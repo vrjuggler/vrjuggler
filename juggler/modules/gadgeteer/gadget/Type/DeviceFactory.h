@@ -41,6 +41,8 @@
 
 #include <gadget/Type/DeviceConstructorBase.h>
 
+#include <vpr/Util/Assert.h>
+
 namespace gadget
 {
 

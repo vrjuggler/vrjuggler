@@ -186,6 +186,11 @@ public:   // ----- PENDING LIST ----- //
     */
    bool pendingNeedsChecked();
 
+   /** Checks to see if the Pending List is stale, meaning that the
+    *  ConfigManager is not actively trying to configure anything
+    *  right now.
+    */
+   bool isPendingStale();
 
    /** Locks the pending list.
     *  This function blocks until it can lock the list of pending

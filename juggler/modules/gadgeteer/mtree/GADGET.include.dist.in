@@ -51,13 +51,23 @@
 	        Position
 		..
 	    ..
-            RemoteInputManager
-            ..
             Type
 	        Position
 		..
             ..
             Util
+            ..
+        ..
+        cluster
+            ClusterNetwork
+            ..
+            Packets
+            ..
+            Plugins
+                ApplicationDataManager
+                ..
+                RemoteInputManager
+                ..
             ..
         ..
     ..

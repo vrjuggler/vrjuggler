@@ -38,7 +38,7 @@
 #include <typeinfo>
 
 #include <gadget/InputManager.h>
-#include <gadget/RemoteInputManager/RemoteInputManager.h>
+//#include <gadget/RemoteInputManager/RemoteInputManager.h>
 #include <gadget/Type/Input.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <gadget/Util/Debug.h>
@@ -146,10 +146,10 @@ namespace gadget
          Input* input_dev = NULL;
          input_dev = InputManager::instance()->getDevice(mDeviceName);
          
-         if ( input_dev == NULL && InputManager::instance()->getRemoteInputManager()->isConfigured())
-         {  
-            input_dev = InputManager::instance()->getRemoteInputManager()->getDevice(mDeviceName);
-         }
+//         if ( input_dev == NULL && InputManager::instance()->getRemoteInputManager()->isConfigured())
+//         {  
+//            input_dev = InputManager::instance()->getRemoteInputManager()->getDevice(mDeviceName);
+//         }
          if ( NULL == input_dev )       // Not found, so stupify
          {
             vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)

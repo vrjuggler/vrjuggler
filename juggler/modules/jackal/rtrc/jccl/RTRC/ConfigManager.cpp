@@ -169,6 +169,8 @@ void ConfigManager::refreshPendingList()
    mPendingCountMutex.release();
 }
 
+static const int pending_repeat_limit = 3;    // Must be one or greater.  1 means only allow one time of no changes
+   
 //: Do we need to check the pending list
 //! CONCURRENCY: concurrent
 // The routine counts the number of pending chunks
@@ -177,7 +179,6 @@ void ConfigManager::refreshPendingList()
 // changing size, then it returns false until mLastPendingSize changes
 bool ConfigManager::pendingNeedsChecked()
 {
-   const int pending_repeat_limit = 3;    // Must be one or greater.  1 means only allow one time of no changes
    int cur_pending_size = 0;
    bool ret_val = false;
 
@@ -236,6 +237,14 @@ bool ConfigManager::pendingNeedsChecked()
    mPendingCountMutex.release();
 
    return ret_val;
+}
+
+bool ConfigManager::isPendingStale()
+{
+   mPendingCountMutex.acquire();
+   bool return_value = (mPendingCheckCount >= pending_repeat_limit);
+   mPendingCountMutex.release();
+   return return_value;
 }
 
 void ConfigManager::addPending(PendingChunk& pendingChunk)
