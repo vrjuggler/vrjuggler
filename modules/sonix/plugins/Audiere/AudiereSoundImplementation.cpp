@@ -141,6 +141,8 @@ void AudiereSoundImplementation::trigger( const std::string& alias, const int& l
    {
       this->bind(alias);
  //     mCurrentTrack->play();
+ 		// Set audiere to loop indefinly if that is requested other wise play only once
+		trackMap[alias]->setRepeat(looping == -1);
       trackMap[alias]->play();
    }
    else
@@ -155,9 +157,29 @@ void AudiereSoundImplementation::trigger( const std::string& alias, const int& l
 
 bool AudiereSoundImplementation::isPlaying( const std::string& alias )
 {
-   vprASSERT( mDev.get() != NULL && "startAPI must be called prior to this function" );
-   boost::ignore_unused_variable_warning(alias);   
-   return false;
+	vprASSERT( mDev.get() != NULL && "startAPI must be called prior to this function" );
+	boost::ignore_unused_variable_warning(alias);   
+	
+	snx::SoundInfo si = this->lookup(alias);
+
+	if(si.streaming)
+	{
+		if(trackMap.count(alias) > 0)
+		{
+			return trackMap[alias]->isPlaying();
+		}
+	}
+	else
+	{
+		return false;
+		/*.
+		if(effectMap.count(alias) > 0)
+		{
+			
+		}
+		*/
+	}
+
 
 }
 
@@ -279,6 +301,23 @@ void AudiereSoundImplementation::setPitchBend( const std::string& alias, float a
 void AudiereSoundImplementation::setVolume( const std::string& alias, float amount )
 {
    snx::SoundImplementation::setVolume( alias, amount );
+	
+	snx::SoundInfo si = this->lookup(alias);
+
+	if(si.streaming)
+	{
+		if(trackMap.count(alias) > 0)
+		{
+			trackMap[alias]->setVolume(amount);
+		}
+	}
+	else
+	{
+		if(effectMap.count(alias) > 0)
+		{
+			effectMap[alias]->setVolume(amount);
+		}	
+	}
 }
 
 /** 1 is no change.  0 is total cutoff. */
