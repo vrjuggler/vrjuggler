@@ -340,7 +340,7 @@ public:  // ----- Various other thread functions ------
     // -----------------------------------------------------------------------
     inline static int
     msleep (u_int32_t milli) {
-        return ::usleep(milli * 1000);
+        return vjThreadPosix::usleep(milli * 1000);
     }
 
     // -----------------------------------------------------------------------
