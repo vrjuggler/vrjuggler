@@ -274,6 +274,38 @@ public:
    }
 
 
+public:  /**** Static Helpers *****/
+   /* static */ virtual bool createHardwareSwapGroup(std::vector<vjGlWindow*> wins)
+   {
+      // Convert to glx windows
+      std::vector<vjGlxWindow*> glx_wins;
+
+      if(wins.size() <= 0)
+         vjDEBUG(0) << "WARNING: createHardwareSwapGroup called with no windows\n" << vjDEBUG_FLUSH;
+
+      for(int i=0;i<wins.size();i++)
+      {
+         vjGlxWindow* glx_win = dynamic_cast<vjGlxWindow*>(wins[i]);
+         vjASSERT(glx_win != NULL);    // Make sure we have the right type
+         glx_wins.push_back(glx_win);
+      }
+
+      // Create hardware group
+#ifdef VJ_OS_SGI
+      for(i=0;i<glx_wins.size();i++)      // For each window
+      {
+         if(glx_wins[i] != this)    // If not me
+         {                          //then add with me to the swap group
+            glXJoinSwapGroupSGIX(x_display, x_window, glx_wins[i]->x_window);
+         }
+      }
+
+#else
+      vjDEBUG(0) << "WARNING: createHardwareSwapGroup not supported.\n" << vjDEBUG_FLUSH;
+#endif
+
+   }
+
 private:
 
    Display         *x_display;

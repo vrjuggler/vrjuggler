@@ -81,6 +81,10 @@ public:
       // -
    void controlLoop(void* nullParam);
 
+   //: Return a list of open windows
+   std::vector<vjGlWindow*> getOpenWindows()
+   { return openWins; }
+
 private:
       //:  Checks for any new windows to add to the pipe
       //! POST: Any new windows will be opened and added to the pipe's rendering list

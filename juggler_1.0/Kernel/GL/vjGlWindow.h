@@ -20,7 +20,7 @@
 
 //-------------------------------------------------------
 //: Represent cross-platform interface to OpenGL windows
-//-------------------------------------------------------   
+//-------------------------------------------------------
 // This interface is used by the OpenGL draw manager
 // in order to keep all platform specific code in this
 // one class.
@@ -93,21 +93,28 @@ public:
 
    friend ostream& operator<<(ostream& out, vjGlWindow& win);
 
+public:  /**** Static Helpers *****/
+   /* static */ virtual bool createHardwareSwapGroup(std::vector<vjGlWindow*> wins)
+   {
+      vjDEBUG(0) << "WARNING: hardware swap not supported.\n" << vjDEBUG_FLUSH;
+      return false;
+   }
+
 protected:
-	      // we store a pointer to the display that we're 
+	      // we store a pointer to the display that we're
         // created from, to config & to get the viewing
         // transforms from.
-   vjDisplay* display;  
+   vjDisplay* display;
 	
 	   // reflects stereo settings in config information;
         // tells us wether or not to try for a stereo display
-   bool try_stereo;     
-        
+   bool try_stereo;
+
       // when the window is open, this tells us whether the
         // display opened actually is in stereo - if we wanted
         // a stereo display but couldn't open it we fall back
         // to mono, and this will be false.
-   bool in_stereo;      
+   bool in_stereo;
    bool border;
    char* display_name;
    bool window_is_open;
