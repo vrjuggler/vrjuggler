@@ -124,27 +124,36 @@ OPT_LIBDIR	= $(LIBDIR)/opt
 PROF_LIBDIR	= $(LIBDIR)/profiled
 
 dbg:
+ifneq ($(SUBDIR), )
 	@for dir in $(SUBDIR); do				\
 		$(MAKE) -C $$dir $@ ;				\
 	done
 	@$(MAKE) LIBDIR=$(DBG_LIBDIR) OBJDIR=$(DBG_BUILDDIR) libs
+endif
+
 opt:
+ifneq ($(SUBDIR), )
 	@for dir in $(SUBDIR); do				\
 		$(MAKE) -C $$dir $@ ;				\
 	done
 	@$(MAKE) LIBDIR=$(OPT_LIBDIR) OBJDIR=$(OPT_BUILDDIR) libs
+endif
 
 prof:
+ifneq ($(SUBDIR), )
 	@for dir in $(SUBDIR); do				\
 		$(MAKE) -C $$dir $@ ;				\
 	done
 	@$(MAKE) LIBDIR=$(PROF_LIBDIR) OBJDIR=$(PROF_BUILDDIR) libs
+endif
 
 # Builds all the plugins that have been configured
 libs:
+ifneq ($(DYNAMIC_LIBS), )
 	@for lib in $(DYNAMIC_LIBS); do				\
 		$(MAKE) OBJDIR=$(OBJDIR)/$$lib $(LIBDIR)/$$lib.$(DYNAMICLIB_EXT) ;	\
 	done
+endif
 
 # ------------------------------------------------
 # Construct the dynamic version of the libraries.
