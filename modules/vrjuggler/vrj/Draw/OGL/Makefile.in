@@ -52,7 +52,7 @@ all dbg opt dso ddso obj: beforebuild ${GL_OBJECTS}
 
 beforebuild:
 ifeq (${OGL_API}, Y)
-	@${scriptdir}/mkinstalldirs ${OBJDIR}
+	@/bin/sh ${scriptdir}/mkinstalldirs ${OBJDIR}
 endif
 
 # -----------------------------------------------------------------------------
