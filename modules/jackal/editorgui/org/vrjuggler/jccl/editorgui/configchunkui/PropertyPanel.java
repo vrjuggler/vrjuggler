@@ -146,8 +146,7 @@ public class PropertyPanel extends JPanel implements ActionListener {
             p.addActionListener (this);
 	}
 	add(eastpanel,"Center");
-	validate();
-	eastpanel.validate();
+
     }
 
 
@@ -255,8 +254,8 @@ public class PropertyPanel extends JPanel implements ActionListener {
 	    //c.gridwidth = GridBagConstraints.REMAINDER;
 	    eastpanellayout.setConstraints(p,c);
 	    eastpanel.add (p);
-	    validate();
-            getParent().validate();
+
+            eastpanel.revalidate(); // yes, we do need this one :(
 	}
         else if (e.getSource() instanceof VarValuePanel) {
             if (e.getActionCommand().equals ("Remove")) {
@@ -269,9 +268,7 @@ public class PropertyPanel extends JPanel implements ActionListener {
                     if (comps[i] == p) {
                         eastpanel.remove (comps[i-1]);
                         eastpanel.remove(p);
-                        Container parent = getParent();
-                        parent.validate();
-                        parent.repaint();
+                        eastpanel.revalidate(); // forces resize of container
                         break;
                     }
                 }
