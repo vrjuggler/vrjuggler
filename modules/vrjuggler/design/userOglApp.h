@@ -2,7 +2,6 @@
 
 #ifndef USEROGLAPP_H
 #define USEROGLAPP_H
-#include "Draw/OGL/GlApp.h"
 class userOglApp : public vrj::GlApp {
 public:    
 

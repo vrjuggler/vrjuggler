@@ -2,7 +2,6 @@
 
 #ifndef USERPFAPP_H
 #define USERPFAPP_H
-#include "Draw/Pf/PfApp.h"
 class userPfApp : public vrj::PfApp {
 public:    
 
