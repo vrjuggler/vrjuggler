@@ -41,6 +41,15 @@ namespace vpr {
 class McastReq {
 public:
     /**
+     * Default constructor.
+     */
+    McastReq (void)
+        : m_mcast_addr(), m_if_addr()
+    {
+        /* Do nothing. */ ;
+    }
+
+    /**
      *
      */
     McastReq (const InetAddr& mcast_addr, const InetAddr& if_addr)
