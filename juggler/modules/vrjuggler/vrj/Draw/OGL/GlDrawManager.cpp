@@ -17,20 +17,42 @@ vjGlDrawManager* vjGlDrawManager::_instance = NULL;
 
 //: Set the app the draw should interact with.
 void vjGlDrawManager::setApp(vjApp* _app)
-{ app = dynamic_cast<vjGlApp*>(_app);}
+{
+   mApp = dynamic_cast<vjGlApp*>(_app);
+
+   // We have a new app, so the contexts must be re-initialized
+   // so... dirty them all.
+   dirtyAllWindows();
+   vjASSERT(mApp != NULL);
+}
 
 //: Return the app we are rednering
 vjGlApp* vjGlDrawManager::getApp()
-{ return app; }
+{ return mApp; }
 
-    /**
-     * Function to config API specific stuff.
-     * Takes a chunkDB and extracts API specific stuff
-     */
+
+//: Do initial configuration for the draw manager
+// Doesn't do anything right now
 void vjGlDrawManager::configInitial(vjConfigChunkDB*  chunkDB)
 {
     // Setup any config data
 }
+
+//: Start the control loop
+void vjGlDrawManager::start()
+{
+   // --- Setup Multi-Process stuff --- //
+   // Create a new thread to handle the control
+	vjThread* control_thread;
+
+   vjThreadMemberFunctor<vjGlDrawManager>* memberFunctor =
+      new vjThreadMemberFunctor<vjGlDrawManager>(this, &vjGlDrawManager::main, NULL);
+
+	control_thread = new vjThread(memberFunctor, 0);
+
+   vjDEBUG(vjDBG_DRAW_MGR,0) << "vjGlDrawManager::thread: " << control_thread << endl << vjDEBUG_FLUSH;
+}
+
 
     // Enable a frame to be drawn
     // Trigger draw
@@ -55,6 +77,10 @@ void vjGlDrawManager::main(void* nullParam)
    //while(!Exit)
    while (1)
    {
+      //**// Runtime config will happen here
+      // Because the kernel is the only one that can trigger it
+      // we will be waiting here at that time
+
       // Wait for trigger
       drawTriggerSema.acquire();
 
@@ -63,12 +89,17 @@ void vjGlDrawManager::main(void* nullParam)
 
       // -- Done rendering --- //
       drawDoneSema.release();
+
+      // Allow run-time config
+      //**//mRuntimeConfigSema.release();
+         // This is the time that reconfig can happen
+      //**//mRuntimeConfigSema.acquire();
    }
 }
 
 void vjGlDrawManager::drawAllPipes()
 {
-   vjDEBUG_BEGIN(3) << "vjGLDrawManager::drawAllPipes: Enter" << endl << flush << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(vjDBG_DRAW_MGR,3) << "vjGLDrawManager::drawAllPipes: Enter" << endl << flush << vjDEBUG_FLUSH;
    int pipeNum;
 
    // RENDER
@@ -90,88 +121,78 @@ void vjGlDrawManager::drawAllPipes()
       pipes[pipeNum]->completeSwap();
 
 
-   vjDEBUG_END(3) << "vjGLDrawManager::drawAllPipes: Exit" << endl << flush << vjDEBUG_FLUSH;
+   vjDEBUG_END(vjDBG_DRAW_MGR,3) << "vjGLDrawManager::drawAllPipes: Exit" << endl << flush << vjDEBUG_FLUSH;
 }
 
-    /// Initialize the drawing API (if not already running)
+//: Initialize the drawing API (if not already running)
+//! POST: Control thread is started
 void vjGlDrawManager::initAPI()
 {
-    ; /* Do nothing */
+   start();
 }
 
-    //: Initialize the drawing state for the API based on
-    //+ the data in the display manager.
-    //
-    //! PRE: API is running (initAPI has been called)
-    //! POST: API is ready do draw    <br>
-    //+	 Process model is configured <br>
-    //+	 Multi-pipe data is set      <br>
-    //+	 Window list is correct      <br>
+//: Initialize the drawing state for the API based on
+//+ the data in the display manager.
+//
+//! PRE: API is running (initAPI has been called)
+//! POST: API is ready do draw    <br>
+//+	 Process model is configured <br>
+//+	 Multi-pipe data is set      <br>
+//+	 Window list is correct      <br>
 void vjGlDrawManager::initDrawing()
 {
-   vjDEBUG(3) << "vjGlDrawManager::initDrawing: Entering." << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,3) << "vjGlDrawManager::initDrawing: Entering." << endl << vjDEBUG_FLUSH;
 
-   //  For each display:
-   //	-- Create a window for it
+
+}
+	
+
+//: Callback when display is added to display manager
+//! NOTE: This function can only be called by the display manager
+//+      functioning in the kernel thread to signal a new display added
+//+      This guarantees that we are not rendering currently.
+//+      We will most likely be waiting for a render trigger.
+void vjGlDrawManager::addDisplay(vjDisplay* disp)
+{
+//**//   vjGuard<vjSemaphore> runtime_guard(mRuntimeConfigSema);     // Have to hold to configure
+
+   vjDEBUG(vjDBG_DRAW_MGR,0) << "vjGlDrawManager:addDisplay\n" << *disp << endl << vjDEBUG_FLUSH;
+
+   //	-- Create a window for new display
    //	-- Store the window in the wins vector
-   std::vector<vjDisplay*> displays = displayManager->getActiveDisplays();
-   for (std::vector<vjDisplay*>::iterator dispIter = displays.begin();
-       dispIter != displays.end(); dispIter++)
-   {
-      vjGlWindow* newWin;
-      newWin = vjKernel::instance()->getSysFactory()->getGLWindow();
-      newWin->config(*dispIter);
-      wins.push_back(newWin);
-   }
+   vjGlWindow* new_win;
+   new_win = vjKernel::instance()->getSysFactory()->getGLWindow();   // Create gl window
+   new_win->config(disp);                                            // Configure it
+   wins.push_back(new_win);                                          // Add to our local window list
 
-   // Create Pipes & Add all windows to the correct pipe
-   for(int winId=0;winId<wins.size();winId++)   // For each window we created
-   {
-      int pipeNum = wins[winId]->getDisplay()->getPipe();  // Find pipe to add it too
-                                                        // ASSERT: pipeNum := [0...n]
+   // -- Create any needed Pipes & Start them
+   int pipe_num = new_win->getDisplay()->getPipe();    // Find pipe to add it too
+   vjASSERT(pipe_num >= 0);                            // ASSERT: pipeNum := [0...n]
 
-      if(pipes.size() < (pipeNum+1))            // ASSERT: Max index of pipes is < our pipe
+   if(pipes.size() < (pipe_num+1))           // ASSERT: Max index of pipes is < our pipe
+   {                                         // +1 because if pipeNum = 0, I still need size() == 1
+      while(pipes.size() < (pipe_num+1))     // While we need more pipes
       {
-                                                // XXX: This is not really a good way to do it
-         while(pipes.size() < (pipeNum+1))      // While we are out of range
-         {
-            vjGlPipe* newPipe = new vjGlPipe(pipeNum, this);   // Create a new pipe to use
-            pipes.push_back(newPipe);                          // Add the pipe
-         }
+         vjGlPipe* new_pipe = new vjGlPipe(pipe_num, this);  // Create a new pipe to use
+         pipes.push_back(new_pipe);                          // Add the pipe
+         new_pipe->start();                                  // Start the pipe running
+                                                            // NOTE: Run pipe even if now windows.  Then it waits for windows.
       }
-
-      vjGlPipe* pipe;                           // The pipe to assign it to
-      pipe = pipes[pipeNum];                    // ASSERT: pipeNum is in the valid range
-      pipe->addWindow(wins[winId]);             // Window has been added
    }
 
-      // Start all the pipes running
-   for(int pipeNum=0;pipeNum<pipes.size();pipeNum++)
-   {
-      //**//if(pipes[pipeNum]->hasWindows())    // Actually we want all the pipes to run
-      // Start all pipes running.  Even pipes that have no windows
-      // This way the pipe can be ready if windows are added to it
-      pipes[pipeNum]->start();
-   }
+   // -- Add window to the correct pipe
+   vjGlPipe* pipe;                           // The pipe to assign it to
+   pipe = pipes[pipe_num];                    // ASSERT: pipeNum is in the valid range
+   pipe->addWindow(new_win);             // Window has been added
 
-      // --- Setup Multi-Process stuff --- //
-      // Create a new thread to handle the control
-	vjThread* control_thread;
-
-   vjThreadMemberFunctor<vjGlDrawManager>* memberFunctor =
-      new vjThreadMemberFunctor<vjGlDrawManager>(this, &vjGlDrawManager::main, NULL);
-
-	control_thread = new vjThread(memberFunctor, 0);
-
-   vjDEBUG(0) << "vjGlDrawManager::thread: " << control_thread << endl << vjDEBUG_FLUSH;
    // Dump the state
    debugDump();
 }
-	
 
     /// Shutdown the drawing API
 void vjGlDrawManager::closeAPI()
 {
+   vjDEBUG(vjDBG_DRAW_MGR,0) << "vjGlDrawManager::closeAPI: Closing.\n" << vjDEBUG_FLUSH;
     // Stop all pipes
    ;
     // Delete all pipes
@@ -202,6 +223,19 @@ bool vjGlDrawManager::configCanHandle(vjConfigChunk* chunk)
 {
    return false;
 }
+
+
+//: Set the dirty bits off all the gl windows
+// Dirty all the window contexts
+void vjGlDrawManager::dirtyAllWindows()
+{
+    // Create Pipes & Add all windows to the correct pipe
+   for(int winId=0;winId<wins.size();winId++)   // For each window we created
+   {
+      wins[winId]->setDirtyContext(true);
+   }
+}
+
 
 // Draw any objects that we need to display in the scene
 // from the system.  (i.e. Gloves, etc)
@@ -242,7 +276,7 @@ void vjGlDrawManager::drawProjections(vjSimDisplay* sim)
    if(ALPHA_VALUE > 1.0f)
       ALPHA_VALUE = 0.0f;
 
-   vjDEBUG(0) << "ALPHA_VALUE: " << ALPHA_VALUE << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_ALL,0) << "ALPHA_VALUE: " << ALPHA_VALUE << endl << vjDEBUG_FLUSH;
    */
 
    std::vector<vjDisplay*> disps = displayManager->getAllDisplays();
@@ -254,18 +288,18 @@ void vjGlDrawManager::drawProjections(vjSimDisplay* sim)
    {
       if(disps[i]->isSurface())
       {
-         if(disps[i]->isSurface())
-         {
+         //if(disps[i]->isSurface())
+         //{
             vjSurfaceDisplay* surf_disp = dynamic_cast<vjSurfaceDisplay*>(disps[i]);
             vjASSERT(surf_disp != NULL);
             proj = surf_disp->getLeftProj();
-         }
-         else if (disps[i]->isSimulator())
-         {
-            vjSimDisplay* sim_disp = dynamic_cast<vjSimDisplay*>(disps[i]);
-            vjASSERT(sim_disp != NULL);
-            proj = sim_disp->getCameraProj();
-         }
+         //}
+         //else if (disps[i]->isSimulator())
+         //{
+         //   vjSimDisplay* sim_disp = dynamic_cast<vjSimDisplay*>(disps[i]);
+         //   vjASSERT(sim_disp != NULL);
+         //   proj = sim_disp->getCameraProj();
+         //}
 
          // Create color values that are unique
          // Basically count in binary (skipping 0), and use the first 3 digits.  That will give six colors
@@ -335,6 +369,7 @@ void vjGlDrawManager::drawSimulator(vjSimDisplay* sim)
 	      glMultMatrixf(sim->getHeadPos().getFloatPtr());
 	
          // Draw Axis
+         /*
          glDisable(GL_LIGHTING);
          glPushMatrix();
             vjVec3 x_axis(10.0f,0.0f,0.0f); vjVec3 y_axis(0.0f, 10.0f, 0.0f); vjVec3 z_axis(0.0f, 0.0f, 10.0f); vjVec3 origin(0.0f, 0.0f, 0.0f);
@@ -344,6 +379,7 @@ void vjGlDrawManager::drawSimulator(vjSimDisplay* sim)
                glColor3f(0.0f, 0.0f, 1.0f); glVertex3fv(origin.vec); glVertex3fv(z_axis.vec);
             glEnd();
          glPopMatrix();
+         */
          glEnable(GL_LIGHTING);
 
          glEnable(GL_BLEND);
@@ -385,15 +421,15 @@ void vjGlDrawManager::drawSimulator(vjSimDisplay* sim)
     /// dumps the object's internal state
 void vjGlDrawManager::debugDump()
 {
-    vjDEBUG(0) << "-- DEBUG DUMP --------- vjGlDrawManager: " << (void*)this << " ------------" << endl
-	         << "\tapp:" << (void*)app << endl << vjDEBUG_FLUSH;
-    vjDEBUG(0) << "\tWins:" << wins.size() << endl << vjDEBUG_FLUSH;
+    vjDEBUG(vjDBG_DRAW_MGR,0) << "-- DEBUG DUMP --------- vjGlDrawManager: " << (void*)this << " ------------" << endl
+	         << "\tapp:" << (void*)mApp << endl << vjDEBUG_FLUSH;
+    vjDEBUG(vjDBG_DRAW_MGR,0) << "\tWins:" << wins.size() << endl << vjDEBUG_FLUSH;
 
     for(std::vector<vjGlWindow*>::iterator i = wins.begin(); i != wins.end(); i++)
     {
-	   vjDEBUG(0) << "\n\t\tvjGlWindow:\n" << *(*i) << endl << vjDEBUG_FLUSH;
+	   vjDEBUG(vjDBG_DRAW_MGR,0) << "\n\t\tvjGlWindow:\n" << *(*i) << endl << vjDEBUG_FLUSH;
     }
-    vjDEBUG(0) << flush << vjDEBUG_FLUSH;
+    vjDEBUG(vjDBG_DRAW_MGR,0) << flush << vjDEBUG_FLUSH;
 }
 
 void vjGlDrawManager::initQuadObj()

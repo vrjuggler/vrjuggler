@@ -39,7 +39,7 @@ void vjGlWindow::setLeftEyeProjection()
    vjProjection* left_proj = surf_display->getLeftProj();
    float* frust = left_proj->frustum.frust;
 
-   vjDEBUG(2)  << "---- Left Frustum ----\n"
+   vjDEBUG(vjDBG_ALL,2)  << "---- Left Frustum ----\n"
                << surf_display->getLeftProj()->frustum.frust << endl << vjDEBUG_FLUSH;
 
       // --- Set to the correct buffer --- //
@@ -80,7 +80,7 @@ void vjGlWindow::setRightEyeProjection()
    vjProjection* right_proj = surf_display->getRightProj();
    float* frust = right_proj->frustum.frust;
 
-   vjDEBUG(2)  << "---- Right Frustum ----\n"
+   vjDEBUG(vjDBG_ALL,2)  << "---- Right Frustum ----\n"
                << *frust << endl << vjDEBUG_FLUSH;
 
       // --- Set to the correct buffer --- //
@@ -122,7 +122,7 @@ void vjGlWindow::setCameraProjection()
 
    float* frust = sim_display->getCameraProj()->frustum.frust;
 
-   vjDEBUG(2)  << "---- Camera Frustrum ----\n"
+   vjDEBUG(vjDBG_ALL,2)  << "---- Camera Frustrum ----\n"
                << sim_display->getCameraProj()->frustum.frust << endl << vjDEBUG_FLUSH;
 
       // --- Set to the correct buffer --- //

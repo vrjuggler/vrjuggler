@@ -99,6 +99,9 @@ public:
    //!NOTE: Fork happens here
    virtual void initDrawing();
 
+   //: Callback when display is added to display manager
+   virtual void addDisplay(vjDisplay* disp);
+
       //: Shutdown the drawing API
    virtual void closeAPI();
 

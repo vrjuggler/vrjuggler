@@ -22,16 +22,16 @@ void vjDisplay::config(vjConfigChunk* chunk)
     // -- Check for error in configuration -- //
     // NOTE: If there are errors, set them to some default value
    if(sizeX <= 0)
-   {  vjDEBUG(0) << "WARNING: window sizeX set to: " << sizeX << ".  Setting to 10." << endl << vjDEBUG_FLUSH;
+   {  vjDEBUG(vjDBG_ALL,0) << "WARNING: window sizeX set to: " << sizeX << ".  Setting to 10." << endl << vjDEBUG_FLUSH;
       sizeX = 10; }
 
    if(sizeY <= 0)
-   {  vjDEBUG(0) << "WARNING: window sizeY set to: " << sizeY << ".  Setting to 10." << endl << vjDEBUG_FLUSH;
+   {  vjDEBUG(vjDBG_ALL,0) << "WARNING: window sizeY set to: " << sizeY << ".  Setting to 10." << endl << vjDEBUG_FLUSH;
       sizeY = 10; }
 
    if(pipe < 0)
    {
-      vjDEBUG(0) << "WARNING: pipe set to: " << pipe << ".  Setting to 0.\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "WARNING: pipe set to: " << pipe << ".  Setting to 0.\n" << vjDEBUG_FLUSH;
       pipe = 0;
    }
 
@@ -43,7 +43,7 @@ void vjDisplay::config(vjConfigChunk* chunk)
     mUser = vjKernel::instance()->getUser(user_name);
 
     if(NULL == mUser)
-    { vjDEBUG(0) << "ERROR: User not found named: " << user_name << endl << vjDEBUG_FLUSH; }
+    { vjDEBUG(vjDBG_ALL,0) << "ERROR: User not found named: " << user_name << endl << vjDEBUG_FLUSH; }
 
     setName(name);
     setPipe(pipe);
@@ -51,7 +51,6 @@ void vjDisplay::config(vjConfigChunk* chunk)
     displayChunk = chunk;        // Save the chunk for later use
 }
 
-// <<<<<<< vjDisplay.cpp
 // void vjDisplay::updateProjections()
 // {
 //    vjMatrix left_eye_pos, right_eye_pos;     // NOTE: Eye coord system is -z forward, x-right, y-up
@@ -85,8 +84,7 @@ void vjDisplay::config(vjConfigChunk* chunk)
 //       cameraProj->calcViewMatrix(camera_pos);
 //    }
 // }
-// =======
-// >>>>>>> 1.11
+
 	
     // ---- FRIEND FUNCTIONS ---- //
 ostream& operator<<(ostream& out,  vjDisplay& disp)

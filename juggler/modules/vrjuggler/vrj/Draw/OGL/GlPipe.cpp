@@ -26,7 +26,7 @@ int vjGlPipe::start()
 
    mActiveThread = new vjThread(memberFunctor, 0);
 
-   vjDEBUG(0) << "vjGlPipe::start: Started control loop.  " << mActiveThread << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_ALL,0) << "vjGlPipe::start: Started control loop.  " << mActiveThread << endl << vjDEBUG_FLUSH;
    return 1;
 }
 
@@ -68,6 +68,7 @@ void vjGlPipe::completeSwap()
 void vjGlPipe::addWindow(vjGlWindow* win)
 {
    vjGuard<vjMutex> guardNew(newWinLock);       // Protect the data
+   vjDEBUG(vjDBG_ALL,1) << "vjGlPipe::addWindow: Pipe: " << mPipeNum << " adding window (to new wins):\n" << *win << endl << vjDEBUG_FLUSH;
    newWins.push_back(win);
 }
 
@@ -142,17 +143,8 @@ void vjGlPipe::checkForNewWindows()
       {
          newWins[winNum]->open();
          newWins[winNum]->makeCurrent();
-         vjDEBUG(2) << "vjGlPipe::checkForNewWindows: Just opened window:\n" << *(newWins[winNum]) << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,1) << "vjGlPipe::checkForNewWindows: Just opened window:\n" << *(newWins[winNum]) << endl << vjDEBUG_FLUSH;
          openWins.push_back(newWins[winNum]);
-
-         // Opened new window, call init function for the context
-         vjGlDrawManager* dMgr = vjGlDrawManager::instance();
-         vjDisplay* theDisplay = newWins[winNum]->getDisplay();   // Get the display for easy access
-         dMgr->setCurrentContext(newWins[winNum]->getId());
-         dMgr->currentUserData()->setUser(theDisplay->getUser());         // Set user data
-         dMgr->currentUserData()->setProjection(NULL);
-
-         theApp->contextInit();              // Call context init function
       }
 
       newWins.erase(newWins.begin(), newWins.end());
@@ -171,9 +163,23 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
    vjDisplay* theDisplay = win->getDisplay();   // Get the display for easy access
 
    vjGlDrawManager::instance()->setCurrentContext(win->getId());     // Set TSS data of context id
-   vjDEBUG(4) << "vjGlPipe::renderWindow: Set context to: " << vjGlDrawManager::instance()->getCurrentContext() << endl << vjDEBUG_FLUSH;
 
-   win->makeCurrent();                       // Set correct context
+   vjDEBUG(vjDBG_ALL,4) << "vjGlPipe::renderWindow: Set context to: " << vjGlDrawManager::instance()->getCurrentContext() << endl << vjDEBUG_FLUSH;
+
+   // --- SET CONTEXT --- //
+   win->makeCurrent();
+
+   // CONTEXT INIT(): Check if we need to call contextInit()
+   if(win->hasDirtyContext())
+   {
+         // Have dirty context
+      glManager->currentUserData()->setUser(theDisplay->getUser());         // Set user data
+      glManager->currentUserData()->setProjection(NULL);
+
+      theApp->contextInit();              // Call context init function
+      win->setDirtyContext(false);        // All clean now
+   }
+
 
    theApp->contextPreDraw();                 // Do any context pre-drawing
 

@@ -11,13 +11,6 @@
 
 #include <Kernel/vjDisplay.h>
 
-#ifndef true
-#define true 1
-#endif
-#ifndef false
-#define false 0
-#endif
-
 //-------------------------------------------------------
 //: Represent cross-platform interface to OpenGL windows
 //-------------------------------------------------------
@@ -33,6 +26,7 @@ public:
       mWindowId = getNextWindowId();
       in_stereo = false;
       window_is_open = false;
+      mDirtyContext = true;      // Always dirty when window first created
    }
 
 public:
@@ -67,12 +61,18 @@ public:
    //: Sets the projection matrix for this window to the one for simulator
    void setCameraProjection();
 
+   //: Is the context dirty?
+   bool hasDirtyContext() const
+   { return mDirtyContext; }
+
+   //: Set the dirty bit for the context
+   void setDirtyContext(bool val=true)
+   { mDirtyContext = val; }
 
    //: Query wether the window is open
    //! RETURNS: true - If window is open
-   bool isOpen() {
-      return window_is_open;
-   }
+   bool isOpen() const
+   { return window_is_open; }
 
    //: Query wether the window is in stereo
    //! RETURNS: true - If window is in stereo
@@ -91,7 +91,7 @@ public:
 public:  /**** Static Helpers *****/
    /* static */ virtual bool createHardwareSwapGroup(std::vector<vjGlWindow*> wins)
    {
-      vjDEBUG(0) << "WARNING: hardware swap not supported.\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "WARNING: hardware swap not supported.\n" << vjDEBUG_FLUSH;
       return false;
    }
 
@@ -101,17 +101,17 @@ protected:
      // transforms from.
    vjDisplay* mDisplay;
 
-     // when the window is open, this tells us whether the
-     // display opened actually is in stereo - if we wanted
-     // a stereo display but couldn't open it we fall back
-     // to mono, and this will be false.
-   bool in_stereo;
-   bool border;
-   char* display_name;
-   bool window_is_open;
+   bool mDirtyContext;  //: The context is dirty.  We need to (re)initialize it next draw
+
+   bool in_stereo;      //: Wether the display is actually in stereo
+                        // if we wanted a stereo display but couldn't open it
+                        // we fall back to mono, and this will be false.
+   bool  border;        //: Do we have a border
+   char* display_name;  //: Name of the display to use
+   bool window_is_open; //: Is the window open
    int  window_width, window_height;
-   int  origin_x, origin_y;		    // lower-left corner of window
-   int   mWindowId;                  // A unique window id to identify us
+   int  origin_x, origin_y;		    //: lower-left corner of window
+   int  mWindowId;                  //: A unique window id to identify us
 
 private:
    static int mCurMaxWinId;             // The current maximum window id
