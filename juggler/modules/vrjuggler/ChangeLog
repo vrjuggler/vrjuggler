@@ -1,5 +1,6 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Aug-27-2001 patrick   We build DLLs on Win32 now.
 Aug-24-2001 allenb    Moved glWindow factory function to glDrawManager.
                       This removes the dependency that Juggler had on
                       Juggler_ogl.
