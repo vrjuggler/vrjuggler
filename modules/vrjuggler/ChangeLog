@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Sep-29-2002 nonchocoboy NEW VERSION: 1.1.128
 Sep-26-2002 patrickh    Regorganized the samples directory to separate simple
                         applications from advanced examples.
 Sep-25-2002 nonchocoboy VRJConfig now uses a custom dialog for collection the

@@ -35,62 +35,39 @@
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
-
-default: ConfigUpdater.jar
+default: java
 
 # Include common definitions.
 include @topdir@/make.defs.mk
 
 srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+INSTALL=	@INSTALL@
 
-# JDK-related variables.  $(JAVAC_CMD) is the compile line for javac when
-# building .java files.
-JDK_HOME=	@JDK_HOME@
-JAR=		@JAR@
-JAVAC=		@JAVAC@
-JAVAC_CMD=	$(JAVAC) -d . -sourcepath $(srcdir)/src		\
-		-classpath "$(CLASSPATH):."
-JAVADOC=	$(JAVAC:javac=javadoc)
-
-JCPS=		@JCPS@
-JDOM_JAR=	@JDOM_JAR@
-CLASSPATH=	$(JDOM_JAR)
-
-DOC_DIR=	$(HOME)/public_html/vjcontrol
-
-# Prevent anything in this file from being built in parallel.
-MAKEFLAGS+=	-j 1
-
-# Include the .mk files for VjConfig and VjGUI so that the Java code in those
-# directories can be built using this Makefile.
-include $(srcdir)/src/VjConfig/VjConfig.mk
-include $(srcdir)/src/ConfigUpdater/ConfigUpdater.mk
-
-# Search path information.
-vpath
-vpath %.java @srcdir@
-vpath %.class .
+_LOCAL_CLEAN=1
+JAVA_AFTERBUILD=java_afterbuild
 
 include $(MKPATH)/dpp.obj.mk
 
 # -----------------------------------------------------------------------------
+# Uses ant to build the java classes and JARs
+# -----------------------------------------------------------------------------
+java_afterbuild:
+	@echo "------------------------------------------------"
+	@echo "Building java sources"
+	@echo "------------------------------------------------"
+	$(ANT)
+
+_clean:
+	$(ANT) clean
+
+# -----------------------------------------------------------------------------
 # Library targets.
 # -----------------------------------------------------------------------------
-JAVA_TARGETS=	ConfigUpdater.jar
-
-ConfigUpdater.jar: $(srcdir)/src/ConfigUpdater/Main.java
-	$(JAVAC_CMD) $(srcdir)/src/VjConfig/*.java	\
-                     $(srcdir)/src/ConfigUpdater/*.java	
-	$(JAR) cv0mf $(srcdir)/META-INF/MANIFEST.MF ConfigUpdater.jar \
-          VjConfig/*.class ConfigUpdater/*.class
-	cd $(srcdir) &&							\
-          $(JAR) uvf $(topdir)/tools/ConfigUpdater/ConfigUpdater.jar	\
-            ConfigUpdater.desc
-
-# -----------------------------------------------------------------------------
-# Clean-up.
-# -----------------------------------------------------------------------------
-CLEAN_FILES+= \
-	VjConfig/*.class VjConfig/*~ 	\
-	ConfigUpdater/*.class ConfigUpdater/*~
-CLOBBER_FILES+= ConfigUpdater.jar
+configupdater-install:
+	@echo "------------------------------------------------"
+	@echo "Installing the ConfigUpdater tool"
+	@echo "------------------------------------------------"
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
+		$(EXTRA_INSTALL_ARGS) $(topdir)/tools/ConfigUpdater/ConfigUpdater.jar \
+		$(bindir) || exit 1

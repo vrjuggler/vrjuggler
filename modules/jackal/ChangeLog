@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Sep-29-2002 nonchocoboy Build and install the ConfigUpdater tool.
+                        NEW VERSION: 0.9.2
+Sep-27-2002 nonchocoboy Implemented editors for modifying a ChunkDesc's name,
+                        token, and categories.
 Sep-23-2002 nonchocoboy DataSources are reference counted in the ConfigBroker.
 Sep-20-2002 jahare      Removed old JCCL network code.
 Sep-15-2002 nonchocoboy ConfigChunks are now created on the fly as needed when

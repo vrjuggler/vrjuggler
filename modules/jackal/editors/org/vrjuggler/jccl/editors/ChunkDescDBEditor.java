@@ -67,6 +67,8 @@ public class ChunkDescDBEditor
     */
    final static String PROPERTY_DESC   = "PropertyDescPane";
 
+   final static String EMPTY           = "Empty";
+
    /**
     * Creates a new ChunkDescDBEditor with no desc to edit.
     */
@@ -93,21 +95,17 @@ public class ChunkDescDBEditor
       });
 
       // Init the ChunkDesc editor pane
-      descPropSheetScrollPane.setViewportView(descPropSheet);
-      descPropSheetScrollPane.setMinimumSize(new Dimension(0, 0));
-      descPropSheetScrollPane.setPreferredSize(descPropSheet.getPreferredSize());
-      editorPane.add(descPropSheetScrollPane, CHUNK_DESC);
-      descPropSheet.addActionListener(new ActionListener()
-      {
-         public void actionPerformed(ActionEvent evt)
-         {
-            ChunkDescPropertySheet ps = (ChunkDescPropertySheet)evt.getSource();
-            displayHelp(ps.getSelectedProperty());
-         }
-      });
+      descEditorScrollPane.setViewportView(descEditor);
+      descEditorScrollPane.setMinimumSize(new Dimension(0, 0));
+      descEditorScrollPane.setPreferredSize(descEditor.getPreferredSize());
+      editorPane.add(descEditorScrollPane, CHUNK_DESC);
 
       // Init the PropertyDesc editor pane
       editorPane.add(propertyDescEditor, PROPERTY_DESC);
+
+      // Init the empty editor pane
+      editorPane.add(emptyPane, EMPTY);
+      editorPaneLayout.show(editorPane, EMPTY);
 
       // Init the ChunkDescDB tree
       DefaultMutableTreeNode root = new DefaultMutableTreeNode("Desc");
@@ -127,24 +125,45 @@ public class ChunkDescDBEditor
             // Show basic help if nothing is selected
             if (node == null)
             {
+               // Disable the add/remove buttons
+               addBtn.setEnabled(false);
+               removeBtn.setEnabled(false);
+
                // TODO: Show the basic help
+               editorPaneLayout.show(editorPane, EMPTY);
                return;
             }
 
             // Edit an entire desc
             else if (node.getUserObject() instanceof ChunkDesc)
             {
-//               ChunkDesc desc = (ChunkDesc)node.getUserObject();
-//               descPropSheet.setChunkDesc(desc);
-//               editorPaneLayout.show(editorPane, CHUNK_DESC);
+               addBtn.setEnabled(true);
+               removeBtn.setEnabled(true);
+
+               ChunkDesc desc = (ChunkDesc)node.getUserObject();
+               descEditor.setDefinition(desc);
+               editorPaneLayout.show(editorPane, CHUNK_DESC);
                return;
             }
             // Edit a specific property desc
             else if (node.getUserObject() instanceof PropertyDesc)
             {
+               addBtn.setEnabled(false);
+               removeBtn.setEnabled(true);
+
                PropertyDesc desc = (PropertyDesc)node.getUserObject();
                propertyDescEditor.setPropertyDesc(desc);
                editorPaneLayout.show(editorPane, PROPERTY_DESC);
+               return;
+            }
+            // Edit a category
+            else if (node.getUserObject() instanceof String)
+            {
+               addBtn.setEnabled(true);
+               removeBtn.setEnabled(false);
+
+               editorPaneLayout.show(editorPane, EMPTY);
+               return;
             }
          }
       });
@@ -728,7 +747,9 @@ public class ChunkDescDBEditor
       propsSplitPane.setOneTouchExpandable(true);
       treeToolbar.setFloatable(false);
       addBtn.setText("Add");
+      addBtn.setEnabled(false);
       removeBtn.setText("Remove");
+      removeBtn.setEnabled(false);
       helpScrollPane.setMinimumSize(new Dimension(0, 0));
       helpPane.setBackground(new Color(255, 253, 181));
       helpPane.setBorder(null);
@@ -783,14 +804,14 @@ public class ChunkDescDBEditor
    private ConfigBroker broker;
 
    /**
-    * The property sheet for the ChunkDesc editing pane.
+    * The overall editor for the ChunkDesc.
     */
-   private ChunkDescPropertySheet descPropSheet = new ChunkDescPropertySheet();
+   private ChunkDescEditor descEditor = new ChunkDescEditor();
 
    /**
     * ScrollPane for the ChunkDesc property sheet.
     */
-   private JScrollPane descPropSheetScrollPane = new JScrollPane();
+   private JScrollPane descEditorScrollPane = new JScrollPane();
 
    /**
     * The editor for PropertyDesc editing pane.
@@ -815,6 +836,7 @@ public class ChunkDescDBEditor
       public boolean getScrollableTracksViewportHeight() { return true; }
    };
    private CardLayout editorPaneLayout = new CardLayout();
+   private JPanel emptyPane = new JPanel();
 
    /**
     * Specialized listener for changes to the configuration.

@@ -62,14 +62,14 @@ do
 
       aclocalinclude="$ACLOCAL_FLAGS"
       echo "Running $ACLOCAL $aclocalinclude ..."
-      $ACLOCAL $aclocalinclude
+      $ACLOCAL $aclocalinclude || exit 1
       if grep "^AC_CONFIG_HEADER" configure.in >/dev/null
       then
-	echo "Running $AUTOHEADER..."
-	$AUTOHEADER
+        echo "Running $AUTOHEADER..."
+        $AUTOHEADER || exit 1
       fi
       echo "Running $AUTOCONF ..."
-      $AUTOCONF
+      $AUTOCONF || exit 1
     )
   fi
 done

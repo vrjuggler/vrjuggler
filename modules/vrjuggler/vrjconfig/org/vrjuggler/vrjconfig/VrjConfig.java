@@ -52,6 +52,7 @@ import org.vrjuggler.vrjconfig.ui.ConfigToolbar;
 
 public class VrjConfig
    extends JPanel
+   implements FileLoader
 {
    public VrjConfig()
    {
@@ -90,6 +91,51 @@ public class VrjConfig
       {
          e.printStackTrace();
       }
+   }
+
+   //--------------------------------------------------------------------------
+   // FileLoader implementation
+   //--------------------------------------------------------------------------
+   public String getFileType()
+   {
+      return "VR Juggler Configuration";
+   }
+
+   public boolean canOpenMultiple() { return true; }
+
+   public boolean openRequested()
+   {
+      return toolbar.doOpen();
+   }
+
+   public boolean canSave() { return true; }
+
+   public boolean saveRequested()
+   {
+      return toolbar.doSave();
+   }
+
+   public boolean saveAsRequested()
+   {
+      return toolbar.doSaveAs();
+   }
+
+   public boolean closeRequested()
+   {
+      ConfigIFrame frame = (ConfigIFrame)desktop.getSelectedFrame();
+      try
+      {
+         frame.setClosed(true);
+      }
+      catch (PropertyVetoException pve) {}
+      removeFrame(frame);
+      frame.dispose();
+      return true;
+   }
+
+   public int getOpenFileCount()
+   {
+      return desktop.getAllFrames().length;
    }
 
    /**

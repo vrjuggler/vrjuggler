@@ -102,12 +102,12 @@ public class DisplayPlacer
 
    public void setDesktopSize(Dimension desktopSize)
    {
-      wndPlacer.setDesktopSize(desktopSize);
+      model.setDesktopSize(desktopSize);
    }
 
    public Dimension getDimensionSize()
    {
-      return wndPlacer.getDesktopSize();
+      return model.getDesktopSize();
    }
 
    /**
@@ -311,6 +311,11 @@ class DisplayPlacerModel
    extends AbstractPlacerModel
    implements ConfigListener, ConfigChunkListener
 {
+   public void DisplayPlacerModel()
+   {
+      mDesktopSize = new Dimension(1600, 1200);
+   }
+
    public void setChunks(List chunks)
    {
       windows = ConfigUtilities.getChunksWithDescToken(chunks, "displayWindow");
@@ -369,6 +374,8 @@ class DisplayPlacerModel
    public void setSizeOf(int idx, Dimension size)
    {
       ConfigChunk window_chunk = (ConfigChunk)getElement(idx);
+      System.out.println("--- Chunk "+window_chunk.getName()+" new size=("+size.width+", "+size.height+")");
+      System.out.println("\thashcode="+window_chunk.hashCode());
       window_chunk.setProperty("size", 0, new VarValue(size.width));
       window_chunk.setProperty("size", 1, new VarValue(size.height));
    }
@@ -378,14 +385,23 @@ class DisplayPlacerModel
       ConfigChunk window_chunk = (ConfigChunk)getElement(idx);
       int x = window_chunk.getProperty("origin", 0).getInt();
       int y = window_chunk.getProperty("origin", 1).getInt();
+
+      // Convert y from Juggler coords (bottom left is origin)
+      int height = window_chunk.getProperty("size", 1).getInt();
+      y = mDesktopSize.height - y - height;
       return new Point(x, y);
    }
 
    public void setLocationOf(int idx, Point pt)
    {
       ConfigChunk window_chunk = (ConfigChunk)getElement(idx);
+
+      // Convert y to Juggler coords (bottom left is origin)
+      int height = window_chunk.getProperty("size", 1).getInt();
+      int y = mDesktopSize.height - pt.y - height;
+      
       window_chunk.setProperty("origin", 0, new VarValue(pt.x));
-      window_chunk.setProperty("origin", 1, new VarValue(pt.y));
+      window_chunk.setProperty("origin", 1, new VarValue(y));
    }
 
    public void moveToFront(int idx)
@@ -397,6 +413,17 @@ class DisplayPlacerModel
    public int getSize()
    {
       return windows.size();
+   }
+
+   public Dimension getDesktopSize()
+   {
+      return mDesktopSize;
+   }
+
+   public void setDesktopSize(Dimension desktopSize)
+   {
+      mDesktopSize = desktopSize;
+      fireDesktopSizeChanged();
    }
 
    public void configChunkAdded(ConfigEvent evt)
@@ -455,4 +482,9 @@ class DisplayPlacerModel
     * The list of windows in the active db.
     */
    private List windows;
+
+   /**
+    * The size of the desktop in this model.
+    */
+   private Dimension mDesktopSize;
 }
