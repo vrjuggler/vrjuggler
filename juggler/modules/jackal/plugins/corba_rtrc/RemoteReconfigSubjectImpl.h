@@ -34,6 +34,9 @@
 #define _JCCL_RTRC_INTERFACE_SUBJECT_IMPL_H_
 
 #include <jccl/jcclConfig.h>
+#include <list>
+#include <sstream>
+
 #include <jccl/Net/JackalControl.h>
 #include <jccl/Config/ConfigChunkDB.h>
 #include <jccl/Config/ChunkDescDB.h>
@@ -50,9 +53,6 @@
 
 #include <jccl/RTRC/ConfigManager.h>
 
-#include <list>
-#include <sstream>
-
 namespace jccl 
 {
 
@@ -62,7 +62,6 @@ namespace jccl
  *
  *  @date July 31, 2002
  */
-
 class JCCL_CLASS_API RTRCInterfaceSubjectImpl : public POA_jccl::RTRCInterfaceSubject,
                                                 public tweek::SubjectImpl
 {
@@ -94,10 +93,22 @@ public:
     */
    virtual char* getChunks();
 
+   /**
+    * This overriding method is needed so that the correct type is returned
+    * when the _this() method is invoked.  Without this method, an object of
+    * type tweek::Subject_ptr would be returned.
+    *
+    * XXX: It may be possible to remove this requirement in the future.
+    */
+   jccl::RTRCInterfaceSubject_ptr _this()
+   {
+      return POA_jccl::RTRCInterfaceSubject::_this();
+   }
+
 //private:
 
 };
 
-}; // namespace jccl
+} // namespace jccl
 
 #endif
