@@ -33,7 +33,9 @@
 
    <!-- Clean up -->
    <target name="clean">
-      <delete dir="VjConfig" />
+      <delete>
+         <fileset dir="VjConfig" includes="**/*.class" />
+      </delete>
       <delete dir="ConfigUpdater" />
       <delete file="ConfigUpdater.jar" />
    </target>
