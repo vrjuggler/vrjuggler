@@ -60,16 +60,16 @@ void drawbox( GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
 //
 // This application simply renders a box on the wand
 //----------------------------------------------------
-class wandApp : public vrj::GlApp
+class sonixApp : public vrj::GlApp
 {
 public:
    // Constructor.
-   wandApp(vrj::Kernel* kern)
+   sonixApp(vrj::Kernel* kern)
       : vrj::GlApp(kern)         // Initialize base class
    {;}
 
    // Destructor.
-   virtual ~wandApp (void) {
+   virtual ~sonixApp (void) {
       /* Do nothing. */ ;
    }
 
@@ -133,11 +133,7 @@ public:
    // Function called after tracker update but before start of drawing<BR><BR>
    // Called once before every frame.  Do calculations and state modifications
    // here.
-   virtual void preFrame()
-   {
-      // Put your pre frame computations here.
-
-   }
+   virtual void preFrame();
 
    virtual void bufferPreDraw();
 
