@@ -52,7 +52,7 @@ ChunkDescDB::ChunkDescDB (): descs() {
 
 
 ChunkDescDB::~ChunkDescDB() {
-    //descs.clear ();
+    ;
 }
 
 
@@ -69,12 +69,13 @@ bool ChunkDescDB::insert (ChunkDescPtr d) {
     for (unsigned int i = 0; i < descs.size(); i++)
         if (!vjstrcasecmp (descs[i]->token, d->token)) {
             if (*descs[i] != *d) {
-                vprDEBUG (vprDBG_ALL,vprDBG_CRITICAL_LVL) <<  clrOutNORM(clrRED, "ERROR:") << " redefinition of ChunkDesc ("
-                                     << d->name.c_str() << ") not allowed:\n"
-                                     << "  Original Desc: \n" << *descs[i]
-                                     << "\n  New Desc: \n" << *d
-                                     << "\n (multiple definitions must be identical)\n"
-                                     << vprDEBUG_FLUSH;
+                vprDEBUG (vprDBG_ALL,vprDBG_CRITICAL_LVL) 
+                    <<  clrOutNORM(clrRED, "ERROR:") 
+                    << " redefinition of ChunkDesc ("
+                    << d->name.c_str() << ") not allowed:\n  Original Desc: \n"
+                    << *descs[i] << "\n  New Desc: \n" << *d
+                    << "\n (multiple definitions must be identical)\n"
+                    << vprDEBUG_FLUSH;
                 vprASSERT (false);
                 return false;
             }
@@ -126,36 +127,14 @@ int ChunkDescDB::size () const {
 
 
 std::ostream& operator << (std::ostream& out, const ChunkDescDB& self) {
-    for (unsigned int i = 0; i < self.descs.size(); i++)
-        out << "Chunk " << *(self.descs[i]) << std::endl;
-    out << "End" << std::endl;
+    ConfigIO::instance()->writeChunkDescDB (out, self);
     return out;
 }
 
 
 
 std::istream& operator >> (std::istream& in, ChunkDescDB& self) {
-    const int buflen = 512;
-    char str[buflen];
-    ChunkDescPtr desc;
-
-    for (;;) {
-        if (readString (in, str, buflen) == 0)
-            break; /* eof */
-        else if (!strcasecmp (str, chunk_TOKEN)) {
-            desc.reset(new ChunkDesc());
-            in >> *desc;
-            self.insert(desc);
-        }
-        else if (!strcasecmp (str, end_TOKEN))
-            break;
-        else {
-            vprDEBUG(vprDBG_ERROR,1) << "Unexpected symbol parsing ChunkDescDB: '"
-                       << str <<"'"<< std::endl << vprDEBUG_FLUSH;
-        }
-    }
-    vprDEBUG(jcclDBG_CONFIG,3) << "ChunkDescDB::>> : Finished - " << self.descs.size()
-               << " descriptions read." << std::endl << vprDEBUG_FLUSH;
+    ConfigIO::instance()->readChunkDescDB (in, self);
     return in;
 }
 
@@ -170,15 +149,24 @@ bool ChunkDescDB::load (const std::string& filename, const std::string& parentfi
 
 
 
-bool ChunkDescDB::save (const char *fname) {
-    std::ofstream out(fname);
-    if (!out) {
-        vprDEBUG(vprDBG_ERROR,0) << "ChunkDescDB::save(): Unable to open file '"
-                   << fname << "'" << std::endl << vprDEBUG_FLUSH;
-        return false;
+bool ChunkDescDB::save (const char *file_name) {
+
+    vprDEBUG(jcclDBG_CONFIG,3) 
+        << "ChunkDescDB::save(): saving file " << file_name 
+        << " -- " << vprDEBUG_FLUSH;    
+    bool retval = ConfigIO::instance()->writeChunkDescDB (file_name, *this);
+    if (retval) {
+        vprDEBUG(jcclDBG_CONFIG,3)
+            << " finished.\n" << vprDEBUG_FLUSH;
     }
-    out << *this;
-    return true;
+    else {
+        vprDEBUG(vprDBG_ERROR,1)
+            << clrOutNORM(clrRED, "ERROR:") << " ChunkDescDB::save() - "
+            << "Unable to open file '"
+            << file_name << "'\n" << vprDEBUG_FLUSH;
+    }
+    return retval;
 }
 
-};
+
+}; // namespace jccl

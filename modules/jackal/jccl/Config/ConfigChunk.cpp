@@ -39,6 +39,7 @@
 #include <jccl/Config/ChunkFactory.h>
 #include <jccl/Config/ChunkDesc.h>
 #include <jccl/Config/ConfigTokens.h>
+#include <jccl/Config/ConfigIO.h>
 
 #include <stdlib.h>
 #include <ctype.h>
@@ -339,97 +340,8 @@ std::vector<VarValue*> ConfigChunk::getAllProperties(const std::string& prop_nam
 std::ostream& operator << (std::ostream& out, const ConfigChunk& self) {
     self.assertValid();
 
-    // outputting an uninitialized chunk would be a mistake...
-    if (self.desc.get() != 0) {
-        out << self.desc->token.c_str() << std::endl;
-        for (unsigned int i =0; i < self.props.size(); i++) {
-            out << "  " << *(self.props[i]) << std::endl;
-        }
-        out << "  End" << std::endl;
-    }
+    ConfigIO::instance()->writeConfigChunk (out, self);
     return out;
-}
-
-
-
-std::istream& operator >> (std::istream& in, ConfigChunk& self) {
-    self.assertValid();
-
-    /* can't really use property >> because we don't know what
-     * property to assign into.
-     */
-    const int buflen = 1024;
-    char buf[buflen];
-    Property *p;
-    int i;
-    bool quoted;
-
-    // if this chunk hasn't been assigned a description yet, something's wrong
-    if (self.desc.get() == 0)
-        return in;
-
-    while (readString (in, buf, buflen, NULL)) {
-
-        if (!strcasecmp (buf, end_TOKEN))
-            break;
-
-        // We have a string token; assumably a property name.
-        if (!(p = self.getPropertyPtrFromToken (buf))) {
-            vprDEBUG(vprDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " Property '" << buf << "' is not found in"
-                                   << " Chunk " << self.desc->name.c_str() << std::endl << vprDEBUG_FLUSH;
-            continue;
-        }
-
-        // We're reading a line of input for a valid Property.
-        readString (in, buf, buflen, &quoted);
-
-        if (!quoted && (buf[0] == '{')) {
-            // We're reading values until we get a close bracket.
-            i = 0;
-            for (;;) {
-                readString (in, buf, buflen, &quoted);
-                if (!quoted && (buf[0] == '}'))
-                    break;
-
-                // this works because the chunk >> expects the typename to have
-                // already been read (which we did when looking for '}')
-                if (p->getType() == T_EMBEDDEDCHUNK) {
-                    ConfigChunkPtr ch = ChunkFactory::instance()->createChunk (p->embeddesc);
-                    in >> *ch;
-                    p->setValue (ch, i++);
-                }
-                //       else if (tok.type == TK_Unit) {
-                //           p->applyUnits (tok.unitval);
-                //       }
-                else {
-                    if (!p->tryAssign (i++, buf))
-                        vprDEBUG(vprDBG_ERROR,2) << clrOutNORM(clrRED, "ERROR:") << " Assigning to property "
-                                               << p->getName().c_str() << std::endl << vprDEBUG_FLUSH;
-                }
-            }
-
-            if (p->hasFixedNumberOfValues() && (p->num != i))
-                vprDEBUG(vprDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") << " Property " << p->getName().c_str() << " should have "
-                                       << p->num << " values; " << i << " found" << std::endl << vprDEBUG_FLUSH;
-        }
-        else {
-            // we're just doing one value.
-            if (!p->tryAssign (0, buf))
-                vprDEBUG(vprDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") << " Assigning to property "
-                                       << p->getName().c_str() << std::endl << vprDEBUG_FLUSH;
-            //        self.getVJCFGToken (in,tok);
-            //        if (tok.type == TK_Unit) {
-            //       p->applyUnits (tok.unitval);
-            //       self.getVJCFGToken (in, tok);
-            //        }
-            if (p->num > 1) {
-                vprDEBUG(vprDBG_ERROR,3) << clrOutNORM(clrRED, "ERROR:") << " Property " << p->getName().c_str()
-                                       << " expects " << p->num << " values." << std::endl << vprDEBUG_FLUSH;
-            }
-        }
-    }
-
-    return in;
 }
 
 
@@ -446,10 +358,10 @@ int ConfigChunk::getNum (const std::string& property_token) const {
 
 
 
-    //: Returns token of this ConfigChunk's ChunkDesc.
-    const std::string& ConfigChunk::getDescToken () const {
-        return desc->getToken();
-    }
+//: Returns token of this ConfigChunk's ChunkDesc.
+const std::string& ConfigChunk::getDescToken () const {
+    return desc->getToken();
+}
 
 
 

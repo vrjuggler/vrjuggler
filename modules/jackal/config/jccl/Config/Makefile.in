@@ -56,7 +56,6 @@ SRCS		= ChunkDesc.cpp			\
                   ParseUtil.cpp			\
                   Property.cpp			\
                   PropertyDesc.cpp		\
-                  StandardConfigIOHandler.cpp	\
                   VarValue.cpp			\
                   XMLConfigIOHandler.cpp
 

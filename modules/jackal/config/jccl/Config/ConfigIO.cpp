@@ -34,20 +34,17 @@
 #include <jccl/jcclConfig.h>
 
 #include <jccl/Config/ConfigIO.h>
-#include <jccl/Config/StandardConfigIOHandler.h>
 #include <jccl/Config/XMLConfigIOHandler.h>
 #include <jccl/Config/ParseUtil.h>
 #include <vpr/Util/Assert.h>
+#include <vpr/Util/Debug.h>
 
 namespace jccl {
    
 
-    /*static*/ const int ConfigIO::XML_HANDLER (1);
-    /*static*/ const int ConfigIO::STANDARD_HANDLER (2);
-    /*static*/ const int ConfigIO::DEFAULT_HANDLER (1);
 
 ConfigIO::ConfigIO () {
-    standard_config_handler = 0;
+    ;
 }
 
 
@@ -58,28 +55,15 @@ ConfigIO::~ConfigIO () {
 }
 
 
-ConfigIOHandler* ConfigIO::getHandler (int handler_type) {
+ConfigIOHandler* ConfigIO::getHandler () {
 
-    vprASSERT ((handler_type == XML_HANDLER) || (handler_type == STANDARD_HANDLER));
-
-    if (handler_type == XML_HANDLER) {
-        if (xml_config_handlers.empty())
-            return new XMLConfigIOHandler();
-        else {
-            ConfigIOHandler* retval = xml_config_handlers[xml_config_handlers.size()-1];
-            xml_config_handlers.pop_back();
-            return retval;
-        }
+    if (xml_config_handlers.empty())
+        return new XMLConfigIOHandler();
+    else {
+        ConfigIOHandler* retval = xml_config_handlers[xml_config_handlers.size()-1];
+        xml_config_handlers.pop_back();
+        return retval;
     }
-    else if (handler_type == STANDARD_HANDLER) {
-        // all methods are reentrant, so we only ever need one instance
-        // create on demand, cuz eventually we won't need it at all.
-        if (!standard_config_handler)
-            standard_config_handler = new StandardConfigIOHandler();
-        return standard_config_handler;
-    }
-    else
-        return 0;
 }
 
 
@@ -88,7 +72,6 @@ void ConfigIO::releaseHandler (ConfigIOHandler* handler) {
     if (h) {
         xml_config_handlers.push_back (h);
     }
-    // nothing to do for standard io handler.
 }
 
 
@@ -96,8 +79,7 @@ void ConfigIO::releaseHandler (ConfigIOHandler* handler) {
 
 
 // file name should already be mangled.
-bool ConfigIO::readConfigChunkDB (std::string file_name, ConfigChunkDB& db,
-                                    int handler_type /*= 0*/) {
+bool ConfigIO::readConfigChunkDB (std::string file_name, ConfigChunkDB& db) {
 
     //std::string file_name = demangleFileName (_file_name);
     std::ifstream in (file_name.c_str());
@@ -107,19 +89,21 @@ bool ConfigIO::readConfigChunkDB (std::string file_name, ConfigChunkDB& db,
             return false;
     }
 
-    ConfigIOHandler* h;
-    if (handler_type == 0) {
-        char buf[50];
-        readString (in, buf, 50, false);
-        if (buf[0] == '<' )
-            h = getHandler (XML_HANDLER);
-        else
-            h = getHandler (STANDARD_HANDLER);
-    }
-    else 
-        h = getHandler (handler_type);
-    if (!h)
+    // check if it's the obsolete syntax or not
+    char buf[50];
+    readString (in, buf, 50, false);
+    if (buf[0] != '<' ) {
+        vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) 
+            << clrOutNORM(clrRED, "ERROR:") 
+            << "File '" << file_name << "' uses obsolete (non-xml) format.\n"
+            << vprDEBUG_FLUSH;
         return false;
+    }
+
+
+    ConfigIOHandler* h = getHandler();
+    vprASSERT (h && "Failed to get handler.");
+
     db.setFileName(file_name);
     bool retval = h->readConfigChunkDB (file_name, db);
     releaseHandler (h);
@@ -128,39 +112,49 @@ bool ConfigIO::readConfigChunkDB (std::string file_name, ConfigChunkDB& db,
 
 
 //! can't guess which handler to use!!!!!!!!!!
-bool ConfigIO::readConfigChunkDB (std::istream& input, ConfigChunkDB& db, int handler_type /*= 0*/) {
-    ConfigIOHandler* h;
-    if (handler_type == 0)
-        h = getHandler (DEFAULT_HANDLER);
-    else
-        h = getHandler (handler_type);
-    if (!h)
-        return false;
+bool ConfigIO::readConfigChunkDB (std::istream& input, ConfigChunkDB& db) {
+    ConfigIOHandler* h = getHandler();
+    vprASSERT (h && "Failed to get handler.");
+
     bool retval = h->readConfigChunkDB (input, db);
     releaseHandler (h);
     return retval;
 }
 
 
-bool ConfigIO::writeConfigChunkDB (const char* file_name, const ConfigChunkDB& db, int handler_type /*= 0*/) {
-    std::ofstream out (file_name);
+bool ConfigIO::writeConfigChunkDB (const std::string& file_name, const ConfigChunkDB& db) {
+    std::ofstream out (file_name.c_str());
     if (!out)
         return false;
-    return writeConfigChunkDB (out, db, handler_type);
+    return writeConfigChunkDB (out, db);
 }
 
 
-bool ConfigIO::writeConfigChunkDB (std::ostream& output, const ConfigChunkDB& db, int handler_type /*= 0*/) {
-    ConfigIOHandler* h;
-    if (handler_type == 0)
-        h = getHandler (DEFAULT_HANDLER);
-    else
-        h = getHandler (handler_type);
-    if (!h) {
-        std::cout << "Couldn't find the output handler for '" << handler_type << "'\n" << std::flush;
-        return false;
-    }
+bool ConfigIO::writeConfigChunkDB (std::ostream& output, const ConfigChunkDB& db) {
+    ConfigIOHandler* h = getHandler();
+    vprASSERT (h && "Failed to get handler.");
+
     bool retval = h->writeConfigChunkDB (output, db);
+    releaseHandler (h);
+    return retval;
+}
+
+
+bool ConfigIO::writeConfigChunk (std::ostream& output, const ConfigChunk& ch) {
+    ConfigIOHandler* h = getHandler();
+    vprASSERT (h && "Failed to get handler.");
+
+    bool retval = h->writeConfigChunk (output, ch);
+    releaseHandler (h);
+    return retval;
+}
+
+
+bool ConfigIO::writeProperty (std::ostream& output, const Property& prop) {
+    ConfigIOHandler* h = getHandler();
+    vprASSERT (h && "Failed to get handler.");
+
+    bool retval = h->writeProperty (output, prop);
     releaseHandler (h);
     return retval;
 }
@@ -168,8 +162,7 @@ bool ConfigIO::writeConfigChunkDB (std::ostream& output, const ConfigChunkDB& db
 
 //--------------------- ChunkDescDB Methods --------------------
 
-bool ConfigIO::readChunkDescDB (std::string file_name, ChunkDescDB& db,
-                                    int handler_type /*= 0*/) {
+bool ConfigIO::readChunkDescDB (std::string file_name, ChunkDescDB& db) {
 
     //std::string file_name = demangleFileName (_file_name);
     std::ifstream in (file_name.c_str());
@@ -179,57 +172,70 @@ bool ConfigIO::readChunkDescDB (std::string file_name, ChunkDescDB& db,
             return false;
     }
 
-    ConfigIOHandler* h;
-    if (handler_type == 0) {
-        char buf[50];
-        readString (in, buf, 50, false);
-        if (buf[0] == '<' ) 
-            h = getHandler (XML_HANDLER);
-        else
-            h = getHandler (STANDARD_HANDLER);
-    }
-    else 
-        h = getHandler (handler_type);
-    if (!h)
+    // check if it's the obsolete syntax or not
+    char buf[50];
+    readString (in, buf, 50, false);
+    if (buf[0] != '<' ) {
+        vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) 
+            << clrOutNORM(clrRED, "ERROR:") 
+            << "File '" << file_name << "' uses obsolete (non-xml) format.\n"
+            << vprDEBUG_FLUSH;
         return false;
+    }
+
+    ConfigIOHandler* h = getHandler();
+    vprASSERT (h && "Failed to get handler.");
+
     bool retval = h->readChunkDescDB (file_name, db);
     releaseHandler (h);
     return retval;
 }
 
 
-//! can't guess which handler to use!!!!!!!!!!
-bool ConfigIO::readChunkDescDB (std::istream& input, ChunkDescDB& db, int handler_type /*= 0*/) {
-    ConfigIOHandler* h;
-    if (handler_type == 0)
-        h = getHandler (DEFAULT_HANDLER);
-    else
-        h = getHandler (handler_type);
-    if (!h)
-        return false;
+
+bool ConfigIO::readChunkDescDB (std::istream& input, ChunkDescDB& db) {
+    ConfigIOHandler* h = getHandler();
+    vprASSERT (h && "Failed to get handler.");
+
     bool retval = h->readChunkDescDB (input, db);
     releaseHandler (h);
     return retval;
 }
 
 
-bool ConfigIO::writeChunkDescDB (const char* file_name, const ChunkDescDB& db, int handler_type /*= 0*/) {
+bool ConfigIO::writeChunkDescDB (const char* file_name, const ChunkDescDB& db) {
     std::ofstream out (file_name);
     if (!out)
         return false;
-    return writeChunkDescDB (out, db, handler_type);
+    return writeChunkDescDB (out, db);
 }
 
 
-bool ConfigIO::writeChunkDescDB (std::ostream& output, const ChunkDescDB& db, int handler_type /*= 0*/) {
-    ConfigIOHandler* h;
-    if (handler_type == 0)
-        h = getHandler (DEFAULT_HANDLER);
-    else
-        h = getHandler (handler_type);
-    if (!h)
-        return false;
+bool ConfigIO::writeChunkDescDB (std::ostream& output, const ChunkDescDB& db) {
+    ConfigIOHandler* h = getHandler();
+    vprASSERT (h && "Failed to get handler.");
+
     bool retval = h->writeChunkDescDB (output, db);
+    releaseHandler (h);
+    return retval;
+}
+
+
+bool ConfigIO::writeChunkDesc (std::ostream& output, const ChunkDesc& ch) {
+    ConfigIOHandler* h = getHandler();
+    vprASSERT (h && "Failed to get handler.");
+
+    bool retval = h->writeChunkDesc (output, ch);
+    releaseHandler (h);
+    return retval;
+}
+
+
+bool ConfigIO::writePropertyDesc (std::ostream& output, const PropertyDesc& prop) {
+    ConfigIOHandler* h = getHandler();
+    vprASSERT (h && "Failed to get handler.");
+
+    bool retval = h->writePropertyDesc (output, prop);
     releaseHandler (h);
     return retval;
 }

@@ -44,19 +44,13 @@ class ConfigChunkDB;
 class ConfigChunk;
 class ChunkDescDB;
 class ChunkDesc;
+class Property;
+class PropertyDesc;
 
 //: Parent interface for XMLConfigIOHandler and StandardConfigIOHandler
 class ConfigIOHandler {
 
 public:
-
-//     ConfigIOHandler () { 
-//         ;
-//     }
-
-//     virtual ~ConfigIOHandler () {
-//         ;
-//     }
 
     // ConfigChunkDB Methods
 
@@ -66,7 +60,10 @@ public:
 
     virtual bool writeConfigChunkDB (std::ostream& output, const ConfigChunkDB& db) = 0;
 
-      virtual bool writeConfigChunk (std::ostream& output, const ConfigChunk& ch, const std::string& pad = "") = 0;
+    virtual bool writeConfigChunk (std::ostream& output, const ConfigChunk& ch, const std::string& pad = "") = 0;
+
+    virtual bool writeProperty (std::ostream& out, const Property& p, const std::string& pad = "") = 0;
+
 
     // ChunkDescDB Methods
 
@@ -78,6 +75,7 @@ public:
 
     virtual bool writeChunkDesc (std::ostream& output, const ChunkDesc& ch, const std::string& pad = "") = 0;
 
+    virtual bool writePropertyDesc (std::ostream& out, const PropertyDesc& p, const std::string& pad = "") = 0;
 
 };
 

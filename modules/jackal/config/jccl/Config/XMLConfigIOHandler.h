@@ -81,7 +81,9 @@ public:
 
 private:
 
-    bool writeProperty (XMLFormatter* formatter, const Property& p, const std::string& pad);
+    bool writeProperty (std::ostream& out, const Property& p, const std::string& pad = "");
+
+    bool writeProperty (XMLFormatter* formatter, const Property& p, const std::string& pad = "");
 
     bool parseTextValues (Property* p, int& startval, char* text);
 
@@ -98,6 +100,7 @@ public:
 
     virtual bool writeChunkDesc (std::ostream& output, const ChunkDesc& ch, const std::string& pad = "");
 
+    virtual bool writePropertyDesc (std::ostream& out, const PropertyDesc& p, const std::string& pad = "");
 
     bool buildChunkDescDB (ChunkDescDB& db, const DOM_Node& doc);
     ChunkDescPtr buildChunkDesc (const DOM_Node& doc);

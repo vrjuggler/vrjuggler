@@ -181,12 +181,6 @@ public:
     friend std::ostream& operator << (std::ostream& out, const PropertyDesc& self);
 
 
-
-    //: Reads a PropertyDesc from the named istream
-    //!NOTE: format is the same as that written out by <<
-    friend std::istream& operator >> (std::istream& in, PropertyDesc& self);
-
-
     PropertyDesc& operator= (const PropertyDesc& pd);
 
     //: Equality Operator
