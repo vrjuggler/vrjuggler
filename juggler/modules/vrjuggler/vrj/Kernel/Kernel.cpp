@@ -142,7 +142,7 @@ void vjKernel::checkForReconfig()
 //  application first then restart all API specific Managers.
 //! ARGS: _app - If NULL, stops current application
 //! NOTE: This can only be called from the kernel thread
-// app = NULL ==> stop dra manager and null out app
+// app = NULL ==> stop draw manager and null out app
 // app != NULL ==>
 //             Get the draw manager needed
 //             Start it

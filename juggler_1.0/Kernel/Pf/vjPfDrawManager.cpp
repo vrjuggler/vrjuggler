@@ -105,10 +105,27 @@ void vjPfDrawManager::sync()
 //! POST: Calls pfFrame()
 void vjPfDrawManager::draw()
 {
+   vjDEBUG(vjDBG_ALL,2) << "vjPfDrawManager::calling appChanFuncs\n" << vjDEBUG_FLUSH;
+   callAppChanFuncs();
+
    vjDEBUG(vjDBG_ALL,2) << "vjPfDrawManager::draw\n" << vjDEBUG_FLUSH;
 
    pfFrame();
 }
+
+//:
+// XXX: Hack for now
+void vjPfDrawManager::callAppChanFuncs()
+{
+   for(int dispIndex=0;dispIndex<disps.size();dispIndex++)
+   {
+      if (disps[dispIndex].chans[pfDisp::LEFT] != NULL)
+         app->appChanFunc(disps[dispIndex].chans[pfDisp::LEFT]);
+      if (disps[dispIndex].chans[pfDisp::RIGHT] != NULL)
+         app->appChanFunc(disps[dispIndex].chans[pfDisp::RIGHT]);
+   }
+}
+
 
 //: Set the app the draw whould interact with.
 //! PRE: none
@@ -121,6 +138,7 @@ void vjPfDrawManager::initAPI()
 {
    pfInit();
 
+   app->preForkInit();
    initDrawing();
 }
 
@@ -158,15 +176,9 @@ void vjPfDrawManager::initDrawing()
       pipes[pipeNum]->setScreen(pipeNum);
    }
 
-   // pipeWindow FrameBuffer config
-   int stereo_win_attrs[] = { PFFB_DOUBLEBUFFER, PFFB_RGBA,
-      PFFB_RED_SIZE, 10, PFFB_GREEN_SIZE, 10, PFFB_BLUE_SIZE, 10,
-      PFFB_ALPHA_SIZE, 10, PFFB_DEPTH_SIZE, 16,
-      PFFB_STEREO, None};
-
-   int norm_win_attrs[] = { PFFB_DOUBLEBUFFER, PFFB_RGBA,
-      PFFB_RED_SIZE, 8, PFFB_GREEN_SIZE, 8, PFFB_BLUE_SIZE, 8,
-      PFFB_ALPHA_SIZE, 8, PFFB_DEPTH_SIZE, 24, None};
+   // Get frame vuffer config
+   std::vector<int> stereo_fb_config = getStereoFBConfig();
+   std::vector<int> mono_fb_config = getMonoFBConfig();
 
    //  For each display:
    //	    -Create a pWin for it
@@ -204,12 +216,12 @@ void vjPfDrawManager::initDrawing()
       if (tempPfDisp.disp->inStereo())                            // If we need stereo
       {
          vjDEBUG(vjDBG_DRAW_MGR,1) << "vjPfDrawManager::initDrawing: Configuring stereo window attribs.\n" << vjDEBUG_FLUSH;
-         tempPfDisp.pWin->setFBConfigAttrs(stereo_win_attrs);     // Configure framebuffer for stereo
+         tempPfDisp.pWin->setFBConfigAttrs(&(stereo_fb_config[0]));     // Configure framebuffer for stereo
       }
       else
       {
          vjDEBUG(vjDBG_DRAW_MGR,1) << "vjPfDrawManager::initDrawing: Configuring mono window attribs.\n" << vjDEBUG_FLUSH;
-         tempPfDisp.pWin->setFBConfigAttrs(norm_win_attrs);       // Configure a "norm" window
+         tempPfDisp.pWin->setFBConfigAttrs(&(mono_fb_config[0]));       // Configure a "norm" window
       }
 
       // -- Set pwin config info -- //
@@ -267,7 +279,10 @@ void vjPfDrawManager::initDrawing()
 
    masterChan->setShare(PFCHAN_NEARFAR | PFCHAN_EARTHSKY |
                         PFCHAN_STRESS | PFCHAN_LOD | PFCHAN_SWAPBUFFERS |
-                        PFCHAN_APPFUNC | PFCHAN_CULLFUNC );
+                        PFCHAN_APPFUNC | PFCHAN_CULLFUNC | PFCHAN_STATS_DRAWMODE );
+   //masterChan->setShare(PFCHAN_NEARFAR | PFCHAN_EARTHSKY |
+   //                     PFCHAN_STRESS | PFCHAN_SWAPBUFFERS |
+   //                     PFCHAN_APPFUNC | PFCHAN_CULLFUNC );
 
    // ----- SETUP CHANNEL GROUP ---- //
    for (int dispIndex=0; dispIndex<disps.size(); dispIndex++)
@@ -302,7 +317,6 @@ void vjPfDrawManager::initDrawing()
    }
    vjASSERT(sceneRoot != NULL);
 
-
    //pfFrame();
 
    // Dump the state
@@ -310,6 +324,48 @@ void vjPfDrawManager::initDrawing()
 
    vjDEBUG_END(vjDBG_DRAW_MGR,1) << "vjPfDrawManager::initDrawing: Exiting." << endl << vjDEBUG_FLUSH;
 }
+
+
+//: Return the needed mono frame buffer config
+std::vector<int> vjPfDrawManager::getMonoFBConfig()
+{
+   std::vector<int> mono_fb;
+   mono_fb.push_back(PFFB_DOUBLEBUFFER);
+   mono_fb.push_back(PFFB_RGBA);
+   mono_fb.push_back(PFFB_RED_SIZE); mono_fb.push_back(8);
+   mono_fb.push_back(PFFB_GREEN_SIZE); mono_fb.push_back(8);
+   mono_fb.push_back(PFFB_BLUE_SIZE); mono_fb.push_back(8);
+   mono_fb.push_back(PFFB_ALPHA_SIZE); mono_fb.push_back(8);
+   mono_fb.push_back(PFFB_DEPTH_SIZE); mono_fb.push_back(24);
+
+   // Add application requests
+   std::vector<int> app_fb = app->getFrameBufferAttrs();
+   mono_fb.insert(mono_fb.end(), app_fb.begin(), app_fb.end());
+
+   mono_fb.push_back(None);
+}
+
+//: Return the needed stereo frame buffer config
+std::vector<int> vjPfDrawManager::getStereoFBConfig()
+{
+   std::vector<int> stereo_fb;
+   stereo_fb.push_back(PFFB_DOUBLEBUFFER);
+   stereo_fb.push_back(PFFB_RGBA);
+   stereo_fb.push_back(PFFB_STEREO);
+   stereo_fb.push_back(PFFB_RED_SIZE); stereo_fb.push_back(8);
+   stereo_fb.push_back(PFFB_GREEN_SIZE); stereo_fb.push_back(8);
+   stereo_fb.push_back(PFFB_BLUE_SIZE); stereo_fb.push_back(8);
+   stereo_fb.push_back(PFFB_ALPHA_SIZE); stereo_fb.push_back(8);
+   stereo_fb.push_back(PFFB_DEPTH_SIZE); stereo_fb.push_back(24);
+
+   // Add application requests
+   std::vector<int> app_fb = app->getFrameBufferAttrs();
+   stereo_fb.insert(stereo_fb.end(), app_fb.begin(), app_fb.end());
+
+   stereo_fb.push_back(None);
+}
+
+
 
 //: Callback when display is added to display manager
 void vjPfDrawManager::addDisplay(vjDisplay* disp)
@@ -482,7 +538,7 @@ void vjPFconfigPWin(pfPipeWindow* pWin)
 
    // Ouput the visual id
    int fb_id = pWin->getFBConfigId();
-   vjDEBUG(vjDBG_DRAW_MGR,1) << "vjPFConfigPWin: framebuffer id:" << hex << fb_id << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,1) << "vjPFConfigPWin: framebuffer id: x" << hex << fb_id << dec << endl << vjDEBUG_FLUSH;
 }
 
 
@@ -518,11 +574,11 @@ void vjPfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye,
       glDrawBuffer(GL_BACK);
    }
 
-      // -- Configure buffers for correct eye/stereo etc -- //
+   // -- Configure buffers for correct eye/stereo etc -- //
    vjPfDrawManager::instance()->app->drawChan(chan, chandata);     // Draw the channel
                                           // Note: This function calls pfDraw and clears
 
-      // Should we draw the simulator
+   // How should we draw the simulator
    /*
    if(cur_pf_disp->disp->isSimulator())
    {
