@@ -88,6 +88,9 @@ public class NodeSettingsStep
    {
       List classes = new ArrayList();
       classes.add(NodeSettingsPanel.class.getName());
+      classes.add(NodeSettingsPanel.class.getName()+"$1");
+      classes.add(NodeSettingsPanel.class.getName()+"$2");
+      classes.add(NodeSettingsPanel.class.getName()+"$3");
       return classes;
    }
 
