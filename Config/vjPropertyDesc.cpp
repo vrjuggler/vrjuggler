@@ -112,7 +112,7 @@ istream& operator >> (istream& in, vjPropertyDesc& self) {
     readString (in,str,512);
     if (strcasecmp (str, "{"))
       vjDEBUG(1) << "ERROR: expected '{'" << endl << vjDEBUG_FLUSH;
-    //int j, i = 0;
+
     vjEnumEntry *e;
     readString (in, str, 512);
     while (strcasecmp (str, "}") && !in.eof()) {
