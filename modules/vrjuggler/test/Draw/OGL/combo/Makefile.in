@@ -45,7 +45,7 @@ SRCS=		combo.cpp	\
 		cubesApp.cpp	\
 		torusApp.cpp	\
 		wandApp.cpp	\
-		PerfProbe.cpp
+		PerfProbe.cpp	\
 		Text.cpp
 
 EXTRA_INCLUDES=		-I$(srcdir)/../cubes -I$(srcdir)/../torus	\
