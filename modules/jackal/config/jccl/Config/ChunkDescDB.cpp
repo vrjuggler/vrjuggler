@@ -167,24 +167,10 @@ std::istream& operator >> (std::istream& in, ChunkDescDB& self) {
 
 
 bool ChunkDescDB::load (const std::string& filename, const std::string& parentfile) {
-    std::string fname = demangleFileName (filename, parentfile);
-    bool retval = ConfigIO::instance()->readChunkDescDB (fname, *this);
+    //std::string fname = demangleFileName (filename, parentfile);
+    bool retval = ConfigIO::instance()->readChunkDescDB (filename, *this);
 
     return retval;
-
-//      std::ifstream in(fname.c_str());
-
-//      if (!in) {
-//          vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-//              << clrOutNORM(clrYELLOW, "WARNING:") << " ChunkDescDB::load(): Unable to open file\n"
-//              << vprDEBUG_FLUSH;
-//          vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-//              << "'" << fname.c_str() << "'" << clrRESET << std::endl
-//              << vprDEBUG_FLUSH;
-//          return false;
-//      }
-//      in >> *this;
-//      return true;
 }
 
 
