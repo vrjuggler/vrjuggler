@@ -187,6 +187,44 @@ namespace gadget
    }
 
    //+++++++++++++++++++++++++
+   NetDevice* NetConnection::findNetDeviceByLocalId(VJ_NETID_TYPE local_id)
+   {
+      std::list<NetDevice*>::iterator i;
+   
+      // check Receiving Devices
+      for ( i = mReceivingDevices.begin(); i != mReceivingDevices.end(); i++ )
+      {
+         if ( (*i)->getLocalId() == local_id )
+         {
+            return(*i);
+         }
+      }
+   
+            // check Transmitting Devices
+      for ( i = mTransmittingDevices.begin(); i != mTransmittingDevices.end(); i++ )
+      {
+         if ( (*i)->getLocalId() == local_id )
+         {
+            return(*i);
+         }
+      }
+   
+      return NULL;
+   }
+
+   
+   Input* NetConnection::getDevice(const std::string device_name)
+   {  
+      for ( std::list<NetDevice*>::iterator i = mReceivingDevices.begin();
+          i!= mReceivingDevices.end(); i++ )
+      {
+         if ( (*i)->getSourceName() == device_name )
+         {
+            return((*i)->getRealDevice());
+         }
+      }
+      return NULL;
+   }
 
 
 
@@ -266,6 +304,6 @@ namespace gadget
       }
       vprDEBUG_END(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
          << "----------------------------------\n" << vprDEBUG_FLUSH;
-}
+   }
 
 }  // end namespace gadget

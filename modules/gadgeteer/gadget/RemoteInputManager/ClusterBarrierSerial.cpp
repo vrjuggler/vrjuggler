@@ -136,6 +136,8 @@ namespace gadget
    void ClusterBarrierSerial::MasterSend()
    {
       vpr::Uint32 bytes_read;
+      
+      vprASSERT(mActive==true && "Barrier is not active!");
       mSerialPort->write(&SYNC_SIGNAL,1,bytes_read);
    }
    void ClusterBarrierSerial::MasterReceive()
@@ -143,6 +145,8 @@ namespace gadget
       vpr::Uint8 temp;
       vpr::Uint32 bytes_read;
       
+      vprASSERT(mActive==true && "Barrier is not active!");
+
       mSerialPort->read(&temp,1,bytes_read,read_timeout);   // DONT USE, SERIAL ONLY
       /*for (std::vector<vpr::SocketStream*>::iterator i = this->mSyncClients.begin();
                i < this->mSyncClients.end();i++)
@@ -153,12 +157,18 @@ namespace gadget
    }
    void ClusterBarrierSerial::SlaveSend()
    {
+      vprASSERT(mSyncServer!=NULL && "mSyncServer is NULL!");
+      vprASSERT(mActive==true && "Barrier is not active!");
+      
       vpr::Uint32 bytes_read;
       mSerialPort->write(&SYNC_SIGNAL,1,bytes_read);     // DON'T USE, SERIAL ONLY
       // mSyncServer->send(&SYNC_SIGNAL , 1, bytes_read);
    }
    void ClusterBarrierSerial::SlaveReceive()
    {
+      vprASSERT(mSyncServer!=NULL && "mSyncServer is NULL!");
+      vprASSERT(mActive==true && "Barrier is not active!");
+
       vpr::Uint32 bytes_read;
       vpr::Uint8 temp;
       mSerialPort->read(&temp,1,bytes_read,read_timeout);

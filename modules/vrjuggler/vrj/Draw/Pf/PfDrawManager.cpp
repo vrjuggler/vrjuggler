@@ -353,7 +353,11 @@ void PfDrawManager::addDisplay(Display* disp)
    //     - For each viewport
    //        - Create viewport
    //        - Create channels for the viewports
-   vprDEBUG_BEGIN(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "vjPfDrawManager: ---- Opening new Display --------" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_OutputGuard(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL,
+                              std::string("vjPfDrawManager: ---- Opening new Display --------\n"),
+                              std::string("vjPfDrawManager: ---- Display Open (done) --------\n"));
+
+
 
    pfDisplay pf_disp;            // The pfDisplay to use
    pf_disp.disp = disp;
@@ -502,9 +506,6 @@ void PfDrawManager::addDisplay(Display* disp)
 
    // -- Add new pfDisp to disp Vector -- //
    mDisplays.push_back(pf_disp);
-
-
-   vprDEBUG_END(vrjDBG_DRAW_MGR,vprDBG_STATE_LVL) << "---- Display Open (done) --------" << std::endl << vprDEBUG_FLUSH;
 
    // Dump the state
    vprDEBUG(vrjDBG_DRAW_MGR, 1) << "Reconfiged the pfDrawManager.\n" << vprDEBUG_FLUSH;
@@ -892,10 +893,10 @@ void PfDrawManager::updateProjections()
  */
 void PfDrawManager::updatePfProjection(pfChannel* chan, Projection* proj)  //, bool simulator)
 {
-   /*
+   
    vprDEBUG_BEGIN(vrjDBG_DRAW_MGR,vprDBG_HVERB_LVL) << "vjPfDrawManager::updatePfProjection: Entering. viewMat:\n"
                     << proj->mViewMat << std::endl << vprDEBUG_FLUSH;
-                    */
+                    
 
    pfMatrix pfViewMat;
    pfViewMat.set(proj->mViewMat.mData);      // Hmm...
@@ -930,12 +931,12 @@ void PfDrawManager::updatePfProjection(pfChannel* chan, Projection* proj)  //, b
    }
    */
 
-   vprDEBUG(vrjDBG_DRAW_MGR,7) << "Frustum: l:" << proj->mFrustum[Frustum::VJ_LEFT]
+   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_HEX_LVL) << "Frustum: l:" << proj->mFrustum[Frustum::VJ_LEFT]
               << "   r: " << proj->mFrustum[Frustum::VJ_RIGHT]
               << "   b: " << proj->mFrustum[Frustum::VJ_BOTTOM]
               << "   t: " << proj->mFrustum[Frustum::VJ_TOP] << std::endl << vprDEBUG_FLUSH;
 
-   vprDEBUG_END(vrjDBG_DRAW_MGR,6) << "vjPfDrawManager::updatePfProjection: Exiting.\n" << vprDEBUG_FLUSH;
+   vprDEBUG_END(vrjDBG_DRAW_MGR,vprDBG_HVERB_LVL) << "vjPfDrawManager::updatePfProjection: Exiting.\n" << vprDEBUG_FLUSH;
 }
 
 

@@ -412,7 +412,7 @@ void Kernel::updateFrameData()
 //        if(NULL != mApp)
 //           chunks_processed += mApp->configProcessPending(lockIt);
 
-//        vprDEBUG_CONT_END(vprDBG_ALL,vprDBG_CONFIG_LVL) << std::endl
+//        vprDEBUG_CONT_END(vprDBG_ALL,vprDBG_STATE_LVL) << std::endl
 //                                                     << vprDEBUG_FLUSH;
 //     }
 //     return chunks_processed;

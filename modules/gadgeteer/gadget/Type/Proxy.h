@@ -146,7 +146,7 @@ namespace gadget
          Input* input_dev = NULL;
          input_dev = InputManager::instance()->getDevice(mDeviceName);
          
-         if ( input_dev == NULL && InputManager::instance()->getRemoteInputManager()->isActive())
+         if ( input_dev == NULL && InputManager::instance()->getRemoteInputManager()->isConfigured())
          {  
             input_dev = InputManager::instance()->getRemoteInputManager()->getDevice(mDeviceName);
          }
