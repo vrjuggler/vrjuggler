@@ -13,10 +13,10 @@
    </articleinfo>
    <section>
       <title>Introduction</title>
-      <para>This document explains how to build the modules of the Juggler project from the source code.</para>
+      <para>This document explains how to build the modules of the Juggler Project from the source code.</para>
       <section>
          <title>Important Note for IRIX Users</title>
-         <para>There are many Perl scripts used as part of getting, configuring, and building the Juggler tools. The version of Perl that ships with IRIX 6.5 is very old (circa 1997) and does not work with many Perl scripts we have written. SGI provides a much newer version of Perl (5.6.1) with their freeware tools (<ulink url="http://freeware.sgi.com/">http://freeware.sgi.com/</ulink>). It will be necessary to install that version for our scripts to work. This version is typically installed as <filename>/usr/freeware/bin/perl</filename>.</para>
+         <para>There are many Perl scripts used as part of getting, configuring, and building the Juggler Suite of tools. In particular, two scripts required for compiling need Perl 5.005 or newer. The version of Perl that ships with IRIX 6.5 is very old (circa 1997) and does not work with many Perl scripts we have written. SGI provides a much newer version of Perl (5.6.1) with their freeware tools (<ulink url="http://freeware.sgi.com/">http://freeware.sgi.com/</ulink>). It will be necessary to install that version for our scripts to work. This version is typically installed as <filename>/usr/freeware/bin/perl</filename>.</para>
          <para>Once you have a modern Perl installed, you can run various Perl scripts as follows:</para>
          <screen>/usr/freeware/bin/perl &lt;script-name&gt;</screen>
          <para>The above will be required any time a Perl script fails with an error similar to the following:</para>
@@ -27,9 +27,30 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
    <section>
       <title>Getting the Source Code</title>
       <para>This section is for those users who want to get the Juggler source code from the CVS repository on SourceForge. Those users who have downloaded a pre-packaged version of the source can skip ahead to <xref linkend="config.section"/>.</para>
-      <para>Getting the source code takes a few steps. You have to first download or check out Juggler and some external packages such as GMTL, Xerces-C, and possibly NSPR. The steps are listed in the following sections.</para>
+      <para>Getting the source code takes a few steps. You have to first download or check out Juggler and some external packages such as GMTL, CppDOM, Boost, and possibly NSPR. The steps are listed in the following sections. The current list of <emphasis>required</emphasis> software packages is as follows:</para>
+      <itemizedlist>
+         <listitem>
+            <para>GMTL (<ulink url="http://ggt.sourceforge.net/">http://ggt.sf.net/</ulink>): A generic math library that makes use of C++ templates and STL paradigms</para>
+         </listitem>
+         <listitem>
+            <para>CppDOM (<ulink url="http://www.sourceforge.net/projects/xml-cppdom/">http://www.sf.net/projects/xml-cppdom/</ulink>): A lightweight, easy-to-use XML parser written in C++</para>
+         </listitem>
+         <listitem>
+            <para>Boost (<ulink url="http://www.boost.org/">http://www.boost.org/</ulink>): A C++ library providing many powerful tools</para>
+         </listitem>
+      </itemizedlist>
+      <para>The following lists <emphasis>semi-optional</emphasis> packages:</para>
+      <itemizedlist>
+         <listitem>
+            <para>NSPR (<ulink url="http://www.mozilla.org/projects/nspr/">http://www.mozilla.org/projects/nspr/</ulink>): The Netscape Portable Runtime, which can be used by VPR for threading and sockets (required on Win32)</para>
+         </listitem>
+         <listitem>
+            <para>JDOM (<ulink url="http://www.jdom.org/">http://www.jdom.org/</ulink>): An XML parser for Java (required only for VjControl, the GUI for editing VR Juggler configuration files)</para>
+         </listitem>
+      </itemizedlist>
+      <para>The following describes how to get all of the above except JDOM. JDOM must be downloaded separately.</para>
       <section>
-         <title>How to get Juggler and external package dependencies</title>
+         <title>How to get the Juggler Suite and external package dependencies</title>
          <para>You can optionally get Juggler as a source code tarball from the website (www.vrjuggler.org) or you can follow these steps to get the code from our CVS repository.</para>
          <orderedlist>
             <listitem>
@@ -46,7 +67,7 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
          </orderedlist>
       </section>
       <section id="acquire">
-         <title>Aquire third-party packages</title>
+         <title>Acquire third-party packages</title>
          <para><command>cvs-gather</command> is a utility we include in the root directory of Juggler to help you collect third-party (external) source code that Juggler needs in order to build. In short, <command>cvs-gather</command> makes it easier to acquire the packages that Juggler needs.</para>
          <para>To get help on using this tool, use one of the following (the second version gives much more detailed output):</para>
          <screen>./cvs-gather.pl --help
@@ -64,7 +85,7 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
       GMTL.CVSROOT = patrickh@cvs.ggt.sourceforge.net:/cvsroot/ggt                  </programlisting>
          <para>The current <filename>Gatherrc</filename> only allows anonymous CVS access. To override that, we suggest making per-user override files. To use the override file, just add the argument <option>--override=&lt;filename&gt;</option> when running <command>cvs-gather</command>.</para>
          <para>The following shows how to run <command>cvs-gather</command> with your own overrides file (called <filename>my_gatheroverride</filename>):</para>
-         <screen>cvs-gather.pl --cfg=deps.gatherrc --override=my_gatheroverride</screen>
+         <screen>cvs-gather.pl --override=my_gatheroverride</screen>
          <para>If all goes well, you'll get everything you need to compile.</para>
       </section>
    </section>
@@ -76,10 +97,10 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
          <para>Please note: you have downloaded <emphasis>developmental</emphasis> code. It may not be stable, and it may not even compile. Compiling Juggler itself can be a little complicated for anyone who does not have some background in Autoconf, C++, and make.</para>
       </section>
       <section>
-         <title>Compiling the Juggler suite of tools</title>
-         <para>This section explains how to get, configure, and compile all of the Juggler tools at once. Each tool compiles to its own library, and can be installed individually. (Refer to the <filename>README</filename> file in this directory for more information about the specific modules.)</para>
+         <title>Compiling the Juggler Suite of tools</title>
+         <para>This section explains how to get, configure, and compile all of the tools that make up VR Juggler at once. Each tool compiles to its own library and can be installed individually. (Refer to the <filename>README</filename> file in this directory for more information about the specific modules.)</para>
          <section id="config.section">
-            <title>Configuring and compiling all Juggler tools at once</title>
+            <title>Configuring and compiling VR Juggler</title>
             <para>Every time you have newly updated source code acquired from CVS or <command>cvs-gather</command>, it is recommended that you run <command>autogen.sh</command>, found in the top-level <filename>juggler</filename> directory:</para>
             <screen>./autogen.sh</screen>
             <para>Also in this directory, we have a <quote>global</quote> configure script written in Perl rather than Autoconf. It is called <command>configure.pl</command>. To get options for this script, use one of the following (the second being much more detailed):</para>
@@ -99,20 +120,20 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
                   <screen>cd build.linux.posix</screen>
                </listitem>
                <listitem>
-                  <para>Configure all the Juggler modules. This is when you must tell the module configure scripts where all the package dependencies are found.</para>
-                  <screen>../configure.pl --prefix=$HOME/vrjuggler-2.0 --with-xercesroot=/home/users/allenb/Linux/xerces-c-src1_5_1 --with-xerceslib=xerces-c1_5_1</screen>
-                  <para>In this case, the interesting configuration options are the path to the Xerces-C installation directory and the basic name of the Xerces-C library. The basic library name comes from the actual library name. For example, on UNIX-based systems, the Xerces-C 1.5.1 library is called <filename>libxerces-c1_5_1.so</filename>; on Win32, it is <filename>xerces-c_1.lib</filename>. The configure script only needs the <emphasis>unique</emphasis> part of the name: <filename>xerces-c1_5_1</filename> or <filename>xerces-c_1</filename>.</para>
+                  <para>Configure all the modules making up VR Juggler. This is when you must tell the module configure scripts where all the package dependencies are found. For this description, we will use the term <filename>&lt;JUGGLER PATH&gt;</filename> to refer to the base of the Juggler Project source tree and <filename>&lt;JDOMPATH&gt;</filename> to refer to the JDOM installation. Assume that both of these are absolute paths (e.g., <filename>&lt;JUGGLERPATH&gt;</filename> = <filename>/home/user1/Source/juggler</filename>).</para>
+                  <screen>../configure.pl --prefix=$HOME/vrjuggler-2.0 --with-cppdom=&lt;JUGGLERPATH&gt;/external/cppdom --with-jdom="&lt;JDOMPATH&gt;/build/jdom.jar:&lt;JDOMPATH&gt;/lib/xerces.jar"</screen>
                </listitem>
                <listitem>
                   <para>Compile the source tree using GNU make.</para>
                   <screen>gmake build</screen>
                </listitem>
             </orderedlist>
-            <para>Once this completes, you will have a full build of VR Juggler. For those who are not interested in developing VR Juggler or its component modules, it is recommended that you install the software and use the installed version for application development.</para>
+            <para>Once this completes, you will have a full build of VR Juggler. For those who are not interested in developing VR Juggler or its component modules, it is recommended that you install the software and use the installed version for application development. Do this as follows:</para>
+            <screen>gmake install</screen>
          </section>
          <section>
-            <title>Compiling individual tools in the Juggler suite</title>
-            <para>Sometimes you do not want to build everything in the Juggler suite. Here are steps for configuring/building each package individually.</para>
+            <title>Compiling individual tools in the Juggler Suite</title>
+            <para>Sometimes you do not want to build everything in the Juggler Suite. Here are steps for configuring/building each package individually.</para>
             <section>
                <title>VPR (individual)</title>
                <para>VPR can be configured a number of ways. Except when building on Win32, no external packages are required. For Win32, NSPR (<ulink url="http://www.mozilla.org/">www.mozilla.org</ulink>) is required. To build VPR, do the following from the top-level <filename>juggler</filename> directory:</para>
@@ -135,7 +156,7 @@ cd build.vpr</screen></para>
             </section>
             <section>
                <title>Sonix (individual)</title>
-               <para>Sonix requires a third-party software package called GMTL (<ulink url="http://ggt.sf.net/">ggt.sf.net)</ulink>. Sonix wraps other audio subsystems such as OpenAL (<ulink url="http://www.openal.org/">www.openal.org</ulink>) or AudioWorks (<ulink url="http://www.multigen.com/">multigen.com</ulink>). One of these subsystems are required in order to hear sound. Once you have all the necessary source code and third-party package installations, to the following from the top-level <filename>juggler</filename> directory:</para>
+               <para>Sonix requires a third-party software package called GMTL (<ulink url="http://ggt.sf.net/">ggt.sf.net</ulink>). Sonix wraps other audio subsystems such as OpenAL (<ulink url="http://www.openal.org/">www.openal.org</ulink>) or AudioWorks (<ulink url="http://www.multigen.com/">multigen.com</ulink>). One of these subsystems are required in order to hear sound. Once you have all the necessary source code and third-party package installations, to the following from the top-level <filename>juggler</filename> directory:</para>
                <orderedlist>
                   <listitem>
                      <para><screen>mkdir build.sonix
@@ -156,14 +177,14 @@ cd build.sonix</screen></para>
             </section>
             <section>
                <title>JCCL (individual)</title>
-               <para>JCCL requires VPR and a third-party software package called Xerces C++. Xerces can be downloaded from <ulink url="http://xml.apache.org/xerces-c/index.html">the Apache XML site</ulink>. Once Xerces C++ is built and installed, the JCCL configure script can find it. To build JCCL, do the following from the top-level <filename>juggler</filename> directory:</para>
+               <para>JCCL requires VPR, CppDOM (<ulink url="http://www.sourceforge.net/projects/xml-cppdom/">http://www.sf.net/projects/xml-cppdom/</ulink>), and JDOM B7 or newer (<ulink url="http://www.jdom.org/">http://www.jdom.org/</ulink>). To build JCCL, do the following from the top-level <filename>juggler</filename> directory:</para>
                <orderedlist>
                   <listitem>
                      <para><screen>mkdir build.jccl
 cd build.jccl</screen></para>
                   </listitem>
                   <listitem>
-                     <para><screen>../configure.pl --module=JCCL --prefix=$HOME/jccl-inst --with-xercesroot=&lt;Xerces C++ dir&gt;</screen></para>
+                     <para><screen>../configure.pl --module=JCCL --prefix=$HOME/jccl-inst --with-cppdom=&lt;JUGGLERPATH&gt;/external/cppdom --with-jdom="&lt;JDOMPATH&gt;/build/jdom.jar:&lt;JDOMPATH&gt;/lib/xerces.jar"</screen></para>
                   </listitem>
                   <listitem>
                      <para><screen>gmake debug install</screen></para>
@@ -172,18 +193,17 @@ cd build.jccl</screen></para>
                      <para><screen>setenv JCCL_BASE_DIR $HOME/jccl-inst</screen></para>
                   </listitem>
                </orderedlist>
-               <para>Depending on the version of Xerces C++ available, an extra argument may be required to find the actual library. For example, if Xerces C++ 1.6.0 is installed, add <option>--with-xerceslib=xerces-c1_6_0</option> to the command line for running <command>configure</command>. Check the Xerces C++ <filename>lib</filename> directory for the exact name (without <filename>.so</filename> or <filename>.a</filename>).</para>
             </section>
             <section>
                <title>Gadgeteer (individual)</title>
-               <para>Gadgeteer depends on JCCL and on VPR. It also needs the third-party math lib GMTL. Assuming you have all the source code, do the following from the top-level <filename>juggler</filename> directory:</para>
+               <para>Gadgeteer depends on JCCL and on VPR. It also needs the third-party math library GMTL (<ulink url="http://ggt.sourceforge.net/">http://ggt.sf.net/</ulink>). Assuming you have all the source code, do the following from the top-level <filename>juggler</filename> directory:</para>
                <orderedlist>
                   <listitem>
                      <para><screen>mkdir build.gadgeteer
 cd build.gadgeteer</screen></para>
                   </listitem>
                   <listitem>
-                     <para><screen>../configure.pl --module=Gadgeteer --prefix=$HOME/gadgeteer-inst</screen></para>
+                     <para><screen>../configure.pl --module=Gadgeteer --prefix=$HOME/gadgeteer-inst --with-cppdom=&lt;JUGGLERPATH&gt;/external/cppdom --with-jdom="&lt;JDOMPATH&gt;/build/jdom.jar:&lt;JDOM PATH&gt;/lib/xerces.jar"</screen></para>
                   </listitem>
                   <listitem>
                      <para><screen>gmake debug install</screen></para>
