@@ -867,12 +867,9 @@ public class MultiUnitDeviceVertexView
             }
          }
 
-         // Remove the edges first to break the vertex connections.
-         // Then remove the vertices.  The order is important here to ensure
-         // that the source and target of the removed edges still have parents
-         // when the edges are removed.
-         this.graph.getModel().remove(removed_edges.toArray());
-         this.graph.getModel().remove(removed_vertices.toArray());
+         DeviceGraphModel model = (DeviceGraphModel) this.graph.getModel();
+         model.remove(removed_edges.toArray(), removed_vertices.toArray(),
+                      false);
 
          // Remove port as a child of our cell.
          DefaultGraphCell device_cell = (DefaultGraphCell) mView.getCell();
