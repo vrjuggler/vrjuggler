@@ -59,7 +59,7 @@ public class ExtensionFileFilter
 {
    /**
     * Creates a new extension file filter with an empty description and no
-    * supported extensions.
+    * supported extensions that will accept directories.
     */
    public ExtensionFileFilter ()
    {
@@ -68,18 +68,18 @@ public class ExtensionFileFilter
 
    /**
     * Creates a new extension file filter with the given description and no
-    * supported extensions.
+    * supported extensions that will accept directories.
     *
     * @param desc    a short description of this filter
     */
    public ExtensionFileFilter (String desc)
    {
-      this( desc, new ArrayList() );
+      this( desc, true );
    }
 
    /**
     * Creates a new extension file filter with an empty description and an
-    * initial set of supported extensions.
+    * initial set of supported extensions that will accept directories.
     *
     * @param extensions    a list of the extensions without the leading '.'
     */
@@ -90,14 +90,54 @@ public class ExtensionFileFilter
 
    /**
     * Creates a new extension file filter with the given description and an
-    * initial set of supported extensions.
+    * initial set of supported extensions that will accept directories.
     *
     * @param desc          a short description of this filter
     * @param extensions    a list of the extensions without the leading '.'
     */
    public ExtensionFileFilter (String desc, List extensions )
    {
+      this( desc, extensions, true );
+   }
+
+   /**
+    * Creates a new extension file filter with the given description and no
+    * supported extensions that will accept directories.
+    *
+    * @param desc          a short description of this filter
+    * @param acceptDirs    true to accept directories as well, false otherwise
+    */
+   public ExtensionFileFilter (String desc, boolean acceptDirs )
+   {
+      this( desc, new ArrayList(), acceptDirs );
+   }
+
+   /**
+    * Creates a new extension file filter with the given description and no
+    * supported extensions that will accept directories.
+    *
+    * @param extensions    a list of the extensions without the leading '.'
+    * @param acceptDirs    true to accept directories as well, false otherwise
+    */
+   public ExtensionFileFilter ( List extensions, boolean acceptDirs )
+   {
+      this( "", extensions, acceptDirs );
+   }
+
+
+   /**
+    * Creates a new extension file filter with the given description and an
+    * initial set of supported extensions. If acceptDirs is true, this filter
+    * will also accept directories.
+    *
+    * @param desc          a short description of this filter
+    * @param extensions    a list of the extensions without the leading '.'
+    * @param acceptDirs    true to accept directories as well, false otherwise
+    */
+   public ExtensionFileFilter (String desc, List extensions, boolean acceptDirs)
+   {
       description = desc;
+      acceptDirectories = acceptDirs;
       for ( Iterator itr=extensions.iterator(); itr.hasNext(); ) {
          addExtension( (String)itr.next() );
       }
@@ -124,10 +164,13 @@ public class ExtensionFileFilter
    {
       boolean status = false;
 
-      // Always accept directories so that they can be navigated.
+      // Only accept directories if acceptDirectories is set
       if ( f.isDirectory() )
       {
-         status = true;
+         if ( acceptDirectories )
+         {
+            status = true;
+         }
       }
       else
       {
@@ -210,4 +253,9 @@ public class ExtensionFileFilter
     * A list of all the extensions supported by this filter.
     */
    private Vector m_exts      = new Vector();
+
+   /**
+    * Flag to test whether or not directories will be accepted by this filter.
+    */
+   private boolean acceptDirectories;
 }
