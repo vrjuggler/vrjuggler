@@ -127,10 +127,10 @@ public:
 	// This is called once for each display (twice for each stereo display)
 	virtual void contextInit()
 	{
+               vjOsgApp::contextInit();
 		initGLState();		 // Initialize the GL state information. (lights, shading, etc)
 	}
 
-	void bufferPreDraw();
    
    // ----- Drawing Loop Functions ------
 	//

@@ -112,11 +112,6 @@ cout  << "Wand Buttons:"
    mNavTrans->preMult(osg::Matrix::translate(direction[0], direction[1], direction[2]));
 }
 
-void OsgNav::bufferPreDraw()
-{
-   glClearColor(0.0, 0.0, 0.0, 0.0);
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
 
 void OsgNav::initGLState()
 {
