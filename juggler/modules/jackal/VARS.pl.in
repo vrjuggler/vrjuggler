@@ -83,7 +83,6 @@ $VARS{'JAVAC'}           = '@JAVAC@';
 
 $VARS{'DEPEND_EXTRAS'}        = '@DEPEND_EXTRAS@';
 $VARS{'DEPEND_FLAGS'}         = '@DEPEND_FLAGS@';
-$VARS{'EXTRA_LINK_FLAGS'}     = '@EXTRA_LINK_FLAGS@';
 
 $VARS{'LD'}                   = '@LD@';
 $VARS{'LDFLAGS'}              = '@LDFLAGS@';
