@@ -1,12 +1,14 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Cct-29-2002 allenb      Migrated all pos device config chunks over to using
+                        position filters for data transformations.
 Oct-24-2002 allenb      Fix for context specific data performance bug.
                         This change should increate the performance of context
-						specific data in cases where we are using multiple
-						display pipes.  The most recent cubes test application
-						can help to give solid numbers for the new performance
+			specific data in cases where we are using multiple
+			display pipes.  The most recent cubes test application
+			can help to give solid numbers for the new performance
                         SF Bug: 521630
-						NEW VERSION: 1.1.129
+			NEW VERSION: 1.1.129
 Oct-14-2002 patrickh    Moved the contents of sonix-chunks.desc into
                         vrj-chunks.desc.
 Oct-10-2002 nonchocoboy VRJConfig loads include files relative to the file that
