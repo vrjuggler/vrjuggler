@@ -1392,6 +1392,7 @@
   </ChunkDesc>
   <ChunkDesc token="cluster_machine" name="Cluster Machine">
     <help />
+    <category>RIM</category>
     <PropertyDesc name="Display System" token="display_system" type="embeddedchunk" variable="0">
       <help />
       <item label="Display System" />
@@ -1412,6 +1413,7 @@
   </ChunkDesc>
   <ChunkDesc token="Fastrack" name="Fastrack">
     <help>Polhemus Fastrack 3D</help>
+    <category>Devices</category>
     <PropertyDesc token="port" name="Device" type="string" variable="0">
       <help>Serial port the fastrack is associated to</help>
       <item label="Port number" defaultvalue="/dev/ttyd0" />
