@@ -30,122 +30,103 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
+
+###############################################################################$
+# builder for test suite.  uses kevin's build system in @srcdir@/mk
+###############################################################################$
+
+# project name...
+PROJECT_NAME = runner@EXEEXT@
+
+default: $(PROJECT_NAME)
+
+srcdir          = @srcdir@
+topdir          = @topdir@
+#top_srcdir     = @top_srcdir@
+
+CXX             = @CXX@
+CFLAGS          = @CFLAGS@ $(OPTIMIZER) $(EXTRA_FLAGS)
+CPPFLAGS        = @CPPFLAGS@
+CXXFLAGS        = @CXXFLAGS@ $(OPTIMIZER) $(EXTRA_FLAGS)
+DEFS            = @DEFS@
+DEP_GEN_FLAG    = @DEP_GEN_FLAG@
+DEPEND_FLAGS    = @DEPEND_FLAGS@ $(INCLUDES)
+DEPEND_EXTRAS   = @DEPEND_EXTRAS@ $(DEFS)
+EXTRA_FLAGS     = @APP_EXTRA_FLAGS@
+INCLUDES        = @INCLUDES@ -I$(topdir) -I$(VPR_BASE_DIR)/include      \
+                 -I$(srcdir) -I$(srcdir)/TestCases                      \
+                 -I$(srcdir)/CppUnit/framework -I$(srcdir)/CppUnit/textui
+OPTIMIZER       = @DBG_FLAGS@ -D_DEBUG
+LD              = @LD@
+LDFLAGS         = @LDFLAGS@ -L/usr/lib$(LIBBITSUF)              \
+                  -L$(VPR_BASE_DIR)/lib$(LIBBITSUF)
+LIBBITSUF       = @LIBBITSUF@
+LIBS            = @LIBS@ $(VJ_LIBS)
+MAKEDEPEND      = @MAKEDEPEND@
+OBJEXT          = @OBJEXT@
+OBJ_NAME_FLAG   = @OBJ_NAME_FLAG@
+OS_TYPE         = @OS_TYPE@
+
+USE_MAKEDEPEND  = @USE_MAKEDEPEND@
+
+LINK            = $(CXX) $(CPPFLAGS) $(CXXFLAGS) @EXTRA_LINK_FLAGS@     \
+                  $(EXTRA_FLAGS)
+
+VJ_LIBS         = -L${VJ_BASE_DIR}/lib32 -L${VJ_BASE_DIR}/lib -lJuggler
+BASIC_LIBS	= @APP_BASIC_LIBS_BEGIN@ @APP_BASIC_LIBS@ @APP_BASIC_EXT_LIBS@ @APP_VJ_LIBS_GL@ @APP_BASIC_LIBS_END@
+EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS@ @APP_EXTRA_LIBS_END@ 
+
 # -----------------------------------------------------------------------------
-# Makefile.in for test/TestSuite
-#
-# Generated for use on @PLATFORM@
+# Compiler command lines.
 # -----------------------------------------------------------------------------
-# IMPORTANT NOTE:
-#     This application will not compile unless you are using GNU make.
-# -----------------------------------------------------------------------------
+C_COMPILE       = $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
+CXX_COMPILE     = $(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
 
-default: all
-
-BASE_OBJDIR = ./obj
-
-# Include common definitions.
-include @topdir@/Makefile.base
-
-includedir	= @includedir@/test/TestSuite
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
-INSTALL		= @INSTALL@
-VJROOT		= $(top_srcdir)
-VJ_SRCDIR	= @VJ_SRCDIR@/test/TestSuite
-WORKDIR		= $(topdir)/test/TestSuite
-
-
-# Add 'install-recursive' to $(INSTALL_DEPS) so installations will be
-# completed.  This has to be done before including <vj.install.mk>
-# unfortunately.
-INSTALL_DEPS	+= install-recursive
-
-# Prefix for recursive stuff.
-DIRPRFX		= test/TestSuite/
-
-# Subdirectories to compile.
-SUBDIRS = 
-
-# Path to all the local source files
-SRC_PATH = \
-	@srcdir@/CppUnit/framework \
-	@srcdir@/CppUnit/textui
-
-# Search path for source code and object files.
-vpath
-vpath %.c @srcdir@ $(SRC_PATH)
-vpath %.cpp @srcdir@ $(SRC_PATH)
-vpath %.$(OBJEXT) $(OBJDIR)
-
-#
-# To add a new test, just add the .cpp file(s) to the TEST_SRC's list
-#
-TEST_SRCS = 
+# objects to be included in the project....
+# SRC Files
+TEST_SRCS =
 CPPUNIT_TEXTUI_SRCS = TestRunner.cpp TextTestResult.cpp
 CPPUNIT_SRCS = TestCase.cpp \
                TestResult.cpp \
                TestFailure.cpp \
                TestSuite.cpp
-TESTDRIVER_SRCS = testSuite.cpp
+RUNNER_SRCS = main.cpp
+SRCS    := $(TEST_SRCS) $(CPPUNIT_TEXTUI_SRCS) $(CPPUNIT_SRCS) $(RUNNER_SRCS)
 
-TESTSUITE_SRCS	:= $(TEST_SRCS) $(CPPUNIT_TEXTUI_SRCS) $(CPPUNIT_SRCS) $(TESTDRIVER_SRCS)
+OBJDIR = .
+DEPDIR =
 
-TESTSUITE_OBJECTS	:= $(addprefix $(OBJDIR)/,$(TESTSUITE_SRCS:.cpp=.$(OBJEXT)))
-DEPEND_FILES	:= $(TESTSUITE_SRCS:.cpp=.d)
+INCLUDE_PATHS = @APP_INCLUDES@ -I${VJ_BASE_DIR}/include
+PATH_TO_SRCS = ${srcdir} ${srcdir}/TestCases ${srcdir}/CppUnit/framework ${srcdir}/CppUnit/textui
+MK_DIR = ${srcdir}/mk
 
-# 
-# App compile
-#
-#
-EXTRA_FLAGS	= @APP_EXTRA_FLAGS@
-#COMPILE		= @CXX@ @DEFS@ $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@ @DBG_FLAGS@ $(EXTRA_FLAGS)
-LINK				= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@ $(EXTRA_FLAGS)
-SUITE_INCLUDES = -I$(srcdir) -I$(srcdir)/CppUnit/framework -I$(srcdir)/CppUnit/textui 
-VJ_INCLUDES		= @INCLUDES@ -I$(VJ_BASE_DIR)/include -I$(srcdir) $(SUITE_INCLUDES)
-VJ_LIBS				= @APP_VJ_LIBS_BASIC@ @APP_VJ_LIBS_GL@ @APP_LIBS_BASIC@
-#VPATH				= @srcdir@
+include ${MK_DIR}/mk.objs
 
-#DEPENDFLAGS += $(VJ_INCLUDES)
-INCLUDES += $(VJ_INCLUDES)
+# Compile then Link
+$(PROJECT_NAME): $(OBJS)
+	@echo ""
+	@echo "-------------------------------------------"
+	@echo "Linking... (.$(OBJEXT)'s --> executable)"
+	@echo "-------------------------------------------"
+	$(LINK) -o $@ $(OBJS) $(LDFLAGS) $(LIBS) $(BASIC_LIBS) $(EXTRA_LIBS)
+	@echo ""
+	@echo "-------------------------------------------"
+	@echo "$(PROJECT_NAME) done"
+	@echo "-------------------------------------------"
 
-# OpenGL test programs require the following libraries to be linked:
-#
-#     -lGLU -lGL -lX11 -lXext -lm
-#
-# If the library uses POSIX threads, the appropriate pthread enabling option
-# must also be added to the list of libraries.  In most cases, this will be
-# "-lpthread".
-#
-# The proper library path must be specified depending on the Application
-# Binary Interface (ABI) used.  For n32 binaries, use -L/usr/lib32.  For
-# 64-bit binaries, use -L/usr/lib64.
-EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
+# Remove the compiled stuff from the system
+clean:
+	@echo ""
+	@echo "-------------------------------------------"
+	@echo "Removing compiled stuff from the system   "
+	@echo "-------------------------------------------"
+	rm -fr $(OBJS) $(PROJECT_NAME) *.ncb *.opt *.plg *.ilk *.idb    \
+	  *.pdb *.pch Debug/ Release/ ii_files/ *core
 
-# -----------------------------------------------------------------------------
-# Targets.
-# -----------------------------------------------------------------------------
-default: all
+clobber: clean
+	rm -f *.d
 
-all: testSuite@EXEEXT@
+include ${MK_DIR}/mk.depend
 
-testSuite@EXEEXT@: $(TESTSUITE_OBJECTS)
-	$(LINK) -o $@ $(TESTSUITE_OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
-# Include source building, recursive, dependency and installation targets.
-include $(MKPATH)/vj.compile.mk
-include $(MKPATH)/vj.rec.mk
-include $(MKPATH)/vj.dep.mk
-#include $(MKPATH)/vj.install.mk
 
-# -----------------------------------------------------------------------------
-# Clean-up.
-# -----------------------------------------------------------------------------
-CLEAN_FILES	+= $(TESTSUITE_OBJECTS) $(DEPEND_FILES)
-CLEAN_FILES	+= $(BASE_OBJDIR)
-
-# -----------------------------------------------------------------------------
-# Include dependencies generated by make automatically.
-# -----------------------------------------------------------------------------
-ifndef DO_CLEANDEPEND
-    include $(DEPEND_FILES)
-endif
