@@ -301,7 +301,7 @@ public:
     * bind: load (or reload) all associate()d sounds
     * @postconditions all sound associations are buffered by the sound API
     */
-   void bindAll()
+   virtual void bindAll()
    {
       std::map< std::string, snx::SoundInfo >::iterator it;
       for( it = mSounds.begin(); it != mSounds.end(); ++it)
@@ -315,7 +315,7 @@ public:
     * unbind: unload/deallocate all associate()d sounds.
     * @postconditions all sound associations are unbuffered by the sound API
     */
-   void unbindAll()
+   virtual void unbindAll()
    {
       std::map< std::string, snx::SoundInfo >::iterator it;
       for( it = mSounds.begin(); it != mSounds.end(); ++it)
