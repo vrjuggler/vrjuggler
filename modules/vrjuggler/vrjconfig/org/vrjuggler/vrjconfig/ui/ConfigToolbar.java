@@ -71,14 +71,23 @@ public class ConfigToolbar
       // Try to get icons for the toolbar buttons
       try
       {
+         String img_root = "org/vrjuggler/vrjconfig/images";
          ClassLoader loader = getClass().getClassLoader();
-         newBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/newchunk.gif")));
-         openBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/open.gif")));
-         saveAllBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/saveall.gif")));
-         copyBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/Copy16.gif")));
-         pasteBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/Paste16.gif")));
+         newBtn.setIcon(new ImageIcon(loader.getResource(img_root +
+                                                         "/newchunk.gif")));
+         openBtn.setIcon(new ImageIcon(loader.getResource(img_root +
+                                                          "/open.gif")));
+         saveAllBtn.setIcon(new ImageIcon(loader.getResource(img_root +
+                                                             "/saveall.gif")));
+         copyBtn.setIcon(new ImageIcon(loader.getResource(img_root +
+                                                          "/Copy16.gif")));
+         copyBtn.setIcon(new ImageIcon(loader.getResource(img_root +
+                                                          "/Copy16.gif")));
+         pasteBtn.setIcon(new ImageIcon(loader.getResource(img_root +
+                                                           "/Paste16.gif")));
 
-         RTRCBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/vrjuggler.gif")));
+         RTRCBtn.setIcon(new ImageIcon(loader.getResource(img_root +
+                                                          "/vrjuggler.gif")));
       }
       catch (Exception e)
       {
@@ -102,8 +111,8 @@ public class ConfigToolbar
       }
       catch(Exception ex)
       {
-         System.err.println("ConfigToolbar(): WARNING: Failed to set file chooser start directory: " +
-                            ex.getMessage());
+         System.err.println("ConfigToolbar(): WARNING: Failed to set file " +
+                            "chooser start directory: " + ex.getMessage());
       }
    }
 
@@ -168,7 +177,8 @@ public class ConfigToolbar
       try
       {
          String file = expandEnvVars(filename);
-         FileDataSource data_source = FileDataSource.open(file, getBroker().getRepository());
+         FileDataSource data_source =
+            FileDataSource.open(file, getBroker().getRepository());
          getBroker().add(file, data_source);
          ctx.add(file);
       }
@@ -185,7 +195,9 @@ public class ConfigToolbar
     */
    public boolean doNew()
    {
-      NewConfigDialog new_dlg = new NewConfigDialog(fileChooser.getCurrentDirectory());
+      NewConfigDialog new_dlg =
+         new NewConfigDialog(fileChooser.getCurrentDirectory());
+
       int option = new_dlg.showDialog(getParentFrame());
       if (option == NewConfigDialog.APPROVE_OPTION)
       {
@@ -208,7 +220,9 @@ public class ConfigToolbar
             File new_file = new File(new_dlg.getDirectory(),
                                      new_dlg.getFileName());
             String new_filename = new_file.getAbsolutePath();
-            FileDataSource data_source = FileDataSource.create(new_filename, getBroker().getRepository());
+            FileDataSource data_source =
+               FileDataSource.create(new_filename,
+                                     getBroker().getRepository());
             getBroker().add(new_filename, data_source);
             ctx.add(new_filename);
          }
@@ -242,7 +256,8 @@ public class ConfigToolbar
          }
 
          // Add in the new data source
-         FileDataSource new_data_source = FileDataSource.create(filename, getBroker().getRepository());
+         FileDataSource new_data_source =
+            FileDataSource.create(filename, getBroker().getRepository());
          getBroker().add(filename, new_data_source);
          ctx.add(filename);
          setConfigContext(ctx);
@@ -279,10 +294,8 @@ public class ConfigToolbar
          fireAction("Open");
       }
 
-
       return result;
    }
-
 
    /**
     * Programmatically executes an open action into the given context.
@@ -319,7 +332,8 @@ public class ConfigToolbar
                String res_name = expandEnvVars(res_file.getAbsolutePath());
                System.out.println("Opening included resource: "+res_name);
 
-               FileDataSource data_source = FileDataSource.open(res_name, getBroker().getRepository());
+               FileDataSource data_source =
+                  FileDataSource.open(res_name, getBroker().getRepository());
                broker.add(res_name, data_source);
                ctx.add(res_name);
 
@@ -358,26 +372,28 @@ public class ConfigToolbar
       try
       {
          EnvironmentServiceProxy env_service = new EnvironmentServiceProxy();
-         
+
          String[] args = env_service.getCommandLineArgs();
          if (null == args)
          {
             return false;
          }
+
          for (int i = 0 ; i < args.length ; ++i)
          {
             // Check if this part of the path is a valid directory we can read
             String file_name = args[i];
             File file = new File(file_name);
-            if (file.exists() && file.isFile() && file.canRead() && file_name.endsWith(".jconf"))
+            if ( file.exists() && file.isFile() && file.canRead() &&
+                 file_name.endsWith(".jconf") )
             {
                System.out.println("Found configuration file in args: " + file);
 
                ConfigBroker broker = new ConfigBrokerProxy();
 
-               // We want to automatically follow include directives. Keep track of
-               // all the URLs on a stack and read them one at a time in the order
-               // that we come across them
+               // We want to automatically follow include directives. Keep
+               // track of all the URLs on a stack and read them one at a time
+               // in the order that we come across them
                Stack urls = new Stack();
                urls.push(file);
                while (! urls.isEmpty())
@@ -387,12 +403,14 @@ public class ConfigToolbar
                   String res_name = expandEnvVars(res_file.getAbsolutePath());
                   System.out.println("Opening included resource: "+res_name);
 
-                  FileDataSource data_source = FileDataSource.open(res_name, getBroker().getRepository());
+                  FileDataSource data_source =
+                     FileDataSource.open(res_name,
+                                         getBroker().getRepository());
                   broker.add(res_name, data_source);
                   ctx.add(res_name);
 
-                  // Look through the elements in the newly loaded file and see if
-                  // any of them are include directives
+                  // Look through the elements in the newly loaded file and
+                  // see if any of them are include directives
                   java.util.List includes = data_source.getIncludes();
                   for (Iterator itr = includes.iterator(); itr.hasNext(); )
                   {
@@ -416,8 +434,6 @@ public class ConfigToolbar
 
       return false;
    }
-
-
 
    /**
     * Adds a RTRCDataSource into the given context.
@@ -453,7 +469,7 @@ public class ConfigToolbar
 
       return false;
    }
-   
+
    /**
     * Programmatically execute a save action.
     */
@@ -463,7 +479,6 @@ public class ConfigToolbar
       fireAction("SaveAll");
       return true;
    }
-
 
    /**
     * Programmatically execute a close action.
@@ -553,7 +568,7 @@ public class ConfigToolbar
       RTRCBtn.setToolTipText("Run Time ReConfiguration");
       RTRCBtn.setActionCommand("RTRC");
       RTRCBtn.setFocusPainted(false);
-      
+
       saveAllBtn.setEnabled(true);
       saveAllBtn.setToolTipText("Save All Open Configurations");
       saveAllBtn.setActionCommand("SaveAll");
@@ -567,7 +582,7 @@ public class ConfigToolbar
       pasteBtn.setToolTipText("Paste Config Element");
       pasteBtn.setActionCommand("paste");
       pasteBtn.setFocusPainted(false);
-      
+
       newBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
@@ -638,7 +653,7 @@ public class ConfigToolbar
       {
          fileChooser.setDialogTitle("Save As...");
          fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
-          
+
          ConfigBroker broker = new ConfigBrokerProxy();
          ArrayList removed_sources = new ArrayList();
          ArrayList added_sources = new ArrayList();
@@ -656,11 +671,15 @@ public class ConfigToolbar
                int result = fileChooser.showSaveDialog(getParentFrame());
                if (result == JFileChooser.APPROVE_OPTION)
                {
-                  /// XXX:  This is kind of ghetto; the only way to "rename" a resource is to remove it
-                  ///       and then add it in again with a new name.
-                  String new_name = fileChooser.getSelectedFile().getAbsolutePath();
-                  ///       JFileChooser implements File Filters, but if the user types in a name, the JFile Chooser
-                  ///       does NOT automatically add the selected file extension to the name.  Go figure.
+                  // XXX:  This is kind of ghetto; the only way to "rename" a
+                  //       resource is to remove it and then add it in again
+                  //       with a new name.
+                  String new_name =
+                     fileChooser.getSelectedFile().getAbsolutePath();
+
+                  // JFileChooser implements File Filters, but if the user
+                  // types in a name, the JFile Chooser does NOT automatically
+                  // add the selected file extension to the name.  Go figure.
                   if ( !new_name.matches(".*\\.jconf") )
                   {
                      new_name = new_name + ".jconf";
@@ -670,14 +689,19 @@ public class ConfigToolbar
                      java.io.File file = new File(new_name);
                      if (file.exists())
                      {
-                        int result_existing = JOptionPane.showConfirmDialog(null, 
-                           "File already exists, do you want to overwrite it?", "File exists!", 
-                           JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-                        
+                        int result_existing =
+                           JOptionPane.showConfirmDialog(
+                              null,
+                              "File already exists, do you want to " +
+                                 "overwrite it?", "File exists!",
+                           JOptionPane.YES_NO_OPTION,
+                           JOptionPane.WARNING_MESSAGE);
+
                         if(JOptionPane.YES_OPTION == result_existing)
                         {
                            file.delete();
-                           /// We have to buffer the adds and removes to avoid ConcurrentModificationExceptions.
+                           // We have to buffer the adds and removes to avoid
+                           // ConcurrentModificationExceptions.
                            removed_sources.add(old_name);
                            added_sources.add(new_name);
                         }
@@ -686,16 +710,19 @@ public class ConfigToolbar
                 }
              }
           }
+
           for (Iterator itr = removed_sources.iterator(); itr.hasNext(); )
           {
              String cur = (String)itr.next();
              context.remove(cur);
              getBroker().remove(cur);
           }
+
           for (Iterator itr = added_sources.iterator(); itr.hasNext(); )
           {
              String cur = (String)itr.next();
-             FileDataSource new_resource = FileDataSource.create(cur, getBroker().getRepository());
+             FileDataSource new_resource =
+               FileDataSource.create(cur, getBroker().getRepository());
              getBroker().add(cur, new_resource);
              context.add(cur);
              new_resource.commit();
@@ -720,7 +747,7 @@ public class ConfigToolbar
 
       return mParentFrame;
    }
-   
+
    // JBuilder GUI variables
    private JLabel titleLbl = new JLabel();
    private JToolBar toolbar = new JToolBar();
