@@ -81,7 +81,10 @@ public:
    ~PropertyDefinition();
 
 #ifdef JCCL_DEBUG
-   void assertValid() const;
+   void assertValid() const
+   {
+      vprASSERT(mIsValid == true && "Trying to use deleted PropertyDefinition");
+   }
 #else
    void assertValid() const
    {}
