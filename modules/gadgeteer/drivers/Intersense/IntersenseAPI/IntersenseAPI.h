@@ -64,21 +64,6 @@
 namespace gadget
 {
 
-typedef struct
-{
-   int stationIndex;
-   bool enabled;
-
-   int dig_min;
-   int dig_num;
-   int ana_min;
-   int ana_num;
-
-   bool useDigital;
-   bool useAnalog;
-} ISStationConfig;
-
-
 /**
  * Position derived class for running an IS900 tracking system.
  *
@@ -159,14 +144,28 @@ protected:
    }
 
 private:
-    unsigned int getStationIndex(unsigned int stationNum, int bufferIndex);
+   struct ISStationConfig
+   {
+      int stationIndex;
+      bool enabled;
 
-    IntersenseAPIStandalone mTracker;
+      int dig_min;
+      int dig_num;
+      int ana_min;
+      int ana_num;
 
-    ISStationConfig* stations;
+      bool useDigital;
+      bool useAnalog;
+   };
 
-    std::vector<DigitalData> mDigitalData;
-    std::vector<AnalogData>  mAnalogData;
+   unsigned int getStationIndex(unsigned int stationNum, int bufferIndex);
+
+   IntersenseAPIStandalone mTracker;
+
+   std::vector<ISStationConfig> stations;
+
+   std::vector<DigitalData> mDigitalData;
+   std::vector<AnalogData>  mAnalogData;
 
    std::string    mISenseDriverLocation;
    bool           mDone;

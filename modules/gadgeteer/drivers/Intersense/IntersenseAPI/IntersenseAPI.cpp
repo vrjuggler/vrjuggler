@@ -87,8 +87,7 @@ unsigned int IntersenseAPI::getStationIndex(unsigned int stationNum,
 }
 
 IntersenseAPI::IntersenseAPI()
-   : stations(NULL)
-   , mDone(false)
+   : mDone(false)
 {
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
       << "*** IntersenseAPI::IntersenseAPI() ***\n" << vprDEBUG_FLUSH;
@@ -119,14 +118,8 @@ bool IntersenseAPI::config(jccl::ConfigElementPtr e)
    // Get the location of the Intersense DSO
    mISenseDriverLocation = e->getProperty<std::string>("driver");
 
-   // Clear all data in the stations array
-   if(stations != NULL)
-   {
-      delete [] stations;
-   }
-
    // Create a new array of StationConfigs
-   stations = new ISStationConfig[mTracker.getNumStations()];
+   stations.resize(mTracker.getNumStations());
 
    vprASSERT(mTracker.getNumStations() == e->getNum("stations") &&
              "ERROR: IntersenseAPI is configured incorrectly. " &&
@@ -165,10 +158,6 @@ bool IntersenseAPI::config(jccl::ConfigElementPtr e)
 IntersenseAPI::~IntersenseAPI()
 {
    this->stopSampling();
-   if (stations != NULL)
-   {
-      delete [] stations;
-   }
 }
 
 // Main thread of control for this active object
