@@ -49,6 +49,7 @@
          <include name="org/vrjuggler/vrjconfig/wizard/cluster/**" />
          <fileset dir="${srcdir}">
             <include name="org/vrjuggler/vrjconfig/wizard/cluster/images/*" />
+            <include name="org/vrjuggler/vrjconfig/wizard/cluster/Wizard.xml" />
          </fileset>
       </jar>
       <jar destfile="Devices.jar" basedir=".">

@@ -41,7 +41,9 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-beandir=		$(bindir)/beans
+beandir=		$(libdir)/vrjuggler/customeditors
+jardir=			$(libdir)/vrjuggler/customeditors
+
 srcdir=			@srcdir@
 top_srcdir=		@top_srcdir@
 EXTRA_SRCS_PATH=	$(srcdir)/../tweek/idl
@@ -90,6 +92,8 @@ install-editor:
 	@echo "------------------------------------------------"
 	@echo "Installing the ProxyEditor code base"
 	@echo "------------------------------------------------"
+	$(MKINSTALLDIRS) $(beandir)
+	$(MKINSTALLDIRS) $(jardir)
 #ifeq (@OS_TYPE@, UNIX)
 #	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
 #          $(EXTRA_INSTALL_ARGS) $(VJROOT_ABS)/vrjconfig/customeditors/proxyeditor/proxyeditor.sh \
@@ -103,7 +107,7 @@ ifneq ($(JARS), )
           do								\
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
                 $(EXTRA_INSTALL_ARGS) $(topdir)/vrjconfig/customeditors/proxyeditor/$$jar		\
-                $(bindir) || exit 1;					\
+                $(jardir) || exit 1;					\
           done
 endif
 ifneq ($(BEANS), )

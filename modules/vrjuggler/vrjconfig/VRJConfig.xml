@@ -30,7 +30,6 @@
          <bean>ConfigBroker</bean>
          <bean>RTRCDataSourceBroker</bean>
          <bean>WizardBuilder</bean>
-         <jar path="${TWEEK_BASE_DIR}/bin/beans">IntersenseEditor.jar</jar>
          <jar path="${TWEEK_BASE_DIR}/bin/beans">jccl_editors.jar</jar>
          <jar path="${TWEEK_BASE_DIR}/bin">ui.jar</jar>
       </dependencies>
