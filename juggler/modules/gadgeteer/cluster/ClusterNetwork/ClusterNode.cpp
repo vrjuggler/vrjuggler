@@ -73,7 +73,11 @@ namespace cluster
       mHostname = std::string("None Given");
       mPort = 0;
       mSockStream = NULL;
-      std::cout << "ARONARON REMOVE Created a ClusterNode: No name given." << std::endl;
+      
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+            << clrOutBOLD(clrBLUE,"[ClusterNode]")
+            << " Created a ClusterNode: No name given." 
+            << std::endl << vprDEBUG_FLUSH;
    }
 
    ClusterNode::ClusterNode(const std::string& name, const std::string& host_name, 
@@ -91,7 +95,10 @@ namespace cluster
       mHostname = host_name;
       mPort = port;
       mSockStream = socket_stream;
-      std::cout << "ARONARON REMOVE Created a ClusterNode: " << name << " - " << host_name << std::endl;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+         << clrOutBOLD(clrBLUE,"[ClusterNode]")
+         << " Created a ClusterNode: " << name << " - " << host_name
+         << std::endl << vprDEBUG_FLUSH;
    }
 
    ClusterNode::~ClusterNode()
