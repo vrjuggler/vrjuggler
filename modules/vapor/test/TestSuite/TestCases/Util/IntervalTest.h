@@ -15,10 +15,10 @@
 namespace vprTest
 {
 
-class IntervalTest : public CppUnit::TestCase
+class IntervalTest : public TestCase
 {
 public:
-   IntervalTest() : CppUnit::TestCase ()
+   IntervalTest( std::string name ) : TestCase (name)
    {
    }
 
@@ -30,13 +30,13 @@ public:
    void construction()
    {
       vpr::Interval val1(21,vpr::Interval::Sec);
-      CppUnit::TestAssert::assertEquals<long>(val1.sec(), 21);
+      assertLongsEqual(val1.sec(), 21);
 
       vpr::Interval val2(21,vpr::Interval::Msec);
-      CppUnit::TestAssert::assertEquals<long>(val2.msec(), 21);
+      assertLongsEqual(val2.msec(), 21);
 
       vpr::Interval val3(21,vpr::Interval::Usec);
-      CppUnit::TestAssert::assertEquals<long>(val3.usec(), 21);
+      assertLongsEqual(val3.usec(), 21);
    }
 
    void testSet()
@@ -44,13 +44,13 @@ public:
       vpr::Interval val;
 
       val.set(21,vpr::Interval::Sec);
-      CppUnit::TestAssert::assertEquals<long>(val.sec(), 21);
+      assertLongsEqual(val.sec(), 21);
 
       val.set(21,vpr::Interval::Msec);
-      CppUnit::TestAssert::assertEquals<long>(val.msec(), 21);
+      assertLongsEqual(val.msec(), 21);
 
       val.set(21,vpr::Interval::Usec);
-      CppUnit::TestAssert::assertEquals<long>(val.usec(), 21);
+      assertLongsEqual(val.usec(), 21);
    }
 
    void testSetf()
@@ -58,13 +58,13 @@ public:
       vpr::Interval val;
 
       val.setf(12.75f, vpr::Interval::Sec);
-      CppUnit::TestAssert::assertEquals<long>(val.msec(), 12750);
+      assertLongsEqual(val.msec(), 12750);
 
       val.setf(12.75f, vpr::Interval::Msec);
-      CppUnit::TestAssert::assertEquals<long>(val.usec(), 12750);
+      assertLongsEqual(val.usec(), 12750);
 
       val.setf(12.75f, vpr::Interval::Usec);
-      CppUnit::TestAssert::assertEquals<long>(val.usec(), 12);
+      assertLongsEqual(val.usec(), 12);
    }
 
    void testSec()
@@ -72,9 +72,9 @@ public:
       vpr::Interval val;
 
       val.sec(21);
-      CppUnit::TestAssert::assertEquals<long>(val.sec(), 21);
-      CppUnit::TestAssert::assertEquals<long>(val.msec(), 21000);
-      CppUnit::TestAssert::assertEquals<long>(val.usec(), 21000000);
+      assertLongsEqual(val.sec(), 21);
+      assertLongsEqual(val.msec(), 21000);
+      assertLongsEqual(val.usec(), 21000000);
    }
 
    void testSecf()
@@ -87,9 +87,9 @@ public:
       //float val_msec = val.msecf();
       //float val_usec = val.usecf();
 
-      CppUnit::TestAssert::assertEquals<double>(val.secf() , 12.345678f, 0.000001f);
-      CppUnit::TestAssert::assertEquals<double>(val.msecf(), 12345.678f, 0.001f);
-      CppUnit::TestAssert::assertEquals<double>(val.usecf(), 12345678.0f, 1.0f);
+      assertDoublesEqual(val.secf() , 12.345678f, 0.000001f);
+      assertDoublesEqual(val.msecf(), 12345.678f, 0.001f);
+      assertDoublesEqual(val.usecf(), 12345678.0f, 1.0f);
    }
 
    void testMsec()
@@ -97,9 +97,9 @@ public:
       vpr::Interval val;
 
       val.msec(12345);
-      CppUnit::TestAssert::assertEquals<long>(val.sec() , 12);
-      CppUnit::TestAssert::assertEquals<long>(val.msec(), 12345);
-      CppUnit::TestAssert::assertEquals<long>(val.usec(), 12345000);
+      assertLongsEqual(val.sec() , 12);
+      assertLongsEqual(val.msec(), 12345);
+      assertLongsEqual(val.usec(), 12345000);
    }
 
    void testMsecf()
@@ -112,9 +112,9 @@ public:
       //float val_msec = val.msecf();
       //float val_usec = val.usecf();
 
-      CppUnit::TestAssert::assertEquals<double>(val.secf() , 12.345678f, 0.00001f);
-      CppUnit::TestAssert::assertEquals<double>(val.msecf(), 12345.678f, 0.001f);
-      CppUnit::TestAssert::assertEquals<double>(val.usecf(), 12345678.0f, 1.0f);
+      assertDoublesEqual(val.secf() , 12.345678f, 0.00001f);
+      assertDoublesEqual(val.msecf(), 12345.678f, 0.001f);
+      assertDoublesEqual(val.usecf(), 12345678.0f, 1.0f);
    }
 
    void testUsec()
@@ -122,9 +122,9 @@ public:
       vpr::Interval val;
 
       val.usecf(1234567);
-      CppUnit::TestAssert::assertEquals<long>(val.sec() , 1);
-      CppUnit::TestAssert::assertEquals<long>(val.msec(), 1234);
-      CppUnit::TestAssert::assertEquals<long>(val.usec(), 1234567);
+      assertLongsEqual(val.sec() , 1);
+      assertLongsEqual(val.msec(), 1234);
+      assertLongsEqual(val.usec(), 1234567);
    }
 
    void testUsecf()
@@ -137,9 +137,9 @@ public:
       //float val_msec = val.msecf();
       //float val_usec = val.usecf();
 
-      CppUnit::TestAssert::assertEquals<double>(val.secf() , 12.345678f, 0.000001f);
-      CppUnit::TestAssert::assertEquals<double>(val.msecf(), 12345.678f, 0.001f);
-      CppUnit::TestAssert::assertEquals<double>(val.usecf(), 12345678.0f, 1.0f);
+      assertDoublesEqual(val.secf() , 12.345678f, 0.000001f);
+      assertDoublesEqual(val.msecf(), 12345.678f, 0.001f);
+      assertDoublesEqual(val.usecf(), 12345678.0f, 1.0f);
    }
 
    void testSubtract()
@@ -153,8 +153,8 @@ public:
 
       diff = val2 - val1;
 
-      CppUnit::TestAssert::assertEquals<long>(diff.usec(), 100);
-      CppUnit::TestAssert::assertEquals<double>(diff.secf(), .000100f, 0.0001f);
+      assertLongsEqual(diff.usec(), 100);
+      assertDoublesEqual(diff.secf(), .000100f, 0.0001f);
    }
 
 
@@ -179,23 +179,31 @@ public:
       std::cout << "vpr::Interval::setNow: overhead = " << per_call << "ns per call\n" << std::flush;
    }
 
-   void registerTests (CppUnit::TestSuite* suite)
+   static Test* suite()
    {
-      suite->addTest( new CppUnit::TestCaller<IntervalTest>("construction", &IntervalTest::construction));
-      suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSet", &IntervalTest::testSet));
-      suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSetf", &IntervalTest::testSetf));
-      suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSec", &IntervalTest::testSec));
-      suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSecf", &IntervalTest::testSecf));
-      suite->addTest( new CppUnit::TestCaller<IntervalTest>("testMsec", &IntervalTest::testMsec));
-      suite->addTest( new CppUnit::TestCaller<IntervalTest>("testMsecf", &IntervalTest::testMsecf));
-      suite->addTest( new CppUnit::TestCaller<IntervalTest>("testUsec", &IntervalTest::testUsec));
-      suite->addTest( new CppUnit::TestCaller<IntervalTest>("testUsecf", &IntervalTest::testUsecf));
-      suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSubtract", &IntervalTest::testSubtract));
+      TestSuite *test_suite = new TestSuite ("IntervalTest");
+
+      test_suite->addTest( new TestCaller<IntervalTest>("construction", &IntervalTest::construction));
+      test_suite->addTest( new TestCaller<IntervalTest>("testSet", &IntervalTest::testSet));
+      test_suite->addTest( new TestCaller<IntervalTest>("testSetf", &IntervalTest::testSetf));
+      test_suite->addTest( new TestCaller<IntervalTest>("testSec", &IntervalTest::testSec));
+      test_suite->addTest( new TestCaller<IntervalTest>("testSecf", &IntervalTest::testSecf));
+      test_suite->addTest( new TestCaller<IntervalTest>("testMsec", &IntervalTest::testMsec));
+      test_suite->addTest( new TestCaller<IntervalTest>("testMsecf", &IntervalTest::testMsecf));
+      test_suite->addTest( new TestCaller<IntervalTest>("testUsec", &IntervalTest::testUsec));
+      test_suite->addTest( new TestCaller<IntervalTest>("testUsecf", &IntervalTest::testUsecf));
+      test_suite->addTest( new TestCaller<IntervalTest>("testSubtract", &IntervalTest::testSubtract));
+            
+      return test_suite;
    }
 
-   void registerMetricsTests (CppUnit::TestSuite* suite)
+   static Test* metric_suite()
    {
-      suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSetNowOverhead", &IntervalTest::testSetNowOverhead));
+      TestSuite *test_suite = new TestSuite ("IntervalTest_metric");
+
+      test_suite->addTest( new TestCaller<IntervalTest>("testSetNowOverhead", &IntervalTest::testSetNowOverhead));
+
+      return test_suite;
    }
 
 };
