@@ -16,7 +16,8 @@
 #         --CPPFLAGS=<C preprocessor flags>
 #         --CXXFLAGS=<C++ compiler flags>
 #         --INCLUDES=<Extra include dirs>
-#         --TEST_EXTRA_LIBS=<Libraries needed for test code>
+#         --TEST_VJ_LIBS=<Libraries needed for test code>
+#         --TEST_EXTRA_LIBS=<Extra libraries needed for test code>
 #         --srcdir=<Location of source code>
 #         --prefix=<Base directory where Makefile will go>
 #         --startdir=<Directory where search begins>
@@ -56,6 +57,7 @@ Usage:
         --srcdir=<Location of source code>
         --prefix=<Base directory where Makefile will go>
         --startdir=<Directory where search begins>
+        --TEST_VJ_LIBS=<Extra libraries needed for test code>
         --TEST_EXTRA_LIBS=<Libraries needed for test code>
         --SUBDIRS=<Directories containing Makefile.in's>
 USAGE_EOF
@@ -67,6 +69,7 @@ GetOptions("CXX=s" => \$VARS{'CXX'}, "DEFS:s" => \$VARS{'DEFS'},
 	   "CPPFLAGS:s" => \$VARS{'CPPFLAGS'},
 	   "CXXFLAGS:s" => \$VARS{'CXXFLAGS'},
 	   "INCLUDES:s" => \$VARS{'INCLUDES'},
+	   "TEST_VJ_LIBS=s" => \$VARS{'TEST_VJ_LIBS'},
 	   "TEST_EXTRA_LIBS=s" => \$VARS{'TEST_EXTRA_LIBS'},
 	   "srcdir=s" => \$VARS{'srcdir'}, "SUBDIRS=s" => \$VARS{'SUBDIRS'},
 	   "prefix=s" => \$prefix, "startdir=s" => \$startdir);
