@@ -318,10 +318,22 @@ public class ChunkDBPanel extends JPanel
 	    tp = current_treemodel.tree.getSelectionPaths();
 	    if (tp == null)
 		return;
-	    for (i = 0; i < tp.length; i++) {
-		ni = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)tp[i].getLastPathComponent()).getUserObject());
-		if (ni.ch != null) {
-		    current_treemodel.removeNode(ni.ch.getName());
+	    if (current_treemodel == Core.active_treemodel) {
+		ConfigChunkDB db = new ConfigChunkDB (Core.descdb);
+		for (i = 0; i < tp.length; i++) {
+		    ni = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)tp[i].getLastPathComponent()).getUserObject());
+		    if (ni.ch != null) {
+			db.addElement (ni.ch);
+		    }
+		}
+		Core.net.removeChunks (db);
+	    }
+	    else {
+		for (i = 0; i < tp.length; i++) {
+		    ni = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)tp[i].getLastPathComponent()).getUserObject());
+		    if (ni.ch != null) {
+			current_treemodel.removeNode(ni.ch.getName());
+		    }
 		}
 	    }
 	}
@@ -506,10 +518,17 @@ public class ChunkDBPanel extends JPanel
 	    ConfigChunk newc, oldc;
 	    oldc = f.getOldValue();
 	    newc = f.getValue();
-	    current_treemodel.replaceNode (oldc, newc);
 	    if (current_treemodel == Core.active_treemodel) {
 		System.out.println ("sending chunk across network...");
-		Core.net.sendChunk(newc);
+		if (oldc.getName().equals (newc.getName()))
+		    Core.net.sendChunk(newc);
+		else {
+		    Core.net.removeChunk (oldc);
+		    Core.net.sendChunk (newc);
+		}
+	    }
+	    else {
+		current_treemodel.replaceNode (oldc, newc);
 	    }
 	}
 	chunk_frames.removeElement(f);

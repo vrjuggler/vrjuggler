@@ -173,6 +173,36 @@ public class NetControl implements Runnable {
 
     }
 
+    public boolean removeChunks (ConfigChunkDB db) {
+	if (!connected)
+	    return false;
+	try {
+	    System.out.println ("remove chunks\n" + db.fileRep());
+	    out.writeBytes ("remove chunks\n" + db.fileRep());
+	    out.flush();
+	    return true;
+	}
+	catch (IOException io) {
+	    return false;
+	}
+    }
+
+
+    public boolean removeChunk (ConfigChunk ch) {
+	if (!connected)
+	    return false;
+	try {
+	    System.out.println ("remove chunks\n" + ch.toString() + "End\n");
+	    out.writeBytes ("remove chunks\n" + ch.toString() + "End\n");
+	    out.flush();
+	    return true;
+	}
+	catch (IOException io) {
+	    return false;
+	}
+    }
+
+
     public boolean isConnected() {
 	return connected;
     }
@@ -343,3 +373,6 @@ public class NetControl implements Runnable {
 
 
 }
+
+
+

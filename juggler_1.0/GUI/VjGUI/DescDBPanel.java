@@ -40,6 +40,7 @@ public class DescDBPanel extends JPanel
 	desc_frames = new Vector();
 	currdb = null;
 
+	setBorder (BorderFactory.createEmptyBorder (5,5,5,5));
 	setLayout (new BorderLayout (5, 5));
 
 	// create buttons
@@ -62,9 +63,9 @@ public class DescDBPanel extends JPanel
 	add (side_panel, "East");
 
 	// side panel - send & send all buttons
-	side_panel = new JPanel();
-	side_panel.setLayout (new BoxLayout (side_panel, BoxLayout.Y_AXIS));
-	add (side_panel, "West");
+//  	side_panel = new JPanel();
+//  	side_panel.setLayout (new BoxLayout (side_panel, BoxLayout.Y_AXIS));
+//  	add (side_panel, "West");
 	
 	// center: scrolled pane w/ tree
 	center_panel = new Box (BoxLayout.Y_AXIS);
