@@ -29,10 +29,5 @@
 # -----------------------------------------------------------------
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
-rtrc-pkg-links:
-	@$(MAKE) instlinks="$(instlinks)" links
 
 java-install:
-
-links:
-	@$(MAKE) -C jccl instlinks="$(instlinks)" links

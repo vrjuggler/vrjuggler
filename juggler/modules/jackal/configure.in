@@ -190,7 +190,7 @@ fi
 DPP_PERL_VER([5.004], , , [AC_MSG_ERROR([*** Perl is required ***])])
 AC_CHECK_PROG([MTREE_CMD], [mtree], [mtree], [\$(PERL) \$(scriptdir)/mtree.pl])
 DPP_BASIC_PROGS([$PLATFORM], [$OS_TYPE])
-DPP_PROG_INSTALL(no)
+DPP_PROG_INSTALL
 
 # -----------------------------------------------------------------------------
 # Checks for libraries.
@@ -528,30 +528,25 @@ AC_OUTPUT(jccl-config
           common/Makefile
           common/Makefile.inc
           common/jccl/Makefile
-          common/jccl/Makefile.inc
           common/jccl/Util/Makefile
           common/jccl/XMLUtil/Makefile
           config/Makefile
           config/Makefile.inc
           config/jccl/Makefile
-          config/jccl/Makefile.inc
           config/jccl/Config/Makefile
           editors/Makefile
           editors/Makefile.inc
           net/Makefile
           net/Makefile.inc
           net/jccl/Makefile
-          net/jccl/Makefile.inc
           net/jccl/Net/Makefile
           rtrc/Makefile
           rtrc/Makefile.inc
           rtrc/jccl/Makefile
-          rtrc/jccl/Makefile.inc
           rtrc/jccl/RTRC/Makefile
           perfmonitor/Makefile
           perfmonitor/Makefile.inc
           perfmonitor/jccl/Makefile
-          perfmonitor/jccl/Makefile.inc
           perfmonitor/jccl/PerfMonitor/Makefile
           tools/Makefile
           tools/ConfigUpdater/Makefile

@@ -191,22 +191,25 @@ ifneq ($(JARS), )
 	for jar in $(JARS) ; \
           do \
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-                $(topdir)/config/$$jar $(bindir) || exit 1; \
+                $(EXTRA_INSTALL_ARGS) $(topdir)/config/$$jar $(bindir) \
+              || exit 1; \
           done
 endif
 ifneq ($(BEANS), )
 	for bean in $(BEANS) ; \
           do \
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-                $(topdir)/config/$$bean.jar $(beandir) || exit 1; \
+                $(EXTRA_INSTALL_ARGS) $(topdir)/config/$$bean.jar $(beandir) \
+              || exit 1; \
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-                $(top_srcdir)/config/$$bean.xml $(beandir) || exit 1; \
+                $(EXTRA_INSTALL_ARGS) $(top_srcdir)/config/$$bean.xml \
+                  $(beandir) || exit 1; \
           done
 endif
 	for jar in `echo "$(JDOM_JAR)" | sed -e 's/$(JCPS)/ /g'` ; \
           do \
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-                $$jar $(bindir) || exit 1; \
+                $(EXTRA_INSTALL_ARGS) $$jar $(bindir) || exit 1; \
           done
 
 install-docs:

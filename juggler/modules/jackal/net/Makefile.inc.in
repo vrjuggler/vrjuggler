@@ -57,20 +57,6 @@
 #	@echo "------------------------------------------------"
 #endif
 #endif	# ifndef NO_JAVA
-#
-#net-pkg-links:
-#	@$(MAKE) instlinks="$(instlinks)" links
 
 java-install:
 #	@$(MAKE) net-install
-#
-links:
-	@$(MAKE) -C jccl instlinks="$(instlinks)" links
-#ifndef NO_JAVA
-#ifeq ($(BUILD_JAVA), Y)
-#	cd $(instlinks)/bin && \
-#		for jar in $(JARS); do \
-#			$(RM_LN) ./$$jar && $(LN_S) $(topdir)/net/$$jar ./$$jar; \
-#		done
-#endif
-#endif

@@ -41,7 +41,7 @@ AC_REVISION($Revision$)
 AC_INIT(vrj/vrjConfig.h)
 AC_CONFIG_AUX_DIR(../../share/config)
 AC_CONFIG_HEADER(vrj/vrjDefines.h)
-DPP_PREREQ([1.4.106])
+DPP_PREREQ([1.4.107])
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -176,7 +176,7 @@ fi
 DPP_PERL_VER(5.004, , , [AC_MSG_ERROR([*** Perl is required ***])])
 AC_CHECK_PROG([MTREE_CMD], [mtree], [mtree], [\$(PERL) \$(scriptdir)/mtree.pl])
 DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
-DPP_PROG_INSTALL(no)
+DPP_PROG_INSTALL
 
 # -----------------------------------------------------------------------------
 # Checks for libraries.
@@ -647,7 +647,6 @@ AC_OUTPUT(vrjuggler-config
           common.defs.mk
           make.defs.mk
           vrj/Makefile
-          vrj/Makefile.inc
           vrj/Display/Makefile
           vrj/Draw/Makefile
           vrj/Draw/OGL/Makefile

@@ -1,5 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Aug-06-2002 patrickh  Developer installations are now constructed using the
+                      standard installation targets.
 Aug-01-2002 patrickh  Enabled shared library versioning.
 Jul-11-2002 patrickh  Updated the Polhemus Fastrack driver to use VPR serial
                       ports, VPR threads, GMTL, Gadgeteer sample buffers, and
