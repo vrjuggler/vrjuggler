@@ -164,6 +164,8 @@ SelectorImplBSD::select (vpr::Uint16& numWithEvents, vpr::Uint16 timeout) {
    last_fd = -1;
 
    for ( i = mPollDescs.begin(); i != mPollDescs.end(); i++ ) {
+      (*i).out_flags = 0;
+
       if ( (*i).in_flags & SelectorBase::VPR_READ ) {
          FD_SET((*i).fd, &read_set);
       }
