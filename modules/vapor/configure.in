@@ -672,6 +672,14 @@ else
    AC_MSG_ERROR([*** CppDOM is required for VPR ***])
 fi
 
+# Verify that we have a new enough version of CppDOM.
+cppdom_version=`$CPPDOM_CONFIG --version`
+min_cppdom_version='0.3.0'
+AC_MSG_CHECKING([whether CppDOM version is >= $min_cppdom_version])
+AC_MSG_RESULT([$cppdom_version])
+DPP_VERSION_CHECK([$cppdom_version], [$min_cppdom_version], ,
+   [AC_MSG_ERROR([*** CppDOM version $min_cppdom_version or newer is requried for VPR ***])])
+
 CXXFLAGS="$CPPDOM_CXXFLAGS $CXXFLAGS $STDFLAGS ${_EXTRA_FLAGS}"
 CPPFLAGS="$CPPDOM_CXXFLAGS $CPPFLAGS"
 LDFLAGS="$CPPDOM_LIBS $LDFLAGS"
