@@ -15,8 +15,8 @@ fi
 
 VERSION="$1";
 DESTINATION="pub/distributions/docs";
-TARBALL="vrjuggler-"$VERSION".tar.gz";
-TEMPBALL="vrjuggler-"$VERSION".tar";
+TARBALL="vrjuggler-"$VERSION".docs.tar.gz";
+TEMPBALL="vrjuggler-"$VERSION".docs.tar";
 
 echo " "
 echo "Making version $VERSION Juggler documentation"
