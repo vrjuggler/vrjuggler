@@ -285,10 +285,10 @@ namespace cluster
             updateNeeded = true;
          }                  
       }
-//      if (updateNeeded)
-//      {
+      if (updateNeeded)
+      {
          sendEndBlocksAndSignalUpdate();
-//      }                                 
+      }                                 
    }
    void ClusterManager::postPostFrame()
    {
@@ -305,10 +305,10 @@ namespace cluster
             updateNeeded = true;
          }
       }  
-//      if (updateNeeded)
-//      {
+      if (updateNeeded)
+      {
          sendEndBlocksAndSignalUpdate();
-//      }                                 
+      }                                 
    }
 
    void ClusterManager::createBarrier()
