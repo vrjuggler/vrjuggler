@@ -30,31 +30,38 @@ methods to encapsulate the functionality of the application within one C++ class
 </p>
 <ul>
   <h4> In CAVElib(TM) </h4>
-  <li>An application's display callback function is defined by passing a function pointer to CAVEDisplay(). 
-  <li>The frame function is defined with CAVEFrameFunction(). 
-  <li>The initialization callback is defined using CAVEInitApplication(). 
+  <ul>
+  <li>Draw: An application's display callback function is defined by passing a function pointer to CAVEDisplay(). 
+  <li>Frame: The frame function is defined with CAVEFrameFunction(). 
+  <li>Init: The initialization callback is defined using CAVEInitApplication(). 
+  </ul>
   
   <h4>In VR Juggler</h4>
    <p>
     No C-style function pointers are nessesary, you only pass Juggler a pointer to your "application class", so
-     you first derive a new application class from vjGlApp then...<BR>
+     you first derive a new application class from vjGlApp:<BR> <TT>class YourApplication : public vjGlApp { ... };</TT> then...<BR>
    </p>
-   <li>an application's display callback function is defined by simply defining a new method/function draw() in
-      your derived class.<BR>
-              (This is where you put OpenGL rendering commands such as glBegin, glVertex, glWhatever...)
-   <li>The frame function is split across 3 functions<BR>
-             (This is where you put your calculations such as navigation, collision, physics, AI, nurbs surface
-      sampling, etc...)
    <ul>
-      <li>yourDerivedApp::preFrame (called before draw)
-      <li>yourDerivedApp::intraFrame (called during draw)
-      <li>yourDerivedApp::postFrame (called after draw)
+      <li>Draw: an application's display callback function is defined by simply defining a new method/function draw() in
+         your derived class. This is where you put OpenGL rendering commands such as glBegin, glVertex, glWhatever...)
+      <li>Frame: This is where you put your calculations such as navigation, collision, physics, AI, nurbs surface
+         sampling, etc...  <BR>
+         The frame function is split across 3 functions:
+      <ul>
+         <li>YourApplication::preFrame (called before draw)
+         <li>YourApplication::intraFrame (called during draw)
+         <li>YourApplication::postFrame (called after draw)
+      </ul>
+      <li>Init: One initialization function for data, and one initialization function for 
+            where you create <a href="${GLOSSARY}#context data">context specific data</a> 
+            (such as displaylists and texture objects) for each 
+            <a href="${GLOSSARY}#display context">display context</a> in the system.<BR>
+          The initialization callback is split across 2 functions
+      <ul>
+         <li>YourApplication::init()         (called once per application startup)
+         <li>YourApplication::contextInit()  (called once per <a href="${GLOSSARY}#display context">display context</a>)
+      </ul>
    </ul>
-   <li>The initialization callback is also split across 2 functions:<BR>
-        (one for data initialization.  and one for <a href="${GLOSSARY}#display context">OpenGL context</a>
-         initialization where you put things like displaylist and texture object creation)
-   <li>yourDerivedApp::init()         (called once on application startup)
-   <li>yourDerivedApp::contextInit()  (called once per window)
 </ul>
 
 <h3><a name="input">Getting input from devices</a></h3>
@@ -89,11 +96,12 @@ methods to encapsulate the functionality of the application within one C++ class
 <p>
 IMPORTANT!  Read this:<BR>
 VR Juggler, unlike the CAVElib, can handle drawing multiple displays in one process, so it's nessesary to
-manage "context data".  A <a href="${GLOSSARY}#display context">display context</a> is the OpenGL state
-information that goes with a GL graphics window.  Compiled OpenGL commands such as displaylists do not get shared
-across muiltiple contexts (or windows), so you will need to initialize them once per window.  vjGlApp::contextInit
-is the place to put these OpenGL initializations since it is called once per window/context after each has become
-valid.
+manage "<a href="${GLOSSARY}#context data">context specific data</a> ".  
+A <a href="${GLOSSARY}#display context">display context</a> is where the OpenGL rendering commands render to.
+Compiled OpenGL commands such as displaylists do not get shared
+across muiltiple contexts (or windows), so you will need to initialize them once per display context.  
+vjGlApp::contextInit is the place to put these OpenGL initializations since it is called once per display context 
+after each has become active.
 </p>
 
 

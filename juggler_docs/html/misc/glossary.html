@@ -58,12 +58,23 @@
   </P>
 
   <P>
-    <A NAME="context data"><B>context data</B> - A display context is the OpenGL state information that goes with
-    a GL graphics window. Compiled OpenGL commands such as displaylists do not get shared across muiltiple
-    contexts (or windows), so you will need to initialize them once per window.
+    <A NAME="context data"><B>context data</B> - OpenGL state information is associated with
+    a GL graphics window, or more generally, a <a href="${GLOSSARY}#display context">display context</a>. 
+    Compiled OpenGL commands such as displaylists do not get shared across muiltiple
+    contexts (or windows) so you will need to initialize them once per window.  
+    For example, if you were to try to call a display list created on a context that is not currently active, then your application will likely fail or do unexpected things.
+    <BR><BR>
+    This data that is only valid within its context, is referred to as context specific data.  
   </P>
 
 <h3><a name="d">[D]</a></h3>
+   <P>
+    <A NAME="display context"><B>display context</B> - A display context is the current place graphics commands render to.  
+    For example a display context can be the window on your screen that OpenGL renders to.  In more complex applications such 
+    as in VR systems, you often have multiple windows open at a time (and thus multiple display contexts to render to).<BR>
+    <BR><BR>
+    For each display context you often need to create <a href="${GLOSSARY}#context data">context specific data</a>.
+  </P>
 
 <h3><a name="e">[E]</a></h3>
 
