@@ -53,6 +53,8 @@
 #include <string>
 #include <sstream>
 
+#include <vpr/Util/Assert.h>
+
 
 namespace vpr
 {
@@ -123,11 +125,27 @@ protected:
     vpr::ReturnStatus readValueStringRep(T& val)
     {
        std::stringstream* in_stream(NULL);
+       //std::string stream_content;
 
        if(AttribSource == mCurSource)
-       { in_stream = &mAttribSource; }
+       { 
+          in_stream = &mAttribSource; 
+          //stream_content = mAttribSource.str();
+       }
        else
-       { in_stream = &(mCurNodeStack.back().cdataSource); }
+       { 
+          in_stream = &(mCurNodeStack.back().cdataSource);
+          //stream_content = mCurNodeStack.back().cdataSource.str();
+       }
+
+       // Just to be safe do this again for the heck of it. :)
+       //in_stream->exceptions( std::ios::eofbit | std::ios::failbit | std::ios::badbit );
+       vprASSERT(!in_stream->bad() && "Bad stream, BAAADDD stream.");
+       vprASSERT(!in_stream->fail() && "Stream failed.");
+       vprASSERT(!in_stream->eof() && "Stream EOF'd.");
+       vprASSERT(in_stream->good());
+
+       //stream_content = (*in_stream).str();
 
        (*in_stream) >> val;
 
@@ -136,6 +154,8 @@ protected:
 
     /** Initialize the members based on a serialized version of something in the data buffer */
     void initCppDomTree(std::vector<vpr::Uint8> data);
+
+    void debugDumpStack(int debug_level);
 
 protected:
    /** State to keep at each level of recursion */
@@ -146,6 +166,8 @@ protected:
       NodeState(const NodeState& rhs);
 
       NodeState& operator=(const NodeState& rhs);
+
+      void debugDump(int debug_level);
 
       cppdom::Node*              node;          /**< The node that this state is for */
       cppdom::NodeList::iterator nextChild_i;      /**< Index of the current child we are examining */

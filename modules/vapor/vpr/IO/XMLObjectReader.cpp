@@ -52,6 +52,9 @@
 #include <cppdom/cppdom.h>
 #include <string>
 #include <sstream>
+#include <iterator>
+
+#define XML_OR_LEVEL vprDBG_HEX_LVL
 
 
 namespace vpr
@@ -62,12 +65,14 @@ XMLObjectReader::XMLObjectReader(std::vector<vpr::Uint8> data)
    : mCurSource(CdataSource)
 {
    initCppDomTree(data);
+   //mAttribSource.exceptions( std::ios::eofbit | std::ios::failbit | std::ios::badbit );
 }
 
 XMLObjectReader::XMLObjectReader(cppdom::NodePtr rootNode)
    : mCurSource(CdataSource)
 {
    mRootNode = rootNode;
+   //mAttribSource.exceptions( std::ios::eofbit | std::ios::failbit | std::ios::badbit );
 }
 
 
@@ -77,8 +82,7 @@ XMLObjectReader::NodeState::NodeState(cppdom::Node* cur_node)
 {
    nextChild_i = node->getChildren().begin();     // Initialize to the first child
    endChild_i = node->getChildren().end();
-   vprASSERT(nextChild_i != endChild_i);
-
+   //cdataSource.exceptions( std::ios::eofbit | std::ios::failbit | std::ios::badbit );
    cdataSource.str(node->getFullCdata());
 }
 
@@ -87,6 +91,7 @@ XMLObjectReader::NodeState::NodeState(const NodeState& rhs)
    node = rhs.node;
    nextChild_i = rhs.nextChild_i;
    endChild_i = rhs.endChild_i;
+   //cdataSource.exceptions( std::ios::eofbit | std::ios::failbit | std::ios::badbit );
    cdataSource.str(rhs.cdataSource.str());
 }
 
@@ -97,6 +102,12 @@ XMLObjectReader::NodeState& XMLObjectReader::NodeState::operator=(const NodeStat
    endChild_i = rhs.endChild_i;
    cdataSource.str(rhs.cdataSource.str());
    return *this;
+}
+
+void XMLObjectReader::NodeState::debugDump(int debug_level)
+{
+   vprDEBUG(vprDBG_ALL, debug_level) << "Node:" << node->getName() << "  num children:" << node->getChildren().size() 
+                                     << "  distance: nextChild-->endChild:" << std::distance(nextChild_i,endChild_i) << std::endl << vprDEBUG_FLUSH;
 }
 
 
@@ -116,31 +127,62 @@ void XMLObjectReader::initCppDomTree(std::vector<vpr::Uint8> data)
    mCurNodeStack.clear();
 }
 
+void XMLObjectReader::debugDumpStack(int debug_level)
+{
+   vprDEBUG_OutputGuard(vprDBG_ALL, debug_level, "mCurNodeStack:\n", "end node stack\n");
+
+   for(unsigned i=0; i<mCurNodeStack.size(); ++i)
+   {
+      mCurNodeStack[i].debugDump(debug_level);
+   }
+}
+
 /** Starting a new tag
 * Get the local cdata into the current data source
 */
 vpr::ReturnStatus XMLObjectReader::beginTag(std::string tagName)
 {
+   vprDEBUG_OutputGuard(vprDBG_ALL, XML_OR_LEVEL, std::string("beginTag:[") + tagName + std::string("]\n"), "endTag");
+
+   vprDEBUG(vprDBG_ALL,XML_OR_LEVEL) << "mCurNodeStack: size: " << mCurNodeStack.size() << std::endl << vprDEBUG_FLUSH;
+   debugDumpStack(XML_OR_LEVEL);
+
    // Find the correct child
    if(mCurNodeStack.empty())  // We should enter the root
    {
+      vprDEBUG(vprDBG_ALL,XML_OR_LEVEL) << "mCurNodeStack is empty. Push on root.\n" << vprDEBUG_FLUSH;
       mCurNodeStack.push_back(NodeState(mRootNode.get()));
    }
    else                      // Find the next child and push it on
    {
+      vprDEBUG(vprDBG_ALL,XML_OR_LEVEL) << "Attempting to find next child: " 
+                             << " cur node (back): " << mCurNodeStack.back().node->getName()
+                             << "  num children:" << mCurNodeStack.back().node->getChildren().size() << std::endl << vprDEBUG_FLUSH;
+
       vprASSERT(mCurNodeStack.back().nextChild_i != mCurNodeStack.back().endChild_i && "Past last child. No remaining child tags.");
 
       // Make sure that we get to child of type node.
       // While next child is not of type node skip over cdata...
       while( (*(mCurNodeStack.back().nextChild_i))->getType() != cppdom::xml_nt_node)
       {
+         vprDEBUG(vprDBG_ALL,XML_OR_LEVEL) << "Skip node: " << (*(mCurNodeStack.back().nextChild_i))->getName() << " -- non nt_node type.\n" << vprDEBUG_FLUSH;
          mCurNodeStack.back().nextChild_i++;
          vprASSERT(mCurNodeStack.back().nextChild_i != mCurNodeStack.back().endChild_i && "Skipped past last child. No remaining child tags.");
       }
 
       cppdom::NodePtr tag_node = *(mCurNodeStack.back().nextChild_i);   // Get the node with the given tag
       mCurNodeStack.back().nextChild_i++;                               // Step to the next child for next time
+      
+      vprDEBUG(vprDBG_ALL,XML_OR_LEVEL) << "Incrementing next child:  at end:" << (mCurNodeStack.back().nextChild_i == mCurNodeStack.back().endChild_i) << std::endl << vprDEBUG_FLUSH;
+
       mCurNodeStack.push_back( NodeState(tag_node.get()));              // Add the child to the stack
+      vprASSERT(tag_node.get() == mCurNodeStack.back().node);
+
+      vprDEBUG(vprDBG_ALL,XML_OR_LEVEL) << "Found node:" << tag_node->getName() << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,XML_OR_LEVEL) << "  Node stack size:" << mCurNodeStack.size() << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,XML_OR_LEVEL) << "  Num children:" << tag_node->getChildren().size() << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,XML_OR_LEVEL) << "  New node child at end:" << (mCurNodeStack.back().nextChild_i == mCurNodeStack.back().endChild_i) 
+                             << std::endl << vprDEBUG_FLUSH;
    }
 
    std::string cur_node_name = mCurNodeStack.back().node->getName();
@@ -163,8 +205,13 @@ vpr::ReturnStatus XMLObjectReader::endTag()
 */
 vpr::ReturnStatus XMLObjectReader::beginAttribute(std::string attributeName)
 {
+   //std::cout << "beginAttribute: " << attributeName << std::endl;
    std::string attrib_content = mCurNodeStack.back().node->getAttribute(attributeName).getString();
+   //std::cout << "  attrib content: [" << attrib_content << "]\n";
+   mAttribSource.clear();                       // Clear error states
    mAttribSource.str(attrib_content);
+   mAttribSource.seekg(0,std::ios::beg);        // Seek to beginning
+   //std::cout << "  mAttribSource.str():[" << mAttribSource.str() << "]" << std::endl;
    mCurSource = AttribSource;             // Get content from attribute now
    return vpr::ReturnStatus::Succeed;
 }
@@ -172,6 +219,8 @@ vpr::ReturnStatus XMLObjectReader::beginAttribute(std::string attributeName)
 /** Ends the most recently named attribute */
 vpr::ReturnStatus XMLObjectReader::endAttribute()
 {
+   mAttribSource.clear();
+   mAttribSource.seekg(0,std::ios::beg);
    mAttribSource.str("");     // Clear the attrib content (not required, but helps point out bugs)
    mCurSource = CdataSource;     // Set back to getting data from cdata
    return vpr::ReturnStatus::Succeed;
