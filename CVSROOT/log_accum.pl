@@ -395,6 +395,20 @@ sub format_summaries {
 	push @text, sprintf $fmt, $revs[$_], $deltas[$_], $files[$_];
     }
 
+    # Add URLs for the SourceForge cvsweb paths to the HTML diffs between
+    # all revisions.
+    push(@text, "");
+
+    my $rev;
+    foreach $rev (0 .. $#revs) {
+	$revs[$rev] =~ /^((\d+\.)*\d+)\.(\d)+$/;
+	my($major_rev, $minor_rev) = ($1, $3);
+
+	if ( $minor_rev > 1 ) {
+	    my $old_minor_rev = $minor_rev - 1;
+	    push(@text, "http://cvs.sourceforge.net/cgi-bin/cvsweb.cgi/$files[$rev].diff?r1=$major_rev.$old_minor_rev\&r2=$revs[$rev]\&cvsroot=vrjuggler");
+	}
+    }
     return @text;
 }
 
