@@ -152,11 +152,12 @@ links:
             cd $(instlinks)/$(LIBDIR_NAME) && rm -f $$lib* &&		\
               $(LN_S) $(LIBDIR_BASE)/$$lib* ./ ;			\
           done
-	cd $(instlinks)/share/sonix && ln -s $(ROOT_ABS)/data ./
+	cd $(instlinks)/share/sonix &&					\
+           rm -f ./data && ln -s $(ROOT_ABS)/data ./
+	cd $(instlinks)/share/sonix &&					\
+           rm -f ./src && ln -s $(topdir)/samples ./src
 	cd $(instlinks)/share/sonix &&                          \
-          ln -s $(topdir)/samples ./src
-	cd $(instlinks)/share/sonix &&                          \
-          ln -s $(topdir)/README.txt ./
+           rm -f ./README.txt ln -s $(topdir)/README.txt ./
 	cd $(instlinks)/bin && cp -p $(topdir)/sonix-config .
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
