@@ -948,23 +948,31 @@ SerialPortImplTermios::setAttrs (struct termios* term, const char* err_msg,
 {
     Status retval;
 
-fprintf(stderr, "[vpr::SerialPortImplTermios] term->c_iflag: %d\n",
-        term->c_iflag);
-fprintf(stderr, "[vpr::SerialPortImplTermios] term->c_oflag: %d\n",
-        term->c_oflag);
-fprintf(stderr, "[vpr::SerialPortImplTermios] term->c_cflag: %d\n",
-        term->c_cflag);
-fprintf(stderr, "[vpr::SerialPortImplTermios] term->c_lflag: %d\n",
-        term->c_lflag);
-fprintf(stderr, "[vpr::SerialPortImplTermios] term->c_ispeed: %d\n",
-        cfgetispeed(term));
-fprintf(stderr, "[vpr::SerialPortImplTermios] term->c_ospeed: %d\n\n",
-        cfgetospeed(term));
-fprintf(stderr, "[vpr::SerialPortImplTermios] term->c_cc[]:");
-for ( int i = 0; i < NCCS; i++ ) {
-    fprintf(stderr, " %u", (unsigned int) term->c_cc[i]);
-}
-fprintf(stderr, "\n");
+    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+        << "[vpr::SerialPortImplTermios] term->c_iflag: " << term->c_iflag
+        << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+        << "[vpr::SerialPortImplTermios] term->c_oflag: " << term->c_oflag
+        << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+        << "[vpr::SerialPortImplTermios] term->c_cflag: " << term->c_cflag
+        << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+        << "[vpr::SerialPortImplTermios] term->c_lflag: " << term->c_lflag
+        << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+        << "[vpr::SerialPortImplTermios] term->c_ispeed: " << cfgetispeed(term)
+        << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+        << "[vpr::SerialPortImplTermios] term->c_ospeed: " << cfgetospeed(term)
+        << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+        << "[vpr::SerialPortImplTermios] term->c_cc[]:";
+    for ( int i = 0; i < NCCS; i++ ) {
+        vprDEBUG_CONT(vprDBG_ALL, vprDBG_STATE_LVL)
+           << " " << (unsigned int) term->c_cc[i];
+    }
+    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << std::endl << vprDEBUG_FLUSH;
 
     if ( tcsetattr(m_handle->m_fdesc, m_actions, term) == -1 ) {
         fprintf(stderr, "[vpr::SerialPortImplTermios] %s (port '%s')", err_msg,
