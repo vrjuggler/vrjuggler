@@ -823,7 +823,9 @@ void FlockStandalone::setHemisphere()
 
       buff[0] = 'L';
 
-      for ( int i = 1; i < (mNumBirds + 1); i++ )
+      // This will loop over all the birds and the transmitter.  When it
+      // encounters the transmitter, it skips it.
+      for ( int i = 1; i <= (mNumBirds + 1); i++ )
       {
          // Skip the transmitter.
          if ( i == mXmitterUnitNumber )
