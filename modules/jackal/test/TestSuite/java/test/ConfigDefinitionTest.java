@@ -25,8 +25,7 @@ import org.vrjuggler.jccl.config.event.*;
       // The name property
       prop_value_defs = new ArrayList();
       prop_value_defs.add(new PropertyValueDefinition("Name", ""));
-      mNamePropDef = new PropertyDefinition("Name",
-                                            "name",
+      mNamePropDef = new PropertyDefinition("name",
                                             String.class,
                                             "The first name of the person.",
                                             prop_value_defs,
@@ -38,8 +37,7 @@ import org.vrjuggler.jccl.config.event.*;
       // The age property
       prop_value_defs = new ArrayList();
       prop_value_defs.add(new PropertyValueDefinition("Age", new Integer(0)));
-      mAgePropDef = new PropertyDefinition("Age",
-                                           "age",
+      mAgePropDef = new PropertyDefinition("age",
                                            Integer.class,
                                            "The age of the person.",
                                            prop_value_defs,
@@ -51,8 +49,7 @@ import org.vrjuggler.jccl.config.event.*;
       // The friends property
       prop_value_defs = new ArrayList();
       prop_value_defs.add(new PropertyValueDefinition("Friend", null));
-      mFriendsPropDef = new PropertyDefinition("Friends",
-                                               "friends",
+      mFriendsPropDef = new PropertyDefinition("friends",
                                                ConfigElement.class,
                                                "The people that are friends of this person.",
                                                prop_value_defs,
@@ -265,8 +262,7 @@ import org.vrjuggler.jccl.config.event.*;
       List prop_value_defs = new ArrayList();
       prop_value_defs.add(new PropertyValueDefinition("Last Name", ""));
       PropertyDefinition new_property_def;
-      new_property_def = new PropertyDefinition("Last Name",
-                                                "last_name",
+      new_property_def = new PropertyDefinition("last_name",
                                                 String.class,
                                                 "The last name of this person.",
                                                 prop_value_defs,
