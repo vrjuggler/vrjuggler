@@ -47,12 +47,8 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(GADGET_LIBRARY)
 
-SRCS		=
-
-ifneq (@OS_TYPE@, Win32)
-SRCS		+= DataGloveStandalone.cpp	\
-                   DataGlove.cpp
-endif
+SRCS		= DataGloveStandalone.cpp	\
+                  DataGlove.cpp
 
 include $(MKPATH)/dpp.obj.mk
 
