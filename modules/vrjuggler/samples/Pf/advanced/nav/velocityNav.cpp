@@ -188,6 +188,7 @@ void velocityNav::update()
    //stopWatch.stop();
    //stopWatch.start();
    
+   /* Cluster Sync Debug code
    vpr::Interval cur_time = mNavWand->getTimeStamp();
    vpr::Interval diff_time(cur_time-mLastTimeStamp);
       
@@ -197,7 +198,7 @@ void velocityNav::update()
    std::cout << "Current: " << cur_time.getBaseVal() << "Last: " << mLastTimeStamp.getBaseVal() << "\n" << std::endl;
       
    mLastTimeStamp = cur_time;
-
+   */
 
 
    if(mTimeDelta > 2.0f)    // If the time is greater than 2 seconds ( 1/2 fps)
