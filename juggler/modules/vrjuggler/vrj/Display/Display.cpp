@@ -82,6 +82,7 @@ void Display::configDisplayWindow(jccl::ConfigElementPtr element)
    int sizeY        = element->getProperty<int>("size", 1);
    std::string name = element->getName();
    mBorder          = element->getProperty<bool>("border");
+   mHideMouse       = element->getProperty<bool>("hide_mouse");
    int pipe         = element->getProperty<int>("pipe");
    mActive          = element->getProperty<bool>("active");
    mStereoRequested = element->getProperty<bool>("stereo");

@@ -50,7 +50,7 @@ namespace vrj
 class VJ_CLASS_API Display
 {
 public:
-   Display() : mBorder(true), mPipe(-1), mActive(true), mStereoRequested(false)
+   Display() : mBorder(true), mHideMouse(false), mPipe(-1), mActive(true), mStereoRequested(false)
    {
       _xo = _yo = _xs = _ys = -1;
    }
@@ -92,6 +92,11 @@ public:
 
    bool  shouldDrawBorder()
    { return mBorder;}
+
+   bool shouldHideMouse()
+   {
+      return mHideMouse;
+   }
 
    /** Explicitly set the origin and size 
    * @param updateConfig - If true, then the changes will be reflected in the config element for this display.
@@ -141,6 +146,7 @@ protected:
    std::string    mName;                /**< Name of the window */
    int            _xo, _yo, _xs, _ys;   /**< X and Y origin and size of the view */
    bool           mBorder;              /**< Should we have a border */
+   bool           mHideMouse;              /**< Should we hide the mouse pointer */
    int            mPipe;                /**< Hardware pipe. Index of the rendering hardware */
    bool           mActive;              /**< Is the display active or not? */
    bool           mStereoRequested;     /**< Has stereo been requested? */
