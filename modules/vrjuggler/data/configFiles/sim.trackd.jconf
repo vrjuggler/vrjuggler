@@ -114,7 +114,7 @@
          <base_frame_proxy>Head Proxy</base_frame_proxy>
          <relative_proxy>Wand Proxy</relative_proxy>
       </simulated_relative_position>
-      <input_manager name="Input Manager" version="1">
+      <input_manager name="Input Manager" version="2">
          <driver_path>${VJ_BASE_DIR}/lib/gadgeteer/drivers</driver_path>
          <driver_path>${VJ_BASE_DIR}/lib32/gadgeteer/drivers</driver_path>
          <driver>Trackd_drv</driver>
