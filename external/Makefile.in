@@ -79,10 +79,6 @@ ifneq ($(TARGETS), )
           done
 endif
 
-links-gmtl:
-	cd $(instlinks)/include && $(RM_LN) ./gmtl &&			\
-          $(LN_S) $(EXTROOT_ABS)/GMTL/gmtl ./
-
 links-doozer:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/share
 	cd $(instlinks)/share && $(RM_LN) ./Doozer &&			\
@@ -96,9 +92,6 @@ ifneq ($(TARGETS), )
             $(MAKE) install-$$target || exit 1;				\
           done
 endif
-
-install-gmtl:
-	@$(MAKE) DIRS="GMTL/gmtl" generic-header-install
 
 install-doozer:
 	@$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
