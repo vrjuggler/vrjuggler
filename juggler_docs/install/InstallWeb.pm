@@ -16,6 +16,7 @@ require Exporter;
 
 # Do this to include the path to the script in @INC.
 use File::Basename;
+use UniqueID;
 BEGIN 
 {
     $path = (fileparse("$0"))[1];
@@ -189,12 +190,11 @@ sub recurseAction($)
     $alias_subst{"CurrentFile"} = $curfile;
     $alias_subst{"CurrentFilePath"} = "$full_src_path/$curfile";
     $alias_subst{"CurrentURL"} = "$html_install_prefix/$rel_path/$curfile";
-   
-   my $UniquePageID = "$html_install_prefix/$rel_path/$curfile";
-   $UniquePageID =~ s/\//-/gis;
-   $UniquePageID =~ s/:/./gis;
+
+   my $UniquePageID;
+   UniqueID::filePathToUniqeID( "$html_install_prefix/$rel_path/$curfile", \$UniquePageID ); 
    $alias_subst{"UniquePageID"} = $UniquePageID;
-   
+
     # print "recurseAction: $curfile , $full_src_path , $full_dest_path, $rel_path\n";
 
     # I need the full name of the file where it is going to be installed

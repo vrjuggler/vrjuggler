@@ -33,8 +33,10 @@ if($opt_a == 1)
 $command .= " -a";
 }
 
+system( "CreateTree.pl -i ../html/layout/website.toc.xml -o ./webtc -s subst.pl" );
+
 print "$command\n\n\n\n-------------\n\n";
-system("$command");
+system( "$command" );
 
 if($opt_n == 0)
 {
