@@ -113,7 +113,6 @@ AudiereSoundImplementation::~AudiereSoundImplementation()
  */
 void AudiereSoundImplementation::trigger( const std::string& alias, const int& looping )
 {
-   std::cout << "triggering sound from in audiereImpl" << std::endl;
    
    assert( mDev != NULL && "startAPI must be called prior to this function" );
    
@@ -185,7 +184,6 @@ void AudiereSoundImplementation::setAmbient( const std::string& alias, bool ambi
  */
 void AudiereSoundImplementation::configure( const std::string& alias, const snx::SoundInfo& description )
 {
-   std::cout << "in audiere configure" << std::endl;  
    
    snx::SoundImplementation::configure( alias, description );
 }
@@ -207,7 +205,6 @@ void AudiereSoundImplementation::setPosition( const std::string& alias, float x,
  */
 void AudiereSoundImplementation::getPosition( const std::string& alias, float& x, float& y, float& z )
 {
-   std::cout << "getting audiere position" << std::endl;
    snx::SoundImplementation::getPosition( alias, x, y, z );
 }
 
@@ -335,11 +332,9 @@ void AudiereSoundImplementation::bind( const std::string& alias )
    // are we streaming this sound from disk?
    if(soundInfo.streaming)
    {
-      std::cout << "getting sound from disk" << std::endl;
       mCurrentTrack = audiere::OpenSound(mDev.get(), soundInfo.filename.c_str());
    }
    
-   std::cout << "binding sound in Audiere" << std::endl;
 
    // was it playing?  if so, then start it up again...
    if (soundInfo.triggerOnNextBind == true)

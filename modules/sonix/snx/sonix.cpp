@@ -79,7 +79,6 @@ sonix::~sonix()
  */
 void sonix::trigger( const std::string& alias, const int& repeat )
 {
-   std::cout << "triggering from in sonix" << std::endl;
    this->impl().trigger( alias, repeat );
 }
 
