@@ -31,7 +31,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
-#include <sys/time.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/System.h>
 
@@ -170,12 +169,12 @@ int IBox::sample()
    {
       mPhysicalIbox.std_cmd(0,0,0);
       //    if (c == 0) {
-      //      gettimeofday(&tv,0);
+      //      vpr::System::gettimeofday(&tv,0);
       //      start_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
       //    }
       //    c++;
       //    if (c == 60) {
-      //      gettimeofday(&tv,0);
+      //      vpr::System::gettimeofday(&tv,0);
       //      stop_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
       //      std::cout << 1/((stop_time-start_time) / 60)
       //                << "  " << std::endl;
