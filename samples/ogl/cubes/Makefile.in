@@ -35,7 +35,7 @@ all: cubes
 cubes: ${OBJECTS}
 	${COMPILE} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
 
-cubes.o: cubes.cpp
+cubes.o: cubes.cpp cubesApp.h
 	${COMPILE} -c -o $@ ${srcdir}/cubes.cpp
 
 # -----------------------------------------------------------------------------
