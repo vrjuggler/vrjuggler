@@ -116,17 +116,6 @@ namespace jccl
                               << "'\n" << vprDEBUG_FLUSH;
                            loadDef(file->native_file_string());
                         }
-
-                        
-                        //const std::string::size_type pos = file->leaf().size() - def_ext.size();
-                        //const std::string file_ext = file->leaf().substr(pos);
-                        //if (file_ext == def_ext)
-                        //{
-                        //   vprDEBUG(jcclDBG_CONFIG, vprDBG_VERB_LVL)
-                        //      << "Loading '" << file->native_file_string()
-                        //      << "'\n" << vprDEBUG_FLUSH;
-                        //   loadDef(file->native_file_string());
-                        //}
                      }
                   }
                   catch (fs::filesystem_error& err)
