@@ -38,14 +38,14 @@
 #include <Performer/pf/pfChannel.h>
 
 #include <vrj/Kernel/App.h>
-#include <vrj/Draw/DrawManager.h>
-//#include <vrj/Kernel/vjKernel.h>
 #include <vrj/Draw/Pf/PfDrawManager.h>
 #include <vrj/Draw/Pf/PfUtil.h>
+
 
 namespace vrj
 {
    class Kernel;
+   class DrawManager;
 
 /** Encapulates an actual Performer application.
  *
@@ -166,6 +166,6 @@ public: // -- Factory Function -- //
 
 };
 
-};
+}
 
 #endif
