@@ -339,3 +339,29 @@ AC_DEFUN(VJ_APP_LINKER,
     AC_SUBST(APP_EXTRA_LIBS_END_INST)
     AC_SUBST(APP_EXTRA_LIBS)
 ])
+
+dnl ---------------------------------------------------------------------------
+dnl Usage:
+dnl     VJ_VERSION_GROK(version-file)
+dnl ---------------------------------------------------------------------------
+AC_DEFUN(VJ_VERSION_GROK,
+[
+    version_file="$srcdir/$1"
+
+    MAJOR_VERSION=0
+    MINOR_VERSION=0
+    MICRO_VERSION=0
+
+    if test -r "$version_file" ; then
+        ver_str=`head -1 "$version_file"`
+        ver_num=`echo "$ver_str" | sed -e 's/^\(.*\) @.*@$/\1/'`
+        ver_str_sep=`echo "$ver_num" | sed -e 's/\./ /g'`
+        MAJOR_VERSION=`echo "$ver_str_sep" | sed -e 's/^\(..*\) ..* ..*$/\1/'`
+        MINOR_VERSION=`echo "$ver_str_sep" | sed -e 's/^..* \(..*\) ..*$/\1/'`
+        MICRO_VERSION=`echo "$ver_str_sep" | sed -e 's/^..* ..* \(..*\)$/\1/'`
+    fi
+
+    AC_SUBST(MAJOR_VERSION)
+    AC_SUBST(MINOR_VERSION)
+    AC_SUBST(MICRO_VERSION)
+])
