@@ -1,7 +1,7 @@
 #ifndef _CYBERGLOVE_H_
 #define _CYBERGLOVE_H_
 
-#include <config.h>
+#include <vjConfig.h>
 
 #ifdef VJ_OS_HPUX
 #   include <float.h>

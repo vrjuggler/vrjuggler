@@ -1,7 +1,7 @@
 #ifndef _VJ_SYSTEM_DATA_
 #define _VJ_SYSTEM_DATA_
 
-#include <config.h>
+#include <vjConfig.h>
 
 /**
  * vjSystemData: Globabl data that many objects need access to.

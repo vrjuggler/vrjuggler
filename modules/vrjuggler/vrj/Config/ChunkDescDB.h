@@ -11,7 +11,7 @@
 #ifndef _VJ_CHUNKDESCDB_H_
 #define _VJ_CHUNKDESCDB_H_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <iostream.h>
 #include <Config/vjChunkDesc.h>
 

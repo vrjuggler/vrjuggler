@@ -1,7 +1,7 @@
 #ifndef _VJ_SGISYSTEMFACTORY_
 #define _VJ_SGISYSTEMFACTORY_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <Kernel/vjSystemFactory.h>
 #include <Kernel/GL/vjGlWindow.h>
 

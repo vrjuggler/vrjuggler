@@ -1,4 +1,4 @@
-#include <config.h>
+#include <vjConfig.h>
 #include <iostream.h>
 #include <fstream.h>
 #include <sys/types.h>

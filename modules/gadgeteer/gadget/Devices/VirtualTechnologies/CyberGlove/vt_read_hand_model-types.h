@@ -14,7 +14,7 @@
 /*  --    Author:  Larry Edwards                                --  */
 /*  ==============================================================  */
 
-#include <config.h>
+#include <vjConfig.h>
 #include <Input/vjGlove/vt_read_object-types.h>
 
 typedef struct

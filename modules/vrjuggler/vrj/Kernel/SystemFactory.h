@@ -1,7 +1,7 @@
 #ifndef _VJ_SYSTEM_FACTORY_
 #define _VJ_SYSTEM_FACTORY_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <Kernel/vjDisplayManager.h>
 class vjDisplayManager;
 #include <Kernel/vjDisplay.h>

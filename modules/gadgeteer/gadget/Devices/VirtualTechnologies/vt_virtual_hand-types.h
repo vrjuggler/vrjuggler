@@ -14,7 +14,7 @@
 /*  --    Author: Larry Edwards                             --  */
 /*  ==========================================================  */
 
-#include <config.h>
+#include <vjConfig.h>
 #include <ctype.h>
 
 #include <Input/vjGlove/vt_read_user_cal-types.h>

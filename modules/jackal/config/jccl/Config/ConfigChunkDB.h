@@ -2,7 +2,7 @@
 #ifndef _VJ_CONFIGCHUNKDB_H_
 #define _VJ_CONFIGCHUNKDB_H_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <Config/vjConfigChunk.h>
 #include <Config/vjChunkDescDB.h>
 

@@ -8,7 +8,7 @@
 /*  --       Copyright (C) 1993 Virtual Technologies        --  */
 /*  ==========================================================  */
 
-#include <config.h>
+#include <vjConfig.h>
 #include <Input/vjGlove/vt_init.h>
 
 extern char version_string[];

@@ -1,7 +1,7 @@
 #ifndef _VJ_PFAPP_
 #define _VJ_PFAPP_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <Performer/pf/pfScene.h>
 #include <Kernel/vjApp.h>
 //#include <Kernel/vjKernel.h>

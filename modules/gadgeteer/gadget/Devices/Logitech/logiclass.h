@@ -16,7 +16,7 @@
 // NASA Ames Research Center, Moffett Field, CA 94035
 //////////////////////////////////////////////////////////////////////////
 
-#include <config.h>
+#include <vjConfig.h>
 #include <Input/vjPosition/vjPosition.h>    // The base class for vr_devices
 #include <Math/vjVec3.h>
 //#include <Inventor/SbLinear.h>	// For the vec classes

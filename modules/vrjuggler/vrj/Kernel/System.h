@@ -1,7 +1,7 @@
 #ifndef _VJSYSTEM_H_
 #define _VJSYSTEM_H_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <Sync/vjMutex.h>
 
 //------------------------------------------------------

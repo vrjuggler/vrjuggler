@@ -7,7 +7,7 @@
 #ifndef _VJ_ANALOGPROXY_H_
 #define _VJ_ANALOGPROXY_H_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <assert.h>
 #include <Input/vjInput/vjAnalog.h>
 

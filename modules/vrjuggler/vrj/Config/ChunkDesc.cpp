@@ -1,6 +1,6 @@
 
 
-#include <config.h>
+#include <vjConfig.h>
 #include <Config/vjChunkDesc.h>
 
 vjChunkDesc::vjChunkDesc () :plist() {

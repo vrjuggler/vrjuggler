@@ -2,7 +2,7 @@
 #ifndef _PARSEUTIL_H_
 #define _PARSEUTIL_H_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <iostream.h>
 #include <Config/vjVarValue.h>
 

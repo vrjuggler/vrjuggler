@@ -1,4 +1,4 @@
-#include <config.h>
+#include <vjConfig.h>
 #include <Math/vjVec4.h>
 
 void vjVec4::xform(const vjMatrix& _m, vjVec4 _v)

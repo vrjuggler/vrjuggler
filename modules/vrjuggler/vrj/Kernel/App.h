@@ -1,7 +1,7 @@
 #ifndef _VJ_APP_
 #define _VJ_APP_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <Kernel/vjAPI.h>
 #include <Kernel/vjKernel.h>
 #include <Kernel/vjDebug.h>

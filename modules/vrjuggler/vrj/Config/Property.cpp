@@ -3,7 +3,7 @@
  */
 
 
-#include <config.h>
+#include <vjConfig.h>
 #include <Config/vjProperty.h>
 
 

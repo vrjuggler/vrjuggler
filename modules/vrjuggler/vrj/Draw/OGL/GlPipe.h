@@ -1,7 +1,7 @@
 #ifndef _VJ_GL_PIPE_
 #define _VJ_GL_PIPE_
 
-#include <config.h>
+#include <vjConfig.h>
 
 #ifdef VJ_OS_HPUX
 #   include <vector>

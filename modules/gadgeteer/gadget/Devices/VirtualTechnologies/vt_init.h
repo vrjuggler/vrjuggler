@@ -12,7 +12,7 @@
 /*  ================================================================  */
 
 
-#include <config.h>
+#include <vjConfig.h>
 #include <Input/vjGlove/vt_types.h>	/* Included for Boolean declaration */
 
 enum
