@@ -11,16 +11,16 @@ public:
    {
       this->addDescriptor( "aw" );
       this->addDescriptor( "AW" );
+      cout<<"[soundengine] Regging Audioworks Creator\n"<<flush;
       SoundFactory::registerCreator( &mSoundEngineCreator );
    }
    virtual SoundEngine* newEngine()
    {
-      cout<<"Regging Audioworks Creator\n"<<flush;
       return new AwSoundEngine;
    }
    virtual ~AwSoundEngineCreator()
    {
-      cout<<"Audioworks Creator Died (application probably exited, or library was unloaded)\n"<<flush;
+      cout<<"[soundengine] Audioworks Creator Died (application probably exited, or library was unloaded)\n"<<flush;
    }
    
    static AwSoundEngineCreator mSoundEngineCreator;

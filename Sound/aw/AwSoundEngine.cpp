@@ -54,11 +54,11 @@ void AwSoundEngine::init( const char* const adfFileName )
    mObserver = awFindObs( "you" );
    if (mObserver == NULL)
    {
-      cout<<"\n"
-          <<"!!! WARNING !!!: could not find in the .adf file the \"observer\" named \"you\".  \n"
-          <<"!!!         !!!: This *has* to be there, or else none of the sound localization \n"
-          <<"!!!         !!!:   functions will work (like setPosition). \n"
-          <<"\n"<<flush;
+      cout<<"[aw] \n"
+          <<"[aw] !!! WARNING !!!: could not find in the .adf file the \"observer\" named \"you\".  \n"
+          <<"[aw] !!!         !!!: This *has* to be there, or else none of the sound localization \n"
+          <<"[aw] !!!         !!!:   functions will work (like setPosition). \n"
+          <<"[aw] \n"<<flush;
    }
 }
 
