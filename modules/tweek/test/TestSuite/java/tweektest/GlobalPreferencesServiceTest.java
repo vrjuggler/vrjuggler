@@ -19,16 +19,19 @@ public class GlobalPreferencesServiceTest extends TestCase
       return new TestSuite(GlobalPreferencesServiceTest.class);
    }
 
-/*
-   public void testCreationAndLoad ()
+   /**
+    * Tests creation of a new Tweek RC file.
+    */
+   public void testCreation ()
    {
-      mPrefs.setFile(mTestTweekrc);
-
-      mPrefs.load();
+      mPrefs.setFile(mTestTweekrc);      // Specify an alternate file to load
+      mPrefs.load();                     // Load it--this creates it first
       assertTrue(mTestTweekrc.exists());
    }
-*/
 
+   /**
+    * Tests modification of the default settings in a fresh Tweek RC file.
+    */
    public void testModification ()
    {
       mPrefs.setFile(mTestTweekrc);
@@ -73,6 +76,10 @@ public class GlobalPreferencesServiceTest extends TestCase
       assertTrue(mPrefs.getLazyPanelBeanInstantiation() == lazyinst);
    }
 
+   /**
+    * Ensures that a fresh GlobalPreferencesService object is available for
+    * each test and that the test Tweek RC file does not exist.
+    */
    protected void setUp ()
    {
       mPrefs = new GlobalPreferencesService(new BeanAttributes("GlobalPreferences"));
@@ -85,6 +92,9 @@ public class GlobalPreferencesServiceTest extends TestCase
       assertTrue(! mTestTweekrc.exists());
    }
 
+   /**
+    * Removes the test Tweek RC file that a given test may have created.
+    */
    protected void tearDown ()
    {
       if ( mTestTweekrc.exists() )
