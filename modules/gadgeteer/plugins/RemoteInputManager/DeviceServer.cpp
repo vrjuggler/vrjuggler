@@ -49,8 +49,8 @@ namespace cluster
       mDevice = device;
       mPluginGUID = plugin_guid;
 
-      mDataPacket = new DataPacket();
       mDeviceData = new std::vector<vpr::Uint8>;
+      mDataPacket = new DataPacket(plugin_guid, mId, mDeviceData);
       mBufferObjectWriter = new vpr::BufferObjectWriter(mDeviceData);
       start();
    }
@@ -72,25 +72,21 @@ namespace cluster
 
    void DeviceServer::send()
    {
-      lockClients();
-//      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-//         << clrOutBOLD(clrMAGENTA,"DeviceServer::send()")
-//         << "Sending Device Data for: " << getName() << std::endl << vprDEBUG_FLUSH;
+      vpr::Guard<vpr::Mutex> guard(mClientsLock);
 
-      //--send to all nodes in the map
-      //WE MUST NEVER USE THE BASE CLASS's SEND()
+      //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+      //   << clrOutBOLD(clrMAGENTA,"DeviceServer::send()")
+      //   << "Sending Device Data for: " << getName() << std::endl << vprDEBUG_FLUSH;
+
       for (std::vector<cluster::ClusterNode*>::iterator i = mClients.begin();
            i != mClients.end() ; i++)
       {
          //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Sending data to: "
-         //   << (*i)->getName() << std::endl << vprDEBUG_FLUSH;
-         (*i)->lockSockWrite();
-         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "We have the lock for " << (*i)->getName()
-         //   << std::endl << vprDEBUG_FLUSH;
+         //   << (*i)->getName() << " trying to lock socket" << std::endl << vprDEBUG_FLUSH;
 
          try
          {
-            mDataPacket->send((*i)->getSockStream(), mPluginGUID, mId, mDeviceData);
+            (*i)->send(mDataPacket);            
          }
          catch(cluster::ClusterException cluster_exception)
          {
@@ -105,21 +101,13 @@ namespace cluster
                << std::endl << vprDEBUG_FLUSH;
 
             (*i)->setConnected(ClusterNode::DISCONNECTED);
-            (*i)->unlockSockWrite();
-//            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Released the lock for " << (*i)->getName()
-//               << std::endl << vprDEBUG_FLUSH;
-
+            
             debugDump(vprDBG_CONFIG_LVL);
          }
-         (*i)->unlockSockWrite();
-//         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Released the lock for " << (*i)->getName()
-//            << std::endl << vprDEBUG_FLUSH;
-
       }
-      unlockClients();
-//      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-//         << clrOutBOLD(clrMAGENTA,"DeviceServer::send()")
-//         << "Done Sending Device Data for: " << getName() << std::endl << vprDEBUG_FLUSH;
+      //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+      //   << clrOutBOLD(clrMAGENTA,"DeviceServer::send()")
+      //   << "Done Sending Device Data for: " << getName() << std::endl << vprDEBUG_FLUSH;
    }
    void DeviceServer::updateLocalData()
    {
@@ -127,24 +115,32 @@ namespace cluster
       mBufferObjectWriter->getData()->clear();
       mBufferObjectWriter->setCurPos(0);
 
+      // This updates the mDeviceData which both mBufferedObjectReader and mDevicePacket point to
       mDevice->writeObject(mBufferObjectWriter);
+
+      // We must update the size of the actual data that we are going to send
+      mDataPacket->getHeader()->setPacketLength(Header::RIM_PACKET_HEAD_SIZE 
+                                       + 16 /*Plugin GUID*/
+                                       + 16 /*Plugin GUID*/
+                                       + mDeviceData->size());
+
+      // We must serialize the header again so that we can reset the size.
+      mDataPacket->getHeader()->serializeHeader();
    }
 
    void DeviceServer::addClient(ClusterNode* new_client_node)
    {
       vprASSERT(0 == mClientsLock.test());
       vprASSERT(new_client_node != NULL && "You can not add a new client that is NULL");
-      lockClients();
+      vpr::Guard<vpr::Mutex> guard(mClientsLock);
 
       mClients.push_back(new_client_node);
-
-      unlockClients();
    }
 
    void DeviceServer::removeClient(const std::string& host_name)
    {
       vprASSERT(0 == mClientsLock.test());
-      lockClients();
+      vpr::Guard<vpr::Mutex> guard(mClientsLock);
 
       for (std::vector<cluster::ClusterNode*>::iterator i = mClients.begin() ;
             i!= mClients.end() ; i++)
@@ -152,17 +148,16 @@ namespace cluster
          if ((*i)->getHostname() == host_name)
          {
             mClients.erase(i);
-            unlockClients();
             return;
          }
       }
-      unlockClients();
    }
 
    void DeviceServer::debugDump(int debug_level)
    {
       vprASSERT(0 == mClientsLock.test());
-      lockClients();
+      
+      vpr::Guard<vpr::Mutex> guard(mClientsLock);
 
       vpr::DebugOutputGuard dbg_output(gadgetDBG_RIM,debug_level,
                                  std::string("-------------- DeviceServer --------------\n"),
@@ -182,7 +177,6 @@ namespace cluster
             vprDEBUG(gadgetDBG_RIM,debug_level) << "----------------------------------" << std::endl << vprDEBUG_FLUSH;
          }
       }
-      unlockClients();
    }
 
    void DeviceServer::controlLoop(void* nullParam)
@@ -198,12 +192,18 @@ namespace cluster
       {
          // Wait for trigger
          deviceServerTriggerSema.acquire();
+         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "DeviceServer: " << getName() << " triggered\n" << vprDEBUG_FLUSH;
 
+         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Before Update Data\n" << vprDEBUG_FLUSH;
          updateLocalData();
+         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "After Update Data\n" << vprDEBUG_FLUSH;
+         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Before send Data\n" << vprDEBUG_FLUSH;
          send();
+         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "After Send Data\n" << vprDEBUG_FLUSH;
 
          // Signal Done Rendering
          deviceServerDoneSema.release();
+         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "DeviceServer synced\n" << vprDEBUG_FLUSH;
       }
    }
    /** Starts the control loop. */

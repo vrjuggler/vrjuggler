@@ -94,10 +94,15 @@ namespace cluster
             {
                DataPacket* temp_data_packet = dynamic_cast<DataPacket*>(packet);
                vprASSERT(NULL != temp_data_packet && "Dynamic cast failed!");
+   
+               //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "ADM::handlePacket()..." << std::endl <<  vprDEBUG_FLUSH;
+               //temp_data_packet->printData(1);
+   
                ApplicationData* user_data = getRemoteApplicationData(temp_data_packet->getId());
                if (user_data != NULL)
-               {
-                  user_data->readObject(temp_data_packet->getPacketReader());
+               {                  
+                  vpr::BufferObjectReader* temp_reader = new vpr::BufferObjectReader(temp_data_packet->getDeviceData());
+                  user_data->readObject(temp_reader);
                }
                break;
             }

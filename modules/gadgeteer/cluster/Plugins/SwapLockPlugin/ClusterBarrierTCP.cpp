@@ -106,7 +106,7 @@ namespace cluster
          SyncRequest sync_request(local_host_name, mTCPport, temp_manager_id);
          sync_request.send(mSyncServer);
    
-         Packet* packet = PacketFactory::instance()->recvPacket(mSyncServer);
+         Packet* packet = mSyncServer->recvPacket();
          SyncAck* ack_packet = static_cast<SyncAck*>(packet);
    
          if (ack_packet->getAck())
@@ -268,7 +268,9 @@ namespace cluster
             Packet* temp_packet;
             try
             {
-               temp_packet = PacketFactory::instance()->recvPacket(client_sock);
+               ClusterNode* temp_node = new ClusterNode("TEMP", "Temp", 0, "None", client_sock);
+               temp_packet = temp_node->recvPacket();
+               delete temp_node;
             }
             catch(cluster::ClusterException cluster_exception)
             {

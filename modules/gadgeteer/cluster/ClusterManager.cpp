@@ -67,12 +67,7 @@ namespace cluster
    ClusterManager::ClusterManager() : mClusterActive(false), mClusterReady(false)
    {
       jccl::ConfigManager::instance()->addConfigChunkHandler(ClusterNetwork::instance());
-      jccl::DependencyManager::instance()->registerChecker(new ClusterDepChecker());
-      
-      //We start all nodes thinking they are masters
-      //This makes us not actually do anything bellow
-      //Until configuration occurs
-      
+      jccl::DependencyManager::instance()->registerChecker(new ClusterDepChecker());      
    }
    ClusterManager::~ClusterManager()
    {
@@ -264,7 +259,7 @@ namespace cluster
       if (updateNeeded)
       {
          sendEndBlocksAndSignalUpdate();
-      }                                 
+      }
    }
 
    void ClusterManager::preDraw()
@@ -282,7 +277,7 @@ namespace cluster
       if (updateNeeded)
       {
          sendEndBlocksAndSignalUpdate();
-      }                                 
+      }
    }
 
    void ClusterManager::postPostFrame()
@@ -342,6 +337,7 @@ namespace cluster
          {
                // Send End Blocks to all connected ClusterNodes
             (*i)->send(temp_end_block);
+
                // Signal Update thread to read Network Packets
             (*i)->signalUpdate();
          }                         
@@ -350,7 +346,7 @@ namespace cluster
       {
          if ((*i)->isConnected())
          {
-              //Block waiting for all packets to be received
+            //Block waiting for all packets to be received
             (*i)->sync();
          }               
       }

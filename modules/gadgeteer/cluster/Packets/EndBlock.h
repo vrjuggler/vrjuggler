@@ -50,101 +50,40 @@ namespace cluster
 class GADGET_CLASS_API EndBlock : public Packet
 {
 public:
-   /**
-    * Create a EndBlock packet
-    *   
-    * @param packet_head -Header which has already been received and 
-    *                     determined to be for a EndBlock.
-    * @param stream -A SocketStream that we will use to receive the packet data.
-    */
-   EndBlock(Header* packet_head, vpr::SocketStream* stream)
-   {
-      // Copy over pointer to header since it normally happens in Packet::recv(SocketStream* stream)
-      mHeader = packet_head;
-
-      /*
-      // Receive the data needed for this packet from the given SocketStream.
-      recv(packet_head,stream);
-      
-      // Parse the new data into member variables.
-      parse();
-      */
-   }
+   EndBlock()
+   {;}
 
    /**
     * Create a EndBlock packet to signal that the local node has reached the end of the frame.
     *
     * @param frame_number -The current number of frames that have been drawn.
     */
-   EndBlock(const vpr::Uint32& frame_number)
-   {
-      // Set the local member variables using the given values.
-
-      // Create a Header for this packet with the correect type and size.
-      mHeader = new Header(Header::RIM_PACKET,
-                                       Header::RIM_END_BLOCK,
-                                       Header::RIM_PACKET_HEAD_SIZE,
-                                       // Not needed since the ClusterManager will grab this packet
-                                       //+ 16 /*Plugin GUID*/, 
-                                       frame_number);
-      // Serialize the given data.
-      serialize();
-   }
+   EndBlock(const vpr::Uint32& frame_number);
 
    /**
     * Serializes member variables into a data stream.
     */
-   void serialize()
-   {
-      // Clear the data stream.
-      mPacketWriter->getData()->clear();
-      mPacketWriter->setCurPos(0);
-
-      // Serialize the header.
-      mHeader->serializeHeader();      
-      
-      // Serialize the Temp Var
-      //mPacketWriter->writeUint16(mTempVar);
-   }
+   void serialize();
 
    /**
     * Parses the data stream into the local member variables.
     */
-   void parse()
-   {
-      // De-Serialize the Temp Var
-      //mTempVar = mPacketReader->readUint16();
-   }
-
+   virtual void parse(vpr::BufferObjectReader* reader);
+   
    /**
     * Print the data to the screen in a readable form.
     */
-   virtual void printData(int debug_level)
-   {
-      boost::ignore_unused_variable_warning(debug_level);
-/*      vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-         <<  clrOutBOLD(clrYELLOW,"====== END BLOCK ======\n") << vprDEBUG_FLUSH;
-
-      Packet::printData(debug_level);
-
-      vprDEBUG(gadgetDBG_RIM,debug_level)
-         << clrOutBOLD(clrYELLOW, "New State:    ") << mNewState
-         << std::endl << vprDEBUG_FLUSH;
-
-      vprDEBUG_END(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-         <<  clrOutBOLD(clrYELLOW,"=======================\n") << vprDEBUG_FLUSH;
-*/
-   }
+   virtual void printData(int debug_level);
 
    /**
     * Return the type of this packet.
     */
-   static vpr::Uint16 getBaseType()
+   static vpr::Uint16 getPacketFactoryType()
    {
        return(Header::RIM_END_BLOCK);
    }
 private:
-   //vpr::Uint16    mTempVar;    /**< Temporary variable that is no longer used. */
+   vpr::Uint16    mTempVar;    /**< Temporary variable that is no longer used. */
 };
 }
 

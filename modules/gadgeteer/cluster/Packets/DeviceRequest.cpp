@@ -35,18 +35,12 @@
 #include <gadget/Util/Debug.h>
 
 #include <cluster/Packets/DeviceRequest.h>
+#include <cluster/Packets/PacketFactory.h>
 
 namespace cluster
 {
-   DeviceRequest::DeviceRequest(Header* packet_head, vpr::SocketStream* stream)
-   {
-      // Receive the data needed for this packet from the given SocketStream.
-      recv(packet_head,stream);
-      
-      // Parse the new data into member variables.
-      parse();
-   }
-
+   CLUSTER_REGISTER_CLUSTER_PACKET_CREATOR(DeviceRequest);   
+   
    DeviceRequest::DeviceRequest(const vpr::GUID& plugin_guid, const std::string& device_name)
    {
       // Set the local member variables using the given values.
@@ -80,13 +74,13 @@ namespace cluster
       // Serialize the name of the requested device.
       mPacketWriter->writeString(mDeviceName);
    }
-   void DeviceRequest::parse()
+   void DeviceRequest::parse(vpr::BufferObjectReader* reader)
    {   
       // De-Serialize plugin GUID
-      mPluginId.readObject(mPacketReader);
+      mPluginId.readObject(reader);
 
       // De-Serialize the name of the requested device.
-      mDeviceName = mPacketReader->readString();
+      mDeviceName = reader->readString();
    }
    
    void DeviceRequest::printData(int debug_level)

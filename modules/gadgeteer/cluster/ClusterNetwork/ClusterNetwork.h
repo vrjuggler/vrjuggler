@@ -102,8 +102,7 @@ private:
     * first by callinf lockClusterNodes()
     */
    vpr::ReturnStatus addClusterNode(const std::string& name, const std::string& host_name, 
-                                    const vpr::Uint16& port, const std::string& manager_id, 
-                                    vpr::SocketStream* socket_stream = NULL);
+                                    const vpr::Uint16& port, vpr::SocketStream* socket_stream = NULL);
 
    /**
     * Adds the given ClusterNode to the std::map of ClusterNodes
@@ -229,18 +228,6 @@ private:
    //    UPDATING METHODS     //
    /////////////////////////////
 private:   
-   /**
-    * Start the updating thread. This thread is responsible for
-    * keeping the ClusterNetwork up-to-date (ie connecting to all pending nodes.)
-    */
-   bool startUpdating();
-
-   /**
-    * Control Loop used to continuously keep the ClusterNetwork up-to-date
-    * by attempting all pending ClusterNodes.
-    */
-   void updateLoop(void* nullParam);
-   
    /**
     * Kill the listen thread and the update thread
     */
