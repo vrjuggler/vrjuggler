@@ -50,8 +50,7 @@ AGLContext GlWindowOSX::aglShareContext = NULL;
 
 GlWindowOSX::GlWindowOSX():GlWindow()
 {
-    gadget::KeyboardOSX::KeyboardOSX();
-    mAreKeyboardDevice = false;
+    gadget::KeyboardOSX::KeyboardOSX();    
 }
 
 GlWindowOSX::~GlWindowOSX() {

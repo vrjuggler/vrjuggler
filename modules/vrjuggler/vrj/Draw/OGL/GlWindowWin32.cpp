@@ -50,7 +50,7 @@ namespace vrj
 
 GlWindowWin32::GlWindowWin32()
    : mMatch(NULL), mWinHandle(NULL), mRenderContext(NULL),
-      mDeviceContext(NULL), mAreKeyboardDevice( false )
+      mDeviceContext(NULL)
 {
 }
 GlWindowWin32::~GlWindowWin32()
