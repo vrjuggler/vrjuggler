@@ -7,8 +7,11 @@
 #include <Performer/pf/pfChannel.h>
 #include <Performer/pf/pfEarthSky.h>
 #include <Performer/pf/pfLightSource.h>
+#include <Performer/pf/pfNode.h>
+#include <Performer/pf/pfTraverser.h>
 #include <Performer/pf/pfDCS.h>
 #include <Performer/pfdu.h>
+#include <Performer/pfutil.h>
 
     // --- VR Juggler Stuff --- //
 #include <Kernel/vjKernel.h>
@@ -16,10 +19,21 @@
 #include <Kernel/vjDebug.h>
 #include <Kernel/vjProjection.h>
 
+/*
 #include <pfNaver.h>
 #include <collidor.h>
 #include <planeCollidor.h>
 #include <pfCollidor.h>
+*/
+
+int lightPreDraw(pfTraverser *trav, void *userData);
+int lightPostDraw(pfTraverser* trav, void* userData);
+int lightPreCull(pfTraverser *trav, void *userData);
+int lightPostCull(pfTraverser* trav, void* userData);
+int lightPreApp(pfTraverser *trav, void *userData);
+int lightPostApp(pfTraverser* trav, void* userData);
+int light_dcsPreCull(pfTraverser* trav, void* userData);
+int light_dcsPostCull(pfTraverser* trav, void* userData);
 
 // Declare my application class
 class myApp : public vjPfApp
@@ -34,73 +48,75 @@ public:
    virtual void init()
    {
       vjDEBUG(vjDBG_ALL, 1) << "app::init\n" << vjDEBUG_FLUSH;
-      vjProjection::setNearFar(1.0, 10000);
+      vjProjection::setNearFar(0.5, 1000);
    }
 
    virtual void apiInit()
    {
       vjDEBUG(vjDBG_ALL,1) << "app::apiInit\n" << vjDEBUG_FLUSH;
-      pfEnable(PFEN_LIGHTING);
-
    }
 
    /// Initialize the scene graph
    virtual void initScene()
    {
-
       // Setup the state like we need
-      //pfEnable(PFEN_LIGHTING);
-      pfEnable(PFEN_LIGHTING);
 
       int cur_light_state = pfGetEnable(PFEN_LIGHTING);
-      cout << "initScene: Current lighting state: " << cur_light_state << endl;
+      vjDEBUG(vjDBG_ALL,0) << "initScene: Current lighting state: " << cur_light_state << endl << vjDEBUG_FLUSH;
 
       // Load the scene
       vjDEBUG(vjDBG_ALL, 0) << "app::initScene\n" << vjDEBUG_FLUSH;
-      rootNode = new pfScene;
+      rootNode = new pfGroup;
 
-      naver = new pfNaver();
-      pfLightSource* sun = new pfLightSource;
-      pfLightSource* sun1 = new pfLightSource;
+      //naver = new pfNaver();
 
-      //pfGeoState* gstate = new pfGeoState;
-      //gstate->setMode(PFSTATE_ENLIGHTING, PF_ON);
-      //gstate->setMode(PFSTATE_CULLFACE, PFCF_OFF);
-      //rootNode->setGState(gstate);
+      sun1 = new pfLightSource;
+      pfDCS* fake_dcs = new pfDCS;
+      sun1->setPos(0.0f, -1.0f, 0.0f, 0.0f);
+      sun1->setColor(PFLT_DIFFUSE,1.0f,0.0f,0.0f);
+      sun1->setColor(PFLT_AMBIENT,0.0f,1.0f,0.0f);
+      sun1->setColor(PFLT_SPECULAR, 1.0f, 1.0f, 1.0f);
+      //naver->addChild(sun1);
 
+      fake_dcs->addChild(sun1);
+      //sun1->on();     // By default
 
-      /*
-      sun->setPos(0.0f, 1.0f, 0.0f, 0.0f);
-      sun->setColor(PFLT_DIFFUSE,1.0f,1.0f,0.8f);
-      sun->setColor(PFLT_AMBIENT,0.4f,0.4f,0.3f);
-      rootNode->addChild(sun);
-      sun->on();
+      sun1->setTravFuncs(PFTRAV_DRAW, lightPreDraw, lightPostDraw);
+      sun1->setTravFuncs(PFTRAV_CULL, lightPreCull, lightPostCull);
+      sun1->setTravFuncs(PFTRAV_APP, lightPreApp, lightPostApp);
+      fake_dcs->setTravFuncs(PFTRAV_CULL, light_dcsPreCull, light_dcsPostCull);
 
-      sun1->setPos(0.0f, 0.0f, 1.0f, 0.0f);
-      sun1->setColor(PFLT_DIFFUSE,1.0f,1.0f,0.8f);
-      sun1->setColor(PFLT_AMBIENT,0.4f,0.4f,0.3f);
-      rootNode->addChild(sun1);
-      sun1->on();
-      */
+      //rootNode->addChild(new pfLightSource);
 
-      rootNode->addChild(new pfLightSource);
-
+      /// Load SIMPLE geometry
+      ///*
+      //pfNode* obj = pfdLoadFile("/usr/share/Performer/data/chamber.0.lsa");
+      pfNode* obj = pfdLoadFile("/usr/share/Performer/data/klingon.flt");
       pfDCS* world_model = new pfDCS;    // The node with the world under it
       //rootNode->addChild(naver);
+      rootNode->addChild(world_model);
+      rootNode->addChild(fake_dcs);
 
-      // Load the data files
-      //pfFilePath("/usr/share/Performer/data:/usr/share/Performer/data/town");
-      pfNode* obj = pfdLoadFile("/usr/share/Performer/data/chamber.0.lsa");
-      //pfNode* obj = pfdLoadFile("/usr/share/Performer/data/cow.obj");
-      //pfNode* obj = pfdLoadFile("/usr/share/Performer/data/town/town_ogl_pfi.pfb");
-
-      /*
       world_model->addChild(obj);
-      //world_model->setScale(3.0f);
-      //vjMatrix initial_pos;  initial_pos.setTrans(-2500,-400,2500);
+      world_model->setScale(0.25f);
+      world_model->setTrans(0.0,5.0,-5.0);
       vjMatrix initial_pos;
-      //initial_pos.setTrans(7500,50,-7500);
-      //initial_pos.setTrans(100,200,350);
+      initial_pos.setTrans(0,0,0);
+      //naver->getNavigator()->setCurPos(initial_pos);
+      //naver->addChild(world_model);
+      //*/
+
+      // Load the TOWN
+      /*
+      pfFilePath("/usr/share/Performer/data:/usr/share/Performer/data/town");
+      pfNode* obj = pfdLoadFile("/usr/share/Performer/data/town/town_ogl_pfi.pfb");
+      pfDCS* world_model = new pfDCS;    // The node with the world under it
+      rootNode->addChild(naver);
+
+      world_model->addChild(obj);
+      world_model->setScale(3.0f);
+      vjMatrix initial_pos;
+      initial_pos.setTrans(7500,50,-7500);
       naver->getNavigator()->setCurPos(initial_pos);
       naver->addChild(world_model);
 
@@ -110,11 +126,12 @@ public:
       naver->getNavigator()->setCollidor(collide);
       */
 
-      rootNode->addChild(obj);
+      pfuTravPrintNodes(rootNode, "nodes.out");
+      pfdStoreFile(rootNode, "nodes.pfb");
    }
 
    /// Return the current scene graph
-   virtual pfScene* getScene()
+   virtual pfGroup* getScene()
    {
       vjDEBUG(vjDBG_ALL, 0) << "app::getScene\n" << vjDEBUG_FLUSH;
       return rootNode;
@@ -130,6 +147,32 @@ public:
    virtual void preDraw()
    {
       //vjDEBUG(vjDBG_ALL, 1) << "app::preDraw\n" << vjDEBUG_FLUSH;
+      static float x=10;
+      static float y=-5;
+      static float z=3;
+      static float amb=0.0f;
+
+      x+=0.05;
+      y+=0.04;
+      z+=0.02;
+      amb += 0.025f;
+
+      if(x>20.0f)
+         x = -20.0f;
+      if(y>20.0f)
+         y = -20.0f;
+      if(z>20.0f)
+         z = -20.0f;
+      if(amb>1.0f)
+         amb = 0.0f;
+
+      //sun1->setPos(x,y,z, 1.0f);
+      cerr << "set ambient: " << amb << endl;
+      sun1->setColor(PFLT_AMBIENT, amb, amb, amb);
+
+      pfSphere* bound = new pfSphere;
+      sun1->getBound(bound);
+      cerr << "rad: " << bound->radius << endl;
    }
 
    /// Function called after pfDraw
@@ -142,10 +185,11 @@ public:
    int   wandIndex;     // the index of the wand
    int   button0Index;   // The index of the wand button
    int   button1Index;  // The index of button1
+   pfLightSource* sun1;
 
-   pfNaver*    naver;
+   //pfNaver*    naver;
    //pfDCS*      baseDCS;
-   pfScene*   rootNode;
+   pfGroup*   rootNode;
 };
 
 
@@ -172,4 +216,58 @@ int main(int argc, char* argv[])
 
 
 
+int lightPreDraw(pfTraverser *trav, void *userData)
+{ cerr << "trav: light preDraw\n"; return PFTRAV_CONT;}
+
+int lightPostDraw(pfTraverser* trav, void* userData)
+{ cerr << "trav: light postDraw\n"; return PFTRAV_CONT;}
+
+int lightPreCull(pfTraverser *trav, void *userData)
+{
+   cerr << "trav: light preCull\n";
+   pfSphere* bound = new pfSphere;
+   trav->getNode()->getBound(bound);
+   cerr << "rad: " << bound->radius << endl;
+   return PFTRAV_CONT;
+}
+
+int lightPostCull(pfTraverser* trav, void* userData)
+{
+   cerr << "trav: light postCull\n";
+   pfSphere* bound = new pfSphere;
+   trav->getNode()->getBound(bound);
+   cerr << "rad: " << bound->radius << endl;
+   return PFTRAV_CONT;
+}
+
+int lightPreApp(pfTraverser *trav, void *userData)
+{
+   cerr << "trav: light preApp\n";
+   pfSphere* bound = new pfSphere;
+   trav->getNode()->getBound(bound);
+   cerr << "rad: " << bound->radius << endl;
+   return PFTRAV_CONT;
+}
+
+int lightPostApp(pfTraverser* trav, void* userData)
+{
+   cerr << "trav: light postApp\n";
+   pfSphere* bound = new pfSphere;
+   trav->getNode()->getBound(bound);
+   cerr << "rad: " << bound->radius << endl;
+   return PFTRAV_CONT;
+}
+
+int light_dcsPreCull(pfTraverser* trav, void* userData)
+{
+   cerr << "trav: light_dcs: preCull\n";
+   pfCullResult(PFIS_MAYBE|PFIS_TRUE|PFIS_ALL_IN);
+   return PFTRAV_CONT;
+}
+
+int light_dcsPostCull(pfTraverser* trav, void* userData)
+{
+   cerr << "trav: light_dcs: postCull\n";
+   return PFTRAV_CONT;
+}
 

@@ -171,10 +171,11 @@ protected:
    std::vector<pfPipe*> pipes;      // Performer pipes we have opened
    std::vector<char*> pipeStrs;     // The X-Strs of the pipes
    pfScene*          sceneRoot;     // Root of Performer tree to render
+   pfGroup*          mSceneGroup;   // The group node with only sceneRoot under it
 
    // ---- Simulator stuff --- //
    pfGroup*          mSimTree;      // The simulator scene graph
-   pfScene*          mRootWithSim;  // The root with the simulator added on to it
+   pfScene*          mRootWithSim;  // The root with the simulator group & the sceneRoot
    pfDCS*            mHeadDCS;      // The DCS above the head
    pfDCS*            mWandDCS;      // The DCS above the wand
    std::string       mHeadModel;    // The head model file path

@@ -24,6 +24,7 @@
 #include <Performer/pf/pfDCS.h>
 #include <Performer/pf/pfScene.h>
 #include <Performer/pf/pfChannel.h>
+#include <Performer/pf/pfLightSource.h>
 
 #include <Kernel/Pf/vjPfDrawManager.h>
 #include <Kernel/Pf/vjPfApp.h>
@@ -130,6 +131,7 @@ void vjPfDrawManager::initDrawing()
    // Set params for Multi-pipe and Multiprocess
    pfMultipipe(numPipes);
    pfMultiprocess(PFMP_APP_CULL_DRAW);
+   //pfMultiprocess(PFMP_APPCULLDRAW);
 
    initLoaders();          // Must call before pfConfig
 
@@ -210,9 +212,10 @@ void vjPfDrawManager::initDrawing()
          tempPfDisp.pWin->setFBConfigAttrs(norm_win_attrs);       // Configure a "norm" window
       }
 
-
+      // -- Set pwin config info -- //
       tempPfDisp.pWin->setConfigFunc(vjPFconfigPWin); // Set config function
       tempPfDisp.pWin->config();                      // Next pfFrame, config Func will be called
+
 
       // --- Setup Channels --- //
       // Left
@@ -242,6 +245,7 @@ void vjPfDrawManager::initDrawing()
          tempPfDisp.chans[pfDisp::LEFT]->setTravFunc(PFTRAV_DRAW, vjPfDrawFuncSimulator);
       else
          tempPfDisp.chans[pfDisp::LEFT]->setTravFunc(PFTRAV_DRAW, vjPfDrawFuncMonoBackbuffer);
+
       // XXX: Put code here to do left, right only in mono
 
 
@@ -263,7 +267,7 @@ void vjPfDrawManager::initDrawing()
 
    masterChan->setShare(PFCHAN_NEARFAR | PFCHAN_EARTHSKY |
                         PFCHAN_STRESS | PFCHAN_LOD | PFCHAN_SWAPBUFFERS |
-                        PFCHAN_APPFUNC | PFCHAN_CULLFUNC);
+                        PFCHAN_APPFUNC | PFCHAN_CULLFUNC );
 
    // ----- SETUP CHANNEL GROUP ---- //
    for (int dispIndex=0; dispIndex<disps.size(); dispIndex++)
@@ -296,8 +300,8 @@ void vjPfDrawManager::initDrawing()
             disps[dispIndex].chans[pfDisp::RIGHT]->setScene(sceneRoot);
       }
    }
-
    vjASSERT(sceneRoot != NULL);
+
 
    //pfFrame();
 
@@ -311,7 +315,6 @@ void vjPfDrawManager::initDrawing()
 void vjPfDrawManager::addDisplay(vjDisplay* disp)
 {
    vjDEBUG(vjDBG_DRAW_MGR,0) << "vjPfDrawManager:addDisplay\n" << disp << endl << vjDEBUG_FLUSH;
-
 }
 
 
@@ -320,8 +323,10 @@ void vjPfDrawManager::addDisplay(vjDisplay* disp)
 void vjPfDrawManager::initPerformerApp()
 {
    app->initScene();
-   sceneRoot = app->getScene();
-   mRootWithSim->addChild(sceneRoot);
+   sceneRoot = new pfScene;
+   mSceneGroup = app->getScene();
+   sceneRoot->addChild(mSceneGroup);      // Create the base scene without sim
+   mRootWithSim->addChild(mSceneGroup);   // Create base scene with sim
 }
 
 void vjPfDrawManager::initLoaders()
@@ -332,8 +337,8 @@ void vjPfDrawManager::initLoaders()
 
 void vjPfDrawManager::initSimulator()
 {
-   pfNode* head_node = pfdLoadFile(mHeadModel.c_str());
-   pfNode* wand_node = pfdLoadFile(mWandModel.c_str());
+   pfNode* head_node = pfdLoadFile(mHeadModel.c_str());     // Load head model
+   pfNode* wand_node = pfdLoadFile(mWandModel.c_str());     // Load wand model
    mSimTree = new pfGroup;
    mRootWithSim = new pfScene;
    mHeadDCS = new pfDCS;
@@ -342,7 +347,7 @@ void vjPfDrawManager::initSimulator()
    mSimTree->addChild(mWandDCS);
    mHeadDCS->addChild(head_node);
    mWandDCS->addChild(wand_node);
-   mRootWithSim->addChild(mSimTree);
+   mRootWithSim->addChild(mSimTree);      // Put sim stuff in the graph
 }
 
 void vjPfDrawManager::updateSimulator(vjSimDisplay* sim)
@@ -431,16 +436,9 @@ void vjPfDrawManager::updatePfProjection(pfChannel* chan, vjProjection* proj, bo
 // This function just loops through all the entries in the disps variable,
 // looking for one that contains the channel.  When it is found, it is
 // returned.
+// NOTE: The "cool" STL functor search didn't work for some reason
 vjPfDrawManager::pfDisp* vjPfDrawManager::getPfDisp(pfChannel* chan)
 {
-   /*
-   std::vector<pfDisp>::iterator theDisp = std::find_if(disps.begin(), disps.end(), findPfDispChan(chan));
-   if(theDisp == disps.end())
-      return NULL;
-   else
-      return (&(*theDisp));
-   */
-
    for(int i=0;i<disps.size();i++)
    {
       pfChannel* left_chan = disps[i].chans[pfDisp::LEFT];
@@ -470,8 +468,6 @@ void vjPfDrawManager::debugDump()
 }
 
 
-
-
 // Config function called in draw proc after window is set up
 void vjPFconfigPWin(pfPipeWindow* pWin)
 {
@@ -479,9 +475,10 @@ void vjPFconfigPWin(pfPipeWindow* pWin)
 
    // Init the vj monitor modes
    pWin->open();
+   pfInitGfx();
 
    // Call user config function
-   dm->app->initPWin(pWin);
+   dm->app->configPWin(pWin);
 
    // Ouput the visual id
    int fb_id = pWin->getFBConfigId();

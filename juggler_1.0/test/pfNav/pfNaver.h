@@ -89,7 +89,7 @@ int pfNaver::app(pfTraverser *trav)
    // Set the DCS to the navigation matrix
    vjMatrix cur_pos,world_pos;
    cur_pos = mVNav.getCurPos();  // Invert because we want to move the world
-   cerr << "Set Pos: " << vjCoord(cur_pos).pos << endl;
+   //cerr << "Set Pos: " << vjCoord(cur_pos).pos << endl;
    world_pos.invert(cur_pos);
    pfMatrix pf_world_pos;
    pf_world_pos = vjGetPfMatrix(world_pos);

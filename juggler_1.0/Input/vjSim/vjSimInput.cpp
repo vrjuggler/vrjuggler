@@ -64,6 +64,10 @@ bool vjSimInput::config(vjConfigChunk* chunk)
 
 int vjSimInput::checkKeyPair(vjKeyModPair& pair)
 {
+   if (pair.mModifier == -1)      // ANY modifier
+   {
+      return mKeyboard->keyPressed(pair.mKey);
+   }
    if (mKeyboard->modifierOnly(pair.mModifier))
    {
       return mKeyboard->keyPressed(pair.mKey);
