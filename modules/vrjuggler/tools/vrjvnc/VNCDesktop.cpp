@@ -67,6 +67,7 @@ VNCDesktop::VNCDesktop(const std::string& hostname, const vpr::Uint16& port,
      mTextureData(NULL)
 {
    mSelectState = Nothing;
+   mActiveState = Normal;
 
    mVncWidth = mVncIf.getWidth();
    mVncHeight = mVncIf.getHeight();
@@ -292,12 +293,48 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
 
    vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
          << "VNC: Isect point: " << mIsectPoint << std::endl << vprDEBUG_FLUSH;
-
    // Get button states
    bool select_button_state = mLeftButton->getData();
    bool things_grabbed = ((mSelectState > GrabBegin) && (mSelectState < GrabEnd));
 
-   if(!things_grabbed)    // If nothing grabbed then check for input
+   // Check for transition states
+   // - If have some, then update them and early exit from this method
+   const float roll_inc(0.05f);
+   if(RollingUp == mActiveState)
+   {
+      mRollUpPercent += roll_inc;
+      if (mRollUpPercent >= 1.0f)      // If finished rolling up
+      {
+         mActiveState = RolledUp;
+         mDesktopHeight = 0.0f;
+      }
+      else
+      {
+         float delta_h = -(roll_inc*mOriginalHeight);
+         mDesktopHeight = mOriginalHeight*(1.0f-mRollUpPercent);
+         m_world_M_desktop *= gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f(0.0f, -delta_h, 0.0f));
+      }
+
+      updateDesktopParameters();
+   }
+   else if(RollingDown == mActiveState)
+   {
+      mRollUpPercent -= roll_inc;
+      if(mRollUpPercent <= 0.0f)    // Finished unrolling
+      {
+         mActiveState = Normal;
+         mDesktopHeight = mOriginalHeight;
+      }
+      else
+      {
+         float delta_h = (roll_inc*mOriginalHeight);
+         mDesktopHeight = mOriginalHeight*(1.0f-mRollUpPercent);
+         m_world_M_desktop *= gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f(0.0f, -delta_h, 0.0f));
+      }
+      updateDesktopParameters();
+   }
+   // --- CHECK SELECTIONS --- //
+   else if(!things_grabbed)    // If nothing grabbed then check for input
    {
       // Check for selecting the main desktop box
       if ( gmtl::isInVolume(mDesktopBox, mIsectPoint) )
@@ -334,6 +371,20 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
       {
          if(select_button_state)
          {
+            if(mActiveState == Normal)
+            {
+               std::cout << "Rolling up\n";
+               mActiveState = RollingUp;
+               mRollUpPercent = 0.0f;
+               mOriginalHeight = mDesktopHeight;
+            }
+            else
+            if(RolledUp == mActiveState)
+            {
+               std::cout << "Rolling down\n";
+               mActiveState = RollingDown;
+               mRollUpPercent = 1.0f;
+            }
          }
          else     // Just select it
          {
@@ -450,7 +501,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
       }
    }
    // --- Resizing
-   else  // Grab state is active
+   else if(things_grabbed) // Grab state is active
    {
       if(LRCornerGrab == mSelectState)
       {
@@ -596,6 +647,10 @@ void VNCDesktop::draw()
       else
       {
          glColor3f(1.0f, 1.0f, 1.0f);
+         float tex_coord_height = 1.0f;
+         if((RollingDown == mActiveState) || (RollingUp == mActiveState))
+            tex_coord_height = (1.0f-mRollUpPercent);
+
          glBindTexture(GL_TEXTURE_2D, tex_name);
          glBegin(GL_QUADS);
            // Draw quad, counter counter clockwise from bottom left hand corner (0,0)
@@ -605,10 +660,10 @@ void VNCDesktop::draw()
             glTexCoord2f(1.0f, 1.0f);           // LR
             glVertex3f(mDesktopWidth, 0.0f, 0.0f);
 
-            glTexCoord2f(1.0f, 0.0f);           // UR
+            glTexCoord2f(1.0f, (1.0f-tex_coord_height));           // UR
             glVertex3f(mDesktopWidth, mDesktopHeight, 0.0f);
 
-            glTexCoord2f(0.0f, 0.0f);           // UL
+            glTexCoord2f(0.0f, (1.0f-tex_coord_height));           // UL
             glVertex3f(0.0f, mDesktopHeight, 0.0f);
          glEnd();
 

@@ -125,6 +125,13 @@ private:
    bool mHaveKeyboard;
 
 private:
+   enum ActiveState
+   {
+      Normal,
+      RolledUp,
+      RollingUp,
+      RollingDown
+   };
 
    /** @name Desktop parameters
    * The desktop window (ie. the texture of the desktop) is assumed to be
@@ -143,6 +150,9 @@ private:
    float          mDesktopToVncHeightScale;
 
    Selection        mSelectState;      /**< State of selection */
+   ActiveState      mActiveState;      /**< The active state of the desktop */
+   float            mRollUpPercent;    /**< Percent of the screen rolled up */
+   float            mOriginalHeight;   /**< Original height of desktop.  Used in roll up */
 
    /** Transform matrix of the desktop.
    * This is from world to desktop.
