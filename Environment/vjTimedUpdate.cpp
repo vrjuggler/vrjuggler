@@ -10,6 +10,7 @@
  */
 
 
+#include <config.h>
 #include <Input/InputManager/vjInputManager.h>
 #include <Environment/vjNetworkConnect.h>
 #include <Environment/vjTimedUpdate.h>

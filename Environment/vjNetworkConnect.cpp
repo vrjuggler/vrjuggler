@@ -1,6 +1,5 @@
 
-#include <Environment/vjNetworkConnect.h>
-#include <Kernel/vjKernel.h>
+#include <config.h>
 #include <iostream.h>
 #include <fstream.h>
 #include <strings.h>    // For bzero()
@@ -8,6 +7,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
+#include <Environment/vjNetworkConnect.h>
+#include <Kernel/vjKernel.h>
 #include <Config/vjChunkDescDB.h>
 #include <Config/vjConfigChunkDB.h>
 
