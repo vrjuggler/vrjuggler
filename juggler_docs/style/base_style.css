@@ -31,6 +31,10 @@ table-border-color-dark: rgb(204, 0, 204);
 background-color: rgb(255, 255, 255);
 color: rgb(0, 0, 0);
 }
+.red
+{
+   color: rgb(255, 0, 0);
+}
 h1, h2, h3, h4, h5, h6, h1style
 {
 font-family: Century Gothic, Arial, Helvetica;

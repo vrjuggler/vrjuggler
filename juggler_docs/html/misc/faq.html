@@ -29,7 +29,7 @@ listserv/vrjuggler?</a></li>
 	  <li><a href="#getstarted">Great, where do I begin?</a></li>
      <li><a href="#whatdoineed">What do I need to run juggler?</a></li>
      <li><a href="#compilejugglerwin32">How do I compile the juggler source code under Win32?</a></li>
-	</ul>
+   </ul>
 	<li><a href="#applications"> VjControl</a></LI>
    <ul>
       <li><a href="#vjcontrolDoesntRun"> Why doesn't vjcontrol or vjcontrol1.1 run?</a></li>
@@ -37,6 +37,7 @@ listserv/vrjuggler?</a></li>
 	<li><a href="#applications"> VR applications</a></LI>
    <ul>
       <li><a href="#cavelib2dxform"> 2D Projections </a></li>
+      <li><a href="#portingcaveapps"> How do I port a CAVElib application to Juggler? </a></li>
    </ul>
 	<li><a href="#dev"> Juggler Team</a></LI>
 	<li>
@@ -163,6 +164,54 @@ href="${MAILTO_JUGGLER_MAILING_LIST}">vrjuggler-info@lists.sourceforge.net</a>
    be careful - since it can really confuse your users if something gets
    positioned in front of your head up display... since your HUD would be the
    thing drawn on top (physically impossible).<BR><BR>
+   </li>
+<LI><font size=1><a href="${CONTACT_US_DIRECTLY}">Contact Us</a> to add your question to this list!</font></li>
+   </blockquote>
+   
+<HR><!-- ----------------------------------------- -->
+<blockquote>
+	<a name="portingcaveapps"><li><b>How do I port a CAVElib application to Juggler?  
+   Or please summerize a Juggler application so I can better understand how to port my app.</b></a><BR><BR>
+
+   The sample code and header for vjGlApp illustrates this, but here's an overview:<BR><BR>
+
+   in a juggler vjApp class, there are 5 functions which you'll find
+   immediately important, one for initialization, one for drawing (opengl
+   only), and two for computation (I usually use only one of these).<BR><BR>
+
+   the 2 init functions are called once on execution of the application.<BR>
+   1.) init<BR>
+   2.) contextInit (called once per window)<BR><BR>
+
+   The other 3 are called repeatedly in this order:<BR><BR>
+
+   3.) preFrame<BR>
+   4.) draw      (Called once per open window...
+                  Function is threaded,
+                  so may be called during pre or postFrame)<BR>
+   5.) postFrame<BR><BR><BR>
+
+
+   a.) Initialize your data in init.<BR><BR>
+
+   b.) Initialize your display contexts and texture objects in contextInit you
+   will need to keep track of the ID/index per graphics window. vjContextData
+   may help you out with this...<BR><BR>
+
+   c.) Do your computations (like modifying your data with juggler input devices
+   etc..) in preFrame and/or postFrame.<BR><BR>
+
+   d.) Don't do your computations in draw, just read your current data state, and
+   draw (render) it.  If you have display lists or textureobjects, you will
+   need to keep track of the ID/index per graphics window and call them
+   accordingly.<BR><BR><BR>
+
+
+   NOTE: that draw is threaded, so may be called during pre or postFrame.
+         contextInit is similar.<BR><BR><BR>
+
+
+   Hope this gives you a better Idea of what is happening in your juggler/opengl application.<BR>
    </li>
 
    <LI><font size=1><a href="${CONTACT_US_DIRECTLY}">Contact Us</a> to add your question to this list!</font></li>
