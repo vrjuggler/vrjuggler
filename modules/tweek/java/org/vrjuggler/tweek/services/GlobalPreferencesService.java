@@ -62,7 +62,7 @@ public class GlobalPreferencesService
    public GlobalPreferencesService( BeanAttributes attr )
    {
       super( attr );
-      load();
+      m_prefs_file = new File(getUserHome() + File.separator + ".tweekrc");
       BeanRegistry.instance().addBeanRegistrationListener( this );
    }
 
@@ -151,13 +151,30 @@ public class GlobalPreferencesService
    }
 
    /**
+    * Changes the default preferences file name to be the given name.
+    */
+   public void setFileName (String name)
+   {
+      File temp_file = new File(name);
+
+      if ( ! temp_file.exists() )
+      {
+         System.err.println("WARNING: Tweek preferences file " + name +
+                            " does not exist, defaulting to " +
+                            m_prefs_file.getAbsolutePath());
+      }
+      else
+      {
+         m_prefs_file = temp_file;
+      }
+   }
+
+   /**
     * Loads the user's prefernces file if one exists.  If the user has not
     * defined a preferences file, one is created.
     */
    public synchronized void load ()
    {
-      m_prefs_file = new File(getUserHome() + File.separator + ".tweekrc");
-
       if ( m_prefs_file.exists() )
       {
          org.jdom.input.SAXBuilder builder = new org.jdom.input.SAXBuilder();
