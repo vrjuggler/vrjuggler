@@ -113,7 +113,7 @@ private:
 
    // ibox native data in the range of [0..255]
    IboxStandalone mPhysicalIbox;
-   std::string    mPortStr;
+   char*		  mPortStr;
    long           mBaudRate;
 };
 
