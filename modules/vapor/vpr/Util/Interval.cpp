@@ -75,8 +75,16 @@ void Interval::setNowReal()
 {
 #if defined(VPR_OS_Win32)
    LARGE_INTEGER count;
-   PRIntn _nt_bitShift  = 0;
-   PRInt32 _nt_highMask = 0;
+   LARGE_INTEGER counts_per_sec;
+
+   QueryPerformanceFrequency(&counts_per_sec);
+
+   vpr::Uint64 counts_per_sec64;
+   vpr::Uint64 counts_per_sec_high64;
+
+   counts_per_sec_high64 = counts_per_sec.HighPart;
+   counts_per_sec64 = counts_per_sec.LowPart;
+   counts_per_sec64 += (counts_per_sec_high64 << 32);
 
    // XXX: Implement this
    /* Sadly; nspr requires the interval to range from 1000 ticks per second
@@ -85,11 +93,19 @@ void Interval::setNowReal()
     */
    if (QueryPerformanceCounter(&count))
    {
-      vpr::Int32 top = count.HighPart & _nt_highMask;
-      top = top << (32 - _nt_bitShift);
-      count.LowPart = count.LowPart >> _nt_bitShift;   
-      count.LowPart = count.LowPart + top; 
-      mMicroSeconds = count.LowPart;
+      const vpr::Uint64 microseconds_per_sec = 1000000u;
+
+      vpr::Uint64 low  = count.LowPart;
+      vpr::Uint64 high = count.HighPart;
+      mMicroSeconds = low + (high << 32);
+      mMicroSeconds /= counts_per_sec64;
+      mMicroSeconds *= microseonds_per_sec;
+
+//      vpr::Int32 top = count.HighPart & _nt_highMask;
+//      top = top << (32 - _nt_bitShift);
+//      count.LowPart = count.LowPart >> _nt_bitShift;   
+//      count.LowPart = count.LowPart + top; 
+//      mMicroSeconds = count.LowPart;
    }
 /*
    else
