@@ -138,7 +138,8 @@ protected:
    std::vector<KeyModPair> readKeyList(std::vector<jccl::ConfigElementPtr>& keyList);
 
 protected:
-   KeyboardMouseInterface mKeyboardMouse; /**< The event window from which we receive events. */
+   /**< The keyboard/mouse device from which we receive events. */
+   KeyboardMouseInterface mKeyboardMouse;
 };
 
 } // End of gadget namespace

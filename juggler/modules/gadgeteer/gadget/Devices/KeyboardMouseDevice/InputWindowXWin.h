@@ -54,7 +54,7 @@ namespace gadget
 {
 
 /**
- * X Winndow System event window class.
+ * X Winndow System input window class.
  * This device is a source of keyboard events.  The device should not be
  * used directly, it should be referenced through proxies.
  *
