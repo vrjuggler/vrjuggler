@@ -578,10 +578,10 @@ struct vrj_GlApp_Wrapper: vrj::GlApp
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_GlApp_Wrapper::draw()\n",
                                  "vrj_GlApp_Wrapper::draw() done.\n");
+        PyJuggler::InterpreterGuard guard;
 
         try
         {
-            PyJuggler::InterpreterGuard guard;
             call_method< void >(self, "draw");
         }
         catch(error_already_set)
