@@ -71,7 +71,7 @@ ConesApp::init () {
     vprDEBUG(vprDBG_ALL, 0) << "---------- Cones:App:init() ---------------"
                           << std::endl << vprDEBUG_FLUSH;
 
-    std::vector<vrj::User*> users = kernel->getUsers();
+    std::vector<vrj::User*> users = mKernel->getUsers();
     int num_users = users.size();
 
     // Make sure that we actually have users defined.
