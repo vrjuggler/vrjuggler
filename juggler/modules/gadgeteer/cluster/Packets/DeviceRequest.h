@@ -72,7 +72,7 @@ public:
     *
     * Create a device request to be sent
     */
-   DeviceRequest(vpr::GUID id, std::string& device_name);
+   DeviceRequest(std::string& device_name);
    
    /**
     * Helper for the above creation of a device request to be sent
@@ -89,13 +89,12 @@ public:
    {
        return(Header::RIM_DEVICE_REQ);
    }
-   vpr::GUID getId() { return mId; }
+
    std::string getDeviceName() { return mDeviceName; }
 
    virtual bool action(ClusterNode* node);
 
 private:
-   vpr::GUID   mId;
    std::string mDeviceName;
 };
 }
