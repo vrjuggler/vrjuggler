@@ -589,10 +589,21 @@ void vjPfDrawManager::updateProjections()
    {
       vjSurfaceDisplay* surf_disp = dynamic_cast<vjSurfaceDisplay*>((*i).disp);
       vjASSERT(surf_disp != NULL && "Could not cast supposedly surface display to vjSurfaceDisplay.");
+      vjDisplay::DisplayView view = surf_disp->getView();
 
-      updatePfProjection((*i).chans[pfDisp::LEFT], surf_disp->getLeftProj(),false);
-      if(surf_disp->inStereo())
+      if(vjDisplay::LEFT_EYE == view)
+      {
+         updatePfProjection((*i).chans[pfDisp::LEFT], surf_disp->getLeftProj(),false);
+      }
+      if(vjDisplay::RIGHT_EYE == view)
+      {
+         updatePfProjection((*i).chans[pfDisp::LEFT], surf_disp->getRightProj(),false);
+      }
+      if(vjDisplay::STEREO == view)
+      {
+         updatePfProjection((*i).chans[pfDisp::LEFT], surf_disp->getLeftProj(),false);
          updatePfProjection((*i).chans[pfDisp::RIGHT], surf_disp->getRightProj(),false);
+      }
    }
 
    for(std::vector<pfDisp>::iterator i = mSimDisps.begin(); i != mSimDisps.end(); i++)
