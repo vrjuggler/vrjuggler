@@ -74,7 +74,7 @@ fi
 prefix=@prefix@
 exec_prefix=@exec_prefix@
 exec_prefix_set='no'
-using_linker='no'
+use_linker='no'
 
 if [ "x$vpr_extra_include_dirs" != "x" ]; then
     for dir in $vpr_extra_include_dirs ; do
@@ -211,7 +211,7 @@ while test $# -gt 0; do
             esac
             ;;
         --linker)
-            using_linker=yes
+            use_linker=yes
             ;;
         --static)
             echo_static=yes
