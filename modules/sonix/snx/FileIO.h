@@ -79,7 +79,7 @@
 #include <fstream>
 #include <stdio.h> // for FILE
 
-#include <snx/Endian.h> //needed for snxEndian::isBig, snxEndian::isLittle funcs
+#include <snx/Endian.h>
 
 namespace snxFileIO
 {
@@ -108,8 +108,8 @@ namespace snxFileIO
       int size = ::fread( &data, sizeof(typeT), 1, fp );
 
       // if we're not on a little endian machine (intel is little endian) then reverse the bytes.
-      if (fileByteOrdering == snxFileIO::LITTLE && snxEndian::isBig() ||
-         fileByteOrdering == snxFileIO::BIG && snxEndian::isLittle())
+      if (fileByteOrdering == snxFileIO::LITTLE && vpr::System::isBigEndian() ||
+         fileByteOrdering == snxFileIO::BIG && vpr::System::isLittleEndian())
       {
          snxEndian::byteReverse( data );
       }
@@ -126,8 +126,8 @@ namespace snxFileIO
 
       // if we're not on a little endian machine (i.e. intel is little endian, mips is big) 
       // then reverse the bytes.
-      if (fileByteOrdering == LITTLE && snxEndian::isBig() ||
-         fileByteOrdering == BIG && snxEndian::isLittle())
+      if (fileByteOrdering == LITTLE && vpr::System::isBigEndian() ||
+         fileByteOrdering == BIG && vpr::System::isLittleEndian())
       {
          snxEndian::byteReverse( tempData );
       }

@@ -1,4 +1,3 @@
-
 /****************** <SNX heading BEGIN do not edit this line> *****************
  *
  * sonix
@@ -39,11 +38,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _SNX_ENDIAN_FUNCS_
+#define _SNX_ENDIAN_FUNCS_
 
-
-
-#ifndef AUDIOJUGGLER_ENDIAN_FUNCS
-#define AUDIOJUGGLER_ENDIAN_FUNCS
+#include <vpr/vpr.h>
+#include <vpr/System.h>
 
 
 namespace snxEndian
@@ -78,37 +77,19 @@ namespace snxEndian
       BIG, LITTLE
    };   
 
-   //: check the system for endianess
-   inline bool isLittle()
-   {
-      union
-      {
-         short   val;
-         char    ch[sizeof(short)];
-      } un;
-
-      // initialize the memory that we'll probe
-      un.val = 256;       // 0x10
-
-      // If the 1 byte is in the low-order position (un.ch[1]), this is a
-      // little-endian system.  Otherwise, it is a big-endian system.
-      return un.ch[1] == 1;
-   }
-
-   //: check the system for endianess
-   inline bool isBig()
-   {
-      return !snxEndian::isLittle();
-   }
-
    template< class Type >
    inline void  byteReverse( Endianness& e, Type& bytes )
    {
-      if (e == BIG && snxEndian::isLittle())
+      if (e == BIG && vpr::System::isLittleEndian())
+      {
          byteReverse( bytes );
-      if (e == LITTLE && snxEndian::isBig())
+      }
+      if (e == LITTLE && vpr::System::isBigEndian())
+      {
          byteReverse( bytes );
+      }
    }
 
-}; // end namespace.
+} // end namespace.
+
 #endif
