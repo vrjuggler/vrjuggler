@@ -117,25 +117,9 @@ private:
     ChunkDescDB descdb;
 
 vprSingletonHeader(ChunkFactory);
-/*
-public:
-   //: Get instance of singleton object
-   static ChunkFactory* instance()
-   {
-      if(_instance == NULL)                     // First check
-      {
-         vpr::Guard<vpr::Mutex> guard(_inst_lock);    // Serial critical section
-         if (_instance == NULL)                 // Second check
-            _instance = new ChunkFactory;
-      }
-      ASSERT(_instance != NULL && "ChunkFactory has NULL _instance");
-      return _instance;
-   }
 
-private:
-   static ChunkFactory* _instance;   //: The instance
-   static vpr::Mutex _inst_lock;
-   */
 };
+
 };
+
 #endif

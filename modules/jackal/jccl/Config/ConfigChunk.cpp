@@ -97,7 +97,7 @@ std::string ConfigChunk::getFirstNameComponent (const std::string& path) {
         return path.substr (0, i);
 }
 
-#ifdef VJ_vprDEBUG
+#ifdef JCCL_DEBUG
 void ConfigChunk::assertValid () const {
     vprASSERT (validation == 1 && "Trying to use deleted config chunk");
     for (unsigned int i = 0; i < props.size(); i++)

@@ -120,7 +120,7 @@ Property::Property (const Property& p):value() {
 
 
 
-#ifdef VJ_vprDEBUG
+#ifdef JCCL_DEBUG
 void Property::assertValid () const {
     vprASSERT (validation == 1 && "Trying to use deleted Property");
 

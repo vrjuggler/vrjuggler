@@ -104,9 +104,9 @@ VarValue::~VarValue() {
 }
 
 
-#ifdef VJ_vprDEBUG
+#ifdef JCCL_DEBUG
 void VarValue::assertValid () const {
-    vprAssert (validation == 1 && "Trying to use deleted VarValue");
+    vprASSERT (validation == 1 && "Trying to use deleted VarValue");
     if ((type == T_EMBEDDEDCHUNK) && embeddedchunkval)
         embeddedchunkval->assertValid();
 }

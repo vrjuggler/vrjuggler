@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJ_CONFIG_H_
-#define _VJ_CONFIG_H_
+#ifndef _JCCL_CONFIG_H_
+#define _JCCL_CONFIG_H_
 /* #pragma once */
 
 /*
@@ -47,9 +47,9 @@
 #include <jccl/jcclDefines.h>
 
 #ifdef _DEBUG
-#   define VJ_DEBUG
+#   define JCCL_DEBUG
 #else
-#   define VJ_OPT
+#   define JCCL_OPT
 #endif
 
 #ifdef WIN32
