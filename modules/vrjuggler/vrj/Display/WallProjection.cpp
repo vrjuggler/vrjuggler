@@ -80,7 +80,7 @@ void WallProjection::calcViewMatrix(gmtl::Matrix44f& eyePos)
 
    // Need to post translate to get the view matrix at the position of the eye
    mViewMat = mWallRotationMatrix *
-              gmtl::makeTrans<gmtl::Matrix44f>( gmtl::Vec3f(-eye_pos[gmtl::Xelt], -eye_pos[gmtl::Yelt], -eye_pos[gmtl::Zelt]));
+              gmtl::makeTrans<gmtl::Matrix44f, 3>( gmtl::Vec3f(-eye_pos[gmtl::Xelt], -eye_pos[gmtl::Yelt], -eye_pos[gmtl::Zelt]));
 }
 
 
