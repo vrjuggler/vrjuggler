@@ -180,6 +180,8 @@ chunk surfaceDisplay "Surface Display" "This is a surface that images are projec
   corners EmbeddedChunk 4 "corners" vj_valuelabels { "lower left" "lower right" "upper right" "upper left" } vj_enumeration { "Vec3" } "The corners of the surface"
   user Chunk 1 "user" vj_enumeration { "JugglerUser" } ""
   active Bool 1 "active" "Is the window active?"
+  tracked Bool 1 "tracked" "Is this a tracked surface?"
+  trackerproxy Chunk 1 "trackerproxy" vj_enumeration { "PosProxy" } "The tracker proxy that tracks the screen's reference frame."
   end
 chunk PerfMeasure "Performance Measurements" "Controls performance monitoring of Juggler library"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
