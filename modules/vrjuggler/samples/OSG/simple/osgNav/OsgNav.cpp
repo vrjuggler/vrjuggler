@@ -140,10 +140,6 @@ void OsgNav::myInit()
 
    mNavigator.init();
 
-   //vpr::GUID new_guid("d6be4359-e8cf-41fc-a72b-a5b4f3f29aa2");
-   //std::string hostname = "crash";
-   //mMyData.init(new_guid, hostname);
-
    mRootNode->addChild( mNoNav );
    mRootNode->addChild( mNavTrans );
 
