@@ -15,202 +15,109 @@ char version_string[] = "2.0.2";
 int vt_error_code = 0;
 int vt_error_level = 2;
 
-//vjCyberGlove::vjCyberGlove (char *homedir, char *serport, int baud) {
-vjCyberGlove::vjCyberGlove(vjConfigChunk *c) : vjInput(c) {
-    cerr << "	vjCyberGlove::vjCyberGlove(vjConfigChunk*) " << endl;
-    char* t = c->getProperty("homedir");
-    if (t != NULL)
+vjCyberGlove::vjCyberGlove(vjConfigChunk *c) : vjGlove(c)
+{
+    char* home_dir = c->getProperty("homedir");
+    if (home_dir != NULL)
     {
-        home = new char [strlen(t) + 1];
-	strcpy(home,t);
+        mCalDir = new char [strlen(home_dir) + 1];
+	     strcpy(mCalDir,home_dir);
     }
 
     myThread = NULL;
+
+    mGlove = new CyberGloveBasic(mCalDir, sPort, baudRate);
 };
 
 int
-vjCyberGlove::StartSampling() {
-   AppDataStruct app;
-   if (myThread == NULL) {
-   //int i;
-   current = 0; valid = 1; progress = 2;
-
-      current_glove = NULL;
-      current_glove_private = NULL;
-      vt_init(home,app);
-      hand = vt_create_VirtualHand(sPort,baudRate,app);
-      current_glove = hand->private_data->glove;
-      current_glove_private = hand->private_data->glove->private_data;
-   vjCyberGlove* devicePtr = this;
-   void SampleGlove(void*);
-
-   myThread = new vjThread(SampleGlove, (void *) devicePtr, 0);
-   if (!myThread->valid())
+vjCyberGlove::StartSampling()
+{
+   if (myThread == NULL)
    {
-      return 0;
-   } else {
-      cout << "     vjCyberGlove is active " << endl;
-      active = 1;
-      return 1;
-   }
+      resetIndexes();
+
+      if(mGlove->Open() == 0)
+      {
+         vjDEBUG(0) << "ERROR: Can't open Cyberglove or it is already opened." << vjDEBUG_FLUSH;
+         return 0;
+      }
+
+      // Create a new thread to handle the control
+      vjThreadMemberFunctor<vjCyberGlove>* memberFunctor =
+         new vjThreadMemberFunctor<vjCyberGlove>(this, &vjCyberGlove::controlLoop, NULL);
+
+      mControlThread = new vjThread(memberFunctor, 0);
+
+      if (!myThread->valid())
+      {
+         return 0;
+      }
+      else
+      {
+         vjDEBUG(1) << "vjCyberGlove is active " << endl;
+         active = 1;
+         return 1;
+      }
   }
-   else return 0; // already sampling
-
-
+  else
+     return 0; // already sampling
 }
 
-void SampleGlove(void* pointer) {
-
-    vjCyberGlove* devPointer = (vjCyberGlove*)pointer;
-    for(;;)
- 	devPointer->Sample();
-
+void vjCyberGlove::controlLoop(void* nullParam)
+{
+   while(1)
+ 	   Sample();
 }
 
-int vjCyberGlove::Sample() {
-   struct timeval tv;
-  double start_time, stop_time;
- static int c = 0;
+int vjCyberGlove::Sample()
+{
+   mGlove->Sample();       // Tell the glove to sample
 
-    if (hand->read_glove) {
-       if (c == 0) {
-     gettimeofday(&tv,0);
-     start_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
-    } c++;
-        if (c == 60) {
-     gettimeofday(&tv,0);
-     stop_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
-     cout << 1/((stop_time-start_time) / 60)
-          << "  " << endl;
-     c = 0;
-     }
-      vt_send_glove_command(CG_REQUEST_DATA); }
-    vt_update_hand_state(hand);
-
-  int i,j;
-  for(i=0; i < MAX_SENSOR_GROUPS; i++)
-     for(j = 0; j < MAX_GROUP_VALUES; j++)
-        theData[progress].joints[i][j] = hand->joint_angle[i][j];
-/*  for(i=0; i < MAX_SENSOR_GROUPS; i++)
-     for(j = 0; j < MAX_GROUP_VALUES; j++)
-       for(int k = 0; k <= 4; k++)
-          for(int l = 0; l <= 4; l++)
-	(theData[progress].xforms[i][j])[k][l] = (hand->digit_xform[i][j])[k][l];
- */
-
-  lock.acquire();
-  int tmp = valid;
-  valid = progress;
-  progress = tmp;
-  lock.release();
-  return 1;
-
+   copyDataFromGlove();                   // Copy the data across
+   mTheData[progress][0].calcXforms();    // Update the xform data
+   swapValidIndices();
+   return 1;
 }
 
+void vjCyberGlove::UpdateData()
+{
+   // swap the indicies for the pointers
+   swapCurrentIndexes();
 
-int vjCyberGlove::StopSampling() {
-  if (myThread != NULL) {
-    myThread->kill();
-    delete myThread;
-    myThread = NULL;
-    sginap(1);
-      vt_destroy_VirtualHand(hand);
-    cout << "stopping vjCyberGlove.." << endl;
+  return;
+}
 
+int vjCyberGlove::StopSampling()
+{
+   if (mControlThread != NULL)
+   {
+      mControlThread->kill();
+      delete mControlThread;
+      mControlThread = NULL;
+      sginap(1);
+
+      mGlove->Close();
+      vjDEBUG(0) << "stopping vjCyberGlove.." << endl;
    }
    return 1;
 }
 
-vjCyberGlove::~vjCyberGlove () {
-        StopSampling();
-      if (needToClosePorts)
-        vt_serial_close_ports();
-      if (home != NULL)
-        delete [] home;
-    }
-
-void vjCyberGlove::UpdateData () {
-
-  lock.acquire();
-  int tmp = valid;
-  valid = current;
-  current = tmp;
-  lock.release();
-
-    }
-
-void vjCyberGlove::GetData(vjGLOVE_DATA* &data)
+vjCyberGlove::~vjCyberGlove ()
 {
-   data = &theData[current];
+   StopSampling();      // Stop the glove
+   delete mGlove;       // Delete the glove
 }
 
-volatile float** vjCyberGlove::GetData () {
-	/* I always find multidimensional arrays confusing to pass
-	 * and return.  For the record, the glove code defines the
- 	 * type of joint angle as:
-	 * volatile float (*joint_angle)[MAX_GROUP_VALUES]
-	 * or float joint_angle[MAX_SENSOR_GROUPS][MAX_GROUP_VALUES]
-	 */
-      int i;
-//	hand->joint_angle[THUMB][MCP]=3.0;
-      for (i = 0; i < MAX_SENSOR_GROUPS; i++)
-	joints[i] = (hand->joint_angle[i]);
-      return joints;
-    };
 
-matrix4x4 ** vjCyberGlove::GetDigitXForms () {
-      int i;
-      for (i = 0; i < 5; i++)
-	xforms[i] = (hand->digit_xform[i]);
-      return xforms;	
-    };
 
-float vjCyberGlove::GetThumbRoll () {
-	return (DEG2RAD)*vt_calc_thumb_roll(hand);
-    };
+void vjCyberGlove::copyDataFromGlove()
+{
+   CYBER_GLOVE_DATA* glove_data = mGlove->GetData();     // Get ptr to data
 
-SurfaceModel vjCyberGlove::GetSurfaceModel() {
-	return (hand->surface);
-};
+   for(int i=0;i<vjGloveData::NUM_COMPONENTS;i++)
+      for(int j=0;j<vjGloveData::NUM_JOINTS;j++)
+         mTheData[progress][0].angles[i][j] = glove_data->joints[i][j];
 
-volatile float * vjCyberGlove::GetStateVec() {
-	return hand->state_vec;
+   vjASSERT(mTheData[progress][0].angles[vjGloveData::MIDDLE][vjGloveData::MPJ]
+             == glove_data->joints[MIDDLE][MCP]);
 }
-
-float vjCyberGlove::GetThumbUnflexedAbduction() {
- 	return hand->unflexed_abduction;
-}
-
-int vjCyberGlove::GetFingerState (int finger) {
-     /* a quick function to determine the position of a finger.
-	return values:
-	0 finger open/pointing
-	1 finger closed
-	2 finger inbetween/relaxed (whatever isn't zero or one
-      */
-     /* Still need to double check these values...
-        I'm taking a hint from the other gesture recognition code &
-        using mainly the metacarpal(?) joints to figure out finger
-        positions.  Makes it easier for those of us with screwy
-        figures, and the 3rd knuckle reading isn't likely to be
-        to accurate (just because of the way the glove fits)
-      */
-      if (hand->joint_angle[finger][0] > -0.75 &&
-	  hand->joint_angle[finger][1] > -0.75 )
-	return 0;
-      if (hand->joint_angle[finger][0] < -0.35 /*&&
-	  hand->joint_angle[finger][1] < -0.35 */)
-	return 1;
-      return 0;
-    };
-
-
-void vjCyberGlove::ReadSurfaceModel (int resolution, char *dir, char *name) {
-  char filename[256];
-  sprintf (filename, "%s/%s", dir, name);
-  if (!resolution)  // lowres
-    vt_read_lowres_hand_model (filename, hand);
-  else  // hires
-    vt_read_hand_model (filename, hand, dir);
-}
-
