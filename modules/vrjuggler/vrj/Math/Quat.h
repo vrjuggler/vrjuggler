@@ -75,7 +75,7 @@ public:
 
    //: Construct Quat from a pure quaternion 
    // NOTE: a pure quaternion is one with scalar component set to 0
-	vjQuat( const vjVec3& pure_quat );
+	//vjQuat( const vjVec3& pure_quat );
    
    //: Construct Quat from 4 floats
    vjQuat( const float w,
@@ -411,10 +411,10 @@ inline vjQuat::vjQuat( const vjQuat& quat ) : vec()
 
 //: Construct Quat from a pure quaternion 
 // NOTE: a pure quaternion is one with scalar component set to 0
-inline vjQuat::vjQuat( const vjVec3& pure_quat ) : vec()
-{
-   this->copy( pure_quat );
-}
+//inline vjQuat::vjQuat( const vjVec3& pure_quat ) : vec()
+//{
+//   this->copy( pure_quat );
+//}
 
 
 
@@ -587,7 +587,8 @@ inline vjQuat vjQuat::operator*( const vjQuat& quat ) const
 inline vjVec3 vjQuat::operator*( const vjVec3& pure_quat ) const
 {
    // convert the vec3 to a quat
-   vjQuat pure( pure_quat );
+   vjQuat pure;
+   pure.copy( pure_quat );
 
    // get the inverse of self
    vjQuat self_inv;
