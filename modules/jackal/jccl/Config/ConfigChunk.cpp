@@ -447,7 +447,7 @@ bool ConfigChunk::addValue (const std::string& property, int val) {
         return false;
     if (p->hasFixedNumberOfValues())
         return false;
-    return setProperty (property, val, p->value.size());
+    return setProperty (property, val, p->getNum());
 }
 
 bool ConfigChunk::addValue (const std::string& property, float val) {
@@ -459,7 +459,7 @@ bool ConfigChunk::addValue (const std::string& property, float val) {
         return false;
     if (p->hasFixedNumberOfValues())
         return false;
-    return setProperty (property, val, p->value.size());
+    return setProperty (property, val, p->getNum());
 }
 
 bool ConfigChunk::addValue (const std::string& property, const std::string& val) {
@@ -471,7 +471,7 @@ bool ConfigChunk::addValue (const std::string& property, const std::string& val)
         return false;
     if (p->hasFixedNumberOfValues())
         return false;
-    return setProperty (property, val, p->value.size());
+    return setProperty (property, val, p->getNum());
 }
 
 bool ConfigChunk::addValue (const std::string& property, ConfigChunkPtr val) {
@@ -483,7 +483,7 @@ bool ConfigChunk::addValue (const std::string& property, ConfigChunkPtr val) {
         return false;
     if (p->hasFixedNumberOfValues())
         return false;
-    return setProperty (property, val, p->value.size());
+    return setProperty (property, val, p->getNum());
 }
 
 

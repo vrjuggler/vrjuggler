@@ -41,76 +41,77 @@
 #include <jccl/Config/ChunkDescPtr.h>
 #include <jccl/Config/ConfigChunkPtr.h>
 
-namespace jccl {
-
-
-//------------------------------------------------------------------
-//: Stores a property and all its values
-//
-// Unit of storage inside a ConfigChunk.  Has a name, type,
-// and 0 or more values.  Some Propertys have a fixed number
-// of values (e.g. to store the three components of a point
-// in 3space), while others have a variable number (e.g. to
-// store a list of active devices)
-// <p>Each instance is associated with
-// a PropertyDesc at instantiation; this associated cannot
-// be changed.
-// <p>Note that the Property instance maintains a pointer to
-// the PropertyDesc, so be careful.
-//
-// <p>author: Christopher Just
-//
-//------------------------------------------------------------------
-//!PUBLIC_API:
+namespace jccl 
+{
+    
+    
+    /** Stores a property and all its values.
+     *  Unit of storage inside a ConfigChunk.  Has a name, type,
+     *  and 0 or more values.  Some Propertys have a fixed number
+     *  of values (e.g. to store the three components of a point
+     *  in 3space), while others have a variable number (e.g. to
+     *  store a list of active devices)
+     *  <p>
+     *  Each instance is associated with
+     *  a PropertyDesc at instantiation; this associated generally
+     *  should not be changed.
+     *  <p>
+     *  Note that the Property instance maintains a pointer to
+     *  the PropertyDesc, so be careful.  Generally the ConfigChunk
+     *  containing the Property will maintain a ChunkDescPtr to
+     *  the ChunkDesc containing the PropertyDesc, ensuring that
+     *  memory is managed properly.
+     */
 class Property {
 
-private:
+protected:
 
-    //: Pointer to this Property's description.
-    PropertyDesc *description;
+    /** Pointer to this Property's description. */
+    PropertyDesc *mDescription;
 
-    //: Type of value entries.
-    VarType type;
+    /** Type of value entries. */
+    VarType mType;
 
-    //: A unit, if type is T_DISTANCE. (not fully functional)
-    CfgUnit units;
+    /** A unit, if type is T_DISTANCE. 
+     *  @note  The 'unit' code was never fully completed and
+     *         is not fully functional.
+     */
+    CfgUnit mUnits;
 
-    unsigned int validation;  // flag for testing validity of self
+    /** Debug flag for testing validity of self. */
+    unsigned int mValidation;
+
+    /** Number of values.  -1 for variable number. */
+    int mNum;
+
+    /** Vector containing the actual VarValues. */
+    std::vector<VarValue*> mValues;
+
+    /** ChunkDesc for embedded chunk (if valtype is EMBEDDEDCHUNK). */
+    ChunkDescPtr mEmbedDesc;
 
 public:
 
-    //: Number of values.  -1 for variable number (use getNum() )
-    int num;
-
-    //: Vector containing the actual VarValues.
-    std::vector<VarValue*> value;
-
-    //: ChunkDesc for embedded chunk (if valtype is T_EMBEDDEDCHUNK)
-    ChunkDescPtr embeddesc;
-
-
-
-    //: Constructor
-    //! PRE: true
-    //! POST: Property is created.  If num values is not -1, num
-    //+       VarValues are created and placed in value.
-    //+       Otherwise, value is left empty.
-    //! ARGS: pd - a pointer to a valid PropertyDesc.
-    //! NOTE: Self stores a pointer to its PropertyDesc pd.  pd
-    //+       should not be deleted while self exists.
+    /** Constructor.
+     *  @post Self is created.  If num values is not -1, num VarValues are
+     *        created and placed in value.  otherwise value is left empty.
+     *  @param pd a pointer to a valid PropertyDesc.  Self stores this
+     *            pointer, so pd must not be deleted while self exists.
+     */
     Property (PropertyDesc *pd);
 
 
 
-    //: Destructor
-    //! PRE: true
-    //! POST: self and its stored values are destroyed (but not
-    //+       the PropertyDesc!)
-    ~Property ();
-
-
-
+    /** Copy constructor. */
     Property (const Property& p);
+
+
+
+    /** Destructor
+     *  @post Self and its stored values are destroyed (but not
+     *        its PropertyDesc).
+     */
+    ~Property ();
 
 
 
@@ -123,82 +124,111 @@ public:
     #endif
 
 
-
+    /** Assignment operator. */
     Property& operator= (const Property& p);
 
 
 
+    /** Equality operator.
+     *  @return True iff self and p use the same PropertDesc and all values
+     *          are equal.
+     */
     bool operator== (const Property& p) const;
+
+    /** Inequality operator. */
     inline bool operator != (const Property& p) const {
         return !(*this == p);
     }
 
 
-    //: Returns actual current number of values in self
-    //! RETURNS: n - size of value vector.
+
+    /** Returns the PropertyDesc used to instantiate self. *?
+    PropertyDesc* getPropertyDesc () const {
+        return mDescription;
+    }
+
+
+
+    /** Returns current number of values in self.
+     *  @return Size of values list.
+     */
     int getNum () const;
 
+
+
+    /** Returns whether self has a fixed number of values.
+     *  @return True if self has a fixed number of values; false if values
+     *          can be added or removed.
+     */
     inline bool hasFixedNumberOfValues () const {
-        return (num >= 0);
+        return (mNum >= 0);
     }
 
+
+
+    /** Returns the type of values stored in self.
+     *  @return The type of values stored in self - as determined by self's
+     *          PropertyDesc.
+     */
     inline VarType getType () const {
-        return type;
+        return mType;
     }
 
+
+    /** Returns the name of self.
+     *  @return the name used by self's PropertyDesc.
+     */
     const std::string& getName () const;
 
 
+    /** Returns the token of self.
+     *  @return the token used by self's PropertyDesc.
+     */
     const std::string& getToken () const;
 
 
-    //: Returns the VarValue at index
-    //! PRE: True
-    //! ARGS: ind - integer index of value to return (default 0)
-    //! RETURNS: v - indth element of value, or a T_INVALID VarValue
-    //+          if ind is out of bounds
+    
+    /** Returns a value from self.
+     *  @param i Index of the value to return (default = 0).
+     *  @return A reference to the ith value in self.  If i is
+     *          out of bounds, return a reference to a VJ_T_INVALID
+     *          VarValue.  The reference (or pointers to it)
+     *          should not be maintained for long periods of time.
+     */
     const VarValue& getValue (unsigned int ind = 0) const;
 
 
 
-    //: set the value at ind
-    //! PRE: true
-    //! POST: the indth value of self is set to val, if ind is
-    //+       a valid index to self's value vector. If self has
-    //+       a variable number of values and ind is greater than
-    //+       the current number of values, the value vector will
-    //+       be padded with VarValues of the appropriate type
-    //+       (with default values).
-    //! NOTE: If the argument can't be assigned because of type
-    //+       mismatch, the value at ind won't be changed.
-    //+       See VarValue::= to see what happens.  Padding
-    //+       of the value vector may still occur.
-    //! ARGS: val - value to assign.  If char*, must be a valid
-    //+       non-NULL C string.
-    //! ARGS: ind - integer index to value vector
+    /** Sets the value at index.
+     *  @param val The value to assign.  If a char*, it must be a 
+     *             0-terminated C string which is copied.
+     *  @param i Index to assign at.
+     *  @post If i is in range ( >= 0 and < num), the ith value
+     *        in self is set to val.  If self has a variable number
+     *        of values, the list of values will be automatically
+     *        extended to include i.
+     *  @note If the argument can't be assigned because of a type
+     *        mismatch, the value at i won't change, though the list
+     *        of values may still be extended.  See VarValue::= for
+     *        details.
+     */
+    //@{
     bool setValue (int val, int ind = 0);
     bool setValue (float val, int ind = 0);
     bool setValue (const std::string&  val, int ind = 0);
     bool setValue (ConfigChunkPtr val, int ind = 0);
     bool setValue (const VarValue& val, int ind = 0);
+    //@}
 
-    //: Attempts to assign a value (in tok) to the Property's ith value.
-    //!NOTE:  This function does a certain amount of type-mangling, and also
-    //+        handles enumeration lookups.  Return value is success/failure.
+
+    /** Attempts to assign a value to self's ith value.
+     *  @note In addition to the usual sorts of padding etc. that setValue
+     *        use, this function does a certain amount of type mangling,
+     *        and also handles enumeration values lookup.
+     *  @return True if we were able to assign a reasonable conversion of
+     *          val to self.
+     */
     bool tryAssign (int index, const char* val);
-
-
-    inline EnumEntry* getEnumEntry (const std::string& n) const {
-        assertValid();
-        return description->getEnumEntry (n);
-    }
-    EnumEntry* getEnumEntryWithValue (int val) const;
-
-
-    //: creates a VarValue of the correct type for this property
-    //! ARGS: i - position of this value.  Useful for giving
-    //+           embedded chunks names based on valuelabels.
-    VarValue *createVarValue (int i = -1);
 
 
     /** Converts the values in this property from units of u to units of feet.
@@ -210,21 +240,32 @@ public:
     bool applyUnits (CfgUnit u);
 
 
-    //: writes p to out
+    /** Writes p to out. 
+     *  Uses ConfigIO to do the actual output.
+     */
     friend std::ostream& operator << (std::ostream &out, Property& p);
 
 
-private:
+protected:
 
-    //: Utility function for setValue(val, ind) functions
-    //! POST: If self has a variable number of values, and ind
-    //+       is greater than the current size of the value
-    //+       vector, the vector is padded with new default-valued
-    //+       VarValues.
-    //! RETURNS: true if ind is a valid index to the values vector
-    //+          (after padding).
-    //! RETURNS: false if ind is out of bounds.
-    //! ARGS: ind - index into the values vector.
+    /** Creates a VarValue of the correct type for this property.
+     *  This is used by the setValue/tryAssign methods to pad the
+     *  values list.
+     *  @param i Position of this value.  Used for giving embedded
+     *           chunks default names based on value labels.
+     */
+    VarValue *createVarValue (int i = -1);
+
+
+    /** Utility function for setValue(val, ind) functions
+     *  @post If self has a variable number of values, and ind
+     *        is greater than the current size of the value
+     *        vector, the vector is padded with new default-valued
+     *        VarValues.
+     *  @param index Index into the values vector.
+     *  @return True iff ind is a valid index to the values vector
+     *          (after padding).
+     */
     bool preSet (unsigned int index);
 
 };
