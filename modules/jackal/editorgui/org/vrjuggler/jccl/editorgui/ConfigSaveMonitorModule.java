@@ -185,12 +185,12 @@ public class ConfigSaveMonitorModule
     //----------------------- ConfigModule Listener Stuff -------------------
 
 
-    public void addChunkDB (ConfigModuleEvent e) {
+    public void chunkDBAdded (ConfigModuleEvent e) {
         ;
     }
 
 
-    public void removeChunkDB (ConfigModuleEvent e) {
+    public void chunkDBRemoved (ConfigModuleEvent e) {
         ConfigChunkDB db = e.getChunkDB();
         if (db.need_to_save  && !config_module.isActive(db)) {
             int result = 
@@ -211,12 +211,12 @@ public class ConfigSaveMonitorModule
     }
 
 
-    public void addDescDB (ConfigModuleEvent e) {
+    public void descDBAdded (ConfigModuleEvent e) {
         ;
     }
 
 
-    public void removeDescDB (ConfigModuleEvent e) {
+    public void descDBRemoved (ConfigModuleEvent e) {
         ChunkDescDB db = e.getDescDB();
         if (db.need_to_save && !config_module.isActive(db)) {
             int result = JOptionPane.showConfirmDialog (ui_module, "Save changes to " + db.getName() + "?", "Save file?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE/*, Core.save_icn*/);

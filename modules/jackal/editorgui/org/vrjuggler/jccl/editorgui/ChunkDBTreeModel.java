@@ -371,7 +371,21 @@ public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener
 
     //------------------------ ChunkDBListener Stuff -------------------------
 
-    public void replaceChunk (ChunkDBEvent e) {
+    public void configChunkAdded (ChunkDBEvent e) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            doAddChunk (e.getNewChunk());
+        }
+        else {
+            try {
+                SwingUtilities.invokeLater (new AddChunkHandler (e.getNewChunk()));
+            }
+            catch (Exception ex) {
+            }
+        }
+    }
+
+
+    public void configChunkReplaced (ChunkDBEvent e) {
         //System.out.println ("replace chunk... chunkdbtreemodel");
 	ConfigChunk oldc = e.getOldChunk();
 	ConfigChunk newc = e.getNewChunk();
@@ -390,7 +404,7 @@ public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener
 
 
 
-    public void removeChunk (ChunkDBEvent e) {
+    public void configChunkRemoved (ChunkDBEvent e) {
         if (SwingUtilities.isEventDispatchThread()) {
             doRemoveChunk (e.getOldChunk());
         }
@@ -405,28 +419,13 @@ public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener
 
 
 
-    public void removeAllChunks (ChunkDBEvent e) {
+    public void configChunksCleared (ChunkDBEvent e) {
         if (SwingUtilities.isEventDispatchThread()) {
             doRemoveAllChunks ();
         }
         else {
             try {
                 SwingUtilities.invokeLater (new RemoveAllChunksHandler ());
-            }
-            catch (Exception ex) {
-            }
-        }
-    }
-
-
-
-    public void addChunk (ChunkDBEvent e) {
-        if (SwingUtilities.isEventDispatchThread()) {
-            doAddChunk (e.getNewChunk());
-        }
-        else {
-            try {
-                SwingUtilities.invokeLater (new AddChunkHandler (e.getNewChunk()));
             }
             catch (Exception ex) {
             }

@@ -49,10 +49,10 @@ import VjComponents.ConfigEditor.ConfigModuleEvent;
  */
 public interface ConfigModuleListener extends java.util.EventListener {
 
-    public abstract void addChunkDB (ConfigModuleEvent e);
-    public abstract void removeChunkDB (ConfigModuleEvent e);
-    public abstract void addDescDB (ConfigModuleEvent e);
-    public abstract void removeDescDB (ConfigModuleEvent e);
+    public abstract void chunkDBAdded (ConfigModuleEvent e);
+    public abstract void chunkDBRemoved (ConfigModuleEvent e);
+    public abstract void descDBAdded (ConfigModuleEvent e);
+    public abstract void descDBRemoved (ConfigModuleEvent e);
 
 }
 

@@ -471,21 +471,21 @@ public class ChunkDBPanel
 
 
     /****************** ConfigModuleListener stuff *********************/
-    public void addChunkDB (ConfigModuleEvent e) {
+    public void chunkDBAdded (ConfigModuleEvent e) {
 	db_combobox.addItem (e.getChunkDB().getName());
     }
 
-    public void removeChunkDB (ConfigModuleEvent e) {
+    public void chunkDBRemoved (ConfigModuleEvent e) {
 	if (chunkdb == e.getChunkDB())
 	    selectDB ("");
 	db_combobox.removeItem (e.getChunkDB().getName());
     }
 
-    public void addDescDB (ConfigModuleEvent e) {
+    public void descDBAdded (ConfigModuleEvent e) {
 	updateInsertTypes();
     }
 
-    public void removeDescDB (ConfigModuleEvent e) {
+    public void descDBRemoved (ConfigModuleEvent e) {
 	updateInsertTypes();
     }
 

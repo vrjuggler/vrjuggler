@@ -393,13 +393,13 @@ public class ChunkDescDB {
         int a = e.getAction();
 	for (int i = 0; (i < l.length) && (l[i] != null); i++) {
 	    if (a == e.INSERT)
-		l[i].addDesc (e);
+		l[i].chunkDescAdded (e);
 	    else if (a == e.REMOVE)
-		l[i].removeDesc (e);
+		l[i].chunkDescRemoved (e);
 	    else if (a == e.REPLACE)
-		l[i].replaceDesc (e);
+		l[i].chunkDescReplaced (e);
 	    else if (a == e.REMOVEALL)
-		l[i].removeAllDescs (e);
+		l[i].chunkDescsCleared (e);
 	}
     }
 

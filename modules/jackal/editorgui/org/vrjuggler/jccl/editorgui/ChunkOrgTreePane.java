@@ -309,24 +309,24 @@ public class ChunkOrgTreePane
 
 
 
-    // ConfigModuleListener stuff
+    //-------------------- ConfigModuleListener stuff -----------------------
 
-    public void addChunkDB (ConfigModuleEvent e) {
+    public void chunkDBAdded (ConfigModuleEvent e) {
     }
 
-    public void removeChunkDB (ConfigModuleEvent e) {
+    public void chunkDBRemoved (ConfigModuleEvent e) {
     }
 
-    public void addDescDB (ConfigModuleEvent e) {
+    public void descDBAdded (ConfigModuleEvent e) {
 	updateInsertTypes();
     }
 
-    public void removeDescDB (ConfigModuleEvent e) {
+    public void descDBRemoved (ConfigModuleEvent e) {
 	updateInsertTypes();
     }
 
 
-    /********************** PlugPanel Stuff **************************/
+    //-------------------------- PlugPanel Stuff ----------------------------
 
     public String getComponentName () {
         return component_name;
@@ -508,11 +508,5 @@ public class ChunkOrgTreePane
 
 
 }
-
-
-
-
-
-
 
 
