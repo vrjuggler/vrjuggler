@@ -231,7 +231,7 @@ namespace gadget
 
          jccl::ConfigChunkPtr local_machine_chunk = mClusterTable[mLocalMachineChunkName];
          
-	 if(local_machine_chunk == NULL)
+	 if(local_machine_chunk.get() == NULL)
 	 {
 	    vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"This machine is not in the current Cluster Configuration!\n") << vprDEBUG_FLUSH;
 	    exit(1);
@@ -260,9 +260,13 @@ namespace gadget
                "ClusterBarrierSerial Barrier Method: TCP/IP Sockets & Serial Port \n" << vprDEBUG_FLUSH;
             break;
          case 3:
+#ifndef VPR_OS_Win32
             mBarrier = new gadget::ClusterBarrierWired;
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << 
                "ClusterBarrierWire Barrier Method: Altered Serial Driver \n" << vprDEBUG_FLUSH;
+#else
+            vprASSERT(false && "gadget::ClusterBarrierWired is not available on Win32");
+#endif
             break;
 
 /*         case 2:
