@@ -37,39 +37,91 @@
 #include <vpr/Util/Assert.h>
 
 #include <gadget/Type/EventWindow.h>
+#include <gadget/Type/EventWindow/Event.h>
+#include <gadget/Type/EventWindow/KeyEvent.h>
+#include <gadget/Type/EventWindow/MouseEvent.h>
+#include <gadget/Type/EventWindow/EventFactory.h>
 
 
 namespace gadget
 {
-
+/**
+ * Write both mCurKeys and mCurEventQueueLock to a stream using the given ObjectWriter.
+ */
 vpr::ReturnStatus EventWindow::writeObject(vpr::ObjectWriter* writer)
 {
-   writer->writeUint16(MSG_DATA_KEYBOARD); // Write out the data type so that we can assert if reading in wrong place
-   writer->writeUint16(256);
-
-   for ( unsigned i = 0; i < 256; ++i )
+   writer->writeUint16(MSG_DATA_EVENT_WINDOW); // Write out the data type so that we can assert if reading in wrong place
+      
+   // Write Current Keys to a stream using the given ObjectWriter
+   writer->writeUint16(gadget::LAST_KEY);
+   for ( unsigned int i = 0; i < gadget::LAST_KEY; ++i )
    {
-      writer->writeUint16(mCurKeys[i]);
+      writer->writeUint32(mCurKeys[i]);
    }
+   
+   // Write Events to a stream using the given ObjectWriter
+   writer->writeUint16(mCurEventQueue.size());
+   
+   // Lock the Queue of current events to serialize
+   vpr::Guard<vpr::Mutex> cur_guard(mCurEventQueueLock);
 
+   // Copy the queue since the only way to iterate over it requires
+   // you to pop events off the front, which destroys the queue
+   std::queue<gadget::EventPtr> temp_queue(mCurEventQueue); 
+
+   // While the queue is not empty
+   //  -Grab the event on the front of the queue
+   //  -Serialize the Event
+   //  -Pop the event off the front of the queue
+   while (!temp_queue.empty())
+   {
+      EventPtr temp_event = temp_queue.front();
+      temp_event->writeObject(writer);
+      temp_queue.pop();
+   }   
    return vpr::ReturnStatus::Succeed;
 }
 
+/**
+ * Read mCurKeys and mCurEventQueueLock from a stream using the given ObjectReader.
+ */
 vpr::ReturnStatus EventWindow::readObject(vpr::ObjectReader* reader)
 {
-   //vprASSERT(reader->attribExists("rim.timestamp.delta"));
-   //vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");
-
-   // ASSERT if this data is really not Digital Data
-   vpr::Uint16 temp = reader->readUint16();
-   vprASSERT(temp==MSG_DATA_KEYBOARD && "[Remote Input Manager]Not Digital Data");
-   unsigned numVectors = reader->readUint16();
-
-   for (unsigned i = 0; i < numVectors; ++i )
+   // ASSERT if the given datastream does not start with the correct datatype flag
+   vpr::Uint16 data_type = reader->readUint16();
+   vprASSERT(data_type==MSG_DATA_EVENT_WINDOW && "[EventWindow::readObject()]Not EventWindow Data");
+   
+   
+   // Read Current Keys using the given ObjectReader
+   unsigned int num_keys = reader->readUint16();
+   for ( unsigned int i = 0; i < num_keys; ++i )
    {
-      mCurKeys[i] = reader->readUint16();
+      mCurKeys[i] = reader->readUint32();
    }
 
+   // Read all events using the given ObjectReader
+   unsigned num_events = reader->readUint16();
+      
+   // -For each event
+   //   -Read the event type
+   //   -Create the correct Event subclass using the EventFactory
+   //   -Set the event type since we could not set it during construction
+   //   -Load all necissary data into event using the given ObjectReader
+   //   -Add the new event to the working event queue
+   //  -Update the event queue, which swaps the working and current queues
+   for (unsigned i = 0; i < num_events; ++i )
+   {
+      EventType event_type = (EventType)reader->readUint16();      
+      EventPtr temp_event(EventFactory::instance()->createObject(event_type));
+      
+      vprASSERT(NULL != temp_event.get() && "temp_event == NULL, Event Type does not exist.");
+      
+      temp_event->setType(event_type);
+      temp_event->readObject(reader);
+
+      addEvent(temp_event);
+   }
+   updateEventQueue();
    return vpr::ReturnStatus::Succeed;
 }
 
@@ -279,7 +331,11 @@ void EventWindow::updateEventQueue()
       vpr::Guard<vpr::Mutex> cur_guard(mCurEventQueueLock);
       mCurEventQueue = mWorkingEventQueue;
    }
-
+   
+   /*std::cout << "updateEventQueue" << std::endl;
+   std::cout << "Current " << mCurEventQueue.size() << " events." << std::endl;
+   std::cout << "Working " << mWorkingEventQueue.size() << " events." << std::endl;
+   */
    while ( ! mWorkingEventQueue.empty() )
    {
       mWorkingEventQueue.pop();

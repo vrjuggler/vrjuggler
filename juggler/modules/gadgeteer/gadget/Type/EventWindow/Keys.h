@@ -290,7 +290,7 @@ enum Keys
 */
    KEY_UNKNOWN,
 
-   LAST_KEY    /**< Maximum vaule to provide enumeration size. */
+   LAST_KEY    /**< Maximum value to provide enumeration size. */
 };
 
 /// Mask values for keyboard modifier keys.

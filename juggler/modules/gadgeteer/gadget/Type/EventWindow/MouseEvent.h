@@ -38,10 +38,16 @@
 #include <gadget/Type/EventWindow/Event.h>
 #include <gadget/Type/EventWindow/MouseEventPtr.h>
 #include <gadget/Type/EventWindow/Keys.h>
+#include <gadget/Type/EventWindow/EventFactory.h>
+
+#include <vpr/IO/SerializableObject.h>
 
 
 namespace gadget
 {
+GADGET_REGISTER_EVENT_CREATOR( MouseEvent, MouseButtonPressEvent );
+GADGET_REGISTER_EVENT_CREATOR( MouseEvent, MouseButtonReleaseEvent );
+GADGET_REGISTER_EVENT_CREATOR( MouseEvent, MouseMoveEvent );
 
 /**
  * Mouse event class.  This captures the state of the mouse when any mouse
@@ -83,6 +89,17 @@ public:
       , mGlobalX(globalX)
       , mGlobalY(globalY)
       , mState(state)
+   {
+   }
+
+   MouseEvent()
+      : gadget::Event(NoEvent, 0),
+      mButton(gadget::NO_MBUTTON), 
+      mRelativeX(0), 
+      mRelativeY(0), 
+      mGlobalX(0), 
+      mGlobalY(0), 
+      mState(0)
    {
    }
 
@@ -134,6 +151,43 @@ public:
    const int& getState() const
    {
       return mState;
+   }
+
+   /**
+    * Serializes this event using the given ObjectWriter
+    */
+   vpr::ReturnStatus MouseEvent::writeObject(vpr::ObjectWriter* writer)
+   {
+      writer->writeUint16(mType);
+
+      // Serialize all member variables
+      writer->writeUint32(mButton);
+      writer->writeUint32(mRelativeX);
+      writer->writeUint32(mRelativeY);
+      writer->writeUint32(mGlobalX);
+      writer->writeUint32(mGlobalY);
+      writer->writeUint32(mState);
+      
+      return vpr::ReturnStatus::Succeed;
+   }
+   
+   /**
+    * De-Serializes this event using the given ObjectReader
+    */
+   vpr::ReturnStatus MouseEvent::readObject(vpr::ObjectReader* reader)
+   {
+      // We have already read the type in EventWindoe to decide
+      // if we should construct a KeyEvent or a MouseEvent
+      //mType = reader->readUint16();
+
+      // De-Serialize all member variables
+      mButton = (gadget::Keys)reader->readUint32();
+      mRelativeX = reader->readUint32();
+      mRelativeY = reader->readUint32();
+      mGlobalX = reader->readUint32();
+      mGlobalY = reader->readUint32();
+      mState = reader->readUint32();
+      return vpr::ReturnStatus::Succeed;
    }
 
 private:
