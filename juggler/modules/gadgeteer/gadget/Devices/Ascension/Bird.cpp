@@ -350,9 +350,9 @@ void Bird::initCorrectionTable()
          >> caltable.ymin >> caltable.ymax
          >> caltable.zmin >> caltable.zmax;
 
-  xsize = (float) (caltable.xmax - caltable.xmin) + 1.0;
-  ysize = (float) (caltable.ymax - caltable.ymin) + 1.0;
-  zsize = (float) (caltable.zmax - caltable.zmin) + 1.0;
+  xsize =  (int)((float)(caltable.xmax - caltable.xmin) + 1.0);
+  ysize =  (int)((float)(caltable.ymax - caltable.ymin) + 1.0);
+  zsize =  (int)((float)(caltable.zmax - caltable.zmin) + 1.0);
 
   for (i = 0; i < xsize; i++)
     for (j = 0; j < ysize; j++)
