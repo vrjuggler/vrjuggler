@@ -55,13 +55,14 @@ namespace vpr {
 //! POST: handle is added to the handle set, and initialized to a mask of
 //+       no-events
 bool
-SelectorImplBSD::addHandle (IOSys::Handle handle) {
+SelectorImplBSD::addHandle (IOSys::Handle handle, vpr::Uint16 mask)
+{
    bool status;
 
    if ( getHandle(handle) == mPollDescs.end() ) {
       BSDPollDesc new_desc;
       new_desc.fd        = handle;
-      new_desc.in_flags  = 0;
+      new_desc.in_flags  = mask;
       new_desc.out_flags = 0;
 
       mPollDescs.push_back(new_desc);
