@@ -130,6 +130,12 @@ AC_ARG_WITH(perl,
                           or newer binary                 [No default]],
             _user_perl_path="$withval")
 
+dnl # Name the group used for setting ownership on installed files.
+AC_ARG_WITH(install-group,
+            [  --with-install-group=<GROUP NAME>
+                          Installed file group name       [default=vrjuggler]],
+	    _install_group="$withval", _install_group='vrjuggler')
+
 dnl # ------------------------------------------------------ #
 dnl # --enable-feature[=arg] and --disable-feature arguments #
 dnl # ------------------------------------------------------ #
@@ -1021,6 +1027,32 @@ AC_CHECK_LIB(m, atan2f, AC_DEFINE(HAVE_ATAN2F))
 dnl # All of the above function checks may not be necessary ...
 
 dnl # -------------------------------------------------------------------------
+dnl # Miscellaneous checks.
+dnl # -------------------------------------------------------------------------
+
+dnl # Make sure that the named install group is actually available and can
+dnl # be set by this user.  This is done by creating a file (conftest.c) and
+dnl # setting the group name to be what is in ${_install_group}.  Any output
+dnl # from chgrp(1) is redirected to chgrp_out.  If chgrp_out has non-zero
+dnl # length, chgrp(1) gave error output, and thus the group is not avaialble.
+AC_CACHE_CHECK(for ${_install_group} group, ac_cv_install_group_available,
+    [ touch conftest.c
+      chgrp ${_install_group} conftest.c >chgrp_out 2>&1
+      if test -s chgrp_out ; then
+          ac_cv_install_group_available=no
+      else
+          ac_cv_install_group_available=yes
+      fi
+      rm conftest.c chgrp_out
+    ])
+
+GROUP_NAME=''
+
+if test "$ac_cv_install_group_available" = "yes" ; then
+    GROUP_NAME="${_install_group}"
+fi
+
+dnl # -------------------------------------------------------------------------
 dnl # Do Makefile substitutions.
 dnl # -------------------------------------------------------------------------
 EXTRA_LINK_FLAGS=''		dnl # For use in linking Juggler applications
@@ -1135,6 +1167,7 @@ AC_SUBST(DEP_GEN_FLAG)
 AC_SUBST(DEPENDFLAGS)
 AC_SUBST(DEPEND_EXTRAS)
 AC_SUBST(EXTRA_LINK_FLAGS)
+AC_SUBST(GROUP_NAME)
 AC_SUBST(INCLUDES)
 AC_SUBST(LD)
 AC_SUBST(LIBS)
