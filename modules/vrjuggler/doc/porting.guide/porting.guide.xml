@@ -23,16 +23,16 @@
          <title>Summary of Changes</title>
          <listitem>
             <para>Separation of subsystems into modules with namespaces</para>
-            <para>To help make VR Juggler more modular, each of the major subsystems of VR Juggler has been split into a separate module. Each of these modules has an associated namespace for all of the symbols in the module. For example the new Vapor module has the namespace <literal>vpr</literal>. Thus all symbols in Vapor must be accessed using the <literal>vpr::</literal> scoping prefix.</para>
-            <para>Because of the move to namespaces, the <quote>vj</quote> prefix from all VR Juggler 1.0 class names has been removed and replaced with the namespace of the module that contains the given class. For example <classname>vjKernel</classname> has moved to the VR Juggler module which defines the <literal>vrj</literal> namespace. So <classname>vjKernel</classname> is now <classname>vrj::Kernel</classname>.</para>
+            <para>To help make VR Juggler more modular, each of the major subsystems of VR Juggler has been split into a separate module. Each of these modules has an associated namespace for all of the symbols in the module. For example, the new Gadgeteer module (which handles all of the device interfaces you might use for a VR application) has the namespace <literal>gadget</literal>. Thus all symbols in Gadgeteer must be accessed using the <literal>gadget::</literal> scoping prefix.</para>
+            <para>Because of the move to namespaces, the <quote>vj</quote> prefix from all VR Juggler 1.0 class names has been removed and replaced with the namespace of the module that contains the given class. For example, <classname>vjKernel</classname> has moved to the VR Juggler module which defines the <literal>vrj</literal> namespace. So <classname>vjKernel</classname> is now <classname>vrj::Kernel</classname>.</para>
          </listitem>
          <listitem>
             <para>Cross-platform system abstraction</para>
-            <para>VR Juggler now has a common module called VPR (VR Juggler Portable Runtime) that captures all platform-specific system abstractions. This includes programming constructs such as threads and semaphores and system access methods such as serial ports and sockets. This common abstraction makes it possible for VR Juggler code to run on all supported platforms with little or no platform-specific code.</para>
+            <para>VR Juggler now has a common module called VPR (VR Juggler Portable Runtime) that captures all platform-specific system abstractions. This includes programming constructs such as threads and semaphores and system access methods such as serial ports and sockets. This common abstraction makes it possible for VR Juggler applications to run on all supported platforms with little or no platform-specific code.</para>
          </listitem>
          <listitem>
             <para>Removal of <filename>Juggler_utils</filename> library</para>
-            <para>As a result of the separation of VR Juggler into multiple subsystems, the need for the standalone <filename>Juggler_utils</filename> library dwindled. In VR Juggler 1.0 and early versions of VR Juggler 1.1, this library contained a lot of standalone <quote>utility</quote> code that was needed by the other VR Juggler libraries. The separation into subsystems resulted in most of the utility code migrating to the VR Juggler Portable Runtime. The library was eventually removed when it was deemed unnecessary.</para>
+            <para>As a result of the separation of VR Juggler into multiple subsystems, the standalone <filename>Juggler_utils</filename> library became unnecessary. In VR Juggler 1.0 and early versions of VR Juggler 1.1, this library contained a lot of standalone <quote>utility</quote> code that was needed by the other VR Juggler libraries. The separation into subsystems resulted in most of the utility code migrating to the VPR (Vapor) module mentioned before.</para>
          </listitem>
          <listitem>
             <para>New math library</para>
@@ -50,7 +50,7 @@
          <para>For the purposes of VR Juggler 1.1, namespaces are used as a way to make it clear which module an object belongs to. As stated before, these modules are roughly defined along the lines of their functionality:</para>
          <itemizedlist>
             <listitem>
-               <para>VR Juggler Portable Runtime (namespace <literal>vpr</literal>): system-level functionality and utilities</para>
+               <para>VR Juggler Portable Runtime (namespace <literal>vpr</literal>): system-level functionality (threading and synchronization) and other utilities</para>
             </listitem>
             <listitem>
                <para>Juggler Configuration and Control Library (namespace <literal>jccl</literal>): application configuration and performance monitoring</para>
@@ -180,22 +180,25 @@ class myApplication : public vrj::GlApp
    ...
    void bufferPreDraw()
    {
-      // Clear the depth buffer.
-      glClear(GL_DEPTH_BUFFER_BIT);
+      // Clear the window.
+      glClearColor(0.0, 0.0, 0.0, 0.0);
+      glClear(GL_COLOR_BUFFER_BIT);
    }
 
    void draw()
    {
-      // Clear the window.
-      glClearColor(0.0, 0.0, 0.0, 0.0);
-      glClear(GL_COLOR_BUFFER_BIT);
+      // Clear the depth buffer.
+      glClear(GL_DEPTH_BUFFER_BIT);
 
       // Render the scene...
       ...
    }
    ...
 };</programlisting>
-         <para>Clearing in the <methodname>bufferPreDraw()</methodname> method also allows multiple viewports to be properly drawn in the same window. If the window is cleared in the draw function, it's possible that a viewport may be drawn incorrectly. </para>
+         <para>Why can't you just clear both the depth and color buffers in bufferPreDraw()? </para>
+         <para>Because when rendering stereo views, OpenGL uses two color buffers (one for each eye) but a single depth buffer is shared between the left and right eye views. The drawing pipeline happens in this order: bufferPreDraw() for left eye, bufferPreDraw() for right eye, draw() for left eye, draw() for right eye. Because the depth buffer is shared, the objects drawn for the left eye are carried over into the right eye rendering and much of your scene can get blocked out for the right eye's view.</para>
+         <para>Why can't you just clear both the depth and color buffers in draw()?</para>
+         <para>Because when rendering multiple viewports within a single window, the glClear() command affects the entire window and not just the current viewport that you're trying to render. So if you clear the color buffer during draw(), all of the previously drawn viewports are cleared and you end up with just a single viewport being visible.</para>
       </section>
       <section>
          <title>Math Library</title>
@@ -203,6 +206,7 @@ class myApplication : public vrj::GlApp
             <listitem>
                <para>VR Juggler now uses the GMTL math library (<ulink url="http://ggt.sf.net/">http://ggt.sf.net/</ulink>). The old <filename>vrj/Math</filename> library is no longer available. There are some very fundamental changes between GMTL and Math from VR Juggler 1.0. You should definitely read the GMTL Programmer's Guide available from the <ulink url="http://ggt.sf.net/">ggt.sf.net</ulink> website. This helps you understand how the toolkit is structured, which is pretty simple.</para>
                <para>The main difference between GMTL and VRJ 1.0 Math is the way you use methods. GMTL is similar to object-oriented C programming where the object is always the first parameter in the function. This difference from VRJ 1.0 Math will affect all application code using math.</para>
+               <para>Another big difference is that GMTL uses radian-based rotations, where VRJ 1.0 Math used degrees. Fortunately GMTL provides conversion functions to allow you to work with rotational data in either notation.</para>
                <para>The <classname>vjMatrix</classname>, <classname>vjVec3</classname>, and <classname>vjQuat</classname> that you're used to has been changed to <classname>gmtl::Matrix44f</classname>, <classname>gmtl::Vec3f</classname>, <classname>gmtl::Point3f</classname>, and <classname>gmtl::Quatf</classname> respectively. The following shows an example of using the math classes.</para>
                <programlisting>#include &lt;gmtl/Matrix.h&gt;
 #include &lt;gmtl/Quat.h&gt;
@@ -251,10 +255,7 @@ gmtl::Vec3f result_cross = gmtl::cross(vec1, vec2);</programlisting>
 float radians = gmtl::Math::deg2Rad(degrees);</programlisting>
             </listitem>
             <listitem>
-               <para>While porting applications to GMTL there is one critical thing to keep in mind. All GMTL functions take angles in <emphasis>radians</emphasis> while 1.0 Math took <emphasis>degrees</emphasis> for most of its functions. You may need to use <function>gmtl::Math::deg2Rad()</function> to convert some values.</para>
-            </listitem>
-            <listitem>
-               <para>The headers are in the directory <filename>gmtl/</filename>. Typically you will type your <token>#include</token>s in the following format:</para>
+               <para>The headers are in the directory <filename>gmtl/</filename>. Typically you will type your <token>#include</token>statements in the following format:</para>
                <programlisting>#include &lt;gmtl/somefile.h&gt;</programlisting>
             </listitem>
             <listitem>
