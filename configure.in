@@ -1326,12 +1326,13 @@ AC_OUTPUT(Makefile Makefile.base Config/Makefile Environment/Makefile
           test/Math/Makefile test/Matrix/Makefile test/Performance/Makefile
           test/Performance/analyzer/Makefile
           test/Performance/perfdatabuffer-test/Makefile test/Quat/Makefile
-          test/Sync/Makefile test/input/Makefile test/testDynamicCastSTL/Makefile
-          test/threads/Makefile
+          test/Sync/Makefile test/input/Makefile
+          test/testDynamicCastSTL/Makefile test/threads/Makefile
           samples/Makefile samples/pfNav/Makefile samples/ogl/Makefile
           samples/ogl/combo/Makefile samples/ogl/cubes/Makefile
           samples/ogl/glove/Makefile samples/ogl/simpleGlove/Makefile
           samples/ogl/torus/Makefile samples/ogl/wand/Makefile
+          tools/Makefile
           VARS.pl)
 
 cat <<BUILD_INFO
