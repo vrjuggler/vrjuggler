@@ -46,6 +46,7 @@ EXIT_STATUS_NO_MSVS           = 1
 EXIT_STATUS_MISSING_DATA_FILE = 2
 EXIT_STATUS_MSVS_START_ERROR  = 3
 EXIT_STATUS_INVALID_PATH      = 4
+EXIT_STATUS_MISSING_REQ_VALUE = 5
 
 gHaveTk = False
 try:
@@ -56,6 +57,15 @@ try:
    gHaveTk = True
 except ImportError, ex:
    print ex
+
+class BuildOption:
+   def __init__(self, envVar, desc, defaultValue, isDirectory = True,
+                required = True):
+      self.envVar      = envVar
+      self.desc        = desc
+      self.default     = defaultValue
+      self.required    = required
+      self.isDirectory = isDirectory
 
 def guessBoostToolset(reattempt = False):
    (cl_stdin, cl_stdout, cl_stderr) = os.popen3('cl')
@@ -127,13 +137,13 @@ def noVisualStudioError():
 
 def processInput(optionDict, envVar, inputDesc, required = False):
    default_value = optionDict[envVar]
-   print "    Enter %s [%s]: " % (inputDesc, default_value),
+   print "  %s [%s]: " % (inputDesc, default_value),
    input_str = sys.stdin.readline().strip(" \n")
 
    if input_str == '':
       if required and (default_value is None or default_value == ''):
          print "ERROR: %s value required" % inputDesc
-         os.exit(1)
+         sys.exit(EXIT_STATUS_MISSING_REQ_VALUE)
       else:
          value_str = default_value
    else:
@@ -144,66 +154,90 @@ def processInput(optionDict, envVar, inputDesc, required = False):
 
    return value_str
 
-def setDefaultVars():
+def getDefaultVars():
    boost_tool_fallback = guessBoostToolset()
 
-   options = {
-      # Default values for required settings.
-      'BOOST_ROOT'     : os.getenv('BOOST_ROOT', ''),
-      'BOOST_VERSION'  : os.getenv('BOOST_VERSION', '1_31'),
-      'BOOST_INCLUDES' : os.getenv('BOOST_INCLUDES', ''),
-      'BOOST_TOOL'     : os.getenv('BOOST_TOOL', boost_tool_fallback),
-      'NSPR_ROOT'      : os.getenv('NSPR_ROOT', ''),
-      'CPPDOM_ROOT'    : os.getenv('CPPDOM_ROOT', ''),
-      'GMTL_ROOT'      : os.getenv('GMTL_ROOT', ''),
+   required = []
+   required.append(BuildOption('BOOST_ROOT',
+                               'Boost C++ installation directory', ''))
+   required.append(BuildOption('BOOST_VERSION', 'Boost C++ version',
+                               '1_31', False))
+   required.append(BuildOption('BOOST_INCLUDES',
+                               'Directory containing the Boost C++ header tree',
+                               ''))
+   required.append(BuildOption('BOOST_TOOL',
+                               'The Boost.Build toolset used to compile Boost C++',
+                               boost_tool_fallback, False))
+   required.append(BuildOption('NSPR_ROOT', 'NSPR installation directory', ''))
+   required.append(BuildOption('CPPDOM_ROOT', 'CppDOM installation directory',
+                               ''))
+   required.append(BuildOption('GMTL_ROOT', 'GMTL installation directory', ''))
 
-      # Default values for optional settings.
-      'JAVA_HOME'       : os.getenv('JAVA_HOME', r'C:\java'),
-      'JOGL_HOME'       : os.getenv('JOGL_HOME', os.getenv('JAVA_HOME', '')),
-      'JAVA3D_HOME'     : os.getenv('JAVA3D_HOME', os.getenv('JAVA_HOME', '')),
-      'OMNIORB_ROOT'    : os.getenv('OMNIORB_ROOT', ''),
-      'PFROOT'          : os.getenv('PFROOT',
-                                    r'C:\Program Files\Silicon Graphics\OpenGL Performer'),
-      'VRPN_ROOT'       : os.getenv('VRPN_ROOT', ''),
-      'AUDIERE_ROOT'    : os.getenv('AUDIERE_ROOT', ''),
-      'OPENAL_ROOT'     : os.getenv('OPENAL_ROOT', ''),
-      'TRACKD_API_ROOT' : os.getenv('TRACKD_API_ROOT', ''),
-      'prefix'          : r'C:\vrjuggler',
-      'deps-prefix'     : r'C:\vrjuggler-deps'
+   optional = []
+   optional.append(BuildOption('JAVA_HOME', 'Java installation directory',
+                               r'C:\java', required = False))
+   optional.append(BuildOption('JOGL_HOME', 'Jogl installation directory',
+                               os.getenv('JAVA_HOME', ''), required = False))
+   optional.append(BuildOption('JAVA3D_HOME', 'Java 3D installation directory',
+                               os.getenv('JAVA_HOME', ''), required = False))
+   optional.append(BuildOption('OMNIORB_ROOT',
+                               'omniORB installation directory', '',
+                               required = False))
+   optional.append(BuildOption('PFROOT',
+                               'OpenGL Performer installation directory',
+                               r'C:\Program Files\Silicon Graphics\OpenGL Performer',
+                               required = False))
+   optional.append(BuildOption('VRPN_ROOT', 'VRPN installation directory', '',
+                               required = False))
+   optional.append(BuildOption('AUDIERE_ROOT',
+                               'Audiere installation directory', '',
+                               required = False))
+   optional.append(BuildOption('OPENAL_ROOT',
+                               'OpenAL SDK installation directory', '',
+                               required = False))
+   optional.append(BuildOption('TRACKD_API_ROOT',
+                               'TrackdAPI installation directory', '',
+                               required = False))
+
+   options = {
+      'prefix'      : r'C:\vrjuggler',
+      'deps-prefix' : r'C:\vrjuggler-deps'
    }
+
+   for opt in required + optional:
+      options[opt.envVar] = os.getenv(opt.envVar, opt.default)
 
    # If there are cached options, read them in.
    cache_file = os.path.join(gJugglerDir, gOptionsFileName)
    if os.path.exists(cache_file):
       execfile(cache_file)
-   return options
+   return required, optional, options
 
 def setVars():
    cache_file = os.path.join(gJugglerDir, gOptionsFileName)
-   options = setDefaultVars()
+   required, optional, options = getDefaultVars()
 
    print "+++ Required Settings"
-   processInput(options, 'prefix', 'installation prefix')
-   boost_ver = processInput(options, 'BOOST_VERSION', 'Boost C++ version')
-   boost_dir = processInput(options, 'BOOST_ROOT',
-                            'Boost C++ installation directory')
+   processInput(options, 'prefix', 'Installation prefix')
 
-   if options['BOOST_INCLUDES'] == '':
-      options['BOOST_INCLUDES'] = boost_dir + r'\include\boost-' + boost_ver
+   boost_dir = ''
+   boost_ver = ''
+   for opt in required:
+      result = processInput(options, opt.envVar, opt.desc, opt.required)
 
-   processInput(options, 'BOOST_INCLUDES',
-                'directory containing the Boost C++ header tree')
-
-   processInput(options, 'BOOST_TOOL',
-                'the Boost.Build toolset used to compile Boost C++')
-
-   processInput(options, 'NSPR_ROOT', 'NSPR installation directory')
-   processInput(options, 'CPPDOM_ROOT', 'CppDOM installation directory')
-   processInput(options, 'GMTL_ROOT', 'GMTL installation directory')
+      # The following is a little hack to get a reasonable default set for
+      # the BOOST_INCLUDES variable before the user has to enter it manually.
+      if opt.envVar == 'BOOST_ROOT':
+         boost_dir = result
+      elif opt.envVar == 'BOOST_VERSION':
+         boost_ver = result
+         options['BOOST_INCLUDES'] = boost_dir + r'\include\boost-' + boost_ver
 
    print "+++ Optional Settings"
-   processInput(options, 'deps-prefix', 'dependency installation prefix')
-   processInput(options, 'JAVA_HOME', 'Java installation directory', False)
+   processInput(options, 'deps-prefix', 'Dependency installation prefix')
+
+   for opt in optional:
+      processInput(options, opt.envVar, opt.desc, opt.required)
 
    # If the %JAVA_HOME% setting is a valid directory, add its bin subdirectory
    # to the path.
@@ -211,11 +245,6 @@ def setVars():
       jdk_path = os.path.join(os.environ['JAVA_HOME'], 'bin')
       os.environ['PATH'] = jdk_path + os.pathsep + os.environ['PATH']
       os.environ['JACORB_PATH'] = os.path.join(gJugglerDir, r'external\JacORB')
-
-   processInput(options, 'JOGL_HOME', 'Jogl installation directory', False)
-   processInput(options, 'JAVA3D_HOME', 'Java3D installation directory', False)
-   processInput(options, 'OMNIORB_ROOT', 'omniORB installation directory',
-                False)
 
    if os.environ['OMNIORB_ROOT'] != '' and os.path.exists(os.environ['OMNIORB_ROOT']):
       omni_bin = os.path.join(os.environ['OMNIORB_ROOT'], 'bin')
@@ -249,16 +278,6 @@ def setVars():
          if match is not None:
             os.environ['OMNIORB_VERSION'] = match.group(1)
             break
-
-   processInput(options, 'PFROOT', 'OpenGL Performer installation directory',
-                False)
-   processInput(options, 'VRPN_ROOT', 'VRPN installation directory', False)
-   processInput(options, 'AUDIERE_ROOT', 'Audiere installation directory',
-                False)
-   processInput(options, 'OPENAL_ROOT', 'OpenAL SDK installation directory',
-                False)
-   processInput(options, 'TRACKD_API_ROOT', 'TrackdAPI installation directory',
-                False)
 
    cache_file = open(cache_file, 'w')
    for k, v in options.iteritems():
@@ -1265,11 +1284,6 @@ def installOmniORB(prefix):
       destdir = os.path.join(prefix, 'bin', 'scripts')
       installDir(srcdir, destdir)
 
-def str2TkinterStrVar(Str):
-   temp = Tkinter.StringVar()
-   temp.set(Str)
-   return temp
-
 class GuiFrontEnd:
    def __init__(self, master):
       self.mRoot = master
@@ -1277,14 +1291,19 @@ class GuiFrontEnd:
       self.mRoot.protocol("WM_DELETE_WINDOW", self.cleanup)
       self.mRoot.bind("<Destroy>", lambda e: self.cleanup)
 
-      options = setDefaultVars()
+      required, optional, options = getDefaultVars()
       self.mOptions = {}
 
       # Make a StringVar dictionary.
       for k in options:
-         self.mOptions[k] = str2TkinterStrVar(options[k])
+         self.mOptions[k] = self.__str2TkinterStrVar(options[k])
 
-      self.makeOptionsInterface()
+      self.makeOptionsInterface(required, optional)
+
+   def __str2TkinterStrVar(self, inputStr):
+      temp = Tkinter.StringVar()
+      temp.set(inputStr)
+      return temp
 
    def cleanup(self):
       cache_file = os.path.join(gJugglerDir, gOptionsFileName)
@@ -1295,7 +1314,7 @@ class GuiFrontEnd:
       cache_file.close()
       self.mRoot.destroy()
 
-   def makeOptionsInterface(self):
+   def makeOptionsInterface(self, required, optional):
       # Set up the frames.
       pad_amount = 10
 
@@ -1382,34 +1401,14 @@ class GuiFrontEnd:
       self.makeEntryRow(self.mRoot.SettingsFrame.RequiredSettingsFrame,
                         "Instalation Prefix:", 'prefix', next_row)
       next_row = next_row + 1
-      self.makeEntryRow(self.mRoot.SettingsFrame.RequiredSettingsFrame,
-                        "Boost C++ version:", 'BOOST_VERSION', next_row, True,
-                        False)
-      next_row = next_row + 1
-      self.makeEntryRow(self.mRoot.SettingsFrame.RequiredSettingsFrame,
-                        "Boost C++ instalation directory:", 'BOOST_ROOT',
-                        next_row)
-      next_row = next_row + 1
-      self.makeEntryRow(self.mRoot.SettingsFrame.RequiredSettingsFrame,
-                        "Directory Containing Boost C++ Header Tree:",
-                        'BOOST_INCLUDES', next_row)
-      next_row = next_row + 1
-      self.makeEntryRow(self.mRoot.SettingsFrame.RequiredSettingsFrame,
-                        "Boost.Build toolset used to Construct Boost C++:",
-                        'BOOST_TOOL', next_row, True, False)
-      next_row = next_row + 1
-      self.makeEntryRow(self.mRoot.SettingsFrame.RequiredSettingsFrame,
-                        "NSPR instalation directory:", 'NSPR_ROOT', next_row)
-      next_row = next_row + 1
-      self.makeEntryRow(self.mRoot.SettingsFrame.RequiredSettingsFrame,
-                        "CppDOM instalation directory:", 'CPPDOM_ROOT',
-                        next_row)
-      next_row = next_row + 1
-      self.makeEntryRow(self.mRoot.SettingsFrame.RequiredSettingsFrame,
-                        "GMTL instalation directory:", 'GMTL_ROOT', next_row)
-      next_row = next_row + 1
 
-      #OptionalSettingsFrame
+      for opt in required:
+         self.makeEntryRow(self.mRoot.SettingsFrame.RequiredSettingsFrame,
+                           opt.desc, opt.envVar, next_row, opt.required,
+                           opt.isDirectory)
+         next_row += 1
+
+      # OptionalSettingsFrame
       next_row = 0
       self.mRoot.SettingsFrame.OptionalSettingsFrame.Label = \
          Tkinter.Label(self.mRoot.SettingsFrame.OptionalSettingsFrame,
@@ -1426,48 +1425,14 @@ class GuiFrontEnd:
                         "Dependency instalation prefix:", 'deps-prefix',
                         next_row, False)
       next_row = next_row + 1
-      self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,
-                        "Java instalation directory:", 'JAVA_HOME', next_row,
-                        False)
-      next_row = next_row + 1
-      self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,
-                        "Jogl instalation directory:", 'JOGL_HOME', next_row,
-                        False)
-      next_row = next_row + 1
-      self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,
-                        "Java3D instalation directory:", 'JAVA3D_HOME',
-                        next_row, False)
-      next_row = next_row + 1
-      self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,
-                        "OmniORB instalation directory:", 'OMNIORB_ROOT',
-                        next_row, False)
-      next_row = next_row + 1
-      self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,
-                        "OpenGL Performer instalation directory:", 'PFROOT',
-                        next_row, False)
-      next_row = next_row + 1
-      self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,
-                        "VRPN instalation directory:", 'VRPN_ROOT', next_row,
-                        False)
-      next_row = next_row + 1
-      self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,
-                        "Audiere instalation directory:", 'AUDIERE_ROOT',
-                        next_row, False)
-      next_row = next_row + 1
-      self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,
-                        "OpenAL SDK instalation directory:", 'OPENAL_ROOT',
-                        next_row, False)
-      next_row = next_row + 1
-      self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,
-                        "TrackdAPI instalation directory:", 'TRACKD_API_ROOT',
-                        next_row, False)
-      next_row = next_row + 1
-      #self.makeEntryRow(self.mRoot.mFrame,
-      #                  "Microsoft Speech SDK instalation directory:", '',
-      #                  next_row, False)
-      #next_row = next_row + 1
 
-      #CommandFrame Innards
+      for opt in optional:
+         self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,
+                           opt.desc, opt.envVar, next_row, opt.required,
+                           opt.isDirectory)
+         next_row += 1
+
+      # CommandFrame Innards.
       next_row = 0
       self.mRoot.CommandFrame.BatchBuildCheck = \
          Tkinter.Checkbutton(self.mRoot.CommandFrame, text="Batch Build",
@@ -1498,7 +1463,7 @@ class GuiFrontEnd:
       next_row = next_row + 1
       self.mRoot.CommandFrame.InstallJugglerDepsCheck = \
          Tkinter.Checkbutton(self.mRoot.CommandFrame,
-                             text = "Install Juggler Dependancies",
+                             text = "Install Juggler Dependencies",
                              bg = self.JugglerYellow,
                              activebackground = self.JugglerYellow,
                              onvalue = "Yes", offvalue = "No")
@@ -1745,7 +1710,7 @@ class GuiFrontEnd:
       if self.mRoot.CommandFrame.InstallJugglerDepsCheck.Variable.get() == "Yes":
          self.mRoot.OutputFrame.MessageText['state'] = 'normal'
          self.mRoot.OutputFrame.MessageText.insert(Tkinter.END,
-                                                   "Installing Juggler Dependancies...\n",
+                                                   "Installing Juggler Dependencies...\n",
                                                    "a")
          self.mRoot.OutputFrame.MessageText['state'] = 'disabled'
          doDependencyInstall(self.mOptions['deps-prefix'].get())
@@ -1917,6 +1882,8 @@ if __name__ == '__main__':
          status = 'could not start Visual Studio'
       elif exitEx.code == EXIT_STATUS_INVALID_PATH:
          status = 'invalid directory structure'
+      elif exitEx.code == EXIT_STATUS_MISSING_REQ_VALUE:
+         status = 'required value not given'
       else:
          status = 'error encountered'
 
