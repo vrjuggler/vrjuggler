@@ -27,10 +27,12 @@ vpath %.c @srcdir@
 vpath %.C @srcdir@
 vpath %.o ${OBJDIR}
 
+ifneq (@OS_TYPE@, Win32)
 IBOX_SRCS	:= drivers.c	\
                    driveunx.c 	\
                    hci.c 	\
                    ibox.c
+endif
 
 IBOX_OBJECTS	:= ${addprefix ${OBJDIR}/,${IBOX_SRCS:.c=.o}}
 DEPEND_FILES	:= ${IBOX_SRCS:.c=.d}
