@@ -9,7 +9,15 @@ For all versions:
 ===============================================================================
 
  Version: 1.0.0
-Released: <month> <day>, 2001
+Released: <month> <day>, 2002
+
+ Version: 0.14.0
+Released: May 23, 2002
+    Required changes when upgrading from all previous versions:
+        * Use of vpr::InetAddr and vpr::Uint64 in STL hash types (e.g.,
+          std::hash_map<> and std::hash_set<>) requires that third template
+          parameter be specified.  This parameter names the hasher.  The
+          hashers are vpr::InetAddrHash and vpr::Uint64Hash.
 
  Version: 0.4.0
 Released: September 4, 2001
