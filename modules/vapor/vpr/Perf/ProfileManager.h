@@ -54,6 +54,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <sstream>
 
 #include <vpr/Sync/Guard.h>
 #include <vpr/Sync/Mutex.h>
@@ -118,7 +119,7 @@ namespace vpr
       static ProfileNode* getRootNode(vpr::Thread* thread=NULL);
 
       /** Print the full profile tree. */
-      static void printTree(bool forAllThreads=false);
+      static void printTree(bool forAllThreads=true);
 
       // ------------------------
       /// @nameIterator handling.
@@ -183,7 +184,12 @@ namespace vpr
       static ProfileSampleResult getSampleResult( )
       {
          ProfileSampleResult sample_time_map;
-         getSampleResultRecursively(sample_time_map, getRootNode());
+         unsigned num_threads = vpr::ThreadManager::instance()->getNumThreads();
+         for(unsigned t=0;t<num_threads;t++)
+         {
+            vpr::Thread* thread = vpr::ThreadManager::instance()->getThread(t);
+            getSampleResultRecursively(sample_time_map, getRootNode(thread));
+         }
          return sample_time_map;
       }
 
