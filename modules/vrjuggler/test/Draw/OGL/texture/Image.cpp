@@ -198,8 +198,6 @@ void Image::getSubImage( const unsigned int& pixelLeft,
                          Image& newImage ) const
 {
 	// make sure the client follows the function's requirements
-	assert( pixelLeft >= 0 && "left position is not within bounds" );
-	assert( pixelTop >= 0 && "top position is not within bounds" );
 	assert( pixelRight < this->width() && "right position is not within bounds" );
 	assert( pixelBottom  < this->height() && "bottom position is not within bounds" );
 	
@@ -354,8 +352,8 @@ void Image::swapChannels( const Image& image, const unsigned int& channel1,
 	}
 
 	assert( image.size() == this->size() && "Can't swap channels" );
-	assert( channel1 <= (this->channels()-1) && channel1 >= 0 && "you must specify a valid channel 1" );
-	assert( channel2 <= (this->channels()-1) && channel2 >= 0 && "you must specify a valid channel 2" );
+	assert( channel1 <= (this->channels()-1) && "you must specify a valid channel 1" );
+	assert( channel2 <= (this->channels()-1) && "you must specify a valid channel 2" );
 	
 	if (channel1 == channel2)
 		return;
@@ -380,8 +378,8 @@ void Image::swapChannels( const Image& image, const unsigned int& channel1,
 void Image::swapChannels( const unsigned int& channel1, 
                           const unsigned int& channel2 )
 {
-	assert( channel1 <= (this->channels()-1) && channel1 >= 0 && "you must specify a valid channel 1" );
-	assert( channel2 <= (this->channels()-1) && channel2 >= 0 && "you must specify a valid channel 2" );
+	assert( channel1 <= (this->channels()-1) && "you must specify a valid channel 1" );
+	assert( channel2 <= (this->channels()-1) && "you must specify a valid channel 2" );
 	
 	if (channel1 == channel2)
 		return;
