@@ -143,18 +143,22 @@ public:
     //! POST: The socket is in the listening state waiting for incoming
     //+       connection requests.
     //
-    //! ARGS: backlog - The maximum length of the pending connection queue.
+    //! ARGS: reuse_addr - Enable or disable reuse of the address being bound.
+    //+                    This argument is optional and defaults to true.
+    //! ARGS: backlog    - The maximum length of the pending connection queue.
     //
     //! RETURNS: true  - The server socket is in the listening state.
     //! RETURNS: false - The server socket could not be set up.  An error
     //+                  message is printed explaining what went wrong.
     // ------------------------------------------------------------------------
     inline bool
-    openServer (const int backlog = 5) {
+    openServer (const bool reuse_addr = true, const int backlog = 5) {
         bool retval;
 
         // First, open the socket.
         if ( retval = open() ) {
+            setReuseAddr(reuse_addr);
+
             // If that succeeded, bind to the internal address.
             if ( retval = bind() ) {
                 // Finally, if that succeeded, go into listening mode.
