@@ -56,7 +56,6 @@ SRCS		= \
 EXTRA_INCLUDES = \
 	-I$(top_srcdir)/config \
 	-I$(top_srcdir)/common \
-	-I$(top_srcdir)/util \
 	-I$(topdir)/common
 
 include $(MKPATH)/dpp.obj.mk
