@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Nov-23-2003 patrickh    Updated the Autoconf-based build system to use the
+                        Doozer++ HEAD branch.
 Sep-13-2003 patrickh    Added a Jamfile for easier compiling.
 Sep-07-2003 patrickh    Added separate debug and optimized build capabilities.
 Aug-31-2003 patrickh    Changed --with-bpldir to --with-boost-python.  The
