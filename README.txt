@@ -139,10 +139,10 @@ Modules
    http://xml-cppdom.sourceforge.net/.
 
    To build the configuration editor JavaBeans, JDOM and the Tweek Java API
-   are required. JDOM can be downloaded from http://www.jdom.org/. We require
-   version B7 or newer, and we recommend version B8. Tweek is another module
-   in the Juggler Project, and it will be built automatically as a dependency
-   of JCCL.
+   are required. Tweek is another module in the Juggler Project, and it will
+   be built automatically as a dependency of JCCL. JDOM comes with the
+   Juggler Project source code and can be found in the directory
+   juggler/external/jdom.
 
   Gadgeteer
 
