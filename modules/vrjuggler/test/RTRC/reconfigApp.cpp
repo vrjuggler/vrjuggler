@@ -885,12 +885,12 @@ TEST SUITE FUNCTIONS
 bool reconfigApp::addMachineSpecific_exec()
 {
    std::cout << "Beginning test for adding machine specific graphics windows...\n" << std::flush;
-   return addElementFile( mPath + "sim.ms.01.config" );
+   return addElementFile( mPath + "sim.ms.01.jconf" );
 }
 
 bool reconfigApp::addMachineSpecific_check()
 {
-   return verifyDisplayFile( mPath + "sim.ms.01.config" );
+   return verifyDisplayFile( mPath + "sim.ms.01.jconf" );
 }
 
 
@@ -898,7 +898,7 @@ bool reconfigApp::addMachineSpecific_check()
 bool reconfigApp::removeMachineSpecific_exec()
 {
    std::cout << "Beginning test for removing machine specific graphics windows...\n" << std::flush;
-   return removeElementFile( mPath + "sim.ms.01.config" );
+   return removeElementFile( mPath + "sim.ms.01.jconf" );
 }
 
 bool reconfigApp::removeMachineSpecific_check()
@@ -906,7 +906,7 @@ bool reconfigApp::removeMachineSpecific_check()
 
    //Load up the given file
    jccl::Configuration fileDB;
-   fileDB.load( mPath + "sim.extradisplay.01.config" );
+   fileDB.load( mPath + "sim.extradisplay.01.jconf" );
    std::vector<jccl::ConfigElementPtr> windowElements;
    fileDB.getByType( "display_window", windowElements );
 
@@ -933,12 +933,12 @@ bool reconfigApp::removeMachineSpecific_check()
 bool reconfigApp::addGFXWindow_exec()
 {
    std::cout << "Beginning test for adding a graphics window...\n" << std::flush;
-   return addElementFile( mPath + "sim.extradisplay.01.config" );
+   return addElementFile( mPath + "sim.extradisplay.01.jconf" );
 }
 
 bool reconfigApp::addGFXWindow_check()
 {
-   return verifyDisplayFile( mPath + "sim.extradisplay.01.config" );
+   return verifyDisplayFile( mPath + "sim.extradisplay.01.jconf" );
 }
 
 
@@ -946,7 +946,7 @@ bool reconfigApp::addGFXWindow_check()
 bool reconfigApp::removeGFXWindow_exec()
 {
    std::cout << "Beginning test for removing a graphics window...\n" << std::flush;
-   return removeElementFile( mPath + "sim.extradisplay.01.config" );
+   return removeElementFile( mPath + "sim.extradisplay.01.jconf" );
 }
 
 bool reconfigApp::removeGFXWindow_check()
@@ -954,7 +954,7 @@ bool reconfigApp::removeGFXWindow_check()
 
    //Load up the given file
    jccl::Configuration fileDB;
-   fileDB.load( mPath + "sim.extradisplay.01.config" );
+   fileDB.load( mPath + "sim.extradisplay.01.jconf" );
    std::vector<jccl::ConfigElementPtr> windowElements;
    fileDB.getByType( "display_window", windowElements );
 
@@ -981,102 +981,102 @@ bool reconfigApp::readdGFXWindow_exec()
 {
    std::cout << "Beginning test for readding a graphics window...\n" << std::flush;
 
-   return (   addElementFile( mPath + "sim.extradisplay.01.config" )
-           && addElementFile( mPath + "sim.extradisplay.02.config" ));
+   return (   addElementFile( mPath + "sim.extradisplay.01.jconf" )
+           && addElementFile( mPath + "sim.extradisplay.02.jconf" ));
 }
 
 bool reconfigApp::readdGFXWindow_check()
 {
-   return verifyDisplayFile( mPath + "sim.extradisplay.01.config" ) &&
-          verifyDisplayFile( mPath + "sim.extradisplay.02.config" );
+   return verifyDisplayFile( mPath + "sim.extradisplay.01.jconf" ) &&
+          verifyDisplayFile( mPath + "sim.extradisplay.02.jconf" );
 }
 
 bool reconfigApp::resizeGFXWindow_exec()
 {
    std::cout << "Beginning test for resizing a graphics window...\n" << std::flush;
 
-   return swapElementFiles( mPath + "sim.extradisplay.02.config",
-                          mPath + "sim.extradisplay.02.resize.config" );
+   return swapElementFiles( mPath + "sim.extradisplay.02.jconf",
+                          mPath + "sim.extradisplay.02.resize.jconf" );
 
 }
 
 bool reconfigApp::resizeGFXWindow_check()
 {
-   return verifyDisplayFile( mPath + "sim.extradisplay.02.resize.config" );
+   return verifyDisplayFile( mPath + "sim.extradisplay.02.resize.jconf" );
 }
 
 bool reconfigApp::moveGFXWindow_exec()
 {
    std::cout << "Beginning test for moving a graphics window...\n" << std::flush;
 
-   return swapElementFiles( mPath + "sim.extradisplay.01.config",
-                          mPath + "sim.extradisplay.01.move.config" );
+   return swapElementFiles( mPath + "sim.extradisplay.01.jconf",
+                          mPath + "sim.extradisplay.01.move.jconf" );
 }
 
 bool reconfigApp::moveGFXWindow_check()
 {
-   return verifyDisplayFile( mPath + "sim.extradisplay.01.move.config" );
+   return verifyDisplayFile( mPath + "sim.extradisplay.01.move.jconf" );
 }
 
 bool reconfigApp::addViewport_exec()
 {
    std::cout << "Beginning test for adding a viewport to a display window...\n" << std::flush;
 
-   return swapElementFiles( mPath + "sim.extradisplay.02.resize.config",
-                          mPath + "sim.extradisplay.02.twoviews.config" );
+   return swapElementFiles( mPath + "sim.extradisplay.02.resize.jconf",
+                          mPath + "sim.extradisplay.02.twoviews.jconf" );
 }
 
 bool reconfigApp::addViewport_check()
 {
-   return verifyDisplayFile( mPath + "sim.extradisplay.02.twoviews.config" );
+   return verifyDisplayFile( mPath + "sim.extradisplay.02.twoviews.jconf" );
 }
 
 bool reconfigApp::removeViewport_exec()
 {
    std::cout << "Beginning test for removing a viewport from a graphics window...\n" << std::flush;
 
-   return swapElementFiles( mPath + "sim.extradisplay.02.twoviews.config",
-                          mPath + "sim.extradisplay.02.oneview.config" );
+   return swapElementFiles( mPath + "sim.extradisplay.02.twoviews.jconf",
+                          mPath + "sim.extradisplay.02.oneview.jconf" );
 }
 
 bool reconfigApp::removeViewport_check()
 {
-   return verifyDisplayFile( mPath + "sim.extradisplay.02.oneview.config" );
+   return verifyDisplayFile( mPath + "sim.extradisplay.02.oneview.jconf" );
 }
 
 bool reconfigApp::resizeViewport_exec()
 {
    std::cout << "Beginning test for resizing a viewport...\n" << std::flush;
 
-   return swapElementFiles( mPath + "sim.extradisplay.02.oneview.config",
-                          mPath + "sim.extradisplay.02.largerview.config" );
+   return swapElementFiles( mPath + "sim.extradisplay.02.oneview.jconf",
+                          mPath + "sim.extradisplay.02.largerview.jconf" );
 }
 
 bool reconfigApp::resizeViewport_check()
 {
-   return verifyDisplayFile( mPath + "sim.extradisplay.02.largerview.config" );;
+   return verifyDisplayFile( mPath + "sim.extradisplay.02.largerview.jconf" );;
 }
 
 bool reconfigApp::moveViewport_exec()
 {
    std::cout << "Beginning test for moving a viewport...\n" << std::flush;
 
-   return swapElementFiles( mPath + "sim.extradisplay.02.largerview.config",
-                          mPath + "sim.extradisplay.02.moveview.config" );
+   return swapElementFiles( mPath + "sim.extradisplay.02.largerview.jconf",
+                          mPath + "sim.extradisplay.02.moveview.jconf" );
 }
 
 bool reconfigApp::moveViewport_check()
 {
-   return verifyDisplayFile( mPath + "sim.extradisplay.02.moveview.config" );
+   return verifyDisplayFile( mPath + "sim.extradisplay.02.moveview.jconf" );
 }
 
 bool reconfigApp::enableStereoSurface_exec()
 {
    std::cout << "Beginning test for enabling stereo on a surface display...\n" << std::flush;
 
-   return        removeElementFile( mPath + "sim.extradisplay.02.moveview.config" )
-              && removeElementFile( mPath + "sim.extradisplay.01.move.config" )
-              && addElementFile( mPath + "sim.surfacedisplay.01.stereo.config" );
+   return        removeElementFile( mPath + "sim.extradisplay.02.moveview.jconf" )
+              && removeElementFile( mPath + "sim.extradisplay.01.move.jconf" )
+              && addElementFile( mPath + "sim.surfacedisplay.01.stereo.jconf" );
 
 }
 
@@ -1084,7 +1084,7 @@ bool reconfigApp::enableStereoSurface_check()
 {
    //Load up the given file
    jccl::Configuration fileDB;
-   fileDB.load( mPath + "sim.surfacedisplay.01.stereo.config" );
+   fileDB.load( mPath + "sim.surfacedisplay.01.stereo.jconf" );
    std::vector<jccl::ConfigElementPtr> windowElements;
    fileDB.getByType( "display_window", windowElements );
 
@@ -1127,15 +1127,15 @@ bool reconfigApp::disableStereoSurface_exec()
 {
    std::cout << "Beginning test for disabling stereo on a surface display...\n" << std::flush;
 
-   return swapElementFiles( mPath + "sim.surfacedisplay.01.stereo.config",
-                          mPath + "sim.surfacedisplay.01.mono.config" );
+   return swapElementFiles( mPath + "sim.surfacedisplay.01.stereo.jconf",
+                          mPath + "sim.surfacedisplay.01.mono.jconf" );
 }
 
 bool reconfigApp::disableStereoSurface_check()
 {
    //Load up the given file
    jccl::Configuration fileDB;
-   fileDB.load( mPath + "sim.surfacedisplay.01.mono.config" );
+   fileDB.load( mPath + "sim.surfacedisplay.01.mono.jconf" );
    std::vector<jccl::ConfigElementPtr> windowElements;
    fileDB.getByType( "display_window", windowElements );
 
@@ -1179,17 +1179,17 @@ bool reconfigApp::removeKeyboardWin_exec()
 {
    std::cout << "Beginning test for removing a keyboard window...\n" << std::flush;
 
-   //Note that we are assuming ./Elements/startup/sim.wandkeyboardproxy.config has
+   //Note that we are assuming ./Elements/startup/sim.wandkeyboardproxy.jconf has
    //already been loaded
 
-   return removeElementFile( mPath + "startup/sim.wandkeyboard.config" );
+   return removeElementFile( mPath + "startup/sim.wandkeyboard.jconf" );
 }
 
 bool reconfigApp::removeKeyboardWin_check()
 {
    //First check that the keyboard device no longer exists
    jccl::Configuration fileDB;
-   fileDB.load( mPath + "startup/sim.wandkeyboard.config" );
+   fileDB.load( mPath + "startup/sim.wandkeyboard.jconf" );
    std::vector<jccl::ConfigElementPtr> fileElements;
    fileDB.getByType( "event_window", fileElements );
 
@@ -1205,7 +1205,7 @@ bool reconfigApp::removeKeyboardWin_check()
 
    //Check the wand keyboard proxy that is supposed to point to it is stupified
    jccl::Configuration fileDB2;
-   fileDB2.load( mPath + "startup/sim.wandkeyboardproxy.config" );
+   fileDB2.load( mPath + "startup/sim.wandkeyboardproxy.jconf" );
    fileElements.clear();
    fileDB2.getByType( "event_window_proxy", fileElements );
 
@@ -1243,7 +1243,7 @@ bool reconfigApp::removeKeyboardWin_check()
 bool reconfigApp::readdKeyboardWin_exec()
 {
    std::cout << "Beginning test for readding a keyboard window...\n" << std::flush;
-   return addElementFile( mPath + "startup/sim.wandkeyboard.config" );
+   return addElementFile( mPath + "startup/sim.wandkeyboard.jconf" );
 }
 
 bool reconfigApp::readdKeyboardWin_check()
@@ -1252,7 +1252,7 @@ bool reconfigApp::readdKeyboardWin_check()
 
    //First check that the keyboard device exists again
    jccl::Configuration fileDB;
-   fileDB.load( mPath + "startup/sim.wandkeyboard.config" );
+   fileDB.load( mPath + "startup/sim.wandkeyboard.jconf" );
    std::vector<jccl::ConfigElementPtr> fileElements;
    fileDB.getByType( "event_window", fileElements );
 
@@ -1268,7 +1268,7 @@ bool reconfigApp::readdKeyboardWin_check()
 
    //Check the wand keyboard proxy that is supposed to point to it is stupified
    jccl::Configuration fileDB2;
-   fileDB2.load( mPath + "startup/sim.wandkeyboardproxy.config" );
+   fileDB2.load( mPath + "startup/sim.wandkeyboardproxy.jconf" );
    fileElements.clear();
    fileDB2.getByType( "event_window_proxy", fileElements );
 
@@ -1313,8 +1313,8 @@ bool reconfigApp::readdKeyboardWin_check()
 bool reconfigApp::addSimPos_exec()
 {
    std::cout << "Beginning test for adding a sim position device and pointing proxies at it...\n" << std::flush;
-   return (  addElementFile( mPath + "sim.positiondevice.config" )
-          && addElementFile( mPath + "sim.positiondeviceproxy.config" ));
+   return (  addElementFile( mPath + "sim.positiondevice.jconf" )
+          && addElementFile( mPath + "sim.positiondeviceproxy.jconf" ));
 }
 
 bool reconfigApp::addSimPos_check()
@@ -1327,7 +1327,7 @@ bool reconfigApp::addSimPos_check()
 bool reconfigApp::removeSimPos_exec()
 {
    std::cout << "Beginning test for removing a sim position device and checking its proxies...\n" << std::flush;
-   return removeElementFile( mPath + "sim.positiondevice.config" );
+   return removeElementFile( mPath + "sim.positiondevice.jconf" );
 }
 
 bool reconfigApp::removeSimPos_check()
@@ -1356,7 +1356,7 @@ bool reconfigApp::removeSimPos_check()
 bool reconfigApp::readdSimPos_exec()
 {
    std::cout << "Beginning test for readding a sim position device and checking its proxies...\n" << std::flush;
-   return addElementFile( mPath + "sim.positiondevice.config" );
+   return addElementFile( mPath + "sim.positiondevice.jconf" );
 }
 
 bool reconfigApp::readdSimPos_check()
@@ -1370,8 +1370,8 @@ bool reconfigApp::repointProxy_exec()
 {
    std::cout << "Beginning test for repointing a proxy to something else...\n" << std::flush;
 
-   return swapElementFiles( mPath + "sim.positiondeviceproxy.config",
-                          mPath + "sim.positiondeviceproxy.repoint.config" );
+   return swapElementFiles( mPath + "sim.positiondeviceproxy.jconf",
+                          mPath + "sim.positiondeviceproxy.repoint.jconf" );
 }
 
 bool reconfigApp::repointProxy_check()
@@ -1379,7 +1379,7 @@ bool reconfigApp::repointProxy_check()
    //Load the repoint config file, get its device property, match that name
    //with the gadget::Proxy's instance name
    jccl::Configuration fileDB;
-   fileDB.load( mPath + "sim.positiondeviceproxy.repoint.config" );
+   fileDB.load( mPath + "sim.positiondeviceproxy.repoint.jconf" );
    std::vector<jccl::ConfigElementPtr> fileElements;
    fileDB.getByType( "position_proxy", fileElements );
 
@@ -1422,7 +1422,7 @@ bool reconfigApp::reconfigSimPos_exec()
 {
    std::cout << "Beginning test for reconfiguring a sim position device...\n" << std::flush;
 
-   return swapElementFiles( mPath + "startup/sim.simheadpos.config", mPath + "sim.simheadpos.reconfig.config" );
+   return swapElementFiles( mPath + "startup/sim.simheadpos.jconf", mPath + "sim.simheadpos.reconfig.jconf" );
 }
 
 bool reconfigApp::reconfigSimPos_check()
@@ -1453,8 +1453,8 @@ bool reconfigApp::reconfigSimDigital_exec()
 {
    std::cout << "Beginning test for reconfiguring a sim digital device...\n" << std::flush;
 
-   return swapElementFiles( mPath + "startup/sim.wandbuttonsdigital02.config",
-                          mPath + "sim.wandbuttonsdigital02.reconfig.config" );
+   return swapElementFiles( mPath + "startup/sim.wandbuttonsdigital02.jconf",
+                          mPath + "sim.wandbuttonsdigital02.reconfig.jconf" );
 }
 
 bool reconfigApp::reconfigSimDigital_check()
@@ -1474,7 +1474,7 @@ bool reconfigApp::reconfigSimDigital_check()
 
    //Load up the config file.
    jccl::Configuration fileDB;
-   fileDB.load( mPath + "sim.wandbuttonsdigital02.reconfig.config" );
+   fileDB.load( mPath + "sim.wandbuttonsdigital02.reconfig.jconf" );
    std::vector<jccl::ConfigElementPtr> fileElements;
    fileDB.getByType( "simulated_digital_device", fileElements );
 
@@ -1516,8 +1516,8 @@ bool reconfigApp::reconfigSimAnalog_exec()
 {
    std::cout << "Beginning test for reconfiguring a sim analog device...\n" << std::flush;
 
-   return swapElementFiles( mPath + "startup/sim.analogdevice1.config",
-                          mPath + "sim.analogdevice1.reconfig.config" );
+   return swapElementFiles( mPath + "startup/sim.analogdevice1.jconf",
+                          mPath + "sim.analogdevice1.reconfig.jconf" );
 }
 
 bool reconfigApp::reconfigSimAnalog_check()
@@ -1538,7 +1538,7 @@ bool reconfigApp::reconfigSimAnalog_check()
 
    //Load up the config file.
    jccl::Configuration fileDB;
-   fileDB.load( mPath + "sim.analogdevice1.reconfig.config" );
+   fileDB.load( mPath + "sim.analogdevice1.reconfig.jconf" );
    std::vector<jccl::ConfigElementPtr> fileElements;
    fileDB.getByType( "simulated_analog_device", fileElements );
 
@@ -1591,8 +1591,8 @@ bool reconfigApp::addSimDigital_exec()
 {
    std::cout << "Beginning test for adding a sim digital device and pointing proxies at it...\n" << std::flush;
 
-   return (  addElementFile( mPath + "sim.digitaldevice.config" )
-          && addElementFile( mPath + "sim.digitalproxy.config"  ));
+   return (  addElementFile( mPath + "sim.digitaldevice.jconf" )
+          && addElementFile( mPath + "sim.digitalproxy.jconf"  ));
 }
 
 bool reconfigApp::addSimDigital_check()
@@ -1604,7 +1604,7 @@ bool reconfigApp::addSimDigital_check()
 bool reconfigApp::removeSimDigital_exec()
 {
    std::cout << "Beginning test for removing a sim digital device...\n" << std::flush;
-   return removeElementFile( mPath + "startup/sim.wandbuttonsdigital.config" );
+   return removeElementFile( mPath + "startup/sim.wandbuttonsdigital.jconf" );
 }
 
 bool reconfigApp::removeSimDigital_check()
@@ -1632,7 +1632,7 @@ bool reconfigApp::readdSimDigital_exec()
 {
    std::cout << "Beginning test for readding a sim digital device and checking the proxies pointing at it...\n" << std::flush;
 
-   return addElementFile( mPath + "startup/sim.wandbuttonsdigital.config" );
+   return addElementFile( mPath + "startup/sim.wandbuttonsdigital.jconf" );
 }
 
 bool reconfigApp::readdSimDigital_check()
@@ -1649,8 +1649,8 @@ bool reconfigApp::addSimAnalog_exec()
 {
    std::cout << "Beginning test for adding a sim analog device and pointing proxies at it...\n" << std::flush;
 
-   return (  addElementFile( mPath + "sim.extraanalogdevice.config" )
-          && addElementFile( mPath + "sim.extraanalogproxy.config"  ));
+   return (  addElementFile( mPath + "sim.extraanalogdevice.jconf" )
+          && addElementFile( mPath + "sim.extraanalogproxy.jconf"  ));
 }
 
 bool reconfigApp::addSimAnalog_check()
@@ -1662,7 +1662,7 @@ bool reconfigApp::addSimAnalog_check()
 bool reconfigApp::removeSimAnalog_exec()
 {
    std::cout << "Beginning test for removing a sim analog device and checking the proxies that point at it...\n" << std::flush;
-   return removeElementFile( mPath + "sim.extraanalogdevice.config" );
+   return removeElementFile( mPath + "sim.extraanalogdevice.jconf" );
 }
 
 bool reconfigApp::removeSimAnalog_check()
@@ -1689,7 +1689,7 @@ bool reconfigApp::removeSimAnalog_check()
 bool reconfigApp::readdSimAnalog_exec()
 {
    std::cout << "Beginning test for readding a sim analog device and checking the old proxies...\n" << std::flush;
-   return addElementFile( mPath + "sim.extraanalogdevice.config" ) ;
+   return addElementFile( mPath + "sim.extraanalogdevice.jconf" ) ;
 }
 
 bool reconfigApp::readdSimAnalog_check()
@@ -1700,7 +1700,7 @@ bool reconfigApp::readdSimAnalog_check()
 bool reconfigApp::addAnalogProxy_exec()
 {
    std::cout << "Beginning test for adding an analog proxy...\n" << std::flush;
-   return addElementFile( mPath + "sim.analogproxy01.config" ) ;
+   return addElementFile( mPath + "sim.analogproxy01.jconf" ) ;
 }
 
 bool reconfigApp::addAnalogProxy_check()
@@ -1712,7 +1712,7 @@ bool reconfigApp::addAnalogProxy_check()
 bool reconfigApp::reconfigAnalogProxy_exec()
 {
    std::cout << "Beginning test for reconfiguring an analog proxy...\n" << std::flush;
-   return swapElementFiles( mPath + "sim.analogproxy01.config", mPath + "sim.analogproxy01.reconfig.config" );
+   return swapElementFiles( mPath + "sim.analogproxy01.jconf", mPath + "sim.analogproxy01.reconfig.jconf" );
 }
 
 bool reconfigApp::reconfigAnalogProxy_check()
@@ -1724,7 +1724,7 @@ bool reconfigApp::reconfigAnalogProxy_check()
 bool reconfigApp::removeAnalogProxy_exec()
 {
    std::cout << "Beginning test for removing an analog proxy...\n" << std::flush;
-   return removeElementFile( mPath + "sim.analogproxy01.reconfig.config" );
+   return removeElementFile( mPath + "sim.analogproxy01.reconfig.jconf" );
 }
 
 bool reconfigApp::removeAnalogProxy_check()
@@ -1745,7 +1745,7 @@ bool reconfigApp::removeAnalogProxy_check()
 bool reconfigApp::addPosProxy_exec()
 {
    std::cout << "Beginning test for adding a sim digital device...\n" << std::flush;
-   return addElementFile( mPath + "sim.simcam1proxy02.config" );
+   return addElementFile( mPath + "sim.simcam1proxy02.jconf" );
 }
 
 bool reconfigApp::addPosProxy_check()
@@ -1757,7 +1757,7 @@ bool reconfigApp::addPosProxy_check()
 bool reconfigApp::reconfigPosProxy_exec()
 {
    std::cout << "Beginning test for reconfiguring a position proxy...\n" << std::flush;
-   return swapElementFiles( mPath + "sim.simcam1proxy02.config", mPath + "sim.simcam1proxy02.reconfig.config");
+   return swapElementFiles( mPath + "sim.simcam1proxy02.jconf", mPath + "sim.simcam1proxy02.reconfig.jconf");
 }
 
 bool reconfigApp::reconfigPosProxy_check()
@@ -1769,7 +1769,7 @@ bool reconfigApp::reconfigPosProxy_check()
 bool reconfigApp::removePosProxy_exec()
 {
    std::cout << "Beginning test for removing a position proxy...\n" << std::flush;
-   return removeElementFile( mPath + "sim.simcam1proxy02.reconfig.config" );
+   return removeElementFile( mPath + "sim.simcam1proxy02.reconfig.jconf" );
 }
 
 bool reconfigApp::removePosProxy_check()
@@ -1789,7 +1789,7 @@ bool reconfigApp::removePosProxy_check()
 bool reconfigApp::addDigitalProxy_exec()
 {
    std::cout << "Beginning test for adding a digital proxy...\n" << std::flush;
-   return addElementFile( mPath + "sim.button0proxy02.config" );
+   return addElementFile( mPath + "sim.button0proxy02.jconf" );
 }
 
 bool reconfigApp::addDigitalProxy_check()
@@ -1801,7 +1801,7 @@ bool reconfigApp::addDigitalProxy_check()
 bool reconfigApp::reconfigDigitalProxy_exec()
 {
    std::cout << "Beginning test for reconfiguring a digital proxy...\n" << std::flush;
-   return swapElementFiles( mPath + "sim.button0proxy02.config", mPath + "sim.button0proxy02.reconfig.config");
+   return swapElementFiles( mPath + "sim.button0proxy02.jconf", mPath + "sim.button0proxy02.reconfig.jconf");
 }
 
 bool reconfigApp::reconfigDigitalProxy_check()
@@ -1813,7 +1813,7 @@ bool reconfigApp::reconfigDigitalProxy_check()
 bool reconfigApp::removeDigitalProxy_exec()
 {
    std::cout << "Beginning test for removing a digital proxy...\n" << std::flush;
-   return removeElementFile( mPath + "sim.button0proxy02.reconfig.config" );
+   return removeElementFile( mPath + "sim.button0proxy02.reconfig.jconf" );
 }
 
 bool reconfigApp::removeDigitalProxy_check()
@@ -1833,7 +1833,7 @@ bool reconfigApp::removeDigitalProxy_check()
 bool reconfigApp::addKeyboardProxy_exec()
 {
    std::cout << "Beginning test for adding a keyboard proxy...\n" << std::flush;
-   return addElementFile( mPath + "sim.wandkeyboardproxy02.config" );
+   return addElementFile( mPath + "sim.wandkeyboardproxy02.jconf" );
 }
 
 bool reconfigApp::addKeyboardProxy_check()
@@ -1845,7 +1845,7 @@ bool reconfigApp::addKeyboardProxy_check()
 bool reconfigApp::reconfigKeyboardProxy_exec()
 {
    std::cout << "Beginning test for reconfiguring a keyboard proxy...\n" << std::flush;
-   return swapElementFiles( mPath + "sim.wandkeyboardproxy02.config", mPath + "sim.wandkeyboardproxy02.reconfig.config");
+   return swapElementFiles( mPath + "sim.wandkeyboardproxy02.jconf", mPath + "sim.wandkeyboardproxy02.reconfig.jconf");
 }
 
 bool reconfigApp::reconfigKeyboardProxy_check()
@@ -1857,7 +1857,7 @@ bool reconfigApp::reconfigKeyboardProxy_check()
 bool reconfigApp::removeKeyboardProxy_exec()
 {
    std::cout << "Beginning test for removing a keyboard proxy...\n" << std::flush;
-   return removeElementFile( mPath + "sim.wandkeyboardproxy02.reconfig.config" );
+   return removeElementFile( mPath + "sim.wandkeyboardproxy02.reconfig.jconf" );
 }
 
 bool reconfigApp::removeKeyboardProxy_check()
@@ -1877,7 +1877,7 @@ bool reconfigApp::removeKeyboardProxy_check()
 bool reconfigApp::addStupifiedAnalogProxy_exec()
 {
    std::cout << "Beginning test for adding a stupified analog proxy...\n" << std::flush;
-   return addElementFile( mPath + "sim.stupidproxy01.config" );
+   return addElementFile( mPath + "sim.stupidproxy01.jconf" );
 }
 
 bool reconfigApp::addStupifiedAnalogProxy_check()
@@ -1918,7 +1918,7 @@ bool reconfigApp::addStupifiedAnalogProxy_check()
 bool reconfigApp::removeStupifiedAnalogProxy_exec()
 {
    std::cout << "Beginning test for removing a stupified analog proxy...\n" << std::flush;
-   return removeElementFile( mPath + "sim.stupidproxy01.config" );
+   return removeElementFile( mPath + "sim.stupidproxy01.jconf" );
 }
 
 bool reconfigApp::removeStupifiedAnalogProxy_check()
