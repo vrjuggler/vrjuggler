@@ -17,8 +17,7 @@ class vjPfAPIFactory : public vjAPIFactory
 {
 public:           
    //: Get a Performer DrawManager
-   virtual vjDrawManager*    getDrawManager()
-   { return vjPfDrawManager::instance();}
+   virtual vjDrawManager* getDrawManager();
 
 
    // --- Singleton stuff --- //
