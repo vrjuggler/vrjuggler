@@ -37,14 +37,14 @@ filter.d2.state = on
 */
 class __options {
 }/**
-@__positions <oigroup:<oiref:cpp#Class#vrj::Display:oiref>=250,120,83,46,0:oigroup>
-<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#vrj::DisplayManager#mActiveDisplays:oiref>=257,103,30,16,0:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::Kernel:oiref>=10,10,154,60,0:oigroup>
-<oigroup:MemberLink#<oiref:cpp#Member#vrj::Kernel#mDisplayManager:oiref>=164,40,220,40:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::DisplayManager:oiref>=220,10,154,60,0:oigroup>
-<oigroup:MemberLink#<oiref:cpp#Member#vrj::DisplayManager#mActiveDisplays:oiref>=291,70,291,120:oigroup>
-<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#vrj::DisplayManager#mInactiveDisplays:oiref>=0,0,30,16,0:oigroup>
-<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#vrj::Kernel#mDisplayManager:oiref>=184,23,32,16,0:oigroup>
+@__positions <oigroup:<oiref:cpp#Class#vrj::Display:oiref>=270,120,110,46,0:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#vrj::DisplayManager#mActiveDisplays:oiref>=286,103,30,13,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::Kernel:oiref>=10,10,180,60,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::Kernel#mDisplayManager:oiref>=190,40,240,40:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::DisplayManager:oiref>=240,10,180,60,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::DisplayManager#mActiveDisplays:oiref>=320,70,320,120:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#vrj::DisplayManager#mInactiveDisplays:oiref>=0,0,30,13,0:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#vrj::Kernel#mDisplayManager:oiref>=204,23,32,13,0:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#vrj::DisplayManager#mInactiveDisplays:oiref>=302,142,283,254:oigroup>
 */
 class __positions {
