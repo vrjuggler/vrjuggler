@@ -73,7 +73,7 @@ namespace vpr
    {
    public:
 
-      ///Convenience typedef; for use by the Performance Monitor Plugin
+      ///Convenience typedef for use by the Performance Monitor Plugin
       typedef std::map<std::string, vpr::Interval> ProfileSampleResult;
 
       /** @name Profiling methods. */
@@ -135,7 +135,7 @@ namespace vpr
       //@}
 
       // ----------------------
-      /// @name Global metrics.
+      /// @name Reset methods.
       // ----------------------
       //@{
       /**
@@ -150,20 +150,6 @@ namespace vpr
        */
       static float getTimeSinceReset();
 
-      /**
-       * Increment the frame counter.
-       *
-       * @post Frame counter incremented by one.
-       */
-      static void incrementFrameCounter();
-
-      /** Get the number of frames since reset.
-       * @return Returns the number of frames since reset.
-       */
-      static int getFrameCountSinceReset()
-      {
-         return mFrameCounter;
-      }
       //@}
 
    public:
@@ -220,7 +206,6 @@ namespace vpr
       static   vpr::Mutex           mTreeLock;
       static   ProfileNode          mRoot;
       static   ProfileNode*         mCurrentNode;
-      static   int                  mFrameCounter;
       static   vpr::Interval        mResetTime;
 
       /** Private Member Functions */
