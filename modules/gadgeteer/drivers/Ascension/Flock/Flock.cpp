@@ -200,7 +200,7 @@ int vjFlock::Sample()
       return 0;
 
    int i;
-   int tmp;
+   //int tmp;
 
    mFlockOfBirds.sample();
 

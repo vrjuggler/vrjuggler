@@ -52,15 +52,15 @@ public:
 	//                                                       <BR>
 	//! POST: configures internal data members,
 	//+         doesn't actually talk to the FOB yet.
-	aFlock(const char* const port = "/dev/ttyd3", 
-		const int& baud = 38400, 
-		const int& sync = 1, 
-		const int& block = 0, 
-		const int& numBrds = 3, 
-		const int& transmit = 3, 
-		const BIRD_HEMI& hemi = LOWER_HEM, 
-		const BIRD_FILT& filt = AC_NARROW, 
-		const char& report = 'R', 
+	aFlock(const char* const port = "/dev/ttyd3",
+		const int& baud = 38400,
+		const int& sync = 1,
+		const int& block = 0,
+		const int& numBrds = 3,
+		const int& transmit = 3,
+		const BIRD_HEMI& hemi = LOWER_HEM,
+		const BIRD_FILT& filt = AC_NARROW,
+		const char& report = 'R',
 		const char* const calfile = "");
 	
 	
@@ -91,7 +91,7 @@ public:
 	//: get the port used
 	//  this will be a string in the form of the native OS descriptor <BR>
 	//  ex: unix - "/dev/ttyd3", win32 - "COM3"
-	const char* const getPort() const;
+	const char* getPort() const;
 	
 	
 	//: set the baud rate
@@ -102,42 +102,42 @@ public:
 	//: get the baud rate
 	//  this is generally 38400, consult flock manual for other rates. <BR>
 	inline const int&  getBaudRate()  const { return _baud;}
-   
+
 	//: Set the unit number of the transmitter
-	//  give - an integer that is the same as the dip switch 
+	//  give - an integer that is the same as the dip switch
 	//         setting on the transmitter box (for the unit number) <BR>
 	//  NOTE: flock.isActive() must be false to use this function
 	void	    setTransmitter( const int& Transmit );
 	
 	//: Get the unit number of the transmitter
-	//  returns - an integer that is the same as the dip switch 
+	//  returns - an integer that is the same as the dip switch
 	//         setting on the transmitter box (for the unit number) <BR>
 	inline const int&  getTransmitter() const { return _xmitterUnitNumber; }
 
 
 	//: Set the number of birds to use in the flock.
-	//  give - an integer number not more than the number of 
+	//  give - an integer number not more than the number of
 	//         birds attached to the system <BR>
 	//  NOTE: flock.isActive() must be false to use this function
 	void	    setNumBirds( const int& n );
 	
 	//: Get the number of birds to use in the flock.
-	//  returns - an integer number not more than the number of 
+	//  returns - an integer number not more than the number of
 	//         birds attached to the system <BR>
 	inline const int&  getNumBirds() const { return _numBirds; }
 
 
 	//: set the video sync type
-	//  this option allows the Flock to syncronize its pulses with 
-	//  your video display.  This will eliminate most flicker caused 
+	//  this option allows the Flock to syncronize its pulses with
+	//  your video display.  This will eliminate most flicker caused
 	//  by the magnetic distortion. <BR>
 	//  - Refer to your flock manual for what number to use.
 	//  NOTE: flock.isActive() must be false to use this function
 	void	    setSync( const int& sync );
 	
 	//: Get the video sync type
-	//  this option allows the Flock to syncronize its pulses with 
-	//  your video display.  This will eliminate most flicker caused 
+	//  this option allows the Flock to syncronize its pulses with
+	//  your video display.  This will eliminate most flicker caused
 	//  by the magnetic distortion. <BR>
 	//  - Refer to your flock manual for what the return number means
 	inline const int&  getSync() const {return _syncStyle; }
@@ -172,7 +172,7 @@ public:
 	//: Set the report rate that the flock uses
 	//  NOTE: flock.isActive() must be false to use this function
 	void	    setReportRate( const char& rRate );
-        
+
 	//: Set the report rate that the flock uses
 	inline const char& getReportRate() const {return _reportRate; }
 
@@ -238,8 +238,8 @@ private:
 	//  give - port: the flock port number <BR>
 	//  give - xyz positions               <BR>
 	//  give - zyx rotations
-	static int   getReading( const int& n, const int& port, 
-				float& xPos, float& yPos, float& zPos, 
+	static int   getReading( const int& n, const int& port,
+				float& xPos, float& yPos, float& zPos,
 				float& zRot, float& yRot, float& xRot );
 	static float rawToFloat(char& r1, char& r2);
 	static void  pickBird(const int& sensor, const int& port_id);
