@@ -236,8 +236,7 @@ PROCS	= 1
 
 test:
 	$(MAKE) -C test/TestSuite -j $(PROCS) runner
-	test/TestSuite/runner noninteractive
-	test/TestSuite/runner metrics
+	test/TestSuite/runner noninteractive metrics
 
 # =============================================================================
 # Automatically generated documentation.
