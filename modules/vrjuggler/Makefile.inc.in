@@ -252,10 +252,12 @@ ifneq (@OS_TYPE@, Win32)
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/vrj
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_NAME)
 	@$(MAKE) -C vrj instlinks=$(instlinks) links
-	cd $(instlinks)/include && rm -f ./deprecated &&               \
-	ln -s $(VJROOT_ABS)/deprecated ./
-	cd $(instlinks)/$(LIBDIR_NAME) && rm -f ./* &&			\
-          ln -s $(LIBDIR_BASE)/* ./
+	cd $(instlinks)/include && rm -f ./deprecated &&		\
+          $(LN_S) $(VJROOT_ABS)/deprecated ./
+	for lib in $(LIBS) ; do 					\
+            cd $(instlinks)/$(LIBDIR_NAME) && rm -f $$lib* &&		\
+              $(LN_S) $(LIBDIR_BASE)/$$lib* ./ ;			\
+          done
 	cd $(instlinks) && rm -rf ./$(VJ_SHARE_DIR) &&			\
           $(SHELL) $(MKINSTALLDIRS) ./$(VJ_SHARE_DIR)
 	cd $(instlinks)/$(VJ_SHARE_DIR) && rm -f ./data &&		\
@@ -265,9 +267,9 @@ ifneq (@OS_TYPE@, Win32)
 	cd $(instlinks)/include/vrj && rm -f ./*.h &&			\
           $(LN_S) $(VJROOT_ABS)/vrj/*.h ./
 	cd $(instlinks)/include/vrj && rm -f ./vrjDefines.h &&		\
-	  $(LN_S) $(topdir)/vrj/vrjDefines.h ./vrjDefines.h
+          $(LN_S) $(topdir)/vrj/vrjDefines.h ./vrjDefines.h
 	cd $(instlinks)/include/vrj && rm -f ./vrjParam.h &&		\
-	  $(LN_S) $(topdir)/vrj/vrjParam.h ./vrjParam.h
+          $(LN_S) $(topdir)/vrj/vrjParam.h ./vrjParam.h
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
 	cd $(instlinks)/bin && rm -f ./catadf.pl &&			\
           $(LN_S) $(VJROOT_ABS)/tools/catadf.pl ./catadf.pl
