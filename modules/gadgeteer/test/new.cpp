@@ -2,9 +2,9 @@
 #include <iomanip.h>
 #include <SharedMem/MemPool.h>
 #include <SharedMem/SharedType.h>
-#include <Input/C2Position/C2Flock.h>
+#include <Input/vjPosition/vjFlock.h>
 #include <Input/ibox/ibox.h>
-#include <Input/C2Glove/CyberGlove.h>
+#include <Input/vjGlove/vjCyberGlove.h>
 
 int main()
 {
