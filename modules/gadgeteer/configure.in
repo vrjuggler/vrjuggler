@@ -351,6 +351,10 @@ APP_BASE_DIR_INST='$(GADGET_BASE_DIR)'
 if test "$OS_TYPE" = "UNIX" ; then
     DYLIB_DEPS="$APP_EXTRA_LIBS"
 
+    if test "x$x_includes" != "xNONE" -a "x$x_includes" != "x" ; then
+        INCLUDES="$INCLUDES -I$x_includes"
+    fi
+
     if test "x$x_libraries" != "xNONE" -a "x$x_libraries" != "x" ; then
         X_LDFLAGS="-L$x_libraries"
     fi
