@@ -36,9 +36,9 @@
 #include <vpr/System.h>
 #include <vpr/Util/Assert.h>
 
-#include <gadget/Devices/Polhemus/Fastrack/FastrackStandalone.h>
+#include <gadget/Devices/Polhemus/Fastrak/FastrakStandalone.h>
 
-vpr::ReturnStatus FastrackStandalone::open()
+vpr::ReturnStatus FastrakStandalone::open()
 {
    vpr::ReturnStatus status;
 
@@ -74,7 +74,7 @@ vpr::ReturnStatus FastrackStandalone::open()
    return status;
 }
 
-void FastrackStandalone::trackerFinish()
+void FastrakStandalone::trackerFinish()
 {
    vpr::Uint32 bytes_written;
    mSerialPort->write("c", 1, bytes_written);
@@ -89,7 +89,7 @@ void FastrackStandalone::trackerFinish()
    }
 }
 
-int FastrackStandalone::Read(int len)
+int FastrakStandalone::Read(int len)
 {
    vpr::Uint32 bytes_read;
    vpr::ReturnStatus status;
@@ -115,7 +115,7 @@ int FastrackStandalone::Read(int len)
 }
 
 
-void FastrackStandalone::readloop(void *unused)
+void FastrakStandalone::readloop(void *unused)
 {
    vpr::Uint32 bytes_written;
    vpr::Uint32 sleep_time(10000000/mConf.baud);
@@ -148,7 +148,7 @@ void FastrackStandalone::readloop(void *unused)
    }
 }
 
-vpr::ReturnStatus FastrackStandalone::trackerInit()
+vpr::ReturnStatus FastrakStandalone::trackerInit()
 {
    vprASSERT(mSerialPort->isOpen() && "Port must be open before initializing");
    vpr::Uint32 bytes_written;
@@ -261,7 +261,7 @@ static int littlendian(unsigned char *src)
    return(src[3]<<24)|(src[2]<<16)|(src[1]<<8)|src[0];
 }
 
-void FastrackStandalone::checkchild()
+void FastrakStandalone::checkchild()
 {
    // XXX: This is commented out because I do not know how useful it is.
 /*
@@ -276,23 +276,23 @@ void FastrackStandalone::checkchild()
          mReadThread->kill(9);
       }
    }
-   vpr::ThreadMemberFunctor<FastrackStandalone>* read_func =
-      new vpr::ThreadMemberFunctor<FastrackStandalone>(this,
-                                                       &FastrackStandalone::readloop,
+   vpr::ThreadMemberFunctor<FastrakStandalone>* read_func =
+      new vpr::ThreadMemberFunctor<FastrakStandalone>(this,
+                                                       &FastrakStandalone::readloop,
                                                        NULL);
    mReadThread = new vpr::Thread(read_func);
 */
    if ( NULL == mReadThread )
    {
-      vpr::ThreadMemberFunctor<FastrackStandalone>* read_func =
-         new vpr::ThreadMemberFunctor<FastrackStandalone>(this,
-                                                          &FastrackStandalone::readloop,
+      vpr::ThreadMemberFunctor<FastrakStandalone>* read_func =
+         new vpr::ThreadMemberFunctor<FastrakStandalone>(this,
+                                                          &FastrakStandalone::readloop,
                                                           NULL);
       mReadThread = new vpr::Thread(read_func);
    }
 }
 
-void FastrackStandalone::getTrackerBuf()
+void FastrakStandalone::getTrackerBuf()
 {
    if ( (mConf.cont != 'C') && (mConf.button == '0') )
    {
@@ -303,7 +303,7 @@ void FastrackStandalone::getTrackerBuf()
    this->Read(mConf.len);
 }
 
-void FastrackStandalone::getTrackerInfo(struct perstation* psp, unsigned char c)
+void FastrakStandalone::getTrackerInfo(struct perstation* psp, unsigned char c)
 {
    unsigned char *cp;
    retry:
@@ -327,7 +327,7 @@ void FastrackStandalone::getTrackerInfo(struct perstation* psp, unsigned char c)
    }
 }
 
-int FastrackStandalone::getCoords(unsigned int stations, float *vecXYZ,
+int FastrakStandalone::getCoords(unsigned int stations, float *vecXYZ,
                                   float *vecAER)
 {
    unsigned char *cp;
@@ -396,7 +396,7 @@ int FastrackStandalone::getCoords(unsigned int stations, float *vecXYZ,
    return button;
 }
 
-void FastrackStandalone::getNewCoords(unsigned int station, float *vecXYZ, float *vecAER)
+void FastrakStandalone::getNewCoords(unsigned int station, float *vecXYZ, float *vecAER)
 {
    unsigned char *cp;
    int i;
@@ -429,7 +429,7 @@ void FastrackStandalone::getNewCoords(unsigned int station, float *vecXYZ, float
    }
 }
 
-int FastrackStandalone::getNewButtonStatus(unsigned int station)
+int FastrakStandalone::getNewButtonStatus(unsigned int station)
 {
    struct perstation *psp;
    char c;
