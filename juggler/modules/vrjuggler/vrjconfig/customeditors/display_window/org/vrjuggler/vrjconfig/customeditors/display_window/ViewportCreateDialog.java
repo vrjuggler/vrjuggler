@@ -36,6 +36,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import info.clearthought.layout.*;
+import org.vrjuggler.jccl.config.ConfigElement;
 import org.vrjuggler.jccl.config.ConfigElementPointer;
 import org.vrjuggler.jccl.config.event.ConfigElementEvent;
 import org.vrjuggler.jccl.config.event.ConfigElementListener;
@@ -45,19 +46,19 @@ public abstract class ViewportCreateDialog
    extends JDialog
    implements ConfigElementListener
 {
-   public ViewportCreateDialog(String title)
+   public ViewportCreateDialog(String title, ConfigElement elt)
    {
       super();
       this.setTitle(title);
       this.setModal(true);
       enableEvents(AWTEvent.WINDOW_EVENT_MASK);
-      mUserPanel = new ViewportUserEditorPanel(this);
+      mBoundsPanel = new ViewportBoundsEditorPanel(elt);
+      mUserPanel = new ViewportUserEditorPanel(this, elt);
       this.setResizable(false);
    }
 
    public void nameChanged(ConfigElementEvent e)
    {
-
    }
 
    public void propertyValueChanged(ConfigElementEvent e)
@@ -65,19 +66,16 @@ public abstract class ViewportCreateDialog
       if ( e.getProperty().equals("user") )
       {
          mUserName = ((ConfigElementPointer) e.getValue()).getTarget();
-         System.out.println("New user name");
          validateUserInput();
       }
    }
 
    public void propertyValueAdded(ConfigElementEvent e)
    {
-
    }
 
    public void propertyValueRemoved(ConfigElementEvent e)
    {
-
    }
 
    public static final int OK_OPTION     = JOptionPane.OK_OPTION;
@@ -159,7 +157,7 @@ public abstract class ViewportCreateDialog
 
    protected JPanel mMainPanel = new JPanel();
    protected TableLayout mMainPanelLayout = null;
-   protected ViewportBoundsEditorPanel mBoundsPanel = new ViewportBoundsEditorPanel();
+   protected ViewportBoundsEditorPanel mBoundsPanel = null;
    protected ViewportUserEditorPanel mUserPanel = null;
 
    private JPanel mButtonPanel = new JPanel();

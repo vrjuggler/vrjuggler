@@ -49,12 +49,34 @@ public class SurfaceViewportCreateDialog
 {
    public SurfaceViewportCreateDialog()
    {
-      super("Basic Surface Viewport Parameters");
+      this(null);
+   }
+
+   public SurfaceViewportCreateDialog(ConfigElement elt)
+   {
+      super("Basic Surface Viewport Parameters", elt);
 
       mCorners[Plane.LL_CORNER] = "Lower Left Corner";
       mCorners[Plane.LR_CORNER] = "Lower Right Corner";
       mCorners[Plane.UR_CORNER] = "Upper Right Corner";
       mCorners[Plane.UL_CORNER] = "Upper Left Corner";
+
+      ConfigBrokerProxy broker = new ConfigBrokerProxy();
+      ConfigDefinition vp_def = broker.getRepository().get("surface_viewport");
+
+      if ( elt == null )
+      {
+         ConfigElementFactory factory =
+            new ConfigElementFactory(broker.getRepository().getAllLatest());
+         elt = factory.create("SurfaceViewportCreateDialog Junk", vp_def);
+      }
+
+      elt.addConfigElementListener(this);
+
+      mTrackerProxyEditor =
+         new PropertyEditorPanel(elt.getProperty("tracker_proxy", 0),
+                                 vp_def.getPropertyDefinition("tracker_proxy"),
+                                 elt, 0, Color.white);
 
       initUI();
 
@@ -155,19 +177,6 @@ public class SurfaceViewportCreateDialog
 
       mCornerChooser = new JComboBox(mCorners);
       mCornerChooser.setSelectedIndex(Plane.LL_CORNER);
-
-      ConfigBrokerProxy broker = new ConfigBrokerProxy();
-      ConfigDefinition vp_def = broker.getRepository().get("surface_viewport");
-      ConfigElementFactory factory =
-         new ConfigElementFactory(broker.getRepository().getAllLatest());
-      ConfigElement elt = factory.create("SurfaceViewportCreateDialog Junk",
-                                         vp_def);
-      elt.addConfigElementListener(this);
-
-      mTrackerProxyEditor =
-         new PropertyEditorPanel(elt.getProperty("tracker_proxy", 0),
-                                 vp_def.getPropertyDefinition("tracker_proxy"),
-                                 elt, 0, Color.white);
 
       double[][] main_size = {{TableLayout.PREFERRED},
                               {TableLayout.PREFERRED, TableLayout.PREFERRED,
