@@ -537,7 +537,7 @@ public:
     * @return true  - Bad bytes are ignored.
     * @return false - Bad bytes are not ignored.
     */
-   bool SerialPortImplTermios::getBreakByteIgnoreState ();
+   bool getBreakByteIgnoreState ();
    
    /**
     * Enable ignoring of received BREAK bytes
@@ -548,7 +548,7 @@ public:
     * 
     * @return A vpr::ReturnStatus object describing the results of the operation.
     */
-   vpr::ReturnStatus SerialPortImplTermios::enableBreakByteIgnore ();
+   vpr::ReturnStatus enableBreakByteIgnore ();
 
    /** 
     * Disable ignoring of received BREAK bytes
@@ -559,7 +559,7 @@ public:
     *
     * @return A vpr::ReturnStatus object describing the results of the operation.
     */
-   vpr::ReturnStatus SerialPortImplTermios::disableBreakByteIgnore ();
+   vpr::ReturnStatus disableBreakByteIgnore ();
 
    // ------------------------------------------------------------------------
    //: Get the number of stop bits in use.  This will be either 1 or 2.
