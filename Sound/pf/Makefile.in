@@ -60,7 +60,10 @@ vpath %.c @srcdir@
 vpath %.cpp @srcdir@
 vpath %.${OBJ_FILE_SUFFIX} ${OBJDIR}
 
+ifeq (@PERFORMER_API@, Y)
 SOUND_SRCS	:= pfSoundNode.cpp
+endif
+
 SOUND_OBJECTS	:= ${addprefix ${OBJDIR}/,${SOUND_SRCS:.cpp=.${OBJ_FILE_SUFFIX}}}
 DEPEND_FILES	:= ${SOUND_SRCS:.cpp=.d}
 
