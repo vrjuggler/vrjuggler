@@ -414,6 +414,10 @@ install-data:
 	$(PERL) $(scriptdir)/install-dir.pl -i $(top_srcdir)/data	\
           -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(projdatadir)/data	\
           -v "$(topdir)/VARS.pl" $(EXTRA_INSTALL_ARGS)
+	$(PERL) $(scriptdir)/makefiles-gen.pl --mode="$(FILE_PERMS)"	\
+          --prefix="$(projdatadir)" --vars="$(topdir)/VARS.pl"		\
+          --files="$(top_srcdir)/tweek.appdefs.mk.in" $(_GROUP_OPT_PL)	\
+          --srcdir="."
 
 # Install the test programs.
 install-test:

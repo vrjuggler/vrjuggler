@@ -866,6 +866,7 @@ AC_OUTPUT(tweek-config
           Makefile.inc
           common.defs.mk
           make.defs.mk
+          tweek.appdefs.mk
           extensions/Makefile
           extensions/java/build.xml
           extensions/java/Makefile
