@@ -123,6 +123,8 @@ class vjFlock : public vjPosition {
 	char repRate;
 	BIRD_HEMI hemisphere;
 	BIRD_FILT filter;
+	
+	
 };
 
 #endif

@@ -1,6 +1,7 @@
-//#include <sys/file.h>
-//#include <sys/ioctl.h>
-//#include <sys/time.h>
+#include <sys/file.h>
+#include <sys/ioctl.h>
+#include <unistd.h>
+#include <sys/time.h>
 
 #include <Math/vjMatrix.h>
 
@@ -31,8 +32,7 @@ aFlock::aFlock(const char* const port,
 		const BIRD_FILT& filt, 
 		const char& report, 
 		const char* const calfile) : 
-		  port_id(-1),
-		  active(0),
+		  _active(false),
 		  _port(port),
 		  _baud(baud),
 		  _syncStyle(sync),
@@ -42,14 +42,15 @@ aFlock::aFlock(const char* const port,
 		  _hemisphere(hemi),
 		  _filter( filt ),
 		  _reportRate(report),
-		  _calibrationFileName( calfile )
+		  _calibrationFileName( calfile ),
+		  _usingCorrectionTable(false)
 {
   // fix the report rate if it makes no sense.
   if ((_reportRate != 'Q') && (_reportRate != 'R') &&
       (_reportRate != 'S') && (_reportRate != 'T'))
   {
      // illegal report rate, defaulting to "every other cycle" (R)
-     assert(false)
+     assert(false);
      _reportRate = 'R';
   }
 
@@ -73,7 +74,7 @@ void aFlock::SetPort(const char* serialPort)
      cerr << "Cannot change the serial Port while active\n";
      return;
   }
-  strncpy(sPort, serialPort, (size_t)30);
+  strncpy(_port, serialPort, (size_t)30);
 }
 
 char* aFlock::GetPort()
@@ -81,13 +82,13 @@ char* aFlock::GetPort()
   if (sPort == NULL) 
   	return "No port";
   else 
-  	return sPort;
+  	return _port;
 }
 
 void aFlock::SetBaudRate(int baud)
 {
   if (myThread != NULL)
-     baudRate = baud;
+     _baudRate = baud;
 }
 
 int aFlock::StartSampling()
@@ -204,7 +205,7 @@ void aFlock::UpdateData()
 
 void aFlock::SetHemisphere(BIRD_HEMI h)
 {
-    if (active) 
+    if (_active) 
     {
 	cout << "Cannot change the hemisphere\n" << flush;
 	return;
@@ -216,7 +217,7 @@ void aFlock::SetHemisphere(BIRD_HEMI h)
 
 void aFlock::SetFilters(BIRD_FILT f)
 {
-    if (active) 
+    if (_active) 
     {
 	cout << "Cannot change filters while active\n" << flush;
 	return;
@@ -228,7 +229,7 @@ void aFlock::SetFilters(BIRD_FILT f)
 
 void aFlock::SetReportRate(char rRate)
 {
-    if (active) 
+    if (_active) 
     {
 	cout << "Cannot change report rate while active\n" << flush;
 	return;
@@ -240,7 +241,7 @@ void aFlock::SetReportRate(char rRate)
 
 void aFlock::SetTransmitter(int Transmit)
 {
-  if (active) 
+  if (_active) 
   {
       cout << "Cannot change transmitter while active\n" << flush;
       return;
@@ -251,7 +252,7 @@ void aFlock::SetTransmitter(int Transmit)
 }
 void aFlock::SetNumBirds(int n)
 {
-    if (active) 
+    if (_active) 
     {
 	cout << "Cannot change num birds while active\n" << flush;
 	return;
@@ -262,7 +263,7 @@ void aFlock::SetNumBirds(int n)
 }
 void aFlock::SetSync(int sync)
 {
-  if (active) 
+  if (_active) 
   {
       cout << "Cannot change report rate while active\n" << flush;
       return;
@@ -274,7 +275,7 @@ void aFlock::SetSync(int sync)
 
 void aFlock::SetBlocking(int blVal)
 {
-  if (active) 
+  if (_active) 
   {
       cout << "Cannot change report rate while active\n" << flush;
       return;
