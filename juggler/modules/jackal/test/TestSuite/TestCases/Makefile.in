@@ -41,9 +41,9 @@ SUBDIR		=
 #                  Thread	\
 #                  Util
 
-SRCS		= 
-#BoostTest.cpp		\
-#                  SystemTest.cpp
+SRCS		= \
+	IncludesTest.cpp
+
 
 include $(MKPATH)/dpp.obj-subdir.mk
 
