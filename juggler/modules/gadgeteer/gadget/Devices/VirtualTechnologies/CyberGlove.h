@@ -54,7 +54,7 @@ public:
    //: Destroy the glove
    virtual ~CyberGlove();
 
-   virtual bool config(jccl::ConfigChunk* c);
+   virtual bool config(jccl::ConfigChunkPtr c);
 
    static std::string getChunkType() { return std::string("CyberGlove");}
 

@@ -49,7 +49,7 @@ SimAnalog::~SimAnalog()
    //vprDEBUG(vprDBG_ALL,4)<<"*** SimAnalog::~SimPinchGlove()\n"<< vprDEBUG_FLUSH;
 }
 
-bool SimAnalog::config(jccl::ConfigChunk* chunk)
+bool SimAnalog::config(jccl::ConfigChunkPtr chunk)
 {
    //vprDEBUG(vprDBG_ALL,4)<<"*** SimAnalog::config()\n"<< vprDEBUG_FLUSH;
    if(! (Input::config(chunk) && Analog::config(chunk) && SimInput::config(chunk)))

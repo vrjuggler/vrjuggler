@@ -37,7 +37,7 @@
 namespace gadget
 {
 
-bool GloveProxy::config(jccl::ConfigChunk* chunk)
+bool GloveProxy::config(jccl::ConfigChunkPtr chunk)
 {
    vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,3) << "------------------ GLOVE PROXY config() -----------------\n" << vprDEBUG_FLUSH;
    vprASSERT(((std::string)chunk->getType()) == "GloveProxy");

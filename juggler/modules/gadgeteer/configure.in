@@ -151,7 +151,7 @@ DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
 VPR_PATH(0.4.1, , AC_MSG_ERROR(*** VPR required for Gadgeteer ***))
 VRJUGGLER_PATH(1.1.91, ,
                AC_MSG_ERROR(*** VR Juggler required for Gadgeteer ***))
-JCCL_PATH(0.0.1, , AC_MSG_ERROR(*** JCCL required for Gadgeteer ***))
+JCCL_PATH(0.0.2, , AC_MSG_ERROR(*** JCCL required for Gadgeteer ***))
 
 AC_PATH_X
 

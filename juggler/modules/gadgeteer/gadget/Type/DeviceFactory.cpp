@@ -184,7 +184,7 @@ void DeviceFactory::registerDevice(DeviceConstructorBase* constructor)
 
 // Simply query all device constructors registered looking
 // for one that knows how to load the device
-bool DeviceFactory::recognizeDevice(jccl::ConfigChunk* chunk)
+bool DeviceFactory::recognizeDevice(jccl::ConfigChunkPtr chunk)
 {
    if(findConstructor(chunk) == -1)
       return false;
@@ -197,7 +197,7 @@ bool DeviceFactory::recognizeDevice(jccl::ConfigChunk* chunk)
 //!ARGS: chunk - specification of the device to load
 //!RETURNS: null - Device failed to load
 //+         other - Pointer to the loaded device
-Input* DeviceFactory::loadDevice(jccl::ConfigChunk* chunk)
+Input* DeviceFactory::loadDevice(jccl::ConfigChunkPtr chunk)
 {
    vprASSERT(recognizeDevice(chunk));
 
@@ -214,7 +214,7 @@ Input* DeviceFactory::loadDevice(jccl::ConfigChunk* chunk)
    return new_dev;
 }
 
-int DeviceFactory::findConstructor(jccl::ConfigChunk* chunk)
+int DeviceFactory::findConstructor(jccl::ConfigChunkPtr chunk)
 {
    std::string chunk_type;
    chunk_type = (std::string)chunk->getType();

@@ -50,7 +50,7 @@ SimDigitalGlove::~SimDigitalGlove()
   // vprDEBUG(vprDBG_ALL,3)<<"*** SimDigitalGlove::~SimDigitalGlove()\n"<< vprDEBUG_FLUSH;
 }
 
-bool SimDigitalGlove::config( jccl::ConfigChunk* chunk )
+bool SimDigitalGlove::config( jccl::ConfigChunkPtr chunk )
 {
    //vprDEBUG(vprDBG_ALL,3)<<"*** SimDigitalGlove::config\n"<< vprDEBUG_FLUSH;
    if(! (Input::config(chunk) && Digital::config(chunk) && SimInput::config(chunk) && Glove::config(chunk)))

@@ -40,7 +40,7 @@
 #define _GADGET_DIGITAL_H_
 
 #include <gadget/gadgetConfig.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigChunkPtr.h>
 
 namespace gadget
 {
@@ -81,7 +81,7 @@ public:
    {
    }
 
-   virtual bool config(jccl::ConfigChunk* c)
+   virtual bool config(jccl::ConfigChunkPtr c)
    {
       //vprDEBUG(vprDBG_ALL,4)<<"*** Digital::config()\n"<< vprDEBUG_FLUSH;
       return true;;

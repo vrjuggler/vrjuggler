@@ -65,7 +65,7 @@ public:
    virtual ~DTK();
 
 //: configure the flock with a config chunk
-    virtual bool config(jccl::ConfigChunk* c);
+    virtual bool config(jccl::ConfigChunkPtr c);
 
 //: begin sampling
     int startSampling();

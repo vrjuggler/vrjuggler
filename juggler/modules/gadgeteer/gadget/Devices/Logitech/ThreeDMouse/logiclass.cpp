@@ -57,6 +57,7 @@
 
 #include <vpr/System.h>
 #include <gadget/Devices/Logitech/logiclass.h>   /* classprototypes and data types */
+#include <jccl/Config/ConfigChunk.h>
 
 // uncommenting the following will produce debug print statements */
 //
@@ -133,7 +134,7 @@ void ThreeDMouse::getPosData(gadget::POS_DATA* &data){
 }
 
 
-bool ThreeDMouse::config(jccl::ConfigChunk *c)
+bool ThreeDMouse::config(jccl::ConfigChunkPtr c)
     // PURPOSE: Constructor - Setup all vars
 {
 //   strncpy(sPort,"/dev/ttyd2",11);

@@ -68,6 +68,7 @@
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>
 #include <vpr/Thread/Thread.h>
+#include <jccl/Config/ConfigChunkPtr.h>
 
 // consider moving this
 typedef unsigned char byte;
@@ -90,9 +91,6 @@ const unsigned int DEVICE_GROW1    = 64;
 const unsigned int DEVICE_GROW2    = 128;
 */
 
-namespace jccl {
-    class ConfigChunk;
-};
 
 namespace gadget
 {
@@ -106,7 +104,7 @@ namespace gadget
 //
 //  Dummy devices can use a default constructor, but physical devices should
 //  have a Constructor which takes a config chunk and calls the Input
-//  constructor taking a ConfigChunk. <br> <br>
+//  constructor taking a ConfigChunkPtr <br> <br>
 //
 //  All Physical devices will inherit from not Input but another abstract
 //  class which inherits from Input, currently there is support for
@@ -141,9 +139,9 @@ public:
    //: Config method
    //
    //  This baselevel config will fill the base datamembers
-   //  when found in the ConfigChunk, such as serial port, instance name
+   //  when found in the ConfigChunkPtr such as serial port, instance name
    //  and baud rate.
-   virtual bool config(jccl::ConfigChunk *c);
+   virtual bool config(jccl::ConfigChunkPtr c);
 
    //: Sample the device
    //

@@ -36,7 +36,7 @@
 
 #include <gadget/gadgetConfig.h>
 #include <gadget/Type/KeyboardInterface.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigChunkPtr.h>
 #include <jccl/Config/VarValue.h>
 
 
@@ -87,7 +87,7 @@ public:
 
    //: Configure the simulated input device
    //! POST: Keyboard proxy is configured <br>
-   virtual bool config(jccl::ConfigChunk* chunk);
+   virtual bool config(jccl::ConfigChunkPtr chunk);
 
 protected:
    //: Check the given keypair

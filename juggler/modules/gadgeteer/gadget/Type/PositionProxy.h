@@ -139,9 +139,9 @@ public:
    void transformData()
    { mPosData.postMult(mMatrixTransform); }
 
-   static std::string getChunkType() { return "PositionProxy"; }
+   static std::string getChunkType() { return "PosProxy"; }
 
-   bool config(jccl::ConfigChunk* chunk);
+   bool config(jccl::ConfigChunkPtr chunk);
 
    virtual Input* getProxiedInputDevice()
    {

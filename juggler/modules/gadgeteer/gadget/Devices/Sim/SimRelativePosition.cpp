@@ -38,7 +38,7 @@
 namespace gadget
 {
 
-bool SimRelativePosition::config(jccl::ConfigChunk* chunk)
+bool SimRelativePosition::config(jccl::ConfigChunkPtr chunk)
 {
     if(! (Input::config(chunk) && Position::config(chunk)))
       return false;

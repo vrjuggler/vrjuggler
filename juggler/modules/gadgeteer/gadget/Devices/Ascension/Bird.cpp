@@ -74,7 +74,7 @@ Bird::Bird()
   myThread = NULL;
 }
 
-bool Bird::config(jccl::ConfigChunk *c)
+bool Bird::config(jccl::ConfigChunkPtr c)
 {
    if(! (Input::config(c) && Position::config(c)))
       return false;

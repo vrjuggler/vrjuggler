@@ -44,7 +44,7 @@ namespace gadget
 // -Load the sample file
 // -Trim the smallest so they are same length
 // -Find/Set pos proxy for glove
-bool SimGloveGesture::config(jccl::ConfigChunk* chunk)
+bool SimGloveGesture::config(jccl::ConfigChunkPtr chunk)
 {
    if((!GloveGesture::config(chunk)) || (!SimInput::config(chunk)))
       return false;

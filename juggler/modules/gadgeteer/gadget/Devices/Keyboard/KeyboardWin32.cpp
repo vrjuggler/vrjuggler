@@ -52,7 +52,7 @@ namespace gadget
 // The message loop
 void samplem_keys(void*);
 
-bool KeyboardWin32::config(jccl::ConfigChunk *c)
+bool KeyboardWin32::config(jccl::ConfigChunkPtr c)
 {
     vprDEBUG_BEGIN(vrjDBG_INPUT_MGR, vprDBG_STATE_LVL)
                      << "vjKeyboardWin32::config " << std::endl
