@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2003-11-12 patrickh Removed the vpr::GUID(const char*) constructor overload.
+                    NEW VERSION: 0.32.2
 2003-11-05 patrickh Fixed a bug that prevented the termios abstraction from
                     opening ports in non-blocking mode.
                     NEW VERSION: 0.32.1
