@@ -307,18 +307,6 @@ void GlPipe::renderWindow(GlWindow* win)
 
    mPerfBuffer->set(perf_phase++);
 
-   // BUFFER PRE DRAW: Check if we need to clear stereo buffers
-   if(win->isStereo())
-   {
-      win->setViewBuffer(Viewport::RIGHT_EYE);
-      theApp->bufferPreDraw();
-      win->setViewBuffer(Viewport::LEFT_EYE);
-      theApp->bufferPreDraw();
-   }
-   else
-      theApp->bufferPreDraw();
-
-   mPerfBuffer->set(perf_phase++);
 
    // CONTEXT INIT(): Check if we need to call contextInit()
    // - Must call when context is new OR application is new
@@ -333,9 +321,23 @@ void GlPipe::renderWindow(GlWindow* win)
       win->setDirtyContext(false);        // All clean now
    }
 
+   // BUFFER PRE DRAW: Check if we need to clear stereo buffers
+   if(win->isStereo())
+   {
+      win->setViewBuffer(Viewport::RIGHT_EYE);
+      theApp->bufferPreDraw();
+      win->setViewBuffer(Viewport::LEFT_EYE);
+      theApp->bufferPreDraw();
+   }
+   else
+      theApp->bufferPreDraw();
+
+   mPerfBuffer->set(perf_phase++);
+
    theApp->contextPreDraw();                 // Do any context pre-drawing
 
    mPerfBuffer->set(perf_phase++);
+
 
    // --- FOR EACH VIEWPORT -- //
    Viewport* viewport = NULL;
