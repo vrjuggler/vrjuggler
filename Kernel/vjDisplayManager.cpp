@@ -110,9 +110,9 @@ bool vjDisplayManager::configRemove(vjConfigChunk* chunk)
 //+          false - We don't
 bool vjDisplayManager::configCanHandle(vjConfigChunk* chunk)
 {
-   return (( ((std::string)chunk->getType()) == "surfaceDisplay")
-            || (((std::string)chunk->getType()) == "simDisplay")
-            || (((std::string)chunk->getType()) == "displaySystem") );
+   return (    ((std::string)chunk->getType() == std::string("surfaceDisplay"))
+            || ((std::string)chunk->getType() == std::string("simDisplay"))
+            || ((std::string)chunk->getType() == std::string("displaySystem")) );
 }
 
 
