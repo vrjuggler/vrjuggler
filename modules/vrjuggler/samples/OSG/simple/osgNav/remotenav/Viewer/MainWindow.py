@@ -52,8 +52,8 @@ class MainWindow(MainWindowBase):
       pos = self.mFacade.getPosition()
       rot = self.mFacade.getOrientation()
       
-      self.mPosLabel.setText("Pos: %12.3f, %12.3f, %12.3f"% pos)
-      self.mRotLabel.setText("Rot: %12.3f, %12.3f, %12.3f"% rot)
+      self.mPosLabel.setText("P:%9.1f,%9.1f,%9.1f"% pos)
+      self.mRotLabel.setText("R:%9.1f,%9.1f,%9.1f"% rot)
       
    def reloadGuiView(self):
       """ Reload the entire gui view from the model. """
