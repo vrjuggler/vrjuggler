@@ -63,7 +63,7 @@ public:
 
       acceptor_socket.setOpenNonBlocking(); // for opening
 
-      assertTest( acceptor_socket.getBlocking() );
+      assertTest( acceptor_socket.getNonBlocking() );
    }
 
    // Set OpenNonBlocking
@@ -100,13 +100,13 @@ public:
 
       acceptor_socket.setOpenNonBlocking(); // for opening
 
-      assertTest( acceptor_socket.getBlocking() );
+      assertTest( acceptor_socket.getNonBlocking() );
 
       result = acceptor_socket.open().success();
       assertTest( result );
 
       acceptor_socket.enableNonBlocking(); // for reads and writes
-      assertTest( acceptor_socket.getBlocking() );
+      assertTest( acceptor_socket.getNonBlocking() );
 
       result = acceptor_socket.close().success();
       assertTest( result );
@@ -135,8 +135,8 @@ public:
       acceptor_socket.setOpenNonBlocking();
       connector_socket.setOpenNonBlocking();
 
-      assertTest( acceptor_socket.getBlocking() );
-      assertTest( connector_socket.getBlocking() );
+      assertTest( acceptor_socket.getNonBlocking() );
+      assertTest( connector_socket.getNonBlocking() );
 
       // a/c: Open
       status = acceptor_socket.open();
@@ -146,9 +146,9 @@ public:
 
       // a/c: enableNonBlock
       acceptor_socket.enableNonBlocking();
-      assertTest( acceptor_socket.getBlocking() );
+      assertTest( acceptor_socket.getNonBlocking() );
       connector_socket.enableNonBlocking();
-      assertTest( connector_socket.getBlocking() );
+      assertTest( connector_socket.getNonBlocking() );
 
       // a:   bind
       status = acceptor_socket.bind();
@@ -213,8 +213,8 @@ public:
       acceptor_socket.setOpenNonBlocking();
       connector_socket.setOpenNonBlocking();
 
-      assertTest( acceptor_socket.getBlocking() );
-      assertTest( connector_socket.getBlocking() );
+      assertTest( acceptor_socket.getNonBlocking() );
+      assertTest( connector_socket.getNonBlocking() );
 
       // a/c: Open
       status = acceptor_socket.open();
@@ -232,9 +232,9 @@ public:
 
       // a/c: enableNonBlock
       acceptor_socket.enableNonBlocking();
-      assertTest( acceptor_socket.getBlocking() );
+      assertTest( acceptor_socket.getNonBlocking() );
       connector_socket.enableNonBlocking();
-      assertTest( connector_socket.getBlocking() );
+      assertTest( connector_socket.getNonBlocking() );
 
       // a:   bind
       status = acceptor_socket.bind();
