@@ -1108,7 +1108,7 @@ void FlockStandalone::sendReportRateCmd(Flock::ReportRate rate)
    vpr::Uint8 report_rate_cmd = vpr::Uint8(rate);
 
    // Assert above assignment works
-   vprASSERT((Flock::MaxRate == rate) && (report_rate_cmd == Flock::Command::ReportRate1));
+   //vprASSERT((Flock::MaxRate == rate) && (report_rate_cmd == Flock::Command::ReportRate1));
 
    sendCommand(report_rate_cmd);
 }
