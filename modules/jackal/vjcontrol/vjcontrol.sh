@@ -54,6 +54,6 @@ fi
 EXTRA_JDK_ARGS="-DJCCL_BASE_DIR=$JCCL_BASE_DIR -DVJ_SHARE_DIR=$VJ_SHARE_DIR -DJCCL_SHARE_DIR=$JCCL_SHARE_DIR"
 
 # Run tweek
-. $TWEEK_BASE_DIR/bin/tweek-base.sh
+. $TWEEK_BASE_DIR/bin/tweek-base.sh --defaultbean=VjControl
 
 exit $status
