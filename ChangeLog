@@ -1,5 +1,6 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jan-01-2003 patrickh  Ported the Performer Draw Manager to Windows.
 Dec-30-2003 patrickh  Fixed rotation errors and Gimbal Lock problems in the
                       Trackd driver.
 
