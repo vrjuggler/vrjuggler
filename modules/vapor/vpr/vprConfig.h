@@ -83,6 +83,19 @@
 
 #endif   /* __cplusplus */
 
+/*
+ * This is used to deal with various locations for the header that defines
+ * std::hash_map.  Files that need the header can test for the definition of
+ * VPR_HASH_MAP_INCLUDE to determine if any std::hash_map is available.
+ */
+#if defined(HAVE_HASH_MAP)
+#  define VPR_HASH_MAP_INCLUDE <hash_map>
+#elif defined(HAVE_EXT_HASH_MAP)
+#  define VPR_HASH_MAP_INCLUDE <ext/hash_map>
+#elif defined(HAVE_HASH_MAP_H)
+#  define VPR_HASH_MAP_INCLUDE <hash_map.h>
+#endif
+
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
