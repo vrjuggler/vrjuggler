@@ -167,6 +167,10 @@ AC_DEFUN(VJ_COMPILER_SETUP,
         DPP_GPLUSPLUS_MODERN(AC_MSG_ERROR(*** VR Juggler requires a modern G++ ***))
     fi
 
+    if test "x$GCC" = "xyes" ; then
+        OPT_FLAGS="$OPT_FLAGS -fno-strict-aliasing"
+    fi
+
     # Ensure that the C++ compiler we've found is capable of compiling the
     # newer C++ features that we need.
     DPP_CXX_TEMPLATES(AC_MSG_ERROR(*** The library requires C++ template support ***))
