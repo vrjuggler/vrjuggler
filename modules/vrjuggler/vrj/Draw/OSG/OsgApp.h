@@ -238,6 +238,7 @@ inline void OsgApp::contextInit()
 
 inline void OsgApp::draw()
 {
+   glPushAttrib(GL_ALL_ATTRIB_BITS);
    glPushAttrib(GL_TRANSFORM_BIT);
    glPushAttrib(GL_VIEWPORT_BIT);
 
@@ -312,6 +313,7 @@ inline void OsgApp::draw()
    glMatrixMode(GL_MODELVIEW);
    glPopMatrix();
 
+   glPopAttrib();
    glPopAttrib();
    glPopAttrib();
 }
