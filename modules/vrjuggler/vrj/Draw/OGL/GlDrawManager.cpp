@@ -425,24 +425,25 @@ void vjGlDrawManager::drawSimulator(vjSimDisplay* sim)
 
       glDisable(GL_TEXTURE_2D);
       glDisable(GL_TEXTURE_1D);
-     // Draw the user's head
+      
+      // Draw base coordinate axis
+      ///*
+      glDisable(GL_LIGHTING);
+      glPushMatrix();
+         vjVec3 x_axis(2.0f,0.0f,0.0f); vjVec3 y_axis(0.0f, 2.0f, 0.0f); vjVec3 z_axis(0.0f, 0.0f, 2.0f); vjVec3 origin(0.0f, 0.0f, 0.0f);
+         glBegin(GL_LINES);
+            glColor3f(1.0f, 0.0f, 0.0f); glVertex3fv(origin.vec); glVertex3fv(x_axis.vec);
+            glColor3f(0.0f, 1.0f, 0.0f); glVertex3fv(origin.vec); glVertex3fv(y_axis.vec);
+            glColor3f(0.0f, 0.0f, 1.0f); glVertex3fv(origin.vec); glVertex3fv(z_axis.vec);
+         glEnd();
+      glPopMatrix();
+      //*/               
+      
+      glEnable(GL_LIGHTING);
+      // Draw the user's head
       glPushMatrix();
          glMultMatrixf(sim->getHeadPos().getFloatPtr());
-   
-         // Draw Axis
-         /*
-         glDisable(GL_LIGHTING);
-         glPushMatrix();
-            vjVec3 x_axis(10.0f,0.0f,0.0f); vjVec3 y_axis(0.0f, 10.0f, 0.0f); vjVec3 z_axis(0.0f, 0.0f, 10.0f); vjVec3 origin(0.0f, 0.0f, 0.0f);
-            glBegin(GL_LINES);
-               glColor3f(1.0f, 0.0f, 0.0f); glVertex3fv(origin.vec); glVertex3fv(x_axis.vec);
-               glColor3f(0.0f, 1.0f, 0.0f); glVertex3fv(origin.vec); glVertex3fv(y_axis.vec);
-               glColor3f(0.0f, 0.0f, 1.0f); glVertex3fv(origin.vec); glVertex3fv(z_axis.vec);
-            glEnd();
-         glPopMatrix();
-         */
-         glEnable(GL_LIGHTING);
-
+            
          //glEnable(GL_BLEND);
          //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
          glColor4f(0.5f, 0.75f, 0.90f, 0.67f);
