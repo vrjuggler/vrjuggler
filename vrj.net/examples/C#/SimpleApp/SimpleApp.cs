@@ -41,14 +41,16 @@ public class SimpleApp : vrj.GlApp
 {
    public static void Main(String[] args)
    {
+      vrj.Kernel kernel = vrj.Kernel.instance();
+
       foreach (String arg in args)
       {
-         vrj.Kernel.instance().loadConfigFile(arg);
+         kernel.loadConfigFile(arg);
       }
 
-      vrj.Kernel.instance().start();
-      vrj.Kernel.instance().setApplication(new SimpleApp());
-      vrj.Kernel.instance().waitForKernelStop();
+      kernel.start();
+      kernel.setApplication(new SimpleApp());
+      kernel.waitForKernelStop();
    }
 
    public SimpleApp() : base()
