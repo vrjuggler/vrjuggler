@@ -97,7 +97,7 @@ dnl                          test JCCL program], , enable_jccltest=yes)
     min_jccl_version=ifelse([$1], ,0.0.1,$1)
 
     dnl Do a sanity check to ensure that $JCCL_CONFIG actually works.
-    if ! eval `$JCCL_CONFIG --cxxflags >/dev/null 2>&1` ; then
+    if ! (eval $JCCL_CONFIG --cxxflags >/dev/null 2>&1) 2>&1 ; then
         JCCL_CONFIG='no'
     fi
 

@@ -88,7 +88,7 @@ dnl                          test SNX program], , enable_sonixtest=yes)
     min_sonix_version=ifelse([$1], ,0.0.1,$1)
 
     dnl Do a sanity check to ensure that $SNX_CONFIG actually works.
-    if ! eval `$SNX_CONFIG --cxxflags >/dev/null 2>&1` ; then
+    if ! (eval $SNX_CONFIG --cxxflags >/dev/null 2>&1) 2>&1 ; then
         SNX_CONFIG='no'
     fi
 
