@@ -41,11 +41,11 @@
 
 #define vprSingletonHeader( TYPE )                   \
 public:                                              \
-   static VPR_API(TYPE*) instance( void )
+   static TYPE* instance( void )
 
 #define vprSingletonHeaderWithInitFunc( TYPE, INIT_FUNC_NAME ) \
 public:                                                        \
-   static VPR_API(TYPE*) instance( void )
+   static TYPE* instance( void )
 
 // NOTE: currently, func is thread safe after first call to instance().
 // if first call to instance happens multiple times simultaneously
@@ -145,7 +145,7 @@ namespace vpr
 /*
 #define vprSingletonHeader( TYPE )                               \
 public:                                                          \
-   static VPR_API(TYPE*) instance( void )                        \
+   static TYPE* instance( void )                                 \
    {                                                             \
       static TYPE* the_instance = NULL;                          \
       if (the_instance == NULL)                                  \
@@ -158,7 +158,7 @@ public:                                                          \
 
 #define vprSingletonHeaderWithInitFunc( TYPE, INIT_FUNC_NAME )   \
 public:                                                          \
-   static VPR_API(TYPE*) instance( void )                        \
+   static TYPE* instance( void )                                 \
    {                                                             \
       static TYPE* the_instance = NULL;                          \
       if (the_instance == NULL)                                  \
