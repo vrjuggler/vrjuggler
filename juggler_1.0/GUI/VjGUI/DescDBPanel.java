@@ -42,22 +42,10 @@ public class DescDBPanel extends JPanel
     setLayout (new BorderLayout (5, 5));
 
     // create buttons
-    try {
-	new_icn = new ImageIcon (ClassLoader.getSystemResource ("VjFiles/new.gif"));
-	load_icn = new ImageIcon (ClassLoader.getSystemResource ("VjFiles/open.gif"));
-	save_icn = new ImageIcon (ClassLoader.getSystemResource ("VjFiles/save.gif"));
-	close_icn = new ImageIcon (ClassLoader.getSystemResource ("VjFiles/close.gif"));
-	load_button = new JButton ("Load", load_icn);
-	save_button = new JButton ("Save", save_icn);
-	new_button = new JButton ("New", new_icn);
-	close_button = new JButton ("Close", close_icn);
-    }
-    catch (NullPointerException e) {
-	load_button = new JButton ("Load");
-	save_button = new JButton ("Save");
-	new_button = new JButton ("New");
-	close_button = new JButton ("Close");
-    }
+    load_button = new JButton ("Load", Core.load_icn);
+    save_button = new JButton ("Save", Core.save_icn);
+    new_button = new JButton ("New", Core.new_icn);
+    close_button = new JButton ("Close", Core.close_icn);
     insert_button = new JButton ("Insert");
     remove_button = new JButton ("Remove");
     

@@ -33,11 +33,13 @@ public class ChunkOrgTreePane extends JPanel
     JMenuItem addfolder_mi, remove_mi, cremove_mi, unnameddesc_mi;
     JMenu addchunkdesc_menu;
 
+    ChunkOrgTree orgtree;
+
     JScrollPane scroll_pane;
     JTree     tree;
     DefaultTreeModel treemodel;
     DefaultMutableTreeNode root;
-    ChunkOrgTree orgtree;
+    //ChunkOrgTree orgtree;
     boolean ignore_next_reload; // used so we don't reload tree as a result
                                 // of message sent because of an apply
                                 // ie. we already knew that.
@@ -70,7 +72,7 @@ public class ChunkOrgTreePane extends JPanel
         setBorder (new EmptyBorder (5,5,5,5));
         setLayout (new BorderLayout (5, 5));
 
-	add (new JLabel ("Warning: Be careful where this saves to"), "North"); 
+	//add (new JLabel ("Warning: Be careful where this saves to"), "North"); 
 
 	root = new DefaultMutableTreeNode ("nothing", false);
 	treemodel = new DefaultTreeModel(root, true);
@@ -87,7 +89,8 @@ public class ChunkOrgTreePane extends JPanel
 	orgtree = new ChunkOrgTree();
 	orgtree.copyValueFrom (Core.chunkorgtree);
 	//orgtree.addActionListener (this);
-	buildTree (orgtree);
+	//orgtree = chunkorgtree;
+	buildTree (Core.chunkorgtree);
 
 	JTextField editfield = new JTextField();
 	DefaultCellEditor editor = new DefaultCellEditor (editfield);
@@ -101,22 +104,11 @@ public class ChunkOrgTreePane extends JPanel
 
         ImageIcon new_icn, load_icn, save_icn, close_icn;
 	
-        try {
-            new_icn = new ImageIcon (ClassLoader.getSystemResource ("VjFiles/new.gif"));
-            load_icn = new ImageIcon (ClassLoader.getSystemResource ("VjFiles/open.gif"));
-            save_icn = new ImageIcon (ClassLoader.getSystemResource ("VjFiles/save.gif"));
-            //close_icn = new ImageIcon (ClassLoader.getSystemResource ("VjFiles/close.gif"));
-	    load_button = new JButton ("Load", load_icn);
-            save_button = new JButton ("Save", save_icn);
-            new_button = new JButton ("New", new_icn);
-            //close_button = new JButton ("Close", close_icn);
-	}
-        catch (NullPointerException e) {
-            load_button = new JButton ("Load");
-            save_button = new JButton ("Save");
-            new_button = new JButton ("New");
-            //close_button = new JButton ("Close");
-        }
+	load_button = new JButton ("Load", Core.load_icn);
+	save_button = new JButton ("Save", Core.save_icn);
+	new_button = new JButton ("New", Core.new_icn);
+	//close_button = new JButton ("Close", Core.close_icn);
+
         Insets ins = new Insets (0,0,0,0);
         new_button.setMargin (ins);
         load_button.setMargin (ins);
@@ -165,13 +157,13 @@ public class ChunkOrgTreePane extends JPanel
     }
 
     public void buildTree (ChunkOrgTree orgtree) {
-	root = buildTreeHelper (orgtree);
+	root = buildTreeHelper (orgtree.root);
 	treemodel.setRoot (root);
 	treemodel.reload();
     }
 
     private DefaultMutableTreeNode buildTreeHelper (Object orgtree) {
-	ChunkOrgTree ot;
+	OrgTreeElem ot;
 	int i;
 	DefaultMutableTreeNode n1, n2;
 	if (orgtree instanceof String) {
@@ -179,8 +171,8 @@ public class ChunkOrgTreePane extends JPanel
 					     false);
 	    return n1;
 	}
-	else if (orgtree instanceof ChunkOrgTree) {
-	    ot = (ChunkOrgTree)orgtree;
+	else if (orgtree instanceof OrgTreeElem) {
+	    ot = (OrgTreeElem)orgtree;
 	    n1 = new DefaultMutableTreeNode (ot.label, 
 					     true);
 	    for (i = 0; i < ot.children.size(); i++)
@@ -196,18 +188,18 @@ public class ChunkOrgTreePane extends JPanel
     public void setCOTValue (ChunkOrgTree ot) {
 	// replaces the old value of ot w/ the value defined by the panel's tree
 	ignore_next_reload = true;
-	ot.copyValueFrom ((ChunkOrgTree)setCOTValueHelper(root));
+	ot.setRoot ((OrgTreeElem)setCOTValueHelper (root));
     }
    
     protected Object setCOTValueHelper (DefaultMutableTreeNode n) {
 	DefaultMutableTreeNode n1, n2;
-	ChunkOrgTree ot;
+	OrgTreeElem ot;
 	Enumeration e;
 	if (n.getAllowsChildren() == false) {
 	    return n.toString();
 	}
 	else {
-	    ot = new ChunkOrgTree(n.toString());
+	    ot = new OrgTreeElem(n.toString());
 	    e = n.children();
 	    while (e.hasMoreElements()) {
 		ot.children.addElement (setCOTValueHelper ((DefaultMutableTreeNode)e.nextElement()));
@@ -224,8 +216,10 @@ public class ChunkOrgTreePane extends JPanel
 	if (e.getActionCommand().equalsIgnoreCase ("reload")) {
 	    if (ignore_next_reload)
 		ignore_next_reload = false;
-	    else
-		buildTree (Core.chunkorgtree);
+	    else {
+		orgtree.copyValueFrom (Core.chunkorgtree);
+		buildTree (orgtree);
+	    }
 	}
 	else if (source == new_button) {
 	    //System.out.println ("pushed new");
@@ -233,21 +227,22 @@ public class ChunkOrgTreePane extends JPanel
 	    buildTree (orgtree);
 	}
 	else if (source == save_button) {
-	    ot = new ChunkOrgTree();
-	    setCOTValue (ot);
-	    System.out.println ("saving chunkorgtree:\n" + ot);
-	    FileControl.saveChunkOrgTree (ot);
+	    //ot = new ChunkOrgTree();
+	    setCOTValue (orgtree);
+	    //System.out.println ("saving chunkorgtree:\n" + ot);
+	    FileControl.saveChunkOrgTree (orgtree);
 	}
 	else if (source == load_button) {
 	    //System.out.println ("load pressed");
-	    FileControl.loadChunkOrgTree ("", true, orgtree);
+	    //ChunkOrgTree orgtree = new ChunkOrgTree();
+	    FileControl.loadChunkOrgTree (orgtree.getFile().getParent(), true, orgtree);
 	    buildTree (orgtree);
 	}
 	else if (source == apply_button) {
 	    setCOTValue (Core.chunkorgtree);
 	}
 	else if (source == remove_button) {
-	    System.out.println ("Remove button pressed");
+	    //System.out.println ("Remove button pressed");
 	    TreePath[] tp = tree.getSelectionPaths();
 	    if (tp == null)
 		return;

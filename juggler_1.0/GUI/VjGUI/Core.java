@@ -28,6 +28,11 @@ public class Core {
     static public int    screenWidth;
     static public int    screenHeight;
 
+    static ImageIcon new_icn;
+    static ImageIcon load_icn;
+    static ImageIcon save_icn;
+    static ImageIcon close_icn;
+
     static public void initialize () {
 	ConfigChunkDB db;
 	
@@ -42,6 +47,23 @@ public class Core {
 	db.setName ("Active Configuration");
 	active_treemodel = new ChunkDBTreeModel (db, chunkorgtree);
 	net = new NetControl();
+
+
+	new_icn = new ImageIcon (ClassLoader.getSystemResource ("VjFiles/new.gif"))
+;
+	load_icn = new ImageIcon (ClassLoader.getSystemResource ("VjFiles/open.gif"));
+	save_icn = new ImageIcon (ClassLoader.getSystemResource ("VjFiles/save.gif"));
+	close_icn = new ImageIcon (ClassLoader.getSystemResource ("VjFiles/close.gif"));
+	if (new_icn == null)
+	    new_icn = new ImageIcon();
+	if (load_icn == null)
+	    load_icn = new ImageIcon();
+	if (save_icn == null)
+	    save_icn = new ImageIcon();
+	if (close_icn == null)
+	    close_icn = new ImageIcon();
+
+
 	ui = new ControlUI();
     }
 
