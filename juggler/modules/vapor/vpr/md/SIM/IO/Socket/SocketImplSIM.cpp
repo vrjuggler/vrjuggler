@@ -78,15 +78,20 @@ vpr::ReturnStatus SocketImplSIM::bind ()
 {
    vpr::ReturnStatus status;
 
-   if ( mLocalAddr.getPort() == 0 )
+   if ( vpr::InetAddr::AnyAddr == mLocalAddr )
    {
-      status = vpr::sim::Controller::instance()->getSocketManager().bindUnusedPort(this,
-                                                                   mLocalAddr);
+      status =
+         vpr::sim::Controller::instance()->getSocketManager().bindUnusedPort(this,
+                                                                             mLocalAddr);
       vprASSERT(status.success() && "Failed to assign port number to socket");
    }
 
-   status = vpr::sim::Controller::instance()->getSocketManager().assignToNode(this,
-                                                              mLocalAddr);
+   vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+      << "SocketImplSIM::bind(): Assigning socket to a node in the graph\n"
+      << vprDEBUG_FLUSH;
+   status =
+      vpr::sim::Controller::instance()->getSocketManager().assignToNode(this,
+                                                                        mLocalAddr);
    vprASSERT(status.success() && "Failed to assign socket to a node");
 
    status = vpr::sim::Controller::instance()->getSocketManager().bind(this, mLocalAddr);
@@ -102,21 +107,28 @@ vpr::ReturnStatus SocketImplSIM::connect (vpr::Interval timeout)
 
    if ( ! mNodeAssigned )
    {
-      if ( mLocalAddr.getPort() == 0 )
+      if ( vpr::InetAddr::AnyAddr == mLocalAddr )
       {
-         status = vpr::sim::Controller::instance()->getSocketManager().bindUnusedPort(this,
-                                                                      mLocalAddr);
+         status =
+            vpr::sim::Controller::instance()->getSocketManager().bindUnusedPort(this,
+                                                                                mLocalAddr);
          vprASSERT(status.success() && "Failed to assign port number to socket");
       }
 
-      status = vpr::sim::Controller::instance()->getSocketManager().assignToNode(this,
-                                                                 mLocalAddr);
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+         << "SocketImplSIM::connect(): Assigning socket to a node in the "
+         << "graph\n" << vprDEBUG_FLUSH;
+      status =
+         vpr::sim::Controller::instance()->getSocketManager().assignToNode(this,
+                                                                           mLocalAddr);
    }
 
    vprASSERT(mNodeAssigned && "A node-less socket cannot connect");
-   status = vpr::sim::Controller::instance()->getSocketManager().connect(this, &mPeer,
-                                                         mRemoteAddr,
-                                                         mPathToPeer, timeout);
+   status =
+      vpr::sim::Controller::instance()->getSocketManager().connect(this, &mPeer,
+                                                                   mRemoteAddr,
+                                                                   mPathToPeer,
+                                                                   timeout);
    mBound = mConnected = status.success();
 
    // Now that we are connected (or queued to get connected), we do not have
