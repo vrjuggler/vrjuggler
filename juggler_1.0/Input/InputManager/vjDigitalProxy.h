@@ -43,39 +43,7 @@ public:
       m_unitNum = subNum;
    }
 
-   void UpdateData()
-   {
-      bool new_state = m_digPtr->GetDigitalData(m_unitNum);
-      int old_state = m_data;
-      if(vjDigital::OFF == old_state)
-      {
-         if(new_state)     // Button now pressed
-            m_data = vjDigital::TOGGLE_ON;
-         else              // Button now released
-            m_data = vjDigital::OFF;
-      }
-      else if(vjDigital::ON == old_state)
-      {
-         if(new_state)     // Button now pressed
-            m_data = vjDigital::ON;
-         else              // Button now released
-            m_data = vjDigital::TOGGLE_OFF;
-      }
-      else if(vjDigital::TOGGLE_ON == old_state)
-      {
-         if(new_state)     // Button now pressed
-            m_data = vjDigital::ON;
-         else              // Button now released
-            m_data = vjDigital::TOGGLE_OFF;
-      }
-      else if(vjDigital::TOGGLE_OFF == old_state)
-      {
-         if(new_state)     // Button now pressed
-            m_data = vjDigital::TOGGLE_ON;
-         else              // Button now released
-            m_data = vjDigital::OFF;
-      }
-   }
+   void UpdateData();
 
 
    //: Get the digital data
