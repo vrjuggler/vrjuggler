@@ -48,6 +48,15 @@ using namespace vrj;
 // Draw an axis in OpenGL
 void drawAxis();
 
+// Clears the viewport.  Put the call to glClear() in this
+// method so that this application will work with configurations
+// using two or more viewports per display window.
+void contextApp::bufferPreDraw()
+{
+   glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
 //----------------------------------------------
 //  Draw the scene.
 //
@@ -57,8 +66,6 @@ void drawAxis();
 void contextApp::draw()
 {
    // --- Setup for drawing --- //
-   glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    glMatrixMode(GL_MODELVIEW);
 
    // -- Get Wand matrix --- //

@@ -46,6 +46,15 @@ using namespace gmtl;
 using namespace vrj;
 
 
+// Clears the viewport.  Put the call to glClear() in this
+// method so that this application will work with configurations
+// using two or more viewports per display window.
+void simpleApp::bufferPreDraw()
+{
+   glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
 //----------------------------------------------
 //  Draw the scene.
 //
@@ -55,8 +64,6 @@ using namespace vrj;
 void simpleApp::draw()
 {
    // --- Setup for drawing --- //
-   glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    glMatrixMode(GL_MODELVIEW);
 
    // -- Get Wand matrix --- //
