@@ -72,7 +72,7 @@ vjVarValue& vjVarValue::operator= (const vjVarValue &v) {
 	val.strval = v.val.strval;
 	break;
 	default:
-	//cout << "something's wrong with varvalue assign" << endl;
+	//cout << "something's wrong with varvalue assign\n" << vjDEBUG_FLUSH;
 	break;
     }
     return *this;
@@ -113,10 +113,12 @@ vjVarValue::operator int() {
     case T_FLOAT:
 	return (int)val.floatval;
     case T_INVALID:
-	cerr << using_invalid_msg << endl;
+	vjDEBUG(vjDBG_CONFIG,1) << using_invalid_msg << 1 
+			       << endl << vjDEBUG_FLUSH;
 	return 0;
     default:
-       vjDEBUG(vjDBG_ERROR,0) << "Type error in cast!\n" << vjDEBUG_FLUSH;
+       vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in cast to int.\n" 
+			      << vjDEBUG_FLUSH;
 	return 0;
     }
 }
@@ -130,10 +132,11 @@ vjVarValue::operator vjConfigChunk*() {
 	// its embeddedchunk
 	return new vjConfigChunk (*val.embeddedchunkval);
     case T_INVALID:
-	cerr << using_invalid_msg << endl;
+	vjDEBUG(vjDBG_CONFIG,1) << using_invalid_msg << 2 
+			       << endl << vjDEBUG_FLUSH;
 	return NULL;
     default:
-       vjDEBUG(vjDBG_ERROR,0) << "Type error in cast!\n" << vjDEBUG_FLUSH;
+       vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in cast to vjConfigChunk*.\n" << vjDEBUG_FLUSH;
 	return NULL;
     }
 }
@@ -151,10 +154,12 @@ vjVarValue::operator bool() {
     case T_FLOAT:
 	return (bool)val.floatval;
     case T_INVALID:
-	cerr << using_invalid_msg << endl;
+	vjDEBUG(vjDBG_CONFIG,1) << using_invalid_msg << 3 
+			       << endl << vjDEBUG_FLUSH;
 	return false;
     default:
-       vjDEBUG(vjDBG_ERROR,0) << "Type error in cast!\n" << vjDEBUG_FLUSH;
+       vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in cast to bool.\n"
+			      << vjDEBUG_FLUSH;
 	return false;
     }
 }
@@ -170,10 +175,11 @@ vjVarValue::operator float () {
     case T_BOOL:
 	return (float)val.boolval;
     case T_INVALID:
-	cerr << using_invalid_msg << endl;
+	vjDEBUG(vjDBG_CONFIG,1) << using_invalid_msg << 4 
+			       << endl << vjDEBUG_FLUSH;
 	return 0.0f;
     default:
-       vjDEBUG(vjDBG_ERROR,0) << "Type error in cast!\n" << vjDEBUG_FLUSH;
+       vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in cast to float.\n" << vjDEBUG_FLUSH;
 	return 0.0f;
     }
 }
@@ -186,10 +192,11 @@ char* vjVarValue::cstring () {
     case T_CHUNK:
 	return strdup (val.strval.c_str());
     case T_INVALID:
-	cerr << using_invalid_msg << endl;
+	vjDEBUG(vjDBG_CONFIG,1) << using_invalid_msg << 5 
+			       << endl << vjDEBUG_FLUSH;
 	return strdup("");
     default:
-       vjDEBUG(vjDBG_ERROR,0) << "Type error in cast to char*!" << endl << vjDEBUG_FLUSH;
+       vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in cstring().\n" << vjDEBUG_FLUSH << vjDEBUG_FLUSH;
 	return strdup("");
     }
 }
@@ -202,10 +209,11 @@ vjVarValue::operator std::string () {
     case T_CHUNK:
 	return val.strval;
     case T_INVALID:
-	cerr << using_invalid_msg << endl;
+	vjDEBUG(vjDBG_CONFIG,1) << using_invalid_msg << 6 
+			       << endl << vjDEBUG_FLUSH;
 	return (std::string)"";
     default:
-       vjDEBUG(vjDBG_ERROR,0) << "Type error in cast to std::string!" << endl << vjDEBUG_FLUSH;
+       vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in cast to std::string.\n" << vjDEBUG_FLUSH;
 	return (std::string)"";
     }
 }
@@ -224,7 +232,7 @@ vjVarValue &vjVarValue::operator = (int i) {
 	val.boolval = (bool)i;
 	break;
     default:
-	cerr << "Type error in assignment!" << endl;
+	vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in assignment.\n" << vjDEBUG_FLUSH;
     }
     return *this;
 }
@@ -240,7 +248,7 @@ vjVarValue& vjVarValue::operator = (bool i) {
 	val.boolval = i;
 	break;
     default:
-	cerr << "Type error in assignment!" << endl;
+	vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in assignment.\n" << vjDEBUG_FLUSH;
     }
     return *this;
 }
@@ -254,7 +262,7 @@ vjVarValue &vjVarValue::operator = (float i) {
 	val.floatval = i;
 	break;
     default:
-	cerr << "Type error in assignment!" << endl;
+	vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in assignment.\n" << vjDEBUG_FLUSH;
     }
     return *this;
 }
@@ -268,7 +276,7 @@ vjVarValue &vjVarValue::operator = (std::string s) {
 	val.strval = s;
 	break;
     default:
-	cerr << "Type error in assignment!" << endl;
+	vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in assignment.\n" << vjDEBUG_FLUSH;
     }
     return *this;
 }
@@ -282,7 +290,7 @@ vjVarValue &vjVarValue::operator = (char *s) {
 	val.strval = s;
 	break;
     default:
-	cerr << "Type error in assignment!" << endl;
+	vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in assignment.\n" << vjDEBUG_FLUSH;
     }
     return *this;
 }
@@ -299,7 +307,7 @@ vjVarValue &vjVarValue::operator = (vjConfigChunk *s) {
 	    val.embeddedchunkval = NULL;
 	break;
     default:
-	cerr << "Type error in assignment!" << endl;
+	vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in assignment.\n" << vjDEBUG_FLUSH;
     }
     return *this;
 }
@@ -307,7 +315,7 @@ vjVarValue &vjVarValue::operator = (vjConfigChunk *s) {
 
 
 ostream& operator << (ostream& out, vjVarValue& v) {
-    //      cerr << "in << func" <<flush;
+    //      vjDEBUG(vjDBG_ERROR,0) << "in << func" <<flush;
 
     switch (v.type) {
     case T_INT:
