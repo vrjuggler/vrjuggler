@@ -289,8 +289,6 @@ public class LabeledSummaryGraphPanel
 	num = col.getNumIndices();
 
 	indices = new ArrayList();
-//  	phase_active = new ArrayList();
-//  	phase_active_boxes = new ArrayList();
 
 	JPanel checkboxpanel = new JPanel();
 	checkboxpanel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder(), "Display Indices", TitledBorder.LEFT, TitledBorder.TOP));
@@ -303,20 +301,10 @@ public class LabeledSummaryGraphPanel
 					graph_colors[i%graph_colors.length]);
 	    indices.add (iv);
 	    checkboxpanel.add (iv.getCheckBox());
+	    iv.getCheckBox().addActionListener (this);
 	    i++;
 	}
 
-//  	for (i = 0, j = 0; i < num; i++) {
-//  	    if (col.getAverageForPhase(i) > 0.0) {
-//  		phase_active_boxes[i] = new JCheckBox (Integer.toString(i) + " -" + col.getLabelForPhase(i), phase_active[i]);
-//  		phase_active_boxes[i].setActionCommand (Integer.toString(i));
-//  		phase_active_boxes[i].addActionListener(this);
-//  		checkboxpanel.add(phase_active_boxes[i]);
-//  		j++;
-//  	    }
-//  	    else
-//  		phase_active_boxes[i] = null;
-//  	}
 	checkboxpanel.setLayout (new GridLayout (indices.size(), 1));//((j+1)/2, 2));
 	add (checkboxpanel, "East");
 
@@ -362,17 +350,8 @@ public class LabeledSummaryGraphPanel
 	    summarypanel.setVerticalScale ((new Double((String)vertscale_box.getSelectedItem())).doubleValue());
 	}
 	else if (e.getSource() instanceof JCheckBox) {
-//  	    int i;
-//  	    for (i = 0; i < num; i++)
-//  		if (phase_active_boxes[i] == e.getSource())
-//  		    break;
-//  	    //System.out.println ("checkbox selected # " + i);
-//  	    if (i < num) {
-//  		phase_active[i] = phase_active_boxes[i].isSelected();
-//  	    }
-//  	    col.refreshMaxValues();
-//  	    summarypanel.refigureMax();
-//  	    summarypanel.refresh();
+	    // one of the "active?" checkboxes was hit.
+	    refresh();
 	}
     }
 
