@@ -77,7 +77,10 @@ public:
    void testSimple()
    {
       aj::Matrix44 mat;
-      mat.makeRot( 180, 0, 1, 0 );
+      mat.makeRot( 180.0f * (3.145f / 180.0f), 0, 1, 0 );
+      
+      std::cout<<mat<<"\n"<<std::flush;
+      
       
       aj::Vec3 forward( 0,0,-1 );
       
