@@ -7,7 +7,7 @@ srcdir		= @srcdir@
 
 COMPILE		= @CXX@ @DEFS@ ${VJ_INCLUDES} @CPPFLAGS@ @CXXFLAGS@ -g
 VJ_INCLUDES	= @INCLUDES@ -I${VJ_BASE_DIR}/include -I${srcdir}
-VJ_LIBS		= -L${VJ_BASE_DIR}/lib -lJuggler
+VJ_LIBS		= @TEST_VJ_LIBS@
 VPATH		= @srcdir@
 
 # These test programs require the following libraries to be linked:
