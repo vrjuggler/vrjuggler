@@ -51,6 +51,7 @@ C_AFTERBUILD=	afterbuild-libs
 
 SRCS=	DsoLoaderTest.cpp	\
 	LibraryFinderTest.cpp	\
+	LibraryLoaderTest.cpp	\
 	LibraryTest.cpp
 
 include $(MKPATH)/dpp.obj.mk
