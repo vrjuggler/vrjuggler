@@ -33,7 +33,11 @@ package org.vrjuggler.jccl.config.io;
 
 import java.io.*;
 import java.util.*;
+import javax.swing.JOptionPane;
+import javax.xml.transform.*;
 import org.jdom.*;
+import org.jdom.transform.*;
+import org.jdom.output.*;
 import org.vrjuggler.tweek.services.EnvironmentService;
 
 import org.vrjuggler.jccl.config.*;
@@ -80,10 +84,10 @@ public class ConfigElementParser
       {
          throw new MissingAttributeException(VERSION);
       }
-      int version;
+      int our_version;
       try
       {
-         version = Integer.parseInt(version_str);
+         our_version = Integer.parseInt(version_str);
       }
       catch (NumberFormatException nfe)
       {
@@ -97,11 +101,62 @@ public class ConfigElementParser
          throw new MissingAttributeException(NAME);
       }
 
+      int newest_version_number = mDefinitionRepos.getNewestVersionNumber(token).intValue();
+      
+      // - If we have an old version
+      //   - For i=our_version ; i < newest_version_num ; i++
+      //     - Transform from version i to i+1
+      if(newest_version_number > our_version)
+      {
+
+         JOptionPane.showMessageDialog(null, 
+               "ConfigElement \"" + name + "\", of type \"" + token + "\", is an old version.\n"
+               + " We are updating your configuration to the new ConfigElement format.\n" 
+               + " You must save your configuration in order for these changes to become permanent.");
+         
+         // We must iterate over all versions between ours and the newest
+         // transforming for each new version.
+         for(int ver_num = our_version ; ver_num < newest_version_number ; ++ver_num)
+         {
+            // Get the XSLT from the next versions definition file.
+            Source xslt_source = mDefinitionRepos.get(token,ver_num + 1).getXsltSource();
+            if(null != xslt_source)
+            {
+               // Transform the element to the next version.
+               root = transformElement(root, xslt_source);
+            }
+            else
+            {
+               throw new ParseException("Could not find XSLT transformation for: "
+                                        + token + " Version: " + (ver_num+1));
+            }
+         }
+
+         // Use the following to debug the transformations by outputting the
+         // current state of root.
+
+         /*
+         System.out.println("Element:");
+         XMLOutputter outp = new XMLOutputter();
+         outp.setTextNormalize(true);
+         outp.setIndent("  ");
+         outp.setNewlines(true);
+         try
+         {
+            outp.output(root, System.out); 
+         }
+         catch(Exception ex)
+         {
+            System.out.println("Somthing bad happened...");
+         }
+         */
+      }
+
       // Get the definition for this configuration element
-      ConfigDefinition def = getDefinition(token, version);
+      ConfigDefinition def = getDefinition(token, newest_version_number);
       if (def == null)
       {
-         throw new ParseException("Could not find definition: "+token+" version "+version);
+         throw new ParseException("Could not find definition: "+token+" version "+newest_version_number);
       }
 
       // Get all the properties for this element
@@ -109,6 +164,35 @@ public class ConfigElementParser
 
       // Create the configuration element
       return new ConfigElement(def, name, props);
+   }
+
+
+   private static Element transformElement(Element element_node, Source xslt_source)
+      throws ParseException
+   {
+      JDOMSource source = new JDOMSource(element_node);
+
+      try
+      {
+         Transformer transformer = TransformerFactory.newInstance()
+            .newTransformer(xslt_source);
+     
+         JDOMResult result = new JDOMResult();
+         transformer.transform(source, result);
+         Element result_elm = null;
+         java.util.List temp_list = result.getResult();
+         
+         if(temp_list.size() > 0)
+         {
+            result_elm = (Element)temp_list.get(0);
+            return result_elm;
+         }
+      }
+      catch(Exception ex)
+      {
+         throw new ParseException("Could not transform using XSLT.");
+      }
+      return null;
    }
 
    /**
@@ -119,7 +203,7 @@ public class ConfigElementParser
       throws ParseException
    {
       Map props = new TreeMap();
-
+      
       // Process each property defined in the configuration definition
       List prop_defs = def.getPropertyDefinitions();
       for (Iterator itr = prop_defs.iterator(); itr.hasNext(); )
