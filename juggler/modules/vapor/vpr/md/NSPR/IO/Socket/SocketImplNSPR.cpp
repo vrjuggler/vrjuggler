@@ -240,8 +240,25 @@ SocketImplNSPR::connect (vpr::Interval timeout) {
 
          err = PR_GetError();
 
+         // This is a non-blocking connection.
          if ( err == PR_WOULD_BLOCK_ERROR || err == PR_IN_PROGRESS_ERROR  ) {
-            retval.setCode( vpr::Status::InProgress );
+            if ( vpr::Interval::NoWait == timeout ) {
+               retval.setCode( vpr::Status::InProgress );
+            }
+            // Use the timeout to wait for the connection to complete.
+            else {
+               PRPollDesc poll_desc;
+
+               poll_desc.fd       = m_handle;
+               poll_desc.in_flags = PR_POLL_WRITE | PR_POLL_EXCEPT;
+
+               PR_Poll(&poll_desc, 1, NSPR_getInterval(timeout));
+
+               // If the out flags don't have PR_POLL_WRITE, then we timed out.
+               if ( ! poll_desc.out_flags & PR_POLL_WRITE ) {
+                  retval.setCode(vpr::Status::Timeout);
+               }
+            }
          }
          else if ( err == PR_IO_TIMEOUT_ERROR ) {
             retval.setCode(vpr::Status::Timeout);
