@@ -51,7 +51,7 @@ include @topdir@/make.defs.mk
 # -----------------------------------------------------------------------------
 test_topdir=    @topdir@/test/TestSuite
 VJ_BASE_DIR?=   @APP_BASE_DIR@
-CPP_UNIT=       $(JUGGLERROOT_ABS)/external/cppunit
+CPP_UNIT=       @CPPUNIT_ROOT@
 
 # -----------------------------------------------------------------------------
 # Override settings for variables read from make.defs.mk.
