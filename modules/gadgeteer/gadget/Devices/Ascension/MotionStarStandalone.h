@@ -165,20 +165,6 @@ public:
     ~aMotionStar();
 
     // ------------------------------------------------------------------------
-    //: Returns whether the MotionStar is active or not.
-    //
-    //! PRE: None.
-    //! POST: A reference to active is returned to the caller.
-    //
-    //! RETURNS: A reference to a boolean variable stating whether or not the
-    //+          device is active.
-    // ------------------------------------------------------------------------
-    inline bool&
-    isActive () {
-        return active;
-    }
-
-    // ------------------------------------------------------------------------
     //: Initializes the driver, setting the status for each bird.
     //
     //! PRE: The server address (either IP address or hostname) has been set.
@@ -213,76 +199,18 @@ public:
     void sample();
 
     // ------------------------------------------------------------------------
-    //: Get the x position of the i'th bird.
+    //: Returns whether the MotionStar is active or not.
     //
-    //! PRE: posinfo has valid data in it.
-    //! POST: The x position for the given bird number is returned to the
-    //+       caller.
+    //! PRE: None.
+    //! POST: A reference to active is returned to the caller.
     //
-    //! RETURNS: A floating-point value for the current x position of the
-    //+          given bird.
+    //! RETURNS: A reference to a boolean variable stating whether or not the
+    //+          device is active.
     // ------------------------------------------------------------------------
-    float xPos(int i);
-
-    // ------------------------------------------------------------------------
-    //: Get the y position of the i'th bird.
-    //
-    //! PRE: posinfo has valid data in it.
-    //! POST: The y position for the given bird number is returned to the
-    //+       caller.
-    //
-    //! RETURNS: A floating-point value for the current y position of the
-    //+          given bird.
-    // ------------------------------------------------------------------------
-    float yPos(int i);
-
-    // ------------------------------------------------------------------------
-    //: Get the z position of the i'th bird.
-    //
-    //! PRE: posinfo has valid data in it.
-    //! POST: The z position for the given bird number is returned to the
-    //+       caller.
-    //
-    //! RETURNS: A floating-point value for the current z position of the
-    //+          given bird.
-    // ------------------------------------------------------------------------
-    float zPos(int i);
-
-    // ------------------------------------------------------------------------
-    //: Get the z rotation of the i'th bird.
-    //
-    //! PRE: posinfo has valid data in it.
-    //! POST: The z rotation for the given bird number is returned to the
-    //+       caller.
-    //
-    //! RETURNS: A floating-point value for the current z rotation of the
-    //+          given bird.
-    // ------------------------------------------------------------------------
-    float zRot(int i);
-
-    // ------------------------------------------------------------------------
-    //: Get the y rotation of the i'th bird.
-    //
-    //! PRE: posinfo has valid data in it.
-    //! POST: The y rotation for the given bird number is returned to the
-    //+       caller.
-    //
-    //! RETURNS: A floating-point value for the current y rotation of the
-    //+          given bird.
-    // ------------------------------------------------------------------------
-    float yRot(int i);
-
-    // ------------------------------------------------------------------------
-    //: Get the x rotation of the i'th bird.
-    //
-    //! PRE: posinfo has valid data in it.
-    //! POST: The x rotation for the given bird number is returned to the
-    //+       caller.
-    //
-    //! RETURNS: A floating-point value for the current x rotation of the
-    //+          given bird.
-    // ------------------------------------------------------------------------
-    float xRot(int i);
+    inline bool&
+    isActive () {
+        return active;
+    }
 
     // ------------------------------------------------------------------------
     //: Change the hemisphere of the transmitter.
@@ -305,31 +233,6 @@ public:
     inline unsigned int
     getHemisphere () {
         return hemisphere;
-    }
-
-    // ------------------------------------------------------------------------
-    //: Set the address (either IP address or hostname) for the server.
-    //
-    //! PRE: None.
-    //! POST: If an address has already been set (i.e., address is non-NULL),
-    //+       that memory is freed.  A copy of n is stored in address.
-    //
-    //! ARGS: n - The new value for the server address.
-    // ------------------------------------------------------------------------
-    void setAddress(const char* n);
-
-    // ------------------------------------------------------------------------
-    //: Get the current server address for the device.
-    //
-    //! PRE: None.
-    //! POST: The current value of address is returned to the caller.
-    //
-    //! RETURNS: NULL - No address has been set.
-    //! RETURNS: Non-NULL - A character array naming the server address.
-    // ------------------------------------------------------------------------
-    inline char*
-    getAddress () {
-        return address;
     }
 
     // ------------------------------------------------------------------------
@@ -446,6 +349,103 @@ public:
     getReportRate () {
         return reportRate;
     }
+
+    // ------------------------------------------------------------------------
+    //: Set the address (either IP address or hostname) for the server.
+    //
+    //! PRE: None.
+    //! POST: If an address has already been set (i.e., address is non-NULL),
+    //+       that memory is freed.  A copy of n is stored in address.
+    //
+    //! ARGS: n - The new value for the server address.
+    // ------------------------------------------------------------------------
+    void setAddress(const char* n);
+
+    // ------------------------------------------------------------------------
+    //: Get the current server address for the device.
+    //
+    //! PRE: None.
+    //! POST: The current value of address is returned to the caller.
+    //
+    //! RETURNS: NULL - No address has been set.
+    //! RETURNS: Non-NULL - A character array naming the server address.
+    // ------------------------------------------------------------------------
+    inline char*
+    getAddress () {
+        return address;
+    }
+
+    // ------------------------------------------------------------------------
+    //: Get the x position of the i'th bird.
+    //
+    //! PRE: posinfo has valid data in it.
+    //! POST: The x position for the given bird number is returned to the
+    //+       caller.
+    //
+    //! RETURNS: A floating-point value for the current x position of the
+    //+          given bird.
+    // ------------------------------------------------------------------------
+    float xPos(int i);
+
+    // ------------------------------------------------------------------------
+    //: Get the y position of the i'th bird.
+    //
+    //! PRE: posinfo has valid data in it.
+    //! POST: The y position for the given bird number is returned to the
+    //+       caller.
+    //
+    //! RETURNS: A floating-point value for the current y position of the
+    //+          given bird.
+    // ------------------------------------------------------------------------
+    float yPos(int i);
+
+    // ------------------------------------------------------------------------
+    //: Get the z position of the i'th bird.
+    //
+    //! PRE: posinfo has valid data in it.
+    //! POST: The z position for the given bird number is returned to the
+    //+       caller.
+    //
+    //! RETURNS: A floating-point value for the current z position of the
+    //+          given bird.
+    // ------------------------------------------------------------------------
+    float zPos(int i);
+
+    // ------------------------------------------------------------------------
+    //: Get the z rotation of the i'th bird.
+    //
+    //! PRE: posinfo has valid data in it.
+    //! POST: The z rotation for the given bird number is returned to the
+    //+       caller.
+    //
+    //! RETURNS: A floating-point value for the current z rotation of the
+    //+          given bird.
+    // ------------------------------------------------------------------------
+    float zRot(int i);
+
+    // ------------------------------------------------------------------------
+    //: Get the y rotation of the i'th bird.
+    //
+    //! PRE: posinfo has valid data in it.
+    //! POST: The y rotation for the given bird number is returned to the
+    //+       caller.
+    //
+    //! RETURNS: A floating-point value for the current y rotation of the
+    //+          given bird.
+    // ------------------------------------------------------------------------
+    float yRot(int i);
+
+    // ------------------------------------------------------------------------
+    //: Get the x rotation of the i'th bird.
+    //
+    //! PRE: posinfo has valid data in it.
+    //! POST: The x rotation for the given bird number is returned to the
+    //+       caller.
+    //
+    //! RETURNS: A floating-point value for the current x rotation of the
+    //+          given bird.
+    // ------------------------------------------------------------------------
+    float xRot(int i);
 
 //*****************************************************
 
