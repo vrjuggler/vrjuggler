@@ -6,7 +6,7 @@
 # Date modified: $Date$
 # Version:       $Revision$
 
-sonix = Class('sonix', 'snx/sonix.h')
+sonix = Class('snx::sonix', 'snx/sonix.h')
 set_policy(sonix.instance, return_value_policy(reference_existing_object))
 
 Class('snx::SoundAPIInfo', 'snx/SoundAPIInfo.h')
