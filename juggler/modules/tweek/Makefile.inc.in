@@ -205,7 +205,7 @@ endif
 # =============================================================================
 # Tweek GUI targets.
 # =============================================================================
-EXTRA_OBJ_TARGETS	= tweek-jar extensions-jar
+EXTRA_OBJ_TARGETS	= tweek-jar
 
 # Build the Tweek GUI code base and the JAR files.
 tweek-gui:
