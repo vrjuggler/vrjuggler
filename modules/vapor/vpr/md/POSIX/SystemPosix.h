@@ -149,7 +149,7 @@ public:
 
         ReturnStatus status;
 
-        int ret_val = ::putenv(set_value.c_str());
+        int ret_val = ::putenv(const_cast<char*>(set_value.c_str()));
 
         if ( ret_val == 0 )
         {
