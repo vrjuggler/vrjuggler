@@ -113,6 +113,11 @@ include @topdir@/make.defs.mk
 
 STARTTIME:=	$(shell LC_TIME=C date)
 
+BUILD_CXX=		@BUILD_CXX@
+BUILD_JAVA=		@BUILD_JAVA@
+BUILD_PYTHON=		@BUILD_PYTHON@
+BUILD_EXTENSIONS=	@BUILD_EXTENSIONS@
+
 BUILD_PROF_C=	@BUILD_PROF_C@
 BUILD_PROF_CXX=	@BUILD_PROF_CXX@
 
@@ -131,17 +136,17 @@ endif
 # Subdirectories used for recursion through the source tree.
 SUBDIR=		
 
-ifeq (@BUILD_CXX@, Y)
+ifeq ($(BUILD_CXX), Y)
    SUBDIR+=	tweek
 endif
 
-ifeq (@BUILD_JAVA@, Y)
+ifeq ($(BUILD_JAVA), Y)
    SUBDIR+=	java
 endif
 
-# Only build extensions if requested
-ifeq (@BUILD_EXTENSIONS@, Y)
-   SUBDIR+= extensions
+# Only build extensions if requested.
+ifeq ($(BUILD_EXTENSIONS), Y)
+   SUBDIR+=	extensions
 endif
 
 # =============================================================================
