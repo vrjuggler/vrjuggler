@@ -120,6 +120,34 @@ public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener
 
 
 
+    public void removeAllChunkNodes () {
+	/* note: doing this in a single stage seems to screw up the enumeration
+	 * when we remove elements from the tree, causing us to miss nodes that
+	 * should be removed.
+	 */
+	DefaultMutableTreeNode n, p;
+	int i;
+	Vector v = new Vector();
+
+	chunkdb.removeAll();
+	Enumeration nodes = ((DefaultMutableTreeNode)root).breadthFirstEnumeration();
+	while (nodes.hasMoreElements()) {
+	    n = (DefaultMutableTreeNode)nodes.nextElement();
+	    if (((ChunkTreeNodeInfo)n.getUserObject()).isChunkNode()) {
+		v.addElement(n);
+	    }
+	}
+	for (i = 0; i < v.size(); i++) {
+	    n = (DefaultMutableTreeNode)v.elementAt(i);
+	    p = (DefaultMutableTreeNode)n.getParent();
+	    p.remove(n);
+	    removedChildCount(p);
+	    reload (p);
+	}
+    }
+
+
+
     public void insertNode (ConfigChunk ch) {
 	removeNode (ch.getName());
 	chunkdb.insertOrdered(ch);
@@ -136,6 +164,7 @@ public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener
 		reload(n);
 	    } 
 	}
+	tree.repaint();
     }
 
 
@@ -161,6 +190,7 @@ public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener
 	    ChunkTreeNodeInfo ni = (ChunkTreeNodeInfo)n.getUserObject();
 	    ni.childchunks--;
 	    removedChildCount ((DefaultMutableTreeNode)n.getParent());
+	    tree.repaint();
 	}
 	catch (ClassCastException exc) {  // root node
 	}
@@ -216,7 +246,7 @@ public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener
 	Vector v;
 
 	if (on == null) {
-	    System.out.println ("treeelem is null");
+	    Core.consoleErrorMessage ("ChunkDBTree", "OrgTreeElem is NULL");
 	    return;
 	}
 	for (i = 0; i < on.children.size(); i++) {

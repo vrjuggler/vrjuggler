@@ -69,17 +69,6 @@ public class ConnectionPane extends JPanel implements ActionListener {
 	add(p1);
 	add(p2);
 
-	/* build menus - but don't add them until "activate" */
-	/*    filemenu = new Menu("File");
-	      filemenu.addActionListener(this);
-	      filemenu.add("Exit");
-    
-	      networkmenu = new Menu("File");
-	      networkmenu.addActionListener(this);
-	      networkmenu.add("Disconnect");
-	      networkmenu.add("Exit");
-	*/
-
 	connect_button.setToolTipText ("Connect or reconnect to remote host");
 	disconnect_button.setToolTipText ("Disconnect from remote host");
     }

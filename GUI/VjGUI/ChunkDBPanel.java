@@ -555,7 +555,6 @@ public class ChunkDBPanel extends JPanel
 	    oldc = f.getOldValue();
 	    newc = f.getValue();
 	    if (current_treemodel == Core.active_treemodel) {
-		System.out.println ("sending chunk across network...");
 		if (oldc.getName().equals (newc.getName()))
 		    Core.net.sendChunk(newc);
 		else {

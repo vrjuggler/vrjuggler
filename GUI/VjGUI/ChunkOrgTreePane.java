@@ -246,7 +246,6 @@ public class ChunkOrgTreePane extends JPanel
 	    buildTree (orgtree);
 	}
 	else if (source == save_button) {
-	    //ot = new ChunkOrgTree();
 	    setCOTValue (orgtree);
 	    //System.out.println ("saving chunkorgtree:\n" + ot);
 	    FileControl.saveChunkOrgTree (orgtree);
@@ -273,7 +272,6 @@ public class ChunkOrgTreePane extends JPanel
 		n.removeFromParent();
 		treemodel.reload(n1);
 	    }
-	    //treemodel.reload();
 	}
 	else if ((source == remove_mi) || (source == cremove_mi)) {
 	    DefaultMutableTreeNode n, n1;
