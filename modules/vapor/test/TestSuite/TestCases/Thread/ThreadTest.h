@@ -13,13 +13,15 @@
 #include <vpr/Thread/TSObjectProxy.h>
 
 
-namespace vprTest{
+namespace vprTest
+{
 
 class ThreadTest : public CppUnit::ThreadTestCase
 {
 CPPUNIT_TEST_SUITE(ThreadTest);
 CPPUNIT_TEST(testNoSpawnCtor);
-CPPUNIT_TEST( testAutoSpawnCtor);
+CPPUNIT_TEST(testAutoSpawnCtor);
+CPPUNIT_TEST(testRunnableFunctor);
 //CPPUNIT_TEST( testCreateJoin);
 //CPPUNIT_TEST( testSuspendResume);
 //CPPUNIT_TEST( testPriority);
@@ -28,14 +30,12 @@ CPPUNIT_TEST( testThreadSpecificData);
 CPPUNIT_TEST_SUITE_END();
 
 public:
-   ThreadTest()
-   : CppUnit::ThreadTestCase ()
+   ThreadTest() : CppUnit::ThreadTestCase ()
    {
       mNumRecursions = 0;
    }
 
-   ThreadTest(std::string name)
-   : CppUnit::ThreadTestCase (name)
+   ThreadTest(std::string name) : CppUnit::ThreadTestCase (name)
    {
       mNumRecursions = 0;
    }
@@ -54,6 +54,8 @@ public:
 
    void testNoSpawnCtor();
    void testAutoSpawnCtor();
+
+   void testRunnableFunctor();
 
    // =========================================================================
    // thread CreateJoin test
