@@ -41,7 +41,7 @@
 namespace vrj
 {
 
-void Display::updateProjections(float positionScale)
+void Display::updateProjections(const float positionScale)
 {
    for(unsigned i=0;i<mViewports.size();i++)
    {

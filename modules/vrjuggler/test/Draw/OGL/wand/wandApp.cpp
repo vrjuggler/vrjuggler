@@ -143,9 +143,9 @@ void wandApp::myDraw()
 void wandApp::initGLState()
 {
    GLfloat light0_ambient[] = { 0.1f,  0.1f,  0.1f,  1.0f};
-   GLfloat light0_diffuse[] = { 0.8f,  0.8f,  0.8f,  1.0f};
+   GLfloat light0_diffuse[] = { 0.7f,  0.7f,  0.7f,  1.0f};
    GLfloat light0_specular[] = { 1.0f,  1.0f,  1.0f,  1.0f};
-   GLfloat light0_position[] = {0.0f, 0.75f, 0.75f, 0.0f};
+   GLfloat light0_position[] = {0.5f, 0.75f, 0.75f, 0.0f};
 
    GLfloat mat_ambient[] = { 0.7, 0.7,  0.7,  1.0};
    GLfloat mat_diffuse[] = { 1.0,  0.5,  0.8,  1.0};

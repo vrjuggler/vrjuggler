@@ -84,10 +84,10 @@ public:     // --- Config stuff -- //
 
 public:
    /**
-    * This function updates the projections for all contained displays.
-    * It also tells the Draw Manager that the projections have changed.
+    * This function is used to update all managed projections at once.
+    * @param scaleFactor - Current scale factor for position data
     */
-   virtual void updateProjections();
+   virtual void updateProjections(const float scaleFactor);
 
    /**
     * Sets the Draw Manager that the system is running.

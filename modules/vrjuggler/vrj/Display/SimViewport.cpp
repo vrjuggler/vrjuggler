@@ -1,5 +1,5 @@
 #include <vrj/Display/SimViewport.h>
- 
+
 #include <gmtl/Matrix.h>
 #include <gmtl/Generate.h>
 #include <gmtl/MatrixOps.h>
@@ -13,10 +13,10 @@
 #include <vrj/Display/CameraProjection.h>
 #include <vrj/Display/Projection.h>
 #include <gadget/Type/Position/PositionUnitConversion.h>
- 
+
 namespace vrj
 {
- 
+
    /**  Configure the simulator */
 void SimViewport::config(jccl::ConfigChunkPtr chunk)
 {
@@ -59,7 +59,7 @@ void SimViewport::config(jccl::ConfigChunkPtr chunk)
    mSurfaceColor[2] = chunk->getProperty<float>("surfaceColor", 2);
 }
 
-void SimViewport::updateProjections(float positionScale)
+void SimViewport::updateProjections(const float positionScale)
 {
    updateInternalData(positionScale);
    gmtl::Matrix44f camera_pos = getCameraPos();
@@ -83,15 +83,15 @@ void SimViewport::updateProjections(float positionScale)
    left_eye_pos = camera_pos * gmtl::makeTrans<gmtl::Matrix44f>( gmtl::Vec3f(-eye_offset, 0.0f, 0.0f) );
    right_eye_pos = camera_pos * gmtl::makeTrans<gmtl::Matrix44f>( gmtl::Vec3f(eye_offset, 0.0f, 0.0f) );
 
-   mLeftProj->calcViewMatrix(left_eye_pos);
-   mRightProj->calcViewMatrix(right_eye_pos);
+   mLeftProj->calcViewMatrix(left_eye_pos, positionScale);
+   mRightProj->calcViewMatrix(right_eye_pos, positionScale);
 }
 
 /**  Update internal simulator data */
 void SimViewport::updateInternalData(float positionScale)
 {
    mHeadPos = mUser->getHeadPosProxy()->getData(positionScale);
-   mWandPos = mWand->getData(positionScale);   
+   mWandPos = mWand->getData(positionScale);
 
    mCameraPos = mCamera->getData(positionScale);
    gmtl::invert(mCameraPos);

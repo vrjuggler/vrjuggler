@@ -42,6 +42,7 @@
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Generate.h>
+#include <gmtl/Output.h>
 #include <gmtl/Xforms.h>
 
 //#include <vrj/Math/Coord.h>
@@ -72,9 +73,9 @@ void WallProjection::config(jccl::ConfigChunkPtr chunk)
  * @pre WallRotation matrix must be set correctly.
  * @pre mOrigin*'s must all be set correctly.
  */
-void WallProjection::calcViewMatrix( gmtl::Matrix44f& eyePos )
+void WallProjection::calcViewMatrix( gmtl::Matrix44f& eyePos, const float scaleFactor )
 {
-   calcViewFrustum(eyePos);
+   calcViewFrustum(eyePos, scaleFactor);
 
    //Coord eye_coord(eyePos);
    gmtl::Vec3f   eye_pos( gmtl::makeTrans<gmtl::Vec3f>(eyePos) );             // Non-xformed pos
@@ -97,7 +98,7 @@ void WallProjection::calcViewMatrix( gmtl::Matrix44f& eyePos )
  * @pre WallRotation matrix must be set correctly.
  * @pre mOrigin*'s must all be set correctly.
  */
-void WallProjection::calcViewFrustum(gmtl::Matrix44f& eyePos)
+void WallProjection::calcViewFrustum(gmtl::Matrix44f& eyePos, const float scaleFactor)
 {
    float near_dist, far_dist;
    near_dist = mNearDist;
@@ -117,31 +118,22 @@ void WallProjection::calcViewFrustum(gmtl::Matrix44f& eyePos)
    eye_pos = gmtl::makeTrans<gmtl::Point3f>(eyePos);
    gmtl::Point3f   eye_xformed;         // Xformed position of eyes
 
-   vprDEBUG(vrjDBG_DISP_MGR,7)
-      << "vjWallProjection::calcWallProjection:  Wall Proj:\n" << *this
-      << std::endl << vprDEBUG_FLUSH;
-
-   /*
-   vprDEBUG(vrjDBG_DISP_MGR,7)
-      << "vjWallProjection::calcWallProjection:    Base eye:" << eye_pos
-      << std::endl << vprDEBUG_FLUSH;
-      */
-
    // Convert eye coords into the wall's coord system
    eye_xformed = mWallRotationMatrix * eye_pos;
 
-   /*
    vprDEBUG(vrjDBG_DISP_MGR,7)
+      << "vjWallProjection::calcWallProjection:  Wall Proj:\n" << *this
+      << "vjWallProjection::calcWallProjection:    Base eye:" << eye_pos
       << "vjWallProjection::calcWallProjection:    Xformed eye:" << eye_xformed
       << std::endl << vprDEBUG_FLUSH;
-      */
 
    // Compute dist from eye to screen/edges
-   eye_to_screen = mOriginToScreen + eye_xformed[gmtl::Zelt];
-   eye_to_right = mOriginToRight - eye_xformed[gmtl::Xelt];
-   eye_to_left = mOriginToLeft + eye_xformed[gmtl::Xelt];
-   eye_to_top = mOriginToTop - eye_xformed[gmtl::Yelt];
-   eye_to_bottom = mOriginToBottom + eye_xformed[gmtl::Yelt];
+   // Take into account scale since all origin to anythings are in meters
+   eye_to_screen = (scaleFactor * mOriginToScreen) + eye_xformed[gmtl::Zelt];
+   eye_to_right =  (scaleFactor * mOriginToRight) - eye_xformed[gmtl::Xelt];
+   eye_to_left =   (scaleFactor * mOriginToLeft) + eye_xformed[gmtl::Xelt];
+   eye_to_top =    (scaleFactor * mOriginToTop) - eye_xformed[gmtl::Yelt];
+   eye_to_bottom = (scaleFactor * mOriginToBottom) + eye_xformed[gmtl::Yelt];
 
    // Find dists on near plane using similar triangles
    float near_distFront = near_dist/eye_to_screen;      // constant factor

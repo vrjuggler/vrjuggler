@@ -341,17 +341,14 @@ Display* DisplayManager::findDisplayNamed(std::string name)
 }
 
 
-void DisplayManager::updateProjections()
+void DisplayManager::updateProjections(const float scaleFactor)
 {
    // for (all displays) update the projections
    for (std::vector<Display*>::iterator i = mActiveDisplays.begin(); i != mActiveDisplays.end(); i++)
-      (*i)->updateProjections(1.0f);
+      (*i)->updateProjections(scaleFactor);
 
    for (std::vector<Display*>::iterator j = mInactiveDisplays.begin(); j != mInactiveDisplays.end(); j++)
-      (*j)->updateProjections(1.0f);
-
-   if(mDrawManager != NULL)
-      mDrawManager->updateProjections();
+      (*j)->updateProjections(scaleFactor);
 }
 
 

@@ -71,7 +71,7 @@ public:
     */
    virtual void config(jccl::ConfigChunkPtr chunk);
 
-   virtual void updateProjections(float positionScale);
+   virtual void updateProjections(const float positionScale);
 
    void getCorners(gmtl::Point3f& ll, gmtl::Point3f& lr, gmtl::Point3f& ur,
                    gmtl::Point3f& ul)

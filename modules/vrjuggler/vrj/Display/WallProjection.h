@@ -78,13 +78,13 @@ public:
     *      mOrigin*'s must all be set correctly.
     * @post frustum has been recomputed for given eyePos.
     */
-   virtual void calcViewMatrix(gmtl::Matrix44f& eyePos);
+   virtual void calcViewMatrix(gmtl::Matrix44f& eyePos, const float scaleFactor);
 
    /**
     * Calculates the frustum needed for the view matrix.
     * @note This function is called as part of calcViewMatrix.
     */
-   virtual void calcViewFrustum(gmtl::Matrix44f& eyePos);
+   virtual void calcViewFrustum(gmtl::Matrix44f& eyePos, const float scaleFactor);
 
    std::ostream& outStream(std::ostream& out);
 
