@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <string>
+#include <iostream>
 #include <stdio.h> // for FILE
 
 #include <AL/al.h>
@@ -300,10 +301,6 @@ public:
             ALuint bufferID;
             ALuint sourceID;
             
-            FILE *fh;
-	         int filelen;
-
-            
             // open the file as readonly binary
 	         if (!CFileIO::fileExists( soundInfo.filename.c_str() )) 
             {
@@ -318,7 +315,7 @@ public:
             
 	         // put the data in an OpenAL buffer
 	         alGenBuffers( 1, &bufferID );
-            alBufferData( bufferID, AL_FORMAT_WAVE_EXT, &(mBindLookup[alias].data[0]), filelen, 0 );
+            alBufferData( bufferID, AL_FORMAT_WAVE_EXT, &(mBindLookup[alias].data[0]), mBindLookup[alias].data.size(), 0 );
 	         if (alGetError() != AL_NO_ERROR)
             {
 		         std::cerr << "Could not buffer data\n" << std::flush;
