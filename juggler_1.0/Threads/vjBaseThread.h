@@ -9,9 +9,10 @@
 //    - This is used as the base class for all thread classes.
 // --------------------------------------------------------------------------
 
+#include <config.h>
 #include <iostream.h>
-#include <Threads/vjThreadFunctor.h>
 #include <hash_map.h>
+#include <Threads/vjThreadFunctor.h>
 
 class vjBaseThread
 {

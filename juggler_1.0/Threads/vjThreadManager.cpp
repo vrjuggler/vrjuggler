@@ -1,3 +1,4 @@
+#include <config.h>
 #include <Threads/vjThreadManager.h>
 #include <Kernel/vjDebug.h>
 
