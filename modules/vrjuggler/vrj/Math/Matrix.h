@@ -22,10 +22,6 @@ class vjCoord;
 #define M_PI_2   1.57079632679489661923
 #endif
 
-#define VJ_DEG2RAD(x) ((x)*M_PI/180.0)
-#define VJ_RAD2DEG(x) ((x)*180.0/M_PI)
-#define VJ_ZERO_CLAMP(x) ((fabs(x) < 1e-15)? 0.0f : x)
-#define VJ_CLAMP(x,y) ((x>y)? y : x)
 
 //-----------------------------------------------------------------------------
 //: vjMatrix: Scene graph matrix optimized for OpenGL.
@@ -294,8 +290,8 @@ public:
    //!POST: mat' = _m * rot(_degrees, axis)
    void postRot(const vjMatrix&  _m, float _degrees, vjVec3& axis);
 
-   void preEuler(float _h, float _p, float _r, vjMatrix& _m);
-   void postEuler(vjMatrix& _m, float _h, float _p, float _r);
+   void preXYZEuler(float x, float y, float z, vjMatrix& _m);
+   void postXYZEuler(vjMatrix& _m, float x, float y, float z);
 
    //!POST: mat' = scale(_xs,_ys,_zs) * _m;
    void preScale(float _xs, float _ys, float _zs, vjMatrix&  _m);
