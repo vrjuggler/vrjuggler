@@ -1,4 +1,3 @@
-
 /****************** <SNX heading BEGIN do not edit this line> *****************
  *
  * sonix
@@ -39,9 +38,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 #ifndef SOUND_HANDLE
 #define SOUND_HANDLE
+
+#include <snx/snxConfig.h>
 
 #include <string>
 #include <gmtl/Math.h>
@@ -71,7 +71,7 @@ namespace snx
     *       you want to use (usually OpenAL or AudioWorks).
     * @ingroup SonixAPI
     */
-   class SoundHandle
+   class SNX_CLASS_API SoundHandle
    {
    public:
       /**
@@ -79,11 +79,7 @@ namespace snx
        *
        * @see init
        */
-      SoundHandle()
-         : mDefaultName("unnamed_sound_handle")
-         , mAlias(mDefaultName)
-      {
-      }
+      SoundHandle();
 
       /**
        * Name constructor.  This gives the handle your chosen name.
@@ -94,9 +90,7 @@ namespace snx
        *
        * @see init
        */
-      SoundHandle( const std::string& myUniqueName ) : mAlias( myUniqueName )
-      {
-      }
+      SoundHandle(const std::string& myUniqueName);
 
       /**
        * Initialize the name of this sound with your chosen name.
@@ -121,10 +115,7 @@ namespace snx
       std::string getName() const { return mAlias; }
 
       /** Virtual destructor. */
-      virtual ~SoundHandle()
-      {
-         mAlias = "deleted";
-      }
+      virtual ~SoundHandle();
 
    public:
 

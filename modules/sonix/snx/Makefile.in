@@ -54,7 +54,9 @@ DIRPRFX=	snx/
 
 SRCS=		FileIO.cpp			\
 		SoundFactory.cpp		\
+		SoundHandle.cpp			\
 		SoundImplementation.cpp 	\
+		StubSoundImplementation.cpp 	\
 		snxParam.cpp			\
 		sonix.cpp
 
