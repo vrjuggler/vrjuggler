@@ -57,7 +57,7 @@
 
 #include <gadget/Type/Input.h>
 #include <gadget/Type/EventWindow.h>
-//#include <gadget/Type/InputMixer.h>
+#include <gadget/Type/InputMixer.h>
 
 #include <gadget/Type/EventWindow/Keys.h>
 #include <gadget/Type/EventWindow/Event.h>
@@ -66,7 +66,12 @@
 namespace gadget
 {
 
-class GADGET_CLASS_API EventWindowWin32 : public Input, public EventWindow
+class GADGET_CLASS_API EventWindowWin32
+#if _MSC_VER < 1310  // 1310 == VC++ 7.1
+   : public Input, public EventWindow
+#else
+   : public InputMixer<Input, EventWindow>
+#endif
 {
 public:
    /**< Enum to keep track of current lock state for state machine. */

@@ -1556,6 +1556,26 @@ The filters are applied in the order that they are specified in this configurati
       <item label="Machine" defaultvalue="" />
       <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
+    <PropertyDesc token="slave_one" name="slave_one" type="bool" variable="0">
+      <help>Should we syncronize with slave #1?</help>
+      <item label="Slave One" defaultvalue="0" />
+    </PropertyDesc>
+    <PropertyDesc token="slave_two" name="slave_two" type="bool" variable="0">
+      <help>Should we syncronize with slave #2?</help>
+      <item label="Slave Two" defaultvalue="0" />
+    </PropertyDesc>
+    <PropertyDesc token="slave_three" name="slave_three" type="bool" variable="0">
+      <help>Should we syncronize with slave #3?</help>
+      <item label="Slave Three" defaultvalue="0" />
+    </PropertyDesc>
+    <PropertyDesc token="slave_four" name="slave_four" type="bool" variable="0">
+      <help>Should we syncronize with slave #4?</help>
+      <item label="Slave Four" defaultvalue="0" />
+    </PropertyDesc>
+    <PropertyDesc token="slave_five" name="slave_five" type="bool" variable="0">
+      <help>Should we syncronize with slave #5?</help>
+      <item label="Slave Five" defaultvalue="0" />
+    </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="TrackdAPIController" name="TrackdAPIController" version="1.0">
     <category>Devices</category>
@@ -1749,17 +1769,22 @@ The filters are applied in the order that they are specified in this configurati
   <ChunkDesc token="Vrpn" name="Vrpn" version="1.0">
     <category>Devices</category>
     <help>Configure an interface to an external VRPN server</help>
-    <PropertyDesc token="trackServer" name="trackerServer" type="string" variable="0">
+    <PropertyDesc token="trackerServer" name="Tracker Server" type="string" variable="0">
       <help>Tracker server.</help>
       <item label="TrackerServer" defaultvalue="Tracker0@localhost" />
     </PropertyDesc>
-    <PropertyDesc token="buttonserver" name="ButtonServer" type="string" variable="0">
+    <PropertyDesc token="buttonServer" name="Button Server" type="string" variable="0">
       <help>Button server </help>
       <item label="ButtonServer" defaultvalue="Button0@localhost" />
     </PropertyDesc>
     <PropertyDesc token="numTrackers" name="NumberTrackers" type="int" variable="0">
       <help>Number of trackers supported by Vrpn server.</help>
       <item label="Number of trackers" defaultvalue="2" />
+    </PropertyDesc>
+    <PropertyDesc name="Host Node" token="deviceHost" type="chunk" variable="0">
+      <help>Points to the machine that the device is physically connected to.</help>
+      <item label="Host Node" defaultvalue="" />
+      <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="numButtons" name="NumberButtons" type="int" variable="0">
       <help>Number of buttons supported by Vrpn server.</help>

@@ -1,6 +1,0 @@
-sub filter {
-# print STDOUT @_;
- local($str) = @_;
- $str =~ s/\-\-\-*/ /g;
- return $str;
-}

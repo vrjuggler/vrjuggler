@@ -119,14 +119,30 @@ void AudiereSoundImplementation::trigger( const std::string& alias, const int& l
    vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "Audiere| playing sound\n") << vprDEBUG_FLUSH;
    
    snx::SoundImplementation::trigger( alias, looping );
-   this->bind(alias);
-   mCurrentTrack->play();
+   
+   snx::SoundInfo si = this->lookup(alias);
+
+   if(si.streaming)
+   {
+      this->bind(alias);
+ //     mCurrentTrack->play();
+      trackMap[alias]->play();
+   }
+   else
+   {
+      // if the sound is already bound then play it.
+      if(effectMap.count(alias) > 0)
+      {
+         effectMap[alias]->play();
+      }
+   }
 }
 
 bool AudiereSoundImplementation::isPlaying( const std::string& alias )
 {
    assert( mDev != NULL && "startAPI must be called prior to this function" );
    return false;
+
 }
 
 /** if the sound is paused, then return true. */
@@ -142,7 +158,6 @@ bool AudiereSoundImplementation::isPaused( const std::string& alias )
 void AudiereSoundImplementation::pause( const std::string& alias )
 {
    assert( mDev != NULL && "startAPI must be called prior to this function" );
-   
 }
 
 /**
@@ -162,6 +177,16 @@ void AudiereSoundImplementation::stop( const std::string& alias )
 {
    assert( mDev != NULL && "startAPI must be called prior to this function" );
    
+   if(this->lookup(alias).streaming)
+   {
+      if(trackMap.count(alias) > 0)
+         trackMap[alias]->stop();
+   }
+   else
+   {
+      if(effectMap.count(alias) > 0)
+         effectMap[alias]->stop();
+   }
 }
 
 /**
@@ -332,9 +357,12 @@ void AudiereSoundImplementation::bind( const std::string& alias )
    // are we streaming this sound from disk?
    if(soundInfo.streaming)
    {
-      mCurrentTrack = audiere::OpenSound(mDev.get(), soundInfo.filename.c_str());
+      trackMap[alias] = audiere::OpenSound(mDev.get(), soundInfo.filename.c_str());
+   }else
+   {
+      effectMap[alias] = audiere::OpenSoundEffect(mDev.get(), soundInfo.filename.c_str(), audiere::SINGLE);
+
    }
-   
 
    // was it playing?  if so, then start it up again...
    if (soundInfo.triggerOnNextBind == true)
@@ -374,4 +402,4 @@ void AudiereSoundImplementation::unbind( const std::string& alias )
    }
 }
 
-}; // end namespace
+} // end namespace

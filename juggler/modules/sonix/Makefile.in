@@ -106,7 +106,7 @@ EXTRA_LIBS      = @LIBS@ -lm
 
 # Version information.
 PARAM_HEADER	= snx/snxParam.h
-BRANCH		= HEAD
+BRANCH		= VRJ_2_0_ALPHA_2_BRANCH
 CANON_NAME	= Mario
 VER_ARGS	= -f $(ROOT_ABS)/VERSION -s @SUBSYSTEM@ -b $(BRANCH)	\
                   -i $(ROOT_ABS)/$(PARAM_HEADER).in -o $(PARAM_HEADER)	\

@@ -205,6 +205,11 @@ public class ConfigUtilities
       }
       else if (type == ValType.BOOL)
       {
+         if ( valueString.equals("1") )
+         {
+            valueString = "true";
+         }
+
          return new Boolean(valueString);
       }
       else if (type == ValType.CHUNK)

@@ -32,6 +32,7 @@
 
 #include <gadget/gadgetConfig.h>
 #include <float.h>
+#include <boost/concept_check.hpp>
 #include <vpr/Util/Debug.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <gadget/Type/Position.h>
@@ -158,7 +159,11 @@ vpr::ReturnStatus Position::readObject(vpr::ObjectReader* reader)
       vpr::Uint16 temp = reader->readUint16();
    reader->endAttribute();
 
+   // XXX: Should there be error checking for the case when vprASSERT() is
+   // compiled out?  -PH 8/21/2003
    vprASSERT(temp==MSG_DATA_POS && "[Remote Input Manager]Not Positional Data");
+   boost::ignore_unused_variable_warning(temp);
+
    std::vector<PositionData> dataSample;
 
    unsigned numPosDatas;

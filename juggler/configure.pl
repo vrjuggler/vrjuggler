@@ -35,8 +35,8 @@
 use 5.005;
 
 use strict 'vars';
-use vars qw($base_dir $module $CONFIG_ARGS $PATH_ARGS $HOST_ARGS $FEATURE_ARGS
-            $CUSTOM_ARGS $LAST_ARG_GROUP $OS $Win32 $CFG_LOAD_FUNC);
+use vars qw($base_dir $module $PRELUDE $FEATURE_ARGS $PACKAGE_ARGS $PROLOGUE
+            $LAST_ARG_GROUP $OS $Win32 $CFG_LOAD_FUNC);
 use vars qw(%MODULES);
 
 use Cwd qw(chdir getcwd);
@@ -83,12 +83,11 @@ my $user_args     = '';
 my $user_args_mod = '';
 my $no_user_args  = 0;
 
-$CONFIG_ARGS    = 0;
-$PATH_ARGS      = 1;
-$HOST_ARGS      = 2;
-$FEATURE_ARGS   = 3;
-$CUSTOM_ARGS    = 4;
-$LAST_ARG_GROUP = 5;
+$PRELUDE        = 0;
+$FEATURE_ARGS   = 1;
+$PACKAGE_ARGS   = 2;
+$PROLOGUE       = 3;
+$LAST_ARG_GROUP = 4;
 
 $CFG_LOAD_FUNC = undef;
 $OS            = '';
@@ -118,6 +117,9 @@ $Win32 = 1 if $ENV{'OS'} && $ENV{'OS'} =~ /Windows/;
 # putting quotes around each argument).
 if ( $Win32 ) 
 {
+   die "Absolute Cygwin paths confuse Visual C++.  Use a relative path.\n"
+      if $0 =~ /^\//;
+
    for ( my $i = 0; $i <= $#save_argv; $i++ )
    {
       $save_argv[$i] = "\"$save_argv[$i]\"";
@@ -610,40 +612,33 @@ sub printHelp ()
    {
       SWITCH:
       {
-         if ( $i == $CONFIG_ARGS )
+         if ( $i == $PRELUDE )
          {
-            print "Configuration:\n";
-            last SWITCH;
-         }
-
-         if ( $i == $PATH_ARGS )
-         {
-            print "Directory and file names:\n";
-            last SWITCH;
-         }
-
-         if ( $i == $HOST_ARGS )
-         {
-            print "Host type:\n";
             last SWITCH;
          }
 
          if ( $i == $FEATURE_ARGS )
          {
-            print "Features and packages:\n";
+            print "Optional Features:\n";
             last SWITCH;
          }
 
-         if ( $i == $CUSTOM_ARGS )
+         if ( $i == $PACKAGE_ARGS )
          {
-            print "--enable and --with options recognized:\n";
+            print "\nOptional Packages:\n";
+            last SWITCH;
+         }
+
+         if ( $i == $PROLOGUE )
+         {
+            print "\n";
             last SWITCH;
          }
       }
 
       foreach ( sort(keys(%{$help_output[$i]})) )
       {
-         print "  ${$help_output[$i]}{$_}\n";
+         print "${$help_output[$i]}{$_}";
       }
    }
 
@@ -689,62 +684,95 @@ sub parseOutput ($$)
    my $string      = shift;
    my $arg_arr_ref = shift;
 
-   my $arg_group;
-
    while ( $string !~ /^\s*$/s )
    {
-      if ( $string =~ /^Configuration:\s*/s )
+      # Match everything up to the list of optional features.  This forms the
+      # prelude of the help output.
+      if ( $string =~ /^(Usage:.*)(Optional Features:)/s )
       {
-         $arg_group = $CONFIG_ARGS;
-         $string = $';
+         $string = "$2$'";
+         ${$$arg_arr_ref[$PRELUDE]}{'all'} = "$1";
       }
-      elsif ( $string =~ /^Directory.*?:\s*/s )
+      # Handle the --enable and --disable list of options.
+      elsif ( $string =~ /^(Optional Features:.*)(Optional Packages:)/s )
       {
-         $arg_group = $PATH_ARGS;
-         $string = $';
-      }
-      elsif ( $string =~ /^Host.*?:\s*/s )
-      {
-         $arg_group = $HOST_ARGS;
-         $string = $';
-      }
-      elsif ( $string =~ /^Features.*?:\s*/s )
-      {
-         $arg_group = $FEATURE_ARGS;
-         $string = $';
-      }
-      elsif ( $string =~ /^--enable and --with.*?:\s*/s )
-      {
-         $arg_group = $CUSTOM_ARGS;
-         $string = $';
-      }
-      elsif ( $string =~ /^\s*(--\w+,\s+--\w+)/s ||
-              $string =~ /^\s*(--[\w-]+)\W/s )
-      {
-         my $param = "$1";
-         ${$$arg_arr_ref[$arg_group]}{"$param"} = '';
+         $string = "$2$'";
 
-         my $temp_string = "$string";
+         my @param_list = split(/\n/, "$1");
 
-         if ( $temp_string =~ /($param.+?)\s+(--)/s ||
-              $temp_string =~ /($param.+?)\s*$/s )
+         # Loop over all the lines of output in the "Optional Features" block.
+         my $i;
+         for ( $i = 0; $i <= $#param_list; $i++ )
          {
-            my $desc = "$1";
-            my $remainder = "$2$'";
-
-            if ( $desc =~ /^(\w.+?:)$/m )
+            if ( $param_list[$i] =~ /(--(enable|disable)\S+)\s/ )
             {
-               $desc = $`;
-               $remainder = "$1\n$remainder";
-            }
+               my $param = "$1";
 
-            ${$$arg_arr_ref[$arg_group]}{"$param"} = "$desc";
-            $string = "$remainder";
+               # If $param does not exist in the hash of feature arguments,
+               # we need to add it.
+               if ( ! exists(${$$arg_arr_ref[$FEATURE_ARGS]}{"$param"}) )
+               {
+                  # Add the first line of information for $param.
+                  my $param_info = "$param_list[$i]\n";
+
+                  # If the following lines are a continuation of the info for
+                  # $param, add them to $param_info as well.
+                  while ( $i + 1 <= $#param_list &&
+                          $param_list[$i + 1] !~ /--(enable|disable)/ )
+                  {
+                     $param_info .= "$param_list[$i + 1]\n";
+                     $i++;
+                  }
+
+                  # Store the complete information block for $param.
+                  ${$$arg_arr_ref[$FEATURE_ARGS]}{"$param"} = "$param_info";
+               }
+            }
          }
       }
-      elsif ( $string =~ /^(Usage|Options).*$/m )
+      # Handle the --with and --without list of options.
+      elsif ( $string =~ /^(Optional Packages:.*)(Some influential)/s )
       {
-         $string = $';
+         $string = "$2$'";
+
+         my @param_list = split(/\n/, "$1");
+
+         # Loop over all the lines of output in the "Optional Packages" block.
+         my $i;
+         for ( $i = 0; $i <= $#param_list; $i++ )
+         {
+            if ( $param_list[$i] =~ /(--with\S+)\s/ )
+            {
+               my $param = "$1";
+
+               # If $param does not exist in the hash of package arguments,
+               # we need to add it.
+               if ( ! exists(${$$arg_arr_ref[$PACKAGE_ARGS]}{"$param"}) )
+               {
+                  # Add the first line of information for $param.
+                  my $param_info = "$param_list[$i]\n";
+
+                  # If the following lines are a continuation of the info for
+                  # $param, add them to $param_info as well.
+                  while ( $i + 1 <= $#param_list &&
+                          $param_list[$i + 1] !~ /--with/ )
+                  {
+                     $param_info .= "$param_list[$i + 1]\n";
+                     $i++;
+                  }
+
+                  # Store the complete information block for $param.
+                  ${$$arg_arr_ref[$PACKAGE_ARGS]}{"$param"} = "$param_info";
+               }
+            }
+         }
+      }
+      # We'll keep everything after the line beginning with "Some influential"
+      # to form the prologue of the help output.
+      elsif ( $string =~ /^(Some influential.*)$/s )
+      {
+         $string = "$'";   # This should be the empty string.
+         ${$$arg_arr_ref[$PROLOGUE]}{'all'} = "$1";
       }
       # Match anything else and strip it from the output.
       elsif ( $string =~ /^.*$/m )

@@ -47,7 +47,7 @@
 //OSG  includes
 #include <osg/Math>
 #include <osg/Geode>
-#include <osg/GeoSet>
+//#include <osg/GeoSet>
 #include <osg/Material>
 #include <osg/Vec3>
 #include <osg/Matrix>
@@ -62,7 +62,6 @@
 #include <math.h>
 
 #include <vrj/Draw/OSG/OsgApp.h>
-
 
 /**
  * Demonstration Open Scene Graph application class

@@ -60,7 +60,7 @@ class GADGET_CLUSTER_PLUGIN_CLASS_API SwapLockWiredPlugin
    vprSingletonHeader( SwapLockWiredPlugin );
 private:
    SwapLockWiredPlugin() : mWire(-1), mPluginGUID("f4f31d1c-eb4f-41fa-94d4-bde783bf32d6"),
-      mIsMaster(false), mActive(false)
+      mIsMaster(false), mActive(false), mMasterWaitByte(0)
    {;}
 public:
    virtual ~SwapLockWiredPlugin()
@@ -162,22 +162,26 @@ private:
    /**
     * Sends the "complete" signal to all sync slaves.
     */
-   void masterSend();
+   // void masterSend();
 
    /**
     * Waits for "ready" signals from all sync slaves.
     */
-   void masterReceive();
+   // void masterReceive();
 
    /**
     * Sends "ready" signal to sync master.
     */
-   void slaveSend();
+   // void slaveSend();
 
    /**
     * Waits for "complete" signal from sync master.
     */
-   void slaveReceive();
+   // void slaveReceive();
+
+   void sendSignal(const unsigned char& val);
+   void waitSignalUp(const unsigned char& val);
+   void waitSignalDown(const unsigned char& val);
 private:
    std::string                      mBarrierMasterHostname; /**< Hostname of the sync master. */
 
@@ -186,6 +190,7 @@ private:
 
    bool                             mIsMaster;           /**< Are we the sync master? */
    bool                             mActive;             /**< Is the plugin ready to be used? */
+   unsigned char		    mMasterWaitByte;
 };
 
 } // end namespace

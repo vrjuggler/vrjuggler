@@ -253,9 +253,6 @@ public:
 
 private:
 
-   /**
-    * stuff we need in order to do streaming output 
-    */
    void tryOpenTrack();
 
    audiere::RefPtr<audiere::AudioDevice> mDev;
@@ -264,6 +261,9 @@ private:
    int mCurrentIndex;
    audiere::RefPtr<audiere::OutputStream> mCurrentTrack;
    bool mIsPlaying; 
+
+   std::map<std::string, audiere::OutputStreamPtr> trackMap;
+   std::map<std::string, audiere::SoundEffectPtr> effectMap;
    
 
 };
