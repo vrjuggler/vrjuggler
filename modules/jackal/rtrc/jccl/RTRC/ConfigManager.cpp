@@ -96,7 +96,8 @@ void ConfigManager::addPendingAdds(ConfigChunkDB* db)
       // Begin Machine Specific Code
       if ( (*i)->getDescToken() == std::string("cluster_machine") )
       {
-         if ( (*i)->getProperty<std::string>("host_name") == host_name )
+         if ( (*i)->getProperty<std::string>("host_name") == host_name ||
+              (*i)->getProperty<std::string>("host_name") == "localhost")
          {
             // NOTE: Add all machine dependent ConfigChunkPtr's here
             vprASSERT((*i)->getNum("display_system") == 1 && "A Cluster System Chunk must have exactly 1 display_system chunk");

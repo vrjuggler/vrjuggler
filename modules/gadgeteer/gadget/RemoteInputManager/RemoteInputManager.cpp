@@ -85,12 +85,12 @@ namespace gadget
 
    bool RemoteInputManager::recognizeClusterMachineConfig(jccl::ConfigChunkPtr chunk)
    {
-      return(chunk->getDescToken() == std::string("cluster_machine"));
+      return(chunk->getDescToken() == this->getMachineSpecificChunkType());
    }
    
    bool RemoteInputManager::recognizeRemoteInputManagerConfig(jccl::ConfigChunkPtr chunk)
    {
-      return(chunk->getDescToken() == std::string("RIMChunk"));
+      return(chunk->getDescToken() == this->getChunkType());
    }
    
    bool RemoteInputManager::recognizeRemoteDeviceConfig(jccl::ConfigChunkPtr chunk)
@@ -331,7 +331,8 @@ namespace gadget
       for(std::map<std::string, jccl::ConfigChunkPtr>::iterator i=mMachineTable.begin();
           i!=mMachineTable.end();i++)
       {
-         if ((*i).second->getProperty<std::string>("host_name") == getLocalHostName())
+         // if ((*i).second->getProperty<std::string>("host_name") == getLocalHostName())
+         if (this->hostnameMatchesLocalHostname((*i).second->getProperty<std::string>("host_name")))
          {
             mLocalMachineChunkName = (*i).first;
             vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << clrOutNORM(clrGREEN,"[Remote Input Manager]")
@@ -350,7 +351,11 @@ namespace gadget
       //   Else
       //   - connect to sync Master server  
 
-      if (sync_server_hostname == getLocalHostName())
+      //if (sync_server_hostname == getLocalHostName())
+      //{
+      //}
+      
+      if (this->hostnameMatchesLocalHostname(sync_server_hostname))
       {
           mIsMaster = true;
           vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "SYNC This machine is sync server!" << std::endl << vprDEBUG_FLUSH;
@@ -470,7 +475,7 @@ namespace gadget
    void RemoteInputManager::debugDump()
    {
       vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
-            << clrOutNORM(clrGREEN,"\n==========Remote Input Manager Configuration==========\n") << vprDEBUG_FLUSH;
+            << clrOutNORM(clrGREEN,"==========Remote Input Manager Configuration==========\n") << vprDEBUG_FLUSH;
       
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
             << clrOutNORM(clrGREEN,"==============Transmitting NetConnections=============\n") << vprDEBUG_FLUSH;
@@ -679,6 +684,16 @@ namespace gadget
       // - for each slave
       //   - send ready      
       
+      // If Slave
+      // - send ready to Master     (TCP/IP)
+      // - read ready from Server   (Serial)
+      // Else if Master
+      // - for each slave           (TCP/IP)
+      //   - read ready
+      // - for each slave           (Serial)
+      //   - send ready      
+
+
 
       if ( (mSyncServer != NULL) || mIsMaster)
       {
@@ -687,12 +702,12 @@ namespace gadget
          vpr::Uint32 bytes_read;
          const vpr::Interval read_timeout(5,vpr::Interval::Sec);
    
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "SYNC-BARRIER, in loop" 
+         vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "SYNC-BARRIER, in loop" 
             << std::endl << vprDEBUG_FLUSH;
          
          if (mIsMaster)
          {
-            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "SYNC-BARRIER, we are the master so now reading!" 
+            vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "SYNC-BARRIER, we are the master so now reading!" 
                << std::endl << vprDEBUG_FLUSH;
             for (std::vector<vpr::SocketStream*>::iterator i = this->mSyncClients.begin();
                  i < this->mSyncClients.end();i++)
@@ -700,7 +715,7 @@ namespace gadget
                (*i)->recv(&temp , 1, bytes_read,read_timeout);
                vprASSERT(1==bytes_read && "Master sync receive timeout");
             }
-            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "SYNC-BARRIER, we are the master so now sending!" 
+            vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "SYNC-BARRIER, we are the master so now sending!" 
                << std::endl << vprDEBUG_FLUSH;
             for (std::vector<vpr::SocketStream*>::iterator i = this->mSyncClients.begin();
                  i < this->mSyncClients.end();i++)
@@ -711,10 +726,10 @@ namespace gadget
          }
          else
          {
-            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "SYNC-BARRIER, we are the slave so now sending!" 
+            vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "SYNC-BARRIER, we are the slave so now sending!" 
                << std::endl << vprDEBUG_FLUSH;
             mSyncServer->send(&SYNC_SIGNAL , 1, bytes_read);
-            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "SYNC-BARRIER, we are the slave so now reading!" 
+            vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "SYNC-BARRIER, we are the slave so now reading!" 
                << std::endl << vprDEBUG_FLUSH;
             mSyncServer->recv(&temp , 1, bytes_read,read_timeout);
             vprASSERT(1==bytes_read && "Slave sync receive timeout");

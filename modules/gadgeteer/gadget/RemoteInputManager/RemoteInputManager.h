@@ -103,6 +103,10 @@ namespace gadget{
       virtual ~RemoteInputManager();
 
       void debugDump();
+      
+      static std::string getChunkType() { return std::string( "RIMChunk" ); }
+      static std::string getMachineSpecificChunkType() { return std::string( "cluster_machine" ); }
+
       bool startCluster(std::vector<jccl::ConfigChunkPtr>);
       bool configAdd(jccl::ConfigChunkPtr chunk);
       bool configRemove(jccl::ConfigChunkPtr chunk);
@@ -379,11 +383,14 @@ namespace gadget{
          // make lowercase
          std::transform (lowercase_host.begin(),lowercase_host.end(), lowercase_host.begin(), tolower);
 
-         // check if test hostname is contained in our long hostname and vice versa
-         if ( mLongHostname.find(lowercase_host) != std::string::npos )
+         if (lowercase_host == "localhost")
+         {
+            return true;
+         }// check if test hostname is contained in our long hostname and vice versa
+         else if ( mLongHostname.find(lowercase_host) != std::string::npos )
          {
             // now make sure short hostnames match
-            if ( getShortHostnameFromLong(lowercase_host) == mShortHostname )
+            if ( lowercase_host == mShortHostname )
             {
                return true;
             }
