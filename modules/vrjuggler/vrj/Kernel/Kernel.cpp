@@ -93,7 +93,7 @@ int Kernel::start()
 
    return 1;
 }
-   
+
 // Set the stop flag
 // NOTE: The kernel should not actually stop until the application has been close (ie. mApp is NULL)
 void Kernel::stop()
@@ -104,7 +104,7 @@ void Kernel::stop()
       mExitWaitCondVar.signal();
    }
    mExitWaitCondVar.release();
-   
+
    setApplication(NULL);      // Set NULL application so that the app gets closed
 }
 
@@ -193,7 +193,7 @@ void Kernel::controlLoop(void* nullParam)
       mIsRunning = false;
       mExitWaitCondVar.signal();
    }
-   mExitWaitCondVar.release();   
+   mExitWaitCondVar.release();
 }
 
 // Set the application to run
@@ -215,8 +215,13 @@ void Kernel::checkForReconfig()
 
    // ---- RECONFIGURATION --- //
    jccl::ConfigManager* cfg_mgr = environmentManager->getConfigManager();
-   while (cfg_mgr->attemptReconfiguration())
-       ;
+   unsigned num_processed(0);
+
+   do
+   {
+      num_processed = cfg_mgr->attemptReconfiguration();
+   }
+   while (num_processed > 0);
 
 //     // If we changed the active configuration, then the environment manager needs to refresh
 //     if((total_chunks_processed > 0) && (environmentManager != NULL))
@@ -263,7 +268,7 @@ void Kernel::changeApplication(App* newApp)
    jccl::ConfigManager* cfg_mgr = environmentManager->getConfigManager();
 
    // EXIT Previous application
-   if(mApp != NULL) 
+   if(mApp != NULL)
    {
       cfg_mgr->removeConfigChunkHandler (mApp);
       mApp->exit();
@@ -581,7 +586,7 @@ Kernel::Kernel()
    vprDEBUG(vprDBG_ALL, 0) << std::string(strlen(VJ_VERSION) + 12, '=')
                           << std::endl << vprDEBUG_FLUSH;
 
-   jccl::ChunkFactory::instance()->loadDescs 
+   jccl::ChunkFactory::instance()->loadDescs
        ("${VJ_BASE_DIR}/share/data/vrj-chunks.desc");
 }
 
