@@ -159,6 +159,7 @@ ifndef NO_CLEAN
 endif
 	@$(MAKE) $(BEFOREBUILD)
 	@$(MAKE) libs
+	@$(MAKE) BUILD_TYPE=opt $(AFTERBUILD)
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning Gadgeteer installation process"
 	@echo "---------------------------------------------------------------"
@@ -187,6 +188,7 @@ endif
             echo "------------------------------------------------" ;	\
             $(MAKE) gadgetABI=$$abi libs ;				\
           done
+	@$(MAKE) BUILD_TYPE=opt $(AFTERBUILD)
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning Gadgeteer installation process"
 	@echo "---------------------------------------------------------------"
@@ -219,9 +221,7 @@ ifndef NO_CLEAN
 endif
 	@$(MAKE) $(BEFOREBUILD)
 	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N libs
-ifdef GLOBAL_BUILD
-	@$(MAKE) links
-endif
+	@$(MAKE) BUILD_TYPE=opt $(AFTERBUILD)
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning Gadgeteer release installation process"
 	@echo "---------------------------------------------------------------"
@@ -239,6 +239,7 @@ endif
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(GADGETROOT_ABS)/RELEASE_NOTES.txt	\
           $(projdatadir)
+	@$(MAKE) afterinstall
 	@echo "Build time: `LTIME=C date`" > $(projdatadir)/BUILD_TIME
 	@echo "==============================================================="
 	@echo ">>> Gadgeteer make release started on $(STARTTIME)"
