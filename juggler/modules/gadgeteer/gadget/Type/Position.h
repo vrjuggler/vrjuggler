@@ -40,11 +40,11 @@
 #define _VJ_POSITION_H_
 
 #include <vjConfig.h>
+#include <typeinfo>
 #include <Input/vjInput/vjInput.h>
 #include <Math/vjVec3.h>
 #include <Math/vjMatrix.h>
 #include <Performance/vjTimeStamp.h>
-#include <typeinfo>
 
 typedef struct {
   vjVec3 pos, orient;   // orient - EulerZYX , 0-Z, 1-Y, 2-X ???
