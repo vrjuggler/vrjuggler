@@ -342,7 +342,7 @@ public class PropertySheetFactory extends PropertyComponent
    {
       Object new_value = null;
       
-      // Pick which type of embedded chunk to add
+      // Pick which type of embedded element to add
       List string_allowed_types = prop_def.getAllowedAndDerivedTypes();
       List allowed_types = new ArrayList();
       
@@ -364,7 +364,7 @@ public class PropertySheetFactory extends PropertyComponent
       chooser.setDefinitions(allowed_types);
       int result = chooser.showDialog(this);
 
-      // If the user did not cancel their choice, make a new ConfigChunk for
+      // If the user did not cancel their choice, make a new ConfigElement for
       // the chosen ConfigDefinition.
       if (result == ConfigDefinitionChooser.APPROVE_OPTION)
       {

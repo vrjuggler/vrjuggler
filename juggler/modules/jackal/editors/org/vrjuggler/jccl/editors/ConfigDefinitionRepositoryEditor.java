@@ -97,7 +97,7 @@ public class ConfigDefinitionRepositoryEditor
       mReposModel.setRepository((new ConfigBrokerProxy()).getRepository());
       mDefPropTree.setModel(mReposModel);
 //      descPropTree.setEditable(true);
-      mDefPropTree.setCellRenderer(new ChunkDescDBTreeCellRenderer());
+      mDefPropTree.setCellRenderer(new DefinitionRepositoryTreeCellRenderer());
       mDefPropTree.putClientProperty("JTree.lineStyle", "Angled");
       mDefPropTree.getSelectionModel().setSelectionMode(
                               TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -529,12 +529,12 @@ public class ConfigDefinitionRepositoryEditor
    private JPanel mEmptyPane = new JPanel();
 
    /**
-    * Specialized renderer for a ChunkDesc tree.
+    * Specialized renderer for a config definition tree.
     */
-   class ChunkDescDBTreeCellRenderer
+   class DefinitionRepositoryTreeCellRenderer
       extends DefaultTreeCellRenderer
    {
-      public ChunkDescDBTreeCellRenderer()
+      public DefinitionRepositoryTreeCellRenderer()
       {
          try
          {

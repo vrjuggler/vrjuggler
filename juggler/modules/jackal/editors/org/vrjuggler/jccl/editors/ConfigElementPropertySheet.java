@@ -413,7 +413,7 @@ public class ConfigElementPropertySheet
     * This method is called by the EmbeddedElementCellEditor to let the property
     * sheet know that an embedded ConfigElement hyperlink has been selected.
     */
-   public void embeddedChunkSelected(ConfigElement elt)
+   public void embeddedElementSelected(ConfigElement elt)
    {
       fireEmbeddedElementSelected(elt);
    }
@@ -461,7 +461,7 @@ public class ConfigElementPropertySheet
    private ConfigElementCellEditor mElementCellEditor = new ConfigElementCellEditor();
 
    /**
-    * Specialized renderer for a ConfigChunk tree.
+    * Specialized renderer for a ConfigElement tree.
     */
    class ElementTreeCellRenderer
       extends DefaultTreeCellRenderer
