@@ -60,17 +60,18 @@ public:
     *
     * @param tracker_name Name of the tracker tracking the screen.
     */
-   TrackedSurfaceProjection(gmtl::Matrix44f surfaceRot, float toScr,
-                    float toRight, float toLeft,
-                    float toTop, float toBottom, std::string tracker_name)
-      : SurfaceProjection(surfaceRot, toScr, toRight, toLeft, toTop, toBottom)
+   TrackedSurfaceProjection(gmtl::Point3f llCorner, gmtl::Point3f lrCorner,
+                    gmtl::Point3f urCorner, gmtl::Point3f ulCorner,std::string trackerName):
+                    SurfaceProjection(llCorner,lrCorner,urCorner,ulCorner)
    {
-      // -- Save the relative transformation
-      m_surftrans_M_surf = surfaceRot;
+      mOrigionalLLCorner=llCorner;
+      mOrigionalLRCorner=lrCorner;
+      mOrigionalURCorner=urCorner;
+      mOrigionalULCorner=ulCorner;
 
       //XXX: Watch for timing problems here if trakcer is not inited first.
       //     It shoulbe be though from dependency checking
-      mTracker.init(tracker_name);              // Intialize the tracker
+      mTracker.init(trackerName);              // Intialize the tracker
    }
 
    virtual ~TrackedSurfaceProjection() {}
@@ -95,24 +96,17 @@ public:
                            const unsigned int indentLevel = 0);
 
 private:
-   /* coord system notes
-   *
-   * new base_M_surface' =  base_M_surftrans * surftrans_M_surf
-   *
-   * note: surftrans_M_surf = initial base_M_surf
-   */
-   // ---- Original parameters ------/
-   /** Rotation of the screen from base
-   */
-   gmtl::Matrix44f   m_surftrans_M_surf;
-   gmtl::Matrix44f   m_base_M_surftrans;
-
-
    /** Tracker connected to the surface.
    * The surface coordinate system is relative to this tracker
    * base_M_surfacetrans
    */
    gadget::PositionInterface    mTracker;
+
+   /** Original surface coordinates.
+   * TrackedSurfaceProjections keep these so they can rotate
+   * them and feed them into the SurfaceProjection calculations
+   */
+   gmtl::Point3f mOrigionalLLCorner, mOrigionalLRCorner, mOrigionalURCorner, mOrigionalULCorner;
 };
 
 };

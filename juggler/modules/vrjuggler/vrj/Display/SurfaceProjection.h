@@ -36,7 +36,7 @@
 #include <vrj/vrjConfig.h>
 #include <vrj/Display/Projection.h>
 #include <gmtl/MatrixOps.h>
-
+#include <gmtl/Point.h>
 
 namespace vrj
 {
@@ -56,18 +56,15 @@ public:
    * @param surfaceRot - The rotation of the surface relative to the base world
    *                     base_M_surface
    */
-   SurfaceProjection(gmtl::Matrix44f surfaceRot, float toScr,
-                    float toRight, float toLeft,
-                    float toTop, float toBottom)
+   SurfaceProjection(gmtl::Point3f llCorner, gmtl::Point3f lrCorner,
+                    gmtl::Point3f urCorner, gmtl::Point3f ulCorner)
    {
-      m_base_M_surface = surfaceRot;
-      m_surface_M_base = gmtl::invert(m_surface_M_base, m_base_M_surface);    // Set the inverse matrix for later
+      mLLCorner=llCorner;
+      mLRCorner=lrCorner;
+      mURCorner=urCorner;
+      mULCorner=ulCorner;
 
-      mOriginToScreen = toScr;
-      mOriginToRight = toRight;
-      mOriginToLeft = toLeft;
-      mOriginToTop = toTop;
-      mOriginToBottom = toBottom;
+      calculateOffsets();
    }
 
    /** Configures the projection using the element given. */
@@ -93,6 +90,29 @@ public:
                            const unsigned int indentLevel = 0);
 
 protected:
+   /** Checks the pts to make sure they form a legal surface. */
+   void assertPtsLegal()
+   {
+      gmtl::Vec3f norm1, norm2;
+      gmtl::Vec3f bot_side = mLRCorner-mLLCorner;
+      gmtl::Vec3f diag = mULCorner-mLRCorner;
+      gmtl::Vec3f right_side = mURCorner-mLRCorner;
+      gmtl::cross(norm1, bot_side, diag);
+      gmtl::cross(norm2, bot_side, right_side);
+      gmtl::normalize( norm1 ); gmtl::normalize(norm2);
+      if(gmtl::isEqual(norm1,norm2,1e-4f)==false){
+         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL) << "ERROR: Invalid surface corners.\n" << vprDEBUG_FLUSH;
+      }
+   }
+
+   /** These calculate mOriginToScreen, etc, from the screen corners.
+   * calculateOffsets requires that mLLCorner to mULCorner be set correctly, and it will
+   * handle calling calculateSurfaceRotation & calculateCornersInBaseFrame
+   */
+   void calculateOffsets();
+   void calculateSurfaceRotation();
+   void calculateCornersInBaseFrame();
+
    /* Coordinate system descriptions
    * Base - B - Base coordinate system of the real physical world
    * Surface - S - Cordinate frame that is aligned with the surface.  This is the coordinates that
@@ -102,6 +122,8 @@ protected:
    *              is drawn in for final projection.  This is where the "view" starts from.
    */
 
+   gmtl::Matrix44f mSurfaceRotation;	/** Same as m_base_M_surface */
+
    /** Rotation of the surface
    * Xfrom from the Base to the surface
    */
@@ -110,6 +132,8 @@ protected:
 
    /** Screen configuration (in Surface coordinate frame )
    */
+   gmtl::Point3f mLLCorner, mLRCorner, mURCorner, mULCorner;
+   gmtl::Point3f  mxLLCorner, mxLRCorner, mxURCorner, mxULCorner;    /**< The corners transformed onto an x,y plane */
    float mOriginToScreen, mOriginToRight, mOriginToLeft, mOriginToTop, mOriginToBottom;
 };
 
