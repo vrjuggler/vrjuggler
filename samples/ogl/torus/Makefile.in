@@ -41,7 +41,7 @@ torus.o: torus.cpp torusApp.h
 torusApp.o: torusApp.cpp torusApp.h
 
 .cpp.o:
-	${COMPILE} -c ${srcdir}/$<
+	${COMPILE} -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.

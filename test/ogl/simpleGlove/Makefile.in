@@ -40,7 +40,7 @@ simpleGlove: ${OBJECTS}
 main.o: main.cpp simpleGloveApp.h
 
 .cpp.o:
-	${COMPILE} -c ${srcdir}/$<
+	${COMPILE} -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.

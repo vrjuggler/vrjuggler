@@ -40,7 +40,7 @@ wand: ${OBJECTS}
 main.o: main.cpp wandApp.h
 
 .cpp.o:
-	${COMPILE} -c ${srcdir}/$<
+	${COMPILE} -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
