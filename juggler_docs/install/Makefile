@@ -9,7 +9,8 @@ default: books
 # ----------------------------------------------------------------------------
 # Variables.
 # ----------------------------------------------------------------------------
-prefix		= /home/users/kevn/public_html/vrj
+# FILL ME IN!!!!: set prefix to your install-web dest directory.
+prefix		= /home/wwwadm/www-vrjuggler/docs
 book_srcdir	= $(prefix)/html/books
 book_distdir	= $(book_srcdir)
 
