@@ -188,8 +188,16 @@ public class ControlUI  extends JFrame
 	orgtreeformat_mi.addActionListener (this);
 
 	// --------------------- FINAL WIN STUFF ---------------------------------
+
+ 	for (int i = 0; i < Core.descdb.size(); i++) {
+	    JMenuItem newmenu;
+ 	    ChunkDesc d = (ChunkDesc)Core.descdb.elementAt(i);
+ 	    helpdesc_menu.add (newmenu = new JMenuItem (d.getName()));
+ 	    newmenu.addActionListener(this);
+	}
+
 	
-	totalSetFont ("", 12);
+// 	totalSetFont ("", 12);
 
 	addWindowListener (this);
 	setSize(750,550);

@@ -290,7 +290,7 @@ public class ChunkDBPanel extends JPanel
 	for (i = 0; i < j; i++)
 	    insert_type.removeItemAt (0);
 	for (i = 0; i < Core.descdb.size(); i++) {
-	    insert_type.addItem (((ChunkDesc)Core.descdb.elementAt(i)).name);
+	    insert_type.addItem (Core.descdb.elementAt(i).name);
 	}
     }
 
