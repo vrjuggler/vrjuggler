@@ -58,7 +58,7 @@ public:
     virtual int overflow (int c=EOF);
 
 
-    virtual int underflow ();
+    virtual int_type underflow ();
 
 
     virtual int sync();
