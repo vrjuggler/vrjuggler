@@ -512,7 +512,7 @@ sub recurseAction ($) {
      # This is equivalent to a C switch block.
     SWITCH: {
       # Match .txt or .TXT.
-      if ( $curfile =~ /\.(txt|pdf|ps)$/i ) {
+      if ( $curfile =~ /\.(txt|pdf|ps|TXT|PDF|PS)$/i ) {
           installFile("$curfile", $uid, $gid, "$mode", "$full_dest_path", $full_src_path);
           last SWITCH;
       }
@@ -545,20 +545,20 @@ sub recurseAction ($) {
       }
 
       # Match .html,.htm
-      if ( $curfile =~ /\.(htm|html)$/ ) {
+      if ( $curfile =~ /\.(htm|HTM|html|HTML)$/ ) {
           installFile("$curfile", $uid, $gid, "$mode", "$full_dest_path", $full_src_path);
           htmlFilter("$full_dest_path/$curfile");
           last SWITCH;
       }
 
       # Match .gif,.jpg, .png
-      if ( $curfile =~ /\.(png|jpg|gif|jpeg)$/ ) {
+      if ( $curfile =~ /\.(png|jpg|gif|jpeg|PNG|JPG|GIF|JPEG)$/ ) {
           installFile("$curfile", $uid, $gid, "$mode", "$full_dest_path", $full_src_path);
           last SWITCH;
       }
       
       # Match binary files
-      if ( $curfile =~ /\.(bin|gz|tar|zip|exe|rpm)$/ ) {
+      if ( $curfile =~ /\.(bin|gz|tar|zip|exe|rpm|BIN|GZ|TAR|ZIP|EXE|RPM)$/ ) {
           installFile("$curfile", $uid, $gid, "$mode", "$full_dest_path", $full_src_path);
           last SWITCH;
       }
@@ -571,13 +571,13 @@ sub recurseAction ($) {
       }
 
       # Match Java stuff: class,archive,javascript
-      if ( $curfile =~ /\.(class|jar|js)$/ ) {
+      if ( $curfile =~ /\.(class|jar|js|CLASS|JAR|JS)$/ ) {
           installFile("$curfile", $uid, $gid, "$mode", "$full_dest_path", $full_src_path);
           last SWITCH;
       }
 
       # Style sheets
-      if ( $curfile =~ /\.(css)$/ ) {
+      if ( $curfile =~ /\.(css|CSS)$/ ) {
           installFile("$curfile", $uid, $gid, "$mode", "$full_dest_path", $full_src_path);
           last SWITCH;
       }
