@@ -447,7 +447,7 @@ public class ChunkDBPanel
 	else if (source == insert_button) {
 	    ch = ChunkFactory.createChunkWithDescName ((String)insert_type.getSelectedItem());
 	    if (ch != null) {
-		ch.name = (chunkdb.getNewName(ch.getDescName()));
+		ch.setName(chunkdb.getNewName(ch.getDescName()));
 		chunkdb.add (ch);
 	    }
 	}
@@ -464,7 +464,7 @@ public class ChunkDBPanel
 		if (ni.isChunkNode()) {
 		    // create a copy of this node...
 		    ch = new ConfigChunk (ni.getChunk());
-		    ch.name = "copy of " + ch.name;
+		    ch.setName ("copy of " + ch.name);
 		    chunkdb.add (ch);
 		}
 	    }
@@ -508,7 +508,7 @@ public class ChunkDBPanel
 	    ni = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)treeitem_menu_path.getLastPathComponent()).getUserObject());
 	    if (ni.isDescNode()) {
 		ch = ChunkFactory.createChunkWithDescName (ni.toString());
-		ch.name = (chunkdb.getNewName(ni.toString()));
+		ch.setName (chunkdb.getNewName(ni.toString()));
 		chunkdb.add (ch);
 	    }
 	    dbt.tree.expandPath(treeitem_menu_path);

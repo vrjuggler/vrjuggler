@@ -178,7 +178,7 @@ vjConfigChunk* vjConfigChunk::getEmbeddedChunk (const std::string &path) {
     vjConfigChunk *ch = this;
     vjConfigChunk *ch2, *ch3;
         
-    if (vjstrcasecmp (ch->getName(), getFirstNameComponent (path))) {
+    if (vjstrcasecmp (ch->getName(), path /*getFirstNameComponent (path)*/)) {
         return 0;
     }
     else {

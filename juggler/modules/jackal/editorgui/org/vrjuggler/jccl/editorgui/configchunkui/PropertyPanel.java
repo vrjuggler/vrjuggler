@@ -149,13 +149,13 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
 	    ConfigChunk ch;
 	    if (valindex < pr.vals.size())
 		ch = ((VarValue)pr.vals.elementAt(valindex)).getEmbeddedChunk();
-	    else
+	    else {
 		ch = ChunkFactory.createChunk (pr.embeddesc);
-		//ch = new ConfigChunk (pr.embeddesc, pr.descdb);
-	    if (pr.desc.valuelabels.size() > valindex)
-		ch.setName (((DescEnum)pr.desc.valuelabels.elementAt(valindex)).str);
-	    else
-		ch.setName (pr.desc.name + " " + valindex);
+                if (pr.desc.valuelabels.size() > valindex)
+                    ch.setName (((DescEnum)pr.desc.valuelabels.elementAt(valindex)).str);
+                else
+                    ch.setName (pr.desc.name + " " + valindex);
+            }
 	    if (useMiniPanel (ch))
 		return new VarValueMiniChunkPanel (this, pr, ch);
 	    else

@@ -348,7 +348,7 @@ void vjGlxWindow::config(vjDisplay* disp)
       vjConfigChunk* keyboard_chunk = displayChunk->getProperty("keyboard_device_chunk");
 
       // Set the name of the chunk to the same as the parent chunk (so we can point at it)
-      keyboard_chunk->setProperty("name", (std::string)displayChunk->getProperty("name"));
+      //keyboard_chunk->setProperty("name", (std::string)displayChunk->getProperty("name"));
 
       vjXWinKeyboard::config(keyboard_chunk);
 

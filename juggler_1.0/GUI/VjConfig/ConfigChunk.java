@@ -50,12 +50,14 @@ public class ConfigChunk {
 
     public final static String embedded_separator = "->";
 
+
     public ConfigChunk (ConfigChunk c) {
 	desc = c.desc;
 	name = c.name;
 	props = new Vector();
 	for (int i = 0; i < c.props.size(); i++)
 	    props.addElement (new Property ((Property)c.props.elementAt(i)));
+        //validateEmbeddedChunkNames(); -- shoulda already been done to c.
     }
 
 
@@ -69,6 +71,7 @@ public class ConfigChunk {
 	 */
 	for (int i = 1; i < d.props.size(); i++)
 	    props.addElement (new Property((PropertyDesc)d.props.elementAt(i)));
+        validateEmbeddedChunkNames();
     }
 
 
@@ -79,6 +82,7 @@ public class ConfigChunk {
 	props = new Vector();
 	for (int i = 1; i < d.props.size(); i++)
 	    props.addElement (new Property((PropertyDesc)d.props.elementAt(i)));
+        validateEmbeddedChunkNames();
     }
 
 
@@ -88,19 +92,127 @@ public class ConfigChunk {
     }
 
     public final void setName (String s) {
-	name = s;
+        setLastNameComponent(s);
+	//name = s;
+        //validateEmbeddedChunkNames();
+    }
+
+
+    //-------- Stuff for dealing with embedded chunk names ---------------
+
+    /** Corrects names of embedded chunks contained by this chunk.
+     *  This function checks that all embedded ConfigChunks contained in
+     *  self have names which accurately reflect the entire path to them
+     *  (e.g. "parentchunkname->propertyname->embeddedchunkname").
+     *  <p>
+     *  It is called when:
+     *  <br> - A ConfigChunk is read from a file (to correct legacy
+     *  config files).
+     *  <br> - setName() is called on a chunk.
+     *  <br> - A chunk is edited by VjControl (this last is a semi-kludgey
+     *  catchall because the current DefaultChunkEditorPanel doesn't carry
+     *  around all the context information needed to accurately keep track
+     *  of this).
+     */
+    public void validateEmbeddedChunkNames() {
+        Property p;
+        int i, k;
+        ConfigChunk ch;
+        for (i = 0; i < props.size(); i++) {
+            p = (Property)props.elementAt(i);
+            if (p.valtype.equals(ValType.t_embeddedchunk)) {
+                for (k = 0; k < p.getNum(); k++) {
+                    ch = p.getValue(k).getEmbeddedChunk();
+                    // set name will also cause recursive validation.
+                    ch.name = (name + embedded_separator + p.getToken() + embedded_separator + ch.getLastNameComponent());
+                    ch.validateEmbeddedChunkNames();
+                }
+            }
+        }
+    }
+
+
+    public ConfigChunk getEmbeddedChunk (String pathname) {
+        // note: expects self's own name/prop pair at start of pathname.
+        // note2: a nonrecursive version of this is probably worth it
+        //        for the performance increase.  this is yicky.
+        try {
+//             if (pathname.equalsIgnoreCase (getLastNameComponent()))
+//                 return this;
+            String s = ConfigChunk.getNameRemainder (pathname);
+            String s2 = ConfigChunk.getFirstNameComponent (s);
+            Property p = getPropertyFromToken (s2);
+            // s3 = embeddedchunkname->prop etc...
+            String s3 = ConfigChunk.getNameRemainder (s);
+            if (ConfigChunk.hasSeparator(s3)) {
+                String s4 = ConfigChunk.getFirstNameComponent (s3);
+                for (int i = 0; i < p.getNum(); i++) {
+                    ConfigChunk ch = p.getValue(i).getEmbeddedChunk();
+                    if (ch.getLastNameComponent().equalsIgnoreCase(s4))
+                        return ch.getEmbeddedChunk (s3);
+                }
+            }
+            else {
+                for (int i = 0; i < p.getNum(); i++) {
+                    ConfigChunk ch = p.getValue(i).getEmbeddedChunk();
+                    if (ch.getLastNameComponent().equalsIgnoreCase(s3))
+                        return ch;
+                }
+
+            }
+            return null;
+        }
+        catch (Exception e) {
+            return null;
+        }
+    }
+
+
+    public static final String getLastNameComponent (String _name) {
+        int i = _name.lastIndexOf (embedded_separator);
+        return (i < 0)?_name:_name.substring(i+embedded_separator.length());
     }
 
     public final String getLastNameComponent() {
-        // there are probably more efficient ways to do this.
-        // but this is low-impact on the implementation.
-        int i = name.lastIndexOf (embedded_separator);
-        return (i < 0)?name:name.substring(i+embedded_separator.length());
+        return ConfigChunk.getLastNameComponent (name);
+    }
+
+    public final static String setLastNameComponent (String _name, String _last) {
+        int i = _name.lastIndexOf (embedded_separator);
+        if (i < 0)
+            return _last;
+        else
+            return _name.substring (0, i+embedded_separator.length()) + _last;
     }
 
     public final void setLastNameComponent (String last) {
-        int i = name.lastIndexOf (embedded_separator);
-        name = name.substring (0, i+embedded_separator.length()) + last;
+        name = ConfigChunk.setLastNameComponent (name, last);
+        validateEmbeddedChunkNames();
+    }
+
+    public static final String getFirstNameComponent (String _name) {
+        int i = _name.indexOf (embedded_separator);
+        return (i < 0)?"":_name.substring(0, i);
+    }
+
+    public final String getFirstNameComponent() {
+        return ConfigChunk.getFirstNameComponent (name);
+    }
+
+    /* Returns everything after the first divider in a name.
+     * If there is no separator, returns name.
+     */
+    public final static String getNameRemainder (String _name) {
+        int i = _name.indexOf (embedded_separator);
+        return (i < 0)?_name:_name.substring(i+embedded_separator.length());
+    }
+
+    public final String getNameRemainder() {
+        return ConfigChunk.getNameRemainder (name);
+    }
+
+    public final static boolean hasSeparator (String _name) {
+        return (_name.indexOf(embedded_separator) >= 0);
     }
 
     public final String getDescName() {
@@ -257,6 +369,7 @@ public class ConfigChunk {
 		}
 		/* finished reading property info from s */
 	    }
+            //validateEmbeddedChunkNames();
 	    return true;
 	}
 	catch (IOException io) {

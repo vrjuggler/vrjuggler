@@ -127,13 +127,15 @@ public class DefaultConfigChunkPanel extends JPanel
 	chunk = _chunk;
 	chunkdb = _chunkdb;
 
+        System.out.println ("editing chunk: " + _chunk.toString());
+
         // double check this to make sure i'm not leaving anything
         // dangling.
         proppanels.removeAllElements();
         properties.removeAll();
 
         if (chunk != null) {
-            namef.setText (chunk.getName());
+            namef.setText (chunk.getLastNameComponent());
             helpfield.setText (chunk.desc.help);
 
             // make property panels
@@ -203,11 +205,14 @@ public class DefaultConfigChunkPanel extends JPanel
     public ConfigChunk getNewValue() {
 	/* returns a configchunk based on the values current 
 	 * in this window */
-	ConfigChunk c = ChunkFactory.createChunk (chunk.desc, namef.getText());
+        String name = chunk.getName();
+        name = ConfigChunk.setLastNameComponent (name, namef.getText());
+	ConfigChunk c = ChunkFactory.createChunk (chunk.desc, name);
 	c.props.removeAllElements();
 	for (int i = 0; i < chunk.props.size(); i++) {
 	    c.props.addElement (((PropertyPanel)proppanels.elementAt(i)).getValue());
 	}
+        c.validateEmbeddedChunkNames();
 	return c;
     }
 

@@ -71,6 +71,9 @@ private:
 
     static const std::string embedded_separator;
 
+
+public:
+
     static bool hasSeparator (const std::string &path) {
         return (path.find(embedded_separator) != path.npos);
     }
