@@ -60,3 +60,7 @@ perfmonitor-pkg-install:
 
 links:
 	@$(MAKE) -C jccl instlinks="$(instlinks)" links
+	cd $(instlinks)/bin && \
+		for jar in $(JARS); do \
+			$(RM_LN) ./$$jar && $(LN_S) $(topdir)/perfmonitor/$$jar ./$$jar; \
+		done
