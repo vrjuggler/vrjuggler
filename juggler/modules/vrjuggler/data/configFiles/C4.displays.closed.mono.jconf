@@ -10,7 +10,7 @@
          <x11_pipes>mammoth:1.0</x11_pipes>
          <x11_pipes>snow:0.0</x11_pipes>
       </display_system>
-      <display_window name="RightScreen" version="2">
+      <display_window name="RightScreen" version="3">
          <origin>1280</origin>
          <origin>0</origin>
          <size>1280</size>
@@ -88,7 +88,7 @@
             </surface_viewport>
          </surface_viewports>
       </display_window>
-      <display_window name="LeftScreen" version="2">
+      <display_window name="LeftScreen" version="3">
          <origin>1280</origin>
          <origin>0</origin>
          <size>1280</size>
@@ -166,7 +166,7 @@
             </surface_viewport>
          </surface_viewports>
       </display_window>
-      <display_window name="FrontScreen" version="2">
+      <display_window name="FrontScreen" version="3">
          <origin>1280</origin>
          <origin>0</origin>
          <size>1280</size>
@@ -244,7 +244,7 @@
             </surface_viewport>
          </surface_viewports>
       </display_window>
-      <display_window name="FloorScreen" version="2">
+      <display_window name="FloorScreen" version="3">
          <origin>0</origin>
          <origin>0</origin>
          <size>1280</size>
