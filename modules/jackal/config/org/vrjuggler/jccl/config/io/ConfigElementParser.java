@@ -63,9 +63,9 @@ public class ConfigElementParser
 
    /**
     * Parses the given XML DOM element for the configuration element defined
-    * therein. If the element requires a configuration definition that is not in
-    * this parser's repository and it can be found, the definition will be added
-    * to the repository.
+    * therein. If the element requires a configuration definition that is not
+    * in this parser's repository and it can be found, the definition will be
+    * added to the repository.
     *
     * @param root          the XML DOM element to parse
     */
@@ -88,7 +88,8 @@ public class ConfigElementParser
       }
       catch (NumberFormatException nfe)
       {
-         throw new ParseException("Version string is not a number: "+version_str);
+         throw new ParseException("Version string is not a number: " +
+                                  version_str);
       }
 
       // Get the name of this configuration element
@@ -108,25 +109,31 @@ public class ConfigElementParser
       {
          throw new ParseException(dle.getMessage());
       }
-      
+
       // - If we have an old version
       //   - For i=our_version ; i < newest_version_num ; i++
       //     - Transform from version i to i+1
       if(newest_version_number > our_version)
       {
+         JOptionPane.showMessageDialog(
+            null,
+            "ConfigElement \"" + name + "\", of type \"" + token +
+               "\", is an old version.\n" +
+               "We are updating your configuration to the latest version.\n" +
+               "You must save your configuration in order for these changes " +
+               "to become permanent.",
+            "Upgrading Configuation", JOptionPane.INFORMATION_MESSAGE
+         );
 
-         JOptionPane.showMessageDialog(null, 
-               "ConfigElement \"" + name + "\", of type \"" + token + "\", is an old version.\n"
-               + " We are updating your configuration to the new ConfigElement format.\n" 
-               + " You must save your configuration in order for these changes to become permanent.",
-               "Upgrading Configuation", JOptionPane.INFORMATION_MESSAGE);
-         
          // We must iterate over all versions between ours and the newest
          // transforming for each new version.
-         for(int ver_num = our_version ; ver_num < newest_version_number ; ++ver_num)
+         for ( int ver_num = our_version;
+               ver_num < newest_version_number;
+               ++ver_num )
          {
             // Get the XSLT from the next versions definition file.
-            Element xslt_element = mDefinitionRepos.get(token,ver_num + 1).getXsltElement();
+            Element xslt_element =
+               mDefinitionRepos.get(token, ver_num + 1).getXsltElement();
             if(null != xslt_element)
             {
                // Transform the element to the next version.
@@ -134,8 +141,10 @@ public class ConfigElementParser
             }
             else
             {
-               throw new ParseException("Could not find XSLT transformation for: "
-                                        + token + " Version: " + (ver_num+1));
+               throw new ParseException(
+                  "Could not find XSLT transformation for: " + token +
+                  " Version: " + (ver_num + 1)
+               );
             }
          }
 
@@ -150,7 +159,7 @@ public class ConfigElementParser
          outp.setNewlines(true);
          try
          {
-            outp.output(root, System.out); 
+            outp.output(root, System.out);
          }
          catch(Exception ex)
          {
@@ -163,7 +172,8 @@ public class ConfigElementParser
       ConfigDefinition def = getDefinition(token, newest_version_number);
       if (def == null)
       {
-         throw new ParseException("Could not find definition: "+token+" version "+newest_version_number);
+         throw new ParseException("Could not find definition: " + token +
+                                  " version " + newest_version_number);
       }
 
       // Get all the properties for this element
@@ -174,22 +184,23 @@ public class ConfigElementParser
    }
 
 
-   private static Element transformElement(Element element_node, Element xslt_element)
+   private static Element transformElement(Element elementNode,
+                                           Element xsltElement)
       throws ParseException
    {
-      JDOMSource xslt_source = new JDOMSource(xslt_element);
-      JDOMSource source = new JDOMSource(element_node);
+      JDOMSource xslt_source = new JDOMSource(xsltElement);
+      JDOMSource source = new JDOMSource(elementNode);
 
       try
       {
          Transformer transformer = TransformerFactory.newInstance()
             .newTransformer(xslt_source);
-     
+
          JDOMResult result = new JDOMResult();
          transformer.transform(source, result);
          Element result_elm = null;
          java.util.List temp_list = result.getResult();
-         
+
          if(temp_list.size() > 0)
          {
             result_elm = (Element)temp_list.get(0);
@@ -211,7 +222,7 @@ public class ConfigElementParser
       throws ParseException
    {
       Map props = new TreeMap();
-      
+
       // Process each property defined in the configuration definition
       List prop_defs = def.getPropertyDefinitions();
       for (Iterator itr = prop_defs.iterator(); itr.hasNext(); )
@@ -221,7 +232,8 @@ public class ConfigElementParser
 
          // Process the property values for this property
          props.put(prop_token,
-                   parsePropertyValues(root.getChildren(prop_token, CFG_NS), prop_def));
+                   parsePropertyValues(root.getChildren(prop_token, CFG_NS),
+                                       prop_def));
       }
 
       return props;
@@ -245,29 +257,37 @@ public class ConfigElementParser
          int diff = propDef.getPropertyValueDefinitionCount() - elements.size();
          if (diff > 0)
          {
-            JOptionPane.showMessageDialog(null, 
-               "Appending " + diff + " default values for missing values in property: " + propDef.getToken(),
-               "Updating Configuation", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(
+               null,
+               "Appending " + diff +
+                  " default values for missing values in property: " +
+                  propDef.getToken(),
+               "Updating Configuation", JOptionPane.INFORMATION_MESSAGE
+            );
 
-            for (int i = 0 ; i < diff ; i++)
+            for (int i = 0 ; i < diff ; ++i)
             {
-               Object obj = propDef.getPropertyValueDefinition(elements.size()).getDefaultValue();
+               Object obj =
+                  propDef.getPropertyValueDefinition(elements.size()).getDefaultValue();
                missing_values.add(obj);
             }
          }
          else
          {
-            JOptionPane.showMessageDialog(null, 
-               "Removing " + -diff + " excess values from property: " + propDef.getToken(),
-               "Updating Configuation", JOptionPane.INFORMATION_MESSAGE);
-            
+            JOptionPane.showMessageDialog(
+               null,
+               "Removing " + -diff + " excess values from property: " +
+                  propDef.getToken(),
+               "Updating Configuation", JOptionPane.INFORMATION_MESSAGE
+            );
+
             // Start is the first item passed the max limit
             int start = propDef.getPropertyValueDefinitionCount();
-            
+
             // End is the last item in the list elements
             int end = elements.size() - 1;
-            
-            for(int i = end ; i >= start ; i--)
+
+            for(int i = end ; i >= start ; --i)
             {
                elements.remove(i);
             }
