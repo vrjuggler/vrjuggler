@@ -37,7 +37,10 @@ class __tags {
 */
 class __options {
 }/**
-@__positions 
+@__positions <oigroup:<oiref:design#Class#id1m3nactylgvb1ctypqazk.diagram:oiref>=10,10,105,61,1:oigroup>
+<oigroup:<oiref:java#Class#org.vrjuggler.tweek.net.CommunicationListener:oiref>=10,330,200,105,1:oigroup>
+<oigroup:<oiref:java#Class#org.vrjuggler.tweek.net.CommException:oiref>=230,10,200,92,1:oigroup>
+<oigroup:<oiref:java#Class#org.vrjuggler.tweek.net.CommunicationEvent:oiref>=10,110,200,179,1:oigroup> 
 */
 class __positions {
 }
