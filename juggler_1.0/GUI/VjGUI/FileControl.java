@@ -54,6 +54,12 @@ public class FileControl {
     static String vjbasedir = null;
     static String homedir = null;
 
+    static final int FILTER_ALL = 0;
+    static final int FILTER_CONFIG = 1;
+    static final int FILTER_DESC = 2;
+    static final int FILTER_ORGTREE = 3;
+    static final int FILTER_PERF = 4;
+
 
     private static String mangleFileName (String s) {
 	// replace "HOME" and "VJ_BASE_DIR" in the string buffer w/
@@ -169,7 +175,7 @@ public class FileControl {
 	name = mangleFileName (name);
 
 	if (showrequester) {
-	    f = requestOpenFile(name);
+	    f = requestOpenFile(name, FILTER_ORGTREE);
 	    if (f == null)
 		return;
 	}
@@ -193,13 +199,22 @@ public class FileControl {
 
 
 
-    public static File requestOpenFile(String dir) {
+    public static File requestOpenFile(String dir, int filtertype) {
 	if (dir == null || dir.equals(""))
 	    dir = System.getProperty("user.dir");
 	/* opens up a file requester... */
 	JFileChooser chooser = new JFileChooser(dir);
-	chooser.addChoosableFileFilter (new SuffixFilter("Config Files (*.config)", ".config"));
-	chooser.addChoosableFileFilter (new SuffixFilter("Description Files (*.dsc)", ".dsc"));
+        javax.swing.filechooser.FileFilter[] filters = new javax.swing.filechooser.FileFilter[5];
+        if (filtertype < 0 || filtertype > 4)
+            filtertype = 0;
+        filters[0] = chooser.getAcceptAllFileFilter();
+	filters[1] = new SuffixFilter("Config Files (*.config)", ".config");
+	filters[2] = new SuffixFilter("Description Files (*.desc)", ".desc");
+        filters[3] = new SuffixFilter("Chunk Org Tree Files (*.org)", ".org");
+        filters[4] = new SuffixFilter("Perf Data Files (*.perf)", ".perf");
+        for (int i = 1; i < 5; i++)
+            chooser.addChoosableFileFilter (filters[i]);
+        chooser.setFileFilter (filters[filtertype]);
 	chooser.setFileHidingEnabled (false);
 	chooser.setDialogType(JFileChooser.OPEN_DIALOG);
 	int returnVal = chooser.showOpenDialog(Core.ui); 
@@ -250,7 +265,7 @@ public class FileControl {
 	ConfigStreamTokenizer st;
 
 	if (showrequester) {
-	    f = requestOpenFile(currentdir);
+	    f = requestOpenFile(currentdir, FILTER_CONFIG);
 	    if (f == null)
 		return null;
 	}
@@ -282,7 +297,7 @@ public class FileControl {
 
 
 
-    public static File requestSaveFile (File file) {
+    public static File requestSaveFile (File file, int filtertype) {
 	JFileChooser chooser;
 
 	/* opens up a file requester... */
@@ -299,6 +314,19 @@ public class FileControl {
 	    chooser.setSelectedFile (file);
 	}
 	chooser.setDialogType(JFileChooser.SAVE_DIALOG);
+
+        javax.swing.filechooser.FileFilter[] filters = new javax.swing.filechooser.FileFilter[5];
+        if (filtertype < 0 || filtertype > 4)
+            filtertype = 0;
+        filters[0] = chooser.getAcceptAllFileFilter();
+	filters[1] = new SuffixFilter("Config Files (*.config)", ".config");
+	filters[2] = new SuffixFilter("Description Files (*.desc)", ".desc");
+        filters[3] = new SuffixFilter("Chunk Org Tree Files (*.org)", ".org");
+        filters[4] = new SuffixFilter("Perf Data Files (*.perf)", ".perf");
+        for (int i = 1; i < 5; i++)
+            chooser.addChoosableFileFilter (filters[i]);
+        chooser.setFileFilter (filters[filtertype]);
+
 	chooser.setFileHidingEnabled (false);
 	chooser.setApproveButtonText("Save");
 	chooser.setDialogTitle("Save File...");
@@ -314,7 +342,7 @@ public class FileControl {
 
 
     public static String saveChunkDBFile (ConfigChunkDB db) {
-	File f = requestSaveFile (db.file);
+	File f = requestSaveFile (db.file, FILTER_CONFIG);
 	if (f == null)
 	    return db.name;
 
@@ -336,7 +364,7 @@ public class FileControl {
 
     public static String saveChunkOrgTree (ChunkOrgTree ot) {
 	//System.out.println ("save msg for file " + ot.getFile());
-	File f = requestSaveFile (ot.getFile());
+	File f = requestSaveFile (ot.getFile(), FILTER_ORGTREE);
 	if (f == null)
 	    return "";
 
@@ -368,7 +396,7 @@ public class FileControl {
 	ConfigStreamTokenizer st;
 
 	if (showrequester) {
-	    f = requestOpenFile(currentdir);
+	    f = requestOpenFile(currentdir, FILTER_DESC);
 	    if (f == null)
 		return null;
 	}
@@ -395,7 +423,7 @@ public class FileControl {
 
 
     public static String saveDescDBFile (ChunkDescDB db) {
-	File f = requestSaveFile (db.file);
+	File f = requestSaveFile (db.file, FILTER_DESC);
 	if (f == null)
 	    return db.name;
 	
@@ -427,7 +455,7 @@ public class FileControl {
 	ConfigStreamTokenizer st;
 
 	if (showrequester) {
-	    f = requestOpenFile(currentdir);
+	    f = requestOpenFile(currentdir, FILTER_PERF);
 	    if (f == null)
 		return null;
 	}
@@ -468,7 +496,7 @@ public class FileControl {
 
 
     public static String savePerfDataFile (VjPerf.PerfDataCollection col) {
-	File f = requestSaveFile (col.file);
+	File f = requestSaveFile (col.file, FILTER_PERF);
 	if (f == null)
 	    return "";
 
