@@ -16,7 +16,7 @@ class BlockIO;    // forward declare
  * This is the interface that the BlockIO class expects to deal with.
  * We add on other stats features using mixins that are added by a template composition adapter
  */
-class BaseIOStatsStrategy
+class VPR_CLASS_API BaseIOStatsStrategy
 {
 public:
    BaseIOStatsStrategy()
