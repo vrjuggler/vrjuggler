@@ -95,9 +95,10 @@ InputManager::~InputManager()
 /** Adds the given config chunk to the input system. */
 bool InputManager::configAdd(jccl::ConfigChunkPtr chunk)
 {
-   vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-      << "\nInputManager: Adding pending config chunk... " << std::endl
-      << vprDEBUG_FLUSH;
+vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
+                              std::string("Input Manager: Adding pending config chunk.\n"),
+                              std::string("...done adding chunk.\n"));
+
    vprASSERT(configCanHandle(chunk));
 
    bool ret_val = false;      // Flag to return success
@@ -117,7 +118,7 @@ bool InputManager::configAdd(jccl::ConfigChunkPtr chunk)
       ret_val = true;
    }
 
-   //DumpStatus();                      // Dump the status
+   //DumpStatus();                      // Dump the status   
    vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,vprDBG_VERB_LVL)
       << "New input manager state:\n" << vprDEBUG_FLUSH;
    vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_VERB_LVL) << (*this) << vprDEBUG_FLUSH;
@@ -131,9 +132,7 @@ bool InputManager::configAdd(jccl::ConfigChunkPtr chunk)
       vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
          << "Updated all devices" << std::endl << vprDEBUG_FLUSH;
    }
-
-   vprDEBUG_END(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL) << std::endl
-                                                      << vprDEBUG_FLUSH;
+   
    return ret_val;         // Return the success flag if we added at all
 }
 
@@ -143,8 +142,9 @@ bool InputManager::configAdd(jccl::ConfigChunkPtr chunk)
  */
 bool InputManager::configRemove(jccl::ConfigChunkPtr chunk)
 {
-   vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-      << "\nInputManager: Removing config... " << std::endl << vprDEBUG_FLUSH;
+vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
+                              std::string("InputManager: Removing config...\n"),
+                              std::string("done removing config.\n"));
    vprASSERT(configCanHandle(chunk));
 
    bool ret_val = false;      // Flag to return success
@@ -174,9 +174,7 @@ bool InputManager::configRemove(jccl::ConfigChunkPtr chunk)
          << "InputManager::configRemove(): Updated all data" << std::endl
          << vprDEBUG_FLUSH;
    }
-
-   vprDEBUG_END(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL) << std::endl
-                                                      << vprDEBUG_FLUSH;
+   
    return ret_val;         // Return the success flag if we added at all
 }
 
@@ -250,10 +248,10 @@ bool InputManager::configureDevice(jccl::ConfigChunkPtr chunk)
 bool InputManager::configureProxy(jccl::ConfigChunkPtr chunk)
 {
    std::string proxy_name = chunk->getFullName();
-   vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-      << "vjInputManager::configureProxy: Named: " << proxy_name.c_str()
-      << std::endl << vprDEBUG_FLUSH;
-
+   
+vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
+                                 std::string("vjInputManager::configureProxy: Named: ") + proxy_name + std::string("\n"),
+                                 std::string("done configuring proxy\n"));
 
    Proxy* new_proxy;
 
@@ -265,17 +263,14 @@ bool InputManager::configureProxy(jccl::ConfigChunkPtr chunk)
    if(NULL == new_proxy)
    {
       vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:") << "vjInputManager::configureProxy: Proxy construction failed:" << proxy_name.c_str() << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG_END(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL) << std::endl
-                                                         << vprDEBUG_FLUSH;
       return false;
    }
 
    // -- Add to proxy table
    if(false == addProxy(proxy_name, new_proxy))
-   { return false; }
-
-   vprDEBUG_END(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-      << "   Proxy is set" << std::endl << vprDEBUG_FLUSH;
+   { 
+      return false;
+   }
 
    return true;
 }
@@ -469,9 +464,10 @@ bool recognizeProxyAlias(jccl::ConfigChunkPtr chunk)
  */
 bool InputManager::configureProxyAlias(jccl::ConfigChunkPtr chunk)
 {
-   vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-      << "vjInputManager::Configuring proxy alias" << std::endl
-      << vprDEBUG_FLUSH;
+vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
+                           std::string("vjInputManager::Configuring proxy alias\n"),
+                           std::string("...done configuring alias.\n"));
+
    vprASSERT(chunk->getDescToken() == "proxyAlias");
 
    std::string alias_name, proxy_name;  // The string of the alias, name of proxy to pt to
@@ -480,9 +476,6 @@ bool InputManager::configureProxyAlias(jccl::ConfigChunkPtr chunk)
    proxy_name = chunk->getProperty<std::string>("proxyPtr");
 
    addProxyAlias(alias_name, proxy_name);
-
-   vprDEBUG_END(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL) << std::endl
-                                                      << vprDEBUG_FLUSH;
 
    return true;
 }
@@ -495,8 +488,10 @@ bool InputManager::configureProxyAlias(jccl::ConfigChunkPtr chunk)
  */
 bool InputManager::removeProxyAlias(jccl::ConfigChunkPtr chunk)
 {
-   vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-      << "vjInputManager::RemoveProxyAlias" << std::endl << vprDEBUG_FLUSH;
+vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
+                        std::string("vjInputManager::RemoveProxyAlias\n"),
+                        std::string("...done removing alias.\n"));
+
    vprASSERT(chunk->getDescToken() == "proxyAlias");
 
    std::string alias_name, proxy_name;  // The string of the alias, name of proxy to pt to
@@ -519,9 +514,7 @@ bool InputManager::removeProxyAlias(jccl::ConfigChunkPtr chunk)
       << "   alias:" << alias_name.c_str() << "   index:"
       << mProxyAliases[proxy_name] << "  has been removed." << std::endl
       << vprDEBUG_FLUSH;
-   vprDEBUG_END(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL) << std::endl
-                                                      << vprDEBUG_FLUSH;
-
+      
    return true;
 }
 
@@ -599,9 +592,9 @@ void InputManager::refreshAllProxies()
 
 bool InputManager::removeProxy(std::string proxyName)
 {
-   vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-      << "vjInputManager::removeProxy" << std::endl << vprDEBUG_FLUSH;
-
+vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
+                  std::string("vjInputManager::removeProxy\n"),
+                  std::string("\n"));
    if(mProxyTable.end() == mProxyTable.find(proxyName))
    {
       vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
@@ -616,8 +609,6 @@ bool InputManager::removeProxy(std::string proxyName)
 
    vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_CONFIG_LVL)
       << "   proxy:" << proxyName.c_str() << "  has been removed."
-      << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG_END(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
       << std::endl << vprDEBUG_FLUSH;
    return true;
 }

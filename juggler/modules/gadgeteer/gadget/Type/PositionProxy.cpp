@@ -90,9 +90,9 @@ void PositionProxy::setTransform(float xoff, float yoff, float zoff,    // Trans
 
 bool PositionProxy::config(jccl::ConfigChunkPtr chunk)
 {
-   vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,3)
-      << "------------------ POSITION PROXY config() -----------------\n"
-      << vprDEBUG_FLUSH;
+vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
+      std::string("------------------ Position PROXY config() -----------------\n"),
+      std::string("\n"));
    vprASSERT(chunk->getDescToken() == "PosProxy");
 
    // if we are going to be receiving remote data, we need to connect to a vjNetInput

@@ -41,9 +41,9 @@ namespace gadget
 
 bool KeyboardProxy::config(jccl::ConfigChunkPtr chunk)
 {
-   vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,3)
-      << "------------------ KEYBOARD PROXY config()-----------------\n"
-      << vprDEBUG_FLUSH;
+vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
+      std::string("------------------ Keyboard PROXY config() -----------------\n"),
+      std::string("\n"));
    vprASSERT(chunk->getDescToken() == "KeyboardProxy");
 
    mDeviceName = chunk->getProperty<std::string>("device");
