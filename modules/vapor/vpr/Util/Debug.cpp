@@ -91,7 +91,9 @@ Debug::Debug()
       debugLevel = atoi(debug_lev);
       std::cout << "VPR_DEBUG_NFY_LEVEL: Set to " << debugLevel << std::endl
                 << std::flush;
-   } else {
+   }
+   else
+   {
       std::cout << "VPR_DEBUG_NFY_LEVEL: Not found. " << std::endl
                 << std::flush;
       std::cout << "VPR_DEBUG_NFY_LEVEL: Defaults to " << debugLevel
@@ -106,12 +108,18 @@ Debug::Debug()
    {
       unsigned debug_enable_val = atoi(debug_enable);
       if(debug_enable_val)
+      {
          mDebugEnabled = true;
+      }
       else
+      {
          mDebugEnabled = false;
+      }
       std::cout << "VPR_DEBUG_ENABLE: Set to " << mDebugEnabled << std::endl
                 << std::flush;
-   } else {
+   }
+   else
+   {
       mDebugEnabled = true;
       std::cout << "VPR_DEBUG_ENABLE: Not found. " << std::endl
                 << std::flush;
@@ -126,7 +134,8 @@ void Debug::setOutputFile(const std::string& filename)
    {
       // if no filename is given then use NULL
       mFile = NULL;
-   }else
+   }
+   else
    {
       // if a filename is given then we should write everything to that file.
       mFile = new std::fstream;
@@ -163,7 +172,9 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level,
 #endif
 
    if(indentChange < 0)                // If decreasing indent
+   {
       indentLevel += indentChange;
+   }
 
    vprASSERT(indentLevel >= 0 && "Decreased indent below 0, look for bad code");
 
@@ -172,9 +183,13 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level,
    if(mUseThreadLocal)
    {
       if((*gVprDebugCurColor).size() == 0)
+      {
          std::cout << clrRESET;
+      }
       else
+      {
          std::cout << clrSetBOLD((*gVprDebugCurColor).back());
+      }
    }
 
    // Autoregister
@@ -189,6 +204,7 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level,
    // If not, then output space if we are also using indent (assume this means
    // new line used)
    if(show_thread_info)
+   {
       if(mFile==NULL)
       {
          std::cout << "[" << vpr::Thread::self() << "] " << (*mCategories.find(cat.mGuid)).second.mPrefix;
@@ -197,7 +213,9 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level,
       {
          (*mFile) << "[" << vpr::Thread::self() << "] " << (*mCategories.find(cat.mGuid)).second.mPrefix;
       }
+   }
    else if(use_indent)
+   {
       if(mFile==NULL)
       {
          std::cout << "                  ";
@@ -206,7 +224,7 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level,
       {
          (*mFile) << "                  ";
       }
-
+   }
 
       // Insert the correct number of tabs into the stream for indenting
    if(use_indent)
@@ -255,9 +273,11 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level,
       const int column_width(3);
       int column(0);
       if( (*gVprDebugCurColumn).size() > 0)
+      {
          column = (*gVprDebugCurColumn).back();
+      }
 
-      for(int i=0;i<(column*column_width);i++)
+      for ( int i = 0; i < (column * column_width); ++i )
       {
          if(mFile==NULL)
          {
@@ -272,7 +292,9 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level,
    }
 
    if(indentChange > 0)             // If increasing indent
+   {
       indentLevel += indentChange;
+   }
 
    if(mFile == NULL)
    {
@@ -288,11 +310,18 @@ void Debug::addCategory(const vpr::DebugCategory& catId)
 {
    if(getLevel() > 2)
    {
-      std::cout << "\nAdding category named [" << catId.mName << "]  -- prefix: " << catId.mPrefix <<  " -- guid: " << catId.mGuid
-               << " to debug categories:" << &mCategories << " size: " << mCategories.size() << std::endl;
+      std::cout << "\nAdding category named [" << catId.mName
+                << "]  -- prefix: " << catId.mPrefix
+                <<  " -- guid: " << catId.mGuid
+                << " to debug categories:" << &mCategories
+                << " size: " << mCategories.size() << std::endl;
    }
-   mCategories.insert( std::pair<vpr::GUID,CategoryInfo>(catId.mGuid,
-                                                         CategoryInfo(catId.mName, catId.mPrefix, false, false)));
+   mCategories.insert(std::pair<vpr::GUID,CategoryInfo>(catId.mGuid,
+                                                        CategoryInfo(catId.mName,
+                                                                     catId.mPrefix,
+                                                                     false,
+                                                                     false)));
+
    if(getLevel() > 4)
    {
       std::cout << "new size: " << mCategories.size() << std::endl;
@@ -300,9 +329,10 @@ void Debug::addCategory(const vpr::DebugCategory& catId)
    }
    updateAllowedCategories();
    if(getLevel() > 4)
+   {
       debugDump();
+   }
 }
-
 
 // Are we allowed to print this category??
 bool Debug::isCategoryAllowed(const vpr::DebugCategory& catId)
@@ -351,7 +381,6 @@ bool Debug::isCategoryAllowed(const vpr::DebugCategory& catId)
    return allow_category;
 }
 
-
 void Debug::updateAllowedCategories()
 {
    // Get the environment variables
@@ -361,7 +390,8 @@ void Debug::updateAllowedCategories()
    if(getLevel() > 4)
    {
       std::cout << "updateAllowedCategories" << std::endl;
-      std::cout << "   updateAllowedCat: Trying to find vprDBG_ALL. guid [" << vprDBG_ALL.mGuid << "] " << std::endl;
+      std::cout << "   updateAllowedCat: Trying to find vprDBG_ALL. guid ["
+                << vprDBG_ALL.mGuid << "] " << std::endl;
    }
 
    // Get cat info for vprDBG_ALL
@@ -386,13 +416,17 @@ void Debug::updateAllowedCategories()
      (*cat_all).second.mAllowed = false;       // Disable the showing of all for now
 
       if(getLevel() > 4)
-         std::cout << "   vprDEBUG::Found VPR_DEBUG_ALLOW_CATEGORIES: Updating allowed categories. (If blank, then none allowed.)\n" << std::flush;
+      {
+         std::cout << "   vprDEBUG::Found VPR_DEBUG_ALLOW_CATEGORIES: "
+                   << "Updating allowed categories. (If blank, then none allowed.)"
+                   << std::endl;
+      }
 
       std::string dbg_cats(dbg_allow_cats_env);
 
       // For each currently known category name
       category_map_t::iterator i;
-      for(i=mCategories.begin();i != mCategories.end();i++)
+      for ( i = mCategories.begin(); i != mCategories.end(); ++i )
       {
          std::string cat_name = (*i).second.mName;
          if (dbg_cats.find(cat_name) != std::string::npos )    // Found one
@@ -400,8 +434,8 @@ void Debug::updateAllowedCategories()
             if(getLevel() > 2)
             {
                std::cout << "   vprDEBUG::updateAllowedCategories: Allowing: "
-                      << (*i).second.mName.c_str() << " val:" << (*i).first.toString()
-                      << std::endl << std::flush;
+                         << (*i).second.mName.c_str() << " val:"
+                         << (*i).first.toString() << std::endl;
             }
             (*i).second.mAllowed = true;
          }
@@ -410,8 +444,8 @@ void Debug::updateAllowedCategories()
             if(getLevel() > 4)
             {
               std::cout << "vprDEBUG::updateAllowedCategories: Not found (to allow): "
-                        << (*i).second.mName.c_str() << " val:" << (*i).first.toString()
-                        << std::endl << std::flush;
+                        << (*i).second.mName.c_str() << " val:"
+                        << (*i).first.toString() << std::endl;
             }
          }
       }
@@ -421,7 +455,7 @@ void Debug::updateAllowedCategories()
       if(getLevel() > 2)
       {
          std::cout << "   vprDEBUG::VPR_DEBUG_ALLOW_CATEGORIES not found:\n"
-                  << " Setting to: vprDBG_ALL!" << std::endl << std::flush;
+                   << " Setting to: vprDBG_ALL!" << std::endl;
       }
       (*cat_all).second.mAllowed = true;       // Enable the showing of all for now
    }
@@ -431,14 +465,16 @@ void Debug::updateAllowedCategories()
    {
       if(getLevel() > 2)
       {
-         std::cout << "   vprDEBUG::Found VPR_DEBUG_DISALLOW_CATEGORIES: Updating dis-allowed categories. (If blank, then none dis-allowed.)\n" << std::flush;
+         std::cout << "   vprDEBUG::Found VPR_DEBUG_DISALLOW_CATEGORIES: "
+                   << "Updating dis-allowed categories. (If blank, then none dis-allowed.)"
+                   << std::endl;
       }
 
       std::string dbg_disallow_cats(dbg_disallow_cats_env);
 
       // For each currently known category name
       category_map_t::iterator i;
-      for(i=mCategories.begin();i != mCategories.end();i++)
+      for ( i = mCategories.begin(); i != mCategories.end(); ++i )
       {
          std::string cat_name = (*i).second.mName;
          if (dbg_disallow_cats.find(cat_name) != std::string::npos )    // Found one
@@ -446,8 +482,8 @@ void Debug::updateAllowedCategories()
             if(getLevel() > 2)
             {
                std::cout << "   vprDEBUG::updateAllowedCategories: Dis-allowing: "
-                         << (*i).second.mName.c_str() << " val:" << (*i).first.toString()
-                         << std::endl << std::flush;
+                         << (*i).second.mName.c_str() << " val:"
+                         << (*i).first.toString() << std::endl;
             }
             (*i).second.mDisallowed = true;
          }
@@ -456,8 +492,8 @@ void Debug::updateAllowedCategories()
             if(getLevel() > 4)
             {
                std::cout << "vprDEBUG::updateAllowedCategories: Not found (to allow): "
-                         << (*i).second.mName.c_str() << " val:" << (*i).first.toString()
-                         << std::endl << std::flush;
+                         << (*i).second.mName.c_str() << " val:"
+                         << (*i).first.toString() << std::endl;
             }
          }
       }
@@ -473,7 +509,6 @@ void Debug::updateAllowedCategories()
 
 }
 
-
 void Debug::pushThreadLocalColumn(int column)
 {
    (*gVprDebugCurColumn).push_back(column);
@@ -482,7 +517,9 @@ void Debug::pushThreadLocalColumn(int column)
 void Debug::popThreadLocalColumn()
 {
    if( (*gVprDebugCurColumn).size() > 0)
+   {
       (*gVprDebugCurColumn).pop_back();
+   }
 }
 
 void Debug::pushThreadLocalColor(std::string color)
@@ -490,13 +527,13 @@ void Debug::pushThreadLocalColor(std::string color)
    (*gVprDebugCurColor).push_back(color);
 }
 
-
 void Debug::popThreadLocalColor()
 {
    if( (*gVprDebugCurColor).size() > 0)
+   {
       (*gVprDebugCurColor).pop_back();
+   }
 }
-
 
 void Debug::debugDump()
 {
@@ -529,8 +566,11 @@ void Debug::incrementIndentLevel()
 DebugOutputGuard::DebugOutputGuard(const vpr::DebugCategory& cat,
                                    const int level, std::string entryText,
                                    std::string exitText, bool indent)
-   : mCat(cat), mLevel(level), mEntryText(entryText), mExitText(exitText),
-     mIndent(indent)
+   : mCat(cat)
+   , mLevel(level)
+   , mEntryText(entryText)
+   , mExitText(exitText)
+   , mIndent(indent)
 {
    if(mIndent)
    {
