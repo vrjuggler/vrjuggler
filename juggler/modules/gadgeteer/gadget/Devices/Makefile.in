@@ -40,7 +40,7 @@
 include @topdir@/make.defs.mk
 
 # Prefix for recursive stuff.
-DIRPRFX		= gadget/Devices/
+DIRPRFX=	gadget/Devices/
 
 include @UNIX_GADGETROOT_ABS@/drivers.mk
 
