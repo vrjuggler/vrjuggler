@@ -10,6 +10,18 @@ For all versions:
 
 ===============================================================================
 
+Version: 2.0 Alpha 3 (1.1.144)
+Released: September 22, 2003
+    
+    Please refer to the following to get started with VR Juggler 2.0 Alpha 3:
+
+       http://www.vrjuggler.org/vrjuggler/2.0-alpha3/migration.guide/porting.guide.html
+
+    VR Juggler Alpha 3 is being released in order to allow the VR Juggler user
+    community access to a stabilized snapshot of the current code base. There
+    have been no additional features added to VR Juggler since VR Juggler
+    Alpha 2. Also there have been no API changes since the Alpha 2 release.
+
 Version: 2.0 Alpha 2 (1.1.143)
 Released: July 1, 2003
 
