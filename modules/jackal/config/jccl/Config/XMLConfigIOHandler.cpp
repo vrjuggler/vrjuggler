@@ -491,8 +491,16 @@ bool XMLConfigIOHandler::buildChunkDB (ConfigChunkDB& db, const DOM_Node& doc) {
                         if (!vjstrcasecmp (ch->getType(), "vjIncludeFile")) {
                             std::string s = ch->getProperty ("Name");
                             std::string fname = db.getFileName();
-                            retval = retval && db.load (s, fname);
-                            // set filename back to what it was...
+                            if (!db.load (s, fname)) {
+                                retval = false;
+                                vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL) 
+                                    << clrOutNORM(clrRED, "ERROR:")
+                                    << "Couldn't load file '" << s 
+                                    << "' included by '" << fname
+                                    << "'.\n" << vprDEBUG_FLUSH;
+                            }
+                            // that load changes the db's filename,
+                            // so set it back to what it was...
                             db.setFileName(fname);
                         }
                         else if (!vjstrcasecmp (ch->getType(), 
@@ -501,7 +509,14 @@ bool XMLConfigIOHandler::buildChunkDB (ConfigChunkDB& db, const DOM_Node& doc) {
                             // the tree so load 'em now.
                             std::string s = ch->getProperty ("Name");
                             ChunkDescDB newdb;
-                            retval = retval && newdb.load (s, db.getFileName());
+                            if (!newdb.load (s, db.getFileName())) {
+                                retval = false;
+                                vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL) 
+                                    << clrOutNORM(clrRED, "ERROR:")
+                                    << "Couldn't load file '" << s 
+                                    << "' included by '" << db.getFileName()
+                                    << "'.\n" << vprDEBUG_FLUSH;
+                            }
                             ChunkFactory::instance()->addDescs (&newdb);
                         }
                         else {
