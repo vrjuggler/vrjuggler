@@ -136,18 +136,19 @@ $ECHO_CXXFLAGS    = 0;
 $ECHO_LIBS        = 0;
 $ECHO_EXTRA_LIBS  = 0;
 
-my $script_help    = 0;
-my $print_min      = 0;
-my $echo_includes  = 0;
-my $echo_subsystem = 0;
-my $echo_version   = 0;
-my $echo_static    = 0;
-my $echo_profiled  = 0;
-my $use_linker     = 0;
-my $echo_jars      = 0;
-my $echo_ext_jars  = 0;
-my $echo_has_cxx   = 0;
-my $echo_has_java  = 0;
+my $script_help     = 0;
+my $print_min       = 0;
+my $echo_includes   = 0;
+my $echo_subsystem  = 0;
+my $echo_version    = 0;
+my $echo_static     = 0;
+my $echo_profiled   = 0;
+my $use_linker      = 0;
+my $echo_jars       = 0;
+my $echo_ext_jars   = 0;
+my $echo_has_cxx    = 0;
+my $echo_has_java   = 0;
+my $echo_has_python = 0;
 
 my $cxxflags_arg   = '';
 my $libs_arg       = '';
@@ -169,7 +170,8 @@ GetOptions('help|?' => \$script_help, 'min' => \$print_min,
            'idlgendir=s' => \$idlgendir_arg, 'jars' => \$echo_jars,
            'ext-jars' => \$echo_ext_jars,
            'too-much-pressure' => \$echo_has_cxx, 'has-cxx' => \$echo_has_cxx,
-           'is-jittery' => \$echo_has_java, 'has-java' => \$echo_has_java);
+           'is-jittery' => \$echo_has_java, 'has-java' => \$echo_has_java,
+           'has-python' => \$echo_has_python);
 
 usage(0) if $script_help;
 
@@ -184,6 +186,11 @@ if ( $idl_arg =~ /^j/i )
 elsif ( $idl_arg =~ /^c/i )
 {
    $idl = "$cxx_orb_bindir/" . qq(@CXX_IDL_CMD@);
+}
+# Python IDL compiler.
+elsif ( $idl_arg =~ /^p/i )
+{
+   $idl = qq(@PYTHON_IDL@);
 }
 # Unknown IDL compiler.
 elsif ( "$idl_arg" ne '' )
@@ -201,6 +208,10 @@ elsif ( $idlflags_arg =~ /^c/i )
 {
    $idlflags = qq(@tweek_idlflags_cxx@);
 }
+elsif ( $idlflags_arg =~ /^p/i )
+{
+   $idlflags = qq(@tweek_idlflags_python@);
+}
 elsif ( "$idlflags_arg" ne '' )
 {
    warn "ERROR: Unrecognized IDL flag type '$idlflags_arg'!";
@@ -216,6 +227,10 @@ elsif ( $idlincflag_arg =~ /^c/i )
 {
    $idlincflag = qq(@tweek_idl_incflag_cxx@);
 }
+elsif ( $idlincflag_arg =~ /^p/i )
+{
+   $idlincflag = qq(@tweek_idl_incflag_python@);
+}
 elsif ( "$idlincflag_arg" ne '' )
 {
    warn "ERROR: Unrecognized IDL flag type '$idlincflag_arg'!";
@@ -230,6 +245,10 @@ if ( $idlgendir_arg =~ /^j/i )
 elsif ( $idlgendir_arg =~ /^c/i )
 {
    $idlgendir = qq(@tweek_idlgendir_cxx@);
+}
+elsif ( $idlgendir_arg =~ /^p/i )
+{
+   $idlgendir = qq(@tweek_idlgendir_python@);
 }
 elsif ( "$idlgendir_arg" ne '' )
 {
@@ -273,6 +292,7 @@ print qq(@tweek_java_api_jars@\n) if $echo_jars;
 print qq(@tweek_ext_jars@\n) if $echo_ext_jars;
 print "@BUILD_CXX@\n" if $echo_has_cxx;
 print "@BUILD_JAVA@\n" if $echo_has_java;
+print "@BUILD_PYTHON@\n" if $echo_has_python;
 
 exit(0);
 
@@ -305,17 +325,22 @@ Options:
         [--profiled]            Print the profiled library names
         [--has-cxx]             Prints "Y" is the C++ API is available
         [--has-java]            Prints "Y" is the Java API is available
-        [--idl cxx|java]        Print path to the IDL compiler used for
-                                generating C++ or Java based on the given
-                                parameter
-        [--idlflags cxx|java]   Print flags passed to the IDL compiler for
-                                generating C++ or Java based on the given
-                                parameter
-        [--idlincflag cxx|java] Print flag passed to IDL compiler to specify
+        [--has-python]          Prints "Y" is the Python API is available
+        [--idl cxx|java|python] Print path to the IDL compiler used for
+                                generating C++, Java, or Python based on the
+                                given parameter
+        [--idlflags cxx|java|python]
+                                Print flags passed to the IDL compiler for
+                                generating C++, Java, or Python based on the
+                                given parameter
+        [--idlincflag cxx|java|python]
+                                Print flag passed to IDL compiler to specify
                                 where to look for other IDL files
-        [--idlgendir cxx|java]  Print flag passed to IDL compiler to specify
-                                where the generated files (either C++ or Java
-                                based on the given parameter) are written
+        [--idlgendir cxx|java|python]
+                                Print flag passed to IDL compiler to specify
+                                where the generated files (either C++, Java,
+                                or Python based on the given parameter) are
+                                written
         [--jars]                Print JAR files making up the Tweek Java API
                                 libraries
         [--ext-jars]            Print JAR files making up extensions to the

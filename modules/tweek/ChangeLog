@@ -1,5 +1,6 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2003-08-03 patrickh    Connected the PyQt-based GUI to the build.
 2003-05-20 patrickh    configure.in requries Autoconf 2.53 or newer.
 2003-03-10 patrickh    Added tweek::SubjectManager::getName() method.
                        NEW VERSION: 0.13.5
