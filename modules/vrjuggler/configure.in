@@ -163,10 +163,11 @@ DSOVERSIONOPTS=''
 ABI_LIST=''		dnl # List of supported ABIs on a given platform
 PLATFORM=''		dnl # Platform name
 
-dnl # Depending on the host type, set various command options and such.
-case $host in
+dnl # Depending on the host operating system, set various command options and
+dnl # such.
+case $host_os in
     dnl # SGI running IRIX [56].*.
-    mips-sgi-irix*)
+    irix*)
         dnl # Set compiler flags and the location of $DSOREGFILE depending on
         dnl # $ABI.
         if test "$ABI" = "64" ; then
@@ -209,7 +210,7 @@ case $host in
         fi
         ;;
     dnl # HP PA-RISC machine running HP-UX 10.20.
-    hppa*hpux10.20)
+    hpux10.20)
         AR='ar'
         ARFLAGS='r'
         CFLAGS="-Aa $CFLAGS"
@@ -236,18 +237,18 @@ case $host in
         PLATFORM='HP'
         ;;
     dnl # DEC Alpha running Digital UNIX 4.0.
-    alpha-[a-z]*-osf4.0)
+    osf4.0)
         AC_DEFINE(VJ_OS_DUX,)
         PLATFORM='alpha-DUX'
         ;;
     dnl # i386-class machine running FreeBSD.
-    i386-[a-z]*-freebsd*)
+    freebsd*)
         AC_DEFINE(VJ_OS_FreeBSD,)
         ABI_LIST='AOUT ELF'
         PLATFORM='i386-FBSD'
         ;;
     dnl # Unkown operating system (to config.guess).
-    *-unknown)
+    unknown)
         AC_DEFINE(VJ_OS_GENERIC,)
         PLATFORM='UNKNOWN'
         ;;
