@@ -9,7 +9,8 @@
 // -- Kevin Meinert kevinmeinert@bigfoot.com
 //////////////////////////////////////////////////////////////////////////////
 #include <math.h>
-#include <iostream.h>
+#include <iostream>
+#include <assert.h>
 
 #include "Image.h"
 #include "defines.h" // min
@@ -406,11 +407,11 @@ void Image::asciioutput( bool useCarriageReturns ) const
       unsigned int bytesWide = this->width() * this->channels() * this->bpc() + this->rowPadding();
       for ( unsigned int te = 0; te < this->size(); ++te )
       {
-         cout<<(int)this->data()[te]<<" ";
+         std::cout<<(int)this->data()[te]<<" ";
 
          if ( (te % bytesWide) == ((bytesWide)-1) )
          {
-	         cout<<'\n';
+	         std::cout<<'\n';
          }
       }
    } 
@@ -418,7 +419,7 @@ void Image::asciioutput( bool useCarriageReturns ) const
    {
       for (unsigned int te = 0; te < this->size(); ++te)
       {
-	      cout<<this->data()[te];
+	      std::cout<<this->data()[te];
       }
    }
 }
