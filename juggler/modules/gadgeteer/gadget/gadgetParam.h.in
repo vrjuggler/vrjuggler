@@ -44,6 +44,13 @@
 #define __GADGET_version @VER_NUMBER@
 
 /*
+ * The individual Gadgeteer version numbers.
+ */
+#define __GADGET_MAJOR__ @MAJOR_VER_NUMBER@
+#define __GADGET_MINOR__ @MINOR_VER_NUMBER@
+#define __GADGET_PATCH__ @PATCH_VER_NUMBER@
+
+/*
  * This is the "human-readable" Gadgeteer version _string_.  It is of the
  * form <major>.<minor>.<days since last major release>.
  */
