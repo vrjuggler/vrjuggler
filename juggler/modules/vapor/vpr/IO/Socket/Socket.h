@@ -320,11 +320,22 @@ public:
         return m_socket_imp->getLocalAddr();
     }
 
+    bool setLocalAddr(const InetAddr& addr)
+    {
+      return m_socket_imp->setLocalAddr(addr);
+    }
+
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline const InetAddr&
     getRemoteAddr (void) const {
         return m_socket_imp->getRemoteAddr();
+    }
+
+
+    bool setRemoteAddr(const InetAddr& addr)
+    {
+       return m_socket_imp->setRemoteAddr(addr);
     }
 
 protected:
