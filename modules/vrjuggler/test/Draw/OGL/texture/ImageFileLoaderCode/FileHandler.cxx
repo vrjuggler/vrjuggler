@@ -8,7 +8,7 @@
 // http://www.bigfoot.com/~KevinMeinert/html/software/index.html
 // -- Kevin Meinert, kevinmeinert@bigfoot.com
 //////////////////////////////////////////////////////////////////////////////
-#include "defines.h" // min max
+#include "defines.h" // Min Max
 #include "CFileIO.h"  //to check if a file exists.
 
 #include "FileHandler.h"
@@ -28,7 +28,7 @@ bool FileHandler::canHandle( const char* const filename ) const
 		std::string fileExt = CFileIO::fileExtension( file );
 		std::string currentExt = _extensions[x];
 
-		int amountToCompare = kev::min(fileExt.size(), currentExt.size());
+		int amountToCompare = kev::Min(fileExt.size(), currentExt.size());
 		#ifdef WIN32
 		if (strnicmp( fileExt.data(), currentExt.data(), amountToCompare ) == 0)
 			canload = true;
