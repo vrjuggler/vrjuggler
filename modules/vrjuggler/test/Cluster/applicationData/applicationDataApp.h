@@ -38,7 +38,7 @@
 #include <gmtl/Vec.h>
 #include <gmtl/Matrix.h>
 #include <vpr/IO/SerializableObject.h>
-#include <cluster/Plugins/ApplicationDataManager/UserData.h>
+#include <plugins/ApplicationDataManager/UserData.h>
 #include "MyType.h"
 
 #include <cluster/ClusterNetwork/ClusterNetwork.h>
