@@ -157,6 +157,7 @@ projdatadir     = $(datadir)/sonix
 AR              = @AR@ $(DPP_EXTRA_ARFLAGS) $(EXTRA_ARFLAGS) $(ARFLAGS)
 ARFLAGS         = @ARFLAGS@
 AR_NAME_FLAG    = @AR_NAME_FLAG@
+DYLIB_NAME_FLAG = @DYLIB_NAME_FLAG@
 CC		= @CC@
 CXX		= @CXX@
 CPP		= @CPP@
