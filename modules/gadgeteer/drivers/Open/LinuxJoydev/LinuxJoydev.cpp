@@ -94,6 +94,11 @@ bool LinuxJoydev::config(jccl::ConfigElementPtr e)
       return false;
    }
 
+   // The joydev driver returns axis values in the range [-32767, 32767].
+   // Hence, we ignore whatever the user provided through the config element.
+   setMin(-32767.0f);
+   setMax(32767.0f);
+
    mJsLabel = e->getName();
    mPortName = e->getProperty<std::string>("port_name");
 
@@ -185,7 +190,7 @@ bool LinuxJoydev::startSampling()
    // Allocate initial device data
    // - By default this will clear them out
    mCurAxes.resize(mNumAxes);
-   mCurAxesRanges.resize(mNumAxes, axis_range_t(0,1));             // Initialize ranges to 0,255
+   mCurAxesRanges.resize(mNumAxes, axis_range_t(getMin(), getMax()));
    mCurButtons.resize(mNumButtons + mAxisButtonIndices.size());
 
    // Setup axis as button stuff
@@ -228,7 +233,7 @@ void LinuxJoydev::updateData()
       {
          //std::cout << "ljs: btn: " << unsigned(cur_event.number) << " val:"
          //          << cur_event.value << std::endl;
-         unsigned btn_number = unsigned(cur_event.number);
+         const unsigned int btn_number(cur_event.number);
          vprASSERT(btn_number < mCurButtons.size() && "Button out of range");
          mCurButtons[btn_number] = cur_event.value;         // Assign the new button value (0,1)
          mCurButtons[btn_number].setTime();                 // Set timestamp to now
@@ -237,32 +242,12 @@ void LinuxJoydev::updateData()
       {
          //std::cout << "ljs: axis: " << unsigned(cur_event.number) << " val:"
          //          << cur_event.value << std::endl;
-         unsigned axis_number = unsigned(cur_event.number);
+         const unsigned int axis_number(cur_event.number);
          vprASSERT(axis_number < mCurAxes.size() && "Axis out of range");
          vprASSERT(axis_number < mCurAxesRanges.size() && "Axis out of range");
 
-         float norm_value = 0;
-         // Verify range (expand if needed)
-         axis_range_t axis_range = mCurAxesRanges[axis_number];
-         if(cur_event.value < axis_range.first)
-         {
-            axis_range.first = cur_event.value;
-            mCurAxesRanges[axis_number] = axis_range;
-         }
-
-         else if(cur_event.value > axis_range.second)
-         {
-            axis_range.second = cur_event.value;
-            mCurAxesRanges[axis_number] = axis_range;
-         }
-
-         else
-         {
-            norm_value =
-               (float(cur_event.value) - axis_range.first) /
-                  (axis_range.second - axis_range.first);
-         }
-
+         float norm_value(0.0f);
+         normalizeMinToMax(cur_event.value, norm_value);
          mCurAxes[axis_number] = norm_value;
          mCurAxes[axis_number].setTime();
 
