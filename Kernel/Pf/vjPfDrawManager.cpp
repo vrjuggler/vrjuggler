@@ -106,10 +106,14 @@ bool vjPfDrawManager::configDisplaySystem(vjConfigChunk* chunk)
                                             << std::endl << vjDEBUG_FLUSH;
    for (unsigned int i=0;i<mNumPipes;i++)
    {
+      char cur_disp_name[] = "-1";
+
       mPipeStrs.push_back(chunk->getProperty("xpipes", i).cstring());
-      if(strcmp(mPipeStrs[i], "-1") == 0)    // Use display env
+
+      if(strcmp(mPipeStrs[i], cur_disp_name) == 0)    // Use display env
       {
-         char* display_env = getenv("DISPLAY");
+	 char env_var[] = "DISPLAY";
+         char* display_env = getenv(env_var);
          char* xpipe_name  = new char[strlen(display_env)+1];
          strcpy(xpipe_name, display_env);
          mPipeStrs[i] = xpipe_name;
