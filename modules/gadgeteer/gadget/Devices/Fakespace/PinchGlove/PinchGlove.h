@@ -53,7 +53,7 @@ class PinchGlove : virtual public Input, public Glove, public Digital
 {
 public:
    //: Construct
-   PinchGlove() : mGlove( NULL )
+   PinchGlove() : mGlove( NULL ), mDigitalData(10)
    {;}
 
    //: Destroy the glove
