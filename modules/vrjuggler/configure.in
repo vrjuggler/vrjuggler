@@ -216,7 +216,8 @@ AC_ARG_WITH(dir-perms,
 AC_ARG_WITH(version,
             [  --with-version=<major>.<minor>.<micro>
                           VR Juggler version number       [default=none]],
-            _vj_version="$withval", _vj_version='no')
+            _vj_version="$withval", _vj_version='none')
+
 dnl # ------------------------------------------------------ #
 dnl # --enable-feature[=arg] and --disable-feature arguments #
 dnl # ------------------------------------------------------ #
@@ -1481,13 +1482,22 @@ PATH="${_vjsave_PATH}"
 
 dnl # Construct the VR Juggler version using the getversion Perl script (if
 dnl # Perl is available).  This is never cached because the version number
-dnl # will change on a daily basis.  Thus, every time configure is run, there
+dnl # can change on a daily basis.  Thus, every time configure is run, there
 dnl # exists the potential for a new version number to be generated.
 dnl # XXX: Get this to work without Perl!
 if test "x${_vj_version}" != "xno" ; then
     if test "x$PERL" != "xno" ; then
         _recversion="$PERL $srcdir/release/scripts/record-version.pl"
-        ${_recversion} -v "${_vj_version}" -i "$srcdir/vjParam.h.in" -o vjParam.h
+        _param_h_args="-i $srcdir/vjParam.h.in -o vjParam.h"
+
+        dnl # If no version number is given, try to extract the current
+        dnl # value from $srcdir/VERSION.
+        if test "x${_vj_version}" = "xnone" ; then
+            ${_recversion} -f "$srcdir/VERSION" ${_param_h_args}
+        dnl # Otherwise, use the given version number.
+        else
+            ${_recversion} -v "${_vj_version}" ${_param_h_args}
+        fi
     else
         AC_MSG_WARN(Cannot construct VR Juggler version without Perl)
         cp "$srcdir/vjParam.h.in" vjParam.h
@@ -1853,11 +1863,10 @@ fi
 
 AC_OUTPUT(Makefile Makefile.base Config/Makefile Environment/Makefile
           GUI/Makefile Input/Makefile Input/Filter/Makefile
-          Input/InputManager/Makefile Input/ibox/Makefile
+          Input/Multi/Makefile Input/InputManager/Makefile Input/ibox/Makefile
           Input/vjGesture/Makefile Input/vjGlove/Makefile
           Input/vjInput/Makefile Input/vjKeyboard/Makefile
-          Input/vjPosition/Makefile Input/Multi/Makefile
-          Input/vjSim/Makefile Kernel/Makefile
+          Input/vjPosition/Makefile Input/vjSim/Makefile Kernel/Makefile
           Kernel/Pf/Makefile Kernel/GL/Makefile Math/Makefile
           Performance/Makefile SharedMem/Makefile Sound/Makefile
           Sound/aw/Makefile Sound/pf/Makefile Sound/sl/Makefile Sync/Makefile
