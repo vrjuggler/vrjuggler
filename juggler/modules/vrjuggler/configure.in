@@ -323,6 +323,12 @@ case $host_os in
         OPT_FLAGS='-O2'
         SHAREDLIB_EXT='so'
 
+        dnl # We have to use POSIX threads on Linux.
+        if test "x${_thread_pkg}" != "xPOSIX" ; then
+            AC_MSG_WARN(*** POSIX threads must be used on $host ***)
+            _thread_pkg='POSIX'
+        fi
+
         AC_DEFINE(VJ_OS_Linux,)
         ABI='ELF'
         ISA='i386'
