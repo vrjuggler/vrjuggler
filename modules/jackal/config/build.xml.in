@@ -25,6 +25,7 @@
       <jar destfile="jccl_config.jar" basedir=".">
          <include name="org/vrjuggler/jccl/config/**"/>
          <fileset dir="${srcdir}" includes="org/vrjuggler/jccl/config/xslt/*.xsl" />
+         <fileset dir="${srcdir}" includes="org/vrjuggler/jccl/config/images/*" />
       </jar>
    </target>
 
