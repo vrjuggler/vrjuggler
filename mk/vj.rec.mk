@@ -27,4 +27,5 @@ recursive:
                          *k*) fail=yes;;				\
                          *) exit 1;;					\
                        esac;						\
+                echo "<=== ${DIRPRFX}$$subdir" ;			\
             done && test -z "$$fail"
