@@ -34,8 +34,9 @@
 
 #include <boost/concept_check.hpp>
 
-#include <vpr/Thread/Thread.h>
+#include <vpr/vpr.h>
 #include <vpr/System.h>
+#include <vpr/Thread/Thread.h>
 #include <jccl/Config/ConfigChunk.h>
 
 #include <gadget/Util/Debug.h>
