@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="7.00"
 	Name="Driver - Trackd API"
-	ProjectGUID="{2BB1C6DC-A6DB-42A3-A91A-DBD8BA7A8432}"
+	ProjectGUID="{2BB1C6DC-A6DB-42A3-A91A-DBD8BA7A843A}"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
