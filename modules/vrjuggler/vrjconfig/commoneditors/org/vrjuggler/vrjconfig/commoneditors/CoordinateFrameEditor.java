@@ -239,7 +239,6 @@ public class CoordinateFrameEditor
       double y_rot = ((Number) elt.getProperty(prop, 1)).doubleValue();
       double z_rot = ((Number) elt.getProperty(prop, 2)).doubleValue();
 
-      System.out.println("Rotation: <" + x_rot + ", " + y_rot + ", " + z_rot + ">");
       mTrackerXRotSpinner.setValue(new Double(x_rot));
       mTrackerYRotSpinner.setValue(new Double(y_rot));
       mTrackerZRotSpinner.setValue(new Double(z_rot));
