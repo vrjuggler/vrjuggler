@@ -29,12 +29,6 @@ public:
    virtual void init()
    {
       cerr << "app::init\n";
-      
-      wandIndex = kernel->getInputManager()->GetProxyIndex("C2Wand");
-      button0Index = kernel->getInputManager()->GetProxyIndex("C2Button0");
-      button1Index = kernel->getInputManager()->GetProxyIndex("C2Button1");
-      if(wandIndex == -1)
-         cerr << "Wand not found\n";
    }
 
    virtual void apiInit()
@@ -47,12 +41,12 @@ public:
    {
       cerr << "app::initScene\n";
       rootNode = new pfScene;
-      naver = new pfNaver(wandIndex, button0Index, button1Index);
+      naver = new pfNaver();
       pfLightSource* sun = new pfLightSource;
       pfLightSource* sun1 = new pfLightSource;
       pfGeoState* gstate = new pfGeoState;
 
-      gstate->setMode(PFSTATE_ENLIGHTING, PF_ON);  
+      gstate->setMode(PFSTATE_ENLIGHTING, PF_ON);
       gstate->setMode(PFSTATE_CULLFACE, PFCF_OFF);
       rootNode->setGState(gstate);
 
@@ -100,7 +94,7 @@ public:
    int   wandIndex;     // the index of the wand
    int   button0Index;   // The index of the wand button
    int   button1Index;  // The index of button1
-   
+
    pfNaver*    naver;
    //pfDCS*      baseDCS;
    pfScene*   rootNode;
@@ -109,14 +103,18 @@ public:
 
 float transSpeed = 0.1;
 
-int main(void)
+int main(int argc, char* argv[])
 {
     vjKernel* kernel = vjKernel::instance();	// Declare a new Kernel
     myApp* application = new myApp(kernel);	// Delcare an instance of my application
-        
+
     kernel->setApplication(application);    // Set up the kernel
+
+    if(argc > 1)
+       kernel->setProgramSpecifiedConfigFile(argv[1]);
+
     kernel->start();
-    
+
     //while(!kernel->done())
     while(1)
      {;}
