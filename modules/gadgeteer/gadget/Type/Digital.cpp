@@ -30,6 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <gadget/gadgetConfig.h>
+#include <boost/concept_check.hpp>
 #include <gadget/Type/Digital.h>
 
 namespace gadget
@@ -87,7 +89,10 @@ namespace gadget
             vpr::Uint16 temp = reader->readUint16();
          reader->endAttribute();
 
+         // XXX: Should there be error checking for the case when vprASSERT()
+         // is compiled out?  -PH 8/21/2003
          vprASSERT(temp==MSG_DATA_DIGITAL && "[Remote Input Manager]Not Digital Data");
+         boost::ignore_unused_variable_warning(temp);
 
          std::vector<DigitalData> dataSample;
 
