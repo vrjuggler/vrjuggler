@@ -73,13 +73,13 @@ JAVA_SRCS	= org/vrjuggler/tweek/Tweek.java			\
 JARS		= Tweek.jar		\
                   TweekBeans.jar	\
                   TweekComm.jar
-BEANS		= Viewers		\
-                  Services
+BEANS		= Viewers
 
 # For the following, *.class is used so that these variables may be used as
 # dependencies of .jar targets.
 
-TWEEK_CLASSES	= org/vrjuggler/tweek/*.class
+TWEEK_CLASSES	= org/vrjuggler/tweek/*.class			\
+                  org/vrjuggler/tweek/services/*.class
 
 BEANS_MF	= $(srcdir)/beans.MF
 BEANS_CLASSES	= org/vrjuggler/tweek/beans/*.class		\
@@ -90,7 +90,7 @@ COMM_CLASSES	= org/vrjuggler/tweek/net/*.class		\
                   tweek/*.class
 
 SERVICE_MF	= $(srcdir)/services.MF
-SERVICE_CLASSES	= org/vrjuggler/tweek/services/EnvironmentService.class
+SERVICE_CLASSES	=
 
 VIEWERS_MF	= $(srcdir)/viewers.MF
 VIEWERS_CLASSES	= org/vrjuggler/tweek/iconviewer/*.class	\
@@ -128,7 +128,7 @@ links:
           do								\
               $(LN_S) $(topdir)/java/$$jar ./ ;				\
           done
-	cd $(instlinks)/bin/beans && rm -f ./*.jar
+	cd $(instlinks)/bin/beans && rm -f *.jar *.xml
 	cd $(instlinks)/bin/beans &&					\
           for bean in $(BEANS) ;					\
           do								\
