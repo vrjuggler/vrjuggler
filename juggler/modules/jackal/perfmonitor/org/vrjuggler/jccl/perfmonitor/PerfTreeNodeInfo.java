@@ -31,10 +31,13 @@ public class PerfTreeNodeInfo implements ActionListener {
 	ii = _ii;
 	mCollector = col;
 
+        mComponent = new JPanel();
+        mComponent.setLayout (new BoxLayout (mComponent, BoxLayout.X_AXIS));
+
 	if (ii != null) {
-	    mComponent = new JPanel();
 	    JLabel l = new JLabel(_sublabel);
 	    mComponent.add (l);
+            mComponent.add (Box.createHorizontalGlue());
 	    l = new JLabel (padFloat(ii.getAverage()/1000.0), JLabel.RIGHT);
 	    mComponent.add (l);
 	    JButton b = new LabeledPanelButton (col, ii, "Graph");
@@ -46,7 +49,8 @@ public class PerfTreeNodeInfo implements ActionListener {
 	    mComponent.add (b);
 	}
 	else {
-	    mComponent = new JLabel (sublabel);
+	    mComponent.add(new JLabel (sublabel));
+            mComponent.add (Box.createHorizontalGlue());
 	}
     }
 
