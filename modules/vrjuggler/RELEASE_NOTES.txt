@@ -15,7 +15,7 @@ Released: March 15, 2003
 
     Please refer to the following to get started with VR Juggler 2.0 Alpha 1:
 
-       http://www.vrjuggler.org/vrjuggler/2.0alpha1/migration.guide/
+       http://www.vrjuggler.org/vrjuggler/2.0-alpha1/migration.guide/
 
     Required application and configuration changes for upgrading from all
     previous versions (including 1.1.x up through 1.1 DR3):
