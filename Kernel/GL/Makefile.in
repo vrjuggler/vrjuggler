@@ -11,7 +11,13 @@ include @topdir@/Makefile.base
 includedir	= @includedir@/Kernel/GL
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
-OBJDIR		:= ${OBJDIR}/GL
+
+# If we are not building in the current directory (the default), put all the
+# object files in the GL subdirectory of ${OBJDIR}.
+ifneq (${OBJDIR}, .)
+    OBJDIR	:= ${OBJDIR}/GL
+endif
+
 VJROOT		= ${top_srcdir}
 VJ_SRCDIR	= @VJ_SRCDIR@/Kernel/GL
 WORKDIR		= ${topdir}/Kernel/GL
