@@ -63,10 +63,16 @@ namespace vrj
 
 VRJ_REGISTER_GL_SIM_INTERFACE_CREATOR(GlBasicSimulator);
 
-GlBasicSimulator::GlBasicSimulator() : mQuadObj(NULL)
+GlBasicSimulator::GlBasicSimulator()
+   : mQuadObj(gluNewQuadric())
 {
    setDrawWandFunctor(new GlDrawRightAngleWandFunctor());
    setDrawHeadFunctor(new GlDrawEllipsoidHeadFunctor());
+}
+
+GlBasicSimulator::~GlBasicSimulator()
+{
+   gluDeleteQuadric(mQuadObj);
 }
 
 /*
@@ -390,15 +396,6 @@ void GlBasicSimulator::drawSimulator(const float scaleFactor)
    glPopAttrib();
 }
 
-
-void GlBasicSimulator::initQuadObj()
-{
-   if (mQuadObj == NULL)
-   {
-      mQuadObj = gluNewQuadric();
-   }
-}
-
 void GlBasicSimulator::drawLine(gmtl::Vec3f& start, gmtl::Vec3f& end)
 {
    glBegin(GL_LINES);
@@ -409,13 +406,10 @@ void GlBasicSimulator::drawLine(gmtl::Vec3f& start, gmtl::Vec3f& end)
 
 void GlBasicSimulator::drawCone(float base, float height, int slices, int stacks)
 {
-  initQuadObj();
   gluQuadricDrawStyle(mQuadObj, (GLenum) GLU_FILL);
   gluQuadricNormals(mQuadObj, (GLenum) GLU_SMOOTH);
   gluCylinder(mQuadObj, base, 0.0, height, slices, stacks);
 }
-
-
 
 void GlBasicSimulator::drawBox(float size, GLenum type)
 {
