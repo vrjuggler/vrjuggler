@@ -61,7 +61,7 @@ EXTRA_INCLUDES+=	-I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/Pf/advanced/nav \
 			-I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/Pf/advanced/pfTools
 
 ifeq (@USE_SONIX@, Y)
-   EXTRA_DEFS+=	-DUSE_SONIX
+   EXTRA_CXXFLAGS+=	-DUSE_SONIX
 endif
 
 # -----------------------------------------------------------------------------
