@@ -324,11 +324,11 @@ void Connect::writeControlLoop(void* nullParam) {
             delete cmd;
         }
 
-        current_time.set();
+        current_time.setNow();
 
         while (!periodic_commands.empty()) {
             pcmd = periodic_commands.top();
-            if (current_time.usecs() < (pcmd->next_fire_time * 1000))
+            if (current_time.msecf() < (pcmd->next_fire_time * 1000))
                 break;
             periodic_commands.pop();
             *outstream << "<protocol handler=\"" << pcmd->getProtocolName()

@@ -51,8 +51,8 @@ namespace jccl {
         next_fire_time = 0.0f;
     }
 
-    void PeriodicCommand::resetFireTime (TimeStamp& ts) {
-        next_fire_time = ts.usecs()/1000 + refresh_time;
+    void PeriodicCommand::resetFireTime (vpr::Interval& ts) {
+        next_fire_time = ts.msecf() + refresh_time;
     }
 
 

@@ -37,10 +37,9 @@
 #define _JCCL_PERFORMANCE_CATEGORIES_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Plugins/PerformanceMonitor/TimeStamp.h>
+#include <jccl/Util/Debug.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Util/GUID.h>
-#include <jccl/Util/Debug.h>
 #include <vpr/Util/Singleton.h>
 
 namespace jccl {
@@ -153,12 +152,13 @@ struct PerfCatRegistrator
  *              environment variable).  Note: This is not in 
  *              string ("str") form
  * @param CAT   GUID id of the category
- * Use this in the .cpp files to register the actually token with 
- * jccl::
+ * Use this in the .cpp files to register the actual token with jccl
  */
 #define jcclREGISTER_PERF_CATEGORY(CAT, NAME) jccl::PerfCatRegistrator NAME ## _registrator (CAT, #NAME);
 
+
 }; // namespace jccl
+
 
 // Perf measurement internal to jackal itself
 extern const vpr::GUID jcclPERF_JACKAL;// ("29ecd55b-e68e-40ce-9db2-99e7682b36b4");
