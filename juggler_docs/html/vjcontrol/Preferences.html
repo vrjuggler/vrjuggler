@@ -3,8 +3,10 @@
 <title>VjControl Preferences</title>
 
 <body bgcolor="#ffffcc">
-<h2><img src="juggler.gif" width="29" height="33"></img>
-VjControl Preferences</H2>
+
+<!--NewPage-->
+<h1><img src="juggler.gif" width="29" height="33"></img>
+VjControl preferences</h1>
 
 Vjcontrol has a number of user-configurable options.  On startup,
 it will attempt to load these preferences from the file
@@ -23,10 +25,10 @@ The "Save Preferences" option saves the current preferences to
 from the next time vjcontrol starts. 
 
 <p>
-<h3>VjControl Preference Options:</h3>
+<h2>VjControl preference options</h2>
 
 <ul>
-<li><h4>Look and Feel</h4> - this can be used to change the overall
+<li><h3>Look and Feel</h3> - this can be used to change the overall
 look and feel (L&F) of the GUI, using the Java Swing classes.  The 
 possible options are: Java (the default, also called "Metal"), Motif, Windows, and Macintosh.
 Note that the Windows and Mac L&Fs are only available when 
@@ -38,12 +40,12 @@ may wish to experiment.  The Windows L&F performs slightly better than
 Java/Metal under W98/NT.  The Java/Metal L&F has been most extensively tested.
 <p>
 
-<li><h4>Default Host and Default Port</h4> - These are the default host name
+<li><h3>Default Host and Default Port</h3> - These are the default host name
 and port number that will appear in the Connections panel.  See
 <a href="DynamicReconfiguration.html">Dynamic Reconfiguration</a> for more information.
 <p>
 
-<li><h4>Preload ChunkDesc Files</h4> - Here you can specify one or more
+<li><h3>Preload ChunkDesc Files</h3> - Here you can specify one or more
 Chunk Description files that will be loaded automatically when vjcontrol
 starts up.  The arguments are simply pathnames to files.  If the strings
 "$VJ_BASE_DIR" or "$HOME" are included in a path name, they will be replaced
@@ -57,18 +59,18 @@ You can override the automatic loading of files at startup by using the
 -noautoload <a href="cmdline.html">command-line argument</a>.
 <p>
 
-<li><h4>Preload Configuration Files</h4> - This lets you specify one or more
+<li><h3>Preload Configuration Files</h3> - This lets you specify one or more
 Configuration files to load at startup (The details are similar to the
 option above).
 <p>
 
-<li><h4>Default ConfigChunk Files</h4> - This lets you specify one or more
+<li><h3>Default ConfigChunk Files</h3> - This lets you specify one or more
 Configuration files which contain default values for new ConfigChunks.
 When you create a new ConfigChunk in VjControl, it checks the default files 
 for a Chunk of that type.  If found, it copies that value into the new Chunk.
 <p>
 
-<li><h4>Font Name and Font Size</h4> - This specifies the name and size of
+<li><h3>Font Name and Font Size</h3> - This specifies the name and size of
 font to use for all of vjcontrol's windows.  Note that currently only a 
 small number of fonts are available (this is a limitation of JDK 1.1,
 and will be fixed at a later date).
@@ -77,4 +79,6 @@ and will be fixed at a later date).
 
 </body>
 
+
 </html>
+
