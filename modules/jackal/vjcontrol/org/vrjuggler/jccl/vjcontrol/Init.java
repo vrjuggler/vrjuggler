@@ -156,7 +156,7 @@ public class Init {
 	}
 	catch (FileNotFoundException e2) {
 	    try {
-		f2 = new File (Core.file.mangleFileName ("$VJ_BASE_DIR/Data/vjcontrol.cfg"));
+		f2 = new File (Core.file.mangleFileName ("$VJ_SHARE_DIR/Data/vjcontrol.cfg"));
                 ConfigIO.readConfigChunkDB (f2, Core.vjcontrol_chunkdb, ConfigIO.GUESS);
 	    }
 	    catch (FileNotFoundException e3) {
