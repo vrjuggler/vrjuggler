@@ -87,6 +87,12 @@ public class VrjConfig
    private ConfigIFrame createNewConfiguration()
    {
       ConfigIFrame frame = new ConfigIFrame();
+      String default_desc_file = "${VJ_BASE_DIR}/share/vrjuggler/data/vrj-chunks.desc";
+      default_desc_file = expandEnvVars(default_desc_file);
+      if (getConfigBroker().isOpen(default_desc_file))
+      {
+         frame.getEditor().getConfigContext().add(default_desc_file);
+      }
       addFrame(frame);
       return frame;
    }
@@ -114,6 +120,23 @@ public class VrjConfig
    {
       desktop.remove(frame);
       frame.removeInternalFrameListener(activationListener);
+   }
+
+   /**
+    * Gets a handle to the configuration broker service.
+    */
+   private ConfigBroker getConfigBroker()
+   {
+      return new ConfigBrokerProxy();
+   }
+
+   /**
+    * Returns a copy of the given string with all environment variables
+    * expanded.
+    */
+   private String expandEnvVars(String str)
+   {
+      return EnvironmentService.expandEnvVars(str);
    }
 
    /**
