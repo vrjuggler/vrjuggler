@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -38,6 +38,15 @@ extern "C"
    SHARPPY_API void delete_vpr_ObjectReader(vpr_ObjectReader_Adapter* self_)
    {
       delete self_;
+   }
+
+   // Wrapper for non-virtual method vpr::ObjectReader::isBinary()
+   SHARPPY_API bool vpr_ObjectReader_isBinary__(vpr_ObjectReader_Adapter* self_)
+   {
+      bool result;
+      result = self_->isBinary();
+
+      return result;
    }
 
 
@@ -218,6 +227,7 @@ extern "C"
    {
       self_->vpr::ObjectReader::readBool(p0);
    }
+
 
 
 
