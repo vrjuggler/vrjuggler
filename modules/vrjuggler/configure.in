@@ -944,22 +944,21 @@ if test "$SL" = "Y" ; then
 fi
 
 if test "$OS_TYPE" = "Darwin" ; then
-    	APP_VJ_LIBS_GL="-lJuggler_ogl"
-    	APP_VJ_LIBS_PF="-lJuggler_pf"
-    	APP_VJ_LIBS_UTILS="-lJuggler_utils"
+    APP_VJ_LIBS_GL="-lJuggler_ogl"
+    APP_VJ_LIBS_PF="-lJuggler_pf"
+    APP_VJ_LIBS_UTILS="-lJuggler_utils"
 
+    APP_VJ_LIBS_BEGIN="-L\$(VJ_BASE_DIR)/lib"
+    APP_VJ_LIBS_END='$APP_VJ_LIBS_UTILS'
+    APP_VJ_LIBS_BASIC='-lJuggler'
 
-        APP_VJ_LIBS_BEGIN="-L\$(VJ_BASE_DIR)/lib"
-        APP_VJ_LIBS_END='$APP_VJ_LIBS_UTILS'
-        APP_VJ_LIBS_BASIC='-lJuggler'
+    APP_VJ_LIBS_BEGIN_INST="-L\$(VJ_BASE_DIR)/lib"
+    APP_VJ_LIBS_END_INST="-lJuggler_utils -Wl,-rpath,\$(VJ_BASE_DIR)/lib"
+    APP_VJ_LIBS_BASIC_INST='-lJuggler'
 
-        APP_VJ_LIBS_BEGIN_INST="-L\$(VJ_BASE_DIR)/lib"
-        APP_VJ_LIBS_END_INST="-lJuggler_utils -Wl,-rpath,\$(VJ_BASE_DIR)/lib"
-        APP_VJ_LIBS_BASIC_INST='-lJuggler'
-
-        APP_EXTRA_LIBS_BEGIN="" 
-        APP_EXTRA_LIBS_END="$NSPR_LIBS $PTHREAD_LIB $SEM_LIB $SOCKET_LIB -lm -lftime"
-	APP_EXTRA_LIBS_GL="-framework OpenGL -framework SetupGL -framework Carbon -framework ApplicationServices"
+    APP_EXTRA_LIBS_BEGIN="" 
+    APP_EXTRA_LIBS_END="$NSPR_LIBS $PTHREAD_LIB $SEM_LIB $SOCKET_LIB -lm -lftime"
+    APP_EXTRA_LIBS_GL="-framework OpenGL -framework SetupGL -framework Carbon -framework ApplicationServices"
 fi
 
 if test "$OS_TYPE" = "UNIX" ; then
