@@ -103,7 +103,7 @@ The filters are applied in the order that they are specified in this configurati
       <item label="Machine" defaultvalue="" />
       <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
- </ChunkDesc>
+  </ChunkDesc>
   <ChunkDesc token="CyberGlove" name="CyberGlove" version="1.0">
     <category>Devices</category>
     <help>Configuration for the CyberGlove</help>
@@ -1104,24 +1104,6 @@ The filters are applied in the order that they are specified in this configurati
       <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="SwapLockPlugin" name="SwapLockPlugin" version="1.0">
-    <category>Cluster Juggler</category>
-    <PropertyDesc name="TCP/IP Server Port" token="sync_server_port" type="int" variable="0">
-      <item label="" defaultvalue="" />
-    </PropertyDesc>
-    <PropertyDesc name="Syncronization Method" token="sync_method" type="int" variable="0">
-      <item label="" defaultvalue="" />
-      <enumeration name="TCP/IP" value="0" />
-      <enumeration name="Serial &amp; TCP/IP" value="1" />
-      <enumeration name="Wired Serial" value="2" />
-      <enumeration name="Nothing" value="3" />
-    </PropertyDesc>
-    <PropertyDesc name="Syncronization Server" token="sync_server" type="chunk" variable="0">
-      <help>Cluster Node that is responsible for syncronizing all other nodes.</help>
-      <item label="Machine" defaultvalue="" />
-      <allowedtype>MachineSpecific</allowedtype>
-    </PropertyDesc>
-  </ChunkDesc>
   <ChunkDesc token="OpenGLFBConfig" name="OpenGL Frame Buffer Configuration" version="1.0">
     <category>Display</category>
     <help />
@@ -1478,6 +1460,15 @@ The filters are applied in the order that they are specified in this configurati
       <help>Vertical field of view in degrees</help>
       <item label="Vertical Field Of View" defaultvalue="80.0" />
     </PropertyDesc>
+    <PropertyDesc name="Enable Sim Plug-in" token="hasSimPlugin" type="bool" variable="0">
+      <item label="hasSimPlugin" defaultvalue="false" />
+      <help>Does this viewport have a custom simulator plug-in?</help>
+    </PropertyDesc>
+    <PropertyDesc name="Sim Plug-In" token="simPlugIn" type="embeddedchunk" variable="0">
+      <item label="simPlugIn" />
+      <allowedtype>PySim</allowedtype>
+      <help>Configuration of a simulator plug-in.</help>
+    </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="Sound" name="Sound Object" version="1.0">
     <category>Audio</category>
@@ -1592,6 +1583,24 @@ The filters are applied in the order that they are specified in this configurati
       <help>The tracker proxy that tracks the screen's reference frame.</help>
       <item label="Tracker Proxy" defaultvalue="" />
       <allowedtype>PosProxy</allowedtype>
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="SwapLockPlugin" name="SwapLockPlugin" version="1.0">
+    <category>Cluster Juggler</category>
+    <PropertyDesc name="TCP/IP Server Port" token="sync_server_port" type="int" variable="0">
+      <item label="" defaultvalue="" />
+    </PropertyDesc>
+    <PropertyDesc name="Syncronization Method" token="sync_method" type="int" variable="0">
+      <item label="" defaultvalue="" />
+      <enumeration name="TCP/IP" value="0" />
+      <enumeration name="Serial &amp; TCP/IP" value="1" />
+      <enumeration name="Wired Serial" value="2" />
+      <enumeration name="Nothing" value="3" />
+    </PropertyDesc>
+    <PropertyDesc name="Syncronization Server" token="sync_server" type="chunk" variable="0">
+      <help>Cluster Node that is responsible for syncronizing all other nodes.</help>
+      <item label="Machine" defaultvalue="" />
+      <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="TrackdAPIController" name="TrackdAPIController" version="1.0">
