@@ -18,6 +18,12 @@
 #include <vjDefines.h>
 #endif	/* HAVE_CONFIG_H */
 
+#ifdef _DEBUG
+#   define VJ_DEBUG
+#else
+#   define VJ_OPT
+#endif
+
 /* Common includes */
 /* Put here for pre-compiled headers */
 #ifdef __cplusplus
@@ -25,19 +31,18 @@
 #include <iomanip.h>
 #include <fstream.h>
 #include <vector>
+#include <map>
 #include <string>
+//#include <Kernel/vjDebug.h>
 #endif
 
-#ifdef _DEBUG
-#   define VJ_DEBUG
-#else
-#   define VJ_OPT
-#endif
 
 /* --- Macros ---- */
+#define VJ_EPS 1e-8
 #define VJ_DEG2RAD(x) ((x)*M_PI/180.0)
 #define VJ_RAD2DEG(x) ((x)*180.0/M_PI)
-#define VJ_ZERO_CLAMP(x) ((fabs(x) < 1e-15)? 0.0f : x)
+#define VJ_ZERO_CLAMP(x) ((fabs(x) < VJ_EPS)? 0.0f : x)
+#define VJ_IS_ZERO(x) (fabs(x) < VJ_EPS)
 #define VJ_CLAMP(x,y) ((x>y)? y : x)
 #define VJ_MIN2(x,y) ((x>y)? y : x)
 #define VJ_MIN3(x,y,z) VJ_MIN2(VJ_MIN2(x,y),z)
