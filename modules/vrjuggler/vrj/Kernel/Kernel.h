@@ -39,7 +39,6 @@
 #include <vpr/Util/Singleton.h>
 
 #include <vrj/Kernel/SystemFactory.h>
-#include <vrj/Environment/EnvironmentManager.h>
 #include <vpr/Sync/CondVar.h>
 
 #include <gadget/InputManager.h>
@@ -219,10 +218,6 @@ public:      // Global "get" interface
    /** Get the input manager */
    gadget::InputManager* getInputManager();
 
-   /** Get the Environment Manager */
-   vrj::EnvironmentManager* getEnvironmentManager()
-    { return environmentManager; }
-
    /** Get the user associated with given name
    * return NULL - Not found
    */
@@ -251,7 +246,6 @@ protected:
    DrawManager*               mDrawManager;           /**< The Draw Manager we are currently using */
    SoundManager*              mSoundManager;          /**< The Audio Manager we are currently using  */
    DisplayManager*            mDisplayManager;        /**< The Display Manager we are currently using */
-   EnvironmentManager*        environmentManager;     /**< The Environment Manager object  */
 
    /// Multi-user information
    std::vector<vrj::User*>   mUsers;         /** A list of user objects in system */
