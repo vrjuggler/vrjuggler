@@ -52,13 +52,14 @@
 
 //: Guard wrapper.
 //!PUBLIC_API:
-template <class LOCK>
+
+template < class LOCK_TYPE >
 class vjGuard
 {
 public:
    //: Acquire the lock implicitly.
    // If block = 1 then use a blocking acquire
-   vjGuard(LOCK &lock, int block = 1)
+   vjGuard(LOCK_TYPE &lock, int block = 1)
    : theLock(&lock)
    {
       lockStatus = block ? acquire() : tryAcquire();
@@ -99,7 +100,7 @@ public:
 
 
 private:
-   LOCK* theLock;	//: The lock that we are using
+   LOCK_TYPE* theLock;	//: The lock that we are using
    int   lockStatus;	//: Are we locked or not
 };
 

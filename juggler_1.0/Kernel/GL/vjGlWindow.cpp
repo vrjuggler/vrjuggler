@@ -82,10 +82,10 @@ void vjGlWindow::setViewport(float xo, float yo, float xSize, float ySize)
    vjASSERT( ((xo+xSize) <= 1.0f) && "X viewport sizes are out of range");
    vjASSERT( ((yo+ySize) <= 1.0f) && "Y viewport sizes are out of range");
 
-   unsigned ll_x = (xo*float(window_width));
-   unsigned ll_y = (yo*float(window_height));
-   unsigned x_size = (xSize*float(window_width));
-   unsigned y_size = (ySize*float(window_height));
+   unsigned ll_x = unsigned(xo*float(window_width));
+   unsigned ll_y = unsigned(yo*float(window_height));
+   unsigned x_size = unsigned(xSize*float(window_width));
+   unsigned y_size = unsigned(ySize*float(window_height));
 
    glViewport(ll_x, ll_y, x_size, y_size);
 }

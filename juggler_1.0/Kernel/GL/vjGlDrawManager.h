@@ -162,18 +162,6 @@ public:  // Drawing functions used by library
    //! NOTE: This is called internally by the library
    void drawSimulator(vjSimViewport* sim);
 
-protected:     // --- Geom helpers --- //
-   void initQuadObj();
-   void drawLine(vjVec3& start, vjVec3& end);
-   void drawSphere(float radius, int slices, int stacks);
-   void drawCone(float base, float height, int slices, int stacks);
-   void drawBox(float size, GLenum type);
-   void drawWireCube(float size);
-   void drawSolidCube(float size);
-   void drawGlove(vjGloveProxy* gloveProxy);
-
-   GLUquadricObj* mQuadObj;
-
 public:
    //: Get ptr to the current user data
    // Should be used in the draw function
@@ -188,7 +176,23 @@ public:
    int getCurrentContext()
    { return (*mContextId); }
 
+protected:     // --- Geom helpers --- //
+   void initQuadObj();
+   void drawLine(vjVec3& start, vjVec3& end);
+   void drawSphere(float radius, int slices, int stacks);
+   void drawCone(float base, float height, int slices, int stacks);
+   void drawBox(float size, GLenum type);
+   void drawWireCube(float size);
+   void drawSolidCube(float size);
+   void drawGlove(vjGloveProxy* gloveProxy);
+
+   GLUquadricObj* mQuadObj;
+
 protected:
+   //: Factory function to get system specific OpenGL window
+	//! POST: Returns an OpenGL window for the current system
+   vjGlWindow* getGLWindow();
+
    void setCurrentContext(int val)
    { (*mContextId) = val; }
 

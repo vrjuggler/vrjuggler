@@ -33,7 +33,6 @@
 
 #include <vjConfig.h>
 #include <Kernel/vjOSXSystemFactory.h>
-#include <Kernel/GL/vjGlOSXWindow.h>
 #include <VPR/Threads/vjThread.h>
 #include <VPR/vjSystem.h>
 #include <Utils/vjDebug.h>
@@ -63,7 +62,7 @@ void vjOSXSystemFactory::CarbonApplicationThread(void* nullData)
 {
     Initialize();
     PreflightGL (false);
-    
+
     InitComplete = true;
     EventLoop(); // This is where we will put the main loop to retrieve events from carbon
 }
@@ -71,17 +70,12 @@ void vjOSXSystemFactory::CarbonApplicationThread(void* nullData)
 vjOSXSystemFactory::vjOSXSystemFactory()
 {
     InitComplete = false; //We haven't initialized yet!
-    
+
     vjThreadMemberFunctor<vjOSXSystemFactory>* memberFunctor = new vjThreadMemberFunctor<vjOSXSystemFactory>(this, &vjOSXSystemFactory::CarbonApplicationThread, NULL);
     vjThread* new_thread;
     new_thread = new vjThread(memberFunctor);
-    
-    while(!InitComplete); //Spin here until the application is initialized!
-}
 
-vjGlWindow* vjOSXSystemFactory::getGLWindow()
-{
-   return new vjGlOSXWindow;
+    while(!InitComplete); //Spin here until the application is initialized!
 }
 
 /*******************************************************************/
@@ -120,13 +114,13 @@ void vjOSXSystemFactory::Initialize()
 {
     OSErr	err;
 
-            
+
     InitCursor();
-    
+
     err = AEInstallEventHandler( kCoreEventClass, kAEQuitApplication, NewAEEventHandlerUPP((AEEventHandlerProcPtr)QuitAppleEventHandler), 0, false );
     if (err != noErr)
         ExitToShell();
-    
+
     /*/ Doesn't work right quite yet...
     char	bundle_path[1024];
     char	root_path[] = "\0";
@@ -134,32 +128,32 @@ void vjOSXSystemFactory::Initialize()
     CFURLRef bundleURL;
     CFBundleRef myBundle;
     IBNibRef mainmenu;
-    
+
     char* vj_base_dir = getenv("VJ_BASE_DIR");
     if(vj_base_dir == NULL) vj_base_dir = root_path;
-    
+
     sprintf(bundle_path,"%s/share/Data/OSXData.bundle",vj_base_dir);
     bundle_path_cfstr = CFStringCreateWithCString(NULL, (const char*)bundle_path, kCFStringEncodingMacRoman);
     bundleURL = CFURLCreateWithFileSystemPath(kCFAllocatorDefault, bundle_path_cfstr, kCFURLPOSIXPathStyle, true);
     myBundle = CFBundleCreate(kCFAllocatorDefault, bundleURL);
-    
+
     if( CreateNibReferenceWithCFBundle(myBundle, CFSTR("mainmenu"), &mainmenu) != 0 )
         vjDEBUG(vjDBG_INPUT_MGR,0) << "vjOSXSystemFactory::Initialize():  Error finding mainmenu in the bundle!" << std::endl << vjDEBUG_FLUSH;
     else if( SetMenuBarFromNib(mainmenu, CFSTR("MainMenu") ) != 0 )
         vjDEBUG(vjDBG_INPUT_MGR,0) << "vjOSXSystemFactory::Initialize():  Error setting the menubar!" << std::endl << vjDEBUG_FLUSH;;
-    
-    CFRelease(bundleURL);    
+
+    CFRelease(bundleURL);
     CFRelease(bundle_path_cfstr); */
-    
+
     Handle	menuBar;
     MenuRef	menu;
     long	response;
-    
+
     menuBar = GetNewMBar(rMenuBar);	/* read menus into menu bar */
     if ( menuBar != nil )
     {
         SetMenuBar(menuBar);	/* install menus */
-        
+
         err = Gestalt(gestaltMenuMgrAttr, &response);
 	if ((err == noErr) && (response & gestaltMenuMgrAquaLayoutMask))
         {
@@ -168,26 +162,26 @@ void vjOSXSystemFactory::Initialize()
             DeleteMenuItem( menu, iQuitSeparator );
         }
     }
-    
+
     // This has to be done no matter what!
-    DrawMenuBar(); 
+    DrawMenuBar();
 }
 
 void vjOSXSystemFactory::EventLoop()
 {
     Boolean	gotEvent;
     EventRecord	event;
-        
+
     gQuitFlag = false;
     //vjDEBUG(vjDBG_INPUT_MGR,0) << "vjOSXSystemFactory::EventLoop()" << std::endl << vjDEBUG_FLUSH;
     do
     {
         gotEvent = WaitNextEvent(everyEvent,&event,36000,nil);
-        if (gotEvent) 
+        if (gotEvent)
             DoEvent(&event);
     } while (!gQuitFlag);
-    
-    
+
+
     // This should kill the application completely.
     // The nice thing about this is that when you put the application into a bundle
     // Cmd + Q works for killing the application.
@@ -199,8 +193,8 @@ void vjOSXSystemFactory::DoEvent(EventRecord *event)
     char	key;
     short	part;
     WindowRef	whichWindow;
-        
-    switch (event->what) 
+
+    switch (event->what)
     {
         case mouseDown:
             part = FindWindow(event->where, &whichWindow);
@@ -233,15 +227,15 @@ void vjOSXSystemFactory::DoMenuCommand(long menuResult)
     menuID = HiWord(menuResult);    /* use macros to get item & menu number */
     menuItem = LoWord(menuResult);
 
-    switch (menuID) 
+    switch (menuID)
     {
         case mApple:
-            switch (menuItem) 
+            switch (menuItem)
             {
                 case iAbout:
                     vjDEBUG(vjDBG_INPUT_MGR,0) << "vjOSXSystemFactory::DoMenuCommand()" << "   AboutBox Menu selected" << std::endl << vjDEBUG_FLUSH;
                     break;
-                    
+
                 case iQuit:
                     ExitToShell();
                     break;
@@ -250,7 +244,7 @@ void vjOSXSystemFactory::DoMenuCommand(long menuResult)
                     break;
             }
             break;
-        
+
         case mFile:
             break;
 		
