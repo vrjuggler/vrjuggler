@@ -55,15 +55,15 @@ namespace gadget
 {
 
 /**
- *  Position derived class for running a Flock of Birds.
- *  , also a wrapper class for the real ascension flock class "FlockStandalone"
+ * Position derived class for running a Flock of Birds.
+ * Also a wrapper class for the real Ascension Flock class "FlockStandalone"
  *
  *  Flock adds to the FlockStandalone class shared memory and threading.<br>
  *  Flock is a positional device driver for the Flock of Birds, the config
  *  chunk in the constructor should set up all the settings, for these to be
  *  changed the Flock has to be deleted and a new instance created with an
  *  updated configchunk.
- *  <br>
+ *
  * @note Some functions still remain for changing the options of
  *     the flock when its not in Sampling mode, but in order to stay
  *     consistent with the Input/vjPosition functionality these
@@ -73,9 +73,10 @@ namespace gadget
  *   For example, if you have recievers 1,2, and 4 with transmitter on 3,
  *   then you can access the data, in order, as 0,1,2.
  *
- * See also: Position
+ * @see gadget::Position
  */
-class Flock : public Input, public Position {
+class Flock : public Input, public Position
+{
 public:
    /**
     * Configure Constructor.
@@ -95,198 +96,238 @@ public:
     *          doesn't actually talk to the FOB yet.
     */
    Flock(const char* const port = "/dev/ttyd3",
-      const int& baud = 38400,
-      const int& sync = 1,
-      const int& block = 0,
-      const int& numBrds = 3,
-      const int& transmit = 3,
-      const BIRD_HEMI& hemi = LOWER_HEM,
-      const BIRD_FILT& filt = AC_NARROW,
-      const char& report = 'R',
-      const char* const calfile = "");
+         const int& baud = 38400,
+         const int& sync = 1,
+         const int& block = 0,
+         const int& numBrds = 3,
+         const int& transmit = 3,
+         const BIRD_HEMI& hemi = LOWER_HEM,
+         const BIRD_FILT& filt = AC_NARROW,
+         const char& report = 'R',
+         const char* const calfile = "");
    ~Flock();
 
 
-    /**  configure the flock with a config chunk */
-    virtual bool config(jccl::ConfigChunkPtr c);
+   /**  configure the flock with a config chunk */
+   virtual bool config(jccl::ConfigChunkPtr c);
 
-    /**  begin sampling */
-    int startSampling();
+   /**  begin sampling */
+   int startSampling();
 
-    /**  stop sampling */
-    int stopSampling();
+   /**  stop sampling */
+   int stopSampling();
 
-    /**  sample data */
-    int sample();
+   /**  sample data */
+   int sample();
 
-    /**  update to the sampled data. */
-    void updateData();
+   /**  update to the sampled data. */
+   void updateData();
 
-    /**  return what chunk type is associated with this class. */
-    static std::string getChunkType() { return std::string("Flock");}
+   /**  return what chunk type is associated with this class. */
+   static std::string getChunkType()
+   {
+      return std::string("Flock");
+   }
 
-    /**  see if the flock is active or not */
-    inline const bool& isActive() const { return mFlockOfBirds.isActive(); }
+   /**  see if the flock is active or not */
+   inline const bool& isActive() const
+   {
+      return mFlockOfBirds.isActive();
+   }
 
-    /**
-     *  set the port to use
-     *  this will be a string in the form of the native OS descriptor <BR>
-     *  ex: unix - "/dev/ttyd3", win32 - "COM3" <BR>
-     * @pre flock.isActive() must be false to use this function
-     */
-    void     setPort( const char* const serialPort );
+   /**
+    * Sets the port to use.
+    * This will be a string in the form of the native OS descriptor <BR>
+    * ex: unix - "/dev/ttyd3", win32 - "COM3"
+    *
+    * @pre flock.isActive() must be false to use this function
+    */
+   void setPort( const char* const serialPort );
 
-    /**
-     *  get the port used
-     *  this will be a string in the form of the native OS descriptor <BR>
-     *  ex: unix - "/dev/ttyd3", win32 - "COM3"
-     */
-    inline const std::string& getPort() const
-    {
-       return mFlockOfBirds.getPort();
-    }
+   /**
+    * Gets the port used.
+    * This will be a string in the form of the native OS descriptor <BR>
+    * ex: unix - "/dev/ttyd3", win32 - "COM3"
+    */
+   inline const std::string& getPort() const
+   {
+      return mFlockOfBirds.getPort();
+   }
 
-    /**
-     *  set the baud rate
-     *  this is generally 38400, consult flock manual for other rates. <BR>
-     * @note flock.isActive() must be false to use this function
-     */
-    void     setBaudRate( const int& baud );
+   /**
+    * Sets the baud rate.
+    * This is generally 38400.  Consult the Flock manual for other rates.
+    * @note flock.isActive() must be false to use this function.
+    */
+   void setBaudRate( const int& baud );
 
-    /**
-     *  get the baud rate
-     *  this is generally 38400, consult flock manual for other rates. <BR>
-     */
-    inline const int&  getBaudRate()  const { return mFlockOfBirds.getBaudRate();}
+   /**
+    * Gets the baud rate.
+    */
+   inline const int& getBaudRate() const
+   {
+      return mFlockOfBirds.getBaudRate();
+   }
 
-    /**
-     *  Set the unit number of the transmitter
-     * @param Transmit  an integer that is the same as the dip switch
-     *          setting on the transmitter box (for the unit number) <BR>
-     * @note flock.isActive() must be false to use this function
-     */
-    void     setTransmitter( const int& Transmit );
+   /**
+    * Sets the unit number of the transmitter.
+    * @param Transmit  An integer that is the same as the dip switch
+    *          setting on the transmitter box (for the unit number).
+    * @note flock.isActive() must be false to use this function
+    */
+   void setTransmitter( const int& Transmit );
 
-    /**
-     *  Get the unit number of the transmitter
-     * @post returns an integer that is the same as the dip switch
-     *         setting on the transmitter box (for the unit number) <BR>
-     */
-    inline const int&  getTransmitter() const { return mFlockOfBirds.getTransmitter(); }
+   /**
+    * Gets the unit number of the transmitter.
+    * @post Returns an integer that is the same as the dip switch
+    *       setting on the transmitter box (for the unit number).
+    */
+   inline const int& getTransmitter() const
+   {
+      return mFlockOfBirds.getTransmitter();
+   }
 
+   /**
+    * Sets the number of birds to use in the Flock.
+    * @param n  an integer number not more than the number of
+    *          birds attached to the system.
+    * @note flock.isActive() must be false to use this function.
+    */
+   void setNumBirds( const int& n );
 
-    /**
-     *  Set the number of birds to use in the flock.
-     * @param n  an integer number not more than the number of
-     *          birds attached to the system <BR>
-     * @note flock.isActive() must be false to use this function
-     */
-    void     setNumBirds( const int& n );
+   /**
+    * Gets the number of birds to use in the Flock.
+    * @return An integer number not more than the number of
+    *         birds attached to the system.
+    */
+   inline const int&  getNumBirds() const
+   {
+      return mFlockOfBirds.getNumBirds();
+   }
 
-    /**
-     *  Get the number of birds to use in the flock.
-     * @post - an integer number not more than the number of
-     *          birds attached to the system <BR>
-     */
-    inline const int&  getNumBirds() const { return mFlockOfBirds.getNumBirds(); }
+   /**
+    * Set the video sync type.  This option allows the Flock to syncronize its
+    * pulses with your video display.  This will eliminate most flicker caused
+    * by the magnetic distortion.
+    *
+    * @pre flock.isActive() must be false to use this function.
+    * @note Refer to your Flock manual for what number to use.
+    */
+   void setSync( const int& sync );
 
+   /**
+    * Gets the video sync type.  This option allows the Flock to syncronize its
+    * pulses with your video display.  This will eliminate most flicker caused
+    * by the magnetic distortion.
+    *
+    * @post returns the sync type.
+    * @note Refer to your Flock manual for what the return number means.
+    */
+   inline const int& getSync() const
+   {
+      return mFlockOfBirds.getSync();
+   }
 
-    /**
-     *  set the video sync type
-     *  this option allows the Flock to syncronize its pulses with
-     *  your video display.  This will eliminate most flicker caused
-     *  by the magnetic distortion. <BR>
-     * @note Refer to your flock manual for what number to use.
-     * @pre flock.isActive() must be false to use this function
-     */
-    void     setSync( const int& sync );
+   /**
+    * Sets blocking of the Flock.
+    * @pre flock.isActive() must be false to use this function.
+    * @note See the Flock manual for details.
+    */
+   void setBlocking( const int& blVal );
 
-    /**
-     *  Get the video sync type
-     *  this option allows the Flock to syncronize its pulses with
-     *  your video display.  This will eliminate most flicker caused
-     *  by the magnetic distortion. <BR>
-     * @post returns the sync type
-     * @note Refer to your flock manual for what the return number means
-     */
-    inline const int&  getSync() const {return mFlockOfBirds.getSync(); }
+   /**
+    * Gets the Flock's blocking type.
+    * @note See the Flock manual for details.
+    */
+   inline const int& getBlocking() const
+   {
+      return mFlockOfBirds.getBlocking();
+   }
 
+   /**
+    * Sets the type of filtering that the Flock uses.
+    * @note flock.isActive() must be false to use this function.
+    */
+   void setFilterType( const BIRD_FILT& f );
 
-    /**
-     *  Set blocking of flock
-     * @pre flock.isActive() must be false to use this function
-     * @note see flock manual for details.
-     */
-    void     setBlocking( const int& blVal );
+   /** Sets the type of filtering that the flock uses. */
+   inline const BIRD_FILT& getFilterType() const
+   {
+      return mFlockOfBirds.getFilterType();
+   }
 
-    /**
-     *  Get flock's blocking type
-     * @note see flock manual for details.
-     */
-    inline const int&  getBlocking() const { return mFlockOfBirds.getBlocking(); }
+   /**
+    * Sets the hemisphere from which the transmitter transmits.
+    * @note flock.isActive() must be false to use this function.
+    */
+   void setHemisphere( const BIRD_HEMI& h );
 
+   /** Sets the hemisphere that the transmitter transmits from. */
+   inline const BIRD_HEMI& getHemisphere() const
+   {
+      return mFlockOfBirds.getHemisphere();
+   }
 
-    /**
-     *  Set the type of filtering that the flock uses
-     * @note flock.isActive() must be false to use this function
-     */
-    void     setFilterType( const BIRD_FILT& f );
+   /**
+    * Sets the report rate that the flock uses.
+    * @note flock.isActive() must be false to use this function.
+    */
+   void setReportRate( const char& rRate );
 
-    /**  Set the type of filtering that the flock uses */
-    inline const BIRD_FILT&  getFilterType() const { return mFlockOfBirds.getFilterType(); }
+   /** Sets the report rate that the flock uses. */
+   inline const char& getReportRate() const
+   {
+      return mFlockOfBirds.getReportRate();
+   }
 
+   /** Gets the x position of the i'th reciever. */
+   inline float& xPos( const int& i )
+   {
+      return mFlockOfBirds.xPos( i );
+   }
 
-    /**
-     *  Set the hemisphere that the transmitter transmits from.
-     * @note flock.isActive() must be false to use this function
-     */
-    void     setHemisphere( const BIRD_HEMI& h );
+   /** Gets the y position of the i'th reciever. */
+   inline float& yPos( const int& i )
+   {
+      return mFlockOfBirds.yPos( i );
+   }
 
-    /**  Set the hemisphere that the transmitter transmits from. */
-    inline const BIRD_HEMI&  getHemisphere() const {return mFlockOfBirds.getHemisphere(); }
+   /** Gets the z position of the i'th reciever. */
+   inline float& zPos( const int& i )
+   {
+      return mFlockOfBirds.zPos( i );
+   }
 
+   /** Gets the z rotation of the i'th reciever. */
+   inline float& zRot( const int& i )
+   {
+      return mFlockOfBirds.zRot( i );
+   };
 
-    /**
-     *  Set the report rate that the flock uses
-     * @note flock.isActive() must be false to use this function
-     */
-    void     setReportRate( const char& rRate );
+   /** Gets the y rotation of the i'th reciever. */
+   inline float& yRot( const int& i )
+   {
+      return mFlockOfBirds.yRot( i );
+   }
 
-    /**  Set the report rate that the flock uses */
-    inline const char& getReportRate() const {return mFlockOfBirds.getReportRate(); }
-
-
-   /**  get the x position of the i'th reciever */
-   inline float&      xPos( const int& i ) { return mFlockOfBirds.xPos( i ); }
-
-   /**  get the y position of the i'th reciever */
-   inline float&      yPos( const int& i ) { return mFlockOfBirds.yPos( i ); }
-
-   /**  get the z position of the i'th reciever */
-   inline float&      zPos( const int& i ) { return mFlockOfBirds.zPos( i ); }
-
-   /**  get the z rotation of the i'th reciever */
-   inline float&      zRot( const int& i ) { return mFlockOfBirds.zRot( i ); };
-
-   /**  get the y rotation of the i'th reciever */
-   inline float&      yRot( const int& i ) { return mFlockOfBirds.yRot( i ); }
-
-   /**  get the x rotation of the i'th reciever */
-   inline float&      xRot( const int& i ) { return mFlockOfBirds.xRot( i ); }
-
+   /** Gets the x rotation of the i'th reciever. */
+   inline float& xRot( const int& i )
+   {
+      return mFlockOfBirds.xRot( i );
+   }
 
 
 private:
-    void controlLoop(void* nullParam);
-    void positionCorrect(float&x,float&y,float&z);
-    void initCorrectionTable(const char*);
+   void controlLoop(void* nullParam);
+   void positionCorrect(float&x,float&y,float&z);
+   void initCorrectionTable(const char*);
 
-    int getBirdIndex(int birdNum, int bufferIndex);
+   int getBirdIndex(int birdNum, int bufferIndex);
 
-    vpr::Thread*     mThread;      // The thread doing the flock sampling    
-    FlockStandalone  mFlockOfBirds;
+   vpr::Thread*     mThread;      /**< The thread doing the flock sampling */
+   FlockStandalone  mFlockOfBirds; /**< The actual Flock device object */
 };
 
-};
+} // End of gadget namespace
 
 #endif
