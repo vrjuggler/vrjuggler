@@ -401,6 +401,15 @@ if test "x$thread_pkg" = "xPOSIX" ; then
         else
             AC_DEFINE(_PTHREADS_DRAFT_4,)
         fi
+
+        # Define the default thread scope depending on the platform.  On IRIX,
+        # only process scope is avaiable.  Other systems may support system
+        # scope.
+        if test "$PLATFORM" = "SGI" ; then
+            AC_DEFINE(VJ_THREAD_SCOPE, PTHREAD_SCOPE_PROCESS)
+        else
+            AC_DEFINE(VJ_THREAD_SCOPE, PTHREAD_SCOPE_SYSTEM)
+        fi
     fi
 
 # If we are not using POSIX threads, we must be using the SGI IPC model, but
