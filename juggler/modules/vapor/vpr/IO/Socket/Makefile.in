@@ -49,7 +49,7 @@ SUBOBJDIR	= $(VPR_LIBRARY)
 VPRROOT		= $(top_srcdir)
 VPR_SRCDIR	= @VPR_SRCDIR@/IO/Socket
 
-SRCS	 	= InetAddr.cpp
+SRCS	 	= 
 
 include $(MKPATH)/dpp.obj.mk
 

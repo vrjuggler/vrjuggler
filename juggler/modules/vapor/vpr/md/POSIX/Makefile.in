@@ -51,7 +51,11 @@ VPR_SRCDIR	= @VPR_SRCDIR@/md/POSIX
 
 ifeq (@SUBSYSTEM@, POSIX)
 SRCS		= MutexPosix.cpp	\
-                  ThreadPosix.cpp
+          ThreadPosix.cpp
+endif
+
+ifneq (@SUBSYSTEM@, NSPR)
+SRCS += InetAddrBSD.cpp
 endif
 
 ifneq (@SUBSYSTEM@, WIN32)
