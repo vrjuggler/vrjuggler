@@ -102,7 +102,6 @@ class JCCL_CLASS_API LabeledPerfDataBuffer {
 
 public:
     std::string name;
-    int         nindex;
 
  public:
 
@@ -111,7 +110,7 @@ public:
     //! POST: self is created and has _numbufs buffers
     //! ARGS: _numbufs - number of buffers to allocate
     //+       (default 50)
-    LabeledPerfDataBuffer (const std::string& _name, int _numbufs, int _nindex);
+    LabeledPerfDataBuffer (const std::string& _name, int _numbufs);
 
 
     //: destructor
@@ -162,11 +161,12 @@ public:
     //+       that calls set. e.g. 1 = point right before
     //+       entering some big computation, and 2 = point
     //+       right after.
-//     void set (int _phase);
+    void set (const vpr::GUID &category, const std::string& index_name);
 
-//     void set (int _phase, TimeStamp& _value);
+    void set (const vpr::GUID &category, const std::string& index_name,
+              TimeStamp& _value);
 
-    void set (vpr::GUID category, const std::string& index_name);
+    void setBeginCycle (const vpr::GUID& category);
 
     // for below: need a version w/ max # buffers to write
 

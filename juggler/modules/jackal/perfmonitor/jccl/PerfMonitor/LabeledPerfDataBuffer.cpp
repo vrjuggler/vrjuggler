@@ -36,8 +36,8 @@
 
 namespace jccl {
 
-LabeledPerfDataBuffer::LabeledPerfDataBuffer (const std::string& _name, int _numbufs,
-                                int _nindex) {
+LabeledPerfDataBuffer::LabeledPerfDataBuffer (const std::string& _name, 
+                                              int _numbufs) {
     name = _name;
     numbufs = _numbufs;
     buffer = new buf_entry[numbufs];
@@ -45,7 +45,6 @@ LabeledPerfDataBuffer::LabeledPerfDataBuffer (const std::string& _name, int _num
     write_pos = 1;
     lost = 0;
     active = false;
-    nindex = _nindex;
 }
 
 
@@ -96,7 +95,7 @@ bool LabeledPerfDataBuffer::isActive() {
 }
 
 
-void LabeledPerfDataBuffer::set (vpr::GUID category, 
+void LabeledPerfDataBuffer::set (const vpr::GUID &category, 
                                  const std::string& index_name) {
     int tw;
 
@@ -125,6 +124,70 @@ void LabeledPerfDataBuffer::set (vpr::GUID category,
     }
 
 }
+
+
+void LabeledPerfDataBuffer::set (const vpr::GUID &category, 
+                                 const std::string& index_name,
+                                 TimeStamp& value) {
+    int tw;
+
+    if (active && isCategoryActive (category)) {
+
+        if (write_pos == read_begin) {
+            if (lost_lock.acquire() != -1) {
+                lost++;
+                lost_lock.release();
+            }
+            else
+                vprDEBUG(vprDBG_ALL,2) 
+                    << "LabeledPerfDataBuffer: lock acquire "
+                    << "failed\n" << vprDEBUG_FLUSH;
+            tw = (write_pos + numbufs - 1) % numbufs;
+            buffer[tw].category = category;
+            buffer[tw].index = &index_name;
+            buffer[tw].stamp.set();
+        }
+        else {
+            buffer[write_pos].category = category;
+            buffer[write_pos].index = &index_name;
+            buffer[write_pos].stamp = value;
+            write_pos = (write_pos+1)%numbufs;
+        }
+    }
+
+}
+
+
+void LabeledPerfDataBuffer::setBeginCycle (const vpr::GUID &category) {
+    int tw;
+
+    if (active && isCategoryActive (category)) {
+
+        if (write_pos == read_begin) {
+            if (lost_lock.acquire() != -1) {
+                lost++;
+                lost_lock.release();
+            }
+            else
+                vprDEBUG(vprDBG_ALL,2) 
+                    << "LabeledPerfDataBuffer: lock acquire "
+                    << "failed\n" << vprDEBUG_FLUSH;
+            tw = (write_pos + numbufs - 1) % numbufs;
+            buffer[tw].category = category;
+            buffer[tw].index = 0;
+            buffer[tw].stamp.set();
+        }
+        else {
+            buffer[write_pos].category = category;
+            buffer[write_pos].index = 0;
+            buffer[write_pos].stamp.set();
+            write_pos = (write_pos+1)%numbufs;
+        }
+    }
+
+}
+
+
 
 
 
