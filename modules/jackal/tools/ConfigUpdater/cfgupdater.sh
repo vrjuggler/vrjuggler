@@ -47,13 +47,6 @@ if test ! -x "$JDK_HOME/bin/java" ; then
     status=1
 # Otherwise, start up ConfigUpdater and exit with status 0.
 else
-    if test "x$VJ_SHARE_DIR" = "x" ; then
-        VJ_SHARE_DIR=$VJ_BASE_DIR/#JCCL_SHARE_DIR#
-    fi
-    if test "x$JCCL_SHARE_DIR" = "x" ; then
-        JCCL_SHARE_DIR=$JCCL_BASE_DIR/#JCCL_SHARE_DIR#
-    fi
-
     if  test "x$CLASSPATH" != "x" ; then
         CLASSPATH="$CLASSPATH:$JCCL_BASE_DIR/bin/ConfigUpdater.jar:$JCCL_BASE_DIR/bin/jdom.jar:$JCCL_BASE_DIR/bin/xerces.jar"
     else
@@ -61,8 +54,7 @@ else
     fi
 
     $JDK_HOME/bin/java -classpath $CLASSPATH				\
-      -DVJ_BASE_DIR="$VJ_BASE_DIR" -DVJ_SHARE_DIR="$VJ_SHARE_DIR"	\
-      -DJCCL_BASE_DIR="$JCCL_BASE_DIR" -DJCCL_SHARE_DIR="$JCCL_SHARE_DIR" \
+      -DVJ_BASE_DIR="$VJ_BASE_DIR" -DJCCL_BASE_DIR="$JCCL_BASE_DIR"	\
       ConfigUpdater.Main $*
     status=0
 fi
