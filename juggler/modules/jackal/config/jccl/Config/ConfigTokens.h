@@ -84,6 +84,7 @@ namespace jccl
       const std::string DEFAULTVALUE("defaultvalue");
       const std::string DEFINITION("definition");
       const std::string DEFINITION_VERSION("definition_version");
+      const std::string PARENT("parent");
       const std::string ENUM("enum");
       const std::string HELP("help");
       const std::string LABEL("label");
