@@ -406,8 +406,8 @@ public class MultiUnitDeviceVertexView
        */
       private void addUnitRow(DefaultPort unitPort, boolean resizeCellView)
       {
-         UnitInfo unit_info = (UnitInfo) unitPort.getUserObject();
-         final Integer unit_type = unit_info.getUnitType();
+         final UnitInfo unit_info = (UnitInfo) unitPort.getUserObject();
+         Integer unit_type = unit_info.getUnitType();
 
          PortComponent port_widget = new PortComponent(this.graph, unitPort);
          port_widget.setMinimumSize(new Dimension(5, 5));
@@ -498,19 +498,7 @@ public class MultiUnitDeviceVertexView
                {
                   public void actionPerformed(ActionEvent evt)
                   {
-                     JComponent button = (JComponent) evt.getSource();
-                     UnitTypeGroup ug =
-                        (UnitTypeGroup) mUnitGroups.get(unit_type);
-                     TableLayoutConstraints my_tlc =
-                        mMainLayout.getConstraints(button);
-                     TableLayoutConstraints add_btn_tlc =
-                        mMainLayout.getConstraints(ug.addButton);
-
-                     // This changes a new property value in our config
-                     // element which results in a ConfigElementEvent being
-                     // fired.  It is in the handling of that event that we
-                     // remove the row from the layout.
-                     removeUnit(my_tlc.row1 - add_btn_tlc.row1 - 1, unit_type);
+                     removeUnit(unit_info);
                   }
                }
             );
@@ -564,8 +552,8 @@ public class MultiUnitDeviceVertexView
       private void removeUnitRow(DefaultPort port)
       {
          List components = (List) mUnitRowMap.get(port.getUserObject());
-         removeUnitRow(port, components);
          mUnitRowMap.remove(port.getUserObject());
+         removeUnitRow(port, components);
       }
 
       /**
@@ -728,7 +716,7 @@ public class MultiUnitDeviceVertexView
          GraphHelpers.autoSizeCellView(this.graph, pref_size, mView);
       }
 
-      private void removeUnit(int unitNumber, Integer unitType)
+      private void removeUnit(UnitInfo unitInfo)
       {
          try
          {
@@ -741,9 +729,10 @@ public class MultiUnitDeviceVertexView
             // whole value.  I simply couldn't come up with a more elegant,
             // more robust way to handle the propertyValueChanged case().
             // -PH 3/22/2005
-            mRemovedUnitInfo = new UnitInfo(unitType, new Integer(unitNumber));
+            mRemovedUnitInfo = unitInfo;
 
-            mDeviceInfo.removeUnit(unitType, unitNumber);
+            mDeviceInfo.removeUnit(unitInfo.getUnitType(),
+                                   unitInfo.getUnitNumber());
          }
          catch (IllegalArgumentException ex)
          {
