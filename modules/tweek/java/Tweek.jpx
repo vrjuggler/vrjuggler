@@ -56,6 +56,7 @@
   <file path="org/vrjuggler/tweek/treeviewer/BeanTreeViewer.java" />
   <file path="org/vrjuggler/tweek/net/CommunicationEvent.java" />
   <file path="org/vrjuggler/tweek/net/CommunicationListener.java" />
+  <file path="org/vrjuggler/tweek/ConnectionDialog.java" />
   <file path="org/vrjuggler/tweek/net/corba/CorbaService.java" />
   <file path="org/vrjuggler/tweek/beans/DefaultBeanModelViewer.java" />
   <file path="org/vrjuggler/tweek/services/EnvironmentService.java" />
