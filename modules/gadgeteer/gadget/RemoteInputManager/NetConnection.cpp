@@ -69,6 +69,7 @@ namespace gadget
       mPort = port;
       mManagerId = vpr::GUID(manager_id); // set the id of the other computer's remote manager
       mSockStream = sock_stream;
+      mSockStream->setNoDelay(true);
       //mRecvBuffer = new RecvBuffer;
       //mObjectReader = new vpr::ObjectReader(new std::vector<vpr::Uint8>);
       mSendIterations = 0;
@@ -86,22 +87,46 @@ namespace gadget
       mSendIterations++;
       
 
-       for ( std::list<NetDevice*>::iterator i = mTransmittingDevices.begin();i != mTransmittingDevices.end();i++ )
-         {
+        for ( std::list<NetDevice*>::iterator i = mTransmittingDevices.begin();i != mTransmittingDevices.end();i++ )
+        {
             if ( (*i)->getWasInitialized() )
             {
-               vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "[RIM] Sending data for device: " << (*i)->getSourceName() << "\n" << vprDEBUG_FLUSH;
-               (*i)->updateFromLocalSource();
-               std::cout << "WRITE: " << (*i)->getSourceName() << std::endl;
-               mMsgPackage.createDeviceDataPacket(*i);
-               mMsgPackage.sendAndClearDeviceData(mSockStream,(*i));
+                vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "[RIM] Sending data for device: " << (*i)->getSourceName() << "\n" << vprDEBUG_FLUSH;
+                (*i)->updateFromLocalSource();
+                //std::cout << "WRITE: " << (*i)->getSourceName() << std::endl;
+                mMsgPackage.createDeviceDataPacket(*i);
+                mMsgPackage.sendAndClearDeviceData(mSockStream,(*i));
             }
-         }
-      
-      mMsgPackage.createEndBlock();
-      
-      mMsgPackage.sendAndClear(mSockStream);
+        }
    }
+
+   void NetConnection::receiveBarrier()
+   {
+      vpr::Uint8 temp;
+      vpr::Uint32 bytes_read;
+      vpr::ReturnStatus status;
+    
+      std::cout << "Bytes before: " << mSockStream->availableBytes() << std::endl;
+      status = mSockStream->recvn(&temp,1,bytes_read);
+      std::cout << "    bytes: " << bytes_read << std::endl;
+      std::cout << "Bytes after: " << mSockStream->availableBytes() << std::endl;
+      if (temp != MSG_BARRIER)
+      {
+          std::cout << "Real value is" << (int)temp << std::endl;
+      }
+   }
+
+   void NetConnection::sendBarrier()
+   {
+      vpr::Uint8 temp;
+      vpr::Uint32 bytes_read;
+      vpr::ReturnStatus status;
+      std::cout << "Bytes before: " << mSockStream->availableBytes() << std::endl;
+      status = mSockStream->send(&MSG_BARRIER,1,bytes_read);
+      std::cout << "    bytes: " << bytes_read << std::endl;
+      std::cout << "Bytes after: " << mSockStream->availableBytes() << std::endl;
+   }
+
 
    void NetConnection::addTransmittingNetDevice(NetDevice* net_device)
    {
@@ -135,6 +160,27 @@ namespace gadget
       }
       return NULL;
    }
+
+   NetConnection* NetConnection::findNetDeviceConnection(const std::string& device_name)
+    {
+       for ( std::list<NetDevice*>::iterator i = mReceivingDevices.begin();
+           i!= mReceivingDevices.end(); i++ )
+       {
+          if ( (*i)->getSourceName() == device_name )
+          {
+             return this;
+          }
+       }
+       for ( std::list<NetDevice*>::iterator i = mTransmittingDevices.begin();
+           i!= mTransmittingDevices.end(); i++ )
+       {
+          if ( (*i)->getSourceName() == device_name )
+          {
+             return this;
+          }
+       }
+       return NULL;
+    }
 
    NetDevice* NetConnection::findReceivingNetDeviceByLocalId(VJ_NETID_TYPE local_id)
    {

@@ -77,7 +77,8 @@ namespace gadget{
       std::string                   mShortHostname;
       std::string                   mLongHostname;
       std::string                   mLocalMachineChunkName;
-      
+      std::string                   mSyncMachine;
+
       std::list<NetConnection*>     mTransmittingConnections;           /**< network connections to other juggler instances */
       std::list<NetConnection*>     mReceivingConnections;           /**< network connections to other juggler instances */
       
@@ -93,6 +94,10 @@ namespace gadget{
       vpr::InetAddr        mListenAddr;
       vpr::Mutex           mConfigMutex;  // prevents us from try to read devices while they are being modified (added or removed)
 
+      std::list<vpr::SocketStream*>       mClientSyncs;
+
+      vpr::SocketStream*                  mServerSync;
+
    public:
       RemoteInputManager(InputManager* input_manager);
 
@@ -105,7 +110,11 @@ namespace gadget{
       bool configCanHandle(jccl::ConfigChunkPtr chunk);
       bool configureRIM();
       bool recognizeClusterMachineConfig(jccl::ConfigChunkPtr chunk);
+      bool recognizeRemoteInputManagerConfig(jccl::ConfigChunkPtr chunk);
       bool recognizeRemoteDeviceConfig(jccl::ConfigChunkPtr chunk);
+      void createBarrier();
+      NetConnection* findReceivingDevice(const std::string device_name);
+      NetConnection* findTransmittingDevice(const std::string device_name);
       
       /**
        * If there is not already a thread for listening and the local listening
@@ -225,6 +234,9 @@ namespace gadget{
        *				NULL if it could not be created
        */
       NetConnection* makeConnection(const std::string &hostname, const int port);
+
+      vpr::SocketStream* makeSyncConnection(const std::string& connection_hostname, const int connection_port);
+
 
       /**
        * Configures a new NetDevice for a device on a remote machine.

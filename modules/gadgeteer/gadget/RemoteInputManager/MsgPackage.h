@@ -73,6 +73,12 @@ namespace gadget
       */
       void sendAndClear(vpr::SocketStream* sock_stream);
      
+
+      bool isEmpty()
+      {
+          return(mObjectWriter->getData()->empty() && mTempWriter->getData()->empty());
+      }
+
      /**
       * Send contents of current ObjectWriter to the specified socket and 
       * clear the ObjectWriter.
