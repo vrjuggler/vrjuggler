@@ -154,7 +154,7 @@ chunk FileConnect "EM File Output" "A file for outputing Environment Manager dat
   end
 chunk PerfMeasure "Performance Measurements" "Controls performance monitoring of Juggler library"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
-  KernelEnabled Bool 1 "Kernel Testing" "Enables/disables performance measurements in vjKernel control loop"
+  TimingTests EmbeddedChunk -1 "Timing Tests" vj_enumeration { "PerfTestActive" } "Turn on/off Juggler internal timing tests"
   end
 chunk JugglerUser "JugglerUser" "This is a user in Juggler.  This is used for multi-user applications"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
@@ -188,5 +188,10 @@ chunk simKeyDigital "simKeyDigital" "This chunk holds a key and a modifier key. 
 chunk simKeyboardDigital "simKeyboardDigital" ""
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   simKeys EmbeddedChunk -1 "simKeys" vj_enumeration { "simKeyDigital" } "The keys we are simulated"
+  end
+chunk PerfTestActive "PerfTestActive" "inner chunk for Performance Testing"
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
+  Prefix String 1 "Prefix" ""
+  Enabled Bool 1 "Enabled" ""
   end
 End
