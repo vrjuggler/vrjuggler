@@ -32,6 +32,7 @@
       </property>
       <property valuetype="configelement" variable="true" name="analog_device">
          <help />
+         <value label="Analog Device" />
          <allowed_type>tweek_analog_device</allowed_type>
       </property>
       <property valuetype="configelementpointer" variable="false" name="device_host">
