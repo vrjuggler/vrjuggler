@@ -30,9 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#ifndef _GADGET_POSITIONDATA_H_
-#define _GADGET_POSITIONDATA_H_
+#ifndef _GADGET_POSITION_DATA_H_
+#define _GADGET_POSITION_DATA_H_
 
 #include <gadget/Type/InputData.h>
 #include <gmtl/Matrix.h>
@@ -41,10 +40,9 @@ namespace gadget
 {
 
 /** InputData subclass for positional data. */
-class GADGET_CLASS_API PositionData: public InputData
+class PositionData : public InputData
 {
 public:
-
    /** Constructor. */
    PositionData()
       : InputData()
@@ -71,10 +69,9 @@ public:
 
 public:
    gmtl::Matrix44f mPosData;
-
 }; // class PositionData
 
 } // namespace gadget
 
 
-#endif
+#endif /* _GADGET_POSITION_DATA_H_ */
