@@ -148,6 +148,48 @@ SocketImplBSD::open () {
 }
 
 // ----------------------------------------------------------------------------
+//: Reconfigure the socket so that it is in blocking mode.
+// ----------------------------------------------------------------------------
+Status
+SocketImplBSD::enableBlocking (void) {
+    vpr::Status status;
+    vprASSERT(m_open && "precondition says you must open() the socket first");
+
+    if ( m_blocking_fixed ) {
+        vprDEBUG(0,0)
+            << "[SocketImplBSD] Cannot enable blocking after a blocking call!\n"
+            << vprDEBUG_FLUSH;
+        status.setCode(Status::Failure);
+    }
+    else {
+        status = m_handle->enableBlocking();
+    }
+
+    return status;
+}
+
+// ----------------------------------------------------------------------------
+//: Reconfigure the socket so that it is in non-blocking mode.
+// ----------------------------------------------------------------------------
+Status
+SocketImplBSD::enableNonBlocking (void) {
+    vpr::Status status;
+    vprASSERT(m_open && "precondition says you must open() the socket first");
+
+    if ( m_blocking_fixed ) {
+        vprDEBUG(0,0)
+            << "[SocketImplBSD] Cannot disable blocking after a blocking call!\n"
+            << vprDEBUG_FLUSH;
+        status.setCode(Status::Failure);
+    }
+    else {
+        status = m_handle->enableNonBlocking();
+    }
+
+    return status;
+}
+
+// ----------------------------------------------------------------------------
 // Bind this socket to the address in the host address member variable.
 // ----------------------------------------------------------------------------
 Status
@@ -206,7 +248,8 @@ SocketImplBSD::connect (vpr::Interval timeout) {
     }
     // Otherwise, return success.
     else {
-        m_connected = true;
+        m_connected      = true;
+        m_blocking_fixed = true;
     }
 
     return retval;

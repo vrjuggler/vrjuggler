@@ -85,6 +85,8 @@ SocketStreamImplBSD::accept (SocketStreamImplBSD& sock,vpr::Interval timeout) {
     retval = m_handle->isReadable(timeout);
 
     if ( retval.success() ) {
+        m_blocking_fixed = true;
+
         // Accept an incoming connection request.
         addrlen = addr.size();
         accept_sock = ::accept(m_handle->m_fdesc,
@@ -110,6 +112,7 @@ SocketStreamImplBSD::accept (SocketStreamImplBSD& sock,vpr::Interval timeout) {
             sock.m_open            = true;
             sock.m_bound           = true;
             sock.m_connected       = true;
+            sock.m_blocking_fixed  = true;
         }
     }
 
