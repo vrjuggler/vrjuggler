@@ -18,6 +18,7 @@ namespace vpr
 class ProfileIterator
 {
 public:
+
 	/**
     * Access the first child of the parent.
     */
@@ -27,6 +28,10 @@ public:
     * Access the next child of the parent.
     */
 	void				next(void);
+
+   ProfileIterator*   getChild(void) {return new ProfileIterator(mCurrentChild->getChild());}
+
+   ProfileIterator*   getSibling(void) {return new ProfileIterator(mCurrentChild->getSibling());}
 
    /**
     * Tells if the there are no more children to iterate through.
@@ -70,6 +75,10 @@ public:
     * @return Current child's parent name is returned.
     */
 	const char*	getCurrentParentName( void )			{ return mCurrentParent->getName(); }
+
+   void printTree(ProfileNode* node) {node->printTree(node);}
+
+   const ProfileNode::NodeHistoryRange getNodeHistoryRange() { return mCurrentChild->getNodeHistoryRange();}
 
    /**
     * @return Current child's parent number of total calls is returned.
