@@ -900,6 +900,9 @@ AC_OUTPUT(Makefile
           samples/Pf/advanced/pfConfigNav/Makefile
           samples/Pf/advanced/pfNav/Makefile
           samples/tutorials/Makefile
+          samples/tutorials/MPApp/Makefile
+          samples/tutorials/SimpleApp/Makefile
+          samples/tutorials/contextApp/Makefile
           samples/tutorials/simpleInput/Makefile
           samples/tutorials/simplePf/Makefile
           test/Makefile 
