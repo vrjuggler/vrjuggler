@@ -85,11 +85,6 @@ public class NetControl implements Runnable {
 	    sock = new Socket (remote_name, port);
 	    out = new DataOutputStream (sock.getOutputStream());
 	    instream = 
-		/*		new ConfigStreamTokenizer(new BufferedReader 
-					  (new InputStreamReader 
-					   (sock.getInputStream()))
-					  );
-		*/
 		new ConfigStreamTokenizer (new InputStreamReader(sock.getInputStream()));
 	    connected = true;
 	    Core.enableActiveDB();
@@ -216,22 +211,22 @@ public class NetControl implements Runnable {
 
 
 
-  public boolean getChunkDescs () {
-    /* the idea behind this function is to send a msg to the server
-     * requesting all ChunkDescs, which we'll put into the DB.
-     */
-    if (!connected)
-      return false;
-    try {
-      //out.println ("get descriptions all");
-      out.writeBytes ("get descriptions all\n");
-      out.flush();
-      return true;
+    public boolean getChunkDescs () {
+	/* the idea behind this function is to send a msg to the server
+	 * requesting all ChunkDescs, which we'll put into the DB.
+	 */
+	if (!connected)
+	    return false;
+	try {
+	    //out.println ("get descriptions all");
+	    out.writeBytes ("get descriptions all\n");
+	    out.flush();
+	    return true;
+	}
+	catch (IOException io) {
+	    return false;
+	}
     }
-    catch (IOException io) {
-      return false;
-    }
-  }
 
 
 
@@ -322,6 +317,11 @@ public class NetControl implements Runnable {
 // 		    return false;
 // 		Core.active_treemodel.buildTree();
 		//core.ui.update();
+		return true;
+	    }
+	    else if (instream.sval.equalsIgnoreCase ("refresh")) {
+		// juggler is telling the GUI it needs to refresh itself.
+		getChunks();
 		return true;
 	    }
 	    else {

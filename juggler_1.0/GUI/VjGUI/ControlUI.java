@@ -35,6 +35,7 @@ public class ControlUI  extends JFrame
                 helptech_menu, 
                 helpdesc_menu;
     JMenuItem   quit_mi, 
+	        network_refresh_mi,
                 lnf_win_mi, 
                 lnf_java_mi, 
                 lnf_motif_mi, 
@@ -101,6 +102,7 @@ public class ControlUI  extends JFrame
 	main_menubar = new JMenuBar();
 
 	main_menubar.add (file_menu = new JMenu("File"));
+	file_menu.add (network_refresh_mi = new JMenuItem ("Refresh Active Config"));
 	file_menu.add (quit_mi = new JMenuItem ("Quit"));
 
 	main_menubar.add (options_menu = new JMenu("Options"));
@@ -135,6 +137,7 @@ public class ControlUI  extends JFrame
 	setJMenuBar (main_menubar);
 
 	quit_mi.addActionListener (this);
+	network_refresh_mi.addActionListener (this);
 	lnf_win_mi.addActionListener (this);
 	lnf_java_mi.addActionListener (this);
 	lnf_motif_mi.addActionListener (this);
@@ -226,6 +229,8 @@ public class ControlUI  extends JFrame
 	Object o = e.getSource(); 
 	if (o == quit_mi)
 	    quit();
+	else if (o == network_refresh_mi)
+	    Core.net.getChunks();
 	else if (o == lnf_win_mi)
 	    setLookNFeel("windows");
 	else if (o == lnf_java_mi)
