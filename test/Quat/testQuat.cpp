@@ -115,6 +115,34 @@ int main(void)
    cout << "\tvj_quat: " << vj_quat << endl;
    testMatch(vj_quat, gl_quat);
 
+   // ---- Test matrix conversion --- //
+   vjMatrix mat1, mat2;
+   vjQuat quat;
+   vjVec3 angles;
+   GL_QUAT q;
+
+   cout << "--- Test matrix conversion ---" << endl;
+   for(float yAng=-180.0;yAng<180.0;yAng += 2)
+   {
+      mat1.makeXYZEuler(0.0, yAng, 0.0f);
+
+      mat1.getXYZEuler(angles[0], angles[1], angles[2]);
+      cout << "Orig angles:" << angles << endl;
+
+      /*
+      gluMatToQuat_EXT((GLfloat (*)[4])mat1.getFloatPtr(), &q);
+      gluQuatNormalize_EXT(&q);
+      gluQuatToMat_EXT(&q, (GLfloat (*)[4])mat1.getFloatPtr());
+      */
+
+      quat.makeQuat(mat1);
+      mat1.makeQuaternion(quat);
+
+
+      mat1.getXYZEuler(angles[0], angles[1], angles[2]);
+      cout << "Final angles:" << angles << endl;
+   }
+
 }
 
 

@@ -4,3 +4,4 @@ chmod +x install-sh
 chmod +x release/scripts/*.pl
 chmod +x release/scripts/mkinstalldirs
 chmod +x release/scripts/print-targets.sh
+chmod +x GUI/editconfig
