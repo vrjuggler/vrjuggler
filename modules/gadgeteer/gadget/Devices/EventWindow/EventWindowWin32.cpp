@@ -51,11 +51,14 @@ bool EventWindowWin32::config(jccl::ConfigElementPtr e)
 
    if(e->getVersion() < required_definition_ver)
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED, "ERROR")
-            << " [gadget::EventWindowWin32::config()] Element named '" << e->getName() << "'" << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << clrOutBOLD(clrRED, "ERROR")
+         << " [gadget::EventWindowWin32::config()] Element named '"
+         << e->getName() << "'" << std::endl << vprDEBUG_FLUSH;
       vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-            << "is version [" << e->getVersion() << "], but we require at least version ["
-            << required_definition_ver << "]. Ignoring...\n" << vprDEBUG_FLUSH;
+         << "is version " << e->getVersion()
+         << ", but we require at least version " << required_definition_ver
+         << ". Ignoring...\n" << vprDEBUG_FLUSH;
       return false;
    }
 
@@ -72,30 +75,34 @@ bool EventWindowWin32::config(jccl::ConfigElementPtr e)
    }
 
    // Check for a remote display
-   std::string remote_display_name = e->getProperty<std::string>("event_source_name");
+   std::string remote_display_name =
+      e->getProperty<std::string>("event_source_name");
 
    // If we have a pointer to a window in registry, then use that
    if(!remote_display_name.empty())
    {
       mUseOwnDisplay = false;
       mRemoteDisplayName = remote_display_name;
-		
-		gadget::InputAreaWin32::InputAreaRegistry::InputAreaInfo input_area_info;
-		bool found_input_area = 
-			InputAreaWin32::InputAreaRegistry::instance()->getInputArea(mRemoteDisplayName,
-																							input_area_info);
+
+      gadget::InputAreaWin32::InputAreaRegistry::InputAreaInfo input_area_info;
+      bool found_input_area = 
+         InputAreaWin32::InputAreaRegistry::instance()->getInputArea(mRemoteDisplayName,
+                                                                     input_area_info);
+
       //WindowRegistry::WindowInfo remote_win_info;
       //bool found_window = WindowRegistry::instance()->getWindow(mRemoteDisplayName, remote_win_info);
       if(!found_input_area)
       {
-         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL) << "WARNING: Could not find remote window named: ["
-                           << mRemoteDisplayName << "]. Failed to create EventWindowWin32.\n" << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+            << "WARNING: Could not find remote window named '"
+            << mRemoteDisplayName << ". Failed to create EventWindowWin32.\n"
+            << vprDEBUG_FLUSH;
          return false;
       }
       else
       {
          mRemoteInputAreaInfo = input_area_info;
-			mRemoteInputAreaInfo.mInputArea->setDelegate(this);
+         mRemoteInputAreaInfo.mInputArea->setDelegate(this);
       }
    }
    else     // --- We will open and manage the real window ---- //
@@ -166,7 +173,8 @@ void EventWindowWin32::controlLoop(void* devPtr)
    if ( mLockState == Lock_LockKey )     // Means that we are in the initially locked state
    {
       vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-         << "gadget::EventWindowWin32::controlLoop: Mouse set to initial lock. Locking it now.\n"
+         << "[gadget::EventWindowWin32::controlLoop()] "
+         << "Mouse set to initial lock. Locking it now.\n"
          << vprDEBUG_FLUSH;
       this->lockMouse();                // Lock the mouse
    }
@@ -190,17 +198,18 @@ void EventWindowWin32::controlLoop(void* devPtr)
 // processing it's messages
 bool EventWindowWin32::startSampling()
 {
-	// XXX: Simple fix for now. We don't need to do any sampling.
-	if (!mUseOwnDisplay)
-	{
-		return true;
-	}
+   // XXX: Simple fix for now. We don't need to do any sampling.
+   if (!mUseOwnDisplay)
+   {
+      return true;
+   }
 
    if ( mThread != NULL )
    {
       vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
          << clrOutNORM(clrRED,"ERROR:")
-         << "gadget::EventWindowWin32: startSampling called, when already sampling.\n"
+         << "[gadget::EventWindowWin32::startSampling()] "
+         << "startSampling called, when already sampling.\n"
          << vprDEBUG_FLUSH;
       vprASSERT(mThread == NULL);
       return 0;
@@ -281,19 +290,19 @@ LONG APIENTRY MenuWndProc(HWND hWnd, UINT message, UINT wParam, LONG lParam)
 {
    switch ( message )
    {
-		// Catch the ALT key so that it does not open the system menu.
+      // Catch the ALT key so that it does not open the system menu.
       case WM_SYSKEYDOWN:
       case WM_SYSKEYUP:
-			break;
+         break;
       case WM_SYSCOMMAND:
-			return DefWindowProc(hWnd, message, wParam, lParam);
+         return DefWindowProc(hWnd, message, wParam, lParam);
          break;
       case WM_DESTROY:
          PostQuitMessage(0);
          break;
-		// Make sure that the resize event stays around until it is processed.
+      // Make sure that the resize event stays around until it is processed.
       case WM_SIZE:
-			break;
+         break;
       default:
          return DefWindowProc(hWnd, message, wParam, lParam);
    }
@@ -302,46 +311,47 @@ LONG APIENTRY MenuWndProc(HWND hWnd, UINT message, UINT wParam, LONG lParam)
 
 void EventWindowWin32::createWindowWin32()
 {
-	if (mUseOwnDisplay)
-	{
-		int root_height;
+   if (mUseOwnDisplay)
+   {
+      int root_height;
 
-		InitCommonControls();
+      InitCommonControls();
 
-		m_hInst = GetModuleHandle(NULL);   // Just try to get the application's handle
-		MenuInit(m_hInst);
+      m_hInst = GetModuleHandle(NULL);   // Just try to get the application's handle
+      MenuInit(m_hInst);
 
-		root_height = GetSystemMetrics(SM_CYSCREEN);
+      root_height = GetSystemMetrics(SM_CYSCREEN);
 
-		/* Create the app. window */
-		mWinHandle = CreateWindow("Gadgeteer Event Window", mInstName.c_str(),
-									WS_OVERLAPPEDWINDOW, mX,
-									root_height - mY - mHeight, mWidth, mHeight,
-									(HWND) NULL, NULL, m_hInst, (LPSTR) NULL);
-		ShowWindow(mWinHandle,SW_SHOW);
-		UpdateWindow(mWinHandle);
+      /* Create the app. window */
+      mWinHandle = CreateWindow("Gadgeteer Event Window", mInstName.c_str(),
+                                WS_OVERLAPPEDWINDOW, mX,
+                                root_height - mY - mHeight, mWidth, mHeight,
+                                (HWND) NULL, NULL, m_hInst, (LPSTR) NULL);
+      ShowWindow(mWinHandle,SW_SHOW);
+      UpdateWindow(mWinHandle);
 
-		// Attach a pointer to the device for use from the WNDPROC
-		SetWindowLong(mWinHandle, GWL_USERDATA, (LPARAM)this);
+      // Attach a pointer to the device for use from the WNDPROC
+      SetWindowLong(mWinHandle, GWL_USERDATA, (LPARAM)this);
 
-		if ( NULL == mWinHandle )
-		{
-			doInternalError("Could not create EventWindowWin32!");
-		}
-	}
+      if ( NULL == mWinHandle )
+      {
+         doInternalError("Could not create EventWindowWin32!");
+      }
+   }
 } /*CreateWindow*/
 
 BOOL EventWindowWin32::MenuInit(HINSTANCE hInstance)
 {
-   HANDLE		hMemory;
-   PWNDCLASS	pWndClass;
-   BOOL			bSuccess;
+   HANDLE    hMemory;
+   PWNDCLASS pWndClass;
+   BOOL      bSuccess;
 
    /* Initialize the menu window class */
    hMemory   = LocalAlloc(LPTR, sizeof(WNDCLASS));
    if ( !hMemory )
    {
-      MessageBox(NULL, ("<MenuInit> Not enough memory."), NULL, MB_OK | MB_ICONHAND);
+      MessageBox(NULL, ("<MenuInit> Not enough memory."), NULL,
+                 MB_OK | MB_ICONHAND);
       return(FALSE);
    }
 
@@ -350,16 +360,16 @@ BOOL EventWindowWin32::MenuInit(HINSTANCE hInstance)
    pWndClass->style         = 0;
    pWndClass->lpfnWndProc   = (WNDPROC) MenuWndProc;
    pWndClass->hInstance     = hInstance;
-	pWndClass->hIcon			 = LoadIcon(hInstance, "GADGETEER_ICON" );
+   pWndClass->hIcon         = LoadIcon(hInstance, "GADGETEER_ICON");
    pWndClass->hCursor       = (HCURSOR) LoadCursor(NULL, IDC_ARROW);
    pWndClass->hbrBackground = (HBRUSH) GetStockObject(WHITE_BRUSH);
    pWndClass->lpszMenuName  = ("MenuMenu"),
    pWndClass->lpszClassName = ("Gadgeteer Event Window");
 
 #ifdef _DEBUG
-#	define LIBNAME "gadget_d.dll"
+#  define LIBNAME "gadget_d.dll"
 #else
-#	define LIBNAME "gadget.dll"
+#  define LIBNAME "gadget.dll"
 #endif
 
    if (pWndClass->hIcon == NULL)
@@ -367,9 +377,9 @@ BOOL EventWindowWin32::MenuInit(HINSTANCE hInstance)
       HINSTANCE hDLLInstance = LoadLibrary( LIBNAME );
       if (hDLLInstance != NULL)
       {
-			pWndClass->hIcon = LoadIcon(hDLLInstance, "GADGETEER_ICON");
-		}
-	}
+         pWndClass->hIcon = LoadIcon(hDLLInstance, "GADGETEER_ICON");
+      }
+   }
 
    bSuccess = RegisterClass(pWndClass);
    LocalUnlock(hMemory);
@@ -377,7 +387,6 @@ BOOL EventWindowWin32::MenuInit(HINSTANCE hInstance)
 
    return bSuccess;
 }
-
 
 // process the current window events
 // Called repeatedly by
