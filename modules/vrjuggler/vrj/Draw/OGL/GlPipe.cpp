@@ -418,30 +418,6 @@ void GlPipe::renderWindow(GlWindow* win)
             else
                perf_phase += 3;
          }
-         // ---- SIMULATOR ---------- //
-         /*
-         else if(viewport->isSimulator())
-         {
-            SimViewport* sim_vp = dynamic_cast<SimViewport*>(viewport);
-
-            //win->setCameraProjection(sim_vp->getCameraProj());
-            win->setProjection(sim_vp->getCameraProj());
-            glManager->currentUserData()->setProjection(sim_vp->getCameraProj());
-
-            mPerfBuffer->set(perf_phase++);
-
-            theApp->draw();
-
-            mPerfBuffer->set(perf_phase++);
-
-            glManager->drawObjects();
-            glManager->drawSimulator(sim_vp);
-
-            mPerfBuffer->set(perf_phase++);
-
-         }
-         */
-
       }  // should viewport be rendered
    }     // for each viewport
 
