@@ -1286,6 +1286,19 @@ AC_OUTPUT(Makefile
           release/mtree/VJ.tools.dist
           VARS.pl)
 
+dnl # Create a script for handy reconfiguration of a build tree.  It removes
+dnl # configure's cache and status files and then runs configure with the
+dnl # same arguments.
+: ${RECONFIG=./reconfig}
+
+echo "creating $RECONFIG"
+rm -f $RECONFIG
+cat > $RECONFIG <<RECONFIG_SCRIPT
+rm -f config.status config.cache config.log
+$0 $ac_configure_args
+RECONFIG_SCRIPT
+chmod 755 $RECONFIG
+
 cat <<BUILD_INFO
 
  Remember that you need to build Juggler with GNU make.
