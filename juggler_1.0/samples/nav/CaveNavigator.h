@@ -165,7 +165,7 @@ int CaveNavigator::update()
    if (true == mNowAccelerating)
    {
       // magic number!  acceleration of 10 units per second
-      mVNav.accelerateForward( 10.0f );
+      mVNav.accelerate( vjVec3(0,0,-10.0f) );
    }
 
    if (true == mNowStopping)
