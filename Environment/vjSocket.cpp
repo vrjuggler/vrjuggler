@@ -128,7 +128,7 @@ vjSocketPosix* vjSocketPosix::accept () {
     sockaddr_in servaddr;
     int servsock;
 
-#ifdef VJ_OS_HPUX
+#if defined(VJ_OS_HPUX) || defined(VJ_OS_IRIX)
     int len;
 #else
     socklen_t len;
