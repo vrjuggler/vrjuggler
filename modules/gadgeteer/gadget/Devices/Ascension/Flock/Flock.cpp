@@ -63,7 +63,7 @@ namespace gadget
  * @param calfile  a calibration file, if "", then use none
  */
 Flock::Flock(const char* const port, const int& baud, const int& sync,
-             const int& block, const int& numBrds, const int& transmit,
+             const bool& block, const int& numBrds, const int& transmit,
              const BIRD_HEMI& hemi, const BIRD_FILT& filt, const char& report,
              const char* const calfile)
    : mThread(NULL),
@@ -95,7 +95,7 @@ bool Flock::config(jccl::ConfigChunkPtr c)
 
    // set mFlockOfBirds with the config info.
    mFlockOfBirds.setSync( c->getProperty<int>("sync") );
-   mFlockOfBirds.setBlocking( c->getProperty<int>("blocking") );
+   mFlockOfBirds.setBlocking( c->getProperty<bool>("blocking") );
    mFlockOfBirds.setNumBirds( c->getProperty<int>("num") );
    mFlockOfBirds.setTransmitter( c->getProperty<int>("transmitter") );
    mFlockOfBirds.setHemisphere( (BIRD_HEMI) c->getProperty<int>("hemi") ); //LOWER_HEMI
@@ -402,7 +402,7 @@ void Flock::setSync(const int& sync)
 }
 
 
-void Flock::setBlocking(const int& blVal)
+void Flock::setBlocking(const bool& blVal)
 {
   if (this->isActive())
   {
