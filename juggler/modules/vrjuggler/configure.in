@@ -151,11 +151,6 @@ DPP_WIN32_SETUP
 AC_CANONICAL_SYSTEM
 DPP_SYSTEM_SETUP
 
-# These are used on all platforms.
-AC_DEFINE_UNQUOTED(VJ_OS_RELEASE, "$OS_REL_STR")
-AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MAJOR, $OS_REL_NUM_MAJOR)
-AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MINOR, $OS_REL_NUM_MINOR)
-
 # Depending on the target operating system, set various command options and
 # such.
 case $target_os in
