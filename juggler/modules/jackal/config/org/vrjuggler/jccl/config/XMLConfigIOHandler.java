@@ -49,7 +49,6 @@ import VjConfig.*;
  *  into {Chunk|Desc}DBs (used by the XMLConfigCommunicator, which does its
  *  own XML->DOM parsing).
  *
- *  @author Christopher Just
  *  @version $Revision$
  */
 public class XMLConfigIOHandler implements ConfigIOHandler {
@@ -205,8 +204,8 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
      *  DOCUMENT_FRAGMENT (with the first element being "<ConfigChunkDB">)
      *  or an ELEMENT (labeled "<ConfigChunkDB>").
      *
-     *  @returns False if errors were encountered, otherwise true.  If
-     *           false, some ConfigChunks may still have been read into db.
+     *  Any problems encountered during the build are recorded in the
+     *  ConfigIOStatus argument.
      */
     public void buildChunkDB (ConfigChunkDB db, Node doc, 
                               ConfigIOStatus iostatus) {
@@ -532,8 +531,8 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
      *  DOCUMENT_FRAGMENT (with the first element being "<ChunkDescDB">)
      *  or an ELEMENT (labeled "<ChunkDescDB>").
      *
-     *  @returns False if errors were encountered, otherwise true.  If
-     *           false, some ChunkDescs may still have been read into db.
+     *  Any problems encountered during the build are recorded in the
+     *  ConfigIOStatus argument.
      */
     public void buildChunkDescDB (ChunkDescDB db, Node doc, 
                                      ConfigIOStatus iostatus) {
@@ -579,7 +578,10 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
 
 
 
-    /** Builds a ChunkDesc out of the DOM tree rooted at doc. */
+    /** Builds a ChunkDesc out of the DOM tree rooted at doc.
+     *  Any problems encountered during the build are recorded in the
+     *  ConfigIOStatus argument.
+     */
     public ChunkDesc buildChunkDesc (Node doc, ConfigIOStatus iostatus) {
         Node child;
         NamedNodeMap attributes;
