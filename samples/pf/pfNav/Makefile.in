@@ -25,7 +25,8 @@ VJ_LIB_DEPS	= $(VJ_BASE_DIR)/lib32/libJuggler.a			\
                   $(VJ_BASE_DIR)/lib32/libJuggler_ogl.a			\
                   $(VJ_BASE_DIR)/lib32/libJuggler_pf.a
 
-vpath %.cpp @srcdir@ @srcdir@/../../nav @srcdir@/../../tools @srcdir@/../pfTools
+vpath %.cpp $(srcdir) $(VJ_BASE_DIR)/samples/nav $(VJ_BASE_DIR)/samples/tools
+vpath %.cpp $(VJ_BASE_DIR)/samples/pf/pfTools
 
 # This test program requires the following libraries to be linked:
 #
