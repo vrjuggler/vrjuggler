@@ -90,15 +90,15 @@ public:
    }
    
    //: tell the navigator to reset its matrix to origin
-   virtual void reset()
+   virtual void reset( const bool& state = true )
    {
-      //TODO
+      mNowResetting = state;
    }
    
    //: tell the navigator the matrix that reset() uses as it's origin.
    virtual void setOrigin( const vjMatrix& matrix )
    {
-      //TODO
+      mVNav.setOrigin( matrix );
    }
    
    const float& speed() const
@@ -147,6 +147,7 @@ protected:
    bool     mNowStopping;
    bool     mNowBraking;
    bool     mNowReversing;
+   bool     mNowResetting;
 };
 
 
@@ -187,6 +188,11 @@ int CaveNavigator::update()
    {
       mVNav.accelerateBackward( 0.9f );
    }
+   
+   if (true == mNowResetting)
+   {
+      mVNav.reset();
+   }   
    
    // Set the matrix to the navigation matrix
    vjMatrix cur_pos,world_pos;
