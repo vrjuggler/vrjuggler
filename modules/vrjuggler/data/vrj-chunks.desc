@@ -48,6 +48,23 @@
         <enumeration name="PosProxy"/>
     </PropertyDesc>
   </ChunkDesc>
+  <ChunkDesc token="DataGlove" name="DataGlove">
+    <help>Configuration for the DataGlove</help>
+    <PropertyDesc token="Name" name="Name" type="String" num="1">
+        <help>Unique name of an instance of this chunk type</help>
+    </PropertyDesc>
+    <PropertyDesc token="port" name="Port" type="String" num="1">
+        <help>Serial port that the DataGlove is connected to</help>
+    </PropertyDesc>
+    <PropertyDesc token="baud" name="Baud Rate" type="Int" num="1">
+        <help>Serial port speed (9600)</help>
+    </PropertyDesc>
+    <PropertyDesc token="glovePos" name="Glove Position" type="Chunk" num="1">
+        <help>The position proxy for the glove position. i.e. the tracker on the glove.</help>
+        <enumeration name="proxyAlias"/>
+        <enumeration name="PosProxy"/>
+    </PropertyDesc>
+  </ChunkDesc>
   <ChunkDesc token="SimDigitalGlove" name="SimDigitalGlove">
     <help>A digital glove simulator</help>
     <PropertyDesc token="Name" name="Name" type="String" num="1">
@@ -167,6 +184,7 @@
         <enumeration name="SimDigital"/>
         <enumeration name="IBox"/>
         <enumeration name="PinchGlove"/>
+        <enumeration name="DataGlove"/>
         <enumeration name="ThreeDMouse"/>
         <enumeration name="SimDigitalGlove"/>
         <enumeration name="TrackdController"/>
@@ -400,6 +418,7 @@
         <help>The glove device the proxy connects to.</help>
         <enumeration name="CyberGlove"/>
         <enumeration name="SimGloveGesture"/>
+        <enumeration name="DataGlove"/>
         <enumeration name="PinchGlove"/>
         <enumeration name="SimDigitalGlove"/>
     </PropertyDesc>
