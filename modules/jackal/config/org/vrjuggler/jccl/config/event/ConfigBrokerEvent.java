@@ -29,31 +29,55 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-package org.vrjuggler.jccl.config;
+package org.vrjuggler.jccl.config.event;
 
-import java.util.EventListener;
+import java.util.EventObject;
+import org.vrjuggler.jccl.config.DataSource;
 
 /**
- * Interface for an observer to receive notifications of additions and removals
- * of configuration elements from a ConfigBroker.
- *
- * @see ConfigBroker
- * @see ConfigElement
+ * This provides detailed information to ConfigBroker observers as to how a
+ * ConfigBroker changed.
  */
-public interface ConfigListener
-   extends EventListener
+public class ConfigBrokerEvent
+   extends EventObject
 {
    /**
-    * Gives notification that a configuration element was added to the broker.
+    * Constructs a new ConfigBrokerEvent fired from the given source object
+    * relating to the given resource.
     *
-    * @param evt     the config event
+    * @param source     the source of the event
+    * @param resource   the resource that changed
     */
-   public void configElementAdded(ConfigEvent evt);
+   public ConfigBrokerEvent(Object source, String resource, DataSource dataSource)
+   {
+      super(source);
+      this.resource = resource;
+      this.dataSource = dataSource;
+   }
 
    /**
-    * Gives notification that a config element was removed from the broker.
-    *
-    * @param evt     the config event
+    * Gets the resource associated with this event.
     */
-   public void configElementRemoved(ConfigEvent evt);
+   public String getResource()
+   {
+      return resource;
+   }
+
+   /**
+    * Gets the data source associated with this event.
+    */
+   public DataSource getDataSource()
+   {
+      return dataSource;
+   }
+
+   /**
+    * The resources associated with this event.
+    */
+   private String resource;
+
+   /**
+    * The DataSource associated with this event.
+    */
+   private DataSource dataSource;
 }

@@ -39,6 +39,8 @@ import org.vrjuggler.jccl.config.event.ConfigContextEvent;
 import org.vrjuggler.jccl.config.event.ConfigContextListener;
 import org.vrjuggler.jccl.config.event.ConfigElementEvent;
 import org.vrjuggler.jccl.config.event.ConfigElementListener;
+import org.vrjuggler.jccl.config.event.ConfigEvent;
+import org.vrjuggler.jccl.config.event.ConfigListener;
 
 /**
  * A data model for a configuration context. For a tree view, this
