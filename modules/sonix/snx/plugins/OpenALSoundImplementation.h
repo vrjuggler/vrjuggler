@@ -100,6 +100,30 @@ public:
     */
    virtual void trigger( const std::string& alias, const int& looping = 0);
 
+   /**
+     * is the sound currently playing?
+     */
+   bool isPlaying( const std::string& alias );
+   
+   /**
+    * @semantics stop the sound
+    * @input alias of the sound to be stopped
+    */
+   virtual void stop( const std::string& alias );
+
+   /**
+    * pause the sound, use unpause to return playback where you left off...
+    */
+   virtual void pause( const std::string& alias );
+
+   /**
+    * resume playback from a paused state.  does nothing if sound was not paused.
+    */
+   virtual void unpause( const std::string& alias );
+
+   /** if the sound is paused, then return true. */
+   virtual bool isPaused( const std::string& alias );
+
    /*
     * when sound is already playing then you call trigger,
     * does the sound restart from beginning?
@@ -127,30 +151,8 @@ public:
    /** 1 is no change.  0 is total cutoff. */
    void setCutoff( const std::string& alias, float amount );
 
-   /**
-     * is the sound currently playing?
-     */
-   bool isPlaying( const std::string& alias );
+   
   
-   /**
-    * @semantics stop the sound
-    * @input alias of the sound to be stopped
-    */
-   virtual void stop( const std::string& alias );
-
-   /**
-    * pause the sound, use unpause to return playback where you left off...
-    */
-   virtual void pause( const std::string& alias );
-
-   /**
-    * resume playback from a paused state.  does nothing if sound was not paused.
-    */
-   virtual void unpause( const std::string& alias );
-
-   /** if the sound is paused, then return true. */
-   virtual bool isPaused( const std::string& alias );
-
    /**
     * set sound's 3D position 
     */
