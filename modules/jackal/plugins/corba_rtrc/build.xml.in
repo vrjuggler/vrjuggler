@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="tweek" default="dist" basedir=".">
+<project name="jccl_rtrc" default="dist" basedir=".">
    <property name="srcdir" location="@srcdir@" />
    <property name="topdir" location="@topdir@" />
    <property name="debug" value="on" />
@@ -43,7 +43,7 @@
 
    <!-- Create the distribution jar -->
    <target name="dist" depends="compile_idl,compile">
-      <jar destfile="TweekGadget.jar" basedir=".">
+      <jar destfile="jccl_rtrc.jar" basedir=".">
          <include name="org/vrjuggler/jccl/rtrc/*.class" />
          <include name="rtrc/*.class" />
       </jar>
@@ -54,6 +54,6 @@
       <delete failonerror="false">
          <fileset dir="org" includes="**/*.class" />
       </delete>
-      <delete file="TweekGadget.jar" failonerror="false" />
+      <delete file="jccl_rtrc.jar" failonerror="false" />
    </target>
 </project>
