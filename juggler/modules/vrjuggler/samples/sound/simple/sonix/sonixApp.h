@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _WAND_APP_
-#define _WAND_APP_
+#ifndef _SONIX_APP_
+#define _SONIX_APP_
 
 #include <vrj/vrjConfig.h>
 
@@ -45,7 +45,6 @@
 
 #include <snx/sonix.h>
 #include <snx/SoundHandle.h>
-
 
 
 namespace vrjTest
@@ -82,7 +81,7 @@ public:
       //std::cout << "---------- App:init() ---------------" << std::endl;
       // Initialize devices
       initSonix();
-      
+
       mWand.init("VJWand");
       mHead.init("VJHead");
       mButton0.init("VJButton0");
@@ -100,9 +99,6 @@ public:
    virtual void apiInit()
    {;}
 
-
-   
-   
    // Function that is called immediately after a new OGL context is created.
    // This is called for every display window that is opened.  Initialize GL
    // state here. Also used to create context specific information<BR>
@@ -175,7 +171,7 @@ private:
    void initGLState();
 
    void initSonix();
-   
+
    void drawCube()
    {
       drawbox(-0.5, 0.5, -0.5, 0.5, -0.5, 0.5, GL_QUADS);
@@ -184,10 +180,6 @@ private:
 public:
    snx::SoundHandle sound;
 
-
-
-
-   
    gadget::PositionInterface    mWand;      // the Wand
    gadget::PositionInterface    mHead;      // the head
    gadget::DigitalInterface     mButton0;
@@ -198,7 +190,7 @@ public:
    gadget::DigitalInterface     mButton5;
 };
 
-};
+}
 
 
 #endif
