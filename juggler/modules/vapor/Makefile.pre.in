@@ -30,6 +30,8 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
+.NOTPARALLEL: Makefile
+
 default: debug ;
 
 srcdir=		@srcdir@
@@ -39,7 +41,7 @@ CONFIGURE_ARGS=	@CONFIGURE_ARGS@
 CFG_SHELL=	@CFG_SHELL@
 
 DPP_CFG_DIR=	$(top_srcdir)/Doozer++/config
-DPP_PKG_DIR=	$(top_srcdir)/Doozer++/config/pkgs
+
 VJ_M4_DIR=	$(top_srcdir)/macros
 EXT_M4_DIR=	$(top_srcdir)/external/macros
 
@@ -64,6 +66,7 @@ Makefile.in: ;
 Makefile.inc.in: ;
 make.defs.mk.in: ;
 $(M4_DEPS): ;
+$(srcdir)/VERSION: ;
 
 configure: configure.in $(M4_DEPS)
 	cd $(srcdir) && ./autogen.sh

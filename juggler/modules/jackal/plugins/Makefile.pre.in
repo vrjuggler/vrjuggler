@@ -30,6 +30,8 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
+.NOTPARALLEL: Makefile
+
 default: debug ;
 
 srcdir=		@srcdir@
