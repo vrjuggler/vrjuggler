@@ -1234,7 +1234,7 @@ void PfPipeSwapFunc(pfPipe *p, pfPipeWindow *pw)
     //   
 
     // Swap the buffer
-    vprDEBUG(vrjDBG_DRAW_MGR, 0) << "--- PfPipeSwapFunc: pipe:" << pf_draw_mgr << " -- pw:" << pw << "\n" << vprDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "--- PfPipeSwapFunc: pipe:" << pf_draw_mgr << " -- pw:" << pw << "\n" << vprDEBUG_FLUSH;
 
     // Barrier for Cluster
     //vprDEBUG(vprDBG_ALL,1) <<  "BARRIER: Going to sleep for: " << num << std::endl << vprDEBUG_FLUSH; 
