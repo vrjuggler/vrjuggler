@@ -470,14 +470,11 @@ int ConfigManager::attemptReconfiguration()
       std::string("ConfigManager::attemptReconfiguration: Examining pending list.\n"),
       std::string("ConfigManager::attemptReconfiguration: Done Examining pending list.\n"));
       
-      std::vector<ConfigChunkHandler*>::iterator it = mChunkHandlers.begin();
-      std::vector<ConfigChunkHandler*>::iterator end = mChunkHandlers.end();
-
       lockPending();
 
-      for ( ; it != end; it++ )
+      for (unsigned int i = 0 ; i < mChunkHandlers.size() ; i++)
       {
-         chunks_processed += (*it)->configProcessPending();
+         mChunkHandlers[i]->configProcessPending();
       }
 
       unlockPending();
