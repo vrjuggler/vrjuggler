@@ -66,10 +66,10 @@ void UserData::updateNavigation()
    gmtl::Matrix44f wand_matrix = mWand->getData();
    gmtl::setRot( xyzAngles, wand_matrix );
 
-   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL) << "===================================\n"
-                        << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL) << "Wand:\n" << wand_matrix << std::endl
-                        << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL)
+      << "===================================\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL) << "Wand:\n" << wand_matrix
+                                             << std::endl << vprDEBUG_FLUSH;
 //   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL) << "Wand XYZ: " << xyzAngles << std::endl
 //                        << vprDEBUG_FLUSH;
 
@@ -85,39 +85,61 @@ void UserData::updateNavigation()
       gmtl::identity(transform);
    }
 
-   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL) << "Transform:\n" << transform << std::endl
-                        << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL) << "Transform:\n" << transform
+                                             << std::endl << vprDEBUG_FLUSH;
    gmtl::setRot(xyzAngles, transform);
-//   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL) << "Transform XYZ: " << xyzAngles << std::endl
-//                        << vprDEBUG_FLUSH;
+//   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL) << "Transform XYZ: " << xyzAngles
+//                                             << std::endl << vprDEBUG_FLUSH;
 
-   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL) << "Nav:\n" << mNavMatrix << std::endl << std::endl
-                        << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL) << "Nav:\n" << mNavMatrix
+                                             << std::endl << std::endl
+                                             << vprDEBUG_FLUSH;
 
    // ----- Translation ------- //
    const float velocity_inc = 0.001f;
 
    // Update velocity
-   if(mIncVelocityButton->getData())
+   if ( mIncVelocityButton->getData() )
+   {
       mCurVelocity += velocity_inc;
-   else if(mDecVelocityButton->getData())
+   }
+   else if ( mDecVelocityButton->getData() )
+   {
       mCurVelocity -= velocity_inc;
-   else if(mStopButton->getData())
+   }
+   else if ( mStopButton->getData() )
+   {
       mCurVelocity = 0.0f;
+   }
 
+   if ( mIncVelocityButton->getData() || mDecVelocityButton->getData() )
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL)
+         << "Velocity: " << mCurVelocity << std::endl << vprDEBUG_FLUSH;
+   }
 
-   if(mIncVelocityButton->getData() || mDecVelocityButton->getData())
-      vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL) << "Velocity: " << mCurVelocity << std::endl
-                           << vprDEBUG_FLUSH;
+   if ( mIncVelocityButton->getData() == gadget::Digital::TOGGLE_ON )
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "-- Toggle ON --" << std::endl
+                                             << vprDEBUG_FLUSH;
+   }
 
-   if(mIncVelocityButton->getData() == gadget::Digital::TOGGLE_ON)
-      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "-- Toggle ON --" << std::endl << vprDEBUG_FLUSH;
-   if(mIncVelocityButton->getData() == gadget::Digital::TOGGLE_OFF)
-      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "-- Toggle OFF --" << std::endl << vprDEBUG_FLUSH;
-   if(mIncVelocityButton->getData() == gadget::Digital::ON)
-      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "-- ON --" << std::endl << vprDEBUG_FLUSH;
-//   if(mIncVelocityButton->getData() == Digital::OFF)
+   if ( mIncVelocityButton->getData() == gadget::Digital::TOGGLE_OFF )
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "-- Toggle OFF --" << std::endl
+                                             << vprDEBUG_FLUSH;
+   }
+
+   if ( mIncVelocityButton->getData() == gadget::Digital::ON )
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "-- ON --" << std::endl
+                                             << vprDEBUG_FLUSH;
+   }
+
+//   if ( mIncVelocityButton->getData() == Digital::OFF )
+//   {
 //      vprDEBUG(vprDBG_ALL,) << "-- OFF --" << std::endl << vprDEBUG_FLUSH;
+//   }
 
    // Find direction vector
    gmtl::Vec3f forward(0.0f, 0.0f, -1.0f);
@@ -136,10 +158,11 @@ void UserData::updateNavigation()
    gmtl::setTrans(xyzTrans, local_xform);
 //   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL) << "Transform   Rot: " << xyzAngles << std::endl
 //                        << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL) << "Transform Trans: " << xyzTrans << std::endl
-                        << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL) << "-------------------------------------------"
-                        << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL)
+      << "Transform Trans: " << xyzTrans << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL)
+      << "-------------------------------------------" << std::endl
+      << vprDEBUG_FLUSH;
 }
 
 void UserData::updateShapeSetting()
@@ -163,7 +186,7 @@ void cubesApp::init()
 
    vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "---------- cubes:App:init() ---------------"
                         << std::endl << vprDEBUG_FLUSH;
-   std::vector<vrj::User*> users = mKernel->getUsers();
+   std::vector<vrj::User*> users = mKernel->getUsers(); // Request user list
    int num_users = users.size();
    vprASSERT(num_users > 0);      // Make sure that we actually have users defined
 
@@ -184,7 +207,9 @@ void cubesApp::init()
       vprASSERT(users[0]->getId() == 0);
       break;
    default:
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED, "ERROR:") << " Bad number of users." << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << clrOutNORM(clrRED, "ERROR:") << " Bad number of users."
+         << vprDEBUG_FLUSH;
       exit();
       break;
    }
@@ -221,10 +246,12 @@ void cubesApp::contextInit()
          drawCone(1.1f, 2.0f, 20, 10);
       glEndList();
 
-      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "Created cube DL:" << mDlCubeData->dlIndex
-                             << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "Created cone DL:" << mDlConeData->dlIndex
-                             << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+         << "Created cube DL:" << mDlCubeData->dlIndex << std::endl
+         << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+         << "Created cone DL:" << mDlConeData->dlIndex << std::endl
+         << vprDEBUG_FLUSH;
       std::cerr << "created displays lists:" << mDlDebugData->maxIndex + 1
                 << std::endl;
 
@@ -240,8 +267,9 @@ void cubesApp::contextClose()
    // Deallocate the random display lists used for debugging.
    if ( glIsList(mDlDebugData->dlIndex) == GL_TRUE )
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "Deallocating " << mDlDebugData->maxIndex
-                              << " display lists\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+         << "Deallocating " << mDlDebugData->maxIndex << " display lists\n"
+         << vprDEBUG_FLUSH;
       glDeleteLists(mDlDebugData->dlIndex, mDlDebugData->maxIndex);
    }
 
@@ -254,21 +282,19 @@ void cubesApp::contextClose()
    // Deallocate the cone geometry data from the video hardware.
    if ( glIsList(mDlConeData->dlIndex) == GL_TRUE )
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "Deallocating cone display list\n"
-                              << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+         << "Deallocating cone display list\n" << vprDEBUG_FLUSH;
       glDeleteLists(mDlConeData->dlIndex, 1);
    }
 }
 
-//----------------------------------------------
 // Draw the scene.  A bunch of boxes of
 // differing color and stuff.
-// Note: This draw routine places extreme stress on VR Juggler's
-//       vrj::GlContextData class (by repeatedly dereferencing it to
-//       access a display list index). As such, performance of
-//       this method will suffer on multipipe configurations.
-//       (i.e. do not imitate this code).
-//----------------------------------------------
+// NOTE: This draw routine places extreme stress on VR Juggler's
+//       vrj::GlContextData class (by repeatedly dereferencing it to access a
+//       display list index).  As such, performance of this method will suffer
+//       on multipipe configurations.
+//       DO NOT IMITATE THIS CODE.
 void cubesApp::myDraw(vrj::User* user)
 {
    vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << "\n--- myDraw() ---\n" << vprDEBUG_FLUSH;
