@@ -250,6 +250,7 @@ public:
  * @author Patrick Hartling
  */
 class VPR_CLASS_API SigHandler {
+public:
     /**
      * Reigsters the given callback as a handler for the named signal.  No
      * mask is applied, and no option flags are set.  To get a mask and/or
