@@ -6,9 +6,9 @@
  *   Allen Bierbaum, Patrick Hartling, Kevin Meinert, Carolina Cruz-Neira
  *
  * -----------------------------------------------------------------
- * File:          SerialPortImplWin32.h,v
- * Date modified: 2002/06/05 21:28:47
- * Version:       1.27
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
  * -----------------------------------------------------------------
  *
  ****************** <VPR heading END do not edit this line> ******************/
