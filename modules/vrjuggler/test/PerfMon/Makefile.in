@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vrjuggler/test/Draw
+# Makefile.in for vrjuggler/test/PerfMon
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -43,7 +43,7 @@ default: all
 
 all: collideApp
 
-OGL OpenSG OSG Pf::
+collideApp::
 	cd $@ && $(MAKE) all
 
 # -----------------------------------------------------------------------------
