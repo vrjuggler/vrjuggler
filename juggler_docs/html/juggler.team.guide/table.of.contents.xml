@@ -1,14 +1,14 @@
 Builder: JExplorerBuilder V 1. 0. 7   
 < treecontrol linkurl="" imageurl="../../images/Icons/W98_Images/" >
 	< font face="Helvetica" style="Plain" size="${TREE_FONTSIZE}">
-		< idefault title="Item" image="Book_Closed.gif" imagetwo="" info="VR Juggler" target="Body" link="" rlink="">
+		< idefault title="Item" image="BlackBook_Closed.gif" imagetwo="" info="VR Juggler" target="Body" link="" rlink="">
 
 			< rootfolder title="Juggler Team Guide" 
 				expand 
 				link="index.html"
 				info="In depth documentation for the VR Juggler project.  Intended to be a resource for the Juggle Development Team (JDT)"
-				image="Book_Closed.gif" 
-				imagetwo="Book_Open.gif">
+				image="BlackBook_Closed.gif" 
+				imagetwo="BlackBook_Open.gif">
 
 			< item title="Contribute!" link="${DOCUMENTATION}/why.html"  info="Why you should contribute to the Juggler documentation project. (A compelling argument)" image="Chat.gif" >
 
