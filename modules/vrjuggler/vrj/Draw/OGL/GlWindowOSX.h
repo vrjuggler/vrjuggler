@@ -40,7 +40,7 @@
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Display/Display.h>
-#include <gadget/Devices/Keyboard/KeyboardOSX.h>
+#include <gadget/Devices/EventWindow/EventWindowOSX.h>
 
 #ifdef __APPLE_CC__
 #   include <Carbon/Carbon.h>
@@ -89,7 +89,7 @@ namespace vrj
  * A GL specific glWindow for OS X.
  * Has all information specific to dealing with a GL window in OpenGL.
  */
-class GlWindowOSX: public GlWindow, public gadget::KeyboardOSX
+class GlWindowOSX: public GlWindow, public gadget::EventWindowOSX
 {
 public:
     GlWindowOSX();
@@ -99,7 +99,7 @@ public:
     int open();
     int close();
     bool makeCurrent();
-    
+
     int startSampling();
     //int stopSampling();
 
@@ -140,7 +140,7 @@ private:
     long            gFrameWindow;
     AbsoluteTime        gTimeWindow;
     float           gRotation;
-    CFStringRef         window_title;    
+    CFStringRef         window_title;
 
     static AGLContext       aglShareContext;
 };

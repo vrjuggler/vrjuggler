@@ -57,13 +57,14 @@
 
 #include <gadget/InputManager.h>
 
-// Get info about gadget keyboard stuff for registering the simulator below
+// Get info about Gadgeteer event window stuff for registering the simulator
+// below.
 // Note: This may seem kind of strange (and it is) but we need it
-// since all of our derived types are going to be gadget::Keyboards as well
+// since all of our derived types are going to be gadget::Eventwindows as well
 // as GL Windows.  They need to be so we can get keyboard input for
 // the simulators that will run on/in this window
-#include <gadget/Type/Keyboard.h>
-#include <gadget/Type/KeyboardProxy.h>
+#include <gadget/Type/EventWindow.h>
+#include <gadget/Type/EventWindowProxy.h>
 #include <gadget/Type/DeviceInterface.h>
 
 // This variable determines which matrix stack we put the viewing transformation
@@ -83,9 +84,9 @@ vpr::Mutex GlWindow::mWinIdMutex;
 void GlWindow::config(vrj::Display* displayWindow)
 {
    vprASSERT(displayWindow != NULL);      // We can't config to a NULL display
-   mDisplay = displayWindow;
-   mDisplay->getOriginAndSize( origin_x, origin_y, window_width, window_height);
-   border = mDisplay->shouldDrawBorder();
+   mVrjDisplay = displayWindow;
+   mVrjDisplay->getOriginAndSize(origin_x, origin_y, window_width, window_height);
+   border = mVrjDisplay->shouldDrawBorder();
 
    /// Other stuff
 }
@@ -100,45 +101,45 @@ void GlWindow::finishSetup()
    // --- Setup any attached simulator that is needed --- //
    Viewport* viewport = NULL;
    SimViewport* sim_vp = NULL;
-   unsigned num_vps = mDisplay->getNumViewports();
+   unsigned num_vps = mVrjDisplay->getNumViewports();
    for(unsigned vp_num=0; vp_num < num_vps; vp_num++)
    {
-      viewport = mDisplay->getViewport(vp_num);
+      viewport = mVrjDisplay->getViewport(vp_num);
       if(viewport->isSimulator())
       {
          sim_vp = dynamic_cast<SimViewport*>(viewport);
          vprASSERT(NULL != sim_vp && "isSimulator lied");
-         
+
          DrawSimInterface* draw_sim = sim_vp->getDrawSimInterface();
          GlSimInterface* gl_draw_sim = dynamic_cast<GlSimInterface*>(draw_sim);
          if(NULL != gl_draw_sim)
          {
             // Setup the simulator
-            // - Get the keyboard device
+            // - Get the event window device
             // - Register a proxy that we will use
             // - Make device interface for that proxy
             // - Intialize the simulator
-            vprASSERT(mAreKeyboardDevice && "Tried to use simulator with a non-keyboard enabled GL window. Bad programmer.");
-            gadget::Keyboard* kb_dev = dynamic_cast<gadget::Keyboard*>(this);
+            vprASSERT(mAreEventSource && "Tried to use simulator with a non-keyboard enabled GL window. Bad programmer.");
+            gadget::EventWindow* kb_dev = dynamic_cast<gadget::EventWindow*>(this);
             gadget::Input* input_dev = dynamic_cast<gadget::Input*>(this);
-            vprASSERT((kb_dev != NULL) && (input_dev != NULL) && "Failed to cast glWindow impl to a gadget::keyboard");
+            vprASSERT((kb_dev != NULL) && (input_dev != NULL) && "Failed to cast glWindow impl to a gadget::EventWindow");
             std::string kb_dev_name = input_dev->getInstanceName();
             vprASSERT( gadget::InputManager::instance()->getDevice(kb_dev_name) != NULL);
-            
-            gadget::KeyboardProxy* kb_proxy = new gadget::KeyboardProxy;
+
+            gadget::EventWindowProxy* kb_proxy = new gadget::EventWindowProxy;
             kb_proxy->set(kb_dev_name, kb_dev);
-            
-            std::string kb_proxy_name("GlWin-Sim-Keyboard-");
+
+            std::string kb_proxy_name("GlWin-Sim-EventWindow-");
             kb_proxy_name += kb_dev_name;
             kb_proxy_name += std::string("-Proxy");
             kb_proxy->setName(kb_proxy_name);
             bool add_success = gadget::InputManager::instance()->addProxy(kb_proxy);
             vprASSERT(add_success && "Failed to add sim wind kb proxy: Check for unique name");
 
-            gadget::KeyboardInterface kb_interface;
+            gadget::EventWindowInterface kb_interface;
             kb_interface.setProxy(kb_proxy);
 
-            gl_draw_sim->setKeyboard(kb_interface);          // Initialize the simulator
+            gl_draw_sim->setEventWindow(kb_interface); // Initialize the simulator
          }
          else
          {
@@ -222,11 +223,11 @@ vpr::Guard<vpr::Mutex> guard(mWinIdMutex);      // Protect the id
 std::ostream& operator<<(std::ostream& out, GlWindow* win)
 {
    vprASSERT(win != NULL);
-   vprASSERT(win->mDisplay != NULL);
+   vprASSERT(win->mVrjDisplay != NULL);
 
    //out << "-------- GlWindow --------" << endl;
    out << "Open: " << (win->window_is_open ? "Yes" : "No") << std::endl;
-   out << "Display Info:\n" << *(win->mDisplay) << std::endl;
+   out << "Display Info:\n" << *(win->mVrjDisplay) << std::endl;
    out << "Stereo: " << (win->in_stereo ? "Yes" : "No") << std::endl;
    return out;
 }

@@ -37,7 +37,7 @@
 
 #include <GL/gl.h>
 
-#include <gadget/Devices/Keyboard/KeyboardWin32.h>
+#include <gadget/Devices/Eventwindow/EventwindowWin32.h>
 
 #include <vrj/vrjConfig.h>
 #include <vrj/Draw/OGL/GlWindow.h>
@@ -45,7 +45,7 @@
 namespace vrj
 {
 
-class VJ_CLASS_API GlWindowWin32 : public GlWindow, public gadget::KeyboardWin32
+class VJ_CLASS_API GlWindowWin32 : public GlWindow, public gadget::EventwindowWin32
 {
 public:
    GlWindowWin32();
@@ -128,19 +128,20 @@ protected:
 
    /**
     * Called with any events to process from win keyboard.
-    * Called from seperate process (keyboard device update).
+    * Called from seperate process (event window device update).
     */
    virtual void processEvent( UINT message, UINT wParam, LONG lParam );
 
    /** do the stuff needed to become a gadgeteer device.
     *  @pre can be called any time
     */
-   void becomeKeyboardDevice();
+   void becomeEventWindowDevice();
 
-   /** do the stuff to make this not a gadgeteer device. 
+   /** do the stuff to make this not a gadgeteer device.
     *  @pre can be called any time
     */
-   void removeKeyboardDevice();
+   void removeEventWindowDevice();
+
 public:
     HWND  mWinHandle;      /**< Window handle */
     HGLRC mRenderContext;  /**< Permenant Rendering context */
@@ -150,7 +151,7 @@ public:
     int            mPipe;
     std::string    mXDisplayName;       /**<  Name of the x display to use */
 
-    PIXELFORMATDESCRIPTOR* mMatch;    /**< Points the the found pixel format */    
+    PIXELFORMATDESCRIPTOR* mMatch;    /**< Points the the found pixel format */
 };
 
 } // End of vrj namespace

@@ -35,7 +35,7 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <gadget/Type/KeyboardProxy.h>
+#include <gadget/Type/EventWindowProxy.h>
 #include <gadget/Type/DeviceInterface.h>
 
 #include <vrj/Draw/DrawSimInterface.h>
@@ -50,7 +50,7 @@ namespace vrj
    {
    public:
       virtual ~GlSimInterface() {}
-      
+
       /**
        * Draws this sim device using the given information about the Window it
        * will be drawing into.
@@ -58,9 +58,10 @@ namespace vrj
       virtual void draw(const float scaleFactor) = 0;
 
       /**
-       * Sets the keyboard the simulator can use to get input from the user.
+       * Sets the event window the simulator can use to get input from the
+       * user.
        */
-      virtual void setKeyboard(gadget::KeyboardInterface kbInterface) = 0;
+      virtual void setEventWindow(gadget::EventWindowInterface ewInterface) = 0;
    };
 }
 

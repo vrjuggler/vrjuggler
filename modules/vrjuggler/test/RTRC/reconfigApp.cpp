@@ -47,7 +47,7 @@
 #include <gadget/Devices/Sim/SimDigital.h>
 #include <gadget/Devices/Sim/SimAnalog.h>
 #include <gadget/Devices/Sim/SimInput.h>
-#include <gadget/Devices/Keyboard/KeyboardXWin.h>
+#include <gadget/Devices/EventWindow/EventWindowXWin.h>
 #include <gadget/Type/AnalogProxy.h>
 
 #include <vrj/Display/DisplayManager.h>
@@ -93,7 +93,7 @@ void reconfigApp::preFrame()
    bool status = false;
 
    //If we are not currently doing any testing, start a new test state
-   if (!mTesting) 
+   if (!mTesting)
    {
       mTesting = true;
 
@@ -175,21 +175,21 @@ void reconfigApp::preFrame()
          case 36:  status =       reconfigKeyboardProxy_exec();break;
 
          case 37:  status =       removeKeyboardProxy_exec();  break;
-         
+
          case 38:  status =       addMachineSpecific_exec();  break;
-         
+
          //case 39:  status =       reconfigMachineSpecific_exec();  break;
-         
+
          case 39:  status =       removeMachineSpecific_exec();  break;
-         
+
          case 40:  status =       addStupifiedAnalogProxy_exec();  break;
-         
+
          case 41:  status =       removeStupifiedAnalogProxy_exec();  break;
 
-         
-         case 42:  status = true; 
-                   mFinished = true; 
-                   std::cout << "\n\n[Test battery completed]\n\n" << std::flush; 
+
+         case 42:  status = true;
+                   mFinished = true;
+                   std::cout << "\n\n[Test battery completed]\n\n" << std::flush;
                    mKernel->stop();
                    break;
 
@@ -204,7 +204,7 @@ void reconfigApp::preFrame()
    }
 
    //If we have waited enough time after executing a test...
-   //Then we need to run the 
+   //Then we need to run the
    if (checkTime())
    {
 
@@ -285,17 +285,17 @@ void reconfigApp::preFrame()
          case 36:  status =       reconfigKeyboardProxy_check();break;
 
          case 37:  status =       removeKeyboardProxy_check();  break;
-      
+
          case 38:  status =       addMachineSpecific_check();   break;
 
          //case 39:  status =       reconfigMachineSpecific_check();break;
 
          case 39:  status =       removeMachineSpecific_check();break;
-         
+
          case 40:  status =       addStupifiedAnalogProxy_check();break;
-         
+
          case 41:  status =       removeStupifiedAnalogProxy_check();break;
-         
+
          default: status = true; break;
 
       }
@@ -386,7 +386,7 @@ bool reconfigApp::addChunkFile( std::string filename )
    else
    {
       std::cout << "\tError: Failed to load config file: " << filename << std::endl << std::flush;
-      delete mNewChunkDB;  
+      delete mNewChunkDB;
       mNewChunkDB = NULL;
       return false;
    }
@@ -407,7 +407,7 @@ bool reconfigApp::removeChunkFile( std::string filename )
    else
    {
       std::cout << "\tError: Failed to load config file: " << filename << std::endl << std::flush;
-      delete mNewChunkDB;  
+      delete mNewChunkDB;
       mNewChunkDB = NULL;
       return false;
    }
@@ -529,47 +529,47 @@ bool reconfigApp::verifyDisplayProps(  vrj::Display* disp,
       ok = false;
    }
 
-   int xo, yo, xs, ys;   
+   int xo, yo, xs, ys;
    disp->getOriginAndSize(xo, yo, xs, ys);
 
    if (xo != x_origin)
    {
-      ok = false;      
+      ok = false;
    }
 
    if (yo != y_origin)
    {
-      ok = false;      
+      ok = false;
    }
 
    if (xs != x_size)
    {
-      ok = false;      
+      ok = false;
    }
 
    if (ys != y_size)
    {
-      ok = false;      
+      ok = false;
    }
 
    if (disp->getPipe() != pipe_num)
    {
-      ok = false;      
+      ok = false;
    }
 
    if (disp->inStereo() != stereo)
    {
-      ok = false;        
+      ok = false;
    }
 
    if (disp->shouldDrawBorder() != border)
    {
-      ok = false;        
+      ok = false;
    }
 
    if (disp->isActive() != active)
    {
-      ok = false;        
+      ok = false;
    }
 
    return ok;
@@ -731,7 +731,7 @@ bool reconfigApp::verifyViewport( vrj::Viewport* viewport, jccl::ConfigChunkPtr 
 bool reconfigApp::verifyDisplayFile( std::string filename )
 {
    //Assume that the file given has the displayWindow chunk in it
-   //Load up the given file 
+   //Load up the given file
    jccl::ConfigChunkDB fileDB ; fileDB.load( filename );
    std::vector<jccl::ConfigChunkPtr> windowChunks;
    std::vector<jccl::ConfigChunkPtr> machineChunks;
@@ -740,19 +740,19 @@ bool reconfigApp::verifyDisplayFile( std::string filename )
    fileDB.getByType( "machineSpecific", machineChunks );
    for (int i=0; i < machineChunks.size(); i++)
    {
-      
+
       machineSpecificChunks = windowChunks[i]->getEmbeddedChunks();
       for (int j=0; i < machineSpecificChunks.size(); i++)
       {
          if (machineSpecificChunks[i]->getDescToken() == "displayWindow")
          {
-            std::cout << "Adding an embedded display to the list to test named: " 
+            std::cout << "Adding an embedded display to the list to test named: "
                << machineSpecificChunks[i]->getName() << std::endl;
             windowChunks.push_back(machineSpecificChunks[i]);
          }
       }
    }
-   
+
    //Verify EACH display in the file
    for (int i=0; i < windowChunks.size(); i++)
    {
@@ -841,7 +841,7 @@ bool reconfigApp::verifyDisplayFile( std::string filename )
                return false;
             }
          }
-         
+
       }
 
       //Run a verification check (verifyDisplayProps)
@@ -854,8 +854,8 @@ bool reconfigApp::verifyDisplayFile( std::string filename )
 /********************************************************************
 TEST SUITE FUNCTIONS
 ********************************************************************/
-         
-//  - Adding machine specfic gfx window     
+
+//  - Adding machine specfic gfx window
 bool reconfigApp::addMachineSpecific_exec()
 {
    std::cout << "Beginning test for adding machine specific graphics windows...\n" << std::flush;
@@ -868,7 +868,7 @@ bool reconfigApp::addMachineSpecific_check()
 }
 
 
-//  - Remove machine specific gfx window     
+//  - Remove machine specific gfx window
 bool reconfigApp::removeMachineSpecific_exec()
 {
    std::cout << "Beginning test for removing machine specific graphics windows...\n" << std::flush;
@@ -878,7 +878,7 @@ bool reconfigApp::removeMachineSpecific_exec()
 bool reconfigApp::removeMachineSpecific_check()
 {
 
-   //Load up the given file 
+   //Load up the given file
    jccl::ConfigChunkDB fileDB ; fileDB.load( mPath + "sim.extradisplay.01.config" );
    std::vector<jccl::ConfigChunkPtr> windowChunks;
    fileDB.getByType( "displayWindow", windowChunks );
@@ -887,20 +887,20 @@ bool reconfigApp::removeMachineSpecific_check()
    {
       std::cout << "\tError: the display config chunk file contains " << windowChunks.size() << " displays (should be 1)\n" << std::flush;
       return false;
-   }   
+   }
 
    vrj::Display* display = getDisplay(windowChunks[0]->getName());
    if (display != NULL)
    {
       std::cout << "\tError: there is still a display in the system named " << windowChunks[0]->getName() << "\n" << std::flush;
       return false;
-   }   
+   }
 
    return true;
 
 }
 
-//  - Adding gfx window     
+//  - Adding gfx window
 bool reconfigApp::addGFXWindow_exec()
 {
    std::cout << "Beginning test for adding a graphics window...\n" << std::flush;
@@ -913,7 +913,7 @@ bool reconfigApp::addGFXWindow_check()
 }
 
 
-//  - Remove gfx window     
+//  - Remove gfx window
 bool reconfigApp::removeGFXWindow_exec()
 {
    std::cout << "Beginning test for removing a graphics window...\n" << std::flush;
@@ -923,7 +923,7 @@ bool reconfigApp::removeGFXWindow_exec()
 bool reconfigApp::removeGFXWindow_check()
 {
 
-   //Load up the given file 
+   //Load up the given file
    jccl::ConfigChunkDB fileDB ; fileDB.load( mPath + "sim.extradisplay.01.config" );
    std::vector<jccl::ConfigChunkPtr> windowChunks;
    fileDB.getByType( "displayWindow", windowChunks );
@@ -932,14 +932,14 @@ bool reconfigApp::removeGFXWindow_check()
    {
       std::cout << "\tError: the display config chunk file contains " << windowChunks.size() << " displays (should be 1)\n" << std::flush;
       return false;
-   }   
+   }
 
    vrj::Display* display = getDisplay(windowChunks[0]->getName());
    if (display != NULL)
    {
       std::cout << "\tError: there is still a display in the system named " << windowChunks[0]->getName() << "\n" << std::flush;
       return false;
-   }   
+   }
 
    return true;
 
@@ -976,7 +976,7 @@ bool reconfigApp::resizeGFXWindow_check()
 bool reconfigApp::moveGFXWindow_exec()
 {
    std::cout << "Beginning test for moving a graphics window...\n" << std::flush;
-  
+
    return swapChunkFiles( mPath + "sim.extradisplay.01.config",
                           mPath + "sim.extradisplay.01.move.config" );
 }
@@ -1050,7 +1050,7 @@ bool reconfigApp::enableStereoSurface_exec()
 
 bool reconfigApp::enableStereoSurface_check()
 {
-   //Load up the given file 
+   //Load up the given file
    jccl::ConfigChunkDB fileDB ; fileDB.load( mPath + "sim.surfacedisplay.01.stereo.config" );
    std::vector<jccl::ConfigChunkPtr> windowChunks;
    fileDB.getByType( "displayWindow", windowChunks );
@@ -1075,7 +1075,7 @@ bool reconfigApp::enableStereoSurface_check()
    if (surfaceDisplay->getNumViewports() != 1)
    {
       std::cout << "\tError: " << windowChunks[0]->getName() << " has an incorrect number of viewports\n" << std::flush;
-      return false;   
+      return false;
    }
 
    vrj::Viewport* surfaceViewport = surfaceDisplay->getViewport(0);
@@ -1083,7 +1083,7 @@ bool reconfigApp::enableStereoSurface_check()
    if (!surfaceViewport->inStereo())
    {
       std::cout << "\tError: the surface viewport is not in stereo\n" << std::flush;
-      return false;   
+      return false;
    }
 
    return true;
@@ -1100,7 +1100,7 @@ bool reconfigApp::disableStereoSurface_exec()
 
 bool reconfigApp::disableStereoSurface_check()
 {
-   //Load up the given file 
+   //Load up the given file
    jccl::ConfigChunkDB fileDB ; fileDB.load( mPath + "sim.surfacedisplay.01.mono.config" );
    std::vector<jccl::ConfigChunkPtr> windowChunks;
    fileDB.getByType( "displayWindow", windowChunks );
@@ -1125,7 +1125,7 @@ bool reconfigApp::disableStereoSurface_check()
    if (surfaceDisplay->getNumViewports() != 1)
    {
       std::cout << "\tError: " << windowChunks[0]->getName() << " has an incorrect number of viewports\n" << std::flush;
-      return false;   
+      return false;
    }
 
    vrj::Viewport* surfaceViewport = surfaceDisplay->getViewport(0);
@@ -1133,7 +1133,7 @@ bool reconfigApp::disableStereoSurface_check()
    if (surfaceViewport->inStereo())
    {
       std::cout << "\tError: " << windowChunks[0]->getName() << "'s viewport is in stereo\n" << std::flush;
-      return false;   
+      return false;
    }
 
    return true;
@@ -1145,7 +1145,7 @@ bool reconfigApp::removeKeyboardWin_exec()
 {
    std::cout << "Beginning test for removing a keyboard window...\n" << std::flush;
 
-   //Note that we are assuming ./Chunks/startup/sim.wandkeyboardproxy.config has 
+   //Note that we are assuming ./Chunks/startup/sim.wandkeyboardproxy.config has
    //already been loaded
 
    return removeChunkFile( mPath + "startup/sim.wandkeyboard.config" );
@@ -1156,11 +1156,11 @@ bool reconfigApp::removeKeyboardWin_check()
    //First check that the keyboard device no longer exists
    jccl::ConfigChunkDB fileDB ; fileDB.load( mPath + "startup/sim.wandkeyboard.config" );
    std::vector<jccl::ConfigChunkPtr> fileChunks;
-   fileDB.getByType( "Keyboard", fileChunks );
+   fileDB.getByType( "EventWindow", fileChunks );
 
    std::string keyboardName = fileChunks[0]->getName();
 
-   gadget::Keyboard* keyboard = (gadget::Keyboard*)gadget::InputManager::instance()->getDevice( keyboardName );
+   gadget::EventWindow* keyboard = (gadget::EventWindow*)gadget::InputManager::instance()->getDevice( keyboardName );
 
    if (keyboard != NULL)
    {
@@ -1171,7 +1171,7 @@ bool reconfigApp::removeKeyboardWin_check()
    //Check the wand keyboard proxy that is supposed to point to it is stupified
    jccl::ConfigChunkDB fileDB2 ; fileDB2.load( mPath + "startup/sim.wandkeyboardproxy.config" );
    fileChunks.clear();
-   fileDB2.getByType( "KeyboardProxy", fileChunks );
+   fileDB2.getByType( "EventWindowProxy", fileChunks );
 
    if (fileChunks.size() != 1)
    {
@@ -1179,14 +1179,14 @@ bool reconfigApp::removeKeyboardWin_check()
       return false;
    }
 
-   gadget::KeyboardProxy* keyboard_proxy = (gadget::KeyboardProxy*)gadget::InputManager::instance()->getProxy( fileChunks[0]->getName() );
+   gadget::EventWindowProxy* keyboard_proxy = (gadget::EventWindowProxy*)gadget::InputManager::instance()->getProxy( fileChunks[0]->getName() );
 
    if (keyboard_proxy == NULL)
    {
       std::cout << "\tError: there is no keyboard proxy named " << fileChunks[0]->getName() << "\n" << std::flush;
       return false;
    }
- 
+
    if (!keyboard_proxy->isStupified())
    {
       std::cout << "\tError: keyboard proxy named " << fileChunks[0]->getName() << " is not stupified\n" << std::flush;
@@ -1217,11 +1217,11 @@ bool reconfigApp::readdKeyboardWin_check()
    //First check that the keyboard device exists again
    jccl::ConfigChunkDB fileDB ; fileDB.load( mPath + "startup/sim.wandkeyboard.config" );
    std::vector<jccl::ConfigChunkPtr> fileChunks;
-   fileDB.getByType( "Keyboard", fileChunks );
+   fileDB.getByType( "EventWindow", fileChunks );
 
    std::string keyboardName = fileChunks[0]->getName();
 
-   gadget::Keyboard* keyboard = (gadget::Keyboard*)gadget::InputManager::instance()->getDevice( keyboardName );
+   gadget::EventWindow* keyboard = (gadget::EventWindow*)gadget::InputManager::instance()->getDevice( keyboardName );
 
    if (keyboard == NULL)
    {
@@ -1232,7 +1232,7 @@ bool reconfigApp::readdKeyboardWin_check()
    //Check the wand keyboard proxy that is supposed to point to it is stupified
    jccl::ConfigChunkDB fileDB2 ; fileDB2.load( mPath + "startup/sim.wandkeyboardproxy.config" );
    fileChunks.clear();
-   fileDB2.getByType( "KeyboardProxy", fileChunks );
+   fileDB2.getByType( "EventWindowProxy", fileChunks );
 
    if (fileChunks.size() != 1)
    {
@@ -1240,14 +1240,14 @@ bool reconfigApp::readdKeyboardWin_check()
       return false;
    }
 
-   gadget::KeyboardProxy* keyboard_proxy = (gadget::KeyboardProxy*)gadget::InputManager::instance()->getProxy( fileChunks[0]->getName() );
+   gadget::EventWindowProxy* keyboard_proxy = (gadget::EventWindowProxy*)gadget::InputManager::instance()->getProxy( fileChunks[0]->getName() );
 
    if (keyboard_proxy == NULL)
    {
       std::cout << "\tError: there is no keyboard proxy named " << fileChunks[0]->getName() << "\n" << std::flush;
       return false;
    }
- 
+
    if (keyboard_proxy->isStupified())
    {
       std::cout << "\tError: keyboard proxy named " << fileChunks[0]->getName() << " is stupified\n" << std::flush;
@@ -1262,7 +1262,7 @@ bool reconfigApp::readdKeyboardWin_check()
    }
 
    //Make sure the pointers match up
-   if (((gadget::Keyboard*)(keyboard_proxy->getProxiedInputDevice())) != keyboard)
+   if (((gadget::EventWindow*)(keyboard_proxy->getProxiedInputDevice())) != keyboard)
    {
       std::cout << "\tError: pointers don't match up\n" << std::flush;
       return false;
@@ -1275,7 +1275,7 @@ bool reconfigApp::readdKeyboardWin_check()
 bool reconfigApp::addSimPos_exec()
 {
    std::cout << "Beginning test for adding a sim position device and pointing proxies at it...\n" << std::flush;
-   return (  addChunkFile( mPath + "sim.positiondevice.config" ) 
+   return (  addChunkFile( mPath + "sim.positiondevice.config" )
           && addChunkFile( mPath + "sim.positiondeviceproxy.config" ));
 }
 
@@ -1309,7 +1309,7 @@ bool reconfigApp::removeSimPos_check()
       std::cout << "\tError: Proxy is not stupified\n" << std::flush;
       return false;
    }
- 
+
    return true;
 
 }
@@ -1370,7 +1370,7 @@ bool reconfigApp::repointProxy_check()
 
    if (fileChunks[0]->getProperty<std::string>("device", 0) != proxy->getDeviceName())
    {
-      std::cout << "\tError: the proxy points at device named " << proxy->getDeviceName() 
+      std::cout << "\tError: the proxy points at device named " << proxy->getDeviceName()
                 << ", but should point at " << fileChunks[0]->getProperty<std::string>("device", 0) << "\n" << std::flush;
       return false;
    }
@@ -1394,7 +1394,7 @@ bool reconfigApp::reconfigSimPos_check()
    if ( device == NULL )
    {
       std::cout << "\tError: Could not find the sim position device\n" << std::flush;
-      return false;      
+      return false;
    }
 
    gmtl::Matrix44f mat = device->getPositionData().getPosition();
@@ -1414,7 +1414,7 @@ bool reconfigApp::reconfigSimDigital_exec()
 {
    std::cout << "Beginning test for reconfiguring a sim digital device...\n" << std::flush;
 
-   return swapChunkFiles( mPath + "startup/sim.wandbuttonsdigital02.config", 
+   return swapChunkFiles( mPath + "startup/sim.wandbuttonsdigital02.config",
                           mPath + "sim.wandbuttonsdigital02.reconfig.config" );
 }
 
@@ -1427,7 +1427,7 @@ bool reconfigApp::reconfigSimDigital_check()
    if ( device == NULL )
    {
       std::cout << "\tError: Could not find the sim digital device\n" << std::flush;
-      return false;      
+      return false;
    }
 
    //Get the vector of keymodpairs
@@ -1456,7 +1456,7 @@ bool reconfigApp::reconfigSimDigital_check()
             key_status = true;
             continue;
          }
-      }  
+      }
 
       //If we have not found a key that matches...
       if (key_status == false)
@@ -1489,7 +1489,7 @@ bool reconfigApp::reconfigSimAnalog_check()
    if ( device == NULL )
    {
       std::cout << "\tError: Could not find the sim analog device\n" << std::flush;
-      return false;      
+      return false;
    }
 
    //Get the vector of keymodpairs
@@ -1520,7 +1520,7 @@ bool reconfigApp::reconfigSimAnalog_check()
             key_status = true;
             continue;
          }
-      }  
+      }
 
       //Scan the down keys
       for (int j=0; j < keypairsdown.size(); j++)
@@ -1532,7 +1532,7 @@ bool reconfigApp::reconfigSimAnalog_check()
             key_status = true;
             continue;
          }
-      }  
+      }
 
       //If we have not found a key that matches...
       if (key_status == false)
@@ -1548,7 +1548,7 @@ bool reconfigApp::reconfigSimAnalog_check()
 
 bool reconfigApp::addSimDigital_exec()
 {
-   std::cout << "Beginning test for adding a sim digital device and pointing proxies at it...\n" << std::flush;   
+   std::cout << "Beginning test for adding a sim digital device and pointing proxies at it...\n" << std::flush;
 
    return (  addChunkFile( mPath + "sim.digitaldevice.config" )
           && addChunkFile( mPath + "sim.digitalproxy.config"  ));
@@ -1582,7 +1582,7 @@ bool reconfigApp::removeSimDigital_check()
       std::cout << "\tError: Proxy is not stupified\n" << std::flush;
       return false;
    }
-   
+
    return true;
 }
 
@@ -1590,7 +1590,7 @@ bool reconfigApp::removeSimDigital_check()
 bool reconfigApp::readdSimDigital_exec()
 {
    std::cout << "Beginning test for readding a sim digital device and checking the proxies pointing at it...\n" << std::flush;
-   
+
    return addChunkFile( mPath + "startup/sim.wandbuttonsdigital.config" );
 }
 
@@ -1606,7 +1606,7 @@ bool reconfigApp::readdSimDigital_check()
 
 bool reconfigApp::addSimAnalog_exec()
 {
-   std::cout << "Beginning test for adding a sim analog device and pointing proxies at it...\n" << std::flush;   
+   std::cout << "Beginning test for adding a sim analog device and pointing proxies at it...\n" << std::flush;
 
    return (  addChunkFile( mPath + "sim.extraanalogdevice.config" )
           && addChunkFile( mPath + "sim.extraanalogproxy.config"  ));
@@ -1640,7 +1640,7 @@ bool reconfigApp::removeSimAnalog_check()
       std::cout << "\tError: Proxy is not stupified\n" << std::flush;
       return false;
    }
-   
+
    return true;
 }
 

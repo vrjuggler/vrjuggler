@@ -35,7 +35,7 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <gadget/Type/KeyboardProxy.h>
+#include <gadget/Type/EventWindowProxy.h>
 #include <gadget/Type/DeviceInterface.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ConfigChunkPtr.h>
@@ -48,11 +48,11 @@ namespace vrj
    /**
     * Base class for all simulator interface across all draw manager types
     */
-   class DrawSimInterface 
+   class DrawSimInterface
    {
    public:
       virtual ~DrawSimInterface() {}
-      
+
       /*
       * Configure the sim display
       * @pre chunk is a valid chunk.

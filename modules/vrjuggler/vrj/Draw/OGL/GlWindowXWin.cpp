@@ -245,23 +245,23 @@ int GlWindowXWin::open()
 
    window_is_open = true;
 
-   // ----------- Keyboard device starting -------------- //
-   if ( true == mAreKeyboardDevice )     // Are we going to act like a keyboard device
+   // ----------- Event window device starting -------------- //
+   if ( true == mAreEventSource )    // Are we going to act as an event source?
    {
       // Set the parameters that we will need to get events
-      gadget::KeyboardXWin::m_window = mXWindow;
-      gadget::KeyboardXWin::m_visual = mVisualInfo;
-      gadget::KeyboardXWin::m_display = mXDisplay;
+      gadget::EventWindowXWin::mWindow  = mXWindow;
+      gadget::EventWindowXWin::mVisual  = mVisualInfo;
+      gadget::EventWindowXWin::mDisplay = mXDisplay;
 
       // Start up the device
       /*   Do it in out check event function
-      gadget::KeyboardXWin::startSampling();
+      gadget::EventWindowXWin::startSampling();
       */
 
       gadget::Input* dev_ptr = dynamic_cast<gadget::Input*>(this);
 
       // XXX: Possibly not the best way to add this to input manager
-      // - What happens when the keyboard is removed at run-time???
+      // - What happens when the event window is removed at run-time???
       vrj::Kernel::instance()->getInputManager()->addDevice(dev_ptr);
    }
 
@@ -284,8 +284,8 @@ int GlWindowXWin::close()
 
    //vprASSERT( !mXfuncLock.test() && "Attempting to close a display window that is locked" );
    // Assert that we have not impllemented correct shutdown for the case that we
-   // are a keyboard window as well
-   vprASSERT(!mAreKeyboardDevice  && "Need to implement GLX window close with gadget-keyboard window");
+   // are an event window as well
+   vprASSERT(!mAreEventSource  && "Need to implement GLX window close with gadget::EventWindow");
 
    if ( mGlxContext )
    {
@@ -365,26 +365,25 @@ void GlWindowXWin::config(vrj::Display* disp)
    vprDEBUG(vrjDBG_DRAW_MGR,4) << "glxWindow::config: display name is: "
       << mXDisplayName << std::endl << vprDEBUG_FLUSH;
 
-   mAreKeyboardDevice = displayChunk->getProperty<bool>("act_as_keyboard_device");
-   // if should have keyboard device
-   if ( true == mAreKeyboardDevice )
-   {
-      mAreKeyboardDevice = true;       // Set flag saying that we need to have the local device
+   mAreEventSource = displayChunk->getProperty<bool>("act_as_event_source");
 
-      // Configure keyboard device portion
-      jccl::ConfigChunkPtr keyboard_chunk =
-         displayChunk->getProperty<jccl::ConfigChunkPtr>("keyboard_device_chunk");
+   // If should be an event source.
+   if ( true == mAreEventSource )
+   {
+      // Configure event window device portion.
+      jccl::ConfigChunkPtr event_win_chunk =
+         displayChunk->getProperty<jccl::ConfigChunkPtr>("event_window_device");
 
       // Set the name of the chunk to the same as the parent chunk (so we can point at it)
-      //keyboard_chunk->setProperty("name", displayChunk->getName();
+      //event_win_chunk->setProperty("name", displayChunk->getName();
 
-      gadget::KeyboardXWin::config(keyboard_chunk);
+      gadget::EventWindowXWin::config(event_win_chunk);
 
       // Custom configuration
-      gadget::KeyboardXWin::m_width = GlWindowXWin::window_width;
-      gadget::KeyboardXWin::m_height = GlWindowXWin::window_height;
+      gadget::EventWindowXWin::mWidth  = GlWindowXWin::window_width;
+      gadget::EventWindowXWin::mHeight = GlWindowXWin::window_height;
 
-      mWeOwnTheWindow = false;      // Keyboard device does not own window
+      mWeOwnTheWindow = false;      // Event window device does not own window
    }
 }
 
@@ -429,9 +428,9 @@ void GlWindowXWin::config(vrj::Display* disp)
 
 void GlWindowXWin::checkEvents()
 {
-   if ( true == mAreKeyboardDevice )
+   if ( true == mAreEventSource )
    {
-      gadget::KeyboardXWin::sample();    /** Sample from the xwindow (calls HandleEvents() )*/
+      gadget::EventWindowXWin::sample();    /** Sample from the xwindow (calls HandleEvents() )*/
    }
 
 }
@@ -457,7 +456,7 @@ void GlWindowXWin::checkEvents()
    int red_size(1), green_size(1), blue_size(1), alpha_size(1), db_size(1);
    bool want_fsaa(false);
 
-   jccl::ConfigChunkPtr gl_fb_chunk = mDisplay->getGlFrameBufferConfig();
+   jccl::ConfigChunkPtr gl_fb_chunk = mVrjDisplay->getGlFrameBufferConfig();
 
    if ( gl_fb_chunk.get() != NULL )
    {
@@ -510,7 +509,7 @@ void GlWindowXWin::checkEvents()
    }
 
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
-      << "Frame buffer visual settings for " << mDisplay->getName()
+      << "Frame buffer visual settings for " << mVrjDisplay->getName()
       << ": R:" << red_size << " G:" << green_size << " B:" << blue_size
       << " A:" << alpha_size << " DB:" << db_size << std::endl
       << vprDEBUG_FLUSH;
@@ -564,7 +563,7 @@ void GlWindowXWin::checkEvents()
       return NULL;
    }
 
-   if ( mDisplay->inStereo() )
+   if ( mVrjDisplay->inStereo() )
    {
       viattrib.push_back(GLX_STEREO);
       in_stereo = true;
@@ -584,7 +583,7 @@ void GlWindowXWin::checkEvents()
    }
 
    // still no luck. if we were going for stereo, let's try without.
-   if ( mDisplay->inStereo() )
+   if ( mVrjDisplay->inStereo() )
    {
       vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
          << "WARNING: Display process for '" << mXDisplayName
@@ -618,7 +617,7 @@ void GlWindowXWin::checkEvents()
    {
       vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
          << "WARNING: Display process for '" << mXDisplayName
- 	 << "' couldn't get FSAA - trying without it.\n" << vprDEBUG_FLUSH;
+     << "' couldn't get FSAA - trying without it.\n" << vprDEBUG_FLUSH;
 
       // Disabling is achieved by moving the terminator for the attribute
       // array up to the beginning of the FSAA attributes.  This effectively

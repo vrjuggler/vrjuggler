@@ -90,21 +90,21 @@ public:
    }
 
    /**
-    * Sets the keyboard the simulator can use to get input from the user.
+    * Sets the event window the simulator can use to get input from the user.
     */
-   virtual void setKeyboard(gadget::KeyboardInterface kbInterface);
+   virtual void setEventWindow(gadget::EventWindowInterface ewInterface);
 
 public:
    gmtl::Matrix44f getCameraPos()
    { return mCameraPos; }
-   
+
    gmtl::Matrix44f getHeadPos()
    { return mHeadPos; }
-   
+
    gmtl::Matrix44f getWandPos()
    { return mWandPos; }
 
-   virtual void updateProjectionData(const float positionScale, 
+   virtual void updateProjectionData(const float positionScale,
                                      Projection* leftProj, Projection* rightProj);
 
    /**  Update internal simulator data */
@@ -118,7 +118,7 @@ public:  // Sim Drawing parameters
    { return mSurfaceColor; }
 
 
-protected: // Drawing functions used by library   
+protected: // Drawing functions used by library
    /**
     * Draws any objects that the manager needs to display
     * i.e. Gloves, etc.
@@ -156,7 +156,7 @@ protected:
 
 protected:
    SimViewport*   mSimViewport;
-   
+
    // Drawing attributes
    bool           mDrawProjections;       /**< Should we draw projections */
    gmtl::Vec3f    mSurfaceColor;   /**< Color to draw surfaces */
