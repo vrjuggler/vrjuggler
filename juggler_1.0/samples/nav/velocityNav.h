@@ -31,10 +31,10 @@
  * -----------------------------------------------------------------
  */
 
-#include <Math/vjQuat.h>
+#include <vjQuat.h>
 #include <navigator.h>
-#include <collidor.h>
-
+#include <collider.h>
+#include "../StopWatch.h"
 
 class velocityNav : public navigator
 {
@@ -42,20 +42,69 @@ public:
    enum navMode { GROUND=0, FLY=1 };
    velocityNav();
 
-   void update(vjMatrix mat, bool allowTrans, bool allowRot);
-   void incTransVelocity();
-   void zeroTransVelocity();
+   virtual void update();
+
+   // set the rotational acceleration matrix
+   // only rotational components of this matrix are used.
+   void setRotationalAcceleration( const vjMatrix& mat )
+   {
+      mRotationalAcceleration = mat;
+   }
+
+
+   // set the highest velocity this nav can achieve.
+   // default is 35
+   void setMaxVelocity( const float& velocity = 35.0f )
+   {
+      mMaxVelocity = velocity;
+   }
+
+   // add forward velocity  (accelerate)
+   void accelerateForward( const float& accel );
+
+   // add backward velocity (decelerate/reverse)
+   void accelerateBackward( const float& accel );
+
+   // add left velocity (Strafe left)
+   void accelerateLeft( const float& accel );
+
+   // add right velocity (strafe right)
+   void accelerateRight( const float& accel );
+
+   // add up velocity (rise/climb)
+   void accelerateUp( const float& accel );
+
+   // add down velocity (fall/dive)
+   void accelerateDown( const float& accel );
+
+   //: zero all velocity
+   void stop();
+
+   //: damping [0...1], where 0 stops immediately, .99 brakes very slowly
+   //  default none (1.0f)
+   void setDamping( const float& damping = 1.0f );
 
    void setMode(navMode new_mode)
    { mMode = new_mode; }
 
-   void setGravityCollidor(collidor* val) { mGravCollidor = val;}
-   void setCorrectingCollidor(collidor* val) { mCorrectingCollidor = val;}
+   void setGravityCollider(collider* val) { mGravCollider = val;}
+   void setCorrectingCollider(collider* val) { mCorrectingCollider = val;}
 
+   // query the current speed.
+   float speed() const;
+
+   // query the current forward speed.
+   const float& zspeed() const;
+
+   // query the current forward speed.
+   const float& xspeed() const;
+
+   // query the current forward speed.
+   const float& yspeed() const;
+   
+   
+   
 protected:
-   // Translate and use gravity if it exists
-   bool trans(vjVec3 trans);
-
    // check if we are hitting anything current, and correct for it
    bool correctPosition(vjVec3 prev_delta);
 
@@ -63,79 +112,216 @@ protected:
    void rotate(vjMatrix rot_mat);
 
 private:
-   float mTransVelocity, mMaxTransVelocity;
+   vjVec3 mVelocity;
+   vjVec3 mVelocityFromGravityAccumulator;
+   float mMaxVelocity;
    float mRotVelocity, mMaxRotVelocity;
-
-   collidor* mCorrectingCollidor;
-   collidor* mGravCollidor;
-
+   vjMatrix mRotationalAcceleration;
+   float mDamping;
+   
+   collider* mCorrectingCollider;
+   collider* mGravCollider;
+   StopWatch stopWatch;
    navMode  mMode;
+   int mTimeHack;
 };
 
-velocityNav::velocityNav()
+velocityNav::velocityNav() : mTimeHack(0), mDamping( 1.0f ), mRotVelocity( 0.0f ),
+   mMaxRotVelocity( 1.0f ),
+   mVelocity( 0.0f, 0.0f , 0.0f ),
+   mMode( velocityNav::GROUND ),
+   mMaxVelocity( 55.0f )
 {
-   mRotVelocity = 0.0f;
-   mMaxRotVelocity = 1.0f;
-   mTransVelocity = 0.0f;
-   mMaxTransVelocity = 5.0f;
-   zeroTransVelocity();
-   mMode = GROUND;
+   stop();
+   stopWatch.start();
+   stopWatch.stop();
 }
 
 
-void velocityNav::update(vjMatrix mat, bool allowTrans, bool allowRot)
+void velocityNav::update()
 {
-   cerr << "--------------------------------" << endl;
-   cerr << "velocityNav::update " << endl;
-
-   // Get forward direction
-   vjVec3   forward(0.0, 0.0, -1.0f);         // -Z is forward in VR Juggler
-   forward.xformVec(mat, forward);
-   vjVec3   gravity(0,-1,0);
-   vjVec3 move(0.0f,0.0f,0.0f);
-
-   if(allowRot)
+   stopWatch.stop();
+   stopWatch.start();
+  
+   if (mTimeHack < 3)
    {
-      rotate(mat);
+      stopWatch.timeInstant = 0;
+      ++mTimeHack;
    }
-   if(mMode == GROUND)  // Do the gravity
+   
+   
+   //////////////////////////////////
+   // do navigations...
+   //////////////////////////////////
+   
+   // Define axes, in Juggler/OpenGL coordinate system (right handed)
+   vjVec3         trackerZaxis(0.0f, 0.0f, 1.0f);
+   vjVec3         trackerXaxis(1.0f, 0.0f, 0.0f);
+   vjVec3         trackerYaxis(0.0f, 1.0f, 0.0f);
+   const vjVec3   gravity( 0.0f, -9.8f, 0.0f );
+   
+   // get the rotation that takes the scene from localspace (user) to modelspace
+   vjMatrix currentRotation = mCurPos;
+   currentRotation( 0, 3 ) = 0.0f;
+   currentRotation( 1, 3 ) = 0.0f;
+   currentRotation( 2, 3 ) = 0.0f;  // zero out the translation...
+   
+   // get the inverse, we'll need it.
+   vjMatrix IcurrentRotation;
+   IcurrentRotation.invert( currentRotation );
+   
+   
+   if (mAllowRot)
    {
-      move += gravity;
-      cerr << "Added gravity: grav: " << gravity << " ==> move: " << move << endl;
+      this->rotate( mRotationalAcceleration );
    }
-   if(allowTrans)
+   
+   if (mMode == GROUND)
    {
-      move += (forward * mTransVelocity);
-      cerr << "Added trans: trans: " << forward << "*" << mTransVelocity << " ==> move: " << move << endl;
+      // get the axes of the tracking/pointing device
+      // NOTE: constrain to the Y axis in GROUND mode (no flying/hopping or diving faster than gravity allows)
+      vjMatrix constrainedToY;
+      mRotationalAcceleration.constrainRotAxis( false, true, false, constrainedToY );
+      trackerZaxis.xformVec( constrainedToY, trackerZaxis);
+      trackerXaxis.xformVec( constrainedToY, trackerXaxis);
+      trackerYaxis.xformVec( constrainedToY, trackerYaxis);
+   }
+   
+   else
+   {
+      // get the axes of the tracking/pointing device
+      trackerZaxis.xformVec( mRotationalAcceleration, trackerZaxis);
+      trackerXaxis.xformVec( mRotationalAcceleration, trackerXaxis);
+      trackerYaxis.xformVec( mRotationalAcceleration, trackerYaxis);
+   }
+   
+   // this is used to accumulate velocity added by navigation
+   vjVec3   velocityAccumulator( 0.0f, 0.0f, 0.0f );
+
+   if (mMode == GROUND)
+   {
+      // add the velocity this timeslice/frame by the acceleration from gravity.
+      velocityAccumulator += mVelocityFromGravityAccumulator;
+      
+      // recalculate the current downward velocity from gravity.
+      // this vector then is accumulated with the rest of the velocity vectors each frame.
+      mVelocityFromGravityAccumulator += (gravity * stopWatch.timeInstant);
+   }
+   if (mAllowTrans)
+   {
+      // add velocity with respect to the tracking/pointing device
+      velocityAccumulator += (trackerZaxis * mVelocity[2]); // forward/reverse   |reletive to tracker
+      velocityAccumulator += (trackerXaxis * mVelocity[0]); // strafe            |reletive to tracker
+      velocityAccumulator += (trackerYaxis * mVelocity[1]); // rise/dive         |reletive to tracker
+      //cerr << "Added trans: trans: " << forward << "*" << mTransVelocity * stopWatch.timeInstant<< " ==> move: " << move << endl;
    }
 
-   if(move != vjVec3(0,0,0))
+   // add in damping (if any)
+   mVelocity[2] += (-mVelocity[2] * (1.0f - mDamping));
+   mVelocity[1] += (-mVelocity[1] * (1.0f - mDamping));
+   mVelocity[0] += (-mVelocity[0] * (1.0f - mDamping));
+
+   //cout<<"Damping: "<<mDamping<<", Velocity: "<<mVelocity<<"\n"<<flush;
+   
+   // navigation just calculated navigator's next velocity
+   // now convert accumulated velocity to distance traveled this frame (by cancelling out time)
+   // NOTE: this is not the final distance, since we still have to do collision correction.
+   vjVec3 distanceToMove = velocityAccumulator * stopWatch.timeInstant;
+   
+      
+   //////////////////////////////////
+   // do collision corrections...
+   //////////////////////////////////
+   // convert the info to model coordinates, since that's what the nav routines take.
+   
+   // distanceToMove is in local (user) coordinates, 
+   // move it to model coordinates (since we're testing against the model)
+   vjVec3 mcDist2Move;
+   mcDist2Move.xformFull( currentRotation, distanceToMove );
+   
+   // mCurPos is already in model coordinates, since it is used to move the geometry from localspace to modelspace
+   vjVec3 whereYouAre, whereYouWantToBe;
+   vjCoord cur_pos(mCurPos);
+   whereYouAre = cur_pos.pos;
+
+   // Find out where you want to move to (modelspace = modelspace + modelspace::: no conversion nessesary)
+   //whereYouWantToBe = whereYouAre + mcDist2Move;
+   
+   // the collider will return a correction vector in modelspace coordinates
+   // add this to correct your distance requested to move.
+   vjVec3 correction;
+   //vjVec3 totalCorrections;
+   
+   
+   // Begin collision testing:::
+   // TODO: collision is limited to 2 colliders for now.  This could easily be expanded.
+   // TODONOTE: if you do expand, then you'll need to fix the HACK(!)
+   
+   if ((mGravCollider != NULL) && mGravCollider->testMove( whereYouAre, mcDist2Move, correction))
    {
-      if(trans(move))     // We hit
-      {;}
-      else
-      {;}
-
-      correctPosition(move);
+      //cout<<"Collide Grav!\n"<<flush;
+      mcDist2Move += correction;
+      //totalCorrections += correction;
+      
+      // HACK(!) - use the correction vectors to decide how much velocity from gravity to remove
+      //        here i'm just zeroing it out.
+      mVelocityFromGravityAccumulator.set( 0.0f, 0.0f, 0.0f );
+   } 
+   
+   if ((mCorrectingCollider != NULL) && mCorrectingCollider->testMove( whereYouAre, mcDist2Move, correction))
+   {
+      //cout<<"Collide Ray!\n"<<flush;
+      mcDist2Move += correction;
+      //totalCorrections += correction;
    }
+   
+   // End collision testing:::
 
+   
+   // HACK(!) - yes, this was my (small) attempt to fix the hack above (depicted with a (!))
+   //
+   // velocity from gravity is affected by all collisions in the direction of the gravity vector.
+   // reduce the velocity from gravity with these collisions.
+   // TODO: this is hackish - do real elastic colisions
+   //vjVec3 localSpaceCorrections;
+   //localSpaceCorrections.xformFull( IcurrentRotation, totalCorrections );
+   //vjVec3 subtractfromGravVel;
+   //subtractfromGravVel[2] = (localSpaceCorrections[2] / stopWatch.timeInstant);
+   //mVelocityFromGravityAccumulator += subtractfromGravVel;
+   
+   // the navTranslate() function requires a translation in local coordinates
+   // move the vector back from modelspace to localspace
+   
+   distanceToMove.xformFull( IcurrentRotation, mcDist2Move );
+   this->navTranslate( distanceToMove );
 }
 
 void velocityNav::rotate(vjMatrix rot_mat)
 {
+   //: Confused by quaternions???
+   //  All this does is scale the angle of rotation back by about %4
+   //  Normally this is done to the euler angles, but since we're just using rotations, 
+   //  this was the "easiest" way to do it.   Quaternions allow you to interpolate, 
+   //  thus getting a scale factor of the original (with respect to identity)
+   /////////////////
+   
    // I should scale the rotation matrix here
    // I should also compute a relative rotation from the head here as well
    vjMatrix    transform, transformIdent;
    vjQuat      source_rot, goal_rot, slerp_rot;
 
-   transformIdent.makeIdent();            // Create an identity matrix to rotate from
+   // Create an identity quaternion to rotate from
+   transformIdent.makeIdent();         
+   
+   // Create the goal rotation quaternion   
    source_rot.makeQuat(transformIdent);
-   goal_rot.makeQuat(rot_mat);                // Create the goal rotation quaternion
+   goal_rot.makeQuat(rot_mat);                
 
-   if(transformIdent != rot_mat)              // If we don't have two identity matrices
+   // If we don't have two identity matrices
+   if(transformIdent != rot_mat)              
    {
-      slerp_rot.slerp(0.05, source_rot, goal_rot);    // Transform part way there
-      transform.makeQuaternion(slerp_rot);            // Create the transform matrix to use
+      slerp_rot.slerp( 0.04, source_rot, goal_rot );    // Transform part way there
+      transform.makeQuaternion( slerp_rot );            // Create the transform matrix to use
    }
    else
    {
@@ -144,56 +330,107 @@ void velocityNav::rotate(vjMatrix rot_mat)
    navigator::navRotate(transform);
 }
 
-
-bool velocityNav::trans(vjVec3 trans)
-{
-   vjVec3 correction;
-   vjCoord cur_pos(mCurPos);
-   bool ret_val(false);
-
-   if((mGravCollidor != NULL) && mGravCollidor->testMove(cur_pos.pos, trans, correction))
-   {
-      trans += correction;                // Correct the translation
-      //trans += correction*(0.1/correction.length());   // Bounce a little too much
-      ret_val = true;
-      cerr << "------ TRANS HIT -------\n";
-      cerr << "Correction: " << correction << endl;
-      cerr << "Corrected:  " << trans << endl;
-   }
-
-   navigator::navTranslate(trans);
-   if((mGravCollidor != NULL) && mGravCollidor->didCollide())        // Do some damping
-      mTransVelocity *= 0.66f;      // We hit, so slow down the translation
-
-   return ret_val;
-}
-
 // check if we are hitting anything current, and correct for it
-bool velocityNav::correctPosition(vjVec3 prev_delta)
+bool velocityNav::correctPosition( vjVec3 prev_delta )
 {
    //vjVec3 zero_trans(0.0f,0.0f,0.0f);
    vjVec3 correction;
    vjCoord cur_pos(mCurPos);
+   
+   // TODO: Kevin....
+   vjMatrix rotMat = mCurPos;
+   rotMat( 0, 3 ) = 0.0f;
+   rotMat( 1, 3 ) = 0.0f;
+   rotMat( 2, 3 ) = 0.0f;
+   prev_delta.xformVec( rotMat, prev_delta );
+   
 
-   if((mCorrectingCollidor != NULL) &&
-      mCorrectingCollidor->testMove(cur_pos.pos, prev_delta, correction,true))
+   if ((mCorrectingCollider != NULL) &&
+      mCorrectingCollider->testMove( cur_pos.pos, prev_delta, correction, true ))
    {
-      cerr << "-------- CORRECTION HIT --------\n";
-      cerr << "Correction: " << correction << endl;
-      navigator::navTranslate(correction);
+      navigator::navTranslate( correction );
       return true;
    }
    return false;
 }
 
 
-void velocityNav::incTransVelocity()
+void velocityNav::accelerateForward( const float& accel )
 {
-   if(mTransVelocity < mMaxTransVelocity)
-      mTransVelocity += 0.05f;
+   // add on the velocity
+   if (mVelocity[2] < mMaxVelocity)
+      mVelocity[2] += (-accel) * stopWatch.timeInstant;
 }
 
-void velocityNav::zeroTransVelocity()
+void velocityNav::accelerateBackward( const float& accel )
 {
-   mTransVelocity = 0.0f;
+   // add on the velocity
+   if (mVelocity[2] > (-mMaxVelocity))
+      mVelocity[2] += accel * stopWatch.timeInstant;
+}
+
+void velocityNav::accelerateRight( const float& accel )
+{
+   // add on the velocity
+   if (mVelocity[2] < mMaxVelocity)
+      mVelocity[0] += accel * stopWatch.timeInstant;
+}
+
+void velocityNav::accelerateLeft( const float& accel )
+{
+   // add on the velocity
+   if (mVelocity[2] > (-mMaxVelocity))
+      mVelocity[0] += (-accel) * stopWatch.timeInstant;
+}
+
+void velocityNav::accelerateUp( const float& accel )
+{
+   // add on the velocity
+   if (mVelocity[1] < mMaxVelocity)
+      mVelocity[1] += accel * stopWatch.timeInstant;
+}
+
+void velocityNav::accelerateDown( const float& accel )
+{
+   // add on the velocity
+   if (mVelocity[1] > (-mMaxVelocity))
+      mVelocity[1] += (-accel) * stopWatch.timeInstant;
+}
+
+
+void velocityNav::stop()
+{
+   this->setDamping( 0.0f );
+}
+
+void velocityNav::setDamping( const float& damping )
+{
+   mDamping = damping;
+   //cout<<"Setting damping coef to: "<<mDamping<<"\n"<<flush;
+}
+
+// query the current speed.
+float velocityNav::speed() const
+{
+   vjVec3 speed( mVelocity[2], mVelocity[0], mVelocity[1] );
+   float velocity = speed.length();
+   return velocity;
+}
+
+// query the current forward speed.
+const float& velocityNav::zspeed() const
+{
+   return mVelocity[2];
+}
+
+// query the current forward speed.
+const float& velocityNav::xspeed() const
+{
+   return mVelocity[0];
+}
+
+// query the current forward speed.
+const float& velocityNav::yspeed() const
+{
+   return mVelocity[1];
 }

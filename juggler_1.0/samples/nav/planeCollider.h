@@ -31,19 +31,18 @@
  * -----------------------------------------------------------------
  */
 
-#include <collidor.h>
-#include <Math/vjVec3.h>
-#include <Math/vjMatrix.h>
+#include <collider.h>
+#include <vjVec3.h>
+#include <vjMatrix.h>
 
-#ifndef _PLANE_COLLIDOR_H_
-#define _PLANE_COLLIDOR_H_
+#ifndef _PLANE_COLLIDER_H_
+#define _PLANE_COLLIDER_H_
 
-class planeCollidor : public collidor
+class planeCollider : public collider
 {
 public:
-   planeCollidor()
+   planeCollider() : mHeight( 0 )
    {
-      mHeight = 0;
    }
 
    bool testMove(vjVec3 curPos, vjVec3 delta, vjVec3& correction, bool curPosWithDelta = false);
@@ -53,7 +52,7 @@ private:
 };
 
 
-bool planeCollidor::testMove(vjVec3 curPos, vjVec3 delta, vjVec3& correction, bool curPosWithDelta)
+bool planeCollider::testMove(vjVec3 curPos, vjVec3 delta, vjVec3& correction, bool curPosWithDelta)
 {
    correction.set(0,0,0);
 
