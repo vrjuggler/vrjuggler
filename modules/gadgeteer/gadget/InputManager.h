@@ -193,7 +193,9 @@ public:
     */
    bool removeDevice(std::string mInstName);
 
-private:
+   /** Remove a device given a pointer to the device.
+   * Internally this just uses removeDevice(dev_name)
+   */
    bool removeDevice(const Input* devPtr);
 
    /*********************************************************
