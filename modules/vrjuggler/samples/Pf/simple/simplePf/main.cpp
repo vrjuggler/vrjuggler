@@ -50,6 +50,8 @@ int main(int argc, char* argv[])
    simplePfApp* application = new simplePfApp();  // Delcare an instance of my application
 
    // --- CHECK FOR CORRECT ARGUMENTS ---- //
+   usage(argv);
+
    if (argc < 2)
    {
       usage( argv );
