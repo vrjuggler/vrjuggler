@@ -32,8 +32,6 @@
 
 #include <gadget/Devices/DriverConfig.h>
 
-#include <sstream>
-#include <fstream>
 #include <boost/concept_check.hpp>
 
 #include <vpr/vprConfig.h>
