@@ -304,6 +304,9 @@ public class ConfigToolbar
       // Only allow the user to choose files
       fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
       fileChooser.setFileHidingEnabled(false);
+      fileChooser.setAcceptAllFileFilterUsed(false);
+      fileChooser.setFileFilter(new ConfigFileFilter());
+      fileChooser.setFileView(new ConfigFileView());
 
       int result = fileChooser.showOpenDialog(this);
       if (result == JFileChooser.APPROVE_OPTION)
