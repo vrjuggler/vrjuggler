@@ -127,32 +127,6 @@ ifndef GLOBAL_BUILD
 	rm -rf $(instlinks)/$(DSO_DRIVER_DIR)
 endif
 
-drivers:
-ifdef BUILD_TYPE
-	$(MAKE) drivers-$(BUILD_TYPE)
-else
-	$(MAKE) drivers-dbg
-endif
-
-drivers-all drivers-opt:
-	$(MKINSTALLDIRS) $(DSO_DRIVER_DIR)
-	$(MAKE) -C gadget/Devices RECTARGET="$(BUILD_TYPE)"		\
-          DSO_DRIVER_DIR="$(DSO_DRIVER_DIR)" OPTIMIZER="$(OPT_FLAGS)"	\
-          BASE_OBJDIR="$(OPT_BUILDDIR)" LIBDIR="$(LIBDIR)" recursive
-
-drivers-dbg:
-	$(MKINSTALLDIRS) $(DSO_DRIVER_DIR)
-	$(MAKE) -C gadget/Devices RECTARGET="$(BUILD_TYPE)"		\
-          DSO_DRIVER_DIR="$(DSO_DRIVER_DIR)" OPTIMIZER="$(DBG_FLAGS)"	\
-          BASE_OBJDIR="$(DBG_BUILDDIR)" LIBDIR="$(LIBDIR)" recursive
-
-drivers-prof:
-	$(MKINSTALLDIRS) $(DSO_DRIVER_DIR)
-	$(MAKE) -C gadget/Devices RECTARGET="$(BUILD_TYPE)"		\
-          DSO_DRIVER_DIR="$(DSO_DRIVER_DIR)" LIBDIR="$(LIBDIR)"		\
-          BASE_OBJDIR="$(PROF_BUILDDIR)" OPTIMIZER="$(PROF_OPT_FLAGS)"	\
-          recursive
-
 # =============================================================================
 # Installation targets.  The default (what is done by 'install') is to install
 # the static debugging version of the libraries.  The steps taken for a full
@@ -196,14 +170,11 @@ install-data:
           --srcdir="."
 
 # =============================================================================
-# Clean-up targets. '_clobber' removes the $(BUILDDIR_BASE) and $(LIBDIR_NAME)
-# directories.
+# Clean-up targets.
 # =============================================================================
-
 _clobber:
 	@$(MAKE) cleandepend
 	@$(MAKE) clean-links
-
 
 # Define $(_LOCAL_CLOBBER) to inform the shared 'clobber' target that there is
 # a '_clobber' target to be run besides the standard target.
