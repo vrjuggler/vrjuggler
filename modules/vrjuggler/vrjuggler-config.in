@@ -413,12 +413,19 @@ sub make_EXTRA_LDFLAGS ($;$$$)
       {
          $extra_libs .= qq( @Juggler_extra_libs@);
       }
+
+      # Only add the "internal" dependencies when we want the basic Juggler
+      # library.
+      if ( $LIBS{'Juggler'} )
+      {
+         $extra_libs = "$dep_libs $extra_libs";
+      }
    }
 
    my $extra_ldflags = ($use_linker ? qq(@vrj_extra_ldflags_linker@)
                                     : qq(@vrj_extra_ldflags_compiler@));
 
-   my $full_extra_ldflags = "$extra_ldflags $dep_libs $extra_libs $dep_extra_libs";
+   my $full_extra_ldflags = "$extra_ldflags $extra_libs $dep_extra_libs";
    $full_extra_ldflags    =~ s/\s{2,}/ /g;
 
    return "$full_extra_ldflags";
