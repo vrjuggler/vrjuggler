@@ -490,17 +490,7 @@ sub make_EXTRA_LDFLAGS ($;$$$)
    $extra_ldflags = "-L$deps_dir/lib$LIBBITSUF $extra_ldflags" if $deps_dir;
 
    my $full_extra_ldflags = "$extra_ldflags $extra_libs $dep_extra_libs";
-
-   # Make sure the option to link with pthreads (-pthread, -pthreads,
-   # -lpthread, or -lpthreads) appears only once at the very end of the
-   # list of extra libraries.
-   # XXX: Generalize this!
-   if ( $full_extra_ldflags =~ s/(-l?pthreads?)//g )
-   {
-      $full_extra_ldflags .= " $1";
-   }
-
-   $full_extra_ldflags =~ s/\s{2,}/ /g;
+   $full_extra_ldflags    =~ s/\s{2,}/ /g;
 
    return groupLibdirArgs(stripDuplicateLibraryArgs("$full_extra_ldflags"));
 }
