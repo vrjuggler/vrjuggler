@@ -35,7 +35,7 @@
 #define _JCCL_PERF_COMMAND_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/JackalServer/Command.h>
+#include <jccl/Net/Command.h>
 
 namespace jccl
 {
