@@ -295,20 +295,20 @@
          <xsl:variable name="dev_name">
             <xsl:value-of select="./jconf:device" />
          </xsl:variable>
-         <xsl:choose>
-            <xsl:when test="contains($dev_name, '/event_window_device/')">
-               <xsl:element name="device">
+         <xsl:element name="device">
+            <xsl:choose>
+               <xsl:when test="contains($dev_name, '/event_window_device/')">
                   <xsl:call-template name="strip-path">
                      <xsl:with-param name="original" select="$dev_name" />
                      <xsl:with-param name="path_sep"><xsl:text>/</xsl:text></xsl:with-param>
                   </xsl:call-template>
-                  <xsl:text> KM Dev</xsl:text>
-               </xsl:element>
-            </xsl:when>
-            <xsl:otherwise>
-               <xsl:copy-of select="./jconf:device" />
-            </xsl:otherwise>
-         </xsl:choose>
+                  </xsl:when>
+                  <xsl:otherwise>
+                     <xsl:value-of select="./jconf:device" />
+                  </xsl:otherwise>
+               </xsl:choose>
+            <xsl:text> KM Dev</xsl:text>
+         </xsl:element>
       </xsl:element>
    </xsl:template>
 
