@@ -32,14 +32,14 @@
 
 package org.vrjuggler.vrjconfig.controlpanel;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import javax.swing.Box;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 
@@ -68,6 +68,9 @@ public class ControlPanelToolbar
    public static final String RTRC_ACTION     = "RTRC";
    public static final String SAVE_ACTION     = "Save";
    public static final String SAVE_AS_ACTION  = "SaveAs";
+
+   private static final String SAVED_STATE_TEXT   = "";
+   private static final String UNSAVED_STATE_TEXT = "Unsaved Changes";
 
    public ControlPanelToolbar(ConfigContext ctx, FileLoader fileLoader,
                               UndoHandler undoHandler)
@@ -127,6 +130,20 @@ public class ControlPanelToolbar
       toolbar.add(expandBtn, null);
    }
 
+   public boolean doSave()
+   {
+      boolean saved = super.doSave();
+      stateLabel.setText(saved ? SAVED_STATE_TEXT : UNSAVED_STATE_TEXT);
+      return saved;
+   }
+
+   public boolean doSaveAs()
+   {
+      boolean saved = super.doSaveAs();
+      stateLabel.setText(saved ? SAVED_STATE_TEXT : UNSAVED_STATE_TEXT);
+      return saved;
+   }
+
    public boolean doRTRC()
    {
       try
@@ -166,6 +183,24 @@ public class ControlPanelToolbar
    private void jbInit()
       throws Exception
    {
+      titlePanel.setLayout(new BorderLayout());
+      titlePanel.setBorder(BorderFactory.createRaisedBevelBorder());
+      titlePanel.setBackground(UIManager.getColor("textHighlight"));
+      stateLabel.setBackground(UIManager.getColor("textHighlight"));
+      stateLabel.setFont(new Font("Serif", Font.ITALIC, 18));
+      stateLabel.setForeground(UIManager.getColor("textHighlightText"));
+      stateLabel.setOpaque(true);
+      stateLabel.setHorizontalAlignment(SwingConstants.LEFT);
+      stateLabel.setText(SAVED_STATE_TEXT);
+      titleLabel.setBackground(UIManager.getColor("textHighlight"));
+      titleLabel.setFont(new Font("Serif", Font.BOLD, 18));
+      titleLabel.setForeground(UIManager.getColor("textHighlightText"));
+      titleLabel.setOpaque(true);
+      titleLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+      titleLabel.setText("VRJConfig Control Panel");
+      titlePanel.add(stateLabel, BorderLayout.WEST);
+      titlePanel.add(titleLabel, BorderLayout.EAST);
+      this.add(titlePanel, BorderLayout.NORTH);
       rtrcBtn.setToolTipText("Acquire the config elements of a running " +
                              "VR Juggler application");
       rtrcBtn.setActionCommand(RTRC_ACTION);
@@ -180,5 +215,8 @@ public class ControlPanelToolbar
    }
 
    // JBuilder GUI variables
+   private JPanel titlePanel = new JPanel();
+   private JLabel stateLabel = new JLabel();
+   private JLabel titleLabel = new JLabel();
    private JButton rtrcBtn = new JButton();
 }
