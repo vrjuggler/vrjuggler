@@ -35,7 +35,7 @@
 #include <string>
 
 #ifdef WIN32
-#include <VPR/md/POSIX/vjSocketStreamImpWinSock.h>
+#include <VPR/md/WIN32/vjSocketStreamImpWinSock.h>
 #else
 #include <VPR/md/POSIX/vjSocketStreamImpBSD.h>
 #endif
