@@ -1,6 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
 
+Jul-18-2000           VR Juggler 0.1.97 released
 ==[ 0.1.97 ]=========================
 Jul-13-2000 cjust     Environment Manager works under NT
                       Config files can have includes for chunkdesc files
