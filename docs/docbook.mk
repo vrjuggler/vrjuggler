@@ -14,6 +14,7 @@ JADETEX?=	$(TEX_BINDIR)/jadetex
 PDFJADETEX?=	$(TEX_BINDIR)/pdfjadetex
 PDFLATEX?=	$(TEX_BINDIR)/pdflatex
 PDFTEX?=	$(TEX_BINDIR)/pdftex
+PDFXMLTEX?=	$(TEX_BINDIR)/pdfxmltex
 RASTERIZER?=	$(DOCBOOK_ROOT)/batik-1.1.1/svgrasterizer
 RM=		rm -f
 SAXON?=		$(DOCBOOK_ROOT)/saxon-$(SAXON_VERSION)/saxon.sh
@@ -39,8 +40,9 @@ ifeq ($(FO_VERSION), XEP)
    SAXON_FO_PARAMS=	xep.extensions=1
 else
 ifeq ($(FO_VERSION), PASSIVE_TEX)
-   XALAN_FO_PARAMS=	-PARAM tex.math.in.alt "latex"
-   SAXON_FO_PARAMS=	tex.math.in.alt=latex
+   XALAN_FO_PARAMS=	-PARAM passivetex.extensions "1"		\
+			-PARAM tex.math.in.alt "latex"
+   SAXON_FO_PARAMS=	passivetex.extensions=1 tex.math.in.alt=latex
 endif # PASSIVE_TEX
 endif # XEP
 endif # FOP
@@ -169,8 +171,8 @@ endif
 # that a simple TeX file be generated from the XML first (see below).
 ifeq ($(FO_VERSION), PASSIVE_TEX)
 .fo.pdf:
-	$(TEX_ENV) $(PDFLATEX) "&pdfxmltex" $*.fo
-#	$(TEX_ENV) $(PDFLATEX) "&pdfxmltex" $*.fo
+	$(TEX_ENV) $(PDFXMLTEX) $*.fo
+#	$(TEX_ENV) $(PDFXMLTEX) $*.fo
 
 # Generate a TeX file for use with PassiveTeX.
 #.xml.tex:
