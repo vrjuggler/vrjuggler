@@ -8,9 +8,9 @@
 <TR>
   <TH ALIGN="LEFT" BGCOLOR="#4682b4">
     {nolink true}
-    <H2><A NAME="{memberef}">
-      <FONT COLOR="#ffffff">{mname}</FONT>
-    </A></H2>
+    <A NAME="{memberef}">
+    <FONT SIZE="+1" COLOR="#ffffff">{mname}</FONT>
+    </A>
     {nolink false}
   </TH>
 </TR>
