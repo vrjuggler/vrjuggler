@@ -433,7 +433,7 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
               <note>
                 <para>You will probably have to specify the paths to your
                 local CppDOM, GMTL, and Boost installations using the options
-                <option>--with-cppdom</option>, <option>--with-gmtl-prefix</option>
+                <option>--with-cppdom</option>, <option>--with-gmtl</option>
                 and <option>--with-boost</option> unless they are installed in
                 the default location (<filename>/usr/local</filename>). By
                 default, Boost 1.31 installs its header files in a
@@ -478,9 +478,9 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
           <filename>/home/user1/pkgs/GMTL/include</filename>. To use this
           installation, run <command>configure.pl</command> as follows:</para>
 
-          <screen>../configure.pl --with-gmtl-prefix=/home/user1/pkgs/GMTL</screen>
+          <screen>../configure.pl --with-gmtl=/home/user1/pkgs/GMTL</screen>
 
-          <para>The --<option>with-gmtl-prefix</option> option could of course
+          <para>The <option>--with-gmtl</option> option could of course
           be mixed in with those shown in the previous section.</para>
         </section>
       </section>
