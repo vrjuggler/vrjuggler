@@ -32,7 +32,10 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <iostream>
+
 #include <prerror.h>
+#include <prerr.h>
 
 #include <md/NSPR/NSPRHelpers.h>
 
@@ -42,18 +45,25 @@ namespace vpr {
 // Print out the current NSPR error message to stderr
 void NSPR_PrintError(const std::string error_prefix_string )
 {
-   PRInt32 textLength = PR_GetErrorTextLength();
-   char *text = (char*)malloc(textLength);
-   if ( PR_GetErrorText(text) > 0 ) {
-      fprintf(stderr, "%s (%d, %s) (%d, %s)\n",
-              error_prefix_string.c_str(), PR_GetError(), text, PR_GetOSError(), strerror(PR_GetOSError()));
-   }
-   else {
-       fprintf(stderr, "%s (%d, %s)\n", 
-               error_prefix_string.c_str(), PR_GetError(), strerror(PR_GetOSError()));
-   }
+   PRErrorCode  err = PR_GetError();
+   const char* err_name = PR_ErrorToName(err);
+   const char* err_str = PR_ErrorToString(err,0);
 
-   free(text);
+   /*
+   int os_err = PR_GetOSError();
+   char* os_str = strerror(PR_GetOSError());
+   */
+
+   std::cerr << "Error (NSPR): " << error_prefix_string
+             << "(" << err;
+   if(err_name != NULL)
+       std::cerr << ":" << err_name;
+    
+   if(err_str != NULL)
+       std::cerr << ", " << err_str;
+
+   std::cerr << ")" << std::endl;
 }
 
-};
+}   // namespace
+
