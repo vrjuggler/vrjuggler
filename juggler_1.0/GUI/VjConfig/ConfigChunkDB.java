@@ -5,9 +5,10 @@ import java.util.Vector;
 import java.io.*;
 import VjConfig.*;
 
-public class ConfigChunkDB extends Vector {
+public class ConfigChunkDB {
 
     private ChunkDescDB descs;
+    private Vector chunks;
     public String name;
     public File file;
 
@@ -19,6 +20,7 @@ public class ConfigChunkDB extends Vector {
 
     public ConfigChunkDB (ChunkDescDB d) {
 	super();
+	chunks = new Vector();
 	descs = d;
 	name = "Untitled";
 	file = new File("Untitled");
@@ -49,7 +51,7 @@ public class ConfigChunkDB extends Vector {
 	ConfigChunkDB newdb = new ConfigChunkDB(d.descs);
 	
 	for (int i = 0; i < d.size(); i++) {
-	    c1 = (ConfigChunk)d.elementAt(i);
+	    c1 = d.elementAt(i);
 	    c2 = get (c1.name);
 	    if ((c2 == null) || (!c1.equals(c2)))
 		newdb.insertOrdered(c1);
@@ -59,16 +61,28 @@ public class ConfigChunkDB extends Vector {
 
 
 
-    public boolean removeAll () {
-	removeAllElements();
-	return true;
+    public int size() {
+	return chunks.size();
+    }
+
+
+    public ConfigChunk elementAt (int i) throws ArrayIndexOutOfBoundsException {
+	return (ConfigChunk)chunks.elementAt(i);
+    }
+
+    public void removeAll () {
+	chunks.removeAllElements();
+    }
+
+    public void removeElementAt (int i) {
+	chunks.removeElementAt(i);
     }
 
 
 
     public boolean remove(String name) {
 	for (int i = 0; i < size(); i++) {
-	    if (((ConfigChunk)elementAt(i)).getName().equalsIgnoreCase(name)) {
+	    if (elementAt(i).getName().equalsIgnoreCase(name)) {
 		removeElementAt(i);
 		return true;
 	    }
@@ -79,9 +93,11 @@ public class ConfigChunkDB extends Vector {
 
 
     public ConfigChunk get (String name) {
+	ConfigChunk ch;
 	for (int i = 0; i < size(); i++) {
-	    if (((ConfigChunk)elementAt(i)).getName().equalsIgnoreCase(name)) {
-		return (ConfigChunk)elementAt(i);
+	    ch = elementAt(i);
+	    if (ch.getName().equalsIgnoreCase(name)) {
+		return ch;
 	    }
 	}
 	return null;
@@ -92,8 +108,8 @@ public class ConfigChunkDB extends Vector {
     public Vector getOfDescName (String typename) {
 	Vector v = new Vector();
 	for (int i = 0; i < size(); i++) {
-	    if (((ConfigChunk)elementAt(i)).desc.name.equalsIgnoreCase(typename))
-		v.addElement((ConfigChunk)elementAt(i));
+	    if (elementAt(i).desc.name.equalsIgnoreCase(typename))
+		v.addElement(elementAt(i));
 	}
 	return v;
     }
@@ -110,30 +126,42 @@ public class ConfigChunkDB extends Vector {
     }
 
 
+    public void addElement (Object o) {
+	if (o instanceof ConfigChunk)
+	    insertOrdered ((ConfigChunk)o);
+	else
+	    System.err.println ("Error: tried to add non-configchunk to chunkdb");
+    }
+
 
     public void insertOrdered (ConfigChunk c) {
 	/* adds a chunk into self, with the constraint 
 	 * that it's stored with all the other chunks of its type.
 	 * For the moment, we won't put any real order on that.
+	 *
 	 */
 	ConfigChunk t;
-	int i;
+	int i = 0;
 
 	remove(c.name);
-	for (i = 0; i < size(); i++) {
-	    t = (ConfigChunk)elementAt(i);
-	    if (t.getDescToken().equalsIgnoreCase(c.getDescToken())) 
-		break;
+
+	// (slightly hacked to make sure includes are first in file)
+	if (!c.getDescToken().equalsIgnoreCase("vjIncludeFile")) {
+	    for (; i < chunks.size(); i++) {
+		t = (ConfigChunk)chunks.elementAt(i);
+		if (t.getDescToken().equalsIgnoreCase(c.getDescToken())) 
+		    break;
+	    }
 	}
 	if (i == size())
-	    addElement(c);
+	    chunks.addElement(c);
 	else {
 	    for ( ; i < size(); i++) {
-		t = (ConfigChunk)elementAt(i);
+		t = (ConfigChunk)chunks.elementAt(i);
 		if (!t.getDescToken().equalsIgnoreCase(c.getDescToken()))
 		    break;
 	    }
-	    insertElementAt(c, i);
+	    chunks.insertElementAt(c, i);
 	}
     }
 
@@ -215,8 +243,8 @@ public class ConfigChunkDB extends Vector {
 	for (int i = 0; i < size(); i++) {
 	    t = (ConfigChunk)elementAt(i);
 	    if (t.getName().equals(o.getName())) {
-		removeElementAt(i);
-		insertElementAt(n,i);
+		chunks.removeElementAt(i);
+		chunks.insertElementAt(n,i);
 		return;
 	    }
 	}
