@@ -1,0 +1,32 @@
+$Id$
+
+InterSense Interface Libraries SDK
+	originals can be found at: http://www.isense.com/support/
+
+Imported files:
+	isense.c isense.h types.h
+
+Files not imported:
+	dlcompat.h, dlcompat.c
+		Mac OS X 10.3 has dlfcn.h (though it defines a deprecated
+		API), and these files appear to be for use with Mac OS X
+		10.2.  Mac OS X 10.2 is not officially supported by the
+		Juggler Suite.
+
+	main.c
+		Unneeded sample program.
+
+Imported by:
+
+	cvs import juggler/modules/gadgeteer/drivers/Intersense/IntersenseAPI/isense \
+		INTERSENSE ISENSE_SDK_v3_58
+
+Files off the vendor branch:
+	isense.c
+		Changes to load_ISLIB() and ISD_OpenAllTrackers() to allow
+		the IntersenseAPI driver to provide an absolute path to the
+		InterSense Interface Libraries DLL via ISD_OpenAllTrackers().
+		Change inclusion of "dlcompat.h" to <dlfcn.h> for Mac OS X.
+
+	isense.h
+		Signature change to ISD_OpenAllTrackers() declaration.
