@@ -458,6 +458,8 @@ def generateAntBuildFiles():
                          'build-editors.xml'))
    mods.append(AntTarget(r'modules\jackal\plugins\corba_rtrc',
                          r'JCCL_Java\RTRC_Plugin_Java', 'build.xml'))
+   mods.append(AntTarget(r'modules\gadgeteer\drivers\Open\Tweek',
+                         r'Gadgeteer\TweekGadget_Java', 'build.xml'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig', 'VRJConfig',
                          'build.xml'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\intersense',
@@ -860,6 +862,20 @@ def installGadgeteerDrivers(prefix):
    for d in drivers:
       srcdir = os.path.join(srcroot, d)
       installLibs(srcdir, destdir, extensions = ['.dll'])
+
+   # Only attempt to install the TweekGadget Java bits if TweekGadget.jar was
+   # built.
+   jar_file = os.path.join(srcroot, 'TweekGadget_Java', 'TweekGadget.jar')
+   print jar_file
+
+   if os.path.exists(jar_file):
+      destdir = os.path.join(prefix, 'bin', 'beans')
+      mkinstalldirs(destdir)             # Just to be safe
+      shutil.copy2(jar_file, destdir)
+
+      xml_file = os.path.join(juggler_dir, 'modules', 'gadgeteer', 'drivers',
+                              'Open', 'Tweek', 'TweekGadget.xml')
+      shutil.copy2(xml_file, destdir)
 
 def installGadgeteerPlugins(prefix):
    print "Installing Gadgeteer cluster plug-ins ..."

@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.00"
-	Name="Driver - TweekGadget"
+	Name="Driver - TweekGadget (C++)"
 	ProjectGUID="{2BB1C6DC-A6DB-42A3-A91A-DBD8BA7A843B}"
 	Keyword="Win32Proj">
 	<Platforms>
