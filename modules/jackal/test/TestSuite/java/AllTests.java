@@ -21,6 +21,8 @@ public class AllTests
 
       suite.addTestSuite( ValTypeTest.class );
       suite.addTestSuite( VarValueTest.class );
+      suite.addTestSuite( DescEnumTest.class );
+
 
       return suite;
    }
