@@ -305,9 +305,11 @@ SocketImplNSPR::connect (vpr::Interval timeout) {
       status = PR_GetSockName(m_handle, m_local_addr.getPRNetAddr());
 
       if ( status == PR_SUCCESS ) {
+/* XXX: This doesn't compile on IRIX, and I don't know why.
           vprDEBUG(0, vprDBG_STATE_LVL) << "Connected, local address is "
                                         << m_local_addr << std::endl
                                         << vprDEBUG_FLUSH;
+*/
       }
       else {
           vprDEBUG(0, vprDBG_WARNING_LVL) << "Failed to get local socket name\n"
