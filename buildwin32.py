@@ -602,8 +602,12 @@ def generateAntBuildFiles():
                          'build-commoneditors.xml'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\display_window',
                          'VRJConfig', 'build-display_window.xml'))
+   mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\flock',
+                         'VRJConfig', 'build-flock.xml'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\intersense',
                          'VRJConfig', 'build-intersense.xml'))
+   mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\motionstar',
+                         'VRJConfig', 'build-motionstar.xml'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\pinchglove',
                          'VRJConfig', 'build-pinchglove.xml'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\proxyeditor',
@@ -1159,7 +1163,9 @@ def installVRJConfig(prefix):
       custom_editor_src = os.path.join(vrjconfig_src, 'customeditors')
       custom_editors = [
          ('display_window', 'DisplayWindowEditor'),
+         ('flock', 'FlockEditor'),
          ('intersense', 'IntersenseEditor'),
+         ('motionstar', 'MotionStarEditor'),
          ('pinchglove', 'PinchGloveEditor'),
          ('proxyeditor', 'ProxyEditor'),
          ('surfacedisplayeditor', 'SurfaceDisplayEditor')

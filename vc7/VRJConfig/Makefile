@@ -38,7 +38,9 @@ java:
 	$(ANT)
 	$(ANT) -f commoneditors\build-commoneditors.xml
 	$(ANT) -f build-display_window.xml
+	$(ANT) -f build-flock.xml
 	$(ANT) -f build-intersense.xml
+	$(ANT) -f build-motionstar.xml
 	$(ANT) -f build-pinchglove.xml
 	$(ANT) -f build-proxyeditor.xml
 	-$(ANT) -f build-surfacedisplayeditor.xml
@@ -47,7 +49,9 @@ clean:
 	$(ANT) clean
 	$(ANT) -f commoneditors\build-commoneditors.xml clean
 	$(ANT) -f build-display_window.xml clean
+	$(ANT) -f build-flock.xml clean
 	$(ANT) -f build-intersense.xml clean
+	$(ANT) -f build-motionstar.xml clean
 	$(ANT) -f build-pinchglove.xml clean
 	$(ANT) -f build-proxyeditor.xml clean
 	$(ANT) -f build-surfacedisplayeditor.xml clean
