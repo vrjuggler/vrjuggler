@@ -1131,6 +1131,7 @@ AC_OUTPUT(Makefile
           samples/ogl/digitalGlove/Makefile
           samples/ogl/simpleGlove/Makefile
           samples/ogl/torus/Makefile
+          samples/ogl/texture/Makefile
           samples/ogl/wand/Makefile
           samples/pf/Makefile
           samples/pf/pfConfigNav/Makefile
