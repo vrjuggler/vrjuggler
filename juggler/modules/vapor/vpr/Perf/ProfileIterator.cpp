@@ -45,7 +45,9 @@ namespace vpr
 {
 
    ProfileIterator::ProfileIterator( ProfileNode* start )
-      : mCurrentParent(NULL), mCurrentNode(NULL), mDepth(0)
+      : mCurrentParent(NULL)
+      , mCurrentNode(NULL)
+      , mDepth(0)
    {
       mCurrentNode = start;
       if(NULL == mCurrentNode)      // NULL iterator
@@ -103,7 +105,7 @@ namespace vpr
       }
    }
 
-   VPR_API(std::ostream&) operator<< (std::ostream& out, ProfileIterator& iter)
+   std::ostream& operator<< (std::ostream& out, ProfileIterator& iter)
    {
       while ( iter != ProfileIterator(NULL))
       {
