@@ -79,7 +79,11 @@ void vjKernel::controlLoop(void* nullParam)
 {
    vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::controlLoop: Started.\n" << vjDEBUG_FLUSH;
 
-   while (0 == vjThread::self());
+   while (0 == vjThread::self())
+   {
+      vjDEBUG(vjDBG_ALL,1) << "vjKernel: Waiting for (thread::self() != NULL)\n" << vjDEBUG_FLUSH;
+      usleep(50);
+   }
    mControlThread = (vjThread*) vjThread::self();
 
    vjTimeStamp::initialize();
