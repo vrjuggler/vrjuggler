@@ -137,7 +137,7 @@ public:
               mCondVar.wait();
            mCondVar.release();
 
-           vpr::BaseIOStatsStrategy* stats = sock->getIOStatStrategy();
+           vpr::BaseIOStatsStrategy<>* stats = sock->getIOStatStrategy();
            BandwidthIOStatsStrategy* bw_interface = dynamic_cast<BandwidthIOStatsStrategy*>(stats );
 
            if(bw_interface != NULL)
@@ -197,7 +197,7 @@ public:
             assertTestThread((bytes_read == mMessageLen) && "Connector recieved message of wrong size" );
          }
 
-         vpr::BaseIOStatsStrategy* stats = con_sock.getIOStatStrategy();
+         vpr::BaseIOStatsStrategy<>* stats = con_sock.getIOStatStrategy();
           BandwidthIOStatsStrategy* bw_interface = dynamic_cast<BandwidthIOStatsStrategy*>(stats );
 
            if(bw_interface != NULL)
