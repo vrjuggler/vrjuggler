@@ -85,7 +85,7 @@ typedef UINT u_int;
 #include <unistd.h>
 #endif
 
-#ifndef WIN32
+#ifdef HAVE_STRINGS_H
 #include <strings.h>
 #endif
 
