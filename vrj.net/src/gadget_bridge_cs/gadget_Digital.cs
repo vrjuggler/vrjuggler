@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.76 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -51,7 +51,7 @@ public class Digital
 
    private void allocDelegates()
    {
-      m_configDelegate_boost_shared_ptr_jccl__ConfigElement = new configDelegate_boost_shared_ptr_jccl__ConfigElement(config);
+      m_configDelegate_jccl_ConfigElementPtr = new configDelegate_jccl_ConfigElementPtr(config);
       m_getBaseTypeDelegate = new getBaseTypeDelegate(getBaseType);
       m_writeObjectDelegate_vpr_ObjectWriter = new writeObjectDelegate_vpr_ObjectWriter(writeObjectAdapter);
       m_readObjectDelegate_vpr_ObjectReader = new readObjectDelegate_vpr_ObjectReader(readObjectAdapter);
@@ -64,12 +64,12 @@ public class Digital
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_Digital_Digital__0([MarshalAs(UnmanagedType.FunctionPtr)] configDelegate_boost_shared_ptr_jccl__ConfigElement d0, [MarshalAs(UnmanagedType.FunctionPtr)] getBaseTypeDelegate d1, [MarshalAs(UnmanagedType.FunctionPtr)] writeObjectDelegate_vpr_ObjectWriter d2, [MarshalAs(UnmanagedType.FunctionPtr)] readObjectDelegate_vpr_ObjectReader d3);
+   private extern static IntPtr gadget_Digital_Digital__0([MarshalAs(UnmanagedType.FunctionPtr)] configDelegate_jccl_ConfigElementPtr d0, [MarshalAs(UnmanagedType.FunctionPtr)] getBaseTypeDelegate d1, [MarshalAs(UnmanagedType.FunctionPtr)] writeObjectDelegate_vpr_ObjectWriter d2, [MarshalAs(UnmanagedType.FunctionPtr)] readObjectDelegate_vpr_ObjectReader d3);
 
    public Digital()
    {
       allocDelegates();
-      mRawObject   = gadget_Digital_Digital__0(m_configDelegate_boost_shared_ptr_jccl__ConfigElement, m_getBaseTypeDelegate, m_writeObjectDelegate_vpr_ObjectWriter, m_readObjectDelegate_vpr_ObjectReader);
+      mRawObject   = gadget_Digital_Digital__0(m_configDelegate_jccl_ConfigElementPtr, m_getBaseTypeDelegate, m_writeObjectDelegate_vpr_ObjectWriter, m_readObjectDelegate_vpr_ObjectReader);
       mWeOwnMemory = true;
    }
 
@@ -138,17 +138,17 @@ public class Digital
 
    // Start of virtual methods.
    // Delegate for the config() callback.
-   public delegate bool configDelegate_boost_shared_ptr_jccl__ConfigElement([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
-   protected configDelegate_boost_shared_ptr_jccl__ConfigElement m_configDelegate_boost_shared_ptr_jccl__ConfigElement;
+   public delegate bool configDelegate_jccl_ConfigElementPtr([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
+   protected configDelegate_jccl_ConfigElementPtr m_configDelegate_jccl_ConfigElementPtr;
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool gadget_Digital_config__boost_shared_ptr_jccl__ConfigElement1(IntPtr obj,
+   private extern static bool gadget_Digital_config__jccl_ConfigElementPtr1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
    public virtual bool config(jccl.ConfigElement p0)
    {
       bool result;
-      result = gadget_Digital_config__boost_shared_ptr_jccl__ConfigElement1(mRawObject, p0);
+      result = gadget_Digital_config__jccl_ConfigElementPtr1(mRawObject, p0);
       return result;
    }
 

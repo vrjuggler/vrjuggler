@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.64 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -58,14 +58,14 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API vpr::GUID* vpr_GUID_GUID__std_basic_string_char_std__char_traits_char__std__allocator_char__1(const char* p0)
+   SHARPPY_API vpr::GUID* vpr_GUID_GUID__std_string1(const char* p0)
    {
       vpr::GUID* obj = new vpr::GUID(p0);
       return obj;
    }
 
    // Constructor wrapper.
-   SHARPPY_API vpr::GUID* vpr_GUID_GUID__vpr_GUID_std_basic_string_char_std__char_traits_char__std__allocator_char__2(const vpr::GUID* p0, const char* p1)
+   SHARPPY_API vpr::GUID* vpr_GUID_GUID__vpr_GUID_std_string2(const vpr::GUID* p0, const char* p1)
    {
       const vpr::GUID& marshal_p0 = *p0;
       vpr::GUID* obj = new vpr::GUID(marshal_p0, p1);
@@ -88,7 +88,7 @@ extern "C"
    // Wrapper for non-virtual method vpr::GUID::toString()
    SHARPPY_API char* vpr_GUID_toString__0(vpr::GUID* self_)
    {
-      std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
+      std::string temp_result;
       char* result;
       temp_result = self_->toString();
       result = strdup(temp_result.c_str());
@@ -104,7 +104,7 @@ extern "C"
 
 
    // Wrapper for non-virtual method vpr::GUID::generate()
-   SHARPPY_API void vpr_GUID_generate__vpr_GUID_std_basic_string_char_std__char_traits_char__std__allocator_char__2(vpr::GUID* self_, const vpr::GUID* p0, const char* p1)
+   SHARPPY_API void vpr_GUID_generate__vpr_GUID_std_string2(vpr::GUID* self_, const vpr::GUID* p0, const char* p1)
    {
       const vpr::GUID& marshal_p0 = *p0;
       self_->generate(marshal_p0, p1);

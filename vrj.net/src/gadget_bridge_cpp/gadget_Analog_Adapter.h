@@ -64,14 +64,14 @@ public:
       return result;
    }
 
-   typedef bool (*config_callback_boost_shared_ptr_jccl__ConfigElement_t)(boost::shared_ptr<jccl::ConfigElement>*);
-   config_callback_boost_shared_ptr_jccl__ConfigElement_t config_callback_boost_shared_ptr_jccl__ConfigElement;
+   typedef bool (*config_callback_jccl_ConfigElementPtr_t)(jccl::ConfigElementPtr*);
+   config_callback_jccl_ConfigElementPtr_t config_callback_jccl_ConfigElementPtr;
 
    /// Override for virtual function gadget::Analog::config.
-   virtual bool config(boost::shared_ptr<jccl::ConfigElement> p0)
+   virtual bool config(jccl::ConfigElementPtr p0)
    {
-      boost::shared_ptr<jccl::ConfigElement>* p_p0 = new boost::shared_ptr<jccl::ConfigElement>(p0);
-      bool result = config_callback_boost_shared_ptr_jccl__ConfigElement(p_p0);
+      jccl::ConfigElementPtr* p_p0 = new jccl::ConfigElementPtr(p0);
+      bool result = config_callback_jccl_ConfigElementPtr(p_p0);
       return result;
    }
 
@@ -79,9 +79,9 @@ public:
    getBaseType_callback_t getBaseType_callback;
 
    /// Override for virtual function gadget::Analog::getBaseType.
-   virtual std::basic_string<char,std::char_traits<char>,std::allocator<char> > getBaseType()
+   virtual std::string getBaseType()
    {
-      std::basic_string<char,std::char_traits<char>,std::allocator<char> > result = getBaseType_callback();
+      std::string result = getBaseType_callback();
       return result;
    }
 

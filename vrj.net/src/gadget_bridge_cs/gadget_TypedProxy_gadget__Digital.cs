@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.76 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -54,13 +54,13 @@ public abstract class TypedProxy_gadget__Digital
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_TypedProxy_gadget_Digital__TypedProxy__0([MarshalAs(UnmanagedType.FunctionPtr)] refreshDelegate d0, [MarshalAs(UnmanagedType.FunctionPtr)] getDeviceNameDelegate d1, [MarshalAs(UnmanagedType.FunctionPtr)] configDelegate_boost_shared_ptr_jccl__ConfigElement d2, [MarshalAs(UnmanagedType.FunctionPtr)] updateDataDelegate d3, [MarshalAs(UnmanagedType.FunctionPtr)] getProxiedInputDeviceDelegate d4, [MarshalAs(UnmanagedType.FunctionPtr)] isStupifiedDelegate d5, [MarshalAs(UnmanagedType.FunctionPtr)] getTimeStampDelegate d6);
+   private extern static IntPtr gadget_TypedProxy_gadget_Digital__TypedProxy__0([MarshalAs(UnmanagedType.FunctionPtr)] refreshDelegate d0, [MarshalAs(UnmanagedType.FunctionPtr)] getDeviceNameDelegate d1, [MarshalAs(UnmanagedType.FunctionPtr)] configDelegate_jccl_ConfigElementPtr d2, [MarshalAs(UnmanagedType.FunctionPtr)] updateDataDelegate d3, [MarshalAs(UnmanagedType.FunctionPtr)] getProxiedInputDeviceDelegate d4, [MarshalAs(UnmanagedType.FunctionPtr)] isStupifiedDelegate d5, [MarshalAs(UnmanagedType.FunctionPtr)] getTimeStampDelegate d6);
 
    public TypedProxy_gadget__Digital()
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
       allocDelegates();
-      mRawObject   = gadget_TypedProxy_gadget_Digital__TypedProxy__0(m_refreshDelegate, m_getDeviceNameDelegate, m_configDelegate_boost_shared_ptr_jccl__ConfigElement, m_updateDataDelegate, m_getProxiedInputDeviceDelegate, m_isStupifiedDelegate, m_getTimeStampDelegate);
+      mRawObject   = gadget_TypedProxy_gadget_Digital__TypedProxy__0(m_refreshDelegate, m_getDeviceNameDelegate, m_configDelegate_jccl_ConfigElementPtr, m_updateDataDelegate, m_getProxiedInputDeviceDelegate, m_isStupifiedDelegate, m_getTimeStampDelegate);
       mWeOwnMemory = true;
    }
 

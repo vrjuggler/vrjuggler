@@ -161,17 +161,15 @@ public:
       return result;
    }
 
-   struct holder_p0_vrj_App_configCanHandle__boost_shared_ptr_jccl__ConfigElement { boost::shared_ptr<jccl::ConfigElement> mPtr; };
-   typedef bool (*configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement_t)(holder_p0_vrj_App_configCanHandle__boost_shared_ptr_jccl__ConfigElement*);
-   configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement_t configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement;
+   typedef bool (*configCanHandle_callback_jccl_ConfigElementPtr_t)(jccl::ConfigElementPtr*);
+   configCanHandle_callback_jccl_ConfigElementPtr_t configCanHandle_callback_jccl_ConfigElementPtr;
 
    /// Override for virtual function vrj::App::configCanHandle.
-   virtual bool configCanHandle(boost::shared_ptr<jccl::ConfigElement> p0)
+   virtual bool configCanHandle(jccl::ConfigElementPtr p0)
    {
       vrjnet::CliGuard guard;
-      holder_p0_vrj_App_configCanHandle__boost_shared_ptr_jccl__ConfigElement* h_p0 = new holder_p0_vrj_App_configCanHandle__boost_shared_ptr_jccl__ConfigElement;
-      h_p0->mPtr = p0;
-      bool result = configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement(h_p0);
+      jccl::ConfigElementPtr* p_p0 = new jccl::ConfigElementPtr(p0);
+      bool result = configCanHandle_callback_jccl_ConfigElementPtr(p_p0);
       return result;
    }
 
@@ -186,27 +184,27 @@ public:
       return result;
    }
 
-   typedef bool (*configAdd_callback_boost_shared_ptr_jccl__ConfigElement_t)(boost::shared_ptr<jccl::ConfigElement>*);
-   configAdd_callback_boost_shared_ptr_jccl__ConfigElement_t configAdd_callback_boost_shared_ptr_jccl__ConfigElement;
+   typedef bool (*configAdd_callback_jccl_ConfigElementPtr_t)(jccl::ConfigElementPtr*);
+   configAdd_callback_jccl_ConfigElementPtr_t configAdd_callback_jccl_ConfigElementPtr;
 
    /// Override for virtual function vrj::App::configAdd.
-   virtual bool configAdd(boost::shared_ptr<jccl::ConfigElement> p0)
+   virtual bool configAdd(jccl::ConfigElementPtr p0)
    {
       vrjnet::CliGuard guard;
-      boost::shared_ptr<jccl::ConfigElement>* p_p0 = new boost::shared_ptr<jccl::ConfigElement>(p0);
-      bool result = configAdd_callback_boost_shared_ptr_jccl__ConfigElement(p_p0);
+      jccl::ConfigElementPtr* p_p0 = new jccl::ConfigElementPtr(p0);
+      bool result = configAdd_callback_jccl_ConfigElementPtr(p_p0);
       return result;
    }
 
-   typedef bool (*configRemove_callback_boost_shared_ptr_jccl__ConfigElement_t)(boost::shared_ptr<jccl::ConfigElement>*);
-   configRemove_callback_boost_shared_ptr_jccl__ConfigElement_t configRemove_callback_boost_shared_ptr_jccl__ConfigElement;
+   typedef bool (*configRemove_callback_jccl_ConfigElementPtr_t)(jccl::ConfigElementPtr*);
+   configRemove_callback_jccl_ConfigElementPtr_t configRemove_callback_jccl_ConfigElementPtr;
 
    /// Override for virtual function vrj::App::configRemove.
-   virtual bool configRemove(boost::shared_ptr<jccl::ConfigElement> p0)
+   virtual bool configRemove(jccl::ConfigElementPtr p0)
    {
       vrjnet::CliGuard guard;
-      boost::shared_ptr<jccl::ConfigElement>* p_p0 = new boost::shared_ptr<jccl::ConfigElement>(p0);
-      bool result = configRemove_callback_boost_shared_ptr_jccl__ConfigElement(p_p0);
+      jccl::ConfigElementPtr* p_p0 = new jccl::ConfigElementPtr(p0);
+      bool result = configRemove_callback_jccl_ConfigElementPtr(p_p0);
       return result;
    }
 
@@ -233,14 +231,14 @@ public:
    }
 
    /// Public wrapper for protected virtual function vrj::App::configAdd.
-   bool configAdd_wrapper(boost::shared_ptr<jccl::ConfigElement> p0)
+   bool configAdd_wrapper(jccl::ConfigElementPtr p0)
    {
       vrjnet::CliGuard guard;
       return vrj::App::configAdd(p0);
    }
 
    /// Public wrapper for protected virtual function vrj::App::configRemove.
-   bool configRemove_wrapper(boost::shared_ptr<jccl::ConfigElement> p0)
+   bool configRemove_wrapper(jccl::ConfigElementPtr p0)
    {
       vrjnet::CliGuard guard;
       return vrj::App::configRemove(p0);

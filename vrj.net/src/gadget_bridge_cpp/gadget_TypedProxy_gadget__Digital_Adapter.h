@@ -45,14 +45,14 @@ public:
    virtual ~gadget_TypedProxy_gadget__Digital_Adapter()
    {;}
 
-   typedef bool (*config_callback_boost_shared_ptr_jccl__ConfigElement_t)(boost::shared_ptr<jccl::ConfigElement>*);
-   config_callback_boost_shared_ptr_jccl__ConfigElement_t config_callback_boost_shared_ptr_jccl__ConfigElement;
+   typedef bool (*config_callback_jccl_ConfigElementPtr_t)(jccl::ConfigElementPtr*);
+   config_callback_jccl_ConfigElementPtr_t config_callback_jccl_ConfigElementPtr;
 
    /// Override for virtual function gadget::Proxy::config.
-   virtual bool config(boost::shared_ptr<jccl::ConfigElement> p0)
+   virtual bool config(jccl::ConfigElementPtr p0)
    {
-      boost::shared_ptr<jccl::ConfigElement>* p_p0 = new boost::shared_ptr<jccl::ConfigElement>(p0);
-      bool result = config_callback_boost_shared_ptr_jccl__ConfigElement(p_p0);
+      jccl::ConfigElementPtr* p_p0 = new jccl::ConfigElementPtr(p0);
+      bool result = config_callback_jccl_ConfigElementPtr(p_p0);
       return result;
    }
 

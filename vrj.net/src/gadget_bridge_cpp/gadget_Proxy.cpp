@@ -36,10 +36,10 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API gadget_Proxy_Adapter* gadget_Proxy_Proxy__0(gadget_Proxy_Adapter::config_callback_boost_shared_ptr_jccl__ConfigElement_t cb0, gadget_Proxy_Adapter::refresh_callback_t cb1, gadget_Proxy_Adapter::updateData_callback_t cb2, gadget_Proxy_Adapter::getProxiedInputDevice_callback_t cb3, gadget_Proxy_Adapter::isStupified_callback_t cb4, gadget_Proxy_Adapter::getTimeStamp_callback_t cb5)
+   SHARPPY_API gadget_Proxy_Adapter* gadget_Proxy_Proxy__0(gadget_Proxy_Adapter::config_callback_jccl_ConfigElementPtr_t cb0, gadget_Proxy_Adapter::refresh_callback_t cb1, gadget_Proxy_Adapter::updateData_callback_t cb2, gadget_Proxy_Adapter::getProxiedInputDevice_callback_t cb3, gadget_Proxy_Adapter::isStupified_callback_t cb4, gadget_Proxy_Adapter::getTimeStamp_callback_t cb5)
    {
       gadget_Proxy_Adapter* obj = new gadget_Proxy_Adapter();
-      obj->config_callback_boost_shared_ptr_jccl__ConfigElement = cb0;
+      obj->config_callback_jccl_ConfigElementPtr = cb0;
       obj->refresh_callback = cb1;
       obj->updateData_callback = cb2;
       obj->getProxiedInputDevice_callback = cb3;
@@ -56,7 +56,7 @@ extern "C"
    // Wrapper for non-virtual method gadget::Proxy::getName()
    SHARPPY_API char* gadget_Proxy_getName__0(gadget_Proxy_Adapter* self_)
    {
-      std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
+      std::string temp_result;
       char* result;
       temp_result = self_->getName();
       result = strdup(temp_result.c_str());
@@ -65,7 +65,7 @@ extern "C"
 
 
    // Wrapper for non-virtual method gadget::Proxy::setName()
-   SHARPPY_API void gadget_Proxy_setName__std_basic_string_char_std__char_traits_char__std__allocator_char__1(gadget_Proxy_Adapter* self_, char* p0)
+   SHARPPY_API void gadget_Proxy_setName__std_string1(gadget_Proxy_Adapter* self_, char* p0)
    {
       self_->setName(p0);
    }
@@ -85,7 +85,7 @@ extern "C"
 
 
    // Wrapper for virtual method gadget::Proxy::config()
-   SHARPPY_API bool gadget_Proxy_config__boost_shared_ptr_jccl__ConfigElement1(gadget_Proxy_Adapter* self_, boost::shared_ptr<jccl::ConfigElement>* p0)
+   SHARPPY_API bool gadget_Proxy_config__jccl_ConfigElementPtr1(gadget_Proxy_Adapter* self_, jccl::ConfigElementPtr* p0)
    {
       bool result;
       result = self_->gadget::Proxy::config(*p0);
@@ -139,7 +139,7 @@ extern "C"
    // Wrapper for static method gadget::Proxy::getElementType()
    SHARPPY_API char* gadget_Proxy_getElementType__0()
    {
-      std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
+      std::string temp_result;
       char* result;
       temp_result = gadget::Proxy::getElementType();
       result = strdup(temp_result.c_str());

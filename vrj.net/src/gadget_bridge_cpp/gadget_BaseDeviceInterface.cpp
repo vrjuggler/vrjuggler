@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.64 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -58,7 +58,7 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gadget::BaseDeviceInterface::init()
-   SHARPPY_API void gadget_BaseDeviceInterface_init__std_basic_string_char_std__char_traits_char__std__allocator_char__1(gadget_BaseDeviceInterface_Adapter* self_, const char* p0)
+   SHARPPY_API void gadget_BaseDeviceInterface_init__std_string1(gadget_BaseDeviceInterface_Adapter* self_, const char* p0)
    {
       self_->init(p0);
    }
@@ -67,7 +67,7 @@ extern "C"
    // Wrapper for non-virtual method gadget::BaseDeviceInterface::getProxyName()
    SHARPPY_API char* gadget_BaseDeviceInterface_getProxyName__0(gadget_BaseDeviceInterface_Adapter* self_)
    {
-      std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
+      std::string temp_result;
       char* result;
       temp_result = self_->getProxyName();
       result = strdup(temp_result.c_str());

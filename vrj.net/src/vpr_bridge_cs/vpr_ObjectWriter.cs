@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.76 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -50,17 +50,17 @@ public abstract class ObjectWriter
 
    private void allocDelegates()
    {
-      m_beginTagDelegate_std_basic_string_char_std__char_traits_char__std__allocator_char__ = new beginTagDelegate_std_basic_string_char_std__char_traits_char__std__allocator_char__(beginTagAdapter);
+      m_beginTagDelegate_std_string = new beginTagDelegate_std_string(beginTagAdapter);
       m_endTagDelegate = new endTagDelegate(endTagAdapter);
-      m_beginAttributeDelegate_std_basic_string_char_std__char_traits_char__std__allocator_char__ = new beginAttributeDelegate_std_basic_string_char_std__char_traits_char__std__allocator_char__(beginAttributeAdapter);
+      m_beginAttributeDelegate_std_string = new beginAttributeDelegate_std_string(beginAttributeAdapter);
       m_endAttributeDelegate = new endAttributeDelegate(endAttributeAdapter);
-      m_writeUint8Delegate_unsigned_char = new writeUint8Delegate_unsigned_char(writeUint8Adapter);
-      m_writeUint16Delegate_short_unsigned_int = new writeUint16Delegate_short_unsigned_int(writeUint16Adapter);
-      m_writeUint32Delegate_unsigned_int = new writeUint32Delegate_unsigned_int(writeUint32Adapter);
-      m_writeUint64Delegate_long_long_unsigned_int = new writeUint64Delegate_long_long_unsigned_int(writeUint64Adapter);
+      m_writeUint8Delegate_vpr_Uint8 = new writeUint8Delegate_vpr_Uint8(writeUint8Adapter);
+      m_writeUint16Delegate_vpr_Uint16 = new writeUint16Delegate_vpr_Uint16(writeUint16Adapter);
+      m_writeUint32Delegate_vpr_Uint32 = new writeUint32Delegate_vpr_Uint32(writeUint32Adapter);
+      m_writeUint64Delegate_vpr_Uint64 = new writeUint64Delegate_vpr_Uint64(writeUint64Adapter);
       m_writeFloatDelegate_float = new writeFloatDelegate_float(writeFloatAdapter);
       m_writeDoubleDelegate_double = new writeDoubleDelegate_double(writeDoubleAdapter);
-      m_writeStringDelegate_std_basic_string_char_std__char_traits_char__std__allocator_char__ = new writeStringDelegate_std_basic_string_char_std__char_traits_char__std__allocator_char__(writeStringAdapter);
+      m_writeStringDelegate_std_string = new writeStringDelegate_std_string(writeStringAdapter);
       m_writeBoolDelegate_bool = new writeBoolDelegate_bool(writeBoolAdapter);
    }
 
@@ -116,8 +116,8 @@ public abstract class ObjectWriter
       return beginTag(p0).mRawObject;
    }
 
-   public delegate IntPtr beginTagDelegate_std_basic_string_char_std__char_traits_char__std__allocator_char__(string p0);
-   protected beginTagDelegate_std_basic_string_char_std__char_traits_char__std__allocator_char__ m_beginTagDelegate_std_basic_string_char_std__char_traits_char__std__allocator_char__;
+   public delegate IntPtr beginTagDelegate_std_string(string p0);
+   protected beginTagDelegate_std_string m_beginTagDelegate_std_string;
 
    public abstract vpr.ReturnStatus beginTag(string p0);
 
@@ -140,8 +140,8 @@ public abstract class ObjectWriter
       return beginAttribute(p0).mRawObject;
    }
 
-   public delegate IntPtr beginAttributeDelegate_std_basic_string_char_std__char_traits_char__std__allocator_char__(string p0);
-   protected beginAttributeDelegate_std_basic_string_char_std__char_traits_char__std__allocator_char__ m_beginAttributeDelegate_std_basic_string_char_std__char_traits_char__std__allocator_char__;
+   public delegate IntPtr beginAttributeDelegate_std_string(string p0);
+   protected beginAttributeDelegate_std_string m_beginAttributeDelegate_std_string;
 
    public abstract vpr.ReturnStatus beginAttribute(string p0);
 
@@ -164,8 +164,8 @@ public abstract class ObjectWriter
       return writeUint8(p0).mRawObject;
    }
 
-   public delegate IntPtr writeUint8Delegate_unsigned_char(byte p0);
-   protected writeUint8Delegate_unsigned_char m_writeUint8Delegate_unsigned_char;
+   public delegate IntPtr writeUint8Delegate_vpr_Uint8(byte p0);
+   protected writeUint8Delegate_vpr_Uint8 m_writeUint8Delegate_vpr_Uint8;
 
    public abstract vpr.ReturnStatus writeUint8(byte p0);
 
@@ -176,8 +176,8 @@ public abstract class ObjectWriter
       return writeUint16(p0).mRawObject;
    }
 
-   public delegate IntPtr writeUint16Delegate_short_unsigned_int(ushort p0);
-   protected writeUint16Delegate_short_unsigned_int m_writeUint16Delegate_short_unsigned_int;
+   public delegate IntPtr writeUint16Delegate_vpr_Uint16(ushort p0);
+   protected writeUint16Delegate_vpr_Uint16 m_writeUint16Delegate_vpr_Uint16;
 
    public abstract vpr.ReturnStatus writeUint16(ushort p0);
 
@@ -188,8 +188,8 @@ public abstract class ObjectWriter
       return writeUint32(p0).mRawObject;
    }
 
-   public delegate IntPtr writeUint32Delegate_unsigned_int(uint p0);
-   protected writeUint32Delegate_unsigned_int m_writeUint32Delegate_unsigned_int;
+   public delegate IntPtr writeUint32Delegate_vpr_Uint32(uint p0);
+   protected writeUint32Delegate_vpr_Uint32 m_writeUint32Delegate_vpr_Uint32;
 
    public abstract vpr.ReturnStatus writeUint32(uint p0);
 
@@ -200,8 +200,8 @@ public abstract class ObjectWriter
       return writeUint64(p0).mRawObject;
    }
 
-   public delegate IntPtr writeUint64Delegate_long_long_unsigned_int(ulong p0);
-   protected writeUint64Delegate_long_long_unsigned_int m_writeUint64Delegate_long_long_unsigned_int;
+   public delegate IntPtr writeUint64Delegate_vpr_Uint64(ulong p0);
+   protected writeUint64Delegate_vpr_Uint64 m_writeUint64Delegate_vpr_Uint64;
 
    public abstract vpr.ReturnStatus writeUint64(ulong p0);
 
@@ -236,8 +236,8 @@ public abstract class ObjectWriter
       return writeString(p0).mRawObject;
    }
 
-   public delegate IntPtr writeStringDelegate_std_basic_string_char_std__char_traits_char__std__allocator_char__(string p0);
-   protected writeStringDelegate_std_basic_string_char_std__char_traits_char__std__allocator_char__ m_writeStringDelegate_std_basic_string_char_std__char_traits_char__std__allocator_char__;
+   public delegate IntPtr writeStringDelegate_std_string(string p0);
+   protected writeStringDelegate_std_string m_writeStringDelegate_std_string;
 
    public abstract vpr.ReturnStatus writeString(string p0);
 
@@ -279,13 +279,13 @@ public class ObjectWriterMarshaler : ICustomMarshaler
       [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
       [return : MarshalAs(UnmanagedType.CustomMarshaler,
                           MarshalTypeRef = typeof(vpr.ReturnStatusMarshaler))]
-      private extern static vpr.ReturnStatus vpr_ObjectWriter_beginTag__std_basic_string_char_std__char_traits_char__std__allocator_char__1(IntPtr obj,
+      private extern static vpr.ReturnStatus vpr_ObjectWriter_beginTag__std_string1(IntPtr obj,
 	string p0);
 
       public override vpr.ReturnStatus beginTag(string p0)
       {
          vpr.ReturnStatus result;
-         result = vpr_ObjectWriter_beginTag__std_basic_string_char_std__char_traits_char__std__allocator_char__1(mRawObject, p0);
+         result = vpr_ObjectWriter_beginTag__std_string1(mRawObject, p0);
          return result;
       }
 
@@ -304,13 +304,13 @@ public class ObjectWriterMarshaler : ICustomMarshaler
       [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
       [return : MarshalAs(UnmanagedType.CustomMarshaler,
                           MarshalTypeRef = typeof(vpr.ReturnStatusMarshaler))]
-      private extern static vpr.ReturnStatus vpr_ObjectWriter_beginAttribute__std_basic_string_char_std__char_traits_char__std__allocator_char__1(IntPtr obj,
+      private extern static vpr.ReturnStatus vpr_ObjectWriter_beginAttribute__std_string1(IntPtr obj,
 	string p0);
 
       public override vpr.ReturnStatus beginAttribute(string p0)
       {
          vpr.ReturnStatus result;
-         result = vpr_ObjectWriter_beginAttribute__std_basic_string_char_std__char_traits_char__std__allocator_char__1(mRawObject, p0);
+         result = vpr_ObjectWriter_beginAttribute__std_string1(mRawObject, p0);
          return result;
       }
 
@@ -329,52 +329,52 @@ public class ObjectWriterMarshaler : ICustomMarshaler
       [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
       [return : MarshalAs(UnmanagedType.CustomMarshaler,
                           MarshalTypeRef = typeof(vpr.ReturnStatusMarshaler))]
-      private extern static vpr.ReturnStatus vpr_ObjectWriter_writeUint8__unsigned_char1(IntPtr obj,
+      private extern static vpr.ReturnStatus vpr_ObjectWriter_writeUint8__vpr_Uint81(IntPtr obj,
 	byte p0);
 
       public override vpr.ReturnStatus writeUint8(byte p0)
       {
          vpr.ReturnStatus result;
-         result = vpr_ObjectWriter_writeUint8__unsigned_char1(mRawObject, p0);
+         result = vpr_ObjectWriter_writeUint8__vpr_Uint81(mRawObject, p0);
          return result;
       }
 
       [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
       [return : MarshalAs(UnmanagedType.CustomMarshaler,
                           MarshalTypeRef = typeof(vpr.ReturnStatusMarshaler))]
-      private extern static vpr.ReturnStatus vpr_ObjectWriter_writeUint16__short_unsigned_int1(IntPtr obj,
+      private extern static vpr.ReturnStatus vpr_ObjectWriter_writeUint16__vpr_Uint161(IntPtr obj,
 	ushort p0);
 
       public override vpr.ReturnStatus writeUint16(ushort p0)
       {
          vpr.ReturnStatus result;
-         result = vpr_ObjectWriter_writeUint16__short_unsigned_int1(mRawObject, p0);
+         result = vpr_ObjectWriter_writeUint16__vpr_Uint161(mRawObject, p0);
          return result;
       }
 
       [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
       [return : MarshalAs(UnmanagedType.CustomMarshaler,
                           MarshalTypeRef = typeof(vpr.ReturnStatusMarshaler))]
-      private extern static vpr.ReturnStatus vpr_ObjectWriter_writeUint32__unsigned_int1(IntPtr obj,
+      private extern static vpr.ReturnStatus vpr_ObjectWriter_writeUint32__vpr_Uint321(IntPtr obj,
 	uint p0);
 
       public override vpr.ReturnStatus writeUint32(uint p0)
       {
          vpr.ReturnStatus result;
-         result = vpr_ObjectWriter_writeUint32__unsigned_int1(mRawObject, p0);
+         result = vpr_ObjectWriter_writeUint32__vpr_Uint321(mRawObject, p0);
          return result;
       }
 
       [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
       [return : MarshalAs(UnmanagedType.CustomMarshaler,
                           MarshalTypeRef = typeof(vpr.ReturnStatusMarshaler))]
-      private extern static vpr.ReturnStatus vpr_ObjectWriter_writeUint64__long_long_unsigned_int1(IntPtr obj,
+      private extern static vpr.ReturnStatus vpr_ObjectWriter_writeUint64__vpr_Uint641(IntPtr obj,
 	ulong p0);
 
       public override vpr.ReturnStatus writeUint64(ulong p0)
       {
          vpr.ReturnStatus result;
-         result = vpr_ObjectWriter_writeUint64__long_long_unsigned_int1(mRawObject, p0);
+         result = vpr_ObjectWriter_writeUint64__vpr_Uint641(mRawObject, p0);
          return result;
       }
 
@@ -407,13 +407,13 @@ public class ObjectWriterMarshaler : ICustomMarshaler
       [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
       [return : MarshalAs(UnmanagedType.CustomMarshaler,
                           MarshalTypeRef = typeof(vpr.ReturnStatusMarshaler))]
-      private extern static vpr.ReturnStatus vpr_ObjectWriter_writeString__std_basic_string_char_std__char_traits_char__std__allocator_char__1(IntPtr obj,
+      private extern static vpr.ReturnStatus vpr_ObjectWriter_writeString__std_string1(IntPtr obj,
 	string p0);
 
       public override vpr.ReturnStatus writeString(string p0)
       {
          vpr.ReturnStatus result;
-         result = vpr_ObjectWriter_writeString__std_basic_string_char_std__char_traits_char__std__allocator_char__1(mRawObject, p0);
+         result = vpr_ObjectWriter_writeString__std_string1(mRawObject, p0);
          return result;
       }
 

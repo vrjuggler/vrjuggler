@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.76 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -51,7 +51,7 @@ public abstract class Input
 
    private void allocDelegates()
    {
-      m_configDelegate_boost_shared_ptr_jccl__ConfigElement = new configDelegate_boost_shared_ptr_jccl__ConfigElement(config);
+      m_configDelegate_jccl_ConfigElementPtr = new configDelegate_jccl_ConfigElementPtr(config);
       m_sampleDelegate = new sampleDelegate(sample);
       m_startSamplingDelegate = new startSamplingDelegate(startSampling);
       m_stopSamplingDelegate = new stopSamplingDelegate(stopSampling);
@@ -69,12 +69,12 @@ public abstract class Input
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_Input_Input__0([MarshalAs(UnmanagedType.FunctionPtr)] configDelegate_boost_shared_ptr_jccl__ConfigElement d0, [MarshalAs(UnmanagedType.FunctionPtr)] sampleDelegate d1, [MarshalAs(UnmanagedType.FunctionPtr)] startSamplingDelegate d2, [MarshalAs(UnmanagedType.FunctionPtr)] stopSamplingDelegate d3, [MarshalAs(UnmanagedType.FunctionPtr)] updateDataDelegate d4, [MarshalAs(UnmanagedType.FunctionPtr)] getBaseTypeDelegate d5, [MarshalAs(UnmanagedType.FunctionPtr)] writeObjectDelegate_vpr_ObjectWriter d6, [MarshalAs(UnmanagedType.FunctionPtr)] readObjectDelegate_vpr_ObjectReader d7, [MarshalAs(UnmanagedType.FunctionPtr)] destroyDelegate d8);
+   private extern static IntPtr gadget_Input_Input__0([MarshalAs(UnmanagedType.FunctionPtr)] configDelegate_jccl_ConfigElementPtr d0, [MarshalAs(UnmanagedType.FunctionPtr)] sampleDelegate d1, [MarshalAs(UnmanagedType.FunctionPtr)] startSamplingDelegate d2, [MarshalAs(UnmanagedType.FunctionPtr)] stopSamplingDelegate d3, [MarshalAs(UnmanagedType.FunctionPtr)] updateDataDelegate d4, [MarshalAs(UnmanagedType.FunctionPtr)] getBaseTypeDelegate d5, [MarshalAs(UnmanagedType.FunctionPtr)] writeObjectDelegate_vpr_ObjectWriter d6, [MarshalAs(UnmanagedType.FunctionPtr)] readObjectDelegate_vpr_ObjectReader d7, [MarshalAs(UnmanagedType.FunctionPtr)] destroyDelegate d8);
 
    public Input()
    {
       allocDelegates();
-      mRawObject   = gadget_Input_Input__0(m_configDelegate_boost_shared_ptr_jccl__ConfigElement, m_sampleDelegate, m_startSamplingDelegate, m_stopSamplingDelegate, m_updateDataDelegate, m_getBaseTypeDelegate, m_writeObjectDelegate_vpr_ObjectWriter, m_readObjectDelegate_vpr_ObjectReader, m_destroyDelegate);
+      mRawObject   = gadget_Input_Input__0(m_configDelegate_jccl_ConfigElementPtr, m_sampleDelegate, m_startSamplingDelegate, m_stopSamplingDelegate, m_updateDataDelegate, m_getBaseTypeDelegate, m_writeObjectDelegate_vpr_ObjectWriter, m_readObjectDelegate_vpr_ObjectReader, m_destroyDelegate);
       mWeOwnMemory = true;
    }
 
@@ -130,17 +130,17 @@ public abstract class Input
 
    // Start of virtual methods.
    // Delegate for the config() callback.
-   public delegate bool configDelegate_boost_shared_ptr_jccl__ConfigElement([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
-   protected configDelegate_boost_shared_ptr_jccl__ConfigElement m_configDelegate_boost_shared_ptr_jccl__ConfigElement;
+   public delegate bool configDelegate_jccl_ConfigElementPtr([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
+   protected configDelegate_jccl_ConfigElementPtr m_configDelegate_jccl_ConfigElementPtr;
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool gadget_Input_config__boost_shared_ptr_jccl__ConfigElement1(IntPtr obj,
+   private extern static bool gadget_Input_config__jccl_ConfigElementPtr1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
    public virtual bool config(jccl.ConfigElement p0)
    {
       bool result;
-      result = gadget_Input_config__boost_shared_ptr_jccl__ConfigElement1(mRawObject, p0);
+      result = gadget_Input_config__jccl_ConfigElementPtr1(mRawObject, p0);
       return result;
    }
 

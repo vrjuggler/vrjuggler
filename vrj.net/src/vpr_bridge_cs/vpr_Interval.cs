@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.76 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -72,11 +72,11 @@ public sealed class Interval
    }
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vpr_Interval_Interval__long_long_unsigned_int_vpr_Interval_Unit2(ulong p0, vpr.Interval.Unit p1);
+   private extern static IntPtr vpr_Interval_Interval__vpr_Uint64_vpr_Interval_Unit2(ulong p0, vpr.Interval.Unit p1);
 
    public Interval(ulong p0, vpr.Interval.Unit p1)
    {
-      mRawObject   = vpr_Interval_Interval__long_long_unsigned_int_vpr_Interval_Unit2(p0, p1);
+      mRawObject   = vpr_Interval_Interval__vpr_Uint64_vpr_Interval_Unit2(p0, p1);
       mWeOwnMemory = true;
    }
 
@@ -197,13 +197,13 @@ public sealed class Interval
 
    // Start of non-virtual methods.
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vpr_Interval_set__long_long_unsigned_int_vpr_Interval_Unit2(IntPtr obj,
+   private extern static void vpr_Interval_set__vpr_Uint64_vpr_Interval_Unit2(IntPtr obj,
 	ulong p0,
 	vpr.Interval.Unit p1);
 
    public  void set(ulong p0, vpr.Interval.Unit p1)
    {
-      vpr_Interval_set__long_long_unsigned_int_vpr_Interval_Unit2(mRawObject, p0, p1);
+      vpr_Interval_set__vpr_Uint64_vpr_Interval_Unit2(mRawObject, p0, p1);
    }
 
 
@@ -248,12 +248,12 @@ public sealed class Interval
 
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vpr_Interval_sec__long_long_unsigned_int1(IntPtr obj,
+   private extern static void vpr_Interval_sec__vpr_Uint641(IntPtr obj,
 	ulong p0);
 
    public  void sec(ulong p0)
    {
-      vpr_Interval_sec__long_long_unsigned_int1(mRawObject, p0);
+      vpr_Interval_sec__vpr_Uint641(mRawObject, p0);
    }
 
 
@@ -311,12 +311,12 @@ public sealed class Interval
 
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vpr_Interval_msec__long_long_unsigned_int1(IntPtr obj,
+   private extern static void vpr_Interval_msec__vpr_Uint641(IntPtr obj,
 	ulong p0);
 
    public  void msec(ulong p0)
    {
-      vpr_Interval_msec__long_long_unsigned_int1(mRawObject, p0);
+      vpr_Interval_msec__vpr_Uint641(mRawObject, p0);
    }
 
 
@@ -374,12 +374,12 @@ public sealed class Interval
 
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vpr_Interval_usec__long_long_unsigned_int1(IntPtr obj,
+   private extern static void vpr_Interval_usec__vpr_Uint641(IntPtr obj,
 	ulong p0);
 
    public  void usec(ulong p0)
    {
-      vpr_Interval_usec__long_long_unsigned_int1(mRawObject, p0);
+      vpr_Interval_usec__vpr_Uint641(mRawObject, p0);
    }
 
 

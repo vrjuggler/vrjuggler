@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.76 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -105,22 +105,22 @@ public sealed class Display
 
    // Start of non-virtual methods.
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_Display_configDisplayWindow__boost_shared_ptr_jccl__ConfigElement1(IntPtr obj,
+   private extern static void vrj_Display_configDisplayWindow__jccl_ConfigElementPtr1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
    public  void configDisplayWindow(jccl.ConfigElement p0)
    {
-      vrj_Display_configDisplayWindow__boost_shared_ptr_jccl__ConfigElement1(mRawObject, p0);
+      vrj_Display_configDisplayWindow__jccl_ConfigElementPtr1(mRawObject, p0);
    }
 
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_Display_configViewports__boost_shared_ptr_jccl__ConfigElement1(IntPtr obj,
+   private extern static void vrj_Display_configViewports__jccl_ConfigElementPtr1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
    public  void configViewports(jccl.ConfigElement p0)
    {
-      vrj_Display_configViewports__boost_shared_ptr_jccl__ConfigElement1(mRawObject, p0);
+      vrj_Display_configViewports__jccl_ConfigElementPtr1(mRawObject, p0);
    }
 
 
@@ -146,12 +146,12 @@ public sealed class Display
 
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_Display_setName__std_basic_string_char_std__char_traits_char__std__allocator_char__1(IntPtr obj,
+   private extern static void vrj_Display_setName__std_string1(IntPtr obj,
 	string p0);
 
    public  void setName(string p0)
    {
-      vrj_Display_setName__std_basic_string_char_std__char_traits_char__std__allocator_char__1(mRawObject, p0);
+      vrj_Display_setName__std_string1(mRawObject, p0);
    }
 
 
@@ -173,6 +173,17 @@ public sealed class Display
    {
       bool result;
       result = vrj_Display_shouldDrawBorder__0(mRawObject);
+      return result;
+   }
+
+
+   [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
+   private extern static bool vrj_Display_shouldHideMouse__0(IntPtr obj);
+
+   public  bool shouldHideMouse()
+   {
+      bool result;
+      result = vrj_Display_shouldHideMouse__0(mRawObject);
       return result;
    }
 
@@ -292,12 +303,12 @@ public sealed class Display
 
    // Start of virtual methods.
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_Display_config__boost_shared_ptr_jccl__ConfigElement1(IntPtr obj,
+   private extern static void vrj_Display_config__jccl_ConfigElementPtr1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
    public  void config(jccl.ConfigElement p0)
    {
-      vrj_Display_config__boost_shared_ptr_jccl__ConfigElement1(mRawObject, p0);
+      vrj_Display_config__jccl_ConfigElementPtr1(mRawObject, p0);
    }
 
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.64 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -50,7 +50,7 @@ extern "C"
 
 
    // Wrapper for virtual method vpr::ObjectReader::beginTag()
-   SHARPPY_API vpr::ReturnStatus* vpr_ObjectReader_beginTag__std_basic_string_char_std__char_traits_char__std__allocator_char__1(vpr_ObjectReader_Adapter* self_, char* p0)
+   SHARPPY_API vpr::ReturnStatus* vpr_ObjectReader_beginTag__std_string1(vpr_ObjectReader_Adapter* self_, char* p0)
    {
       vpr::ReturnStatus* result;
       result = new vpr::ReturnStatus(self_->beginTag(p0));
@@ -68,7 +68,7 @@ extern "C"
 
 
    // Wrapper for virtual method vpr::ObjectReader::beginAttribute()
-   SHARPPY_API vpr::ReturnStatus* vpr_ObjectReader_beginAttribute__std_basic_string_char_std__char_traits_char__std__allocator_char__1(vpr_ObjectReader_Adapter* self_, char* p0)
+   SHARPPY_API vpr::ReturnStatus* vpr_ObjectReader_beginAttribute__std_string1(vpr_ObjectReader_Adapter* self_, char* p0)
    {
       vpr::ReturnStatus* result;
       result = new vpr::ReturnStatus(self_->beginAttribute(p0));
@@ -107,27 +107,27 @@ extern "C"
 
 
    // Wrapper for virtual method vpr::ObjectReader::readUint8()
-   SHARPPY_API unsigned char vpr_ObjectReader_readUint8__0(vpr_ObjectReader_Adapter* self_)
+   SHARPPY_API vpr::Uint8 vpr_ObjectReader_readUint8__0(vpr_ObjectReader_Adapter* self_)
    {
-      unsigned char result;
+      vpr::Uint8 result;
       result = self_->readUint8();
       return result;
    }
 
 
    // Wrapper for virtual method vpr::ObjectReader::readUint16()
-   SHARPPY_API short unsigned int vpr_ObjectReader_readUint16__0(vpr_ObjectReader_Adapter* self_)
+   SHARPPY_API vpr::Uint16 vpr_ObjectReader_readUint16__0(vpr_ObjectReader_Adapter* self_)
    {
-      short unsigned int result;
+      vpr::Uint16 result;
       result = self_->readUint16();
       return result;
    }
 
 
    // Wrapper for virtual method vpr::ObjectReader::readUint32()
-   SHARPPY_API unsigned int vpr_ObjectReader_readUint32__0(vpr_ObjectReader_Adapter* self_)
+   SHARPPY_API vpr::Uint32 vpr_ObjectReader_readUint32__0(vpr_ObjectReader_Adapter* self_)
    {
-      unsigned int result;
+      vpr::Uint32 result;
       result = self_->readUint32();
       return result;
    }
@@ -163,7 +163,7 @@ extern "C"
    // Wrapper for virtual method vpr::ObjectReader::readString()
    SHARPPY_API char* vpr_ObjectReader_readString__0(vpr_ObjectReader_Adapter* self_)
    {
-      std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
+      std::string temp_result;
       char* result;
       temp_result = self_->readString();
       result = strdup(temp_result.c_str());
@@ -181,28 +181,28 @@ extern "C"
 
 
    // Wrapper for virtual method vpr::ObjectReader::readUint8()
-   SHARPPY_API void vpr_ObjectReader_readUint8__unsigned_char1(vpr_ObjectReader_Adapter* self_, unsigned char& p0)
+   SHARPPY_API void vpr_ObjectReader_readUint8__vpr_Uint81(vpr_ObjectReader_Adapter* self_, vpr::Uint8& p0)
    {
       self_->vpr::ObjectReader::readUint8(p0);
    }
 
 
    // Wrapper for virtual method vpr::ObjectReader::readUint16()
-   SHARPPY_API void vpr_ObjectReader_readUint16__short_unsigned_int1(vpr_ObjectReader_Adapter* self_, short unsigned int& p0)
+   SHARPPY_API void vpr_ObjectReader_readUint16__vpr_Uint161(vpr_ObjectReader_Adapter* self_, vpr::Uint16& p0)
    {
       self_->vpr::ObjectReader::readUint16(p0);
    }
 
 
    // Wrapper for virtual method vpr::ObjectReader::readUint32()
-   SHARPPY_API void vpr_ObjectReader_readUint32__unsigned_int1(vpr_ObjectReader_Adapter* self_, unsigned int& p0)
+   SHARPPY_API void vpr_ObjectReader_readUint32__vpr_Uint321(vpr_ObjectReader_Adapter* self_, vpr::Uint32& p0)
    {
       self_->vpr::ObjectReader::readUint32(p0);
    }
 
 
    // Wrapper for virtual method vpr::ObjectReader::readUint64()
-   SHARPPY_API void vpr_ObjectReader_readUint64__long_long_unsigned_int1(vpr_ObjectReader_Adapter* self_, vpr::Uint64& p0)
+   SHARPPY_API void vpr_ObjectReader_readUint64__vpr_Uint641(vpr_ObjectReader_Adapter* self_, vpr::Uint64& p0)
    {
       self_->vpr::ObjectReader::readUint64(p0);
    }
@@ -223,7 +223,7 @@ extern "C"
 
 
    // Wrapper for virtual method vpr::ObjectReader::readString()
-   SHARPPY_API void vpr_ObjectReader_readString__std_basic_string_char_std__char_traits_char__std__allocator_char__1(vpr_ObjectReader_Adapter* self_, char** p0)
+   SHARPPY_API void vpr_ObjectReader_readString__std_string1(vpr_ObjectReader_Adapter* self_, char** p0)
    {
       std::string marshal_p0 = *p0;
       self_->vpr::ObjectReader::readString(marshal_p0);

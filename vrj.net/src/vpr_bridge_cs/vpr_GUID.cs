@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.76 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -90,22 +90,22 @@ public sealed class GUID
    }
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vpr_GUID_GUID__std_basic_string_char_std__char_traits_char__std__allocator_char__1(string p0);
+   private extern static IntPtr vpr_GUID_GUID__std_string1(string p0);
 
    public GUID(string p0)
    {
       allocDelegates();
-      mRawObject   = vpr_GUID_GUID__std_basic_string_char_std__char_traits_char__std__allocator_char__1(p0);
+      mRawObject   = vpr_GUID_GUID__std_string1(p0);
       mWeOwnMemory = true;
    }
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vpr_GUID_GUID__vpr_GUID_std_basic_string_char_std__char_traits_char__std__allocator_char__2([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.GUIDMarshaler))] vpr.GUID p0, string p1);
+   private extern static IntPtr vpr_GUID_GUID__vpr_GUID_std_string2([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.GUIDMarshaler))] vpr.GUID p0, string p1);
 
    public GUID(vpr.GUID p0, string p1)
    {
       allocDelegates();
-      mRawObject   = vpr_GUID_GUID__vpr_GUID_std_basic_string_char_std__char_traits_char__std__allocator_char__2(p0, p1);
+      mRawObject   = vpr_GUID_GUID__vpr_GUID_std_string2(p0, p1);
       mWeOwnMemory = true;
    }
 
@@ -208,13 +208,13 @@ public sealed class GUID
 
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vpr_GUID_generate__vpr_GUID_std_basic_string_char_std__char_traits_char__std__allocator_char__2(IntPtr obj,
+   private extern static void vpr_GUID_generate__vpr_GUID_std_string2(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.GUIDMarshaler))] vpr.GUID p0,
 	string p1);
 
    public  void generate(vpr.GUID p0, string p1)
    {
-      vpr_GUID_generate__vpr_GUID_std_basic_string_char_std__char_traits_char__std__allocator_char__2(mRawObject, p0, p1);
+      vpr_GUID_generate__vpr_GUID_std_string2(mRawObject, p0, p1);
    }
 
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.76 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -106,12 +106,12 @@ public class BaseDeviceInterface
 
    // Start of non-virtual methods.
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gadget_BaseDeviceInterface_init__std_basic_string_char_std__char_traits_char__std__allocator_char__1(IntPtr obj,
+   private extern static void gadget_BaseDeviceInterface_init__std_string1(IntPtr obj,
 	string p0);
 
    public  void init(string p0)
    {
-      gadget_BaseDeviceInterface_init__std_basic_string_char_std__char_traits_char__std__allocator_char__1(mRawObject, p0);
+      gadget_BaseDeviceInterface_init__std_string1(mRawObject, p0);
    }
 
 

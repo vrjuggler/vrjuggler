@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.76 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -53,7 +53,7 @@ public class Analog
    {
       m_writeObjectDelegate_vpr_ObjectWriter = new writeObjectDelegate_vpr_ObjectWriter(writeObjectAdapter);
       m_readObjectDelegate_vpr_ObjectReader = new readObjectDelegate_vpr_ObjectReader(readObjectAdapter);
-      m_configDelegate_boost_shared_ptr_jccl__ConfigElement = new configDelegate_boost_shared_ptr_jccl__ConfigElement(config);
+      m_configDelegate_jccl_ConfigElementPtr = new configDelegate_jccl_ConfigElementPtr(config);
       m_getBaseTypeDelegate = new getBaseTypeDelegate(getBaseType);
    }
 
@@ -64,12 +64,12 @@ public class Analog
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_Analog_Analog__0([MarshalAs(UnmanagedType.FunctionPtr)] writeObjectDelegate_vpr_ObjectWriter d0, [MarshalAs(UnmanagedType.FunctionPtr)] readObjectDelegate_vpr_ObjectReader d1, [MarshalAs(UnmanagedType.FunctionPtr)] configDelegate_boost_shared_ptr_jccl__ConfigElement d2, [MarshalAs(UnmanagedType.FunctionPtr)] getBaseTypeDelegate d3);
+   private extern static IntPtr gadget_Analog_Analog__0([MarshalAs(UnmanagedType.FunctionPtr)] writeObjectDelegate_vpr_ObjectWriter d0, [MarshalAs(UnmanagedType.FunctionPtr)] readObjectDelegate_vpr_ObjectReader d1, [MarshalAs(UnmanagedType.FunctionPtr)] configDelegate_jccl_ConfigElementPtr d2, [MarshalAs(UnmanagedType.FunctionPtr)] getBaseTypeDelegate d3);
 
    public Analog()
    {
       allocDelegates();
-      mRawObject   = gadget_Analog_Analog__0(m_writeObjectDelegate_vpr_ObjectWriter, m_readObjectDelegate_vpr_ObjectReader, m_configDelegate_boost_shared_ptr_jccl__ConfigElement, m_getBaseTypeDelegate);
+      mRawObject   = gadget_Analog_Analog__0(m_writeObjectDelegate_vpr_ObjectWriter, m_readObjectDelegate_vpr_ObjectReader, m_configDelegate_jccl_ConfigElementPtr, m_getBaseTypeDelegate);
       mWeOwnMemory = true;
    }
 
@@ -237,17 +237,17 @@ public class Analog
 
 
    // Delegate for the config() callback.
-   public delegate bool configDelegate_boost_shared_ptr_jccl__ConfigElement([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
-   protected configDelegate_boost_shared_ptr_jccl__ConfigElement m_configDelegate_boost_shared_ptr_jccl__ConfigElement;
+   public delegate bool configDelegate_jccl_ConfigElementPtr([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
+   protected configDelegate_jccl_ConfigElementPtr m_configDelegate_jccl_ConfigElementPtr;
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool gadget_Analog_config__boost_shared_ptr_jccl__ConfigElement1(IntPtr obj,
+   private extern static bool gadget_Analog_config__jccl_ConfigElementPtr1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
    public virtual bool config(jccl.ConfigElement p0)
    {
       bool result;
-      result = gadget_Analog_config__boost_shared_ptr_jccl__ConfigElement1(mRawObject, p0);
+      result = gadget_Analog_config__jccl_ConfigElementPtr1(mRawObject, p0);
       return result;
    }
 

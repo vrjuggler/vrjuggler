@@ -36,10 +36,10 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API gadget_Input_Adapter* gadget_Input_Input__0(gadget_Input_Adapter::config_callback_boost_shared_ptr_jccl__ConfigElement_t cb0, gadget_Input_Adapter::sample_callback_t cb1, gadget_Input_Adapter::startSampling_callback_t cb2, gadget_Input_Adapter::stopSampling_callback_t cb3, gadget_Input_Adapter::updateData_callback_t cb4, gadget_Input_Adapter::getBaseType_callback_t cb5, gadget_Input_Adapter::writeObject_callback_vpr_ObjectWriter_t cb6, gadget_Input_Adapter::readObject_callback_vpr_ObjectReader_t cb7, gadget_Input_Adapter::destroy_callback_t cb8)
+   SHARPPY_API gadget_Input_Adapter* gadget_Input_Input__0(gadget_Input_Adapter::config_callback_jccl_ConfigElementPtr_t cb0, gadget_Input_Adapter::sample_callback_t cb1, gadget_Input_Adapter::startSampling_callback_t cb2, gadget_Input_Adapter::stopSampling_callback_t cb3, gadget_Input_Adapter::updateData_callback_t cb4, gadget_Input_Adapter::getBaseType_callback_t cb5, gadget_Input_Adapter::writeObject_callback_vpr_ObjectWriter_t cb6, gadget_Input_Adapter::readObject_callback_vpr_ObjectReader_t cb7, gadget_Input_Adapter::destroy_callback_t cb8)
    {
       gadget_Input_Adapter* obj = new gadget_Input_Adapter();
-      obj->config_callback_boost_shared_ptr_jccl__ConfigElement = cb0;
+      obj->config_callback_jccl_ConfigElementPtr = cb0;
       obj->sample_callback = cb1;
       obj->startSampling_callback = cb2;
       obj->stopSampling_callback = cb3;
@@ -59,7 +59,7 @@ extern "C"
    // Wrapper for non-virtual method gadget::Input::getInstanceName()
    SHARPPY_API char* gadget_Input_getInstanceName__0(gadget_Input_Adapter* self_)
    {
-      std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
+      std::string temp_result;
       char* result;
       temp_result = self_->getInstanceName();
       result = strdup(temp_result.c_str());
@@ -77,7 +77,7 @@ extern "C"
 
 
    // Wrapper for virtual method gadget::Input::config()
-   SHARPPY_API bool gadget_Input_config__boost_shared_ptr_jccl__ConfigElement1(gadget_Input_Adapter* self_, boost::shared_ptr<jccl::ConfigElement>* p0)
+   SHARPPY_API bool gadget_Input_config__jccl_ConfigElementPtr1(gadget_Input_Adapter* self_, jccl::ConfigElementPtr* p0)
    {
       bool result;
       result = self_->gadget::Input::config(*p0);
@@ -122,7 +122,7 @@ extern "C"
    // Wrapper for virtual method gadget::Input::getBaseType()
    SHARPPY_API char* gadget_Input_getBaseType__0(gadget_Input_Adapter* self_)
    {
-      std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
+      std::string temp_result;
       char* result;
       temp_result = self_->gadget::Input::getBaseType();
       result = strdup(temp_result.c_str());
@@ -158,7 +158,7 @@ extern "C"
    // Wrapper for static method gadget::Input::getElementType()
    SHARPPY_API char* gadget_Input_getElementType__0()
    {
-      std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
+      std::string temp_result;
       char* result;
       temp_result = gadget::Input::getElementType();
       result = strdup(temp_result.c_str());

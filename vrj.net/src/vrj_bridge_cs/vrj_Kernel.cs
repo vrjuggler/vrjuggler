@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.76 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -137,22 +137,22 @@ public sealed class Kernel
 
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_Kernel_loadConfigFile__std_basic_string_char_std__char_traits_char__std__allocator_char__1(IntPtr obj,
+   private extern static void vrj_Kernel_loadConfigFile__std_string1(IntPtr obj,
 	string p0);
 
    public  void loadConfigFile(string p0)
    {
-      vrj_Kernel_loadConfigFile__std_basic_string_char_std__char_traits_char__std__allocator_char__1(mRawObject, p0);
+      vrj_Kernel_loadConfigFile__std_string1(mRawObject, p0);
    }
 
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_Kernel_scanForConfigDefinitions__std_basic_string_char_std__char_traits_char__std__allocator_char__1(IntPtr obj,
+   private extern static void vrj_Kernel_scanForConfigDefinitions__std_string1(IntPtr obj,
 	string p0);
 
    public  void scanForConfigDefinitions(string p0)
    {
-      vrj_Kernel_scanForConfigDefinitions__std_basic_string_char_std__char_traits_char__std__allocator_char__1(mRawObject, p0);
+      vrj_Kernel_scanForConfigDefinitions__std_string1(mRawObject, p0);
    }
 
 
@@ -172,13 +172,13 @@ public sealed class Kernel
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(vrj.UserMarshaler))]
-   private extern static vrj.User vrj_Kernel_getUser__std_basic_string_char_std__char_traits_char__std__allocator_char__1(IntPtr obj,
+   private extern static vrj.User vrj_Kernel_getUser__std_string1(IntPtr obj,
 	string p0);
 
    public  vrj.User getUser(string p0)
    {
       vrj.User result;
-      result = vrj_Kernel_getUser__std_basic_string_char_std__char_traits_char__std__allocator_char__1(mRawObject, p0);
+      result = vrj_Kernel_getUser__std_string1(mRawObject, p0);
       return result;
    }
 
@@ -201,9 +201,6 @@ public sealed class Kernel
       return false;
    }
 
-   // End of virtual methods.
-
-   // Start of virtual methods.
    // End of virtual methods.
 
    // Start of static methods.

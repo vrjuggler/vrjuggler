@@ -36,13 +36,13 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API jccl_ConfigElementHandler_Adapter* jccl_ConfigElementHandler_ConfigElementHandler__0(jccl_ConfigElementHandler_Adapter::configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement_t cb0, jccl_ConfigElementHandler_Adapter::configProcessPending_callback_t cb1, jccl_ConfigElementHandler_Adapter::configAdd_callback_boost_shared_ptr_jccl__ConfigElement_t cb2, jccl_ConfigElementHandler_Adapter::configRemove_callback_boost_shared_ptr_jccl__ConfigElement_t cb3)
+   SHARPPY_API jccl_ConfigElementHandler_Adapter* jccl_ConfigElementHandler_ConfigElementHandler__0(jccl_ConfigElementHandler_Adapter::configCanHandle_callback_jccl_ConfigElementPtr_t cb0, jccl_ConfigElementHandler_Adapter::configProcessPending_callback_t cb1, jccl_ConfigElementHandler_Adapter::configAdd_callback_jccl_ConfigElementPtr_t cb2, jccl_ConfigElementHandler_Adapter::configRemove_callback_jccl_ConfigElementPtr_t cb3)
    {
       jccl_ConfigElementHandler_Adapter* obj = new jccl_ConfigElementHandler_Adapter();
-      obj->configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement = cb0;
+      obj->configCanHandle_callback_jccl_ConfigElementPtr = cb0;
       obj->configProcessPending_callback = cb1;
-      obj->configAdd_callback_boost_shared_ptr_jccl__ConfigElement = cb2;
-      obj->configRemove_callback_boost_shared_ptr_jccl__ConfigElement = cb3;
+      obj->configAdd_callback_jccl_ConfigElementPtr = cb2;
+      obj->configRemove_callback_jccl_ConfigElementPtr = cb3;
       return obj;
    }
 
@@ -52,7 +52,7 @@ extern "C"
    }
 
    // Wrapper for virtual method jccl::ConfigElementHandler::configCanHandle()
-   SHARPPY_API bool jccl_ConfigElementHandler_configCanHandle__boost_shared_ptr_jccl__ConfigElement1(jccl_ConfigElementHandler_Adapter* self_, boost::shared_ptr<jccl::ConfigElement>* p0)
+   SHARPPY_API bool jccl_ConfigElementHandler_configCanHandle__jccl_ConfigElementPtr1(jccl_ConfigElementHandler_Adapter* self_, jccl::ConfigElementPtr* p0)
    {
       bool result;
       result = self_->configCanHandle(*p0);
@@ -70,7 +70,7 @@ extern "C"
 
 
    // Wrapper for virtual method jccl::ConfigElementHandler::configAdd()
-   SHARPPY_API bool jccl_ConfigElementHandler_configAdd__boost_shared_ptr_jccl__ConfigElement1(jccl_ConfigElementHandler_Adapter* self_, boost::shared_ptr<jccl::ConfigElement>* p0)
+   SHARPPY_API bool jccl_ConfigElementHandler_configAdd__jccl_ConfigElementPtr1(jccl_ConfigElementHandler_Adapter* self_, jccl::ConfigElementPtr* p0)
    {
       bool result;
       result = self_->configAdd(*p0);
@@ -79,7 +79,7 @@ extern "C"
 
 
    // Wrapper for virtual method jccl::ConfigElementHandler::configRemove()
-   SHARPPY_API bool jccl_ConfigElementHandler_configRemove__boost_shared_ptr_jccl__ConfigElement1(jccl_ConfigElementHandler_Adapter* self_, boost::shared_ptr<jccl::ConfigElement>* p0)
+   SHARPPY_API bool jccl_ConfigElementHandler_configRemove__jccl_ConfigElementPtr1(jccl_ConfigElementHandler_Adapter* self_, jccl::ConfigElementPtr* p0)
    {
       bool result;
       result = self_->configRemove(*p0);

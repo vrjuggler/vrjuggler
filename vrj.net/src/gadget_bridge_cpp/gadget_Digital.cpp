@@ -36,10 +36,10 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API gadget_Digital_Adapter* gadget_Digital_Digital__0(gadget_Digital_Adapter::config_callback_boost_shared_ptr_jccl__ConfigElement_t cb0, gadget_Digital_Adapter::getBaseType_callback_t cb1, gadget_Digital_Adapter::writeObject_callback_vpr_ObjectWriter_t cb2, gadget_Digital_Adapter::readObject_callback_vpr_ObjectReader_t cb3)
+   SHARPPY_API gadget_Digital_Adapter* gadget_Digital_Digital__0(gadget_Digital_Adapter::config_callback_jccl_ConfigElementPtr_t cb0, gadget_Digital_Adapter::getBaseType_callback_t cb1, gadget_Digital_Adapter::writeObject_callback_vpr_ObjectWriter_t cb2, gadget_Digital_Adapter::readObject_callback_vpr_ObjectReader_t cb3)
    {
       gadget_Digital_Adapter* obj = new gadget_Digital_Adapter();
-      obj->config_callback_boost_shared_ptr_jccl__ConfigElement = cb0;
+      obj->config_callback_jccl_ConfigElementPtr = cb0;
       obj->getBaseType_callback = cb1;
       obj->writeObject_callback_vpr_ObjectWriter = cb2;
       obj->readObject_callback_vpr_ObjectReader = cb3;
@@ -76,7 +76,7 @@ extern "C"
 
 
    // Wrapper for virtual method gadget::Digital::config()
-   SHARPPY_API bool gadget_Digital_config__boost_shared_ptr_jccl__ConfigElement1(gadget_Digital_Adapter* self_, boost::shared_ptr<jccl::ConfigElement>* p0)
+   SHARPPY_API bool gadget_Digital_config__jccl_ConfigElementPtr1(gadget_Digital_Adapter* self_, jccl::ConfigElementPtr* p0)
    {
       bool result;
       result = self_->gadget::Digital::config(*p0);
@@ -87,7 +87,7 @@ extern "C"
    // Wrapper for virtual method gadget::Digital::getBaseType()
    SHARPPY_API char* gadget_Digital_getBaseType__0(gadget_Digital_Adapter* self_)
    {
-      std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
+      std::string temp_result;
       char* result;
       temp_result = self_->gadget::Digital::getBaseType();
       result = strdup(temp_result.c_str());

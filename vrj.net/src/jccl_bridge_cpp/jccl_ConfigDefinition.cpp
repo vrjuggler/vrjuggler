@@ -42,7 +42,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API boost::shared_ptr< jccl::ConfigDefinition >* jccl_ConfigDefinition_ConfigDefinition__std_basic_string_char_std__char_traits_char__std__allocator_char___cppdom_boost_shared_ptr_cppdom__Node2(const char* p0, cppdom_boost::shared_ptr<cppdom::Node>* p1)
+   SHARPPY_API boost::shared_ptr< jccl::ConfigDefinition >* jccl_ConfigDefinition_ConfigDefinition__std_string_cppdom_NodePtr2(const char* p0, cppdom::NodePtr* p1)
    {
       boost::shared_ptr< jccl::ConfigDefinition >* obj = new boost::shared_ptr< jccl::ConfigDefinition >(new jccl::ConfigDefinition(p0, *p1));
       return obj;
@@ -71,7 +71,7 @@ extern "C"
    // Wrapper for non-virtual method jccl::ConfigDefinition::getName()
    SHARPPY_API char* jccl_ConfigDefinition_getName__0(boost::shared_ptr< jccl::ConfigDefinition >* self_ptr)
    {
-      std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
+      std::string temp_result;
       char* result;
       temp_result = (*self_ptr)->getName();
       result = strdup(temp_result.c_str());
@@ -82,7 +82,7 @@ extern "C"
    // Wrapper for non-virtual method jccl::ConfigDefinition::getToken()
    SHARPPY_API char* jccl_ConfigDefinition_getToken__0(boost::shared_ptr< jccl::ConfigDefinition >* self_ptr)
    {
-      std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
+      std::string temp_result;
       char* result;
       temp_result = (*self_ptr)->getToken();
       result = strdup(temp_result.c_str());
@@ -102,7 +102,7 @@ extern "C"
    // Wrapper for non-virtual method jccl::ConfigDefinition::getHelp()
    SHARPPY_API char* jccl_ConfigDefinition_getHelp__0(boost::shared_ptr< jccl::ConfigDefinition >* self_ptr)
    {
-      std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
+      std::string temp_result;
       char* result;
       temp_result = (*self_ptr)->getHelp();
       result = strdup(temp_result.c_str());

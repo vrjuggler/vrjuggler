@@ -58,7 +58,7 @@ extern "C"
    // Wrapper for non-virtual method vrj::User::getName()
    SHARPPY_API char* vrj_User_getName__0(vrj::User* self_)
    {
-      std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
+      std::string temp_result;
       char* result;
       temp_result = self_->getName();
       result = strdup(temp_result.c_str());
@@ -94,7 +94,7 @@ extern "C"
 
 
    // Wrapper for virtual method vrj::User::config()
-   SHARPPY_API bool vrj_User_config__boost_shared_ptr_jccl__ConfigElement1(vrj::User* self_, boost::shared_ptr<jccl::ConfigElement>* p0)
+   SHARPPY_API bool vrj_User_config__jccl_ConfigElementPtr1(vrj::User* self_, jccl::ConfigElementPtr* p0)
    {
       bool result;
       result = self_->config(*p0);

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.76 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -64,11 +64,11 @@ public sealed class ConfigDefinition
 
 /*
    [DllImport("jccl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr jccl_ConfigDefinition_ConfigDefinition__std_basic_string_char_std__char_traits_char__std__allocator_char___cppdom_boost_shared_ptr_cppdom__Node2(string p0, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(cppdom.NodeMarshaler))] cppdom.Node p1);
+   private extern static IntPtr jccl_ConfigDefinition_ConfigDefinition__std_string_cppdom_NodePtr2(string p0, [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(cppdom.NodeMarshaler))] cppdom.Node p1);
 
    public ConfigDefinition(string p0, cppdom.Node p1)
    {
-      mRawObject   = jccl_ConfigDefinition_ConfigDefinition__std_basic_string_char_std__char_traits_char__std__allocator_char___cppdom_boost_shared_ptr_cppdom__Node2(p0, p1);
+      mRawObject   = jccl_ConfigDefinition_ConfigDefinition__std_string_cppdom_NodePtr2(p0, p1);
       mWeOwnMemory = true;
    }
 */

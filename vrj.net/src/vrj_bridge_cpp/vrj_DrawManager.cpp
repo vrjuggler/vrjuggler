@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.64 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -36,7 +36,7 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API vrj_DrawManager_Adapter* vrj_DrawManager_DrawManager__0(vrj_DrawManager_Adapter::draw_callback_t cb0, vrj_DrawManager_Adapter::sync_callback_t cb1, vrj_DrawManager_Adapter::setApp_callback_vrj_App_t cb2, vrj_DrawManager_Adapter::initAPI_callback_t cb3, vrj_DrawManager_Adapter::addDisplay_callback_vrj_Display_t cb4, vrj_DrawManager_Adapter::removeDisplay_callback_vrj_Display_t cb5, vrj_DrawManager_Adapter::closeAPI_callback_t cb6, vrj_DrawManager_Adapter::configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement_t cb7, vrj_DrawManager_Adapter::configProcessPending_callback_t cb8, vrj_DrawManager_Adapter::configAdd_callback_boost_shared_ptr_jccl__ConfigElement_t cb9, vrj_DrawManager_Adapter::configRemove_callback_boost_shared_ptr_jccl__ConfigElement_t cb10)
+   SHARPPY_API vrj_DrawManager_Adapter* vrj_DrawManager_DrawManager__0(vrj_DrawManager_Adapter::draw_callback_t cb0, vrj_DrawManager_Adapter::sync_callback_t cb1, vrj_DrawManager_Adapter::setApp_callback_vrj_App_t cb2, vrj_DrawManager_Adapter::initAPI_callback_t cb3, vrj_DrawManager_Adapter::addDisplay_callback_vrj_Display_t cb4, vrj_DrawManager_Adapter::removeDisplay_callback_vrj_Display_t cb5, vrj_DrawManager_Adapter::closeAPI_callback_t cb6, vrj_DrawManager_Adapter::configCanHandle_callback_jccl_ConfigElementPtr_t cb7, vrj_DrawManager_Adapter::configProcessPending_callback_t cb8, vrj_DrawManager_Adapter::configAdd_callback_jccl_ConfigElementPtr_t cb9, vrj_DrawManager_Adapter::configRemove_callback_jccl_ConfigElementPtr_t cb10)
    {
       vrj_DrawManager_Adapter* obj = new vrj_DrawManager_Adapter();
       obj->draw_callback = cb0;
@@ -46,10 +46,10 @@ extern "C"
       obj->addDisplay_callback_vrj_Display = cb4;
       obj->removeDisplay_callback_vrj_Display = cb5;
       obj->closeAPI_callback = cb6;
-      obj->configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement = cb7;
+      obj->configCanHandle_callback_jccl_ConfigElementPtr = cb7;
       obj->configProcessPending_callback = cb8;
-      obj->configAdd_callback_boost_shared_ptr_jccl__ConfigElement = cb9;
-      obj->configRemove_callback_boost_shared_ptr_jccl__ConfigElement = cb10;
+      obj->configAdd_callback_jccl_ConfigElementPtr = cb9;
+      obj->configRemove_callback_jccl_ConfigElementPtr = cb10;
       return obj;
    }
 

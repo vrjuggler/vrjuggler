@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.64 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -88,14 +88,14 @@ extern "C"
 
 
    // Wrapper for non-virtual method vrj::Kernel::loadConfigFile()
-   SHARPPY_API void vrj_Kernel_loadConfigFile__std_basic_string_char_std__char_traits_char__std__allocator_char__1(vrj::Kernel* self_, char* p0)
+   SHARPPY_API void vrj_Kernel_loadConfigFile__std_string1(vrj::Kernel* self_, char* p0)
    {
       self_->loadConfigFile(p0);
    }
 
 
    // Wrapper for non-virtual method vrj::Kernel::scanForConfigDefinitions()
-   SHARPPY_API void vrj_Kernel_scanForConfigDefinitions__std_basic_string_char_std__char_traits_char__std__allocator_char__1(vrj::Kernel* self_, const char* p0)
+   SHARPPY_API void vrj_Kernel_scanForConfigDefinitions__std_string1(vrj::Kernel* self_, const char* p0)
    {
       self_->scanForConfigDefinitions(p0);
    }
@@ -111,7 +111,7 @@ extern "C"
 
 
    // Wrapper for non-virtual method vrj::Kernel::getUser()
-   SHARPPY_API vrj::User* vrj_Kernel_getUser__std_basic_string_char_std__char_traits_char__std__allocator_char__1(vrj::Kernel* self_, const char* p0)
+   SHARPPY_API vrj::User* vrj_Kernel_getUser__std_string1(vrj::Kernel* self_, const char* p0)
    {
       vrj::User* result;
       result = self_->getUser(p0);

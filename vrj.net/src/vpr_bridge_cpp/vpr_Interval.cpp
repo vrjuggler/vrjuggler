@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.63 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.64 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -50,7 +50,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API vpr::Interval* vpr_Interval_Interval__long_long_unsigned_int_vpr_Interval_Unit2(const vpr::Uint64 p0, const vpr::Interval::Unit p1)
+   SHARPPY_API vpr::Interval* vpr_Interval_Interval__vpr_Uint64_vpr_Interval_Unit2(const vpr::Uint64 p0, const vpr::Interval::Unit p1)
    {
       vpr::Interval* obj = new vpr::Interval(p0, p1);
       return obj;
@@ -62,7 +62,7 @@ extern "C"
    }
 
    // Wrapper for non-virtual method vpr::Interval::set()
-   SHARPPY_API void vpr_Interval_set__long_long_unsigned_int_vpr_Interval_Unit2(vpr::Interval* self_, const vpr::Uint64 p0, const vpr::Interval::Unit p1)
+   SHARPPY_API void vpr_Interval_set__vpr_Uint64_vpr_Interval_Unit2(vpr::Interval* self_, const vpr::Uint64 p0, const vpr::Interval::Unit p1)
    {
       self_->set(p0, p1);
    }
@@ -97,7 +97,7 @@ extern "C"
 
 
    // Wrapper for non-virtual method vpr::Interval::sec()
-   SHARPPY_API void vpr_Interval_sec__long_long_unsigned_int1(vpr::Interval* self_, const vpr::Uint64 p0)
+   SHARPPY_API void vpr_Interval_sec__vpr_Uint641(vpr::Interval* self_, const vpr::Uint64 p0)
    {
       self_->sec(p0);
    }
@@ -145,7 +145,7 @@ extern "C"
 
 
    // Wrapper for non-virtual method vpr::Interval::msec()
-   SHARPPY_API void vpr_Interval_msec__long_long_unsigned_int1(vpr::Interval* self_, const vpr::Uint64 p0)
+   SHARPPY_API void vpr_Interval_msec__vpr_Uint641(vpr::Interval* self_, const vpr::Uint64 p0)
    {
       self_->msec(p0);
    }
@@ -193,7 +193,7 @@ extern "C"
 
 
    // Wrapper for non-virtual method vpr::Interval::usec()
-   SHARPPY_API void vpr_Interval_usec__long_long_unsigned_int1(vpr::Interval* self_, const vpr::Uint64 p0)
+   SHARPPY_API void vpr_Interval_usec__vpr_Uint641(vpr::Interval* self_, const vpr::Uint64 p0)
    {
       self_->usec(p0);
    }

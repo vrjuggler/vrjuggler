@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.64 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -50,7 +50,7 @@ extern "C"
 
 
    // Wrapper for virtual method vpr::ObjectWriter::beginTag()
-   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_beginTag__std_basic_string_char_std__char_traits_char__std__allocator_char__1(vpr_ObjectWriter_Adapter* self_, char* p0)
+   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_beginTag__std_string1(vpr_ObjectWriter_Adapter* self_, char* p0)
    {
       vpr::ReturnStatus* result;
       result = new vpr::ReturnStatus(self_->beginTag(p0));
@@ -68,7 +68,7 @@ extern "C"
 
 
    // Wrapper for virtual method vpr::ObjectWriter::beginAttribute()
-   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_beginAttribute__std_basic_string_char_std__char_traits_char__std__allocator_char__1(vpr_ObjectWriter_Adapter* self_, char* p0)
+   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_beginAttribute__std_string1(vpr_ObjectWriter_Adapter* self_, char* p0)
    {
       vpr::ReturnStatus* result;
       result = new vpr::ReturnStatus(self_->beginAttribute(p0));
@@ -86,7 +86,7 @@ extern "C"
 
 
    // Wrapper for virtual method vpr::ObjectWriter::writeUint8()
-   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_writeUint8__unsigned_char1(vpr_ObjectWriter_Adapter* self_, unsigned char p0)
+   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_writeUint8__vpr_Uint81(vpr_ObjectWriter_Adapter* self_, vpr::Uint8 p0)
    {
       vpr::ReturnStatus* result;
       result = new vpr::ReturnStatus(self_->writeUint8(p0));
@@ -95,7 +95,7 @@ extern "C"
 
 
    // Wrapper for virtual method vpr::ObjectWriter::writeUint16()
-   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_writeUint16__short_unsigned_int1(vpr_ObjectWriter_Adapter* self_, short unsigned int p0)
+   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_writeUint16__vpr_Uint161(vpr_ObjectWriter_Adapter* self_, vpr::Uint16 p0)
    {
       vpr::ReturnStatus* result;
       result = new vpr::ReturnStatus(self_->writeUint16(p0));
@@ -104,7 +104,7 @@ extern "C"
 
 
    // Wrapper for virtual method vpr::ObjectWriter::writeUint32()
-   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_writeUint32__unsigned_int1(vpr_ObjectWriter_Adapter* self_, unsigned int p0)
+   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_writeUint32__vpr_Uint321(vpr_ObjectWriter_Adapter* self_, vpr::Uint32 p0)
    {
       vpr::ReturnStatus* result;
       result = new vpr::ReturnStatus(self_->writeUint32(p0));
@@ -113,7 +113,7 @@ extern "C"
 
 
    // Wrapper for virtual method vpr::ObjectWriter::writeUint64()
-   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_writeUint64__long_long_unsigned_int1(vpr_ObjectWriter_Adapter* self_, vpr::Uint64 p0)
+   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_writeUint64__vpr_Uint641(vpr_ObjectWriter_Adapter* self_, vpr::Uint64 p0)
    {
       vpr::ReturnStatus* result;
       result = new vpr::ReturnStatus(self_->writeUint64(p0));
@@ -140,7 +140,7 @@ extern "C"
 
 
    // Wrapper for virtual method vpr::ObjectWriter::writeString()
-   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_writeString__std_basic_string_char_std__char_traits_char__std__allocator_char__1(vpr_ObjectWriter_Adapter* self_, char* p0)
+   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_writeString__std_string1(vpr_ObjectWriter_Adapter* self_, char* p0)
    {
       vpr::ReturnStatus* result;
       result = new vpr::ReturnStatus(self_->writeString(p0));

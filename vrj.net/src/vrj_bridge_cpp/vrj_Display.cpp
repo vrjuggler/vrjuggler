@@ -55,14 +55,14 @@ extern "C"
    }
 
    // Wrapper for non-virtual method vrj::Display::configDisplayWindow()
-   SHARPPY_API void vrj_Display_configDisplayWindow__boost_shared_ptr_jccl__ConfigElement1(vrj::Display* self_, boost::shared_ptr<jccl::ConfigElement>* p0)
+   SHARPPY_API void vrj_Display_configDisplayWindow__jccl_ConfigElementPtr1(vrj::Display* self_, jccl::ConfigElementPtr* p0)
    {
       self_->configDisplayWindow(*p0);
    }
 
 
    // Wrapper for non-virtual method vrj::Display::configViewports()
-   SHARPPY_API void vrj_Display_configViewports__boost_shared_ptr_jccl__ConfigElement1(vrj::Display* self_, boost::shared_ptr<jccl::ConfigElement>* p0)
+   SHARPPY_API void vrj_Display_configViewports__jccl_ConfigElementPtr1(vrj::Display* self_, jccl::ConfigElementPtr* p0)
    {
       self_->configViewports(*p0);
    }
@@ -85,7 +85,7 @@ extern "C"
 
 
    // Wrapper for non-virtual method vrj::Display::setName()
-   SHARPPY_API void vrj_Display_setName__std_basic_string_char_std__char_traits_char__std__allocator_char__1(vrj::Display* self_, char* p0)
+   SHARPPY_API void vrj_Display_setName__std_string1(vrj::Display* self_, char* p0)
    {
       self_->setName(p0);
    }
@@ -94,7 +94,7 @@ extern "C"
    // Wrapper for non-virtual method vrj::Display::getName()
    SHARPPY_API char* vrj_Display_getName__0(vrj::Display* self_)
    {
-      std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
+      std::string temp_result;
       char* result;
       temp_result = self_->getName();
       result = strdup(temp_result.c_str());
@@ -166,19 +166,19 @@ extern "C"
 
 
    // Wrapper for non-virtual method vrj::Display::getConfigElement()
-   SHARPPY_API boost::shared_ptr<jccl::ConfigElement>* vrj_Display_getConfigElement__0(vrj::Display* self_)
+   SHARPPY_API jccl::ConfigElementPtr* vrj_Display_getConfigElement__0(vrj::Display* self_)
    {
-      boost::shared_ptr<jccl::ConfigElement>* result;
-      result = new boost::shared_ptr<jccl::ConfigElement>(self_->getConfigElement());
+      jccl::ConfigElementPtr* result;
+      result = new jccl::ConfigElementPtr(self_->getConfigElement());
       return result;
    }
 
 
    // Wrapper for non-virtual method vrj::Display::getGlFrameBufferConfig()
-   SHARPPY_API boost::shared_ptr<jccl::ConfigElement>* vrj_Display_getGlFrameBufferConfig__0(vrj::Display* self_)
+   SHARPPY_API jccl::ConfigElementPtr* vrj_Display_getGlFrameBufferConfig__0(vrj::Display* self_)
    {
-      boost::shared_ptr<jccl::ConfigElement>* result;
-      result = new boost::shared_ptr<jccl::ConfigElement>(self_->getGlFrameBufferConfig());
+      jccl::ConfigElementPtr* result;
+      result = new jccl::ConfigElementPtr(self_->getGlFrameBufferConfig());
       return result;
    }
 
@@ -193,7 +193,7 @@ extern "C"
 
 
    // Wrapper for virtual method vrj::Display::config()
-   SHARPPY_API void vrj_Display_config__boost_shared_ptr_jccl__ConfigElement1(vrj::Display* self_, boost::shared_ptr<jccl::ConfigElement>* p0)
+   SHARPPY_API void vrj_Display_config__jccl_ConfigElementPtr1(vrj::Display* self_, jccl::ConfigElementPtr* p0)
    {
       self_->config(*p0);
    }

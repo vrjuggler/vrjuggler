@@ -36,7 +36,7 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API vrj_App_Adapter* vrj_App_App__vrj_Kernel1(vrj::Kernel* p0, vrj_App_Adapter::init_callback_t cb0, vrj_App_Adapter::apiInit_callback_t cb1, vrj_App_Adapter::exit_callback_t cb2, vrj_App_Adapter::preFrame_callback_t cb3, vrj_App_Adapter::latePreFrame_callback_t cb4, vrj_App_Adapter::intraFrame_callback_t cb5, vrj_App_Adapter::postFrame_callback_t cb6, vrj_App_Adapter::reset_callback_t cb7, vrj_App_Adapter::focusChanged_callback_t cb8, vrj_App_Adapter::getDrawScaleFactor_callback_t cb9, vrj_App_Adapter::configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement_t cb10, vrj_App_Adapter::depSatisfied_callback_t cb11, vrj_App_Adapter::configAdd_callback_boost_shared_ptr_jccl__ConfigElement_t cb12, vrj_App_Adapter::configRemove_callback_boost_shared_ptr_jccl__ConfigElement_t cb13, vrj_App_Adapter::getDrawManager_callback_t cb14, vrj_App_Adapter::getSoundManager_callback_t cb15, vrj_App_Adapter::configProcessPending_callback_t cb16)
+   SHARPPY_API vrj_App_Adapter* vrj_App_App__vrj_Kernel1(vrj::Kernel* p0, vrj_App_Adapter::init_callback_t cb0, vrj_App_Adapter::apiInit_callback_t cb1, vrj_App_Adapter::exit_callback_t cb2, vrj_App_Adapter::preFrame_callback_t cb3, vrj_App_Adapter::latePreFrame_callback_t cb4, vrj_App_Adapter::intraFrame_callback_t cb5, vrj_App_Adapter::postFrame_callback_t cb6, vrj_App_Adapter::reset_callback_t cb7, vrj_App_Adapter::focusChanged_callback_t cb8, vrj_App_Adapter::getDrawScaleFactor_callback_t cb9, vrj_App_Adapter::configCanHandle_callback_jccl_ConfigElementPtr_t cb10, vrj_App_Adapter::depSatisfied_callback_t cb11, vrj_App_Adapter::configAdd_callback_jccl_ConfigElementPtr_t cb12, vrj_App_Adapter::configRemove_callback_jccl_ConfigElementPtr_t cb13, vrj_App_Adapter::getDrawManager_callback_t cb14, vrj_App_Adapter::getSoundManager_callback_t cb15, vrj_App_Adapter::configProcessPending_callback_t cb16)
    {
       vrj_App_Adapter* obj = new vrj_App_Adapter(p0);
       obj->init_callback = cb0;
@@ -49,10 +49,10 @@ extern "C"
       obj->reset_callback = cb7;
       obj->focusChanged_callback = cb8;
       obj->getDrawScaleFactor_callback = cb9;
-      obj->configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement = cb10;
+      obj->configCanHandle_callback_jccl_ConfigElementPtr = cb10;
       obj->depSatisfied_callback = cb11;
-      obj->configAdd_callback_boost_shared_ptr_jccl__ConfigElement = cb12;
-      obj->configRemove_callback_boost_shared_ptr_jccl__ConfigElement = cb13;
+      obj->configAdd_callback_jccl_ConfigElementPtr = cb12;
+      obj->configRemove_callback_jccl_ConfigElementPtr = cb13;
       obj->getDrawManager_callback = cb14;
       obj->getSoundManager_callback = cb15;
       obj->configProcessPending_callback = cb16;
@@ -60,7 +60,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API vrj_App_Adapter* vrj_App_App__0(vrj_App_Adapter::init_callback_t cb0, vrj_App_Adapter::apiInit_callback_t cb1, vrj_App_Adapter::exit_callback_t cb2, vrj_App_Adapter::preFrame_callback_t cb3, vrj_App_Adapter::latePreFrame_callback_t cb4, vrj_App_Adapter::intraFrame_callback_t cb5, vrj_App_Adapter::postFrame_callback_t cb6, vrj_App_Adapter::reset_callback_t cb7, vrj_App_Adapter::focusChanged_callback_t cb8, vrj_App_Adapter::getDrawScaleFactor_callback_t cb9, vrj_App_Adapter::configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement_t cb10, vrj_App_Adapter::depSatisfied_callback_t cb11, vrj_App_Adapter::configAdd_callback_boost_shared_ptr_jccl__ConfigElement_t cb12, vrj_App_Adapter::configRemove_callback_boost_shared_ptr_jccl__ConfigElement_t cb13, vrj_App_Adapter::getDrawManager_callback_t cb14, vrj_App_Adapter::getSoundManager_callback_t cb15, vrj_App_Adapter::configProcessPending_callback_t cb16)
+   SHARPPY_API vrj_App_Adapter* vrj_App_App__0(vrj_App_Adapter::init_callback_t cb0, vrj_App_Adapter::apiInit_callback_t cb1, vrj_App_Adapter::exit_callback_t cb2, vrj_App_Adapter::preFrame_callback_t cb3, vrj_App_Adapter::latePreFrame_callback_t cb4, vrj_App_Adapter::intraFrame_callback_t cb5, vrj_App_Adapter::postFrame_callback_t cb6, vrj_App_Adapter::reset_callback_t cb7, vrj_App_Adapter::focusChanged_callback_t cb8, vrj_App_Adapter::getDrawScaleFactor_callback_t cb9, vrj_App_Adapter::configCanHandle_callback_jccl_ConfigElementPtr_t cb10, vrj_App_Adapter::depSatisfied_callback_t cb11, vrj_App_Adapter::configAdd_callback_jccl_ConfigElementPtr_t cb12, vrj_App_Adapter::configRemove_callback_jccl_ConfigElementPtr_t cb13, vrj_App_Adapter::getDrawManager_callback_t cb14, vrj_App_Adapter::getSoundManager_callback_t cb15, vrj_App_Adapter::configProcessPending_callback_t cb16)
    {
       vrj_App_Adapter* obj = new vrj_App_Adapter();
       obj->init_callback = cb0;
@@ -73,10 +73,10 @@ extern "C"
       obj->reset_callback = cb7;
       obj->focusChanged_callback = cb8;
       obj->getDrawScaleFactor_callback = cb9;
-      obj->configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement = cb10;
+      obj->configCanHandle_callback_jccl_ConfigElementPtr = cb10;
       obj->depSatisfied_callback = cb11;
-      obj->configAdd_callback_boost_shared_ptr_jccl__ConfigElement = cb12;
-      obj->configRemove_callback_boost_shared_ptr_jccl__ConfigElement = cb13;
+      obj->configAdd_callback_jccl_ConfigElementPtr = cb12;
+      obj->configRemove_callback_jccl_ConfigElementPtr = cb13;
       obj->getDrawManager_callback = cb14;
       obj->getSoundManager_callback = cb15;
       obj->configProcessPending_callback = cb16;
@@ -177,7 +177,7 @@ extern "C"
 
 
    // Wrapper for virtual method vrj::App::configCanHandle()
-   SHARPPY_API bool vrj_App_configCanHandle__boost_shared_ptr_jccl__ConfigElement1(vrj_App_Adapter* self_, boost::shared_ptr<jccl::ConfigElement>* p0)
+   SHARPPY_API bool vrj_App_configCanHandle__jccl_ConfigElementPtr1(vrj_App_Adapter* self_, jccl::ConfigElementPtr* p0)
    {
       bool result;
       result = self_->vrj::App::configCanHandle(*p0);
@@ -195,7 +195,7 @@ extern "C"
 
 
    // Wrapper for virtual method vrj::App::configAdd()
-   SHARPPY_API bool vrj_App_configAdd__boost_shared_ptr_jccl__ConfigElement1(vrj_App_Adapter* self_, boost::shared_ptr<jccl::ConfigElement>* p0)
+   SHARPPY_API bool vrj_App_configAdd__jccl_ConfigElementPtr1(vrj_App_Adapter* self_, jccl::ConfigElementPtr* p0)
    {
       bool result;
       result = self_->configAdd_wrapper(*p0);
@@ -204,7 +204,7 @@ extern "C"
 
 
    // Wrapper for virtual method vrj::App::configRemove()
-   SHARPPY_API bool vrj_App_configRemove__boost_shared_ptr_jccl__ConfigElement1(vrj_App_Adapter* self_, boost::shared_ptr<jccl::ConfigElement>* p0)
+   SHARPPY_API bool vrj_App_configRemove__jccl_ConfigElementPtr1(vrj_App_Adapter* self_, jccl::ConfigElementPtr* p0)
    {
       bool result;
       result = self_->configRemove_wrapper(*p0);

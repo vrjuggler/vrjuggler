@@ -36,12 +36,12 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API gadget_Analog_Adapter* gadget_Analog_Analog__0(gadget_Analog_Adapter::writeObject_callback_vpr_ObjectWriter_t cb0, gadget_Analog_Adapter::readObject_callback_vpr_ObjectReader_t cb1, gadget_Analog_Adapter::config_callback_boost_shared_ptr_jccl__ConfigElement_t cb2, gadget_Analog_Adapter::getBaseType_callback_t cb3)
+   SHARPPY_API gadget_Analog_Adapter* gadget_Analog_Analog__0(gadget_Analog_Adapter::writeObject_callback_vpr_ObjectWriter_t cb0, gadget_Analog_Adapter::readObject_callback_vpr_ObjectReader_t cb1, gadget_Analog_Adapter::config_callback_jccl_ConfigElementPtr_t cb2, gadget_Analog_Adapter::getBaseType_callback_t cb3)
    {
       gadget_Analog_Adapter* obj = new gadget_Analog_Adapter();
       obj->writeObject_callback_vpr_ObjectWriter = cb0;
       obj->readObject_callback_vpr_ObjectReader = cb1;
-      obj->config_callback_boost_shared_ptr_jccl__ConfigElement = cb2;
+      obj->config_callback_jccl_ConfigElementPtr = cb2;
       obj->getBaseType_callback = cb3;
       return obj;
    }
@@ -133,7 +133,7 @@ extern "C"
 
 
    // Wrapper for virtual method gadget::Analog::config()
-   SHARPPY_API bool gadget_Analog_config__boost_shared_ptr_jccl__ConfigElement1(gadget_Analog_Adapter* self_, boost::shared_ptr<jccl::ConfigElement>* p0)
+   SHARPPY_API bool gadget_Analog_config__jccl_ConfigElementPtr1(gadget_Analog_Adapter* self_, jccl::ConfigElementPtr* p0)
    {
       bool result;
       result = self_->gadget::Analog::config(*p0);
@@ -144,7 +144,7 @@ extern "C"
    // Wrapper for virtual method gadget::Analog::getBaseType()
    SHARPPY_API char* gadget_Analog_getBaseType__0(gadget_Analog_Adapter* self_)
    {
-      std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
+      std::string temp_result;
       char* result;
       temp_result = self_->gadget::Analog::getBaseType();
       result = strdup(temp_result.c_str());

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.15 of RCSfile: class_cxx_adapter.tmpl,v
+// Generated from Revision: 1.18 of RCSfile: class_cxx_adapter.tmpl,v
 
 
 #ifndef __VPR_OBJECTWRITER_ADAPTER__
@@ -40,14 +40,14 @@ public:
    virtual ~vpr_ObjectWriter_Adapter()
    {;}
 
-   typedef vpr::ReturnStatus* (*beginTag_callback_std_basic_string_char_std__char_traits_char__std__allocator_char___t)(char*);
-   beginTag_callback_std_basic_string_char_std__char_traits_char__std__allocator_char___t beginTag_callback_std_basic_string_char_std__char_traits_char__std__allocator_char__;
+   typedef vpr::ReturnStatus* (*beginTag_callback_std_string_t)(char*);
+   beginTag_callback_std_string_t beginTag_callback_std_string;
 
    /// Override for virtual function vpr::ObjectWriter::beginTag.
-   virtual vpr::ReturnStatus beginTag(std::basic_string<char,std::char_traits<char>,std::allocator<char> > p0)
+   virtual vpr::ReturnStatus beginTag(std::string p0)
    {
       char* marshal_p0 = strdup(p0.c_str());
-      vpr::ReturnStatus result = *(beginTag_callback_std_basic_string_char_std__char_traits_char__std__allocator_char__(marshal_p0));
+      vpr::ReturnStatus result = *(beginTag_callback_std_string(marshal_p0));
       free(marshal_p0);
       return result;
    }
@@ -62,14 +62,14 @@ public:
       return result;
    }
 
-   typedef vpr::ReturnStatus* (*beginAttribute_callback_std_basic_string_char_std__char_traits_char__std__allocator_char___t)(char*);
-   beginAttribute_callback_std_basic_string_char_std__char_traits_char__std__allocator_char___t beginAttribute_callback_std_basic_string_char_std__char_traits_char__std__allocator_char__;
+   typedef vpr::ReturnStatus* (*beginAttribute_callback_std_string_t)(char*);
+   beginAttribute_callback_std_string_t beginAttribute_callback_std_string;
 
    /// Override for virtual function vpr::ObjectWriter::beginAttribute.
-   virtual vpr::ReturnStatus beginAttribute(std::basic_string<char,std::char_traits<char>,std::allocator<char> > p0)
+   virtual vpr::ReturnStatus beginAttribute(std::string p0)
    {
       char* marshal_p0 = strdup(p0.c_str());
-      vpr::ReturnStatus result = *(beginAttribute_callback_std_basic_string_char_std__char_traits_char__std__allocator_char__(marshal_p0));
+      vpr::ReturnStatus result = *(beginAttribute_callback_std_string(marshal_p0));
       free(marshal_p0);
       return result;
    }
@@ -84,43 +84,43 @@ public:
       return result;
    }
 
-   typedef vpr::ReturnStatus* (*writeUint8_callback_unsigned_char_t)(unsigned char);
-   writeUint8_callback_unsigned_char_t writeUint8_callback_unsigned_char;
+   typedef vpr::ReturnStatus* (*writeUint8_callback_vpr_Uint8_t)(vpr::Uint8);
+   writeUint8_callback_vpr_Uint8_t writeUint8_callback_vpr_Uint8;
 
    /// Override for virtual function vpr::ObjectWriter::writeUint8.
-   virtual vpr::ReturnStatus writeUint8(unsigned char p0)
+   virtual vpr::ReturnStatus writeUint8(vpr::Uint8 p0)
    {
-      vpr::ReturnStatus result = *(writeUint8_callback_unsigned_char(p0));
+      vpr::ReturnStatus result = *(writeUint8_callback_vpr_Uint8(p0));
       return result;
    }
 
-   typedef vpr::ReturnStatus* (*writeUint16_callback_short_unsigned_int_t)(short unsigned int);
-   writeUint16_callback_short_unsigned_int_t writeUint16_callback_short_unsigned_int;
+   typedef vpr::ReturnStatus* (*writeUint16_callback_vpr_Uint16_t)(vpr::Uint16);
+   writeUint16_callback_vpr_Uint16_t writeUint16_callback_vpr_Uint16;
 
    /// Override for virtual function vpr::ObjectWriter::writeUint16.
-   virtual vpr::ReturnStatus writeUint16(short unsigned int p0)
+   virtual vpr::ReturnStatus writeUint16(vpr::Uint16 p0)
    {
-      vpr::ReturnStatus result = *(writeUint16_callback_short_unsigned_int(p0));
+      vpr::ReturnStatus result = *(writeUint16_callback_vpr_Uint16(p0));
       return result;
    }
 
-   typedef vpr::ReturnStatus* (*writeUint32_callback_unsigned_int_t)(unsigned int);
-   writeUint32_callback_unsigned_int_t writeUint32_callback_unsigned_int;
+   typedef vpr::ReturnStatus* (*writeUint32_callback_vpr_Uint32_t)(vpr::Uint32);
+   writeUint32_callback_vpr_Uint32_t writeUint32_callback_vpr_Uint32;
 
    /// Override for virtual function vpr::ObjectWriter::writeUint32.
-   virtual vpr::ReturnStatus writeUint32(unsigned int p0)
+   virtual vpr::ReturnStatus writeUint32(vpr::Uint32 p0)
    {
-      vpr::ReturnStatus result = *(writeUint32_callback_unsigned_int(p0));
+      vpr::ReturnStatus result = *(writeUint32_callback_vpr_Uint32(p0));
       return result;
    }
 
-   typedef vpr::ReturnStatus* (*writeUint64_callback_long_long_unsigned_int_t)(vpr::Uint64);
-   writeUint64_callback_long_long_unsigned_int_t writeUint64_callback_long_long_unsigned_int;
+   typedef vpr::ReturnStatus* (*writeUint64_callback_vpr_Uint64_t)(vpr::Uint64);
+   writeUint64_callback_vpr_Uint64_t writeUint64_callback_vpr_Uint64;
 
    /// Override for virtual function vpr::ObjectWriter::writeUint64.
    virtual vpr::ReturnStatus writeUint64(vpr::Uint64 p0)
    {
-      vpr::ReturnStatus result = *(writeUint64_callback_long_long_unsigned_int(p0));
+      vpr::ReturnStatus result = *(writeUint64_callback_vpr_Uint64(p0));
       return result;
    }
 
@@ -144,14 +144,14 @@ public:
       return result;
    }
 
-   typedef vpr::ReturnStatus* (*writeString_callback_std_basic_string_char_std__char_traits_char__std__allocator_char___t)(char*);
-   writeString_callback_std_basic_string_char_std__char_traits_char__std__allocator_char___t writeString_callback_std_basic_string_char_std__char_traits_char__std__allocator_char__;
+   typedef vpr::ReturnStatus* (*writeString_callback_std_string_t)(char*);
+   writeString_callback_std_string_t writeString_callback_std_string;
 
    /// Override for virtual function vpr::ObjectWriter::writeString.
-   virtual vpr::ReturnStatus writeString(std::basic_string<char,std::char_traits<char>,std::allocator<char> > p0)
+   virtual vpr::ReturnStatus writeString(std::string p0)
    {
       char* marshal_p0 = strdup(p0.c_str());
-      vpr::ReturnStatus result = *(writeString_callback_std_basic_string_char_std__char_traits_char__std__allocator_char__(marshal_p0));
+      vpr::ReturnStatus result = *(writeString_callback_std_string(marshal_p0));
       free(marshal_p0);
       return result;
    }

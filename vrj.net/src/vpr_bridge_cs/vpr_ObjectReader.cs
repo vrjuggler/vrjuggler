@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.76 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -50,9 +50,9 @@ public abstract class ObjectReader
 
    private void allocDelegates()
    {
-      m_beginTagDelegate_std_basic_string_char_std__char_traits_char__std__allocator_char__ = new beginTagDelegate_std_basic_string_char_std__char_traits_char__std__allocator_char__(beginTagAdapter);
+      m_beginTagDelegate_std_string = new beginTagDelegate_std_string(beginTagAdapter);
       m_endTagDelegate = new endTagDelegate(endTagAdapter);
-      m_beginAttributeDelegate_std_basic_string_char_std__char_traits_char__std__allocator_char__ = new beginAttributeDelegate_std_basic_string_char_std__char_traits_char__std__allocator_char__(beginAttributeAdapter);
+      m_beginAttributeDelegate_std_string = new beginAttributeDelegate_std_string(beginAttributeAdapter);
       m_endAttributeDelegate = new endAttributeDelegate(endAttributeAdapter);
       m_resetReadingDelegate = new resetReadingDelegate(resetReading);
       m_pushStateDelegate = new pushStateDelegate(pushState);
@@ -65,13 +65,13 @@ public abstract class ObjectReader
       m_readDoubleDelegate = new readDoubleDelegate(readDouble);
       m_readStringDelegate = new readStringDelegate(readString);
       m_readBoolDelegate = new readBoolDelegate(readBool);
-      m_readUint8Delegate_unsigned_char = new readUint8Delegate_unsigned_char(readUint8);
-      m_readUint16Delegate_short_unsigned_int = new readUint16Delegate_short_unsigned_int(readUint16);
-      m_readUint32Delegate_unsigned_int = new readUint32Delegate_unsigned_int(readUint32);
-      m_readUint64Delegate_long_long_unsigned_int = new readUint64Delegate_long_long_unsigned_int(readUint64);
+      m_readUint8Delegate_vpr_Uint8 = new readUint8Delegate_vpr_Uint8(readUint8);
+      m_readUint16Delegate_vpr_Uint16 = new readUint16Delegate_vpr_Uint16(readUint16);
+      m_readUint32Delegate_vpr_Uint32 = new readUint32Delegate_vpr_Uint32(readUint32);
+      m_readUint64Delegate_vpr_Uint64 = new readUint64Delegate_vpr_Uint64(readUint64);
       m_readFloatDelegate_float = new readFloatDelegate_float(readFloat);
       m_readDoubleDelegate_double = new readDoubleDelegate_double(readDouble);
-      m_readStringDelegate_std_basic_string_char_std__char_traits_char__std__allocator_char__ = new readStringDelegate_std_basic_string_char_std__char_traits_char__std__allocator_char__(readString);
+      m_readStringDelegate_std_string = new readStringDelegate_std_string(readString);
       m_readBoolDelegate_bool = new readBoolDelegate_bool(readBool);
    }
 
@@ -127,8 +127,8 @@ public abstract class ObjectReader
       return beginTag(p0).mRawObject;
    }
 
-   public delegate IntPtr beginTagDelegate_std_basic_string_char_std__char_traits_char__std__allocator_char__(string p0);
-   protected beginTagDelegate_std_basic_string_char_std__char_traits_char__std__allocator_char__ m_beginTagDelegate_std_basic_string_char_std__char_traits_char__std__allocator_char__;
+   public delegate IntPtr beginTagDelegate_std_string(string p0);
+   protected beginTagDelegate_std_string m_beginTagDelegate_std_string;
 
    public abstract vpr.ReturnStatus beginTag(string p0);
 
@@ -151,8 +151,8 @@ public abstract class ObjectReader
       return beginAttribute(p0).mRawObject;
    }
 
-   public delegate IntPtr beginAttributeDelegate_std_basic_string_char_std__char_traits_char__std__allocator_char__(string p0);
-   protected beginAttributeDelegate_std_basic_string_char_std__char_traits_char__std__allocator_char__ m_beginAttributeDelegate_std_basic_string_char_std__char_traits_char__std__allocator_char__;
+   public delegate IntPtr beginAttributeDelegate_std_string(string p0);
+   protected beginAttributeDelegate_std_string m_beginAttributeDelegate_std_string;
 
    public abstract vpr.ReturnStatus beginAttribute(string p0);
 
@@ -247,58 +247,58 @@ public abstract class ObjectReader
 
 
    // Delegate for the readUint8() callback.
-   public delegate void readUint8Delegate_unsigned_char(ref byte p0);
-   protected readUint8Delegate_unsigned_char m_readUint8Delegate_unsigned_char;
+   public delegate void readUint8Delegate_vpr_Uint8(ref byte p0);
+   protected readUint8Delegate_vpr_Uint8 m_readUint8Delegate_vpr_Uint8;
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vpr_ObjectReader_readUint8__unsigned_char1(IntPtr obj,
+   private extern static void vpr_ObjectReader_readUint8__vpr_Uint81(IntPtr obj,
 	ref byte p0);
 
    public virtual void readUint8(ref byte p0)
    {
-      vpr_ObjectReader_readUint8__unsigned_char1(mRawObject, ref p0);
+      vpr_ObjectReader_readUint8__vpr_Uint81(mRawObject, ref p0);
    }
 
 
    // Delegate for the readUint16() callback.
-   public delegate void readUint16Delegate_short_unsigned_int(ref ushort p0);
-   protected readUint16Delegate_short_unsigned_int m_readUint16Delegate_short_unsigned_int;
+   public delegate void readUint16Delegate_vpr_Uint16(ref ushort p0);
+   protected readUint16Delegate_vpr_Uint16 m_readUint16Delegate_vpr_Uint16;
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vpr_ObjectReader_readUint16__short_unsigned_int1(IntPtr obj,
+   private extern static void vpr_ObjectReader_readUint16__vpr_Uint161(IntPtr obj,
 	ref ushort p0);
 
    public virtual void readUint16(ref ushort p0)
    {
-      vpr_ObjectReader_readUint16__short_unsigned_int1(mRawObject, ref p0);
+      vpr_ObjectReader_readUint16__vpr_Uint161(mRawObject, ref p0);
    }
 
 
    // Delegate for the readUint32() callback.
-   public delegate void readUint32Delegate_unsigned_int(ref uint p0);
-   protected readUint32Delegate_unsigned_int m_readUint32Delegate_unsigned_int;
+   public delegate void readUint32Delegate_vpr_Uint32(ref uint p0);
+   protected readUint32Delegate_vpr_Uint32 m_readUint32Delegate_vpr_Uint32;
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vpr_ObjectReader_readUint32__unsigned_int1(IntPtr obj,
+   private extern static void vpr_ObjectReader_readUint32__vpr_Uint321(IntPtr obj,
 	ref uint p0);
 
    public virtual void readUint32(ref uint p0)
    {
-      vpr_ObjectReader_readUint32__unsigned_int1(mRawObject, ref p0);
+      vpr_ObjectReader_readUint32__vpr_Uint321(mRawObject, ref p0);
    }
 
 
    // Delegate for the readUint64() callback.
-   public delegate void readUint64Delegate_long_long_unsigned_int(ref ulong p0);
-   protected readUint64Delegate_long_long_unsigned_int m_readUint64Delegate_long_long_unsigned_int;
+   public delegate void readUint64Delegate_vpr_Uint64(ref ulong p0);
+   protected readUint64Delegate_vpr_Uint64 m_readUint64Delegate_vpr_Uint64;
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vpr_ObjectReader_readUint64__long_long_unsigned_int1(IntPtr obj,
+   private extern static void vpr_ObjectReader_readUint64__vpr_Uint641(IntPtr obj,
 	ref ulong p0);
 
    public virtual void readUint64(ref ulong p0)
    {
-      vpr_ObjectReader_readUint64__long_long_unsigned_int1(mRawObject, ref p0);
+      vpr_ObjectReader_readUint64__vpr_Uint641(mRawObject, ref p0);
    }
 
 
@@ -331,16 +331,16 @@ public abstract class ObjectReader
 
 
    // Delegate for the readString() callback.
-   public delegate void readStringDelegate_std_basic_string_char_std__char_traits_char__std__allocator_char__(string p0);
-   protected readStringDelegate_std_basic_string_char_std__char_traits_char__std__allocator_char__ m_readStringDelegate_std_basic_string_char_std__char_traits_char__std__allocator_char__;
+   public delegate void readStringDelegate_std_string(string p0);
+   protected readStringDelegate_std_string m_readStringDelegate_std_string;
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vpr_ObjectReader_readString__std_basic_string_char_std__char_traits_char__std__allocator_char__1(IntPtr obj,
+   private extern static void vpr_ObjectReader_readString__std_string1(IntPtr obj,
 	string p0);
 
    public virtual void readString(string p0)
    {
-      vpr_ObjectReader_readString__std_basic_string_char_std__char_traits_char__std__allocator_char__1(mRawObject, p0);
+      vpr_ObjectReader_readString__std_string1(mRawObject, p0);
    }
 
 
@@ -383,13 +383,13 @@ public class ObjectReaderMarshaler : ICustomMarshaler
       [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
       [return : MarshalAs(UnmanagedType.CustomMarshaler,
                           MarshalTypeRef = typeof(vpr.ReturnStatusMarshaler))]
-      private extern static vpr.ReturnStatus vpr_ObjectReader_beginTag__std_basic_string_char_std__char_traits_char__std__allocator_char__1(IntPtr obj,
+      private extern static vpr.ReturnStatus vpr_ObjectReader_beginTag__std_string1(IntPtr obj,
 	string p0);
 
       public override vpr.ReturnStatus beginTag(string p0)
       {
          vpr.ReturnStatus result;
-         result = vpr_ObjectReader_beginTag__std_basic_string_char_std__char_traits_char__std__allocator_char__1(mRawObject, p0);
+         result = vpr_ObjectReader_beginTag__std_string1(mRawObject, p0);
          return result;
       }
 
@@ -408,13 +408,13 @@ public class ObjectReaderMarshaler : ICustomMarshaler
       [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
       [return : MarshalAs(UnmanagedType.CustomMarshaler,
                           MarshalTypeRef = typeof(vpr.ReturnStatusMarshaler))]
-      private extern static vpr.ReturnStatus vpr_ObjectReader_beginAttribute__std_basic_string_char_std__char_traits_char__std__allocator_char__1(IntPtr obj,
+      private extern static vpr.ReturnStatus vpr_ObjectReader_beginAttribute__std_string1(IntPtr obj,
 	string p0);
 
       public override vpr.ReturnStatus beginAttribute(string p0)
       {
          vpr.ReturnStatus result;
-         result = vpr_ObjectReader_beginAttribute__std_basic_string_char_std__char_traits_char__std__allocator_char__1(mRawObject, p0);
+         result = vpr_ObjectReader_beginAttribute__std_string1(mRawObject, p0);
          return result;
       }
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.76 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -166,13 +166,13 @@ public sealed class PositionProxy
 
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool gadget_PositionProxy_config__boost_shared_ptr_jccl__ConfigElement1(IntPtr obj,
+   private extern static bool gadget_PositionProxy_config__jccl_ConfigElementPtr1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
    public override bool config(jccl.ConfigElement p0)
    {
       bool result;
-      result = gadget_PositionProxy_config__boost_shared_ptr_jccl__ConfigElement1(mRawObject, p0);
+      result = gadget_PositionProxy_config__jccl_ConfigElementPtr1(mRawObject, p0);
       return result;
    }
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.76 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -50,7 +50,7 @@ public abstract class Proxy
 
    private void allocDelegates()
    {
-      m_configDelegate_boost_shared_ptr_jccl__ConfigElement = new configDelegate_boost_shared_ptr_jccl__ConfigElement(config);
+      m_configDelegate_jccl_ConfigElementPtr = new configDelegate_jccl_ConfigElementPtr(config);
       m_refreshDelegate = new refreshDelegate(refresh);
       m_updateDataDelegate = new updateDataDelegate(updateData);
       m_getProxiedInputDeviceDelegate = new getProxiedInputDeviceDelegate(getProxiedInputDeviceAdapter);
@@ -65,12 +65,12 @@ public abstract class Proxy
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_Proxy_Proxy__0([MarshalAs(UnmanagedType.FunctionPtr)] configDelegate_boost_shared_ptr_jccl__ConfigElement d0, [MarshalAs(UnmanagedType.FunctionPtr)] refreshDelegate d1, [MarshalAs(UnmanagedType.FunctionPtr)] updateDataDelegate d2, [MarshalAs(UnmanagedType.FunctionPtr)] getProxiedInputDeviceDelegate d3, [MarshalAs(UnmanagedType.FunctionPtr)] isStupifiedDelegate d4, [MarshalAs(UnmanagedType.FunctionPtr)] getTimeStampDelegate d5);
+   private extern static IntPtr gadget_Proxy_Proxy__0([MarshalAs(UnmanagedType.FunctionPtr)] configDelegate_jccl_ConfigElementPtr d0, [MarshalAs(UnmanagedType.FunctionPtr)] refreshDelegate d1, [MarshalAs(UnmanagedType.FunctionPtr)] updateDataDelegate d2, [MarshalAs(UnmanagedType.FunctionPtr)] getProxiedInputDeviceDelegate d3, [MarshalAs(UnmanagedType.FunctionPtr)] isStupifiedDelegate d4, [MarshalAs(UnmanagedType.FunctionPtr)] getTimeStampDelegate d5);
 
    public Proxy()
    {
       allocDelegates();
-      mRawObject   = gadget_Proxy_Proxy__0(m_configDelegate_boost_shared_ptr_jccl__ConfigElement, m_refreshDelegate, m_updateDataDelegate, m_getProxiedInputDeviceDelegate, m_isStupifiedDelegate, m_getTimeStampDelegate);
+      mRawObject   = gadget_Proxy_Proxy__0(m_configDelegate_jccl_ConfigElementPtr, m_refreshDelegate, m_updateDataDelegate, m_getProxiedInputDeviceDelegate, m_isStupifiedDelegate, m_getTimeStampDelegate);
       mWeOwnMemory = true;
    }
 
@@ -112,12 +112,12 @@ public abstract class Proxy
 
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gadget_Proxy_setName__std_basic_string_char_std__char_traits_char__std__allocator_char__1(IntPtr obj,
+   private extern static void gadget_Proxy_setName__std_string1(IntPtr obj,
 	string p0);
 
    public  void setName(string p0)
    {
-      gadget_Proxy_setName__std_basic_string_char_std__char_traits_char__std__allocator_char__1(mRawObject, p0);
+      gadget_Proxy_setName__std_string1(mRawObject, p0);
    }
 
 
@@ -143,17 +143,17 @@ public abstract class Proxy
 
    // Start of virtual methods.
    // Delegate for the config() callback.
-   public delegate bool configDelegate_boost_shared_ptr_jccl__ConfigElement([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
-   protected configDelegate_boost_shared_ptr_jccl__ConfigElement m_configDelegate_boost_shared_ptr_jccl__ConfigElement;
+   public delegate bool configDelegate_jccl_ConfigElementPtr([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
+   protected configDelegate_jccl_ConfigElementPtr m_configDelegate_jccl_ConfigElementPtr;
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool gadget_Proxy_config__boost_shared_ptr_jccl__ConfigElement1(IntPtr obj,
+   private extern static bool gadget_Proxy_config__jccl_ConfigElementPtr1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
    public virtual bool config(jccl.ConfigElement p0)
    {
       bool result;
-      result = gadget_Proxy_config__boost_shared_ptr_jccl__ConfigElement1(mRawObject, p0);
+      result = gadget_Proxy_config__jccl_ConfigElementPtr1(mRawObject, p0);
       return result;
    }
 

@@ -97,7 +97,7 @@ extern "C"
 
 
    // Wrapper for virtual method gadget::PositionProxy::config()
-   SHARPPY_API bool gadget_PositionProxy_config__boost_shared_ptr_jccl__ConfigElement1(gadget::PositionProxy* self_, boost::shared_ptr<jccl::ConfigElement>* p0)
+   SHARPPY_API bool gadget_PositionProxy_config__jccl_ConfigElementPtr1(gadget::PositionProxy* self_, jccl::ConfigElementPtr* p0)
    {
       bool result;
       result = self_->config(*p0);
@@ -117,7 +117,7 @@ extern "C"
    // Wrapper for static method gadget::PositionProxy::getElementType()
    SHARPPY_API char* gadget_PositionProxy_getElementType__0()
    {
-      std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
+      std::string temp_result;
       char* result;
       temp_result = gadget::PositionProxy::getElementType();
       result = strdup(temp_result.c_str());

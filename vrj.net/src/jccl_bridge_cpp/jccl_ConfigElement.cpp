@@ -42,7 +42,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API boost::shared_ptr< jccl::ConfigElement >* jccl_ConfigElement_ConfigElement__boost_shared_ptr_jccl__ConfigDefinition1(boost::shared_ptr<jccl::ConfigDefinition>* p0)
+   SHARPPY_API boost::shared_ptr< jccl::ConfigElement >* jccl_ConfigElement_ConfigElement__jccl_ConfigDefinitionPtr1(jccl::ConfigDefinitionPtr* p0)
    {
       boost::shared_ptr< jccl::ConfigElement >* obj = new boost::shared_ptr< jccl::ConfigElement >(new jccl::ConfigElement(*p0));
       return obj;
@@ -78,16 +78,16 @@ extern "C"
 
 
    // Wrapper for non-virtual method jccl::ConfigElement::getChildElement()
-   SHARPPY_API boost::shared_ptr<jccl::ConfigElement>* jccl_ConfigElement_getChildElement__std_basic_string_char_std__char_traits_char__std__allocator_char__1(boost::shared_ptr< jccl::ConfigElement >* self_ptr, const char* p0)
+   SHARPPY_API jccl::ConfigElementPtr* jccl_ConfigElement_getChildElement__std_string1(boost::shared_ptr< jccl::ConfigElement >* self_ptr, const char* p0)
    {
-      boost::shared_ptr<jccl::ConfigElement>* result;
-      result = new boost::shared_ptr<jccl::ConfigElement>((*self_ptr)->getChildElement(p0));
+      jccl::ConfigElementPtr* result;
+      result = new jccl::ConfigElementPtr((*self_ptr)->getChildElement(p0));
       return result;
    }
 
 
    // Wrapper for non-virtual method jccl::ConfigElement::getNum()
-   SHARPPY_API int jccl_ConfigElement_getNum__std_basic_string_char_std__char_traits_char__std__allocator_char__1(boost::shared_ptr< jccl::ConfigElement >* self_ptr, const char* p0)
+   SHARPPY_API int jccl_ConfigElement_getNum__std_string1(boost::shared_ptr< jccl::ConfigElement >* self_ptr, const char* p0)
    {
       int result;
       result = (*self_ptr)->getNum(p0);
@@ -98,7 +98,7 @@ extern "C"
    // Wrapper for non-virtual method jccl::ConfigElement::getName()
    SHARPPY_API char* jccl_ConfigElement_getName__0(boost::shared_ptr< jccl::ConfigElement >* self_ptr)
    {
-      std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
+      std::string temp_result;
       char* result;
       temp_result = (*self_ptr)->getName();
       result = strdup(temp_result.c_str());
@@ -109,7 +109,7 @@ extern "C"
    // Wrapper for non-virtual method jccl::ConfigElement::getFullName()
    SHARPPY_API char* jccl_ConfigElement_getFullName__0(boost::shared_ptr< jccl::ConfigElement >* self_ptr)
    {
-      std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
+      std::string temp_result;
       char* result;
       temp_result = (*self_ptr)->getFullName();
       result = strdup(temp_result.c_str());
@@ -129,7 +129,7 @@ extern "C"
    // Wrapper for non-virtual method jccl::ConfigElement::getID()
    SHARPPY_API char* jccl_ConfigElement_getID__0(boost::shared_ptr< jccl::ConfigElement >* self_ptr)
    {
-      std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
+      std::string temp_result;
       char* result;
       temp_result = (*self_ptr)->getID();
       result = strdup(temp_result.c_str());
@@ -138,7 +138,7 @@ extern "C"
 
 
    // Wrapper for non-virtual method jccl::ConfigElement::setProperty()
-   SHARPPY_API bool jccl_ConfigElement_setProperty__std_basic_string_char_std__char_traits_char__std__allocator_char___int_bool3(boost::shared_ptr< jccl::ConfigElement >* self_ptr, const char* p0, const int p1, bool p2)
+   SHARPPY_API bool jccl_ConfigElement_setProperty__std_string_int_bool3(boost::shared_ptr< jccl::ConfigElement >* self_ptr, const char* p0, const int p1, bool p2)
    {
       bool result;
       result = (*self_ptr)->setProperty(p0, p1, p2);
@@ -147,7 +147,7 @@ extern "C"
 
 
    // Wrapper for non-virtual method jccl::ConfigElement::setProperty()
-   SHARPPY_API bool jccl_ConfigElement_setProperty__std_basic_string_char_std__char_traits_char__std__allocator_char___int_boost_shared_ptr_jccl__ConfigElement3(boost::shared_ptr< jccl::ConfigElement >* self_ptr, const char* p0, const int p1, boost::shared_ptr<jccl::ConfigElement>* p2)
+   SHARPPY_API bool jccl_ConfigElement_setProperty__std_string_int_jccl_ConfigElementPtr3(boost::shared_ptr< jccl::ConfigElement >* self_ptr, const char* p0, const int p1, jccl::ConfigElementPtr* p2)
    {
       bool result;
       result = (*self_ptr)->setProperty(p0, p1, *p2);
@@ -156,7 +156,7 @@ extern "C"
 
 
    // Wrapper for non-virtual method jccl::ConfigElement::setDefinition()
-   SHARPPY_API void jccl_ConfigElement_setDefinition__boost_shared_ptr_jccl__ConfigDefinition1(boost::shared_ptr< jccl::ConfigElement >* self_ptr, boost::shared_ptr<jccl::ConfigDefinition>* p0)
+   SHARPPY_API void jccl_ConfigElement_setDefinition__jccl_ConfigDefinitionPtr1(boost::shared_ptr< jccl::ConfigElement >* self_ptr, jccl::ConfigDefinitionPtr* p0)
    {
       (*self_ptr)->setDefinition(*p0);
    }
