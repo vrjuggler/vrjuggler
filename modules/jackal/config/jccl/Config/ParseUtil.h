@@ -45,23 +45,13 @@ namespace jccl
  *  @param str A non-NULL c string.
  *  @return The VarType named by str (VJ_T_INVALID if no match).
  */
-VarType stringToVarType (const std::string& str);
+VarType stringToVarType(const std::string& str);
 
 /** Converts a VarType enum elem to a c string.
  *  @param t A VarType (see jccl/Config/VarValue.h)
  *  @return A non-NULL c string.
  */
-std::string typeString (const VarType t);
-
-/** Converts a CfgUnit to a c string. */
-char *unitString (CfgUnit t);
-
-/** Converts a value to feet.
- *  @param val A distance in some unit.
- *  @param unit The units that val is measured in.
- *  @return The distance val converted to feet.
- */
-float toFeet (float val, CfgUnit unit);
+std::string typeString(const VarType t);
 
 /** Demangle a filename so that it can be passed to open().
  *  @param n A filename.
@@ -74,7 +64,7 @@ float toFeet (float val, CfgUnit unit);
  *          to a file, so if n is "included_file" and parentfile is
  *          "mydir/including_file", the result will be "mydir/included_file".
  */
-std::string demangleFileName (const std::string& n, std::string parentfile);
+std::string demangleFileName(const std::string& n, std::string parentfile);
 
 /** Looks for a file in a path, and opens it if found.
  *
@@ -94,13 +84,13 @@ JCCL_API(vpr::ReturnStatus) findFileUsingPathVar(const std::string& file_name,
                                                  std::string& absolute_file);
 
 /** Does the given path have a separator */
-bool hasSeparator (const std::string &path);
+bool hasSeparator(const std::string &path);
 
 /** Get the part of the path after the separator */
-std::string getRemainder (const std::string &path);
+std::string getRemainder(const std::string &path);
 
 /** Get the part of the path before the separator */
-std::string getFirstNameComponent (const std::string& path);
+std::string getFirstNameComponent(const std::string& path);
 
 } // End of jccl namespace
 
