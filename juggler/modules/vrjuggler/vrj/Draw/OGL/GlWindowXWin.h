@@ -84,12 +84,28 @@ public:
     * Processes window systems events each frame.
     */
    virtual void checkEvents();
-
+   
    void configWindow(vrj::Display* disp);
 
    virtual bool createHardwareSwapGroup(const std::vector<vrj::GlWindow*>& wins);
 
 protected:
+   /** Do any extra event processing needed. */
+   virtual void processEvent(::XEvent event)
+   {
+      switch ( event.type )
+      {
+         case ConfigureNotify:
+            updateOriginSize(vrj::GlWindow::mOriginX, vrj::GlWindow::mOriginY,
+                             event.xconfigure.width, event.xconfigure.height);
+            vrj::GlWindow::setDirtyViewport(true);
+            break;
+
+         default:
+            break;
+      }
+   }
+
 
    XVisualInfo* getGlxVisInfo(::Display* display, int screen);
 
