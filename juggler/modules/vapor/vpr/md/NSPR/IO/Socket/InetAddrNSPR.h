@@ -295,8 +295,8 @@ public:
     bool
     operator== (const InetAddrNSPR& addr) {
         return ((mAddr.inet.family == addr.mAddr.inet.family) &&
-                (mAddr.inet.port == mAddr.inet.port) &&
-                (mAddr.inet.ip == mAddr.inet.ip));
+                (mAddr.inet.port == addr.mAddr.inet.port) &&
+                (mAddr.inet.ip == addr.mAddr.inet.ip));
     }
 
     // ------------------------------------------------------------------------
