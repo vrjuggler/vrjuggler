@@ -61,7 +61,7 @@ public:
    }
 };
 
-void main(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
    vjKernel* kernel = vjKernel::instance(); // Declare a new Kernel
    simplePfNavApp* application = new simplePfNavApp();  // Delcare an instance of my application
@@ -76,7 +76,7 @@ void main(int argc, char* argv[])
    {
       usage( argv );
       std::cout<<"\n\n[ERROR!!!] you must supply a model database (then config files)\n\n"<<std::flush;
-      return;
+      return 1;
    }
 
    std::string model_filename = argv[1];
@@ -85,7 +85,7 @@ void main(int argc, char* argv[])
    if (argc < 3)
    {
       std::cout<<"\n\n[ERROR!!!] you must supply config files after the model file...\n\n"<<std::flush;
-      return;
+      return 2;
    }
 
    std::cout<<"==========\n"<<std::flush;

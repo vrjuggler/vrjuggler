@@ -40,7 +40,7 @@
 #include <Kernel/vjKernel.h>
 #include <pfBasicConfigNavApp.h>
 
-void main(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
    vjKernel* kernel = vjKernel::instance();                             // Declare a new Kernel
    pfBasicConfigNavApp* application = new pfBasicConfigNavApp();  // Delcare an instance of my application
@@ -62,5 +62,3 @@ void main(int argc, char* argv[])
       usleep( 100000 );
    }
 }
-
-
