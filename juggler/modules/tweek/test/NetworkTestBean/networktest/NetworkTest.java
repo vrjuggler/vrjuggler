@@ -1,9 +1,10 @@
-package networktest;
+ ackage networktest;
 
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
+import orb.omg.CORBA.BAD_PARAM;
 import org.vrjuggler.tweek.event.*;
 import org.vrjuggler.tweek.net.*;
 import org.vrjuggler.tweek.net.corba.*;
@@ -11,6 +12,10 @@ import tweek.*;
 
 
 /**
+ * This is an example of a JavaBean that Tweek can load dynamically.  It holds
+ * a JSlider and a (broken) JTextArea that act as Observers in the Tweek CORBA
+ * Subject/Observer pattern implementation.
+ *
  * @version 1.0
  */
 public class NetworkTest
@@ -29,35 +34,99 @@ public class NetworkTest
       }
    }
 
+   /**
+    * Implements the Tweek CommunicationListener interface needed for being
+    * informed of connections and disconnections with remote CORBA servers.
+    */
    public void connectionStateChanged (CommunicationEvent e)
    {
+      // The first thing to do is get the CORBA service object from the
+      // event.  We need this so we know to whom we are are connecting.  Once
+      // we have the CORBA service, we get its Subject Manager since that's
+      // what contains the actual subjects we need.
       CorbaService corba_service = e.getCorbaService();
       SubjectManager mgr         = corba_service.getSubjectManager();
 
       Subject subject = mgr.getSubject("SliderSubject");
-      SliderSubject slider_subject = SliderSubjectHelper.narrow(subject);
-      subject = mgr.getSubject("WhiteboardSubject");
-      WhiteboardSubject whiteboard_subject = WhiteboardSubjectHelper.narrow(subject);
+      SliderSubject slider_subject = null;
 
+      // Try to narrow the Subjet object to a SliderSubject object.  If this
+      // fails, it throws a CORBA BAD_PARAM exception.  In that case, we open
+      // a dialog box saying that the narrowing failed.
+      try
+      {
+         slider_subject = SliderSubjectHelper.narrow(subject);
+      }
+      catch (BAD_PARAM narrow_ex)
+      {
+         JOptionPane.showMessageDialog(null,
+                                       "Failed to narrow subject to SliderSubject",
+                                       "SliderSubject Narrow Error",
+                                       JOptionPane.ERROR_MESSAGE);
+      }
+
+      subject = mgr.getSubject("WhiteboardSubject");
+      WhiteboardSubject whiteboard_subject = null;
+
+      // Try to do the same narrowing as above, but this time for Subject to
+      // WhitboardSubjectHelper.
+      try
+      {
+         whiteboard_subject = WhiteboardSubjectHelper.narrow(subject);
+      }
+      catch (BAD_PARAM narrow_ex)
+      {
+         JOptionPane.showMessageDialog(null,
+                                       "Failed to narrow subject to WhiteboardSubject",
+                                       "WhiteboardSubject Narrow Error",
+                                       JOptionPane.ERROR_MESSAGE);
+      }
+
+      // Handle a CORBA connection event from Tweek.
       if ( CommunicationEvent.CONNECT == e.getType() )
       {
-         m_slider_observer = new SliderObserverImpl(m_data_slider, slider_subject);
-         corba_service.registerObject(m_slider_observer, "SliderObserver");
-         slider_subject.attach(m_slider_observer._this());
-         m_data_slider.setValue(slider_subject.getValue());
-         m_data_slider.addChangeListener(new SliderChangeListener(slider_subject));
+         // Ensure that slider_subject is a valid object just to be safe.
+         if ( slider_subject != null )
+         {
+            // First, we need a Java object that implements the Observer.  That
+            // object must be registered with the Java CORBA service.
+            m_slider_observer = new SliderObserverImpl(m_data_slider,
+                                                       slider_subject);
+            corba_service.registerObject(m_slider_observer, "SliderObserver");
 
-         m_whiteboard_observer = new WhiteboardObserverImpl(m_whiteboard,
-                                                            whiteboard_subject);
-         corba_service.registerObject(m_whiteboard_observer, "WhiteboardObserver");
-         whiteboard_subject.attach(m_whiteboard_observer._this());
-         m_whiteboard.setText(whiteboard_subject.getAllText());
-         m_whiteboard.getDocument().addDocumentListener(new DocumentChangeListener(whiteboard_subject));
+            // Now that the observer is registered, we can attach it to the
+            // subject.  The subject needs to know who its observers are so
+            // that it can notify them of updates.
+            slider_subject.attach(m_slider_observer._this());
+
+            // Now we set the slider in our GUI to be whatever value the
+            // remote subject is holding for us.
+            m_data_slider.setValue(slider_subject.getValue());
+            m_data_slider.addChangeListener(new SliderChangeListener(slider_subject));
+         }
+
+         if ( whiteboard_subject != null )
+         {
+            m_whiteboard_observer = new WhiteboardObserverImpl(m_whiteboard,
+                                                               whiteboard_subject);
+            corba_service.registerObject(m_whiteboard_observer, "WhiteboardObserver");
+            whiteboard_subject.attach(m_whiteboard_observer._this());
+            m_whiteboard.setText(whiteboard_subject.getAllText());
+            m_whiteboard.getDocument().addDocumentListener(new DocumentChangeListener(whiteboard_subject));
+         }
       }
+      // Handle a CORBA disconnect event from Tweek.
       else if ( CommunicationEvent.DISCONNECT == e.getType() )
       {
-         slider_subject.detach(m_slider_observer._this());
-         whiteboard_subject.detach(m_whiteboard_observer._this());
+         if ( slider_subject != null )
+         {
+            slider_subject.detach(m_slider_observer._this());
+         }
+
+         if ( whiteboard_subject != null )
+         {
+            whiteboard_subject.detach(m_whiteboard_observer._this());
+         }
       }
    }
 
