@@ -61,10 +61,15 @@ void GlWindowOSX::swapBuffers() {
     if(aglContext)
     {
         aglSwapBuffers (aglContext);
-
+        
+        /* This code is supposed to change the size of the window
+        ** it works but it is a wast to check to size if the window is a
+        ** different size every frame.  If we want to implement this feature
+        ** we should capture the window resize event and change based on that
         Rect rectPort;
         if(gpWindow)
         {
+            //If the window changed size
             GetWindowPortBounds (gpWindow, &rectPort);
             int newWidth = rectPort.right - rectPort.left;
             int newHeight = rectPort.bottom - rectPort.top;
@@ -77,11 +82,13 @@ void GlWindowOSX::swapBuffers() {
                 glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
                 glClear (GL_COLOR_BUFFER_BIT);
                 aglSwapBuffers (aglContext);
-
+                    
                 glViewport (0, 0, rectPort.right - rectPort.left, rectPort.bottom - rectPort.top);
             }
         }
+        */
     }
+   
 }
 
 int GlWindowOSX::open() {
@@ -89,11 +96,22 @@ int GlWindowOSX::open() {
 
     GDHandle hGDWindow;
 
+    //Get the size of the screen from core graphics
+    //I'll need to check to see how this works with multiple monitors
+    CGRect bounds;
+    bounds = CGDisplayBounds(kCGDirectMainDisplay);
+    
+    
+    //set the window size and location with the height adjusted
+    SetRect(&rectWin, origin_x , bounds.size.height - origin_y - window_height,
+                            origin_x + window_width, bounds.size.height - origin_y);
+                            /* left, top, right, bottom */
+    /*
     rectWin.top = origin_y;
     rectWin.left = origin_x;
     rectWin.bottom = origin_y + window_height;
     rectWin.right = origin_x + window_width;
-
+    */
     if (noErr != CreateNewWindow (kDocumentWindowClass, kWindowStandardDocumentAttributes | kWindowNoShadowAttribute | kWindowLiveResizeAttribute, &rectWin, &gpWindow))
     {
         vprDEBUG(vrjDBG_DRAW_MGR,0) << "vjGlWindowOSX::open()    Window failed to open!" << std::endl << vprDEBUG_FLUSH;
@@ -108,7 +126,7 @@ int GlWindowOSX::open() {
     glInfo.fAcceleratedMust = false;    // must renderer be accelerated?
     glInfo.VRAM = 0 * 1048576;          // minimum VRAM (if not zero this is always required)
     glInfo.textureRAM = 0 * 1048576;    // minimum texture RAM (if not zero this is always required)
-    glInfo.fDraggable = false;      // desired vertical refresh frquency in Hz (0 = any)
+    glInfo.fDraggable = false;      // desired vertical refresh frequency in Hz (0 = any)
     glInfo.fmt = 0;                 // output pixel format
 
     int i = 0;
