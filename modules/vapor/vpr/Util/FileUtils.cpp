@@ -33,6 +33,8 @@ std::string replaceEnvVars(const std::string str)
 
    ret_str = replaceEnvVars(ret_str, std::string("${"), std::string("}") );
    ret_str = replaceEnvVars(ret_str, std::string("$("), std::string(")") );
+
+   return ret_str;
 }
 
 } // End of vpr namespace
