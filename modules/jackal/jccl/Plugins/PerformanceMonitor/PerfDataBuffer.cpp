@@ -33,14 +33,12 @@
 
 #include <jccl/Performance/PerfDataBuffer.h>
 #include <vpr/Util/Debug.h>
-//#include <Math/Math.h>
 
 namespace jccl {
 
-void PerfDataBuffer::init (const char* _name, int _numbufs,
-				    int _nindex) {
+PerfDataBuffer::PerfDataBuffer (const std::string& _name, int _numbufs,
+                                int _nindex) {
     name = _name;
-    handler_name = "c_performance";
     numbufs = _numbufs;
     buffer = new buf_entry[numbufs];
     read_begin = 0;
@@ -57,7 +55,6 @@ void PerfDataBuffer::init (const char* _name, int _numbufs,
 PerfDataBuffer::~PerfDataBuffer () {
     active = 0;
     delete buffer;
-    //delete name;
 }
 
 
