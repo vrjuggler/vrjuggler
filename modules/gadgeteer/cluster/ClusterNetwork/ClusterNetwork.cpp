@@ -630,12 +630,31 @@ namespace cluster
       if (recognizeClusterMachineConfig(element))
       {
          // -If local machine element
+         //   -Add machine specific ConfigElements to the pending list.
          //   -Start Listening thread
          // -Else
          //   -Add Node to ClusterNetwork
 
          if (isLocalHost(element->getProperty<std::string>("host_name")))
          {
+            // NOTE: Add all machine dependent ConfigElementPtr's here
+            vprASSERT(element->getNum("display_system") == 1 && "A Cluster System element must have exactly 1 display_system element");
+
+            std::vector<jccl::ConfigElementPtr> machine_specific_elements = element->getChildElements();
+
+            for (std::vector<jccl::ConfigElementPtr>::iterator i = machine_specific_elements.begin();
+                 i != machine_specific_elements.end();
+                 i++)
+            {
+               jccl::ConfigManager::PendingElement pending;
+               pending.mType = jccl::ConfigManager::PendingElement::ADD;
+               pending.mElement = (*i);
+               jccl::ConfigManager::instance()->addPending(pending);
+               vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << clrSetBOLD(clrCYAN)
+                  << "[ClusterNetwork] Adding Machine specific ConfigElement: "
+                  << (*i)->getName() << clrRESET << std::endl << vprDEBUG_FLUSH;
+            }
+            
             const int listen_port = element->getProperty<int>("listen_port");
             startListening(listen_port);
          }
