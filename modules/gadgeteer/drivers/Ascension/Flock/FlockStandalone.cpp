@@ -157,7 +157,7 @@ vpr::ReturnStatus FlockStandalone::open()
    vprDEBUG_BEGIN(vprDBG_ALL,vprDBG_CONFIG_LVL) << "====== Opening fob serial port: " << mPort << " =====\n" << vprDEBUG_FLUSH;
 
    bool open_successfull;
-   unsigned attempt_num = 0;
+   unsigned int attempt_num = 0;
    const unsigned max_open_attempts(7);
    
    // Allocate the port if we need to
@@ -220,14 +220,14 @@ vpr::ReturnStatus FlockStandalone::open()
          vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
             << "Resetting flock (using RTS signal)." << vprDEBUG_FLUSH;
          mSerialPort->setRequestToSend(true);
-         for(unsigned i=0;i<5;++i)
+         for(unsigned int i=0;i<5;++i)
          {
             vpr::System::msleep(200);
             vprDEBUG_CONT(vprDBG_ALL, vprDBG_CONFIG_LVL) << "." << vprDEBUG_FLUSH;
          }
 
          mSerialPort->setRequestToSend(false);              // Set RTS low to allow the flock to start back up
-         for(unsigned i=0;i<5;++i)
+         for(unsigned int i=0;i<5;++i)
          {
             vpr::System::msleep(200);
             vprDEBUG_CONT(vprDBG_ALL, vprDBG_CONFIG_LVL)
@@ -412,19 +412,19 @@ void FlockStandalone::sample()
    vpr::Uint32 bytes_remaining;
    const vpr::Uint8 phase_mask(1<<7);     // Mask for finding phasing bit
 
-   unsigned single_bird_data_size = Flock::Output::getDataSize(mOutputFormat);
+   unsigned int single_bird_data_size = Flock::Output::getDataSize(mOutputFormat);
    if(Flock::Standalone != mMode)      // If we are in group mode, then it is one byte longer (the bird address for the sample)
    {
       single_bird_data_size += 1;
    }
-   const unsigned data_record_size(mNumSensors*single_bird_data_size);    // Size of the data record to read
+   const unsigned int data_record_size(mNumSensors*single_bird_data_size);    // Size of the data record to read
 
    bool sample_succeeded;        // Flag for success. When false, there was an error so repeat.
    
    // counter to track the number of times a read doesn't complete in stream mode.  This counter is
    // used to intelligently back off the reporting rate if needed (baud rate not high enough is the normal cause)
-   unsigned num_stream_read_failures = 0;
-   unsigned const stream_read_failure_limit(5);
+   unsigned int num_stream_read_failures = 0;
+   const unsigned int stream_read_failure_limit(5);
 
    // Try to send/read sample until it succeeds
    do
@@ -469,7 +469,7 @@ void FlockStandalone::sample()
                Flock::ReportRate report_rate = getReportRate();
                if(Flock::Every32 != report_rate)
                {
-                  Flock::ReportRate new_rate = Flock::ReportRate(unsigned(report_rate)+1);
+                  Flock::ReportRate new_rate = Flock::ReportRate((unsigned int)report_rate+1);
                   setReportRate(new_rate);
                }
                else
@@ -511,7 +511,7 @@ void FlockStandalone::sample()
 
             // Make sure the only phase bits the record are at the beginning
             // of a sensor record.
-            for(unsigned b=0;b<data_record.size();++b)
+            for(unsigned int b=0;b<data_record.size();++b)
             {  
                if((b%single_bird_data_size) && (phase_mask & data_record[b]))       // If it is not the start of a sensor record, and it has a phase bit
                {
@@ -524,7 +524,6 @@ void FlockStandalone::sample()
                   break;                           // We have a failure, so quite checking the bits
                }
             }
-                        
          }
       }
       catch(Flock::CommandFailureException& cfe)
@@ -544,7 +543,7 @@ void FlockStandalone::sample()
       }
    }
    while(!sample_succeeded);
-      
+
    // Process the data record
    vprASSERT(data_record[0] & phase_mask);
    processDataRecord(data_record);
@@ -740,7 +739,7 @@ void FlockStandalone::setOutputFormat(Flock::Output::Format format)
 }
 
 /** Sets the number of birds to use in the Flock. */
-void FlockStandalone::setNumSensors( const unsigned& n )
+void FlockStandalone::setNumSensors( const unsigned int& n )
 {
    if ( (FlockStandalone::CLOSED != mStatus) && (FlockStandalone::OPEN != mStatus) )
    {
@@ -770,12 +769,12 @@ void FlockStandalone::processDataRecord(std::vector<vpr::Uint8> dataRecord)
 {
    const vpr::Uint8 phase_mask(1<<7);     // Mask for finding phasing bit
 
-   unsigned single_bird_data_size = Flock::Output::getDataSize(mOutputFormat);
+   unsigned int single_bird_data_size = Flock::Output::getDataSize(mOutputFormat);
    if(Flock::Standalone != mMode)      // If we are in group mode, then it is one byte longer
    {
       single_bird_data_size += 1;
    }
-   const unsigned data_record_size(mNumSensors*single_bird_data_size);    // Size of the data record to read
+   const unsigned int data_record_size(mNumSensors*single_bird_data_size);    // Size of the data record to read
    vprASSERT(dataRecord.size() == data_record_size);
    vprASSERT(dataRecord[0] & phase_mask);
 
@@ -785,7 +784,7 @@ void FlockStandalone::processDataRecord(std::vector<vpr::Uint8> dataRecord)
    // - Store the sensor data
    for(vpr::Uint8 sensor=0; sensor<mNumSensors; ++sensor)
    {
-      unsigned data_offset = (single_bird_data_size*sensor);
+      unsigned int data_offset = (single_bird_data_size*sensor);
       vprASSERT(dataRecord[data_offset] & phase_mask && "Unit record within data record does not have correct phase mask");
       gmtl::Matrix44f sensor_mat = processSensorRecord(&(dataRecord[data_offset]));
       int sensor_number(0);                                              // In standalone mode, only read into sensor 0
@@ -806,7 +805,7 @@ void FlockStandalone::processDataRecord(std::vector<vpr::Uint8> dataRecord)
          sensor_number = mAddrToSensorIdMap[unit_addr]; 
          vprASSERT(sensor_number != -1 && "Got addr of unit we don't think has sensor");
       }
-      mSensorData[unsigned(sensor_number)] = sensor_mat;
+      mSensorData[(unsigned int)sensor_number] = sensor_mat;
    }
 }
 
@@ -955,11 +954,11 @@ float FlockStandalone::rawToFloat(const vpr::Uint8& MSchar,
 // ------------------------------------------------------------------------- //
 
 /** Gets the software revision on the bird. */
-std::pair<unsigned,unsigned> FlockStandalone::querySoftwareRevision()
+std::pair<unsigned int,unsigned int> FlockStandalone::querySoftwareRevision()
 {
    std::vector<vpr::Uint8> resp(2);
    getAttribute(Flock::Parameter::SoftwareRevision, 2, resp);
-   std::pair<unsigned,unsigned> sw_rev;
+   std::pair<unsigned int,unsigned int> sw_rev;
    sw_rev.first = resp[0];
    sw_rev.second = resp[1];
    return sw_rev;
@@ -971,7 +970,7 @@ std::string FlockStandalone::queryModelIdString()
    std::vector<vpr::Uint8> resp(10);
    getAttribute(Flock::Parameter::ModelIdentification, 10, resp);
    std::string model_id = "";
-   for(unsigned i=0;i<10;++i)
+   for(unsigned int i=0;i<10;++i)
    {
       model_id += char(resp[i]);
    }
@@ -1004,7 +1003,7 @@ vpr::Uint8 FlockStandalone::queryAddress()
 }
 
 /** Gets status of the bird. */
-vpr::Uint16 FlockStandalone::queryBirdStatus(unsigned addr)
+vpr::Uint16 FlockStandalone::queryBirdStatus(unsigned int addr)
 {
    if(0 != addr)
    {
@@ -1027,7 +1026,7 @@ std::vector<vpr::Uint8> FlockStandalone::querySystemStatus()
    std::vector<vpr::Uint8> sysStatus;
 
    // Find number of addresses that will be returned
-   unsigned num_addrs(14);
+   unsigned int num_addrs(14);
    if(Flock::ExpandedAddressing == mAddrMode)
    {
       num_addrs = 30;
@@ -1063,7 +1062,7 @@ void FlockStandalone::printFlockStatus()
    std::cout << "        port:" << mPort << std::endl;
    std::cout << "        baud:" << mBaud << std::endl;
 
-   for(unsigned i=0;i<mFlockUnits.size();++i)
+   for(unsigned int i=0;i<mFlockUnits.size();++i)
    {
       const FlockUnit& unit = mFlockUnits[i];
 
@@ -1118,7 +1117,7 @@ void FlockStandalone::printFlockStatus()
 
 }
 
-unsigned FlockStandalone::getMaxBirdAddr()
+unsigned int FlockStandalone::getMaxBirdAddr()
 {
    if(Flock::NormalAddressing == mAddrMode)
    {
@@ -1252,7 +1251,6 @@ void FlockStandalone::sendFilter()
    std::vector<vpr::Uint8> param(2);
    param[0] = 0x00;  // New filter state; This would turn on all filters
    param[1] = 0;     // Ignored
-
    setAttribute(Flock::Parameter::FilterStatus, param);
 }
 */
@@ -1299,7 +1297,7 @@ void FlockStandalone::sendCommand(vpr::Uint8 cmd, std::vector<vpr::Uint8> data )
       throw Flock::ConnectionException("NULL port");
    }
 
-   unsigned bytes_written;
+   unsigned int bytes_written;
 
    vpr::ReturnStatus ret_val = mSerialPort->write(&cmd, 1, bytes_written);
    if(ret_val.failure())
@@ -1357,7 +1355,7 @@ void FlockStandalone::sendCommandAll(vpr::Uint8 cmd,
                                      std::vector<vpr::Uint8> data,
                                      bool excludeErc)
 {
-   for(unsigned u=0;u<mActiveUnitEndIndex;++u)
+   for(unsigned int u=0;u<mActiveUnitEndIndex;++u)
    {
       const FlockUnit& unit = mFlockUnits[u];
       if(excludeErc && Transmitter::isErt(unit.mTransmitterType))
@@ -1378,7 +1376,7 @@ void FlockStandalone::sendCommandAll(vpr::Uint8 cmd,
  * @param respSize Expected size of the response.
  * @param respData Returned data.
  */
-void FlockStandalone::getAttribute(vpr::Uint8 attrib, unsigned respSize,
+void FlockStandalone::getAttribute(vpr::Uint8 attrib, unsigned int respSize,
                                    std::vector<vpr::Uint8>& respData)
 {
    vpr::ReturnStatus ret_stat;
@@ -1417,7 +1415,7 @@ void FlockStandalone::getAttribute(vpr::Uint8 attrib, unsigned respSize,
    
    // Read response and then flush the port to make sure we don't leave
    // anything extra.
-   mSerialPort->readn(respData, respSize, bytes_read, mReadTimeout);
+   mSerialPort->readn(respData, respSize, bytes_read);
    mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
 
    // Check response size
@@ -1526,7 +1524,7 @@ void FlockStandalone::checkError()
 
 void FlockStandalone::readInitialFlockConfiguration()
 {
-   std::pair<unsigned,unsigned> sw_rev;
+   std::pair<unsigned int,unsigned int> sw_rev;
 
    vprASSERT(( mSerialPort != NULL ) && (FlockStandalone::CLOSED != mStatus));
    vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
@@ -1593,7 +1591,7 @@ void FlockStandalone::readInitialFlockConfiguration()
       //    - If we have erts set to extended range mode
       //    - Store indicies of the transmitters
       // - Find number of sensors in system
-      for(unsigned u=0;u<mActiveUnitEndIndex;++u)
+      for(unsigned int u=0;u<mActiveUnitEndIndex;++u)
       {
          const FlockUnit& unit = mFlockUnits[u];
          if(unit.mTransmitterType == Transmitter::Ert0)
@@ -1628,13 +1626,13 @@ void FlockStandalone::readInitialFlockConfiguration()
 
 void FlockStandalone::setupFlockUnitsDataStructure()
 {
-   unsigned max_units = getMaxBirdAddr();
+   unsigned int max_units = getMaxBirdAddr();
    mFlockUnits.resize(max_units);   // Allocate enough room
 
    // --- Get data from system status command --- //
    std::vector<vpr::Uint8> sys_status = querySystemStatus();
 
-   for(unsigned i=0;i<sys_status.size();++i)
+   for(unsigned int i=0;i<sys_status.size();++i)
    {
       vpr::Uint8 status = sys_status[i];
       FlockUnit& unit = mFlockUnits[i];
@@ -1676,7 +1674,7 @@ void FlockStandalone::setupFlockUnitsDataStructure()
    }
 
    // Query each bird individually for more information
-   for(unsigned i=0;i<mActiveUnitEndIndex;++i)
+   for(unsigned int i=0;i<mActiveUnitEndIndex;++i)
    {
       FlockUnit& unit = mFlockUnits[i];
       vpr::Uint16 status = queryBirdStatus(unit.mAddr);
