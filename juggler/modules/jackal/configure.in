@@ -574,6 +574,10 @@ AC_OUTPUT(jccl-config
           net/jccl/Makefile.inc
           net/jccl/Net/Makefile
           perfmonitor/Makefile
+          perfmonitor/Makefile.inc
+          perfmonitor/jccl/Makefile
+          perfmonitor/jccl/Makefile.inc
+          perfmonitor/jccl/PerfMonitor/Makefile
           vjcontrol/Makefile
           vjcontrol/Makefile.inc
           mtree/JCCL.data.dist
