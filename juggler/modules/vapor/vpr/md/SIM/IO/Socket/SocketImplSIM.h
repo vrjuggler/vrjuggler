@@ -311,7 +311,7 @@ public:
     */
    bool isConnected()
    {
-      return mPeer != NULL;
+      return mConnected;
    }
 
    /**
