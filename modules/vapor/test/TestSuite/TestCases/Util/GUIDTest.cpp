@@ -64,15 +64,15 @@ void GUIDTest::testCompare ()
 
    //std::cout << "vprDBG_ALL: " << vprDBG_ALL << std::endl;
 
-   vpr::GUID guid5(vprDBG_ALL);     // Copy over known guid
+   vpr::GUID guid5(vprDBG_ALL.mGuid);     // Copy over known guid
    vpr::GUID guid6;
 
    CPPUNIT_ASSERT(guid3 != guid4);
    CPPUNIT_ASSERT(guid3 == guid3);
    CPPUNIT_ASSERT(guid4 == guid4);
 
-   CPPUNIT_ASSERT(vprDBG_ALL == guid5);
-   CPPUNIT_ASSERT(guid5 == vprDBG_ALL);
+   CPPUNIT_ASSERT(vprDBG_ALL.mGuid == guid5);
+   CPPUNIT_ASSERT(guid5 == vprDBG_ALL.mGuid);
 
    guid6 = guid3;
    CPPUNIT_ASSERT(guid6 == guid3);
