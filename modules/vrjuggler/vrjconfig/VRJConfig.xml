@@ -7,7 +7,8 @@
       <dependencies>
          <bean>ConfigBroker</bean>
          <bean>RTRCDataSourceBroker</bean>
-         <bean>jccl_editors</bean>
+         <jar path="${TWEEK_BASE_DIR}/bin">jccl_editors.jar</jar>
+         <jar path="${TWEEK_BASE_DIR}/bin">TableLayout.jar</jar>
          <jar path="${TWEEK_BASE_DIR}/bin">ui.jar</jar>
       </dependencies>
       <tree path="/" />
@@ -17,7 +18,9 @@
             class="org.vrjuggler.vrjconfig.ControlPanelView" />
       <dependencies>
          <bean>ConfigBroker</bean>
-         <bean>RTRCDataSource</bean>
+         <bean>RTRCDataSourceBroker</bean>
+         <jar path="${TWEEK_BASE_DIR}/bin">jccl_editors.jar</jar>
+         <jar path="${TWEEK_BASE_DIR}/bin">TableLayout.jar</jar>
          <jar path="${TWEEK_BASE_DIR}/bin">ui.jar</jar>
       </dependencies>
       <tree path="/" />
