@@ -69,58 +69,52 @@ public class ConfigBrokerProxy
    }
 
    /**
-    * Opens a new configuration resource using the given unique name from the
-    * given input stream.
+    * Adds the given resources in the given data source to this broker.
     *
-    * @param context    the context in which to open the resource
-    * @param name       the unique name to assign to the resource
-    * @param input      the stream from which to retrieve the resource data
-    *
-    * @throws IOException  if there is an error opening the resource
+    * @param name          the unique name to assign to the resource
+    * @param dataSource    the data source from which to retrieve the data
     */
-   public void open(ConfigContext context, String name, InputStream input)
-      throws IOException
+   public void add(String name, DataSource dataSource)
    {
-      broker.open(context, name, input);
+      broker.add(name, dataSource);
    }
 
    /**
-    * Closes the configuration resource associated with the given name.
+    * Removes the resources in the given data source from this broker.
     *
-    * @param name    the name of the resource to close
+    * @param name          the name of the data source to remove
     *
-    * @throws IOException  if there is an error closing the resource
+    * @return  the data source that was removed
     */
-   public void close(String name)
-      throws IOException
+   public DataSource remove(String name)
    {
-      broker.close(name);
+      return broker.remove(name);
    }
 
    /**
-    * Saves the configuration resource associated with the given name.
+    * Gets the data source associated with the given name in this broker.
     *
-    * @param name    the name of the resource to save
+    * @param name          the unique name assigned to the data source
     *
-    * @throws IOException  if there is an error saving the resource
+    * @return  the DataSource if one exists; null if no DataSource has that name
     */
-   public void save(String name)
-      throws IOException
+   public DataSource get(String name)
    {
-      broker.save(name);
+      return broker.get(name);
    }
 
    /**
-    * Tests if the given resource is currently open and being managed by this
+    * Tests if the data source with the given name is being managed by this
     * broker.
     *
-    * @param name    the name of the resource to check
+    * @param name    the name of the data source to check
     *
-    * @return  true if the resource is open, false otherwise
+    * @return  true if the data source resource is in this broker;
+    *          false otherwise
     */
-   public boolean isOpen(String name)
+   public boolean containsDataSource(String name)
    {
-      return broker.isOpen(name);
+      return broker.containsDataSource(name);
    }
 
    /**
