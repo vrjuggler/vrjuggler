@@ -42,20 +42,17 @@ import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 import org.vrjuggler.tweek.services.EnvironmentService;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.vrjconfig.PopupButton;
+import org.vrjuggler.vrjconfig.VrjConfigConstants;
 
 /**
  * A specialized toolbar that pays attention to the ConfigManager.
  */
 public class ConfigToolbar
    extends JComponent
+   implements VrjConfigConstants
 {
-   private String mDefaultDefinitionFile = "${VJ_BASE_DIR}/share/vrjuggler/data/vrj-chunks.desc";
-
    public ConfigToolbar()
    {
-      // Expand the environment variables in the default description file
-      mDefaultDefinitionFile = expandEnvVars(mDefaultDefinitionFile);
-
       try
       {
          jbInit();
@@ -150,11 +147,12 @@ public class ConfigToolbar
 
       try
       {
+         String default_def_file = expandEnvVars(DEFAULT_DEFINITION_FILE);
          // Add the VR Juggler definitions into the context
-         FileDataSource defs_data_source = new FileDataSource(mDefaultDefinitionFile,
+         FileDataSource defs_data_source = new FileDataSource(default_def_file,
                                                               FileDataSource.DEFINITIONS);
-         getConfigBroker().add(mDefaultDefinitionFile, defs_data_source);
-         ctx.add(mDefaultDefinitionFile);
+         getConfigBroker().add(default_def_file, defs_data_source);
+         ctx.add(default_def_file);
       }
       catch (IOException ioe)
       {
@@ -164,17 +162,63 @@ public class ConfigToolbar
       return ctx;
    }
 
+   private boolean openInContext(String filename, ConfigContext ctx)
+   {
+      try
+      {
+         String file = expandEnvVars(filename);
+         FileDataSource data_source = new FileDataSource(file, FileDataSource.DEFINITIONS);
+         getConfigBroker().add(file, data_source);
+         ctx.add(file);
+      }
+      catch (IOException ioe)
+      {
+         ioe.printStackTrace();
+         return false;
+      }
+      return true;
+   }
+
    /**
     * Programmatically does a new action in a new ConfigContext.
     */
    public boolean doNew()
    {
-      boolean result = doNew(createDefaultConfigContext());
-      if (result)
+      NewConfigDialog new_dlg = new NewConfigDialog();
+      int option = new_dlg.showDialog(this);
+      if (option == NewConfigDialog.APPROVE_OPTION)
       {
+         // Open all the included files first
+         ConfigContext ctx = new ConfigContext();
+         for (Iterator itr = new_dlg.getIncludes().iterator(); itr.hasNext(); )
+         {
+            if (! openInContext((String)itr.next(), ctx))
+            {
+               return false;
+            }
+         }
+
+         // Create the new config file
+         try
+         {
+            File new_file = new File(new_dlg.getDirectory(), new_dlg.getName());
+            String new_filename = new_file.getAbsolutePath();
+            FileDataSource data_source = new FileDataSource(new_filename,
+                                                            FileDataSource.ELEMENTS);
+            getConfigBroker().add(new_filename, data_source);
+            ctx.add(new_filename);
+         }
+         catch (IOException ioe)
+         {
+            ioe.printStackTrace();
+            return false;
+         }
+         
+         setConfigContext(ctx);
          fireAction("New");
+         return true;
       }
-      return result;
+      return false;
    }
 
    /**
