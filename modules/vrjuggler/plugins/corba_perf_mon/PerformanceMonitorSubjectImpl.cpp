@@ -30,9 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/Performance/PluginConfig.h>
-
-
 #include <string>
 #include <list>
 #include <sstream>
