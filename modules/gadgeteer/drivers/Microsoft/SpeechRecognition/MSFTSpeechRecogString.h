@@ -57,7 +57,7 @@ namespace gadget
 {
 
 class MSFTSpeechRecogString
-   : public gadget::InputMixer<gadget::Input, gadget::SpeechRecogString>
+   : public gadget::InputMixer<gadget::Input, gadget::String>
 {
 public:
    MSFTSpeechRecogString();

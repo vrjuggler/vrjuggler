@@ -33,21 +33,21 @@
 #include <gadget/gadgetConfig.h>
 #include <jccl/Config/ConfigElement.h>
 #include <gadget/Util/Debug.h>
-#include <gadget/Type/SpeechRecogDigitalProxy.h>
+#include <gadget/Type/StringProxy.h>
 
 namespace gadget
 {
 
-std::string SpeechRecogDigitalProxy::getElementType()
+std::string StringProxy::getElementType()
 {
-   return "speech_recog_digital_proxy";
+   return "string_proxy";
 }
 
-bool SpeechRecogDigitalProxy::config(jccl::ConfigElementPtr element)
+bool StringProxy::config(jccl::ConfigElementPtr element)
 {
 vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
-                              std::string("----------- configuring SPEECH RECOG DIGITAL PROXY -----------------\n"),
-                              std::string("----------- exit: configuring speech recog digital proxy -----------\n"));
+                              std::string("----------- configuring STRING PROXY -----------------\n"),
+                              std::string("----------- exit: configuring string proxy -----------\n"));
 
    vprASSERT(element->getID() == getElementType());
 
@@ -63,11 +63,13 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
    return true;
 }
 
-void SpeechRecogDigitalProxy::updateData()
+void StringProxy::updateData()
 {
    if (!isStupified())
    {
-      mData = mTypedDevice->getDigitalData(mUnitNum);
+      std::string old_state = mData.getString();
+      mData = mTypedDevice->getStringData(mUnitNum);
+      std::string new_state = mData.getString();
    }
 }
 

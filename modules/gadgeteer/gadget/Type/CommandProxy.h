@@ -30,13 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_SPEECH_RECOG_DIGITAL_PROXY_H_
-#define _GADGET_SPEECH_RECOG_DIGITAL_PROXY_H_
+#ifndef _GADGET_COMMAND_PROXY_H_
+#define _GADGET_COMMAND_PROXY_H_
 
 #include <gadget/gadgetConfig.h>
-#include <gadget/Type/SpeechRecogDigital.h>
-#include <gadget/Type/Proxy.h>
 #include <vpr/Util/Assert.h>
+#include <gadget/Type/Proxy.h>
+#include <gadget/Type/Command.h>
 
 namespace gadget
 {
@@ -50,20 +50,19 @@ namespace gadget
  * can therefore keep an array of these around and treat them as digital
  * devices that only return a single sub-device's amount of data (one int).
  *
- * @see gagdet::SpeechRecogDigital
+ * @see gagdet::Command
  */
-class GADGET_CLASS_API SpeechRecogDigitalProxy
-   : public TypedProxy<SpeechRecogDigital>
+class GADGET_CLASS_API CommandProxy : public TypedProxy<Command>
 {
 
 public:
    /** @name Construction/Destruction */
    //@{
-   SpeechRecogDigitalProxy()
+   CommandProxy()
       : mUnitNum(-1), mData(0)
    {;}
 
-   virtual ~SpeechRecogDigitalProxy()
+   virtual ~CommandProxy()
    {;}
    //@}
 
@@ -92,10 +91,9 @@ public:
    }
 
    /**
-    * Returns a pointer to the gadget::SpeechRecogDigital object that we are
-    * proxying.
+    * Returns a pointer to the gadget::Command object that we are proxying.
     */
-   SpeechRecogDigital* getSpeechRecogDigitalPtr()
+   Command* getCommandPtr()
    {
       // If we're stupified, return NULL.  Otherwise, return mTypedDevice.
       return (isStupified() ? NULL : mTypedDevice);
@@ -122,7 +120,7 @@ public:
       }
 
       Input* ret_val = dynamic_cast<Input*>(mTypedDevice);
-      vprASSERT((ret_val != NULL) && "Cross-cast in SpeechRecogDigital failed");
+      vprASSERT((ret_val != NULL) && "Cross-cast in Command failed");
       return ret_val;
    }
 

@@ -55,6 +55,8 @@ SUBDIR=		EventWindow	\
 SRCS=		Analog.cpp			\
 		AnalogProxy.cpp			\
 		BaseTypeFactory.cpp		\
+		Command.cpp			\
+		CommandProxy.cpp		\
 		DeviceFactory.cpp		\
 		DeviceInterface.cpp		\
 		Digital.cpp			\
@@ -69,10 +71,8 @@ SRCS=		Analog.cpp			\
 		Input.cpp			\
 		Position.cpp			\
 		PositionProxy.cpp		\
-		SpeechRecogDigital.cpp		\
-		SpeechRecogDigitalProxy.cpp	\
-		SpeechRecogString.cpp		\
-		SpeechRecogStringProxy.cpp
+		StringProxy.cpp			\
+		String.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
 

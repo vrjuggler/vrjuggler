@@ -30,47 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _GADGET_STRING_INTERFACE_H_
+#define _GADGET_STRING_INTERFACE_H_
+
 #include <gadget/gadgetConfig.h>
-#include <jccl/Config/ConfigElement.h>
-#include <gadget/Util/Debug.h>
-#include <gadget/Type/SpeechRecogStringProxy.h>
 
-namespace gadget
-{
+#include <gadget/Type/StringProxy.h>
+#include <gadget/Type/DeviceInterface.h>
 
-std::string SpeechRecogStringProxy::getElementType()
-{
-   return "speech_recog_string_proxy";
-}
-
-bool SpeechRecogStringProxy::config(jccl::ConfigElementPtr element)
-{
-vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
-                              std::string("----------- configuring SPEECH RECOG STRING PROXY -----------------\n"),
-                              std::string("----------- exit: configuring speech recog string proxy -----------\n"));
-
-   vprASSERT(element->getID() == getElementType());
-
-   if( ! Proxy::config(element) )
-   {
-      return false;
-   }
-
-   mUnitNum = element->getProperty<int>("unit");
-   mDeviceName = element->getProperty<std::string>("device");
-
-   refresh();
-   return true;
-}
-
-void SpeechRecogStringProxy::updateData()
-{
-   if (!isStupified())
-   {
-      std::string old_state = mData.getString();
-      mData = mTypedDevice->getStringData(mUnitNum);
-      std::string new_state = mData.getString();
-   }
-}
-
-} // End of gadget namespace
+#endif

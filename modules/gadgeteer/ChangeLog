@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Nov-13-2004 patrickh    Renamed gadget::SpeechRecogDigital* to gadget::Command*
+                        and gadget::SpeechRecogString* to gadget::String*.
+                        NEW VERSION 0.20.0
 Nov-08-2004 dshipton    Split EventWindowXWin::openTheWindow() into
                         openLocalWindow and setupRemoteWindow and
                         added code to get size into getWindowWidthAndHeight().
