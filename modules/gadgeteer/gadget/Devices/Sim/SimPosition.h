@@ -40,22 +40,22 @@
 #include <gadget/Type/Position.h>
 #include <gadget/Type/InputMixer.h>
 #include <gmtl/Vec.h>
-#include <gmtl/VecOps.h>
 
 namespace gadget
 {
 
 /**
  * Simulated positional device.
- * Simulates a positional device from a keyboard device.
- * This class should not be used directly by the user.
+ * Simulates a positional device from an event source.
+ * This class should not be accessed directly by the user.
  */
 //class SimPosition :  public SimInput, public Input, public Position
 class SimPosition : public InputMixer<InputMixer<SimInput,Input>,Position>
 {
 public:
    /** Constants for the key array. */
-   enum {
+   enum Key
+   {
       FORWARD = 0,
       BACK    = 1,
       LEFT    = 2,
@@ -72,15 +72,20 @@ public:
    };
 
    /** Const for coord system selection. */
-   enum {
-      LOCAL = 0,
-      GLOBAL = 1
+   enum CoordSystem
+   {
+      LOCAL = 0,    /**< Local coordinate system. */
+      GLOBAL = 1    /**< Global coordinate system. */
    };
+
 public:
    SimPosition()
-      : mTransCoordSystem(LOCAL), mRotCoordSystem(LOCAL),
-        mDTrans(-1221.75f), mDRot(-1221.75f)
+      : mTransCoordSystem(LOCAL)
+      , mRotCoordSystem(LOCAL)
+      , mDTrans(-1221.75f)
+      , mDRot(-1221.75f)
    {;}
+
    virtual ~SimPosition() {;}
 
    virtual bool config(jccl::ConfigElementPtr element);
@@ -117,34 +122,36 @@ protected:
 private:
    /** @name Movement helpers */
    //@{
-   /** Move amt in direction.
-   * Captures code common for all movements.
-   */
+   /**
+    * Moves the specified amount in the given direction.
+    * Captures code common for all movements.
+    */
    void moveDir(const float amt, const gmtl::Vec3f dir);
 
-   /** Moves forward (-z) the given amount on position data n. */
+   /** Moves forward (-Z) the given amount on position data n. */
    void moveFor(const float amt);
 
    /** Moves left (-X) the given amount. */
    void moveLeft(const float amt);
 
-   /** Moves up (+y) the given amount. */
+   /** Moves up (+Y) the given amount. */
    void moveUp(const float amt);
 
    /** @name Rotation helpers */
    //@{
-   /** Rotation amt around axis.
-   * Captures code common for all rotations.
-   */
-   void rotAxis(const float amt, const gmtl::Vec3f& rotAxis);
+   /**
+    * Rotates the specified number of degrees around the given axis.
+    * Captures code common for all rotations.
+    */
+   void rotAxis(const float degrees, const gmtl::Vec3f& rotAxis);
 
-   /** Pitch up - rot +x axis. */
+   /** Pitch up - rot +X axis. */
    void rotUp(const float amt);
 
    /** Yaw left - rot +Y axis. */
    void rotLeft(const float amt);
 
-   /** Roll Left - rot -z axis. */
+   /** Roll Left - rot -Z axis. */
    void rotRollCCW(const float amt);
    //@}
 
