@@ -30,6 +30,11 @@ public class WhiteboardObserverImpl extends ObserverPOA
       }
    }
 
+   public void detach ()
+   {
+      whiteboard_subject.detach(this._this());
+   }
+
    private WhiteboardSubject whiteboard_subject = null;
    private JTextArea         whiteboard         = null;
 }
