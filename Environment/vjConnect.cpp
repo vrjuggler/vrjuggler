@@ -231,7 +231,7 @@ void vjConnect::removeTimedUpdate (vjTimedUpdate* _tu) {
 
 
 void vjConnect::readControlLoop(void* nullParam) {
-   vjDEBUG(vjDBG_ENV_MGR,5) << "vjConnect " << name
+   vjDEBUG(vjDBG_ENV_MGR,5) << "vjConnect " << name.c_str()
              << " started read control loop.\n"
              << vjDEBUG_FLUSH;
    while (!read_die) {

@@ -69,7 +69,7 @@ bool vjEnvironmentManager::isAccepting() {
 
 
 void vjEnvironmentManager::addPerfDataBuffer (vjPerfDataBuffer *b) {
-    vjDEBUG (vjDBG_PERFORMANCE, 4) << "EM adding perf data buffer " << b->getName() << "\n"
+    vjDEBUG (vjDBG_PERFORMANCE, 4) << "EM adding perf data buffer " << b->getName().c_str() << "\n"
       << vjDEBUG_FLUSH;
     perf_buffers.push_back(b);
     activatePerfBuffers();
@@ -81,7 +81,7 @@ void vjEnvironmentManager::addPerfDataBuffer (vjPerfDataBuffer *b) {
 void vjEnvironmentManager::removePerfDataBuffer (vjPerfDataBuffer *b) {
     std::vector<vjPerfDataBuffer*>::iterator it;
 
-    vjDEBUG (vjDBG_PERFORMANCE, 4) << "EM removing perf data buffer " << b->getName() 
+    vjDEBUG (vjDBG_PERFORMANCE, 4) << "EM removing perf data buffer " << b->getName().c_str() 
                << "\n" << vjDEBUG_FLUSH;
 
     b->deactivate();
@@ -181,7 +181,7 @@ bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
    if ((int)chunk->getProperty("Mode") != VJC_INTERACTIVE) {
        // it's new to us
        vjConnect* vn = new vjConnect (chunk);
-       vjDEBUG (vjDBG_ENV_MGR, 1) << "EM adding connection: " << vn->getName() << '\n'
+       vjDEBUG (vjDBG_ENV_MGR, 1) << "EM adding connection: " << vn->getName().c_str() << '\n'
                    << vjDEBUG_FLUSH;
        connections_mutex.acquire();
        connections.push_back (vn);
