@@ -135,9 +135,12 @@ public class PropertyEditorPanel extends PropertyComponent
          {
             // Set the help text.
             ConfigContextEditor context_editor =
-            (ConfigContextEditor)SwingUtilities.getAncestorOfClass(ConfigContextEditor.class,
-                                                                   box);
-            context_editor.getHelpPane().setText(mPropDef.getHelp());
+               (ConfigContextEditor)SwingUtilities.getAncestorOfClass(ConfigContextEditor.class,
+                                                                      box);
+            if (null != context_editor)
+            {
+               context_editor.getHelpPane().setText(mPropDef.getHelp());
+            }
          }
       });
       return box;
@@ -176,9 +179,12 @@ public class PropertyEditorPanel extends PropertyComponent
 
             // Set the help text.
             ConfigContextEditor context_editor =
-            (ConfigContextEditor)SwingUtilities.getAncestorOfClass(ConfigContextEditor.class,
-                                                                   txtField);
-            context_editor.getHelpPane().setText(mPropDef.getHelp());
+               (ConfigContextEditor)SwingUtilities.getAncestorOfClass(ConfigContextEditor.class,
+                                                                      txtField);
+            if (null != context_editor)
+            {
+               context_editor.getHelpPane().setText(mPropDef.getHelp());
+            }
          }
          public void focusLost(FocusEvent evt)
          {
