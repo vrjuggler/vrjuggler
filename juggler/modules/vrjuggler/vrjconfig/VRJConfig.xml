@@ -7,10 +7,11 @@
       <dependencies>
          <bean>ConfigBroker</bean>
          <jar path="${TWEEK_BASE_DIR}/bin/beans">jccl_editors.jar</jar>
+         <jar path="${TWEEK_BASE_DIR}/bin">ui.jar</jar>
       </dependencies>
       <tree path="/" />
    </guipanel>
-
+<!--
    <guipanel name="ControlPanel">
       <file name="${TWEEK_BASE_DIR}/bin/beans/VRJConfig.jar"
             class="org.vrjuggler.vrjconfig.ControlPanelView" />
@@ -20,4 +21,5 @@
       </dependencies>
       <tree path="/" />
    </guipanel>
+-->
 </beanlist>
