@@ -372,16 +372,6 @@ int ThreadPosix::getRunOn(int* cur_cpu)
 #endif
 }
 
-int ThreadPosix::usleep(vpr::Uint32 micro)
-{
-#ifdef VPR_OS_Linux
-   ::usleep(micro);
-   return 0;  // usleep can't report failure, so assume success.
-#else
-   return ::usleep(micro);
-#endif
-}
-
 int ThreadPosix::kill(int signum)
 {
 #ifdef _PTHREADS_DRAFT_4

@@ -62,10 +62,13 @@
 #include <prtime.h>
 #include <prnetdb.h>
 #include <prenv.h>
+#include <prthread.h>      /* For PR_Sleep() */
 #include <prsystem.h>
 
 #include <vpr/Util/ReturnStatus.h>
+#include <vpr/vprTypes.h>
 #include <vpr/SystemBase.h>
+
 
 #ifndef HAVE_GETTIMEOFDAY
 #  ifndef VPR_OS_Win32
@@ -92,6 +95,36 @@ namespace vpr
 class SystemNSPR : public SystemBase
 {
 public:
+   /**
+    * Sleeps for the given number of microseconds.
+    *
+    * @param micro The number of microseconds to sleep.
+    */
+   static int usleep(vpr::Uint32 micro)
+   {
+      return PR_Sleep(PR_MicrosecondsToInterval(micro));
+   }
+
+   /**
+    * Sleeps for the given number of milliseconds.
+    *
+    * @param micro The number of milliseconds to sleep.
+    */
+   static int msleep(vpr::Uint32 milli)
+   {
+      return PR_Sleep(PR_MillisecondsToInterval(milli));
+   }
+
+   /**
+    * Sleeps for the given number of seconds.
+    *
+    * @param micro The number of seconds to sleep.
+    */
+   static int sleep(vpr::Uint32 seconds)
+   {
+      return PR_Sleep(PR_SecondsToInterval(seconds));
+   }
+
    static int gettimeofday (struct timeval* tp, struct timezone* tzp = NULL)
    {
       PRTime now = PR_Now();

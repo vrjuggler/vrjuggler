@@ -55,6 +55,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <string>
+#include <unistd.h>
 #include <sys/time.h>
 
 // I don't know why this is necessary, but I think something is being defined
@@ -69,6 +70,7 @@
 #include <sys/utsname.h>
 
 #include <vpr/Util/ReturnStatus.h>
+#include <vpr/vprTypes.h>
 #include <vpr/SystemBase.h>
 
 
@@ -78,6 +80,30 @@ namespace vpr
 class SystemPosix : public SystemBase
 {
 public:
+   /**
+    * Sleeps for the given number of microseconds.
+    *
+    * @param micro The number of microseconds to sleep.
+    */
+   static int usleep(vpr::Uint32 micro);
+
+   /**
+    * Sleeps for the given number of milliseconds.
+    *
+    * @param micro The number of milliseconds to sleep.
+    */
+   static int msleep(vpr::Uint32 milli);
+
+   /**
+    * Sleeps for the given number of seconds.
+    *
+    * @param micro The number of seconds to sleep.
+    */
+   static int sleep(vpr::Uint32 seconds)
+   {
+      return ::sleep(seconds);
+   }
+
    static int gettimeofday (struct timeval* tp, struct timezone* tzp = NULL)
    {
       return ::gettimeofday(tp, tzp);

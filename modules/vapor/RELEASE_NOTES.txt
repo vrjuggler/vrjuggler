@@ -11,6 +11,15 @@ For all versions:
  Version: 1.0.0
 Released: <month> <day>, 2003
 
+ Version: 0.26.0
+Released: January 13, 2003
+    Required changes when upgrading from all previous versions:
+        * vpr::Thread::usleep(), vpr::Thread::msleep(), and
+          vpr::Thread::sleep() have been removed in favor of using only
+          the sleep functions in vpr::System.  All code that used one of
+          the removed functions must convert to using the vpr::System
+          class.
+
  Version: 0.22.0
 Released: January 6, 2003
     Required changes when upgrading from version 0.21.0:

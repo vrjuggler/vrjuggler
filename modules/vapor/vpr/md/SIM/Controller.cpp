@@ -304,7 +304,7 @@ vpr::DebugOutputGuard dbg_output(vprDBG_SIM, vprDBG_STATE_LVL,
 
       if ( mSleepTime != 0 )
       {
-         vpr::Thread::usleep(mSleepTime);
+         vpr::System::usleep(mSleepTime);
       }
    }
 }
