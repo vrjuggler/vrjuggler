@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Base Makefile.in for VR Juggler.  It requires GNU make.
+# Base Makefile.in for Jackal (jccl & VjControl).  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -47,12 +47,12 @@
 #
 # all               - Build everything.
 # all-abi           - Build everything using all supported ABIs.
-# debug             - Build the VR Juggler libraries (dynamic and static) with
+# debug             - Build the Jackal library (dynamic and static) with
 #                     debugging symbols turned on.
 # dbg               - Build the debugging, static copy of the libraries.
 # ddso              - Build the debugging, dynamic shared object version of
 #                     the libraries.
-# optim             - Build the VR Juggler libraries (dynamic and static) with
+# optim             - Build the Jackal library (dynamic and static) with
 #                     optimization flags enabled.
 # opt               - Build the optimized, static version of the libraries.
 # dso               - Build the dynamic shared object version of the
@@ -119,25 +119,19 @@ include @topdir@/make.defs.mk
 STARTTIME	:= $(shell LC_TIME=C date)
 
 # State whether or not to build the configuration editor GUI.
-BUILD_GUI	= @BUILD_GUI@
+BUILD_VJCONTROL	= @BUILD_VJCONTROL@
 
 # =============================================================================
 # Lists used for various types of recursion.
 # =============================================================================
 
 # Subdirectories used for recursion through the source tree.
-SUBDIR		= Config	\
-                  Environment	\
-                  Input		\
-                  Kernel	\
-                  Math		\
-                  Performance	\
-                  SharedMem	\
-                  Sound		\
-                  Sync		\
-                  Threads	\
-                  Utils		\
-                  VPR
+SUBDIR          = VjControl          \
+                  jccl/Config      
+# \
+#                  jccl/JackalServer \
+#                  jccl/Performance  \
+#                  jccl/Utils
 
 # =============================================================================
 # Library targets.  The default is 'debug' as defined above.  The steps for 
@@ -155,7 +149,7 @@ SUBDIR		= Config	\
 # ------------------------------------------------
 world:
 	@echo "==============================================================="
-	@echo ">>> VR Juggler make world started $(STARTTIME)"
+	@echo ">>> Jackal make world started $(STARTTIME)"
 	@echo "==============================================================="
 ifndef NO_CLEAN
 	@$(MAKE) clobber
@@ -163,14 +157,14 @@ endif
 	@$(MAKE) $(BEFOREBUILD)
 	@$(MAKE) libs vjcontrol
 	@echo "---------------------------------------------------------------"
-	@echo "Beginning VR Juggler installation process"
+	@echo "Beginning Jackal installation process"
 	@echo "---------------------------------------------------------------"
 	@$(MAKE) beforeinstall
 	@$(MAKE) install-libs
 	@$(MAKE) do-post-install
 	@echo "==============================================================="
-	@echo ">>> VR Juggler make world started $(STARTTIME)"
-	@echo ">>> VR Juggler make world completed `LTIME=C date`"
+	@echo ">>> Jackal make world started $(STARTTIME)"
+	@echo ">>> Jackal make world completed `LTIME=C date`"
 	@echo "==============================================================="
 
 # ------------------------------------------------------------------------
@@ -178,7 +172,7 @@ endif
 # ------------------------------------------------------------------------
 world-all-abi:
 	@echo "==============================================================="
-	@echo ">>> VR Juggler make world started on $(STARTTIME)"
+	@echo ">>> Jackal make world started on $(STARTTIME)"
 	@echo "==============================================================="
 ifndef NO_CLEAN
 	@$(MAKE) clobber
@@ -192,7 +186,7 @@ endif
           done
 	@$(MAKE) vjcontrol
 	@echo "---------------------------------------------------------------"
-	@echo "Beginning VR Juggler installation process"
+	@echo "Beginning Jackal installation process"
 	@echo "---------------------------------------------------------------"
 	@$(MAKE) beforeinstall
 	@for abi in $(ABI_LIST) ; do					\
@@ -203,8 +197,8 @@ endif
           done
 	@$(MAKE) do-post-install
 	@echo "==============================================================="
-	@echo ">>> VR Juggler make world started on $(STARTTIME)"
-	@echo ">>> VR Juggler make world completed on `LTIME=C date`"
+	@echo ">>> Jackal make world started on $(STARTTIME)"
+	@echo ">>> Jackal make world completed on `LTIME=C date`"
 	@echo "==============================================================="
 
 # -------------------------------------------------------------
@@ -214,7 +208,7 @@ endif
 
 release:
 	@echo "==============================================================="
-	@echo ">>> VR Juggler make release started on $(STARTTIME)"
+	@echo ">>> Jackal make release started on $(STARTTIME)"
 	@echo "==============================================================="
 ifndef NO_CLEAN
 	@$(MAKE) clobber
@@ -222,7 +216,7 @@ endif
 	@$(MAKE) $(BEFOREBUILD)
 	@$(MAKE) libs vjcontrol
 	@echo "---------------------------------------------------------------"
-	@echo "Beginning VR Juggler release installation process"
+	@echo "Beginning Jackal release installation process"
 	@echo "---------------------------------------------------------------"
 	@$(MAKE) beforeinstall
 	@$(MAKE) install-libs
@@ -239,8 +233,8 @@ endif
           $(JACKALROOT_ABS)/RELEASE_NOTES $(prefix)
 	@echo "Build time: `LTIME=C date`" > $(prefix)/BUILD_TIME
 	@echo "==============================================================="
-	@echo ">>> VR Juggler make release started on $(STARTTIME)"
-	@echo ">>> VR Juggler make release completed on `LTIME=C date`"
+	@echo ">>> Jackal make release started on $(STARTTIME)"
+	@echo ">>> Jackal make release completed on `LTIME=C date`"
 	@echo "==============================================================="
 
 # -------------------------------------
@@ -269,7 +263,7 @@ doc-public:
 # Human-readable information about the build system.
 # =============================================================================
 info:
-	@echo "\nInfo for the make of $(VJ_LIBRARY)"
+	@echo "\nInfo for the make of Jackal"
 	@echo "\nOBJDIR: $(OBJDIR)"
 	@echo "JACKALROOT_ABS: $(JACKALROOT_ABS)"
 	@echo "Default ABI: $(ABI)"

@@ -45,7 +45,6 @@ includedir	= @includedir@
 instlinks	= $(topdir)/instlinks
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
-JACKALROOT		= $(top_srcdir)
 JACKAL_SRCDIR	= @JACKAL_SRCDIR@
 
 # Extra compiler and linker options needed only by this file.
@@ -75,26 +74,21 @@ STATICLIB_EXT	= @STATICLIB_EXT@
 DYNAMICLIB_EXT	= @DYNAMICLIB_EXT@
 
 # Full list of the libraries to build.
-LIBS		= $(UTILS_LIBRARY)	\
-                  $(VJ_LIBRARY)
-
+LIBS		= $(JACKAL_LIBRARY)
 STATIC_LIBS	= $(LIBS)
 DYNAMIC_LIBS	= $(LIBS)
 
 # Dependencies for each of the various dynamic libraries we build.
-DYLIB_DEPS_VJ		= @DYLIB_DEPS_VJ@
-DYLIB_DEPS_UTILS	= @DYLIB_DEPS_UTILS@
+DYLIB_DEPS		= @DYLIB_DEPS@
 
-VJ_LIB_STATIC		= $(VJ_LIBRARY).$(STATICLIB_EXT)
-VJ_LIB_DYNAMIC		= $(VJ_LIBRARY).$(DYNAMICLIB_EXT)
-UTILS_LIB_STATIC	= $(UTILS_LIBRARY).$(STATICLIB_EXT)
-UTILS_LIB_DYNAMIC	= $(UTILS_LIBRARY).$(DYNAMICLIB_EXT)
+JACKAL_LIB_STATIC	= $(JACKAL_LIBRARY).$(STATICLIB_EXT)
+JACKAL_LIB_DYNAMIC	= $(JACKAL_LIBRARY).$(DYNAMICLIB_EXT)
 
 # Version information.
 BRANCH		= HEAD
 CANON_NAME	= Kenny
-VER_ARGS	= -f $(JACKALROOT_ABS)/VERSION -s @SUBSYSTEM@ -b $(BRANCH)	\
-                  -i $(JACKALROOT_ABS)/vjParam.h.in -o vjParam.h		\
+VER_ARGS	= -f $(JACKALROOT_ABS)/VERSION -b $(BRANCH)	\
+                  -i $(JACKALROOT_ABS)/jccl/jcclParam.h.in -o jccl/jcclParam.h		\
                   -d "`date '+%b %e, %Y %H:%M:%S'`" -n "$(CANON_NAME)"
 
 ifdef VERSION
@@ -112,8 +106,9 @@ AFTERBUILD	= afterbuild
 beforebuild:
 	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
 	@$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
-            -t $(JACKALROOT_ABS)/juggler-config.in -o $(topdir)/juggler-config
-	@chmod +x $(topdir)/juggler-config
+            -t $(JACKALROOT_ABS)/jccl-config.in -v$(JACKALROOT_ABS)/VERSION \
+            -o $(topdir)/jccl-config
+	@chmod +x $(topdir)/jccl-config
 
 # Things to do after the object files and library are built.
 afterbuild:
@@ -122,7 +117,7 @@ afterbuild:
 # -----------------------------------------------
 # Construct the static version of the libraries.
 # -----------------------------------------------
-$(LIBDIR)/$(VJ_LIB_STATIC) $(LIBDIR)/$(UTILS_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(JACKAL_LIB_STATIC) $(LIBDIR)/$(UTILS_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
 ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
@@ -139,71 +134,24 @@ endif
 # ------------------------------------------------
 # Construct the dynamic version of the libraries.
 # ------------------------------------------------
-$(LIBDIR)/$(VJ_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(JACKAL_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
-            $(DYLIB_DEPS_VJ)
+            $(DYLIB_DEPS)
 	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
 ifeq (@OS_TYPE@, Win32)
-	cd $(LIBDIR_BASE) && rm -f $(VJ_LIB_STATIC) &&			\
-            $(LN_S) $(LIBDIR)/$(VJ_LIB_STATIC) ./
-	cd $(LIBDIR_BASE) && rm -f $(VJ_LIBRARY).exp &&			\
-            $(LN_S) $(LIBDIR)/$(VJ_LIBRARY).exp ./
+	cd $(LIBDIR_BASE) && rm -f $(JACKAL_LIB_STATIC) &&		\
+            $(LN_S) $(LIBDIR)/$(JACKAL_LIB_STATIC) ./
+	cd $(LIBDIR_BASE) && rm -f $(JACKAL_LIBRARY).exp &&			\
+            $(LN_S) $(LIBDIR)/$(JACKAL_LIBRARY).exp ./
 endif
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
 
-$(LIBDIR)/$(UTILS_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
-	@echo "------------------------------------------------"
-	@echo "Creating $@"
-	@echo "------------------------------------------------"
-	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
-	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
-            $(DYLIB_DEPS_UTILS)
-	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
-ifeq (@OS_TYPE@, Win32)
-	cd $(LIBDIR_BASE) && rm -f $(UTILS_LIB_STATIC) &&		\
-            $(LN_S) $(LIBDIR)/$(UTILS_LIB_STATIC) ./
-	cd $(LIBDIR_BASE) && rm -f $(UTILS_LIBRARY).exp &&		\
-            $(LN_S) $(LIBDIR)/$(UTILS_LIBRARY).exp ./
-endif
-	@echo "------------------------------------------------"
-	@echo "$@ done"
-	@echo "------------------------------------------------"
-
-$(LIBDIR)/$(GL_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
-	@echo "------------------------------------------------"
-	@echo "Creating $@"
-	@echo "------------------------------------------------"
-	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
-	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
-            $(DYLIB_DEPS_GL)
-	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
-ifeq (@OS_TYPE@, Win32)
-	cd $(LIBDIR_BASE) && rm -f $(GL_LIB_STATIC) &&			\
-            $(LN_S) $(LIBDIR)/$(GL_LIB_STATIC) ./
-	cd $(LIBDIR_BASE) && rm -f $(GL_LIBRARY).exp &&			\
-            $(LN_S) $(LIBDIR)/$(GL_LIBRARY).exp ./
-endif
-	@echo "------------------------------------------------"
-	@echo "$@ done"
-	@echo "------------------------------------------------"
-
-$(LIBDIR)/$(PF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
-	@echo "------------------------------------------------"
-	@echo "Creating $@"
-	@echo "------------------------------------------------"
-	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
-	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
-            $(DYLIB_DEPS_PF)
-	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
-	@echo "------------------------------------------------"
-	@echo "$@ done"
-	@echo "------------------------------------------------"
 
 # =============================================================================
 # VjControl targets.
@@ -267,8 +215,8 @@ ifndef NO_JAVA_GUI
           chmod ${EXEC_PERMS} vjcontrol
 endif
 	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
-            -t $(JACKALROOT_ABS)/juggler-config.in -p 'use_base_dir=yes'	\
-            -o $(instlinks)/bin/juggler-config -x
+            -t $(JACKALROOT_ABS)/jccl-config.in -p 'use_base_dir=yes'	\
+            -o $(instlinks)/bin/jccl-config -x
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$VJ_BASE_DIR to:'
@@ -276,7 +224,7 @@ endif
 	@echo "---------------------------------------------------------------"
 else
 	@echo "---------------------------------------------------------------"
-	@echo 'You must now install VR Juggler and set %VJ_BASE_DIR% to:'
+	@echo 'You must now install Jackal and set %VJ_BASE_DIR% to:'
 	@echo "  $(prefix)"
 	@echo "---------------------------------------------------------------"
 endif
@@ -315,27 +263,27 @@ hier:
 	@echo "Making hierarchy"
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(prefix)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.install.dist -p $(prefix)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.install.dist -p $(prefix)
 	$(SHELL) $(MKINSTALLDIRS) $(datadir)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.data.dist -p $(datadir)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.include.dist -p $(prefix)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.lib.dist -p $(prefix)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.samples.dist -p $(datadir)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.test.dist -p $(datadir)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.tools.dist -p $(datadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.data.dist -p $(datadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.include.dist -p $(prefix)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.lib.dist -p $(prefix)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.samples.dist -p $(datadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.test.dist -p $(datadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.tools.dist -p $(datadir)
 
 # Steps to take after the installation process is complete.  This target is
 # independent of the current ABI.
 afterinstall:
 	@echo "==============================================================="
-	@echo "VR Juggler installation complete"
+	@echo "Jackal installation complete"
 	@echo "==============================================================="
 
 PREINSTALL	= pre-install
 POSTINSTALL	= post-install
 
 pre-install:
-	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.lib.dist -p $(prefix)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.lib.dist -p $(prefix)
 
 # Do everything needed after installing the library binaries.
 post-install:
@@ -345,21 +293,21 @@ post-install:
 	@$(MAKE) install-data
 	@$(MAKE) install-vjcontrol
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/juggler-config $(bindir)
+          $(topdir)/jccl-config $(bindir)
 
 PREINSTALL_HEADERS	= pre-install-headers
 POSTINSTALL_HEADERS	= post-install-headers
 
 pre-install-headers:
-	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.include.dist -p $(prefix)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.include.dist -p $(prefix)
 
 post-install-headers:
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(JACKALROOT_ABS)/vjConfig.h $(includedir)/vjConfig.h
+          $(JACKALROOT_ABS)/jccl/jcclConfig.h $(includedir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/vjDefines.h $(includedir)
+          $(topdir)/jccl/jcclDefines.h $(includedir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/vjParam.h $(includedir)
+          $(topdir)/jccl/jcclParam.h $(includedir)
 
 # Install the sample applications.
 install-samples:
@@ -367,7 +315,7 @@ install-samples:
 	@echo "Installing sample applications"
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(datadir)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.samples.dist -p $(datadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.samples.dist -p $(datadir)
 	$(PERL) $(scriptdir)/install-src.pl -i $(top_srcdir)/samples	\
           -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(datadir)/samples
 	$(PERL) $(scriptdir)/makefiles-gen.pl				\
@@ -381,7 +329,7 @@ install-test:
 	@echo "Installing test programs"
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(datadir)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.test.dist -p $(datadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.test.dist -p $(datadir)
 	$(PERL) $(scriptdir)/install-src.pl -i $(top_srcdir)/test	\
           -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(datadir)/test
 	$(PERL) $(scriptdir)/makefiles-gen.pl --mode="$(FILE_PERMS)"	\
@@ -389,20 +337,20 @@ install-test:
           --startdir="$(top_srcdir)/test" $(_GROUP_OPT_PL) --srcdir="."
 
 # Install the user tools code.
-install-tools:
-	@echo "------------------------------------------------"
-	@echo "Installing user tools"
-	@echo "------------------------------------------------"
-	$(SHELL) $(MKINSTALLDIRS) $(datadir)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.tools.dist -p $(datadir)
-	$(PERL) $(scriptdir)/install-src.pl -i $(top_srcdir)/tools	\
-          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(datadir)/tools
-	$(PERL) $(scriptdir)/makefiles-gen.pl				\
-          --prefix="$(datadir)/tools" --vars="$(topdir)/VARS.pl"	\
-          --startdir="$(top_srcdir)/tools" --mode="$(FILE_PERMS)"	\
-          $(_GROUP_OPT_PL) --srcdir="."
-	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-          $(JACKALROOT_ABS)/tools/catadf.pl $(bindir)/catadf.pl
+#install-tools:
+#	@echo "------------------------------------------------"
+#	@echo "Installing user tools"
+#	@echo "------------------------------------------------"
+#	$(SHELL) $(MKINSTALLDIRS) $(datadir)
+#	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.tools.dist -p $(datadir)
+#	$(PERL) $(scriptdir)/install-src.pl -i $(top_srcdir)/tools	\
+#          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(datadir)/tools
+#	$(PERL) $(scriptdir)/makefiles-gen.pl				\
+#          --prefix="$(datadir)/tools" --vars="$(topdir)/VARS.pl"	\
+#          --startdir="$(top_srcdir)/tools" --mode="$(FILE_PERMS)"	\
+#          $(_GROUP_OPT_PL) --srcdir="."
+#	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
+#          $(JACKALROOT_ABS)/tools/catadf.pl $(bindir)/catadf.pl
 
 # Install the standard data files.
 install-data:
@@ -410,7 +358,7 @@ install-data:
 	@echo "Installing standard data files"
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(datadir)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.data.dist -p $(datadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.data.dist -p $(datadir)
 	$(PERL) $(scriptdir)/install-dir.pl -i $(top_srcdir)/Data	\
           -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(datadir)/Data		\
           -v "$(topdir)/VARS.pl"
@@ -422,7 +370,7 @@ ifdef NO_JAVA_GUI
 	@echo "Skipping installation of VjControl (not built)"
 	@echo "------------------------------------------------"
 else
-ifeq ($(BUILD_GUI), Y)
+ifeq ($(BUILD_VJCONTROL), Y)
 	@echo "------------------------------------------------"
 	@echo "Installing VjControl"
 	@echo "------------------------------------------------"
@@ -439,7 +387,7 @@ else
 endif	# if OS_TYPE == UNIX
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/VjControl/VjControl.jar $(bindir)
-endif	# if $(BUILD_GUI) == Y
+endif	# if $(BUILD_VJCONTROL) == Y
 endif	# ifdef NO_JAVA_GUI
 
 # =============================================================================
@@ -462,3 +410,6 @@ _LOCAL_CLOBBER	= 1
 
 include $(MKPATH)/dpp.libs.mk
 include $(MKPATH)/dpp.clean.mk
+
+CLEAN_DIRS      += $(BUILDDIR_BASE) $(LIBDIR_NAME)
+CLOBBER_DIRS    += $(BUILDDIR_BASE) $(LIBDIR_NAME)
