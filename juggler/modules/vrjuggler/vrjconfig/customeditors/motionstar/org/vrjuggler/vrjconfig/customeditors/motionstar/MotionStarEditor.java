@@ -34,6 +34,7 @@ package org.vrjuggler.vrjconfig.customeditors.motionstar;
 
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.event.ActionListener;
 import org.vrjuggler.jccl.config.ConfigContext;
 import org.vrjuggler.jccl.config.ConfigElement;
 import org.vrjuggler.jccl.editors.CustomEditor;
@@ -73,6 +74,11 @@ public class MotionStarEditor
       mContext = ctx;
       mElement = elt;
       mMainEditorPanel.setConfig(ctx, elt);
+   }
+
+   public ActionListener getHelpActionListener()
+   {
+      return null;
    }
 
    private ConfigContext mContext = null;
