@@ -34,6 +34,7 @@
 #define _GADGET_DIRECTX_JOYSTICK_STANDALONE_H_
 
 #include <windows.h>
+#include <dinput.h>
 #include <string>
 
 
@@ -57,7 +58,20 @@ public:
 
    std::string getProductName();
 
+   /** @name Direct Input callbacks */
+   //@{
+   BOOL enumerateJoysticks(const DIDEVICEINSTANCE* dInstance);
+   BOOL enumerateAxes(const DIDEVICEOBJECTINSTANCE* doi);
+   //@}
+
 private:
+   /** @name Direct Input data */
+   //@{
+   LPDIRECTINPUT8       mDxObject;    /**< DirectInput object */
+   LPDIRECTINPUTDEVICE8 mDxJoystick;  /**< DirectInput device */
+   DIJOYSTATE           mJsData;      /**< Joystick state data structure */
+   //@}
+
    DWORD mType;
    std::string mProductName;
 };
