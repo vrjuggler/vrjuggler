@@ -103,7 +103,6 @@ namespace vpr
 
    typedef class InetAddrNSPR InetAddr;
    typedef class IOSysNSPR    IOSys;
-   typedef class ErrorImplNSPR Error;
 
    typedef class Selector_t<class SelectorImplNSPR> Selector;
 
@@ -125,9 +124,8 @@ namespace vpr
       typedef IOStatsStrategyAdapter<class BaseIOStatsStrategy, class BandwidthIOStatsStrategy>     SocketIOStatsStrategy;
    };
 
-   typedef class InetAddrBSD InetAddr;
-   typedef class IOSysUnix   IOSys;
-   typedef class ErrorBase   Error;
+   typedef class InetAddrBSD    InetAddr;
+   typedef class IOSysUnix      IOSys;
 
    typedef class Selector_t<class SelectorImplBSD>         Selector;
    typedef class SerialPort_t<class SerialPortImplTermios> SerialPort;
@@ -145,6 +143,7 @@ namespace vpr
 #ifdef VPR_USE_NSPR
 #  define VPR_THREAD_DOMAIN_INCLUDE VPR_DOMAIN_NSPR
 
+   typedef class ErrorImplNSPR Error;
    typedef class SystemNSPR    System;
    typedef class CondVarNSPR   CondVar;
    typedef class MutexNSPR     Mutex;
@@ -155,7 +154,8 @@ namespace vpr
 
 /* POSIX and SPROC */
 #else
-   typedef class SystemPosix System;
+   typedef class ErrorImplPosix Error;
+   typedef class SystemPosix    System;
 
 #  ifdef VPR_USE_IRIX_SPROC
 #     define VPR_THREAD_DOMAIN_INCLUDE VPR_DOMAIN_IRIX_SPROC
