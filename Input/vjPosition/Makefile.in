@@ -60,7 +60,9 @@ vpath %.c @srcdir@
 vpath %.cpp @srcdir@
 vpath %.${OBJ_FILE_SUFFIX} ${OBJDIR}
 
-VJPOS_SRCS	:= vjDummyPosition.cpp	\
+VJPOS_SRCS	:= isIntersense.cpp	\
+                   vjDummyPosition.cpp	\
+                   vjIsense.cpp		\
                    vjPosition.cpp
 
 ifneq (@OS_TYPE@, Win32)
@@ -69,8 +71,6 @@ VJPOS_SRCS	+= logiclass.cpp	\
                    aFlock.cpp		\
                    vjFlock.cpp		\
                    aMotionStar.cpp	\
-		   isIntersense.cpp	\
-		   vjIsense.cpp		\
                    vjMotionStar.cpp
 endif
 
