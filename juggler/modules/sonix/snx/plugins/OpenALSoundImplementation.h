@@ -84,12 +84,13 @@ public:
    /**
      * every implementation can return a new copy of itself
      */
-   virtual void clone( snx::SoundImplementation* &newCopy )
+   virtual void clone( snx::ISoundImplementation* &newCopy )
    {
-      newCopy = new OpenALSoundImplementation;
+      OpenALSoundImplementation* temp = new OpenALSoundImplementation;
+      newCopy = temp;
       
       // copy state, so that we return a true "clone"
-      newCopy->copy( *this );
+      temp->copy( *this );
    }
    
    /**

@@ -4,7 +4,7 @@
  * sonix
  *
  * Original Authors:
- *   Kevin Meinert, Carolina Cruz-Neira
+ *   Kevin Meinert
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile$
@@ -79,12 +79,13 @@ namespace snx
    /**
      * every implementation can return a new copy of itself
      */
-   void AudioWorksSoundImplementation::clone( snx::SoundImplementation* &newCopy )
+   void AudioWorksSoundImplementation::clone( snx::ISoundImplementation* &newCopy )
    {
-      newCopy = new AudioWorksSoundImplementation;
-
+      AudioWorksSoundImplementation* temp = new AudioWorksSoundImplementation;
+      newCopy = temp;
+      
       // copy state, so that we return a true "clone"
-      newCopy->copy( *this );
+      temp->copy( *this );
    }
 
    /**

@@ -73,12 +73,6 @@ public:
     */
    virtual ~ISoundImplementation() {}
 
-   /**
-    * copies current state of the system from one API to another.
-    * @semantics copies sound state.  doesn't do binding here, you must do that separately
-    */
-   virtual void copy( const ISoundImplementation& si ) = 0;
-
 public:
 
    /** trigger a sound.
@@ -249,11 +243,11 @@ public:
     */
    virtual void unbind( const std::string& alias ) = 0;
 
-   snx::SoundInfo& lookup( const std::string& alias ) = 0;
+   virtual snx::SoundInfo& lookup( const std::string& alias ) = 0;
 
-   void setName( const std::string& name ) = 0;
+   virtual void setName( const std::string& name ) = 0;
    
-   std::string& name() = 0;
+   virtual std::string& name() = 0;
 };
 
 }; // end namespace
