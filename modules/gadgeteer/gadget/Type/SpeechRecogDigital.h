@@ -152,8 +152,11 @@ namespace gadget
 
    protected:
       // gadget::SampleBuffer<T> is not copyable, so neither are we.
-      SpeechRecogDigital(const gadget::SpeechRecogDigital& d) : vpr::SerializableObject() {;}
-      void operator=(const gadget::SpeechRecogDigital& d) {;}
+      SpeechRecogDigital(const gadget::SpeechRecogDigital&)
+         : vpr::SerializableObject()
+      {;}
+
+      void operator=(const gadget::SpeechRecogDigital&) {;}
 
    private:
       SampleBuffer_t    mDigitalSamples; /**< SpeechRecogDigital samples */
