@@ -317,14 +317,14 @@ void ajOpenALSoundImplementation::_bind( const std::string& alias )
 	      // put the data in an OpenAL buffer
 	      alGenBuffers( 1, &bufferID );
          alBufferData( bufferID, AL_FORMAT_WAVE_EXT, &(mBindLookup[alias].data[0]), mBindLookup[alias].data.size(), 0 );
-	      if (alGetError() != AL_NO_ERROR)
+         if (alGetError() != AL_NO_ERROR)
          {
 		      std::cerr << "Could not buffer data\n" << std::flush;
             alDeleteBuffers( 1, &bufferID );
             mBindLookup.erase( alias );
 		      return;
 	      }
-
+      
          // associate a source with the buffer
 	      alGenSources( 1, &sourceID );
          if (alGetError() != AL_NO_ERROR)
@@ -334,7 +334,6 @@ void ajOpenALSoundImplementation::_bind( const std::string& alias )
             mBindLookup.erase( alias );
 		      return;
 	      }
-
 	      alSourcei( sourceID, AL_BUFFER, bufferID );
 	      alSourcei( sourceID, AL_LOOPING, AL_FALSE );
 
