@@ -140,12 +140,12 @@ public class ChunkOrgTreeModule extends DefaultCoreModule {
 	String homedir;
 
         try {
-            f1 = new File (Core.file.mangleFileName ("$HOME/.vjconfig/orgtree.org"));
+            f1 = new File (Core.file.mangleFileName ("${HOME}/.vjconfig/orgtree.org"));
             r = new FileReader (f1);
         }
         catch (FileNotFoundException e) {
             try {
-                f1 = new File (Core.file.mangleFileName ("$VJ_SHARE_DIR/Data/orgtree.org"));
+                f1 = new File (Core.file.mangleFileName ("${VJ_SHARE_DIR}/data/orgtree.org"));
                 r = new FileReader(f1);
             }
             catch (FileNotFoundException e2) {
