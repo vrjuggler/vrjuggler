@@ -83,7 +83,7 @@ public:
       vpr::Uint8  m5[6];
    };
 
-private:
+public:
    /**
     * Generates a random GUID.
     */
