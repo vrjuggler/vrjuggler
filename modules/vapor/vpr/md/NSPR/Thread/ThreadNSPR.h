@@ -138,7 +138,7 @@ public:
     *        (i.e., finishes its root function).  This routine may return
     *        immediately if this thread has already exited.
     *
-    * @return 0 is returned upon succeedful completion.  -1 is returned if
+    * @return 0 is returned upon successful completion.  -1 is returned if
     *         an error occurred.
     */
    virtual int join(void** status = NULL);
@@ -152,10 +152,10 @@ public:
     * @post This thread is sent the SIGCONT signal and is allowed to begin
     *        executing again.
     *
-    * @return 0 is returned upon succeedful completion.  -1 is returned if
+    * @return 0 is returned upon successful completion.  -1 is returned if
     *         an error occurred.
     */
-   virtual int resume (void)
+   virtual int resume()
    {
 //        return kill(SIGCONT);
       return -1;
@@ -168,10 +168,10 @@ public:
     * @post This thread is sent the SIGSTOP signal and is thus suspended
     *        from execution until the member function resume() is called.
     *
-    * @return  0 - Succeedful completion
-    * @return -1 - Error
+    * @return 0 is returned upon successful completion.  -1 is returned if
+    *         an error occurred.
     */
-   virtual int suspend (void)
+   virtual int suspend()
    {
 //        return kill(SIGSTOP);
       return -1;
@@ -187,10 +187,10 @@ public:
     * @param prio Pointer to an int variable that will have the thread's
     *             priority stored in it.
     *
-    * @return  0 - Succeedful completion
-    * @return -1 - Error
+    * @return 0 is returned upon successful completion.  -1 is returned if
+    *         an error occurred.
     */
-   virtual int getPrio (VPRThreadPriority* prio)
+   virtual int getPrio(VPRThreadPriority* prio)
    {
       *prio = nsprThreadPriorityToVPR(PR_GetThreadPriority(mThread));
 
@@ -205,8 +205,8 @@ public:
     *
     * @param prio  The new priority for this thread.
     *
-    * @return  0 - Succeedful completion
-    * @return -1 - Invalid priority given
+    * @return 0 is returned upon successful completion.  -1 is returned if
+    *         an error occurred.
     *
     * @note The priority must correspond to a value in the PRThreadPriority
     *        enumerated type.
@@ -221,10 +221,10 @@ public:
     *
     * @param signum  The signal to send to the specified thread.
     *
-    * @return  0 - Succeedful completion
-    * @return -1 - Error
+    * @return 0 is returned upon successful completion.  -1 is returned if
+    *         an error occurred.
     */
-   virtual int kill (int signum)
+   virtual int kill(int signum)
    {
       return -1;
    }
@@ -244,7 +244,7 @@ public:
     *        version of kill() is also used for sending signals to threads.
     *        This kill() and cancel() do exactly the same thing.
     */
-   virtual void kill (void)
+   virtual void kill()
    {
    }
 
@@ -288,10 +288,10 @@ public:
 // All private member variables and functions.
 private:
    /**
-    * Called by the spawn routine to start the user thread function
+    * Called by the spawn routine to start the user thread function.
     *
-    * @pre Called ONLY by a new thread
-    * @post The new thread will have started the user thread function
+    * @pre Called ONLY by a new thread.
+    * @post The new thread will have started the user thread function.
     */
    void startThread(void* null_param);
 
