@@ -192,7 +192,6 @@ public class ConfigChunkDBEditor
     */
    public void setConfigContext(ConfigContext context)
    {
-      System.out.println("Setting context: "+context);
       if (this.context != null)
       {
          this.context.removeContextListener(this);
@@ -643,7 +642,6 @@ public class ConfigChunkDBEditor
     */
    public void resourceAdded(ContextEvent evt)
    {
-      System.out.println("ConfigChunkDB.resourceAdded()");
       String resource = evt.getResource();
       addChunks(getConfigBroker().getChunksIn(resource));
    }
