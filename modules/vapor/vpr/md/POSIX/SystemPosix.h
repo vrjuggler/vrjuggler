@@ -86,7 +86,7 @@ public:
         char* val;
         Status status;
 
-        val = getenv(name.c_str());
+        val = ::getenv(name.c_str());
 
         if ( val != NULL ) {
             result = val;
