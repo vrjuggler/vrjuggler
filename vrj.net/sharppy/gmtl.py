@@ -28,8 +28,12 @@
 mod = 'gmtl'
 
 Matrix = ReferenceTemplate(mod, 'gmtl::Matrix', 'gmtl/Matrix.h')
+
 Matrix44f = Matrix('float 4 4', rename = 'gmtl::Matrix44f')
+sealed(Matrix44f)
+
 Matrix33f = Matrix('float 3 3', rename = 'gmtl::Matrix33f')
+sealed(Matrix33f)
 
 # XXX: The gmtl::VecBase<> instantiations should cannot be renamed until
 # Sharppy supports renaming without requiring existing typedefs.
@@ -38,9 +42,13 @@ VecBase3f = VecBase('float 3')
 VecBase4f = VecBase('float 4')
 
 Vec = ReferenceTemplate(mod, 'gmtl::Vec', 'gmtl/Vec.h')
+
 Vec3f = Vec('float 3', rename = 'gmtl::Vec3f')
+sealed(Vec3f)
+
 Vec4f = Vec('float 4', rename = 'gmtl::Vec4f')
+sealed(Vec4f)
 
 Quat = ReferenceTemplate(mod, 'gmtl::Quat', 'gmtl/Quat.h')
 Quatf = Quat('float', rename = 'gmtl::Quatf')
-
+sealed(Quatf)

@@ -28,6 +28,7 @@
 mod = 'vrj'
 
 User = ReferenceType(mod, 'vrj::User', 'vrj/Kernel/User.h')
+sealed(User)
 
 App = ReferenceType(mod, 'vrj::App', 'vrj/Kernel/App.h')
 #exclude(App.getDrawManager)
@@ -37,6 +38,7 @@ GlApp = ReferenceType(mod, 'vrj::GlApp', 'vrj/Draw/OGL/GlApp.h')
 #exclude(App.getDrawManager)
 
 Kernel = ReferenceType(mod, 'vrj::Kernel', 'vrj/Kernel/Kernel.h')
+sealed(Kernel)
 exclude(Kernel.getUsers) # Returns a vector
 exclude(Kernel.getThread)
 exclude(Kernel.controlLoop)

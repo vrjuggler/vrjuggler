@@ -39,11 +39,14 @@ SerializableObject = ReferenceType('vpr', 'vpr::SerializableObject',
                                    'vpr/IO/SerializableObject.h')
 
 GUID = ReferenceType('vpr', 'vpr::GUID', 'vpr/Util/GUID.h')
+sealed(GUID)
 exclude(GUID.mGuid)
 exclude(GUID.StdGuid)
 exclude(GUID.hash)
 
 Interval = ReferenceType('vpr', 'vpr::Interval', 'vpr/Util/Interval.h')
+sealed(Interval)
 
 ReturnStatus = ReferenceType('vpr', 'vpr::ReturnStatus',
                              'vpr/Util/ReturnStatus.h')
+sealed(ReturnStatus)

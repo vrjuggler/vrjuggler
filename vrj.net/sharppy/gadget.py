@@ -29,6 +29,7 @@ mod = 'gadget'
 
 InputManager = ReferenceType(mod, 'gadget::InputManager',
                              'gadget/InputManager.h')
+sealed(InputManager)
 exclude(InputManager.getDeviceFactory)
 exclude(InputManager.getInputLogger)
 
@@ -70,14 +71,17 @@ exclude(TypedProxy_pos.set)
 
 AnalogProxy = ReferenceType(mod, 'gadget::AnalogProxy',
                              'gadget/Type/AnalogProxy.h')
+sealed(AnalogProxy)
 exclude(AnalogProxy.set)
 
 DigitalProxy = ReferenceType(mod, 'gadget::DigitalProxy',
                              'gadget/Type/DigitalProxy.h')
+sealed(DigitalProxy)
 exclude(DigitalProxy.set)
 
 PositionProxy = ReferenceType(mod, 'gadget::PositionProxy',
                               'gadget/Type/PositionProxy.h')
+sealed(PositionProxy)
 exclude(PositionProxy.set)
 exclude(PositionProxy.getPositionData)
 exclude(PositionProxy.getPositionPtr)
@@ -92,6 +96,7 @@ DeviceInterface = ReferenceTemplate(mod, 'gadget::DeviceInterface',
 AnalogInterface = DeviceInterface('gadget::AnalogProxy',
                                    ['gadget/Type/AnalogInterface.h'],
                                    rename = 'gadget::AnalogInterface')
+sealed(AnalogInterface)
 use_smart_ptr(AnalogInterface)
 no_smart_ptr(AnalogInterface.getProxy)
 no_smart_ptr(AnalogInterface.refresh)
@@ -100,6 +105,7 @@ exclude(AnalogInterface.setProxy)
 DigitalInterface = DeviceInterface('gadget::DigitalProxy',
                                    ['gadget/Type/DigitalInterface.h'],
                                    rename = 'gadget::DigitalInterface')
+sealed(DigitalInterface)
 use_smart_ptr(DigitalInterface)
 no_smart_ptr(DigitalInterface.getProxy)
 no_smart_ptr(DigitalInterface.refresh)
@@ -108,6 +114,7 @@ exclude(DigitalInterface.setProxy)
 PositionInterface = DeviceInterface('gadget::PositionProxy',
                                     ['gadget/Type/PositionInterface.h'],
                                     rename = 'gadget::PositionInterface')
+sealed(PositionInterface)
 use_smart_ptr(PositionInterface)
 no_smart_ptr(PositionInterface.getProxy)
 no_smart_ptr(PositionInterface.refresh)

@@ -28,6 +28,7 @@
 ConfigElement = ReferenceType('jccl', 'jccl::ConfigElement',
                               'jccl/Config/ConfigElement.h')
 use_shared_ptr(ConfigElement)
+sealed(ConfigElement)
 exclude(ConfigElement.initFromNode)
 exclude(ConfigElement.getNode)
 exclude(ConfigElement.getElementPtrDependencies) # Returns a vector
@@ -42,6 +43,7 @@ exclude(ConfigElement.getProperty_ElementPtr)
 ConfigDefinition = ReferenceType('jccl', 'jccl::ConfigDefinition',
                                  'jccl/Config/ConfigDefinition.h')
 use_shared_ptr(ConfigDefinition)
+sealed(ConfigDefinition)
 exclude(ConfigDefinition.setNode)
 exclude(ConfigDefinition.getNode)
 exclude(ConfigDefinition.getAllPropertyDefinitions) # Returns a vector
@@ -51,6 +53,7 @@ exclude(ConfigDefinition.getPropertyDefinition)
 #                                   'jccl/Config/PropertyDefinition.h')
 ##exclude(PropertyDefinition.PropertyDefinition[1])
 #exclude(PropertyDefinition.getNode)
+#sealed(ConfigElement)
 
 ConfigElementHandler = ReferenceType('jccl', 'jccl::ConfigElementHandler',
                                      'jccl/RTRC/ConfigElementHandler.h')
