@@ -381,97 +381,102 @@ void vjPfDrawManager::addDisplay(vjDisplay* disp)
    for(unsigned vp_num=0; vp_num < num_vps; vp_num++)
    {
       viewport = disp->getViewport(vp_num);
-      vjViewport::View view = viewport->getView();
-      pfViewport pf_viewport;                         // The viewport to build up
-      pf_viewport.viewport = viewport;
-      float vp_ox, vp_oy, vp_sx, vp_sy;
 
-      // Get channel info
-      // Primary channel - (Left in stereo)
-      viewport->getOriginAndSize(vp_ox, vp_oy, vp_sx, vp_sy);
-      pf_viewport.chans[pfViewport::PRIMARY] = new pfChannel(pipe);
-      pf_viewport.chans[pfViewport::PRIMARY]->setViewport(vp_ox, vp_ox+vp_sx, vp_oy, vp_oy+vp_sy);
-      pf_disp.pWin->addChan(pf_viewport.chans[pfViewport::PRIMARY]);
+      if(viewport->isActive())      // is viewport active
+      {
+         vjViewport::View view = viewport->getView();
+         pfViewport pf_viewport;                         // The viewport to build up
+         pf_viewport.viewport = viewport;
+         float vp_ox, vp_oy, vp_sx, vp_sy;
 
-      // Secondary channel - (Right in stereo)
-      if(disp->inStereo())
-      {
-         pf_viewport.chans[pfViewport::SECONDARY] = new pfChannel(pipe);
-         pf_viewport.chans[pfViewport::SECONDARY]->setViewport(vp_ox, vp_ox+vp_sx, vp_oy, vp_oy+vp_sy);
-         pf_disp.pWin->addChan(pf_viewport.chans[pfViewport::SECONDARY]);
-      }
+         // Get channel info
+         // Primary channel - (Left in stereo)
+         viewport->getOriginAndSize(vp_ox, vp_oy, vp_sx, vp_sy);
+         pf_viewport.chans[pfViewport::PRIMARY] = new pfChannel(pipe);
+         pf_viewport.chans[pfViewport::PRIMARY]->setViewport(vp_ox, vp_ox+vp_sx, vp_oy, vp_oy+vp_sy);
+         pf_disp.pWin->addChan(pf_viewport.chans[pfViewport::PRIMARY]);
 
-      // Set draw function
-      if(disp->inStereo() && (!viewport->isSimulator()))
-      {
-         pf_viewport.chans[pfViewport::PRIMARY]->setTravFunc(PFTRAV_DRAW, vjPfDrawFuncStereoLeft);
-         pf_viewport.chans[pfViewport::SECONDARY]->setTravFunc(PFTRAV_DRAW, vjPfDrawFuncStereoRight);
-      }
-      else if(viewport->isSimulator())
-      {
-         pf_viewport.chans[pfViewport::PRIMARY]->setTravFunc(PFTRAV_DRAW, vjPfDrawFuncSimulator);
-      }
-      else
-      {
-         pf_viewport.chans[pfViewport::PRIMARY]->setTravFunc(PFTRAV_DRAW, vjPfDrawFuncMonoBackbuffer);
-      }
-
-      // if surface ==> Setup surface channels
-      if (viewport->isSurface())
-      {
-         vjASSERT(pf_viewport.chans[pfViewport::PRIMARY] != NULL);
-
-         // Primary
-         if(NULL == mSurfMasterChan)      // If NULL, then add us as the new one
+         // Secondary channel - (Right in stereo)
+         if(disp->inStereo())
          {
-            mSurfMasterChan = pf_viewport.chans[pfViewport::PRIMARY];
-            mSurfMasterChan->setScene(mRoot);
-            initChanGroupAttribs(mSurfMasterChan);
-            mSurfChannels.push_back(mSurfMasterChan);
+            pf_viewport.chans[pfViewport::SECONDARY] = new pfChannel(pipe);
+            pf_viewport.chans[pfViewport::SECONDARY]->setViewport(vp_ox, vp_ox+vp_sx, vp_oy, vp_oy+vp_sy);
+            pf_disp.pWin->addChan(pf_viewport.chans[pfViewport::SECONDARY]);
+         }
+
+         // Set draw function
+         if(disp->inStereo() && (!viewport->isSimulator()))
+         {
+            pf_viewport.chans[pfViewport::PRIMARY]->setTravFunc(PFTRAV_DRAW, vjPfDrawFuncStereoLeft);
+            pf_viewport.chans[pfViewport::SECONDARY]->setTravFunc(PFTRAV_DRAW, vjPfDrawFuncStereoRight);
+         }
+         else if(viewport->isSimulator())
+         {
+            pf_viewport.chans[pfViewport::PRIMARY]->setTravFunc(PFTRAV_DRAW, vjPfDrawFuncSimulator);
          }
          else
          {
-            mSurfChannels.push_back(pf_viewport.chans[pfViewport::PRIMARY]);
-            mSurfMasterChan->attach(pf_viewport.chans[pfViewport::PRIMARY]);
+            pf_viewport.chans[pfViewport::PRIMARY]->setTravFunc(PFTRAV_DRAW, vjPfDrawFuncMonoBackbuffer);
          }
 
-         // Secondary
-         if(NULL != pf_viewport.chans[pfViewport::SECONDARY])
+         // if surface ==> Setup surface channels
+         if (viewport->isSurface())
          {
-            mSurfChannels.push_back(pf_viewport.chans[pfViewport::SECONDARY]);
-            mSurfMasterChan->attach(pf_viewport.chans[pfViewport::SECONDARY]);
+            vjASSERT(pf_viewport.chans[pfViewport::PRIMARY] != NULL);
+
+            // Primary
+            if(NULL == mSurfMasterChan)      // If NULL, then add us as the new one
+            {
+               mSurfMasterChan = pf_viewport.chans[pfViewport::PRIMARY];
+               mSurfMasterChan->setScene(mRoot);
+               initChanGroupAttribs(mSurfMasterChan);
+               mSurfChannels.push_back(mSurfMasterChan);
+            }
+            else
+            {
+               mSurfChannels.push_back(pf_viewport.chans[pfViewport::PRIMARY]);
+               mSurfMasterChan->attach(pf_viewport.chans[pfViewport::PRIMARY]);
+            }
+
+            // Secondary
+            if(NULL != pf_viewport.chans[pfViewport::SECONDARY])
+            {
+               mSurfChannels.push_back(pf_viewport.chans[pfViewport::SECONDARY]);
+               mSurfMasterChan->attach(pf_viewport.chans[pfViewport::SECONDARY]);
+            }
+
          }
-
-      }
-      // if sim ==> setup sim channels
-      else if(viewport->isSimulator())
-      {
-         vjASSERT(pf_viewport.chans[pfViewport::PRIMARY] != NULL);
-
-         // Primary
-         if(NULL == mSimMasterChan)        // If NULL, then make us the master
+         // if sim ==> setup sim channels
+         else if(viewport->isSimulator())
          {
-            mSimMasterChan = pf_viewport.chans[pfViewport::PRIMARY];
-            mSimMasterChan->setScene(mRootWithSim);       // Set the shared "normal" scene
-            initChanGroupAttribs(mSimMasterChan);       // Setup the channel group attribs
-            mSimChannels.push_back(mSimMasterChan);
-         }
-         else
-         {
-            mSimChannels.push_back(pf_viewport.chans[pfViewport::PRIMARY]);
-            mSimMasterChan->attach(pf_viewport.chans[pfViewport::PRIMARY]);
+            vjASSERT(pf_viewport.chans[pfViewport::PRIMARY] != NULL);
+
+            // Primary
+            if(NULL == mSimMasterChan)        // If NULL, then make us the master
+            {
+               mSimMasterChan = pf_viewport.chans[pfViewport::PRIMARY];
+               mSimMasterChan->setScene(mRootWithSim);       // Set the shared "normal" scene
+               initChanGroupAttribs(mSimMasterChan);       // Setup the channel group attribs
+               mSimChannels.push_back(mSimMasterChan);
+            }
+            else
+            {
+               mSimChannels.push_back(pf_viewport.chans[pfViewport::PRIMARY]);
+               mSimMasterChan->attach(pf_viewport.chans[pfViewport::PRIMARY]);
+            }
+
+            // Secondary
+            if(NULL != pf_viewport.chans[pfViewport::SECONDARY])
+            {
+               mSimChannels.push_back(pf_viewport.chans[pfViewport::SECONDARY]);
+               mSimMasterChan->attach(pf_viewport.chans[pfViewport::SECONDARY]);
+            }
          }
 
-         // Secondary
-         if(NULL != pf_viewport.chans[pfViewport::SECONDARY])
-         {
-            mSimChannels.push_back(pf_viewport.chans[pfViewport::SECONDARY]);
-            mSimMasterChan->attach(pf_viewport.chans[pfViewport::SECONDARY]);
-         }
-      }
+         // Add viewport to the display list
+         pf_disp.viewports.push_back(pf_viewport);
 
-      // Add viewport to the display list
-      pf_disp.viewports.push_back(pf_viewport);
+      }  // is viewport active
    }     // for each viewport
 
    // -- Add new pfDisp to disp Vector -- //
