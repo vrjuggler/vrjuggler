@@ -971,19 +971,19 @@ install-data:
 
 # Install the Java-based config editor if possible.
 install-gui:
-ifndef NO_JAVA_GUI
+ifdef NO_JAVA_GUI
+	@echo "------------------------------------------------"
+	@echo "Skipping installation of vjcontrol (not built)"
+	@echo "------------------------------------------------"
+else
 ifeq (${BUILD_GUI}, Y)
 	@echo "------------------------------------------------"
 	@echo "Installing vjcontrol"
 	@echo "------------------------------------------------"
-ifneq (@OS_TYPE@, Win32)
+ifeq (@OS_TYPE@, UNIX)
 	swingpath=`${PERL} ${scriptdir}/find-swing.pl` ;		\
-          ${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
+          ${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}		\
           $$swingpath ${bindir}
-endif
-	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${topdir}/GUI/VjControl.jar ${bindir}
-ifneq (@OS_TYPE@, Win32)
 	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
           ${VJROOT_ABS}/GUI/vjcontrol ${bindir}/vjcontrol
 	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
@@ -991,13 +991,11 @@ ifneq (@OS_TYPE@, Win32)
 else
 	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX} 			\
           ${VJROOT_ABS}/GUI/vjcontrol.bat ${bindir}/vjcontrol.bat
-endif
-else
-	@echo "------------------------------------------------"
-	@echo "Skipping installation of vjcontrol (not built)"
-	@echo "------------------------------------------------"
-endif
-endif	# ifndef NO_JAVA_GUI
+endif	# if OS_TYPE == UNIX
+	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
+          ${topdir}/GUI/VjControl.jar ${bindir}
+endif	# if ${BUILD_GUI} == Y
+endif	# ifdef NO_JAVA_GUI
 
 # =============================================================================
 # Clean-up targets.  '_clean' removes all the files in the build directories.  
