@@ -70,9 +70,9 @@ namespace snx
 class AudiereSoundImplementation : public snx::SoundImplementation
 {
 public:
-    
+
    /**
-    * constructor for the OpenAL implementation 
+    * constructor for the OpenAL implementation.
     */
    AudiereSoundImplementation();
 
@@ -88,11 +88,11 @@ public:
    {
       AudiereSoundImplementation* temp = new AudiereSoundImplementation;
       newCopy = temp;
-      
+
       // copy state, so that we return a true "clone"
       temp->copy( *this );
    }
-   
+
    /**
     * @input alias of the sound to trigger, and number of times to play
     * @preconditions alias does not have to be associated with a loaded sound.
@@ -105,7 +105,7 @@ public:
      * is the sound currently playing?
      */
    bool isPlaying( const std::string& alias );
-   
+
    /**
     * @semantics stop the sound
     * @input alias of the sound to be stopped
@@ -152,10 +152,8 @@ public:
    /** 1 is no change.  0 is total cutoff. */
    void setCutoff( const std::string& alias, float amount );
 
-   
-  
    /**
-    * set sound's 3D position 
+    * set sound's 3D position.
     */
    virtual void setPosition( const std::string& alias, float x, float y, float z );
 
@@ -165,7 +163,7 @@ public:
     * @output x,y,z are returned in OpenGL coordinates.
     */
    virtual void getPosition( const std::string& alias, float& x, float& y, float& z );
-   
+
    /**
     * set the position of the listener
     */
@@ -175,7 +173,7 @@ public:
     * get the position of the listener
     */
    virtual void getListenerPosition( gmtl::Matrix44f& mat );
-   
+
 public:
    /**
     * start the sound API, creating any contexts or other configurations at startup
@@ -187,7 +185,7 @@ public:
    /*
     * configure the sound API global settings
     */
-   
+
    /**
     * kill the sound API, deallocating any sounds, etc...
     * @postconditions sound API is ready to go.
@@ -201,7 +199,7 @@ public:
      */
    virtual bool isStarted() const
    {
-      return mDev != NULL;
+      return mDev.get() != NULL;
    }
 
    virtual void configure( const snx::SoundAPIInfo& sai )
@@ -231,7 +229,7 @@ public:
     * @semantics any existing aliases will be stubbed. sounds will be unbind()ed
     */
    virtual void clear();
-   
+
    /**
     * load/allocate the sound data this alias refers to the sound API
     * @postconditions the sound API has the sound buffered.
@@ -260,12 +258,10 @@ private:
 
    int mCurrentIndex;
    audiere::RefPtr<audiere::OutputStream> mCurrentTrack;
-   bool mIsPlaying; 
+   bool mIsPlaying;
 
    std::map<std::string, audiere::OutputStreamPtr> trackMap;
    std::map<std::string, audiere::SoundEffectPtr> effectMap;
-   
-
 };
 
 } // end namespace
