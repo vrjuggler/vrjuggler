@@ -421,7 +421,7 @@ case $target_os in
         dnl # If no ABI has been set yet, default to ELF with whatever the
         dnl # target CPU architecture is.
         if test "$ABI" = "" ; then
-            VJ_ABI_CFG('ELF', "$target_cpu", '', '-elf')
+            VJ_ABI_CFG('ELF', "$target_cpu")
         fi
 
         AR='ar'
