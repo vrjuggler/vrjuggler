@@ -86,7 +86,6 @@ Builder: JExplorerBuilder V 1. 0. 7
 			</folder>
 						
 			< folder title="Case Studies: Learn by example" 
-				link="examples/index.html" 
 				info="Learn by example"
 				image="Leaf_Script2.gif" imagetwo="Leaf_Write.gif" >
 				< folder title="Cubes Example - Using OpenGL display lists in VR Juggler" 
