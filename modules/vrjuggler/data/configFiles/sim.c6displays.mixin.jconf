@@ -2,7 +2,7 @@
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
 <configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
-      <display_window name="Right Surface" version="2">
+      <display_window name="Right Surface" version="3">
          <origin>400</origin>
          <origin>400</origin>
          <size>200</size>
@@ -21,6 +21,7 @@
          </frame_buffer_config>
          <stereo>false</stereo>
          <border>false</border>
+         <hide_mouse>false</hide_mouse>
          <act_as_event_source>false</act_as_event_source>
          <event_window_device>
             <event_window name="Event window configuration 0" version="1">
@@ -79,7 +80,7 @@
             </surface_viewport>
          </surface_viewports>
       </display_window>
-      <display_window name="Front Surface" version="2">
+      <display_window name="Front Surface" version="3">
          <origin>200</origin>
          <origin>400</origin>
          <size>200</size>
@@ -98,6 +99,7 @@
          </frame_buffer_config>
          <stereo>false</stereo>
          <border>false</border>
+         <hide_mouse>false</hide_mouse>
          <act_as_event_source>false</act_as_event_source>
          <event_window_device>
             <event_window name="Event window configuration 0" version="1">
@@ -156,7 +158,7 @@
             </surface_viewport>
          </surface_viewports>
       </display_window>
-      <display_window name="Left Surface" version="2">
+      <display_window name="Left Surface" version="3">
          <origin>0</origin>
          <origin>400</origin>
          <size>200</size>
@@ -175,6 +177,7 @@
          </frame_buffer_config>
          <stereo>false</stereo>
          <border>false</border>
+         <hide_mouse>false</hide_mouse>
          <act_as_event_source>false</act_as_event_source>
          <event_window_device>
             <event_window name="Event window configuration 0" version="1">
@@ -233,7 +236,7 @@
             </surface_viewport>
          </surface_viewports>
       </display_window>
-      <display_window name="Floor Surface" version="2">
+      <display_window name="Floor Surface" version="3">
          <origin>200</origin>
          <origin>200</origin>
          <size>200</size>
@@ -252,6 +255,7 @@
          </frame_buffer_config>
          <stereo>false</stereo>
          <border>false</border>
+         <hide_mouse>false</hide_mouse>
          <act_as_event_source>false</act_as_event_source>
          <event_window_device>
             <event_window name="Event window configuration 0" version="1">
@@ -310,7 +314,7 @@
             </surface_viewport>
          </surface_viewports>
       </display_window>
-      <display_window name="Ceiling Surface" version="2">
+      <display_window name="Ceiling Surface" version="3">
          <origin>200</origin>
          <origin>600</origin>
          <size>200</size>
@@ -329,6 +333,7 @@
          </frame_buffer_config>
          <stereo>false</stereo>
          <border>false</border>
+         <hide_mouse>false</hide_mouse>
          <act_as_event_source>false</act_as_event_source>
          <event_window_device>
             <event_window name="Event window configuration 0" version="1">
@@ -387,7 +392,7 @@
             </surface_viewport>
          </surface_viewports>
       </display_window>
-      <display_window name="Entrance Surface" version="2">
+      <display_window name="Entrance Surface" version="3">
          <origin>600</origin>
          <origin>400</origin>
          <size>200</size>
@@ -406,6 +411,7 @@
          </frame_buffer_config>
          <stereo>false</stereo>
          <border>false</border>
+         <hide_mouse>false</hide_mouse>
          <act_as_event_source>false</act_as_event_source>
          <event_window_device>
             <event_window name="Event window configuration 0" version="1">
@@ -464,7 +470,7 @@
             </surface_viewport>
          </surface_viewports>
       </display_window>
-      <display_window name="rightSurfaceAngled" version="2">
+      <display_window name="rightSurfaceAngled" version="3">
          <origin>400</origin>
          <origin>200</origin>
          <size>200</size>
@@ -483,6 +489,7 @@
          </frame_buffer_config>
          <stereo>false</stereo>
          <border>false</border>
+         <hide_mouse>false</hide_mouse>
          <act_as_event_source>false</act_as_event_source>
          <event_window_device>
             <event_window name="Event window configuration 0" version="1">
@@ -541,7 +548,7 @@
             </surface_viewport>
          </surface_viewports>
       </display_window>
-      <display_window name="Ceiling Surface Angled" version="2">
+      <display_window name="Ceiling Surface Angled" version="3">
          <origin>200</origin>
          <origin>800</origin>
          <size>200</size>
@@ -560,6 +567,7 @@
          </frame_buffer_config>
          <stereo>false</stereo>
          <border>false</border>
+         <hide_mouse>false</hide_mouse>
          <act_as_event_source>false</act_as_event_source>
          <event_window_device>
             <event_window name="Event window configuration 0" version="1">
