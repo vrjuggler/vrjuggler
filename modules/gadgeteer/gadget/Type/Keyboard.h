@@ -87,7 +87,7 @@ const int VJKEY_Y      = 42;
 const int VJKEY_Z      = 43;
 const int VJKEY_ESC    = 44;
 
-#define LAST_KEY 44  // Don't forget to change this when new keys are added
+#define LAST_KEY 44  /* Don't forget to change this when new keys are added */
 
 const int VJMOUSE_POSX = LAST_KEY + 1;
 const int VJMOUSE_NEGX = LAST_KEY + 2;
