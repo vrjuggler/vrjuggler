@@ -191,6 +191,10 @@ DPP_BASIC_PROGS([$PLATFORM], [$OS_TYPE])
 # Checks for libraries.
 # -----------------------------------------------------------------------------
 VPR_PATH([0.15.0], , [AC_MSG_ERROR([*** VPR required for JCCL ***])])
+TWEEK_PATH_JAVA([0.4.0], ,
+                [AC_MSG_WARN([*** Tweek required for VjControl ***])
+                 BUILD_JAVA='N'
+                ])
 
 # -----------
 # cppdom
