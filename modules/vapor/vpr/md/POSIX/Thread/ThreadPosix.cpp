@@ -145,16 +145,12 @@ ThreadPosix::ThreadPosix (BaseThreadFunctor* functorPtr,
 // POST: This thread is removed from the thread table and from the local
 //       thread hash.
 // ---------------------------------------------------------------------------
-ThreadPosix::~ThreadPosix (void)
+ThreadPosix::~ThreadPosix()
 {
-   int status;
-
    if ( mDeleteThreadFunctor )
    {
       delete mUserThreadFunctor;
    }
-
-   status = 0;
 }
 
 // ---------------------------------------------------------------------------
