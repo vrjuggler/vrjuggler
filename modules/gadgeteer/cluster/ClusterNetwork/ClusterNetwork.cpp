@@ -71,6 +71,7 @@ namespace cluster
       
          // now strip the tail of the address to just get the computer name
       mLocalHostnameShort = cluster::getShortHostnameFromLong(mLocalHostnameLong);
+      std::cout << "START UPDATEING" << std::endl;
       startUpdating();
    }
 
@@ -363,10 +364,14 @@ namespace cluster
                   << clrOutBOLD(clrMAGENTA,"[ClusterNetwork]")
                   << " Adding a new Cluster Node." << std::endl << vprDEBUG_FLUSH;           
                ClusterNode* node = new ClusterNode(std::string("Unkown"), std::string("Unkown"), vpr::Uint16(0), std::string("Unkown"), client_sock);               
+               vprASSERT(node != NULL && "God Damnit!!");
                addClusterNode(node);               
             }
             temp_packet->printData(vprDBG_CONFIG_LVL);
-            temp_packet->action(node);   
+            if(temp_packet->action(node) == false)
+            {
+               std::cout << "FALSE!!!!" << std::endl;
+            }
             delete temp_packet;
             
             // XXX: HACK FOR NOW

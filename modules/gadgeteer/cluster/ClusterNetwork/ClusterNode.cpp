@@ -66,6 +66,7 @@ namespace cluster
       mThreadActive = false;
       mPendingConnectionRequest = false;
       mUpdated = false;
+      mRunning = false;
       
       mConnected = DISCONNECTED;
 
@@ -84,6 +85,7 @@ namespace cluster
       mThreadActive = false;
       mUpdated = false;
       mPendingConnectionRequest = false;
+      mRunning = false;
       
       mConnected = DISCONNECTED;
       
