@@ -30,16 +30,21 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef CLUSTER_ApplicationData_SERVER_H
-#define CLUSTER_ApplicationData_SERVER_H
+#ifndef CLUSTER_APPLICATION_DATA_SERVER_H
+#define CLUSTER_APPLICATION_DATA_SERVER_H
 
 #include <cluster/Plugins/PluginConfig.h>
-#include <cluster/Packets/DataPacket.h>
+
+namespace vpr
+{
+   class BufferObjectWriter;
+}
 
 namespace cluster
 {
-   class ClusterNode;
    class ApplicationData;
+   class ClusterNode;
+   class DataPacket;
 
    class GADGET_CLUSTER_PLUGIN_CLASS_API ApplicationDataServer
    {
@@ -53,51 +58,60 @@ namespace cluster
        *                   each data packet so that the receiver knows which 
        *                   plugin the data is coming from.
        */
-      ApplicationDataServer(vpr::GUID guid, ApplicationData* user_data, vpr::GUID plugin_guid);
+      ApplicationDataServer(const vpr::GUID& guid, ApplicationData* user_data, const vpr::GUID& plugin_guid);
+
+      /**
+       * Release all memory that is no longer needed.
+       */
       ~ApplicationDataServer();
 
-      void send();
-      void updateLocalData();
+      /**
+       * Serialize the local ApplicationData and store it in a DataPacket to send to each client later.
+       */
+      //void updateLocalData();
+      
+      /**
+       * Send mDataPacket, which has been updated in updateLocalData, to each client.
+       */
+      //void send();
 
+      void serializeAndSend();
+
+      /**
+       * Add a ClusterNode to the list of clients that should receive data for this ApplicationData.
+       *
+       * @param new_client_node -ClusterNode that will be added to the list
+       */
       void addClient(ClusterNode* new_client_node);
+
+      /**
+       * Remove a ClusterNode from the list of clients that should receive data for this ApplicationData.
+       *
+       * @param new_client_node -Hostname of the ClusterNode that will be removed from the list
+       */
       void removeClient(const std::string& host_name);
 
+      /**
+       * Print information about this ApplicationDataServer to the screen.
+       *
+       * @param debug_level -The debug level that the information will be displayed at.
+       */
       void debugDump(int debug_level);
 
-      vpr::GUID getId() { return mId; }
-      /** Locks the active list.
-       *
-       *  This function blocks until it can lock the std::map of active
-       *  ClusterNodes.
-       *
-       *  The caller of this method must call unlockActive() when it
-       *  is finished viewing/modifying the active list.
+      /**
+       * Return the GUID of the ApplicationData that this server is responsible for.
        */
-      void lockClients()
-      { mClientsLock.acquire(); }
-
-      /** Unlocks the active list.
-       *
-       *  The method releases the lock on the active connections std::map.
-       *
-       *  The caller of this method must have previously locked the active
-       *  list with lockActive().
-       */
-      void unlockClients()
-      { mClientsLock.release(); }
-
+      vpr::GUID getId();
    private:
-      vpr::GUID                                    mId;   /**< ApplicationDataServer name */
-      std::vector<cluster::ClusterNode*>           mClients;
-      vpr::Mutex                                   mClientsLock;   /**< Lock on active config list.*/   
+      std::vector<cluster::ClusterNode*>           mClients;            /**< Vecor of nodes that this server needs to send data to. */
+      vpr::Mutex                                   mClientsLock;        /**< Lock for the list of clients. */   
       
-      ApplicationData*                             mApplicationData;
-      DataPacket*                                  mDataPacket;
-      vpr::BufferObjectWriter*                     mBufferObjectWriter;
-      std::vector<vpr::Uint8>*                     mDeviceData;
-      vpr::GUID                                    mPluginGUID;
+      ApplicationData*                             mApplicationData;    /**< Structure that is being shared across the cluster. */
+      DataPacket*                                  mDataPacket;         /**< Packet will be sent across the cluster. */
+      vpr::BufferObjectWriter*                     mBufferObjectWriter; /**< ObjectWriter used to serialize the ApplicationData. */
+      std::vector<vpr::Uint8>*                     mDeviceData;         /**< Vector that conatins the data that will be sent across the node */
    };
 
-} // end namespace gadget
+} // end namespace cluster
 
 #endif
