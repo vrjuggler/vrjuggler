@@ -82,6 +82,9 @@ public class GlobalPreferencesService
       }
    }
 
+   public static final int MIN_USER_LEVEL = 1;
+   public static final int MAX_USER_LEVEL = 10;
+
    public static final int WINDOWS_CHOOSER = 0;
    public static final int EMACS_CHOOSER   = 1;
    public static final int DEFAULT_CHOOSER = WINDOWS_CHOOSER;

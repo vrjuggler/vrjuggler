@@ -298,7 +298,9 @@ public class PrefsDialog extends JDialog
 
       // ----------------------------------------------------------------------
       // Add user level options to mLevelBox.
-      for ( int i = 1; i <= 10; i++ )
+      for ( int i = GlobalPreferencesService.MIN_USER_LEVEL;
+            i <= GlobalPreferencesService.MAX_USER_LEVEL;
+            i++ )
       {
          mLevelBox.addItem(String.valueOf(i));
       }
