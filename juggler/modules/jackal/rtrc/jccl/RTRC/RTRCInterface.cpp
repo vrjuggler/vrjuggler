@@ -65,7 +65,7 @@ RTRCInterface::~RTRCInterface()
    }
 }
 
-void RTRCInterface::init()
+vpr::ReturnStatus RTRCInterface::init()
 {
    //Create new corba manager and initialize it
    //Create new RTRCInterfaceSubjectImpl object
@@ -79,11 +79,10 @@ void RTRCInterface::init()
 
    try
    {
-      int dummy_int = 0 ;
+      int dummy_int(0);
 
       //Attempt to initialize the corba manager
       status = mCorbaManager->init("corba_test", dummy_int, NULL);
-
    }
    catch (...)
    {
@@ -93,7 +92,7 @@ void RTRCInterface::init()
 
       delete mCorbaManager; 
       mCorbaManager = NULL;
-      return;
+      return vpr::ReturnStatus::Fail;
    }
 
    //Test to see if init succeeded
@@ -105,7 +104,7 @@ void RTRCInterface::init()
 
       delete mCorbaManager; 
       mCorbaManager = NULL;
-      return;
+      return vpr::ReturnStatus::Fail;
    }
 
    try
@@ -128,15 +127,16 @@ void RTRCInterface::init()
 
       delete mCorbaManager; 
       mCorbaManager = NULL;
-      return;
+      return vpr::ReturnStatus::Fail;
    }
 
    //Create an intstance of our interface subject
    mInterface = new RTRCInterfaceSubjectImpl();
 
+   return status;
 }
 
-void RTRCInterface::enable()
+vpr::ReturnStatus RTRCInterface::enable()
 {
    //Make sure the corba manager has been initialized
    if ((mInterface == NULL) || (mCorbaManager == NULL))
@@ -145,7 +145,7 @@ void RTRCInterface::enable()
          << "RTRCInterface::enable: Cannot enable interface until it has been initialized\n" 
          << vprDEBUG_FLUSH ;
 
-      return;
+      return vpr::ReturnStatus::Fail;
    }
 
    //Register the subject with the corba manager
@@ -153,12 +153,14 @@ void RTRCInterface::enable()
    {
       //Attempt to register the subject
       mCorbaManager->getSubjectManager()->registerSubject(mInterface, mInterfaceName.c_str());
+      return vpr::ReturnStatus::Succeed;
    }
    catch (...)
    {
       vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
          << "RTRCInterface::enable: Caught an exception while trying to register subject\n" 
          << vprDEBUG_FLUSH ;
+      return vpr::ReturnStatus::Fail;
    }
 }
 
