@@ -278,8 +278,15 @@ public:
    //!POST: mat' = trans(_x,_y,_z) * _m
    void preTrans(float _x, float _y, float _z, vjMatrix&  _m);
 
+   //: Pre translate a matrix
+   //!POST: mat' = trans(_x,_y,_z) * _m
+   void preTrans(vjVec3& _trans, vjMatrix&  _m);
+
    //!POST: mat' = _m * trans(_x,_y,_z)
    void postTrans(const vjMatrix&  _m, float _x, float _y, float _z);
+
+   //!POST: mat' = _m * trans(_x,_y,_z)
+   void postTrans(const vjMatrix&  _m, vjVec3& _trans);
 
    //!POST: mat' = rot(_degrees, axis) * _m
    void preRot(float _degrees, vjVec3& axis, vjMatrix&  _m);
