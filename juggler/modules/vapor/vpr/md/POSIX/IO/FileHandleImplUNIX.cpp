@@ -86,25 +86,18 @@ FileHandleUNIX::open () {
 
     switch ( m_open_mode ) {
       case BlockIO::READ_ONLY:
-fprintf(stderr, "[vpr::FileHandleUNIX] Opening read-only\n");
         open_flags = O_RDONLY;
         break;
       case BlockIO::WRITE_ONLY:
-fprintf(stderr, "[vpr::FileHandleUNIX] Opening write-only\n");
         open_flags = O_WRONLY;
         break;
       case BlockIO::READ_WRITE:
-fprintf(stderr, "[vpr::FileHandleUNIX] Opening read/write\n");
         open_flags = O_RDWR;
         break;
     }
 
     if ( ! m_open_blocking ) {
-fprintf(stderr, "[vpr::FileHandleUNIX] Opening non-blocking\n");
         open_flags |= O_NONBLOCK;
-    }
-    else {
-fprintf(stderr, "[vpr::FileHandleUNIX] Opening blocking\n");
     }
 
     m_fdesc = ::open(m_name.c_str(), open_flags);
@@ -409,9 +402,6 @@ FileHandleUNIX::read_i (void* buffer, const size_t length,
                     m_name.c_str(), strerror(errno));
         }
     }
-else if ( status == vpr::Status::Timeout ) {
-fprintf(stderr, "Timeout!\n");
-}
 
     return status;
 }
