@@ -180,7 +180,7 @@ vjSocketImpWinSock::connect () {
 // ----------------------------------------------------------------------------
 ssize_t
 vjSocketImpWinSock::recv(void* buffer, const size_t length, const int flags) {
-    return ::recv(m_sockfd, buffer, length, flags);
+    return ::recv(m_sockfd, (char*) buffer, length, flags);
 }
 
 // ----------------------------------------------------------------------------
@@ -261,7 +261,7 @@ ssize_t
 vjSocketImpWinSock::send (const void* buffer, const size_t length,
                           const int flags)
 {
-    return ::send(m_sockfd, buffer, length, flags);
+    return ::send(m_sockfd, (char*) buffer, length, flags);
 }
 
 // ----------------------------------------------------------------------------

@@ -95,7 +95,7 @@ vjSocketDatagramImpWinSock::recvfrom (void* msg, const size_t len,
     ssize_t bytes;
 
     fromlen = from.size();
-    bytes   = ::recvfrom(m_handle->m_fdesc, msg, len, flags,
+    bytes   = ::recvfrom(m_sockfd, (char*) msg, len, flags,
                          (struct sockaddr*) &from.m_addr, &fromlen);
 
     if ( bytes == -1 ) {
@@ -167,7 +167,7 @@ vjSocketDatagramImpWinSock::sendto (const void* msg, const size_t len,
 {
     ssize_t bytes;
 
-    bytes = ::sendto(m_handle->m_fdesc, msg, len, flags,
+    bytes = ::sendto(m_sockfd, (char*) msg, len, flags,
                      (struct sockaddr*) &to.m_addr, to.size());
 
     if ( bytes == -1 ) {
