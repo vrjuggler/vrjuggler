@@ -54,3 +54,9 @@ install-books:
 	$(PSGEN) $(PSGEN_FLAGS) $< > $*.ps
 	$(PDFGEN) $(PDFGEN_FLAGS) $*.ps
 	rm -f $*.ps
+
+clean:
+	rm -f $(PS_BOOKS)
+
+clobber:
+	rm -f $(PS_BOOKS) $(PDF_BOOKS)
