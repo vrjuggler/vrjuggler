@@ -889,7 +889,7 @@ if (-e $LAST_FILE) {
 	$tmpfiles =~ s,([^a-zA-Z0-9_/]),\\$1,g;
 	unless (grep(/$tmpfiles$/, $_)) {
 		print "More commits to come...\n";
-		exit 0
+		exit 0;
 	}
 }
 
