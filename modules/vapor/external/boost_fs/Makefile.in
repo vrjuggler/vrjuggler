@@ -52,7 +52,7 @@ include @topdir@/make.defs.mk
 
 BOOST_FS_DIR=		@BOOST_ROOT@
 
-srcdir=			$(BOOST_FS_DIR)/libs/filesystem/src
+srcdir=			@BOOST_ROOT_UNIX@/libs/filesystem/src
 top_srcdir=		@top_srcdir@
 EXTRA_INCLUDES+=	-I$(BOOST_FS_DIR)
 INSTALL_FILES=		

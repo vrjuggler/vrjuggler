@@ -548,6 +548,12 @@ if test "x$BOOST_ROOT" != "x$JUGGLERROOT_ABS/external/boost" ; then
     LOCAL_BOOST='Y'
 fi
 
+if test "x$OS_TYPE" = "xWin32" ; then
+   BOOST_ROOT_UNIX=`$CYGPATH -u $BOOST_ROOT`
+else
+   BOOST_ROOT_UNIX="$BOOST_ROOT"
+fi
+
 # -----------------------------------------------------------------------------
 # Checks for library functions.
 # -----------------------------------------------------------------------------
@@ -878,8 +884,8 @@ AC_SUBST(LOCAL_CPPDOM)
 AC_SUBST(APP_BASE_DIR)
 AC_SUBST(APP_BASE_DIR_INST)
 
-AC_SUBST(BOOST_DIR)
 AC_SUBST(LOCAL_BOOST)
+AC_SUBST(BOOST_ROOT_UNIX)
 
 AC_SUBST(DYLIB_DEPS)
 
