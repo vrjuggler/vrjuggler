@@ -1066,6 +1066,33 @@
       <enumeration name="MachineSpecific" value="MachineSpecific" />
     </PropertyDesc>
   </ChunkDesc>
+  <ChunkDesc token="PosXformFilter" name="Pos Xform Filter">
+    <category>Gadgeteer</category>
+    <help>Configure the positional offset information.</help>
+    <PropertyDesc token="translate" name="Translation" type="float" variable="0">
+      <help>(recv_T_modRecv) Proxy translation (in the reciever's coord system)</help>
+      <item label="Trans X" defaultvalue="0.0" />
+      <item label="Trans Y" defaultvalue="0.0" />
+      <item label="Trans Z" defaultvalue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc token="rotation" name="Rotation" type="float" variable="0">
+      <help>(recv_T_modRecv) Proxy rotation (Euler angles in the reciever's coord system)</help>
+      <item label="Rot X" defaultvalue="0.0" />
+      <item label="Rot Y" defaultvalue="0.0" />
+      <item label="Rot Z" defaultvalue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc name="Scale" token="scalar" type="float" variable="0">
+      <help>This is the value used if the device units are set to custom.
+            When the device data is scaled by this value, it should result in units of meters (which is what VR Juggler uses internally).</help>
+    </PropertyDesc>
+    <PropertyDesc name="Device Units" token="dev_units" type="float" variable="0">
+      <enumeration name="Custom" value="0.0" />
+      <enumeration name="Meters" value="1.0" />
+      <enumeration name="Centimeters" value="100" />
+      <enumeration name="Feet" value="0.3048" />
+      <enumeration name="Inches" value="0.0254" />
+    </PropertyDesc>
+  </ChunkDesc>
   <ChunkDesc token="PosProxy" name="Position Proxy">
     <category>Proxies</category>
     <help>Used to access a single positional input source</help>
