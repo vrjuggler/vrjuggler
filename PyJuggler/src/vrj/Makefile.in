@@ -21,6 +21,7 @@ SRCS= \
 	_Display.cpp		\
 	_Frustum.cpp		\
 	_GlApp.cpp		\
+	_GlContextData.cpp	\
 	_Kernel.cpp		\
 	_Projection.cpp		\
 	_SimViewport.cpp	\

@@ -157,6 +157,9 @@
 				RelativePath="..\..\src\vrj\_GlApp.cpp">
 			</File>
 			<File
+				RelativePath="..\..\src\vrj\_GlContextData.cpp">
+			</File>
+			<File
 				RelativePath="..\..\src\vrj\_Kernel.cpp">
 			</File>
 			<File
