@@ -62,7 +62,7 @@ protected:
 public:
     //: Function to config API specific stuff.
     // Takes a chunkDB and extracts API specific stuff
-   virtual void config(vjConfigChunkDB*  chunkDB);
+   virtual void configInitial(vjConfigChunkDB*  chunkDB);
 
     //: Blocks until the end of the frame
     //! PRE: none

@@ -16,7 +16,7 @@
 
 vjPfDrawManager* vjPfDrawManager::_instance = NULL;
 
-void vjPfDrawManager::config(vjConfigChunkDB*  chunkDB)
+void vjPfDrawManager::configInitial(vjConfigChunkDB*  chunkDB)
 {
    std::vector<vjConfigChunk*>* sgiChunks;
    sgiChunks = chunkDB->getMatching("displaySystem");       // Get the chunk to config system

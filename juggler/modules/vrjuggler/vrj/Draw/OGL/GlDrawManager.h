@@ -37,7 +37,7 @@ public:
 
     //: Function to config API specific stuff.
     // Takes a chunkDB and extracts API specific stuff
-   virtual void config(vjConfigChunkDB*  chunkDB);
+   virtual void configInitial(vjConfigChunkDB*  chunkDB);
 
    //: Enable a frame to be drawn
    virtual void draw();
@@ -75,6 +75,22 @@ public:
    vjGlApp* getApp();
 
    void setDisplayManager(vjDisplayManager* _dispMgr);
+
+public: // Chunk handlers
+   //: Add the chunk to the configuration
+   //! PRE: configCanHandle(chunk) == true
+   //! RETURNS: success
+   virtual bool configAdd(vjConfigChunk* chunk);
+
+   //: Remove the chunk from the current configuration
+   //! PRE: configCanHandle(chunk) == true
+   //!RETURNS: success
+   virtual bool configRemove(vjConfigChunk* chunk);
+
+   //: Can the handler handle the given chunk?
+   //! RETURNS: true - Can handle it
+   //+          false - Can't handle it
+   virtual bool configCanHandle(vjConfigChunk* chunk);
 
    void debugDump();
 
