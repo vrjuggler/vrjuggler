@@ -6,16 +6,16 @@
  *   Allen Bierbaum, Patrick Hartling, Kevin Meinert, Carolina Cruz-Neira
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile$
- * Date modified: $Date$
- * Version:       $Revision$
+ * File:          SerialPortImplWin32.h,v
+ * Date modified: 2002/06/05 21:28:47
+ * Version:       1.27
  * -----------------------------------------------------------------
  *
  ****************** <VPR heading END do not edit this line> ******************/
 
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
- * VR Juggler is (C) Copyright 1998-2003 by Iowa State University
+ * VR Juggler is (C) Copyright 1998-2002 by Iowa State University
  *
  * Original Authors:
  *   Allen Bierbaum, Christopher Just,
@@ -161,6 +161,7 @@ public:
     */
    void setOpenNonBlocking (void)
    {
+	   //Still not sure why this is not supported
       std::cout << "non-Blocking not currently supported in win32." << std::endl;
 //      mBlocking |= FILE_FLAG_OVERLAPPED;
    }
@@ -1143,11 +1144,7 @@ public:
     */
    vpr::ReturnStatus readn_i (void* buffer, const vpr::Uint32 length,
                               vpr::Uint32& bytes_read,
-                              const vpr::Interval timeout = vpr::Interval::NoTimeout)
-   {
-      // XXX: Fix me!!!
-      return vpr::ReturnStatus();
-   }
+                              const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Implementation of the <code>write</code> template method.  This writes
@@ -1185,6 +1182,7 @@ protected:
    bool mOpen;
    DWORD mBlocking;    /**< flag for blocking I/O */
    bool mParityMark;   /**< flag for parity marking */
+   vpr::Uint8 mCurrentTimeout;
 };
 
 } // End of vpr namespace
