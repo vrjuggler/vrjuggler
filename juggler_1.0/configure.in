@@ -1898,6 +1898,7 @@ AC_OUTPUT(Makefile
           samples/pf/Makefile
           samples/pf/pfConfigNav/Makefile
           samples/pf/pfNav/Makefile
+          test/Makefile 
           test/TestSuite/Makefile
           test/TestSuite/mk/mk.defs
           test/TestSuite/mk/mk.objs
