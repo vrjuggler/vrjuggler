@@ -69,7 +69,7 @@ public:
 
     static CppUnit::Test* suite()
     {
-        CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("VarValueTest");
+        CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("ChunkDescTest");
         test_suite->addTest( new CppUnit::TestCaller<ChunkDescTest>("BasicFunctions", &ChunkDescTest::BasicFunctions));
         test_suite->addTest( new CppUnit::TestCaller<ChunkDescTest>("PropertyDescTests", &ChunkDescTest::PropertyDescTests));
         
