@@ -99,12 +99,16 @@ void StartBarrierPlugin::handlePacket(Packet* packet, gadget::Node* node)
                << "handlePacket() Slave has finished start barrier\n" << vprDEBUG_FLUSH;         
             mComplete = true;
             ClusterManager::instance()->setClusterReady(true);
+            
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_STATUS_LVL) << clrOutBOLD(clrCYAN,"[StartBarrierPlugin] ")
+               << "Received signal from master, barrier released."
+               << std::endl << vprDEBUG_FLUSH;   
          }      
       }
       else
       {
          vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"StartBarrierPlugin::handlePacket() ERROR: ")
-            << "We do not handle this type of packet.\n" << vprDEBUG_FLUSH;         
+            << "We do not handle this type of packet.\n" << vprDEBUG_FLUSH;
       }
    }
 }
@@ -236,8 +240,11 @@ void StartBarrierPlugin::postPostFrame()
             else
             {
                //If we are not connected and we are not in pending list, add to the pending list
-               if (gadget::Node::PENDING != start_master->getStatus())
+               if (gadget::Node::DISCONNECTED == start_master->getStatus())
                {
+                  vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[StartBarrierPlugin] ")
+                     << "Moving node: " << start_master->getName() << " to pending state because we need to connect to it."
+                     << std::endl << vprDEBUG_FLUSH;
                   start_master->setStatus(gadget::Node::PENDING);
                }
             }
@@ -251,7 +258,10 @@ void StartBarrierPlugin::postPostFrame()
             {
                mComplete = true;
                ClusterManager::instance()->setClusterReady(true);
-               std::cout << "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX DONE - list=0 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" << std::endl;
+               
+               vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_STATUS_LVL) << clrOutBOLD(clrCYAN,"[StartBarrierPlugin] ")
+                  << "Pending nodes list empty, releasing all slave nodes."
+                  << std::endl << vprDEBUG_FLUSH;   
                
                StartBlock temp_start_block(getHandlerGUID(), 0);
 
