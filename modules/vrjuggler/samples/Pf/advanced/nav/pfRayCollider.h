@@ -142,7 +142,7 @@ inline bool pfRayCollider::testRayCollision( pfVec3& intersectionPt, pfVec3& whe
 }
 
 
-bool pfRayCollider::testMove(vrj::Vec3 _whereYouAre, vrj::Vec3 _delta, vrj::Vec3& correction, bool whereYouAreWithDelta)
+inline bool pfRayCollider::testMove(vrj::Vec3 _whereYouAre, vrj::Vec3 _delta, vrj::Vec3& correction, bool whereYouAreWithDelta)
 {
    pfVec3 whereYouAre = vrj::GetPfVec(_whereYouAre);
    pfVec3 delta = vrj::GetPfVec(_delta);
