@@ -76,8 +76,8 @@ EXTRA_JAVA_SRCS_PATH=	$(IDL_GENDIR)/jccl
 # -----------------------------------------------------------------------------
 # Java-related setup
 # -----------------------------------------------------------------------------
-JARS=		jccl_rtrc.jar
-BEANS=
+JARS=		
+BEANS=	        jccl_rtrc
 
 IDL_JAVA_FILES=	RTRCInterfaceSubject.java
 
