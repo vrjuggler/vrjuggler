@@ -35,6 +35,7 @@
 
 #include <gadget/gadgetConfig.h>
 #include <vector>
+#include <boost/concept_check.hpp>   /* for ignore_unused_variable_warning */
 #include <jccl/Config/ConfigChunkPtr.h>
 #include <gadget/Type/DigitalData.h>
 #include <gadget/Type/SampleBuffer.h>
@@ -88,6 +89,7 @@ namespace gadget
 
       virtual bool config(jccl::ConfigChunkPtr c)
       {
+         boost::ignore_unused_variable_warning(c);
          //vprDEBUG(vprDBG_ALL,4)<<"*** Digital::config()\n"<< vprDEBUG_FLUSH;
          return true;
       }
