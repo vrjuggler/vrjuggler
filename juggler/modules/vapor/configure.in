@@ -43,8 +43,8 @@ AC_CONFIG_HEADER(include/vprDefines.h)
 DPP_PREREQ(1.3)
 DPP_INIT
 
-dnl # Generate the reconfig script first so that it's easy to run configure
-dnl # again if it fails later on.
+# Generate the reconfig script first so that it's easy to run configure again
+# if it fails later on.
 DPP_GEN_RECONFIG
 
 # -----------------------------------------------------------------------------
@@ -109,7 +109,7 @@ DPP_SYSTEM_SETUP
 
 CC="${_vpr_save_CC}"
 
-dnl # These are used on all platforms.
+# These are used on all platforms.
 AC_DEFINE_UNQUOTED(VPR_OS_RELEASE, "$OS_REL_STR")
 AC_DEFINE_UNQUOTED(VPR_OS_RELEASE_MAJOR, $OS_REL_NUM_MAJOR)
 AC_DEFINE_UNQUOTED(VPR_OS_RELEASE_MINOR, $OS_REL_NUM_MINOR)
@@ -159,7 +159,7 @@ case $target_os in
         ;;
     # HP PA-RISC machine running HP-UX 10.20.
     hpux10.20)
-        dnl # We have to use the NSPR subsystem on HP-UX 10.20.
+        # We have to use the NSPR subsystem on HP-UX 10.20.
         if test "x$SUBSYSTEM" != "xNSPR" ; then
             AC_MSG_WARN(*** Forcing the use of NSPR subsystem ***)
             SUBSYSTEM='NSPR'
@@ -213,32 +213,32 @@ case $target_os in
         ;;
 esac
 
-dnl # -------------------------------------------------------------------------
-dnl # Checks for programs.
-dnl # -------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+# Checks for programs.
+# -----------------------------------------------------------------------------
 CC_ERR=''
 CXX_ERR=''
 
 _vpr_save_CFLAGS="$CFLAGS"
 _vpr_save_CXXFLAGS="$CXXFLAGS"
 
-dnl # If no alternate C compiler was specified, check to see if it is
-dnl # necessary to force the use of a specific compiler on a given platform.
+# If no alternate C compiler was specified, check to see if it is necessary
+# to force the use of a specific compiler on a given platform.
 if test "x${_alt_cc}" = "xnone" ; then
     CC_IRIX='cc'
     CC_PIC_IRIX='-KPIC'
 
-    dnl # On IRIX, we have to use cc (not gcc).
+    # On IRIX, we have to use cc (not gcc).
     if test "$PLATFORM" = "IRIX" ; then
         CC_ERR='*** The library requires the IRIX MIPSpro C compiler ***'
     fi
-dnl # Otherwise, force the use of the alternate C compiler.
+# Otherwise, force the use of the alternate C compiler.
 else
     CC="${_alt_cc}"
 fi
 
-dnl # If no alternate C++ compiler was specified, check to see if it is
-dnl # necessary to force the use of a specific compiler on a given platform.
+# If no alternate C++ compiler was specified, check to see if it is
+# necessary to force the use of a specific compiler on a given platform.
 if test "x${_alt_cxx}" = "xnone" ; then
     if test "x$USE_GCC" = "xyes" ; then
         CXX_HP='aCC'
@@ -246,19 +246,19 @@ if test "x${_alt_cxx}" = "xnone" ; then
         CXX_PIC_IRIX='-KPIC'
     fi
 
-    dnl # On HP-UX, we have to use the aCC C++ compiler.
+    # On HP-UX, we have to use the aCC C++ compiler.
     if test "$PLATFORM" = "HP" -a "x$USE_GCC" != "xyes" ; then
         CXX_ERR='*** The library requires the HP-UX aCC C++ compiler ***'
-    dnl # On Windows, we have to use the Microsoft Visual C++ compiler CL.EXE.
+    # On Windows, we have to use the Microsoft Visual C++ compiler CL.EXE.
     elif test "$OS_TYPE" = "Win32" -a "x$USE_GCC" != "xyes" ; then
         CXX='cl'
         CC="$CXX"
         CXX_ERR='*** The library requires the MS Visual C++ compiler ***'
-    dnl # On IRIX, we have to use CC (not g++).
+    # On IRIX, we have to use CC (not g++).
     elif test "x$PLATFORM" = "xIRIX" ; then
         CXX_ERR='*** The library requires the IRIX MIPSpro C++ compiler ***'
     fi
-dnl # Otherwise, force the use of the alternate C++ compiler.
+# Otherwise, force the use of the alternate C++ compiler.
 else
     CXX="${_alt_cxx}"
 fi
@@ -268,12 +268,12 @@ DPP_PROG_CXX($CXX, , AC_MSG_ERROR($CXX_ERR))
 DPP_GET_EXT
 
 if test "x$GXX" = "xyes" ; then
-    dnl # If we are using GCC as the compiler, we need to be using at least
-    dnl # egcs 1.1.2.  A newer version (e.g., 2.95.2) is even better.
+    # If we are using GCC as the compiler, we need to be using at least egcs
+    # 1.1.2.  A newer version (e.g., 2.95.2) is even better.
     DPP_GPLUSPLUS_MODERN(AC_MSG_ERROR(*** VPR requires a modern G++ ***))
 fi
 
-dnl # Now check to see if the compiler accepts the -pthread option.
+# Now check to see if the compiler accepts the -pthread option.
 if test "x$SUBSYSTEM" != "xSPROC" -a "x$SUBSYSTEM" != "WIN32" -a \
         "x$NSPR_THREADS_ENABLED" = "xno"
 then
@@ -284,12 +284,11 @@ then
     fi
 fi
 
-dnl # Ensure that the C++ compiler we've found is capable of compiling the
-dnl # newer C++ features that we need.
+# Ensure that the C++ compiler we've found is capable of compiling the newer
+# newer C++ features that we need.
 DPP_CXX_TEMPLATES(AC_MSG_ERROR(*** The library requires C++ template support ***))
 
-dnl # Ensure that a version of Perl greater than or equal to 5.004 is
-dnl # available.
+# Ensure that a version of Perl greater than or equal to 5.004 is available.
 DPP_PERL_VER(5.004)
 
 AC_CHECK_PROG(MTREE_CMD, mtree, mtree, \$(PERL) \$(scriptdir)/mtree.pl)
@@ -306,24 +305,23 @@ MUTEX_SYS=''			# POSIX, SPROC, WIN32, NSPR
 SHMEM_SYS=''			# POSIX, SPROC, WIN32, NSPR
 THREAD_SYS=''			# POSIX, SPROC, WIN32, NSPR
 
-dnl # Test for libpthread or for libcma if libpthread is not present.
-dnl # If the library is found, check for pthread_kill().  If it is present,
-dnl # Draft 10 (the "final" draft) of the POSIX threads standard is in place.
-dnl # If not, Draft 4 is available.
+# Test for libpthread or for libcma if libpthread is not present.  If the
+# library is found, check for pthread_kill().  If it is present, Draft 10 (the
+# "final" draft) of the POSIX threads standard is in place.  If not, Draft 4
+# is available.
 if test "x$SUBSYSTEM" = "xPOSIX" ; then
     DPP_GET_PTHREAD_LIB
 
-    dnl # If $PTHREAD_LIB has a value at this point, then the pthread
-    dnl # libraries needed are in $LIBS, so now we make a check for the draft
-    dnl # revision being used.  This is done by determining if pthread_kill()
-    dnl # is in the library.  If it is, Draft 10 is in use.  Otherwise, assume
-    dnl # it is Draft 4.
+    # If $PTHREAD_LIB has a value at this point, then the pthread libraries
+    # needed are in $LIBS, so now we make a check for the draft revision being
+    # used.  This is done by determining if pthread_kill() is in the library.
+    # If it is, Draft 10 is in use.  Otherwise, assume it is Draft 4.
     if test "$xPTHREAD_LIB" != "x" ; then
         DPP_GET_PTHREAD_VER($PLATFORM, VPR_POSIX_C_SOURCE)
 
-        dnl # Define the default thread scope depending on the platform.  On
-        dnl # IRIX, only process scope is avaiable without special
-        dnl # configuration options.  Other systems may support system scope.
+        # Define the default thread scope depending on the platform.  On IRIX,
+        # only process scope is avaiable without special configuration options.
+        # Other systems may support system scope.
         if test "$PLATFORM" = "IRIX" ; then
             AC_DEFINE(VPR_THREAD_SCOPE, PTHREAD_SCOPE_PROCESS)
         else
@@ -337,49 +335,49 @@ if test "x$SUBSYSTEM" = "xPOSIX" ; then
         AC_MSG_WARN(*** POSIX threads will not be used (no library found) ***)
     fi
 
-    dnl # Do not define _POSIX_C_SOURCE here because it will cause problems
-    dnl # when compiling on IRIX.  Instead, define that in the source files
-    dnl # where appropriate.
+    # Do not define _POSIX_C_SOURCE here because it will cause problems when
+    # compiling on IRIX.  Instead, define that in the source files where
+    # appropriate.
     AC_DEFINE(VPR_USE_PTHREADS,)
     AC_DEFINE(VPR_POSIX_SEMAPHORES,)
     AC_DEFINE(RWSTD_MULTI_THREAD,)
     AC_DEFINE(RW_MULTI_THREAD,)
     AC_DEFINE(_THREAD_SAFE,)
 
-    dnl # On Linux, defining _THREAD_SAFE is the same as defining _REENTRANT,
-    dnl # so we will not define both.
+    # On Linux, defining _THREAD_SAFE is the same as defining _REENTRANT, so
+    # we will not define both.
     if test "x$PLATFORM" != "xLinux" ; then
         AC_DEFINE(_REENTRANT,)
     fi
 
-    dnl # Use POSIX threading, mutexes and shared memory.
+    # Use POSIX threading, mutexes and shared memory.
     MUTEX_SYS='POSIX'
     SHMEM_SYS='POSIX'
     THREAD_SYS='POSIX'
     SEMPANORE_SYS='POSIX'
-dnl # We are using WIN32 threads.
+# We are using WIN32 threads.
 elif test "x$SUBSYSTEM" = "xWIN32" ; then
     AC_DEFINE(VPR_USE_WIN32,)
 
-    dnl # Set to Win32 threading, synchronization and shared memory.
+    # Set to Win32 threading, synchronization and shared memory.
     SEMPANORE_SYS='WIN32'
     THREAD_SYS='WIN32'
     MUTEX_SYS='WIN32'
     SHMEM_SYS='WIN32'
-dnl # If we are not using POSIX threads, we must be using the IRIX sproc(2)
-dnl # model, but we test $SUBSYSTEM just to be sure it is set right.
+# If we are not using POSIX threads, we must be using the IRIX sproc(2) model,
+# but we test $SUBSYSTEM just to be sure it is set right.
 elif test "x$SUBSYSTEM" = "xSPROC" ; then
     AC_CHECK_HEADERS(sys/prctl.h, ,
         AC_MSG_ERROR(*** IRIX sproc(2) threading will not be used (no headers found) ***))
 
     AC_DEFINE(VPR_USE_IRIX_SPROC,)
 
-    dnl # Set to IRIX sproc threading, synchronization and shared memory.
+    # Set to IRIX sproc threading, synchronization and shared memory.
     THREAD_SYS='SPROC'
     SEMAPHORE_SYS='SPROC'
     SHMEM_SYS='SPROC'
     MUTEX_SYS='SPROC'
-dnl # NSPR subsystem.
+# NSPR subsystem.
 else
     if test "x$NSPR_THREADS_ENABLED" = "xno" -a "x$OS_TYPE" = "xUNIX" ; then
         DPP_GET_PTHREAD_LIB
@@ -395,7 +393,7 @@ else
 
     AC_DEFINE(VPR_USE_NSPR,)
 
-    dnl # Set to NSPR threading, synchronization and shared memory.
+    # Set to NSPR threading, synchronization and shared memory.
     SEMPANORE_SYS='NSPR'
     THREAD_SYS='NSPR'
     MUTEX_SYS='NSPR'
@@ -405,16 +403,16 @@ else
     NSPR_LIBS="-L$NSPR_ROOT/lib -lnspr$NSPR_VER $UCB_LIB"
 fi
 
-dnl # -------------------------------------------------------------------------
-dnl # Checks for typedefs, structures, and compiler characteristics.
-dnl # -------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+# Checks for typedefs, structures, and compiler characteristics.
+# -----------------------------------------------------------------------------
 AC_TYPE_PID_T
 AC_TYPE_SIZE_T
 AC_TYPE_SIGNAL
 
-dnl # The following checks for availability of the socklen_t type.  Since it
-dnl # is supposed to be defined in sys/socket.h, the usual AC_CHECK_TYPE
-dnl # method will not work.
+# The following checks for availability of the socklen_t type.  Since it is
+# is supposed to be defined in sys/socket.h, the usual AC_CHECK_TYPE method
+# will not work.
 AC_CACHE_CHECK(for socklen_t, ac_cv_has_socklen_t,
     AC_TRY_COMPILE([#include <sys/types.h>
                     #include<sys/socket.h> ],
@@ -459,9 +457,9 @@ AC_HEADER_TIME
 AC_CHECK_HEADERS(fcntl.h limits.h strings.h sys/file.h sys/ioctl.h	\
                  sys/time.h termios.h unistd.h sys/capability.h sys/stdsyms.h)
 
-dnl # -------------------------------------------------------------------------
-dnl # Checks for library functions.
-dnl # -------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+# Checks for library functions.
+# -----------------------------------------------------------------------------
 AC_CHECK_FUNCS(gettimeofday socket strcasecmp strdup strerror strtod)
 
 _vpr_save_LIBS="$LIBS"
@@ -469,21 +467,21 @@ AC_CHECK_FUNC(gethostbyname, SOCKET_LIB='',
     AC_CHECK_LIB(socket, gethostbyname, SOCKET_LIB='-lsocket'))
 LIBS="${_vpr_save_LIBS}"
 
-dnl # Ensure that we have sched_yield(3).  On Solaris, sched_yield(3) and its
-dnl # synchronization friends are in libposix4.
+# Ensure that we have sched_yield(3).  On Solaris, sched_yield(3) and its
+# synchronization friends are in libposix4.
 _vpr_save_LIBS="$LIBS"
 AC_CHECK_FUNC(sched_yield, AC_DEFINE(HAVE_SCHED_YIELD),
               AC_CHECK_LIB(posix4, sched_yield,
                   [ _sched_lib='-lposix4' ; AC_DEFINE(HAVE_SCHED_YIELD) ]))
 LIBS="${_vpr_save_LIBS}"
 
-dnl # -------------------------------------------------------------------------
-dnl # Miscellaneous checks.
-dnl # -------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+# Miscellaneous checks.
+# -----------------------------------------------------------------------------
 
 DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 
-dnl # For use in linking applications.
+# For use in linking applications.
 EXTRA_LINK_FLAGS=''
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" = "xno" ; then
@@ -498,16 +496,16 @@ fi
 
 DPP_SYSTEM_SUBST
 
-dnl # If we are using pthreads, add the library containing the pthread calls to
-dnl # $LIBS.
+# If we are using pthreads, add the library containing the pthread calls to
+# $LIBS.
 if test "x$USE_PTHREADS" = "xyes" ; then
     DPP_PTHREAD_FINISH
 fi
 
 INCLUDES="$INCLUDES $NSPR_INCLUDES"
 
-dnl # For makedepend(1) to work properly on HP-UX with aCC, we have to
-dnl # include these extra paths.
+# For makedepend(1) to work properly on HP-UX with aCC, we have to include
+# these extra paths.
 if test "x$PLATFORM" = "xHP" ; then
     _aCC_ROOT="/opt/aCC"
     DEPEND_EXTRAS="$DEPEND_EXTRAS -I${_aCC_ROOT} -I${_aCC_ROOT}/include -I${_aCC_ROOT}/include/iostream"
@@ -515,36 +513,36 @@ elif test "x$OS_TYPE" = "xWin32" ; then
     DEPEND_EXTRAS="$DEPEND_EXTRAS -D__cplusplus"
 fi
 
-dnl # $srcdir is the root directory of the juggler source tree.  To get a
-dnl # value for $VPRROOT_ABS, we cd there and save the value of running pwd.
-dnl # Then return to the directory where configure is being run ($topdir).
+# $srcdir is the root directory of the juggler source tree.  To get a value
+# for $VPRROOT_ABS, we cd there and save the value of running pwd.  Then
+# return to the directory where configure is being run ($topdir).
 cd "$srcdir"
 VPRROOT_ABS=`pwd`
 cd "$topdir"
 
-dnl # Define the base path to the source directory using $VPRROOT_ABS as an
-dnl # alternative to using $srcdir.
+# Define the base path to the source directory using $VPRROOT_ABS as an
+# alternative to using $srcdir.
 VPR_SRCDIR='$(VPRROOT_ABS)'
 UNIX_VPRROOT_ABS="$VPRROOT_ABS"
 
-dnl # Variables set in Makefiles found in the application trees.  All variables
-dnl # listed are for use only in the Makefile.in's found in that tree unless
-dnl # otherwise noted.  They are used in the following way:
-dnl #
-dnl #     * APP_EXTRA_FLAGS: Extra flags for the compiler and linker.
-dnl #     * APP_VPR_LIBS_BASIC: The basic VPR library.
-dnl #     * APP_VPR_LIBS_BASIC_INST: Same as the above but is for installed
-dnl #       Makefiles.
-dnl #     * APP_LIBS_BASIC: The _most basic_ basic libraries needed for
-dnl #       compiling (e.g., -lpthread).
-dnl #     * APP_EXTRA_LIBS_BEGIN: Options used at the beginning of the list
-dnl #       of extra libraries.
-dnl #     * APP_EXTRA_LIBS_END: Options used at the end of the list of extra
-dnl #       libraries.
-dnl #     * APP_EXTRA_LIBS_BASIC: A basic set of extra libraries and linker
-dnl #       flags needed for compiling.  These are put after those listed in
-dnl #       the previous variables in the compile line.
-dnl #
+# Variables set in Makefiles found in the application trees.  All variables
+# listed are for use only in the Makefile.in's found in that tree unless
+# otherwise noted.  They are used in the following way:
+#
+#     * APP_EXTRA_FLAGS: Extra flags for the compiler and linker.
+#     * APP_VPR_LIBS_BASIC: The basic VPR library.
+#     * APP_VPR_LIBS_BASIC_INST: Same as the above but is for installed
+#       Makefiles.
+#     * APP_LIBS_BASIC: The _most basic_ basic libraries needed for compiling
+#       (e.g., -lpthread).
+#     * APP_EXTRA_LIBS_BEGIN: Options used at the beginning of the list of
+#       extra libraries.
+#     * APP_EXTRA_LIBS_END: Options used at the end of the list of extra
+#       libraries.
+#     * APP_EXTRA_LIBS_BASIC: A basic set of extra libraries and linker flags
+#       needed for compiling.  These are put after those listed in the previous
+#       variables in the compile line.
+#
 APP_EXTRA_FLAGS="${_EXTRA_FLAGS} $X_INCLUDES"
 
 if test "$OS_TYPE" = "UNIX" ; then
@@ -560,9 +558,6 @@ if test "$OS_TYPE" = "UNIX" ; then
         APP_EXTRA_LIBS_BEGIN='-B dynamic'
         APP_EXTRA_LIBS_END="$NSPR_LIBS $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
     elif test "x$GXX" = "xyes" ; then
-        dnl # For now, we are disabling static linking for the sample
-        dnl # applications when compiled in a developer's build tree.  This
-        dnl # is only the case on non-IRIX platforms.
         APP_VPR_LIBS_BEGIN="-Wl,-Bstatic -L\$(VPR_BASE_DIR)/lib${LIBBITSUF}"
         APP_VPR_LIBS_END=''
         APP_VPR_LIBS_BASIC='-lvpr'
@@ -574,9 +569,9 @@ if test "$OS_TYPE" = "UNIX" ; then
         APP_EXTRA_LIBS_BEGIN='-Wl,-Bdynamic'
         APP_EXTRA_LIBS_END="$NSPR_LIBS $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
     else
-        dnl # For now, we are disabling static linking for the sample
-        dnl # applications when compiled in a developer's build tree.  This
-        dnl # is only the case on non-IRIX platforms.
+        # For now, we are disabling static linking for the sample applications
+        # when compiled in a developer's build tree.  This is only the csae on
+        # non-IRIX platforms.
         APP_VPR_LIBS_BEGIN="-L\$(VPR_BASE_DIR)/lib${LIBBITSUF}"
         APP_VPR_LIBS_END=''
         APP_VPR_LIBS_BASIC='-lvpr'
@@ -588,7 +583,7 @@ if test "$OS_TYPE" = "UNIX" ; then
         APP_EXTRA_LIBS_END="$NSPR_LIBS $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
     fi
 
-    dnl # FreeBSD needs to use libcompat for linking.
+    # FreeBSD needs to use libcompat for linking.
     if test "x$PLATFORM" = "xFreeBSD" ; then
         APP_EXTRA_LIBS_END="$APP_EXTRA_LIBS_END -lcompat"
     fi
@@ -605,7 +600,7 @@ elif test "$OS_TYPE" = "Win32" ; then
     APP_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
 fi
 
-dnl # Translate paths from UNIX-style to Win32.
+# Translate paths from UNIX-style to Win32.
 if test "x$OS_TYPE" = "xWin32" ; then
     SAFE_VPRROOT_ABS=`unix2dos -p "$VPRROOT_ABS"`
     VPR_SRCDIR=`unix2dos "$VPR_SRCDIR"`
@@ -629,8 +624,8 @@ else
     SAFE_VPRROOT_ABS="$VPRROOT_ABS"
 fi
 
-dnl # Set up some sed expressions that will help separate the share directory
-dnl # from the full installation prefix.
+# Set up some sed expressions that will help separate the share directory from
+# the full installation prefix.
 _prefix_var_exp='s|^${prefix}/||'
 
 if test "x$prefix" = "xNONE" ; then
@@ -743,8 +738,8 @@ elif test "x$ISA" != "x" ; then
     ..
 ..
 END_ISA_DIST
-dnl # In all other cases, just make a simple directory tree for debugging and
-dnl # optimized libraries.
+# In all other cases, just make a simple directory tree for debugging and
+# optimized libraries.
 else
     cat >>${_lib_file} <<END_DIST
 .
