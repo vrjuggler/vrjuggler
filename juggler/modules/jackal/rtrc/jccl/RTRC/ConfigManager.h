@@ -64,15 +64,15 @@ public:
       vjConfigChunk* mChunk;
    };
 
-   
+
 public: // -- Query functions --- //
    //: Is the chunk in the active configuration??
    //! CONCURRENCY: concurrent
    //! NOTE: This locks the active list to do processing
    bool isChunkInActiveList(std::string chunk_name)
    {
-   vjGuard<vjMutex> guard(mActiveLock);     // Lock the current list   
-      
+   vjGuard<vjMutex> guard(mActiveLock);     // Lock the current list
+
       std::vector<vjConfigChunk*>::iterator i;
       for(i=mActiveConfig.begin(); i != mActiveConfig.end();i++)
       {
@@ -119,7 +119,7 @@ public:   // ----- PENDING LIST ----- //
       lockPending();
       mPendingConfig.push_back(pendingChunk);
       unlockPending();
-      
+
       // Reset pending count
       mPendingCountMutex.acquire();
       mPendingCheckCount = 0;
@@ -225,7 +225,7 @@ public:   // ----- ACTIVE LIST ----- //
    //! POST: list = old(list).erase(item) && item is invalid
    void removeActive(std::string chunk_name)
    {
-      vjASSERT(1 == mActiveLock.test());
+      vjASSERT(0 == mActiveLock.test());
       lockActive();
       mActiveConfig.removeNamed(chunk_name);
       unlockActive();
@@ -251,11 +251,11 @@ public:   // ----- ACTIVE LIST ----- //
    {
       vjASSERT(1 == mActiveLock.test());
       return &mActiveConfig;
-   }   
+   }
 
 public:
    //: Scan the active list for items that don't have their dependencies filled
-   //! POST: Any chunks in active with dependencies not filled are added to the 
+   //! POST: Any chunks in active with dependencies not filled are added to the
    //+       the pending list. (A remove and an add are added to the pending)
    //+       The remove item configChunk* == active configChunk*
    //+       The add item configChunk* points to a copy of the chunk
@@ -268,8 +268,8 @@ private:
    vjConfigChunkDB            mActiveConfig;   //: List of current configuration
    std::list<vjPendingChunk>  mPendingConfig;   //: List of pending configuration changes
    vjMutex                    mPendingLock;     //: Lock on pending list
-   vjMutex                    mActiveLock;     //: Lock for current config list   
-   
+   vjMutex                    mActiveLock;     //: Lock for current config list
+
    // The following variables are used to implment some logic
    // that "stales" the pending list.   (see pendingNeedsChecked)
    vjMutex                    mPendingCountMutex;
@@ -279,7 +279,7 @@ protected:
    vjConfigManager()
    {;}
 
-   
+
 public:
    //: Get instance of singleton object
    static vjConfigManager* instance()
