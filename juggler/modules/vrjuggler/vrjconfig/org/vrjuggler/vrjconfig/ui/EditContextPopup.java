@@ -185,33 +185,10 @@ public class EditContextPopup
       lblTitle.setText("Please pick the files in your configuration.");
       lblTitle.setOpaque(false);
       titlePnl.setOpaque(false);
-      buttonPnl.setLayout(new BoxLayout(buttonPnl, BoxLayout.X_AXIS));
-      buttonPnl.setOpaque(false);
-      newBtn.setText("New");
-      openBtn.setText("Open");
-      newBtn.addActionListener(new ActionListener()
-      {
-         public void actionPerformed(ActionEvent evt)
-         {
-            doAddNew();
-         }
-      });
-      openBtn.addActionListener(new ActionListener()
-      {
-         public void actionPerformed(ActionEvent evt)
-         {
-            doAddExisting();
-         }
-      });
       this.add(titlePnl, BorderLayout.NORTH);
       titlePnl.add(lblTitle, null);
       this.add(contextTableScrollPane, BorderLayout.CENTER);
       contextTableScrollPane.getViewport().setView(contextTable);
-      this.add(buttonPnl, BorderLayout.SOUTH);
-      buttonPnl.add(Box.createHorizontalGlue(), null);
-      buttonPnl.add(newBtn, null);
-      buttonPnl.add(Box.createHorizontalStrut(8), null);
-      buttonPnl.add(openBtn, null);
    }
 
    // JBuilder GUI variables
@@ -227,9 +204,6 @@ public class EditContextPopup
          return pref_size;
       }
    };
-   private JPanel buttonPnl = new JPanel();
-   private JButton newBtn = new JButton();
-   private JButton openBtn = new JButton();
 
    private ContextTableModel model = new ContextTableModel();
 
