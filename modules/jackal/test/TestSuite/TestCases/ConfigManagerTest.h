@@ -21,10 +21,10 @@ namespace jcclTest
 class ConfigManagerTest : public CppUnit::TestFixture
 {
    CPPUNIT_TEST_SUITE(ConfigManagerTest);
-   CPPUNIT_TEST(AddPendingAdds);
-   CPPUNIT_TEST(AddPendingRemoves);
    CPPUNIT_TEST(AddConfigElementHandler);
-   CPPUNIT_TEST(RemovePending);
+   CPPUNIT_TEST(AddConfigurationRemovals);
+   CPPUNIT_TEST(GetElementNamed);
+//   CPPUNIT_TEST(RemovePending);
    CPPUNIT_TEST(AttemptReconfiguration);
    CPPUNIT_TEST_SUITE_END();
 
@@ -41,10 +41,10 @@ public:
    virtual void setUp();
    virtual void tearDown();
 
-   void AddPendingAdds();
-   void AddPendingRemoves();
    void AddConfigElementHandler();
-   void RemovePending();
+   void AddConfigurationRemovals();
+   void GetElementNamed();
+//   void RemovePending();
    void AttemptReconfiguration();
 
 private:
