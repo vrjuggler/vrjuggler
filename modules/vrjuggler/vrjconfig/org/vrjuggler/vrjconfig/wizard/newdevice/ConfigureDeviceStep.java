@@ -118,8 +118,7 @@ public class ConfigureDeviceStep
             {
                CustomEditor editor = (CustomEditor)list.get(0);
                cwp = (JComponent)editor.getPanel();
-               editor.setContext(context);
-               editor.setConfigElement(element);
+               editor.setConfig(context, element);
             }
          }
       }

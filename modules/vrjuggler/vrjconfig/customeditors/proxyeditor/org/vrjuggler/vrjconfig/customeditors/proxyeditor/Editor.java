@@ -83,8 +83,18 @@ public class Editor
 	implements GraphSelectionListener, KeyListener, CustomEditor 
 {
 
-   public void setConfigElement(ConfigElement elm)
+   public void setConfig(ConfigContext ctx, ConfigElement elm)
    {
+      // Create the model
+      graph.setModel(new ProxyModelFactory(ctx).getModel());
+
+      // Create a graph layout controller
+      //final LayoutController controller = new SpringEmbeddedLayoutController();
+      //final LayoutController controller = new AnnealingLayoutController();
+      //final LayoutController controller = new   SugiyamaLayoutController();
+      //final LayoutController controller = new GEMLayoutController();
+      //final LayoutController controller = new TreeLayoutController();
+      
       String token = elm.getDefinition().getToken();
       if(token.equals("digital_proxy"))
       {
@@ -154,20 +164,6 @@ public class Editor
       return("Proxy Editor");
    }
 
-   public void setContext(ConfigContext ctx)
-   {
-      // Create the model
-      graph.setModel(new ProxyModelFactory(ctx).getModel());
-
-      // Create a graph layout controller
-      //final LayoutController controller = new SpringEmbeddedLayoutController();
-      //final LayoutController controller = new AnnealingLayoutController();
-      //final LayoutController controller = new   SugiyamaLayoutController();
-      //final LayoutController controller = new GEMLayoutController();
-      //final LayoutController controller = new TreeLayoutController();
-      
-   }
-   
    private LayoutController controller = new SpringEmbeddedLayoutController();
    private boolean mApplyToAll = true;
    private Properties mLayoutConfig = controller.getConfiguration();

@@ -199,11 +199,10 @@ public class ControlPanelView
                else if(null != list && list.size() > 0)
                {
                   CustomEditor editor = (CustomEditor)list.get(0);
-                  dlg.getContentPane().add(editor.getPanel(), BorderLayout.CENTER);
-                  
-                  // Make sure to set the context first.
-                  editor.setContext(mContext);
-                  editor.setConfigElement(element);
+                  dlg.getContentPane().add(editor.getPanel(),
+                                           BorderLayout.CENTER);
+
+                  editor.setConfig(mContext, element);
                   dlg.setTitle(editor.getTitle());
                   dlg.pack();
                   dlg.setVisible(true);

@@ -141,18 +141,11 @@ public class PinchGlovePanel extends JPanel implements CustomEditor
       this.loadLabelIcon(mPinchGloveImageLbl, "org/vrjuggler/vrjconfig/customeditors/pinchglove/images/PinchGlove.png", "PinchGlove");
    }
 
-   public void setConfigElement(ConfigElement elm)
-   {
-      mConfigElement = elm;
-      init();
-   }
-
-   /**
-    * Specify the ConfigContext to use with this CustomEditor.
-    */
-   public void setContext(ConfigContext ctx)
+   public void setConfig(ConfigContext ctx, ConfigElement elm)
    {
       mConfigContext = ctx;
+      mConfigElement = elm;
+      init();
    }
 
    public Container getPanel()
