@@ -70,6 +70,8 @@
                 ..
                 RemoteInputManager
                 ..
+                StartBarrierPlugin
+                ..
                 SwapLockPlugin
                 ..
             ..

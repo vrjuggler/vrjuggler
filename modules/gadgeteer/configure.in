@@ -735,8 +735,10 @@ AC_OUTPUT(gadgeteer-config
           cluster/ClusterNetwork/Makefile
           cluster/Packets/Makefile
           cluster/Plugins/Makefile
+          cluster/Plugins/plugin.defs.mk
           cluster/Plugins/ApplicationDataManager/Makefile
           cluster/Plugins/RemoteInputManager/Makefile
+          cluster/Plugins/StartBarrierPlugin/Makefile
           cluster/Plugins/SwapLockPlugin/Makefile
           gadget/Makefile
           gadget/Devices/Makefile

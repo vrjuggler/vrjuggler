@@ -360,8 +360,8 @@ post-install-headers:
           $(includedir)/gadget/Devices/DriverConfig.h
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS)						\
-          $(GADGETROOT_ABS)/cluster/Plugins/DriverConfig.h		\
-          $(includedir)/cluster/Plugins/DriverConfig.h
+          $(GADGETROOT_ABS)/cluster/Plugins/PluginConfig.h		\
+          $(includedir)/cluster/Plugins/PluginConfig.h
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(GADGETROOT_ABS)/gadget/gadgetConfig.h	\
           $(includedir)/gadget/gadgetConfig.h

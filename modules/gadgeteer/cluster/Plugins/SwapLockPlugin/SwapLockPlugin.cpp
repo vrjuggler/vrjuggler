@@ -243,11 +243,13 @@ namespace cluster
    {;
    }
    
+   /*
    bool SwapLockPlugin::isPluginReady()
    {
       // We could do some sort of signal here I guess?
       return (true);
    }
+   */
    
    bool SwapLockPlugin::createBarrier()
    {
