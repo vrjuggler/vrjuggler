@@ -127,9 +127,10 @@ vpr::SerialTypes::UpdateActionOption getUpdateAction(void)
 // because IRIX does this automatically.
 // ----------------------------------------------------------------------------
 
-vpr::ReturnStatus SerialPortImplTermios::clearAll ()
+vpr::ReturnStatus SerialPortImplWin32::clearAll ()
 {
-    // Do Nothing
+   // Not implemented yet...
+   return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
 }
 
 
@@ -394,52 +395,57 @@ vpr::ReturnStatus SerialPortImplWin32::disableInputParityCheck ()
 // ----------------------------------------------------------------------------
 // Get the current CLOCAL state, if the device is locally attached.
 // ----------------------------------------------------------------------------
-bool SerialPortImplTermios::getLocalAttachState ()
+bool SerialPortImplWin32::getLocalAttachState ()
 {
-   //Do Nothing
+   // Not implemented yet...
+   return false;
 }
 
 // ----------------------------------------------------------------------------
 // Enable CLOCAL, that is the device is locally attached
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::enableLocalAttach ()
+vpr::ReturnStatus SerialPortImplWin32::enableLocalAttach ()
 {
-    //Do Nothing
+   // Not implemented yet...
+   return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
 }
 
 // ----------------------------------------------------------------------------
 // Disable CLOCAL, that is the device is not locally attached
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::disableLocalAttach ()
+vpr::ReturnStatus SerialPortImplWin32::disableLocalAttach ()
 {
-    //Do Nothing    
+   // Not implemented yet...
+   return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
 }
 
 // ----------------------------------------------------------------------------
 // Get the current state of ignoring BREAK bytes
 // 
 // ----------------------------------------------------------------------------
-bool SerialPortImplTermios::getBreakByteIgnoreState ()
+bool SerialPortImplWin32::getBreakByteIgnoreState ()
 {
-    //Do Nothing
+   // Not implemented yet...
+   return false;
 }
 
 // ----------------------------------------------------------------------------
 // Enable ignoring of received BREAK bytes
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::enableBreakByteIgnore ()
+vpr::ReturnStatus SerialPortImplWin32::enableBreakByteIgnore ()
 {
-    //Do Nothing
+   // Not implemented yet...
+   return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
 }
 
 // ----------------------------------------------------------------------------
 // Disable ignoring of received BREAK bytes 
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::disableBreakByteIgnore ()
+vpr::ReturnStatus SerialPortImplWin32::disableBreakByteIgnore ()
 {
-    //Do Nothing
+   // Not implemented yet...
+   return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
 }
-
 
 
 // ----------------------------------------------------------------------------
