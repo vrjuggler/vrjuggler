@@ -21,14 +21,14 @@ void vjQuat::makeQuat(vjMatrix& mat)
    else     // Diagonal is negative
    {
       int   i, j, k;
-      int   nxt[3] = {1, 2, 0};
+      int   nxt[3] = {VJ_Y, VJ_Z, VJ_X};
 
-      i = 0;
+      i = VJ_X;
 
-      if (mat.mat[1][1] > mat.mat[0][0])
-         i = 1;
-	   if (mat.mat[2][2] > mat.mat[i][i])
-         i = 2;
+      if (mat.mat[VJ_Y][VJ_Y] > mat.mat[VJ_X][VJ_X])
+         i = VJ_Y;
+	   if (mat.mat[VJ_Z][VJ_Z] > mat.mat[i][i])
+         i = VJ_Z;
 
 	   j = nxt[i];
       k = nxt[j];
@@ -40,7 +40,7 @@ void vjQuat::makeQuat(vjMatrix& mat)
       if (s != 0.0)
          s = (0.5 / s);
 
-	   vec[3] = (mat.mat[j][k] - mat.mat[k][j]) * s;
+	   vec[VJ_W] = (mat.mat[j][k] - mat.mat[k][j]) * s;
       vec[j] = (mat.mat[i][j] + mat.mat[j][i]) * s;
       vec[k] = (mat.mat[i][k] + mat.mat[k][i]) * s;
    }
