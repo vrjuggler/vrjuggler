@@ -773,7 +773,6 @@ BOOST_PYTHON_MODULE(vrj)
 
     scope* vrj_Viewport_scope = new scope(
     class_< vrj::Viewport, boost::noncopyable, vrj_Viewport_Wrapper >("Viewport", init<  >())
-        .def("recordLatency", &vrj::Viewport::recordLatency)
         .def("getType", &vrj::Viewport::getType)
         .def("isSimulator", &vrj::Viewport::isSimulator)
         .def("isSurface", &vrj::Viewport::isSurface)
