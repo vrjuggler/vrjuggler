@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
    // Keep thread alive and waiting
    kernel->waitForKernelStop();
 
-   delete simpleApp;
+   delete application;
 
    return 0;
 }
