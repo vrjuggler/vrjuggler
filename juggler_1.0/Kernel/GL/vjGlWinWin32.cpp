@@ -32,6 +32,7 @@
 
 #include <vjConfig.h>
 #include <Kernel/GL/vjGlWinWin32.h>
+#include <Kernel/vjDebug.h>
 #include <Kernel/vjAssert.h>
 
 #define glWinWin32Classname "vjOGLWin32"
@@ -51,23 +52,31 @@ int vjGlWinWin32::open()
       return 1;
 
 	HMODULE hMod = GetModuleHandle(NULL);
+        DWORD style;
+
+        // OpenGL requires WS_CLIPCHILDREN and WS_CLIPSIBLINGS.
+        style = WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
+
+        // If we want a border, create an overlapped window.  This will have
+        // a titlebar and a border.
+        if ( border ) {
+            vjDEBUG(vjDBG_DRAW_MGR, 5) << "attempting to give window a border"
+                                       << std::endl << vjDEBUG_FLUSH;
+            style |= WS_OVERLAPPEDWINDOW;
+        }
+        // Otherwise, come as close as possible to having no border by using
+        // the thin-line border.
+        else {
+            vjDEBUG(vjDBG_DRAW_MGR, 5) << "attempting to make window borderless"
+                                       << std::endl << vjDEBUG_FLUSH;
+            style |= WS_BORDER;
+        }
 
 	// Create the main application window
-	hWnd = CreateWindow(
-				glWinWin32Classname,
-				glWinWin32Classname,
-				
-				// OpenGL requires WS_CLIPCHILDREN and WS_CLIPSIBLINGS
-				WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS,
-	
-				// Window position and size
-				origin_x, origin_y,
-				window_width, window_height,
-				NULL,
-				NULL,
-				hMod,
-				NULL);
-	
+        hWnd = CreateWindow(glWinWin32Classname, glWinWin32Classname, style,
+                            origin_x, origin_y, window_width, window_height,
+                            NULL, NULL, hMod, NULL);
+
 	// If window was not created, quit
 	if(NULL == hWnd)
 		return 0;
