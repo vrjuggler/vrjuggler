@@ -44,7 +44,7 @@
 #endif
 
 #include <vpr/Util/Debug.h>
-#include <vpr/md/POSIX/IO/FileHandleUNIX.h>
+#include <vpr/md/POSIX/IO/FileHandleImplUNIX.h>
 
 
 extern int errno;
@@ -59,7 +59,7 @@ namespace vpr {
 // Constructor.  This initializes the member variables to reasonable defaults
 // and stores the given file name for later use.
 // ----------------------------------------------------------------------------
-FileHandleUNIX::FileHandleUNIX (const std::string& file_name)
+FileHandleImplUNIX::FileHandleImplUNIX (const std::string& file_name)
     : FileHandle(file_name), m_fdesc(-1)
 {
     /* Do nothing. */ ;
@@ -68,7 +68,7 @@ FileHandleUNIX::FileHandleUNIX (const std::string& file_name)
 // ----------------------------------------------------------------------------
 // Destructor.  If the file handle is in an open state, it is closed.
 // ----------------------------------------------------------------------------
-FileHandleUNIX::~FileHandleUNIX () {
+FileHandleImplUNIX::~FileHandleImplUNIX () {
     if ( m_open ) {
         close();
     }
@@ -78,7 +78,7 @@ FileHandleUNIX::~FileHandleUNIX () {
 // Open the file handle.
 // ----------------------------------------------------------------------------
 Status
-FileHandleUNIX::open () {
+FileHandleImplUNIX::open () {
     int open_flags;
     Status status;
 
@@ -113,7 +113,7 @@ FileHandleUNIX::open () {
         // Otherwise, report the error.
         else {
             vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-                << "[vpr::FileHandleUNIX] Could not open " << m_name << ": "
+                << "[vpr::FileHandleImplUNIX] Could not open " << m_name << ": "
                 << strerror(errno) << std::endl << vprDEBUG_FLUSH;
             status.setCode(Status::Failure);
             m_open = false;
@@ -132,12 +132,12 @@ FileHandleUNIX::open () {
 // Close the file handle.
 // ----------------------------------------------------------------------------
 Status
-FileHandleUNIX::close () {
+FileHandleImplUNIX::close () {
     Status status;
 
     if ( ::close(m_fdesc) == -1 ) {
         vprDEBUG(0, vprDBG_WARNING_LVL)
-            << "[vpr::FileHandleUNIX] Could not close " << m_name << ": "
+            << "[vpr::FileHandleImplUNIX] Could not close " << m_name << ": "
             << strerror(errno) << std::endl << vprDEBUG_FLUSH;
         status.setCode(Status::Failure);
     }
@@ -154,7 +154,7 @@ FileHandleUNIX::close () {
 // Test if the file is read-only.
 // ----------------------------------------------------------------------------
 bool
-FileHandleUNIX::isReadOnly () {
+FileHandleImplUNIX::isReadOnly () {
     int flags, accmode;
 
     flags   = getFlags();
@@ -167,7 +167,7 @@ FileHandleUNIX::isReadOnly () {
 // Test if the file is write-only.
 // ----------------------------------------------------------------------------
 bool
-FileHandleUNIX::isWriteOnly () {
+FileHandleImplUNIX::isWriteOnly () {
     int flags, accmode;
 
     flags   = getFlags();
@@ -180,7 +180,7 @@ FileHandleUNIX::isWriteOnly () {
 // Test if the file is read/write.
 // ----------------------------------------------------------------------------
 bool
-FileHandleUNIX::isReadWrite () {
+FileHandleImplUNIX::isReadWrite () {
     int flags, accmode;
 
     flags   = getFlags();
@@ -194,7 +194,7 @@ FileHandleUNIX::isReadWrite () {
 // Reconfigure the file handle so that it is in blocking mode.
 // ----------------------------------------------------------------------------
 Status
-FileHandleUNIX::enableBlocking () {
+FileHandleImplUNIX::enableBlocking () {
     int cur_flags, new_flags;
     Status retval;
 
@@ -214,7 +214,7 @@ FileHandleUNIX::enableBlocking () {
     // Set the file descriptor to be blocking with the new flags.
     if ( setFlags(new_flags) == -1 ) {
         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-            << "[vpr::FileHandleUNIX] Failed to set blocking on " << m_name
+            << "[vpr::FileHandleImplUNIX] Failed to set blocking on " << m_name
             << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
         retval.setCode(Status::Failure);
     }
@@ -229,7 +229,7 @@ FileHandleUNIX::enableBlocking () {
 // Reconfigure the file handle so that it is in non-blocking mode.
 // ----------------------------------------------------------------------------
 Status
-FileHandleUNIX::enableNonBlocking () {
+FileHandleImplUNIX::enableNonBlocking () {
     int cur_flags, new_flags;
     Status retval;
 
@@ -249,8 +249,9 @@ FileHandleUNIX::enableNonBlocking () {
     // Set the file descriptor to be non-blocking with the new flags.
     if ( setFlags(new_flags) == -1 ) {
         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-            << "[vpr::FileHandleUNIX] Failed to set non-blocking on " << m_name
-            << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
+            << "[vpr::FileHandleImplUNIX] Failed to set non-blocking on "
+            << m_name << ": " << strerror(errno) << std::endl
+            << vprDEBUG_FLUSH;
         retval.setCode(Status::Failure);
     }
     else {
@@ -264,7 +265,7 @@ FileHandleUNIX::enableNonBlocking () {
 // Reconfigure the file handle to be in append mode.
 // ----------------------------------------------------------------------------
 Status
-FileHandleUNIX::enableAppend () {
+FileHandleImplUNIX::enableAppend () {
     int cur_flags, new_flags, retval;
     Status status;
 
@@ -277,7 +278,7 @@ FileHandleUNIX::enableAppend () {
 
     if ( retval == -1 ) {
         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-            << "[vpr::FileHandleUNIX] Failed to enable append mode on "
+            << "[vpr::FileHandleImplUNIX] Failed to enable append mode on "
             << m_name << ": " << strerror(errno) << std::endl
             << vprDEBUG_FLUSH;
         status.setCode(Status::Failure);
@@ -290,7 +291,7 @@ FileHandleUNIX::enableAppend () {
 // Reconfigure the file handle so that it is not in append mode.
 // ----------------------------------------------------------------------------
 Status
-FileHandleUNIX::disableAppend () {
+FileHandleImplUNIX::disableAppend () {
     int cur_flags, new_flags, retval;
     Status status;
 
@@ -303,7 +304,7 @@ FileHandleUNIX::disableAppend () {
 
     if ( retval == -1 ) {
         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-            << "[vpr::FileHandleUNIX] Failed to disable append mode on "
+            << "[vpr::FileHandleImplUNIX] Failed to disable append mode on "
             << m_name << ": " << strerror(errno) << std::endl
             << vprDEBUG_FLUSH;
         status.setCode(Status::Failure);
@@ -316,7 +317,7 @@ FileHandleUNIX::disableAppend () {
 // Reconfigure the file handle so that writes are synchronous.
 // ----------------------------------------------------------------------------
 Status
-FileHandleUNIX::enableSynchronousWrite () {
+FileHandleImplUNIX::enableSynchronousWrite () {
     Status status;
 #if ! defined(_POSIX_SOURCE) && defined(O_SYNC)
     int cur_flags, new_flags, retval;
@@ -330,14 +331,14 @@ FileHandleUNIX::enableSynchronousWrite () {
 
     if ( retval == -1 ) {
         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-            << "[vpr::FileHandleUNIX] Failed to enable synchronous writes on "
+            << "[vpr::FileHandleImplUNIX] Failed to enable synchronous writes on "
             << m_name << ": " << strerror(errno) << std::endl
             << vprDEBUG_FLUSH;
         status.setCode(Status::Failure);
     }
 #else
     vprDEBUG(0, vprDBG_CRITICAL_LVL)
-        << "[vpr::FileHandleUNIX] Cannot enable synchronous writes on this platform!\n"
+        << "[vpr::FileHandleImplUNIX] Cannot enable synchronous writes on this platform!\n"
         << vprDEBUG_FLUSH;
     status.setCode(Status::Failure);
 #endif
@@ -349,7 +350,7 @@ FileHandleUNIX::enableSynchronousWrite () {
 // Reconfigure the file handle so that writes are asynchronous.
 // ----------------------------------------------------------------------------
 Status
-FileHandleUNIX::enableAsynchronousWrite () {
+FileHandleImplUNIX::enableAsynchronousWrite () {
     Status status;
 #if ! defined(_POSIX_SOURCE) && defined(O_ASYNC)
     int cur_flags, new_flags, retval;
@@ -363,14 +364,14 @@ FileHandleUNIX::enableAsynchronousWrite () {
 
     if ( retval == -1 ) {
         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-            << "[vpr::FileHandleUNIX] Failed to enable asynchronous writes on "
+            << "[vpr::FileHandleImplUNIX] Failed to enable asynchronous writes on "
             << m_name << ": " << strerror(errno) << std::endl
             << vprDEBUG_FLUSH;
         status.setCode(Status::Failure);
     }
 #else
     vprDEBUG(0, vprDBG_CRITICAL_LVL)
-        << "[vpr::FileHandleUNIX] Cannot enable asynchronous writes on this platform!\n"
+        << "[vpr::FileHandleImplUNIX] Cannot enable asynchronous writes on this platform!\n"
         << vprDEBUG_FLUSH;
     status.setCode(Status::Failure);
 #endif
@@ -387,8 +388,8 @@ FileHandleUNIX::enableAsynchronousWrite () {
 // bufer.
 // ----------------------------------------------------------------------------
 Status
-FileHandleUNIX::read_i (void* buffer, const size_t length,
-                        ssize_t& bytes_read, const vpr::Interval timeout)
+FileHandleImplUNIX::read_i (void* buffer, const size_t length,
+                            ssize_t& bytes_read, const vpr::Interval timeout)
 {
     Status status;
 
@@ -406,8 +407,9 @@ FileHandleUNIX::read_i (void* buffer, const size_t length,
             // bother to print the message.
             if ( ! (errno == EAGAIN && ! m_blocking) ) {
                 vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-                    << "[vpr::FileHandleUNIX] Error reading from " << m_name
-                    << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
+                    << "[vpr::FileHandleImplUNIX] Error reading from "
+                    << m_name << ": " << strerror(errno) << std::endl
+                    << vprDEBUG_FLUSH;
                 status.setCode(Status::Failure);
             }
 
@@ -417,7 +419,7 @@ FileHandleUNIX::read_i (void* buffer, const size_t length,
         else if ( bytes_read == 0 && errno != 0 ) {
 //        errno != ENOENT
             vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-                << "[vpr::FileHandleUNIX] Nothing read from " << m_name
+                << "[vpr::FileHandleImplUNIX] Nothing read from " << m_name
                 << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
         }
     }
@@ -431,8 +433,8 @@ FileHandleUNIX::read_i (void* buffer, const size_t length,
 // _Effective TCP/IP Programming_ by Jon D. Snader.
 // ----------------------------------------------------------------------------
 Status
-FileHandleUNIX::readn_i (void* buffer, const size_t length,
-                         ssize_t& bytes_read, const vpr::Interval timeout)
+FileHandleImplUNIX::readn_i (void* buffer, const size_t length,
+                             ssize_t& bytes_read, const vpr::Interval timeout)
 {
     size_t count;
     Status status;
@@ -474,8 +476,9 @@ FileHandleUNIX::readn_i (void* buffer, const size_t length,
 // Write the buffer to the file handle.
 // ----------------------------------------------------------------------------
 Status
-FileHandleUNIX::write_i (const void* buffer, const size_t length,
-                         ssize_t& bytes_written, const vpr::Interval timeout)
+FileHandleImplUNIX::write_i (const void* buffer, const size_t length,
+                             ssize_t& bytes_written,
+                             const vpr::Interval timeout)
 {
     Status status;
 
@@ -490,7 +493,7 @@ FileHandleUNIX::write_i (const void* buffer, const size_t length,
             }
             else {
                 vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-                    << "[vpr::FileHandleUNIX] Error writing to " << m_name
+                    << "[vpr::FileHandleImplUNIX] Error writing to " << m_name
                     << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
                 status.setCode(Status::Failure);
             }
@@ -504,7 +507,7 @@ FileHandleUNIX::write_i (const void* buffer, const size_t length,
 // Get the current file handle flags.
 // ----------------------------------------------------------------------------
 int
-FileHandleUNIX::getFlags () {
+FileHandleImplUNIX::getFlags () {
     return fcntl(m_fdesc, F_GETFL, 0);
 }
 
@@ -512,14 +515,14 @@ FileHandleUNIX::getFlags () {
 // Overwrite the current file handle flags with the given value.
 // ----------------------------------------------------------------------------
 int
-FileHandleUNIX::setFlags (const int flags) {
+FileHandleImplUNIX::setFlags (const int flags) {
     return fcntl(m_fdesc, F_SETFL, flags);
 }
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-FileHandleUNIX::isReadable (const vpr::Interval timeout) {
+FileHandleImplUNIX::isReadable (const vpr::Interval timeout) {
     Status ready;
 
     if ( timeout != vpr::Interval::NoTimeout ) {
@@ -556,7 +559,7 @@ FileHandleUNIX::isReadable (const vpr::Interval timeout) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-FileHandleUNIX::isWriteable (const vpr::Interval timeout) {
+FileHandleImplUNIX::isWriteable (const vpr::Interval timeout) {
     Status ready;
 
     if ( timeout != vpr::Interval::NoTimeout ) {

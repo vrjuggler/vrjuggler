@@ -58,7 +58,7 @@ SUBDIR		= Port		\
 SRCS		=
 
 ifneq (@SERIAL_PORT_ABS@, WIN32)
-    SRCS	+= FileHandleUNIX.cpp
+    SRCS	+= FileHandleImplUNIX.cpp
 endif
 
 ifeq (@HANDLE_ABS@, UNIX)

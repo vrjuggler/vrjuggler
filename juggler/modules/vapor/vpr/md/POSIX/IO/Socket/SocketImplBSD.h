@@ -42,7 +42,7 @@
 
 #include <vpr/IO/BlockIO.h>
 #include <vpr/IO/IOSys.h>
-#include <vpr/md/POSIX/IO/FileHandleUNIX.h>
+#include <vpr/md/POSIX/IO/FileHandleImplUNIX.h>
 #include <vpr/IO/Socket/InetAddr.h>
 #include <vpr/IO/Socket/SocketIpOpt.h>
 #include <vpr/Util/Assert.h>
@@ -220,7 +220,7 @@ protected:
         : BlockIO(std::string("INADDR_ANY")), m_bound(false),
           m_connected(false), m_handle(NULL), m_type(sock_type)
     {
-        m_handle = new FileHandleUNIX("INADDR_ANY");
+        m_handle = new FileHandleImplUNIX("INADDR_ANY");
     }
 
     // ------------------------------------------------------------------------
@@ -240,7 +240,7 @@ protected:
           m_connected(false), m_handle(NULL), m_local_addr(local_addr),
           m_remote_addr(remote_addr), m_type(sock_type)
     {
-        m_handle = new FileHandleUNIX(m_name);
+        m_handle = new FileHandleImplUNIX(m_name);
     }
 
     // ------------------------------------------------------------------------
@@ -254,24 +254,27 @@ protected:
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     virtual Status
-    read_i (void* buffer, const size_t length,
-            ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout) {
+    read_i (void* buffer, const size_t length, ssize_t& bytes_read,
+            const vpr::Interval timeout = vpr::Interval::NoTimeout)
+    {
         return m_handle->read(buffer, length, bytes_read, timeout);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     virtual Status
-    readn_i (void* buffer, const size_t length,
-             ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout) {
+    readn_i (void* buffer, const size_t length, ssize_t& bytes_read,
+             const vpr::Interval timeout = vpr::Interval::NoTimeout)
+    {
         return m_handle->readn(buffer, length, bytes_read, timeout);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     virtual Status
-    write_i (const void* buffer, const size_t length,
-             ssize_t& bytes_written, const vpr::Interval timeout = vpr::Interval::NoTimeout) {
+    write_i (const void* buffer, const size_t length, ssize_t& bytes_written,
+             const vpr::Interval timeout = vpr::Interval::NoTimeout)
+    {
         return m_handle->write(buffer, length, bytes_written, timeout);
     }
 
@@ -287,12 +290,12 @@ protected:
     virtual Status setOption(const SocketOptions::Types option,
                              const struct SocketOptions::Data& data);
 
-    bool              m_bound;
-    bool              m_connected;
-    FileHandleUNIX*   m_handle;      //:
-    InetAddr          m_local_addr;  //: The local site's address structure
-    InetAddr          m_remote_addr; //: The remote site's address structure
-    SocketTypes::Type m_type;        //:
+    bool                m_bound;
+    bool                m_connected;
+    FileHandleImplUNIX* m_handle;      //:
+    InetAddr            m_local_addr;  //: The local site's address structure
+    InetAddr            m_remote_addr; //: The remote site's address structure
+    SocketTypes::Type   m_type;        //:
 };
 
 }; // End of vpr namespace

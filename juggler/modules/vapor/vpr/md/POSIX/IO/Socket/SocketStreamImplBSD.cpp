@@ -105,7 +105,7 @@ SocketStreamImplBSD::accept (SocketStreamImplBSD& sock,vpr::Interval timeout) {
         // Otherwise, put the new socket in the passed socket object.
         else {
             sock.setRemoteAddr(addr);
-            sock.m_handle          = new FileHandleUNIX(addr.getAddressString());
+            sock.m_handle          = new FileHandleImplUNIX(addr.getAddressString());
             sock.m_handle->m_fdesc = accept_sock;
             sock.m_open            = true;
             sock.m_bound           = true;

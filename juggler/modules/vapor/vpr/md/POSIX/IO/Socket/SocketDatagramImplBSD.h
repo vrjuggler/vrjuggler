@@ -83,7 +83,7 @@ public:
     {
         m_local_addr      = sock.m_local_addr;
         m_remote_addr     = sock.m_remote_addr;
-        m_handle          = new FileHandleUNIX(sock.m_handle->getName());
+        m_handle          = new FileHandleImplUNIX(sock.m_handle->getName());
         m_handle->m_fdesc = sock.m_handle->m_fdesc;
     }
 

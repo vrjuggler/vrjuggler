@@ -39,7 +39,7 @@
 
 #include <vpr/IO/Port/Port.h>
 #include <vpr/IO/Port/SerialTypes.h>
-#include <vpr/md/POSIX/IO/FileHandleUNIX.h>
+#include <vpr/md/POSIX/IO/FileHandleImplUNIX.h>
 
 
 namespace vpr {
@@ -901,7 +901,7 @@ protected:
     // ------------------------------------------------------------------------
     speed_t intToBaud(const Uint32 speed_int);
 
-    FileHandleUNIX*	m_handle;    //: File handle for the serial port
+    FileHandleImplUNIX*	m_handle;    //: File handle for the serial port
     int			m_actions;
 };
 
