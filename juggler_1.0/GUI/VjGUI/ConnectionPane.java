@@ -110,6 +110,17 @@ public class ConnectionPane extends JPanel
 	setRemoteAddress (e.host, e.port);
     }
 
+
+
+    /********************** PlugPanel Stuff **************************/
+    public void destroy () {
+    }
+
+    public String getName () {
+        return "Connections";
+    }
+
+
 }
 
 

@@ -441,6 +441,16 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener, JFrameP
 	f.destroy();
     }
 
+
+    /********************** PlugPanel Stuff **************************/
+    public void destroy () {
+    }
+
+    public String getName () {
+        return "Performance";
+    }
+
+
 }
 
 
