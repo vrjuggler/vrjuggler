@@ -89,7 +89,9 @@ INSTALL		= @INSTALL@
 EXTRA_SRCS_PATH = $(srcdir)/plugins
 EXTRA_INCLUDES = 
 LIBS = ${LIBS} -lm
-
+ifeq ($(OS_TYPE), Win32)
+EXTRA_INCLUDES += -DWIN32
+endif
 
 ##################################################################
 
