@@ -57,7 +57,6 @@ namespace vpr {
 /**
  * vpr::RWMutex wrapper.
  *
- * @author Allen Bierbaum
  * @date 1-31-97
  */
 class VPR_CLASS_API RWMutex

@@ -102,8 +102,6 @@ namespace vpr
     * so...
     *
     * class myClass : public vpr::Singleton<myClass>
-    *
-    * @author Kevin Meinert
     */
    template< class singleClass >
    class VPR_CLASS_API Singleton

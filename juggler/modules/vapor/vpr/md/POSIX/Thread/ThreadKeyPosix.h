@@ -69,8 +69,6 @@ namespace vpr {
 
 /**
  * Wrapper around pthread keys (thread-specific data).
- *
- * @author Patrick Hartling
  */
 class ThreadKeyPosix {
 public:

@@ -75,9 +75,6 @@ typedef vpr::Uint32 thread_id_t;
  * to the class, then the class is "boot-strapped" by spawning a call to the
  * startThread function with in turn will call the previously set thread
  * function
- *
- * @author Patrick Hartling
- * @author Allen Bierbaum
  */
 class ThreadPosix : public BaseThread
 {

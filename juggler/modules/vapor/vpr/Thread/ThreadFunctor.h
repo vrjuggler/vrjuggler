@@ -52,8 +52,6 @@ namespace vpr {
  * Converts a function into a functor that can be passed to a
  * extern C type function to be called by a thread creation
  * routine.
- *
- * @author Allen Bierbaum
  */
 class VPR_CLASS_API BaseThreadFunctor
 {
@@ -84,8 +82,6 @@ public:
 /**
  * Member functor class.  This class allows non-static class member functions
  * to be used as functors.
- *
- * @author Allen Bierbaum
  */
 template<class T>
 class VPR_CLASS_API ThreadMemberFunctor : public BaseThreadFunctor
@@ -125,8 +121,6 @@ private:
 /**
  * Nonmember functor class.  Converts a non-member function or a static class
  * member function into a functor.
- *
- * @author Allen Bierbaum
  */
 class VPR_CLASS_API ThreadNonMemberFunctor : public BaseThreadFunctor
 {

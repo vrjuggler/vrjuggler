@@ -50,7 +50,6 @@ namespace vpr {
 /**
  * Null mutex wrapper.  Used to pass a do nothing mutex as a template type.
  *
- * @author Allen Bierbaum
  * @date 1-21-97
  */
 class VPR_CLASS_API NullMutex

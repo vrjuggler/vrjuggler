@@ -51,8 +51,6 @@ namespace vpr {
 
 /**
  * Simple wrapper around time since the UNIX Epoch (00:00 UTC January 1, 1970).
- *
- * @author Patrick Hartling
  */
 class VPR_CLASS_API DateTime {
 public:
