@@ -295,7 +295,8 @@ if ($#inputfiles < 0) {
   exit (0);
 }
 
-%class_paths = ();
+%class_groups = ();	# Groups of classes (defined using paths)
+%class_paths = ();	# Paths to where classes are defined
 
 foreach $inputfile (@inputfiles) {
 
@@ -617,6 +618,17 @@ sub GENTEXT {
 	my $path = $class_paths{"$cname"};
 	$str =~ s|$TO([^$TO$TC]*)$TC|$path|;
       }
+      # {gname} was read.  For {gname} to have meaning, we must be looping
+      # over {classgroup}, so the group name will be in $cname.
+      elsif ( "$arg[0]" eq "gname" ) {
+	my $group_name = "$cname";
+	$str =~ s|$TO([^$TO$TC]*)$TC|$group_name|;
+      }
+      # {group} was read.
+      elsif ( "$arg[0]" eq "group" ) {
+	my $group_name = $class_paths{"$cname"};
+	$str =~ s|$TO([^$TO$TC]*)$TC|$group_name|;
+      }
       elsif ($arg[0] eq "name") {
         if ($curglob) {
           $cleaned=&FILTER($curglobval{$curglob},"$filterdir${X}$curglob.flt");
@@ -894,6 +906,83 @@ sub GENTEXT {
             }
           }
         }
+	# This loops over all groups of classes listed in the keys of
+	# %class_groups.
+	elsif ( "$arg[1]" eq "classgroup" ) {
+	  @group = keys(%class_groups);
+
+	  if ( @group ) {
+	    if ( $dosort ) {
+	      if ( $sortfunc ) {
+	        @group = sort(DOSORT @group);
+	      } else {
+	        @group = sort(@group);
+	      }
+	    }
+
+	    foreach $member ( @group ) {
+ 	      $tmp = 1;
+	      $index = -1 if $index == $#group;
+
+	      if ( %curglobval ) {
+		my $glb;
+		foreach $glb ( keys(%curglobval) ) {
+		  my $temp_var = "$priv_prefix" . "U_$glb";
+
+		  if ( ${"$temp_var"}{"$member"} ne $curglobval{"$glb"} ) {
+		    $tmp = 0;
+		    last;
+		  }
+		}
+	      }
+
+	      if ( $tmp ) {
+		$tmpstr .= GENTEXT(1, "$srcstr", $index, "$member", 0, 0,
+				   %curglobval);
+		$index++;
+	      }
+	    }
+	  }
+	}
+	# This loops over each member of a class group (the array reference
+	# returned by indexing %class_groups by group name).
+	elsif ( "$arg[1]" eq "gmember" ) {
+	  # $cname contains the group in which we are interested.
+	  @group = @${$class_groups{"$cname"}};
+
+	  if ( @group ) {
+	    if ( $dosort ) {
+	      if ( $sortfunc ) {
+	        @group = sort(DOSORT @group);
+	      } else {
+	        @group = sort(@group);
+	      }
+	    }
+
+	    foreach $member ( @group ) {
+	      $tmp = 1;
+	      $index = -1 if $index == $#group;
+
+	      if ( %curglobval ) {
+		my $glb;
+		foreach $glb ( keys(%curglobval) ) {
+		  my $temp_var = "$priv_prefix" . "U_$glb";
+
+		  if ( ${"$temp_var"}{"$member"} ne $curglobval{"$glb"} ) {
+		    $tmp = 0;
+		    last;
+		  }
+		}
+	      }
+
+	      if ( $tmp ) {
+		$tmpstr .= GENTEXT(1, "$srcstr", $index, "$member", 0, 0,
+				   %curglobval);
+		$index++;
+	      }
+	    }
+	  }
+	}
         elsif ($arg[1]=~/class|parent|child|union/) {
 
           if ($arg[1] eq "class") { 
@@ -1949,6 +2038,9 @@ sub PROCCLASS {
   # Store the path leading up to the file where this class is defined.  We
   # get $path as a 'local' variable from the calling function.
   $class_paths{"$classname"} = "$path";
+
+  # Store this class in the array for this class group.
+  push(@${$class_groups{"$path"}}, "$classname");
 
   if ($modtime>$modtime{$classname}) { $modtime{$classname}=$modtime; }
     
