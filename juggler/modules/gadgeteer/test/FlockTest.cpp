@@ -36,7 +36,7 @@
 //#include <VPR/SharedMem/vjSharedType.h>
 #include <Input/vjPosition/vjFlock.h>
 #include <Math/vjCoord.h>
-#include <VPR/vjSystem.h>
+#include <vpr/System.h>
 
 int main()
 {
@@ -155,7 +155,7 @@ int main()
                  << "   roll:" << std::setprecision(2) << std::setw(10)
                  << ori0[2] << std::endl << std::endl;
             }
-            vjSystem::sleep(2);
+            vpr::System::sleep(2);
          }
          break;
       }

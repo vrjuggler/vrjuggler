@@ -32,8 +32,8 @@
 
 #include <stdlib.h>   //for NULL
 #include <iostream.h> // for cout
-#include <VPR/Threads/vjThread.h>
-#include <VPR/vjSystem.h>
+#include <vpr/Thread/Thread.h>
+#include <vpr/System.h>
 #include <vjSound/vjSoundFactory.h>
 #include "fileIO.h"
 
@@ -113,7 +113,7 @@ void main(int argc, char** argv)
       cout<<"\n"<<flush;
       arg = "nosound"; //default arg
       success = initvjSoundEngine( arg, gSoundEngine );
-      vjSystem::sleep( 1 );
+      vpr::System::sleep( 1 );
    }   
    
    assert( gSoundEngine != NULL );
@@ -137,42 +137,42 @@ void main(int argc, char** argv)
    /*gSoundEngine->setPosition( 10, 0, 0 );
    longPan->trigger();
    gSoundEngine->update();
-   vjSystem::usleep( 1 );
+   vpr::System::usleep( 1 );
    
    gSoundEngine->setPosition( 0, 5, 0 );
    fastPan->trigger();
    gSoundEngine->update();
-   vjSystem::usleep( 1 );
+   vpr::System::usleep( 1 );
    
    gSoundEngine->setPosition( 0, 5, 5 );
    shortTriggeredvjSound->trigger();
    gSoundEngine->update();
-   vjSystem::usleep( 1 );
+   vpr::System::usleep( 1 );
    
    gSoundEngine->setPosition( 0, 0, 20 );
    fastPan->trigger();
    gSoundEngine->update();
-   vjSystem::sleep( 1 );
+   vpr::System::sleep( 1 );
    
    gSoundEngine->setPosition( 0, 0, 10 );
    longPan->trigger();
    gSoundEngine->update();
-   vjSystem::sleep( 1 );
+   vpr::System::sleep( 1 );
    
    gSoundEngine->setPosition( 0, 0, 5 );
    shortTriggeredvjSound->trigger();
    gSoundEngine->update();
-   vjSystem::sleep( 1 );
+   vpr::System::sleep( 1 );
    
    gSoundEngine->setPosition( -5, -5, -4 );
    longPan->trigger();
    gSoundEngine->update();
-   vjSystem::sleep( 1 );
+   vpr::System::sleep( 1 );
    
    gSoundEngine->setPosition( 30, 0, 0 );
    fastPan->trigger();
    gSoundEngine->update();
-   vjSystem::sleep( 1 );
+   vpr::System::sleep( 1 );
    */
 
    gSoundEngine->setPosition( 0, 0, 0 );
@@ -197,10 +197,10 @@ void main(int argc, char** argv)
          fastPan->setPosition( x - 50, 0, 0 );
          //gSoundEngine->update();
          gSoundEngine->update();
-         vjSystem::usleep( 25000 );
+         vpr::System::usleep( 25000 );
       }
    }
-   vjSystem::sleep( 1 );
+   vpr::System::sleep( 1 );
 
    // positional test, for when longPan has looppoints.
    // nice long panning.
@@ -215,7 +215,7 @@ void main(int argc, char** argv)
       {
          longPan->setPosition( z - 50, 0, x * 10 - 50 );
          gSoundEngine->update();
-         vjSystem::usleep( 50000 );
+         vpr::System::usleep( 50000 );
       }
       
       // ... and forth
@@ -223,18 +223,18 @@ void main(int argc, char** argv)
       {
          longPan->setPosition( z - 50, 0, x * 10 - 50 );
          gSoundEngine->update();
-         vjSystem::usleep( 50000 );
+         vpr::System::usleep( 50000 );
       }
    }
   
-   vjSystem::sleep( 1 );
+   vpr::System::sleep( 1 );
    
    // or just trigger a sound, no panning...
    cout<<"Triggering a short sound....\n"<<flush;
    shortTriggeredvjSound->trigger();
    gSoundEngine->update();
    
-   vjSystem::sleep( 3 );
+   vpr::System::sleep( 3 );
   
    gSoundEngine->update();
    longPan->stop();
@@ -242,7 +242,7 @@ void main(int argc, char** argv)
    shortTriggeredvjSound->stop();
    gSoundEngine->update();
   
-   vjSystem::usleep( 30000 );
+   vpr::System::usleep( 30000 );
    
    cout<<"vjSound should have stopped....\n"<<flush;
    cout<<"Done...\n"<<flush;
@@ -253,5 +253,5 @@ void main(int argc, char** argv)
    delete longPan;
    
    
-   vjSystem::usleep( 1 );
+   vpr::System::usleep( 1 );
 }

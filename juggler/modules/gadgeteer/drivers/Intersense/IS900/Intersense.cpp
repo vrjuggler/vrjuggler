@@ -198,10 +198,10 @@ int vjIsense::startSampling()
       }
 
 // Create a new thread to handle the control
-        vjThreadMemberFunctor<vjIsense>* memberFunctor =
-            new vjThreadMemberFunctor<vjIsense>(this, &vjIsense::controlLoop, NULL);
-        vjThread* new_thread;
-        new_thread = new vjThread(memberFunctor);
+        vpr::ThreadMemberFunctor<vjIsense>* memberFunctor =
+            new vpr::ThreadMemberFunctor<vjIsense>(this, &vjIsense::controlLoop, NULL);
+        vpr::Thread* new_thread;
+        new_thread = new vpr::Thread(memberFunctor);
         myThread = new_thread;
 
 
@@ -233,7 +233,7 @@ int vjIsense::sample()
     int stationIndex;
     int min, num;
 
-    vjThread::yield();
+    vpr::Thread::yield();
 
     for (i = 0 ; i < (mTracker.NumStations()); i++)
     {
@@ -366,7 +366,7 @@ void vjIsense::updateData()
     int i;
 
 // this unlocks when this object is destructed (upon return of the function)
-    vjGuard<vjMutex> updateGuard(lock);
+    vpr::Guard<vpr::Mutex> updateGuard(lock);
 
 
 // TODO: modify the datagrabber to get correct data

@@ -33,13 +33,13 @@
 #define _VJ_XWIN_KEYBOARD_H_
 
 #include <vjConfig.h>
+#include <vpr/Sync/Mutex.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/keysym.h>
 
 #include <Input/vjInput/vjInput.h>
 #include <Input/vjInput/vjKeyboard.h>
-#include <VPR/Sync/vjMutex.h>
 
 class vjConfigChunk;
 
@@ -161,7 +161,7 @@ protected:
    int      m_keys[256];         // (0,*): The num key presses during an UpdateData (ie. How many keypress events)
    int      m_curKeys[256];      // (0,*): Copy of m_keys that the user reads from between updates
    int      m_realkeys[256];     // (0,1): The real keyboard state, all events processed (ie. what is the key now)
-   vjMutex  mKeysLock;           // Must hold this lock when accessing m_keys OR mHandleEventsHasBeenCalled
+   vpr::Mutex  mKeysLock;           // Must hold this lock when accessing m_keys OR mHandleEventsHasBeenCalled
    bool     mHandleEventsHasBeenCalled;  // This flag keeps track of wether or not HandleEvents has been called since the last updateData.
                                     // It is used by updateData to make sure we don't get a "blank" update where no keys are pressed.
    bool     mExitFlag;           // Should we exit

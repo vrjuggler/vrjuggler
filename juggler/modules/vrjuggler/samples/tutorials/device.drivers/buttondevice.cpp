@@ -1,6 +1,6 @@
 #include <Input/vjInput/vjDigital.h>
 #include <Input/InputManager/vjDeviceFactory.h>
-#include <VPR/vjSystem.h>
+#include <vpr/System.h>
 
 class MyButtonDevice : public vjDigital
 {
@@ -16,7 +16,7 @@ public:
 private:
    static void   threadedSampleFunction( void* classPointer );
    int           mDigitalData;
-   vjThread*     mSampleThread;
+   vpr::Thread*     mSampleThread;
    
    // configuration data set by config()
    int           mPortId, mBaud;
@@ -36,7 +36,7 @@ static std::string  MyButtonDevice::getChunkType()
 // which calls MyButtonDevice::sample() repeatedly
 void MyButtonDevice::startSampling()
 {
-   mSampleThread = new vjThread( threadedSampleFunction, (void*)this, 0 );
+   mSampleThread = new vpr::Thread( threadedSampleFunction, (void*)this, 0 );
    if (!mSampleThread->valid())
       return 0; // thread creation failed
    else 
@@ -83,7 +83,7 @@ void MyButtonDevice::threadedSampleFunction( void* classPointer )
    while (1)   
    {
      this_ptr->sample();
-     vjSystem::sleep(1); //specify some time here, so you don't waste CPU cycles
+     vpr::System::sleep(1); //specify some time here, so you don't waste CPU cycles
    }
 }
 

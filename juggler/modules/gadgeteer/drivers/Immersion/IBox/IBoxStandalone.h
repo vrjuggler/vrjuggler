@@ -33,11 +33,7 @@
 
 #include <vjConfig.h>
 #include <string>
-#include <VPR/IO/Port/vjSerialPort.h>
-#include <VPR/IO/Port/vjPort.h>
-#include <VPR/IO/Port/vjSerialPortFactory.h>
-#include <VPR/IO/Port/vjPortImp.h>
-#include </home/users/browner/vpr/vapor/vpr/IO/Port/SerialPort.h>
+#include <vpr/IO/Port/SerialPort.h>
 
 /*-----------*/
 /* Constants */

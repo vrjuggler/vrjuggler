@@ -40,8 +40,8 @@
 #include <Kernel/GL/vjGlDrawManager.h>
 class vjGlDrawManager;
 
-#include <VPR/Sync/vjCond.h>
-#include <VPR/Sync/vjSemaphore.h>
+#include <vpr/Sync/CondVar.h>
+#include <vpr/Sync/Semaphore.h>
 
 #include <Performance/vjPerfDataBuffer.h>
 
@@ -157,29 +157,29 @@ private:
    void operator=(const vjGlPipe& o) {;}
 
 private:
-   vjThread*   mActiveThread;      //: The thread running this object
+   vpr::Thread*   mActiveThread;      //: The thread running this object
    bool        mThreadRunning;      //: Do we have a running thread?
 
    int   mPipeNum;                     //: The id of the pipe
 
    std::vector<vjGlWindow*> newWins;  //: List of windows still to be opened on current pipe
-   vjMutex newWinLock;                //: Lock for accessing the newWin list
+   vpr::Mutex newWinLock;                //: Lock for accessing the newWin list
 
    std::vector<vjGlWindow*> openWins; //: List of current open windows to render
-   vjMutex openWinLock;               //: Lock for accessing the openWinList
+   vpr::Mutex openWinLock;               //: Lock for accessing the openWinList
 
    std::vector<vjGlWindow*> mClosingWins; //: List of windows to close
-   vjMutex mClosingWinLock;               //: Lock for access the windows to close
+   vpr::Mutex mClosingWinLock;               //: Lock for access the windows to close
 
    int         controlExit;         //: Flag for when to exit the control loop
 
    vjGlDrawManager*    glManager;    //: The openlGL manager that we are rendering for
                                      //: Needed to get app, etc.
 
-   vjSemaphore    renderTriggerSema;   //: Signals render trigger
-   vjSemaphore    renderCompleteSema;  //: signals render completed
-   vjSemaphore    swapTriggerSema;     //: Signals a swap to happen
-   vjSemaphore    swapCompleteSema;    //: Signals a swap has been completed
+   vpr::Semaphore    renderTriggerSema;   //: Signals render trigger
+   vpr::Semaphore    renderCompleteSema;  //: signals render completed
+   vpr::Semaphore    swapTriggerSema;     //: Signals a swap to happen
+   vpr::Semaphore    swapCompleteSema;    //: Signals a swap has been completed
 
     vjPerfDataBuffer* mPerfBuffer;  //: Performance data for this pipe
     int mPerfPhase;                 //: utility var for perf measurement

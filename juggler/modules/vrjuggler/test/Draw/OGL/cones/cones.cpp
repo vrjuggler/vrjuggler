@@ -34,7 +34,7 @@
 
 #include <Kernel/vjKernel.h>
 #include <Kernel/vjProjection.h>
-#include <VPR/vjSystem.h>
+#include <vpr/System.h>
 
 #include <ConesApp.h>
 
@@ -73,6 +73,6 @@ main (int argc, char* argv[]) {
     kernel->setApplication(application);         // Set application
 
     while (1) {
-       vjSystem::usleep(250000);
+       vpr::System::usleep(250000);
     }
 }

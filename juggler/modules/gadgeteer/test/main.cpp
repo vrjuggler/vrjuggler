@@ -38,7 +38,7 @@
 #include <Input/InputManager/vjInputManager.h>
 #include <Input/InputManager/vjPosInterface.h>
 #include <Math/vjCoord.h>
-#include <VPR/vjSystem.h>
+#include <vpr/System.h>
 
 
 #define CHUNK_DESC_LOCATION "/home/users/allenb/Source/juggler/Data/chunksDesc"
@@ -78,7 +78,7 @@ int main()
    std::cout << input_manager << std::endl;
 
    std::cout << "Sleeping..." << std::flush;
-   vjSystem::sleep(2);
+   vpr::System::sleep(2);
    std::cout << "awake." << std::endl << std::flush;
 
       // get the indices for the devices
@@ -87,7 +87,7 @@ int main()
 
    for (int l = 0; l <30; l++)
    {
-      vjSystem::sleep (1);
+      vpr::System::sleep (1);
       std::cout << "Updating All Data .. " << std::endl;
       input_manager->updateAllData();
 

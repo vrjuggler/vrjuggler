@@ -35,10 +35,10 @@
 #include <sys/time.h>
 
 #include <Input/vjInput/vjIbox.h>
-#include <VPR/Threads/vjThread.h>
+#include <vpr/Thread/Thread.h>
 #include <Utils/vjDebug.h>
 #include <Config/vjConfigChunk.h>
-#include <VPR/vjSystem.h>
+#include <vpr/System.h>
 
 //: Config function
 // Configures the ibox
@@ -116,7 +116,7 @@ int vjIBox::startSampling()
 
       vjIBox* devicePtr = this;
       void sampleBox(void*);
-      myThread = new vjThread(sampleBox, (void*)devicePtr);
+      myThread = new vpr::Thread(sampleBox, (void*)devicePtr);
       if (!myThread->valid())
          return 0; //fail
       else
@@ -210,7 +210,7 @@ int vjIBox::stopSampling()
     delete(myThread);
     myThread = NULL;
 
-    vjSystem::usleep(100);        // 100 uSec pause
+    vpr::System::usleep(100);        // 100 uSec pause
 
     hci_disconnect(&thingie);
     std::cout << "stopping the ibox.." << std::endl;
@@ -263,7 +263,7 @@ int vjIBox::getDigitalData(int d)
 *********************************************** ahimberg */
 void vjIBox::updateData()
 {
-vjGuard<vjMutex> updateGuard(lock);
+vpr::Guard<vpr::Mutex> updateGuard(lock);
 
    // Copy the valid data to the current data so that both are valid
    theData[current] = theData[valid];   // ASSERT: only one data entry for the ibox

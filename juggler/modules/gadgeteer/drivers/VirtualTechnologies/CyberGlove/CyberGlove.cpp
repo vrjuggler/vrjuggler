@@ -44,7 +44,7 @@
 #include <Input/vjGlove/vt_error.h>
 #include <Kernel/vjKernel.h>
 #include <Config/vjConfigChunk.h>
-#include <VPR/vjSystem.h>
+#include <vpr/System.h>
 
 bool vjCyberGlove::config(vjConfigChunk *c)
 {
@@ -93,10 +93,10 @@ vjCyberGlove::startSampling()
       resetIndexes();
 
       // Create a new thread to handle the control
-      vjThreadMemberFunctor<vjCyberGlove>* memberFunctor =
-         new vjThreadMemberFunctor<vjCyberGlove>(this, &vjCyberGlove::controlLoop, NULL);
+      vpr::ThreadMemberFunctor<vjCyberGlove>* memberFunctor =
+         new vpr::ThreadMemberFunctor<vjCyberGlove>(this, &vjCyberGlove::controlLoop, NULL);
 
-      myThread = new vjThread(memberFunctor);
+      myThread = new vpr::Thread(memberFunctor);
 
       if (!myThread->valid())
       {
@@ -144,7 +144,7 @@ int vjCyberGlove::sample()
 
 void vjCyberGlove::updateData()
 {
-vjGuard<vjMutex> updateGuard(lock);
+vpr::Guard<vpr::Mutex> updateGuard(lock);
    // Copy the valid data to the current data so that both are valid
    mTheData[0][current] = mTheData[0][valid];   // ASSERT: we only have one glove
 
@@ -161,7 +161,7 @@ int vjCyberGlove::stopSampling()
       myThread->kill();
       delete myThread;
       myThread = NULL;
-      vjSystem::usleep(100);
+      vpr::System::usleep(100);
 
       mGlove->close();
       vjDEBUG(vjDBG_INPUT_MGR,1) << "stopping vjCyberGlove.." << std::endl << vjDEBUG_FLUSH;

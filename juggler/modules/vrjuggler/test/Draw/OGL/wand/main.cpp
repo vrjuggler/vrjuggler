@@ -39,7 +39,7 @@
 
       // --- Lib Stuff --- //
 #include <Kernel/vjKernel.h>
-#include <VPR/vjSystem.h>
+#include <vpr/System.h>
 
 
 int main(int argc, char* argv[])
@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
    /*
    for(int i=0;i<20;i++)
    {
-      vjSystem::usleep(50000);
+      vpr::System::usleep(50000);
       cout << i << "." << flush;
    }
    */
@@ -78,6 +78,6 @@ int main(int argc, char* argv[])
 
    while(1)
    {
-      vjThread::yield();
+      vpr::Thread::yield();
    }
 }

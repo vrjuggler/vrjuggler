@@ -214,10 +214,10 @@ int vjDTK::startSampling()
     	}
 
 // Create a new thread to handle the control
-	vjThreadMemberFunctor<vjDTK>* memberFunctor =
-	    new vjThreadMemberFunctor<vjDTK>(this, &vjDTK::controlLoop, NULL);
-	vjThread* new_thread;
-	new_thread = new vjThread(memberFunctor);
+	vpr::ThreadMemberFunctor<vjDTK>* memberFunctor =
+	    new vpr::ThreadMemberFunctor<vjDTK>(this, &vjDTK::controlLoop, NULL);
+	vpr::Thread* new_thread;
+	new_thread = new vpr::Thread(memberFunctor);
 	myThread = new_thread;
 
 
@@ -248,7 +248,7 @@ int vjDTK::sample()
 
     sampletime.set();
 
-    vjThread::yield()
+    vpr::Thread::yield()
 
     for (i = 0; i < numSegments; i++)
     {
@@ -379,7 +379,7 @@ void vjDTK::updateData()
 	return;
 				
 // this unlocks when this object is destructed (upon return of the function)
-    vjGuard<vjMutex> updateGuard(lock);
+    vpr::Guard<vpr::Mutex> updateGuard(lock);
     
     
 // TODO: modify the datagrabber to get correct data

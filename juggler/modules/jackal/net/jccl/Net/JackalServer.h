@@ -36,9 +36,9 @@
 
 #include <vjConfig.h>
 #include <Kernel/vjConfigChunkHandler.h>
-#include <VPR/Threads/vjThread.h>
+#include <vpr/Thread/Thread.h>
 #include <Environment/vjSocket.h>
-#include <VPR/Sync/vjMutex.h>
+#include <vpr/Sync/Mutex.h>
 
 class vjConnect;
 class vjPerfDataBuffer;
@@ -132,15 +132,15 @@ private:
     std::string               perf_target_name;
     std::vector<vjConnect*>   connections;
     std::vector<vjPerfDataBuffer*> perf_buffers;
-    vjThread*                 listen_thread;
+    vpr::Thread*                 listen_thread;
     int                       Port;
     vjSocket*                 listen_socket;
     vjConnect*                perf_target;
     float                     perf_refresh_time;  // in milliseconds
     bool                      configured_to_accept;
     vjConfigChunk*            current_perf_config;
-    vjMutex                   connections_mutex;
-    vjMutex                   perf_buffers_mutex;
+    vpr::Mutex                   connections_mutex;
+    vpr::Mutex                   perf_buffers_mutex;
 
     // PRIVATE utility functions
 

@@ -42,7 +42,7 @@
       // --- Lib Stuff --- //
 #include <Kernel/vjKernel.h>
 #include <Kernel/vjProjection.h>
-#include <VPR/vjSystem.h>
+#include <vpr/System.h>
 
 
 int main(int argc, char* argv[])
@@ -81,12 +81,12 @@ int main(int argc, char* argv[])
    while(1)
    {   
       /*
-      vjSystem::sleep(2);
+      vpr::System::sleep(2);
       kernel->stopApplication();
-      vjSystem::sleep(2);
+      vpr::System::sleep(2);
       kernel->setApplication(application);
       */
-      vjThread::yield();
+      vpr::Thread::yield();
    }
 
    return 1;

@@ -33,8 +33,8 @@
 
 #include <vjConfig.h>
 #include <Kernel/vjOSXSystemFactory.h>
-#include <VPR/Threads/vjThread.h>
-#include <VPR/vjSystem.h>
+#include <vpr/Thread/Thread.h>
+#include <vpr/System.h>
 #include <Utils/vjDebug.h>
 #include <stdlib.h>
 #include <string.h>
@@ -71,9 +71,9 @@ vjOSXSystemFactory::vjOSXSystemFactory()
 {
     InitComplete = false; //We haven't initialized yet!
 
-    vjThreadMemberFunctor<vjOSXSystemFactory>* memberFunctor = new vjThreadMemberFunctor<vjOSXSystemFactory>(this, &vjOSXSystemFactory::CarbonApplicationThread, NULL);
-    vjThread* new_thread;
-    new_thread = new vjThread(memberFunctor);
+    vpr::ThreadMemberFunctor<vjOSXSystemFactory>* memberFunctor = new vpr::ThreadMemberFunctor<vjOSXSystemFactory>(this, &vjOSXSystemFactory::CarbonApplicationThread, NULL);
+    vpr::Thread* new_thread;
+    new_thread = new vpr::Thread(memberFunctor);
 
     while(!InitComplete); //Spin here until the application is initialized!
 }

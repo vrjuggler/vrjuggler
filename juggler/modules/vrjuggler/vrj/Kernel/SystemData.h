@@ -38,17 +38,17 @@
 class vjInputManager;
 
 /**
- * vjSystemData: Globabl data that many objects need access to.
+ * vpr::SystemData: Globabl data that many objects need access to.
  *
  * This object is designed to encapsulte a variety of data
  * at the Kernel level that needs to be access by many objects
  * at several levels.  This object will provide a single point
  * of access.
  */
-class vjSystemData
+class vpr::SystemData
 {
 public:
-    vjSystemData (void) {
+    vpr::SystemData (void) {
         inputManager = NULL;
     }
 

@@ -64,9 +64,9 @@
 #include <signal.h>
 #include <float.h>
 
-#include <VPR/Sync/vjMutex.h>
-#include <VPR/Sync/vjGuard.h>
-#include <VPR/Threads/vjThread.h>
+#include <vpr/Sync/Mutex.h>
+#include <vpr/Sync/Guard.h>
+#include <vpr/Thread/Thread.h>
 
 class vjConfigChunk;
 
@@ -222,7 +222,7 @@ protected:
    char*       sPort;
    std::string instName;
    int         port_id;
-   vjThread*   myThread;   //: The thread being used by the driver
+   vpr::Thread*   myThread;   //: The thread being used by the driver
    int         active;     //: Is the driver active
 
    //: Index holders
@@ -234,7 +234,7 @@ protected:
    // UpdateData switches)
    int current, valid, progress;
 
-   vjMutex lock;        //: Mutex for swapping the pointers.
+   vpr::Mutex lock;        //: Mutex for swapping the pointers.
    int baudRate;        //: Baud rate of the device (if it is serial device)
 
    vjInput (const vjInput& o) {;}

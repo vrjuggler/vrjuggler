@@ -39,7 +39,7 @@
 
 #include <Input/vjInput/vjInput.h>
 #include <Input/vjPosition/vjPosition.h>
-#include <VPR/Threads/vjThread.h>
+#include <vpr/Thread/Thread.h>
 #include <Input/vjPosition/aMotionStar.h>
 
 
@@ -173,7 +173,7 @@ public:
     // ------------------------------------------------------------------------
     //: Begin sampling.
     //
-    //! PRE: m_my_thread is either NULL or points to a valid vjThread object.
+    //! PRE: m_my_thread is either NULL or points to a valid vpr::Thread object.
     //! POST: If the driver is not already active and a thread has not already
     //+       been created, an attempt is made to activate the device.  First,
     //+       a connection attempt to the server is made.  If successful, the
@@ -188,10 +188,10 @@ public:
     // ------------------------------------------------------------------------
     //: Stop sampling.
     //
-    //! PRE: m_my_thread is either NULL or points to a valid vjThread object.
+    //! PRE: m_my_thread is either NULL or points to a valid vpr::Thread object.
     //! POST: If the driver is not currently active, no stop attempt is made.
     //+       Otherwise, if m_my_thread is non-NULL (assumed to point to a
-    //+       valid vjThread object), the thread is killed and deleted, and a
+    //+       valid vpr::Thread object), the thread is killed and deleted, and a
     //+       stop attempt is made on the device.
     //
     //! RETURNS: 0 - Sampling could not be stopped.  This will occur if the
@@ -612,7 +612,7 @@ private:
     // ------------------------------------------------------------------------
     unsigned int getBirdIndex(int bird_num, int buffer_index);
 
-    vjThread*   m_my_thread;   // The thread doing the flock sampling
+    vpr::Thread*   m_my_thread;   // The thread doing the flock sampling
     aMotionStar m_motion_star; // Actual MotionStar device driver
 };
 
