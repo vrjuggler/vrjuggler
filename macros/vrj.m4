@@ -109,8 +109,10 @@ dnl        VRJ_LIBS_STATIC="`$VRJ_CONFIG $vrj_config_args --libs $ABI --static` 
         VRJ_EXTRA_LIBS_ALL_CC=`$VRJ_CONFIG $vrj_config_args --extra-libs $ABI --all`
         VRJ_EXTRA_LIBS_ALL_LD=`$VRJ_CONFIG $vrj_config_args --extra-libs $ABI --all --linker`
         VRJ_VERSION=`$VRJ_CONFIG --version`
-        DPP_VERSION_CHECK_MSG([VR Juggler], [$VRJ_VERSION], [$min_vrj_version],
-                              [vrj_cv_vrj_version], $2, $3)
+
+        AC_MSG_CHECKING([whether VR Juggler version is >= $min_vrj_version])
+        AC_MSG_RESULT([$VRJ_VERSION])
+        DPP_VERSION_CHECK([$VRJ_VERSION], [$min_vrj_version], $2, $3)
     fi
 
     if test "x$no_vrj" != x ; then

@@ -104,8 +104,10 @@ dnl                          test SNX program], , enable_sonixtest=yes)
         SNX_LIBS_CC="`$SNX_CONFIG $sonix_config_args --libs $ABI` $SNX_EXTRA_LIBS_CC"
         SNX_LIBS_STATIC_CC="`$SNX_CONFIG $sonix_config_args --libs $ABI --static` $SNX_EXTRA_LIBS_CC"
         SNX_VERSION=`$SNX_CONFIG --version`
-        DPP_VERSION_CHECK_MSG([SNX], [$SNX_VERSION], [$min_sonix_version],
-                              [sonix_cv_sonix_version], $2, $3)
+
+        AC_MSG_CHECKING([whether Sonix version is >= $min_sonix_version])
+        AC_MSG_RESULT([$SNX_VERSION])
+        DPP_VERSION_CHECK([$SNX_VERSION], [$min_sonix_version], $2, $3)
     fi
 
     if test "x$no_sonix" != x ; then
