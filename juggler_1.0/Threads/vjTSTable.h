@@ -2,9 +2,9 @@
 #define _VJ_TS_TABLE_H_
 #pragma once
 
+#include <vector.h>
 #include <Threads/vjTSObject.h>
 #include <Kernel/vjDebug.h>
-#include <vector.h>
 
 //-----------------------------------------------------------------
 //: This class is the actual TS Table
