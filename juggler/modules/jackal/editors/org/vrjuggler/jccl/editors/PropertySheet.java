@@ -94,8 +94,7 @@ public class PropertySheet extends PropertyComponent
          if (prop_def.isVariable() || (elm.getPropertyValueCount(prop_def.getToken()) > 1))
          {
             System.out.println("Variable Property List.");
-            List props = elm.getPropertyValues(prop_def.getToken());
-            addVarList(elm, props, prop_def, row);
+            addVarList(elm, prop_def, row);
             ++row;
          }
          else
@@ -136,8 +135,7 @@ public class PropertySheet extends PropertyComponent
          if (prop_def.isVariable() || (elm.getPropertyValueCount(prop_def.getToken()) > 1))
          {
             System.out.println("Variable Property List.");
-            List props = elm.getPropertyValues(prop_def.getToken());
-            addVarList(elm, props, prop_def, row);
+            addVarList(elm, prop_def, row);
             ++row;
          }
          else
@@ -193,8 +191,11 @@ public class PropertySheet extends PropertyComponent
    }
   
    // This is the special case where we actually have a Variable list of values.
-   public PropertySheet(ConfigElement elm, PropertyDefinition prop_def, List props, Color color)
+   public PropertySheet(ConfigElement elm, PropertyDefinition prop_def, Color color)
    {
+      System.out.println("Variable Property List.");
+      List props = elm.getPropertyValues(prop_def.getToken());
+      
       mConfigElement = elm;
       mColor = color;
       
@@ -211,7 +212,8 @@ public class PropertySheet extends PropertyComponent
       ClassLoader loader = getClass().getClassLoader();
       mAddIcon = new ImageIcon(loader.getResource("org/vrjuggler/jccl/editors/images/New16.gif"));
       mRemoveIcon = new ImageIcon(loader.getResource("org/vrjuggler/jccl/editors/images/Delete16.gif"));
- 
+
+      // If we have a variable list then create the buttons to add new values.
       if(prop_def.isVariable())
       {
          mAddButton.setIcon(mAddIcon);
@@ -229,7 +231,15 @@ public class PropertySheet extends PropertyComponent
             {
                //XXX: This should add a new variable list value not an embedded
                //list.
-               addNewEmbeddedElement(temp_elm, temp_prop_def);
+               if(ConfigElement.class == temp_prop_def.getType())
+               {
+                  addNewEmbeddedElement(temp_elm, temp_prop_def);
+               }
+               else
+               {
+                  System.out.println("Var List...");
+                  addNewNormalEditor(temp_elm, temp_prop_def);
+               }
             }
          });
          
@@ -247,7 +257,7 @@ public class PropertySheet extends PropertyComponent
             // Embedded Element.
             addEmbeddedElement(value, prop_def, row);
          }
-         else
+         else // List of normal values.
          {
             String label = null;
             // If it is variable then there will only be one label for the
@@ -264,13 +274,68 @@ public class PropertySheet extends PropertyComponent
             addNormalEditor(value, prop_def, label, row, list_number);
             ++list_number;
          }
+
          ++row;
       }
    }
-   
-   private void addVarList(ConfigElement elm, List props, PropertyDefinition prop_def, int row)
+
+   /**
+    * Adds a delete icon next to the given property. When the Icon is clicked it
+    * will remove the property from the ConfigElement.
+    */
+   private void addDeleteButton(PropertyDefinition prop_def, Object value, int row)
    {
-      VarListPanel editor_list = new VarListPanel(elm, prop_def, props, mColor);
+      JButton remove_button = new JButton();
+      remove_button.setIcon(mRemoveIcon);
+      remove_button.setMargin(new Insets(0,0,0,0));
+      remove_button.setBorderPainted(false);
+      remove_button.setFocusPainted(false);
+      remove_button.setContentAreaFilled(false);
+      
+      // Verify that the property is variable.
+      if(prop_def.isVariable())
+      {
+         remove_button.setEnabled(true);
+        
+         final Object temp_value = value;
+         final String temp_string = prop_def.getToken();
+         
+         remove_button.addActionListener(new ActionListener()
+         {
+            public void actionPerformed(ActionEvent evt)
+            {
+               System.out.println("1");
+               PropertyComponent temp = (PropertyComponent)((Component)evt.getSource()).getParent();
+               mConfigElement.removeProperty(temp_string, temp_value);
+               
+               if(temp.getLayout() instanceof TableLayout)
+               {
+                  System.out.println("2");
+                  TableLayout tl = (TableLayout)temp.getLayout();
+                  // Get the row that this panel is in.
+                  TableLayoutConstraints tlc = tl.getConstraints((Component)evt.getSource());
+                  int row = tlc.row1;
+                  temp.remove((Component)evt.getSource()); 
+                  tl.deleteRow(row);
+               }
+               temp.doLayout();
+               temp.repaint();
+               temp.invalidate();
+               temp.validate();
+            }
+         });
+      }
+      else
+      {
+         remove_button.setEnabled(false);
+      }
+      TableLayoutConstraints c4 = new TableLayoutConstraints(2, row, 2, row, TableLayout.LEFT, TableLayout.TOP);
+      add(remove_button, c4);
+   }
+   
+   private void addVarList(ConfigElement elm, PropertyDefinition prop_def, int row)
+   {
+      VarListPanel editor_list = new VarListPanel(elm, prop_def, mColor);
       
       ((TableLayout)this.getLayout()).insertRow(row, TableLayout.PREFERRED);
       
@@ -298,56 +363,7 @@ public class PropertySheet extends PropertyComponent
          // Make sure to set the properties after adding it to the correct panel.
          editor.set(value, prop_def, mConfigElement, list_num);
 
-         JButton remove_button = new JButton();
-         remove_button.setIcon(mRemoveIcon);
-         remove_button.setMargin(new Insets(0,0,0,0));
-         remove_button.setBorderPainted(false);
-         remove_button.setFocusPainted(false);
-         remove_button.setContentAreaFilled(false);
-         remove_button.setToolTipText("Remove this value");
-
-         // If this property has variable length we must allow the user to
-         // add/remove them.
-         if(prop_def.isVariable())
-         {
-            remove_button.setEnabled(true);
-
-            final ConfigElement temp_elm = mConfigElement;
-            final Object temp_value = value;
-            final String temp_string = prop_def.getToken();
-            
-            remove_button.addActionListener(new ActionListener()
-            {
-               public void actionPerformed(ActionEvent evt)
-               {
-                  System.out.println("1");
-                  PropertyComponent temp = (PropertyComponent)((Component)evt.getSource()).getParent();
-                  temp_elm.removeProperty(temp_string, temp_value);
-                  
-                  if(temp.getLayout() instanceof TableLayout)
-                  {
-                     System.out.println("2");
-                     TableLayout tl = (TableLayout)temp.getLayout();
-                     // Get the row that this panel is in.
-                     TableLayoutConstraints tlc = tl.getConstraints((Component)evt.getSource());
-                     int row = tlc.row1;
-                     temp.remove((Component)evt.getSource()); 
-                     tl.deleteRow(row);
-                  }
-                  temp.doLayout();
-                  temp.repaint();
-                  temp.invalidate();
-                  temp.validate();
-               }
-            });
-         }
-         else
-         {
-            remove_button.setEnabled(false);
-         }
-
-         TableLayoutConstraints c4 = new TableLayoutConstraints(2, row, 2, row, TableLayout.LEFT, TableLayout.TOP);
-         add(remove_button, c4);
+         addDeleteButton(prop_def, value, row);
 
          //We must refresh things in the following order:
          // 1) This control.
@@ -372,59 +388,25 @@ public class PropertySheet extends PropertyComponent
       TableLayoutConstraints c = new TableLayoutConstraints(0, row, 1, row, TableLayout.FULL, TableLayout.FULL);
       this.add(editor_list, c);
       
-      JButton remove_button = new JButton();
-      remove_button.setIcon(mRemoveIcon);
-      remove_button.setMargin(new Insets(0,0,0,0));
-      remove_button.setBorderPainted(false);
-      remove_button.setFocusPainted(false);
-      remove_button.setContentAreaFilled(false);
-      remove_button.setToolTipText("Remove this embedded element");
-
-      if(prop_def.isVariable())
-      {
-         remove_button.setEnabled(true);
-
-         final ConfigElement temp_elm = mConfigElement;
-         final Object temp_value = value;
-         final String temp_string = prop_def.getToken();
-            
-         remove_button.addActionListener(new ActionListener()
-         {
-            public void actionPerformed(ActionEvent evt)
-            {
-               System.out.println("1");
-               PropertyComponent temp = (PropertyComponent)((Component)evt.getSource()).getParent();
-               temp_elm.removeProperty(temp_string, temp_value);
-                  
-               if(temp.getLayout() instanceof TableLayout)
-               {
-                  System.out.println("2");
-                  TableLayout tl = (TableLayout)temp.getLayout();
-                  // Get the row that this panel is in.
-                  TableLayoutConstraints tlc = tl.getConstraints((Component)evt.getSource());
-                  int row = tlc.row1;
-                  temp.remove((Component)evt.getSource()); 
-                  tl.deleteRow(row);
-               }
-               temp.doLayout();
-               temp.repaint();
-               temp.invalidate();
-               temp.validate();
-            }
-         });
-      }
-      else
-      {
-         remove_button.setEnabled(false);
-      }
-
-      TableLayoutConstraints c4 = new TableLayoutConstraints(2, row, 2, row, TableLayout.LEFT, TableLayout.TOP);
-      add(remove_button, c4);
+      addDeleteButton(prop_def, value, row);
       
       this.refresh();
       editor_list.refresh();
    }
 
+   public void addNewNormalEditor(ConfigElement elm, PropertyDefinition prop_def)
+   {
+      // We know that we want the default value for the first
+      // PropertyValueDefinition since this is a variable list.
+      PropertyValueDefinition pvd = prop_def.getPropertyValueDefinition(0);
+      Object default_value = pvd.getDefaultValue();
+      elm.addProperty(prop_def.getToken(), default_value);
+      
+      // We select 2 here because we want to add it to the top of the list.
+      addNormalEditor(default_value, prop_def, pvd.getLabel(), 2,
+            elm.getPropertyValueCount(prop_def.getToken()) - 1);
+   }
+   
    public void addNewEmbeddedElement(ConfigElement elm, PropertyDefinition prop_def)
    {
       Object new_value = null;
@@ -464,6 +446,7 @@ public class PropertySheet extends PropertyComponent
          new_value = temp_factory.create("CHANGEME", chooser.getSelectedDefinition());
          
          elm.addProperty(prop_def.getToken(), new_value);
+         // We select 2 here because we want to add it to the top of the list.
          addEmbeddedElement(new_value, prop_def, 2);
       }
    }

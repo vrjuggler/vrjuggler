@@ -11,13 +11,15 @@ import java.awt.Insets;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 
-public abstract class PropertyEditorPanel extends JPanel 
+public abstract class PropertyEditorPanel extends PropertyComponent 
 {   
    public abstract void set(Object value, PropertyDefinition prop_def, ConfigElement elm, int prop_num);
    public void refresh()
    {
+      updateMyRow();
       this.getLayout().layoutContainer(this);
       this.repaint();
+      updateMyRow();
    }
    
    /**
