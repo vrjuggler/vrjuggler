@@ -17,6 +17,7 @@
 #include <TestCases/Util/IntervalTest.h>
 
 #include <TestCases/BoostTest.h>
+#include <TestCases/SystemTest.h>
 
 #include <vpr/Util/Debug.h>
 #include <vpr/System.h>
@@ -58,14 +59,14 @@ int main (int ac, char **av)
    // add tests to the suite
    noninteractive_suite->addTest(vprTest::ReturnStatusTest::suite());
    noninteractive_suite->addTest(vprTest::BoostTest::suite());
+   noninteractive_suite->addTest(vprTest::SystemTest::suite());
    noninteractive_suite->addTest(vprTest::IntervalTest::suite());
    noninteractive_suite->addTest(vprTest::InetAddrTest::suite());
    noninteractive_suite->addTest(vprTest::SocketTest::suite());
    noninteractive_suite->addTest(vprTest::NonBlockingSocketTest::suite());
 //   noninteractive_suite->addTest(vprTest::SocketCopyConstructorTest::suite());
    noninteractive_suite->addTest(vprTest::SocketConnectorAcceptorTest::suite());
-   noninteractive_suite->addTest(vprTest::SelectorTest::suite());
-
+   noninteractive_suite->addTest(vprTest::SelectorTest::suite());   
 
    // Add the test suite to the runner
    runner.addTest( "noninteractive", noninteractive_suite );
