@@ -63,6 +63,7 @@ namespace gadget
 void PositionProxy::setTransform(float xoff, float yoff, float zoff,    // Translate
                                  float xrot, float yrot, float zrot)   // Rotate
 {
+   /*
    mETrans = true;
    gmtl::identity(mMatrixTransform);
 
@@ -84,6 +85,7 @@ void PositionProxy::setTransform(float xoff, float yoff, float zoff,    // Trans
    }
 
    mMatrixTransform = (trans_mat * rot_mat);
+   */
 }
 
 
