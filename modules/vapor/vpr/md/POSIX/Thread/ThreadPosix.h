@@ -50,23 +50,12 @@
 #include <signal.h>
 #include <sched.h>
 
-
-namespace  {
-
-#ifdef VPR_OS_Solaris
-typedef unsigned int thread_id_t;
-#elif defined(VPR_OS_FreeBSD)
-typedef caddr_t thread_id_t;
-#else
-typedef uint32_t thread_id_t;
-#endif
-
-};
-
 // To get the posix key stuff for storing self.
 #include <md/POSIX/ThreadKeyPosix.h>
 
 namespace vpr {
+
+typedef Uint32 thread_id_t;
 
 //: Threads implementation using POSIX threads (both Draft 4 and the "final"
 //+ draft of the standard are supported).
@@ -329,7 +318,7 @@ public:  // ----- Various other thread functions ------
     // -----------------------------------------------------------------------
     // -----------------------------------------------------------------------
     inline static int
-    usleep (uint32_t micro) {
+    usleep (Uint32 micro) {
 #ifdef VPR_OS_Linux
         ::usleep(micro);
         return 0;  // usleep can't report failure, so assume success.
@@ -341,14 +330,14 @@ public:  // ----- Various other thread functions ------
     // -----------------------------------------------------------------------
     // -----------------------------------------------------------------------
     inline static int
-    msleep (uint32_t milli) {
+    msleep (Uint32 milli) {
         return ThreadPosix::usleep(milli * 1000);
     }
 
     // -----------------------------------------------------------------------
     // -----------------------------------------------------------------------
     inline static int
-    sleep (uint32_t seconds) {
+    sleep (Uint32 seconds) {
         return ::sleep(seconds);
     }
 
