@@ -2,6 +2,7 @@
 #define _VJSYSTEM_H_
 
 #include <vjConfig.h>
+#include <SharedMem/vjMemory.h>
 #include <Sync/vjMutex.h>
 
 //------------------------------------------------------
@@ -15,10 +16,10 @@ class vjSystem : public vjMemory
 // Nothing in this section is safe after any forking !!! 
 // Must be set BEFORE instance is created.
 public:
-    static setBaseSize(size_t size)
+    static void setBaseSize(size_t size)
     { baseMemPoolSize = size; }
     
-    static setBaseNumProcs(int numProcs)
+    static void setBaseNumProcs(int numProcs)
     { baseNumProcs = numProcs; }
     
 private:
@@ -56,9 +57,6 @@ protected:
 private:
     static vjSystem* _instance;
 };
-
-static vjSystem::_instance = NULL;
-static vjSystem::baseMemPool
 
 #endif  /* _VJSYSTEM_H_ */
 
