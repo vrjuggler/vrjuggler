@@ -40,6 +40,7 @@ import org.vrjuggler.tweek.beans.*;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import org.jdom.*;
@@ -59,9 +60,9 @@ public class GlobalPreferencesService
    /**
     * Creates a new global preferences service.
     */
-   public GlobalPreferencesService( BeanAttributes attr )
+   public GlobalPreferencesService (BeanAttributes attr)
    {
-      super( attr );
+      super(attr);
       m_prefs_file = new File(getUserHome() + File.separator + ".tweekrc");
       BeanRegistry.instance().addBeanRegistrationListener( this );
    }
@@ -75,9 +76,36 @@ public class GlobalPreferencesService
    public void beanRegistered( BeanRegistrationEvent evt )
    {
       TweekBean bean = evt.getBean();
-      if ( bean instanceof ViewerBean ) {
+      if ( bean instanceof ViewerBean )
+      {
          addBeanViewer( bean.getName() );
       }
+   }
+
+   public static final int WINDOWS_CHOOSER = 0;
+   public static final int EMACS_CHOOSER   = 1;
+   public static final int DEFAULT_CHOOSER = WINDOWS_CHOOSER;
+
+   public static final String CWD_START     = "<cwd>";
+   public static final String HOME_START    = "<home>";
+   public static final String DEFAULT_START = CWD_START;
+
+   /**
+    * Returns a list of the basic starting directories from which the user may
+    * choose.  This does not necessarily include the user's current preference.
+    * A separate check should be done to determine how to handle the user's
+    * preferred start directory versus the default possible choices.
+    *
+    * @see getChooserStartDir()
+    * @see setChooserStartDir()
+    */
+   public static List getStartDirList ()
+   {
+      List start_dirs = new ArrayList();
+      start_dirs.add(CWD_START);
+      start_dirs.add(HOME_START);
+
+      return start_dirs;
    }
 
    public void setUserLevel (int level)
@@ -151,6 +179,73 @@ public class GlobalPreferencesService
    }
 
    /**
+    * Sets the preferred start directory for file choosers.  It is up to the
+    * code that opens file choosers to act on this preference.  The given
+    * directory may be one of the default possible choices, or it may be a
+    * user-entered string, possibly containing one or more environment
+    * variables.
+    */
+   public void setChooserStartDir (String d)
+   {
+      chooserStartDir = d;
+
+      Element e = m_prefs_doc_root.getChild("chooser");
+
+      if ( e == null )
+      {
+         e = new Element("chooser");
+         m_prefs_doc_root.addContent(e);
+      }
+
+      // XXX: It might be good to validate d before saving, but how?
+      e.setAttribute("start", d);
+   }
+
+   /**
+    * Returns the user's current preferred starting directory.  This may be
+    * one of the default list, or it may be a user-defined setting.
+    */
+   public String getChooserStartDir ()
+   {
+      return chooserStartDir;
+   }
+
+   /**
+    * Sets the user's current preferred file chooser "open style".  This
+    * defines how file choosers should behave with respect to the directory
+    * they use when first opening.  It is up to the code that opens the file
+    * choosers to act on this preference.
+    */
+   public void setChooserOpenStyle (int style)
+   {
+      chooserOpenStyle = style;
+
+      Element e = m_prefs_doc_root.getChild("chooser");
+
+      if ( e == null )
+      {
+         e = new Element("chooser");
+         m_prefs_doc_root.addContent(e);
+      }
+
+      switch (style)
+      {
+         case EMACS_CHOOSER:
+            e.setAttribute("style", "Emacs");
+            break;
+         case WINDOWS_CHOOSER:
+         default:
+            e.setAttribute("style", "Windows");
+            break;
+      }
+   }
+
+   public int getChooserOpenStyle ()
+   {
+      return chooserOpenStyle;
+   }
+
+   /**
     * Changes the default preferences file name to be the given name.
     */
    public void setFileName (String name)
@@ -196,7 +291,29 @@ public class GlobalPreferencesService
             beanViewer = viewer_element.getAttribute("name").getValue();
 
             Element user_element = m_prefs_doc_root.getChild("user");
-            userLevel = Integer.parseInt(user_element.getAttribute("level").getValue());
+
+            if ( user_element != null )
+            {
+               userLevel = Integer.parseInt(user_element.getAttribute("level").getValue());
+            }
+
+            Element chooser_element = m_prefs_doc_root.getChild("chooser");
+
+            if ( chooser_element != null )
+            {
+               chooserStartDir = chooser_element.getAttribute("start").getValue();
+
+               String style = chooser_element.getAttribute("style").getValue();
+
+               if ( style.equals("Windows") )
+               {
+                  chooserOpenStyle = WINDOWS_CHOOSER;
+               }
+               else
+               {
+                  chooserOpenStyle = EMACS_CHOOSER;
+               }
+            }
          }
          catch (JDOMException e)
          {
@@ -230,6 +347,20 @@ public class GlobalPreferencesService
          Element user_element = new Element("user");
          user_element.setAttribute("level", String.valueOf(userLevel));
          m_prefs_doc_root.addContent(user_element);
+
+         Element chooser_element = new Element("chooser");
+         chooser_element.setAttribute("start", chooserStartDir);
+
+         switch ( chooserOpenStyle )
+         {
+            case EMACS_CHOOSER:
+               chooser_element.setAttribute("style", "Emacs");
+               break;
+            case WINDOWS_CHOOSER:
+            default:
+               chooser_element.setAttribute("style", "Windows");
+               break;
+         }
 
          save(true);
       }
@@ -293,7 +424,9 @@ public class GlobalPreferencesService
 
    private Vector beanViewers = new Vector();
 
-   private int    userLevel   = 1;
-   private String lookAndFeel = javax.swing.UIManager.getSystemLookAndFeelClassName();
-   private String beanViewer  = null;
+   private int    userLevel        = 1;
+   private String lookAndFeel      = javax.swing.UIManager.getSystemLookAndFeelClassName();
+   private String beanViewer       = null;
+   private String chooserStartDir  = CWD_START;
+   private int    chooserOpenStyle = WINDOWS_CHOOSER;
 }
