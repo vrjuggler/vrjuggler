@@ -24,20 +24,20 @@
 #include <Kernel/vjDebug.h>
 
 // Sims
-#include <Input/vjSim/vjSimAnalog.h>
-#include <Input/vjSim/vjSimDigital.h>
-#include <Input/vjSim/vjSimPosition.h>
-#include <Input/vjSim/vjSimGloveGesture.h>
+//#include <Input/vjSim/vjSimAnalog.h>
+//#include <Input/vjSim/vjSimDigital.h>
+//#include <Input/vjSim/vjSimPosition.h>
+//#include <Input/vjSim/vjSimGloveGesture.h>
 
 // Physical devices
 #ifndef WIN32
-#include <Input/vjPosition/vjFlock.h>
-#include <Input/vjInput/vjIbox.h>
-#include <Input/vjGlove/vjCyberGlove.h>
-#include <Input/vjKeyboard/vjXWinKeyboard.h>
-#include <Input/vjPosition/logiclass.h>
+//#include <Input/vjPosition/vjFlock.h>
+//#include <Input/vjInput/vjIbox.h>
+//#include <Input/vjGlove/vjCyberGlove.h>
+//#include <Input/vjKeyboard/vjXWinKeyboard.h>
+//#include <Input/vjPosition/logiclass.h>
 #else
-#include <Input/vjKeyboard/vjKeyboardWin32.h>
+//#include <Input/vjKeyboard/vjKeyboardWin32.h>
 #endif
 
 #include <Input/InputManager/vjDeviceFactory.h>
@@ -97,7 +97,7 @@ vjInputManager::~vjInputManager()
 void vjInputManager::configureInitial(vjConfigChunkDB *cdb)
 {
    vjDEBUG(vjDBG_INPUT_MGR,6) << "vjInputManager::ConfigureInitial" << endl << vjDEBUG_FLUSH;
-   
+
    if(cdb == NULL)
    {
       vjDEBUG(vjDBG_INPUT_MGR,0) << "vjInputManager::ConfigureInitial: NULL config file.  Can configure.\n" << vjDEBUG_FLUSH;
@@ -196,7 +196,6 @@ bool vjInputManager::configureDevice(vjConfigChunk* chunk)
    bool ret_val;
    std::string dev_name = chunk->getProperty("name");
    vjDEBUG_BEGIN(vjDBG_INPUT_MGR,4) << "ConfigureDevice: Named: " << dev_name.c_str() << endl << vjDEBUG_FLUSH;
-
 
    vjInput* new_device;
    new_device = vjDeviceFactory::instance()->loadDevice(chunk);

@@ -65,7 +65,7 @@ int vjXWinKeyboard::startSampling()
    {
       int i;
 
-      resetIndexes();
+      resetIndexes();      // Reset the buffering variables
 
       m_display = XOpenDisplay(NULL);
       if (m_display == NULL)
@@ -100,6 +100,7 @@ int vjXWinKeyboard::startSampling()
       m_swa.colormap = XCreateColormap(m_display,
                                        RootWindow(m_display,m_visual->screen),
                                        m_visual->visual, AllocNone);
+      // Try to make it just a black window
       m_swa.border_pixel = WhitePixel(m_display,m_screen);
       m_swa.event_mask = ExposureMask | StructureNotifyMask | KeyPressMask;
       m_swa.background_pixel = BlackPixel(m_display,m_screen);

@@ -72,6 +72,9 @@ public:
       mQ.pop();
    }
 
+   int size() const
+   { return mQ.size(); }
+
 private:
    vjMutex           mMutexGuard;      // The mutex to guard the queue
    std::queue<value_type> mQ;
