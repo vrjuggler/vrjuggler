@@ -260,17 +260,6 @@ test:
 	test/TestSuite/runner noninteractive
 
 # =============================================================================
-# Automatically generated documentation.
-# =============================================================================
-docs: doc-internal doc-public
-
-doc-internal:
-	$(MAKE) -C Doc SUBDIRS="$(SUBDIRS)" $@
-
-doc-public:
-	$(MAKE) -C Doc SUBDIRS="$(SUBDIRS)" $@
-
-# =============================================================================
 # Human-readable information about the build system.
 # =============================================================================
 info:
