@@ -177,7 +177,7 @@ public:
    void debugDumpPfDisp(pfDisplay* pf_disp, int debugLevel);
 
    friend void PFconfigPWin(pfPipeWindow* pWin);
-   friend void PfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, bool stereo, bool simulator);
+   friend void PfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, bool stereo);
    friend void PfAppFunc(pfChannel *chan, void* chandata);
 
 public: // Chunk handlers
@@ -223,7 +223,7 @@ protected:
    void callAppChanFuncs();
 
    /** Helper to set channel view params from a Projection */
-   void updatePfProjection(pfChannel* chan, Projection* proj, bool simulator=false);
+   void updatePfProjection(pfChannel* chan, Projection* proj); //, bool simulator=false);
 
    /** Helper function to create the base scene graph stuff */
    void initPerformerGraph();
