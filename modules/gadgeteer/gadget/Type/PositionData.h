@@ -61,11 +61,8 @@ public:
         return *this;
     }
 
-
 protected:
-
     vrj::Matrix mPosData;
-
 
 }; // class PositionData
 

@@ -227,18 +227,7 @@ public:
    //+       current indices are then swapped.
    // ------------------------------------------------------------------------
    virtual void updateData(void);
-
-
-    /** Get current data from the receiver.
-     *  @arg dev - the receiver number.  Clients of juggler should access
-     *             tracker receivers as [0-n].  For example, if you have
-     *             receivers 1, 2, and 4, with transmitter on 3, then
-     *             you can access them as devs 0, 1, and 2.
-     *  @return a pointer to the receiver's current PositionData, or NULL
-     *          if the device is not active.
-     */
-    PositionData* getPositionData (int dev=0);
-
+    
 
    // ========================================================================
    // MotionStar-specific methods.
@@ -586,28 +575,10 @@ private:
    // ------------------------------------------------------------------------
    void initCorrectionTable(const char*);
 
-   // ------------------------------------------------------------------------
-   //: Helper to return the index for mData array given the birdNum we are
-   //+ dealing with and the bufferIndex to read.
-   //
-   //! PRE: None.
-   //! POST: The bird index into the mData array is calcualted and
-   //+       returned to the caller.  An assertion is made to verify that the
-   //+       index to be returned is valid.
-   //
-   //! ARGS: bird_num     - The bird number in which we are interested.
-   //! ARGS: buffer_index - The value of current, progress, or valid (it is
-   //+                      an offset in the array).
-   //
-   //! RETURNS: An unsigned integer value given the index into mData for
-   //+          the given bird number and buffer index.
-   // ------------------------------------------------------------------------
-   unsigned int getBirdIndex(int bird_num, int buffer_index);
-
    vpr::Thread*         m_my_thread;   // The thread doing the flock sampling
    MotionStarStandalone m_motion_star; // Actual MotionStar device driver
 
-    PositionData*       mData;
+    //PositionData*       mData;
 };
 
 

@@ -231,21 +231,9 @@ protected:
    char*          mPort;
    std::string    mInstName;
    int            mPortId;
-   vpr::Thread*   mThread;   //: The thread being used by the driver
-   int            mActive;     //: Is the driver active
-
-   /** Index holders
-   * Current is the index to the current data being returned by GetData
-   * Progress is the index to the data being filled by Sample() at any given
-   * time Valid is the index to the data that has already been filled by
-   * Sample() and will become the next Current data.  (NOTE: no dirty bit
-   * checking is done to make SURE that valid is newer than current on
-   * UpdateData switches)
-   */
-   int current, valid, progress;
-
-   vpr::Mutex  lock;        //: Mutex for swapping the pointers.
-   int         mBaudRate;           //: Baud rate of the device (if it is serial device)
+   vpr::Thread*   mThread;       //: The thread being used by the driver
+   int            mActive;       //: Is the driver active
+   int            mBaudRate;     //: Baud rate of the device (if it is serial device)
 
    Input (const Input& o) {;}
    void operator= (const Input& o) {;}

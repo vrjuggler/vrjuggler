@@ -43,36 +43,29 @@
 #include <typeinfo>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/PositionData.h>
-#include <vrj/Math/Vec3.h>
+#include <gadget/Type/SampleBuffer.h>
+
 #include <vrj/Math/Matrix.h>
 
 namespace gadget
 {
 
-typedef struct {
-  vrj::Vec3 pos, orient;   // orient - EulerZYX , 0-Z, 1-Y, 2-X ???
-  //float x,y,z,azi,elev,roll;
-  } POS_DATA;
-
-//-----------------------------------------------------------------------------------
-//: Position is the abstract base class that devices with digital data derive from.
-//
-//  Position is the base class that digital devices must derive from.  Position
-//  inherits from Input, so it has pure virtual function constraints from
-//  Input in the following functions: StartSampling,StopSampling,Sample,
-//  and UpdateData.
-//
-//  Position objects have the ability to convert from the tracker's coord system
-//  to the Juggler coordinate system.
-//
-//  Position adds one new pure virtual function, GetPosData for retreiving
-//  the positional data, similar to the addition for Analog and Digital.
-//-----------------------------------------------------------------------------------
-//!PUBLIC_API:
+/** Position is the abstract base class that devices with digital data derive from.
+*
+*  Position is the base class that digital devices must derive from.  Position
+*  inherits from Input, so it has pure virtual function constraints from
+*  Input in the following functions: StartSampling,StopSampling,Sample,
+*  and UpdateData.
+*
+*  Position objects have the ability to convert from the tracker's coord system
+*  to the Juggler coordinate system.
+*
+*  Position adds one new pure virtual function, GetPosData for retreiving
+*  the positional data, similar to the addition for Analog and Digital.
+*/
 class Position
 {
 public:
-
     //: Constructor
     Position();
 
@@ -82,13 +75,16 @@ public:
     virtual bool config(jccl::ConfigChunkPtr c);
 
     /** Get Positional data. */
-    virtual PositionData* getPositionData (int devNum = 0) = 0;
+    virtual PositionData* getPositionData (int devNum = 0)
+    {
+       //crap here
+    }
 
 public:
-    
+   gadget::SampleBuffer<PositionData>  mPosSamples;   /**< Position samples */
 
-    vrj::Matrix xformMat;   // The total xform matrix.  T*R  NOTE: Used to move from trk coord system to Juggler coord system
-    vrj::Matrix rotMat;     // Only the rotation matrix
+   vrj::Matrix xformMat;   /**< The total xform matrix.  T*R  NOTE: Used to move from trk coord system to Juggler coord system */
+   vrj::Matrix rotMat;     /**< Only the rotation matrix */
 };
 
 };
