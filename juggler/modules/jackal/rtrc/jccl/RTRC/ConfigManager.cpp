@@ -216,49 +216,6 @@ ConfigManager::~ConfigManager()
 
 //-------------------- Pending List Stuff -------------------------------
 
-// Add the given configuration to the pending list as adds.
-void ConfigManager::addPendingAdds(Configuration* db)
-{
-   vprASSERT(0 == mPendingLock.test());     // ASSERT: Make sure we don't already have it
-   lockPending();
-
-   PendingElement pending;
-   pending.mType = PendingElement::ADD;
-
-   for ( std::vector<ConfigElementPtr>::iterator i = db->vec().begin();
-         i != db->vec().end();
-         ++i )
-   {
-      pending.mElement = (*i);
-      mPendingConfig.push_back(pending);
-   }
-
-   unlockPending();
-
-   refreshPendingList();
-}
-
-void ConfigManager::addPendingRemoves(Configuration* db)
-{
-   vprASSERT(0 == mPendingLock.test());     // ASSERT: Make sure we don't already have it
-   lockPending();
-
-   PendingElement pending;
-   pending.mType = PendingElement::REMOVE;
-
-   for ( std::vector<ConfigElementPtr>::iterator i = db->vec().begin();
-         i != db->vec().end();
-         ++i )
-   {
-      pending.mElement = (*i);
-      mPendingConfig.push_back(pending);
-   }
-
-   unlockPending();
-
-   refreshPendingList();
-}
-
 void ConfigManager::removePending(std::list<PendingElement>::iterator item)
 {
    vprASSERT(1 == mPendingLock.test());
@@ -345,6 +302,24 @@ bool ConfigManager::pendingNeedsChecked()
    mPendingCountMutex.release();
 
    return ret_val;
+}
+
+void ConfigManager::mergeIncomingToPending()
+{
+   lockPending();
+   {
+      vpr::Guard<vpr::Mutex> g(mIncomingLock);
+
+      for ( std::list<PendingElement>::iterator i = mIncomingConfig.begin();
+            i != mIncomingConfig.end();
+            ++i )
+      {
+         mPendingConfig.push_back(*i);
+      }
+
+      mIncomingConfig.clear();
+   }
+   unlockPending();
 }
 
 bool ConfigManager::isPendingStale()
@@ -462,6 +437,56 @@ void ConfigManager::debugDumpPending(int debug_level)
 
 //------------------ Active List Stuff -------------------------------
 
+jccl::ConfigElementPtr ConfigManager::getElementFromActive(const std::string& elementName)
+{
+   jccl::ConfigElementPtr elt;
+
+   vpr::Guard<vpr::Mutex> guard(mActiveLock);     // Lock the list
+
+   std::vector<ConfigElementPtr>::iterator i;
+   for ( i = mActiveConfig.vec().begin(); i != mActiveConfig.vec().end(); ++i )
+   {
+      if ( (*i)->getName() == elementName )
+      {
+         elt = *i;
+         break;
+      }
+   }
+
+   return elt;
+}
+
+jccl::ConfigElementPtr ConfigManager::getElementFromPending(const std::string& elementName)
+{
+   jccl::ConfigElementPtr elt;
+
+   vpr::Guard<vpr::Mutex> guard(mPendingLock);     // Lock the list
+
+   std::list<PendingElement>::iterator i;
+   for ( i = mPendingConfig.begin(); i != mPendingConfig.end(); ++i )
+   {
+      if ( (*i).mElement->getName() == elementName )
+      {
+         elt = (*i).mElement;
+      }
+   }
+
+   return elt;
+}
+
+jccl::ConfigElementPtr ConfigManager::getElementNamed(const std::string& elementName)
+{
+   jccl::ConfigElementPtr elt = getElementFromActive(elementName);
+
+   // If the element is not in the active list, check the pending list.
+   if ( elt.get() == NULL )
+   {
+      elt = getElementFromPending(elementName);
+   }
+
+   return elt;
+}
+
 // Is the element in the active configuration??
 // CONCURRENCY: concurrent
 // NOTE: This locks the active list to do processing.
@@ -517,6 +542,12 @@ bool ConfigManager::isElementTypeInPendingList(const std::string& elementType)
    return false;     // Not found, so return false
 }
 
+bool ConfigManager::hasElementType(const std::string& elementType)
+{
+   return isElementTypeInActiveList(elementType) ||
+          isElementTypeInPendingList(elementType);
+}
+
 // Add an item to the active configuration
 // NOTE: This DOES NOT process the element it just places it into the active
 //       configuration list.
@@ -538,6 +569,53 @@ void ConfigManager::removeActive(const std::string& elementName)
    lockActive();
    mActiveConfig.remove(elementName);
    unlockActive();
+}
+
+void ConfigManager::addConfigurationAdditions(jccl::Configuration* cfg)
+{
+   vpr::Guard<vpr::Mutex> g(mIncomingLock);
+
+   PendingElement pending;
+   pending.mType = PendingElement::ADD;
+
+   for ( std::vector<ConfigElementPtr>::iterator i = cfg->vec().begin();
+         i != cfg->vec().end();
+         ++i )
+   {
+      pending.mElement = (*i);
+      mIncomingConfig.push_back(pending);
+   }
+}
+
+void ConfigManager::addConfigurationRemovals(jccl::Configuration* cfg)
+{
+   vpr::Guard<vpr::Mutex> g(mIncomingLock);
+
+   PendingElement pending;
+   pending.mType = PendingElement::REMOVE;
+
+   for ( std::vector<ConfigElementPtr>::iterator i = cfg->vec().begin();
+         i != cfg->vec().end();
+         ++i )
+   {
+      pending.mElement = (*i);
+      mIncomingConfig.push_back(pending);
+   }
+}
+
+void ConfigManager::addConfigElement(jccl::ConfigElementPtr elt,
+                                     ConfigManager::PendingElement::Type t)
+{
+   PendingElement pending;
+   pending.mType = t;
+   pending.mElement = elt;
+   mIncomingConfig.push_back(pending);
+}
+
+std::list<ConfigManager::PendingElement>::size_type ConfigManager::getNumIncoming()
+{
+   vpr::Guard<vpr::Mutex> g(mIncomingLock);
+   return mIncomingConfig.size();
 }
 
 //------------------ DynamicReconfig Stuff ------------------------------
@@ -563,6 +641,12 @@ void ConfigManager::removeConfigElementHandler(ConfigElementHandler* h)
 int ConfigManager::attemptReconfiguration()
 {
    int elements_processed(0);     // Needs to return this value
+
+   // Copy the contents of the incoming config element list to the pending
+   // list.  Config element handlers may have added new elements to the
+   // incoming list.
+   mergeIncomingToPending();
+
    if ( pendingNeedsChecked() )
    {
       vprDEBUG_OutputGuard(vprDBG_ALL, vprDBG_STATE_LVL,
