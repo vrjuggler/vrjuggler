@@ -84,7 +84,7 @@ public class IntersenseModelEvent
    public int getUnitNumber()
    {
       return mUnitNumber;
-   }
+   } 
 
    /** The element associated with this event. */
    private ConfigElement mElement;
