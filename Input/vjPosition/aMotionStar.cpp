@@ -155,69 +155,67 @@ aMotionStar::start () {
     default:
       format = 0x64;
       break;
+  }
+
+  // Ensure that an address string has been defind for the server before
+  // trying to make a connection.
+  if ( mAddress != NULL ) {
+    printf("\nConnecting to %s ...\n", mAddress);
+
+    if ( (mSocket = socket(AF_INET, SOCK_STREAM, 0)) < 0 ) {
+      perror("client: can't open stream socket");
+      return -1;
     }
 
-  /*
-   * Open a TCP socket.
-   */
+    // Fill in the structure with the address of the
+    // server that we want to connect to.
+    bzero((char *) &server_addr, sizeof(server_addr));
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port   = htons(mPort);		// Server port number
 
-  printf("\nConnecting to %s ...\n", mAddress);
+    // Try to look up address by name.  This will work for an IP address too,
+    // but we fall back on inet_addr(3) below just to be safe.
+    host_ent = gethostbyname(mAddress);
 
-  if ( (mSocket = socket(AF_INET, SOCK_STREAM, 0)) < 0 ) {
-    perror("client: can't open stream socket");
-    return -1;
-  }
+    // If host_ent is non-NULL, we found an IP address for the hostname in
+    // address.  Move that address into the server struct.
+    if ( host_ent != NULL ) {
+      memmove((void*) &server_addr.sin_addr.s_addr, (void*) host_ent->h_addr,
+              sizeof(server_addr.sin_addr.s_addr));
+    }
+    // Otherwise, assume that the value in address is already an IP address
+    // and use inet_addr(3) on it.
+    else {
+      server_addr.sin_addr.s_addr = inet_addr(mAddress);
+    }
 
-  /* Fill in the structure with the address of the
-   * server that we want to connect to.
-   */
-
-  bzero((char *) &server_addr, sizeof(server_addr));
-  server_addr.sin_family = AF_INET;
-  server_addr.sin_port   = htons(mPort);		// Server port number
-
-  // Try to look up address by name.  This will work for an IP address too,
-  // but we fall back on inet_addr(3) below just to be safe.
-  host_ent = gethostbyname(mAddress);
-
-  // If host_ent is non-NULL, we found an IP address for the hostname in
-  // address.  Move that address into the server struct.
-  if ( host_ent != NULL ) {
-    memmove((void*) &server_addr.sin_addr.s_addr, (void*) host_ent->h_addr,
-            sizeof(server_addr.sin_addr.s_addr));
-  }
-  // Otherwise, assume that the value in address is already an IP address
-  // and use inet_addr(3) on it.
-  else {
-    server_addr.sin_addr.s_addr = inet_addr(mAddress);
-  }
-
-  rtn = connect(mSocket, (struct sockaddr*) &server_addr, sizeof(server_addr));
+    rtn = connect(mSocket, (struct sockaddr*) &server_addr,
+                  sizeof(server_addr));
 /*
-  printf("connect = %4d, connect error = %4d, ", rtn, errno);
-  perror(NULL);
-  printf("\n");
+    printf("connect = %4d, connect error = %4d, ", rtn, errno);
+    perror(NULL);
+    printf("\n");
 */
 
-  mNewptr     = (char*) &mResponse;
-  mLpCommand  = &mCommand;
-  mLpResponse = &mResponse;
+    mNewptr     = (char*) &mResponse;
+    mLpCommand  = &mCommand;
+    mLpResponse = &mResponse;
 
-  /* send the wake up call */
-  sendWakeup();
+    /* send the wake up call */
+    sendWakeup();
 
-  /* get the system status */
-  getSystemStatus();
+    /* get the system status */
+    getSystemStatus();
 
-  /* send the system setup */
-  setSystemStatus();
+    /* send the system setup */
+    setSystemStatus();
 
-   /* for 1 to n flock boards                    */
-  /* get the individual bird status             */
-  /* modify the appropriate contents            */
-  /* send the individual bird status packet back        */
+     /* for 1 to n flock boards                    */
+    /* get the individual bird status             */
+    /* modify the appropriate contents            */
+    /* send the individual bird status packet back        */
 
-  for ( unsigned int flock = 1; flock<= mChassisDevices; flock++ ) {
+    for ( unsigned int flock = 1; flock<= mChassisDevices; flock++ ) {
       /* get the status of an individual bird */
       getBirdStatus(flock);
 
@@ -235,18 +233,25 @@ aMotionStar::start () {
 
       /* set the status of an individual bird */
       setBirdStatus(flock);
-  }
+    }
 
-  if ( mRunMode == 0 ) {
+    if ( mRunMode == 0 ) {
       runContinuous();
-  }
-  else {
+    }
+    else {
       singleShot();
+    }
+
+    mActive = true;
+
+    return 0;
   }
+  // If no address has been defined, return -2 to the caller.
+  else {
+    fprintf(stderr, "aMotionStar: NULL server address string\n");
 
-  mActive = true;
-
-  return 0;
+    return -2;
+  }
 }
 
 // ----------------------------------------------------------------------------
