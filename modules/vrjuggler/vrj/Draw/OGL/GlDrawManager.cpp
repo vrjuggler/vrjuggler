@@ -117,8 +117,8 @@ void GlDrawManager::start()
    mControlThread = new vpr::Thread(mMemberFunctor);
 
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
-      << "vrj::GlDrawManager started (thread: "
-      << std::hex << mControlThread << std::dec << ")\n" << vprDEBUG_FLUSH;
+      << "vrj::GlDrawManager started (thread: " << mControlThread << ")\n"
+      << vprDEBUG_FLUSH;
 }
 
 
