@@ -53,10 +53,10 @@ public class VarValueStandardPanel extends VarValuePanel implements ActionListen
 	    String s;
 
 	    choice = new JComboBox();
+	    ListBoxModel bm = new ListBoxModel();
+	    bm.addObject ("<No Selection>");
 	    if (desc.enums.size() == 0) {
 		/* no listed types we use as a wildcard - show all chunks */
-		choice = new JComboBox();
-		ListBoxModel bm = new ListBoxModel();
 		for (i = 0; i < Core.chunkdbs.size(); i++) {
 		    db = (ConfigChunkDB)Core.chunkdbs.elementAt(i);
 		    for (j = 0; j < db.size(); j++) {
@@ -64,12 +64,8 @@ public class VarValueStandardPanel extends VarValuePanel implements ActionListen
 			bm.addObject (db.getName() + ": " + ch.getName());
 		    }
 		}
-		choice.setModel(bm);
-		add(choice, "Center");
 	    }
 	    else {
-		choice = new JComboBox();
-		ListBoxModel bm = new ListBoxModel();
 		for (i = 0; i < Core.chunkdbs.size(); i++) {
 		    db = ((ChunkDBTreeModel)Core.chunkdbs.elementAt(i)).chunkdb;
 		    for (j = 0; j < db.size(); j++) {
@@ -82,17 +78,20 @@ public class VarValueStandardPanel extends VarValuePanel implements ActionListen
 			}
 		    }
 		}
-		choice.setModel(bm);
-		add(choice, "Center");
 	    }
+	    choice.setModel (bm);
+	    choice.setSelectedItem ("<No Selection>");
+	    add (choice, "Center");
 	}
 	else if (desc.enums.size() > 0) {
 	    /* just present the enumeration names as choices */
 	    choice = new JComboBox();
 	    ListBoxModel bm = new ListBoxModel();
+	    //bm.addObject ("<No Selection>"); may not be safe for enums
 	    for (i = 0; i < desc.enums.size(); i++)
 		bm.addObject(((DescEnum)desc.enums.elementAt(i)).str);
 	    choice.setModel(bm);
+	    choice.setSelectedItem ("<No Selection>");
 	    add(choice, "Center");
 	}
 	else {
@@ -137,8 +136,6 @@ public class VarValueStandardPanel extends VarValuePanel implements ActionListen
 		    choice.setSelectedItem((String)v.get());
 		else if (tp.equals(ValType.t_chunk))
 		    choice.setSelectedItem((String)v.get());
-		else 
-		    System.err.println ("VarValuePanel.setValue is confused");    
 	    }
 	    else
 		/* set text in textbox */
@@ -159,7 +156,7 @@ public class VarValueStandardPanel extends VarValuePanel implements ActionListen
 	else if (choice != null) {
 	    /* enumeration */
 	    String s = desc.getEnumValue((String)choice.getSelectedItem()).toString();
-	    if (s == null)
+	    if ((s == null) || (s.equals("<No Selection>")))
 		s = "";
 	    // remove the "filename: " prefix if it's there...
 	    int i = s.indexOf(": ");
