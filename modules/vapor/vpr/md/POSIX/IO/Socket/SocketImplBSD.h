@@ -242,21 +242,6 @@ protected:
     // ------------------------------------------------------------------------
     virtual ~SocketImpBSD(void);
 
-    // ------------------------------------------------------------------------
-    // Look up the address in m_file_name and store the address in the
-    // m_host_addr structure's address field.
-    //
-    // PRE: None.
-    // POST: The address string is converted into a 32-bit INET address, and
-    //       the m_host_addr structure is populated accordingly.
-    //
-    // Returns:
-    //     true  - The address lookup was successful.
-    //     false - The address could not be looked up.  An error message is
-    //             printed to stderr explaining what went wrong.
-    // ------------------------------------------------------------------------
-    bool lookupAddress(void);
-
     FileHandleUNIX* m_handle;       //:
 };
 

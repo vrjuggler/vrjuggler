@@ -35,9 +35,6 @@
 #include <sys/param.h>
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <netdb.h>
 #include <errno.h>
 
 #include <md/POSIX/SocketImpBSD.h>
@@ -143,11 +140,6 @@ SocketImpBSD::open () {
         // INADDR_ANY constant.
         if ( m_name == "INADDR_ANY" || m_name == "" ) {
             m_local_addr.setAddressValue(INADDR_ANY);
-        }
-        // Otherwise, look up the address and save the return status as the
-        // return value for this method.
-        else {
-            retval = lookupAddress();
         }
     }
 
@@ -261,48 +253,6 @@ SocketImpBSD::~SocketImpBSD () {
         delete m_handle;
         m_handle = NULL;
     }
-}
-
-// ----------------------------------------------------------------------------
-// Look up the address in m_name and store the address in the m_remote_addr
-// object.
-// ----------------------------------------------------------------------------
-bool
-SocketImpBSD::lookupAddress () {
-    bool retval;
-    struct hostent* host_entry;
-
-    // First, try looking the host up by name.
-    host_entry = gethostbyname(m_name.c_str());
-
-    // If that succeeded, put the result in m_remote_addr.
-    if ( host_entry != NULL ) {
-        m_remote_addr.copyAddressValue(host_entry->h_addr);
-        retval = true;
-    }
-    // If gethostbyname(3) failed, the address string may be an IP address.
-    else {
-        unsigned long addr;
-
-        // Try looking it up with inet_addr(3).
-        addr = inet_addr(m_name.c_str());
-
-        // If the address string could not be found using inet_addr(3), then
-        // return error status.
-        if ( addr == INADDR_NONE ) {
-            fprintf(stderr,
-                    "[vpr::SocketImpBSD] Could not find address for '%s': %s\n",
-                    m_name.c_str(), strerror(errno));
-            retval = false;
-        }
-        // Otherwise, we found the integer address successfully.
-        else {
-            m_remote_addr.setAddressValue(addr);
-            retval = true;
-        }
-    }
-
-    return retval;
 }
 
 }; // End of vpr namespace
