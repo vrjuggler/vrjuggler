@@ -330,6 +330,7 @@ install-drivers install-drivers-dbg install-drivers-opt install-drivers-prof:
             -o $(libdir)$(LIBBITSUF)/$(DSO_DRIVER_SUBDIR) -i		\
             $(DSO_DRIVER_DIR) ;						\
         fi
+	$(MAKE) -C gadget/Devices $@
 
 # Install the test programs.
 install-test:
