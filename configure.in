@@ -2138,6 +2138,9 @@ AC_OUTPUT(Makefile
           samples/pf/pfConfigNav/Makefile
           samples/pf/pfNav/Makefile
           samples/tutorials/Makefile
+          samples/tutorials/MPApp/Makefile
+          samples/tutorials/SimpleApp/Makefile
+          samples/tutorials/contextApp/Makefile
           samples/tutorials/device.drivers/Makefile
           samples/tutorials/simpleInput/Makefile
           samples/tutorials/simplePf/Makefile
