@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+May-22-2004 patrickh    Moved vrj::FileIO out of the vrj library and into the
+                        sample code tree under pfTools.
+                        NEW VERSION: 1.1.153
 May-22-2004 patrickh    Moved pfSoundNode and pfSoundTraverser out of the
                         vrj_pf library and into the sample code tree under
                         pfTools.

@@ -32,59 +32,61 @@
 
 #include <vrj/vrjConfig.h>
 
+#include <stdio.h>
+
 #include <vpr/Util/FileUtils.h>
 #include <vrj/Util/Debug.h>
-#include <vrj/Util/FileIO.h>
+#include <FileIO.h>
 
-namespace vrj
+namespace vrjutil
 {
 
 std::vector<std::string> FileIO::mPaths;
 
-void FileIO::addFilePath( const std::string& filepath )
+void FileIO::addFilePath(const std::string& filepath)
 {
-   std::string demangled = vpr::replaceEnvVars( filepath );
-   mPaths.push_back( demangled );
+   std::string demangled = vpr::replaceEnvVars(filepath);
+   mPaths.push_back(demangled);
 }
 
 //: true -
-bool FileIO::fileExists( const char* const name )
+bool FileIO::fileExists(const char* name)
 {
    std::string stdstring_name = name;
-   std::string demangled_name = demangleFileName( stdstring_name, "" );
-    FILE* file = ::fopen( demangled_name.c_str(), "r" );
-    if (file == NULL)
-    {
-        return false;
-    }
-
-    else
-    {
-        ::fclose( file );
-        return true;
-    }
+   std::string demangled_name = demangleFileName(stdstring_name, "");
+   FILE* file = ::fopen(demangled_name.c_str(), "r" );
+   if (file == NULL)
+   {
+      return false;
+   }
+   else
+   {
+      ::fclose(file);
+      return true;
+   }
 }
 
-bool FileIO::fileExists( const std::string& name )
+bool FileIO::fileExists(const std::string& name)
 {
-   return fileExists( name.c_str() );
+   return fileExists(name.c_str());
 }
 
-bool FileIO::fileExistsResolvePath( const char* const filename, std::string& realPath )
+bool FileIO::fileExistsResolvePath(const char* filename, std::string& realPath)
 {
-   realPath = resolvePathForName( filename );
-   return fileExists( realPath.c_str() );
+   realPath = resolvePathForName(filename);
+   return fileExists(realPath.c_str());
 }
 
-bool FileIO::fileExistsResolvePath( const std::string& filename, std::string& realPath )
+bool FileIO::fileExistsResolvePath(const std::string& filename,
+                                   std::string& realPath)
 {
-   return fileExistsResolvePath( filename.c_str(), realPath );
+   return fileExistsResolvePath(filename.c_str(), realPath);
 }
 
-std::string FileIO::resolvePathForName( const char* const filename )
+std::string FileIO::resolvePathForName(const char* filename)
 {
    std::string stdstring_name = filename;
-   std::string demangled_name = demangleFileName( stdstring_name, "" );
+   std::string demangled_name = demangleFileName(stdstring_name, "");
 
    for (unsigned int x = 0; x < FileIO::mPaths.size(); ++x)
    {
@@ -92,9 +94,9 @@ std::string FileIO::resolvePathForName( const char* const filename )
       std::string temp  = FileIO::mPaths[x] + slash + demangled_name;
 
       // if this path works, then return it.
-      if (fileExists( temp ))
+      if (fileExists(temp))
       {
-         std::cout<<"Fixed path: "<<temp.c_str()<<"\n"<<std::flush;
+         std::cout << "Fixed path: " << temp << "\n" <<std::flush;
          return temp;
       }
    }
@@ -107,7 +109,7 @@ std::string FileIO::resolvePathForName( const char* const filename )
 /** filename handling routines **/
 
 /** Is n an absolute path name? */
-bool FileIO::isAbsolutePathName (const std::string& n)
+bool FileIO::isAbsolutePathName(const std::string& n)
 {
 #ifdef WIN32
     return ((n.length() > 0) && (n[0] == '\\'))
@@ -117,27 +119,27 @@ bool FileIO::isAbsolutePathName (const std::string& n)
 #endif
 }
 
-
-
-std::string FileIO::demangleFileName (const std::string& n, std::string parentfile)
+std::string FileIO::demangleFileName(const std::string& n,
+                                     const std::string& parentfile)
 {
-
    std::string fname = vpr::replaceEnvVars (n);
 
    if (!isAbsolutePathName(fname))
    {
       // it's a relative pathname... so we have to add in the path part
       // of parentfile...
-      //         cout << "demangling relative pathname '" << fname.c_str() << "' with parent dir '"
-      //              << parentfile.c_str() << "'\n" << endl;
       int lastslash = 0;
       for (unsigned int i = 0; i < parentfile.length(); i++)
       {
-            if (parentfile[i] == '/')
-                lastslash = i;
+         if (parentfile[i] == '/')
+         {
+            lastslash = i;
+         }
 #ifdef WIN32
-            if (parentfile[i] == '\\')
-                lastslash = i;
+         if (parentfile[i] == '\\')
+         {
+            lastslash = i;
+         }
 #endif
       }
       if (lastslash)
@@ -150,4 +152,4 @@ std::string FileIO::demangleFileName (const std::string& n, std::string parentfi
    return fname;
 }
 
-};
+}

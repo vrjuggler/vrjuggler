@@ -56,7 +56,7 @@
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
 
-#include <vrj/Util/FileIO.h>
+#include <FileIO.h>
 
 #include <snx/SoundHandle.h>
 
@@ -465,7 +465,8 @@ void simplePfNavApp::addModelFile( const std::string& filename )
 
 void simplePfNavApp::loadAnimation( const char* const filename )
 {
-   std::string dFilename = vrj::FileIO::demangleFileName( std::string( filename ), std::string( "" ) );
+   std::string dFilename =
+      vrjutil::FileIO::demangleFileName(std::string(filename),std::string(""));
    kev::KeyFramerImporter kfi;
    kfi.execute( dFilename.c_str(), mKeyFramer );
 }
@@ -497,7 +498,8 @@ void simplePfNavApp::addFilePath( const std::string& path )
 }
 void simplePfNavApp::setFilePath( const std::string& path )
 {
-   std::string dFilePath = vrj::FileIO::demangleFileName( path, std::string( "" ) );
+   std::string dFilePath =
+      vrjutil::FileIO::demangleFileName(path, std::string(""));
    mFilePath = dFilePath;
 }
 void simplePfNavApp::setInitialNavPos( const gmtl::Vec3f& initialPos )

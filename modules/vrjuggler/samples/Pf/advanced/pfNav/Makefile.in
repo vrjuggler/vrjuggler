@@ -41,6 +41,7 @@ APP_NAME=	pfNav@EXEEXT@
 # Basic options.
 srcdir=		@srcdir@
 COMMON_SRCS=	simplePfNavApp.cpp	\
+		FileIO.cpp		\
 		pfFileIO.cpp		\
 		pfSoundNode.cpp		\
 		pfSoundTraverser.cpp	\
