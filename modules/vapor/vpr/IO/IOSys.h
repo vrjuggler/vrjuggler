@@ -35,9 +35,6 @@
 
 #include <vprConfig.h>
 
-// include base class for vprSystem
-#include <IO/IOSysBase.h>
-
 namespace vpr {
 
 // determine which implementation of vprSystem to include.

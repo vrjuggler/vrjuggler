@@ -35,6 +35,9 @@
 
 #include <vprConfig.h>
 
+#include <winsock2.h>
+#include <windows.h>
+
 
 namespace vpr {
 
@@ -43,6 +46,7 @@ namespace vpr {
 class IOSysWin32
 {
 public:
+   typedef SOCKET Handle;
 
 };
 
