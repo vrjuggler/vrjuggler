@@ -43,6 +43,7 @@ import javax.swing.*;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.tweek.beans.BeanRegistry;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
+import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 import org.vrjuggler.tweek.services.GlobalPreferencesService;
 import org.vrjuggler.tweek.services.GlobalPreferencesServiceProxy;
 import org.vrjuggler.vrjconfig.ui.*;
@@ -123,14 +124,13 @@ public class ControlPanelView
 
 //      // Init the watermark in the control panel
 //      ClassLoader loader = BeanJarClassLoader.instance();
-//      showMainPanel();
+      showMainPanel();
 //
 //      control.addActionListener(new ActionListener()
 //      {
 //         public void actionPerformed(ActionEvent evt)
 //         {
-//            Object value = control.getModel().getElementAt(evt.getID());
-//            String item = (String)value;
+//            String item = control.getModel().getLabelAt(evt.getID());
 //            if (item.equals("D e v i c e s"))
 //            {
 //               showDevicesPanel();
@@ -238,8 +238,7 @@ public class ControlPanelView
          public void actionPerformed(ActionEvent evt)
          {
             ControlPanel control = (ControlPanel)evt.getSource();
-            Object value = control.getModel().getElementAt(evt.getID());
-            String item = (String)value;
+            String item = control.getModel().getLabelAt(evt.getID());
             if (item.equals("D e v i c e s"))
             {
                showDevicesPanel();
@@ -296,8 +295,7 @@ public class ControlPanelView
          public void actionPerformed(ActionEvent evt)
          {
             ControlPanel control = (ControlPanel)evt.getSource();
-            Object value = control.getModel().getElementAt(evt.getID());
-            String item = (String)value;
+            String item = control.getModel().getLabelAt(evt.getID());
             if (item.equals("A n a l o g"))
             {
                ClassLoader loader = BeanJarClassLoader.instance();
@@ -317,7 +315,7 @@ public class ControlPanelView
                      SimAnalogDeviceEditor editor = new SimAnalogDeviceEditor(context);
 
                      List chunks = getConfigBroker().getElements(context);
-                     String device_name = (String)((ControlPanel)evt.getSource()).getModel().getElementAt(evt.getID());
+                     String device_name = ((ControlPanel)evt.getSource()).getModel().getLabelAt(evt.getID());
                      ConfigElement device = (ConfigElement)ConfigUtilities.getElementsWithName(chunks, device_name).get(0);
                      editor.setDevice(device);
                      dlg.getContentPane().add(editor, BorderLayout.CENTER);
@@ -338,10 +336,16 @@ public class ControlPanelView
             }
             else if (item.equals("P o s i t i o n a l"))
             {
+               /*
+               List list = CustomEditorRegistry.findEditors("intersense");
+               CustomEditor editor = (CustomEditor)list.get(0);
+
+               //editor.setContext(context);
+               pushCurrentBack(editor.getPanel());
+               
+               */
                ClassLoader loader = BeanJarClassLoader.instance();
-               ControlPanel ctl = createPanelWithChunks(
-                                       "simulated_positional_device",
-                                       new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/positional_devices64.png")));
+               ControlPanel ctl = createPanelWithElementsOfType("positional_device");
                ctl.setTitle("Choose a positional device");
                ctl.addActionListener(new ActionListener()
                {
@@ -351,18 +355,43 @@ public class ControlPanelView
                            (Frame)SwingUtilities.getAncestorOfClass(Frame.class, ControlPanelView.this),
                            "Positional Device Editor",
                            true);
+                     /*
                      dlg.getContentPane().setLayout(new BorderLayout());
                      SimPosDeviceEditor editor = new SimPosDeviceEditor(context);
 
                      List chunks = getConfigBroker().getElements(context);
                      System.out.println("Action Cmd: "+evt.getActionCommand());
 
-                     String device_name = (String)((ControlPanel)evt.getSource()).getModel().getElementAt(evt.getID());
+                     String device_name = ((ControlPanel)evt.getSource()).getModel().getLabelAt(evt.getID());
                      ConfigElement device = (ConfigElement)ConfigUtilities.getElementsWithName(chunks, device_name).get(0);
                      editor.setDevice(device);
-                     dlg.getContentPane().add(editor, BorderLayout.CENTER);
-                     dlg.pack();
-                     dlg.setVisible(true);
+                     */
+                     
+                     Object object = ((ControlPanel)evt.getSource()).getModel().getUserObjectAt(evt.getID());
+                     if(null != object && object instanceof ConfigElement)
+                     {
+                        ConfigElement element = (ConfigElement)object;
+                        String token = element.getDefinition().getToken();
+                        
+                        List list = CustomEditorRegistry.findEditors(token);
+                        
+                        //XXX:This will be used after making findEditors -> findEditor
+                        //if(null != editor)
+                        if(null != list && list.size() > 0)
+                        {
+                           CustomEditor editor = (CustomEditor)list.get(0);
+                           dlg.getContentPane().add(editor.getPanel(), BorderLayout.CENTER);
+                           
+                           // Make sure to set the context first.
+                           editor.setContext(context);
+                           editor.setConfigElement(element);
+                           dlg.setTitle(editor.getTitle());
+                           dlg.pack();
+                           dlg.setVisible(true);
+                        }
+                     }
+
+
                   }
                });
                pushCurrentBack(ctl);
@@ -391,18 +420,83 @@ public class ControlPanelView
    {
       ClassLoader loader = BeanJarClassLoader.instance();
       DefaultControlPanelModel model = new DefaultControlPanelModel();
+      /*
       List devices = ConfigUtilities.getElementsWithDefinition(
                            getConfigBroker().getElements(context), token);
+      */
+      List devices = getElementsWithDefinitionAndDerived(token);
       for (Iterator itr = devices.iterator(); itr.hasNext(); )
       {
-         ConfigElement chunk = (ConfigElement)itr.next();
-         model.add(chunk.getName(), icon);
+         ConfigElement element = (ConfigElement)itr.next();
+         String icon_location = element.getDefinition().getIconLocation();
+         icon_location = (new EnvironmentServiceProxy()).expandEnvVars(icon_location);
+         System.out.println("icon_location:" + icon_location);
+         try
+         {
+            java.net.URL url = new java.net.URL(icon_location);
+            Icon device_icon = new ImageIcon(url);
+            model.add(element.getName(), device_icon);
+         }
+         catch(Exception ex)
+         {
+            ex.printStackTrace();
+         }
       }
       ControlPanel new_control = new ControlPanel();
       new_control.setModel(model);
       new_control.setWatermark(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/watermark_logo.png")));
 
       return new_control;
+   }
+
+   /**
+    * Displays a panel containing all of the chunks that have the given token.
+    */
+   private ControlPanel createPanelWithElementsOfType(String token)
+   {
+      ClassLoader loader = BeanJarClassLoader.instance();
+      DefaultControlPanelModel model = new DefaultControlPanelModel();
+      /*
+      List devices = ConfigUtilities.getElementsWithDefinition(
+                           getConfigBroker().getElements(context), token);
+      */
+      List devices = getElementsWithDefinitionAndDerived(token);
+      for (Iterator itr = devices.iterator(); itr.hasNext(); )
+      {
+         ConfigElement element = (ConfigElement)itr.next();
+         String icon_location = element.getDefinition().getIconLocation();
+         icon_location = (new EnvironmentServiceProxy()).expandEnvVars(icon_location);
+         System.out.println("icon_location:" + icon_location);
+         try
+         {
+            java.net.URL url = new java.net.URL(icon_location);
+            Icon device_icon = new ImageIcon(url);
+            model.add(element.getName(), device_icon, element);
+         }
+         catch(Exception ex)
+         {
+            ex.printStackTrace();
+         }
+      }
+      ControlPanel new_control = new ControlPanel();
+      new_control.setModel(model);
+      new_control.setWatermark(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/watermark_logo.png")));
+
+      return new_control;
+   }
+
+   private List getElementsWithDefinitionAndDerived(String token)
+   {
+      List result = new ArrayList();
+      List elts = getConfigBroker().getElements(context);
+      ConfigDefinitionRepository repos = getConfigBroker().getRepository();
+      List sub_defs = repos.getSubDefinitions(token); 
+      for(Iterator itr = sub_defs.iterator() ; itr.hasNext() ; )
+      {
+         List elements = ConfigUtilities.getElementsWithDefinition(elts, (String)itr.next());
+         result.addAll(elements);
+      }
+      return result;
    }
 
    /**

@@ -236,15 +236,14 @@ public class NodeSettingsPanel
   {
     ConfigElementFactory factory = new ConfigElementFactory(mBroker.getRepository().getAllLatest());
     ConfigElement cluster_manager = factory.create("Sample Cluster", "cluster_manager");
-    cluster_manager.setProperty("barrier_master",0, (String)lstModelNodes.get(0));
     for(int i = 0 ; i < lstModelNodes.size() ; i++)
     {
-      cluster_manager.setProperty("cluster_nodes",i,(String)lstModelNodes.get(0));
+      cluster_manager.addProperty("cluster_node" ,(String)lstModelNodes.get(0));
     }
-    cluster_manager.setProperty("plugin",0,"RemoteInputManager");
-    cluster_manager.setProperty("plugin",1,"ApplicationDataManager");
+    cluster_manager.addProperty("plugin_path", "${VJ_BASE_DIR}/lib/gadgeteer/plugins/");
+    cluster_manager.addProperty("plugin", "RemoteInputManager");
+    cluster_manager.addProperty("plugin", "ApplicationDataManager");
     mBroker.add(mContext, cluster_manager);
-    //  cluster_manager.setProperty("plugin",2,"swap_lock_plugin");
   }
 
   private void removeNode()
