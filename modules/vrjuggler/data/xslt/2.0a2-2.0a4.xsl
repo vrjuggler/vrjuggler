@@ -47,8 +47,7 @@
 -->
 
 <xsl:stylesheet version="1.0"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:cfg="http://www.vrjuggler.org/jccl/xsd/3.0/configuration">
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
    <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
 
    <!-- Define a handy way to insert newlines when necessary. -->
@@ -60,38 +59,21 @@
    <xsl:template match="/">
      <!-- Add the new version information. -->
      <xsl:processing-instruction name="org-vrjuggler-jccl-settings">configuration.version="3.0"</xsl:processing-instruction>
-     <xsl:value-of select="$newline"/>
 
+      <!-- XXX: Need to deal with includes here. -->
       <!-- Create the new XML tree. -->
-      <xsl:element name="configuration">
-         <!-- Fill in the attributes for the root node. -->
-         <!--
-            XXX: A good default value for this would be the name of the file.
-            How do we get that from the XSLT processor?
-         -->
-         <xsl:attribute name="name">
-            <xsl:text>Configuration</xsl:text>
-         </xsl:attribute>
-         <xsl:attribute name="xsi:schemaLocation">
-            <xsl:text>http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:text>
-         </xsl:attribute>
-         <xsl:attribute name="xmlns:xsi">
-            <xsl:text>http://www.w3.org/2001/XMLSchema-instance</xsl:text>
-         </xsl:attribute>
-         <xsl:attribute name="xmlns">
-            <xsl:text>http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:text>
-         </xsl:attribute>
-         <xsl:value-of select="$newline"/>
-
+      <!-- XXX: The way the attributes are specified here isn't quite right. -->
+      <configuration name="Configuration"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration"
+                     xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration">
          <!-- Create the tree of elements. -->
-         <xsl:element name="elements">
-            <xsl:value-of select="$newline"/>
+         <elements>
             <xsl:for-each select="ConfigChunkDB/*">
                <xsl:apply-templates select="."/>
             </xsl:for-each>
-         </xsl:element>
-         <xsl:value-of select="$newline"/>
-      </xsl:element>
+         </elements>
+      </configuration>
 
       <xsl:message>
          <xsl:text>Processing is complete.  You should now use VRJConfig</xsl:text>
@@ -515,6 +497,19 @@
    <!-- displayWindow property "frameBufferConfig". -->
    <xsl:template match="displayWindow/frameBufferConfig">
       <xsl:element name="frame_buffer_config">
+         <xsl:value-of select="$newline"/>
+         <xsl:apply-templates select="./*" />
+      </xsl:element>
+      <xsl:value-of select="$newline"/>
+   </xsl:template>
+
+   <!--
+      displayWindow property "event_window_device" which contains a child
+      element that has been renamed.
+   -->
+   <xsl:template match="displayWindow/event_window_device">
+      <xsl:element name="event_window_device">
+         <xsl:value-of select="$newline"/>
          <xsl:apply-templates select="./*" />
       </xsl:element>
       <xsl:value-of select="$newline"/>
@@ -523,6 +518,19 @@
    <!-- displayWindow property "sim_viewports". -->
    <xsl:template match="displayWindow/sim_viewports">
       <xsl:element name="simulator_viewports">
+         <xsl:value-of select="$newline"/>
+         <xsl:apply-templates select="./*" />
+      </xsl:element>
+      <xsl:value-of select="$newline"/>
+   </xsl:template>
+
+   <!--
+      displayWindow property "surface_viewports" which contains a child
+      element that has been renamed.
+   -->
+   <xsl:template match="displayWindow/surface_viewports">
+      <xsl:element name="surface_viewports">
+         <xsl:value-of select="$newline"/>
          <xsl:apply-templates select="./*" />
       </xsl:element>
       <xsl:value-of select="$newline"/>
@@ -1579,6 +1587,18 @@
          </xsl:attribute>
          <xsl:apply-templates select="./*" />
       </xsl:element>
+   </xsl:template>
+
+   <!--
+      surfaceViewport property "corners" which contains a child element
+      whose name has changed.
+   -->
+   <xsl:template match="surfaceViewport/corners">
+      <xsl:element name="corners">
+         <xsl:value-of select="$newline"/>
+         <xsl:apply-templates select="./*" />
+      </xsl:element>
+      <xsl:value-of select="$newline"/>
    </xsl:template>
 
    <!-- surfaceViewport property "trackerproxy". -->
