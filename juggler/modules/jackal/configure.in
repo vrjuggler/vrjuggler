@@ -226,13 +226,13 @@ DPP_PATH_JAVA
 # built.
 if test "x$JAVAC" = "xno" ; then
     AC_MSG_WARN(*** VjControl requires javac -- it will not be built ***)
-    BUILD_GUI='N'
+    BUILD_VJCONTROL='N'
 else
     # Check for JAXP extensions to JDK
     DPP_CHECK_JAVA_STATIC_METHOD(javax.xml.parsers.DocumentBuilderFactory,
         newInstance(), ,
-        BUILD_GUI='Y',
-        [ BUILD_GUI='N' ;
+        BUILD_VJCONTROL='Y',
+        [ BUILD_VJCONTROL='N' ;
           AC_MSG_WARN(*** VjControl requires JAXP extensions for java -- it will not be built ***) ])
 fi
 
@@ -527,7 +527,7 @@ AC_SUBST(VJ_SHARE_DIR)
 
 AC_SUBST(EXTRA_LINK_FLAGS)
 
-AC_SUBST(BUILD_GUI)
+AC_SUBST(BUILD_VJCONTROL)
 
 AC_SUBST(XERCESROOT)
 
