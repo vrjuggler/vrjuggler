@@ -121,8 +121,14 @@ void reconfigApp::preFrame()
          case 36:  status =       reconfigKeyboardProxy_exec();break;
 
          case 37:  status =       removeKeyboardProxy_exec();  break;
-
-         case 38:  status = true; 
+         
+         case 38:  status =       addMachineSpecific_exec();  break;
+         
+         //case 39:  status =       reconfigMachineSpecific_exec();  break;
+         
+         case 39:  status =       removeMachineSpecific_exec();  break;
+         
+         case 40:  status = true; 
                    mFinished = true; 
                    std::cout << "\n\n[Test battery completed]\n\n" << std::flush; 
                    mKernel->stop();
@@ -220,7 +226,13 @@ void reconfigApp::preFrame()
          case 36:  status =       reconfigKeyboardProxy_check();break;
 
          case 37:  status =       removeKeyboardProxy_check();  break;
+      
+         case 38:  status =       addMachineSpecific_check();   break;
 
+         //case 39:  status =       reconfigMachineSpecific_check();break;
+
+         case 39:  status =       removeMachineSpecific_check();break;
+         
          default: status = true; break;
 
       }
@@ -762,6 +774,51 @@ bool reconfigApp::verifyDisplayFile( std::string filename )
 /********************************************************************
 TEST SUITE FUNCTIONS
 ********************************************************************/
+         
+//  - Adding machine specfic gfx window     
+bool reconfigApp::addMachineSpecific_exec()
+{
+   std::cout << "Beginning test for adding machine specific graphics windows...\n" << std::flush;
+   return addChunkFile( mPath + "sim.ms.01.config" );
+}
+
+bool reconfigApp::addMachineSpecific_check()
+{
+   return verifyDisplayFile( mPath + "sim.ms.01.config" );
+}
+
+
+//  - Remove machine specific gfx window     
+bool reconfigApp::removeMachineSpecific_exec()
+{
+   std::cout << "Beginning test for removing machine specific graphics windows...\n" << std::flush;
+   return removeChunkFile( mPath + "sim.ms.01.config" );
+}
+
+bool reconfigApp::removeMachineSpecific_check()
+{
+
+   //Load up the given file 
+   jccl::ConfigChunkDB fileDB ; fileDB.load( mPath + "sim.extradisplay.01.config" );
+   std::vector<jccl::ConfigChunkPtr> windowChunks;
+   fileDB.getByType( "displayWindow", windowChunks );
+
+   if (windowChunks.size() != 1)
+   {
+      std::cout << "\tError: the display config chunk file contains " << windowChunks.size() << " displays (should be 1)\n" << std::flush;
+      return false;
+   }   
+
+   vrj::Display* display = getDisplay(windowChunks[0]->getName());
+   if (display != NULL)
+   {
+      std::cout << "\tError: there is still a display in the system named " << windowChunks[0]->getName() << "\n" << std::flush;
+      return false;
+   }   
+
+   return true;
+
+}
 
 //  - Adding gfx window     
 bool reconfigApp::addGFXWindow_exec()
