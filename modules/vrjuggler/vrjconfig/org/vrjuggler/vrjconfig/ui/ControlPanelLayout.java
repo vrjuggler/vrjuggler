@@ -164,11 +164,15 @@ public class ControlPanelLayout
       int x = insets.left;
       int y = insets.top;
 
-      // Calculate the components' sizes if it hasn't been done already
-      if (needCalcSizes)
-      {
+      // Calculate the components' sizes if it hasn't been done already.
+      // -----
+      // XXX: (nonchocoboy 19Jul2002)
+      // Removed check for recalc of sizes to fix an invalidation bug. This
+      // needs to be reexamined again in the future for a more elegant fix.
+//      if (needCalcSizes)
+//      {
          calcSizes(parent);
-      }
+//      }
 
       for (int i=0; i<num_comps; ++i)
       {
