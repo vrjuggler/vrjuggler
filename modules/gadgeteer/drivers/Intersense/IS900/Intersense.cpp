@@ -193,12 +193,10 @@ int Intersense::startSampling()
 // Create a new thread to handle the control
         vpr::ThreadMemberFunctor<Intersense>* memberFunctor =
             new vpr::ThreadMemberFunctor<Intersense>(this, &Intersense::controlLoop, NULL);
-        vpr::Thread* new_thread;
-        new_thread = new vpr::Thread(memberFunctor);
-        mThread = new_thread;
+        mThread = new vpr::Thread(memberFunctor);
+        vpr::ReturnStatus start_status = mThread->start();
 
-
-        if ( mThread == NULL )
+        if ( ! start_status.success() )
         {
             return 0;  // Fail
         } else {

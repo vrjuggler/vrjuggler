@@ -232,12 +232,11 @@ int KeyboardWin32::startSampling()
                                        &KeyboardWin32::controlLoop,
                                        (void*)this );
 
-   vpr::Thread* new_thread;
-   new_thread = new vpr::Thread( memberFunctor );
-   mThread = new_thread;
+   mThread = new vpr::Thread(memberFunctor);
+   vpr::ReturnStatus start_status = mThread->start();
 
    // return success value...
-   if (NULL == mThread)
+   if ( ! start_status.success() )
    {
      return 0; // fail
    }

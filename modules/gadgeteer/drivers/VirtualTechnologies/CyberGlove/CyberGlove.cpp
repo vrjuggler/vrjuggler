@@ -116,10 +116,11 @@ CyberGlove::startSampling()
          new vpr::ThreadMemberFunctor<CyberGlove>(this, &CyberGlove::controlLoop, NULL);
 
       mThread = new vpr::Thread(memberFunctor);
+      vpr::ReturnStatus start_status = mThread->start();
 
-      if (!mThread->valid())
+      if ( ! start_status.success() || ! mThread->valid() )
       {
-         return 0;
+         return 0;   // Failure
       }
       else
       {

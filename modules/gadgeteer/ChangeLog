@@ -1,5 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Dec-24-2002 patrickh  Updated to VPR 0.21.0.
+                      NEW VERSION: 0.6.5
 Nov-13-2002 patrickh  Merged all changes from SC02_DEV branch.
                       NEW VERSION: 0.6.4
 Nov-01-2002 patrickh  Added a driver that allows Tweek Subjects to act as
