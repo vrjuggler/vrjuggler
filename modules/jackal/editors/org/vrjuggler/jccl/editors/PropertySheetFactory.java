@@ -343,7 +343,7 @@ public class PropertySheetFactory extends PropertyComponent
       Object new_value = null;
       
       // Pick which type of embedded chunk to add
-      List string_allowed_types = prop_def.getAllowedTypes();
+      List string_allowed_types = prop_def.getAllowedAndDerivedTypes();
       List allowed_types = new ArrayList();
       
       ConfigBroker broker = new ConfigBrokerProxy();
