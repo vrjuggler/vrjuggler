@@ -250,7 +250,7 @@ sub make_CXXFLAGS ($;$)
    }
 
    # XXX: No @snx_cxxflags@ defined by configure!
-   my $cxxflags = "$dep_cxxflags $snx_extra_cxxflags " .
+   my $cxxflags = "$snx_extra_cxxflags " .
                   qq(-I@includedir@ $snx_extra_includes);
 
    # Strip out extra whitespace.
