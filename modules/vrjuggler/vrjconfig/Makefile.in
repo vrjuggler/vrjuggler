@@ -50,18 +50,10 @@ INSTALL_FILES=
 JAVA_IDL_OPTS=		@JAVA_IDL_OPTS@ @JAVA_IDL_GENDIR_OPT@$(srcdir)
 JAVA_IDL_INCLUDES=	@JAVA_IDL_INCFLAG@$(top_srcdir)
 
-JARS		= ClusterWizard.jar Devices.jar Simulator.jar NewDevice.jar
-BEANS		= VRJConfig
+JARS=	ClusterWizard.jar Devices.jar Simulator.jar NewDevice.jar
+BEANS=	VRJConfig
 
-# List the packages for which JavaDoc documentation will be generated.
-DOC_PKGS	= $(VRJCONFIG_PKG)
-
-webroot		= $(HOME)/public_html/jugglerweb
-instdir		= vrjuggler/vrjconfig/1.0
-doc_prefix	= $(webroot)/$(instdir)
-DOC_ROOT	= programmer.reference.java
-
-_LOCAL_CLEAN=1
+_LOCAL_CLEAN=	1
 JAVA_AFTERBUILD=java_afterbuild
 
 include $(MKPATH)/dpp.obj-subdir.mk
@@ -144,11 +136,6 @@ endif
 	@echo "------------------------------------------------"
 	$(MAKE) -C customeditors install-customeditors
 	
-install-docs:
-	$(MKINSTALLDIRS) $(doc_prefix)
-	rm -rf $(doc_prefix)/$(DOC_ROOT)
-	mv $(DOC_ROOT) $(doc_prefix)
-
 ifdef GLOBAL_BUILD
    CLEAN_DIRS+=	$(top_srcdir)/bin
 endif
