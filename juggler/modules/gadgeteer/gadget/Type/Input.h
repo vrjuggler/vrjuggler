@@ -53,8 +53,9 @@
 #include <vpr/Thread/Thread.h>
 #include <jccl/Config/ConfigChunkPtr.h>
 
-#include <vpr/IO/ObjectReader.h>
-#include <vpr/IO/ObjectWriter.h>
+//#include <vpr/IO/ObjectReader.h>
+//#include <vpr/IO/ObjectWriter.h>
+#include <gadget/RemoteInputManager/SerializableDevice.h>
 
 // consider moving this
 typedef unsigned char byte;
@@ -104,7 +105,7 @@ namespace gadget
 *       frame.  Because of this, threads should not be reading data while
 *       it is being updated to the most recent copy.
 */
-class GADGET_CLASS_API Input
+class GADGET_CLASS_API Input : public SerializableDevice
 {
 public:
    /** Default Constructor

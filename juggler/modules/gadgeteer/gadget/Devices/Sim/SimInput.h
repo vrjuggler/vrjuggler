@@ -40,7 +40,7 @@
 #include <gadget/Type/KeyboardInterface.h>
 #include <vpr/IO/ObjectReader.h>
 #include <vpr/IO/ObjectWriter.h>
-
+#include <gadget/RemoteInputManager/SerializableDevice.h>
 
 namespace gadget
 {
@@ -50,7 +50,7 @@ namespace gadget
  * Base class for all simulated input devices.
  * Has the common routines for accessing and seting up keyboard interface.
  */
-class SimInput
+class SimInput : public SerializableDevice
 {
 public:
    class KeyModPair
