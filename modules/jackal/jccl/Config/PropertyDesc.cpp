@@ -72,13 +72,11 @@ PropertyDesc::PropertyDesc (const std::string& n, int i, VarType t,
 
 
 PropertyDesc::~PropertyDesc () {
-    /* XXX
     unsigned int i;
     for (i = 0; i < enumv.size(); i++)
         delete enumv[i];
     for (i = 0; i < valuelabels.size(); i++)
         delete valuelabels[i];
-    */
     validation = 0;
 }
 
@@ -272,7 +270,7 @@ std::istream& operator >> (std::istream& in, PropertyDesc& self) {
                     *v = i++;
             }
             self.enumv.push_back (new EnumEntry (str, *v));
-            // delete v; XXX
+            delete v;
             readString (in, str, size);
         }
         readString (in, str, size);
@@ -295,12 +293,11 @@ PropertyDesc& PropertyDesc::operator= (const PropertyDesc& pd) {
     type = pd.type;
     num = pd.num;
 
-    /*
+    
     for (i = 0; i < valuelabels.size(); i++)
         delete valuelabels[i];
     for (i = 0; i < enumv.size(); i++)
         delete enumv[i];
-        */
     valuelabels.clear();
     enumv.clear();
     for (i = 0; i < pd.valuelabels.size(); i++)
