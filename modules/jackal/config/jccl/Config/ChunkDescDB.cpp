@@ -110,9 +110,9 @@ std::istream& operator >> (std::istream& in, ChunkDescDB& self)
 
 ChunkDescPtr ChunkDescDB::get (const std::string descToken)
 {
-   ChunkDescDB::iterator desc;
-   desc = find(descToken);
-   if(desc != end())
+   std::map<std::string, ChunkDescPtr>::iterator desc;
+   desc = mDescs.find(descToken);
+   if(desc != mDescs.end())
    {  return (*desc).second;  }
    else
    {  return ChunkDescPtr(); }
@@ -204,7 +204,7 @@ bool ChunkDescDB::loadFromChunkDescDBNode(cppdom::XMLNodePtr chunkDescDBNode)
         cur_child != chunkDescDBNode->getChildren().end(); cur_child++)
    {
       ChunkDescPtr new_desc(new ChunkDesc( *cur_child ) );     // New desc
-      (*this)[(*cur_child)->getAttribute(token_TOKEN).getValue<std::string>()] = new_desc;
+      mDescs[(*cur_child)->getAttribute(token_TOKEN).getValue<std::string>()] = new_desc;
    }
 
    return true;
@@ -215,9 +215,9 @@ void ChunkDescDB::createChunkDescDBNode(cppdom::XMLNodePtr& chunkDescDBNode) con
    chunkDescDBNode = ChunkFactory::instance()->createXMLNode();
    chunkDescDBNode->setName(chunk_desc_db_TOKEN);
 
-   ChunkDescDB::const_iterator cur_desc;
+   std::map<std::string, ChunkDescPtr>::const_iterator cur_desc;
 
-   for(cur_desc = begin(); cur_desc != end(); cur_desc++)
+   for(cur_desc = mDescs.begin(); cur_desc != mDescs.end(); ++cur_desc)
    {
       cppdom::XMLNodePtr child_node = (*cur_desc).second->getNode();
       chunkDescDBNode->addChild( child_node );

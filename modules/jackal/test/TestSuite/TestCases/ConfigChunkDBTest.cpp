@@ -18,12 +18,12 @@ void ConfigChunkDBTest::testLoad ()
    status = jccl::ChunkFactory::instance()->loadDescs(file_path + "ConfigChunkDBTest/ConfigChunkDBTest.desc");
    CPPUNIT_ASSERT(status && "Failed to load description file");
 
-   CPPUNIT_ASSERT(chunkdb.empty() && "The DB should be empty");
+   CPPUNIT_ASSERT(chunkdb.vec().empty() && "The DB should be empty");
 
    status = chunkdb.load(file_path + "ConfigChunkDBTest/ConfigChunkDBTest_start.config");
    CPPUNIT_ASSERT(status && "Failed to load initial config file");
 
-   CPPUNIT_ASSERT(! chunkdb.empty() && "The DB should not be empty");
+   CPPUNIT_ASSERT(! chunkdb.vec().empty() && "The DB should not be empty");
 }
 
 void ConfigChunkDBTest::testDependencySort ()
@@ -55,9 +55,9 @@ void ConfigChunkDBTest::testDependencySort ()
    CPPUNIT_ASSERT(status && "Dependency sort failed");
 
    // This is pretty gross...
-   jccl::ConfigChunkDB::iterator i;
+   std::vector<jccl::ConfigChunkPtr>::iterator i;
    int j = 0;
-   for ( i = chunkdb_dep.begin(); i != chunkdb_dep.end(); ++i, ++j )
+   for ( i = chunkdb_dep.vec().begin(); i != chunkdb_dep.vec().end(); ++i, ++j )
    {
       CPPUNIT_ASSERT((*i)->getName() == chunk_names[j] && "Incorrect dependency sort");
    }
@@ -93,14 +93,14 @@ void ConfigChunkDBTest::testClear ()
    status = jccl::ChunkFactory::instance()->loadDescs(file_path + "ConfigChunkDBTest/ConfigChunkDBTest.desc");
    CPPUNIT_ASSERT(status && "Failed to load description file");
 
-   CPPUNIT_ASSERT(chunkdb.empty() && "The DB should be empty");
+   CPPUNIT_ASSERT(chunkdb.vec().empty() && "The DB should be empty");
 
    status = chunkdb.load(file_path + "ConfigChunkDBTest/ConfigChunkDBTest_start.config");
    CPPUNIT_ASSERT(status && "Failed to load initial config file");
 
-   CPPUNIT_ASSERT(! chunkdb.empty() && "The DB should not be empty");
-   chunkdb.clear();
-   CPPUNIT_ASSERT(chunkdb.empty() && "The DB now should be empty");
+   CPPUNIT_ASSERT(! chunkdb.vec().empty() && "The DB should not be empty");
+   chunkdb.vec().clear();
+   CPPUNIT_ASSERT(chunkdb.vec().empty() && "The DB now should be empty");
 }
 
 }
