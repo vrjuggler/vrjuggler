@@ -66,7 +66,6 @@ public class ConfigChunkTreeTableModel
     */
    public void setConfigChunk(ConfigChunk chunk)
    {
-      System.out.println("ConfigChunkTreeTableModel.setConfigChunk()");
       // First clear out all the old nodes from the tree.
       ((DefaultMutableTreeNode)getRoot()).removeAllChildren();
 
