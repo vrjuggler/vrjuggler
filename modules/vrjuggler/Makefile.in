@@ -590,7 +590,7 @@ ${LIBDIR}/${GL_LIB_DYNAMIC}: ${OBJDIR}/*.${OBJ_FILE_SUFFIX}
 # =============================================================================
 
 # Build the Java-based configuration GUI.
-gui:
+gui::
 ifndef NO_JAVA_GUI
 ifeq (${BUILD_GUI}, Y)
 	@echo "------------------------------------------------"
