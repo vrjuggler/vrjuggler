@@ -240,7 +240,7 @@ int Intersense::sample()
     int stationIndex;
     int min, num;
 
-    //vpr::Thread::yield();
+    vpr::Thread::yield();
 
    for (i = 0 ; i < (mTracker.NumStations()); i++)
    {
