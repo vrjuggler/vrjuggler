@@ -101,17 +101,6 @@ AC_DEFUN(VJ_COMPILER_SETUP,
         DPP_GPLUSPLUS_MODERN(AC_MSG_ERROR(*** VR Juggler requires a modern G++ ***))
     fi
 
-    # Now check to see if the compiler accepts the -pthread option.
-    if test "x$1" != "xSPROC" -a "x$1" != "WIN32" -a \
-            "x$NSPR_THREADS_ENABLED" != "xyes"
-    then
-        DPP_CC_PTHREAD_ARG
-
-        if test "x$CC_ACCEPTS_PTHREAD" = "xno" ; then
-            DPP_CC_PTHREADS_ARG
-        fi
-    fi
-
     # Ensure that the C++ compiler we've found is capable of compiling the
     # newer C++ features that we need.
     DPP_CXX_TEMPLATES(AC_MSG_ERROR(*** The library requires C++ template support ***))
