@@ -121,7 +121,7 @@ public class DescDBPanel
 
 	if (name == null || name.equals (""))
 	    name = "No Selection";
-	ChunkDescDB db = config_module.getChunkDescDB (name);
+	ChunkDescDB db = config_module.getDescDB (name);
 	if (db == null)
 	    name = "No Selection";
 	if (name.equalsIgnoreCase ("No Selection")) {
