@@ -42,7 +42,7 @@
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/corba_rtrc_d.pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)/corba_rtrc.lib"
+				ImportLibrary="$(OutDir)/corba_rtrc_d.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
