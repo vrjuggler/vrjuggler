@@ -1183,6 +1183,8 @@ sub GENTEXT {
               (($arg[1] eq "hasinlines") && $hasinlines{$cname})  ||
               (($arg[1] eq "abstract") && $isabstract{$cname})  ||
               (($arg[1] eq "pure") && $mname && $ispure{$mloc,$mnm})  ||
+	      ( ("$arg[1]" eq "membervar") &&
+		getMemberVars("$cname", "$arg[2]") ) ||
 	      ( ("$arg[1]" eq "mconstructor") && $mnm &&
 		isconstructor("$cname", "$mnm") ) ||
 	      ( ("$arg[1]" eq "mpublic") && $mname &&
@@ -1193,6 +1195,10 @@ sub GENTEXT {
 		isprotected("$cname", "$mname") ) ||
 	      ( ("$arg[1]" eq "mfriend") && $mname &&
 		isfriend("$cname", "$mname") ) ||
+	      ( ("$arg[1]" eq "overrides") && $mname && $parents{"$cname"} &&
+		overrides("$cname", "$mname") ) ||
+	      ( ("$arg[1]" eq "overridden") && $mname && $parents{"$cname"} &&
+		overridden("$cname", "$mname") ) ||
               ($mname && ${"$var_name"}{"$mloc","$mnm"})  ||
               (!$mname && ${"$var_name"}{"$cname"})  ||
               ($curglob && ($arg[1] eq $curglob) && $curglobval{$curglob})){
@@ -2962,6 +2968,51 @@ sub mkLastBuildFile {
   print LBT "Last Build $buildtime";
 
   close (LBT) or warn "ERROR: Could not save $lastbuildFile: $!\n";
+}
+
+sub isvar ($) {
+  my $member_name = shift;
+
+  return 1 if $member_name !~ /\(.*\)/;
+
+  return undef;
+}
+
+sub getMemberVars ($;$) {
+  my $class_name = shift;
+  my $type = shift || 'member';
+
+  my $neg = 0;
+
+  if ( $type =~ /^!\s*(\S\w+)$/ ) {
+    $neg = 1;
+    $type = "$1";
+  }
+
+  my(@members) = ();
+
+  if ( $neg ) {
+    if ( "$type" eq "private" ) {
+      @members = GETMEMBERS("$class_name", 'public', 1);
+      push(@members, GETMEMBERS("$class_name", 'protected', 1));
+    } elsif ( "$type" eq "protected" ) {
+      @members = GETMEMBERS("$class_name", 'public', 1);
+      push(@members, GETMEMBERS("$class_name", 'private', 1));
+    } else {
+      @members = GETMEMBERS("$class_name", 'private', 1);
+      push(@members, GETMEMBERS("$class_name", 'protected', 1));
+    }
+  } else {
+    @members = GETMEMBERS("$class_name", "$type", 1);
+  }
+
+  my(@member_vars) = ();
+
+  foreach ( @members ) {
+    push(@member_vars, "$_") if isvar("$_");
+  }
+
+  return @member_vars;
 }
 
 sub isconstructor ($$) {
