@@ -53,7 +53,7 @@ static const unsigned int alignment = 1;
 
 //: Scanline padding
 //  This is the number of bytes (non-pixel data) attached to the end of each scanline.
-static const unsigned int padding = 0;
+//static const unsigned int padding = 0;
 
 //: Number of bits per pixel
 //  Typical values include 8, 15, 16, 24, 32
