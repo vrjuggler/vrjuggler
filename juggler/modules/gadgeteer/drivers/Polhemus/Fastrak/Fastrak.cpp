@@ -445,27 +445,23 @@ int Fastrack::sample()
    cur_dig_samples[0].setTime(cur_pos_samples[0].getTime());
    cur_dig_samples[0].setDigital(mButtonState);
 
-   mDigitalSamples.lock();
-   mDigitalSamples.addSample(cur_dig_samples);
-   mDigitalSamples.unlock();
-
+   addDigitalSample(cur_dig_samples);
+      
    for ( int i = 0; i < 4; ++i )         // for each station
    {
       cur_pos_samples[i].setTime(cur_pos_samples[i].getTime());
       *(cur_pos_samples[i].getPosition()) = getPosData(i);
    }
 
-   mPosSamples.lock();
-   mPosSamples.addSample(cur_pos_samples);
-   mPosSamples.unlock();
-
+   addPositionSample(cur_pos_samples);
+   
    return status;
 }
 
 void Fastrack::updateData()
 {
-   // swap the indicies for the tri-buffer pointers
-   mPosSamples.swapBuffers();
+   // swap the buffered sample data
+   swapPositionBuffers();
 }
 
 // kill sample thread

@@ -131,7 +131,7 @@ int ThreeDMouse::stopSampling()
 
 void ThreeDMouse::updateData()
 {
-   mPosSamples.swapBuffers();
+   swapPositionBuffers();
 }
 
 

@@ -109,9 +109,7 @@ public:
        {
            mDigitalData.push_back(temp);
        }
-       mDigitalSamples.lock();
-       mDigitalSamples.addSample(mDigitalData);
-       mDigitalSamples.unlock();
+       addDigitalSample(mDigitalData);
        return 1;
    }
 

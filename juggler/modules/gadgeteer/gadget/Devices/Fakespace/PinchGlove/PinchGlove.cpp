@@ -170,10 +170,8 @@ int PinchGlove::sample()
    }
    //std::cout << std::endl;
 
-   mDigitalSamples.lock();
-   mDigitalSamples.addSample(mDigitalData);
-   mDigitalSamples.unlock();
-
+   addDigitalSample(mDigitalData);
+      
    /////////////////////////////
    // Add Finger Angles LATER //
    // updateFingerAngles();   //
@@ -191,7 +189,7 @@ int PinchGlove::sample()
 
 void PinchGlove::updateData()
 {
-   mDigitalSamples.swapBuffers();
+   swapDigitalBuffers();
    return;
 }
 

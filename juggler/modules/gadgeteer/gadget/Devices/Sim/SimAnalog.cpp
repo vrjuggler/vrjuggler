@@ -107,11 +107,8 @@ void SimAnalog::updateData()
    }
 
    // Locks and then swaps the indices.
-   mAnalogSamples.lock();
-   mAnalogSamples.addSample(mAnaData);
-   mAnalogSamples.unlock();
-
-   mAnalogSamples.swapBuffers();
+   addAnalogSample(mAnaData);
+   swapAnalogBuffers();
 }
 
 } // End of gadget namespace

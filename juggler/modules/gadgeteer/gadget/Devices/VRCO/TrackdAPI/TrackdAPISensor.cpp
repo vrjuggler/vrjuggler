@@ -108,12 +108,10 @@ namespace gadget
     }
 
     // Update the data buffer
-    mPosSamples.lock();
-    mPosSamples.addSample(mCurSensorValues);
-    mPosSamples.unlock();
-
+    addPositionSample(mCurSensorValues);
+        
     // Swap it
-    mPosSamples.swapBuffers();
+    swapPositionBuffers();
  }
 
 /** Returns the position of the given sensor. */

@@ -124,17 +124,11 @@ void TrackdController::updateData()
        mCurValuators[j].setTime();
    }
 
-   mDigitalSamples.lock();
-   mDigitalSamples.addSample(mCurButtons);
-   mDigitalSamples.unlock();
-   mDigitalSamples.swapBuffers();
+   addDigitalSample(mCurButtons);
+   swapDigitalBuffers();
 
-
-   mAnalogSamples.lock();
-   mAnalogSamples.addSample(mCurValuators);
-   mAnalogSamples.unlock();
-   mAnalogSamples.swapBuffers();
-
+   addAnalogSample(mCurValuators);
+   swapAnalogBuffers();
 }
 
 
