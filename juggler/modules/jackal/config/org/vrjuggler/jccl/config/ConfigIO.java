@@ -37,7 +37,7 @@ package VjConfig;
 import java.io.*;
 
 import VjConfig.*;
-import VjControl.Core;
+
 
 /** Master IO handler for VR Juggler-style configuration files.
  *  There are currently two different formats for these configuration files:
@@ -234,18 +234,17 @@ public class ConfigIO {
         if (handler == null)
             throw new IOException ("Couldn't find file format handler.");
 
-        if (!handler.writeConfigChunkDB (file, db))
-            throw new IOException ("Handler write failed.");
+        handler.writeConfigChunkDB (file, db);
     }
 
 
 
-    public static boolean writeConfigChunkDB (DataOutputStream output, ConfigChunkDB db, int handler_type) {
+    public static void writeConfigChunkDB (DataOutputStream output, ConfigChunkDB db, int handler_type) throws IOException {
         ConfigIOHandler handler = getHandler (handler_type);
         if (handler == null)
-            return false;
+            throw new IOException ("Couldn't find file format handler.");
 
-        return handler.writeConfigChunkDB (output, db);
+        handler.writeConfigChunkDB (output, db);
     }
 
 
@@ -336,21 +335,17 @@ public class ConfigIO {
         if (handler == null)
             throw new IOException ("Couldn't find file format handler.");
 
-        if (!handler.writeChunkDescDB (file, db))
-            throw new IOException ("Handler write failed.");
+        handler.writeChunkDescDB (file, db);
     }
 
 
 
-    public static boolean writeChunkDescDB (DataOutputStream output, ChunkDescDB db, int handler_type) {
+    public static void writeChunkDescDB (DataOutputStream output, ChunkDescDB db, int handler_type) throws IOException {
         ConfigIOHandler handler = getHandler (handler_type);
-        if (handler == null) {
-            Core.consoleErrorMessage ("ConfigIO", "Couldn't get ConfigIOHandler for writeChunkDescDB.");
-            return false;
-        }
-        else {
-            return handler.writeChunkDescDB (output, db);
-        }
+        if (handler == null)
+            throw new IOException ("Couldn't find file format handler.");
+
+        handler.writeChunkDescDB (output, db);
     }
 
 }

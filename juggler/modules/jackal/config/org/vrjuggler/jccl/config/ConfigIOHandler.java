@@ -51,9 +51,11 @@ public interface ConfigIOHandler {
                                    ConfigIOStatus iostatus);
 
 
-    public boolean writeConfigChunkDB (DataOutputStream out, ConfigChunkDB db);
+    public void writeConfigChunkDB (DataOutputStream out, ConfigChunkDB db)
+        throws IOException;
 
-    public boolean writeConfigChunkDB (File file, ConfigChunkDB db);
+    public void writeConfigChunkDB (File file, ConfigChunkDB db)
+        throws IOException;
 
 
     public void readChunkDescDB (File file, ChunkDescDB db,
@@ -64,9 +66,11 @@ public interface ConfigIOHandler {
                                  ConfigIOStatus iostatus);
 
 
-    public boolean writeChunkDescDB (DataOutputStream out, ChunkDescDB db);
+    public void writeChunkDescDB (DataOutputStream out, ChunkDescDB db)
+        throws IOException;
 
-    public boolean writeChunkDescDB (File file, ChunkDescDB db);
+    public void writeChunkDescDB (File file, ChunkDescDB db)
+        throws IOException;
 
 
 }
