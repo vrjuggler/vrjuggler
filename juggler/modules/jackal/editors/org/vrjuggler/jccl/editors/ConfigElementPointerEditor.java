@@ -91,7 +91,7 @@ public class ConfigElementPointerEditor
       // For each definition token this definition can point to, look for
       // matching config elements we can use.
       mTags.clear();
-      for (Iterator at_itr = propDef.getAllowedTypes().iterator(); at_itr.hasNext(); )
+      for (Iterator at_itr = propDef.getAllowedAndDerivedTypes().iterator(); at_itr.hasNext(); )
       {
          String type = (String)at_itr.next();
 
