@@ -73,6 +73,20 @@ namespace snxEndian
       bytes = buf;
    }
 
+   enum Endianness
+   {
+      BIG, LITTLE
+   };   
+      
+   template< class Type >
+   inline void  byteReverse( Endianness& e, Type& bytes )
+   {
+      if (e == BIG && this->isLittle())
+         byteReverse( bytes );
+      if (e == LITTLE && this->isBig())
+         byteReverse( bytes );
+   }   
+   
    //: check the system for endianess
    inline bool isLittle() 
    {
