@@ -419,7 +419,8 @@ vpr::ReturnStatus SocketImplNSPR::readn_i (void* buffer,
 
    while ( bytes_left > 0 )
    {
-      bytes = PR_Recv(mHandle, buffer, length, 0, NSPR_getInterval(timeout));
+      bytes = PR_Recv(mHandle, buffer, bytes_left, 0,
+                      NSPR_getInterval(timeout));
 
       // We are in an error state.
       if ( bytes > 0 )
