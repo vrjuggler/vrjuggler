@@ -39,6 +39,7 @@
 #include <Kernel/vjDebug.h>
 #include <Config/vjChunkDescDB.h>
 #include <Config/vjParseUtil.h>
+#include <Config/vjConfigTokens.h>
 
 
 vjChunkDescDB::vjChunkDescDB (): descs() {
@@ -67,8 +68,8 @@ bool vjChunkDescDB::insert (vjChunkDesc *d) {
             if (*descs[i] != *d) {
                 vjDEBUG (vjDBG_ALL,vjDBG_CRITICAL_LVL) <<  clrOutNORM(clrRED, "ERROR:") << " redefinition of vjChunkDesc ("
                                      << d->name.c_str() << ") not allowed:\n"
-                                     << "  Original Desc: \n" << *descs[i] 
-                                     << "\n  New Desc: \n" << *d 
+                                     << "  Original Desc: \n" << *descs[i]
+                                     << "\n  New Desc: \n" << *d
                                      << "\n (multiple definitions must be identical)\n"
                                      << vjDEBUG_FLUSH;
                 vjASSERT (false);
@@ -144,12 +145,12 @@ std::istream& operator >> (std::istream& in, vjChunkDescDB& self) {
     for (;;) {
         if (readString (in, str, buflen) == 0)
             break; /* eof */
-        else if (!strcasecmp (str, "chunk")) {
+        else if (!strcasecmp (str, chunk_TOKEN)) {
             ch = new vjChunkDesc();
             in >> *ch;
             self.insert(ch);
         }
-        else if (!strcasecmp (str, "end"))
+        else if (!strcasecmp (str, end_TOKEN))
             break;
         else {
             vjDEBUG(vjDBG_ERROR,1) << "Unexpected symbol parsing vjChunkDescDB: '"
