@@ -777,4 +777,4 @@ AC_OUTPUT(Makefile Makefile.base Config/Makefile Environment/Makefile
           test/ogl/Makefile test/ogl/cubes/Makefile test/ogl/glove/Makefile
           test/ogl/simpleGlove/Makefile test/ogl/wand/Makefile
           test/pfNav/Makefile test/testDynamicCastSTL/Makefile
-          test/threads/Makefile)
+          test/threads/Makefile test/Performance/Makefile test/Performance/perfdatabuffer-test/Makefile test/Performance/analyzer/Makefile)
