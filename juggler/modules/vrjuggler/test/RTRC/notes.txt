@@ -1,3 +1,10 @@
+To run this test:
+
+reconfigApp [path to chunks]
+
+where [path to chunks] is the directory containing the reconfiguration chunks
+including the startup directory.
+
 Points of interest in the Juggler 1.1 code
 ------------------
 
