@@ -76,6 +76,9 @@ module tweek
       /**
        * Returns all the relevant information for the named JavaBean, including
        * the complete JAR file.
+       *
+       * @param beanName The name of the JavaBean whose information will be
+       *                 returned.
        */
       BeanInfo getBean(in string beanName);
 
