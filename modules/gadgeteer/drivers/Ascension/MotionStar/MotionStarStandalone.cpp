@@ -2189,11 +2189,9 @@ vpr::ReturnStatus MotionStarStandalone::getRsp(BIRDNET::HEADER* packet)
          // Resynchronize with the server's sequence number.
          m_seq_num = seq_num;
       }
+
       // Increment the sequence number for the next message we will send.
-      else
-      {
-         m_seq_num++;
-      }
+      m_seq_num++;
    }
 
    return status;
