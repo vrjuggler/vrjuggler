@@ -30,46 +30,23 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_PORT_H_
-#define _VPR_PORT_H_
-
 #include <vpr/vprConfig.h>
-
-#include <string>
-
-#include <vpr/IO/BlockIO.h>
+#include <vpr/IO/Port/Port.h>
 
 
 namespace vpr {
 
+Port::Port (const std::string& port_name)
+    : BlockIO(port_name)
+{
+    /* Do nothing. */ ;
+}
+
 /**
- * A cross-platform interface to using a computer's I/O ports (serial,
- * parallel, IR, etc.).
- *
- * @author Patrick Hartling
+ * Destructor.  This does nothing.
  */
-class VPR_CLASS_API Port : public BlockIO {
-public:
+Port::~Port () {
+    /* Do nothing. */ ;
+}
 
-protected:
-    /**
-     * Constructor.
-     *
-     * <b>PRE:</b> None.
-     * <b>POST:</b> The given port name is passed on to the
-     *              <code>vpr::BlockIO</code> constructor.
-     *
-     * @param port_name The name of the port in use.
-     */
-    Port(const std::string& port_name);
-
-    /**
-     * Destructor.  This does nothing.
-     */
-    virtual ~Port(void);
-};
-
-}; // End of vpr namespace
-
-
-#endif	/* _VPR_PORT_H_ */
+}
