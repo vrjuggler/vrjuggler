@@ -60,7 +60,7 @@ namespace vpr
  *
  * @todo Add smart buffering for type sizes
  */
-class XMLObjectWriter : public ObjectWriter
+class VPR_CLASS_API XMLObjectWriter : public ObjectWriter
 {
 public:
    XMLObjectWriter()
