@@ -492,7 +492,7 @@ AC_CHECK_HEADERS(fcntl.h limits.h strings.h sys/file.h sys/ioctl.h	\
 # -----------------------------------------------------------------------------
 # Checks for library functions.
 # -----------------------------------------------------------------------------
-AC_CHECK_FUNCS(gettimeofday socket strcasecmp strdup strerror strtod)
+AC_CHECK_FUNCS(gettimeofday socket strerror)
 
 _vpr_save_LIBS="$LIBS"
 AC_CHECK_FUNC(gethostbyname, SOCKET_LIB='',
