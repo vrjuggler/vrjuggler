@@ -58,7 +58,7 @@ namespace jccl {
      *  @author Allen Bierbaum
      */
 
-class ConfigManager: public JackalControl 
+class JCCL_CLASS_API ConfigManager: public JackalControl 
 {
 public:
    struct PendingChunk
@@ -287,9 +287,11 @@ protected:
     ConfigManager();
     virtual ~ConfigManager ();
 
-#if 1
+    // needed for windows:
+    ConfigManager(const ConfigManager&) {;}
+    void operator= (const ConfigManager&) {;}
+
     vprSingletonHeader(ConfigManager);
-#endif
 
 }; // class ConfigManager
 
