@@ -28,13 +28,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.dep.mk,v
-# Date modified: 2004/01/29 04:28:00
-# Version:       1.14
+# Date modified: 2004/11/07 21:34:39
+# Version:       1.15
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.dep.mk,v 1.14 2004/01/29 04:28:00 patrickh Exp
+# dpp.dep.mk,v 1.15 2004/11/07 21:34:39 patrickh Exp
 #
 # This include file <dpp.dep.mk> handles source code dependencies.  It
 # generates makefiles corresponding to each source file (ending in .c or .cpp)
@@ -43,27 +43,37 @@
 # -----------------------------------------------------------------------------
 # The Makefile including this file must define the following variables:
 #
-# BASIC_OBJECTS - The list of objects files (with extension .$(OBJEXT)) to be
-#                 compiled.  The dependency file names are generated based on
-#                 the contents of this variable.
-# C_COMPILE     - The compiler command for C files.
-# CXX_COMPILE   - The compiler command for C++ files.
-# DEPDIR        - The directory to which the depenecy file(s) will be written.
-#                 If not given, it defaults to the current directory.
-# DEP_GEN_FLAG  - The flag passed to the compiler to generate dependencies.
-# MKDEP_C       - The dependency generator command for C files.  If not given,
-#                 this defaults to the value of $(C_COMPILE).  Note that this
-#                 should not include the flag that actually generates the
-#                 dependency list.
-# MKDEP_CXX     - The dependency generator command for C++ files.  If not
-#                 given, this defaults to the value of $(CXX_COMPILE).  Note
-#                 that this should not include the flag that actually
-#                 generates the dependency list.
-# OBJDIR        - The directory to which the object file(s) will be written.
-#                 If not given, it defaults to the current directory.
-# OBJEXT        - Suffix for object file names (e.g., "o" or "obj").
-# SRCS          - The list of source files for which dependencies are to be
-#                 generated.
+# BASIC_OBJECTS  - The list of objects files (with extension .$(OBJEXT)) to be
+#                  compiled.  The dependency file names are generated based on
+#                  the contents of this variable.
+# C_COMPILE      - The compiler command for C files.
+# CXX_COMPILE    - The compiler command for C++ files.
+# OBJC_COMPILE   - The compiler command for Objective-C files.
+# OBJCXX_COMPILE - The compiler command for Objective-C++ files.
+# DEPDIR         - The directory to which the depenecy file(s) will be written.
+#                  If not given, it defaults to the current directory.
+# DEP_GEN_FLAG   - The flag passed to the compiler to generate dependencies.
+# MKDEP_C        - The dependency generator command for C files.  If not given,
+#                  this defaults to the value of $(C_COMPILE).  Note that this
+#                  should not include the flag that actually generates the
+#                  dependency list.
+# MKDEP_CXX      - The dependency generator command for C++ files.  If not
+#                  given, this defaults to the value of $(CXX_COMPILE).  Note
+#                  that this should not include the flag that actually
+#                  generates the dependency list.
+# MKDEP_OBJC     - The dependency generator command for Objective-C files.  If
+#                  not given, this defaults to the value of $(CXX_COMPILE).
+#                  Note that this should not include the flag that actually
+#                  generates the dependency list.
+# MKDEP_OBJCXX   - The dependency generator command for Objective-C++ files.
+#                  If not given, this defaults to the value of
+#                  $(OBJCXX_COMPILE).  Note that this should not include the
+#                  flag that actually generates the dependency list.
+# OBJDIR         - The directory to which the object file(s) will be written.
+#                  If not given, it defaults to the current directory.
+# OBJEXT         - Suffix for object file names (e.g., "o" or "obj").
+# SRCS           - The list of source files for which dependencies are to be
+#                  generated.
 #
 # Example:
 #         srcdir = /usr/src/proj1
@@ -82,6 +92,8 @@ OBJDIR?=	.
 DEPDIR?=	.
 MKDEP_C?=	$(C_COMPILE)
 MKDEP_CXX?=	$(CXX_COMPILE)
+MKDEP_OBJC?=	$(OBJC_COMPILE)
+MKDEP_OBJCXX?=	$(OBJCXX_COMPILE)
 
 DEPEND_FILES:=	$(addprefix $(DEPDIR)/, $(BASIC_OBJECTS:.$(OBJEXT)=.d))
 
@@ -108,13 +120,19 @@ _DEPGEN_MKDEP=	$(SHELL) -ec '$(MAKEDEPEND) -f- -o.$(OBJEXT)		\
 # If we have to use makedepend(1), then go that route.  Otherwise, use the
 # compiler's built-in dependency generation features.
 ifeq ($(USE_MAKEDEPEND), Y)
-   C_DEPGEN=	$(_DEPGEN_MKDEP)
-   CXX_DEPGEN=	$(_DEPGEN_MKDEP)
+   C_DEPGEN=		$(_DEPGEN_MKDEP)
+   CXX_DEPGEN=		$(_DEPGEN_MKDEP)
+   OBJC_DEPGEN=		$(_DEPGEN_MKDEP)
+   OBJCXX_DEPGEN=	$(_DEPGEN_MKDEP)
 else
-   C_DEPGEN=	$(SHELL) -ec '$(MKDEP_C) $(DEP_GEN_FLAG) $< |		\
-		   sed $(_CC_SED_EXP) > $@' 2>/dev/null
-   CXX_DEPGEN=	$(SHELL) -ec '$(MKDEP_CXX) $(DEP_GEN_FLAG) $< |		\
-		   sed $(_CC_SED_EXP) > $@' 2>/dev/null
+   C_DEPGEN=		$(SHELL) -ec '$(MKDEP_C) $(DEP_GEN_FLAG) $< |	\
+			   sed $(_CC_SED_EXP) > $@' 2>/dev/null
+   CXX_DEPGEN=		$(SHELL) -ec '$(MKDEP_CXX) $(DEP_GEN_FLAG) $< |	\
+			   sed $(_CC_SED_EXP) > $@' 2>/dev/null
+   OBJC_DEPGEN=		$(SHELL) -ec '$(MKDEP_OBJC) $(DEP_GEN_FLAG) $< | \
+			   sed $(_CC_SED_EXP) > $@' 2>/dev/null
+   OBJCXX_DEPGEN=	$(SHELL) -ec '$(MKDEP_OBJCXX) $(DEP_GEN_FLAG) $< | \
+			   sed $(_CC_SED_EXP) > $@' 2>/dev/null
 endif
 
 $(DEPDIR)/%.d: %.c
@@ -144,3 +162,15 @@ $(DEPDIR)/%.d: %.cpp
 $(DEPDIR)/%.d: %.cxx
 	@echo "Updating dependency file $@ ..."
 	@$(CXX_DEPGEN)
+
+$(DEPDIR)/%.d: %.m
+	@echo "Updating dependency file $@ ..."
+	@$(OBJC_DEPGEN)
+
+$(DEPDIR)/%.d: %.mm
+	@echo "Updating dependency file $@ ..."
+	@$(OBJCXX_DEPGEN)
+
+$(DEPDIR)/%.d: %.M
+	@echo "Updating dependency file $@ ..."
+	@$(OBJCXX_DEPGEN)

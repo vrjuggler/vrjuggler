@@ -21,13 +21,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.idl.mk,v
-# Date modified: 2004/01/29 04:28:00
-# Version:       1.12
+# Date modified: 2004/11/07 21:34:39
+# Version:       1.13
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.idl.mk,v 1.12 2004/01/29 04:28:00 patrickh Exp
+# dpp.idl.mk,v 1.13 2004/11/07 21:34:39 patrickh Exp
 #
 # This file <dpp.idl.mk> handles compiling a CORBA IDL file into source files
 # for various languages using the appropriate IDL compiler.
@@ -38,6 +38,8 @@
 #                    etc.) to compile.
 # C_IDL            - The IDL compiler for generating C code.
 # CXX_IDL          - The IDL compiler for generating C++ code.
+# OBJC_IDL         - The IDL compiler for generating Objective-C code.
+# OBJCXX_IDL       - The IDL compiler for generating Objective-C++ code.
 # JAVA_IDL         - The IDL compiler for generating Java code.
 # IDL_C_FILES      - The list of C files that the IDL compiler will generate.
 #                    The order is very important.  For an IDL file called
@@ -49,6 +51,12 @@
 # IDL_CXX_FILES    - The list of C++ files that the IDL compiler will generate.
 #                    The same rule for ordering of file names in
 #                    $(IDL_C_FILES) applies here.
+# IDL_OBJC_FILES   - The list of Objective-C files that the IDL compiler will
+#                    generate.  The same rule for ordering of file names in
+#                    $(IDL_C_FILES) applies here.
+# IDL_OBJCXX_FILES - The list of Objective-C++ files that the IDL compiler
+#                    will generate.  The same rule for ordering of file names
+#                    in $(IDL_C_FILES) applies here.
 # IDL_JAVA_FILES   - The list of Java files that the Java IDL compiler will
 #                    generate.  The same rule for ordering of file names in
 #                    $(IDL_C_FILES) applies here.
@@ -61,6 +69,10 @@
 #                       found.
 # C_IDL_OPTS          - General options to pass to the IDL-to-C compiler.
 # CXX_IDL_OPTS        - General options to pass to the IDL-to-C++ compiler.
+# OBJC_IDL_OPTS       - General options to pass to the IDL-to-Objective-C
+#                       compiler.
+# OBJCXX_IDL_OPTS     - General options to pass to the IDL-to-Objective-C++
+#                       compiler.
 # JAVA_IDL_OPTS       - General options to pass to the IDL-to-Java compiler.
 # PYTHON_IDL_OPTS     - General options to pass to the IDL-to-Python compiler.
 #
@@ -68,6 +80,10 @@
 #                       compiler.
 # CXX_IDL_INCLUDES    - Paths to extend the include path for the IDL-to-C++
 #                       compiler.
+# OBJC_IDL_INCLUDES   - Paths to extend the include path for the
+#                       IDL-to-Objective-C compiler.
+# OBJCXX_IDL_INCLUDES - Paths to extend the include path for the
+#                       IDL-to-Objective-C++ compiler.
 # JAVA_IDL_INCLUDES   - Paths to extend the include path for the IDL-to-Java
 #                       compiler.
 # PYTHON_IDL_INCLUDES - Paths to extend the include path for the IDL-to-Python
@@ -102,6 +118,34 @@ endif
 ifdef IDL_CXX_FILES
 %.cpp %.h: %.idl
 	$(CXX_IDL) $(CXX_IDL_OPTS) $(CXX_IDL_INCLUDES) $<
+endif
+
+# -----------------------------------------------------------------------------
+# Generate Objective-C code (the files listed in $(IDL_OBJC_FILES) from the
+# corresponding IDL file.
+# -----------------------------------------------------------------------------
+objc_idl: $(IDL_OBJC_FILES)
+ifdef _LOCAL_OBJC_IDL
+	@$(MAKE) _objc_idl
+endif
+
+ifdef IDL_OBJC_FILES
+%.m %.h: %.idl
+	$(OBJC_IDL) $(OBJC_IDL_OPTS) $(OBJC_IDL_INCLUDES) $<
+endif
+
+# -----------------------------------------------------------------------------
+# Generate Objective-C++ code (the files listed in $(IDL_OBJCXX_FILES) from the
+# corresponding IDL file.
+# -----------------------------------------------------------------------------
+objcxx_idl: $(IDL_OBJCXX_FILES)
+ifdef _LOCAL_OBJCXX_IDL
+	@$(MAKE) _objcxx_idl
+endif
+
+ifdef IDL_OBJCXX_FILES
+%.mm %.M %.h: %.idl
+	$(OBJCXX_IDL) $(OBJCXX_IDL_OPTS) $(OBJCXX_IDL_INCLUDES) $<
 endif
 
 # -----------------------------------------------------------------------------

@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          compiler.m4,v
-dnl Date modified: 2004/07/02 11:35:54
-dnl Version:       1.40
+dnl Date modified: 2004/12/02 06:12:15
+dnl Version:       1.42
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -132,7 +132,7 @@ dnl     WIN32
 dnl     _MBCS
 dnl ===========================================================================
 
-dnl compiler.m4,v 1.40 2004/07/02 11:35:54 patrickh Exp
+dnl compiler.m4,v 1.42 2004/12/02 06:12:15 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Check if the given compiler accepts a given flag.  This can be used for
@@ -242,7 +242,9 @@ AC_DEFUN([DPP_SETUP_COMPILER],
          ;;
       dnl i386-class machine running Windows {98,NT} with Cygnus GNU-Win32.
       cygwin)
-         if test "x$USE_GCC" = "xyes" ; then
+         if test "x$ICC" = "xyes" ; then
+            DPP_SETUP_ICC($dpp_opt_level)
+         elif test "x$USE_GCC" = "xyes" ; then
             DPP_SETUP_GCC($dpp_opt_level)
          else
             AR='link /lib'
@@ -295,7 +297,11 @@ AC_DEFUN([DPP_SETUP_COMPILER],
          ;;
       dnl A machine running FreeBSD.
       freebsd*)
-         DPP_SETUP_GCC($dpp_opt_level)
+         if test "x$ICC" = "xyes" ; then
+            DPP_SETUP_ICC($dpp_opt_level)
+         else
+            DPP_SETUP_GCC($dpp_opt_level)
+         fi
          DYNAMICLIB_EXT='so'
          ;;
       dnl HP PA-RISC machine running HP-UX 10.20.
@@ -429,17 +435,29 @@ dnl            _LD_REGOPTS='-check_registry $(DSOREGFILE)'
          ;;
       dnl A machine running Linux.
       linux*)
-         DPP_SETUP_GCC($dpp_opt_level)
+         if test "x$ICC" = "xyes" ; then
+            DPP_SETUP_ICC($dpp_opt_level)
+         else
+            DPP_SETUP_GCC($dpp_opt_level)
+         fi
          DYNAMICLIB_EXT='so'
          ;;
       dnl A machine running NetBSD.
       netbsd*)
-         DPP_SETUP_GCC($dpp_opt_level)
+         if test "x$ICC" = "xyes" ; then
+            DPP_SETUP_ICC($dpp_opt_level)
+         else
+            DPP_SETUP_GCC($dpp_opt_level)
+         fi
          DYNAMICLIB_EXT='so'
          ;;
       dnl A machine running OpenBSD.
       openbsd*)
-         DPP_SETUP_GCC($dpp_opt_level)
+         if test "x$ICC" = "xyes" ; then
+            DPP_SETUP_ICC($dpp_opt_level)
+         else
+            DPP_SETUP_GCC($dpp_opt_level)
+         fi
          DYNAMICLIB_EXT='so'
          ;;
       dnl DEC Alpha running Digital UNIX 4.0.
@@ -549,8 +567,6 @@ dnl                           compiler.  This is optional.
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([DPP_PROG_CC],
 [
-   AC_REQUIRE([DPP_SETUP_COMPILER])
-
    dpp_save_CFLAGS="$CFLAGS"
    CFLAGS="$CFLAGS $2 $ABI_FLAGS"
 
@@ -598,12 +614,15 @@ AC_DEFUN([DPP_PROG_CC],
 
    AC_PROG_CC
    AC_PROG_CPP
+   DPP_C_COMPILER_INTEL
 
    CFLAGS="$dpp_save_CFLAGS"
 
+   if test "x$ICC" = "xyes" ; then
+      CFLAGS_DYNLIB='-KPIC'
    dnl If GCC will be the C compiler, -fPIC is the position-independent code
    dnl generation option.
-   if test "x$GCC" = "xyes" ; then
+   elif test "x$GCC" = "xyes" ; then
       CFLAGS_DYNLIB='-fPIC'
    dnl Otherwise, get the platform-specific compiler PIC option hint value.
    else
@@ -775,8 +794,6 @@ dnl                           compiler.  This is optional.
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([DPP_PROG_CXX],
 [
-   AC_REQUIRE([DPP_SETUP_COMPILER])
-
    dpp_save_CXXFLAGS="$CXXFLAGS"
    CXXFLAGS="$CXXFLAGS $2 $ABI_FLAGS"
 
@@ -825,12 +842,15 @@ AC_DEFUN([DPP_PROG_CXX],
 
    AC_PROG_CXX
    AC_PROG_CXXCPP
+   DPP_CXX_COMPILER_INTEL
 
    CXXFLAGS="$dpp_save_CXXFLAGS"
 
+   if test "x$ICPC" = "xyes" ; then
+      CXXFLAGS_DYNLIB='-KPIC'
    dnl If GCC's g++ will be the C++ compiler, -fPIC is the
    dnl position-independent code generation option.
-   if test "x$GXX" = "xyes" ; then
+   elif test "x$GXX" = "xyes" ; then
       CXXFLAGS_DYNLIB='-fPIC'
    dnl Otherwise, get the platform-specific compiler PIC option hint value.
    else

@@ -1,5 +1,13 @@
 DATE       AUTHOR       CHANGE
 ---------- ------------ -------------------------------------------------------
+2004-12-02 patrickh     Improved support for the Intel C/C++ compiler.
+                        NEW VERSION: 1.99.20
+2004-12-02 patrickh     DPP_PROG_CC and DPP_PROG_CXX no longer call
+                        DPP_SETUP_COMPILER automatically.
+                        NEW VERSION: 1.99.19
+2004-11-07 patrickh     Added initial support for Objective-C in the makefile
+                        stubs.
+                        NEW VERSION: 1.99.19
 2004-11-05 patrickh     Updated, improved, and fixed DPP_CHECK_JNI.
                         NEW VERSION: 1.99.18
 2004-11-03 patrickh     Changed DPP_HAVE_OPENGL to use AC_PATH_XTRA instead of
