@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2004-09-24 patrickh Removed the flags parameter from the methods recvfrom() and
+                    sendto() in vpr::SocketDatagram.
+                    NEW VERSION: 0.39.0
 2004-09-08 dshipton Interface changes to vpr::ProfileManager.
                     NEW VERSION: 0.38.0
 2004-08-22 allenb   Added new feature the TSObjectProxy to allow direct request

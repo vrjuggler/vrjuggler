@@ -84,7 +84,6 @@ SocketDatagramImplBSD::SocketDatagramImplBSD(const SocketDatagramImplBSD& sock)
 
 vpr::ReturnStatus SocketDatagramImplBSD::recvfrom(void* msg,
                                                   const vpr::Uint32 length,
-                                                  const int flags,
                                                   vpr::InetAddr& from,
                                                   vpr::Uint32& bytes_read,
                                                   const vpr::Interval timeout)
@@ -106,7 +105,7 @@ vpr::ReturnStatus SocketDatagramImplBSD::recvfrom(void* msg,
       mBlockingFixed = true;
 
       fromlen = from.size();
-      bytes   = ::recvfrom(mHandle->mFdesc, msg, length, flags,
+      bytes   = ::recvfrom(mHandle->mFdesc, msg, length, 0,
                            (struct sockaddr*) &from.mAddr, &fromlen);
 
       if ( bytes == -1 )
@@ -141,7 +140,6 @@ vpr::ReturnStatus SocketDatagramImplBSD::recvfrom(void* msg,
 
 vpr::ReturnStatus SocketDatagramImplBSD::sendto(const void* msg,
                                                 const vpr::Uint32 length,
-                                                const int flags,
                                                 const vpr::InetAddr& to,
                                                 vpr::Uint32& bytes_sent,
                                                 const vpr::Interval timeout)
@@ -156,7 +154,7 @@ vpr::ReturnStatus SocketDatagramImplBSD::sendto(const void* msg,
 
       mBlockingFixed = true;
 
-      bytes = ::sendto(mHandle->mFdesc, msg, length, flags,
+      bytes = ::sendto(mHandle->mFdesc, msg, length, 0,
                        (struct sockaddr*) &to.mAddr, to.size());
 
       if ( bytes == -1 )

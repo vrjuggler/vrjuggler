@@ -469,7 +469,7 @@ void NonBlockingSocketTest::testSendUDP_receiver (void* arg)
 
    do
    {
-      status = recv_sock.recvfrom(data, mMessageLen, 0, from_addr, bytes_read);
+      status = recv_sock.recvfrom(data, mMessageLen, from_addr, bytes_read);
       vpr::System::usleep(10);
    } while ( status == vpr::ReturnStatus::WouldBlock );
 
@@ -516,7 +516,7 @@ void NonBlockingSocketTest::testSendUDP_sender (void* arg)
    assertTestThread(status.success() &&
                     "Failed to enable non-blocking for sender");
 
-   status = send_sock.sendto(mMessage, mMessageLen, 0, remote_addr, bytes);
+   status = send_sock.sendto(mMessage, mMessageLen, remote_addr, bytes);
    assertTestThread(status.success() && "Failed to send to receiver");
 
    status = send_sock.close();
