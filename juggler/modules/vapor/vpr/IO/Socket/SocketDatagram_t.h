@@ -75,6 +75,15 @@ public:
     }
 
     // ------------------------------------------------------------------------
+    // Copy constructor.
+    // ------------------------------------------------------------------------
+    SocketDatagram_t (const SocketDatagram_t& sock)
+        : m_socket_dgram_imp(sock.m_socket_dgram_imp)
+    {
+        m_socket_imp = &m_socket_dgram_imp;
+    }
+
+    // ------------------------------------------------------------------------
     //: Destructor.  This currently does nothing.
     //
     //! PRE: None.

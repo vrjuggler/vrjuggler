@@ -78,6 +78,15 @@ public:
     }
 
     // ------------------------------------------------------------------------
+    // Copy constructor.
+    // ------------------------------------------------------------------------
+    SocketStream_t (const SocketStream_t& sock)
+        : m_socket_stream_imp(sock.m_socket_stream_imp)
+    {
+        m_socket_imp = &m_socket_stream_imp;
+    }
+
+    // ------------------------------------------------------------------------
     //: Destructor.  This currently does nothing.
     //
     //! PRE: None.
