@@ -461,7 +461,7 @@ if test "$OS_TYPE" = "UNIX" ; then
 
     if test "x$PLATFORM" = "xDarwin" ; then
         if test "x$GADGET_USE_X11" = "xyes" ; then
-            DYLIB_DEPS_GL="$DYLIB_DEPS_GL $X_LDFLAGS -lGL -lGLU $osx_frameworks"
+            DYLIB_DEPS_GL="$DYLIB_DEPS_GL $X_LDFLAGS -lGLU -lGL $osx_frameworks"
         else
             DYLIB_DEPS_GL="$DYLIB_DEPS_GL $OGL_LDFLAGS $LIBOPENGL $osx_frameworks"
         fi
@@ -483,7 +483,7 @@ if test "$OS_TYPE" = "UNIX" ; then
     if test "x$OGL_LDFLAGS" != "x" ; then
         if test "x$PLATFORM" = "xDarwin" ; then
             if test "x$GADGET_USE_X11" = "xyes" ; then
-                APP_EXTRA_LIBS_GL="-lGL -lGLU $osx_frameworks"
+                APP_EXTRA_LIBS_GL="-lGLU -lGL $osx_frameworks"
             else
                 APP_EXTRA_LIBS_GL="$OGL_LDFLAGS $osx_frameworks"
             fi
