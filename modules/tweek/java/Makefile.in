@@ -57,10 +57,13 @@ JAVA_IDL_INCLUDES	= @JAVA_IDL_INCFLAG@$(top_srcdir)
 
 JDOM_JAR	= @JDOM_JAR@
 JAVA_ORB_JAR	= @JAVA_ORB_JAR@
-CLASSPATH	= $(JDOM_JAR)
 
+# The following check is done this way to prevent unwanted spaces from
+# appearing in $(CLASSPATH)
 ifneq ($(JAVA_ORB_JAR), none)
-CLASSPATH+=	$(JCPS)$(JAVA_ORB_JAR)
+CLASSPATH	= $(JDOM_JAR)$(JCPS)$(JAVA_ORB_JAR)
+else
+CLASSPATH	= $(JDOM_JAR)
 endif
 
 IDL_JAVA_FILES	= SubjectManager.java	\
