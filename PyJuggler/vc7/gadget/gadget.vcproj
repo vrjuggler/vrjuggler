@@ -236,6 +236,9 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc">
 			<File
+				RelativePath="..\..\src\container_conversions.h">
+			</File>
+			<File
 				RelativePath="..\..\src\gadgeteer-wrappers.h">
 			</File>
 		</Filter>

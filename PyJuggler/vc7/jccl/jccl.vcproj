@@ -21,7 +21,7 @@
 				AdditionalOptions="/Zm800"
 				Optimization="0"
 				ImproveFloatingPointConsistency="TRUE"
-				AdditionalIncludeDirectories="&quot;$(PYTHON_ROOT)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
+				AdditionalIncludeDirectories="..\..\src;&quot;$(PYTHON_ROOT)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_USRDLL;BOOST_PYTHON_DYNAMIC_LIB"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
@@ -83,7 +83,7 @@
 				InlineFunctionExpansion="2"
 				ImproveFloatingPointConsistency="TRUE"
 				OmitFramePointers="TRUE"
-				AdditionalIncludeDirectories="&quot;$(PYTHON_ROOT)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
+				AdditionalIncludeDirectories="..\..\src;&quot;$(PYTHON_ROOT)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_USRDLL;BOOST_PYTHON_DYNAMIC_LIB"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
@@ -163,6 +163,9 @@
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc">
+			<File
+				RelativePath="..\..\src\container_conversions.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
