@@ -249,9 +249,10 @@ ThreadPosix::spawn (BaseThreadFunctor* functorPtr,
 
 
 /**
- * Called by the spawn routine to start the user thread function
- * PRE: Called ONLY by a new thread
- * POST: Do any thread registration necessary
+ * Called by the spawn routine to start the user thread function.
+ *
+ * @pre Called ONLY by a new thread
+ * @post Do any thread registration necessary
  *       Call the user thread functor
  *
  * @param null_param
