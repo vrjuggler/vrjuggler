@@ -66,8 +66,8 @@ public:
    }
 
    /**
-    * Set the type of this event. This is needed because while using an
-    * Object Reader to de-serialize an Event we can not set the type 
+    * Sets the type of this event.  This is needed because, while using an
+    * object reader to de-serialize an Event object, we cannot set the type 
     * during construction. We must set the event type after creating
     * this event using the EventFactory. This could later be removed if
     * the EventFactory is chaged to take care of this.
@@ -89,8 +89,10 @@ public:
    {
    }
 
+   /** Serializes this object. */
    virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
 
+   /** De-serializes this object. */
    virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
 
 protected:

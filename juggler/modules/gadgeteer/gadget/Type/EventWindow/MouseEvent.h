@@ -100,7 +100,7 @@ public:
    }
 
    /**
-    * Returns the X corrdinate of the mouse pointer relative to the window.
+    * Returns the X coordinate of the mouse pointer relative to the window.
     */
    const int& getX() const
    {
@@ -108,7 +108,7 @@ public:
    }
 
    /**
-    * Returns the Y corrdinate of the mouse pointer relative to the window.
+    * Returns the Y coordinate of the mouse pointer relative to the window.
     */
    const int& getY() const
    {
@@ -116,7 +116,7 @@ public:
    }
 
    /**
-    * Returns the X corrdinate of the mouse pointer relative to the root
+    * Returns the X coordinate of the mouse pointer relative to the root
     * window (i.e., the desktop).
     */
    const int& getGlobalX() const
@@ -125,7 +125,7 @@ public:
    }
 
    /**
-    * Returns the Y corrdinate of the mouse pointer relative to the root
+    * Returns the Y coordinate of the mouse pointer relative to the root
     * window (i.e., the desktop).
     */
    const int& getGlobalY() const

@@ -56,17 +56,17 @@ class Input;
 class DeviceFactory;
 
 /**
- * The Input Manager holds an manages all Gadgeteer Input devices.
+ * The Input Manager holds and manages all Gadgeteer Input devices.
  *
- * The Input Manager, handles all the details behind organizing the input
+ * The Input Manager handles all the details behind organizing the input
  * devices in the library.  It provides an API for adding devices by their
  * JCCL config element and deleting them by their element (or just their string
  * name).
  *
  * Proxies are used to abstract away from the devices so any type and number
  * of devices may be accessed in the same way.  These proxies are also
- * set up by config elements and should be accessed by number, rather than name
- * (for speed).
+ * set up by config elements and should be accessed by number, rather than by
+ * name (for speed reasons).
  */
 class GADGET_CLASS_API InputManager : public jccl::ConfigElementHandler
 {
@@ -109,16 +109,16 @@ public:
     * Removes the element from the current configuration.
     * @pre configCanHandle(element) == true
     * @post (element is proxy) ==> (returns == false)<br>
-    *       (element is device) ==> (devices is removed && proxies are stupified)<br>
-    *       (element is proxyAlias) ==> (proxyAlias is removed && devInterfaces.refreshAll())
+    *       (element is device) ==> (device is removed && proxies are stupified)<br>
+    *       (element is proxy_alias) ==> (proxy_alias is removed && devInterfaces.refreshAll())
     * @return success
     */
    bool configRemove(jccl::ConfigElementPtr element);
 
    /**
-    * Can the handler handle the given element?
+    * Can we handle the given element?
     *
-    * @return true if the handler can handle it, false otherwise.
+    * @return true is returned if we can handle it, false otherwise.
     */
    bool configCanHandle(jccl::ConfigElementPtr element);
 
@@ -143,11 +143,11 @@ private:
     */
    bool removeDevice(jccl::ConfigElementPtr element);
 
-
-   // ------------------------------- //
-   //        DEVICE API               //
-   // ------------------------------- //
 public:
+   /**
+    * @name Device API.
+    */
+   //@{
    /**
     * Updates the data in all the devices.
     * This calls updateData() on all the devices in the device table.
@@ -160,9 +160,8 @@ public:
     */
    void updateAllProxies();
 
-public:
    /**
-    * Returns an Input pointer to a named device.
+    * Returns a pointer to a gadget::Input object that is the named device.
     *
     * @return NULL if the device is not found.
     */
@@ -171,7 +170,7 @@ public:
    DeviceFactory* getDeviceFactory();
 
    /**
-    * Adds a device to InputManager.
+    * Adds the given device to the Input Manager.
     * Adds the devPtr to the device table.  devPtr should not already be in
     * the array.
     *
@@ -182,7 +181,7 @@ public:
    bool addDevice(Input* devPtr);
 
    /**
-    * Adds a remote device to InputManager.
+    * Adds the given remote device to the Input Manager.
     * Adds the devPtr to the device table.  devPtr should not already be in
     * the array.
     *
@@ -192,37 +191,46 @@ public:
     */
    bool addRemoteDevice(Input* devPtr, const std::string& device_name);
 
-public:
    /**
-    * Removes a device from the InputManager.
-    * Remove the named device from the device table.
+    * Removes the named device from the device table.
     *
-    * @post mDevTable[devNum]' = NULL
+    * @post mDevTable[devName]' = NULL
+    *
+    * @param devName The name of the device to remove.
     *
     * @return true on success.
     */
-   bool removeDevice(const std::string& mInstName);
+   bool removeDevice(const std::string& devName);
 
    /**
-    * Remove a device given a pointer to the device.
-    * Internally this just uses removeDevice(dev_name).
+    * Removes the device identified by the given gadget::Input pointer.
+    * Internally, this just uses removeDevice(const std::string&).
+    *
+    * @param devPtr The device object to remove.
     */
    bool removeDevice(const Input* devPtr);
+   //@}
 
-   // ------------------------------- //
-   //          PROXIES API            //
-   // ------------------------------- //
 public:
 
    /**
-    * Adds a proxy to the proxy table.
-    * @param proxy The proxy to add.  It is added with name: proxy->getName().
+    * @name Proxy API.
+    */
+   //@{
+   /**
+    * Adds the given gadget::Proxy object to the proxy table.
+    *
+    * @param proxy The proxy to add.  It is added using the name returned
+    *              by calling proxy->getName().
+    *
     * @return true if the proxy was added correctly.
     */
    bool addProxy(Proxy* proxy);
 
    /**
-    * Gets a proxy for the given proxy name (or alias).
+    * Gets a proxy having the given name (or alias).
+    *
+    * @param proxyName A string identifier that is a proxy name or alias.
     *
     * @return NULL if the proxy was not found.
     */
@@ -233,13 +241,14 @@ public:
     * point.
     */
    void refreshAllProxies();
+   //@}
 
 protected:
    bool removeProxy(const std::string& proxyName);
    bool removeProxy(jccl::ConfigElementPtr element);
 
 public:
-   /** Get the input logger connected to the system. */
+   /** Gets the input logger connected to the Input Manager. */
    gadget::InputLoggerPtr getInputLogger();
 
    /* friends */
