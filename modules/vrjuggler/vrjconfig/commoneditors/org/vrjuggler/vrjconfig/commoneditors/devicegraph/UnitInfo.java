@@ -89,6 +89,12 @@ public class UnitInfo
       return result;
    }
 
+   public String toString()
+   {
+      return "UnitInfo@" + Integer.toHexString(hashCode()) + ": [Type=" +
+             this.unitType + ",Number=" + this.unitNumber + "]";
+   }
+
    private Integer unitType   = null;
    private Integer unitNumber = null;
 }
