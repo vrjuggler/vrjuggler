@@ -34,13 +34,12 @@ public:
    }
 
 
-   void ReadTests () {
-      std::string file_path(TESTFILES_PATH);
-
-      jccl::ElementFactory::instance()->loadDefs(file_path + "EnumerationsTest");
+   void ReadTests()
+   {
+      const std::string file_path(TESTFILES_PATH);
 
       jccl::Configuration configuration;
-      configuration.load(file_path + "EnumerationsTest/enumerations_test.jconf");
+      configuration.load(file_path + "cfg/enumerations_test.jconf");
 
       jccl::ConfigElementPtr ch = configuration.get("Motion Star master");
       CPPUNIT_ASSERT(ch.get() != NULL);
@@ -53,10 +52,7 @@ public:
       
       int format = ch->getProperty<int>("data_format");
       CPPUNIT_ASSERT(format == 4);
-      
-    }
-
-        
+   }
 
    static CppUnit::Test* suite()
    {
