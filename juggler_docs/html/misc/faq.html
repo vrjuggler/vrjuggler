@@ -56,6 +56,8 @@ F.A.Q.</H2>
     <li>
 	<a href="#applications"> VR applications</a>
       <ul>
+        <LI><A HREF="#sproc_pthread">When I run on IRIX, the application hangs
+            right after printing ``New application set''</A></LI>
         <LI><A HREF="#head_wand">Why is there a blue sphere and a green cone
         in my way when I run in simulator mode?</A></LI>
         <li><a href="#cavelib2dxform"> 2D Projections </a>
@@ -304,6 +306,28 @@ F.A.Q.</H2>
 <HR><!-- ----------------------------------------- -->
 
 <h3><a name="applications">VR applications</a></h3>
+
+  <DL>
+    <DT><A NAME="sproc_pthread"><B>When I run on IRIX, the application hangs
+        right after printing ``New application set''</B></A>
+      <DD>
+        This most often happens when using the IRIX SPROC version of VR
+        Juggler and linking the POSIX thread library (libpthread) into
+        the application.  When you compile your VR Juggler application,
+        make sure not to use <TT>-lpthread</TT>.  If your application
+        requires POSIX threads, use the pthread version of VR Juggler
+        instead.
+
+        <P>
+        On IRIX, there are two ways to write multithreaded softare, and VR
+        Juggler supports both.  The methods are IRIX SPROC and POSIX threads.
+        These two systems are incompatible, and a SPROC application will
+        hang the first time it tries to createa thread if the POSIX thread
+        library is linked.  Removing <TT>-lpthread</TT> fixes the problem.
+        </P>
+
+        <P> </P>
+      </DD>
 
   <DL>
     <DT><A NAME="head_wand"><B>Why is there a blue sphere and a green cone
