@@ -531,6 +531,7 @@ BOOL rs232SetRTSState(COMM_PORT *port, DWORD value)
 *
 ************************************************************************/
 
+#include <unistd.h>
 #include <sys/types.h>
 #include <signal.h>
 #include <sys/ioctl.h>
