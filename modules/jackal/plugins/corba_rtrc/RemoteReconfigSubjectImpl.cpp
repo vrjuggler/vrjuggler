@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <jccl/jcclConfig.h>
+#include <jccl/Plugins/PluginConfig.h>
 
 #include <string>
 #include <list>
