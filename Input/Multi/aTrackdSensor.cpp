@@ -1,5 +1,6 @@
-#include <Input/Multi/aTrackdSensor.h>
 #include <assert.h>
+#include <Math/vjQuat.h>
+#include <Input/Multi/aTrackdSensor.h>
 
 int aTrackdSensor::numSensors()
 {
@@ -17,9 +18,16 @@ vjMatrix aTrackdSensor::getSensorPos(int sensorNum)
    CAVE_SENSOR_ST* sensor_val;
    sensor_val = trackd_sensor(mMem, sensorNum);
 
-   // XXX: This is untested and is probably wrong. :(
+   vjQuat rx, ry, rz, rt;
+
+   rx.makeRot(VJ_DEG2RAD(sensor_val->elev), 1.0, 0.0, 0.0);
+   ry.makeRot(VJ_DEG2RAD(sensor_val->azim), 0.0, 1.0, 0.0);
+   rz.makeRot(VJ_DEG2RAD(sensor_val->roll), 0.0, 0.0, 1.0);
+
+   rt = ry * rx * rz;
+
    vjMatrix ret_val;
-   ret_val.makeXYZEuler(sensor_val->elev, sensor_val->azim, sensor_val->roll);
+   ret_val.makeQuaternion(rt);
    ret_val.setTrans(sensor_val->x, sensor_val->y, sensor_val->z);
 
    return ret_val;
