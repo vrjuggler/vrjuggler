@@ -78,10 +78,8 @@ int main( int argc, char* argv[] )
    // Set application that the kernel will run now.
    kernel->setApplication( application );         
 
-   // spin wildly until dizzy, then fall over. (press ctrl-c to exit)
-   std::cout << "Press CTRL-C to exit\n" << std::flush;
-   while (1)
-   {
-      vpr::System::usleep( 100000 );
-   }
+   std::cout << "Press ESC to exit\n" << std::flush;
+   kernel->waitForKernelStop();
+
+   return 0;
 }

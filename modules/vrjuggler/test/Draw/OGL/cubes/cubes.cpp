@@ -40,7 +40,7 @@
       // --- Lib Stuff --- //
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Display/Projection.h>
-#include <vpr/System.h>
+
 
 int main(int argc, char* argv[])
 {
@@ -65,8 +65,10 @@ int main(int argc, char* argv[])
    }
    
    // Load any config files specified on the command line
-   for(int i=1;i<argc;i++)
+   for( int i = 1; i < argc; ++i )
+   {
       kernel->loadConfigFile(argv[i]);
+   }
 
    kernel->start();
       //- Kernel load global config  -- Environment variable
@@ -75,8 +77,6 @@ int main(int argc, char* argv[])
 
    kernel->setApplication(application);         // Set application
 
-   while(1)
-   {
-       vpr::System::usleep (250000);
-   }
+   kernel->waitForKernelStop();
+   return 0;
 }

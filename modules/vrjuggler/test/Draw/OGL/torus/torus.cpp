@@ -68,8 +68,10 @@ int main(int argc, char* argv[])
    }
    
    // Load any config files specified on the command line
-   for(int i=1;i<argc;i++)
+   for( int i = 1; i < argc; ++i )
+   {
       kernel->loadConfigFile(argv[i]);
+   }
 
    kernel->start();
       //- Kernel load global config  -- Environment variable
@@ -87,5 +89,5 @@ int main(int argc, char* argv[])
 
    kernel->waitForKernelStop();
 
-   return 1;
+   return 0;
 }
