@@ -38,8 +38,6 @@
 #include <vpr/md/POSIX/IO/Port/SerialPortImplTermios.h>
 
 
-extern int errno;
-
 namespace vpr {
 
 // ============================================================================

@@ -48,8 +48,6 @@
 #include <vpr/md/POSIX/IO/FileHandleImplUNIX.h>
 
 
-extern int errno;
-
 namespace vpr {
 
 // ============================================================================
