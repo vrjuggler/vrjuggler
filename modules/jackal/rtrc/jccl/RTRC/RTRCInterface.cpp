@@ -74,6 +74,16 @@ void RTRCInterface::init()
 
 void RTRCInterface::enable()
 {
+   //Make sure the corba manager has been initialized
+   if ((mInterface == NULL) || (mCorbaManager == NULL))
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "RTRCInterface::enable: Cannot enable interface until it has been initialized\n" 
+         << vprDEBUG_FLUSH ;
+
+      return;
+   }
+
    //Register the subject with the corba manager
    try
    {
@@ -102,6 +112,16 @@ void RTRCInterface::enable()
 
 void RTRCInterface::disable()
 {
+   //Make sure the corba manager has been initialized
+   if ((mInterface == NULL) || (mCorbaManager == NULL))
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "RTRCInterface::disable: Cannot disable interface until it has been initialized\n" 
+         << vprDEBUG_FLUSH ;
+
+      return;
+   }
+
    //Unregister the subject (note that observers must handle this disconnection)
    vpr::ReturnStatus status;
 
