@@ -84,30 +84,39 @@ public: // -- Query functions --- //
 public:   // ----- PENDING LIST ----- //
 
 
-   //: Add a pending entry
-   //! PRE: pending must NOT be locked
-   //! POST: A copy of the pendingChunk is placed on the pending list
-   //! concurrency: gaurded
-   void addPending(PendingChunk& pendingChunk);
+    /** Marks pending list as "not stale".
+     *  Call this method when something happens that might allow 
+     *  items on a stale pending list to be processed (e.g. if a
+     *  new Manager is added to the system).
+     */
+    void ConfigManager::refreshPendingList ();
 
 
-   // Add the given chunk db to the pending list as adds
-   //! PRE: The pending list can NOT be locked
-   //! POST: pendinglist = old(pendinglist) += db
-   //! NOTE: The entries are copied
+    /** Add the ConfigChunks in db to pending list as adds.
+     *  The pending list must not be (already) locked.
+     *  ConfigChunks in db are copied.
+     */
    void addPendingAdds (ConfigChunkDB* db);
 
 
-   //: Add the given chunks to the db as pending removes
-   //! PRE: The pending list can NOT be locked
-   //! POST: pendinglist = old(pendinglist) += db
-   //! NOTE: The entries are copied
+    /** Add the ConfigChunks in db to pending list as removes.
+     *  The pending list must not be (already) locked.
+     *  ConfigChunks in db are copied.
+     */
    void addPendingRemoves (ConfigChunkDB* db);
 
 
-    //: Erase an item from the list
-    //! PRE: Pending list must be locked && item must be in list
-    //! POST: list = old(list).erase(item) && item is invalid
+    /** Add an entry to the pending list.
+     *  The pending list must not be locked.
+     *  A copy of the pendingChunk is placed on the pending list.
+     */
+   void addPending(PendingChunk& pendingChunk);
+
+
+    /** Erases an item from the pending list.
+     *  The pending list must be locked && item must be in list.
+     *  Item is invalid after this operation.
+     */
     void removePending(std::list<PendingChunk>::iterator item);
 
 
@@ -249,7 +258,6 @@ public:
 
 public:
 
-    virtual void setJackalServer (JackalServer* js);
     virtual void addConnect (Connect *c);
     virtual void removeConnect (Connect* c);
 
@@ -271,7 +279,6 @@ private:
     int                      mPendingCheckCount;  //: How many pending checks since last change to pending
     int                      mLastPendingSize;    //: The size of pending at last check
 
-    JackalServer*            jackal_server;
     XMLConfigCommunicator*   config_communicator;
 
 
