@@ -33,6 +33,8 @@
 #ifndef _JCCL_REMOTE_RECONFIG_SUBJECT_IMPL_H_
 #define _JCCL_REMOTE_RECONFIG_SUBJECT_IMPL_H_
 
+#include <jccl/Plugins/PluginConfig.h>
+
 #include <tweek/CORBA/SubjectImpl.h>
 
 #include <RemoteReconfigSubject.h>
