@@ -374,11 +374,11 @@ if test "x$SUBSYSTEM" = "xPOSIX" ; then
         # Define the default thread scope depending on the platform.  On IRIX,
         # only process scope is avaiable without special configuration options.
         # Other systems may support system scope.
-        if test "$PLATFORM" = "IRIX" ; then
-            AC_DEFINE(VPR_THREAD_SCOPE, PTHREAD_SCOPE_PROCESS)
-        else
+#        if test "$PLATFORM" = "IRIX" ; then
+#            AC_DEFINE(VPR_THREAD_SCOPE, PTHREAD_SCOPE_PROCESS)
+#        else
             AC_DEFINE(VPR_THREAD_SCOPE, PTHREAD_SCOPE_SYSTEM)
-        fi
+#        fi
 
         USE_PTHREADS='yes'
         DPP_GET_POSIX_SEMAPHORE_LIB( ,
