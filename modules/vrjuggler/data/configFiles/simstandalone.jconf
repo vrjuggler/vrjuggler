@@ -119,9 +119,9 @@
                <key>KEY_1</key>
             </key_modifier_pair>
          </key_pair>
-         <initial_position>0.5</initial_position>
-         <initial_position>-1.0</initial_position>
-         <initial_position>-5.0</initial_position>
+         <initial_position>0.1524</initial_position>
+         <initial_position>-0.3048</initial_position>
+         <initial_position>-1.524</initial_position>
          <initial_rotation>0.0</initial_rotation>
          <initial_rotation>0.0</initial_rotation>
          <initial_rotation>0.0</initial_rotation>
@@ -223,7 +223,7 @@
                <key>KEY_9</key>
             </key_modifier_pair>
          </key_pair>
-         <initial_position>-4.0</initial_position>
+         <initial_position>-1.2192</initial_position>
          <initial_position>6.0</initial_position>
          <initial_position>8.0</initial_position>
          <initial_rotation>0.0</initial_rotation>
@@ -368,12 +368,6 @@
       <display_system name="Pipe Setup" version="1">
          <number_of_pipes>1</number_of_pipes>
          <x11_pipes>-1</x11_pipes>
-         <x11_pipes>:0.1</x11_pipes>
-         <x11_pipes>:0.1</x11_pipes>
-         <x11_pipes>:0.0</x11_pipes>
-         <x11_pipes>:0.0</x11_pipes>
-         <x11_pipes>:0.0</x11_pipes>
-         <x11_pipes>:0.0</x11_pipes>
          <x11_pipes>:0.0</x11_pipes>
       </display_system>
       <user name="User" version="1">
