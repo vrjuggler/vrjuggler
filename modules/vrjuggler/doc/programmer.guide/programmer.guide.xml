@@ -751,8 +751,8 @@ int main(int argc, char* argv[])
             <section>
               <title>Timing</title>
 
-              <para>This method is called immediately before triggering
-              rendering of the current frame.</para>
+              <para>This method is called before triggering rendering of the
+              current frame.</para>
             </section>
 
             <section>
@@ -761,6 +761,40 @@ int main(int argc, char* argv[])
               <para>In general, this method should be reserved for
               <quote>last-millisecond</quote> data updates in response to
               device input (latency-critical code).</para>
+            </section>
+          </section>
+
+          <section>
+            <title><methodname>vrj::App::latePreFrame()</methodname></title>
+
+            <para>The <methodname>latePreFrame()</methodname> method is called
+            after <classname>preFrame()</classname> and after shared
+            application-specific data is synchronized among the cluster nodes
+            (see <xref linkend="section.cluster.apps" /> for more details) but
+            before the scene is rendered. When sharing application-specific
+            data in a cluster configuration, this is when the reader nodes
+            should perform updates based on the most recently received copy of
+            the shared application data. The writer node must have written to
+            the shared application data in <methodname>preFrame()</methodname>
+            to minimize the latency of the data.</para>
+
+            <section>
+              <title>Timing</title>
+
+              <para>This method is called after application-specific data is
+              sychronized among the cluster nodes but before triggering
+              rendering of the current frame.</para>
+            </section>
+
+            <section>
+              <title>Uses</title>
+
+              <para>When using shared application-specific data in a cluster
+              configuration, the nodes that read from the shared data (those
+              where
+              <methodname>cluster::UserData&lt;T&gt;::isLocal()</methodname>
+              returns false) should perform state updates based on the freshly
+              received update to the shared data.</para>
             </section>
           </section>
 
@@ -5493,6 +5527,670 @@ public:
         </section>
       </section>
 
+      <section id="section.cluster.apps">
+        <title>Cluster Application Programming</title>
+
+        <indexterm zone="section.cluster.apps">
+          <primary>application programming</primary>
+
+          <secondary>clustering</secondary>
+        </indexterm>
+
+        <para>Traditionally, multi-screen immersive systems have relied upon
+        dedicated high-end shared memory graphics workstations or
+        supercomputers to generate interactive virtual environments. These
+        multi-screen immersive systems typically require one or two video
+        outputs for each screen and simultaneously utilize several interaction
+        devices. In recent years this trend of almost exclusively using
+        high-end systems has started to change as commodity hardware has
+        become a viable alternative to high-end systems.</para>
+
+        <para>Current technologies have empowered PC-based systems with
+        high-quality graphics hardware, significant amount of memory and
+        computing power, as well as support for many external devices. Their
+        application to virtual reality applications is motivated by the
+        dramatic cost decrease they represent and by the wide range of options
+        and availability. To drive a multi-screen immersive environment we
+        need multiple commodity systems working as a single unit, that is, a
+        tightly synchronized <indexterm>
+            <primary>cluster</primary>
+          </indexterm>cluster. The challenge is that, although the base
+        technology is standard off-the-shelf technology, there is a lack of
+        software for weaving together the cluster into a platform that
+        supports the creation of virtual environments. Furthermore, there is
+        an even greater lack of software that can allow existing virtual
+        environment designed for high-end system to transparently migrate to a
+        cluster.</para>
+
+        <para>In this section, we review the clustering capabilities of VR
+        Juggler 2.0. The current implementation of clustering in VR Juggler is
+        the result of the hard work of many people and of several design and
+        implementation iterations. It is the most important new feature in VR
+        Juggler 2.0, and it is also the most complex new feature internally.
+        At the level of the application object, the clustering infrastructure
+        is largely hidden. Those pieces that are exposed have been designed to
+        be easy to use and to work in non-cluster configurations. This aids in
+        application portability between VR system configurations.</para>
+
+        <section>
+          <title>Shared Input Data</title>
+
+          <para>One approach to implementing clustering for interactive
+          graphics applications is to share all data received from input
+          devices. This is based on an assumption that the interaction with
+          the computer graphics will occur through input devices such as 6DOF
+          trackers, pointing devices, etc. Using this approach, a distinct
+          copy of the VR application is run on each cluster node, but they all
+          see the same input data. Since changes to the scene are based on
+          information from the input devices, all the nodes will make the same
+          state changes each frame and therefore remain synchronized.</para>
+
+          <para>This capability is implemented through the Gadgeteer Remote
+          Input Manager and the <literal>RIMPlugin</literal> used by the
+          Cluster Manager. The basic goal of these components is to provide a
+          distributed shared memory system for VR input device data. Through
+          shared input data, applications can migrate transparently between
+          shared memory VR systems and PC cluster VR systems.</para>
+
+          <para>Shared input data is the easiest VR Juggler clustering feature
+          that can be utilized by application object programmers. In simple
+          cases, nothing about an application will have to change to take
+          advantage of shared input data because the details are hidden within
+          the VR Juggler configuration. The Cluster Manager simply needs to be
+          configured to load the <literal>RIMPlugin</literal> and the Start
+          Barrier Plug-in (<literal>StartBarrierPlugin</literal>) to enable
+          applications to take advantage of shared input data.</para>
+        </section>
+
+        <section id="section.cluster.UserData">
+          <title>Application-Specific Shared Data</title>
+
+          <para>When input data sharing is not sufficient to enable a VR
+          Juggler application to run on a cluster, the next option is to use
+          application-specific shared data. Using this option, VR application
+          developers can easily exchange any type of data across a cluster of
+          machines. For example, we might have a GUI running on a hand-held
+          device that interacts with the VR application to control it. We
+          cannot expect this GUI to connect to all nodes in the cluster.
+          Instead, the GUI connects to a single node that accepts the commands
+          from the GUI and then relays them to the rest of the cluster nodes
+          using application-specific shared data.</para>
+
+          <para>Application-specific shared data is implemented through the
+          generic (templated) container type
+          <classname>cluster::UserData&lt;T&gt;</classname><indexterm>
+              <primary>cluster::UserData&lt;T&gt;</primary>
+            </indexterm><indexterm>
+              <primary>classes</primary>
+
+              <secondary>cluster::UserData&lt;T&gt;</secondary>
+            </indexterm> and the Application Data Manager plug-in
+          (<literal>ApplicationDataManager</literal> in the Cluster Manager
+          config element plug-in list). As is typically the case with generic
+          containers, any sort of data can be stored and therefore shared. The
+          only caveat is that the contained type must have the following two
+          methods:</para>
+
+          <orderedlist>
+            <listitem>
+              <para><methodsynopsis>
+                  <type>vpr::ReturnStatus</type>
+
+                  <methodname>writeObject</methodname>
+
+                  <methodparam>
+                    <type>vpr::ObjectWriter*</type>
+
+                    <parameter>writer</parameter>
+                  </methodparam>
+                </methodsynopsis></para>
+            </listitem>
+
+            <listitem>
+              <para><methodsynopsis>
+                  <type>vpr::ReturnStatus</type>
+
+                  <methodname>readObject</methodname>
+
+                  <methodparam>
+                    <type>vpr::ObjectReader*</type>
+
+                    <parameter>reader</parameter>
+                  </methodparam>
+                </methodsynopsis></para>
+            </listitem>
+          </orderedlist>
+
+          <para>Respectively, these two methods are used for serializing and
+          de-serializing shared data types. The simplest way to achieve this
+          is to create a data structure that is a subclass of the abstract
+          type <classname>vpr::SerializableObject</classname><indexterm>
+              <primary>vpr::SerializableObject</primary>
+            </indexterm><indexterm>
+              <primary>classes</primary>
+
+              <secondary>vpr::SerializableObject</secondary>
+            </indexterm> and overriding its pure virtual
+          <methodname>writeObject()</methodname> and
+          <methodname>readObject()</methodname> methods.</para>
+
+          <para>Deriving from <classname>vpr::SerializableObject</classname>
+          is not viable in all cases, however. If the data that must be shared
+          is of a type defined in a third-party library, it cannot be modified
+          to derive from <classname>vpr::SerializableObject</classname>. In
+          that case, the type
+          <classname>vpr::SerializableObjectMixin&lt;T&gt;</classname><indexterm>
+              <primary>vpr::SerializableObjectMixin&lt;T&gt;</primary>
+            </indexterm><indexterm>
+              <primary>classes</primary>
+
+              <secondary>vpr::SerializableObjectMixin&lt;T&gt;</secondary>
+            </indexterm> can be used. The methods
+          <classname>vpr::SerializableObjectMixin&lt;T&gt;::writeObject()</classname>
+          and
+          <classname>vpr::SerializableObjectMixin&lt;T&gt;::readObject()</classname>
+          must be specialized for the desired type <type>T</type>.</para>
+
+          <para>In either case, the end result is a means to serialize the
+          data to be shared across the cluster, and application object
+          programmers will implement methods named
+          <methodname>writeObject()</methodname> and
+          <methodname>readObject()</methodname>. When
+          <methodname>writeObject()</methodname> is invoked, it is passed a
+          pointer to a <classname>vpr::ObjectWriter</classname><indexterm>
+              <primary>vpr::ObjectWriter</primary>
+            </indexterm><indexterm>
+              <primary>classes</primary>
+
+              <secondary>vpr::ObjectWriter</secondary>
+            </indexterm> object. An object writer is a simple wrapper around
+          an expandable block of memory. Each write operation appends some
+          number of bytes to the memory block based on the size of the data
+          written. The type <classname>vpr::ObjectWriter</classname> provides
+          methods for writing all the basic C++ data types (<type>int</type>,
+          <type>float</type>, <type>bool</type>, <type>char</type>, etc.),
+          though they are named based on the cross-platform type identifiers
+          provided by the VR Juggler Portable Runtime
+          (<type>vpr::Int32</type>, <type>vpr::Uint8</type>, etc.). Byte
+          ordering (endian) issues are handled internally by the object
+          writer. The implementation of <methodname>writeObject()</methodname>
+          for any shared data type simply copies the data members of the
+          shared data structure into the object writer.</para>
+
+          <para>Inversely, the implementation of
+          <methodname>readObject()</methodname> reads data from an object
+          reader (an instance of
+          <classname>vpr::ObjectReader</classname><indexterm>
+              <primary>vpr::ObjectReader</primary>
+            </indexterm><indexterm>
+              <primary>classes</primary>
+
+              <secondary>vpr::ObjectReader</secondary>
+            </indexterm>) into the local copy of the data structure. The
+          object reader contains a fixed-size block of memory and a pointer to
+          the current location in that memory block. Each read operation moves
+          the pointer some number of bytes in the memory block based on the
+          size of the data read.</para>
+
+          <important>
+            <para>Due to the symmetric nature of
+            <methodname>writeObject()</methodname> and
+            <methodname>readObject()</methodname>, the reading and writing of
+            data must occur in the same order. That is, the implementation of
+            <methodname>writeObject()</methodname> will write the shared data
+            in some order, and <methodname>readObject()</methodname> must read
+            the shared data back out in the same order.</para>
+          </important>
+
+          <para>We now present two examples of using the serializable object
+          concept. The first demonstrates the case when a new data structure
+          can be created; the second is the case when a third-party type must
+          be made serializable. When we make a new data structure, it is quite
+          easy to enable serialization. Consider the basic type shown in <xref
+          linkend="example.declare.serializable.type" />. It derives from
+          <classname>vpr::SerializableObject</classname> and overrides
+          <methodname>writeObject()</methodname> and
+          <methodname>readObject()</methodname> just as it must. It has three
+          data members of different types that define the state of an instance
+          of our type. The serialization and de-serialization implementation,
+          which is quite straightforward, is shown in <xref
+          linkend="example.implement.serialization" />.</para>
+
+          <example id="example.declare.serializable.type">
+            <title>Declaration of a Serializable Type</title>
+
+            <programlisting>#include &lt;vpr/IO/SerializableObject.h&gt;
+
+class MyType : public vpr::SerializableObject
+{
+public:
+   vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
+   vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
+   // Other public methods ...
+
+private:
+   unsigned int mIntData;
+   char         mByteData;
+   float        mFloatData;
+};</programlisting>
+          </example>
+
+          <example id="example.implement.serialization">
+            <title>Serializing an Application-Specific Type</title>
+
+            <programlisting>vpr::ReturnStatus MyType::writeObject(vpr::ObjectWriter* writer)
+{
+   writer-&gt;writeUint32(mIntData);
+   writer-&gt;writeInt8(mByteData);
+   writer-&gt;writeFloat(mFloatData);
+}
+
+vpr::ReturnStatus MyType::readObject(vpr::ObjectReader* reader)
+{
+   mIntData   = reader-&gt;readUint32();
+   mByteData  = reader-&gt;readInt8();
+   mFloatData = reader-&gt;readFloat();
+}</programlisting>
+          </example>
+
+          <para>Now we consider the case when we need to serialize a
+          third-party type. First, let us assume that we have a type, called
+          <classname>SomeType</classname>, defined in a header file from a
+          third-party C++ library. This is shown in <xref
+          linkend="example.type.SomeData" />. The type has three accessor
+          methods for reading its data and three for writing. We can then
+          specialize the methods of
+          <classname>vpr::SerializableObjectMixin&lt;T&gt;</classname> as
+          shown in <xref linkend="example.serialize.SomeData" />.</para>
+
+          <example id="example.type.SomeData">
+            <title>Sample Third-Party Type</title>
+
+            <programlisting>class SomeType
+{
+public:
+   unsigned int getIntData();
+   void setIntData(unsigned int v);
+
+   char getByteData();
+   void setByteData(char v);
+
+   float getFloatDat();
+   void setFloatData(float v);
+
+private:
+   // Private data ...
+};</programlisting>
+          </example>
+
+          <example id="example.serialize.SomeData">
+            <title>Serializing a Third-Party Type Using
+            <classname>vpr::SerializableObjectMixin&lt;T&gt;</classname></title>
+
+            <programlisting>#include &lt;vpr/IO/SerializableObject.h&gt;
+
+vpr::ReturnStatus
+vpr::SerializableObjectMixin&lt;SomeType&gt;::
+   writeObject(vpr::ObjectWriter* writer)
+{
+   writer-&gt;writeUint32(getIntData());
+   writer-&gt;writeInt8(getByteData());
+   write-&gt;writeFloat(getFloatData());
+   return vpr::ReturnStatus::Success;
+}
+
+vpr::ReturnStatus
+vpr::SerializableObjectMixin&lt;SomeType&gt;::
+   readObject(vpr::ObjectReader* reader)
+{
+   setIntData(reader-&gt;readUint32());
+   setByteData(reader-&gt;readInt8());
+   setFloatData(reader-&gt;readFloat());
+   return vpr::ReturnStatus::Success;
+}</programlisting>
+          </example>
+
+          <para>The magic of
+          <classname>vpr::SerializableObjectMixin&lt;T&gt;</classname> allows
+          the specialized methods to behave as member functions in
+          <classname>SomeType</classname>. This means that the specialized
+          members have easy access to all public and protected members of
+          <classname>SomeType</classname>.</para>
+
+          <para>Now that we have data serialization out of the way, we can
+          turn our attention to the use of
+          <classname>cluster::UserData&lt;T&gt;</classname>, the special type
+          that automates application-specific data sharing. For each type of
+          shared data, the application object will have at least one instance
+          of <classname>cluster::UserData&lt;T&gt;</classname>. Example
+          instantiations of <classname>cluster::UserData&lt;T&gt;</classname>
+          are shown in <xref
+          linkend="example.using.cluster.UserData" />.</para>
+
+          <example id="example.using.cluster.UserData">
+            <title>Declaring Instances of
+            <classname>cluster::UserData&lt;T&gt;</classname></title>
+
+            <programlisting>#include &lt;vrj/Draw/OGL/GlApp.h&gt;
+#include &lt;plugins/ApplicationDataManager/UserData.h&gt;
+#include &lt;SomeType.h&gt;
+#include "MyType.h"
+
+class AppObject : public vrj::GlApp
+{
+public:
+   void init();
+   void preFrame();
+   void latePreFrame();
+
+   // Other public member functions ...
+
+private:
+   cluster::UserData&lt;MyType&gt; mMyTypeObj;
+   cluster::UserData&lt; vpr::SerializableObjectMixin&lt;SomeType&gt; &gt; mSomeTypeObj;
+};</programlisting>
+          </example>
+
+          <para>Next, we must initialize the
+          <classname>cluster::UserData&lt;T&gt;</classname> instances so that
+          the Application Data Manager plug-in can identify the shared data
+          types and so that the application can determine which cluster node
+          will be allowed to write to the shared data. While there are two
+          ways to do this, we will show only the recommended approach here.
+          First, a globally unique identifier (GUID) must be defined for each
+          and every shared data type instance. The command-line utility
+          <command>uuidgen</command> is available on most operating systems
+          for generating new GUIDs (also known as universally unique
+          identifiers or UUIDs). These will be used in the application object
+          <methodname>init()</methodname> method, as shown in <xref
+          linkend="example.init.cluster.UserData" />.</para>
+
+          <example id="example.init.cluster.UserData">
+            <title>Initializing Application-Specific Shared Data</title>
+
+            <programlisting>void AppObject::init()
+{
+   vpr::GUID mytype_guid("99CFD306-32AB-11D9-A963-000D933B5E6A");
+   mMyTypeObj.init(mytype_guid);
+
+   vpr::GUID sometype_guid("A154B8E8-32AB-11D9-B4C9-000D933B5E6A");
+   mSomeTypeObj.init(sometype_guid);
+}</programlisting>
+          </example>
+
+          <para>In conjunction with this, two config elements need to be
+          created. These will be used by the Application Data Manager plug-in
+          to identify which cluster node will be the writer node. The
+          <quote>guid</quote> properties must match the string values used to
+          initialize the <classname>vpr::GUID</classname><indexterm>
+              <primary>vpr::GUID</primary>
+            </indexterm><indexterm>
+              <primary>classes</primary>
+
+              <secondary>vpr::GUID</secondary>
+            </indexterm> objects in <xref
+          linkend="example.init.cluster.UserData" />. The
+          <quote>hostname</quote> properties set the name of the cluster node
+          that will be the shared data writer. An example of this is shown in
+          <xref linkend="example.config.cluster.UserData" />.</para>
+
+          <example id="example.config.cluster.UserData">
+            <title>Application-Specific Shared Data Configuration</title>
+
+            <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;?org-vrjuggler-jccl-settings configuration.version="3.0"?&gt;
+&lt;configuration
+   xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration"
+   name="Example Shared Application Data Configuration"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd"&gt;
+
+   &lt;elements&gt;
+      &lt;application_data name="MyType Shared Data" version="1"&gt;
+         &lt;guid&gt;99CFD306-32AB-11D9-A963-000D933B5E6A&lt;/guid&gt;
+         &lt;hostname&gt;machine1&lt;/hostname&gt;
+      &lt;/application_data&gt;
+      &lt;application_data name="SomeType Shared Data" version="1"&gt;
+         &lt;guid&gt;A154B8E8-32AB-11D9-B4C9-000D933B5E6A&lt;/guid&gt;
+         &lt;hostname&gt;machine1&lt;/hostname&gt;
+      &lt;/application_data&gt;
+   &lt;/elements&gt;
+&lt;/configuration&gt;</programlisting>
+          </example>
+
+          <para>Now that the shared data is initialized and ready to use, we
+          can write to and read from it—the Application Data Manager plug-in
+          will take care of the rest. Only one node can be allowed to write to
+          the data. This is determined through the use of the method
+          <methodname>cluster::UserData&lt;T&gt;::isLocal()</methodname>. This
+          method returns a Boolean value that indicates whether the data is
+          <quote>local.</quote> The local node is the one named in the
+          configuration element, as shown earlier. Writes to shared data
+          should only occur in <methodname>preFrame()</methodname> or
+          <methodname>postFrame()</methodname> after testing the result of
+          <methodname>cluster::UserData&lt;T&gt;::isLocal()</methodname>. This
+          is shown in <xref
+          linkend="example.write.cluster.UserData" />.</para>
+
+          <important>
+            <para>The <classname>cluster::UserData&lt;T&gt;</classname>
+            instances introduce a level of indirection (using the Smart
+            Pointer design pattern) for accessing the shared data that works
+            in both the cluster and the non-cluster case. No direct access to
+            shared data is allowed when using
+            <classname>cluster::UserData&lt;T&gt;</classname>. This is true
+            both for reading and for writing, demonstrated in <xref
+            linkend="example.write.cluster.UserData" /> and in <xref
+            linkend="example.read.cluster.UserData" />.</para>
+          </important>
+
+          <example id="example.write.cluster.UserData">
+            <title>Writing to Application-Specific Shared Data</title>
+
+            <programlisting>void AppObject::preFrame()
+{
+   if ( mMyTypeObj.isLocal() )
+   {
+      // Computations ...
+      mMyTypeObj-&gt;setIntData(...);
+      mMyTypeObj-&gt;setByteData(...);
+      mMyTypeObj-&gt;setFloatData(...);
+   }
+
+   if ( mSomeTypeObj.isLocal() )
+   {
+      // Computations ...
+      mSomeTypeObj-&gt;setIntData(...);
+      mSomeTypeObj-&gt;setByteData(...);
+      mSomeTypeObj-&gt;setFloatData(...);
+   }
+}</programlisting>
+          </example>
+
+          <para>After the snapshot of the application-specific shared data for
+          the current frame has been distributed to the cluster nodes, it is
+          time to read the shared data and set up the application state for
+          rendering the current frame. This must be done in the application
+          object method <methodname>latePreFrame()</methodname>. This is
+          demonstrated in <xref linkend="example.read.cluster.UserData" />.
+          All the nodes in the cluster will read the results of the
+          computations made in <methodname>preFrame()</methodname> and set up
+          the application state. In general, there should be no need to use
+          <methodname>cluster::UserData&lt;T&gt;::isLocal()</methodname> at
+          this point.</para>
+
+          <example id="example.read.cluster.UserData">
+            <title>Reading from Application-Specific Shared Data</title>
+
+            <programlisting>void AppObject::latePreFrame()
+{
+   mStateVar1 = mMyTypeObj-&gt;getIntData();
+   mStateVar2 = mMyTypeObj-&gt;getByteData();
+   // And so on ...
+}</programlisting>
+          </example>
+        </section>
+
+        <section>
+          <title>General Cluster Programming Issues</title>
+
+          <para>With the tools for VR Juggler cluster programming in hand, we
+          can turn our attention to specific, higher level areas that must be
+          handled carefully when writing applications that may run on a
+          graphics cluster.</para>
+
+          <section id="section.cluster.time.deltas">
+            <title>Time-Based Computations</title>
+
+            <indexterm zone="section.cluster.time.deltas">
+              <primary>application programming</primary>
+
+              <secondary>clustering</secondary>
+
+              <tertiary>time deltas</tertiary>
+            </indexterm>
+
+            <para>Using time as input to algorithms is a very common
+            occurrence in VR applications. On a cluster, however, each node
+            has its own clock, and each node may start its frame loop at a
+            slightly different time than the other cluster nodes. Differences
+            such as these would result in inconsistencies among the time-based
+            computations across the cluster nodes.</para>
+
+            <para>These problems can be avoided through a feature of the input
+            data sharing feature of VR Juggler's cluster support. Every time a
+            Gadgeteer device driver takes a sample from the input device, a
+            time stamp is applied to the sample. This time stamp is included
+            with the shared device data and can be accessed through the device
+            interfaces used by the application objects. A time delta since the
+            last frame can then be calculated. Use of this is demonstrated in
+            <xref linkend="example.getTimeStamp" />.</para>
+
+            <example id="example.getTimeStamp">
+              <title>Calculating Frame Deltas Using
+              <classname>vpr::Interval</classname></title>
+
+              <programlisting>static vpr::Interval last_frame; 
+vpr::Interval current_frame = mHead-&gt;getTimeStamp();
+vpr::Interval diff(current_frame - last_frame);
+last_frame = current_frame; // You can get the delta in microseconds from 
+                            // vpr::Uint64 delta = diff.usecs();</programlisting>
+            </example>
+
+            <important>
+              <para>This technique implies that the Remote Input Manager
+              plug-in (<literal>RIMPlugin</literal>) and the Start Barrier
+              plug-in (<literal>StartBarrierPlugin</literal>) must be used by
+              the Cluster Manager.</para>
+            </important>
+          </section>
+
+          <section id="section.cluster.random.numbers">
+            <title>Random Numbers</title>
+
+            <indexterm zone="section.cluster.random.numbers">
+              <primary>application programming</primary>
+
+              <secondary>clustering</secondary>
+
+              <tertiary>random numbers</tertiary>
+            </indexterm>
+
+            <para>Random numbers are, by definition, random. When two
+            computers generate a random number, there is a high likelihood
+            that they will generate different numbers. However, the algorithms
+            used to generate random numbers on computers generate
+            <emphasis>pseudo-random</emphasis> numbers. Pseudo-random numbers
+            are generated by algorithms that have a predictable nature. Given
+            a known starting point (called a <firstterm>seed</firstterm>), the
+            sequence of numbers generated can be predicted. If the same
+            algorithm is seeded identically on two separate computers, the two
+            sequences of generated random numbers will be identical. Varying
+            the seed allows the algorithms to generate different random
+            sequences</para>
+
+            <para>This is a very important issue for VR application
+            programming in a cluster configuration. When an application object
+            uses random numbers, each application instance across the cluster
+            must generate the same sequence of random numbers. With VR
+            Juggler, there are two options for making this happen. The first
+            is to seed the random number generator algorithm identically on
+            all the cluster nodes. This is an easy solution as long as all the
+            nodes use the same algorithm to generate random numbers. If the
+            seed is hard coded into the application object initialization, the
+            random number sequence will always be the same for every run of
+            the application. While the numbers will still be random, the
+            predictable nature of pseudo-random number generators could become
+            a detriment.</para>
+
+            <para>The second option is to use application-specific shared
+            data, as described above in <xref
+            linkend="section.cluster.UserData" />. In this case, only one node
+            will generate the random numbers, and the Application Data Manager
+            will take care of sharing the most recently generated number(s)
+            with the other nodes. Using this approach allows for better
+            algorithm seeding and thus better random number generation. It
+            also avoids the issue of different computers having different
+            random number generator algorithms.</para>
+          </section>
+        </section>
+
+        <section>
+          <title>Troubleshooting Cluster Problems</title>
+
+          <para>In this final section, we present some frequently asked
+          questions regarding VR Juggler application programming and
+          clustering.</para>
+
+          <qandaset>
+            <qandadiv>
+              <qandaentry>
+                <question>
+                  <para>Why doesn't swap lock work with OpenGL Performer-based
+                  applications?</para>
+                </question>
+
+                <answer>
+                  <para>OpenGL Performer can make use of multiple processes to
+                  separate the App, Cull, and Draw actions. This allows
+                  Performer to spread its work out across three processors.
+                  Unfortunately, this interferes with cluster synchronization,
+                  so Performer multi-processing cannot be used in conjunction
+                  with the cluster capabilities in VR Juggler. The VR Juggler
+                  Performer Draw Manager is already written to disable
+                  multi-processing when the Cluster Manager is active.</para>
+                </answer>
+              </qandaentry>
+            </qandadiv>
+
+            <qandadiv>
+              <qandaentry>
+                <question>
+                  <para>Why is my application navigating differently on every
+                  screen?</para>
+                </question>
+
+                <answer>
+                  <para>All navigation must be based on time stamps returned
+                  from input devices. These time stamps, of type
+                  <classname>vpr::Interval</classname><indexterm>
+                      <primary>vpr::Interval</primary>
+                    </indexterm><indexterm>
+                      <primary>classes</primary>
+
+                      <secondary>vpr::Interval</secondary>
+                    </indexterm>, can be acquired from any device interface
+                  that refers to a device being shared across the cluster, and
+                  they can be used to compute the time deltas between frames.
+                  More details can be found in <xref
+                  linkend="section.cluster.time.deltas" />.</para>
+                </answer>
+              </qandaentry>
+            </qandadiv>
+          </qandaset>
+        </section>
+      </section>
+
       <section>
         <title>VTK Applications</title>
 
@@ -8285,6 +8983,21 @@ public:
           <methodname>vrj::App::postFrame()</methodname>. Methods called in
           between include <methodname>vrj::App::intraFrame()</methodname> and
           methods that are specific to a given graphics API.</para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>G</title>
+
+      <glossentry id="gloss.guid">
+        <glossterm>GUID</glossterm>
+
+        <glossdef>
+          <para>Globally unique identifier that is generated using various
+          properties of a machine and a random number generator. It has been
+          proven that it is statistically impossible for the same number to be
+          generated twice within the average human lifetime.</para>
         </glossdef>
       </glossentry>
     </glossdiv>
