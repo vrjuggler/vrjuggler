@@ -2,7 +2,7 @@
 <beanlist>
   <guipanel name="Prefs Test Bean">
     <file name="${TWEEK_BASE_DIR}/bin/beans/PrefsTestBean.jar" 
-          entry="prefstestbean/PrefsTestBean" />
+          class="prefstestbean.PrefsTestBean" />
     <tree path="/" />
   </guipanel>
 </beanlist>
