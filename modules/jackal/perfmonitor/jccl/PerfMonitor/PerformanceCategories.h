@@ -43,6 +43,32 @@ namespace jccl
 
 class LabeledPerfDataBuffer;
 
+class PerformanceCategory
+{
+public:
+   
+   PerformanceCategory (vpr::GUID category, const std::string& name)
+      : mCategory (category), mName(name),
+        mActive(NULL), mRegistered(false)
+   {;}
+   
+   const vpr::GUID   mCategory;
+   const std::string mName;
+   /** mActive is a ptr so that we can share the activation state
+    *  among all PerformanceCategory objects with the same name.
+    *  In addition to saving us from one possible class of errors,
+    *  this is helpful for the case where a performance category
+    *  is configured before the PerformanceCategory object itself
+    *  is registered.
+    */
+   bool        *mActive;
+   bool        mRegistered;
+
+private:
+   
+};
+
+
 /** Singleton for category information of all PerfDataBuffers. 
  *  Since it already involves activation & a central registration
  *  of all buffers, this is an increasingly innacurately named
@@ -51,20 +77,17 @@ class LabeledPerfDataBuffer;
 class JCCL_CLASS_API PerformanceCategories
 {
 private:
-
-   struct CategoryInfo
-   {
-      CategoryInfo(std::string name, bool active)
-         : mName(name), mActive(active)
-      {;}
-        
-      std::string mName;
-      bool        mActive;
-   };
-
-   typedef std::map<vpr::GUID, CategoryInfo > category_map_t;
+   
+   typedef std::map<std::string, PerformanceCategory* > category_map_t;
+   /** mCategories contains (at least) one PerformanceCategory object
+    *  for each name that has been either configured or registered.
+    *  Since PerformanceCategories with the same name share the
+    *  activation boolean, this is sufficient for configuring all
+    *  performance categories.
+    */
    category_map_t mCategories; 
-    
+   vpr::Mutex mCategoriesMutex;
+   
    bool mActive;
     
 
@@ -95,17 +118,16 @@ public:
    }
 
    
-   void addCategory (const vpr::GUID& catId, const std::string& name);
-
    void activateCategory (const std::string& catname);
 
    void deactivateCategory (const std::string& catname);
 
 
    /** Returns whether the given category is active.
+    *  Autoregisters the category if necessary.
     *  @return True iff the category is active.
     */
-   bool isCategoryActive (const vpr::GUID& category);
+   bool isCategoryActive (PerformanceCategory& category);
     
 
    void addBuffer (LabeledPerfDataBuffer* buffer);
@@ -139,36 +161,14 @@ private:
 #define jcclTIMESTAMP(cat, id) ((void)0)
 #endif
 
-/** Utility class for auto-registering a category.  Use the macros
- *  below instead of using this class directly.
- */
-struct PerfCatRegistrator
-{
-    PerfCatRegistrator(const vpr::GUID& catGuid, const std::string& catName)
-    {
-      PerformanceCategories::instance()->addCategory(catGuid, catName);
-    }
-};
-
-
-/** Helper macro for registering category
- * Defines a (file) unique variable that create a registrator 
- * in the file prive namespace
- * @param NAME  String name of the category (as used in the 
- *              environment variable).  Note: This is not in 
- *              string ("str") form
- * @param CAT   GUID id of the category
- * Use this in the .cpp files to register the actual token with jccl
- */
-#define jcclREGISTER_PERF_CATEGORY(CAT, NAME) jccl::PerfCatRegistrator NAME ## _registrator (CAT, #NAME);
-
 
 } // namespace jccl
 
 
 // Perf measurement internal to JCCL itself
-const vpr::GUID jcclPERF_JACKAL("29ecd55b-e68e-40ce-9db2-99e7682b36b4");
-const vpr::GUID jcclPERF_ALL("0b6b599c-f90c-43f6-8fbb-08454dd78872");
+extern jccl::PerformanceCategory jcclPERF_JACKAL;
+extern jccl::PerformanceCategory jcclPERF_ALL;
+
 
 
 #endif
