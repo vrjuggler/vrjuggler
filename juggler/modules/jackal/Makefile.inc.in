@@ -370,9 +370,11 @@ ifeq ($(BUILD_VJCONTROL), Y)
 	@echo "------------------------------------------------"
 ifeq (@OS_TYPE@, UNIX)
 	@sed -e 's,#JCCL_SHARE_DIR#,$(JCCL_SHARE_DIR),g'		\
-          $(JCCLROOT_ABS)/vjcontrol/vjcontrol.sh > vjcontrol.sh
+          $(JCCLROOT_ABS)/vjcontrol/vjcontrol.sh > vjcontrol.tmp
+	@jars=`echo $(JDOM_JAR) | sed -e 's,[^:][^:]*/\([^/][^/]*\.jar\),$$JCCL_BASE_DIR/bin/\1,g'` && \
+          sed -e "s,#JDOM_JAR#,$$jars," vjcontrol.tmp > vjcontrol.sh
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-          vjcontrol.sh $(bindir)/vjcontrol && rm -f vjcontrol.sh
+          vjcontrol.sh $(bindir)/vjcontrol && rm -f vjcontrol.sh vjcontrol.tmp
 else
 	@sed -e 's,#JCCL_SHARE_DIR#,$(JCCL_SHARE_DIR),g'		\
           $(JCCLROOT_ABS)/vjcontrol/vjcontrol.bat > vjcontrol.bat
