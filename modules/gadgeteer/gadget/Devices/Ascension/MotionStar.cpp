@@ -233,20 +233,18 @@ int MotionStar::stopSampling()
       vprDEBUG(gadgetDBG_INPUT_MGR, 1) << "  Stopping the MotionStar ...\n"
                                        << vprDEBUG_FLUSH;
 
-      mMotionStar.stop();
-
-      // sanity check: did the device actually stop?
-      if ( isActive() == true )
+      try
+      {
+         mMotionStar.stop();
+         vprDEBUG(gadgetDBG_INPUT_MGR, 1) << "MotionStar server shut down.\n"
+                                          << vprDEBUG_FLUSH;
+         retval = 1;
+      }
+      catch (mstar::CommandException ex)
       {
          vprDEBUG(gadgetDBG_INPUT_MGR, 1)
             << "MotionStar server did not shut down.\n" << vprDEBUG_FLUSH;
          retval = 0;
-      }
-      else
-      {
-         vprDEBUG(gadgetDBG_INPUT_MGR, 1) << "MotionStar server shut down.\n"
-                                          << vprDEBUG_FLUSH;
-         retval = 1;
       }
    }
    // If the thread was not started, then the device is stopped.
@@ -638,22 +636,31 @@ void MotionStar::setRunMode(const unsigned int mode)
    }
    else
    {
-      switch (mode)
+      try
       {
-         case 0:
-            mMotionStar.setRunMode(BIRDNET::CONTINUOUS);
-            break;
-         case 1:
-            mMotionStar.setRunMode(BIRDNET::SINGLE_SHOT);
-            break;
-         default:
-            vprDEBUG(gadgetDBG_INPUT_MGR, 1)
-               << "gadget::MotionStar: Unexpected run mode " << mode
-               << " given!\n"
-               << "                    Defaulting to continuous.\n"
-               << vprDEBUG_FLUSH;
-            mMotionStar.setRunMode(BIRDNET::CONTINUOUS);
-            break;
+         switch (mode)
+         {
+            case 0:
+               mMotionStar.setRunMode(BIRDNET::CONTINUOUS);
+               break;
+            case 1:
+               mMotionStar.setRunMode(BIRDNET::SINGLE_SHOT);
+               break;
+            default:
+               vprDEBUG(gadgetDBG_INPUT_MGR, 1)
+                  << "gadget::MotionStar: Unexpected run mode " << mode
+                  << " given!\n"
+                  << "                    Defaulting to continuous.\n"
+                  << vprDEBUG_FLUSH;
+               mMotionStar.setRunMode(BIRDNET::CONTINUOUS);
+               break;
+         }
+      }
+      catch (mstar::CommandException ex)
+      {
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+            << "gadget::MotionStar: Failed to change run mode to " << mode
+            << std::endl << vprDEBUG_FLUSH;
       }
    }
 }
