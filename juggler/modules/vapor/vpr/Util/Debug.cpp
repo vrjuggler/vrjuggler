@@ -100,12 +100,11 @@ Debug::Debug()
       std::cout << "VPR_DEBUG_ENABLE: Defaults to " << mDebugEnabled
                 << std::endl << std::flush;
    }
-
-   setDefaultCategoryNames();
+   
    getAllowedCatsFromEnv();
 }
 
-std::ostream& Debug::getStream(int cat, int level, bool show_thread_info,
+std::ostream& Debug::getStream(vpr::GUID cat, int level, bool show_thread_info,
                                bool use_indent, int indentChange,
                                bool lockStream)
 {
@@ -170,48 +169,31 @@ std::ostream& Debug::getStream(int cat, int level, bool show_thread_info,
    return std::cout;
 }
 
-void Debug::addCategoryName(std::string name, int cat)
+void Debug::addCategoryName(std::string name, vpr::GUID catId)
 {
-   mCategoryNames[name] = cat;
+   mCategoryNames[name] = catId;
 }
 
-void Debug::addAllowedCategory(int cat)
+void Debug::addAllowedCategory(vpr::GUID catId)
 {
-   if((int)mAllowedCategories.size() < (cat+1))
-      growAllowedCategoryVector(cat+1);
-
-   mAllowedCategories[cat] = true;
+   mAllowedCategories[catId] = true;
 }
 
 // Are we allowed to print this category??
-bool Debug::isCategoryAllowed(int cat)
+bool Debug::isCategoryAllowed(vpr::GUID catId)
 {
    // If no entry for cat, grow the vector
-   if((int)mAllowedCategories.size() < (cat+1))
-      growAllowedCategoryVector(cat+1);
-
+   if(mAllowedCategories.find(catId) == mAllowedCategories.end())
+      mAllowedCategories[catId] = false;
+      
    // If I specified to listen to all OR
    // If it has category of ALL
-   if((mAllowedCategories[vprDBG_ALL]) || (cat == vprDBG_ALL))
+   if((mAllowedCategories[vprDBG_ALL] == true) || (catId == vprDBG_ALL))
       return true;
    else
-      return mAllowedCategories[cat];
+      return mAllowedCategories[catId];
 }
 
-void Debug::setDefaultCategoryNames()
-{
-   ///* XXX: Removed for insure checking
-   addCategoryName(vprDBG_ALLstr,vprDBG_ALL);
-   addCategoryName(vprDBG_ERRORstr,vprDBG_ERROR);
-   addCategoryName(vprDBG_KERNELstr,vprDBG_KERNEL);
-   addCategoryName(vprDBG_INPUT_MGRstr,vprDBG_INPUT_MGR);
-   addCategoryName(vprDBG_DRAW_MGRstr,vprDBG_DRAW_MGR);
-   addCategoryName(vprDBG_DISP_MGRstr,vprDBG_DISP_MGR);
-   addCategoryName(vprDBG_ENV_MGRstr, vprDBG_ENV_MGR);
-   addCategoryName(vprDBG_PERFORMANCEstr, vprDBG_PERFORMANCE);
-   addCategoryName(vprDBG_CONFIGstr, vprDBG_CONFIG);
-   //*/
-}
 
 void Debug::getAllowedCatsFromEnv()
 {
@@ -223,7 +205,7 @@ void Debug::getAllowedCatsFromEnv()
       std::cout << "vprDEBUG::Found VPR_DEBUG_CATEGORIES: Listing allowed categories. (If blank, then none allowed.\n" << std::flush;
       std::string dbg_cats(dbg_cats_env);
 
-      std::map< std::string, int >::iterator i;
+      std::map< std::string, vpr::GUID >::iterator i;
       for(i=mCategoryNames.begin();i != mCategoryNames.end();i++)
       {
          std::string cat_name = (*i).first;
@@ -246,11 +228,6 @@ void Debug::getAllowedCatsFromEnv()
    //addAllowedCategory(vprDBG_ALL);
 }
 
-void Debug::growAllowedCategoryVector(int newSize)
-{
-   while((int)mAllowedCategories.size() < newSize)
-      mAllowedCategories.push_back(false);
-}
 
 void Debug::pushThreadLocalColumn(int column)
 {

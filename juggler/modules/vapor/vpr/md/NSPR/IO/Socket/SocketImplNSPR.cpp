@@ -240,7 +240,7 @@ SocketImplNSPR::connect (vpr::Interval timeout) {
 
    if(m_bound)
    {
-      vprDEBUG(0,0) << "SocketImplNSPR::connect: Socket alreay bound.  Can't connect"
+      vprDEBUG(vprDBG_ALL,0) << "SocketImplNSPR::connect: Socket alreay bound.  Can't connect"
                     << vprDEBUG_FLUSH;
       retval.setCode(vpr::ReturnStatus::Fail);
    }
@@ -306,13 +306,13 @@ SocketImplNSPR::connect (vpr::Interval timeout) {
 
       if ( status == PR_SUCCESS ) {
 /* XXX: This doesn't compile on IRIX, and I don't know why.
-          vprDEBUG(0, vprDBG_STATE_LVL) << "Connected, local address is "
+          vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "Connected, local address is "
                                         << m_local_addr << std::endl
                                         << vprDEBUG_FLUSH;
 */
       }
       else {
-          vprDEBUG(0, vprDBG_WARNING_LVL) << "Failed to get local socket name\n"
+          vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "Failed to get local socket name\n"
                                           << vprDEBUG_FLUSH;
       }
    }

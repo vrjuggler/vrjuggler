@@ -52,29 +52,8 @@
 #include <vpr/Sync/Guard.h>
 #include <vpr/Util/StreamLock.h>
 #include <vpr/Util/Singleton.h>
+#include <vpr/Util/GUID.h>
 
-// Debug output categories
-#define vprDBG_BASE 0
-#define vprDBG_ALL (vprDBG_BASE+0)         /* Use if you always want it ouput */
-const std::string vprDBG_ALLstr("DBG_ALL");
-#define vprDBG_ERROR (vprDBG_BASE+1)       /* Error output */
-const std::string vprDBG_ERRORstr("DBG_ERROR");
-#define vprDBG_KERNEL (vprDBG_BASE+2)      /* Kernel output */
-const std::string vprDBG_KERNELstr("DBG_KERNEL");
-#define vprDBG_INPUT_MGR (vprDBG_BASE+3)       /* Input output */
-const std::string vprDBG_INPUT_MGRstr("DBG_INPUT_MGR");
-#define vprDBG_DRAW_MGR (vprDBG_BASE+4)
-const std::string vprDBG_DRAW_MGRstr("DBG_DRAW_MGR");
-#define vprDBG_DISP_MGR (vprDBG_BASE+5)
-const std::string vprDBG_DISP_MGRstr("DBG_DISP_MGR");
-#define vprDBG_ENV_MGR (vprDBG_BASE+6)
-const std::string vprDBG_ENV_MGRstr("DBG_ENV_MGR");
-#define vprDBG_PERFORMANCE (vprDBG_BASE+7)
-const std::string vprDBG_PERFORMANCEstr("DBG_PERFORMANCE");
-#define vprDBG_CONFIG (vprDBG_BASE+8)
-const std::string vprDBG_CONFIGstr("DBG_CONFIGDB");
-
-#define vprDBG_USER 100
 
 // Suggested use of val/debugLevel
 //
@@ -95,7 +74,6 @@ const std::string vprDBG_CONFIGstr("DBG_CONFIGDB");
 #define vprDBG_DETAILED_LVL 6
 #define vprDBG_HEX_LVL 7
 
-
 // ANSI COLOR CONTROL CODES
 // TODO: Make the work for windows
 // 00=none 01=bold 04=underscore 05=blink 07=reverse 08=concealed
@@ -113,33 +91,35 @@ const std::string vprDBG_CONFIGstr("DBG_CONFIGDB");
 #define clrWHITE "37"
 
 #ifdef VPR_OS_Win32
-#  define clrESC ""
-#  define clrCONTROL_CHARS(font, color) ""
-#  define clrSetNORM(color) ""
-#  define clrSetBOLD(color) ""
-#  define clrRESET ""
-#  define clrOutBOLD(color,text) text
-#  define clrOutNORM(color,text) text
+   #define clrESC ""
+   #define clrCONTROL_CHARS(font, color) ""
+   #define clrSetNORM(color) ""
+   #define clrSetBOLD(color) ""
+   #define clrRESET ""
+   #define clrOutBOLD(color,text) text
+   #define clrOutNORM(color,text) text
 #else
-#  define clrESC char(27)
-#  define clrCONTROL_CHARS(font, color) clrESC << "[" << font << ";" << color << "m"
-#  define clrSetNORM(color) clrESC << "[" << color << "m"
-#  define clrSetBOLD(color) clrCONTROL_CHARS(clrBOLD, color)
-#  define clrRESET clrESC << "[" << clrNONE << "m"
-#  define clrOutBOLD(color,text) clrSetBOLD(color) << text << clrRESET
-#  define clrOutNORM(color,text) clrSetNORM(color) << text << clrRESET
+   #define clrESC char(27)
+   #define clrCONTROL_CHARS(font, color) clrESC << "[" << font << ";" << color << "m"
+   #define clrSetNORM(color) clrESC << "[" << color << "m"
+   #define clrSetBOLD(color) clrCONTROL_CHARS(clrBOLD, color)
+   #define clrRESET clrESC << "[" << clrNONE << "m"
+   #define clrOutBOLD(color,text) clrSetBOLD(color) << text << clrRESET
+   #define clrOutNORM(color,text) clrSetNORM(color) << text << clrRESET
 #endif
 
 
 #ifdef VPR_DEBUG
+
 //#   define vprDEBUG(cat,val) if (0) ; else if((val <= vprDebug::instance()->getLevel()) && (vprDebug::instance()->isCategoryAllowed(cat))) vprDebug::instance()->getStream(cat, val)
 //#   define vprDEBUG_BEGIN(cat,val) if (0) ; else if((val <= vprDebug::instance()->getLevel()) && (vprDebug::instance()->isCategoryAllowed(cat))) vprDebug::instance()->getStream(cat, val, true, 1)
 //#   define vprDEBUG_END(cat,val) if (0) ; else if((val <= vprDebug::instance()->getLevel()) && (vprDebug::instance()->isCategoryAllowed(cat))) vprDebug::instance()->getStream(cat, val, true, -1)
-#  define LOCK_DEBUG_STREAM
-#  define VPR_MAX_DBG_LEVEL 100
+   #define LOCK_DEBUG_STREAM
+   #define VPR_MAX_DBG_LEVEL 100
 #else
-#  define LOCK_DEBUG_STREAM
-#  define VPR_MAX_DBG_LEVEL vprDBG_WARNING_LVL
+   #define LOCK_DEBUG_STREAM
+   #define VPR_MAX_DBG_LEVEL vpr::DBG_WARNING_LVL
+
 //#   define vprDEBUG(cat,val) if (1) ; else std::cout
 //#   define vprDEBUG_BEGIN(cat,val) if (1) ; else std::cout
 //#   define vprDEBUG_END(cat,val) if (1) ; else std::cout
@@ -189,13 +169,13 @@ const std::string vprDBG_CONFIGstr("DBG_CONFIGDB");
 
 
 #ifdef LOCK_DEBUG_STREAM
-#   define vprDEBUG_STREAM_LOCK vpr::StreamLock(vpr::Debug::instance()->debugLock())
-#   define vprDEBUG_STREAM_UNLOCK vpr::StreamUnLock(vpr::Debug::instance()->debugLock())
-#   define vprDEBUG_FLUSH vprDEBUG_STREAM_UNLOCK << std::flush
+   #define vprDEBUG_STREAM_LOCK vpr::StreamLock(vpr::Debug::instance()->debugLock())
+   #define vprDEBUG_STREAM_UNLOCK vpr::StreamUnLock(vpr::Debug::instance()->debugLock())
+   #define vprDEBUG_FLUSH vprDEBUG_STREAM_UNLOCK << std::flush
 #else
-#   define vprDEBUG_STREAM_LOCK std::flush
-#   define vprDEBUG_STREAM_UNLOCK std::flush
-#   define vprDEBUG_FLUSH std::flush
+   #define vprDEBUG_STREAM_LOCK std::flush
+   #define vprDEBUG_STREAM_UNLOCK std::flush
+   #define vprDEBUG_FLUSH std::flush
 #endif
 
 
@@ -206,94 +186,121 @@ namespace vpr {
  *
  * @author Allen Bierbaum
  */
-class VPR_CLASS_API Debug
-{
-protected:
-   // Set default values
-   // Set up default categories
-   // Get debug config from environment
-   Debug();
+   class VPR_CLASS_API Debug
+   {
+   protected:
+      // Set default values
+      // Set up default categories
+      // Get debug config from environment
+      Debug();
 
-   // These two have to be here because Visual C++ will try to make them
-   // exported public symbols.  This causes problems because copying vpr::Mutex
-   // objects is not allowed.
-   Debug(const Debug& d) {;}
-   void operator= (const Debug& d) {;}
+      // These two have to be here because Visual C++ will try to make them
+      // exported public symbols.  This causes problems because copying vpr::Mutex
+      // objects is not allowed.
+      Debug(const Debug& d) {;}
+      void operator= (const Debug& d) {;}
 
-public:
-   // Get the debug stream to use
-   std::ostream& getStream(int cat, int level, bool show_thread_info = true,
-                           bool use_indent = true, int indentChange = 0,
-                           bool lockStream = true);
+   public:
+      // Get the debug stream to use
+      std::ostream& getStream(vpr::GUID cat, int level, bool show_thread_info = true,
+                              bool use_indent = true, int indentChange = 0,
+                              bool lockStream = true);
 
-   int getLevel()
-   { return debugLevel; }
+      int getLevel()
+      { return debugLevel;}
 
-   Mutex& debugLock()
-   { return mDebugLock; }
+      Mutex& debugLock()
+      { return mDebugLock;}
 
-   /// Adds a category name.
-   void addCategoryName(std::string name, int cat);
+      /// Adds a category name.
+      void addCategoryName(std::string name, vpr::GUID catId);
 
-   /// Allows the given category.
-   void addAllowedCategory(int cat);
+      /// Allows the given category.
+      void addAllowedCategory(vpr::GUID catId);
 
-   /// Are we allowed to print this category??
-   bool isCategoryAllowed(int cat);
+      /// Are we allowed to print this category??
+      bool isCategoryAllowed(vpr::GUID catId);
 
-   /// Sets up the default categories.
-   void setDefaultCategoryNames();
+      /// Sets up the default categories.
+      void setDefaultCategoryNames();
 
-   /// Configures the allowed categories from the users environment.
-   void getAllowedCatsFromEnv();
+      /// Configures the allowed categories from the users environment.
+      void getAllowedCatsFromEnv();
 
-   void growAllowedCategoryVector(int newSize);
+      void enableThreadLocalSettings()
+      { mUseThreadLocal = true;}
+      void disableThreadLocalSettings()
+      { mUseThreadLocal = false;}
 
-   void enableThreadLocalSettings()
-   { mUseThreadLocal = true; }
-   void disableThreadLocalSettings()
-   { mUseThreadLocal = false; }
+      void pushThreadLocalColumn(int column);
+      void popThreadLocalColumn();
+      void setThreadLocalColor(std::string color);
 
-   void pushThreadLocalColumn(int column);
-   void popThreadLocalColumn();
-   void setThreadLocalColor(std::string color);
+      //@{
+      /** Is debuging enabled */
+      bool isDebugEnabled()
+      { return mDebugEnabled;}
+      void enableOutput()
+      { mDebugEnabled = true;}
+      void disableOutput()
+      { mDebugEnabled = false;}
+      //@}
 
-   //@{
-   /** Is debuging enabled */
-   bool isDebugEnabled()
-   { return mDebugEnabled;}
-   void enableOutput()
-   { mDebugEnabled = true; }
-   void disableOutput()
-   { mDebugEnabled = false; }
-   //@}
+   private:
+      bool mDebugEnabled;  // Is debug output enabled
+      int debugLevel;      //! Debug level to use
+      int indentLevel;     //! Amount to indent
 
-private:
-   bool mDebugEnabled;  // Is debug output enabled
-   int debugLevel;      //! Debug level to use
-   int indentLevel;     //! Amount to indent
+      bool  mUseThreadLocal;  //! Whether to use thread local info or not
 
-   bool  mUseThreadLocal;  //! Whether to use thread local info or not
+      Mutex          mDebugLock;
 
-   Mutex          mDebugLock;
+      //std::vector<bool> mAllowedCategories;      //! The categories we allow
 
-   std::vector<bool> mAllowedCategories;      //! The categories we allow
-   std::map<std::string,int> mCategoryNames; //! The names and id of allowed catagories
+      std::map<std::string, vpr::GUID> mCategoryNames; //! The names and id of allowed catagories
+      std::map<vpr::GUID, bool> mAllowedCategories;   // The categories that we allow printing of
 
-vprSingletonHeader(Debug);
-};
+      vprSingletonHeader(Debug);
+   };
 
 // Helper class
-struct DebugColumnGuard
-{
-   DebugColumnGuard(int col_val)
-   { vprDEBUG_PushColumn(col_val); }
+   struct DebugColumnGuard
+   {
+      DebugColumnGuard(int col_val)
+      { vprDEBUG_PushColumn(col_val);}
 
-   ~DebugColumnGuard()
-   { vprDEBUG_PopColumn(); }
-};
+      ~DebugColumnGuard()
+      { vprDEBUG_PopColumn();}
+   };
 
 }; // End of vpr namespace
+
+
+namespace vpr
+{
+
+   struct DebugCatRegistrator
+   {
+      DebugCatRegistrator(vpr::GUID catGuid, std::string catName)
+      {
+         vpr::Debug::instance()->addCategoryName(catName, catGuid);
+      }
+   };
+}; // namespace
+
+/** Helper macro for registering category
+* Defines a (file) unique variable that create a registrator in the file prive namespace
+* @param NAME  String name of the category (as used in the environment variable).  Note: This is not in string ("str") form
+* @param CAT   GUID id of the category
+*/
+#define vprREGISTER_DBG_CATEGORY(NAME, CAT) namespace { vpr::DebugCatRegistrator NAME ## _registrator (CAT, #NAME); }
+
+// Debug output categories
+const vpr::GUID vprDBG_ALL("660b4b06-1f5b-4e4b-abb8-d44229ce1319");
+vprREGISTER_DBG_CATEGORY(DBG_ALL,vprDBG_ALL);
+
+const vpr::GUID vprDBG_ERROR("b081eb68-0a61-4a65-a0a1-dd3ccc90a82b");   /* Error output */
+vprREGISTER_DBG_CATEGORY(DBG_ERROR,vprDBG_ERROR);
 
 
 #endif
