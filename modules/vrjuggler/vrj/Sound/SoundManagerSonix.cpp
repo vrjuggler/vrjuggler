@@ -34,7 +34,7 @@
 #include <jccl/Config/ConfigChunk.h>
 #include <vrj/Sound/SoundManagerSonix.h>
 #include <snx/sonix.h>
-#include <vrj/Math/Matrix.h>
+#include <gmtl/Matrix.h>
 
 namespace vrj
 {
@@ -58,8 +58,8 @@ namespace vrj
 
       // configure sonix
       sonix::instance()->changeAPI( api_to_use );
-      vrj::Matrix mat;
-      mat.setTrans( listener_position[0], listener_position[1], listener_position[2] );
+      gmtl::Matrix44f mat;
+      gmtl::setTrans( mat, gmtl::Vec3f( listener_position[0], listener_position[1], listener_position[2] ) );
       sonix::instance()->setListenerPosition( mat );
 
       // read the list of sounds
