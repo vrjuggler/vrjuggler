@@ -520,7 +520,7 @@ BOOST_PYTHON_MODULE(gmtl)
         .def("__getitem__", &gmtl::Matrix<float,4,4>::operator[])
     );
 
-    class_< gmtl::Matrix<float,4,4>::RowAccessor, boost::noncopyable >("RowAccessor", no_init)
+    class_< gmtl::Matrix<float,4,4>::RowAccessor >("RowAccessor", no_init)
        .def("__getitem__", &gmtl::Matrix<float,4,4>::RowAccessor::operator[], return_value_policy<copy_non_const_reference>())
        .def("__setitem__", (void (*)(gmtl::Matrix44f::RowAccessor*, const unsigned, float)) &gmtlWrapper::setArrayElement)
     ;
@@ -844,9 +844,12 @@ BOOST_PYTHON_MODULE(gmtl)
         .def("setTranspose", &gmtl::Matrix<float,3,3>::setTranspose)
         .def("isError", &gmtl::Matrix<float,3,3>::isError)
         .def("setError", &gmtl::Matrix<float,3,3>::setError)
+        .def("__getitem__", &gmtl::Matrix<float,3,3>::operator[])
     );
 
-    class_< gmtl::Matrix<float,3,3>::RowAccessor, boost::noncopyable >("RowAccessor", no_init)
+    class_< gmtl::Matrix<float,3,3>::RowAccessor >("RowAccessor", no_init)
+       .def("__getitem__", &gmtl::Matrix<float,3,3>::RowAccessor::operator[], return_value_policy<copy_non_const_reference>())
+       .def("__setitem__", (void (*)(gmtl::Matrix33f::RowAccessor*, const unsigned, float)) &gmtlWrapper::setArrayElement)
     ;
 
 

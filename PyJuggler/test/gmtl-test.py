@@ -67,13 +67,13 @@ if gmtl.isEqual(mat1, mat1):
 else:
    print "gmtl.isEqual(mat1, mat2) fail"
 
-#print mat1[1][1]
-#mat1[1][1] = 5
-#
-#if mat1[1][1] == 5:
-#   print "gmtl.Matrix44f element accessor pass"
-#else:
-#   print "gmtl.Matrix44f element accessor fail"
+print "mat1[1][1] =", mat1[1][1]
+mat1[1][1] = 5
+
+if mat1[1][1] == 5:
+   print "gmtl.Matrix44f element accessor pass"
+else:
+   print "gmtl.Matrix44f element accessor fail"
 
 vec1 = gmtl.Vec3f()
 vec2 = gmtl.Vec3f()
