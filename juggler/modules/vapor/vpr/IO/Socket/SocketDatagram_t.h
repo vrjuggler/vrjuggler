@@ -68,9 +68,9 @@ public:
    /**
     * Default constructor.
     */
-   SocketDatagram_t (void) : mSocketDgramImpl()
+   SocketDatagram_t() : mSocketDgramImpl()
    {
-      mSocketDgramImpl = boost::shared_ptr<SocketDatagramImpl>( new SocketDatagramImpl );
+      mSocketDgramImpl = boost::shared_ptr<SocketDatagramImpl>(new SocketDatagramImpl);
       mSocketImpl = mSocketDgramImpl;
    }
 
@@ -84,8 +84,8 @@ public:
     *
     * @param addr A reference to a vpr::InetAddr object.
     */
-   SocketDatagram_t (const vpr::InetAddr& local_addr,
-                     const vpr::InetAddr& remote_addr)
+   SocketDatagram_t(const vpr::InetAddr& local_addr,
+                    const vpr::InetAddr& remote_addr)
       : Socket_t<Config>()
    {
       mSocketDgramImpl = boost::shared_ptr<SocketDatagramImpl>(new SocketDatagramImpl(local_addr, remote_addr));
@@ -97,7 +97,7 @@ public:
     *
     * @param sock The source socket object to be copied.
     */
-   SocketDatagram_t (const SocketDatagram_t& sock)
+   SocketDatagram_t(const SocketDatagram_t& sock)
       : mSocketDgramImpl(sock.mSocketDgramImpl)
    {
       mSocketImpl = mSocketDgramImpl;
@@ -109,7 +109,7 @@ public:
     * @pre None.
     * @post None.
     */
-   virtual ~SocketDatagram_t (void)
+   virtual ~SocketDatagram_t()
    {
       /* nothing */ ;
    }
@@ -118,10 +118,10 @@ public:
     * Receives a message from some source.  The source's address is writen
     * into the by-reference parameter from.
     */
-   vpr::ReturnStatus recvfrom (void* msg, const vpr::Uint32 len,
-                               const int flags, vpr::InetAddr& from,
-                               vpr::Uint32& bytes_read,
-                               const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus recvfrom(void* msg, const vpr::Uint32 len,
+                              const int flags, vpr::InetAddr& from,
+                              vpr::Uint32& bytes_read,
+                              const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       return mSocketDgramImpl->recvfrom(msg, len, flags, from, bytes_read,
                                         timeout);
@@ -131,10 +131,10 @@ public:
     * Receives a message from some source.  The source's address is writen
     * into the by-reference parameter from.
     */
-   vpr::ReturnStatus recvfrom (std::string& msg, const vpr::Uint32 len,
-                               const int flags, vpr::InetAddr& from,
-                               vpr::Uint32& bytes_read,
-                               const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus recvfrom(std::string& msg, const vpr::Uint32 len,
+                              const int flags, vpr::InetAddr& from,
+                              vpr::Uint32& bytes_read,
+                              const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       msg.resize(len);
       memset(&msg[0], '\0', msg.size());
@@ -147,10 +147,10 @@ public:
     * Receives a message from some source.  The source's address is writen
     * into the by-reference parameter from.
     */
-   vpr::ReturnStatus recvfrom (std::vector<vpr::Uint8>& msg,
-                               const vpr::Uint32 len, const int flags,
-                               vpr::InetAddr& from, vpr::Uint32& bytes_read,
-                               const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus recvfrom(std::vector<vpr::Uint8>& msg,
+                              const vpr::Uint32 len, const int flags,
+                              vpr::InetAddr& from, vpr::Uint32& bytes_read,
+                              const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       vpr::ReturnStatus retval;
 
@@ -173,10 +173,10 @@ public:
    /**
     * Sends a message to the designated recipient.
     */
-   vpr::ReturnStatus sendto (const void* msg, const vpr::Uint32 len,
-                             const int flags, const vpr::InetAddr& to,
-                             vpr::Uint32& bytes_sent,
-                             const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus sendto(const void* msg, const vpr::Uint32 len,
+                            const int flags, const vpr::InetAddr& to,
+                            vpr::Uint32& bytes_sent,
+                            const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       return mSocketDgramImpl->sendto(msg, len, flags, to, bytes_sent,
                                       timeout);
@@ -185,10 +185,10 @@ public:
    /**
     * Sends a message to the designated recipient.
     */
-   vpr::ReturnStatus sendto (const std::string& msg, const vpr::Uint32 len,
-                             const int flags, const vpr::InetAddr& to,
-                             vpr::Uint32& bytes_sent,
-                             const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus sendto(const std::string& msg, const vpr::Uint32 len,
+                            const int flags, const vpr::InetAddr& to,
+                            vpr::Uint32& bytes_sent,
+                            const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       vprASSERT(len <= msg.size() && "Length is bigger than data given");
       return sendto(msg.c_str(), len, flags, to, bytes_sent, timeout);
@@ -197,10 +197,10 @@ public:
    /**
     * Sends a message to the designated recipient.
     */
-   vpr::ReturnStatus sendto (const std::vector<vpr::Uint8>& msg,
-                             const vpr::Uint32 len, const int flags,
-                             const vpr::InetAddr& to, vpr::Uint32& bytes_sent,
-                             const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus sendto(const std::vector<vpr::Uint8>& msg,
+                            const vpr::Uint32 len, const int flags,
+                            const vpr::InetAddr& to, vpr::Uint32& bytes_sent,
+                            const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       vprASSERT(len <= msg.size() && "Length is bigger than data given");
       return sendto((const void*) &msg[0], len, flags, to, bytes_sent,
@@ -208,14 +208,14 @@ public:
    }
 
 protected:
-   virtual vpr::ReturnStatus getOption (const vpr::SocketOptions::Types option,
-                                        struct vpr::SocketOptions::Data& data)
+   virtual vpr::ReturnStatus getOption(const vpr::SocketOptions::Types option,
+                                       struct vpr::SocketOptions::Data& data)
    {
       return mSocketDgramImpl->getOption(option, data);
    }
 
-   virtual vpr::ReturnStatus setOption (const vpr::SocketOptions::Types option,
-                                        const struct vpr::SocketOptions::Data& data)
+   virtual vpr::ReturnStatus setOption(const vpr::SocketOptions::Types option,
+                                       const struct vpr::SocketOptions::Data& data)
    {
       return mSocketDgramImpl->setOption(option, data);
    }
