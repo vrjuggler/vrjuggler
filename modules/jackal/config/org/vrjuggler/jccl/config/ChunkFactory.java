@@ -58,7 +58,12 @@ public class ChunkFactory
 
    static public ChunkDesc getChunkDescByToken(String s)
    {
-      return descdb.getByToken(s);
+      List descs = ConfigUtilities.getDescsWithToken(descdb.getAll(), s);
+      if (descs.size() > 0)
+      {
+         return (ChunkDesc)descs.get(0);
+      }
+      return null;
    }
 
    static public ConfigChunk createChunkWithDescName(String s)
@@ -77,9 +82,10 @@ public class ChunkFactory
       }
       if (descdb != null)
       {
-         ChunkDesc cd = descdb.getByName(s);
-         if (cd != null)
+         List descs = ConfigUtilities.getDescsWithToken(descdb.getAll(), s);
+         if (descs.size() > 0)
          {
+            ChunkDesc cd = (ChunkDesc)descs.get(0);
             newchunk = new ConfigChunk(cd);
          }
       }
@@ -103,9 +109,10 @@ public class ChunkFactory
       }
       if (descdb != null)
       {
-         ChunkDesc cd = descdb.getByToken(s);
-         if (cd != null)
+         List descs = ConfigUtilities.getDescsWithToken(descdb.getAll(), s);
+         if (descs.size() > 0)
          {
+            ChunkDesc cd = (ChunkDesc)descs.get(0);
             newchunk = new ConfigChunk(cd);
          }
       }

@@ -383,49 +383,6 @@ public class ChunkDescDB
       return v;
    }
 
-   /**
-    * Gets the ChunkDesc in this database that has the given token.
-    *
-    * @param tok     the token of the ChunkDesc to retrieve
-    *
-    * @return  the matching ChunkDesc; null if nothing is found
-    */
-   public final ChunkDesc getByToken(String tok)
-   {
-      synchronized (this)
-      {
-         int n = descs.size();
-         for (int i = 0; i < n; i++)
-         {
-            if (((ChunkDesc)descs.get(i)).getToken().equals(tok))
-            {
-               return (ChunkDesc)descs.get(i);
-            }
-         }
-      }
-      return null;
-   }
-
-   /**
-    * Gets the first ChunkDesc in this database that has the given name.
-    *
-    * @param name    the name of the ChunkDesc to retrieve
-    *
-    * @return  the matching ChunkDesc; null if nothing is found
-    */
-   public final synchronized ChunkDesc getByName(String name)
-   {
-      int n = descs.size();
-      for (int i = 0; i < n; i++)
-      {
-         if ( ((ChunkDesc)descs.get(i)).getName().equals(name) )
-         {
-            return (ChunkDesc)descs.get(i);
-         }
-      }
-      return null;
-   }
-
    public final synchronized String getTokenFromName(String _name)
    {
       int n = descs.size();
@@ -489,7 +446,8 @@ public class ChunkDescDB
       synchronized (this)
       {
          // make sure the name will be unique
-         if (getByName(d.getName()) != null)
+         List descs = ConfigUtilities.getDescsWithName(getAll(), d.getName());
+         if (descs.size() > 0)
          {
             // this is ugly & clunky, but it's a rarely occurring case,
             // and java (yay!) will handle the memory for us.  If we're
@@ -542,7 +500,7 @@ public class ChunkDescDB
       {
          n = name + " <" + (i++) + ">";
       }
-      while (getByName(n) != null);
+      while (ConfigUtilities.getDescsWithName(getAll(), n).size() > 0);
       return n;
    }
 
