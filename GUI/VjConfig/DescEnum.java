@@ -9,6 +9,13 @@ public class DescEnum {
   public String str;
   public VarValue val;
 
+    public String toString () {
+	if (val != null)
+	    return new String (str + "=" + val);
+	else 
+	    return new String (str);
+    }
+
   public DescEnum (DescEnum other) {
     str = other.str;
     val = new VarValue (other.val);

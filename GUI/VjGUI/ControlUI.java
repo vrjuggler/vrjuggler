@@ -27,7 +27,7 @@ public class ControlUI  extends JFrame
     JMenuItem quit_mi, lnf_win_mi, lnf_java_mi, lnf_motif_mi, lnf_mac_mi;
     JMenuItem lnf_organic1_mi;
     JMenuItem editprefs_mi, saveprefs_mi;
-    JMenuItem helpbugs_mi, helpabout_mi, helpstart_mi, helpchunk_mi, helpdesc_mi, helpcmdline_mi, descformat_mi, chunkformat_mi, orgtreeformat_mi, helpprefs_mi;
+    JMenuItem helpbugs_mi, helpabout_mi, helpstart_mi, helpchunk_mi, helpdesc_mi, helporgtree_mi, helpcmdline_mi, descformat_mi, chunkformat_mi, orgtreeformat_mi, helpprefs_mi;
     JLabel status_label;
     ConfigChunkFrame prefs_frame;
     HTMLFrame help_frame;
@@ -92,6 +92,7 @@ public class ControlUI  extends JFrame
 	help_menu.add (helpcmdline_mi = new JMenuItem ("Command Line Arguments"));
 	help_menu.add (helpchunk_mi = new JMenuItem ("Working with Config Files"));
 	help_menu.add (helpdesc_mi = new JMenuItem ("Working with ChunkDesc Files"));
+	help_menu.add (helporgtree_mi = new JMenuItem ("Working with ChunkOrgTrees"));
 	help_menu.add (helpprefs_mi = new JMenuItem ("VjControl Preferences"));
 	help_menu.add (helpbugs_mi = new JMenuItem ("Known Bugs"));
 
@@ -114,6 +115,7 @@ public class ControlUI  extends JFrame
 	helpstart_mi.addActionListener (this);
 	helpchunk_mi.addActionListener (this);
 	helpdesc_mi.addActionListener (this);
+	helporgtree_mi.addActionListener (this);
 	helpprefs_mi.addActionListener (this);
 	helpbugs_mi.addActionListener (this);
 	helpcmdline_mi.addActionListener (this);
@@ -225,12 +227,14 @@ public class ControlUI  extends JFrame
 	    loadHelp ("VjFiles/ChunkDBPanel.html");
 	else if (o == helpdesc_mi)
 	    loadHelp ("VjFiles/DescDBPanel.html");
+	else if (o == helporgtree_mi)
+	    loadHelp ("VjFiles/OrgTreePanel.html");
 	else if (o == descformat_mi)
 	    loadHelp ("VjFiles/ChunkDescFormat.html");
 	else if (o == chunkformat_mi)
 	    loadHelp ("VjFiles/ConfigChunkFormat.html");
 	else if (o == orgtreeformat_mi)
-	    loadHelp ("VjFiles/ChunkOrgTreeFormat.html");
+	    loadHelp ("VjFiles/OrgTreeFormat.html");
     }
 
 

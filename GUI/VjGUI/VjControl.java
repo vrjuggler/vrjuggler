@@ -130,7 +130,7 @@ public class VjControl {
 	    //ConfigChunk ch = (ConfigChunk)v.elementAt(0);
 	    //if (ch == null) {
 	    System.err.println ("didn't get chunk");
-	    ch = new ConfigChunk (Core.descdb.get ("vjcontrol"));
+	    ch = new ConfigChunk (Core.descdb.get ("vjcontrol"), Core.descdb);
 	    ch.setPropertyFromToken ("fontname", "Courier", 0);
 	    ch.setPropertyFromToken ("fontsize", 12, 0);
 	    ch.setPropertyFromToken ("looknfeel", "Java", 0);

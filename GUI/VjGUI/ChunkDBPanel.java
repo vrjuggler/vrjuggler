@@ -12,7 +12,7 @@ import VjGUI.*;
 import VjGUI.configchunk.ConfigChunkFrame;
 
 public class ChunkDBPanel extends JPanel 
-  implements ActionListener, MouseListener, 
+    implements ActionListener, MouseListener, //TreeSelectionListener,
 	     ConfigChunkFrame.ConfigChunkFrameParent {
 
 
@@ -128,7 +128,8 @@ public class ChunkDBPanel extends JPanel
 	send_button.setToolTipText ("Copy selected chunks to the other panel");
 	send_all_button.setToolTipText ("Copy all chunks over to the other panel");
 	insert_button.setToolTipText ("Inserts new chunk (select type below)");
-	
+	duplicate_button.setToolTipText ("Insert copies of all selected chunks");
+	remove_button.setToolTipText ("Remove all selected chunks");
     }
 
 
@@ -264,7 +265,7 @@ public class ChunkDBPanel extends JPanel
 	    System.out.println ("Insert button pressed");
 	    cd = Core.descdb.getByName ((String)insert_type.getSelectedItem());
 	    if (cd != null) {
-		ch = new ConfigChunk (cd);
+		ch = new ConfigChunk (cd, Core.descdb);
 		ch.name = (current_treemodel.chunkdb.getNewName(cd.name));
 		current_treemodel.insertNode (ch);
 	    }
@@ -277,10 +278,8 @@ public class ChunkDBPanel extends JPanel
 		nodeinfo = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)tp[i].getLastPathComponent()).getUserObject());
 		if (nodeinfo.ch != null) {
 		    // create a copy of this node...
-		    System.out.println ("not implemented");
-		    ch = nodeinfo.ch.copy();
+		    ch = new ConfigChunk (nodeinfo.ch);
 		    ch.name = "copy of " + ch.name;
-		    System.out.println ("doing insert of\n" + ch);
 		    current_treemodel.insertNode (ch);
 		}
 		else
@@ -306,28 +305,42 @@ public class ChunkDBPanel extends JPanel
 
 
 
-  public void mouseClicked(MouseEvent e) {
-    ConfigChunkFrame f;
+    public void mouseClicked(MouseEvent e) {
+	ConfigChunkFrame f;
 
-    if(e.getClickCount() == 2) {
-      int selRow = current_treemodel.tree.getRowForLocation(e.getX(), e.getY());
-      TreePath selPath = current_treemodel.tree.getPathForLocation(e.getX(), e.getY());
-      if(selRow != -1) {
-	  //System.out.println ("Double click on path: " + selPath);
+	int selRow = current_treemodel.tree.getRowForLocation(e.getX(), e.getY());
+	if (selRow == -1)
+	    return;
+	TreePath selPath = current_treemodel.tree.getPathForLocation(e.getX(), e.getY());
 	ChunkTreeNodeInfo ni = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)selPath.getLastPathComponent()).getUserObject());
-	
-	if (ni.ch != null) {
-	  f = getChunkFrame (ni.ch.getName());
-	  if (f == null) {
-	    f = new ConfigChunkFrame (this, ni.ch);
-	    chunk_frames.addElement(f);
-	  }
-	  else
-	    f.show();
+
+	if (e.getClickCount() == 1) {
+	    if (ni.ch != null) {
+		String h = (ni.ch.desc.help.equals(""))?"No help available":ni.ch.desc.help;
+		Core.consoleTempMessage (ni.ch.desc.getName(), h);
+	    }
+	    else if (ni.isDescNode()) {
+		ChunkDesc d = Core.descdb.getByName (ni.toString());
+		String h = (d.help.equals(""))?"No help available":d.help;
+		Core.consoleTempMessage (d.getName(), h);
+	    }
 	}
-      }
+	if(e.getClickCount() == 2) {
+	    //System.out.println ("Double click on path: " + selPath);
+	    
+	    if (ni.ch != null) {
+		f = getChunkFrame (ni.ch.getName());
+		if (f == null) {
+		    f = new ConfigChunkFrame (this, ni.ch);
+		    chunk_frames.addElement(f);
+		}
+		else
+		    f.show();
+	    }
+	}
     }
-  }
+
+
 
   public ConfigChunkFrame getChunkFrame (String name) {
     int i;
@@ -357,6 +370,7 @@ public class ChunkDBPanel extends JPanel
   public void mouseExited(MouseEvent e) {}
   public void mousePressed(MouseEvent e) {}
   public void mouseReleased(MouseEvent e) {}
+
 
 
 

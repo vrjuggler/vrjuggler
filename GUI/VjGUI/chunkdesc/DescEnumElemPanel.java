@@ -56,137 +56,177 @@ public class DescEnumElemPanel extends JPanel implements MouseListener {
   }
 
 
-  private void addLabel (String s) {
-    /* just a convenience used below */
-    JLabel l = new JLabel (s);
-    l.addMouseListener(this);
-    add (l);
-  }
-
-
-
-  public DescEnumElemPanel (DescEnum e, ValType t) {
-    super();
-
-    if (select_border == null) {
-      select_border = new CompoundBorder ( new BevelBorder (BevelBorder.LOWERED),
-					   new EmptyBorder (5,5,5,5));
+    private void addLabel (String s) {
+	/* just a convenience used below */
+	JLabel l = new JLabel (s);
+	l.addMouseListener(this);
+	add (l);
     }
-    if (unselect_border == null) {
-      unselect_border = new CompoundBorder ( new BevelBorder (BevelBorder.RAISED),
-					     new EmptyBorder (5,5,5,5));
+
+
+    public DescEnumElemPanel (ValType t) {
+	super();
+	init (t);
     }
+
+    public DescEnumElemPanel (DescEnum e, ValType t) {
+	super();
+
+System.out.println ("build descenumelempanel " + e);
+	init (t);
+	if (namef != null)
+	    namef.setText (e.str);
+	if (namechoice != null) {
+	    if (t.equals(ValType.t_chunk) || t.equals (ValType.t_embeddedchunk)) {
+		String s = null;
+		for (int j = 0; j < Core.descdbs.size(); j++) {
+		    s = ((ChunkDescDB)Core.descdbs.elementAt(j)).getNameFromToken (e.str);
+		    if (s != null)
+			break;
+		}
+		if (s == null) 
+		    s = "";
+		System.out.println ("setting active to: " + s);
+		namechoice.setSelectedItem (s);
+	    }
+	    else
+		namechoice.setSelectedItem(e.str);
+	}
+	if (valf != null)
+	    valf.setText (e.val.toString());
+    }
+
+
+
+    public void init(ValType t) {
+	if (select_border == null) {
+	    select_border = new CompoundBorder ( new BevelBorder (BevelBorder.LOWERED),
+						 new EmptyBorder (5,5,5,5));
+	}
+	if (unselect_border == null) {
+	    unselect_border = new CompoundBorder ( new BevelBorder (BevelBorder.RAISED),
+						   new EmptyBorder (5,5,5,5));
+	}
     
-    setBorder (unselect_border);
+	setBorder (unselect_border);
 
-    int i, j;
-    ChunkDescDB db;
+	int i, j;
+	ChunkDescDB db;
 
-    selected = false;
-    addMouseListener (this);
+	selected = false;
+	addMouseListener (this);
 
-    namechoice = null;
-    valf = null;
-    namef = null;
+	namechoice = null;
+	valf = null;
+	namef = null;
 
-    /* next bit is specific on valtype of the propertydesc */
-    if (t.equals(ValType.t_string)) {
-      addLabel ("Name: ");
-      namef = new JTextField (e.str, 20);
-      add (namef);
+	/* next bit is specific on valtype of the propertydesc */
+	if (t.equals(ValType.t_string)) {
+	    addLabel ("Name: ");
+	    namef = new JTextField (20);
+	    add (namef);
+	}
+	else if (t.equals(ValType.t_chunk)) {
+	    addLabel ("Accept chunks of type: ");
+	    namechoice = new JComboBox();
+	    for (i = 0; i < Core.descdbs.size(); i++) {
+		db = (ChunkDescDB)Core.descdbs.elementAt(i);
+		for (j = 0; j < db.size(); j++)
+		    namechoice.addItem(((ChunkDesc)db.elementAt(j)).name);
+	    }
+	    add (namechoice);
+	}
+	else if (t.equals(ValType.t_embeddedchunk)) {
+	    addLabel ("Embedded chunk type: ");
+	    namechoice = new JComboBox();
+	    for (i = 0; i < Core.descdbs.size(); i++) {
+		db = (ChunkDescDB)Core.descdbs.elementAt(i);
+		for (j = 0; j < db.size(); j++)
+		    namechoice.addItem(((ChunkDesc)db.elementAt(j)).name);
+	    }
+	    add (namechoice);
+	}
+	else {
+	    addLabel ("Name: ");
+	    namef = new JTextField (20);
+	    add (namef);
+	    addLabel ("Value: ");
+	    if (t.equals(ValType.t_int))
+		valf = new IntegerTextField (10);
+	    else if (t.equals(ValType.t_float))
+		valf = new FloatTextField (10);
+	    else
+		valf = new StringTextField (10);
+	    add (valf);
+	}
+	
+	Dimension d3 = getPreferredSize();
+	Dimension d4 = getMaximumSize();
+	d4.height = d3.height;
+	setMaximumSize (d4);
+
     }
-    else if (t.equals(ValType.t_chunk)) {
-      addLabel ("Accept chunks of type: ");
-      namechoice = new JComboBox();
-      for (i = 0; i < Core.descdbs.size(); i++) {
-	db = (ChunkDescDB)Core.descdbs.elementAt(i);
-	for (j = 0; j < db.size(); j++)
-	  namechoice.addItem(((ChunkDesc)db.elementAt(j)).name);
-      }
-      add (namechoice);
-      namechoice.setSelectedItem(e.str);
-    }
-    else {
-      addLabel ("Name: ");
-      namef = new JTextField (e.str, 20);
-      add (namef);
-      addLabel ("Value: ");
-      if (t.equals(ValType.t_int))
-	valf = new IntegerTextField (e.val.toString(), 10);
-      else if (t.equals(ValType.t_float))
-	valf = new FloatTextField (e.val.toString(), 10);
-      else
-	valf = new StringTextField (e.val.toString(), 10);
-      add (valf);
-    }
-
-      Dimension d3 = getPreferredSize();
-      Dimension d4 = getMaximumSize();
-      d4.height = d3.height;
-      setMaximumSize (d4);
 
 
-  }
 
-  public DescEnumElemPanel (ValType t) {
-    super();
+//     public DescEnumElemPanel (ValType t) {
+// 	super();
 
-    int i, j;
-    ChunkDescDB db;
+// 	int i, j;
+// 	ChunkDescDB db;
 
-    if (select_border == null) {
-      //border = new BevelBorder(BevelBorder.LOWERED);
-      select_border = new CompoundBorder ( new BevelBorder (BevelBorder.LOWERED),
-				    new EmptyBorder (5,5,5,5));
-    }
-    if (unselect_border == null) {
-      //border = new BevelBorder(BevelBorder.RAISED);
-      unselect_border = new CompoundBorder ( new BevelBorder (BevelBorder.RAISED),
-				    new EmptyBorder (5,5,5,5));
-    }
+// 	if (select_border == null) {
+// 	    select_border = new CompoundBorder ( new BevelBorder (BevelBorder.LOWERED),
+// 						 new EmptyBorder (5,5,5,5));
+// 	}
+// 	if (unselect_border == null) {
+// 	    //border = new BevelBorder(BevelBorder.RAISED);
+// 	    unselect_border = new CompoundBorder ( new BevelBorder (BevelBorder.RAISED),
+// 						   new EmptyBorder (5,5,5,5));
+// 	}
     
-    setBorder (unselect_border);
+// 	setBorder (unselect_border);
+	
+// 	selected = false;
+// 	addMouseListener (this);
 
-    selected = false;
-    addMouseListener (this);
-
-    /* next bit is specific on valtype of the propertydesc */
-    if (t.equals(ValType.t_string)) {
-      addLabel ("Name: ");
-      namef = new JTextField ("", 20);
-      add (namef);
-    }
-    else if (t.equals(ValType.t_chunk)) {
-      addLabel ("Accept chunks of type: ");
-      namechoice = new JComboBox();
-      for (i = 0; i < Core.descdbs.size(); i++) {
-	db = (ChunkDescDB)Core.descdbs.elementAt(i);
-	for (j = 0; j < db.size(); j++)
-	  namechoice.addItem(((ChunkDesc)db.elementAt(j)).name);
-      }
-      add (namechoice);
-    }
-    else {
-      addLabel ("Name: ");
-      namef = new JTextField ("", 20);
-      add (namef);
-      addLabel ("Value: ");
-      if (t.equals(ValType.t_int))
-	valf = new /*int*/JTextField (10);
-      else if (t.equals(ValType.t_float))
-	valf = new /*Float*/JTextField (10);
-      else
-	valf = new /*Integer*/JTextField (10);
-
-      add (valf);
-    }
-
-      Dimension d3 = getPreferredSize();
-      Dimension d4 = getMaximumSize();
-      d4.height = d3.height;
-      setMaximumSize (d4);
-
-  }
+// 	/* next bit is specific on valtype of the propertydesc */
+// 	if (t.equals(ValType.t_string)) {
+// 	    addLabel ("Name: ");
+// 	    namef = new JTextField ("", 20);
+// 	    add (namef);
+// 	}
+// 	else if (t.equals(ValType.t_chunk)) {
+// 	    addLabel ("Accept chunks of type: ");
+// 	    namechoice = new JComboBox();
+// 	    for (i = 0; i < Core.descdbs.size(); i++) {
+// 		db = (ChunkDescDB)Core.descdbs.elementAt(i);
+// 		for (j = 0; j < db.size(); j++)
+// 		    namechoice.addItem(((ChunkDesc)db.elementAt(j)).name);
+// 	    }
+// 	    add (namechoice);
+// 	}
+// 	else {
+// 	    addLabel ("Name: ");
+// 	    namef = new JTextField ("", 20);
+// 	    add (namef);
+// 	    addLabel ("Value: ");
+// 	    if (t.equals(ValType.t_int))
+// 		valf = new /*int*/JTextField (10);
+// 	    else if (t.equals(ValType.t_float))
+// 		valf = new /*Float*/JTextField (10);
+// 	    else
+// 		valf = new /*Integer*/JTextField (10);
+	    
+// 	    add (valf);
+// 	}
+	
+// 	Dimension d3 = getPreferredSize();
+// 	Dimension d4 = getMaximumSize();
+// 	d4.height = d3.height;
+// 	setMaximumSize (d4);
+	
+//     }
 
 
   public void setSelected(boolean v) {
