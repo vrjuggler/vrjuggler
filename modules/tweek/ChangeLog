@@ -1,5 +1,9 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2003-11-07 patrickh    org.vrjuggler.tweek.net.corba.CorbaService.init() now
+                       passes all CORBA-related exceptions through to the
+                       caller.
+                       NEW VERSION: 0.16.1
 2003-09-19 patrickh    Removed the Emacs/Windows file chooesr open style
                        preference.  Changed the semantics of
                        GlobalPreferencesService.getChooserStartDir() to return
