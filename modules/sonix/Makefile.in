@@ -237,7 +237,6 @@ post-install:
 
 install-share:
 	cp -r $(ROOT_ABS)/data/*.wav $(datadir)/sonix/data
-	cp -r $(ROOT_ABS)/data/*.aiff $(datadir)/sonix/data
 	cp -r $(ROOT_ABS)/samples/*.cpp $(topdir)/samples/Makefile $(datadir)/sonix/src
 	cp $(ROOT_ABS)/README.txt $(datadir)/sonix
 
