@@ -7,7 +7,7 @@
 /*  --    Authors: Larry Edwards and William Chapin         --  */
 /*  ==========================================================  */
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 #include <math.h>
 #include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_math3d.h>
 

@@ -9,7 +9,7 @@
 /*  --    Modified by Larry Edwards                         --  */
 /*  ==========================================================  */
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 #include <stdio.h>
 
 #include <X11/Intrinsic.h>

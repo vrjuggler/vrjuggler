@@ -10,7 +10,7 @@
 /*  ==========================================================  */
 
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

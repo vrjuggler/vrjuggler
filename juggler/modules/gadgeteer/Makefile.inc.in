@@ -309,6 +309,10 @@ pre-install-headers:
 
 post-install-headers:
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS)						\
+          $(GADGETROOT_ABS)/gadget/Devices/DriverConfig.h		\
+          $(includedir)/gadget/Devices/DriverConfig.h
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(GADGETROOT_ABS)/gadget/gadgetConfig.h	\
           $(includedir)/gadget/gadgetConfig.h
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\

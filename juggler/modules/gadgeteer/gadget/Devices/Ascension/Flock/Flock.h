@@ -33,7 +33,7 @@
 #ifndef _GADGET_ASCENSION_FLOCK_OF_BIRDS_H_
 #define _GADGET_ASCENSION_FLOCK_OF_BIRDS_H_
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 #include <vpr/Thread/Thread.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Position.h>
@@ -46,7 +46,7 @@ namespace gadget
    class InputManager;
 }
 
-extern "C" GADGET_API(void) initDevice(gadget::InputManager* inputMgr);
+extern "C" GADGET_DRIVER_API(void) initDevice(gadget::InputManager* inputMgr);
 
 namespace gadget
 {

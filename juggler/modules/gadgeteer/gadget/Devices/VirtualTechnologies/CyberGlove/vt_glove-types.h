@@ -12,7 +12,7 @@
 #ifndef VT_GLOVE_TYPES_H
 #define VT_GLOVE_TYPES_H
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 
 /* some convenience macros */
 #define CG_ASCII_COMM(cmd) tolower((cmd)) /* make ascii version of a command */

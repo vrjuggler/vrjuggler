@@ -12,7 +12,7 @@
 /*  --    Authors:  Larry Edwards, William L. Chapin        --  */
 /*  ==========================================================  */
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 #include <math.h>
 
 #define epsilon 0.000001

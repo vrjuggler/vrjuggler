@@ -41,7 +41,7 @@
 #ifndef _GADGET_FASTRACK_
 #define _GADGET_FASTRACK_
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 
 #include <iostream>
 #include <string>
@@ -64,7 +64,7 @@ namespace gadget
    class InputManager;
 }
 
-extern "C" GADGET_API(void) initDevice(gadget::InputManager* inputMgr);
+extern "C" GADGET_DRIVER_API(void) initDevice(gadget::InputManager* inputMgr);
 
 namespace gadget
 {
