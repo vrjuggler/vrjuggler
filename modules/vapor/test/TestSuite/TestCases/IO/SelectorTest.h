@@ -111,6 +111,7 @@ public:
       //vpr::SocketStream* sock(NULL);
       Status ret_val;
       ssize_t bytes_written;
+      vpr::Uint16 num_events = 0;
 
       // make lots of acceptors, set their addresses, and open them... saving each handle in a std::map
       for(i=0;i<mNumRendevousPorts;i++)
@@ -125,6 +126,11 @@ public:
          selector.setIn(handle, (vpr::Selector::VPR_READ | vpr::Selector::VPR_WRITE | vpr::Selector::VPR_EXCEPT));
       }
 
+      // First test selector TIMEOUT
+      ret_val = selector.select(num_events, vpr::Interval(5,vpr::Interval::Usec));
+      threadAssertTest(ret_val.timeout(), "Selection did not timeout like it should");
+      threadAssertTest((0 == num_events), "Num events should have been 0");
+
       // READY - Tell everyone that we are ready to accept
       mCondVar.acquire();
       {
@@ -137,7 +143,7 @@ public:
       // Then accept and send a message back
        for(i=0;i<mNumIters;i++)
        {
-          vpr::Uint16 num_events;
+          num_events = 0;
           Status ret = selector.select(num_events, vpr::Interval::NoTimeout );
 
           threadAssertTest((ret.success()),
@@ -285,10 +291,10 @@ public:
          Status ret_val = acceptors[i]->accept(sock);           // Accept the connection
          threadAssertTest((ret_val.success()), "Error accepting a connection");
          socks.push_back(sock);
-         vpr::IOSys::Handle handle = sock.getHandle();       // Get the Handle to register
-         handleTable[handle] = i;                           // Save handle index
-         selector.addHandle(handle);                          // Add to selector
-         selector.setIn(handle, (vpr::Selector::VPR_READ));       // Set it for waiting for VPR_READ
+         vpr::IOSys::Handle handle = sock.getHandle();         // Get the Handle to register
+         handleTable[handle] = i;                              // Save handle index
+         selector.addHandle(handle);                           // Add to selector
+         selector.setIn(handle, (vpr::Selector::VPR_READ));    // Set it for waiting for VPR_READ
       }
 
       threadAssertTest((mNumRendevousPorts == selector.getNumHandles()), "We didn't add all ports correctly to selector");
@@ -313,6 +319,10 @@ public:
                            "Selection did not return successfully");
           threadAssertTest((num_events == mSelectedPorts.size()),
                            "There was an incorrect number of events");
+          if(num_events != mSelectedPorts.size())
+          {
+             std::cout << "Expected [ " << mSelectedPorts.size() << " ] events. Have [ " << num_events << " ] instead." << std::endl;
+          }
 
           // mSelectedPorts holds the index numbers of the sockets that data was sent on
           // Read from each selected socket
@@ -325,7 +335,8 @@ public:
                threadAssertTest((handleTable.find(selector.getHandle(j)) != handleTable.end()),
                                 "Handle not found int acceptor table");
                vpr::Uint16 sock_index = handleTable[selector.getHandle(j)];
-               threadAssertTest((std::find(mSelectedPorts.begin(), mSelectedPorts.end(), sock_index) != mSelectedPorts.end()), "Found a port that wasn't supposed to have data");
+               threadAssertTest((std::find(mSelectedPorts.begin(), mSelectedPorts.end(), sock_index) != mSelectedPorts.end()),
+                                "Found a port that wasn't supposed to have data");
                num_found += 1;
 
                std::string data;
@@ -402,6 +413,7 @@ public:
          {
             threadAssertTest((mSelectedPorts[j] < sockets.size()));           // Make sure we are in range
             ret_val = sockets[mSelectedPorts[j]].write(mMessageValue, mMessageLen, bytes_written);    // Write the data
+            threadAssertTest((mMessageLen == bytes_written), "Wrong num bytes written");
             threadAssertTest((ret_val.success()), "Error writing data on socket");
          }
 
