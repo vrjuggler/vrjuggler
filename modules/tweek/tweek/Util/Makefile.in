@@ -54,7 +54,8 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(TWEEK_LIBRARY)
 
-SRCS		= Debug.cpp
+SRCS		= Debug.cpp	\
+                  Version.cpp
 
 include $(MKPATH)/dpp.obj.mk
 
