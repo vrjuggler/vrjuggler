@@ -51,7 +51,7 @@ MKPATH		= $(JUGGLERROOT_ABS)/Doozer++/mk
 
 @SET_MAKE@
 
-SUBDIR		= modules/vapor
+SUBDIR		= modules/vapor @JUGGLER_PROJECTS@
 
 build:
 	$(MAKE) RECTARGET="buildworld" recursive

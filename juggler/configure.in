@@ -43,9 +43,16 @@ AC_CONFIG_AUX_DIR(share/config)
 DPP_PREREQ(1.4)
 DPP_INIT
 
-# List the sub-projects where a local configure script needs to be run.
-# Order is important.
-AC_CONFIG_SUBDIRS(modules/vapor)
+builddir=`pwd`
+cd "$srcdir"
+curdir=`pwd`
+
+if test "$builddir" != "$curdir" ; then
+   echo "Sorry, you can't use a build directory with this script!"
+   exit 1
+else
+   cd "$builddir"
+fi
 
 DPP_GEN_RECONFIG
 
@@ -57,7 +64,40 @@ DPP_STD_CPP(yes)
 
 builtin(include, modules/vapor/cfgargs.m4)
 
+AC_ARG_ENABLE(jackal,
+              [ --enable-jackal          Enable building Jackal          [default=no]],
+              build_jccl="$enableval", build_jccl='no')
+
+builtin(include, modules/jackal/cfgargs.m4)
+
 DPP_ABI_SETUP
+
+# -----------------------------------------------------------------------------
+# Package building option handling.
+# -----------------------------------------------------------------------------
+
+# List the Juggler sub-projects that will be configured and built.  The order
+# here is very important: they must be ordered based on dependencies.  It is
+# assumed that VPR is always built since everything depends on it.
+JUGGLER_PROJECTS=''
+
+BUILD_JCCL='NO'
+
+if test "x$build_jccl" = "xyes" ; then
+   BUILD_JCCL='YES'
+   JUGGLER_PROJECTS="$JUGGLER_PROJECTS modules/jackal"
+   JCCL_BASE_DIR="$builddir/modules/jackal"
+   export JCCL_BASE_DIR
+fi
+
+# List the sub-projects where a local configure script needs to be run.
+AC_CONFIG_SUBDIRS(modules/vapor $JUGGLER_PROJECTS)
+
+VPR_BASE_DIR="$builddir/modules/vapor"
+VPR_CONFIG="$VPR_BASE_DIR/vpr-config --basedir"
+
+export VPR_BASE_DIR
+export VPR_CONFIG
 
 # -----------------------------------------------------------------------------
 # System-dependent stuff.
@@ -140,6 +180,7 @@ DPP_SUBST
 AC_SUBST(topdir)
 AC_SUBST(UNIX_JUGGLERROOT_ABS)
 AC_SUBST(JUGGLERROOT_ABS)
+AC_SUBST(JUGGLER_PROJECTS)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.
