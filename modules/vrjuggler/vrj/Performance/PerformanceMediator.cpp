@@ -36,6 +36,7 @@
 
 #include <vpr/vpr.h>
 #include <vpr/System.h>
+#include <vpr/DynLoad/LibraryLoader.h>
 #include <vpr/IO/Socket/InetAddr.h>
 
 #include <jccl/Config/ConfigElement.h>
@@ -150,7 +151,8 @@ namespace vrj
       const std::string perf_mon_dso("corba_perf_mon");
       const std::string init_func("initPlugin");
       Callable functor(this);
-      mPluginLoader.findAndInitDSO(perf_mon_dso, search_path, init_func, functor);
+      vpr::LibraryLoader::findDSOAndLookup(perf_mon_dso, search_path,
+                                           init_func, functor, mPluginDSO);
    }
 
    void PerformanceMediator::setPerfPlugin(vrj::PerfPlugin* plugin)
