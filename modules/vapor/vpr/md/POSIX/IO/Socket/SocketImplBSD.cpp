@@ -63,6 +63,11 @@ namespace vpr
 // Public methods.
 // ============================================================================
 
+const std::string& SocketImplBSD::getName()
+{
+   return mHandle->getName();
+}
+
 // Open the socket.  This creates a new socket using the domain and type
 // options set through member variables.
 vpr::ReturnStatus SocketImplBSD::open()
@@ -156,6 +161,16 @@ vpr::ReturnStatus SocketImplBSD::open()
       // vpr::FileHandleUNIX::setBlocking() directly.
       retval = mHandle->setBlocking(mOpenBlocking);
    }
+
+   return retval;
+}
+
+vpr::ReturnStatus SocketImplBSD::close()
+{
+   vpr::ReturnStatus retval;
+
+   retval = mHandle->close();
+   mOpen = (retval.success() ? false : true);
 
    return retval;
 }
@@ -761,20 +776,45 @@ vpr::ReturnStatus SocketImplBSD::setOption (const vpr::SocketOptions::Types opti
    return retval;
 }
 
-// ============================================================================
-// Protected methods.
-// ============================================================================
-
-// ----------------------------------------------------------------------------
-// Destructor.  This currently does nothing.
-// ----------------------------------------------------------------------------
-SocketImplBSD::~SocketImplBSD ()
+SocketImplBSD::~SocketImplBSD()
 {
    if ( mHandle != NULL )
    {
       delete mHandle;
       mHandle = NULL;
    }
+}
+
+// ============================================================================
+// Protected methods.
+// ============================================================================
+
+SocketImplBSD::SocketImplBSD(const vpr::SocketTypes::Type sock_type)
+   : mOpen(false)
+   , mOpenBlocking(true)
+   , mBound(false)
+   , mConnected(false)
+   , mBlockingFixed(false)
+   , mHandle(NULL)
+   , mType(sock_type)
+{
+   mHandle = new FileHandleImplUNIX();
+}
+
+SocketImplBSD::SocketImplBSD(const vpr::InetAddr& local_addr,
+                             const vpr::InetAddr& remote_addr,
+                             const vpr::SocketTypes::Type sock_type)
+   : mOpen(false)
+   , mOpenBlocking(true)
+   , mBound(false)
+   , mConnected(false)
+   , mBlockingFixed(false)
+   , mHandle(NULL)
+   , mLocalAddr(local_addr)
+   , mRemoteAddr(remote_addr)
+   , mType(sock_type)
+{
+   mHandle = new FileHandleImplUNIX(remote_addr.getAddressString());
 }
 
 } // End of vpr namespace

@@ -68,10 +68,7 @@ public:
     * Default constructor.  This sets the socket type to
     * vpr::SocketTypes::DATAGRAM.
     */
-   SocketDatagramImplBSD (void) : SocketImplBSD(vpr::SocketTypes::DATAGRAM)
-   {
-      /* Do nothing. */ ;
-   }
+   SocketDatagramImplBSD();
 
    /**
     * Constructs a datagram socket using the given addresses as defaults for
@@ -85,28 +82,15 @@ public:
     * @param remote_addr The remote address for this socket.  This is used to
     *                    specify a default destination for all packets.
     */
-   SocketDatagramImplBSD (const InetAddr& local_addr,
-                          const InetAddr& remote_addr)
-      : SocketImplBSD(local_addr, remote_addr, vpr::SocketTypes::DATAGRAM)
-   {
-      /* Do nothing. */ ;
-   }
+   SocketDatagramImplBSD(const InetAddr& local_addr,
+                         const InetAddr& remote_addr);
 
    /**
     * Copy constructor.
     *
     * @post This socket is a copy of the given socket.
     */
-   SocketDatagramImplBSD (const SocketDatagramImplBSD& sock)
-      : SocketImplBSD(SocketTypes::DATAGRAM)
-   {
-      mLocalAddr         = sock.mLocalAddr;
-      mRemoteAddr        = sock.mRemoteAddr;
-      mHandle            = new FileHandleImplUNIX(sock.mHandle->getName());
-      mHandle->mFdesc    = sock.mHandle->mFdesc;
-      mHandle->mOpen     = sock.mHandle->mOpen;
-      mHandle->mBlocking = sock.mHandle->mBlocking;
-   }
+   SocketDatagramImplBSD(const SocketDatagramImplBSD& sock);
 
    /**
     * Receives a message from the specified address.

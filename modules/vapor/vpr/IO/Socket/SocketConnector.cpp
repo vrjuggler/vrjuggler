@@ -176,6 +176,25 @@ vpr::ReturnStatus SocketConnector::complete(vpr::SocketStream& newStream,
    return status;
 }
 
+bool SocketConnector::checkOpen(SocketStream& newStream)
+{
+   vpr::ReturnStatus status;
+
+   if (!newStream.isOpen())
+   {
+       status = newStream.open();
+
+       if(!status.success())
+       {
+          vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
+             << "vpr::Connector:CheckOpen: Failed to open socket\n"
+             << vprDEBUG_FLUSH;
+       }
+   }
+
+   return status.success();
+}
+
 // Do preconnection rituals
 // - If not bound, then bind to local addr
 // - If timeout == 0, then set nonblocking
