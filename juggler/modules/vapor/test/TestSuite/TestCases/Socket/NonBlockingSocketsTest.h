@@ -56,18 +56,18 @@ public:
    void testSetOpenNonBlocking()
    {
       int port = 6275;
-      bool result = false;
+      //bool result = false;
       vpr::InetAddr local_addr;
       local_addr.setPort( port );
       vpr::SocketStream acceptor_socket( local_addr, vpr::InetAddr::AnyAddr );
-   
+
       acceptor_socket.setOpenNonBlocking(); // for opening
-      
+
       assertTest( acceptor_socket.getBlocking() );
    }
-   
+
    // Set OpenNonBlocking
-   // Open 
+   // Open
    // Close
    void testSetOpenNonBlockingThenOpenThenClose()
    {
@@ -76,19 +76,19 @@ public:
       vpr::InetAddr local_addr;
       local_addr.setPort( port );
       vpr::SocketStream acceptor_socket( local_addr, vpr::InetAddr::AnyAddr );
-   
+
       acceptor_socket.setOpenNonBlocking();
-      
+
       result = acceptor_socket.open().success();
       assertTest( result );
-      
+
       result = acceptor_socket.close().success();
       assertTest( result );
    }
 
    // Set OpenNonBlocking
-   // Open 
-   // enableNonBlock 
+   // Open
+   // enableNonBlock
    // Close
    void testSetOpenNonBlockingThenOpenThenEnableNonBlockThenClose()
    {
@@ -97,24 +97,24 @@ public:
       vpr::InetAddr local_addr;
       local_addr.setPort( port );
       vpr::SocketStream acceptor_socket( local_addr, vpr::InetAddr::AnyAddr );
-   
+
       acceptor_socket.setOpenNonBlocking(); // for opening
-      
+
       assertTest( acceptor_socket.getBlocking() );
-      
+
       result = acceptor_socket.open().success();
       assertTest( result );
 
       acceptor_socket.enableNonBlocking(); // for reads and writes
       assertTest( acceptor_socket.getBlocking() );
-      
+
       result = acceptor_socket.close().success();
       assertTest( result );
    }
 
    // 2 sockets...
    // a/c: Set OpenNonBlocking
-   // a/c: Open 
+   // a/c: Open
    // a/c: enableNonBlock
    // a:   bind
    // a:   listen
@@ -124,48 +124,48 @@ public:
    void testConnect2NonBlockingSockets()
    {
       int port = 6275;
-      bool result = false;
+      //bool result = false;
       vpr::InetAddr local_addr;
       vpr::Status status;
       local_addr.setPort( port );
       vpr::SocketStream acceptor_socket( local_addr, vpr::InetAddr::AnyAddr );
       vpr::SocketStream connector_socket( vpr::InetAddr::AnyAddr, local_addr );
-   
+
       // a/c: Set OpenNonBlocking
-      acceptor_socket.setOpenNonBlocking(); 
+      acceptor_socket.setOpenNonBlocking();
       connector_socket.setOpenNonBlocking();
-            
+
       assertTest( acceptor_socket.getBlocking() );
       assertTest( connector_socket.getBlocking() );
-      
-      // a/c: Open 
+
+      // a/c: Open
       status = acceptor_socket.open();
       assertTest( status.failure() != true );
       status = connector_socket.open();
       assertTest( status.failure() != true );
-      
+
       // a/c: enableNonBlock
       acceptor_socket.enableNonBlocking();
       assertTest( acceptor_socket.getBlocking() );
       connector_socket.enableNonBlocking();
       assertTest( connector_socket.getBlocking() );
-      
+
       // a:   bind
       status = acceptor_socket.bind();
       assertTest( status.failure() != true );
-      
+
       // a:   listen
       status = acceptor_socket.listen();
       assertTest( status.failure() != true );
-      
+
       // c:   connect
       status = connector_socket.connect();
       assertTest( status.failure() != true );
       if ( status.success() != true )
       {
          assertTest( status.inProgress() == true );
-      }      
-      
+      }
+
       // a:   accept
       vpr::SocketStream spawned_socket;
       status = acceptor_socket.accept( spawned_socket );
@@ -174,8 +174,8 @@ public:
       if ( status.success() != true )
       {
          assertTest( status.inProgress() == true );
-      }   
-      
+      }
+
       // a/c/s: Close
       status = acceptor_socket.close();
       assertTest( status.failure() != true );
@@ -184,10 +184,10 @@ public:
       status = spawned_socket.close();
       assertTest( status.failure() != true );
    }
-   
+
    // 2 sockets... use select...
    // a/c:   Set OpenNonBlocking
-   // a/c:   Open 
+   // a/c:   Open
    // a:     getHandle
    //        Add acceptor's handle to a selector
    // a/c:   enableNonBlock
@@ -197,31 +197,31 @@ public:
    //        select (block) until connection request goes through
    // a:     accept
    // s:     write...
-   // s:     write the max size... 
+   // s:     write the max size...
    // a/c/s: Close
    void testConnect2NonBlockingSocketsUsingSelect()
    {
       int port = 6275;
-      bool result = false;
+      //bool result = false;
       vpr::InetAddr local_addr;
       vpr::Status status;
       local_addr.setPort( port );
       vpr::SocketStream acceptor_socket( local_addr, vpr::InetAddr::AnyAddr );
       vpr::SocketStream connector_socket( vpr::InetAddr::AnyAddr, local_addr );
-   
+
       // a/c: Set OpenNonBlocking
-      acceptor_socket.setOpenNonBlocking(); 
+      acceptor_socket.setOpenNonBlocking();
       connector_socket.setOpenNonBlocking();
-            
+
       assertTest( acceptor_socket.getBlocking() );
       assertTest( connector_socket.getBlocking() );
-      
-      // a/c: Open 
+
+      // a/c: Open
       status = acceptor_socket.open();
       assertTest( status.failure() != true );
       status = connector_socket.open();
       assertTest( status.failure() != true );
-      
+
       // a: getHandle
       vpr::IOSys::Handle handle = acceptor_socket.getHandle();
 
@@ -235,57 +235,57 @@ public:
       assertTest( acceptor_socket.getBlocking() );
       connector_socket.enableNonBlocking();
       assertTest( connector_socket.getBlocking() );
-      
+
       // a:   bind
       status = acceptor_socket.bind();
       assertTest( status.failure() != true );
-      
+
       // a:   listen
       status = acceptor_socket.listen();
       assertTest( status.failure() != true );
-      
+
       // c:   connect
       status = connector_socket.connect();
       assertTest( status.failure() != true );
       if ( status.success() != true )
       {
          assertTest( status.inProgress() == true );
-      }      
-      
+      }
+
       // block until connection request goes through
       vpr::Uint16 num_events;
-      status = selector.select( num_events, 50000 );
+      status = selector.select( num_events, vpr::Interval(50000,vpr::Interval::MSEC) );
       for (int j = 0; j < selector.getNumHandles(); ++j)
       {
          if (selector.getOut( selector.getHandle(j) ) & (vpr::Selector::VPR_READ | vpr::Selector::VPR_EXCEPT))
          {
-            threadAssertTest( handle == selector.getHandle( j ) 
+            threadAssertTest( handle == selector.getHandle( j )
                   && "Handle doesn't match" );
          }
       }
       assertTest( num_events > 0 && "no events" );
-      
-      
+
+
       // a:   accept
       vpr::SocketStream spawned_socket;
       status = acceptor_socket.accept( spawned_socket );
       assertTest( status.success() == true && "accepted socket is NULL" );
       assertTest( spawned_socket.isOpen() && "accepted socket should be open" );
-      
+
       // s:    write...
       std::string message = "Hi Maynard, My leg hurts";
       int bytes_written;
       status = spawned_socket.write( message, message.size(), bytes_written );
       threadAssertTest( status.success(), "Problem writing in acceptor" );
-      
-      // s:    write the max size... 
+
+      // s:    write the max size...
       int size;
       status = spawned_socket.getSendBufferSize( size );
       threadAssertTest( status.success(), "couldn't get the max size for sending data with socket" );
       message.resize( size );
       status = spawned_socket.write( message, message.size(), bytes_written );
       threadAssertTest( status.success(), "maxsize test failed" );
-      
+
       // block until data is sent
       /*
       status = selector.select( num_events, 50000 );
@@ -293,17 +293,17 @@ public:
       {
          if (selector.getOut( selector.getHandle(j) ) & (vpr::Selector::VPR_READ | vpr::Selector::VPR_EXCEPT))
          {
-            threadAssertTest( handle == selector.getHandle( j ) 
+            threadAssertTest( handle == selector.getHandle( j )
                   && "Handle doesn't match" );
          }
       }
       assertTest( num_events > 0 && "no events" );
-      
+
       // c:     read
       status = connector_socket.read( message, message.size(), bytes_written );
       threadAssertTest( status.success(), "read test failed" );
       */
-      
+
       // a/c/s: Close
       status = acceptor_socket.close();
       assertTest( status.failure() != true );
@@ -312,7 +312,7 @@ public:
       status = spawned_socket.close();
       assertTest( status.failure() != true );
    }
-   
+
    static Test* suite()
    {
       TestSuite *test_suite = new TestSuite ("NonBlockingSocketTest");
@@ -322,12 +322,12 @@ public:
       test_suite->addTest( new TestCaller<NonBlockingSocketTest>("testSetOpenNonBlockingThenOpenThenEnableNonBlockThenClose", &NonBlockingSocketTest::testSetOpenNonBlockingThenOpenThenEnableNonBlockThenClose));
       test_suite->addTest( new TestCaller<NonBlockingSocketTest>("testConnect2NonBlockingSockets", &NonBlockingSocketTest::testConnect2NonBlockingSockets));
       test_suite->addTest( new TestCaller<NonBlockingSocketTest>("testConnect2NonBlockingSocketsUsingSelect", &NonBlockingSocketTest::testConnect2NonBlockingSocketsUsingSelect));
-      
+
       return test_suite;
    }
 
 protected:
-   vpr::Mutex     mMutex;        
+   vpr::Mutex     mMutex;
 };
 
 }

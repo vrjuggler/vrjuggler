@@ -15,6 +15,8 @@
 #include <vpr/IO/Socket/SocketAcceptor.h>
 #include <vpr/IO/Socket/SocketConnector.h>
 
+#include <vpr/Util/Interval.h>
+
 #include <vpr/System.h>
 
 #include <vpr/Thread/Thread.h>
@@ -32,7 +34,7 @@ class SocketConnectorAcceptorTest : public TestCase
 {
 public:
    SocketConnectorAcceptorTest( std::string name )
-   : mThreadAssertTest(false), TestCase (name)
+   : TestCase (name), mThreadAssertTest(false)
    {;}
 
    virtual ~SocketConnectorAcceptorTest()
@@ -44,7 +46,7 @@ public:
    virtual void tearDown()
    {
    }
-   
+
    // use this within your threads (CppUnit doesn't catch the assertTest there)
    // then test mThreadAssertTest with assertTest in your parent func.
    // then reset it to true.
@@ -52,7 +54,7 @@ public:
    {
        if(!testcase)
        {
-           mThreadAssertTest = testcase; 
+           mThreadAssertTest = testcase;
            std::cerr << "threadAssertTest: " << text << std::endl;
        }
        else
@@ -113,20 +115,20 @@ public:
    void testSpawnedAcceptor()
    {
        testAssertReset();
-       mRendevousPort = 47000 + (random() % 71);     // Get a partially random port       
+       mRendevousPort = 47000 + (random() % 71);     // Get a partially random port
        mNumItersA = 5;
        mMessageValue = std::string("The Data");
        mMessageLen = mMessageValue.length();
-       
+
        mState = NOT_READY;                        // Initialize
 
        // Spawn acceptor thread
-       vpr::ThreadMemberFunctor<SocketConnectorAcceptorTest> 
+       vpr::ThreadMemberFunctor<SocketConnectorAcceptorTest>
            acceptor_functor( this, &SocketConnectorAcceptorTest::testSpawnedAcceptor_acceptor );
        vpr::Thread acceptor_thread( &acceptor_functor);
 
        // Spawn connector thread
-       vpr::ThreadMemberFunctor<SocketConnectorAcceptorTest> 
+       vpr::ThreadMemberFunctor<SocketConnectorAcceptorTest>
            connector_functor( this, &SocketConnectorAcceptorTest::testSpawnedAcceptor_connector );
        vpr::Thread connector_thread( &connector_functor);
 
@@ -148,7 +150,7 @@ public:
        // Open the acceptor
        ret_val = acceptor.open(local_acceptor_addr);
        threadAssertTest((ret_val.success()), "Acceptor did not open correctly");
-                     
+
        for(int i=0;i<mNumItersA;i++)
        {
           // READY - Tell everyone that we are ready to accept
@@ -161,28 +163,28 @@ public:
 
           // ACCEPT connection
           sock = new vpr::SocketStream;
-          ret_val = acceptor.accept(*sock);
+          ret_val = acceptor.accept(*sock, vpr::Interval::NoTimeout );
            threadAssertTest((ret_val.success()), "Accepting socket failed");
 
            threadAssertTest((sock->isOpen()), "Accepted socket should be open");
            //threadAssertTest((sock->isConnected()), "Accepted socket should be connected");
-           
-           ret_val = sock->write(mMessageValue, mMessageLen, bytes_written);      // Send a message           
+
+           ret_val = sock->write(mMessageValue, mMessageLen, bytes_written);      // Send a message
            threadAssertTest((ret_val.success()), "Problem writing in acceptor");
            threadAssertTest((bytes_written == mMessageLen), "Didn't send entire messag");
-           
+
            // WAIT for close
-           mCondVar.acquire();         
+           mCondVar.acquire();
            while(mState != CONNECTOR_CLOSED)
-              mCondVar.wait();             
+              mCondVar.wait();
            mCondVar.release();
-                      
+
            //ret_val = sock->isConnected();
            //threadAssertTest((ret_val == false), "Socket should not still be connected");
-           
+
            ret_val = sock->close();                                // Close the socket
-           threadAssertTest((ret_val.success()), "Problem closing accepted socket");           
-       }       
+           threadAssertTest((ret_val.success()), "Problem closing accepted socket");
+       }
    }
    void testSpawnedAcceptor_connector(void* arg)
    {
@@ -191,31 +193,31 @@ public:
       vpr::InetAddr remote_addr;
       remote_addr.setAddress("localhost", mRendevousPort);
       vpr::SocketConnector connector;           // Connect to acceptor
-      
+
       for(int i=0;i<mNumItersA;i++)
       {
-         // WAIT for READY 
+         // WAIT for READY
          mCondVar.acquire();
          {
             while(mState != READY)
                mCondVar.wait();
          }
          mCondVar.release();
-         
+
          vpr::SocketStream    con_sock;
          std::string      data;
-         ret_val = connector.connect(con_sock, remote_addr, 100);
+         ret_val = connector.connect(con_sock, remote_addr, vpr::Interval::NoTimeout );
          threadAssertTest((ret_val.success()), "Connector can't connect");
-         
+
          ret_val = con_sock.read(data, mMessageLen, bytes_read);   // Recieve data
          threadAssertTest((ret_val.success()), "Read failed");
-         threadAssertTest((bytes_read == mMessageLen), "Connector recieved message of wrong size" );         
-         
+         threadAssertTest((bytes_read == mMessageLen), "Connector recieved message of wrong size" );
+
          //ret_val = con_sock.isConnected();
-         //threadAssertTest((ret_val == false), "Socket should still be connected");            
-         
+         //threadAssertTest((ret_val == false), "Socket should still be connected");
+
          con_sock.close();                                   // Close socket
-         
+
          // Tell everyone that we closed
          mCondVar.acquire();
          {
@@ -225,24 +227,24 @@ public:
          mCondVar.release();
       }
    }
-   
+
    static Test* suite()
    {
       TestSuite *test_suite = new TestSuite ("SocketConnectorAcceptorTest");
 
       test_suite->addTest( new TestCaller<SocketConnectorAcceptorTest>("testAcceptorConstruction", &SocketConnectorAcceptorTest::testAcceptorConstruction));
-      test_suite->addTest( new TestCaller<SocketConnectorAcceptorTest>("testSpawnedAcceptor", &SocketConnectorAcceptorTest::testSpawnedAcceptor));      
+      test_suite->addTest( new TestCaller<SocketConnectorAcceptorTest>("testSpawnedAcceptor", &SocketConnectorAcceptorTest::testSpawnedAcceptor));
       return test_suite;
    }
 
-private:   
+private:
    bool             mThreadAssertTest; // true for no error
 
 protected:
     vpr::Uint16     mRendevousPort;     // The port the acceptor will be waiting on
     int             mNumItersA;        // Number of primary iterations
     int             mNumItersB;        // Number of secondary iterations
-    
+
     vpr::Uint16     mMessageLen;        // Length of message to send
     std::string     mMessageValue;      // The value of the message that is supposed to be sent (and recieved)
 
@@ -259,4 +261,4 @@ protected:
 
 }       // namespace
 
-#endif          
+#endif
