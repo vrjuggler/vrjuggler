@@ -96,7 +96,7 @@ endif
 # Version information.
 BRANCH		= HEAD
 CANON_NAME	= Evil Cartman
-VER_ARGS	= -f $(GADGETROOT_ABS)/VERSION -s @SUBSYSTEM@		\
+VER_ARGS	= -f $(GADGETROOT_ABS)/VERSION -s @VPR_SUBSYSTEM@	\
                   -b $(BRANCH) -o gadget/gadgetParam.h 			\
                   -i $(GADGETROOT_ABS)/gadget/gadgetParam.h.in		\
                   -n "$(CANON_NAME)" -d "`date '+%b %e, %Y %H:%M:%S'`"
