@@ -247,6 +247,35 @@ namespace cluster
    
    bool SwapLockPlugin::createBarrier()
    {
+      // If Slave
+      // - send ready to Master
+      // - read ready from Server
+      // Else if Master
+      // - for each slave
+      //   - read ready
+      // - for each slave
+      //   - send ready
+
+      if (/*mConfigured && mBarrier != NULL &&*/ mBarrier->isActive())
+      {
+         vpr::Interval first_time, second_time;
+         first_time.setNow();
+
+         if (mBarrier->isMaster())
+         {
+            mBarrier->MasterReceive();
+            mBarrier->MasterSend();
+         }
+         else
+         {
+            mBarrier->SlaveSend();
+            mBarrier->SlaveReceive();
+         }
+         second_time.setNow();
+         vpr::Interval diff_time(second_time-first_time);
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << clrSetBOLD(clrCYAN) << "Latency: " 
+            << diff_time.getBaseVal() << " usecs\n"<< clrRESET << vprDEBUG_FLUSH;
+      }
       return(true);
    }
 

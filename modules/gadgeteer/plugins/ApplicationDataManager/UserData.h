@@ -71,8 +71,8 @@ private:
    // Make sure that we are not already deriving from ApplicationData
    BOOST_STATIC_ASSERT(!(::boost::is_base_and_derived<cluster::ApplicationData,BASE>::value));
    
-//   // Make sure that we are deriving from a SerializableObject class
-//   BOOST_STATIC_ASSERT((::boost::is_base_and_derived<cluster::ApplicationData,BASE>::value));
+   // Make sure that we are deriving from a SerializableObject class
+   BOOST_STATIC_ASSERT((::boost::is_base_and_derived<vpr::SerializableObject,BASE>::value));
 
 };
 
@@ -85,7 +85,44 @@ class UserData
 public:
    typedef TYPE Type;
    
-   UserData(vpr::GUID id, std::string host_name = std::string(""))
+   UserData()
+   {
+      mAppData = NULL;
+   }
+   
+   /** Copy Constructor */
+   UserData(UserData& userdata) : mAppData(userdata.mAppData)
+   {
+//      *this = userdata;
+   }
+   
+   bool operator== (const UserData& userdata) const
+   {
+      // Make sure user_data is valid also
+      if (NULL == mAppData)
+      {
+         return false;
+      }  // Not valid
+      return (mAppData == userdata.mAppData);
+   }
+   
+   bool operator!= (const UserData& userdata) const
+   {
+      return !(*this == userdata);
+   }
+
+   UserData& operator=(const UserData& userdata)
+   {
+      //if (! (this == &userdata) )    // Different objects
+      //{
+         mAppData = userdata.mAppData;
+      //}
+   
+      return *this;
+   }
+
+
+   void init(vpr::GUID id, std::string host_name = std::string(""))
    {
       mAppData = new AppDataMixin<TYPE>(id, host_name);
    }

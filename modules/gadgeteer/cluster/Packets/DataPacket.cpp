@@ -73,11 +73,12 @@ namespace cluster
       serialize();
    }
    
-   vpr::ReturnStatus DataPacket::send()
+   vpr::ReturnStatus DataPacket::send(vpr::SocketStream* socket)
    {
       vprASSERT("YOU SHOULD NOT BE USING THIS SEND FUNCTION");
       return(vpr::ReturnStatus::Fail);
    }
+
    void DataPacket::send(vpr::SocketStream* socket, vpr::GUID device_id, std::vector<vpr::Uint8>* device_data)
    {
       // - Send header data

@@ -79,7 +79,7 @@ public:
       ;
    }
 
-   virtual vpr::ReturnStatus send();
+   virtual vpr::ReturnStatus send(vpr::SocketStream* socket);
 
    void send(vpr::SocketStream* socket, vpr::GUID device_id, std::vector<vpr::Uint8>* device_data);
 

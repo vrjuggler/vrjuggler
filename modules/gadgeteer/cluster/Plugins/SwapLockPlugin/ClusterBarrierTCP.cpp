@@ -275,12 +275,13 @@ namespace cluster
             try
             {
                sync_request = static_cast<SyncRequest*>(temp_packet);
+               sync_request->printData(vprDBG_CONFIG_LVL);
             }
             catch(...)
             {
                vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
                   << clrOutBOLD(clrRED,"ERROR:")
-                  << " ClusterNetwork::acceptLoop() The first packet read on the socket is NOT a Connection Request" << std::endl << vprDEBUG_FLUSH;
+                  << " ClusterNetwork::acceptLoop() The first packet read on the socket is NOT a Sync Request" << std::endl << vprDEBUG_FLUSH;
                exit(0);
             }
             /////////////////

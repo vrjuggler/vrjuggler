@@ -138,7 +138,7 @@ public:
       vpr::ReturnStatus status;
       if (mIsMaster)
       {
-         //startListening();
+         startListening();
          mActive = true;
          return(vpr::ReturnStatus::Succeed);
       }
