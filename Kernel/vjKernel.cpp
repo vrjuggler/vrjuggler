@@ -101,14 +101,16 @@ void vjKernel::controlLoop(void* nullParam)
             perfBuffer->set (0);
             vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: drawManager->draw()\n" << vjDEBUG_FLUSH;
          mDrawManager->draw();    // DRAW: Trigger the beginning of frame drawing
+			mSoundManager->update();
             perfBuffer->set (1);
             vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->intraFrame()\n" << vjDEBUG_FLUSH;
          mApp->intraFrame();        // INTRA FRAME: Do computations that can be done while drawing.  This should be for next frame.
          //usleep(15000);              // Generate a wait in critical section
             perfBuffer->set (2);
             vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: drawManager->sync()\n" << vjDEBUG_FLUSH;
-         mDrawManager->sync();    // SYNC: Block until drawing is done
-            perfBuffer->set (3);
+			mSoundManager->sync();
+			mDrawManager->sync();    // SYNC: Block until drawing is done
+			   perfBuffer->set (3);
             vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->postFrame()\n" << vjDEBUG_FLUSH;
          mApp->postFrame();        // POST FRAME: Do processing after drawing is complete
             perfBuffer->set (4);
@@ -258,6 +260,7 @@ void vjKernel::initConfig()
    vjASSERT(mDisplayManager != NULL);                 // Did we get an object
    //setupEnvironmentManager();
    environmentManager = new vjEnvironmentManager();
+	mSoundManager = vjSoundManager::instance();
 
    //??// processPending() // Should I do this here
 
@@ -303,13 +306,15 @@ int vjKernel::configProcessPending(bool lockIt)
       chunks_processed += vjConfigChunkHandler::configProcessPending(lockIt);      // Process kernels pending chunks
       chunks_processed += getInputManager()->configProcessPending(lockIt);
       chunks_processed += mDisplayManager->configProcessPending(lockIt);
-      if(NULL != mDrawManager)
+      if(NULL != mSoundManager)
+			chunks_processed != mSoundManager->configProcessPending(lockIt);
+		if(NULL != mDrawManager)
          chunks_processed += mDrawManager->configProcessPending(lockIt);              // XXX: We should not necessarily do this for all draw mgrs
       if (NULL != environmentManager)
          chunks_processed += environmentManager->configProcessPending(lockIt);
       if(NULL != mApp)
          chunks_processed += mApp->configProcessPending(lockIt);
-
+		
       vjDEBUG_ENDlg(vjDBG_ALL,vjDBG_CONFIG_LVL,false,false) << endl << vjDEBUG_FLUSH;
    }
    return chunks_processed;
