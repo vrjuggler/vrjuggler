@@ -41,10 +41,10 @@ $(OBJDIR)/%.$(OBJ_FILE_SUFFIX): %.C
 
 # Search path for source code and object files.
 vpath
-vpath %.c ${PATH_TO_SRCS}
-vpath %.C ${PATH_TO_SRCS}
-vpath %.cpp ${PATH_TO_SRCS}
-vpath %.cxx ${PATH_TO_SRCS}
-vpath %.c++ ${PATH_TO_SRCS}
-vpath %.cc ${PATH_TO_SRCS}
+vpath %.c $(srcdir):${PATH_TO_SRCS}
+vpath %.C $(srcdir):${PATH_TO_SRCS}
+vpath %.cpp $(srcdir):${PATH_TO_SRCS}
+vpath %.cxx $(srcdir):${PATH_TO_SRCS}
+vpath %.c++ $(srcdir):${PATH_TO_SRCS}
+vpath %.cc $(srcdir):${PATH_TO_SRCS}
 vpath %.${OBJ_FILE_SUFFIX} ${OBJDIR}
