@@ -54,10 +54,9 @@ namespace vrj
 class VJ_CLASS_API Display
 {
 public:
-   Display()
+   Display() : mBorder(true), mPipe(-1), mActive(true), mStereoRequested(false)
    {
       _xo = _yo = _xs = _ys = -1;
-      mPipe = -1;
    }
 
    virtual ~Display()
@@ -112,10 +111,14 @@ public:
    { return mPipe; }
 
    /**
+    * Indicates whether stereo rendering has been requested for this display.
+    *
     * @note If we are in simulator, we can not be in stereo.
     */
-   bool inStereo()
-   { return mInStereo; }
+   bool isStereoRequested()
+   {
+      return mStereoRequested;
+   }
 
    /** Gets the config chunk that configured this display window. */
    jccl::ConfigChunkPtr getConfigChunk()
@@ -138,7 +141,7 @@ protected:
    bool           mBorder;              /**< Should we have a border */
    int            mPipe;                /**< Hardware pipe. Index of the rendering hardware */
    bool           mActive;              /**< Is the display active or not? */
-   bool           mInStereo;            /**< Is the window in stereo mode? */
+   bool           mStereoRequested;     /**< Has stereo been requested? */
    jccl::ConfigChunkPtr mDisplayChunk;  /**< The chunk data for this display */
 
    std::vector<vrj::Viewport*>   mViewports;    /**<  Contained viewports */

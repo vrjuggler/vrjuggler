@@ -220,15 +220,14 @@ vpr::Guard<vpr::Mutex> guard(mWinIdMutex);      // Protect the id
    return mCurMaxWinId++;
 }
 
-std::ostream& operator<<(std::ostream& out, GlWindow* win)
+std::ostream& operator<<(std::ostream& out, GlWindow& win)
 {
-   vprASSERT(win != NULL);
-   vprASSERT(win->mVrjDisplay != NULL);
+   vprASSERT(win.mVrjDisplay != NULL);
 
    //out << "-------- GlWindow --------" << endl;
-   out << "Open: " << (win->window_is_open ? "Yes" : "No") << std::endl;
-   out << "Display Info:\n" << *(win->mVrjDisplay) << std::endl;
-   out << "Stereo: " << (win->in_stereo ? "Yes" : "No") << std::endl;
+   out << "Open: " << (win.window_is_open ? "Yes" : "No") << std::endl;
+   out << "Stereo: " << (win.in_stereo ? "Yes" : "No") << std::endl;
+   out << "Display Info:\n" << *(win.mVrjDisplay) << std::endl;
    return out;
 }
 

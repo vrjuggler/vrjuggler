@@ -225,7 +225,7 @@ public:
       height = window_height;
    }
 
-   friend std::ostream& operator<<(std::ostream& out, GlWindow* win);
+   friend std::ostream& operator<<(std::ostream& out, GlWindow& win);
 
 public:  /**** Static Helpers *****/
    /* static */ virtual bool createHardwareSwapGroup(std::vector<GlWindow*> wins)

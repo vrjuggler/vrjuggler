@@ -563,7 +563,7 @@ void GlWindowXWin::checkEvents()
       return NULL;
    }
 
-   if ( mVrjDisplay->inStereo() )
+   if ( mVrjDisplay->isStereoRequested() )
    {
       viattrib.push_back(GLX_STEREO);
       in_stereo = true;
@@ -583,7 +583,7 @@ void GlWindowXWin::checkEvents()
    }
 
    // still no luck. if we were going for stereo, let's try without.
-   if ( mVrjDisplay->inStereo() )
+   if ( mVrjDisplay->isStereoRequested() )
    {
       vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
          << "WARNING: Display process for '" << mXDisplayName
