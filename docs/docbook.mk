@@ -5,14 +5,17 @@
 XALAN_VERSION?=	20020214
 SAXON_VERSION?=	6.5.1
 
+DVIPDF?=	dvipdf
+DVIPS?=		dvips
 FOP?=		sh $(DOCBOOK_ROOT)/fop/fop.sh
 JADE?=		openjade
-JADETEX?=	jadetex
-PDFJADETEX?=	pdfjadetex
-PDFLATEX?=	$(DOCBOOK_ROOT)/pdftex-linux/pdflatex
-PDFTEX?=	$(DOCBOOK_ROOT)/pdftex-linux/pdftex
+JADETEX?=	$(TEX_BINDIR)/jadetex
+PDFJADETEX?=	$(TEX_BINDIR)/pdfjadetex
+PDFLATEX?=	$(TEX_BINDIR)/pdflatex
+PDFTEX?=	$(TEX_BINDIR)/pdftex
 RM=		rm -f
 SAXON?=		$(DOCBOOK_ROOT)/saxon-$(SAXON_VERSION)/saxon.sh
+TEX_BINDIR?=	/usr/bin
 XALAN?=		$(DOCBOOK_ROOT)/xalan-j_$(XALAN_VERSION)/bin/xalan.sh
 XEP?=		sh $(DOCBOOK_ROOT)/XEP/run.sh
 XSLTPROC?=	/usr/bin/xsltproc
@@ -49,7 +52,7 @@ XALAN_TXT_PARAMS=	-PARAM page.margin.bottom "0in"	\
 DOCBOOK_ROOT?=	/home/vr/Juggler/docbook
 SGML_ROOT?=	/usr/share/sgml/docbook
 
-DSSSL_DIR?=	$(DOCBOOK_ROOT)/docbook-dsssl-1.74b
+DSSSL_DIR?=	$(DOCBOOK_ROOT)/docbook-dsssl-1.76
 XSL_DIR?=	$(DOCBOOK_ROOT)/docbook-xsl-1.49
 TEXINPUTS=	.:$(DOCBOOK_ROOT)/latex/passivetex:$(DOCBOOK_ROOT)/latex/base:
 
@@ -87,7 +90,7 @@ endif
 
 .xml.html:
 ifeq ($(XSLT_TOOL), Xalan)
-	$(XALAN) -in $< -xsl $(XSL_DIR)/html/conferencepaper.xsl -out $@	\
+	$(XALAN) -in $< -xsl $(XSL_DIR)/html/docbook.xsl -out $@	\
           $(XALAN_HTML_PARAMS) $(EXTRA_XALAN_HTML_PARAMS)
 else
 	$(SAXON) -i $< -xsl $(XSL_DIR)/html/docbook.xsl -o $@		\
@@ -135,11 +138,9 @@ ifdef USE_JADE
 .xml.tex:
 	$(JADE) -t tex -d $(DSSSL_DIR)/print/docbook.dsl $<
 
-# Generate a PDF file using JadeTeX.  This one requires that a TeX file be
-# generated using Jade first (see above).
-#.xml.pdf:
-#	$(JADETEX) $*.tex
-#	$(PDFJADETEX) $*.tex
+# $(PDFJADETEX) has to be run twice for page references to be calculated.  :(
+.tex.pdf:
+	-$(PDFJADETEX) $<
 endif
 
 # -----------------------------------------------------------------------------
