@@ -130,6 +130,6 @@ ostream& operator<<(ostream& out, vjGlWindow& win)
    out << "-------- vjGlWindow --------" << endl;
    out << "Open: " << win.window_is_open << endl;
    out << "Display:" << *(win.display) << endl;
-   out << "Setero:" << win.in_stereo << endl;
+   out << "Stereo:" << win.in_stereo << endl;
    return out;
 }
