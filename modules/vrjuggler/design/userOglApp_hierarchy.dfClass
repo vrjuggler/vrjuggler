@@ -1,0 +1,59 @@
+package id3lf3hcy7rwc73cy7s6gef;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#userOglApp:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#vrj::GlApp:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#$$constructor$$#(#vrj::Kernel*#)#:oiref>
+@__hiddenMember BeanProperty#<oiref:cpp#Member#vrj::GlApp#getDrawManager#(##)#:oiref> 
+*/
+class reference1 {
+}/**
+@__ref <oiref:cpp#Class#vrj::App:oiref><oihard>
+@__modelType reference
+@__imported
+@hideAttributes
+@hideProperties
+@__hiddenMember <oiref:cpp#Member#vrj::App#configRemove#(#jccl::ConfigChunkPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configAdd#(#jccl::ConfigChunkPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#depSatisfied#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configCanHandle#(#jccl::ConfigChunkPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#focusChanged#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#haveFocus#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#reset#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(#vrj::Kernel*#)#:oiref> 
+*/
+class reference2 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options filter.e.state = off 
+*/
+class __options {
+}/**
+@__positions 
+<oigroup:<oiref:cpp#Class#userOglApp:oiref>=160,240,143,197,1:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::GlApp#vrj::App:oiref>=320,95,250,95:oigroup>
+<oigroup:<oiref:cpp#Extends#userOglApp#vrj::GlApp:oiref>=303,310,370,310,370,180:oigroup>
+<oigroup:<oiref:cpp#Member#userOglApp#apiInit#(##)#:oiref>=110,130,211,13,1:oigroup>
+<oigroup:<oiref:cpp#Member#userOglApp#preFrame#(##)#:oiref>=110,150,211,13,1:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::GlApp:oiref>=320,10,250,170,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::App:oiref>=10,10,240,199,0:oigroup>
+*/
+class __positions {
+}

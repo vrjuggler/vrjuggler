@@ -1,0 +1,59 @@
+package id2au7qcyau46y0cyavefvd;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#vrj::App:oiref><oihard>
+@__modelType reference
+@__imported
+@hideAttributes
+@__hiddenMember BeanProperty#<oiref:cpp#Member#vrj::App#setFocus#(#bool#)#:oiref>
+@__hiddenMember BeanProperty#<oiref:cpp#Member#vrj::App#getDrawManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#reset#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#haveFocus#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#focusChanged#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configCanHandle#(#jccl::ConfigChunkPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#depSatisfied#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configAdd#(#jccl::ConfigChunkPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configRemove#(#jccl::ConfigChunkPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(#vrj::Kernel*#)#:oiref> 
+*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#vrj::PfApp:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember BeanProperty#<oiref:cpp#Member#vrj::PfApp#getScene#(##)#:oiref>
+@__hiddenMember BeanProperty#<oiref:cpp#Member#vrj::PfApp#getFrameBufferAttrs#(##)#:oiref>
+@__hiddenMember BeanProperty#<oiref:cpp#Member#vrj::PfApp#getDrawManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#$$constructor$$#(#vrj::Kernel*#)#:oiref> 
+*/
+class reference3 {
+}/**
+@__ref <oiref:cpp#Class#userPfApp:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference4 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:cpp#Extends#vrj::PfApp#vrj::App:oiref>=280,103,250,103:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::PfApp:oiref>=280,10,270,210,0:oigroup>
+<oigroup:<oiref:cpp#Extends#userPfApp#vrj::PfApp:oiref>=284,330,330,330,330,220:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::App:oiref>=10,10,240,186,0:oigroup>
+<oigroup:<oiref:cpp#Class#userPfApp:oiref>=170,260,114,181,1:oigroup>
+*/
+class __positions {
+}
