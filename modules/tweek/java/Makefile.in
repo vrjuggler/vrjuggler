@@ -62,6 +62,8 @@ JAVA_SRC_PATH=		$(KUNSTSTOFF_SRCDIR)
 JDOM_JAR=	@JDOM_JAR@
 JAVA_ORB_JAR=	@JAVA_ORB_JAR@
 
+#SKIN_LAF_DIR=	$(LAF_DIR)/skinlf/lib
+#SKIN_LAF_JARS=	$(SKIN_LAF_DIR)/skinlf.jar$(JCPS)$(SKIN_LAF_DIR)/themepack.zip
 METOUIA_JAR=	$(LAF_DIR)/metouia/metouia.jar
 
 LAF_JARS=	$(METOUIA_JAR)
@@ -130,8 +132,7 @@ else
           $(TWEEKROOT_ABS)/java/tweek.bat $(bindir)/tweek.bat
 endif	# if OS_TYPE == UNIX
 	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
-          $(GROUP_OPT_UNIX) $(top_srcdir)/java/java.security.policy.txt	\
-          $(bindir)
+          $(GROUP_OPT_UNIX) $(srcdir)/java.security.policy.txt $(bindir)
 	for jar in $(JARS) ;						\
           do								\
               $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
