@@ -47,9 +47,10 @@
 namespace vrj
 {
 
-class VJ_CLASS_API GlWindowWin32 : public GlWindow
-	, public gadget::InputAreaWin32
-//	, public gadget::EventWindowWin32
+class VJ_CLASS_API GlWindowWin32
+   : public GlWindow
+   , public gadget::InputAreaWin32
+// , public gadget::EventWindowWin32
 {
 public:
    GlWindowWin32();
@@ -92,15 +93,16 @@ public:
 
    void configWindow( vrj::Display* disp );
 
-	virtual void setDelegate(gadget::EventWindowWin32* delegate)
-	{
-		InputAreaWin32::setDelegate(delegate);
-		mIsEventSource = true;
-		mUseOwnDisplay = false;
-	   // Custom configuration
+   virtual void setDelegate(gadget::EventWindowWin32* delegate)
+   {
+      InputAreaWin32::setDelegate(delegate);
+      mIsEventSource = true;
+      mUseOwnDisplay = false;
+      // Custom configuration
       gadget::InputAreaWin32::mWidth = GlWindowWin32::mWindowWidth;
       gadget::InputAreaWin32::mHeight = GlWindowWin32::mWindowHeight;
-	}
+   }
+
 protected:
    // WindowProcedure to deal with the events generated.
    // Called only for the window that we are controlling
@@ -143,9 +145,9 @@ private:
    HGLRC mRenderContext;  /**< Permenant Rendering context */
    HDC   mDeviceContext;  /**< Private GDI Device context */
 
-   std::string						mWindowName;
-   int								mPipe;
-   std::string						mXDisplayName;       /**<  Name of the x display to use */
+   std::string  mWindowName;
+   int          mPipe;
+   std::string  mXDisplayName;       /**<  Name of the X11 display to use */
 };
 
 } // End of vrj namespace

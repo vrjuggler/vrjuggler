@@ -114,7 +114,7 @@ bool GlWindowWin32::open()
    // If window was not created, quit
    if ( NULL == mWinHandle )
    {
-		doInternalError("Could not create EventWindowWin32!");
+      doInternalError("Could not create EventWindowWin32!");
       return 0;
    }
 
@@ -201,7 +201,7 @@ void GlWindowWin32::checkEvents()
       << std::endl << vprDEBUG_FLUSH;
    if (true == mIsEventSource)
    {
-		handleEvents();
+      handleEvents();
    }
    else
    {
@@ -227,7 +227,7 @@ void GlWindowWin32::configWindow(vrj::Display* disp)
    vprASSERT( disp != NULL );
    vrj::GlWindow::configWindow(disp);
 
-	// Get the vector of display chunks
+   // Get the vector of display chunks
    jccl::ConfigElementPtr disp_sys_elt =
       DisplayManager::instance()->getDisplaySystemElement();
    jccl::ConfigElementPtr display_elt = disp->getConfigElement();
@@ -291,7 +291,7 @@ LRESULT GlWindowWin32::handleEvent(HWND hWnd, UINT message, WPARAM wParam,
          // Call our function which modifies the clipping
          // volume and viewport
          sizeChanged(LOWORD(lParam), HIWORD(lParam));
-	 InputAreaWin32::resize(LOWORD(lParam), HIWORD(lParam));
+         InputAreaWin32::resize(LOWORD(lParam), HIWORD(lParam));
          break;
 
          // The painting function.  This message sent by Windows
@@ -303,10 +303,10 @@ LRESULT GlWindowWin32::handleEvent(HWND hWnd, UINT message, WPARAM wParam,
             EndPaint(hWnd, &ps);
          }
          break;
-		// Catch the ALT key so that it does not open the system menu.
+      // Catch the ALT key so that it does not open the system menu.
       case WM_SYSKEYDOWN:
       case WM_SYSKEYUP:
-			break;
+         break;
       default:   // Passes it on if unproccessed
          return DefWindowProc(hWnd, message, wParam, lParam);
    }
@@ -390,11 +390,11 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
 
       if ( result == 0 )
       {
-			std::stringstream error;
-			error << "Failed to get requested visual (ID 0x" << std::hex
-					<< visual_id << std::dec << ")" << std::flush;
-			
-			doInternalError(error.str());
+         std::stringstream error;
+         error << "Failed to get requested visual (ID 0x" << std::hex
+               << visual_id << std::dec << ")" << std::flush;
+
+         doInternalError(error.str());
          return false;
       }
 
@@ -450,7 +450,7 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
          {
             if ( !(match.dwFlags & PFD_STEREO) )
             {
-					doInternalError("Could not get a stereo pixel format.");
+               doInternalError("Could not get a stereo pixel format.");
                return false;
             }
          }
@@ -498,9 +498,9 @@ LRESULT CALLBACK GlWindowWin32::WndProc(HWND hWnd, UINT message,
    }
    else
    {
-		vprDEBUG(vrjDBG_DRAW_MGR, 0)
-			<< "Could not find GlWindow to process event."
-			<< std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+         << "Could not find GlWindow to process event."
+         << std::endl << vprDEBUG_FLUSH;
 
       return DefWindowProc(hWnd, message, wParam, lParam);
    }
@@ -533,7 +533,7 @@ bool GlWindowWin32::registerWindowClass()
    mWinClass.cbClsExtra  = 0;
    mWinClass.cbWndExtra  = 0;
    mWinClass.hInstance   = hInstance;            // Get handle to the module that created current process
-	mWinClass.hIcon		 = LoadIcon(hInstance, "VRJUGGLER_ICON" );
+   mWinClass.hIcon       = LoadIcon(hInstance, "VRJUGGLER_ICON");
    mWinClass.hCursor     = LoadCursor(NULL, IDC_ARROW);
 
    // No need for background brush for OpenGL window
@@ -544,9 +544,9 @@ bool GlWindowWin32::registerWindowClass()
    mWinClass.lpszClassName  = GL_WINDOW_WIN32_CLASSNAME;
 
 #ifdef _DEBUG
-#	define LIBNAME "vrj_ogl_d.dll"
+#  define LIBNAME "vrj_ogl_d.dll"
 #else
-#	define LIBNAME "vrj_ogl.dll"
+#  define LIBNAME "vrj_ogl.dll"
 #endif
 
    if (mWinClass.hIcon == NULL)
@@ -554,9 +554,9 @@ bool GlWindowWin32::registerWindowClass()
       HINSTANCE hDLLInstance = LoadLibrary( LIBNAME );
       if (hDLLInstance != NULL)
       {
-			mWinClass.hIcon = LoadIcon(hDLLInstance, "VRJUGGLER_ICON");
-		}
-	}
+         mWinClass.hIcon = LoadIcon(hDLLInstance, "VRJUGGLER_ICON");
+      }
+   }
 
    // Register the window class
    if ( RegisterClass(&mWinClass) == 0 )
