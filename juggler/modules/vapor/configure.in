@@ -755,6 +755,7 @@ AC_OUTPUT(Makefile
           Threads/Makefile
           Utils/Makefile
           test/Makefile
+          test/TestSuite/Makefile
           test/SerialPort/Makefile
           test/Socket/Makefile
           test/Sync/Makefile
