@@ -142,11 +142,11 @@ bool GlWindowWin32::open()
    mWindowIsOpen = true;
 
    // ----------- Event window device starting -------------- //
-	gadget::InputAreaWin32::InputAreaRegistry::InputAreaInfo input_area_info;
-	input_area_info.mDisplayName = mWindowName;
-	input_area_info.mInputArea = this;
+   gadget::InputAreaWin32::InputAreaRegistry::InputAreaInfo input_area_info;
+   input_area_info.mDisplayName = mWindowName;
+   input_area_info.mInputArea = this;
 
-	gadget::InputAreaWin32::InputAreaRegistry::instance()->addInputArea(mWindowName, input_area_info);
+   gadget::InputAreaWin32::InputAreaRegistry::instance()->addInputArea(mWindowName, input_area_info);
 
    // If mHideMouse is true we must pass false to ShowCursor
    ShowCursor(! mHideMouse);
@@ -290,10 +290,8 @@ LRESULT GlWindowWin32::handleEvent(HWND hWnd, UINT message, WPARAM wParam,
       case WM_SIZE:
          // Call our function which modifies the clipping
          // volume and viewport
-			vprDEBUG(vrjDBG_DRAW_MGR, 0)
-				<< "GlWindowWin32::handleEvent() Size changed."
-				<< mXDisplayName << std::endl << vprDEBUG_FLUSH;
          sizeChanged(LOWORD(lParam), HIWORD(lParam));
+	 InputAreaWin32::resize(LOWORD(lParam), HIWORD(lParam));
          break;
 
          // The painting function.  This message sent by Windows
