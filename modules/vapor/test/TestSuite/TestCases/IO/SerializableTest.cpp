@@ -37,7 +37,6 @@ void SerializableTest::testReaderWriter()
    writer->writeUint64(data_uint64);
    writer->writeFloat(data_float);
    writer->writeDouble(data_double);
-   writer->writeUint8(data_string.length());
    writer->writeString(data_string);
    writer->writeBool(data_bool);
 
@@ -47,7 +46,6 @@ void SerializableTest::testReaderWriter()
    vpr::Uint64 read_uint64;
    float       read_float;
    double      read_double;
-   vpr::Uint8  read_str_len;
    std::string read_string;
    bool        read_bool;
 
@@ -60,8 +58,7 @@ void SerializableTest::testReaderWriter()
    reader->readUint64(read_uint64);
    reader->readFloat(read_float);
    reader->readDouble(read_double);
-   reader->readUint8(read_str_len);
-   reader->readString(read_string, read_str_len);
+   reader->readString(read_string);
    reader->readBool(read_bool);
 
    CPPUNIT_ASSERT(data_uint8 == read_uint8);
@@ -94,7 +91,6 @@ void SerializableTest::testDataOffsets()
    vpr::Uint64 read_uint64;
    float       read_float;
    double      read_double;
-   vpr::Uint8  read_str_len;
    std::string read_string;
    bool        read_bool;
 
@@ -119,7 +115,6 @@ void SerializableTest::testDataOffsets()
       writer->writeUint64(data_uint64);
       writer->writeFloat(data_float);
       writer->writeDouble(data_double);
-      writer->writeUint8(data_string.length());
       writer->writeString(data_string);
       writer->writeBool(data_bool);
 
@@ -139,8 +134,7 @@ void SerializableTest::testDataOffsets()
       reader->readUint64(read_uint64);
       reader->readFloat(read_float);
       reader->readDouble(read_double);
-      reader->readUint8(read_str_len);
-      reader->readString(read_string, read_str_len);
+      reader->readString(read_string);
       reader->readBool(read_bool);
 
       CPPUNIT_ASSERT(data_uint8 == read_uint8);
