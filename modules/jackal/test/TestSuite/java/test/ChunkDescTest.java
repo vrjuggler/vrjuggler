@@ -125,9 +125,11 @@ public class ChunkDescTest
    {
       PropertyDesc p = new PropertyDesc();
       p.setName( "myproperty" );
+      p.setValType(ValType.STRING);
       ChunkDesc c = new ChunkDesc();
       c.addPropertyDesc( p );
-      assertEquals( c.getPropertyDesc( 0 ), p );
+      assertEquals(c.getPropertyDesc(0), p);
+//      assertTrue(c.getPropertyDesc(0).getName().equals(p.getName()));
    }
 
    //--------------------------------------------------------------------------
@@ -154,7 +156,10 @@ public class ChunkDescTest
 
       // vary property descs
       c2 = (ChunkDesc)c1.clone();
-      c2.addPropertyDesc( new PropertyDesc() );
+      PropertyDesc pd = new PropertyDesc();
+      pd.setName("Stuff");
+      pd.setValType(ValType.STRING);
+      c2.addPropertyDesc(pd);
       assertTrue( ! c1.equals(c2) );
    }
 }
