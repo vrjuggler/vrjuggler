@@ -29,9 +29,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
 // commands used by connections...
 
 #ifndef _JCCL_COMMAND_H_
@@ -40,39 +37,27 @@
 #include <jccl/jcclConfig.h>
 #include <vpr/Util/Interval.h>
 
-namespace jccl {
-
-
-    class JCCL_CLASS_API Command {
-
+namespace jccl
+{
+    class JCCL_CLASS_API Command
+    {
     public:
-        
         Command ();
-
-        virtual void call (std::ostream& out) const = 0;
-
-        virtual const std::string& getProtocolName () const = 0;
-
+        virtual void call(std::ostream& out) const = 0;
+        virtual const std::string& getProtocolName() const = 0;
     };
 
     
-    class JCCL_CLASS_API PeriodicCommand: public Command {
-
+    class JCCL_CLASS_API PeriodicCommand: public Command
+    {
     public:
-
         float next_fire_time;
         const float refresh_time;
 
-        PeriodicCommand (float _refresh_time);
-
-        void resetFireTime (vpr::Interval& ts);
-
-        int operator < (const PeriodicCommand& cmd2) const;
-
+        PeriodicCommand(float _refresh_time);
+        void resetFireTime(vpr::Interval& ts);
+        int operator<(const PeriodicCommand& cmd2) const;
     };
-
-
-
-};
+}
 
 #endif
