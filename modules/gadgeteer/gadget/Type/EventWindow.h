@@ -113,8 +113,8 @@ public:
    {
       return mCurKeys[keyId];
    }
-
-   /**
+	
+	/**
     * Checks for the given modifier key pressed only.
     * @return true if key pressed exclusively.
     */
@@ -130,17 +130,18 @@ public:
     */
    EventQueue getEventQueue();
 
+public:
+   /**
+    * Adds the given event object to the in-progress queue.
+    */
+   void addEvent(gadget::EventPtr e);
+
 protected:
    /**
     * (0,*): Copy of keys for this frame that the user reads from between
     * updates.
     */
    int mCurKeys[gadget::LAST_KEY];
-
-   /**
-    * Adds the given event object to the in-progress queue.
-    */
-   void addEvent(gadget::EventPtr e);
 
    /**
     * Copies the in-progress event queue into the current (i.e., user) queue
