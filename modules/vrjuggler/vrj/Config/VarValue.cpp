@@ -18,13 +18,7 @@ vjVarValue::vjVarValue (vjConfigChunk* ch) {
 
 
 
-vjVarValue& vjVarValue::operator= (vjVarValue &v) {
-   if ((type == T_STRING) || (type == T_CHUNK))
-      if (val.strval)
-      {
-         delete val.strval;
-         val.strval = NULL;
-      }
+vjVarValue& vjVarValue::operator= (const vjVarValue &v) {
    type = v.type;
    switch (type)
    {
@@ -44,10 +38,7 @@ vjVarValue& vjVarValue::operator= (vjVarValue &v) {
       break;
    case T_STRING:
    case T_CHUNK:
-      if (v.val.strval == NULL)
-         val.strval = NULL;
-      else
-         val.strval = strdup (v.val.strval);
+      val.strval = v.val.strval;
       break;
    default:
       //cout << "something's wrong with varvalue assign" << endl;
@@ -75,7 +66,7 @@ vjVarValue::vjVarValue ( VarType t ) {
 	break;
     case T_STRING:
     case T_CHUNK:
-	val.strval = NULL;
+	val.strval = "";
 	break;
     }
 }
@@ -83,8 +74,6 @@ vjVarValue::vjVarValue ( VarType t ) {
 
 
 vjVarValue::~vjVarValue() {
-    if (((type == T_STRING) || (type == T_CHUNK)) && val.strval)
-	delete val.strval;
     if ((type == T_EMBEDDEDCHUNK) && val.embeddedchunkval)
 	delete val.embeddedchunkval;
 }
@@ -132,13 +121,21 @@ vjVarValue::operator float () {
 
 
 
-vjVarValue::operator char* () {
+//  vjVarValue::operator char* () {
+//      if ((type == T_STRING) || (type == T_CHUNK)) {
+//  	if (val.strval) {
+//  	    return strdup (val.strval);
+//  	}
+//  	else
+//  	    return strdup("");
+//      }
+//      if (type != T_INVALID)
+//  	cerr << "Type error in cast to char*!\n";
+//      return NULL;
+//  }
+char* vjVarValue::cstring () {
     if ((type == T_STRING) || (type == T_CHUNK)) {
-	if (val.strval) {
-	    return strdup (val.strval);
-	}
-	else
-	    return strdup("");
+	return strdup (val.strval.c_str());
     }
     if (type != T_INVALID)
 	cerr << "Type error in cast to char*!\n";
@@ -147,11 +144,7 @@ vjVarValue::operator char* () {
 
 vjVarValue::operator std::string () {
     if ((type == T_STRING) || (type == T_CHUNK)) {
-	if (val.strval) {
-	    return (std::string)val.strval;
-	}
-	else
-	    return (std::string)"";
+      return val.strval;
     }
     if (type != T_INVALID)
 	cerr << "Type error in cast to std::string!\n";
@@ -206,14 +199,21 @@ vjVarValue &vjVarValue::operator = (float i) {
 
 
 
+vjVarValue &vjVarValue::operator = (std::string s) {
+    if ((type == T_STRING) || (type == T_CHUNK)) {
+      val.strval = s;
+	return *this;
+    } else {
+	cerr << "Type error in assignment!\n";
+	return *this;
+    }
+}
+
+
+
 vjVarValue &vjVarValue::operator = (char *s) {
     if ((type == T_STRING) || (type == T_CHUNK)) {
-	if (val.strval)
-	    delete val.strval;
-	if (s)
-	    val.strval = strdup(s);
-	else
-	    val.strval = NULL;
+      val.strval = s;
 	return *this;
     } else {
 	cerr << "Type error in assignment!\n";
@@ -256,8 +256,7 @@ ostream& operator << (ostream& out, vjVarValue& v) {
 	return out;
     case T_STRING:
     case T_CHUNK:
-	if (v.val.strval)
-	    out << v.val.strval;
+	out << v.val.strval;
 	return out;
     case T_EMBEDDEDCHUNK:
 	if (v.val.embeddedchunkval)

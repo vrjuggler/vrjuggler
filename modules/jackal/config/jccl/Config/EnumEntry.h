@@ -2,29 +2,26 @@
  * or valuelabel data 
  */
 
-#include <strings.h>
+#include <vjConfig.h>
+
+//#include <strings.h>
 
 class vjEnumEntry {
 private:
-    char *entry;
-    int val;
+    std::string entry;
+    vjVarValue val;
 
 public:
-    vjEnumEntry (char *e, int v) {
-	entry = new char[strlen(e)+1];
-	strcpy (entry, e);
+    vjEnumEntry (const std::string& e, int v): val(T_INT) {
+	entry = e;
 	val = v;
     }
 
-    ~vjEnumEntry () {
-	delete entry;
-    }
-
-    char* getName () {
+    std::string getName () {
 	return entry;
     }
 
-    int getVal () {
+    vjVarValue& getVal () {
 	return val;
     }
 };

@@ -40,13 +40,13 @@ class vjChunkDesc {
 public:
 
     //:Identifer for this vjChunkDesc - no spaces allowed
-    char *token;
+    std::string token;
 
     //:A longer, friendlier name (for use in GUI displays, etc.)
-    char *name;
+    std::string name;
 
     //:A help string of help text
-    char *help;
+    std::string help;
 
     //:Container for this vjChunkDesc's vjPropertyDescs
     std::vector<vjPropertyDesc*> plist;
@@ -72,35 +72,28 @@ public:
 
 
     //:Sets the user-friendly name of self
-    //!ARGS: _name - a non-NULL string. Whitespace is allowed.
-    //!RETURNS: True - success
-    //!RETURNS: False - failure (probably memory-allocation)
+    //!ARGS: _name - a string. Whitespace is allowed.
     //!NOTE: self makes a copy of the argument string
-    bool setName (char *_name);
+    void setName (const std::string& _name);
 
 
 
     //:Sets the token identifier of self
-    //!ARGS: _token - a non-NULL string. Whitespace is not allowed.
-    //!RETURNS: True - success
-    //!RETURNS: False - failure (probably memory-allocation)
+    //!ARGS: _token - a string. Whitespace is not allowed.
     //!NOTE: self makes a copy of the argument string
-    bool setToken (char *_token);
+    void setToken (const std::string& _token);
 
 
 
     //:Sets the help string for self
-    //!ARGS: _help - a non-NULL string. Whitespace is allowed.
-    //!RETURNS: True - success
-    //!RETURNS: False - failure (probably memory-allocation)
-    //!NOTE: self makes a copy of the argument string
-    bool setHelp (char *_help);
+    //!ARGS: _help - a string. Whitespace is allowed.
+    void setHelp (const std::string& _help);
 
 
 
-    char* getName();
-    char* getToken();
-    char* getHelp();
+    std::string getName();
+    std::string getToken();
+    std::string getHelp();
 
 
     //:Adds a vjPropertyDesc to self.
@@ -115,7 +108,7 @@ public:
     //!RETURNS: true - a vjPropertyDesc with that token was found
     //+         and removed.
     //!RETURNS: false - no such vjPropertyDesc was found.
-    bool remove (char *_token);
+    bool remove (const std::string& _token);
 
 
     //:Gets a vjPropertyDesc from self with matching token
@@ -123,7 +116,7 @@ public:
     //!RETURNS: pdesc - Pointer to propertydesc in self with
     //+         matching token
     //!RETURNS: NULL - if no match is found
-    vjPropertyDesc *getPropertyDesc (char *_token);
+    vjPropertyDesc *getPropertyDesc (const std::string& _token);
 
 
 

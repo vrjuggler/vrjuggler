@@ -47,7 +47,7 @@ vjConfigChunk::vjConfigChunk (vjConfigChunk& c):props(), type_as_varvalue(T_STRI
 
 
 
-vjConfigChunk& vjConfigChunk::operator = (vjConfigChunk& c) {
+vjConfigChunk& vjConfigChunk::operator = (const vjConfigChunk& c) {
     int i;
     desc = c.desc;
     type_as_varvalue = c.type_as_varvalue;
@@ -65,7 +65,7 @@ vjConfigChunk& vjConfigChunk::operator = (vjConfigChunk& c) {
 // This is used to sort a db by dependancy.
 std::vector<std::string> vjConfigChunk::getDependencies()
 {
-    char* chunkname;
+    std::string chunkname;
     std::vector<std::string> dep_list;     // Create return vector
     int i, j;
 
@@ -73,9 +73,9 @@ std::vector<std::string> vjConfigChunk::getDependencies()
     for(i=0;i<props.size();i++) {
 	if(props[i]->type == T_CHUNK)
 	    for(j=0;j<props[i]->getNum();j++) {
-		chunkname = (char*)props[i]->getValue(j);
-		if (chunkname && (chunkname[0] != '\0')) {
-		    dep_list.push_back((std::string)chunkname);
+		chunkname = static_cast<std::string>(props[i]->getValue(j));
+		if (!(chunkname == "")) {
+		    dep_list.push_back(chunkname);
 		}
 	    }
 	if (props[i]->type == T_EMBEDDEDCHUNK) {
@@ -91,9 +91,9 @@ std::vector<std::string> vjConfigChunk::getDependencies()
 }
 
 
-vjProperty* vjConfigChunk::getPropertyPtr (char *property) {
+vjProperty* vjConfigChunk::getPropertyPtr (const std::string& property) {
     for (int i = 0; i < props.size(); i++) {
-	if (!strcasecmp (props[i]->name, property))
+	if (!vjstrcasecmp (props[i]->getName(), property))
 	    return props[i];
     }
     return NULL;
@@ -101,9 +101,9 @@ vjProperty* vjConfigChunk::getPropertyPtr (char *property) {
 
 
 
-vjProperty* vjConfigChunk::getPropertyFromToken (char *token) {
+vjProperty* vjConfigChunk::getPropertyFromToken (const std::string& token) {
   for (int i = 0; i < props.size(); i++) {
-    if (!strcasecmp(props[i]->description->token,token))
+    if (!vjstrcasecmp(props[i]->description->getToken(), token))
       return props[i];
   }
   return NULL;
@@ -323,15 +323,15 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
 		else {
 		    if (!self.tryassign (p, tok, i++))
 			vjDEBUG(3) << "ERROR: Assigning to property "
-				   << p->name << endl << vjDEBUG_FLUSH;
+				   << p->getName() << endl << vjDEBUG_FLUSH;
 		}
 		self.getToken (in, tok);
 	    }
 	    if ((p->num != -1) && (p->num != i))
-		vjDEBUG(3) << "ERROR: vjProperty " << p->name << " should have "
+		vjDEBUG(3) << "ERROR: vjProperty " << p->getName() << " should have "
 			   << p->num << " values; " << i << " found" << endl << vjDEBUG_FLUSH;
 	    if (tok.type != TK_CloseBracket)
-		vjDEBUG(3) << "ERROR: vjProperty " << p->name << ": '}' expected"
+		vjDEBUG(3) << "ERROR: vjProperty " << p->getName() << ": '}' expected"
 			   << endl << vjDEBUG_FLUSH;
 	    self.getToken (in,tok);
 	}
@@ -339,14 +339,14 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
 	    // we're just doing one value.
 	    if (!self.tryassign (p, tok, 0))
 		vjDEBUG(3) << "ERROR: Assigning to property "
-			   << p->name << endl << vjDEBUG_FLUSH;
+			   << p->getName() << endl << vjDEBUG_FLUSH;
 	    self.getToken (in,tok);
 	    if (tok.type == TK_Unit) {
 		p->applyUnits (tok.unitval);
 		self.getToken (in, tok);
 	    }
 	    if (p->num > 1) {
-		vjDEBUG(3) << "ERROR: Property " << p->name
+		vjDEBUG(3) << "ERROR: Property " << p->getName()
 			   << " expects " << p->num << " values." << endl << vjDEBUG_FLUSH;
 	    }
 	}
@@ -357,11 +357,12 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
 
 
 
-int vjConfigChunk::getNum (char *property) {
-    for (int i = 0; i < props.size(); i++)
-	if (!strcasecmp(props[i]->name, property))
-	    return props[i]->getNum();
-    return 0;
+int vjConfigChunk::getNum (const std::string& property_token) {
+    vjProperty* p = getPropertyFromToken (property_token);
+    if (p)
+	return p->getNum();
+    else
+	return 0;
 }
 
 
@@ -372,12 +373,12 @@ vjVarValue& vjConfigChunk::getType () {
 
 
 
-vjVarValue& vjConfigChunk::getProperty (char *property, int ind) {
-    if (!strcasecmp(property,"type")) {
+vjVarValue& vjConfigChunk::getProperty (const std::string& property_token, int ind) {
+    if (!vjstrcasecmp(property_token,"type")) {
 	return type_as_varvalue;
     }
     
-    vjProperty *p = getPropertyPtr (property);
+    vjProperty *p = getPropertyFromToken (property_token);
     if (!p) {
 	return vjVarValue::getInvalidInstance();
     }
@@ -389,7 +390,7 @@ vjVarValue& vjConfigChunk::getProperty (char *property, int ind) {
  * value.  That gets passed on to the vjVarValue assign...
  */
 
-bool vjConfigChunk::setProperty (char *property, int val, int ind) {
+bool vjConfigChunk::setProperty (const std::string& property, int val, int ind) {
     vjProperty *p;
     p = getPropertyPtr (property);
     if (!p)
@@ -397,7 +398,7 @@ bool vjConfigChunk::setProperty (char *property, int val, int ind) {
     return p->setValue (val, ind);
 }
 
-bool vjConfigChunk::setProperty (char *property, float val, int ind) {
+bool vjConfigChunk::setProperty (const std::string& property, float val, int ind) {
     vjProperty *p;
     p = getPropertyPtr (property);
     if (!p)
@@ -405,7 +406,7 @@ bool vjConfigChunk::setProperty (char *property, float val, int ind) {
     return p->setValue (val, ind);
 }
 
-bool vjConfigChunk::setProperty (char *property, char* val, int ind) {
+bool vjConfigChunk::setProperty (const std::string& property, const std::string& val, int ind) {
     vjProperty *p;
     p = getPropertyPtr (property);
     if (!p)
@@ -413,7 +414,7 @@ bool vjConfigChunk::setProperty (char *property, char* val, int ind) {
     return p->setValue (val, ind);
 }
 
-bool vjConfigChunk::setProperty (char *property, vjConfigChunk* val, int ind) {
+bool vjConfigChunk::setProperty (const std::string& property, vjConfigChunk* val, int ind) {
     vjProperty *p;
     p = getPropertyPtr (property);
     if (!p)
@@ -422,7 +423,7 @@ bool vjConfigChunk::setProperty (char *property, vjConfigChunk* val, int ind) {
 }
 
 
-bool vjConfigChunk::addValue (char *property, int val) {
+bool vjConfigChunk::addValue (const std::string& property, int val) {
     vjProperty *p;
     p = getPropertyPtr (property);
     if (p == NULL)
@@ -432,7 +433,7 @@ bool vjConfigChunk::addValue (char *property, int val) {
     return setProperty (property, val, p->value.size());
 }
 
-bool vjConfigChunk::addValue (char *property, float val) {
+bool vjConfigChunk::addValue (const std::string& property, float val) {
     vjProperty *p;
     p = getPropertyPtr (property);
     if (p == NULL)
@@ -442,7 +443,7 @@ bool vjConfigChunk::addValue (char *property, float val) {
     return setProperty (property, val, p->value.size());
 }
 
-bool vjConfigChunk::addValue (char *property, char* val) {
+bool vjConfigChunk::addValue (const std::string& property, const std::string& val) {
     vjProperty *p;
     p = getPropertyPtr (property);
     if (p == NULL)
@@ -452,7 +453,7 @@ bool vjConfigChunk::addValue (char *property, char* val) {
     return setProperty (property, val, p->value.size());
 }
 
-bool vjConfigChunk::addValue (char *property, vjConfigChunk* val) {
+bool vjConfigChunk::addValue (const std::string& property, vjConfigChunk* val) {
     vjProperty *p;
     p = getPropertyPtr (property);
     if (p == NULL)

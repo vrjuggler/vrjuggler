@@ -33,7 +33,7 @@ public:
     vjPropertyDesc *description;
 
     //: Name of the vjProperty (shortcut for description->name)
-    char *name;
+    //char *name;
 
     //: Number of values.  -1 for variable number (use getNum() )
     int num;
@@ -74,7 +74,7 @@ public:
 
 
 
-    vjProperty& operator= (vjProperty& p);
+    vjProperty& operator= (const vjProperty& p);
 
 
 
@@ -82,6 +82,11 @@ public:
     //! RETURNS: n - size of value vector.
     int getNum ();
 
+
+    std::string& getName ();
+
+
+    std::string& getToken ();
 
 
     //: Returns the VarValue at index
@@ -110,13 +115,15 @@ public:
     //! ARGS: ind - integer index to value vector
     bool setValue (int val, int ind = 0);
     bool setValue (float val, int ind = 0);
-    bool setValue (char* val, int ind = 0);
+    bool setValue (const std::string&  val, int ind = 0);
     bool setValue (vjConfigChunk* val, int ind = 0);
+    bool setValue (vjVarValue& val, int ind = 0);
 
 
-
-  vjEnumEntry* getEnumEntry (char *n);
-  vjEnumEntry* getEnumEntry (int val);
+    inline vjEnumEntry* getEnumEntry (const std::string& n) {
+	return description->getEnumEntry (n);
+    }
+    vjEnumEntry* getEnumEntryWithValue (int val);
 
 
     //: creates a vjVarValue of the correct type for this property

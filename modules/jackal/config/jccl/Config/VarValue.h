@@ -57,7 +57,7 @@ private:
     struct {
 	int          intval;
 	float        floatval;
-	char        *strval;
+	std::string  strval;
 	bool         boolval;
 	vjConfigChunk *embeddedchunkval;
     } val;
@@ -102,8 +102,30 @@ public:
 
 
     //: Assignment Operator
-    vjVarValue& operator= (vjVarValue &v);
+    vjVarValue& operator= (const vjVarValue &v);
 
+
+
+    //: Equality Operator
+    bool operator == (const vjVarValue& v) {
+	if (type != v.type)
+	    return false;
+	switch (type) {
+	    case T_INT:
+	    return (val.intval == v.val.intval);
+	    case T_FLOAT:
+	    return (val.floatval == v.val.floatval);
+	    case T_STRING:
+	    case T_CHUNK:
+	    return (val.strval == v.val.strval);
+	    case T_BOOL:
+	    return (val.boolval == v.val.boolval);
+	    case T_EMBEDDEDCHUNK:
+	    return (val.embeddedchunkval == v.val.embeddedchunkval);
+	    default:
+	    return false;
+	}
+    }
 
 
     /*  Cast Operators
@@ -139,8 +161,8 @@ public:
     //: Cast to char* (can return NULL!)
     //!NOTE: if non-NULL, returns a freshly-allocated char array, which the
     //+      caller is responsible for freeing.
-    operator char* ();
-
+    //operator char* ();
+char* cstring ();
 
     //: Cast to std::string
     operator std::string ();
@@ -152,7 +174,7 @@ public:
     vjVarValue& operator = (int i);
     vjVarValue& operator = (bool i);
     vjVarValue& operator = (float i);
-
+    vjVarValue& operator = (std::string i);
 
     //: Assignment overload 
     //!NOTE: type of a vjVarValue is immutable, so a type mismatch here
@@ -175,5 +197,8 @@ public:
 };
 
 #endif
+
+
+
 
 

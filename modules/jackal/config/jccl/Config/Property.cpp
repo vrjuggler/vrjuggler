@@ -13,13 +13,13 @@ vjProperty::vjProperty (vjPropertyDesc *pd):value() {
     vjVarValue *v;
 
     description = pd;
-    name = pd->token;
-    num = pd->num;
-    type = pd->type;
+    //name = pd->token;
+    num = pd->getNumAllowed();
+    type = pd->getType();
     embeddesc = NULL;
 
     if (type == T_EMBEDDEDCHUNK) {
-	vjEnumEntry *e = description->getEnumEntryAt (0);
+	vjEnumEntry *e = description->getEnumEntryAtIndex (0);
 	if (e) 
 	    embeddesc = vjChunkFactory::getChunkDesc (e->getName());
     }
@@ -46,10 +46,10 @@ vjVarValue *vjProperty::createVarValue (int i) {
 	i = value.size();
     if (type == T_EMBEDDEDCHUNK) {
 	vjConfigChunk *ch = vjChunkFactory::createChunk (embeddesc);
-	if (description->valuelabels.size() > i)
-	    ch->setProperty ("Name", description->valuelabels[i]->getName());
+	if (description->getValueLabelsSize() > i)
+	    ch->setProperty ("Name", description->getValueLabel(i));
 	else {
-	    ch->setProperty ("Name", description->name);
+	    ch->setProperty ("Name", description->getName());
 	}
 	return new vjVarValue (ch);
     }
@@ -74,12 +74,12 @@ vjProperty::vjProperty (vjProperty& p):value() {
 
 
 
-vjProperty& vjProperty::operator= (vjProperty& p) {
+vjProperty& vjProperty::operator= (const vjProperty& p) {
     int i;
 
     description = p.description;
-    name = description->token;
-    num = p.num;
+    //    name = description->token;
+    //num = p.num;
     type = p.type;
     units = p.units;
 
@@ -109,27 +109,18 @@ bool vjProperty::applyUnits (CfgUnit u) {
 
 
 
-vjEnumEntry* vjProperty::getEnumEntry (char *n) {
-    for (int i = 0; i < description->enumv.size(); i++)
-	if (!strcasecmp (n, description->enumv[i]->getName()))
-	    return description->enumv[i];
-    return NULL;
-}
 
-
-
-vjEnumEntry* vjProperty::getEnumEntry (int val) {
+vjEnumEntry* vjProperty::getEnumEntryWithValue (int val) {
     // gets an enumentry based on the value, instead of the name
-    for (int i = 0; i < description->enumv.size(); i++)
-	if (val == description->enumv[i]->getVal())
-	    return description->enumv[i];
-    return NULL;
+    vjVarValue v(T_INT);
+    v = val;
+    return description->getEnumEntryWithValue (v);
 }
 
 
 
 ostream& operator << (ostream &out, vjProperty& p) {
-    out << p.name << " { ";
+    out << p.getToken () << " { ";
     for (int i = 0; i < p.value.size(); i++) {
 	vjVarValue *v = ((p.value))[i];
 	
@@ -139,15 +130,15 @@ ostream& operator << (ostream &out, vjProperty& p) {
 	else if (p.type == T_EMBEDDEDCHUNK) {
 	    out << "\n" << *v;
 	}
-	else if (p.description->enumv.size() > 0) {
-	    vjEnumEntry *e = p.getEnumEntry((int)(*v));
+	else if ((p.type == T_FLOAT) || (p.type == T_BOOL)) {
+	    out << *v;
+	}
+	else {
+	    vjEnumEntry *e = p.getEnumEntryWithValue((int)(*v));
 	    if (e)
 		out << e->getName();
 	    else
 		out << *v;
-	}
-	else {
-	    out << *v;
 	}
 	out << " ";
     }
@@ -172,6 +163,16 @@ int vjProperty::getNum () {
     return value.size();
 }
 
+
+
+std::string& vjProperty::getName () {
+    return description->getName();
+}
+
+
+std::string& vjProperty::getToken () {
+    return description->getToken();
+}
 
 
 bool vjProperty::preSet (int ind) {
@@ -214,7 +215,7 @@ bool vjProperty::setValue (float val, int ind ) {
 
 
 
-bool vjProperty::setValue (char* val, int ind) {
+bool vjProperty::setValue (const std::string& val, int ind) {
     if (!preSet(ind))
 	return false;
     *((value)[ind]) = val;
@@ -227,7 +228,15 @@ bool vjProperty::setValue (vjConfigChunk* val, int ind) {
     if (!preSet(ind)) {
 	return false;
     }
-    *((value)[ind]) = val;
+    *(value[ind]) = val;
+    return true;
+}
+
+
+bool vjProperty::setValue (vjVarValue& val, int ind) {
+    if (!preSet (ind))
+	return false;
+    *(value[ind]) = val;
     return true;
 }
 
