@@ -2,9 +2,9 @@
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
 <configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
-      <event_window_proxy name="GloveKeyProxy" version="1">
-         <device>Glove Event Window</device>
-      </event_window_proxy>
+      <keyboard_mouse_proxy name="GloveKeyProxy" version="1">
+         <device>Glove Keyboard</device>
+      </keyboard_mouse_proxy>
       <position_proxy name="GlovePos Proxy" version="1">
          <device>SimGlovePos</device>
          <unit>0</unit>
@@ -49,8 +49,8 @@
             </position_transform_filter>
          </position_filters>
       </position_proxy>
-      <simulated_positional_device name="SimGlovePos" version="2">
-         <event_window_proxy>GloveKeyProxy</event_window_proxy>
+      <simulated_positional_device name="SimGlovePos" version="3">
+         <keyboard_mouse_proxy>GloveKeyProxy</keyboard_mouse_proxy>
          <key_pair>
             <key_modifier_pair name="Forward" version="1">
                <modifier_key>ALT</modifier_key>
@@ -153,8 +153,8 @@
          </position_filters>
          <device_host />
       </simulated_positional_device>
-      <simulated_positional_device name="Right SimGlovePos" version="2">
-         <event_window_proxy>GloveKeyProxy</event_window_proxy>
+      <simulated_positional_device name="Right SimGlovePos" version="3">
+         <keyboard_mouse_proxy>GloveKeyProxy</keyboard_mouse_proxy>
          <key_pair>
             <key_modifier_pair name="Forward" version="1">
                <modifier_key>ALT</modifier_key>
@@ -288,21 +288,23 @@
          <proxy>DigitalRightPinky</proxy>
       </alias>
       <alias name="VJGlove" version="1">
-         <proxy>GloveProxy</proxy>
+         <proxy>Glove Proxy</proxy>
       </alias>
-      <event_window name="Glove Event Window" version="2">
-         <event_source_name />
+      <keyboard_mouse_device name="Glove Keyboard" version="1">
          <mouse_sensitivity>2.0</mouse_sensitivity>
-         <lock_key>KEY_NONE</lock_key>
-         <start_locked>false</start_locked>
-         <sleep_time>0</sleep_time>
+         <device_host />
+      </keyboard_mouse_device>
+      <input_window name="Glove Input Window" version="1">
          <origin>800</origin>
          <origin>320</origin>
          <size>200</size>
          <size>200</size>
          <display_number>0</display_number>
-         <device_host />
-      </event_window>
+         <keyboard_mouse_device_name>Glove Keyboard</keyboard_mouse_device_name>
+         <lock_key>KEY_NONE</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>0</sleep_time>
+      </input_window>
       <digital_proxy name="DigitalLeftThumb" version="1">
          <device>SimDigitalGlove</device>
          <unit>0</unit>
@@ -343,8 +345,8 @@
          <device>SimDigitalGlove</device>
          <unit>10</unit>
       </digital_proxy>
-      <simulated_digital_glove name="SimDigitalGlove" version="2">
-         <event_window_proxy>GloveKeyProxy</event_window_proxy>
+      <simulated_digital_glove name="SimDigitalGlove" version="3">
+         <keyboard_mouse_proxy>GloveKeyProxy</keyboard_mouse_proxy>
          <key_pair>
             <key_modifier_pair name="KeyPresses 1" version="1">
                <modifier_key>NONE</modifier_key>

@@ -73,6 +73,10 @@
                      </simulator_plugin>
                   </simulator_viewport>
                </simulator_viewports>
+               <keyboard_mouse_device_name />
+               <lock_key>KEY_NONE</lock_key>
+               <start_locked>false</start_locked>
+               <sleep_time>75</sleep_time>
             </display_window>
          </display_windows>
          <listen_port>7000</listen_port>
@@ -131,6 +135,10 @@
                      </simulator_plugin>
                   </simulator_viewport>
                </simulator_viewports>
+               <keyboard_mouse_device_name />
+               <lock_key>KEY_NONE</lock_key>
+               <start_locked>false</start_locked>
+               <sleep_time>75</sleep_time>
             </display_window>
          </display_windows>
          <listen_port>7000</listen_port>
@@ -189,6 +197,10 @@
                      </simulator_plugin>
                   </simulator_viewport>
                </simulator_viewports>
+               <keyboard_mouse_device_name />
+               <lock_key>KEY_NONE</lock_key>
+               <start_locked>false</start_locked>
+               <sleep_time>75</sleep_time>
             </display_window>
          </display_windows>
          <listen_port>7000</listen_port>
@@ -247,6 +259,10 @@
                      </simulator_plugin>
                   </simulator_viewport>
                </simulator_viewports>
+               <keyboard_mouse_device_name />
+               <lock_key>KEY_NONE</lock_key>
+               <start_locked>false</start_locked>
+               <sleep_time>75</sleep_time>
             </display_window>
          </display_windows>
          <listen_port>7000</listen_port>

@@ -10,8 +10,8 @@
          <device>SimAnalogDevice</device>
          <unit>1</unit>
       </analog_proxy>
-      <simulated_analog_device name="SimAnalogDevice" version="1">
-         <event_window_proxy>WandEventWindowProxy</event_window_proxy>
+      <simulated_analog_device name="SimAnalogDevice" version="2">
+         <keyboard_mouse_proxy>Wand Keyboard Proxy</keyboard_mouse_proxy>
          <increment_keypress>
             <key_modifier_pair name="Increment Keypress 0" version="1">
                <modifier_key>NONE</modifier_key>
