@@ -56,6 +56,8 @@
 
 #include <Input/vjPosition/aFlock.h>
 
+// we need a less silly solution to this
+#   define sginap(x) (usleep(x * 333333))
 
 const int aFlock::MAXCHARSTRINGSIZE = 256;
 
