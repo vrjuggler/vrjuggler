@@ -349,10 +349,14 @@ fi
 if test "x${_idl_java}" = "xno" ; then
    jacorb_dir='$(JUGGLERROOT_ABS)/external/JacORB'
    JAVA_IDL="JACORB_PATH=\"$jacorb_dir\" \"$jacorb_dir/idl\""
+
    java_idl_name='JacORB'
 
    app_jacorb_dir='$(TWEEK_BASE_DIR)/bin'
    APP_JAVA_IDL="JACORB_PATH=\"$app_jacorb_dir\" \"$app_jacorb_dir/idl\""
+
+   config_jacorb_dir='\$(TWEEK_BASE_DIR)/bin'
+   config_java_idl="JACORB_PATH=\"$config_jacorb_dir\" \"$config_jacorb_dir/idl\""
 else
    # XXX: Need to support more than one IDL compiler for Java by recognizing
    # the name of the compiler and defining options for it below.  Blah.
@@ -615,6 +619,8 @@ AC_SUBST(JUNIT_JAR)
 
 AC_SUBST(ORB_CLASS_PROP)
 AC_SUBST(ORB_SINGLETON_CLASS_PROP)
+
+AC_SUBST(config_java_idl)
 
 AC_SUBST(APP_JAVA_IDL)
 AC_SUBST(APP_BASE_DIR)
