@@ -43,10 +43,10 @@ _SED_EXP	= '\''s/\($*\)\.o[ :]*/$${OBJDIR}\/\1.o $@ : /g'\''
 
 %.d: %.c
 	@echo "Updating dependency file $@ ..."
-	${SHELL} -ec '${C_COMPILE} ${DEP_GEN_FLAG} $< |			\
+	@${SHELL} -ec '${C_COMPILE} ${DEP_GEN_FLAG} $< |		\
                        sed ${_SED_EXP} > $@ ; [ -s $@ ] || rm -f $@'
 
 %.d: %.cpp
 	@echo "Updating dependency file $@ ..."
-	${SHELL} -ec '${CXX_COMPILE} ${DEP_GEN_FLAG} $< |		\
+	@${SHELL} -ec '${CXX_COMPILE} ${DEP_GEN_FLAG} $< |		\
                         sed ${_SED_EXP} > $@ ; [ -s $@ ] || rm -f $@'
