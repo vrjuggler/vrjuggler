@@ -232,8 +232,10 @@ installworld: install-all
 
 .PHONY: test
 
+PROCS	= 1
+
 test:
-	$(MAKE) -C test/TestSuite runner
+	$(MAKE) -C test/TestSuite -j $(PROCS) runner
 	test/TestSuite/runner noninteractive
 
 # =============================================================================
