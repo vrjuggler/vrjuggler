@@ -59,7 +59,7 @@ int main(void)
 
    hit = seg_through.isectTriangle(z_axis,origin,y_axis,&t_dist);
    std::cout << "Testing isectTriangle (through): ";
-   if(hit && VJ_IS_ZERO(t_dist - 1.0f))
+   if(hit && vjMath::isZero(t_dist - 1.0f))
       std::cout << "Passed.\n";
    else
       std::cout << "FAILED!!!!\n";
