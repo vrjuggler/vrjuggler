@@ -6,6 +6,10 @@
 /set type=dir gname=c2dev mode=0775
 .
     Data
+	configFiles
+	..
+	gesture
+	..
 	models
 	..
     ..
