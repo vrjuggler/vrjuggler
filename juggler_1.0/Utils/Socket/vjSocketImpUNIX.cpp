@@ -42,6 +42,10 @@
 
 #include <Utils/Socket/vjSocketImpUNIX.h>
 
+#ifndef INADDR_NONE
+#define INADDR_NONE 0xffffffff	/* -1 return */
+#endif
+
 
 // ============================================================================
 // External global variables.
