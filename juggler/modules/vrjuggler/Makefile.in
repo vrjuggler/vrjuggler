@@ -685,7 +685,7 @@ install-data:
 install-gui: _check_gui
 ifeq (${BUILD_GUI}, Y)
 	@echo "------------------------------------------------"
-	@echo "Installing vjConfig"
+	@echo "Installing vjcontrol"
 	@echo "------------------------------------------------"
 	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
           ${topdir}/GUI/VjControl.jar ${bindir}
@@ -693,7 +693,7 @@ ifeq (${BUILD_GUI}, Y)
           ${VJROOT_ABS}/GUI/vjcontrol ${bindir}/vjcontrol
 else
 	@echo "------------------------------------------------"
-	@echo "Skipping installation of vjConfig (not built)"
+	@echo "Skipping installation of vjcontrol (not built)"
 	@echo "------------------------------------------------"
 endif
 
