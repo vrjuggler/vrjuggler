@@ -32,40 +32,12 @@
 
 
 
-#include <jccl/JackalServer/Command.h>
+#include <jccl/ConfigManager/ConfigCommand.h>
 #include <jccl/Config/ConfigChunkDB.h>
 #include <jccl/Config/ChunkDescDB.h>
 #include <jccl/Config/ConfigIO.h>
-#include <jccl/Performance/PerfDataBuffer.h>
 
 namespace jccl {
-
-
-    // generic Command
-
-    Command::Command () {
-        ;
-    }
-
-
-    // Periodic Command
-
-    PeriodicCommand::PeriodicCommand (float _rt): refresh_time (_rt) {
-        next_fire_time = 0.0f;
-    }
-
-    void PeriodicCommand::resetFireTime (TimeStamp& ts) {
-        next_fire_time = ts.usecs()/1000 + refresh_time;
-    }
-
-
-    int PeriodicCommand::operator < (const PeriodicCommand& cmd2) const {
-        // used in priority queue in connects.
-        // true if self should be called _after_ cmd2
-        return (next_fire_time < cmd2.next_fire_time);
-    }
-    
-
 
 
     // CommandRefresh
@@ -141,26 +113,5 @@ namespace jccl {
         return protocol_name;
     }
 
-
-
-    // CommandWritePerfData
-
-    /*static*/ const std::string CommandWritePerfData::protocol_name ("vjc_performance");
-    
-
-    CommandWritePerfData::CommandWritePerfData (PerfDataBuffer* _perf_buffer, 
-                                                float _refresh_time) :PeriodicCommand (_refresh_time) {
-        perf_buffer = _perf_buffer;
-    }
-
-    
-    /*virtual*/ void CommandWritePerfData::call (std::ostream& out) const {
-    perf_buffer->write (out);
-    }
-
-
-    /*virtual*/ const std::string& CommandWritePerfData::getProtocolName () const {
-        return protocol_name;
-    }
     
 };

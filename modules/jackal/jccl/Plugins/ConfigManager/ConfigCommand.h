@@ -32,47 +32,19 @@
 
 
 
-// commands used by connections...
+// commands used by Configuration control
 
-#ifndef _JCCL_COMMAND_H_
-#define _JCCL_COMMAND_H_
+#ifndef _JCCL_CONFIG_COMMAND_H_
+#define _JCCL_CONFIG_COMMAND_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Performance/TimeStamp.h>
+#include <jccl/JackalServer/Command.h>
+
 
 namespace jccl {
 
-    //class TimedUpdate;
-class ConfigChunkDB;
-class ChunkDescDB;
-
-    class VJ_CLASS_API Command {
-
-    public:
-        
-        Command ();
-
-        virtual void call (std::ostream& out) const = 0;
-
-        virtual const std::string& getProtocolName () const = 0;
-
-    };
-
-    
-    class VJ_CLASS_API PeriodicCommand: public Command {
-
-    public:
-
-        float next_fire_time;
-        const float refresh_time;
-
-        PeriodicCommand (float _refresh_time);
-
-        void resetFireTime (TimeStamp& ts);
-
-        int operator < (const PeriodicCommand& cmd2) const;
-
-    };
+    class ConfigChunkDB;
+    class ChunkDescDB;
 
 
     //------------- ConfigurationManager Commands -------------------
@@ -122,23 +94,6 @@ class ChunkDescDB;
         virtual const std::string& getProtocolName() const;
     };
 
-
-
-    //------------------ PerfManager Commands --------------------------
-
-    class PerfDataBuffer;
-
-    class CommandWritePerfData: public PeriodicCommand {
-    public:
-        PerfDataBuffer* perf_buffer;
-        static const std::string protocol_name;
-        
-        CommandWritePerfData (PerfDataBuffer *pd, float _refresh_time);
-        
-        virtual void call (std::ostream& out) const;
-        
-        virtual const std::string& getProtocolName () const;
-    };
 
 };
 

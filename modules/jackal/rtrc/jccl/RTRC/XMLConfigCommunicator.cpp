@@ -32,8 +32,8 @@
 
 #include <jccl/ConfigManager/XMLConfigCommunicator.h>
 #include <jccl/ConfigManager/ConfigManager.h>
+#include <jccl/ConfigManager/ConfigCommand.h>
 #include <jccl/JackalServer/Connect.h>
-#include <jccl/JackalServer/NetCommunicator.h>
 #include <jccl/XMLUtil/XercesXMLParserPool.h>
 #include <jccl/Config/ConfigIO.h>
 #include <jccl/Config/XMLConfigIOHandler.h>

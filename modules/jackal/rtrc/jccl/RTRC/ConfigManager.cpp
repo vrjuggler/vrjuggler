@@ -39,7 +39,7 @@
 #include <jccl/JackalServer/JackalServer.h>
 #include <jccl/JackalServer/Connect.h>
 #include <vpr/Util/Debug.h>
-#include <stdlib.h>
+
 
 
 namespace jccl {
