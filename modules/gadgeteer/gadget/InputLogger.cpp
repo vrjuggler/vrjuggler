@@ -44,6 +44,8 @@
 #include <cppdom/cppdom.h>
 #include <stdio.h>
 
+#include <boost/progress.hpp>
+
 /*
 
 --- Input logger format ---
@@ -93,6 +95,7 @@ bool InputLogger::config( jccl::ConfigChunkPtr chunk)
    mStampButton.init(stamp_name);
 
    int max_frame_rate = chunk->getProperty<int>("max_framerate");
+   mCompressFactor = chunk->getProperty<unsigned>("compress_factor");
 
    if(-1 != max_frame_rate)   // If we are supposed to limit frame rate
    {
@@ -480,6 +483,47 @@ void InputLogger::limitFramerate()
    }
    
    mPrevFrameTimestamp.setNow();
+}
+
+void InputLogger::compressSamples()
+{
+   // Get the current children to compress
+   cppdom::NodeList nodes =  mRootNode->getChildren();
+   unsigned total_nodes_start = nodes.size();
+
+   // Create a nice little progress bar for the compression
+   boost::progress_display compress_progress(nodes.size());
+
+   cppdom::NodeList::iterator cur_node = nodes.begin(); 
+   if(nodes.end() == cur_node)
+      return;
+   
+   cur_node++;       // Can't remove first node
+   
+   // Compress the data
+   // - While nodes left
+   //   - If node is duplicate of one before it
+   //     - Erase the node and goto next
+   while(cur_node != nodes.end())
+   {
+      cppdom::NodeList::iterator dup_node = (cur_node-1);      // Initialize dup node to check
+      
+      if((*cur_node)->isEqual( *dup_node))
+      {
+         cur_node = nodes.erase(cur_node);         // Remove the node and get next one
+      }
+      else
+      {
+         cur_node++;                               // Go to the next 
+      }
+
+      compress_progress += 1;       // Progress a little bit
+   }
+
+   // --- Print results --- //
+   std::cout << std::endl
+             << "Compression: initial/compressed:" << total_nodes_start << "/" << nodes.size() << std::endl 
+             << "      ratio: " << float(nodes.size())/float(total_nodes_start) << std::endl;
 }
 
 

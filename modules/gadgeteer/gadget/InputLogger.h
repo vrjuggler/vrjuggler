@@ -126,6 +126,10 @@ protected:
    void limitFramerate();
    //@}
 
+   /** Eliminates duplicates in the current sampled data
+   * It ignores the timestamp attribute
+   */
+   void compressSamples();
 
 public:
    /** List of states that the Logger can be in */
@@ -145,6 +149,8 @@ private:
    */
    unsigned    mSleepFramesLeft; 
    std::string mActiveStamp;     /**< The active stamp for this frame */
+
+   unsigned    mCompressFactor;  /**< Compression factor.  This is the number of duplicate frames to allow in a row */
 
    cppdom::NodePtr   mRootNode;           /**< Root node of the data */
    std::string       mRecordingFilename;  /**< Filename to use for the recording */
