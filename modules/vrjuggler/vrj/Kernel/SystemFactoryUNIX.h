@@ -40,14 +40,10 @@
 namespace vrj
 {
 
-//---------------------------------------------------
-//: Concrete class for UNIX System specific Factory.
-//
-//  Concrete class to create UNIX system specific objects.
-//
-// @author Allen Bierbaum
-//  Date: 9-9-97
-//----------------------------------------------------
+/** Concrete class for UNIX System specific Factory.
+ *
+ *  Concrete class to create UNIX system specific objects.
+ */
 class SystemFactoryUNIX : public SystemFactory
 {
 public:

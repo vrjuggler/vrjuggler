@@ -39,16 +39,12 @@
 namespace vrj
 {
 
-//---------------------------------------------------------
-// API: Encapulates interfaces to graphics APIs.
-//
-// PURPOSE:
-//   This class is used for the application to tell the
-//  Kernel what API it is using.
-//
-// @author Allen Bierbaum
-//  Date: 9-7-97
-//--------------------------------------------------------
+/** API: Encapulates interfaces to graphics APIs.
+ *
+ * PURPOSE:
+ *   This class is used for the application to tell the
+ *  Kernel what API it is using.
+ */ 
 class API
 {
 public:
