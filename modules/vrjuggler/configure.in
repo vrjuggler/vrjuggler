@@ -197,7 +197,7 @@ if test "x$VRJ_USE_X11" = "xyes" ; then
 fi
 
 if test "x$BUILD_JAVA" = "xY" ; then
-   TWEEK_PATH_JAVA([0.20.0],
+   TWEEK_PATH_JAVA([0.21.1],
                    [JCCL_PATH_JAVA([$vrj_min_jccl_ver], ,
                        [AC_MSG_WARN([*** JCCL Java API required for VRJConfig ***])
                        BUILD_JAVA='N'])],
