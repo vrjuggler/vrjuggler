@@ -133,8 +133,8 @@ AFTERBUILD	= afterbuild
 beforebuild:
 	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
 	@$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
-            -t $(VJROOT_ABS)/juggler-config.in -o $(topdir)/juggler-config
-	@chmod +x $(topdir)/juggler-config
+            -t $(VJROOT_ABS)/vrjuggler-config.in -o $(topdir)/vrjuggler-config
+	@chmod +x $(topdir)/vrjuggler-config
 
 # Things to do after the object files and library are built.
 afterbuild:
@@ -257,8 +257,8 @@ ifneq (@OS_TYPE@, Win32)
 	cd $(instlinks)/bin && rm -f ./catadf.pl &&			\
           $(LN_S) $(VJROOT_ABS)/tools/catadf.pl ./catadf.pl
 	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
-            -t $(VJROOT_ABS)/juggler-config.in -p 'use_base_dir=yes'	\
-            -o $(instlinks)/bin/juggler-config -x
+            -t $(VJROOT_ABS)/vrjuggler-config.in -p 'use_base_dir=yes'	\
+            -o $(instlinks)/bin/vrjuggler-config -x
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$VJ_BASE_DIR to:'
@@ -334,7 +334,7 @@ post-install:
 	@$(MAKE) install-tools
 	@$(MAKE) install-data
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/juggler-config $(bindir)
+          $(topdir)/vrjuggler-config $(bindir)
 
 PREINSTALL_HEADERS	= pre-install-headers
 POSTINSTALL_HEADERS	= post-install-headers
