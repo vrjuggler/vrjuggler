@@ -497,8 +497,11 @@ aMotionStar::sample () {
 
                 if ( rec_data_words != m_birds[bird]->data_words ) {
                     fprintf(stderr,
-                            "[aMotionStar] WARNING: Expecting %u data words "
-                            "from bird %u, got %u\n",
+                            "[aMotionStar] WARNING: Expecting %u data words from bird %u, got %u\n"
+                            "                       You may have requested more birds than you\n"
+                            "                       have connected, or the birds may not be\n"
+                            "                       connected sequentially\n"
+                            "                       Verify that your configuratoin is correct\n",
                             m_birds[bird]->data_words, bird, rec_data_words);
                 }
 
