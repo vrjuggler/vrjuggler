@@ -46,6 +46,7 @@
 
 #include <Input/InputManager/vjPosInterface.h>
 #include <Input/InputManager/vjGloveInterface.h>
+#include <Input/InputManager/vjGestureInterface.h>
 #include <Input/InputManager/vjDigitalInterface.h>
 
 
@@ -70,19 +71,11 @@ public:
    {
       //cout<<"simpleGloveApp::init()"<<flush;
       
+      // use this interface for the position of the glove.
       mGlove.init("VJGlove");
       
-      // for the digital glove fingers.
-      mLeftThumb.init("LeftThumb");
-      mLeftIndex.init("LeftIndex");
-      mLeftMiddle.init("LeftMiddle");
-      mLeftRing.init("LeftRing");
-      mLeftPinky.init("LeftPinky");
-      mRightThumb.init("RightThumb");
-      mRightIndex.init("RightIndex");
-      mRightMiddle.init("RightMiddle");
-      mRightRing.init("RightRing");
-      mRightPinky.init("RightPinky");
+      // use this interface if you want to use *gestures*
+      mGesture.init("VJGesture");
       
       //cout<<" --- done\n"<<flush;
    }
@@ -130,16 +123,30 @@ public:
    {
      //cout<<"simpleGloveApp::preFrame()\n"<<flush; 
       
-       cout<<mLeftThumb->getData()
-          <<mLeftIndex->getData()
-          <<mLeftMiddle->getData()
-          <<mLeftRing->getData()
-          <<mLeftPinky->getData()<<"."
-          <<mRightThumb->getData()
-          <<mRightIndex->getData()
-          <<mRightMiddle->getData()
-          <<mRightRing->getData()
-          <<mRightPinky->getData()<<"\n"<<flush;
+       // what gesture is happening??
+       int currentGesture = mGesture->getGesture();
+       
+       // lookup the name of that gesture, and output it.
+       cout<<"gestureID["<<currentGesture<<"]:"<<mGesture->getGestureString( currentGesture )<<"\n"<<flush;
+   
+       if (mGesture->getGesture() == mGesture->getGestureIndex("Open Hand"))
+       {
+          // do openhand stuff.
+          //cout<<"OpenHand\n"<<flush;
+       }
+       
+       if (mGesture->getGesture() == mGesture->getGestureIndex("Closed Fist"))
+       {
+          // do closed fist stuff.
+          //cout<<"Closed Fist\n"<<flush;
+       }  
+       
+       if (mGesture->getGesture() == mGesture->getGestureIndex("Pointing"))
+       {
+          // do pointing stuff.
+          //cout<<"Pointing\n"<<flush;
+       }  
+       
    }
 
    /// Function called after drawing has been triggered but BEFORE it completes
@@ -176,19 +183,9 @@ protected:
    GLUquadricObj* mQuadObj;
 
 public:
+      
+   vjGestureInterface  mGesture;
    vjGloveInterface    mGlove;      // the glove
-
-   // for the glove fingers
-   vjDigitalInterface  mLeftThumb;
-   vjDigitalInterface  mLeftIndex;
-   vjDigitalInterface  mLeftMiddle;
-   vjDigitalInterface  mLeftRing;
-   vjDigitalInterface  mLeftPinky;
-   vjDigitalInterface  mRightThumb;
-   vjDigitalInterface  mRightIndex;
-   vjDigitalInterface  mRightMiddle;
-   vjDigitalInterface  mRightRing;
-   vjDigitalInterface  mRightPinky;
 };
 
 
