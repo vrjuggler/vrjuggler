@@ -59,12 +59,7 @@ namespace vpr
       func(); // Call the functor's operator ()
    }
 #elif defined(VPR_USE_PTHREADS)
-#  ifdef _PTHREADS_DRAFT_4
-      void
-#  else
-      void*
-#  endif
-      vprThreadFunctorFunction (void* args)
+      void* vprThreadFunctorFunction(void* args)
       {
          ThreadManager* vpr_tm_inst;
          BaseThreadFunctor& func = *((BaseThreadFunctor*) args);
@@ -78,9 +73,7 @@ namespace vpr
          vprASSERT( func.isValid() );
          func();
 
-#  ifdef _PTHREADS_DRAFT_10
          return (void*) NULL;
-#  endif
       }
 
 #elif defined(VPR_USE_NSPR)

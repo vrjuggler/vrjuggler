@@ -190,19 +190,7 @@ vpr::ReturnStatus ThreadPosix::spawn(BaseThreadFunctor* functorPtr)
    int pthread_prio = vprThreadPriorityToPOSIX(mPriority);
 
    // Initialize thread_attrs and set the priority of the thread if it is
-   // supported.  HP-UX requires a slightly different syntax than other
-   // operating systems.
-#ifdef _PTHREADS_DRAFT_4
-   pthread_attr_create(&thread_attrs);
-
-#  ifdef _POSIX_THREAD_REALTIME_SCHEDULING
-   if ( pthread_prio > 0 )
-   {
-      pthread_attr_setprio(&thread_attrs, pthread_prio);
-   }
-#  endif   /* _POSIX_THREAD_REALTIME_SCHEDULING */
-
-#else /* ! _PTHREADS_DRAFT_4 */
+   // supported.
    sched_param_t prio_param;
 
    pthread_attr_init(&thread_attrs);
@@ -233,8 +221,6 @@ vpr::ReturnStatus ThreadPosix::spawn(BaseThreadFunctor* functorPtr)
    }
 #  endif   /* _POSIX_THREAD_PRIORITY_SCHEDULING */
 
-#endif   /* _PTHREADS_DRAFT_4 */
-
    // Set the stack size if a value greater than 0 is specified and this
    // pthreads implementation supports it.  Ensure that
    // _POSIX_THREAD_ATTR_STACKSIZE is defined before trying to test its
@@ -249,14 +235,8 @@ vpr::ReturnStatus ThreadPosix::spawn(BaseThreadFunctor* functorPtr)
 #endif
 
    // Finally create the thread.
-#ifdef _PTHREADS_DRAFT_4
-   ret_val = pthread_create(&(mThread), thread_attrs,
-                            (pthread_startroutine_t) vprThreadFunctorFunction,
-                            (pthread_addr_t) functorPtr);
-#else
    ret_val = pthread_create(&(mThread), &thread_attrs,
                             vprThreadFunctorFunction, (void *) functorPtr);
-#endif
 
    // Inform the caller if the thread was not created successfully.
    if ( ret_val != 0 )
@@ -380,14 +360,7 @@ int ThreadPosix::getRunOn(int* cur_cpu)
 
 int ThreadPosix::kill(int signum)
 {
-#ifdef _PTHREADS_DRAFT_4
-   std::cerr << "vpr::ThreadPosix::kill(): Signals cannot be sent to threads "
-             << "with this POSIX threads implementation.\n";
-
-   return -1;
-#else
    return pthread_kill(mThread, signum);
-#endif
 }
 
 BaseThread* ThreadPosix::self()
