@@ -157,6 +157,7 @@ void KeyboardXWin::controlLoop(void* nullParam)
    // Exit, cleanup code
    XDestroyWindow(m_display,m_window);
    XCloseDisplay((::Display*) m_display);
+   mControlLoopDone = true;
 }
 
 
@@ -488,14 +489,26 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
 
 int KeyboardXWin::stopSampling()
 {
-  if (mThread != NULL)
-  {
-    mExitFlag = true;
-    vpr::System::sleep(1);
-    delete mThread;
-  }
+   if (mThread != NULL)
+   {
+      mExitFlag = true;
 
-  return 1;
+      vpr::System::sleep(1);
+
+      XResizeWindow( m_display, m_window, 1,1); //Dummy event
+      XFlush(m_display);
+
+      while( !mControlLoopDone )
+      {
+         // give the window thread a chance before we delete...
+         vpr::System::usleep( 20 ); 
+      }
+
+      delete mThread;
+      mThread = NULL;
+   }
+
+   return 1;
 }
 
 int KeyboardXWin::xKeyToKey(KeySym xKey)
