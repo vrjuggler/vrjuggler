@@ -2,6 +2,7 @@
 
 #ifndef AJSOUNDFACTORY_H
 #define AJSOUNDFACTORY_H
+#include <iostream>
 #include <string>
 #include "aj/ajSingleton.h"
 #include "aj/ajSoundImplementation.h"
@@ -22,6 +23,7 @@ public:
    // pass NULL to unregister/delete an API...
    void reg( const std::string& apiName, ajSoundImplementation* impl )
    {
+      std::cout<<"loading plugin: "<<apiName<<"\n"<<std::flush;
       mRegisteredImplementations[apiName] = impl;
    }
    
