@@ -48,7 +48,7 @@
 # scriptdir     - The path to the directory containing scripts used in the
 #                 build and install/release process.
 # topdir        - The top of the build tree.
-# VPRROOT_ABS   - The absolute path to the root of the VR Juggler source tree.
+# VPRROOT_ABS   - The absolute path to the root of the VPR source tree.
 #
 # MKDEPS_CC     - Compiler for C dependencies.
 # MKDEPS_CXX    - Compiler for CXX dependencies.
