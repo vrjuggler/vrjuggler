@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-package org.vrjuggler.vrjconfig.customeditors.display_window;
+package org.vrjuggler.vrjconfig.commoneditors;
 
 import java.util.ArrayList;
 import java.util.HashMap;

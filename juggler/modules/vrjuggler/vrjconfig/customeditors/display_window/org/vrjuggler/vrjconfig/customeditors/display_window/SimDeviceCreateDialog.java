@@ -46,6 +46,7 @@ import info.clearthought.layout.*;
 import org.vrjuggler.tweek.services.EnvironmentService;
 import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.vrjconfig.commoneditors.DeviceConfig;
 
 
 public class SimDeviceCreateDialog
@@ -91,7 +92,7 @@ public class SimDeviceCreateDialog
       this.setLocationRelativeTo(parent);
    }
 
-   public SimDeviceConfig showDialog()
+   public DeviceConfig showDialog()
    {
       setVisible(true);
       return mSimDevConfig;
@@ -205,11 +206,11 @@ public class SimDeviceCreateDialog
       this.getContentPane().add(mButtonPanel, BorderLayout.SOUTH);
    }
 
-   private ConfigContext   mContext            = null;
-   private ConfigElement   mKbdProxyElement    = null;
-   private SimDeviceConfig mSimDevConfig       = null;
-   private Map             mSimDevProxyDefsMap = null;
-   private String          mDataSourceName     = null;
+   private ConfigContext mContext            = null;
+   private ConfigElement mKbdProxyElement    = null;
+   private DeviceConfig  mSimDevConfig       = null;
+   private Map           mSimDevProxyDefsMap = null;
+   private String        mDataSourceName     = null;
 
    private JPanel mMainPanel = new JPanel();
    private JLabel mNameLabel = new JLabel();
@@ -261,9 +262,9 @@ public class SimDeviceCreateDialog
       broker.add(mContext, proxy_elt, mDataSourceName);
       broker.add(mContext, alias_elt, mDataSourceName);
 
-      mSimDevConfig = new SimDeviceConfig(mContext, dev_elt,
-                                          new ConfigElement[]{proxy_elt},
-                                          new ConfigElement[]{alias_elt});
+      mSimDevConfig = new DeviceConfig(mContext, dev_elt,
+                                       new ConfigElement[]{proxy_elt},
+                                       new ConfigElement[]{alias_elt});
 
       dispose();
    }
