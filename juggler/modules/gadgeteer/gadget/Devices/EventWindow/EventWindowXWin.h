@@ -177,10 +177,8 @@ private:
     *
     * @param key   The key whose state changed.
     * @param type  The type of key event (KeyPress or KeyRelease).
-    * @param state An integer value from the X Window System that gives the
-    *              current state of depressed keyboard modifiers in addition
-    *              to key.
-    * @param time  The time (in milliseconds) at which the event occurred.
+    * @param event A pointer to the X Window System key event structure
+    *              associated with the event.
     */
    void addKeyEvent(const gadget::Keys& key, const gadget::EventType& type,
                     XKeyEvent* event);
