@@ -44,3 +44,17 @@ pfMatrix vjGetPfMatrix(vjMatrix& mat)
 
    return perf_mat;
 }
+
+
+
+vjVec3 vjGetVjVec(pfVec3& vec)
+{
+   //     Perf     x       z       -y
+   return vjVec3(vec[0], vec[2], -vec[1]);
+}
+
+pfVec3 vjGetPfVec(vjVec3& vec)
+{
+   //   Juggler   x        -z       y
+   return pfVec3(vec[0], -vec[2], vec[1]);
+}

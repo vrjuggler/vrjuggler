@@ -38,4 +38,8 @@ vjMatrix vjGetVJMatrix(pfMatrix& perfMat);
 pfMatrix vjGetPfMatrix(vjMatrix& mat);
 
 
+vjVec3 vjGetVjVec(pfVec3& vec);
+pfVec3 vjGetPfVec(vjVec3& vec);
+
+
 #endif

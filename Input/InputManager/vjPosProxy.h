@@ -102,7 +102,7 @@ public:
    //: Transform the data in m_posData
    //! PRE: m_posData needs to have most recent data
    //! POST: m_posData is transformed by the xform matrix
-   //+       m_posData = old(m_posData).pre(xformMatrix)
+   //+       m_posData = old(m_posData).post(xformMatrix)
    //!NOTE: This moves the wMr to the modifed reciever system wMmr
    //+  where w = world, mr = world of the reciever, and r = reciever
    void transformData()

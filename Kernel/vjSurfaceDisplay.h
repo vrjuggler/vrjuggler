@@ -126,6 +126,18 @@ public:
    vjProjection* getRightProj()
    { return mRightProj; }
 
+   virtual ostream& outStream(ostream& out)
+   {
+      vjDisplay::outStream(out);
+
+      out << "LLCorner: " << mLLCorner << "\nLRCorner: " << mLRCorner
+          << "\nURCorner: " << mURCorner << "\nULCorner" << mULCorner << endl;
+      out << "surfRot: \n" << mSurfaceRotation << endl;
+      out << "leftProj: " << *mLeftProj << endl;
+      out << "rightProj: " << *mRightProj << endl;
+      return out;
+   }
+
 protected:
    void calculateSurfaceRotation()
    {

@@ -40,7 +40,7 @@ class vjSimDisplay;
 
     // Performer Config function called in draw proc after window is set up
 void vjPFconfigPWin(pfPipeWindow* pWin);
-void vjPfDrawFunc(pfChannel *chan, void* chandata);
+void vjPfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, bool stereo, bool simulator);
 
 //------------------------------------------------------------
 //: Concrete singleton class for API specific Draw Manager.
@@ -137,7 +137,7 @@ public:
    void debugDump();
 
    friend void vjPFconfigPWin(pfPipeWindow* pWin);
-   friend void vjPfDrawFunc(pfChannel *chan, void* chandata);
+   friend void vjPfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, bool stereo, bool simulator);
 
 protected:
    //: Helper to set channel view params from a vjProjection
@@ -153,17 +153,15 @@ protected:
 
    //: Helper to get the pfDisp given a channel
    //! RETURNS: NULL - Not found
-   pfDisp* getPfDisp(pfChannel* chan)
-   {
-      std::vector<pfDisp>::iterator theDisp = std::find_if(disps.begin(), disps.end(), findPfDispChan(chan));
-      if(theDisp == disps.end())
-         return NULL;
-      else
-         return (&(*theDisp));
-   }
+   pfDisp* getPfDisp(pfChannel* chan);
 
 
 protected:
+   // NOTE:  ---- REMEMBER THAT PF HAS SHARED MEM Model ---
+   // Rember that Performer uses forks, so it's processes need to
+   // have shared memory allocated variable in order to work
+   // correctly.
+
    // --- Config Data --- //
    int numPipes;    // The number of Performer pipes
 

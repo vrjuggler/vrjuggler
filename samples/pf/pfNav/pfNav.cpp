@@ -10,12 +10,16 @@
 #include <Performer/pf/pfDCS.h>
 #include <Performer/pfdu.h>
 
-    // --- New Lib Stuff --- //
+    // --- VR Juggler Stuff --- //
 #include <Kernel/vjKernel.h>
 #include <Kernel/Pf/vjPfApp.h>
 #include <Kernel/vjDebug.h>
+#include <Kernel/vjProjection.h>
 
 #include <pfNaver.h>
+#include <collidor.h>
+#include <planeCollidor.h>
+#include <pfCollidor.h>
 
 // Declare my application class
 class myApp : public vjPfApp
@@ -30,40 +34,83 @@ public:
    virtual void init()
    {
       vjDEBUG(vjDBG_ALL, 1) << "app::init\n" << vjDEBUG_FLUSH;
+      vjProjection::setNearFar(1.0, 10000);
    }
 
    virtual void apiInit()
    {
       vjDEBUG(vjDBG_ALL,1) << "app::apiInit\n" << vjDEBUG_FLUSH;
+      pfEnable(PFEN_LIGHTING);
+
    }
 
    /// Initialize the scene graph
    virtual void initScene()
    {
+
+      // Setup the state like we need
+      //pfEnable(PFEN_LIGHTING);
+      pfEnable(PFEN_LIGHTING);
+
+      int cur_light_state = pfGetEnable(PFEN_LIGHTING);
+      cout << "initScene: Current lighting state: " << cur_light_state << endl;
+
+      // Load the scene
       vjDEBUG(vjDBG_ALL, 0) << "app::initScene\n" << vjDEBUG_FLUSH;
       rootNode = new pfScene;
+
       naver = new pfNaver();
       pfLightSource* sun = new pfLightSource;
       pfLightSource* sun1 = new pfLightSource;
-      pfGeoState* gstate = new pfGeoState;
 
-      gstate->setMode(PFSTATE_ENLIGHTING, PF_ON);
-      gstate->setMode(PFSTATE_CULLFACE, PFCF_OFF);
-      rootNode->setGState(gstate);
+      //pfGeoState* gstate = new pfGeoState;
+      //gstate->setMode(PFSTATE_ENLIGHTING, PF_ON);
+      //gstate->setMode(PFSTATE_CULLFACE, PFCF_OFF);
+      //rootNode->setGState(gstate);
 
-      sun->setPos(3, -15, 20, 1);
+
+      /*
+      sun->setPos(0.0f, 1.0f, 0.0f, 0.0f);
+      sun->setColor(PFLT_DIFFUSE,1.0f,1.0f,0.8f);
+      sun->setColor(PFLT_AMBIENT,0.4f,0.4f,0.3f);
       rootNode->addChild(sun);
-      sun1->setPos(-3, -15, 20, 1);
+      sun->on();
+
+      sun1->setPos(0.0f, 0.0f, 1.0f, 0.0f);
+      sun1->setColor(PFLT_DIFFUSE,1.0f,1.0f,0.8f);
+      sun1->setColor(PFLT_AMBIENT,0.4f,0.4f,0.3f);
       rootNode->addChild(sun1);
       sun1->on();
+      */
 
-      rootNode->addChild(naver);
+      rootNode->addChild(new pfLightSource);
 
+      pfDCS* world_model = new pfDCS;    // The node with the world under it
+      //rootNode->addChild(naver);
+
+      // Load the data files
+      //pfFilePath("/usr/share/Performer/data:/usr/share/Performer/data/town");
       pfNode* obj = pfdLoadFile("/usr/share/Performer/data/chamber.0.lsa");
+      //pfNode* obj = pfdLoadFile("/usr/share/Performer/data/cow.obj");
+      //pfNode* obj = pfdLoadFile("/usr/share/Performer/data/town/town_ogl_pfi.pfb");
 
-      naver->addChild(obj);
-      naver->setScale(10.0f);
-      naver->setTrans(0.0, 0.0, -10.0f);
+      /*
+      world_model->addChild(obj);
+      //world_model->setScale(3.0f);
+      //vjMatrix initial_pos;  initial_pos.setTrans(-2500,-400,2500);
+      vjMatrix initial_pos;
+      //initial_pos.setTrans(7500,50,-7500);
+      //initial_pos.setTrans(100,200,350);
+      naver->getNavigator()->setCurPos(initial_pos);
+      naver->addChild(world_model);
+
+      //planeCollidor* collide = new planeCollidor;
+      pfCollidor* collide = new pfCollidor(world_model);
+
+      naver->getNavigator()->setCollidor(collide);
+      */
+
+      rootNode->addChild(obj);
    }
 
    /// Return the current scene graph
