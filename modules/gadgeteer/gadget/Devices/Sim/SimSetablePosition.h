@@ -55,7 +55,7 @@ namespace gadget
  * input manager from having different copies of data for very long.
  */
 //class SimSetablePosition : public Input, public Position
-class SimSetablePosition : public InputMixer<Input,Position>
+class GADGET_CLASS_API SimSetablePosition : public InputMixer<Input,Position>
 {
 public:
    SimSetablePosition() {;}
