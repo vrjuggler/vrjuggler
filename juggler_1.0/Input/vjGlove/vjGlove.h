@@ -43,7 +43,7 @@
 
 // TODO: 2 devs here is a hack until we make 
 //       the pinch glove act more like the flock of birds.
-#define VJ_MAX_GLOVE_DEVS 2          // The maximum number of gloves per device
+#define VJ_MAX_GLOVE_DEVS 2	/* The maximum number of gloves per device */
 
 //: This is the data stored about a glove
 //

@@ -42,13 +42,13 @@
 //--------------------------------------------
 // This is the actual function that is called.
 //--------------------------------------------
-#if defined(VJ_IRIX_SPROC)	// ---- Using IRIX Sproc ------ //
+#if defined(VJ_IRIX_SPROC)	/* ---- Using IRIX Sproc ------ */
     void
     ThreadFunctorFunction (void* args) {
         vjBaseThreadFunctor& func = *(vjBaseThreadFunctor*)args;
         func();	// Call the functor's operator ()
     }
-#elif defined(VJ_OS_Win32)	// ----- Using Win32 ---- //
+#elif defined(VJ_OS_Win32)	/* ----- Using Win32 ---- */
     unsigned int __stdcall
     ThreadFunctorFunction (void* args) {
          vjBaseThreadFunctor& func = *(vjBaseThreadFunctor*)args;
