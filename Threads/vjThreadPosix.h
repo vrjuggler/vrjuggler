@@ -29,34 +29,6 @@
 typedef uint32_t	thread_id_t;
 
 
-class vjPthreadObj
-{
-public:
-    thread_id_t	id;		//: Non-decreasing, unique ID for this thread
-    pthread_t	obj;		//: pthread_t data structure for this thread
-};
-
-
-// The following is a terrible, evil, platform-specific hack to deal with
-// determining if two pthread structures are equal.
-
-struct eq_thread {
-    bool
-    operator() (const caddr_t& thread1, const caddr_t& thread2) const {
-#ifdef VJ_OS_SGI
-        return ((vjPthreadObj*) thread1)->obj == ((vjPthreadObj*) thread2)->obj;
-#else
-#ifdef VJ_OS_HPUX
-        return ((vjPthreadObj*) thread1)->obj.field1 ==
-               ((vjPthreadObj*) thread2)->obj.field1;
-#else
-        return thread1 == thread2;
-#endif	/* VJ_OS_HPUX */
-#endif	/* VJ_OS_SGI */
-    }
-};
-
-
 //: Threads implementation using POSIX threads (both Draft 4 and the "final"
 //+ draft of the standard are supported).
 
@@ -134,7 +106,7 @@ public:
     // -----------------------------------------------------------------------
     virtual int
     join (void** status = 0) {
-        return pthread_join(mThread.obj, status);
+        return pthread_join(mThread, status);
     }
 
     // -----------------------------------------------------------------------
@@ -241,7 +213,7 @@ public:
 
         return -1;
 #else
-        return pthread_kill(mThread.obj, signum);
+        return pthread_kill(mThread, signum);
 #endif
     }
 
@@ -262,7 +234,7 @@ public:
     // -----------------------------------------------------------------------
     virtual void
     kill (void) {
-        pthread_cancel(mThread.obj);
+        pthread_cancel(mThread);
     }
 
     // -----------------------------------------------------------------------
@@ -281,24 +253,88 @@ public:
     // -----------------------------------------------------------------------
     ostream&
     outStream (ostream& out) {
-        out << "pThrd: [" << getpid() << ":" << mThread.id << "] ";
+        out << "pThrd: [" << getpid() << ":" << id << "] ";
         vjBaseThread::outStream(out);
         return out;
     }
 
 // All private member variables and functions.
 private:
-    vjPthreadObj mThread;		//: Thread object
+    thread_id_t	id;		//: Non-decreasing, unique ID for this thread
+    pthread_t	mThread;	//: pthread_t data structure for this thread
 
     void checkRegister(int status);
 
-    // Static member variables and functions.
-    static hash_map<caddr_t, thread_id_t, hash<caddr_t>, eq_thread> mPthreadHash;
+    // -----------------------------------------------------------------------
+    //: Get a hash index for this thread.  This will always be a nonzero
+    //+ value.
+    //
+    //! PRE: None.
+    //! POST: The hash index for this thread is returned to the caller.
+    //
+    //! RETURNS: Nonzero - The hash index of this tread.
+    // -----------------------------------------------------------------------
+    inline thread_id_t
+    hash (void) {
+#ifdef VJ_OS_SGI
+        return mThread;
+#else
+#ifdef VJ_OS_HPUX
+        return mThread.field1;
+#else
+        return mThread;
+#endif	/* VJ_OS_HPUX */
+#endif	/* VJ_OS_SGI */
+    }
 
+    // -----------------------------------------------------------------------
+    //: Get a hash index for the given thread.  This will always be a nonzero
+    //+ value.
+    //
+    //! PRE: None.
+    //! POST: The hash index for the given thread is returned to the caller.
+    //
+    //! ARGS: thread: A pthread_t structure whose hash index will be
+    //+       determined and returned.
+    //
+    //! RETURNS: Nonzero - The hash index of the given tread.
+    // -----------------------------------------------------------------------
+    inline static thread_id_t
+    hash (pthread_t thread) {
+#ifdef VJ_OS_SGI
+        return thread;
+#else
+#ifdef VJ_OS_HPUX
+        return thread.field1;
+#else
+        return thread;
+#endif	/* VJ_OS_HPUX */
+#endif	/* VJ_OS_SGI */
+    }
+
+    // -----------------------------------------------------------------------
+    //: Get this thread's ID (i.e., its hash index for the thread table).  It
+    //+ will always be greater than 0.
+    //
+    //! PRE: None.
+    //! POST: The hash index ID for this thread is returned to the caller.
+    //
+    //! RETURNS: Nonzero - The hash index of this tread.
+    // -----------------------------------------------------------------------
+    inline static thread_id_t
+    gettid (void) {
+        pthread_t me;
+
+        me = pthread_self();
+
+        return hash(me);
+    }
+
+    //: Non-decreasing count of how many thread objects have been created.
     static thread_id_t			mThreadCount;
-    static vjThreadTable<thread_id_t>	mThreadTable;
 
-    static thread_id_t gettid(void);
+    static vjThreadTable<thread_id_t>	mThreadTable;
 };
+
 
 #endif	/* _THREAD_POSIX_H_ */
