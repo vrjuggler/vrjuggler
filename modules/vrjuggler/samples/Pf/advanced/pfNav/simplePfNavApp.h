@@ -199,7 +199,7 @@ public:
    std::vector<navigator*>    mNavigators;      // A list of the navigators in the system
    unsigned                   mCurNavIndex;     // Index of the current navigator
    pfNavDCS*                  mNavigationDCS;
-   vrj::DigitalInterface      mNavCycleButton;  // Button to cycle the navigation
+   gadget::DigitalInterface      mNavCycleButton;  // Button to cycle the navigation
 
    // SCENE GRAPH NODES
    pfGroup*       mLightGroup;

@@ -33,8 +33,8 @@
 #ifndef _VRJ_PF_APP_STATS_
 #define _VRJ_PF_APP_STATS_
 
-#include <vrj/Input/Type/DigitalInterface.h>
-#include <vrj/Input/Type/DigitalProxy.h>
+#include <gadget/Type/DigitalInterface.h>
+#include <gadget/Type/DigitalProxy.h>
 #include <Performer/pf/pfChannel.h>
 #include <Performer/pfutil.h>
 #include <pfMPStats.h>
@@ -113,7 +113,7 @@ protected:  // -- Helper functions --- //
 
 private:
    // Stats info
-   DigitalInterface      mStatsButton;           // Button used to cycle the stats info
+   gadget::DigitalInterface      mStatsButton;           // Button used to cycle the stats info
    bool                    mStatsConfigChange;     // Has the stats stuff been change
    PfAppStats::statMode  mStatsMode;             // The current stats mode
    pfMPStats               mMPStats;               // The Multi-pipe stats
@@ -283,7 +283,7 @@ inline void PfAppStats::preFrame()
    }
 
    // Check for STATS CYCLE Button
-   if(mStatsButton->getData() == Digital::TOGGLE_ON)
+   if(mStatsButton->getData() == gadget::Digital::TOGGLE_ON)
    {
       vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrGREEN,"vjPfAppStats: mStatsButton pressed. Turning on or cycling stats.\n") << vprDEBUG_FLUSH;
 

@@ -168,7 +168,7 @@ bool pfBasicConfigNavApp::configAdd( jccl::ConfigChunk* chunk )
    mModelList.clear();//start out clean
    for (x = 0; x < chunk->getNum( "Model" ); ++x)
    {
-      jccl::ConfigChunk* model_chunk = chunk->getProperty( "Model", x );
+      jccl::ConfigChunkPtr model_chunk = chunk->getProperty( "Model", x );
       Model m;
       m.description = (std::string)model_chunk->getProperty( "Name" );
       m.filename = (std::string)model_chunk->getProperty( "filename" );
@@ -188,7 +188,7 @@ bool pfBasicConfigNavApp::configAdd( jccl::ConfigChunk* chunk )
    mSoundList.clear();//start out clean
    for (x = 0; x < chunk->getNum( "Sound" ); ++x)
    {
-      jccl::ConfigChunk* sound_chunk = chunk->getProperty( "Sound", x );
+      jccl::ConfigChunkPtr sound_chunk = chunk->getProperty( "Sound", x );
       Sound s;
       s.name = (std::string)sound_chunk->getProperty( "Name" );
       s.alias = (std::string)sound_chunk->getProperty( "soundAlias" );

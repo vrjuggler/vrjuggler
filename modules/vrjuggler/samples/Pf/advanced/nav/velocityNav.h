@@ -137,8 +137,8 @@ private:
    float    mAcceleration;
 
    // digitalInterfaces
-   std::vector<vrj::DigitalInterface*> mActionButtons;
-   vrj::PosInterface mNavWand;
+   std::vector<gadget::DigitalInterface*> mActionButtons;
+   gadget::PositionInterface mNavWand;
 
    // State combos
    std::vector<ActionState> mAccelForwardCombo;
@@ -207,7 +207,7 @@ void velocityNav::setActionButtons(std::vector<std::string> action_btn_names)
    // Make sure list is long enough
    while(action_btn_names.size() > mActionButtons.size())
    {
-      mActionButtons.push_back(new vrj::DigitalInterface());
+      mActionButtons.push_back(new gadget::DigitalInterface());
    }
 
    // Update all the entries
