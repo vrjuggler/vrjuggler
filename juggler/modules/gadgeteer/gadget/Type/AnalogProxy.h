@@ -60,7 +60,7 @@ class vjAnalogProxy : public vjProxy
 
 public:
    //: Constructor
-   vjAnalogProxy() : m_anaPtr(NULL), m_unitNum(-1), m_data(-1)
+   vjAnalogProxy() : m_anaPtr(NULL), m_unitNum(-1), m_data(-1.0f)
    {;}
 
    virtual ~vjAnalogProxy() {}
@@ -84,13 +84,13 @@ public:
 
    //: Get the current analog data value
    //! RETURNS: The analog data from the device
-   int getData()
+   float getData() const
    { return m_data;}
 
    vjAnalog* getAnalogPtr()
    { return m_anaPtr;}
 
-   int getUnit()
+   int getUnit() const
    { return m_unitNum;}
 
    static std::string getChunkType() { return "AnaProxy";}
@@ -107,7 +107,7 @@ public:
 private:
    vjAnalog*   m_anaPtr;
    int         m_unitNum;
-   int         m_data;
+   float       m_data;
 };
 
 #endif

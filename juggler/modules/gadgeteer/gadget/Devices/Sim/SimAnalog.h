@@ -56,7 +56,7 @@ public:
    virtual bool config(vjConfigChunk* chunk);
 
    //: Return analog data
-   virtual int getAnalogData(int devNum=0)
+   virtual float getAnalogData(int devNum=0)
    {
       vjASSERT(devNum < (int)mAnaData.size());    // Make sure we have enough space
       return mAnaData[devNum];
@@ -76,10 +76,10 @@ public:
    static std::string getChunkType() { return std::string("SimAnalog");}
 
 private:
-   std::vector<int>          mAnaData;     //: The analog data that we have
+   std::vector<float>          mAnaData;     //: The analog data that we have
    std::vector<vjKeyModPair> mSimKeysUp;   //: The keys to press for moving analog up
    std::vector<vjKeyModPair> mSimKeysDown; //: The keys to press for moving analog up
-   int                     mAnaStep;      //: The analog step size
+   float                     mAnaStep;      //: The analog step size
 };
 
 #endif

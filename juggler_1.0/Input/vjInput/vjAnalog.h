@@ -63,13 +63,22 @@ public:
 	//: Constructor
    //! POST: Set device abilities
    //! NOTE: Must be called from all derived classes
-   vjAnalog () {  deviceAbilities = deviceAbilities | DEVICE_ANALOG; }
-	~vjAnalog() {}
+   vjAnalog() : mMin( 0.0f ), mMax( 1.0f ) 
+   {
+      deviceAbilities = deviceAbilities | DEVICE_ANALOG;
+   }
+   ~vjAnalog() {}
 	
    // Just call base class config
    //! NOTE: Let constructor set device abilities
    virtual bool config(vjConfigChunk* c)
-   { return vjInput::config(c); }
+   { 
+      mMin = static_cast<float>( c->getProperty("min") );
+      float max = static_cast<float>( c->getProperty("max") );
+      if (max > 0.0f)
+         mMax = max;
+      return vjInput::config( c ); 
+   }
 
 	/* vjInput pure virtual functions */
 	virtual int startSampling() = 0;
@@ -80,9 +89,52 @@ public:
 	//: Get the device name
 	char* getDeviceName() { return "vjAnalog"; }
 	
-	/* New pure virtual functions */
-	//: Return analog data
-	virtual int getAnalogData(int devNum = 0) = 0;
+   /* new pure virtual functions */
+   //: Return "analog data".. 
+   //  Gee, that's ambiguous especially on a discrete system such as a digital computer....
+   //  
+   //! PRE: give the device number you wish to access.
+   //! POST: returns a value that ranges from 0.0f to 1.0f
+   //! NOTE: for example, if you are sampling a potentiometer, and it returns reading from 
+   //        0, 255 - this function will normalize those values (using vjAnalog::normalizeMinToMax())
+   //        for another example, if your potentiometer's turn radius is limited mechanically to return
+   //        say, the values 176 to 200 (yes this is really low res), this function will still return
+   //        0.0f to 1.0f. 
+   //! NOTE: to specify these min/max values, you must set in your vjAnalog (or analog device) config
+   //        file the field "min" and "max".  By default (if these values do not appear), 
+   //        "min" and "max" are set to 0.0f and 1.0f respectivly.
+   //! NOTE: TO ALL ANALOG DEVICE DRIVER WRITERS, you *must* normalize your data using 
+   //        vjAnalog::normalizeMinToMax()
+	virtual float getAnalogData(int devNum = 0) = 0;
+   
+protected:
+   // give a value that will range from [min() <= n <= max()]
+   // return a value that is normalized to the range of 0.0f <= n <= 1.0f
+   // if n < 0 or n > 1, then result = 0 or 1 respectively.
+   void normalizeMinToMax( const float& plainJaneValue, float& normedFromMinToMax )
+   {
+      float value = plainJaneValue;
+
+      // first clamp the value so that min<=value<=max
+      if (value < mMin) value = mMin;
+      if (value > mMax) value = mMax;
+
+      // slide everything to 0.0 (subtract all by mMin)
+      float //tmin( 0.0f ), 
+            tmax( mMax - mMin), 
+            tvalue = value - mMin;
+
+      // since [tmin/tmax...tmax/tmax] == [0.0f...1.0f], the normalized value will be value/tmax
+      normedFromMinToMax = tvalue / tmax;
+   }
+
+
+   float min() const { return mMin; }
+   float max() const { return mMax; }
+   void setMin( float min ) { mMin = min; }
+   void setMax( float max ) { mMax = max; }
+
+   float mMin, mMax;
 };
 
 
