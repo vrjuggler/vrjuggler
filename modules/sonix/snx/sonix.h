@@ -54,6 +54,8 @@
 #include <gmtl/VecOps.h>
 #include <gmtl/Xforms.h>
 
+#include <jccl/Config/ConfigChunk.h>
+
 #include <vpr/Util/Singleton.h>
 #include "snx/SoundInfo.h"
 #include "snx/SoundFactory.h"
@@ -71,20 +73,7 @@ protected:
    }
 
    //: virtual destructor
-   virtual ~sonix()
-   {
-      // release the implementation
-      if (mImplementation != NULL)
-      {
-         // unload all sound data
-         mImplementation->unbindAll();
-         
-         // shutdown old api if exists
-         mImplementation->shutdownAPI();
-         delete mImplementation;
-         mImplementation = NULL;
-      }
-   }
+   virtual ~sonix();
 
 public:
 
@@ -95,66 +84,42 @@ public:
     * @postconditions if it is, then the loaded sound is triggered.  if it isn't then nothing happens.
     * @semantics Triggers a sound
     */
-   virtual void trigger( const std::string& alias, const int& repeat = 1 )
-   {
-      this->impl().trigger( alias, repeat );
-   }
+   virtual void trigger( const std::string& alias, const int& repeat = 1 );
    
    /**
      * is the sound currently playing?
      */
-   virtual bool isPlaying( const std::string& alias )
-   {
-      return this->impl().isPlaying( alias );
-   }  
+   virtual bool isPlaying( const std::string& alias );
 
    /*
     * when sound is already playing then you call trigger,
     * does the sound restart from beginning?
     */
-   virtual void setRetriggerable( const std::string& alias, bool onOff )
-   {
-      this->impl().setRetriggerable( alias, onOff );
-   }
+   virtual void setRetriggerable( const std::string& alias, bool onOff );
 
    /**
     * is the sound retriggerable?
     */
-   virtual bool isRetriggerable( const std::string& alias )
-   {
-      return this->impl().isRetriggerable( alias );
-   }
+   virtual bool isRetriggerable( const std::string& alias );
 
    /**
     * @semantics stop the sound
     * @input alias of the sound to be stopped
     */
-   virtual void stop( const std::string& alias )
-   {
-      this->impl().stop( alias );
-   }
+   virtual void stop( const std::string& alias );
 
    /**
     * pause the sound, use unpause to return playback where you left off...
     */
-   virtual void pause( const std::string& alias )
-   {
-      this->impl().pause( alias );
-   }
+   virtual void pause( const std::string& alias );
 
    /**
     * resume playback from a paused state.  does nothing if sound was not paused.
     */
-   virtual void unpause( const std::string& alias )
-   {
-      this->impl().unpause( alias );
-   }
+   virtual void unpause( const std::string& alias );
    
    /** if the sound is paused, then return true. */
-   virtual bool isPaused( const std::string& alias )
-   {
-      return this->impl().isPaused( alias );
-   } 
+   virtual bool isPaused( const std::string& alias );
    
    /**
     * ambient or positional sound.
@@ -162,75 +127,48 @@ public:
     * when listener moves...
     * or is the sound positional - changes volume as listener nears or retreats..
     */
-   virtual void setAmbient( const std::string& alias, bool setting = false )
-   {
-      this->impl().setAmbient( alias, setting );
-   }
+   virtual void setAmbient( const std::string& alias, bool setting = false );
 
    /** is the sound ambient? */
-   virtual bool isAmbient( const std::string& alias )
-   {
-      return this->impl().isAmbient( alias );
-   }
+   virtual bool isAmbient( const std::string& alias );
 
    /** alters the frequency of the sample.
     *  1 is no change
     *  < 1 is low
     *  > 1 is high.
     */
-   virtual void setPitchBend( const std::string& alias, float amount )
-   {
-      this->impl().setPitchBend( alias, amount );
-   }
+   virtual void setPitchBend( const std::string& alias, float amount );
 
    /** affect volume.  set to a value between [0..1]. */
-   virtual void setVolume( const std::string& alias, float amount )
-   {
-      this->impl().setVolume( alias, amount );
-   }
+   virtual void setVolume( const std::string& alias, float amount );
    
    /** affect cutoff.
     *  set to a value between [0..1]... 1 is no change.  0 is total cutoff.
     */
-   virtual void setCutoff( const std::string& alias, float amount )
-   {
-      this->impl().setCutoff( alias, amount );
-   }
+   virtual void setCutoff( const std::string& alias, float amount );
    
    /**
     * set sound's 3D position 
     * @input x,y,z are in OpenGL coordinates.  alias is a name that has been associate()d with some sound data
     */
-   virtual void setPosition( const std::string& alias, const float& x, const float& y, const float& z )
-   {
-      this->impl().setPosition( alias, x, y, z );
-   }
+   virtual void setPosition( const std::string& alias, const float& x, const float& y, const float& z );
 
    /**
     * get sound's 3D position
     * @input alias is a name that has been associate()d with some sound data
     * @output x,y,z are returned in OpenGL coordinates.
     */
-   virtual void getPosition( const std::string& alias, float& x, float& y, float& z )
-   {
-      this->impl().getPosition( alias, x, y, z );
-   }
+   virtual void getPosition( const std::string& alias, float& x, float& y, float& z );
 
    /**
     * set the position of the listener
     */
-   virtual void setListenerPosition( const gmtl::Matrix44f& mat )
-   {
-      this->impl().setListenerPosition( mat );
-   }
+   virtual void setListenerPosition( const gmtl::Matrix44f& mat );
 
    /**
     * get the position of the listener
     */
-   virtual void getListenerPosition( gmtl::Matrix44f& mat )
-   {
-      this->impl().getListenerPosition( mat );
-   }
+   virtual void getListenerPosition( gmtl::Matrix44f& mat );
 
 
    /**
@@ -242,48 +180,12 @@ public:
     * @time O(1)
     * @output a valid sound API.  if apiName is invalid, then a stub implementation is returned.
     */
-   virtual void changeAPI( const std::string& apiName )
-   {
-      snx::ISoundImplementation& oldImpl = this->impl();
-      assert( &oldImpl != NULL && "this->impl() should ensure that oldImpl is non-NULL" );
-      
-      std::cout<<"[snx] NOTIFY: Changing API from "<<oldImpl.name();
-      
-      // change the current api to the newly requested one.
-      snx::SoundFactory::instance()->createImplementation( apiName, mImplementation );
-
-      std::cout<<" to "<<mImplementation->name()<<".\n"<<std::flush;
-      
-      // copy sound state from old to current (doesn't do binding yet)
-      snx::SoundImplementation* si = dynamic_cast<snx::SoundImplementation*>( mImplementation );
-      assert( NULL != si && "implementation is not of type SoundImplementation, cast fails" );
-      snx::SoundImplementation& old_si = dynamic_cast<snx::SoundImplementation&>( oldImpl );
-      assert( NULL != &old_si && "implementation is not of type SoundImplementation, cast fails" );
-      si->copy( old_si );
-
-         // unload all sound data
-         oldImpl.unbindAll();
-
-         // shutdown old api if exists
-         oldImpl.shutdownAPI();
-
-         // delete old api, we're done with it...
-         delete &oldImpl;
-      
-      // startup the new API
-      mImplementation->startAPI();
-
-      // load all sound data
-      mImplementation->bindAll();
-   }
+   virtual void changeAPI( const std::string& apiName );
 
    /*
     * configure the sound API global settings
     */
-   virtual void configure( const snx::SoundAPIInfo& sai )
-   {
-      this->impl().configure( sai );
-   }   
+   virtual void configure( const snx::SoundAPIInfo& sai );
 
    /**
      * configure/reconfigure a sound
@@ -293,40 +195,23 @@ public:
      * @postconditions alias will point to loaded sound data
      * @semantics associate an alias to sound data.  later this alias can be used to operate on this sound data.
      */
-   virtual void configure( const std::string& alias, const snx::SoundInfo& description )
-   {
-      this->impl().configure( alias, description );
-   }   
+   virtual void configure( const std::string& alias, const snx::SoundInfo& description );
 
    /**
      * remove a configured sound, any future reference to the alias will not
      * cause an error, but will not result in a rendered sound
      */
-   virtual void remove( const std::string alias )
-   {
-      this->impl().remove( alias );
-   }   
+   virtual void remove( const std::string alias );
 
    /**
      * @semantics call once per sound frame (doesn't have to be same as your graphics frame)
      * @input time elapsed since last frame
      */
-   virtual void step( const float& timeElapsed )
-   {
-      this->impl().step( timeElapsed );
-   }
+   virtual void step( const float& timeElapsed );
    
 protected:
-   snx::ISoundImplementation& impl()
-   {
-      if (mImplementation == NULL)
-      {
-         snx::SoundFactory::instance()->createImplementation( "stub", mImplementation );
-         mImplementation->startAPI();
-         mImplementation->bindAll();
-      }
-      return *mImplementation;
-   }
+   snx::ISoundImplementation& impl();
+
 private:
    /** @link dependency */
    /*#  snx::SoundFactory lnkSoundFactory; */
