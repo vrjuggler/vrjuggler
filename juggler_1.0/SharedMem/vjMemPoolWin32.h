@@ -63,7 +63,6 @@
 #include <vjConfig.h>
 #include <stdio.h>
 #include <windows.h>
-#include <SharedMem/vjMemPool.h>
 
 
 
