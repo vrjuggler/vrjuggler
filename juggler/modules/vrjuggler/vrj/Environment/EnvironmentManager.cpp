@@ -30,6 +30,7 @@ vjEnvironmentManager::vjEnvironmentManager():
     configured_to_accept = false;
     perf_refresh_time = 500;
 
+    perf_target_name = "";
     perf_target = NULL;
     current_perf_config = NULL;
 }
@@ -103,8 +104,8 @@ bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
 	    newport = Port;
 	if ((newport != Port) || (configured_to_accept != isAccepting()))
 	    networkingchanged = true;
-	std::string s = chunk->getProperty ("PerformanceTarget");
-	vjConnect* new_perf_target = getConnect(s);
+	perf_target_name = (std::string)chunk->getProperty ("PerformanceTarget");
+	vjConnect* new_perf_target = getConnect(perf_target_name);
 	if (new_perf_target != perf_target)
 	    setPerformanceTarget (NULL);
 
@@ -140,6 +141,8 @@ bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
 	    vjConnect* vn = new vjConnect (chunk);
 	    connections.push_back (vn);
 	    vn->startProcess();
+	    if (!vjstrcasecmp (vn->getName(), perf_target_name))
+		setPerformanceTarget (vn);
 	}
 	return true;
     }
@@ -177,10 +180,13 @@ bool vjEnvironmentManager::configRemove(vjConfigChunk* chunk) {
 	return true;
     }
     else if (!vjstrcasecmp (s, "FileConnect")) {
-//  	vjConnect* c = getConnect (chunk->getProperty ("Name"));
-//  	if (c) {
-//  	    removeConnect (c);
-//  	}
+	cout << "removing fileconnect named " << flush
+	     << chunk->getProperty ("Name") << endl;
+ 	vjConnect* c = getConnect (chunk->getProperty ("Name"));
+ 	if (c) {
+ 	    removeConnect (c);
+ 	}
+	cout << "done fileconnect remove" << endl;
 	return true;
     }
 
@@ -208,12 +214,12 @@ void vjEnvironmentManager::removeConnect (vjConnect* con) {
 	return;
     if (con == perf_target)
 	setPerformanceTarget (NULL);
-
     std::vector<vjConnect*>::iterator i;
     for (i = connections.begin(); i != connections.end(); i++)
 	if (con == *i) {
 	    connections.erase (i);
 	    delete con;
+	    break;
 	}
 }
 
