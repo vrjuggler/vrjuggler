@@ -97,7 +97,7 @@ bool KeyboardWin32::config(jccl::ConfigChunkPtr c)
 int KeyboardWin32::startSampling()
 {
    if (mThread == NULL) {
-      resetIndexes();
+//      resetIndexes();
 
       vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
                  << "vjWin32Keyboard::startSampling() : ready to go.."

@@ -48,10 +48,6 @@ Input::Input()
    mPortId(0),
    mThread(NULL),
    mActive(0),
-   current(0),
-   valid(1),
-   progress(2),
-   lock(),
    mBaudRate(0)
 {
 }

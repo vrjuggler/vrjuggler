@@ -151,9 +151,6 @@ void Intersense::controlLoop(void* nullParam)
         mTracker.setConfigState(j);
     }
 
-// Reset current, progress, and valid indices
-    resetIndexes();
-
 // Loop through and keep sampling
     for (;;)
     {

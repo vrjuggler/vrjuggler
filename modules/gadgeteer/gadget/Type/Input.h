@@ -207,26 +207,6 @@ public:
    /** Is this input device active?. */
    int isActive() { return mActive;}
 
-protected:  // Helpers
-   /** Reset the Index Holders
-    * Sets to (0,1,2) in that order
-    */
-   void resetIndexes();
-
-   /** Swap the current and valid indexes (NOT thread safe)
-    * You must have a lock when you call this
-    * @note In the same lock that this is called, the driver
-    *      MUST copy the valid data over the current data in order
-    *      to keep from seeing bad data in the future
-    */
-   void swapCurrentIndexes();
-
-   /** Swap the valid and progress indexes (thread safe) */
-   void swapValidIndexes();
-
-   /** Assert that the indices currently have valid values */
-   void assertIndexes();
-
 protected:
    char*          mPort;
    std::string    mInstName;
