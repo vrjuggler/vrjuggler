@@ -32,15 +32,13 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <math.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
+#include <OsgNav.h>
 
 #include <gmtl/Vec.h>
 #include <gmtl/Coord.h>
 #include <gmtl/Xforms.h>
 
-#include <OsgNav.h>
+
 
 
 //----------------------------------------------
@@ -131,13 +129,13 @@ void OsgNav::myInit()
    //The top level nodes of the tree
     mRootNode = new osg::Group();
     mNoNav   = new osg::Group();
-    mNavTrans = new osg::Transform();
+    mNavTrans = new osg::MatrixTransform();
 
     mRootNode->addChild( mNoNav );
     mRootNode->addChild( mNavTrans );
 
    //Load the models and add them to the tree
-   mModelTrans  = new osg::Transform();         // Transform node for the model
+   mModelTrans  = new osg::MatrixTransform();         // Transform node for the model
 
     //model = osgDB::readNodeFile("paraglider.osg");
     //mModel = osgDB::readNodeFile("dumptruck.osg");
@@ -147,14 +145,18 @@ void OsgNav::myInit()
    std::cout << "done." << std::endl;
 
    // Could use this to correct for incorrectly rotated models
-   mModelBaseXform = new osg::Transform();
+   mModelBaseXform = new osg::MatrixTransform();
    //mModelBaseXform->preRotate(90.0f, 1.0f, 0.0f, 0.0f);
    mModelBaseXform->preMult( osg::Matrix::rotate(90.0f, 1.0f, 0.0f, 0.0f));
    mModelBaseXform->setMatrix( osg::Matrix::scale(50.0f, 50.0f, 50.0f));
 
    // Add model to the tree
    mModelTrans->addChild(mModel);
-    mNavTrans->addChild( mModelTrans );
+   mNavTrans->addChild( mModelTrans );
+   
+   // run optimization over the scene graph
+    osgUtil::Optimizer optimzer;
+    optimzer.optimize(mRootNode);
 
    // traverse the scene graph setting up all osg::GeoSet's so they will use
     // OpenGL display lists.
