@@ -17,7 +17,6 @@
 
 
 thread_id_t vjThreadPosix::mThreadCount = 1;
-hash_map<caddr_t, thread_id_t, hash<caddr_t>, eq_thread> vjThreadPosix::mPthreadHash;
 vjThreadTable<thread_id_t> vjThreadPosix::mThreadTable;
 
 typedef struct sched_param	sched_param_t;
@@ -82,12 +81,9 @@ vjThreadPosix::vjThreadPosix (vjBaseThreadFunctor* functorPtr, long flags,
 //       thread hash.
 // ---------------------------------------------------------------------------
 vjThreadPosix::~vjThreadPosix (void) {
-    vjPthreadObj me;
     int status;
 
-    mThreadTable.removeThread(gettid());
-    me.obj = pthread_self();
-    mPthreadHash.erase((caddr_t) &me);
+    mThreadTable.removeThread(hash());
 
     status = 0;
     pthread_exit((void*) &status);
@@ -161,11 +157,11 @@ vjThreadPosix::spawn (vjBaseThreadFunctor* functorPtr, long flags,
 
     // Finally create the thread.
 #ifdef _PTHREADS_DRAFT_4
-    ret_val = pthread_create(&(mThread.obj), thread_attrs,
+    ret_val = pthread_create(&(mThread), thread_attrs,
                              (pthread_startroutine_t) ThreadFunctorFunction,
                              (pthread_addr_t) functorPtr);
 #else
-    ret_val = pthread_create(&(mThread.obj), &thread_attrs,
+    ret_val = pthread_create(&(mThread), &thread_attrs,
                              ThreadFunctorFunction, (void *) functorPtr);
 #endif
 
@@ -190,7 +186,7 @@ vjThreadPosix::getPrio (int* prio) {
     int policy, ret_val;
     sched_param_t fifo_sched_param;
 
-    ret_val = pthread_getschedparam(mThread.obj, &policy, &fifo_sched_param);
+    ret_val = pthread_getschedparam(mThread, &policy, &fifo_sched_param);
     *prio = fifo_sched_param.sched_priority;
 
     return ret_val;
@@ -214,7 +210,7 @@ vjThreadPosix::setPrio (int prio) {
 
     fifo_sched_param.sched_priority = prio;
 
-    return pthread_setschedparam(mThread.obj, SCHED_FIFO, &fifo_sched_param);
+    return pthread_setschedparam(mThread, SCHED_FIFO, &fifo_sched_param);
 #else
     cerr << "vjThreadPosix::setPrio(): Not supported\n";
 
@@ -240,39 +236,11 @@ vjThreadPosix::setPrio (int prio) {
 void
 vjThreadPosix::checkRegister (int status) {
     if ( status == 0 ) {
-        mThread.id = mThreadCount;
-        mPthreadHash[(caddr_t) &mThread] = mThread.id;
+        id = mThreadCount;
         registerThread(true);
-        mThreadTable.addThread(this, mThread.id);
+        mThreadTable.addThread(this, hash());
         mThreadCount++;
     } else {
         registerThread(false);	// Failed to create
-    }
-}
-
-// ---------------------------------------------------------------------------
-//: Get this thread's ID (a non-decreasing, positive number strictly greater
-//+ than 0).
-//
-//! PRE: None.
-//! POST: If this thread is found in the local thread hash, its unique ID is
-//        returned to the caller.
-//
-//! RETURNS: 0 - This thread was not found in the thread hash.
-//! RETURNS: Nonzero - The ID of this tread.
-// ---------------------------------------------------------------------------
-thread_id_t
-vjThreadPosix::gettid (void) {
-    vjPthreadObj me;
-    hash_map<caddr_t, thread_id_t, hash<caddr_t>, eq_thread>::iterator i;
-
-    // Find me in the local thread hash.
-    me.obj = pthread_self();
-    i = mPthreadHash.find((caddr_t) &me);
-
-    if ( i == mPthreadHash.end() ) {
-        return 0;		// There is no thread with ID 0
-    } else {
-        return (*i).second;
     }
 }
