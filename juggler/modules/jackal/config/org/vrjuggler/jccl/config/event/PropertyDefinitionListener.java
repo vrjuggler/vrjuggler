@@ -40,8 +40,6 @@ import java.util.EventListener;
 public interface PropertyDefinitionListener
    extends EventListener
 {
-   public void nameChanged(PropertyDefinitionEvent evt);
-
    public void tokenChanged(PropertyDefinitionEvent evt);
 
    public void typeChanged(PropertyDefinitionEvent evt);

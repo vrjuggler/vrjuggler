@@ -280,13 +280,6 @@ public class ConfigDefinitionRepositoryEditor
          };
       pdl = new PropertyDefinitionListener()
          {
-            public void nameChanged(PropertyDefinitionEvent evt)
-            {
-               mDefinitionChanged = true;
-
-               System.out.println("Property Definition Changed..." +
-                     " " + mCurConfigDef.getToken());
-            }
             public void tokenChanged(PropertyDefinitionEvent evt)
             {
                mDefinitionChanged = true;
@@ -476,8 +469,7 @@ public class ConfigDefinitionRepositoryEditor
       // Check if the user wants to add a new property definition
       else if (node.getUserObject() instanceof ConfigDefinition)
       {
-         PropertyDefinition prop_def = new PropertyDefinition("Untitled",
-                                                              "untitled",
+         PropertyDefinition prop_def = new PropertyDefinition("untitled",
                                                               String.class,
                                                               "",
                                                               new ArrayList(),
@@ -712,7 +704,7 @@ public class ConfigDefinitionRepositoryEditor
          // Display the name of property definitions
          else if (value instanceof PropertyDefinition)
          {
-            setText(((PropertyDefinition)value).getName());
+            setText(((PropertyDefinition)value).getToken());
             setFont(tree.getFont().deriveFont(Font.ITALIC));
          }
 

@@ -47,13 +47,11 @@ public class PropertyDefinition
    /**
     * Creates a new PropertyDefinition initialized with the given values.
     */
-   public PropertyDefinition(String name, String token, Class type,
-                             String help, List propValueDefs, 
-                             boolean editableEnum, Map enums,
-                             List allowedTypes, boolean variable)
+   public PropertyDefinition(String name, Class type, String help,
+                             List propValueDefs, boolean editableEnum,
+                             Map enums, List allowedTypes, boolean variable)
    {
-      mName = name;
-      mToken = token;
+      mToken = name;
       mType = type;
       mHelp = help;
       mPropValueDefs = propValueDefs;
@@ -68,17 +66,7 @@ public class PropertyDefinition
     */
    public String getName()
    {
-      return mName;
-   }
-
-   /**
-    * Sets the name for this property definition.
-    */
-   public synchronized void setName(String name)
-   {
-      String old_name = mName;
-      mName = name;
-      fireNameChanged(old_name);
+      return getToken();
    }
 
    /**
@@ -417,8 +405,7 @@ public class PropertyDefinition
       else if (obj instanceof PropertyDefinition)
       {
          PropertyDefinition d = (PropertyDefinition)obj;
-         if (mName.equals(d.mName) &&
-             mToken.equals(d.mToken) &&
+         if (mToken.equals(d.mToken) &&
              mType.equals(d.mType) &&
              mHelp.equals(d.mHelp) &&
              mPropValueDefs.equals(d.mPropValueDefs) &&
@@ -437,26 +424,6 @@ public class PropertyDefinition
    public void removePropertyDefinitionListener(PropertyDefinitionListener listener)
    {
       listenerList.remove(PropertyDefinitionListener.class, listener);
-   }
-
-   /**
-    * Notifies listeners that this definition's name has changed.
-    */
-   protected void fireNameChanged(String old_name)
-   {
-      PropertyDefinitionEvent evt = null;
-      Object[] listeners = listenerList.getListenerList();
-      for (int i=listeners.length-2; i>=0; i-=2)
-      {
-         if (listeners[i] == PropertyDefinitionListener.class)
-         {
-            if (evt == null)
-            {
-               evt = new PropertyDefinitionEvent(this, old_name);
-            }
-            ((PropertyDefinitionListener)listeners[i+1]).nameChanged(evt);
-         }
-      }
    }
 
    /**
@@ -682,9 +649,6 @@ public class PropertyDefinition
          }
       }
    }
-
-   /** The name of this property definition. */
-   private String mName;
 
    /** The token of this property definition. */
    private String mToken;

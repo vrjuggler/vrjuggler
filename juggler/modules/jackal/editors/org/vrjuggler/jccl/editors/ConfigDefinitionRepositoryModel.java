@@ -603,7 +603,7 @@ public class ConfigDefinitionRepositoryModel
    private class PropertyDefinitionChangeListener
       extends PropertyDefinitionAdapter
    {
-      public void nameChanged(PropertyDefinitionEvent evt)
+      public void tokenChanged(PropertyDefinitionEvent evt)
       {
          PropertyDefinition prop_def = (PropertyDefinition)evt.getSource();
          for (Iterator itr = getNodesFor(prop_def).iterator(); itr.hasNext(); )

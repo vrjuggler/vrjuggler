@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Nov-12-2004 patrickh    In the Java APi, the notion that a property definition
+                        has a name other than its XML token has been removed.
+                        NEW VERSION: 0.23.0
 Nov-12-2004 patrickh    Fixed the config definition editor.
                         NEW VERSION: 0.22.0
 Nov-05-2004 patrickh    Updated to require Tweek 0.19.2.
