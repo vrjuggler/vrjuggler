@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2004-08-22 allenb   Added new feature the TSObjectProxy to allow direct request
+                    of object for a specific thread.
+                    NEW VERSION: 0.37.1
 2004-08-02 allenb   Refactored ProfileManager code and rewrote ProfileIterator
                     to behave like an iterator.
                     NEW VERSION: 0.37.0
