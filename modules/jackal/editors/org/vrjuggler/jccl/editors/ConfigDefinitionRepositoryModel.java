@@ -226,7 +226,21 @@ public class ConfigDefinitionRepositoryModel
          if (child instanceof ConfigDefinition)
          {
             ConfigDefinition child_def = (ConfigDefinition)child;
-            if (def.getName().compareTo(child_def.getName()) <= 0)
+
+            // If we find an existing definition with a token matching ours,
+            // then we have to replace the old definition with the new one.
+            if ( def.getToken().equals(child_def.getToken()) )
+            {
+               child_node.setUserObject(def);
+
+               // XXX: This has the unfortunate side effect of collapsing the
+               // definition node if it is expanded.  I couldn't come up with
+               // an alternative approach that avoided this.  -PH 11/12/2004
+               child_node.removeAllChildren();
+               nodeStructureChanged(child_node);
+               return child_node;
+            }
+            else if (def.getName().compareTo(child_def.getName()) <= 0)
             {
                // Insert the element before the current node
                --insert_idx;

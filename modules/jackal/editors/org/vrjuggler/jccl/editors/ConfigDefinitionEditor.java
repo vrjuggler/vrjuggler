@@ -161,6 +161,8 @@ public class ConfigDefinitionEditor
             mDefinition.setName(mNameTxt.getText());
          }
       });
+      // XXX: Remove this when renaming config definitions is allowed.
+      mTokenTxt.setEditable(false);
       mTokenTxt.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)

@@ -568,14 +568,16 @@ public class ConfigBrokerImpl
    }
 
    /**
-    * Save a new version of the ConfigDefinition with the given token.
+    * Saves the given ConfigDefinition.
     */
-   public void saveDefinition(String token)
+   public void saveDefinition(ConfigDefinition def)
+      throws IOException
+           , ParseException
    {
       List def_file_list = new ArrayList();
       List def_path = getDefinitionPath();
-      final String temp_token = token;
-      
+      final String temp_token = def.getToken();
+
       for (Iterator itr = def_path.iterator(); itr.hasNext(); )
       {
          // Check if this part of the path is a valid directory we can read
@@ -608,76 +610,74 @@ public class ConfigBrokerImpl
          }
       }
      
-      List defs = null;
-      ConfigDefinition edited_def = mRepos.get(token);
-      int new_version = 1;
+      List all_def_versions = null;
       File def_file = null;
 
-      if(def_file_list.size() > 1)
+      if ( def_file_list.size() > 1 )
       {
          // Error
-         System.out.println("ERROR: Multiple files for token " + token + " found.");
-         return;
+         throw new IOException("ERROR: Multiple files for token " +
+                                  def.getToken() + " found.");
       }
-      else if(1 > def_file_list.size())
+      // We are saving a new definition.
+      else if ( def_file_list.size() == 0 )
       {
-         System.out.println("Saving a new configuration not yet implemented.");
-         return;
-         //def_file = new File();
+         all_def_versions = new ArrayList();
+         all_def_versions.add(def);
+         String file_name = def.getToken() + ".jdef";
+
+         // Default to saving the new file in the first directory in the
+         // definition path.
+         if ( def_path.size() > 0 )
+         {
+            def_file = new File((String) def_path.get(0), file_name);
+         }
+         // If there is no definition path, then save in the current working
+         // directory.
+         else
+         {
+            def_file = new File(file_name);
+         }
+
+         System.out.println("NOTE: Saving new definition '" + def.getToken() +
+                               "' in " + def_file.getAbsoluteFile());
       }
-      else if(1 == def_file_list.size())
+      // We are saving an existing definition.  It may or may not be a new
+      // definition.
+      else if ( def_file_list.size() == 1 )
       {
          def_file = (File)def_file_list.get(0);
-         System.out.println("Found it:" + def_file.getAbsolutePath());
+         System.out.println("Found it: " + def_file.getAbsolutePath());
 
-         try
+         // Attempt to load in the definitions in the file.
+         ConfigDefinitionReader reader =
+            new ConfigDefinitionReader(def_file);
+         all_def_versions = reader.readDefinition();
+         boolean overwriting = false;
+
+         // Determine if there is an existing version of this definition to
+         // overwrite.  If not, we will append the given definition version
+         // to all_def_versions.
+         for ( int i = 0; i < all_def_versions.size(); ++i )
          {
-            // Attempt to load in the definitions in the file
-            ConfigDefinitionReader reader = new ConfigDefinitionReader(def_file);
-            defs = reader.readDefinition();
-            
-            // Get the maximal version number
-            try
+            ConfigDefinition d = (ConfigDefinition) all_def_versions.get(i);
+
+            if ( d.getVersion() == def.getVersion() )
             {
-               new_version = mRepos.getNewestVersionNumber(token).intValue() + 1;
-            }
-            catch(DefinitionLookupException dle)
-            {
-               dle.printStackTrace();
+               all_def_versions.set(i, def);
+               overwriting = true;
+               break;
             }
          }
-         catch (ParseException pe)
+
+         if ( ! overwriting )
          {
-            pe.printStackTrace();
-         }
-         catch (IOException ioe)
-         {
-            ioe.printStackTrace();
+            all_def_versions.add(def);
          }
       }
 
-      try
-      {
-         // We want to set the XSLT to null since we do not have a way to
-         // create it here.
-         ConfigDefinition new_def = new ConfigDefinition(edited_def.getName(),
-                                                        edited_def.getToken(),
-                                                        edited_def.getIconLocation(),
-                                                        new_version,
-                                                        edited_def.getParents(),
-                                                        edited_def.getHelp(),
-                                                        edited_def.getCategories(),
-                                                        edited_def.getPropertyDefinitions(),
-                                                        null);
-         defs.add(new_def);
-         
-         ConfigDefinitionWriter writer = new ConfigDefinitionWriter(def_file);
-         writer.writeDefinition(defs);
-      }
-      catch (IOException ioe)
-      {
-         ioe.printStackTrace();
-      }
+      ConfigDefinitionWriter writer = new ConfigDefinitionWriter(def_file);
+      writer.writeDefinition(all_def_versions);
    }
 
    /**
@@ -807,11 +807,11 @@ public class ConfigBrokerImpl
             // repository.
             for (Iterator itr = mDefFileList.iterator(); itr.hasNext(); )
             {
+               // Attempt to load in the definitions in the file.
+               File def_file = (File)itr.next();
+
                try
                {
-                  // Attempt to load in the definitions in the file.
-                  File def_file = (File)itr.next();
-
                   mFileNameLabel.setText("Loading " + def_file.getName());
 
                   ConfigDefinitionReader reader =
@@ -827,11 +827,21 @@ public class ConfigBrokerImpl
                }
                catch (ParseException pe)
                {
-                  pe.printStackTrace();
+                  JOptionPane.showMessageDialog(dialog,
+                     "Caught a parse exception while trying to load\n" +
+                        def_file.getAbsolutePath() + "\n" +
+                        pe.getMessage() + "\n" +
+                        "The contents of this file will not be available!",
+                     "Definition Load Failure", JOptionPane.WARNING_MESSAGE);
                }
                catch (IOException ioe)
                {
-                  ioe.printStackTrace();
+                  JOptionPane.showMessageDialog(dialog,
+                     "Caught an I/O exception while trying to load\n" +
+                        def_file.getAbsolutePath() + "\n" +
+                        ioe.getMessage() + "\n" +
+                        "The contents of this file will not be available!",
+                     "Definition Load Failure", JOptionPane.WARNING_MESSAGE);
                }
             }
 

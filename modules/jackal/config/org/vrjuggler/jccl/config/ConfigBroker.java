@@ -180,5 +180,7 @@ public interface ConfigBroker
     */
    public void removeConfigBrokerListener(ConfigBrokerListener listener);
 
-   public void saveDefinition(String token);
+   public void saveDefinition(ConfigDefinition def)
+      throws IOException
+           , org.vrjuggler.jccl.config.io.ParseException;
 }

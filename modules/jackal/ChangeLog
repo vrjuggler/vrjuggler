@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Nov-12-2004 patrickh    Fixed the config definition editor.
+                        NEW VERSION: 0.22.0
 Nov-05-2004 patrickh    Updated to require Tweek 0.19.2.
                         NEW VERSION: 0.21.1
 Nov-04-2004 aronb       Java API changes.
