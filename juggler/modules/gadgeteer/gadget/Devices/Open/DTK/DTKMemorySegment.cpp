@@ -30,8 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <Input/vjDTK/vjDTKMemorySegment.h>
+#include <vjConfig.h>
+
 #include <dtk.h>
+
+#include <Config/vjConfigChunk.h>
+#include <Input/vjDTK/vjDTKMemorySegment.h>
 
 vjDTKMemorySegment::vjDTKMemorySegment()
 {

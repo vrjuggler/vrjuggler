@@ -35,12 +35,14 @@
 #include <strstream>
 #include <fstream>
 
-#include <Input/vjDTK/vjDTK.h>
+#include <dtk.h>
+#include <dlfcn.h>
+
 #include <Math/vjCoord.h>
 #include <Math/vjQuat.h>
 #include <Kernel/vjDebug.h>
-#include <dtk.h>
-#include <dlfcn.h>
+#include <Config/vjConfigChunk.h>
+#include <Input/vjDTK/vjDTK.h>
 
 // Helper to return the index for theData array
 // given the stationNum we are dealing with and the bufferIndex
