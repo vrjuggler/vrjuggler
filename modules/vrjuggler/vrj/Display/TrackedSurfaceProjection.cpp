@@ -61,16 +61,16 @@ void TrackedSurfaceProjection::updateSurfaceParams(const float scaleFactor)
    */
 
    // Get the tracking data for the surface offset
-   gmtl::Matrix44f mTrackerMatrix = mTracker->getData(scaleFactor);
+   gmtl::Matrix44f trackerMatrix = mTracker->getData(scaleFactor);
 
-   gmtl::Vec3f trans=gmtl::makeTrans<gmtl::Vec3f>(mTrackerMatrix);
+   gmtl::Vec3f trans=gmtl::makeTrans<gmtl::Vec3f>(trackerMatrix);
    trans=trans/scaleFactor;
-   gmtl::setTrans(mTrackerMatrix,trans);
+   gmtl::setTrans(trackerMatrix,trans);
 
-   mLLCorner=mTrackerMatrix * mOrigionalLLCorner;
-   mLRCorner=mTrackerMatrix * mOrigionalLRCorner;
-   mURCorner=mTrackerMatrix * mOrigionalURCorner;
-   mULCorner=mTrackerMatrix * mOrigionalULCorner;
+   mLLCorner=trackerMatrix * mOrigionalLLCorner;
+   mLRCorner=trackerMatrix * mOrigionalLRCorner;
+   mURCorner=trackerMatrix * mOrigionalURCorner;
+   mULCorner=trackerMatrix * mOrigionalULCorner;
 
    calculateOffsets();
 }
