@@ -202,9 +202,14 @@ SocketImplBSD::connect () {
     // If connect(2) failed, print an error message explaining why and return
     // error status.
     if ( status == -1 ) {
-        fprintf(stderr, "[vpr::SocketImplBSD] Error connecting to %s: %s\n",
-                m_remote_addr.getAddressString().c_str(), strerror(errno));
-        retval.setCode(Status::Failure);
+        if ( errno == EINPROGRESS ) {
+            retval.setCode(Status::InProgress);
+        }
+        else {
+            fprintf(stderr, "[vpr::SocketImplBSD] Error connecting to %s: %s\n",
+                    m_remote_addr.getAddressString().c_str(), strerror(errno));
+            retval.setCode(Status::Failure);
+        }
     }
     // Otherwise, return success.
     else {
