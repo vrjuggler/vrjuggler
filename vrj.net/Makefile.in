@@ -38,7 +38,8 @@ top_srcdir=	@top_srcdir@
 EXEC_PERMS=	@EXEC_PERMS@
 PERL=		@PERL@
 
-SUBDIR=		src
+SUBDIR=		vrjnet_util	\
+		src
 
 @SET_MAKE@
 
