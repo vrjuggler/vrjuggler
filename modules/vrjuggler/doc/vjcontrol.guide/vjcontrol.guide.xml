@@ -7,7 +7,7 @@
 
     <subtitle>VjControl Guide</subtitle>
 
-    <releaseinfo>1.0.0</releaseinfo>
+    <releaseinfo>1.0.1</releaseinfo>
 
     <pubdate>$Date$</pubdate>
   </bookinfo>
@@ -63,7 +63,7 @@
         of config files to load are given as command-line arguments when the
         program is run. For example:</para>
 
-        <programlisting>% cubes ~.vjconfig/simstandalone.config</programlisting>
+        <programlisting>% cubes ~/.vjconfig/simstandalone.config</programlisting>
 
         <para>runs the cubesdemo program and tells it to load a configuration
         file called simstandalone.config, which provides a basic
@@ -262,11 +262,11 @@
         program:</para>
 
         <figure>
-          <title></title>
+          <title>Example Config Chunk</title>
 
           <mediaobject>
             <imageobject>
-              <imagedata />
+              <imagedata fileref="figures/ConfigChunkPic.png" format="PNG" />
             </imageobject>
           </mediaobject>
         </figure>
@@ -450,7 +450,7 @@
       recently read Chunk will supercede older ConfigChunks.</para>
 
       <section>
-        <title>&#34;Meta&#34; Chunks</title>
+        <title><quote>Meta</quote> Chunks</title>
 
         <para>VR Juggler defines two ConfigChunks which don&#39;t correspond
         to components of the VR system itself, but rather impact how
@@ -959,7 +959,7 @@
 
           <mediaobject>
             <imageobject>
-              <imagedata />
+              <imagedata fileref="figures/MainWindowTabs.png" format="PNG" />
             </imageobject>
           </mediaobject>
         </figure>
@@ -1142,18 +1142,19 @@
     <chapter>
       <title>Working with Config Files</title>
 
-      <para>Clicking on VjControl&#39;s &#34;Configure&#34; tab lets you view
-      and edit config files (see <xref linkend="vjcontrol-chunk-panel-fig" />).
-      The display consists of two similar panels, side by side. The idea is
-      that you can view one file on each side, making it easy to compare two
-      files and to copy Chunks back and forth between them.</para>
+      <para>Clicking on VjControl&#39;s <quote>Configure</quote> tab lets you
+      view and edit config files (see <xref
+      linkend="vjcontrol-chunk-panel-fig" />). The display consists of two
+      similar panels, side by side. The idea is that you can view one file on
+      each side, making it easy to compare two files and to copy Chunks back
+      and forth between them.</para>
 
       <figure float="1" id="vjcontrol-chunk-panel-fig">
         <title>VjControl Config Editing</title>
 
         <mediaobject>
           <imageobject>
-            <imagedata />
+            <imagedata fileref="figures/ChunkDBPanel1.png" format="PNG" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -1180,7 +1181,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata />
+            <imagedata fileref="figures/ChunkDBPanel2.png" format="PNG" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -1190,7 +1191,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata />
+            <imagedata fileref="figures/ChunkDBPanel3.png" format="PNG" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -1258,7 +1259,7 @@
 
           <mediaobject>
             <imageobject>
-              <imagedata />
+              <imagedata fileref="figures/ChunkDBFrame1.png" format="PNG" />
             </imageobject>
           </mediaobject>
         </figure>
@@ -1273,13 +1274,13 @@
 
           <mediaobject>
             <imageobject>
-              <imagedata />
+              <imagedata fileref="figures/ChunkDBFrame2.png" format="PNG" />
             </imageobject>
           </mediaobject>
 
           <mediaobject>
             <imageobject>
-              <imagedata />
+              <imagedata fileref="figures/ChunkDBFrame3.png" format="PNG" />
             </imageobject>
           </mediaobject>
         </figure>
@@ -1359,7 +1360,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata />
+            <imagedata fileref="figures/DescDBPanel1.png" format="PNG" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -1415,7 +1416,7 @@
 
           <mediaobject>
             <imageobject>
-              <imagedata />
+              <imagedata fileref="figures/DescFrame1.png" format="PNG" />
             </imageobject>
           </mediaobject>
         </figure>
@@ -1468,7 +1469,7 @@
 
           <mediaobject>
             <imageobject>
-              <imagedata />
+              <imagedata fileref="figures/ValueLabels1.png" format="PNG" />
             </imageobject>
           </mediaobject>
         </figure>
@@ -1571,7 +1572,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata />
+            <imagedata fileref="figures/OrgTreeDemo1.jpg" format="JPG" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -1581,7 +1582,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata />
+            <imagedata fileref="figures/OrgTreeDemo2.jpg" format="JPG" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -1600,7 +1601,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata />
+            <imagedata fileref="figures/OrgTreePanel.jpg" format="JPG" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -1650,7 +1651,7 @@
 
             <mediaobject>
               <imageobject>
-                <imagedata />
+                <imagedata fileref="figures/OrgTreePanel2.png" format="PNG" />
               </imageobject>
             </mediaobject>
           </figure>
@@ -1787,7 +1788,7 @@
 
           <mediaobject>
             <imageobject>
-              <imagedata />
+              <imagedata fileref="figures/ConnectionPane1.png" format="PNG" />
             </imageobject>
           </mediaobject>
         </figure>
