@@ -102,6 +102,9 @@ $alias_subst{"SSVR"} = 'http://www.mechdyne.com';
 $alias_subst{"PERFORMER"} = 'http://www.sgi.com/software/performer/';
 $alias_subst{"PERFORMERLINUX"} = 'http://www.sgi.com/software/performer/linux.html';
 $alias_subst{"PATTERNS"} = 'http://hillside.net/patterns/patterns.html';
+$alias_subst{"GETCYGWIN"} = 'http://sourceware.cygnus.com/cygwin/';
+$alias_subst{"GETAUTOCONF"} = 'ftp://ftp.gnu.org/gnu/autoconf/';
+
 # links to books and manuals
 $alias_subst{"DESIGNPATTERNSBOOK"} = 'http://www.amazon.com/exec/obidos/ASIN/0201633612/o/qid=947544224/sr=2-1/002-9163340-6788217';
 $alias_subst{"OPENGLREDBOOK"} = 'http://www.amazon.com/exec/obidos/ASIN/0201604582/o/qid=947802795/sr=2-1/002-9163340-6788217';

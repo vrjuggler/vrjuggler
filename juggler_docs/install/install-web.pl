@@ -321,12 +321,17 @@ sub htmlFilter($)
       $file_contents =~ s/($body_tag_end)/\n$html_footer\n$1\n/is;
    }
 
-   ## Check includes ##
+   ## REPLACE TAGS (there may be some in the include statements)
+   replaceTags(\$file_contents);
+   
+   ## Check includes.  TODO: need a way to use reletive path substs in 
+   ##                        include statements.
    processIncludes(\$file_contents);
 
-   ## REPLACE TAGS
+   ## REPLACE TAGS (there may be more tags now that we included other files.)
    replaceTags(\$file_contents);
-
+   
+   
    # -----------  SAVE FILE ----------- #
    if ( ! open(HTML_FILE, ">$filename") ) {
        warn "WARNING: Cannot create $filename: $!\n";
@@ -558,7 +563,7 @@ sub recurseAction ($) {
       }
       
       # Match binary files
-      if ( $curfile =~ /\.(bin|gz|tar|zip|exe|rpm|BIN|GZ|TAR|ZIP|EXE|RPM)$/ ) {
+      if ( $curfile =~ /\.(bin|gz|tar|zip|exe|rpm|mid|mp3|BIN|GZ|TAR|ZIP|EXE|RPM|MID|mp3)$/ ) {
           installFile("$curfile", $uid, $gid, "$mode", "$full_dest_path", $full_src_path);
           last SWITCH;
       }
@@ -578,6 +583,13 @@ sub recurseAction ($) {
 
       # Style sheets
       if ( $curfile =~ /\.(css|CSS)$/ ) {
+          installFile("$curfile", $uid, $gid, "$mode", "$full_dest_path", $full_src_path);
+          htmlFilter("$full_dest_path/$curfile");
+          last SWITCH;
+      }
+
+      # PGP files (public key ring)
+      if ( $curfile =~ /\.(pkr|PKR)$/ ) {
           installFile("$curfile", $uid, $gid, "$mode", "$full_dest_path", $full_src_path);
           last SWITCH;
       }
