@@ -380,12 +380,13 @@ if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
     CXXFLAGS="$CXXFLAGS -woff 3322 -w2"
     EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -J4 -all"
 elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
+    vc_cxxflags='/W3 /GR /GX /EHc /QIfdiv /QI0f'
     CFLAGS="$CFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
-    CXXFLAGS="$CXXFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
+    CXXFLAGS="$CXXFLAGS $vc_cxxflags"
     EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /nologo /incremental:no"
     DBG_FLAGS="$DBG_FLAGS /MDd"
     OPT_FLAGS="$OPT_FLAGS /MD"
-    vrj_cxxflags="$CXXFLAGS"
+    vrj_cxxflags="$vc_cxxflags $vrj_cxxflags"
 fi
 
 DPP_SYSTEM_SUBST
@@ -471,7 +472,8 @@ if test "$OS_TYPE" = "UNIX" ; then
         APP_EXTRA_LIBS_OSG="$LIBOSG"
     fi
 elif test "$OS_TYPE" = "Win32" ; then
-    DYLIB_DEPS_BASIC="$LDFLAGS $GADGET_LIBS_LD $SNX_LIBS_LD $JCCL_LIBS_LD $JCCL_LIBS_LD $VPR_LIBS_LD $LIBS $VPR_EXTRA_LIBS_LD comctl32.lib user32.lib gdi32.lib ws2_32.lib"
+    BASIC_WIN32_LIBS='comctl32.lib user32.lib gdi32.lib ws2_32.lib'
+    DYLIB_DEPS_BASIC="$LDFLAGS $GADGET_LIBS_LD $SNX_LIBS_LD $JCCL_LIBS_LD $JCCL_LIBS_LD $VPR_LIBS_LD $LIBS $VPR_EXTRA_LIBS_LD $BASIC_WIN32_LIBS"
     DYLIB_DEPS_VJ="/libpath:\$(LIBDIR) $DYLIB_DEPS_BASIC"
     DYLIB_DEPS_GL="/libpath:\$(LIBDIR) Juggler.lib $DYLIB_DEPS_BASIC $OGL_LDFLAGS $LIBOPENGL"
 
@@ -554,16 +556,16 @@ case $OS_TYPE in
         Juggler_ogl_extra_libs="$APP_EXTRA_LIBS_GL"
         Juggler_pf_extra_libs="$APP_EXTRA_LIBS_PF"
         ;;
-    WIN32)
+    Win32)
         vrj_ldflags_compiler="/link /libpath:\$prefix/lib/debug "
         vrj_ldflags_linker="/libpath:\$prefix/lib/debug "
         vrj_libs='Juggler.lib Juggler_ogl.lib'
-        vrj_extra_libs="$LDFLAGS $APP_EXTRA_LIBS_GL $LIBS"
+        vrj_extra_libs="$LDFLAGS $APP_EXTRA_LIBS_GL $BASIC_WIN32_LIBS $LIBS"
         vrj_extra_libs_juggler="$GADGET_LIBS_LD $SNX_LIBS_LD $JCCL_LIBS_LD $JCCL_EXTRA_LIBS_LD $VPR_LIBS_LD $VPR_EXTRA_LIBS_LD"
 
         Juggler_lib='Juggler.lib'
         Juggler_ogl_lib='Juggler_ogl.lib'
-        Juggler_extra_libs="$LDFLAGS $LIBS"
+        Juggler_extra_libs="$LDFLAGS $BASIC_WIN32_LIBS $LIBS"
         Juggler_ogl_extra_libs="$APP_EXTRA_LIBS_GL"
         ;;
 esac
