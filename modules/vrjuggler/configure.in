@@ -999,3 +999,9 @@ AC_OUTPUT(Makefile Makefile.base Config/Makefile Environment/Makefile
           test/ogl/torus/Makefile test/ogl/wand/Makefile
           test/pfNav/Makefile test/testDynamicCastSTL/Makefile
           test/threads/Makefile)
+
+echo
+echo  Remember that you need to build Juggler with gnu-make.
+echo  Gnu-make is called \'gmake\' on most systems.
+echo  See the file README for more details on compiling the Juggler distribution.
+echo
