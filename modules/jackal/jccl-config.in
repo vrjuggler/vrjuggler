@@ -245,9 +245,9 @@ if test "$echo_libs" = "yes"; then
         ldflags="-L$JCCL_BASE_DIR/lib$LIBBITSUF"
     else
         if test "$use_linker" = "yes" ; then
-            ldflags="ldflags @jccl_ldflags_linker@"
+            ldflags="$ldflags @jccl_ldflags_linker@"
         else
-            ldflags="ldflags @jccl_ldflags_compiler@"
+            ldflags="$ldflags @jccl_ldflags_compiler@"
         fi
     fi
 
