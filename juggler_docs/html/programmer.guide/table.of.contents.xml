@@ -114,6 +114,13 @@ Builder: JExplorerBuilder V 1. 0. 7
 					<!-- TODO: under construction, add more content! -->
 				</folder>
 			</folder>
+
+			< item title="Classroom Notes" 
+        	                        link="./classroom.html"
+                	                info="Overview of Juggler Concepts, Ideas, and Techniques"
+                        	        image="Leaf.gif" >       
+
+
 		</idefault>
 	</font>
 </treecontrol>
