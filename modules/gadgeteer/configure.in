@@ -737,6 +737,7 @@ AC_OUTPUT(gadgeteer-config
           cluster/Plugins/Makefile
           cluster/Plugins/ApplicationDataManager/Makefile
           cluster/Plugins/RemoteInputManager/Makefile
+          cluster/Plugins/SwapLockPlugin/Makefile
           gadget/Makefile
           gadget/Devices/Makefile
           gadget/Devices/driver.defs.mk
