@@ -48,21 +48,22 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(GADGET_LIBRARY)
 
-SRCS=		KeyboardMouseDevice.cpp
+SRCS=		InputArea.cpp		\
+		KeyboardMouseDevice.cpp
 
-xwin_srcs=	InputWindowXWin.cpp		\
-		InputAreaXWin.cpp
+xwin_srcs=	InputAreaXWin.cpp	\
+		InputWindowXWin.cpp
 
 ifeq (@OS_TYPE@, Win32)
-   SRCS=	InputWindowWin32.cpp	\
-   		InputAreaWin32.cpp
+   SRCS=	InputAreaWin32.cpp	\
+   		InputWindowWin32.cpp
 else
    ifeq (@PLATFORM@, Darwin)
       ifeq (@gadget_use_x11@, yes)
          SRCS+=	$(xwin_srcs)
       else
-         SRCS+=	InputWindowOSX.cpp	\
-	 	InputAreaOSX.cpp
+         SRCS+=	InputAreaOSX.cpp	\
+	 	InputWindowOSX.cpp
       endif
    else
       SRCS+=	$(xwin_srcs)
