@@ -110,7 +110,7 @@
                   <para><command>cd modules/vrjuggler</command></para>
                </listitem>
                <listitem>
-                  <para><command>./configure --prefix=$HOME/vrjuggler-2.0</command></para>
+                  <para><command>./reconfig</command></para>
                </listitem>
                <listitem>
                   <para><command>gmake debug install</command></para>
