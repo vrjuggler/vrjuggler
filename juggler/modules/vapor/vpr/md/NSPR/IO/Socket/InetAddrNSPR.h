@@ -68,7 +68,7 @@ public:
     }
 
     // ------------------------------------------------------------------------
-    // Set address to a string like "hostname.domain.com:<port_num>"
+    // Set address to a string like "hostname.domain.com:<port_num>" or IP:port
     // ------------------------------------------------------------------------
     InetAddrNSPR (const std::string& address)
     {
@@ -80,6 +80,9 @@ public:
 
     // ------------------------------------------------------------------------
     // Initialize to address and port
+    //! ARGS: address - A string giving the address (either hostname or IP
+    //+                 address).
+    //! ARGS: port    - The port to associate with the IP address.
     // ------------------------------------------------------------------------
     InetAddrNSPR (const std::string& address, const Uint16 port)
     {
@@ -98,6 +101,23 @@ public:
        setFamily(SocketTypes::INET);
        setAddressValue(PR_INADDR_ANY);
        setPort(port);
+    }
+
+    // ------------------------------------------------------------------------
+    //: Construct an address object using the given address and port number.
+    //+ The address must be the actual 32-bit integer value.
+    //
+    //! PRE: None.
+    //! POST:
+    //
+    //! ARGS: address - A 32-bit integer IP address.
+    //! ARGS: port    - The port to associate with the IP address.
+    // ------------------------------------------------------------------------
+    InetAddrNSPR (const Uint32 address, const Uint16 port) {
+        memset(&mAddr, 0, sizeof(mAddr));
+        setAddressValue(address);
+        setPort(port);
+        setFamily(SocketTypes::INET);
     }
 
     // ------------------------------------------------------------------------
@@ -214,13 +234,20 @@ public:
     std::string getAddressString(void) const;
 
     // ------------------------------------------------------------------------
+    //: Set the IP address for this object using the given string.  The string
+    //+ can be a hostname or a dotted-decimal IP address.
     //
-    // ARGS: addr - an address string in IP format or hostname formant
+    //! PRE: None.
+    //! POST: If the address is valid, the object's IP address is updated
+    //+       appropriately.
     //
-    // Returns:
-    //     true  - The address lookup was successful.
-    //     false - The address could not be looked up.  An error message is
-    //             printed to stderr explaining what went wrong.
+    //! ARGS: addr - An address string in dotted-decimal address notation or
+    //+              as a hostname.
+    //
+    //! RETURNS: true  - The address was valid and the set operation
+    //+                  succeeded.
+    //! RETURNS: false - The address could not be looked up.  An error message
+    //+                  is printed to stderr explaining what went wrong.
     // ------------------------------------------------------------------------
     bool setAddress (const std::string& addr);
 
