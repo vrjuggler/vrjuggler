@@ -97,6 +97,10 @@ DPP_ENABLE_NSPR_THREADS(no)
 # partially usable on Windows.
 DPP_WITH_GCC(no)
 
+AC_ARG_WITH(boost,
+            [  --with-boost=<PATH>     Boost installation              [default=<JUGGLER>]],
+            _with_boost="$withval", _with_boost='no')
+
 # Define the binary format.
 DPP_ABI_SETUP
 
@@ -433,6 +437,16 @@ AC_CHECK_HEADERS(bstring.h fcntl.h limits.h signal.h strings.h sys/file.h \
 DPP_LANG_SAVE
 DPP_LANG_CPLUSPLUS
 AC_CHECK_HEADERS(hash_map hash_map.h)
+
+LOCAL_BOOST='N'
+BOOST_DIR='$(JUGGLERROOT_ABS)/external/boost'
+
+if test "x${_with_boost}" != "xno" ; then
+    _vpr_save_CPPFLAGS="$CPPFLAGS -I${_with_boost}/include"
+    AC_CHECK_HEADER(boost/utility.hpp,
+                    BOOST_DIR="${_with_boost}/include" LOCAL_BOOST='Y')
+fi
+
 DPP_LANG_RESTORE
 
 # -----------------------------------------------------------------------------
@@ -649,6 +663,9 @@ AC_SUBST(SOCKET_ABS)
 
 AC_SUBST(APP_BASE_DIR)
 AC_SUBST(APP_BASE_DIR_INST)
+
+AC_SUBST(BOOST_DIR)
+AC_SUBST(LOCAL_BOOST)
 
 AC_SUBST(DYLIB_DEPS)
 

@@ -259,9 +259,11 @@ pre-install-headers:
 	$(MTREE_CMD) -Ude -f $(mtreedir)/VPR.include.dist -p $(prefix)
 
 post-install-headers:
+ifneq (@LOCAL_BOOST@, Y)
 	@$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
           $(GROUP_OPT_UNIX) -e .hpp -o $(includedir)/../boost		\
           -i $(JUGGLERROOT_ABS)/external/boost/boost
+endif
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(VPRROOT_ABS)/vpr/System.h $(includedir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\

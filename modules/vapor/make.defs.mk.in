@@ -96,24 +96,24 @@ MTREE_CMD	= @MTREE_CMD@
 VPRROOT_ABS	= @VPRROOT_ABS@
 JUGGLERROOT_ABS	= @JUGGLERROOT_ABS@
 
+LOCAL_BOOST	= @LOCAL_BOOST@
+
 # -----------------------------------------------------------------------------
 # Extra information for the Doozer++ file common.defs.mk.
 # -----------------------------------------------------------------------------
 EXTRA_CFLAGS		= $(CFLAGS_DYNLIB)
 EXTRA_CXXFLAGS		= $(CXXFLAGS_DYNLIB)
-EXTRA_DEPEND_FLAGS	= -I$(VPRROOT_ABS)				\
-                          -I$(JUGGLERROOT_ABS)/external/boost		\
+EXTRA_DEPEND_FLAGS	= -I$(VPRROOT_ABS) -I@BOOST_DIR@		\
                           -I$(JUGGLERROOT_ABS)/external/leach-uuid	\
                           -I$(JUGGLERROOT_ABS)/external/md5-c
 EXTRA_DEFS		+= -D_VPR_BUILD_
-EXTRA_INCLUDES		= -I$(top_srcdir)				\
-                          -I$(JUGGLERROOT_ABS)/external/boost		\
+EXTRA_INCLUDES		= -I$(top_srcdir) -I@BOOST_DIR@			\
                           -I$(JUGGLERROOT_ABS)/external/leach-uuid	\
                           -I$(JUGGLERROOT_ABS)/external/md5-c
 
 ifeq (@PLATFORM@, IRIX)
-    EXTRA_DEPEND_FLAGS	+= -I$(JUGGLERROOT_ABS)/external/boost/boost/compatibility/cpp_c_headers
-    EXTRA_INCLUDES	+= -I$(JUGGLERROOT_ABS)/external/boost/boost/compatibility/cpp_c_headers
+    EXTRA_DEPEND_FLAGS	+= -I@BOOST_DIR@/boost/compatibility/cpp_c_headers
+    EXTRA_INCLUDES	+= -I@BOOST_DIR@/boost/compatibility/cpp_c_headers
 endif
 
 # -----------------------------------------------------------------------------
