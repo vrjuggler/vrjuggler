@@ -76,9 +76,10 @@
 # Base variables needed by all makefiles.
 # -----------------------------------------------------------------------------
 mtreedir	= $(topdir)/mtree
-releasedir	= $(JUGGLERROOT_ABS)/release
+releasedir	= @JUGGLERROOT_ABS@/release
 scriptdir	= $(releasedir)/scripts
 topdir		= @topdir@
+top_srcdir      = @top_srcdir@
 MAKEFLAGS	+= --no-print-directory
 MKDEPS_CC	= @CC@
 MKDEPS_CXX	= @CXX@

@@ -29,11 +29,11 @@
 %{
 %}
 
-subsystem_cxxflags="@subsystem_cxxflags@"
-subsystem_libs="@subsystem_libs@"
-jccl_extra_cxxflags="@jccl_extra_cxxflags@"
+#subsystem_cxxflags="@subsystem_cxxflags@"
+#subsystem_libs="@subsystem_libs@"
+#jccl_extra_cxxflags="@jccl_extra_cxxflags@"
 jccl_libs="@jccl_libs@"
-JCCL_lib="@JCCL_lib@"
+jccl_lib="@jccl_lib@"
 
 jccl_extra_include_dirs="@jccl_extra_include_dirs@"
 
@@ -61,12 +61,12 @@ prefix=@prefix@
 exec_prefix=@exec_prefix@
 exec_prefix_set=no
 
-if [ "x$jccl_extra_include_dirs" != "x" ]; then
-    for dir in $jccl_extra_include_dirs ; do
-        jccl_extra_includes="$jccl_extra_includes -I@includedir@/$dir"
-        jccl_basedir_extra_includes="$jccl_basedir_extra_includes -I$JCCL_BASE_DIR/include/$dir"
-    done
-fi
+#if [ "x$jccl_extra_include_dirs" != "x" ]; then
+#    for dir in $jccl_extra_include_dirs ; do
+#        jccl_extra_includes="$jccl_extra_includes -I@includedir@/$dir"
+#        jccl_basedir_extra_includes="$jccl_basedir_extra_includes -I$JCCL_BASE_DIR/include/$dir"
+#    done
+#fi
 
 usage()
 {
@@ -221,19 +221,13 @@ fi
 
 if test "$echo_cxxflags" = "yes"; then
     if test "$use_base_dir" = "yes"; then
-        echo @CXXFLAGS@ -I$JCCL_BASE_DIR/include $subsystem_cxxflags
+        echo @CXXFLAGS@ $jccl_extra_cxxflags -I$JCCL_BASE_DIR/include
+#        echo @CXXFLAGS@ -I$JCCL_BASE_DIR/include $subsystem_cxxflags
     else
-        echo @CXXFLAGS@ -I@includedir@ $subsystem_cxxflags
+#        echo @CXXFLAGS@ -I@includedir@ $subsystem_cxxflags
+        echo @CXXFLAGS $jccl_extra_cxxflags -I@includedir@
     fi
 fi
-#if test "$echo_cxxflags" = "yes"; then
-#    if test "$use_base_dir" = "yes"; then
-#        echo @jccl_cxxflags@ $jccl_extra_cxxflags $subsystem_cxxflags -I$JCCL_BASE_DIR/include $jccl_basedir_extra_includes
-#    else
-#        echo @jccl_cxxflags@ $jccl_extra_cxxflags $subsystem_cxxflags -I@includedir@ $jccl_extra_includes
-#    fi
-#fi
-
 
 if test "$echo_static" = "yes" ; then
     static_begin='@static_begin@'
@@ -241,25 +235,26 @@ if test "$echo_static" = "yes" ; then
 fi
 
 if test "$echo_libs" = "yes"; then
-    my_subsystem_libs=
-
     if test "$use_base_dir" = "yes"; then
-        ldflags="$ldflags -L$JCCL_BASE_DIR/lib$LIBBITSUF"
+#        ldflags="$ldflags -L$JCCL_BASE_DIR/lib$LIBBITSUF"
+        ldflags="-L$JCCL_BASE_DIR/lib$LIBBITSUF"
     else
-        ldflags="$ldflags @jccl_ldflags@"
+#        ldflags="$ldflags @jccl_ldflags@"
+        ldfags="-L$jccl_ldflags"
     fi
 
-    for i in $subsystem_libs ; do
-        if test $i != -L@libdir@ ; then
-            if test -z "$my_subsystem_libs" ; then
-                my_subsystem_libs="$i"
-            else
-                my_subsystem_libs="$my_subsystem_libs $i"
-            fi
-        fi
-    done
+#    for i in $subsystem_libs ; do
+#        if test $i != -L@libdir@ ; then
+#            if test -z "$my_subsystem_libs" ; then
+#                my_subsystem_libs="$i"
+#            else
+#                my_subsystem_libs="$my_subsystem_libs $i"
+#            fi
+#        fi
+#    done
 
-    echo $ldflags $static_begin $jccl_libs $static_end $my_subsystem_libs
+    echo $ldflags $static_begin $jccl_libs $static_end 
+#$my_subsystem_libs
 fi      
 
 if test "x$echo_extra_libs" = "xyes"; then
