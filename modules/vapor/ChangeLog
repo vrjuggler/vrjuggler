@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2004-09-26 patrickh Removed the NSPR dependency on Mac OS X.
+                    NEW VERSION: 0.39.1
 2004-09-24 patrickh Removed the flags parameter from the methods recvfrom() and
                     sendto() in vpr::SocketDatagram.
                     NEW VERSION: 0.39.0

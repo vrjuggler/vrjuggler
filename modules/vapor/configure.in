@@ -189,9 +189,9 @@ case $target_os in
         ;;
     # Darwin, aka Mac OS X.
     darwin*)
-        if test "x$SUBSYSTEM" != "xNSPR" ; then
-            AC_MSG_WARN([*** Forcing the use of NSPR subsystem ***])
-            SUBSYSTEM='NSPR' 
+        if test "x$SUBSYSTEM" != "xPOSIX" ; then
+            AC_MSG_WARN([*** Forcing the use of POSIX subsystem ***])
+            SUBSYSTEM='POSIX' 
         fi
 
         AC_DEFINE(VPR_OS_Darwin, , [Define if building on Darin.])
@@ -1016,6 +1016,8 @@ AC_CONFIG_FILES([
    make.defs.mk
    vpr/Makefile
    vpr/md/Makefile
+   vpr/md/DARWIN/Makefile
+   vpr/md/DARWIN/DynLoad/Makefile
    vpr/md/NSPR/Makefile
    vpr/md/NSPR/DynLoad/Makefile
    vpr/md/NSPR/IO/Makefile
