@@ -112,10 +112,11 @@ public:
      * Destructor.  This currently does nothing.
      *
      * @pre None.
-     * @post None.
+     * @post Delete impl
      */
-    virtual ~SocketStream_t (void) {
-        /* Do nothing. */ ;
+    virtual ~SocketStream_t (void)
+    {
+       ;  // When obj is destroyed, then member m_socket_stream_imp will be destroyed
     }
 
     /**

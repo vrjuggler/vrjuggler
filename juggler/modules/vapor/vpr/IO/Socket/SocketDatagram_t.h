@@ -110,8 +110,9 @@ public:
      * @pre None.
      * @post None.
      */
-    virtual ~SocketDatagram_t (void) {
-        /* Do nothing. */ ;
+    virtual ~SocketDatagram_t (void)
+    {
+     /* nothing */;
     }
 
     /**

@@ -110,18 +110,27 @@ SocketImplNSPR::open () {
 // ----------------------------------------------------------------------------
 vpr::ReturnStatus
 SocketImplNSPR::close () {
-    vpr::ReturnStatus retval;
+    vpr::ReturnStatus retval(vpr::ReturnStatus::Success);      // Default to success
     PRStatus status;
 
-    status = PR_Close(m_handle);
+    if(NULL != m_handle)
+    {
+       status = PR_Close(m_handle);
 
-    if (status == PR_SUCCESS) {
-       m_open = false;
+       m_handle = NULL;                // m_handle points to shrapnel now, so write over it
+       m_open = false;                 // Even if failed, we must scrap the socket and start over
        m_bound = false;
-       retval.setCode(vpr::ReturnStatus::Success);
-    }
-    else {
-       retval.setCode(vpr::ReturnStatus::Failure);
+       m_connected = false;
+       m_blocking_fixed = false;
+
+       if (status == PR_SUCCESS) {
+          //m_open = false;
+          //m_bound = false;
+          retval.setCode(vpr::ReturnStatus::Success);
+       }
+       else {
+          retval.setCode(vpr::ReturnStatus::Failure);
+       }
     }
 
     return retval;
@@ -134,6 +143,9 @@ vpr::ReturnStatus
 SocketImplNSPR::bind () {
     vpr::ReturnStatus retval;
     PRStatus status;
+
+    vprASSERT((true == m_open) && "Trying to bind an un-opened socket");
+    vprASSERT((m_handle != NULL) && "Trying to bind with NULL handle");
 
     // Bind the socket to the address in m_local_addr.
     status = PR_Bind(m_handle, m_local_addr.getPRNetAddr());
@@ -222,6 +234,9 @@ vpr::ReturnStatus
 SocketImplNSPR::connect (vpr::Interval timeout) {
    vpr::ReturnStatus retval;
    PRStatus status;
+
+   vprASSERT((true == m_open) && "Trying to connect an un-opened socket");
+   vprASSERT((m_handle != NULL) && "Trying to connect with NULL handle");
 
    if(m_bound)
    {
@@ -696,8 +711,10 @@ SocketImplNSPR::SocketImplNSPR (const vpr::InetAddr& local_addr,
 // ----------------------------------------------------------------------------
 SocketImplNSPR::~SocketImplNSPR ()
 {
-    if ( m_handle != NULL ) {
-       // PRClose(m_handle);     // XXX: Let it dangle
+    if ( m_handle != NULL )
+    {
+       vpr::ReturnStatus status = close();      // Close the socket
+       vprASSERT(status.success() && "Failed to close socket in SocketImplNSPR destructor");
        m_handle = NULL;
     }
 }
