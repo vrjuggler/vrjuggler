@@ -179,6 +179,107 @@ int vjConfigChunkDB::removeMatching (char *property, char *value) {
   return i;
 }
 
+//: Sorts the chunks based on dependancies
+//! PRE: we need a "good object"
+//! MODIFIES: self.  We move the objects around so they are sorted
+//! POST: Topologically sorted
+// Copy the chunks over to a new list.  Repetatively try to
+// find an item in the source list that already has it's dependencies
+// copied into the dst list.  Do this iteratively until done or
+// until fail.
+int vjConfigChunkDB::dependencySort()
+{
+   // Print out dependancies
+   /*
+   for(int i=0;i<chunks.size();i++)
+   {
+      cout << "Chunk:" << chunks[i]->getProperty("name") << endl;
+      cout << "\tDepends on:";
+      vector<string> deps = chunks[i]->getDependencies();
+      if(deps.size() > 0)
+      {
+         for(int j=0;j<deps.size();j++)
+            cout << deps[j] << ", ";
+      } else {
+         cout << "Nothing.";
+      }
+      cout << endl;
+   }
+   */
+
+   // Create new src list to work from
+   vector<vjConfigChunk*> src_chunks = chunks;
+   chunks = vector<vjConfigChunk*>(0);
+
+   bool dep_pass(true);             // Pass dependency check
+   vector<string> deps;             // Source dependencies
+   vector<vjConfigChunk*>::iterator cur_item
+               = src_chunks.begin();          // The current src item to look at
+
+   while(cur_item != src_chunks.end())          // While not at end of src list
+   {
+      deps = (*cur_item)->getDependencies();    // Get src dependencies
+      for(int dep_num=0;dep_num<deps.size();dep_num++)   // May have multiple dependencies
+         if (getChunk((char*)deps[dep_num].c_str()) == NULL)    // Check dependency
+            dep_pass = false;                            // Failed check
+
+      if(dep_pass)        // If src dependencies are accounted for
+      {
+         chunks.push_back(*cur_item);        // Copy src to dst
+         src_chunks.erase(cur_item);         // Erase it from source
+         cur_item = src_chunks.begin();      // Goto first item
+      }
+      else
+         cur_item++;             // goto next item
+
+      dep_pass = true;           // Reset to passing
+   }
+
+   if(src_chunks.size() > 0)     // Failed to get all dependencies
+   {
+      // ouput error
+      for(int i=0;i<src_chunks.size();i++)
+      {
+          vjDEBUG(0) << "ERROR: Dependency error:  Chunk:" << chunks[i]->getProperty("name")
+                     << "\tDepends on: " << vjDEBUG_FLUSH;
+         vector<string> deps = chunks[i]->getDependencies();
+         if(deps.size() > 0)
+         {
+            for(int j=0;j<deps.size();j++)
+               vjDEBUG(0) << "\t" << deps[j] << vjDEBUG_FLUSH;
+         } else {
+            vjDEBUG(0) << "Nothing." << vjDEBUG_FLUSH;
+         }
+         vjDEBUG(0) << "Check for undefined devices that others depend upon." << endl << vjDEBUG_FLUSH;
+      }
+      chunks.insert(chunks.end(), src_chunks.begin(), src_chunks.end());   // Copy over the rest
+
+      return -1;
+   }
+   else
+   {
+      // Print out sorted dependancies
+      /*
+      cout << "---- After sort ----" << endl;
+      for(int i=0;i<chunks.size();i++)
+      {
+         cout << "Chunk:" << chunks[i]->getProperty("name") << endl;
+         cout << "\tDepends on:";
+         vector<string> deps = chunks[i]->getDependencies();
+         if(deps.size() > 0)
+         {
+            for(int j=0;j<deps.size();j++)
+               cout << deps[j] << ", ";
+         } else {
+            cout << "Nothing.";
+         }
+         cout << endl;
+      }
+      */
+
+      return 0;      // Success
+   }
+}
 
 
 /* IO functions: */
