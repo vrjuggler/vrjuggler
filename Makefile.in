@@ -434,7 +434,7 @@ _build_dbg_obj:
 	@echo "------------------------------------------------"
 	@echo "Building object files with debugging symbols"
 	@echo "------------------------------------------------"
-	${scriptdir}/mkinstalldirs ${_DBG_BUILDDIR}
+	/bin/sh ${scriptdir}/mkinstalldirs ${_DBG_BUILDDIR}
 	@${MAKE} RECTARGET="dbg" OPTIMIZER="${DBG_FLAGS}"		\
           BASE_OBJDIR="${_DBG_BUILDDIR}" recursive
 
@@ -443,7 +443,7 @@ _build_opt_obj:
 	@echo "------------------------------------------------"
 	@echo "Building optimized object files"
 	@echo "------------------------------------------------"
-	${scriptdir}/mkinstalldirs ${_OPT_BUILDDIR}
+	/bin/sh ${scriptdir}/mkinstalldirs ${_OPT_BUILDDIR}
 	@${MAKE} RECTARGET="opt" OPTIMIZER="${OPT_FLAGS}"		\
           BASE_OBJDIR="${_OPT_BUILDDIR}" recursive
 
@@ -533,7 +533,7 @@ ${LIBDIR}/${GL_LIB_STATIC}: ${OBJDIR}/*.o
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
-	@${scriptdir}/mkinstalldirs ${LIBDIR}
+	@/bin/sh ${scriptdir}/mkinstalldirs ${LIBDIR}
 	${AR} $@ ${OBJDIR}/*.o
 	cd ${_LIBDIR_BASE} && ln -sf $@ ./
 	@echo "------------------------------------------------"
@@ -550,7 +550,7 @@ ${LIBDIR}/${GL_LIB_DYNAMIC}: ${OBJDIR}/*.o
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
-	@${scriptdir}/mkinstalldirs ${LIBDIR}
+	@/bin/sh ${scriptdir}/mkinstalldirs ${LIBDIR}
 	${LD} ${LDOPTS} -o $@ ${OBJDIR}/*.o
 	cd ${_LIBDIR_BASE} && ln -sf $@ ./
 	@echo "------------------------------------------------"
@@ -588,8 +588,8 @@ links:
 	@echo "------------------------------------------------"
 	@echo "Setting up developer installation links"
 	@echo "------------------------------------------------"
-	${scriptdir}/mkinstalldirs ${instlinks}
-	${scriptdir}/mkinstalldirs ${instlinks}/include
+	/bin/sh ${scriptdir}/mkinstalldirs ${instlinks}
+	/bin/sh ${scriptdir}/mkinstalldirs ${instlinks}/include
 	cd ${instlinks}/include &&					\
           dir_list='${SUBDIRS}' ;					\
             for dir in $$dir_list ; do					\
@@ -601,7 +601,7 @@ links:
 	cd ${instlinks} && rm -f ./Data && ln -s ${VJROOT_ABS}/Data ./Data
 	cd ${instlinks}/include && ln -sf ${VJROOT_ABS}/vjConfig.h ./vjConfig.h
 	cd ${instlinks}/include && ln -sf ${topdir}/vjDefines.h ./vjDefines.h
-	${scriptdir}/mkinstalldirs ${instlinks}/bin
+	/bin/sh ${scriptdir}/mkinstalldirs ${instlinks}/bin
 ifndef NO_JAVA_GUI
 	cd ${instlinks}/bin && ln -sf ${topdir}/GUI/VjControl.jar ./
 	cd ${instlinks}/bin && ln -sf ${VJROOT_ABS}/GUI/vjcontrol ./vjcontrol
@@ -635,7 +635,7 @@ clean-links:
 # Steps to take before beginning the installation process.  This target is
 # independent of the current ABI.
 beforeinstall:
-	${scriptdir}/mkinstalldirs ${prefix}
+	/bin/sh ${scriptdir}/mkinstalldirs ${prefix}
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.install.dist -p ${prefix}
 
 # Steps to take after the installation process is complete.  This target is
@@ -992,4 +992,4 @@ info::
 	@echo "Installation prefix: ${prefix}"
 	@echo "includedir: ${includedir}"
 	@echo "libdir: ${libdir}"
-	@${scriptdir}/print-targets.sh
+	@/bin/sh ${scriptdir}/print-targets.sh
