@@ -93,6 +93,9 @@ public class DisplayWindowEditorPanel
          ImageIcon sim_viewport_icon =
             new ImageIcon(loader.getResource(root_path + "/vrjuggler-sim-viewport-icon.png"));
          mSimViewportButton.setIcon(sim_viewport_icon);
+         ImageIcon kbd_icon =
+            new ImageIcon(loader.getResource(root_path + "/vrjuggler-input-window-add-icon.png"));
+         mInputWinCreateButton.setIcon(kbd_icon);
 
          int width, height;
          int buffer = 6;
@@ -110,6 +113,11 @@ public class DisplayWindowEditorPanel
          height = sim_viewport_icon.getIconHeight() + buffer;
          mSimViewportButton.setMinimumSize(new Dimension(width, height));
          mSimViewportButton.setPreferredSize(new Dimension(width, height));
+
+         width  = kbd_icon.getIconWidth() + buffer;
+         height = kbd_icon.getIconHeight() + buffer;
+         mInputWinCreateButton.setMinimumSize(new Dimension(width, height));
+         mInputWinCreateButton.setPreferredSize(new Dimension(width, height));
       }
       // If any icon fails to load, we fall back on plain old text for the
       // button labels.
@@ -121,9 +129,15 @@ public class DisplayWindowEditorPanel
             System.err.println(ex.getMessage());
          }
 
-         mDisplayCreateButton.setText("Add Display ...");
+         mDisplayCreateButton.setIcon(null);
+         mSurfaceViewportButton.setIcon(null);
+         mSimViewportButton.setIcon(null);
+         mInputWinCreateButton.setIcon(null);
+
+         mDisplayCreateButton.setText("Add Display Window ...");
          mSurfaceViewportButton.setText("Add Surface Viewport");
          mSimViewportButton.setText("Add Simulator Viewport");
+         mInputWinCreateButton.setText("Add Input Window ...");
       }
 
       // Set a background image for the JDesktopPane that will display the
@@ -148,36 +162,51 @@ public class DisplayWindowEditorPanel
    public void setConfig(ConfigContext ctx, ConfigElement elt)
    {
       mContext = ctx;
-      mElement = elt;
 
-      // A configuration context without a configuration element indicates that
-      // we should operate as a desktop editor rather than a single display
-      // window editor.
-      mIsDesktopEditor = (mContext != null && mElement == null);
-
-      // The button for creating a new display window can only be active when
-      // we are in desktop editor mode.
-      mDisplayCreateButton.setEnabled(mIsDesktopEditor);
-
-      // If we are acting as a desktop editor, then we need to pull out all
-      // the existing display_window config elements.
-      if ( mIsDesktopEditor )
+      // If elt is null, then we are acting as a multi-element editor.
+      // In that case, we want to act as a full-blown desktop simulator
+      // editor.
+      if ( null == elt )
       {
+         mSimEditor = true;
+
+         // We will not be using mElement in this mode.
+         mElement = null;
+
          ConfigBrokerProxy broker = new ConfigBrokerProxy();
          java.util.List all_elts = broker.getElements(mContext);
 
          for ( Iterator i = all_elts.iterator(); i.hasNext(); )
          {
             ConfigElement cur_elt = (ConfigElement) i.next();
-            if ( cur_elt.getDefinition().getName().equals(DISPLAY_WINDOW_TYPE) )
+            String def_type = cur_elt.getDefinition().getToken();
+
+            if ( def_type.equals(DISPLAY_WINDOW_TYPE) )
             {
-               addDisplay(cur_elt);
+               addDisplayWindow(cur_elt);
+            }
+            else if ( def_type.equals(INPUT_WINDOW_TYPE) )
+            {
+               addInputWindow(cur_elt);
             }
          }
       }
+      // If elt is not null, then we are acting as a single-element editor.
+      // In that case, we only want to allow editing of the display_window
+      // element that we were given.
       else
       {
-         addDisplay(elt);
+         mSimEditor = false;
+         mElement   = elt;
+
+         // Disable all user interface components that result in the creation
+         // of new top-level (i.e., non-embedded) config elements.
+         mDisplayCreateButton.setEnabled(false);
+         mInputWinCreateButton.setEnabled(false);
+         mAddDisplayItem.setEnabled(false);
+         mAddInputWinItem.setEnabled(false);
+
+         addDisplayWindow(mElement);
       }
    }
 
@@ -219,7 +248,7 @@ public class DisplayWindowEditorPanel
 
    public void internalFrameClosing(InternalFrameEvent e)
    {
-
+      /* Nothing to do for this event. */ ;
    }
 
    public void internalFrameDeactivated(InternalFrameEvent e)
@@ -254,9 +283,10 @@ public class DisplayWindowEditorPanel
 
    private void jbInit() throws Exception
    {
-      double button_size[][] =
+      double[][] button_size =
          {{5, TableLayout.PREFERRED, 5},
           {TableLayout.FILL, TableLayout.PREFERRED, TableLayout.PREFERRED, 10,
+           TableLayout.PREFERRED, TableLayout.PREFERRED, 10,
            TableLayout.PREFERRED, TableLayout.PREFERRED, 10,
            TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.FILL}};
       mButtonPanelLayout = new TableLayout(button_size);
@@ -272,18 +302,20 @@ public class DisplayWindowEditorPanel
       mSimViewportButton.setEnabled(false);
       mSimViewportButton.setToolTipText("Add a new Simulator Viewport to the display window");
       mSimViewportButton.addActionListener(new DisplayWindowEditorPanel_mSimViewportButton_actionAdapter(this));
+      mInputWinCreateButton.setToolTipText("Add a new input window to the desktop");
+      mInputWinCreateButton.addActionListener(new DisplayWindowEditorPanel_mInputWinCreateButton_actionAdapter(this));
       mResolutionLabel.setLabelFor(mWidthField);
       mResolutionLabel.setText("Screen Resolution:");
-      mWidthField.setMinimumSize(new Dimension(40, 21));
-      mWidthField.setPreferredSize(new Dimension(40, 21));
+      mWidthField.setMinimumSize(new Dimension(50, 21));
+      mWidthField.setPreferredSize(new Dimension(50, 21));
       mWidthField.setToolTipText("Screen resolution width");
       mWidthField.setHorizontalAlignment(SwingConstants.TRAILING);
       mWidthField.addPropertyChangeListener(new DisplayWindowEditorPanel_mWidthField_propertyChangeAdapter(this));
       mWidthField.addFocusListener(new DisplayWindowEditorPanel_Resolution_focusAdapter(this));
       mResolutionXLabel.setRequestFocusEnabled(true);
       mResolutionXLabel.setText("\u00D7");
-      mHeightField.setMinimumSize(new Dimension(40, 21));
-      mHeightField.setPreferredSize(new Dimension(40, 21));
+      mHeightField.setMinimumSize(new Dimension(50, 21));
+      mHeightField.setPreferredSize(new Dimension(50, 21));
       mHeightField.setToolTipText("Screen resolution height");
       mHeightField.addFocusListener(new DisplayWindowEditorPanel_Resolution_focusAdapter(this));
       mDesktopEditor.setBorder(BorderFactory.createLoweredBevelBorder());
@@ -317,10 +349,19 @@ public class DisplayWindowEditorPanel
       mSimViewportLabel.setHorizontalAlignment(SwingConstants.CENTER);
       mSimViewportLabel.setLabelFor(mSimViewportButton);
       mSimViewportLabel.setText("<html>Simulator<br>Viewport</html>");
+      mInputWinCreateLabel.setFont(new java.awt.Font("Dialog", 0, 11));
+      mInputWinCreateLabel.setForeground(Color.white);
+      mInputWinCreateLabel.setMaximumSize(new Dimension(64, 28));
+      mInputWinCreateLabel.setHorizontalAlignment(SwingConstants.CENTER);
+      mInputWinCreateLabel.setLabelFor(mInputWinCreateButton);
+      mInputWinCreateLabel.setText("Input Window");
       mMainPanel.setLayout(mMainPanelLayout);
       mAddDisplayItem.setToolTipText("Add a new display window to the desktop");
-      mAddDisplayItem.setText("Add Display ...");
+      mAddDisplayItem.setText("Add Display Window ...");
       mAddDisplayItem.addActionListener(new DisplayWindowEditorPanel_mAddDisplayItem_actionAdapter(this));
+      mAddInputWinItem.setToolTipText("Add a new input window to the desktop");
+      mAddInputWinItem.setText("Add Input Window ...");
+      mAddInputWinItem.addActionListener(new DisplayWindowEditorPanel_mAddInputWinItem_actionAdapter(this));
       mResolutionPanel.setToolTipText("Set the size of the managed area (display screen resolution)");
       this.add(mMainPanel, BorderLayout.CENTER);
       mMainPanel.add(mMainEditorPanel, BorderLayout.CENTER);
@@ -357,7 +398,16 @@ public class DisplayWindowEditorPanel
                        new TableLayoutConstraints(1, 8, 1, 8,
                                                   TableLayout.FULL,
                                                   TableLayout.CENTER));
+      mButtonPanel.add(mInputWinCreateButton,
+                       new TableLayoutConstraints(1, 10, 1, 10,
+                                                  TableLayout.FULL,
+                                                  TableLayout.CENTER));
+      mButtonPanel.add(mInputWinCreateLabel,
+                       new TableLayoutConstraints(1, 11, 1, 11,
+                                                  TableLayout.FULL,
+                                                  TableLayout.CENTER));
       mContextMenu.add(mAddDisplayItem);
+      mContextMenu.add(mAddInputWinItem);
    }
 
    private void setActiveJugglerWindow(JugglerWindowFrame w)
@@ -379,7 +429,7 @@ public class DisplayWindowEditorPanel
                                                            this);
    }
 
-   void createDisplayClicked(ActionEvent e)
+   void createDisplayWindowClicked(ActionEvent e)
    {
       DisplayWindowStartDialog dlg =
          new DisplayWindowStartDialog(getOwner(), mContext,
@@ -395,7 +445,6 @@ public class DisplayWindowEditorPanel
 
          // Validate the name chosen by the user to ensure that we do not
          // create conflicting config elements.
-         java.util.List all_elts = broker.getElements(mContext);
          String title = checkElementName(dlg.getDisplayWindowTitle());
 
          // Create a new config element based on the initial information we
@@ -406,14 +455,15 @@ public class DisplayWindowEditorPanel
          // here because elt is a freshly created config element.  Hence, the
          // act of creating the config element is what needs to be undone.
          Rectangle bounds  = dlg.getDisplayWindowBounds();
-         elt.setProperty("origin", 0, new Integer(bounds.x));
-         elt.setProperty("origin", 1, new Integer(bounds.y));
-         elt.setProperty("size", 0, new Integer(bounds.width));
-         elt.setProperty("size", 1, new Integer(bounds.height));
+         elt.setProperty(ORIGIN_PROPERTY, 0, new Integer(bounds.x));
+         elt.setProperty(ORIGIN_PROPERTY, 1, new Integer(bounds.y));
+         elt.setProperty(SIZE_PROPERTY, 0, new Integer(bounds.width));
+         elt.setProperty(SIZE_PROPERTY, 1, new Integer(bounds.height));
 
-         ConfigDefinition fb_def = broker.getRepository().get("opengl_frame_buffer_config");
-         ConfigElement fb_cfg = factory.create("OpenGL Frame Buffer Configuration",
-                                               fb_def);
+         ConfigDefinition fb_def =
+            broker.getRepository().get(OPENGL_FRAME_BUFFER_TYPE);
+         ConfigElement fb_cfg =
+            factory.create("OpenGL Frame Buffer Configuration", fb_def);
          fb_cfg.setProperty("visual_id", 0, dlg.getVisualID());
          fb_cfg.setProperty("red_size", 0, dlg.getRedDepth());
          fb_cfg.setProperty("green_size", 0, dlg.getGreenDepth());
@@ -431,11 +481,11 @@ public class DisplayWindowEditorPanel
          elt.setProperty(SLEEP_TIME_PROPERTY, 0, dlg.getSleepTime());
 
          dlg.getResource().add(elt);
-         addDisplay(elt);
+         addDisplayWindow(elt);
       }
    }
 
-   private void addDisplay(ConfigElement elt)
+   private void addDisplayWindow(ConfigElement elt)
    {
       Dimension desktop_size = mDesktopEditor.getSize();
 
@@ -446,9 +496,10 @@ public class DisplayWindowEditorPanel
 
       JInternalFrame new_frame = new DisplayWindowFrame(elt.getName(),
                                                         getResolution(),
-                                                        desktop_size, mContext, elt);
+                                                        desktop_size, mContext,
+                                                        elt);
 
-      // Attempt to set an icone for the newly created frame.
+      // Attempt to set an icon for the newly created frame.
       try
       {
          ClassLoader loader = getClass().getClassLoader();
@@ -464,6 +515,75 @@ public class DisplayWindowEditorPanel
 
       // XXX: How do we handle inactive windows?  Perhaps that could be left to
       // the rendering process for each indvidual window.
+      new_frame.setVisible(true);
+      new_frame.addInternalFrameListener(this);
+      mDesktopEditor.add(new_frame);
+      mAllWindows.add(new_frame);
+   }
+
+   void createInputWindowClicked(ActionEvent e)
+   {
+      InputWindowStartDialog dlg =
+         new InputWindowStartDialog(getOwner(), mContext, mCurrentResolution);
+
+      if ( dlg.showDialog() == InputWindowStartDialog.OK_OPTION )
+      {
+         ConfigBrokerProxy broker = new ConfigBrokerProxy();
+         ConfigDefinition window_def =
+            broker.getRepository().get(DISPLAY_WINDOW_TYPE);
+         ConfigElementFactory factory =
+            new ConfigElementFactory(broker.getRepository().getAllLatest());
+
+         // Validate the name chosen by the user to ensure that we do not
+         // create conflicting config elements.
+         String title = checkElementName(dlg.getInputWindowTitle());
+
+         // Create a new config element based on the initial information we
+         // have.
+         ConfigElement elt = factory.create(title, window_def);
+
+         // We do not use the undoable form of ConfigElement.setProperty()
+         // here because elt is a freshly created config element.  Hence, the
+         // act of creating the config element is what needs to be undone.
+         Rectangle bounds = dlg.getInputWindowBounds();
+         elt.setProperty(ORIGIN_PROPERTY, 0, new Integer(bounds.x));
+         elt.setProperty(ORIGIN_PROPERTY, 1, new Integer(bounds.y));
+         elt.setProperty(SIZE_PROPERTY, 0, new Integer(bounds.width));
+         elt.setProperty(SIZE_PROPERTY, 1, new Integer(bounds.height));
+
+         dlg.getResource().add(elt);
+         addInputWindow(elt);
+      }
+   }
+
+   private void addInputWindow(ConfigElement elt)
+   {
+      Dimension desktop_size = mDesktopEditor.getSize();
+
+      if ( desktop_size.width == 0 || desktop_size.height == 0 )
+      {
+         desktop_size = mDesktopEditor.getPreferredSize();
+      }
+
+      JInternalFrame new_frame = new InputWindowFrame(elt.getName(),
+                                                      getResolution(),
+                                                      desktop_size, mContext,
+                                                      elt);
+
+      // Attempt to set an icon for the newly created frame.
+      try
+      {
+         ClassLoader loader = getClass().getClassLoader();
+         ImageIcon icon =
+            new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/customeditors/display_window/images/vrjuggler.gif"));
+
+         new_frame.setFrameIcon(icon);
+      }
+      catch(NullPointerException ex)
+      {
+         /* Ignore the exception. */ ;
+      }
+
       new_frame.setVisible(true);
       new_frame.addInternalFrameListener(this);
       mDesktopEditor.add(new_frame);
@@ -526,10 +646,10 @@ public class DisplayWindowEditorPanel
          // here because elt is a freshly created config element.  Hence, the
          // act of adding the config element as a property value to display_elt
          // is what needs to be undone.
-         elt.setProperty("origin", 0, new Float(origin_x));
-         elt.setProperty("origin", 1, new Float(origin_y));
-         elt.setProperty("size", 0, new Float(width));
-         elt.setProperty("size", 1, new Float(height));
+         elt.setProperty(ORIGIN_PROPERTY, 0, new Float(origin_x));
+         elt.setProperty(ORIGIN_PROPERTY, 1, new Float(origin_y));
+         elt.setProperty(SIZE_PROPERTY, 0, new Float(width));
+         elt.setProperty(SIZE_PROPERTY, 1, new Float(height));
          elt.setProperty("view", 0, dlg.getViewpoint());
          elt.setProperty("user", 0, dlg.getUser());
 
@@ -593,10 +713,10 @@ public class DisplayWindowEditorPanel
          // here because elt is a freshly created config element.  Hence, the
          // act of adding the config element as a property value to display_elt
          // is what needs to be undone.
-         elt.setProperty("origin", 0, new Float(origin_x));
-         elt.setProperty("origin", 1, new Float(origin_y));
-         elt.setProperty("size", 0, new Float(width));
-         elt.setProperty("size", 1, new Float(height));
+         elt.setProperty(ORIGIN_PROPERTY, 0, new Float(origin_x));
+         elt.setProperty(ORIGIN_PROPERTY, 1, new Float(origin_y));
+         elt.setProperty(SIZE_PROPERTY, 0, new Float(width));
+         elt.setProperty(SIZE_PROPERTY, 1, new Float(height));
          elt.setProperty("view", 0, dlg.getViewpoint());
          elt.setProperty("user", 0, dlg.getUser());
          elt.setProperty("vertical_fov", 0, dlg.getVertialFOV());
@@ -621,14 +741,14 @@ public class DisplayWindowEditorPanel
       }
    }
 
-   private ConfigElement mElement = null;
-   private ConfigContext mContext = null;
+   private ConfigElement mElement   = null;
+   private ConfigContext mContext   = null;
+   private boolean       mSimEditor = false;
 
    private JDesktopPane mDesktopEditor = new JDesktopPane();
    private DesktopBackgroundImage mDesktopBackground = new DesktopBackgroundImage();
    private JugglerWindowFrame mActiveWindow = null;
    private java.util.List mAllWindows = new ArrayList();
-   private boolean mIsDesktopEditor = false;
    private Dimension mCurrentResolution = new Dimension(1280, 1024);
 
    private JPopupMenu mContextMenu = new JPopupMenu();
@@ -655,14 +775,17 @@ public class DisplayWindowEditorPanel
    private JPanel mExtraEditorPanel = new JPanel();
    private BorderLayout mEditorPanelLayout = new BorderLayout();
    private JMenuItem mAddDisplayItem = new JMenuItem();
+   private JMenuItem mAddInputWinItem = new JMenuItem();
+   private JButton mInputWinCreateButton = new JButton();
+   private JLabel mInputWinCreateLabel = new JLabel();
 
    void resolutionChanged(FocusEvent e)
    {
       // XXX: The size and/or aspect ration of mDesktopEditor should probably
       // be updated too.
 
-      int new_width  = ((Integer) mWidthField.getValue()).intValue();
-      int new_height = ((Integer) mHeightField.getValue()).intValue();
+      int new_width  = ((Number) mWidthField.getValue()).intValue();
+      int new_height = ((Number) mHeightField.getValue()).intValue();
 
       if ( new_width != mCurrentResolution.width ||
            new_height != mCurrentResolution.height )
@@ -706,7 +829,12 @@ public class DisplayWindowEditorPanel
 
    void mAddDisplayItem_actionPerformed(ActionEvent e)
    {
-      createDisplayClicked(e);
+      createDisplayWindowClicked(e);
+   }
+
+   void mAddInputWinItem_actionPerformed(ActionEvent e)
+   {
+      createInputWindowClicked(e);
    }
 
    void closeClicked(ActionEvent e)
@@ -734,7 +862,22 @@ class DisplayWindowEditorPanel_mDisplayCreateButton_actionAdapter
    }
    public void actionPerformed(ActionEvent e)
    {
-      adaptee.createDisplayClicked(e);
+      adaptee.createDisplayWindowClicked(e);
+   }
+}
+
+class DisplayWindowEditorPanel_mInputWinCreateButton_actionAdapter
+   implements java.awt.event.ActionListener
+{
+   private DisplayWindowEditorPanel adaptee;
+
+   DisplayWindowEditorPanel_mInputWinCreateButton_actionAdapter(DisplayWindowEditorPanel adaptee)
+   {
+      this.adaptee = adaptee;
+   }
+   public void actionPerformed(ActionEvent e)
+   {
+      adaptee.createInputWindowClicked(e);
    }
 }
 
@@ -795,6 +938,20 @@ class DisplayWindowEditorPanel_mAddDisplayItem_actionAdapter implements java.awt
    public void actionPerformed(ActionEvent e)
    {
       adaptee.mAddDisplayItem_actionPerformed(e);
+   }
+}
+
+class DisplayWindowEditorPanel_mAddInputWinItem_actionAdapter implements java.awt.event.ActionListener
+{
+   private DisplayWindowEditorPanel adaptee;
+
+   DisplayWindowEditorPanel_mAddInputWinItem_actionAdapter(DisplayWindowEditorPanel adaptee)
+   {
+      this.adaptee = adaptee;
+   }
+   public void actionPerformed(ActionEvent e)
+   {
+      adaptee.mAddInputWinItem_actionPerformed(e);
    }
 }
 
