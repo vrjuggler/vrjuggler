@@ -53,6 +53,7 @@ public class ConfigChunkCellEditor
 {
    private PropertyEditor editor = null;
    private Component editorComponent = null;
+   private PropertyDesc propDesc = null;
 
    /**
     * Gets the value contained in the editor.
@@ -61,6 +62,15 @@ public class ConfigChunkCellEditor
    {
       return editor.getValue();
    }
+
+   /**
+    * Sets the PropertyDesc this editor should use for the value it is editing.
+    */
+   public void setPropertyDesc(PropertyDesc desc)
+   {
+      propDesc = desc;
+   }
+
 
    /**
     * When it has been requested to stop editing the cell, validate that the
@@ -107,19 +117,11 @@ public class ConfigChunkCellEditor
       }
       else
       {
-         // Assume that the table model is an instance of ConfigChunkTableModel and
-         // get the property description for the row this cell is in
-         ConfigChunkTableModel dataModel = (ConfigChunkTableModel)table.getModel();
-         PropertyDesc desc = dataModel.getPropertyDesc(row);
-
          // If the value is an embedded ConfigChunk, just use a button
          if (value instanceof ConfigChunk)
          {
-            int base_row = dataModel.getRowFor(desc);
-            int value_idx = row - base_row;
             ConfigChunk chunk = (ConfigChunk)value;
             String name = chunk.getName();
-//            String name = chunk.getProperty(desc.getToken(), value_idx).getEmbeddedChunk().getName();
             JButton btn = new JButton(name);
             btn.setMargin(new Insets(0,0,0,0));
             btn.setBorderPainted(false);
@@ -127,7 +129,7 @@ public class ConfigChunkCellEditor
          }
 
          // Get the property editor for the given value
-         editor = findEditor(value, desc);
+         editor = findEditor(value, propDesc);
       }
       if (editor == null)
       {

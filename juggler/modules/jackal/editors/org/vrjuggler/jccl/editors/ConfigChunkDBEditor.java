@@ -38,7 +38,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.*;
-import java.beans.PropertyEditor;
+import java.beans.*;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
@@ -54,6 +54,7 @@ import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 public class ConfigChunkDBEditor
    extends JPanel
    implements ContextListener
+            , PropertyChangeListener
 {
    /**
     * The ID used to reference the generic ConfigChunk editor panel in the
@@ -339,6 +340,16 @@ public class ConfigChunkDBEditor
     */
    private void addChunk(ConfigChunk chunk)
    {
+      // Make ourselves a listener to the chunk
+      chunk.addPropertyChangeListener(this);
+      for (Iterator itr = chunk.getEmbeddedChunks().iterator(); itr.hasNext(); )
+      {
+         ConfigChunk emb_chunk = (ConfigChunk)itr.next();
+         System.out.println("Listening to emb chunk: "+emb_chunk.getName());
+         emb_chunk.addPropertyChangeListener(this);
+//         ((ConfigChunk)itr.next()).addPropertyChangeListener(this);
+      }
+
       // Add the chunk to each of its categories
       for (Iterator itr = chunk.getDesc().getCategories(); itr.hasNext(); )
       {
@@ -617,6 +628,13 @@ public class ConfigChunkDBEditor
     */
    private void removeChunk(ConfigChunk chunk)
    {
+      // Don't listen to the chunk anymore
+      for (Iterator itr = chunk.getEmbeddedChunks().iterator(); itr.hasNext(); )
+      {
+         ((ConfigChunk)itr.next()).removePropertyChangeListener(this);
+      }
+      chunk.removePropertyChangeListener(this);
+
       // Get the nodes for the chunk
       List chunk_nodes = getNodesFor(chunk);
       for (Iterator itr = chunk_nodes.iterator(); itr.hasNext(); )
@@ -661,6 +679,20 @@ public class ConfigChunkDBEditor
    protected List getNodesFor(Object obj)
    {
       return getNodesFor(obj, (DefaultMutableTreeNode)treeModel.getRoot());
+   }
+
+   /**
+    * This gets called whenver one of the ChunkDescs in the ChunkDescDB we are
+    * editing has been modified.
+    */
+   public void propertyChange(PropertyChangeEvent evt)
+   {
+      ConfigChunk src = (ConfigChunk)evt.getSource();
+      System.out.println("ConfigChunk changed: "+src.getName());
+      for (Iterator itr = getNodesFor(src).iterator(); itr.hasNext(); )
+      {
+         treeModel.nodeChanged((TreeNode)itr.next());
+      }
    }
 
    /**
@@ -716,7 +748,7 @@ public class ConfigChunkDBEditor
          if (! getConfigBroker().add(context, chunk))
          {
             JOptionPane.showMessageDialog(this,
-                                          "There are no configuration files active",
+                                          "There are no configuration files active.",
                                           "Error",
                                           JOptionPane.ERROR_MESSAGE);
             return;
