@@ -104,6 +104,11 @@ public class ConfigToolbar
       newPopupBtn.setPopupMenu(new_popup);
    }
 
+   public void addToToolbar(Component comp)
+   {
+      toolbar.add(comp);
+   }
+
    public void addActionListener(ActionListener listener)
    {
       listenerList.add(ActionListener.class, listener);
@@ -194,8 +199,6 @@ public class ConfigToolbar
       toolbar.add(saveBtn, null);
       toolbar.add(saveAsBtn, null);
       toolbar.add(saveAllBtn, null);
-//      toolbar.add(fileCombo, null);
-//      toolbar.add(Box.createHorizontalGlue());
    }
 
    // JBuilder GUI variables
@@ -206,5 +209,4 @@ public class ConfigToolbar
    private JButton saveBtn = new JButton();
    private JButton saveAsBtn = new JButton();
    private JButton saveAllBtn = new JButton();
-//   private JComboBox fileCombo = new JComboBox();
 }
