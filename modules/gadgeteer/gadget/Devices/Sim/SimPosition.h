@@ -86,6 +86,10 @@ private:
    //: Roll Left - rot -z axis
    void RotRollCCW(const float amt);
 
+   //: Check if movement is allowed
+   //! NOTE: It is not allowed if it hits a simulated wall, etc.
+   bool isTransAllowed(vjVec3 trans);
+
 
 private:
    int            mTransCoordSystem;                 //: What coord system for translations?

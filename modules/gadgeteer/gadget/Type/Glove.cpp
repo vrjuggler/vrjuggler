@@ -197,7 +197,7 @@ vjMatrix vjGlove::getGlovePos(vjGloveData::vjGloveComponent component, int devNu
    }
    else
    {
-      vjDEBUG(0) << "ERROR: vjGlove: Trying to get a glove without a position proxy set.\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "ERROR: vjGlove: Trying to get a glove without a position proxy set.\n" << vjDEBUG_FLUSH;
       vjASSERT(mGlovePos[devNum] != NULL);      // should be false in here
       return vjMatrix();
    }

@@ -76,7 +76,7 @@ bool vjFlock::config(vjConfigChunk *c)
    port_id = -1;
    myThread = NULL;
 
-   vjDEBUG(0) << "	 vjFlock::vjFlock(vjConfigChunk*)" << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_ALL,0) << "	 vjFlock::vjFlock(vjConfigChunk*)" << endl << vjDEBUG_FLUSH;
 
    // read in vjPosition's config stuff,
    // --> this will be the port and baud fields
@@ -100,14 +100,14 @@ bool vjFlock::config(vjConfigChunk *c)
    if ((r != 'Q') && (r != 'R') &&
        (r != 'S') && (r != 'T'))
    {
-      vjDEBUG(0)  << "   illegal report rate from configChunk, defaulting to every other cycle (R)" << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0)  << "   illegal report rate from configChunk, defaulting to every other cycle (R)" << endl << vjDEBUG_FLUSH;
       mFlockOfBirds.setReportRate( 'R' );
    }
    else
       mFlockOfBirds.setReportRate( r );
 
    // output what was read.
-   vjDEBUG(0) << "	  Flock Settings: " << endl
+   vjDEBUG(vjDBG_ALL,0) << "	  Flock Settings: " << endl
    << "	        aFlock::getTransmitter(): " << mFlockOfBirds.getTransmitter() << endl
    << "             aFlock::getNumBirds()      : " << mFlockOfBirds.getNumBirds() << endl
    << "	        aFlock::getBaudRate()      : " << mFlockOfBirds.getBaudRate() << endl
@@ -124,7 +124,7 @@ bool vjFlock::config(vjConfigChunk *c)
 
 vjFlock::~vjFlock()
 {
-    vjDEBUG(0)  << "	vjFlock::~vjFlock()" << endl << vjDEBUG_FLUSH;
+    vjDEBUG(vjDBG_ALL,0)  << "	vjFlock::~vjFlock()" << endl << vjDEBUG_FLUSH;
     this->StopSampling();
     if (theData != NULL)
        getMyMemPool()->deallocate((void*)theData);
@@ -134,7 +134,7 @@ vjFlock::~vjFlock()
 
 static void SampleBirds(void* pointer)
 {
-   vjDEBUG(0) << "vjFlock: Spawned SampleBirds starting" << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_ALL,0) << "vjFlock: Spawned SampleBirds starting" << endl << vjDEBUG_FLUSH;
 
    vjFlock* devPointer = (vjFlock*) pointer;
    for (;;)
@@ -148,7 +148,7 @@ int vjFlock::StartSampling()
    // make sure birds aren't already started
    if (this->isActive() == true)
    {
-      vjDEBUG(0)  << "vjFlock was already started." << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0)  << "vjFlock was already started." << endl << vjDEBUG_FLUSH;
       return 0;
    }
 
@@ -168,7 +168,7 @@ int vjFlock::StartSampling()
       // Reset current, progress, and valid
       resetIndexes();
 
-      vjDEBUG(0) << "    Getting flock ready....\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "    Getting flock ready....\n" << vjDEBUG_FLUSH;
 
 
       mFlockOfBirds.start();
@@ -176,11 +176,11 @@ int vjFlock::StartSampling()
       //sanity check.. make sure birds actually started
       if (this->isActive() == false)
       {
-         vjDEBUG(0)  << "vjFlock failed to start.." << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,0)  << "vjFlock failed to start.." << endl << vjDEBUG_FLUSH;
          return 0;
       }
 
-      vjDEBUG(0)  << "vjFlock ready to go.." << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0)  << "vjFlock ready to go.." << endl << vjDEBUG_FLUSH;
 
       vjFlock* devicePtr = this;
 
@@ -242,7 +242,7 @@ int vjFlock::Sample()
       mDataTimes[index] = sampletime;
 
       //if (i==1)
-         //vjDEBUG(2) << "Flock: bird1:    orig:" << vjCoord(theData[index]).pos << endl << vjDEBUG_FLUSH;
+         //vjDEBUG(vjDBG_ALL,2) << "Flock: bird1:    orig:" << vjCoord(theData[index]).pos << endl << vjDEBUG_FLUSH;
 
 
       // Transforms between the cord frames
@@ -257,7 +257,7 @@ int vjFlock::Sample()
       theData[index] = world_T_reciever;                                     // Store corrected xform back into data
 
       //if (i==1)
-         //vjDEBUG(2) << "Flock: bird1: xformed:" << vjCoord(theData[index]).pos << endl << vjDEBUG_FLUSH;
+         //vjDEBUG(vjDBG_ALL,2) << "Flock: bird1: xformed:" << vjCoord(theData[index]).pos << endl << vjDEBUG_FLUSH;
    }
 
    // Locks and then swaps the indices
@@ -273,24 +273,24 @@ int vjFlock::StopSampling()
 
    if (myThread != NULL)
    {
-      vjDEBUG(0) << "Stopping the flock thread..." << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "Stopping the flock thread..." << vjDEBUG_FLUSH;
 
       myThread->kill();
       delete myThread;
       myThread = NULL;
 
-      vjDEBUG(0) << "  Stopping the flock..." << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "  Stopping the flock..." << vjDEBUG_FLUSH;
 
       mFlockOfBirds.stop();
 
       // sanity check: did the flock actually stop?
       if (this->isActive() == true)
       {
-         vjDEBUG(0) << "Flock didn't stop." << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,0) << "Flock didn't stop." << endl << vjDEBUG_FLUSH;
          return 0;
       }
 
-      vjDEBUG(0) << "stopped." << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "stopped." << endl << vjDEBUG_FLUSH;
    }
 
    return 1;
@@ -326,7 +326,7 @@ void vjFlock::setHemisphere(const BIRD_HEMI& h)
 {
     if (this->isActive())
     {
-	vjDEBUG(0) << "Cannot change the hemisphere while active\n" << vjDEBUG_FLUSH;
+	vjDEBUG(vjDBG_ALL,0) << "Cannot change the hemisphere while active\n" << vjDEBUG_FLUSH;
 	return;
     }
     mFlockOfBirds.setHemisphere( h );
@@ -336,7 +336,7 @@ void vjFlock::setFilterType(const BIRD_FILT& f)
 {
   if (this->isActive())
   {
-      vjDEBUG(0) << "Cannot change filters while active\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "Cannot change filters while active\n" << vjDEBUG_FLUSH;
       return;
   }
   mFlockOfBirds.setFilterType( f );
@@ -346,7 +346,7 @@ void vjFlock::setReportRate(const char& rRate)
 {
   if (this->isActive())
   {
-      vjDEBUG(0) << "Cannot change report rate while active\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "Cannot change report rate while active\n" << vjDEBUG_FLUSH;
       return;
   }
   mFlockOfBirds.setReportRate( rRate );
@@ -356,7 +356,7 @@ void vjFlock::setTransmitter(const int& Transmit)
 {
   if (this->isActive())
   {
-      vjDEBUG(0) << "Cannot change transmitter while active\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "Cannot change transmitter while active\n" << vjDEBUG_FLUSH;
       return;
   }
   mFlockOfBirds.setTransmitter( Transmit );
@@ -365,7 +365,7 @@ void vjFlock::setNumBirds(const int& n)
 {
   if (this->isActive())
   {
-      vjDEBUG(0) << "Cannot change num birds while active\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "Cannot change num birds while active\n" << vjDEBUG_FLUSH;
       return;
   }
   mFlockOfBirds.setNumBirds( n );
@@ -374,7 +374,7 @@ void vjFlock::setSync(const int& sync)
 {
   if (this->isActive())
   {
-      vjDEBUG(0) << "Cannot change report rate while active\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "Cannot change report rate while active\n" << vjDEBUG_FLUSH;
       return;
   }
   mFlockOfBirds.setSync( sync );
@@ -384,7 +384,7 @@ void vjFlock::setBlocking(const int& blVal)
 {
   if (this->isActive())
   {
-      vjDEBUG(0) << "Cannot change report rate while active\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "Cannot change report rate while active\n" << vjDEBUG_FLUSH;
       return;
   }
   mFlockOfBirds.setBlocking( blVal );
@@ -398,7 +398,7 @@ void vjFlock::setPort( const char* const serialPort )
 {
     if (this->isActive())
     {
-      vjDEBUG(0) << "Cannot change port while active\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "Cannot change port while active\n" << vjDEBUG_FLUSH;
       return;
     }
     mFlockOfBirds.setPort( serialPort );
@@ -415,7 +415,7 @@ void vjFlock::setBaudRate( const int& baud )
 {
     if (this->isActive())
     {
-      vjDEBUG(0) << "Cannot change baud rate while active\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "Cannot change baud rate while active\n" << vjDEBUG_FLUSH;
       return;
     }
     mFlockOfBirds.setBaudRate( baud );

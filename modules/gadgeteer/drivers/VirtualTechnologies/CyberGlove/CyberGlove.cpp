@@ -30,7 +30,7 @@ bool vjCyberGlove::config(vjConfigChunk *c)
     std::string glove_pos_proxy = c->getProperty("glovePos");    // Get the name of the pos_proxy
     if(glove_pos_proxy == std::string(""))
     {
-       vjDEBUG(0) << "ERROR: vjCyberglove has no posProxy." << endl << vjDEBUG_FLUSH;
+       vjDEBUG(vjDBG_ALL,0) << "ERROR: vjCyberglove has no posProxy." << endl << vjDEBUG_FLUSH;
        return false;
     }
 
@@ -39,7 +39,7 @@ bool vjCyberGlove::config(vjConfigChunk *c)
     if(proxy_index != -1)
        mGlovePos[0] = vjKernel::instance()->getInputManager()->GetPosProxy(proxy_index);
     else
-       vjDEBUG(0) << "ERROR: vjCyberGlove::vjCyberGlove: Can't find posProxy." << endl << vjDEBUG_FLUSH << endl;
+       vjDEBUG(vjDBG_ALL,0) << "ERROR: vjCyberGlove::vjCyberGlove: Can't find posProxy." << endl << vjDEBUG_FLUSH << endl;
 
     mGlove = new CyberGloveBasic(mCalDir, sPort, baudRate);
 
@@ -65,7 +65,7 @@ vjCyberGlove::StartSampling()
       }
       else
       {
-         vjDEBUG(1) << "vjCyberGlove is active " << endl;
+         vjDEBUG(vjDBG_ALL,1) << "vjCyberGlove is active " << endl;
          active = 1;
          return 1;
       }
@@ -81,7 +81,7 @@ void vjCyberGlove::controlLoop(void* nullParam)
    // Open the port and run with it
    if(mGlove->Open() == 0)
    {
-      vjDEBUG(0) << "ERROR: Can't open Cyberglove or it is already opened." << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "ERROR: Can't open Cyberglove or it is already opened." << vjDEBUG_FLUSH;
       return;
    }
 
@@ -119,7 +119,7 @@ int vjCyberGlove::StopSampling()
       sginap(1);
 
       mGlove->Close();
-      vjDEBUG(0) << "stopping vjCyberGlove.." << endl;
+      vjDEBUG(vjDBG_ALL,0) << "stopping vjCyberGlove.." << endl;
    }
    return 1;
 }

@@ -4,7 +4,7 @@
 
 bool vjGloveProxy::config(vjConfigChunk* chunk)
 {
-   vjDEBUG_BEGIN(1) << "------------------ GLOVE PROXY -----------------\n"
+   vjDEBUG_BEGIN(vjDBG_ALL,1) << "------------------ GLOVE PROXY -----------------\n"
                     << "   config()" << endl << vjDEBUG_FLUSH;
    vjASSERT(((std::string)chunk->getType()) == "GloveProxy");
 
@@ -16,12 +16,12 @@ bool vjGloveProxy::config(vjConfigChunk* chunk)
 
    if ( proxy_num != -1)
    {
-      vjDEBUG_END(1) << "   GloveProxy config()'ed" << endl << vjDEBUG_FLUSH;
+      vjDEBUG_END(vjDBG_ALL,1) << "   GloveProxy config()'ed" << endl << vjDEBUG_FLUSH;
       return true;
    }
    else
    {
-      vjDEBUG_END(1) << "   GloveProxy config() failed" << endl << vjDEBUG_FLUSH;
+      vjDEBUG_END(vjDBG_ALL,1) << "   GloveProxy config() failed" << endl << vjDEBUG_FLUSH;
       return false;
    }
 }

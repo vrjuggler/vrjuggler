@@ -670,17 +670,11 @@ int aFlock::open_port( const char* const serialPort,
 	cout<<" success\n"<<flush;
     else
 	cout<<" failed\n"<<flush;
-    //<<<<<<< aFlock.cpp
-    
-    //cout << "  Disconnect calling process from terminal and session (TIOCNOTTY)..." << flush;
-    //result = ioctl( portId, TIOCNOTTY );
-    
-// =======
+
 
 //     cout << "  Disconnect calling process from terminal and session (TIOCNOTTY)..." << flush;
 //     result = ioctl( portId, TIOCNOTTY );
 
-// >>>>>>> 1.11
 //     // did it succeed?
 //     if (result == 0)
 // 	cout<<" success\n"<<flush;
