@@ -535,6 +535,12 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
       {
          mUpdateRect.merge(temp_rect);
       }
+
+      // Compute texture upload stats
+      const double one_mb(1024.0*1024.0);
+      double tex_size_mb = (mUpdateRect.width*mUpdateRect.height*8.0*1.0)/one_mb;
+      mTextureUploadRate.addSample(tex_size_mb);
+      mTextureUpdateCount.addSample(tex_size_mb);
    }
 
    // Check status of focus
@@ -574,13 +580,6 @@ void VNCDesktop::updateDesktopTexture()
                       GL_RGBA, GL_UNSIGNED_BYTE, src);
 
       glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);      // Reset to default since this is a "strange" param
-
-      // Add stats
-      // Compute texture stats
-      const double one_mb(1024.0*1024.0);
-      double tex_size_mb = (mUpdateRect.width*mUpdateRect.height*8.0*1.0)/one_mb;
-      mTextureUploadRate.addSample(tex_size_mb);
-      mTextureUpdateCount.addSample(tex_size_mb);
    }
 
 #else
