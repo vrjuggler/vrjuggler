@@ -261,8 +261,8 @@ int vjConfigChunkDB::dependencySort(vjConfigChunkDB* auxChunks)
     }
     vjDEBUG_END(vjDBG_CONFIG,4) << "-----------------------------\n" << vjDEBUG_FLUSH;
 #endif
-
-
+    
+    
     // --- THE SORT --- //
     // Create new src list to work from
     // Targetting the local data
@@ -276,20 +276,31 @@ int vjConfigChunkDB::dependencySort(vjConfigChunkDB* auxChunks)
     bool dep_pass(true);             // Flag for Pass dependency check
     std::vector<std::string> deps;   // Dependencies of current item
     std::vector<vjConfigChunk*>::iterator cur_item = src_chunks.begin();          // The current src item to look at
-
+    
     while (cur_item != src_chunks.end()) {          // While not at end of src list
         vjDEBUG(vjDBG_CONFIG,4) << "Checking depencies for: " << (*cur_item)->getProperty("name") << "\n" << vjDEBUG_FLUSH;
-
+        
+        dep_pass = true;
         deps = (*cur_item)->getChunkPtrDependencies();             // Get src dependencies
-        for (unsigned int dep_num=0;dep_num<deps.size();dep_num++) {  // For each dependency
-            bool dep_not_found = (getChunk(deps[dep_num]) == NULL);
-            bool aux_dep_not_found = ((auxChunks == NULL) ||
-                                      (auxChunks->getChunk(deps[dep_num]) == NULL));
-
-            // If dependency not in list yet or in aux buffer
-            // If (not in src && (!aux exists || not in aux))
-            if ( dep_not_found && aux_dep_not_found )
-                dep_pass = false;                                   // Failed check (we don't pass)
+        for (unsigned int dep_num=0; (dep_num < deps.size()) && dep_pass; dep_num++) {  // For each dependency
+            
+            if (vjConfigChunk::hasSeparator (deps[dep_num])) {
+                std::string chunkname = vjConfigChunk::getFirstNameComponent(deps[dep_num]);
+                vjConfigChunk* ch;
+                bool found = false;
+                ch = getChunk(chunkname);
+                found = found || (ch && ch->getEmbeddedChunk (deps[dep_num]));
+                if (!found && auxChunks) {
+                    ch = auxChunks->getChunk(chunkname);
+                    found = found || (ch && ch->getEmbeddedChunk (deps[dep_num]));
+                }
+                dep_pass = dep_pass && found;
+            }
+            else {
+                dep_pass = dep_pass && (getChunk(deps[dep_num]) || 
+                                        (auxChunks && auxChunks->getChunk(deps[dep_num])));
+                
+            }
         }
 
         if (dep_pass) {        // If all dependencies are accounted for
@@ -299,7 +310,6 @@ int vjConfigChunkDB::dependencySort(vjConfigChunkDB* auxChunks)
         } else
             cur_item++;             // Try next item
 
-        dep_pass = true;           // Reset to passing
     }
 
     // ASSERT: (Done with sort)
@@ -323,12 +333,12 @@ int vjConfigChunkDB::dependencySort(vjConfigChunkDB* auxChunks)
             vjDEBUG(vjDBG_ERROR,0) << "Check for undefined devices that others depend upon.\n" << vjDEBUG_FLUSH;
         }
         chunks.insert(chunks.end(), src_chunks.begin(), src_chunks.end());   // Copy over the rest anyway
-
+        
         return -1;
     } else {
         // Print out sorted dependancies
 #ifdef VJ_DEBUG
-
+        
         vjDEBUG_BEGIN(vjDBG_CONFIG,4) << "---- After sort ----" << std::endl << vjDEBUG_FLUSH;
         for (unsigned int i=0;i<chunks.size();i++) {
             vjDEBUG(vjDBG_CONFIG,4) << "Chunk:" << chunks[i]->getProperty("name") << std::endl
@@ -343,7 +353,7 @@ int vjConfigChunkDB::dependencySort(vjConfigChunkDB* auxChunks)
         }
         vjDEBUG_END(vjDBG_CONFIG,4) << "-----------------\n" << vjDEBUG_FLUSH;
 #endif
-
+        
         return 0;      // Success
     }
 }

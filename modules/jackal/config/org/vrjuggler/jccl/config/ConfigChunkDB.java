@@ -315,8 +315,10 @@ public class ConfigChunkDB {
 
 	for (;;) {
 	    c = readAChunk(st);
-	    if (c != null)
+	    if (c != null) {
+                c.validateEmbeddedChunkNames(); // needed when loading old files.
 		insertOrdered(c);
+            }
 	    else
 		break;
 	}
@@ -342,7 +344,7 @@ public class ConfigChunkDB {
 		if (c != null) {
 		    c.read(st);
 		    if ((c.name == null) || (c.name.equals(""))) {
-			c.name = getNewName (c.desc.name);    
+			c.setName( getNewName (c.desc.name));    
 		    }
 		} 
 		else {
@@ -472,11 +474,26 @@ public class ConfigChunkDB {
 	    cde = (ChunkDependEntry)v.elementAt(i);
 	    for (j = 0; j < cde.propdepends.size(); j++) {
 		pde = (PropDependEntry)cde.propdepends.elementAt(j);
-		ch = get (pde.dependency_name);
+		//ch = get (pde.dependency_name);
+                ch = searchDependency (pde.dependency_name);
 		if (ch != null)
 		    pde.other_files.addElement (getName());
 	    }
 	}
+    }
+
+    private ConfigChunk searchDependency (String dep_name) {
+        if (!ConfigChunk.hasSeparator(dep_name))
+            return get (dep_name);
+        else {
+            // embedded chunk dependency
+            String first = ConfigChunk.getFirstNameComponent (dep_name);
+            ConfigChunk ch = get (first);
+            if (ch == null)
+                return null;
+            else
+                return ch.getEmbeddedChunk (dep_name);
+        }
     }
 
 
