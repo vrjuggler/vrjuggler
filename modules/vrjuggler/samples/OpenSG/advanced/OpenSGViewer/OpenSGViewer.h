@@ -65,6 +65,7 @@
 // Common viewer helper classes
 #include <Common/User.h>
 #include <Common/ViewPlatform.h>
+#include <Common/SelectionMethod.h>
 
 /*-----------------------------OpenSG includes--------------------------------*/
 #include <OpenSG/OSGNode.h>
@@ -118,7 +119,7 @@ public:
     { return mUser; }
 
     OSG::NodePtr getCurSelectedNode()
-    { return mCurSelectedNode; }
+    { return mSelectionMethod->getCurSelection(); }
     std::vector<OSG::NodePtr> getSelectableNodes()
     { return mSelectableNodes; }
 
