@@ -118,9 +118,14 @@ public:
          }
          else if(cur_value > old_sample)
          {
-            std::cout << "New metric for [" << test_key << "]  new value:" << cur_value << "  old value:" << old_sample
-                      << " --- increase of [" << 100.0f*(cur_value-old_sample)/old_sample << "] percent." << std::endl;
-            setMetric(test_key, cur_value);
+            // Only note new one if we have a "significant" version
+            float percent_diff = (cur_value-old_sample)/old_sample;
+            if(percent_diff > soft_limit)
+            {
+               std::cout << "New metric for [" << test_key << "]  new value:" << cur_value << "  old value:" << old_sample
+                         << " --- increase of [" << 100.0f*percent_diff << "] percent.  (better then soft_limit)" << std::endl;
+               setMetric(test_key, cur_value);
+            }
          }
       }
    }
@@ -163,9 +168,14 @@ public:
          }
          else if(cur_value < old_sample)
          {
-            std::cout << "Changed metric for [" << test_key << "]  new value:" << cur_value
-                      << " --- decrease of [" << 100.0f*(old_sample-cur_value)/old_sample << "] percent." << std::endl;
-            setMetric(test_key, cur_value);
+            // Only note new one if we have a "significant" version
+            float percent_diff = (old_sample-cur_value)/old_sample;
+            if(percent_diff > soft_limit)
+            {
+               std::cout << "Changed metric for [" << test_key << "]  new value:" << cur_value
+                         << " --- decrease of [" << 100.0f*percent_diff << "] percent. (better then soft_limit)" << std::endl;
+               setMetric(test_key, cur_value);
+            }
          }
       }
    }
