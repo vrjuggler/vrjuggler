@@ -31,11 +31,11 @@ public:
       {
          impl->setName( apiName );
          mRegisteredImplementations[apiName] = impl;
-         std::cout<<"NOTIFY: Loading sound API: "<<apiName<<" ["<<(int)impl<<"]\n"<<std::flush;
+         std::cout<<"[aj]SoundFactory| NOTICE: Loading sound API: "<<apiName<<" ["<<(int)impl<<"]\n"<<std::flush;
       }
       else
       {
-         std::cout<<"NOTIFY: Removed sound API: "<<apiName<<" ["<<(int)impl<<"]\n"<<std::flush;
+         std::cout<<"[aj]SoundFactory| NOTICE: Removed sound API: "<<apiName<<" ["<<(int)impl<<"]\n"<<std::flush;
          mRegisteredImplementations.erase( apiName );
       }      
       
