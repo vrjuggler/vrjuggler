@@ -240,6 +240,22 @@ class EnvironmentServiceImpl
 
    /**
     * Returns the value of the named environment variable or null if the
+    * variable is not set in the user's environment.
+    *
+    * @param envVarName The name of the variable to look up in the user's
+    *                   environment.
+    *
+    * @return A String object containing the value of the named environment
+    *         variable if the variable exists in the user's environment.  If
+    *         it does not exist, null is returned.
+    */
+   public String getenv(String envVarName)
+   {
+      return getenv(envVarName, null);
+   }
+
+   /**
+    * Returns the value of the named environment variable or null if the
     * variable is not set in the user's environment.  With versions of the
     * JDK prior to 1.5, this is implemented using a native method call
     * because System.getenv() is not available.  If the native method call is
@@ -256,7 +272,7 @@ class EnvironmentServiceImpl
     *         that is used to implement this method is not available, null is
     *         always returned.
     */
-   public String getenv(String envVarName)
+   public String getenv(String envVarName, String defaultValue)
    {
       String value = null;
 
@@ -270,6 +286,12 @@ class EnvironmentServiceImpl
       else if ( mHaveTweekJni )
       {
          value = tweekJniGetenv(envVarName);
+      }
+
+      // If value is still null, then return defaultValue.
+      if ( null == value )
+      {
+         value = defaultValue;
       }
 
       return value;
