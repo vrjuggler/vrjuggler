@@ -1,18 +1,19 @@
 #ifndef _SIMPLE_APP
 #define _SIMPLE_APP
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
-#include <iostream.h>
-#include <iomanip.h>
+#include <iostream>
+#include <iomanip>
 
-#include <Kernel/GL/vjGlApp.h>
-#include <Kernel/GL/vjGlContextData.h>
-#include <Math/vjMatrix.h>
+#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Draw/OGL/GlContextData.h>
+#include <vrj/Math/Matrix.h>
 
-#include <Input/InputManager/vjPosInterface.h>
-#include <Input/InputManager/vjAnalogInterface.h>
-#include <Input/InputManager/vjDigitalInterface.h>
+#include <vrj/Input/Type/PosInterface.h>
+#include <vrj/Input/Type/DigitalInterface.h>
+
+using namespace vrj;
 
 // Utility function to draw a cube
 void drawbox( GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
@@ -43,7 +44,7 @@ public: // ---- INITIALIZATION FUNCITONS ---- //
    //! NOTE: This is called once before OpenGL is initialized
    virtual void init()
    {
-      cout << "---------- App:init() ---------------" << endl;
+      std::cout << "---------- App:init() ---------------" << std::endl;
       // Initialize devices
       mWand.init("VJWand");
       mHead.init("VJHead");
@@ -80,9 +81,9 @@ public:
    virtual void preFrame()
    {
       if(mButton0->getData())
-         { cout << "Button 0 pressed" << endl; }
+         { std::cout << "Button 0 pressed" << std::endl; }
       if(mButton1->getData())
-         { cout << "Button 1 pressed" << endl; }
+         { std::cout << "Button 1 pressed" << std::endl; }
    }
 
    //: Called during the Frame
