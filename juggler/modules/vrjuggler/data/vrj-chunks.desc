@@ -1,159 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?org-vrjuggler-jccl-settings desc.db.version="2.0" ?>
+<?org-vrjuggler-jccl-settings desc.db.version="2.1"?>
 <ChunkDescDB>
-  <ChunkDesc token="displaySystem" name="Display System">
-    <category>Display</category>
-    <PropertyDesc token="numpipes" name="Number of Pipes" type="int" variable="0">
-      <help>The number of pipes on the system</help>
-      <item label="Number of Pipes" defaultvalue="0" />
-    </PropertyDesc>
-    <PropertyDesc token="xpipes" name="xpipes" type="string" variable="1">
-      <help>The x-display strings for the pipes.  NOTE: This is a zero-based list.</help>
-      <item label="X11 Pipe" defaultvalue="0:0" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="IBox" name="IBox">
-    <category>Devices</category>
-    <help>Configuration for the IBox</help>
-    <PropertyDesc token="port" name="Port" type="string" variable="0">
-      <help>Serial port this device is connected to</help>
-      <item label="Port" defaultvalue="/dev/ttyd1" />
-    </PropertyDesc>
-    <PropertyDesc token="baud" name="Baud Rate" type="int" variable="0">
-      <help>Serial port speed</help>
-      <item label="Baud Rate" defaultvalue="38400" />
-    </PropertyDesc>
-    <PropertyDesc token="min" name="min" type="float" variable="0">
-      <help>the actual analog data values range - lower bound</help>
-      <item label="Analog Minimum" defaultvalue="0.0" />
-    </PropertyDesc>
-    <PropertyDesc token="max" name="max" type="float" variable="0">
-      <help>the actual analog data values range - upper bound</help>
-      <item label="Analog Maximum" defaultvalue="255.0" />
-    </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
-      <help>Points to the machine that the device is physically connected to.</help>
-      <item label="" defaultvalue="" />
-      <enumeration name="cluster_machine" value="cluster_machine" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="PinchGlove" name="PinchGlove">
-    <category>Devices</category>
-    <help>Configuration for the PinchGlove</help>
-    <PropertyDesc token="port" name="Port" type="string" variable="0">
-      <help>Serial port that the PinchGlove is connected to</help>
-      <item label="Port" defaultvalue="/dev/ttyd1" />
-    </PropertyDesc>
-    <PropertyDesc token="baud" name="Baud Rate" type="int" variable="0">
-      <help>Serial port speed</help>
-      <item label="Baud Rate" defaultvalue="9600" />
-    </PropertyDesc>
-    <PropertyDesc token="glovePos" name="Glove Position" type="chunk" variable="0">
-      <help>The position proxy for the glove position. i.e. the tracker on the glove.</help>
-      <item label="Glove Position" defaultvalue="" />
-      <enumeration name="proxyAlias" />
-      <enumeration name="PosProxy" />
-    </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
-      <help>Points to the machine that the device is physically connected to.</help>
-      <enumeration name="cluster_machine" value="cluster_machine" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="DataGlove" name="DataGlove">
-    <category>Devices</category>
-    <help>Configuration for the DataGlove</help>
-    <PropertyDesc token="port" name="Port" type="string" variable="0">
-      <help>Serial port that the DataGlove is connected to</help>
-      <item label="Port" defaultvalue="/dev/ttyd1" />
-    </PropertyDesc>
-    <PropertyDesc token="baud" name="Baud Rate" type="int" variable="0">
-      <help>Serial port speed (9600)</help>
-      <item label="Baud Rate" defaultvalue="38400" />
-    </PropertyDesc>
-    <PropertyDesc token="glovePos" name="Glove Position" type="chunk" variable="0">
-      <help>The position proxy for the glove position. i.e. the tracker on the glove.</help>
-      <item label="Glove Position" defaultvalue="" />
-      <enumeration name="proxyAlias" />
-      <enumeration name="PosProxy" />
-    </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
-      <help />
-      <item label="" defaultvalue="" />
-      <enumeration name="cluster_machine" value="cluster_machine" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="SimDigitalGlove" name="SimDigitalGlove">
-    <category>Devices/Simulator</category>
-    <help>A digital glove simulator</help>
-    <PropertyDesc token="keyboardProxy" name="Keyboard Proxy" type="chunk" variable="0">
-      <help>The Keyboard to use for event input</help>
-      <item label="Keyboard Proxy" defaultvalue="" />
-      <enumeration name="KeyboardProxy" />
-    </PropertyDesc>
-    <PropertyDesc token="keyPairs" name="KeyPresses" type="embeddedchunk" variable="1">
-      <help>Keypresses to trigger multiple digital inputs</help>
-      <item label="Key Presses" />
-      <enumeration name="KeyModPair" />
-    </PropertyDesc>
-    <PropertyDesc token="glovePos" name="Left Glove Position" type="chunk" variable="0">
-      <help>The position proxy for the left hand glove position.</help>
-      <item label="Left Glove Position" defaultvalue="" />
-      <enumeration name="PosProxy" />
-    </PropertyDesc>
-    <PropertyDesc token="rightGlovePos" name="Right Glove Position" type="chunk" variable="0">
-      <help>The position proxy for the right hand glove position.</help>
-      <item label="Right Glove Position" defaultvalue="" />
-      <enumeration name="PosProxy" />
-    </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
-      <help />
-      <item label="" defaultvalue="" />
-      <enumeration name="cluster_machine" value="cluster_machine" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="CyberGlove" name="CyberGlove">
-    <category>Devices</category>
-    <help>Configuration for the CyberGlove</help>
-    <PropertyDesc token="port" name="Port" type="string" variable="0">
-      <help>Serial port that the CyberGlove is connected to</help>
-      <item label="Port" defaultvalue="/dev/ttdy1" />
-    </PropertyDesc>
-    <PropertyDesc token="baud" name="Baud Rate" type="int" variable="0">
-      <help>Serial port speed</help>
-      <item label="Baud Rate" defaultvalue="38400" />
-    </PropertyDesc>
-    <PropertyDesc token="calDir" name="Calibration Dir" type="string" variable="0">
-      <help>Home directory for calibration files</help>
-      <item label="Calibration Directory" defaultvalue="" />
-    </PropertyDesc>
-    <PropertyDesc token="glovePos" name="Glove Position" type="chunk" variable="0">
-      <help>The position proxy for the glove position. i.e. the tracker on the glove.</help>
-      <item label="Glove Position" />
-      <enumeration name="proxyAlias" />
-      <enumeration name="PosProxy" />
-    </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
-      <help />
-      <item label="" defaultvalue="" />
-      <enumeration name="cluster_machine" value="cluster_machine" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="DummyPosition" name="Dummy Position">
-    <category>NoClue</category>
-    <help>A 'dummy' position device</help>
-    <PropertyDesc token="position" name="Position" type="float" variable="0">
-      <help>Initial Dummy Position</help>
-      <item label="x" defaultvalue="0.0" />
-      <item label="y" defaultvalue="0.0" />
-      <item label="z" defaultvalue="0.0" />
-    </PropertyDesc>
-    <PropertyDesc token="ori" name="Orientation" type="float" variable="0">
-      <help>Initial Dummy Orientation XYZ Euler</help>
-      <item label="x" defaultvalue="0.0" />
-      <item label="y" defaultvalue="0.0" />
-      <item label="z" defaultvalue="0.0" />
-    </PropertyDesc>
-  </ChunkDesc>
   <ChunkDesc token="ThreeDMouse" name="3D Mouse">
     <category>Devices</category>
     <help>Configuration for Logitech 3d mouse</help>
@@ -171,24 +18,6 @@
       <enumeration name="cluster_machine" value="cluster_machine" />
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="proxyAlias" name="Proxy Alias">
-    <category>Proxies</category>
-    <help>An additional name for referencing a device proxy</help>
-    <PropertyDesc token="aliasName" name="aliasName" type="string" variable="0">
-      <help>The string alias to use.</help>
-      <item label="Alias Name" defaultvalue="" />
-    </PropertyDesc>
-    <PropertyDesc token="proxyPtr" name="Proxy Pointer" type="chunk" variable="0">
-      <help>The proxy this alias refers to</help>
-      <item label="Proxy Pointer" defaultvalue="" />
-      <enumeration name="PosProxy" />
-      <enumeration name="DigProxy" />
-      <enumeration name="AnaProxy" />
-      <enumeration name="GloveProxy" />
-      <enumeration name="KeyboardProxy" />
-      <enumeration name="GestureProxy" />
-    </PropertyDesc>
-  </ChunkDesc>
   <ChunkDesc token="AnaProxy" name="Analog Proxy">
     <category>Proxies</category>
     <help>Used to access a single analog input source</help>
@@ -202,396 +31,6 @@
     <PropertyDesc token="unit" name="Unit" type="int" variable="0">
       <help>The unit in the device this proxy attaches to</help>
       <item label="Unit" defaultvalue="0" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="DigProxy" name="Digital Proxy">
-    <category>Proxies</category>
-    <help>Used to access a single digital (binary) input source</help>
-    <PropertyDesc token="device" name="Device" type="chunk" variable="0">
-      <help>The device this proxy attaches to</help>
-      <item label="Device" defaultvalue="" />
-      <enumeration name="SimDigital" />
-      <enumeration name="IBox" />
-      <enumeration name="PinchGlove" />
-      <enumeration name="DataGlove" />
-      <enumeration name="ThreeDMouse" />
-      <enumeration name="SimDigitalGlove" />
-      <enumeration name="TrackdController" />
-    </PropertyDesc>
-    <PropertyDesc token="unit" name="Unit" type="int" variable="0">
-      <help>The unit in the device this proxy attaches to</help>
-      <item label="Unit" defaultvalue="0" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="apiPerformer" name="Performer API">
-    <category>Display</category>
-    <help>This is information for configuring the Performer API.  It only pertains to Performer.</help>
-    <PropertyDesc token="simHeadModel" name="SimHeadModel" type="string" variable="0">
-      <help>This is the full path to the model used for the head.</help>
-      <item label="Simulator Head Model" defaultvalue="$VJ_BASE_DIR/share/vrjuggler/data/models/head.flt" />
-    </PropertyDesc>
-    <PropertyDesc token="simWandModel" name="SimWandModel" type="string" variable="0">
-      <help>This is the full path to the model used as a wand.</help>
-      <item label="Simulator Wand Model" defaultvalue="$VJ_BASE_DIR/share/vrjuggler/data/models/wand.flt" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="PosProxy" name="Position Proxy">
-    <category>Proxies</category>
-    <help>Used to access a single positional input source</help>
-    <PropertyDesc token="device" name="device" type="chunk" variable="0">
-      <help>The device the proxy points to</help>
-      <item label="Device" defaultvalue="" />
-      <enumeration name="Flock" />
-      <enumeration name="SimPosition" />
-      <enumeration name="DummyPosition" />
-      <enumeration name="MotionStar" />
-      <enumeration name="TrackdSensor" />
-      <enumeration name="SimRelativePosition" />
-      <enumeration name="SimSetablePosition" />
-    </PropertyDesc>
-    <PropertyDesc token="unit" name="unit" type="int" variable="0">
-      <help>The unit in the device this proxy attaches to</help>
-      <item label="Unit" defaultvalue="0" />
-    </PropertyDesc>
-    <PropertyDesc token="etrans" name="Enable Transformation" type="bool" variable="0">
-      <help>If true, the Proxy Transformation is applied to data</help>
-      <item label="Enable Transformation" defaultvalue="0" />
-    </PropertyDesc>
-    <PropertyDesc token="translate" name="Translation" type="float" variable="0">
-      <help>(recv_T_modRecv) Proxy translation (in the reciever's coord system)</help>
-      <item label="Trans X" defaultvalue="0.0" />
-      <item label="Trans Y" defaultvalue="0.0" />
-      <item label="Trans Z" defaultvalue="0.0" />
-    </PropertyDesc>
-    <PropertyDesc token="rotate" name="Rotation" type="float" variable="0">
-      <help>(recv_T_modRecv) Proxy rotation (Euler angles in the reciever's coord system)</help>
-      <item label="X" defaultvalue="0.0" />
-      <item label="Y" defaultvalue="0.0" />
-      <item label="Z" defaultvalue="0.0" />
-    </PropertyDesc>
-    <PropertyDesc token="useFilter" name="Use Filter" type="bool" variable="0">
-      <help>If true, use the sigmoid filter.</help>
-      <item label="Use Filter" defaultvalue="false" />
-    </PropertyDesc>
-    <PropertyDesc token="sigmoidParams" name="sigmoidParams" type="embeddedchunk" variable="0">
-      <help>TODO: Insert help here!</help>
-      <item label="Sigmoid Parameters" />
-      <enumeration name="sigmoid_linear_pos_filter" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="Flock" name="Flock of Birds">
-    <category>Devices</category>
-    <help>Configuration for Ascension Flock of Birds</help>
-    <PropertyDesc token="port" name="Port" type="string" variable="0">
-      <help>Serial port the Flock is attached to</help>
-      <item label="Port" defaultvalue="/dev/ttyd1" />
-    </PropertyDesc>
-    <PropertyDesc token="baud" name="Baud Rate" type="int" variable="0">
-      <help>Serial port speed</help>
-      <item label="Baud Rate" defaultvalue="38400" />
-    </PropertyDesc>
-    <PropertyDesc token="num" name="Num Birds" type="int" variable="0">
-      <help>Number of birds in the Flock</help>
-      <item label="Number of Birds" defaultvalue="2" />
-    </PropertyDesc>
-    <PropertyDesc token="translate" name="Translation" type="float" variable="0">
-      <help>Translation used to get pt from tracker coordinates to Juggler coordinate system. world_T_transmitter = T*R*pt</help>
-      <item label="X" defaultvalue="0.0" />
-      <item label="Y" defaultvalue="0.0" />
-      <item label="Z" defaultvalue="0.0" />
-    </PropertyDesc>
-    <PropertyDesc token="rotate" name="Rotation" type="float" variable="0">
-      <help>Rotation (in degrees) used to get pt from tracker coordinates to Juggler coordinate system. world_T_tranmitter = T*R*pt</help>
-      <item label="X Axis" defaultvalue="0.0" />
-      <item label="Y Axis" defaultvalue="0.0" />
-      <item label="Z Axis" defaultvalue="0.0" />
-    </PropertyDesc>
-    <PropertyDesc token="calfile" name="Calibration file" type="string" variable="0">
-      <help>Name of a tracker calibration file</help>
-      <item label="Calibration file" defaultvalue="${VJ_BASE_DIR}/share/gadgeteer/data/calibration.table" />
-    </PropertyDesc>
-    <PropertyDesc token="hemi" name="Hemisphere" type="int" variable="0">
-      <help>Flock Hemisphere</help>
-      <item label="Hemisphere" defaultvalue="3" />
-      <enumeration name="FRONT_HEM" value="0" />
-      <enumeration name="AFT_HEM" value="1" />
-      <enumeration name="UPPER_HEM" value="2" />
-      <enumeration name="LOWER_HEM" value="3" />
-      <enumeration name="LEFT_HEM" value="4" />
-      <enumeration name="RIGHT_HEM" value="5" />
-    </PropertyDesc>
-    <PropertyDesc token="filt" name="Filter" type="int" variable="0">
-      <help>Filter</help>
-      <item label="Filter" defaultvalue="0" />
-      <enumeration name="AC_NARROW" value="0" />
-      <enumeration name="AC_WIDE" value="1" />
-      <enumeration name="DC_FILTER" value="2" />
-    </PropertyDesc>
-    <PropertyDesc token="sync" name="Synchronous" type="int" variable="0">
-      <help>sync style. See flock man pg 82</help>
-      <item label="Synchronous" defaultvalue="0" />
-      <enumeration name="NoSync" value="0" />
-      <enumeration name="CRT_Above_72Hz" value="1" />
-      <enumeration name="CRT_Below_72hz" value="2" />
-    </PropertyDesc>
-    <PropertyDesc token="blocking" name="Blocking" type="bool" variable="0">
-      <help>Run in blocking mode or non-blocking mode.</help>
-      <item label="Blocking" defaultvalue="1" />
-    </PropertyDesc>
-    <PropertyDesc token="report" name="Report Frequency" type="string" variable="0">
-      <help>Q-(every cycle) R-(every other cycle) S-(every 8 cycles) T-(every 32 cycles)</help>
-      <item label="Report Frequency" defaultvalue="R" />
-      <enumeration name="Every Cycle" value="Q" />
-      <enumeration name="Every Other Cycle" value="R" />
-      <enumeration name="Every 8 Cycles" value="S" />
-      <enumeration name="Every 32 Cycles" value="T" />
-    </PropertyDesc>
-    <PropertyDesc token="transmitter" name="Transmitter" type="int" variable="0">
-      <help>Id of the transmitter</help>
-      <item label="Transmitter ID" defaultvalue="3" />
-    </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
-      <help />
-      <item label="" defaultvalue="" />
-      <enumeration name="cluster_machine" value="cluster_machine" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="Keyboard" name="Keyboard">
-    <category>Devices</category>
-    <help>Configures a window that accepts keyboard and mouse input</help>
-    <PropertyDesc token="width" name="width" type="int" variable="0">
-      <help>window width</help>
-      <item label="Window Width" defaultvalue="300" />
-    </PropertyDesc>
-    <PropertyDesc token="height" name="height" type="int" variable="0">
-      <help>window height</help>
-      <item label="Window Height" defaultvalue="100" />
-    </PropertyDesc>
-    <PropertyDesc token="origin" name="origin" type="int" variable="0">
-      <help>Window origin (lower left is 0,0)</help>
-      <item label="X" defaultvalue="0" />
-      <item label="Y" defaultvalue="0" />
-    </PropertyDesc>
-    <PropertyDesc token="msens" name="msens" type="float" variable="0">
-      <help>Mouse sensitivity, 1 is 1 keypress per pixel moved, 0.1 is 1 key for 10 pixels</help>
-      <item label="Mouse Sensitivity" defaultvalue="1.0" />
-    </PropertyDesc>
-    <PropertyDesc token="display_number" name="DisplayNumber" type="int" variable="0">
-      <help>The number of the display to put the keyboard on. (-1 for local)</help>
-      <item label="Display Number" defaultvalue="0" />
-    </PropertyDesc>
-    <PropertyDesc token="lock_key" name="Lock Key" type="int" variable="0">
-      <help>The key that will lock the mouse to the window</help>
-      <item label="Lock Key" defaultvalue="0" />
-      <enumeration name="KEY_NONE" value="0" />
-      <enumeration name="KEY_UP" value="1" />
-      <enumeration name="KEY_DOWN" value="2" />
-      <enumeration name="KEY_LEFT" value="3" />
-      <enumeration name="KEY_RIGHT" value="4" />
-      <enumeration name="KEY_CTRL" value="5" />
-      <enumeration name="KEY_SHIFT" value="6" />
-      <enumeration name="KEY_ALT" value="7" />
-      <enumeration name="KEY_1" value="8" />
-      <enumeration name="KEY_2" value="9" />
-      <enumeration name="KEY_3" value="10" />
-      <enumeration name="KEY_4" value="11" />
-      <enumeration name="KEY_5" value="12" />
-      <enumeration name="KEY_6" value="13" />
-      <enumeration name="KEY_7" value="14" />
-      <enumeration name="KEY_8" value="15" />
-      <enumeration name="KEY_9" value="16" />
-      <enumeration name="KEY_0" value="17" />
-      <enumeration name="KEY_A" value="18" />
-      <enumeration name="KEY_B" value="19" />
-      <enumeration name="KEY_C" value="20" />
-      <enumeration name="KEY_D" value="21" />
-      <enumeration name="KEY_E" value="22" />
-      <enumeration name="KEY_F" value="23" />
-      <enumeration name="KEY_G" value="24" />
-      <enumeration name="KEY_H" value="25" />
-      <enumeration name="KEY_I" value="26" />
-      <enumeration name="KEY_J" value="27" />
-      <enumeration name="KEY_K" value="28" />
-      <enumeration name="KEY_L" value="29" />
-      <enumeration name="KEY_M" value="30" />
-      <enumeration name="KEY_N" value="31" />
-      <enumeration name="KEY_O" value="32" />
-      <enumeration name="KEY_P" value="33" />
-      <enumeration name="KEY_Q" value="34" />
-      <enumeration name="KEY_R" value="35" />
-      <enumeration name="KEY_S" value="36" />
-      <enumeration name="KEY_T" value="37" />
-      <enumeration name="KEY_U" value="38" />
-      <enumeration name="KEY_V" value="39" />
-      <enumeration name="KEY_W" value="40" />
-      <enumeration name="KEY_X" value="41" />
-      <enumeration name="KEY_Y" value="42" />
-      <enumeration name="KEY_Z" value="43" />
-      <enumeration name="KEY_ESC" value="44" />
-      <enumeration name="MOUSE_POSX" value="45" />
-      <enumeration name="MOUSE_NEGX" value="46" />
-      <enumeration name="MOUSE_POSY" value="47" />
-      <enumeration name="MOUSE_NEGY" value="48" />
-      <enumeration name="MOUSE_BUT1" value="49" />
-      <enumeration name="MOUSE_BUT2" value="50" />
-      <enumeration name="MOUSE_BUT3" value="51" />
-    </PropertyDesc>
-    <PropertyDesc token="start_locked" name="Start Locked" type="bool" variable="0">
-      <help>Do we start with the window locked??</help>
-      <item label="Start Locked" defaultvalue="0" />
-    </PropertyDesc>
-    <PropertyDesc token="sleep_time" name="Sleep time" type="int" variable="0">
-      <help>This is the number of milliseconds that the keyboard update loop should sleep between updates.</help>
-      <item label="Sleep Time" defaultvalue="75" />
-    </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
-      <help />
-      <item label="" defaultvalue="" />
-      <enumeration name="cluster_machine" value="cluster_machine" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="GloveProxy" name="Glove Proxy">
-    <category>Proxies</category>
-    <help>A Glove Proxy points to a glove device and unit</help>
-    <PropertyDesc token="device" name="Device" type="chunk" variable="0">
-      <help>The glove device the proxy connects to.</help>
-      <item label="Device" defaultvalue="" />
-      <enumeration name="CyberGlove" />
-      <enumeration name="SimGloveGesture" />
-      <enumeration name="DataGlove" />
-      <enumeration name="PinchGlove" />
-      <enumeration name="SimDigitalGlove" />
-    </PropertyDesc>
-    <PropertyDesc token="unit" name="Unit" type="int" variable="0">
-      <help>The unit number in the device to hook to.</help>
-      <item label="Unit" defaultvalue="0" />
-    </PropertyDesc>
-    <PropertyDesc token="visible" name="Visible" type="bool" variable="0">
-      <help>If true, the glove will be rendered in display windows.</help>
-      <item label="Visible" defaultvalue="1" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="KeyboardProxy" name="Keyboard Proxy">
-    <category>Proxies</category>
-    <help>This proxy points to a keyboard device.</help>
-    <PropertyDesc token="device" name="Device" type="chunk" variable="0">
-      <help>The keyboard device to hook the proxy to.</help>
-      <item label="Device" defaultvalue="" />
-      <enumeration name="Keyboard" />
-      <enumeration name="simKeyboardDigital" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="MotionStar" name="MotionStar">
-    <category>Devices</category>
-    <help>Ascension MotionStar server chassis configuration</help>
-    <PropertyDesc token="address" name="Server Address" type="string" variable="0">
-      <help>Hostname or IP address of the server.</help>
-      <item label="Server Address" defaultvalue="" />
-    </PropertyDesc>
-    <PropertyDesc token="serverPort" name="Server Port" type="int" variable="0">
-      <help>The port on the server to which the client connects.  (UDP -&gt; 5000, TCP -&gt; 6000)</help>
-      <item label="Server Port" defaultvalue="6000" />
-      <enumeration name="UDP Port" value="5000" />
-      <enumeration name="TCP Port" value="6000" />
-    </PropertyDesc>
-    <PropertyDesc token="serverType" name="Server Type" type="bool" variable="0">
-      <help>The type of this server chassis.</help>
-      <item label="Server Type" defaultvalue="1" />
-      <enumeration name="Master" value="1" />
-      <enumeration name="Slave" value="0" />
-    </PropertyDesc>
-    <PropertyDesc token="hemisphere" name="Hemisphere" type="int" variable="0">
-      <help>Transmitter hemisphere to use.</help>
-      <item label="Hemisphere" defaultvalue="0" />
-      <enumeration name="Front" value="0" />
-      <enumeration name="Aft" value="1" />
-      <enumeration name="Upper" value="2" />
-      <enumeration name="Lower" value="3" />
-      <enumeration name="Left" value="4" />
-      <enumeration name="Right" value="5" />
-    </PropertyDesc>
-    <PropertyDesc token="translate" name="Translation" type="float" variable="0">
-      <help>(world_T_transmitter) Translation of the transmitter from Juggler coord system.</help>
-      <item label="X" defaultvalue="0.0" />
-      <item label="Y" defaultvalue="0.0" />
-      <item label="Z" defaultavlue="0.0" />
-    </PropertyDesc>
-    <PropertyDesc token="rotate" name="Rotation" type="float" variable="0">
-      <help>(world_T_transmitter) Rotation of the tranmitter from the Juggler coord system.</help>
-      <item label="X Axis" defaultvalue="0.0" />
-      <item label="Y Axis" defaultvalue="0.0" />
-      <item label="Z Axis" defaultavlue="0.0" />
-    </PropertyDesc>
-    <PropertyDesc token="num" name="Number of Birds" type="int" variable="0">
-      <help>Number of birds connected to this chassis.</help>
-      <item label="Number of Birds" defaultvalue="2" />
-    </PropertyDesc>
-    <PropertyDesc token="bformat" name="Data Format" type="int" variable="0">
-      <help>Data format for the birds.</help>
-      <item label="Data Format" defaultvalue="4" />
-      <enumeration name="No Data" value="0" />
-      <enumeration name="Position" value="1" />
-      <enumeration name="Angles" value="2" />
-      <enumeration name="Matrix" value="3" />
-      <enumeration name="Position and Angles" value="4" />
-      <enumeration name="Position and Matrix" value="5" />
-      <enumeration name="Quaternion" value="7" />
-      <enumeration name="Position and Quaternion" value="8" />
-    </PropertyDesc>
-    <PropertyDesc token="mode" name="Sample Mode" type="int" variable="0">
-      <help>The sample mode for the running driver.</help>
-      <item label="Sample Mode" defaultvalue="0" />
-      <enumeration name="Run Continuous" value="0" />
-      <enumeration name="Sample Individually" value="1" />
-    </PropertyDesc>
-    <PropertyDesc token="reportRate" name="Bird Report Rate" type="int" variable="0">
-      <help>Report rate for the birds (0-255).  This should usually be 1.</help>
-      <item label="Bird Report Rate" defaultvalue="1" />
-    </PropertyDesc>
-    <PropertyDesc token="measurementRate" name="Chassis Measurement Rate" type="float" variable="0">
-      <help>Measurement rate for the chassis.</help>
-      <item label="Chassis Measurement Rate" defaultavlue="0.0" />
-    </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
-      <help />
-      <item label="" defaultvalue="" />
-      <enumeration name="cluster_machine" value="cluster_machine" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="SimGloveGesture" name="Glove Gesture Simulator">
-    <category>Devices/Simulator</category>
-    <help>Simulate glove gesture device</help>
-    <PropertyDesc token="keyboardProxy" name="Keyboard Proxy" type="chunk" variable="0">
-      <help>The keyboard to use.</help>
-      <item label="Keyboard Proxy" defaultvalue="" />
-      <enumeration name="KeyboardProxy" />
-    </PropertyDesc>
-    <PropertyDesc token="keyPairs" name="Key Presses" type="embeddedchunk" variable="1">
-      <item label="Key Presses" />
-      <enumeration name="KeyModPair" />
-    </PropertyDesc>
-    <PropertyDesc token="trainedFilename" name="Trained File Name" type="string" variable="0">
-      <help>The name of the trained gesture file.  Used to get simulated values.</help>
-      <item label="Trained File Name" defaultvalue="${VJ_BASE_DIR}/share/gadgeteer/data/gesture/simpleSimGestures.dat" />
-    </PropertyDesc>
-    <PropertyDesc token="glovePos" name="Glove Position" type="chunk" variable="0">
-      <help>The position proxy for the glove position.</help>
-      <item label="Glove Position" defaultvalue="" />
-      <enumeration name="PosProxy" />
-    </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
-      <help />
-      <item label="" defaultvalue="" />
-      <enumeration name="cluster_machine" value="cluster_machine" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="GestureProxy" name="Gesture Proxy">
-    <category>Proxies</category>
-    <help>A Gesture Proxy points to a gesture device.</help>
-    <PropertyDesc token="device" name="Device" type="chunk" variable="0">
-      <help>The gesture device to hook the proxy to.</help>
-      <item label="Device" defaultvalue="" />
-      <enumeration name="SimGloveGesture" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="SimAnalog" name="Analog Simulator">
@@ -630,434 +69,6 @@
       <enumeration name="cluster_machine" value="cluster_machine" />
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="SimDigital" name="Digital Simulator">
-    <category>Devices/Simulator</category>
-    <help>Simulated digital device.  Gets input from keyboard proxy.</help>
-    <PropertyDesc token="keyboardProxy" name="Keyboard Proxy" type="chunk" variable="0">
-      <help>The keyboard to use for event input.</help>
-      <item label="Keyboard Proxy" defaultvalue="" />
-      <enumeration name="KeyboardProxy" />
-    </PropertyDesc>
-    <PropertyDesc token="keyPairs" name="KeyPresses" type="embeddedchunk" variable="1">
-      <help>Keypresses to trigger multiple digital inputs</help>
-      <item label="Key Presses" />
-      <enumeration name="KeyModPair" />
-    </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
-      <help />
-      <item label="" defaultvalue="" />
-      <enumeration name="cluster_machine" value="cluster_machine" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="SimPosition" name="Position Simulator">
-    <category>Devices/Simulator</category>
-    <help>A simulated position device. Gets input from a keyboard proxy</help>
-    <PropertyDesc token="keyboardProxy" name="Keyboard Proxy" type="chunk" variable="0">
-      <help>The keyboard to use for event input.</help>
-      <item label="Keyboard Proxy" defaultvalue="" />
-      <enumeration name="KeyboardProxy" />
-    </PropertyDesc>
-    <PropertyDesc token="keyPairs" name="keyPairs" type="embeddedchunk" variable="0">
-      <help>Keys for moving and rotating the simulated device.</help>
-      <item label="Forward" />
-      <item label="Back" />
-      <item label="Left" />
-      <item label="Right" />
-      <item label="Up" />
-      <item label="Down" />
-      <item label="Rot Right" />
-      <item label="Rot Left" />
-      <item label="Rot Up" />
-      <item label="Rot Down" />
-      <item label="Rot CCW" />
-      <item label="Rot CW" />
-      <enumeration name="KeyModPair" />
-    </PropertyDesc>
-    <PropertyDesc token="initialPos" name="Initial Position" type="float" variable="0">
-      <help>Initial position</help>
-      <item label="X" defaultvalue="0.0" />
-      <item label="Y" defaultvalue="0.0" />
-      <item label="Z" defaultvalue="0.0" />
-    </PropertyDesc>
-    <PropertyDesc token="initialRot" name="Initial Rotation" type="float" variable="0">
-      <help>Initial Euler rotation</help>
-      <item label="X Axis" defaultvalue="0.0" />
-      <item label="Y Axis" defaultvalue="0.0" />
-      <item label="Z Axis" defaultvalue="0.0" />
-    </PropertyDesc>
-    <PropertyDesc token="dtrans" name="Translation Delta" type="float" variable="0">
-      <help>How much to translate for a single keypress.</help>
-      <item label="Translation Delta" defaultvalue="0.1" />
-    </PropertyDesc>
-    <PropertyDesc token="drot" name="Rotation Delta" type="float" variable="0">
-      <help>How many degrees to rotate for a single keypress.</help>
-      <item label="Rotation Delta" defaultvalue="1.0" />
-    </PropertyDesc>
-    <PropertyDesc token="transCoordSystem" name="Translation Coordinate System" type="int" variable="0">
-      <help>Do the translations apply to the tracker's local coordinate system?  Ex. Wand - global, Camera - Local</help>
-      <item label="Translation Coordinate System" defaultvalue="0" />
-      <enumeration name="Local" value="0" />
-      <enumeration name="Global" value="1" />
-    </PropertyDesc>
-    <PropertyDesc token="rotCoordSystem" name="Rotation Coordinate System" type="int" variable="0">
-      <help>Do the rotations apply to the tracker's local coordinate system?</help>
-      <item label="Rotation Coordinate System" defaultvalue="0" />
-      <enumeration name="Local" value="0" />
-      <enumeration name="Global" value="1" />
-    </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
-      <help>Points to the machine that the device is physically connected to.</help>
-      <item label="Host Chunk" defaultvalue="" />
-      <enumeration name="cluster_machine" value="cluster_machine" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="EnvironmentManager" name="Environment Manager">
-    <category>NoClue</category>
-    <help>Application-side of connection to vjcontrol GUI</help>
-    <PropertyDesc token="Port" name="Port" type="int" variable="0">
-      <help>Networking port to listen on</help>
-      <item label="Port" defaultvalue="4450" />
-    </PropertyDesc>
-    <PropertyDesc token="AcceptConnections" name="Accept Connections" type="bool" variable="0">
-      <help>Whether or not we should accept connections from vjcontrol clients</help>
-      <item label="Accept Connections" defaultvalue="1" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="FileConnect" name="EM Connection">
-    <category>NoClue</category>
-    <help>A file for outputing Environment Manager data</help>
-    <PropertyDesc token="FileName" name="Filename" type="string" variable="0">
-      <help>The name of the file to dump output to.</help>
-      <item label="Filename" defaultvalue="/var/tmp/out.perf" />
-    </PropertyDesc>
-    <PropertyDesc token="Enabled" name="Enabled" type="bool" variable="0">
-      <help>Should file be opened &amp; used?</help>
-      <item label="Enabled" defaultvalue="0" />
-    </PropertyDesc>
-    <PropertyDesc token="Mode" name="File Mode" type="int" variable="0">
-      <help>Is the file readable, writeable, or interactive (e.g. socket or pipe)</help>
-      <item label="File Mode" defaultvalue="2" />
-      <enumeration name="Interactive" value="0" />
-      <enumeration name="Input" value="1" />
-      <enumeration name="Output" value="2" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="JugglerUser" name="VR Juggler User">
-    <category>NoClue</category>
-    <help>This is a user in VR Juggler.  This is used for multi-user applications</help>
-    <PropertyDesc token="headPos" name="Head Position" type="chunk" variable="0">
-      <help>This is the source of head position information.</help>
-      <item label="Head Position" defaultvalue="" />
-      <enumeration name="proxyAlias" />
-      <enumeration name="PosProxy" />
-    </PropertyDesc>
-    <PropertyDesc token="interocular_distance" name="Eye Separation" type="float" variable="0">
-      <help>Interocular distance.  NOTE: In same units as displays settings.</help>
-      <item label="User's eye separation" defaultvalue="0.229" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="KeyModPair" name="Key and Modifier Pair">
-    <category>Devices</category>
-    <help>This chunk holds a key and a modifier key.  It is for key events inside other chunks.</help>
-    <PropertyDesc token="modKey" name="modKey" type="int" variable="0">
-      <help>Modifier key</help>
-      <item label="Modifier Key" defaultvalue="-1" />
-      <enumeration name="NONE" value="0" />
-      <enumeration name="SHIFT" value="5" />
-      <enumeration name="CTRL" value="6" />
-      <enumeration name="ALT" value="7" />
-      <enumeration name="ANY" value="-1" />
-    </PropertyDesc>
-    <PropertyDesc token="key" name="key" type="int" variable="0">
-      <help>Main key</help>
-      <item label="Key" defaultvalue="0" />
-      <enumeration name="KEY_NONE" value="0" />
-      <enumeration name="KEY_UP" value="1" />
-      <enumeration name="KEY_DOWN" value="2" />
-      <enumeration name="KEY_LEFT" value="3" />
-      <enumeration name="KEY_RIGHT" value="4" />
-      <enumeration name="KEY_CTRL" value="5" />
-      <enumeration name="KEY_SHIFT" value="6" />
-      <enumeration name="KEY_ALT" value="7" />
-      <enumeration name="KEY_1" value="8" />
-      <enumeration name="KEY_2" value="9" />
-      <enumeration name="KEY_3" value="10" />
-      <enumeration name="KEY_4" value="11" />
-      <enumeration name="KEY_5" value="12" />
-      <enumeration name="KEY_6" value="13" />
-      <enumeration name="KEY_7" value="14" />
-      <enumeration name="KEY_8" value="15" />
-      <enumeration name="KEY_9" value="16" />
-      <enumeration name="KEY_0" value="17" />
-      <enumeration name="KEY_A" value="18" />
-      <enumeration name="KEY_B" value="19" />
-      <enumeration name="KEY_C" value="20" />
-      <enumeration name="KEY_D" value="21" />
-      <enumeration name="KEY_E" value="22" />
-      <enumeration name="KEY_F" value="23" />
-      <enumeration name="KEY_G" value="24" />
-      <enumeration name="KEY_H" value="25" />
-      <enumeration name="KEY_I" value="26" />
-      <enumeration name="KEY_J" value="27" />
-      <enumeration name="KEY_K" value="28" />
-      <enumeration name="KEY_L" value="29" />
-      <enumeration name="KEY_M" value="30" />
-      <enumeration name="KEY_N" value="31" />
-      <enumeration name="KEY_O" value="32" />
-      <enumeration name="KEY_P" value="33" />
-      <enumeration name="KEY_Q" value="34" />
-      <enumeration name="KEY_R" value="35" />
-      <enumeration name="KEY_S" value="36" />
-      <enumeration name="KEY_T" value="37" />
-      <enumeration name="KEY_U" value="38" />
-      <enumeration name="KEY_V" value="39" />
-      <enumeration name="KEY_W" value="40" />
-      <enumeration name="KEY_X" value="41" />
-      <enumeration name="KEY_Y" value="42" />
-      <enumeration name="KEY_Z" value="43" />
-      <enumeration name="KEY_ESC" value="44" />
-      <enumeration name="MOUSE_POSX" value="45" />
-      <enumeration name="MOUSE_NEGX" value="46" />
-      <enumeration name="MOUSE_POSY" value="47" />
-      <enumeration name="MOUSE_NEGY" value="48" />
-      <enumeration name="MOUSE_BUT1" value="49" />
-      <enumeration name="MOUSE_BUT2" value="50" />
-      <enumeration name="MOUSE_BUT3" value="51" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="simKeyDigital" name="simKeyDigital">
-    <category>Devices/Simulator</category>
-    <help>This chunk holds a key and a modifier key.  It is for key events.</help>
-    <PropertyDesc token="key" name="key" type="int" variable="0">
-      <help>The key we are simulating</help>
-      <item label="Key" defaultvalue="0" />
-      <enumeration name="KEY_NONE" value="0" />
-      <enumeration name="SHIFT" value="5" />
-      <enumeration name="CTRL" value="6" />
-      <enumeration name="ALT" value="7" />
-      <enumeration name="KEY_UP" value="1" />
-      <enumeration name="KEY_DOWN" value="2" />
-      <enumeration name="KEY_LEFT" value="3" />
-      <enumeration name="KEY_RIGHT" value="4" />
-      <enumeration name="KEY_CTRL" value="5" />
-      <enumeration name="KEY_SHIFT" value="6" />
-      <enumeration name="KEY_ALT" value="7" />
-      <enumeration name="KEY_1" value="8" />
-      <enumeration name="KEY_2" value="9" />
-      <enumeration name="KEY_3" value="10" />
-      <enumeration name="KEY_4" value="11" />
-      <enumeration name="KEY_5" value="12" />
-      <enumeration name="KEY_6" value="13" />
-      <enumeration name="KEY_7" value="14" />
-      <enumeration name="KEY_8" value="15" />
-      <enumeration name="KEY_9" value="16" />
-      <enumeration name="KEY_0" value="17" />
-      <enumeration name="KEY_A" value="18" />
-      <enumeration name="KEY_B" value="19" />
-      <enumeration name="KEY_C" value="20" />
-      <enumeration name="KEY_D" value="21" />
-      <enumeration name="KEY_E" value="22" />
-      <enumeration name="KEY_F" value="23" />
-      <enumeration name="KEY_G" value="24" />
-      <enumeration name="KEY_H" value="25" />
-      <enumeration name="KEY_I" value="26" />
-      <enumeration name="KEY_J" value="27" />
-      <enumeration name="KEY_K" value="28" />
-      <enumeration name="KEY_L" value="29" />
-      <enumeration name="KEY_M" value="30" />
-      <enumeration name="KEY_N" value="31" />
-      <enumeration name="KEY_O" value="32" />
-      <enumeration name="KEY_P" value="33" />
-      <enumeration name="KEY_Q" value="34" />
-      <enumeration name="KEY_R" value="35" />
-      <enumeration name="KEY_S" value="36" />
-      <enumeration name="KEY_T" value="37" />
-      <enumeration name="KEY_U" value="38" />
-      <enumeration name="KEY_V" value="39" />
-      <enumeration name="KEY_W" value="40" />
-      <enumeration name="KEY_X" value="41" />
-      <enumeration name="KEY_Y" value="42" />
-      <enumeration name="KEY_Z" value="43" />
-      <enumeration name="KEY_ESC" value="44" />
-      <enumeration name="MOUSE_POSX" value="45" />
-      <enumeration name="MOUSE_NEGX" value="46" />
-      <enumeration name="MOUSE_POSY" value="47" />
-      <enumeration name="MOUSE_NEGY" value="48" />
-      <enumeration name="MOUSE_BUT1" value="49" />
-      <enumeration name="MOUSE_BUT2" value="50" />
-      <enumeration name="MOUSE_BUT3" value="51" />
-    </PropertyDesc>
-    <PropertyDesc token="pressed" name="pressed" type="chunk" variable="1">
-      <help>Digitals that must be pressed</help>
-      <item label="Pressed" defaultvalue="" />
-      <enumeration name="proxyAlias" />
-      <enumeration name="DigProxy" />
-    </PropertyDesc>
-    <PropertyDesc token="notPressed" name="notPressed" type="chunk" variable="1">
-      <help>Digitals that should not be pressed</help>
-      <item label="Not Pressed" defaultvalue="" />
-      <enumeration name="proxyAlias" />
-      <enumeration name="DigProxy" />
-    </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
-      <help />
-      <item label="" defaultvalue="" />
-      <enumeration name="cluster_machine" value="cluster_machine" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="simKeyboardDigital" name="simKeyboardDigital">
-    <category>Devices/Simulator</category>
-    <PropertyDesc token="simKeys" name="simKeys" type="embeddedchunk" variable="1">
-      <help>The keys we are simulating</help>
-      <item label="Sim Keys" />
-      <enumeration name="simKeyDigital" />
-    </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
-      <help />
-      <item label="" defaultvalue="" />
-      <enumeration name="cluster_machine" value="cluster_machine" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="PerfMeasure" name="Performance Measurements">
-    <category>Performance</category>
-    <help>Controls performance monitoring of Juggler library</help>
-    <PropertyDesc token="PerformanceTarget" name="Performance Target" type="chunk" variable="0">
-      <help>File or network connection that performance data should be sent to.</help>
-      <item label="Performance Target" defaultvalue="" />
-      <enumeration name="FileConnect" />
-      <enumeration name="NetworkConnect" />
-    </PropertyDesc>
-    <PropertyDesc token="TimingTests" name="Timing Tests" type="embeddedchunk" variable="1">
-      <help>Turn on/off Juggler internal timing tests</help>
-      <item label="Timing Tests" />
-      <enumeration name="PerfTestActive" />
-    </PropertyDesc>
-    <PropertyDesc token="PerfCategories" name="Performance Measurement Categories" type="embeddedchunk" variable="1">
-      <help>Turn on/off Juggler timing measurements by category name</help>
-      <item label="Performance Measurement Categories" />
-      <enumeration name="PerfTestActive" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="PerfTestActive" name="PerfTestActive">
-    <category>Performance</category>
-    <help>inner chunk for Performance Testing</help>
-    <PropertyDesc token="Prefix" name="Prefix" type="string" variable="0">
-      <item label="Prefix" defaultvalue="" />
-    </PropertyDesc>
-    <PropertyDesc token="Enabled" name="Enabled" type="bool" variable="0">
-      <item label="Enabled" defaultvalue="0" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="Vec3" name="Vec3">
-    <category>NoClue</category>
-    <PropertyDesc token="x" name="x" type="float" variable="0">
-      <item label="X" defaultvalue="0.0" />
-    </PropertyDesc>
-    <PropertyDesc token="y" name="y" type="float" variable="0">
-      <item label="Y" defaultvalue="0.0" />
-    </PropertyDesc>
-    <PropertyDesc token="z" name="z" type="float" variable="0">
-      <item label="Z" defaultvalue="0.0" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="vjIncludeFile" name="Include File">
-    <category>NoClue</category>
-    <help>File that should be loaded along with this one</help>
-  </ChunkDesc>
-  <ChunkDesc token="vjIncludeDescFile" name="Include Descriptions File">
-    <category>NoClue</category>
-    <help>Chunk Descriptions File that should be loaded before processing the rest of this file</help>
-  </ChunkDesc>
-  <ChunkDesc token="vjcontrol" name="VjControl Configuration">
-    <category>VjControl</category>
-    <help>Configuration information for the VjControl GUI itself</help>
-    <PropertyDesc token="looknfeel" name="Look and Feel" type="string" variable="0">
-      <help>The visual 'Look and Feel' to use for the GUI</help>
-      <item label="Look and Feel" defaultvalue="Java" />
-      <enumeration name="Java" />
-      <enumeration name="Motif" />
-      <enumeration name="Windows" />
-    </PropertyDesc>
-    <PropertyDesc token="host" name="Default Host" type="string" variable="0">
-      <help>A remote host that VjControl should try to connect to</help>
-      <item label="Application location" defaultvalue="localhost" />
-    </PropertyDesc>
-    <PropertyDesc token="port" name="Default Port" type="int" variable="0">
-      <help>Network Port that VjControl should try to connect to</help>
-      <item label="Application port number" defaultvalue="4450" />
-    </PropertyDesc>
-    <PropertyDesc token="descfiles" name="Preload ChunkDesc Files" type="string" variable="1">
-      <help>The names of Chunk Description files that VjControl should load at startup</help>
-      <item label="Preload ChunkDesc Files" defaultvalue="" />
-    </PropertyDesc>
-    <PropertyDesc token="chunkfiles" name="Preload ConfigChunk Files" type="string" variable="1">
-      <help>The names of ConfigChunk files that VjControl should load at startup</help>
-      <item label="Preload ConfigChunk Files" defaultvalue="" />
-    </PropertyDesc>
-    <PropertyDesc token="defaultchunkfiles" name="Default ConfigChunk Files" type="string" variable="1">
-      <help>Files that contain default values for new ConfigChunks</help>
-      <item label="Default ConfigChunk Files" defaultvalue="" />
-    </PropertyDesc>
-    <PropertyDesc token="fontname" name="Font Name" type="string" variable="0">
-      <help>Name of the font to use for the GUI</help>
-      <item label="Font Name" defaultvalue="Helvetica" />
-      <enumeration name="Courier" />
-      <enumeration name="Dialog" />
-      <enumeration name="DialogInput" />
-      <enumeration name="Helvetica" />
-      <enumeration name="TimesRoman" />
-    </PropertyDesc>
-    <PropertyDesc token="fontsize" name="Font Size" type="int" variable="0">
-      <help>Font size to use for GUI</help>
-      <item label="Font Size" defaultvalue="12" />
-    </PropertyDesc>
-    <PropertyDesc token="windowsize" name="Max Window Size" type="int" variable="0">
-      <help>Maximum size to open vjcontrol windows</help>
-      <item label="Width" defaultvalue="0" />
-      <item label="Height" defaultvalue="0" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="PerfData" name="Performance Data Display">
-    <category>Performance</category>
-    <help>Information for displaying data from perfbuffers with a matching name</help>
-    <PropertyDesc token="labels" name="Labels" type="string" variable="1">
-      <help>Labels for Perf Buffer phases</help>
-      <item label="Labels" defaultvalue="" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="SimRelativePosition" name="SimRelativePosition">
-    <category>Devices/Simulator</category>
-    <help>A positional device simulator for one device relative to another.</help>
-    <PropertyDesc token="base_frame_proxy" name="base_frame_proxy" type="chunk" variable="0">
-      <help>Pos proxy that devices the base frame of reference</help>
-      <item label="Base Frame Proxy" defaultvalue="" />
-      <enumeration name="PosProxy" />
-    </PropertyDesc>
-    <PropertyDesc token="relative_proxy" name="relative_proxy" type="chunk" variable="0">
-      <help>device that is relative to the base frame</help>
-      <item label="Relative Proxy" defaultvalue="" />
-      <enumeration name="PosProxy" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="SimSetablePosition" name="SimSetablePosition">
-    <category>Devices/Simulator</category>
-    <help>A positional device simulator for one device relative to another.</help>
-  </ChunkDesc>
-  <ChunkDesc token="sigmoid_linear_pos_filter" name="SigmoidLinearPosFilter">
-    <category>NoClue</category>
-    <PropertyDesc token="minDist" name="minDist" type="float" variable="0">
-      <help>Low point of the sigmoid.  Anything below this is ignored.  Anything larger is interpolated.</help>
-      <item label="Minimum Distance" defaultvalue="0.0" />
-    </PropertyDesc>
-    <PropertyDesc token="maxDist" name="maxDist" type="float" variable="0">
-      <help>high point of the sigmoid.  Anything beyond this is just treated as normal</help>
-      <item label="Maximum Distance" defaultvalue="0.0" />
-    </PropertyDesc>
-    <PropertyDesc token="maxThreshold" name="maxThreshold" type="float" variable="0">
-      <help>Maximum distance value allowed.  Anything larger than this is just ignored.</help>
-      <item albel="Maximum Threshold" defaultvalue="0.0" />
-    </PropertyDesc>
-  </ChunkDesc>
   <ChunkDesc token="AwSoundEngine" name="Audioworks Sound Engine">
     <category>Audio</category>
     <help>Use an audioworks sound engine.</help>
@@ -1065,83 +76,62 @@
       <item label="adf Config File" defaultvalue="" />
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="TrackdSensor" name="TrackdSensor">
-    <category>Devices</category>
-    <help>Configure the interface to a trackd sensor memory area</help>
-    <PropertyDesc token="shm_key" name="SharedMemoryKey" type="int" variable="0">
-      <help>This is the shared memory key for the trackd information.</help>
-      <item label="Shared Memory Key" defaultvalue="4126" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="TrackdController" name="TrackdController">
-    <category>Devices</category>
-    <help>Configure the interface to a trackd controller memory area.</help>
-    <PropertyDesc token="shm_key" name="SharedMemoryKey" type="int" variable="0">
-      <help>This is the shared memory key for the trackd information.</help>
-      <item label="Shared Memory Key" defaultvalue="4127" />
-    </PropertyDesc>
-    <PropertyDesc token="min" name="min" type="float" variable="0">
-      <help>the actual analog data values range - lower bound</help>
-      <item label="Range Minimum" defaultvalue="0.0" />
-    </PropertyDesc>
-    <PropertyDesc token="max" name="max" type="float" variable="0">
-      <help>the actual analog data values range - upper bound</help>
-      <item label="Range Maximum" defaultvalue="255.0" />
-    </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+  <ChunkDesc token="cluster_machine" name="Cluster Machine">
+    <help />
+    <category>RIM</category>
+    <PropertyDesc name="Display System" token="display_system" type="embeddedchunk" variable="0">
       <help />
-      <item label="" defaultvalue="" />
-      <enumeration name="cluster_machine" value="cluster_machine" />
+      <item label="Display System" />
+      <enumeration name="displaySystem" />
     </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="ISenseStation" name="Station">
-    <category>Devices</category>
-    <help>Settings for an Intersense Tracker Station</help>
-    <PropertyDesc token="enabled" name="Enabled" type="bool" variable="0">
-      <item label="Enabled" defaultvalue="0" />
-    </PropertyDesc>
-    <PropertyDesc token="stationIndex" name="Station Number" type="int" variable="0">
-      <item label="Station Number" defaultvalue="1" />
-    </PropertyDesc>
-    <PropertyDesc token="useDigital" name="Use Digital" type="bool" variable="0">
-      <item label="Use Digital" defaultvalue="1" />
-    </PropertyDesc>
-    <PropertyDesc token="useAnalog" name="Use Analog" type="bool" variable="0">
-      <item label="Use Analog" defaultvalue="1" />
-    </PropertyDesc>
-    <PropertyDesc token="digitalFirst" name="Digital First" type="int" variable="0">
-      <help>The first index in the vjIsense device that this station will store digital data</help>
-      <item label="Digital First" defaultvalue="0" />
-    </PropertyDesc>
-    <PropertyDesc token="digitalNum" name="Digital Count" type="int" variable="0">
-      <help>The number of digital inputs that will be stored into the vjIsense device</help>
-      <item label="Digital Count" defaultvalue="0" />
-    </PropertyDesc>
-    <PropertyDesc token="analogFirst" name="Analog First" type="int" variable="0">
-      <help>The first index in the vjIsense device that this station will store analog data</help>
-      <item label="Analog First" defaultvalue="0" />
-    </PropertyDesc>
-    <PropertyDesc token="analogNum" name="Analog Count" type="int" variable="0">
-      <help>The number of analog inputs that will be stored into the vjIsense device</help>
-      <item label="Analog Count" defaultvalue="0" />
-    </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Display Windows" token="display_windows" type="embeddedchunk" variable="1">
       <help />
-      <item label="" defaultvalue="" />
-      <enumeration name="cluster_machine" value="cluster_machine" />
+      <item label="Display Window" />
+      <enumeration name="displayWindow" />
+    </PropertyDesc>
+    <PropertyDesc name="Listen Port" token="listen_port" type="int" variable="0">
+      <help>Port on which to listen for connections</help>
+      <item label="Listen Port" defaultvalue="0" />
+    </PropertyDesc>
+    <PropertyDesc name="Forced Hostname" token="forced_hostname" type="string" variable="0">
+      <help>Useful if a computer has multiple networks and network names.</help>
+      <item label="Forced Hostname" defaultvalue="" />
+    </PropertyDesc>
+    <PropertyDesc name="Host Name" token="host_name" type="string" variable="0">
+      <help />
+      <item label="Host Name" defaultvalue="" />
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="Isense" name="Isense">
+  <ChunkDesc token="CyberGlove" name="CyberGlove">
     <category>Devices</category>
-    <help>Intersense Tracking Devices</help>
+    <help>Configuration for the CyberGlove</help>
     <PropertyDesc token="port" name="Port" type="string" variable="0">
-      <help>Serial port the Flock is attached to</help>
-      <item label="Port" defaultvalue="/dev/ttyd1" />
+      <help>Serial port that the CyberGlove is connected to</help>
+      <item label="Port" defaultvalue="/dev/ttdy1" />
     </PropertyDesc>
     <PropertyDesc token="baud" name="Baud Rate" type="int" variable="0">
       <help>Serial port speed</help>
-      <item label="Baud Rate" defaultvalue="115200" />
+      <item label="Baud Rate" defaultvalue="38400" />
     </PropertyDesc>
+    <PropertyDesc token="calDir" name="Calibration Dir" type="string" variable="0">
+      <help>Home directory for calibration files</help>
+      <item label="Calibration Directory" defaultvalue="" />
+    </PropertyDesc>
+    <PropertyDesc token="glovePos" name="Glove Position" type="chunk" variable="0">
+      <help>The position proxy for the glove position. i.e. the tracker on the glove.</help>
+      <item label="Glove Position" />
+      <enumeration name="proxyAlias" />
+      <enumeration name="PosProxy" />
+    </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+      <help />
+      <item label="" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="DTK" name="DTK">
+    <category>NoClue</category>
+    <help>Provides input services multiple machines</help>
     <PropertyDesc token="translate" name="Translation" type="float" variable="0">
       <help>(world_T_transmitter) Translation of the transmitter from Juggler coord system.</help>
       <item label="X" defaultvalue="0.0" />
@@ -1154,31 +144,18 @@
       <item label="Y Axis" defaultvalue="0.0" />
       <item label="Z Axis" defaultvalue="0.0" />
     </PropertyDesc>
-    <PropertyDesc token="stations" name="Stations" type="embeddedchunk" variable="1">
-      <help>Settings for each Station.</help>
-      <item label="Stations" />
-      <enumeration name="ISenseStation" />
-    </PropertyDesc>
-    <PropertyDesc token="verbose" name="Vebose Enabled" type="bool" variable="0">
-      <help>Enable output from the Intersense Driver</help>
-      <item label="Verbose Enabled" defaultvalue="false" />
-    </PropertyDesc>
-    <PropertyDesc token="script" name="Script File" type="string" variable="0">
-      <help>File path of script sent to the tracker on startup.</help>
-      <item label="Script File" defaultvalue="" />
-    </PropertyDesc>
     <PropertyDesc token="min" name="min" type="float" variable="0">
       <help>the actual analog data values range - lower bound</help>
       <item label="Range Minimum" defaultvalue="0.0" />
     </PropertyDesc>
     <PropertyDesc token="max" name="max" type="float" variable="0">
       <help>the actual analog data values range - upper bound</help>
-      <item label="Range Maximum" defaultvalue="0.0" />
+      <item label="Range Maximum" defaultvalue="255.0" />
     </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
-      <help />
-      <item label="" defaultvalue="" />
-      <enumeration name="cluster_machine" value="cluster_machine" />
+    <PropertyDesc token="segments" name="Segments" type="embeddedchunk" variable="1">
+      <help>Configuration for a shared memory segment.</help>
+      <item label="Segments" />
+      <enumeration name="DTKsegment" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="DTKsegment" name="DTK Memory Segment">
@@ -1213,133 +190,76 @@
       <enumeration name="Custom" value="6" />
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="DTK" name="DTK">
-    <category>NoClue</category>
-    <help>Provides input services multiple machines</help>
-    <PropertyDesc token="translate" name="Translation" type="float" variable="0">
-      <help>(world_T_transmitter) Translation of the transmitter from Juggler coord system.</help>
-      <item label="X" defaultvalue="0.0" />
-      <item label="Y" defaultvalue="0.0" />
-      <item label="Z" defaultvalue="0.0" />
+  <ChunkDesc token="DataGlove" name="DataGlove">
+    <category>Devices</category>
+    <help>Configuration for the DataGlove</help>
+    <PropertyDesc token="port" name="Port" type="string" variable="0">
+      <help>Serial port that the DataGlove is connected to</help>
+      <item label="Port" defaultvalue="/dev/ttyd1" />
     </PropertyDesc>
-    <PropertyDesc token="rotate" name="Rotation" type="float" variable="0">
-      <help>(world_T_transmitter) Rotation (in degrees) of the tranmitter from the Juggler coord system.</help>
-      <item label="X Axis" defaultvalue="0.0" />
-      <item label="Y Axis" defaultvalue="0.0" />
-      <item label="Z Axis" defaultvalue="0.0" />
+    <PropertyDesc token="baud" name="Baud Rate" type="int" variable="0">
+      <help>Serial port speed (9600)</help>
+      <item label="Baud Rate" defaultvalue="38400" />
     </PropertyDesc>
-    <PropertyDesc token="min" name="min" type="float" variable="0">
-      <help>the actual analog data values range - lower bound</help>
-      <item label="Range Minimum" defaultvalue="0.0" />
-    </PropertyDesc>
-    <PropertyDesc token="max" name="max" type="float" variable="0">
-      <help>the actual analog data values range - upper bound</help>
-      <item label="Range Maximum" defaultvalue="255.0" />
-    </PropertyDesc>
-    <PropertyDesc token="segments" name="Segments" type="embeddedchunk" variable="1">
-      <help>Configuration for a shared memory segment.</help>
-      <item label="Segments" />
-      <enumeration name="DTKsegment" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="simViewport" name="Simulator Viewport">
-    <category>Display/Simulator</category>
-    <help>This is a viewport surface that simulator images are projected on.</help>
-    <PropertyDesc token="origin" name="origin" type="float" variable="0">
-      <help>Window origin (lower left is 0.0,0.0)</help>
-      <item label="X" defaultvalue="0.0" />
-      <item label="Y" defaultvalue="0.0" />
-    </PropertyDesc>
-    <PropertyDesc token="size" name="size" type="float" variable="0">
-      <help>Window size ( must be in range [0.0,1.0] )</help>
-      <item label="Width" defaultvalue="1.0" />
-      <item label="Height" defaultvalue="1.0" />
-    </PropertyDesc>
-    <PropertyDesc token="view" name="view" type="int" variable="0">
-      <item label="View" defaultvalue="1" />
-      <enumeration name="left_eye" value="1" />
-      <enumeration name="right_eye" value="2" />
-      <enumeration name="stereo" value="3" />
-    </PropertyDesc>
-    <PropertyDesc token="cameraPos" name="cameraPos" type="chunk" variable="0">
-      <help>This is the pos proxy that controls the sim view</help>
-      <item label="Camera Position" defaultvalue="" />
-      <enumeration name="PosProxy" />
-      <enumeration name="proxyAlias" />
-    </PropertyDesc>
-    <PropertyDesc token="user" name="user" type="chunk" variable="0">
-      <help>This is the user that the window is drawing for.</help>
-      <item label="User" defaultvalue="" />
-      <enumeration name="JugglerUser" />
-    </PropertyDesc>
-    <PropertyDesc token="wandPos" name="wandPos" type="chunk" variable="0">
-      <help>The wand pos proxy to use in the simulator.</help>
-      <item label="Wand Position" defaultvalue="" />
+    <PropertyDesc token="glovePos" name="Glove Position" type="chunk" variable="0">
+      <help>The position proxy for the glove position. i.e. the tracker on the glove.</help>
+      <item label="Glove Position" defaultvalue="" />
       <enumeration name="proxyAlias" />
       <enumeration name="PosProxy" />
     </PropertyDesc>
-    <PropertyDesc token="active" name="active" type="bool" variable="0">
-      <help>Is the window active?</help>
-      <item label="Use this viewport?" defaultvalue="1" />
-    </PropertyDesc>
-    <PropertyDesc token="drawProjections" name="drawProjections" type="bool" variable="0">
-      <help>Should projections be drawn in the simulator?</help>
-      <item label="Draw Projections" defaultvalue="0" />
-    </PropertyDesc>
-    <PropertyDesc token="surfaceColor" name="surfaceColor" type="float" variable="0">
-      <help>What color should the surfaces be?</help>
-      <item label="red" defaultvalue="0.0" />
-      <item label="green" defaultvalue="0.0" />
-      <item label="blue" defaultvalue="0.0" />
-    </PropertyDesc>
-    <PropertyDesc token="vert_fov" name="Vertical FOV" type="float" variable="0">
-      <help>Vertical field of view in degrees</help>
-      <item label="Vertical Field Of View" defaultvalue="80.0" />
+    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+      <help />
+      <item label="" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="surfaceViewport" name="Surface Viewport">
+  <ChunkDesc token="DigProxy" name="Digital Proxy">
+    <category>Proxies</category>
+    <help>Used to access a single digital (binary) input source</help>
+    <PropertyDesc token="device" name="Device" type="chunk" variable="0">
+      <help>The device this proxy attaches to</help>
+      <item label="Device" defaultvalue="" />
+      <enumeration name="SimDigital" />
+      <enumeration name="IBox" />
+      <enumeration name="PinchGlove" />
+      <enumeration name="DataGlove" />
+      <enumeration name="ThreeDMouse" />
+      <enumeration name="SimDigitalGlove" />
+      <enumeration name="TrackdController" />
+    </PropertyDesc>
+    <PropertyDesc token="unit" name="Unit" type="int" variable="0">
+      <help>The unit in the device this proxy attaches to</help>
+      <item label="Unit" defaultvalue="0" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="SimDigital" name="Digital Simulator">
+    <category>Devices/Simulator</category>
+    <help>Simulated digital device.  Gets input from keyboard proxy.</help>
+    <PropertyDesc token="keyboardProxy" name="Keyboard Proxy" type="chunk" variable="0">
+      <help>The keyboard to use for event input.</help>
+      <item label="Keyboard Proxy" defaultvalue="" />
+      <enumeration name="KeyboardProxy" />
+    </PropertyDesc>
+    <PropertyDesc token="keyPairs" name="KeyPresses" type="embeddedchunk" variable="1">
+      <help>Keypresses to trigger multiple digital inputs</help>
+      <item label="Key Presses" />
+      <enumeration name="KeyModPair" />
+    </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+      <help />
+      <item label="" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="displaySystem" name="Display System">
     <category>Display</category>
-    <help>This is a viewport surface that images are projected onto.</help>
-    <PropertyDesc token="origin" name="origin" type="float" variable="0">
-      <help>Window origin (lower left screen is 0.0,0.0)</help>
-      <item label="X" defaultvalue="0.0" />
-      <item label="Y" defaultvalue="0.0" />
+    <PropertyDesc token="numpipes" name="Number of Pipes" type="int" variable="0">
+      <help>The number of pipes on the system</help>
+      <item label="Number of Pipes" defaultvalue="0" />
     </PropertyDesc>
-    <PropertyDesc token="size" name="size" type="float" variable="0">
-      <help>Window size (must be in range [0.0,1.0])</help>
-      <item label="Width" defaultvalue="1.0" />
-      <item label="Height" defaultvalue="1.0" />
-    </PropertyDesc>
-    <PropertyDesc token="view" name="view" type="int" variable="0">
-      <item label="View" defaultvalue="1" />
-      <enumeration name="left eye" value="1" />
-      <enumeration name="right eye" value="2" />
-      <enumeration name="stereo" value="3" />
-    </PropertyDesc>
-    <PropertyDesc token="corners" name="corners" type="embeddedchunk" variable="0">
-      <help>The corners of the surface</help>
-      <item label="lower left" />
-      <item label="lower right" />
-      <item label="upper right" />
-      <item label="upper left" />
-      <enumeration name="Vec3" />
-    </PropertyDesc>
-    <PropertyDesc token="user" name="user" type="chunk" variable="0">
-      <item label="User" defaultvalue="" />
-      <enumeration name="JugglerUser" />
-    </PropertyDesc>
-    <PropertyDesc token="active" name="active" type="bool" variable="0">
-      <help>Is the window active?</help>
-      <item label="Use this viewport?" defaultvalue="1" />
-    </PropertyDesc>
-    <PropertyDesc token="tracked" name="tracked" type="bool" variable="0">
-      <help>Is this a tracked surface?</help>
-      <item label="Is Tracked" defaultvalue="0" />
-    </PropertyDesc>
-    <PropertyDesc token="trackerproxy" name="trackerproxy" type="chunk" variable="0">
-      <help>The tracker proxy that tracks the screen's reference frame.</help>
-      <item label="Tracker Proxy" defaultvalue="" />
-      <enumeration name="PosProxy" />
+    <PropertyDesc token="xpipes" name="xpipes" type="string" variable="1">
+      <help>The x-display strings for the pipes.  NOTE: This is a zero-based list.</help>
+      <item label="X11 Pipe" defaultvalue="0:0" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="displayWindow" name="Display Window">
@@ -1390,42 +310,51 @@
       <enumeration name="surfaceViewport" />
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="cluster_machine" name="Cluster Machine">
-    <help />
-    <category>RIM</category>
-    <PropertyDesc name="Display System" token="display_system" type="embeddedchunk" variable="0">
-      <help />
-      <item label="Display System" />
-      <enumeration name="displaySystem" />
+  <ChunkDesc token="DummyPosition" name="Dummy Position">
+    <category>NoClue</category>
+    <help>A 'dummy' position device</help>
+    <PropertyDesc token="position" name="Position" type="float" variable="0">
+      <help>Initial Dummy Position</help>
+      <item label="x" defaultvalue="0.0" />
+      <item label="y" defaultvalue="0.0" />
+      <item label="z" defaultvalue="0.0" />
     </PropertyDesc>
-    <PropertyDesc name="Display Windows" token="display_windows" type="embeddedchunk" variable="1">
-      <help />
-      <item label="Display Window" />
-      <enumeration name="displayWindow" />
-    </PropertyDesc>
-    <PropertyDesc name="Listen Port" token="listen_port" type="int" variable="0">
-      <help>Port on which to listen for connections</help>
-      <item label="Listen Port" defaultvalue="0" />
-    </PropertyDesc>
-    <PropertyDesc name="Forced Hostname" token="forced_hostname" type="string" variable="0">
-      <help>Useful if a computer has multiple networks and network names.</help>
-      <item label="Forced Hostname" defaultvalue="" />
-    </PropertyDesc>
-    <PropertyDesc name="Host Name" token="host_name" type="string" variable="0">
-      <help />
-      <item label="Host Name" defaultvalue="" />
+    <PropertyDesc token="ori" name="Orientation" type="float" variable="0">
+      <help>Initial Dummy Orientation XYZ Euler</help>
+      <item label="x" defaultvalue="0.0" />
+      <item label="y" defaultvalue="0.0" />
+      <item label="z" defaultvalue="0.0" />
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="RIMChunk" name="Remote Input Manager Chunk">
-    <help />
-    <category>RIM</category>
-    <PropertyDesc name="Sync Device" token="sync_device" type="chunk" variable="0">
-      <help />
-      <item label="Device" defaultvalue="" />
-      <enumeration name="SimAnalog" />
-      <enumeration name="SimDigital" />
-      <enumeration name="SimPosition" />
-      <enumeration name="Isense" />
+  <ChunkDesc token="FileConnect" name="EM Connection">
+    <category>NoClue</category>
+    <help>A file for outputing Environment Manager data</help>
+    <PropertyDesc token="FileName" name="Filename" type="string" variable="0">
+      <help>The name of the file to dump output to.</help>
+      <item label="Filename" defaultvalue="/var/tmp/out.perf" />
+    </PropertyDesc>
+    <PropertyDesc token="Enabled" name="Enabled" type="bool" variable="0">
+      <help>Should file be opened &amp; used?</help>
+      <item label="Enabled" defaultvalue="0" />
+    </PropertyDesc>
+    <PropertyDesc token="Mode" name="File Mode" type="int" variable="0">
+      <help>Is the file readable, writeable, or interactive (e.g. socket or pipe)</help>
+      <item label="File Mode" defaultvalue="2" />
+      <enumeration name="Interactive" value="0" />
+      <enumeration name="Input" value="1" />
+      <enumeration name="Output" value="2" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="EnvironmentManager" name="Environment Manager">
+    <category>NoClue</category>
+    <help>Application-side of connection to vjcontrol GUI</help>
+    <PropertyDesc token="Port" name="Port" type="int" variable="0">
+      <help>Networking port to listen on</help>
+      <item label="Port" defaultvalue="4450" />
+    </PropertyDesc>
+    <PropertyDesc token="AcceptConnections" name="Accept Connections" type="bool" variable="0">
+      <help>Whether or not we should accept connections from vjcontrol clients</help>
+      <item label="Accept Connections" defaultvalue="1" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="Fastrack" name="Fastrack">
@@ -1606,4 +535,1076 @@
       <enumeration name="cluster_machine" value="cluster_machine" />
     </PropertyDesc>
   </ChunkDesc>
+  <ChunkDesc token="Flock" name="Flock of Birds">
+    <category>Devices</category>
+    <help>Configuration for Ascension Flock of Birds</help>
+    <PropertyDesc token="port" name="Port" type="string" variable="0">
+      <help>Serial port the Flock is attached to</help>
+      <item label="Port" defaultvalue="/dev/ttyd1" />
+    </PropertyDesc>
+    <PropertyDesc token="baud" name="Baud Rate" type="int" variable="0">
+      <help>Serial port speed</help>
+      <item label="Baud Rate" defaultvalue="38400" />
+    </PropertyDesc>
+    <PropertyDesc token="num" name="Num Birds" type="int" variable="0">
+      <help>Number of birds in the Flock</help>
+      <item label="Number of Birds" defaultvalue="2" />
+    </PropertyDesc>
+    <PropertyDesc token="translate" name="Translation" type="float" variable="0">
+      <help>Translation used to get pt from tracker coordinates to Juggler coordinate system. world_T_transmitter = T*R*pt</help>
+      <item label="X" defaultvalue="0.0" />
+      <item label="Y" defaultvalue="0.0" />
+      <item label="Z" defaultvalue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc token="rotate" name="Rotation" type="float" variable="0">
+      <help>Rotation (in degrees) used to get pt from tracker coordinates to Juggler coordinate system. world_T_tranmitter = T*R*pt</help>
+      <item label="X Axis" defaultvalue="0.0" />
+      <item label="Y Axis" defaultvalue="0.0" />
+      <item label="Z Axis" defaultvalue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc token="calfile" name="Calibration file" type="string" variable="0">
+      <help>Name of a tracker calibration file</help>
+      <item label="Calibration file" defaultvalue="${VJ_BASE_DIR}/share/gadgeteer/data/calibration.table" />
+    </PropertyDesc>
+    <PropertyDesc token="hemi" name="Hemisphere" type="int" variable="0">
+      <help>Flock Hemisphere</help>
+      <item label="Hemisphere" defaultvalue="3" />
+      <enumeration name="FRONT_HEM" value="0" />
+      <enumeration name="AFT_HEM" value="1" />
+      <enumeration name="UPPER_HEM" value="2" />
+      <enumeration name="LOWER_HEM" value="3" />
+      <enumeration name="LEFT_HEM" value="4" />
+      <enumeration name="RIGHT_HEM" value="5" />
+    </PropertyDesc>
+    <PropertyDesc token="filt" name="Filter" type="int" variable="0">
+      <help>Filter</help>
+      <item label="Filter" defaultvalue="0" />
+      <enumeration name="AC_NARROW" value="0" />
+      <enumeration name="AC_WIDE" value="1" />
+      <enumeration name="DC_FILTER" value="2" />
+    </PropertyDesc>
+    <PropertyDesc token="sync" name="Synchronous" type="int" variable="0">
+      <help>sync style. See flock man pg 82</help>
+      <item label="Synchronous" defaultvalue="0" />
+      <enumeration name="NoSync" value="0" />
+      <enumeration name="CRT_Above_72Hz" value="1" />
+      <enumeration name="CRT_Below_72hz" value="2" />
+    </PropertyDesc>
+    <PropertyDesc token="blocking" name="Blocking" type="bool" variable="0">
+      <help>Run in blocking mode or non-blocking mode.</help>
+      <item label="Blocking" defaultvalue="1" />
+    </PropertyDesc>
+    <PropertyDesc token="report" name="Report Frequency" type="string" variable="0">
+      <help>Q-(every cycle) R-(every other cycle) S-(every 8 cycles) T-(every 32 cycles)</help>
+      <item label="Report Frequency" defaultvalue="R" />
+      <enumeration name="Every Cycle" value="Q" />
+      <enumeration name="Every Other Cycle" value="R" />
+      <enumeration name="Every 8 Cycles" value="S" />
+      <enumeration name="Every 32 Cycles" value="T" />
+    </PropertyDesc>
+    <PropertyDesc token="transmitter" name="Transmitter" type="int" variable="0">
+      <help>Id of the transmitter</help>
+      <item label="Transmitter ID" defaultvalue="3" />
+    </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+      <help />
+      <item label="" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="GestureProxy" name="Gesture Proxy">
+    <category>Proxies</category>
+    <help>A Gesture Proxy points to a gesture device.</help>
+    <PropertyDesc token="device" name="Device" type="chunk" variable="0">
+      <help>The gesture device to hook the proxy to.</help>
+      <item label="Device" defaultvalue="" />
+      <enumeration name="SimGloveGesture" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="SimGloveGesture" name="Glove Gesture Simulator">
+    <category>Devices/Simulator</category>
+    <help>Simulate glove gesture device</help>
+    <PropertyDesc token="keyboardProxy" name="Keyboard Proxy" type="chunk" variable="0">
+      <help>The keyboard to use.</help>
+      <item label="Keyboard Proxy" defaultvalue="" />
+      <enumeration name="KeyboardProxy" />
+    </PropertyDesc>
+    <PropertyDesc token="keyPairs" name="Key Presses" type="embeddedchunk" variable="1">
+      <item label="Key Presses" />
+      <enumeration name="KeyModPair" />
+    </PropertyDesc>
+    <PropertyDesc token="trainedFilename" name="Trained File Name" type="string" variable="0">
+      <help>The name of the trained gesture file.  Used to get simulated values.</help>
+      <item label="Trained File Name" defaultvalue="${VJ_BASE_DIR}/share/gadgeteer/data/gesture/simpleSimGestures.dat" />
+    </PropertyDesc>
+    <PropertyDesc token="glovePos" name="Glove Position" type="chunk" variable="0">
+      <help>The position proxy for the glove position.</help>
+      <item label="Glove Position" defaultvalue="" />
+      <enumeration name="PosProxy" />
+    </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+      <help />
+      <item label="" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="GloveProxy" name="Glove Proxy">
+    <category>Proxies</category>
+    <help>A Glove Proxy points to a glove device and unit</help>
+    <PropertyDesc token="device" name="Device" type="chunk" variable="0">
+      <help>The glove device the proxy connects to.</help>
+      <item label="Device" defaultvalue="" />
+      <enumeration name="CyberGlove" />
+      <enumeration name="SimGloveGesture" />
+      <enumeration name="DataGlove" />
+      <enumeration name="PinchGlove" />
+      <enumeration name="SimDigitalGlove" />
+    </PropertyDesc>
+    <PropertyDesc token="unit" name="Unit" type="int" variable="0">
+      <help>The unit number in the device to hook to.</help>
+      <item label="Unit" defaultvalue="0" />
+    </PropertyDesc>
+    <PropertyDesc token="visible" name="Visible" type="bool" variable="0">
+      <help>If true, the glove will be rendered in display windows.</help>
+      <item label="Visible" defaultvalue="1" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="IBox" name="IBox">
+    <category>Devices</category>
+    <help>Configuration for the IBox</help>
+    <PropertyDesc token="port" name="Port" type="string" variable="0">
+      <help>Serial port this device is connected to</help>
+      <item label="Port" defaultvalue="/dev/ttyd1" />
+    </PropertyDesc>
+    <PropertyDesc token="baud" name="Baud Rate" type="int" variable="0">
+      <help>Serial port speed</help>
+      <item label="Baud Rate" defaultvalue="38400" />
+    </PropertyDesc>
+    <PropertyDesc token="min" name="min" type="float" variable="0">
+      <help>the actual analog data values range - lower bound</help>
+      <item label="Analog Minimum" defaultvalue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc token="max" name="max" type="float" variable="0">
+      <help>the actual analog data values range - upper bound</help>
+      <item label="Analog Maximum" defaultvalue="255.0" />
+    </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+      <help>Points to the machine that the device is physically connected to.</help>
+      <item label="" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="vjIncludeDescFile" name="Include Descriptions File">
+    <category>NoClue</category>
+    <help>Chunk Descriptions File that should be loaded before processing the rest of this file</help>
+  </ChunkDesc>
+  <ChunkDesc token="vjIncludeFile" name="Include File">
+    <category>NoClue</category>
+    <help>File that should be loaded along with this one</help>
+  </ChunkDesc>
+  <ChunkDesc token="Isense" name="Isense">
+    <category>Devices</category>
+    <help>Intersense Tracking Devices</help>
+    <PropertyDesc token="port" name="Port" type="string" variable="0">
+      <help>Serial port the Flock is attached to</help>
+      <item label="Port" defaultvalue="/dev/ttyd1" />
+    </PropertyDesc>
+    <PropertyDesc token="baud" name="Baud Rate" type="int" variable="0">
+      <help>Serial port speed</help>
+      <item label="Baud Rate" defaultvalue="115200" />
+    </PropertyDesc>
+    <PropertyDesc token="translate" name="Translation" type="float" variable="0">
+      <help>(world_T_transmitter) Translation of the transmitter from Juggler coord system.</help>
+      <item label="X" defaultvalue="0.0" />
+      <item label="Y" defaultvalue="0.0" />
+      <item label="Z" defaultvalue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc token="rotate" name="Rotation" type="float" variable="0">
+      <help>(world_T_transmitter) Rotation (in degrees) of the tranmitter from the Juggler coord system.</help>
+      <item label="X Axis" defaultvalue="0.0" />
+      <item label="Y Axis" defaultvalue="0.0" />
+      <item label="Z Axis" defaultvalue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc token="stations" name="Stations" type="embeddedchunk" variable="1">
+      <help>Settings for each Station.</help>
+      <item label="Stations" />
+      <enumeration name="ISenseStation" />
+    </PropertyDesc>
+    <PropertyDesc token="verbose" name="Vebose Enabled" type="bool" variable="0">
+      <help>Enable output from the Intersense Driver</help>
+      <item label="Verbose Enabled" defaultvalue="false" />
+    </PropertyDesc>
+    <PropertyDesc token="script" name="Script File" type="string" variable="0">
+      <help>File path of script sent to the tracker on startup.</help>
+      <item label="Script File" defaultvalue="" />
+    </PropertyDesc>
+    <PropertyDesc token="min" name="min" type="float" variable="0">
+      <help>the actual analog data values range - lower bound</help>
+      <item label="Range Minimum" defaultvalue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc token="max" name="max" type="float" variable="0">
+      <help>the actual analog data values range - upper bound</help>
+      <item label="Range Maximum" defaultvalue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+      <help />
+      <item label="" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="KeyModPair" name="Key and Modifier Pair">
+    <category>Devices</category>
+    <help>This chunk holds a key and a modifier key.  It is for key events inside other chunks.</help>
+    <PropertyDesc token="modKey" name="modKey" type="int" variable="0">
+      <help>Modifier key</help>
+      <item label="Modifier Key" defaultvalue="-1" />
+      <enumeration name="NONE" value="0" />
+      <enumeration name="SHIFT" value="5" />
+      <enumeration name="CTRL" value="6" />
+      <enumeration name="ALT" value="7" />
+      <enumeration name="ANY" value="-1" />
+    </PropertyDesc>
+    <PropertyDesc token="key" name="key" type="int" variable="0">
+      <help>Main key</help>
+      <item label="Key" defaultvalue="0" />
+      <enumeration name="KEY_NONE" value="0" />
+      <enumeration name="KEY_UP" value="1" />
+      <enumeration name="KEY_DOWN" value="2" />
+      <enumeration name="KEY_LEFT" value="3" />
+      <enumeration name="KEY_RIGHT" value="4" />
+      <enumeration name="KEY_CTRL" value="5" />
+      <enumeration name="KEY_SHIFT" value="6" />
+      <enumeration name="KEY_ALT" value="7" />
+      <enumeration name="KEY_1" value="8" />
+      <enumeration name="KEY_2" value="9" />
+      <enumeration name="KEY_3" value="10" />
+      <enumeration name="KEY_4" value="11" />
+      <enumeration name="KEY_5" value="12" />
+      <enumeration name="KEY_6" value="13" />
+      <enumeration name="KEY_7" value="14" />
+      <enumeration name="KEY_8" value="15" />
+      <enumeration name="KEY_9" value="16" />
+      <enumeration name="KEY_0" value="17" />
+      <enumeration name="KEY_A" value="18" />
+      <enumeration name="KEY_B" value="19" />
+      <enumeration name="KEY_C" value="20" />
+      <enumeration name="KEY_D" value="21" />
+      <enumeration name="KEY_E" value="22" />
+      <enumeration name="KEY_F" value="23" />
+      <enumeration name="KEY_G" value="24" />
+      <enumeration name="KEY_H" value="25" />
+      <enumeration name="KEY_I" value="26" />
+      <enumeration name="KEY_J" value="27" />
+      <enumeration name="KEY_K" value="28" />
+      <enumeration name="KEY_L" value="29" />
+      <enumeration name="KEY_M" value="30" />
+      <enumeration name="KEY_N" value="31" />
+      <enumeration name="KEY_O" value="32" />
+      <enumeration name="KEY_P" value="33" />
+      <enumeration name="KEY_Q" value="34" />
+      <enumeration name="KEY_R" value="35" />
+      <enumeration name="KEY_S" value="36" />
+      <enumeration name="KEY_T" value="37" />
+      <enumeration name="KEY_U" value="38" />
+      <enumeration name="KEY_V" value="39" />
+      <enumeration name="KEY_W" value="40" />
+      <enumeration name="KEY_X" value="41" />
+      <enumeration name="KEY_Y" value="42" />
+      <enumeration name="KEY_Z" value="43" />
+      <enumeration name="KEY_ESC" value="44" />
+      <enumeration name="MOUSE_POSX" value="45" />
+      <enumeration name="MOUSE_NEGX" value="46" />
+      <enumeration name="MOUSE_POSY" value="47" />
+      <enumeration name="MOUSE_NEGY" value="48" />
+      <enumeration name="MOUSE_BUT1" value="49" />
+      <enumeration name="MOUSE_BUT2" value="50" />
+      <enumeration name="MOUSE_BUT3" value="51" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="Keyboard" name="Keyboard">
+    <category>Devices</category>
+    <help>Configures a window that accepts keyboard and mouse input</help>
+    <PropertyDesc token="width" name="width" type="int" variable="0">
+      <help>window width</help>
+      <item label="Window Width" defaultvalue="300" />
+    </PropertyDesc>
+    <PropertyDesc token="height" name="height" type="int" variable="0">
+      <help>window height</help>
+      <item label="Window Height" defaultvalue="100" />
+    </PropertyDesc>
+    <PropertyDesc token="origin" name="origin" type="int" variable="0">
+      <help>Window origin (lower left is 0,0)</help>
+      <item label="X" defaultvalue="0" />
+      <item label="Y" defaultvalue="0" />
+    </PropertyDesc>
+    <PropertyDesc token="msens" name="msens" type="float" variable="0">
+      <help>Mouse sensitivity, 1 is 1 keypress per pixel moved, 0.1 is 1 key for 10 pixels</help>
+      <item label="Mouse Sensitivity" defaultvalue="1.0" />
+    </PropertyDesc>
+    <PropertyDesc token="display_number" name="DisplayNumber" type="int" variable="0">
+      <help>The number of the display to put the keyboard on. (-1 for local)</help>
+      <item label="Display Number" defaultvalue="0" />
+    </PropertyDesc>
+    <PropertyDesc token="lock_key" name="Lock Key" type="int" variable="0">
+      <help>The key that will lock the mouse to the window</help>
+      <item label="Lock Key" defaultvalue="0" />
+      <enumeration name="KEY_NONE" value="0" />
+      <enumeration name="KEY_UP" value="1" />
+      <enumeration name="KEY_DOWN" value="2" />
+      <enumeration name="KEY_LEFT" value="3" />
+      <enumeration name="KEY_RIGHT" value="4" />
+      <enumeration name="KEY_CTRL" value="5" />
+      <enumeration name="KEY_SHIFT" value="6" />
+      <enumeration name="KEY_ALT" value="7" />
+      <enumeration name="KEY_1" value="8" />
+      <enumeration name="KEY_2" value="9" />
+      <enumeration name="KEY_3" value="10" />
+      <enumeration name="KEY_4" value="11" />
+      <enumeration name="KEY_5" value="12" />
+      <enumeration name="KEY_6" value="13" />
+      <enumeration name="KEY_7" value="14" />
+      <enumeration name="KEY_8" value="15" />
+      <enumeration name="KEY_9" value="16" />
+      <enumeration name="KEY_0" value="17" />
+      <enumeration name="KEY_A" value="18" />
+      <enumeration name="KEY_B" value="19" />
+      <enumeration name="KEY_C" value="20" />
+      <enumeration name="KEY_D" value="21" />
+      <enumeration name="KEY_E" value="22" />
+      <enumeration name="KEY_F" value="23" />
+      <enumeration name="KEY_G" value="24" />
+      <enumeration name="KEY_H" value="25" />
+      <enumeration name="KEY_I" value="26" />
+      <enumeration name="KEY_J" value="27" />
+      <enumeration name="KEY_K" value="28" />
+      <enumeration name="KEY_L" value="29" />
+      <enumeration name="KEY_M" value="30" />
+      <enumeration name="KEY_N" value="31" />
+      <enumeration name="KEY_O" value="32" />
+      <enumeration name="KEY_P" value="33" />
+      <enumeration name="KEY_Q" value="34" />
+      <enumeration name="KEY_R" value="35" />
+      <enumeration name="KEY_S" value="36" />
+      <enumeration name="KEY_T" value="37" />
+      <enumeration name="KEY_U" value="38" />
+      <enumeration name="KEY_V" value="39" />
+      <enumeration name="KEY_W" value="40" />
+      <enumeration name="KEY_X" value="41" />
+      <enumeration name="KEY_Y" value="42" />
+      <enumeration name="KEY_Z" value="43" />
+      <enumeration name="KEY_ESC" value="44" />
+      <enumeration name="MOUSE_POSX" value="45" />
+      <enumeration name="MOUSE_NEGX" value="46" />
+      <enumeration name="MOUSE_POSY" value="47" />
+      <enumeration name="MOUSE_NEGY" value="48" />
+      <enumeration name="MOUSE_BUT1" value="49" />
+      <enumeration name="MOUSE_BUT2" value="50" />
+      <enumeration name="MOUSE_BUT3" value="51" />
+    </PropertyDesc>
+    <PropertyDesc token="start_locked" name="Start Locked" type="bool" variable="0">
+      <help>Do we start with the window locked??</help>
+      <item label="Start Locked" defaultvalue="0" />
+    </PropertyDesc>
+    <PropertyDesc token="sleep_time" name="Sleep time" type="int" variable="0">
+      <help>This is the number of milliseconds that the keyboard update loop should sleep between updates.</help>
+      <item label="Sleep Time" defaultvalue="75" />
+    </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+      <help />
+      <item label="" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="KeyboardProxy" name="Keyboard Proxy">
+    <category>Proxies</category>
+    <help>This proxy points to a keyboard device.</help>
+    <PropertyDesc token="device" name="Device" type="chunk" variable="0">
+      <help>The keyboard device to hook the proxy to.</help>
+      <item label="Device" defaultvalue="" />
+      <enumeration name="Keyboard" />
+      <enumeration name="simKeyboardDigital" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="MotionStar" name="MotionStar">
+    <category>Devices</category>
+    <help>Ascension MotionStar server chassis configuration</help>
+    <PropertyDesc token="address" name="Server Address" type="string" variable="0">
+      <help>Hostname or IP address of the server.</help>
+      <item label="Server Address" defaultvalue="" />
+    </PropertyDesc>
+    <PropertyDesc token="serverPort" name="Server Port" type="int" variable="0">
+      <help>The port on the server to which the client connects.  (UDP -&gt; 5000, TCP -&gt; 6000)</help>
+      <item label="Server Port" defaultvalue="6000" />
+      <enumeration name="UDP Port" value="5000" />
+      <enumeration name="TCP Port" value="6000" />
+    </PropertyDesc>
+    <PropertyDesc token="serverType" name="Server Type" type="bool" variable="0">
+      <help>The type of this server chassis.</help>
+      <item label="Server Type" defaultvalue="1" />
+      <enumeration name="Master" value="1" />
+      <enumeration name="Slave" value="0" />
+    </PropertyDesc>
+    <PropertyDesc token="hemisphere" name="Hemisphere" type="int" variable="0">
+      <help>Transmitter hemisphere to use.</help>
+      <item label="Hemisphere" defaultvalue="0" />
+      <enumeration name="Front" value="0" />
+      <enumeration name="Aft" value="1" />
+      <enumeration name="Upper" value="2" />
+      <enumeration name="Lower" value="3" />
+      <enumeration name="Left" value="4" />
+      <enumeration name="Right" value="5" />
+    </PropertyDesc>
+    <PropertyDesc token="translate" name="Translation" type="float" variable="0">
+      <help>(world_T_transmitter) Translation of the transmitter from Juggler coord system.</help>
+      <item label="X" defaultvalue="0.0" />
+      <item label="Y" defaultvalue="0.0" />
+      <item label="Z" defaultavlue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc token="rotate" name="Rotation" type="float" variable="0">
+      <help>(world_T_transmitter) Rotation of the tranmitter from the Juggler coord system.</help>
+      <item label="X Axis" defaultvalue="0.0" />
+      <item label="Y Axis" defaultvalue="0.0" />
+      <item label="Z Axis" defaultavlue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc token="num" name="Number of Birds" type="int" variable="0">
+      <help>Number of birds connected to this chassis.</help>
+      <item label="Number of Birds" defaultvalue="2" />
+    </PropertyDesc>
+    <PropertyDesc token="bformat" name="Data Format" type="int" variable="0">
+      <help>Data format for the birds.</help>
+      <item label="Data Format" defaultvalue="4" />
+      <enumeration name="No Data" value="0" />
+      <enumeration name="Position" value="1" />
+      <enumeration name="Angles" value="2" />
+      <enumeration name="Matrix" value="3" />
+      <enumeration name="Position and Angles" value="4" />
+      <enumeration name="Position and Matrix" value="5" />
+      <enumeration name="Quaternion" value="7" />
+      <enumeration name="Position and Quaternion" value="8" />
+    </PropertyDesc>
+    <PropertyDesc token="mode" name="Sample Mode" type="int" variable="0">
+      <help>The sample mode for the running driver.</help>
+      <item label="Sample Mode" defaultvalue="0" />
+      <enumeration name="Run Continuous" value="0" />
+      <enumeration name="Sample Individually" value="1" />
+    </PropertyDesc>
+    <PropertyDesc token="reportRate" name="Bird Report Rate" type="int" variable="0">
+      <help>Report rate for the birds (0-255).  This should usually be 1.</help>
+      <item label="Bird Report Rate" defaultvalue="1" />
+    </PropertyDesc>
+    <PropertyDesc token="measurementRate" name="Chassis Measurement Rate" type="float" variable="0">
+      <help>Measurement rate for the chassis.</help>
+      <item label="Chassis Measurement Rate" defaultavlue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+      <help />
+      <item label="" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="PerfTestActive" name="PerfTestActive">
+    <category>Performance</category>
+    <help>inner chunk for Performance Testing</help>
+    <PropertyDesc token="Prefix" name="Prefix" type="string" variable="0">
+      <item label="Prefix" defaultvalue="" />
+    </PropertyDesc>
+    <PropertyDesc token="Enabled" name="Enabled" type="bool" variable="0">
+      <item label="Enabled" defaultvalue="0" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="PerfData" name="Performance Data Display">
+    <category>Performance</category>
+    <help>Information for displaying data from perfbuffers with a matching name</help>
+    <PropertyDesc token="labels" name="Labels" type="string" variable="1">
+      <help>Labels for Perf Buffer phases</help>
+      <item label="Labels" defaultvalue="" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="PerfMeasure" name="Performance Measurements">
+    <category>Performance</category>
+    <help>Controls performance monitoring of Juggler library</help>
+    <PropertyDesc token="PerformanceTarget" name="Performance Target" type="chunk" variable="0">
+      <help>File or network connection that performance data should be sent to.</help>
+      <item label="Performance Target" defaultvalue="" />
+      <enumeration name="FileConnect" />
+      <enumeration name="NetworkConnect" />
+    </PropertyDesc>
+    <PropertyDesc token="TimingTests" name="Timing Tests" type="embeddedchunk" variable="1">
+      <help>Turn on/off Juggler internal timing tests</help>
+      <item label="Timing Tests" />
+      <enumeration name="PerfTestActive" />
+    </PropertyDesc>
+    <PropertyDesc token="PerfCategories" name="Performance Measurement Categories" type="embeddedchunk" variable="1">
+      <help>Turn on/off Juggler timing measurements by category name</help>
+      <item label="Performance Measurement Categories" />
+      <enumeration name="PerfTestActive" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="apiPerformer" name="Performer API">
+    <category>Display</category>
+    <help>This is information for configuring the Performer API.  It only pertains to Performer.</help>
+    <PropertyDesc token="simHeadModel" name="SimHeadModel" type="string" variable="0">
+      <help>This is the full path to the model used for the head.</help>
+      <item label="Simulator Head Model" defaultvalue="$VJ_BASE_DIR/share/vrjuggler/data/models/head.flt" />
+    </PropertyDesc>
+    <PropertyDesc token="simWandModel" name="SimWandModel" type="string" variable="0">
+      <help>This is the full path to the model used as a wand.</help>
+      <item label="Simulator Wand Model" defaultvalue="$VJ_BASE_DIR/share/vrjuggler/data/models/wand.flt" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="PinchGlove" name="PinchGlove">
+    <category>Devices</category>
+    <help>Configuration for the PinchGlove</help>
+    <PropertyDesc token="port" name="Port" type="string" variable="0">
+      <help>Serial port that the PinchGlove is connected to</help>
+      <item label="Port" defaultvalue="/dev/ttyd1" />
+    </PropertyDesc>
+    <PropertyDesc token="baud" name="Baud Rate" type="int" variable="0">
+      <help>Serial port speed</help>
+      <item label="Baud Rate" defaultvalue="9600" />
+    </PropertyDesc>
+    <PropertyDesc token="glovePos" name="Glove Position" type="chunk" variable="0">
+      <help>The position proxy for the glove position. i.e. the tracker on the glove.</help>
+      <item label="Glove Position" defaultvalue="" />
+      <enumeration name="proxyAlias" />
+      <enumeration name="PosProxy" />
+    </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+      <help>Points to the machine that the device is physically connected to.</help>
+      <enumeration name="cluster_machine" value="cluster_machine" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="PosProxy" name="Position Proxy">
+    <category>Proxies</category>
+    <help>Used to access a single positional input source</help>
+    <PropertyDesc token="device" name="device" type="chunk" variable="0">
+      <help>The device the proxy points to</help>
+      <item label="Device" defaultvalue="" />
+      <enumeration name="Flock" />
+      <enumeration name="SimPosition" />
+      <enumeration name="DummyPosition" />
+      <enumeration name="MotionStar" />
+      <enumeration name="TrackdSensor" />
+      <enumeration name="SimRelativePosition" />
+      <enumeration name="SimSetablePosition" />
+    </PropertyDesc>
+    <PropertyDesc token="unit" name="unit" type="int" variable="0">
+      <help>The unit in the device this proxy attaches to</help>
+      <item label="Unit" defaultvalue="0" />
+    </PropertyDesc>
+    <PropertyDesc token="etrans" name="Enable Transformation" type="bool" variable="0">
+      <help>If true, the Proxy Transformation is applied to data</help>
+      <item label="Enable Transformation" defaultvalue="0" />
+    </PropertyDesc>
+    <PropertyDesc token="translate" name="Translation" type="float" variable="0">
+      <help>(recv_T_modRecv) Proxy translation (in the reciever's coord system)</help>
+      <item label="Trans X" defaultvalue="0.0" />
+      <item label="Trans Y" defaultvalue="0.0" />
+      <item label="Trans Z" defaultvalue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc token="rotate" name="Rotation" type="float" variable="0">
+      <help>(recv_T_modRecv) Proxy rotation (Euler angles in the reciever's coord system)</help>
+      <item label="X" defaultvalue="0.0" />
+      <item label="Y" defaultvalue="0.0" />
+      <item label="Z" defaultvalue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc token="useFilter" name="Use Filter" type="bool" variable="0">
+      <help>If true, use the sigmoid filter.</help>
+      <item label="Use Filter" defaultvalue="false" />
+    </PropertyDesc>
+    <PropertyDesc token="sigmoidParams" name="sigmoidParams" type="embeddedchunk" variable="0">
+      <help>TODO: Insert help here!</help>
+      <item label="Sigmoid Parameters" />
+      <enumeration name="sigmoid_linear_pos_filter" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="SimPosition" name="Position Simulator">
+    <category>Devices/Simulator</category>
+    <help>A simulated position device. Gets input from a keyboard proxy</help>
+    <PropertyDesc token="keyboardProxy" name="Keyboard Proxy" type="chunk" variable="0">
+      <help>The keyboard to use for event input.</help>
+      <item label="Keyboard Proxy" defaultvalue="" />
+      <enumeration name="KeyboardProxy" />
+    </PropertyDesc>
+    <PropertyDesc token="keyPairs" name="keyPairs" type="embeddedchunk" variable="0">
+      <help>Keys for moving and rotating the simulated device.</help>
+      <item label="Forward" />
+      <item label="Back" />
+      <item label="Left" />
+      <item label="Right" />
+      <item label="Up" />
+      <item label="Down" />
+      <item label="Rot Right" />
+      <item label="Rot Left" />
+      <item label="Rot Up" />
+      <item label="Rot Down" />
+      <item label="Rot CCW" />
+      <item label="Rot CW" />
+      <enumeration name="KeyModPair" />
+    </PropertyDesc>
+    <PropertyDesc token="initialPos" name="Initial Position" type="float" variable="0">
+      <help>Initial position</help>
+      <item label="X" defaultvalue="0.0" />
+      <item label="Y" defaultvalue="0.0" />
+      <item label="Z" defaultvalue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc token="initialRot" name="Initial Rotation" type="float" variable="0">
+      <help>Initial Euler rotation</help>
+      <item label="X Axis" defaultvalue="0.0" />
+      <item label="Y Axis" defaultvalue="0.0" />
+      <item label="Z Axis" defaultvalue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc token="dtrans" name="Translation Delta" type="float" variable="0">
+      <help>How much to translate for a single keypress.</help>
+      <item label="Translation Delta" defaultvalue="0.1" />
+    </PropertyDesc>
+    <PropertyDesc token="drot" name="Rotation Delta" type="float" variable="0">
+      <help>How many degrees to rotate for a single keypress.</help>
+      <item label="Rotation Delta" defaultvalue="1.0" />
+    </PropertyDesc>
+    <PropertyDesc token="transCoordSystem" name="Translation Coordinate System" type="int" variable="0">
+      <help>Do the translations apply to the tracker's local coordinate system?  Ex. Wand - global, Camera - Local</help>
+      <item label="Translation Coordinate System" defaultvalue="0" />
+      <enumeration name="Local" value="0" />
+      <enumeration name="Global" value="1" />
+    </PropertyDesc>
+    <PropertyDesc token="rotCoordSystem" name="Rotation Coordinate System" type="int" variable="0">
+      <help>Do the rotations apply to the tracker's local coordinate system?</help>
+      <item label="Rotation Coordinate System" defaultvalue="0" />
+      <enumeration name="Local" value="0" />
+      <enumeration name="Global" value="1" />
+    </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+      <help>Points to the machine that the device is physically connected to.</help>
+      <item label="Host Chunk" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="proxyAlias" name="Proxy Alias">
+    <category>Proxies</category>
+    <help>An additional name for referencing a device proxy</help>
+    <PropertyDesc token="aliasName" name="aliasName" type="string" variable="0">
+      <help>The string alias to use.</help>
+      <item label="Alias Name" defaultvalue="" />
+    </PropertyDesc>
+    <PropertyDesc token="proxyPtr" name="Proxy Pointer" type="chunk" variable="0">
+      <help>The proxy this alias refers to</help>
+      <item label="Proxy Pointer" defaultvalue="" />
+      <enumeration name="PosProxy" />
+      <enumeration name="DigProxy" />
+      <enumeration name="AnaProxy" />
+      <enumeration name="GloveProxy" />
+      <enumeration name="KeyboardProxy" />
+      <enumeration name="GestureProxy" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="RIMChunk" name="Remote Input Manager Chunk">
+    <help />
+    <category>RIM</category>
+    <PropertyDesc name="Sync Device" token="sync_device" type="chunk" variable="0">
+      <help />
+      <item label="Device" defaultvalue="" />
+      <enumeration name="SimAnalog" />
+      <enumeration name="SimDigital" />
+      <enumeration name="SimPosition" />
+      <enumeration name="Isense" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="sigmoid_linear_pos_filter" name="SigmoidLinearPosFilter">
+    <category>NoClue</category>
+    <PropertyDesc token="minDist" name="minDist" type="float" variable="0">
+      <help>Low point of the sigmoid.  Anything below this is ignored.  Anything larger is interpolated.</help>
+      <item label="Minimum Distance" defaultvalue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc token="maxDist" name="maxDist" type="float" variable="0">
+      <help>high point of the sigmoid.  Anything beyond this is just treated as normal</help>
+      <item label="Maximum Distance" defaultvalue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc token="maxThreshold" name="maxThreshold" type="float" variable="0">
+      <help>Maximum distance value allowed.  Anything larger than this is just ignored.</help>
+      <item albel="Maximum Threshold" defaultvalue="0.0" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="SimDigitalGlove" name="SimDigitalGlove">
+    <category>Devices/Simulator</category>
+    <help>A digital glove simulator</help>
+    <PropertyDesc token="keyboardProxy" name="Keyboard Proxy" type="chunk" variable="0">
+      <help>The Keyboard to use for event input</help>
+      <item label="Keyboard Proxy" defaultvalue="" />
+      <enumeration name="KeyboardProxy" />
+    </PropertyDesc>
+    <PropertyDesc token="keyPairs" name="KeyPresses" type="embeddedchunk" variable="1">
+      <help>Keypresses to trigger multiple digital inputs</help>
+      <item label="Key Presses" />
+      <enumeration name="KeyModPair" />
+    </PropertyDesc>
+    <PropertyDesc token="glovePos" name="Left Glove Position" type="chunk" variable="0">
+      <help>The position proxy for the left hand glove position.</help>
+      <item label="Left Glove Position" defaultvalue="" />
+      <enumeration name="PosProxy" />
+    </PropertyDesc>
+    <PropertyDesc token="rightGlovePos" name="Right Glove Position" type="chunk" variable="0">
+      <help>The position proxy for the right hand glove position.</help>
+      <item label="Right Glove Position" defaultvalue="" />
+      <enumeration name="PosProxy" />
+    </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+      <help />
+      <item label="" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="SimRelativePosition" name="SimRelativePosition">
+    <category>Devices/Simulator</category>
+    <help>A positional device simulator for one device relative to another.</help>
+    <PropertyDesc token="base_frame_proxy" name="base_frame_proxy" type="chunk" variable="0">
+      <help>Pos proxy that devices the base frame of reference</help>
+      <item label="Base Frame Proxy" defaultvalue="" />
+      <enumeration name="PosProxy" />
+    </PropertyDesc>
+    <PropertyDesc token="relative_proxy" name="relative_proxy" type="chunk" variable="0">
+      <help>device that is relative to the base frame</help>
+      <item label="Relative Proxy" defaultvalue="" />
+      <enumeration name="PosProxy" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="SimSetablePosition" name="SimSetablePosition">
+    <category>Devices/Simulator</category>
+    <help>A positional device simulator for one device relative to another.</help>
+  </ChunkDesc>
+  <ChunkDesc token="simViewport" name="Simulator Viewport">
+    <category>Display/Simulator</category>
+    <help>This is a viewport surface that simulator images are projected on.</help>
+    <PropertyDesc token="origin" name="origin" type="float" variable="0">
+      <help>Window origin (lower left is 0.0,0.0)</help>
+      <item label="X" defaultvalue="0.0" />
+      <item label="Y" defaultvalue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc token="size" name="size" type="float" variable="0">
+      <help>Window size ( must be in range [0.0,1.0] )</help>
+      <item label="Width" defaultvalue="1.0" />
+      <item label="Height" defaultvalue="1.0" />
+    </PropertyDesc>
+    <PropertyDesc token="view" name="view" type="int" variable="0">
+      <item label="View" defaultvalue="1" />
+      <enumeration name="left_eye" value="1" />
+      <enumeration name="right_eye" value="2" />
+      <enumeration name="stereo" value="3" />
+    </PropertyDesc>
+    <PropertyDesc token="cameraPos" name="cameraPos" type="chunk" variable="0">
+      <help>This is the pos proxy that controls the sim view</help>
+      <item label="Camera Position" defaultvalue="" />
+      <enumeration name="PosProxy" />
+      <enumeration name="proxyAlias" />
+    </PropertyDesc>
+    <PropertyDesc token="user" name="user" type="chunk" variable="0">
+      <help>This is the user that the window is drawing for.</help>
+      <item label="User" defaultvalue="" />
+      <enumeration name="JugglerUser" />
+    </PropertyDesc>
+    <PropertyDesc token="wandPos" name="wandPos" type="chunk" variable="0">
+      <help>The wand pos proxy to use in the simulator.</help>
+      <item label="Wand Position" defaultvalue="" />
+      <enumeration name="proxyAlias" />
+      <enumeration name="PosProxy" />
+    </PropertyDesc>
+    <PropertyDesc token="active" name="active" type="bool" variable="0">
+      <help>Is the window active?</help>
+      <item label="Use this viewport?" defaultvalue="1" />
+    </PropertyDesc>
+    <PropertyDesc token="drawProjections" name="drawProjections" type="bool" variable="0">
+      <help>Should projections be drawn in the simulator?</help>
+      <item label="Draw Projections" defaultvalue="0" />
+    </PropertyDesc>
+    <PropertyDesc token="surfaceColor" name="surfaceColor" type="float" variable="0">
+      <help>What color should the surfaces be?</help>
+      <item label="red" defaultvalue="0.0" />
+      <item label="green" defaultvalue="0.0" />
+      <item label="blue" defaultvalue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc token="vert_fov" name="Vertical FOV" type="float" variable="0">
+      <help>Vertical field of view in degrees</help>
+      <item label="Vertical Field Of View" defaultvalue="80.0" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="ISenseStation" name="Station">
+    <category>Devices</category>
+    <help>Settings for an Intersense Tracker Station</help>
+    <PropertyDesc token="enabled" name="Enabled" type="bool" variable="0">
+      <item label="Enabled" defaultvalue="0" />
+    </PropertyDesc>
+    <PropertyDesc token="stationIndex" name="Station Number" type="int" variable="0">
+      <item label="Station Number" defaultvalue="1" />
+    </PropertyDesc>
+    <PropertyDesc token="useDigital" name="Use Digital" type="bool" variable="0">
+      <item label="Use Digital" defaultvalue="1" />
+    </PropertyDesc>
+    <PropertyDesc token="useAnalog" name="Use Analog" type="bool" variable="0">
+      <item label="Use Analog" defaultvalue="1" />
+    </PropertyDesc>
+    <PropertyDesc token="digitalFirst" name="Digital First" type="int" variable="0">
+      <help>The first index in the vjIsense device that this station will store digital data</help>
+      <item label="Digital First" defaultvalue="0" />
+    </PropertyDesc>
+    <PropertyDesc token="digitalNum" name="Digital Count" type="int" variable="0">
+      <help>The number of digital inputs that will be stored into the vjIsense device</help>
+      <item label="Digital Count" defaultvalue="0" />
+    </PropertyDesc>
+    <PropertyDesc token="analogFirst" name="Analog First" type="int" variable="0">
+      <help>The first index in the vjIsense device that this station will store analog data</help>
+      <item label="Analog First" defaultvalue="0" />
+    </PropertyDesc>
+    <PropertyDesc token="analogNum" name="Analog Count" type="int" variable="0">
+      <help>The number of analog inputs that will be stored into the vjIsense device</help>
+      <item label="Analog Count" defaultvalue="0" />
+    </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+      <help />
+      <item label="" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="surfaceViewport" name="Surface Viewport">
+    <category>Display</category>
+    <help>This is a viewport surface that images are projected onto.</help>
+    <PropertyDesc token="origin" name="origin" type="float" variable="0">
+      <help>Window origin (lower left screen is 0.0,0.0)</help>
+      <item label="X" defaultvalue="0.0" />
+      <item label="Y" defaultvalue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc token="size" name="size" type="float" variable="0">
+      <help>Window size (must be in range [0.0,1.0])</help>
+      <item label="Width" defaultvalue="1.0" />
+      <item label="Height" defaultvalue="1.0" />
+    </PropertyDesc>
+    <PropertyDesc token="view" name="view" type="int" variable="0">
+      <item label="View" defaultvalue="1" />
+      <enumeration name="left eye" value="1" />
+      <enumeration name="right eye" value="2" />
+      <enumeration name="stereo" value="3" />
+    </PropertyDesc>
+    <PropertyDesc token="corners" name="corners" type="embeddedchunk" variable="0">
+      <help>The corners of the surface</help>
+      <item label="lower left" />
+      <item label="lower right" />
+      <item label="upper right" />
+      <item label="upper left" />
+      <enumeration name="Vec3" />
+    </PropertyDesc>
+    <PropertyDesc token="user" name="user" type="chunk" variable="0">
+      <item label="User" defaultvalue="" />
+      <enumeration name="JugglerUser" />
+    </PropertyDesc>
+    <PropertyDesc token="active" name="active" type="bool" variable="0">
+      <help>Is the window active?</help>
+      <item label="Use this viewport?" defaultvalue="1" />
+    </PropertyDesc>
+    <PropertyDesc token="tracked" name="tracked" type="bool" variable="0">
+      <help>Is this a tracked surface?</help>
+      <item label="Is Tracked" defaultvalue="0" />
+    </PropertyDesc>
+    <PropertyDesc token="trackerproxy" name="trackerproxy" type="chunk" variable="0">
+      <help>The tracker proxy that tracks the screen's reference frame.</help>
+      <item label="Tracker Proxy" defaultvalue="" />
+      <enumeration name="PosProxy" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="TrackdController" name="TrackdController">
+    <category>Devices</category>
+    <help>Configure the interface to a trackd controller memory area.</help>
+    <PropertyDesc token="shm_key" name="SharedMemoryKey" type="int" variable="0">
+      <help>This is the shared memory key for the trackd information.</help>
+      <item label="Shared Memory Key" defaultvalue="4127" />
+    </PropertyDesc>
+    <PropertyDesc token="min" name="min" type="float" variable="0">
+      <help>the actual analog data values range - lower bound</help>
+      <item label="Range Minimum" defaultvalue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc token="max" name="max" type="float" variable="0">
+      <help>the actual analog data values range - upper bound</help>
+      <item label="Range Maximum" defaultvalue="255.0" />
+    </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+      <help />
+      <item label="" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="TrackdSensor" name="TrackdSensor">
+    <category>Devices</category>
+    <help>Configure the interface to a trackd sensor memory area</help>
+    <PropertyDesc token="shm_key" name="SharedMemoryKey" type="int" variable="0">
+      <help>This is the shared memory key for the trackd information.</help>
+      <item label="Shared Memory Key" defaultvalue="4126" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="JugglerUser" name="VR Juggler User">
+    <category>NoClue</category>
+    <help>This is a user in VR Juggler.  This is used for multi-user applications</help>
+    <PropertyDesc token="headPos" name="Head Position" type="chunk" variable="0">
+      <help>This is the source of head position information.</help>
+      <item label="Head Position" defaultvalue="" />
+      <enumeration name="proxyAlias" />
+      <enumeration name="PosProxy" />
+    </PropertyDesc>
+    <PropertyDesc token="interocular_distance" name="Eye Separation" type="float" variable="0">
+      <help>Interocular distance.  NOTE: In same units as displays settings.</help>
+      <item label="User's eye separation" defaultvalue="0.229" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="Vec3" name="Vec3">
+    <category>NoClue</category>
+    <PropertyDesc token="x" name="x" type="float" variable="0">
+      <item label="X" defaultvalue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc token="y" name="y" type="float" variable="0">
+      <item label="Y" defaultvalue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc token="z" name="z" type="float" variable="0">
+      <item label="Z" defaultvalue="0.0" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="vjcontrol" name="VjControl Configuration">
+    <category>VjControl</category>
+    <help>Configuration information for the VjControl GUI itself</help>
+    <PropertyDesc token="looknfeel" name="Look and Feel" type="string" variable="0">
+      <help>The visual 'Look and Feel' to use for the GUI</help>
+      <item label="Look and Feel" defaultvalue="Java" />
+      <enumeration name="Java" />
+      <enumeration name="Motif" />
+      <enumeration name="Windows" />
+    </PropertyDesc>
+    <PropertyDesc token="host" name="Default Host" type="string" variable="0">
+      <help>A remote host that VjControl should try to connect to</help>
+      <item label="Application location" defaultvalue="localhost" />
+    </PropertyDesc>
+    <PropertyDesc token="port" name="Default Port" type="int" variable="0">
+      <help>Network Port that VjControl should try to connect to</help>
+      <item label="Application port number" defaultvalue="4450" />
+    </PropertyDesc>
+    <PropertyDesc token="descfiles" name="Preload ChunkDesc Files" type="string" variable="1">
+      <help>The names of Chunk Description files that VjControl should load at startup</help>
+      <item label="Preload ChunkDesc Files" defaultvalue="" />
+    </PropertyDesc>
+    <PropertyDesc token="chunkfiles" name="Preload ConfigChunk Files" type="string" variable="1">
+      <help>The names of ConfigChunk files that VjControl should load at startup</help>
+      <item label="Preload ConfigChunk Files" defaultvalue="" />
+    </PropertyDesc>
+    <PropertyDesc token="defaultchunkfiles" name="Default ConfigChunk Files" type="string" variable="1">
+      <help>Files that contain default values for new ConfigChunks</help>
+      <item label="Default ConfigChunk Files" defaultvalue="" />
+    </PropertyDesc>
+    <PropertyDesc token="fontname" name="Font Name" type="string" variable="0">
+      <help>Name of the font to use for the GUI</help>
+      <item label="Font Name" defaultvalue="Helvetica" />
+      <enumeration name="Courier" />
+      <enumeration name="Dialog" />
+      <enumeration name="DialogInput" />
+      <enumeration name="Helvetica" />
+      <enumeration name="TimesRoman" />
+    </PropertyDesc>
+    <PropertyDesc token="fontsize" name="Font Size" type="int" variable="0">
+      <help>Font size to use for GUI</help>
+      <item label="Font Size" defaultvalue="12" />
+    </PropertyDesc>
+    <PropertyDesc token="windowsize" name="Max Window Size" type="int" variable="0">
+      <help>Maximum size to open vjcontrol windows</help>
+      <item label="Width" defaultvalue="0" />
+      <item label="Height" defaultvalue="0" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="simKeyDigital" name="simKeyDigital">
+    <category>Devices/Simulator</category>
+    <help>This chunk holds a key and a modifier key.  It is for key events.</help>
+    <PropertyDesc token="key" name="key" type="int" variable="0">
+      <help>The key we are simulating</help>
+      <item label="Key" defaultvalue="0" />
+      <enumeration name="KEY_NONE" value="0" />
+      <enumeration name="SHIFT" value="5" />
+      <enumeration name="CTRL" value="6" />
+      <enumeration name="ALT" value="7" />
+      <enumeration name="KEY_UP" value="1" />
+      <enumeration name="KEY_DOWN" value="2" />
+      <enumeration name="KEY_LEFT" value="3" />
+      <enumeration name="KEY_RIGHT" value="4" />
+      <enumeration name="KEY_CTRL" value="5" />
+      <enumeration name="KEY_SHIFT" value="6" />
+      <enumeration name="KEY_ALT" value="7" />
+      <enumeration name="KEY_1" value="8" />
+      <enumeration name="KEY_2" value="9" />
+      <enumeration name="KEY_3" value="10" />
+      <enumeration name="KEY_4" value="11" />
+      <enumeration name="KEY_5" value="12" />
+      <enumeration name="KEY_6" value="13" />
+      <enumeration name="KEY_7" value="14" />
+      <enumeration name="KEY_8" value="15" />
+      <enumeration name="KEY_9" value="16" />
+      <enumeration name="KEY_0" value="17" />
+      <enumeration name="KEY_A" value="18" />
+      <enumeration name="KEY_B" value="19" />
+      <enumeration name="KEY_C" value="20" />
+      <enumeration name="KEY_D" value="21" />
+      <enumeration name="KEY_E" value="22" />
+      <enumeration name="KEY_F" value="23" />
+      <enumeration name="KEY_G" value="24" />
+      <enumeration name="KEY_H" value="25" />
+      <enumeration name="KEY_I" value="26" />
+      <enumeration name="KEY_J" value="27" />
+      <enumeration name="KEY_K" value="28" />
+      <enumeration name="KEY_L" value="29" />
+      <enumeration name="KEY_M" value="30" />
+      <enumeration name="KEY_N" value="31" />
+      <enumeration name="KEY_O" value="32" />
+      <enumeration name="KEY_P" value="33" />
+      <enumeration name="KEY_Q" value="34" />
+      <enumeration name="KEY_R" value="35" />
+      <enumeration name="KEY_S" value="36" />
+      <enumeration name="KEY_T" value="37" />
+      <enumeration name="KEY_U" value="38" />
+      <enumeration name="KEY_V" value="39" />
+      <enumeration name="KEY_W" value="40" />
+      <enumeration name="KEY_X" value="41" />
+      <enumeration name="KEY_Y" value="42" />
+      <enumeration name="KEY_Z" value="43" />
+      <enumeration name="KEY_ESC" value="44" />
+      <enumeration name="MOUSE_POSX" value="45" />
+      <enumeration name="MOUSE_NEGX" value="46" />
+      <enumeration name="MOUSE_POSY" value="47" />
+      <enumeration name="MOUSE_NEGY" value="48" />
+      <enumeration name="MOUSE_BUT1" value="49" />
+      <enumeration name="MOUSE_BUT2" value="50" />
+      <enumeration name="MOUSE_BUT3" value="51" />
+    </PropertyDesc>
+    <PropertyDesc token="pressed" name="pressed" type="chunk" variable="1">
+      <help>Digitals that must be pressed</help>
+      <item label="Pressed" defaultvalue="" />
+      <enumeration name="proxyAlias" />
+      <enumeration name="DigProxy" />
+    </PropertyDesc>
+    <PropertyDesc token="notPressed" name="notPressed" type="chunk" variable="1">
+      <help>Digitals that should not be pressed</help>
+      <item label="Not Pressed" defaultvalue="" />
+      <enumeration name="proxyAlias" />
+      <enumeration name="DigProxy" />
+    </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+      <help />
+      <item label="" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="simKeyboardDigital" name="simKeyboardDigital">
+    <category>Devices/Simulator</category>
+    <PropertyDesc token="simKeys" name="simKeys" type="embeddedchunk" variable="1">
+      <help>The keys we are simulating</help>
+      <item label="Sim Keys" />
+      <enumeration name="simKeyDigital" />
+    </PropertyDesc>
+    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+      <help />
+      <item label="" defaultvalue="" />
+      <enumeration name="cluster_machine" value="cluster_machine" />
+    </PropertyDesc>
+  </ChunkDesc>
 </ChunkDescDB>
+
