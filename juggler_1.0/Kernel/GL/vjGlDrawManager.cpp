@@ -192,38 +192,71 @@ void vjGlDrawManager::drawSimulator(vjSimulator* sim)
    const float interoccular(0.27);
    const float eye_radius(0.08f);
 
+    glPushAttrib( GL_ENABLE_BIT | GL_LIGHTING_BIT );
+    {
+	//-----------------set up materials....
+	float mat_ambient[] = {0.1, 0.1, 0.1, 1.0};
+	float mat_shininess[] = {50.0};
+	float mat_diffuse[] = {.7, .7, .7, 1.0};
+	float mat_specular[] = {1.0, 1.0, 1.0, 1.0};
+	//-----------------Call Materials.....
+	glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
+	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+	//----------------Enable Materials.....
+	glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
+	glEnable(GL_COLOR_MATERIAL);
+	    
+	//-----------------set up a light....
+	GLfloat light_ambient[] = { 0.1f,  0.1f,  0.1f,  1.0f};
+	GLfloat light_diffuse[] = { 0.8f,  0.8f,  0.8f,  1.0f};
+	GLfloat light_specular[] = { 1.0f,  1.0f,  1.0f,  1.0f};
+	GLfloat light_position[] = {0.0f, 0.75f, 0.75f, 0.0f};
+	//-----------------Call the light....
+	glLightfv(GL_LIGHT7, GL_AMBIENT,  light_ambient);
+	glLightfv(GL_LIGHT7, GL_DIFFUSE,  light_diffuse);
+	glLightfv(GL_LIGHT7, GL_SPECULAR,  light_specular);
+	glLightfv(GL_LIGHT7, GL_POSITION,  light_position);
+    
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT7);
+	//-----------------------------------------------------
+	
       // Draw a cave-like outline
-   glPushMatrix();
-      glColor3f(1.0f, 1.0f, 1.0f);
-      glTranslatef(0.0f, 5.0f, 0.0f);      // Center it on 0,0,0
-      drawWireCube(10.0f);
-   glPopMatrix();
-
-      // Draw the user's head
-   glPushMatrix();
-      glMultMatrixf(sim->getHeadPos().getFloatPtr());
-      glColor3f(1.0f, 0.0f, 0.0f);
-      drawSphere(head_radius, 10, 10);             // Head
-      glPushMatrix();
-         glColor3f(0.0f, 0.0f, 1.0f);
-         glTranslatef(0.0f, eye_vertical, -eye_horizontal);
-         glPushMatrix();                     // Right eye
-            glTranslatef((interoccular/2.0f), 0.0f, 0.0f);
-            drawSphere(eye_radius, 5, 5);
-         glPopMatrix();
-         glPushMatrix();                     // Left eye
-            glTranslatef(-(interoccular/2.0f), 0.0f, 0.0f);
-            drawSphere(eye_radius, 5, 5);
-         glPopMatrix();
-      glPopMatrix();
-   glPopMatrix();
-
-      // Draw the wand
-   glPushMatrix();
-      glMultMatrixf(sim->getWandPos().getFloatPtr());
-      glColor3f(1.0f, 0.0f, 1.0f);
-      drawCone(0.2, 0.6f, 6, 1);
-   glPopMatrix();
+       glPushMatrix();
+	  glColor3f(1.0f, 1.0f, 1.0f);
+	  glTranslatef(0.0f, 5.0f, 0.0f);      // Center it on 0,0,0
+	  drawWireCube(10.0f);
+       glPopMatrix();
+    
+	  // Draw the user's head
+       glPushMatrix();
+	  glMultMatrixf(sim->getHeadPos().getFloatPtr());
+	  glColor3f(1.0f, 0.0f, 0.0f);
+	  drawSphere(head_radius, 10, 10);             // Head
+	  glPushMatrix();
+	     glColor3f(0.0f, 0.0f, 1.0f);
+	     glTranslatef(0.0f, eye_vertical, -eye_horizontal);
+	     glPushMatrix();                     // Right eye
+		glTranslatef((interoccular/2.0f), 0.0f, 0.0f);
+		drawSphere(eye_radius, 5, 5);
+	     glPopMatrix();
+	     glPushMatrix();                     // Left eye
+		glTranslatef(-(interoccular/2.0f), 0.0f, 0.0f);
+		drawSphere(eye_radius, 5, 5);
+	     glPopMatrix();
+	  glPopMatrix();
+       glPopMatrix();
+    
+	  // Draw the wand
+       glPushMatrix();
+	  glMultMatrixf(sim->getWandPos().getFloatPtr());
+	  glColor3f(1.0f, 0.0f, 1.0f);
+	  drawCone(0.2, 0.6f, 6, 1);
+       glPopMatrix();
+   }
+   glPopAttrib();
 }
 
     /// dumps the object's internal state
