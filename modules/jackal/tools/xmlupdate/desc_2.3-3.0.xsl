@@ -58,9 +58,14 @@
    <xsl:param name="outputdir" select="'definitions'" />
 
 
+   <!-- The namespace for JCCL config definitions. -->
+   <xsl:variable name="definition_namespace">
+      <xsl:text>http://www.vrjuggler.org/jccl/xsd/3.0/definition</xsl:text>
+   </xsl:variable>
+
    <!-- The schema for JCCL config definitions. -->
    <xsl:variable name="definition_schema">
-      <xsl:text>http://www.vrjuggler.org/jccl/xsd/3.0/definition</xsl:text>
+      <xsl:text>http://www.vrjuggler.org/jccl/xsd/3.0/definition.xsd</xsl:text>
    </xsl:variable>
 
    <!-- Define a handy way to insert newlines when necessary. -->
@@ -130,7 +135,7 @@
          <!-- Create the new XML tree. -->
          <xsl:element name="definition" namespace="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
             <xsl:attribute name="schemaLocation" namespace="http://www.w3.org/2001/XMLSchema-instance">
-               <xsl:value-of select="$definition_schema" />
+               <xsl:value-of select="$definition_namespace" />
                <xsl:text> </xsl:text>
                <xsl:value-of select="$definition_schema" />
             </xsl:attribute>
