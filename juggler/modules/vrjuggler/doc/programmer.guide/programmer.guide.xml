@@ -5829,6 +5829,7 @@ private:
 
             <programlisting>#include &lt;vpr/IO/SerializableObject.h&gt;
 
+template&lt;&gt;
 vpr::ReturnStatus
 vpr::SerializableObjectMixin&lt;SomeType&gt;::
    writeObject(vpr::ObjectWriter* writer)
@@ -5839,6 +5840,7 @@ vpr::SerializableObjectMixin&lt;SomeType&gt;::
    return vpr::ReturnStatus::Success;
 }
 
+template&lt;&gt;
 vpr::ReturnStatus
 vpr::SerializableObjectMixin&lt;SomeType&gt;::
    readObject(vpr::ObjectReader* reader)
