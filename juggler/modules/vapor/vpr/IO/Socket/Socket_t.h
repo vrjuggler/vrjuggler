@@ -844,6 +844,10 @@ protected:
       return m_socket_imp->setOption(option, data);
    }
 
+// Put in back door for simulator
+#if VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_SIMULATOR
+public:
+#endif
    /// Platform-specific socket implementation object
    //SocketImpl* m_socket_imp;
    boost::shared_ptr<SocketImpl> m_socket_imp;

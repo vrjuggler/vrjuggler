@@ -50,6 +50,28 @@ namespace vpr
 namespace sim
 {
 
+
+Message::Message (const Message& msg)
+   : mStartOnWire(msg.mStartOnWire),
+     mFullyOnWire(msg.mFullyOnWire), mArrivesFully(msg.mArrivesFully),
+     mMsgPath(msg.mMsgPath), mNextHop(msg.mNextHop), mSrcSock(msg.mSrcSock),
+     mDestSock(msg.mDestSock)
+{
+   vprASSERT(false && "In copy constructor");
+   mMsg = msg.mMsg;     // Just copy the shared pointer.  VERY cheap
+
+   /*
+   if ( (msg.mMsg.get() != NULL) && (!msg.mMsg->empty()) )
+   {
+      // Yikes, this could get expensive!
+      // XXX: Find out if this is REALLY needed
+      mMsg = MessageDataPtr( new MessageDataType(msg.mMsg->begin(), msg.mMsg->end()));
+      //mMsg = malloc(msg.mMsgSize);
+      //memcpy(mMsg, msg.mMsg, msg.mMsgSize);
+   }
+   */
+}
+
 vpr::Uint32 Message::resize (const vpr::Uint32 bytes_read)
 {
    vpr::Uint32 resize_amount;
