@@ -661,7 +661,7 @@ esac
 vpr_extra_cxxflags=''
 vpr_extra_include_dirs=''
 
-if test "x$PLATFORM" = "xIRIX" ; then
+if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
     vpr_n32_flags='-n32'
     vpr_64_flags='-64'
     vpr_extra_include_dirs='boost/compatibility/cpp_c_headers'
