@@ -129,8 +129,9 @@ void Controller::processNextEvent ()
 
       vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
          << "Controller::processNextEvent(): Event is an arrived message on "
-         << "forward queue of line " << line.getNetworkAddressString()
-         << "\n" << vprDEBUG_FLUSH;
+         << ((dir == vpr::sim::NetworkLine::FORWARD) ? "forward" : "reverse")
+         << " queue of line " << line.getNetworkAddressString() << "\n"
+         << vprDEBUG_FLUSH;
       mClock.setCurrentTime(event_time);
       moveMessage(msg, event_time);
 
