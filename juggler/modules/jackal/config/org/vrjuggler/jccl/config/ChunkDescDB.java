@@ -44,7 +44,8 @@ import org.jdom.output.XMLOutputter;
  * grouped together logically.
  */
 public class ChunkDescDB
-   implements PropertyChangeListener
+   implements ConfigTokens
+            , PropertyChangeListener
             , ChunkDescListener
 {
    public static final double DESC_VERSION_VALUE = 2.1;
@@ -627,7 +628,7 @@ public class ChunkDescDB
    {
       String name = docRoot.getName();
 
-      if ( name.equals(ConfigTokens.chunk_desc_db_TOKEN) )
+      if ( name.equals(chunk_desc_db_TOKEN) )
       {
          Iterator i = docRoot.getChildren().iterator();
          Element desc_elem;
@@ -635,7 +636,7 @@ public class ChunkDescDB
          while ( i.hasNext() )
          {
             desc_elem = (Element) i.next();
-            if ( desc_elem.getName().equals(ConfigTokens.chunk_desc_TOKEN) )
+            if ( desc_elem.getName().equals(chunk_desc_TOKEN) )
             {
                // We have to detach this node from its parent so that we can
                // create a new root document when writing out the database.
@@ -656,7 +657,7 @@ public class ChunkDescDB
    private void makeDocument(Document doc)
    {
       addVersion(doc);
-      Element root = new Element(ConfigTokens.chunk_desc_db_TOKEN);
+      Element root = new Element(chunk_desc_db_TOKEN);
       doc.setRootElement(root);
 
       ChunkDesc cur_desc;
@@ -685,7 +686,7 @@ public class ChunkDescDB
       pi_attrs.put(DESC_VERSION_ATTR, String.valueOf(DESC_VERSION_VALUE));
 
       ProcessingInstruction ver =
-         new ProcessingInstruction(ConfigTokens.SETTINGS_INSTRUCTION, pi_attrs);
+         new ProcessingInstruction(SETTINGS_INSTRUCTION, pi_attrs);
       doc.addContent(ver);
    }
 

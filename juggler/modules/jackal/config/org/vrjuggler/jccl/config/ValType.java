@@ -38,6 +38,7 @@ package org.vrjuggler.jccl.config;
  *  be treated as equivalent to vt1.equals(vt2).
  */
 public final class ValType
+   implements ConfigTokens
 {
    private final static int t_string        = 1;
    private final static int t_float         = 2;
@@ -69,27 +70,27 @@ public final class ValType
    public static ValType getValType(String s)
    {
       String s2 = s.toLowerCase().trim();
-      if (s2.equals(ConfigTokens.string_TOKEN))
+      if (s2.equals(string_TOKEN))
       {
          return STRING;
       }
-      else if (s2.equals(ConfigTokens.float_TOKEN))
+      else if (s2.equals(float_TOKEN))
       {
          return FLOAT;
       }
-      else if (s2.equals(ConfigTokens.int_TOKEN))
+      else if (s2.equals(int_TOKEN))
       {
          return INT;
       }
-      else if (s2.equals(ConfigTokens.bool_TOKEN))
+      else if (s2.equals(bool_TOKEN))
       {
          return BOOL;
       }
-      else if (s2.equals(ConfigTokens.chunk_TOKEN))
+      else if (s2.equals(chunk_TOKEN))
       {
          return CHUNK;
       }
-      else if (s2.equals(ConfigTokens.embeddedchunk_TOKEN))
+      else if (s2.equals(embeddedchunk_TOKEN))
       {
          return EMBEDDEDCHUNK;
       }
@@ -108,19 +109,19 @@ public final class ValType
       switch (val)
       {
       case t_string:
-         return ConfigTokens.string_TOKEN;
+         return string_TOKEN;
       case t_float:
-         return ConfigTokens.float_TOKEN;
+         return float_TOKEN;
       case t_int:
-         return ConfigTokens.int_TOKEN;
+         return int_TOKEN;
       case t_bool:
-         return ConfigTokens.bool_TOKEN;
+         return bool_TOKEN;
       case t_chunk:
-         return ConfigTokens.chunk_TOKEN;
+         return chunk_TOKEN;
       case t_embeddedchunk:
-         return ConfigTokens.embeddedchunk_TOKEN;
+         return embeddedchunk_TOKEN;
       default:
-         return ConfigTokens.invalid_TOKEN;
+         return invalid_TOKEN;
       }
    }
 

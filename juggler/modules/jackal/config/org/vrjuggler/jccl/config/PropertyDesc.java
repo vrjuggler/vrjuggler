@@ -51,6 +51,7 @@ import org.jdom.Element;
  */
 public class PropertyDesc
    implements Cloneable
+            , ConfigTokens
 {
    private int enumval = 0; // for assigning numeric defaults to enum entries
 
@@ -65,7 +66,7 @@ public class PropertyDesc
 
    public PropertyDesc ()
    {
-      mDomElement = new Element(ConfigTokens.property_desc_TOKEN);
+      mDomElement = new Element(property_desc_TOKEN);
       changeSupport = new PropertyChangeSupport(this);
       this.setName("");
       this.setToken("");
@@ -199,7 +200,7 @@ public class PropertyDesc
    {
       Vector items = new Vector();
 
-      Iterator i = mDomElement.getChildren(ConfigTokens.item_TOKEN).iterator();
+      Iterator i = mDomElement.getChildren(item_TOKEN).iterator();
 
       while ( i.hasNext() )
       {
@@ -215,24 +216,24 @@ public class PropertyDesc
     */
    public int getItemsSize()
    {
-      return mDomElement.getChildren(ConfigTokens.item_TOKEN).size();
+      return mDomElement.getChildren(item_TOKEN).size();
    }
 
    public void setItem (int index, Item item)
    {
-      if ( index >= mDomElement.getChildren(ConfigTokens.item_TOKEN).size() )
+      if ( index >= mDomElement.getChildren(item_TOKEN).size() )
       {
          mDomElement.addContent(item.getNode());
       }
       else
       {
          Element item_elem =
-            (Element) mDomElement.getChildren(ConfigTokens.item_TOKEN).get(index);
+            (Element) mDomElement.getChildren(item_TOKEN).get(index);
 
          // XXX: Not sure if this is right... There may be an issue with the
          // default value setting not being copied into item_elem.
-         item_elem.setAttribute(ConfigTokens.item_label_TOKEN, item.getLabel());
-         item_elem.setAttribute(ConfigTokens.default_value_TOKEN,
+         item_elem.setAttribute(item_label_TOKEN, item.getLabel());
+         item_elem.setAttribute(default_value_TOKEN,
                                 item.getDefaultValue().toString());
       }
       changeSupport.firePropertyChange("item", null, null);
@@ -247,15 +248,15 @@ public class PropertyDesc
       ValType val_type = this.getValType();
       VarValue val = new VarValue(val_type);
 
-      List children = mDomElement.getChildren(ConfigTokens.item_TOKEN);
+      List children = mDomElement.getChildren(item_TOKEN);
 
       if ( index < children.size() )
       {
          Element item_child = (Element) children.get(index);
 
-         if ( item_child.getAttribute(ConfigTokens.default_value_TOKEN) != null )
+         if ( item_child.getAttribute(default_value_TOKEN) != null )
          {
-            val.set(item_child.getAttribute(ConfigTokens.default_value_TOKEN).getValue().trim());
+            val.set(item_child.getAttribute(default_value_TOKEN).getValue().trim());
          }
          // XXX: Default values for embedded chunks are not yet supported.
          else if ( ValType.EMBEDDEDCHUNK == val_type )
@@ -345,7 +346,7 @@ public class PropertyDesc
    public void setUserLevel(int level)
    {
       int old = getUserLevel();
-      mDomElement.setAttribute(ConfigTokens.user_level_TOKEN,
+      mDomElement.setAttribute(user_level_TOKEN,
                                String.valueOf(level));
       changeSupport.firePropertyChange("level", old, level);
    }
@@ -356,16 +357,16 @@ public class PropertyDesc
 
       // XXX: The following code will probably not be needed in the long run.
       // (PH 5/10/2002)
-      if ( mDomElement.getAttribute(ConfigTokens.user_level_TOKEN) != null )
+      if ( mDomElement.getAttribute(user_level_TOKEN) != null )
       {
          String value =
-            mDomElement.getAttribute(ConfigTokens.user_level_TOKEN).getValue();
+            mDomElement.getAttribute(user_level_TOKEN).getValue();
 
-         if ( value.equals(ConfigTokens.beginner_TOKEN) )
+         if ( value.equals(beginner_TOKEN) )
          {
             level = 0;
          }
-         else if ( value.equals(ConfigTokens.expert_TOKEN) )
+         else if ( value.equals(expert_TOKEN) )
          {
             level = 1;
          }
@@ -380,7 +381,7 @@ public class PropertyDesc
 
    public int getValueLabelsSize ()
    {
-      return mDomElement.getChildren(ConfigTokens.item_TOKEN).size();
+      return mDomElement.getChildren(item_TOKEN).size();
    }
 
    public String getValueLabel (int i)
@@ -388,8 +389,8 @@ public class PropertyDesc
       if ( i < getValueLabelsSize() )
       {
          Element item_elem =
-            (Element) mDomElement.getChildren(ConfigTokens.item_TOKEN).get(i);
-         return item_elem.getAttribute(ConfigTokens.item_label_TOKEN).getValue();
+            (Element) mDomElement.getChildren(item_TOKEN).get(i);
+         return item_elem.getAttribute(item_label_TOKEN).getValue();
       }
       else
       {
@@ -406,13 +407,13 @@ public class PropertyDesc
     */
    public void setValueLabels (List labels)
    {
-      mDomElement.removeChildren(ConfigTokens.item_TOKEN);
+      mDomElement.removeChildren(item_TOKEN);
       Iterator i = labels.iterator();
 
       while ( i.hasNext() )
       {
-         Element new_elem = new Element(ConfigTokens.item_TOKEN);
-         new_elem.setAttribute(ConfigTokens.item_label_TOKEN,
+         Element new_elem = new Element(item_TOKEN);
+         new_elem.setAttribute(item_label_TOKEN,
                                (String) i.next());
          mDomElement.addContent(new_elem);
       }
@@ -428,8 +429,8 @@ public class PropertyDesc
     */
    public void appendValueLabel (String label)
    {
-      Element new_item = new Element(ConfigTokens.item_TOKEN);
-      new_item.setAttribute(ConfigTokens.item_label_TOKEN, label);
+      Element new_item = new Element(item_TOKEN);
+      new_item.setAttribute(item_label_TOKEN, label);
       mDomElement.addContent(new_item);
       changeSupport.firePropertyChange("item", null, null);
    }
@@ -464,7 +465,7 @@ public class PropertyDesc
     */
    public int getNumEnums()
    {
-      return mDomElement.getChildren(ConfigTokens.prop_enum_TOKEN).size();
+      return mDomElement.getChildren(prop_enum_TOKEN).size();
    }
 
    /**
@@ -486,7 +487,7 @@ public class PropertyDesc
 
       // Construct a new DescEnum object for the enum we care about
       Element desc_elt =
-         (Element)mDomElement.getChildren(ConfigTokens.prop_enum_TOKEN).get(idx);
+         (Element)mDomElement.getChildren(prop_enum_TOKEN).get(idx);
       DescEnum desc_enum = new DescEnum(desc_elt, getValType());
       desc_enum.addPropertyChangeListener(enumChangeListener);
 
@@ -502,7 +503,7 @@ public class PropertyDesc
    {
       List enums = new ArrayList();
       Iterator itr =
-         mDomElement.getChildren(ConfigTokens.prop_enum_TOKEN).iterator();
+         mDomElement.getChildren(prop_enum_TOKEN).iterator();
 
       while (itr.hasNext())
       {
@@ -539,7 +540,7 @@ public class PropertyDesc
    public VarValue getEnumValue (String val)
    {
       VarValue enum_value = null;
-      Iterator i = mDomElement.getChildren(ConfigTokens.prop_enum_TOKEN).iterator();
+      Iterator i = mDomElement.getChildren(prop_enum_TOKEN).iterator();
 
       while ( i.hasNext() )
       {
@@ -577,7 +578,7 @@ public class PropertyDesc
    {
       VarValue val_storage = new VarValue(val.getValType());
       Iterator i =
-         mDomElement.getChildren(ConfigTokens.prop_enum_TOKEN).iterator();
+         mDomElement.getChildren(prop_enum_TOKEN).iterator();
       Element enum_elem;
       String return_val = val.toString();
 
@@ -638,7 +639,7 @@ public class PropertyDesc
    {
       public Item (ValType type)
       {
-         this.mNode    = new Element(ConfigTokens.item_TOKEN);
+         this.mNode    = new Element(item_TOKEN);
          this.mValType = type;
 
          this.setLabel("");
@@ -661,12 +662,12 @@ public class PropertyDesc
 
       public String getLabel ()
       {
-         return mNode.getAttribute(ConfigTokens.item_label_TOKEN).getValue();
+         return mNode.getAttribute(item_label_TOKEN).getValue();
       }
 
       public void setLabel (String label)
       {
-         mNode.setAttribute(ConfigTokens.item_label_TOKEN, label);
+         mNode.setAttribute(item_label_TOKEN, label);
       }
 
       public ValType getValType ()
@@ -679,10 +680,10 @@ public class PropertyDesc
          VarValue default_value = null;
 
          // If the item actually has a default value, return it
-         if ( mNode.getAttribute(ConfigTokens.default_value_TOKEN) != null )
+         if ( mNode.getAttribute(default_value_TOKEN) != null )
          {
             default_value = new VarValue(mValType);
-            default_value.set(mNode.getAttribute(ConfigTokens.default_value_TOKEN).getValue());
+            default_value.set(mNode.getAttribute(default_value_TOKEN).getValue());
          }
          // Otherwise, create a new value for the default
          else
@@ -693,8 +694,8 @@ public class PropertyDesc
             {
                // Get the enumeration containing the chunk desc token
                Element parent = mNode.getParent();
-               Element desc_node = parent.getChild(ConfigTokens.prop_enum_TOKEN);
-               String desc_token = desc_node.getAttributeValue(ConfigTokens.name_TOKEN);
+               Element desc_node = parent.getChild(prop_enum_TOKEN);
+               String desc_token = desc_node.getAttributeValue(name_TOKEN);
 
                // Get the default config chunk for the found desc
                ChunkDesc desc = ChunkFactory.getChunkDescByToken(desc_token);
@@ -712,7 +713,7 @@ public class PropertyDesc
 
       private void setDefaultValue (String value)
       {
-         mNode.setAttribute(ConfigTokens.default_value_TOKEN, value);
+         mNode.setAttribute(default_value_TOKEN, value);
       }
 
       /**

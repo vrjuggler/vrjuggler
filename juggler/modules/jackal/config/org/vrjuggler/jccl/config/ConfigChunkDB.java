@@ -49,6 +49,7 @@ import org.jdom.output.XMLOutputter;
  */
 public class ConfigChunkDB
    implements Cloneable
+            , ConfigTokens
 {
    public static final double CONFIG_VERSION_VALUE = 2.0;
 
@@ -69,7 +70,7 @@ public class ConfigChunkDB
       // Create a new document for this DB.
       mDoc = new Document();
       addVersion(mDoc);
-      mDoc.setRootElement(new Element(ConfigTokens.chunk_db_TOKEN));
+      mDoc.setRootElement(new Element(chunk_db_TOKEN));
    }
 
    /** Deep copy.
@@ -253,7 +254,7 @@ public class ConfigChunkDB
    private void loadChunks(Element docRoot)
       throws IOException
    {
-      if ( docRoot.getName().equals(ConfigTokens.chunk_db_TOKEN) )
+      if ( docRoot.getName().equals(chunk_db_TOKEN) )
       {
          List children = docRoot.getChildren();
          Iterator i    = children.iterator();
@@ -532,7 +533,7 @@ public class ConfigChunkDB
       else
       {
          // Desription includes are forced to be first in the chunk collection.
-         if ( desc_token.equals(ConfigTokens.vj_include_desc_file_TOKEN) )
+         if ( desc_token.equals(vj_include_desc_file_TOKEN) )
          {
             chunks.add(0, c);
          }
@@ -540,7 +541,7 @@ public class ConfigChunkDB
          // element of the chunk collection that is not an include directive.
          // I suppose this is to ensure that includes always come before loaded
          // chunks.
-         else if ( desc_token.equals(ConfigTokens.vj_include_file_TOKEN) )
+         else if ( desc_token.equals(vj_include_file_TOKEN) )
          {
             int i;
             String desc_token2;
@@ -550,8 +551,8 @@ public class ConfigChunkDB
                // Get the chunk description type of a previously loaded chunk.
                desc_token2 = ((ConfigChunk) chunks.get(i)).getDescToken();
 
-               if ( ! desc_token2.equals(ConfigTokens.vj_include_desc_file_TOKEN) &&
-                    ! desc_token2.equals(ConfigTokens.vj_include_file_TOKEN) )
+               if ( ! desc_token2.equals(vj_include_desc_file_TOKEN) &&
+                    ! desc_token2.equals(vj_include_file_TOKEN) )
                {
                   break;
                }
@@ -804,7 +805,7 @@ public class ConfigChunkDB
       pi_attrs.put(CONFIG_VERSION_ATTR, String.valueOf(CONFIG_VERSION_VALUE));
 
       ProcessingInstruction ver =
-         new ProcessingInstruction(ConfigTokens.SETTINGS_INSTRUCTION, pi_attrs);
+         new ProcessingInstruction(SETTINGS_INSTRUCTION, pi_attrs);
       doc.addContent(ver);
    }
 
