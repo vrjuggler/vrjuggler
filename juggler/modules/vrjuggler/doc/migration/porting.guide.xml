@@ -712,14 +712,14 @@ if (mAccelerateButton-&#62;getData() == gadget::Digital::TOGGLE_ON)
       units. Therefore for VR Juggler 2.0 we have switched to meters and added
       a Position Filter Proxy that allows an application to use any units that
       it wishes. The addition of position filters causes three potential
-      changes for applications. </para>
+      changes for applications.</para>
 
       <para><itemizedlist><listitem><para>The first change is in the
       configuration of the devices themselves, for these modifications please
       refer to the configuration guide which can help you configure your
-      devices for whichever units your application desires.</para></listitem><listitem><para>The
-      second change is that a positional device now the position matrix
-      instead of a reference to the matrix as shown here.<programlisting>gadget::PositionInterface posInt;
+      devices properly.</para></listitem><listitem><para>The second change is
+      that a positional device now the position matrix instead of a reference
+      to the matrix as shown here.<programlisting>gadget::PositionInterface posInt;
 
 //Checking position device values in 1.0
 vjMatrix* mat = posInt.getData();
