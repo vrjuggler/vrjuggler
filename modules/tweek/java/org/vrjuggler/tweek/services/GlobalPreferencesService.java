@@ -495,7 +495,7 @@ public class GlobalPreferencesService
                }
             }
          }
-         catch (JDOMException e)
+         catch (Exception e)
          {
             e.printStackTrace();
          }
