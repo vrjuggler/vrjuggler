@@ -13,6 +13,7 @@ public class VjControl {
     static Vector chunkdbnames;
     static Vector auto_descdbnames;
     static Vector auto_chunkdbnames;
+    static Vector auto_defaultchunkdbnames;
     static String default_looknfeel = "java";
 
     static int fontsize = -1;
@@ -29,6 +30,7 @@ public class VjControl {
 	boolean autoload = true;
 	auto_descdbnames = new Vector();
 	auto_chunkdbnames = new Vector();
+	auto_defaultchunkdbnames = new Vector();
 	Vector descdbnames = new Vector();
 	Vector chunkdbnames = new Vector();
 	Vector perfdatanames = new Vector();
@@ -87,6 +89,11 @@ public class VjControl {
 	    FileControl.loadNewDescDBFile (lastdname, false);
 	}
 	if (autoload) {
+	    for (i = 0; i < auto_defaultchunkdbnames.size(); i++) {
+		lastfname = (String)auto_defaultchunkdbnames.elementAt(i);
+		FileControl.loadChunkDBFileInto(Core.default_chunkdb,lastfname);
+	    }
+	    //System.out.println("default are\n" + Core.default_chunkdb.fileRep());
 	    for (i = 0; i < auto_chunkdbnames.size(); i++) {
 		lastfname = (String)auto_chunkdbnames.elementAt(i);
 		FileControl.loadNewChunkDBFile (lastfname, false);
@@ -159,6 +166,13 @@ public class VjControl {
 	    s = stringReplacements (s);
 	    auto_chunkdbnames.addElement (s);
 	}
+	p = ch.getPropertyFromToken ("defaultchunkfiles");
+	if (p != null) 
+	    for (i = 0; i < p.getNum(); i++) {
+		s = p.getVal(i).getString();
+		s = stringReplacements (s);
+		auto_defaultchunkdbnames.addElement (s);
+	    }
     }
 
     

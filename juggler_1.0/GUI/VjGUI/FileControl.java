@@ -140,6 +140,34 @@ public class FileControl {
 
 
 
+    // this is used specifically to load into an existing chunkdb without
+    // adding anything into the gui's list of chunkdb's... useful
+    // for loading the default chunkdb and keeping it hidden
+    public static boolean loadChunkDBFileInto (ConfigChunkDB chunkdb, String currentdir) {
+	File f = null;
+	FileReader r;
+	ConfigStreamTokenizer st;
+	boolean retval = true;
+	try {
+	    f = new File (currentdir);
+	    r = new FileReader (f);
+	    st = new ConfigStreamTokenizer(r);
+	    chunkdb.setName(f.getName());
+	    chunkdb.setFile(f);
+	    chunkdb.read(st);
+	    Vector v = chunkdb.getOfDescToken("vjIncludeFile");
+	    for (int i = 0; i < v.size(); i++)
+		retval = retval && loadChunkDBFileInto(chunkdb, ((ConfigChunk)v.elementAt(i)).getName());
+	    return retval;
+	}
+	catch (FileNotFoundException e) {
+	    Core.consoleErrorMessage ("FileControl", "File Not Found: " + f);
+	    return false;
+	}
+
+    }
+
+
   public static String loadNewChunkDBFile (String currentdir, boolean showrequester) {
     File f;
     FileReader r;
@@ -339,7 +367,8 @@ public class FileControl {
 	    st.eolIsSignificant(false);
 	    st.quoteChar('"');
 
-	    Core.perf_collection.read (st);
+	    Core.perf_collection.removeAllData();
+	    Core.perf_collection.read (st, true);
 	    return new String ("unnamed perf data file");
 	}
 	catch (FileNotFoundException e) {
