@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/samples/ogl/simpleGlove
+# Makefile.in for juggler/samples/ogl/digitalGlove
 # $Id$
 #
 # Generated for use on @PLATFORM@
@@ -29,7 +29,7 @@ VPATH		= @srcdir@
 # use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
-OBJECTS		= main.@OBJ_FILE_SUFFIX@ simpleGloveApp.@OBJ_FILE_SUFFIX@
+OBJECTS		= main.@OBJ_FILE_SUFFIX@ digitalGloveApp.@OBJ_FILE_SUFFIX@
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -37,13 +37,13 @@ OBJECTS		= main.@OBJ_FILE_SUFFIX@ simpleGloveApp.@OBJ_FILE_SUFFIX@
 default: all
 
 
-all: simpleGlove
+all: digitalGlove
 
 
-simpleGlove: $(OBJECTS)
+digitalGlove: $(OBJECTS)
 	$(LINK) -o $@ $(OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
-main.@OBJ_FILE_SUFFIX@ simpleGloveApp.@OBJ_FILE_SUFFIX@: simpleGloveApp.h
+main.@OBJ_FILE_SUFFIX@ digitalGloveApp.@OBJ_FILE_SUFFIX@: digitalGloveApp.h
 
 .cpp.@OBJ_FILE_SUFFIX@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
@@ -52,6 +52,6 @@ main.@OBJ_FILE_SUFFIX@ simpleGloveApp.@OBJ_FILE_SUFFIX@: simpleGloveApp.h
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend simpleGlove simpleGlove.exe simpleGlove.ilk	\
+	rm -f Makedepend digitalGlove digitalGlove.exe digitalGlove.ilk	\
           $(OBJECTS) *core so_locations *.?db
 	rm -rf ./ii_files

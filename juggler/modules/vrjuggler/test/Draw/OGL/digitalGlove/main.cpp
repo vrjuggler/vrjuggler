@@ -36,7 +36,7 @@
 //
 // main.cpp
 //----------------------------------------
-#include <simpleGloveApp.h>
+#include <digitalGloveApp.h>
 
       // --- Lib Stuff --- //
 #include <Kernel/vjKernel.h>
@@ -44,7 +44,7 @@
 int main(int argc, char* argv[])
 {
    vjKernel* kernel = vjKernel::instance();           // Get the kernel
-   simpleGloveApp* application = new simpleGloveApp(kernel);       // Declare an instance of the app
+   digitalGloveApp* application = new digitalGloveApp(kernel);       // Declare an instance of the app
 
    if (argc <= 1)
    {
