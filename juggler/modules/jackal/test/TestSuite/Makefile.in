@@ -69,15 +69,21 @@ LINKALL_OFF	= @APP_LINKALL_OFF@
 # -----------------------------------------------------------------------------
 # CppUnit stuff.
 # -----------------------------------------------------------------------------
-CPPUNIT_SRCS	= Exception.cpp		\
-                  NotEqualException.cpp	\
-                  TestAssert.cpp	\
-                  TestCase.cpp		\
-                  TestResult.cpp	\
-                  TestFailure.cpp	\
+CPPUNIT_SRCS	= Asserter.cpp			\
+                  Exception.cpp			\
+                  NotEqualException.cpp		\
+                  SourceLine.cpp		\
+                  SynchronizedObject.cpp	\
+                  TestAssert.cpp		\
+                  TestCase.cpp			\
+                  TestFailure.cpp		\
+                  TestResult.cpp		\
+                  TestResultCollector.cpp	\
+                  TestSucessListener.cpp	\
                   TestSuite.cpp
-CPPUNIT_UI_SRCS	= TextTestResult.cpp	\
-                  TextTestRunner.cpp
+CPPUNIT_UI_SRCS	= TestRunner.cpp		\
+                  TextTestProgressListener.cpp	\
+                  TextOutputter.cpp
 CPPUNIT_EXTS	= MetricRegistry.cpp
 EXTRA_SRCS_PATH	= $(CPP_UNIT)/src/cppunit $(CPP_UNIT)/src/cppunit/extensions
 
