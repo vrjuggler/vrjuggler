@@ -260,7 +260,7 @@ case $host_os in
         AC_DEFINE(VJ_OS_DUX,)
         PLATFORM='alpha-DUX'
         ;;
-    dnl # i386-class machine running FreeBSD.
+    dnl # A machine running FreeBSD.  Currently only i386 is supported.
     freebsd*)
         if test "$ABI" != "ELF" -a "$ABI" != "AOUT" ; then
             if test -x "/usr/bin/objformat" ; then
@@ -293,6 +293,20 @@ case $host_os in
         ISA='i386'
         ABI_LIST='AOUT ELF'
         PLATFORM='FreeBSD'
+        ;;
+    dnl # A machine running Linux.  Currently only i386 is supported.
+    linux*)
+        AR='ar -r'
+        INCLUDES="$INCLUDES -I/usr/include"
+        LD='${CXX} -shared'
+        LDOPTS=''
+        OPT_FLAGS='-O2'
+        SHAREDLIB_EXT='so'
+
+        AC_DEFINE(VJ_OS_Linux,)
+        ISA='i386'
+        ABI_LIST='ELF'
+        PLATFORM='Linux'
         ;;
     dnl # Unkown operating system (to config.guess).
     unknown)
