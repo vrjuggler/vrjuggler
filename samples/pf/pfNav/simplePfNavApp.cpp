@@ -71,10 +71,6 @@
 
 #include "pfFileIO.h" // handy fileloading/caching functions
 
-// animation
-#include "KeyFramerImporter.h"
-#include "KeyFramer.h"
-
 #include <Performer/pf/pfTraverser.h>
 
 
@@ -215,18 +211,6 @@ void simplePfNavApp::preDrawChan( pfChannel* chan, void* chandata )
 /// Function called after pfSync and before pfDraw
 void simplePfNavApp::preFrame()
 {
-   mStopWatch.stop();
-   mStopWatch.start();
-
-   if (mStopWatch.timeInstant < 1.0)
-      mKeyFramer.update( mStopWatch.timeInstant );
-
-   vjMatrix mat;
-   mKeyFramer.getMatrix( mat );
-   pfMatrix pf_mat;
-   pf_mat = vjGetPfMatrix( mat );
-   mAnimDCS->setMat( pf_mat );
-
    if (mDisableNav == true)
    {
       mNavigationDCS->setActive( false );
@@ -337,23 +321,6 @@ void simplePfNavApp::addModelFile( const std::string& filename )
    addModel( m );
 }
 
-void simplePfNavApp::loadAnimation( const char* const filename )
-{
-   std::string dFilename = vjFileIO::demangleFileName( std::string( filename ), std::string( "" ) );
-   kev::KeyFramerImporter kfi;
-   kfi.execute( dFilename.c_str(), mKeyFramer );
-}  
-
-kev::KeyFramer& simplePfNavApp::keyFramer() 
-{ 
-   return mKeyFramer; 
-}
-
-const kev::KeyFramer& simplePfNavApp::keyFramer() const 
-{ 
-   return mKeyFramer; 
-}
-
 // Add a model to the application
 void simplePfNavApp::addModel( const Model& m)
 { 
@@ -432,7 +399,6 @@ void simplePfNavApp::disableStats()
    mUseStats = false;
 }
 
-
 // load the set models into the scene graph
 // If models are already in the scene graph, we destroy 
 // them and reload the list of set model names.. (could be smarter)
@@ -442,9 +408,9 @@ void simplePfNavApp::disableStats()
 // ------- SCENE GRAPH ----
 // a standard organized interface for derived applications:
 //
-//                                         /-- mLightGroup -- mSun
-// mRootNode -- mNavigationDCS -- mAnimDCS -- mCollidableModelGroup -- mConfiguredCollideModels -- loaded stuff...
-//          \-- mNoNav                     \-- mUnCollidableModelGroup -- mConfiguredNoCollideModels -- loaded stuff...
+//                            /-- mLightGroup -- mSun
+// mRootNode -- mNavigationDCS -- mCollidableModelGroup -- mConfiguredCollideModels -- loaded stuff...
+//          \-- mNoNav        \-- mUnCollidableModelGroup -- mConfiguredNoCollideModels -- loaded stuff...
 //                                                       \-- mSoundNodes -- loaded stuff...
 void simplePfNavApp::initializeModels()
 {
@@ -566,7 +532,6 @@ void simplePfNavApp::initScene()
    mRootNode             = new pfGroup;       // Root of our graph
    mRootNode->setName("simplePfNavApp::mRootNode");
    mNavigationDCS        = new pfNavDCS;      // DCS to navigate with
-   mAnimDCS              = new pfDCS;
    mCollidableModelGroup = new pfGroup;
    mUnCollidableModelGroup = new pfGroup;
    mNoNav                  = new pfGroup;
@@ -599,13 +564,9 @@ void simplePfNavApp::initScene()
 
    // --- CONSTRUCT STATIC Structure of SCENE GRAPH -- //
    mRootNode->addChild( mNavigationDCS );
-   mNavigationDCS->addChild( mAnimDCS );
-   pfMatrix mat;
-   mat.makeIdent();
-   mAnimDCS->setMat( mat );
-   mAnimDCS->addChild( mLightGroup );
-   mAnimDCS->addChild( mCollidableModelGroup );
-   mAnimDCS->addChild( mUnCollidableModelGroup );
+   mNavigationDCS->addChild(mLightGroup);
+   mNavigationDCS->addChild(mCollidableModelGroup);
+   mNavigationDCS->addChild(mUnCollidableModelGroup);
    //mNavigationDCS->addChild( pfFileIO::autoloadFile( "terrain.flt", pfFileIO::FEET ) );
 
    // --- Load the model (if it is configured) --- //

@@ -59,6 +59,7 @@ VJ_LIB_DEPS	= $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler.a		\
 vpath %.cpp $(srcdir) $(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/nav
 vpath %.cpp $(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/tools
 vpath %.cpp $(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/pf/pfTools
+vpath %.cpp $(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/pf/pfNav
 
 # This Performer sample program requires the following libraries to be linked:
 #
@@ -73,7 +74,8 @@ vpath %.cpp $(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/pf/pfTools
 # 64-bit binaries, use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ $(AW_LIBS) @APP_EXTRA_LIBS_PF@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
-COMMON_OBJECTS	= pfFileIO.@OBJ_FILE_SUFFIX@		\
+COMMON_OBJECTS	= simplePfNavApp.@OBJ_FILE_SUFFIX@	\
+                  pfFileIO.@OBJ_FILE_SUFFIX@		\
                   pfTerryCollide.@OBJ_FILE_SUFFIX@	\
                   pfTerryPogoCollide.@OBJ_FILE_SUFFIX@	\
                   pfTerryBoxCollide.@OBJ_FILE_SUFFIX@	\
