@@ -391,31 +391,19 @@ LRESULT GlWindowWin32::handleEvent(HWND hWnd, UINT message, WPARAM wParam,
 // Set the pixel format for the given window
 bool GlWindowWin32::setPixelFormat(HDC hDC)
 {
-   int pixel_format;
    PIXELFORMATDESCRIPTOR pfd;
 
    memset(&pfd, 0, sizeof(PIXELFORMATDESCRIPTOR));
    pfd.nSize = (sizeof(PIXELFORMATDESCRIPTOR));
    pfd.nVersion = 1;
 
-   /* Defaults. */
-   pfd.dwFlags = PFD_SUPPORT_OPENGL | PFD_DRAW_TO_WINDOW | PFD_DOUBLEBUFFER;
-
-   if ( mVrjDisplay->isStereoRequested() )
-   {
-      mInStereo = true;
-      pfd.dwFlags |= PFD_STEREO;
-   }
-   else
-   {
-      mInStereo = false;
-   }
-
    int red_size(8), green_size(8), blue_size(8), alpha_size(8), db_size(32);
+   int visual_id(-1);
    jccl::ConfigElementPtr gl_fb_chunk = mVrjDisplay->getGlFrameBufferConfig();
 
    if ( gl_fb_chunk.get() != NULL )
    {
+      visual_id  = gl_fb_chunk->getProperty<int>("visual_id");
       red_size   = gl_fb_chunk->getProperty<int>("red_size");
       green_size = gl_fb_chunk->getProperty<int>("green_size");
       blue_size  = gl_fb_chunk->getProperty<int>("blue_size");
@@ -463,43 +451,88 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
       }
    }
 
-   vprDEBUG(vrjDBG_DISP_MGR, vprDBG_CONFIG_LVL)
-      << "Frame buffer visual settings for " << mVrjDisplay->getName()
-      << ": R:" << red_size << " G:" << green_size << " B:" << blue_size
-      << " A:" << alpha_size << " DB:" << db_size << std::endl
-      << vprDEBUG_FLUSH;
+   int pixel_format;
 
-   pfd.iPixelType = PFD_TYPE_RGBA;
-   pfd.cColorBits = 32;
-   pfd.cRedBits = red_size;
-   pfd.cGreenBits = green_size;
-   pfd.cBlueBits = blue_size;
-   pfd.cAlphaBits = alpha_size;
-   pfd.cDepthBits = db_size;
-   pfd.cStencilBits = 0;
-   pfd.cAccumBits = 0;
-   pfd.cAuxBuffers = 0;
-
-   // Let Win32 choose one for us
-   pixel_format = ChoosePixelFormat(hDC, &pfd);
-   if ( pixel_format > 0 )
+   if ( visual_id != -1 )
    {
-      PIXELFORMATDESCRIPTOR match;
-      DescribePixelFormat(hDC, pixel_format, sizeof(PIXELFORMATDESCRIPTOR),
-                          &match);
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+         << "Requesting visual 0x" << std::hex << visual_id << std::dec
+         << " from WGL." << std::endl << vprDEBUG_FLUSH;
 
-      /* ChoosePixelFormat is dumb in that it will return a pixel
-         format that doesn't have stereo even if it was requested
-         so we need to make sure that if stereo was selected, we
-         got it. */
+      int result = DescribePixelFormat(hDC, visual_id,
+                                       sizeof(PIXELFORMATDESCRIPTOR), &pfd);
+
+      if ( result == 0 )
+      {
+         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+            << "ERROR: Failed to get requested visual (ID 0x" << std::hex
+            << visual_id << std::dec << ")\n" << vprDEBUG_FLUSH;
+         // XXX: It would be helpful to print out the Windows error message.
+//         DWORD error = GetLastError();
+         return false;
+      }
+
+      mInStereo = (mVrjDisplay->isStereoRequested() &&
+                   (pfd.dwFlags & PFD_STEREO));
+      pixel_format = visual_id;
+   }
+   else
+   {
+      vprDEBUG(vrjDBG_DISP_MGR, vprDBG_CONFIG_LVL)
+         << "Frame buffer visual settings for " << mVrjDisplay->getName()
+         << ": R:" << red_size << " G:" << green_size << " B:" << blue_size
+         << " A:" << alpha_size << " DB:" << db_size << std::endl
+         << vprDEBUG_FLUSH;
+
+      /* Defaults. */
+      pfd.dwFlags = PFD_SUPPORT_OPENGL | PFD_DRAW_TO_WINDOW | PFD_DOUBLEBUFFER;
+
       if ( mVrjDisplay->isStereoRequested() )
       {
-         if ( !(match.dwFlags & PFD_STEREO) )
+         mInStereo = true;
+         pfd.dwFlags |= PFD_STEREO;
+      }
+      else
+      {
+         mInStereo = false;
+      }
+
+      pfd.iPixelType = PFD_TYPE_RGBA;
+      pfd.cColorBits = 32;
+      pfd.cRedBits = red_size;
+      pfd.cGreenBits = green_size;
+      pfd.cBlueBits = blue_size;
+      pfd.cAlphaBits = alpha_size;
+      pfd.cDepthBits = db_size;
+      pfd.cStencilBits = 0;
+      pfd.cAccumBits = 0;
+      pfd.cAuxBuffers = 0;
+
+      // Let Win32 choose one for us
+      pixel_format = ChoosePixelFormat(hDC, &pfd);
+
+      if ( pixel_format > 0 )
+      {
+         PIXELFORMATDESCRIPTOR match;
+         DescribePixelFormat(hDC, pixel_format, sizeof(PIXELFORMATDESCRIPTOR),
+                             &match);
+
+         // ChoosePixelFormat is dumb in that it will return a pixel format
+         // that doesn't have stereo even if it was requested so we need to
+         // make sure that if stereo was selected, we got it.
+         if ( mVrjDisplay->isStereoRequested() )
          {
-            return NULL;
+            if ( !(match.dwFlags & PFD_STEREO) )
+            {
+               return false;
+            }
          }
       }
    }
+
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+      << "Visual ID: 0x" << std::hex << pixel_format << std::dec
+      << std::endl << vprDEBUG_FLUSH;
 
    // Set the pixel format for the device context
    SetPixelFormat(hDC, pixel_format, &pfd);
