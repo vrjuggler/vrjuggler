@@ -70,15 +70,24 @@ bool PositionXformFilter::config(jccl::ConfigChunkPtr c)
       yr = gmtl::Math::deg2Rad(c->getProperty<float>("rotation",1));
       zr = gmtl::Math::deg2Rad(c->getProperty<float>("rotation",2));
 
+      // Calculate the scale value
+      // - If dev_units is 0.0f, then use custom_scale
+      float custom_scale = c->getProperty<float>("dev_units");
+
+      if(custom_scale == 0.0f)
+      { custom_scale = c->getProperty<float>("custom_scale"); }
+
       // This makes a rotation matrix that moves a pt in
       // the device's coord system to the vj coord system.
       // ==> world_M_transmitter
-      gmtl::EulerAngleXYZf euler( xr,yr,zr );
-      gmtl::Matrix44f rotMat = gmtl::makeRot<gmtl::Matrix44f>( euler );
+      gmtl::EulerAngleXYZf euler( xr,yr,zr );      
+      gmtl::Matrix44f rot_mat = gmtl::makeRot<gmtl::Matrix44f>( euler );
+      gmtl::Matrix44f scale_mat = gmtl::makeScale<gmtl::Matrix44f>( custom_scale );
 
       gmtl::identity(m_worldMsensor);
       gmtl::setTrans(m_worldMsensor, gmtl::Vec3f(xt, yt, zt) );
-      gmtl::postMult(m_worldMsensor, rotMat);         // xformMat = T*R
+      gmtl::postMult(m_worldMsensor, rot_mat);         // xformMat = T*R
+      gmtl::postMult(m_worldMsensor, scale_mat);       // xformmat = T*R*S
    }
 
    return true;
