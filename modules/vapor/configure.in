@@ -128,12 +128,6 @@ case $target_os in
         ;;
     # i386-class machine running Windows {98,NT} with Cygnus GNU-Win32.
     cygwin)
-        # There is no performance testing/monitoring code for Win32 (yet).
-        if test "x${_enable_perf}" != "xNONE" ; then
-            AC_MSG_WARN(*** Disabling performance testing on $host ***)
-            _enable_perf='NONE'
-        fi
-
         # We have to use Win32 subsystem on Win32.
         if test "x$SUBSYSTEM" = "xnone" ; then
             AC_MSG_WARN(*** Forcing the use of WIN32 subsystem ***)
