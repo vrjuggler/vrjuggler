@@ -55,6 +55,7 @@ SUBDIR=		doc/build.system				\
 		modules/tweek/doc				\
 		modules/tweek/doc/programmer.guide		\
 		modules/vapor/doc				\
+		modules/vapor/doc/programmer.guide		\
 		modules/vrjuggler/doc/configuration.guide	\
 		modules/vrjuggler/doc/doxy			\
 		modules/vrjuggler/doc/getting.started.guide	\
