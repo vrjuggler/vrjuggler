@@ -83,8 +83,10 @@ public:
    {
       vjASSERT(kern != NULL);    // We don't want a NULL Kernel
       kernel = kern;
+      mHaveFocus = true;
    }
 
+   // Just call vjApp(vjKernel::instance())
    vjApp();
 
 public:
