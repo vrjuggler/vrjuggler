@@ -44,14 +44,15 @@
 #include <Config/vjChunkFactory.h>
 #include <Environment/vjEnvironmentManager.h>
 #include <Environment/vjTimedUpdate.h>
-//#include <Kernel/vjKernel.h>
 #include <Kernel/vjConfigManager.h>
 #include <Config/vjConfigTokens.h>
 #include <VPR/vjSystem.h>
+//#include <Config/vjXMLConfigIO.h>
 
+#include <Environment/vjXMLConfigCommunicator.h>
 
 vjConnect::vjConnect(vjSocket* s, const std::string& _name,
-           vjConnectMode _mode): name(""), filename(""), commands_mutex() {
+           vjConnectMode _mode): name(""), filename(""), commands_mutex(), communicators() {
     vjDEBUG(vjDBG_ENV_MGR,4) << "EM: Creating vjConnect to file or socket\n"
           << vjDEBUG_FLUSH;
     sock = s;
@@ -63,6 +64,9 @@ vjConnect::vjConnect(vjSocket* s, const std::string& _name,
     read_connect_thread = NULL;
     write_connect_thread = NULL;
     read_die = write_die = false;
+
+    // populate communicators vector here.
+    communicators.push_back (new vjXMLConfigCommunicator());
 
     outstream = sock->getOutputStream();
     instream = sock->getInputStream();
@@ -76,11 +80,18 @@ vjConnect::vjConnect(vjSocket* s, const std::string& _name,
         ch->setProperty ("Enabled", true);
         vjConfigManager::instance()->addActive(ch);              // Add to active config
     }
+
+    // communicators initialize connection
+    // send initconnections...
+    std::vector<vjNetCommunicator*>::iterator i;
+    for (i = communicators.begin(); i != communicators.end(); i++) {
+        (*i)->initConnection(this);
+    }
 }
 
 
 
-vjConnect::vjConnect(vjConfigChunk* c): commands_mutex() {
+vjConnect::vjConnect(vjConfigChunk* c): commands_mutex(), communicators() {
 
     sock = NULL;
     filename = (std::string)c->getProperty ("FileName");
@@ -118,11 +129,24 @@ vjConnect::vjConnect(vjConfigChunk* c): commands_mutex() {
     if (mode == VJC_OUTPUT)
         *outstream << "VR Juggler FileConnect output " << name.c_str()
                    << std::endl;
+
+    // populate communicators vector
+    // send initconnections...
+    std::vector<vjNetCommunicator*>::iterator i;
+    for (i = communicators.begin(); i != communicators.end(); i++) {
+        (*i)->initConnection(this);
+    }
 }
 
 
 
 vjConnect::~vjConnect() {
+    // send shutdownconnections...
+    std::vector<vjNetCommunicator*>::iterator i;
+    for (i = communicators.begin(); i != communicators.end(); i++) {
+        (*i)->shutdownConnection();
+    }
+
     stopProcess();
     //close (fd);
 }
@@ -262,7 +286,7 @@ void vjConnect::readControlLoop(void* nullParam) {
        if (!(*instream) || instream->eof())
       break;
       if (!readCommand (*instream))
-          break;
+          ; // do some error handling...
    }
    vjDEBUG(vjDBG_ENV_MGR,5) << "vjConnect " << name.c_str()
              <<" ending read control loop.\n" << vjDEBUG_FLUSH;
@@ -327,116 +351,171 @@ void vjConnect::writeControlLoop(void* nullParam) {
     write_alive = false;
 }
 
-
-
 bool vjConnect::readCommand(std::istream& fin) {
-    // reads one command.  called from controlloop
-    const int   buflen = 512;
-    char        rbuf[buflen];    // HACK! can't handle lines longer than buflen
-    //char        c;
-    char*       s;
+    const int buflen(512);
+    char buf[buflen];
+    char *c1, *c2;
+    char* protocol_start_string = "<protocol handler=\"";
+    int protocol_start_string_len = strlen (protocol_start_string);
+    char* protocol_name;
+    vjNetCommunicator *communicator = 0;
 
-    if (!fin.getline(rbuf,buflen,'\n'))
+    // this is a little inflexible, but nice & quick.
+    if (!fin.getline (buf, buflen, '\n'))
         return false;
-
-    vjDEBUG(vjDBG_ENV_MGR,4) << "vjConnect:: read: '" << rbuf
-                             << "'.\n" << vjDEBUG_FLUSH;
-
-    s = strtok (rbuf, " \t\n");
-    if (!s) {
-        vjDEBUG(vjDBG_ERROR,1) << "couldn't get a token.  something's really wrong in vjConnect\n"
-                               << vjDEBUG_FLUSH;
+    if (strncmp (buf, protocol_start_string, protocol_start_string_len)) {
+        vjDEBUG (vjDBG_ENV_MGR, 3) << "Connection: Invalid protocol identifier." << std::endl << vjDEBUG_FLUSH;
+        do {
+            if (!fin.getline (buf, buflen, '\n'))
+                return false;
+        } while (strncmp (buf, protocol_start_string, protocol_start_string_len));
     }
-
-    if (!strcasecmp (s, get_TOKEN)) {
-        s = strtok (NULL, " \t\n");
-        if (!strcasecmp (s, descriptions_TOKEN)) {
-            vjChunkDescDB* db = vjChunkFactory::instance()->getChunkDescDB();
-            vjDEBUG(vjDBG_ENV_MGR,4) << "vjConnect: Sending (requested) chunkdesc.\n" << vjDEBUG_FLUSH;
-            vjDEBUG(vjDBG_ENV_MGR,5) << *db << std::endl << vjDEBUG_FLUSH;
-            sendDescDB (db);
-        }
-        else if (!strcasecmp (s,chunks_TOKEN)) {
-            vjConfigManager::instance()->lockActive();
-            vjConfigChunkDB* db = new vjConfigChunkDB((*(vjConfigManager::instance()->getActiveConfig())));   // Make a copy
-            vjConfigManager::instance()->unlockActive();
-
-            vjDEBUG(vjDBG_ENV_MGR,4) << "vjConnect: Sending (requested) chunkdb.\n" << vjDEBUG_FLUSH;
-            vjDEBUG(vjDBG_ENV_MGR,5) << *db << std::endl << vjDEBUG_FLUSH;
-            sendChunkDB (db, true);
-        }
-        else {
-            vjDEBUG(vjDBG_ERROR,1)
-               << "Error: vjConnect:: Received unknown GET: " << s
-               << std::endl << vjDEBUG_FLUSH;
-        }
-    }
-
-    else if (!strcasecmp (s, descriptions_TOKEN)) {
-        /* message contains one or more descriptions, to
-         * be read in just like a ChunkDescDB.  If the
-         * descriptions line itself contains the word
-         * "all", then we should clear the db first.
-         */
-        // XXX: Hack!!! We need to change this. We should not
-        // change the dbs outside of kernel
-        //s = strtok (NULL, " \t\n");
-        vjDEBUG(vjDBG_ERROR,0) << "EM Receive descriptions disabled!!!\n" << vjDEBUG_FLUSH;
-        //if (!strcasecmp (s, "all") && (cachedChunkdb->isEmpty()))
-        //    cachedDescdb->removeAll();
-        //fin >> *cachedDescdb;
-    }
-
-    else if (!strcasecmp (s, chunks_TOKEN)) {
-        /* message contains one or more chunks.  If the
-         * descriptions line contains "all", we should
-         * clear the db first
-         */
-        //s = strtok (NULL, " \t\n");
-        // chunks 'all' option disabled for now...
-        //if (!strcasecmp (s, "all"))
-        //   chunkdb->removeAll()
-        vjDEBUG(vjDBG_ENV_MGR,1) << "vjConnect:: Read: chunks: Started\n" << vjDEBUG_FLUSH;
-
-        vjConfigChunkDB* newchunkdb = new vjConfigChunkDB;
-        fin >> *newchunkdb;
-        vjDEBUG(vjDBG_ENV_MGR,5) << *newchunkdb << std::endl << vjDEBUG_FLUSH;
-        vjDEBUG(vjDBG_ENV_MGR,3) << "vjConnect:: Read: chunks: Completed\n" << vjDEBUG_FLUSH;
-        // ALLEN: PUT A FUNCTION HERE FOR THE KERNEL TO LOOK AT NEWCHUNKDB
-        vjConfigManager::instance()->addChunkDB(newchunkdb);    // Adds chunks to the pending list
-        vjDEBUG(vjDBG_ENV_MGR,3) << "vjConnect: Added chunks to vjConfigManager pending list to add\n" << vjDEBUG_FLUSH;
-    }
-
-    else if (!strcasecmp (s, remove_TOKEN)) {
-        s = strtok (NULL, " \t\n");
-        if (!strcasecmp (s, descriptions_TOKEN)) {
-            while ( (s = strtok (NULL, " \t\n")) ) {
-                // BUG! - what if chunks exist in db using the desc we're removing?
-                //cachedDescdb->remove(s);
-                vjDEBUG(vjDBG_ENV_MGR,3) << "EM Remove Descriptions disabled!\n" << vjDEBUG_FLUSH;
-            }
-        }
-        else if (!strcasecmp (s, chunks_TOKEN)) {
-            vjConfigChunkDB* remove_chunk_db = new vjConfigChunkDB();
-
-            vjDEBUG(vjDBG_ENV_MGR,5) << "vjConnect: Remove: chunks: Starting...\n"  << vjDEBUG_FLUSH;
-
-            fin >> *remove_chunk_db;       // Read in the chunks to remove
-
-            vjDEBUG(vjDBG_ENV_MGR,5) << *remove_chunk_db << std::endl
-                                     << vjDEBUG_FLUSH;
-
-            // Tell config manager to remove the chunks
-            vjConfigManager::instance()->removeChunkDB(remove_chunk_db);     // Add chunks to pending list as removes
-            vjDEBUG(vjDBG_ENV_MGR,3) << "vjConnect: Remove chunks added to vjConfigManager pending list\n" << vjDEBUG_FLUSH;
-        }
-        else
-            vjDEBUG(vjDBG_ERROR,3) << "Error: vjConnect: Unknown remove type: "
-                                   << s << std::endl << vjDEBUG_FLUSH;
+    c1 = buf + protocol_start_string_len;
+    c2 = strstr (c1, "\"");
+    if (c2) {
+        int len = c2-c1;
+        protocol_name = new char[len+1];
+        strncpy (protocol_name, c1, len);
+        protocol_name[len] = 0;
     }
     else {
-        vjDEBUG(vjDBG_ERROR,0) << "Error: vjConnect:: Unknown command '"
-                               << s << "'\n" << vjDEBUG_FLUSH;
+        vjDEBUG (vjDBG_ENV_MGR, 3) << "foo\n" << vjDEBUG_FLUSH;
+        return false;
     }
-    return true;
+
+//      protocol_name = strtok_r (buf+protocol_start_string_len, "\"", &c);
+//      cout << "using protocol " << protocol_name << std::endl;
+        
+    // find a communicator for this protocol.
+    std::vector<vjNetCommunicator*>::iterator i;
+    for (i = communicators.begin(); i != communicators.end(); i++) {
+        if ((*i)->acceptsStreamIdentifier(protocol_name)) {
+            communicator = *i;
+            break;
+        }
+    }
+
+    if (communicator) {
+        return communicator->readStream (fin, buf);
+    }
+    else {
+        vjDEBUG (vjDBG_ENV_MGR, 1) << "Connection: Couldn't find protocol handler for '" << protocol_name << "'\n" << vjDEBUG_FLUSH;
+        // should we scan for </protocol> here?
+        return false;
+    }
 }
+
+
+//  bool vjConnect::readCommand(std::istream& fin) {
+//      // reads one command.  called from controlloop
+//      const int   buflen = 512;
+//      char        rbuf[buflen];    // HACK! can't handle lines longer than buflen
+//      char*       s;
+
+//      if (!fin.getline(rbuf,buflen,'\n'))
+//          return false;
+
+//      vjDEBUG(vjDBG_ENV_MGR,4) << "vjConnect:: read: '" << rbuf
+//                               << "'.\n" << vjDEBUG_FLUSH;
+
+//      s = strtok (rbuf, " \t\n");
+//      if (!s) {
+//          vjDEBUG(vjDBG_ERROR,1) << "couldn't get a token.  something's really wrong in vjConnect\n"
+//                                 << vjDEBUG_FLUSH;
+//      }
+
+//      if (!strcasecmp (s, get_TOKEN)) {
+//          s = strtok (NULL, " \t\n");
+//          if (!strcasecmp (s, descriptions_TOKEN)) {
+//              vjChunkDescDB* db = vjChunkFactory::instance()->getChunkDescDB();
+//              vjDEBUG(vjDBG_ENV_MGR,4) << "vjConnect: Sending (requested) chunkdesc.\n" << vjDEBUG_FLUSH;
+//              vjDEBUG(vjDBG_ENV_MGR,5) << *db << std::endl << vjDEBUG_FLUSH;
+//              sendDescDB (db);
+//          }
+//          else if (!strcasecmp (s,chunks_TOKEN)) {
+//              vjConfigManager::instance()->lockActive();
+//              vjConfigChunkDB* db = new vjConfigChunkDB((*(vjConfigManager::instance()->getActiveConfig())));   // Make a copy
+//              vjConfigManager::instance()->unlockActive();
+
+//              vjDEBUG(vjDBG_ENV_MGR,4) << "vjConnect: Sending (requested) chunkdb.\n" << vjDEBUG_FLUSH;
+//              vjDEBUG(vjDBG_ENV_MGR,5) << *db << std::endl << vjDEBUG_FLUSH;
+//              sendChunkDB (db, true);
+//          }
+//          else {
+//              vjDEBUG(vjDBG_ERROR,1)
+//                 << "Error: vjConnect:: Received unknown GET: " << s
+//                 << std::endl << vjDEBUG_FLUSH;
+//          }
+//      }
+
+//      else if (!strcasecmp (s, descriptions_TOKEN)) {
+//          /* message contains one or more descriptions, to
+//           * be read in just like a ChunkDescDB.  If the
+//           * descriptions line itself contains the word
+//           * "all", then we should clear the db first.
+//           */
+//          // XXX: Hack!!! We need to change this. We should not
+//          // change the dbs outside of kernel
+//          //s = strtok (NULL, " \t\n");
+//          vjDEBUG(vjDBG_ERROR,0) << "EM Receive descriptions disabled!!!\n" << vjDEBUG_FLUSH;
+//          //if (!strcasecmp (s, "all") && (cachedChunkdb->isEmpty()))
+//          //    cachedDescdb->removeAll();
+//          //fin >> *cachedDescdb;
+//      }
+
+//      else if (!strcasecmp (s, chunks_TOKEN)) {
+//          /* message contains one or more chunks.  If the
+//           * descriptions line contains "all", we should
+//           * clear the db first
+//           */
+//          //s = strtok (NULL, " \t\n");
+//          // chunks 'all' option disabled for now...
+//          //if (!strcasecmp (s, "all"))
+//          //   chunkdb->removeAll()
+//          vjDEBUG(vjDBG_ENV_MGR,1) << "vjConnect:: Read: chunks: Started\n" << vjDEBUG_FLUSH;
+
+//          vjConfigChunkDB* newchunkdb = new vjConfigChunkDB;
+//          // new cool xml testing stuff.
+//          vjXMLConfigIO configio;
+//          configio.readConfigChunkDB (fin, *newchunkdb);
+//          //fin >> *newchunkdb;
+//          vjDEBUG(vjDBG_ENV_MGR,5) << *newchunkdb << std::endl << vjDEBUG_FLUSH;
+//          vjDEBUG(vjDBG_ENV_MGR,3) << "vjConnect:: Read: chunks: Completed\n" << vjDEBUG_FLUSH;
+//          // ALLEN: PUT A FUNCTION HERE FOR THE KERNEL TO LOOK AT NEWCHUNKDB
+//          vjConfigManager::instance()->addChunkDB(newchunkdb);    // Adds chunks to the pending list
+//          vjDEBUG(vjDBG_ENV_MGR,3) << "vjConnect: Added chunks to vjConfigManager pending list to add\n" << vjDEBUG_FLUSH;
+//      }
+
+//      else if (!strcasecmp (s, remove_TOKEN)) {
+//          s = strtok (NULL, " \t\n");
+//          if (!strcasecmp (s, descriptions_TOKEN)) {
+//              while ( (s = strtok (NULL, " \t\n")) ) {
+//                  // BUG! - what if chunks exist in db using the desc we're removing?
+//                  //cachedDescdb->remove(s);
+//                  vjDEBUG(vjDBG_ENV_MGR,3) << "EM Remove Descriptions disabled!\n" << vjDEBUG_FLUSH;
+//              }
+//          }
+//          else if (!strcasecmp (s, chunks_TOKEN)) {
+//              vjConfigChunkDB* remove_chunk_db = new vjConfigChunkDB();
+
+//              vjDEBUG(vjDBG_ENV_MGR,5) << "vjConnect: Remove: chunks: Starting...\n"  << vjDEBUG_FLUSH;
+
+//              fin >> *remove_chunk_db;       // Read in the chunks to remove
+
+//              vjDEBUG(vjDBG_ENV_MGR,5) << *remove_chunk_db << std::endl
+//                                       << vjDEBUG_FLUSH;
+
+//              // Tell config manager to remove the chunks
+//              vjConfigManager::instance()->removeChunkDB(remove_chunk_db);     // Add chunks to pending list as removes
+//              vjDEBUG(vjDBG_ENV_MGR,3) << "vjConnect: Remove chunks added to vjConfigManager pending list\n" << vjDEBUG_FLUSH;
+//          }
+//          else
+//              vjDEBUG(vjDBG_ERROR,3) << "Error: vjConnect: Unknown remove type: "
+//                                     << s << std::endl << vjDEBUG_FLUSH;
+//      }
+//      else {
+//          vjDEBUG(vjDBG_ERROR,0) << "Error: vjConnect:: Unknown command '"
+//                                 << s << "'\n" << vjDEBUG_FLUSH;
+//      }
+//      return true;
+//  }

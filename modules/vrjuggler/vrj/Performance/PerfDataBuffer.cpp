@@ -38,7 +38,8 @@
 
 void vjPerfDataBuffer::init (const char* _name, int _numbufs,
 				    int _nindex) {
-    name = strdup (_name);
+    name = _name;
+    handler_name = "vjc_performance";
     numbufs = _numbufs;
     buffer = new buf_entry[numbufs];
     read_begin = 0;
@@ -55,7 +56,7 @@ void vjPerfDataBuffer::init (const char* _name, int _numbufs,
 vjPerfDataBuffer::~vjPerfDataBuffer () {
     active = 0;
     delete buffer;
-    delete name;
+    //delete name;
 }
 
 

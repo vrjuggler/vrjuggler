@@ -54,7 +54,12 @@ DIRPRFX		= Utils/
 
 SRCS 		= vjDebug.cpp		\
                   vjFileIO.cpp		\
-                  vjStreamLock.cpp
+                  vjStreamLock.cpp	\
+		  vjXercesXMLParser.cpp	\
+		  vjXercesXMLParserPool.cpp	\
+		  vjXercesXMLError.cpp	\
+		  vjXercesStreamInputStream.cpp	\
+		  vjXercesStreamInputSource.cpp
 
 BEFOREBUILD	= beforebuild
 

@@ -58,7 +58,10 @@ SRCS		= vjChunkDesc.cpp	\
                   vjPropertyDesc.cpp	\
                   vjProperty.cpp	\
                   vjPropertyDesc.cpp	\
-                  vjVarValue.cpp
+                  vjVarValue.cpp	\
+		  vjConfigIO.cpp	\
+		  vjXMLConfigIOHandler.cpp	\
+		  vjStandardConfigIOHandler.cpp	
 
 include $(MKPATH)/dpp.obj.mk
 

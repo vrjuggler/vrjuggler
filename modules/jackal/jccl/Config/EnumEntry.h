@@ -54,20 +54,20 @@ public:
     }
 
 
-    vjEnumEntry (vjEnumEntry& e):val(e.val) {
+    vjEnumEntry (const vjEnumEntry& e):val(e.val) {
 	entry = e.entry;
     }
 
 
-    std::string getName () {
+    const std::string& getName () const {
 	return entry;
     }
 
-    vjVarValue& getValue () {
+    const vjVarValue& getValue () const {
 	return val;
     }
 
-    friend std::ostream& operator << (std::ostream& out, vjEnumEntry& e) {
+    friend std::ostream& operator << (std::ostream& out, const vjEnumEntry& e) {
 	switch (e.val.getType()) {
 	case T_INT:
 	case T_FLOAT:
