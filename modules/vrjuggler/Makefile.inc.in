@@ -207,7 +207,7 @@ ifeq ($(BUILD_GUI), Y)
 	@echo "<=== GUI"
 else
 	@echo "------------------------------------------------"
-	@echo "GUI cannot be built without javac"
+	@echo "VjControl build skipped"
 	@echo "------------------------------------------------"
 endif
 endif	# ifndef NO_JAVA_GUI
