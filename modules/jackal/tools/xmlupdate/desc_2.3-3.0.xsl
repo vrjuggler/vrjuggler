@@ -267,7 +267,7 @@
          </xsl:for-each>
 
          <!-- Copy over the allowed types. -->
-         <xsl:for-each select="allowedtype">
+         <xsl:for-each select="allowedType">
             <xsl:element name="allowed_type">
                <xsl:value-of select="." />
             </xsl:element>
