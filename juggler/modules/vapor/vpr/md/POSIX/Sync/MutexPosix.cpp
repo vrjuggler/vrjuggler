@@ -44,15 +44,7 @@
 #include <vpr/md/POSIX/Sync/MutexPosix.h>
 
 
-// ---------------------------------------------------------------------------
-// Test the current lock status.
-//
-// PRE: None.
-// POST: The state of the mutex variable is returned.
-//
-// RETURNS: 0 - Not locked
-// RETURNS: 1 - Locked
-// ---------------------------------------------------------------------------
+// Tests the current lock status.
 int
 vpr::MutexPosix::test (void) {
     int ret_val;
