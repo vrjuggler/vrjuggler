@@ -433,6 +433,7 @@ case $target_os in
         CFLAGS="-nologo"
         CXXFLAGS="-nologo"
         DBG_FLAGS='-Od -GZ'
+        DEP_GEN_FLAG='-FD'
 
         dnl # Use optimization flags based on the type of CPU.
         case $target_cpu in
@@ -451,8 +452,8 @@ case $target_os in
         LDOPTS="$LDOPTS -nologo"
         LDOPTS_DBG='-LDd -MDd'
         LDOPTS_OPT='-LD -MD'
-        LIB_PREFIX=''
         OBJ_NAME_FLAG='-Fo$@'
+        LIB_PREFIX=''
         STATICLIB_EXT='lib'
         SHAREDLIB_EXT='dll'
 
@@ -705,6 +706,10 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
         AC_MSG_WARN(*** POSIX threads will not be used (no library found) ***)
     fi
 
+dnl #
+elif test "x${_thread_pkg}" = "xWIN32" ; then
+    THREADS='WIN32'
+
 dnl # If we are not using POSIX threads, we must be using the SGI IPC model,
 dnl # but we test ${_thread_pkg} just to be sure it is set right.
 elif test "x${_thread_pkg}" = "xSGI_IPC" ; then
@@ -714,9 +719,9 @@ elif test "x${_thread_pkg}" = "xSGI_IPC" ; then
 fi
 
 dnl # Shared memory and synchronization primitives.
-SYNC_SYS=''			# POSIX, SGI_IPC
-SHMEM_SYS=''			# SGI_IPC
-THREAD_SYS=''			# POSIX, SGI_IPC
+SYNC_SYS=''			# POSIX, SGI_IPC, WIN32
+SHMEM_SYS=''			# SGI_IPC, WIN32
+THREAD_SYS=''			# POSIX, SGI_IPC, WIN32
 
 dnl # Define various CPP macros depending on which threads implementation will
 dnl # be used.  If no implementation was defined above, exit configure.
@@ -734,6 +739,11 @@ if test "$THREADS" = "POSIX" ; then
     THREAD_SYS='POSIX'
     SYNC_SYS='POSIX'
     SHMEM_SYS='POSIX'
+elif test "$THREADS" = "WIN32" ; then
+    dnl # Set to Win32 threading, synchronization and shared memory.
+    THREAD_SYS='WIN32'
+    SYNC_SYS='WIN32'
+    SHMEM_SYS='WIN32'
 elif test "$THREADS" = "SGI_IPC" ; then
     AC_DEFINE(VJ_SGI_IPC,)
 
