@@ -30,59 +30,37 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-# This file defines the specification for the sample code directory tree for
-# the VR Juggler installation.
+# -----------------------------------------------------------------------------
+# Makefile.in for juggler/samples/tutorials/device.drivers
 #
-# $Id$
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
 
-/set type=dir mode=@DIR_PERMS@ uname=@OWNER_NAME@ gname=@GROUP_NAME@
-.
-    samples
-	nav
-	..
-	OSG
-	    osgNav
-	    ..
-	..
-	ogl
-	    analog
-	    ..
-	    combo
-	    ..
-	    cones
-	    ..
-	    cubes
-	    ..
-	    digitalGlove
-	    ..
-	    simpleGlove
-	    ..
-	    texture
-		ImageFileLoaderCode
-		..
-	    ..
-	    torus
-	    ..
-	    wand
-	    ..
-	    glove
-	    ..
-	..
-	pf
-	    pfConfigNav
-	    ..
-	    pfNav
-	    ..
-	    pfTools
-	    ..
-	..
-	tutorials
-	    device.drivers
-	    ..
-	    simpleInput
-	    ..
-	    simplePfApp
-	    ..
-	..
-    ..
-..
+.SUFFIXES: .cpp .@OBJ_FILE_SUFFIX@
+
+srcdir		= @srcdir@
+
+EXTRA_FLAGS	= @APP_EXTRA_FLAGS@
+COMPILE		= @CXX@ @DEFS@ $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@ @DBG_FLAGS@ $(EXTRA_FLAGS)
+VJ_INCLUDES	= @INCLUDES@ -I$(VJ_BASE_DIR)/include -I$(srcdir)
+VPATH		= @srcdir@
+
+OBJECTS		= buttondevice.@OBJ_FILE_SUFFIX@
+
+# -----------------------------------------------------------------------------
+# Targets.
+# -----------------------------------------------------------------------------
+default: all
+
+all: $(OBJECTS)
+
+.cpp.@OBJ_FILE_SUFFIX@:
+	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
+
+# -----------------------------------------------------------------------------
+# Clean-up.
+# -----------------------------------------------------------------------------
+clean:
+	rm -f Makedepend buttondevice.ilk $(OBJECTS) *core	\
+          so_locations *.?db
+	rm -rf ./ii_files

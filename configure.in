@@ -2111,6 +2111,8 @@ AC_OUTPUT(Makefile
           Threads/Makefile
           Utils/Makefile
           samples/Makefile
+          samples/OSG/Makefile
+          samples/OSG/osgNav/Makefile
           samples/ogl/Makefile
           samples/ogl/analog/Makefile
           samples/ogl/combo/Makefile
@@ -2122,12 +2124,11 @@ AC_OUTPUT(Makefile
           samples/ogl/texture/Makefile
           samples/ogl/torus/Makefile
           samples/ogl/wand/Makefile
-		  samples/OSG/Makefile
-		  samples/OSG/osgNav/Makefile
           samples/pf/Makefile
           samples/pf/pfConfigNav/Makefile
           samples/pf/pfNav/Makefile
           samples/tutorials/Makefile
+          samples/tutorials/device.drivers/Makefile
           samples/tutorials/simpleInput/Makefile
           samples/tutorials/simplePf/Makefile
           test/Makefile 
