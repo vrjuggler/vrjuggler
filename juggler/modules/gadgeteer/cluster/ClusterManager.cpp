@@ -324,7 +324,7 @@ namespace cluster
          
          std::string barrier_machine_chunk_name = chunk->getProperty<std::string>(std::string("barrier_master"));
          jccl::ConfigChunkPtr barrier_machine_chunk = getConfigChunkPointer(barrier_machine_chunk_name);
-         vprASSERT(NULL != barrier_machine_chunk && "ConfigManager Chunk MUST have a barrier_master.");
+         vprASSERT(NULL != barrier_machine_chunk.get() && "ConfigManager Chunk MUST have a barrier_master.");
          mBarrierMasterHostname = barrier_machine_chunk->getProperty<std::string>(std::string("host_name"));
 
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[XXX] ")
