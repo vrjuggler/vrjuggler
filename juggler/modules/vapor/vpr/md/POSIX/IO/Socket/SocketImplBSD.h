@@ -113,27 +113,6 @@ public:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    inline virtual ssize_t
-    read (void* buffer, const size_t length) {
-        return m_handle->read(buffer, length);
-    }
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    inline virtual ssize_t
-    readn (void* buffer, const size_t length) {
-        return m_handle->readn(buffer, length);
-    }
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    inline virtual ssize_t
-    write (const void* buffer, const size_t length) {
-        return m_handle->write(buffer, length);
-    }
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
     inline virtual bool
     enableBlocking (void) {
         return m_handle->enableBlocking();
@@ -271,6 +250,27 @@ protected:
     // POST: None.
     // ------------------------------------------------------------------------
     virtual ~SocketImpBSD(void);
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    virtual ssize_t
+    read_i (void* buffer, const size_t length) {
+        return m_handle->read(buffer, length);
+    }
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    virtual ssize_t
+    readn_i (void* buffer, const size_t length) {
+        return m_handle->readn(buffer, length);
+    }
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    virtual ssize_t
+    write_i (const void* buffer, const size_t length) {
+        return m_handle->write(buffer, length);
+    }
 
     FileHandleUNIX*   m_handle;      //:
     InetAddr          m_local_addr;  //: The local site's address structure

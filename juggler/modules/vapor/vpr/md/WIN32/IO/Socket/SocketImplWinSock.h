@@ -97,27 +97,6 @@ public:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    inline virtual ssize_t
-    read (void* buffer, const size_t length) {
-        return recv(buffer, length);
-    }
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    inline virtual ssize_t
-    readn (void* buffer, const size_t length) {
-        return recvn(buffer, length);
-    }
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    inline virtual ssize_t
-    write (const void* buffer, const size_t length) {
-        return send(buffer, length);
-    }
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
     inline virtual bool
     enableBlocking (void) {
         u_long non_blocking_mode;
@@ -264,6 +243,27 @@ protected:
     //! POST: The WinSock startup operation is performed.
     // ------------------------------------------------------------------------
     void init(void);
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    virtual ssize_t
+    read_i (void* buffer, const size_t length) {
+        return recv(buffer, length);
+    }
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    virtual ssize_t
+    readn_i (void* buffer, const size_t length) {
+        return recvn(buffer, length);
+    }
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    virtual ssize_t
+    write_i (const void* buffer, const size_t length) {
+        return send(buffer, length);
+    }
 
     // ------------------------------------------------------------------------
     // Receive the specified number of bytes from the remote site to which the

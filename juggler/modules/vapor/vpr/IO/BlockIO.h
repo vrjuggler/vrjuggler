@@ -226,7 +226,10 @@ public:
     //+                device.
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
-    virtual ssize_t read(void* buffer, const size_t length) = 0;
+    ssize_t
+    read (void* buffer, const size_t length) {
+        return read_i(buffer, length);
+    }
 
     // ------------------------------------------------------------------------
     //: Read at most the specified number of bytes from the I/O device into
@@ -248,7 +251,7 @@ public:
     //+                device.
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
-    virtual ssize_t read(std::string& buffer, const size_t length = 0)
+    ssize_t read(std::string& buffer, const size_t length = 0)
     {
        ssize_t bytes;
        char* temp_buf;
@@ -344,7 +347,10 @@ public:
     //+                device.
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
-    virtual ssize_t readn(void* buffer, const size_t length) = 0;
+    ssize_t
+    readn (void* buffer, const size_t length) {
+        return readn_i(buffer, length);
+    }
 
     // ------------------------------------------------------------------------
     //: Read exactly the specified number of bytes from the I/O device into
@@ -452,7 +458,10 @@ public:
     //+                device.
     //! RETURNS:  -1 - An error occurred when writing.
     // ------------------------------------------------------------------------
-    virtual ssize_t write(const void* buffer, const size_t length) = 0;
+    virtual ssize_t
+    write (const void* buffer, const size_t length) {
+        return write_i(buffer, length);
+    }
 
     // ------------------------------------------------------------------------
     //: Write the buffer to the I/O device.
@@ -574,6 +583,21 @@ protected:
     virtual ~BlockIO (void) {
         /* Do nothing. */ ;
     }
+
+    /**
+     *
+     */
+    virtual ssize_t read_i(void* buffer, const size_t length) = 0;
+
+    /**
+     *
+     */
+    virtual ssize_t readn_i(void* buffer, const size_t length) = 0;
+
+    /**
+     *
+     */
+    virtual ssize_t write_i(const void* buffer, const size_t length) = 0;
 
     std::string m_name;          //: The name of the I/O device
     _open_mode  m_open_mode;     //: The open mode of the device
