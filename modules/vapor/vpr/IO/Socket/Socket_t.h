@@ -666,7 +666,7 @@ protected:
     *       m_socket_imp is set to NULL.
     */
    Socket_t (void)
-      : vpr::BlockIO(std::string("INADDR_ANY")), m_socket_imp(NULL)
+      : vpr::BlockIO(), m_socket_imp(NULL)
    {
       initSocket_t();
    }

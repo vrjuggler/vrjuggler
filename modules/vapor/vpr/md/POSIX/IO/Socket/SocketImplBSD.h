@@ -477,7 +477,7 @@ protected:
         m_connected(false), m_blocking_fixed(false), m_handle(NULL),
         m_type(sock_type)
    {
-      m_handle = new FileHandleImplUNIX("INADDR_ANY");
+      m_handle = new FileHandleImplUNIX();
    }
 
    /**
