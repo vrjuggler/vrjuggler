@@ -34,6 +34,10 @@
 #ifndef _SIMPLE_PF_NAV_APP_H_
 #define _SIMPLE_PF_NAV_APP_H_
 
+#ifdef WIN32
+#include <windows.h>
+#endif
+
 #include <vjPfAppStats.h> // for stats
 #include <Kernel/Pf/vjPfApp.h>    // the performer application base type
 class pfNavDCS;

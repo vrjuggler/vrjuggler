@@ -31,6 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vjConfig.h>
+
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
