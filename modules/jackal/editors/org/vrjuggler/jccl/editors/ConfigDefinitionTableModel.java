@@ -142,13 +142,11 @@ public class ConfigDefinitionTableModel
       PropertyDefinition prop_def = getPropertyDefinition(row);
       switch (col)
       {
-      case 0: // Name
-         return prop_def.getName();
-      case 1: // Type
+      case 0: // Type
          return prop_def.getType();
-      case 2: // Token
+      case 1: // Token
          return prop_def.getToken();
-      case 3: // Has variable values
+      case 2: // Has variable values
          return new Boolean(prop_def.isVariable());
       default:
          return null;
@@ -164,16 +162,13 @@ public class ConfigDefinitionTableModel
 
       switch (col)
       {
-      case 0: // Name
-         prop_def.setName((String)value);
-         break;
-      case 1: // Type
+      case 0: // Type
          prop_def.setType((Class)value);
          break;
-      case 2: // Token
+      case 1: // Token
          prop_def.setToken((String)value);
          break;
-      case 3: // Has variable values
+      case 2: // Has variable values
          prop_def.setVariable(((Boolean)value).booleanValue());
          break;
       default:
@@ -183,8 +178,7 @@ public class ConfigDefinitionTableModel
    }
 
    /** The name of the columns. */
-   private String[] mColumnNames = { "Property Name"
-                                   , "Type"
+   private String[] mColumnNames = { "Type"
                                    , "Token"
                                    , "Variable"
                                    };
