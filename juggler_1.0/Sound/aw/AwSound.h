@@ -7,6 +7,16 @@
 #include <aw.h> //audio works
 #include "Sound.h"
 
+// you need an Observer node in your .adf file named you
+// usually set it's position to 0,0,0
+// every sound is positoined reletive to this observer
+// this observer is updated by the soundengine's setPosition function.
+//  it may be controlled by head tracking and navigation (or not at all)
+//
+// Positional sounds need to be specified using awPlayer nodes in the .adf file
+// awSound node's position can only change with observer position change,
+//  so i'd keep it flexible by using awPlayer nodes for each sound you want.
+// Ambient sounds can be defined as plain awSound nodes.
 class AwSound : public Sound
 {
 public:
@@ -38,7 +48,8 @@ public:
    virtual void print();
    
    std::string mSoundName;
-   awSound* mSound;
+   awPlayer* mSoundPlayer; // will be either this one...
+   awSound* mSound; // or this one... not both.
 };
 
 #endif

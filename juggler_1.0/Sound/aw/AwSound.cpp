@@ -7,7 +7,7 @@
 #include "AwSound.h" // my header
 
 //specify the sound's name in the adf file...
-AwSound::AwSound( SoundEngine& engine ) : Sound( engine )
+AwSound::AwSound( SoundEngine& engine ) : Sound( engine ), mSoundPlayer( NULL ), mSound( NULL )
 {
 }
 
@@ -19,18 +19,51 @@ bool AwSound::load( const char* const alias )
 
    mSoundName = alias;
 
-   mSound = awFindSnd( mSoundName.data() );
-   if (mSound == NULL)
+   // first look for a sound-player in the .adf file.
+   // they support position
+   mSoundPlayer = awFindPlyr( mSoundName.data() );
+   if (mSoundPlayer == NULL)
+   {
+      // try as a normal sound... this may screw things up later...
+      mSound = awFindSnd( mSoundName.data() );
+      cout<<"[aw] Loading \""<<mSoundName.data()<<"\" as an awSound (non-positional type)\n"<<flush;
+   }
+   else
+      cout<<"[aw] Loading \""<<mSoundName.data()<<"\" as an awPlayer (positional type)\n"<<flush;
+   if (mSoundPlayer == NULL && mSound == NULL)
    {
       char buffer[256];
-      sprintf( buffer, "Unable to locate sound %s\n", mSoundName.data() );
+      sprintf( buffer, " Unable to locate sound %s\n", mSoundName.data() );
       awNotify( AW_FATAL, AW_APP, buffer );
       return false;
    }
   
    // allow user to trigger sound by default
    // user must call play and stop to control sound
-   awProp( mSound, AWSND_RETRIGGER, AWSND_ON );
+   if (mSoundPlayer != NULL)
+      awProp( mSoundPlayer, AWSND_RETRIGGER, AWSND_ON );
+   else
+      awProp( mSound, AWSND_RETRIGGER, AWSND_ON );
+  
+   // get the observer tht the player is reletive to.
+   awObserver* obs = awFindObs( "you" );
+   if (obs == NULL)
+   {
+      cout<<"[aw] \n"
+          <<"[aw] !!! WARNING !!!: could not find in the .adf file the \"observer\" named \"you\".  \n"
+          <<"[aw] !!!         !!!: This *has* to be there, or else none of the sound localization \n"
+          <<"[aw] !!!         !!!:   functions will work (like setPosition). \n"
+          <<"[aw] \n"<<flush;
+      return true; // observer failed, sound did not, if it's a player it will still be reletive to absolute (i think?)
+   }
+   
+   else
+   {
+      // set the player reletive to the observer.
+      if (mSoundPlayer != NULL)
+         awPlyrObsRef( mSoundPlayer, obs );
+   }
+      
    return true;
 }   
 
@@ -38,10 +71,14 @@ AwSound::~AwSound() {}
 
 void AwSound::pitchBend( float amount )
 {
-   assert( mSound != NULL );
+   assert( mSoundPlayer != NULL || mSound != NULL );
    // turn on the sound by default
-   cout<<"awProp( mSound, AWSND_PBEND, "<<amount<<" )\n"<<flush;
-   awProp( mSound, AWSND_PBEND, amount );
+   cout<<"[aw] awProp( mSoundPlayer, AWSND_PBEND, "<<amount<<" )\n"<<flush;
+   
+   if (mSoundPlayer != NULL)
+      awProp( mSoundPlayer, AWSND_PBEND, amount );
+   else
+      awProp( mSound, AWSND_PBEND, amount );
 }   
 
 // allows a user to enable or disable a sound without worring about its state set by start or stop.
@@ -49,41 +86,53 @@ void AwSound::pitchBend( float amount )
 //       default is ON
 void AwSound::enable( Sound::BinaryState state )
 {
-   assert( mSound != NULL );
+   assert( mSoundPlayer != NULL || mSound != NULL );
    switch (state)
    {
       case Sound::ON:
-         cout<<"awProp( mSound, AWSND_ENABLED, "<<AWSND_ON<<" )\n"<<flush;
-         awProp( mSound, AWSND_ENABLED, AWSND_ON );
+         cout<<"[aw] awProp( mSoundPlayer, AWSND_ENABLED, "<<AWSND_ON<<" )\n"<<flush;
+         if (mSoundPlayer != NULL)
+            awProp( mSoundPlayer, AWSND_ENABLED, AWSND_ON );
+         else
+            awProp( mSound, AWSND_ENABLED, AWSND_ON );
          break;
       case Sound::OFF:
-         cout<<"awProp( mSound, AWSND_ENABLED, "<<AWSND_OFF<<" )\n"<<flush;
-         awProp( mSound, AWSND_ENABLED, AWSND_OFF );
+         cout<<"[aw] awProp( mSoundPlayer, AWSND_ENABLED, "<<AWSND_OFF<<" )\n"<<flush;
+         if (mSoundPlayer != NULL)
+            awProp( mSoundPlayer, AWSND_ENABLED, AWSND_OFF );
+         else
+            awProp( mSound, AWSND_ENABLED, AWSND_OFF );
          break;
    }
 }
 
 void AwSound::trigger()
 {
-   assert( mSound != NULL );
+   assert( mSoundPlayer != NULL || mSound != NULL );
    // make sure that the state is observed     
    // TODO: this is messed up....
    switch (mLooping)
    {
       case 0:
-         cout<<"Playing audio "<<mSoundName.data()<<"\n"<<flush;
-         awProp( mSound, AWSND_STATE, AWSND_ON );
+         cout<<"[aw] Playing audio "<<mSoundName.data()<<"\n"<<flush;
+         if (mSoundPlayer != NULL)
+            awProp( mSoundPlayer, AWPLYR_STATE, AWSND_ON );
+         else
+            awProp( mSound, AWSND_STATE, AWSND_ON );
          break;
          
       default:
       case -1:
-         cout<<"Looping audio "<<mSoundName.data()<<"\n"<<flush;
-         awProp( mSound, AWSND_NLOOPS, mLooping );
-         //awProp( mSound, AWSND_RELEASELOOP, AW_ON );
-         awProp( mSound, AWSND_STATE, AWSND_ON );
-         //awProp( mSound, AWSND_NLOOPS, mLooping );
-         //awProp( mSound, AWSND_RELEASELOOP, AW_ON );
-         
+         cout<<"[aw] Looping audio "<<mSoundName.data()<<"\n"<<flush;
+         if (mSoundPlayer != NULL)
+         {
+            awProp( mSoundPlayer, AWSND_NLOOPS, mLooping );
+            awProp( mSoundPlayer, AWPLYR_STATE, AWSND_ON );
+         }
+         else
+         {
+            awProp( mSound, AWSND_STATE, AWSND_ON );
+         }
          break;
    }
 }
@@ -92,27 +141,38 @@ void AwSound::trigger()
 // useful when a sound has been set to LOOP, this will stop it
 void AwSound::stop()
 {
-   assert( mSound != NULL );
-    awProp( mSound, AWSND_STATE, AWSND_OFF );
+   assert( mSoundPlayer != NULL || mSound != NULL );
+
+   if (mSoundPlayer != NULL)
+     awProp( mSoundPlayer, AWPLYR_STATE, AWSND_OFF );
+   else
+      awProp( mSound, AWSND_STATE, AWSND_OFF );
 }
 
 // change the position of the sound.
 void AwSound::setPosition( float x, float y, float z )
 {
-   assert( mSound != NULL );
+   assert( mSoundPlayer != NULL || mSound != NULL );
    // set the base functionality
    Sound::setPosition( x, y, z );
    
-   float xyz[3] = {x, y, z};
-   float hpr[3] = {0.0f, 0.0f, 0.0f};
+   // you can set position for a awPlayer object only...
+   if (mSoundPlayer != NULL)
+   {
+      float xyz[3] = {x, y, z};
+      float hpr[3] = {0.0f, 0.0f, 0.0f};
 
-   // hmmm.. Might have to be a player...
-   awXYZHPR( mSound, xyz, hpr);
+      awXYZHPR( mSoundPlayer, xyz, hpr);
+   }
 }
 
 // output to stdout, useful for debugging.
 void AwSound::print()
 {
-   assert( mSound != NULL );
-   awPrint( mSound );
+   assert( mSoundPlayer != NULL || mSound != NULL );
+   
+   if (mSoundPlayer != NULL)
+     awPrint( mSoundPlayer );
+   else
+      awPrint( mSound );
 }
