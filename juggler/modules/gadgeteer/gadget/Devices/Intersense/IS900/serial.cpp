@@ -53,7 +53,7 @@ int rs232InitCommunications(COMM_PORT *port, std::string comPort, int baud_rate)
     rs232DeinitCommunications(port);
 
     FillMemory(&dcb, sizeof(dcb), 0);
-    port->portHandle = CreateFile(comPort),
+    port->portHandle = CreateFile((LPCSTR)comPort.c_str(),
                             GENERIC_READ | GENERIC_WRITE,
                             0,
                             0,
