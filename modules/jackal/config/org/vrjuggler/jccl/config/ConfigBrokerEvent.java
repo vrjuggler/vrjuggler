@@ -47,14 +47,15 @@ public class ConfigBrokerEvent
     * @param source     the source of the event
     * @param resource   the resource that changed
     */
-   public ConfigBrokerEvent(Object source, String resource)
+   public ConfigBrokerEvent(Object source, String resource, DataSource dataSource)
    {
       super(source);
       this.resource = resource;
+      this.dataSource = dataSource;
    }
 
    /**
-    * Gets the resource associated with this context event.
+    * Gets the resource associated with this event.
     */
    public String getResource()
    {
@@ -62,7 +63,20 @@ public class ConfigBrokerEvent
    }
 
    /**
+    * Gets the data source associated with this event.
+    */
+   public DataSource getDataSource()
+   {
+      return dataSource;
+   }
+
+   /**
     * The resources associated with this event.
     */
    private String resource;
+
+   /**
+    * The DataSource associated with this event.
+    */
+   private DataSource dataSource;
 }

@@ -142,6 +142,7 @@ public class ConfigBrokerImpl
       }
 
       resources.put(name, dataSource);
+      fireResourceAdded(name, dataSource);
    }
 
    /**
@@ -158,8 +159,9 @@ public class ConfigBrokerImpl
          throw new IllegalArgumentException(name + " is not open");
       }
 
-      //TODO: Refactor into fireResourceRemoved(name)
       DataSource data_source = (DataSource)resources.remove(name);
+      fireResourceRemoved(name, data_source);
+
       return data_source;
    }
 
@@ -579,9 +581,9 @@ public class ConfigBrokerImpl
    }
 
    /**
-    * Notifies all listeners that the given resource has been opened.
+    * Notifies all listeners that the given resource has been added.
     */
-   protected void fireResourceOpened(String resource)
+   protected void fireResourceAdded(String resource, DataSource dataSource)
    {
       ConfigBrokerEvent evt = null;
       Object[] listener_list = listeners.getListenerList();
@@ -591,17 +593,17 @@ public class ConfigBrokerImpl
          {
             if (evt == null)
             {
-               evt = new ConfigBrokerEvent(this, resource);
+               evt = new ConfigBrokerEvent(this, resource, dataSource);
             }
-            ((ConfigBrokerListener)listener_list[i+1]).resourceOpened(evt);
+            ((ConfigBrokerListener)listener_list[i+1]).resourceAdded(evt);
          }
       }
    }
 
    /**
-    * Notifies all listeners that the given resource has been closed.
+    * Notifies all listeners that the given resource has been removed.
     */
-   protected void fireResourceClosed(String resource)
+   protected void fireResourceRemoved(String resource, DataSource dataSource)
    {
       ConfigBrokerEvent evt = null;
       Object[] listener_list = listeners.getListenerList();
@@ -611,29 +613,9 @@ public class ConfigBrokerImpl
          {
             if (evt == null)
             {
-               evt = new ConfigBrokerEvent(this, resource);
+               evt = new ConfigBrokerEvent(this, resource, dataSource);
             }
-            ((ConfigBrokerListener)listener_list[i+1]).resourceClosed(evt);
-         }
-      }
-   }
-
-   /**
-    * Notifies all listeners that the given resource has been saved.
-    */
-   protected void fireResourceSaved(String resource)
-   {
-      ConfigBrokerEvent evt = null;
-      Object[] listener_list = listeners.getListenerList();
-      for (int i=listener_list.length-2; i>=0; i-=2)
-      {
-         if (listener_list[i] == ConfigBrokerListener.class)
-         {
-            if (evt == null)
-            {
-               evt = new ConfigBrokerEvent(this, resource);
-            }
-            ((ConfigBrokerListener)listener_list[i+1]).resourceSaved(evt);
+            ((ConfigBrokerListener)listener_list[i+1]).resourceRemoved(evt);
          }
       }
    }
