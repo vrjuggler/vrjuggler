@@ -4,6 +4,7 @@
 #include <Kernel/vjWallProjection.h>
 #include <Kernel/vjCameraProjection.h>
 #include <Kernel/vjSimulator.h>
+#include <Kernel/vjDebug.h>
 
 vjDisplay::vjDisplay()
 {
@@ -15,7 +16,10 @@ vjDisplay::vjDisplay()
 
 void vjDisplay::config(vjConfigChunk* chunk)
 {
-    char* proj  = chunk->getProperty("projectiontype");
+   vjASSERT(chunk != NULL);
+
+   // -- Get config info from chunk -- // 
+   char* proj  = chunk->getProperty("projectiontype");
     int originX = chunk->getProperty("origin", 0);
     int originY = chunk->getProperty("origin", 1);
     int sizeX   = chunk->getProperty("size", 0);
@@ -26,6 +30,17 @@ void vjDisplay::config(vjConfigChunk* chunk)
     mStereo  = chunk->getProperty("stereo");
     bool sim = chunk->getProperty("simulator");
 
+      // -- Check for error in configuration -- //
+      // NOTE: If there are errors, set them to some default value
+   if(sizeX <= 0)
+   {  vjDEBUG(0) << "Error: window sizeX set to: " << sizeX << ".  Setting to 100." << endl;
+      sizeX = 10; }
+
+   if(sizeY <= 0)
+   {  vjDEBUG(0) << "Error: window sizeY set to: " << sizeY << ".  Setting to 100." << endl;
+      sizeY = 10; }
+
+      // -- Set local window attributes --- //
     setOriginAndSize(originX, originY, sizeX, sizeY);
     
       // Set type
@@ -55,6 +70,7 @@ void vjDisplay::config(vjConfigChunk* chunk)
 
     setName(name);
     setPipe(pipe);
+
 
     displayChunk = chunk;        // Save the chunk for later use
 }
