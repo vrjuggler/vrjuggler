@@ -111,6 +111,22 @@ public class PropertyEditorPanel extends PropertyComponent
       this.add(mEditorComponent, BorderLayout.CENTER);
    }
 
+   /**
+    * Enables or disables the editor component contained within this panel.
+    *
+    * @param enabled If true, this component and its editor component are
+    *                enabled; otherwise they are disabled.
+    */
+   public void setEnabled(boolean enabled)
+   {
+      super.setEnabled(enabled);
+
+      if ( mEditorComponent != null )
+      {
+         mEditorComponent.setEnabled(enabled);
+      }
+   }
+
    public void nameChanged(ConfigElementEvent evt)
    {;}
 
