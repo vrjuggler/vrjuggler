@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.15 of RCSfile: class_cxx_adapter.tmpl,v
 
 
 #ifndef __GADGET_INPUT_ADAPTER__
@@ -44,13 +44,17 @@ public:
    virtual ~gadget_Input_Adapter()
    {;}
 
-   typedef bool (*config_callback_boost_shared_ptr_jccl__ConfigElement_t)(boost::shared_ptr<jccl::ConfigElement>);
+   struct holder_p0_gadget_Input_config__boost_shared_ptr_jccl__ConfigElement { boost::shared_ptr<jccl::ConfigElement> mPtr; };
+   typedef bool (*config_callback_boost_shared_ptr_jccl__ConfigElement_t)(holder_p0_gadget_Input_config__boost_shared_ptr_jccl__ConfigElement*);
    config_callback_boost_shared_ptr_jccl__ConfigElement_t config_callback_boost_shared_ptr_jccl__ConfigElement;
 
    /// Override for virtual function gadget::Input::config.
    virtual bool config(boost::shared_ptr<jccl::ConfigElement> p0)
    {
-      return config_callback_boost_shared_ptr_jccl__ConfigElement(p0);
+      holder_p0_gadget_Input_config__boost_shared_ptr_jccl__ConfigElement* h_p0 = new holder_p0_gadget_Input_config__boost_shared_ptr_jccl__ConfigElement; h_p0->mPtr = p0;
+      bool result = config_callback_boost_shared_ptr_jccl__ConfigElement(h_p0);
+      ;
+      return result;
    }
 
    typedef bool (*sample_callback_t)();
@@ -59,7 +63,8 @@ public:
    /// Override for virtual function gadget::Input::sample.
    virtual bool sample()
    {
-      return sample_callback();
+      bool result = sample_callback();
+      return result;
    }
 
    typedef bool (*startSampling_callback_t)();
@@ -68,7 +73,8 @@ public:
    /// Override for virtual function gadget::Input::startSampling.
    virtual bool startSampling()
    {
-      return startSampling_callback();
+      bool result = startSampling_callback();
+      return result;
    }
 
    typedef bool (*stopSampling_callback_t)();
@@ -77,7 +83,8 @@ public:
    /// Override for virtual function gadget::Input::stopSampling.
    virtual bool stopSampling()
    {
-      return stopSampling_callback();
+      bool result = stopSampling_callback();
+      return result;
    }
 
    typedef void (*updateData_callback_t)();
@@ -89,13 +96,14 @@ public:
       updateData_callback();
    }
 
-   typedef std::basic_string<char,std::char_traits<char>,std::allocator<char> >* (*getBaseType_callback_t)();
+   typedef char* (*getBaseType_callback_t)();
    getBaseType_callback_t getBaseType_callback;
 
    /// Override for virtual function gadget::Input::getBaseType.
    virtual std::basic_string<char,std::char_traits<char>,std::allocator<char> > getBaseType()
    {
-      return *(getBaseType_callback());
+      std::basic_string<char,std::char_traits<char>,std::allocator<char> > result = getBaseType_callback();
+      return result;
    }
 
    typedef vpr::ReturnStatus* (*writeObject_callback_vpr_ObjectWriter_t)(vpr::ObjectWriter*);
@@ -104,7 +112,8 @@ public:
    /// Override for virtual function gadget::Input::writeObject.
    virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* p0)
    {
-      return *(writeObject_callback_vpr_ObjectWriter(p0));
+      vpr::ReturnStatus result = *(writeObject_callback_vpr_ObjectWriter(p0));
+      return result;
    }
 
    typedef vpr::ReturnStatus* (*readObject_callback_vpr_ObjectReader_t)(vpr::ObjectReader*);
@@ -113,7 +122,8 @@ public:
    /// Override for virtual function gadget::Input::readObject.
    virtual vpr::ReturnStatus readObject(vpr::ObjectReader* p0)
    {
-      return *(readObject_callback_vpr_ObjectReader(p0));
+      vpr::ReturnStatus result = *(readObject_callback_vpr_ObjectReader(p0));
+      return result;
    }
 
    typedef void (*destroy_callback_t)();

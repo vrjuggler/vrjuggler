@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.15 of RCSfile: class_cxx_adapter.tmpl,v
 
 
 #ifndef __GADGET_PROXY_ADAPTER__
@@ -44,13 +44,17 @@ public:
    virtual ~gadget_Proxy_Adapter()
    {;}
 
-   typedef bool (*config_callback_boost_shared_ptr_jccl__ConfigElement_t)(boost::shared_ptr<jccl::ConfigElement>);
+   struct holder_p0_gadget_Proxy_config__boost_shared_ptr_jccl__ConfigElement { boost::shared_ptr<jccl::ConfigElement> mPtr; };
+   typedef bool (*config_callback_boost_shared_ptr_jccl__ConfigElement_t)(holder_p0_gadget_Proxy_config__boost_shared_ptr_jccl__ConfigElement*);
    config_callback_boost_shared_ptr_jccl__ConfigElement_t config_callback_boost_shared_ptr_jccl__ConfigElement;
 
    /// Override for virtual function gadget::Proxy::config.
    virtual bool config(boost::shared_ptr<jccl::ConfigElement> p0)
    {
-      return config_callback_boost_shared_ptr_jccl__ConfigElement(p0);
+      holder_p0_gadget_Proxy_config__boost_shared_ptr_jccl__ConfigElement* h_p0 = new holder_p0_gadget_Proxy_config__boost_shared_ptr_jccl__ConfigElement; h_p0->mPtr = p0;
+      bool result = config_callback_boost_shared_ptr_jccl__ConfigElement(h_p0);
+      ;
+      return result;
    }
 
    typedef bool (*refresh_callback_t)();
@@ -59,7 +63,8 @@ public:
    /// Override for virtual function gadget::Proxy::refresh.
    virtual bool refresh()
    {
-      return refresh_callback();
+      bool result = refresh_callback();
+      return result;
    }
 
    typedef void (*updateData_callback_t)();
@@ -77,7 +82,8 @@ public:
    /// Override for virtual function gadget::Proxy::getProxiedInputDevice.
    virtual gadget::Input* getProxiedInputDevice()
    {
-      return getProxiedInputDevice_callback();
+      gadget::Input* result = getProxiedInputDevice_callback();
+      return result;
    }
 
    typedef bool (*isStupified_callback_t)();
@@ -86,7 +92,8 @@ public:
    /// Override for virtual function gadget::Proxy::isStupified.
    virtual bool isStupified()
    {
-      return isStupified_callback();
+      bool result = isStupified_callback();
+      return result;
    }
 
 }; // class gadget_Proxy_Adapter

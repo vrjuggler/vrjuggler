@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.15 of RCSfile: class_cxx_adapter.tmpl,v
 
 
 #ifndef __VPR_READABLEOBJECT_ADAPTER__
@@ -46,7 +46,8 @@ public:
    /// Override for virtual function vpr::ReadableObject::readObject.
    virtual vpr::ReturnStatus readObject(vpr::ObjectReader* p0)
    {
-      return *(readObject_callback_vpr_ObjectReader(p0));
+      vpr::ReturnStatus result = *(readObject_callback_vpr_ObjectReader(p0));
+      return result;
    }
 
 }; // class vpr_ReadableObject_Adapter

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.15 of RCSfile: class_cxx_adapter.tmpl,v
 
 
 #ifndef __VPR_OBJECTREADER_ADAPTER__
@@ -40,13 +40,16 @@ public:
    virtual ~vpr_ObjectReader_Adapter()
    {;}
 
-   typedef vpr::ReturnStatus* (*beginTag_callback_std_basic_string_char_std__char_traits_char__std__allocator_char___t)(std::basic_string<char,std::char_traits<char>,std::allocator<char> >);
+   typedef vpr::ReturnStatus* (*beginTag_callback_std_basic_string_char_std__char_traits_char__std__allocator_char___t)(char*);
    beginTag_callback_std_basic_string_char_std__char_traits_char__std__allocator_char___t beginTag_callback_std_basic_string_char_std__char_traits_char__std__allocator_char__;
 
    /// Override for virtual function vpr::ObjectReader::beginTag.
    virtual vpr::ReturnStatus beginTag(std::basic_string<char,std::char_traits<char>,std::allocator<char> > p0)
    {
-      return *(beginTag_callback_std_basic_string_char_std__char_traits_char__std__allocator_char__(p0));
+      char* marshal_p0 = strdup(p0.c_str());
+      vpr::ReturnStatus result = *(beginTag_callback_std_basic_string_char_std__char_traits_char__std__allocator_char__(marshal_p0));
+      free(marshal_p0);
+      return result;
    }
 
    typedef vpr::ReturnStatus* (*endTag_callback_t)();
@@ -55,16 +58,20 @@ public:
    /// Override for virtual function vpr::ObjectReader::endTag.
    virtual vpr::ReturnStatus endTag()
    {
-      return *(endTag_callback());
+      vpr::ReturnStatus result = *(endTag_callback());
+      return result;
    }
 
-   typedef vpr::ReturnStatus* (*beginAttribute_callback_std_basic_string_char_std__char_traits_char__std__allocator_char___t)(std::basic_string<char,std::char_traits<char>,std::allocator<char> >);
+   typedef vpr::ReturnStatus* (*beginAttribute_callback_std_basic_string_char_std__char_traits_char__std__allocator_char___t)(char*);
    beginAttribute_callback_std_basic_string_char_std__char_traits_char__std__allocator_char___t beginAttribute_callback_std_basic_string_char_std__char_traits_char__std__allocator_char__;
 
    /// Override for virtual function vpr::ObjectReader::beginAttribute.
    virtual vpr::ReturnStatus beginAttribute(std::basic_string<char,std::char_traits<char>,std::allocator<char> > p0)
    {
-      return *(beginAttribute_callback_std_basic_string_char_std__char_traits_char__std__allocator_char__(p0));
+      char* marshal_p0 = strdup(p0.c_str());
+      vpr::ReturnStatus result = *(beginAttribute_callback_std_basic_string_char_std__char_traits_char__std__allocator_char__(marshal_p0));
+      free(marshal_p0);
+      return result;
    }
 
    typedef vpr::ReturnStatus* (*endAttribute_callback_t)();
@@ -73,7 +80,8 @@ public:
    /// Override for virtual function vpr::ObjectReader::endAttribute.
    virtual vpr::ReturnStatus endAttribute()
    {
-      return *(endAttribute_callback());
+      vpr::ReturnStatus result = *(endAttribute_callback());
+      return result;
    }
 
    typedef void (*resetReading_callback_t)();
@@ -109,7 +117,8 @@ public:
    /// Override for virtual function vpr::ObjectReader::readUint8.
    virtual unsigned char readUint8()
    {
-      return readUint8_callback();
+      unsigned char result = readUint8_callback();
+      return result;
    }
 
    typedef short unsigned int (*readUint16_callback_t)();
@@ -118,7 +127,8 @@ public:
    /// Override for virtual function vpr::ObjectReader::readUint16.
    virtual short unsigned int readUint16()
    {
-      return readUint16_callback();
+      short unsigned int result = readUint16_callback();
+      return result;
    }
 
    typedef unsigned int (*readUint32_callback_t)();
@@ -127,7 +137,8 @@ public:
    /// Override for virtual function vpr::ObjectReader::readUint32.
    virtual unsigned int readUint32()
    {
-      return readUint32_callback();
+      unsigned int result = readUint32_callback();
+      return result;
    }
 
    typedef long long unsigned int (*readUint64_callback_t)();
@@ -136,7 +147,8 @@ public:
    /// Override for virtual function vpr::ObjectReader::readUint64.
    virtual long long unsigned int readUint64()
    {
-      return readUint64_callback();
+      long long unsigned int result = readUint64_callback();
+      return result;
    }
 
    typedef float (*readFloat_callback_t)();
@@ -145,7 +157,8 @@ public:
    /// Override for virtual function vpr::ObjectReader::readFloat.
    virtual float readFloat()
    {
-      return readFloat_callback();
+      float result = readFloat_callback();
+      return result;
    }
 
    typedef double (*readDouble_callback_t)();
@@ -154,16 +167,18 @@ public:
    /// Override for virtual function vpr::ObjectReader::readDouble.
    virtual double readDouble()
    {
-      return readDouble_callback();
+      double result = readDouble_callback();
+      return result;
    }
 
-   typedef std::basic_string<char,std::char_traits<char>,std::allocator<char> >* (*readString_callback_t)();
+   typedef char* (*readString_callback_t)();
    readString_callback_t readString_callback;
 
    /// Override for virtual function vpr::ObjectReader::readString.
    virtual std::basic_string<char,std::char_traits<char>,std::allocator<char> > readString()
    {
-      return *(readString_callback());
+      std::basic_string<char,std::char_traits<char>,std::allocator<char> > result = readString_callback();
+      return result;
    }
 
    typedef bool (*readBool_callback_t)();
@@ -172,7 +187,8 @@ public:
    /// Override for virtual function vpr::ObjectReader::readBool.
    virtual bool readBool()
    {
-      return readBool_callback();
+      bool result = readBool_callback();
+      return result;
    }
 
    typedef void (*readUint8_callback_unsigned_char_t)(unsigned char&);
@@ -229,13 +245,15 @@ public:
       readDouble_callback_double(p0);
    }
 
-   typedef void (*readString_callback_std_basic_string_char_std__char_traits_char__std__allocator_char___t)(std::basic_string<char,std::char_traits<char>,std::allocator<char> >&);
+   typedef void (*readString_callback_std_basic_string_char_std__char_traits_char__std__allocator_char___t)(char**);
    readString_callback_std_basic_string_char_std__char_traits_char__std__allocator_char___t readString_callback_std_basic_string_char_std__char_traits_char__std__allocator_char__;
 
    /// Override for virtual function vpr::ObjectReader::readString.
    virtual void readString(std::basic_string<char,std::char_traits<char>,std::allocator<char> >& p0)
    {
-      readString_callback_std_basic_string_char_std__char_traits_char__std__allocator_char__(p0);
+      char* marshal_p0 = (char*) malloc(sizeof(char) * 256);
+      readString_callback_std_basic_string_char_std__char_traits_char__std__allocator_char__(&marshal_p0);
+      p0 = marshal_p0; free(marshal_p0);
    }
 
    typedef void (*readBool_callback_bool_t)(bool&);

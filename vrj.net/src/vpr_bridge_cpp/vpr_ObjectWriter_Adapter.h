@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.15 of RCSfile: class_cxx_adapter.tmpl,v
 
 
 #ifndef __VPR_OBJECTWRITER_ADAPTER__
@@ -40,13 +40,16 @@ public:
    virtual ~vpr_ObjectWriter_Adapter()
    {;}
 
-   typedef vpr::ReturnStatus* (*beginTag_callback_std_basic_string_char_std__char_traits_char__std__allocator_char___t)(std::basic_string<char,std::char_traits<char>,std::allocator<char> >);
+   typedef vpr::ReturnStatus* (*beginTag_callback_std_basic_string_char_std__char_traits_char__std__allocator_char___t)(char*);
    beginTag_callback_std_basic_string_char_std__char_traits_char__std__allocator_char___t beginTag_callback_std_basic_string_char_std__char_traits_char__std__allocator_char__;
 
    /// Override for virtual function vpr::ObjectWriter::beginTag.
    virtual vpr::ReturnStatus beginTag(std::basic_string<char,std::char_traits<char>,std::allocator<char> > p0)
    {
-      return *(beginTag_callback_std_basic_string_char_std__char_traits_char__std__allocator_char__(p0));
+      char* marshal_p0 = strdup(p0.c_str());
+      vpr::ReturnStatus result = *(beginTag_callback_std_basic_string_char_std__char_traits_char__std__allocator_char__(marshal_p0));
+      free(marshal_p0);
+      return result;
    }
 
    typedef vpr::ReturnStatus* (*endTag_callback_t)();
@@ -55,16 +58,20 @@ public:
    /// Override for virtual function vpr::ObjectWriter::endTag.
    virtual vpr::ReturnStatus endTag()
    {
-      return *(endTag_callback());
+      vpr::ReturnStatus result = *(endTag_callback());
+      return result;
    }
 
-   typedef vpr::ReturnStatus* (*beginAttribute_callback_std_basic_string_char_std__char_traits_char__std__allocator_char___t)(std::basic_string<char,std::char_traits<char>,std::allocator<char> >);
+   typedef vpr::ReturnStatus* (*beginAttribute_callback_std_basic_string_char_std__char_traits_char__std__allocator_char___t)(char*);
    beginAttribute_callback_std_basic_string_char_std__char_traits_char__std__allocator_char___t beginAttribute_callback_std_basic_string_char_std__char_traits_char__std__allocator_char__;
 
    /// Override for virtual function vpr::ObjectWriter::beginAttribute.
    virtual vpr::ReturnStatus beginAttribute(std::basic_string<char,std::char_traits<char>,std::allocator<char> > p0)
    {
-      return *(beginAttribute_callback_std_basic_string_char_std__char_traits_char__std__allocator_char__(p0));
+      char* marshal_p0 = strdup(p0.c_str());
+      vpr::ReturnStatus result = *(beginAttribute_callback_std_basic_string_char_std__char_traits_char__std__allocator_char__(marshal_p0));
+      free(marshal_p0);
+      return result;
    }
 
    typedef vpr::ReturnStatus* (*endAttribute_callback_t)();
@@ -73,7 +80,8 @@ public:
    /// Override for virtual function vpr::ObjectWriter::endAttribute.
    virtual vpr::ReturnStatus endAttribute()
    {
-      return *(endAttribute_callback());
+      vpr::ReturnStatus result = *(endAttribute_callback());
+      return result;
    }
 
    typedef vpr::ReturnStatus* (*writeUint8_callback_unsigned_char_t)(unsigned char);
@@ -82,7 +90,8 @@ public:
    /// Override for virtual function vpr::ObjectWriter::writeUint8.
    virtual vpr::ReturnStatus writeUint8(unsigned char p0)
    {
-      return *(writeUint8_callback_unsigned_char(p0));
+      vpr::ReturnStatus result = *(writeUint8_callback_unsigned_char(p0));
+      return result;
    }
 
    typedef vpr::ReturnStatus* (*writeUint16_callback_short_unsigned_int_t)(short unsigned int);
@@ -91,7 +100,8 @@ public:
    /// Override for virtual function vpr::ObjectWriter::writeUint16.
    virtual vpr::ReturnStatus writeUint16(short unsigned int p0)
    {
-      return *(writeUint16_callback_short_unsigned_int(p0));
+      vpr::ReturnStatus result = *(writeUint16_callback_short_unsigned_int(p0));
+      return result;
    }
 
    typedef vpr::ReturnStatus* (*writeUint32_callback_unsigned_int_t)(unsigned int);
@@ -100,7 +110,8 @@ public:
    /// Override for virtual function vpr::ObjectWriter::writeUint32.
    virtual vpr::ReturnStatus writeUint32(unsigned int p0)
    {
-      return *(writeUint32_callback_unsigned_int(p0));
+      vpr::ReturnStatus result = *(writeUint32_callback_unsigned_int(p0));
+      return result;
    }
 
    typedef vpr::ReturnStatus* (*writeUint64_callback_long_long_unsigned_int_t)(long long unsigned int);
@@ -109,7 +120,8 @@ public:
    /// Override for virtual function vpr::ObjectWriter::writeUint64.
    virtual vpr::ReturnStatus writeUint64(long long unsigned int p0)
    {
-      return *(writeUint64_callback_long_long_unsigned_int(p0));
+      vpr::ReturnStatus result = *(writeUint64_callback_long_long_unsigned_int(p0));
+      return result;
    }
 
    typedef vpr::ReturnStatus* (*writeFloat_callback_float_t)(float);
@@ -118,7 +130,8 @@ public:
    /// Override for virtual function vpr::ObjectWriter::writeFloat.
    virtual vpr::ReturnStatus writeFloat(float p0)
    {
-      return *(writeFloat_callback_float(p0));
+      vpr::ReturnStatus result = *(writeFloat_callback_float(p0));
+      return result;
    }
 
    typedef vpr::ReturnStatus* (*writeDouble_callback_double_t)(double);
@@ -127,16 +140,20 @@ public:
    /// Override for virtual function vpr::ObjectWriter::writeDouble.
    virtual vpr::ReturnStatus writeDouble(double p0)
    {
-      return *(writeDouble_callback_double(p0));
+      vpr::ReturnStatus result = *(writeDouble_callback_double(p0));
+      return result;
    }
 
-   typedef vpr::ReturnStatus* (*writeString_callback_std_basic_string_char_std__char_traits_char__std__allocator_char___t)(std::basic_string<char,std::char_traits<char>,std::allocator<char> >);
+   typedef vpr::ReturnStatus* (*writeString_callback_std_basic_string_char_std__char_traits_char__std__allocator_char___t)(char*);
    writeString_callback_std_basic_string_char_std__char_traits_char__std__allocator_char___t writeString_callback_std_basic_string_char_std__char_traits_char__std__allocator_char__;
 
    /// Override for virtual function vpr::ObjectWriter::writeString.
    virtual vpr::ReturnStatus writeString(std::basic_string<char,std::char_traits<char>,std::allocator<char> > p0)
    {
-      return *(writeString_callback_std_basic_string_char_std__char_traits_char__std__allocator_char__(p0));
+      char* marshal_p0 = strdup(p0.c_str());
+      vpr::ReturnStatus result = *(writeString_callback_std_basic_string_char_std__char_traits_char__std__allocator_char__(marshal_p0));
+      free(marshal_p0);
+      return result;
    }
 
    typedef vpr::ReturnStatus* (*writeBool_callback_bool_t)(bool);
@@ -145,7 +162,8 @@ public:
    /// Override for virtual function vpr::ObjectWriter::writeBool.
    virtual vpr::ReturnStatus writeBool(bool p0)
    {
-      return *(writeBool_callback_bool(p0));
+      vpr::ReturnStatus result = *(writeBool_callback_bool(p0));
+      return result;
    }
 
 }; // class vpr_ObjectWriter_Adapter

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.15 of RCSfile: class_cxx_adapter.tmpl,v
 
 
 #ifndef __VRJ_DRAWMANAGER_ADAPTER__
@@ -44,13 +44,17 @@ public:
    virtual ~vrj_DrawManager_Adapter()
    {;}
 
-   typedef bool (*configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement_t)(boost::shared_ptr<jccl::ConfigElement>);
+   struct holder_p0_jccl_ConfigElementHandler_configCanHandle__boost_shared_ptr_jccl__ConfigElement { boost::shared_ptr<jccl::ConfigElement> mPtr; };
+   typedef bool (*configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement_t)(holder_p0_jccl_ConfigElementHandler_configCanHandle__boost_shared_ptr_jccl__ConfigElement*);
    configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement_t configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement;
 
    /// Override for virtual function jccl::ConfigElementHandler::configCanHandle.
    virtual bool configCanHandle(boost::shared_ptr<jccl::ConfigElement> p0)
    {
-      return configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement(p0);
+      holder_p0_jccl_ConfigElementHandler_configCanHandle__boost_shared_ptr_jccl__ConfigElement* h_p0 = new holder_p0_jccl_ConfigElementHandler_configCanHandle__boost_shared_ptr_jccl__ConfigElement; h_p0->mPtr = p0;
+      bool result = configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement(h_p0);
+      ;
+      return result;
    }
 
    typedef int (*configProcessPending_callback_t)();
@@ -59,25 +63,34 @@ public:
    /// Override for virtual function jccl::ConfigElementHandler::configProcessPending.
    virtual int configProcessPending()
    {
-      return configProcessPending_callback();
+      int result = configProcessPending_callback();
+      return result;
    }
 
-   typedef bool (*configAdd_callback_boost_shared_ptr_jccl__ConfigElement_t)(boost::shared_ptr<jccl::ConfigElement>);
+   struct holder_p0_jccl_ConfigElementHandler_configAdd__boost_shared_ptr_jccl__ConfigElement { boost::shared_ptr<jccl::ConfigElement> mPtr; };
+   typedef bool (*configAdd_callback_boost_shared_ptr_jccl__ConfigElement_t)(holder_p0_jccl_ConfigElementHandler_configAdd__boost_shared_ptr_jccl__ConfigElement*);
    configAdd_callback_boost_shared_ptr_jccl__ConfigElement_t configAdd_callback_boost_shared_ptr_jccl__ConfigElement;
 
    /// Override for virtual function jccl::ConfigElementHandler::configAdd.
    virtual bool configAdd(boost::shared_ptr<jccl::ConfigElement> p0)
    {
-      return configAdd_callback_boost_shared_ptr_jccl__ConfigElement(p0);
+      holder_p0_jccl_ConfigElementHandler_configAdd__boost_shared_ptr_jccl__ConfigElement* h_p0 = new holder_p0_jccl_ConfigElementHandler_configAdd__boost_shared_ptr_jccl__ConfigElement; h_p0->mPtr = p0;
+      bool result = configAdd_callback_boost_shared_ptr_jccl__ConfigElement(h_p0);
+      ;
+      return result;
    }
 
-   typedef bool (*configRemove_callback_boost_shared_ptr_jccl__ConfigElement_t)(boost::shared_ptr<jccl::ConfigElement>);
+   struct holder_p0_jccl_ConfigElementHandler_configRemove__boost_shared_ptr_jccl__ConfigElement { boost::shared_ptr<jccl::ConfigElement> mPtr; };
+   typedef bool (*configRemove_callback_boost_shared_ptr_jccl__ConfigElement_t)(holder_p0_jccl_ConfigElementHandler_configRemove__boost_shared_ptr_jccl__ConfigElement*);
    configRemove_callback_boost_shared_ptr_jccl__ConfigElement_t configRemove_callback_boost_shared_ptr_jccl__ConfigElement;
 
    /// Override for virtual function jccl::ConfigElementHandler::configRemove.
    virtual bool configRemove(boost::shared_ptr<jccl::ConfigElement> p0)
    {
-      return configRemove_callback_boost_shared_ptr_jccl__ConfigElement(p0);
+      holder_p0_jccl_ConfigElementHandler_configRemove__boost_shared_ptr_jccl__ConfigElement* h_p0 = new holder_p0_jccl_ConfigElementHandler_configRemove__boost_shared_ptr_jccl__ConfigElement; h_p0->mPtr = p0;
+      bool result = configRemove_callback_boost_shared_ptr_jccl__ConfigElement(h_p0);
+      ;
+      return result;
    }
 
    typedef void (*draw_callback_t)();
@@ -125,13 +138,15 @@ public:
       closeAPI_callback();
    }
 
-   typedef void (*outStream_callback_std_basic_ostream_char_std__char_traits_char___t)(std::basic_ostream<char,std::char_traits<char> >&);
+   typedef void (*outStream_callback_std_basic_ostream_char_std__char_traits_char___t)(std::basic_ostream<char,std::char_traits<char> >*);
    outStream_callback_std_basic_ostream_char_std__char_traits_char___t outStream_callback_std_basic_ostream_char_std__char_traits_char__;
 
    /// Override for virtual function vrj::DrawManager::outStream.
    virtual void outStream(std::basic_ostream<char,std::char_traits<char> >& p0)
    {
-      outStream_callback_std_basic_ostream_char_std__char_traits_char__(p0);
+      ;
+      outStream_callback_std_basic_ostream_char_std__char_traits_char__(&marshal_p0);
+      ;
    }
 
 }; // class vrj_DrawManager_Adapter

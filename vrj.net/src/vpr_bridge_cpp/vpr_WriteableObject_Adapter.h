@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.15 of RCSfile: class_cxx_adapter.tmpl,v
 
 
 #ifndef __VPR_WRITEABLEOBJECT_ADAPTER__
@@ -46,7 +46,8 @@ public:
    /// Override for virtual function vpr::WriteableObject::writeObject.
    virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* p0)
    {
-      return *(writeObject_callback_vpr_ObjectWriter(p0));
+      vpr::ReturnStatus result = *(writeObject_callback_vpr_ObjectWriter(p0));
+      return result;
    }
 
 }; // class vpr_WriteableObject_Adapter

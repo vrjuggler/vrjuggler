@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.15 of RCSfile: class_cxx_adapter.tmpl,v
 
 
 #ifndef __GADGET_ANALOG_ADAPTER__
@@ -50,7 +50,8 @@ public:
    /// Override for virtual function gadget::Analog::writeObject.
    virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* p0)
    {
-      return *(writeObject_callback_vpr_ObjectWriter(p0));
+      vpr::ReturnStatus result = *(writeObject_callback_vpr_ObjectWriter(p0));
+      return result;
    }
 
    typedef vpr::ReturnStatus* (*readObject_callback_vpr_ObjectReader_t)(vpr::ObjectReader*);
@@ -59,25 +60,31 @@ public:
    /// Override for virtual function gadget::Analog::readObject.
    virtual vpr::ReturnStatus readObject(vpr::ObjectReader* p0)
    {
-      return *(readObject_callback_vpr_ObjectReader(p0));
+      vpr::ReturnStatus result = *(readObject_callback_vpr_ObjectReader(p0));
+      return result;
    }
 
-   typedef bool (*config_callback_boost_shared_ptr_jccl__ConfigElement_t)(boost::shared_ptr<jccl::ConfigElement>);
+   struct holder_p0_gadget_Analog_config__boost_shared_ptr_jccl__ConfigElement { boost::shared_ptr<jccl::ConfigElement> mPtr; };
+   typedef bool (*config_callback_boost_shared_ptr_jccl__ConfigElement_t)(holder_p0_gadget_Analog_config__boost_shared_ptr_jccl__ConfigElement*);
    config_callback_boost_shared_ptr_jccl__ConfigElement_t config_callback_boost_shared_ptr_jccl__ConfigElement;
 
    /// Override for virtual function gadget::Analog::config.
    virtual bool config(boost::shared_ptr<jccl::ConfigElement> p0)
    {
-      return config_callback_boost_shared_ptr_jccl__ConfigElement(p0);
+      holder_p0_gadget_Analog_config__boost_shared_ptr_jccl__ConfigElement* h_p0 = new holder_p0_gadget_Analog_config__boost_shared_ptr_jccl__ConfigElement; h_p0->mPtr = p0;
+      bool result = config_callback_boost_shared_ptr_jccl__ConfigElement(h_p0);
+      ;
+      return result;
    }
 
-   typedef std::basic_string<char,std::char_traits<char>,std::allocator<char> >* (*getBaseType_callback_t)();
+   typedef char* (*getBaseType_callback_t)();
    getBaseType_callback_t getBaseType_callback;
 
    /// Override for virtual function gadget::Analog::getBaseType.
    virtual std::basic_string<char,std::char_traits<char>,std::allocator<char> > getBaseType()
    {
-      return *(getBaseType_callback());
+      std::basic_string<char,std::char_traits<char>,std::allocator<char> > result = getBaseType_callback();
+      return result;
    }
 
    /// Public wrapper for protected non-virtual function gadget::Analog::normalizeMinToMax.
@@ -89,13 +96,15 @@ public:
    /// Public wrapper for protected non-virtual function gadget::Analog::getMin.
    float getMin()
    {
-      return gadget::Analog::getMin();
+      float result = gadget::Analog::getMin();
+      return result;
    }
 
    /// Public wrapper for protected non-virtual function gadget::Analog::getMax.
    float getMax()
    {
-      return gadget::Analog::getMax();
+      float result = gadget::Analog::getMax();
+      return result;
    }
 
    /// Public wrapper for protected non-virtual function gadget::Analog::setMin.
