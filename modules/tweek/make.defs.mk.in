@@ -89,6 +89,7 @@ releasedir=	@JUGGLERROOT_ABS@/release
 scriptdir=	$(releasedir)/scripts
 topdir=		@topdir@
 
+ANT=			@ANT@
 CXX_IDL=		@CXX_IDL@
 JAVA_IDL=		@JAVA_IDL@
 DPP_SCRIPTDIR=		$(JUGGLERROOT_ABS)/Doozer++/scripts
