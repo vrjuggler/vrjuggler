@@ -11,6 +11,8 @@
 	ogl
 	    combo
 	    ..
+	    cones
+	    ..
 	    cubes
 	    ..
 	    digitalGlove
