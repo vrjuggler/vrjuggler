@@ -55,6 +55,16 @@
 </xsl:text>
    </xsl:variable>
 
+   <!-- The namespace for JCCL configuration files. -->
+   <xsl:variable name="cfg_namespace">
+      <xsl:text>http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:text>
+   </xsl:variable>
+
+   <!-- The schema for JCCL configuration files. -->
+   <xsl:variable name="cfg_schema">
+      <xsl:text>http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd</xsl:text>
+   </xsl:variable>
+
    <xsl:template match="/">
      <!-- Add the new version information. -->
      <xsl:processing-instruction name="org-vrjuggler-jccl-settings">configuration.version="3.0"</xsl:processing-instruction>
@@ -62,18 +72,37 @@
 
       <!-- XXX: Need to deal with includes here. -->
       <!-- Create the new XML tree. -->
-      <!-- XXX: The way the attributes are specified here isn't quite right. -->
-      <configuration name="Configuration"
-                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                     xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration"
-                     xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration">
+      <xsl:element name="configuration">
+         <!-- Fill in the attributes for the root node. -->
+         <!--
+            XXX: A good default value for this would be the name of the file.
+            How do we get that from the XSLT processor?
+         -->
+         <xsl:attribute name="name">
+            <xsl:text>Configuration</xsl:text>
+         </xsl:attribute>
+         <xsl:attribute name="xsi:schemaLocation">
+            <xsl:value-of select="$cfg_namespace" />
+            <xsl:text> </xsl:text>
+            <xsl:value-of select="$cfg_schema" />
+         </xsl:attribute>
+         <xsl:attribute name="xmlns:xsi">
+            <xsl:text>http://www.w3.org/2001/XMLSchema-instance</xsl:text>
+         </xsl:attribute>
+         <xsl:attribute name="xmlns">
+            <xsl:value-of select="$cfg_namespace" />
+         </xsl:attribute>
+         <xsl:value-of select="$newline"/>
+
          <!-- Create the tree of elements. -->
-         <elements>
+         <xsl:element name="elements">
+            <xsl:value-of select="$newline"/>
             <xsl:for-each select="ConfigChunkDB/*">
                <xsl:apply-templates select="."/>
             </xsl:for-each>
-         </elements>
-      </configuration>
+         </xsl:element>
+         <xsl:value-of select="$newline"/>
+      </xsl:element>
 
       <xsl:message>
          <xsl:text>Processing is complete.  You should now use VRJConfig</xsl:text>
@@ -391,14 +420,14 @@
 
    <!-- default_simulator property "simHeadModel". -->
    <xsl:template match="default_simulator/simHeadModel">
-      <xsl:element name="sim_head_model">
+      <xsl:element name="head_model">
          <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- default_simulator property "simWandModel". -->
    <xsl:template match="default_simulator/simWandModel">
-      <xsl:element name="sim_wand_model">
+      <xsl:element name="wand_model">
          <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
