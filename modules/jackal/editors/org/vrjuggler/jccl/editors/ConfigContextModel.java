@@ -221,7 +221,8 @@ public class ConfigContextModel
             for (Iterator elt_itr = emb_elts.iterator(); elt_itr.hasNext(); )
             {
                ConfigElement emb_elt = (ConfigElement)elt_itr.next();
-               emb_elt.addConfigElementListener(mElementListener);
+               // XXX: Don't need this since we have called addListenerTo up the stack.
+               //emb_elt.addConfigElementListener(mElementListener);
                addElement(emb_elt, prop_node, false);
             }
          }
@@ -534,6 +535,8 @@ public class ConfigContextModel
    {
       public void configElementAdded(ConfigEvent evt)
       {
+         System.out.println("ConfigElement added.");
+
          if (getContext().contains(evt.getResource()))
          {
             addElement(evt.getElement());
@@ -607,7 +610,11 @@ public class ConfigContextModel
             for (Enumeration e = elt_node.children(); e.hasMoreElements(); )
             {
                DefaultMutableTreeNode prop_node = (DefaultMutableTreeNode)e.nextElement();
-               if (prop_node.getUserObject().equals(evt.getValue()))
+               
+               String property_token = ((PropertyDefinition)prop_node.getUserObject()).getToken();
+               String changed_property = evt.getProperty();
+               
+               if (property_token.equals(changed_property))
                {
                   // Get the appropriate value node and mark it as changed
                   TreeNode value_node = prop_node.getChildAt(evt.getIndex());
@@ -639,7 +646,11 @@ public class ConfigContextModel
             for (Enumeration e = elt_node.children(); e.hasMoreElements(); )
             {
                DefaultMutableTreeNode prop_node = (DefaultMutableTreeNode)e.nextElement();
-               if (prop_node.getUserObject().equals(evt.getValue()))
+               
+               String property_token = ((PropertyDefinition)prop_node.getUserObject()).getToken();
+               String changed_property = evt.getProperty();
+               
+               if (property_token.equals(changed_property))
                {
                   // Create a new node for the new property value
                   ConfigElement new_elt = (ConfigElement)evt.getValue();
@@ -678,18 +689,25 @@ public class ConfigContextModel
             for (Enumeration e = elt_node.children(); e.hasMoreElements(); )
             {
                DefaultMutableTreeNode prop_node = (DefaultMutableTreeNode)e.nextElement();
-               if (prop_node.getUserObject().equals(evt.getValue()))
+               String property_token = ((PropertyDefinition)prop_node.getUserObject()).getToken();
+               String changed_property = evt.getProperty();
+               
+               if (property_token.equals(changed_property))
                {
-                  // Get the node for the property value to remove
-                  MutableTreeNode value_node =
-                     (MutableTreeNode)prop_node.getChildAt(evt.getIndex());
-
                   // Stop listening to the embedded element
                   ConfigElement removed_elt = (ConfigElement)evt.getValue();
                   removed_elt.removeConfigElementListener(mElementListener);
 
-                  // Remove the node from the tree
-                  removeNodeFromParent(prop_node);
+                  // Itereate over child nodes and remove the nodes for the given element.
+                  for (Enumeration ve = prop_node.children(); ve.hasMoreElements(); )
+                  {
+                     DefaultMutableTreeNode node = (DefaultMutableTreeNode)ve.nextElement();
+                     if( node.getUserObject() == evt.getValue() )
+                     {
+                        // Remove the node from the tree
+                        removeNodeFromParent(node);
+                     }
+                  }
                }
             }
          }
