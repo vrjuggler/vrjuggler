@@ -148,7 +148,7 @@ public:
 
    void setLineProperty(const net_edge_t& e, const vpr::sim::NetworkLine& prop);
 
-   net_vertex_t getNode (const vpr::Uint32 index)
+   net_vertex_t getNode (const vpr::Uint32 index) const
    {
       return boost::vertex(index, mGraph);
    }

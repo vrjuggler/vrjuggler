@@ -101,15 +101,17 @@ vpr::ReturnStatus SocketDatagramImplSIM::sendto (const void* msg,
                                                  const vpr::Interval timeout)
 {
    vpr::ReturnStatus status;
+   vpr::sim::SocketManager& sock_mgr =
+      vpr::sim::Controller::instance()->getSocketManager();
 
    if ( ! mNodeAssigned )
    {
-      vpr::sim::Controller::instance()->getSocketManager().assignToNode(this, mLocalAddr);
+      sock_mgr.assignToNode(this, mLocalAddr);
    }
 
    bytes_sent = length;
    vpr::sim::MessagePtr net_msg(new vpr::sim::Message(msg, length));
-   vpr::sim::Controller::instance()->getSocketManager().sendMessageTo(net_msg, this, to);
+   sock_mgr.sendMessageTo(net_msg, this, to);
 
    return status;
 }
