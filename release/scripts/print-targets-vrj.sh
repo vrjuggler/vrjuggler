@@ -44,11 +44,6 @@ Library type targets are:
                       This target depends on a correct value for \${LIBDIR}
                       (that does not have a default value).
 
-Dependency targets are:
-    depend          - Recursively build the dependencies for the source files.
-    newdepend       - Recursively (and forcibly) rebuild the dependencies for
-                      the source files.
-
 Install targets are:
     install-all     - Install all versions of the libraries, all header files,
                       the Data directory, the configuration GUI and the test
@@ -78,6 +73,8 @@ Miscellaneous targets are:
 
 Clean-up targets are:
     clean           - Clean up everything (uses common 'clean' target).
+    cleandepend     - Clean up the dependency files (uses common 'cleandepend'
+                      target).
     clobber         - Clean up everything and remove the directories containing
                       the compiled libraries and its object files.
 
