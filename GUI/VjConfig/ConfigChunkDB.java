@@ -2,10 +2,8 @@
 package VjConfig;
 
 import java.util.Vector;
-import VjConfig.ConfigChunk;
 import java.io.*;
-import VjConfig.ConfigStreamTokenizer;
-import VjConfig.ChunkDependEntry;
+import VjConfig.*;
 
 public class ConfigChunkDB extends Vector {
 
@@ -225,44 +223,66 @@ public class ConfigChunkDB extends Vector {
     }
 
 
-
-    public Vector getDependencies () {
-	// gets the dependencies of _this_chunk_only_
+    private Vector addDependsForChunk (ConfigChunk ch, Vector v, String nameprefix) {
+	// returns vector of pde's
+	// finds dependencies in ch and adds 'em to v.
 	int i, j, k;
-	ConfigChunk ch, ch2;
+	ConfigChunk ch2;
 	Property p;
 	String s;
 	VarValue val;
 	ChunkDependEntry cde;
-	ChunkDependEntry.PropDependEntry pde;
+	PropDependEntry pde;
+
+	for (j = 0; j < ch.props.size(); j++) {
+	    p = (Property)ch.props.elementAt(j);
+	    if (p.valtype.equals (ValType.t_chunk)) {
+		for (k = 0; k < p.vals.size(); k++) {
+		    s = ((VarValue)p.vals.elementAt(k)).getString();
+		    if (s.equals (""))
+			continue;
+		    ch2 = get(s);
+		    if (ch2 == null) {
+			pde = new PropDependEntry();
+			pde.propertyname = nameprefix + p.getName();
+			if (p.vals.size() > 1)
+			    pde.propertyname += "[" + k + "]";
+			pde.dependency_name = s;
+			v.addElement (pde);
+		    }
+		}
+	    }
+	    else if (p.valtype.equals (ValType.t_embeddedchunk)) {
+		for (k = 0; k < p.vals.size(); k++) {
+		    ch2 = ((VarValue)p.vals.elementAt(k)).getEmbeddedChunk();
+		    String prefix = nameprefix + p.getName();
+		    if (p.vals.size() > 1)
+			prefix += "[" + k + "].";
+		    else
+			prefix += ".";
+		    addDependsForChunk (ch2, v, nameprefix + prefix);
+		}
+	    }
+	}
+	return v;
+    }
+
+
+    public Vector getDependencies () {
+	// gets the dependencies of _this_chunkdb_only_
+	int i;
+	ConfigChunk ch;
+	ChunkDependEntry cde;
 
 	Vector dep = new Vector();
 	
 	for (i = 0; i < size(); i++) {
 	    cde = null;
 	    ch = (ConfigChunk)elementAt(i);
-	    for (j = 0; j < ch.props.size(); j++) {
-		p = (Property)ch.props.elementAt(j);
-		if (p.valtype.equals (ValType.t_chunk)) {
-		    for (k = 0; k < p.vals.size(); k++) {
-			s = ((VarValue)p.vals.elementAt(k)).getString();
-			if (s.equals (""))
-			    continue;
-			ch2 = get(s);
-			if (ch2 == null) {
-			    if (cde == null) {
-				cde = new ChunkDependEntry();
-				cde.chunk = ch;
-			    }
-			    pde = cde.new PropDependEntry();
-			    pde.property = p;
-			    pde.dependency_name = s;
-			    cde.propdepends.addElement (pde);
-			}
-		    }
-		}
-	    }
-	    if (cde != null)
+	    cde = new ChunkDependEntry();
+	    cde.chunk = ch;
+	    addDependsForChunk (ch, cde.propdepends, "");
+	    if (cde.propdepends.size() > 0)
 		dep.addElement (cde);
 	}
 	return dep;
@@ -274,14 +294,14 @@ public class ConfigChunkDB extends Vector {
 	// which is a vector of DependEntry.  DependEntries in v are
 	// updated with that information
 	ChunkDependEntry cde;
-	ChunkDependEntry.PropDependEntry pde;
+	PropDependEntry pde;
 	ConfigChunk ch;
 	int i, j;
 
 	for (i = 0; i < v.size(); i++) {
 	    cde = (ChunkDependEntry)v.elementAt(i);
 	    for (j = 0; j < cde.propdepends.size(); j++) {
-		pde = (ChunkDependEntry.PropDependEntry)cde.propdepends.elementAt(j);
+		pde = (PropDependEntry)cde.propdepends.elementAt(j);
 		ch = get (pde.dependency_name);
 		if (ch != null)
 		    pde.other_files.addElement (getName());
