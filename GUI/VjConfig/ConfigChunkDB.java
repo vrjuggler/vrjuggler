@@ -26,7 +26,6 @@ import VjConfig.*;
 
 public class ConfigChunkDB {
 
-    private ChunkDescDB descs;
     private Vector chunks;
     public String name;
     public File file;
@@ -37,10 +36,9 @@ public class ConfigChunkDB {
      * by the GUI.
      */
 
-    public ConfigChunkDB (ChunkDescDB d) {
+    public ConfigChunkDB () {
 	super();
 	chunks = new Vector();
-	descs = d;
 	name = "Untitled";
 	file = new File("Untitled");
     }
@@ -67,7 +65,7 @@ public class ConfigChunkDB {
 	 * in self or differs from the same-named chunk in self 
 	 */
 	ConfigChunk c1, c2;
-	ConfigChunkDB newdb = new ConfigChunkDB(d.descs);
+	ConfigChunkDB newdb = new ConfigChunkDB();
 	
 	for (int i = 0; i < d.size(); i++) {
 	    c1 = d.elementAt(i);
