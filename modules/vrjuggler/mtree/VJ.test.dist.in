@@ -38,6 +38,10 @@
 /set type=dir mode=@DIR_PERMS@ uname=@OWNER_NAME@ gname=@GROUP_NAME@
 .
     test
+        Cluster
+            applicationData
+            ..
+        ..
         Draw
             OGL
                 analog
@@ -81,6 +85,10 @@
             ..
         ..
         TestSuite
+            TestCases
+                Pf
+                ..
+            ..
         ..
     ..
 ..

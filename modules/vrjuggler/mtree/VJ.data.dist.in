@@ -40,6 +40,8 @@
     data
         configFiles
         ..
+        definitions
+        ..
         gesture
         ..
         models
