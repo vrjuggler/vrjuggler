@@ -35,6 +35,7 @@ protected:
    bool mAllDataReceived;
    int mSendIterations;  // for debugging
    int mRecvIterations;  // for debugging
+   SendBuffer mSendBuffer;
 
    // Test of proxies instead of  inputs
    // std::list<vjNetProxy*> mReceivingProxies;
