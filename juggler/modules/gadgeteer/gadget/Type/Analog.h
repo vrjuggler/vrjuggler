@@ -58,7 +58,7 @@ const unsigned short MSG_DATA_ANALOG = 421;
  * Analog adds one new pure virtual function, GetAnalogData for retreiving
  * the analog data, similar to the addition for Position and Digital.
  */
-class Analog : public SerializableDevice
+class GADGET_CLASS_API Analog : public SerializableDevice
 {
 public:
    typedef gadget::SampleBuffer<AnalogData> SampleBuffer_t;
