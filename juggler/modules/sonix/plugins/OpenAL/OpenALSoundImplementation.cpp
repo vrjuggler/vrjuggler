@@ -479,7 +479,7 @@ void OpenALSoundImplementation::shutdownAPI()
       vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
          << clrOutNORM(clrYELLOW, "OpenAL| WARNING:")
          << "API not started, nothing to shutdown [dev=0x" << std::hex
-         << mDev << ",ctx0x=" << mContextId << std::dec << "]\n"
+         << mDev << ",ctx=0x" << mContextId << std::dec << "]\n"
          << vprDEBUG_FLUSH;
       return;
    }
