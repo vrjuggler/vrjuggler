@@ -120,11 +120,8 @@ public:
    //
    //! RETURNS:  0 - Successful completion
    //! RETURNS: -1 - Error
-   //
-   //! NOTE:  Not implemented.
    // -----------------------------------------------------------------------
-   virtual int
-   join (void** = 0);
+   virtual int join (void** = 0);
 
    // -----------------------------------------------------------------------
    //: Resume the execution of a thread that was previously suspended using

@@ -30,11 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 #include <vjConfig.h>
+
 #include <sys/types.h>
 #include <sys/prctl.h>
+#include <sys/wait.h>
 
+#include <Kernel/vjAssert.h>
 #include <Threads/vjThread.h>
 #include <Threads/vjThreadSGI.h>
 #include <Threads/vjThreadManager.h>
@@ -121,14 +123,38 @@ void vjThreadSGI::startThread(void* null_param)
 // -----------------------------------------------------------------------
 //: Make the calling thread wait for the termination of the specified
 //+ thread.
-//! NOTE:  Not implemented.
 //! RETURNS:  0 - Successful completion
 //! RETURNS: -1 - Error
 // -----------------------------------------------------------------------
- int
-vjThreadSGI::join (void** arg)
+int vjThreadSGI::join (void** arg)
 {
-   std::cerr << "vjThreadSGI::join() not implemented yet!\n";
-   return -1;
-}
+   int status, retval;
+   pid_t pid;
 
+   do
+   {
+      pid = ::waitpid(mThreadPID, &status, 0);
+   } while ( WIFSTOPPED(status) != 0 );
+
+   if ( pid > -1 )
+   {
+      vjASSERT(pid == mThreadPID);
+
+      if ( WIFEXITED(status) != 0 && arg != NULL )
+      {
+         **((int**) arg) = WEXITSTATUS(status);
+      }
+      else if ( WIFSIGNALED(status) != 0 && arg != NULL )
+      {
+         **((int**) arg) = WTERMSIG(status);
+      }
+
+      retval = 0;
+   }
+   else
+   {
+      retval = -1;
+   }
+
+   return retval;
+}
