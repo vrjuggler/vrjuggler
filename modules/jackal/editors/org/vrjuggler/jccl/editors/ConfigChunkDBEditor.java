@@ -864,7 +864,7 @@ public class ConfigChunkDBEditor
       List results = new ArrayList();
 
       // Check if we found a match
-      if (node.getUserObject() == obj)
+      if (node.getUserObject().equals(obj))
       {
          results.add(node);
       }
