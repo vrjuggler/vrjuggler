@@ -48,6 +48,7 @@ MK_PATH=	../../../../doc
 
 #########################################################
 
+XML_FILES=    $(NAME).xml
 TXT_FILES=    $(NAME).txt
 HTML_FILES=   $(NAME).html
 PDF_FILES=    $(NAME).pdf
