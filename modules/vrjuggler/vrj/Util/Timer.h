@@ -35,10 +35,8 @@
 
 #include <vrj/vrjConfig.h>
 #include <vpr/vpr.h>
+#include <vpr/System.h>
 
-#ifndef VPR_OS_Win32
-#include <sys/time.h>
-#endif
 
 namespace vrj
 {
@@ -106,7 +104,7 @@ public:
        double v;
        struct timeval tv;
 
-       gettimeofday(&tv, 0);
+       vpr::System::gettimeofday(&tv);
 
        v = (double) tv.tv_sec + (double) tv.tv_usec / 1000000.0;
        return v;
