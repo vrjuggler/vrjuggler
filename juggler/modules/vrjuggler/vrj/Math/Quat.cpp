@@ -109,6 +109,8 @@ void vjQuat::makeRot( const float& rad, const float& x, const float& y, const fl
 	vec[VJ_X] = sinHalfRad * vecNormalized[0];
 	vec[VJ_Y] = sinHalfRad * vecNormalized[1];
 	vec[VJ_Z] = sinHalfRad * vecNormalized[2];
+
+   // rotation quats are by definition 1 unit in magnitude.
 	this->normalizeFast();
 }
 
@@ -121,6 +123,12 @@ void vjQuat::getRot( float& rad, float& xx, float& yy, float& zz ) const
    {
       quat.normalize();
    }
+   /*
+   if (vjMath::abs( quat.vec[VJ_W] ) > 1.0f)
+   {
+      std::cerr<<" bad: "<<quat.vec[VJ_W]<<"\n"<<std::flush;
+   }
+   */
    assert( vjMath::abs( quat.vec[VJ_W] ) <= 1.0f && "acos returns NaN when |arg| > 1" );
    
    float halfrad = vjMath::acos( quat.vec[VJ_W] );
@@ -171,7 +179,9 @@ void vjQuat::mult( const vjQuat& q1, const vjQuat& q2 )
    vec[VJ_Z] = temporary[VJ_Z];
    vec[VJ_W] = temporary[VJ_W];
    
-   // Make sure self is a unit quaternion
+   // Make sure self is a unit quaternion 
+   // (TODO: only need unit quat for rotations, 
+   //  are we sure that we should assume this behaviour in mult???)
    this->normalizeFast();
 }
 
