@@ -254,9 +254,10 @@ namespace cluster
          // Get the localhost name.
          vpr::InetAddr local;
          vpr::InetAddr::getLocalHost(local);
-         
-         std::string local_host_name = local.getHostname();
-         
+
+         std::string local_host_name;
+         local.getHostname(local_host_name);
+
          SyncRequest sync_request(local_host_name, mTCPport);
          
          ClusterNode* temp_node = new ClusterNode(std::string("Unknown"), std::string("Unknown"), vpr::Uint16(0), mSyncServerSocket);
@@ -504,10 +505,11 @@ namespace cluster
             // Get the localhost name.
             vpr::InetAddr local;
             vpr::InetAddr::getLocalHost(local);
-            
-            std::string host = local.getHostname();
+
+            std::string host;
+            local.getHostname(host);
             vpr::Uint16 temp_port = mTCPport;
-            
+
             SyncAck temp_ack(host, temp_port, true);
 
 
