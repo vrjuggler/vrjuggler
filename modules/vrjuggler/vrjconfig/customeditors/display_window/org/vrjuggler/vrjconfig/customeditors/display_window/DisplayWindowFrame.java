@@ -102,9 +102,9 @@ public class DisplayWindowFrame
          jbInit();
          placeMyself();
 
-         this.getGlassPane().addMouseListener(new DisplayWindowFrame_this_mouseInputAdapter(this));
-         this.getGlassPane().addMouseMotionListener(new DisplayWindowFrame_this_mouseInputAdapter(this));
-         this.getGlassPane().setVisible(true);
+         mViewportEditor.getPlacer().addMouseListener(
+            new DisplayWindowFrame_this_mouseInputAdapter(this)
+         );
 
          mViewButtonGroup.add(mViewportLeftEyeItem);
          mViewButtonGroup.add(mViewportRightEyeItem);
@@ -338,114 +338,26 @@ public class DisplayWindowFrame
    private JMenuItem mViewportRemoveItem = new JMenuItem();
    private ButtonGroup mViewButtonGroup = new ButtonGroup();
 
-   private void redispatchMouseEvent(MouseEvent e)
-   {
-      Point glass_pane_point = e.getPoint();
-      Container container = this.getContentPane();
-      Point container_point = SwingUtilities.convertPoint(this.getGlassPane(),
-                                                          glass_pane_point,
-                                                          container);
-
-      if ( container_point.y < 0 )
-      {
-         // XXX: What to do here?
-      }
-      else
-      {
-         // The mouse event is probably over the content pane.
-         // Find out exactly which component it's over.
-         Component component =
-            SwingUtilities.getDeepestComponentAt(container, container_point.x,
-                                                 container_point.y);
-
-         if ( component != null )
-         {
-            Point component_point =
-               SwingUtilities.convertPoint(this.getGlassPane(),
-                                           glass_pane_point, component);
-
-            // Forward the mouse event on to the viewport editor panel.
-            component.dispatchEvent(new MouseEvent(component, e.getID(),
-                                                   e.getWhen(),
-                                                   e.getModifiers(),
-                                                   component_point.x,
-                                                   component_point.y,
-                                                   e.getClickCount(),
-                                                   e.isPopupTrigger()));
-         }
-      }
-   }
-
-   void this_mouseEntered(MouseEvent e)
-   {
-/*
-      if ( mHideMouse )
-      {
-         this.setCursor(mInverseCursor);
-      }
-*/
-      redispatchMouseEvent(e);
-   }
-
-   void this_mouseExited(MouseEvent e)
-   {
-/*
-      if ( mHideMouse )
-      {
-         this.setCursor(Cursor.getDefaultCursor());
-      }
-*/
-      redispatchMouseEvent(e);
-   }
-
    void this_mouseClicked(MouseEvent e)
    {
-      if ( ! checkForPopUp(e) )
-      {
-         redispatchMouseEvent(e);
-      }
+      checkForPopUp(e);
    }
 
    void this_mousePressed(MouseEvent e)
    {
-      if ( ! checkForPopUp(e) )
-      {
-/*
-         if ( e.getButton() == MouseEvent.BUTTON1 )
-         {
-            System.out.println("Mouse pressed");
-            mMousePressed = true;
-         }
-*/
-         redispatchMouseEvent(e);
-      }
+      checkForPopUp(e);
    }
 
    void this_mouseReleased(MouseEvent e)
    {
-      if ( ! checkForPopUp(e) )
-      {
-/*
-         if ( e.getButton() == MouseEvent.BUTTON1 )
-         {
-            System.out.println("Mouse released");
-            mMousePressed = false;
-         }
-*/
-         redispatchMouseEvent(e);
-      }
+      checkForPopUp(e);
    }
 
-   private boolean checkForPopUp(MouseEvent e)
+   private void checkForPopUp(MouseEvent e)
    {
       if ( e.isPopupTrigger() )
       {
          mContextMenu.show(e.getComponent(), e.getX(), e.getY());
-         return true;
-      }
-      else
-      {
-         return false;
       }
    }
 
@@ -684,22 +596,6 @@ public class DisplayWindowFrame
       mElement.removeProperty(prop, mSelectedViewport);
    }
 
-   void this_mouseDragged(MouseEvent e)
-   {
-      redispatchMouseEvent(e);
-   }
-
-   void this_mouseMoved(MouseEvent e)
-   {
-/*
-      if ( mHideMouse )
-      {
-         this.setCursor(mInverseCursor);
-      }
-*/
-      redispatchMouseEvent(e);
-   }
-
    void this_componentMoved(ComponentEvent e)
    {
 //      if ( ! mMousePressed )
@@ -809,21 +705,13 @@ class DisplayWindowFrame_mStereoItem_actionAdapter implements ActionListener
 }
 
 class DisplayWindowFrame_this_mouseInputAdapter
-   extends javax.swing.event.MouseInputAdapter
+   extends MouseInputAdapter
 {
    private DisplayWindowFrame adaptee;
 
    DisplayWindowFrame_this_mouseInputAdapter(DisplayWindowFrame adaptee)
    {
       this.adaptee = adaptee;
-   }
-   public void mouseEntered(MouseEvent e)
-   {
-      adaptee.this_mouseEntered(e);
-   }
-   public void mouseExited(MouseEvent e)
-   {
-      adaptee.this_mouseExited(e);
    }
    public void mouseClicked(MouseEvent e)
    {
@@ -836,14 +724,6 @@ class DisplayWindowFrame_this_mouseInputAdapter
    public void mouseReleased(MouseEvent e)
    {
       adaptee.this_mouseReleased(e);
-   }
-   public void mouseDragged(MouseEvent e)
-   {
-      adaptee.this_mouseDragged(e);
-   }
-   public void mouseMoved(MouseEvent e)
-   {
-      adaptee.this_mouseMoved(e);
    }
 }
 
