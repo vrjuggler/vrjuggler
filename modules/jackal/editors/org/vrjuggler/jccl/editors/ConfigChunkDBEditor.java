@@ -213,9 +213,15 @@ public class ConfigChunkDBEditor
             // Edit an entire chunk
             else if (node.getUserObject() instanceof ConfigChunk)
             {
-               // Disable the add button. Enable the remove button.
+               // If the parent does not contain a property desc, the selected
+               // chunk is not an embedded chunk
+               DefaultMutableTreeNode parent = (DefaultMutableTreeNode)node.getParent();
+               boolean is_emb_chunk = parent.getUserObject() instanceof PropertyDesc;
+
+               // Disable the add button. Enable the remove button if not an
+               // embedded chunk
                addBtn.setEnabled(false);
-               removeBtn.setEnabled(true);
+               removeBtn.setEnabled(! is_emb_chunk);
 
                // Show an editor for the given chunk
                ConfigChunk chunk = (ConfigChunk)node.getUserObject();
@@ -245,7 +251,7 @@ public class ConfigChunkDBEditor
                addBtn.setEnabled(false);
                removeBtn.setEnabled(false);
 
-               //TODO: Siwtch to a property desc panel.
+               //TODO: Switch to a property desc panel.
                editorPaneLayout.show(editorPane, CATEGORY);
             }
          }
