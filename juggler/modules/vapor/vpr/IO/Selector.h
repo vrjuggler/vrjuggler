@@ -39,18 +39,10 @@
 #include <vpr/IO/Selector_t.h>
 
 // make the connection
-#if defined(VPR_USE_NSPR)
+#if VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
 #   include <vpr/md/NSPR/IO/SelectorImplNSPR.h>
-namespace vpr {
-  typedef Selector_t<SelectorImplNSPR> Selector;
-};
-
-#else
+#elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
 #   include <vpr/md/POSIX/IO/SelectorImplBSD.h>
-namespace vpr {
-  typedef Selector_t<SelectorImplBSD> Selector;
-};
 #endif
-
 
 #endif  /* _VPR_SELECTOR_H_ */

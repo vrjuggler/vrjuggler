@@ -35,12 +35,18 @@
 
 #include <vpr/vprConfig.h>
 
-#include <vpr/IO/Socket/Socket.h>
-#include <vpr/IO/Socket/InetAddr.h>
+#include <vpr/IO/Stats/BandwidthIOStatsStrategy.h>
+#include <vpr/IO/Stats/BaseIOStatsStrategy.h>
+#include <vpr/IO/Stats/IOStatsStrategyAdapter.h>
 
-#include <vpr/IO/Socket/SocketConfiguration.h>
 // include bridge class
 #include <vpr/IO/Socket/SocketDatagram_t.h>
+
+#if VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
+#include <vpr/md/NSPR/IO/Socket/SocketDatagramImplNSPR.h>
+#elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
+#include <vpr/md/POSIX/IO/Socket/SocketDatagramImplBSD.h>
+#endif
 
 namespace vpr
 {
