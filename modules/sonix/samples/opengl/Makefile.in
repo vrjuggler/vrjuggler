@@ -44,8 +44,8 @@ PROJECT_NAME = sample
 
 OBJECTS		= main.@OBJEXT@
 APP_INCLUDES	= @sample_application_includes@
-APP_LIBS		= @snx_extra_ldflags@ @snx_extra_libs@ @sample_application_libs@
-APP_LDFLAGS       = @sample_application_ldflags@
+APP_LIBS	= @snx_extra_ldflags@ @snx_extra_libs@ @sample_application_libs@
+APP_LDFLAGS	= @sample_application_ldflags@
 VPATH		= @srcdir@
 
 # if you're kevin, and you're on irix, then your glut is not in the usual place.

@@ -87,9 +87,16 @@ SUBSYNTH_LIB_DYNAMIC	= $(SUBSYNTH_LIBRARY).$(DYNAMICLIB_EXT)
 DYLIB_DEPS_SNX		= @DYLIB_DEPS@
 DYLIB_PROF_DEPS_SNX	= @DYLIB_PROF_DEPS@
 
+# Library dependencies
+AW_LDFLAGS		= @AW_LDFLAGS@
+AW_LIBS			= @LIBAUDIOWORKS@
+OPENAL_LDFLAGS		= @AL_LDFLAGS@
+OPENAL_LIBS		= @LIBOPENAL@ @EXTRA_LDFLAGS@
+SUBSYNTH_LDFLAGS	= @SYN_LDFLAGS@
+SUBSYNTH_LIBS		= @LIBSUBSYNTH@
+
 # setup the list of libs to be built...
 LIBS=
-
 ifeq (@STATIC_PLUGINS@, N)
 ifeq (@AUDIOWORKS_API@, Y)
 	LIBS	+= $(AUDIOWORKS_LIBRARY)
@@ -144,13 +151,37 @@ libs:
 # ------------------------------------------------
 # Construct the dynamic version of the libraries.
 # ------------------------------------------------
-$(LIBDIR)/$(AUDIOWORKS_LIB_DYNAMIC) $(LIBDIR)/$(OPENAL_LIB_DYNAMIC) $(LIBDIR)/$(SUBSYNTH_LIBRARY): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(AUDIOWORKS_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) \
-		$(DYLIB_DEPS_SNX)
+		$(AW_LDFLAGS) $(AW_LIBS) $(DYLIB_DEPS_SNX)
+	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
+
+$(LIBDIR)/$(OPENAL_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) \
+		$(OPENAL_LDFLAGS) $(OPENAL_LIBS) $(DYLIB_DEPS_SNX)
+	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
+
+$(LIBDIR)/$(SUBSYNTH_LIBRARY): $(OBJDIR)/*.$(OBJEXT)
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) \
+		$(SUBSYNTH_LDFLAGS) $(SUBSYNTH_LIBS) $(DYLIB_DEPS_SNX)
 	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"
