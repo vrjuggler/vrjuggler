@@ -53,6 +53,7 @@ ifeq ($(BUILD_JAVA), Y)
    ifeq ($(BUILD_PROXY_EDITOR), Y)
       SUBDIR+=	proxyeditor
    endif
+   SUBDIR+= intersense
 endif
 
 # Subdirectories to compile.
