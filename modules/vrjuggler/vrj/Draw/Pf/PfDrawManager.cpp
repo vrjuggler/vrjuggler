@@ -51,6 +51,7 @@
 #include <Config/vjConfigChunk.h>
 #include <Kernel/vjSimDisplay.h>
 #include <Kernel/vjSurfaceDisplay.h>
+#include <Utils/vjFileIO.h>
 
 // Draw Callbacks
 void vjPfDrawFuncStereoLeft(pfChannel *chan, void* chandata);
@@ -140,8 +141,8 @@ bool vjPfDrawManager::configPerformerAPI(vjConfigChunk* chunk)
          << "WARNING: vjPfDrawManager::config: simWandModel not set."
          << std::endl << vjDEBUG_FLUSH;
 
-   mHeadModel = std::string(head_file);
-   mWandModel = std::string(wand_file);
+   mHeadModel = vjFileIO::replaceEnvVars(head_file);
+   mWandModel = vjFileIO::replaceEnvVars(wand_file);
 
    vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL)
       << "Head Model: " << mHeadModel.c_str() << std::endl
