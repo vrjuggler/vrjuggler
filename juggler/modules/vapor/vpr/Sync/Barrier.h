@@ -77,90 +77,51 @@ public:
 };
 
 /**
- * Implements "barrier synchronization".
+ * Implements "barrier synchronization" primitive.
  *
- *    This class allows <count> number of threads to synchronize
- *    their completion (so-called "barrier synchronization").  The
- *    implementation uses a "sub-barrier generation numbering"
- *    scheme to avoid overhead and to ensure that all threads exit
- *    the barrier correct.  This code is based on an article from
- *    SunOpsis Vol. 4, No. 1 by Richard Marejka
- *    (Richard.Marejka@canada.sun.com).
  */
 class Barrier
 {
 public:
    /**
-    * Initializes the barrier to synchronize <count> threads.
+    * Constructor for barrier.
+    * Creates a barrier that will wait for "count" num threads to synchronize.
     */
-   Barrier (int count)
-      : currentGeneration(0), count(count), subBarrier1(count, &mutex),
-        subBarrier2(count, &mutex)
-   {
-      //std::cerr << "vpr::Barrier::Barrier: Entering." << std::endl;
-      subBarrier[0] = &subBarrier1;
-      subBarrier[1] = &subBarrier2;
-   }
+   Barrier (unsigned count);
+
+   /** Destructor. */
+   ~Barrier();
 
    /**
     * Blocks the caller until all <count> threads have called <wait> and
     * then allows all the caller threads to continue in parallel.
     */
-   int wait(void);
+   bool wait(void);
 
    /**
     * Tells the barrier to increase the count of the number of threads to
     * syncronize.
     */
-   void addProcess()
-   {
-      std::cerr << "vpr::Barrier::addProcess: Not implemented yet."
-                << std::endl;
-   }
+   void addProcess();
 
    /**
     * Tells the barrier to decrease the count of the number of threads to
     * syncronize.
     */
-   void removeProcess()
-   {
-      std::cerr << "vpr::Barrier::removeProcess: Not implemented yet."
-                << std::endl;
-   }
+   void removeProcess();
 
 private:
-   Mutex mutex;   /** < Serialize access to the barrier state.*/
-
-   /**
-    * Either 0 or 1, depending on whether we are the first generation
-    * of waiters or the next generation of waiters.
-    */
-   int currentGeneration;
-
-
-   int count; /**< Total number of threads that can be waiting at any one time. */
-
-   SubBarrier subBarrier1;
-   SubBarrier subBarrier2;
-   SubBarrier* subBarrier[2];
-   // We keep two <sub_barriers>, one for the first "generation" of
-   // waiters, and one for the next "generation" of waiters.  This
-   // efficiently solves the problem of what to do if all the first
-   // generation waiters don't leave the barrier before one of the
-   // threads calls wait() again (i.e., starts up the next generation
-   // barrier).
+   vpr::CondVar   mCond;   /**< Condition variable and mutex for the barrier. */
+   unsigned       mThreshold;
+   unsigned       mCount;
+   unsigned       mGeneration;
 
    // = Prevent assignment and initialization.
    void operator= (const Barrier &)
-   {
-      ;
-   }
+   {;}
 
    Barrier (const Barrier &)
-      : subBarrier1(0, &mutex), subBarrier2(0, &mutex)
-   {
-      ;
-   }
+   {;}
 };
 
 } // End of vpr namespace
