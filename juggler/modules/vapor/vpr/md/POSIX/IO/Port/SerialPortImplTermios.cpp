@@ -684,7 +684,7 @@ SerialPortImpTermios::setEvenParity () {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::getInputBaudRate (Int32& rate) {
+SerialPortImpTermios::getInputBaudRate (Uint32& rate) {
     struct termios term;
     Status retval;
 
@@ -701,7 +701,7 @@ SerialPortImpTermios::getInputBaudRate (Int32& rate) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::setInputBaudRate (const Int32 baud) {
+SerialPortImpTermios::setInputBaudRate (const Uint32 baud) {
     struct termios term;
     Status retval;
 
@@ -733,7 +733,7 @@ fprintf(stderr, "Setting input baud rate to %d\n", new_rate);
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::getOutputBaudRate (Int32& rate) {
+SerialPortImpTermios::getOutputBaudRate (Uint32& rate) {
     struct termios term;
     Status retval;
 
@@ -750,7 +750,7 @@ SerialPortImpTermios::getOutputBaudRate (Int32& rate) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::setOutputBaudRate (const Int32 baud) {
+SerialPortImpTermios::setOutputBaudRate (const Uint32 baud) {
     struct termios term;
     Status retval;
 
@@ -1093,9 +1093,9 @@ SerialPortImpTermios::setBit (const tcflag_t bit,
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-Int32
+Uint32
 SerialPortImpTermios::baudToInt (const speed_t baud_rate) {
-    Int32 retval;
+    Uint32 retval;
 
     switch (baud_rate) {
       case B50:
@@ -1154,7 +1154,7 @@ SerialPortImpTermios::baudToInt (const speed_t baud_rate) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 speed_t
-SerialPortImpTermios::intToBaud (const Int32 speed_int) {
+SerialPortImpTermios::intToBaud (const Uint32 speed_int) {
     speed_t rate;
 
     switch (speed_int) {

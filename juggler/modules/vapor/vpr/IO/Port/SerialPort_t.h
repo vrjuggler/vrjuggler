@@ -342,28 +342,28 @@ public:
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline vpr::Status
-    getInputBaudRate (vpr::Int32& rate) {
+    getInputBaudRate (vpr::Uint32& rate) {
         return m_sio_imp.getInputBaudRate(rate);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline vpr::Status
-    setInputBaudRate (const vpr::Int32 baud) {
+    setInputBaudRate (const vpr::Uint32 baud) {
         return m_sio_imp.setInputBaudRate(baud);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline vpr::Status
-    getOutputBaudRate (vpr::Int32& rate) {
+    getOutputBaudRate (vpr::Uint32& rate) {
         return m_sio_imp.getOutputBaudRate(rate);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline vpr::Status
-    setOutputBaudRate (const vpr::Int32 baud) {
+    setOutputBaudRate (const vpr::Uint32 baud) {
         return m_sio_imp.setOutputBaudRate(baud);
     }
 
