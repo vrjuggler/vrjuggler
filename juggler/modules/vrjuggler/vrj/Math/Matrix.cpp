@@ -175,7 +175,7 @@ void vjMatrix::makeDirCos(vjVec3 secXAxis, vjVec3 secYAxis, vjVec3 secZAxis)
 void    vjMatrix::makeQuaternion(float* q)
 {
    float wx, wy, wz, xx, yy, yz, xy, xz, zz, xs, ys, zs;
-   float s;
+   //float s;
 
    //s = 2.0f/(q[VJ_X]*q[VJ_X] + q[VJ_Y]*q[VJ_Y] + q[VJ_Z]*q[VJ_Z] + q[VJ_W]*q[VJ_W]);
 
