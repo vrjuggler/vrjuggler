@@ -162,7 +162,6 @@ public class MotionStarEditorPanel
          }
       }
 
-
       try
       {
          jbInit();
@@ -269,31 +268,33 @@ public class MotionStarEditorPanel
                                                 GridBagConstraints.NONE,
                                                 new Insets(0, 0, 0, 3), 0, 0));
       mHardwarePanel.add(mReportRateLabel,
-                         new GridBagConstraints(0, 6, 1, 1, 0.0, 0.0
-                                                , GridBagConstraints.EAST,
+                         new GridBagConstraints(0, 6, 1, 1, 0.0, 0.0,
+                                                GridBagConstraints.EAST,
                                                 GridBagConstraints.NONE,
                                                 new Insets(0, 0, 0, 3), 0, 0));
       mHardwarePanel.add(mMeasurementRateLabel,
-                         new GridBagConstraints(0, 7, 1, 1, 0.0, 0.0
-                                                , GridBagConstraints.EAST,
+                         new GridBagConstraints(0, 7, 1, 1, 0.0, 0.0,
+                                                GridBagConstraints.EAST,
                                                 GridBagConstraints.NONE,
                                                 new Insets(0, 3, 2, 3), 0, 0));
-      this.add(mHardwarePanel, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0
-         , GridBagConstraints.WEST, GridBagConstraints.BOTH,
-         new Insets(0, 0, 2, 0), 20, 0));
+      this.add(mHardwarePanel,
+               new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0,
+                                      GridBagConstraints.WEST,
+                                      GridBagConstraints.BOTH,
+                                      new Insets(0, 0, 2, 0), 20, 0));
       this.add(mPosXformFilterPanel,
-               new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0
-                                      , GridBagConstraints.WEST,
+               new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0,
+                                      GridBagConstraints.WEST,
                                       GridBagConstraints.BOTH,
                                       new Insets(0, 0, 2, 0), 20, 0));
       mHardwarePanel.add(mReportRateSpinner,
-                         new GridBagConstraints(1, 6, 1, 1, 1.0, 0.0
-                                                , GridBagConstraints.WEST,
+                         new GridBagConstraints(1, 6, 1, 1, 1.0, 1.0,
+                                                GridBagConstraints.WEST,
                                                 GridBagConstraints.NONE,
-                                                new Insets(0, 0, 2, 0), 20, 0));
+                                                new Insets(0, 0, 2, 0), 30, 0));
       mHardwarePanel.add(mMeasurementRateSpinner,
-                         new GridBagConstraints(1, 7, 1, 1, 1.0, 1.0
-                                                , GridBagConstraints.WEST,
+                         new GridBagConstraints(1, 7, 1, 1, 1.0, 1.0,
+                                                GridBagConstraints.WEST,
                                                 GridBagConstraints.NONE,
                                                 new Insets(0, 0, 2, 0), 20, 0));
    }
