@@ -71,13 +71,7 @@ public:
       /* Do nothing. */ ;
    }
 
-   ~LibraryLoader()
-   {
-      for ( dso_list_t::iterator i = mLoadedLibs.begin(); i != mLoadedLibs.end(); ++i )
-      {
-         (*i)->unload();
-      }
-   }
+   ~LibraryLoader();
 
    /**
     * Searches for a dynamic shared object (DSO) with the "base" name given in
