@@ -1,5 +1,10 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2002-09-10 patrickh    Changed org.vrjuggler.tweek.net.CommunicationListener to
+                       have two methods, connectionOpened() and
+                       connectionClosed() instead of one method where the event
+                       object determined what changed with the connection.
+                       NEW VERSION: 0.11.0
 2002-09-04 patrickh    Fixed bugs relating to registration of event listener
                        Beans that were not instantiated lazily by the Java GUI.
                        NEW VERSION: 0.10.3
