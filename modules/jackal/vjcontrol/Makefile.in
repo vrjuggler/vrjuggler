@@ -82,12 +82,17 @@ VJCONTROL_UI_WIDGETS_DIR		= $(subst .,/,$(VJCONTROL_UI_WIDGETS_PKG))
 VJCONTROL_UI_WIDGETS_SRCS		= $(wildcard $(srcdir)/$(VJCONTROL_UI_WIDGETS_DIR)/*.java)
 VJCONTROL_UI_WIDGETS_CLASSES	= $(patsubst $(srcdir)/%,%,$(VJCONTROL_UI_WIDGETS_SRCS:.java=.class))
 
-JAVA_SRCS 		= $(VJCONTROL_SRCS) $(VJCONTROL_UI_SRCS) $(VJCONTROL_UI_WIDGETS_SRCS)
-JAVA_CLASSES	= $(VJCONTROL_CLASSES) $(VJCONTROL_UI_CLASSES) $(VJCONTROL_UI_WIDGETS_CLASSES)
+WIZARDS_PKG			= org.vrjuggler.jccl.wizards
+WIZARDS_DIR			= $(subst .,/,$(WIZARDS_PKG))
+WIZARDS_SRCS		= $(wildcard $(srcdir)/$(WIZARDS_DIR)/*.java)
+WIZARDS_CLASSES	= $(patsubst $(srcdir)/%,%,$(WIZARDS_SRCS:.java=.class))
+
+JAVA_SRCS 		= $(VJCONTROL_SRCS) $(VJCONTROL_UI_SRCS) $(VJCONTROL_UI_WIDGETS_SRCS) $(WIZARDS_SRCS)
+JAVA_CLASSES	= $(VJCONTROL_CLASSES) $(VJCONTROL_UI_CLASSES) $(VJCONTROL_UI_WIDGETS_CLASSES) $(WIZARDS_CLASSES)
 JARS		 		= jccl_vjcontrol.jar
 
 # List the packages for which JavaDoc documentation will be generated.
-DOC_PKGS		= $(VJCONTROL_PKG) $(VJCONTROL_UI_PKG) $(VJCONTROL_UI_WIDGETS_PKG)
+DOC_PKGS		= $(VJCONTROL_PKG) $(VJCONTROL_UI_PKG) $(VJCONTROL_UI_WIDGETS_PKG) $(WIZARDS_PKG)
 webroot		= $(HOME)/public_html/jugglerweb
 instdir		= jccl/vjcontrol/1.0
 doc_prefix	= $(webroot)/$(instdir)

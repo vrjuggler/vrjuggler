@@ -29,31 +29,26 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.wizards;
 
-
-package VjWizards;
-
-import java.io.*;
-import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
+import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.border.*;
-import VjWizards.*;
-import VjConfig.*;
-import VjControl.*;
-import VjComponents.ConfigEditor.ConfigChunkUI.*;
-import VjComponents.ConfigEditor.ConfigUIHelper;
-import VjComponents.UI.Widgets.*;
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.editorgui.ConfigUIHelper;
+import org.vrjuggler.jccl.editorgui.configchunkui.*;
+import org.vrjuggler.jccl.vjcontrol.*;
+import org.vrjuggler.jccl.vjcontrol.ui.widgets.*;
 
 /**
  * Title:        VjControl Sim Wizard GUI
  * Description:
  * Copyright:    Copyright (c) 2001
  * Company:      VRAC
- * @author Christopher Just
- * @version 1.0
  */
 
 public class InputDevicePanel

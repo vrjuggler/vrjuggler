@@ -29,16 +29,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
-package VjWizards;
+package org.vrjuggler.jccl.wizards;
 
 import java.io.*;
 import javax.swing.JComponent;
 
-import VjConfig.ConfigChunkDB;
-import VjComponents.ConfigEditor.ConfigUIHelper;
+import org.vrjuggler.jccl.config.ConfigChunkDB;
+import org.vrjuggler.jccl.editorgui.ConfigUIHelper;
 
 public interface WizardSubPanel {
 

@@ -29,24 +29,20 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.wizards;
 
-
-package VjWizards;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
+import javax.swing.*;
 
-import VjWizards.*;
-import VjConfig.*;
-import VjComponents.UI.*;
-import VjComponents.ConfigEditor.ConfigModule;
-import VjComponents.ConfigEditor.ConfigUIHelper;
-import VjControl.*;
-
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.editorgui.ConfigModule;
+import org.vrjuggler.jccl.editorgui.ConfigUIHelper;
+import org.vrjuggler.jccl.vjcontrol.*;
+import org.vrjuggler.jccl.vjcontrol.ui.*;
 
 public class WizardPanel extends JPanel implements PlugPanel, ActionListener {
 
