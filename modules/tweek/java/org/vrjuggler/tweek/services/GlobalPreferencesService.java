@@ -344,7 +344,7 @@ public class GlobalPreferencesService
 
             if ( lazyinst_element != null )
             {
-               lazyPanelBeanInstantiation = chooser_element.getAttribute("enabled").getBooleanValue();
+               lazyPanelBeanInstantiation = lazyinst_element.getAttribute("enabled").getBooleanValue();
             }
          }
          catch (JDOMException e)
