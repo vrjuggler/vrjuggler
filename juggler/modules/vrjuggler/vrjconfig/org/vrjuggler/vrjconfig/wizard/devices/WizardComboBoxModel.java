@@ -1,19 +1,19 @@
-package org.vrjuggler.vrjconfig.wizard;
+package org.vrjuggler.vrjconfig.wizard.devices;
 
 import java.util.*;
 import javax.swing.*;
 import org.vrjuggler.jccl.config.*;
 
-public class WizardListModel
-   extends DefaultListModel
+public class WizardComboBoxModel
+   extends DefaultComboBoxModel
    implements ConfigListener
 {
   String mFileSource = null;
   ConfigBroker mBroker = null;
   ConfigContext mContext = null;
-  List mElementTypes = new ArrayList();
+  java.util.List mElementTypes = new ArrayList();
 
-  public WizardListModel()
+  public WizardComboBoxModel()
   {
     mBroker = new ConfigBrokerProxy();
     mContext = new ConfigContext();

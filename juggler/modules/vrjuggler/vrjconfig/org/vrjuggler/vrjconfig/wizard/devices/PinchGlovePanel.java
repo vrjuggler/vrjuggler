@@ -36,7 +36,6 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 import org.vrjuggler.jccl.config.*;
-import org.vrjuggler.vrjconfig.wizard.*;
 
 
 public class PinchGlovePanel extends JPanel
