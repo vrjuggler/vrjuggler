@@ -1,3 +1,0 @@
-Kevin Meinert <subatomic@users.sourceforge.net>
-Allen Bierbaum <allenb@users.sourceforge.net>
-Simon Julier <sjulier@erols.com>
