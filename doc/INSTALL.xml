@@ -39,9 +39,9 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
             </listitem>
             <listitem>
                <para>Get external packages that Juggler depends on. Typically you will run cvs-gather.pl, found in the top-level <filename>juggler</filename> directory.</para>
-               <para>The syntax will be similar to the following (you may have to edit the file <filename>deps.esrc</filename>, see also <xref linkend="acquire"/>):</para>
-               <screen>./cvs-gather.pl --verbose --cfg=deps.esrc</screen>
-               <para>You can use the <command>cvs-gather</command> tool, or you can read the file <filename>deps.esrc</filename> and get the packages manually. For more details about this, see <xref linkend="acquire"/>.</para>
+               <para>The syntax will be similar to the following (you may have to edit the file <filename>Gatherrc</filename>, see also <xref linkend="acquire"/>):</para>
+               <screen>./cvs-gather.pl --verbose</screen>
+               <para>You can use the <command>cvs-gather</command> tool, or you can read the file <filename>Gatherrc</filename> and get the packages manually. For more details about this, see <xref linkend="acquire"/>.</para>
             </listitem>
          </orderedlist>
       </section>
@@ -53,16 +53,16 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
 ./cvs-gather.pl --manual
 </screen>
          <para>Use of <command>cvs-gather</command> is not required. You can skip <command>cvs-gather</command> if you already have the needed packages in your system or if you feel like getting these packages manually. <command>cvs-gather</command> is provided primarily for developer convenience.</para>
-         <para>For a list of these package dependencies, you can look in the file <filename>deps.esrc</filename> to determine what packages you need to download manually.</para>
+         <para>For a list of these package dependencies, you can look in the file <filename>Gatherrc</filename> to determine what packages you need to download manually.</para>
          <para>For <command>cvs-gather</command> to work, it uses a <filename>.gatherrc</filename> file. The <filename>.gatherrc</filename> file is used to specify the external project CVS locations. <command>cvs-gather</command> reads these CVS locations and then checks each one out locally for Juggler to build.</para>
          <para>The following shows how to run <command>cvs-gather</command> with a <filename>.gatherrc</filename> file. As of this writing, such a file is provide that allows anonymous-only CVS access. To use it, enter the following:</para>
          <screen>./cvs-gather.pl --verbose --cfg=deps.gatherrc</screen>
-         <para>To simplify shared use of a single configuration file, the contents of the file may be overridden on the command line or using an <quote>overrides</quote> file. The following shows such a file that overrides the CVSROOT settings in <filename>deps.esrc</filename>:</para>
+         <para>To simplify shared use of a single configuration file, the contents of the file may be overridden on the command line or using an <quote>overrides</quote> file. The following shows such a file that overrides the CVSROOT settings in <filename>Gatherrc</filename>:</para>
          <programlisting>      #JugglerBaseStuff.CVSROOT=patrickh@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler 
       Doozer.CVSROOT = patrickh@cvs.doozer.sourceforge.net:/cvsroot/doozer
       Doozer++.CVSROOT = patrickh@cvs.doozer.sourceforge.net:/cvsroot/doozer
       GMTL.CVSROOT = patrickh@cvs.ggt.sourceforge.net:/cvsroot/ggt                  </programlisting>
-         <para>The current <filename>deps.esrc</filename> only allows anonymous CVS access. To override that, we suggest making per-user override files. To use the override file, just add the argument <option>--override=&lt;filename&gt;</option> when running <command>cvs-gather</command>.</para>
+         <para>The current <filename>Gatherrc</filename> only allows anonymous CVS access. To override that, we suggest making per-user override files. To use the override file, just add the argument <option>--override=&lt;filename&gt;</option> when running <command>cvs-gather</command>.</para>
          <para>The following shows how to run <command>cvs-gather</command> with your own overrides file (called <filename>my_gatheroverride</filename>):</para>
          <screen>cvs-gather.pl --cfg=deps.gatherrc --override=my_gatheroverride</screen>
          <para>If all goes well, you'll get everything you need to compile.</para>
