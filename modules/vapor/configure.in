@@ -297,7 +297,7 @@ DPP_PROG_INSTALL
 # -----------------------------------------------------------------------------
 
 DPP_CHECK_DYNLOAD_LIB
-DPP_HAVE_CPPUNIT
+DPP_HAVE_CPPUNIT([1.9.10])
 
 # Shared memory and synchronization primitives.
 SEMAPHORE_SYS=''		# POSIX, SPROC, NSPR
