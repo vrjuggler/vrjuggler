@@ -88,9 +88,17 @@ void wandApp::preFrame()
 {
    mFrameCount++;
 
-   if((mFrameCount % 100) == 1)
+   vpr::Interval frame_time = vpr::Interval::now() - mPrevFrameStartTime;
+   mPrevFrameStartTime.setNow();
+   mFrameRate.addSample(frame_time.secf());
+
+   if((mFrameCount % 50) == 1)
    {
       mDesktop->printStats();
+
+      // fps = 1.0f / time_per_frame
+      float fps = 1.0f / mFrameRate.getSTA();
+      std::cout << "fps: " << fps << std::endl;
    }
 
    // Put your pre frame computations here.
@@ -107,6 +115,7 @@ void wandApp::preFrame()
    // Update navigation
    // - Find forward direction of wand
    // - Translate along that direction
+   /*
    float velocity(0.0f);
    if(mButton0->getData())
       velocity = 0.05f;
@@ -119,6 +128,7 @@ void wandApp::preFrame()
       gmtl::Vec3f direction(wandMatrix * Zdir);
       gmtl::preMult(mNavMat, gmtl::makeTrans<gmtl::Matrix44f>(direction));
    }
+   */
 
    // Check logger play button
    if(mLoggerPlayButton->getData() == gadget::Digital::TOGGLE_ON)
