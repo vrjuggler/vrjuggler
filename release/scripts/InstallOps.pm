@@ -231,6 +231,7 @@ sub installFile($$$$$;$)
 
    if ( ! -d "$inst_dir" )
    {
+      warn "WARNING: Creating $inst_dir (incomplete installation hierarchy)!\n";
       mkpath("$inst_dir", 0, 0755) or warn "mkpath: $!\n";
    }
 
