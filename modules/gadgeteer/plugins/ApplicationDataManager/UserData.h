@@ -233,8 +233,10 @@ public:
     * Member selection (via pointer) operator overload.  Use it as follows:
     *
     * \code
-    * struct MyType
+    * struct MyType : vpr::SerializableObject
     * {
+    *    vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
+    *    vpr::ReturnStatus readObject(vpr::ObjectWriter* reader);
     *    bool boolVal;
     * };
     *
@@ -255,8 +257,10 @@ public:
     * Dereference operator overload.  Use it as follows:
     *
     * \code
-    * struct MyType
+    * struct MyType : vpr::SerializableObject
     * {
+    *    vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
+    *    vpr::ReturnStatus readObject(vpr::ObjectWriter* reader);
     *    bool boolVal;
     * };
     *
