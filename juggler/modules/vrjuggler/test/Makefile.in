@@ -47,11 +47,7 @@ SUBDIRS	= TestSuite	\
           Math		\
           Matrix	\
           Performance	\
-          Quat		\
-          SerialPort	\
-          Socket	\
-          Sync		\
-          threads
+          Quat
 
 all: $(SUBDIRS)
 
