@@ -208,6 +208,20 @@ SocketImpBSD::connect () {
     return retval;
 }
 
+// ============================================================================
+// Protected methods.
+// ============================================================================
+
+// ----------------------------------------------------------------------------
+// Destructor.  This currently does nothing.
+// ----------------------------------------------------------------------------
+SocketImpBSD::~SocketImpBSD () {
+    if ( m_handle != NULL ) {
+        delete m_handle;
+        m_handle = NULL;
+    }
+}
+
 /**
  * Define a simple union used as the optval argument to [gs]etsockopt(2).
  */
@@ -498,20 +512,6 @@ SocketImpBSD::setOption (const SocketOptions::Types option,
 
     return setsockopt(m_handle->m_fdesc, opt_level, opt_name, &opt_data,
                       opt_size);
-}
-
-// ============================================================================
-// Protected methods.
-// ============================================================================
-
-// ----------------------------------------------------------------------------
-// Destructor.  This currently does nothing.
-// ----------------------------------------------------------------------------
-SocketImpBSD::~SocketImpBSD () {
-    if ( m_handle != NULL ) {
-        delete m_handle;
-        m_handle = NULL;
-    }
 }
 
 }; // End of vpr namespace

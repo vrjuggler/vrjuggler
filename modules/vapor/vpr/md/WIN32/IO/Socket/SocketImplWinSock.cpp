@@ -182,6 +182,105 @@ SocketImpWinSock::connect () {
     return retval;
 }
 
+// ============================================================================
+// Protected methods.
+// ============================================================================
+
+// ----------------------------------------------------------------------------
+// Default constructor.  This just initializes member variables to reasonable
+// defaults.
+// ----------------------------------------------------------------------------
+SocketImpWinSock::SocketImpWinSock ()
+    : BlockIO(std::string("INADDR_ANY")), m_sockfd(-1)
+{
+    init();
+}
+
+// ----------------------------------------------------------------------------
+// Standard constructor.  This takes the given address (a string containing
+// a hostname or an IP address), port, domain and type and stores the values
+// in the member variables for use when opening the socket and performing
+// communications.
+// ----------------------------------------------------------------------------
+SocketImpWinSock::SocketImpWinSock (const InetAddr& local_addr,
+                                    const InetAddr& remote_addr,
+                                    const SocketTypes::Type type)
+    : BlockIO(std::string("INADDR_ANY")), m_sockfd(-1),
+      m_local_addr(local_addr), m_remote_addr(remote_addr), m_type(type)
+{
+    init();
+}
+
+// ----------------------------------------------------------------------------
+// Destructor.  This currently does nothing.
+// ----------------------------------------------------------------------------
+SocketImpWinSock::~SocketImpWinSock () {
+    init();
+}
+
+// ----------------------------------------------------------------------------
+// Do the WinSock initialization required before any socket stuff can happen.
+// This is copied from a similar function given on page 279 of _Effective
+// TCP/IP Programming_ by Jon C. Snader.
+// ----------------------------------------------------------------------------
+void
+SocketImpWinSock::init () {
+    WSADATA wsadata;
+    WSAStartup(MAKEWORD(2, 2), &wsadata);
+}
+
+// ----------------------------------------------------------------------------
+// Receive the specified number of bytes from the remote site to which the
+// local side is connected.
+// ----------------------------------------------------------------------------
+ssize_t
+SocketImpWinSock::recv(void* buffer, const size_t length, const int flags) {
+    return ::recv(m_sockfd, (char*) buffer, length, flags);
+}
+
+// ----------------------------------------------------------------------------
+// Read exactly the specified number of bytes from the file handle into the
+// given buffer.  This is baesd on the readn() function given on pages 51-2 of
+// _Effective TCP/IP Programming_ by Jon D. Snader.
+// ----------------------------------------------------------------------------
+ssize_t
+SocketImpWinSock::recvn (void* buffer, const size_t length, const int flags) {
+    size_t count;
+    ssize_t bytes;
+
+    count = length;
+
+    while ( count > 0 ) {
+        bytes = ::recv(m_sockfd, (char*) buffer, length, flags);
+
+        // Read error.
+        if ( bytes < 0 ) {
+            break;
+        }
+        // May have read EOF, so return bytes read so far.
+        else if ( bytes == 0 ) {
+            bytes = length - count;
+        }
+        else {
+            buffer = (void*) ((char*) buffer + bytes);
+            count  -= bytes;
+        }
+    }
+
+    return bytes;
+}
+
+// ----------------------------------------------------------------------------
+// Send the specified number of bytes contained in the given buffer from the
+// local side to the remote site to which we are connected.
+// ----------------------------------------------------------------------------
+ssize_t
+SocketImpWinSock::send (const void* buffer, const size_t length,
+                        const int flags)
+{
+    return ::send(m_sockfd, (char*) buffer, length, flags);
+}
+
 /**
  * Define a simple union used as the optval argument to [gs]etsockopt(2).
  */
@@ -515,106 +614,5 @@ SocketImpWinSock::setOption (const SocketOptions::Types option,
 
     return retval;
 }
-
-// ============================================================================
-// Protected methods.
-// ============================================================================
-
-// ----------------------------------------------------------------------------
-// Default constructor.  This just initializes member variables to reasonable
-// defaults.
-// ----------------------------------------------------------------------------
-SocketImpWinSock::SocketImpWinSock ()
-    : BlockIO(std::string("INADDR_ANY")), m_sockfd(-1)
-{
-    init();
-}
-
-// ----------------------------------------------------------------------------
-// Standard constructor.  This takes the given address (a string containing
-// a hostname or an IP address), port, domain and type and stores the values
-// in the member variables for use when opening the socket and performing
-// communications.
-// ----------------------------------------------------------------------------
-SocketImpWinSock::SocketImpWinSock (const InetAddr& local_addr,
-                                    const InetAddr& remote_addr,
-                                    const SocketTypes::Type type)
-    : BlockIO(std::string("INADDR_ANY")), m_sockfd(-1),
-      m_local_addr(local_addr), m_remote_addr(remote_addr), m_type(type)
-{
-    init();
-}
-
-// ----------------------------------------------------------------------------
-// Destructor.  This currently does nothing.
-// ----------------------------------------------------------------------------
-SocketImpWinSock::~SocketImpWinSock () {
-    init();
-}
-
-// ----------------------------------------------------------------------------
-// Do the WinSock initialization required before any socket stuff can happen.
-// This is copied from a similar function given on page 279 of _Effective
-// TCP/IP Programming_ by Jon C. Snader.
-// ----------------------------------------------------------------------------
-void
-SocketImpWinSock::init () {
-    WSADATA wsadata;
-    WSAStartup(MAKEWORD(2, 2), &wsadata);
-}
-
-// ----------------------------------------------------------------------------
-// Receive the specified number of bytes from the remote site to which the
-// local side is connected.
-// ----------------------------------------------------------------------------
-ssize_t
-SocketImpWinSock::recv(void* buffer, const size_t length, const int flags) {
-    return ::recv(m_sockfd, (char*) buffer, length, flags);
-}
-
-// ----------------------------------------------------------------------------
-// Read exactly the specified number of bytes from the file handle into the
-// given buffer.  This is baesd on the readn() function given on pages 51-2 of
-// _Effective TCP/IP Programming_ by Jon D. Snader.
-// ----------------------------------------------------------------------------
-ssize_t
-SocketImpWinSock::recvn (void* buffer, const size_t length, const int flags) {
-    size_t count;
-    ssize_t bytes;
-
-    count = length;
-
-    while ( count > 0 ) {
-        bytes = ::recv(m_sockfd, (char*) buffer, length, flags);
-
-        // Read error.
-        if ( bytes < 0 ) {
-            break;
-        }
-        // May have read EOF, so return bytes read so far.
-        else if ( bytes == 0 ) {
-            bytes = length - count;
-        }
-        else {
-            buffer = (void*) ((char*) buffer + bytes);
-            count  -= bytes;
-        }
-    }
-
-    return bytes;
-}
-
-// ----------------------------------------------------------------------------
-// Send the specified number of bytes contained in the given buffer from the
-// local side to the remote site to which we are connected.
-// ----------------------------------------------------------------------------
-ssize_t
-SocketImpWinSock::send (const void* buffer, const size_t length,
-                        const int flags)
-{
-    return ::send(m_sockfd, (char*) buffer, length, flags);
-}
-
-
 
 }; // End of vpr namespace

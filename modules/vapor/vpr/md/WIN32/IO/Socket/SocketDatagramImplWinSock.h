@@ -36,11 +36,14 @@
 #include <string>
 
 #include <md/WIN32/SocketImpWinSock.h>
+#include <IO/Socket/SocketDatagramOpt.h>
 
 
 namespace vpr {
 
-class SocketDatagramImpWinSock : public SocketImpWinSock {
+class SocketDatagramImpWinSock : public SocketDatagramOpt,
+                                 public SocketImpWinSock
+{
 public:
     // ========================================================================
     // vpr::SocketDatagram implementation.
@@ -103,6 +106,25 @@ public:
     // ------------------------------------------------------------------------
     virtual ssize_t sendto(const std::vector<char>& msg, const size_t len,
                            const int flags, const InetAddr& to);
+
+protected:
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    virtual int
+    getOption (const SocketOptions::Types option,
+               struct SocketOptions::Data& data)
+    {
+        return SocketImpWinSock::getOption(option, data);
+    }
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    virtual int
+    setOption (const SocketOptions::Types option,
+               const struct SocketOptions::Data& data)
+    {
+        return SocketImpWinSock::setOption(option, data);
+    }
 };
 
 }; // End of vpr namespace

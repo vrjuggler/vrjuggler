@@ -35,14 +35,14 @@
 
 #include <vprConfig.h>
 #include <string>
+#include <prio.h>
 
 #include <md/NSPR/SocketImpNSPR.h>
-
-#include <prio.h>
+#include <IO/Socket/SocketStreamOpt.h>
 
 namespace vpr {
 
-class SocketStreamImpNSPR : public SocketImpNSPR {
+class SocketStreamImpNSPR : public SocketStreamOpt, public SocketImpNSPR {
 public:
     // ========================================================================
     // vpr::SocketStreamImp implementation.
@@ -139,6 +139,24 @@ protected:
     //                   are connected.
     // ------------------------------------------------------------------------
     SocketStreamImpNSPR(PRFileDesc* sock, const InetAddr& remote_addr);
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    virtual int
+    getOption (const SocketOptions::Types option,
+               struct SocketOptions::Data& data)
+    {
+        return SocketImpNSPR::getOption(option, data);
+    }
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    virtual int
+    setOption (const SocketOptions::Types option,
+               const struct SocketOptions::Data& data)
+    {
+        return SocketImpNSPR::setOption(option, data);
+    }
 };
 
 }; // End of vpr namespace

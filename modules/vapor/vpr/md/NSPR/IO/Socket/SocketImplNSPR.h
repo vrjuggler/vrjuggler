@@ -37,19 +37,17 @@
 
 #include <string>
 #include <vector>
+#include <prio.h>
 
 #include <IO/BlockIO.h>
 #include <IO/Socket/InetAddr.h>
 #include <md/NSPR/NSPRHelpers.h>
-
-#include <prio.h>
-
 #include <IO/Socket/SocketTypes.h>
-#include <IO/Socket/SocketOptions.h>
+#include <IO/Socket/SocketIpOpt.h>
 
 namespace vpr {
 
-class SocketImpNSPR : public BlockIO
+class SocketImpNSPR : public BlockIO, public SocketIpOpt
 {
 public:
     // ========================================================================
@@ -221,18 +219,6 @@ public:
        return true;
     }
 
-    /**
-     *
-     */
-    int getOption(const SocketOptions::Types option,
-                  struct SocketOptions::Data& data);
-
-    /**
-     *
-     */
-    int setOption(const SocketOptions::Types option,
-                  const struct SocketOptions::Data& data);
-
 protected:
     // ------------------------------------------------------------------------
     // Default constructor.  This just initializes member variables to
@@ -288,6 +274,18 @@ protected:
     write_i (const void* buffer, const size_t length) {
         return PR_Send(m_handle, buffer, length, 0, PR_INTERVAL_NO_TIMEOUT);
     }
+
+    /**
+     *
+     */
+    virtual int getOption(const SocketOptions::Types option,
+                          struct SocketOptions::Data& data);
+
+    /**
+     *
+     */
+    virtual int setOption(const SocketOptions::Types option,
+                          const struct SocketOptions::Data& data);
 
     PRFileDesc*       m_handle;      //: Handle to the socket
     InetAddr          m_local_addr;  //: The local site's address structure

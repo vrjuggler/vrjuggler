@@ -39,11 +39,12 @@
 
 #include <md/WIN32/SocketImpWinSock.h>
 #include <IO/Socket/InetAddr.h>
+#include <IO/Socket/SocketStreamOpt.h>
 
 
 namespace vpr {
 
-class SocketStreamImpWinSock : public SocketImpWinSock
+class SocketStreamImpWinSock : public SocketStreamOpt, public SocketImpWinSock
 {
 public:
     // ========================================================================
@@ -149,6 +150,24 @@ protected:
     //                   are connected.
     // ------------------------------------------------------------------------
     SocketStreamImpWinSock(const SOCKET sock, const InetAddr& remote_addr);
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    virtual int
+    getOption (const SocketOptions::Types option,
+               struct SocketOptions::Data& data)
+    {
+        return SocketImpWinSock::getOption(option, data);
+    }
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    virtual int
+    setOption (const SocketOptions::Types option,
+               const struct SocketOptions::Data& data)
+    {
+        return SocketImpWinSock::setOption(option, data);
+    }
 };
 
 }; // End of vpr namespace

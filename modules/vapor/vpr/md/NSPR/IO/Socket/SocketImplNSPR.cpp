@@ -140,6 +140,44 @@ SocketImpNSPR::connect () {
     return retval;
 }
 
+// ============================================================================
+// Protected methods.
+// ============================================================================
+
+// ----------------------------------------------------------------------------
+// Default constructor.  This just initializes member variables to reasonable
+// defaults.
+// ----------------------------------------------------------------------------
+SocketImpNSPR::SocketImpNSPR ()
+    : BlockIO(std::string("INADDR_ANY")), m_handle(NULL)
+{
+    /* Do nothing. */ ;
+}
+
+// ----------------------------------------------------------------------------
+// Standard constructor.  This takes the given address (a string containing a
+// hostname or an IP address), port, domain and type and stores the values in
+// the member variables for use when opening the socket and performing
+// communications.
+// ----------------------------------------------------------------------------
+SocketImpNSPR::SocketImpNSPR (const InetAddr& local_addr,
+                            const InetAddr& remote_addr,
+                            const SocketTypes::Type sock_type)
+    : BlockIO(std::string("INADDR_ANY")), m_handle(NULL),
+      m_local_addr(local_addr), m_remote_addr(remote_addr), m_type(sock_type)
+{;}
+
+// ----------------------------------------------------------------------------
+// Destructor.  This currently does nothing.
+// ----------------------------------------------------------------------------
+SocketImpNSPR::~SocketImpNSPR ()
+{
+    if ( m_handle != NULL ) {
+       // PRClose(m_handle);     // XXX: Let it dangle
+       m_handle = NULL;
+    }
+}
+
 /**
  *
  */
@@ -372,44 +410,6 @@ SocketImpNSPR::setOption (const SocketOptions::Types option,
     }
 
     return PR_SetSocketOption(m_handle, &opt_data);
-}
-
-// ============================================================================
-// Protected methods.
-// ============================================================================
-
-// ----------------------------------------------------------------------------
-// Default constructor.  This just initializes member variables to reasonable
-// defaults.
-// ----------------------------------------------------------------------------
-SocketImpNSPR::SocketImpNSPR ()
-    : BlockIO(std::string("INADDR_ANY")), m_handle(NULL)
-{
-    /* Do nothing. */ ;
-}
-
-// ----------------------------------------------------------------------------
-// Standard constructor.  This takes the given address (a string containing a
-// hostname or an IP address), port, domain and type and stores the values in
-// the member variables for use when opening the socket and performing
-// communications.
-// ----------------------------------------------------------------------------
-SocketImpNSPR::SocketImpNSPR (const InetAddr& local_addr,
-                            const InetAddr& remote_addr,
-                            const SocketTypes::Type sock_type)
-    : BlockIO(std::string("INADDR_ANY")), m_handle(NULL),
-      m_local_addr(local_addr), m_remote_addr(remote_addr), m_type(sock_type)
-{;}
-
-// ----------------------------------------------------------------------------
-// Destructor.  This currently does nothing.
-// ----------------------------------------------------------------------------
-SocketImpNSPR::~SocketImpNSPR ()
-{
-    if ( m_handle != NULL ) {
-       // PRClose(m_handle);     // XXX: Let it dangle
-       m_handle = NULL;
-    }
 }
 
 }; // End of vpr namespace

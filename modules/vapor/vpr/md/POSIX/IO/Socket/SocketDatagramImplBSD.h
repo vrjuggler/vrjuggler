@@ -36,11 +36,12 @@
 #include <string>
 
 #include <md/POSIX/SocketImpBSD.h>
+#include <IO/Socket/SocketDatagramOpt.h>
 
 
 namespace vpr {
 
-class SocketDatagramImpBSD : public SocketImpBSD {
+class SocketDatagramImpBSD : public SocketDatagramOpt, public SocketImpBSD {
 public:
     typedef SocketImpBSD Parent;
 
@@ -123,6 +124,25 @@ public:
     // ------------------------------------------------------------------------
     virtual ssize_t sendto(const std::vector<char>& msg, const size_t len,
                            const int flags, const InetAddr& to);
+
+protected:
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    virtual int
+    getOption (const SocketOptions::Types option,
+               struct SocketOptions::Data& data)
+    {
+        return SocketImpBSD::getOption(option, data);
+    }
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    virtual int
+    setOption (const SocketOptions::Types option,
+               const struct SocketOptions::Data& data)
+    {
+        return SocketImpBSD::setOption(option, data);
+    }
 };
 
 }; // End of namespace

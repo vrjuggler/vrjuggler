@@ -41,12 +41,12 @@
 
 #include <IO/BlockIO.h>
 #include <IO/Socket/InetAddr.h>
-#include <IO/Socket/SocketOptions.h>
+#include <IO/Socket/SocketIpOpt.h>
 
 
 namespace vpr {
 
-class SocketImpWinSock : public BlockIO {
+class SocketImpWinSock : public BlockIO, public SocketIpOpt {
 public:
     // ========================================================================
     // vpr::BlockIO overrides.
@@ -190,18 +190,6 @@ public:
        return true;
     }
 
-    /**
-     *
-     */
-    int getOption(const SocketOptions::Types option,
-                  struct SocketOptions::Data& data);
-
-    /**
-     *
-     */
-    int setOption(const SocketOptions::Types option,
-                  const struct SocketOptions::Data& data);
-
 protected:
     // ------------------------------------------------------------------------
     // Default constructor.  This just initializes member variables to
@@ -330,6 +318,18 @@ protected:
     // ------------------------------------------------------------------------
     virtual ssize_t send(const void* buffer, const size_t length,
                          const int flags = 0);
+
+    /**
+     *
+     */
+    int getOption(const SocketOptions::Types option,
+                  struct SocketOptions::Data& data);
+
+    /**
+     *
+     */
+    int setOption(const SocketOptions::Types option,
+                  const struct SocketOptions::Data& data);
 
     SOCKET            m_sockfd;
     InetAddr          m_local_addr;
