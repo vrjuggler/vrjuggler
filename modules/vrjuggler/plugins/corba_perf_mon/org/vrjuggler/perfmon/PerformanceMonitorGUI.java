@@ -118,7 +118,7 @@ public class PerformanceMonitorGUI
       jPanel1.add( mJSpinner, null );
    }
 
-   private JFreeChart createTimeSeriesChart ( XYDataset dataset )
+   private JFreeChart createTimeSeriesChart ( TimeSeriesCollection dataset )
    {
       JFreeChart result = ChartFactory.createTimeSeriesChart(
                                                             "Performance Monitoring Statistics",
