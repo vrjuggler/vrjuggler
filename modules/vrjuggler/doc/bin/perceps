@@ -1173,26 +1173,26 @@ sub GENTEXT {
               (($arg[1] eq "detail") && $mname && ${"$desc"}{"$mloc","$mnm"}) ||
               (($arg[1] eq "detail") && !$mname && ${"$desc"}{$cname})  ||
 	      ( ("$arg[1]" eq "descr") &&
-	        ( ($mname && (${"$sdesc"}{"$mloc", "$mnm"} ||
+		( ($mname && (${"$sdesc"}{"$mloc", "$mnm"} ||
 			      ${"$desc"}{"$mloc", "$mnm"})) ||
 		  (! $mname && (${"$sdesc"}{"$cname"} ||
-		  		${"$desc"}{"$cname"})) ) ) ||
+				${"$desc"}{"$cname"})) ) ) ||
               (($arg[1] eq "first") && $ord==0)  ||
               (($arg[1] eq "last") && $ord==-1)  ||
               (($arg[1] eq "mid") && $ord>0)  ||
               (($arg[1] eq "hasinlines") && $hasinlines{$cname})  ||
               (($arg[1] eq "abstract") && $isabstract{$cname})  ||
               (($arg[1] eq "pure") && $mname && $ispure{$mloc,$mnm})  ||
-	      ( ("$arg[1]" eq "constructor") && $mnm &&
-	        isconstructor("$cname", "$mnm") ) ||
+	      ( ("$arg[1]" eq "mconstructor") && $mnm &&
+		isconstructor("$cname", "$mnm") ) ||
 	      ( ("$arg[1]" eq "mpublic") && $mname &&
-	        ispublic("$cname", "$mname") ) ||
+		ispublic("$cname", "$mname") ) ||
 	      ( ("$arg[1]" eq "mprivate") && $mname &&
-	        isprivate("$cname", "$mname") ) ||
+		isprivate("$cname", "$mname") ) ||
 	      ( ("$arg[1]" eq "mprotected") && $mname &&
-	        isprotected("$cname", "$mname") ) ||
+		isprotected("$cname", "$mname") ) ||
 	      ( ("$arg[1]" eq "mfriend") && $mname &&
-	        isfriend("$cname", "$mname") ) ||
+		isfriend("$cname", "$mname") ) ||
               ($mname && ${"$var_name"}{"$mloc","$mnm"})  ||
               (!$mname && ${"$var_name"}{"$cname"})  ||
               ($curglob && ($arg[1] eq $curglob) && $curglobval{$curglob})){
