@@ -43,7 +43,8 @@
 # install-dso     - Install the dynamic shared object version of the library.
 # install-headers - Install only the header files.
 # install-test    - Install only the test code.
-# install-data    - Install only the Data directory.  # install-gui     - Install only the configuration GUI.
+# install-data    - Install only the Data directory.
+# install-gui     - Install only the configuration GUI.
 #
 # depend          - Recursively build the dependencies for the source files.
 # newdepend       - Recursively (and forcibly) rebuild the dependencies for
