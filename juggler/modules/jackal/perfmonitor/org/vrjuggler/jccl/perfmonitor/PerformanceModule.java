@@ -196,7 +196,9 @@ public class PerformanceModule extends DefaultCoreModule {
 	}
     }
 
-    void interpretXMLCommands (Node doc) {
+
+    /** Utility for readXMLStream. */
+    protected void interpretXMLCommands (Node doc) {
         String name = doc.getNodeName();
         String value = doc.getNodeValue();
         NamedNodeMap attributes;
