@@ -67,7 +67,12 @@ InterpreterGuard::InterpreterGuard() : mMyLock(false)
    {
       vprDEBUG(pyjDBG_CXX, vprDBG_VERB_LVL)
          << "Getting new thread state data\n" << vprDEBUG_FLUSH;
-      mState->pyState = PyThreadState_New(PyInterpreterState_New());
+
+      // Use an existing interpreter object for creating the new thread
+      // state to get proper sharing of information between threads.
+      // XXX: PyInterpreterState_Head() is documented as only for use by
+      // advanced debuggers.  There may be a better way to do this.
+      mState->pyState = PyThreadState_New(PyInterpreterState_Head());
    }
 
    vprDEBUG(pyjDBG_CXX, vprDBG_HVERB_LVL)
@@ -81,7 +86,6 @@ InterpreterGuard::InterpreterGuard() : mMyLock(false)
 
       // Lock the GIL.
       PyEval_AcquireThread(mState->pyState);
-      mState->pyState->interp->sysdict = PyThreadState_GetDict();
 
       vprDEBUG(pyjDBG_CXX, vprDBG_VERB_LVL)
          << std::hex << this << std::dec << " locked\n" << vprDEBUG_FLUSH;
