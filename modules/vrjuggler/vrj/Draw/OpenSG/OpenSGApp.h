@@ -49,9 +49,6 @@
 #include <OpenSG/OSGPassiveViewport.h>
 #include <OpenSG/OSGPassiveBackground.h>
 #include <OpenSG/OSGMatrixUtility.h>
-#include <OpenSG/OSGMatrix.h>
-#include <OpenSG/OSGNode.h>
-#include <OpenSG/OSGTransform.h>
 
 /*----------------------------------------------------------------------------*/
 
@@ -323,30 +320,10 @@ inline void OpenSGApp::draw()
       c_data->mCamera->setModelviewMatrix( view_xform_mat );   // Set modelview matrix
    osg::endEditCP(c_data->mCamera);
 
-   // Scaling
-   osg::NodePtr root_node;
-   osg::TransformPtr scene_scale;
-   scene_scale = osg::Transform::create();
-   root_node = osg::Node::create();
-   float scaling = getDrawScaleFactor();
-
-   osg::Matrix scene_scale_mat;
-   scene_scale_mat.setScale(scaling);
-
-   // Set the scale for the scene
-   osg::beginEditCP(scene_scale);
-      scene_scale->setMatrix(scene_scale_mat);
-   osg::endEditCP(scene_scale);
-
-   osg::beginEditCP(root_node);
-      root_node->setCore(scene_scale);
-      root_node->addChild(getScene());
-   osg::endEditCP(root_node);
-
    // Setup the viewport
-   osg::beginEditCP(c_data->mViewport);
-      c_data->mViewport->setRoot(root_node);
-   osg::endEditCP  (c_data->mViewport);
+   OSG::beginEditCP(c_data->mViewport);
+      c_data->mViewport->setRoot(getScene());
+   OSG::endEditCP  (c_data->mViewport);
 
    // --- Trigger the draw --- //
 
