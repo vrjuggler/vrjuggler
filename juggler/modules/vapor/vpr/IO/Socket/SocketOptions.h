@@ -129,12 +129,13 @@ namespace SocketOptions
  */
 class VPR_CLASS_API SocketOptionWrapper
 {
-protected:
+public:
    virtual ~SocketOptionWrapper()
    {
       /* Do nothing. */ ;
    }
 
+protected:
    /**
     * Retrieves the value for the given option as set on the socket.
     *
