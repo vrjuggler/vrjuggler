@@ -56,6 +56,7 @@
 #include <vpr/Util/ReturnStatus.h>
 #include <vpr/Util/Interval.h>
 #include <vpr/IO/IOSys.h>
+#include <vpr/IO/Selector.h>
 
 #include <vpr/IO/Stats/BaseIOStatsStrategy.h>
 
@@ -558,7 +559,7 @@ public:
     }
 
     /**
-     * Test if reading from this I/O device will block.
+     * Tests if reading from this I/O device will block.
      *
      * @pre getHandle() returns a valid vpr::IOSys::Handle object.
      * @post
@@ -571,10 +572,33 @@ public:
      * @return <code>true</code> is returned if reading will block;
      *         <code>false</code> otherwise.
      */
-    bool isReadBlocked(const vpr::Interval& timeout = vpr::Interval::NoWait);
+    bool
+    isReadBlocked (const vpr::Interval& timeout = vpr::Interval::NoWait) {
+        bool is_blocked;
+        vpr::Selector selector;
+        vpr::IOSys::Handle handle;
+        vpr::Uint16 num_events;
+        vpr::ReturnStatus status;
+
+        handle = getHandle();
+        selector.addHandle(handle);
+        selector.setIn(handle, vpr::Selector::Read);
+
+        // Test the handle to get its read state.
+        status = selector.select(num_events, timeout);
+
+        if ( num_events == 1 ) {
+            is_blocked = false;
+        }
+        else {
+            is_blocked = true;
+        }
+
+        return is_blocked;
+    }
 
     /**
-     * Test if writing to this I/O device will block.
+     * Tests if writing to this I/O device will block.
      *
      * @pre getHandle() returns a valid vpr::IOSys::Handle object.
      * @post
@@ -587,7 +611,30 @@ public:
      * @return <code>true</code> is returned if writing will block;
      *         <code>false</code> otherwise.
      */
-    bool isWriteBlocked(const vpr::Interval& timeout = vpr::Interval::NoWait);
+    bool
+    isWriteBlocked(const vpr::Interval& timeout = vpr::Interval::NoWait) {
+        bool is_blocked;
+        vpr::Selector selector;
+        vpr::IOSys::Handle handle;
+        vpr::Uint16 num_events;
+        vpr::ReturnStatus status;
+
+        handle = getHandle();
+        selector.addHandle(handle);
+        selector.setIn(handle, vpr::Selector::Write);
+
+        // Test the handle to get its write state.
+        status = selector.select(num_events, timeout);
+
+        if ( num_events == 1 ) {
+            is_blocked = false;
+        }
+        else {
+            is_blocked = true;
+        }
+
+        return is_blocked;
+    }
 
     /**
      * Set the IO stats strategy to use
