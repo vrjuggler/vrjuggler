@@ -1,6 +1,8 @@
 #ifndef _WAND_APP_
 #define _WAND_APP_
 
+#include <vjConfig.h>
+
 #include <iostream.h>
 #include <iomanip.h>
 
