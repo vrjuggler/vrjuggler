@@ -110,6 +110,8 @@ public class PrefsDialog extends JDialog
          m_viewer_box.addItem(viewers.elementAt(i));
       }
 
+      m_viewer_box.setSelectedItem(m_prefs.getBeanViewer());
+
       for ( int i = 1; i <= 10; i++ )
       {
          m_level_box.addItem(String.valueOf(i));
