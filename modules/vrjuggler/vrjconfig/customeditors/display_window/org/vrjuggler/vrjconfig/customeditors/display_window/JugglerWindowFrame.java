@@ -183,7 +183,7 @@ public class JugglerWindowFrame
             // Verify that kbd_dev is the right type of config element.
             // If it is not the right type of element, pop up a dialog box
             // saying so.
-            if ( ! kbd_dev_elt.getDefinition().getToken().equals(KEYBOARD_MOUSE_TYPE) )
+            if ( ! kbd_dev_elt.getDefinition().getToken().equals(KEYBOARD_MOUSE_DEVICE_TYPE) )
             {
                Container parent =
                   (Container) SwingUtilities.getAncestorOfClass(Container.class,

@@ -96,7 +96,8 @@ public interface EditorConstants
    public static final String INTERSENSE_API_TYPE = "intersense_api";
 
    /** Config element type keyboard_mouse_device. */
-   public static final String KEYBOARD_MOUSE_TYPE = "keyboard_mouse_device";
+   public static final String KEYBOARD_MOUSE_DEVICE_TYPE =
+      "keyboard_mouse_device";
 
    /** Config element type keyboard_mouse_proxy. */
    public static final String KEYBOARD_MOUSE_PROXY_TYPE =
