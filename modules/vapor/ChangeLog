@@ -1,6 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
-2001-12-20 allenb   Complete rewrite of sim::SocketManager and many of the
+2001-12-31 allenb   Added interface isBound() to Socket_t and Socket impls.
+2001-12-30 allenb   Complete rewrite of sim::SocketManager and many of the
                     associated sim classes.
 2001-12-27 allenb   Added setNowReal() method to vpr::Interval.
 					NEW VERSION: 0.8.4

@@ -135,6 +135,7 @@ inline vpr::ReturnStatus SocketConnector::connect(SocketStream& newStream,
     if(!checkOpen(newStream))
         return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
 
+    /*  This actually happens in connect start
     if ( localAddr != vpr::InetAddr::AnyAddr )
     {
        vpr::ReturnStatus status;
@@ -142,10 +143,11 @@ inline vpr::ReturnStatus SocketConnector::connect(SocketStream& newStream,
        status = newStream.bind();
        vprASSERT(status.success() && "Failed to bind local address");
     }
+    */
 
     // Start the connection
     if(!connectStart(newStream, timeout, localAddr))
-        return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
+    { return vpr::ReturnStatus(vpr::ReturnStatus::Fail); }
 
     newStream.setRemoteAddr(remoteAddr);
 
@@ -254,20 +256,20 @@ inline bool SocketConnector::connectStart (SocketStream& newStream,
 {
    vprASSERT(newStream.isOpen());
 
-   // If timeout is 0, then we are non-blocking
-   if(vpr::Interval::NoWait == timeout)
+   if(!newStream.isBound())      // If we are not bound yet
    {
-      newStream.enableNonBlocking();
-   }
+      // If timeout is 0, then we are non-blocking
+      if(vpr::Interval::NoWait == timeout)
+      {
+         newStream.enableNonBlocking();
+      }
 
-  // Check to bind to local addr
-   if(localAddr != InetAddr::AnyAddr)
-   {
+     // Set addr and bind
       if(!newStream.setLocalAddr(localAddr).success())
          return false;
 
       if(!newStream.bind().success())
-        return false;
+         return false;
    }
 
    return true;
