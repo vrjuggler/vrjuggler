@@ -43,8 +43,6 @@
 #include <sys/types.h>
 #endif
 
-#include <vprStatus.h>
-
 
 namespace vpr {
 

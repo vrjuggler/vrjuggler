@@ -34,11 +34,12 @@
 #define _VPR_SOCKET_BRIDGE_H_
 // NOTE: this is the bridge class for use with Socket.h
 
+#include <vprConfig.h>
+
 #include <string>
 
 #include <IO/BlockIO.h> // base class.
 #include <IO/IOSys.h>
-#include <vprStatus.h>
 
 
 namespace vpr {

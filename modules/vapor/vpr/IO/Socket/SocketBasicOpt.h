@@ -33,8 +33,8 @@
 #ifndef _VPR_SOCKET_BASIC_OPT_H_
 #define _VPR_SOCKET_BASIC_OPT_H_
 
+#include <vprConfig.h>
 #include <IO/Socket/SocketOptions.h>
-#include <vprStatus.h>
 
 
 namespace vpr {
