@@ -50,12 +50,17 @@
 # debug             - Build the Gadgeteer libraries (dynamic and static) with
 #                     debugging symbols turned on.
 # dbg               - Build the debugging, static copy of the libraries.
-# ddso              - Build the debugging, dynamic shared object version of
+# dbg-dso           - Build the debugging, dynamic shared object version of
 #                     the libraries.
 # optim             - Build the Gadgeteer libraries (dynamic and static) with
 #                     optimization flags enabled.
 # opt               - Build the optimized, static version of the libraries.
-# dso               - Build the dynamic shared object version of the
+# opt-dso           - Build the dynamic shared object version of the
+#                     libraries.
+# profiled          - Build the Gadgeteer libraries (dynamic and static) with
+#                     profiling flags enabled.
+# prof              - Build the profiled, static version of the libraries.
+# prof-dso          - Build the profiled, dynamic shared object version of the
 #                     libraries.
 # obj               - Build the object files using the default value for
 #                     $(OBJDIR).
@@ -73,12 +78,12 @@
 #                     both static and dynamic libraries). 
 # install-debug     - Same as 'install'.
 # install-dbg       - Install the debugging, static version of the libraries.
-# install-ddso      - Install the debugging, dynamic shared object version of
+# install-dbg-dso   - Install the debugging, dynamic shared object version of
 #                     the libraries.
 # install-optim     - Install the full optimized version of Gadgeteer (with
 #                     both static and dynamic libraries).
 # install-opt       - Install the optimized, static version of the libraries.
-# install-dso       - Install the dynamic shared object version of the
+# install-opt-dso   - Install the dynamic shared object version of the
 #                     libraries.
 # install-headers   - Install only the header files.
 # install-test      - Install only the test code.
@@ -113,6 +118,17 @@ include @topdir@/make.defs.mk
 
 STARTTIME	:= $(shell LC_TIME=C date)
 
+BUILD_PROF_C	= @BUILD_PROF_C@
+BUILD_PROF_CXX	= @BUILD_PROF_CXX@
+
+# If we can build both C and C++ profiled objects, we will build profiled
+# libraries.
+ifeq ($(BUILD_PROF_C), Y)
+ifeq ($(BUILD_PROF_CXX), Y)
+    BUILD_PROF_LIBS	= 1
+endif
+endif
+
 # =============================================================================
 # Lists used for various types of recursion.
 # =============================================================================
@@ -122,7 +138,7 @@ SUBDIR		= gadget
 
 # =============================================================================
 # Library targets.  The default is 'debug' as defined above.  The steps for 
-# building the 'dbg', 'ddso', 'opt' and 'dso' are as follows:
+# building the 'dbg', 'dbg-dso', 'opt' and 'opt-dso' are as follows:
 #
 #    1) Build dependencies (if necessary).
 #    2) Compile all object files that are out of date.
