@@ -76,6 +76,7 @@ void SimAnalog::updateData()
    // -- Update analog data --- //
    for (unsigned int i = 0; i < mSimKeysUp.size(); ++i)
    {
+      mAnaData[i].setTime();
       mAnaData[i].setAnalog(mAnaData[i].getAnalog()
                                 + (float)checkKeyPair(mSimKeysUp[i]) * mAnaStep);
       mAnaData[i].setAnalog(mAnaData[i].getAnalog()
