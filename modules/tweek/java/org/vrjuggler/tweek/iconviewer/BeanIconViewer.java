@@ -134,6 +134,7 @@ public class BeanIconViewer extends DefaultBeanModelViewer
       }
       catch (NullPointerException e)
       {
+         m_home_button.setText("Home");
          System.err.println("WARNING: Failed to load icon " + icon_name);
       }
 
@@ -158,6 +159,7 @@ public class BeanIconViewer extends DefaultBeanModelViewer
       }
       catch (NullPointerException e)
       {
+         m_back_button.setText("Back");
          System.err.println("WARNING: Failed to load icon " + icon_name);
       }
 
@@ -182,6 +184,7 @@ public class BeanIconViewer extends DefaultBeanModelViewer
       }
       catch (NullPointerException e)
       {
+         m_forw_button.setText("Forward");
          System.err.println("WARNING: Failed to load icon " + icon_name);
       }
 
