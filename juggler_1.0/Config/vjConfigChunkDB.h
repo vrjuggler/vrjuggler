@@ -107,7 +107,7 @@ public:
     //+          the argument, or NULL if no such element exists.
     //! NOTE: The memory associated with the return value belongs to
     //+       the ConfigChunkDB, and should not be delete()d
-    vjConfigChunk *getChunk (char *name);
+    vjConfigChunk *getChunk (const std::string& name);
 
 
     //: return a vector of all the chunks
@@ -123,9 +123,7 @@ public:
 
     void addChunk(vjConfigChunk* new_chunk)
     {
-       std::vector<vjConfigChunk*> new_chunks;
-       new_chunks.push_back(new_chunk);
-       addChunks(new_chunks);
+       chunks.push_back (new_chunk);
     }
 
     //: Returns all chunks of a given type.
@@ -139,7 +137,7 @@ public:
     //! NOTE: The memory for the vector should be deleted by the
     //+       caller when it is no longer needed.  The individual
     //+       vjConfigChunks in the vector should not be freed.
-    std::vector<vjConfigChunk*>* getMatching (char *mytypename) {
+    std::vector<vjConfigChunk*>* getMatching (const std::string& mytypename) {
 	return getMatching ("type", mytypename);
     }
 
@@ -157,9 +155,9 @@ public:
     //! NOTE: The memory for the vector should be deleted by the
     //+       caller when it is no longer needed.  The individual
     //+       ConfigChunks in the vector should not be freed.
-    std::vector<vjConfigChunk*>* getMatching (char *property, char *value);
-    std::vector<vjConfigChunk*>* getMatching (char *property, int value);
-    std::vector<vjConfigChunk*>* getMatching (char *property, float value);
+    std::vector<vjConfigChunk*>* getMatching (const std::string& property, const std::string value);
+    std::vector<vjConfigChunk*>* getMatching (const std::string& property, int value);
+    std::vector<vjConfigChunk*>* getMatching (const std::string& property, float value);
 
 
 
@@ -173,7 +171,7 @@ public:
     //+       in self, it is removed and its memory freed.
     //! RETURNS: true - a matching chunk was found.
     //! RETURNS: false - otherwise.
-    int removeNamed (char *name);
+    int removeNamed (const std::string& name);
 
 
 
@@ -186,9 +184,9 @@ public:
     //! ARGS: value - value to match.  If char*, must be non-NULL
     //+       C string.
     //! RETURNS: n - Number of ConfigChunks removed.
-    int removeMatching (char *property, int value);
-    int removeMatching (char *property, float value);
-    int removeMatching (char *property, char *value);
+    int removeMatching (const std::string& property, int value);
+    int removeMatching (const std::string& property, float value);
+    int removeMatching (const std::string& property, const std::string& value);
 
 
     //: Sorts the chunks based on dependencies

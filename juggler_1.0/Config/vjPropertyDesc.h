@@ -27,14 +27,97 @@ class vjPropertyDesc {
 
 public:
 
+    //: Constructor
+    //!POST: name, token, help = NULL, type = T_INVALID, num = 0,
+    //+      valuelabels & enumerations are empty.
+    vjPropertyDesc ();
+
+    //: Convenience constructor
+    //!POST: name = token = n, help = h, num = i, type = t,
+    //+      valuelabels & enumerations are empty.
+    vjPropertyDesc (const std::string& n, int i, VarType t, const std::string& h);
+
+
+    //: Destroys a vjPropertyDesc, and frees all allocated memory.
+    ~vjPropertyDesc ();
+
+
+
+    //: returns the token string for
+    inline std::string& getToken () {
+	return token;
+    }
+
+
+    inline std::string& getName () {
+	return name;
+    }
+
+
+
+    inline VarType getType () {
+	return type;
+    }
+
+
+    inline int getNumAllowed () {
+	return num;
+    }
+
+
+    int getValueLabelsSize () {
+	return valuelabels.size();
+    }
+
+
+    std::string getValueLabel (int i) {
+	if (i < valuelabels.size())
+	    return (std::string)"";
+	else
+	    return valuelabels[i]->getName();
+    }
+
+
+
+    //: Returns the enumeration entry at index ind
+    //! ARGS: index - index of EnumEntry to retrieve (0-base)
+    //! RETURNS: NULL - if index is < 0 or out of range
+    //! RETURNS: enumentry* - otherwise 
+    vjEnumEntry* getEnumEntryAtIndex (int index);
+
+
+    //: Returns an enumentry with val matching val...
+    vjEnumEntry* getEnumEntryWithValue (vjVarValue& val);
+
+
+    //: Returns the enumentry named _name
+    //! RETURNS: NULL - if no match if found
+    //! RETURNS: vjEnumEntry* - otherwise
+    vjEnumEntry* getEnumEntry (const std::string& _name);
+
+    
+    //: Writes a vjPropertyDesc to the given ostream
+    //!NOTE: output format is:
+    //+      name typename num token { enum1 enum2=42 } "help string"
+    friend ostream& operator << (ostream& out, vjPropertyDesc& self);
+
+
+
+    //: Reads a vjPropertyDesc from the named istream
+    //!NOTE: format is the same as that written out by <<
+    friend istream& operator >> (istream& in, vjPropertyDesc& self);
+
+
+private:
+
     //: Descriptive name of the vjProperty this object describes. Used in GUI.
-    char *name;
+    std::string name;
 
     //: Short name for this vjPropertyDesc.  Used in app/library code.
-    char* token;
+    std::string token;
 
     //: One line of help information for this vjPropertyDesc.
-    char* help;
+    std::string help;
 
     //: Type of values allowed in this vjProperty.
     VarType type;
@@ -56,40 +139,6 @@ public:
     //  means _all_ chunk types are accepted
     std::vector<vjEnumEntry*> enumv;
     
-    //: Constructor
-    //!POST: name, token, help = NULL, type = T_INVALID, num = 0,
-    //+      valuelabels & enumerations are empty.
-    vjPropertyDesc ();
-
-    //: Convenience constructor
-    //!POST: name = token = n, help = h, num = i, type = t,
-    //+      valuelabels & enumerations are empty.
-    vjPropertyDesc (char *n, int i, VarType t, char* h);
-
-
-    //: Destroys a vjPropertyDesc, and frees all allocated memory.
-    ~vjPropertyDesc ();
-
-
-    //: Returns the enumeration entry at index ind
-    //! ARGS: index - index of EnumEntry to retrieve (0-base)
-    //! RETURNS: NULL - if index is < 0 or out of range
-    //! RETURNS: enumentry* - otherwise 
-    vjEnumEntry *getEnumEntryAt (int index);
-
-
-    
-    //: Writes a vjPropertyDesc to the given ostream
-    //!NOTE: output format is:
-    //+      name typename num token { enum1 enum2=42 } "help string"
-    friend ostream& operator << (ostream& out, vjPropertyDesc& self);
-
-
-
-    //: Reads a vjPropertyDesc from the named istream
-    //!NOTE: format is the same as that written out by <<
-    friend istream& operator >> (istream& in, vjPropertyDesc& self);
-
 };
 
 

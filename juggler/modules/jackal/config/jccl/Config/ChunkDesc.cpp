@@ -3,10 +3,9 @@
 #include <Config/vjChunkDesc.h>
 
 vjChunkDesc::vjChunkDesc () :plist() {
-    name = token = help = NULL;
-    setName ("unnamed");
-    setToken ("unnamed");
-    setHelp ("");
+    name = "unnamed";
+    token = "unnamed";
+    help = "";
     vjPropertyDesc *d = new vjPropertyDesc("name",1,T_STRING," ");
     add (d);
 }
@@ -14,12 +13,6 @@ vjChunkDesc::vjChunkDesc () :plist() {
 
 vjChunkDesc::~vjChunkDesc() {
 
-    if (name)
-	delete name;
-    if (token)
-	delete token;
-    if (help)
-	delete help;
     for (int i = 0; i < plist.size(); i++)
 	delete plist[i];
 }
@@ -29,19 +22,13 @@ vjChunkDesc::~vjChunkDesc() {
 vjChunkDesc& vjChunkDesc::operator= (const vjChunkDesc& other) {
     int i;
 
-    if (name)
-	delete name;
-    if (help)
-	delete help;
-    if (token)
-	delete token;
     for (i = 0; i < plist.size(); i++)
 	delete plist[i];
     plist.erase (plist.begin(), plist.end());
     
-    name = strdup (other.name);
-    token = strdup (other.token);
-    help = strdup (other.help);
+    name = other.name;
+    token = other.token;
+    help = other.help;
     
     plist.reserve (other.plist.size());
     for (i = 0; i < other.plist.size(); i++)
@@ -52,71 +39,60 @@ vjChunkDesc& vjChunkDesc::operator= (const vjChunkDesc& other) {
 
 
 
-bool vjChunkDesc::setName (char *_name) {
-    if (name)
-	delete name;
-    name = strdup (_name);
-    return (name != NULL);
+void vjChunkDesc::setName (const std::string& _name) {
+    name = _name;
 }
 
 
 
-bool vjChunkDesc::setToken (char *_token) {
-    if (token)
-	delete token;
-    token = strdup (_token);
-    return (token != NULL);
+void vjChunkDesc::setToken (const std::string& _token) {
+    token = _token;
 }
 
 
 
-bool vjChunkDesc::setHelp (char *_help) {
-    if (help)
-	delete help;
-    help = strdup (_help);
-    return (token != NULL);
+void vjChunkDesc::setHelp (const std::string& _help) {
+    help = _help;
 }
 
 
 
-char* vjChunkDesc::getName () {
+std::string vjChunkDesc::getName () {
     return name;
 }
 
 
-char* vjChunkDesc::getToken () {
+std::string vjChunkDesc::getToken () {
     return token;
 }
 
 
-char* vjChunkDesc::getHelp () {
+std::string vjChunkDesc::getHelp () {
     return help;
 }
 
 
 void vjChunkDesc::add (vjPropertyDesc *pd) {
-    remove(pd->token);
+    remove(pd->getToken());
     plist.push_back(pd);
 }
 
 
 
-vjPropertyDesc* vjChunkDesc::getPropertyDesc (char *_token) {
+vjPropertyDesc* vjChunkDesc::getPropertyDesc (const std::string& _token) {
     for (int i = 0; i < plist.size(); i++)
-	if (!strcasecmp (_token, plist[i]->token))
+	if (!vjstrcasecmp (_token, plist[i]->getToken()))
 	    return plist[i];
     return NULL;
 }
 
 
 
-bool vjChunkDesc::remove (char *_token) {
-    if (!_token)
-	return 0;
+bool vjChunkDesc::remove (const std::string& _token) {
 
     std::vector<vjPropertyDesc*>::iterator begin = plist.begin();
     while (begin != plist.end()) {
-	if (!strcasecmp ((*begin)->token, _token)) {
+	if (!vjstrcasecmp ((*begin)->getToken(), _token)) {
 	    delete (*begin);
 	    plist.erase(begin);
 	    return 1;
@@ -144,13 +120,13 @@ istream& operator >> (istream& in, vjChunkDesc& self) {
     vjPropertyDesc *p;
 
     readString (in, str, 256);
-    self.setToken (str);
+    self.token = str;
 
     readString (in, str, 256);
-    self.setName (str);
+    self.name = str;
 
     readString (in, str, 256);
-    self.setHelp (str);
+    self.help = str;
 
     for (int i = 0; i < self.plist.size(); i++)
 	delete self.plist[i];
@@ -160,7 +136,7 @@ istream& operator >> (istream& in, vjChunkDesc& self) {
     do {
 	p = new vjPropertyDesc();
 	in >> *p;
-	if (p->token && (!strcasecmp(p->token,"end"))) {
+	if (!vjstrcasecmp (p->getToken(),"end")) {
 	    delete p;
 	    break;
 	}

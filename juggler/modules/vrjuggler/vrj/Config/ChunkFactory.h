@@ -35,7 +35,7 @@ public:
 	    nulldesc = new vjChunkDesc();
     }
 
-    static vjChunkDesc* getChunkDesc (char* token) {
+    static vjChunkDesc* getChunkDesc (const std::string& token) {
 	return descdb->getChunkDesc (token);
     }
 
@@ -44,7 +44,7 @@ public:
     //+          whose token matches the argument.  If no such
     //+          vjChunkDesc is found, an "empty" vjChunkDesc,
     //+          containing only a Name vjPropertyDesc, is used.
-    static vjConfigChunk* createChunk (char* desctoken) {
+    static vjConfigChunk* createChunk (const std::string& desctoken) {
 	vjChunkDesc* desc = descdb->getChunkDesc (desctoken);
 	if (desc)
 	    return new vjConfigChunk (desc, descdb);

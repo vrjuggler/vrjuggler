@@ -47,7 +47,7 @@ public:
     //:Searches for a particular vjChunkDesc
     //!RETURNS: desc - a vjChunkDesc whose token matches _token
     //!RETURNS: NULL - if no such vjChunkDesc is found
-    vjChunkDesc *getChunkDesc (char *_token);
+    vjChunkDesc *getChunkDesc (const std::string& _token);
 
 
     //:Inserts a vjChunkDesc
@@ -64,7 +64,7 @@ public:
     //+      is removed and destroyed.
     //!RETURNS: true - if a matching chunk was found
     //!RETURNS: false - if no matching chunk was found
-    bool remove (char *name);
+    bool remove (const std::string& name);
 
 
     //:Removes all vjChunkDescs from self

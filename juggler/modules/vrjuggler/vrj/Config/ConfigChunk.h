@@ -66,7 +66,7 @@ public:
     vjConfigChunk (vjConfigChunk& c);
 
 
-    vjConfigChunk& operator = (vjConfigChunk& c);
+    vjConfigChunk& operator = (const vjConfigChunk& c);
 
 
 
@@ -106,7 +106,7 @@ public:
     //+         given name.
     //!NOTE: This should always be used before looking at any
     //+      vjProperty that can have a variable number of values.
-    int getNum (char *property);
+    int getNum (const std::string& property);
 
 
 
@@ -117,20 +117,20 @@ public:
     //+      values in the vjProperty to return.
     //!RETURNS: v - a vjVarValue that can be cast directly if
     //+         its type is known (float, int, etc).
-    vjVarValue& getProperty (char *property, int ind = 0);
+    vjVarValue& getProperty (const std::string& property, int ind = 0);
 
 
     //: Return all the values for a given property
     // This is just a simple helper function
     //! NOTE: The vector has COPIES of the var values.
-    std::vector<vjVarValue*> getAllProperties(char* property)
+    // cj - this is bad implementation... bad...
+    std::vector<vjVarValue*> getAllProperties(const std::string& property)
     {
        int num_properties = getNum(property);
        std::vector<vjVarValue*> ret_val;
        for(int i=0;i<num_properties;i++)
        {
-         vjVarValue* new_var_val = new vjVarValue(T_INT);
-         *new_var_val = getProperty(property,i);
+         vjVarValue* new_var_val = new vjVarValue(getProperty(property,i));
          ret_val.push_back(new_var_val);
        }
 
@@ -151,10 +151,10 @@ public:
     //+      so that the assignment can occure.
     //+      <p>The char* version of setProperty allocates its
     //+      own copy of the string value argument.
-    bool setProperty (char *property, int val, int ind=0);
-    bool setProperty (char *property, float val, int ind=0);
-    bool setProperty (char *property, char *val,  int ind=0);
-    bool setProperty (char *property, vjConfigChunk *val,  int ind=0);
+    bool setProperty (const std::string& property, int val, int ind=0);
+    bool setProperty (const std::string& property, float val, int ind=0);
+    bool setProperty (const std::string& property, const std::string& val,  int ind=0);
+    bool setProperty (const std::string& property, vjConfigChunk *val,  int ind=0);
 
 
 
@@ -168,10 +168,10 @@ public:
     //!RETURNS: true - success
     //!RETURNS: false - failure. (no such property, or it
     //+         does exist but has a fixed number of values
-    bool addValue (char *property, int val);
-    bool addValue (char *property, float val);
-    bool addValue (char *property, char* val);
-    bool addValue (char *property, vjConfigChunk* val);
+    bool addValue (const std::string& property, int val);
+    bool addValue (const std::string& property, float val);
+    bool addValue (const std::string& property, const std::string& val);
+    bool addValue (const std::string& property, vjConfigChunk* val);
 
 
     //: Return a list of chunk names dependant upon this one
@@ -180,9 +180,9 @@ public:
     std::vector<std::string> getDependencies();
 
 private:
-  vjProperty *getPropertyPtr (char *name);
+  vjProperty *getPropertyPtr (const std::string& name);
 
-  vjProperty *getPropertyFromToken (char *token);
+  vjProperty *getPropertyFromToken (const std::string& token);
 
   /** Tokenizer for vjConfigChunk read.
    *  Fills in the Token object passed to it with the next token in _in_.

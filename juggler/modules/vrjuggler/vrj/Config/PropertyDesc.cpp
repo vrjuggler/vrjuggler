@@ -5,24 +5,22 @@
 
 
 vjPropertyDesc::vjPropertyDesc () : enumv(), valuelabels() {
-    name = NULL;
-    token = NULL;
+    name = "";
+    token = "";
     num = 0;
     type = T_INVALID;
-    help = NULL;
+    help = "";
 }
 
 
 
-vjPropertyDesc::vjPropertyDesc (char *n, int i, VarType t, char* h):enumv(), valuelabels () {
-    name = new char[strlen(n)+1];
-    strcpy (name, n);
-    token = new char[strlen(n)+1];
-    strcpy (token, n);
+vjPropertyDesc::vjPropertyDesc (const std::string& n, int i, VarType t, 
+				const std::string& h):enumv(), valuelabels () {
+    name = n;
+    token = n;
+    help = h;
     num = i;
     type = t;
-    help = new char[strlen(h)+1];
-    strcpy (help, h);
 }
 
 
@@ -33,30 +31,39 @@ vjPropertyDesc::~vjPropertyDesc () {
 	delete enumv[i];
     for (i = 0; i < valuelabels.size(); i++)
 	delete valuelabels[i];
-    if (name)
-	delete name;
-    if (token)
-	delete token;
-    if (help) {
-	delete help;
-  }
 }
 
 
+vjEnumEntry* vjPropertyDesc::getEnumEntry (const std::string& s) {
+    for (int i = 0; i < enumv.size(); i++) {
+	if (!vjstrcasecmp (enumv[i]->getName(), s))
+	    return enumv[i];
+    }
+    return NULL;
+}
 
-vjEnumEntry* vjPropertyDesc::getEnumEntryAt (int index) {
+
+vjEnumEntry* vjPropertyDesc::getEnumEntryAtIndex (int index) {
     if ((enumv.size() > index) && (index >= 0))
 	return enumv[index];
     else
 	return NULL;
 }
 
+vjEnumEntry* vjPropertyDesc::getEnumEntryWithValue (vjVarValue& val) {
+    for (int i = 0; i < enumv.size(); i++) {
+	if (enumv[i]->getVal() == val)
+	    return enumv[i];
+    }
+    return NULL;
+}
 
 
 ostream& operator << (ostream& out, vjPropertyDesc& self) {
     out << self.token << " " << typeString(self.type) << " "
 	<< self.num << " \"" << self.name << "\"";
 
+    /* print valuelabels if we have 'em */
     if (self.valuelabels.size() > 0) {
 	vjEnumEntry *e;
 	out << " vj_valuelabels { ";
@@ -98,19 +105,15 @@ istream& operator >> (istream& in, vjPropertyDesc& self) {
 
     readString (in, str, size);
     //cout << "read propertydesc token " << str << endl;
-    if (self.token)
-	delete self.token;
-    self.token = strdup (str);
-    if (!strcasecmp (self.token, "end"))
+    self.token = str;
+    if (!strcasecmp (str, "end"))
 	return in;
 
     self.type = readType(in);
     in >> self.num;
     readString (in,str,size);
 
-    if (self.name)
-	delete self.name;
-    self.name = strdup (str);
+    self.name = str;
 
     readString (in, str, size);
     
@@ -165,8 +168,14 @@ istream& operator >> (istream& in, vjPropertyDesc& self) {
 	readString (in, str, size);
     }
 
-    self.help = strdup (str);
+    self.help = str;
 
     return in;
 }
+
+
+
+
+
+
 
