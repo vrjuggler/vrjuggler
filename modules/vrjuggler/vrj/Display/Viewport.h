@@ -166,7 +166,7 @@ public:
 
 
    virtual std::ostream& outStream(std::ostream& out);
-   friend std::ostream& operator<<(std::ostream& out, Viewport& viewport);
+   friend VJ_API(std::ostream&) operator<<(std::ostream& out, Viewport& viewport);
 
 protected:
    std::string       mName;               /**< The name of the viewport being displayed */
@@ -197,6 +197,6 @@ protected:
 
 };
 
-};
+}
 
 #endif
