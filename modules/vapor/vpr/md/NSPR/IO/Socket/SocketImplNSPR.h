@@ -44,6 +44,7 @@
 #include <md/NSPR/NSPRHelpers.h>
 #include <IO/Socket/SocketTypes.h>
 #include <IO/Socket/SocketIpOpt.h>
+#include <IO/IOSys.h>
 
 #include <Utils/Debug.h>
 
@@ -110,6 +111,14 @@ public:
     //             went wrong.
     // ------------------------------------------------------------------------
     virtual bool bind(void);
+
+    // ---------------------------------------
+    //: Return the contained handle
+    // --------------------------------------
+    IOSys::Handle getHandle()
+    {
+       return m_handle;
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------

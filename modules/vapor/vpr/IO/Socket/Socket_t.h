@@ -37,6 +37,7 @@
 #include <string>
 
 #include <IO/BlockIO.h> // base class.
+#include <IO/IOSys.h>
 
 namespace vpr {
 
@@ -175,6 +176,12 @@ public:
     bool isConnected()
     {
         return m_socket_imp->isConnected();
+    }
+
+    //: Get the handle to this socket
+    IOSys::Handle getHandle()
+    {
+        return m_socket_imp->getHandle();
     }
 
     // ------------------------------------------------------------------------

@@ -51,6 +51,7 @@ VPR_SRCDIR	= @VPR_SRCDIR@/md/NSPR
 
 ifeq (@SUBSYSTEM@, NSPR)
 SRCS		= InetAddrNSPR.cpp		\
+									IOSysNSPR.cpp \
                   NSPRHelpers.cpp		\
                   RWMutexNSPR.cpp		\
                   SocketImpNSPR.cpp		\

@@ -36,7 +36,7 @@
 #include <vprConfig.h>
 
 // determine which implementation of vprSystem to include.
-#if defined(VRP_USE_NSPR)
+#if defined(VPR_USE_NSPR)
 #   include <md/NSPR/IOSysNSPR.h>
 
 namespace vpr {
