@@ -35,6 +35,7 @@ import java.awt.BorderLayout;
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
+import javax.swing.border.*;
 import javax.swing.event.EventListenerList;
 import org.vrjuggler.tweek.services.EnvironmentService;
 import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
@@ -731,6 +732,15 @@ public class ConfigBrokerImpl
          super(new BorderLayout());
          mDefFileList = defFileList;
 
+         // Create a basic border
+         Border compound = BorderFactory.createCompoundBorder(
+               BorderFactory.createRaisedBevelBorder(),
+               BorderFactory.createLoweredBevelBorder());
+         
+         this.setBorder( BorderFactory.createTitledBorder(compound,
+                  "Loading Config Definitions ...",
+                  TitledBorder.CENTER, TitledBorder.BELOW_TOP) );
+
          mFileNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
          mProgressBar = new JProgressBar(0, defFileList.size());
          mProgressBar.setValue(0);
@@ -769,6 +779,7 @@ public class ConfigBrokerImpl
          final JDialog dialog = new JDialog();
          dialog.setTitle("Loading Config Definitions ...");
          dialog.setModal(true);
+         dialog.setUndecorated(true);
 
          java.awt.Container content_pane = dialog.getContentPane();
          content_pane.setLayout(new BorderLayout());
