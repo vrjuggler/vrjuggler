@@ -64,7 +64,7 @@ int main( int argc, char* argv[] )
       return 0;
    }
 
-   if (!snxFileIO::fileExists( filename.c_str() ))
+   if (!snx::FileIO::fileExists( filename.c_str() ))
    {
       std::cout << "File not found: " << filename << "\n" << std::flush;
       return 0;
@@ -79,35 +79,35 @@ int main( int argc, char* argv[] )
   
    //snx.startAPI();
    std::cout<<"associate: \n" << std::flush;
-   sonix::instance()->configure( "kevin", si );
+   snx::sonix::instance()->configure( "kevin", si );
    
    std::cout<<"trigger: \n" << std::flush;
-   sonix::instance()->trigger( "kevin" );
+   snx::sonix::instance()->trigger( "kevin" );
    
    std::cout<<"sleep: \n" << std::flush;
    sleep( 1 );
    
-   sonix::instance()->changeAPI( api );
+   snx::sonix::instance()->changeAPI( api );
    
    std::cout<<"trigger: \n" << std::flush;
-   sonix::instance()->trigger( "kevin" );
+   snx::sonix::instance()->trigger( "kevin" );
    
    std::cout<<"sleep: \n" << std::flush;
    sleep( 3 );
    
-   sonix::instance()->changeAPI( "stub" );
+   snx::sonix::instance()->changeAPI( "stub" );
    
    sleep( 1 );
    
-   sonix::instance()->changeAPI( api );
+   snx::sonix::instance()->changeAPI( api );
    
    std::cout<<"trigger: \n" << std::flush;
-   sonix::instance()->trigger( "kevin" );
+   snx::sonix::instance()->trigger( "kevin" );
    
    std::cout<<"sleep: \n" << std::flush;
    sleep( 3 );
    
-   sonix::instance()->changeAPI( "stub" );
+   snx::sonix::instance()->changeAPI( "stub" );
    
    return 1;
 }

@@ -55,6 +55,10 @@
 #include "snx/SoundImplementation.h"
 #include "snx/SoundAPIInfo.h"
 
+
+namespace snx
+{
+
 class SNX_CLASS_API sonix
 {
 protected:
@@ -247,5 +251,7 @@ private:
 
    vprSingletonHeader(sonix);
 };
+
+} // namespace snx
 
 #endif //SONIX___H

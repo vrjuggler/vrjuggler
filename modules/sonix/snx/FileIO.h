@@ -79,7 +79,10 @@
 #include <snx/Endian.h>
 
 
-namespace snxFileIO
+namespace snx
+{
+
+namespace FileIO
 {
    SNX_API(bool) fileExists(const char* name);
 
@@ -108,10 +111,10 @@ namespace snxFileIO
 
       // if we're not on a little endian machine (intel is little endian) then
       // reverse the bytes.
-      if (fileByteOrdering == snxFileIO::LITTLE && vpr::System::isBigEndian() ||
-         fileByteOrdering == snxFileIO::BIG && vpr::System::isLittleEndian())
+      if (fileByteOrdering == snx::FileIO::LITTLE && vpr::System::isBigEndian() ||
+         fileByteOrdering == snx::FileIO::BIG && vpr::System::isLittleEndian())
       {
-         snxEndian::byteReverse( data );
+         snx::Endian::byteReverse( data );
       }
 
       return size;
@@ -132,7 +135,7 @@ namespace snxFileIO
       if ( fileByteOrdering == LITTLE && vpr::System::isBigEndian() ||
            fileByteOrdering == BIG && vpr::System::isLittleEndian() )
       {
-         snxEndian::byteReverse( tempData );
+         snx::Endian::byteReverse( tempData );
       }
 
       int size = ::fwrite( &tempData, 1, sizeof(typeT), fp );
@@ -180,6 +183,8 @@ namespace snxFileIO
 
    void getAll( std::ifstream& f, std::string& buffer );
 
-} //end namespace.
+} // namespace FileIO
+
+} // namespce snx
 
 #endif

@@ -62,8 +62,8 @@
    </dl>
    
    <dl>
-   <dt>- Bridge (sonix interface class / snx::SoundImplementation)
-   <dd>sonix class is the audio system abstraction which is decoupled 
+   <dt>- Bridge (snx::sonix interface class / snx::SoundImplementation)
+   <dd>snx::sonix class is the audio system abstraction which is decoupled 
        from its implementation SoundImplementation.  This way the two 
        can vary independently.  Bridge also facilitates run-time 
        configuration of the sound API.
@@ -72,7 +72,7 @@
    <dl>
    <dt>- Proxy (std::string)
    <dd>refer to actual sounds with a std::string Proxy.  This allows you
-      to generically control a sound for any sound API.  The sonix
+      to generically control a sound for any sound API.  The snx::sonix
        class acts as Mediator between every Proxy method and the actual
        SoundImplementation Adaptor.
    </dl>

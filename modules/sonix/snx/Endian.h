@@ -45,7 +45,10 @@
 #include <vpr/System.h>
 
 
-namespace snxEndian
+namespace snx
+{
+
+namespace Endian
 {
    //: Swap the bytes in any data type.
    // Motorola and Intel store their bytes in reversed formats <BR>
@@ -90,6 +93,8 @@ namespace snxEndian
       }
    }
 
-} // end namespace.
+} // end Endian namespace.
+
+} // end snx namespace
 
 #endif
