@@ -54,7 +54,7 @@ void drawAxis();
 void contextApp::bufferPreDraw()
 {
    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   glClear(GL_COLOR_BUFFER_BIT);
 }
 
 //----------------------------------------------
@@ -65,6 +65,8 @@ void contextApp::bufferPreDraw()
 //----------------------------------------------
 void contextApp::draw()
 {
+   glClear(GL_DEPTH_BUFFER_BIT);
+
    // --- Setup for drawing --- //
    glMatrixMode(GL_MODELVIEW);
 
