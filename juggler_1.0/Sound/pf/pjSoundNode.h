@@ -39,11 +39,11 @@
 #include <Math/vjCoord.h>
 #include <Kernel/vjDebug.h>
 #include <Kernel/Pf/vjPfUtil.h>
-#include <vjSound.h> //juggler sound
+#include <Sound/vjSound.h> //juggler sound
 
 //: Performer-Juggler sound node.
 //  this node automatically updates the Sound's position information.
-//  you should keep a pointer to the Sound, so that you can trigger 
+//  you should keep a pointer to the Sound, so that you can trigger
 //  and change other properties of it.
 //  NOTE: This pjSoundNode does not trigger the Sound object, you must do that.
 //  NOTE: you still need to use the SoundEngine::update function
@@ -61,13 +61,13 @@ public:
    void setObs( float x, float y, float z )
    {
       mX = x; mY = y; mZ = z;
-   }   
+   }
 
    void setSound( vjSound* sound )
    {
       mSound = sound;
-   }   
-   
+   }
+
 public:  // APP traversal
    virtual int app( pfTraverser* );
    virtual int needsApp( void )
@@ -75,14 +75,14 @@ public:  // APP traversal
       return TRUE;
    }
 
-   
+
 public:  // Required for Performer class
    static void init();
    static pfType* getClassType( void )
-   { 
+   {
       return classType;
    }
-   
+
 private:
    static pfType* classType;
    vjSound*         mSound;
@@ -105,7 +105,7 @@ pjSoundNode::pjSoundNode( vjSound* sound )
 // by a program.
 int pjSoundNode::app(pfTraverser *trav)
 {
-   // update the sound attributes (position) based on the current 
+   // update the sound attributes (position) based on the current
    // position of this node.
    if (mSound != NULL)
    {
@@ -114,16 +114,16 @@ int pjSoundNode::app(pfTraverser *trav)
       //       it should orbit the user, so that the audio will pan correctly.
       pfMatrix matrix, traverserMatrix, dcsMatrix;
       matrix.makeIdent();
-      
+
       //: take the sound from soundspace to userspace.
-      
-      // add in any offset due to this DCS node 
+
+      // add in any offset due to this DCS node
       // (since the traverser hasn't yet added it to it's matrix stack.)
       // *NOTE: this is the matrix that takes the sound from local(sound)space to modelspace.
       this->getMat( dcsMatrix ); //TODO: don't call this.
       // ...to get the location of the sound in modelspace, you'd do an invertFull here, but we want it in user space..
       matrix.postMult( dcsMatrix );
-      
+
       // add in any offset due to navigation and any other DCS xforms currently on the traverser's stack.
       // this is the position of the model's origin in relation to a user at position 0,0,0
       // this is just the nav matrix, which should be on the matrix stack right now...
@@ -131,24 +131,24 @@ int pjSoundNode::app(pfTraverser *trav)
       trav->getMat( traverserMatrix );
       // ...to get the location of the sound in modelspace, you'd do an invertFull here, but we want it in user space..
       matrix.postMult( traverserMatrix );
-      
+
       pfCoord coord;
       matrix.getOrthoCoord( &coord );
       pfVec3 pf_soundPosition = coord.xyz;
-      
+
       // set my sound's position.
       vjVec3 soundPosition = vjGetVjVec( pf_soundPosition );
       mSound->setPosition( soundPosition[0], soundPosition[1], soundPosition[2] );
-   
-      // Engine's update should be called by the app's frame process, 
+
+      // Engine's update should be called by the app's frame process,
       // or in juggler's manager (not both, of course)...
-      
+
       // use this for debugging the location of the sound reletive to the user.
       //cout<<"sound in userspace: "<<soundPosition[0]<<" "<<soundPosition[1]<<" "<<soundPosition[2]<<"\n"<<flush;
    }
-      
+
    return pfDCS::app(trav);  // call the parent class's app()
- 
+
 }
 
 //---------------------------------------------------------------------//
@@ -159,7 +159,7 @@ int pjSoundNode::app(pfTraverser *trav)
 pfType *pjSoundNode::classType = NULL;
 
 void pjSoundNode::init(void)
-{  
+{
    if (classType == NULL)
    {
         pfDCS::init();           // Initialize my parent
