@@ -534,18 +534,6 @@ void vjInputManager::StupifyDig(int ProxyNum)
 }
 
 	
-/**********************************************************
-  vjInputManager::GetDigData(int d)
-
-  Get the digital data at Digital Proxy #d
-
-*********************************************** ahimberg */
-/*
-int vjInputManager::GetDigData(int d)
-{
-   return m_digProxyVector[d]->GetData();
-}
-*/
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * *
   * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -604,25 +592,12 @@ void vjInputManager::StupifyAna(int ProxyNum)
 }
 
 
-/**********************************************************
-  vjInputManager::GetAnaData(int d)
-
-  Get the analog data at Analog Proxy #d
-
-*********************************************** ahimberg */	
-/*
-int vjInputManager::GetAnaData(int d)
-{
-   return m_anaProxyVector[d]->GetData();
-}
-*/
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * *
   * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 		GLOVE PROXY FUNCTIONS
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
 
 //: Set the glove proxy #ProxyNum to be hooked to
 //+ device #DevNum at sub-unit #subNum
