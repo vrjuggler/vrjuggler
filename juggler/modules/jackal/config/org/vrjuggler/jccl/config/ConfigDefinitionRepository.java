@@ -178,7 +178,7 @@ public class ConfigDefinitionRepository
 
       if(null == version_map)
       {
-         throw new DefinitionLookupException("Failed to find definintion " +
+         throw new DefinitionLookupException("Failed to find definition " +
                                              "of type '" + token + "'");
       }
 
