@@ -95,7 +95,7 @@ bool SocketAcceptor::open(const InetAddr& addr, bool reuseAddr, int backlog)
     vprASSERT((!mSocket.isOpen()) && "Trying to re-open socket that has already been opened");
 
     mSocket.setLocalAddr(addr);
-
+    
     if(!mSocket.open())
         return false;
 

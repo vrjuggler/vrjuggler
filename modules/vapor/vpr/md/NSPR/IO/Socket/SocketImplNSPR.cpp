@@ -427,6 +427,10 @@ SocketImpNSPR::setOption (const SocketOptions::Types option,
         break;
     }
 
+    vprASSERT((m_handle != NULL) && "Trying to set option on NULL handle");
+    if(m_handle == NULL)
+        return false;
+
     return (PR_SetSocketOption(m_handle, &opt_data) == PR_SUCCESS);
 }
 
