@@ -56,14 +56,20 @@ aMotionStar::aMotionStar(char* _address, const unsigned short port,
                          int _hemisphere, unsigned int _birdFormat,
                          unsigned int _birdsRequired, int _runMode,
                          double _birdRate, unsigned char _reportRate)
-    : m_port(port), active(0), hemisphere(_hemisphere), birdFormat(_birdFormat),
-      birdsRequired(_birdsRequired), runMode(_runMode), birdRate(_birdRate),
-      reportRate(_reportRate)
 {
   union {
     char c[sizeof(short)];
     short value;
   } endian;
+
+  m_port        = port;
+  active        = false;
+  hemisphere    = _hemisphere;
+  birdFormat    = _birdFormat;
+  birdsRequired = _birdsRequired;
+  runMode       = _runMode;
+  birdRate      = _birdRate;
+  reportRate    = _reportRate;
 
   if ( _address != NULL ) {
     address = strdup(_address);
@@ -212,7 +218,7 @@ aMotionStar::start () {
   /* modify the appropriate contents            */
   /* send the individual bird status packet back        */
 
-  for(int flock=1;flock<=chassisDevices;flock++)
+  for(unsigned int flock=1;flock<=chassisDevices;flock++)
     {
       /* get the status of an individual bird */
       get_status_fbb(flock);
@@ -364,7 +370,7 @@ aMotionStar::sample () {
     //    printf("\n");
 
     int o; // Offset -- 14 * bird number (bnum)
-    for (int bnum = 0; bnum < birdsRequired; bnum++)
+    for (unsigned int bnum = 0; bnum < birdsRequired; bnum++)
     {
       o = 14*bnum;
       posinfo[bnum][0] = getXPos(o) / 12.0;	// X translation
