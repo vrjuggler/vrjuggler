@@ -94,9 +94,14 @@ void CorbaManager::registerSubjectManager (tweek::SubjectManagerImpl* mgr)
    context_name[0].id   = CORBA::string_dup(id);
    context_name[0].kind = CORBA::string_dup(kind);
 
+   // Bind the Subject Manager reference and activate the object within the
+   // POA.  If a Subject Manager is already bound, the exceptoin thrown
+   // prevents either operation from happening.  This is correct since we
+   // only want one Subject Manager per address space.
    try
    {
       m_root_context->bind(context_name, mgr_ptr);
+      m_subj_mgr_id = m_poa->activate_object(mgr);
    }
    catch (CosNaming::NamingContext::AlreadyBound& ex)
    {
