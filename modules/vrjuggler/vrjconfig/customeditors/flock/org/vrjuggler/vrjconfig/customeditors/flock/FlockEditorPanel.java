@@ -214,13 +214,13 @@ public class FlockEditorPanel
       mRealHardwarePanel.add(mBaudEditor,
                          new GridBagConstraints(1, 1, 1, 1, 1.0, 1.0,
                                                 GridBagConstraints.WEST,
-                                                GridBagConstraints.BOTH,
+                                                GridBagConstraints.HORIZONTAL,
                                                 new Insets(0, 0, 0, 0), 0, 0));
       mRealHardwarePanel.add(mHemisphereEditor,
                          new GridBagConstraints(1, 2, 1, 1, 1.0, 1.0,
                                                 GridBagConstraints.WEST,
-                                                GridBagConstraints.BOTH,
-                                                new Insets(0, 3, 0, 0), 0, 0));
+                                                GridBagConstraints.HORIZONTAL,
+                                                new Insets(0, 0, 0, 0), 0, 0));
       mRealHardwarePanel.add(mHemisphereLabel,
                          new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
                                                 GridBagConstraints.EAST,
@@ -234,7 +234,7 @@ public class FlockEditorPanel
       mRealHardwarePanel.add(mMasterAddrEditor,
                          new GridBagConstraints(1, 3, 1, 1, 1.0, 1.0,
                                                 GridBagConstraints.WEST,
-                                                GridBagConstraints.BOTH,
+                                                GridBagConstraints.HORIZONTAL,
                                                 new Insets(0, 0, 0, 0), 0, 0));
       mRealHardwarePanel.add(mAddrModeLabel,
                          new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0,
@@ -244,7 +244,7 @@ public class FlockEditorPanel
       mRealHardwarePanel.add(mAddrModeEditor,
                          new GridBagConstraints(1, 4, 1, 1, 1.0, 1.0,
                                                 GridBagConstraints.WEST,
-                                                GridBagConstraints.BOTH,
+                                                GridBagConstraints.HORIZONTAL,
                                                 new Insets(0, 0, 0, 0), 0, 0));
       mRealHardwarePanel.add(mFilterLabel,
                          new GridBagConstraints(0, 5, 1, 1, 0.0, 0.0,
@@ -254,7 +254,7 @@ public class FlockEditorPanel
       mRealHardwarePanel.add(mFilterEditor,
                          new GridBagConstraints(1, 5, 1, 1, 1.0, 1.0,
                                                 GridBagConstraints.WEST,
-                                                GridBagConstraints.BOTH,
+                                                GridBagConstraints.HORIZONTAL,
                                                 new Insets(0, 0, 0, 0), 0, 0));
       mRealHardwarePanel.add(mDeviceHostLabel,
                          new GridBagConstraints(0, 6, 1, 1, 0.0, 0.0,
@@ -264,7 +264,7 @@ public class FlockEditorPanel
       mRealHardwarePanel.add(mDeviceHostEditor,
                          new GridBagConstraints(1, 6, 1, 1, 1.0, 1.0,
                                                 GridBagConstraints.WEST,
-                                                GridBagConstraints.BOTH,
+                                                GridBagConstraints.HORIZONTAL,
                                                 new Insets(0, 0, 0, 0), 0, 0));
       mHardwarePanel.add(mRealHardwarePanel,
                          new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0,
