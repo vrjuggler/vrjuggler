@@ -1,6 +1,6 @@
 /*
  * --------------------------------------------------------------------------
- *  vjCondPosix.h
+ * vjCondPosix.h
  * $Revision$
  * $Date$
  *
@@ -8,8 +8,8 @@
  *   Patrick Hartling (based on CondSGI by Allen Bierbaum).
  * --------------------------------------------------------------------------
  * NOTES:
- *    - This file ( vjCondPosix.h) must be included by vjCond.h, not the other
- *      way around.
+ *    - This file (vjCondPosix.h) must be included by vjCond.h, not the
+ *      other way around.
  * --------------------------------------------------------------------------
  */
 
@@ -20,7 +20,7 @@
 #include <config.h>
 #include <iostream.h>
 #include <pthread.h>
-#include <Sync/ vjMutexPosix.h>
+#include <Sync/vjMutexPosix.h>
 
 
 //: Condition variable wrapper for POSIX-compliant systems using pthreads
@@ -29,18 +29,18 @@
 class vjCondPosix {
 public:
     // -----------------------------------------------------------------------
-    //: Constructor for  vj vjCondPosix class.
+    //: Constructor for vjCondPosix class.
     //
     //! PRE: None.
     //! POST: The condition variable is intialized, and the mutex variable
     //+       associated with it is defined.  These two steps must be done
     //+       before any other member functions can use them.
     //
-    //! ARGS: mutex - Pointer to a  vjMutexPosix variable that is used in
+    //! ARGS: mutex - Pointer to a vjMutexPosix variable that is used in
     //+               association with the condition variable in this class
     //+               (optional).
     // -----------------------------------------------------------------------
-     vj vjCondPosix ( vjMutexPosix* mutex = NULL) {
+    vjCondPosix (vjMutexPosix* mutex = NULL) {
         // Initialize the condition variable.
 #ifdef _PTHREADS_DRAFT_4
         pthread_cond_init(&cond_var, pthread_condattr_default);
@@ -58,12 +58,12 @@ public:
     }
 
     // -----------------------------------------------------------------------
-    //: Destructor for  vj vjCondPosix class.
+    //: Destructor for vjCondPosix class.
     //
     //! PRE: None.
     //! POST: The condition variable is destroyed.
     // -----------------------------------------------------------------------
-    ~ vj vjCondPosix (void) {
+    ~vjCondPosix (void) {
         pthread_cond_destroy(&cond_var);
     }
 
@@ -84,7 +84,7 @@ public:
 
         // If not locked ...
         if ( condMutex->test() == 0 ) {
-            cerr << " vj vjCondPosix::wait: INCORRECT USAGE: Mutex was not "
+            cerr << "vjCondPosix::wait: INCORRECT USAGE: Mutex was not "
                  << "locked when wait invoked!!!\n";
 
             return -1;
@@ -128,7 +128,7 @@ public:
 
         // If not locked ...
         if ( condMutex->test() == 0 ) {
-            cerr << " vj vjCondPosix::broadcast: Mutex was not locked when "
+            cerr << "vjCondPosix::broadcast: Mutex was not locked when "
                  << "broadcast called!!!\n";
         }
 
@@ -190,13 +190,13 @@ public:
     //! POST: The condition variable associated with the mutex variable is
     //+       reset to the specified variable.
     //
-    //! ARGS: mutex - Pointer to a  vjMutexPosix variable that is used in
+    //! ARGS: mutex - Pointer to a vjMutexPosix variable that is used in
     //+               association with the condition variable in this class.
     //
     //! NOTE: NEVER call except to initialize explicitly.
     // -----------------------------------------------------------------------
     inline void
-    setMutex ( vjMutexPosix* mutex) {
+    setMutex (vjMutexPosix* mutex) {
         // NOT exactly correct, but just make sure not to leave it locked
         mutex->release();
         condMutex = mutex;
@@ -211,18 +211,18 @@ public:
     // -----------------------------------------------------------------------
     void
     dump (void) const {
-        cerr << "-------------  vj vjCondPosix::Dump ---------\n"
+        cerr << "------------- vjCondPosix::Dump ---------\n"
              << "Not Implemented yet.\n";
     }
 
 private:
     pthread_cond_t	cond_var;	//: Condition variable
-     vjMutexPosix*		condMutex;	//: Mutex for the condition variable
-     vjMutexPosix		defaultMutex;	//: A default mutex variable
+    vjMutexPosix*	condMutex;	//: Mutex for the condition variable
+    vjMutexPosix	defaultMutex;	//: A default mutex variable
 
     // = Prevent assignment and initialization.
-    void operator= (const  vj vjCondPosix&) {}
-     vj vjCondPosix (const  vj vjCondPosix &c) {}
+    void operator= (const vjCondPosix&) {}
+    vjCondPosix (const vjCondPosix &c) {}
 };
 
 #endif	/* _COND_POSIX_H_ */
