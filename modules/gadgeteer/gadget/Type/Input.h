@@ -96,83 +96,90 @@ namespace gadget
 {
 
 //-----------------------------------------------------------------------------
-//: Input is the abstract base class that all input objects derive from.
-//
-//  Input is the base class for all Input Devices, all the devices are
-//  therefore forced to implement the pure virtual functions of Sample,
-//  StartSampling, StopSampling, and UpdateData. <br> <br>
-//
-//  Dummy devices can use a default constructor, but physical devices should
-//  have a Constructor which takes a config chunk and calls the Input
-//  constructor taking a ConfigChunkPtr <br> <br>
-//
-//  All Physical devices will inherit from not Input but another abstract
-//  class which inherits from Input, currently there is support for
-//  Positional Devices, Analog Devices, and Digital devices, each has its own
-//  added pure virtual functions providing a simple and equal interface to
-//  themselves.
-//
-//! NOTE: We make the assumption in all devices that while UpdateData() is being
-//+       called, no other process will try to read the current data.
-//+       We can make this assumption because the whole idea of UpdateData() is
-//+       to bring in a current copy of the data for threads to process for a
-//+       frame.  Because of this, threads should not be reading data while
-//+       it is being updated to the most recent copy.
-//-----------------------------------------------------------------------------
-//!PUBLIC_API:
+/** Input is the abstract base class that all input objects derive from.
+*
+*  Input is the base class for all Input Devices, all the devices are
+*  therefore forced to implement the pure virtual functions of Sample,
+*  StartSampling, StopSampling, and UpdateData. <br> <br>
+*
+*  Dummy devices can use a default constructor, but physical devices should
+*  have a Constructor which takes a config chunk and calls the Input
+*  constructor taking a ConfigChunkPtr <br> <br>
+*
+*  All Physical devices will inherit from not Input but another abstract
+*  class which inherits from Input, currently there is support for
+*  Positional Devices, Analog Devices, and Digital devices, each has its own
+*  added pure virtual functions providing a simple and equal interface to
+*  themselves.
+*
+* @note  We make the assumption in all devices that while UpdateData() is being
+*       called, no other process will try to read the current data.
+*       We can make this assumption because the whole idea of UpdateData() is
+*       to bring in a current copy of the data for threads to process for a
+*       frame.  Because of this, threads should not be reading data while
+*       it is being updated to the most recent copy.
+*/
 class GADGET_CLASS_API Input
 {
 public:
-   //: Default Constructor
-   //
-   //  The default constructor is intended only for use by the DummyProxies
-   //  which do not need to have their serial port and baud rate etc set up.
-   // Also, initializes myThread, and active to null values
+   /** Default Constructor
+   *
+   *  The default constructor is intended only for use by the DummyProxies
+   *  which do not need to have their serial port and baud rate etc set up.
+   * Also, initializes myThread, and active to null values
+   */
    Input();
 
-   //: Input Destructor
-   //
-   // Free the memory for the Instance Name and Serial Port strings if
-   // allocated
+   /** Input Destructor
+   *
+   * Free the memory for the Instance Name and Serial Port strings if
+   * allocated
+   */
    virtual ~Input();
 
-   //: Config method
-   //
-   //  This baselevel config will fill the base datamembers
-   //  when found in the ConfigChunkPtr such as serial port, instance name
-   //  and baud rate.
+   /** Config method
+   *
+   *  This baselevel config will fill the base datamembers
+   *  when found in the ConfigChunkPtr such as serial port, instance name
+   *  and baud rate.
+   */
    virtual bool config(jccl::ConfigChunkPtr c);
 
-   //: Sample the device
-   //
-   //  Every input device should have a sample function, after which the
-   //  device has been sampled to have new data.  (This new data is not
-   //  accessable until UpdateData is called, however)
+   /** Sample the device
+   *
+   *  Every input device should have a sample function, after which the
+   *  device has been sampled to have new data.  (This new data is not
+   *  accessable until UpdateData is called, however)
+   */
    virtual int sample() = 0;
 
-   //: Start a device sampling.
-   //
-   //  Start the device sampling, normally this will spawn a thread which will
-   //  just repeatedly call Sample().
-   //  This function should return true when it sucessfully starts,
-   //      false otherwise.
+   /** Start a device sampling.
+   *
+   *  Start the device sampling, normally this will spawn a thread which will
+   *  just repeatedly call Sample().
+   *  This function should return true when it sucessfully starts,
+   *      false otherwise.
+   */
    virtual int startSampling() = 0;
 
-   //: StopSampling.
-   //
-   //  Reverse the effects of StartSampling()
+   /* StopSampling.
+   *
+   *  Reverse the effects of StartSampling()
+   */
    virtual int stopSampling() = 0;
 
-   //: updateData()
-   //
-   //  After this function is called subsequent calls to GetData(d) will
-   //  return the most recent data at the time of THIS function call.  Data is
-   //  guaranteed to be valid and static until the next call to UpdateData.
+   /** Update the data
+   *
+   *  After this function is called subsequent calls to GetData(d) will
+   *  return the most recent data at the time of THIS function call.  Data is
+   *  guaranteed to be valid and static until the next call to UpdateData.
+   */
    virtual void updateData() = 0;
 
-   //: Returns the string rep of the chunk type used to config this device
-   // This string is used by the device factory to look up device drivers
-   // based up the type of chunk it is trying to load.
+   /** Returns the string rep of the chunk type used to config this device
+   * This string is used by the device factory to look up device drivers
+   * based up the type of chunk it is trying to load.
+   */
    static std::string getChunkType() { return std::string("Undefined"); }
 
    /** @name Functions to remove (?)
@@ -186,40 +193,38 @@ public:
    int  getBaudRate() { return baudRate;}
    //@}
 
-   //: getInstanceName()
-   //
-   //  Returns the name identifying this instance of the device.
-   // This is the name given to the device in it's config chunk (ie. "MyFlockOfBirds", "TheIbox", etc)
+   /** getInstanceName()
+   *
+   *  Returns the name identifying this instance of the device.
+   * This is the name given to the device in it's config chunk (ie. "MyFlockOfBirds", "TheIbox", etc)
+   */
    const std::string getInstanceName() {
       if (instName.empty())
          return "Undefined";
       return instName;
    }
 
-   //: fDeviceSupport(ability)
-   //
-   //  Returns true/false does this input device support the ability passed in
-   //int  fDeviceSupport(int devAbility);
-
-   //: Is this input device active?.
+   /** Is this input device active?. */
    int isActive() { return active;}
 
 protected:  // Helpers
-   //: Reset the Index Holders
-   // Sets to (0,1,2) in that order
+   /** Reset the Index Holders
+    * Sets to (0,1,2) in that order
+    */
    void resetIndexes();
 
-   //: Swap the current and valid indexes (NOT thread safe)
-   // You must have a lock when you call this
-   //! NOTE: In the same lock that this is called, the driver
-   //+      MUST copy the valid data over the current data in order
-   //+      to keep from seeing bad data in the future
+   /** Swap the current and valid indexes (NOT thread safe)
+    * You must have a lock when you call this
+    * @note In the same lock that this is called, the driver
+    *      MUST copy the valid data over the current data in order
+    *      to keep from seeing bad data in the future
+    */
    void swapCurrentIndexes();
 
-   //: Swap the valid and progress indexes (thread safe)
+   /** Swap the valid and progress indexes (thread safe) */
    void swapValidIndexes();
 
-   //: Assert that the indices currently have valid values
+   /** Assert that the indices currently have valid values */
    void assertIndexes();
 
 protected:
@@ -229,17 +234,18 @@ protected:
    vpr::Thread*   myThread;   //: The thread being used by the driver
    int         active;     //: Is the driver active
 
-   //: Index holders
-   // Current is the index to the current data being returned by GetData
-   // Progress is the index to the data being filled by Sample() at any given
-   // time Valid is the index to the data that has already been filled by
-   // Sample() and will become the next Current data.  (NOTE: no dirty bit
-   // checking is done to make SURE that valid is newer than current on
-   // UpdateData switches)
+   /** Index holders
+   * Current is the index to the current data being returned by GetData
+   * Progress is the index to the data being filled by Sample() at any given
+   * time Valid is the index to the data that has already been filled by
+   * Sample() and will become the next Current data.  (NOTE: no dirty bit
+   * checking is done to make SURE that valid is newer than current on
+   * UpdateData switches)
+   */
    int current, valid, progress;
 
    vpr::Mutex lock;        //: Mutex for swapping the pointers.
-   int baudRate;        //: Baud rate of the device (if it is serial device)
+   int baudRate;           //: Baud rate of the device (if it is serial device)
 
    Input (const Input& o) {;}
    void operator= (const Input& o) {;}
