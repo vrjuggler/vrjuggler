@@ -39,7 +39,7 @@
 
 #include <vpr/Util/GUID.h>
 #include <vpr/Util/Singleton.h>
-#include <vpr/DynLoad/LibraryLoader.h>
+#include <vpr/DynLoad/Library.h>
 
 #include <jccl/Config/ConfigElementPtr.h>
 #include <jccl/RTRC/ConfigElementHandler.h>
@@ -252,7 +252,7 @@ private:
    vpr::Mutex                   mPluginsLock;        /**< Lock on plugins list.*/
    std::string                  mBarrierMachineName; /**< Name of the barrier machine.*/
    std::map<vpr::GUID, ClusterPlugin*> mPluginMap;   /**< Map of ClusterPlugins. */
-   vpr::LibraryLoader           mPluginLoader;       /**< Used to dynamically load ClusterPlugins. */
+   std::vector<vpr::LibraryPtr> mLoadedPlugins;
 
    vpr::Mutex                   mNodesLock;          /**< Lock on hostname list. */
    std::vector<std::string>     mNodes;              /**< Hostnames of the nodes in the cluster. */

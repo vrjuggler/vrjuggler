@@ -35,16 +35,16 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <vpr/vpr.h>
-#include <vpr/DynLoad/LibraryLoader.h>
-
-#include <vpr/Util/Singleton.h>
-#include <jccl/RTRC/ConfigElementHandler.h>
-#include <gadget/InputLoggerPtr.h>
 #include <map>
 #include <vector>
-
 #include <boost/smart_ptr.hpp>
+
+#include <vpr/vpr.h>
+#include <vpr/DynLoad/Library.h>
+#include <vpr/Util/Singleton.h>
+
+#include <jccl/RTRC/ConfigElementHandler.h>
+#include <gadget/InputLoggerPtr.h>
 
 
 namespace gadget
@@ -246,7 +246,7 @@ public:
    friend class InputLogger;  /**< Make input logger a friend */
 
 protected:
-   vpr::LibraryLoader   mDriverLoader;
+   std::vector<vpr::LibraryPtr> mLoadedDrivers;
 
    typedef std::map<std::string,Input*> tDevTableType;
 
