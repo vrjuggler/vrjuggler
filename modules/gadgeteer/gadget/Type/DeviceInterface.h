@@ -34,6 +34,7 @@
 #define _GADGET_DEVICE_INTERFACE_H_
 
 #include <gadget/gadgetConfig.h>
+#include <vector>
 #include <gadget/Util/Debug.h>
 
 namespace gadget
@@ -140,6 +141,18 @@ public:
 
    PROXY_TYPE* getProxy()
    { return mTypeSpecificProxy; }
+
+   /** Set the proxy to an explicit proxy */
+   void setProxy(PROXY_TYPE* proxy)
+   {
+      vprASSERT(NULL != proxy);
+      mProxyName = proxy->getName();    // Set the name
+      mNameSet = true;
+      this->refresh();
+
+      // Verify we found the correct proxy
+      vprASSERT(mTypeSpecificProxy == proxy && "Found incorrect proxy for dev interface");
+   }
 
    virtual void refresh()
    {

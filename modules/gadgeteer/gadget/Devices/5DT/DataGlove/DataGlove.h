@@ -35,6 +35,7 @@
 
 #include <gadget/Devices/DriverConfig.h>
 #include <string>
+#include <vector>
 
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Glove.h>

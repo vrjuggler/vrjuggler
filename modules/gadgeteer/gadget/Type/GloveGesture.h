@@ -35,6 +35,7 @@
 //#pragma once
 
 #include <gadget/gadgetConfig.h>
+#include <vector>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Gesture.h>
 #include <gadget/Type/Glove.h>

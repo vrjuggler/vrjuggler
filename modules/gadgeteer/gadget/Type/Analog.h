@@ -34,6 +34,7 @@
 #define _GADGET_ANALOG_H_
 
 #include <gadget/gadgetConfig.h>
+#include <vector>
 
 #include <gadget/Type/AnalogData.h>
 #include <gadget/Type/SampleBuffer.h>

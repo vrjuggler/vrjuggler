@@ -34,6 +34,7 @@
 
 #include <gadget/gadgetConfig.h>
 #include <typeinfo>
+#include <vector>
 
 #include <jccl/Config/ConfigChunkPtr.h>
 #include <gadget/Filter/Position/PositionFilter.h>

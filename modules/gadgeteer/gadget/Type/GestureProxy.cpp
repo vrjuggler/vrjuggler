@@ -46,6 +46,10 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       std::string("\n"));
 
    vprASSERT(chunk->getDescToken() == "GestureProxy");
+   bool base_config = Proxy::config(chunk);
+   if(!base_config)
+      return false;
+
 
    mDeviceName = chunk->getProperty<std::string>("device");
 

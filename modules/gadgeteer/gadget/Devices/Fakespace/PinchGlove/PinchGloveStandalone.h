@@ -35,6 +35,7 @@
 
 #include <gadget/Devices/DriverConfig.h>
 #include <string>
+#include <vector>
 #include <vpr/IO/Port/SerialPort.h>
 
 

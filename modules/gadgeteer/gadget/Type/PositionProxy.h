@@ -40,6 +40,7 @@
 #define _GADGET_POSPROXY_H_
 
 #include <gadget/gadgetConfig.h>
+#include <vector>
 #include <math.h>
 
 #include <gadget/Type/Position.h>
