@@ -37,11 +37,14 @@
 #include <vjConfig.h>
 #include <Config/vjChunkDesc.h>
 
+namespace vrj
+{
+   
 //--------------------------------------------------------------
-//: Storage class for vjChunkDescs used by the ConfigChunkDB.
+//: Storage class for ChunkDescs used by the ConfigChunkDB.
 //
-//  A vjChunkDescDB is a container for vjChunkDescs.  Includes
-//  functions to search for particular vjChunkDescs, and to read
+//  A ChunkDescDB is a container for ChunkDescs.  Includes
+//  functions to search for particular ChunkDescs, and to read
 //  and write ChunkDesc files.
 //
 // @author Christopher Just
@@ -50,27 +53,27 @@
 //-----------------------------------------------------------------
 
 
-class vjChunkDescDB {
+class ChunkDescDB {
 private:
 
-    //:Internal storage of vjChunkDescs
-    std::vector<vjChunkDesc*> descs;
+    //:Internal storage of ChunkDescs
+    std::vector<ChunkDesc*> descs;
 
 public:
 
     //:Default Constructor
-    //!POST: Self is created with an empty vector of vjChunkDescs
-    vjChunkDescDB ();
+    //!POST: Self is created with an empty vector of ChunkDescs
+    ChunkDescDB ();
 
 
     //:Destructor
     //!POST: Self is destroyed; all memory (including contained
-    //+      vjChunkDescs) is destroyed.
-    ~vjChunkDescDB ();
+    //+      ChunkDescs) is destroyed.
+    ~ChunkDescDB ();
 
 
-    typedef std::vector<vjChunkDesc*>::iterator iterator;
-    typedef std::vector<vjChunkDesc*>::const_iterator const_iterator;
+    typedef std::vector<ChunkDesc*>::iterator iterator;
+    typedef std::vector<ChunkDesc*>::const_iterator const_iterator;
 
     inline iterator begin() {
         return descs.begin();
@@ -89,69 +92,69 @@ public:
     }
 
 
-    //:Searches for a particular vjChunkDesc
-    //!RETURNS: desc - a vjChunkDesc whose token matches _token
-    //!RETURNS: NULL - if no such vjChunkDesc is found
-    vjChunkDesc *getChunkDesc (const std::string& _token);
+    //:Searches for a particular ChunkDesc
+    //!RETURNS: desc - a ChunkDesc whose token matches _token
+    //!RETURNS: NULL - if no such ChunkDesc is found
+    ChunkDesc *getChunkDesc (const std::string& _token);
 
 
-    //:Inserts a vjChunkDesc
-    //!ARGS: d - non-NULL pointer to vjChunkDesc
-    //!POST: d is inserted into self, replacing any vjChunkDesc
+    //:Inserts a ChunkDesc
+    //!ARGS: d - non-NULL pointer to ChunkDesc
+    //!POST: d is inserted into self, replacing any ChunkDesc
     //+      with the same token.
     //!RETURNS: True - always.
-    bool insert (vjChunkDesc *d);
+    bool insert (ChunkDesc *d);
 
 
-    //:Inserts all vjChunkDescs in db
-    //!ARGS: db - a non-NULL pointer to a vjChunkDescDB
+    //:Inserts all ChunkDescs in db
+    //!ARGS: db - a non-NULL pointer to a ChunkDescDB
     //!POST: all elements of db are inserted into self, replacing any
-    //+      existing vjChunkDescs with the same token.
-    void insert (vjChunkDescDB* db);
+    //+      existing ChunkDescs with the same token.
+    void insert (ChunkDescDB* db);
     
 
-    //:Removes vjChunkDesc from self
+    //:Removes ChunkDesc from self
     //!ARGS: _token - a non-NULL C string
-    //!POST: Any vjChunkDesc in self whose token equals _token
+    //!POST: Any ChunkDesc in self whose token equals _token
     //+      is removed and destroyed.
     //!RETURNS: true - if a matching chunk was found
     //!RETURNS: false - if no matching chunk was found
     bool remove (const std::string& name);
 
 
-    //:Removes all vjChunkDescs from self
-    //!POST: All vjChunkDescs in self have been removed and
+    //:Removes all ChunkDescs from self
+    //!POST: All ChunkDescs in self have been removed and
     //+      destroyed
     //!NOTE: This <b>can</b> be dangerous, if there exist
-    //+      vjConfigChunks somewhere that rever to any of
-    //+      the deleted vjChunkDescs.
+    //+      ConfigChunks somewhere that rever to any of
+    //+      the deleted ChunkDescs.
     void removeAll ();
 
 
-    //:Returns the number of vjChunkDescs in self.
-    //!RETURNS: n - the number of vjChunkDescs in self.
+    //:Returns the number of ChunkDescs in self.
+    //!RETURNS: n - the number of ChunkDescs in self.
     int size () const;
 
 
     //:Writes self to out
     //!POST: A text representation of self is appended to out
     //!RETURNS: out
-    //!NOTE: The output format is zero or more vjChunkDescs
+    //!NOTE: The output format is zero or more ChunkDescs
     //+      followed by "end"
-    friend std::ostream& operator << (std::ostream& out, const vjChunkDescDB& self);
+    friend std::ostream& operator << (std::ostream& out, const ChunkDescDB& self);
 
 
     //:Reads from in
-    //!POST: vjChunkDescs read from in are appended to self.
-    //+      vjChunkDescs previously in self are retained.
-    //!NOTE: input format is zero or more vjChunkDescs followed
+    //!POST: ChunkDescs read from in are appended to self.
+    //+      ChunkDescs previously in self are retained.
+    //!NOTE: input format is zero or more ChunkDescs followed
     //+      by "End" or eof.
-    friend std::istream& operator >> (std::istream& in, vjChunkDescDB& self);
+    friend std::istream& operator >> (std::istream& in, ChunkDescDB& self);
 
 
     //:Loads a chunkdesc file
     //!ARGS: fname - name of file to load
-    //!POST: File is opened and vjChunkDescs are read and inserted
+    //!POST: File is opened and ChunkDescs are read and inserted
     //+      into self (using >>).
     //!RETURNS: true - if file was opened succesfully
     //!RETURNS: false - otherwise
@@ -163,7 +166,7 @@ public:
 
     //:Saves a chunkdesc file
     //!ARGS: fname - name of file to load
-    //!POST: File is opened and vjChunkDescs are written to it
+    //!POST: File is opened and ChunkDescs are written to it
     //+      using << operator.
     //!RETURNS: true - if file was opened succesfully
     //!RETURNS: false - otherwise
@@ -171,4 +174,5 @@ public:
 
 };
 
+};
 #endif

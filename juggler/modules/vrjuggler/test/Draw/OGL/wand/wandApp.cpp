@@ -57,13 +57,13 @@ void wandApp::myDraw()
 {
    //cout << "\n--- myDraw() ---\n";
 
-   //cout << "HeadPos:" << vjCoord(*mHead->getData()).pos << "\t"
-   //     << "WandPos:" << vjCoord(*mWand->getData()).pos << endl;
+   //cout << "HeadPos:" << Coord(*mHead->getData()).pos << "\t"
+   //     << "WandPos:" << Coord(*mWand->getData()).pos << endl;
 
    glMatrixMode(GL_MODELVIEW);
 
       // -- Draw box on wand --- //
-   vjMatrix* wandMatrix;
+   Matrix* wandMatrix;
    wandMatrix = mWand->getData();      // Get the wand matrix
 
    glPushMatrix();
@@ -73,17 +73,17 @@ void wandApp::myDraw()
          //glColor3f(1.0f, 0.0f, 1.0f);
          float wand_color[3];
          wand_color[0] = wand_color[1] = wand_color[2] = 0.0f;
-         if(mButton0->getData() == vjDigital::ON)
+         if(mButton0->getData() == Digital::ON)
             wand_color[0] += 0.5f;
-         if(mButton1->getData() == vjDigital::ON)
+         if(mButton1->getData() == Digital::ON)
             wand_color[1] += 0.5f;
-         if(mButton2->getData() == vjDigital::ON)
+         if(mButton2->getData() == Digital::ON)
             wand_color[2] += 0.5f;
-         if(mButton3->getData() == vjDigital::ON)
+         if(mButton3->getData() == Digital::ON)
             wand_color[0] += 0.5f;
-         if(mButton4->getData() == vjDigital::ON)
+         if(mButton4->getData() == Digital::ON)
             wand_color[1] += 0.5f;
-         if(mButton5->getData() == vjDigital::ON)
+         if(mButton5->getData() == Digital::ON)
             wand_color[2] += 0.5f;
          glColor3fv(wand_color);
          glScalef(0.25f, 0.25f, 0.25f);
@@ -100,10 +100,10 @@ void wandApp::myDraw()
       glPushMatrix();
          glMultMatrixf(wandMatrix->getFloatPtr());    // Goto wand position
 
-         vjVec3 x_axis(7.0f,0.0f,0.0f);
-         vjVec3 y_axis(0.0f, 7.0f, 0.0f);
-         vjVec3 z_axis(0.0f, 0.0f, 7.0f);
-         vjVec3 origin(0.0f, 0.0f, 0.0f);
+         Vec3 x_axis(7.0f,0.0f,0.0f);
+         Vec3 y_axis(0.0f, 7.0f, 0.0f);
+         Vec3 z_axis(0.0f, 0.0f, 7.0f);
+         Vec3 origin(0.0f, 0.0f, 0.0f);
 
          glBegin(GL_LINES);
             glColor3f(1.0f, 0.0f, 0.0f);

@@ -40,7 +40,10 @@
 #include <Input/InputManager/vjKeyboardInterface.h>
 #include <Config/vjVarValue.h>
 
-class vjConfigChunk;
+namespace vrj
+{
+   
+class ConfigChunk;
 
 //: Base class for all simulated input devices
 //
@@ -48,25 +51,25 @@ class vjConfigChunk;
 // up keyboard interface
 //
 //!PUBLIC_API:
-class vjSimInput
+class SimInput
 {
 protected:
-   class vjKeyModPair
+   class KeyModPair
    {
    public:
-      vjKeyModPair() : mKey(-1), mModifier(-1)
+      KeyModPair() : mKey(-1), mModifier(-1)
       {;}
 
-      vjKeyModPair (const vjKeyModPair& in) {
+      KeyModPair (const KeyModPair& in) {
          copy(in);
       }
 
-      inline const vjKeyModPair& operator= (const vjKeyModPair& in) {
+      inline const KeyModPair& operator= (const KeyModPair& in) {
          copy(in);
          return *this;
       }
 
-      inline void copy (const vjKeyModPair& in) {
+      inline void copy (const KeyModPair& in) {
          mKey      = in.mKey;
          mModifier = in.mModifier;
       }
@@ -77,21 +80,21 @@ protected:
    };
 
 public:
-   vjSimInput()
+   SimInput()
    {
-      //vjDEBUG(vjDBG_ALL,4)<<"*** vjSimInput::vjSimInput()\n"<< vjDEBUG_FLUSH;
+      //vjDEBUG(vjDBG_ALL,4)<<"*** SimInput::SimInput()\n"<< vjDEBUG_FLUSH;
    }
-   virtual ~vjSimInput() {}
+   virtual ~SimInput() {}
 
    //: Configure the simulated input device
    //! POST: Keyboard proxy is configured <br>
-   virtual bool config(vjConfigChunk* chunk);
+   virtual bool config(ConfigChunk* chunk);
 
 protected:
    //: Check the given keypair
    //! RETURNS: Number of times the key was pressed
    //           with the modifier alone held down
-   virtual int  checkKeyPair(vjKeyModPair& pair);
+   virtual int  checkKeyPair(KeyModPair& pair);
 
    //: Get number of time key pressed
    //! RETURNS: Number of time the key is pressed
@@ -102,10 +105,12 @@ protected:
    //! PRE: keyList must be full of var values containing chunks of the type "KeyModPair"
    //+      The KeyModPair chunk type must have fields name key and modKey
    //! RETURNS: vector of KeyModPairs
-   std::vector<vjKeyModPair> readKeyList(std::vector<vjVarValue*>& keyList);
+   std::vector<KeyModPair> readKeyList(std::vector<VarValue*>& keyList);
 
 private:
-   vjKeyboardInterface     mKeyboard;        //: The keyboard we are getting events from
+   KeyboardInterface     mKeyboard;        //: The keyboard we are getting events from
+};
+
 };
 
 #endif

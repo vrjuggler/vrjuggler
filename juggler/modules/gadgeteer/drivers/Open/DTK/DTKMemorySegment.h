@@ -36,6 +36,9 @@
 #include <vjConfig.h>
 #include <Input/vjDTK/vjDTK.h>
 
+namespace vrj
+{
+   
 typedef enum {
     dtk_pos_ZYXEuler = 0, 
     dtk_pos_XYZEuler,
@@ -43,7 +46,7 @@ typedef enum {
     dtk_digital, 
     dtk_analog, 
     dtk_custom
-} vjDTK_memoryType;
+} DTK_memoryType;
 
 typedef enum {
     DTK_INVALID = 0,
@@ -51,19 +54,19 @@ typedef enum {
     DTK_FLOAT,
     DTK_BYTES,
     DTK_CSTRING
-} vjDTK_dataType;
+} DTK_dataType;
 
 class dtkSharedMem;
 class dtkClient;
 
-class VJ_CLASS_API vjDTKMemorySegment
+class VJ_CLASS_API DTKMemorySegment
 {
 public:
-    vjDTKMemorySegment();
-    ~vjDTKMemorySegment();
+    DTKMemorySegment();
+    ~DTKMemorySegment();
     
     //: configure the flock with a config chunk
-    bool config(vjConfigChunk* c);
+    bool config(ConfigChunk* c);
 
     //: return what chunk type is associated with this class.
     static std::string getChunkType() { return std::string("DTKMemorySegment");}
@@ -71,7 +74,7 @@ public:
     const char* SegmentName() { return _segmentName; }
     const char* RemoteHost() { return _remotehost; }
     
-    vjDTK_memoryType SegmentType() { return _segmentType; }
+    DTK_memoryType SegmentType() { return _segmentType; }
     
     //: Returns the number of items, size of each item, and the total memory size of
     //  The specified memory segment.  This allows users to make sure they are
@@ -84,11 +87,11 @@ public:
     int SegmentSize() { return _segmentSize; }
     
     
-    //: The index is used by the Multi type device vjDTK.  The index is used for the proxy
+    //: The index is used by the Multi type device DTK.  The index is used for the proxy
     //  interfaces.  The Item index is specified at configuration time, depending on the
     //  order each chunk was entered.
-    int ItemIndex() { return vjInputIndex; }
-    void setItemIndex(int i) { vjInputIndex = i; }
+    int ItemIndex() { return InputIndex; }
+    void setItemIndex(int i) { InputIndex = i; }
     
     //: Makes the connection to the DTK Client and gets the memory segment.
     bool connectSegment(dtkClient* in_parent);
@@ -107,10 +110,10 @@ private:
     char* _segmentName;
     char* _remotehost;
 
-    vjDTK_memoryType _segmentType;
-    vjDTK_dataType _type;
+    DTK_memoryType _segmentType;
+    DTK_dataType _type;
 
-    int vjInputIndex;
+    int InputIndex;
 
 
     int _numItems;
@@ -119,6 +122,8 @@ private:
     float *floatData;
     int	  *intData;
     char  *charData;
+};
+
 };
 
 #endif

@@ -41,7 +41,9 @@
 
 #include <Environment/vjSockStream.h>
 
-
+namespace vrj
+{
+   
 const size_t sockstreambuf::BUFSIZE = 128;
 
 
@@ -106,3 +108,4 @@ int sockstreambuf::sync() {
     //return streambuf::sync();
 }
 
+};

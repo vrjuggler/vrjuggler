@@ -40,16 +40,19 @@
 class DOMParser;
 class ErrorHandler;
 
+namespace vrj
+{
+   
 //: Wrapper for libxerces-c parsers.
 //  This class should never be instantiated by itself; only thru the
-//  vjXercesXMLParserPool object.
-class VJ_CLASS_API vjXercesXMLParser {
+//  XercesXMLParserPool object.
+class VJ_CLASS_API XercesXMLParser {
 
 public:
 
-    vjXercesXMLParser ();
+    XercesXMLParser ();
 
-    ~vjXercesXMLParser ();
+    ~XercesXMLParser ();
 
     bool readStream (std::istream& input, DOM_Node& doc);
 
@@ -67,5 +70,6 @@ private:
 
 };
 
+};
 
 #endif

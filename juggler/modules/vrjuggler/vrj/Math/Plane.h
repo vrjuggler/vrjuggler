@@ -42,7 +42,10 @@
 #include <Math/vjMath.h>
 
 
-//: sgPlane: Defines a geometrical plane.
+namespace vrj
+{
+   
+//: Plane: Defines a geometrical plane.
 //
 // All points on the plane satify the equation dot(Pt,Normal) = offset
 // normal is assumed to be normalized
@@ -50,17 +53,17 @@
 // pg. 309 Computer Graphics 2nd Edition Hearn Baker
 // N dot P = -D
 //
-class vjPlane
+class Plane
 {
 public:
-	vjPlane()
+	Plane()
 	{}
 	
 	//: Create a plane containing the given points.
-	void makePts(const vjVec3& pt1, const vjVec3& pt2, const vjVec3& pt3);
+	void makePts(const Vec3& pt1, const Vec3& pt2, const Vec3& pt3);
 		
 	//: Create a plane given a normal and a point
-   void makeNormPt( const vjVec3& norm, const vjVec3& pt );
+         void makeNormPt( const Vec3& norm, const Vec3& pt );
 	
 	
 	//: Intersects the plane with a given segment.
@@ -68,7 +71,7 @@ public:
    //+         *t = distance "down" the segment to the hit.
    //
 	//! PRE: seg.dir must be normalized
-	bool isect(vjSeg& seg, float* t);
+	bool isect(Seg& seg, float* t);
 		
 	
 	//: Intersects the plane with the line defined
@@ -76,24 +79,24 @@ public:
 	//
 	// seg - seg that represents the line to isect
 	// t   - the t value of the isect
-	bool isectLine(const vjSeg& seg, float* t);
+	bool isectLine(const Seg& seg, float* t);
 	
 	//: Find nearest pt on the plane
 	//! RETURN: distance to the point (d), and point on the plane
 	//+ If d is positive, pt lies on same side as normal
 	//+ If d is negative, pt lies on opposite side from normal
 	//+ if d is "near" zero, pt is on the plane
-	float findNearestPt(const vjVec3& pt, vjVec3& nearPt);
+	float findNearestPt(const Vec3& pt, Vec3& nearPt);
    
    // Finds the distance between pt and the point on the plane nearest pt
    //! RETURN: distance to the point (d)
 	//+ If d is positive, pt lies on same side as normal
 	//+ If d is negative, pt lies on opposite side from normal
 	//+ if d is "near" zero, pt is on the plane
-	float getDistance( const vjVec3& pt );
+	float getDistance( const Vec3& pt );
 	
 public:
-	vjVec3  normal;     // N or Just Normal
+	Vec3  normal;     // N or Just Normal
 	float   offset;     // D or offset
 };
 
@@ -104,10 +107,10 @@ public:
 
 /// Create a plane containing the given points.
 inline
-void vjPlane::makePts(const vjVec3& pt1, const vjVec3& pt2, const vjVec3& pt3)
+void Plane::makePts(const Vec3& pt1, const Vec3& pt2, const Vec3& pt3)
 {
-    vjVec3 vec12(pt2-pt1);
-    vjVec3 vec13(pt3-pt1);
+    Vec3 vec12(pt2-pt1);
+    Vec3 vec13(pt3-pt1);
 
     normal = vec12.cross(vec13);
 
@@ -116,7 +119,7 @@ void vjPlane::makePts(const vjVec3& pt1, const vjVec3& pt2, const vjVec3& pt3)
 }
 
 inline
-void vjPlane::makeNormPt(const vjVec3& norm, const vjVec3& _pt)
+void Plane::makeNormPt(const Vec3& norm, const Vec3& _pt)
 {
     normal = norm;
     offset = -(_pt.dot(normal));
@@ -125,22 +128,22 @@ void vjPlane::makeNormPt(const vjVec3& norm, const vjVec3& _pt)
 
 // Finds the distance between pt and the point on the plane nearest pt
 inline 
-float vjPlane::getDistance( const vjVec3& pt )
+float Plane::getDistance( const Vec3& pt )
 {
    // GGI: P 297
 	// GGII: Pg 223
-	vjASSERT( normal.isNormalized() );		// Assert: Normalized
+	vprASSERT( normal.isNormalized() );		// Assert: Normalized
 	return offset+normal.dot( pt );		  // Distance to plane
 }
 
 // Finds the point on the plane nearest to pt.
 // Returns the nearest point in nearPt
 inline
-float vjPlane::findNearestPt(const vjVec3& pt, vjVec3& nearPt)
+float Plane::findNearestPt(const Vec3& pt, Vec3& nearPt)
 {
         // GGI: P 297
 		// GGII: Pg 223
-	vjASSERT(normal.isNormalized());		            // Assert: Normalized
+	vprASSERT(normal.isNormalized());		            // Assert: Normalized
 	float dist_to_plane = offset+normal.dot(pt);		// Distance to plane
 	nearPt = pt - (normal*dist_to_plane);
 	return dist_to_plane;
@@ -152,7 +155,7 @@ float vjPlane::findNearestPt(const vjVec3& pt, vjVec3& nearPt)
 // seg - seg that represents the line to isect
 // t   - the t value of the isect
 inline
-bool vjPlane::isectLine(const vjSeg& seg, float* t)
+bool Plane::isectLine(const Seg& seg, float* t)
 {
 	// GGI: Pg 299
 	// Lu = seg.pos;
@@ -161,7 +164,7 @@ bool vjPlane::isectLine(const vjSeg& seg, float* t)
 	// Jd = offset;
 	
 	float denom = normal.dot(seg.dir);
-	if(vjMath::isZero(denom))
+	if(Math::isZero(denom))
       return false;
 	else
 	{
@@ -176,7 +179,7 @@ bool vjPlane::isectLine(const vjSeg& seg, float* t)
 //
 // PRE: seg.dir must be normalized
 inline
-bool vjPlane::isect(vjSeg& seg, float* t)
+bool Plane::isect(Seg& seg, float* t)
 {
 	if(!isectLine(seg, t))
       return false;           // Plane and seg are parallel
@@ -189,6 +192,6 @@ bool vjPlane::isect(vjSeg& seg, float* t)
 
 
 
-
+};
 
 #endif

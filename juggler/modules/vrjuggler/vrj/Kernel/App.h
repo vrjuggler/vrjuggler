@@ -38,8 +38,13 @@
 #include <Utils/vjDebug.h>
 #include <Kernel/vjConfigChunkHandler.h>
 #include <Sound/SoundManagerFactory.h>
-class vjDrawManager;
-class vjKernel;
+
+
+namespace vrj
+{
+   
+   class DrawManager;
+class Kernel;
 
 //----------------------------------------------------------------
 //: Encapsulates the actually application.
@@ -74,15 +79,15 @@ class vjKernel;
 //  Date: 9-8-97
 //!PUBLIC_API:
 //------------------------------------------------------------------
-class VJ_CLASS_API vjApp : public vjConfigChunkHandler
+class VJ_CLASS_API App : public ConfigChunkHandler
 {
 public:
    //: Constructor
-   //! ARGS: kern - The vjKernel that is active.  So application has easy access to kernel
-   vjApp(vjKernel* kern);
+   //! ARGS: kern - The Kernel that is active.  So application has easy access to kernel
+   App(Kernel* kern);
 
-   // Just call vjApp(vjKernel::instance())
-   vjApp();
+   // Just call App(Kernel::instance())
+   App();
 
 public:
    //: Application init function
@@ -143,9 +148,9 @@ public:
       }
    }
 
-public:  // --- DEfault config handlers: (inherited from vjConfigChunkHandler) --- //
+public:  // --- DEfault config handlers: (inherited from ConfigChunkHandler) --- //
    // Default to not handling anything
-   virtual bool configCanHandle(vjConfigChunk* chunk)
+   virtual bool configCanHandle(ConfigChunk* chunk)
    { return false; }
 
    //: Are any application dependencies satisfied
@@ -157,29 +162,30 @@ public:  // --- DEfault config handlers: (inherited from vjConfigChunkHandler) -
    { return true; }
 
 protected:
-   //! NOTE: Inherited from vjConfigChunkHandler
-   virtual bool configAdd(vjConfigChunk* chunk)
-   { vjASSERT(false);  return false; }
-   //! NOTE: INherited from vjConfigChunkHandler
-   virtual bool configRemove(vjConfigChunk* chunk)
-   { vjASSERT(false); return false; }
+   //! NOTE: Inherited from ConfigChunkHandler
+   virtual bool configAdd(ConfigChunk* chunk)
+   { vprASSERT(false);  return false; }
+   //! NOTE: INherited from ConfigChunkHandler
+   virtual bool configRemove(ConfigChunk* chunk)
+   { vprASSERT(false); return false; }
 
 public:
    //vjAPI       api;        // Used to signal which API this application works with
-   vjKernel*   kernel;     // The library kernel (here for convienence)
+   Kernel*   kernel;     // The library kernel (here for convienence)
    bool        mHaveFocus;
 
 public:  // --- Factory functions --- //
    //: Get the DrawManager to use
    //! NOTE: Each derived app MUST implement this function
-   virtual vjDrawManager*    getDrawManager() = 0;
+   virtual DrawManager*    getDrawManager() = 0;
 
    //: Get the SoundManager to use
    //! NOTE: Each derived app could implement this function if needed
-   virtual vrj::SoundManager*    getSoundManager()
+   virtual SoundManager*    getSoundManager()
    {
-      return &vrj::SoundManagerFactory::get();
+      return &SoundManagerFactory::get();
    }
 };
 
+};
 #endif

@@ -55,14 +55,14 @@ public:
    static std::string filePath;
    static void setFilePath( const std::string& filepath = ".:" )
    {
-      std::string demangled_path = vjFileIO::replaceEnvVars( filepath );
+      std::string demangled_path = FileIO::replaceEnvVars( filepath );
       filePath = demangled_path;
       //std::cout << "pfFileIO::setFilePath: path now: " << filePath << std::endl;
    }
 
    static void addFilePath( const std::string& filepath)
    {
-      std::string demangled_path = vjFileIO::replaceEnvVars( filepath );
+      std::string demangled_path = FileIO::replaceEnvVars( filepath );
       filePath += demangled_path;
       filePath += std::string(":");    // Add on trailing seperator
       //std::cout << "pfFileIO::addFilePath: path now: " << filePath << std::endl;

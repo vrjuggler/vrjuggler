@@ -73,15 +73,15 @@
 // the nav is a hack, and well, it works for this silly little app.
 // be warned, it (navigation.h) won't be fun to extend 
 
-class gloveApp : public vjGlApp
+class gloveApp : public GlApp
 {
 // utility functions
 protected:
-    //friend vjVec3 operator*( const vjMatrix& m, const vjVec3& v );
+    //friend Vec3 operator*( const Matrix& m, const Vec3& v );
 
 // Application Functions:
 public:
-   gloveApp(vjKernel* kern) : vjGlApp(kern),
+   gloveApp(Kernel* kern) : GlApp(kern),
                                 mCubeSelected(false),
                                 mSphereSelected(false),
                                 mConeSelected(false),
@@ -97,7 +97,7 @@ public:
    // Initialize VR Juggler device interfaces here.
    virtual void init()
    {
-      vjGlApp::init();
+      GlApp::init();
       // for the glove position
       mGlove.init("VJGlove");
       
@@ -121,7 +121,7 @@ public:
    // allocation here.
    virtual void contextInit()
    {
-      vjGlApp::contextInit();
+      GlApp::contextInit();
       // Init the scene's displaylists for this context.
       mScene->init();
    }
@@ -145,7 +145,7 @@ public:
    //  but before the drawManager starts the drawing loops.
    virtual void apiInit()
    {
-      vjGlApp::apiInit();
+      GlApp::apiInit();
       // Do nothing
    }
 
@@ -155,7 +155,7 @@ public:
    // objects.
    virtual void preFrame()
    {
-      vjGlApp::preFrame();
+      GlApp::preFrame();
       // Do nothing
    }   
 
@@ -171,7 +171,7 @@ public:
    // Function called after drawing has been triggered but BEFORE it completes
    virtual void intraFrame()
    {
-      vjGlApp::intraFrame();
+      GlApp::intraFrame();
       // Do nothing
    }
 
@@ -186,19 +186,19 @@ private:
 
 protected:
    // for the glove position
-   vjGloveInterface    mGlove;
+   GloveInterface    mGlove;
 
    // for the glove fingers
-   vjDigitalInterface  mPinchLeftThumb;
-   vjDigitalInterface  mPinchLeftIndex;
-   vjDigitalInterface  mPinchLeftMiddle;
-   vjDigitalInterface  mPinchLeftRing;
-   vjDigitalInterface  mPinchLeftPinky;
-   vjDigitalInterface  mPinchRightThumb;
-   vjDigitalInterface  mPinchRightIndex;
-   vjDigitalInterface  mPinchRightMiddle;
-   vjDigitalInterface  mPinchRightRing;
-   vjDigitalInterface  mPinchRightPinky;
+   DigitalInterface  mPinchLeftThumb;
+   DigitalInterface  mPinchLeftIndex;
+   DigitalInterface  mPinchLeftMiddle;
+   DigitalInterface  mPinchLeftRing;
+   DigitalInterface  mPinchLeftPinky;
+   DigitalInterface  mPinchRightThumb;
+   DigitalInterface  mPinchRightIndex;
+   DigitalInterface  mPinchRightMiddle;
+   DigitalInterface  mPinchRightRing;
+   DigitalInterface  mPinchRightPinky;
    
    
    //: Object selection
@@ -207,13 +207,13 @@ protected:
    bool                mConeSelected;
 
    //: Object positions
-   vjVec3               mCubePos;
-   vjVec3               mConePos;
-   vjVec3               mSpherePos;
+   Vec3               mCubePos;
+   Vec3               mConePos;
+   Vec3               mSpherePos;
 
-   vjMatrix    mNavigation;
+   Matrix    mNavigation;
 
-   vjGlContextData<Scene> mScene;
+   GlContextData<Scene> mScene;
 };
 
 

@@ -39,10 +39,13 @@
 #include <Config/vjConfigChunk.h>
 
 
+namespace vrj
+{
+   
 //------------------------------------------------------------------
 //: Database of ConfigChunks
 //
-// The vjConfigChunkDB is a general-purpose container for
+// The ConfigChunkDB is a general-purpose container for
 // ConfigChunks, with functionality for reading/writing
 // files of ConfigChunks and querying for sets of configchunks
 // with specific properties.
@@ -52,19 +55,19 @@
 //
 //!PUBLIC_API:
 //------------------------------------------------------------------
-class vjConfigChunkDB {
+class ConfigChunkDB {
 
 private:
     //: vector of ConfigChunks
-    std::vector<vjConfigChunk*> chunks;
+    std::vector<ConfigChunk*> chunks;
 
     //: name of the file this DB was loaded from - used for includes
     std::string file_name;
 
 public:
 
-    typedef std::vector<vjConfigChunk*>::iterator iterator;
-    typedef std::vector<vjConfigChunk*>::const_iterator const_iterator;
+    typedef std::vector<ConfigChunk*>::iterator iterator;
+    typedef std::vector<ConfigChunk*>::const_iterator const_iterator;
 
     inline iterator begin() {
         return chunks.begin();
@@ -85,12 +88,12 @@ public:
     //: Constructor
     //! PRE: true
     //! POST: self is created. Chunks is empty.
-    vjConfigChunkDB ();
+    ConfigChunkDB ();
 
 
 
     //: Copy constructor
-    vjConfigChunkDB (vjConfigChunkDB& db);
+    ConfigChunkDB (ConfigChunkDB& db);
 
 
 
@@ -99,12 +102,12 @@ public:
     //! POST: self is destroyed and its associated memory freed.
     //+       This includes all ConfigChunks stored in self, but
     //+       not any ChunkDescDB
-    ~vjConfigChunkDB ();
+    ~ConfigChunkDB ();
 
 
 
     //: Assignment operator
-    vjConfigChunkDB& operator = (const vjConfigChunkDB& db);
+    ConfigChunkDB& operator = (const ConfigChunkDB& db);
 
 
 
@@ -117,13 +120,13 @@ public:
     }
 
     //: Checks if self is empty
-    //! RETURNS: true - if self contains no vjConfigChunks
+    //! RETURNS: true - if self contains no ConfigChunks
     //! RETURNS: false - otherwise
     bool isEmpty() const;
 
 
 
-    //: Removes and destroys all vjConfigChunks in self
+    //: Removes and destroys all ConfigChunks in self
     //! PRE: true
     //! POST: All ConfigChunks in self have been removed and their
     //+       associated memory freed.
@@ -147,31 +150,31 @@ public:
     //+          the argument, or NULL if no such element exists.
     //! NOTE: The memory associated with the return value belongs to
     //+       the ConfigChunkDB, and should not be delete()d
-    vjConfigChunk *getChunk (const std::string& name) const;
+    ConfigChunk *getChunk (const std::string& name) const;
 
 
     //: return a vector of all the chunks
     //! POST: returns
     //! RETURNS: Copy of the pointers to the chunks in this.
-    std::vector<vjConfigChunk*> getChunks() const;
+    std::vector<ConfigChunk*> getChunks() const;
 
 
 
     //: Add chunks to self
     //! POST: self has added copies of all chunks in new_chunks
-    void addChunks(std::vector<vjConfigChunk*> new_chunks);
+    void addChunks(std::vector<ConfigChunk*> new_chunks);
 
 
 
     //: Add chunks to self
     //! PRE: db is non-null.
     //! POST: self has added copies of all chunks in db.
-    void addChunks(const vjConfigChunkDB *db);
+    void addChunks(const ConfigChunkDB *db);
 
 
 
     //: Adds a chunk to this
-    void addChunk(vjConfigChunk* new_chunk);
+    void addChunk(ConfigChunk* new_chunk);
 
 
 
@@ -181,12 +184,12 @@ public:
     //! ARGS: property - a non-NULL C string, the name of a property.
     //! ARGS: value - value of a property.  non-NULL C string.
     //! RETURNS: p - Pointer to a vector of ConfigChunk* containing
-    //+          all vjConfigChunks in self that have the specified
-    //+          type (ie vjChunkDesc token).
+    //+          all ConfigChunks in self that have the specified
+    //+          type (ie ChunkDesc token).
     //! NOTE: The memory for the vector should be deleted by the
     //+       caller when it is no longer needed.  The individual
-    //+       vjConfigChunks in the vector should not be freed.
-    std::vector<vjConfigChunk*>* getMatching (const std::string& mytypename) const {
+    //+       ConfigChunks in the vector should not be freed.
+    std::vector<ConfigChunk*>* getMatching (const std::string& mytypename) const {
         return getMatching ("type", mytypename);
     }
 
@@ -204,9 +207,9 @@ public:
     //! NOTE: The memory for the vector should be deleted by the
     //+       caller when it is no longer needed.  The individual
     //+       ConfigChunks in the vector should not be freed.
-    std::vector<vjConfigChunk*>* getMatching (const std::string& property, const std::string value) const;
-    std::vector<vjConfigChunk*>* getMatching (const std::string& property, int value) const;
-    std::vector<vjConfigChunk*>* getMatching (const std::string& property, float value) const;
+    std::vector<ConfigChunk*>* getMatching (const std::string& property, const std::string value) const;
+    std::vector<ConfigChunk*>* getMatching (const std::string& property, int value) const;
+    std::vector<ConfigChunk*>* getMatching (const std::string& property, float value) const;
 
 
 
@@ -249,7 +252,7 @@ public:
     //+     This is a topological sorting of the dependencies. <br>
     //+     informally( forall elts in the chunks list ) <br>
     //! RETURNS: -1 - Failed to complete sort
-    int dependencySort(vjConfigChunkDB* auxChunks = NULL);
+    int dependencySort(ConfigChunkDB* auxChunks = NULL);
 
 
     /* IO functions: */
@@ -258,7 +261,7 @@ public:
     //! ARGS: out - an output stream
     //! ARGS: self - a ConfigChunkDB
     //! RETURNS: out
-    friend std::ostream& operator << (std::ostream& out, const vjConfigChunkDB& self);
+    friend std::ostream& operator << (std::ostream& out, const ConfigChunkDB& self);
 
 
 
@@ -270,7 +273,7 @@ public:
     //! NOTE: Any ConfigChunks in self before the >> operation remain,
     //+       unless they have the same name as a newly read chunk
     //+       in which case they are replaced by the newer chunks.
-    friend std::istream& operator >> (std::istream& in, vjConfigChunkDB& self);
+    friend std::istream& operator >> (std::istream& in, ConfigChunkDB& self);
 
 
 
@@ -295,5 +298,5 @@ public:
 
 };
 
-
+};
 #endif

@@ -40,18 +40,21 @@
 #include <Config/vjConfigChunk.h>
 #include <vpr/System.h>
 
+namespace vrj
+{
+   
 //: Config function
 // Configures the ibox
-bool vjIBox::config(vjConfigChunk *c)
+bool IBox::config(ConfigChunk *c)
 {
-  if(! (vjInput::config(c) && vjAnalog::config(c) && vjDigital::config(c) ))
+  if(! (Input::config(c) && Analog::config(c) && Digital::config(c) ))
       return false;
 
-  vjDEBUG(vjDBG_INPUT_MGR,3) << "   vjIBox::config:" << std::endl
+  vjDEBUG(vjDBG_INPUT_MGR,3) << "   IBox::config:" << std::endl
                              << vjDEBUG_FLUSH;
   port_id = c->getProperty( "portNum" );
 
-  // Done in vjInput
+  // Done in Input
   //active = 0;
   //baudRate = c->getProperty("baud");
 
@@ -65,19 +68,19 @@ bool vjIBox::config(vjConfigChunk *c)
 }
 
 /**********************************************************
-  vjIBox::~vjIBox()
+  IBox::~IBox()
 
   IBox Destructor, just stop sampling, let other destructors
   do the rest.
 
 *********************************************** ahimberg */
-vjIBox::~vjIBox()
+IBox::~IBox()
 {
   stopSampling();
 }
 
 /**********************************************************
-  int vjIBox::startSampling()
+  int IBox::startSampling()
 
   Starts the Ibox sampling, spawns a thread to query for
   data.
@@ -85,7 +88,7 @@ vjIBox::~vjIBox()
   returns 1 if successful, 0 if it failed or was already sampling
 
 *********************************************** ahimberg */
-int vjIBox::startSampling()
+int IBox::startSampling()
 {
   ibox_result result;
 
@@ -114,7 +117,7 @@ int vjIBox::startSampling()
       hci_std_cmd(&thingie, 0,0,0);
 
 
-      vjIBox* devicePtr = this;
+      IBox* devicePtr = this;
       void sampleBox(void*);
       myThread = new vpr::Thread(sampleBox, (void*)devicePtr);
       if (!myThread->valid())
@@ -136,7 +139,7 @@ int vjIBox::startSampling()
 *********************************************** ahimberg */
 void sampleBox(void* pointer)
 {
-   vjIBox* devPointer = (vjIBox*) pointer;
+   IBox* devPointer = (IBox*) pointer;
 
    for (;;)
      devPointer->sample();
@@ -144,7 +147,7 @@ void sampleBox(void* pointer)
 }
 
 /**********************************************************
-  int vjIBox::sample()
+  int IBox::sample()
 
   IBox Sampler function, tries to get a packet of new stuff,
   when it does it fills up the data and swaps swaps the
@@ -153,7 +156,7 @@ void sampleBox(void* pointer)
   Each call to this function is not guaranteed to result in new data.
 
 *********************************************** ahimberg */
-int vjIBox::sample()
+int IBox::sample()
 {
    //struct timeval tv;
    // double start_time, stop_time;
@@ -196,13 +199,13 @@ int vjIBox::sample()
 }
 
 /**********************************************************
-  int vjIBox::stopSampling()
+  int IBox::stopSampling()
 
   Kill the sampling thread if it exists, disconnect from
   the ibox.
 
 *********************************************** ahimberg */
-int vjIBox::stopSampling()
+int IBox::stopSampling()
 {
   if (myThread != NULL)
   {
@@ -220,7 +223,7 @@ int vjIBox::stopSampling()
 }
 
 /**********************************************************
-  float vjIBox::getAnalogData(int)
+  float IBox::getAnalogData(int)
 
 *********************************************** bokbok? */
 //: Return "analog data"..
@@ -229,16 +232,16 @@ int vjIBox::stopSampling()
 //! PRE: give the device number you wish to access.
 //! POST: returns a value that ranges from 0.0f to 1.0f
 //! NOTE: for example, if you are sampling a potentiometer, and it returns reading from
-//        0, 255 - this function will normalize those values (using vjAnalog::normalizeMinToMax())
+//        0, 255 - this function will normalize those values (using Analog::normalizeMinToMax())
 //        for another example, if your potentiometer's turn radius is limited mechanically to return
 //        say, the values 176 to 200 (yes this is really low res), this function will still return
 //        0.0f to 1.0f.
-//! NOTE: to specify these min/max values, you must set in your vjAnalog (or analog device) config
+//! NOTE: to specify these min/max values, you must set in your Analog (or analog device) config
 //        file the field "min" and "max".  By default (if these values do not appear),
 //        "min" and "max" are set to 0.0f and 1.0f respectivly.
 //! NOTE: TO ALL ANALOG DEVICE DRIVER WRITERS, you *must* normalize your data using
-//        vjAnalog::normalizeMinToMax()
-float vjIBox::getAnalogData( int d )
+//        Analog::normalizeMinToMax()
+float IBox::getAnalogData( int d )
 {
     float value = static_cast<float>( theData[current].analog[d] );
     float normalized;
@@ -247,21 +250,21 @@ float vjIBox::getAnalogData( int d )
 }
 
 /**********************************************************
-  int vjIBox::getDigitalData(int)
+  int IBox::getDigitalData(int)
 
 *********************************************** ahimberg */
-int vjIBox::getDigitalData(int d)
+int IBox::getDigitalData(int d)
 {
     return theData[current].button[d];
 }
 
 /**********************************************************
-  void vjIBox::updateData()
+  void IBox::updateData()
 
   Swap the current/valid array indicies
 
 *********************************************** ahimberg */
-void vjIBox::updateData()
+void IBox::updateData()
 {
 vpr::Guard<vpr::Mutex> updateGuard(lock);
 
@@ -274,3 +277,4 @@ vpr::Guard<vpr::Mutex> updateGuard(lock);
    return;
 }
 
+};

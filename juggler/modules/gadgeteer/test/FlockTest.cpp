@@ -40,7 +40,7 @@
 
 int main()
 {
-  vjMemPool* aMemPool = new vjSharedPool(1024*1024);
+  MemPool* aMemPool = new SharedPool(1024*1024);
 
   // Get configuration information
   char port[100] = "/dev/ttyd3";
@@ -78,7 +78,7 @@ int main()
   std::cin >> transmitter;
 
 
-    vjFlock* flock = new(aMemPool) vjFlock
+    Flock* flock = new(aMemPool) Flock
     		(   port,
 		    baud,
 		    sync,
@@ -134,12 +134,12 @@ int main()
          {
             flock->updateData();
             system("clear");
-            std::cout << "-------- vjFlock: Sampling (" << z << " of "
+            std::cout << "-------- Flock: Sampling (" << z << " of "
                       << num_samples << ") -------" << std::endl;
             for(int bird=0;bird<numBirds;bird++)
             {
-               vjVec3 pos0 = vjCoord( *flock->getPosData(bird) ).pos;
-               vjVec3 ori0 = vjCoord( *flock->getPosData(bird) ).orient;
+               Vec3 pos0 = Coord( *flock->getPosData(bird) ).pos;
+               Vec3 ori0 = Coord( *flock->getPosData(bird) ).orient;
                std::cout << "Bird " << bird << ":\n"
                  << std::setiosflags(std::ios::right | std::ios::fixed | std::ios::showpoint)
                  << "Data: x:" << std::setprecision(2) << std::setw(10)

@@ -33,9 +33,12 @@
 #include <Input/vjSim/vjSimRelativePosition.h>
 #include <Config/vjConfigChunk.h>
 
-bool vjSimRelativePosition::config(vjConfigChunk* chunk)
+namespace vrj
 {
-    if(! (vjInput::config(chunk) && vjPosition::config(chunk)))
+   
+bool SimRelativePosition::config(ConfigChunk* chunk)
+{
+    if(! (Input::config(chunk) && Position::config(chunk)))
       return false;
 
    // Initialize the positional devices
@@ -48,10 +51,11 @@ bool vjSimRelativePosition::config(vjConfigChunk* chunk)
 }
 
 
-void vjSimRelativePosition::updateData()
+void SimRelativePosition::updateData()
 {
    mPos.mult( *(mBaseFrame->getData()),
               *(mRelativePos->getData()) );
 }
 
 
+};

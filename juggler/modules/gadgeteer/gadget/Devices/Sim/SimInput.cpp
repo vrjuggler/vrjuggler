@@ -34,25 +34,28 @@
 #include <Input/vjSim/vjSimInput.h>
 #include <Config/vjConfigChunk.h>
 
+namespace vrj
+{
+   
 //: Construct the mod pair from a mod pair chunk
-std::vector<vjSimInput::vjKeyModPair> vjSimInput::readKeyList(std::vector<vjVarValue*>& keyList)
+std::vector<SimInput::KeyModPair> SimInput::readKeyList(std::vector<VarValue*>& keyList)
 {
    if(keyList.size() > 0)
    {
 #ifdef VJ_DEBUG
-      vjConfigChunk* first_chunk = (vjConfigChunk*)(*(keyList[0]));
+      ConfigChunk* first_chunk = (ConfigChunk*)(*(keyList[0]));
       std::string chunk_type = first_chunk->getType();
-      vjASSERT(chunk_type == std::string("KeyModPair"));
+      vprASSERT(chunk_type == std::string("KeyModPair"));
 #endif
 
-      std::vector<vjKeyModPair> keys;
+      std::vector<KeyModPair> keys;
       int num_keys = keyList.size();
 
       for(int i=0;i<num_keys;i++)
       {
-         vjKeyModPair key_pair;
-         vjVarValue* var_val = keyList[i];
-         vjConfigChunk* chunk = (vjConfigChunk*)(*var_val);
+         KeyModPair key_pair;
+         VarValue* var_val = keyList[i];
+         ConfigChunk* chunk = (ConfigChunk*)(*var_val);
          key_pair.mKey = chunk->getProperty("key");
          key_pair.mModifier = chunk->getProperty("modKey");
          keys.push_back(key_pair);
@@ -61,13 +64,13 @@ std::vector<vjSimInput::vjKeyModPair> vjSimInput::readKeyList(std::vector<vjVarV
       return keys;
    }
    else
-      return std::vector<vjKeyModPair>();
+      return std::vector<KeyModPair>();
 }
 
 
 // Configure the keyboard interface
 // Grabs it out of the given config chunk
-bool vjSimInput::config(vjConfigChunk* chunk)
+bool SimInput::config(ConfigChunk* chunk)
 {
    std::string keyboardName = chunk->getProperty("keyboardProxy");    // Get the event source
    mKeyboard.init(keyboardName);
@@ -75,7 +78,7 @@ bool vjSimInput::config(vjConfigChunk* chunk)
    return true;
 }
 
-int vjSimInput::checkKeyPair(vjKeyModPair& pair)
+int SimInput::checkKeyPair(KeyModPair& pair)
 {
    if (pair.mModifier == -1)      // ANY modifier
    {
@@ -89,7 +92,9 @@ int vjSimInput::checkKeyPair(vjKeyModPair& pair)
       return 0;
 }
 
-int vjSimInput::checkKey(int keyId)
+int SimInput::checkKey(int keyId)
 {
    return mKeyboard->keyPressed(keyId);
 }
+
+};

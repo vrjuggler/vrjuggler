@@ -56,11 +56,11 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 {
  	// TODO: Place code here.
 	g_hInst = hInstance;
-	vjKeyboard keys;
+	Keyboard keys;
 
 	   // --- Load chunk database -- //
-   vjMemPool* shared_pool = new vjSharedPool(1024*1024);
-   vjChunkDescDB desc;
+   MemPool* shared_pool = new SharedPool(1024*1024);
+   ChunkDescDB desc;
    bool load_worked = desc.load(CHUNK_DESC_LOCATION);
    if(!load_worked)
       cerr << "Could not load chunkDesc's\n" << flush;
@@ -68,7 +68,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
    cout << desc << "\n----------------------------------------" << endl;
 
    // -- Load config -- //
-   vjConfigChunkDB *chunkdb = new vjConfigChunkDB(&desc);
+   ConfigChunkDB *chunkdb = new ConfigChunkDB(&desc);
    load_worked = chunkdb->load(CONFIG_LOCATION);
    if(!load_worked)
       cerr << "Could not load config file\n" << flush;
@@ -77,7 +77,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
    cout << (*chunkdb);
    cout << "endochunks" << endl;
 
-   vjInputManager *input_manager = new(shared_pool)vjInputManager;
+   InputManager *input_manager = new(shared_pool)InputManager;
    cout << "vjInputManager created" << endl;
 
    // --- configure the input manager -- //
@@ -101,17 +101,17 @@ int APIENTRY WinMain(HINSTANCE hInstance,
       input_manager->UpdateAllData();
 
 
-      vjMatrix* pd_head = input_manager->GetPosProxy(head_index)->GetData();
-      vjMatrix* pd_wand = input_manager->GetPosProxy(wand_index)->GetData();
+      Matrix* pd_head = input_manager->GetPosProxy(head_index)->GetData();
+      Matrix* pd_wand = input_manager->GetPosProxy(wand_index)->GetData();
 
       cout << "-------------------------------------\n";
       cout << "head:\n" << *pd_head << endl;
-      vjCoord head_coord(*pd_head);
+      Coord head_coord(*pd_head);
       cout << "\tpos:" << head_coord.pos << endl;
       cout << "\tor:" << head_coord.orient << endl;
 
       cout << "wand:\n" << *pd_wand << endl << flush;
-      vjCoord wand_coord(*pd_wand);
+      Coord wand_coord(*pd_wand);
       cout << "\tpos:" << wand_coord.pos << endl;
       cout << "\tor:" << wand_coord.orient << endl;
       cout << "-------------------------------------\n\n";

@@ -41,13 +41,16 @@
 #include <Math/vjMath.h>
 
 
-class vjQuat;
-class vjVec3;
-class vjCoord;
+namespace vrj
+{
+   
+class Quat;
+class Vec3;
+class Coord;
 
 
 //-----------------------------------------------------------------------------
-//: vjMatrix: 4x4 Matrix class (OpenGL ordering)
+//: Matrix: 4x4 Matrix class (OpenGL ordering)
 //
 // C/C++ uses matrices in row major order.  In other words the access
 // indices look like: <br>
@@ -70,7 +73,7 @@ class vjCoord;
 //
 //-----------------------------------------------------------------------------
 //!PUBLIC_API:
-class VJ_CLASS_API vjMatrix
+class VJ_CLASS_API Matrix
 {
 public:
    // Column major.  In other words {Column1, Column2, Column3, Column4} in memory
@@ -79,10 +82,10 @@ public:
 
 public:
    //: Default Constructor (Identity constructor)
-   vjMatrix() : mat() { makeIdent(); };
+   Matrix() : mat() { makeIdent(); };
 
    //: Constructor: Specify each element
-   vjMatrix(float a00, float a01, float a02, float a03,
+   Matrix(float a00, float a01, float a02, float a03,
             float a10, float a11, float a12, float a13,
             float a20, float a21, float a22, float a23,
             float a30, float a31, float a32, float a33)
@@ -93,13 +96,13 @@ public:
       mat[0][3] = a30; mat[1][3] = a31; mat[2][3] = a32; mat[3][3] = a33;
    }
 
-   //: Build matrix from a vjCoord object
+   //: Build matrix from a Coord object
    //! POST: mat = coord represented as a matrix
-   vjMatrix(vjCoord coord);
+   Matrix(Coord coord);
 
    //: copy constructor
    //! POST: *this = matrix
-   vjMatrix( const vjMatrix& matrix )
+   Matrix( const Matrix& matrix )
    {
       this->copy( matrix );
    }
@@ -192,8 +195,8 @@ public:
    //+       allowYRot = true to keep the y rotation info<BR>
    //+       allowZRot = true to keep the z rotation info<BR>
    //!POST:  result returned is a constrained matrix.
-   void     constrainRotAxis( const bool& allowXRot, const bool& allowYRot, const bool& allowZRot, vjMatrix& result );
-   void     _kevn_constrainRotAxis( const bool& pitch, const bool& yaw, const bool& roll, vjMatrix& result );
+   void     constrainRotAxis( const bool& allowXRot, const bool& allowYRot, const bool& allowZRot, Matrix& result );
+   void     _kevn_constrainRotAxis( const bool& pitch, const bool& yaw, const bool& roll, Matrix& result );
 
 
 
@@ -208,46 +211,46 @@ public:
    //!NOTE: Based on "Virtual Reality Sytems" pg. 26
    //+      The matrix created is able to transform a pt in the first coord
    //+      system to the second coord system. Ps = sMf*Pf
-   void     makeDirCos( vjVec3 secXAxis, vjVec3 secYAxis, vjVec3 secZAxis );
+   void     makeDirCos( Vec3 secXAxis, Vec3 secYAxis, Vec3 secZAxis );
 
    //: Make matrix from given quaternion
    //!POST: mat = Matrix specified by Quaternion _quat
    //!POST: sets every cell, no need to call makeIdent before this.
    void     makeQuaternion( const float* const q );
-   void     makeQuaternion( const vjQuat& q );
+   void     makeQuaternion( const Quat& q );
 
 
    //: Make rotation matrix around _axis
    //!ARGS: _degrees - Number of degrees to rotate
    //+      _axis - The axis to rotate around
-   void makeRot(float _degrees, vjVec3 _axis);
+   void makeRot(float _degrees, Vec3 _axis);
 
    //: Make translation matrix
    //!POST: mat = matrix with only the new translation
    void makeTrans(float _x, float _y, float _z);
-   void makeTrans(const vjVec3& trans);
+   void makeTrans(const Vec3& trans);
 
    //: Sets given translation to current matrix
    //!POST: mat = old(mat) with the tranlation portion set to the parameters
    void setTrans(float _x, float _y, float _z);
-   void setTrans(const vjVec3& trans);
+   void setTrans(const Vec3& trans);
 
    //: Get the translation portion of the matrix
    //!POST: _x, _y, and _z contain the translation portion of the matrix
    void getTrans(float& _x, float& _y, float& _z) const;
-   vjVec3 getTrans() const;
+   Vec3 getTrans() const;
 
    //: Make scale matrix
    void makeScale(float _x, float _y, float _z);
 
-//    void  makeVecRotVec(const vjVec3&  _v1, const vjVec3&  _v2)
+//    void  makeVecRotVec(const Vec3&  _v1, const Vec3&  _v2)
 // {;}
 //    void  makeCoord(const sgCoord* _c)
 // {;}
 
    //: Copy matrix
    //!POST: *this' = _m
-   void copy( const vjMatrix& _m )
+   void copy( const Matrix& _m )
    {
       ((mat)[0][0] = (_m)[0][0]); ((mat)[0][1] = (_m)[0][1]); ((mat)[0][2] = (_m)[0][2]); ((mat)[0][3] = (_m)[0][3]);
       ((mat)[1][0] = (_m)[1][0]); ((mat)[1][1] = (_m)[1][1]); ((mat)[1][2] = (_m)[1][2]); ((mat)[1][3] = (_m)[1][3]);
@@ -258,7 +261,7 @@ public:
    //: Compare matrix for equality
    //!RETVAL: true - this == _m
    //!RETVAL: false - this != _m
-   bool     equal(const vjMatrix&  _m) const  {
+   bool     equal(const Matrix&  _m) const  {
       return (((mat)[0][0] == (_m)[0][0]) &&
               ((mat)[0][1] == (_m)[0][1]) &&
               ((mat)[0][2] == (_m)[0][2]) &&
@@ -285,13 +288,13 @@ public:
       // Could be removed
        for(int i=0;i<4;i++)
           for(int j=0;j<4;j++)
-             mat[i][j] = vjMath::zero_clamp(mat[i][j]);
+             mat[i][j] = Math::zero_clamp(mat[i][j]);
    }
 
 public:
    //: Set to the transpose of the matrix
    //!POST: mat = transpose(_m)
-   void transpose(const vjMatrix&  _m)
+   void transpose(const Matrix&  _m)
    {
       for (int i=0; i<4; i++)
          for (int j=0; j<4; j++)
@@ -300,7 +303,7 @@ public:
 
    //: Multiple 2 matrices
    //!POST: mat = m1 * m2
-   void mult(const vjMatrix& _m1, const vjMatrix &_m2)
+   void mult(const Matrix& _m1, const Matrix &_m2)
    {
       *this = _m1;       //  Set equal to param 1
       postMult(_m2);     // Now post mult be the second param
@@ -308,7 +311,7 @@ public:
 
    //: Add 2 matrices
    //!POST: mat = m1 + m2
-   void add(const vjMatrix& _m1, const vjMatrix &_m2)
+   void add(const Matrix& _m1, const Matrix &_m2)
    {
       for (int n=0;n<4;n++)
          for (int m=0;m<4;m++)
@@ -317,7 +320,7 @@ public:
 
    //: Subtract a matrix
    //!POST: mat' = m1 - m2
-   void sub(const vjMatrix& _m1, const vjMatrix &_m2)
+   void sub(const Matrix& _m1, const Matrix &_m2)
    {
       for (int n=0;n<4;n++)
          for (int m=0;m<4;m++)
@@ -327,7 +330,7 @@ public:
    //: Scale a matrix by a scalar
    //!POST: Each element of mat' = mat * _s
    //!NOTE: Not a 3D scale
-   void scale(float _s, const vjMatrix &_m)
+   void scale(float _s, const Matrix &_m)
    {
       for (int n=0;n<4;n++)
          for (int m=0;m<4;m++)
@@ -336,52 +339,52 @@ public:
 
    //: Post multiply by a matrix
    //!POST: mat' = mat * m
-   void postMult( const vjMatrix& _m );
+   void postMult( const Matrix& _m );
 
    //: Pre multiply by a matrix
    //!POST: mat' = m * mat
-   void preMult( const vjMatrix& _m );
+   void preMult( const Matrix& _m );
 
    //: Find inverse of a matrix
    //!POST: mat = inverse(_m)
    //! RETURNS: 1 - Success
-   int invert( const vjMatrix& _m );
+   int invert( const Matrix& _m );
 
 public:
    // --- Transformation functions --- //
 
    //: Pre translate a matrix
    //!POST: mat' = trans(_x,_y,_z) * _m
-   void preTrans( float _x, float _y, float _z, const vjMatrix&  _m );
+   void preTrans( float _x, float _y, float _z, const Matrix&  _m );
 
    //: Pre translate a matrix
    //!POST: mat' = trans(_x,_y,_z) * _m
-   void preTrans( const vjVec3& _trans, const vjMatrix&  _m );
+   void preTrans( const Vec3& _trans, const Matrix&  _m );
 
    //: Post translate a matrix
    //!POST: mat' = _m * trans(_x,_y,_z)
-   void postTrans( const vjMatrix&  _m, float _x, float _y, float _z );
+   void postTrans( const Matrix&  _m, float _x, float _y, float _z );
 
    //: Post translate a matrix
    //!POST: mat' = _m * trans(_x,_y,_z)
-   void postTrans( const vjMatrix&  _m, const vjVec3& _trans );
+   void postTrans( const Matrix&  _m, const Vec3& _trans );
 
    //: Pre rotate a matrix
    //!POST: mat' = rot(_degrees, axis) * _m
-   void preRot( const float& _degrees, const vjVec3& axis, const vjMatrix&  _m );
+   void preRot( const float& _degrees, const Vec3& axis, const Matrix&  _m );
 
    //: Post rotate a matrix
    //!POST: mat' = _m * rot(_degrees, axis)
-   void postRot( const vjMatrix&  _m, const float& _degrees, const vjVec3& axis );
+   void postRot( const Matrix&  _m, const float& _degrees, const Vec3& axis );
 
-   void preXYZEuler( float x, float y, float z, const vjMatrix& _m );
-   void postXYZEuler( const vjMatrix& _m, float x, float y, float z );
+   void preXYZEuler( float x, float y, float z, const Matrix& _m );
+   void postXYZEuler( const Matrix& _m, float x, float y, float z );
 
    //!POST: mat' = scale(_xs,_ys,_zs) * _m;
-   void preScale( float _xs, float _ys, float _zs, const vjMatrix&  _m );
+   void preScale( float _xs, float _ys, float _zs, const Matrix&  _m );
 
    //!POST: mat' = _m * scale(_xs,_ys,_zs)
-   void postScale( const vjMatrix&  _m, float _xs, float _ys, float _zs );
+   void postScale( const Matrix&  _m, float _xs, float _ys, float _zs );
 
 public:
    //: Get a float pointer to the matrix data
@@ -395,58 +398,58 @@ public:
    inline float&        operator()( const int& row, const int& column ) { return mat[column][row];}
    inline const float&  operator()( const int& row, const int& column ) const { return mat[column][row];}
 
-   int operator==( const vjMatrix&  _m ) const
+   int operator==( const Matrix&  _m ) const
    {
       return this->equal(_m);
    }
 
-   int operator!=( const vjMatrix&  _m ) const
+   int operator!=( const Matrix&  _m ) const
    {
       return !this->equal(_m);
    }
 
 public:
-   // vjMatrix operators (N.B. return by value can be quite slow)
-   vjMatrix operator*( const vjMatrix&  _m ) const
+   // Matrix operators (N.B. return by value can be quite slow)
+   Matrix operator*( const Matrix&  _m ) const
    {
-      vjMatrix dst; dst.mult(*this, _m); return dst;
+      Matrix dst; dst.mult(*this, _m); return dst;
    }
 
    //: addition
-   vjMatrix operator+( const vjMatrix&  _m ) const
+   Matrix operator+( const Matrix&  _m ) const
    {
-      vjMatrix dst; dst.add(*this, _m); return dst;
+      Matrix dst; dst.add(*this, _m); return dst;
    }
 
    //: subtraction
-   vjMatrix operator-( const vjMatrix&  _m ) const
+   Matrix operator-( const Matrix&  _m ) const
    {
-      vjMatrix dst;
+      Matrix dst;
       dst.sub(*this, _m);
       return dst;
    }
 
-   friend VJ_API(vjMatrix) operator*( float _s, const vjMatrix& );
-   friend VJ_API(vjMatrix) operator*( const vjMatrix& _v, float _s );
-   friend VJ_API(vjMatrix) operator/( const vjMatrix& _v, float _s );
+   friend VJ_API(Matrix) operator*( float _s, const Matrix& );
+   friend VJ_API(Matrix) operator*( const Matrix& _v, float _s );
+   friend VJ_API(Matrix) operator/( const Matrix& _v, float _s );
    friend VJ_API(std::ostream&) operator<<( std::ostream& out,
-                                            const vjMatrix& _mat );
+                                            const Matrix& _mat );
 
 public:
    // Assignment operators
    //!POST: *this' = _m
-   inline vjMatrix&  operator=( const vjMatrix&  _m )
+   inline Matrix&  operator=( const Matrix&  _m )
    {
       this->copy( _m );
       return *this;
    }
 
-   vjMatrix&  operator*=( const vjMatrix&  _m )
+   Matrix&  operator*=( const Matrix&  _m )
    {
       this->postMult(_m); return *this;
    }
 
-   vjMatrix&  operator*=( float _s )
+   Matrix&  operator*=( float _s )
    {
       for (int i=0; i<4; i++)
          for (int j=0; j<4; j++)
@@ -456,13 +459,15 @@ public:
    }
 
    //vjMatrix&  operator/=( float _s );
-   //vjMatrix&  operator+=( const vjMatrix&  _m );
-   //vjMatrix&  operator-=( const vjMatrix&  _m );
+   //vjMatrix&  operator+=( const Matrix&  _m );
+   //vjMatrix&  operator-=( const Matrix&  _m );
 };
 
-VJ_API(vjMatrix) operator*( float _s, const vjMatrix& );
-VJ_API(vjMatrix) operator*( const vjMatrix& _v, float _s );
-VJ_API(vjMatrix) operator/( const vjMatrix& _v, float _s );
-VJ_API(std::ostream&) operator<<( std::ostream& out, const vjMatrix& _mat );
+VJ_API(Matrix) operator*( float _s, const Matrix& );
+VJ_API(Matrix) operator*( const Matrix& _v, float _s );
+VJ_API(Matrix) operator/( const Matrix& _v, float _s );
+VJ_API(std::ostream&) operator<<( std::ostream& out, const Matrix& _mat );
+
+};
 
 #endif

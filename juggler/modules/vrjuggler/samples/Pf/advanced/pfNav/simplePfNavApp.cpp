@@ -95,7 +95,7 @@ simplePfNavApp::Model::Model() : description( "no description" ),
 }
 
 simplePfNavApp::Model::Model( const std::string& desc, const std::string& file_name,
-            const float& s, const vjVec3& position, const vjVec3& rotation, 
+            const float& s, const Vec3& position, const Vec3& rotation, 
             const bool& collidable )
 {
    description = desc;
@@ -117,7 +117,7 @@ simplePfNavApp::Sound::Sound() : name( "no name" ),
 simplePfNavApp::Sound::Sound( const std::string& sound_name, 
                               const std::string& alias_name, 
                               const bool& isPositional, 
-                              const vjVec3& position )
+                              const Vec3& position )
 {
    name = sound_name;
    alias = alias_name;
@@ -157,7 +157,7 @@ simplePfNavApp::~simplePfNavApp()
 void simplePfNavApp::init()
 {
    //vjDEBUG(vjDBG_ALL, 1) << "simplePfNavApp::init\n" << vjDEBUG_FLUSH;
-   /* vjProjection::setNearFar( 0.4f, 200000 ); XXXX: */
+   /* Projection::setNearFar( 0.4f, 200000 ); XXXX: */
 
    mStats.setToggleButton( "VJButton5" );
    mNavCycleButton.init( std::string( "VJButton3" ) );
@@ -234,18 +234,18 @@ void simplePfNavApp::preFrame()
       std::cout<<"disable...\n"<<std::flush;
       
       // do animation...
-      vjMatrix mat;
+      Matrix mat;
       mKeyFramer.getMatrix( mat );
       pfMatrix pf_mat;
-      pf_mat = vjGetPfMatrix( mat );
+      pf_mat = GetPfMatrix( mat );
       mAnimDCS->setMat( pf_mat );
       
       // Emit a time
       if (0 == (mStatusMessageEmitCount++ % 60))
       {
-         vjVec3 cur_pos;
+         Vec3 cur_pos;
          cur_pos = mat.getTrans();
-         vjQuat quat;
+         Quat quat;
          quat.makeRot( mat );
 
          std::cout << mKeyFramer.time() << ": "<<cur_pos << " :|: ";
@@ -258,7 +258,7 @@ void simplePfNavApp::preFrame()
       // Deal with focus based changes
       mNavigationDCS->setActive(haveFocus());
 
-      if (haveFocus() && (mNavCycleButton->getData() == vjDigital::TOGGLE_ON))
+      if (haveFocus() && (mNavCycleButton->getData() == Digital::TOGGLE_ON))
       {
          cycleNavigator();
       }
@@ -268,9 +268,9 @@ void simplePfNavApp::preFrame()
          // Emit cur position
          if (0 == (mStatusMessageEmitCount++ % 60))
          {
-            vjVec3 cur_pos;
+            Vec3 cur_pos;
             cur_pos = mNavigationDCS->getNavigator()->getCurPos().getTrans();
-            vjQuat quat;
+            Quat quat;
             quat.makeRot( mNavigationDCS->getNavigator()->getCurPos() );
 
             std::cout << "You: " << cur_pos << " :|: ";
@@ -285,12 +285,12 @@ void simplePfNavApp::preFrame()
             
             // debug//./////
             /*
-            vjMatrix mmm = mNavigationDCS->getNavigator()->getCurPos();
+            Matrix mmm = mNavigationDCS->getNavigator()->getCurPos();
             std::cout << "MatrixNav:\n" << mmm << std::endl << std::endl;
             
             std::cout << "-----------" << std::endl;
             
-            std::cout << mKeyFramer.time() << ": "<<(vjVec3)mKeyFramer.key().position() << " :|: ";
+            std::cout << mKeyFramer.time() << ": "<<(Vec3)mKeyFramer.key().position() << " :|: ";
             mKeyFramer.key().rotation().outStreamReadable( std::cout );
             std::cout << std::endl;
             
@@ -377,7 +377,7 @@ void simplePfNavApp::addModelFile( const std::string& filename )
 
 void simplePfNavApp::loadAnimation( const char* const filename )
 {
-   std::string dFilename = vjFileIO::demangleFileName( std::string( filename ), std::string( "" ) );
+   std::string dFilename = FileIO::demangleFileName( std::string( filename ), std::string( "" ) );
    kev::KeyFramerImporter kfi;
    kfi.execute( dFilename.c_str(), mKeyFramer );
 }  
@@ -409,10 +409,10 @@ void simplePfNavApp::addFilePath( const std::string& path )
 }
 void simplePfNavApp::setFilePath( const std::string& path )
 {
-   std::string dFilePath = vjFileIO::demangleFileName( path, std::string( "" ) );
+   std::string dFilePath = FileIO::demangleFileName( path, std::string( "" ) );
    mFilePath = dFilePath;
 }
-void simplePfNavApp::setInitialNavPos( const vjVec3& initialPos )
+void simplePfNavApp::setInitialNavPos( const Vec3& initialPos )
 {
    mInitialNavPos = initialPos;
 
@@ -421,7 +421,7 @@ void simplePfNavApp::setInitialNavPos( const vjVec3& initialPos )
    // FIXME: some code duplication here.
    for (unsigned int i = 0; i < mNavigators.size(); ++i)
    {
-	   vjMatrix initial_nav;
+	   Matrix initial_nav;
       vjDEBUG(vjDBG_ALL,0) << "setting pos\n" << vjDEBUG_FLUSH;
       initial_nav.setTrans( mInitialNavPos );
 
@@ -443,7 +443,7 @@ void simplePfNavApp::cycleNavigator()
 
 void simplePfNavApp::setNavigator( unsigned new_index )
 {
-   vjASSERT( new_index < mNavigators.size() );
+   vprASSERT( new_index < mNavigators.size() );
 
    if (new_index != mCurNavIndex)
    {
@@ -522,7 +522,7 @@ void simplePfNavApp::initializeModels()
 
       // set trans
       //pfVec3 pf_nextModelDcsTrans;
-      pfVec3 pf_model_trans = vjGetPfVec( mModelList[x].pos );
+      pfVec3 pf_model_trans = GetPfVec( mModelList[x].pos );
       mModelList[x].modelDCS->setTrans( pf_model_trans[0],
                                           pf_model_trans[1],
                                           pf_model_trans[2]);
@@ -578,7 +578,7 @@ void simplePfNavApp::initializeSounds()
 
       // set trans
       pfVec3 pf_nextSoundDcsTrans;
-      pf_nextSoundDcsTrans = vjGetPfVec( mSoundList[x].pos );
+      pf_nextSoundDcsTrans = GetPfVec( mSoundList[x].pos );
       nextSoundDCS->setTrans( pf_nextSoundDcsTrans[0],
             pf_nextSoundDcsTrans[1],
             pf_nextSoundDcsTrans[2]);
@@ -653,7 +653,7 @@ void simplePfNavApp::initScene()
    initializeSounds();
 
    // Configure the Navigator DCS node:
-   vjMatrix initial_nav;              // Initial navigation position
+   Matrix initial_nav;              // Initial navigation position
    initial_nav.setTrans( mInitialNavPos );
 
 

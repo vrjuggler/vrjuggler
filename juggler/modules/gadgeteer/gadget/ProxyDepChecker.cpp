@@ -40,20 +40,23 @@
 #include <Input/InputManager/vjKeyboardProxy.h>
 #include <Input/InputManager/vjProxyDepChecker.h>
 
-
-bool vjProxyDepChecker::canHandle(vjConfigChunk* chunk)
+namespace vrj
+{
+   
+bool ProxyDepChecker::canHandle(ConfigChunk* chunk)
 {
    std::string chunk_type = (std::string)chunk->getType();
 
    bool ret_val;
-   ret_val = ((chunk_type == vjAnalogProxy::getChunkType()) ||
-              (chunk_type == vjDigitalProxy::getChunkType()) ||
-              (chunk_type == vjGestureProxy::getChunkType()) ||
-              (chunk_type == vjGloveProxy::getChunkType()) ||
-              (chunk_type == vjKeyboardProxy::getChunkType()) ||
-              (chunk_type == vjPosProxy::getChunkType()));
+   ret_val = ((chunk_type == AnalogProxy::getChunkType()) ||
+              (chunk_type == DigitalProxy::getChunkType()) ||
+              (chunk_type == GestureProxy::getChunkType()) ||
+              (chunk_type == GloveProxy::getChunkType()) ||
+              (chunk_type == KeyboardProxy::getChunkType()) ||
+              (chunk_type == PosProxy::getChunkType()));
 
    return ret_val;
 }
 
 
+};

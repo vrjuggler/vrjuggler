@@ -41,13 +41,15 @@
 #include <Kernel/GL/vjGlDrawManager.h>
 
 //#include <Kernel/vjKernel.h>
-class vjKernel;
 #include <Kernel/vjUser.h>
 #include <Kernel/vjProjection.h>
 
+namespace vrj
+{
+   class Kernel;
 
 //-----------------------------------------------------------
-//: vjGlApp: Encapulates an actual OpenGL application.
+//: GlApp: Encapulates an actual OpenGL application.
 //
 // PURPOSE:
 // This class defines the class that OpenGL
@@ -55,21 +57,21 @@ class vjKernel;
 //  given is the interface that the System expects in order to
 //  interface with the application.
 //
-// See also: vjApp
+// See also: App
 //
 // @author Allen Bierbaum
 //  Date: 1-12-98
 //-------------------------------------------------------------
 //!PUBLIC_API:
-class VJ_CLASS_API vjGlApp : public vjApp
+class VJ_CLASS_API GlApp : public App
 {
 public:
-   vjGlApp(vjKernel* kern) : vjApp(kern)
+   GlApp(Kernel* kern) : App(kern)
    {
       //api.setOpenGL();     // Tell everyone that we are OpenGL
    }
 
-   vjGlApp() {;}
+   GlApp() {;}
 
    //: Function to draw the scene
    // Override this function with the user draw routine
@@ -121,9 +123,11 @@ public:
 public:  // --- Factory functions --- //
    //: Get the DrawManager to use
    // Returns the ogl draw manager
-   virtual vjDrawManager*    getDrawManager()
-   { return vjGlDrawManager::instance(); }
+   virtual DrawManager*    getDrawManager()
+   { return GlDrawManager::instance(); }
 };
 
+
+};
 
 #endif

@@ -33,7 +33,7 @@
 
 /////////////////////////////////////////////////////////////////////////
 //
-// vjGlove proxy class
+// Glove proxy class
 //
 ////////////////////////////////////////////////////////////////////////
 #ifndef _VJ_GLOVE_PROXY_H_
@@ -46,24 +46,26 @@
 #include <Input/vjGlove/vjGlove.h>
 #include <Input/InputManager/vjProxy.h>
 
-
-//: vjGlove proxy class.
+namespace vrj
+{
+   
+//: Glove proxy class.
 //!PUBLIC_API:
-class VJ_CLASS_API vjGloveProxy : public vjTypedProxy<vjGlove>
+class VJ_CLASS_API GloveProxy : public TypedProxy<Glove>
 {
 public:
      //: Construct the proxy to point to the given glove device and sub-unit number.
-  vjGloveProxy()
+  GloveProxy()
   {
      mUnitNum = -1;
      mVisible = true;
   }
 
-  virtual ~vjGloveProxy()
+  virtual ~GloveProxy()
   {}
 
-  float getAngle(vjGloveData::vjGloveComponent component,
-                 vjGloveData::vjGloveJoint joint)
+  float getAngle(GloveData::GloveComponent component,
+                 GloveData::GloveJoint joint)
   {
     if(mStupified)
        return 0.0f;
@@ -72,34 +74,34 @@ public:
   }
 
 
-  vjVec3 getVector(vjGloveData::vjGloveComponent component)
+  Vec3 getVector(GloveData::GloveComponent component)
   {
      if(mStupified)
-        return vjVec3(0,0,0);
+        return Vec3(0,0,0);
      else
         return mTypedDevice->getGloveVector(component, mUnitNum);
   }
 
-  vjMatrix getPos( vjGloveData::vjGloveComponent component = vjGloveData::WRIST)
+  Matrix getPos( GloveData::GloveComponent component = GloveData::WRIST)
   {
      if(mStupified)
-        return vjMatrix();
+        return Matrix();
      else
       return mTypedDevice->getGlovePos(component, mUnitNum);
   }
 
 
-  vjGloveData getData()
+  GloveData getData()
   {
      if(mStupified)
-        return vjGloveData();
+        return GloveData();
      else
         return mTypedDevice->getGloveData(mUnitNum);
   }
 
 
   //: Returns a pointer to the device held by this proxy.
-  vjGlove* getGlovePtr()
+  Glove* getGlovePtr()
   {
      if(mStupified)
         return NULL;
@@ -117,15 +119,15 @@ public:
 
    static std::string getChunkType() { return "GloveProxy"; }
 
-   bool config(vjConfigChunk* chunk);
+   bool config(ConfigChunk* chunk);
 
-   virtual vjInput* getProxiedInputDevice()
+   virtual Input* getProxiedInputDevice()
    {
       if(NULL == mTypedDevice)
          return NULL;
 
-      vjInput* ret_val = dynamic_cast<vjInput*>(mTypedDevice);
-      vjASSERT(ret_val != NULL);
+      Input* ret_val = dynamic_cast<Input*>(mTypedDevice);
+      vprASSERT(ret_val != NULL);
       return ret_val;
    }
 
@@ -136,6 +138,8 @@ private:
 
    //: The subUnit number to use in the device.
    int mUnitNum;
+};
+
 };
 
 #endif

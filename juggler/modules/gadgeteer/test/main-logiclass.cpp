@@ -40,11 +40,11 @@
 
 int main()
 {
-  vjMemPool* anSgiPool = new vjSharedPool(1024*1024);
+  MemPool* anSgiPool = new SharedPool(1024*1024);
   
-  vjThreeDMouse* t1 = new(anSgiPool) vjThreeDMouse;
+  ThreeDMouse* t1 = new(anSgiPool) ThreeDMouse;
 
-  vjPOS_DATA *data;
+  POS_DATA *data;
 
   char achar;
   std::cout << "U - Update\n"

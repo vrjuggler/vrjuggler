@@ -47,24 +47,28 @@
 #include <Math/vjMatrix.h>
 #include <Input/Filter/vjPosFilter.h>
 
+
+namespace vrj
+{
+   
 //-----------------------------------------------------------------------
-//: A proxy class to positional devices, used by the vjInputManager.
+//: A proxy class to positional devices, used by the InputManager.
 //
-//  A vjPosProxy always points to a positional device and subUnit number,
+//  A PosProxy always points to a positional device and subUnit number,
 //  the inputgroup can therefore keep an array of these around and
 //  treat them as positional devices which only return a single
-//  subDevice's amount of data.  (one vjPOS_DATA)
+//  subDevice's amount of data.  (one POS_DATA)
 //
-// See also: vjPosition
+// See also: Position
 //------------------------------------------------------------------------
 //!PUBLIC_API:
-class VJ_CLASS_API vjPosProxy : public vjTypedProxy<vjPosition>
+class VJ_CLASS_API PosProxy : public TypedProxy<Position>
 {
 public:
-   vjPosProxy() :  mUnitNum(-1), mETrans(false), mFilter(NULL)
+   PosProxy() :  mUnitNum(-1), mETrans(false), mFilter(NULL)
    {;}
 
-   virtual ~vjPosProxy() {}
+   virtual ~PosProxy() {}
 
    //: Update the proxy's copy of the data
    // Copy the device data to local storage, and transform it if necessary
@@ -86,12 +90,12 @@ public:
    }
 
     //: returns time of last update...
-    vjTimeStamp* getUpdateTime () {
+    TimeStaMp* getUpdateTime () {
    return &mPosUpdateTime;
     }
 
 
-   //: Set the transform for this vjPosProxy
+   //: Set the transform for this PosProxy
    // Sets the transformation matrix to
    //    mMatrixTransform = M<sub>trans</sub>.post(M<sub>rot</sub>)
    //! NOTE: This means that to set transform, you specific the translation
@@ -101,7 +105,7 @@ public:
                       float xrot, float yrot, float zrot);   // Rotate
 
    //: Get the data
-   vjMatrix* getData()
+   Matrix* getData()
    {
       if(mStupified)
          mPosData.makeIdent();
@@ -113,8 +117,8 @@ public:
    int getUnit()
    { return mUnitNum; }
 
-   //: Return the vjPosition pointer held by this proxy
-   vjPosition* getPositionPtr()
+   //: Return the Position pointer held by this proxy
+   Position* getPositionPtr()
    {
       if(!mStupified)
          return mTypedDevice;
@@ -123,7 +127,7 @@ public:
    }
 
    //: Get the transform being using by this proxy
-   vjMatrix& getTransform()
+   Matrix& getTransform()
    { return mMatrixTransform; }
 
    //: Transform the data in mPosData
@@ -137,25 +141,27 @@ public:
 
    static std::string getChunkType() { return "PosProxy"; }
 
-   bool config(vjConfigChunk* chunk);
+   bool config(ConfigChunk* chunk);
 
-   virtual vjInput* getProxiedInputDevice()
+   virtual Input* getProxiedInputDevice()
    {
       if(NULL == mTypedDevice)
          return NULL;
 
-      vjInput* ret_val = dynamic_cast<vjInput*>(mTypedDevice);
-      vjASSERT(ret_val != NULL);
+      Input* ret_val = dynamic_cast<Input*>(mTypedDevice);
+      vprASSERT(ret_val != NULL);
       return ret_val;
    }
 
 private:
-   vjMatrix       mPosData;
-   vjTimeStamp    mPosUpdateTime;
-   vjMatrix       mMatrixTransform;        // reciever_t_modifiedReciever
+   Matrix       mPosData;
+   TimeStaMp    mPosUpdateTime;
+   Matrix       mMatrixTransform;        // reciever_t_modifiedReciever
    int            mUnitNum;
    bool           mETrans;                // Are transformation enabled;
-   vjPosFilter*   mFilter;                // A possible position filter to use
+   PosFilter*   mFilter;                // A possible position filter to use
+};
+
 };
 
 #endif

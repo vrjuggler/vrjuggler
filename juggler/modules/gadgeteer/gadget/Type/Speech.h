@@ -34,15 +34,17 @@
 #ifndef _VJ_SPEECH_H_
 #define _VJ_SPEECH_H_
 
-
-class vjSpeech
+namespace vrj
+{
+   
+class Speech
 {
 public:
    //: Construct using chunk
-   vjSpeech();
+   Speech();
 
    //: Destructor
-   ~vjSpeech();
+   ~Speech();
 
    virtual std::string     getWord();
    virtual int       getId();
@@ -80,11 +82,11 @@ protected:
 
 protected:
    void           startThread();
-   static void       controlLoop(vjSpeech& currentInstance);
+   static void       controlLoop(Speech& currentInstance);
 };
 
 
-inline std::string vjSpeech::getWord()
+inline std::string Speech::getWord()
 {
    std::string word = "";
 
@@ -97,7 +99,7 @@ inline std::string vjSpeech::getWord()
    return word;
 }
 
-inline int vjSpeech::getId()
+inline int Speech::getId()
 {
    int id = -1;
 
@@ -110,19 +112,19 @@ inline int vjSpeech::getId()
    return id;
 }
 
-inline void vjSpeech::setMode( Mode mode )
+inline void Speech::setMode( Mode mode )
 {
    _mode = mode;
    // TODO: tell dragon about the mode change.
 }
 
-inline std::list<asdfjlk>& vjSpeech::getList()
+inline std::list<asdfjlk>& Speech::getList()
 {
    return _wordQueue;
 }
 
 //TODO: take a config chunck here.
-inline void vjSpeech::config()
+inline void Speech::config()
 {
    _filename = "somefile.vjs";
    _dragonIP = "129.186.232.70";
@@ -130,5 +132,7 @@ inline void vjSpeech::config()
    _user = "kevin";
 }
 
+
+};
 
 #endif   /* _VJ_SPEECH_H_ */

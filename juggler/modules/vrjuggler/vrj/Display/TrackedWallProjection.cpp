@@ -35,7 +35,10 @@
 #include <Kernel/vjTrackedWallProjection.h>
 
 
-void vjTrackedWallProjection::updateWallParams()
+namespace vrj
+{
+   
+void TrackedWallProjection::updateWallParams()
 {
    // Compute the correct rotation matrix
    // mWallRotationMatrix_bak ==> surfMbase
@@ -43,16 +46,16 @@ void vjTrackedWallProjection::updateWallParams()
    // We want surfMbase <=== surfMbase*trackerMbase
    // NOTE: wallRotMat's base is the base of the tracking system
    
-   vjMatrix tracker_mat = *(mTracker->getData());     // baseMtracker
+   Matrix tracker_mat = *(mTracker->getData());     // baseMtracker
    
    // Method 1:
    // baseMsurf = baseMtracker*baseMsurf
    // surfMbase = inv(baseMsurf)
    // Cost: 2 inversions, 1 mult, 2 temp matrices
 #if 0
-   vjMatrix wall_rot_bak_inv;
+   Matrix wall_rot_bak_inv;
    wall_rot_bak_inv.invert(mWallRotationMatrix_bak);
-   vjMatrix base_m_surf;
+   Matrix base_m_surf;
    base_m_surf.mult(tracker_mat,wall_rot_bak_inv);
    mWallRotationMatrix.invert(base_m_surf);
 #endif
@@ -61,15 +64,18 @@ void vjTrackedWallProjection::updateWallParams()
    // Method 2:
    // surfMbase = surfMbase*trackerMbase
    // Cost: 1 inversion, 1 mult, 1 temp matrix
-   vjMatrix tracker_mat_inv;                 // trackerMbase
+   Matrix tracker_mat_inv;                 // trackerMbase
    tracker_mat_inv.invert(tracker_mat);
    mWallRotationMatrix.mult(mWallRotationMatrix_bak,tracker_mat_inv);
 #endif  
 }
 
-std::ostream& vjTrackedWallProjection::outStream(std::ostream& out)
+std::ostream& TrackedWallProjection::outStream(std::ostream& out)
 {
    out << "vjTrackedWallProjection:\n";
    out << "Pos Proxy: " << mTracker.getProxyName().c_str() << std::endl;
-   return vjWallProjection::outStream(out);
+   return WallProjection::outStream(out);
 }
+
+
+};

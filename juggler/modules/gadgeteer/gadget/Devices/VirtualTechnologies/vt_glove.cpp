@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 /*                                                              */
-/*  vjCyberGlove initialization and control routines              */
+/*  CyberGlove initialization and control routines              */
 /*                                                              */
 /*  ==========================================================  */
 /*  --  Copyright (C) 1990,91,92,93 Virtual Technologies    --  */

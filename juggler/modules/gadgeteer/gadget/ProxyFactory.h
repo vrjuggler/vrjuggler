@@ -38,23 +38,26 @@
 #include <vjConfig.h>
 #include <Input/InputManager/vjProxy.h>
 #include <Config/vjConfigChunk.h>
-#include <Utils/vjSingleton.h>
+#include <vpr/Util/Singleton.h>
 #include <Kernel/vjDependencyManager.h>
 
 
+namespace vrj
+{
+   
 //: Base class for virtual construction of proxies
 // Implementations of this class are registered with the proxy factory
 // for each proxy tyep in the system
-class vjProxyConstructorBase
+class ProxyConstructorBase
 {
 public:
    //: Constructor
    //! POST: We have been registered with the proxy factory
-   vjProxyConstructorBase() {;}
+   ProxyConstructorBase() {;}
 
    //: Create the proxy
    //! RETURNS: NULL - Proxy failed creation or configuration
-   virtual vjProxy* createProxy(vjConfigChunk* chunk) const = 0;
+   virtual Proxy* createProxy(ConfigChunk* chunk) const = 0;
 
    //: Get the string desc of the type of chunk we can create
    virtual std::string    getChunkType() const = 0;
@@ -62,14 +65,14 @@ public:
 
 
 template <class PROXY>
-class vjProxyConstructor : public vjProxyConstructorBase
+class ProxyConstructor : public ProxyConstructorBase
 {
 public:
-   vjProxyConstructor();
+   ProxyConstructor();
 
    //: Create the proxy
    //! RETURNS: NULL - Proxy failed creation or configuration
-   vjProxy* createProxy(vjConfigChunk* chunk) const
+   Proxy* createProxy(ConfigChunk* chunk) const
    {
       PROXY* new_proxy = new PROXY;             // Create new proxy
       bool success = new_proxy->config(chunk);  // Attempt to configure it
@@ -93,62 +96,47 @@ public:
 
 //: Object used for creating proxies
 //!NOTE: Singleton
-class vjProxyFactory
+class ProxyFactory
 {
 private:
    // Singleton so must be private
-   vjProxyFactory() {;}
+   ProxyFactory() {;}
 
    //: register the proxies that the system knows about
    //! POST: all known proxies are registered with this factory
    void loadKnownProxies();
 
 public:
-   void registerProxy(vjProxyConstructorBase* constructor);
+   void registerProxy(ProxyConstructorBase* constructor);
 
    //: Query if the factory knows about the given proxy
    //!PRE: chunk != NULL, chunk is a valid chunk
    //!ARGS: chunk - chunk we are requesting about knowledge to create
    //!RETURNS: true - factory knows how to create the proxy
    //+          false - factory does not know how to create the proxy
-   bool recognizeProxy(vjConfigChunk* chunk);
+   bool recognizeProxy(ConfigChunk* chunk);
 
    //: Load the specified proxy
    //!PRE: recognizeDevice(chunk) == true
    //!ARGS: chunk - specification of the proxy to load
    //!RETURNS: null - Proxy failed to load
    //+         other - Pointer to the loaded proxy
-   vjProxy* loadProxy(vjConfigChunk* chunk);
+   Proxy* loadProxy(ConfigChunk* chunk);
 
 private:
 
    //: Find a constructor for the given proxy type
    //!RETURNS: -1 - Not found
    //+            - Index of the constructorck
-   int   findConstructor(vjConfigChunk* chunk);
+   int   findConstructor(ConfigChunk* chunk);
 
 private:
-   std::vector<vjProxyConstructorBase*> mConstructors;   //: List of the proxy constructors
+   std::vector<ProxyConstructorBase*> mConstructors;   //: List of the proxy constructors
 
 
-vjSingletonHeaderWithInitFunc(vjProxyFactory,loadKnownProxies);
-/*
-public:     // ------ SINGLETON ----- ///
-   //: Return singleton instance of the class
-   static vjProxyFactory* instance()
-   {
-      if(mInstance == NULL)
-      {
-         mInstance = new vjProxyFactory();
-         mInstance->loadKnownProxies();
-      }
-      return mInstance;
-   }
-
-private:
-   static vjProxyFactory* mInstance;
-   */
+   vprSingletonHeaderWithInitFunc(ProxyFactory,loadKnownProxies);
 };
 
+} // end namespace
 
 #endif

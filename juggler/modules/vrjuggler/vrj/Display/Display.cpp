@@ -35,7 +35,10 @@
 #include <Kernel/vjSimViewport.h>
 #include <Kernel/vjSurfaceViewport.h>
 
-void vjDisplay::updateProjections()
+namespace vrj
+{
+   
+void Display::updateProjections()
 {
    for(unsigned i=0;i<mViewports.size();i++)
    {
@@ -44,17 +47,17 @@ void vjDisplay::updateProjections()
 }
 
 
-void vjDisplay::config(vjConfigChunk* chunk)
+void Display::config(ConfigChunk* chunk)
 {
-   vjASSERT(chunk != NULL);
+   vprASSERT(chunk != NULL);
 
    configDisplayWindow(chunk);
    configViewports(chunk);
 }
 
-void vjDisplay::configDisplayWindow(vjConfigChunk* chunk)
+void Display::configDisplayWindow(ConfigChunk* chunk)
 {
-   vjASSERT(chunk != NULL);
+   vprASSERT(chunk != NULL);
 
    // -- Get config info from chunk -- //
     int originX = chunk->getProperty("origin", 0);
@@ -99,16 +102,16 @@ void vjDisplay::configDisplayWindow(vjConfigChunk* chunk)
     mDisplayChunk = chunk;        // Save the chunk for later use
 }
 
-void vjDisplay::configViewports(vjConfigChunk* chunk)
+void Display::configViewports(ConfigChunk* chunk)
 {
-   vjASSERT(chunk != NULL);
+   vprASSERT(chunk != NULL);
 
    unsigned num_sim_vps = chunk->getNum("sim_viewports");
    unsigned num_surface_vps = chunk->getNum("surface_viewports");
 
-   vjConfigChunk* vp_chunk = NULL;
-   vjSimViewport* sim_vp = NULL;
-   vjSurfaceViewport* surf_vp = NULL;
+   ConfigChunk* vp_chunk = NULL;
+   SimViewport* sim_vp = NULL;
+   SurfaceViewport* surf_vp = NULL;
 
    unsigned i(0);
 
@@ -116,7 +119,7 @@ void vjDisplay::configViewports(vjConfigChunk* chunk)
    for(i=0;i<num_sim_vps;i++)
    {
       vp_chunk = chunk->getProperty("sim_viewports",i);
-      sim_vp = new vjSimViewport;
+      sim_vp = new SimViewport;
       sim_vp->config(vp_chunk);
       mViewports.push_back(sim_vp);
    }
@@ -125,14 +128,14 @@ void vjDisplay::configViewports(vjConfigChunk* chunk)
    for(i=0;i<num_surface_vps;i++)
    {
       vp_chunk = chunk->getProperty("surface_viewports",i);
-      surf_vp = new vjSurfaceViewport;
+      surf_vp = new SurfaceViewport;
       surf_vp->config(vp_chunk);
       mViewports.push_back(surf_vp);
    }
 }
 
 
-VJ_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, vjDisplay& disp)
+VJ_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, Display& disp)
 {
    out << std::setw(15) << disp.mName.c_str() << std::endl
         << "  org:" << disp._xo << ", " << disp._yo
@@ -146,3 +149,4 @@ VJ_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, vjDisplay& disp)
 
    return out;
 }
+};

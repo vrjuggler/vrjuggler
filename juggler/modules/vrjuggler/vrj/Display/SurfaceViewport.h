@@ -38,18 +38,21 @@
 #include <Kernel/vjViewport.h>
 #include <Kernel/vjProjection.h>
 #include <Math/vjVec3.h>
-class vjConfigChunk;
+class ConfigChunk;
 
+namespace vrj
+{
+   
 //: Defines a display surface an associated projections
 //
 //
-class vjSurfaceViewport : public vjViewport
+class SurfaceViewport : public Viewport
 {
 public:
-   vjSurfaceViewport() :  mTracked(false), mLeftProj(NULL), mRightProj(NULL)
+   SurfaceViewport() :  mTracked(false), mLeftProj(NULL), mRightProj(NULL)
    {;}
 
-   virtual ~vjSurfaceViewport() {}
+   virtual ~SurfaceViewport() {}
 
 public:
    //: Takes a display chunk and configures the display based one it.
@@ -59,24 +62,24 @@ public:
    //+       and "fix" the error.
    //! NOTE: All derived display classes MUST call this function
    //+       after doing local configuration.
-   virtual void config(vjConfigChunk *chunk);
+   virtual void config(ConfigChunk *chunk);
 
    virtual void updateProjections();
 
-   void getCorners(vjVec3& ll, vjVec3& lr, vjVec3& ur, vjVec3& ul)
+   void getCorners(Vec3& ll, Vec3& lr, Vec3& ur, Vec3& ul)
    {
       ll = mLLCorner; lr = mLRCorner; ur = mURCorner; ul = mULCorner;
    }
 
-   vjProjection* getLeftProj()
+   Projection* getLeftProj()
    { return mLeftProj; }
 
-   vjProjection* getRightProj()
+   Projection* getRightProj()
    { return mRightProj; }
 
    virtual std::ostream& outStream(std::ostream& out)
    {
-      vjViewport::outStream(out);
+      Viewport::outStream(out);
 
       out << "LL: " << mLLCorner << ", LR: " << mLRCorner
           << ", UR: " << mURCorner << ", UL:" << mULCorner << std::endl;
@@ -94,10 +97,10 @@ protected:
    //: Check the pts to make sure they form a legal surface
    void assertPtsLegal()
    {
-      vjVec3 norm1, norm2;
-      vjVec3 bot_side = mLRCorner-mLLCorner;
-      vjVec3 diag = mULCorner-mLRCorner;
-      vjVec3 right_side = mURCorner-mLRCorner;
+      Vec3 norm1, norm2;
+      Vec3 bot_side = mLRCorner-mLLCorner;
+      Vec3 diag = mULCorner-mLRCorner;
+      Vec3 right_side = mURCorner-mLRCorner;
       norm1 = bot_side.cross(diag);
       norm2 = bot_side.cross(right_side);
       norm1.normalize(); norm2.normalize();
@@ -107,22 +110,22 @@ protected:
 
 
 protected:
-   vjVec3   mLLCorner, mLRCorner, mURCorner, mULCorner;  //: The corners in 3Space (for config)
-   vjMatrix mSurfaceRotation;                            //: surfMbase - rotation to base coordinate frame of the surface view plane
+   Vec3   mLLCorner, mLRCorner, mURCorner, mULCorner;  //: The corners in 3Space (for config)
+   Matrix mSurfaceRotation;                            //: surfMbase - rotation to base coordinate frame of the surface view plane
 
    // Deal with tracked surfaces (ie. HMD, movable walls, desks, etc)
    bool           mTracked;            // Is this surface tracked
    std::string    mTrackerProxyName;   // If tracked, what is the name of the tracker
 
    /// Defines the projection for this window. Ex. RIGHT, LEFT, FRONT
-   vjProjection*   mLeftProj;              //: Left eye projection
-   vjProjection*   mRightProj;             //: Right eye projection
+   Projection*   mLeftProj;              //: Left eye projection
+   Projection*   mRightProj;             //: Right eye projection
 
 private:
          // These values are used to compute the coordinates of the view plane
          // in the transformed coord system of mSurfaceRotation
-   vjVec3   mxLLCorner, mxLRCorner, mxURCorner, mxULCorner;    //: The corners transformed onto an x,y plane
+   Vec3   mxLLCorner, mxLRCorner, mxURCorner, mxULCorner;    //: The corners transformed onto an x,y plane
 };
 
-
+};
 #endif

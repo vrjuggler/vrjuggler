@@ -38,6 +38,9 @@
 #include <vjConfig.h>
 
 
+namespace vrj
+{
+   
 //-------------------------------------------------------------------------
 //: Base Juggler Gesture interface class
 // This class is the base interface for all gesture recognition objects
@@ -51,16 +54,16 @@
 //
 //-------------------------------------------------------------------------
 //!PUBLIC_API:
-class vjGesture
+class Gesture
 {
 public:
-   vjGesture()
+   Gesture()
    {}
 
-   virtual ~vjGesture()
+   virtual ~Gesture()
    {;}
 
-   virtual bool config(vjConfigChunk* c)
+   virtual bool config(ConfigChunk* c)
    { return true;}
 
 
@@ -108,6 +111,8 @@ public:  // **** TRAINING **** //
    //: Saves the sample training data specified.
    // This data can be loaded at a later time to do more sample training.
    virtual void saveSamplesFile(std::string filename) = 0;
+
+};
 
 };
 

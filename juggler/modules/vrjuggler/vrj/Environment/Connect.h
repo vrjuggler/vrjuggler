@@ -34,35 +34,38 @@
 #ifndef _VJ_CONNECT_H_
 #define _VJ_CONNECT_H_
 
-#include <vjConfig.h>
 #include <queue>
+#include <vpr/Thread/Thread.h>
+
+#include <vjConfig.h>
 #include <Environment/vjSocket.h>
 #include <Environment/vjNetCommunicator.h>
-#include <vpr/Thread/Thread.h>
 #include <Performance/vjTimeStamp.h>
 #include <Environment/vjCommand.h>
 
+namespace vrj
+{
+   
+class TimedUpdate;
+class ConfigChunk;
 
-class vjTimedUpdate;
-class vjConfigChunk;
-
-enum vjConnectMode { VJC_INTERACTIVE, VJC_INPUT, VJC_OUTPUT };
+enum ConnectMode { VJC_INTERACTIVE, VJC_INPUT, VJC_OUTPUT };
 
 //--------------------------------------------------
-//: vjConnect reads/writes to a file, pipe, or socket.
+//: Connect reads/writes to a file, pipe, or socket.
 //
 // @author  Christopher Just
 //
 //---------------------------------------
-class VJ_CLASS_API vjConnect {
+class VJ_CLASS_API Connect {
  public:
 
-    vjConnect (vjSocket* s, const std::string& _name="unnamed", 
-	       vjConnectMode _mode = VJC_INTERACTIVE);
+    Connect (Socket* s, const std::string& _name="unnamed", 
+	       ConnectMode _mode = VJC_INTERACTIVE);
 
 
 
-    vjConnect (vjConfigChunk* c);
+    Connect (ConfigChunk* c);
 
 
     //: destructor
@@ -71,7 +74,7 @@ class VJ_CLASS_API vjConnect {
     //+       with self is freed.
     //+       If ControlPID is non-NULL, the process it refers
     //+       to is stopped.
-    ~vjConnect();
+    ~Connect();
 
 
 
@@ -105,19 +108,19 @@ class VJ_CLASS_API vjConnect {
     bool stopProcess();
 
 
-    void sendDescDB (vjChunkDescDB* db);
-    void sendChunkDB (vjConfigChunkDB* db, bool all);
+    void sendDescDB (ChunkDescDB* db);
+    void sendChunkDB (ConfigChunkDB* db, bool all);
     void sendRefresh ();
     void sendDisconnect();
 
     //: Attaches a timed update object to this connection
-    //! ARGS: _tu - a vjTimedUpdate* 
+    //! ARGS: _tu - a TimedUpdate* 
     //! ARGS: _refresh_time - time between refreshes, in milliseconds
-    void addTimedUpdate (vjTimedUpdate* _tu, float _refresh_time);
+    void addTimedUpdate (TimedUpdate* _tu, float _refresh_time);
 
 
     //: Detaches a timed update object from this connection
-    void removeTimedUpdate (vjTimedUpdate* _tu);
+    void removeTimedUpdate (TimedUpdate* _tu);
 
 
 private:
@@ -130,30 +133,30 @@ private:
     std::string             filename;
     vpr::Thread*               read_connect_thread;
     vpr::Thread*               write_connect_thread;
-    vjSocket*               sock;
-    vjConnectMode           mode;
+    Socket*               sock;
+    ConnectMode           mode;
     bool                    read_die;    // if true, thread suicide
     bool                    write_die;   // if true, thread suicide
     bool                    write_alive; // true when thread running
 
-    //: used for storing vjCommand* in a priority queue
-    struct vjCommandPtrCmp {
-	bool operator() (const vjCommand* a, const vjCommand* b) {
+    //: used for storing Command* in a priority queue
+    struct CommandPtrCmp {
+	bool operator() (const Command* a, const Command* b) {
 	    return (a->next_fire_time > b->next_fire_time);
 	}
     };
 
 
-    std::priority_queue<vjCommand*, std::vector<vjCommand*>, vjCommandPtrCmp>
+    std::priority_queue<Command*, std::vector<Command*>, CommandPtrCmp>
                                timed_commands; // used as heap
-    std::queue<vjCommand*>     commands;
+    std::queue<Command*>     commands;
 
     //: controls access to commands & timed_commands queues.
     //  could we dispense with this???
     vpr::Mutex                    commands_mutex;
 
     //: used to see if it's time to spring a timed_command
-    vjTimeStamp             current_time;
+    TimeStaMp             current_time;
 
     //: body of network process.
     void readControlLoop (void* nullParam);
@@ -162,13 +165,14 @@ private:
     //: utility for controlLoop()
     bool readCommand (std::istream& fin);
 
-    std::vector<vjNetCommunicator*> communicators;
+    std::vector<NetCommunicator*> communicators;
 
     // These are needed to appease Visual C++ in its creation of DLLs.
-    vjConnect(const vjConnect&) {;}
-    void operator=(const vjConnect&) {;}
+    Connect(const Connect&) {;}
+    void operator=(const Connect&) {;}
 
-}; // end vjConnect
+}; // end Connect
 
 
+};
 #endif

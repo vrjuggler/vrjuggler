@@ -40,7 +40,10 @@
 #include <Carbon/Carbon.h>
 #include <Kernel/vjOSXSystemFactory.h>
 
-class vjConfigChunk;
+namespace vrj
+{
+   
+   class ConfigChunk;
 
 //---------------------------------------------------------------
 //: XWin Keyboard class
@@ -58,9 +61,9 @@ class vjConfigChunk;
 //  CASE 2: The user can toggle locking using a special "locking" key
 //           defined in the configuration chunk.
 //
-// See also: vjKeyboard, vjKeyboardProxy
+// See also: Keyboard, KeyboardProxy
 //--------------------------------------------------------------
-class vjOSXKeyboard : public vjInput, public vjKeyboard
+class OSXKeyboard : public Input, public Keyboard
 {
 public:
    // Enum to keep track of current lock state for state machine
@@ -68,22 +71,22 @@ public:
    // Lock_LockKey - The mouse is locked due to lock toggle key press
    // Lock_LockKeyDown - The mouse is locked due to a key being held down
    enum lockState { Unlocked, Lock_LockKey, Lock_KeyDown};
-   vjOSXKeyboard()
+   OSXKeyboard()
    {
       mPrevX = 0; mPrevY = 0;
       mLockState = Unlocked;     // Initialize to unlocked.
       mExitFlag = false;
       mWeOwnTheWindow = true;
-      vjOSXSystemFactory::instance();
+      OSXSystemFactory::instance();
    }
-   ~vjOSXKeyboard() { stopSampling();}
+   ~OSXKeyboard() { stopSampling();}
 
-   virtual bool config(vjConfigChunk* c);
+   virtual bool config(ConfigChunk* c);
 
    // Main thread of control for this active object
    void controlLoop(void* nullParam);
 
-   /* Pure Virtuals required by vjInput */
+   /* Pure Virtuals required by Input */
    int startSampling();
    int stopSampling();
 
@@ -98,8 +101,8 @@ public:
    // last frame, so you can put this in an if to check if was
    // pressed at all, or if you are doing processing based on this
    // catch the actual number..
-   int isKeyPressed(int vjKey)
-   {  return m_curKeys[vjKey];}
+   int isKeyPressed(int Key)
+   {  return m_curKeys[Key];}
 
    virtual int keyPressed(int keyId)
    { return isKeyPressed(keyId); }
@@ -125,7 +128,7 @@ private:
    void lockMouse();
    void unlockMouse();
    
-   int OSXKeyTovjKey(int xKey);
+   int OSXKeyToKey(int xKey);
    
 protected:  
    bool         mWeOwnTheWindow;       // True if this class owns the window (is reposible for opening and closing)
@@ -159,106 +162,108 @@ protected:
    int	 mSnapTimer;
 };
 
-enum vjOSXKeyMap {
-    vjOSX_KEY_X = 0,
-    vjOSX_KEY_Z = 1,
-    vjOSX_KEY_G = 2,
-    vjOSX_KEY_H = 3,
-    vjOSX_KEY_F = 4,
-    vjOSX_KEY_D = 5,
-    vjOSX_KEY_S = 6,
-    vjOSX_KEY_A = 7,
-    vjOSX_KEY_R = 8,
-    vjOSX_KEY_E = 9,
-    vjOSX_KEY_W = 10,
-    vjOSX_KEY_Q = 11,
-    vjOSX_KEY_B = 12,
-    vjOSX_KEY_V = 14,
-    vjOSX_KEY_C = 15,
-    vjOSX_KEY_5 = 16,
-    vjOSX_KEY_6 = 17,
-    vjOSX_KEY_4 = 18,
-    vjOSX_KEY_3 = 19,
-    vjOSX_KEY_2 = 20,
-    vjOSX_KEY_1 = 21,
-    vjOSX_KEY_T = 22,
-    vjOSX_KEY_Y = 23,
-    vjOSX_KEY_O = 24,
-    vjOSX_KEY_BRACE_LEFT = 25,
-    vjOSX_KEY_0 = 26,
-    vjOSX_KEY_8 = 27,
-    vjOSX_KEY_MINUS = 28,
-    vjOSX_KEY_7 = 29,
-    vjOSX_KEY_9 = 30,
-    vjOSX_KEY_PLUS = 31,
-    vjOSX_KEY_QUOTE = 32,
-    vjOSX_KEY_J = 33,
-    vjOSX_KEY_L = 34,
-    vjOSX_KEY_RETURN = 35,
-    vjOSX_KEY_P = 36,
-    vjOSX_KEY_I = 37,
-    vjOSX_KEY_BRACE_RIGHT = 38,
-    vjOSX_KEY_U = 39,
-    vjOSX_KEY_GREATER_THAN = 40,
-    vjOSX_KEY_M = 41,
-    vjOSX_KEY_N = 42,
-    vjOSX_KEY_QUESTION_MARK = 43,
-    vjOSX_KEY_LESS_THAN = 44,
-    vjOSX_KEY_FORWARD_SLASH = 45,
-    vjOSX_KEY_SEMI_COLLEN = 46,
-    vjOSX_KEY_K = 47,
-    vjOSX_KEY_COMMAND = 48,
-    vjOSX_KEY_ESCAPE = 50,
-    vjOSX_KEY_BACKSPACE = 52,
-    vjOSX_KEY_TILDE = 53,
-    vjOSX_KEY_SPACE = 54,
-    vjOSX_KEY_TAB = 55,
-    vjOSX_KEY_CONTROL = 60,
-    vjOSX_KEY_OPTION = 61,
-    vjOSX_KEY_CAPS = 62,
-    vjOSX_KEY_SHIFT = 63,
-    vjOSX_KEYPAD_CLEAR = 64,
-    vjOSX_KEYPAD_PLUS = 66,
-    vjOSX_KEYPAD_MULT = 68,
-    vjOSX_KEYPAD_DECIMAL = 70,
-    vjOSX_KEYPAD_MINUS = 73,
-    vjOSX_KEYPAD_ENTER = 75,
-    vjOSX_KEYPAD_DIVIDE = 76,
-    vjOSX_KEYPAD_5 = 80,
-    vjOSX_KEYPAD_4 = 81,
-    vjOSX_KEYPAD_3 = 82,
-    vjOSX_KEYPAD_2 = 83,
-    vjOSX_KEYPAD_1 = 84,
-    vjOSX_KEYPAD_0 = 85,
-    vjOSX_KEYPAD_EQUAL = 86,
-    vjOSX_KEYPAD_9 = 91,
-    vjOSX_KEYPAD_8 = 92,
-    vjOSX_KEYPAD_7 = 94,
-    vjOSX_KEYPAD_6 = 95,
-    vjOSX_KEY_F9 = 98,
-    vjOSX_KEY_F8 = 99,
-    vjOSX_KEY_F3 = 100,
-    vjOSX_KEY_F7 = 101,
-    vjOSX_KEY_F6 = 102,
-    vjOSX_KEY_F5 = 103,
-    vjOSX_KEY_F12 = 104,
-    vjOSX_KEY_F10 = 106,
-    vjOSX_KEY_F14 = 108,
-    vjOSX_KEY_F13 = 110,
-    vjOSX_KEY_END = 112,
-    vjOSX_KEY_F4 = 113,
-    vjOSX_KEY_DEL = 114,
-    vjOSX_KEY_PAGEUP = 115,
-    vjOSX_KEY_HOME = 116,
-    vjOSX_KEY_HELP = 117,
-    vjOSX_KEY_F15 = 118,
-    vjOSX_KEY_UP = 121,
-    vjOSX_KEY_DOWN = 122,
-    vjOSX_KEY_RIGHT = 123,
-    vjOSX_KEY_LEFT = 124,
-    vjOSX_KEY_F1 = 125,
-    vjOSX_KEY_PAGEDOWN = 126,
-    vjOSX_KEY_F2 = 127
+enum OSXKeyMap {
+    OSX_KEY_X = 0,
+    OSX_KEY_Z = 1,
+    OSX_KEY_G = 2,
+    OSX_KEY_H = 3,
+    OSX_KEY_F = 4,
+    OSX_KEY_D = 5,
+    OSX_KEY_S = 6,
+    OSX_KEY_A = 7,
+    OSX_KEY_R = 8,
+    OSX_KEY_E = 9,
+    OSX_KEY_W = 10,
+    OSX_KEY_Q = 11,
+    OSX_KEY_B = 12,
+    OSX_KEY_V = 14,
+    OSX_KEY_C = 15,
+    OSX_KEY_5 = 16,
+    OSX_KEY_6 = 17,
+    OSX_KEY_4 = 18,
+    OSX_KEY_3 = 19,
+    OSX_KEY_2 = 20,
+    OSX_KEY_1 = 21,
+    OSX_KEY_T = 22,
+    OSX_KEY_Y = 23,
+    OSX_KEY_O = 24,
+    OSX_KEY_BRACE_LEFT = 25,
+    OSX_KEY_0 = 26,
+    OSX_KEY_8 = 27,
+    OSX_KEY_MINUS = 28,
+    OSX_KEY_7 = 29,
+    OSX_KEY_9 = 30,
+    OSX_KEY_PLUS = 31,
+    OSX_KEY_QUOTE = 32,
+    OSX_KEY_J = 33,
+    OSX_KEY_L = 34,
+    OSX_KEY_RETURN = 35,
+    OSX_KEY_P = 36,
+    OSX_KEY_I = 37,
+    OSX_KEY_BRACE_RIGHT = 38,
+    OSX_KEY_U = 39,
+    OSX_KEY_GREATER_THAN = 40,
+    OSX_KEY_M = 41,
+    OSX_KEY_N = 42,
+    OSX_KEY_QUESTION_MARK = 43,
+    OSX_KEY_LESS_THAN = 44,
+    OSX_KEY_FORWARD_SLASH = 45,
+    OSX_KEY_SEMI_COLLEN = 46,
+    OSX_KEY_K = 47,
+    OSX_KEY_COMMAND = 48,
+    OSX_KEY_ESCAPE = 50,
+    OSX_KEY_BACKSPACE = 52,
+    OSX_KEY_TILDE = 53,
+    OSX_KEY_SPACE = 54,
+    OSX_KEY_TAB = 55,
+    OSX_KEY_CONTROL = 60,
+    OSX_KEY_OPTION = 61,
+    OSX_KEY_CAPS = 62,
+    OSX_KEY_SHIFT = 63,
+    OSX_KEYPAD_CLEAR = 64,
+    OSX_KEYPAD_PLUS = 66,
+    OSX_KEYPAD_MULT = 68,
+    OSX_KEYPAD_DECIMAL = 70,
+    OSX_KEYPAD_MINUS = 73,
+    OSX_KEYPAD_ENTER = 75,
+    OSX_KEYPAD_DIVIDE = 76,
+    OSX_KEYPAD_5 = 80,
+    OSX_KEYPAD_4 = 81,
+    OSX_KEYPAD_3 = 82,
+    OSX_KEYPAD_2 = 83,
+    OSX_KEYPAD_1 = 84,
+    OSX_KEYPAD_0 = 85,
+    OSX_KEYPAD_EQUAL = 86,
+    OSX_KEYPAD_9 = 91,
+    OSX_KEYPAD_8 = 92,
+    OSX_KEYPAD_7 = 94,
+    OSX_KEYPAD_6 = 95,
+    OSX_KEY_F9 = 98,
+    OSX_KEY_F8 = 99,
+    OSX_KEY_F3 = 100,
+    OSX_KEY_F7 = 101,
+    OSX_KEY_F6 = 102,
+    OSX_KEY_F5 = 103,
+    OSX_KEY_F12 = 104,
+    OSX_KEY_F10 = 106,
+    OSX_KEY_F14 = 108,
+    OSX_KEY_F13 = 110,
+    OSX_KEY_END = 112,
+    OSX_KEY_F4 = 113,
+    OSX_KEY_DEL = 114,
+    OSX_KEY_PAGEUP = 115,
+    OSX_KEY_HOME = 116,
+    OSX_KEY_HELP = 117,
+    OSX_KEY_F15 = 118,
+    OSX_KEY_UP = 121,
+    OSX_KEY_DOWN = 122,
+    OSX_KEY_RIGHT = 123,
+    OSX_KEY_LEFT = 124,
+    OSX_KEY_F1 = 125,
+    OSX_KEY_PAGEDOWN = 126,
+    OSX_KEY_F2 = 127
    };
+
+};
 
 #endif

@@ -71,11 +71,11 @@ using namespace std;
 //
 // This application simply renders a box on the wand
 //----------------------------------------------------
-class OsgNav : public vjOsgApp
+class OsgNav : public OsgApp
 {
 public:
-	OsgNav(vjKernel* kern)
-		: vjOsgApp(kern)			// Initialize base class
+	OsgNav(Kernel* kern)
+		: OsgApp(kern)			// Initialize base class
 	{
       mFileToLoad = std::string("");
    }
@@ -89,7 +89,7 @@ public:
 	// This is called once before OGL is initialized
 	virtual void initScene()
 	{
-		//DeBugOut = vjDebug::getStream(0, 3, true, true, 1, true);
+		//DeBugOut = Debug::getStream(0, 3, true, true, 1, true);
 		
 		//cout << "---------- App:init() ---------------" << endl;
 		// Initialize devices
@@ -194,14 +194,14 @@ private:
    std::string mFileToLoad;
 
 public:
-	vjPosInterface	 mWand;		// the Wand
-	vjPosInterface	 mHead;		// the head
-	vjDigitalInterface	mButton0;
-	vjDigitalInterface	mButton1;
-	vjDigitalInterface	mButton2;
-	vjDigitalInterface	mButton3;
-	vjDigitalInterface	mButton4;
-	vjDigitalInterface	mButton5;	
+	PosInterface	 mWand;		// the Wand
+	PosInterface	 mHead;		// the head
+	DigitalInterface	mButton0;
+	DigitalInterface	mButton1;
+	DigitalInterface	mButton2;
+	DigitalInterface	mButton3;
+	DigitalInterface	mButton4;
+	DigitalInterface	mButton5;	
 };
 
 

@@ -41,7 +41,9 @@
 #include <Input/vjGlove/vjGlove.h>
 #include <Input/vjGesture/vjGesture.h>
 #include <Input/vjSim/vjSimInput.h>
-
+namespace vrj
+{
+   
 
 //: Simulated glove class
 //
@@ -49,14 +51,14 @@
 //
 // By default the glove is in gesture 0
 //!PUBLIC_API:
-class vjSimGloveGesture
-   :  virtual public vjInput, public vjGloveGesture,  public vjGlove,  public vjDigital, public vjSimInput
+class SimGloveGesture
+   :  virtual public Input, public GloveGesture,  public Glove,  public Digital, public SimInput
 {
 public:
-   //: Construct a vjSimGloveGesture
-   vjSimGloveGesture() {;}
+   //: Construct a SimGloveGesture
+   SimGloveGesture() {;}
 
-   virtual bool config(vjConfigChunk* chunk);
+   virtual bool config(ConfigChunk* chunk);
 
    //: Get the current gesture.
    //! RETURNS: id of current gesture
@@ -86,8 +88,10 @@ public:
    void train() { ; }
 
 private:
-   std::vector<vjKeyModPair> mSimKeys;    //: The keys to press for the gestures
+   std::vector<KeyModPair> mSimKeys;    //: The keys to press for the gestures
    int                     mCurGesture;   //: The current gesture id
+};
+
 };
 
 #endif

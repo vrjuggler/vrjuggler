@@ -36,9 +36,12 @@
 #include <vpr/Thread/Thread.h>
 #include <Config/vjConfigChunk.h>
 
-#include <Kernel/vjAssert.h>
+#include <vpr/Util/Assert.h>
 
-vjInput::vjInput()
+namespace vrj
+{
+   
+Input::Input()
  : sPort(NULL),
    instName(""),
    port_id(0),
@@ -50,7 +53,7 @@ vjInput::vjInput()
    lock(),
    baudRate(0)
 {
-   //vjDEBUG(vjDBG_ALL,4)<<"*** vjInput::vjInput()\n"<< vjDEBUG_FLUSH;
+   //vjDEBUG(vjDBG_ALL,4)<<"*** Input::Input()\n"<< vjDEBUG_FLUSH;
    /*
    sPort = NULL;
    myThread = NULL;
@@ -58,20 +61,20 @@ vjInput::vjInput()
    */
 }
 
-vjInput::~vjInput()
+Input::~Input()
 {
     if (sPort != NULL)
         delete [] sPort;
 }
 
-bool vjInput::config( vjConfigChunk *c)
+bool Input::config( ConfigChunk *c)
 {
   //sPort = NULL;
   if((sPort != NULL) && (!instName.empty()))
   {
      // ASSERT: We have already been configured
      //         this prevents config from being called multiple times (once for each derived class)
-     //         ie. vjDigital, vjAnalog, etc
+     //         ie. Digital, Analog, etc
      return true;
   }
 
@@ -89,7 +92,7 @@ bool vjInput::config( vjConfigChunk *c)
 }
 
 
-void vjInput::setPort(const char* serialPort)
+void Input::setPort(const char* serialPort)
 {
 if (myThread != NULL) {
      std::cerr << "Cannot change the serial Port while active\n";
@@ -98,20 +101,20 @@ if (myThread != NULL) {
   strncpy(sPort,serialPort,(size_t)30);
 }
 
-char* vjInput::getPort()
+char* Input::getPort()
 {
   if (sPort == NULL) return "No port";
   return sPort;
 }
 
-void vjInput::setBaudRate(int baud)
+void Input::setBaudRate(int baud)
 {
   if (myThread != NULL)
      baudRate = baud;
 }
 
 /*
-int vjInput::fDeviceSupport(int devAbility)
+int Input::fDeviceSupport(int devAbility)
 {
     return (deviceAbilities & devAbility);
 }
@@ -119,7 +122,7 @@ int vjInput::fDeviceSupport(int devAbility)
 
 //: Reset the Index Holders
 // Sets to (0,1,2) in that order
-void vjInput::resetIndexes()
+void Input::resetIndexes()
 {
     current = 0;
     valid = 1;
@@ -128,9 +131,9 @@ void vjInput::resetIndexes()
 }
 
 //: Swap the current and valid indexes (thread safe)
-void vjInput::swapCurrentIndexes()
+void Input::swapCurrentIndexes()
 {
-   vjASSERT(lock.test());       // Make sure that we have the lock when we are called
+   vprASSERT(lock.test());       // Make sure that we have the lock when we are called
    assertIndexes();
    int tmp = current;
    current = valid;
@@ -138,7 +141,7 @@ void vjInput::swapCurrentIndexes()
 }
 
 //: Swap the valid and progress indexes (thread safe)
-void vjInput::swapValidIndexes()
+void Input::swapValidIndexes()
 {
    lock.acquire();
    int tmp = valid;
@@ -148,11 +151,12 @@ void vjInput::swapValidIndexes()
    lock.release();
 }
 
-void vjInput::assertIndexes()
+void Input::assertIndexes()
 {
-   vjASSERT((current != progress) && (current != valid) && (progress != valid));
-   vjASSERT((current >= 0) && (current <= 3));
-   vjASSERT((progress >= 0) && (progress <= 3));
-   vjASSERT((valid >= 0) && (valid <= 3));
+   vprASSERT((current != progress) && (current != valid) && (progress != valid));
+   vprASSERT((current >= 0) && (current <= 3));
+   vprASSERT((progress >= 0) && (progress <= 3));
+   vprASSERT((valid >= 0) && (valid <= 3));
 }
 
+};

@@ -62,13 +62,13 @@
 //
 //#define DEBUG
 
-int vjThreeDMouse::startSampling()
+int ThreeDMouse::startSampling()
 {
   if (myThreadID == NULL) {
    //int i;
    current = 0; valid = 1; progress = 2;
    openMouse(sPort);
-   vjThreeDMouse* devicePtr = this;
+   ThreeDMouse* devicePtr = this;
    void sampleMouse(void*);
 
    myThread = new vpr::Thread(sampleMouse, (void *) devicePtr);
@@ -88,7 +88,7 @@ void sampleMouse(void* pointer) {
  struct timeval tv;
   double start_time, stop_time;
 
-    vjThreeDMouse* devPointer = (vjThreeDMouse*)pointer;
+    ThreeDMouse* devPointer = (ThreeDMouse*)pointer;
     for(;;) {
      gettimeofday(&tv,0);
      start_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
@@ -102,19 +102,19 @@ void sampleMouse(void* pointer) {
     }
 }
 
-int vjThreeDMouse::stopSampling()
+int ThreeDMouse::stopSampling()
 {
   if (myThread != NULL) {
     myThread->kill();
 
     myThreadID = NULL;
 //    sginap(1);
-    std::cout << "stopping the vjThreeDMouse.." << std::endl;
+    std::cout << "stopping the ThreeDMouse.." << std::endl;
    }
    return 1;
 }
 
-void vjThreeDMouse::updateData() {
+void ThreeDMouse::updateData() {
   lock.acquire();
   int tmp = valid;
   valid = progress;
@@ -123,22 +123,22 @@ void vjThreeDMouse::updateData() {
 }
 
 // XXX: Bad stuff
-vjMatrix* vjThreeDMouse::getPosData(int devNum)
+vrj::Matrix* ThreeDMouse::getPosData(int devNum)
 {
-  return (vjMatrix*)&theData[current];
+  return (vrj::Matrix*)&theData[current];
 }
 
-void vjThreeDMouse::getPosData(vjPOS_DATA* &data){
+void ThreeDMouse::getPosData(vrj::POS_DATA* &data){
   data = &theData[current];
 }
 
 
-bool vjThreeDMouse::config(vjConfigChunk *c)
+bool ThreeDMouse::config(vrj::ConfigChunk *c)
     // PURPOSE: Constructor - Setup all vars
 {
 //   strncpy(sPort,"/dev/ttyd2",11);
 //    baseVector.setValue(0, 0, 0);   // Setup base offest as origin
-   if(! (vjInput::config(c) && vjPosition::config(c)))
+   if(! (vrj::Input::config(c) && vrj::Position::config(c)))
       return false;
 
    baseVector[0] = baseVector[1] = baseVector[2] = 0;
@@ -153,10 +153,10 @@ bool vjThreeDMouse::config(vjConfigChunk *c)
 //
 // Open the mouse device and set the fd
 ////////////////////////////////////////////////////////////
-int vjThreeDMouse::openMouse(char* portName)
+int ThreeDMouse::openMouse(char* portName)
 {
     int fd;
-    fd = vjThreeDMouse::logitechOpen(portName);
+    fd = ThreeDMouse::logitechOpen(portName);
     if (fd==-1)
    return -1;  // error
     else {
@@ -172,7 +172,7 @@ int vjThreeDMouse::openMouse(char* portName)
 //
 // Return: file descriptor to serial port or -1 if error opening port
 //////////////////////////////////////////////////////////////////////////
-int vjThreeDMouse::logitechOpen (char* port_name)
+int ThreeDMouse::logitechOpen (char* port_name)
 {
   int fd;
   struct termios t;
@@ -212,10 +212,10 @@ int vjThreeDMouse::logitechOpen (char* port_name)
   }
 
   /* reset the mouse */
-  vjThreeDMouse::resetControlUnit ();
+  ThreeDMouse::resetControlUnit ();
 
   /* do diagnostics */
-  vjThreeDMouse::getDiagnostics (data);
+  ThreeDMouse::getDiagnostics (data);
 
 #ifdef DEBUG
   printf ("diag[0]: %2x=", data[0]);
@@ -240,7 +240,7 @@ int vjThreeDMouse::logitechOpen (char* port_name)
 //
 // Return 0 on success, -1 on failure.
 ///////////////////////////////////////////////////////////////////////////////
-int vjThreeDMouse::closeMouse()
+int ThreeDMouse::closeMouse()
 {
   if (close (mouseFD) < 0) {
     perror ("error closing serial port");
@@ -254,7 +254,7 @@ int vjThreeDMouse::closeMouse()
 ///////////////////////////////////////////////////////////////////////////////
 // Command demand reporting
 ///////////////////////////////////////////////////////////////////////////////
-void vjThreeDMouse::cuDemandReporting ()
+void ThreeDMouse::cuDemandReporting ()
 {
 
 #ifdef DEBUG
@@ -280,7 +280,7 @@ void vjThreeDMouse::cuDemandReporting ()
 ///////////////////////////////////////////////////////////////////////////////
 // Command control unit to Euler mode
 //////////////////////////////////////////////////////////////////////////////
-void vjThreeDMouse::cuEulerMode ()
+void ThreeDMouse::cuEulerMode ()
 {
 
 #ifdef DEBUG
@@ -294,7 +294,7 @@ void vjThreeDMouse::cuEulerMode ()
 ///////////////////////////////////////////////////////////////////////////////
 // Command control unit to head tracker mode
 ///////////////////////////////////////////////////////////////////////////////
-void vjThreeDMouse::cuHeadtrackerMode ()
+void ThreeDMouse::cuHeadtrackerMode ()
 {
 
 #ifdef DEBUG
@@ -308,7 +308,7 @@ void vjThreeDMouse::cuHeadtrackerMode ()
 /////////////////////////////////////////////////////////////////////////////
 // Command control unit to mouse mode
 /////////////////////////////////////////////////////////////////////////////
-void vjThreeDMouse::cuMouseMode ()
+void ThreeDMouse::cuMouseMode ()
 {
 
 #ifdef DEBUG
@@ -322,7 +322,7 @@ void vjThreeDMouse::cuMouseMode ()
 //////////////////////////////////////////////////////////////////////////////
 // Command control unit to perform diagnostics
 //////////////////////////////////////////////////////////////////////////////
-void vjThreeDMouse::cuRequestDiagnostics ()
+void ThreeDMouse::cuRequestDiagnostics ()
 {
 
 #ifdef DEBUG
@@ -349,7 +349,7 @@ void vjThreeDMouse::cuRequestDiagnostics ()
 ///////////////////////////////////////////////////////////////////////////////
 // Command a reset
 ///////////////////////////////////////////////////////////////////////////////
-void vjThreeDMouse::cuResetControlUnit ()
+void ThreeDMouse::cuResetControlUnit ()
 {
 
 #ifdef DEBUG
@@ -363,9 +363,9 @@ void vjThreeDMouse::cuResetControlUnit ()
 ///////////////////////////////////////////////////////////////////////////////
 // Retrieve diagnostics report
 ///////////////////////////////////////////////////////////////////////////////
-void vjThreeDMouse::getDiagnostics ( char data[])
+void ThreeDMouse::getDiagnostics ( char data[])
 {
-  vjThreeDMouse::cuRequestDiagnostics ();	/* command diagnostics */
+  ThreeDMouse::cuRequestDiagnostics ();	/* command diagnostics */
   vpr::System::sleep(1);
   read (mouseFD, data, DIAGNOSTIC_SIZE);
 }
@@ -375,12 +375,12 @@ void vjThreeDMouse::getDiagnostics ( char data[])
 // Retrieve a single record. This routine will spin until a valid record
 // (i.e., 16 bytes and bit 7, byte 0 is on) is received.
 ///////////////////////////////////////////////////////////////////////////////
-int vjThreeDMouse::getRecord ( vjPOS_DATA* data)
+int ThreeDMouse::getRecord ( vrj::POS_DATA* data)
 {
   int num_read;
   byte record[EULER_RECORD_SIZE];
 
-  vjThreeDMouse::cuRequestReport ();
+  ThreeDMouse::cuRequestReport ();
   num_read = read (mouseFD, record, EULER_RECORD_SIZE);
 
   /* if didn't get a complete record or if invalid record, then try
@@ -394,7 +394,7 @@ int vjThreeDMouse::getRecord ( vjPOS_DATA* data)
     /* flush the input buffer */
     tcflush(mouseFD, TCIFLUSH);
 
-    vjThreeDMouse::cuRequestReport ();
+    ThreeDMouse::cuRequestReport ();
     num_read = read (mouseFD, record, EULER_RECORD_SIZE);
   }
 
@@ -402,7 +402,7 @@ int vjThreeDMouse::getRecord ( vjPOS_DATA* data)
   printf ("%d bytes read...", num_read);
 #endif
 
-  vjThreeDMouse::eulerToAbsolute (record, data);
+  ThreeDMouse::eulerToAbsolute (record, data);
 
   return (0);
 }
@@ -412,16 +412,16 @@ int vjThreeDMouse::getRecord ( vjPOS_DATA* data)
 // Set control unit into demand reporting, send reset command, and wait for
 // the reset.
 //////////////////////////////////////////////////////////////////////////////
-void vjThreeDMouse::resetControlUnit ()
+void ThreeDMouse::resetControlUnit ()
 {
-  vjThreeDMouse::cuDemandReporting ();	/* make sure control unit is processing */
+  ThreeDMouse::cuDemandReporting ();	/* make sure control unit is processing */
   vpr::System::usleep ((long) 100000);	/* wait 10 clock ticks = 100 ms */
-  vjThreeDMouse::cuResetControlUnit ();	/* command a reset */
+  ThreeDMouse::cuResetControlUnit ();	/* command a reset */
   vpr::System::sleep(1);
 }
 
 
-void vjThreeDMouse::setBaseOrigin()
+void ThreeDMouse::setBaseOrigin()
     // PURPOSE: Sets the current mouse X,Y,Z position to be the base origin
 {
     baseVector[0] = theData[current].pos[0];
@@ -435,7 +435,7 @@ void vjThreeDMouse::setBaseOrigin()
 /////////////////////////////////////////////////////////////////////////
 // convert from raw Euler data record to absolute data
 ////////////////////////////////////////////////////////////////////////
-void vjThreeDMouse::eulerToAbsolute (byte record[], vjPOS_DATA* data)
+void ThreeDMouse::eulerToAbsolute (byte record[], vrj::POS_DATA* data)
 {
   long ax, ay, az, arx, ary, arz;
 
@@ -478,7 +478,7 @@ void vjThreeDMouse::eulerToAbsolute (byte record[], vjPOS_DATA* data)
 /////////////////////////////////////////////////////////////////////////
 // print an 8-bit binary string
 /////////////////////////////////////////////////////////////////////////
-void vjThreeDMouse::printBin (char a)
+void ThreeDMouse::printBin (char a)
 {
   int i;
 

@@ -34,8 +34,11 @@
 #include <vjConfig.h>
 #include <Kernel/vjWin32SystemFactory.h>
 
+namespace vrj
+{
+   
 
+//vjWin32SystemFactory* Win32SystemFactory::_instance = NULL;
+vprSingletonImp(Win32SystemFactory);
 
-//vjWin32SystemFactory* vjWin32SystemFactory::_instance = NULL;
-vjSingletonImp(vjWin32SystemFactory);
-
+};

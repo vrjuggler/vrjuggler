@@ -33,6 +33,9 @@
 #ifndef _VJ_CONFIG_TOKENS_H_
 #define _VJ_CONFIG_TOKENS_H_
 
+namespace vrj
+{
+   
 const char end_TOKEN[] = "end";
 
 const char vj_valuelabels_TOKEN[] = "vj_valuelabels";
@@ -63,5 +66,5 @@ const char distance_TOKEN[] = "distance";
 const char chunk_TOKEN[] = "chunk";
 const char embeddedchunk_TOKEN[] = "embeddedchunk";
 
-
+};
 #endif

@@ -36,6 +36,9 @@
 
 #include <vjConfig.h>
 
+namespace vrj
+{
+   
 //------------------------------
 //: A frustum object.
 // 
@@ -44,13 +47,13 @@
 // @author Allen Bierbaum
 //  Date: 10-1-97
 //------------------------------
-class VJ_CLASS_API vjFrustum
+class VJ_CLASS_API Frustum
 {
 public:
    enum entry
    {VJ_LEFT = 0, VJ_RIGHT = 1, VJ_BOTTOM, VJ_TOP, VJ_NEAR, VJ_FAR};
 
-   vjFrustum()
+   Frustum()
    {
       frust[0] = frust[1] = frust[2] = 0.0f;
       frust[3] = frust[4] = frust[5] = 0.0f;
@@ -91,6 +94,7 @@ public:
 
 
 // ---- FRIEND FUNCTIONS ---- //
-std::ostream& operator<<(std::ostream& out, vjFrustum& _frust);
+std::ostream& operator<<(std::ostream& out, Frustum& _frust);
 
+};
 #endif

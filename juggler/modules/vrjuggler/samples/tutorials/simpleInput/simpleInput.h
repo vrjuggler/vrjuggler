@@ -19,10 +19,10 @@
 //
 // This application demonstrates getting and printing input
 //
-// NOTE: It is derived from vjGlApp only because vjApp
+// NOTE: It is derived from GlApp only because App
 //        is an abstract base class.
 //----------------------------------------------------
-class simpleInput : public vjGlApp
+class simpleInput : public GlApp
 {
 public:
    simpleInput()
@@ -63,7 +63,7 @@ public:
                  << std::endl;
 
       // -- Get Wand matrix --- //
-      vjMatrix wand_matrix;
+      Matrix wand_matrix;
       wand_matrix = *(mWand->getData());
       std::cout << "Wand pos: \n" << wand_matrix << std::endl;
    }
@@ -72,10 +72,10 @@ public:
    virtual void draw() {;}
 
 public:
-   vjPosInterface    mWand;         // Positional interface for Wand position
-   vjPosInterface    mHead;         // Positional interface for Head position
-   vjDigitalInterface   mButton0;   // Digital interface for button 0
-   vjDigitalInterface   mButton1;   // Digital interface for button 1
+   PosInterface    mWand;         // Positional interface for Wand position
+   PosInterface    mHead;         // Positional interface for Head position
+   DigitalInterface   mButton0;   // Digital interface for button 0
+   DigitalInterface   mButton1;   // Digital interface for button 1
 };
 
 

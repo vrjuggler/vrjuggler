@@ -67,14 +67,14 @@ public:
 
 int main(int argc, char* argv[])
 {
-   vjKernel* kernel = vjKernel::instance(); // Declare a new Kernel
+   Kernel* kernel = Kernel::instance(); // Declare a new Kernel
    simplePfNavApp* application = new simplePfNavApp();  // Delcare an instance of my application
 
    std::string file_path( "" );
    const float dcs_scale( 1.0f );
-   const vjVec3 dcs_trans( 0.0f, 0.0f, 0.0f );
-   const vjVec3 dcs_rot(0.0,0.0,0.0);
-   const vjVec3 initial_pos( 0.0f, 0.0f, 0.0f );
+   const Vec3 dcs_trans( 0.0f, 0.0f, 0.0f );
+   const Vec3 dcs_rot(0.0,0.0,0.0);
+   const Vec3 initial_pos( 0.0f, 0.0f, 0.0f );
 
    if (argc < 2)
    {

@@ -36,7 +36,7 @@ namespace kev
          }  
                 
          // matrix constructor
-         Key( const float& timeVal, const vjMatrix& mat )
+         Key( const float& timeVal, const Matrix& mat )
          {
             assert( timeVal >= 0 && "Keyframes always have positive time value" );
             mTime = timeVal;
@@ -44,7 +44,7 @@ namespace kev
             mPos = mat.getTrans();
          }
          // pos/quat constructor
-         Key( const float& timeVal, const vjVec3& pos, const vjQuat& rot )
+         Key( const float& timeVal, const Vec3& pos, const Quat& rot )
          {
             assert( timeVal >= 0 && "Keyframes always have positive time value" );
             mTime = timeVal;
@@ -53,17 +53,17 @@ namespace kev
          }
          // accessors
          const float&    time() const { return mTime; }
-         const vjQuat&   rotation() const { return mRot; }
-         const vjVec3&   position() const { return mPos; }
+         const Quat&   rotation() const { return mRot; }
+         const Vec3&   position() const { return mPos; }
          float&          time() { return mTime; }
-         vjQuat&         rotation() { return mRot; }
-         vjVec3&         position() { return mPos; }
+         Quat&         rotation() { return mRot; }
+         Vec3&         position() { return mPos; }
          
          // quat/pos -> matrix conversion
-         void getMatrix( vjMatrix& mat ) const
+         void getMatrix( Matrix& mat ) const
          {
-            vjMatrix rot;
-            vjMatrix pos;
+            Matrix rot;
+            Matrix pos;
             
             rot.makeQuaternion( mRot );
             pos.makeTrans( mPos );
@@ -76,8 +76,8 @@ namespace kev
          
       private:
          float       mTime;
-         vjQuat      mRot;
-         vjVec3      mPos;
+         Quat      mRot;
+         Vec3      mPos;
       };
    
       //: default constructor
@@ -195,10 +195,10 @@ namespace kev
       const Key& key() const { return mCurrentKey; }
       
       //: get the current interpolated key's quaternion rotation
-      const vjQuat& rotation() const { return mCurrentKey.rotation(); }
+      const Quat& rotation() const { return mCurrentKey.rotation(); }
       
       //: get the current interpolated key's position
-      const vjVec3& position() const { return mCurrentKey.position(); }
+      const Vec3& position() const { return mCurrentKey.position(); }
       
       //: get the time of the current interpolated key
       const float& time() const
@@ -208,7 +208,7 @@ namespace kev
       }
       
       //: get the current interpolated key's matrix transform
-      void getMatrix( vjMatrix& mat ) const { mCurrentKey.getMatrix( mat ); }
+      void getMatrix( Matrix& mat ) const { mCurrentKey.getMatrix( mat ); }
       
       //: update func.
       void update( float timeOfKey )
@@ -305,7 +305,7 @@ public:
          float time_needed( timeNeeded );
          assert( (time_needed >= keyTwo.time() && time_needed <= keyOne.time()) ||
                  (time_needed >= keyOne.time() && time_needed <= keyTwo.time()) && "time_needed need to be in between the two times" );
-         float size = vjMath::abs( keyTwo.time() - keyOne.time() );
+         float size = Math::abs( keyTwo.time() - keyOne.time() );
 
          // degenerate case where you're interpolating between two keys of the same size..
          if (size <= 0.00001f)
@@ -315,11 +315,11 @@ public:
          }
 
          // find the distance between [keyOneTime, time_needed, keyTwoTime] to  [0, normalize, 1]
-         time_needed -= vjMath::Min( keyOne.time(), keyTwo.time() );
+         time_needed -= Math::Min( keyOne.time(), keyTwo.time() );
          float normalize = time_needed / size;
 
          // interpolate.
-         vjMath::lerp( resultingKey.time(), normalize, keyOne.time(), keyTwo.time() );
+         Math::lerp( resultingKey.time(), normalize, keyOne.time(), keyTwo.time() );
          resultingKey.position().lerp( normalize, keyOne.position(), keyTwo.position() );
 	      resultingKey.rotation().slerp( normalize, keyOne.rotation(), keyTwo.rotation() );
       }

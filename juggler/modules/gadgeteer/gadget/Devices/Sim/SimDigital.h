@@ -40,6 +40,9 @@
 #include <Input/vjInput/vjDigital.h>
 #include <Input/vjSim/vjSimInput.h>
 
+namespace vrj
+{
+   
 //: Simulated digital device
 // Simulates a digital device from a keyboard device.
 // It allows any number of simulated digital devices to be created.
@@ -49,18 +52,18 @@
 //
 // This class should not be used directly by the user.
 //!PUBLIC_API:
-class vjSimDigital : public vjInput, public vjDigital, public vjSimInput
+class SimDigital : public Input, public Digital, public SimInput
 {
 public:
-   vjSimDigital();
-   virtual ~vjSimDigital();
+   SimDigital();
+   virtual ~SimDigital();
 
-   virtual bool config(vjConfigChunk* chunk);
+   virtual bool config(ConfigChunk* chunk);
 
    //: Return digital data
    virtual int getDigitalData(int devNum=0)
    {
-      vjASSERT(devNum < (int)mDigitalData.size());    // Make sure we have enough space
+      vprASSERT(devNum < (int)mDigitalData.size());    // Make sure we have enough space
       return mDigitalData[devNum];
    }
 
@@ -76,7 +79,9 @@ public:
 
 private:
    std::vector<int>          mDigitalData;   //: The digital data that we have
-   std::vector<vjKeyModPair> mSimKeys;       //: The keys to press for digital simulation
+   std::vector<KeyModPair> mSimKeys;       //: The keys to press for digital simulation
+};
+
 };
 
 #endif

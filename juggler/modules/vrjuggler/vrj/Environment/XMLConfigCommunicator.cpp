@@ -41,18 +41,21 @@
 #include <Config/vjChunkFactory.h>
 
 
+namespace vrj
+{
+   
 //: Constructor
-vjXMLConfigCommunicator::vjXMLConfigCommunicator ():vjNetCommunicator() {
+XMLConfigCommunicator::XMLConfigCommunicator ():NetCommunicator() {
     //connection = NULL;
-    config_xml_handler = (vjXMLConfigIOHandler*)vjConfigIO::instance()->getHandler ("xml_config");
-    xml_parser = vjXercesXMLParserPool::instance()->getParser();
+    config_xml_handler = (XMLConfigIOHandler*)ConfigIO::instance()->getHandler ("xml_config");
+    xml_parser = XercesXMLParserPool::instance()->getParser();
 }
 
 
 //: Destructor
-/*virtual*/ vjXMLConfigCommunicator::~vjXMLConfigCommunicator () {
-    vjConfigIO::instance()->releaseHandler (config_xml_handler);
-    vjXercesXMLParserPool::instance()->releaseParser (xml_parser);
+/*virtual*/ XMLConfigCommunicator::~XMLConfigCommunicator () {
+    ConfigIO::instance()->releaseHandler (config_xml_handler);
+    XercesXMLParserPool::instance()->releaseParser (xml_parser);
 }
 
 
@@ -65,8 +68,8 @@ vjXMLConfigCommunicator::vjXMLConfigCommunicator ():vjNetCommunicator() {
 //! PRE: _connection is open & valid for writing to; connection
 //+      is NULL.
 //! POST: true.
-/*virtual*/ void vjXMLConfigCommunicator::initConnection(vjConnect* _connection) {
-    vjNetCommunicator::initConnection (_connection);
+/*virtual*/ void XMLConfigCommunicator::initConnection(Connect* _connection) {
+    NetCommunicator::initConnection (_connection);
     //connection = _connection;
 }
 
@@ -76,9 +79,9 @@ vjXMLConfigCommunicator::vjXMLConfigCommunicator ():vjNetCommunicator() {
 //  (at least on vjcontrol's side).
 //! PRE: connection != NULL.
 //! POST: connection = NULL.
-/*virtual*/ void vjXMLConfigCommunicator::shutdownConnection() {
+/*virtual*/ void XMLConfigCommunicator::shutdownConnection() {
     //connection = 0;
-    vjNetCommunicator::shutdownConnection();
+    NetCommunicator::shutdownConnection();
 }
 
 
@@ -89,13 +92,13 @@ vjXMLConfigCommunicator::vjXMLConfigCommunicator ():vjNetCommunicator() {
 //  this is useful for backwards compatibility.
 //! RETURNS: True - if self knows how to parse this stream.
 //! RETURNS: False - otherwise.
-/*virtual*/ bool vjXMLConfigCommunicator::acceptsStreamIdentifier (const std::string& id) {
+/*virtual*/ bool XMLConfigCommunicator::acceptsStreamIdentifier (const std::string& id) {
     return !strcasecmp (id.c_str(), "xml_config");
 }
 
 
 //: Reads data from a communications stream.
-//  This should only be called by the vjConnect object self is
+//  This should only be called by the Connect object self is
 //  owned by.
 //  The Communicator should read data until it reaches the end of
 //  the protocol stream (signified by the character string
@@ -105,8 +108,8 @@ vjXMLConfigCommunicator::vjXMLConfigCommunicator ():vjNetCommunicator() {
 //! PRE: connection != NULL;
 //! RETURNS: true - if reading the protocol stream was succesful.
 //! RETURNS: false - if EOF or a fatal error occurs.  This will
-//+                  kill the vjConnect.
-/*virtual*/ bool vjXMLConfigCommunicator::readStream (std::istream& instream, const std::string& id) {
+//+                  kill the Connect.
+/*virtual*/ bool XMLConfigCommunicator::readStream (std::istream& instream, const std::string& id) {
     DOM_Node doc;
     bool retval = xml_parser->readStream (instream, doc);
     if (retval) {
@@ -116,7 +119,7 @@ vjXMLConfigCommunicator::vjXMLConfigCommunicator ():vjNetCommunicator() {
 }
 
 
-bool vjXMLConfigCommunicator::interpretDOM_Node (DOM_Node& doc) {
+bool XMLConfigCommunicator::interpretDOM_Node (DOM_Node& doc) {
     bool retval = true;
     DOMString node_name = doc.getNodeName();
     DOMString node_value = doc.getNodeValue();
@@ -126,7 +129,7 @@ bool vjXMLConfigCommunicator::interpretDOM_Node (DOM_Node& doc) {
 //     int attrCount;
 //     int i;
     //vjConfigChunk* ch = 0;
-    vjConfigChunkDB newchunkdb;
+    ConfigChunkDB newchunkdb;
     //      cout << "ok, we've got a node named '" << name << "' with a value of '" << node_value << "'." << endl;
     
     switch (doc.getNodeType()) {
@@ -149,7 +152,7 @@ bool vjXMLConfigCommunicator::interpretDOM_Node (DOM_Node& doc) {
                 child = child.getNextSibling();
             }
             if (retval)
-                vjConfigManager::instance()->addChunkDB(&newchunkdb);
+                ConfigManager::instance()->addChunkDB(&newchunkdb);
         }
         else if (!strcasecmp (name, "remove_chunks")) {
             child = doc.getFirstChild();
@@ -160,16 +163,16 @@ bool vjXMLConfigCommunicator::interpretDOM_Node (DOM_Node& doc) {
                 child = child.getNextSibling();
             }
             if (retval)
-                vjConfigManager::instance()->removeChunkDB (&newchunkdb);
+                ConfigManager::instance()->removeChunkDB (&newchunkdb);
         }
         else if (!strcasecmp (name, "remove_descs")) {
             // that could be dangerous, so we quietly refuse to honor
             // this request.
         }
         else if (!strcasecmp (name, "request_current_chunks")) {
-            vjConfigManager::instance()->lockActive();
-            vjConfigChunkDB* db = new vjConfigChunkDB((*(vjConfigManager::instance()->getActiveConfig())));   // Make a copy
-            vjConfigManager::instance()->unlockActive();
+            ConfigManager::instance()->lockActive();
+            ConfigChunkDB* db = new ConfigChunkDB((*(ConfigManager::instance()->getActiveConfig())));   // Make a copy
+            ConfigManager::instance()->unlockActive();
             
             //vjDEBUG(vjDBG_ENV_MGR,4) << "vjConnect: Sending (requested) chunkdb.\n" << vjDEBUG_FLUSH;
             //vjDEBUG(vjDBG_ENV_MGR,5) << *db << std::endl << vjDEBUG_FLUSH;
@@ -177,7 +180,7 @@ bool vjXMLConfigCommunicator::interpretDOM_Node (DOM_Node& doc) {
             
         }
         else if (!strcasecmp (name, "request_current_descs")) {
-            vjChunkDescDB* db = vjChunkFactory::instance()->getChunkDescDB();
+            ChunkDescDB* db = ChunkFactory::instance()->getChunkDescDB();
             vjDEBUG(vjDBG_ENV_MGR,4) << "vjConnect: Sending (requested) chunkdesc.\n" << vjDEBUG_FLUSH;
             vjDEBUG(vjDBG_ENV_MGR,5) << *db << std::endl << vjDEBUG_FLUSH;
             connection->sendDescDB (db);
@@ -193,3 +196,5 @@ bool vjXMLConfigCommunicator::interpretDOM_Node (DOM_Node& doc) {
     }
     return retval;
 } // interpretDOM_Node ();
+
+};

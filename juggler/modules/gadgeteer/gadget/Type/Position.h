@@ -46,52 +46,57 @@
 #include <Math/vjMatrix.h>
 #include <Performance/vjTimeStamp.h>
 
+namespace vrj
+{
+   
 typedef struct {
-  vjVec3 pos, orient;   // orient - EulerZYX , 0-Z, 1-Y, 2-X ???
+  Vec3 pos, orient;   // orient - EulerZYX , 0-Z, 1-Y, 2-X ???
   //float x,y,z,azi,elev,roll;
-  } vjPOS_DATA;
+  } POS_DATA;
 
 //-----------------------------------------------------------------------------------
-//: vjPosition is the abstract base class that devices with digital data derive from.
+//: Position is the abstract base class that devices with digital data derive from.
 //
-//  vjPosition is the base class that digital devices must derive from.  vjPosition
-//  inherits from vjInput, so it has pure virtual function constraints from
-//  vjInput in the following functions: StartSampling,StopSampling,Sample,
+//  Position is the base class that digital devices must derive from.  Position
+//  inherits from Input, so it has pure virtual function constraints from
+//  Input in the following functions: StartSampling,StopSampling,Sample,
 //  and UpdateData.
 //
-//  vjPosition objects have the ability to convert from the tracker's coord system
+//  Position objects have the ability to convert from the tracker's coord system
 //  to the Juggler coordinate system.
 //
-//  vjPosition adds one new pure virtual function, GetPosData for retreiving
-//  the positional data, similar to the addition for vjAnalog and vjDigital.
+//  Position adds one new pure virtual function, GetPosData for retreiving
+//  the positional data, similar to the addition for Analog and Digital.
 //-----------------------------------------------------------------------------------
 //!PUBLIC_API:
-class vjPosition
+class Position
 {
 public:
 
     //: Constructor
-    vjPosition();
+    Position();
 
     //: Destructor
-    virtual ~vjPosition();
+    virtual ~Position();
 
-    virtual bool config(vjConfigChunk *c);
+    virtual bool config(ConfigChunk *c);
 
     /* New pure virtual functions */
     //: Get Position data
-    virtual vjMatrix* getPosData(int devNum = 0) = 0;
-    virtual vjTimeStamp* getPosUpdateTime (int devNum = 0);
+    virtual Matrix* getPosData(int devNum = 0) = 0;
+    virtual TimeStaMp* getPosUpdateTime (int devNum = 0);
 
 public:
     /* XXX: Some of this stuff should be removed */
     /* XXX: theData is a ptr because flock needs an infinite number */
     /* XXX: We should change this so that theData is defined in each class and not here */
-    vjMatrix* theData;   // Ptr to matrix that holds the actually position data
-    vjTimeStamp* mDataTimes; // time when each buffer was last filled.
+    Matrix* theData;   // Ptr to matrix that holds the actually position data
+    TimeStaMp* mDataTimes; // time when each buffer was last filled.
 
-    vjMatrix xformMat;   // The total xform matrix.  T*R  NOTE: Used to move from trk coord system to Juggler coord system
-    vjMatrix rotMat;     // Only the rotation matrix
+    Matrix xformMat;   // The total xform matrix.  T*R  NOTE: Used to move from trk coord system to Juggler coord system
+    Matrix rotMat;     // Only the rotation matrix
+};
+
 };
 
 #endif

@@ -34,32 +34,35 @@
 
 #include <Config/vjChunkDesc.h>
 #include <Config/vjParseUtil.h>
-#include <Kernel/vjAssert.h>
+#include <vpr/Util/Assert.h>
 #include <Config/vjConfigIO.h>
 #include <Config/vjXMLConfigIOHandler.h>
 
 
-vjChunkDesc::vjChunkDesc () :plist() {
+namespace vrj
+{
+   
+ChunkDesc::ChunkDesc () :plist() {
     validation = 1;
     name = "unnamed";
     token = "unnamed";
     help = "";
     default_chunk = 0;
     default_node = 0;
-    vjPropertyDesc *d = new vjPropertyDesc("name",1,T_STRING," ");
+    PropertyDesc *d = new PropertyDesc("name",1,T_STRING," ");
     add (d);
 }
 
 
 
-vjChunkDesc::vjChunkDesc (const vjChunkDesc& desc): plist() {
+ChunkDesc::ChunkDesc (const ChunkDesc& desc): plist() {
     validation = 1;
     *this = desc;
 }
 
 
 
-vjChunkDesc::~vjChunkDesc() {
+ChunkDesc::~ChunkDesc() {
     /* XXX: Leave it for now
     for (unsigned int i = 0; i < plist.size(); i++)
         delete plist[i];
@@ -70,8 +73,8 @@ vjChunkDesc::~vjChunkDesc() {
 
 
 #ifdef VJ_DEBUG
-void vjChunkDesc::assertValid () const {
-    vjASSERT (validation == 1 && "Trying to use deleted vjChunkDesc");
+void ChunkDesc::assertValid () const {
+    vprASSERT (validation == 1 && "Trying to use deleted ChunkDesc");
      for (unsigned int i = 0; i < plist.size(); i++)
          plist[i]->assertValid();
 }
@@ -79,7 +82,7 @@ void vjChunkDesc::assertValid () const {
 
 
 
-vjChunkDesc& vjChunkDesc::operator= (const vjChunkDesc& other) {
+ChunkDesc& ChunkDesc::operator= (const ChunkDesc& other) {
     assertValid();
     other.assertValid();
 
@@ -106,7 +109,7 @@ vjChunkDesc& vjChunkDesc::operator= (const vjChunkDesc& other) {
     plist.reserve (other.plist.size());
     for (i = 0; i < other.plist.size(); i++) {
         //plist.push_back ( other.plist[i]);
-        plist.push_back ( new vjPropertyDesc(*(other.plist[i])));
+        plist.push_back ( new PropertyDesc(*(other.plist[i])));
     }
 
     return *this;
@@ -114,7 +117,7 @@ vjChunkDesc& vjChunkDesc::operator= (const vjChunkDesc& other) {
 
 
 
-void vjChunkDesc::setName (const std::string& _name) {
+void ChunkDesc::setName (const std::string& _name) {
     assertValid();
 
     name = _name;
@@ -122,7 +125,7 @@ void vjChunkDesc::setName (const std::string& _name) {
 
 
 
-void vjChunkDesc::setToken (const std::string& _token) {
+void ChunkDesc::setToken (const std::string& _token) {
     assertValid();
 
     token = _token;
@@ -130,7 +133,7 @@ void vjChunkDesc::setToken (const std::string& _token) {
 
 
 
-void vjChunkDesc::setHelp (const std::string& _help) {
+void ChunkDesc::setHelp (const std::string& _help) {
     assertValid();
 
     help = _help;
@@ -138,28 +141,28 @@ void vjChunkDesc::setHelp (const std::string& _help) {
 
 
 
-const std::string& vjChunkDesc::getName () const {
+const std::string& ChunkDesc::getName () const {
     assertValid();
 
     return name;
 }
 
 
-const std::string& vjChunkDesc::getToken () const {
+const std::string& ChunkDesc::getToken () const {
     assertValid();
 
     return token;
 }
 
 
-const std::string& vjChunkDesc::getHelp () const {
+const std::string& ChunkDesc::getHelp () const {
     assertValid();
 
     return help;
 }
 
 
-void vjChunkDesc::add (vjPropertyDesc *pd) {
+void ChunkDesc::add (PropertyDesc *pd) {
     assertValid();
 
     remove(pd->getToken());
@@ -167,22 +170,22 @@ void vjChunkDesc::add (vjPropertyDesc *pd) {
 }
 
 
-void vjChunkDesc::setDefaultChunk (DOM_Node* n) {
+void ChunkDesc::setDefaultChunk (DOM_Node* n) {
     default_node = new DOM_Node;
     *default_node = *n;
     default_chunk = 0; // memory leak?
 }
 
-vjConfigChunk* vjChunkDesc::getDefaultChunk() const {
+ConfigChunk* ChunkDesc::getDefaultChunk() const {
     // thread safety???
     if ((default_chunk == NULL) && (default_node != 0)) {
-        vjXMLConfigIOHandler* handler = (vjXMLConfigIOHandler*)vjConfigIO::instance()->getHandler("xml_config");
-        vjConfigChunk* ch = handler->buildConfigChunk (*default_node, false);
+        XMLConfigIOHandler* handler = (XMLConfigIOHandler*)ConfigIO::instance()->getHandler("xml_config");
+        ConfigChunk* ch = handler->buildConfigChunk (*default_node, false);
         if (ch) {
             // this is a cheat
-            const_cast<vjChunkDesc*>(this)->default_chunk = ch;
+            const_cast<ChunkDesc*>(this)->default_chunk = ch;
         }
-        vjConfigIO::instance()->releaseHandler (handler);
+        ConfigIO::instance()->releaseHandler (handler);
     }
 //      if (default_chunk)
 //          std::cout << "returning a default chunk: " << *default_chunk << std::endl;
@@ -192,7 +195,7 @@ vjConfigChunk* vjChunkDesc::getDefaultChunk() const {
 }
 
 
-vjPropertyDesc* vjChunkDesc::getPropertyDesc (const std::string& _token) const {
+PropertyDesc* ChunkDesc::getPropertyDesc (const std::string& _token) const {
     assertValid();
 
     for (unsigned int i = 0; i < plist.size(); i++)
@@ -203,11 +206,11 @@ vjPropertyDesc* vjChunkDesc::getPropertyDesc (const std::string& _token) const {
 
 
 
-bool vjChunkDesc::remove (const std::string& _token)
+bool ChunkDesc::remove (const std::string& _token)
 {
     assertValid();
 
-    std::vector<vjPropertyDesc*>::iterator cur_desc = plist.begin();
+    std::vector<PropertyDesc*>::iterator cur_desc = plist.begin();
     while (cur_desc != plist.end()) {
         if (!vjstrcasecmp ((*cur_desc)->getToken(), _token)) {
             /* XXX:
@@ -225,7 +228,7 @@ bool vjChunkDesc::remove (const std::string& _token)
 
 
 VJ_IMPLEMENT(std::ostream&) operator << (std::ostream& out,
-                                         const vjChunkDesc& self)
+                                         const ChunkDesc& self)
 {
     self.assertValid();
 
@@ -238,13 +241,13 @@ VJ_IMPLEMENT(std::ostream&) operator << (std::ostream& out,
 }
 
 
-VJ_IMPLEMENT(std::istream&) operator >> (std::istream& in, vjChunkDesc& self)
+VJ_IMPLEMENT(std::istream&) operator >> (std::istream& in, ChunkDesc& self)
 {
     self.assertValid();
 
     const int buflen = 512;
     char str[buflen];
-    vjPropertyDesc *p;
+    PropertyDesc *p;
     
     readString (in, str, buflen);
     self.token = str;
@@ -265,7 +268,7 @@ VJ_IMPLEMENT(std::istream&) operator >> (std::istream& in, vjChunkDesc& self)
     
     // this could use improvement
     do {
-        p = new vjPropertyDesc();
+        p = new PropertyDesc();
         in >> *p;
         if (!vjstrcasecmp (p->getToken(),std::string("end"))) {
             /* XXX:
@@ -277,7 +280,7 @@ VJ_IMPLEMENT(std::istream&) operator >> (std::istream& in, vjChunkDesc& self)
     } while (!in.eof());
     
     if (!self.getPropertyDesc ("name"))
-        self.plist.insert (self.plist.begin(), new vjPropertyDesc("name",1,T_STRING," "));
+        self.plist.insert (self.plist.begin(), new PropertyDesc("name",1,T_STRING," "));
     return in;
 }
 
@@ -286,7 +289,7 @@ VJ_IMPLEMENT(std::istream&) operator >> (std::istream& in, vjChunkDesc& self)
 //:equality operator
 // a little stricter than it needs to be.. it shouldn't care about the order of
 // propertydescs...
-bool vjChunkDesc::operator== (const vjChunkDesc& d) const {
+bool ChunkDesc::operator== (const ChunkDesc& d) const {
     assertValid();
     d.assertValid();
 
@@ -301,3 +304,5 @@ bool vjChunkDesc::operator== (const vjChunkDesc& d) const {
             return false;
     return true;
 }
+
+};

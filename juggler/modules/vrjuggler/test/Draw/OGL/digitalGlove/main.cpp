@@ -43,7 +43,7 @@
 
 int main(int argc, char* argv[])
 {
-   vjKernel* kernel = vjKernel::instance();           // Get the kernel
+   Kernel* kernel = Kernel::instance();           // Get the kernel
    digitalGloveApp* application = new digitalGloveApp(kernel);       // Declare an instance of the app
 
    if (argc <= 1)

@@ -489,7 +489,7 @@ BOOL ISD_openTracker(InterSenseTrackerType *tracker,
         tracker->station[i].Orientation[2] = 0.0f; 
         tracker->station[i].Orientation[3] = 0.0f; 
 
-        tracker->station[i].TimeStamp = 0.0f;
+        tracker->station[i].TimeStaMp = 0.0f;
 
         memset((void *)tracker->station[i].ButtonState, 0, sizeof(tracker->station[i].ButtonState));
         memset((void *)tracker->station[i].AnalogData, 0, sizeof(tracker->station[i].AnalogData));
@@ -520,7 +520,7 @@ BOOL ISD_openTracker(InterSenseTrackerType *tracker,
         Station.GetAnalogData = FALSE;
 
         /* no time stamp unless requested by application */
-        Station.TimeStamped = FALSE;
+        Station.TimeStaMped = FALSE;
         Station.AngleFormat = ISD_EULER;
 
         ISD_setOutputRecordList(tracker, &Station, i);  
@@ -568,7 +568,7 @@ BOOL ISD_getCommState(InterSenseTrackerType *tracker,
 {
     WORD systemModel[MAX_HARDWARE_VERSIONS] =
               {ISD_IS300, ISD_IS600, ISD_IS900, ISD_INTERTRAX, ISD_UNKNOWN};
-    BOOL status = PASS;
+    //BOOL status = PASS;
 
     Tracker->TrackerType = tracker->hardware;  
     
@@ -602,10 +602,11 @@ BOOL ISD_getCommState(InterSenseTrackerType *tracker,
 BOOL ISD_getTrackerState(InterSenseTrackerType *tracker, 
                          ISD_TRACKER_TYPE *Tracker, BOOL verbose)
 {
+   BOOL status = PASS;
+        
     WORD systemModel[MAX_HARDWARE_VERSIONS] =
               {ISD_IS300, ISD_IS600, ISD_IS900, ISD_INTERTRAX, ISD_UNKNOWN};
-    BOOL status = PASS;
-
+    
     Tracker->TrackerType = tracker->hardware;  
     
     if(tracker->hardware == ISD_PRECISION_SERIES)
@@ -641,7 +642,9 @@ BOOL ISD_getTrackerState(InterSenseTrackerType *tracker,
         }
 
         if(verbose)
+        {
             ISD_printf(tracker, "%s\n", status == PASS ? "done" : "failed");
+        }
     }
 
     return status;
@@ -661,7 +664,7 @@ BOOL ISD_getTrackerState(InterSenseTrackerType *tracker,
 BOOL ISD_setTrackerState(InterSenseTrackerType *tracker, 
                          ISD_TRACKER_TYPE *Tracker, BOOL verbose)
 {
-    BOOL status = FAIL;
+    //BOOL status = FAIL;
 
     if(tracker->hardware == ISD_PRECISION_SERIES)
     {
@@ -711,7 +714,7 @@ BOOL ISD_getStationState(InterSenseTrackerType *tracker,
     {
         Station->GetButtons = FALSE;
         Station->GetAnalogData = FALSE;
-        Station->TimeStamped = FALSE;
+        Station->TimeStaMped = FALSE;
         Station->AngleFormat = ISD_EULER;
 
         /* look for the time stamp item in the output record list */
@@ -719,7 +722,7 @@ BOOL ISD_getStationState(InterSenseTrackerType *tracker,
         {
             if(tracker->station[stationNum-1].outputList[i] == 21)
             {
-                Station->TimeStamped = TRUE;
+                Station->TimeStaMped = TRUE;
             }
             if(tracker->station[stationNum-1].outputList[i] == 22)
             {
@@ -828,7 +831,7 @@ BOOL ISD_setOutputRecordList (InterSenseTrackerType *tracker,
                 break;
         }
 
-        if(Station->TimeStamped) pos += sprintf(&command[pos], ",21");
+        if(Station->TimeStaMped) pos += sprintf(&command[pos], ",21");
 
         if(tracker->state.hardwareVersion & IS900)
         {

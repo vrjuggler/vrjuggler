@@ -9,7 +9,7 @@ int aTrackdSensor::numSensors()
 }
 
 // Return the position of the given sensor
-vjMatrix aTrackdSensor::getSensorPos(int sensorNum)
+vrj::Matrix aTrackdSensor::getSensorPos(int sensorNum)
 {
    assert(mMem != NULL && "We don't have a valid trackd memory area");
    assert(sensorNum < numSensors() && "Out of bounds request for a sensor");
@@ -18,7 +18,7 @@ vjMatrix aTrackdSensor::getSensorPos(int sensorNum)
    sensor_val = trackd_sensor(mMem, sensorNum);
 
    // XXX: This is untested and is probably wrong. :(
-   vjMatrix ret_val;
+   vrj::Matrix ret_val;
    ret_val.makeXYZEuler(sensor_val->elev, sensor_val->azim, sensor_val->roll);
    ret_val.setTrans(sensor_val->x, sensor_val->y, sensor_val->z);
 

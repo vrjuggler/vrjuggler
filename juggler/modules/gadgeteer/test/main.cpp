@@ -47,10 +47,10 @@
 int main()
 {
    // --- Load chunk database -- //
-   vjMemPool* shared_pool = new vjSharedPool(1024*1024);
-   vjChunkDescDB desc;
+   MemPool* shared_pool = new SharedPool(1024*1024);
+   ChunkDescDB desc;
    bool load_worked = desc.load(CHUNK_DESC_LOCATION);
-   vjChunkFactory::setChunkDescDB(&desc);
+   ChunkFactory::setChunkDescDB(&desc);
 
    if(!load_worked)
       std::cerr << "Could not load chunkDesc's\n" << std::flush;
@@ -59,7 +59,7 @@ int main()
              << std::endl;
 
    // -- Load config -- //
-   vjConfigChunkDB *chunkdb = new vjConfigChunkDB();
+   ConfigChunkDB *chunkdb = new ConfigChunkDB();
    load_worked = chunkdb->load(CONFIG_LOCATION);
    if(!load_worked)
       std::cerr << "Could not load config file\n" << std::flush;
@@ -68,7 +68,7 @@ int main()
    std::cout << (*chunkdb);
    std::cout << "endochunks" << std::endl;
 
-   vjInputManager *input_manager = new(shared_pool)vjInputManager;
+   InputManager *input_manager = new(shared_pool)InputManager;
    std::cout << "vjInputManager created" << std::endl;
 
    // --- configure the input manager -- //
@@ -92,17 +92,17 @@ int main()
       input_manager->updateAllData();
 
 
-      vjMatrix* pd_head = input_manager->getPosProxy(head_index)->getData();
-      vjMatrix* pd_wand = input_manager->getPosProxy(wand_index)->getData();
+      Matrix* pd_head = input_manager->getPosProxy(head_index)->getData();
+      Matrix* pd_wand = input_manager->getPosProxy(wand_index)->getData();
 
       std::cout << "-------------------------------------\n";
       std::cout << "head:\n" << *pd_head << std::endl;
-      vjCoord head_coord(*pd_head);
+      Coord head_coord(*pd_head);
       std::cout << "\tpos:" << head_coord.pos << std::endl;
       std::cout << "\tor:" << head_coord.orient << std::endl;
 
       std::cout << "wand:\n" << *pd_wand << std::endl << std::flush;
-      vjCoord wand_coord(*pd_wand);
+      Coord wand_coord(*pd_wand);
       std::cout << "\tpos:" << wand_coord.pos << std::endl;
       std::cout << "\tor:" << wand_coord.orient << std::endl;
       std::cout << "-------------------------------------\n\n";

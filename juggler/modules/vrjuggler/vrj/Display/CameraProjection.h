@@ -37,23 +37,27 @@
 #include <vjConfig.h>
 #include <Kernel/vjProjection.h>
 #include <Config/vjConfigChunk.h>
-class vjMatrix;
+
+namespace vrj
+{
+   
+   class Matrix;
 
 //: Projection class that simply takes a matrix for the camera position
 //
-class vjCameraProjection : public vjProjection
+class CameraProjection : public Projection
 {
 public:
-   vjCameraProjection()
+   CameraProjection()
    {
-      mType = vjProjection::SIM;
+      mType = Projection::SIM;
    }
 
-   virtual void config(vjConfigChunk* chunk)
+   virtual void config(ConfigChunk* chunk)
    {
-      vjProjection::config(chunk);
+      Projection::config(chunk);
 
-      vjASSERT( ((std::string)chunk->getType() == std::string("simDisplay")) ||
+      vprASSERT( ((std::string)chunk->getType() == std::string("simDisplay")) ||
                 ((std::string)chunk->getType() == std::string("simViewport")) );
 
       // Set fov and make sure that it is not 0.0
@@ -65,7 +69,7 @@ public:
          mAspectRatio = 1.0f;
    }
 
-   virtual void calcViewMatrix(vjMatrix& cameraPos)
+   virtual void calcViewMatrix(Matrix& cameraPos)
    {
       mViewMat = cameraPos;
       // XXX: The frustum is not used
@@ -83,4 +87,5 @@ public:
    float mVertFOV;         // The vertical field of view
 };
 
+};
 #endif

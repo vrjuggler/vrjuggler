@@ -47,9 +47,9 @@
 
 int main(int argc, char* argv[])
 {
-   vjProjection::setNearFar(0.01f, 10000.0f);
+   Projection::setNearFar(0.01f, 10000.0f);
    
-   vjKernel* kernel = vjKernel::instance();        // Get the kernel
+   Kernel* kernel = Kernel::instance();        // Get the kernel
    torusApp* application = new torusApp(kernel);   // Declare an instance of the app
 
    if (argc <= 1)

@@ -62,7 +62,7 @@ public:
 // Demonstration OpenGL application class.
 // This application simply renders a field of cones.
 // ----------------------------------------------------------------------------
-class ConesApp : public vjGlApp {
+class ConesApp : public GlApp {
 public:
     // ------------------------------------------------------------------------
     // Constructor.  This creates the GLU quadric used to render the cones.
@@ -144,19 +144,19 @@ public:
 
     // ------------------------------------------------------------------------
     // Make sure that all our dependencies are satisfied, and make sure that
-    // there are vjUsers registered with the system.
+    // there are Users registered with the system.
     // ------------------------------------------------------------------------
     virtual bool depSatisfied(void);
 
-    vjGlContextData<ContextData>  mDlData;      // Data for display lists
-    vjGlContextData<ContextData>  mDlDebugData; // Data for debugging display lists
+    GlContextData<ContextData>  mDlData;      // Data for display lists
+    GlContextData<ContextData>  mDlDebugData; // Data for debugging display lists
     std::vector<UserData*>        mUserData;    // All the users in the program
 
 private:
     // ------------------------------------------------------------------------
     // Draw the scene.  A bunch of cones of differing color and stuff.
     // ------------------------------------------------------------------------
-    void myDraw(vjUser* user);
+    void myDraw(User* user);
     void initGLState(void);
 
     // ------------------------------------------------------------------------

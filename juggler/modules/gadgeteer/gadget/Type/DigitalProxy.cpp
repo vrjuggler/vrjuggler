@@ -36,10 +36,13 @@
 #include <Input/InputManager/vjDigitalProxy.h>
 #include <Config/vjConfigChunk.h>
 
-bool vjDigitalProxy::config(vjConfigChunk* chunk)
+namespace vrj
+{
+   
+bool DigitalProxy::config(ConfigChunk* chunk)
 {
    vjDEBUG_BEGIN(vjDBG_INPUT_MGR,3) << "----------- configuring DIGITAL proxy ----\n" << vjDEBUG_FLUSH;
-   vjASSERT(((std::string)chunk->getType()) == "DigProxy");
+   vprASSERT(((std::string)chunk->getType()) == "DigProxy");
 
    m_unitNum = chunk->getProperty("unit");
    mDeviceName = (std::string)chunk->getProperty("device");
@@ -50,39 +53,41 @@ bool vjDigitalProxy::config(vjConfigChunk* chunk)
 
 
 
-void vjDigitalProxy::updateData()
+void DigitalProxy::updateData()
 {
    if(!mStupified)
    {
       int new_state = mTypedDevice->getDigitalData(m_unitNum);
        int old_state = m_data;
-       if(vjDigital::OFF == old_state)
+       if(Digital::OFF == old_state)
       {
           if(new_state)     // Button now pressed
-         m_data = vjDigital::TOGGLE_ON;
+         m_data = Digital::TOGGLE_ON;
           else              // Button now released
-         m_data = vjDigital::OFF;
+         m_data = Digital::OFF;
       }
-       else if(vjDigital::ON == old_state)
+       else if(Digital::ON == old_state)
       {
           if(new_state)     // Button now pressed
-         m_data = vjDigital::ON;
+         m_data = Digital::ON;
           else              // Button now released
-         m_data = vjDigital::TOGGLE_OFF;
+         m_data = Digital::TOGGLE_OFF;
       }
-       else if(vjDigital::TOGGLE_ON == old_state)
+       else if(Digital::TOGGLE_ON == old_state)
       {
           if(new_state)     // Button now pressed
-         m_data = vjDigital::ON;
+         m_data = Digital::ON;
           else              // Button now released
-         m_data = vjDigital::TOGGLE_OFF;
+         m_data = Digital::TOGGLE_OFF;
       }
-       else if(vjDigital::TOGGLE_OFF == old_state)
+       else if(Digital::TOGGLE_OFF == old_state)
       {
           if(new_state)     // Button now pressed
-         m_data = vjDigital::TOGGLE_ON;
+         m_data = Digital::TOGGLE_ON;
           else              // Button now released
-         m_data = vjDigital::OFF;
+         m_data = Digital::OFF;
       }
    }
 }
+
+};

@@ -46,6 +46,9 @@
 //       the pinch glove act more like the flock of birds.
 #define VJ_MAX_GLOVE_DEVS 2   /* The maximum number of gloves per device */
 
+namespace vrj
+{
+   
 //: This is the data stored about a glove
 //
 // Desc:
@@ -64,23 +67,23 @@
 // NOTE: More docs needed here
 //
 //!PUBLIC_API:
-class VJ_CLASS_API vjGloveData
+class VJ_CLASS_API GloveData
 {
 public:
    enum { NUM_JOINTS = 4, NUM_COMPONENTS = 6 };
-   enum vjGloveJoint
+   enum GloveJoint
       { MPJ = 0, PIJ = 1, DIJ = 2, ABDUCT = 3, YAW = 0, PITCH = 1};
-   enum vjGloveComponent
+   enum GloveComponent
       { THUMB = 0, INDEX = 1, MIDDLE = 2, RING = 3, PINKY = 4, WRIST = 5};
 
 public:
    //: Constructor
    //! POST: Initialized with zero values and identities
-   vjGloveData();
+   GloveData();
 
     //: Copy Constructor
     //! POST: Initialized with the values from data
-    vjGloveData(const vjGloveData &data);
+    GloveData(const GloveData &data);
 
    //: From the given angle data, calculate the xforms
    int calcXforms();
@@ -96,18 +99,18 @@ public:
    //: These are the xforms from TO the coord system of the given joint
    // Ex: xforms[0] ==> <br>
    //     base<b>T</b>mpj mpj<b>T</b>pij pij<b>T</b>dij
-   vjMatrix  xforms[NUM_COMPONENTS][(NUM_JOINTS-1)];
+   Matrix  xforms[NUM_COMPONENTS][(NUM_JOINTS-1)];
 
    // Finger params
    //  XXX: Should put better info about hand dimensions in here
    // For now this is the translations FROM the previous joint to
    // the SPECIFIED joint.  In case of (DIJ+1), length to tip of finger
-   vjVec3    dims[NUM_COMPONENTS][NUM_JOINTS];
+   Vec3    dims[NUM_COMPONENTS][NUM_JOINTS];
 };
 
 
 //------------------------------------------------------------------------
-//: This is the abstract base glove class. Derived from vjInput.
+//: This is the abstract base glove class. Derived from Input.
 // It specifies the interface to all glove objects in the system.
 // VR Juggler will deal only with gloves using this interface.
 //
@@ -115,47 +118,49 @@ public:
 //
 //-------------------------------------------------------------------------
 //!PUBLIC_API:
-class VJ_CLASS_API vjGlove : virtual public vjInput
+class VJ_CLASS_API Glove : virtual public Input
 {
 public:
-   vjGlove();
+   Glove();
 
-   virtual ~vjGlove() {}
+   virtual ~Glove() {}
 
    // Let constructor take care of device abilities and init
-   virtual bool config(vjConfigChunk* chunk)
+   virtual bool config(ConfigChunk* chunk)
    {return true;}
 
 public:  // ---- GLOVE INTERFACE ---- //
    //: Return the angle of the given joint.
    // joint is one of a predefined enum type (jointType)
-   float getGloveAngle(vjGloveData::vjGloveComponent component,
-                       vjGloveData::vjGloveJoint joint, int devNum);
+   float getGloveAngle(GloveData::GloveComponent component,
+                       GloveData::GloveJoint joint, int devNum);
 
    //: This returns a vector ponting "out" of the component
    // Can be used for selection, etc.
-   vjVec3 getGloveVector(vjGloveData::vjGloveComponent component, int devNum);
+   Vec3 getGloveVector(GloveData::GloveComponent component, int devNum);
 
    //: This returns the position of given components.
    // Defaults to returning the palm position.
    // Can also get finger tips.
-   vjMatrix getGlovePos(vjGloveData::vjGloveComponent component = vjGloveData::WRIST, int devNum = 0);
+   Matrix getGlovePos(GloveData::GloveComponent component = GloveData::WRIST, int devNum = 0);
 
    //: This returns a copy of the glove data struct
-   vjGloveData getGloveData(int devNum);
+   GloveData getGloveData(int devNum);
 
 protected:
    // NOTE: make sure you use the "vjInput::progress" member in the [3] slot
    // here. Then you'll not go off the end of this array.
    // TODO: VJ_MAX_GLOVE_DEVS = 2 here is a hack until we make
    //       the pinch glove act more like the flock of birds.
-   vjGloveData mTheData[VJ_MAX_GLOVE_DEVS][3];
+   GloveData mTheData[VJ_MAX_GLOVE_DEVS][3];
 
    //: This is the positional proxy of the glove.  It defines the location of the
    // "center" of the glove. "center" could be different for each glove type.
    // TODO: VJ_MAX_GLOVE_DEVS = 2 here is a hack until we make
    //       the pinch glove act more like the flock of birds.
-   vjPosProxy*  mGlovePos[VJ_MAX_GLOVE_DEVS];
+   PosProxy*  mGlovePos[VJ_MAX_GLOVE_DEVS];
+
+};
 
 };
 

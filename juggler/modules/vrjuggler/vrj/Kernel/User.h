@@ -38,7 +38,11 @@
 //#include <Config/vjConfigChunk.h>
 #include <Input/InputManager/vjPosInterface.h>
 
-class vjConfigChunk;
+
+namespace vrj
+{
+   
+class ConfigChunk;
 
 //-----------------------------------------
 //: Representation for Juggler user in multi-user environments
@@ -55,14 +59,14 @@ class vjConfigChunk;
 // specific data.  Ex. Navigation matrices, input devices
 //---------------------------------------------
 //! PUBLIC_API:
-class VJ_CLASS_API vjUser
+class VJ_CLASS_API User
 {
 public:
    // Cosntruct the user
-   vjUser() : mUserId(-1), mName("")
+   User() : mUserId(-1), mName("")
    {;}
 
-   virtual ~vjUser()
+   virtual ~User()
    {;}
 
    //: Get the id of the user in the system
@@ -76,12 +80,12 @@ public:
    //: Configure the user object
    //! POST: User has valid ids (int and string)
    //! POST: Positional device for user location has been set
-   virtual bool config(vjConfigChunk* chunk);
+   virtual bool config(ConfigChunk* chunk);
 
-   vjMatrix* getHeadPos()
+   Matrix* getHeadPos()
    { return mHead->getData(); }
 
-   vjTimeStamp* getHeadUpdateTime()
+   TimeStaMp* getHeadUpdateTime()
    { return mHead->getUpdateTime(); }
 
    float getInterocularDistance()
@@ -90,16 +94,17 @@ public:
 private:
    int               mUserId;    //: the id of the user
    std::string       mName;      //: The string name of the user
-   vjPosInterface    mHead;      //: The head positon
+   PosInterface    mHead;      //: The head positon
    float             mInterocularDist;    //: Eye seperation
 
 private:
    static int mNextUserId;     //: the next user id to assign
 
-   vjUser(const vjUser& u) {;}
-   void operator=(const vjUser& u) {;}
+   User(const User& u) {;}
+   void operator=(const User& u) {;}
 };
 
 
+};
 
 #endif

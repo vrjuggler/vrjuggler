@@ -142,7 +142,7 @@ typedef struct
     WORD    Sensitivity;    /* levels 1 to 4 */
     WORD    Prediction;     /* 0 to 50 ms */
     WORD    AngleFormat;    /* ISD_EULER or ISD_QUATERNION */
-    BOOL    TimeStamped;    /* TRUE if time stamp is requested */
+    BOOL    TimeStaMped;    /* TRUE if time stamp is requested */
     BOOL    GetButtons;     /* TRUE if joystick or stylus button state is requested */
     BOOL    GetAnalogData;  /* TRUE if analog joystick data is requested */
 
@@ -153,7 +153,7 @@ typedef struct
 {
     float Orientation[4];   /* Supports both Euler and Quaternion formats */
     float Position[3];      /* Always in meters */
-    float TimeStamp;        /* Only if requested */
+    float TimeStaMp;        /* Only if requested */
     int   ButtonState[MAX_NUM_BUTTONS];  /* Only if requested */
 
     /* Current hardware is limited to 10 channels, only 2 are used. 

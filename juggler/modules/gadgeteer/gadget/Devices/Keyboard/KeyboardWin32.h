@@ -32,7 +32,7 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// vjKeyboardWin32.h
+// KeyboardWin32.h
 //
 // Keyboard input device for win32
 //
@@ -55,24 +55,26 @@
 #include <Input/vjInput/vjKeyboard.h>
 #include <vpr/Thread/Thread.h>
 
-
-class vjKeyboardWin32 : public vjInput, public vjKeyboard
+namespace vrj
+{
+   
+class KeyboardWin32 : public Input, public Keyboard
 {
 public:
 
-   vjKeyboardWin32()
+   KeyboardWin32()
    {
       for (int i =0; i < 256; i++)
          m_realkeys[i] = m_keys[i] = m_framekeys[i] = 0;
 
       m_realkeys[0] = m_keys[0] = m_framekeys[0] = 1;
    }
-   ~vjKeyboardWin32() { stopSampling();}
+   ~KeyboardWin32() { stopSampling();}
 
 
-   virtual bool config(vjConfigChunk* c);
+   virtual bool config(ConfigChunk* c);
 
-   /* Pure Virtuals required by vjInput */
+   /* Pure Virtuals required by Input */
    int startSampling();
    int stopSampling();
    int sample() { return 1;}
@@ -84,8 +86,8 @@ public:
    // last frame, so you can put this in an if to check if was
    // pressed at all, or if you are doing processing based on this
    // catch the actual number..
-   int isKeyPressed(int vjKey)
-   {  return m_keys[vjKey];}
+   int isKeyPressed(int Key)
+   {  return m_keys[Key];}
 
    virtual int keyPressed(int keyId)
    { return isKeyPressed(keyId); }
@@ -109,7 +111,7 @@ private:
 
    /** @name Windows utility functions */
    //@{
-   int VKKeyTovjKey(int vkKey);
+   int VKKeyToKey(int vkKey);
    char* checkArgs(char* look_for);
 
    BOOL MenuInit (HINSTANCE hInstance);
@@ -130,6 +132,8 @@ private:
    float m_mouse_sensitivity;
 
    int oldx,oldy,newx,newy;  // Mousemove variables
+};
+
 };
 
 #endif

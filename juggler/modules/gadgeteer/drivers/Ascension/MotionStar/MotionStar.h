@@ -42,14 +42,16 @@
 #include <vpr/Thread/Thread.h>
 #include <Input/vjPosition/aMotionStar.h>
 
-
+namespace vrj
+{
+   
 //-----------------------------------------------------------------------------
-//: vjPosition-derived class for running an Ascension MotionStar device that
+//: Position-derived class for running an Ascension MotionStar device that
 //+ is connected to a Flock of Birds.  It is a wrapper class for the real
 //+ driver class 'aMotionStar'.
 //
-//  vjMotionStar adds to the aMotionStar class shared memory and threading.<br>
-//  vjMotionStar is a positional device driver for the Flock of Birds.  The
+//  MotionStar adds to the aMotionStar class shared memory and threading.<br>
+//  MotionStar is a positional device driver for the Flock of Birds.  The
 //  config chunk in the constructor should set up all the settings.  For these
 //  to be changed, the MotionStar has to be deleted and a new instance created
 //  with an updated configchunk.
@@ -57,17 +59,17 @@
 //
 //! NOTE: Some functions still remain for changing the options of the
 //+       MotionStar when its not in Sampling mode, but in order to stay
-//+       consistent with the vjInput/vjPosition functionality these are only
-//+       left for building apps without vjConfigChunks.
+//+       consistent with the Input/vjPosition functionality these are only
+//+       left for building apps without ConfigChunks.
 //! NOTE: A note on reciever access:
 //+  Clients of Juggler should access tracker recievers as [0-n].  For
 //+  example, if you have recievers 1,2, and 4 with transmitter on 3, then
 //+  you can access the data, in order, as 0, 1, 2.
 //
-// See also: vjPosition
+// See also: Position
 //-----------------------------------------------------------------------------
 //!PUBLIC_API:
-class vjMotionStar : public vjInput, public vjPosition {
+class MotionStar : public Input, public Position {
 public:
 
     // ------------------------------------------------------------------------
@@ -100,7 +102,7 @@ public:
     //! ARGS: birds_required   - The number of birds required.  The default is
     //+                          10.
     // ------------------------------------------------------------------------
-    vjMotionStar(const char* address = NULL, const unsigned short port = 6000,
+    MotionStar(const char* address = NULL, const unsigned short port = 6000,
                  const enum BIRDNET::protocol proto = BIRDNET::TCP,
                  const bool master = false,
                  const FLOCK::hemisphere hemisphere = FLOCK::FRONT_HEMISPHERE,
@@ -116,10 +118,10 @@ public:
     //! PRE: None.
     //! POST: Sampling is stopped, and the data pool is deallocated.
     // ------------------------------------------------------------------------
-    virtual ~vjMotionStar(void);
+    virtual ~MotionStar(void);
 
     // ========================================================================
-    // vjInput overrides (or methods with the same name anyway).
+    // Input overrides (or methods with the same name anyway).
     // ========================================================================
 
     // ------------------------------------------------------------------------
@@ -152,7 +154,7 @@ public:
     }
 
     // ========================================================================
-    // vjPosition overrides.
+    // Position overrides.
     // ========================================================================
 
     // ------------------------------------------------------------------------
@@ -168,7 +170,7 @@ public:
     //! RETURNS: true - The device was configured succesfully.
     //! RETURNS: false - The config chunk is invalid.
     // ------------------------------------------------------------------------
-    virtual bool config(vjConfigChunk* c);
+    virtual bool config(ConfigChunk* c);
 
     // ------------------------------------------------------------------------
     //: Begin sampling.
@@ -241,15 +243,15 @@ public:
     //+  For example, if you have recievers 1,2, and 4 with transmitter on 3,
     //+  then you can access them, in order, as 0,1,2.
     // ------------------------------------------------------------------------
-    virtual vjMatrix* getPosData(int dev = 0);
+    virtual Matrix* getPosData(int dev = 0);
 
     // ------------------------------------------------------------------------
     //: Not used currently -- needed for interface.
     // ------------------------------------------------------------------------
-    virtual vjTimeStamp* getPosUpdateTime(int d);
+    virtual TimeStaMp* getPosUpdateTime(int d);
 
     // ========================================================================
-    // vjMotionStar-specific methods.
+    // MotionStar-specific methods.
     // ========================================================================
 
     // ------------------------------------------------------------------------
@@ -616,5 +618,7 @@ private:
     aMotionStar m_motion_star; // Actual MotionStar device driver
 };
 
+
+};
 
 #endif   /* _VJ_ASCENSION_MOTION_STAR_H_ */

@@ -35,28 +35,28 @@
 #define _VJ_KERNEL_
 //#pragma once
 
+#include <vpr/Util/Singleton.h>
+
 #include <vjConfig.h>
 #include <Kernel/vjSystemFactory.h>
 #include <Performance/vjPerfDataBuffer.h>
+#include <Kernel/vjConfigChunkHandler.h>  // Config stuff
 
-// Config stuff
-#include <Kernel/vjConfigChunkHandler.h>
-#include <Utils/vjSingleton.h>
 
 namespace vpr
 {
    class BaseThread;
 };
-class vjDisplayManager;
-class vjDrawManager;
-class vjEnvironmentManager;
-class vjInputManager;
+
 namespace vrj
 {
-   class SoundManager;
-};
-class vjUser;
-class vjApp;
+class DisplayManager;
+class DrawManager;
+class EnvironmentManager;
+class InputManager;
+class SoundManager;
+class User;
+class App;
 
 
 //-------------------------------------------------------
@@ -72,7 +72,7 @@ class vjApp;
 // Date: 9-7-97
 //-------------------------------------------------------
 //!PUBLIC_API:
-class VJ_CLASS_API vjKernel : public vjConfigChunkHandler
+class VJ_CLASS_API Kernel : public ConfigChunkHandler
 {
 public:
 
@@ -92,7 +92,7 @@ public:
    //  If there is another app active, it has to stop that
    //  application first then restart all API specific Managers.
    //! ARGS: _app - If NULL, stops current application
-   void setApplication(vjApp* _app);
+   void setApplication(vrj::App* _app);
 
    //: Load configuration data for Kernel
    //! POST: Config data has been read into initial buffer
@@ -115,7 +115,7 @@ protected:  // -- CHUNK HANDLER
    //: Can the handler handle the given chunk?
    //! RETURNS: true - Can handle it
    //+          false - Can't handle it
-   virtual bool configCanHandle(vjConfigChunk* chunk);
+   virtual bool configCanHandle(vrj::ConfigChunk* chunk);
 
    //: Process any pending reconfiguration that we can deal with
    //
@@ -130,20 +130,20 @@ protected:  // -- CHUNK HANDLER
    //: Add the chunk to the configuration
    //! PRE: configCanHandle(chunk) == true
    //! RETURNS: success
-   virtual bool configAdd(vjConfigChunk* chunk);
+   virtual bool configAdd(vrj::ConfigChunk* chunk);
 
    //: Remove the chunk from the current configuration
    //! PRE: configCanHandle(chunk) == true
    //!RETURNS: success
-   virtual bool configRemove(vjConfigChunk* chunk);
+   virtual bool configRemove(vrj::ConfigChunk* chunk);
 
 protected:  // Local config functions
-   //: Add a vjUser to the system
-   bool addUser(vjConfigChunk* chunk);
+   //: Add a User to the system
+   bool addUser(vrj::ConfigChunk* chunk);
 
-   //: Remove a vjUser from the system
+   //: Remove a User from the system
    //! NOTE: Currently not implemented
-   bool removeUser(vjConfigChunk* chunk);
+   bool removeUser(vrj::ConfigChunk* chunk);
 
 protected:
    //: Updates any data that needs updated once a frame (Trackers, etc.)
@@ -160,7 +160,7 @@ protected:
    //  application first then restart all API specific Managers.
    //! ARGS: _app - If NULL, stops current application
    //! NOTE: This can only be called from the kernel thread
-   void changeApplication(vjApp* _app);
+   void changeApplication(vrj::App* _app);
 
 protected:      // --- DRAW MGR ROUTINES --- //
    // Starts the draw manager running
@@ -176,61 +176,62 @@ protected:      // --- DRAW MGR ROUTINES --- //
 public:      // Global "get" interface
 
       //: Get the system Factory
-   vjSystemFactory* getSysFactory()
+   vrj::SystemFactory* getSysFactory()
    { return mSysFactory; }
 
    //: Get the input manager
-   vjInputManager* getInputManager();
+   vrj::InputManager* getInputManager();
 
     //: Get the Environment Manager
-    vjEnvironmentManager* getEnvironmentManager()
+   vrj::EnvironmentManager* getEnvironmentManager()
     { return environmentManager; }
 
    //: Get the user associated with given name
    //! RETURNS: NULL - Not found
-   vjUser*  getUser(std::string userName);
+   vrj::User*  getUser(std::string userName);
 
    //: Get a list of the users back
-   std::vector<vjUser*> getUsers()
+   std::vector<vrj::User*> getUsers()
    { return mUsers; }
 
    const vpr::BaseThread* getThread()
    { return mControlThread; }
 
 protected:
-   vjApp*      mApp;                        //: The app object
-   vjApp*      mNewApp;                      //: New application to set
+   vrj::App*      mApp;                        //: The app object
+   vrj::App*      mNewApp;                      //: New application to set
    bool        mNewAppSet;                   //: Flag to notify that a new application should be set
 
    vpr::BaseThread*   mControlThread;             //: The thread in control of me.
 
    /// Factories and Managers
-   vjSystemFactory*        mSysFactory;            //: The current System factory
-   vjInputManager*         mInputManager;          //: The input manager for the system
-   vjDrawManager*          mDrawManager;           //: The Draw Manager we are currently using
-   vrj::SoundManager*      mSoundManager;          //: The Audio Manager we are currently using
-   vjDisplayManager*       mDisplayManager;        //: The Display Manager we are currently using
-   vjEnvironmentManager*   environmentManager;     //: The Environment Manager object
+   vrj::SystemFactory*        mSysFactory;            //: The current System factory
+   InputManager*         mInputManager;          //: The input manager for the system
+   DrawManager*          mDrawManager;           //: The Draw Manager we are currently using
+   SoundManager*      mSoundManager;          //: The Audio Manager we are currently using
+   DisplayManager*       mDisplayManager;        //: The Display Manager we are currently using
+   EnvironmentManager*   environmentManager;     //: The Environment Manager object
    
    /// Performance information
-   vjPerfDataBuffer* perfBuffer;          //: store perfdata for kernel main
+   PerfDataBuffer* perfBuffer;          //: store perfdata for kernel main
    bool              performanceEnabled;
 
    /// Multi-user information
-   std::vector<vjUser*>   mUsers;         //: A list of user objects in system
+   std::vector<vrj::User*>   mUsers;         //: A list of user objects in system
 
    // ----------------------- //
    // --- SINGLETON STUFF --- //
    // ----------------------- //
 protected:
    //: Constructor:  Hidden, so no instantiation is allowed
-   vjKernel();
+   Kernel();
 
-   virtual ~vjKernel()
+   virtual ~Kernel()
    {;}
 
-   vjSingletonHeader( vjKernel );
+   vprSingletonHeader( Kernel );
 };
 
 
+} // end namespace
 #endif

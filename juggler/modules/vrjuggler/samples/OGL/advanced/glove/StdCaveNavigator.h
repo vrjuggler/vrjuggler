@@ -39,16 +39,19 @@
 #include <Math/vjMatrix.h>
 #include <Math/vjQuat.h>
 
+namespace vrj
+{
+   
 //: This is a "cave style" navigation matrix
 //  Provided that you call update once per frame, it should 
 //  provide back to you a matrix that can be used to navigate a scene.
 //  The matrix is in the OpenGL form, 
 //  For performer, convert this matrix, 
 //  and copy it to a DCS node once per frame as well.
-class vjStdCaveNavigator : public vjMatrix
+class StdCaveNavigator : public Matrix
 {
 public:
-   vjStdCaveNavigator();
+   StdCaveNavigator();
 
    //: tell the navigator to accelerate
    //  Acceleration is based on the current setMatrix call
@@ -88,26 +91,26 @@ public:
    }
    
    //: tell the navigator the matrix that reset() uses as it's origin.
-   virtual void setOrigin( const vjMatrix& matrix )
+   virtual void setOrigin( const Matrix& matrix )
    {
       mOrigin = matrix;
    }
    
    //: tell the navigator what the pointing device's matrix is.
    //  you can usually do this to get that matrix
-   //  vjMatrix* wand_mat = mWand->getData();
-   virtual void setMatrix( const vjMatrix& matrix )
+   //  Matrix* wand_mat = mWand->getData();
+   virtual void setMatrix( const Matrix& matrix )
    {
       mDeviceMatrix = matrix;
    }   
    
 protected:
-   vjMatrix mOrigin;
-   vjMatrix mDeviceMatrix;
+   Matrix mOrigin;
+   Matrix mDeviceMatrix;
    bool mAccelerate;
    bool mStop;
    float mVelocity;
-   vjQuat mRot;
+   Quat mRot;
 };
 
 //: call once per frame (pre or post frame, not intra frame)
@@ -116,5 +119,7 @@ virtual int update()
    mVelocity = mVelocity / factor;
    mAccelerate = 0.0f;
 }   
+
+};
 
 #endif

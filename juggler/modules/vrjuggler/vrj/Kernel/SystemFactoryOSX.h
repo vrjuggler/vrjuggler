@@ -36,10 +36,13 @@
 
 #include <vjConfig.h>
 #include <Kernel/vjSystemFactory.h>
-#include <Utils/vjSingleton.h>
+#include <vpr/Util/Singleton.h>
 #include <Carbon/Carbon.h>
 
-class vjDisplayManager;
+namespace vrj
+{
+   
+class DisplayManager;
 
 //---------------------------------------------------
 //: Concrete class for Mac OS X System specific Factory.
@@ -52,7 +55,7 @@ class vjDisplayManager;
 
 static OSErr QuitAppleEventHandler(const AppleEvent *appleEvt, AppleEvent* reply, UInt32 refcon);
 
-class vjOSXSystemFactory : public vjSystemFactory
+class OSXSystemFactory : public SystemFactory
 {
 public:
 
@@ -61,9 +64,9 @@ public:
       // --- Singleton stuff --- //
 protected:
    /// Constructor:  Hidden, so no instantiation is allowed
-   vjOSXSystemFactory();
+   OSXSystemFactory();
 
-   vjSingletonHeader(vjOSXSystemFactory);
+   vprSingletonHeader(OSXSystemFactory);
 
 
 
@@ -80,4 +83,5 @@ public:
     void setQuitFlag(Boolean value) { gQuitFlag = value; }
 };
 
+};
 #endif

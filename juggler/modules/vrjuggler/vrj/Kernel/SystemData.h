@@ -35,7 +35,11 @@
 #define _VJ_SYSTEM_DATA_
 
 #include <vjConfig.h>
-class vjInputManager;
+
+namespace vrj
+{
+   
+class InputManager;
 
 /**
  * vpr::SystemData: Globabl data that many objects need access to.
@@ -52,7 +56,8 @@ public:
         inputManager = NULL;
     }
 
-    vjInputManager*      inputManager;
+    InputManager*      inputManager;
 };
 
+};
 #endif

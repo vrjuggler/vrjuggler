@@ -37,10 +37,13 @@
 #include <vjConfig.h>
 
 
+namespace vrj
+{
+   
 //------------------------------------------------
 //: Parent class for any object whose value can be read periodically by EM
 //
-//       Right now, the only such objects are vjPerfDataBuffer
+//       Right now, the only such objects are PerfDataBuffer
 //       Additional classes may include an Input reader object...
 //
 // @author  Christopher Just
@@ -48,11 +51,11 @@
 // Date: 6-9-98
 //------------------------------------------------
 
-class VJ_CLASS_API vjTimedUpdate {
+class VJ_CLASS_API TimedUpdate {
 
     public:
 
-    //: writes the current contents of this vjTimedUpdate to out
+    //: writes the current contents of this TimedUpdate to out
     virtual void write (std::ostream& out) = 0;
     
     //: gets a name associated with this object
@@ -64,5 +67,6 @@ class VJ_CLASS_API vjTimedUpdate {
 
 };
 
+};
 
 #endif

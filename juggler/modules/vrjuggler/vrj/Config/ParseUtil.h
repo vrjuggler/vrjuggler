@@ -38,6 +38,9 @@
 #include <vjConfig.h>
 #include <Config/vjVarValue.h>
 
+namespace vrj
+{
+   
 bool readString (std::istream& in, char* buffer, int size, bool *quoted = NULL);
 
 VarType stringToVarType (const char* str);
@@ -68,4 +71,5 @@ std::string demangleFileName (const std::string& n, std::string parentfile);
 
 const std::string findFileUsingPathVar (std::ifstream& in, const std::string& file_name, const std::string& env_name);
 
+};
 #endif

@@ -45,16 +45,15 @@
 #ifndef VJ_INPUT_H
 #define VJ_INPUT_H
 
-#include <vjConfig.h>
 
 #ifndef VJ_OS_Win32
-#include <unistd.h>
+#  include <unistd.h>
 
-#include <termios.h>
+#  include <termios.h>
 
-#ifdef HAVE_SYS_PRCTL_H
-#   include <sys/prctl.h>
-#endif      /* ifdef HAVE_SYS_PRCTL_H */
+#  ifdef HAVE_SYS_PRCTL_H
+#     include <sys/prctl.h>
+#  endif      /* ifdef HAVE_SYS_PRCTL_H */
 #endif      /* ifndef VJ_OS_Win32 */
 
 #include <limits.h>
@@ -64,20 +63,20 @@
 #include <signal.h>
 #include <float.h>
 
+#include <vjConfig.h>
+
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>
 #include <vpr/Thread/Thread.h>
 
-class vjConfigChunk;
-
-
+// consider moving this
 typedef unsigned char byte;
 
 /** Abilities List
  *
- *  vjInput devices can have one or more 'Abilities'
+ *  Input devices can have one or more 'Abilities'
  *  The function FDeviceSupport(ability) allows a user
- *  of a vjInput object to query which types it may be
+ *  of a Input object to query which types it may be
  *  casted up to.
  */
 /*
@@ -91,19 +90,23 @@ const unsigned int DEVICE_GROW1    = 64;
 const unsigned int DEVICE_GROW2    = 128;
 */
 
+namespace vrj
+{
+   class ConfigChunk;
+
 //-----------------------------------------------------------------------------
-//: vjInput is the abstract base class that all input objects derive from.
+//: Input is the abstract base class that all input objects derive from.
 //
-//  vjInput is the base class for all Input Devices, all the devices are
+//  Input is the base class for all Input Devices, all the devices are
 //  therefore forced to implement the pure virtual functions of Sample,
 //  StartSampling, StopSampling, and UpdateData. <br> <br>
 //
 //  Dummy devices can use a default constructor, but physical devices should
-//  have a Constructor which takes a config chunk and calls the vjInput
-//  constructor taking a vjConfigChunk. <br> <br>
+//  have a Constructor which takes a config chunk and calls the Input
+//  constructor taking a ConfigChunk. <br> <br>
 //
-//  All Physical devices will inherit from not vjInput but another abstract
-//  class which inherits from vjInput, currently there is support for
+//  All Physical devices will inherit from not Input but another abstract
+//  class which inherits from Input, currently there is support for
 //  Positional Devices, Analog Devices, and Digital devices, each has its own
 //  added pure virtual functions providing a simple and equal interface to
 //  themselves.
@@ -116,7 +119,7 @@ const unsigned int DEVICE_GROW2    = 128;
 //+       it is being updated to the most recent copy.
 //-----------------------------------------------------------------------------
 //!PUBLIC_API:
-class VJ_CLASS_API vjInput
+class VJ_CLASS_API Input
 {
 public:
    //: Default Constructor
@@ -124,20 +127,20 @@ public:
    //  The default constructor is intended only for use by the DummyProxies
    //  which do not need to have their serial port and baud rate etc set up.
    // Also, initializes myThread, and active to null values
-   vjInput();
+   Input();
 
-   //: vjInput Destructor
+   //: Input Destructor
    //
    // Free the memory for the Instance Name and Serial Port strings if
    // allocated
-   virtual ~vjInput();
+   virtual ~Input();
 
    //: Config method
    //
    //  This baselevel config will fill the base datamembers
-   //  when found in the vjConfigChunk, such as serial port, instance name
+   //  when found in the ConfigChunk, such as serial port, instance name
    //  and baud rate.
-   virtual bool config(vjConfigChunk *c);
+   virtual bool config(ConfigChunk *c);
 
    //: Sample the device
    //
@@ -237,8 +240,10 @@ protected:
    vpr::Mutex lock;        //: Mutex for swapping the pointers.
    int baudRate;        //: Baud rate of the device (if it is serial device)
 
-   vjInput (const vjInput& o) {;}
-   void operator= (const vjInput& o) {;}
+   Input (const Input& o) {;}
+   void operator= (const Input& o) {;}
 };
+
+} // end namespace
 
 #endif   /* VJ_INPUT_H */

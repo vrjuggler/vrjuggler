@@ -32,14 +32,18 @@
 
 #include <vjStdCaveNavigator.h>
 
-
-vjStdCaveNavigator::vjStdCaveNavigator()
-    : vjMatrix(), mNowTranslating( false ), mNowRotating( false )
+namespace vrj
+{
+   
+StdCaveNavigator::StdCaveNavigator()
+    : Matrix(), mNowTranslating( false ), mNowRotating( false )
 {
 }
 
 //: call once per frame (pre or post frame, not intra frame)
-int vjStdCaveNavigator::update()
+int StdCaveNavigator::update()
 {
    return 1;
 }
+
+};

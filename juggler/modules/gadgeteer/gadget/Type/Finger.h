@@ -33,14 +33,17 @@
 #ifndef VJ_FINGER___
 #define VJ_FINGER___
 
-//  DIJ = Distal Interphalangeal Joint  --- vjFinger tip
+namespace vrj
+{
+   
+//  DIJ = Distal Interphalangeal Joint  --- Finger tip
 //  PIJ = Proximal "              "     --- Middle joint
-//  MPJ = Metacarpo "             "     --- closest to vjHand
-//  ABDUCT = spread of vjFingers
-class vjFinger
+//  MPJ = Metacarpo "             "     --- closest to Hand
+//  ABDUCT = spread of Fingers
+class Finger
 {
 public:
-   vjFinger( const float& dij = -15, const float& pij = -45, const float& mpj = -45, const float& abduct = 0 ) : mDij( dij ), mPij( pij ), mMpj( mpj ), mAbduct( abduct )
+   Finger( const float& dij = -15, const float& pij = -45, const float& mpj = -45, const float& abduct = 0 ) : mDij( dij ), mPij( pij ), mMpj( mpj ), mAbduct( abduct )
    {
    }
    
@@ -66,5 +69,7 @@ private:
    float mDij, mPij, mMpj, mAbduct;
 };
 
+
+};
 
 #endif

@@ -161,7 +161,7 @@ AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MINOR, $OS_REL_NUM_MINOR)
 case $target_os in
     # SGI running IRIX 6.*.
     irix6*)
-        DBG_FLAGS="$DBG_FLAGS -gslim"
+        vjDBG_FLAGS="$vjDBG_FLAGS -gslim"
 
         AC_DEFINE(VJ_OS_IRIX,)
         AC_DEFINE(_BSD_TYPES,)
@@ -616,7 +616,7 @@ elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     CFLAGS="$CFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
     CXXFLAGS="$CXXFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
     EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /nologo /incremental:no"
-    DBG_FLAGS="$DBG_FLAGS /MTd"
+    vjDBG_FLAGS="$vjDBG_FLAGS /MTd"
     OPT_FLAGS="$OPT_FLAGS /MT"
 fi
 
@@ -668,7 +668,7 @@ fi
 #       with the OpenScenegraph API.
 
 # Put together the basic information needed to compile VR Juggler applications.
-VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
+VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $vjDBG_FLAGS, $OPT_FLAGS,
                 VJ_BASE_DIR, $DEFS, $INCLUDES, ${_EXTRA_FLAGS})
 VJ_APP_LINKER($CXX, $EXTRA_LINK_FLAGS, $LDOPTS_DBG, $LDOPTS_OPT, VJ_BASE_DIR,
               Juggler Juggler_utils, $APP_EXTRA_LIBS)

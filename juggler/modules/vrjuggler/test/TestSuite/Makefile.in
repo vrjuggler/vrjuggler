@@ -56,7 +56,7 @@ EXTRA_FLAGS     = @APP_EXTRA_FLAGS@
 INCLUDES        = @INCLUDES@ -I$(topdir) -I$(VPR_BASE_DIR)/include      \
                  -I$(srcdir) -I$(srcdir)/TestCases                      \
                  -I$(srcdir)/CppUnit/framework -I$(srcdir)/CppUnit/textui
-OPTIMIZER       = @DBG_FLAGS@ -D_DEBUG
+OPTIMIZER       = @vjDBG_FLAGS@ -D_DEBUG
 LD              = @LD@
 LDFLAGS         = @LDFLAGS@ -L/usr/lib$(LIBBITSUF)              \
                   -L$(VPR_BASE_DIR)/lib$(LIBBITSUF)

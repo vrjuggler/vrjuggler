@@ -33,7 +33,6 @@
 
 #include <vjConfig.h>
 
-#include <Input/InputManager/vjInputManager.h>
 #include <Input/InputManager/vjProxy.h>
 #include <Utils/vjDebug.h>
 
@@ -42,26 +41,33 @@
 #include <Input/InputManager/vjDeviceInterface.h>
 #include <Config/vjConfigChunk.h>
 
+#include <Input/InputManager/vjInputManager.h> // my header...
+
+
+
+namespace vrj
+{
+
 // Local helpers
-bool recognizeProxyAlias(vjConfigChunk* chunk);
-
+bool recognizeProxyAlias( ConfigChunk* chunk );
+   
 /**********************************************************
-  vjInputManager::vjInputManager()
+  InputManager::InputManager()
 
-  vjInputManager Constructor
+  InputManager Constructor
 
 *********************************************** ahimberg */
-vjInputManager::vjInputManager()
+InputManager::InputManager()
 {;}
 
 
 /**********************************************************
-  vjInputManager::~vjInputManager()
+  InputManager::~InputManager()
 
-  vjInputManager Destructor
+  InputManager Destructor
 
 *********************************************** ahimberg */
-vjInputManager::~vjInputManager()
+InputManager::~InputManager()
 {
    for (tDevTableType::iterator a = mDevTable.begin(); a != mDevTable.end(); a++)    // Stop all devices
       if ((*a).second != NULL)
@@ -71,7 +77,7 @@ vjInputManager::~vjInputManager()
       }
 
    // Delete all the proxies
-   for(std::map<std::string, vjProxy*>::iterator j = mProxyTable.begin(); j != mProxyTable.end(); j++)
+   for(std::map<std::string, Proxy*>::iterator j = mProxyTable.begin(); j != mProxyTable.end(); j++)
    {
       delete (*j).second;
    }
@@ -79,16 +85,16 @@ vjInputManager::~vjInputManager()
 
 
 //: Add the given config chunk to the input system
-bool vjInputManager::configAdd(vjConfigChunk* chunk)
+bool InputManager::configAdd(ConfigChunk* chunk)
 {
-   vjDEBUG_BEGIN(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "\nvjInputManager: Adding pending config chunk... " << std::endl << vjDEBUG_FLUSH;
-   vjASSERT(configCanHandle(chunk));
+   vjDEBUG_BEGIN(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "\nInputManager: Adding pending config chunk... " << std::endl << vjDEBUG_FLUSH;
+   vprASSERT(configCanHandle(chunk));
 
    bool ret_val = false;      // Flag to return success
 
-   if(vjDeviceFactory::instance()->recognizeDevice(chunk))
+   if(DeviceFactory::instance()->recognizeDevice(chunk))
       ret_val = configureDevice(chunk);
-   else if(vjProxyFactory::instance()->recognizeProxy(chunk))
+   else if(ProxyFactory::instance()->recognizeProxy(chunk))
       ret_val = configureProxy(chunk);
    else if(recognizeProxyAlias(chunk))
       ret_val = configureProxyAlias(chunk);
@@ -101,7 +107,7 @@ bool vjInputManager::configAdd(vjConfigChunk* chunk)
    if(ret_val)
    {
       updateAllData();                             // Update all the input data
-      vjBaseDeviceInterface::refreshAllDevices();      // Refresh all the device interface handles
+      BaseDeviceInterface::refreshAllDevices();      // Refresh all the device interface handles
       vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "Updated all devices" << std::endl << vjDEBUG_FLUSH;
    }
 
@@ -116,18 +122,18 @@ bool vjInputManager::configAdd(vjConfigChunk* chunk)
 //+       (chunk is device) ==> (devices is removed && proxies are stupified)
 //+       (chunk is proxyAlias) ==> (proxyAlias is removed && devInterfaces.refreshAll())
 //!RETURNS: success
-bool vjInputManager::configRemove(vjConfigChunk* chunk)
+bool InputManager::configRemove(ConfigChunk* chunk)
 {
-   vjDEBUG_BEGIN(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "\nvjInputManager: Removing config... " << std::endl << vjDEBUG_FLUSH;
-   vjASSERT(configCanHandle(chunk));
+   vjDEBUG_BEGIN(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "\nInputManager: Removing config... " << std::endl << vjDEBUG_FLUSH;
+   vprASSERT(configCanHandle(chunk));
 
    bool ret_val = false;      // Flag to return success
 
-   if(vjDeviceFactory::instance()->recognizeDevice(chunk))
+   if(DeviceFactory::instance()->recognizeDevice(chunk))
       ret_val = removeDevice(chunk);
    else if(recognizeProxyAlias(chunk))
       ret_val = removeProxyAlias(chunk);
-   else if(vjProxyFactory::instance()->recognizeProxy(chunk))
+   else if(ProxyFactory::instance()->recognizeProxy(chunk))
       ret_val = removeProxy(chunk);
    else
       ret_val = false;
@@ -135,7 +141,7 @@ bool vjInputManager::configRemove(vjConfigChunk* chunk)
    if(ret_val)
    {
       updateAllData();                             // Update all the input data
-      vjBaseDeviceInterface::refreshAllDevices();      // Refresh all the device interface handles
+      BaseDeviceInterface::refreshAllDevices();      // Refresh all the device interface handles
       vjDEBUG(vjDBG_INPUT_MGR,vjDBG_VERB_LVL) << "InputManager::configRemove(): Updated all data" << std::endl << vjDEBUG_FLUSH;
    }
 
@@ -146,22 +152,22 @@ bool vjInputManager::configRemove(vjConfigChunk* chunk)
 
 // Return true if:
 //  It is recognized device, proxy, or alias.
-bool vjInputManager::configCanHandle(vjConfigChunk* chunk)
+bool InputManager::configCanHandle(ConfigChunk* chunk)
 {
-   return ( vjDeviceFactory::instance()->recognizeDevice(chunk) ||
-            vjProxyFactory::instance()->recognizeProxy(chunk) ||
+   return ( DeviceFactory::instance()->recognizeDevice(chunk) ||
+            ProxyFactory::instance()->recognizeProxy(chunk) ||
             recognizeProxyAlias(chunk));
 }
 
 // Check if the device factory or proxy factory can handle the chunk
-bool vjInputManager::configureDevice(vjConfigChunk* chunk)
+bool InputManager::configureDevice(ConfigChunk* chunk)
 {
    bool ret_val;
    std::string dev_name = chunk->getProperty("name");
    vjDEBUG_BEGIN(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "ConfigureDevice: Named: " << dev_name.c_str() << std::endl << vjDEBUG_FLUSH;
 
-   vjInput* new_device;
-   new_device = vjDeviceFactory::instance()->loadDevice(chunk);
+   Input* new_device;
+   new_device = DeviceFactory::instance()->loadDevice(chunk);
 
    if ((new_device != NULL) && (new_device->startSampling()))
    {
@@ -182,16 +188,16 @@ bool vjInputManager::configureDevice(vjConfigChunk* chunk)
 }
 
 // Check if the device factory or proxy factory can handle the chunk
-bool vjInputManager::configureProxy(vjConfigChunk* chunk)
+bool InputManager::configureProxy(ConfigChunk* chunk)
 {
    std::string proxy_name = chunk->getProperty("name");
    vjDEBUG_BEGIN(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjInputManager::configureProxy: Named: " << proxy_name.c_str() << std::endl << vjDEBUG_FLUSH;
 
-   vjProxy* new_proxy;
+   Proxy* new_proxy;
 
    // Tell the factory to load the proxy
    // NOTE: The config for the proxy registers it with the input manager
-   new_proxy = vjProxyFactory::instance()->loadProxy(chunk);
+   new_proxy = ProxyFactory::instance()->loadProxy(chunk);
 
    // Check for success
    if(NULL == new_proxy)
@@ -213,7 +219,7 @@ bool vjInputManager::configureProxy(vjConfigChunk* chunk)
 
 //: Remove the device associated with the given chunk
 //!RETURNS: true - Device was removed
-bool vjInputManager::removeDevice(vjConfigChunk* chunk)
+bool InputManager::removeDevice(ConfigChunk* chunk)
 {
    char* dev_name = chunk->getProperty("name").cstring();      // Get the name of the device
    return removeDevice(dev_name);
@@ -223,17 +229,17 @@ bool vjInputManager::removeDevice(vjConfigChunk* chunk)
 /**********************************************************
   operator<<()
 
-  Dump the current Status of the vjInputManager, listing all
+  Dump the current Status of the InputManager, listing all
   the devices, proxies and internal settings
 
 *********************************************** ahimberg */
-VJ_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, vjInputManager& iMgr)
+VJ_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, InputManager& iMgr)
 {
-  out << "\n=============== vjInputManager Status: ===============================" << std::endl;
+  out << "\n=============== InputManager Status: ===============================" << std::endl;
 
   out << "Devices:\n";
 
-  for (vjInputManager::tDevTableType::iterator i = iMgr.mDevTable.begin(); i != iMgr.mDevTable.end(); i++)      // Dump DEVICES
+  for (InputManager::tDevTableType::iterator i = iMgr.mDevTable.begin(); i != iMgr.mDevTable.end(); i++)      // Dump DEVICES
      if ((*i).second != NULL)
        out << std::setw(2) << std::setfill(' ') << i->first << ":"
            << "  name:" << std::setw(30) << std::setfill(' ') << i->second->getInstanceName()
@@ -241,7 +247,7 @@ VJ_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, vjInputManager& iMgr)
            << std::endl;
 
   out << "\nProxies:\n";
-  for (std::map<std::string, vjProxy*>::iterator i_p = iMgr.mProxyTable.begin();
+  for (std::map<std::string, Proxy*>::iterator i_p = iMgr.mProxyTable.begin();
        i_p != iMgr.mProxyTable.end(); i_p++)
   {
     out << (*i_p).second->getName()
@@ -260,18 +266,18 @@ VJ_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, vjInputManager& iMgr)
   for(std::map<std::string, std::string>::iterator cur_alias = iMgr.mProxyAliases.begin(); cur_alias != iMgr.mProxyAliases.end(); cur_alias++)
      out << "    " << (*cur_alias).first.c_str() << "  proxy:" << (*cur_alias).second << std::endl;
 
-  out << "=============== vjInputManager Status =========================" << std::endl;
+  out << "=============== InputManager Status =========================" << std::endl;
   return out;
 }
 
 /**********************************************************
-  vjInputManager::addDevice(vjInput* devPtr)
+  InputManager::addDevice(Input* devPtr)
 
-  Add a device to the vjInputManager, returns the index
+  Add a device to the InputManager, returns the index
   where the device was placed
 
 *********************************************** ahimberg */
-bool vjInputManager::addDevice(vjInput* devPtr)
+bool InputManager::addDevice(Input* devPtr)
 {
    mDevTable[devPtr->getInstanceName()] = devPtr;
 
@@ -283,19 +289,19 @@ bool vjInputManager::addDevice(vjInput* devPtr)
 
 
 /**********************************************************
-  vjInputManager::updateAllData()
+  InputManager::updateAllData()
 
   Call UpdateData() on all the devices and transform proxies
 
 *********************************************** ahimberg */
-void vjInputManager::updateAllData()
+void InputManager::updateAllData()
 {
    for (tDevTableType::iterator i = mDevTable.begin(); i != mDevTable.end(); i++)      // all DEVICES
      if ((*i).second != NULL)
          i->second->updateData();
 
    // Update proxies
-   for (std::map<std::string, vjProxy*>::iterator i_p = mProxyTable.begin();
+   for (std::map<std::string, Proxy*>::iterator i_p = mProxyTable.begin();
        i_p != mProxyTable.end(); i_p++)
    {
       (*i_p).second->updateData();
@@ -304,9 +310,9 @@ void vjInputManager::updateAllData()
 
 
 
-// Return a vjInput ptr to a deviced named
+// Return a Input ptr to a deviced named
 // RETURNS: NULL - Not found
-vjInput* vjInputManager::getDevice(std::string deviceName)
+Input* InputManager::getDevice(std::string deviceName)
 {
    tDevTableType::iterator ret_dev;
    ret_dev = mDevTable.find(deviceName);
@@ -317,7 +323,7 @@ vjInput* vjInputManager::getDevice(std::string deviceName)
 }
 
 // Remove the device that is pointed to by devPtr
-bool vjInputManager::removeDevice(const vjInput* devPtr)
+bool InputManager::removeDevice(const Input* devPtr)
 {
    for (tDevTableType::iterator i = mDevTable.begin(); i != mDevTable.end(); i++)      // all DEVICES
      if ((*i).second == devPtr)
@@ -328,20 +334,20 @@ bool vjInputManager::removeDevice(const vjInput* devPtr)
 
 
 /**********************************************************
-  vjInputManager::removeDevice(char* instName)
+  InputManager::removeDevice(char* instName)
 
-  vjInputManager remove instName from the vjInputManager,
+  InputManager remove instName from the InputManager,
   currently stupifies all the proxies connected to it.
 
 *********************************************** ahimberg */
-bool vjInputManager::removeDevice(std::string instName)
+bool InputManager::removeDevice(std::string instName)
 {
    tDevTableType::iterator dev_found;
    dev_found = mDevTable.find(instName);
    if(dev_found == mDevTable.end())
       return false;
 
-   vjInput* dev_ptr = dev_found->second;
+   Input* dev_ptr = dev_found->second;
 
    if(NULL == dev_ptr)
       return false;
@@ -350,7 +356,7 @@ bool vjInputManager::removeDevice(std::string instName)
    // Stupify any proxies connected to device
    // NOTE: Could just remove it and then refresh all, but this is a little safer
    //       since we explicitly stupify the one that we don't want anymore
-   for (std::map<std::string, vjProxy*>::iterator i_p = mProxyTable.begin();
+   for (std::map<std::string, Proxy*>::iterator i_p = mProxyTable.begin();
        i_p != mProxyTable.end(); i_p++)
    {
       if((*i_p).second->getProxiedInputDevice() == dev_ptr)
@@ -379,7 +385,7 @@ bool vjInputManager::removeDevice(std::string instName)
 
 
 // Is it a proxy alias
-bool recognizeProxyAlias(vjConfigChunk* chunk)
+bool recognizeProxyAlias(ConfigChunk* chunk)
 {
    return (((std::string)chunk->getType()) == std::string("proxyAlias"));
 }
@@ -388,10 +394,10 @@ bool recognizeProxyAlias(vjConfigChunk* chunk)
 // PRE: none
 // POST: (alias not already in list) ==> Alias is added to proxyAlias list
 //+      (alias was already is list) ==> Alias is set to point to the new proxy instead
-bool vjInputManager::configureProxyAlias(vjConfigChunk* chunk)
+bool InputManager::configureProxyAlias(ConfigChunk* chunk)
 {
    vjDEBUG_BEGIN(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjInputManager::Configuring proxy alias" << std::endl << vjDEBUG_FLUSH;
-   vjASSERT(((std::string)chunk->getType()) == "proxyAlias");
+   vprASSERT(((std::string)chunk->getType()) == "proxyAlias");
 
    std::string alias_name, proxy_name;  // The string of the alias, name of proxy to pt to
 
@@ -409,10 +415,10 @@ bool vjInputManager::configureProxyAlias(vjConfigChunk* chunk)
 // PRE: none
 // POST: (alias not in list) ==> returns = false
 //+      (alias is in list) ==> (alias is removed from list) returns true
-bool vjInputManager::removeProxyAlias(vjConfigChunk* chunk)
+bool InputManager::removeProxyAlias(ConfigChunk* chunk)
 {
    vjDEBUG_BEGIN(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjInputManager::RemoveProxyAlias" << std::endl << vjDEBUG_FLUSH;
-   vjASSERT(((std::string)chunk->getType()) == "proxyAlias");
+   vprASSERT(((std::string)chunk->getType()) == "proxyAlias");
 
    std::string alias_name, proxy_name;  // The string of the alias, name of proxy to pt to
 
@@ -439,7 +445,7 @@ bool vjInputManager::removeProxyAlias(vjConfigChunk* chunk)
 //: Adds a Proxy alias to the alias list
 // PRE: none - BUT: Preferable if proxyName is for a valid proxy
 // POST: Alias list has alias str refering to proxyName
-void vjInputManager::addProxyAlias(std::string alias_name, std::string proxy_name)
+void InputManager::addProxyAlias(std::string alias_name, std::string proxy_name)
 {
    vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "Proxy alias [" << alias_name.c_str() << "] added.\n" << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_INPUT_MGR,vjDBG_VERB_LVL)   << "   proxy:" << proxy_name << std::endl << vjDEBUG_FLUSH;
@@ -450,7 +456,7 @@ void vjInputManager::addProxyAlias(std::string alias_name, std::string proxy_nam
 
 //: Add a proxy to the proxy table
 //! RETURN: true - added correctly
-bool vjInputManager::addProxy(std::string proxyName, vjProxy* proxy)
+bool InputManager::addProxy(std::string proxyName, Proxy* proxy)
 {
    // Check if already in the table
    if(mProxyTable.end() != mProxyTable.find(proxyName))     // Found it
@@ -468,7 +474,7 @@ bool vjInputManager::addProxy(std::string proxyName, vjProxy* proxy)
 // PRE: none
 // POST: none
 // RET: NULL - Not found
-vjProxy* vjInputManager::getProxy(std::string proxyName)
+Proxy* InputManager::getProxy(std::string proxyName)
 {
    // Is it in table
    if(mProxyTable.end() != mProxyTable.find(proxyName))     // proxy name
@@ -489,18 +495,18 @@ vjProxy* vjInputManager::getProxy(std::string proxyName)
 }
 
  // Refresh all the proxies to have then update what device they are pointing at
-void vjInputManager::refreshAllProxies()
+void InputManager::refreshAllProxies()
 {
    vjDEBUG(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << "vjInputManager::refreshAppProxies: Refreshing all....\n" << vjDEBUG_FLUSH;
 
-   for(std::map<std::string, vjProxy*>::iterator i = mProxyTable.begin(); i != mProxyTable.end(); i++)
+   for(std::map<std::string, Proxy*>::iterator i = mProxyTable.begin(); i != mProxyTable.end(); i++)
    {
       (*i).second->refresh();
    }
 
 }
 
-bool vjInputManager::removeProxy(std::string proxyName)
+bool InputManager::removeProxy(std::string proxyName)
 {
    vjDEBUG_BEGIN(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjInputManager::removeProxy" << std::endl << vjDEBUG_FLUSH;
 
@@ -520,9 +526,12 @@ bool vjInputManager::removeProxy(std::string proxyName)
    return true;
 }
 
-bool vjInputManager::removeProxy(vjConfigChunk* chunk)
+bool InputManager::removeProxy(ConfigChunk* chunk)
 {
    std::string proxy_name;
    proxy_name = (std::string)chunk->getProperty("name");
    return removeProxy(proxy_name);
 }
+
+
+};

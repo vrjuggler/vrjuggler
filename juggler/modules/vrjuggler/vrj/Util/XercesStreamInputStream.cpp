@@ -33,7 +33,10 @@
 
 #include <Utils/vjXercesStreamInputStream.h>
 
-vjXercesStreamInputStream::vjXercesStreamInputStream (std::istream& _in, const char* _terminator): terminator (_terminator) {
+namespace vrj
+{
+   
+XercesStreamInputStream::XercesStreamInputStream (std::istream& _in, const char* _terminator): terminator (_terminator) {
     //terminator = strdup (_terminator);
     termlength = strlen (terminator);
     search_state = 0;
@@ -41,15 +44,15 @@ vjXercesStreamInputStream::vjXercesStreamInputStream (std::istream& _in, const c
     in = &_in;
 }
 
-/*virtual*/ vjXercesStreamInputStream::~vjXercesStreamInputStream() {
+/*virtual*/ XercesStreamInputStream::~XercesStreamInputStream() {
     ;
 }
 
-/*virtual*/ unsigned int vjXercesStreamInputStream::curPos() const {
+/*virtual*/ unsigned int XercesStreamInputStream::curPos() const {
     return 0;
 }
 
-/*virtual*/ unsigned int vjXercesStreamInputStream::readBytes (XMLByte* const buf, const unsigned int _buflen) {
+/*virtual*/ unsigned int XercesStreamInputStream::readBytes (XMLByte* const buf, const unsigned int _buflen) {
     // we shorten buflen here so that we always know we'll have space
     // to tack on text if we were following a false lead.
     // the problem is that, even if we're real close to the end of the
@@ -85,3 +88,5 @@ vjXercesStreamInputStream::vjXercesStreamInputStream (std::istream& _in, const c
     
     return i;
 }
+
+};

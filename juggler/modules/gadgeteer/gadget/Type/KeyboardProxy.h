@@ -37,16 +37,18 @@
 #include <vjConfig.h>
 #include <Input/InputManager/vjProxy.h>
 #include <Input/vjInput/vjKeyboard.h>
-
-//: Proxy class to vjKeyboard based devices.
+namespace vrj
+{
+   
+//: Proxy class to Keyboard based devices.
 //!PUBLIC_API:
-class VJ_CLASS_API vjKeyboardProxy : public vjTypedProxy<vjKeyboard>
+class VJ_CLASS_API KeyboardProxy : public TypedProxy<Keyboard>
 {
 public:
-   vjKeyboardProxy()
+   KeyboardProxy()
    { ; }
 
-   vjKeyboard* getKeyboardPtr()
+   Keyboard* getKeyboardPtr()
    {
       if(mStupified)
          return NULL;
@@ -75,19 +77,21 @@ public:
 
    static std::string getChunkType() { return "KeyboardProxy"; }
 
-   bool config(vjConfigChunk* chunk);
+   bool config(ConfigChunk* chunk);
 
-   virtual vjInput* getProxiedInputDevice()
+   virtual Input* getProxiedInputDevice()
    {
       if(NULL == mTypedDevice)
          return NULL;
 
-      vjInput* ret_val = dynamic_cast<vjInput*>(mTypedDevice);
-      vjASSERT(ret_val != NULL);
+      Input* ret_val = dynamic_cast<Input*>(mTypedDevice);
+      vprASSERT(ret_val != NULL);
       return ret_val;
    }
 
 };
 
+
+};
 
 #endif

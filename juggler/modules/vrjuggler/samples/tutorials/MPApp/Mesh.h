@@ -58,8 +58,8 @@ protected:
 private:
    int mXDim, mYDim;
 
-   std::vector<std::vector<vjVec3> > mVerts;
-   std::vector<std::vector<vjVec3> > mNormals;
+   std::vector<std::vector<Vec3> > mVerts;
+   std::vector<std::vector<Vec3> > mNormals;
 };
 
 
@@ -108,15 +108,15 @@ void Mesh::compute(float curTime)
       for(j=0;j<mYDim;j++)
       {
          y = (1.0f/float(mYDim))*float(j);
-         mVerts[i][j] = vjVec3(x,y,getHeight(x,y,curTime));
+         mVerts[i][j] = Vec3(x,y,getHeight(x,y,curTime));
       }
    }
 
    // --- Compute the normals --- //
-   vjVec3 total_normal;     // Total of all normals to average
+   Vec3 total_normal;     // Total of all normals to average
    float  num_normals;        // Number of normals contributing
-   vjVec3 v0,v1,temp_normal;
-   vjVec3 local_vert;
+   Vec3 v0,v1,temp_normal;
+   Vec3 local_vert;
 
    for(i=0;i<mXDim;i++)
    {

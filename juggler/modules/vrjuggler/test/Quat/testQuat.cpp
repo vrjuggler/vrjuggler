@@ -36,15 +36,15 @@
 int number_failed = 0;
 
 std::ostream& operator<<(std::ostream& out, GL_QUAT& quat);
-void testMatch(vjQuat& vj_quat, GL_QUAT& gl_quat);
+void testMatch(Quat& vj_quat, GL_QUAT& gl_quat);
 
 
 int main(void)
 {
-   vjMatrix mat;
+   Matrix mat;
 
    GL_QUAT gl_quat;
-   vjQuat vj_quat;
+   Quat vj_quat;
 
    // --- Test 1 --- //
    std::cout << "Test 1" << std::endl;
@@ -78,7 +78,7 @@ int main(void)
 
    // ---- Test Mat construct --- //
    std::cout << "Construct Matrix" << std::endl;
-   vjMatrix gl_mat;
+   Matrix gl_mat;
    gluQuatToMat_EXT(&gl_quat, (GLfloat (*)[4])gl_mat.getFloatPtr());
    mat.makeQuaternion(vj_quat);
 
@@ -96,17 +96,17 @@ int main(void)
    // Kevin's Vec test...
    {
       std::cout << "Construct Matrix, xformVecFull" << std::endl;
-      vjMatrix kevinMat;
-      vjQuat kevinQuat;
-      vjVec3 kevinVec( 0.0f, 0.0f, -1.0f );
+      Matrix kevinMat;
+      Quat kevinQuat;
+      Vec3 kevinVec( 0.0f, 0.0f, -1.0f );
       float fourtyFiveDegs = 3.145f / 4.0f;
       kevinQuat.makeRot( fourtyFiveDegs, 0.0f, 1.0f, 0.0f );
       kevinMat.makeQuaternion( kevinQuat );
 
-      vjVec3 tempVec;
+      Vec3 tempVec;
       tempVec.xformFull( kevinMat, kevinVec );
 
-      vjVec3 shouldBe( -0.707708, 0, -0.706504 );
+      Vec3 shouldBe( -0.707708, 0, -0.706504 );
       std::cout<<"\tshouldBe: "<<shouldBe[0]<<" "<<shouldBe[1]<<" "<<shouldBe[2]<< std::endl;
       std::cout<<"\ttempVec: "<<tempVec[0]<<" "<<tempVec[1]<<" "<<tempVec[2]<< std::endl;
       std::cout << "Testing match.....";
@@ -122,15 +122,15 @@ int main(void)
    // Kevin's makeRot test...
    {
       std::cout << "Construct Matrix, makeRot" << std::endl;
-      vjMatrix kevinMat;
-      vjQuat kevinQuat;
+      Matrix kevinMat;
+      Quat kevinQuat;
       float fourtyFiveRads = 3.145f / 4.0f;
       float fourtyFiveDegs = 45.0f;
       kevinQuat.makeRot( fourtyFiveRads, 0.0f, 1.0f, 0.0f );
       kevinMat.makeQuaternion( kevinQuat );
 
-      vjMatrix kevin2Mat;
-      kevin2Mat.makeRot( fourtyFiveDegs, vjVec3( 0.0f, 1.0f, 0.0f ));
+      Matrix kevin2Mat;
+      kevin2Mat.makeRot( fourtyFiveDegs, Vec3( 0.0f, 1.0f, 0.0f ));
 
       std::cout<<"kevinMat:\n"<<kevinMat<< std::endl;
       std::cout<<"kevin2Mat:\n"<<kevin2Mat<< std::endl;
@@ -147,7 +147,7 @@ int main(void)
    
    // --- Inverse ---- //
    std::cout << "Test Invert\n";
-   vjQuat vj_inv;
+   Quat vj_inv;
    GL_QUAT gl_inv;
    gl_inv = gl_quat;
    gluQuatInverse_EXT(&gl_inv);
@@ -159,7 +159,7 @@ int main(void)
 
    // ---- Multiply ---- //
    std::cout << "Mult:\n";
-   vjQuat vj_quat1, vj_quat2;
+   Quat vj_quat1, vj_quat2;
    GL_QUAT gl_quat1, gl_quat2;
    mat.makeXYZEuler(123.0f, -15.0f, 12.21f);
    gluMatToQuat_EXT((GLfloat (*)[4])mat.getFloatPtr(), &gl_quat1);
@@ -189,7 +189,7 @@ int main(void)
       // loose test...
       std::cout << "\tTesting equality using a tolerance... (if this passes, ignore previous)" << std::endl;
       std::cout << "\tTesting match.........";
-      vjQuat glquat( gl_quat.w, gl_quat.x, gl_quat.y, gl_quat.z );
+      Quat glquat( gl_quat.w, gl_quat.x, gl_quat.y, gl_quat.z );
       if(vj_quat.isEqual( glquat, 0.001f ))
          std::cout << "passed.\n" << std::flush;
       else
@@ -218,9 +218,9 @@ int main(void)
    testMatch(vj_quat, gl_quat);
 
    // ---- Test matrix conversion --- //
-   vjMatrix mat1, mat2;
-   vjQuat quat;
-   vjVec3 angles;
+   Matrix mat1, mat2;
+   Quat quat;
+   Vec3 angles;
    GL_QUAT q;
 
    std::cout << "--- Test matrix conversion ---" << std::endl;
@@ -250,7 +250,7 @@ std::ostream& operator<<(std::ostream& out, GL_QUAT& quat)
    return out;
 }
 
-void testMatch(vjQuat& vj_quat, GL_QUAT& gl_quat)
+void testMatch(Quat& vj_quat, GL_QUAT& gl_quat)
 {
    std::cout << "\tTesting match.........";
    if((vj_quat[VJ_X] == gl_quat.x) &&

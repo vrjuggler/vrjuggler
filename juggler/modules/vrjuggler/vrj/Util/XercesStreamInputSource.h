@@ -39,6 +39,9 @@
 #include <util/BinInputStream.hpp>
 
 
+namespace vrj
+{
+   
 //: Xerces-XML compatible InputSource wrapper for std::istream.
 //  The stream has some kind of a terminating symbole (e.g. 
 //  "&lt;/protocol&gt;").  The InputSource stops reading 
@@ -46,7 +49,7 @@
 //  This is useful for grabbing sections of an XML document out of 
 //  a larger data stream, such as we have with VjControl and Juggler's
 //  Environment Manager.
-class vjXercesStreamInputSource: public InputSource {
+class XercesStreamInputSource: public InputSource {
 
     std::istream* in;
 
@@ -55,11 +58,13 @@ class vjXercesStreamInputSource: public InputSource {
 
 public:
 
-    vjXercesStreamInputSource (std::istream& _in, char const * _terminator);
+    XercesStreamInputSource (std::istream& _in, char const * _terminator);
 
-    virtual ~vjXercesStreamInputSource ();
+    virtual ~XercesStreamInputSource ();
 
     virtual BinInputStream* makeStream() const;
+
+};
 
 };
 

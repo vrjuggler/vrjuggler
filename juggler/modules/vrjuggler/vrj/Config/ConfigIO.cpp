@@ -38,30 +38,33 @@
 #include <Config/vjXMLConfigIOHandler.h>
 #include <Config/vjParseUtil.h>
 
+namespace vrj
+{
+   
 
-/*static*/ const std::string vjConfigIO::xml_handler_name ("xml_config");
-/*static*/ const std::string vjConfigIO::standard_handler_name ("standard_config");
+/*static*/ const std::string ConfigIO::xml_handler_name ("xml_config");
+/*static*/ const std::string ConfigIO::standard_handler_name ("standard_config");
 
 
-vjConfigIO::vjConfigIO (): default_handler_name(xml_handler_name) {
+ConfigIO::ConfigIO (): default_handler_name(xml_handler_name) {
     standard_config_handler = 0;
 }
 
 
-vjConfigIO::~vjConfigIO () {
-    std::vector<vjConfigIOHandler*>::iterator it;
+ConfigIO::~ConfigIO () {
+    std::vector<ConfigIOHandler*>::iterator it;
     for (it = xml_config_handlers.begin(); it != xml_config_handlers.end(); it++)
         delete (*it);
 }
 
 
-vjConfigIOHandler* vjConfigIO::getHandler (const std::string& handler_name) {
+ConfigIOHandler* ConfigIO::getHandler (const std::string& handler_name) {
 
     if (handler_name == xml_handler_name) {
         if (xml_config_handlers.empty())
-            return new vjXMLConfigIOHandler();
+            return new XMLConfigIOHandler();
         else {
-            vjConfigIOHandler* retval = xml_config_handlers[xml_config_handlers.size()-1];
+            ConfigIOHandler* retval = xml_config_handlers[xml_config_handlers.size()-1];
             xml_config_handlers.pop_back();
             return retval;
         }
@@ -70,7 +73,7 @@ vjConfigIOHandler* vjConfigIO::getHandler (const std::string& handler_name) {
         // all methods are reentrant, so we only ever need one instance
         // create on demand, cuz eventually we won't need it at all.
         if (!standard_config_handler)
-            standard_config_handler = new vjStandardConfigIOHandler();
+            standard_config_handler = new StandardConfigIOHandler();
         return standard_config_handler;
     }
     else
@@ -78,8 +81,8 @@ vjConfigIOHandler* vjConfigIO::getHandler (const std::string& handler_name) {
 }
 
 
-void vjConfigIO::releaseHandler (vjConfigIOHandler* handler) {
-    vjXMLConfigIOHandler* h = dynamic_cast<vjXMLConfigIOHandler*>(handler);
+void ConfigIO::releaseHandler (ConfigIOHandler* handler) {
+    XMLConfigIOHandler* h = dynamic_cast<XMLConfigIOHandler*>(handler);
     if (h) {
         xml_config_handlers.push_back (h);
     }
@@ -91,7 +94,7 @@ void vjConfigIO::releaseHandler (vjConfigIOHandler* handler) {
 
 
 // file name should already be mangled.
-bool vjConfigIO::readConfigChunkDB (std::string file_name, vjConfigChunkDB& db,
+bool ConfigIO::readConfigChunkDB (std::string file_name, ConfigChunkDB& db,
                                     const std::string& handler_name /*= ""*/) {
 
     //std::string file_name = demangleFileName (_file_name);
@@ -102,7 +105,7 @@ bool vjConfigIO::readConfigChunkDB (std::string file_name, vjConfigChunkDB& db,
             return false;
     }
 
-    vjConfigIOHandler* h;
+    ConfigIOHandler* h;
     if (handler_name == "") {
         char buf[50];
         readString (in, buf, 50, false);
@@ -123,8 +126,8 @@ bool vjConfigIO::readConfigChunkDB (std::string file_name, vjConfigChunkDB& db,
 
 
 //! can't guess which handler to use!!!!!!!!!!
-bool vjConfigIO::readConfigChunkDB (std::istream& input, vjConfigChunkDB& db, const std::string& handler_name /*= ""*/) {
-    vjConfigIOHandler* h;
+bool ConfigIO::readConfigChunkDB (std::istream& input, ConfigChunkDB& db, const std::string& handler_name /*= ""*/) {
+    ConfigIOHandler* h;
     if (handler_name == "")
         h = getHandler (default_handler_name);
     else
@@ -137,7 +140,7 @@ bool vjConfigIO::readConfigChunkDB (std::istream& input, vjConfigChunkDB& db, co
 }
 
 
-bool vjConfigIO::writeConfigChunkDB (const char* file_name, const vjConfigChunkDB& db, const std::string& handler_name /*= ""*/) {
+bool ConfigIO::writeConfigChunkDB (const char* file_name, const ConfigChunkDB& db, const std::string& handler_name /*= ""*/) {
     std::ofstream out (file_name);
     if (!out)
         return false;
@@ -145,8 +148,8 @@ bool vjConfigIO::writeConfigChunkDB (const char* file_name, const vjConfigChunkD
 }
 
 
-bool vjConfigIO::writeConfigChunkDB (std::ostream& output, const vjConfigChunkDB& db, const std::string& handler_name /*= ""*/) {
-    vjConfigIOHandler* h;
+bool ConfigIO::writeConfigChunkDB (std::ostream& output, const ConfigChunkDB& db, const std::string& handler_name /*= ""*/) {
+    ConfigIOHandler* h;
     if (handler_name == "")
         h = getHandler (default_handler_name);
     else
@@ -163,7 +166,7 @@ bool vjConfigIO::writeConfigChunkDB (std::ostream& output, const vjConfigChunkDB
 
 //--------------------- ChunkDescDB Methods --------------------
 
-bool vjConfigIO::readChunkDescDB (std::string file_name, vjChunkDescDB& db,
+bool ConfigIO::readChunkDescDB (std::string file_name, ChunkDescDB& db,
                                     const std::string& handler_name /*= ""*/) {
 
     //std::string file_name = demangleFileName (_file_name);
@@ -174,7 +177,7 @@ bool vjConfigIO::readChunkDescDB (std::string file_name, vjChunkDescDB& db,
             return false;
     }
 
-    vjConfigIOHandler* h;
+    ConfigIOHandler* h;
     if (handler_name == "") {
         char buf[50];
         readString (in, buf, 50, false);
@@ -194,8 +197,8 @@ bool vjConfigIO::readChunkDescDB (std::string file_name, vjChunkDescDB& db,
 
 
 //! can't guess which handler to use!!!!!!!!!!
-bool vjConfigIO::readChunkDescDB (std::istream& input, vjChunkDescDB& db, const std::string& handler_name /*= ""*/) {
-    vjConfigIOHandler* h;
+bool ConfigIO::readChunkDescDB (std::istream& input, ChunkDescDB& db, const std::string& handler_name /*= ""*/) {
+    ConfigIOHandler* h;
     if (handler_name == "")
         h = getHandler (default_handler_name);
     else
@@ -208,7 +211,7 @@ bool vjConfigIO::readChunkDescDB (std::istream& input, vjChunkDescDB& db, const 
 }
 
 
-bool vjConfigIO::writeChunkDescDB (const char* file_name, const vjChunkDescDB& db, const std::string& handler_name /*= ""*/) {
+bool ConfigIO::writeChunkDescDB (const char* file_name, const ChunkDescDB& db, const std::string& handler_name /*= ""*/) {
     std::ofstream out (file_name);
     if (!out)
         return false;
@@ -216,8 +219,8 @@ bool vjConfigIO::writeChunkDescDB (const char* file_name, const vjChunkDescDB& d
 }
 
 
-bool vjConfigIO::writeChunkDescDB (std::ostream& output, const vjChunkDescDB& db, const std::string& handler_name /*= ""*/) {
-    vjConfigIOHandler* h;
+bool ConfigIO::writeChunkDescDB (std::ostream& output, const ChunkDescDB& db, const std::string& handler_name /*= ""*/) {
+    ConfigIOHandler* h;
     if (handler_name == "")
         h = getHandler (default_handler_name);
     else
@@ -231,5 +234,6 @@ bool vjConfigIO::writeChunkDescDB (std::ostream& output, const vjChunkDescDB& db
 
 
 
-vjSingletonImp(vjConfigIO);
+vprSingletonImp(ConfigIO);
 
+};

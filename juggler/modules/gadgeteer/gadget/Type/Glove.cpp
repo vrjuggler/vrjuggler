@@ -33,13 +33,16 @@
 #include <Input/vjGlove/vjGlove.h>
 #include <Math/vjVec4.h>
 
+namespace vrj
+{
+   
 
 /////////////////////////////////////////////////////////////////////////
-//                vjGloveData                                          //
+//                GloveData                                          //
 /////////////////////////////////////////////////////////////////////////
 
 /*
- * Implementation of the vjGlove
+ * Implementation of the Glove
  * abstract device class
  *
  * This class is the base class for all gloves.
@@ -47,7 +50,7 @@
  * on the glove data. (Get finger pos, get vectors, get matrices, etc.)
  */
 
-vjGloveData::vjGloveData()
+GloveData::GloveData()
 {
    // Zero out the angles
    for(int i=0;i<NUM_COMPONENTS;i++)
@@ -57,7 +60,7 @@ vjGloveData::vjGloveData()
    // Matrices are already identities
 }
 
-vjGloveData::vjGloveData(const vjGloveData& data)
+GloveData::GloveData(const GloveData& data)
 {
    int i;
 
@@ -88,10 +91,10 @@ vjGloveData::vjGloveData(const vjGloveData& data)
 // I am just rotating around single axis for fingers, not taking abduct into account
 // The thumb is a complete fudge.
 // Wrist is not being done at all
-int vjGloveData::calcXforms()
+int GloveData::calcXforms()
 {
-   vjVec3 xAxis(1.0f, 0.0f, 0.0f);
-   vjVec3 yAxis(0.0f, 1.0f, 0.0f);
+   Vec3 xAxis(1.0f, 0.0f, 0.0f);
+   Vec3 yAxis(0.0f, 1.0f, 0.0f);
    const float oneIn(1/12.0f);
 
 
@@ -159,7 +162,7 @@ int vjGloveData::calcXforms()
 }
 
 // Output the angles in one single line
-std::ostream& vjGloveData::outputAngles(std::ostream& out) const
+std::ostream& GloveData::outputAngles(std::ostream& out) const
 {
    for(int i=0;i<NUM_COMPONENTS;i++)
       for(int j=0;j<NUM_JOINTS;j++)
@@ -169,7 +172,7 @@ std::ostream& vjGloveData::outputAngles(std::ostream& out) const
 }
 
 // Input the angles from one single line
-std::istream& vjGloveData::inputAngles(std::istream& in)
+std::istream& GloveData::inputAngles(std::istream& in)
 {
    for(int i=0;i<NUM_COMPONENTS;i++)
       for(int j=0;j<NUM_JOINTS;j++)
@@ -179,11 +182,11 @@ std::istream& vjGloveData::inputAngles(std::istream& in)
 }
 
 ////////////////////////////////////////////////////////////////////////
-//                          vjGlove                                   //
+//                          Glove                                   //
 ////////////////////////////////////////////////////////////////////////
-vjGlove::vjGlove()
+Glove::Glove()
 {
-   //vjDEBUG(vjDBG_INPUT_MGR,3)<<"*** vjGlove::vjGlove()\n"<< vjDEBUG_FLUSH;
+   //vjDEBUG(vjDBG_INPUT_MGR,3)<<"*** Glove::Glove()\n"<< vjDEBUG_FLUSH;
 
    for(int i=0;i<VJ_MAX_GLOVE_DEVS;i++)
       mGlovePos[i] = NULL;
@@ -191,8 +194,8 @@ vjGlove::vjGlove()
 
 
 // Just get the data from the current vector entry
-float vjGlove::getGloveAngle(vjGloveData::vjGloveComponent component,
-                             vjGloveData::vjGloveJoint joint, int devNum)
+float Glove::getGloveAngle(GloveData::GloveComponent component,
+                             GloveData::GloveJoint joint, int devNum)
 {
    return mTheData[devNum][current].angles[component][joint];
 }
@@ -200,12 +203,12 @@ float vjGlove::getGloveAngle(vjGloveData::vjGloveComponent component,
 //: This returns a vector ponting "out" of the component
 // Can be used for selection, etc.
 // Use getGlovePos to get the transformation matrix
-vjVec3 vjGlove::getGloveVector(vjGloveData::vjGloveComponent component, int devNum)
+Vec3 Glove::getGloveVector(GloveData::GloveComponent component, int devNum)
 {
    // Take a normalized ray up default (yAxis), and transform by finger tip rot matrix
    // ret_val = wTt yAxis
-   vjVec3 y_axis(0.0f, 1.0f, 0.0f);
-   vjVec3 ret_val(0.0f, 0.0f, 0.0f);
+   Vec3 y_axis(0.0f, 1.0f, 0.0f);
+   Vec3 ret_val(0.0f, 0.0f, 0.0f);
 
    ret_val.xformVec(getGlovePos(component, devNum), y_axis);      // Compute the vector direction
    return ret_val;
@@ -214,35 +217,35 @@ vjVec3 vjGlove::getGloveVector(vjGloveData::vjGloveComponent component, int devN
 // Calculated from the matrices in xforms
 // <sub>world</sub><b>T</b><sub>tip</sub> = <sub>world</sub><b>T</b><sub>base</sub> <sub>base</sub><b>T</b><sub>dij</sub> <sub>dij</sub><b>T</b><sub>tip</sub>
 //  i.e. wTt = wTb bTd dTt
-vjMatrix vjGlove::getGlovePos(vjGloveData::vjGloveComponent component, int devNum)
+Matrix Glove::getGlovePos(GloveData::GloveComponent component, int devNum)
 {
    if(mGlovePos[devNum] != NULL)
    {
-      vjMatrix ret_val;       // The returned matrix.
-      vjMatrix baseTdij;      // Transform from base to dig coord system
-      vjMatrix dijTtip;       // Transform to the tip of the finger
+      Matrix ret_val;       // The returned matrix.
+      Matrix baseTdij;      // Transform from base to dig coord system
+      Matrix dijTtip;       // Transform to the tip of the finger
 
       switch(component)
       {
-      case vjGloveData::WRIST:
+      case GloveData::WRIST:
          baseTdij.makeIdent();      // No transform
          dijTtip.makeIdent();       // No transform
          break;
-      case vjGloveData::INDEX:
-      case vjGloveData::MIDDLE:
-      case vjGloveData::RING:
-      case vjGloveData::PINKY:
-      case vjGloveData::THUMB:
-         dijTtip.makeTrans(mTheData[devNum][current].dims[component][vjGloveData::DIJ+1][VJ_X],
-                           mTheData[devNum][current].dims[component][vjGloveData::DIJ+1][VJ_Y],
-                           mTheData[devNum][current].dims[component][vjGloveData::DIJ+1][VJ_Z]);
-         baseTdij = mTheData[devNum][current].xforms[component][vjGloveData::MPJ];            // baseTmpj
-         baseTdij.postMult(mTheData[devNum][current].xforms[component][vjGloveData::PIJ]);    // mpjTpij
-         baseTdij.postMult(mTheData[devNum][current].xforms[component][vjGloveData::DIJ]);    // pijTdij
+      case GloveData::INDEX:
+      case GloveData::MIDDLE:
+      case GloveData::RING:
+      case GloveData::PINKY:
+      case GloveData::THUMB:
+         dijTtip.makeTrans(mTheData[devNum][current].dims[component][GloveData::DIJ+1][VJ_X],
+                           mTheData[devNum][current].dims[component][GloveData::DIJ+1][VJ_Y],
+                           mTheData[devNum][current].dims[component][GloveData::DIJ+1][VJ_Z]);
+         baseTdij = mTheData[devNum][current].xforms[component][GloveData::MPJ];            // baseTmpj
+         baseTdij.postMult(mTheData[devNum][current].xforms[component][GloveData::PIJ]);    // mpjTpij
+         baseTdij.postMult(mTheData[devNum][current].xforms[component][GloveData::DIJ]);    // pijTdij
          break;
 
       default:
-         vjASSERT(false);
+         vprASSERT(false);
          break;
       }
 
@@ -255,16 +258,17 @@ vjMatrix vjGlove::getGlovePos(vjGloveData::vjGloveComponent component, int devNu
    }
    else
    {
-      vjDEBUG( vjDBG_INPUT_MGR,0) << clrOutNORM(clrRED, "ERROR:") << " vjGlove: Trying to get a glove without a position proxy set for device number: "<<devNum<<".\n" << vjDEBUG_FLUSH;
-      vjASSERT( mGlovePos[devNum] != NULL );      // should be false in here
-      return vjMatrix();
+      vjDEBUG( vjDBG_INPUT_MGR,0) << clrOutNORM(clrRED, "ERROR:") << " Glove: Trying to get a glove without a position proxy set for device number: "<<devNum<<".\n" << vjDEBUG_FLUSH;
+      vprASSERT( mGlovePos[devNum] != NULL );      // should be false in here
+      return Matrix();
    }
 }
 
 // Grab a copy of the most current glove data
-vjGloveData vjGlove::getGloveData(int devNum)
+GloveData Glove::getGloveData(int devNum)
 {
    return mTheData[devNum][current];
 }
 
 
+};

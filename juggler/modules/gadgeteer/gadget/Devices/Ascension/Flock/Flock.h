@@ -32,7 +32,7 @@
 
 
 //===============================================================
-// vjFlock (a Wrapper for aFlock)
+// Flock (a Wrapper for aFlock)
 //
 // Purpose:
 //      VR Juggler Ascention Flock of birds tracking class
@@ -51,29 +51,32 @@
 #include <vpr/Thread/Thread.h>
 #include <Input/vjPosition/aFlock.h>
 
+namespace vrj
+{
+   
 //----------------------------------------------------------------------------
 //: Position derived class for running a Flock of Birds.
 //: , also a wrapper class for the real ascension flock class "aFlock"
 //
-//  vjFlock adds to the aFlock class shared memory and threading.<br>
-//  vjFlock is a positional device driver for the Flock of Birds, the config
+//  Flock adds to the aFlock class shared memory and threading.<br>
+//  Flock is a positional device driver for the Flock of Birds, the config
 //  chunk in the constructor should set up all the settings, for these to be
 //  changed the Flock has to be deleted and a new instance created with an
 //  updated configchunk.
 //  <br>
 //! NOTE: Some functions still remain for changing the options of
 //+    the flock when its not in Sampling mode, but in order to stay
-//+    consistent with the vjInput/vjPosition functionality these
-//+    are only left for building apps without vjConfigChunks
+//+    consistent with the Input/vjPosition functionality these
+//+    are only left for building apps without ConfigChunks
 //! NOTE: A note on reciever access:
 //+  Clients of juggler should access tracker recievers as [0-n]
 //+  For example, if you have recievers 1,2, and 4 with transmitter on 3,
 //+  then you can access the data, in order, as 0,1,2.
 //
-// See also: vjPosition
+// See also: Position
 //---------------------------------------------------------------------------
 //!PUBLIC_API:
-class vjFlock : public vjInput, public vjPosition {
+class Flock : public Input, public Position {
     public:
         //: Configure Constructor
    //! ARGS: port - such as "/dev/ttyd3"                         <BR>
@@ -89,7 +92,7 @@ class vjFlock : public vjInput, public vjPosition {
    //                                                       <BR>
    //! POST: configures internal data members,
    //+         doesn't actually talk to the FOB yet.
-   vjFlock(const char* const port = "/dev/ttyd3",
+   Flock(const char* const port = "/dev/ttyd3",
       const int& baud = 38400,
       const int& sync = 1,
       const int& block = 0,
@@ -99,11 +102,11 @@ class vjFlock : public vjInput, public vjPosition {
       const BIRD_FILT& filt = AC_NARROW,
       const char& report = 'R',
       const char* const calfile = "");
-   ~vjFlock();
+   ~Flock();
 
 
     //: configure the flock with a config chunk
-    virtual bool config(vjConfigChunk* c);
+    virtual bool config(ConfigChunk* c);
 
     //: begin sampling
     int startSampling();
@@ -126,12 +129,12 @@ class vjFlock : public vjInput, public vjPosition {
     //! NOTE: Clients of juggler should access tracker recievers as [0-n]
     //+  For example, if you have recievers 1,2, and 4 with transmitter on 3,
     //+  then you can access them, in order, as 0,1,2.
-    vjMatrix* getPosData( int dev = 0); // 0 base
+    Matrix* getPosData( int dev = 0); // 0 base
 
     //: Get time of last update for this receiver
     //! ARGS: dev - is the reciever number
     //! POST: returns a pointer to the reciever's timestamp
-    vjTimeStamp* getPosUpdateTime (int dev = 0);
+    TimeStaMp* getPosUpdateTime (int dev = 0);
 
     //: see if the flock is active or not
     inline const bool& isActive() const { return mFlockOfBirds.isActive(); }
@@ -262,6 +265,8 @@ private:
     vpr::Thread*   myThread;      // The thread doing the flock sampling
 
     aFlock mFlockOfBirds;
+};
+
 };
 
 #endif

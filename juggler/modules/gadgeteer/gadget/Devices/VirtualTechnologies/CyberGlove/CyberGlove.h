@@ -39,20 +39,23 @@
 #include <Input/vjGlove/vjGlove.h>
 #include <Input/vjGlove/CyberGloveBasic.h>
 
+namespace vrj
+{
+   
 //: Cyberglove device
 //!PUBLIC_API:
-class vjCyberGlove : virtual public vjInput, public vjGlove
+class CyberGlove : virtual public Input, public Glove
 {
 public:
    //: Construct using chunk
-   vjCyberGlove() : mGlove( NULL ), mCalDir( NULL )
+   CyberGlove() : mGlove( NULL ), mCalDir( NULL )
    {
    }
 
    //: Destroy the glove
-   virtual ~vjCyberGlove();
+   virtual ~CyberGlove();
 
-   virtual bool config(vjConfigChunk* c);
+   virtual bool config(ConfigChunk* c);
 
    static std::string getChunkType() { return std::string("CyberGlove");}
 
@@ -71,6 +74,8 @@ protected:
 protected:
    CyberGloveBasic*  mGlove;              // The actual glove
    char*             mCalDir;             // Calibration file directory
+};
+
 };
 
 #endif   /* _VJ_CYBER_GLOVE_H_ */

@@ -37,17 +37,20 @@
 #include <Config/vjConfigChunk.h>
 #include <Input/vjDTK/vjDTKMemorySegment.h>
 
-vjDTKMemorySegment::vjDTKMemorySegment()
+namespace vrj
+{
+   
+DTKMemorySegment::DTKMemorySegment()
 {
     floatData = NULL;
     intData = NULL;
     charData = NULL;
     _segmentName = _remotehost = NULL;
 
-    _numItems = _segmentSize = vjInputIndex = 0;
+    _numItems = _segmentSize = InputIndex = 0;
 }
 
-vjDTKMemorySegment::~vjDTKMemorySegment()
+DTKMemorySegment::~DTKMemorySegment()
 {
        if(floatData != NULL) delete [] floatData;
        if(intData != NULL) delete [] intData;
@@ -58,12 +61,12 @@ vjDTKMemorySegment::~vjDTKMemorySegment()
 }
 
 
-bool vjDTKMemorySegment::config(vjConfigChunk* c)
+bool DTKMemorySegment::config(ConfigChunk* c)
 {
-    _type = (vjDTK_dataType)static_cast<int>(c->getProperty("dataType"));
+    _type = (DTK_dataType)static_cast<int>(c->getProperty("dataType"));
     
     _numItems = static_cast<int>(c->getProperty("itemCount"));
-    _segmentType = (vjDTK_memoryType)static_cast<int>(c->getProperty("inputType"));
+    _segmentType = (DTK_memoryType)static_cast<int>(c->getProperty("inputType"));
 
     _segmentName = c->getProperty("segmentName").cstring();
     _remotehost = c->getProperty("remoteHost").cstring();
@@ -121,7 +124,7 @@ bool vjDTKMemorySegment::config(vjConfigChunk* c)
     return true;
 }
 
-bool vjDTKMemorySegment::connectSegment(dtkClient* in_parent)
+bool DTKMemorySegment::connectSegment(dtkClient* in_parent)
 {
     parent_client = in_parent;
     m = parent_client->getSharedMem(_segmentSize, _segmentName);	
@@ -129,7 +132,7 @@ bool vjDTKMemorySegment::connectSegment(dtkClient* in_parent)
     return true;
 }
 
-vjDTKMemorySegment::operator float*() const 
+DTKMemorySegment::operator float*() const 
 {
     if(floatData == NULL) return 0;
 
@@ -147,7 +150,7 @@ vjDTKMemorySegment::operator float*() const
     }
 }
 
-vjDTKMemorySegment::operator int*() const
+DTKMemorySegment::operator int*() const
 {
     if(intData == NULL) return 0;
 
@@ -165,7 +168,7 @@ vjDTKMemorySegment::operator int*() const
     }
 }
 
-vjDTKMemorySegment::operator char*() const
+DTKMemorySegment::operator char*() const
 {
     if(charData == NULL) return 0;
 
@@ -183,3 +186,5 @@ vjDTKMemorySegment::operator char*() const
          return 0;
     }
 }
+
+};

@@ -39,11 +39,15 @@
 #include <Kernel/vjDisplayManager.h>
 #include <Kernel/vjDepChecker.h>
 
+
+namespace vrj
+{
+   
 //: Dependency checker for Proxies
-class vjProxyDepChecker : public vjDepChecker
+class ProxyDepChecker : public DepChecker
 {
 public:
-   vjProxyDepChecker()
+   ProxyDepChecker()
    {;}
 
    //: Return a string name of the checker
@@ -52,20 +56,22 @@ public:
    { return std::string("vjProxyChecker Checker"); }
 
    // We can handle only keyboard configuration information
-   virtual bool canHandle(vjConfigChunk* chunk);
+   virtual bool canHandle(ConfigChunk* chunk);
 
    //: Are the dependencies satisfied?
    // Defaults to all being handled for it
-   virtual bool depSatisfied(vjConfigChunk* chunk)
+   virtual bool depSatisfied(ConfigChunk* chunk)
    {
       return true;
    }
 
    // Write out the dependencies to the vjDEBUG macro
-   virtual void debugOutDependencies(vjConfigChunk* chunk,int dbg_lvl=vjDBG_WARNING_LVL)
+   virtual void debugOutDependencies(ConfigChunk* chunk,int dbg_lvl=vjDBG_WARNING_LVL)
    {
       ;
    }
+};
+
 };
 
 #endif

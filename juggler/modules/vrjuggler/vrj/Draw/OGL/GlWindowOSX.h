@@ -50,7 +50,6 @@
 #   include <agl.h>
 #endif
 
-
 // structure for creating a context from a window
 // This structure comes from Carbon SetupGL 1.5 distributed by Apple
 // Corporation.  Its use is here is permitted by the license.
@@ -79,6 +78,9 @@ struct structGLWindowInfo {
 				//          accelerated
 };
 
+namespace vrj
+{
+   
 //------------------------------------
 //: A GLOSX specific glWindow
 //------------------------------------
@@ -86,21 +88,21 @@ struct structGLWindowInfo {
 // to dealing with a GLOSX window
 // in OpenGL
 //------------------------------------
-class vjGlOSXWindow: public vjGlWindow
+class GlOSXWindow: public GlWindow
 {
 public:
-    vjGlOSXWindow();
-    ~vjGlOSXWindow();
+    GlOSXWindow();
+    ~GlOSXWindow();
 
     void swapBuffers();
     int open();
     int close();
     bool makeCurrent();
 
-   void config(vjDisplay* _display);
+   void config(Display* _display);
 
 public:  /**** Static Helpers *****/
-   /* static */ virtual bool createHardwareSwapGroup(std::vector<vjGlWindow*> wins);
+   /* static */ virtual bool createHardwareSwapGroup(std::vector<GlWindow*> wins);
 
 protected:
     OSStatus BuildGLFromWindow(WindowPtr pWindow, AGLContext* paglContext,
@@ -137,6 +139,8 @@ private:
     CFStringRef			window_title;
 
     static AGLContext		aglShareContext;
+};
+
 };
 
 #endif

@@ -35,7 +35,10 @@
 #define _VJ_CONFIG_CHUNK_HANDLER_H_
 
 #include <vjConfig.h>
-class vjConfigChunk;
+
+namespace vrj
+{
+   class ConfigChunk;
 
 //-----------------------------------------
 //: Abstract base class for all classes that can handle config chunks
@@ -52,13 +55,13 @@ class vjConfigChunk;
 // default one will work in most cases.
 //---------------------------------------------
 //! PUBLIC_API:
-class VJ_CLASS_API vjConfigChunkHandler
+class VJ_CLASS_API ConfigChunkHandler
 {
 public:
    //: Can the handler handle the given chunk?
    //! RETURNS: true - Can handle it
    //+          false - Can't handle it
-   virtual bool configCanHandle(vjConfigChunk* chunk) = 0;
+   virtual bool configCanHandle(ConfigChunk* chunk) = 0;
 
    //: Process any pending reconfiguration that we can deal with
    // This function processes each pending reconfiguration in configuration manager
@@ -80,13 +83,14 @@ protected:
    //: Add the chunk to the configuration
    //! PRE: configCanHandle(chunk) == true
    //! RETURNS: success
-   virtual bool configAdd(vjConfigChunk* chunk) = 0;
+   virtual bool configAdd(ConfigChunk* chunk) = 0;
 
    //: Remove the chunk from the current configuration
    //! PRE: configCanHandle(chunk) == true
    //!RETURNS: success
-   virtual bool configRemove(vjConfigChunk* chunk) = 0;
+   virtual bool configRemove(ConfigChunk* chunk) = 0;
 };
 
 
+} // end namespace
 #endif

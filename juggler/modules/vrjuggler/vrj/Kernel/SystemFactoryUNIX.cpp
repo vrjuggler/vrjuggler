@@ -34,7 +34,11 @@
 #include <vjConfig.h>
 #include <Kernel/vjSGISystemFactory.h>
 
-//vjSGISystemFactory* vjSGISystemFactory::_instance = NULL;
-vjSingletonImp(vjSGISystemFactory);
+namespace vrj
+{
+   
+//vjSGISystemFactory* SGISystemFactory::_instance = NULL;
+vprSingletonImp(SGISystemFactory);
 
 
+};
