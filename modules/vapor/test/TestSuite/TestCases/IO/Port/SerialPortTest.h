@@ -30,7 +30,7 @@ CPPUNIT_TEST( testBlockingOpen );
 CPPUNIT_TEST( testNonBlockingOpen );
 CPPUNIT_TEST( testEnableBlocking );
 CPPUNIT_TEST( testEnableNonBlocking );
-CPPUNIT_TEST( testChangeBufferSize );
+CPPUNIT_TEST( testChangeMinInputSize );
 CPPUNIT_TEST( testChangeTimeout );
 CPPUNIT_TEST( testChangeCharacterSize );
 CPPUNIT_TEST( testChangeReadState );
@@ -87,7 +87,7 @@ public:
    void testNonBlockingOpen(void);
    void testEnableBlocking(void);
    void testEnableNonBlocking(void);
-   void testChangeBufferSize(void);
+   void testChangeMinInputSize(void);
    void testChangeTimeout(void);
    void testChangeCharacterSize(void);
    void testChangeReadState(void);

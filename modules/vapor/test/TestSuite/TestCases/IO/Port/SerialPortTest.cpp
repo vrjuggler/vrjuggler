@@ -187,18 +187,18 @@ void SerialPortTest::testEnableNonBlocking()
    CPPUNIT_ASSERT(port.close().success() && "Port closing failed");
 }
 
-void SerialPortTest::testChangeBufferSize()
+void SerialPortTest::testChangeMinInputSize()
 {
    vpr::SerialPort port(mSendPortName);
    vpr::Uint16 buf_size, buf_size_new;
 
    CPPUNIT_ASSERT(port.open().success() && "Port opening failed");
-   CPPUNIT_ASSERT(port.getBufferSize(buf_size).success() && "Buffer size query failed");
+   CPPUNIT_ASSERT(port.getMinInputSize(buf_size).success() && "Buffer size query failed");
 
    buf_size++;
-   CPPUNIT_ASSERT(port.setBufferSize(buf_size).success() && "Buffer size update failed");
+   CPPUNIT_ASSERT(port.setMinInputSize(buf_size).success() && "Buffer size update failed");
 
-   port.getBufferSize(buf_size_new);
+   port.getMinInputSize(buf_size_new);
    CPPUNIT_ASSERT(buf_size == buf_size_new && "Buffer size update failed");
 
    CPPUNIT_ASSERT(port.close().success() && "Port closing failed");
@@ -595,7 +595,7 @@ void SerialPortTest::testSendRecv_receiver(void* arg)
       status = recv_port.setCanonicalInput(false);
       assertTestThread(status.success() && "Failed to disable canonical input");
 
-      status = recv_port.setBufferSize(mDataBuffer.size() * 2);
+      status = recv_port.setMinInputSize(mDataBuffer.size() * 2);
       assertTestThread(status.success() && "Failed to change buffer size");
 
       mCondVar.acquire();
