@@ -58,7 +58,7 @@ namespace vpr {
 // variables of the object.
 // ----------------------------------------------------------------------------
 SocketStreamImplNSPR::SocketStreamImplNSPR (void)
-   : SocketImplNSPR(SocketTypes::STREAM)
+   : SocketImplNSPR(vpr::SocketTypes::STREAM)
 {
     /* Do nothing. */ ;
 }
@@ -68,25 +68,25 @@ SocketStreamImplNSPR::SocketStreamImplNSPR (void)
 // remote site and a port and stores the values for later use in the member
 // variables of the object.
 // ----------------------------------------------------------------------------
-SocketStreamImplNSPR::SocketStreamImplNSPR (const InetAddr& local_addr,
-                                            const InetAddr& remote_addr)
-    : SocketImplNSPR(local_addr, remote_addr, SocketTypes::STREAM)
+SocketStreamImplNSPR::SocketStreamImplNSPR (const vpr::InetAddr& local_addr,
+                                            const vpr::InetAddr& remote_addr)
+    : SocketImplNSPR(local_addr, remote_addr, vpr::SocketTypes::STREAM)
 {;}
 
 // ----------------------------------------------------------------------------
 // Listen on the socket for incoming connection requests.
 // ----------------------------------------------------------------------------
-Status
+vpr::Status
 SocketStreamImplNSPR::listen (const int backlog)
 {
-    Status retval;
+    vpr::Status retval;
     PRStatus status;
 
     if(!m_bound)        // To listen, we must be bound
     {
         vprDEBUG(0,0) << "SocketStreamImplNSPR::listen: Trying to listen on an unbound socket.\n"
                       << vprDEBUG_FLUSH;
-        retval.setCode(Status::Failure);
+        retval.setCode(vpr::Status::Failure);
     }
     else {
         // Put the socket into listning mode.  If that fails, print an error
@@ -95,7 +95,7 @@ SocketStreamImplNSPR::listen (const int backlog)
 
         if (PR_FAILURE == status) {
            NSPR_PrintError("SocketStreamImplNSPR::listen: Cannon listen on socket: ");
-           retval.setCode(Status::Failure);
+           retval.setCode(vpr::Status::Failure);
         }
     }
 
@@ -105,16 +105,17 @@ SocketStreamImplNSPR::listen (const int backlog)
 // ----------------------------------------------------------------------------
 // Accept an incoming connection request.
 // ----------------------------------------------------------------------------
-Status
-SocketStreamImplNSPR::accept (SocketStreamImplNSPR& sock, vpr::Interval timeout) {
-    Status retval;
-    InetAddr addr;
+vpr::Status
+SocketStreamImplNSPR::accept (SocketStreamImplNSPR& sock, vpr::Interval timeout)
+{
+    vpr::Status retval;
+    vpr::InetAddr addr;
 
     if(!m_bound)        // To listen, we must be bound
     {
         vprDEBUG(0,0) << "SocketStreamImplNSPR::accept: Trying to accept on an unbound socket.\n"
                       << vprDEBUG_FLUSH;
-        retval.setCode(Status::Failure);
+        retval.setCode(vpr::Status::Failure);
     }
     else {
        PRFileDesc* accept_sock = NULL;
@@ -131,14 +132,14 @@ SocketStreamImplNSPR::accept (SocketStreamImplNSPR& sock, vpr::Interval timeout)
           PRErrorCode err_code = PR_GetError();
 
           if ( err_code == PR_WOULD_BLOCK_ERROR ) {
-             retval.setCode(Status::WouldBlock);
+             retval.setCode(vpr::Status::WouldBlock);
           }
           else if ( err_code == PR_IO_TIMEOUT_ERROR ) {
-             retval.setCode(Status::Timeout);
+             retval.setCode(vpr::Status::Timeout);
           }
           else {
              NSPR_PrintError("SocketStreamImplNSPR::accept: Cannot accept on socket: ");
-             retval.setCode(Status::Failure);
+             retval.setCode(vpr::Status::Failure);
           }
        }
        // Otherwise, put the new socket in the passed socket object.

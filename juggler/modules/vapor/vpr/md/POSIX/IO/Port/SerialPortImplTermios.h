@@ -37,7 +37,6 @@
 #include <string>
 #include <vector>
 
-#include <vpr/IO/Port/Port.h>
 #include <vpr/IO/Port/SerialTypes.h>
 #include <vpr/IO/IOSys.h>
 #include <vpr/md/POSIX/IO/FileHandleImplUNIX.h>
@@ -51,7 +50,7 @@ namespace vpr {
  *
  * @author Patrick Hartling
  */
-class SerialPortImplTermios : public Port {
+class SerialPortImplTermios {
 public:
     /**
      * Constructor.  This creates a file handle object connected to the given
@@ -71,11 +70,24 @@ public:
      * @pre None.
      * @post If m_handle is non-NULL, its memory is released.
      */
-    virtual ~SerialPortImplTermios(void);
+    ~SerialPortImplTermios(void);
 
     // ========================================================================
-    // vpr::BlockIO overrides.
+    // vpr::BlockIO basics.
     // ========================================================================
+
+    /**
+     * Gets the name of this serial port.
+     *
+     * @pre None.
+     * @post
+     *
+     * @return An object containing the name of the serial port.
+     */
+    const std::string&
+    getName (void) {
+        return m_handle->getName();
+    }
 
     /**
      * Sets the open flags so that the serial port is opened in read-only
@@ -120,6 +132,34 @@ public:
     }
 
     /**
+     * Sets the blocking flags so that the serial port is opened in blocking
+     * mode.
+     *
+     * @pre None.
+     * @post The open flags are updated so that when the port is opened, it is
+     *       opened in blocking mode.  If the port is already open, this has
+     *       no effect.
+     */
+    inline void
+    setOpenBlocking (void) {
+        m_handle->setOpenBlocking();
+    }
+
+    /**
+     * Sets the blocking flags so that the serial port is opened in
+     * non-blocking mode.
+     *
+     * @pre None.
+     * @post The open flags are updated so that when the port is opened, it is
+     *       opened in non-blocking mode.  If the port is already open, this
+     *       has no effect.
+     */
+    inline void
+    setOpenNonBlocking (void) {
+        m_handle->setOpenNonBlocking();
+    }
+
+    /**
      * Opens the serial port and initialize its flags.
      *
      * @pre The serial port is not already open.
@@ -131,7 +171,7 @@ public:
      *         successfully.<br>
      *         vpr::Status::Failure is returned otherwise.
      */
-    virtual Status open(void);
+    vpr::Status open(void);
 
     /**
      * Closes the serial port.
@@ -144,14 +184,9 @@ public:
      *         successfully.<br>
      *         vpr::Status::Failure is returned otherwise.
      */
-    inline virtual Status
+    inline vpr::Status
     close (void) {
-        Status retval;
-
-        retval = m_handle->close();
-        m_open = (retval.success() ? false : true);
-
-        return retval;
+        return m_handle->close();
     }
 
     /**
@@ -163,7 +198,7 @@ public:
      * @return vpr::Status::Success is returned if the blocking mode was
      *         changed successfully; vpr::Status::Failure otherwise.
      */
-    inline virtual Status
+    inline vpr::Status
     enableBlocking (void) {
        return m_handle->enableBlocking();
     }
@@ -177,15 +212,41 @@ public:
      * @return vpr::Status::Success is returned if the blocking mode was
      *         changed successfully; vpr::Status::Failure otherwise.
      */
-    inline virtual Status
+    inline vpr::Status
     enableNonBlocking (void) {
        return m_handle->enableNonBlocking();
     }
 
     /**
+     * Get the current blocking state for the serial port.
+     *
+     * @pre m_blocking is set correctly
+     *
+     * @return true is returned if the port is in blocking mode.<br>
+     *         false is returned if the port is in non-blocking mode.
+     */
+    inline bool
+    getBlocking (void) const {
+        return m_handle->getBlocking();
+    }
+
+    /**
+     * Gets the current non-blocking state for the serial port.
+     *
+     * @pre <code>m_blocking</code> is set correctly<br>
+     *
+     * @return <code>true</code> is returned if the port is in non-blocking
+     *         mode.   Otherwise, <code>false</code> is returned.
+     */
+    inline bool
+    getNonBlocking (void) const {
+        return m_handle->getNonBlocking();
+    }
+
+    /**
      * Returns the contained handle.
      */
-    inline IOSys::Handle
+    inline vpr::IOSys::Handle
     getHandle (void) {
        return m_handle->getHandle();
     }
@@ -249,7 +310,7 @@ public:
      * @return A vpr::SerialTypes::UpdateActionOption value stating when
      *         updates take effect.
      */
-    SerialTypes::UpdateActionOption getUpdateAction(void);
+    vpr::SerialTypes::UpdateActionOption getUpdateAction(void);
 
     // ------------------------------------------------------------------------
     //: Change the current update action to take place as described by the
@@ -835,7 +896,7 @@ public:
      *         <code>vpr::Status::Timeout</code> is returned if the read
      *         could not begin within the timeout interval.
      */
-    virtual Status
+    inline vpr::Status
     read_i (void* buffer, const size_t length, ssize_t& bytes_read,
             const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
@@ -870,7 +931,7 @@ public:
      *         within the timeout interval.<br>
      *         vpr::Status::Failure is returned if the read operation failed.
      */
-    virtual Status
+    inline vpr::Status
     readn_i (void* buffer, const size_t length, ssize_t& bytes_read,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
@@ -901,7 +962,7 @@ public:
      *         within the timeout interval.<br>
      *         vpr::Status::Failure is returned if the write operation failed.
      */
-    virtual Status
+    inline vpr::Status
     write_i (const void* buffer, const size_t length, ssize_t& bytes_written,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
@@ -932,17 +993,17 @@ protected:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status getAttrs(struct termios* term);
+    vpr::Status getAttrs(struct termios* term);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status setAttrs(struct termios* term, const char* err_msg,
-                    const bool print_sys_err = true);
+    vpr::Status setAttrs(struct termios* term, const char* err_msg,
+                         const bool print_sys_err = true);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status setAttrs(struct termios* term, const std::string& err_msg,
-                    const bool print_sys_err = true);
+    vpr::Status setAttrs(struct termios* term, const std::string& err_msg,
+                         const bool print_sys_err = true);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
@@ -950,19 +1011,20 @@ protected:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status setBit(const tcflag_t bit, _term_flag flag, const bool enable,
-                  const std::string& err_msg, const bool print_sys_err = true);
+    vpr::Status setBit(const tcflag_t bit, _term_flag flag, const bool enable,
+                       const std::string& err_msg,
+                       const bool print_sys_err = true);
 
     /**
      * Converts a termios baud rate to its corresponding integer value.
      */
-    Uint32 baudToInt(const speed_t baud_rate);
+    vpr::Uint32 baudToInt(const speed_t baud_rate);
 
     /**
      * Converts an integer baud rate to the corresponding termios rate
      * constant.
      */
-    speed_t intToBaud(const Uint32 speed_int);
+    speed_t intToBaud(const vpr::Uint32 speed_int);
 
     FileHandleImplUNIX*	m_handle;    /**< File handle for the serial port */
     int			m_actions;

@@ -51,7 +51,7 @@ namespace vpr {
 class SocketStreamImplBSD : public SocketImplBSD {
 public:
     // ========================================================================
-    // vpr::SocketStreamImp implementation.
+    // vpr::SocketStream interface.
     // ========================================================================
 
     /**
@@ -64,7 +64,7 @@ public:
      *       particular set to vpr::SocketTypes::SOCK_STREAM.
      */
     SocketStreamImplBSD (void)
-        : SocketImplBSD(SocketTypes::STREAM)
+        : SocketImplBSD(vpr::SocketTypes::STREAM)
     {
         /* Do nothing. */ ;
     }
@@ -103,13 +103,6 @@ public:
     }
 
     /**
-     * Destructor.  This currently does nothing.
-     */
-    virtual ~SocketStreamImplBSD (void) {
-        /* Do nothing. */ ;
-    }
-
-    /**
      * Puts this socket into the listening state where it listens for
      * incoming connection requests.
      *
@@ -124,7 +117,7 @@ public:
      *         listening state.<br>
      *         vpr::Status::Failure is returned otherwise.
      */
-    virtual Status listen(const int backlog = 5);
+    vpr::Status listen(const int backlog = 5);
 
     /**
      * Accepts an incoming connection request and return the connected socket
@@ -149,8 +142,8 @@ public:
      *         vpr::Status::Failure is returned if the accept failed.  The
      *         given vpr::SocketStream object is not modified in this case.
      */
-    virtual Status accept(SocketStreamImplBSD& sock,
-                          vpr::Interval timeout = vpr::Interval::NoTimeout);
+    vpr::Status accept(SocketStreamImplBSD& sock,
+                       vpr::Interval timeout = vpr::Interval::NoTimeout);
 };
 
 }; // End of vpr namespace

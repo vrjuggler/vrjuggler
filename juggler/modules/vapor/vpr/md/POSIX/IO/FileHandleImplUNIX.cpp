@@ -61,7 +61,8 @@ namespace vpr {
 // and stores the given file name for later use.
 // ----------------------------------------------------------------------------
 FileHandleImplUNIX::FileHandleImplUNIX (const std::string& file_name)
-    : BlockIO(file_name), m_fdesc(-1)
+    : m_name(file_name), m_open(false), m_open_blocking(true),
+      m_blocking(true), m_fdesc(-1), m_open_mode(O_RDWR)
 {
     /* Do nothing. */ ;
 }
@@ -401,7 +402,6 @@ FileHandleImplUNIX::read_i (void* buffer, const size_t length,
                     << vprDEBUG_FLUSH;
                 status.setCode(Status::Failure);
             }
-
         }
         // If 0 bytes were read or an error was returned, we print an error
         // message.

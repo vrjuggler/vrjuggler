@@ -33,13 +33,16 @@
 #ifndef _VPR_FILE_HANDLE_IMPL_UNIX_H_
 #define _VPR_FILE_HANDLE_IMPL_UNIX_H_
 
+#include <vpr/vprConfig.h>
+
 #include <fcntl.h>
 #include <sys/types.h>
 #include <string>
 #include <vector>
 
-#include <vpr/IO/BlockIO.h>
 #include <vpr/IO/IOSys.h>
+#include <vpr/Util/Status.h>
+#include <vpr/Util/Interval.h>
 #include <vpr/Util/Debug.h>
 
 
@@ -50,7 +53,7 @@ namespace vpr {
  *
  * @author Patrick Hartling
  */
-class FileHandleImplUNIX : public BlockIO {
+class FileHandleImplUNIX {
 public:
     /**
      * Constructor.  This initializes the member variables to reasonable
@@ -68,11 +71,50 @@ public:
      *
      * @post If the file handle is still open, it is closed.
      */
-    virtual ~FileHandleImplUNIX(void);
+    ~FileHandleImplUNIX(void);
 
     // ========================================================================
-    // vpr::BlockIO implementation.
+    // vpr::BlockIO basics.
     // ========================================================================
+
+    /**
+     * Gets the name of this file.
+     *
+     * @post
+     *
+     * @return An object containing the name of this file.
+     */
+    inline const std::string&
+    getName (void) {
+        return m_name;
+    }
+
+    /**
+     * Sets the blocking flags so that the socket is opened in blocking mode.
+     *
+     * @pre None.
+     * @post The open flags are updated so that when the socket is opened, it
+     *       is opened in blocking mode.  If the socket is already open, this
+     *       has no effect.
+     */
+    inline void
+    setOpenBlocking (void) {
+        m_open_blocking = true;
+    }
+
+    /**
+     * Sets the blocking flags so that the socket is opened in non-blocking
+     * mode.
+     *
+     * @pre None.
+     * @post The open flags are updated so that when the socket is opened, it
+     *       is opened in non-blocking mode.  If the socket is already open,
+     *       this has no effect.
+     */
+    inline void
+    setOpenNonBlocking (void) {
+        m_open_blocking = false;
+    }
 
     /**
      * Opens the file handle.
@@ -85,7 +127,7 @@ public:
      * @return vpr::Status;:Success is returned if the file handle was opened
      *         successfully.  vpr::Status::Failure is returned otherwise.
      */
-    Status open(void);
+    vpr::Status open(void);
 
     /**
      * Closes the file handle.
@@ -100,7 +142,22 @@ public:
      *         vpr::Status::Failure is returned if the file handle could not
      *         be closed for some reason.
      */
-    Status close(void);
+    vpr::Status close(void);
+
+    /**
+     * Gets the open state of this file handle.
+     *
+     * @pre None.
+     * @post The boolean value giving the open state is returned to the
+     *       caller.
+     *
+     * @return <code>true</code> is returned if this file handle is open;
+     *         <code>false</code> otherwise.
+     */
+    inline bool
+    isOpen (void) {
+        return m_open;
+    }
 
     /**
      * Reconfigures the file handle so that it is in blocking mode.
@@ -127,7 +184,7 @@ public:
     /**
      * Returns the contained handle.
      */
-    inline IOSys::Handle
+    inline vpr::IOSys::Handle
     getHandle (void) {
 #ifdef VPR_USE_NSPR
        vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
@@ -136,6 +193,34 @@ public:
 #else
        return m_fdesc;
 #endif
+    }
+
+    /**
+     * Gets the current blocking state for the file handle.
+     *
+     * @pre m_blocking is set correctly.
+     * @post
+     *
+     * @return <code>true</code> is returned if the file handle is in blocking
+     *         mode.  Otherwise, <code>false</code> is returned.
+     */
+    inline bool
+    getBlocking (void) const {
+        return m_blocking;
+    }
+
+    /**
+     * Gets the current non-blocking state for the file handle.
+     *
+     * @pre m_blocking is set correctly.
+     * @post
+     *
+     * @return <code>true</code> is returned if the file handle is in
+     *         non-blocking mode.  Otherwise, <code>false</code> is returned.
+     */
+    inline bool
+    getNonBlocking (void) const {
+        return ! m_blocking;
     }
 
     // ========================================================================
@@ -304,9 +389,8 @@ public:
      *         within the timeout interval.<br>
      *         vpr::Status::Failure is returned if the read operation failed.
      */
-    virtual Status read_i(void* buffer, const size_t length,
-                          ssize_t& bytes_read,
-                          const vpr::Interval timeout = vpr::Interval::NoTimeout);
+    vpr::Status read_i(void* buffer, const size_t length, ssize_t& bytes_read,
+                       const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     /**
      * Implementation of the <code>readn</code> template method.  This reads
@@ -335,9 +419,8 @@ public:
      *         vpr::Status::Timeout is returned if the read could not begin
      *         within the timeout interval.<br>
      */
-    virtual Status readn_i(void* buffer, const size_t length,
-                           ssize_t& bytes_read,
-                           const vpr::Interval timeout = vpr::Interval::NoTimeout);
+    vpr::Status readn_i(void* buffer, const size_t length, ssize_t& bytes_read,
+                        const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     /**
      * Implementation of the <code>write</code> template method.  This writes
@@ -364,9 +447,9 @@ public:
      *         within the timeout interval.<br>
      *         vpr::Status::Failure is returned if the write operation failed.
      */
-    virtual Status write_i(const void* buffer, const size_t length,
-                           ssize_t& bytes_written,
-                           const vpr::Interval timeout = vpr::Interval::NoTimeout);
+    vpr::Status write_i(const void* buffer, const size_t length,
+                        ssize_t& bytes_written,
+                        const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
 protected:
     // Friends.
@@ -403,13 +486,18 @@ protected:
      * Tests if the file handle is ready for reading within the timeout
      * period.
      */
-    Status isReadable(const vpr::Interval timeout);
+    vpr::Status isReadable(const vpr::Interval timeout);
 
     /**
      * Tests if the file handle is ready for writing within the timeout
      * period.
      */
-    Status isWriteable(const vpr::Interval timeout);
+    vpr::Status isWriteable(const vpr::Interval timeout);
+
+    std::string m_name;           /**< The name of this file */
+    bool        m_open;           /**< Open state of this file */
+    bool        m_open_blocking;
+    bool        m_blocking;       /**< Blocking state of this file */
 
     int m_fdesc;      /**< File descriptor */
     int m_open_mode;  /**< The open mode of the device */

@@ -94,7 +94,7 @@ SocketStreamImplBSD::accept (SocketStreamImplBSD& sock,vpr::Interval timeout) {
 
         // If accept(2) failed, print an error message and return error stauts.
         if ( accept_sock == -1 ) {
-            if ( errno == EWOULDBLOCK && ! m_blocking ) {
+            if ( errno == EWOULDBLOCK && getNonBlocking() ) {
                 retval.setCode(Status::WouldBlock);
             }
             else {
@@ -114,7 +114,7 @@ SocketStreamImplBSD::accept (SocketStreamImplBSD& sock,vpr::Interval timeout) {
             // Inherit the blocking state from the accepting socket.  This
             // must be done after m_open is set to true to satisfy the
             // pre-condition.
-            if ( ! m_blocking ) {
+            if ( getNonBlocking() ) {
                 sock.enableNonBlocking();
             }
 

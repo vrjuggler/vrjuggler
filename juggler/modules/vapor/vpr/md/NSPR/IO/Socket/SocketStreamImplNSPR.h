@@ -62,8 +62,8 @@ public:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    SocketStreamImplNSPR(const InetAddr& local_addr,
-                         const InetAddr& remote_addr);
+    SocketStreamImplNSPR(const vpr::InetAddr& local_addr,
+                         const vpr::InetAddr& remote_addr);
 
     // ------------------------------------------------------------------------
     // Copy constructor.
@@ -71,16 +71,6 @@ public:
     // ------------------------------------------------------------------------
     SocketStreamImplNSPR (const SocketStreamImplNSPR& sock) : SocketImplNSPR(sock)
     { /* Just call base class */ }
-
-    // ------------------------------------------------------------------------
-    // Destructor.  This currently does nothing.
-    //
-    // PRE: None.
-    // POST: None.
-    // ------------------------------------------------------------------------
-    virtual ~SocketStreamImplNSPR (void) {
-        /* Do nothing. */ ;
-    }
 
     // ------------------------------------------------------------------------
     // Listen on the socket for incoming connection requests.
@@ -98,7 +88,7 @@ public:
     //     false - The socket could not be put into a listening state.  An
     //             error message is printed explaining what went wrong.
     // ------------------------------------------------------------------------
-    virtual Status listen(const int backlog = 5);
+    vpr::Status listen(const int backlog = 5);
 
     // ------------------------------------------------------------------------
     // Accept an incoming connection request.
@@ -110,7 +100,8 @@ public:
     //
     // Returns:
     // ------------------------------------------------------------------------
-    virtual Status accept(SocketStreamImplNSPR& sock, const vpr::Interval timeout = vpr::Interval::NoTimeout);
+    vpr::Status accept(SocketStreamImplNSPR& sock,
+                       const vpr::Interval timeout = vpr::Interval::NoTimeout);
 };
 
 }; // End of vpr namespace

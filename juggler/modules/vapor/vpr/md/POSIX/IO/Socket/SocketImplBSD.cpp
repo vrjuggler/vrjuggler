@@ -60,10 +60,10 @@ namespace vpr {
 // Open the socket.  This creates a new socket using the domain and type
 // options set through member variables.
 // ----------------------------------------------------------------------------
-Status
+vpr::Status
 SocketImplBSD::open () {
     int domain, type, sock;
-    Status retval;
+    vpr::Status retval;
 
     switch (m_local_addr.getFamily()) {
       case SocketTypes::LOCAL:
@@ -127,8 +127,8 @@ SocketImplBSD::open () {
     if ( sock == -1 ) {
         fprintf(stderr,
                 "[vpr::SocketImplBSD] Could not create socket (%s): %s\n",
-                m_name.c_str(), strerror(errno));
-        retval.setCode(Status::Failure);
+                getName().c_str(), strerror(errno));
+        retval.setCode(vpr::Status::Failure);
     }
     // Otherwise, return success.
     else {
@@ -137,7 +137,8 @@ SocketImplBSD::open () {
         }
 
         m_handle->m_fdesc = sock;
-        m_open = true;
+        m_handle->m_open  = true;
+        m_open            = true;
 
         // Since socket(2) cannot open a socket in non-blocking mode, we call
         // enableNonBlocking() now if the socket is to be opened in
@@ -153,23 +154,19 @@ SocketImplBSD::open () {
 // ----------------------------------------------------------------------------
 //: Reconfigure the socket so that it is in blocking mode.
 // ----------------------------------------------------------------------------
-Status
+vpr::Status
 SocketImplBSD::enableBlocking (void) {
     vpr::Status status;
-    vprASSERT(m_open && "precondition says you must open() the socket first");
+    vprASSERT(isOpen() && "precondition says you must open() the socket first");
 
     if ( m_blocking_fixed ) {
         vprDEBUG(0,0)
             << "[SocketImplBSD] Cannot enable blocking after a blocking call!\n"
             << vprDEBUG_FLUSH;
-        status.setCode(Status::Failure);
+        status.setCode(vpr::Status::Failure);
     }
     else {
         status = m_handle->enableBlocking();
-
-        if ( status.success() ) {
-            m_blocking = true;
-        }
     }
 
     return status;
@@ -178,23 +175,19 @@ SocketImplBSD::enableBlocking (void) {
 // ----------------------------------------------------------------------------
 //: Reconfigure the socket so that it is in non-blocking mode.
 // ----------------------------------------------------------------------------
-Status
+vpr::Status
 SocketImplBSD::enableNonBlocking (void) {
     vpr::Status status;
-    vprASSERT(m_open && "precondition says you must open() the socket first");
+    vprASSERT(isOpen() && "precondition says you must open() the socket first");
 
     if ( m_blocking_fixed ) {
         vprDEBUG(0,0)
             << "[SocketImplBSD] Cannot disable blocking after a blocking call!\n"
             << vprDEBUG_FLUSH;
-        status.setCode(Status::Failure);
+        status.setCode(vpr::Status::Failure);
     }
     else {
         status = m_handle->enableNonBlocking();
-
-        if ( status.success() ) {
-            m_blocking = false;
-        }
     }
 
     return status;
@@ -203,9 +196,9 @@ SocketImplBSD::enableNonBlocking (void) {
 // ----------------------------------------------------------------------------
 // Bind this socket to the address in the host address member variable.
 // ----------------------------------------------------------------------------
-Status
+vpr::Status
 SocketImplBSD::bind () {
-    Status retval;
+    vpr::Status retval;
     int status;
 
     // Bind the socket to the address in m_local_addr.
@@ -217,7 +210,7 @@ SocketImplBSD::bind () {
         fprintf(stderr,
                 "[vpr::SocketImplBSD] Cannot bind socket to address: %s\n",
                 strerror(errno));
-        retval.setCode(Status::Failure);
+        retval.setCode(vpr::Status::Failure);
     }
     else {
         m_bound = true;
@@ -232,9 +225,9 @@ SocketImplBSD::bind () {
 // destination for all packets.  For a stream socket, this has the effect of
 // establishing a connection with the destination.
 // ----------------------------------------------------------------------------
-Status
+vpr::Status
 SocketImplBSD::connect (vpr::Interval timeout) {
-    Status retval;
+    vpr::Status retval;
     int status;
 
     if(vpr::Interval::NoTimeout != timeout)
@@ -252,7 +245,7 @@ SocketImplBSD::connect (vpr::Interval timeout) {
         // to indicate that the connection will complete later.  I'm not sure
         // if it's safe to set m_connected and m_blocking_fixed at this
         // point, but they have to be set sometime.
-        if ( errno == EINPROGRESS && ! m_blocking ) {
+        if ( errno == EINPROGRESS && getNonBlocking() ) {
             retval.setCode(vpr::Status::InProgress);
             m_connected      = true;
             m_blocking_fixed = true;
@@ -272,15 +265,15 @@ SocketImplBSD::connect (vpr::Interval timeout) {
     return retval;
 }
 
-Status
+vpr::Status
 SocketImplBSD::setLocalAddr (const InetAddr& addr) {
-    Status status;
+    vpr::Status status;
 
     if ( m_bound || m_connected ) {
         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
             << "SocketImplBSD::setLocalAddr: Can't set address of a "
             << "bound or connected socket.\n" << vprDEBUG_FLUSH;
-        status.setCode(Status::Failure);
+        status.setCode(vpr::Status::Failure);
     }
     else {
       m_local_addr = addr;
@@ -289,12 +282,12 @@ SocketImplBSD::setLocalAddr (const InetAddr& addr) {
     return status;
 }
 
-Status
+vpr::Status
 SocketImplBSD::setRemoteAddr (const InetAddr& addr) {
-    Status status;
+    vpr::Status status;
 
     if ( m_connected ) {
-        status.setCode(Status::Failure);
+        status.setCode(vpr::Status::Failure);
     }
     else {
         m_remote_addr = addr;
@@ -319,87 +312,87 @@ union sockopt_data {
 /**
  *
  */
-Status
-SocketImplBSD::getOption (const SocketOptions::Types option,
-                          struct SocketOptions::Data& data)
+vpr::Status
+SocketImplBSD::getOption (const vpr::SocketOptions::Types option,
+                          struct vpr::SocketOptions::Data& data)
 {
     int opt_name, opt_level, status;
-    Status retval;
+    vpr::Status retval;
     socklen_t opt_size;
     union sockopt_data opt_data;
 
     switch (option) {
       // Socket-level options.
-      case SocketOptions::Linger:
+      case vpr::SocketOptions::Linger:
         opt_level = SOL_SOCKET;
         opt_name  = SO_LINGER;
         opt_size  = sizeof(opt_data.linger_val);
         break;
-      case SocketOptions::ReuseAddr:
+      case vpr::SocketOptions::ReuseAddr:
         opt_level = SOL_SOCKET;
         opt_name  = SO_REUSEADDR;
         opt_size  = sizeof(opt_data.enabled);
         break;
-      case SocketOptions::KeepAlive:
+      case vpr::SocketOptions::KeepAlive:
         opt_level = SOL_SOCKET;
         opt_name  = SO_KEEPALIVE;
         opt_size  = sizeof(opt_data.enabled);
         break;
-      case SocketOptions::RecvBufferSize:
+      case vpr::SocketOptions::RecvBufferSize:
         opt_level = SOL_SOCKET;
         opt_name  = SO_RCVBUF;
         opt_size  = sizeof(opt_data.size);
         break;
-      case SocketOptions::SendBufferSize:
+      case vpr::SocketOptions::SendBufferSize:
         opt_level = SOL_SOCKET;
         opt_name  = SO_SNDBUF;
         opt_size  = sizeof(opt_data.size);
         break;
 
       // IP-level options.
-      case SocketOptions::IpTimeToLive:
+      case vpr::SocketOptions::IpTimeToLive:
         opt_level = IPPROTO_IP;
         opt_name  = IP_TTL;
         opt_size  = sizeof(opt_data.size);
         break;
-      case SocketOptions::IpTypeOfService:
+      case vpr::SocketOptions::IpTypeOfService:
         opt_level = IPPROTO_IP;
         opt_name  = IP_TOS;
         opt_size  = sizeof(opt_data.size);
         break;
-      case SocketOptions::AddMember:
+      case vpr::SocketOptions::AddMember:
         opt_level = IPPROTO_IP;
         opt_name  = IP_ADD_MEMBERSHIP;
         opt_size  = sizeof(opt_data.mcast_req);
         break;
-      case SocketOptions::DropMember:
+      case vpr::SocketOptions::DropMember:
         opt_level = IPPROTO_IP;
         opt_name  = IP_DROP_MEMBERSHIP;
         opt_size  = sizeof(opt_data.mcast_req);
         break;
-      case SocketOptions::McastInterface:
+      case vpr::SocketOptions::McastInterface:
         opt_level = IPPROTO_IP;
         opt_name  = IP_MULTICAST_IF;
         opt_size  = sizeof(opt_data.mcast_if);
         break;
-      case SocketOptions::McastTimeToLive:
+      case vpr::SocketOptions::McastTimeToLive:
         opt_level = IPPROTO_IP;
         opt_name  = IP_MULTICAST_TTL;
         opt_size  = sizeof(opt_data.mcast_ttl);
         break;
-      case SocketOptions::McastLoopback:
+      case vpr::SocketOptions::McastLoopback:
         opt_level = IPPROTO_IP;
         opt_name  = IP_MULTICAST_LOOP;
         opt_size  = sizeof(opt_data.mcast_loop);
         break;
 
       // TCP-level options.
-      case SocketOptions::NoDelay:
+      case vpr::SocketOptions::NoDelay:
         opt_level = IPPROTO_TCP;
         opt_name  = TCP_NODELAY;
         opt_size  = sizeof(opt_data.enabled);
         break;
-      case SocketOptions::MaxSegment:
+      case vpr::SocketOptions::MaxSegment:
         opt_level = IPPROTO_TCP;
         opt_name  = TCP_MAXSEG;
         opt_size  = sizeof(opt_data.size);
@@ -411,68 +404,68 @@ SocketImplBSD::getOption (const SocketOptions::Types option,
 
     if ( status == 0 ) {
         // This extracts the information from the union passed to getsockopt(2)
-        // and puts it in our friendly SocketOptions::Data object.  This code
+        // and puts it in our friendly vpr::SocketOptions::Data object.  This code
         // depends on the type of that object being a union!
         switch (option) {
-          case SocketOptions::Linger:
+          case vpr::SocketOptions::Linger:
             data.linger.enabled = (opt_data.linger_val.l_onoff != 0 ? true
                                                                     : false);
             data.linger.seconds = opt_data.linger_val.l_linger;
             break;
-          case SocketOptions::ReuseAddr:
+          case vpr::SocketOptions::ReuseAddr:
             data.reuse_addr = (opt_data.enabled != 0 ? true : false);
             break;
-          case SocketOptions::KeepAlive:
+          case vpr::SocketOptions::KeepAlive:
             data.keep_alive = (opt_data.enabled != 0 ? true : false);
             break;
-          case SocketOptions::RecvBufferSize:
+          case vpr::SocketOptions::RecvBufferSize:
             data.recv_buffer_size = opt_data.size;
             break;
-          case SocketOptions::SendBufferSize:
+          case vpr::SocketOptions::SendBufferSize:
             data.send_buffer_size = opt_data.size;
             break;
-          case SocketOptions::IpTimeToLive:
+          case vpr::SocketOptions::IpTimeToLive:
             data.ip_ttl = opt_data.size;
             break;
-          case SocketOptions::IpTypeOfService:
+          case vpr::SocketOptions::IpTypeOfService:
             switch (opt_data.size) {
               case IPTOS_LOWDELAY:
-                data.type_of_service = SocketOptions::LowDelay;
+                data.type_of_service = vpr::SocketOptions::LowDelay;
                 break;
               case IPTOS_THROUGHPUT:
-                data.type_of_service = SocketOptions::Throughput;
+                data.type_of_service = vpr::SocketOptions::Throughput;
                 break;
               case IPTOS_RELIABILITY:
-                data.type_of_service = SocketOptions::Reliability;
+                data.type_of_service = vpr::SocketOptions::Reliability;
                 break;
 #ifdef IPTOS_LOWCOST
               case IPTOS_LOWCOST:
-                data.type_of_service = SocketOptions::LowCost;
+                data.type_of_service = vpr::SocketOptions::LowCost;
                 break;
 #endif
             }
 
             break;
-          case SocketOptions::McastInterface:
+          case vpr::SocketOptions::McastInterface:
             data.mcast_if = InetAddr();
             data.mcast_if.setAddress(opt_data.mcast_if.s_addr, 0);
             break;
-          case SocketOptions::McastTimeToLive:
+          case vpr::SocketOptions::McastTimeToLive:
             data.mcast_ttl = opt_data.mcast_ttl;
             break;
-          case SocketOptions::McastLoopback:
+          case vpr::SocketOptions::McastLoopback:
             data.mcast_loopback = opt_data.mcast_loop;
             break;
-          case SocketOptions::NoDelay:
+          case vpr::SocketOptions::NoDelay:
             data.no_delay = (opt_data.enabled != 0 ? true : false);
             break;
-          case SocketOptions::MaxSegment:
+          case vpr::SocketOptions::MaxSegment:
             data.max_segment = opt_data.size;
             break;
         }
     }
     else {
-        retval.setCode(Status::Failure);
+        retval.setCode(vpr::Status::Failure);
         fprintf(stderr,
                 "[vpr::SocketImplBSD] ERROR: Could not get socket option for socket %s: %s\n",
                 m_handle->getName().c_str(), strerror(errno));
@@ -484,43 +477,43 @@ SocketImplBSD::getOption (const SocketOptions::Types option,
 /**
  *
  */
-Status
-SocketImplBSD::setOption (const SocketOptions::Types option,
-                          const struct SocketOptions::Data& data)
+vpr::Status
+SocketImplBSD::setOption (const vpr::SocketOptions::Types option,
+                          const struct vpr::SocketOptions::Data& data)
 {
     int opt_name, opt_level;
     socklen_t opt_size;
     union sockopt_data opt_data;
-    Status retval;
+    vpr::Status retval;
 
     switch (option) {
       // Socket-level options.
-      case SocketOptions::Linger:
+      case vpr::SocketOptions::Linger:
         opt_level                    = SOL_SOCKET;
         opt_name                     = SO_LINGER;
         opt_data.linger_val.l_onoff  = (data.linger.enabled ? 1 : 0);
         opt_data.linger_val.l_linger = data.linger.seconds;
         opt_size                     = sizeof(struct linger);
         break;
-      case SocketOptions::ReuseAddr:
+      case vpr::SocketOptions::ReuseAddr:
         opt_level        = SOL_SOCKET;
         opt_name         = SO_REUSEADDR;
         opt_data.enabled = (data.reuse_addr ? 1 : 0);
         opt_size         = sizeof(int);
         break;
-      case SocketOptions::KeepAlive:
+      case vpr::SocketOptions::KeepAlive:
         opt_level        = SOL_SOCKET;
         opt_name         = SO_KEEPALIVE;
         opt_data.enabled = (data.keep_alive ? 1 : 0);
         opt_size         = sizeof(int);
         break;
-      case SocketOptions::RecvBufferSize:
+      case vpr::SocketOptions::RecvBufferSize:
         opt_name      = SO_RCVBUF;
         opt_level     = SOL_SOCKET;
         opt_data.size = data.recv_buffer_size;
         opt_size      = sizeof(size_t);
         break;
-      case SocketOptions::SendBufferSize:
+      case vpr::SocketOptions::SendBufferSize:
         opt_level     = SOL_SOCKET;
         opt_name      = SO_SNDBUF;
         opt_data.size = data.send_buffer_size;
@@ -528,27 +521,27 @@ SocketImplBSD::setOption (const SocketOptions::Types option,
         break;
 
       // IP-level options.
-      case SocketOptions::IpTimeToLive:
+      case vpr::SocketOptions::IpTimeToLive:
         opt_level     = IPPROTO_IP;
         opt_name      = IP_TTL;
         opt_data.size = data.ip_ttl;
         opt_size      = sizeof(size_t);
         break;
-      case SocketOptions::IpTypeOfService:
+      case vpr::SocketOptions::IpTypeOfService:
         opt_level     = IPPROTO_IP;
         opt_name      = IP_TOS;
 
         switch (data.type_of_service) {
-          case SocketOptions::LowDelay:
+          case vpr::SocketOptions::LowDelay:
             opt_data.size = IPTOS_LOWDELAY;
             break;
-          case SocketOptions::Throughput:
+          case vpr::SocketOptions::Throughput:
             opt_data.size = IPTOS_THROUGHPUT;
             break;
-          case SocketOptions::Reliability:
+          case vpr::SocketOptions::Reliability:
             opt_data.size = IPTOS_RELIABILITY;
             break;
-          case SocketOptions::LowCost:
+          case vpr::SocketOptions::LowCost:
 #ifdef IPTOS_LOWCOST
             opt_data.size = IPTOS_LOWCOST;
 #else
@@ -561,33 +554,33 @@ SocketImplBSD::setOption (const SocketOptions::Types option,
 
         opt_size      = sizeof(size_t);
         break;
-      case SocketOptions::AddMember:
+      case vpr::SocketOptions::AddMember:
         opt_level = IPPROTO_IP;
         opt_name  = IP_ADD_MEMBERSHIP;
         opt_data.mcast_req.imr_multiaddr.s_addr = data.mcast_add_member.getMulticastAddr().getAddressValue();
         opt_data.mcast_req.imr_interface.s_addr = data.mcast_add_member.getInterfaceAddr().getAddressValue();
         opt_size  = sizeof(struct ip_mreq);
         break;
-      case SocketOptions::DropMember:
+      case vpr::SocketOptions::DropMember:
         opt_level          = IPPROTO_IP;
         opt_name           = IP_DROP_MEMBERSHIP;
         opt_data.mcast_req.imr_multiaddr.s_addr = data.mcast_drop_member.getMulticastAddr().getAddressValue();
         opt_data.mcast_req.imr_interface.s_addr = data.mcast_drop_member.getInterfaceAddr().getAddressValue();
         opt_size           = sizeof(struct ip_mreq);
         break;
-      case SocketOptions::McastInterface:
+      case vpr::SocketOptions::McastInterface:
         opt_level                = IPPROTO_IP;
         opt_name                 = IP_MULTICAST_IF;
         opt_data.mcast_if.s_addr = data.mcast_if.getAddressValue();
         opt_size                 = sizeof(struct in_addr);
         break;
-      case SocketOptions::McastTimeToLive:
+      case vpr::SocketOptions::McastTimeToLive:
         opt_level          = IPPROTO_IP;
         opt_name           = IP_MULTICAST_TTL;
         opt_data.mcast_ttl = data.mcast_ttl;
         opt_size           = sizeof(Uint8);
         break;
-      case SocketOptions::McastLoopback:
+      case vpr::SocketOptions::McastLoopback:
         opt_level           = IPPROTO_IP;
         opt_name            = IP_MULTICAST_LOOP;
         opt_data.mcast_loop = data.mcast_loopback;
@@ -595,13 +588,13 @@ SocketImplBSD::setOption (const SocketOptions::Types option,
         break;
 
       // TCP-level options.
-      case SocketOptions::NoDelay:
+      case vpr::SocketOptions::NoDelay:
         opt_level        = IPPROTO_TCP;
         opt_name         = TCP_NODELAY;
         opt_data.enabled = (data.no_delay ? 1 : 0);
         opt_size         = sizeof(int);
         break;
-      case SocketOptions::MaxSegment:
+      case vpr::SocketOptions::MaxSegment:
         opt_level     = IPPROTO_TCP;
         opt_name      = TCP_MAXSEG;
         opt_data.size = data.max_segment;
@@ -611,7 +604,7 @@ SocketImplBSD::setOption (const SocketOptions::Types option,
 
     if ( ::setsockopt(m_handle->m_fdesc, opt_level, opt_name, &opt_data, opt_size) != 0 )
     {
-        retval.setCode(Status::Failure);
+        retval.setCode(vpr::Status::Failure);
     }
 
     return retval;
