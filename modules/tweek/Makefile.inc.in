@@ -110,11 +110,11 @@ TWEEK_PROF_LIB_DYNAMIC=	$(TWEEK_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
 
 # Version information.
 PARAM_HEADER=	tweek/tweekParam.h
+PARAM_SOURCE=	tweek/tweekParam.cpp
 BRANCH=		HEAD
 CANON_NAME=	Harbucks Coffee
 VER_ARGS=	-f $(TWEEKROOT_ABS)/VERSION -s @VPR_SUBSYSTEM@		\
-		-b $(BRANCH) -o $(PARAM_HEADER) -n "$(CANON_NAME)"	\
-		-i $(TWEEKROOT_ABS)/tweek/tweekParam.h.in		\
+		-b $(BRANCH) -n "$(CANON_NAME)"				\
 		-d "`date '+%b %e, %Y %H:%M:%S'`"
 
 ifdef VERSION
@@ -131,6 +131,7 @@ AFTERBUILD=	afterbuild
 # Things to do before the object files and library are built.
 beforebuild:
 	@$(MAKE) $(PARAM_HEADER)
+	@$(MAKE) $(PARAM_SOURCE)
 	@echo "------------------------------------------------"
 	@echo "IDL code generation phase"
 	@echo "------------------------------------------------"
@@ -141,7 +142,12 @@ beforebuild:
 	@$(MAKE) extensions-java
 
 $(PARAM_HEADER): $(TWEEKROOT_ABS)/$(PARAM_HEADER).in $(TWEEKROOT_ABS)/VERSION
-	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
+	@$(SHELL) $(scriptdir)/make-ver.sh -o $@		\
+          -i $(TWEEKROOT_ABS)/$@.in $(VER_ARGS)
+
+$(PARAM_SOURCE): $(PARAM_HEADER) $(TWEEKROOT_ABS)/$(PARAM_SOURCE).in
+	@$(SHELL) $(scriptdir)/make-ver.sh -o $@		\
+          -i $(TWEEKROOT_ABS)/$@.in $(VER_ARGS)
 
 cxx-idl:
 ifeq ($(BUILD_CXX), Y)
