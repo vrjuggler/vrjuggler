@@ -51,47 +51,6 @@ top_srcdir		= @top_srcdir@
 INSTALL			= @INSTALL@
 INSTALL_FILES		=
 
-CLASSPATH	= $(topdir)/java
-
-# For each package, we need the four lines to automatically add found sources
-# to the build process. This allows us to not have to modify the build
-# whenever new sources are added.
-
-UI_PKG			= org.vrjuggler.tweek.ui
-UI_DIR			= $(subst .,/,$(UI_PKG))
-UI_SRCS			= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(UI_DIR)/*.java))
-UI_CLASSES		= $(UI_SRCS:.java=.class)
-
-UI_TREETABLE_PKG	= org.vrjuggler.tweek.ui.treetable
-UI_TREETABLE_DIR	= $(subst .,/,$(UI_TREETABLE_PKG))
-UI_TREETABLE_SRCS	= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(UI_TREETABLE_DIR)/*.java))
-UI_TREETABLE_CLASSES	= $(UI_TREETABLE_SRCS:.java=.class)
-
-WIZARD_PKG		= org.vrjuggler.tweek.wizard
-WIZARD_DIR		= $(subst .,/,$(WIZARD_PKG))
-WIZARD_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(WIZARD_DIR)/*.java))
-WIZARD_CLASSES		= $(WIZARD_SRCS:.java=.class)
-
-WIZARD_BUILDER_PKG	= org.vrjuggler.tweek.wizard.builder
-WIZARD_BUILDER_DIR	= $(subst .,/,$(WIZARD_BUILDER_PKG))
-WIZARD_BUILDER_SRCS	= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(WIZARD_BUILDER_DIR)/*.java))
-WIZARD_BUILDER_CLASSES	= $(WIZARD_BUILDER_SRCS:.java=.class)
-
-WIZARD_PANES_PKG	= org.vrjuggler.tweek.wizard.panes
-WIZARD_PANES_DIR	= $(subst .,/,$(WIZARD_PANES_PKG))
-WIZARD_PANES_SRCS	= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(WIZARD_PANES_DIR)/*.java))
-WIZARD_PANES_CLASSES	= $(WIZARD_PANES_SRCS:.java=.class)
-
-
-JAVA_SRCS = \
-	$(UI_SRCS) \
-	$(UI_TREETABLE_SRCS) \
-	$(WIZARD_SRCS) \
-	$(WIZARD_BUILDER_SRCS) \
-	$(WIZARD_PANES_SRCS)
-
-JAVA_CLASSES = $(JAVA_SRCS:.java=.class)
-
 # Java targets
 JARS		= wizard.jar ui.jar
 BEANS		= WizardBuilder
@@ -107,41 +66,24 @@ instdir		= tweek/wizard/1.0
 doc_prefix	= $(webroot)/$(instdir)
 DOC_ROOT	= programmer.reference.java
 
+
+_LOCAL_CLEAN=1
+JAVA_AFTERBUILD=java_afterbuild
+
 include $(MKPATH)/dpp.obj.mk
 
 # -----------------------------------------------------------------------------
-# JAR-related targets
+# Uses ant to build the java classes and JARs
 # -----------------------------------------------------------------------------
-jars: $(JARS) $(addsuffix .jar, $(BEANS))
-ifdef GLOBAL_BUILD
-	@$(MKINSTALLDIRS) $(top_srcdir)/bin
-	@$(MKINSTALLDIRS) $(top_srcdir)/bin/beans
-ifneq ($(JARS), )
-	cp $(JARS) $(top_srcdir)/bin
-endif
-ifneq ($(BEANS), )
-	cp $(addsuffix .jar, $(BEANS)) $(top_srcdir)/bin/beans
-endif
-endif
+java_afterbuild:
+	@echo "------------------------------------------------"
+	@echo "Building java sources"
+	@echo "------------------------------------------------"
+	$(ANT)
 
-ui.jar: $(UI_CLASSES) $(UI_TREETABLE_CLASSES)
-	$(JAR) cvf $@ \
-		$(UI_DIR)/*.class \
-		$(UI_TREETABLE_DIR)/*.class
+_clean:
+	$(ANT) clean
 
-wizard.jar: $(WIZARD_CLASSES) $(WIZARD_PANES)
-	$(JAR) cvf $@ \
-		$(WIZARD_DIR)/*.class \
-		$(WIZARD_PANES_DIR)/*.class
-	cd $(srcdir) && $(JAR) uvf $(topdir)/extensions/java/$@ \
-		$(WIZARD_DIR)/images/*.png
-
-WizardBuilder.jar: $(WIZARD_BUILDER_CLASSES)
-	$(JAR) cvf $@ \
-		$(WIZARD_BUILDER_DIR)/*.class
-	cd $(srcdir) && $(JAR) uvf $(topdir)/extensions/java/$@ \
-		$(WIZARD_BUILDER_DIR)/images/*.gif \
-		LICENSE-java-laf.txt
 
 # -----------------------------------------------------------------------------
 # Extra targets
@@ -178,14 +120,6 @@ install-docs:
 	$(MKINSTALLDIRS) $(doc_prefix)
 	rm -rf $(doc_prefix)/$(DOC_ROOT)
 	mv $(DOC_ROOT) $(doc_prefix)
-
-CLEAN_FILES	+= \
-	$(JARS) \
-	$(UI_CLASSES) \
-	$(UI_TREETABLE_CLASSES) \
-	$(WIZARD_CLASSES) \
-	$(WIZARD_BUILDER_CLASSES) \
-	$(WIZARD_PANES_CLASSES)
 
 ifdef GLOBAL_BUILD
     CLEAN_DIRS	+= $(top_srcdir)/bin

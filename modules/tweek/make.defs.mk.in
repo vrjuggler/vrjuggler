@@ -84,7 +84,7 @@
 # -----------------------------------------------------------------------------
 mtreedir	= $(topdir)/mtree
 projdatadir     = $(datadir)/tweek
-releasedir	= @SAFE_JUGGLERROOT_ABS@/release
+releasedir	= @JUGGLERROOT_ABS@/release
 scriptdir	= $(releasedir)/scripts
 topdir		= @topdir@
 CXX_IDL		= @CXX_IDL@
@@ -99,8 +99,8 @@ MTREE_CMD	= @MTREE_CMD@
 PROFLIB_EXT	= _p
 PROF_OPT_FLAGS	= $(DBG_FLAGS)
 RM_LN		= @RM_LN@
-TWEEKROOT_ABS	= @SAFE_TWEEKROOT_ABS@
-JUGGLERROOT_ABS	= @SAFE_JUGGLERROOT_ABS@
+TWEEKROOT_ABS	= @TWEEKROOT_ABS@
+JUGGLERROOT_ABS	= @JUGGLERROOT_ABS@
 TWEEK_SHARE_DIR	= @TWEEK_SHARE_DIR@
 
 # -----------------------------------------------------------------------------
