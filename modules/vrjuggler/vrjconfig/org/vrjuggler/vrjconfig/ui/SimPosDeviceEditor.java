@@ -31,10 +31,10 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 package org.vrjuggler.vrjconfig.ui;
 
-import java.awt.*;
+import java.awt.Component;
 import java.awt.event.*;
 import java.beans.*;
-import java.util.Iterator;
+import java.util.*;
 import javax.swing.*;
 import javax.swing.table.*;
 import org.vrjuggler.jccl.config.*;
@@ -49,7 +49,7 @@ public class SimPosDeviceEditor
    /**
     * Creates a new sim device editor with no chunk to edit.
     */
-   public SimPosDeviceEditor()
+   public SimPosDeviceEditor(ConfigContext context)
    {
       try
       {
@@ -60,12 +60,14 @@ public class SimPosDeviceEditor
          e.printStackTrace();
       }
 
+      this.context = context;
+
       // setup the keyboard proxy combo box
-      ConfigChunkDB active_db = getConfigManager().getActiveConfig();
-      if (active_db != null)
+      List chunks = getConfigBroker().getChunks(context);
+      if (chunks.size() > 0)
       {
-         java.util.List proxies = ConfigUtilities.getChunksWithDescToken(
-                                    active_db.getAll(), "KeyboardProxy");
+         List proxies = ConfigUtilities.getChunksWithDescToken(
+                                                   chunks, "KeyboardProxy");
          for (Iterator itr = proxies.iterator(); itr.hasNext(); )
          {
             ConfigChunk proxy = (ConfigChunk)itr.next();
@@ -129,12 +131,11 @@ public class SimPosDeviceEditor
    }
 
    /**
-    * Helper class for getting the config manager serivce.
+    * Helper class for getting the config broker.
     */
-   private ConfigManagerService getConfigManager()
+   private ConfigBroker getConfigBroker()
    {
-      Object bean = BeanRegistry.instance().getBean("ConfigManager").getBean();
-      return (ConfigManagerService)bean;
+      return new ConfigBrokerProxy();
    }
 
    /**
@@ -206,6 +207,11 @@ public class SimPosDeviceEditor
     * The config chunk of the device we are currently editing.
     */
    private ConfigChunk device;
+
+   /**
+    * Our view into the configuration.
+    */
+   private ConfigContext context;
 
    /**
     * Table model for the actions table.
