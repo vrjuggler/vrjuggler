@@ -73,12 +73,11 @@ namespace gadget
             << mHostname <<":"<< mTCPport << "\n"<< vprDEBUG_FLUSH;
 
          gadget::MsgPackage* msg_packer = new gadget::MsgPackage;
+            // Send a handshake to initalize communication with remote computer
          msg_packer->createHandshake(true,mHostname,mTCPport,"Any Manager",true);
          msg_packer->sendAndClear(mSyncServer);
          delete msg_packer;
-            // Send a handshake to initalize communication with remote computer
-         //mMsgPackage->createHandshake(true,mHostname,mTCPport,"Any Manager",true);
-         //mMsgPackage->sendAndClear(mSyncServer);
+
          return(vpr::ReturnStatus::Succeed);
       }
       else
@@ -103,8 +102,6 @@ namespace gadget
         i < this->mSyncClients.end();i++)
       {
          (*i)->send(&SYNC_SIGNAL , 1, bytes_read);
-         vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "ClusterBarrierTCP: Sent END_BARRIER signal from Master..." 
-            << std::endl << vprDEBUG_FLUSH;
       }
 
    }
@@ -117,10 +114,21 @@ namespace gadget
       for (std::vector<vpr::SocketStream*>::iterator i = this->mSyncClients.begin();
            i < this->mSyncClients.end();i++)
       {
-         (*i)->recv(&temp , 1, bytes_read,read_timeout);
-         vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "ClusterBarrierTCP: Waiting at Master Barrier..." 
-            << std::endl << vprDEBUG_FLUSH;
-         vprASSERT(1==bytes_read && "ClusterBarrierTCP: Master Barrier received timeout");
+         if((*i)->recv(&temp , 1, bytes_read,read_timeout) == vpr::ReturnStatus::Timeout)
+         {
+            static int numTimeouts = 0;
+            numTimeouts++;
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << "ClusterBarrierTCP: Received a timeout from a cluster node, it was removed" 
+               << std::endl << vprDEBUG_FLUSH;
+            if (numTimeouts > 5)
+            {
+               mSyncClients.erase(i);
+               vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << "ClusterBarrierTCP: Received too many timeouts from a cluster node,"
+                  <<" so it was removed from the list of machines to syncronize with." 
+                  << std::endl << vprDEBUG_FLUSH;
+            }
+         }
+         //vprASSERT(1==bytes_read && "ClusterBarrierTCP: Master Barrier received timeout");
       } 
    }
    void ClusterBarrierTCP::SlaveSend()
@@ -130,8 +138,6 @@ namespace gadget
 
       vpr::Uint32 bytes_read;
       mSyncServer->send(&SYNC_SIGNAL , 1, bytes_read);
-      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "ClusterBarrierTCP: Sent START_BARRIER signal from Slave..." 
-         << std::endl << vprDEBUG_FLUSH;
    }
    void ClusterBarrierTCP::SlaveReceive()
    {
@@ -140,9 +146,7 @@ namespace gadget
       
       vpr::Uint32 bytes_read;
       vpr::Uint8 temp;
-      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "ClusterBarrierTCP: Waiting at Slave Barrier..." 
-         << std::endl << vprDEBUG_FLUSH;
       mSyncServer->recv(&temp , 1, bytes_read,read_timeout);
-      vprASSERT(1==bytes_read && "ClusterBarrierTCP: Slave Barrier received timeout");
+      //vprASSERT(1==bytes_read && "ClusterBarrierTCP: Slave Barrier received timeout");
    }
 };

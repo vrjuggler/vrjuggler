@@ -439,7 +439,7 @@ namespace gadget
    }
 
 
-   void NetConnection::receiveNetworkPacket()
+   vpr::ReturnStatus NetConnection::receiveNetworkPacket()
    {
       
       ///////////////////////////////////////////////////////////////////////
@@ -489,7 +489,7 @@ namespace gadget
          vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << clrSetBOLD(clrRED) << "[RIM::receiveNetworkPacket] ERROR: Connection lost" << vprDEBUG_FLUSH;
             // Print the low level error
          vpr::Error::outputCurrentError(std::cout, "BlockIO readn ERROR: ");
-         return;
+         return(vpr::ReturnStatus::NotConnected);
       }
    
          // Create a new ObjectReader to retreive our data
@@ -523,7 +523,7 @@ namespace gadget
             vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << (int)packet_data[i] << " ";
          }
          packet_data.clear();
-         return;
+         return(vpr::ReturnStatus::Fail);
       }
    
       /////////////////////////////
@@ -673,6 +673,7 @@ namespace gadget
       }
          // Clear the data vector since we will not need this data again
       data_reader->mData->clear();
+      return(vpr::ReturnStatus::Succeed);
    }
 
 
