@@ -685,6 +685,7 @@ if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
 elif test "x$PLATFORM" = "xDarwin" ; then
     CFLAGS="$CFLAGS -Wno-long-double"
     CXXFLAGS="$CXXFLAGS -Wno-long-double"
+    vpr_cxxflags="$vpr_cxxflags -Wno-long-double"
 elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     vc_cflags='/QIfdiv /QI0f'
     vc_cxxflags='/GR /GX /EHc /QIfdiv /QI0f'
