@@ -69,12 +69,20 @@ class VJ_CLASS_API GlWindow
 {
 public:
    GlWindow()
-      : mWindowId(getNextWindowId()), in_stereo(false), border(false), \
-        window_is_open(false), mDirtyContext(true), mDirtyViewport(true), \
-        mVrjDisplay(0), window_width(0), window_height(0), origin_x(0), \
-        origin_y(0), mAreEventSource(false)
-   {
+      : mVrjDisplay(NULL)
+      , mDirtyContext(true)
+      , mDirtyViewport(true)
+      , in_stereo(false)
+      , border(false)
+      , window_is_open(false)
+      , window_width(0)
+      , window_height(0)
+      , origin_x(0)
+      , origin_y(0)
       // XXX: Sync problem on window id value assignment
+      , mWindowId(getNextWindowId())
+      , mAreEventSource(false)
+   {
       // The context is always dirty when the window is first created
    }
 
@@ -88,16 +96,25 @@ public:
     * Opens the OpenGL window.
     * @pre this has been configured.
     */
-   virtual int open(){ return 1;}
+   virtual int open()
+   {
+      return 1;
+   }
 
    /** Closes the OpenGL window. */
-   virtual int close(){return 1;}
+   virtual int close()
+   {
+      return 1;
+   }
 
    /**
     * Sets the current OpenGL context to this window.
     * @post this.context is active context.
     */
-   virtual bool makeCurrent(){return false;}
+   virtual bool makeCurrent()
+   {
+      return false;
+   }
 
    /**
     * Configures the window.
@@ -110,12 +127,14 @@ public:
     * @post A glFlush must be called explicitly by the implementation
     *       or explicitly by the functions used in the implementation.
     */
-   virtual void swapBuffers(){;}
+   virtual void swapBuffers()
+   {;}
 
    /**
     * Handles any window events that have occured.
     */
-   virtual void checkEvents() {;}
+   virtual void checkEvents()
+   {;}
 
    /** Complete any setup that is needed after open
    * @pre Window is open
@@ -159,33 +178,45 @@ public:
 
    /** Is the context dirty? */
    bool hasDirtyContext() const
-   { return mDirtyContext; }
+   {
+      return mDirtyContext;
+   }
 
    /** Sets the dirty bit for the context. */
    void setDirtyContext(bool val=true)
-   { mDirtyContext = val; }
+   {
+      mDirtyContext = val;
+   }
 
    /** Is the viewport dirty? */
    bool hasDirtyViewport() const
-   { return mDirtyViewport; }
+   {
+      return mDirtyViewport;
+   }
 
    /** Sets the dirty bit for the viewport. */
    void setDirtyViewport(bool val=true)
-   { mDirtyViewport = val; }
+   {
+      mDirtyViewport = val;
+   }
 
    /**
     * Queries wether the window is open.
     * @return true if window is open.
     */
    bool isOpen() const
-   { return window_is_open; }
+   {
+      return window_is_open;
+   }
 
    /**
     * Queries wether the window is in stereo.
     * @return true if window is in stereo.
     */
    bool isStereo() const
-   { return in_stereo;}
+   {
+      return in_stereo;
+   }
 
    bool isEventSource() const
    {
@@ -201,7 +232,9 @@ public:
     * @return A unique window id.
     */
    int getId() const
-   { return mWindowId; }
+   {
+      return mWindowId;
+   }
 
    // Called by event function to update size info
    // XXX: Should update Display configuration element in some way
@@ -215,7 +248,8 @@ public:
    }
 
    /** Return the origin and size of the current window */
-   void getOriginSize(unsigned& o_x, unsigned& o_y, unsigned& width, unsigned& height) const
+   void getOriginSize(unsigned& o_x, unsigned& o_y, unsigned& width,
+                      unsigned& height) const
    {
       o_x = origin_x;
       o_y = origin_y;
@@ -225,11 +259,12 @@ public:
 
    friend std::ostream& operator<<(std::ostream& out, GlWindow& win);
 
-public:  /**** Static Helpers *****/
-   /* static */ virtual bool createHardwareSwapGroup(std::vector<GlWindow*> wins)
+public:
+   virtual bool createHardwareSwapGroup(std::vector<GlWindow*> wins)
    {
       boost::ignore_unused_variable_warning(wins);
-      vprDEBUG(vprDBG_ALL,vprDBG_WARNING_LVL) << "WARNING: hardware swap not supported.\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,vprDBG_WARNING_LVL)
+         << "WARNING: hardware swap not supported.\n" << vprDEBUG_FLUSH;
       return false;
    }
 
@@ -243,12 +278,12 @@ protected:
    bool mDirtyViewport; /**  The GL window setup (viewport, etc) is dirty and needs to be reinited. */
 
    /**
-    * Wether the display is actually in stereo if we wanted a stereo display
+    * Whether the display is actually in stereo if we wanted a stereo display
     * but couldn't open it we fall back to mono, and this will be false.
     */
    bool in_stereo;
 
-   bool  border;        /**<  Do we have a border? */
+   bool border;         /**<  Do we have a border? */
    bool window_is_open; /**< Is the window open? */
    int  window_width, window_height;
    int  origin_x, origin_y;         /**< lower-left corner of window */
