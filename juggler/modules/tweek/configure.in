@@ -68,19 +68,16 @@ AC_ARG_WITH(cxx-orb-root,
                           Root directory of C++ ORB
                           installation],
             cxx_orb_root="$withval", cxx_orb_root='/usr')
-#            OMNI_ROOT="$withval", OMNI_ROOT='none')
 
 AC_ARG_WITH(cxx-orb-bin,
             [  --with-cxx-orb-bin=<PATH>                               [default=/usr/bin]
                           Path to C++ ORB executables],
             cxx_orb_bin_dir="$withval", cxx_orb_bin_dir='none')
-#            OMNI_BIN_DIR="$withval", OMNI_BIN_DIR='none')
 
 AC_ARG_WITH(cxx-orb-lib,
             [  --with-cxx-orb-lib=<PATH>                               [default=/usr/lib]
                           Path to C++ ORB libraries],
             cxx_orb_lib_dir="$withval", cxx_orb_lib_dir='none')
-#            OMNI_LIB_DIR="$withval", OMNI_LIB_DIR='none')
 
 AC_ARG_WITH(java-orb,
             [  --with-java-orb=<NAME>  Name of Java ORB to use         [default=OpenORB]
