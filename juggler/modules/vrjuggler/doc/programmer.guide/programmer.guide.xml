@@ -6507,141 +6507,140 @@ sound_handle.trigger();
 sleep(1);
 </programlisting>
             </example>
+          </section>
+
+          <section>
+            <title>Design and Implementation of Sonix</title>
+
+            <para>Before we conclude this section on using Sonix directly in
+            applications, we examine the design details of Sonix. These
+            details are beyond the scope of what needs to be understood in
+            order for Sonix to be utilized by VR Juggler applications, so
+            readers not interested in these details can skip ahead to <xref
+            linkend="section.using.sound.manager" />.</para>
+
+            <para>Sonix was designed using modern software design principles
+            including design patterns and object oriented design. The complete
+            design of Sonix is depicted in UML in <xref
+            linkend="figure.complete.sonix.design" />. As evidenced by the
+            diagram, the design of Sonix is quite simple, though the classes
+            tend to have relatively large interfaces. Refer to the Sonix
+            <emphasis>Programmer Reference</emphasis>, found on the <ulink
+            url="http://www.vrjuggler.org/sonix/docs.php">Sonix documentaiton
+            web page</ulink>, for complete documentation of these
+            interfaces.</para>
+
+            <figure id="figure.complete.sonix.design">
+              <title>The Sonix Design</title>
+
+              <mediaobject>
+                <imageobject>
+                  <imagedata align="center"
+                             fileref="figures/sonix_system_view.png"
+                             format="PNG" />
+                </imageobject>
+              </mediaobject>
+            </figure>
 
             <section>
-              <title>Design and Implementation of Sonix</title>
+              <title>Design Patterns Overview</title>
 
-              <para>Before we conclude this section on using Sonix directly in
-              applications, we examine the design details of Sonix. These
-              details are beyond the scope of what needs to be understood in
-              order for Sonix to be utilized by VR Juggler applications, so
-              readers not interested in these details can skip ahead to <xref
-              linkend="section.using.sound.manager" />.</para>
+              <para>Design patterns describe simple and elegant solutions to
+              specific problems in object oriented software design. When
+              designing Sonix, we used many design patterns appropriate for a
+              simple audio system.</para>
 
-              <para>Sonix was designed using modern software design principles
-              including design patterns and object oriented design. The
-              complete design of Sonix is depicted in UML in <xref
-              linkend="figure.complete.sonix.design" />. As evidenced by the
-              diagram, the design of Sonix is quite simple, though the classes
-              tend to have relatively large interfaces. Refer to the Sonix
-              <emphasis>Programmer Reference</emphasis>, found on the <ulink
-              url="http://www.vrjuggler.org/sonix/docs.php">Sonix
-              documentaiton web page</ulink>, for complete documentation of
-              these interfaces.</para>
+              <itemizedlist>
+                <listitem>
+                  <para>Adapter
+                  (<classname>snx::SoundImplementation</classname>). This
+                  adapter provides a common interface to the underlying sound
+                  API.</para>
+                </listitem>
 
-              <figure id="figure.complete.sonix.design">
-                <title>The Sonix Design</title>
+                <listitem>
+                  <para>Prototype
+                  (<classname>snx::SoundImplementation</classname>). Making
+                  <classname>snx::SoundImplementation</classname> a Prototype
+                  allows a new cloned object to be created from it that has
+                  duplicate state.</para>
+                </listitem>
+
+                <listitem>
+                  <para>Store/plugin-method
+                  (<classname>snx::SoundFactory</classname>). Each sound
+                  implementation is registered with a Store called
+                  <classname>snx::SoundFactory</classname>. This Store allows
+                  users to select items from its inventory. Another name for
+                  Store is <quote>Abstract Factory.</quote></para>
+                </listitem>
+
+                <listitem>
+                  <para>Abstract Factory
+                  (<classname>snx::SoundFactory</classname>). The Store can
+                  create new instances of the requested sound implementation.
+                  The Abstract Factory consults its Store of registered
+                  objects, and if found, makes a clone of that object
+                  (Prototype pattern). The Abstract Factory is used in Sonix
+                  to configure the Bridge.</para>
+                </listitem>
+
+                <listitem>
+                  <para>Bridge (<classname>snx::sonix</classname> interface
+                  class and <classname>snx::SoundImplementation</classname>).
+                  The <classname>snx::sonix</classname> class is the audio
+                  system abstraction which is decoupled from its
+                  implementation
+                  <classname>snx::SoundImplementation</classname>. This way
+                  the two can vary independently. Bridge also facilitates
+                  run-time configuration of the sound API.</para>
+                </listitem>
+
+                <listitem>
+                  <para>Proxy (<classname>std::string</classname> and
+                  <classname>snx::SoundHandle</classname>).
+                  <classname>snx::SoundHandle</classname> is how users
+                  manipulate their sound object.
+                  <classname>snx::SoundHandle</classname> is actually a proxy
+                  to a <classname>std::string</classname> proxy. The
+                  <classname>std::string</classname> Proxy is what allows
+                  Sonix reconfiguration of resources. Rather than using
+                  pointers which can easily be left to dangle, the
+                  <classname>std::string</classname> serves as a lookup for a
+                  protected sound resource located internally to the Sonix
+                  run-time memory space. The
+                  <classname>snx::SoundHandle</classname> wraps this
+                  <classname>std::string</classname> to provide a simple and
+                  familiar C++ object to use as the sound handle. The Sonix
+                  class acts as Mediator between every Proxy method and the
+                  actual audio system Adapter.</para>
+                </listitem>
+              </itemizedlist>
+            </section>
+
+            <section>
+              <title>Pluggable Audio Subsystems</title>
+
+              <para>Sonix supports the selection of several audio subsystems
+              by the application through implementation plug-ins (see <xref
+              linkend="figure.sonix.plugins" />). Each plug-in implements an
+              adapter to an underlying audio subsystem. The adapter supports a
+              common interface that Sonix knows how talk to. Each adapter is
+              then registered with a factory object, which may ask that
+              adapter to clone itself for use by whomever called the
+              factory.</para>
+
+              <figure id="figure.sonix.plugins">
+                <title>Use of Plug-ins in Sonix</title>
 
                 <mediaobject>
                   <imageobject>
                     <imagedata align="center"
-                               fileref="figures/sonix_system_view.png"
+                               fileref="figures/how_sonix_plugins_work.png"
                                format="PNG" />
                   </imageobject>
                 </mediaobject>
               </figure>
-
-              <section>
-                <title>Design Patterns Overview</title>
-
-                <para>Design patterns describe simple and elegant solutions to
-                specific problems in object oriented software design. When
-                designing Sonix, we used many design patterns appropriate for
-                a simple audio system.</para>
-
-                <itemizedlist>
-                  <listitem>
-                    <para>Adapter
-                    (<classname>snx::SoundImplementation</classname>). This
-                    adapter provides a common interface to the underlying
-                    sound API.</para>
-                  </listitem>
-
-                  <listitem>
-                    <para>Prototype
-                    (<classname>snx::SoundImplementation</classname>). Making
-                    <classname>snx::SoundImplementation</classname> a
-                    Prototype allows a new cloned object to be created from it
-                    that has duplicate state.</para>
-                  </listitem>
-
-                  <listitem>
-                    <para>Store/plugin-method
-                    (<classname>snx::SoundFactory</classname>). Each sound
-                    implementation is registered with a Store called
-                    <classname>snx::SoundFactory</classname>. This Store
-                    allows users to select items from its inventory. Another
-                    name for Store is <quote>Abstract Factory.</quote></para>
-                  </listitem>
-
-                  <listitem>
-                    <para>Abstract Factory
-                    (<classname>snx::SoundFactory</classname>). The Store can
-                    create new instances of the requested sound
-                    implementation. The Abstract Factory consults its Store of
-                    registered objects, and if found, makes a clone of that
-                    object (Prototype pattern). The Abstract Factory is used
-                    in Sonix to configure the Bridge.</para>
-                  </listitem>
-
-                  <listitem>
-                    <para>Bridge (<classname>snx::sonix</classname> interface
-                    class and
-                    <classname>snx::SoundImplementation</classname>). The
-                    <classname>snx::sonix</classname> class is the audio
-                    system abstraction which is decoupled from its
-                    implementation
-                    <classname>snx::SoundImplementation</classname>. This way
-                    the two can vary independently. Bridge also facilitates
-                    run-time configuration of the sound API.</para>
-                  </listitem>
-
-                  <listitem>
-                    <para>Proxy (<classname>std::string</classname> and
-                    <classname>snx::SoundHandle</classname>).
-                    <classname>snx::SoundHandle</classname> is how users
-                    manipulate their sound object.
-                    <classname>snx::SoundHandle</classname> is actually a
-                    proxy to a <classname>std::string</classname> proxy. The
-                    <classname>std::string</classname> Proxy is what allows
-                    Sonix reconfiguration of resources. Rather than using
-                    pointers which can easily be left to dangle, the
-                    <classname>std::string</classname> serves as a lookup for
-                    a protected sound resource located internally to the Sonix
-                    run-time memory space. The
-                    <classname>snx::SoundHandle</classname> wraps this
-                    <classname>std::string</classname> to provide a simple and
-                    familiar C++ object to use as the sound handle. The Sonix
-                    class acts as Mediator between every Proxy method and the
-                    actual audio system Adapter.</para>
-                  </listitem>
-                </itemizedlist>
-              </section>
-
-              <section>
-                <title>Pluggable audio subsystems</title>
-
-                <para>Sonix supports the selection of several audio subsystems
-                by the application through implementation plug-ins (see <xref
-                linkend="figure.sonix.plugins" />). Each plug-in implements an
-                adapter to an underlying audio subsystem. The adapter supports
-                a common interface that Sonix knows how talk to. Each adapter
-                is then registered with a factory object, which may ask that
-                adapter to clone itself for use by whomever called the
-                factory.</para>
-
-                <figure id="figure.sonix.plugins">
-                  <title>Use of Plug-ins in Sonix</title>
-
-                  <mediaobject>
-                    <imageobject>
-                      <imagedata align="center"
-                                 fileref="figures/how_sonix_plugins_work.png"
-                                 format="PNG" />
-                    </imageobject>
-                  </mediaobject>
-                </figure>
-              </section>
             </section>
           </section>
         </section>
