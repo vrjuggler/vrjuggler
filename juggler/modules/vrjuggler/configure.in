@@ -1087,7 +1087,7 @@ if test "x${_enable_gl_api}" = "xyes" ; then
         dnl # option.
         AC_CHECK_LIB(${MESA}GL, glEnable, ,
             AC_MSG_ERROR(*** OpenGL API will not be used (GL library not found) ***),
-            -lm)
+            -lX11 -lXext -lm)
 
         dnl # This is necessary because AC_CHECK_LIB() adds -l${MESA}GL to
         dnl # $LIBS.  We want to do that ourselves later.
