@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE schema SYSTEM "http://www.w3.org/1999/XMLSchema.dtd">
 
-<!-- Jackal definition schema for definition file format v3.0 -->
+<!-- Jackal definition schema for definition file format v3.1 -->
 <!-- $Id$ -->
 
-<xs:schema targetNamespace="http://www.vrjuggler.org/jccl/xsd/3.0/definition"
+<xs:schema targetNamespace="http://www.vrjuggler.org/jccl/xsd/3.1/definition"
            elementFormDefault="qualified"
            attributeFormDefault="unqualified"
            xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-           xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
+           xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition">
 
    <!--
       The following import will be needed when the XSLT schema is written. Until
