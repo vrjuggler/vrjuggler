@@ -46,6 +46,22 @@ listserv/vrjuggler?</a></li>
 	     <a href="#troubleshooting"> Troubleshooting</a> 
 	</LI>
 	<ul>
+	<li><a href="#general_compile">General Compiling</a> 
+	  <UL>
+	    <LI>
+	      <A HREF="#no_includes">When I compile a sample application,
+	      the compiler cannot find any VR Juggler headers</A>
+	    </LI>
+	    <LI>
+	      <A HREF="#no_libs">When I compile a sample application, the
+	      compiler cannot find any VR Juggler libraries</A>
+	    </LI>
+	    <LI>
+	      <A HREF="#makefile">I just compiled on Platform X, but now my
+	      application's makefile does not work at all on Platform Y</A>
+	    </LI>
+	  </UL>
+	</LI>
 	<li><a href="#performer"> Performer</a> 
 		<ul>
 		<li><a href="#pftexturing"> Why does texturing not work?  I copied the pfNav sample!</a> 
@@ -285,6 +301,67 @@ listserv/vrjuggler?</a></li>
 <h3><a name="troubleshooting">Troubleshooting</a></h3>
 
 	<blockquote>
+    <H4><A NAME="general_compile">General Compiling</A></H4>
+
+      <UL>
+	<LI>
+	  <A NAME="no_includes"><B>When I compile a sample application, the
+	  compiler cannot find any VR Juggler headers</B></A>
+
+	  <P>
+	    The most common reason for this is that you did not set the
+	    <A HREF="${GETTINGSTARTED}/environment.variables.html">environment
+	    variable</A> <TT>VJ_BASE_DIR</TT>.  This is <I>required</I> for
+	    compiling as well as running because the makefiles for the
+	    shipped sample applications reference <TT>VJ_BASE_DIR</TT>
+	    when telling the compiler where to look for files.
+	  </P>
+	</LI>
+	<LI>
+	  <A NAME="no_libs"><B>When I compile a sample application, the
+	  compiler cannot find any VR Juggler libraries</B></A>
+
+	  <P>
+	    <A HREF="#no_includes">See above</A>.
+	  </P>
+	</LI>
+	<LI>
+	  <A NAME="makefile"><B>I just compiled on Platform X, but now my
+	  application's makefile does not work at all on Platform Y</B></A>
+
+	  <P>
+	    In general, different <A HREF="${GLOSSARY}#platform">platforms</A>
+	    have different development environments.  It is very difficult
+	    to guarantee that a compiler will behave exactly the same
+	    between two different platforms.  This is especially true when
+	    moving from a Win32 environment to a version of UNIX or vice
+	    versa.  The sample applications shipped with VR Juggler binary
+	    distributions all have their own makefile (unsurprisingly named
+	    <TT>Makefile</TT>) that was generated for use on the specific
+	    platform where VR Juggler was compiled.  The fifth line of these
+	    files names this platform.  This information is there to tell
+	    you where you can expect the makefile to work.
+	  </P>
+
+	  <P>
+	    If you have based your application's makefile on one of these
+	    samples, you should expect to do some work to get your
+	    application to build on another platform.  While the code will
+	    not have to change (ideally), the way the compiling works
+	    probably will change.  That is just a fact of life when
+	    working with multiple platforms.  While it is theoretically
+	    possible to use the same single makefile on many different
+	    platforms, VR Juggler does not offer such a solution.  That is
+	    most definitely not the scope of the VR Juggler project.
+	  </P>
+	</LI>
+	<LI>
+	  <FONT SIZE="1">Can't find your answer here?
+	  <A HREF="${MAILTO_JUGGLER_MAILING_LIST}">Contact The User
+	  List</A></FONT>
+	</LI>
+      </UL>
+
    <h4><a name="#performer"> Performer</a> </h4>
       <blockquote>
 		<li><a name="#pftexturing"> <b>Why does texturing not work?  I copied the pfNav sample!</b></a> <BR>
