@@ -176,8 +176,8 @@ AC_DEFUN(VJ_COMPILER_SETUP,
 
     if test "x$GXX" = "xyes" ; then
         # If we are using GCC as the compiler, we need to be using version
-        # 2.95.3 or newer.
-        DPP_GPLUSPLUS_VER(2.95.3,
+        # 2.96 or newer.
+        DPP_GPLUSPLUS_VER(2.96,
                           [AC_MSG_ERROR([*** VR Juggler requires a modern G++ ***])])
     fi
 
