@@ -272,6 +272,8 @@ POSTINSTALL_HEADERS=	post-install-headers
 
 post-install-headers:
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(topdir)/snx/snxDefines.h $(includedir)/snx
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(topdir)/snx/snxParam.h $(includedir)/snx
 
 install-share:
