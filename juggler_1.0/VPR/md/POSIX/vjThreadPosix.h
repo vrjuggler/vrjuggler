@@ -46,7 +46,7 @@
 #define _VJ_THREAD_POSIX_H_
 
 #include <vjConfig.h>
- 
+
 #include <stdlib.h>
 #include <pthread.h>
 #include <sys/types.h>
@@ -515,7 +515,8 @@ private:
         return hash(me);
     }
 
-    static vjThreadKeyPosix            mThreadIdKey;     // Key for the id of the local thread
+    static vjThreadKeyPosix   mThreadIdKey;           // Key for the id of the local thread
+    static unsigned           mStaticsInitialized;    // Just a debug helper to try to find times when people call us before the statics are created
 };
 
 

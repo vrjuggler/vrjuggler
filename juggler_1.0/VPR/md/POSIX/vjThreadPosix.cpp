@@ -49,7 +49,8 @@
 #include <VPR/md/POSIX/vjThreadPosix.h>
 
 
-vjThreadKeyPosix           vjThreadPosix::mThreadIdKey(NULL);
+vjThreadKeyPosix  vjThreadPosix::mThreadIdKey(NULL);
+unsigned          vjThreadPosix::mStaticsInitialized = 1221;
 
 typedef struct sched_param sched_param_t;
 
@@ -303,6 +304,8 @@ vjThreadPosix::setPrio (VJThreadPriority prio) {
 vjBaseThread*
 vjThreadPosix::self (void)
 {
+   vjASSERT((mStaticsInitialized==1221) && "Trying to call vjThreadPosix::self before statics are initialized. Don't do that");
+
    vjBaseThread* my_thread;
    mThreadIdKey.getspecific((void**)&my_thread);
 
