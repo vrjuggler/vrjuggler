@@ -16,8 +16,8 @@
  * --------------------------------------------------------------------------
  */
 
-#ifndef _MUTEX_POSIX_H_
-#define _MUTEX_POSIX_H_
+#ifndef _VJ_MUTEX_POSIX_H_
+#define _VJ_MUTEX_POSIX_H_
 
 #include <vjConfig.h>
 #include <stdio.h>
@@ -40,12 +40,12 @@ public:
     // -----------------------------------------------------------------------
     vjMutexPosix (void) {
         // ----- Allocate the mutex ----- //
-        mutex = (pthread_mutex_t *) malloc(sizeof(pthread_mutex_t));
+        mMutex = (pthread_mutex_t *) malloc(sizeof(pthread_mutex_t));
 
 #ifdef _PTHREADS_DRAFT_4
-        pthread_mutex_init(mutex, pthread_mutexattr_default);
+        pthread_mutex_init(mMutex, pthread_mutexattr_default);
 #else
-        pthread_mutex_init(mutex, NULL);
+        pthread_mutex_init(mMutex, NULL);
 #endif
     }
 
@@ -59,9 +59,9 @@ public:
     // -----------------------------------------------------------------------
     ~vjMutexPosix (void) {
         // Destroy the mutex.
-        if ( pthread_mutex_destroy(mutex) == -1 ) {
-            pthread_mutex_unlock(mutex);
-            pthread_mutex_destroy(mutex);
+        if ( pthread_mutex_destroy(mMutex) == -1 ) {
+            pthread_mutex_unlock(mMutex);
+            pthread_mutex_destroy(mMutex);
         }
     }
 
@@ -78,7 +78,7 @@ public:
     // -----------------------------------------------------------------------
     inline int
     acquire (void) const {
-        if ( pthread_mutex_lock(mutex) == 0 ) {
+        if ( pthread_mutex_lock(mMutex) == 0 ) {
             return 1;
         } else {
             return -1;
@@ -134,7 +134,7 @@ public:
     // -----------------------------------------------------------------------
     inline int
     tryAcquire (void) const {
-        if ( pthread_mutex_trylock(mutex) == 0 ) {
+        if ( pthread_mutex_trylock(mMutex) == 0 ) {
             return 1;
         } else {
             return 0;
@@ -184,7 +184,7 @@ public:
     // -----------------------------------------------------------------------
     inline int
     release (void) const {
-        return pthread_mutex_unlock(mutex);
+        return pthread_mutex_unlock(mMutex);
     }
 
     // -----------------------------------------------------------------------
@@ -200,7 +200,7 @@ public:
     test (void) {
         int ret_val;
 
-        ret_val = pthread_mutex_trylock(mutex);
+        ret_val = pthread_mutex_trylock(mMutex);
 
         // The mutex is not currently locked if ret_val is 0.
         if ( ret_val == 0 ) {
@@ -210,7 +210,7 @@ public:
         // process now has a lock on mutex.  Therefore, no other process
         // could have held a lock on it, so unlock mutex and return 0.
         else if ( ret_val == 1 ) {
-            pthread_mutex_unlock(mutex);
+            pthread_mutex_unlock(mMutex);
             return 0;
         }
 
@@ -245,11 +245,11 @@ public:
 friend class  vjCondPosix;
 
 protected:
-    pthread_mutex_t* mutex;	//: Mutex variable for the class.
+    pthread_mutex_t* mMutex;	//: Mutex variable for the class.
 
     // = Prevent assignment and initialization.
     void operator= (const vjMutexPosix &) {}
     vjMutexPosix (const vjMutexPosix &) {}
 };
 
-#endif	/* ifdef _MUTEX_POSIX_H_ */
+#endif	/* ifdef _VJ_MUTEX_POSIX_H_ */
