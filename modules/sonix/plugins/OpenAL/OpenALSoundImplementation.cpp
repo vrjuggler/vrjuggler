@@ -45,7 +45,7 @@
 #include <iostream>
 #include <stdio.h>// for FILE
 
-#ifdef WIN32
+#if defined(WIN32) || defined(__APPLE__)
 #  include <al.h>
 #  include <alc.h>
 #  include <alut.h>
@@ -400,10 +400,10 @@ void OpenALSoundImplementation::setVolume( const std::string& alias, float amoun
    snx::SoundImplementation::setVolume( alias, amount );
    if (mBindLookup.count( alias ) > 0 && mSounds.count( alias ) > 0)
    {
-#ifndef WIN32
-      alSourcef( mBindLookup[alias].source, AL_GAIN_LINEAR_LOKI, amount );
-#else
+#if defined(WIN32) || defined(__APPLE__)
       alSourcef( mBindLookup[alias].source, AL_GAIN, amount );
+#else
+      alSourcef( mBindLookup[alias].source, AL_GAIN_LINEAR_LOKI, amount );
 #endif      
    }
 }
@@ -415,10 +415,10 @@ void OpenALSoundImplementation::setCutoff( const std::string& alias, float amoun
    if (mBindLookup.count( alias ) > 0 && mSounds.count( alias ) > 0)
    {
       // @todo: cutoff is not defined in openal, use gain instead... :(
-#ifndef WIN32
-      alSourcef( mBindLookup[alias].source, AL_GAIN_LINEAR_LOKI, amount );
-#else
+#if defined(WIN32) || defined(__APPLE__)
       alSourcef( mBindLookup[alias].source, AL_GAIN, amount );
+#else
+      alSourcef( mBindLookup[alias].source, AL_GAIN_LINEAR_LOKI, amount );
 #endif      
    }
 }  
@@ -642,7 +642,11 @@ void OpenALSoundImplementation::bind( const std::string& alias )
                << bufferID << ",err=" << err << "]\n" << vprDEBUG_FLUSH;
             switch (err)
             {
+#if defined(__APPLE__)
+               case AL_INVALID_OPERATION:
+#else
                case AL_ILLEGAL_COMMAND:
+#endif
                   vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
                      <<  clrOutNORM(clrYELLOW, "Streaming buffers cannot use alBufferData\n")
                      << vprDEBUG_FLUSH;
