@@ -42,7 +42,7 @@ public:
 
 struct eq_thread {
     bool
-    operator() (const addr_t& thread1, const addr_t& thread2) const {
+    operator() (const caddr_t& thread1, const caddr_t& thread2) const {
 #ifdef VJ_OS_SGI
         return ((vjPthreadObj*) thread1)->obj == ((vjPthreadObj*) thread2)->obj;
 #else
@@ -293,7 +293,7 @@ private:
     void checkRegister(int status);
 
     // Static member variables and functions.
-    static hash_map<addr_t, thread_id_t, hash<addr_t>, eq_thread> mPthreadHash;
+    static hash_map<caddr_t, thread_id_t, hash<caddr_t>, eq_thread> mPthreadHash;
 
     static thread_id_t			thread_count;
     static vjThreadTable<thread_id_t>	mThreadTable;

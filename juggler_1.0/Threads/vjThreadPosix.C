@@ -17,7 +17,7 @@
 
 
 thread_id_t vjThreadPosix::thread_count = 1;
-hash_map<addr_t, thread_id_t, hash<addr_t>, eq_thread> vjThreadPosix::mPthreadHash;
+hash_map<caddr_t, thread_id_t, hash<caddr_t>, eq_thread> vjThreadPosix::mPthreadHash;
 vjThreadTable<thread_id_t> vjThreadPosix::mThreadTable;
 
 typedef struct sched_param	sched_param_t;
@@ -87,7 +87,7 @@ vjThreadPosix::~vjThreadPosix (void) {
 
     mThreadTable.removeThread(gettid());
     me.obj = pthread_self();
-    mPthreadHash.erase((addr_t) &me);
+    mPthreadHash.erase((caddr_t) &me);
 
     status = 0;
     pthread_exit((void*) &status);
@@ -239,7 +239,7 @@ void
 vjThreadPosix::checkRegister (int status) {
     if ( status == 0 ) {
         mThread.id = thread_count;
-        mPthreadHash[(addr_t) &mThread] = mThread.id;
+        mPthreadHash[(caddr_t) &mThread] = mThread.id;
         registerThread(true);
         mThreadTable.addThread(this, mThread.id);
         thread_count++;
@@ -262,11 +262,11 @@ vjThreadPosix::checkRegister (int status) {
 thread_id_t
 vjThreadPosix::gettid (void) {
     vjPthreadObj me;
-    hash_map<addr_t, thread_id_t, hash<addr_t>, eq_thread>::iterator i;
+    hash_map<caddr_t, thread_id_t, hash<caddr_t>, eq_thread>::iterator i;
 
     // Find me in the local thread hash.
     me.obj = pthread_self();
-    i = mPthreadHash.find((addr_t) &me);
+    i = mPthreadHash.find((caddr_t) &me);
 
     if ( i == mPthreadHash.end() ) {
         return 0;		// There is no thread with ID 0
