@@ -1890,11 +1890,11 @@ AC_OUTPUT(Makefile Makefile.base Config/Makefile Environment/Makefile
           release/mtree/VJ.data.dist release/mtree/VJ.include.dist
           release/mtree/VJ.install.dist release/mtree/VJ.samples.dist
           release/mtree/VJ.test.dist release/mtree/VJ.tools.dist
-          test/Makefile
-          test/mk/mk.defs
-          test/mk/mk.objs
-          test/mk/mk.depend
-          test/mk/mk.hosttype
+          test/TestSuite/Makefile
+          test/TestSuite/mk/mk.defs
+          test/TestSuite/mk/mk.objs
+          test/TestSuite/mk/mk.depend
+          test/TestSuite/mk/mk.hosttype
           VARS.pl)
 
 cat <<BUILD_INFO
