@@ -41,7 +41,11 @@
 
 #include <vpr/vprConfig.h>
 
+#include <iosfwd>
+#include <iostream>
 #include <fstream>
+#include <sstream>
+#include <streambuf>
 #include <boost/concept_check.hpp>
 
 #include <vpr/Sync/Mutex.h>
@@ -81,12 +85,13 @@ vprREGISTER_DBG_CATEGORY(vprDBG_VPR, DBG_VPR, "VPR:");
 vprSingletonImpWithInitFunc(Debug, init);
 
 Debug::Debug()
-   : mFile(&std::cout)
+   : mFile(0), mStreamPtr(&std::cout)
 {
    indentLevel = 0;     // Initialy don't indent
    debugLevel = 2;      // Should actually try to read env variable
    mUseThreadLocal = false;   // Initially set to false
 
+   
    char* debug_lev = getenv("VPR_DEBUG_NFY_LEVEL");
    if(debug_lev != NULL)
    {
@@ -128,28 +133,50 @@ Debug::Debug()
       std::cout << "VPR_DEBUG_ENABLE: Defaults to " << mDebugEnabled
                 << std::endl << std::flush;
    }
+   
+   // Check to see if there is a default Debug target
+   char* debug_file_ptr = getenv("VPR_DEBUG_FILE");
+   
+   if (0 != debug_file_ptr)
+   {
+      std::string debug_file(debug_file_ptr);
+      if ("stderr" == debug_file)
+      {
+         mStreamPtr = &std::cerr;
+      }
+      else if ("stdout" != debug_file)
+      {
+         setOutputFile(debug_file);
+      }
+      else
+      {
+         // Use std::cout by default, which is set via the member
+         // initializer.
+      }
+   }
 }
 
-void Debug::setOutputFile(const std::string& filename)
+bool 
+Debug::setOutputFile(const std::string& filename)
 {
-   if ( mFile != NULL && mFile != &std::cout )
+   // Attempt to open the file first.
+   mFile = new std::ofstream(filename.c_str());
+   if ( !(*mFile) )
    {
-      ((std::ofstream*) mFile)->close();
+      // We couldn't open the file
       delete mFile;
-      mFile = NULL;
+      mFile = 0;
+      return false;
    }
+   
+   // Successfully opened the file, so switch the output handler
+   mStreamPtr = mFile;
+   return true;
+}
 
-   if(filename.length() == 0)
-   {
-      // if no filename is given then use std::cout.
-      mFile = &std::cout;
-   }
-   else
-   {
-      // if a filename is given then we should write everything to that file.
-      mFile = new std::ofstream;
-      ((std::ofstream*) mFile)->open(filename.c_str(), std::ios_base::out);
-   }
+void Debug::setOutputStream(std::ostream& stream)
+{
+   mStreamPtr = &stream;
 }
 
 void Debug::init()
@@ -178,7 +205,9 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level,
       debugLock().acquire();     // Get the lock
    }
 #endif
-
+   // the generic stream to "buffer" output to for the output handler
+   // this allows us to avoid pointer dereferences until necessary
+   std::ostream& os = *mStreamPtr;
    if(indentChange < 0)                // If decreasing indent
    {
       indentLevel += indentChange;
@@ -192,11 +221,11 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level,
    {
       if((*gVprDebugCurColor).size() == 0)
       {
-         std::cout << clrRESET;
+         os << clrRESET;
       }
       else
       {
-         std::cout << clrSetBOLD((*gVprDebugCurColor).back());
+         os << clrSetBOLD((*gVprDebugCurColor).back());
       }
    }
 
@@ -213,46 +242,21 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level,
    // new line used)
    if(show_thread_info)
    {
-      *mFile << "[" << vpr::Thread::self() << "] "
-              << (*mCategories.find(cat.mGuid)).second.mPrefix;
+      os << "[" << vpr::Thread::self() << "] " 
+         << (*mCategories.find(cat.mGuid)).second.mPrefix;
    }
    else if(use_indent)
    {
-      *mFile << "                  ";
+      os << "                  ";
    }
 
-      // Insert the correct number of tabs into the stream for indenting
+   // Insert the correct number of tabs into the stream for indenting
    if(use_indent)
    {
       for(int i=0;i<indentLevel;i++)
       {
-         *mFile << "\t";
+         os << "\t";
       }
-
-      /* For debugging indentation
-      // Output the indent level that we are going to of coming from
-      if(getLevel() >= 7)
-      {
-         if(indentChange >0)  // Not incremented yet
-         {
-            std::cout << " ind-";
-            for(int i=0;i<indentLevel+indentChange;++i)
-            {
-               std::cout << indentLevel+indentChange << "-";
-            }
-            std::cout << "> ";
-         }
-         else if(indentChange < 0) // Already decremented
-         {
-            std::cout << " ind-";
-            for(int i=0;i<indentLevel-indentChange;++i)
-            {
-               std::cout << indentLevel-indentChange << "-";
-            }
-            std::cout << "< ";
-         }
-      }
-      */
    }
 
    // If we have thread local stuff to do
@@ -267,7 +271,7 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level,
 
       for ( int i = 0; i < (column * column_width); ++i )
       {
-         *mFile << "\t";
+         os << "\t";
       }
 
    }
@@ -277,7 +281,7 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level,
       indentLevel += indentChange;
    }
 
-   return *mFile;
+   return *mStreamPtr;
 }
 
 void Debug::addCategory(const vpr::DebugCategory& catId)
