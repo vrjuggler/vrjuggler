@@ -70,28 +70,16 @@ bool Position::config(jccl::ConfigChunkPtr c)
   return true;
 }
 
-jccl::TimeStamp* Position::getPosUpdateTime (int devNum)
-{
-    //vprDEBUG(vrjDBG_PERFORMANCE,2) << "vjPosition::getPosUpdateTime: Get update time function not implemented for this class: " << typeid(this).name() << std::endl << vprDEBUG_FLUSH;
-   return NULL;
-}
 
 Position::Position()
 {
   //vprDEBUG(vprDBG_ALL,0) << "vjPosition::Position()" << vprDEBUG_FLUSH;
-  theData = NULL;
-  mDataTimes = NULL;
-  xformMat.makeIdent();
+    xformMat.makeIdent();
 }
 
 Position::~Position()
 {
-    /*  I didn't allocate it, so I should not deallocate it
-    if (theData != NULL)
-       getMyMemPool()->deallocate((void*)theData);
-    */
-    if (mDataTimes != NULL)
-   delete mDataTimes;
+    ;
 }
 
 };

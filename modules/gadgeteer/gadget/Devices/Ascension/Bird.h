@@ -77,16 +77,11 @@ public:
    //@}
 
 
-   /** @name Position pure virtual functions
-    *
-    *  pure virtual functions required by Position
-    */
-   //@{
-   //old function
-   //void getData(POS_DATA* &data);
-   // XXX: Bad things live here
-   vrj::Matrix* getPosData(int dev = 0); // 0 base
-   //@}
+    /** Get current data from the bird.
+     *  @arg dev - the bird number.  Probably 0.
+     *  @return a pointer to the bird's current PositionData.
+     */
+    PositionData* getPositionData (int dev=0);
 
 
    /** @name Bird settings functions
@@ -126,6 +121,9 @@ private:
    char repRate;
    BIRD_HEMI hemisphere;
    BIRD_FILT filter;
+
+    PositionData* mData;
+
 };
 
 };

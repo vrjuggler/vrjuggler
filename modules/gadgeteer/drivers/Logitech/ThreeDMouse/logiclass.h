@@ -99,14 +99,22 @@ public:
    int startSampling();
    int stopSampling();
    void updateData();
-   int sample()
-       { return getRecord(&theData[current]); }
+   int sample() { 
+       return getRecord(&mData[current]); 
+   }
 
    static std::string getChunkType() { return std::string("ThreeDMouse");}
 
-   /** Position pure virtual functions **/
-   vrj::Matrix* getPosData(int devNum = 0);
-   void getPosData(gadget::POS_DATA* &data);
+    /** Get current data from the receiver.
+     *  @arg dev - the receiver number.  Clients of juggler should access
+     *             tracker receivers as [0-n].  For example, if you have
+     *             receivers 1, 2, and 4, with transmitter on 3, then
+     *             you can access them as devs 0, 1, and 2.
+     *  @return a pointer to the receiver's current PositionData, or NULL
+     *          if the device is not active.
+     */
+    gadget::PositionData* getPositionData (int dev=0);
+
 
    /** @name Internal functions from original implementation
     *
@@ -128,22 +136,22 @@ public:
    void cuResetControlUnit ();
 
    void getDiagnostics (char data[]);
-   int  getRecord (gadget::POS_DATA *data);
+   int  getRecord (gadget::PositionData *data);
    void resetControlUnit ();
 
 
    void setBaseOrigin();
        // PURPOSE: Sets the current mouse X,Y,Z position to be the base origin
 
-   float getX()
-   { return theData[current].pos[0] + baseVector[0]; }
-   float getY()
-   { return theData[current].pos[1] + baseVector[1]; }
-   float getZ()
-   { return theData[current].pos[2] + baseVector[2]; }
-   float getPitch()    { return theData[current].orient[0]; }
-   float getYaw()     { return theData[current].orient[1]; }
-   float getRoll()       { return theData[current].orient[2]; }
+//     float getX()
+//     { return theData[current].pos[0] + baseVector[0]; }
+//     float getY()
+//     { return theData[current].pos[1] + baseVector[1]; }
+//     float getZ()
+//     { return theData[current].pos[2] + baseVector[2]; }
+//     float getPitch()    { return theData[current].orient[0]; }
+//     float getYaw()     { return theData[current].orient[1]; }
+//     float getRoll()       { return theData[current].orient[2]; }
 // Vec3 getLocation() { return SbVec3f(GetX(), GetY(), GetZ()); }
 
 // int buttonPressed() { return currentMouseReadings.buttons; }
@@ -155,7 +163,8 @@ public:
    //@}
     private:
    int mouseFD;
-   gadget::POS_DATA theData[3];
+//     gadget::POS_DATA theData[3];
+    gadget::PositionData mData[3];
 
    vpr::Thread*   myThreadID; // Ptr to the thread object
    vrj::Vec3      baseVector; // Used to store the base location tooffset from
@@ -163,7 +172,7 @@ public:
 
    int  logitechOpen (char *port_name);
 
-   void eulerToAbsolute (byte record[], gadget::POS_DATA * data);
+   void eulerToAbsolute (byte record[], vrj::Matrix* data);
    void printBin (char a);
 };
 

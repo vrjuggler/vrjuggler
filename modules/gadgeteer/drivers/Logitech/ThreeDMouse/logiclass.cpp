@@ -123,14 +123,12 @@ void ThreeDMouse::updateData() {
   lock.release();
 }
 
-// XXX: Bad stuff
-vrj::Matrix* ThreeDMouse::getPosData(int devNum)
-{
-  return (vrj::Matrix*)&theData[current];
-}
-
-void ThreeDMouse::getPosData(gadget::POS_DATA* &data){
-  data = &theData[current];
+gadget::PositionData* ThreeDMouse::getPositionData (int dev) {
+    if (this->isActive() == false) {
+        return NULL;
+    }
+    else
+        return &mData[current];
 }
 
 
@@ -376,7 +374,7 @@ void ThreeDMouse::getDiagnostics ( char data[])
 // Retrieve a single record. This routine will spin until a valid record
 // (i.e., 16 bytes and bit 7, byte 0 is on) is received.
 ///////////////////////////////////////////////////////////////////////////////
-int ThreeDMouse::getRecord ( gadget::POS_DATA* data)
+int ThreeDMouse::getRecord ( gadget::PositionData* data)
 {
   int num_read;
   byte record[EULER_RECORD_SIZE];
@@ -403,7 +401,7 @@ int ThreeDMouse::getRecord ( gadget::POS_DATA* data)
   printf ("%d bytes read...", num_read);
 #endif
 
-  ThreeDMouse::eulerToAbsolute (record, data);
+  ThreeDMouse::eulerToAbsolute (record, data->getPositionData());
 
   return (0);
 }
@@ -425,9 +423,12 @@ void ThreeDMouse::resetControlUnit ()
 void ThreeDMouse::setBaseOrigin()
     // PURPOSE: Sets the current mouse X,Y,Z position to be the base origin
 {
-    baseVector[0] = theData[current].pos[0];
-    baseVector[1] = theData[current].pos[1];
-    baseVector[2] = theData[current].pos[2];
+    mData[current].getPositionData()->getTrans (baseVector[0],
+                                                baseVector[1],
+                                                baseVector[2]);
+//      baseVector[0] = mData[current].getPositionData()->pos[0];
+//      baseVector[1] = mData[current].getPositionData()->pos[1];
+//      baseVector[2] = mData[current].getPositionData()->pos[2];
     // Setup currrent offest as origin
 }
 
@@ -436,7 +437,7 @@ void ThreeDMouse::setBaseOrigin()
 /////////////////////////////////////////////////////////////////////////
 // convert from raw Euler data record to absolute data
 ////////////////////////////////////////////////////////////////////////
-void ThreeDMouse::eulerToAbsolute (byte record[], gadget::POS_DATA* data)
+void ThreeDMouse::eulerToAbsolute (byte record[], vrj::Matrix* data)
 {
   long ax, ay, az, arx, ary, arz;
 
@@ -457,9 +458,12 @@ void ThreeDMouse::eulerToAbsolute (byte record[], gadget::POS_DATA* data)
   az |= (long)(record[8] & 0x7f) << 7;
   az |= (record[9] & 0x7f);
 
-  data->pos[0] = ((float) ax) / 1000.0;
-  data->pos[1] = ((float) ay) / 1000.0;
-  data->pos[2] = ((float) az) / 1000.0;
+  data->setTrans (((float) ax) / 1000.0,
+                  ((float) ay) / 1000.0,
+                  ((float) az) / 1000.0);
+//    data->pos[0] = ((float) ax) / 1000.0;
+//    data->pos[1] = ((float) ay) / 1000.0;
+//    data->pos[2] = ((float) az) / 1000.0;
 
   arx  = (record[10] & 0x7f) << 7;
   arx += (record[11] & 0x7f);
@@ -470,9 +474,12 @@ void ThreeDMouse::eulerToAbsolute (byte record[], gadget::POS_DATA* data)
   arz  = (record[14] & 0x7f) << 7;
   arz += (record[15] & 0x7f);
 
-  data->pos[0] = ((float) arx) / 40.0;
-  data->pos[1] = ((float) ary) / 40.0;
-  data->pos[2] = ((float) arz) / 40.0;
+  data->setTrans (((float) arx) / 40.0,
+                  ((float) ary) / 40.0,
+                  ((float) arz) / 40.0);
+//    data->pos[0] = ((float) arx) / 40.0;
+//    data->pos[1] = ((float) ary) / 40.0;
+//    data->pos[2] = ((float) arz) / 40.0;
 }
 
 
