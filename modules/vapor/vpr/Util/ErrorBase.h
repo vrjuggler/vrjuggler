@@ -44,6 +44,7 @@
 
 #include <vpr/vprConfig.h>
 #include <iostream>
+#include <string>
 
 
 namespace vpr
