@@ -50,12 +50,17 @@ namespace vrj
 class CameraProjection : public Projection
 {
 public:
-   CameraProjection()
+   CameraProjection() : mVertFOV(60.0f)
    {
       //mType = Projection::SIM;
    }
 
    virtual void config(jccl::ConfigChunkPtr chunk);
+
+   void setVerticalFOV(const float fov)
+   {
+      mVertFOV = fov;
+   }
 
    /** Calculate the viewmatrix and frustum for the camera
    * Calculates a perspective transform for the given settings.

@@ -56,12 +56,16 @@ void SimViewport::config(jccl::ConfigChunkPtr chunk)
 
    mType = SIM;
 
+   const float vert_fov = chunk->getProperty<float>("vert_fov");
+
    mLeftProj = new CameraProjection;
+   ((CameraProjection*) mLeftProj)->setVerticalFOV(vert_fov);
    mLeftProj->config(chunk);
    mLeftProj->setEye(Projection::LEFT);
    mLeftProj->setViewport(this);
 
    mRightProj = new CameraProjection;
+   ((CameraProjection*) mRightProj)->setVerticalFOV(vert_fov);
    mRightProj->config(chunk);
    mRightProj->setEye(Projection::RIGHT);
    mRightProj->setViewport(this);
