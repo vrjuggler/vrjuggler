@@ -39,6 +39,7 @@
 #include <GL/gl.h>
 
 #include <Kernel/vjDisplay.h>
+#include <Sync/vjMutex.h>
 
 //-------------------------------------------------------
 //: Represent cross-platform interface to OpenGL windows
@@ -154,12 +155,11 @@ protected:
    int  mWindowId;                  //: A unique window id to identify us
 
 private:
-   static int mCurMaxWinId;             // The current maximum window id
+   static vjMutex mWinIdMutex;
+   static int mCurMaxWinId;             // The current maximum window id   
 
-   static int getNextWindowId()
-   {
-      return mCurMaxWinId++;
-   }
+   // Get the window id to use
+   static int getNextWindowId();
 };
 
 // ostream& operator<<(ostream& out, vjGlWindow& win);
