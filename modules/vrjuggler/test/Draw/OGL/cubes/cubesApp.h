@@ -81,12 +81,20 @@ public:
 class UserData
 {
 public:
+   enum ShapeSetting
+   {
+      CUBE,
+      CONE
+   };
+
    // Constructor
    // Takes the string names of the devices to use
    // NOTE: This means that we cannot construct a user until the input manager is loaded
    //       Ex. The Init function
    UserData(vrj::User* user, std::string wandName, std::string incButton,
-            std::string decButton, std::string stopButton)
+            std::string decButton, std::string stopButton,
+            std::string toggleButton)
+      : mShapeSetting(CUBE)
    {
       mCurVelocity = 0.0;
       gmtl::identity(mNavMatrix);
@@ -97,6 +105,7 @@ public:
       mIncVelocityButton.init(incButton);
       mDecVelocityButton.init(decButton);
       mStopButton.init(stopButton);
+      mToggleButton.init(toggleButton);
    }
 
    // Update the navigation matrix
@@ -104,18 +113,28 @@ public:
    // Uses a quaternion to do rotation in the environment
    void updateNavigation();
 
+   void updateShapeSetting();
+
+   ShapeSetting getShapeSetting()
+   {
+      return mShapeSetting;
+   }
+
 public:
       // Devices to use for the given user
    gadget::PositionInterface  mWand;                  // the Wand
    gadget::DigitalInterface   mIncVelocityButton;     // Button for velocity
    gadget::DigitalInterface   mDecVelocityButton;
    gadget::DigitalInterface   mStopButton;            // Button to stop
+   gadget::DigitalInterface   mToggleButton;          // Button to toggle shape
 
       // Navigation info for the user
    float                mCurVelocity;  // The current velocity
    gmtl::Matrix44f      mNavMatrix;    // Matrix for navigation in the application
 
    vrj::User*           mUser;         // The user we hold data for
+
+   ShapeSetting mShapeSetting; // Flag identifying the shape to render
 };
 
 //--------------------------------------------------
@@ -126,12 +145,18 @@ public:
 class cubesApp : public vrj::GlApp
 {
 public:
-   cubesApp(vrj::Kernel* kern) : vrj::GlApp(kern)
+   cubesApp(vrj::Kernel* kern)
+      : vrj::GlApp(kern), mConeQuad(NULL), mBaseQuad(NULL)
    {
-      ;
+      mConeQuad = gluNewQuadric();
+      mBaseQuad = gluNewQuadric();
    }
 
-   virtual ~cubesApp() {}
+   virtual ~cubesApp()
+   {
+      gluDeleteQuadric(mConeQuad);
+      gluDeleteQuadric(mBaseQuad);
+   }
 
    // Execute any initialization needed before the API is started.  Put device
    // initialization here.
@@ -178,8 +203,11 @@ public:
        vprDEBUG(vprDBG_ALL,5) << "cubesApp::preFrame()" << std::endl
                             << vprDEBUG_FLUSH;
 
-       for(unsigned int i=0;i<mUserData.size();i++)
+       for ( unsigned int i = 0; i < mUserData.size(); ++i )
+       {
+          mUserData[i]->updateShapeSetting();
           mUserData[i]->updateNavigation();       // Update the navigation matrix
+       }
    }
 
    // Function to draw the scene.  Put OpenGL draw functions here.
@@ -235,15 +263,31 @@ private:
 
    void drawCube()
    {
-       glCallList(mDlData->dlIndex);
+       glCallList(mDlCubeData->dlIndex);
        //drawbox(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, GL_QUADS);
    }
 
    void drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
                 GLdouble z0, GLdouble z1, GLenum type);
 
+   void drawCone()
+   {
+      glCallList(mDlConeData->dlIndex);
+//      drawCone(1.5f, 2.0f, 20, 10);
+   }
+
+   void drawCone(GLdouble base, GLdouble height, GLint slices, GLint stacks)
+   {
+      gluCylinder(mConeQuad, base, 0.0f, height, slices, stacks);
+      gluDisk(mBaseQuad, 0.0f, base, slices, 1);
+   }
+
+   GLUquadric* mConeQuad;      // GLU quadric for the cone
+   GLUquadric* mBaseQuad;      // GLU quadric for the cone's base
+
 public:
-   vrj::GlContextData<ContextData>  mDlData;      // Data for display lists
+   vrj::GlContextData<ContextData>  mDlCubeData;  // Data for cube display lists
+   vrj::GlContextData<ContextData>  mDlConeData;  // Data for cone display lists
    vrj::GlContextData<ContextData>  mDlDebugData; // Data for debugging display lists
    std::vector<UserData*>        mUserData;     // All the users in the program
 };
