@@ -476,6 +476,8 @@ public class DisplayWindowEditorPanel
          elt.setProperty("stereo", 0, dlg.inStereo());
          elt.setProperty("border", 0, dlg.hasBorder());
 
+         elt.setProperty(KEYBOARD_MOUSE_PTR_PROPERTY, 0,
+                         dlg.getKeyboardMousePointer());
          elt.setProperty(LOCK_KEY_PROPERTY, 0, dlg.getLockKey());
          elt.setProperty(START_LOCKED_PROPERTY, 0, dlg.shouldStartLocked());
          elt.setProperty(SLEEP_TIME_PROPERTY, 0, dlg.getSleepTime());
@@ -550,6 +552,8 @@ public class DisplayWindowEditorPanel
          elt.setProperty(ORIGIN_PROPERTY, 1, new Integer(bounds.y));
          elt.setProperty(SIZE_PROPERTY, 0, new Integer(bounds.width));
          elt.setProperty(SIZE_PROPERTY, 1, new Integer(bounds.height));
+         elt.setProperty(KEYBOARD_MOUSE_PTR_PROPERTY, 0,
+                         dlg.getKeyboardMousePointer());
          elt.setProperty(LOCK_KEY_PROPERTY, 0, dlg.getLockKey());
          elt.setProperty(START_LOCKED_PROPERTY, 0, dlg.shouldStartLocked());
          elt.setProperty(SLEEP_TIME_PROPERTY, 0, dlg.getSleepTime());

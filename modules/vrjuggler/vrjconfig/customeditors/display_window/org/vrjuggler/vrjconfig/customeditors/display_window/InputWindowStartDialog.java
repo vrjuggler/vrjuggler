@@ -68,9 +68,16 @@ public class InputWindowStartDialog
       ConfigElementFactory factory =
          new ConfigElementFactory(cfg_broker.getRepository().getAllLatest());
       ConfigElement win_elt = factory.createUnique(my_def, ctx);
-      Object value = win_elt.getProperty(LOCK_KEY_PROPERTY, 0);
+
+      Object value = win_elt.getProperty(KEYBOARD_MOUSE_PTR_PROPERTY, 0);
       PropertyDefinition prop_def =
-         my_def.getPropertyDefinition(LOCK_KEY_PROPERTY);
+         my_def.getPropertyDefinition(KEYBOARD_MOUSE_PTR_PROPERTY);
+
+      mKbdDevEditor = new PropertyEditorPanel(ctx, value, prop_def, win_elt,
+                                              0, Color.white);
+
+      value    = win_elt.getProperty(LOCK_KEY_PROPERTY, 0);
+      prop_def = my_def.getPropertyDefinition(LOCK_KEY_PROPERTY);
 
       mLockKeyEditor = new PropertyEditorPanel(ctx, value, prop_def, win_elt,
                                                0, Color.white);
@@ -119,6 +126,13 @@ public class InputWindowStartDialog
       mResolution = resolution;
 
       PropertyDefinition prop_def =
+         winElt.getDefinition().getPropertyDefinition(KEYBOARD_MOUSE_PTR_PROPERTY);
+      mKbdDevEditor =
+         new PropertyEditorPanel(ctx,
+                                 winElt.getProperty(KEYBOARD_MOUSE_PTR_PROPERTY, 0),
+                                 prop_def, winElt, 0, Color.white);
+
+      prop_def =
          winElt.getDefinition().getPropertyDefinition(LOCK_KEY_PROPERTY);
       mLockKeyEditor =
          new PropertyEditorPanel(ctx,
@@ -182,6 +196,11 @@ public class InputWindowStartDialog
       int width = ((Number) mWidthField.getValue()).intValue();
       int height = ((Number) mHeightField.getValue()).intValue();
       return new Rectangle(x, y, width, height);
+   }
+
+   public Object getKeyboardMousePointer()
+   {
+      return mWinElement.getProperty(KEYBOARD_MOUSE_PTR_PROPERTY, 0);
    }
 
    public Object getLockKey()
@@ -254,7 +273,7 @@ public class InputWindowStartDialog
             {TableLayout.PREFERRED, 5, 20, TableLayout.MINIMUM, 5,
              TableLayout.MINIMUM},
             {TableLayout.PREFERRED, TableLayout.PREFERRED,
-             TableLayout.PREFERRED}
+             TableLayout.PREFERRED, TableLayout.PREFERRED}
          };
       mWindowPropsPanelLayout = new TableLayout(window_props_size);
 
@@ -299,6 +318,8 @@ public class InputWindowStartDialog
       mPositionYField.setPreferredSize(new Dimension(40, 21));
       mPositionYField.setValue(new Integer(0));
       mPositionYField.setHorizontalAlignment(SwingConstants.TRAILING);
+      mKbdDevLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mKbdDevLabel.setText("Keyboard/Mouse");
       mLockKeyLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mLockKeyLabel.setText("Lock Key");
       mStartLockedCB.setText("Start Locked");
@@ -339,28 +360,36 @@ public class InputWindowStartDialog
                        new TableLayoutConstraints(1, 1, 1, 1,
                                                   TableLayoutConstraints.LEFT,
                                                   TableLayoutConstraints.CENTER));
-      mWindowPropsPanel.add(mLockKeyLabel,
+      mWindowPropsPanel.add(mKbdDevLabel,
                             new TableLayoutConstraints(0, 0, 0, 0,
                                                        TableLayoutConstraints.RIGHT,
                                                        TableLayoutConstraints.CENTER));
-      mWindowPropsPanel.add(mLockKeyEditor,
+      mWindowPropsPanel.add(mKbdDevEditor,
                             new TableLayoutConstraints(2, 0, 5, 0,
                                                        TableLayoutConstraints.LEFT,
                                                        TableLayoutConstraints.CENTER));
+      mWindowPropsPanel.add(mLockKeyLabel,
+                            new TableLayoutConstraints(0, 1, 0, 1,
+                                                       TableLayoutConstraints.RIGHT,
+                                                       TableLayoutConstraints.CENTER));
+      mWindowPropsPanel.add(mLockKeyEditor,
+                            new TableLayoutConstraints(2, 1, 5, 1,
+                                                       TableLayoutConstraints.LEFT,
+                                                       TableLayoutConstraints.CENTER));
       mWindowPropsPanel.add(mStartLockedCB,
-                            new TableLayoutConstraints(0, 1, 2, 1,
+                            new TableLayoutConstraints(0, 2, 2, 2,
                                                        TableLayoutConstraints.RIGHT,
                                                        TableLayoutConstraints.CENTER));
       mWindowPropsPanel.add(mSleepTimeLabel,
-                            new TableLayoutConstraints(0, 2, 0, 2,
+                            new TableLayoutConstraints(0, 3, 0, 3,
                                                        TableLayoutConstraints.RIGHT,
                                                        TableLayoutConstraints.CENTER));
       mWindowPropsPanel.add(mSleepTimeField,
-                            new TableLayoutConstraints(2, 2, 3, 2,
+                            new TableLayoutConstraints(2, 3, 3, 3,
                                                        TableLayoutConstraints.FULL,
                                                        TableLayoutConstraints.CENTER));
       mWindowPropsPanel.add(mSleepMSLabel,
-                            new TableLayoutConstraints(5, 2, 5, 2,
+                            new TableLayoutConstraints(5, 3, 5, 3,
                                                        TableLayoutConstraints.LEFT,
                                                        TableLayoutConstraints.CENTER));
       mPositionPanel.add(mPositionXField, null);
@@ -449,6 +478,8 @@ public class InputWindowStartDialog
    private JPanel mWindowPropsPanel = new JPanel();
    private TableLayout mWindowPropsPanelLayout = null;
    private TitledBorder mWindowPropsPanelBorder;
+   private JLabel mKbdDevLabel = new JLabel();
+   private PropertyEditorPanel mKbdDevEditor = null;
    private JLabel mLockKeyLabel = new JLabel();
    private PropertyEditorPanel mLockKeyEditor = null;
    private JCheckBox mStartLockedCB = new JCheckBox();
