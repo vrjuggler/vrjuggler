@@ -5,17 +5,19 @@ void vjVec3::xformFull(const vjMatrix& _m, const vjVec3& _v)
 {
     vjVec4 tempVec(_v[0], _v[1], _v[2], 1.0f);
     tempVec.xform(_m, tempVec);
-    
-    vec[0] = (tempVec.vec[0]/tempVec.vec[3]);
-    vec[1] = (tempVec.vec[1]/tempVec.vec[3]);
-    vec[2] = (tempVec.vec[2]/tempVec.vec[3]);
+
+    float w_coord_div = 1/tempVec.vec[3];
+
+    vec[0] = (tempVec.vec[0]* w_coord_div);
+    vec[1] = (tempVec.vec[1]* w_coord_div);
+    vec[2] = (tempVec.vec[2]* w_coord_div);
 }
 
 void vjVec3::xformVec(const vjMatrix& _m, const vjVec3& _v)
 {
     vjVec4 tempVec(_v[0], _v[1], _v[2], 0.0f);
     tempVec.xform(_m, tempVec);
-    
+
     vec[0] = tempVec.vec[0];
     vec[1] = tempVec.vec[1];
     vec[2] = tempVec.vec[2];
@@ -46,6 +48,6 @@ ostream& operator<<(ostream& out, vjVec3& _v)
     {
     	out << _v.vec[j] << ", ";
     }
-    
-    return out;	   
+
+    return out;	
 }
