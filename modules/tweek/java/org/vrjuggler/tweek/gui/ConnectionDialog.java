@@ -45,11 +45,13 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import org.omg.CosNaming.NamingContextPackage.*;
 import org.vrjuggler.tweek.beans.BeanRegistry;
 import org.vrjuggler.tweek.beans.TweekBean;
 import org.vrjuggler.tweek.services.*;
 import org.vrjuggler.tweek.net.corba.CorbaService;
 import tweek.SubjectManagerPackage.SubjectMgrInfoItem;
+import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 
 
 /**
@@ -205,6 +207,7 @@ public class ConnectionDialog extends JDialog
       mSubjectMgrPanel.setLayout(mSubjectMgrLayout);
       mSubjectMgrSplitPane.setDividerSize(7);
       mNSConnectButton.setEnabled(false);
+      mNSConnectButton.setSelected(true);
       mNSConnectButton.setText("Connect");
       mNSConnectButton.addActionListener(new java.awt.event.ActionListener()
       {
@@ -242,24 +245,33 @@ public class ConnectionDialog extends JDialog
             validateNetworkAddress();
          }
       });
-      mNSConnectPanel.add(mNSHostLabel,            new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
+      mNSRefreshButton.setEnabled(false);
+      mNSRefreshButton.setText("Refresh");
+      mNSRefreshButton.addActionListener(new java.awt.event.ActionListener()
+      {
+         public void actionPerformed(ActionEvent e)
+         {
+            namingServiceRefreshAction();
+         }
+      });
+      mNSConnectPanel.add(mNSHostLabel, new GridBagConstraints(0, 0, 2, 1, 0.0, 0.0
             ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 2), 47, 18));
-      mNSConnectPanel.add(mNSHostField,       new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
+      mNSConnectPanel.add(mNSHostField,        new GridBagConstraints(2, 0, 1, 1, 1.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 14, 6));
 
       mNSPortLabel.setText("Naming Service Port");
       mNSPortField.setMinimumSize(new Dimension(50, 17));
       mNSPortField.setPreferredSize(new Dimension(50, 17));
-      mNSConnectPanel.add(mNSPortLabel,      new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+      mNSConnectPanel.add(mNSPortLabel,       new GridBagConstraints(0, 1, 2, 1, 0.0, 0.0
             ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 2), 0, 18));
-      mNSConnectPanel.add(mNSPortField,            new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0
+      mNSConnectPanel.add(mNSPortField,             new GridBagConstraints(2, 1, 1, 1, 1.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 10, 6));
 
       mNSIiopVerField.setMinimumSize(new Dimension(50, 17));
       mNSIiopVerField.setPreferredSize(new Dimension(50, 17));
-      mNSConnectPanel.add(mNSIiopVerLabel,     new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
+      mNSConnectPanel.add(mNSIiopVerLabel,      new GridBagConstraints(0, 2, 2, 1, 0.0, 0.0
             ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 2), 0, 18));
-      mNSConnectPanel.add(mNSIiopVerField, new GridBagConstraints(1, 2, 1, 1, 1.0, 0.0
+      mNSConnectPanel.add(mNSIiopVerField,  new GridBagConstraints(2, 2, 1, 1, 1.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 10, 6));
 
       mNamingContextLabel.setText("Naming Subcontext");
@@ -289,12 +301,14 @@ public class ConnectionDialog extends JDialog
 
       this.getContentPane().add(mNSConnectPanel,  BorderLayout.NORTH);
 
-      mNSConnectPanel.add(mNamingContextLabel,    new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0
+      mNSConnectPanel.add(mNamingContextLabel,     new GridBagConstraints(0, 3, 2, 1, 0.0, 0.0
             ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 2), 0, 18));
-      mNSConnectPanel.add(mNamingContextField,    new GridBagConstraints(1, 3, 1, 1, 1.0, 0.0
+      mNSConnectPanel.add(mNamingContextField,     new GridBagConstraints(2, 3, 1, 1, 1.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 44, 6));
-      mNSConnectPanel.add(mNSConnectButton,               new GridBagConstraints(0, 4, 2, 1, 0.0, 0.0
-            ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5, 0, 0, 0), 0, 0));
+      mNSConnectPanel.add(mNSButtonPanel, new GridBagConstraints(1, 4, 2, 1, 0.0, 0.0
+            ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+      mNSButtonPanel.add(mNSConnectButton, null);
+      mNSButtonPanel.add(mNSRefreshButton, null);
 
       this.getContentPane().add(mButtonPanel, BorderLayout.SOUTH);
       mButtonPanel.add(mOkayButton, null);
@@ -328,40 +342,112 @@ public class ConnectionDialog extends JDialog
          try
          {
             EnvironmentService env_service = new EnvironmentServiceProxy();
+
+            // This may throw several types of exceptions, all of which are
+            // handled below.
             new_orb.init(env_service.getCommandLineArgs());
+
+            // We initialized the CorbaService object successfully and
+            // connected to the remote Naming Service.
+            corbaService = new_orb;
+
+            // XXX: Should we allow the user to make multiple connections from
+            // a single dialog box?  Probably not...
+            mNSConnectButton.setEnabled(false);
+            mNSRefreshButton.setEnabled(true);
+
+            // Create a new list model for the fresh list of Subject Managers.
+            DefaultListModel mgr_list_model = new DefaultListModel();
+
+            // Get the list of Subject Managers.  There had better be at least
+            // one!  The list returned is guaranteed to contain valid references
+            // at the time of construction.
+            java.util.Iterator i = new_orb.getSubjectManagerList().iterator();
+            tweek.SubjectManager cur_mgr;
+
+            while ( i.hasNext() )
+            {
+               cur_mgr = (tweek.SubjectManager) i.next();
+               mgr_list_model.addElement(new SubjectManagerWrapper(cur_mgr));
+            }
+
+            mSubjectMgrList.setModel(mgr_list_model);
+         }
+         catch(org.omg.CosNaming.NamingContextPackage.NotFound nfex)
+         {
+            String reason = "";
+
+            if ( nfex.why == NotFoundReason.not_context )
+            {
+               reason = " (naming context is an object)";
+            }
+            else if ( nfex.why == NotFoundReason.not_object )
+            {
+               reason = " (object is a naming context)";
+            }
+            else if ( nfex.why == NotFoundReason.missing_node )
+            {
+               reason = " (node in name path is missing)";
+            }
+            else
+            {
+               reason = " (" + nfex.getMessage() + ")";
+            }
+
+            int answer =
+               JOptionPane.showConfirmDialog(this,
+                                             "No naming context found" +
+                                             reason +
+                                             ".\nDisconnect from this Naming Service?",
+                                             "Naming Context Lookup Failure",
+                                             JOptionPane.YES_NO_OPTION,
+                                             JOptionPane.QUESTION_MESSAGE);
+
+            // Disable this button regardless of the user's answer.  A new
+            // connection cannot be attempted until new naming service
+            // connection is entered or the current connection is closed.
+            mNSConnectButton.setEnabled(false);
+
+            // If the user clicked "No," then we need to enable the refresh
+            // button so that an attempt can be made to get a new list of
+            // Subject Managers later.
+            if ( answer == JOptionPane.NO_OPTION )
+            {
+               corbaService = new_orb;
+               mNSRefreshButton.setEnabled(true);
+            }
+            // If the user clicked "Yes," then ensure that the refresh button
+            // is disabled until the next connection attempt.
+            else
+            {
+               mNSRefreshButton.setEnabled(false);
+            }
+         }
+         catch(org.omg.CORBA.ORBPackage.InvalidName poaNameEx)
+         {
+            JOptionPane.showConfirmDialog(this, poaNameEx.getMessage(),
+                                          "Root Portable Object Adapter Not Found",
+                                          JOptionPane.OK_OPTION,
+                                          JOptionPane.ERROR_MESSAGE);
+         }
+         catch(org.omg.PortableServer.POAManagerPackage.AdapterInactive poaEx)
+         {
+            JOptionPane.showConfirmDialog(this, poaEx.getMessage(),
+                                          "Root Portable Object Adapter Inactive",
+                                          JOptionPane.OK_OPTION,
+                                          JOptionPane.ERROR_MESSAGE);
+         }
+         catch(org.omg.CORBA.UserException userEx)
+         {
+            JOptionPane.showConfirmDialog(this, userEx.getMessage(),
+                                          "CORBA User Exception",
+                                          JOptionPane.OK_OPTION,
+                                          JOptionPane.ERROR_MESSAGE);
          }
          catch(RuntimeException ex)
          {
             ex.printStackTrace();
-            new_orb.init(null);
          }
-
-         // XXX: Is this the best time to do this?  We want to be sure that
-         // anyone who calls getCorbaService() gets a valid reference back.  If
-         // something goes wrong later with the Subject Manager choice, this
-         // should be set to null.
-         corbaService = new_orb;
-
-         // XXX: Should we allow the user to make multiple connections from a
-         // single dialog box?  Probably not...
-         mNSConnectButton.setEnabled(false);
-
-         // Create a new list model for the fresh list of Subject Managers.
-         DefaultListModel mgr_list_model = new DefaultListModel();
-
-         // Get the list of Subject Managers.  There had better be at least
-         // one!  The list returned is guaranteed to contain valid references
-         // at the time of construction.
-         java.util.Iterator i = new_orb.getSubjectManagerList().iterator();
-         tweek.SubjectManager cur_mgr;
-
-         while ( i.hasNext() )
-         {
-            cur_mgr = (tweek.SubjectManager) i.next();
-            mgr_list_model.addElement(new SubjectManagerWrapper(cur_mgr));
-         }
-
-         mSubjectMgrList.setModel(mgr_list_model);
       }
       // Something went wrong with the CORBA service initialization.
       catch (org.omg.CORBA.SystemException sys_ex)
@@ -370,6 +456,7 @@ public class ConnectionDialog extends JDialog
          // caused the connection to fail, but failure should not disallow any
          // further attempts to connect.
          mNSConnectButton.setEnabled(true);
+         mNSRefreshButton.setEnabled(false);
 
          // Pop up a dialog stating that the connection failed.
          JOptionPane.showMessageDialog(null, "CORBA System Exception: '" +
@@ -380,6 +467,27 @@ public class ConnectionDialog extends JDialog
          // DEBUG
          sys_ex.printStackTrace();
       }
+   }
+
+   private void namingServiceRefreshAction()
+   {
+      // Create a new list model for the fresh list of Subject Managers.
+      DefaultListModel mgr_list_model = new DefaultListModel();
+
+      // Get the list of Subject Managers.  There had better be at least
+      // one!  The list returned is guaranteed to contain valid references
+      // at the time of construction.
+      java.util.Iterator i = corbaService.getSubjectManagerList().iterator();
+      tweek.SubjectManager cur_mgr;
+
+      while ( i.hasNext() )
+      {
+         cur_mgr = (tweek.SubjectManager) i.next();
+         mgr_list_model.addElement(new SubjectManagerWrapper(cur_mgr));
+      }
+
+      mSubjectMgrList.setModel(mgr_list_model);
+      mSubjectMgrList.invalidate();
    }
 
    /**
@@ -434,15 +542,20 @@ public class ConnectionDialog extends JDialog
     */
    private void validateNetworkAddress()
    {
-      if ( ! mNSHostField.getText().equals("") &&
-           validatePortNumber(mNSPortField.getText()) &&
-           ! mNSIiopVerField.getText().equals("") )
+      // Do not perform network address validation if there is an active
+      // CorbaService object.
+      if ( null == corbaService )
       {
-         mNSConnectButton.setEnabled(true);
-      }
-      else
-      {
-         mNSConnectButton.setEnabled(false);
+         if ( ! mNSHostField.getText().equals("") &&
+              validatePortNumber(mNSPortField.getText()) &&
+              ! mNSIiopVerField.getText().equals("") )
+         {
+            mNSConnectButton.setEnabled(true);
+         }
+         else
+         {
+            mNSConnectButton.setEnabled(false);
+         }
       }
    }
 
@@ -578,6 +691,9 @@ public class ConnectionDialog extends JDialog
    private JTextField    mNSIiopVerField     = new JTextField();
    private JLabel        mNamingContextLabel = new JLabel();
    private JTextField    mNamingContextField = new JTextField();
+   private JPanel        mNSButtonPanel      = new JPanel();
+   private JButton       mNSConnectButton    = new JButton();
+   private JButton       mNSRefreshButton    = new JButton();
 
    // GUI elements for the Subject Manager panel.
    private TitledBorder mSubjectMgrBorder;
@@ -588,7 +704,6 @@ public class ConnectionDialog extends JDialog
    private JScrollPane  mSubjectMgrListPane  = new JScrollPane(mSubjectMgrList);
    private JTable       mSubjectMgrInfo      = new JTable();
    private JScrollPane  mSubjectMgrInfoPane  = new JScrollPane(mSubjectMgrInfo);
-   private JButton      mNSConnectButton     = new JButton();
 
    // GUI elements for the OK/Cancel button panel.
    private JPanel  mButtonPanel  = new JPanel();
