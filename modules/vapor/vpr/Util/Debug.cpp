@@ -48,7 +48,8 @@
 #include <vpr/Util/Debug.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 /*
 Debug* Debug::_instance = NULL;
@@ -451,6 +452,17 @@ void Debug::debugDump()
 
 }
 
+void Debug::decrementIndentLevel()
+{
+   vprASSERT(indentLevel > 0 && "Attempt to decrrement indent level below 0, check for bad code");
+   indentLevel--;
+}
+
+void Debug::incrementIndentLevel()
+{
+   indentLevel++;
+}
+
 DebugOutputGuard::DebugOutputGuard(const vpr::DebugCategory& cat,
                                    const int level, std::string entryText,
                                    std::string exitText, bool indent)
@@ -489,7 +501,7 @@ DebugOutputGuard::~DebugOutputGuard()
    {
       if(mExitText == std::string(""))
       {
-         vprDEBUG_DECREMENT_INDENT();
+         vprDEBUG_DECREMENT_INDENT(mCat, mLevel);
       }
       else
       {     
