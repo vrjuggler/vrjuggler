@@ -1,5 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jan-04-2002 patrickh  Fixed the bug causing assertion failures with angled
+                      surface displays.
 Dec-21-2001 patrickh  Updated the use of variable argument lists in the
                       CyberGlove driver from Virtual Technologies.  We can
                       build and run on Linux/PowerPC now.  Submitted by
