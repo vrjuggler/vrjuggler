@@ -736,7 +736,7 @@ DPP_INSTALLER(tweek, 0644, 0755, 0755)
 #fi
 
 # For use in linking applications.
-EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
+BASE_APP_LINK_FLAGS="$STDFLAGS $BASE_APP_LINK_FLAGS"
 
 tweek_idlflags_cxx="$CXX_IDL_OPTS ${CXX_IDL_INCFLAG}\$prefix/include"
 tweek_idlflags_java="$JAVA_IDL_OPTS ${JAVA_IDL_INCFLAG}\$prefix/include"
@@ -772,7 +772,10 @@ if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
 #   CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
 #   CXXFLAGS="$CXXFLAGS -woff 1234,1388,3303,3322 -w2"
    CXXFLAGS="$CXXFLAGS -woff 1174 -w2"
-   EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -J4 -all"
+   BASE_APP_LINK_FLAGS="$BASE_APP_LINK_FLAGS -J4 -all"
+elif test "x$PLATFORM" = "xDarwin" ; then
+   CXXFLAGS_DYNLIB="$CXXFLAGS_DYNLIB -fexport-coalesced"
+   BASE_APP_LINK_FLAGS="$BASE_APP_LINK_FLAGS -flat_namespace -Wl,-bind_at_load"
 elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
    vc_cflags='/QIfdiv /QI0f'
    vc_cxxflags='/GR /GX /EHc /QIfdiv /QI0f'
@@ -780,7 +783,7 @@ elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
    CXXFLAGS="$CXXFLAGS $vc_cxxflags"
    DBG_FLAGS="$DBG_FLAGS /MDd"
    OPT_FLAGS="$OPT_FLAGS /MD"
-   EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /nologo /incremental:no"
+   BASE_APP_LINK_FLAGS="$BASE_APP_LINK_FLAGS /nologo /incremental:no"
    tweek_cxxflags="$vc_cxxflags $tweek_cxxflags"
 fi
 
@@ -812,9 +815,9 @@ fi
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS $IDL_GEN_INCLUDES, $DBG_FLAGS,
                 $OPT_FLAGS, TWEEK_BASE_DIR, $DEFS $EXTRA_DEFS, $INCLUDES,
                 ${_EXTRA_FLAGS})
-VJ_APP_LINKER_DOOZER(["$CXX"], ["$EXTRA_LINK_FLAGS"], ["$LDOPTS_DBG"],
-                     ["$LDOPTS_OPT"], ['$(TWEEK_LIBS_MIN)'],
-                     ["$APP_EXTRA_LIBS"])
+VJ_APP_LINKER_DOOZER([$CXX], [$BASE_APP_LINK_FLAGS], [$LDOPTS_DBG],
+                     [$LDOPTS_OPT], ['$(TWEEK_LIBS_MIN)'],
+                     [$APP_EXTRA_LIBS])
 
 APP_BASE_DIR='$(topdir)/instlinks'
 APP_BASE_DIR_INST='$(TWEEK_BASE_DIR)'
@@ -929,7 +932,7 @@ AC_SUBST(JAVA_IDL_OPTS)
 AC_SUBST(JAVA_IDL_GENDIR_OPT)
 AC_SUBST(JAVA_IDL_INCFLAG)
 AC_SUBST(EXTRA_DEFS)
-AC_SUBST(EXTRA_LINK_FLAGS)
+AC_SUBST(EXTRA_LDFLAGS)
 AC_SUBST(RM_LN)
 AC_SUBST(VPR_SUBSYSTEM)
 

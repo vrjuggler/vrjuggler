@@ -191,18 +191,22 @@ DPP_HAVE_CPPUNIT([1.9.10])
 DPP_INSTALLER(sonix, 0644, 0755, 0755)
 
 # For use in linking applications.
-EXTRA_LINK_FLAGS=''
+BASE_APP_LINK_FLAGS=''
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
 #    CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
     CXXFLAGS="$CXXFLAGS -w2"
-    EXTRA_LINK_FLAGS="-all"
+    BASE_APP_LINK_FLAGS="-all"
+elif test "x$PLATFORM" = "xDarwin" ; then
+    CFLAGS_DYNLIB="$CFLAGS_DYNLIB -fexport-coalesced"
+    CXXFLAGS_DYNLIB="$CXXFLAGS_DYNLIB -fexport-coalesced"
+    BASE_APP_LINK_FLAGS="$BASE_APP_LINK_FLAGS -flat_namespace -Wl,-bind_at_load"
 elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     vc_cflags='/QIfdiv /QI0f'
     vc_cxxflags='/GR /GX /EHc /QIfdiv /QI0f'
     CFLAGS="$CFLAGS $vc_cflags"
     CXXFLAGS="$CXXFLAGS $vc_cxxflags"
-    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /MTd"
+    BASE_APP_LINK_FLAGS="$BASE_APP_LINK_FLAGS /MTd"
     DBG_FLAGS="$DBG_FLAGS /MDd"
     OPT_FLAGS="$OPT_FLAGS /MD"
 fi
@@ -389,7 +393,6 @@ AC_SUBST(SAFE_JUGGLERROOT_ABS)
 # Export variables defined above.
 AC_SUBST(topdir)
 AC_SUBST(RM_LN)
-AC_SUBST(EXTRA_LINK_FLAGS)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.
