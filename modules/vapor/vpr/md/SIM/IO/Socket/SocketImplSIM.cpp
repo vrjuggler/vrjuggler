@@ -170,11 +170,10 @@ vpr::Uint32 SocketImplSIM::availableBytes ()
    vpr::Guard<vpr::Mutex> guard(mArrivedQueueMutex);
    vpr::Uint32 bytes = 0;
 
-   for ( std::vector<vpr::sim::MessagePtr>::iterator i = mArrivedQueue.begin();
-         i != mArrivedQueue.end();
-         i++ )
+   if ( mArrivedQueue.size() > 0 )
    {
-      bytes += (*i)->getSize();
+      std::vector<vpr::sim::MessagePtr>::iterator i = mArrivedQueue.begin();
+      bytes = (*i)->getSize();
    }
 
    return bytes;
