@@ -57,6 +57,8 @@ void RTRCInterfaceSubjectImpl::add(const char* configurationString)
    std::istringstream input(cfg_string);
 
    input >> new_elements;
+
+   //std::cout << "Adding a new Element: " << std::endl << cfg_string << std::endl;
    
    //Send pending changes to ConfigManager
    jccl::ConfigManager::instance()->addPendingAdds(&new_elements);
@@ -73,6 +75,8 @@ void RTRCInterfaceSubjectImpl::remove(const char* configurationString)
    std::istringstream input(cfg_string);
 
    input >> delete_elements;
+   
+   //std::cout << "Removing a new Element: " << std::endl << configurationString << std::endl;
 
    //Send pending changes to ConfigManager   
    jccl::ConfigManager::instance()->addPendingRemoves(&delete_elements);
@@ -109,10 +113,12 @@ char* RTRCInterfaceSubjectImpl::getElements()
    // Compile a string of the configuration.
    std::ostringstream active_output;
 
-   active_output << active_elements;
+   active_output << *active_elements;
 
    //Unlock the list
    jccl::ConfigManager::instance()->unlockActive();
+
+   //std::cout<< "Sending configuration: " << std::endl << active_output.str() << std::endl;
 
    //Return the full string
    return CORBA::string_dup(active_output.str().c_str());
@@ -127,6 +133,8 @@ char* RTRCInterfaceSubjectImpl::getDefinitions()
    // Compile a string of the repository.
    std::ostringstream defs_output;
 
+   // TODO: Fix the ConfigDefinitions interface to allow vrjconfig to request
+   // any definitions that it might not have.
    defs_output << defs;
 
    //Return the full string
