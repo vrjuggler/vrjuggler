@@ -25,6 +25,17 @@ class vjGloveProxy;
 //
 //    Responsible for all OGL based rendering.
 //
+//  vjGlDrawManager is an active object.  It manages
+// ogl pipes and windows.  In addition, it triggers
+// rendering, swapping, and syncing of the windows
+// under it's control.
+//
+// All access to the ogl rendering structures has
+// to happen from the control thread or in the case
+// of context sensitive functions, from the control
+// thread of the managed pipes. Because of this,
+// the object uses queues to hold new windows.
+//
 // @author Allen Bierbaum
 //  Date: 1-7-98
 //------------------------------------------------
@@ -38,6 +49,9 @@ public:
     //: Function to config API specific stuff.
     // Takes a chunkDB and extracts API specific stuff
    virtual void configInitial(vjConfigChunkDB*  chunkDB);
+
+   //: Start the control loop
+   virtual void start();
 
    //: Enable a frame to be drawn
    virtual void draw();
@@ -61,6 +75,13 @@ public:
    //	 Multi-pipe data is set <br>
    //	 Window list is correct
    virtual void initDrawing();
+
+   //: Callback when display is added to display manager
+   //! NOTE: This function can only be called by the display manager
+   //+      functioning in the kernel thread to signal a new display added
+   //+      This guarantees that we are not rendering currently.
+   //+      We will most likely be waiting for a render trigger.
+   virtual void addDisplay(vjDisplay* disp);
 
    //: Shutdown the drawing API
    virtual void closeAPI();
@@ -136,13 +157,16 @@ protected:
    void setCurrentContext(int val)
    { (*mContextId) = val; }
 
+   //: Set the dirty bits off all the gl windows
+   void dirtyAllWindows();
+
 
 protected:
    // --- Config Data --- //
    int      numPipes;     //: The number of pipes in the system
 
    // --- API data --- //
-   vjGlApp*                 app;      //: The OpenGL application
+   vjGlApp*                 mApp;      //: The OpenGL application
    std::vector<vjGlWindow*> wins;     //: A list of the windows in the system
    std::vector<vjGlPipe*>   pipes;    //: A list of the pipes in the system
 
@@ -153,6 +177,9 @@ protected:
    // --- MP Stuff -- //
    vjSemaphore    drawTriggerSema;  // Semaphore for draw trigger
    vjSemaphore    drawDoneSema;     // Semaphore for drawing done
+   vjSemaphore    mRuntimeConfigSema;  //: Protects run-time config.  Only when this semaphore
+                                       //+ is acquired can run-time config occur
+
 
    // --- Singleton Stuff --- //
 public:
@@ -163,7 +190,7 @@ public:
       return _instance;
    }
 protected:
-   vjGlDrawManager() : drawTriggerSema(0), drawDoneSema(0)
+   vjGlDrawManager() : drawTriggerSema(0), drawDoneSema(0), mRuntimeConfigSema(0)
    { ;}
 private:
    static vjGlDrawManager* _instance;

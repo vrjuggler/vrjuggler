@@ -31,10 +31,6 @@ public:
       out << "vjCameraProjection:\n";
       return out;
    }
-
-protected:
-   virtual void surfaceSet()
-   {;}
 };
 
 #endif

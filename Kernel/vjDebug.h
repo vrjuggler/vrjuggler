@@ -6,10 +6,21 @@
 #include <vjConfig.h>
 #define LOCK_DEBUG_STREAM
 
+// Debug output categories
 #define vjDBG_BASE 0
-#define vjDBG_ALL (VJ_DBG_BASE+0)
-#define vjDBG_KERNEL (VJ_DBG_BASE+1)
-#define vjDBG_INPUT (VJ_DBG_BASE+2)
+#define vjDBG_ALL (vjDBG_BASE+0)         // Use if you always want it ouput
+#define vjDBG_ALLstr std::string("DBG_ALL")
+#define vjDBG_ERROR (vjDBG_BASE+1)       // Error output
+#define vjDBG_ERRORstr std::string("DBG_ERROR")
+#define vjDBG_KERNEL (vjDBG_BASE+2)      // Kernel output
+#define vjDBG_KERNELstr std::string("DBG_KERNEL")
+#define vjDBG_INPUT_MGR (vjDBG_BASE+3)       // Input output
+#define vjDBG_INPUT_MGRstr std::string("DBG_INPUT_MGR")
+#define vjDBG_DRAW_MGR (vjDBG_BASE+4)
+#define vjDBG_DRAW_MGRstr std::string("DBG_DRAW_MGR")
+#define vjDBG_DISP_MGR (vjDBG_BASE+5)
+#define vjDBG_DISP_MGRstr std::string("DBG_DISP_MGR")
+
 #define vjDBG_USER 100
 
 // --------------- //
@@ -19,17 +30,17 @@
 #include <assert.h>
 
 #ifdef VJ_DEBUG
-#   define vjDEBUG(val) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val)
-#   define vjDEBUG_BEGIN(val) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val, 1)
-#   define vjDEBUG_END(val) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val, -1)
+#   define vjDEBUG(cat,val) if (0) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val)
+#   define vjDEBUG_BEGIN(cat,val) if (0) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, 1)
+#   define vjDEBUG_END(cat,val) if (0) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, -1)
 
-//#   define vjDEBUG(val,desc) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val)
-//#   define vjDEBUG_BEGIN(val,desc) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val, 1)
-//#   define vjDEBUG_END(val,desc) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val, -1)
+//#   define vjDEBUG(vjDBG_ALL,val,desc) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val)
+//#   define vjDEBUG_BEGIN(vjDBG_ALL,val,desc) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val, 1)
+//#   define vjDEBUG_BEGIN(vjDBG_ALL,val,desc) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val, -1)
 #else
-#   define vjDEBUG(val) if (1) ; else cout
-#   define vjDEBUG_BEGIN(val) if (1) ; else cout
-#   define vjDEBUG_END(val) if (1) ; else cout
+#   define vjDEBUG(cat,val) if (1) ; else cout
+#   define vjDEBUG_BEGIN(cat,val) if (1) ; else cout
+#   define vjDEBUG_END(cat,val) if (1) ; else cout
 #endif
 
 #ifdef LOCK_DEBUG_STREAM
@@ -94,10 +105,14 @@ private:
          cout << "VJ_DEBUG_NFY_LEVEL: Not found. " << endl << flush;
          cout << "VJ_DEBUG_NFY_LEVEL: Defaults to " << debugLevel << endl << flush;
       }
+
+      setDefaultCategoryNames();
+      getAllowedCatsFromEnv();
+
    }
 
 public:
-   ostream& getStream(int level, int indentChange = 0)
+   ostream& getStream(int cat, int level, int indentChange = 0)
    {
       if(indentChange < 0)                // If decreasing indent
          indentLevel += indentChange;
@@ -123,11 +138,79 @@ public:
    vjMutex& debugLock()
    { return mDebugLock; }
 
+   void addCategoryName(std::string name, int cat)
+   {
+      mCategoryNames[name] = cat;
+   }
+
+   void addAllowedCategory(int cat)
+   {
+      if(mAllowedCategories.size() < (cat+1))
+         growAllowedCategoryVector(cat+1);
+
+      mAllowedCategories[cat] = true;
+   }
+
+   // Are we allowed to print this category??
+   bool isCategoryAllowed(int cat)
+   {
+      // If now entry for cat, grow the vector
+      if(mAllowedCategories.size() < (cat+1))
+         growAllowedCategoryVector(cat+1);
+
+      // If I specified to listen to all OR
+      // If it has category of ALL
+      if((mAllowedCategories[vjDBG_ALL]) || (cat == vjDBG_ALL))
+         return true;
+      else
+         return mAllowedCategories[cat];
+   }
+
+   void setDefaultCategoryNames()
+   {
+      addCategoryName(vjDBG_ALLstr,vjDBG_ALL);
+      addCategoryName(vjDBG_ERRORstr,vjDBG_ERROR);
+      addCategoryName(vjDBG_KERNELstr,vjDBG_KERNEL);
+      addCategoryName(vjDBG_INPUT_MGRstr,vjDBG_INPUT_MGR);
+      addCategoryName(vjDBG_DRAW_MGRstr,vjDBG_DRAW_MGR);
+      addCategoryName(vjDBG_DISP_MGRstr,vjDBG_DISP_MGR);
+   }
+
+   void getAllowedCatsFromEnv()
+   {
+      char* dbg_cats_env = getenv("VJ_DEBUG_CATEGORIES");
+
+      if(dbg_cats_env != NULL)
+      {
+         std::string dbg_cats(dbg_cats_env);
+
+         std::map< std::string, int >::iterator i;
+         for(i=mCategoryNames.begin();i != mCategoryNames.end();i++)
+         {
+            std::string cat_name = (*i).first;
+            if (dbg_cats.find(cat_name) != std::string::npos )    // Found one
+            {
+               cout << "vjDEBUG::getAllowedCatsFromEnv: Allowing: " << (*i).first << " val:" << (*i).second << endl << flush;
+               addAllowedCategory((*i).second);                   // Add the category
+            }
+         }
+      }
+   }
+
+   void growAllowedCategoryVector(int newSize)
+   {
+      while(mAllowedCategories.size() < newSize)
+         mAllowedCategories.push_back(false);
+   }
+
 private:
    int debugLevel;      // Debug level to use
    int indentLevel;     // Amount to indent
 
    vjMutex  mDebugLock;
+
+   std::vector<bool> mAllowedCategories;      //: The categories we allow
+   std::map<std::string,int> mCategoryNames; //: The names and id of allowed catagories
 
 public:
    static vjDebug* instance()

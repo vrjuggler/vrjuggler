@@ -7,7 +7,7 @@
 class vjDisplayManager;
 class vjApp;
 class vjConfigChunkDB;
-
+class vjDisplay;
 //--------------------------------------------------------
 //: Abstract base class for API specific Draw Manager.
 //
@@ -39,6 +39,8 @@ public:
    void setDisplayManager(vjDisplayManager* _dispMgr);
 
    //: Initialize the drawing API (if not already running)
+   //! NOTE: If the draw manager should be an active object,
+   //        start the process here.
    virtual void initAPI() = 0;
 
    //: Initialize the drawing state for the API
@@ -47,13 +49,18 @@ public:
    //! POST: API is ready do draw
    virtual void initDrawing() = 0;
 
+   //: Callback when display is added to display manager
+   virtual void addDisplay(vjDisplay* disp) = 0;
+
    //: Shutdown the drawing API
+   //! NOTE: If it was an active object, kill process here
    virtual void closeAPI() = 0;
 
-   //: Updates the projections for the displays.
-   // It calls the displayManager to update the display.projection
-   // stuff.  Then it does any API specific stuff.
-   virtual void updateProjections();
+   //: Called when projections change
+   // Called by display manager when projections change
+   // Should do any API specific stuff.
+   virtual void updateProjections()
+   {;}
 
 protected:
    vjDisplayManager* displayManager;  //: The display manager dealing with
