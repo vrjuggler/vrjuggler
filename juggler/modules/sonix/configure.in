@@ -43,6 +43,8 @@ AC_ARG_WITH(cc, [  --with-cc=<PATH>        Alternate C compiler ],
 AC_ARG_WITH(cxx, [  --with-cxx=<PATH>       Alternate C++ compiler ],
             _alt_cxx="$withval", _alt_cxx='none')
 
+
+
 # Force the use of GCC as the compiler.
 # NOTE: This is not fully implemented yet for any platform, but it is
 # partially usable on Windows.
@@ -185,6 +187,8 @@ else
     SAFE_PLXROOT_ABS="$PLXROOT_ABS"
 fi
 
+
+DPP_HAVE_OPENAL( /usr/local, AC_MSG_RESULT(+ Found openal), AC_MSG_ERROR(*** project requires openal type configure --help for options***) )
 
 DPP_SUBST
 DPP_GET_SRCDIR_ABSOLUTE
