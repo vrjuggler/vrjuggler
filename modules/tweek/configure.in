@@ -693,7 +693,7 @@ elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
    DBG_FLAGS="$DBG_FLAGS /MDd"
    OPT_FLAGS="$OPT_FLAGS /MD"
    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /nologo /incremental:no"
-   tweek_cxxflags="$vc_cxxflags $EXTRA_DEFS $INCLUDES $IDL_GEN_INCLUDES"
+   tweek_cxxflags="$vc_cxxflags $tweek_cxxflags"
 fi
 
 if test "x$BUILD_CXX" = "xY" ; then
