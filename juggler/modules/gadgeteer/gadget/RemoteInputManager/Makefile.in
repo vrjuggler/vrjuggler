@@ -48,7 +48,6 @@ INSTALL		= @INSTALL@
 SUBOBJDIR	= $(GADGET_LIBRARY)
 
 SRCS		= MsgPackage.cpp \
-                  NetClockSync.cpp \
                   NetConnection.cpp \
                   RecvBuffer.cpp \
                   RemoteInputManager.cpp \
