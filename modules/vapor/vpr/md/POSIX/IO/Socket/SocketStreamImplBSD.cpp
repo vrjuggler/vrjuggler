@@ -87,7 +87,11 @@ vpr::ReturnStatus SocketStreamImplBSD::accept (SocketStreamImplBSD& sock,vpr::In
    int accept_sock;
    vpr::ReturnStatus retval;
    InetAddr addr;
+#ifdef VPR_OS_IRIX
+   int addrlen;
+#else
    socklen_t addrlen;
+#endif
 
    retval = mHandle->isReadable(timeout);
 
