@@ -1176,6 +1176,7 @@ def installVRJConfig(prefix):
       lib_jars = [
          'ClusterWizard.jar',
          'Devices.jar',
+         'NewDevice.jar',
          'Simulator.jar'
       ]
 
