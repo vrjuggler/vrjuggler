@@ -601,11 +601,18 @@ def main():
    options = setVars()
    generateVersionHeaders()
 
-   # The environment variable %VSINSTALLDIR% is set by vsvars32.bat.
-   # XXX: Is there a better way to get the absolute path to devenv.exe,
-   # possibly from the user's path?
-   devenv_cmd = r'%s' % os.path.join(os.getenv('VSINSTALLDIR', ''),
-                                     'devenv.exe')
+   devenv_cmd = None
+   for p in str.split(os.getenv('PATH', ''), ';'):
+      if os.path.exists(os.path.join(p, 'devenv.exe')):
+         devenv_cmd = os.path.join(p, 'devenv.exe')
+         break
+
+   if devenv_cmd is None:
+      # The environment variable %VSINSTALLDIR% is set by vsvars32.bat.
+      print "WARNING: Falling back on the use of %VSINSTALLDIR%"
+      devenv_cmd = r'%s' % os.path.join(os.getenv('VSINSTALLDIR', ''),
+                                        'devenv.exe')
+
    solution_file = r'%s' % os.path.join(juggler_dir, 'vc7', 'Juggler.sln')
    status = os.spawnl(os.P_WAIT, devenv_cmd, 'devenv', solution_file)
 
