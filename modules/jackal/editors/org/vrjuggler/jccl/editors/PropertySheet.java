@@ -298,17 +298,20 @@ public class PropertySheet extends PropertyComponent
          // Make sure to set the properties after adding it to the correct panel.
          editor.set(value, prop_def, mConfigElement, list_num);
 
+         JButton remove_button = new JButton();
+         remove_button.setIcon(mRemoveIcon);
+         remove_button.setMargin(new Insets(0,0,0,0));
+         remove_button.setBorderPainted(false);
+         remove_button.setFocusPainted(false);
+         remove_button.setContentAreaFilled(false);
+         remove_button.setToolTipText("Remove this value");
+
          // If this property has variable length we must allow the user to
          // add/remove them.
          if(prop_def.isVariable())
          {
-            JButton remove_button = new JButton();
-            remove_button.setIcon(mRemoveIcon);
-            remove_button.setMargin(new Insets(0,0,0,0));
-            remove_button.setBorderPainted(false);
-            remove_button.setFocusPainted(false);
-            remove_button.setContentAreaFilled(false);
-           
+            remove_button.setEnabled(true);
+
             final ConfigElement temp_elm = mConfigElement;
             final Object temp_value = value;
             final String temp_string = prop_def.getToken();
@@ -337,10 +340,14 @@ public class PropertySheet extends PropertyComponent
                   temp.validate();
                }
             });
-
-            TableLayoutConstraints c4 = new TableLayoutConstraints(2, row, 2, row, TableLayout.LEFT, TableLayout.TOP);
-            add(remove_button, c4);
          }
+         else
+         {
+            remove_button.setEnabled(false);
+         }
+
+         TableLayoutConstraints c4 = new TableLayoutConstraints(2, row, 2, row, TableLayout.LEFT, TableLayout.TOP);
+         add(remove_button, c4);
 
          //We must refresh things in the following order:
          // 1) This control.
@@ -365,47 +372,54 @@ public class PropertySheet extends PropertyComponent
       TableLayoutConstraints c = new TableLayoutConstraints(0, row, 1, row, TableLayout.FULL, TableLayout.FULL);
       this.add(editor_list, c);
       
+      JButton remove_button = new JButton();
+      remove_button.setIcon(mRemoveIcon);
+      remove_button.setMargin(new Insets(0,0,0,0));
+      remove_button.setBorderPainted(false);
+      remove_button.setFocusPainted(false);
+      remove_button.setContentAreaFilled(false);
+      remove_button.setToolTipText("Remove this embedded element");
+
       if(prop_def.isVariable())
       {
-         JButton remove_button = new JButton();
-         remove_button.setIcon(mRemoveIcon);
-         remove_button.setMargin(new Insets(0,0,0,0));
-         remove_button.setBorderPainted(false);
-         remove_button.setFocusPainted(false);
-         remove_button.setContentAreaFilled(false);
-         
-            final ConfigElement temp_elm = mConfigElement;
-            final Object temp_value = value;
-            final String temp_string = prop_def.getToken();
-            
-            remove_button.addActionListener(new ActionListener()
-            {
-               public void actionPerformed(ActionEvent evt)
-               {
-                  System.out.println("1");
-                  PropertyComponent temp = (PropertyComponent)((Component)evt.getSource()).getParent();
-                  temp_elm.removeProperty(temp_string, temp_value);
-                  
-                  if(temp.getLayout() instanceof TableLayout)
-                  {
-                     System.out.println("2");
-                     TableLayout tl = (TableLayout)temp.getLayout();
-                     // Get the row that this panel is in.
-                     TableLayoutConstraints tlc = tl.getConstraints((Component)evt.getSource());
-                     int row = tlc.row1;
-                     temp.remove((Component)evt.getSource()); 
-                     tl.deleteRow(row);
-                  }
-                  temp.doLayout();
-                  temp.repaint();
-                  temp.invalidate();
-                  temp.validate();
-               }
-            });
+         remove_button.setEnabled(true);
 
-         TableLayoutConstraints c4 = new TableLayoutConstraints(2, row, 2, row, TableLayout.LEFT, TableLayout.TOP);
-         add(remove_button, c4);
+         final ConfigElement temp_elm = mConfigElement;
+         final Object temp_value = value;
+         final String temp_string = prop_def.getToken();
+            
+         remove_button.addActionListener(new ActionListener()
+         {
+            public void actionPerformed(ActionEvent evt)
+            {
+               System.out.println("1");
+               PropertyComponent temp = (PropertyComponent)((Component)evt.getSource()).getParent();
+               temp_elm.removeProperty(temp_string, temp_value);
+                  
+               if(temp.getLayout() instanceof TableLayout)
+               {
+                  System.out.println("2");
+                  TableLayout tl = (TableLayout)temp.getLayout();
+                  // Get the row that this panel is in.
+                  TableLayoutConstraints tlc = tl.getConstraints((Component)evt.getSource());
+                  int row = tlc.row1;
+                  temp.remove((Component)evt.getSource()); 
+                  tl.deleteRow(row);
+               }
+               temp.doLayout();
+               temp.repaint();
+               temp.invalidate();
+               temp.validate();
+            }
+         });
       }
+      else
+      {
+         remove_button.setEnabled(false);
+      }
+
+      TableLayoutConstraints c4 = new TableLayoutConstraints(2, row, 2, row, TableLayout.LEFT, TableLayout.TOP);
+      add(remove_button, c4);
       
       this.refresh();
       editor_list.refresh();
