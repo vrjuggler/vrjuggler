@@ -153,9 +153,9 @@ GUID::GUID(const struct vpr::GUID::StdGUID& guid)
    memcpy(&mGuid, &guid, sizeof(vpr::GUID::StdGUID));
 }
 
-GUID::GUID(const GUID& ns_guid, const std::string& name)
+GUID::GUID(const GUID& nsGuid, const std::string& name)
 {
-   generate(ns_guid,name);
+   generate(nsGuid,name);
 }
 
 void GUID::generate()
@@ -174,15 +174,15 @@ void GUID::generate()
    memcpy((void*) &mGuid.standard, storage, sizeof(mGuid));
 // Leach UUID (see juggler/external/leach-uuid).
 #else
-   uuid_create( (uuid_t*)(&mGuid.standard));
+   uuid_create((uuid_t*) &mGuid.standard);
 #endif
 }
 
-void GUID::generate(const GUID& ns_guid, const std::string& name)
+void GUID::generate(const GUID& nsGuid, const std::string& name)
 {
 // Leach UUID (see juggler/external/leach-uuid).
 #if defined(VPR_USE_LEACH_UUID)
-   uuid_t temp_ns_id = *((uuid_t*)(&ns_guid.mGuid.standard));    // nasty, but works
+   uuid_t temp_ns_id = *((uuid_t*) &nsGuid.mGuid.standard); // nasty, but works
 
    uuid_create_from_name((uuid_t*) (&mGuid.standard), temp_ns_id,
                          (void*) name.c_str(), name.length());
@@ -190,7 +190,7 @@ void GUID::generate(const GUID& ns_guid, const std::string& name)
 // Implementation of the algorithm for creating a name-based UUID.
 #else
    // Convert to network byte order.
-   vpr::GUID net_ns_guid = ns_guid;
+   vpr::GUID net_ns_guid = nsGuid;
    net_ns_guid.mGuid.standard.m0 = vpr::System::Htonl(net_ns_guid.mGuid.standard.m0);
    net_ns_guid.mGuid.standard.m1 = vpr::System::Htons(net_ns_guid.mGuid.standard.m1);
    net_ns_guid.mGuid.standard.m2 = vpr::System::Htons(net_ns_guid.mGuid.standard.m2);
