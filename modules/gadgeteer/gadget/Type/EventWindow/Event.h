@@ -37,6 +37,10 @@
 namespace gadget
 {
 
+/**
+ * Base event type that an event source may generate.  This class cannot be
+ * instantiated directly, and instead, subclasses must be used.
+ */
 class Event
 {
 public:
@@ -48,11 +52,18 @@ public:
       MouseEvent = 2   /**< Mouse event */
    };
 
+   /**
+    * Returns the type of this event.  This can be used for dynamic casting
+    * to more specific event types.
+    */
    const Type& type() const
    {
       return mType;
    }
 
+   /**
+    * Returns the time at which the event occurred.
+    */
    const unsigned long& time() const
    {
       return mTime;
@@ -63,6 +74,16 @@ public:
    }
 
 protected:
+   /**
+    * Initializes data members.
+    *
+    * @param type The type of this event from the Event::Type enumeration.
+    * @param time The time at which this event occurred.  This should be as
+    *             accurate as possible,  preferabbly acquired from the
+    *             operating system or windowing system event data structure.
+    *             The time at which the event was processed is not an
+    *             acceptable value.
+    */
    Event(const Type& type, const unsigned long& time)
       : mType(type), mTime(time)
    {
