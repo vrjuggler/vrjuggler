@@ -50,110 +50,112 @@
 #include <vpr/IO/Socket/SocketStreamOpt.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 /**
  * Implementation of the stream socket wrapper using BSD sockets.
  */
-class SocketStreamImplBSD : public SocketImplBSD {
+class SocketStreamImplBSD : public SocketImplBSD
+{
 public:
-    // ========================================================================
-    // vpr::SocketStream interface.
-    // ========================================================================
+   // ========================================================================
+   // vpr::SocketStream interface.
+   // ========================================================================
 
-    /**
-     * Constructor.  This takes the address (either hostname or IP address) of
-     * a remote site and a port and stores the values for later use in the
-     * member variables of the object.
-     *
-     * @pre None.
-     * @post The member variables are initialized with the mType variable in
-     *       particular set to vpr::SocketTypes::SOCK_STREAM.
-     */
-    SocketStreamImplBSD (void)
-        : SocketImplBSD(vpr::SocketTypes::STREAM)
-    {
-        /* Do nothing. */ ;
-    }
+   /**
+    * Constructor.  This takes the address (either hostname or IP address) of
+    * a remote site and a port and stores the values for later use in the
+    * member variables of the object.
+    *
+    * @pre None.
+    * @post The member variables are initialized with the mType variable in
+    *       particular set to vpr::SocketTypes::SOCK_STREAM.
+    */
+   SocketStreamImplBSD (void) : SocketImplBSD(vpr::SocketTypes::STREAM)
+   {
+      /* Do nothing. */ ;
+   }
 
-    /**
-     * Constructs a stream socket using the given addresses as defaults for
-     * communication channels.
-     *
-     * @post The member variables are initialized with the type in particular
-     *       set to vpr::SocketTypes::STREAM.
-     *
-     * @param local_addr  The local address for this socket.  This is used for
-     *                    binding the socket.
-     * @param remote_addr The remote address for this socket.  This is used to
-     *                    specify the connection addres for this socket.
-     */
-    SocketStreamImplBSD (const InetAddr& local_addr,
+   /**
+    * Constructs a stream socket using the given addresses as defaults for
+    * communication channels.
+    *
+    * @post The member variables are initialized with the type in particular
+    *       set to vpr::SocketTypes::STREAM.
+    *
+    * @param local_addr  The local address for this socket.  This is used for
+    *                    binding the socket.
+    * @param remote_addr The remote address for this socket.  This is used to
+    *                    specify the connection addres for this socket.
+    */
+   SocketStreamImplBSD (const InetAddr& local_addr,
                         const InetAddr& remote_addr)
-        : SocketImplBSD(local_addr, remote_addr, SocketTypes::STREAM)
-    {
-        /* Do nothing. */ ;
-    }
+      : SocketImplBSD(local_addr, remote_addr, SocketTypes::STREAM)
+   {
+      /* Do nothing. */ ;
+   }
 
-    /**
-     * Copy constructor.
-     *
-     * @post This socket is a copy of the given socket.
-     */
-    SocketStreamImplBSD (const SocketStreamImplBSD& sock)
-        : SocketImplBSD(SocketTypes::STREAM)
-    {
-        mLocalAddr      = sock.mLocalAddr;
-        mRemoteAddr     = sock.mRemoteAddr;
-        mHandle          = new FileHandleImplUNIX(sock.mHandle->getName());
-        mHandle->mFdesc = sock.mHandle->mFdesc;
-    }
+   /**
+    * Copy constructor.
+    *
+    * @post This socket is a copy of the given socket.
+    */
+   SocketStreamImplBSD (const SocketStreamImplBSD& sock)
+      : SocketImplBSD(SocketTypes::STREAM)
+   {
+      mLocalAddr      = sock.mLocalAddr;
+      mRemoteAddr     = sock.mRemoteAddr;
+      mHandle          = new FileHandleImplUNIX(sock.mHandle->getName());
+      mHandle->mFdesc = sock.mHandle->mFdesc;
+   }
 
-    /**
-     * Puts this socket into the listening state where it listens for
-     * incoming connection requests.
-     *
-     * @pre The socket has been opened and bound to the address in
-     *      mLocalAddr.
-     * @post The socket is in a listening state waiting for incoming
-     *       connection requests.
-     *
-     * @param backlog The maximum length of th queue of pending connections.
-     *
-     * @return vpr::ReturnStatus::Succeed is returned if this socket is now in a
-     *         listening state.<br>
-     *         vpr::ReturnStatus::Fail is returned otherwise.
-     */
-    vpr::ReturnStatus listen(const int backlog = 5);
+   /**
+    * Puts this socket into the listening state where it listens for
+    * incoming connection requests.
+    *
+    * @pre The socket has been opened and bound to the address in
+    *      mLocalAddr.
+    * @post The socket is in a listening state waiting for incoming
+    *       connection requests.
+    *
+    * @param backlog The maximum length of th queue of pending connections.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if this socket is now in a
+    *         listening state.<br>
+    *         vpr::ReturnStatus::Fail is returned otherwise.
+    */
+   vpr::ReturnStatus listen(const int backlog = 5);
 
-    /**
-     * Accepts an incoming connection request and return the connected socket
-     * to the caller in the given socket object reference.
-     *
-     * @pre The socket is open and is in a listening state.
-     * @post When a connection is established, the given vpr::SocketStream
-     *       object is assigned the newly connected socket.
-     *
-     * @param sock    A reference to a vpr::SocketStream object that will
-     *                be used to return the connected socket created.
-     * @param timeout The length of time to wait for the accept call to
-     *                return.
-     *
-     * @return vpr::ReturnStatus::Succeed is returned if the incoming request has
-     *         been handled, and the given SocketStream object is a valid,
-     *         connected socket.<br>
-     *         vpr::ReturnStatus::WouldBlock is returned if this is a non-blocking
-     *         socket, and there are no waiting connection requests.<br>
-     *         vpr::ReturnStatus::Timeout is returned when no connections requests
-     *         arrived within the given timeout period.<br>
-     *         vpr::ReturnStatus::Fail is returned if the accept failed.  The
-     *         given vpr::SocketStream object is not modified in this case.
-     */
-    vpr::ReturnStatus accept(SocketStreamImplBSD& sock,
-                       vpr::Interval timeout = vpr::Interval::NoTimeout);
+   /**
+    * Accepts an incoming connection request and return the connected socket
+    * to the caller in the given socket object reference.
+    *
+    * @pre The socket is open and is in a listening state.
+    * @post When a connection is established, the given vpr::SocketStream
+    *       object is assigned the newly connected socket.
+    *
+    * @param sock    A reference to a vpr::SocketStream object that will
+    *                be used to return the connected socket created.
+    * @param timeout The length of time to wait for the accept call to
+    *                return.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if the incoming request has
+    *         been handled, and the given SocketStream object is a valid,
+    *         connected socket.<br>
+    *         vpr::ReturnStatus::WouldBlock is returned if this is a
+    *         non-blocking socket, and there are no waiting connection
+    *         requests.<br>
+    *         vpr::ReturnStatus::Timeout is returned when no connections
+    *         requests arrived within the given timeout period.<br>
+    *         vpr::ReturnStatus::Fail is returned if the accept failed.  The
+    *         given vpr::SocketStream object is not modified in this case.
+    */
+   vpr::ReturnStatus accept(SocketStreamImplBSD& sock,
+                            vpr::Interval timeout = vpr::Interval::NoTimeout);
 };
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
 #endif  /* _VJ_SOCKET_STREAM_IMPL_BSD_H_ */

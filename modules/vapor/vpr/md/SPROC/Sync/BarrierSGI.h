@@ -49,7 +49,8 @@
 #include <vpr/Sync/Guard.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 //----------------------------------------------
 //:    Barrier wrapper for SGI.
@@ -58,7 +59,7 @@ namespace vpr {
 //    processes to wait at a sync point.
 //
 // Author:
-//	Allen Bierbaum
+//  Allen Bierbaum
 //
 // Date: 1-30-97
 //!PUBLIC_API:
@@ -116,7 +117,7 @@ public:
    int wait ()
    {
       barrier(theBarrier, syncCount);
-      //init_barrier(theBarrier);	    // -- How do I reset the barrier -- //
+      //init_barrier(theBarrier);       // -- How do I reset the barrier -- //
       return 0;
    }
 
@@ -164,7 +165,6 @@ protected:
    static int* attachedCounter;
 };
 
-}; // End of vpr namespace
-
+} // End of vpr namespace
 
 #endif

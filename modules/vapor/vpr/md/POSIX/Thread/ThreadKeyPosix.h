@@ -57,171 +57,177 @@
 #include <vpr/Thread/ThreadFunctor.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 // Key destructor function type.
 #ifdef _PTHREADS_DRAFT_4
-    typedef pthread_destructor_t	KeyDestructor;
+typedef pthread_destructor_t KeyDestructor;
 #else
-    typedef thread_func_t		KeyDestructor;
+typedef thread_func_t        KeyDestructor;
 #endif
 
 
 /**
  * Wrapper around pthread keys (thread-specific data).
  */
-class ThreadKeyPosix {
+class ThreadKeyPosix
+{
 public:
-    /// Default constructor.
-    ThreadKeyPosix () {
-        keycreate(NULL);
-    } 
+   /// Default constructor.
+   ThreadKeyPosix ()
+   {
+      keycreate(NULL);
+   }
 
-    /// Create a key that knows how to delete itself using a function pointer.
-    ThreadKeyPosix (thread_func_t destructor, void* arg) {
-        keycreate(destructor, arg);
-    }
+   /// Create a key that knows how to delete itself using a function pointer.
+   ThreadKeyPosix (thread_func_t destructor, void* arg)
+   {
+      keycreate(destructor, arg);
+   }
 
-    /// Create a key that knows how to delete itself using a functor.
-    ThreadKeyPosix (BaseThreadFunctor* destructor) {
-        keycreate(destructor);
-    }
+   /// Create a key that knows how to delete itself using a functor.
+   ThreadKeyPosix (BaseThreadFunctor* destructor)
+   {
+      keycreate(destructor);
+   }
 
-    /**
-     * Releases this key.
-     */
-    ~ThreadKeyPosix (void) {
-        keyfree();
-    }
+   /**
+    * Releases this key.
+    */
+   ~ThreadKeyPosix (void)
+   {
+      keyfree();
+   }
 
-    /**
-     * Allocates a <keyp> that is used to identify data that is specific to
-     * each thread in the process, is global to all threads in the process
-     * and is destroyed using the spcefied destructor function that takes a
-     * single argument.
-     *
-     * @pre None.
-     * @post A key is created and is associated with the specified destructor
-     *       function and argument.
-     *
-     * @param dest_func The destructor function for the key.
-     * @param arg       Argument to be passed to destructor (optional).
-     *
-     * @return 0 is returned upown successful completion.<br>
-     *         -1 is returned if an error occurs.
-     *
-     * @note Use this routine to construct the key destructor function if
-     *       it requires arguments.  Otherwise, use the two-argument version
-     *       of keycreate().
-     */
-    int
-    keycreate (thread_func_t destructor, void* arg) {
-        // XXX: Memory leak!
-        ThreadNonMemberFunctor *NonMemFunctor = new ThreadNonMemberFunctor(destructor, arg);
+   /**
+    * Allocates a <keyp> that is used to identify data that is specific to
+    * each thread in the process, is global to all threads in the process
+    * and is destroyed using the spcefied destructor function that takes a
+    * single argument.
+    *
+    * @pre None.
+    * @post A key is created and is associated with the specified destructor
+    *       function and argument.
+    *
+    * @param dest_func The destructor function for the key.
+    * @param arg       Argument to be passed to destructor (optional).
+    *
+    * @return 0 is returned upown successful completion.<br>
+    *         -1 is returned if an error occurs.
+    *
+    * @note Use this routine to construct the key destructor function if
+    *       it requires arguments.  Otherwise, use the two-argument version
+    *       of keycreate().
+    */
+   int keycreate (thread_func_t destructor, void* arg)
+   {
+      // XXX: Memory leak!
+      ThreadNonMemberFunctor *NonMemFunctor = new ThreadNonMemberFunctor(destructor, arg);
 
-        return keycreate(NonMemFunctor);
-    }
+      return keycreate(NonMemFunctor);
+   }
 
-    /**
-     * Allocates a <keyp> that is used to identify data that is specific to
-     * each thread in the process, is global to all threads in the process
-     * and is destroyed by the specified destructor function.
-     *
-     * @pre None.
-     * @post A key is created and is associated with the specified
-     *       destructor function.
-     *
-     * @param desctructor Procedure to be called to destroy a data value
-     *                    associated with the key when the thread terminates.
-     *
-     * @return 0 is returned upown successful completion.<br>
-     *         -1 is returned if an error occurs.
-     */
-    int
-    keycreate (BaseThreadFunctor* destructor) {
+   /**
+    * Allocates a <keyp> that is used to identify data that is specific to
+    * each thread in the process, is global to all threads in the process
+    * and is destroyed by the specified destructor function.
+    *
+    * @pre None.
+    * @post A key is created and is associated with the specified
+    *       destructor function.
+    *
+    * @param desctructor Procedure to be called to destroy a data value
+    *                    associated with the key when the thread terminates.
+    *
+    * @return 0 is returned upown successful completion.<br>
+    *         -1 is returned if an error occurs.
+    */
+   int keycreate (BaseThreadFunctor* destructor)
+   {
 #ifdef _PTHREADS_DRAFT_4
-        return pthread_keycreate(&keyID, (KeyDestructor) destructor);
+      return pthread_keycreate(&keyID, (KeyDestructor) destructor);
 #else
-        return pthread_key_create(&keyID, (KeyDestructor) destructor);
+      return pthread_key_create(&keyID, (KeyDestructor) destructor);
 #endif
-    }
+   }
 
-    /**
-     * Frees up this key so that other threads may reuse it.
-     *
-     * @pre This key must have been properly created using the keycreate()
-     *      member function.
-     * @post This key is destroyed using the destructor function previously
-     *       associated with it, and its resources are freed.
-     *
-     * @return 0 is returned upown successful completion.<br>
-     *         -1 is returned if an error occurs.
-     *
-     * @note This is not currently supported with Pthreads Draft 4.
-     */
-    int
-    keyfree (void) {
+   /**
+    * Frees up this key so that other threads may reuse it.
+    *
+    * @pre This key must have been properly created using the keycreate()
+    *      member function.
+    * @post This key is destroyed using the destructor function previously
+    *       associated with it, and its resources are freed.
+    *
+    * @return 0 is returned upown successful completion.<br>
+    *         -1 is returned if an error occurs.
+    *
+    * @note This is not currently supported with Pthreads Draft 4.
+    */
+   int keyfree (void)
+   {
 #ifdef _PTHREADS_DRAFT_4
-        cerr << "keyfree() not supported with this POSIX threads "
-             << "implementation\n";
+      cerr << "keyfree() not supported with this POSIX threads "
+           << "implementation\n";
 
-        return -1;
+      return -1;
 #else
-        return pthread_key_delete(keyID);
+      return pthread_key_delete(keyID);
 #endif
-    }
+   }
 
-    /**
-     * Binds value to the thread-specific data key, <key>, for the calling
-     * thread.
-     *
-     * @pre The specified key must have been properly created using the
-     *      keycreate() member function.
-     * @post The specified value is associated with the key for the calling
-     *       thread.
-     *
-     * @param value Address containing data to be associated with the
-     *              specified key for the current thread.
-     *
-     * @return 0 is returned upown successful completion.<br>
-     *         -1 is returned if an error occurs.
-     */
-    int
-    setspecific (void* value) {
-        return pthread_setspecific(keyID, value);
-    }
+   /**
+    * Binds value to the thread-specific data key, <key>, for the calling
+    * thread.
+    *
+    * @pre The specified key must have been properly created using the
+    *      keycreate() member function.
+    * @post The specified value is associated with the key for the calling
+    *       thread.
+    *
+    * @param value Address containing data to be associated with the
+    *              specified key for the current thread.
+    *
+    * @return 0 is returned upown successful completion.<br>
+    *         -1 is returned if an error occurs.
+    */
+   int setspecific (void* value)
+   {
+      return pthread_setspecific(keyID, value);
+   }
 
-    /**
-     * Stores the current value bound to <key> for the calling thread into
-     * the location pointed to by <valuep>.
-     *
-     * @pre The specified key must have been properly created using the
-     *      keycreate() member function.
-     * @post The value associated with the key is obtained and stored in the
-     *       pointer valuep so that the caller may work with it.
-     *
-     * @param valuep Address of the current data value associated with the
-     *               key.
-     *
-     * @return 0 is returned upown successful completion.<br>
-     *         -1 is returned if an error occurs.
-     */
-    int
-    getspecific (void** valuep) {
+   /**
+    * Stores the current value bound to <key> for the calling thread into
+    * the location pointed to by <valuep>.
+    *
+    * @pre The specified key must have been properly created using the
+    *      keycreate() member function.
+    * @post The value associated with the key is obtained and stored in the
+    *       pointer valuep so that the caller may work with it.
+    *
+    * @param valuep Address of the current data value associated with the
+    *               key.
+    *
+    * @return 0 is returned upown successful completion.<br>
+    *         -1 is returned if an error occurs.
+    */
+   int getspecific (void** valuep)
+   {
 #ifdef _PTHREADS_DRAFT_4
-        return pthread_getspecific(keyID, valuep);
+      return pthread_getspecific(keyID, valuep);
 #else
-        *valuep = pthread_getspecific(keyID);
+      *valuep = pthread_getspecific(keyID);
 
-        return 0;
+      return 0;
 #endif
-    }
+   }
 
 private:
-    pthread_key_t keyID;		/**< Thread key ID */
+   pthread_key_t keyID;        /**< Thread key ID */
 };
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
-#endif	/* _VPR_THREAD_KEY_POSIX_H_ */
+#endif  /* _VPR_THREAD_KEY_POSIX_H_ */

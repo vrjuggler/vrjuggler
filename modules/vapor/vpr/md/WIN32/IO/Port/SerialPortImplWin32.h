@@ -148,7 +148,7 @@ public:
     */
    void setOpenBlocking (void)
    {
-      mBlocking &= ~FILE_FLAG_OVERLAPPED; 
+      mBlocking &= ~FILE_FLAG_OVERLAPPED;
    }
 
    /**
@@ -161,7 +161,7 @@ public:
     */
    void setOpenNonBlocking (void)
    {
-       std::cout << "non-Blocking not currently supported in win32." << std::endl; 
+      std::cout << "non-Blocking not currently supported in win32." << std::endl;
 //      mBlocking |= FILE_FLAG_OVERLAPPED;
    }
 
@@ -214,7 +214,7 @@ public:
     */
    vpr::ReturnStatus enableBlocking (void)
    {
-     vpr::ReturnStatus status(vpr::ReturnStatus::Fail);
+      vpr::ReturnStatus status(vpr::ReturnStatus::Fail);
       std::cout << "Enabling blocking mode after port open is unsuported in Win32." << std::endl;
       return status;
    }
@@ -878,8 +878,6 @@ public:
    // ------------------------------------------------------------------------
    vpr::ReturnStatus setOutputBaudRate(const vpr::Uint32 rate);
 
-
-
    // ------------------------------------------------------------------------
    //: Wait for all output to be transmitted.
    //
@@ -959,9 +957,6 @@ public:
    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
    // ------------------------------------------------------------------------
    vpr::ReturnStatus flushQueue(vpr::SerialTypes::FlushQueueOption queue);
-
-
-
 
    // ------------------------------------------------------------------------
    //: Transmit a continuous stream of zero bits for the given duration.  If

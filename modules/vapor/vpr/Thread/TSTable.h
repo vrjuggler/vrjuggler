@@ -50,7 +50,8 @@
 #include <vpr/Util/Assert.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 /**
  * This class is the actual TS Table.
@@ -72,12 +73,12 @@ public:
     * Deletes the table. It deletes all objects in the table.
     */
    ~TSTable()
-   {  
+   {
       // For all elements in the table
       for(unsigned int i=0;i<mTSObjects.size();i++)
       {
          if(mTSObjects[i] != NULL)        // If valid object
-         {  delete mTSObjects[i]; }       // Delete them 
+         {  delete mTSObjects[i]; }       // Delete them
       }
    }
 
@@ -125,14 +126,14 @@ void TSTable::setObject(TSBaseObject* object, unsigned long key)
 #ifdef _DEBUG
    unsigned long size_before = mTSObjects.size();
 #endif
-   if(mTSObjects.size() <= key)              
+   if(mTSObjects.size() <= key)
    {
       mTSObjects.resize((key+1), NULL);       // We will find these later and actually allocate them
    }
    mTSObjects[key] = object;
 
 #ifdef _DEBUG
-   vprASSERT( size_before <= mTSObjects.size());   // ASSERT: vector should never get smaller 
+   vprASSERT( size_before <= mTSObjects.size());   // ASSERT: vector should never get smaller
 #endif
 }
 
@@ -152,7 +153,7 @@ void TSTable::releaseObject(unsigned long key)
 }
 
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
 #endif

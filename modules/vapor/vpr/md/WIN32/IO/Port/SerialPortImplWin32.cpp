@@ -723,12 +723,16 @@ vpr::ReturnStatus SerialPortImplWin32::controlFlow(SerialTypes::FlowActionOption
 
 bool SerialPortImplWin32::getHardwareFlowControlState ()
 {
-    DCB dcb;
-    GetCommState(mHandle, &dcb);
-    if(dcb.fRtsControl==RTS_CONTROL_DISABLE && dcb.fDtrControl==DTR_CONTROL_DISABLE)
-         return false;
-    else
-         return true;
+   DCB dcb;
+   GetCommState(mHandle, &dcb);
+   if(dcb.fRtsControl==RTS_CONTROL_DISABLE && dcb.fDtrControl==DTR_CONTROL_DISABLE)
+   {
+      return false;
+   }
+   else
+   {
+      return true;
+   }
 }
 
 vpr::ReturnStatus SerialPortImplWin32::enableHardwareFlowControl ()
@@ -758,7 +762,7 @@ vpr::ReturnStatus SerialPortImplWin32::flushQueue(vpr::SerialTypes::FlushQueueOp
 bool SerialPortImplWin32::getCanonicalState(void)
 {
    std::cout << "Canonical State not yet implemented, EOF is enabled."
-   << std::endl;
+             << std::endl;
    return false;
 }
 
@@ -766,7 +770,7 @@ vpr::ReturnStatus SerialPortImplWin32::enableCanonicalInput(void)
 {
    vpr::ReturnStatus s;
    std::cout << "Canoncial State not yet implemented, EOF is enabled."
-   << std::endl;
+             << std::endl;
    s.setCode(vpr::ReturnStatus::Fail);
    return s;
 }
@@ -775,7 +779,7 @@ vpr::ReturnStatus SerialPortImplWin32::disableCanonicalInput(void)
 {
    vpr::ReturnStatus s;
    std::cout << "Canoncial State not yet implemented on Win32, EOF is enabled."
-   << std::endl;
+             << std::endl;
    s.setCode(vpr::ReturnStatus::Fail);
    return s;
 }
@@ -805,14 +809,14 @@ vpr::ReturnStatus SerialPortImplWin32::disableBitStripping(void)
 bool SerialPortImplWin32::getStartStopInputState(void)
 {
    std::cout << "Start/Stop Input is not yet implemented on Win32."
-   << std::endl;
+             << std::endl;
    return false;
 }
 
 bool SerialPortImplWin32::getStartStopOutputState(void)
 {
    std::cout << "Start/Stop Output is not yet implemented on Win32."
-   << std::endl;
+             << std::endl;
    return false;
 }
 
@@ -820,7 +824,7 @@ vpr::ReturnStatus SerialPortImplWin32::enableStartStopInput(void)
 {
    vpr::ReturnStatus s;
    std::cout << "Start/Stop Input is not yet implemented on Win32."
-   << std::endl;
+             << std::endl;
    s.setCode(vpr::ReturnStatus::Fail);
    return s;
 }
@@ -829,7 +833,7 @@ vpr::ReturnStatus SerialPortImplWin32::disableStartStopInput(void)
 {
    vpr::ReturnStatus s;
    std::cout << "Start/Stop Input is not yet implemented on Win32."
-   << std::endl;
+             << std::endl;
    s.setCode(vpr::ReturnStatus::Fail);
    return s;
 }
@@ -838,7 +842,7 @@ vpr::ReturnStatus SerialPortImplWin32::enableStartStopOutput(void)
 {
    vpr::ReturnStatus s;
    std::cout << "Start/Stop output is not yet implemented on Win32."
-   << std::endl;
+             << std::endl;
    s.setCode(vpr::ReturnStatus::Fail);
    return s;
 }
@@ -847,7 +851,7 @@ vpr::ReturnStatus SerialPortImplWin32::disableStartStopOutput(void)
 {
    vpr::ReturnStatus s;
    std::cout << "Start/Stop Output is not yet implemented on Win32."
-   << std::endl;
+             << std::endl;
    s.setCode(vpr::ReturnStatus::Fail);
    return s;
 }

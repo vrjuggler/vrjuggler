@@ -52,10 +52,8 @@ vpr::MemPoolSGI::MemPoolSGI (size_t initialSize, int numProcs,
                              char* staticTempName)
 {
    std::cerr.setf(std::ios::showbase);
-   std::cerr << "\nMemPoolSGI: Allocating arena ("
-             << initialSize << " bytes, "
-             << numProcs  << " procs, "
-             << std::hex  << this << std::dec
+   std::cerr << "\nMemPoolSGI: Allocating arena (" << initialSize << " bytes, "
+             << numProcs  << " procs, " << std::hex  << this << std::dec
              << ")\n" << std::flush;
 
    usconfig(CONF_INITUSERS, numProcs);
@@ -72,51 +70,51 @@ vpr::MemPoolSGI::MemPoolSGI (size_t initialSize, int numProcs,
    arena = usinit(mktemp(tempName));   // Allocate the arena
 
    arenaFileName = tempName;      // So we know where the file is
-   //delete tempName;		    // Delete the temporary file name
+   //delete tempName;           // Delete the temporary file name
 
-   if (arena == NULL)
+   if ( arena == NULL )
    {
       perror("ERROR: PoolSGI::MemPoolSGI");
    }
 
-   std::cerr << "  " << arenaFileName << ", "
-             << "arena: " << std::hex << arena << std::dec << std::endl;
+   std::cerr << "  " << arenaFileName << ", " << "arena: " << std::hex << arena
+             << std::dec << std::endl;
    std::cerr.unsetf(std::ios::showbase);
 }
 
-void
-vpr::MemPoolSGI::init (size_t initialSize, int numProcs, char* staticTempName)
+void vpr::MemPoolSGI::init (size_t initialSize, int numProcs,
+                            char* staticTempName)
 {
-   if (arenaForMemPools == NULL)
+   if ( arenaForMemPools == NULL )
    {
       std::cerr << "\nMemPoolSGI: Allocating Base Arena for ALL MemPoolSGI's.\n"
-                << initialSize << " bytes, "
-                << numProcs << " procs"
+                << initialSize << " bytes, " << numProcs << " procs"
                 << "\n" << std::flush;
-   
+
       usconfig(CONF_INITUSERS, numProcs);
       usconfig(CONF_INITSIZE, initialSize);
       usconfig(CONF_AUTOGROW, 1);   // Default, but we set anyway
-   
+
       char* tempName = strdup (staticTempName); // make mutable copy for mktemp
-   
+
       arenaForMemPools = usinit(mktemp(tempName));
       unlink(tempName);
-   
-      if (arenaForMemPools == NULL)
+
+      if ( arenaForMemPools == NULL )
       {
          perror("ERROR: MemPoolSGI::init. Was not able to get an arena!!!!");
       }
       arenaForMemPoolsFileName = (char*)usmalloc(strlen(staticTempName)+1, arenaForMemPools);
       strcpy(arenaForMemPoolsFileName, tempName);
       free (tempName);
-   
+
       std::cerr.setf(std::ios::showbase);
-      std::cerr << "  " << arenaForMemPoolsFileName << ", "
-                << "arena: " << std::hex << arenaForMemPools << std::dec
-                << std::endl;
+      std::cerr << "  " << arenaForMemPoolsFileName << ", " << "arena: "
+                << std::hex << arenaForMemPools << std::dec << std::endl;
       std::cerr.unsetf(std::ios::showbase);
-   } else {
+   }
+   else
+   {
       std::cerr << "Tried to re-init the Base Arena for ALL MemPoolSGI's"
                 << std::endl;
    }

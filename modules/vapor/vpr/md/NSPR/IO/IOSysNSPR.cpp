@@ -41,8 +41,9 @@
 
 #include <vpr/md/NSPR/IO/IOSysNSPR.h>
 
-namespace vpr {
+namespace vpr
+{
 
 const IOSysNSPR::Handle IOSysNSPR::NullHandle = NULL;
 
-}; // End of vpr namespace
+} // End of vpr namespace

@@ -50,7 +50,8 @@
 #include <vpr/Util/Assert.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 /**
  * This is a smart pointer to a thread specific object.
@@ -158,7 +159,7 @@ private:
    long  mObjectKey;    //! The key to find the object
 };
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
 #endif

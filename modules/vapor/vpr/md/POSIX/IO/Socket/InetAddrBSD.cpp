@@ -52,7 +52,7 @@
 #include <vpr/md/POSIX/IO/Socket/InetAddrBSD.h>
 
 #ifndef INADDR_NONE
-   #define INADDR_NONE 0xffffffff   /* -1 return */
+#  define INADDR_NONE 0xffffffff   /* -1 return */
 #endif
 
 

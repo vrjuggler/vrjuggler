@@ -49,7 +49,8 @@
 #include <vpr/vprTypes.h>
 #include <vpr/Thread/Thread.h>
 
-namespace vpr {
+namespace vpr
+{
 
 /**
  * vpr::SystemBase is a base class for vpr::System so, for xplatform system
@@ -138,7 +139,7 @@ public:
    }
 };
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
 #endif   /* _VPR_SYSTEM_BASE_H_ */

@@ -42,8 +42,9 @@
 #include <vpr/md/POSIX/IO/IOSysUnix.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 const IOSysUnix::Handle IOSysUnix::NullHandle = -1;
 
-}; // End of vpr namespace
+} // End of vpr namespace

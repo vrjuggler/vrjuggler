@@ -73,20 +73,20 @@ public:
    enum { IS_NULL = 0 };
 
 public:
-   virtual void read_s(ReturnStatus& status,
-                         void* buffer, const vpr::Uint32 length,
-                          vpr::Uint32& bytes_read,
-                          const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   virtual void read_s(vpr::ReturnStatus& status,
+                       void* buffer, const vpr::Uint32 length,
+                       vpr::Uint32& bytes_read,
+                       const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
-   virtual void readn_s(ReturnStatus& status,
-                          void* buffer, const vpr::Uint32 length,
-                           vpr::Uint32& bytes_read,
-                           const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   virtual void readn_s(vpr::ReturnStatus& status,
+                        void* buffer, const vpr::Uint32 length,
+                        vpr::Uint32& bytes_read,
+                        const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
-   virtual void write_s(ReturnStatus& status,
-                          const void* buffer, const vpr::Uint32 length,
-                           vpr::Uint32& bytes_written,
-                           const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   virtual void write_s(vpr::ReturnStatus& status,
+                        const void* buffer, const vpr::Uint32 length,
+                        vpr::Uint32& bytes_written,
+                        const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
 protected:
     vpr::BlockIO*   mRealObject;
@@ -103,6 +103,6 @@ public:
    enum { IS_NULL = 1 };
 };
 
-}; // namespace vpr
+} // namespace vpr
 
 #endif //_VPR_BASEIOSTATS_H

@@ -49,167 +49,176 @@
 #include <vpr/Util/ReturnStatus.h>
 
 
-namespace vpr {
-
+namespace vpr
+{
 
 /**
  * Options common to all types of sockets.
  */
-class VPR_CLASS_API SocketBasicOpt : public vpr::SocketOptionWrapper {
+class VPR_CLASS_API SocketBasicOpt : public vpr::SocketOptionWrapper
+{
 public:
-    /**
-     *
-     */
-    inline vpr::ReturnStatus
-    getKeepAlive (bool& enabled) {
-        vpr::SocketOptions::Data option;
-        vpr::ReturnStatus retval;
+   /**
+    *
+    */
+   vpr::ReturnStatus getKeepAlive (bool& enabled)
+   {
+      vpr::SocketOptions::Data option;
+      vpr::ReturnStatus retval;
 
-        retval = getOption(vpr::SocketOptions::KeepAlive, option);
+      retval = getOption(vpr::SocketOptions::KeepAlive, option);
 
-        if ( retval.success() ) {
-            enabled = option.keep_alive;
-        }
+      if ( retval.success() )
+      {
+         enabled = option.keep_alive;
+      }
 
-        return retval;
-    }
+      return retval;
+   }
 
-    /**
-     *
-     */
-    inline vpr::ReturnStatus
-    setKeepAlive (const bool enable_val) {
-        vpr::SocketOptions::Data option;
-        option.keep_alive = enable_val;
-        return setOption(vpr::SocketOptions::KeepAlive, option);
-    }
+   /**
+    *
+    */
+   vpr::ReturnStatus setKeepAlive (const bool enable_val)
+   {
+      vpr::SocketOptions::Data option;
+      option.keep_alive = enable_val;
+      return setOption(vpr::SocketOptions::KeepAlive, option);
+   }
 
-    /**
-     *
-     */
-    inline vpr::ReturnStatus
-    getLingerOnClose (bool& enabled, int& linger_sec) {
-        vpr::SocketOptions::Data opt;
-        vpr::ReturnStatus retval;
+   /**
+    *
+    */
+   vpr::ReturnStatus getLingerOnClose (bool& enabled, int& linger_sec)
+   {
+      vpr::SocketOptions::Data opt;
+      vpr::ReturnStatus retval;
 
-        retval = getOption(vpr::SocketOptions::Linger, opt);
+      retval = getOption(vpr::SocketOptions::Linger, opt);
 
-        if ( retval.success() ) {
-            enabled    = opt.linger.enabled;
-            linger_sec = opt.linger.seconds;
-        }
+      if ( retval.success() )
+      {
+         enabled    = opt.linger.enabled;
+         linger_sec = opt.linger.seconds;
+      }
 
-        return retval;
-    }
+      return retval;
+   }
 
-    /**
-     *
-     */
-    inline vpr::ReturnStatus
-    setLingerOnClose (const bool enable_val, const int linger_sec) {
-        vpr::SocketOptions::Data opt;
+   /**
+    *
+    */
+   vpr::ReturnStatus setLingerOnClose (const bool enable_val,
+                                       const int linger_sec)
+   {
+      vpr::SocketOptions::Data opt;
 
-        opt.linger.enabled = enable_val;
-        opt.linger.seconds = linger_sec;
+      opt.linger.enabled = enable_val;
+      opt.linger.seconds = linger_sec;
 
-        return setOption(vpr::SocketOptions::Linger, opt);
-    }
+      return setOption(vpr::SocketOptions::Linger, opt);
+   }
 
-    /**
-     *
-     */
-    inline vpr::ReturnStatus
-    getRecvBufferSize (Int32& size) {
-        vpr::SocketOptions::Data opt;
-        vpr::ReturnStatus retval;
+   /**
+    *
+    */
+   vpr::ReturnStatus getRecvBufferSize (Int32& size)
+   {
+      vpr::SocketOptions::Data opt;
+      vpr::ReturnStatus retval;
 
-        retval = getOption(vpr::SocketOptions::RecvBufferSize, opt);
+      retval = getOption(vpr::SocketOptions::RecvBufferSize, opt);
 
-        if ( retval.success() ) {
-            size = opt.recv_buffer_size;
-        }
-        else {
-            size = -1;
-        }
+      if ( retval.success() )
+      {
+         size = opt.recv_buffer_size;
+      }
+      else
+      {
+         size = -1;
+      }
 
-        return retval;
-    }
+      return retval;
+   }
 
-    /**
-     *
-     */
-    inline vpr::ReturnStatus
-    setRecvBufferSize (const Int32 size) {
-        vpr::SocketOptions::Data opt;
+   /**
+    *
+    */
+   vpr::ReturnStatus setRecvBufferSize (const Int32 size)
+   {
+      vpr::SocketOptions::Data opt;
 
-        opt.recv_buffer_size = size;
+      opt.recv_buffer_size = size;
 
-        return setOption(vpr::SocketOptions::RecvBufferSize, opt);
-    }
+      return setOption(vpr::SocketOptions::RecvBufferSize, opt);
+   }
 
-    /**
-     *
-     */
-    inline vpr::ReturnStatus
-    getSendBufferSize (int& size) {
-        vpr::SocketOptions::Data opt;
-        vpr::ReturnStatus retval;
+   /**
+    *
+    */
+   vpr::ReturnStatus getSendBufferSize (int& size)
+   {
+      vpr::SocketOptions::Data opt;
+      vpr::ReturnStatus retval;
 
-        retval = getOption(vpr::SocketOptions::SendBufferSize, opt);
+      retval = getOption(vpr::SocketOptions::SendBufferSize, opt);
 
-        if ( retval.success() ) {
-            size = opt.send_buffer_size;
-        }
-        else {
-            size = -1;
-        }
+      if ( retval.success() )
+      {
+         size = opt.send_buffer_size;
+      }
+      else
+      {
+         size = -1;
+      }
 
-        return retval;
-    }
+      return retval;
+   }
 
-    /**
-     *
-     */
-    inline vpr::ReturnStatus
-    setSendBufferSize (const Int32 size) {
-        vpr::SocketOptions::Data opt;
+   /**
+    *
+    */
+   vpr::ReturnStatus setSendBufferSize (const Int32 size)
+   {
+      vpr::SocketOptions::Data opt;
 
-        opt.send_buffer_size = size;
+      opt.send_buffer_size = size;
 
-        return setOption(vpr::SocketOptions::SendBufferSize, opt);
-    }
+      return setOption(vpr::SocketOptions::SendBufferSize, opt);
+   }
 
-    /**
-     *
-     */
-    inline vpr::ReturnStatus
-    getReuseAddr (bool& enabled) {
-        vpr::SocketOptions::Data option;
-        vpr::ReturnStatus retval;
+   /**
+    *
+    */
+   vpr::ReturnStatus getReuseAddr (bool& enabled)
+   {
+      vpr::SocketOptions::Data option;
+      vpr::ReturnStatus retval;
 
-        retval = getOption(vpr::SocketOptions::ReuseAddr, option);
+      retval = getOption(vpr::SocketOptions::ReuseAddr, option);
 
-        if ( retval.success() ) {
-            enabled = option.reuse_addr;
-        }
+      if ( retval.success() )
+      {
+         enabled = option.reuse_addr;
+      }
 
-        return retval;
-    }
+      return retval;
+   }
 
-    /**
-     * Enables reuse of the address that will be bound by the socket.
-     *
-     * @pre The socket has been opened, but bind() has not been called.
-     */
-    inline vpr::ReturnStatus
-    setReuseAddr (const bool enable_val) {
-        vpr::SocketOptions::Data option;
-        option.reuse_addr = enable_val;
-        return setOption(vpr::SocketOptions::ReuseAddr, option);
-    }
+   /**
+    * Enables reuse of the address that will be bound by the socket.
+    *
+    * @pre The socket has been opened, but bind() has not been called.
+    */
+   vpr::ReturnStatus setReuseAddr (const bool enable_val)
+   {
+      vpr::SocketOptions::Data option;
+      option.reuse_addr = enable_val;
+      return setOption(vpr::SocketOptions::ReuseAddr, option);
+   }
 };
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
-#endif	/* _VPR_SOCKET_OPT_H_ */
+#endif  /* _VPR_SOCKET_BASIC_OPT_H_ */

@@ -44,13 +44,16 @@
 #include <vpr/IO/Socket/SocketStreamOpt.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
-SocketStreamOpt::SocketStreamOpt () {
+SocketStreamOpt::SocketStreamOpt ()
+{
    /* Do nothing. */ ;
 }
 
-SocketStreamOpt::~SocketStreamOpt () {
+SocketStreamOpt::~SocketStreamOpt ()
+{
    /* Do nothing. */ ;
 }
 

@@ -83,22 +83,22 @@ public:
    *       timeout    - The num msecs to wait (0 - NonBlocking)
    */
   inline vpr::ReturnStatus connect (vpr::SocketStream& newStream,
-                              const vpr::InetAddr& remoteAddr,
-                              vpr::Interval timeout = vpr::Interval::NoTimeout,
-                              const vpr::InetAddr& localAddr = vpr::InetAddr::AnyAddr);
+                                    const vpr::InetAddr& remoteAddr,
+                                    vpr::Interval timeout = vpr::Interval::NoTimeout,
+                                    const vpr::InetAddr& localAddr = vpr::InetAddr::AnyAddr);
 
   /**
    * Complete a non-blocking connection
    * Try to complete a non-blocking connection.
    */
   inline vpr::ReturnStatus complete (vpr::SocketStream &newStream,
-                               const vpr::Interval timeout = vpr::Interval::NoTimeout);
+                                     const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
 protected:
-  // Make sure we have opened the socket
-  // If not, then open it with the given params
-  bool checkOpen (SocketStream& newStream)
-  {
+   // Make sure we have opened the socket
+   // If not, then open it with the given params
+   bool checkOpen (SocketStream& newStream)
+   {
       vpr::ReturnStatus status;
 
       if (!newStream.isOpen())
@@ -112,21 +112,20 @@ protected:
       }
 
       return status.success();
-  }
+   }
 
-
-  // Do preconnection rituals
-  // - If not bound, then bind to local addr
-  // - If timeout == NoWait, then try to set nonblocking
-  inline bool connectStart (vpr::SocketStream& newStream,
-                            vpr::Interval timeout = vpr::Interval::NoTimeout,
-                            const vpr::InetAddr& localAddr = vpr::InetAddr::AnyAddr);
+   // Do preconnection rituals
+   // - If not bound, then bind to local addr
+   // - If timeout == NoWait, then try to set nonblocking
+   inline bool connectStart (vpr::SocketStream& newStream,
+                             vpr::Interval timeout = vpr::Interval::NoTimeout,
+                             const vpr::InetAddr& localAddr = vpr::InetAddr::AnyAddr);
 };
 
 inline vpr::ReturnStatus SocketConnector::connect(SocketStream& newStream,
-                                            const vpr::InetAddr& remoteAddr,
-                                            vpr::Interval timeout,
-                                            const vpr::InetAddr& localAddr)
+                                                  const vpr::InetAddr& remoteAddr,
+                                                  vpr::Interval timeout,
+                                                  const vpr::InetAddr& localAddr)
 {
     vpr::ReturnStatus ret_val;
     //vpr::InetAddr remote_addr;
@@ -187,16 +186,16 @@ inline vpr::ReturnStatus SocketConnector::connect(SocketStream& newStream,
     return ret_val;
 }
 
- /**
-   * Complete a non-blocking connection
-   * Try to complete a non-blocking connection.
-   *
-   * @pre
-   * @param newStream  The connected stream.
-   * @param remoteAddr returns the address of the remote connection.
-   */
+/**
+ * Complete a non-blocking connection
+ * Try to complete a non-blocking connection.
+ *
+ * @pre
+ * @param newStream  The connected stream.
+ * @param remoteAddr returns the address of the remote connection.
+ */
 inline vpr::ReturnStatus SocketConnector::complete (SocketStream &newStream,
-                                              const vpr::Interval timeout)
+                                                    const vpr::Interval timeout)
 {
    vpr::ReturnStatus status;
 

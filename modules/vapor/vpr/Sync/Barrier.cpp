@@ -43,45 +43,47 @@
 #include <vpr/Sync/Barrier.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 /**
  * Block the caller until all <count> threads have called <wait> and then
  * allow all the caller threads to continue in parallel.
  */
-int
-Barrier::wait (void) {
-    Guard<Mutex> guard(mutex);
+int Barrier::wait (void)
+{
+   Guard<Mutex> guard(mutex);
 
-    SubBarrier* curvprSubBarrier = this->subBarrier[currentGeneration];
+   SubBarrier* curvprSubBarrier = this->subBarrier[currentGeneration];
 
-    // Check for shutdown...
-    if (curvprSubBarrier == NULL) {
-        return -1;
-    }
+   // Check for shutdown...
+   if ( curvprSubBarrier == NULL )
+   {
+      return -1;
+   }
 
-    if (curvprSubBarrier->runningThreads == 1)
-    {
-        // We're the last running thread, so swap generations and tell
-        // all the threads waiting on the barrier to continue on their
-        // way.
+   if ( curvprSubBarrier->runningThreads == 1 )
+   {
+      // We're the last running thread, so swap generations and tell
+      // all the threads waiting on the barrier to continue on their
+      // way.
 
-        curvprSubBarrier->runningThreads = this->count;
+      curvprSubBarrier->runningThreads = this->count;
 
-        // Swap generations.
-        currentGeneration = 1 - this->currentGeneration;	    // Cycles between 0 and 1
-        curvprSubBarrier->barrierFinished.broadcast();
-    }
-    else
-    {
-        --curvprSubBarrier->runningThreads;
+      // Swap generations.
+      currentGeneration = 1 - this->currentGeneration;        // Cycles between 0 and 1
+      curvprSubBarrier->barrierFinished.broadcast();
+   }
+   else
+   {
+      --curvprSubBarrier->runningThreads;
 
-        // Block until all the other threads wait().
-        while (curvprSubBarrier->runningThreads != count)
-            curvprSubBarrier->barrierFinished.wait ();
-    }
+      // Block until all the other threads wait().
+      while ( curvprSubBarrier->runningThreads != count )
+         curvprSubBarrier->barrierFinished.wait ();
+   }
 
-    return 0;
+   return 0;
 }
 
-}; // End of vpr namespace
+} // End of vpr namespace

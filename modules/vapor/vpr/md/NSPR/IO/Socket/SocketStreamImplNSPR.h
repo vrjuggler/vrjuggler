@@ -49,71 +49,75 @@
 #include <vpr/md/NSPR/IO/Socket/SocketImplNSPR.h>
 #include <vpr/Util/Debug.h>
 
-namespace vpr {
+namespace vpr
+{
 
 class VPR_CLASS_API SocketStreamImplNSPR : public SocketImplNSPR
 {
 public:
-    // ========================================================================
-    // vpr::SocketStreamImp implementation.
-    // ========================================================================
+   // ========================================================================
+   // vpr::SocketStreamImp implementation.
+   // ========================================================================
 
-    // ------------------------------------------------------------------------
-    // Constructor.  This takes the address (either hostname or IP address) of
-    // a remote site and a port and stores the values for later use in the
-    // member variables of the object.
-    //
-    // PRE: None.
-    // POST: The member variables are initialized with the mType variable in
-    //       particular set to SOCK_STREAM.
-    // ------------------------------------------------------------------------
-    SocketStreamImplNSPR(void);
+   // ------------------------------------------------------------------------
+   // Constructor.  This takes the address (either hostname or IP address) of
+   // a remote site and a port and stores the values for later use in the
+   // member variables of the object.
+   //
+   // PRE: None.
+   // POST: The member variables are initialized with the mType variable in
+   //       particular set to SOCK_STREAM.
+   // ------------------------------------------------------------------------
+   SocketStreamImplNSPR(void);
 
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    SocketStreamImplNSPR(const vpr::InetAddr& local_addr,
-                         const vpr::InetAddr& remote_addr);
+   // ------------------------------------------------------------------------
+   // ------------------------------------------------------------------------
+   SocketStreamImplNSPR(const vpr::InetAddr& local_addr,
+                        const vpr::InetAddr& remote_addr);
 
-    // ------------------------------------------------------------------------
-    // Copy constructor.
-    // XXX: We need to have a reference count here
-    // ------------------------------------------------------------------------
-    SocketStreamImplNSPR (const SocketStreamImplNSPR& sock) : SocketImplNSPR(sock)
-    { /* Just call base class */ }
+   // ------------------------------------------------------------------------
+   // Copy constructor.
+   // XXX: We need to have a reference count here
+   // ------------------------------------------------------------------------
+   SocketStreamImplNSPR (const SocketStreamImplNSPR& sock)
+      : SocketImplNSPR(sock)
+   {
+      /* Just call base class */ ;
+   }
 
-    // ------------------------------------------------------------------------
-    // Listen on the socket for incoming connection requests.
-    //
-    // PRE: The socket has been opened and bound to the address in
-    //      mLocalAddr.
-    // POST: The socket is in a listening state waiting for incoming
-    //       connection requests.
-    //
-    // Arguments:
-    //     backlog - The maximum length of th queue of pending connections.
-    //
-    // Returns:
-    //     true  - The socket is in a listening state.
-    //     false - The socket could not be put into a listening state.  An
-    //             error message is printed explaining what went wrong.
-    // ------------------------------------------------------------------------
-    vpr::ReturnStatus listen(const int backlog = 5);
+   // ------------------------------------------------------------------------
+   // Listen on the socket for incoming connection requests.
+   //
+   // PRE: The socket has been opened and bound to the address in
+   //      mLocalAddr.
+   // POST: The socket is in a listening state waiting for incoming
+   //       connection requests.
+   //
+   // Arguments:
+   //     backlog - The maximum length of th queue of pending connections.
+   //
+   // Returns:
+   //     true  - The socket is in a listening state.
+   //     false - The socket could not be put into a listening state.  An
+   //             error message is printed explaining what went wrong.
+   // ------------------------------------------------------------------------
+   vpr::ReturnStatus listen(const int backlog = 5);
 
-    // ------------------------------------------------------------------------
-    // Accept an incoming connection request.
-    //
-    // PRE: The socket is open and is in a listening state.
-    // POST: When a connection is established, a new vpr::SocketStreamImp
-    //       object will be created that can be used for further communication
-    //       with the remote site.
-    //
-    // Returns:
-    // ------------------------------------------------------------------------
-    vpr::ReturnStatus accept(SocketStreamImplNSPR& sock,
-                       const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   // ------------------------------------------------------------------------
+   // Accept an incoming connection request.
+   //
+   // PRE: The socket is open and is in a listening state.
+   // POST: When a connection is established, a new vpr::SocketStreamImp
+   //       object will be created that can be used for further communication
+   //       with the remote site.
+   //
+   // Returns:
+   // ------------------------------------------------------------------------
+   vpr::ReturnStatus accept(SocketStreamImplNSPR& sock,
+                            const vpr::Interval timeout = vpr::Interval::NoTimeout);
 };
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
 #endif   /* _VJ_SOCKET_STREAM_IMPL_NSPR_H_ */

@@ -46,7 +46,7 @@
 #include <vpr/vprConfig.h>
 #include <stdlib.h>
 
-namespace vpr 
+namespace vpr
 {
 
 //: Shared memory pool.
@@ -55,34 +55,38 @@ namespace vpr
 // should behave.
 //
 // Author:
-//	Allen Bierbaum
+//  Allen Bierbaum
 //
 // Date: 1-9-97
 //
-class MemPool {
+class MemPool
+{
 
 public:
-    // ---> This is a prototype for what all derived constructors should take
-    // as params
-    // MemPool(size_t initialSize,  int numProcs, char* staticTempName)
-    virtual ~MemPool() {;}
+   // ---> This is a prototype for what all derived constructors should take
+   // as params
+   // MemPool(size_t initialSize,  int numProcs, char* staticTempName)
+   virtual ~MemPool()
+   {
+      ;
+   }
 
 public:
-    virtual void* allocate(size_t size) = 0;
-    virtual void  deallocate(void* ptr) = 0;
-    virtual void* reallocate(void *ptr, size_t new_sz) = 0;
-
+   virtual void* allocate(size_t size) = 0;
+   virtual void  deallocate(void* ptr) = 0;
+   virtual void* reallocate(void *ptr, size_t new_sz) = 0;
 };
 
 } // End of vpr namespace
 
 #if defined(VPR_USE_IRIX_SPROC)
-#   include <vpr/md/SPROC/SharedMem/MemPoolSGI.h>
+#  include <vpr/md/SPROC/SharedMem/MemPoolSGI.h>
 
-namespace vpr {
-    typedef MemPoolSGI  SharedPool;
-    typedef MemPoolSGI  SyncPool;
+namespace vpr
+{
+   typedef MemPoolSGI  SharedPool;
+   typedef MemPoolSGI  SyncPool;
 };
-#endif	/* VPR_IRIX_SPROC */
+#endif  /* VPR_IRIX_SPROC */
 
-#endif	/* _VPR_MemPool_h_ */
+#endif  /* _VPR_MemPool_h_ */
