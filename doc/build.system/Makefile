@@ -8,8 +8,6 @@ install-docs: install-html install-chunk-html install-pdf
 NAME=		build.system
 
 XML_FILES=	$(NAME).xml
-HTML_FILES=	$(NAME).html
-PDF_FILES=	$(NAME).pdf
 
 XSLT_TOOL=	Saxon
 
@@ -21,8 +19,5 @@ prefix=		$(webroot)/$(instdir)
 INSTALL_FILES=	$(webroot)/base_style.css
 
 NEED_DB_IMAGES=	1
-
-$(NAME).html: $(NAME).xml
-$(NAME).pdf: $(NAME).xml $(NAME).fo
 
 include ../docbook.mk
