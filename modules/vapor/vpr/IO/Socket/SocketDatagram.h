@@ -86,21 +86,21 @@ public:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    inline virtual ssize_t
+    inline ssize_t
     recvfrom (void* msg, const size_t len, const int flags, InetAddr& from) {
         return m_socket_dgram_imp.recvfrom(msg, len, flags, from);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    inline virtual ssize_t
+    inline ssize_t
     recvfrom (std::vector<char>& msg, const int flags, InetAddr& from) {
         return m_socket_dgram_imp.recvfrom(msg, flags, from);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    inline virtual ssize_t
+    inline ssize_t
     recvfrom (std::vector<char>& msg, const size_t len, const int flags,
               InetAddr& from)
     {
@@ -109,7 +109,7 @@ public:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    inline virtual ssize_t
+    inline ssize_t
     sendto (const void* msg, const size_t len, const int flags,
             const InetAddr& to)
     {
@@ -118,7 +118,7 @@ public:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    inline virtual ssize_t
+    inline ssize_t
     sendto (const std::vector<char>& msg, const int flags,
             const InetAddr& to)
     {
@@ -127,7 +127,7 @@ public:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    inline virtual ssize_t
+    inline ssize_t
     sendto (const std::vector<char>& msg, const size_t len, const int flags,
             const InetAddr& to)
     {
