@@ -67,15 +67,17 @@
   <file path="org/vrjuggler/tweek/beans/PanelBean.java" />
   <file path="org/vrjuggler/tweek/PrefsDialog.java" />
   <file path="org/vrjuggler/tweek/beans/ServiceBean.java" />
-  <file path="org/vrjuggler/tweek/ServiceRegistry.java" />
+  <file path="org/vrjuggler/tweek/services/ServiceRegistry.java" />
   <file path="org/vrjuggler/tweek/beans/TreeModelRefreshEvent.java" />
   <file path="org/vrjuggler/tweek/beans/TreeModelRefreshListener.java" />
   <file path="org/vrjuggler/tweek/Tweek.java" />
   <file path="org/vrjuggler/tweek/beans/TweekBean.java" />
   <file path="org/vrjuggler/tweek/TweekCore.java" />
   <file path="org/vrjuggler/tweek/TweekFrame.java" />
-  <file path="org/vrjuggler/tweek/beans/UserLevelChangeEvent.java" />
-  <file path="org/vrjuggler/tweek/beans/UserLevelChangeListener.java" />
+  <file path="org/vrjuggler/tweek/event/TweekFrameEvent.java" />
+  <file path="org/vrjuggler/tweek/event/TweekFrameListener.java" />
+  <file path="org/vrjuggler/tweek/event/UserLevelChangeEvent.java" />
+  <file path="org/vrjuggler/tweek/event/UserLevelChangeListener.java" />
   <file path="org/vrjuggler/tweek/beans/ViewerBean.java" />
   <file path="org/vrjuggler/tweek/ViewerRegistry.java" />
 </project>
