@@ -113,7 +113,6 @@ bool IntersenseAPI::config(jccl::ConfigElementPtr e)
 
    // Set various attributes of the Intersense driver
    mTracker.setPort( e->getProperty<std::string>("port") );
-   mTracker.setBaudRate( e->getProperty<int>("baud") );
    mTracker.setNumStations(e->getNum("stations"));
    mTracker.setVerbose(e->getProperty<bool>("verbose"));
 
