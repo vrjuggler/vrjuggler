@@ -249,8 +249,7 @@ world:
 ifndef NO_CLEAN
 	@${MAKE} clobber
 endif
-	@${MAKE} _libs
-	@${MAKE} gui
+	@${MAKE} _libs gui
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning VR Juggler installation process"
 	@echo "---------------------------------------------------------------"
@@ -308,8 +307,7 @@ release:
 ifndef NO_CLEAN
 	@${MAKE} clobber
 endif
-	@${MAKE} _libs
-	@${MAKE} gui
+	@${MAKE} _libs gui
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning VR Juggler release installation process"
 	@echo "---------------------------------------------------------------"
@@ -333,8 +331,7 @@ all buildworld:
 	@echo "Building everything"
 	@echo "==============================================================="
 	@${MAKE} beforebuild
-	@${MAKE} _libs
-	@${MAKE} gui
+	@${MAKE} _libs gui
 	@${MAKE} afterbuild
 	@echo "==============================================================="
 	@echo "$@ complete"
@@ -427,10 +424,9 @@ debug:
 	@echo "Making debugging version of VR Juggler"
 	@echo "========================================================"
 	@${MAKE} beforebuild
-	@${MAKE} _build_dbg_obj
+	@${MAKE} _build_dbg_obj gui
 	@${MAKE} _build_dbg_lib_static
 	@${MAKE} _build_dbg_lib_shared
-	@${MAKE} gui
 	@${MAKE} afterbuild
 	@echo "========================================================"
 	@echo "$@ complete"
@@ -444,9 +440,8 @@ dbg:
 	@echo "Making DBG version of VR Juggler"
 	@echo "========================================================"
 	@${MAKE} beforebuild
-	@${MAKE} _build_dbg_obj
+	@${MAKE} _build_dbg_obj gui
 	@${MAKE} _build_dbg_lib_static
-	@${MAKE} gui
 	@${MAKE} afterbuild
 	@echo "========================================================"
 	@echo "$@ complete"
@@ -460,9 +455,8 @@ ddso:
 	@echo "Making DBG version of VR Juggler"
 	@echo "========================================================"
 	@${MAKE} beforebuild
-	@${MAKE} _build_dbg_obj
+	@${MAKE} _build_dbg_obj gui
 	@${MAKE} _build_dbg_lib_shared
-	@${MAKE} gui
 	@${MAKE} afterbuild
 	@echo "========================================================"
 	@echo "$@ complete"
@@ -477,10 +471,9 @@ optim:
 	@echo "Making optimized version of VR Juggler"
 	@echo "========================================================"
 	@${MAKE} beforebuild
-	@${MAKE} _build_opt_obj
+	@${MAKE} _build_opt_obj gui
 	@${MAKE} _build_opt_lib_static
 	@${MAKE} _build_opt_lib_shared
-	@${MAKE} gui
 	@${MAKE} afterbuild
 	@echo "========================================================"
 	@echo "$@ complete"
@@ -494,9 +487,8 @@ opt:
 	@echo "Making OPT version of VR Juggler"
 	@echo "========================================================"
 	@${MAKE} beforebuild
-	@${MAKE} _build_opt_obj
+	@${MAKE} _build_opt_obj gui
 	@${MAKE} _build_opt_lib_static
-	@${MAKE} gui
 	@${MAKE} afterbuild
 	@echo "========================================================"
 	@echo "$@ complete"
@@ -510,9 +502,8 @@ dso:
 	@echo "Making OPT version of VR Juggler"
 	@echo "========================================================"
 	@${MAKE} beforebuild
-	@${MAKE} _build_opt_obj
+	@${MAKE} _build_opt_obj gui
 	@${MAKE} _build_opt_lib_shared
-	@${MAKE} gui
 	@${MAKE} afterbuild
 	@echo "========================================================"
 	@echo "$@ complete"
