@@ -56,13 +56,14 @@ std::string pfFileIO::filePath = ".:";
 // outputs useful stuff, to let you know current status.
 pfNode* pfFileIO::loadFile( const std::string& filename )
 {
-   pfdInitConverter( filename.c_str() );
+   const std::string file_name = fileIO::demangleFileName( filename, "" );
+   pfdInitConverter( file_name.c_str() );
    pfFilePath( filePath.c_str() );
-   pfNode* node = pfdLoadFile( filename.c_str() );
+   pfNode* node = pfdLoadFile( file_name.c_str() );
 
    if (node == NULL)
    {
-      cout << "pfFileIO::loadFile: COULDN'T FIND "<<filename.c_str()
+      cout << "pfFileIO::loadFile: COULDN'T FIND "<<file_name.c_str()
            << "\tusing filepath: " << filePath << endl;
    }
 
