@@ -133,8 +133,14 @@ else:
 
 vec4 = gmtl.cross(vec1, vec2)
 
+# Create a translation matrix and then create a vector from it.
 trans_mat = gmtl.makeTransMatrix44(vec2)
-print "trans_mat", trans_mat
+trans_vec = gmtl.makeTransVec3(trans_mat)
+
+if gmtl.isEqual(vec2, trans_vec, 0.0):
+   print "gmtl.makeTransMatrix44()/gmtl.makeTransVec3() pass"
+else:
+   print "gmtl.makeTransMatrix44()/gmtl.makeTransVec3() fail"
 
 point1 = gmtl.Point2i(4, 5)
 point1[0] = point1[1]
