@@ -5,7 +5,7 @@
 #include <vjConfig.h>
 #include <Config/vjVarValue.h>
 
-int readString (istream& in, char* buffer, int size, bool *quoted = NULL);
+bool readString (istream& in, char* buffer, int size, bool *quoted = NULL);
 VarType readType (istream &ip);
 char *typeString (VarType t);
 char *unitString (CfgUnit t);
@@ -22,5 +22,7 @@ bool vjstrcasecmp (const std::string& a, const std::string& b);
 //! RETURNS: true - if the first n chars of a & b do NOT match
 //! RETURNS: false - if the first n chars of strings a & b match
 bool vjstrncasecmp (const std::string& a, const std::string& b, int _n = -1);
+
+bool vjstrncmp (const std::string& a, const std::string& b, int _n = -1);
 
 #endif
