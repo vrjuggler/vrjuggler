@@ -1,0 +1,33 @@
+# =============================================================================
+# This file is used only for generating and installing documentation.  The
+# variable $(webroot) should be assigned an appropriate value in order for
+# an installation to work correctly.
+# -----------------------------------------------------------------------------
+# This makefile requires the use of GNU make.
+# =============================================================================
+
+# $Id$
+
+# ******** Fill this in!! ********
+webroot=	$(HOME)/public_html/phpjug
+
+SUBDIR=		docs/team.guide					\
+		modules/vrjuggler/doc/faq			\
+		modules/vrjuggler/doc/getting.started.guide	\
+		modules/vrjuggler/doc/programmer.guide		\
+		modules/vrjuggler/doc/vjcontrol.guide
+
+all:
+	for dir in $(SUBDIR) ; do	\
+            $(MAKE) -C $$dir docs ;	\
+          done
+
+install:
+	for dir in $(SUBDIR) ; do				\
+            $(MAKE) -C $$dir webroot=$(webroot) install-docs ;	\
+          done
+
+clobber:
+	for dir in $(SUBDIR) ; do	\
+            $(MAKE) -C $$dir clobber ;	\
+          done
