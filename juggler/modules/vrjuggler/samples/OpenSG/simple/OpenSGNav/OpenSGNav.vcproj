@@ -3,7 +3,6 @@
 	ProjectType="Visual C++"
 	Version="7.00"
 	Name="OpenSGNav"
-	ProjectGUID="{783B5239-8ABD-4E9F-88FD-202FAE824B49}"
 	SccProjectName=""
 	SccLocalPath="">
 	<Platforms>
@@ -13,38 +12,48 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\Debug"
-			IntermediateDirectory=".\Debug"
+			OutputDirectory="Debug"
+			IntermediateDirectory="Debug"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="-Zm400"
+				AdditionalOptions="/Zm800"
 				Optimization="0"
-				AdditionalIncludeDirectories=".;&quot;$(OSGROOT)/include&quot;;&quot;$(OSGROOT)/lib/glut_3.7/include&quot;;&quot;$(OSGROOT)/lib/jpg6b/include&quot;;&quot;$(OSGROOT)/lib/tiff-3.5.4/include&quot;;&quot;$(VJ_BASE_DIR)/include&quot;;&quot;$(NSPR_ROOT)/include/nspr&quot;"
+				AdditionalIncludeDirectories=".;&quot;$(OSGROOT)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;"
 				PreprocessorDefinitions="WIN32,_WINDOWS,WINVER=0x0400,_WIN32_WINDOWS=0x0410,_WIN32_WINNT=0x0400,_OSG_HAVE_CONFIGURED_H_,OSG_BUILD_DLL,_DEBUG,OSG_DEBUG,OSG_WITH_GLUT,OSG_WITH_GIF,OSG_WITH_TIF,OSG_WITH_JPG"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				BufferSecurityCheck="FALSE"
 				RuntimeTypeInfo="TRUE"
-				AssemblerListingLocation=".\Debug/"
-				ObjectFile=".\Debug/"
-				ProgramDataBaseFileName=".\Debug/"
-				DebugInformationFormat="4"/>
+				UsePrecompiledHeader="0"
+				PrecompiledHeaderFile=""
+				AssemblerListingLocation=""
+				ObjectFile="$(IntDir)/"
+				ProgramDataBaseFileName="$(IntDir)/"
+				WarningLevel="3"
+				DebugInformationFormat="4"
+				CompileAs="2"
+				DisableSpecificWarnings="4244;4251;4275;4290"
+				ForcedIncludeFiles="windows.h"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vrj.lib vrj_ogl.lib gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib MSVCPRTD.lib MSVCRTD.lib winmm.lib wsock32.lib OSGBaseD.lib OSGSystemD.lib OSGWindowGLUTD.lib glut32.lib opengl32.lib tif32.lib libjpeg.lib"
-				OutputFile=".\Debug/OpenSGNav.exe"
+				AdditionalOptions="/MACHINE:I386"
+				AdditionalDependencies="vrj_d.lib vrj_ogl_d.lib gadget_d.lib jccl_d.lib vpr_d.lib libnspr4.lib libplc4.lib comctl32.lib ws2_32.lib OSGBaseD.lib OSGSystemD.lib OSGWindowGLUTD.lib glut32.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib $(NOINHERIT)"
+				OutputFile="$(OutDir)/OpenSGNav.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(OSGROOT)/lib,$(OSGROOT)/lib/glut_3.7/lib,$(OSGROOT)/lib/jpg6b/lib,$(OSGROOT)/lib/tiff-3.5.4/lib;$(VJ_BASE_DIR)/lib/debug;$(NSPR_ROOT)/lib"
-				IgnoreAllDefaultLibraries="TRUE"
+				SuppressStartupBanner="TRUE"
+				AdditionalLibraryDirectories="&quot;$(OSGROOT)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Debug/OpenSGNav.pdb"/>
+				ProgramDatabaseFile="$(OutDir)/OpenSGNav.pdb"
+				SubSystem="1"
+				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\Debug/OpenSGNav.tlb"/>
+				TypeLibraryName="$(OutDir)/OpenSGNav.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -62,37 +71,49 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\Release"
-			IntermediateDirectory=".\Release"
+			OutputDirectory="Release"
+			IntermediateDirectory="Release"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="-Zm1200 -I&quot;$(OSGROOT)/include&quot; -I&quot;$(OSGROOT)/lib/glut_3.7/include&quot; -I&quot;$(OSGROOT)/lib/jpg6b/include&quot; -I&quot;$(OSGROOT)/lib/tiff-3.5.4/include&quot; -I&quot;$(VJ_BASE_DIR)/include&quot; -I&quot;$(NSPR_ROOT)/include/nspr&quot;"
+				AdditionalOptions="/Zm800"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories=".;&quot;$(OSGROOT)/include&quot;;&quot;$(OSGROOT)/lib/glut_3.7/include&quot;;&quot;$(OSGROOT)/lib/jpg6b/include&quot;;&quot;$(OSGROOT)/lib/tiff-3.5.4/include&quot;;&quot;$(VJ_BASE_DIR)/include&quot;;&quot;$(NSPR_ROOT)/include/nspr&quot;"
-				PreprocessorDefinitions="WIN32,_WINDOWS,WINVER=0x0400,_WIN32_WINDOWS=0x0410,_WIN32_WINNT=0x0400,_OSG_HAVE_CONFIGURED_H_,OSG_BUILD_DLL,OSG_WITH_GLUT,OSG_WITH_GIF,OSG_WITH_TIF,OSG_WITH_JPG"
+				OmitFramePointers="FALSE"
+				AdditionalIncludeDirectories=".;&quot;$(OSGROOT)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;"
+				PreprocessorDefinitions="_OPT;NDEBUG;WIN32,_WINDOWS,WINVER=0x0400,_WIN32_WINDOWS=0x0410,_WIN32_WINNT=0x0400,_OSG_HAVE_CONFIGURED_H_,OSG_BUILD_DLL,OSG_WITH_GLUT,OSG_WITH_GIF,OSG_WITH_TIF,OSG_WITH_JPG"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
+				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
-				AssemblerListingLocation=".\Release/"
-				ObjectFile=".\Release/"
-				ProgramDataBaseFileName=".\Release/"/>
+				UsePrecompiledHeader="0"
+				PrecompiledHeaderFile=""
+				AssemblerListingLocation=""
+				ObjectFile="$(IntDir)/"
+				ProgramDataBaseFileName="$(IntDir)/"
+				WarningLevel="3"
+				SuppressStartupBanner="TRUE"
+				CompileAs="2"
+				DisableSpecificWarnings="4244;4251;4275;4290"
+				ForcedIncludeFiles="windows.h"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vrj.lib vrj_ogl.lib gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib MSVCPRTD.lib MSVCRTD.lib winmm.lib wsock32.lib OSGBase.lib OSGSystem.lib OSGWindowGLUT.lib glut32.lib opengl32.lib tif32.lib libjpeg.lib"
-				OutputFile=".\Release/OpenSGNav.exe"
+				AdditionalOptions="/MACHINE:I386"
+				AdditionalDependencies="vrj.lib vrj_ogl.lib gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib comctl32.lib ws2_32.lib OSGBase.lib OSGSystem.lib OSGWindowGLUT.lib glut32.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib $(NOINHERIT)"
+				OutputFile="$(OutDir)/OpenSGNav.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(OSGROOT)/lib,$(OSGROOT)/lib/glut_3.7/lib,$(OSGROOT)/lib/jpg6b/lib,$(OSGROOT)/lib/tiff-3.5.4/lib,$(VJ_BASE_DIR)/lib/opt,$(NSPR_ROOT)/lib"
-				IgnoreAllDefaultLibraries="TRUE"
-				ProgramDatabaseFile=".\Release/OpenSGNav.pdb"/>
+				SuppressStartupBanner="TRUE"
+				AdditionalLibraryDirectories="&quot;$(OSGROOT)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;"
+				ProgramDatabaseFile="$(OutDir)/OpenSGNav.pdb"
+				SubSystem="1"
+				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\Release/OpenSGNav.tlb"/>
+				TypeLibraryName="$(OutDir)/OpenSGNav.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -114,10 +135,10 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
 			<File
-				RelativePath=".\OpenSGNav.cpp">
+				RelativePath="OpenSGNav.cpp">
 			</File>
 			<File
-				RelativePath=".\app.cpp">
+				RelativePath="app.cpp">
 			</File>
 		</Filter>
 		<Filter
