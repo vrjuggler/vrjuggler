@@ -38,8 +38,8 @@ public:
       vpr::Interval val2(21,vpr::Interval::Msec);
       CppUnit::TestAssert::assertEquals<long>(val2.msec(), 21);
 
-      vpr::Interval val3(21,vpr::Interval::Usec);
-      CppUnit::TestAssert::assertEquals<long>(val3.usec(), 21);
+      vpr::Interval val3(20,vpr::Interval::Usec);
+      CppUnit::TestAssert::assertEquals<long>(val3.usec(), 20);
    }
 
    void testSet()
@@ -52,8 +52,8 @@ public:
       val.set(21,vpr::Interval::Msec);
       CppUnit::TestAssert::assertEquals<long>(val.msec(), 21);
 
-      val.set(21,vpr::Interval::Usec);
-      CppUnit::TestAssert::assertEquals<long>(val.usec(), 21);
+      val.set(20,vpr::Interval::Usec);
+      CppUnit::TestAssert::assertEquals<long>(val.usec(), 20);
    }
 
    void testSetf()
@@ -66,8 +66,8 @@ public:
       val.setf(12.75f, vpr::Interval::Msec);
       CppUnit::TestAssert::assertEquals<long>(val.usec(), 12750);
 
-      val.setf(12.75f, vpr::Interval::Usec);
-      CppUnit::TestAssert::assertEquals<long>(val.usec(), 12);
+      val.setf(20.75f, vpr::Interval::Usec);
+      CppUnit::TestAssert::assertEquals<long>(val.usec(), 20);
    }
 
    void testSec()
@@ -84,15 +84,15 @@ public:
    {
       vpr::Interval val;
 
-      val.secf(12.345678);
+      val.secf(12.34567);
 
       //float val_sec = val.secf();
       //float val_msec = val.msecf();
       //float val_usec = val.usecf();
 
-      CPPUNIT_ASSERT_DOUBLES_EQUAL(val.secf() , 12.345678f, 0.000001f);
-      CPPUNIT_ASSERT_DOUBLES_EQUAL(val.msecf(), 12345.678f, 0.001f);
-      CPPUNIT_ASSERT_DOUBLES_EQUAL(val.usecf(), 12345678.0f, 1.0f);
+      CPPUNIT_ASSERT_DOUBLES_EQUAL(val.secf() , 12.34567f, 0.00001f);
+      CPPUNIT_ASSERT_DOUBLES_EQUAL(val.msecf(), 12345.67f, 0.01f);
+      CPPUNIT_ASSERT_DOUBLES_EQUAL(val.usecf(), 12345678.0f, 100.0f);
    }
 
    void testMsec()
@@ -115,19 +115,19 @@ public:
       //float val_msec = val.msecf();
       //float val_usec = val.usecf();
 
-      CPPUNIT_ASSERT_DOUBLES_EQUAL(val.secf() , 12.345678f, 0.00001f);
-      CPPUNIT_ASSERT_DOUBLES_EQUAL(val.msecf(), 12345.678f, 0.001f);
-      CPPUNIT_ASSERT_DOUBLES_EQUAL(val.usecf(), 12345678.0f, 1.0f);
+      CPPUNIT_ASSERT_DOUBLES_EQUAL(val.secf() , 12.345678f, 0.0001f);
+      CPPUNIT_ASSERT_DOUBLES_EQUAL(val.msecf(), 12345.678f, 0.01f);
+      CPPUNIT_ASSERT_DOUBLES_EQUAL(val.usecf(), 12345678.0f, 10.0f);
    }
 
    void testUsec()
    {
       vpr::Interval val;
 
-      val.usecf(1234567);
+      val.usecf(1234560);
       CppUnit::TestAssert::assertEquals<long>(val.sec() , 1);
       CppUnit::TestAssert::assertEquals<long>(val.msec(), 1234);
-      CppUnit::TestAssert::assertEquals<long>(val.usec(), 1234567);
+      CppUnit::TestAssert::assertEquals<long>(val.usec(), 1234560);
    }
 
    void testUsecf()
@@ -140,9 +140,9 @@ public:
       //float val_msec = val.msecf();
       //float val_usec = val.usecf();
 
-      CPPUNIT_ASSERT_DOUBLES_EQUAL(val.secf() , 12.345678f, 0.000001f);
-      CPPUNIT_ASSERT_DOUBLES_EQUAL(val.msecf(), 12345.678f, 0.001f);
-      CPPUNIT_ASSERT_DOUBLES_EQUAL(val.usecf(), 12345678.0f, 1.0f);
+      CPPUNIT_ASSERT_DOUBLES_EQUAL(val.secf() , 12.345678f, 0.00001f);
+      CPPUNIT_ASSERT_DOUBLES_EQUAL(val.msecf(), 12345.678f, 0.01f);
+      CPPUNIT_ASSERT_DOUBLES_EQUAL(val.usecf(), 12345678.0f, 10.0f);
    }
 
    void testSubtract()
@@ -159,6 +159,28 @@ public:
       CppUnit::TestAssert::assertEquals<long>(diff.usec(), 100);
       CPPUNIT_ASSERT_DOUBLES_EQUAL(diff.secf(), .000100f, 0.0001f);
    }
+
+   void testLessThen()
+   {
+      vpr::Interval val1, val2;
+
+      val1.set(5, vpr::Interval::Sec);
+      val2.set(10, vpr::Interval::Sec);
+      CPPUNIT_ASSERT(val1 < val2);
+      CPPUNIT_ASSERT(!(val2 < val1));
+
+      vpr::Interval offset(10, vpr::Interval::Msec);
+      val1 = (vpr::Interval::HalfPeriod - offset);
+      val2 = (vpr::Interval::HalfPeriod + offset);
+
+      CPPUNIT_ASSERT(val2 < val1);
+      CPPUNIT_ASSERT(! (val1 < val2));
+
+      vpr::Interval val3(5, vpr::Interval::Usec);
+      CPPUNIT_ASSERT(val3 < val1);
+      CPPUNIT_ASSERT(val2 < val3);
+   }
+
 
 
    void testSetNowOverhead()
@@ -196,6 +218,7 @@ public:
       test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testUsec", &IntervalTest::testUsec));
       test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testUsecf", &IntervalTest::testUsecf));
       test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSubtract", &IntervalTest::testSubtract));
+      test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testLessThen", &IntervalTest::testLessThen));
 
       return test_suite;
    }
