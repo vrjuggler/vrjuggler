@@ -386,8 +386,16 @@ clean-links:
 	rm -rf ${instlinks}
 
 # Installation targets.
-install-all: install-opt install-dso install-dbg install-ddso		\
-             install-headers install-test install-data install-gui
+beforeinstall:
+
+afterinstall:
+	@echo "------------------------------------------------"
+	@echo "Library installation complete"
+	@echo "------------------------------------------------"
+
+install-all: beforeinstall install-opt install-dso install-dbg		\
+             install-ddso install-headers install-test install-data	\
+             install-gui
 	@-cd ${prefix} && chgrp -R c2dev .
 	@-cd ${prefix} && chmod -R g+rw .
 	@echo "------------------------------------------------"
@@ -409,9 +417,7 @@ ifeq (${PF_API}, Y)
 	cd ${_install_libdir} && umask ${_UMASK} &&			\
           rm -f ${PF_LIB_DYNAMIC} && ln -s ${_DEFAULT_DIR}/${PF_LIB_DYNAMIC} ./
 endif
-	@echo "------------------------------------------------"
-	@echo "Library installation complete"
-	@echo "------------------------------------------------"
+	${MAKE} afterinstall
 
 install-all-abi:
 	@abi_list='${ABI_LIST}' ;					\
@@ -425,13 +431,10 @@ install-all-abi:
 	@echo "install-all-abi done"
 	@echo "------------------------------------------------"
 
-
-install: install-dbg install-headers install-test install-data install-gui
+install: beforeinstall install-dbg install-headers install-test		\
+         install-data install-gui afterinstall
 	@-cd ${prefix} && chgrp -R c2dev .
 	@-cd ${prefix} && chmod -R g+rw .
-	@echo "------------------------------------------------"
-	@echo "Install done"
-	@echo "------------------------------------------------"
 
 install-dbg: dbg
 	@echo "------------------------------------------------"
