@@ -87,9 +87,9 @@ main () {
 	cout << "OK." << endl;
     //cout << "Read " << desc.size() << " descriptions." << endl;
     
-    //cout << "Printing Chunk DB:" << endl;
-    //cout << chunk;
-    //cout << "endochunks" << endl;
+    cout << "Printing Chunk DB:" << endl;
+    cout << chunk;
+    cout << "endochunks" << endl;
 
     cout << "Getting ConfigChunk 'chunk in chunk test 1'..." <<flush;
     c = chunk.getChunk ("chunk in chunk test 1");
@@ -97,9 +97,17 @@ main () {
 	err = 1;
 	cout << "Failed!" << endl;
     }
-    else
+    else 
 	cout << "OK.\nPrinting:\n" << *c << endl;
     
+    cout << "Getting dependencies for 'chunk in chunk test 1'..." << flush;
+    std::vector<std::string> deps = c->getDependencies();
+    cout << "OK\nPrinting:" << endl;
+    for (int k = 0; k < deps.size(); k++) {
+	cout << "    " << deps[k] << endl;
+    }
+    cout << "Finished." << endl;
+
     cout << "Getting its 2nd display prop..." << flush;
     c2 = c->getProperty ("bigchunk", 1);
     if (c2 == NULL) {
@@ -123,39 +131,31 @@ main () {
 	err = 1;
 	cout << "Failed!" << endl;
     }
-    else
+    else {
 	cout << "OK.";
     
-    if (c) {
 	/* query "ptrtest 1" chunk */
     
 	cout << "Querying 'ptrtest 1'" << endl;
-	char *s = c->getProperty ("ptr");
-	if (s == NULL) {
-	    err = 1;
-	    cout << "  Error: GetProperty 'ptr' returned NULL." << endl;
+	std::string s = c->getProperty ("ptr");
+
+	cout << "  'ptr' property value is '" << s << "'" << endl;
+
+	cout << "Getting property '" << s << "'..." << flush;
+	c2 = chunk.getChunk(s);
+	if (c2) {
+	    cout << "OK.  Read:\n" << *c2 << endl;
 	}
 	else {
-	    cout << "  'ptr' property value is '" << s << "'" << endl;
+	    err = 1;
+	    cout << "Failed!" << endl;
 	}
-	if (s) {
-	    cout << "Getting property '" << s << "'..." << flush;
-	    c2 = chunk.getChunk(s);
-	    if (c2) {
-		cout << "OK.  Read:\n" << *c2 << endl;
-	    }
-	    else {
-		err = 1;
-		cout << "Failed!" << endl;
-	    }
 
-	    
-	}
     }
 
 
     /****************** TESTING VARVALUES *************************/
-    cout << "Getting ConfigChunk 'varvaltest 1'..." << flush;
+cout << "Getting ConfigChunk 'varvaltest 1'..." << flush;
     c = chunk.getChunk("varvaltest 1");
     if (c == NULL) {
 	err = 1;

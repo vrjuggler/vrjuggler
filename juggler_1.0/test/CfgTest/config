@@ -12,6 +12,20 @@ chunkinchunktest
       KeyMod { 5 }
       end
   }
+  bigchunk {
+display
+  name "Right"
+  projectiontype "right"
+  XDisplay ":0.0"
+  stereo false
+  sgipipe 0
+  origin { 450 0 }
+  size { 400 400 }
+  sillyptr { "dependency one" "dependency two" }
+  end
+}
+
+
   end
 
 display
