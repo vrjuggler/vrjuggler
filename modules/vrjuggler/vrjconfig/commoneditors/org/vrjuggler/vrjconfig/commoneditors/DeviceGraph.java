@@ -68,8 +68,9 @@ public class DeviceGraph
 {
    /**
     * Initializes this JGraph specialization to use a model of type
-    * DeviceGraphModel, a graph layout cache of type DeviceGraphLayoutCache,
-    * and a cell view factory of type ProxiedDeviceCellViewFactory.
+    * <code>DeviceGraphModel</code>, a graph layout cache of type
+    * <code>DeviceGraphLayoutCache</code>, and a cell view factory of type
+    * <code>ProxiedDeviceCellViewFactory</code>.
     *
     * @see org.vrjuggler.vrjconfig.commoneditors.devicegraph.DeviceGraphModel
     * @see org.vrjuggler.vrjconfig.commoneditors.devicegraph.DeviceGraphLayoutCache
@@ -138,19 +139,8 @@ public class DeviceGraph
                {
                   this.add(component);
                   component.validate();
-                  Rectangle2D bounds =
-                     GraphConstants.getBounds(view.getAllAttributes());
-
-                  if ( bounds != null )
-                  {
-                     bounds = (Rectangle2D) bounds.clone();
-                     java.awt.Dimension d = component.getPreferredSize();
-                     bounds.setFrame(bounds.getX(), bounds.getY(),
-                                     d.getWidth(), d.getHeight());
-                     AttributeMap map = new AttributeMap();
-                     GraphConstants.setBounds(map, bounds);
-                     table.put(view.getCell(), map);
-                  }
+                  GraphHelpers.autoSizeCellView(component.getPreferredSize(),
+                                                view, table);
                }
             }
          }
@@ -196,7 +186,7 @@ public class DeviceGraph
    /**
     * Centralized creation of an attribute map for graph cells that represent
     * the ConfigElement for a device.  Internally, this makes use of
-    * JGraph.createBounds().
+    * <code>JGraph.createBounds()</code>.
     *
     * @param x          the x-coordinate for the device cell
     * @param y          the y-coordinate for the device cell
@@ -211,6 +201,7 @@ public class DeviceGraph
       map = JGraph.createBounds((AttributeMap) map, x, y, Color.blue);
 
       GraphConstants.setAutoSize(map, autoSize);
+      GraphConstants.setResize(map, true);
 
       return map;
    }
@@ -218,20 +209,38 @@ public class DeviceGraph
    /**
     * Centralized creation of an attribute map for graph cells that represent
     * the ConfigElement for a device proxy.  Internally, this makes use of
-    * JGraph.createBounds().
+    * <code>createProxyAttributes(int,int,boolean)</code>.  It is invoked
+    * with its <code>autoSize</code> parameter set to true.
     *
     * @param x  the x-coordinate for the proxy cell
     * @param y  the y-coordinate for the proxy cell
     *
+    * @see #createProxyAttributes(int,int,boolean)
+    */
+   public static Map createProxyAttributes(int x, int y)
+   {
+      return createProxyAttributes(x, y, false);
+   }
+
+   /**
+    * Centralized creation of an attribute map for graph cells that represent
+    * the ConfigElement for a device proxy.  Internally, this makes use of
+    * <code>JGraph.createBounds()</code>.
+    *
+    * @param x          the x-coordinate for the proxy cell
+    * @param y          the y-coordinate for the proxy cell
+    * @param autoSize   enable or disable always-on auto sizing of cells
+    *
     * @see org.jgraph.graph.GraphConstants
     * @see org.jgraph.JGraph#createBounds(AttributeMap,int,int,Color)
     */
-   public static Map createProxyAttributes(int x, int y)
+   public static Map createProxyAttributes(int x, int y, boolean autoSize)
    {
       Map map = new AttributeMap();
       map = JGraph.createBounds((AttributeMap) map, x, y, Color.red);
 
-      GraphConstants.setAutoSize(map, true);
+      GraphConstants.setAutoSize(map, autoSize);
+      GraphConstants.setResize(map, true);
 
       return map;
    }
