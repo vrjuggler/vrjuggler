@@ -148,6 +148,7 @@ public class VrjConfig
 
                ChunkDescDBEditorIFrame frame = new ChunkDescDBEditorIFrame();
                frame.getEditor().setChunkDescDB(desc_db);
+               frame.setTitle(file.getName());
                frame.pack();
                frame.setVisible(true);
                desktop.add(frame);
@@ -158,13 +159,14 @@ public class VrjConfig
                ConfigChunkDB chunk_db = config.loadConfigChunks(in, mgr.getAllChunkDescs());
                ConfigChunkDBEditorIFrame frame = new ConfigChunkDBEditorIFrame();
                frame.getEditor().setConfigChunkDB(chunk_db);
+               frame.setTitle(file.getName());
                frame.pack();
                frame.setVisible(true);
                desktop.add(frame);
             }
             else
             {
-               System.err.println("Unknown file");
+               System.err.println("ERROR: Unknown file");
             }
          }
          catch (IOException ioe)
