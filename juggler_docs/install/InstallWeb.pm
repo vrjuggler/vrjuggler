@@ -597,19 +597,20 @@ sub processIncludesRecursive($)
 sub processIncludes($)
 {
    outputDebug( "==> processIncludes\n" );
-   my $include_command = 'install-web include';
-   my $include_toc_command = 'install-web include-toc';
-   my $include_tocdocs_command = 'install-web include-tocdocs';
+   my $installweb_command = 'install-web';
+   my $include_command = 'include';
+   my $include_toc_command = 'include-toc';
+   my $include_tocdocs_command = 'include-tocdocs';
   
    my $contents_ref = shift;
    
    my $includes_existed = 0;
    
    # While we have some more includes to deal with
-   while ($$contents_ref =~ m/($html_comment_begin[ ]*$include_command.*?\s*?(\S*?)\s*?$html_comment_end)/is)
+   while ($$contents_ref =~ m/($html_comment_begin[ ]*$installweb_command[ ]*include(-toc|-tocdocs)?[ ]*(\S*?)[ ]*$html_comment_end)/is)
    {
       my $include_statement = $1; # what was that match?
-      my $orig_filename = $2;     # Get filename from the match
+      my $orig_filename = $3;     # Get filename from the match
       
       # fix filename, if it contains tag(s)
       my $expandvars_filename = $orig_filename;
@@ -641,7 +642,7 @@ sub processIncludes($)
       }
       
       # ----------- TOC-DOCS include ----------- #
-      elsif ($expandvars_filename =~ m/$include_tocdocs_command/)
+      elsif ($include_statement =~ m/$include_tocdocs_command/)
       {
          print "==========================\n======================\nImplementME!\n\n====================\n";
       }
@@ -651,7 +652,7 @@ sub processIncludes($)
       {
          my $text_data = "";
          print "[including: \"$expandvars_filename\" ";
-         InstallWeb::load( \$text_data, $expandvars_filename, "include text", "1" );
+         InstallWeb::load( \$text_data, $expandvars_filename, "include text from $expandvars_filename", "1" );
 
          $$contents_ref =~ s/$include_statement/$text_data/is;
 
