@@ -38,11 +38,6 @@
             <enum label="Right" value="5"/>
          </enumeration>
       </property>
-      <property valuetype="configelement" variable="true" name="position_filters">
-         <help>This is a list of all the filters that are to be applied to the postional device data. The filters are applied in the order that they are specified in this configuration.</help>
-         <value label="Position Filter"/>
-         <allowed_type>position_transform_filter</allowed_type>
-      </property>
       <property valuetype="integer" variable="false" name="number_of_birds">
          <help>Number of birds connected to this chassis.</help>
          <value label="Number of Birds" defaultvalue="2"/>
@@ -111,11 +106,6 @@
             <enum label="Left" value="4"/>
             <enum label="Right" value="5"/>
          </enumeration>
-      </property>
-      <property valuetype="configelement" variable="true" name="position_filters">
-         <help>This is a list of all the filters that are to be applied to the postional device data. The filters are applied in the order that they are specified in this configuration.</help>
-         <value label="Position Filter"/>
-         <allowed_type>position_transform_filter</allowed_type>
       </property>
       <property valuetype="integer" variable="false" name="data_format">
          <help>Data format for the birds.</help>
