@@ -74,3 +74,6 @@ install-docs:
 	rm -rf $(doc_prefix)/$(DOC_ROOT)
 	mv $(DOC_ROOT) $(doc_prefix)
 	cp -p beanlist.xsd $(webroot)/$(instdir)
+
+clobber:
+	rm -rf $(DOC_ROOT)
