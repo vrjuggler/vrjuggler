@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.62 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.65 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -96,6 +96,7 @@ public class Matrix44f
 
    // Operator overloads.
 
+   // Converter operators.
 
    // Start of non-virtual methods.
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
@@ -266,6 +267,11 @@ public class RowAccessorMarshaler : ICustomMarshaler
    {
       protected internal IntPtr mRawObject = IntPtr.Zero;
 
+      internal IntPtr RawObject
+      {
+         get { return mRawObject; }
+      }
+
       public DummyRowAccessor(IntPtr rawObject)
       {
          mRawObject = rawObject;
@@ -340,6 +346,11 @@ public class ConstRowAccessorMarshaler : ICustomMarshaler
    private class DummyConstRowAccessor : gmtl.Matrix44f.ConstRowAccessor
    {
       protected internal IntPtr mRawObject = IntPtr.Zero;
+
+      internal IntPtr RawObject
+      {
+         get { return mRawObject; }
+      }
 
       public DummyConstRowAccessor(IntPtr rawObject)
       {

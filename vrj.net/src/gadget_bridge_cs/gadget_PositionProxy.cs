@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.65 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -44,7 +44,7 @@ public class PositionProxy
    {
       m_updateDataDelegate = new updateDataDelegate(updateData);
       m_configDelegate_boost_shared_ptr_jccl__ConfigElement = new configDelegate_boost_shared_ptr_jccl__ConfigElement(config);
-      m_getProxiedInputDeviceDelegate = new getProxiedInputDeviceDelegate(getProxiedInputDevice);
+      m_getProxiedInputDeviceDelegate = new getProxiedInputDeviceDelegate(getProxiedInputDeviceAdapter);
    }
 
    // Constructors.
@@ -105,6 +105,7 @@ public class PositionProxy
 
    // Operator overloads.
 
+   // Converter operators.
 
    // Start of non-virtual methods.
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
@@ -165,6 +166,8 @@ public class PositionProxy
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
+   [return : MarshalAs(UnmanagedType.CustomMarshaler,
+                       MarshalTypeRef = typeof(gadget.InputMarshaler))]
    private extern static gadget.Input gadget_PositionProxy_getProxiedInputDevice__(IntPtr obj);
 
    public override gadget.Input getProxiedInputDevice()

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.65 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -101,9 +101,12 @@ public class DigitalInterface
 
    // Operator overloads.
 
+   // Converter operators.
 
    // Start of non-virtual methods.
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
+   [return : MarshalAs(UnmanagedType.CustomMarshaler,
+                       MarshalTypeRef = typeof(gadget.DigitalProxyMarshaler))]
    private extern static gadget.DigitalProxy gadget_DeviceInterface_gadget_DigitalProxy__getProxy__(IntPtr obj);
 
    public  gadget.DigitalProxy getProxy()

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.65 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -53,7 +53,7 @@ public abstract class Proxy
       m_configDelegate_boost_shared_ptr_jccl__ConfigElement = new configDelegate_boost_shared_ptr_jccl__ConfigElement(config);
       m_refreshDelegate = new refreshDelegate(refresh);
       m_updateDataDelegate = new updateDataDelegate(updateData);
-      m_getProxiedInputDeviceDelegate = new getProxiedInputDeviceDelegate(getProxiedInputDevice);
+      m_getProxiedInputDeviceDelegate = new getProxiedInputDeviceDelegate(getProxiedInputDeviceAdapter);
       m_isStupifiedDelegate = new isStupifiedDelegate(isStupified);
    }
 
@@ -100,6 +100,7 @@ public abstract class Proxy
 
    // Operator overloads.
 
+   // Converter operators.
 
    // Start of non-virtual methods.
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
@@ -167,7 +168,12 @@ public abstract class Proxy
    }
 
    // Delegate for the getProxiedInputDevice() callback.
-   public delegate gadget.Input getProxiedInputDeviceDelegate();
+   protected IntPtr getProxiedInputDeviceAdapter()
+   {
+      return getProxiedInputDevice().mRawObject;
+   }
+
+   public delegate IntPtr getProxiedInputDeviceDelegate();
    protected getProxiedInputDeviceDelegate m_getProxiedInputDeviceDelegate;
 
    public abstract gadget.Input getProxiedInputDevice();
@@ -232,6 +238,8 @@ public class ProxyMarshaler : ICustomMarshaler
       }
 
       [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
+      [return : MarshalAs(UnmanagedType.CustomMarshaler,
+                          MarshalTypeRef = typeof(gadget.InputMarshaler))]
       private extern static gadget.Input gadget_Proxy_getProxiedInputDevice__(IntPtr obj);
 
       public override gadget.Input getProxiedInputDevice()
