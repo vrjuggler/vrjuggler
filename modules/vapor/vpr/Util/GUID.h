@@ -128,23 +128,13 @@ public:
 
    /**
     * Generates a GUID from the given string representation of the GUID using
-    * a char*.
-    * Format: "8x-4x-4x-2x2x-2x2x2x2x2x2x"
-    *
-    * @param guid_string Ptr to a string that is used to inialize guid. Must
-    *                    be non-NULL.
-    */
-   explicit GUID(const char* guid_string);
-
-   /**
-    * Generates a GUID from the given string representation of the GUID using
     * a std::string.
     * Format: "8x-4x-4x-2x2x-2x2x2x2x2x2x"
     *
     * @param guid_string Ptr to a string that is used to inialize guid. Must
     *                    be non-NULL.
     */
-   explicit GUID (const std::string& guid_string)
+   explicit GUID(const std::string& guid_string)
    {
       fromString(guid_string);
    }
