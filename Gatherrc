@@ -37,7 +37,7 @@ Doozer++
 cppdom
 {
    CVSROOT:  :pserver:anonymous@cvs.xml-cppdom.sourceforge.net:/cvsroot/xml-cppdom;
-   Module: cppdom  [external/cppdom];
+   Module: cppdom;
    Tag: HEAD;
-   Path: .;          // Put me right here
+   Path: external;
 };
