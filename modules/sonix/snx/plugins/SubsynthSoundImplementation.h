@@ -57,7 +57,12 @@
 #include "snx/SoundAPIInfo.h"
 
 #include <syn/Core/Module.h>
+#include <syn/Module/InstrumentModule.h>
+#include <syn/Module/WaveTableOscModule.h>
+#include <syn/Module/OperatorModule.h>
+#include <syn/Module/FilterModule.h>
 #include <syn/Module/OStreamModule.h>
+#include <syn/Runner/Runner.h>
 
 namespace snx
 {
@@ -308,7 +313,9 @@ private:
    std::map< std::string, ImplSoundInfo > mBindLookup;
 
    syn::ModulePtr mSink;
+   syn::ModulePtr mMixer;
    void reschedule();
+   syn::Runner mRunner;
 
    /** @link dependency */
    /*#  snx::SoundAPIInfo lnksnx::SoundAPIInfo; */
