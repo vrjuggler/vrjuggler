@@ -327,9 +327,9 @@ public class XMLConfigCommunicator
         synchronized (outstream) {
             try {
                 outstream.writeBytes ("<protocol handler=\"xml_config\">\n" +
-                                      "<apply_chunks>\n" +
+                                      "<apply_chunks>\n<ConfigChunkDB>\n" +
                                       ch.xmlRep ("  ") +
-                                      "</apply_chunks>\n" +
+                                      "</ConfigChunkDB></apply_chunks>\n" +
                                       "</protocol>\n");
                 outstream.flush();
                 return true;
