@@ -1,4 +1,4 @@
-#!/usr/freeware/bin/perl
+#!/usr/local/bin/perl
 
 # -----------------------------------------------------------------------------
 # Install an entire directory from the VR Juggler development tree without
@@ -54,7 +54,9 @@ my $html_header_filename = "$opt_e";
 my $html_footer_filename = "$opt_f";
 my $html_install_prefix = "$opt_h";
 my $subst_file = "$opt_w";
-
+my $levels_of_recursion_allowed = 4; # you may have to change this ...
+   
+   
 my $check_file_mtime = 1;     # should we check file modification time in recurseAction?
 if($opt_a == 1)
 {
@@ -235,10 +237,13 @@ sub htmlFilter($)
    my $html_comment_begin = "<!-- ";
    my $html_comment_end = " -->";
    my $body_tag_end = "<\/body>";
-   my $ignore_web_filter_str = 'install-web ignore';
+   my $ignore_all_str = 'install-web ignore';
+   my $ignore_tags_str = 'install-web no-tags';
+   my $ignore_includes_str = 'install-web no-includes';
    my $ignore_css_str = 'install-web no-css';
    my $ignore_header_str = 'install-web no-header';
    my $ignore_footer_str = 'install-web no-footer';
+   my $include_footer_str = 'install-web common-footer';
 
    my $filename = shift;
    ##print "     |--> HTML filter: $filename ...";
@@ -259,32 +264,56 @@ sub htmlFilter($)
    close(HTML_FILE) or warn "WARNING: Cannot close $filename: $!\n";
 
    ### Check for IGNORE ALL ####
-   if($file_contents =~ m/$ignore_web_filter_str/is)
+   if($file_contents =~ m/$ignore_all_str/is)
    {
-      ##print "ignoring file.\n";
+      print "ignoring file.\n";
       return 1;
    }
 
+   
+   
+   ################# search and replace (tags and includes) ##################
+   #
+   if($file_contents =~ m/$ignore_includes_str/is)
+   {
+   }
+   else
+   { 
+      processIncludesRecursive(\$file_contents);
+   }
+   
+   if($file_contents =~ m/$ignore_tags_str/is)
+   {
+   }
+   else
+   { 
+      replaceTagsRecursive(\$file_contents);
+   }
+   #
+   ################# end of search and replace (tags and includes) ##################
+   
+   
+   ########## begin custom html commands ###############
+   #
+   
    # ----------- HEADER INSERT ----------- #
    # Insert header
    # Look for <BODY> and put it right after that
    if($file_contents =~ m/$ignore_header_str/is)  ### Check for IGNORE HEADER ####
    {
-      print "ignoring header... ";
+      print "[ignoring header...]";
    }
    else
    {
       $file_contents =~ s/($head_tag_end)/\n$html_header\n$1\n/is;
    }
    
-   
-   
    # ----------- CSS HEADER INSERT ----------- #
    # if there is </head> then insert before it
    # if not, then look for <html> and insert after it with <head>...</head> around it
    if($file_contents =~ m/$ignore_css_str/is)  ### Check for IGNORE HEADER ####
    {
-      print "ignoring header... ";
+      print "[ignoring stylesheet...]";
    }
    else
    {
@@ -300,36 +329,55 @@ sub htmlFilter($)
       {
       #print "did NOT add css...";
       }
+
+      # ------ Edit the CSS link path ----- #
+      # ASSERT: The path in the css file is relative to the
+      #         root directory of the web install
+      $file_contents =~ s/<link(.*?)\"stylesheet\"(.*?)href(.*?)\"/$&$html_install_prefix/gis;
    }
-
-   # ------ Edit the CSS link path ----- #
-   # ASSERT: The path in the css file is relative to the
-   #         root directory of the web install
-   $file_contents =~ s/<link(.*?)stylesheet(.*?)href(.*?)\"/$&$html_install_prefix/gis;
-
-   
 
    # ----------- FOOTER INSERT ----------- #
    # Insert footer
    # Look for </BODY> and put it right before that
    if($file_contents =~ m/$ignore_footer_str/is)  ### Check for IGNORE FOOTER ####
    {
-      print "ignoring footer... ";
+      print "[ignoring footer...]";
    }
    else
    {
-      $file_contents =~ s/($body_tag_end)/\n$html_footer\n$1\n/is;
+      if($file_contents =~ m/$html_comment_begin$include_footer_str$html_comment_end/is)
+      {
+         print "[Putting footer in custom place...]";
+         $file_contents =~ s/$html_comment_begin$include_footer_str$html_comment_end/\n$html_footer\n$1\n/is;
+      }
+      else
+      {
+         $file_contents =~ s/($body_tag_end)/\n$html_footer\n$1\n/is;
+      }
    }
-
-   ## REPLACE TAGS (there may be some in the include statements)
-   replaceTags(\$file_contents);
+   #
+   ########## done, with custom html commands ###############
    
-   ## Check includes.  TODO: need a way to use reletive path substs in 
-   ##                        include statements.
-   processIncludes(\$file_contents);
-
-   ## REPLACE TAGS (there may be more tags now that we included other files.)
-   replaceTags(\$file_contents);
+   
+   ################# search and replace (tags and includes) ##################
+   #
+   if($file_contents =~ m/$ignore_includes_str/is)
+   {
+   }
+   else
+   { 
+      processIncludesRecursive(\$file_contents);
+   }
+   
+   if($file_contents =~ m/$ignore_tags_str/is)
+   {
+   }
+   else
+   { 
+      replaceTagsRecursive(\$file_contents);
+   }
+   #
+   ################# end of search and replace (tags and includes) ##################
    
    
    # -----------  SAVE FILE ----------- #
@@ -379,12 +427,11 @@ sub xmlFilter($$)
    }
    close(XML_FILE) or warn "WARNING: Cannot close $filename: $!\n";
 
-   ## Check includes ##
-   processIncludes(\$file_contents);
+   processIncludesRecursive(\$file_contents);
 
    # ---- PATH REPLACE ----
    # If it is not a tag, then do a simple replace
-   # urllink = "somewhere/something.html" ==> urllink="webprefix/rel_path/somewhere/something.html"
+   # linkurl = "somewhere/something.html" ==> linkurl="webprefix/rel_path/somewhere/something.html"
    # NOTE: We don't want to replace links that have TAGS in them
    # NOTE2: This means that all other types of links (rlink|jit|link) must have paths relative to the urllink
    #       OR that use a ${TAG} format for the paths
@@ -393,7 +440,7 @@ sub xmlFilter($$)
    $file_contents =~ s/(linkurl)(\s*?)=(\s*?)\"(?!\$)/$1=\"$html_install_prefix\/$rel_path\//gis;
 
    ## REPLACE TAGS
-   replaceTags(\$file_contents);
+   replaceTagsRecursive(\$file_contents);
 
    ## Replace white space
    processRemoveWhitespace(\$file_contents);
@@ -411,62 +458,169 @@ sub xmlFilter($$)
    #print "done.\n";
 }
 
+#  replaceTags Recursive version (see other for documentation)
+#
+sub replaceTagsRecursive($$)
+{
+   my $contents_ref = shift;
+   my $in_include = shift;
+  
+   # fix filename, if it contains a tag
+   my $found_a_tag = 1;
+   my $levels_of_recursion = 0;
+   while( $found_a_tag == 1 )
+   {
+      $found_a_tag = replaceTags( \$$contents_ref, \$$in_include );
+      
+      # bail if too many recursions.
+      $levels_of_recursion = $levels_of_recursion + 1;
+      if($levels_of_recursion > $levels_of_recursion_allowed)
+      {
+         ## bail!
+         print "replaceTagsRecursive: too much recursion, bailing (you need to fix it or set the recursion level higher in install-web.pl...)\n";
+         exit(0);
+      }
+   }
+}
+
 # Replace the tags in the file contents passed to the subroutine
 #
 # Each tag in %path_subst is replaced with the tag value prefixed
 # by the html_install_directory
 # Each tag in %alias_subst is replace by the tag only
-sub replaceTags($)
+#
+# returns whether a tag was found 0=false 1=true
+sub replaceTags($$)
 {
    my $contents_ref = shift;
+   my $in_include = shift;
+   my $found_a_tag = 0;
 
    #print "File contents???---\n\n";
    #print $$contents_ref;
-
-   # find and path_subst tags and replace with <html_inst_dir>/<tag value>
+  
+   # find subst tags and replace with <html_inst_dir>/<tag value>
    while (($tag,$tag_value) = each(%path_subst))
    {
-      #print "Checking web subst: $tag ==> $tag_value\n";
-      # Look for ${tag} or $(tag)
-      $$contents_ref =~ s/(\$)[{\(]$tag[}\)]/$html_install_prefix$tag_value/gis;
+      # see if there are any tags, if so note it, and replace them
+      if ($$contents_ref =~ m/(\$)[{\(]$tag[}\)]/gis)
+      {
+         $found_a_tag = 1;
+         
+         #print "Checking web subst: $tag ==> $tag_value\n";
+         # Look for ${tag} or $(tag)
+         if ($$in_include == 0)
+         {
+            $$contents_ref =~ s/(\$)[{(]$tag[})]/$html_install_prefix$tag_value/gis;
+         }
+         else
+         {
+            my $root_dir = "$root_src_dir/$src_dir/";
+            $$contents_ref =~ s/(\$)[{(]$tag[})]/$root_dir$tag_value/gis;
+         }
+      }
    }
 
    # alias_subst replace
    while (($tag,$tag_value) = each(%alias_subst))
    {
-      $$contents_ref =~ s/(\$)[{\(]$tag[}\)]/$tag_value/gis;
+      # see if there are any tags, if so note it, and replace them
+      if ($$contents_ref =~ m/(\$)[{\(]$tag[}\)]/gis)
+      {
+         $found_a_tag = 1;
+         $$contents_ref =~ s/(\$)[{(]$tag[})]/$tag_value/gis;
+      }
+   }
+   
+   return $found_a_tag;
+}
+
+
+# recursive-capable process includes (see other for documentation)
+#
+sub processIncludesRecursive($)
+{
+   my $contents_ref = shift;
+   
+   ## Check includes ##
+   my $found_an_include = 1;
+   my $levels_of_recursion = 0;
+   while( $found_an_include == 1 )
+   {
+      my $prev_name = $$contents_ref;
+      $found_an_include = processIncludes(\$$contents_ref);
+      #if( $found_an_include == 1 )
+      #{
+      #   print "including file: changing $prev_name to $filename\n";
+      #}
+      
+      # count number of times we recurse
+      $levels_of_recursion = $levels_of_recursion + 1;
+      if($levels_of_recursion > $levels_of_recursion_allowed)
+      {
+         ## bail!
+         print "processIncludesRecursive: too much recursion, bailing...\n";
+         $found_an_include = 0;
+      }
    }
 }
 
+# One process include
+#
 # Check for includes and do them
+# returns whether or not includes did exist 0=false or 1=true
 sub processIncludes($)
 {
    my $contents_ref = shift;
 
    #print "Processing includes....";
+   my $includes_existed = 0;
 
    # While we have some more includes to deal with
    while($$contents_ref =~ m/<!--(\s*?)install-web(\s*?)include(\s*?)(\S*?)(\s*?)-->/is)
    {
-      my $filename = $4;      # Get filename from the match
+      my $orig_filename = $4;      # Get filename from the match
       my $include_contents = "";   # contents of the file
-
-      print "including file: $filename... ";
-
+      my $expandvars_filename = $orig_filename;
+      
+      # fix filename, if it contains a tag
+      my $one = 1;
+      replaceTagsRecursive( \$expandvars_filename, \$one );
+      $expandvars_filename =~ s/"//g;  # for some reason there was spurious "'s
+      $orig_filename =~ s/"//g;  # for some reason there was spurious "'s
+      
       ###  LOAD the INCLUDE FILE ###
-      if(!open(INC_FILE, $filename))
+      print "[including: \"$expandvars_filename\" ";
+      if(open(INC_FILE, $expandvars_filename))
       {
-         warn "WARNING: Cannot read from $filename: $!\n";
-         return -1;
+         # gather contents together into one var
+         while(<INC_FILE>)
+         { 
+            $include_contents .= $_; 
+            print ".";
+         }
+
+         close(INC_FILE) or warn "WARNING: Cannot close $expandvars_filename: $!\n";
       }
-
-      while(<INC_FILE>)
-      { $include_contents .= $_; }
-      close(INC_FILE) or warn "WARNING: Cannot close $filename: $!\n";
-
-      $$contents_ref =~ s/<!--(\s*?)install-web(\s*?)include(\s*?)($filename)(\s*?)-->/$include_contents/is;
+      else
+      {
+         my $curdirrrr = `pwd`;
+         warn "WARNING: Cannot read from [$orig_filename] == [$expandvars_filename]: $!... skipping\n";
+         warn "         current directory is $curdirrrr\n";
+      }
+      
+      # in case $orig_filename has $ in it, then 
+      # make it \$, so that the regex doesn't interpret the $ as "line end"
+      $orig_filename =~ s/\$/\\\$/g;
+      $$contents_ref =~ s/<!--(\s*?)install-web(\s*?)include(\s*?)($orig_filename)(\s*?)-->/$include_contents/is;
+      
+      print "]";
+      
+      $includes_existed = 1;
    }
    #print " done processing includes.\n";
+   
+   return $includes_existed;
 }
 
 # Get rid of white space lines to make the file smaller to download
@@ -517,7 +671,7 @@ sub recurseAction ($) {
      # This is equivalent to a C switch block.
     SWITCH: {
       # Match .txt or .TXT.
-      if ( $curfile =~ /\.(txt|pdf|ps|TXT|PDF|PS|doc|DOC|ppt|PPT)$/i ) {
+      if ( $curfile =~ /\.(txt|pdf|ps|TXT|PDF|PS)$/i ) {
           installFile("$curfile", $uid, $gid, "$mode", "$full_dest_path", $full_src_path);
           last SWITCH;
       }
@@ -563,7 +717,8 @@ sub recurseAction ($) {
       }
       
       # Match binary files
-      if ( $curfile =~ /\.(bin|gz|tar|zip|exe|rpm|mid|mp3|BIN|GZ|TAR|ZIP|EXE|RPM|MID|mp3)$/ ) {
+      if ( $curfile =~ /\.(scr|bin|gz|tar|zip|exe|rpm|mid|mp3|BIN|GZ|TAR|ZIP|EXE|RPM|MID|MP3|SCR)$/ )
+      {
           installFile("$curfile", $uid, $gid, "$mode", "$full_dest_path", $full_src_path);
           last SWITCH;
       }

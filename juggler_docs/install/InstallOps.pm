@@ -274,4 +274,4 @@ sub replaceTags ($%) {
     return $count;
 }
 
-1;
+# 1;
