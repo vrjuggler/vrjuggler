@@ -45,12 +45,12 @@ SUBOBJDIR=	$(VJ_LIBRARY)
 DIRPRFX=	vrj/
 
 # Subdirectories used for recursion through the source tree.
-SUBDIR=		Display	\
-		Draw	\
-		Kernel	\
-		Performance \
-		Sound	\
-		Test	\
+SUBDIR=		Display		\
+		Draw		\
+		Kernel		\
+		Performance	\
+		Sound		\
+		Test		\
 		Util
 
 SRCS=		vrjParam.cpp
