@@ -41,6 +41,7 @@
 
 #include <vjConfig.h>
 #include <Config/vjConfigChunk.h>
+#include <Utils/vjDebug.h>
 
 //-----------------------------------------------------------------------------
 //: vjAnalog is the abstract base class that devices with digital data derive
@@ -72,9 +73,10 @@ public:
    virtual bool config(vjConfigChunk* c)
    {
       mMin = static_cast<float>( c->getProperty("min") );
-      float max = static_cast<float>( c->getProperty("max") );
-      if (max > 0.0f)
-         mMax = max;
+      mMax = static_cast<float>( c->getProperty("max") );
+      
+      vjDEBUG(vjDBG_ALL,4)<<"*** vjSimAnalog::config() min:"<<mMin<<" max:"<<mMax<<"\n"<< vjDEBUG_FLUSH;
+
       return true;
    }
 

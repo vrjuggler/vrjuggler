@@ -231,6 +231,11 @@ public:
 	   q.outStream( out );
 	   return out;
    }
+   
+   float& scalar() { return vec[VJ_W]; }
+   float& x() { return vec[VJ_W]; }
+   float& y() { return vec[VJ_Y]; }
+   float& z() { return vec[VJ_Z]; }
 };
 
 #endif
