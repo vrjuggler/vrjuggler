@@ -510,7 +510,7 @@ if test "x$OS_TYPE" = "xWin32" ; then
 #    APP_EXTRA_LIBS=`dospath "$APP_EXTRA_LIBS"`
     APP_EXTRA_LIBS_GL=`dospath "$APP_EXTRA_LIBS_GL"`
     APP_EXTRA_LIBS_PF=`dospath "$APP_EXTRA_LIBS_PF"`
-    APP_EXTRA_LIBS_OSG=`dospath "$APP_EXTRA_LIBS_OSG"`
+#    APP_EXTRA_LIBS_OSG=`dospath "$APP_EXTRA_LIBS_OSG"`
 else
     RM_LN='rm -f'
     VJROOT_ABS="$VJROOT_ABS"
