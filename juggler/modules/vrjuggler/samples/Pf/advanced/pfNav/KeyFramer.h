@@ -81,7 +81,7 @@ namespace kev
       };
    
       //: default constructor
-      KeyFramer()
+      KeyFramer() : mCurrentKey()
       {
          // initial state.
          this->clear();

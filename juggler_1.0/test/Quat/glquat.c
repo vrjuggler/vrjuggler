@@ -67,7 +67,7 @@ void APIENTRY gluQuatToMat_EXT(GL_QUAT * quat, GLfloat m[4][4])
   xx = quat->x * x2;   xy = quat->x * y2;   xz = quat->x * z2;
   yy = quat->y * y2;   yz = quat->y * z2;   zz = quat->z * z2;
   wx = quat->w * x2;   wy = quat->w * y2;   wz = quat->w * z2;
-
+/*
   m[0][0] = 1.0 - (yy + zz);
   m[0][1] = xy - wz;
   m[0][2] = xz + wy;
@@ -87,7 +87,27 @@ void APIENTRY gluQuatToMat_EXT(GL_QUAT * quat, GLfloat m[4][4])
   m[3][1] = 0;
   m[3][2] = 0;
   m[3][3] = 1;
+*/
+  // fixed by kevin (transposed the matrix)...
+  m[0][0] = 1.0 - (yy + zz);
+  m[0][1] = xy + wz;
+  m[0][2] = xz - wy;
+  m[0][3] = 0;
+  
+  m[1][0] = xy - wz;
+  m[1][1] = 1.0 - (xx + zz);
+  m[1][2] = yz + wx;
+  m[1][3] = 0;
+  
+  m[2][0] = xz + wy;
+  m[2][1] = yz - wx;
+  m[2][2] = 1.0 - (xx + yy);
+  m[2][3] = 0;
 
+  m[3][0] = 0.0;
+  m[3][1] = 0.0;
+  m[3][2] = 0.0;
+  m[3][3] = 1;
 }
 
 

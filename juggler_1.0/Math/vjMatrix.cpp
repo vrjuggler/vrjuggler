@@ -415,7 +415,7 @@ void vjMatrix::makeDirCos(vjVec3 secXAxis, vjVec3 secYAxis, vjVec3 secZAxis)
 }
 
 // From Watt & Watt
-void    vjMatrix::makeQuaternion( const float* const q )
+void vjMatrix::makeQuaternion( const vjQuat& q )
 {
    /* 
    // A piece of reference code for checking against...
@@ -452,35 +452,36 @@ void    vjMatrix::makeQuaternion( const float* const q )
 
    //s = 2.0f/(q[VJ_X]*q[VJ_X] + q[VJ_Y]*q[VJ_Y] + q[VJ_Z]*q[VJ_Z] + q[VJ_W]*q[VJ_W]);
 
-   xs = q[VJ_X] + q[VJ_X]; ys = q[VJ_Y] + q[VJ_Y]; zs = q[VJ_Z] + q[VJ_Z];
+   xs = q[VJ_X] + q[VJ_X];   ys = q[VJ_Y] + q[VJ_Y];   zs = q[VJ_Z] + q[VJ_Z];
    xx = q[VJ_X] * xs;      xy = q[VJ_X] * ys;      xz = q[VJ_X] * zs;
    yy = q[VJ_Y] * ys;      yz = q[VJ_Y] * zs;      zz = q[VJ_Z] * zs;
    wx = q[VJ_W] * xs;      wy = q[VJ_W] * ys;      wz = q[VJ_W] * zs;
 
-   mat[0][0] = 1.0 - (yy+zz);
-    mat[0][1] = xy+wz;
-    mat[0][2] = xz-wy;
-    mat[0][3] = 0.0;
+   mat[0][0] = 1.0 - (yy + zz);
+   mat[0][1] = xy + wz;
+   mat[0][2] = xz - wy;
+   mat[0][3] = 0.0;
 
-    mat[1][0] = xy-wz;
-    mat[1][1] = 1.0 - (xx+zz);
-    mat[1][2] = yz+wx;
-    mat[1][3] = 0.0;
+   mat[1][0] = xy - wz;
+   mat[1][1] = 1.0 - (xx + zz);
+   mat[1][2] = yz + wx;
+   mat[1][3] = 0.0;
 
-    mat[2][0] = xz+wy;
-    mat[2][1] = yz-wx;
-    mat[2][2] = 1.0 - (xx+yy);
-    mat[2][3] = 0.0;
+   mat[2][0] = xz + wy;
+   mat[2][1] = yz - wx;
+   mat[2][2] = 1.0 - (xx + yy);
+   mat[2][3] = 0.0;
 
-    mat[3][0] = 0.0;
-    mat[3][1] = 0.0;
-    mat[3][2] = 0.0;
-    mat[3][3] = 1.0;
+   mat[3][0] = 0.0;
+   mat[3][1] = 0.0;
+   mat[3][2] = 0.0;
+   mat[3][3] = 1.0;
 }
 
-void vjMatrix::makeQuaternion( const vjQuat& q )
+void vjMatrix::makeQuaternion( const float* const q )
 {
-   makeQuaternion(q.vec);
+   vjQuat quat( q[VJ_W], q[VJ_X], q[VJ_Y], q[VJ_Z] );
+   makeQuaternion( quat );
 }
 
 void  vjMatrix::makeRot(float _degrees, vjVec3 _axis)

@@ -131,6 +131,42 @@ public:
         return (float) ::atan2(x, y);
 #endif
     }
+    
+    // -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
+    inline static double atan( const double x ) 
+    {
+        return ::atan( x );
+    }
+
+    // -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
+    inline static float atan( const float x ) 
+    {
+#ifdef HAVE_ATAN2F
+        return ::atanf( x );
+#else
+        return (float) ::atan( x );
+#endif
+    }
+    
+    // -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
+    inline static double tan( const double x ) 
+    {
+        return ::tan( x );
+    }
+
+    // -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
+    inline static float tan( const float x ) 
+    {
+#ifdef HAVE_ATAN2F
+        return ::tanf( x );
+#else
+        return (float) ::tan( x );
+#endif
+    }
 
     // -----------------------------------------------------------------------
     // -----------------------------------------------------------------------
@@ -240,22 +276,22 @@ public:
     //! RETURNS: random number between 0 and 1
     // -----------------------------------------------------------------------
     inline float random()
-   {
-      // rand returns int from  0 - RAND_MAX
-      const float rand_max( RAND_MAX );
-      float r = static_cast<float>( rand() );
-      r /= rand_max;
-      return r;
-   }
+    {
+       // rand returns int from  0 - RAND_MAX
+       const float rand_max( RAND_MAX );
+       float r = static_cast<float>( rand() );
+       r /= rand_max;
+       return r;
+    }
 
-   //: return a random number between x1 and x2
-   //! RETURNS: random number between x1 and x2
+    //: return a random number between x1 and x2
+    //! RETURNS: random number between x1 and x2
     inline float random( float x1, float x2 )
-   {
-      float r = vjSystemBase::random();
-      float size = x2 - x1;
-      return r * size + x1;
-   }
+    {
+       float r = vjSystemBase::random();
+       float size = x2 - x1;
+       return r * size + x1;
+    }
 };
 
 

@@ -266,7 +266,7 @@ void gloveApp::preFrame()
    mNavigation.accelerate( LeftPointing() == true );
    mNavigation.rotate( LeftPointing() == false && LeftOpen() == false );
    mNavigation.setMatrix( mGlove->getPos(vjGloveData::INDEX) );
-   mNavigation.update();
+   mNavigation.update( time );
 
    vjVec3 glovePos;
 

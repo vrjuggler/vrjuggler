@@ -35,10 +35,9 @@
 
 
 //#include <Kernel/vjKernel.h>
-#include <Math/vjCoord.h>
 #include <Utils/vjDebug.h>
-
-#include <velocityNav.h>
+#include <Math/vjMatrix.h>
+#include <Math/vjQuat.h>
 
 //: This is a "cave style" navigation matrix
 //  Provided that you call update once per frame, it should 
@@ -51,54 +50,47 @@ class vjStdCaveNavigator : public vjMatrix
 public:
    vjStdCaveNavigator();
 
-   velocityNav* getNavigator()
-   { return &mVNav; }
-   
-   //: call once per frame (pre or post frame, not intra frame)
-   virtual int update();
-   
-   //: tell the navigator to rotate
-   //  Rotation is based on the current setMatrix call
-   virtual void rotate( const bool& state = true )
-   {
-      mNowRotating = state;
-   }   
-   
    //: tell the navigator to accelerate
    //  Acceleration is based on the current setMatrix call
-   virtual void accelerate( const bool& state = true )
+   virtual void accelerate( const float& metersPerSocondSquared )
    {
-      mNowTranslating = state;
+      mAccelerate = metersPerSocondSquared;
    }
    
    //: tell the navigator to stop
    virtual void stop()
    {
-      //TODO
+      mStop = true;
    }
    
-   //: tell the navigator to reverse acceleration
-   virtual void reverse()
+   void speed( float metersPerSecond )
    {
-      //TODO
+      mVelocity = metersPerSecond;
    }
+    
+   // do this rotation per socond
+   void rotate( float rad, float x, float y, float z )
+   {
+      mRot.setRotation( rad, x, y, z );
+   }   
    
    //: tell the navigator to brake
+   // kill speed by some factor, kill all acceleration
    virtual void brake()
    {
-      //TODO
+      mBrake = true;
    }
    
    //: tell the navigator to reset its matrix to origin
    virtual void reset()
    {
-      //TODO
+      mDeviceMatrix = mOrigin
    }
    
    //: tell the navigator the matrix that reset() uses as it's origin.
    virtual void setOrigin( const vjMatrix& matrix )
    {
-      //TODO
+      mOrigin = matrix;
    }
    
    //: tell the navigator what the pointing device's matrix is.
@@ -109,15 +101,20 @@ public:
       mDeviceMatrix = matrix;
    }   
    
-private:
-   velocityNav          mVNav;      // My navigator
-   //vjKernel* mKern;        // The Kernel
-
 protected:
+   vjMatrix mOrigin;
    vjMatrix mDeviceMatrix;
-   bool     mNowTranslating;
-   bool     mNowRotating;
+   bool mAccelerate;
+   bool mStop;
+   float mVelocity;
+   vjQuat mRot;
 };
 
+//: call once per frame (pre or post frame, not intra frame)
+virtual int update()
+{
+   mVelocity = mVelocity / factor;
+   mAccelerate = 0.0f;
+}   
 
 #endif

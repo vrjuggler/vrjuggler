@@ -70,28 +70,19 @@ public:
    //: Are we equal
    bool equal(const vjVec4&  _v) const {
       return (vec[0] == _v[0] &&
-              vec[1] == _v[1] &&
-              vec[2] == _v[2] &&
-              vec[3] == _v[3]);
+               vec[1] == _v[1] &&
+               vec[2] == _v[2] &&
+               vec[3] == _v[3]);
    }
 
-   float dot(const vjVec4&  _v) const {
-      return (vec[0] * _v[0] +
-              vec[1] * _v[1] +
-              vec[2] * _v[2]);
-   }
-
-
-   void normalize()
+   float dot(const vjVec4&  _v) const
    {
-      float len = length();
-      vec[0] = vec[0] / len;
-      vec[1] = vec[1] / len;
-      vec[2] = vec[2] / len;
-      vec[3] = vec[3] / len;
+      return (vec[0] * _v[0] +
+               vec[1] * _v[1] +
+               vec[2] * _v[2] );
    }
 
-   float length() const
+   inline float length() const
    {
       return vjSystem::sqrt((vec[0]*vec[0])+
                             (vec[1]*vec[1])+
@@ -99,6 +90,14 @@ public:
                             (vec[3]*vec[3]));
    }
 
+   inline void normalize()
+   {
+      float len = 1.0f / length();
+      vec[0] *= len;
+      vec[1] *= len;
+      vec[2] *= len;
+      vec[3] *= len;
+   }
 
    //: Xform the vector
    // Set vec = (Mat)(Vec)

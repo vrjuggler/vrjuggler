@@ -90,13 +90,23 @@
 #include <math.h>
 
 //: Linear Interpolation
-inline void VJ_LERP( float& result, const float& lerp, const float& a, 
-                  const float& b )
+// use double or float only...
+template <class dataType>
+inline void VJ_LERP( dataType& result, const dataType& lerp, const dataType& a, 
+                  const dataType& b )
 {
-    float size = b - a;
+    dataType size = b - a;
     result = a + (size * lerp);
 }
 /* #include <Utils/vjDebug.h> */
+
+//: Is almost equal?
+// test for equality with tolerance...
+template <class dataType>
+inline bool VJ_ISEQUAL( const dataType& a, const dataType& b, const dataType& tolerance )
+{
+   return vjSystem::abs( a - b ) <= tolerance;
+}
 #endif   /* __cplusplus */
 
 #ifdef HAVE_UNISTD_H

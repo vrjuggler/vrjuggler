@@ -419,8 +419,8 @@ void velocityNav::scaled_rotate(vjMatrix rot_mat)
    transformIdent.makeIdent();
 
    // Create the goal rotation quaternion (the goal is the input matrix)
-   source_rot.makeQuat(transformIdent);
-   goal_rot.makeQuat(rot_mat);
+   source_rot.makeRot(transformIdent);
+   goal_rot.makeRot(rot_mat);
 
    // If we don't have two identity matrices, then interpolate between them
    if(transformIdent != rot_mat)

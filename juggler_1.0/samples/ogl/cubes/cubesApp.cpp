@@ -55,7 +55,7 @@ void UserData::updateNavigation()
    vjQuat      source_rot, goal_rot, slerp_rot;
 
    transformIdent.makeIdent();            // Create an identity matrix to rotate from
-   source_rot.makeQuat(transformIdent);
+   source_rot.makeRot(transformIdent);
 
    vjMatrix* wand_matrix;
    wand_matrix = mWand->getData();
@@ -69,7 +69,7 @@ void UserData::updateNavigation()
    vjDEBUG(vjDBG_ALL,6) << "Wand XYZ: " << xyzAngles << std::endl
                         << vjDEBUG_FLUSH;
 
-   goal_rot.makeQuat(*wand_matrix);    // Create the goal rotation quaternion
+   goal_rot.makeRot(*wand_matrix);    // Create the goal rotation quaternion
 
    if(transformIdent != *wand_matrix)  // If we don't have two identity matrices
    {
