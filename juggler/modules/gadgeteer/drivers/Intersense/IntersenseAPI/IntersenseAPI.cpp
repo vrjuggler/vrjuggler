@@ -79,10 +79,11 @@ namespace gadget
 //! ARGS:bufferIndex - the value of current, progress, or valid (it is an offset in the array)
 // XXX: We are going to say the cubes are 0 based
 
-int IntersenseAPI::getStationIndex(int stationNum, int bufferIndex)
+unsigned int IntersenseAPI::getStationIndex(unsigned int stationNum,
+                                            int bufferIndex)
 {
-   int ret_val = (stationNum*3)+bufferIndex;
-   vprASSERT((ret_val >= 0) && (ret_val < ((mTracker.getNumStations()+1)*3)));
+   unsigned int ret_val = (stationNum*3)+bufferIndex;
+   vprASSERT(ret_val < ((mTracker.getNumStations()+1)*3));
    return ret_val;
 }
 
@@ -146,7 +147,7 @@ bool IntersenseAPI::config(jccl::ConfigElementPtr e)
    }
 
    // Configure each station
-   for( int i = 0; i < mTracker.getNumStations(); i++)
+   for( unsigned int i = 0; i < mTracker.getNumStations(); ++i )
    {
       jccl::ConfigElementPtr station_config = e->getProperty<jccl::ConfigElementPtr>("stations", i);
 
@@ -204,7 +205,7 @@ void IntersenseAPI::controlLoop(void* nullParam)
 bool IntersenseAPI::startSampling()
 {
    // Configure the stations used by the configuration
-   for( int i = 0; i < mTracker.getNumStations(); i++ )
+   for( unsigned int i = 0; i < mTracker.getNumStations(); ++i )
    {
       int station_index = stations[i].stationIndex;
 
@@ -292,7 +293,7 @@ bool IntersenseAPI::sample()
    vpr::Thread::yield();
 
 
-   for (int i = 0 ; i < (mTracker.getNumStations()); i++)
+   for ( unsigned int i = 0 ; i < (mTracker.getNumStations()); ++i )
    {
       // Get the station index for the given station.
       int stationIndex = stations[i].stationIndex;
