@@ -2,6 +2,9 @@ DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
 Oct-02-2004 patrickh    Handle the case when it is necessary to link against
                         the XFree86/X.org library libXxf86vm explicitly.
+Oct-01-2004 aronb       Updated to use the modified gadget::InputManager API
+                        to fix a cluster device data sharing bug.
+                        NEW VERSION 1.1.150-2
 
 [2.0 Alpha 4 released - 4.28.2004]=============================================
 Apr-28-2004 aronb       NEW VERSION: 1.1.150
