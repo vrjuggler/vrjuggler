@@ -50,6 +50,7 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
       <section>
          <title>Important Note for Win32 Users</title>
          <para>VR Juggler 1.1 uses a lot of C++ templates. Some components of the system will not compile with MS Visual Studio 6.0, and as a result, we currently require the use of Visual Studio 7 (.NET) to compile the source code. We understand that this is an inconvenience, and we are interested in methods for compiling the code with Visual Studio 6. However, due to VC6's poor support for templates and the C++ standard in general, users need to be aware that it may not be possible.</para>
+         <para>VR Juggler and all its modules have a <quote>unified</quote> build system. That is, the same build system works on UNIX-based systems as on Win32. To do this, we require the use of Cygwin (<ulink url="http://sources.redhat.com/cygwin/download.html">http://sources.redhat.com/cygwin/download.html</ulink>) to provide a build environment for all of the code found in this source tree. We also require the use of an extension to Cygwin that we call <quote>juggler-tools</quote>. The archive may be downloaded from <ulink url="http://www.vrjuggler.org/download/juggler-tools.zip">http://www.vrjuggler.org/download/juggler-tools.zip</ulink>. After being installed, the <filename>juggler-tools</filename> directory should be added at the <emphasis>end</emphasis> of your path so that it adds to the Cygwin environment and does not conflict with it.</para>
       </section>
    </section>
    <section id="source.code.section">
