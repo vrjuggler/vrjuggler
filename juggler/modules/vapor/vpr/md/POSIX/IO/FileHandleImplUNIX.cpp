@@ -97,7 +97,7 @@ FileHandleImplUNIX::open () {
     if ( m_fdesc == -1 ) {
         // If we are opening in non-blocking mode, we do not want to bomb out.
         if ( errno == EWOULDBLOCK && ! m_open_blocking ) {
-            status.setCode(Status::InProgress);
+            status.setCode(vpr::Status::WouldBlock);
             m_open = true;
         }
         // Otherwise, report the error.
@@ -391,7 +391,7 @@ FileHandleImplUNIX::read_i (void* buffer, const size_t length,
         // Something went wrong while attempting to read from the file.
         if ( bytes_read < 0 ) {
             if ( errno == EAGAIN && ! m_blocking ) {
-                status.setCode(Status::InProgress);
+                status.setCode(vpr::Status::WouldBlock);
             }
             // If the error is EAGAIN and we are in non-blocking mode, we do not
             // bother to print the message.
@@ -478,7 +478,7 @@ FileHandleImplUNIX::write_i (const void* buffer, const size_t length,
 
         if ( bytes_written <= 0 ) {
             if ( errno == EAGAIN && ! m_blocking ) {
-                status.setCode(Status::InProgress);
+                status.setCode(vpr::Status::WouldBlock);
             }
             else {
                 vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)

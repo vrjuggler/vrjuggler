@@ -74,7 +74,7 @@ SocketDatagramImplBSD::recvfrom (void* msg, const size_t length,
 
         if ( bytes_read == -1 ) {
             if ( errno == EAGAIN && getNonBlocking() ) {
-                retval.setCode(Status::InProgress);
+                retval.setCode(Status::WouldBlock);
             }
             else {
                 fprintf(stderr,
@@ -108,7 +108,7 @@ SocketDatagramImplBSD::sendto (const void* msg, const size_t length,
 
         if ( bytes_sent == -1 ) {
             if ( errno == EAGAIN && getNonBlocking() ) {
-                retval.setCode(Status::InProgress);
+                retval.setCode(Status::WouldBlock);
             }
             else {
                 fprintf(stderr,
