@@ -39,6 +39,8 @@
 # Include common definitions.
 include @topdir@/make.defs.mk
 
+SUBOBJDIR=	$(JCCL_LIBRARY)
+
 # Prefix for recursive stuff.
 DIRPRFX=	common/jccl/
 
@@ -46,6 +48,6 @@ DIRPRFX=	common/jccl/
 SUBDIR=		Plugins		\
 		Util
 
-$(RECTARGET): recursive
+SRCS=		jcclParam.cpp
 
-include $(MKPATH)/dpp.subdir.mk
+include $(MKPATH)/dpp.obj-subdir.mk
