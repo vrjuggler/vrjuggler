@@ -1651,6 +1651,28 @@ clobber:
          </orderedlist>
          <para>Other ORBs will vary in the location of the <classname>ORBClass</classname> and the <classname>ORBSingletonClass</classname>. Refer to the documentation of the specific ORB to find out more about using it instead of Java IDL.</para>
       </appendix>
+      <appendix>
+         <title>Legal</title>
+         <para>A full binary distribution of Tweek comes with binary code from several other software projects not affiliated with the Juggler Project or Iowa State University. Tweek makes use of redistributable code from the following packages:</para>
+         <itemizedlist>
+            <listitem>
+               <para>JDOM (<ulink url="http://www.jdom.org/">http://www.jdom.org/</ulink>)</para>
+            </listitem>
+            <listitem>
+               <para>JacORB (<ulink url="http://www.jacorb.org/">http://www.jacorb.org/</ulink>)</para>
+            </listitem>
+            <listitem>
+               <para>Kuststoff look and feel (<ulink url="http://www.incors.org/">http://www.incors.org/</ulink>)</para>
+            </listitem>
+            <listitem>
+               <para>Metouia look and feel (<ulink url="http://mlf.sourceforge.net/">http://mlf.sourceforge.net/</ulink>)</para>
+            </listitem>
+            <listitem>
+               <para>OpenORB (<ulink url="http://openorb.exolab.org/">http://openorb.exolab.org/</ulink> or <ulink url="http://openorb.sourceforge.net/">http://openorb.sourceforge.net/</ulink>)</para>
+            </listitem>
+         </itemizedlist>
+         <para>The licenses for each of these software packages can be found in <filename>$TWEEK_BASE_DIR/share/tweek/data/licenses</filename>.</para>
+      </appendix>
    </part>
    <bibliography>
       <biblioentry id="Gam95">
