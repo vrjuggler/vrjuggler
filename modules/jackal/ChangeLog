@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Nov-05-2004 patrickh    Updated to require Tweek 0.19.2.
+                        NEW VERSION: 0.21.1
 Nov-04-2004 aronb       Java API changes.
                         NEW VERSION: 0.21.0
 Oct-29-2004 patrickh    Relocated the JCCL Java libraries to the directory
