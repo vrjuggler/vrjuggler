@@ -140,7 +140,7 @@ protected:
     *
     * @pre None.
     * @post A thread (with any specified attributes) is created that begins
-    *       executing func().  Depending on the scheduler, it may being
+    *       executing func().  Depending on the scheduler, it may begin
     *       execution immediately, or it may block for a short time before
     *       beginning execution.
     *
