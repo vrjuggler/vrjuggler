@@ -40,7 +40,7 @@ module tweek
 
 interface Observer
 {
-   void update();
+   oneway void update();
 };
 
 };
