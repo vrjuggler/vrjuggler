@@ -1,7 +1,7 @@
 chunk displaySystem "Display System" ""
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   numpipes Int 1 "Number of Pipes" "The number of pipes on the system"
-  xpipes String -1 "xpipes" "The x-display strings for the pipes"
+  xpipes String -1 "xpipes" "The x-display strings for the pipes.  NOTE: This is a zero-based list."
   end
 chunk IBox "IBox" "Configuration for the IBox"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
@@ -362,7 +362,7 @@ chunk displayWindow "Display Window" "This is display window, it contains viewpo
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   origin Int 2 "origin" vj_valuelabels { "X" "Y" } "Window origin (lower left screen is 0,0)"
   size Int 2 "size" vj_valuelabels { "Width" "Height" } "Window size"
-  pipe Int 1 "pipe" "Graphics pipe"
+  pipe Int 1 "pipe" "Graphics pipe.  Zero-based reference to the display system chunk"
   stereo Bool 1 "In stereo" ""
   border Bool 1 "Has Border" "Should the window have a border"
   act_as_keyboard_device Bool 1 "Act as keyboard device" "Should this window also be a keyboard event device."

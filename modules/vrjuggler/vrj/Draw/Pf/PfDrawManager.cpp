@@ -315,10 +315,10 @@ void vjPfDrawManager::addDisplay(vjDisplay* disp)
 
    // ouput debug info about the frame buffer config recieved
    unsigned int i;
-   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_VERB_LVL) << "vjPfDrawManager::initDrawing: Got Stereo FB config\n" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_VERB_LVL) << "vjPfDrawManager::addDisplay: Got Stereo FB config\n" << vjDEBUG_FLUSH;
    for(i=0;i<stereo_fb_config.size();i++)
       vjDEBUG_CONT(vjDBG_DRAW_MGR,vjDBG_VERB_LVL) << "  " << stereo_fb_config[i] << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_VERB_LVL) << "\nvjPfDrawManager::initDrawing: Got Mono FB config\n" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_VERB_LVL) << "\nvjPfDrawManager::addDisplay: Got Mono FB config\n" << vjDEBUG_FLUSH;
    for(i=0;i<mono_fb_config.size();i++)
       vjDEBUG_CONT(vjDBG_DRAW_MGR,vjDBG_VERB_LVL) << "  " << mono_fb_config[i] << std::endl << vjDEBUG_FLUSH;
    vjDEBUG_CONT(vjDBG_DRAW_MGR,vjDBG_VERB_LVL) << std::endl << vjDEBUG_FLUSH;
@@ -356,12 +356,12 @@ void vjPfDrawManager::addDisplay(vjDisplay* disp)
    // Setup Frame Buffer config
    if (disp->inStereo())                            // If we need stereo
    {
-      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager::initDrawing: Configuring stereo window attribs.\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager::addDisplay: Configuring stereo window attribs.\n" << vjDEBUG_FLUSH;
       pf_disp.pWin->setFBConfigAttrs(&(stereo_fb_config[0]));     // Configure framebuffer for stereo
    }
    else
    {
-      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager::initDrawing: Configuring mono window attribs.\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager::addDisplay: Configuring mono window attribs.\n" << vjDEBUG_FLUSH;
       pf_disp.pWin->setFBConfigAttrs(&(mono_fb_config[0]));       // Configure a "norm" window
    }
 
@@ -377,6 +377,7 @@ void vjPfDrawManager::addDisplay(vjDisplay* disp)
    vjViewport* viewport = NULL;
    unsigned num_vps = disp->getNumViewports();
 
+   vjDEBUG(vjDBG_DRAW_MGR, vjDBG_CONFIG_LVL) << "   Num viewports: " << num_vps << std::endl << vjDEBUG_FLUSH;
    for(unsigned vp_num=0; vp_num < num_vps; vp_num++)
    {
       viewport = disp->getViewport(vp_num);
