@@ -174,7 +174,7 @@ ifdef GLOBAL_BUILD
 endif
 
 jccl_config.jar: $(CONFIG_CLASSES)
-	$(JAR) cvf $@ $(CONFIG_CLASSES)
+	$(JAR) cvf $@ $(CONFIG_DIR)/*.class
 
 docs:
 	$(JDK_HOME)/bin/javadoc -d $(DOC_ROOT) -sourcepath $(srcdir)	\

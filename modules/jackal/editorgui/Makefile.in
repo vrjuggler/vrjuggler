@@ -110,7 +110,10 @@ ifdef GLOBAL_BUILD
 endif
 
 jccl_editorgui.jar: $(JAVA_CLASSES)
-	$(JAR) cvf $@ $(JAVA_CLASSES)
+	$(JAR) cvf $@ \
+			$(EDITORGUI_DIR)/*.class \
+			$(CHUNKDESCUI_DIR)/*.class \
+			$(CONFIGCHUNKUI_DIR)/*.class
 
 docs:
 	$(JDK_HOME)/bin/javadoc -d $(DOC_ROOT) -sourcepath $(srcdir)	\
