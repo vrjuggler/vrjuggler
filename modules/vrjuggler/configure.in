@@ -680,7 +680,6 @@ AC_OUTPUT(vrjuggler-config
           test/Draw/OGL/Makefile
           test/Draw/OGL/analog/Makefile
           test/Draw/OGL/combo/Makefile
-          test/Draw/OGL/cones/Makefile
           test/Draw/OGL/cubes/Makefile
           test/Draw/OGL/digitalGlove/Makefile
           test/Draw/OGL/simpleGlove/Makefile
