@@ -197,7 +197,7 @@ case $target_os in
     # Darwin, aka Mac OS X.
     darwin*)
         VPR_FORCE_SUBSYSTEM([POSIX])
-        AC_DEFINE(VPR_OS_Darwin, , [Define if building on Darin.])
+        AC_DEFINE(VPR_OS_Darwin, , [Define if building on Darwin.])
         AC_DEFINE(_BSD_TYPES,)
         ;;
     # A machine running FreeBSD.  Currently only i386 is known to compile.
