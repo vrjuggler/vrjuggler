@@ -15,7 +15,7 @@
       <FONT COLOR="#ffffff" SIZE="+2">Documentation</FONT>
     </TD>
     <TD ALIGN="RIGHT" BGCOLOR="#008000">
-      <FONT COLOR="#ffffff"><B><I>VR Juggler<BR>
+      <FONT COLOR="#ffffff"><a href="http://www.vrjuggler.org"><B><I>VR Juggler</a><BR>
       Beta 1</I></B></FONT>
       <BR>
     </TD>
