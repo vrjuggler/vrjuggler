@@ -727,8 +727,8 @@ fi
 
 # Translate paths from UNIX-style to Win32.
 if test "x$OS_TYPE" = "xWin32" ; then
-    SAFE_VJROOT_ABS=`unix2dos -p "$VJROOT_ABS"`
-    SAFE_JUGGLERROOT_ABS=`unix2dos -p "$JUGGLERROOT_ABS"`
+    VJROOT_ABS=`unix2dos -p "$VJROOT_ABS"`
+    JUGGLERROOT_ABS=`unix2dos -p "$JUGGLERROOT_ABS"`
 
     DEPEND_EXTRAS=`unix2dos "$DEPEND_EXTRAS"`
     INCLUDES=`unix2dos "$INCLUDES"`
@@ -743,8 +743,8 @@ if test "x$OS_TYPE" = "xWin32" ; then
     APP_EXTRA_LIBS_PF=`unix2dos "$APP_EXTRA_LIBS_PF"`
     APP_EXTRA_LIBS_OSG=`unix2dos "$APP_EXTRA_LIBS_OSG"`
 else
-    SAFE_VJROOT_ABS="$VJROOT_ABS"
-    SAFE_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
+    VJROOT_ABS="$VJROOT_ABS"
+    JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 fi
 
 # Set up some sed expressions that will help separate the share directory from
@@ -804,8 +804,8 @@ DPP_SUBST
 AC_SUBST(topdir)
 AC_SUBST(UNIX_VJROOT_ABS)
 AC_SUBST(UNIX_JUGGLERROOT_ABS)
-AC_SUBST(SAFE_VJROOT_ABS)
-AC_SUBST(SAFE_JUGGLERROOT_ABS)
+AC_SUBST(VJROOT_ABS)
+AC_SUBST(JUGGLERROOT_ABS)
 AC_SUBST(VJ_SHARE_DIR)
 AC_SUBST(SUBSYSTEM)
 
