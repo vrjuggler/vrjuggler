@@ -91,7 +91,7 @@ public:
    }
 
    /// Returns time of last update.
-   vpr::Interval getTimeStamp ()
+   vpr::Interval getTimeStamp()
    {
       return mPositionData.getTime();
    }
