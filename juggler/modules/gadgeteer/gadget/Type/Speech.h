@@ -133,7 +133,7 @@ inline void Speech::config()
    _user = "kevin";
 }
 
+} // End of gadget namespace
 
-};
 
 #endif   /* _GADGET_SPEECH_H_ */

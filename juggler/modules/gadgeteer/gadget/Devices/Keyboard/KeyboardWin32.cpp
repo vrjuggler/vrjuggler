@@ -65,7 +65,7 @@ bool KeyboardWin32::config( jccl::ConfigChunkPtr c )
    // Get size and position
    m_width = c->getProperty<int>( "width" );
    m_height = c->getProperty<int>( "height" );
-   
+
    // default to something "sane" if too small
    if (m_width == 0) m_width = 400;
    if (m_height == 0) m_height = 400;
@@ -147,7 +147,7 @@ void KeyboardWin32::controlLoop( void* devPtr )
 }
 
 // do not call from any other thread than controlLoop()!!!!
-// Peek and GetMessage retrieves messages for any window 
+// Peek and GetMessage retrieves messages for any window
 // that belongs to the calling thread...
 void KeyboardWin32::handleEvents()
 {
@@ -169,7 +169,7 @@ void KeyboardWin32::handleEvents()
    else
    {
       have_events_to_check = false;
-      return; // don't wait on the lock since there is nothing 
+      return; // don't wait on the lock since there is nothing
               // afterwards that will be called when this is false.
    }
 
@@ -177,7 +177,7 @@ void KeyboardWin32::handleEvents()
 // Doing it here gives makes sure that we process all events and don't get only part of them for an update
 // In order to copy data over to the m_curKeys array
 // Lock access to the m_keys array for the duration of this function
-vpr::Guard<vpr::Mutex> guard( mKeysLock );      
+vpr::Guard<vpr::Mutex> guard( mKeysLock );
 
    while (have_events_to_check)
    {
@@ -191,7 +191,7 @@ vpr::Guard<vpr::Mutex> guard( mKeysLock );
       // send the message to the registered event handler
       ::DispatchMessage( &msg );
 
-      // see if there is more messages immediately waiting 
+      // see if there is more messages immediately waiting
       // (don't block), process them all at once...
       int retval = ::PeekMessage( &msg, m_hWnd, 0, 0, PM_REMOVE );
       if (retval != 0) // messages != 0, nomessages == 0
@@ -228,8 +228,8 @@ int KeyboardWin32::startSampling()
 
    // Create a new thread to handle the control
    vpr::ThreadMemberFunctor<KeyboardWin32>* memberFunctor =
-     new vpr::ThreadMemberFunctor<KeyboardWin32>( this, 
-                                       &KeyboardWin32::controlLoop, 
+     new vpr::ThreadMemberFunctor<KeyboardWin32>( this,
+                                       &KeyboardWin32::controlLoop,
                                        (void*)this );
 
    vpr::Thread* new_thread;
@@ -247,7 +247,7 @@ int KeyboardWin32::startSampling()
 
 int KeyboardWin32::onlyModifier( int mod )
 {
-  switch (mod) 
+  switch (mod)
   {
     case VJKEY_NONE:
       return (!m_curKeys[VJKEY_SHIFT] && !m_curKeys[VJKEY_CTRL] && !m_curKeys[VJKEY_ALT]);
@@ -298,13 +298,13 @@ void KeyboardWin32::updKeys( UINT message, UINT wParam, LONG lParam )
       << vprDEBUG_FLUSH;
 
    int key;
-    
+
    switch (message)
    {
    case WM_ACTIVATE:
       // if was activated, and not minimized
-      if ((WA_ACTIVE == LOWORD( wParam ) || 
-           WA_CLICKACTIVE == LOWORD( wParam )) && 
+      if ((WA_ACTIVE == LOWORD( wParam ) ||
+           WA_CLICKACTIVE == LOWORD( wParam )) &&
           0 == HIWORD( wParam ))
       {
          // and was previously locked...
@@ -325,7 +325,7 @@ void KeyboardWin32::updKeys( UINT message, UINT wParam, LONG lParam )
          }
       }
       break;
-   
+
    // sent to the window that is losing the mouse capture
    case WM_CAPTURECHANGED:
          // if locked, unlock it
@@ -335,7 +335,7 @@ void KeyboardWin32::updKeys( UINT message, UINT wParam, LONG lParam )
             this->unlockMouse();
          }
       break;
-   
+
    // keys and buttons
    // When we hit a key (or button), then set the m_key and m_realkey
    // When release, only set real so that we don't lose a press of the
@@ -355,7 +355,7 @@ void KeyboardWin32::updKeys( UINT message, UINT wParam, LONG lParam )
          // check if the key was down already
          // this indicates key repeat, which we [may] want to ignore.
          bool was_down = (lParam & 0x40000000) == 0x40000000;
-         if (was_down) 
+         if (was_down)
          {
             break;
          }
@@ -365,10 +365,10 @@ void KeyboardWin32::updKeys( UINT message, UINT wParam, LONG lParam )
          m_realkeys[key] += 1;
 
          // Check for Escape from bad state
-         // this provides a sort of failsafe to 
+         // this provides a sort of failsafe to
          // get out of the locked state...
          // @todo this is sort of hard coded, do we want it this way?
-         if (key == VJKEY_ESC)       
+         if (key == VJKEY_ESC)
          {
             if(mLockState != Unlocked)
             {
@@ -392,7 +392,7 @@ void KeyboardWin32::updKeys( UINT message, UINT wParam, LONG lParam )
             }
          }
          // Just switch the current locking state
-         else if((mLockState == Lock_KeyDown) && (key == mLockToggleKey))     
+         else if((mLockState == Lock_KeyDown) && (key == mLockToggleKey))
          {
             mLockState = Lock_LockKey;
          }
@@ -471,9 +471,9 @@ void KeyboardWin32::updKeys( UINT message, UINT wParam, LONG lParam )
       cur_x = GET_X_LPARAM( lParam );
       cur_y = GET_Y_LPARAM( lParam );
 
-      vprDEBUG(vprDBG_ALL,vprDBG_HVERB_LVL) << "MotionNotify: x:"  
-              << std::setw(6) << cur_x 
-              << "  y:" << std::setw(6) << cur_y << std::endl 
+      vprDEBUG(vprDBG_ALL,vprDBG_HVERB_LVL) << "MotionNotify: x:"
+              << std::setw(6) << cur_x
+              << "  y:" << std::setw(6) << cur_y << std::endl
               << vprDEBUG_FLUSH;
 
       if(mLockState == Unlocked)
@@ -495,9 +495,9 @@ void KeyboardWin32::updKeys( UINT message, UINT wParam, LONG lParam )
          // This prevents us from sending an event based on our XWarp event
          if ((dx != 0) || (dy != 0))
          {
-            vprDEBUG(vprDBG_ALL,vprDBG_HVERB_LVL) << "CORRECTING: x:" 
-                  << std::setw(6) << dx << "  y:" 
-                  << std::setw(6) << dy 
+            vprDEBUG(vprDBG_ALL,vprDBG_HVERB_LVL) << "CORRECTING: x:"
+                  << std::setw(6) << dx << "  y:"
+                  << std::setw(6) << dy
                   << std::endl << vprDEBUG_FLUSH;
 
             // convert windows coords to screen coords.
@@ -540,7 +540,7 @@ int KeyboardWin32::stopSampling()
       for (int x = 0; x < 100000 && !mControlLoopDone; ++x)
       {
          // give the window thread a chance before we delete...
-         vpr::System::usleep( 10 ); 
+         vpr::System::usleep( 10 );
       }
       delete mThread;
       mThread = NULL;
@@ -785,17 +785,17 @@ BOOL KeyboardWin32::MenuInit (HINSTANCE hInstance)
 
 
 // process the current window events
-// Called repeatedly by 
-// - the controlLoop when "we own the window", 
+// Called repeatedly by
+// - the controlLoop when "we own the window",
 // - the GlWindow if we "dont own the window"
-int KeyboardWin32::sample() 
-{ 
+int KeyboardWin32::sample()
+{
    this->handleEvents();
-   return 1; 
+   return 1;
 }
 
-std::string KeyboardWin32::getChunkType() 
-{ 
+std::string KeyboardWin32::getChunkType()
+{
    return std::string( "Keyboard" );
 }
 
@@ -804,16 +804,16 @@ std::string KeyboardWin32::getChunkType()
 // pressed at all, or if you are doing processing based on this
 // catch the actual number..
 int KeyboardWin32::isKeyPressed( int Key )
-{  
+{
    return m_curKeys[Key];
 }
 
-void KeyboardWin32::lockMouse() 
+void KeyboardWin32::lockMouse()
 {
    // Center the mouse
    int win_center_x( m_width / 2 ),
        win_center_y( m_height / 2 );
-   
+
    // convert windows coords to screen coords.
    ::POINT pt;
    pt.x = win_center_x;
@@ -829,4 +829,4 @@ void KeyboardWin32::unlockMouse()
    BOOL result = ::ReleaseCapture();
 }
 
-};
+} // End of gadget namespace

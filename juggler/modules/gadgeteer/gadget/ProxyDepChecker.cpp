@@ -59,4 +59,4 @@ bool ProxyDepChecker::canHandle(jccl::ConfigChunkPtr chunk)
 }
 
 
-};
+} // End of gadget namespace

@@ -117,6 +117,6 @@ private:
    long           mBaudRate;
 };
 
-};
+} // End of gadget namespace
 
 #endif

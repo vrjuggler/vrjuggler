@@ -143,4 +143,4 @@ int GloveGesture::getGestureIndex(std::string gestureName)
    return found;
 }
 
-};
+} // End of gadget namespace

@@ -104,7 +104,7 @@ private:
    float mYaw, mPitch;
 };
 
+} // End of gadget namespace
 
-};
 
 #endif

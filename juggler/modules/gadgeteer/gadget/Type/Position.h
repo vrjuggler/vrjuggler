@@ -108,10 +108,10 @@ public:
          return mDefaultValue;
       }
    }
-	virtual std::string getBaseType()
-	{
-		return std::string("Position");
-	}
+    virtual std::string getBaseType()
+    {
+        return std::string("Position");
+    }
 
    virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
    virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader, vpr::Uint64* delta);
@@ -131,6 +131,6 @@ public:
    gmtl::Matrix44f rotMat;     /**< Only the rotation matrix */
 };
 
-};
+} // End of gadget namespace
 
 #endif

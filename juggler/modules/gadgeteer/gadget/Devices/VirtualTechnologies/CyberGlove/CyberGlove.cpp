@@ -208,4 +208,4 @@ void CyberGlove::copyDataFromGlove()
 }
 
 
-};
+} // End of gadget namespace

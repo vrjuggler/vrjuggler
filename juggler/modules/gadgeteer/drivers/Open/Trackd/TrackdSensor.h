@@ -117,7 +117,7 @@ private:
     std::vector<PositionData>   mCurSensorValues; // The current (up-to-date) values
 };
 
-};
+} // End of gadget namespace
 
 #endif
 

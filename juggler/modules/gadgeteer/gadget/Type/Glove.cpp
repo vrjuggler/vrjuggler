@@ -296,4 +296,4 @@ GloveData Glove::getGloveData(int devNum)
 }
 
 
-};
+} // End of gadget namespace

@@ -165,4 +165,4 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
    return true;
 }
 
-};
+} // End of gadget namespace

@@ -80,8 +80,7 @@ protected:
 
 }; // class DigitalData
 
-
-}; // namespace gadget
+} // namespace gadget
 
 
 #endif

@@ -96,7 +96,7 @@ bool Intersense::config(jccl::ConfigChunkPtr c)
 // --> this will be the port and baud fields
    if(! (Input::config(c) && Position::config(c) && Digital::config(c) && Analog::config(c) ))
       return false;
-   
+
    mPortName = c->getProperty<std::string>("port");
    mBaudRate = c->getProperty<int>("baud");
 
@@ -116,7 +116,7 @@ bool Intersense::config(jccl::ConfigChunkPtr c)
       stations[i].stationIndex = stationConfig->getProperty<int>("stationIndex");
       stations[i].useDigital = stationConfig->getProperty<bool>("useDigital");
       stations[i].useAnalog = stationConfig->getProperty<bool>("useAnalog");
-   
+
       stations[i].dig_min = stationConfig->getProperty<int>("digitalFirst");
       stations[i].dig_num = stationConfig->getProperty<int>("digitalNum");
       stations[i].ana_min = stationConfig->getProperty<int>("analogFirst");
@@ -370,5 +370,4 @@ void Intersense::updateData()
    mPosSamples.swapBuffers();
 }
 
-
-};
+} // End of gadget namespace

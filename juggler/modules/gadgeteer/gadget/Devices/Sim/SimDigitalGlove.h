@@ -153,6 +153,6 @@ private:
    //int                     mCurGesture;   /**< The current gesture id */
 };
 
-};
+} // End of gadget namespace
 
 #endif

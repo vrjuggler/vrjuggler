@@ -43,13 +43,14 @@
 
 namespace gadget
 {
+
 /**
  * Simulated positional device whose data is set by the user (in postFrame).
  *
  * Should be set just before input manager updates data so it
  * can be distributed by the remote input manager.
  * The end of postFrame() is the logical place for the user to
- * set the data.  This prevents computers connected to the remote 
+ * set the data.  This prevents computers connected to the remote
  * input manager from having different copies of data for very long.
  */
 //class SimSetablePosition : public Input, public Position
@@ -79,6 +80,6 @@ private:
 
 };
 
-};
+} // End of gadget namespace
 
 #endif

@@ -119,4 +119,4 @@ void TrackdController::updateData()
 }
 
 
-};
+} // End of gadget namespace

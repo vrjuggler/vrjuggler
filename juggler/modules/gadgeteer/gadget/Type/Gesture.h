@@ -128,6 +128,7 @@ public:  // **** TRAINING **** //
 
 };
 
-};
+} // End of gadget namespace
+
 
 #endif

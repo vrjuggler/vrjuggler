@@ -112,7 +112,7 @@ void SimPosition::updateData()
 
    //Modify the distance and rotation amount by the time factor
    float delta_val = delta_time.secf();
-   
+
    amt = checkKeyPair(mSimKeys[FORWARD]);
    if(amt > 0.0f)
       moveFor( 1 * amt * delta_val);
@@ -158,7 +158,7 @@ void SimPosition::updateData()
    mPosSamples.lock();
    mPosSamples.addSample(std::vector< gadget::PositionData>(1, mPos) );
    mPosSamples.unlock();
-   
+
    mPosSamples.swapBuffers(); // Swap the buffers
 }
 
@@ -217,7 +217,7 @@ void SimPosition::rotAxis(const float amt, const gmtl::Vec3f rotAxis)
 {
    // convert the input...
    gmtl::AxisAnglef axisAngle( gmtl::Math::deg2Rad(amt*mDRot), gmtl::makeNormal( rotAxis ) );
-  
+
   gmtl::Matrix44f* m = mPos.getPosition();
   gmtl::Matrix44f delta_rot( gmtl::makeRot<gmtl::Matrix44f>( axisAngle ) );   // make delta rot
 
@@ -309,4 +309,4 @@ bool SimPosition::isTransAllowed(gmtl::Vec3f trans)
 
 }
 
-};
+} // End of gadget namespace
