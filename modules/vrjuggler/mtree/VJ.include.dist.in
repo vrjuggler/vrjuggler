@@ -63,8 +63,6 @@
             ..
         ..
         vrj
-            Config
-            ..
             Display
             ..
             Draw
@@ -108,8 +106,6 @@
             Kernel
             ..
             Math
-            ..
-            Performance
             ..
             Sound
                 pf
