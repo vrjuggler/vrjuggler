@@ -122,8 +122,4 @@ void Interval::setNowReal()
 #endif
 }
 
-}; // namespace vpr
-
-
-
-
+} // namespace vpr
