@@ -58,6 +58,7 @@ public class WelcomePane
    public WelcomePane()
    {
       text = "";
+      title = "";
       wp = null;
    }
 
