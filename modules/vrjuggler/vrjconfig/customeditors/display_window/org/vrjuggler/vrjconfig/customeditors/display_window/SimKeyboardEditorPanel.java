@@ -49,7 +49,6 @@ import javax.swing.event.ListSelectionListener;
 
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.vrjconfig.commoneditors.DeviceConfig;
-import org.vrjuggler.vrjconfig.commoneditors.KeyboardEditorPanel;
 import org.vrjuggler.vrjconfig.commoneditors.ProxyEditorUI;
 
 
@@ -306,9 +305,6 @@ public class SimKeyboardEditorPanel
    {
       this.setLayout(mMainLayout);
       mDevicePanel.setLayout(mDevicePanelLayout);
-      mDeviceSplitPane.setOneTouchExpandable(false);
-      mDeviceSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-      mDeviceSplitPane.setResizeWeight(1.0);
       mAddSimDeviceButton.setText("Create Sim Device");
       mAddSimDeviceButton.setToolTipText("Create a new simulator device configuration");
       mAddSimDeviceButton.addActionListener(
@@ -330,16 +326,12 @@ public class SimKeyboardEditorPanel
       mDeviceList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
       mDevicePanel.add(mDeviceButtonPanel, BorderLayout.NORTH);
       mDevicePanel.add(mDeviceScrollPane, BorderLayout.CENTER);
-      mKeyboardEditor.setMinimumSize(new Dimension(500, 225));
-      mKeyboardEditor.setPreferredSize(new Dimension(500, 225));
-      mDeviceSplitPane.add(mEmptyEditor, JSplitPane.LEFT);
-      mDeviceSplitPane.add(mKeyboardEditor, JSplitPane.RIGHT);
       mAdvancedEditorPanel.setLayout(new BorderLayout());
       mAdvancedEditorPanel.add(mAllProxyEditor, BorderLayout.CENTER);
       mTabContainer.add(mDeviceEditorPane, "Simulator Devices");
       mTabContainer.add(mAdvancedEditorPanel, "Advanced");
       mDeviceEditorPane.add(mDevicePanel, JSplitPane.LEFT);
-      mDeviceEditorPane.add(mDeviceSplitPane, JSplitPane.RIGHT);
+      mDeviceEditorPane.add(mEmptyEditor, JSplitPane.RIGHT);
       mDeviceScrollPane.getViewport().add(mDeviceList);
       this.add(mTabContainer, BorderLayout.CENTER);
    }
@@ -353,7 +345,6 @@ public class SimKeyboardEditorPanel
    private Map mSimEditorCache = new HashMap();
 
    private SimDeviceEditor mCurSimEditor = null;
-   private KeyboardEditorPanel mKeyboardEditor = new KeyboardEditorPanel();
 
    private JPanel mEmptyEditor = new JPanel();
 
@@ -367,7 +358,6 @@ public class SimKeyboardEditorPanel
    private JButton mRemoveSimDeviceButton = new JButton();
    private JScrollPane mDeviceScrollPane = new JScrollPane();
    private JList mDeviceList = new JList();
-   private JSplitPane mDeviceSplitPane = new JSplitPane();
    private JPanel mAdvancedEditorPanel = new JPanel();
    private ProxyEditorUI mAllProxyEditor = new ProxyEditorUI();
 
@@ -430,14 +420,14 @@ public class SimKeyboardEditorPanel
 
       if ( mCurSimEditor != null )
       {
-         mDeviceSplitPane.remove(mCurSimEditor.getEditor());
+         mDeviceEditorPane.remove(mCurSimEditor.getEditor());
       }
 
-      mDeviceSplitPane.add(mEmptyEditor, JSplitPane.LEFT);
+      mDeviceEditorPane.add(mEmptyEditor, JSplitPane.RIGHT);
       mCurSimEditor = null;
 
-      mDeviceSplitPane.revalidate();
-      mDeviceSplitPane.repaint();
+      mDeviceEditorPane.revalidate();
+      mDeviceEditorPane.repaint();
 
       mDeviceList.clearSelection();
       ((DefaultListModel) mDeviceList.getModel()).removeElement(sim_dev_cfg);
@@ -463,9 +453,8 @@ public class SimKeyboardEditorPanel
    {
       if ( mCurSimEditor != null )
       {
-         mCurSimEditor.setKeyboardEditorPanel(null);
-         mDeviceSplitPane.remove(mCurSimEditor.getEditor());
-         mDeviceSplitPane.add(mEmptyEditor, JSplitPane.LEFT);
+         mDeviceEditorPane.remove(mCurSimEditor.getEditor());
+         mDeviceEditorPane.add(mEmptyEditor, JSplitPane.RIGHT);
          mCurSimEditor = null;
       }
 
@@ -481,9 +470,8 @@ public class SimKeyboardEditorPanel
          if ( cached_editor != null )
          {
             mCurSimEditor = (SimDeviceEditor) cached_editor;
-            mCurSimEditor.setKeyboardEditorPanel(mKeyboardEditor);
-            mDeviceSplitPane.remove(mEmptyEditor);
-            mDeviceSplitPane.add(mCurSimEditor.getEditor(), JSplitPane.LEFT);
+            mDeviceEditorPane.remove(mEmptyEditor);
+            mDeviceEditorPane.add(mCurSimEditor.getEditor(), JSplitPane.RIGHT);
          }
          else
          {
@@ -498,11 +486,10 @@ public class SimKeyboardEditorPanel
                try
                {
                   mCurSimEditor = (SimDeviceEditor) editor_class.newInstance();
-                  mCurSimEditor.setKeyboardEditorPanel(mKeyboardEditor);
                   mCurSimEditor.setConfig(mContext, dev_elt);
-                  mDeviceSplitPane.remove(mEmptyEditor);
-                  mDeviceSplitPane.add(mCurSimEditor.getEditor(),
-                                       JSplitPane.LEFT);
+                  mDeviceEditorPane.remove(mEmptyEditor);
+                  mDeviceEditorPane.add(mCurSimEditor.getEditor(),
+                                        JSplitPane.RIGHT);
                   mSimEditorCache.put(dev_elt, mCurSimEditor);
                }
                catch (Exception ex)
