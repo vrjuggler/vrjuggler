@@ -213,6 +213,13 @@ Table of contents:
   setenv LD_LIBRARYN32_PATH "$VPR_BASE_DIR"/lib32:"$GADGET_BASE_DIR"/lib32:"$JCCL_BASE_DIR"/lib32:"$VJ_BASE_DIR"/lib32:"$SNX_BASE_DIR"/lib32:"$XERCESROOT"/lib32:"$OALROOT"/lib32
 
 
+
+      Sound problems:
+
+  - currently unix OpenAL has some bugs, try not to confuse these with 
+    a sonix bug. :)  One issue is that pitch and gain cannot be adjusted at 
+    the same time since one only works at 0,0,0, and one only works if not 0,0,0
+
   6.  Extending Sonix to your custom sound API.
   
   Writting sound API plugins (sound driver backends) for sonix
