@@ -29,6 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
 #ifndef _JCCL_CONFIG_CHUNK_HANDLER_H_
 #define _JCCL_CONFIG_CHUNK_HANDLER_H_
 
@@ -43,7 +44,7 @@ class ConfigManager;
 /** Abstract base class for all classes that can handle ConfigChunks
  *  Any class supporting this interface can be dynamically reconfigured,
  *  for example by Jackal's ConfigurationManager.
- * 
+ *
  *  The idea is that you override configCanHandle() to recognize those
  *  chunks that your derived class cares about.  Then you override
  *  configAdd() and configRemove() to actually process those chunks.
@@ -55,11 +56,14 @@ class ConfigManager;
  *  implementation should be sufficient for almost any conceivable
  *  dynamic reconfiguration need.
  */
-
 class JCCL_CLASS_API ConfigChunkHandler
 {
 
 public:
+   virtual ~ConfigChunkHandler()
+   {
+      /* Do nothing. */ ;
+   }
 
    /** Checks if this handler can process chunk.
     *  Typically, an implementation of handler will check the chunk's
@@ -90,7 +94,7 @@ public:
     *  ConfigManager::attemptReconfiguration(), which takes care of
     *  this automatically.
     */
-   virtual int configProcessPending ();
+   virtual int configProcessPending();
 
 
    /** Add the pending chunk to the configuration.
@@ -106,8 +110,6 @@ public:
     *          were successfully removed.
     */
    virtual bool configRemove(ConfigChunkPtr chunk) = 0;
-
-   
 };
 
 }
