@@ -1157,7 +1157,9 @@ install-headers:
           ${VJROOT_ABS}/vjConfig.h ${includedir}/vjConfig.h
 	@-rm -f ./vjConfig.tmp
 	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${topdir}/*.h ${includedir}
+          ${topdir}/vjDefines.h ${includedir}
+	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
+          ${topdir}/vjParam.h ${includedir}
 
 # Install the sample applications.
 install-samples:
