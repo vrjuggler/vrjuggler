@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
- 
+
 #include <gadget/Util/Debug.h>
 #include <gadget/Devices/KeyboardMouseDevice/KeyboardMouseDevice.h>
 #include <jccl/Config/ConfigElement.h>
@@ -64,7 +64,7 @@ bool KeyboardMouseDevice::config(jccl::ConfigElementPtr e)
    {
       return false;
    }
-   
+
    mMouseSensitivity = e->getProperty<float>("mouse_sensitivity");
    if (0.0f == mMouseSensitivity)
    {
@@ -166,7 +166,7 @@ bool KeyboardMouseDevice::KeyboardMouseDeviceRegistry::getKeyboardMouseDevice(co
    }
    else
    {
-      return false; 
+      return false;
    }
 }
 
