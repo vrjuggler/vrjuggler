@@ -74,12 +74,12 @@ public:
       vpr::InetAddr addr5;
       vpr::InetAddr local_addr;
 
-      assertTest(addr1.setAddress("192.49.3.2", 13768));
-      assertTest(addr2.setAddress((vpr::Uint32)3224437506u, 13768));
-      assertTest(addr3.setAddress("cruncher.vrac.iastate.edu", 13768));
-      assertTest(addr4.setAddress("129.186.232.58", 13768));
-      assertTest(addr5.setAddress("cruncher.vrac.iastate.edu:13768"));
-      assertTest(local_addr.setAddress("localhost", 0));
+      assertTest(addr1.setAddress("192.49.3.2", 13768).success());
+      assertTest(addr2.setAddress((vpr::Uint32)3224437506u, 13768).success());
+      assertTest(addr3.setAddress("cruncher.vrac.iastate.edu", 13768).success());
+      assertTest(addr4.setAddress("129.186.232.58", 13768).success());
+      assertTest(addr5.setAddress("cruncher.vrac.iastate.edu:13768").success());
+      assertTest(local_addr.setAddress("localhost", 0).success());
 
       assertTest(local_addr.getAddressValue() > 0);
       assertTest(addr1.getAddressValue() == 3224437506u);
