@@ -2411,6 +2411,16 @@ sub PROCARGS {
       $element =~ s/=\s*\S*$//;
     }
 
+    # Strip out leading whitespace--it just confuses things.
+    $element =~ s/^\s+//;
+
+    # Remove the parameter name from $element leaving only the type.
+    if ( $element =~ /^(\w\S*)\s+(\*+|&)\s*\w\S*/ ) {
+      $element = "$1$2";
+    } elsif ( $element =~ /^(\w\S*)\s+\w\S*/ ) {
+      $element = "$1";
+    }
+
     $arglist .= "$element";
   }
 
@@ -2522,7 +2532,7 @@ sub PROCFUNC {
     # Match untyped member functions.
     if ( $string =~ /^\s*(\S+|operator\s*\S\s*\S?)\s*\(([^\{\)]*)\)s*(const|)\s*(\=|throw\s*\w*\s*\([^\{\)]*\)\s*=?|)/ )
     {
-      my ($func_name, $args) = ("$1", "$2");
+      my ($func_name, $args) = ("$1", PROCARGS("$2"));
 
       $args =~ s/(\s|&&[A-Z]+)//g;
       $membername .= "$func_name($args)";
@@ -2530,7 +2540,7 @@ sub PROCFUNC {
     # Match typed operator functions.
     elsif ( $string =~ /^\s*([\w<>:\,\s\*&]*[\w<>:\*&]\s[\s\*&]*)(operator\s*\S\s*\S?)\s*\(([^\{\)]*)\)\s*(const|)\s*(\=|throw\s*\w*\s*\([^\{\)]*\)\s*=?|)/ )
     {
-      my ($temp, $args, $extra) = ("$2", "$3", "$4");
+      my ($temp, $args, $extra) = ("$2", PROCARGS("$3"), "$4");
 
       $args =~ s/(\s|&&[A-Z]+)//g;
       $membername = "$func_name($args) $extra";
@@ -2538,7 +2548,7 @@ sub PROCFUNC {
     # Match typed member functions.
     elsif ( $string =~ /^\s*([\w<>:\,\s\*&]*[\w<>:\*&]\s[\s\*&]*)(\S+)\s*\(([^\{\)]*)\)\s*(const|)\s*(\=|throw\s*\w*\s*\([^\{\)]*\)\s*=?|)/ )
     {
-      my ($func_name, $args, $extra) = ("$2", "$3", "$4");
+      my ($func_name, $args, $extra) = ("$2", PROCARGS("$3"), "$4");
 
       $args =~ s/(\s|&&[A-Z]+)//g;
       $membername = "$func_name($args) $extra";
