@@ -312,22 +312,24 @@ class ElementTree extends JTree implements DragGestureListener,
 
       popup.addSeparator();
 
+      int shortcut_mask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+
       mi = new JMenuItem("Cut", cut_icon);
       mi.addActionListener(this);
       mi.setActionCommand("cut");
-      mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_MASK));
+      mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, shortcut_mask));
       popup.add(mi);
       
       mi = new JMenuItem("Copy", copy_icon);
       mi.addActionListener(this);
       mi.setActionCommand("copy");
-      mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK));
+      mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, shortcut_mask));
       popup.add(mi);
 
       mi = new JMenuItem("Paste", paste_icon);
       mi.addActionListener(this);
       mi.setActionCommand("paste");
-      mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_MASK));
+      mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, shortcut_mask));
       popup.add(mi);
 
       popup.setOpaque(true);
@@ -366,17 +368,22 @@ class ElementTree extends JTree implements DragGestureListener,
             {
                public void keyPressed(KeyEvent e)
                {
-                  if(e.getKeyCode() == KeyEvent.VK_C && e.getModifiers() == ActionEvent.CTRL_MASK)
+                  int shortcut_mask =
+                     Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+                  if(e.getKeyCode() == KeyEvent.VK_C &&
+                     e.getModifiers() == shortcut_mask)
                   {
                      System.out.println("We have a copy.");
                      actionPerformed(new ActionEvent(this, 0, "copy"));
                   }
-                  if(e.getKeyCode() == KeyEvent.VK_V && e.getModifiers() == ActionEvent.CTRL_MASK)
+                  if(e.getKeyCode() == KeyEvent.VK_V &&
+                     e.getModifiers() == shortcut_mask)
                   {
                      System.out.println("We have a paste.");
                      actionPerformed(new ActionEvent(this, 0, "paste"));
                   }
-                  if(e.getKeyCode() == KeyEvent.VK_X && e.getModifiers() == ActionEvent.CTRL_MASK)
+                  if(e.getKeyCode() == KeyEvent.VK_X &&
+                     e.getModifiers() == shortcut_mask)
                   {
                      System.out.println("We have a cut.");
                      actionPerformed(new ActionEvent(this, 0, "cut"));
