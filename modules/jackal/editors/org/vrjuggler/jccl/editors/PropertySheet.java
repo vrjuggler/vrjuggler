@@ -36,7 +36,6 @@ import java.awt.event.ActionListener;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Insets;
-//import java.awt.Graphics;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -49,7 +48,10 @@ import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.config.event.*;
 //import com.sun.java.swing.plaf.windows.WindowsTreeUI;
 
-public class PropertySheet extends PropertyComponent implements ConfigElementListener
+/**
+ * Contains a given set of property editors.
+ */
+public class PropertySheet extends PropertyComponent
 {
    public void setConfigElement(ConfigElement elm)
    {
@@ -73,22 +75,5 @@ public class PropertySheet extends PropertyComponent implements ConfigElementLis
       this.setLayout(new TableLayout(size)); 
    }
 
-   public void nameChanged(ConfigElementEvent evt)
-   {
-      System.out.println("Name changed...");
-   }
-   public void propertyValueChanged(ConfigElementEvent evt)
-   {
-      System.out.println("Property value changed...");
-   }
-   public void propertyValueAdded(ConfigElementEvent evt)
-   {
-      System.out.println("Property value added...");
-   }
-   public void propertyValueRemoved(ConfigElementEvent evt)
-   {
-      System.out.println("Property value removed...");
-   }
-   
    private ConfigElement      mConfigElement = null;
 }
