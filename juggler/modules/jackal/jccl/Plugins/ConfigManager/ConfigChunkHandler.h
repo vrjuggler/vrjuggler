@@ -18,17 +18,20 @@ public:
    //: Add the chunk to the configuration
    //! PRE: configCanHandle(chunk) == true
    //! RETURNS: success
-   virtual bool configAdd(vjConfigChunk* chunk) = 0;
+   virtual bool configAdd(vjConfigChunk* chunk)
+   { return false; }
 
    //: Remove the chunk from the current configuration
    //! PRE: configCanHandle(chunk) == true
    //!RETURNS: success
-   virtual bool configRemove(vjConfigChunk* chunk) = 0;
+   virtual bool configRemove(vjConfigChunk* chunk)
+   { return false; }
 
    //: Can the handler handle the given chunk?
    //! RETURNS: true - Can handle it
    //+          false - Can't handle it
-   virtual bool configCanHandle(vjConfigChunk* chunk) = 0;
+   virtual bool configCanHandle(vjConfigChunk* chunk)
+   { return false; }
 };
 
 #endif
