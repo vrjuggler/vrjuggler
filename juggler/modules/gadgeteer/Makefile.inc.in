@@ -183,10 +183,7 @@ endif
 	cd $(instlinks)/include/gadget && $(RM_LN) ./gadgetParam.h &&	\
           $(LN_S) $(topdir)/gadget/gadgetParam.h ./gadgetParam.h
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
-	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
-            -t $(GADGETROOT_ABS)/gadgeteer-config.in			\
-            -p 'use_base_dir=yes' -o $(instlinks)/bin/gadgeteer-config	\
-            -v $(GADGETROOT_ABS)/VERSION -x
+	cd $(instlinks)/bin && cp -p $(topdir)/gadgeteer-config .
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$GADGET_BASE_DIR to:'
