@@ -42,39 +42,56 @@
 
 namespace vpr {
 
-//: vpr::SystemBase is a base class for vpr::System so, for xplatform system
-//+ functions, use vpr::System (don't use vpr::SystemBase).
+/**
+ * vpr::SystemBase is a base class for vpr::System so, for xplatform system
+ * functions, use vpr::System (don't use vpr::SystemBase).
+ *
+ * @author Kevin Meinert
+ * @author Patrick Hartling
+ *
+ * @see vpr::SystemPosix
+ * @see vpr::SystemNSPR
+ */
 class VPR_CLASS_API SystemBase {
 public:
-    // -----------------------------------------------------------------------
-    // -----------------------------------------------------------------------
+    /**
+     * Sleeps for the given number of microseconds.
+     *
+     * @param micro The number of microseconds to sleep.
+     */
     inline static int
     usleep (vpr::Uint32 micro) {
         return Thread::usleep(micro);
     }
 
-    // -----------------------------------------------------------------------
-    // -----------------------------------------------------------------------
+    /**
+     * Sleeps for the given number of milliseconds.
+     *
+     * @param micro The number of milliseconds to sleep.
+     */
     inline static int
     msleep (vpr::Uint32 milli) {
         return Thread::msleep(milli);
     }
 
-    // -----------------------------------------------------------------------
-    // -----------------------------------------------------------------------
+    /**
+     * Sleeps for the given number of seconds.
+     *
+     * @param micro The number of seconds to sleep.
+     */
     inline static int
     sleep (vpr::Uint32 seconds) {
         return Thread::sleep(seconds);
     }
 
-    // -----------------------------------------------------------------------
-    //: Determine the endianness of the host platform.  A return nvalue of 0
-    //+ means that the host uses little-endian byte order.  A return value of
-    //+ 1 means that the host uses big-endian byte order.
-    //
-    //! RETURNS: 0 - Little endian
-    //! RETURNS: 1 - Big endian
-    // -----------------------------------------------------------------------
+    /**
+     * Determines the endianness of the host platform.  A return nvalue of 0
+     * means that the host uses little-endian byte order.  A return value of
+     * 1 means that the host uses big-endian byte order.
+     *
+     * @return 0 is returned for little-endian hosts<br>
+     *         1 is returned for big-endian hosts
+     */
     inline static int
     getEndian (void) {
         union {
@@ -90,23 +107,23 @@ public:
         return endian.c[0];
     }
 
-    // -----------------------------------------------------------------------
-    //: Tells if the host uses little-endian byte order or not.
-    //
-    //! RETURNS: true  - Little-endian host.
-    //! RETURNS: false - Big-endian host.
-    // -----------------------------------------------------------------------
+    /**
+     * Tells if the host uses little-endian byte order or not.
+     *
+     * @return <code>true</code> is returned on a little-endian host.<br>
+     *         <code>false</code> is returned on a big-endian host.<br>
+     */
     inline static bool
     isLittleEndian (void) {
         return (getEndian() == 0);
     }
 
-    // -----------------------------------------------------------------------
-    //: Tells if the host uses big-endian byte order or not.
-    //
-    //! RETURNS: true  - Big-endian host.
-    //! RETURNS: false - Little-endian host.
-    // -----------------------------------------------------------------------
+    /**
+     * Tells if the host uses big-endian byte order or not.
+     *
+     * @return <code>true</code> is returned on a big-endian host.<br>
+     *         <code>false</code> is returned on a little-endian host.<br>
+     */
     inline static bool
     isBigEndian (void) {
         return (getEndian() == 1);
