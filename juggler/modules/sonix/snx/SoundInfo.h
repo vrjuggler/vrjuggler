@@ -72,11 +72,11 @@ struct SoundInfo
                  ambient( false ),
                  retriggerable( false ),
                  repeat( 1 ),
-                 triggerOnNextBind( false ), 
-                 repeatCountdown( 0 ),
                  pitchbend( 1.0f ),
                  cutoff( 1.0f ),
-                 volume( 1.0f )
+                 volume( 1.0f ),
+                 triggerOnNextBind( false ), 
+                 repeatCountdown( 0 )
    {
       //position.makeIdent();
       position[0] = 0.0f;
