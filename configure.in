@@ -18,6 +18,14 @@ dnl # -------------------------------------------- #
 dnl # --with-pkg[=arg] and --without-pkg arguments #
 dnl # -------------------------------------------- #
 
+dnl # Enable binary format.  Possible values are "O32", "N32" or "64".
+dnl # The default is "N32".
+AC_ARG_WITH(abi,
+            [  --with-abi=[O32|N32_M3|N32_M4|64_M3|64_M4]
+                          define the Application Binary Interface to use
+                          [default=N32_M3]],
+            abi_type="$withval", abi_type='N32_M3')
+
 dnl # Define the location where the library will be built.  This is not
 dnl # currently used anyhwere in this script.
 dnl # The default is "$srcdir/lib".
@@ -58,13 +66,6 @@ AC_ARG_ENABLE(debug,
               [  --enable-debug          enable debugging [default=yes]],
               enable_debug="$enableval", enable_debug="yes")
 
-dnl # Enable binary format.  Possible values are "N32", "32" or "64".
-dnl # The default is "N32".
-AC_ARG_ENABLE(vjstyle,
-              [  --enable-vjstyle=[N32|32|64]
-                          define VJSTYLE [default=N32]],
-              enable_vjstyle="$enableval", enable_vjstyle='N32')
-
 dnl # Enable compilation of the OpenGL API.  Possible values are "yes" or
 dnl # "no".  "yes" is set with --enable-opengl and "no" is set with
 dnl # --disable-opengl.
@@ -86,18 +87,34 @@ if test "x$enable_debug" = "xyes" ; then
     AC_DEFINE(VJ_DEBUG,)
 fi
 
-if test "x$enable_vjstyle" = "x64" ; then
-    OBJECT_STYLE='64'
+# Set default values for these before checking $abi_type.  Currently, these
+# are for non-SGI platforms.
+OBJECT_STYLE='32'
+LIBBITSUF=''
+ABI='32'
+
+# Based on the value of $abi_type, set the internal variable $OBJECT_STYLE
+# for later use and the Makefile substitution variables $LIBBITSUF and $ABI.
+if test "x$abi_type" = "x64_M3" ; then
+    OBJECT_STYLE='64_M3'
     LIBBITSUF='64'
-    ABI='N64'
-elif test "x$enable_vjstyle" = "x32" ; then
-    OBJECT_STYLE='32'
-    LIBBITSUF=''
-    ABI='O32'
-else
+    ABI='64'
+elif test "x$abi_type" = "x64_M4" ; then
+    OBJECT_STYLE='64_M4'
+    LIBBITSUF='64'
+    ABI='64'
+elif test "x$abi_type" = "xN32_M3" ; then
     OBJECT_STYLE='N32_M3'
     LIBBITSUF='32'
     ABI='N32'
+elif test "x$abi_type" = "xN32_M4" ; then
+    OBJECT_STYLE='N32_M4'
+    LIBBITSUF='32'
+    ABI='N32'
+elif test "x$abi_type" = "xO32" ; then
+    OBJECT_STYLE='O32'
+    LIBBITSUF=''
+    ABI='O32'
 fi
 
 # -----------------------------------------------------------------------------
@@ -130,20 +147,33 @@ case $host in
             AC_DEFINE(IRIXREL, "IRIX6")
         fi
 
-        # Set compiler flags andthe location of $DSOREGFILE depending on
-        # the value given with --enable-vjstyle (if any).
-        if test "x$enable_vjstyle" = "x64" ; then
+        # Set compiler flags and the location of $DSOREGFILE depending on
+        # $OBJECT_STYLE.
+        if test "$OBJECT_STYLE" = "64_M3" ; then
             DSOREGFILE='/usr/lib64/so_locations'
             CFLAGS="$CFLAGS -mips3 -64"
             CXXFLAGS="$CXXFLAGS -mips3 -64"
-        elif test "x$enable_vjstyle" = "x32" ; then
-            DSOREGFILE='/usr/lib/so_locations'
-            CFLAGS="$CFLAGS -mips2 -o32"
-            CXXFLAGS="$CXXFLAGS -mips2 -o32"
-        else
+            OPT_FLAGS='-OPT:Olimit=2000'
+        elif test "$OBJECT_STYLE" = "64_M4" ; then
+            DSOREGFILE='/usr/lib64/so_locations'
+            CFLAGS="$CFLAGS -mips4 -64"
+            CXXFLAGS="$CXXFLAGS -mips4 -64"
+            OPT_FLAGS='-OPT:Olimit=2000'
+        elif test "$OBJECT_STYLE" = "N32_M3" ; then
             DSOREGFILE='/usr/lib32/so_locations'
             CFLAGS="$CFLAGS -mips3 -n32"
             CXXFLAGS="$CXXFLAGS -mips3 -n32"
+            OPT_FLAGS='-OPT:Olimit=2000'
+        elif test "$OBJECT_STYLE" = "N32_M4" ; then
+            DSOREGFILE='/usr/lib32/so_locations'
+            CFLAGS="$CFLAGS -mips4 -n32"
+            CXXFLAGS="$CXXFLAGS -mips4 -n32"
+            OPT_FLAGS='-OPT:Olimit=2000'
+        elif test "$OBJECT_STYLE" = "O32" ; then
+            DSOREGFILE='/usr/lib/so_locations'
+            CFLAGS="$CFLAGS -mips2 -o32"
+            CXXFLAGS="$CXXFLAGS -mips2 -o32"
+            OPT_FLAGS='-Olimit 2000'
         fi
 
         AR='${CXX} -ar -WR,-v -o'
@@ -154,7 +184,6 @@ case $host in
         LIBOPTS='-shared -all -check_registry'
         LDFLAGS="$LDFLAGS"
         LDOPTS=''
-        OPT_FLAGS='-Olimit 2000'
         SHAREDLIB_EXT='so'
 
         DSOVERSION='sgi4.0'
@@ -390,10 +419,11 @@ if test "x$enable_opengl" = "xyes" ; then
         else
             if test "$OBJECT_STYLE" = "64" ; then
                 SYSTEM_OPENGL="-limage $LIBOPENGL -lXmu -lX11 -lm -lC"
-            elif test "$OBJECT_STYLE" = "32" ; then
-                SYSTEM_OPENGL="-lmpc -limage -lGLw $LIBOPENGL -lfpe -lXm -lXt -lXmu -lX11 -lm -lmalloc -lC"
-            else
+            elif test "$OBJECT_STYLE" = "N32_M3" -o \
+                      "$OBJECT_STYLE" = "N32_M4" ; then
                 SYSTEM_OPENGL="-limage $LIBOPENGL -lXmu -lX11 -lm -lC"
+            elif test "$OBJECT_STYLE" = "O32" ; then
+                SYSTEM_OPENGL="-lmpc -limage -lGLw $LIBOPENGL -lfpe -lXm -lXt -lXmu -lX11 -lm -lmalloc -lC"
             fi
         fi
     # No OpenGL API files were added, so restore $INCLUDES and $LDFLAGS so
@@ -535,8 +565,6 @@ AC_SUBST(LDOPTS)
 AC_SUBST(OPT_FLAGS)
 AC_SUBST(SHAREDLIB_EXT)
 
-AC_SUBST(VJSTYLE)
-AC_SUBST(OBJECT_STYLE)
 AC_SUBST(ABI)
 AC_SUBST(LIBBITSUF)
 AC_SUBST(PLATFORM)
