@@ -44,6 +44,7 @@ use File::Basename;
 use Getopt::Long;
 
 sub usage($);
+sub normalizePath($);
 sub make_CXXFLAGS($;$);
 sub make_INCLUDES($);
 sub make_LDFLAGS($;$$$);
@@ -111,9 +112,12 @@ else
    # Otherwise, we use / for the path separator.
    my $path_sep = (($Win32 && $base_dir =~ /\\/) ? "\\" : "/");
 
-   $base_dir =~ s|$path_sep$||o;       # Strip off the trailing slash
-   $base_dir =~ s|${path_sep}bin$||io; # If the path ends in "/bin", strip it
+   $base_dir =~ s|${path_sep}+$||o;     # Strip off the trailing slash(es)
+   $base_dir =~ s|${path_sep}+bin$||io; # If the path ends in "/bin", strip it
 }
+
+# Strip extra slashes from $base_dir.
+normalizePath(\$base_dir);
 
 # If we are on Windows, make sure that $base_dir is a full DOS path.
 if ( $Win32  && $base_dir !~ /^[A-Za-z]:/ )
@@ -228,6 +232,22 @@ Options:
 EOF
 
     exit($_[0]);
+}
+
+sub normalizePath($)
+{
+   my $path_ref = shift;
+
+   # If we are on Windows and $base_dir contains \'s, set $path_sep to \.
+   # Otherwise, we use / for the path separator.
+   my $path_sep = (($Win32 && $$path_ref =~ /\\/) ? "\\" : "/");
+
+   while ( $$path_ref =~ m|${path_sep}{2,}|o )
+   {
+      $$path_ref =~ s|${path_sep}{2,}|${path_sep}|go;
+   }
+
+   $$path_ref =~ s|${path_sep}+$||go;
 }
 
 sub make_CXXFLAGS ($;$)
