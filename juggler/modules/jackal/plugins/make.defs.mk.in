@@ -84,7 +84,7 @@ top_srcdir=		@top_srcdir@
 
 ANT=			@ANT@
 CXX_IDL=		@TWEEK_CXX_IDL@
-JAVA_IDL=		JAVA_HOME=$(JDK_HOME) @TWEEK_JAVA_IDL@
+JAVA_IDL=		JAVA_HOME="$(JDK_HOME)" @TWEEK_JAVA_IDL@
 DPP_SCRIPTDIR=		$(JUGGLERROOT_ABS)/Doozer++/scripts
 MAKEFLAGS+=		--no-print-directory
 DEPGEN_TOOL_CC=		@CC@
