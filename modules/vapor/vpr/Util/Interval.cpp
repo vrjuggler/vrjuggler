@@ -41,13 +41,6 @@
 
 #include <vpr/vprConfig.h>
 
-#ifdef VPR_SIMULATOR
-#  include <vpr/md/SIM/Controller.h>
-#endif
-
-#include <vpr/Util/Interval.h>
-#include <vpr/System.h>
-
 #if defined(VPR_OS_IRIX)
 // these includes are needed for accessing the SGI cycle counter.
 #include <sys/utsname.h>
@@ -57,8 +50,14 @@
 #include <sys/mman.h>
 #include <unistd.h>
 #include <sys/syssgi.h>
-#include <sys/errno.h>
 #endif
+
+#ifdef VPR_SIMULATOR
+#  include <vpr/md/SIM/Controller.h>
+#endif
+
+#include <vpr/Util/Interval.h>
+#include <vpr/System.h>
 
 const vpr::Interval vpr::Interval::NoWait(0,vpr::Interval::Base);
 const vpr::Interval vpr::Interval::NoTimeout(0xffffffffUL, vpr::Interval::Base);
