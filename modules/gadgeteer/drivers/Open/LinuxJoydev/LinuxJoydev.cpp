@@ -155,7 +155,7 @@ bool LinuxJoydev::startSampling()
    }
 
    // Output joystick description
-   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_STATUS_LVL)
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
          << "  Joystick Label: " << mJsLabel << std::endl
          << "   Joystick Name: " << mPhysicalJsName << std::endl
          << "            Axes: " << mNumAxes << std::endl
@@ -165,9 +165,11 @@ bool LinuxJoydev::startSampling()
 
    for(unsigned i=0;i<mAxisButtonIndices.size(); ++i)
    { 
-      vprDEBUG_CONTnl(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_STATUS_LVL) << mAxisButtonIndices[i] << " "; 
+      vprDEBUG_CONTnl(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+         << mAxisButtonIndices[i] << " "; 
    }
-   vprDEBUG_CONTnl(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_STATUS_LVL) << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_CONTnl(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL) << std::endl
+                                                           << vprDEBUG_FLUSH;
 
    // Allocate initial device data
    // - By default this will clear them out
