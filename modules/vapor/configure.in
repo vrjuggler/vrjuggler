@@ -240,12 +240,14 @@ fi
 dnl # If no alternate C++ compiler was specified, check to see if it is
 dnl # necessary to force the use of a specific compiler on a given platform.
 if test "x${_alt_cxx}" = "xnone" ; then
-    CXX_HP='aCC'
-    CXX_IRIX='CC'
-    CXX_PIC_IRIX='-KPIC'
+    if test "x$USE_GCC" = "xyes" ; then
+        CXX_HP='aCC'
+        CXX_IRIX='CC'
+        CXX_PIC_IRIX='-KPIC'
+    fi
 
     dnl # On HP-UX, we have to use the aCC C++ compiler.
-    if test "$PLATFORM" = "HP" ; then
+    if test "$PLATFORM" = "HP" -a "x$USE_GCC" != "xyes" ; then
         CXX_ERR='*** The library requires the HP-UX aCC C++ compiler ***'
     dnl # On Windows, we have to use the Microsoft Visual C++ compiler CL.EXE.
     elif test "$OS_TYPE" = "Win32" -a "x$USE_GCC" != "xyes" ; then
