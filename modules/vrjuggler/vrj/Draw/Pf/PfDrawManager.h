@@ -38,14 +38,15 @@
 #include <vector>
 #include <functional>
 #include <algorithm>
+#include <boost/concept_check.hpp>
 
 #include <Performer/pf/pfChannel.h>
 
+#include <vpr/Util/Singleton.h>
 #include <vrj/Draw/DrawManager.h>
 #include <vrj/Draw/Pf/PfUtil.h>
-#include <vpr/Util/Singleton.h>
+#include <vrj/Util/Debug.h>
 
-#include <boost/concept_check.hpp>
 namespace vrj
 {
 
