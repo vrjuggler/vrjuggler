@@ -162,8 +162,8 @@ public class PrefsDialog extends JDialog implements TableModelListener
          }
       });
 
-      mSaveButton.setMnemonic('S');
-      mSaveButton.setText("Save");
+      mSaveButton.setMnemonic('A');
+      mSaveButton.setText("Apply");
       mSaveButton.addActionListener(new ActionListener()
       {
          public void actionPerformed (ActionEvent e)
