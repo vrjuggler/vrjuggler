@@ -36,6 +36,8 @@
 
 #include <tweek/tweekConfig.h>
 
+#include <algorithm>
+
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Util/Debug.h>
 
