@@ -44,7 +44,7 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <strstream>
+#include <sstream>
 #include <fstream>
 
 #include <gadget/Devices/Intersense/Intersense.h>
@@ -125,11 +125,11 @@ bool Intersense::config(jccl::ConfigChunkPtr c)
 
 // load an init script for the tracker and then pass it to mTracker
     const char* filename = c->getProperty<std::string>("script").c_str();
-    std::strstream script;
+    std::stringstream script;
     std::ifstream scriptFile;
     scriptFile.open(filename);
     script<<scriptFile.rdbuf();
-    mTracker.setScript(script.str());
+    mTracker.setScript(script.str().c_str());
     scriptFile.close();
     mTracker.rVerbose() = c->getProperty<bool>("verbose");
 
