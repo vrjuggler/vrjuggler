@@ -176,10 +176,10 @@ public class ControlPanelView
       {
          public void actionPerformed(ActionEvent evt)
          {
-            JDialog dlg = new JDialog(
-               (Frame)SwingUtilities.getAncestorOfClass(Frame.class, ControlPanelView.this),
-               "Positional Device Editor",
-               true);
+            Frame parent = 
+               (Frame) SwingUtilities.getAncestorOfClass(Frame.class,
+                                                         ControlPanelView.this);
+            JDialog dlg = new JDialog(parent, "Custom Editor", true);
             
             ControlPanel control = (ControlPanel)evt.getSource();
             Object object = control.getModel().getUserObjectAt(evt.getID());
@@ -206,6 +206,30 @@ public class ControlPanelView
                   dlg.setTitle(editor.getTitle());
                   dlg.pack();
                   dlg.setVisible(true);
+
+                  ConfigBroker broker = new ConfigBrokerProxy();
+                  for ( Iterator itr = mContext.getResources().iterator();
+                        itr.hasNext(); )
+                  {
+                     DataSource data_source = broker.get((String)itr.next());
+                     if (! data_source.isReadOnly())
+                     {
+                        try
+                        {
+                           data_source.commit();
+                        }
+                        catch(IOException ioe)
+                        {
+                           JOptionPane.showMessageDialog(parent,
+                                                         ioe.getMessage(),
+                                                         "Error",
+                                                         JOptionPane.ERROR_MESSAGE);
+                        }
+                     }
+                  }
+
+                  // Inform the ConfigUndoManager that we have saved changes.
+                  mContext.getConfigUndoManager().saveHappened();
                }
             }
          }
