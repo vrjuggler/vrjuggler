@@ -10,7 +10,7 @@ std::string replaceEnvVars(const std::string str,
                            const std::string startStr, const std::string endStr)
 {
 
-   std::string ret_str(endStr);
+   std::string ret_str(str);
    std::string::size_type subst_begin(0), subst_end(0), subst_len(0);
 
    while( (subst_begin = ret_str.find(startStr)) != std::string::npos)
@@ -19,9 +19,9 @@ std::string replaceEnvVars(const std::string str,
 
       subst_end = ret_str.find(endStr);
       subst_len = subst_end - subst_begin;
-      env_var = std::string(ret_str, subst_begin, subst_len);
+      env_var = std::string(ret_str, subst_begin+startStr.size(), subst_len-startStr.size());
       vpr::System::getenv(env_var, env_var_val);
-      ret_str.replace(subst_begin, subst_len, env_var_val);
+      ret_str.replace(subst_begin, subst_len+1, env_var_val);
    }
 
    return ret_str;

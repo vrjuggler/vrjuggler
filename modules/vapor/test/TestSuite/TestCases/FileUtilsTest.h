@@ -96,6 +96,7 @@ public:
       expected_str = std::string("abcVal1Val2ghiVal2Val1");
       result_str = vpr::replaceEnvVars(test_str);
       CPPUNIT_ASSERT(expected_str == result_str);
+
    }
 
    static CppUnit::Test* suite()
