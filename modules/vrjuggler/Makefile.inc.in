@@ -389,12 +389,12 @@ install-data:
 install-gui:
 ifdef NO_JAVA_GUI
 	@echo "------------------------------------------------"
-	@echo "Skipping installation of vjcontrol (not built)"
+	@echo "Skipping installation of VjControl (not built)"
 	@echo "------------------------------------------------"
 else
 ifeq ($(BUILD_GUI), Y)
 	@echo "------------------------------------------------"
-	@echo "Installing vjcontrol"
+	@echo "Installing VjControl"
 	@echo "------------------------------------------------"
 ifeq (@OS_TYPE@, UNIX)
 	@sed -e 's,#VJ_SHARE_DIR#,$(VJ_SHARE_DIR),g'			\
