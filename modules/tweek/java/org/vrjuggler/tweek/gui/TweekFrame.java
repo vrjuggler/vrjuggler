@@ -220,9 +220,9 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
          });
 
       // Define the Edit Local option in the Preferences menu.
-      mMenuPrefsLocalEdit.setMnemonic('L');
-      mMenuPrefsLocalEdit.setText("Edit Local ...");
-      mMenuPrefsLocalEdit.setEnabled(false);
+      mMenuPrefsBeanEdit.setMnemonic('B');
+      mMenuPrefsBeanEdit.setText("Edit Bean-Specific ...");
+      mMenuPrefsBeanEdit.setEnabled(false);
 
       mMenuBeansLoad.setMnemonic('L');
       mMenuBeansLoad.setText("Load Beans ...");
@@ -289,7 +289,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       mMenuPrefs.setText("Preferences");
       mMenuPrefs.setMnemonic('P');
       mMenuPrefs.add(mMenuPrefsGlobalEdit);
-      mMenuPrefs.add(mMenuPrefsLocalEdit);
+      mMenuPrefs.add(mMenuPrefsBeanEdit);
 
       // Set up the Beans menu.
       mMenuBeans.setText("Beans");
@@ -665,7 +665,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
    private JMenuItem mMenuNetDisconnect   = new JMenuItem();
    private JMenu mMenuPrefs               = new JMenu();
    private JMenuItem mMenuPrefsGlobalEdit = new JMenuItem();
-   private JMenuItem mMenuPrefsLocalEdit  = new JMenuItem();
+   private JMenuItem mMenuPrefsBeanEdit   = new JMenuItem();
    private JMenu mMenuBeans               = new JMenu();
    private JMenuItem mMenuBeansLoad       = new JMenuItem();
    private JMenu mMenuHelp                = new JMenu();
