@@ -48,16 +48,9 @@ public:
    //! POST: this.context is active context
    virtual bool makeCurrent(){return false;}
 
-    //: Configure the window
+   //: Configure the window
    //! POST: this' is configured based on the data in display
-   virtual void config(vjDisplay* _display)
-   {
-      mDisplay = _display;
-      mDisplay->getOriginAndSize( origin_x, origin_y, window_width, window_height);
-      border = mDisplay->shouldDrawBorder();
-
-      /// Other stuff
-   }
+   virtual void config(vjDisplay* _display);
 
    //: Performs an OpenGL swap buffers command
    virtual void swapBuffers(){;}
