@@ -60,46 +60,46 @@ namespace vpr
 class MutexSGI
 {
 public:
-   MutexSGI ()
+   MutexSGI() : mMutex(NULL)
    {
       // BUG: Possible race condition here
-      if ( mutexPool == NULL )
+      if ( mMutexPool == NULL )
       {
-         mutexPool = new MemPoolSGI(65536, 32,
-                                    "/var/tmp/memMutexPoolSGIXXXXXX");
-         attachedCounter = static_cast<int*>(mutexPool->allocate(sizeof(int)));
-         *attachedCounter = 0;
+         mMutexPool = new MemPoolSGI(65536, 32,
+                                     "/var/tmp/memMutexPoolSGIXXXXXX");
+         mAttachedCounter = static_cast<int*>(mMutexPool->allocate(sizeof(int)));
+         *mAttachedCounter = 0;
       }
 
       // Track how many mutexes are allocated
-      *attachedCounter = *attachedCounter + 1;
-//      vprDEBUG << " vpr::MutexSGI::MutexSGI: attachedCounter: "
-//               << *attachedCounter << endl << vprDEBUG_FLUSH;
+      *mAttachedCounter = *mAttachedCounter + 1;
+//      vprDEBUG << " vpr::MutexSGI::MutexSGI: mAttachedCounter: "
+//               << *mAttachedCounter << endl << vprDEBUG_FLUSH;
 
       // ----- Allocate the mutex ----- //
-      mutex = usnewlock(mutexPool->getArena());
-      vprASSERT(mutex != NULL && "in vpr::MutexSGI::MutexSGI() mutex is NULL");
+      mMutex = usnewlock(mMutexPool->getArena());
+      vprASSERT(mMutex != NULL && "in vpr::MutexSGI::MutexSGI() mMutex is NULL");
    }
 
-   ~MutexSGI(void)
+   ~MutexSGI()
    {
       // ---- Delete the mutex --- //
-      usfreelock(mutex, mutexPool->getArena());
+      usfreelock(mMutex, mMutexPool->getArena());
 
       // ---- Deal with the pool --- //
 
       // Track how many mutexes are allocated
-      *attachedCounter = *attachedCounter - 1;
+      *mAttachedCounter = *mAttachedCounter - 1;
 
-//      vprDEBUG << "vpr::MutexSGI::~MutexSGI: attachedCounter: "
-//               << *attachedCounter << endl << vprDEBUG_FLUSH;
+//      vprDEBUG << "vpr::MutexSGI::~MutexSGI: mAttachedCounter: "
+//               << *mAttachedCounter << endl << vprDEBUG_FLUSH;
 
-      if ( *attachedCounter == 0 )
+      if ( *mAttachedCounter == 0 )
       {
-         mutexPool->deallocate(attachedCounter);
-         attachedCounter = NULL;
-         delete mutexPool;
-         mutexPool = NULL;
+         mMutexPool->deallocate(mAttachedCounter);
+         mAttachedCounter = NULL;
+         delete mMutexPool;
+         mMutexPool = NULL;
       }
    }
 
@@ -116,8 +116,8 @@ public:
     */
    vpr::ReturnStatus acquire() const
    {
-      vprASSERT(mutex != NULL && "in vpr::MutexSGI::aquire() mutex is NULL");
-      if ( ussetlock(mutex) == 1 )
+      vprASSERT(mMutex != NULL && "in vpr::MutexSGI::aquire() mMutex is NULL");
+      if ( ussetlock(mMutex) == 1 )
       {
          return vpr::ReturnStatus();
       }
@@ -177,10 +177,10 @@ public:
     *         vpr::ReturnStatus::Fail is returned if another thread is
     *         holding the lock already.
     */
-   vpr::ReturnStatus tryAcquire () const
+   vpr::ReturnStatus tryAcquire() const
    {
       // Try 100 spins.
-      if ( uscsetlock(mutex, 100) == 1 )
+      if ( uscsetlock(mMutex, 100) == 1 )
       {
          return vpr::ReturnStatus();
       }
@@ -202,7 +202,7 @@ public:
     *         acquired.  vpr::ReturnStatus::Fail is returned if another thread
     *         is holding the lock already.
     */
-   vpr::ReturnStatus tryAcquireRead () const
+   vpr::ReturnStatus tryAcquireRead() const
    {
       return this->tryAcquire();
    }
@@ -219,7 +219,7 @@ public:
     *         acquired.  vpr::ReturnStatus::Fail is returned if another thread
     *         is holding the lock already.
     */
-   vpr::ReturnStatus tryAcquireWrite () const
+   vpr::ReturnStatus tryAcquireWrite() const
    {
       return this->tryAcquire();
    }
@@ -235,7 +235,7 @@ public:
     */
    vpr::ReturnStatus release() const
    {
-      if ( usunsetlock(mutex) == 0 )
+      if ( usunsetlock(mMutex) == 0 )
       {
          return vpr::ReturnStatus();
       }
@@ -256,7 +256,7 @@ public:
     */
    int test()
    {
-      return ustestlock(mutex);
+      return ustestlock(mMutex);
    }
 
    /**
@@ -271,21 +271,21 @@ public:
     *                It defaults to stderr if no descriptor is specified.
     * @param message Message printed out before the output is dumped.
     */
-   void dump (FILE* dest = stdout,
-              const char* message = "\n------ Mutex Dump -----\n") const
+   void dump(FILE* dest = stdout,
+             const char* message = "\n------ Mutex Dump -----\n") const
    {
-      usdumplock(mutex, dest, message);
+      usdumplock(mMutex, dest, message);
    }
 
 protected:
-   ulock_t mutex;
+   ulock_t mMutex;
 
    // = Prevent assignment and initialization.
    void operator= (const MutexSGI &) {;}
    MutexSGI (const MutexSGI &) {;}
 
-   static MemPoolSGI* mutexPool;
-   static int* attachedCounter;
+   static MemPoolSGI* mMutexPool;
+   static int* mAttachedCounter;
 };
 
 } // End of vpr namespace
