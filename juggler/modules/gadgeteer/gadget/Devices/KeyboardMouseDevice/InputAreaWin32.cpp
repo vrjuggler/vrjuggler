@@ -90,11 +90,12 @@ void InputAreaWin32::handleEvents()
               // afterwards that will be called when this is false.
    }
 
-	// GUARD mKeys for duration of loop
-	// Doing it here gives makes sure that we process all events and don't get only part of them for an update
-	// In order to copy data over to the mCurKeys array
-	// Lock access to the mKeys array for the duration of this function
-	vpr::Guard<vpr::Mutex> guard(mKeysLock);
+   // GUARD mKeys for duration of loop.
+   // Doing it here gives makes sure that we process all events and don't get
+   // only part of them for an update.
+   // In order to copy data over to the mCurKeys array,
+   // Lock access to the mKeys array for the duration of this function.
+   vpr::Guard<vpr::Mutex> guard(mKeysLock);
 
    while ( have_events_to_check )
    {
@@ -129,11 +130,11 @@ void InputAreaWin32::handleEvents()
  */
 void InputAreaWin32::updKeys(const MSG& message)
 {
-	/*
+/*
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
       << mInstName << ": KeyWin32::updKeys: Processing keys.\n"
       << vprDEBUG_FLUSH;
-	*/
+*/
 
    gadget::Keys key;
 
@@ -540,22 +541,25 @@ void InputAreaWin32::addKeyEvent(const gadget::Keys& key,
                                    const gadget::EventType& type,
                                    const MSG& msg)
 {
+/*
    // XXX: Missing modifier key information here...
    // XXX: Missing ASCII character value here...
    gadget::EventPtr key_event(new gadget::KeyEvent(type, key, 0, msg.time));
    mKeyboardMouseDevice->addEvent(key_event);
+*/
 }
 
 void InputAreaWin32::resize(long width, long height)
 {
-	mWidth = width;
-	mHeight = height;
+   mWidth = width;
+   mHeight = height;
 }
 
 void InputAreaWin32::addMouseButtonEvent(const gadget::Keys& button,
                                          const gadget::EventType& type,
                                          const MSG& msg)
 {
+/*
    // XXX: Missing keyboard modifier information here...
    gadget::EventPtr mouse_event(new gadget::MouseEvent(type, button,
                                                        GET_X_LPARAM(msg.lParam),
@@ -563,10 +567,12 @@ void InputAreaWin32::addMouseButtonEvent(const gadget::Keys& button,
                                                        msg.pt.x, msg.pt.y, 0,
                                                        msg.time));
    mKeyboardMouseDevice->addEvent(mouse_event);
+*/
 }
 
 void InputAreaWin32::addMouseMoveEvent(const MSG& msg)
 {
+/*
    gadget::EventPtr mouse_event(new gadget::MouseEvent(gadget::MouseMoveEvent,
                                                        gadget::NO_MBUTTON,
                                                        GET_X_LPARAM(msg.lParam),
@@ -574,6 +580,7 @@ void InputAreaWin32::addMouseMoveEvent(const MSG& msg)
                                                        msg.pt.x, msg.pt.y, 0,
                                                        msg.time));
    mKeyboardMouseDevice->addEvent(mouse_event);
+*/
 }
 
 void InputAreaWin32::doInternalError( const std::string& msg )
