@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Feb-03-2005 patrickh    Use JCCL 0.92.1 handling of the .jdef search path.
+                        Now, $JCCL_DEFINITION_PATH augments the .jdef search
+                        path rather than defining it outright.
 Jan-31-2005 patrickh    Separated the builds for VR Juggler and VRJConfig.
 
 [2.0 Beta 2 released - 1.18.2005]==============================================
