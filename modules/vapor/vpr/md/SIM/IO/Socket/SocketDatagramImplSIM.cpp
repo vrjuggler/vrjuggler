@@ -93,10 +93,10 @@ vpr::ReturnStatus SocketDatagramImplSIM::recvfrom (void* msg,
    return status;
 }
 
-vpr::ReturnStatus SocketDatagramImplSIM::sendto (void* msg,
+vpr::ReturnStatus SocketDatagramImplSIM::sendto (const void* msg,
                                                  const vpr::Uint32 length,
                                                  const int flags,
-                                                 vpr::InetAddr& to,
+                                                 const vpr::InetAddr& to,
                                                  vpr::Uint32& bytes_sent,
                                                  const vpr::Interval timeout)
 {
