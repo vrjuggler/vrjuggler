@@ -31,57 +31,10 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-#ifndef _VJ_TS_TABLE_H_
-#define _VJ_TS_TABLE_H_
-//#pragma once
+#ifndef _VJ_TS_TABLE_H_DEPRECATED_
+#define _VJ_TS_TABLE_H_DEPRECATED_
 
-#include <vjConfig.h>
-#include <Threads/vjTSObject.h>
-#include <Sync/vjMutex.h>
-
-//-----------------------------------------------------------------
-//: This class is the actual TS Table.
-//
-// This class maintains a table that has ptrs to all the TS data
-// in the system for a specific thread.
-// Only the owning thread may actually access the table
-//-----------------------------------------------------------------
-class vjTSTable
-{
-public:
-   vjTSTable()
-   {;}
-
-   //: Delete the table
-   // Delete all objects in the table
-   ~vjTSTable();
-
-public:
-   // Returns true if the table contains the given key
-   // If false, then the user should setObject(...,key) before
-   // attempting to access the object
-   bool containsKey(long key)
-   {
-      return ((key>=0)&&((unsigned)key<mTSObjects.size()));
-   }
-   
-   //: Get the object with the spcified key
-   vjTSBaseObject* getObject(unsigned int objectKey);
-   
-   //-----------------------------------------------------------------
-   //: Set an object entry in the table.
-   //-----------------------------------------------------------------
-   void setObject(vjTSBaseObject* object, long key);
-
-   //-----------------------------------------------------------------
-   //: Release the object given by key.
-   //
-   //! POST: Obj(key) is deleted, and the ptr is set to NULL.
-   //-----------------------------------------------------------------
-   void releaseObject(unsigned long key);
-
-private:
-   std::vector<vjTSBaseObject*> mTSObjects; //: Map object key to TS Object ptr
-};
+#warn "Threads/vjTSTable.h is deprecated!  Use VPR/Threads/vjTSTable.h"
+#include <VPR/Threads/vjTSTable.h>
 
 #endif

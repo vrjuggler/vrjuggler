@@ -38,7 +38,7 @@
 #include <Kernel/GL/vjGlWindow.h>
 #include <Kernel/vjProjection.h>
 #include <Kernel/vjFrustum.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <Kernel/vjSimDisplay.h>
 #include <Kernel/vjSurfaceDisplay.h>
 #include <Config/vjConfigChunk.h>

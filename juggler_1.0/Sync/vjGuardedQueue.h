@@ -30,68 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VJ_GUARDED_QUEUE_DEPRECATED_
+#define _VJ_GUARDED_QUEUE_DEPRECATED_
 
-#ifndef _VJ_GUARDED_QUEUE_
-#define _VJ_GUARDED_QUEUE_
-
-#include <vjConfig.h>
-
-#include <queue>
-#include <Sync/vjMutex.h>
-#include <Sync/vjGuard.h>
-
-//: A guarded queue
-// Guards an STL queue and implements the basic interface
-// All the functions pass directly through to the corresponding STL
-// queue function but they are guarded so that only a single
-// thread can interact with the queue at once.
-template <class value_type>
-class vjGuardedQueue
-{
-public:
-   vjGuardedQueue()
-   {;}
-
-   ~vjGuardedQueue()
-   {;}
-
-   bool empty()
-   {
-   vjGuard<vjMutex> guard(mMutexGuard);
-      return mQ.empty();
-   }
-
-   value_type& front()
-   {
-   vjGuard<vjMutex> guard(mMutexGuard);
-      return mQ.front();
-   }
-
-   value_type& back()
-   {
-   vjGuard<vjMutex> guard(mMutexGuard);
-      return mQ.back();
-   }
-
-   void push(const value_type& val)
-   {
-    vjGuard<vjMutex> guard(mMutexGuard);
-      mQ.push(val);
-   }
-
-   void pop()
-   {
-   vjGuard<vjMutex> guard(mMutexGuard);
-      mQ.pop();
-   }
-
-   int size() const
-   { return mQ.size(); }
-
-private:
-   vjMutex           mMutexGuard;      // The mutex to guard the queue
-   std::queue<value_type> mQ;
-};
-
+#warn "Sync/vjGuardedQueue.h is deprecated!  Use VPR/Sync/vjGuardedQueue.h"
+#include <VPR/Sync/vjGuardedQueue.h>
 
 #endif

@@ -41,7 +41,7 @@ class vjDrawManager;
 class vjDisplay;
 
 #include <Input/vjPosition/vjPosition.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <Kernel/vjConfigChunkHandler.h>
 #include <Utils/vjSingleton.h>
 

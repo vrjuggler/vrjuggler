@@ -49,22 +49,4 @@ SUBOBJDIR	= $(VJ_LIBRARY)
 VJROOT		= $(top_srcdir)
 VJ_SRCDIR	= @VJ_SRCDIR@/SharedMem
 
-SRCS		=
-
-ifeq (@SHMEM_SYS@, IRIX_SPROC)
-    SRCS	+= vjMemPoolSGI.cpp
-endif
-ifeq (@SHMEM_SYS@,WIN32)
-    SRCS	+= vjMemPoolWin32.cpp
-endif
-
 include $(MKPATH)/dpp.obj.mk
-
-# -----------------------------------------------------------------------------
-# Include dependencies generated automatically.
-# -----------------------------------------------------------------------------
-ifndef DO_CLEANDEPEND
-ifndef DO_BEFOREBUILD
-    include $(DEPEND_FILES)
-endif
-endif

@@ -30,59 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _MemPool_h_DEPRECATED_
+#define _MemPool_h_DEPRECATED_
 
-#ifndef _MemPool_h_
-#define _MemPool_h_
-//#pragma once
+#warn "SharedMem/vjMemPool.h is deprecated!  Use VPR/SharedMem/vjMemPool.h"
+#include <VPR/SharedMem/vjMemPool.h>
 
-#include <vjConfig.h>
-#include <stdlib.h>
-
-//: Shared memory pool.
-//
-//    Base class that defines how all memory pools
-// should behave.
-//
-// Author:
-//	Allen Bierbaum
-//
-// Date: 1-9-97
-//
-class vjMemPool {
-
-public:
-    // ---> This is a prototype for what all derived constructors should take as params
-    // vjMemPool(size_t initialSize,  int numProcs, char* staticTempName) {
-    virtual ~vjMemPool() {;}     	
-
-public:
-    virtual void* allocate(size_t size) = 0;
-    virtual void  deallocate(void* ptr) = 0;
-    virtual void* reallocate(void *ptr, size_t new_sz) = 0;
-
-};
-
-#if defined(VJ_IRIX_SPROC)
-#   include <SharedMem/vjMemPoolSGI.h>
-#   include <SharedMem/vjMemPoolHeap.h>
-
-    typedef vjMemPoolSGI vjSharedPool;
-    typedef vjMemPoolHeap vjHeapPool;
-    typedef vjMemPoolSGI vjSyncPool;
-#elif defined(VJ_OS_Win32)
-#	include <SharedMem/vjMemPoolWin32.h>
-#	include <SharedMem/vjMemPoolHeap.h>
-                                             // Everything is heap!!!
-	typedef vjMemPoolHeap vjSharedPool;
-	typedef vjMemPoolHeap  vjHeapPool;
-	typedef vjMemPoolHeap vjSyncPool;
-#elif defined(VJ_OS_HPUX) || defined(VJ_USE_PTHREADS)
-#   include <SharedMem/vjMemPool_malloc.h>
-#   include <SharedMem/vjMemPoolHeap.h>
-
-    typedef vjMemPool_malloc	vjSharedPool;
-    typedef vjMemPoolHeap	vjHeapPool;
-    typedef vjMemPool_malloc	vjSyncPool;
-#endif	/* VJ_IRIX_SPROC */
-
-#endif // ifdef vjMemPool_h
+#endif

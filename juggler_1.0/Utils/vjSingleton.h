@@ -34,8 +34,8 @@
 #define _SINGLETON_TEMPLATE_H_
 
 #include <vjConfig.h>
-#include <Sync/vjMutex.h>
-#include <Sync/vjGuard.h>
+#include <VPR/Sync/vjMutex.h>
+#include <VPR/Sync/vjGuard.h>
 #include <iostream>
 
 // Double checked locking version

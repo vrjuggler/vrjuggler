@@ -39,6 +39,7 @@
 #include <Input/vjGlove/vjPinchGlove.h> //vrjuggler pinch driver
 //#include <Kernel/vjKernel.h>
 #include <Config/vjConfigChunk.h>
+#include <VPR/vjSystem.h>
 
 bool vjPinchGlove::config(vjConfigChunk *c)
 {
@@ -104,7 +105,7 @@ int vjPinchGlove::startSampling()
       vjThreadMemberFunctor<vjPinchGlove>* memberFunctor =
          new vjThreadMemberFunctor<vjPinchGlove>(this, &vjPinchGlove::controlLoop, NULL);
 
-      myThread = new vjThread(memberFunctor, 0);
+      myThread = new vjThread(memberFunctor);
 
       if (!myThread->valid())
       {
@@ -137,7 +138,7 @@ void vjPinchGlove::controlLoop(void* nullParam)
       if (result == false)
       {
          vjDEBUG(vjDBG_INPUT_MGR,0) << "[vjPinch] ERROR: Can't open or it is already opened." << vjDEBUG_FLUSH;
-         usleep(14500);
+         vjSystem::usleep(14500);
       }
    }
 
@@ -224,7 +225,7 @@ int vjPinchGlove::stopSampling()
       myThread->kill();
       delete myThread;
       myThread = NULL;
-      usleep(100);
+      vjSystem::usleep(100);
 
       // XXX: there is no "close"
       //mGlove->Close();

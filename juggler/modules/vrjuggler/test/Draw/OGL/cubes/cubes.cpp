@@ -40,7 +40,7 @@
       // --- Lib Stuff --- //
 #include <Kernel/vjKernel.h>
 #include <Kernel/vjProjection.h>
-//#include <unistd.h>
+#include <VPR/vjSystem.h>
 
 int main(int argc, char* argv[])
 {
@@ -77,6 +77,6 @@ int main(int argc, char* argv[])
 
    while(1)
    {
-       usleep (250000);
+       vjSystem::usleep (250000);
    }
 }

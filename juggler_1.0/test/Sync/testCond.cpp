@@ -37,9 +37,9 @@
 #include <time.h>
 #include <sys/time.h>
 
-#include <Threads/vjThread.h>
-#include <Sync/vjCond.h>
-#include <Kernel/vjDebug.h>
+#include <VPR/Threads/vjThread.h>
+#include <VPR/Sync/vjCond.h>
+#include <Utils/vjDebug.h>
 
 class SyncIncrementer
 {

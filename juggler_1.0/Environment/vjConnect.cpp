@@ -47,6 +47,7 @@
 //#include <Kernel/vjKernel.h>
 #include <Kernel/vjConfigManager.h>
 #include <Config/vjConfigTokens.h>
+#include <VPR/vjSystem.h>
 
 
 vjConnect::vjConnect(vjSocket* s, const std::string& _name,
@@ -142,7 +143,7 @@ bool vjConnect::startProcess() {
       new vjThreadMemberFunctor<vjConnect>(this,
                                            &vjConnect::writeControlLoop,
                                            NULL);
-      write_connect_thread = new vjThread (writeMemberFunctor, 0);
+      write_connect_thread = new vjThread (writeMemberFunctor);
       success = success && write_connect_thread;
    }
    if (mode == VJC_INPUT || mode == VJC_INTERACTIVE)
@@ -151,7 +152,7 @@ bool vjConnect::startProcess() {
       new vjThreadMemberFunctor<vjConnect>(this,
                                            &vjConnect::readControlLoop,
                                            NULL);
-      read_connect_thread = new vjThread (readMemberFunctor, 0);
+      read_connect_thread = new vjThread (readMemberFunctor);
       success = success && read_connect_thread;
    }
 
@@ -289,7 +290,7 @@ void vjConnect::writeControlLoop(void* nullParam) {
 //          *outstream << "yet another test : ( \n" << flush;
 //          cout << " -done\n" << flush;
 
-        usleep (300000); // half a sec - find a better way to do this...
+        vjSystem::usleep (300000); // half a sec - find a better way to do this...
         if (!outstream)
             break;
 

@@ -40,7 +40,7 @@
 #define _VJ_ANALOGPROXY_H_
 
 #include <vjConfig.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <Input/vjInput/vjAnalog.h>
 #include <Input/InputManager/vjProxy.h>
 

@@ -34,11 +34,11 @@
 #include <stdio.h>
 #include <math.h>
 
-#include <Threads/vjThread.h>
-#include <Threads/vjTSObjectProxy.h>
-#include <Threads/vjTSObject.h>
-#include <Sync/vjMutex.h>
-#include <Kernel/vjDebug.h>
+#include <VPR/Threads/vjThread.h>
+#include <VPR/Threads/vjTSObjectProxy.h>
+#include <VPR/Threads/vjTSObject.h>
+#include <VPR/Sync/vjMutex.h>
+#include <Utils/vjDebug.h>
 
 int num_threads_to_create = 6;
 int threads_created = 0;

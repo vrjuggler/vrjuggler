@@ -105,7 +105,7 @@ int vjKeyboardWin32::startSampling()
 
       vjKeyboard* devicePtr = this;
 
-      if (0 == (myThread = new vjThread(samplem_keys,(void*)devicePtr,0)))
+      if (0 == (myThread = new vjThread(samplem_keys,(void*)devicePtr)))
          return 0; //fail
       else {
          return 1;

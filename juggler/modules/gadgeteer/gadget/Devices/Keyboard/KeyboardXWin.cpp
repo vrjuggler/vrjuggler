@@ -31,10 +31,11 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <vjConfig.h>
 #include <Input/vjKeyboard/vjXWinKeyboard.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <Kernel/vjDisplayManager.h>
-#include <Threads/vjThread.h>
+#include <VPR/Threads/vjThread.h>
 #include <Config/vjConfigChunk.h>
+#include <VPR/vjSystem.h>
 
 
 //: Constructor
@@ -107,7 +108,7 @@ void vjXWinKeyboard::controlLoop(void* nullParam)
 
    while (NULL == vjThread::self())
    {
-      usleep(50);
+      vjSystem::usleep(50);
       vjDEBUG(vjDBG_ALL,vjDBG_VERB_LVL) << "vjXWinKeyboard: Waiting for (thread::self() != NULL)\n" << vjDEBUG_FLUSH;
    }
    myThread = (vjThread*) vjThread::self();
@@ -134,7 +135,7 @@ void vjXWinKeyboard::controlLoop(void* nullParam)
 
       usleep_time = mSleepTimeMS*1000;
 
-      usleep( usleep_time );
+      vjSystem::usleep(usleep_time);
    }
 
    // Exit, cleanup code
@@ -162,7 +163,7 @@ int vjXWinKeyboard::startSampling()
       new vjThreadMemberFunctor<vjXWinKeyboard>(this, &vjXWinKeyboard::controlLoop, NULL);
 
    vjThread* new_thread;
-   new_thread = new vjThread(memberFunctor, 0);
+   new_thread = new vjThread(memberFunctor);
    myThread = new_thread;
 
    return 1;
@@ -442,7 +443,7 @@ int vjXWinKeyboard::stopSampling()
   if (myThread != NULL)
   {
     mExitFlag = true;
-    sleep(1);
+    vjSystem::sleep(1);
   }
 
   return 1;

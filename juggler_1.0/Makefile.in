@@ -133,7 +133,8 @@ SUBDIR		= Config	\
                   Sound		\
                   Sync		\
                   Threads	\
-                  Utils
+                  Utils		\
+                  VPR
 
 # =============================================================================
 # Library targets.  The default is 'debug' as defined above.  The steps for 

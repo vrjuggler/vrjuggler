@@ -36,7 +36,7 @@
 
 #include <vjConfig.h>
 #include <Kernel/vjWallProjection.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <Input/InputManager/vjPosInterface.h>
 
 class vjMatrix;

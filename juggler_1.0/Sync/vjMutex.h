@@ -30,39 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VJ_MUTEX_H_DEPRECATED_
+#define _VJ_MUTEX_H_DEPRECATED_
 
-#ifndef _VJ_MUTEX_H_
-#define _VJ_MUTEX_H_
-//----------------------------------------------
-// vjMutex
-//
-// Purpose:
-//    Defines a mutex wrapper.  No base class because
-//   we don't want to have to use virtual functions.
-//
-// Author:
-//	Allen Bierbaum
-//
-// Date: 1-20-97
-//-----------------------------------------------
+#warn "Sync/vjMutex.h is deprecated!  Use VPR/Sync/vjMutex.h"
+#include <VPR/Sync/vjMutex.h>
 
-#include <vjConfig.h>
-
-#if defined(VJ_IRIX_SPROC)
-#   include <ulocks.h>
-#   include <Sync/vjMutexSGI.h>    
-    
-    typedef  vjMutexSGI vjMutex;
-#elif defined(VJ_OS_Win32)
-#	include <Sync/vjMutexWin32.h>
-	typedef vjMutexWin32 vjMutex;
-#elif defined(VJ_USE_PTHREADS)
-#   include <Sync/vjMutexPosix.h>
-
-    typedef  vjMutexPosix vjMutex;
-#endif	/* VJ_IRIX_SPROC */
-
-#include <Sync/vjNullMutex.h>
-
-
-#endif	/* _VJ_MUTEX_H_ */
+#endif

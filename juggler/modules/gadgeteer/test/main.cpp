@@ -32,12 +32,13 @@
 
 #include <iostream>
 
-#include <SharedMem/vjMemPool.h>
+#include <VPR/SharedMem/vjMemPool.h>
 #include <Config/vjChunkDescDB.h>
 #include <Config/vjChunkFactory.h>
 #include <Input/InputManager/vjInputManager.h>
 #include <Input/InputManager/vjPosInterface.h>
 #include <Math/vjCoord.h>
+#include <VPR/vjSystem.h>
 
 
 #define CHUNK_DESC_LOCATION "/home/users/allenb/Source/juggler/Data/chunksDesc"
@@ -77,7 +78,7 @@ int main()
    std::cout << input_manager << std::endl;
 
    std::cout << "Sleeping..." << std::flush;
-   sleep(2);
+   vjSystem::sleep(2);
    std::cout << "awake." << std::endl << std::flush;
 
       // get the indices for the devices
@@ -86,7 +87,7 @@ int main()
 
    for (int l = 0; l <30; l++)
    {
-      sleep (1);
+      vjSystem::sleep (1);
       std::cout << "Updating All Data .. " << std::endl;
       input_manager->updateAllData();
 

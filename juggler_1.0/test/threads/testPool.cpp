@@ -37,13 +37,15 @@
 #include <time.h>
 #include <sys/time.h>
 
-#include <Sync/vjMutex.h>
-//#include <Sync/vjSemaphore.h>
-//#include <Sync/vjBarrier.h>
-//#include <Sync/NullMutex.h>
-//#include <Threads/ThreadSGI.h>
-#include <Threads/vjThreadPool.h>
-#include <Kernel/vjDebug.h>
+#include <VPR/Sync/vjMutex.h>
+//#include <VPR/Sync/vjSemaphore.h>
+//#include <VPR/Sync/vjBarrier.h>
+//#include <VPR/Sync/vjNullMutex.h>
+//#include <VPR/md/SPROC/vjThreadSGI.h>
+#include <VPR/Threads/vjThreadPool.h>
+#include <VPR/SharedMem/vjMemPool.h>
+#include <Utils/vjDebug.h>
+#include <VPR/vjSystem.h>
 
 void doIt(void*);
 
@@ -103,7 +105,7 @@ void doIt(void* param)
     long iters = (1000000*drand48());
     for(float q=0;q<iters;q += .34)
     {
-	pdq = sin(sin(q)*q*cos(q*pdq));
+	pdq = vjSystem::sin(vjSystem::sin(q)*q*vjSystem::cos(q*pdq));
     }
     	
 }

@@ -35,10 +35,10 @@
 
 
 #include <vjConfig.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <Config/vjConfigChunk.h>
 class vjConfigChunkDB;
-#include <Sync/vjGuardedQueue.h>
+#include <VPR/Sync/vjGuardedQueue.h>
 #include <Kernel/vjConfigChunkHandler.h>
 
 //: Class that holds configuration queues for the system objects

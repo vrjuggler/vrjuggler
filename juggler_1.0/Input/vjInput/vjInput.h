@@ -64,9 +64,9 @@
 #include <signal.h>
 #include <float.h>
 
-#include <Sync/vjMutex.h>
-#include <Sync/vjGuard.h>
-#include <Threads/vjThread.h>
+#include <VPR/Sync/vjMutex.h>
+#include <VPR/Sync/vjGuard.h>
+#include <VPR/Threads/vjThread.h>
 
 class vjConfigChunk;
 

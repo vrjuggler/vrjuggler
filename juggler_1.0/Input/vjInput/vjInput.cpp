@@ -33,7 +33,7 @@
 
 #include <vjConfig.h>
 #include <Input/vjInput/vjInput.h>
-#include <Threads/vjThread.h>
+#include <VPR/Threads/vjThread.h>
 #include <Config/vjConfigChunk.h>
 
 #include <Kernel/vjAssert.h>

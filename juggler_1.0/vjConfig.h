@@ -96,7 +96,7 @@ inline void VJ_LERP( const float& lerp, const float& a,
     float size = b - a;
     result = a + (size * lerp);
 }
-/* #include <Kernel/vjDebug.h> */
+/* #include <Utils/vjDebug.h> */
 #endif   /* __cplusplus */
 
 #ifdef HAVE_UNISTD_H
@@ -109,45 +109,11 @@ inline void VJ_LERP( const float& lerp, const float& a,
 
 /* --- Macros ---- */
 
-/* Define this macro to replace calls to sleep(3) if it is not avialable. */
-#ifndef HAVE_SLEEP
-#   define sleep(x) (Sleep(x * 1000))        /* Win32-specific */
-#endif
-
-/* Define this macro to replace calls to usleep(3) if it is not avialable. */
-#ifndef HAVE_USLEEP
-#   define usleep(x) (Sleep(x / 1000))       /* Win32-specific */
-#endif
-
-#ifndef HAVE_SINF
-#   define sinf(x) ((float) sin(x))
-#endif
-
-#ifndef HAVE_ASINF
-#   define asinf(x) ((float) asin(x))
-#endif
-
-#ifndef HAVE_ACOSF
-#   define acosf(x) ((float) acos(x))
-#endif
-
-#ifndef HAVE_ATAN2F
-#   define atan2f(x, y) ((float) atan2(x, y))
-#endif
-
-#ifndef HAVE_SQRTF
-#   define sqrtf(x) ((float) sqrt(x))
-#endif
-
-#ifndef HAVE_FABSF
-#   define fabsf(x) ((float) fabs(x))
-#endif
-
 #define VJ_EPS 1e-8
 #define VJ_DEG2RAD(x) (x * 0.01745329252f) /* M_PI / 180.0 */
 #define VJ_RAD2DEG(x) (x * 57.2957795131f) /* 180.0 / M_PI */
-#define VJ_ZERO_CLAMP(x) ((fabs(x) < VJ_EPS)? 0.0f : x)
-#define VJ_IS_ZERO(x) (fabs(x) < VJ_EPS)
+#define VJ_ZERO_CLAMP(x) ((vjSystem::fabs(x) < VJ_EPS)? 0.0f : x)
+#define VJ_IS_ZERO(x) (vjSystem::fabs(x) < VJ_EPS)
 #define VJ_CLAMP(x,y) ((x>y)? y : x)
 #define VJ_MIN2(x,y) ((x>y)? y : x)
 #define VJ_MIN3(x,y,z) VJ_MIN2(VJ_MIN2(x,y),z)

@@ -38,8 +38,8 @@
 #include <vjConfig.h>
 #include <Config/vjConfigChunk.h>
 #include <Config/vjChunkDescDB.h>
-#include <Kernel/vjDebug.h>
-#include <Sync/vjMutex.h>
+#include <Utils/vjDebug.h>
+#include <VPR/Sync/vjMutex.h>
 #include <Utils/vjSingleton.h>
 
 

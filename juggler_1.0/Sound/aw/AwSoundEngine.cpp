@@ -38,6 +38,7 @@
 #include <Sound/aw/AwSound.h>       // my sound type...
 #include <Config/vjParseUtil.h>
 #include <Utils/vjFileIO.h>
+//#include <VPR/vjSystem.h> // my header
 #include <Sound/aw/AwSoundEngine.h> // my header
 
 AwSoundEngine::AwSoundEngine() : vjSoundEngine(), mObserver( NULL ), mInitialized( false )
@@ -111,7 +112,7 @@ void AwSoundEngine::init()
    if (result == -1)
    {
       vjDEBUG(vjDBG_ALL,vjDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"[aw] FATAL: ")  << "awDefineSys failed...Audioworks couldn't initialize (or not as likely, ADF file couldn't be found)"<< "\n" << vjDEBUG_FLUSH;
-      //sleep( 5 );
+      //vjSystem::sleep( 5 );
       vjASSERT( false && "awDefineSys failed...Audioworks system couldn't initialize (or not as likely, ADF file couldn't be found)" );
       return;
    }
@@ -140,7 +141,7 @@ void AwSoundEngine::init()
    // OFF is default
    //awProp( awGetSys(), AWSYS_MPMODE, AW_ON );
 
-   //usleep( 3000 );
+   //vjSystem::usleep( 3000 );
 
    // we need an observer to do localized sound.
    mObserver = awFindObs( "you" );

@@ -36,7 +36,7 @@
 //#pragma once
 
 #include <vjConfig.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <Math/vjVec3.h>
 #include <Math/vjSeg.h>
 

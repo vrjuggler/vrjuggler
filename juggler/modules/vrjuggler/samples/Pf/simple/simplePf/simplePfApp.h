@@ -47,7 +47,7 @@
 // --- VR Juggler Stuff --- //
 #include <Kernel/vjKernel.h>
 #include <Kernel/Pf/vjPfApp.h>    // the performer application base type
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <Kernel/vjProjection.h>  // for setNearFar (for setting clipping planes)
 
 // Declare my application class

@@ -32,7 +32,7 @@
 
 
 #include <vjConfig.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 
 #include <Kernel/vjDisplay.h>
 #include <Kernel/vjKernel.h>

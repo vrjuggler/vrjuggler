@@ -43,15 +43,15 @@
 class vjGlApp;
 #include <Kernel/GL/vjGlWindow.h>
 #include <Kernel/GL/vjGlPipe.h>
-#include <Threads/vjTSObjectProxy.h>
+#include <VPR/Threads/vjTSObjectProxy.h>
 #include <Kernel/GL/vjGlUserData.h>
 
 class vjConfigChunkDB;
 class vjSimDisplay;
 class vjGloveProxy;
 
-//#include <Sync/vjCond.h>
-#include <Sync/vjSemaphore.h>
+//#include <VPR/Sync/vjCond.h>
+#include <VPR/Sync/vjSemaphore.h>
 #include <Utils/vjSingleton.h>
 
 //-----------------------------------------------

@@ -29,44 +29,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef _VJ_TS_OBJECT_H_
-#define _VJ_TS_OBJECT_H_
+#ifndef _VJ_TS_OBJECT_H_DEPRECATED_
+#define _VJ_TS_OBJECT_H_DEPRECATED_
 
-#include <vjConfig.h>
-
-//-----------------------------------------------------------------
-//: Base Thread Specific object.
-//
-// Used so that we can have an array of heterogenous TS objects.
-// (ie. We get some type safety)
-// Also defines some memeber that all TS Objects need.
-//-----------------------------------------------------------------
-class vjTSBaseObject
-{
-public:
-   virtual ~vjTSBaseObject()
-   {;}
-};
-
-//-----------------------------------------------------------------
-//: This is the object actually stored in the system.
-//-----------------------------------------------------------------
-template <class T>
-class vjTSObject : public vjTSBaseObject
-{
-public:
-   virtual ~vjTSObject()
-   {;}
-
-   //-----------------------------------------------------------------
-   //: Return the address of our object
-   //-----------------------------------------------------------------
-   T* getObject()
-   { return &mLocalObj; }
-
-private:
-   T mLocalObj;
-};
-
+#warn "Threads/vjTSObject.h is deprecated!  Use VPR/Threads/vjTSObject.h"
+#include <VPR/Threads/vjTSObject.h>
 
 #endif

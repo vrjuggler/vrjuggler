@@ -36,7 +36,7 @@
 #include <Sound/vjSoundEngine.h>
 #include <string>
 #include <Config/vjConfigChunk.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <Sound/vjSoundFactory.h>
 
 

@@ -49,30 +49,4 @@ SUBOBJDIR	= $(VJ_LIBRARY)
 VJROOT		= $(top_srcdir)
 VJ_SRCDIR	= @VJ_SRCDIR@/Threads
 
-SRCS		= vjBaseThread.cpp	\
-                   vjTSObject.cpp	\
-                   vjTSTable.cpp	\
-                   vjThreadFunctor.cpp	\
-                   vjThreadManager.cpp	\
-                   vjThreadPool.cpp
-
-ifeq (@THREAD_SYS@,POSIX)
-    SRCS	+= vjThreadPosix.cpp
-endif
-ifeq (@THREAD_SYS@, IRIX_SPROC)
-    SRCS	+= vjThreadSGI.cpp
-endif
-ifeq (@THREAD_SYS@,WIN32)
-    SRCS	+= vjThreadWin32.cpp
-endif
-
 include $(MKPATH)/dpp.obj.mk
-
-# -----------------------------------------------------------------------------
-# Include dependencies generated automatically.
-# -----------------------------------------------------------------------------
-ifndef DO_CLEANDEPEND
-ifndef DO_BEFOREBUILD
-    include $(DEPEND_FILES)
-endif
-endif

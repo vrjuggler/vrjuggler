@@ -416,8 +416,7 @@ bool vjEnvironmentManager::acceptConnections() {
         new vjThreadMemberFunctor<vjEnvironmentManager>(this,
                                                         &vjEnvironmentManager::controlLoop,
                                                         NULL);
-    listen_thread = new vjThread (memberFunctor, 0);
-
+    listen_thread = new vjThread(memberFunctor);
 
     return (listen_thread != NULL);
 }

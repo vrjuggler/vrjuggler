@@ -41,7 +41,7 @@
 #include <Kernel/vjKernel.h>
 #include <Input/vjPosition/vjPosition.h>
 #include <Math/vjCoord.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 
 
 //: Recalculate the projection matrix

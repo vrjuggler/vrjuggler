@@ -39,7 +39,7 @@
 
 #include <Input/vjInput/vjInput.h>
 #include <Input/vjInput/vjKeyboard.h>
-#include <Sync/vjMutex.h>
+#include <VPR/Sync/vjMutex.h>
 
 class vjConfigChunk;
 

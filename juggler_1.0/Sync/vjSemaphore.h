@@ -30,29 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VJSemaphore_h_DEPRECATED_
+#define _VJSemaphore_h_DEPRECATED_
 
-#ifndef _VJSemaphore_h_
-#define _VJSemaphore_h_
+#warn "Sync/vjSemaphore.h is deprecated!  Use VPR/Sync/vjSemaphore.h"
+#include <VPR/Sync/vjSemaphore.h>
 
-#include <vjConfig.h>
-
-#if defined(VJ_IRIX_SPROC)
-#   include <ulocks.h>
-#   include <Sync/vjSemaphoreSGI.h>
-    
-    typedef vjSemaphoreSGI vjSemaphore;
-#elif defined(VJ_OS_Win32)
-#  include <Sync/vjSemaphoreWin32.h>
-   typedef vjSemaphoreWin32 vjSemaphore;
-#elif defined(VJ_POSIX_SEMAPHORES)
-#ifndef _POSIX_C_SOURCE
-#   define _POSIX_C_SOURCE VJ_POSIX_C_SOURCE
 #endif
-
-#   include <Sync/vjSemaphorePosix.h>
-
-    typedef vjSemaphorePosix vjSemaphore;
-#endif	/* VJ_IRIX_SPROC */
-
-
-#endif	/* _VJSempahore_h_ */

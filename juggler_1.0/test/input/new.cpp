@@ -32,13 +32,14 @@
 
 #include <iostream>
 #include <iomanip>
-#include <SharedMem/vjMemPool.h>
-//#include <SharedMem/SharedType.h>
+#include <VPR/SharedMem/vjMemPool.h>
+//#include <VPR/SharedMem/SharedType.h>
 #include <Input/vjPosition/vjFlock.h>
 #include <Input/ibox/hci.h>
 #include <Input/ibox/ibox.h>
 #include <Input/vjInput/vjIbox.h>
 #include <Input/vjGlove/vjCyberGlove.h>
+#include <VPR/vjSystem.h>
 
 int main()
 {
@@ -122,7 +123,7 @@ int main()
                  << gdata->joints[3][1] << " " << gdata->joints[3][2] << " "
                  << gdata->joints[3][3] << std::endl;
 */
-         sleep(2);
+         vjSystem::sleep(2);
     }
      break;
    }

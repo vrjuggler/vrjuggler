@@ -41,8 +41,8 @@
 class vjGlDrawManager;
 class vjDisplay;
 
-#include <Sync/vjCond.h>
-#include <Sync/vjSemaphore.h>
+#include <VPR/Sync/vjCond.h>
+#include <VPR/Sync/vjSemaphore.h>
 
 #include <Performance/vjPerfDataBuffer.h>
 

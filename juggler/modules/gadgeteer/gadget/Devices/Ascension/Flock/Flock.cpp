@@ -47,12 +47,13 @@
 #include <sys/ioctl.h>
 #include <sys/time.h>
 
-#include <Input/vjPosition/vjFlock.h>
 #include <Math/vjCoord.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <Utils/vjFileIO.h>
 #include <Input/vjPosition/aFlock.h>
 #include <Config/vjConfigChunk.h>
+#include <VPR/vjSystem.h>
+#include <Input/vjPosition/vjFlock.h>
 
 // Helper to return the index for theData array
 // given the birdNum we are dealing with and the bufferIndex
@@ -220,11 +221,13 @@ int vjFlock::startSampling()
       vjDEBUG(vjDBG_INPUT_MGR,1) << "vjFlock ready to go.." << std::endl
                                  << vjDEBUG_FLUSH;
 
+      vjFlock* devicePtr = this;
+
       // Create a new thread to handle the control
       vjThreadMemberFunctor<vjFlock>* memberFunctor =
           new vjThreadMemberFunctor<vjFlock>(this, &vjFlock::controlLoop, NULL);
       vjThread* new_thread;
-      new_thread = new vjThread(memberFunctor, 0);
+      new_thread = new vjThread(memberFunctor);
       myThread = new_thread;
 
       if ( myThread == NULL )
@@ -250,15 +253,7 @@ int vjFlock::sample()
    sampletime.set();
    mFlockOfBirds.sample();
 
-
-
-//: vjThread::yield()
-// XXX: Give up CPU time so that this thread doesn't bog down the processor.
-// This is really important when using PThreads since for some reason Pthreads
-// isn't dumping these threads onto other processors.  Therefore, some of these
-// threads are killing application frame-rates.
-    myThread->yield();
-
+   vjThread::yield();
 
    // For each bird
    for (i=0; i < (mFlockOfBirds.getNumBirds()); i++)

@@ -7,6 +7,7 @@
 
 // --- Lib Stuff --- //
 #include <Kernel/vjKernel.h>
+#include <VPR/vjSystem.h>
 
 int main(int argc, char* argv[])
 {
@@ -38,6 +39,6 @@ int main(int argc, char* argv[])
    // then this loop can check for that
    while(1)
    {
-      usleep(250000);
+      vjSystem::usleep(250000);
    }
 }

@@ -38,6 +38,7 @@
 #include <Math/vjVec3.h>
 #include <Math/vjCoord.h>
 #include <Math/vjQuat.h>
+#include <VPR/vjSystem.h>
 
 // Clamps an angle that is a cos or sin value [-1,1]
 static inline void limitAngle(float& angle)
@@ -51,7 +52,7 @@ static inline void limitAngle(float& angle)
 // Clamp an angle to zero if it is close
 static inline void zeroClampAngle(float& angle)
 {
-   if(fabs(angle) < 1e-6)
+   if(vjSystem::fabs(angle) < 1e-6)
       angle = 0.0f;
 }
 
@@ -63,9 +64,9 @@ vjMatrix::vjMatrix(vjCoord coord)
 
 void vjMatrix::makeXYZEuler(float xRot, float yRot, float zRot)
 {
-   float sx = sin(VJ_DEG2RAD(xRot));  float cx = cos(VJ_DEG2RAD(xRot));
-   float sy = sin(VJ_DEG2RAD(yRot));  float cy = cos(VJ_DEG2RAD(yRot));
-   float sz = sin(VJ_DEG2RAD(zRot));  float cz = cos(VJ_DEG2RAD(zRot));
+   float sx = vjSystem::sin(VJ_DEG2RAD(xRot));  float cx = vjSystem::cos(VJ_DEG2RAD(xRot));
+   float sy = vjSystem::sin(VJ_DEG2RAD(yRot));  float cy = vjSystem::cos(VJ_DEG2RAD(yRot));
+   float sz = vjSystem::sin(VJ_DEG2RAD(zRot));  float cz = vjSystem::cos(VJ_DEG2RAD(zRot));
 
    // Derived by simply multiplying out the matrices by hand
    // X*Y*Z
@@ -81,10 +82,10 @@ void vjMatrix::getXYZEuler(float& xRot, float& yRot, float& zRot) const
 {
    float cz;
 
-   zRot = atan2f(-mat[1][0], mat[0][0]);     // -(-cy*sz)/(cy*cz) - cy falls out
-   xRot = atan2f(-mat[2][1], mat[2][2]);     // -(sx*cy)/(cx*cy) - cy falls out
-   cz = cos(zRot);
-   yRot = atan2f(mat[2][0], mat[0][0]/cz);   // (sy)/((cy*cz)/cz)
+   zRot = vjSystem::atan2(-mat[1][0], mat[0][0]);     // -(-cy*sz)/(cy*cz) - cy falls out
+   xRot = vjSystem::atan2(-mat[2][1], mat[2][2]);     // -(sx*cy)/(cx*cy) - cy falls out
+   cz = vjSystem::cos(zRot);
+   yRot = vjSystem::atan2(mat[2][0], mat[0][0]/cz);   // (sy)/((cy*cz)/cz)
 
    xRot = VJ_RAD2DEG(xRot);
    yRot = VJ_RAD2DEG(yRot);
@@ -95,9 +96,9 @@ void vjMatrix::getXYZEuler(float& xRot, float& yRot, float& zRot) const
 
 void vjMatrix::makeZYXEuler(float zRot, float yRot, float xRot)
 {
-   float sx = sin(VJ_DEG2RAD(xRot));  float cx = cos(VJ_DEG2RAD(xRot));
-   float sy = sin(VJ_DEG2RAD(yRot));  float cy = cos(VJ_DEG2RAD(yRot));
-   float sz = sin(VJ_DEG2RAD(zRot));  float cz = cos(VJ_DEG2RAD(zRot));
+   float sx = vjSystem::sin(VJ_DEG2RAD(xRot));  float cx = vjSystem::cos(VJ_DEG2RAD(xRot));
+   float sy = vjSystem::sin(VJ_DEG2RAD(yRot));  float cy = vjSystem::cos(VJ_DEG2RAD(yRot));
+   float sz = vjSystem::sin(VJ_DEG2RAD(zRot));  float cz = vjSystem::cos(VJ_DEG2RAD(zRot));
 
    // Derived by simply multiplying out the matrices by hand
    // Z*Y*Z
@@ -113,10 +114,10 @@ void vjMatrix::getZYXEuler(float& zRot, float& yRot, float& xRot) const
 {
    float sx;
 
-   zRot = atan2f(mat[0][1], mat[0][0]);      // (cy*sz)/(cy*cz) - cy falls out
-   xRot = atan2f(mat[1][2], mat[2][2]);      // (sx*cy)/(cx*cy) - cy falls out
-   sx = sinf(xRot);
-   yRot = atan2f(-mat[0][2],(mat[1][2]/sx) );   // -(-sy)/((sx*cy)/sx)
+   zRot = vjSystem::atan2(mat[0][1], mat[0][0]);      // (cy*sz)/(cy*cz) - cy falls out
+   xRot = vjSystem::atan2(mat[1][2], mat[2][2]);      // (sx*cy)/(cx*cy) - cy falls out
+   sx = vjSystem::sin(xRot);
+   yRot = vjSystem::atan2(-mat[0][2],(mat[1][2]/sx) );   // -(-sy)/((sx*cy)/sx)
 
    xRot = VJ_RAD2DEG(xRot);
    yRot = VJ_RAD2DEG(yRot);
@@ -127,9 +128,9 @@ void vjMatrix::getZYXEuler(float& zRot, float& yRot, float& xRot) const
 
 void vjMatrix::makeZXYEuler(float zRot, float xRot, float yRot)
 {
-   float sx = sin(VJ_DEG2RAD(xRot));  float cx = cos(VJ_DEG2RAD(xRot));
-   float sy = sin(VJ_DEG2RAD(yRot));  float cy = cos(VJ_DEG2RAD(yRot));
-   float sz = sin(VJ_DEG2RAD(zRot));  float cz = cos(VJ_DEG2RAD(zRot));
+   float sx = vjSystem::sin(VJ_DEG2RAD(xRot));  float cx = vjSystem::cos(VJ_DEG2RAD(xRot));
+   float sy = vjSystem::sin(VJ_DEG2RAD(yRot));  float cy = vjSystem::cos(VJ_DEG2RAD(yRot));
+   float sz = vjSystem::sin(VJ_DEG2RAD(zRot));  float cz = vjSystem::cos(VJ_DEG2RAD(zRot));
 
    // Derived by simply multiplying out the matrices by hand
    // Z*X*Y
@@ -156,7 +157,7 @@ float vjMatrix::getYRot() const
    // constrain the direction to x/z plane only
    directionVector[VJ_Y] = 0.0f;                   // Eliminate Y value
    directionVector.normalize();
-   float y_rot = VJ_RAD2DEG( acosf(directionVector.dot( forwardPoint )) );
+   float y_rot = VJ_RAD2DEG( vjSystem::acos(directionVector.dot( forwardPoint )) );
    vjVec3 whichSide = forwardPoint.cross(directionVector);
    if (whichSide[VJ_Y] < 0.0f)   // If dir vector to "right" (negative) side of forward
       y_rot = -y_rot;
@@ -179,7 +180,7 @@ float vjMatrix::getXRot() const
    // constrain the direction to y/z plane only
    directionVector[VJ_X] = 0.0f;                // Eliminate X value
    directionVector.normalize();
-   float x_rot = VJ_RAD2DEG( acosf(directionVector.dot( forwardPoint )) );
+   float x_rot = VJ_RAD2DEG( vjSystem::acos(directionVector.dot( forwardPoint )) );
    vjVec3 whichSide = forwardPoint.cross(directionVector);
    if (whichSide[VJ_X] < 0.0f)      // If dir vector to "bottom" (negative) side of forward
       x_rot = -x_rot;
@@ -202,7 +203,7 @@ float vjMatrix::getZRot() const
    // constrain the direction to x/y plane only
    direction_vector[VJ_Z] = 0.0f;                    // Eliminate Z component
    direction_vector.normalize();
-   float z_rot = VJ_RAD2DEG( acosf(direction_vector.dot( up_point )) );
+   float z_rot = VJ_RAD2DEG( vjSystem::acos(direction_vector.dot( up_point )) );
    vjVec3 which_side = up_point.cross(direction_vector);
    if (which_side[VJ_Z] < 0.0f)                          // If dirVec it to right (neg side) of up_point
       z_rot = -z_rot;
@@ -355,8 +356,8 @@ void vjMatrix::getZXYEuler(float& zRot, float& xRot, float& yRot) const
    float cos_z, sin_z;
 
    sin_x = mat[1][2];
-   x_angle = asinf(sin_x);     // Get x angle
-   cos_x = cos(x_angle);
+   x_angle = vjSystem::asin(sin_x);     // Get x angle
+   cos_x = vjSystem::cos(x_angle);
    zeroClampAngle(cos_x);          // Clamp it to get a good test
 
    // Check if cos_x = Zero
@@ -365,12 +366,12 @@ void vjMatrix::getZXYEuler(float& zRot, float& xRot, float& yRot) const
          // Get y Angle
       cos_y = mat[2][2]/cos_x;
       sin_y = -mat[0][2]/cos_x;
-      y_angle = atan2(cos_y, sin_y);
+      y_angle = vjSystem::atan2(cos_y, sin_y);
 
          // Get z Angle
       cos_z = mat[1][1]/cos_x;
       sin_z = -mat[1][0]/cos_x;
-      z_angle = atan2(cos_z, sin_z);
+      z_angle = vjSystem::atan2(cos_z, sin_z);
    }
    else
    {
@@ -380,7 +381,7 @@ void vjMatrix::getZXYEuler(float& zRot, float& xRot, float& yRot) const
          // Get y Angle
       cos_y = mat[0][0];
       sin_y = mat[0][1];
-      y_angle = atan2(cos_y, sin_y);
+      y_angle = vjSystem::atan2(cos_y, sin_y);
    }
 
    xRot = VJ_RAD2DEG(x_angle);
@@ -487,8 +488,8 @@ void  vjMatrix::makeRot(float _degrees, vjVec3 _axis)
     _axis.normalize();  // NOTE: This could be eliminated by passing normalized
              //       vector.  This could be by ref to make even faster
     // GGI: pg 466
-    float s = sin(VJ_DEG2RAD(_degrees));
-    float c = cos(VJ_DEG2RAD(_degrees));
+    float s = vjSystem::sin(VJ_DEG2RAD(_degrees));
+    float c = vjSystem::cos(VJ_DEG2RAD(_degrees));
     float t = 1-c;
     float x = _axis[0];
     float y = _axis[1];
@@ -725,7 +726,7 @@ int vjMatrix::invert(vjMatrix& _m)
                         for ( j = 0; j < n; j++ )
                         {
                                 if ( col[ j] )          continue;
-                                tmp_m = fabs( m[ i][ j]);
+                                tmp_m = vjSystem::fabs( m[ i][ j]);
                                 if ( tmp_m > max_m)
                                 {
                                         max_m = tmp_m;
@@ -738,7 +739,7 @@ int vjMatrix::invert(vjMatrix& _m)
                 pivot = m[ r[ k] ][ c[ k] ];
 
 
-                if ( fabs( pivot) <= 1e-20)
+                if ( vjSystem::fabs( pivot) <= 1e-20)
                 {
                         std::cerr << "*** pivot = %f in mat_inv. ***\n";
                         //exit( 0);

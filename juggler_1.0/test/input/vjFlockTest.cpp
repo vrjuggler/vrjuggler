@@ -32,10 +32,11 @@
 
 #include <iostream>
 #include <iomanip>
-#include <SharedMem/vjMemPool.h>
-//#include <SharedMem/vjSharedType.h>
+#include <VPR/SharedMem/vjMemPool.h>
+//#include <VPR/SharedMem/vjSharedType.h>
 #include <Input/vjPosition/vjFlock.h>
 #include <Math/vjCoord.h>
+#include <VPR/vjSystem.h>
 
 int main()
 {
@@ -154,7 +155,7 @@ int main()
                  << "   roll:" << std::setprecision(2) << std::setw(10)
                  << ori0[2] << std::endl << std::endl;
             }
-            sleep(2);
+            vjSystem::sleep(2);
          }
          break;
       }

@@ -49,28 +49,4 @@ SUBOBJDIR	= $(VJ_LIBRARY)
 VJROOT		= $(top_srcdir)
 VJ_SRCDIR	= @VJ_SRCDIR@/Sync
 
-SRCS		= vjCondGeneric.cpp	\
-                  vjRWMutex.cpp
-
-# Determine what objects to use.
-ifneq (@MUTEX_SYS@, WIN32)
-ifeq (@MUTEX_SYS@, POSIX)
-    SRCS	+= vjBarrier.cpp	\
-                   vjMutexPosix.cpp
-else
-    SRCS	+= vjBarrierSGI.cpp	\
-                   vjMutexSGI.cpp	\
-                   vjSemaphoreSGI.cpp
-endif
-endif
-
 include $(MKPATH)/dpp.obj.mk
-
-# -----------------------------------------------------------------------------
-# Include dependencies generated automatically.
-# -----------------------------------------------------------------------------
-ifndef DO_CLEANDEPEND
-ifndef DO_BEFOREBUILD
-    include $(DEPEND_FILES)
-endif
-endif

@@ -39,6 +39,7 @@
 
 #include <Input/vjPosition/vjBird.h>
 #include <Config/vjConfigChunk.h>
+#include <VPR/vjSystem.h>
 
 
 inline int getReading(vjMatrix* data, int port);
@@ -138,7 +139,7 @@ int vjBird::startSampling()
 
   vjBird* devicePtr = this;
 
-  myThread = new vjThread(sampleBirds,(void*)devicePtr,0);
+  myThread = new vjThread(sampleBirds,(void*)devicePtr);
 
   if ( !myThread->valid() ) {
      return -1; //fail
@@ -184,7 +185,7 @@ int vjBird::stopSampling()
       delete(myThread);
       myThread = NULL;
 
-      usleep(100);
+      vjSystem::usleep(100);
       char   bird_command[4];
 
       std::cout << "stopping the flock.." << std::endl;
@@ -192,11 +193,11 @@ int vjBird::stopSampling()
       bird_command[0] = 'B';
       write(port_id, bird_command, 1);
       tcflush(port_id, TCIFLUSH);
-      usleep(500);
+      vjSystem::usleep(500);
       bird_command[0] = 'G';
       write(port_id, bird_command, 1);
       tcflush(port_id, TCIFLUSH);
-      sleep(2);
+      vjSystem::sleep(2);
       close(port_id);
       port_id = -1;
 
@@ -419,7 +420,7 @@ inline void  pickBird(int birdID, int port)
    char buff = 0xF0 + birdID;
    write(port, &buff, 1);
    tcflush(port, TCIFLUSH);
-   usleep(100);
+   vjSystem::usleep(100);
 }
 
 static int open_port(char* serialPort, int baud)
@@ -433,7 +434,7 @@ static int open_port(char* serialPort, int baud)
    { std::cerr << "tracker port open failed\n";
     return port_id;
    }
-  sleep(2);
+  vjSystem::sleep(2);
   close(port_id);
   port_id = open(serialPort,O_RDWR | O_NDELAY);
   if (port_id == -1)
@@ -486,10 +487,10 @@ static int open_port(char* serialPort, int baud)
   fcntl(port,F_SETFL,blocking ? blockf : nonblock); // 0 Non Blocked
                                                     // 1 Blocked
   tcflush(port, TCIOFLUSH);
-  usleep(1000);
+  vjSystem::usleep(1000);
   char junk[1024];
   read(port, junk, 1024);
-  sleep(1);
+  vjSystem::sleep(1);
 
   }
 
@@ -555,7 +556,7 @@ static void set_hemisphere(int port, BIRD_HEMI hem)//, int transmitter)
    }
     write(port, buff, 3);
     tcflush(port, TCIFLUSH);
-    usleep(500);
+    vjSystem::usleep(500);
   }
 }
 
@@ -572,7 +573,7 @@ static void set_rep_and_stream(int port, char repRate)
   buff[0] = repRate;
   write(port, buff, 1);
   tcflush(port, TCIFLUSH);
-  usleep(2000);
+  vjSystem::usleep(2000);
 
  ////////////////////////////////////////////////////////////////
  // set stream mode
@@ -580,7 +581,7 @@ static void set_rep_and_stream(int port, char repRate)
   buff[0] = '@';
   write(port, buff, 1);
   tcflush(port, TCIFLUSH);
-  usleep(500);
+  vjSystem::usleep(500);
 
 }
 
@@ -596,7 +597,7 @@ static void set_pos_angles(int port)//, int transmitter)
     buff[0] = 'Y';
     write(port, buff, 1);
     tcflush(port, TCIFLUSH);
-    usleep(500);
+    vjSystem::usleep(500);
   }
 
 }
@@ -631,7 +632,7 @@ static void set_transmitter(int port, int transmitter)
   buff[1] = (unsigned char) transmitter  << 4;
   write(port, buff, 2);
   tcflush(port, TCIFLUSH);
-  usleep(12000);
+  vjSystem::usleep(12000);
  }
 
 
@@ -648,7 +649,7 @@ static void set_autoconfig(int port, int transmitter)
   buff[2] = transmitter;  //number of input devices + 1 for transmitter
   write(port, buff,3);
   tcflush(port, TCIFLUSH);
-  sleep(2);
+  vjSystem::sleep(2);
 }
 
 static void set_group(int port)
@@ -665,6 +666,6 @@ static void set_group(int port)
   buff[2] = 0x00;  // set group mode off
   write(port, buff, 3);
   tcflush(port, TCIFLUSH);
-  sleep(2);
+  vjSystem::sleep(2);
 
 }

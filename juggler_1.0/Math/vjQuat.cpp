@@ -45,7 +45,7 @@ void vjQuat::makeQuat(const vjMatrix& mat)
    // Check the diagonal
    if (tr > 0.0)
    {
-      s = sqrt(tr + 1.0);
+      s = vjSystem::sqrt(tr + 1.0);
       vec[VJ_W] = s/2.0;
       s = 0.5/s;
 
@@ -68,7 +68,7 @@ void vjQuat::makeQuat(const vjMatrix& mat)
       j = nxt[i];
       k = nxt[j];
 
-      s = sqrt ((mat.mat[i][i] - (mat.mat[j][j] + mat.mat[k][k])) + 1.0);
+      s = vjSystem::sqrt ((mat.mat[i][i] - (mat.mat[j][j] + mat.mat[k][k])) + 1.0);
 
       vec[i] = s * 0.5;
 
@@ -147,10 +147,10 @@ void vjQuat::slerp(float t, const vjQuat& p, const vjQuat& q)
    if ((1.0 - cosom) > VJ_QUAT_EPSILON)
    {
          // Standard case (slerp)
-      omega = acos(cosom);
-      sinom = sin(omega);
-      sclp  = sin((1.0 - t)*omega)/sinom;
-      sclq = sin(t*omega)/sinom;
+      omega = vjSystem::acos(cosom);
+      sinom = vjSystem::sin(omega);
+      sclp  = vjSystem::sin((1.0 - t)*omega)/sinom;
+      sclq = vjSystem::sin(t*omega)/sinom;
    }
    else
    {

@@ -32,7 +32,7 @@
 
 #include <iostream.h>
 #include <vector>
-#include <SharedMem/MemPool_alloc.h>
+#include <VPR/SharedMem/MemPool_alloc.h>
 
 template<class T, class A>
 void printVector(std::vector<T, A>& list);

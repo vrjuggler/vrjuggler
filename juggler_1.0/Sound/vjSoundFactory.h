@@ -35,7 +35,7 @@
 
 #include <Sound/vjSoundEngine.h>
 #include <Sound/vjSound.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <vector>
 #include <typeinfo>
 #include <Utils/vjSingleton.h>

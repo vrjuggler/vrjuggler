@@ -33,9 +33,9 @@
 #include <iostream.h>
 #include <stdio.h>
 
-#include <SharedMem/Integer.h>
-#include <SharedMem/SharedType.h>
-#include <SharedMem/MemPool.h>
+#include <VPR/SharedMem/Integer.h>
+#include <VPR/SharedMem/SharedType.h>
+#include <VPR/SharedMem/MemPool.h>
 
 int main(void)
 {       

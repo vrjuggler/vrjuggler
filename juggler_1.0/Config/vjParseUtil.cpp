@@ -34,7 +34,7 @@
 #include <vjConfig.h>
 #include <ctype.h>
 #include <Config/vjParseUtil.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <Config/vjConfigTokens.h>
 
 /* a utility function that probably belongs elsewhere */

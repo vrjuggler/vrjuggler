@@ -2,9 +2,10 @@
 #define _MESH_H_
 
 #include <iostream>
+#include <vector>
 #include <GL/gl.h>
 #include <Math/vjVec3.h>
-#include <vector>
+#include <VPR/vjSystem.h>
 
 // Simple class to calculate a height-field type mesh
 //
@@ -187,9 +188,9 @@ float Mesh::getHeight(float x, float y, float curTime)
 
    float ret_val;
 
-   ret_val = amp1*sin((phase1*var1)+offset1) +
-             amp2*sin((phase2*var2)+offset2) +
-             amp3*sin((phase3*var3)+offset3);
+   ret_val = amp1*vjSystem::sin((phase1*var1)+offset1) +
+             amp2*vjSystem::sin((phase2*var2)+offset2) +
+             amp3*vjSystem::sin((phase3*var3)+offset3);
 
    return ret_val;
 }

@@ -35,7 +35,7 @@
 #include <Input/vjPosition/aMotionStar.h>
 #include <Input/vjPosition/vjMotionStar.h>
 #include <Math/vjCoord.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <Config/vjConfigChunk.h>
 
 
@@ -207,7 +207,7 @@ vjMotionStar::startSampling () {
             vjDEBUG(vjDBG_INPUT_MGR, 1) << "vjMotionStar ready to go.\n"
                                         << vjDEBUG_FLUSH;
 
-            m_my_thread = new vjThread(sampleBirds, (void*) this, 0);
+            m_my_thread = new vjThread(sampleBirds, (void*) this);
 
             if ( m_my_thread == NULL ) {
                vjDEBUG(vjDBG_INPUT_MGR, 0)

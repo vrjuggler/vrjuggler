@@ -34,7 +34,7 @@
 #ifndef _VJ_SURFACE_DISPLAY_H_
 #define _VJ_SURFACE_DISPLAY_H_
 
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <Kernel/vjDisplay.h>
 //#include <Kernel/vjProjection.h>
 #include <Kernel/vjWallProjection.h>

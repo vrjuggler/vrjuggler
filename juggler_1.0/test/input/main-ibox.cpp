@@ -34,11 +34,12 @@
 #include <iomanip>
 #include <unistd.h>
 
-#include <SharedMem/vjMemPool.h>
-//#include <SharedMem/vjSharedType.h>
+#include <VPR/SharedMem/vjMemPool.h>
+//#include <VPR/SharedMem/vjSharedType.h>
 #include <Input/vjInput/vjIbox.h>
 #include <Input/ibox/hci.h>
 #include <Input/ibox/ibox.h>
+#include <VPR/vjSystem.h>
 
 int main()
 {
@@ -72,7 +73,7 @@ int main()
 	std::cout << t1->getDigitalData(2);
 	std::cout << t1->getDigitalData(3);        
          std::cout << std::endl; 
-         sleep(2);
+         vjSystem::sleep(2);
     }
      break;
    }

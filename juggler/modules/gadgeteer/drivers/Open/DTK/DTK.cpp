@@ -40,7 +40,7 @@
 
 #include <Math/vjCoord.h>
 #include <Math/vjQuat.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <Config/vjConfigChunk.h>
 #include <Input/vjDTK/vjDTK.h>
 
@@ -219,7 +219,7 @@ int vjDTK::startSampling()
 	vjThreadMemberFunctor<vjDTK>* memberFunctor =
 	    new vjThreadMemberFunctor<vjDTK>(this, &vjDTK::controlLoop, NULL);
 	vjThread* new_thread;
-	new_thread = new vjThread(memberFunctor, 0);
+	new_thread = new vjThread(memberFunctor);
 	myThread = new_thread;
 
 
@@ -250,12 +250,7 @@ int vjDTK::sample()
 
     sampletime.set();
 
-//: vjThread::yield()
-// XXX: Give up CPU time so that this thread doesn't bog down the processor.
-// This is really important when using PThreads since for some reason Pthreads
-// isn't dumping these threads onto other processors.  Therefore, some of these
-// threads are killing application frame-rates.
-    myThread->yield();
+    vjThread::yield()
 
     for (i = 0; i < numSegments; i++)
     {

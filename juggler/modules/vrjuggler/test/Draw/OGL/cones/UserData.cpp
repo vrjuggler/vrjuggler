@@ -35,7 +35,7 @@
 #include <Math/vjVec3.h>
 #include <Math/vjMatrix.h>
 #include <Math/vjQuat.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 
 #include <UserData.h>
 

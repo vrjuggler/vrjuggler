@@ -33,7 +33,7 @@
 #define _VJ_DEVICE_INTERFACE_H_
 
 #include <vjConfig.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 
 class vjProxy;
 class vjAnalogProxy;

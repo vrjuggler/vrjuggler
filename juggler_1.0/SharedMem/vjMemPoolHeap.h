@@ -30,50 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _MemPoolHeap_h_DEPRECATED_
+#define _MemPoolHeap_h_DEPRECATED_
 
-#ifndef _MemPoolHeap_h_
-#define _MemPoolHeap_h_
-//#pragma once
-
-//----------------------------------------------
-// vjMemPoolHeap
-//
-// Purpose:
-//    Simple pool based on heap memory
-//
-// Author:
-//	Allen Bierbaum
-//
-// Date: 1-9-97
-//-----------------------------------------------
-
-#include <vjConfig.h>
-#include <stdlib.h>
-
-
-class vjMemPoolHeap : public vjMemPool {
-
-public:
-   static void init()
-   {;}
-
-   vjMemPoolHeap(size_t initialSize = 65536,  int numProcs = 8, char* staticTempName = "memPoolHeapXXXXXX")
-   {;}
-
-    virtual void* allocate(size_t size)
-    {
-	return malloc(size); 	
-    }
-
-    virtual void deallocate(void* ptr)
-    {
-	free(ptr);
-    }
-
-    virtual void* reallocate(void *ptr, size_t new_sz)
-    {
-	return realloc(ptr, new_sz);
-    }
-};
+#warn "SharedMem/vjMemPoolHeap.h is deprecated!  Use VPR/SharedMem/vjMemPoolHeap.h"
+#include <VPR/SharedMem/vjMemPoolHeap.h>
 
 #endif

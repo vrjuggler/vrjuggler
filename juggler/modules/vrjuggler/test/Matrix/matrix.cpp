@@ -33,6 +33,7 @@
 #include <iostream>
 #include <Math/vjMatrix.h>
 #include <Math/vjVec3.h>
+#include <VPR/vjSystem.h>
 
 bool testMakeXYZ(float x, float y, float z);
 bool testMakeZYX(float z, float y, float x);
@@ -513,7 +514,7 @@ bool compareMats(vjMatrix mat1, vjMatrix mat2, vjMatrix& difMat)
       float* mat;
       mat = diff_mat.getFloatPtr();    // Get the matrix
 
-      while( (fabs(mat[i]) < 1e-5) && (i<16) )
+      while( (vjSystem::fabs(mat[i]) < 1e-5) && (i<16) )
       {
          i++;
       }

@@ -38,9 +38,11 @@
 #include <time.h>
 #include <sys/time.h>
 
-#include <Threads/vjThreadPool.h>
-#include <Kernel/vjDebug.h>
-#include <Sync/vjMutex.h>
+#include <VPR/SharedMem/vjMemPool.h>
+#include <VPR/Threads/vjThreadPool.h>
+#include <Utils/vjDebug.h>
+#include <VPR/Sync/vjMutex.h>
+#include <VPR/vjSystem.h>
 
 void doIt(void*);
 
@@ -94,7 +96,7 @@ int main(void)
 ///    std::cout << "\nDone: It took... " << totalSeconds << " seconds" << std::flush;
 //---------------------------------------------------------
 
-    usleep(100);
+    vjSystem::usleep(100);
     
     DebugLock.acquire();
 	dumpVector(intVector);

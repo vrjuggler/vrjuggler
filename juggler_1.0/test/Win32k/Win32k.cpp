@@ -35,12 +35,12 @@
 
 #include "stdafx.h"
 
-#include <SharedMem/vjMemPool.h>
+#include <VPR/SharedMem/vjMemPool.h>
 #include <Input/InputManager/vjInputManager.h>
 #include <Input/InputManager/vjPosInterface.h>
 #include <Math/vjCoord.h>
 
-#include <Input\vjInput\vjKeyboardWin32.h>
+#include <Input/vjInput/vjKeyboardWin32.h>
 
 
 #define CHUNK_DESC_LOCATION "\\\\endless2\\c$\\juggler\\test\\win32k\\chunksDesc.txt"

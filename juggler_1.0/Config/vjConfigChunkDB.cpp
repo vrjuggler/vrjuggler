@@ -39,7 +39,7 @@
 #include <Config/vjConfigChunkDB.h>
 #include <Config/vjChunkFactory.h>
 #include <Config/vjParseUtil.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <Config/vjConfigTokens.h>
 
 #include <sys/types.h>

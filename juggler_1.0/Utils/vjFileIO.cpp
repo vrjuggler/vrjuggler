@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <Utils/vjFileIO.h>
 
 std::vector<std::string> vjFileIO::mPaths;

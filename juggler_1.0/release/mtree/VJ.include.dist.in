@@ -98,5 +98,23 @@
 	    Socket
 	    ..
 	..
+	VPR
+	    SharedMem
+	    ..
+	    Sync
+	    ..
+	    Threads
+	    ..
+	    md
+		NSPR
+		..
+		POSIX
+		..
+		SPROC
+		..
+		WIN32
+		..
+	    ..
+	..
     ..
 ..

@@ -44,6 +44,7 @@
 #include <Input/vjGlove/vt_error.h>
 #include <Kernel/vjKernel.h>
 #include <Config/vjConfigChunk.h>
+#include <VPR/vjSystem.h>
 
 bool vjCyberGlove::config(vjConfigChunk *c)
 {
@@ -95,7 +96,7 @@ vjCyberGlove::startSampling()
       vjThreadMemberFunctor<vjCyberGlove>* memberFunctor =
          new vjThreadMemberFunctor<vjCyberGlove>(this, &vjCyberGlove::controlLoop, NULL);
 
-      myThread = new vjThread(memberFunctor, 0);
+      myThread = new vjThread(memberFunctor);
 
       if (!myThread->valid())
       {
@@ -160,7 +161,7 @@ int vjCyberGlove::stopSampling()
       myThread->kill();
       delete myThread;
       myThread = NULL;
-      usleep(100);
+      vjSystem::usleep(100);
 
       mGlove->close();
       vjDEBUG(vjDBG_INPUT_MGR,1) << "stopping vjCyberGlove.." << std::endl << vjDEBUG_FLUSH;

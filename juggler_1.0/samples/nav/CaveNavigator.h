@@ -36,7 +36,7 @@
 
 //#include <Kernel/vjKernel.h>
 #include <vjCoord.h>
-//#include <Kernel/vjDebug.h>
+//#include <Utils/vjDebug.h>
 
 #include <velocityNav.h>
 

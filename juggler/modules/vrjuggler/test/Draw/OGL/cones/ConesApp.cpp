@@ -35,7 +35,7 @@
 #include <math.h>
 
 #include <Math/vjMatrix.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <Kernel/vjAssert.h>
 
 #include <ConesApp.h>

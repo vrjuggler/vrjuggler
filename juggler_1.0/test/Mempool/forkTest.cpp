@@ -33,8 +33,8 @@
 #include <iostream.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <SharedMem/C2Memory.h>
-#include <SharedMem/SharedType.h>
+#include <VPR/SharedMem/vjMemPool.h>
+//#include <VPR/SharedMem/SharedType.h>
 
 void main(void)
 {

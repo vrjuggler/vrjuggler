@@ -37,7 +37,7 @@
 
 #include <vjConfig.h>
 #include <Math/vjMatrix.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <Input/InputManager/vjPosInterface.h>
 #include <Kernel/vjDisplay.h>
 #include <Kernel/vjCameraProjection.h>

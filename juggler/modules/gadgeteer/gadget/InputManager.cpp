@@ -35,7 +35,7 @@
 
 #include <Input/InputManager/vjInputManager.h>
 #include <Input/InputManager/vjProxy.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 
 #include <Input/InputManager/vjDeviceFactory.h>
 #include <Input/InputManager/vjProxyFactory.h>

@@ -37,7 +37,7 @@
 #include <vjConfig.h>
 #include <Math/vjMatrix.h>
 #include <Kernel/vjFrustum.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <Math/vjVec3.h>
 #include <Input/vjPosition/vjPosition.h>
 

@@ -6,6 +6,7 @@
 #include "Math/vjVec3.h"
 #include "Math/vjQuat.h"
 #include "Math/vjMatrix.h"
+#include "VPR/vjSystem.h"
 
 namespace kev
 {
@@ -290,7 +291,7 @@ public:
          float time_needed( timeNeeded );
          assert( (time_needed >= keyTwo.time() && time_needed <= keyOne.time()) ||
                  (time_needed >= keyOne.time() && time_needed <= keyTwo.time()) && "time_needed need to be in between the two times" );
-         float size = fabsf( keyTwo.time() - keyOne.time() );
+         float size = vjSystem::fabs( keyTwo.time() - keyOne.time() );
 
          // degenerate case where you're interpolating between two keys of the same size..
          if (size <= 0.00001f)

@@ -49,7 +49,7 @@
 #include <Input/vjPosition/vjIsense.h>
 #include <Math/vjCoord.h>
 #include <Math/vjQuat.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <Config/vjConfigChunk.h>
 
 // Helper to return the index for theData array
@@ -201,7 +201,7 @@ int vjIsense::startSampling()
         vjThreadMemberFunctor<vjIsense>* memberFunctor =
             new vjThreadMemberFunctor<vjIsense>(this, &vjIsense::controlLoop, NULL);
         vjThread* new_thread;
-        new_thread = new vjThread(memberFunctor, 0);
+        new_thread = new vjThread(memberFunctor);
         myThread = new_thread;
 
 
@@ -233,13 +233,7 @@ int vjIsense::sample()
     int stationIndex;
     int min, num;
 
-//: vjThread::yield()
-// XXX: Give up CPU time so that this thread doesn't bog down the processor.
-// This is really important when using PThreads since for some reason Pthreads
-// isn't dumping these threads onto other processors.  Therefore, some of these
-// threads are killing application frame-rates.
-
-    myThread->yield();
+    vjThread::yield();
 
     for (i = 0 ; i < (mTracker.NumStations()); i++)
     {

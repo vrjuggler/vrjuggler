@@ -35,7 +35,7 @@
 #include <Config/vjConfigChunkDB.h>
 #include <Config/vjParseUtil.h>
 #include <Config/vjChunkFactory.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <Kernel/vjSGISystemFactory.h>
 
 

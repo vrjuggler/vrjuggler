@@ -34,9 +34,9 @@
 #include <stdio.h>
 #include <math.h>
 
-#include <Threads/vjThread.h>
-#include <Sync/vjMutex.h>
-#include <Kernel/vjDebug.h>
+#include <VPR/Threads/vjThread.h>
+#include <VPR/Sync/vjMutex.h>
+#include <Utils/vjDebug.h>
 #include <Utils/vjTimer.h>
 
 #define MAX_NUM_THREADS 1000

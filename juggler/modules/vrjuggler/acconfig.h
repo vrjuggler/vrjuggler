@@ -63,6 +63,9 @@
 /* Define to use the IRIX sproc(2) threading model instead of POSIX threads. */
 #undef VJ_IRIX_SPROC
 
+/* Define to use the NSPR subsystem. */
+#undef VJ_USE_NSPR
+
 /* Define to use the OpenGL API. */
 #undef VJ_API_OPENGL
 
@@ -157,6 +160,9 @@
 
 /* Define if you have the sinf function.  */
 #undef HAVE_SINF
+
+/* Define if you have the cosf function.  */
+#undef HAVE_COSF
 
 /* Define if you have the sqrtf function.  */
 #undef HAVE_SQRTF

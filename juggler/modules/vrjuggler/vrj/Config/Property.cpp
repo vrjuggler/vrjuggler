@@ -38,7 +38,7 @@
 #include <Config/vjPropertyDesc.h>
 #include <Config/vjEnumEntry.h>
 #include <Config/vjParseUtil.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 
 vjProperty::vjProperty (vjPropertyDesc *pd): value() {
     //cout << "vjProperty(): desc is '" << flush << *pd << "'" << endl;

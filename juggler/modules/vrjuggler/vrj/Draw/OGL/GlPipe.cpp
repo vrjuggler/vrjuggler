@@ -35,9 +35,9 @@
 #include <Kernel/vjKernel.h>
 #include <Kernel/GL/vjGlPipe.h>
 #include <Kernel/GL/vjGlApp.h>
-#include <Threads/vjThread.h>
-#include <Sync/vjGuard.h>
-#include <Kernel/vjDebug.h>
+#include <VPR/Threads/vjThread.h>
+#include <VPR/Sync/vjGuard.h>
+#include <Utils/vjDebug.h>
 
 #include <Kernel/vjSurfaceDisplay.h>
 #include <Kernel/vjSimDisplay.h>
@@ -56,7 +56,7 @@ int vjGlPipe::start()
     vjThreadMemberFunctor<vjGlPipe>* memberFunctor =
          new vjThreadMemberFunctor<vjGlPipe>(this, &vjGlPipe::controlLoop, NULL);
 
-    mActiveThread = new vjThread(memberFunctor, 0);
+    mActiveThread = new vjThread(memberFunctor);
 
     vjDEBUG(vjDBG_DRAW_MGR,1) << "vjGlPipe::start: Started control loop. "
                               << mActiveThread << std::endl << vjDEBUG_FLUSH;

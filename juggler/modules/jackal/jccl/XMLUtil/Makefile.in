@@ -55,7 +55,9 @@ DIRPRFX		= Utils/
 SUBDIR		= Port		\
                   Socket
 
-SRCS 		= vjFileIO.cpp
+SRCS 		= vjDebug.cpp		\
+                  vjFileIO.cpp		\
+                  vjStreamLock.cpp
 
 ifeq (@OS_TYPE@, Win32)
     SRCS	+=

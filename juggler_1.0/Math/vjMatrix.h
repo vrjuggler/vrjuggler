@@ -38,6 +38,7 @@
 #include <vjConfig.h>
 #include <math.h>
 #include <string.h>
+#include <VPR/vjSystem.h>
 
 class vjQuat;
 class vjVec3;

@@ -47,7 +47,7 @@
 #include <assert.h>
 #include <Sound/pf/pfSoundNode.h>
 #include <Sound/vjSoundManager.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 
 //: This is a collection of Performer traversers...
 //

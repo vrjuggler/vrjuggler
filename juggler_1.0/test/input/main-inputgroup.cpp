@@ -36,7 +36,8 @@
 #include <Input/ibox/ibox.h>
 #include <Input/vjPosition/vjFlock.h>
 #include <Input/vjInput/vjIbox.h>
-#include <SharedMem/vjMemPool.h>
+#include <VPR/SharedMem/vjMemPool.h>
+#include <VPR/vjSystem.h>
 
 int main()
 {
@@ -96,7 +97,7 @@ int main()
    input_manager->SetPosProxy(2,devNum,1);
 
    std::cout << "Trackers set up.. " << std::endl;
-   //sleep(5);
+   //vjSystem::sleep(5);
 
    vjPOS_DATA *data1,*data2,*data0;
 
@@ -112,7 +113,7 @@ int main()
       << "Y: " << data0->y << "  " << data1->y << "  " << data2->y << endl
       << "Z: " << data0->z << "  " << data1->z << "  " << data2->z << endl;
 
-      sleep(1);
+      vjSystem::sleep(1);
    }
 
    aFlock->stopSampling();
@@ -136,7 +137,7 @@ int main()
                 << input_manager->getDinput_managerData(1);
       std::cout << " dinput_managerital2: "
                 << input_manager->getDinput_managerData(2) << std::endl;
-      sleep(1);
+      vjSystem::sleep(1);
    }
 
 

@@ -38,7 +38,7 @@
 
 #include <Kernel/vjKernel.h>
 #include <Math/vjCoord.h>
-#include <Kernel/vjDebug.h>
+#include <Utils/vjDebug.h>
 #include <Kernel/Pf/vjPfUtil.h>
 
 #include <navigator.h>

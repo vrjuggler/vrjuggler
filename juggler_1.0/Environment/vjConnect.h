@@ -37,7 +37,7 @@
 #include <vjConfig.h>
 #include <queue>
 #include <Environment/vjSocket.h>
-#include <Threads/vjThread.h>
+#include <VPR/Threads/vjThread.h>
 #include <Performance/vjTimeStamp.h>
 #include <Environment/vjCommand.h>
 

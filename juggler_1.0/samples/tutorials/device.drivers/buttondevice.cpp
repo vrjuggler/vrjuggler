@@ -1,5 +1,6 @@
 #include <Input/vjInput/vjDigital.h>
 #include <Input/InputManager/vjDeviceFactory.h>
+#include <VPR/vjSystem.h>
 
 class MyButtonDevice : public vjDigital
 {
@@ -82,7 +83,7 @@ void MyButtonDevice::threadedSampleFunction( void* classPointer )
    while (1)   
    {
      this_ptr->sample();
-     sleep(1); //specify some time here, so you don't waste CPU cycles
+     vjSystem::sleep(1); //specify some time here, so you don't waste CPU cycles
    }
 }
 
