@@ -53,14 +53,18 @@
 namespace vpr
 {
 
-ThreadNSPR::staticWrapper ThreadNSPR::statics;                 // Initialize the static data
+ThreadNSPR::staticWrapper ThreadNSPR::statics;    // Initialize the static data
 PRUint32 ThreadNSPR::mTicksPerSec = PR_TicksPerSecond();
 
 // Non-spawning constructor.  This will not start a thread.
 ThreadNSPR::ThreadNSPR(VPRThreadPriority priority, VPRThreadScope scope,
                        VPRThreadState state, PRUint32 stackSize)
-   : mThread(NULL), mUserThreadFunctor(NULL), mPriority(priority),
-     mScope(scope), mState(state), mStackSize(stackSize)
+   : mThread(NULL)
+   , mUserThreadFunctor(NULL)
+   , mPriority(priority)
+   , mScope(scope)
+   , mState(state)
+   , mStackSize(stackSize)
 {
 }
 
@@ -69,8 +73,12 @@ ThreadNSPR::ThreadNSPR(VPRThreadPriority priority, VPRThreadScope scope,
 ThreadNSPR::ThreadNSPR(thread_func_t func, void* arg,
                        VPRThreadPriority priority, VPRThreadScope scope,
                        VPRThreadState state, PRUint32 stackSize)
-   : mThread(NULL), mUserThreadFunctor(NULL), mPriority(priority),
-     mScope(scope), mState(state), mStackSize(stackSize)
+   : mThread(NULL)
+   , mUserThreadFunctor(NULL)
+   , mPriority(priority)
+   , mScope(scope)
+   , mState(state)
+   , mStackSize(stackSize)
 {
    // XXX: Memory leak.
    setFunctor(new ThreadNonMemberFunctor(func, arg));
@@ -82,8 +90,12 @@ ThreadNSPR::ThreadNSPR(thread_func_t func, void* arg,
 ThreadNSPR::ThreadNSPR(BaseThreadFunctor* functorPtr,
                        VPRThreadPriority priority, VPRThreadScope scope,
                        VPRThreadState state, PRUint32 stackSize)
-   : mThread(NULL), mUserThreadFunctor(NULL), mPriority(priority),
-     mScope(scope), mState(state), mStackSize(stackSize)
+   : mThread(NULL)
+   , mUserThreadFunctor(NULL)
+   , mPriority(priority)
+   , mScope(scope)
+   , mState(state)
+   , mStackSize(stackSize)
 {
    setFunctor(functorPtr);
    start();
@@ -134,8 +146,8 @@ vpr::ReturnStatus ThreadNSPR::start()
       // start routine.
       // XXX: Memory leak.
       ThreadMemberFunctor<ThreadNSPR>* start_functor =
-            new ThreadMemberFunctor<ThreadNSPR>(this, &ThreadNSPR::startThread,
-                                                NULL);
+         new ThreadMemberFunctor<ThreadNSPR>(this, &ThreadNSPR::startThread,
+                                             NULL);
 
       // Finally create the thread.
       // - On success --> The start method registers the actual thread info
@@ -162,8 +174,11 @@ vpr::ReturnStatus ThreadNSPR::start()
          // -- Wait for registration to complete
          mThreadStartCondVar.acquire();
          {
-            while ( !mThreadStartCompleted )    // While not desired state (ie. register completed)
-            { mThreadStartCondVar.wait();}
+            // While not desired state (ie. register completed)
+            while ( !mThreadStartCompleted )
+            {
+               mThreadStartCondVar.wait();
+            }
          }
          mThreadStartCondVar.release();
          // ASSERT: Thread has completed registration
@@ -184,7 +199,7 @@ int ThreadNSPR::join(void** status)
    return PR_JoinThread(mThread);
 }
 
-Thread* ThreadNSPR::self (void)
+Thread* ThreadNSPR::self()
 {
    vprASSERT((statics.mStaticsInitialized==1221) && "Trying to call vpr::ThreadNSPR::self before statics are initialized. Don't do that");
 
@@ -376,7 +391,5 @@ BaseThread::VPRThreadState ThreadNSPR::nsprThreadStateToVPR(const PRThreadState 
 
    return vpr_state;
 }
-
-
 
 } // End of vpr namespace
