@@ -385,7 +385,9 @@ namespace cluster
               << " is not connected! WE SHOULD NEVER REACH THIS HERE!!!!\n" << vprDEBUG_FLUSH;            
            return false;
         }
-        DeviceRequest* device_req = new DeviceRequest(generateLocalId(), device_name);
+        
+        vpr::Uint16 new_id = ClusterNetwork::instance()->generateLocalId();
+        DeviceRequest* device_req = new DeviceRequest(new_id, device_name);
         //device_req->send(node->getSockStream());
         //delete device_req;
         //node->addDeviceRequest(device_req);

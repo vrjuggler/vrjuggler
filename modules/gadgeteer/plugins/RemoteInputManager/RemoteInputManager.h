@@ -41,7 +41,6 @@
 #include <gadget/gadgetConfig.h>
 // Must implement the Abstract Base Class in order to be a manager used on the ClusterNetwork
 #include <cluster/ClusterPlugin.h>
-#include <cluster/IdGenerator.h>
 
 #include <jccl/Config/ConfigChunkPtr.h>
 
@@ -191,12 +190,6 @@ public:
    
    void updateAll();
    
-   vpr::Uint16 generateLocalId()
-   { return mLocalIdGen.generateNewId(); }
-
-   void releaseLocalId(vpr::Uint16 remove)
-   { mLocalIdGen.releaseId(remove); }
-
    void setReconfigurationNeededOnConnection(bool val)
    { mReconfigurationNeededOnConnection = val; }
 
@@ -234,7 +227,6 @@ private:
    std::vector<cluster::DeviceServer*>             mDeviceServers;      /**< List of Devices that should act as servers to remote ClusterNodes.*/
    vpr::Mutex                                      mDeviceServersLock;  /**< Lock on Device Server list.*/
 
-   IdGenerator<vpr::Uint16>                        mLocalIdGen;         /**< Keeps track of used/free virtual ids. */
    vpr::Uint32                                     mFrameNumber;
    bool                          mReconfigurationNeededOnConnection;    /**< We need to try to reconfigure on the next connection made. */
 //   std::string mLocalHostnameShort;

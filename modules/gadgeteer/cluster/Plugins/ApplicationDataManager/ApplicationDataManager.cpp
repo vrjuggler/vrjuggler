@@ -36,7 +36,6 @@
 
 #include <cluster/ClusterNetwork/ClusterNetwork.h>
 #include <cluster/ClusterNetwork/ClusterNode.h>
-
 #include <cluster/Packets/EndBlock.h>
 
 //XXX: Need to remove this since we can not depend on another plug-in
@@ -282,7 +281,7 @@ namespace cluster
          else
          {
                // Get a new device_id
-            vpr::Uint16 new_id = RemoteInputManager::instance()->generateLocalId();
+            vpr::Uint16 new_id = ClusterNetwork::instance()->generateLocalId();
                
                // Create a UserDataRequest
             UserDataRequest* new_userdata_req = 
