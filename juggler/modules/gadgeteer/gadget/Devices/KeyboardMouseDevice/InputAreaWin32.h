@@ -37,66 +37,23 @@
 
 #include <vpr/Sync/Mutex.h>
 
-#include <gadget/Type/EventWindow/KeyEvent.h>
-#include <gadget/Type/EventWindow/MouseEvent.h>
-#include <gadget/Type/EventWindow/Keys.h>
-#include <gadget/Type/EventWindow/Event.h>
+#include <gadget/Devices/KeyboardMouseDevice/InputArea.h>
+#include <gadget/Type/KeyboardMouse/KeyEvent.h>
+#include <gadget/Type/KeyboardMouse/MouseEvent.h>
+#include <gadget/Type/KeyboardMouse/Keys.h>
+#include <gadget/Type/KeyboardMouse/Event.h>
 
 namespace gadget
 {
-   class EventWindowWin32;
+   class InputWindowWin32;
 }
 
 namespace gadget
 {
-class GADGET_CLASS_API InputAreaWin32
+
+class GADGET_CLASS_API InputAreaWin32 : public gadget::InputArea
 {
-public:  // --- Internal helper class ----- //
-   /**
-    * Holds list of registered windows that may be used for Win32 Input.
-    * This is used by EventWindow routines to find any windows
-    * opened by other system components but that we still want to get input
-    * from.
-    */
-   class GADGET_CLASS_API InputAreaRegistry
-   {
-   public:
-      struct InputAreaInfo
-      {
-         std::string mDisplayName;            /**< The Win32 display name the window is on. */
-         gadget::InputAreaWin32* mInputArea;  /**< The handle to the window. */
-      };
-
-   public:
-      InputAreaRegistry()
-      {;}
-
-      /** Add the given window to the registry.
-       * @return true if window is added, false if matches existing window name.
-       */
-      bool addInputArea(const std::string& name, InputAreaInfo winInfo);
-
-      /** Remove the window with the id of "name". */
-      void removeInputArea(const std::string& name);
-
-      /** Get the window information. */
-      bool getInputArea(const std::string& name, InputAreaInfo& winInfo);
-
-   protected:
-      typedef std::map<std::string,InputAreaInfo> input_area_map_t;
-      input_area_map_t    mInputAreaMap;    /**< Map Window name to the data needed for it. */
-
-      vprSingletonHeader(InputAreaRegistry);
-   };
 public:
-   /** Enum to keep track of current lock state for state machine. */
-   enum lockState
-   {
-      Unlocked,     /**< The mouse is free. */
-      Lock_LockKey, /**< The mouse is locked due to lock toggle key press. */
-      Lock_KeyDown  /**< The mouse is locked due to a key being held down. */
-   };
-
    InputAreaWin32();
    ~InputAreaWin32();
 
@@ -106,10 +63,6 @@ public:
     */
    void handleEvents();
    void updKeys(const MSG& message);
-   virtual void setDelegate(gadget::EventWindowWin32* delegate)
-   {
-      mEventDelegate = delegate;
-   }
 
 protected:
    void lockMouse();
@@ -125,31 +78,11 @@ protected:
    static void doInternalError( const std::string& msg );
 
 protected:
-   EventWindowWin32* mEventDelegate;
-   HWND              mWinHandle;       /**< Window handle */
-
-   // NOTE: This driver does not use the normal triple buffering mechanism.
-   // Instead, it just uses a modified double buffering system.
-   /* Event window state holders */
-   /**
-    * (0,*): The num key presses during an UpdateData (ie. How many keypress
-    * events).
-    */
-   int mKeys[gadget::LAST_KEY];
-
-   /**
-    * (0,1): The real keyboard state, all events processed (ie. what is the
-    * key now).
-    */
-   int mRealkeys[gadget::LAST_KEY];
-
-   lockState    mLockState;       /**< The current state of locking. */
-   int          mLockStoredKey;   /**< The key that was pressed down. */
-   int          mLockToggleKey;   /**< The key that toggles the locking. */
-   unsigned int mWidth,mHeight;
-   bool         mUseOwnDisplay;   /**< Are we using a display we manage ourselves (true) or a remote one (false). */
-   vpr::Mutex   mKeysLock;        /**< Must hold this lock when accessing mKeys. */
-   int   mPrevX, mPrevY;         /**< Previous mouse location. */
+   HWND           mWinHandle;           /**< Window handle */
+   unsigned int   mWidth, mHeight;
+   bool           mUseOwnDisplay;       /**< Are we using a display we manage ourselves (true) or a remote one (false). */
+   vpr::Mutex     mKeysLock;            /**< Must hold this lock when accessing mKeys. */
+   int            mPrevX, mPrevY;       /**< Previous mouse location. */
 };
 
 } // end namespace gadget

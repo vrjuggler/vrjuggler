@@ -39,8 +39,8 @@
 
 #include <gadget/Util/Debug.h>
 
-#include <gadget/Devices/EventWindow/EventWindowWin32.h>
-#include <gadget/Devices/EventWindow/InputAreaWin32.h> // my header
+//#include <gadget/Devices/EventWindow/InputWindowWin32.h>
+#include <gadget/Devices/KeyboardMouseDevice/InputAreaWin32.h> // my header
 
 #ifndef GET_X_LPARAM
 #  define GET_X_LPARAM(lp)   ((int)(short)LOWORD(lp))
@@ -52,60 +52,8 @@
 namespace gadget
 {
 
-vprSingletonImp(InputAreaWin32::InputAreaRegistry);
-
-/** Add the given window to the registry. */
-bool InputAreaWin32::InputAreaRegistry::addInputArea(const std::string& name,
-                                                     InputAreaInfo winInfo)
-{
-   input_area_map_t::iterator found_input_area = mInputAreaMap.find(name);
-   if(found_input_area != mInputAreaMap.end())
-   {
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
-         << "Warning: Attempted to add x event source twice. named '"
-         << name << "'. Ignoring second.\n" << vprDEBUG_FLUSH;
-      return false;
-   }
-   else
-   {
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-         << "Adding Win32 window: " << name << std::endl << vprDEBUG_FLUSH;
-      mInputAreaMap[name] = winInfo;
-      return true;
-   }
-}
-
-/** Remove the window with the id of "name". */
-void InputAreaWin32::InputAreaRegistry::removeInputArea(const std::string& name)
-{
-   unsigned num_erased = mInputAreaMap.erase(name);
-   if(0 == num_erased)
-   {
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
-         << "Warning: Attempted to remove Win32 event source not found. named '"
-         << name << "'. \n" << vprDEBUG_FLUSH;
-   }
-}
-
-bool InputAreaWin32::InputAreaRegistry::getInputArea(const std::string& name,
-                                                     InputAreaInfo& inputAreaInfo)
-{
-   input_area_map_t::iterator found_input_area = mInputAreaMap.find(name);
-   if(found_input_area != mInputAreaMap.end())
-   {
-      inputAreaInfo = (*found_input_area).second;
-      return true;
-   }
-   else
-   {
-      return false;
-   }
-}
-
 InputAreaWin32::InputAreaWin32()
    : mWinHandle(NULL)
-   , mLockState(Unlocked)
-   , mUseOwnDisplay(true)
    , mPrevX(0)
    , mPrevY(0)
 {;}
@@ -267,8 +215,8 @@ void InputAreaWin32::updKeys(const MSG& message)
             }
 
             // process the keypress.
-            mEventDelegate->mKeys[key] += repeat_count;
-            mEventDelegate->mRealkeys[key] += 1;
+            mKeyboardMouseDevice->mKeys[key] += repeat_count;
+            mKeyboardMouseDevice->mRealkeys[key] += 1;
 
             // Check for Escape from bad state
             // this provides a sort of failsafe to
@@ -316,7 +264,7 @@ void InputAreaWin32::updKeys(const MSG& message)
       case WM_KEYUP:
          key = VKKeyToKey(message.wParam);
 
-         mEventDelegate->mRealkeys[key] = 0;
+         mKeyboardMouseDevice->mRealkeys[key] = 0;
 
          /*
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
@@ -337,8 +285,8 @@ void InputAreaWin32::updKeys(const MSG& message)
 
          // press...
       case WM_LBUTTONDOWN:
-         mEventDelegate->mRealkeys[gadget::MBUTTON1] = 1;
-         mEventDelegate->mKeys[gadget::MBUTTON1] += 1;
+         mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON1] = 1;
+         mKeyboardMouseDevice->mKeys[gadget::MBUTTON1] += 1;
 
          addMouseButtonEvent(gadget::MBUTTON1, gadget::MouseButtonPressEvent,
                              message);
@@ -346,8 +294,8 @@ void InputAreaWin32::updKeys(const MSG& message)
             << "LeftButtonDown\n" << vprDEBUG_FLUSH;
          break;
       case WM_MBUTTONDOWN:
-         mEventDelegate->mRealkeys[gadget::MBUTTON2] = 1;
-         mEventDelegate->mKeys[gadget::MBUTTON2] += 1;
+         mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON2] = 1;
+         mKeyboardMouseDevice->mKeys[gadget::MBUTTON2] += 1;
 
          addMouseButtonEvent(gadget::MBUTTON2, gadget::MouseButtonPressEvent,
                              message);
@@ -355,8 +303,8 @@ void InputAreaWin32::updKeys(const MSG& message)
             << "MiddleButtonDown\n" << vprDEBUG_FLUSH;
          break;
       case WM_RBUTTONDOWN:
-         mEventDelegate->mRealkeys[gadget::MBUTTON3] = 1;
-         mEventDelegate->mKeys[gadget::MBUTTON3] += 1;
+         mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON3] = 1;
+         mKeyboardMouseDevice->mKeys[gadget::MBUTTON3] += 1;
 
          addMouseButtonEvent(gadget::MBUTTON3, gadget::MouseButtonPressEvent,
                              message);
@@ -366,7 +314,7 @@ void InputAreaWin32::updKeys(const MSG& message)
 
          // release...
       case WM_LBUTTONUP:
-         mEventDelegate->mRealkeys[gadget::MBUTTON1] = 0;
+         mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON1] = 0;
 
          addMouseButtonEvent(gadget::MBUTTON1,
                              gadget::MouseButtonReleaseEvent, message);
@@ -374,7 +322,7 @@ void InputAreaWin32::updKeys(const MSG& message)
             << "LeftButtonUp\n" << vprDEBUG_FLUSH;
          break;
       case WM_MBUTTONUP:
-         mRealkeys[gadget::MBUTTON2] = 0;
+         mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON2] = 0;
 
          addMouseButtonEvent(gadget::MBUTTON2,
                              gadget::MouseButtonReleaseEvent, message);
@@ -382,7 +330,7 @@ void InputAreaWin32::updKeys(const MSG& message)
             << "MiddleButtonUp\n" << vprDEBUG_FLUSH;
          break;
       case WM_RBUTTONUP:
-         mRealkeys[gadget::MBUTTON3] = 0;
+         mKeyboardMouseDevice->mRealkeys[gadget::MBUTTON3] = 0;
 
          addMouseButtonEvent(gadget::MBUTTON3,
                              gadget::MouseButtonReleaseEvent, message);
@@ -444,20 +392,20 @@ void InputAreaWin32::updKeys(const MSG& message)
             // Update mKeys based on key pressed and store in the key array
             if ( dx > 0 )
             {
-               mEventDelegate->mKeys[gadget::MOUSE_POSX] += dx;     // Positive movement in the x direction.
+               mKeyboardMouseDevice->mKeys[gadget::MOUSE_POSX] += dx;     // Positive movement in the x direction.
             }
             else
             {
-               mEventDelegate->mKeys[gadget::MOUSE_NEGX] += -dx;    // Negative movement in the x direction.
+               mKeyboardMouseDevice->mKeys[gadget::MOUSE_NEGX] += -dx;    // Negative movement in the x direction.
             }
 
             if ( dy > 0 )
             {
-               mEventDelegate->mKeys[gadget::MOUSE_POSY] += dy;     // Positive movement in the y direction.
+               mKeyboardMouseDevice->mKeys[gadget::MOUSE_POSY] += dy;     // Positive movement in the y direction.
             }
             else
             {
-               mEventDelegate->mKeys[gadget::MOUSE_NEGY] += -dy;    // Negative movement in the y direction.
+               mKeyboardMouseDevice->mKeys[gadget::MOUSE_NEGY] += -dy;    // Negative movement in the y direction.
             }
          }
          break;
@@ -598,7 +546,7 @@ void InputAreaWin32::addKeyEvent(const gadget::Keys& key,
    // XXX: Missing modifier key information here...
    // XXX: Missing ASCII character value here...
    gadget::EventPtr key_event(new gadget::KeyEvent(type, key, 0, msg.time));
-   mEventDelegate->addEvent(key_event);
+   mKeyboardMouseDevice->addEvent(key_event);
 }
 
 void InputAreaWin32::resize(long width, long height)
@@ -617,7 +565,7 @@ void InputAreaWin32::addMouseButtonEvent(const gadget::Keys& button,
                                                        GET_Y_LPARAM(msg.lParam),
                                                        msg.pt.x, msg.pt.y, 0,
                                                        msg.time));
-   mEventDelegate->addEvent(mouse_event);
+   mKeyboardMouseDevice->addEvent(mouse_event);
 }
 
 void InputAreaWin32::addMouseMoveEvent(const MSG& msg)
@@ -628,7 +576,7 @@ void InputAreaWin32::addMouseMoveEvent(const MSG& msg)
                                                        GET_Y_LPARAM(msg.lParam),
                                                        msg.pt.x, msg.pt.y, 0,
                                                        msg.time));
-   mEventDelegate->addEvent(mouse_event);
+   mKeyboardMouseDevice->addEvent(mouse_event);
 }
 
 void InputAreaWin32::doInternalError( const std::string& msg )
