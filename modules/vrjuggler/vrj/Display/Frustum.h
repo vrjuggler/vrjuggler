@@ -50,7 +50,14 @@ class VJ_CLASS_API Frustum
 {
 public:
    enum entry
-   {VJ_LEFT = 0, VJ_RIGHT = 1, VJ_BOTTOM, VJ_TOP, VJ_NEAR, VJ_FAR};
+   {
+      VJ_LEFT = 0,
+      VJ_RIGHT = 1,
+      VJ_BOTTOM,
+      VJ_TOP,
+      VJ_NEAR,
+      VJ_FAR
+   };
 
    Frustum()
    {
@@ -58,28 +65,30 @@ public:
       frust[3] = frust[4] = frust[5] = 0.0f;
    }
 
-   void setBottomLeftTopRight(float bot_val, float left_val, float top_val, float right_val)
+   void setBottomLeftTopRight(const float bottomVal, const float leftVal,
+                              const float topVal, const float rightVal)
    {
-      frust[VJ_BOTTOM] = bot_val;
-      frust[VJ_LEFT] = left_val;
-      frust[VJ_TOP] = top_val;
-      frust[VJ_RIGHT] = right_val;
+      frust[VJ_BOTTOM] = bottomVal;
+      frust[VJ_LEFT]   = leftVal;
+      frust[VJ_TOP]    = topVal;
+      frust[VJ_RIGHT]  = rightVal;
    }
 
-   void setNearFar(float near_val, float far_val)
+   void setNearFar(const float nearVal, const float farVal)
    {
-      frust[VJ_NEAR] = near_val;
-      frust[VJ_FAR] = far_val;
+      frust[VJ_NEAR] = nearVal;
+      frust[VJ_FAR]  = farVal;
    }
 
-   void set(float left_val, float right_val, float bottom_val, float top_val, float near_val, float far_val)
+   void set(const float leftVal, const float rightVal, const float bottomVal,
+            const float topVal, const float nearVal, const float farVal)
    {
-      frust[VJ_LEFT] = left_val;
-      frust[VJ_RIGHT] = right_val;
-      frust[VJ_BOTTOM] = bottom_val;
-      frust[VJ_TOP] = top_val;
-      frust[VJ_NEAR] = near_val;
-      frust[VJ_FAR] = far_val;
+      frust[VJ_LEFT]   = leftVal;
+      frust[VJ_RIGHT]  = rightVal;
+      frust[VJ_BOTTOM] = bottomVal;
+      frust[VJ_TOP]    = topVal;
+      frust[VJ_NEAR]   = nearVal;
+      frust[VJ_FAR]    = farVal;
    }
 
    float& operator[](int elt)
@@ -88,7 +97,7 @@ public:
    }
 
 public:
-   float frust[6];  /**<  Left, Right, Bottom, Top, Near, Far */
+   float frust[6];  /**< Left, Right, Bottom, Top, Near, Far */
 };
 
 // ---- FRIEND FUNCTIONS ---- //
