@@ -152,10 +152,6 @@ if test "x$target_os" = "xcygwin" -a "x$USE_GCC" != "xyes" ; then
     CC='cl'
 fi
 
-# For now, we have to set the optimization level to 1 until we verify that the
-# GL Draw Manager is working with level 2.
-OPT_LEVEL='1'
-
 DPP_SYSTEM_SETUP
 
 CC="${_vjsave_CC}"
