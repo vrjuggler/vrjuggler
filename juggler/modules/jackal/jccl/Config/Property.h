@@ -155,13 +155,13 @@ public:
     vjVarValue *createVarValue (int i = -1);
 
 
-  /** Converts the values in this property from units of u to units of feet.
-   *  This is used when we're reading in a new distance property - The
-   *  values have been read in as raw numbers, then we read in the unit type
-   *  and realize what kind of conversion we have to do to put them in
-   *  feet (our standard unit for internal storage of distances).
-   */
-  bool applyUnits (CfgUnit u);
+    /** Converts the values in this property from units of u to units of feet.
+     *  This is used when we're reading in a new distance property - The
+     *  values have been read in as raw numbers, then we read in the unit type
+     *  and realize what kind of conversion we have to do to put them in
+     *  feet (our standard unit for internal storage of distances).
+     */
+    bool applyUnits (CfgUnit u);
 
 
     //: writes p to out
@@ -171,18 +171,20 @@ public:
 
 private:
 
-  //: Utility function for setValue(val, ind) functions
-  //! POST: If self has a variable number of values, and ind
-  //+       is greater than the current size of the value
-  //+       vector, the vector is padded with new default-valued
-  //+       vjVarValues.
-  //! RETURNS: true if ind is a valid index to the values vector
-  //+          (after padding).
-  //! RETURNS: false if ind is out of bounds.
-  //! ARGS: ind - index into the values vector.
-  bool preSet (int ind);
+    //: Utility function for setValue(val, ind) functions
+    //! POST: If self has a variable number of values, and ind
+    //+       is greater than the current size of the value
+    //+       vector, the vector is padded with new default-valued
+    //+       vjVarValues.
+    //! RETURNS: true if ind is a valid index to the values vector
+    //+          (after padding).
+    //! RETURNS: false if ind is out of bounds.
+    //! ARGS: ind - index into the values vector.
+    bool preSet (int ind);
 
 };
 
 
 #endif
+
+

@@ -23,6 +23,7 @@
 #include <Config/vjChunkFactory.h>
 #include <Config/vjPropertyDesc.h>
 #include <Config/vjEnumEntry.h>
+#include <Config/vjParseUtil.h>
 #include <Kernel/vjDebug.h>
 
 vjProperty::vjProperty (vjPropertyDesc *pd) {
@@ -50,11 +51,8 @@ vjProperty::vjProperty (vjPropertyDesc *pd) {
 	/* we're filling the vector with num copies of a 
 	 * default vjVarValue */
 	for (j = 0; j < num; j++ ) {
-	    //cout << "creating varvalue" << endl;
 	    v = createVarValue (j);
-	    //cout << "created var value: " << flush << *v << endl;
 	    value.push_back(v);
-	    //cout << "pushed" << endl;
 	}
     }
 }
@@ -114,6 +112,8 @@ vjProperty& vjProperty::operator= (const vjProperty& p) {
     return *this;
 }
 
+
+
 bool vjProperty::operator== (const vjProperty& p) {
     if (description != p.description)
 	return false;
@@ -126,6 +126,7 @@ bool vjProperty::operator== (const vjProperty& p) {
 }
 
 
+
 bool vjProperty::applyUnits (CfgUnit u) {
 
     if (type == T_DISTANCE) {
@@ -134,7 +135,7 @@ bool vjProperty::applyUnits (CfgUnit u) {
 	return true;
     }
     else {
-	cerr << "Units may only be applied to Distance values." <<endl;
+	//cerr << "Units may only be applied to Distance values." <<endl;
 	return false;
     }
 }
@@ -258,7 +259,7 @@ bool vjProperty::setValue (const std::string& val, int ind) {
 
 bool vjProperty::setValue (vjConfigChunk* val, int ind) {
     if (!preSet(ind)) {
-	vjDEBUG(vjDBG_ALL, 0) << "Preset failed\n" << vjDEBUG_FLUSH;
+	vjDEBUG(vjDBG_ERROR, 1) << "vjProperty::Preset failed!\n" << vjDEBUG_FLUSH;
 	return false;
     }
     *(value[ind]) = val;

@@ -30,9 +30,8 @@ bool readString (istream &in, char *buffer, int size, bool *quoted) {
      *
      * returns true if a string is correctly read.  This could be a 0-length
      * quoted string...
-     */
-    /* 
-     *       Quoted is set true if the string read was in quoted.
+     *
+     * Quoted is set true if the string read was in quotes.
      */
 
     int i;
@@ -102,8 +101,8 @@ bool readString (istream &in, char *buffer, int size, bool *quoted) {
 	    while (in.get(buffer[i]) && (buffer[i] != '"'))
 		;
 	    buffer[i] = '\0';
-	    vjDEBUG (vjDBG_ALL,0) << "ERROR: Truncated string in config file: '"
-				  << buffer << "'\n" << vjDEBUG_FLUSH;
+	    vjDEBUG (vjDBG_ERROR,0) << "ERROR: Truncated string in config file: '"
+				    << buffer << "'\n" << vjDEBUG_FLUSH;
 	}
 	retval = true;
     }

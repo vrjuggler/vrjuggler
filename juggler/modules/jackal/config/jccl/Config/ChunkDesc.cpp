@@ -30,7 +30,6 @@ vjChunkDesc::vjChunkDesc () :plist() {
 
 
 vjChunkDesc::~vjChunkDesc() {
-    cout << "a chunkdesc is getting deleted!!!" << endl;
     for (int i = 0; i < plist.size(); i++)
 	delete plist[i];
 }

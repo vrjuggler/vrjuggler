@@ -23,7 +23,7 @@
 
 #include <Kernel/vjDebug.h>
 #include <Config/vjChunkDescDB.h>
-
+#include <Config/vjParseUtil.h>
 
 
 vjChunkDescDB::vjChunkDescDB (): descs() {
@@ -119,11 +119,11 @@ istream& operator >> (istream& in, vjChunkDescDB& self) {
 	else if (!strcasecmp (str, "end"))
 	    break;
 	else {
-	    vjDEBUG(vjDBG_ALL,1) << "Unexpected symbol parsing vjChunkDescDB: '"
+	    vjDEBUG(vjDBG_ERROR,1) << "Unexpected symbol parsing vjChunkDescDB: '"
 		       << str <<"'"<< endl << vjDEBUG_FLUSH;
 	}
     }
-    vjDEBUG(vjDBG_CONFIG,4) << "vjChunkDescDB::>> : Finished - " << self.descs.size()
+    vjDEBUG(vjDBG_CONFIG,3) << "vjChunkDescDB::>> : Finished - " << self.descs.size()
 	       << " descriptions read." << endl << vjDEBUG_FLUSH;
     return in;
 }
@@ -134,7 +134,7 @@ bool vjChunkDescDB::load (char *fname) {
     ifstream in(fname);
 
     if (!in) {
-	vjDEBUG(vjDBG_ALL,0) << "vjChunkDescDB::load(): Unable to open file '"
+	vjDEBUG(vjDBG_ERROR,0) << "vjChunkDescDB::load(): Unable to open file '"
 		   << fname << "'" << endl << vjDEBUG_FLUSH;
 	return false;
     }
@@ -147,7 +147,7 @@ bool vjChunkDescDB::load (char *fname) {
 bool vjChunkDescDB::save (char *fname) {
     ofstream out(fname);
     if (!out) {
-	vjDEBUG(vjDBG_ALL,0) << "vjChunkDescDB::save(): Unable to open file '"
+	vjDEBUG(vjDBG_ERROR,0) << "vjChunkDescDB::save(): Unable to open file '"
 		   << fname << "'" << endl << vjDEBUG_FLUSH;
 	return false;
     }

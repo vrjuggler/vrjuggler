@@ -34,22 +34,16 @@ vjConfigChunk::vjConfigChunk (vjChunkDesc *d) :props(), type_as_varvalue(T_STRIN
 
     desc = d;
     type_as_varvalue = desc->getToken();
-    //cout << "creating properties" << endl;
     for (int i = 0; i < desc->plist.size(); i++) {
 	vjPropertyDesc* pd = desc->plist[i];
-	//cout << "propdesc is " << flush << *pd << endl;
 	vjProperty* pr = new vjProperty (pd);
-	//cout << "created property " << flush << *pr << endl;
 	props.push_back (pr);
     }
-    //cout << "done creating properties" << endl;
 }
 
 
 
 vjConfigChunk::~vjConfigChunk () {
-//     cout << "I thought we weren't deleting chunks anymore? -- self is" << endl
-// 	 << *this << "-------------" << endl;
     for (int i = 0; i < props.size(); i++)
 	delete (props[i]);
 }
@@ -146,6 +140,7 @@ std::vector<std::string> vjConfigChunk::getDependencies()
 }
 
 
+
 vjProperty* vjConfigChunk::getPropertyPtrFromName (const std::string& property) {
     for (int i = 0; i < props.size(); i++) {
 	if (!vjstrcasecmp (props[i]->getName(), property))
@@ -162,6 +157,25 @@ vjProperty* vjConfigChunk::getPropertyPtrFromToken (const std::string& token) {
       return props[i];
   }
   return NULL;
+}
+
+
+
+//: Return all the values for a given property
+// This is just a simple helper function
+//! NOTE: The vector has COPIES of the var values.
+// cj - this is bad implementation... bad...
+std::vector<vjVarValue*> vjConfigChunk::getAllProperties(const std::string& property)
+{
+    int num_properties = getNum(property);
+    std::vector<vjVarValue*> ret_val;
+    for(int i=0;i<num_properties;i++)
+	{
+	    vjVarValue* new_var_val = new vjVarValue(getProperty(property,i));
+	    ret_val.push_back(new_var_val);
+	}
+    
+    return ret_val;
 }
 
 
@@ -267,7 +281,7 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
 
 	// We have a string token; assumably a property name.
 	if (!(p = self.getPropertyPtrFromToken (buf))) {
-	    vjDEBUG(vjDBG_ALL,0) << "ERROR: Property '" << buf << "' is not found in"
+	    vjDEBUG(vjDBG_ERROR,0) << "ERROR: Property '" << buf << "' is not found in"
 		       << " Chunk " << self.desc->name << endl << vjDEBUG_FLUSH;
 	    continue;
 	}
@@ -295,19 +309,19 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
 //  		}
 		else {
 		    if (!self.tryassign (p, i++, buf))
-			vjDEBUG(vjDBG_ALL,3) << "ERROR: Assigning to property "
+			vjDEBUG(vjDBG_ERROR,2) << "ERROR: Assigning to property "
 				   << p->getName() << endl << vjDEBUG_FLUSH;
 		}
 	    }
 
 	    if ((p->num != -1) && (p->num != i))
-		vjDEBUG(vjDBG_CONFIG,3) << "ERROR: vjProperty " << p->getName() << " should have "
+		vjDEBUG(vjDBG_ERROR,1) << "ERROR: vjProperty " << p->getName() << " should have "
 			   << p->num << " values; " << i << " found" << endl << vjDEBUG_FLUSH;
 	}
 	else {
 	    // we're just doing one value.
 	    if (!self.tryassign (p, 0, buf))
-		vjDEBUG(vjDBG_CONFIG,3) << "ERROR: Assigning to property "
+		vjDEBUG(vjDBG_ERROR,1) << "ERROR: Assigning to property "
 			   << p->getName() << endl << vjDEBUG_FLUSH;
 //  	    self.getVJCFGToken (in,tok);
 //  	    if (tok.type == TK_Unit) {
@@ -315,7 +329,7 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
 //  		self.getVJCFGToken (in, tok);
 //  	    }
 	    if (p->num > 1) {
-		vjDEBUG(vjDBG_ALL,3) << "ERROR: Property " << p->getName()
+		vjDEBUG(vjDBG_ERROR,3) << "ERROR: Property " << p->getName()
 			   << " expects " << p->num << " values." << endl << vjDEBUG_FLUSH;
 	    }
 	}
@@ -391,7 +405,7 @@ bool vjConfigChunk::setProperty (const std::string& property, vjConfigChunk* val
     vjProperty *p;
     p = getPropertyPtrFromToken (property);
     if (!p) {
-	vjDEBUG (vjDBG_ALL, 1) << "setProperty: no such property " << property
+	vjDEBUG (vjDBG_ERROR, 1) << "ConfigChunk.setProperty: no such property " << property
 			       << "\n" << vjDEBUG_FLUSH;
 	return false;
     }

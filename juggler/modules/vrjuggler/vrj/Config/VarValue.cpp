@@ -26,6 +26,14 @@
 vjVarValue* vjVarValue::invalid_instance = NULL;
 std::string vjVarValue::using_invalid_msg = "Using T_INVALID VarValue - something's messed up";
 
+
+/*static*/ vjVarValue& vjVarValue::getInvalidInstance () {
+    if (invalid_instance == NULL)
+	invalid_instance = new vjVarValue (T_INVALID);
+    return *invalid_instance;
+}
+
+
 vjVarValue::vjVarValue (vjVarValue &v):strval("") {
     intval = 0;
     floatval = 0.0;

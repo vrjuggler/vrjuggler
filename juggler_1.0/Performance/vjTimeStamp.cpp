@@ -34,7 +34,6 @@
  *
  */
 
-//#include <iostream.h>
 #include <stddef.h>
 #include <sys/types.h>
 #include <fcntl.h>
@@ -56,8 +55,8 @@ void vjTimeStampSGI::initialize() {
     poffmask = getpagesize() - 1;
     phys_addr = syssgi(SGI_QUERY_CYCLECNTR, &cyclevalue);
     if (phys_addr == ENODEV) {
-	cerr << "ERROR: vjTimeStamp: Cycle Counter not supported "
-	     << "by this machine."<< endl;
+	vjDEBUG (vjDBG_ERROR,0) << "ERROR: vjTimeStamp: Cycle Counter not "
+	    "supported by this machine.\n" << vjDEBUG_FLUSH;
 	iotimer_addr = &enodev_dummy_address;
     }
     else {
@@ -78,7 +77,7 @@ void vjTimeStampSGI::initialize() {
     else
 	initval = *(unsigned int*)iotimer_addr;
 
-    vjDEBUG(vjDBG_ALL,3) << "vjTimeStamp system initialized.\n"
+    vjDEBUG(vjDBG_PERFORMANCE,3) << "vjTimeStamp system initialized.\n"
 	       << vjDEBUG_FLUSH;
 }
 

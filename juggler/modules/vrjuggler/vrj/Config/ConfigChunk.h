@@ -80,6 +80,8 @@ public:
 
     //: tests for equality of two vjConfigChunks
     bool operator== (const vjConfigChunk& c);
+
+    //: tests for inequality of two vjConfigChunks
     inline bool operator != (const vjConfigChunk& c) {
 	return !(*this == c);
     }
@@ -143,19 +145,8 @@ public:
     //: Return all the values for a given property
     // This is just a simple helper function
     //! NOTE: The vector has COPIES of the var values.
-    // cj - this is bad implementation... bad...
-    std::vector<vjVarValue*> getAllProperties(const std::string& property)
-    {
-       int num_properties = getNum(property);
-       std::vector<vjVarValue*> ret_val;
-       for(int i=0;i<num_properties;i++)
-       {
-         vjVarValue* new_var_val = new vjVarValue(getProperty(property,i));
-         ret_val.push_back(new_var_val);
-       }
+    std::vector<vjVarValue*> getAllProperties(const std::string& property);
 
-       return ret_val;
-    }
 
     //: Sets a value for the given property.
     //!PRE:  property is a non-null string, ind >= 0.
@@ -212,3 +203,6 @@ private:
 };
 
 #endif
+
+
+
