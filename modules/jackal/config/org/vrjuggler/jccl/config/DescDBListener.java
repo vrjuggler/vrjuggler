@@ -29,7 +29,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 package VjConfig;
 
 import VjConfig.DescDBEvent;
@@ -46,12 +45,11 @@ import VjConfig.DescDBEvent;
  *  @author Christopher Just
  *  @version $Revision$
  */
-public interface DescDBListener extends java.util.EventListener {
-
-    public abstract void chunkDescAdded (DescDBEvent e);
-    public abstract void chunkDescRemoved (DescDBEvent e);
-    public abstract void chunkDescReplaced (DescDBEvent e);
-    public abstract void chunkDescsCleared (DescDBEvent e);
+public interface DescDBListener
+   extends java.util.EventListener
+{
+   public abstract void chunkDescAdded(DescDBEvent e);
+   public abstract void chunkDescRemoved(DescDBEvent e);
+   public abstract void chunkDescReplaced(DescDBEvent e);
+   public abstract void chunkDescsCleared(DescDBEvent e);
 }
-
-
