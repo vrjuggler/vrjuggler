@@ -71,6 +71,20 @@ class FileHandleImplUNIX
 {
 public:
    /**
+    * Constructor for unnamed file-based devices.  This initializes the member
+    * variables to reasonable defaults and stores the given file name for
+    * later use.
+    *
+    * @post All member variables are initialized except m_name.
+    */
+   FileHandleImplUNIX (void)
+      : m_open(false), m_open_blocking(true), m_blocking(true), m_fdesc(-1),
+        m_open_mode(O_RDWR)
+   {
+      /* Do nothing. */ ;
+   }
+
+   /**
     * Constructor.  This initializes the member variables to reasonable
     * defaults and stores the given file name for later use.
     *
