@@ -30,7 +30,7 @@ class vjMemory {
 public:
     vjMemory()
     {
-	;
+	memPool = NULL;
     }
 public:
     // -----------------------------------------------------------------------
