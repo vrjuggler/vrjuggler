@@ -80,14 +80,17 @@ public:
    vjMatrix* getHeadPos()
    { return mHead->getData(); }
 
-    vjTimeStamp* getHeadUpdateTime() {
-   return mHead->getUpdateTime();
-    }
+   vjTimeStamp* getHeadUpdateTime()
+   { return mHead->getUpdateTime(); }
+
+   float getInterocularDistance()
+   { return mInterocularDist; }
 
 private:
    int               mUserId;    //: the id of the user
    std::string       mName;      //: The string name of the user
    vjPosInterface    mHead;      //: The head positon
+   float             mInterocularDist;    //: Eye seperation
 
 private:
    static int mNextUserId;     //: the next user id to assign

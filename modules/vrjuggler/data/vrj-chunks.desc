@@ -175,6 +175,7 @@ chunk FileConnect "EM Connection" "A file for outputing Environment Manager data
 chunk JugglerUser "Juggler User" "This is a user in Juggler.  This is used for multi-user applications"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   headPos Chunk 1 "Head Position" vj_enumeration { "proxyAlias" "PosProxy" } "This is the source of head position information."
+  interocular_distance Float 1 "Eye Seperation" "Interocular distance.  NOTE: In same units as displays settings."
   end
 chunk KeyModPair "Key and Modifier Pair" "This chunk holds a key and a modifier key.  It is for key events inside other chunks."
   Name String 1 "Name" "Unique name of an instance of this chunk type"
