@@ -10,14 +10,14 @@ default: all
 
 all: cubes wand simpleGlove glove
 
-cubes wand::
+cubes glove simpleGlove wand::
 	cd $@ && ${MAKE} all
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	-cd cubes && ${MAKE} clean
-	-cd wand  && ${MAKE} clean
-	-cd glove  && ${MAKE} clean
+	-cd cubes        && ${MAKE} clean
+	-cd wand         && ${MAKE} clean
+	-cd glove        && ${MAKE} clean
 	-cd simpleGlove  && ${MAKE} clean
