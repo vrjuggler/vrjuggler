@@ -96,8 +96,8 @@ public:
     virtual ~GlWindowOSX();
 
     void swapBuffers();
-    int open();
-    int close();
+    virtual bool open();
+    virtual bool close();
     bool makeCurrent();
 
    /**

@@ -100,13 +100,13 @@ public:
     * Opens the OpenGL window.
     * @pre this has been configured.
     */
-   virtual int open()
+   virtual bool open()
    {
       return 1;
    }
 
    /** Closes the OpenGL window. */
-   virtual int close()
+   virtual bool close()
    {
       return 1;
    }
