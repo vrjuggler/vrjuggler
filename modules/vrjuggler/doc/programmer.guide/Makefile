@@ -9,6 +9,7 @@ JADE		= openjade
 JADETEX		= jadetex
 PDFJADETEX	= pdfjadetex
 RM		= rm -f
+XALAN		= $(DOCBOOK_ROOT)/xalan-j_2_2_0/bin/xalan.sh
 XEP		= sh $(DOCBOOK_ROOT)/XEP/run.sh
 XSLTPROC	= /usr/bin/xsltproc
 
@@ -33,10 +34,10 @@ guide.pdf: guide.xml # guide.fo guide.tex
 # Basic XSL conversions -------------------------------------------------------
 
 .xml.html:
-	$(XSLTPROC) --output $@ $(XSL_DIR)/html/docbook.xsl $<
+	$(XALAN) -in $@ -xsl $(XSL_DIR)/html/docbook.xsl -out $<
 
 .xml.fo:
-	$(XSLTPROC) --output $@ $(XSL_DIR)/fo/docbook.xsl $<
+	$(XALAN) -in $@ -xsl $(XSL_DIR)/fo/docbook.xsl -out $<
 
 # Generate a PDF file from an XML file using FOP.
 .xml.pdf:
