@@ -52,7 +52,7 @@ namespace gadget
 //!PUBLIC_API:
 class SimInput
 {
-protected:
+public:
    class KeyModPair
    {
    public:
