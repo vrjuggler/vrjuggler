@@ -181,19 +181,6 @@ docs:
 	$(JDK_HOME)/bin/javadoc -d $(DOC_ROOT) -sourcepath $(srcdir)	\
           -classpath $(CLASSPATH) $(DOC_PKGS)
 
-links:
-	cd $(instlinks)/bin && rm -f ./*.jar
-	cd $(instlinks)/bin && \
-          for jar in $(JARS) ; \
-          do \
-              $(LN_S) $(topdir)/java/$$jar ./ ; \
-          done
-	cd $(instlinks)/bin && \
-          for jar in `echo "$(JAXP_JAR)" | sed -e 's/$(JCPS)/ /g'` ; \
-          do \
-              $(LN_S) $$jar ./ ; \
-          done
-
 # This cannot be named 'install' because Doozer++ already defines that.
 net-install:
 	@echo "------------------------------------------------"
