@@ -44,9 +44,15 @@
 
 
 #include <stdlib.h>
-#include "AudioWorksSoundImplementation.h"
+#include <gmtl/Math.h>
+#include <gmtl/Matrix.h>
+#include <gmtl/Vec.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/VecOps.h>
+#include <gmtl/Xforms.h>
 
 #include "snx/SoundFactory.h"
+#include "snx/plugins/AudioWorksSoundImplementation.h"
 
 namespace snx
 {
@@ -195,7 +201,7 @@ namespace snx
 
       if (mBindTable.count( alias ) > 0)
       {
-         awProp(mBindTable[alias].mSound, AWSND_STATE, AW_OFF);
+         awProp( mBindTable[alias].mSound, AWSND_STATE, AW_OFF );
       }
    }
 
@@ -212,7 +218,7 @@ namespace snx
          float xyz[3] = { 0.0f, 0.0f, 0.0f };
          float hpr[3] = { 0.0f, 0.0f, 0.0f };
          snx::SoundImplementation::getPosition( alias, xyz[0], xyz[1], xyz[2] );
-         
+
          if (this->isAmbient( alias ) == true)
             awXYZHPR( mBindTable[alias].mSound, xyz, hpr );  //Set sound at origin
          else
@@ -235,15 +241,16 @@ namespace snx
    /**
     * set the position of the listener
     */
-   void AudioWorksSoundImplementation::setListenerPosition( const vrj::Matrix& mat )
+   void AudioWorksSoundImplementation::setListenerPosition( const gmtl::Matrix44f& mat )
    {
       snx::SoundImplementation::setListenerPosition( mat );
+      std::cout << "WARNING: setListenerPosition not implemented yet\n" << std::endl;
    }
 
    /**
     * get the position of the listener
     */
-   void AudioWorksSoundImplementation::getListenerPosition( vrj::Matrix& mat )
+   void AudioWorksSoundImplementation::getListenerPosition( gmtl::Matrix44f& mat )
    {
       snx::SoundImplementation::getListenerPosition( mat );
    }
@@ -493,6 +500,7 @@ namespace snx
    {
    }   
 
+   /** @todo: make me work */
    void loadload( const std::string& filename, awWave& wav )
    {
       // aiff

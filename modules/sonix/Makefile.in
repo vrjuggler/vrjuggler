@@ -42,6 +42,8 @@
 
 default: debug
 
+
+
 # This is a hack to deal with GNU make's ignorance about defined targets.
 # Without this, the 'default' set in dpp.subdir.mk becomes the default
 # target, and that's not what we want.
@@ -255,5 +257,21 @@ CLOBBER_DIRS    += $(BUILDDIR_BASE) $(LIBDIR_NAME)
 # this is for "ooops! i configured in the root dir of my project..."
 cleanconfigure:
 	rm config.cache configure config.status reconfig simple_config.h make.defs.mk config.log aclocal.m4 Makefile
+
+# -------------------------------------
+# Build all versions of the libraries.
+# -------------------------------------
+buildworld: all
+
+# ------------------------------------------------------------------------
+# Do a full installation all versions of the libraries and the associated
+# files.
+# ------------------------------------------------------------------------
+installworld: install-all
+
+# =============================================================================
+# Automatically generated documentation.
+# =============================================================================
+docs: doc-internal doc-public
 
 include $(MKPATH)/dpp.subdir.mk

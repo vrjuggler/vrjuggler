@@ -53,16 +53,19 @@
 #include <AL/alext.h>
 #include <AL/alut.h>
 
-#include "vrj/Math/Matrix.h"
-#include "vrj/Math/Vec3.h"
-#include "snx/Extend.h"
+#include <gmtl/Math.h>
+#include <gmtl/Matrix.h>
+#include <gmtl/Vec.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/VecOps.h>
+#include <gmtl/Xforms.h>
+
 #include "snx/FileIO.h"
 #include "snx/SoundImplementation.h"
 #include "snx/SoundInfo.h"
-
+#include "snx/SoundFactory.h"
 #include "snx/plugins/OpenALSoundImplementation.h"
 
-#include "snx/SoundFactory.h"
 namespace snx
 {
 snx::SoundFactoryReg<OpenALSoundImplementation> openAlRegistrator( "OpenAL" );
@@ -195,7 +198,7 @@ void OpenALSoundImplementation::getPosition( const std::string& alias, float& x,
 /**
  * set the position of the listener
  */
-void OpenALSoundImplementation::setListenerPosition( const vrj::Matrix& mat )
+void OpenALSoundImplementation::setListenerPosition( const gmtl::Matrix44f& mat )
 {
    assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
    
@@ -203,14 +206,14 @@ void OpenALSoundImplementation::setListenerPosition( const vrj::Matrix& mat )
 
    // extract position from the matrix
    ALfloat position[3];
-   mat.getTrans( position[0], position[1], position[2] );
+   gmtl::getTrans( mat, position[0], position[1], position[2] );
 
    // extract orientation from the matrix
-   const vrj::Vec3 forward( 0.0f, 0.0f, -1.0f );
-   const vrj::Vec3 up( 0.0f, 1.0f, 0.0f );
-   vrj::Vec3 forward_modified, up_modified;
-   forward_modified = snx::xformVec( mat, forward );
-   up_modified = snx::xformVec( mat, up );
+   const gmtl::Vec3f forward( 0.0f, 0.0f, -1.0f );
+   const gmtl::Vec3f up( 0.0f, 1.0f, 0.0f );
+   gmtl::Vec3f forward_modified, up_modified;
+   gmtl::xform( forward_modified, mat, forward );
+   gmtl::xform( up_modified, mat, up );
 
    // openal wants a pair of 3 tuples: { forward, up }
    ALfloat orientation[]  = { forward_modified[0], forward_modified[1], forward_modified[2],
@@ -226,7 +229,7 @@ void OpenALSoundImplementation::setListenerPosition( const vrj::Matrix& mat )
 /**
  * get the position of the listener
  */
-void OpenALSoundImplementation::getListenerPosition( vrj::Matrix& mat )
+void OpenALSoundImplementation::getListenerPosition( gmtl::Matrix44f& mat )
 {
    snx::SoundImplementation::getListenerPosition( mat );
 }
