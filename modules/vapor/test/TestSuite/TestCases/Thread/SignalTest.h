@@ -1,9 +1,9 @@
 #include <iostream>
 #include <string.h>
 
-#include <TestCase.h>
-#include <TestSuite.h>
-#include <TestCaller.h>
+#include <cppunit/TestCase.h>
+#include <cppunit/TestSuite.h>
+#include <cppunit/TestCaller.h>
 
 #include <vpr/Thread/Signal.h>
 
