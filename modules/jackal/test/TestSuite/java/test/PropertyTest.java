@@ -1,7 +1,7 @@
 package test;
 
 import junit.framework.*;
-import VjConfig.*;
+import org.vrjuggler.jccl.config.*;
 
 /**
  * Test the Property class.

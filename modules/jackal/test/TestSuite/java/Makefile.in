@@ -7,7 +7,7 @@ JCPS           = @JCPS@
 
 JUNIT_JAR		= @JUNIT_JAR@
 JAXP_JAR			= @JAXP_JAR@
-VJCONTROL_JARS = $(JCCL_BASE_DIR)/bin/VjControl.jar
+VJCONTROL_JARS = $(JCCL_BASE_DIR)/bin/config.jar
 CLASSPATH		= $(JUNIT_JAR)$(JCPS)$(VJCONTROL_JARS)$(JCPS)$(JAXP_JAR)
 
 # Commands to execute.
