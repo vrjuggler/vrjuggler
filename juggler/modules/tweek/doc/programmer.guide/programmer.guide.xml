@@ -1329,7 +1329,11 @@ public void connectionClosed(ConnectEvent e)                              <co li
 {
    if ( slider_subject != null )
    {
-      slider_subject.detach(mSliderObserver._this());                     <co linkends="NetworkTest.java.shutdown.co" id="NetworkTest.java.observer.detach"/>
+      if ( mSliderObserver != null )
+      {
+         mSliderObserver.detach();                                        <co linkends="NetworkTest.java.shutdown.co" id="NetworkTest.java.observer.detach"/>
+         mSliderObserver = null;
+      }
    }
 }</programlisting>
                   <calloutlist>
