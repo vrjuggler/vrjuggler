@@ -1,0 +1,50 @@
+# If no object directory is being used, set it to the current directory.
+OBJDIR		?= .
+DEPDIR		?= .
+
+# Define the list of supported source file suffixes.
+_suffix_list = c C CC cc cpp c++ cxx
+
+# Loop over the suffixes, translate them to $(OBJECT_EXT) and store the
+# result in $(OBJS).
+makeobjs = $(filter %.$(OBJ_FILE_SUFFIX), $(foreach _suffix, $(_suffix_list), $(1:.$(_suffix)=.$(OBJ_FILE_SUFFIX))))
+
+# add a directory prefix to each source file
+# OBJS := ${addprefix ${OBJDIR}/,$(SRCS)}
+# Construct $(OBJS) from $(SRCS) using the makeobjs function.
+OBJS = $(call makeobjs, $(SRCS))
+
+# Rules for compiling
+CREATE_OBJ_FILE_COMMAND = $(CXX_COMPILE) $(CXX_FLAGS) $(DEFS) $(WARNINGS_FLAGS) $(INCLUDE_PATHS) $< $(OUTPUT_OBJ_FLAG)$@
+CREATE_OBJ_FILE_COMMAND_C = $(C_COMPILE) $(C_FLAGS) $(DEFS) $(WARNINGS_FLAGS) $(INCLUDE_PATHS) $< $(OUTPUT_OBJ_FLAG)$@
+
+$(OBJDIR)/%.$(OBJ_FILE_SUFFIX): %.c
+	$(CREATE_OBJ_FILE_COMMAND_C)
+
+$(OBJDIR)/%.$(OBJ_FILE_SUFFIX): %.cxx
+	$(CREATE_OBJ_FILE_COMMAND)
+
+$(OBJDIR)/%.$(OBJ_FILE_SUFFIX): %.c++
+	$(CREATE_OBJ_FILE_COMMAND)
+
+$(OBJDIR)/%.$(OBJ_FILE_SUFFIX): %.cc
+	$(CREATE_OBJ_FILE_COMMAND)
+
+$(OBJDIR)/%.$(OBJ_FILE_SUFFIX): %.C
+	$(CREATE_OBJ_FILE_COMMAND)
+
+$(OBJDIR)/%.$(OBJ_FILE_SUFFIX): %.cpp
+	$(CREATE_OBJ_FILE_COMMAND)
+
+$(OBJDIR)/%.$(OBJ_FILE_SUFFIX): %.C
+	$(CREATE_OBJ_FILE_COMMAND)
+
+# Search path for source code and object files.
+vpath
+vpath %.c ${PATH_TO_SRCS}
+vpath %.C ${PATH_TO_SRCS}
+vpath %.cpp ${PATH_TO_SRCS}
+vpath %.cxx ${PATH_TO_SRCS}
+vpath %.c++ ${PATH_TO_SRCS}
+vpath %.cc ${PATH_TO_SRCS}
+vpath %.${OBJ_FILE_SUFFIX} ${OBJDIR}
