@@ -148,6 +148,9 @@ public class ConfigDefinitionChooser
             cancelSelection();
          }
       });
+
+      mDialog.getRootPane().setDefaultButton(approveBtn);
+         
       Container contentPane = mDialog.getContentPane();
       contentPane.setLayout(new BorderLayout());
       contentPane.add(this, BorderLayout.CENTER);
