@@ -269,18 +269,10 @@ vpr::ReturnStatus ThreadPosix::spawn(BaseThreadFunctor* functorPtr)
    return status;
 }
 
-/**
- * Called by the spawn routine to start the user thread function.
- *
- * @pre Called ONLY by a new thread
- * @post Do any thread registration necessary
- *       Call the user thread functor
- *
- * @param null_param
- */
-void ThreadPosix::startThread(void* null_param)
+// Called by the spawn routine to start the user thread function.
+void ThreadPosix::startThread(void* nullParam)
 {
-   boost::ignore_unused_variable_warning(null_param);
+   boost::ignore_unused_variable_warning(nullParam);
 
    // WE are a new thread... yeah!!!!
    // TELL EVERYONE THAT WE LIVE!!!!
@@ -303,14 +295,8 @@ void ThreadPosix::startThread(void* null_param)
    (*mUserThreadFunctor)();
 }
 
-// ---------------------------------------------------------------------------
 // Get this thread's priority.
-//
-// PRE: None.
-// POST: The priority of this thread is returned in the integer pointer
-//       variable.
-// ---------------------------------------------------------------------------
-int ThreadPosix::getPrio (VPRThreadPriority* prio)
+int ThreadPosix::getPrio(VPRThreadPriority* prio)
 {
 #ifdef _POSIX_THREAD_PRIORITY_SCHEDULING
    int policy, ret_val;
@@ -327,13 +313,8 @@ int ThreadPosix::getPrio (VPRThreadPriority* prio)
 #endif
 }
 
-// ---------------------------------------------------------------------------
 // Set this thread's priority.
-//
-// PRE: None.
-// POST: This thread has its priority set to the specified value.
-// ---------------------------------------------------------------------------
-int ThreadPosix::setPrio (VPRThreadPriority prio)
+int ThreadPosix::setPrio(VPRThreadPriority prio)
 {
 #ifdef _POSIX_THREAD_PRIORITY_SCHEDULING
    sched_param_t fifo_sched_param;
@@ -419,7 +400,7 @@ BaseThread* ThreadPosix::self()
    return my_thread;
 }
 
-/// Provides a way of printing the process ID neatly.
+// Provides a way of printing the process ID neatly.
 std::ostream& ThreadPosix::outStream(std::ostream& out)
 {
    out.setf(std::ios::right);
@@ -434,9 +415,7 @@ std::ostream& ThreadPosix::outStream(std::ostream& out)
 // Private methods follow.
 // ===========================================================================
 
-// ---------------------------------------------------------------------------
-// ---------------------------------------------------------------------------
-int ThreadPosix::vprThreadPriorityToPOSIX (const VPRThreadPriority priority)
+int ThreadPosix::vprThreadPriorityToPOSIX(const VPRThreadPriority priority)
 {
    int posix_prio;
    int min_prio, max_prio;
@@ -464,9 +443,7 @@ int ThreadPosix::vprThreadPriorityToPOSIX (const VPRThreadPriority priority)
    return posix_prio;
 }
 
-// ---------------------------------------------------------------------------
-// ---------------------------------------------------------------------------
-int ThreadPosix::vprThreadScopeToPOSIX (const VPRThreadScope scope)
+int ThreadPosix::vprThreadScopeToPOSIX(const VPRThreadScope scope)
 {
    int posix_scope;
 
@@ -486,9 +463,7 @@ int ThreadPosix::vprThreadScopeToPOSIX (const VPRThreadScope scope)
    return posix_scope;
 }
 
-// ---------------------------------------------------------------------------
-// ---------------------------------------------------------------------------
-int ThreadPosix::vprThreadStateToPOSIX (const VPRThreadState state)
+int ThreadPosix::vprThreadStateToPOSIX(const VPRThreadState state)
 {
    int posix_state;
 
@@ -508,9 +483,7 @@ int ThreadPosix::vprThreadStateToPOSIX (const VPRThreadState state)
    return posix_state;
 }
 
-// ---------------------------------------------------------------------------
-// ---------------------------------------------------------------------------
-BaseThread::VPRThreadPriority ThreadPosix::posixThreadPriorityToVPR (const int priority)
+BaseThread::VPRThreadPriority ThreadPosix::posixThreadPriorityToVPR(const int priority)
 {
    VPRThreadPriority vpr_prio;
    int min_prio, max_prio;
@@ -534,9 +507,7 @@ BaseThread::VPRThreadPriority ThreadPosix::posixThreadPriorityToVPR (const int p
    return vpr_prio;
 }
 
-// ---------------------------------------------------------------------------
-// ---------------------------------------------------------------------------
-BaseThread::VPRThreadScope ThreadPosix::posixThreadScopeToVPR (const int scope)
+BaseThread::VPRThreadScope ThreadPosix::posixThreadScopeToVPR(const int scope)
 {
    VPRThreadScope vpr_scope;
 
@@ -553,9 +524,7 @@ BaseThread::VPRThreadScope ThreadPosix::posixThreadScopeToVPR (const int scope)
    return vpr_scope;
 }
 
-// ---------------------------------------------------------------------------
-// ---------------------------------------------------------------------------
-BaseThread::VPRThreadState ThreadPosix::posixThreadStateToVPR (const int state)
+BaseThread::VPRThreadState ThreadPosix::posixThreadStateToVPR(const int state)
 {
    VPRThreadState vpr_state;
 
@@ -571,6 +540,5 @@ BaseThread::VPRThreadState ThreadPosix::posixThreadStateToVPR (const int state)
 
    return vpr_state;
 }
-
 
 } // End of vpr namespace
