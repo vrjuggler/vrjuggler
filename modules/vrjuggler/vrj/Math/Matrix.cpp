@@ -46,6 +46,7 @@ vjMatrix::vjMatrix(vjCoord coord)
    setTrans(coord.pos[0], coord.pos[1], coord.pos[2]);
 }
 
+// args are in degrees
 void vjMatrix::makeXYZEuler(float xRot, float yRot, float zRot)
 {
    float sx = vjMath::sin(vjMath::deg2rad(xRot));  float cx = vjMath::cos(vjMath::deg2rad(xRot));
@@ -62,6 +63,10 @@ void vjMatrix::makeXYZEuler(float xRot, float yRot, float zRot)
    zeroClamp();     // Clamp ~ zero values
 }
 
+// args are in degrees
+// TODO: degrees are more inefficient (cause you have to convert), 
+//       which is why most math libs standardize on radians.
+//       think about standardizing our stuff on radians instead?
 void vjMatrix::getXYZEuler(float& xRot, float& yRot, float& zRot) const
 {
    float cz;
@@ -78,6 +83,7 @@ void vjMatrix::getXYZEuler(float& xRot, float& yRot, float& zRot) const
 
 // ------------------------------------------------------------------- //
 
+// args are in degrees
 void vjMatrix::makeZYXEuler(float zRot, float yRot, float xRot)
 {
    float sx = vjMath::sin(vjMath::deg2rad(xRot));  float cx = vjMath::cos(vjMath::deg2rad(xRot));
@@ -94,6 +100,7 @@ void vjMatrix::makeZYXEuler(float zRot, float yRot, float xRot)
    zeroClamp();     // Clamp ~ zero values
 }
 
+// args are in degrees
 void vjMatrix::getZYXEuler(float& zRot, float& yRot, float& xRot) const
 {
    float sx;
@@ -110,6 +117,7 @@ void vjMatrix::getZYXEuler(float& zRot, float& yRot, float& xRot) const
 
 // -------------------------------------------------------------- //
 
+// args are in degrees
 void vjMatrix::makeZXYEuler(float zRot, float xRot, float yRot)
 {
    float sx = vjMath::sin(vjMath::deg2rad(xRot));  float cx = vjMath::cos(vjMath::deg2rad(xRot));
@@ -468,6 +476,10 @@ void vjMatrix::makeQuaternion( const float* const q )
    makeQuaternion( quat );
 }
 
+// TODO: consider changing to radians... 
+// then this func will be fast as possible, 
+// plus client won't have to convert rad->deg most times they 
+// want to use this func.
 void  vjMatrix::makeRot(float _degrees, vjVec3 _axis)
 {
     _axis.normalize();  // NOTE: This could be eliminated by passing normalized
@@ -540,7 +552,7 @@ void  vjMatrix::makeScale(float _x, float _y, float _z)
     mat[2][2] = _z;
 }
 
-void vjMatrix::preTrans(float _x, float _y, float _z, vjMatrix&  _m)
+void vjMatrix::preTrans(float _x, float _y, float _z, const vjMatrix&  _m)
 {
     vjMatrix transMat;
     transMat.makeTrans(_x, _y, _z);
@@ -550,7 +562,7 @@ void vjMatrix::preTrans(float _x, float _y, float _z, vjMatrix&  _m)
 
 //: Pre translate a matrix
 //!POST: mat' = trans(_x,_y,_z) * _m
-void vjMatrix::preTrans(vjVec3& _trans, vjMatrix&  _m)
+void vjMatrix::preTrans(const vjVec3& _trans, const vjMatrix&  _m)
 { preTrans(_trans.vec[0], _trans.vec[1], _trans.vec[2], _m); }
 
 
@@ -564,10 +576,10 @@ void vjMatrix::postTrans(const vjMatrix&  _m, float _x, float _y, float _z)
 }
 
 //!POST: mat' = _m * trans(_x,_y,_z)
-void vjMatrix::postTrans(const vjMatrix&  _m, vjVec3& _trans)
+void vjMatrix::postTrans(const vjMatrix&  _m, const vjVec3& _trans)
 { postTrans(_m, _trans.vec[0], _trans.vec[1], _trans.vec[2]); }
 
-void vjMatrix::preRot(const float& _degrees, const vjVec3& axis, vjMatrix&  _m)
+void vjMatrix::preRot(const float& _degrees, const vjVec3& axis, const vjMatrix&  _m)
 {
     vjMatrix rotMat;
     rotMat.makeRot(_degrees, axis);
@@ -583,7 +595,7 @@ void vjMatrix::postRot(const vjMatrix&  _m, const float& _degrees, const vjVec3&
     *this = rotMat;
 }
 
-void vjMatrix::preXYZEuler(float x, float y, float z, vjMatrix& _m)
+void vjMatrix::preXYZEuler(float x, float y, float z, const vjMatrix& _m)
 {
     vjMatrix rotMat;
     rotMat.makeXYZEuler(x, y, z);
@@ -591,7 +603,7 @@ void vjMatrix::preXYZEuler(float x, float y, float z, vjMatrix& _m)
     *this = rotMat;
 }
 
-void vjMatrix::postXYZEuler(vjMatrix& _m, float x, float y, float z)
+void vjMatrix::postXYZEuler(const vjMatrix& _m, float x, float y, float z)
 {
     vjMatrix rotMat;
     rotMat.makeXYZEuler(x, y, z);
@@ -600,7 +612,7 @@ void vjMatrix::postXYZEuler(vjMatrix& _m, float x, float y, float z)
 }
 
     /// mat = scale(_xs,_ys,_zs) * _m;
-void vjMatrix::preScale(float _xs, float _ys, float _zs, vjMatrix&  _m)
+void vjMatrix::preScale(float _xs, float _ys, float _zs, const vjMatrix&  _m)
 {
     vjMatrix scaleMat;
     scaleMat.makeScale(_xs, _ys, _zs);
@@ -671,11 +683,11 @@ void vjMatrix::preMult(const vjMatrix&  _m)
 //int     n;
 
     /// Set mat = inverse(_m)
-int vjMatrix::invert(vjMatrix& _m)
+int vjMatrix::invert(const vjMatrix& _m)
 
 {
-        float*  a = _m.getFloatPtr();
-   float*  b = getFloatPtr();
+   const float*  a = _m.getFloatPtr();
+   float*  b = this->getFloatPtr();
 
    int   n = 4;
    //int      is, js;      // Was never referenced
@@ -769,7 +781,7 @@ int vjMatrix::invert(vjMatrix& _m)
 }
 
    // ---- FRIEND FUNCTIONS ---- //
-std::ostream& operator<<(std::ostream& out, vjMatrix& _mat)
+std::ostream& operator<<(std::ostream& out, const vjMatrix& _mat)
 {
    for(int j=0;j<4;j++)
    {

@@ -144,6 +144,7 @@ public:
    }
 
    //: Make XYZEuler matrix
+   // args are in degrees
    //!ARGS: rotX - Rotation about the x-axis
    //!ARGS: rotY - Rotation about the y-axis
    //!ARGS: rotZ - Rotation about the z-axis
@@ -153,6 +154,7 @@ public:
    void getXYZEuler(float& xRot, float& yRot, float& zRot) const;
 
    //: Make ZYX Euler matrix
+   // args are in degrees
    //!POST: mat = rZ*rY*rX
    //!ARGS: rotZ - Rotation about the z-axis
    //!ARGS: rotY - Rotation about the y-axis
@@ -161,6 +163,7 @@ public:
    void getZYXEuler(float& zRot, float& yRot, float& xRot) const;
 
    //!POST: mat = rZ*rX*rY
+   // args are in degrees
    void makeZXYEuler( float zRot, float xRot, float yRot );
    void getZXYEuler( float& zRot, float& xRot, float& yRot ) const;
 
@@ -288,7 +291,7 @@ public:
 public:
    //: Set to the transpose of the matrix
    //!POST: mat = transpose(_m)
-   void transpose(vjMatrix&  _m)
+   void transpose(const vjMatrix&  _m)
    {
       for (int i=0; i<4; i++)
          for (int j=0; j<4; j++)
@@ -333,49 +336,49 @@ public:
 
    //: Post multiply by a matrix
    //!POST: mat' = mat * m
-   void postMult(const vjMatrix&  _m);
+   void postMult( const vjMatrix& _m );
 
    //: Pre multiply by a matrix
    //!POST: mat' = m * mat
-   void preMult(const vjMatrix&  _m);
+   void preMult( const vjMatrix& _m );
 
    //: Find inverse of a matrix
    //!POST: mat = inverse(_m)
    //! RETURNS: 1 - Success
-   int invert(vjMatrix& _m);
+   int invert( const vjMatrix& _m );
 
 public:
    // --- Transformation functions --- //
 
    //: Pre translate a matrix
    //!POST: mat' = trans(_x,_y,_z) * _m
-   void preTrans(float _x, float _y, float _z, vjMatrix&  _m);
+   void preTrans( float _x, float _y, float _z, const vjMatrix&  _m );
 
    //: Pre translate a matrix
    //!POST: mat' = trans(_x,_y,_z) * _m
-   void preTrans(vjVec3& _trans, vjMatrix&  _m);
+   void preTrans( const vjVec3& _trans, const vjMatrix&  _m );
 
    //: Post translate a matrix
    //!POST: mat' = _m * trans(_x,_y,_z)
-   void postTrans(const vjMatrix&  _m, float _x, float _y, float _z);
+   void postTrans( const vjMatrix&  _m, float _x, float _y, float _z );
 
    //: Post translate a matrix
    //!POST: mat' = _m * trans(_x,_y,_z)
-   void postTrans(const vjMatrix&  _m, vjVec3& _trans);
+   void postTrans( const vjMatrix&  _m, const vjVec3& _trans );
 
    //: Pre rotate a matrix
    //!POST: mat' = rot(_degrees, axis) * _m
-   void preRot(const float& _degrees, const vjVec3& axis, vjMatrix&  _m);
+   void preRot( const float& _degrees, const vjVec3& axis, const vjMatrix&  _m );
 
    //: Post rotate a matrix
    //!POST: mat' = _m * rot(_degrees, axis)
    void postRot( const vjMatrix&  _m, const float& _degrees, const vjVec3& axis );
 
-   void preXYZEuler( float x, float y, float z, vjMatrix& _m );
-   void postXYZEuler( vjMatrix& _m, float x, float y, float z );
+   void preXYZEuler( float x, float y, float z, const vjMatrix& _m );
+   void postXYZEuler( const vjMatrix& _m, float x, float y, float z );
 
    //!POST: mat' = scale(_xs,_ys,_zs) * _m;
-   void preScale( float _xs, float _ys, float _zs, vjMatrix&  _m );
+   void preScale( float _xs, float _ys, float _zs, const vjMatrix&  _m );
 
    //!POST: mat' = _m * scale(_xs,_ys,_zs)
    void postScale( const vjMatrix&  _m, float _xs, float _ys, float _zs );
@@ -416,17 +419,17 @@ public:
    }
 
    //: subtraction
-   vjMatrix operator-(const vjMatrix&  _m) const
+   vjMatrix operator-( const vjMatrix&  _m ) const
    {
       vjMatrix dst;
       dst.sub(*this, _m);
       return dst;
    }
 
-   friend inline vjMatrix operator*(float _s, const vjMatrix&);
-   friend inline vjMatrix operator*(const vjMatrix& _v, float _s);
-   friend inline vjMatrix operator/(const vjMatrix& _v, float _s);
-   friend std::ostream& operator<<(std::ostream& out, vjMatrix& _mat);
+   friend inline vjMatrix operator*( float _s, const vjMatrix& );
+   friend inline vjMatrix operator*( const vjMatrix& _v, float _s );
+   friend inline vjMatrix operator/( const vjMatrix& _v, float _s );
+   friend std::ostream& operator<<( std::ostream& out, const vjMatrix& _mat );
 
 public:
    // Assignment operators
@@ -442,7 +445,7 @@ public:
       this->postMult(_m); return *this;
    }
 
-   vjMatrix&  operator*=(float _s)
+   vjMatrix&  operator*=( float _s )
    {
       for (int i=0; i<4; i++)
          for (int j=0; j<4; j++)
