@@ -117,14 +117,14 @@ public:
     bool writePropertyDesc (std::ostream& out, const PropertyDesc& p);
 
 
-private:
+protected:
 
     //: Constructor - private for singleton.
     ConfigIO ();
 
     ~ConfigIO ();
 
-
+private:
     //: pool of io handlers.
     std::vector<ConfigIOHandler*> xml_config_handlers;
 

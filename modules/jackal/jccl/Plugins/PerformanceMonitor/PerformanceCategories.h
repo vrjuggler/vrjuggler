@@ -65,6 +65,7 @@ private:
     
     bool mActive;
     
+protected:
     PerformanceCategories () {
         mActive = false;
     }
