@@ -188,7 +188,7 @@ vjsave_CPPFLAGS="$CPPFLAGS"
 CPPFLAGS="$CPPFLAGS $STDFLAGS"
 GMTL_PATH(0.0.2, [$JUGGLERROOT_ABS/external/GMTL],
           [$JUGGLERROOT_ABS/external/GMTL], ,
-          [AC_MSG_ERROR([*** GMTL required for Gadgeteer ***])])
+          [AC_MSG_ERROR([*** GMTL required for VR Juggler ***])])
 CPPFLAGS="$vjsave_CPPFLAGS"
 
 # If we are not using GMTL from the external directory, we have a locally
@@ -299,8 +299,12 @@ fi
 # Checks for header files.
 # -----------------------------------------------------------------------------
 AC_HEADER_STDC
-AC_HEADER_TIME
 AC_CHECK_HEADERS(strings.h sys/time.h unistd.h)
+
+DPP_LANG_SAVE
+DPP_LANG_CPLUSPLUS
+AC_CHECK_HEADERS([ext/functional])
+DPP_LANG_RESTORE
 
 # -----------------------------------------------------------------------------
 # Checks for typedefs, structures, and compiler characteristics.
