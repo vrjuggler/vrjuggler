@@ -57,12 +57,13 @@ bool vncApp::configAdd(jccl::ConfigElementPtr element)
    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "vncApp::configAdd()\n"
                                              << vprDEBUG_FLUSH;
 
-   if ( element->getProperty<bool>("embeddedGUI") )
+   if ( element->getProperty<bool>("embedded_gui") )
    {
-      std::string vnc_host = element->getProperty<std::string>("vncHost");
-      vpr::Uint16 vnc_port = element->getProperty<vpr::Uint16>("vncPort");
-      std::string vnc_pass = element->getProperty<std::string>("vncPassword");
-      float       vnc_size = element->getProperty<float>("vncDesktopSideLength");
+      std::string vnc_host = element->getProperty<std::string>("vnc_host");
+      vpr::Uint16 vnc_port = element->getProperty<vpr::Uint16>("vnc_port");
+      std::string vnc_pass = element->getProperty<std::string>("vnc_password");
+      float       vnc_size =
+         element->getProperty<float>("vnc_desktop_side_length");
 
       try
       {
