@@ -120,6 +120,15 @@ public:
    float usecf() const
    { return mUsecs; }
 
+   bool operator ==(const Interval& r) const
+   { return (mUsecs == r.mUsecs); }
+
+   Interval operator +(const Interval& r) const
+   { return Interval(mUsecs+r.mUsecs, Interval::USEC); }
+   Interval operator -(const Interval& r) const
+   { return Interval(mUsecs-r.mUsecs, Interval::USEC); }
+
+
 private:
    vpr::Uint32 mUsecs;
 }; // class Interval
