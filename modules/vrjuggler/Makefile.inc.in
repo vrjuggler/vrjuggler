@@ -253,10 +253,14 @@ links:
 	@$(MAKE) -C vrj instlinks=$(instlinks) links
 	cd $(instlinks)/include && $(RM_LN) ./deprecated &&		\
           $(LN_S) $(VJROOT_ABS)/deprecated ./
+ifeq (@OS_TYPE@, Win32)
+	cd $(instlinks)/$(LIBDIR_NAME) && cp -r $(LIBDIR_BASE)/* .
+else
 	for lib in $(LIBS) ; do 					\
             cd $(instlinks)/$(LIBDIR_NAME) && $(RM_LN) $$lib* &&	\
               $(LN_S) $(LIBDIR_BASE)/$$lib* ./ ;			\
           done
+endif
 	cd $(instlinks) && rm -rf ./$(VJ_SHARE_DIR) &&			\
           $(SHELL) $(MKINSTALLDIRS) ./$(VJ_SHARE_DIR)
 	cd $(instlinks)/$(VJ_SHARE_DIR) && $(RM_LN) ./data &&		\
