@@ -1,5 +1,6 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2001-09-23 patrick  Updated test suite to use CppUnit 1.6.0.
 2001-09-12 alleb    Added wait interval to the cond var abstractions.
            patrick
 2001-09-04 kevn     vpr::ReturnStatus::Success renamed to
