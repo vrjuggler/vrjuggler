@@ -462,20 +462,23 @@ void FlockStandalone::sample()
                   throw Flock::CommandFailureException("Could not find entire streaming data record"); 
                }
             }
-            vprASSERT(data_record.size() == (data_record_size-1));            // Assert: We actually read the number of bytes we set out too
+            data_record.insert(data_record.begin(), buffer);              // Add on the initial phase bit
+            
+            vprASSERT(data_record.size() == data_record_size);            // Assert: We actually read the number of bytes we set out too
 
-            // If there are phase bits in the rest of the data we are out of phase so restart reading
+            // Make sure the only phase bits the record are at the beginning of a sensor record
             for(unsigned b=0;b<data_record.size();++b)
             {  
-               if(phase_mask & data_record[b])
+               if((b%single_bird_data_size) && (phase_mask & data_record[b]))       // If it is not the start of a sensor record, and it has a phase bit
                {
-                  vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "FlockStandalone::sample: data out of phase, attempting to correct.\n" << vprDEBUG_FLUSH;
+                  vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "FlockStandalone::sample: data out of phase, attempting to correct.\n" 
+                                                           << " byte: " << b << "  out of: " << data_record_size << "\n" << vprDEBUG_FLUSH;                  
                   sample_succeeded = false;
                   num_stream_read_failures++;
+                  break;                           // We have a failure, so quite checking the bits
                }
             }
-            
-            data_record.insert(data_record.begin(), buffer);
+                        
          }
       }
       catch(Flock::CommandFailureException& cfe)
@@ -705,6 +708,9 @@ void FlockStandalone::setSync(const vpr::Uint8& sync)
 }
 
 
+/**
+* Process a data record from the flock that contains one sensor record per sensor
+*/
 void FlockStandalone::processDataRecord(std::vector<vpr::Uint8> dataRecord)
 {
    const vpr::Uint8 phase_mask(1<<7);     // Mask for finding phasing bit
@@ -723,6 +729,7 @@ void FlockStandalone::processDataRecord(std::vector<vpr::Uint8> dataRecord)
    for(vpr::Uint8 sensor=0; sensor<mNumSensors; ++sensor)
    {
       unsigned data_offset = (single_bird_data_size*sensor);
+      vprASSERT(dataRecord[data_offset] & phase_mask && "Unit record within data record does not have correct phase mask");
       gmtl::Matrix44f sensor_mat = processSensorRecord(&(dataRecord[data_offset]));
       int sensor_number(0);
       if(Flock::Standalone != mMode)
