@@ -1,9 +1,8 @@
 #ifndef _INCLUDES_TEST_H
 #define _INCLUDES_TEST_H
 
-#include <iostream>
-
-#include <cppunit/TestCase.h>
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 /*****************************************************************
  tests out the functionality expected of desc & config file
@@ -13,20 +12,20 @@
 namespace jcclTest
 {
 
-class IncludesTest : public CppUnit::TestCase
+class IncludesTest : public CppUnit::TestFixture
 {
+   CPPUNIT_TEST_SUITE(IncludesTest);
+   CPPUNIT_TEST(BasicInclude);
+   CPPUNIT_TEST(ValueSuperceding);
+   CPPUNIT_TEST_SUITE_END();
+
 public:
+   virtual ~IncludesTest()
+   {
+   }
 
-    IncludesTest();
-    
-    IncludesTest(std::string name);
-
-    virtual ~IncludesTest();
-
-    void XMLElementIncludeTest();
-
-    static CppUnit::Test* suite();
-
+   void BasicInclude();
+   void ValueSuperceding();
 };
 
 }

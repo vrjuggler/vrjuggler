@@ -11,8 +11,10 @@
 namespace jcclTest
 {
 
+CPPUNIT_TEST_SUITE_REGISTRATION(ConfigDefinitionTest);
+
 /*
-void ConfigDefinitionTest::basicFunctions() 
+void ConfigDefinitionTest::BasicFunctions() 
 {
    std::string name = "test desc 1";
    std::string token = "test_desc_1";
@@ -41,7 +43,7 @@ void ConfigDefinitionTest::basicFunctions()
 }
 */
 
-void ConfigDefinitionTest::propertyDefinitionTests()
+void ConfigDefinitionTest::PropertyDefinition()
 {
    jccl::ConfigDefinitionPtr def =
       jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
@@ -58,7 +60,30 @@ void ConfigDefinitionTest::propertyDefinitionTests()
    CPPUNIT_ASSERT( p.getNumAllowed() == 1 );
 }
 
-void ConfigDefinitionTest::testEqual()
+void ConfigDefinitionTest::CopyConstructor()
+{
+   jccl::ConfigDefinitionPtr def =
+      jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
+
+   jccl::ConfigDefinition receiving(*def);
+
+   CPPUNIT_ASSERT( def->getName() == receiving.getName() );
+   CPPUNIT_ASSERT( def->getToken() == receiving.getToken() );
+   CPPUNIT_ASSERT( def->getHelp() == receiving.getHelp() );
+}
+
+void ConfigDefinitionTest::BasicEquality()
+{
+   jccl::ConfigDefinitionPtr def =
+      jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
+   
+   jccl::ConfigDefinition receiving;
+   receiving = (*def);
+
+   CPPUNIT_ASSERT( receiving == (*def) );
+}
+
+void ConfigDefinitionTest::ContentEquality()
 {
    jccl::ConfigDefinitionPtr def =
       jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
@@ -76,30 +101,7 @@ void ConfigDefinitionTest::testEqual()
    CPPUNIT_ASSERT( def->getHelp() == receiving.getHelp() );
 }
 
-void ConfigDefinitionTest::testCopyConstr()
-{
-   jccl::ConfigDefinitionPtr def =
-      jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
-
-   jccl::ConfigDefinition receiving(*def);
-
-   CPPUNIT_ASSERT( def->getName() == receiving.getName() );
-   CPPUNIT_ASSERT( def->getToken() == receiving.getToken() );
-   CPPUNIT_ASSERT( def->getHelp() == receiving.getHelp() );
-}
-
-void ConfigDefinitionTest::testIsEqual()
-{
-   jccl::ConfigDefinitionPtr def =
-      jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
-   
-   jccl::ConfigDefinition receiving;
-   receiving = (*def);
-
-   CPPUNIT_ASSERT( receiving == (*def) );
-}
-
-void ConfigDefinitionTest::testIsNotEqual()
+void ConfigDefinitionTest::BasicInequality()
 {
    jccl::ConfigDefinitionPtr def =
       jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
@@ -109,7 +111,7 @@ void ConfigDefinitionTest::testIsNotEqual()
    CPPUNIT_ASSERT( receiving != (*def) );
 }
 
-void ConfigDefinitionTest::addPropDefinition()
+void ConfigDefinitionTest::AddPropertyDefinition()
 {
    jccl::ConfigDefinitionPtr def =
       jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
@@ -132,7 +134,7 @@ void ConfigDefinitionTest::addPropDefinition()
    //CPPUNIT_ASSERT( def->getPropertyDefinition( "chuck e cheeze" ) != pdef );
 }
       
-void ConfigDefinitionTest::remPropDefinition()
+void ConfigDefinitionTest::RemovePropertyDefinition()
 {
    /*
    jccl::ConfigDefinitionPtr def = jccl::ElementFactory::instance()->getConfigDefinition( "config-chuck-the-beaver" );
@@ -153,24 +155,6 @@ void ConfigDefinitionTest::remPropDefinition()
    CPPUNIT_ASSERT( result == true );
    CPPUNIT_ASSERT( def->getPropertyDefinition( "cheer up chuck" ) == NULL );
    */
-}
-
-CppUnit::Test* ConfigDefinitionTest::suite()
-{
-    CppUnit::TestSuite* test_suite = new CppUnit::TestSuite( "ConfigDefinitionTest" );
-//    test_suite->addTest( new CppUnit::TestCaller<ConfigDefinitionTest>( "basicFunctions", &ConfigDefinitionTest::basicFunctions ) );
-    test_suite->addTest( new CppUnit::TestCaller<ConfigDefinitionTest>( "propertyDefinitionTests", &ConfigDefinitionTest::propertyDefinitionTests ) );
-
-    test_suite->addTest( new CppUnit::TestCaller<ConfigDefinitionTest>( "testEqual", &ConfigDefinitionTest::testEqual ) );
-    test_suite->addTest( new CppUnit::TestCaller<ConfigDefinitionTest>( "testCopyConstr", &ConfigDefinitionTest::testCopyConstr ) );
-
-    test_suite->addTest( new CppUnit::TestCaller<ConfigDefinitionTest>( "testIsEqual", &ConfigDefinitionTest::testIsEqual ) );
-    test_suite->addTest( new CppUnit::TestCaller<ConfigDefinitionTest>( "testIsNotEqual", &ConfigDefinitionTest::testIsNotEqual ) );
-
-    test_suite->addTest( new CppUnit::TestCaller<ConfigDefinitionTest>( "addPropDefinition", &ConfigDefinitionTest::addPropDefinition ) );
-    test_suite->addTest( new CppUnit::TestCaller<ConfigDefinitionTest>( "remPropDefinition", &ConfigDefinitionTest::remPropDefinition ) );
-
-    return test_suite;
 }
 
 }

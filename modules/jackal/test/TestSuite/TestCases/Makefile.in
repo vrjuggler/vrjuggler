@@ -44,6 +44,7 @@ SRCS= \
 	ConfigurationTest.cpp		\
 	ConfigDefinitionTest.cpp	\
 	ConfigElementTest.cpp		\
+	EnumerationsTest.cpp		\
 	IncludesTest.cpp
 
 include $(MKPATH)/dpp.obj.mk
