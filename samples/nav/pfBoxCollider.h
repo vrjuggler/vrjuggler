@@ -83,7 +83,7 @@ bool pfBoxCollider::testMove( vjVec3 feetPosition, vjVec3 feetDelta, vjVec3& cor
    
          
    // get the speed, can only be positive bye definition of .length()
-   /*
+   
    float speed = pf_feet_delta.length();
    
    // get the radius..       // Terry hack
@@ -92,9 +92,10 @@ bool pfBoxCollider::testMove( vjVec3 feetPosition, vjVec3 feetDelta, vjVec3& cor
    // constrain value to always have unit length or greater
    if(vol_radius < 1.0f)
       vol_radius = 1.0f;
-   */
-         
+   
    terryCollide.setRadius( vol_radius );    // Setup collision volume
+   
+   
    //terryCollide.setVelocity( pf_feet_delta );
    
    if (terryCollide.collide( pf_correction, mWorldNode, pf_step_destination) )
