@@ -36,7 +36,7 @@
 				WarningLevel="3"
 				DebugInformationFormat="4"
 				CompileAs="2"
-				DisableSpecificWarnings="4244;4251;4275;4290"
+				DisableSpecificWarnings="4231;4244;4251;4275;4290"
 				ForcedIncludeFiles="windows.h"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
@@ -97,7 +97,7 @@
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
 				CompileAs="2"
-				DisableSpecificWarnings="4244;4251;4275;4290"
+				DisableSpecificWarnings="4231;4244;4251;4275;4290"
 				ForcedIncludeFiles="windows.h"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
