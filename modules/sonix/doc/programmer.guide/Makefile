@@ -2,7 +2,11 @@
 
 NAME = sonix.ieeevr2002
 MK_PATH=../../../../docs/
-default: html
+default: html pdf
+
+# comment these out if you don't want to use renderX
+XSLT_TOOL=Saxon 
+FO_VERSION=XEP
 
 
 #########################################################
