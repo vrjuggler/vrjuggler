@@ -609,7 +609,7 @@ Kernel::Kernel()
                            << std::endl << vprDEBUG_FLUSH;
 
    jccl::ChunkFactory::instance()->loadDescs
-       ("${VJ_BASE_DIR}/share/data/vrj-chunks.desc");
+       ("${VJ_BASE_DIR}/" VJ_SHARE_DIR "/data/vrj-chunks.desc");
 }
 
 };
