@@ -85,6 +85,14 @@
                     Thread
                     ..
                 ..
+                SIM
+                    IO
+                        Socket
+                        ..
+                    ..
+                    Network
+                    ..
+                ..
                 SPROC
                     SharedMem
                     ..
