@@ -127,8 +127,7 @@ sub popFolder_action ($$$$$) {
     if ( $whatAmI =~ /rootfolder/ ) {
         # Loop over all the HTML files and process each one.
         foreach ( @{$book{'files'}} ) {
-            print "+";
-            processFile("$_");
+            print "+" if processFile("$_");
         }
 
         # If this book has any chapters, concatenate them.  The files will
@@ -225,7 +224,7 @@ sub outputIndents ($$) {
 sub processFile ($) {
     my $file = shift;
 
-    loadHTML("$file", 0);
+    return loadHTML("$file", 0);
 }
 
 sub loadHTML ($$$) {
