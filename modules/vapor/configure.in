@@ -800,6 +800,7 @@ AC_OUTPUT(vpr-config
           vpr/Sync/Makefile
           vpr/Thread/Makefile
           vpr/Util/Makefile
+          vpr/Util/boost_fs/Makefile
           vpr/Util/md5/Makefile
           vpr/Util/uuid/Makefile
           test/Makefile

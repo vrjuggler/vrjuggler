@@ -40,7 +40,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vpr/src/Utils.  It requires GNU make.
+# Makefile.in for vpr/src/Utils/boost_fs.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -50,26 +50,20 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir=	@includedir@/vpr/Util
-srcdir=		@srcdir@
-top_srcdir=	@top_srcdir@
-EXTRA_DEFS+=	@UUID_DEFS@
-INSTALL=	@INSTALL@
-SUBOBJDIR=	$(VPR_LIBRARY)
+BOOST_FS_DIR=		@srcdir@/../../../../../external/boost_fs
 
-DIRPRFX=	vpr/Util/
-SUBDIR=		boost_fs		\
-		md5			\
-		uuid
+includedir=		@includedir@/boost/filesystem
+srcdir=			$(BOOST_FS_DIR)/libs/filesystem/src
+top_srcdir=		@top_srcdir@
+EXTRA_INCLUDES+=	-I$(BOOST_FS_DIR)
+INSTALL_FILES=		$(BOOST_FS_DIR)/boost/filesystem/*.hpp
+SUBOBJDIR=		$(VPR_LIBRARY)
 
-SRCS=		Debug.cpp		\
-		FileUtils.cpp		\
-		GUID.cpp		\
-		Interval.cpp		\
-		StreamLock.cpp		\
-		Version.cpp
+SRCS=			exception.cpp			\
+			operations_posix_windows.cpp	\
+			path_posix_windows.cpp
 
-include $(MKPATH)/dpp.obj-subdir.mk
+include $(MKPATH)/dpp.obj.mk
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.

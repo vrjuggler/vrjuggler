@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2002-10-28 patrickh Build the Boost Filesystem Library (from Boost CVS HEAD)
+                    into VPR.
+                    NEW VERSION: 0.19.2
 2002-10-24 allenb   Fixed bugs in the DurationStatCollector and SampleCollector
                     where time and averages were being computed completely
                     wrong.
