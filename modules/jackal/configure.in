@@ -566,6 +566,7 @@ AC_OUTPUT(Makefile
           samples/vjcontrol/Makefile
           samples/vjcontrol/AudioPlayer/Makefile
           samples/vjcontrol/DisplayWindowEditor/Makefile
+          samples/vjcontrol/PlxViewComponent/Makefile
           samples/jccl/Makefile
           samples/jccl/serverdemo/Makefile
           mtree/JCCL.data.dist
