@@ -61,7 +61,7 @@ public:
    */
    virtual void draw()
    {
-      const float base = 0.2;
+      const float base = 0.2f;
       const float height = 0.6f;
       const int slices = 6;
       const int stacks = 1;
