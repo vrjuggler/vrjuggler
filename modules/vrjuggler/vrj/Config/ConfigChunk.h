@@ -1,17 +1,9 @@
-
-// vjConfigChunk.h
-// Header for vjConfigChunk class
-//
-// Author: Christopher Just
-
-
 #ifndef _VJ_CONFIGCHUNK_H_
 #define _VJ_CONFIGCHUNK_H_
 
 #include <vjConfig.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <string.h>
+#include <Config/vjChunkDesc.h>
+#include <Config/vjProperty.h>
 
 #ifdef VJ_OS_HPUX
 #   include <float.h>
@@ -20,12 +12,9 @@
 
 #include <Config/vjVarValue.h>
 #include <Config/vjChunkDescDB.h>
-#include <Config/vjChunkDesc.h>
-
-#include <Config/vjProperty.h>
 
 
-struct Token;
+struct VJCFGToken;
 
 
 //------------------------------------------------------------------
@@ -35,6 +24,8 @@ struct Token;
 // the configuration of a particular component of the system.
 // It has an associated vjChunkDesc which describes its type
 // and the vjPropertys that belong to it.
+//
+// @author  Christopher Just
 //
 //!PUBLIC_API:
 //------------------------------------------------------------------
@@ -188,13 +179,13 @@ private:
    *  Fills in the Token object passed to it with the next token in _in_.
    *  Returns false to indicate a parsing failure.
    */
-  bool getToken (istream& in, Token& tok);
+  bool getVJCFGToken (istream& in, VJCFGToken& tok);
 
   /** Attempts to assign a value (in tok) to the vjProperty's ith value.
    *  This function does a certain amount of type-mangling, and also
    *  handles enumeration lookups.  Return value is success/failure.
    */
-  bool tryassign (vjProperty *p, Token &tok, int i);
+  bool tryassign (vjProperty *p, VJCFGToken &tok, int i);
 
 };
 

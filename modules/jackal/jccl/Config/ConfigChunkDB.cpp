@@ -5,13 +5,11 @@
 // Author: Christopher Just
 
 
-
-#include <vjConfig.h>
-#include <sys/types.h>
-
-#include <Kernel/vjDebug.h>
 #include <Config/vjConfigChunkDB.h>
+#include <Config/vjChunkDescDB.h>
+#include <Kernel/vjDebug.h>
 
+#include <sys/types.h>
 
 
 vjConfigChunkDB::vjConfigChunkDB (vjChunkDescDB *d): chunks() {
@@ -78,6 +76,13 @@ void vjConfigChunkDB::addChunks(std::vector<vjConfigChunk*> new_chunks)
 {
     chunks.insert(chunks.end(), new_chunks.begin(), new_chunks.end());
 }
+
+
+
+void vjConfigChunkDB::addChunk(vjConfigChunk* new_chunk) {
+    chunks.push_back (new_chunk);
+}
+
 
 
 

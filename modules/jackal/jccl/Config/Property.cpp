@@ -1,19 +1,19 @@
-/* vjProperty.cpp
- *
- */
+
+// vjProperty.cpp
 
 
 #include <vjConfig.h>
 #include <Config/vjProperty.h>
 #include <Config/vjConfigChunk.h>
 #include <Config/vjChunkFactory.h>
+#include <Config/vjPropertyDesc.h>
+#include <Config/vjEnumEntry.h>
 
 vjProperty::vjProperty (vjPropertyDesc *pd):value() {
     int j;
     vjVarValue *v;
 
     description = pd;
-    //name = pd->token;
     num = pd->getNumAllowed();
     type = pd->getType();
     embeddesc = NULL;

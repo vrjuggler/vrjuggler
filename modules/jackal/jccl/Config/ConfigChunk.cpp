@@ -8,12 +8,17 @@
 #include <Kernel/vjDebug.h>
 #include <Config/vjChunkFactory.h>
 
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
+
+
 typedef enum {
     TK_String, TK_Float, TK_End, TK_Int, TK_Bool,
     TK_OpenBracket, TK_CloseBracket, TK_Unit, TK_Error
 } CfgTok;
 
-struct Token {
+struct VJCFGToken {
     CfgTok type;
     int intval;
     float floatval;
@@ -145,7 +150,7 @@ static TokTableEntry TokTable[] = {
 };
 
 
-bool vjConfigChunk::getToken (istream& in, Token& tok) {
+bool vjConfigChunk::getVJCFGToken (istream& in, VJCFGToken& tok) {
     /* this could stand to be reimplemented */
 
     int i,j;
@@ -203,7 +208,7 @@ bool vjConfigChunk::getToken (istream& in, Token& tok) {
 
 
 
-bool vjConfigChunk::tryassign (vjProperty *p, Token &tok, int i) {
+bool vjConfigChunk::tryassign (vjProperty *p, VJCFGToken &tok, int i) {
     /* This does some type-checking and translating before just
      * doing an assign into the right value entry of p. Some of
      * this functionality ought to just be subsumed by vjVarValue
@@ -284,16 +289,16 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
      * property to assign into.
      */
     vjProperty *p;
-    Token tok;
+    VJCFGToken tok;
     int i;
 
-    self.getToken (in, tok);
+    self.getVJCFGToken (in, tok);
     
     while (tok.type != TK_End) {
 	
 	if (tok.type != TK_String) {
 	    vjDEBUG(3) << "ERROR: Unexpected Token #" << tok.type << endl << vjDEBUG_FLUSH;
-	    self.getToken(in,tok);
+	    self.getVJCFGToken(in,tok);
 	    continue;
 	}
 	
@@ -301,16 +306,16 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
 	if (!(p = self.getPropertyFromToken (tok.strval))) {
 	    vjDEBUG(3) << "ERROR: Property '" << tok.strval << "' is not found in"
 		       << " Chunk " << self.desc->name << endl << vjDEBUG_FLUSH;
-	    self.getToken(in,tok);
+	    self.getVJCFGToken(in,tok);
 	    continue;
 	}
 	
 	// We're reading a line of input for a valid Property.
-	self.getToken (in, tok);
+	self.getVJCFGToken (in, tok);
 	if (tok.type == TK_OpenBracket) {
 	    // We're reading values until we get a TK_CloseBracket.
 	    i = 0;
-	    self.getToken (in, tok);
+	    self.getVJCFGToken (in, tok);
 	    while ((tok.type != TK_CloseBracket) && (tok.type != TK_End)) {
 		if (p->type == T_EMBEDDEDCHUNK) {
 		    vjConfigChunk *ch = vjChunkFactory::createChunk (p->embeddesc);
@@ -325,7 +330,7 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
 			vjDEBUG(3) << "ERROR: Assigning to property "
 				   << p->getName() << endl << vjDEBUG_FLUSH;
 		}
-		self.getToken (in, tok);
+		self.getVJCFGToken (in, tok);
 	    }
 	    if ((p->num != -1) && (p->num != i))
 		vjDEBUG(3) << "ERROR: vjProperty " << p->getName() << " should have "
@@ -333,17 +338,17 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
 	    if (tok.type != TK_CloseBracket)
 		vjDEBUG(3) << "ERROR: vjProperty " << p->getName() << ": '}' expected"
 			   << endl << vjDEBUG_FLUSH;
-	    self.getToken (in,tok);
+	    self.getVJCFGToken (in,tok);
 	}
 	else {
 	    // we're just doing one value.
 	    if (!self.tryassign (p, tok, 0))
 		vjDEBUG(3) << "ERROR: Assigning to property "
 			   << p->getName() << endl << vjDEBUG_FLUSH;
-	    self.getToken (in,tok);
+	    self.getVJCFGToken (in,tok);
 	    if (tok.type == TK_Unit) {
 		p->applyUnits (tok.unitval);
-		self.getToken (in, tok);
+		self.getVJCFGToken (in, tok);
 	    }
 	    if (p->num > 1) {
 		vjDEBUG(3) << "ERROR: Property " << p->getName()
