@@ -38,13 +38,39 @@ import javax.swing.event.ListDataListener;
  */
 public interface ControlPanelModel
 {
+   /**
+    * Gets the element at the given index in the model.
+    */
    public Object getElementAt(int index);
 
+   /**
+    * Gets the icon for the element at the given index.
+    */
    public Icon getIconAt(int index);
 
+   /**
+    * Gets the index of the given value in this model.
+    *
+    * @param value     the value to search for
+    *
+    * @return  the index of the object if it is contained in the model; -1 if
+    *          <code>value</code> is not in the model
+    */
+   public int getIndexOf(Object value);
+
+   /**
+    * Gets the number of elements in this model.
+    */
    public int getSize();
 
+   /**
+    * Registers the given listener to be notified when this model changes.
+    */
    public void addListDataListener(ListDataListener listener);
 
+   /**
+    * Unregisters the given listeners so that it will no longer be notified
+    * when this model changes.
+    */
    public void removeListDataListener(ListDataListener listener);
 }
