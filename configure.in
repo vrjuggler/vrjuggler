@@ -1991,12 +1991,8 @@ AC_OUTPUT(Makefile
           samples/tutorials/simplePf/Makefile
           test/Makefile 
           test/TestSuite/Makefile
-          test/CfgTest/Makefile 
           test/Math/Makefile 
           test/Matrix/Makefile 
-          test/Performance/Makefile
-          test/Performance/analyzer/Makefile
-          test/Performance/perfdatabuffer-test/Makefile 
           test/Quat/Makefile
           test/Sync/Makefile 
           test/input/Makefile

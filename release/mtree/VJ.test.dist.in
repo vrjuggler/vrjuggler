@@ -40,23 +40,9 @@
     test
 	TestSuite
 	..
-	CfgTest
-	..
-	GLWindow
-	..
 	Math
 	..
 	Matrix
-	..
-	Mempool
-	..
-	Performance
-	    analyzer
-	    ..
-	    perfdatabuffer-test
-	    ..
-	    timestamp-test
-	    ..
 	..
 	Quat
 	..
