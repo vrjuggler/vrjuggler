@@ -24,13 +24,8 @@
       </section>
       <section>
          <title>Compiling the Juggler suite of tools</title>
-         <para>
-         This section explains how to get, configure, and compile all of the Juggler tools at once. 
-         Each tool compiles to its own library, and can be installed individually.  (Refer to <xref linkend="modules-section"/> for more information about the specific modules.) 
-         </para>
-         <para>
-         Getting the source code takes a few steps.  You have to first download or check out Juggler 
-         and some external packages such as GGT, Xerces, and possibly NSPR.  Here are the steps:</para>
+         <para> This section explains how to get, configure, and compile all of the Juggler tools at once. Each tool compiles to its own library, and can be installed individually. (Refer to <xref linkend="modules-section"/> for more information about the specific modules.) </para>
+         <para> Getting the source code takes a few steps. You have to first download or check out Juggler and some external packages such as GGT, Xerces, and possibly NSPR. Here are the steps:</para>
          <section>
             <title>How to get Juggler and external package dependencies.</title>
             <orderedlist>
@@ -48,12 +43,9 @@
                      </listitem>
                   </itemizedlist>
                </listitem>
-               
                <listitem>
-                  <para>Get external packages that Juggler depends on.  
-                        Typically you will run cvs-gather.pl, found in the top-level 'juggler' directory. 
-                        </para>
-                        <para> The syntax will be similar to the following (you may have to edit the .gatherrc file, see also <xref linkend="aquire"/>): </para>
+                  <para>Get external packages that Juggler depends on. Typically you will run cvs-gather.pl, found in the top-level 'juggler' directory. </para>
+                  <para> The syntax will be similar to the following (you may have to edit the .gatherrc file, see also <xref linkend="aquire"/>): </para>
                   <itemizedlist>
                      <listitem>
                         <para><command>./cvs-gather.pl --versbose --cfg=deps.gatherrc</command></para>
@@ -66,13 +58,8 @@
             </orderedlist>
             <section id="aquire">
                <title>Aquire 3rdparty packages</title>
-               <para>   cvs-gather is a utility we include in the root directory of Juggler to help you 
-                        collect 3rd party (external) source code that Juggler needs in order to build.
-                        In short, cvs-gather makes it easier to acquire the packages that Juggler needs.
-               </para>
-               <para>
-                  To get help on using this tool:
-               </para>
+               <para> cvs-gather is a utility we include in the root directory of Juggler to help you collect 3rd party (external) source code that Juggler needs in order to build. In short, cvs-gather makes it easier to acquire the packages that Juggler needs. </para>
+               <para> To get help on using this tool: </para>
                <orderedlist>
                   <listitem>
                      <para><command>./cvs-gather.pl --help</command></para>
@@ -81,83 +68,47 @@
                      <para><command>./cvs-gather.pl --manual</command></para>
                   </listitem>
                </orderedlist>
-               <para>
-                        cvs-gather is not required. You can skip cvs-gather if 
-                        you already have the needed packages in your system, 
-                        or if you feel like getting these packages manually. 
-                        cvs-gather is only provided for developer convenience.
-               </para>
-               <para>
-                        For a list of these package dependencies, you can look in the .gatherrc file to determine what packages 
-                        you need to download manually.
-               </para>
-               <para>
-                        For cvs-gather to work, it uses an .gatherrc file.  
-                        The .gatherrc file is used to specify the external project CVS locations.
-                        cvs-gather reads these CVS locations and then checks each one out locally for Juggler to build.
-               </para>
-               <para>
-                  The following shows how to run cvs gather with an .gatherrc file:
-               </para>
+               <para> cvs-gather is not required. You can skip cvs-gather if you already have the needed packages in your system, or if you feel like getting these packages manually. cvs-gather is only provided for developer convenience. </para>
+               <para> For a list of these package dependencies, you can look in the .gatherrc file to determine what packages you need to download manually. </para>
+               <para> For cvs-gather to work, it uses an .gatherrc file. The .gatherrc file is used to specify the external project CVS locations. cvs-gather reads these CVS locations and then checks each one out locally for Juggler to build. </para>
+               <para> The following shows how to run cvs gather with an .gatherrc file: </para>
                <itemizedlist>
                   <listitem>
                      <para><command>./cvs-gather.pl --versbose --cfg=deps.gatherrc</command></para>
                   </listitem>
                </itemizedlist>
-               <figure
-                 id    = "Overrides File Example"
-               >
-                  <title>A .gatheroverride file that specifies "overrides' to the base .gatherrc file.
-                    This file is used to override the default fields in the base .gatherrc file.
-                         </title>
+               <figure id="Overrides-File-Example">
+                  <title>A .gatheroverride file that specifies "overrides' to the base .gatherrc file. This file is used to override the default fields in the base .gatherrc file. </title>
                   <programlisting>
       #JugglerBaseStuff.CVSROOT=patrickh@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler 
       Doozer.CVSROOT=patrickh@cvs.doozer.sourceforge.net:/cvsroot/doozer
       GMTL.*.CVSROOT=patrickh@cvs.ggt.sourceforge.net:/cvsroot/ggt
                   </programlisting>
                </figure>
-               <para>
-                         The current deps.gatherrc has Allen's username in a few places.  To
-                      override that, we suggest making per-user override files (see <xref linkend="Overrides File Example"/>). 
-                      To use the override file, just add the argument
-                      '--override=&lt;filename&gt;' when running cvs-gather.  There should be included
-                      an overrides file for "normal" users who do not have any
-                      CVS write access (it is called ...).
-               </para>
-               <para>
-                  The following shows how to run cvs gather with your own override .gatherrc file that 
-                  overwrites any parameters stored in the base config file.:
-               </para>
+               <para> The current deps.gatherrc has Allen's username in a few places. To override that, we suggest making per-user override files (see <xref linkend="Overrides-File-Example"/>). To use the override file, just add the argument '--override=&lt;filename&gt;' when running cvs-gather. There should be included an overrides file for "normal" users who do not have any CVS write access (it is called ...). </para>
+               <para> The following shows how to run cvs gather with your own override .gatherrc file that overwrites any parameters stored in the base config file.: </para>
                <itemizedlist>
                   <listitem>
                      <para><command>cvs-gather.pl --cfg=deps.gatherrc --override=anonuser.gatheroverride</command></para>
-                     
                   </listitem>
                </itemizedlist>
-
                <para>If all goes well, you'll get everything you need to compile.</para>
             </section>
             <section>
                <title>Configuring / Compiling all Juggler tools at once</title>
-               
                <para>Every time you have newly updated source code aquired from CVS or cvs-gather, it is recommended that you autogen.</para>
                <itemizedlist>
-               <listitem>
-                  <para>Run autogen.sh in the top-level 'juggler' directory.</para>
-                  <itemizedlist>
-                     <listitem>
-                        <para><command>./autogen.sh</command></para>
-                     </listitem>
-                  </itemizedlist>
-               </listitem>
+                  <listitem>
+                     <para>Run autogen.sh in the top-level 'juggler' directory.</para>
+                     <itemizedlist>
+                        <listitem>
+                           <para><command>./autogen.sh</command></para>
+                        </listitem>
+                     </itemizedlist>
+                  </listitem>
                </itemizedlist>
-               
-               <para>It may interest you that we use a configure script written in Perl 
-               rather than using the usual Autoconf stuff.  
-               </para>
-               <para>
-                  To get the options for running configure.pl:
-               </para>
+               <para>It may interest you that we use a configure script written in Perl rather than using the usual Autoconf stuff. </para>
+               <para> To get the options for running configure.pl: </para>
                <orderedlist>
                   <listitem>
                      <para><command>./configure.pl --script-help</command></para>
@@ -166,23 +117,16 @@
                      <para><command>./configure.pl --manual</command></para>
                   </listitem>
                </orderedlist>
-               
-               <para>
-                  To configure your system, you'll need to see what options all the autoconf configure scripts in Juggler needs.  
-                  To get this text, do:
-               </para>
+               <para> To configure your system, you'll need to see what options all the autoconf configure scripts in Juggler needs. To get this text, do: </para>
                <orderedlist>
                   <listitem>
                      <para><command>./configure.pl --help</command></para>
                   </listitem>
                </orderedlist>
-               
-               <para>Like autoconf, it works in a different build directory or in the same.
-                  Here is how we (the team) have been using it:
-               </para>
+               <para>Like autoconf, it works in a different build directory or in the same. Here is how we (the team) have been using it: </para>
                <orderedlist>
                   <listitem>
-                     <para>Make a directory to build in.  There are many good reasons to do this away from the main source tree.</para>
+                     <para>Make a directory to build in. There are many good reasons to do this away from the main source tree.</para>
                      <itemizedlist>
                         <listitem>
                            <para><command>mkdir build.linux.posix</command></para>
@@ -198,7 +142,7 @@
                      </itemizedlist>
                   </listitem>
                   <listitem>
-                     <para>configure all the makefiles.  Tell them where all the package dependencies are.</para>
+                     <para>configure all the makefiles. Tell them where all the package dependencies are.</para>
                      <itemizedlist>
                         <listitem>
                            <para><command>../configure.pl --cfg=../juggler.cfg --with-xercesroot=/home/users/allenb/Linux/xerces-c-src1_5_1 --with-xerceslib=xerces-c1_5_1 --with-gmtl-include=/var/tmp/patrick/juggler/modules/GMTL</command></para>
@@ -214,22 +158,14 @@
                      </itemizedlist>
                   </listitem>
                </orderedlist>
-               <para>
-               Note that the path to GMTL must be the absolute path to the parent 
-               directory containing the 'gmtl' directory.  That's where the GMTL headers 
-               live.  (i.e. don't set it to modules/GMTL/gmtl, instead you only need to set it to modules/GMTL)</para>
+               <para> Note that the path to GMTL must be the absolute path to the parent directory containing the 'gmtl' directory. That's where the GMTL headers live. (i.e. don't set it to modules/GMTL/gmtl, instead you only need to set it to modules/GMTL)</para>
             </section>
             <section>
                <title>Compiling individual tools in the Juggler suite</title>
-               <para>
-                   Sometimes you do not want to build everything in the Juggler suite.
-                   Here are steps for configuring/building each package individually.
-               </para>
+               <para> Sometimes you do not want to build everything in the Juggler suite. Here are steps for configuring/building each package individually. </para>
                <section>
                   <title>JCCL (individual)</title>
-                  <para>JCCL requires VPR, and a third-party software package called Xerces C++.  
-                  Xerces can be downloaded from <ulink url="http://xml.apache.org/xerces-c/index.html">the Apache XML site</ulink>. 
-                  Once Xerces C++ is built and installed, the JCCL configure script can find it:</para>
+                  <para>JCCL requires VPR, and a third-party software package called Xerces C++. Xerces can be downloaded from <ulink url="http://xml.apache.org/xerces-c/index.html">the Apache XML site</ulink>. Once Xerces C++ is built and installed, the JCCL configure script can find it:</para>
                   <orderedlist>
                      <listitem>
                         <para><command>cd modules/jackal</command></para>
@@ -266,7 +202,7 @@
                </section>
                <section>
                   <title>VR Juggler (individual)</title>
-                  <para>VR Juggler depends on JCCL, VPR, and Gadgeteer. It also needs the 3rd party math lib GMTL.  VRJuggler uses JCCL_BASE_DIR, GADGET_BASE_DIR, and VPR_BASE_DIR env variables to find these, so be sure you have them set.</para>
+                  <para>VR Juggler depends on JCCL, VPR, and Gadgeteer. It also needs the 3rd party math lib GMTL. VRJuggler uses JCCL_BASE_DIR, GADGET_BASE_DIR, and VPR_BASE_DIR env variables to find these, so be sure you have them set.</para>
                   <orderedlist>
                      <listitem>
                         <para><command>cd modules/vrjuggler</command></para>
@@ -348,17 +284,8 @@
          </section>
          <section>
             <title>Description</title>
-            <para>Sonix provides an interface useful to many simple VR and entertainment 
-                  applications to trigger and position sounds in 3D.  
-                  This library provides simple audio sound objects on top of several audio APIs. 
-                  The interface to Sonix is kept very simple in order to get people up 
-                  and running with sound as fast as possible.</para>
-            <para>The interface to sonix 
-                  is kept very simple in order to get people up and running with sound as
-                  fast as possible.  Sonix is reconfigurable
-                  allowing audio APIs to be safely swapped out at runtime without the
-                  dependent systems noticing.  Systems using this layer expect to be
-                  completely portable. </para>
+            <para>Sonix provides an interface useful to many simple VR and entertainment applications to trigger and position sounds in 3D. This library provides simple audio sound objects on top of several audio APIs. The interface to Sonix is kept very simple in order to get people up and running with sound as fast as possible.</para>
+            <para>The interface to sonix is kept very simple in order to get people up and running with sound as fast as possible. Sonix is reconfigurable allowing audio APIs to be safely swapped out at runtime without the dependent systems noticing. Systems using this layer expect to be completely portable. </para>
          </section>
       </section>
       <section>
@@ -369,13 +296,7 @@
          </section>
          <section>
             <title>Description</title>
-            <para>Plexus is a network data routing library that operates at the application
-                  level on top of the TCP/IP stack.  The focus of Plexus is to make
-                  low-latency data networks for use within virtual environments.  It is not
-                  strictly limited to use with virtual reality (VR), but its design focuses
-                  on the needs of VR.  Those needs include soft real-time responsiveness
-                  to enhance the users' suspension of disbelief.
-            </para>
+            <para>Plexus is a network data routing library that operates at the application level on top of the TCP/IP stack. The focus of Plexus is to make low-latency data networks for use within virtual environments. It is not strictly limited to use with virtual reality (VR), but its design focuses on the needs of VR. Those needs include soft real-time responsiveness to enhance the users' suspension of disbelief. </para>
          </section>
       </section>
       <section>
@@ -386,11 +307,7 @@
          </section>
          <section>
             <title>Description</title>
-            <para>Distributed Shared Objects (DSO) are useful.  It provides a simple
-                  intuitive interface to share data between applications.  The DSO has
-                  been engineered with soft real-time requirements in mind and is suitable
-                  for collaborative virtual reality applications.
-            </para>
+            <para>Distributed Shared Objects (DSO) are useful. It provides a simple intuitive interface to share data between applications. The DSO has been engineered with soft real-time requirements in mind and is suitable for collaborative virtual reality applications. </para>
          </section>
       </section>
       <section>
@@ -401,10 +318,7 @@
          </section>
          <section>
             <title>Description</title>
-            <para>Tweek is a portable GUI for applications.  The Tweek GUI can be run
-   in virtual environments, external on a palm top, or on the desktop next
-   to a running application.  Each of these methods gives a familier 2D 
-   widget set that can control applications flexibly.</para>
+            <para>Tweek is a portable GUI for applications. The Tweek GUI can be run in virtual environments, external on a palm top, or on the desktop next to a running application. Each of these methods gives a familier 2D widget set that can control applications flexibly.</para>
             <para>Tweek is a cross-platform, cross-language library consisting of a C++ API and a Java API. Its purpose is to provide a convenient mechanism for a Java-based GUI to interact with a complex C++ library or application. To provide this capability, it uses CORBA.</para>
             <para>The Java code in Tweek includes the Tweek Java API and the Tweek JavaBean Loader application. The Java API is provided to make the use of JavaBeans and CORBA simpler for programmers who want to write JavaBeans that can communicate with a C++ application. The JavaBean Loader application is a generalized application used to display and manage those Beans. It simply loads the Beans it finds and presents them to the user in some sort of structured manner (for example, a collection of icons with web-style navigation).</para>
          </section>
