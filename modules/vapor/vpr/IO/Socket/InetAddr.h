@@ -53,7 +53,7 @@ namespace vpr {
 };
 #endif
 
-#include <hash_map.h>
+#include <hash_map>
 
 // Nice little helper class for hashing an inetaddr
 template<>
