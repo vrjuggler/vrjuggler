@@ -242,9 +242,9 @@ namespace gadget
          float z_dot_product = 0.0f;
          for (size_t j = 0; j < mTable.size(); ++j)
          {
-            x_dot_product += w_matrix_copy[i][j] * mAlphaVec[i][0]
-            y_dot_product += w_matrix_copy[i][j] * mAlphaVec[i][1]
-            z_dot_product += w_matrix_copy[i][j] * mAlphaVec[i][2]
+            x_dot_product += w_matrix_copy[i][j] * mAlphaVec[i][0];
+            y_dot_product += w_matrix_copy[i][j] * mAlphaVec[i][1];
+            z_dot_product += w_matrix_copy[i][j] * mAlphaVec[i][2];
          }
          gmtl::Vec3f solution(x_dot_product, y_dot_product, z_dot_product);
          vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL)
