@@ -43,9 +43,7 @@
 #include <Performer/pf/pfDCS.h>
 #include <Performer/pf/pfTraverser.h>
 
-#ifdef USE_SONIX
 #   include <snx/sonix.h>
-#endif
 
 /**
  * Performer-Juggler sound node.
