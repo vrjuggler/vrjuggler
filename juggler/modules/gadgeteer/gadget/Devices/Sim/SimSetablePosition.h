@@ -43,15 +43,15 @@
 namespace gadget
 {
 
-//: Simulated positional device whose data is set by the user (in postFrame)
-//
-//  Should be set just before input manager updates data so it
-//  can be distributed by the remote input manager.
-//  The end of postFrame() is the logical place for the user to
-//  set the data.  This prevents computers connected to the remote 
-//  input manager from having different copies of data for very long.
-// 
-//!PUBLIC_API:
+/**
+ * Simulated positional device whose data is set by the user (in postFrame).
+ *
+ * Should be set just before input manager updates data so it
+ * can be distributed by the remote input manager.
+ * The end of postFrame() is the logical place for the user to
+ * set the data.  This prevents computers connected to the remote 
+ * input manager from having different copies of data for very long.
+ */
 class SimSetablePosition : public Input, public Position
 {
 public:
@@ -60,12 +60,12 @@ public:
 
    virtual bool config(jccl::ConfigChunkPtr chunk);
 
-   /* These functions don't do anything */
+   /** These functions don't do anything. */
    int startSampling() { return 1; }
    int stopSampling() { return 1; }
    int sample() { return 1; }
 
-   //: Update the data
+   /** Updates the data. */
    virtual void updateData(){;}
 
    void setData(const std::vector<PositionData> &pos_data_vec);
@@ -74,7 +74,7 @@ public:
    static std::string getChunkType() { return std::string( "SimSetablePosition" ); }
 
 private:
-   PositionData            mPos;                   //: The current position
+   PositionData            mPos;                   /**<  The current position */
 
 };
 

@@ -41,11 +41,13 @@
 namespace gadget
 {
 
-//: Construct the SimGloveGesture
-// -Set the keyboard key pairs <b>
-// -Load the sample file
-// -Trim the smallest so they are same length
-// -Find/Set pos proxy for glove
+/**
+ * Constructs the SimGloveGesture.
+ * Set the keyboard key pairs.
+ * Load the sample file.
+ * Trim the smallest so they are same length.
+ * Find/Set pos proxy for glove.
+ */
 bool SimGloveGesture::config(jccl::ConfigChunkPtr chunk)
 {
    if((!GloveGesture::config(chunk)) || (!SimInput::config(chunk)))
@@ -102,11 +104,14 @@ bool SimGloveGesture::config(jccl::ConfigChunkPtr chunk)
    return true;
 }
 
-//: Get the digital data for the given devNum
-//  Returns digital 0 or 1, if devNum makes sense.<BR>
-//  Returns -1 if function fails or if devNum is out of range.<BR>
-//  NOTE: If devNum is out of range, function will fail, possibly issueing
-//  an error to a log or console - but will not ASSERT.<BR>
+/**
+ * Gets the digital data for the given devNum.
+ * Returns digital 0 or 1, if devNum makes sense.
+ * Returns -1 if function fails or if devNum is out of range.
+ *
+ * @note If devNum is out of range, function will fail, possibly issueing
+ *       an error to a log or console - but will not ASSERT.
+ */
 const DigitalData SimGloveGesture::getDigitalData(int devNum)
 {
    int openLookupTable[] = { 0,0,0,0,0,-1,0,0,0,0,0 };
@@ -133,14 +138,18 @@ const DigitalData SimGloveGesture::getDigitalData(int devNum)
    return mDigitalData;
 }
 
-//: Get the current gesture.
-//! RETURNS: id of current gesture
+/**
+ * Gets the current gesture.
+ * @return id of current gesture
+ */
 int SimGloveGesture::getGesture()
 { return mCurGesture; }
 
-//: Update the device data
-// -Get the gesture id
-// -Set the glove params
+/**
+ * Updates the device data.
+ * Get the gesture id.
+ * Set the glove params.
+ */
 void SimGloveGesture::updateData()
 {
 /*  TEMPORARILY REMOVE
@@ -163,9 +172,10 @@ void SimGloveGesture::updateData()
 */
 }
 
-
-//: Load trained data for the gesture object
-// Loads the file for trained data
+/**
+ * Loads trained data for the gesture object.
+ * Loads the file for trained data.
+ */
 void SimGloveGesture::loadTrainedFile(std::string fileName)
 {
    std::ifstream inFile(fileName.c_str());

@@ -37,13 +37,13 @@
 namespace gadget
 {
 
-//: Default Constructor
+/** Default Constructor */
 SimAnalog::SimAnalog() : Analog(), SimInput()
 {
    //vprDEBUG(vprDBG_ALL,4)<<"*** SimAnalog::SimPinchGlove()\n"<< vprDEBUG_FLUSH;
 }
 
-//: Destructor
+/** Destructor */
 SimAnalog::~SimAnalog()
 {
    //vprDEBUG(vprDBG_ALL,4)<<"*** SimAnalog::~SimPinchGlove()\n"<< vprDEBUG_FLUSH;

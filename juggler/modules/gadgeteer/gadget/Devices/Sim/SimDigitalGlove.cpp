@@ -39,13 +39,13 @@
 namespace gadget
 {
 
-//: Default Constructor
+/** Default Constructor */
 SimDigitalGlove::SimDigitalGlove() : Digital(), SimInput(), Glove()
 {
    //vprDEBUG(vprDBG_ALL,3)<<"*** SimDigitalGlove::SimDigitalGlove()\n"<< vprDEBUG_FLUSH;
 }
 
-//: Destructor
+/** Destructor */
 SimDigitalGlove::~SimDigitalGlove()
 {
   // vprDEBUG(vprDBG_ALL,3)<<"*** SimDigitalGlove::~SimDigitalGlove()\n"<< vprDEBUG_FLUSH;
@@ -129,10 +129,12 @@ bool SimDigitalGlove::config( jccl::ConfigChunkPtr chunk )
    return true;
 }
 
-// Updates the state of the digital data vector <br>
-//
-// NOTE: Digital is on when key is held down
-//+     When key is release, digital goes to off state
+/**
+ * Updates the state of the digital data vector.
+ *
+ * @note Digital is on when key is held down.
+ *       When key is release, digital goes to off state.
+ */
 void SimDigitalGlove::updateData()
 {
     // -- Update digital data --- //
@@ -269,14 +271,18 @@ void SimDigitalGlove::updateFingerAngles()
 */
 }
 
-/*
-//: Get the current gesture.
-//! RETURNS: id of current gesture
+#if 0
+/**
+ * Gets the current gesture.
+ * @return id of current gesture
+ */
 int SimDigitalGlove::getGesture()
 { return mCurGesture; }
 
-//: Load trained data for the gesture object
-// Loads the file for trained data
+/**
+ * Loads trained data for the gesture object.
+ * Loads the file for trained data.
+ */
 void SimDigitalGlove::loadTrainedFile(std::string fileName)
 {
    ifstream inFile(fileName.c_str());
@@ -293,6 +299,6 @@ void SimDigitalGlove::loadTrainedFile(std::string fileName)
          << std::endl << vprDEBUG_FLUSH;
    }
 }
-*/
+#endif
 
 };

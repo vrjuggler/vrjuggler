@@ -37,13 +37,13 @@
 namespace gadget
 {
 
-//: Default Constructor
+/** Default Constructor */
 SimDigital::SimDigital() : Digital(), SimInput()
 {
    vprDEBUG(vprDBG_ALL,4)<<"*** SimDigital::SimDigital()\n"<< vprDEBUG_FLUSH;
 }
 
-//: Destructor
+/** Destructor */
 SimDigital::~SimDigital()
 {
    //vprDEBUG(vprDBG_ALL,4)<<"*** SimDigital::~SimDigital()\n"<< vprDEBUG_FLUSH;
@@ -66,10 +66,12 @@ bool SimDigital::config(jccl::ConfigChunkPtr chunk)
    return true;
 }
 
-// Updates the state of the digital data vector <br>
-//
-// NOTE: Digital is on when key is held down
-//+     When key is release, digital goes to off state
+/**
+ * Updates the state of the digital data vector.
+ *
+ * @note Digital is on when key is held down.
+ *       When key is release, digital goes to off state.
+ */
 void SimDigital::updateData()
 {
    //vprDEBUG(vprDBG_ALL,4)<<"*** SimDigital::updateData()\n"<< vprDEBUG_FLUSH;
