@@ -136,7 +136,7 @@ protected:
 // Handle any initialization needed before API
 inline void OpenSGApp::init()
 {
-   vprDEBUG(vprDBG_ALL,0) << "OpenSGNav::init: Called.\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "OpenSGApp::init: Called.\n" << vprDEBUG_FLUSH;
 
    GlApp::init();
 
@@ -160,7 +160,7 @@ inline void OpenSGApp::init()
 
 inline void OpenSGApp::apiInit()
 {
-   vprDEBUG(vprDBG_ALL,0) << "OpenSGNav::initAPI: Called.\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "OpenSGApp::initAPI: Called.\n" << vprDEBUG_FLUSH;
 
    this->initScene();
    vprASSERT(getSceneRoot() != OSG::NullFC);
@@ -169,7 +169,7 @@ inline void OpenSGApp::apiInit()
 /** Called once per context at context creation */
 inline void OpenSGApp::contextInit()
 {
-   vprDEBUG(vprDBG_ALL,0) << "OpenSGNav::contextInit: Called.\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "OpenSGApp::contextInit: Called.\n" << vprDEBUG_FLUSH;
 
    context_data* c_data = &(*mContextData);  // Context specific data. Should be one copy per context
 
