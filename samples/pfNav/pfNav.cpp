@@ -241,9 +241,7 @@ public:
                          mActionButton2->getData() != vjDigital::TOGGLE_ON );
       vjMatrix* wandMatrix = mWand->getData();
       vjMatrix rotMatrix = *wandMatrix;
-      rotMatrix( 0, 3 ) = 0.0f;
-      rotMatrix( 1, 3 ) = 0.0f;
-      rotMatrix( 2, 3 ) = 0.0f;
+      rotMatrix.setTrans(0, 0, 0);
       mNavigator.setMatrix( rotMatrix );
       
       // tell the navigator to update itself with any new instructions just given to it.
