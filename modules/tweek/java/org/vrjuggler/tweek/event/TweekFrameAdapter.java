@@ -36,32 +36,35 @@
 
 package org.vrjuggler.tweek.event;
 
-import java.awt.Window;
 
-
-/**
- * @since 1.0
- */
-public class TweekFrameEvent extends java.awt.event.WindowEvent
+public class TweekFrameAdapter implements TweekFrameListener
 {
-   public TweekFrameEvent(Window source, int id)
+   public void frameOpened(TweekFrameEvent e)
    {
-      super(source, id);
    }
 
-   public TweekFrameEvent(Window source, int id, int oldState, int newState)
+   public void frameClosed(TweekFrameEvent e)
    {
-      super(source, id, oldState, newState);
    }
 
-   public TweekFrameEvent(Window source, int id, Window opposite)
+   public boolean frameClosing(TweekFrameEvent e)
    {
-      super(source, id, opposite);
+      return true;
    }
 
-   public TweekFrameEvent(Window source, int id, Window opposite, int oldState,
-                          int newState)
+   public void frameFocused(TweekFrameEvent e)
    {
-      super(source, id, opposite, oldState, newState);
+   }
+
+   public void frameUnfocused(TweekFrameEvent e)
+   {
+   }
+
+   public void frameIconified(TweekFrameEvent e)
+   {
+   }
+
+   public void frameDeiconified(TweekFrameEvent e)
+   {
    }
 }
