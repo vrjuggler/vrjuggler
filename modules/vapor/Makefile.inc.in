@@ -111,10 +111,10 @@ VPR_PROF_LIB_DYNAMIC=	$(VPR_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
 
 # Version information.
 PARAM_HEADER=	vpr/vprParam.h
+PARAM_SOURCE=	vpr/vprParam.cpp
 BRANCH=		HEAD
 CANON_NAME=	Ring Wraith
 VER_ARGS=	-f $(VPRROOT_ABS)/VERSION -s @SUBSYSTEM@ -b $(BRANCH)	\
-		-i $(VPRROOT_ABS)/vpr/vprParam.h.in -o $(PARAM_HEADER)	\
 		-n "$(CANON_NAME)" -d "`date '+%b %e, %Y %H:%M:%S'`"
 
 ifdef VERSION
@@ -129,10 +129,15 @@ BEFOREBUILD=	beforebuild
 AFTERBUILD=	afterbuild
 
 # Things to do before the object files and library are built.
-beforebuild: $(PARAM_HEADER)
+beforebuild: $(PARAM_HEADER) $(PARAM_SOURCE)
 
 $(PARAM_HEADER): $(VPRROOT_ABS)/$(PARAM_HEADER).in $(VPRROOT_ABS)/VERSION
-	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
+	@$(SHELL) $(scriptdir)/make-ver.sh -o $@			\
+          -i $(VPRROOT_ABS)/$@.in $(VER_ARGS)
+
+$(PARAM_SOURCE): $(PARAM_HEADER) $(VPRROOT_ABS)/$(PARAM_SOURCE).in
+	@$(SHELL) $(scriptdir)/make-ver.sh -o $@			\
+          -i $(VPRROOT_ABS)/$@.in $(VER_ARGS)
 
 # Things to do after the object files and library are built.
 afterbuild:
