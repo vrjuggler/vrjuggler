@@ -124,6 +124,9 @@
 /* Define to `int' if the socklen_t type is not available.  */
 #undef socklen_t
 
+/* Define to the appropriate type if the ssize_t type is not available.  */
+#undef ssize_t
+
 /*
  * Define to the sizeof a memory address if the type caddr_t is not available.
  * char* is most likely going to be a safe substitute.
