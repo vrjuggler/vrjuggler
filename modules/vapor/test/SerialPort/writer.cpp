@@ -52,7 +52,7 @@ main (int argc, char* argv[]) {
 
         std::cout << "Port opened\n";
         write_port->setUpdateAction(vpr::SerialTypes::NOW);
-        write_port->setCharacterSize(8);
+        write_port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
 //        write_port->enableLocalAttach();
         write_port->write(buffer, strlen(buffer) + 1, bytes);
         write_port->flushQueue(vpr::SerialTypes::IO_QUEUES);
