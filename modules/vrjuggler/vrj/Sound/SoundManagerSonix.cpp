@@ -38,8 +38,10 @@
 
 namespace vrj
 {
-   //: Add the chunk to the configuration
-   //! PRE: configCanHandle(chunk) == true
+   /**
+    * Adds the chunk to the configuration.
+    * @pre configCanHandle(chunk) == true
+    */
    bool SoundManagerSonix::configAdd( jccl::ConfigChunkPtr chunk )
    {
       if (!configCanHandle( chunk ))
@@ -93,8 +95,10 @@ namespace vrj
       return true;
    }
 
-   //: Remove the chunk from the current configuration
-   //! PRE: configCanHandle(chunk) == true
+   /**
+    * Removes the chunk from the current configuration.
+    * @pre configCanHandle(chunk) == true
+    */
    bool SoundManagerSonix::configRemove(jccl::ConfigChunkPtr chunk)
    {
       // remove any specified sounds...
@@ -109,9 +113,10 @@ namespace vrj
       return true;
    }
 
-   //: Can the handler handle the given chunk?
-   //! RETURNS: true - Can handle it
-   //+          false - Can't handle it
+   /**
+    * Can the handler handle the given chunk?
+    * @return true if we can handle it; false if not.
+    */
    bool SoundManagerSonix::configCanHandle( jccl::ConfigChunkPtr chunk )
    {
       std::string chunk_type = (std::string)chunk->getDescToken();
@@ -122,15 +127,17 @@ namespace vrj
          return false;
    }
 
-   //: Enable a frame to be drawn
+   /** Enables a frame to be drawn. */
    void SoundManagerSonix::update()
    {
       float time_delta = 0.1; // TODO: get real time since last frame...
       sonix::instance()->step( time_delta );
    }
 
-   //: Blocks until the end of the frame
-   //! POST: The frame has been drawn
+   /**
+    * Blocks until the end of the frame.
+    * @post The frame has been drawn.
+    */
    void SoundManagerSonix::sync()
    {
       // whatever...

@@ -47,19 +47,22 @@
 #   include <snx/sonix.h>
 #endif
 
-//: Performer-Juggler sound node.
-//  this node automatically updates the Sound's position information.
-//  you should keep a pointer to the Sound, so that you can trigger
-//  and change other properties of it.
-//  NOTE: This pfSoundNode does not trigger the Sound object, you must do that.
-//!PUBLIC_API:
+/**
+ * Performer-Juggler sound node.
+ * This node automatically updates the Sound's position information.
+ * You should keep a pointer to the Sound, so that you can trigger
+ * and change other properties of it.
+ * @note This pfSoundNode does not trigger the Sound object, you must do that.
+ */
 class pfSoundNode : public pfDCS
 {
 public:
-   // TODO: the constructor takes a Sound, which does not
-   //       mean that it was aquired with a getHandle function... fixme..
-   //  who manages this memory?  should be sound manager... but...
-   //  what if it wasn't created by the manager?
+   /**
+    * @todo the constructor takes a Sound, which does not
+    *       mean that it was aquired with a getHandle function... fixme..
+    *  who manages this memory?  should be sound manager... but...
+    *  what if it wasn't created by the manager?
+    */
    pfSoundNode( const std::string& soundHandle, bool isPositional = true );
    virtual ~pfSoundNode()
    {
@@ -67,7 +70,7 @@ public:
 
    float mX, mY, mZ;
 
-   // set the listener
+   /** Sets the listener. */
    void setObs( float x, float y, float z )
    {
       mX = x; mY = y; mZ = z;

@@ -41,9 +41,11 @@
 namespace vrj
 {
 
-//: Simple class to take timings and give averages
-// NOTE: All times are in seconds
-// XXX: Should use jccl::TimeStamp for the time info in the future
+/**
+ * Simple class to take timings and give averages.
+ * @note All times are in seconds.
+ * XXX: Should use vpr::Interval for the time info in the future.
+ */
 class Timer
 {
 public:
@@ -55,12 +57,14 @@ public:
         endTime = startTime;
     }
 
-    //: Start a timing
+    /** Starts a timing. */
     void startTiming()
     { startTime = wallclock(); }
 
-    //: Stop current timing
-    //! PRE: Timing has been started
+    /**
+     * Stops current timing.
+     * @pre Timing has been started.
+     */
     void stopTiming()
     {
         endTime = wallclock();
@@ -74,14 +78,14 @@ public:
         }
     }
 
-    // Get the average timing
+    /** Gets the average timing. */
     double getTiming()
     { return (totalTime/(double)timeCount); }
 
     double getLastTiming()
     { return lastTiming; }
 
-    //: Returns the number of timings collected
+    /** Returns the number of timings collected. */
     long getTimeCount()
     { return timeCount; }
 
@@ -112,11 +116,11 @@ public:
 #endif
 
 private:        // Timing stuff
-    double  startTime;      // The times
+    double  startTime;      /**< The times */
     double  endTime;
-    double  lastTiming;      // The last timing recieved
-    double  totalTime;      // The total time
-    long    timeCount;      // The count on the number of times
+    double  lastTiming;     /**< The last timing recieved */
+    double  totalTime;      /**< The total time */
+    long    timeCount;      /**< The count on the number of times */
 };
 
 };

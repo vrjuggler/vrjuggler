@@ -251,7 +251,7 @@ protected:
    // --- SINGLETON STUFF --- //
    // ----------------------- //
 protected:
-   //: Constructor:  Hidden, so no instantiation is allowed
+   /** Constructor:  Hidden, so no instantiation is allowed. */
    Kernel();
 
    virtual ~Kernel()
