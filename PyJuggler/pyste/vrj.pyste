@@ -26,6 +26,8 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 Kernel = Class('vrj::Kernel', 'vrj/Kernel/Kernel.h')
+exclude(Kernel.initConfig)
+exclude(Kernel.controlLoop)
 exclude(Kernel.getInputManager)
 exclude(Kernel.getThread)
 set_policy(Kernel.instance, return_value_policy(reference_existing_object))
@@ -76,9 +78,13 @@ exclude(Projection.outStream)
 
 CameraProjection = Class('vrj::CameraProjection',
                          'vrj/Display/CameraProjection.h')
+set_policy(CameraProjection.getViewport, return_internal_reference())
 exclude(CameraProjection.setVerticalFOV)
 exclude(CameraProjection.config)
 exclude(CameraProjection.outStream)
+exclude(CameraProjection.setViewport)
+exclude(CameraProjection.setEye)
+exclude(CameraProjection.setNearFar)
 
 Viewport = Class('vrj::Viewport', 'vrj/Display/Viewport.h')
 set_policy(Viewport.getUser, return_internal_reference())
@@ -93,8 +99,17 @@ exclude(Viewport.config)
 exclude(Viewport.outStream)
 
 SimViewport = Class('vrj::SimViewport', 'vrj/Display/SimViewport.h')
+set_policy(SimViewport.getUser, return_internal_reference())
+set_policy(SimViewport.getDisplay, return_internal_reference())
+set_policy(SimViewport.getLeftProj, return_internal_reference())
+set_policy(SimViewport.getRightProj, return_internal_reference())
+set_policy(SimViewport.getName, return_internal_reference())
 set_policy(SimViewport.getDrawSimInterface, return_internal_reference())
 exclude(SimViewport.setDrawSimInterface)
+exclude(SimViewport.config)
+exclude(SimViewport.setName)
+exclude(SimViewport.setOriginAndSize)
+exclude(SimViewport.setDisplay)
 exclude(SimViewport.config)
 exclude(SimViewport.outStream)
 
