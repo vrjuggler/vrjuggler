@@ -42,11 +42,6 @@
 
 #include <VPR/IO/Socket/vjInetAddr.h>
 
-// _WINSOCKAPI_ is defined in winsock2.h which is included by vjInetAdr.h.
-#if (defined(__sun__) && ! defined(uint32_t)) || defined(_WINSOCKAPI_)
-typedef unsigned int uint32_t;
-#endif
-
 
 // ----------------------------------------------------------------------------
 // Get the protocol family of this address structure.
