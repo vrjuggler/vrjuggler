@@ -175,8 +175,8 @@ public:
     *         <code>vpr::ReturnStatus::Fail</code> is returned if the select
     *         failed.
     */
-   ReturnStatus select(vpr::Uint16& numWithEvents,
-                 const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   const ReturnStatus select(vpr::Uint16& numWithEvents,
+                 const vpr::Interval& timeout = vpr::Interval::NoTimeout)
    {
       return mSelectorImp.select(numWithEvents, timeout);
    }

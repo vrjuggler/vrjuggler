@@ -59,7 +59,7 @@ namespace vpr {
     typedef int Int16;
     typedef unsigned int Uint16;
 #endif
-    
+
 #if SIZEOF_INT == 4
     typedef int Int32;
     typedef unsigned int Uint32;
@@ -112,7 +112,7 @@ struct hash<vpr::Uint64>
    {
       Uint64_val temp;
       temp.full = val;
-      return temp.nested.low32 + temp.nested.high32;      
+      return temp.nested.low32 + temp.nested.high32;
    }
 };
 
@@ -122,4 +122,4 @@ struct hash<vpr::Uint64>
 
 
 
-#endif	/* _VPR_TYPES_H_ */
+#endif   /* _VPR_TYPES_H_ */

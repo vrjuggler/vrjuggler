@@ -56,11 +56,11 @@ namespace vpr
 
 /**
  * This class captures an high resolution interval
- * 
+ *
  * This interval is based off an unsigned always increasing
  * counter.  This means the interval is only accurate for about 3 hours
- * 
- * 
+ *
+ *
  * The interval overflows whenever the counter maxes out.
  * The operator- will take care of the overflow automatically
  * to make it possible to compare to interval values.
@@ -80,10 +80,10 @@ public:
    static const Interval NoTimeout;  /**< Wait indefinitely */
 
 public:
-   Interval()
-   { mUsecs = 0; }
+   Interval() : mUsecs(0)
+   { }
 
-   Interval(const vpr::Uint32 num, const Unit timeUnit)
+   Interval(const vpr::Uint32 num, const Unit timeUnit) : mUsecs(0)
    { set(num, timeUnit); }
 
    void set(const vpr::Uint32 num, const Unit timeUnit)
@@ -117,6 +117,7 @@ public:
          break;
       case Interval::Usec:
          mUsecs = vpr::Uint32(num);
+         //mUsecs = num;
          break;
       default:
          vprASSERT(false && "vpr::Interval::setf: Invalid Units used");
@@ -125,7 +126,7 @@ public:
    }
 
    /**
-    * Set the interval to the current time.  This can them be used to compute a time 
+    * Set the interval to the current time.  This can them be used to compute a time
     * interval by subtracting two intervals from each other.
     */
    inline void setNow();
@@ -165,7 +166,7 @@ public:
 
    bool operator <(const Interval& r) const
    { return (mUsecs < r.mUsecs); }
-   
+
    Interval& operator+=(const Interval& r)
    { mUsecs += r.mUsecs; return *this; }
 
@@ -174,10 +175,10 @@ public:
 
    Interval& operator-=(const Interval& r)
    { mUsecs -= r.mUsecs; return *this; }
-   
+
    /**
     * Return the difference of two interval values
-    * 
+    *
     * @note The interval may overflow.  If so, then it will still
     * evaluate correctly.
     * @param r      The parameter to subtract
@@ -189,7 +190,7 @@ public:
 
    /** Helper function that returns an interval representing the current time */
    static vpr::Interval now()
-   { 
+   {
       vpr::Interval ret_val;
       ret_val.setNow();
       return ret_val;
