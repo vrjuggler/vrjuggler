@@ -30,6 +30,7 @@ public class Core {
     static final boolean error_msg_to_stdout = true;
     static public int    screenWidth;
     static public int    screenHeight;
+    static public boolean window_pos_kludge;
 
     static ImageIcon new_icn;
     static ImageIcon load_icn;
@@ -56,6 +57,7 @@ public class Core {
     static public void initialize () {
 	ConfigChunkDB db;
 	
+	window_pos_kludge = false;
 	screenWidth = 800;
 	screenHeight = 600;
 	descdbs = new Vector();
@@ -238,7 +240,7 @@ public class Core {
 
     static public void reconfigure() {
 	// called whenever vjcontrol_preferences changes
-	String looknfeel;
+	String looknfeel = null;
 	int i;
 	String s;
 	Property p;
@@ -249,16 +251,27 @@ public class Core {
 	if (ch == null)
 	    return;
 
-	ui.connection_pane.setHost (ch.getPropertyFromToken("host").getVal(0).getString());
-	ui.connection_pane.setPort (ch.getPropertyFromToken("port").getVal(0).getInt());
-	looknfeel = ch.getPropertyFromToken ("looknfeel").getVal(0).getString();
+	try {
+	    ui.connection_pane.setHost (ch.getPropertyFromToken("host").getVal(0).getString());
+	    ui.connection_pane.setPort (ch.getPropertyFromToken("port").getVal(0).getInt());
+	    looknfeel = ch.getPropertyFromToken ("looknfeel").getVal(0).getString();
 
-	p = ch.getPropertyFromToken ("fontsize");
-	if (p != null)
-	    fontsize = p.getVal(0).getInt();
-	p = ch.getPropertyFromToken ("fontname");
-	if (p != null)
-	    fontname = p.getVal(0).getString();
+	    fontsize = ch.getPropertyFromToken("fontsize").getVal(0).getInt();
+	    fontname = ch.getPropertyFromToken("fontname").getVal(0).getString();
+	    //window_pos_kludge = ch.getPropertyFromToken("windowposkludge").getVal(0).getBool();
+
+	    screenWidth = ch.getPropertyFromToken("windowsize").getVal(0).getInt();
+	    screenHeight = ch.getPropertyFromToken("windowsize").getVal(1).getInt();
+
+	}
+	catch (Exception e) {
+	    Core.consoleInfoMessage ("vjControl", "Old vjcontrol preferences file - please check preferences and re-save");
+	}
+
+	if (screenWidth < 1)
+	    screenWidth = 800;
+	if (screenHeight < 1)
+	    screenHeight = 600;
 
 	ui.totalSetFont (fontname, fontsize);
 	ui.setLookNFeel (looknfeel);

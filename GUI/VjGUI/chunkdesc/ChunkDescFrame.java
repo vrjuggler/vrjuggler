@@ -131,48 +131,17 @@ public class ChunkDescFrame
 	
 	addWindowListener (this);
 
-	//setReasonableSize();
-	//pack();
-	//Dimension d = properties.getPreferredSize();
-	//if (d.height > Core.screenHeight - 100)
-	//    setSize (d.width+42, 550);
-	
+	pack();
 	Dimension d = properties.getPreferredSize();
-	Dimension d2 = buttonspanel.getPreferredSize();
-	//Dimension d3 = northpanel.getPreferredSize();
-	d.width = Math.max (d.width+42, d2.width +20);
+	d.width += 45;
+	d.height += getMinimumSize().height;
+	d.height = Math.min (d.height, Core.screenHeight);
 	d.width = Math.min (d.width, Core.screenWidth);
-	d.height = Math.min (550, Core.screenHeight);
 	setSize(d);
-
+	properties.setSize (properties.getMinimumSize());
 
         setVisible(true);
 
-    }
-
-
-    public void setReasonableSize() {
-	Dimension d1, d2, d3, d4, d;
-
-	validate();
-	d = new Dimension ();
-	d1 = northpanel.getPreferredSize();
-	d2 = buttonspanel.getPreferredSize();
-	d3 = properties.getPreferredSize();
-	d.height = d1.height + d2.height + d3.height +65;
-	d4 = getSize();
-	d.width = d4.width;
-
-	if (d.height > Core.screenHeight - 100) {
-	    d.height = Core.screenHeight;
-	}
-	if (d.width > Core.screenWidth) {
-	    d.width = Core.screenWidth;
-	}
-
-	System.out.println ("setting size to " + d);
-	setSize (d);
-	validate();
     }
 
 
