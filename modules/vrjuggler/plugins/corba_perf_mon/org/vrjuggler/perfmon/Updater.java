@@ -15,6 +15,8 @@ public class Updater implements Runnable
 
   public Updater ( TimeSeries series, SpinnerModel model )
   {
+     //Will get multiple time series based on the list that comes back
+     //from c++ side
     mTimeSeries = series;
     mSpinnerModel = model;
     try {
