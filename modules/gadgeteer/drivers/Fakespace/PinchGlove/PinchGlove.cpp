@@ -99,7 +99,7 @@ bool PinchGlove::startSampling()
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_STATUS_LVL)
          << "[PinchGlove] Connecting to PinchGlove on port: "
          << std::setiosflags(std::ios::right) << std::setfill(' ') 
-         << std::setw(port_width) << mPortName << "  ";
+         << std::setw(port_width) << mPortName << "  " << vprDEBUG_FLUSH;
      
       // Attempt to connect to the PinchGlove. 
       if(mGlove->connect(mPortName, mBaud).success())
