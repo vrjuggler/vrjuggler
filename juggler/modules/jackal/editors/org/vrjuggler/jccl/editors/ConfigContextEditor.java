@@ -154,6 +154,7 @@ public class ConfigContextEditor
       // Make sure that we can only add when we have a writable data source.
       addBtn.setEnabled(false);
       removeBtn.setEnabled(false);
+      mElementTree.setContextEditable(false);
       
       for (Iterator itr = context.getResources().iterator() ; itr.hasNext() ; )
       {
@@ -161,6 +162,7 @@ public class ConfigContextEditor
          {
             addBtn.setEnabled(true);
             removeBtn.setEnabled(true);
+            mElementTree.setContextEditable(true);
             break;
          }
       }
@@ -205,6 +207,7 @@ public class ConfigContextEditor
       // Make sure that we can only add when we have a writable data source.
       addBtn.setEnabled(false);
       removeBtn.setEnabled(false);
+      mElementTree.setContextEditable(false);
       
       for (Iterator itr = getContext().getResources().iterator() ; itr.hasNext() ; )
       {
@@ -212,6 +215,7 @@ public class ConfigContextEditor
          {
             addBtn.setEnabled(true);
             removeBtn.setEnabled(true);
+            mElementTree.setContextEditable(true);
             return;
          }
       }
@@ -227,6 +231,7 @@ public class ConfigContextEditor
       // Make sure that we can only add when we have a writable data source.
       addBtn.setEnabled(false);
       removeBtn.setEnabled(false);
+      mElementTree.setContextEditable(false);
       
       for (Iterator itr = getContext().getResources().iterator() ; itr.hasNext() ; )
       {
@@ -234,6 +239,7 @@ public class ConfigContextEditor
          {
             addBtn.setEnabled(true);
             removeBtn.setEnabled(true);
+            mElementTree.setContextEditable(true);
             return;
          }
       }
@@ -303,6 +309,7 @@ public class ConfigContextEditor
       mElementTreeScrollPane.setMinimumSize(new Dimension(0, 0));
       mElementTree.setRootVisible(false);
       mElementTree.setShowsRootHandles(true);
+      
       mBaseSplitPane.setOneTouchExpandable(true);
       this.add(mBaseSplitPane, BorderLayout.CENTER);
       mBaseSplitPane.add(treePane, JSplitPane.LEFT);
@@ -336,6 +343,7 @@ public class ConfigContextEditor
       addBtn.setEnabled(false);
       removeBtn.setText("Remove");
       removeBtn.setEnabled(false);
+      mElementTree.setContextEditable(false);
 
       helpScrollPane.setMinimumSize(new Dimension(0, 0));
       helpPane.setBackground(new Color(255, 253, 181));
