@@ -470,31 +470,6 @@ void PfDrawManager::addDisplay(Display* disp)
    vprASSERT(disp != NULL);    // Can't add a null display
    vprASSERT((true == mPfHasForked) && "Trying to add display when performer has not been initialized");
 
-   // Get frame buffer config
-   std::vector<int> stereo_fb_config = getStereoFBConfig(disp);
-   std::vector<int> mono_fb_config = getMonoFBConfig(disp);
-
-   // ouput debug info about the frame buffer config recieved
-#ifdef VJ_DEBUG
-   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL)
-      << "vrj::PfDrawManager::addDisplay(): Got Stereo FB config\n"
-      << vprDEBUG_FLUSH;
-   for ( unsigned int i = 0; i < stereo_fb_config.size(); ++i )
-   {
-      vprDEBUG_CONT(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL)
-         << "  " << stereo_fb_config[i] << vprDEBUG_FLUSH;
-   }
-   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL)
-      << "\nvrj::PfDrawManager::addDisplay(): Got Mono FB config\n"
-      << vprDEBUG_FLUSH;
-   for ( unsigned int j = 0 ; j < mono_fb_config.size(); ++j )
-   {
-      vprDEBUG_CONT(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL)
-         << "  " << mono_fb_config[j] << std::endl << vprDEBUG_FLUSH;
-   }
-   vprDEBUG_CONT(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL) << std::endl << vprDEBUG_FLUSH;
-#endif
-
    //  For the display
    //     -Create a pWin for it
    //     - For each viewport
@@ -537,16 +512,66 @@ void PfDrawManager::addDisplay(Display* disp)
    else
       pf_disp.pWin->setMode(PFWIN_NOBORDER, 1);          // Get rid of that border
 
-   // Setup Frame Buffer config
-   if (disp->isStereoRequested())                     // If we need stereo
+   jccl::ConfigElementPtr fb_elt = disp->getGlFrameBufferConfig();
+   const int visual_id = fb_elt->getProperty<int>("visual_id");
+
+   // If the user requested a specific visual ID, use it and ignore the rest
+   // of the frame buffer configuration.
+   if ( visual_id != -1 )
    {
-      vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "vjPfDrawManager::addDisplay: Configuring stereo window attribs.\n" << vprDEBUG_FLUSH;
-      pf_disp.pWin->setFBConfigAttrs(&(stereo_fb_config[0]));     // Configure framebuffer for stereo
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+         << "Requesting visual 0x" << std::hex << visual_id << std::dec
+         << "." << std::endl << vprDEBUG_FLUSH;
+      pf_disp.pWin->setFBConfigId(visual_id);
    }
    else
    {
-      vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "vjPfDrawManager::addDisplay: Configuring mono window attribs.\n" << vprDEBUG_FLUSH;
-      pf_disp.pWin->setFBConfigAttrs(&(mono_fb_config[0]));       // Configure a "norm" window
+      // Setup Frame Buffer config
+      if (disp->isStereoRequested())                     // If we need stereo
+      {
+         std::vector<int> fb_config = getStereoFBConfig(disp);
+
+#ifdef VJ_DEBUG
+         // ouput debug info about the frame buffer config recieved
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
+            << "[vrj::PfDrawManager::addDisplay()] Got Stereo FB config\n"
+            << vprDEBUG_FLUSH;
+         for ( unsigned int i = 0; i < fb_config.size(); ++i )
+         {
+            vprDEBUG_CONT(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
+               << "  " << fb_config[i] << vprDEBUG_FLUSH;
+         }
+#endif
+
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+            << "[vrj::PfDrawManager::addDisplay()] "
+            << "Configuring stereo window attribs.\n" << vprDEBUG_FLUSH;
+         pf_disp.pWin->setFBConfigAttrs(&(fb_config[0]));     // Configure framebuffer for stereo
+      }
+      else
+      {
+         // Get frame buffer config
+         std::vector<int> fb_config = getMonoFBConfig(disp);
+
+#ifdef VJ_DEBUG
+         // ouput debug info about the frame buffer config recieved
+         vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL)
+            << "[vrj::PfDrawManager::addDisplay()] Got Mono FB config\n"
+            << vprDEBUG_FLUSH;
+         for ( unsigned int j = 0 ; j < fb_config.size(); ++j )
+         {
+            vprDEBUG_CONT(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL)
+               << "  " << fb_config[j] << std::endl << vprDEBUG_FLUSH;
+         }
+         vprDEBUG_CONT(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL)
+            << std::endl << vprDEBUG_FLUSH;
+#endif
+
+         vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL)
+            << "[vrj::PfDrawManager::addDisplay()] "
+            << "Configuring mono window attribs.\n" << vprDEBUG_FLUSH;
+         pf_disp.pWin->setFBConfigAttrs(&(fb_config[0]));       // Configure a "norm" window
+      }
    }
 
    // -- Set config info -- //
@@ -1423,9 +1448,13 @@ void PfDrawManager::debugDump(int debugLevel)
 
 void PfDrawManager::debugDumpPfDisp(pfDisplay* pf_disp, int debugLevel)
 {
-   vprDEBUG_BEGIN(vrjDBG_DRAW_MGR,debugLevel) << "Display:" << (void*)(pf_disp->disp) << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel)  << "pWin:" << (void*)(pf_disp->pWin) << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel)  << "vis id:" << std::hex << pf_disp->pWin->getFBConfigId() << std::dec << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_BEGIN(vrjDBG_DRAW_MGR,debugLevel)
+      << "Display: " << (void*)(pf_disp->disp) << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel)
+      << "pWin: " << (void*)(pf_disp->pWin) << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel)
+      << "visual ID: 0x" << std::hex << pf_disp->pWin->getFBConfigId()
+      << std::dec << std::endl << vprDEBUG_FLUSH;
 
    for(unsigned vp=0; vp<pf_disp->viewports.size(); ++vp)
    {
@@ -1472,10 +1501,10 @@ void PFconfigPWin(pfPipeWindow* pWin)
    dm->mApp->configPWin(pWin);
 
    // Ouput the visual id
-   int fb_id = pWin->getFBConfigId();
    vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL)
-      << "vjPFConfigPWin: framebuffer id: x" << std::hex << fb_id << std::dec
-      << std::endl << vprDEBUG_FLUSH;
+      << "[vrj::PfDrawManager::PFconfigPWin()] framebuffer id: 0x"
+      << std::hex << pWin->getFBConfigId() << std::dec << std::endl
+      << vprDEBUG_FLUSH;
    /*
    int disp_num = int(pWin->getWSWindow());
    vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL)
