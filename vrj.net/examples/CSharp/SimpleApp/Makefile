@@ -29,14 +29,14 @@ default: all
 
 CSC=		mcs /debug
 
-LIBDIR=		../../../src/lib
+LIBDIR=		$(VRJNET_BASE_DIR)/lib
 EXE_NAME=	SimpleApp
-EXE_DEPS=	/r:$(LIBDIR)/vprnet.dll		\
-		/r:$(LIBDIR)/jcclnet.dll	\
-		/r:$(LIBDIR)/gmtlnet.dll	\
-		/r:$(LIBDIR)/gadgetnet.dll	\
-		/r:$(LIBDIR)/vrjnet.dll		\
-		/r:$(LIBDIR)/Tao.OpenGl.dll
+EXE_DEPS=	/lib:$(LIBDIR) /r:vprnet.dll	\
+		/r:jcclnet.dll			\
+		/r:gmtlnet.dll			\
+		/r:gadgetnet.dll		\
+		/r:vrjnet.dll			\
+		/r:Tao.OpenGl.dll
 
 CS_SRCS=	AssemblyInfo.cs SimpleApp.cs
 
