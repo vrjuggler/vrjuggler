@@ -6,7 +6,6 @@
 default: VjCfg.jar
 
 srcdir	= @srcdir@
-topdir	= @topdir@
 
 # JDK-related variables.  ${JAVAC_CMD} is the compile line for javac when
 # building .java files.
@@ -25,7 +24,7 @@ else
 endif
 
 # Include common definitions.
-include ${topdir}/Makefile.base
+include @topdir@/Makefile.base
 
 # Include the .mk files for VjConfig and VjGUI so that the Java code in those
 # directories can be built using this Makefile.
