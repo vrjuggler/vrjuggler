@@ -1353,7 +1353,7 @@ EXTRA_LINK_FLAGS=''		dnl # For use in linking Juggler applications
 
 if test "$PLATFORM" = "IRIX" ; then
     CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
-    CXXFLAGS="$CXXFLAGS -woff 3322 -w2"
+    CXXFLAGS="$CXXFLAGS -woff 1183,3322 -w2"
 elif test "$OS_TYPE" = "Win32" -a "x${_use_gcc}" != "xyes" ; then
     CFLAGS="$CFLAGS -W3 -Gm -GR -GX -ZI -EHc -QIfdiv -QI0f"
     CXXFLAGS="$CXXFLAGS -W3 -Gm -GR -GX -ZI -EHc -QIfdiv -QI0f"
