@@ -442,7 +442,7 @@ AC_SUBST(topdir)
 AC_SUBST(EXTRA_LINK_FLAGS)
 
 
-AC_OUTPUT(vj/Makefile 
+AC_OUTPUT(
           snx/Makefile
           samples/Makefile
           samples/opengl/Makefile
