@@ -49,6 +49,8 @@
 
 #include <jccl/Config/ConfigElementPtr.h>
 
+#include <vpr/Util/Singleton.h>
+
 
 namespace gadget
 {
@@ -57,6 +59,19 @@ namespace gadget
  * X Winndow System event window class.
  * This device is a source of keyboard events.  The device should not be
  * used directly, it should be referenced through proxies.
+ *
+ * There are two modes that this device can operate in:
+ *
+ * 1. Controlling local window
+ *
+ *    In this mode, the device opens and manages it's own
+ *    x window for getting input.
+ *
+ * 2. Connecting to remotely management window
+ *
+ *    In this mode, the device connects through X to a
+ *    window (and display) that have been opened by
+ *    another process (normally an GLX window from VR Juggler).
  *
  * Mouse Locking:<br>
  *    This device recieves input from the XWindows display.  As such,
@@ -71,6 +86,42 @@ namespace gadget
  */
 class EventWindowXWin : public InputMixer<Input,EventWindow>
 {
+public:  // --- Internal helper class ----- //
+   /** Holds list of registered windows that may be used for X-Input.
+    * This is used by EventWindow routines to find any windows
+    * opened by other system components but that we still want to get input
+    * from.
+    */
+   class WindowRegistry : public vpr::Singleton<WindowRegistry>
+   {
+   public:
+      struct WindowInfo
+      {
+         std::string displayName;   /**< The X display name the window is on. */
+         ::Window    xWindow;       /**< The handle to the window. */
+      };
+
+   public:
+      WindowRegistry()
+      {;}
+
+      /** Add the given window to the registry.
+       * @return true if window is added, false if matches existing window name.
+       */
+      bool addWindow(std::string name, WindowInfo winInfo);
+
+      /** Remove the window with the id of "name". */
+      void removeWindow(std::string name);
+
+      /** Get the window information. */
+      bool getWindow(std::string name, WindowInfo& winInfo);
+
+   protected:
+      typedef std::map<std::string,WindowInfo> window_map_t;
+      window_map_t    mWindowMap;    /**< Map Window name to the data needed for it. */
+
+   };
+
 public:
    /** Enum to keep track of current lock state for state machine. */
    enum lockState
@@ -81,7 +132,9 @@ public:
    };
 
    EventWindowXWin()
-      : mWeOwnTheWindow(true), mVisual(NULL), mDisplay(NULL),
+      : mVisual(NULL), mDisplay(NULL),
+        mUseOwnDisplay(true),
+        mRemoteDisplayName(""),
         mScreen(-1), mX(-1), mY(-1), mWidth(0), mHeight(0),
         mEmptyCursorSet(false), mExitFlag(false),
         mLockState(Unlocked), mLockStoredKey(-1), mLockToggleKey(-1),
@@ -231,17 +284,21 @@ private:
 protected:
    void createEmptyCursor(Display* display, Window root);
 
-   bool mWeOwnTheWindow; /**< True if this class owns the window (is reposible for opening, closing, and event processing). */
-
    ::Window       mWindow;
    ::XVisualInfo* mVisual;
    ::Display*     mDisplay;
    ::XSetWindowAttributes mSWA;
-   int          mScreen, mX, mY;    /**< screen id, x-origin, y-origin. */
-   unsigned int mWidth, mHeight;
 
-   Cursor mEmptyCursor;
-   bool   mEmptyCursorSet;
+   // --- Used with remote window --- //
+   bool                       mUseOwnDisplay;     /**< Are we using a display we manage ourselves (true) or a remote one (false). */
+   std::string                mRemoteDisplayName; /**< Name of the remote display window (index in registry). */
+   WindowRegistry::WindowInfo mRemoteWinInfo;     /**< Info structure for remote window. */
+
+   // --- Used with local window --- //
+   int          mScreen, mX, mY;    /**< screen id, x-origin, y-origin. */
+   unsigned int mWidth, mHeight;    /**< Width and height of the managed window. */
+   Cursor       mEmptyCursor;       /**< "Blank" cursor for X. */
+   bool         mEmptyCursorSet;    /**< If true, then empty cursor has been created. */
 
    /** @name EventWindow state holders
     * @note This driver does not use the normal triple buffering mechanism.
@@ -268,6 +325,7 @@ protected:
    int   mSleepTimeMS;           /**< Amount of time to sleep in milliseconds between updates. */
    int   mPrevX, mPrevY;         /**< Previous mouse location. */
 };
+
 
 } // end namespace
 

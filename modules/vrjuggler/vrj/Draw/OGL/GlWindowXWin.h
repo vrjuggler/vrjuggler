@@ -42,7 +42,6 @@
 #include <GL/glx.h>
 
 #include <vrj/Draw/OGL/GlWindow.h>
-#include <gadget/Devices/EventWindow/EventWindowXWin.h>
 
 
 namespace vrj
@@ -65,8 +64,11 @@ MotifWmHints;
 /**
  * A GLX-specific window for displaying OpenGL graphics.
  * It holds all the information specific to dealing with a GLX window.
+ *
+ * This class is responsbile for connecting to the X server, getting a GLX visual,
+ * opening a GL window and associated context, and handling all managment of that context.
  */
-class GlWindowXWin: public vrj::GlWindow, public gadget::EventWindowXWin
+class GlWindowXWin: public vrj::GlWindow
 {
 public:
    GlWindowXWin();
@@ -79,7 +81,7 @@ public:
 
    /**
     * Checks events.
-    * @post If (areEventSource), checks the x-events and processes them.
+    * Processes window systems events each frame.
     */
    virtual void checkEvents();
 
@@ -88,7 +90,6 @@ public:
    virtual bool createHardwareSwapGroup(const std::vector<vrj::GlWindow*>& wins);
 
 protected:
-   // Non-public member functions.
 
    XVisualInfo* getGlxVisInfo(::Display* display, int screen);
 
@@ -101,11 +102,7 @@ protected:
     */
    static int eventIsMapNotify(::Display* display, XEvent* e, XPointer window);
 
-   /**
-    * Called with any XEvents to process from X-win keyboard.
-    * Called from seperate process (event window device update).
-    */
-   virtual void processEvent(XEvent event);
+   void createEmptyCursor(::Display* display, ::Window root);
 
 private:
    ::Display*   mXDisplay;
@@ -115,6 +112,9 @@ private:
    std::string  mWindowName;
    int          mPipe;
    std::string  mXDisplayName;       /**<  Name of the x display to use */
+
+   Cursor mEmptyCursor;
+   bool   mEmptyCursorSet;
 };
 
 

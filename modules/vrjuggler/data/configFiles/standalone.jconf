@@ -3,7 +3,7 @@
 <configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
       <event_window_proxy name="SimEventWindow Proxy" version="1">
-         <device>SimWindow/event_window_device/Event window configuration 0</device>
+         <device>SimEventSource</device>
       </event_window_proxy>
       <alias name="VJWand" version="1">
          <proxy>Wand Proxy</proxy>
@@ -425,7 +425,7 @@
          </key_pair>
          <device_host />
       </simulated_digital_device>
-      <display_window name="SimWindow" version="3">
+      <display_window name="SimWindow" version="4">
          <origin>50</origin>
          <origin>100</origin>
          <size>800</size>
@@ -445,21 +445,6 @@
          <stereo>false</stereo>
          <border>true</border>
          <hide_mouse>false</hide_mouse>
-         <act_as_event_source>true</act_as_event_source>
-         <event_window_device>
-            <event_window name="Event window configuration 0" version="1">
-               <width>50</width>
-               <height>100</height>
-               <origin>800</origin>
-               <origin>800</origin>
-               <mouse_sensitivity>1.0</mouse_sensitivity>
-               <display_number>0</display_number>
-               <lock_key>0</lock_key>
-               <start_locked>false</start_locked>
-               <sleep_time>0</sleep_time>
-               <device_host />
-            </event_window>
-         </event_window_device>
          <active>true</active>
          <simulator_viewports>
             <simulator_viewport name="Contained Sim Viewports 0" version="3">
@@ -679,6 +664,19 @@
          <naming_service_port>2809</naming_service_port>
          <iiop_version>1.0</iiop_version>
       </corba_remote_reconfig>
+      <event_window name="SimEventSource" version="2">
+         <event_source_name>SimWindow</event_source_name>
+         <mouse_sensitivity>1.0</mouse_sensitivity>
+         <lock_key>0</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>75</sleep_time>
+         <width>300</width>
+         <height>100</height>
+         <origin>0</origin>
+         <origin>0</origin>
+         <display_number>0</display_number>
+         <device_host />
+      </event_window>
    </elements>
 </configuration>
 

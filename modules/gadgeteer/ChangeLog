@@ -1,5 +1,11 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Oct-18-2004 allenb      Major refactoring of EventWindow handling on X.
+                        Now the X event window device can sample events
+                        from "remote" windows that it did not open.
+                        This uses a new window registry and works with vrj
+                        to allow input from GL and Performer windows.
+                        NEW VERSION 0.19.0
 Oct-18-2004 allenb      Renamed Input::getBaseType to getInputTypeName.
 Oct-11-2004 patrickh    Implemented version checking for device driver and
                         cluster plug-ins.  All Gadgeteer plug-ins must now

@@ -385,7 +385,10 @@ void GlPipe::renderWindow(GlWindow* win)
             {
                sim_vp = dynamic_cast<SimViewport*>(viewport);
                vprASSERT(NULL != sim_vp);
-               draw_sim_i = dynamic_cast<GlSimInterface*>(sim_vp->getDrawSimInterface());
+               if(NULL != sim_vp)
+               {
+                  draw_sim_i = dynamic_cast<GlSimInterface*>(sim_vp->getDrawSimInterface());
+               }
             }
 
             if((Viewport::STEREO == view) || (Viewport::LEFT_EYE == view))      // LEFT EYE

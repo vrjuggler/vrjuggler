@@ -71,6 +71,8 @@
 #include <jccl/Config/ConfigElement.h>
 #include <jccl/RTRC/ConfigManager.h>
 
+#include <gadget/Devices/EventWindow/EventWindowXWin.h>
+
 #include <boost/concept_check.hpp>
 
 #include <gmtl/Output.h>
@@ -116,11 +118,11 @@ bool PfDrawManager::configDisplaySystem(jccl::ConfigElementPtr element)
    {
       mNumPipes = 1;
    }
-   
+
    for (unsigned int i=0;i<mNumPipes;i++)
    {
       std::string cur_disp_name = "-1";
-      
+
       // NOTE: ConfigElements return the default value for a property if a value is
       //       not present. So if a pipe string is not specified for this pipe then
       //       it gets the default value of "-1".
@@ -219,10 +221,11 @@ void PfDrawManager::initAPI()
    pfMultipipe(mNumPipes);
 
    // If we are running in a cluster then we must run in single process mode.
+   /*
    if(jccl::ConfigManager::instance()->isElementTypeInPendingList("cluster_manager") ||
       jccl::ConfigManager::instance()->isElementTypeInActiveList("cluster_manager"))
    {
-      vprDEBUG_BEGIN(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL) 
+      vprDEBUG_BEGIN(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
          << "PfDrawManager::initAPI() Running Performer in single process to ensure cluster synchronization."
          << std::endl << vprDEBUG_FLUSH;
       // Single process mode.
@@ -233,6 +236,9 @@ void PfDrawManager::initAPI()
       // Multiple process mode.
       pfMultiprocess(PFMP_APP_CULL_DRAW);
    }
+   */
+   pfMultiprocess(PFMP_APPCULLDRAW);
+
 
 // We can not init head and wand model loaders since they are loaded in PfBasicSimInterface
 //   initLoaders();          // Must call before pfConfig
@@ -408,7 +414,7 @@ void PfDrawManager::addDisplay(Display* disp)
    }
 
    // -- Set config info -- //
-   pf_disp.pWin->setConfigFunc(PFconfigPWin); // Set config function
+   pf_disp.pWin->setConfigFunc(PFconfigPWin);   // Set config function
    pf_disp.pWin->config();                      // Next pfFrame, config Func will be called
 
    // --- SETUP VIEWPORTS --- //
@@ -549,6 +555,17 @@ void PfDrawManager::addDisplay(Display* disp)
 
    // -- Add new pfDisp to disp Vector -- //
    mDisplays.push_back(pf_disp);
+
+   // Call pfFrame to cause the pipeWindow configured to be opened and setup.
+   pfFrame();
+
+   // ----------- Register this window with XEvent Device registry --------- //
+   gadget::EventWindowXWin::WindowRegistry::WindowInfo xwin_info;
+   xwin_info.displayName = mPipeStrs[disp->getPipe()];
+   xwin_info.xWindow = pf_disp.pWin->getWSWindow();
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL) << "PfDrawManager::addDisplay: window id: " << int(xwin_info.xWindow) << "\n" << vprDEBUG_FLUSH;
+
+   gadget::EventWindowXWin::WindowRegistry::instance()->addWindow(disp->getName(), xwin_info);
 
    // Dump the state
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
@@ -1135,6 +1152,11 @@ void PFconfigPWin(pfPipeWindow* pWin)
    vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL)
       << "vjPFConfigPWin: framebuffer id: x" << std::hex << fb_id << std::dec
       << std::endl << vprDEBUG_FLUSH;
+   /*
+   int disp_num = int(pWin->getWSWindow());
+   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL)
+      << "vjPFConfigPWin: Window id: x" << disp_num << std::endl << vprDEBUG_FLUSH;
+   */
 }
 
 
