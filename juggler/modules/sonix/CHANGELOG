@@ -1,5 +1,6 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Aug-01-2002 patrickh  Enabled compiling of profiled libraries.
 Jul-30-2002 patrickh  Fixed problems with building on IRIX wherein the Sonix
                       library was not put into lib{32,64} correctly.
 Jun-24-2002 patrickh  The sonix-config script is now written in Perl.  It is

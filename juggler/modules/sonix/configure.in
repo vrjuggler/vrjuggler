@@ -117,6 +117,8 @@ DPP_SYSTEM_SETUP
 # Checks for programs.
 # -----------------------------------------------------------------------------
 VJ_COMPILER_SETUP
+VJ_PROG_CC_PROF_FLAG(yes)
+VJ_PROG_CXX_PROF_FLAG(yes)
 
 # Ensure that the C++ compiler we've found is capable of compiling the newer
 # newer C++ features that we need.
