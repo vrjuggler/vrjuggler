@@ -80,7 +80,7 @@ AC_DEFUN(VRJUGGLER_PATH,
     min_vrj_version=ifelse([$1], ,0.0.1,$1)
 
     dnl Do a sanity check to ensure that $VRJ_CONFIG actually works.
-    if ! eval `$VRJ_CONFIG --cxxflags >/dev/null 2>&1` ; then
+    if ! (eval $VRJ_CONFIG --cxxflags >/dev/null 2>&1) 2>&1 ; then
         VRJ_CONFIG='no'
     fi
 

@@ -88,7 +88,7 @@ AC_DEFUN(VPR_PATH,
     min_vpr_version=ifelse([$1], ,0.0.1,$1)
 
     dnl Do a sanity check to ensure that $VPR_CONFIG actually works.
-    if ! eval `$VPR_CONFIG --cxxflags >/dev/null 2>&1` ; then
+    if ! (eval $VPR_CONFIG --cxxflags >/dev/null 2>&1) 2>&1 ; then
         VPR_CONFIG='no'
     fi
 
