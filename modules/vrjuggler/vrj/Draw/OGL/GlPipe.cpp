@@ -63,6 +63,11 @@ void vjGlPipe::addWindow(vjGlWindow* win)
 
 
 // The main loop routine
+// while running <br>
+// - Check for windows to open/close <br>
+// - Wait for render signal <br>
+// - Render all the windows <br>
+// - Signal render completed <br>
 void vjGlPipe::controlLoop(void* nullParam)
 {
    mThreadRunning = true;     // We are running
@@ -111,7 +116,11 @@ void vjGlPipe::checkForNewWindows()
          openWins.push_back(newWins[winNum]);
 
          // Opened new window, call init function for the context
-         vjGlDrawManager::instance()->currentContext() = newWins[winNum]->getId();
+         vjGlDrawManager* dMgr = vjGlDrawManager::instance();
+         dMgr->setCurrentContext(newWins[winNum]->getId());
+         dMgr->currentUserData()->setUser(newWins[winNum]->getDisplay()->mUser);         // Set user data
+         dMgr->currentUserData()->setProjection(newWins[winNum]->getDisplay()->leftProj);
+
          theApp->contextInit();              // Call context init function
       }
 
@@ -119,36 +128,47 @@ void vjGlPipe::checkForNewWindows()
    }
 }
 
-/**   Renders the window using OpenGL
- * POST: win is rendered (In stereo if it is a stereo window)
- */
+//: Renders the window using OpenGL
+//! POST: win is rendered (In stereo if it is a stereo window)
 void vjGlPipe::renderWindow(vjGlWindow* win)
 {
    vjGlApp* theApp = glManager->getApp();       // Get application for easy access
-   vjGlDrawManager::instance()->currentContext() = win->getId();     // Set TSS data of context id
-   vjDEBUG(4) << "vjGlPipe::renderWindow: Set context to: " << vjGlDrawManager::instance()->currentContext() << endl << vjDEBUG_FLUSH;
+   vjDisplay* theDisplay = win->getDisplay();   // Get the display for easy access
+
+   vjGlDrawManager::instance()->setCurrentContext(win->getId());     // Set TSS data of context id
+   vjDEBUG(4) << "vjGlPipe::renderWindow: Set context to: " << vjGlDrawManager::instance()->getCurrentContext() << endl << vjDEBUG_FLUSH;
 
    win->makeCurrent();                       // Set correct context
    theApp->contextPreDraw();                 // Do any context pre-drawing
 
-   if (!win->getDisplay()->isSimulator())      // NON-SIMULATOR
+   if (!theDisplay->isSimulator())      // NON-SIMULATOR
    {
       win->setLeftEye();
       glManager->drawObjects();
+      glManager->currentUserData()->setUser(theDisplay->mUser);         // Set user data
+      glManager->currentUserData()->setProjection(theDisplay->leftProj);
+
       theApp->draw();
 
       if (win->isStereo())
       {
          win->setRightEye();
          glManager->drawObjects();
+         glManager->currentUserData()->setUser(theDisplay->mUser);         // Set user data
+         glManager->currentUserData()->setProjection(theDisplay->rightProj);
+
          theApp->draw();
       }
    }
    else                                   // SIMULATOR
    {
       win->setCameraEye();
-      theApp->draw();
       glManager->drawObjects();
+      glManager->currentUserData()->setUser(theDisplay->mUser);         // Set user data
+      glManager->currentUserData()->setProjection(theDisplay->cameraProj);
+
+      theApp->draw();
+
       glManager->drawSimulator(win->getDisplay()->mSim);
    }
 

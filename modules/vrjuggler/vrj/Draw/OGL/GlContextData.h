@@ -12,7 +12,7 @@ class vjGlContextDataBase
 protected:
    int getCurContext()
    {
-      return vjGlDrawManager::instance()->currentContext();
+      return vjGlDrawManager::instance()->getCurrentContext();
    }
 };
 
