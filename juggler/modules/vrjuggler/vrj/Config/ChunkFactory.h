@@ -73,7 +73,9 @@ public:
     //: Adds descriptions in file 'filename' to the factory
     void loadDescs (const std::string& filename) {
         //vjConfigIO::instance->readChunkDescDB (filename, descdb);
-        descdb.load(filename.c_str());
+        if (!descdb.load(filename.c_str()))
+            vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) <<  "Failed to load descriptions file.\n" << vjDEBUG_FLUSH;
+
     }
 
 
