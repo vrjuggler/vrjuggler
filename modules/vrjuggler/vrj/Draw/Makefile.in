@@ -50,7 +50,8 @@ SUBOBJDIR	= $(VJ_LIBRARY)
 # Prefix for recursive stuff.
 DIRPRFX		= vrj/Draw/
 
-SUBDIR		= OSG
+SUBDIR		= OSG		\
+                  OpenSG
 
 # Subdirectories to compile.
 ifeq (@OPENGL_API@, Y)

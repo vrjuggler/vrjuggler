@@ -611,6 +611,7 @@ AC_OUTPUT(Makefile
           vrj/Draw/Makefile
           vrj/Draw/OGL/Makefile
           vrj/Draw/OSG/Makefile
+          vrj/Draw/OpenSG/Makefile
           vrj/Draw/Pf/Makefile
           vrj/Environment/Makefile
           vrj/Kernel/Makefile
