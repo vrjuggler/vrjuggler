@@ -188,7 +188,6 @@ std::ostream& operator<<(std::ostream& out, Display& disp)
    {
       out << indent_text << "Viewport " << i << ":\n";
       disp.mViewports[i]->outStream(out, 4);
-      out << std::endl;
    }
 
    // Restore the previous state.
