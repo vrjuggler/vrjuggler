@@ -88,6 +88,7 @@ ThreadSGI::ThreadSGI(BaseThreadFunctor* functorPtr,
    : mUserThreadFunctor(NULL), mRunning(false)
 {
    setFunctor(functorPtr);
+   start();
 }
 
 void ThreadSGI::setFunctor(BaseThreadFunctor* functorPtr)
