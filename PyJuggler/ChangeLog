@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jun-13-2003 patrickh    Removed setter methods from vrj.Display and related
+                        classes.  These now act as read-only objects when
+                        accessed from Python.
+                        NEW VERSION: 0.6.0
 May-21-2003 patrickh    Updated to Gadgeteer 0.12.0 API.
                         NEW VERSION: 0.5.1
 May-21-2003 patrickh    Removed the GMTL bindings.  They now live in the PyGMTL
