@@ -70,7 +70,9 @@ int AppWindow::width = 0, AppWindow::height = 0;
 int AppWindow::mainWin_contextID = -1;
 
 int soundpos = 0;
-float pitchbend = 0.0f;
+float pitchbend = 1.0f;
+float cutoff = 0.2f;
+float volume = 1.0f;
 
 // our sound object...
 snx::SoundHandle kevinSound;
@@ -174,7 +176,7 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
    {
       sonix::instance()->changeAPI( "Stub" );
       snx::SoundInfo si;
-      si.filename = "../../../data/sample.wav";
+      si.filename = "../../../data/sol.wav";
       si.ambient = false;
       si.datasource = snx::SoundInfo::FILESYSTEM;
       kevinSound.configure( si );
@@ -186,7 +188,7 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
    {
       sonix::instance()->changeAPI( "Stub" );
       snx::SoundInfo si;
-      si.filename = "../../../data/suck1.aiff";
+      si.filename = "../../../data/sep.wav";
       si.ambient = false;
       si.datasource = snx::SoundInfo::FILESYSTEM;
       kevinSound.configure( si );
@@ -203,19 +205,31 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
    {
       snx::SoundInfo si;
       si.ambient = false;
-      si.filename = "../../../data/sample.wav";
+      si.filename = "../../../data/sol.wav";
       si.datasource = snx::SoundInfo::FILESYSTEM;
       kevinSound.configure( si );
+      std::cout<<"positional"<<std::endl;
    }
    break;
       case 'b':
    {
       snx::SoundInfo si;
-      si.ambient = false;
-      si.filename = "../../../data/sample-drumsolo-2bars.wav";
+      si.ambient = true;
+      si.filename = "../../../data/sep.wav";
       si.datasource = snx::SoundInfo::FILESYSTEM;
       kevinSound.configure( si );
-      kevinSound.setAmbient( false );
+      kevinSound.setAmbient( true );
+      std::cout<<"ambient"<<std::endl;
+   }
+   break;
+      case 'c':
+   {
+      snx::SoundInfo si;
+      si.ambient = false;
+      si.filename = "../../../data/suck.wav";
+      si.datasource = snx::SoundInfo::FILESYSTEM;
+      kevinSound.configure( si );
+      std::cout<<"positional"<<std::endl;
    }
    break;
    case 't':
@@ -238,7 +252,7 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
    {
       soundpos -= 1;
       kevinSound.setPosition( soundpos, 0, 0 );
-      std::cout<<soundpos<<std::endl;
+      std::cout<<"soundpos: "<<soundpos<<std::endl;
    }
    break;
 
@@ -246,22 +260,56 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
    {
       soundpos += 1;
       kevinSound.setPosition( soundpos, 0, 0 );
-      std::cout<<soundpos<<std::endl;
+      std::cout<<"soundpos: "<<soundpos<<std::endl;
    }
-   
+   break;
+
    case '[':
    {
-      pitchbend -= 15.0f;
+      pitchbend -= 0.1;
       kevinSound.setPitchBend( pitchbend );
-      std::cout<<pitchbend<<std::endl;
+      std::cout<<"pitchbend: "<<pitchbend<<std::endl;
    }
    break;
 
    case ']':
    {
-      pitchbend += 15.0f;
+      pitchbend += 0.1;
       kevinSound.setPitchBend( pitchbend );
-      std::cout<<pitchbend<<std::endl;
+      std::cout<<"pitchbend: "<<pitchbend<<std::endl;
+   }
+   break;
+   
+   
+   case ';':
+   {
+      cutoff -= 0.01;
+      kevinSound.setCutoff( cutoff );
+      std::cout<<"Cutoff: "<<cutoff<<std::endl;
+   }
+   break;
+
+   case '\'':
+   {
+      cutoff += 0.01;
+      kevinSound.setCutoff( cutoff );
+      std::cout<<"Cutoff: "<<cutoff<<std::endl;
+   }
+   break;
+   
+   case '-':
+   {
+      volume -= 0.1;
+      kevinSound.setVolume( volume );
+      std::cout<<"volume: "<<volume<<std::endl;
+   }
+   break;
+
+   case '=':
+   {
+      volume += 0.1;
+      kevinSound.setVolume( volume );
+      std::cout<<"volume: "<<volume<<std::endl;
    }
    break;
 
