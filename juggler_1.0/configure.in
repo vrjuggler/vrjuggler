@@ -158,7 +158,7 @@ case $host in
         SHAREDLIB_EXT='so'
 
         DSOVERSION='sgi4.0'
-        DSOVERSIONOPT='-set ${DSOVERSION}'
+        DSOVERSIONOPTS='-set ${DSOVERSION}'
 
         PLATFORM='SGI'
 

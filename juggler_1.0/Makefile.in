@@ -147,7 +147,7 @@ ${LIBRARY}.a:
 
 ${LIBRARY}.${SHAREDLIB_EXT}:
 	cd ${OBJDIR} && \
-          ${LD} ${LIBOPTS} ${DSOREGFILE} ${DSOVERSIONOPT} ${LDOPTS} *.o -o $@
+          ${LD} ${LIBOPTS} ${DSOREGFILE} ${DSOVERSIONOPTS} ${LDOPTS} *.o -o $@
 
 depend: depend-recursive
 
