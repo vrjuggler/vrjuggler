@@ -30,6 +30,29 @@ dnl -----------------------------------------------------------------
 dnl
 dnl ************* <auto-copyright.pl END do not edit this line> *************
 
+AC_DEFUN(VJ_STRIP_JAR_PATH,
+[
+   dnl Helper function that removes any path information leading up to a JAR
+   dnl file name (i.e, a file that ends in .jar).
+   strip_jar_path ( ) {
+      jar_list=`echo $[1] | sed -e "s/$JCPS/ /g"`
+
+      changequote(<<, >>)
+      for jar in $jar_list ; do
+         no_path_jar=`echo $jar | sed -e 's/^.*[/\]\([A-Za-z0-9_][A-Za-z0-9_.-]*\.jar\)/\1/'`
+         no_path_jar_list="$no_path_jar_list $no_path_jar"
+      done
+      changequote([, ])
+
+      dnl Strip off any leading spaces that would have been added in the above
+      dnl loop.
+      retval=`echo "$no_path_jar_list" | sed -e 's/^  *//'`
+      echo "$retval"
+   }
+
+   $1=`strip_jar_path $2`
+])
+
 dnl ---------------------------------------------------------------------------
 dnl Usage:
 dnl     VJ_PROG_CC_PROF_FLAG([prefer-gnu])
