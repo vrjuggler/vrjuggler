@@ -94,7 +94,8 @@ public class PositionProxyEditor
                                                      filter_def);
 
          // Add the new config element to the position_filters property.
-         elt.addProperty(EditorConstants.position_filters_prop, xform_filter);
+         elt.addProperty(EditorConstants.position_filters_prop, xform_filter,
+                         ctx);
          mRotationPanel.setConfig(ctx, xform_filter);
          mTranslationPanel.setConfig(ctx, xform_filter);
       }
