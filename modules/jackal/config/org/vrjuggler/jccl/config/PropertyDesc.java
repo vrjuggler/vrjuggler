@@ -768,13 +768,13 @@ public class PropertyDesc
             // If the type is an embedded chunk, create the chunk needed
             if (mValType == ValType.EMBEDDEDCHUNK)
             {
-               // Get the enumeration containing the chunk desc token
-               Element parent = mNode.getParent();
-               Element desc_node = parent.getChild(prop_enum_TOKEN);
-               String desc_token = desc_node.getAttributeValue(name_TOKEN);
+               // Get the allowed type node containing the chunk desc token
+               Element desc_node = mNode.getParent();
+               Element type_node = desc_node.getChild(allowed_type_TOKEN);
+               String type = type_node.getText();
 
                // Get the default config chunk for the found desc
-               default_value = ChunkFactory.createConfigChunk(desc_token);
+               default_value = ChunkFactory.createConfigChunk(type);
             }
          }
 
