@@ -21,7 +21,7 @@
   </OL>
 <!-- install-web toc-end -->
 
-<H4><A NAME="intro">Introduction</A></H4>
+<H3><A NAME="intro">Introduction</A></H3>
 
   <P>
     The VR Juggler project uses the autoconf utility to stay portable across
@@ -60,7 +60,7 @@
     </UL>
 
 <!-- install-web book-ignore-begin -->
-<H4><A NAME="recommend">Recommended Reading:</A></H4>
+<H3><A NAME="recommend">Recommended Reading:</A></H3>
 
   <UL>
     <LI>
@@ -77,7 +77,7 @@
   </UL>
 <!-- install-web book-ignore-end -->
 
-<H4><A NAME="quick">General Quick Start</A></H4>
+<H3><A NAME="quick">General Quick Start</A></H3>
 
   <P>
     When first downloading the Juggler source to compile it, users must
@@ -112,7 +112,7 @@
     % <B>./configure --help</B>
 </PRE>
 
-<H4><A NAME="autoconf">Autoconf and Autoheader</A></H4>
+<H3><A NAME="autoconf">Autoconf and Autoheader</A></H3>
 
   <P>
     VR Juggler uses tools from the GNU Autoconf package for automatically
@@ -148,9 +148,9 @@
     characters confuse the shell and cause the script to fail immediately.
   </P>
 
-<H4><A NAME="usage">Usage</A></H4>
+<H3><A NAME="usage">Usage</A></H3>
 
-  <H5>Environment Variables (UNIX vs. Win32)</H5>
+  <H4>Environment Variables (UNIX vs. Win32)</H4>
 
     <P>
       In a UNIX environment, no environment variables have to be set for
@@ -172,7 +172,7 @@
       and installing.
     </P>
 
-  <H5>Quick Start</H5>
+  <H4>Quick Start</H4>
 
     <P>
       The easiest way to configure Juggler is to run <TT>configure</TT>
@@ -262,7 +262,7 @@
         </LI>
       </UL>
 
-  <H5>Options</H5>
+  <H4>Options</H4>
 
     <P>
       The following is a list of the current Juggler-specific options that
@@ -479,7 +479,7 @@
       <TT>configure</TT> and the makefiles it generates.
     </P>
 
-  <H5>Regenerating Files</H5>
+  <H4>Regenerating Files</H4>
 
     <P>
       After running <TT>configure</TT>, one of the generated files is a
@@ -493,7 +493,7 @@
       template file changes into the generated files.
     </P>
 
-  <H5>When to Run <TT>configure</TT> Again</H5>
+  <H4>When to Run <TT>configure</TT> Again</H4>
   
     <P>
       The configure script should always be run after it is regenerated
@@ -504,7 +504,7 @@
       the latest build environment is available.
     </P>
 
-  <H5>Advanced Use</H5>
+  <H4>Advanced Use</H4>
 
     <P>
       The VR Juggler configure script has been designed to work in a
@@ -579,7 +579,7 @@
       is specified.
     </P>
 
-<H4><A NAME="debug">Debugging Configuration Errors</A></H4>
+<H3><A NAME="debug">Debugging Configuration Errors</A></H3>
 
   <P>
     When <TT>configure</TT> runs, a file called <TT>config.log</TT> is
@@ -593,9 +593,9 @@
     particular topic.
   </P>
 
-<H4><A NAME="template">Template (<TT>.in</TT>) Files</A></H4>
+<H3><A NAME="template">Template (<TT>.in</TT>) Files</A></H3>
 
-  <H5><TT>vjDefines.h.in</TT></H5>
+  <H4><TT>vjDefines.h.in</TT></H4>
 
     <P>
       This file is the template for <TT>vjDefines.h</TT>  (the equivalent of
@@ -610,7 +610,7 @@
       necessary, they should be made to <TT>acconfig.h</TT>.
     </P>
 
-  <H5><TT>Makefile.in</TT></H5>
+  <H4><TT>Makefile.in</TT></H4>
 
     <P>
       There are many <TT>Makefile.in</TT>'s in the Juggler source tree.
@@ -624,7 +624,7 @@
       be included by other makefiles to maximize sharing.
     </P>
 
-  <H5>Other <TT>.in</TT> Files</H5>
+  <H4>Other <TT>.in</TT> Files</H4>
 
     <P>
       Besides the previous examples, <TT>configure</TT> can be used to
