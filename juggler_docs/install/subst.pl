@@ -35,10 +35,6 @@ $path_subst{"PUB"} = 'pub/';
 $path_subst{"BUGS"} = 'html/bugs';
 $path_subst{"CONTACT"} = 'html/contact.info';
 
-# these might not stick around...
-$path_subst{"JUGGLERSTATUS"} = 'html/status';
-$path_subst{"ABOUTJUGGLER"} = 'html/about';
-
 $path_subst{"DOCUMENTATION"} = 'html/documentation';
 $path_subst{"OVERVIEW"} = 'html/juggler.overview';
 $path_subst{"SPECIFICATION"} = 'html/juggler.arch';

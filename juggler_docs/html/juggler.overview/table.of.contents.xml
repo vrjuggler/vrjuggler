@@ -1,14 +1,14 @@
 Builder: JExplorerBuilder V 1. 0. 7   
 < treecontrol linkurl="" imageurl="../../images/Icons/W98_Images/" >
 	< font face="Helvetica" style="Plain" size="${TREE_FONTSIZE}">
-		< idefault title="Item" image="BlackBook_Closed.gif" imagetwo="" info="VR Juggler" target="Body" link="" rlink="">
+		< idefault title="Item" image="Book_Closed.gif" imagetwo="" info="VR Juggler" target="Body" link="" rlink="">
 
 			< rootfolder title="Juggler Overview" 
 				expand 
 				link="index.html"
 				info="Overview of VR Juggler"
 				target="Body" 
-				image="BlackBook_Closed.gif" 
+				image="Book_Closed.gif" 
 				imagetwo="BlackBook_Open.gif">
 
 			< item title="QuickStart" 

@@ -9,8 +9,9 @@ Builder: JExplorerBuilder V 1. 0. 7
 
     < item title="StartPage" link="${ROOT}/frontpage.html"  info="Introduction to the VR Juggler website: What is juggler?  How do I get it?  How do I learn more???  Direct me to something useful..." image="Speaker.gif" >
     
+    < item title="About" link="${MISC}/about.html"  info="Learn more about VR juggler" image="Battery.gif" >
     < item title="News" link="${NEWS}/index.html"  info="The latest Juggler news" image="Newspaper.gif" >
-    < item title="FAQ" link="${MISC}/faq.html"  info="Frequently Asked Questions" image="Leaf.gif" >
+    < item title="FAQ" link="${MISC}/faq.html"  info="Frequently Asked Questions" image="Help.gif" >
 
     < folder title="Manuals/Guides" ref=1 info="Online documentation.  Click this for an overview." link="${DOCUMENTATION}/index.html" rlink="${ROOT}/books.html" rtarget="${NEW_WINDOW}" image="Book_Closed.gif" >
     <!-- install-web include books-include.xml -->
