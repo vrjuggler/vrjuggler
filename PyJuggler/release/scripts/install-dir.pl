@@ -25,9 +25,9 @@
 # Boston, MA 02111-1307, USA.
 #
 # -----------------------------------------------------------------
-# File:          install-dir.pl,v
-# Date modified: 2003/02/21 23:04:05
-# Version:       1.18
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
 # -----------------------------------------------------------------
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
@@ -81,7 +81,12 @@ my(@exts)    = split(/,/, "$opt_e") if $opt_e;
 my $src_dir  = "$opt_i";
 my $dest_dir = "$opt_o";
 
-require "$opt_v" if $opt_v;
+if ( $opt_v )
+{
+   my @path_info = fileparse("$opt_v");
+   push(@INC, "$path_info[1]");
+   require "$path_info[0]";
+}
 
 # Defaults.  getpwuid() is not implemented in the Win32 Perl port.
 my($uid, $gid, $mode) = ($<, (getpwuid($<))[3], "0644") unless $Win32;

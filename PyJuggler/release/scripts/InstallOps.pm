@@ -23,9 +23,9 @@
 # Boston, MA 02111-1307, USA.
 #
 # -----------------------------------------------------------------
-# File:          InstallOps.pm,v
-# Date modified: 2003/02/21 23:04:04
-# Version:       1.24
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
 # -----------------------------------------------------------------
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
