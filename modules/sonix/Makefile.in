@@ -90,7 +90,7 @@ links:
        	  $(SHELL) $(MKINSTALLDIRS) ./share/AudioJuggler && \
            ln -s $(ROOT_ABS)/data ./share/AudioJuggler/data
 	cd $(instlinks)/share/AudioJuggler &&                          \
-          ln -s $(ROOT_ABS)/samples ./src
+          ln -s $(topdir)/samples ./src
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$AJ_BASE_DIR to:'
@@ -134,7 +134,8 @@ hier:
 	$(SHELL) $(MKINSTALLDIRS) $(prefix)
 	$(SHELL) $(MKINSTALLDIRS) $(bindir)
 	$(SHELL) $(MKINSTALLDIRS) $(includedir)/aj
-	$(SHELL) $(MKINSTALLDIRS) $(datadir)/samples
+	$(SHELL) $(MKINSTALLDIRS) $(datadir)/AudioJuggler/src
+	$(SHELL) $(MKINSTALLDIRS) $(datadir)/AudioJuggler/data
 	$(SHELL) $(MKINSTALLDIRS) $(includedir)/share/AudioJuggler/data
 	$(SHELL) $(MKINSTALLDIRS) $(includedir)/share/AudioJuggler/src
 	@for lib in $(ABI_LIST) ; do					\
@@ -149,9 +150,30 @@ hier-abi:
 # independent of the current ABI.
 afterinstall:
 	@echo "==============================================================="
-	@echo "VPR installation complete"
+	@echo "Audio Juggler installation complete"
 	@echo "==============================================================="
 
+
+#PREINSTALL	= pre-install
+POSTINSTALL	= post-install
+
+
+
+# Do everything needed after installing the library binaries.
+post-install:
+	@$(MAKE) install-samples
+	@$(MAKE) install-test
+	@$(MAKE) install-data
+#	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
+#          $(topdir)/juggler-config $(bindir)
+
+install-data:
+	cp -r $(ROOT_ABS)/data/*.wav $(datadir)/AudioJuggler/data
+
+install-samples:
+	cp -r $(ROOT_ABS)/samples/*.cpp $(topdir)/samples/Makefile $(datadir)/AudioJuggler/src
+
+install-test:
 
 include $(MKPATH)/dpp.libs.mk
 
