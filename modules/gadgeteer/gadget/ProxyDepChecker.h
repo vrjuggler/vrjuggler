@@ -34,6 +34,7 @@
 #define _GADGET_PROXY_DEP_CHECKER_H_
 
 #include <gadget/gadgetConfig.h>
+#include <boost/concept_check.hpp>
 
 // Dependency checker includes
 #include <jccl/RTRC/DependencyManager.h>
@@ -66,6 +67,7 @@ public:
     */
    virtual bool depSatisfied(jccl::ConfigChunkPtr chunk)
    {
+      boost::ignore_unused_variable_warning(chunk);
       return true;
    }
 

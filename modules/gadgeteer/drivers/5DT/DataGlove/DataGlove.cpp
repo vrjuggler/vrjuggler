@@ -33,6 +33,7 @@
 #include <gadget/Devices/DriverConfig.h>
 
 #include <string>
+#include <boost/concept_check.hpp>
 #include <vpr/System.h>
 
 #include <jccl/Config/ConfigChunk.h>
@@ -123,9 +124,12 @@ int DataGlove::startSampling()
 
 void DataGlove::controlLoop(void* nullParam)
 {
+   boost::ignore_unused_variable_warning(nullParam);
+
    vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "[dataglove] Entered control thread\n"
                                     << vprDEBUG_FLUSH;
 
+   // XXX: I can never exit!
    while(1)
    {
       sample();

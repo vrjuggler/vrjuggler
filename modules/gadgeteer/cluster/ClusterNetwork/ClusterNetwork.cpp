@@ -32,6 +32,8 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <boost/concept_check.hpp>
+
 #include <gadget/Util/Debug.h>
 #include <vpr/Util/ReturnStatus.h>	
 
@@ -282,7 +284,9 @@ namespace cluster
       //     -Send responce packet
       //     -Get Cluster Delta
       //   -Close and delete socket
-      
+
+      boost::ignore_unused_variable_warning(nullParam);
+
       // Create an socket to listen for connection requests on
       vpr::SocketStream sock(mListenAddr, vpr::InetAddr::AnyAddr);
         // Open in server mode.
@@ -551,6 +555,8 @@ namespace cluster
       //    and the configmanager's pending list is stale
       //     -Refresh pending list to force reconfig
       // -Yield the processer so that we don't hog it.
+
+      boost::ignore_unused_variable_warning(nullParam);
 
       while(true)
       {

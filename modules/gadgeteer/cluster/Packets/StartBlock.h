@@ -35,6 +35,8 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <boost/concept_check.hpp>
+
 #include <vpr/vprTypes.h>
 #include <vpr/IO/BufferObjectReader.h>
 #include <vpr/IO/BufferObjectWriter.h>
@@ -143,6 +145,7 @@ public:
       
    virtual bool action(ClusterNode* node)
    {
+      boost::ignore_unused_variable_warning(node);
       return true;
    }
 };

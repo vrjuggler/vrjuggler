@@ -32,6 +32,8 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <boost/concept_check.hpp>
+
 //#include <vpr/vpr.h>
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/Util/ReturnStatus.h>
@@ -372,7 +374,9 @@ namespace cluster
       // -Update Local Data
       // -Send
       // -Signal Sync
-      
+
+      boost::ignore_unused_variable_warning(nullParam);
+
       while(true)
       {
          // Wait for trigger

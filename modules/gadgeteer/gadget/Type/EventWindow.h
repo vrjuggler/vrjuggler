@@ -37,6 +37,7 @@
 
 #include <string>
 #include <queue>
+#include <boost/concept_check.hpp>
 
 #include <vpr/IO/SerializableObject.h>
 #include <vpr/Sync/Mutex.h>
@@ -94,6 +95,7 @@ public:
 
    virtual bool config(jccl::ConfigChunkPtr chunk)
    {
+      boost::ignore_unused_variable_warning(chunk);
       return true;
    }
 

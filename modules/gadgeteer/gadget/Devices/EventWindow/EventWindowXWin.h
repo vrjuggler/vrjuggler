@@ -38,6 +38,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/keysym.h>
+#include <boost/concept_check.hpp>
 
 #include <vpr/Sync/Mutex.h>
 
@@ -151,7 +152,9 @@ protected:
 
    /** Do any extra event processing needed. */
    virtual void processEvent(XEvent event)
-   {;}
+   {
+      boost::ignore_unused_variable_warning(event);
+   }
 
 private:
    /** @name Private functions for processing input data. */

@@ -30,13 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_Packet_FACTORY_H_
-#define _GADGET_Packet_FACTORY_H_
+#ifndef _GADGET_PACKET_FACTORY_H_
+#define _GADGET_PACKET_FACTORY_H_
 //#pragma once
 
+#include <gadget/gadgetConfig.h>
+#include <boost/concept_check.hpp>
 #include <vpr/IO/Socket/SocketStream.h>
 
-#include <gadget/gadgetConfig.h>
 //#include <gadget/Type/Input.h>
 #include <cluster/Packets/Packet.h>
 //#include <jccl/Config/ConfigChunkPtr.h>
@@ -63,9 +64,14 @@ public:
    PacketConstructorBase() {;}
 
    /** Creates the device. */
-   virtual Packet* createPacket(Header* packet_head, vpr::SocketStream* stream)
+   virtual Packet* createPacket(Header* packetHead, vpr::SocketStream* stream)
    {
-      vprDEBUG(vprDBG_ALL,0) << "ERROR: DeviceConstructorBase::createDevice: Should never be called" << vprDEBUG_FLUSH;
+      boost::ignore_unused_variable_warning(packetHead);
+      boost::ignore_unused_variable_warning(stream);
+
+      vprDEBUG(vprDBG_ALL,0)
+         << "ERROR: DeviceConstructorBase::createDevice: Should never be called"
+         << vprDEBUG_FLUSH;
       return NULL;
    }
 
