@@ -56,8 +56,10 @@ public class NewConfigDialog
    public static final int CANCEL_OPTION = 1;
    public static final int ERROR_OPTION = -1;
 
-   public NewConfigDialog()
+   public NewConfigDialog(JFileChooser chooser)
    {
+      fileChooser = chooser;
+      
       try
       {
          jbInit();
