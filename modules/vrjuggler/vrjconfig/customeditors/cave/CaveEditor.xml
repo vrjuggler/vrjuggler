@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.1/beanlist.xsd">
-   <service name="MotionStarEditor">
+   <generic name="MotionStarEditor">
       <file name="${VJ_BASE_DIR}/share/vrjuggler/beans/customeditors/CaveEditor.jar"
             class="org.vrjuggler.vrjconfig.customeditors.cave.CaveEditor"/>
       <dependencies>
@@ -12,5 +12,5 @@
          <jar path="${VJ_BASE_DIR}/share/vrjuggler/java">CommonEditors.jar</jar>
          <jar path="/home/users/aronb/Source/JavaTesting/tabcontainer/dist">tabcontainer.jar</jar>
       </dependencies>
-   </service>
+   </generic>
 </beanlist>
