@@ -33,7 +33,7 @@ TEST_PROGS	= test stlTest testPool
 # -----------------------------------------------------------------------------
 default: all
 
-all: test
+all: ${TEST_PROGS}
 
 test: test.o
 	${COMPILE} -o $@ test.o ${VJ_LIBS} ${EXTRA_LIBS}
