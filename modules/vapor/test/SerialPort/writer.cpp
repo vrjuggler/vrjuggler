@@ -46,7 +46,7 @@ main (int argc, char* argv[]) {
     write_port->setOpenWriteOnly();
     write_port->setOpenBlocking();
 
-    if ( write_port->open() ) {
+    if ( write_port->open().success() ) {
         char* buffer = "This is a test...\n";
         ssize_t bytes;
 
@@ -54,7 +54,7 @@ main (int argc, char* argv[]) {
         write_port->setUpdateAction(vpr::SerialTypes::NOW);
         write_port->setCharacterSize(8);
 //        write_port->enableLocalAttach();
-        bytes = write_port->write(buffer, strlen(buffer) + 1);
+        write_port->write(buffer, strlen(buffer) + 1, bytes);
         write_port->flushQueue(vpr::SerialTypes::IO_QUEUES);
         std::cout << "Wrote " << bytes << " bytes to " << argv[1] << std::endl;
     }
