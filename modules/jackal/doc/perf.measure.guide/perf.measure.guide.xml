@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="../docbook_ab.css" type="text/css"?>
+<?xml-stylesheet href="../../../../../../docbook_ab.css" type="text/css"?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <book>
   <bookinfo>
@@ -18,7 +18,7 @@
   </chapter>
   <chapter>
     <title>Measuring Application Performance</title>
-    <para>Jackal provides a timestamp-based system for measuring the overall performance of multithreaded applications. Some clarification is needed here: we measure the "wall-clock" time required by various portions of our application's threads. The measurements we take are coarse- we measure the time required for relatively large logical blocks of code, not for individual instructions (for the latter case, other tools such as <command>gprof</command> are more apposite).</para>
+    <para>Jackal provides a timestamp-based system for measuring the overall performance of multithreaded applications. Some clarification is needed here: we measure the "wall-clock" time required by various portions of our application's threads. The measurements we take are coarse - we measure the time required for relatively large logical blocks of code, not for individual instructions (for the latter case, other tools such as <command>gprof</command> are more apposite).</para>
     <para>For example, we might look at the kernel thread in VR Juggler, one of the projects that uses Jackal. The kernel thread executes in a tight loop that synchronizes the drawing of various graphical displays (see <xref linkend="loopdiagram"/>). The framerate of a VR Juggler application is controlled by the total time required for an iteration of this kernel loop. Application developers using VR Juggler want to know the framerate, and also how much time is being spent on the actual drawing (as opposed to other tasks that add overhead to the kernel loop). To do this, we can store a timestamp just before starting to draw (location ts1 in the figure) and again after all the drawing threads have completed. The time between ts1 and ts2 is the time spent drawing the frame - that is, the time from when the various draw threads were told to start, and when all of them signalled the kernel that they had completed.</para>
     <figure id="loopdiagram" xreflabel="loopdiagram">
       <title>Thread example - VR Juggler Kernel.</title>
@@ -28,13 +28,13 @@
         </imageobject>
       </mediaobject>
     </figure>
-    <para>The time between ts2 and the ts1 stamp in the next loop iteration is spent on other tasks such as updating the viewing transformations and (if necessary) and calling various application-supplied callback methods.</para>
+    <para>The time between ts2 and the ts1 stamp in the next loop iteration is spent on other tasks such as updating the viewing transformations and (if necessary) calling various application-supplied callback methods.</para>
     <para>We could take finer-grained measurements if we so desired, perhaps setting a timestamp after every major function call, or even stepping into some of those calls as necessary. The important thing to remember is that the time recorded for a stamp (such as ts2, the "time to draw" stamp in the VR Juggler kernel) is always the difference between that stamp and the stamp immediately preceding it.</para>
-  </chapter>
-  <chapter>
+  <section>
     <title>Measuring Latencies</title>
     <para>Sometimes - especially in interactive applications - raw speed is not the most pressing concern. Latency - the age of data when it is presented to the user - is more important. Again we use VR Juggler as an example. In a VR application, latency is usually thought of as the time between when a measurement of the user's body is taken, and when a scene generated using that information is presented.</para>
     <para>This type of latency data can be collected by recording a timestamp when the input data - such as the user's body position - was read, and another when the result of that input data is presented to the user. The difference between these two stamps is the latency measurement.</para>
+  </section>
   </chapter>
   <chapter>
     <title>Viewing Performance Data</title>
@@ -51,7 +51,7 @@
     <para>To simplify the display, VjControl tries to display the stamps in an organized, hierarchical fashion. For example, the three application callback methods that are called in our kernel frame are all collected under the heading "app", so that we can easily see the sum of the times for each of them, as well as the individual averages.</para>
     <section>
       <title>Viewing Performance Graphs</title>
-      <para>Of course, averages do not tell the whole story - a few large anomalous readings could seriously skew the averages, for example. Therefore VjControl can also display a graph of the actual data over time. For example, see <xref linkend="perf_graph_figure"/>. Each vertical line on the graph represents the time taken for drawing during one iteration of the loop. As you can see, the graph is mostly smooth, but there is a single anomalously large reading (approx. 295 ms) at the far left.  This is a common occurrence when VR Juggler applications start up - the first few frames involve all of the application's configuration, initialization of device drivers, and so forth, before the application eventually settles into its regular routing.</para>
+      <para>Of course, averages do not tell the whole story - a few large anomalous readings could seriously skew the averages, for example. Therefore VjControl can also display a graph of the actual data over time. For example, see <xref linkend="perf_graph_figure"/>. Each vertical line on the graph represents the time taken for drawing during one iteration of the loop. As you can see, the graph is mostly smooth, but there is a single anomalously large reading (approx. 295 ms) at the far left. This is a common occurrence when VR Juggler applications start up - the first few frames involve all of the application's configuration, initialization of device drivers, and so forth, before the application eventually settles into its regular routine.</para>
       <figure float="1" id="perf_graph_figure">
         <title>Example performance data graph.</title>
         <mediaobject>
