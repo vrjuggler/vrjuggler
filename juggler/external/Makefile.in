@@ -180,7 +180,9 @@ links-omniORB3 links-omniORB4:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/lib$(LIBBITSUF)
+ifneq ($(PYTHON_DIR),)
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/lib$(LIBBITSUF)/$(PYTHON_PKG_DIR)
+endif
 	-$(RM_LN) $(instlinks)/include/$(CXX_ORB_NAME)
 	-$(RM_LN) $(instlinks)/include/omniconfig.h
 	-$(RM_LN) $(instlinks)/include/omnithread
@@ -201,6 +203,7 @@ links-omniORB3 links-omniORB4:
           $(instlinks)/lib$(LIBBITSUF)
 	$(INSTALL) -l $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libomni*	\
           $(instlinks)/lib$(LIBBITSUF)
+ifneq ($(PYTHON_DIR),)
 	$(INSTALL) -l $(CXX_ORB_LIB_DIR)/$(PYTHON_PKG_DIR)/_omni*	\
           $(instlinks)/lib$(LIBBITSUF)/$(PYTHON_PKG_DIR)
 	$(PERL) $(scriptdir)/install-dir.pl -l				\
@@ -209,6 +212,7 @@ links-omniORB3 links-omniORB4:
 	$(PERL) $(scriptdir)/install-dir.pl -l				\
           -i $(CXX_ORB_LIB_DIR)/$(PYTHON_PKG_DIR)/omniidl_be		\
           -o $(instlinks)/lib$(LIBBITSUF)/$(PYTHON_PKG_DIR)/omniidl_be
+endif
 
 links-openal:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
@@ -295,7 +299,9 @@ install-omniORB3 install-omniORB4:
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/omnithread
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/bin
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib$(LIBBITSUF)
+ifneq ($(PYTHON_DIR),)
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib$(LIBBITSUF)/$(PYTHON_PKG_DIR)
+endif
 	@for c in $(OMNIORB_CMDS) ; do					\
             $(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX) $(CXX_ORB_BIN_DIR)/$$c $(deps_prefix)/bin/$$c || exit 1; \
           done
@@ -321,6 +327,7 @@ install-omniORB3 install-omniORB4:
 	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
           $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libomni*.so*		\
           $(deps_prefix)/lib$(LIBBITSUF)
+ifneq ($(PYTHON_DIR),)
 	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
           $(CXX_ORB_LIB_DIR)/$(PYTHON_PKG_DIR)/_omni*			\
           $(deps_prefix)/lib$(LIBBITSUF)/$(PYTHON_PKG_DIR)
@@ -332,6 +339,7 @@ install-omniORB3 install-omniORB4:
           -m $(FILE_PERMS) -e .py					\
           -i $(CXX_ORB_LIB_DIR)/$(PYTHON_PKG_DIR)/omniidl_be		\
           -o $(deps_prefix)/lib$(LIBBITSUF)/$(PYTHON_PKG_DIR)/omniidl_be
+endif
 
 install-openal:
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/AL
