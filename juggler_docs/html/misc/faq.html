@@ -20,6 +20,7 @@
 	<ul>
 	  <li><a href="#WhatIs">What is VR Juggler?</a></li>
 	  <li><a href="#WhatIsNot">What is VR Juggler not?</a></li>
+	  <li><a href="#getstarted">Great, where do I begin?</a></li>
 	</ul>
 	<li><h5style><a href="#applications"> VR applications</a></h5style></LI>
 	<li><h5style><a href="#dev"> Juggler Team</a></h5style></LI>
@@ -28,10 +29,12 @@
 	</LI>
 	<ul>
 	<li><h5style><a href="#linuxandperformer"> LiNUX and Performer</a> </h5style>
+		<ul>
+		<li><h5style><a href="#lnpnotcompile"> Why don't my LiNUX/Performer Juggler applications compile?</a> </h5style>
+		</ul>
 	</ul>
 	<li>
 	     <h5style> <a href="#misc">Misc</a></h5style><BR>
-		<a href="${CONTACT_US_DIRECTLY}"><img border=0 src="${IMAGES}/Icons/24x24_Images/Envelope.gif"> Submit your own question.</a>
 	</li>
 	<LI><font size=1><a href="${CONTACT_US_DIRECTLY}">Contact Us</a> to add your question to this list!</font></li>
 </ul>
@@ -57,9 +60,16 @@
 		</UL>
 		
 	<b><a name="WhatIsNot">What VR Juggler is not</a></b>
-		<p>VR Juggler does not have it's own graphics API. It requires you to use a standard API such as OpenGL. </p>
-		<p>VR Juggler does not have any support for scene graphs or other data structures for the application graphics</p>
-		<p>VR Juggler is not a visual development environment.</p>
+		<p>VR Juggler does not have it's own graphics API. It requires you to use a standard API such as OpenGL.
+		VR Juggler does not have any support for scene graphs or other data structures for the application graphics.
+		VR Juggler is not a visual development environment.</p>
+	
+	<b><a name="getstarted">Great, where do I begin?</a></b>
+		<p>To begin, we suggest reading one of Juggler's books called the "Programmer Guide".  
+		You'll find this book in the tree control on the www.vrjuggler.org web site.  
+		In the tree control the path to getting started is: "Books"/"Programmer Guide"/"Getting Started"</p><BR>
+		
+
 	</blockquote>
 <LI><font size=1><a href="${CONTACT_US_DIRECTLY}">Contact Us</a> to add your question to this list!</font></li>
 
@@ -88,7 +98,7 @@
 	<blockquote>
 	<h4><a name="linuxandperformer">LiNUX And Performer</a></h4>
 		<blockquote>
-		<li><b>Why do my LiNUX/Performer Juggler applications not compile?</b><BR>
+		<li><a name="lnpnotcompile"><b>Why do my LiNUX/Performer Juggler applications not compile?</b></a><BR>
 		     Maybe you aren't using the -o option to your compiler.  <BR>
 		     You must compile with the -o option when using <a href="${PERFORMERLINUX}">Performer 2.3 for LiNUX</a>.<BR>
 		     See the <a href="http://www.sgi.com/software/performer/linux-buglist.html">Performer LiNUX bug-list (item SCR 767188)</a> for more info.</li>
