@@ -58,7 +58,7 @@ typedef struct
    long functions;
    long decorations;
    long input_mode;
-} 
+}
 MotifWmHints;
 
 
@@ -73,8 +73,8 @@ public:
    virtual ~GlWindowXWin();
 
    void swapBuffers();
-   int open();
-   int close();
+   virtual bool open();
+   virtual bool close();
    bool makeCurrent();
 
    /**

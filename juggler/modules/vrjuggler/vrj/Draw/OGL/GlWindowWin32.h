@@ -62,7 +62,7 @@ public:
     *
     * @return true if the window opened correctly.
     */
-   virtual int open();
+   virtual bool open();
 
    /**
     * Closes the OpenGL window.
@@ -70,7 +70,7 @@ public:
     * @return true if the window closed correctly.
     * @note Must be called by the same thread that called open.
     */
-   virtual int close();
+   virtual bool close();
 
    /**
     * Sets the current OpenGL context to this window.
