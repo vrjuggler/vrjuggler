@@ -39,6 +39,7 @@
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/Analog.h>
 #include <gadget/Type/InputMixer.h>
+#include <utility>
 
 
 namespace gadget
@@ -79,20 +80,20 @@ public:
     * @return true if the device was configured succesfully; false if the
     *         configuration element is invalid.
     */
-   virtual bool config(jccl::ConfigElementPtr e);
+   virtual bool config(jccl::ConfigChunkPtr e);
 
    /** Begin sampling.
    * Connect to the joystick and prepare to read.
    */
-   bool startSampling();
+   int startSampling();
 
    /** Stops sampling.
    * Drop connection to joystick and clear everything.
    */
-   bool stopSampling();
+   int stopSampling();
 
    /** Samples a value. */
-   bool sample()
+   int sample()
    { return 1;}
 
    /**
@@ -104,7 +105,7 @@ public:
    void updateData();
 
    /** Returns what element type is associated with this class. */
-   static std::string getElementType();
+   static std::string getChunkType();
 
    /** Returns digital data. */
    virtual const DigitalData getDigitalData(int devNum=0)
@@ -153,6 +154,9 @@ private:
    std::vector<AnalogData>    mCurAxes;               /**< The current (up-to-date) values. */
    std::vector<DigitalData>   mCurButtons;            /**< The current button states. */
    std::vector<int>           mAxisToButtonIndexLookup;   /**< Maps axis number to button index (-1 means none) */
+
+   typedef std::pair<float,float> axis_range_t;       /**< Current axis range */
+   std::vector<axis_range_t>  mCurAxesRanges;         /**<  Current known ranges on the axes */
 
    std::string       mJsLabel;         /**< The VR Juggler name of the joystick device */
    std::string       mPhysicalJsName;  /**< Name of the joystick */
