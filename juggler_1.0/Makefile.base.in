@@ -71,6 +71,8 @@
 # OBJDIR          - Path to the directory where the object files will be
 #                   built.
 # PERL            - Path to Perl 5 binary.
+# RANLIB          - Path to ranlib(1) binary if it is available.  ':'
+#                   otherwise.
 #
 # C_COMPILE       - Command for compiling C code.
 # CXX_COMPILE     - Command for compiling C++ code.
@@ -146,6 +148,7 @@ MTREE_CMD	= @MTREE_CMD@
 OBJ_FILE_SUFFIX	= @OBJ_FILE_SUFFIX@
 OBJ_NAME_FLAG	= @OBJ_NAME_FLAG@
 PERL		= @PERL@
+RANLIB		= @RANLIB@
 
 # Allow overriding the default value of ${OBJDIR} by setting ${BASE_OBJDIR}
 # (probably using an externally defined value).

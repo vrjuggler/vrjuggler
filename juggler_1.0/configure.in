@@ -734,7 +734,15 @@ PERL="$ac_cv_perl_version"
 
 AC_CHECK_PROG(MTREE_CMD, mtree, mtree, \${PERL} \${scriptdir}/mtree.pl)
 AC_PROG_MAKE_SET
-dnl # AC_PROG_RANLIB
+
+dnl # While ranlib(1) is not part of the base IRIX installation, the VRAC SGIs
+dnl # have a ranlib(1) installed that does very bad things to ar archives.
+if test "$PLATFORM" = "IRIX" ; then
+    RANLIB=':'
+else
+    AC_PROG_RANLIB
+fi
+
 AC_PROG_LN_S
 
 dnl # -------------------------------------------------------------------------
