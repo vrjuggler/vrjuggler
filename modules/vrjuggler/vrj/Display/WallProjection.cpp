@@ -27,6 +27,7 @@
 #include <Kernel/vjKernel.h>
 #include <Input/vjPosition/vjPosition.h>
 #include <Math/vjCoord.h>
+#include <Kernel/vjDebug.h>
 
 
 //: Recalculate the projection matrix
@@ -36,7 +37,33 @@
 // This method can be used for any rectangular planar screen.
 // By adjusting the wall rotation matrix, this method can be used for
 // the general case of a rectangular screen in 3-space
+//
+//! PRE: WallRotation matrix must be set correctly
+//! PRE: mOrigin*'s must all be set correctly
 void vjWallProjection::calcViewMatrix(vjMatrix& eyePos)
+{
+   calcViewFrustum(eyePos);
+      
+   vjCoord eye_coord(eyePos);
+   vjVec3   eye_pos;             // Non-xformed pos
+   eye_pos = eye_coord.pos;
+   
+   // Need to post translate to get the view matrix at the position of the eye
+   mViewMat.postTrans(mWallRotationMatrix, -eye_pos[VJ_X], -eye_pos[VJ_Y], -eye_pos[VJ_Z]);   
+}
+
+
+//: Recalculate the view frustum
+// Uses a method that needs to know the distance in the screen plane
+// from the origin (determined by the normal to the plane throught the
+// origin) to the edges of the screen.
+// This method can be used for any rectangular planar screen.
+// By adjusting the wall rotation matrix, this method can be used for
+// the general case of a rectangular screen in 3-space
+//
+//! PRE: WallRotation matrix must be set correctly
+//! PRE: mOrigin*'s must all be set correctly
+void vjWallProjection::calcViewFrustum(vjMatrix& eyePos)
 {
    float near_dist, far_dist;
    near_dist = mNearDist;
@@ -79,58 +106,15 @@ void vjWallProjection::calcViewMatrix(vjMatrix& eyePos)
    n_eye_to_bottom = eye_to_bottom*near_distFront;
 
    // Set frustum and calulcate the matrix
-   frustum.set(-n_eye_to_left, n_eye_to_right,
+   mFrustum.set(-n_eye_to_left, n_eye_to_right,
                 -n_eye_to_bottom, n_eye_to_top,
                 near_dist, far_dist);
 
    mFocusPlaneDist = eye_to_screen;    // Needed for drawing
 
-   vjDEBUG(vjDBG_DISP_MGR,7) << "vjWallProjection::calcWallProjection: \n\tFrustum: " << frustum << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DISP_MGR,7) << "vjWallProjection::calcWallProjection: \n\tFrustum: " << mFrustum << endl << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_DISP_MGR,7) << "vjWallProjection::calcWallProjection: B4 Trans:\n" << mWallRotationMatrix << endl << vjDEBUG_FLUSH;
-
-   viewMat.postTrans(mWallRotationMatrix, -eye_pos[VJ_X], -eye_pos[VJ_Y], -eye_pos[VJ_Z]);
 }
-
-
-
-//
-// Performer: (Zup Coords)
-//	1st row is "right" direction
-//	2nd Row defines the view direction.
-//	3rd row defines up direction
-/*
-void vjWallProjection::setWallRotationMatrix()
-{
-   vjDEBUG(vjDBG_ALL,2) << "vjWallProjection::setWallRotationMatrix: Entering" << endl << vjDEBUG_FLUSH;
-
-   switch (mSurface)
-   {
-   //////////////
-   // R  V  U  //
-   case FRONT:
-      mWallRotationMatrix.makeIdent();
-      break;
-   case LEFT:
-      mWallRotationMatrix.makeRot(-90.0f, vjVec3(0.0f, 1.0f, 0.0f));
-      break;
-   case RIGHT:
-      mWallRotationMatrix.makeRot(90.0f, vjVec3(0.0f, 1.0f, 0.0f));
-      break;
-   case FLOOR:
-      mWallRotationMatrix.makeRot(-90.0f, vjVec3(-1.0f, 0.0f, 0.0f));
-      break;
-   case CEILING:
-      mWallRotationMatrix.makeRot(90.0f, vjVec3(-1.0f, 1.0f, 0.0f));
-      break;
-   case BACK:
-      mWallRotationMatrix.makeRot(180, vjVec3(0.0f, 1.0f, 0.0f));
-      break;
-   }
-
-   vjDEBUG(vjDBG_ALL,2) << "vjWallProjection::setWallRotationMatrix: Matrix" << endl << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_ALL,2) << mWallRotationMatrix << endl << vjDEBUG_FLUSH;
-}
-*/
 
 
 ostream& vjWallProjection::outStream(ostream& out)

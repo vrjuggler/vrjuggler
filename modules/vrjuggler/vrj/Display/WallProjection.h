@@ -31,7 +31,7 @@ class vjMatrix;
 //-----------------------------------------------------------------
 //: Wall specific class for viewport definitions.
 //
-//	 Responsible for storing and computing projection
+//  Responsible for storing and computing projection
 //  information of a surface specified.
 //
 // XXX: This should be renamed vjSurfaceProjection
@@ -62,8 +62,14 @@ public:
    }
 
    //: Recalculate the projection matrix
+   //! PRE: WallRotation matrix must be set correctly
+   //! PRE: mOrigin*'s must all be set correctly
    //!POST: frustum has been recomputed for given eyePos
    virtual void calcViewMatrix(vjMatrix& eyePos);
+
+   //: Calculate the frustum needed for the view matrix
+   //! NOTE: This function is called as part of calcViewMatrix
+   virtual void calcViewFrustum(vjMatrix& eyePos);
 
    ostream& outStream(ostream& out);
 

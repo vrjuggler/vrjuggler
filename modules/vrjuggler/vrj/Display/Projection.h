@@ -31,7 +31,7 @@
 //------------------------------------------------------------------
 //: Pure virtual base class for viewport definitions.
 //
-//	Responsible for storing and computing projection
+// Responsible for storing and computing projection
 //  information based upon an eye positions
 // This class is an abstract base class for other classes
 //  that actually compute the projections.
@@ -80,8 +80,8 @@ public:
 
 
 public:
-   vjMatrix    viewMat;
-   vjFrustum   frustum;
+   vjMatrix    mViewMat;
+   vjFrustum   mFrustum;
 
 protected:
    int mEye;
