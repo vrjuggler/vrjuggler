@@ -61,6 +61,7 @@ SRCS		= BaseThread.cpp	\
                   ThreadFunctor.cpp	\
                   ThreadManager.cpp	\
                   ThreadPool.cpp        \
+                  TSObject.cpp		\
                   TSObjectProxy.cpp
 
 include $(MKPATH)/dpp.obj.mk
