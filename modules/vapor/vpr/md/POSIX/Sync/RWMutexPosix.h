@@ -168,7 +168,7 @@ public:
     */
    vpr::ReturnStatus acquireWrite()
    {
-      int retval = pthread_rwlock_rdlock(&mRWMutex);
+      int retval = pthread_rwlock_wrlock(&mRWMutex);
 
       // Locking succeeded.
       if ( retval == 0 )
