@@ -65,7 +65,6 @@ WindowListener {
 	    pane.setPage (url);
 	    HTMLDocument d = (HTMLDocument)pane.getDocument();
 	    String s =  (String)d.getProperty (d.TitleProperty);
-	    //System.out.println ("doc title is '" + s + "'");
 	    setTitle (s);
 	    /*
 	    String s1;

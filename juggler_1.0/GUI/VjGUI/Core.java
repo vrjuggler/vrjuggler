@@ -286,17 +286,14 @@ public class Core {
 
 	    screenWidth = ch.getPropertyFromToken("windowsize").getVal(0).getInt();
 	    screenHeight = ch.getPropertyFromToken("windowsize").getVal(1).getInt();
-	    defaultchunkfile = ch.getPropertyFromToken("defaultchunkfile").getVal(0).getString();
+	    // default chunk files not dealt with here - only at startup.
+	    //defaultchunkfile = ch.getPropertyFromToken("defaultchunkfiles").getVal(0).getString();
 	   
 
 	}
 	catch (Exception e) {
 	    Core.consoleInfoMessage ("vjControl", "Old vjcontrol preferences file - please check preferences and re-save");
 	}
-
-//  	if (defaultchunkfile != null) {
-//  	    default_chunkdb.removeAllElements();
-	    
 
 	if (screenWidth < 1)
 	    screenWidth = 800;
@@ -361,7 +358,5 @@ public class Core {
     }
 
 }
-
-
 
 

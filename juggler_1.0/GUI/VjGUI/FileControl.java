@@ -319,7 +319,7 @@ public class FileControl {
 
 
     public static String saveChunkOrgTree (ChunkOrgTree ot) {
-	System.out.println ("save msg for file " + ot.getFile());
+	//System.out.println ("save msg for file " + ot.getFile());
 	File f = requestSaveFile (ot.getFile());
 	if (f == null)
 	    return "";

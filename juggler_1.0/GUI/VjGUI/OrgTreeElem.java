@@ -30,32 +30,6 @@ public class OrgTreeElem {
     Vector children;  // mixed vec. of Strings (chunkdescnames)
                       // and OrgTreeElems
 
-//     public void copyValueFrom (OrgTreeElem ot) {
-// 	// copies the values of the tree ot, but not its listeners
-// 	label = ot.label;
-// 	Object o;
-// 	OrgTreeElem ot2;
-// 	children.removeAllElements();
-// 	for (int i = 0; i < ot.children.size(); i++) {
-// 	    o = ot.children.elementAt(i);
-// 	    if (o instanceof String)
-// 		children.addElement((String)o);
-// 	    else {
-// 		ot2 = new OrgTreeElem ();
-// 		ot2.copyValueFrom ((OrgTreeElem)o);
-// 		children.addElement(ot2);
-// 	    }
-// 	}
-	
-// 	//processActionEvent (new ActionEvent (this, 5, "reload"));
-//     }
-
-//     public OrgTreeElem () {
-//         label = "Root";
-// 	children = new Vector();
-// 	children.addElement (new OrgTreeElem ("*"));
-// 	listeners = new Vector();
-//     }
 
 
     public OrgTreeElem (String _label){
@@ -102,7 +76,7 @@ public class OrgTreeElem {
             return true;
         }
         catch (IOException e) {
-            System.out.println ("OrgTreeElem::Read: " + e.getMessage());
+	    Core.consoleErrorMessage ("Error: OrgTree Read: " + e.getMessage());
             return false;
         }
     }
@@ -120,8 +94,6 @@ public class OrgTreeElem {
                 s += newpad + "\"" + (String)o + "\"\n";
             else if (o instanceof OrgTreeElem)
                 s += ((OrgTreeElem)o).toString(newpad);
-            else 
-		System.err.println ("There's something here that shouldn't be\n");
         }
         s += pad + "End\n";
         return s;

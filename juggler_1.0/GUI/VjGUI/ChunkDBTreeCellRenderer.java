@@ -34,10 +34,11 @@ public class ChunkDBTreeCellRenderer extends JLabel implements TreeCellRenderer 
 	mClosedIcon = close;
 	mLeafIcon = leaf;
 
-	if (open == null || close == null || leaf == null)
-	    System.out.println ("one icon is null");
+//  	if (open == null || close == null || leaf == null)
+//  	    System.out.println ("one icon is null");
 
     }
+
 
 //     private void setMyFont (Font f) {
 // 	super.setFont (f);
@@ -46,6 +47,7 @@ public class ChunkDBTreeCellRenderer extends JLabel implements TreeCellRenderer 
 //     public void setFont (Font f) {
 // 	;
 //     }
+
 
     public Component getTreeCellRendererComponent (JTree tree,
 						   Object value,

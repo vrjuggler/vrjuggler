@@ -55,7 +55,6 @@ public class NetControl implements Runnable {
 
 
     public void setHost(String s) {
-	//System.out.println ("Set host '" + s + "'");
 	remote_name = s;
     }
 
@@ -76,7 +75,7 @@ public class NetControl implements Runnable {
 
     public void run() {
 	while (connected) {
-	    System.out.println ("a");
+	    //System.out.println ("a");
 	    if (!read())
 		break;
 	}
@@ -202,7 +201,7 @@ public class NetControl implements Runnable {
 	if (!connected)
 	    return false;
 	try {
-	    System.out.println ("remove chunks\n" + db.fileRep());
+	    Core.consoleTempMessage ("Net","Removing " + db.size() + " chunks");
 	    out.writeBytes ("remove chunks\n" + db.fileRep());
 	    out.flush();
 	    return true;
@@ -217,7 +216,7 @@ public class NetControl implements Runnable {
 	if (!connected)
 	    return false;
 	try {
-	    System.out.println ("remove chunks\n" + ch.toString() + "End\n");
+	    Core.consoleTempMessage ("Net", "Removing chunk " + ch.getName());
 	    out.writeBytes ("remove chunks\n" + ch.toString() + "End\n");
 	    out.flush();
 	    return true;
@@ -273,7 +272,7 @@ public class NetControl implements Runnable {
 	if (!connected)
 	    return false;
 	try {
-	    //out.println ("get descriptions all");
+	    Core.consoleTempMessage ("Net", "Requesting Descriptions");
 	    out.writeBytes ("get descriptions all\n");
 	    out.flush();
 	    return true;
@@ -290,6 +289,7 @@ public class NetControl implements Runnable {
 	if (!connected)
 	    return false;
 	try {
+	    Core.consoleTempMessage ("Net", "Sending Descriptions");
 	    out.writeBytes ("descriptions\n");
 	    // write out d;
 	    out.writeBytes (d.toString());
@@ -308,6 +308,7 @@ public class NetControl implements Runnable {
 	if (!connected)
 	    return false;
 	try {
+	    Core.consoleTempMessage ("Net", "Removing Descriptions");
 	    out.writeBytes ("remove descriptions " + s + "\n");
 	    out.flush();
 	    return true;
@@ -346,17 +347,18 @@ public class NetControl implements Runnable {
 		return true;
 	    }
 	    else if (instream.sval.equalsIgnoreCase ("chunks")) {
+		//System.out.println ("reading chunks");
 		instream.nextToken();
 		if (instream.sval.equalsIgnoreCase("all")) {
 		    /* remove old chunks */
-		  Core.active_treemodel.chunkdb.removeAll();
-		  Core.active_treemodel.buildTree();
+		    Core.active_treemodel.removeAllChunkNodes();
 		}
 		else
 		    instream.pushBack();
 		
 		// now we read in the new descriptions
-		System.err.println(" about to read chunks");
+		Core.consoleTempMessage ("Net","Reading ConfigChunks");
+		//System.err.println(" about to read chunks");
 		
 		
 		for (;;) {
@@ -368,7 +370,7 @@ public class NetControl implements Runnable {
 		    else
 			break;
 		}
-		System.out.println (" done reading chunks");
+		Core.consoleTempMessage ("Net","Reading ConfigChunks -- Finished");
 
 		return true;
 	    }
@@ -390,18 +392,17 @@ public class NetControl implements Runnable {
 		return true;
 	    }
 	    else {
-		System.err.println ("Unknown command: " + instream.sval);
+	        Core.consoleErrorMessage ("Net", "Unknown command: " + instream.sval);
 		return false;
 	    }
 	    
-	    //return true;
 	}
 	catch (IOException io) {
 	    // if connected is true, then the IOE is an error; otherwise,
 	    // it's probably just that disconnect() shut down the socket
 	    // to take us out of our read loop.
 	    if (connected) {
-		System.err.println ("IOException in NetControl.read(): " +io);
+		Core.consoleErrorMessage ("Net", "IOException in NetControl.read(): " +io);
 		disconnect();
 	    }
 	    return false;
