@@ -878,7 +878,6 @@ public class ConfigBrokerImpl
                                                    new Insets(0, 0, 0, 0), 0,
                                                    0));
 
-         this.add(mLogoLabel, BorderLayout.CENTER);
          this.add(mProgressPanel, BorderLayout.SOUTH);
 
          // Load the icons for the popup menu.
