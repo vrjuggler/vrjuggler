@@ -17,7 +17,8 @@ public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener
 
 
 
-    public ChunkDBTreeModel (ConfigChunkDB _chunkdb, ChunkOrgTree _chunkorgtree) {
+    public ChunkDBTreeModel (ConfigChunkDB _chunkdb, 
+			     ChunkOrgTree _chunkorgtree) {
 	super(new DefaultMutableTreeNode());
 	chunkorgtree = _chunkorgtree;
 	chunkdb = _chunkdb;
@@ -86,7 +87,6 @@ public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener
 	while (nodes.hasMoreElements()) {
 	    n = (DefaultMutableTreeNode)nodes.nextElement();
 	    if (n.toString().equalsIgnoreCase (name)) {
-		System.out.println ("found node to remove");
 		v.addElement(n);
 	    }
 	}
@@ -244,7 +244,6 @@ public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener
 
     public void actionPerformed (ActionEvent e) {
 	if (e.getActionCommand().equalsIgnoreCase ("reload")) {
-	    //System.out.println ("ChunkDBTreeModel got reload message");
 	    buildTree();
 	}
     }

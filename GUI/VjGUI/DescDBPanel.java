@@ -295,6 +295,7 @@ public class DescDBPanel extends JPanel
 	    }
 	}
 	desc_frames.removeElement(f);
+	f.dispose();
     }
     
 
