@@ -222,7 +222,7 @@ void GlPipe::checkForWindowsToClose()
 
          // Call contextClose
          GlApp* theApp = glManager->getApp();       // Get application for easy access
-         Display* theDisplay = win->getDisplay();   // Get the display for easy access
+         //Display* theDisplay = win->getDisplay();   // Get the display for easy access
          glManager->setCurrentContext(win->getId());     // Set TS data of context id
          glManager->currentUserData()->setUser(NULL);         // Set user data
          glManager->currentUserData()->setProjection(NULL);
