@@ -63,7 +63,7 @@ public:
    {;}
 
    // Execute any initialization needed before the API is started<BR><BR>
-   // 
+   //
    // This is called once before OGL is initialized
    virtual void init()
    {
@@ -71,6 +71,9 @@ public:
       // Initialize devices
       mWand.init("VJWand");
       mHead.init("VJHead");
+      mButton0.init("VJButton0");
+      mButton1.init("VJButton1");
+      mButton2.init("VJButton2");
    }
 
    // Execute any initialization needed after API is started
@@ -93,7 +96,7 @@ public:
    //! PRE: OpenGL state has correct transformation and buffer selected
    //! POST: The current scene has been drawn<BR><BR>
    //
-   // called [once * number of displays] per frame 
+   // called [once * number of displays] per frame
    virtual void draw()
    {
       //call your openGL drawing code here.
@@ -116,7 +119,7 @@ public:
    //  }
    //------------------------------------
 
-   
+
    //: Function called after tracker update but before start of drawing<BR><BR>
    //
    // called once before every frame.
@@ -156,6 +159,9 @@ private:
 public:
    vjPosInterface    mWand;      // the Wand
    vjPosInterface    mHead;      // the head
+   vjDigitalInterface   mButton0;
+   vjDigitalInterface   mButton1;
+   vjDigitalInterface   mButton2;
 };
 
 
