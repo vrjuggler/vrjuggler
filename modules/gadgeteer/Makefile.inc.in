@@ -427,7 +427,11 @@ install-tools:
 	@echo "------------------------------------------------"
 	@echo "Installing tools"
 	@echo "------------------------------------------------"
-	@echo " doing nothing... "
+	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/GADGET.tools.dist -p $(projdatadir)
+	$(PERL) $(scriptdir)/install-dir.pl -i $(top_srcdir)/tools	\
+          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(projdatadir)/tools	\
+          -v "$(topdir)/VARS.pl"
 
 install-m4:
 	@echo "------------------------------------------------"

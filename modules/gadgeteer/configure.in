@@ -783,6 +783,7 @@ AC_CONFIG_FILES([
    mtree/GADGET.include.dist
    mtree/GADGET.install.dist
    mtree/GADGET.test.dist
+   mtree/GADGET.tools.dist
    VARS.pl
    ],
    [chmod a+x gadgeteer-config])
