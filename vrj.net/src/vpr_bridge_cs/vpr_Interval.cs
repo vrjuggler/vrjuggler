@@ -156,11 +156,6 @@ public sealed class Interval
       return result;
    }
 
-   public static bool operator>=(vpr.Interval lhs, vpr.Interval rhs)
-   {
-      return ! (lhs < rhs);
-   }
-
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
    private extern static bool vpr_Interval_greater_than__vpr_Interval(IntPtr lhs,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.IntervalMarshaler))] vpr.Interval rhs);
