@@ -1,4 +1,3 @@
-
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
@@ -127,7 +126,7 @@ int GloveData::calcXforms()
    gmtl::preMult(mTransforms[THUMB][DIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[THUMB][DIJ]));
    gmtl::setRot(mTransforms[THUMB][PIJ], gmtl::AxisAnglef( mAngles[THUMB][PIJ], xAxis ) );
    gmtl::preMult(mTransforms[THUMB][PIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[THUMB][PIJ]));
-   gmtl::setRot(mTransforms[THUMB][MPJ], gmtl::AxisAnglef( M_PI/4, zAxis ) );
+   gmtl::setRot(mTransforms[THUMB][MPJ], gmtl::AxisAnglef( gmtl::Math::PI_OVER_4, zAxis ) );
    gmtl::preMult(mTransforms[THUMB][MPJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[THUMB][MPJ]));
    
 // Do we need to rotate this by the mAngles too?
