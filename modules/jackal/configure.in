@@ -162,26 +162,26 @@ DPP_PATH_JAVA
 # If there is still no value in $JAVAC, then warn that the GUI will not be
 # built.
 if test "x$JAVAC" = "xno" ; then
-    AC_MSG_WARN([*** VjControl requires javac -- it will not be built ***])
+    AC_MSG_WARN([*** Editor JavaBeans require javac -- they will not be built ***])
     BUILD_JAVA='N'
 else
     # Check for JDOM.
     DPP_CHECK_JAVA_STATIC_METHOD([org.jdom.Namespace],
        [getNamespace(uri)], [String uri = new String("test")],
        [BUILD_JAVA='Y'],
-       [ AC_MSG_WARN([*** JDOM required for VjControl ***])
+       [ AC_MSG_WARN([*** JDOM required for editor JavaBeans ***])
          BUILD_JAVA='N' ],
        [$JDOM_JAR])
 fi
 
-# If we're building VjControl, we should build the test cases too.
+# If we're building the editor JavaBeans, we should build the test cases too.
 if test "x$BUILD_JAVA" = "xY" ; then
     # Check for the JUnit library
     DPP_CHECK_JAVA_STATIC_METHOD([junit.framework.Assert],
         [assertTrue(true)], ,
         [BUILD_JAVA_TEST_SUITE='Y'],
         [ BUILD_JAVA_TEST_SUITE='N' ;
-          AC_MSG_WARN(*** JUnit required for VjControl Java test suite ***)
+          AC_MSG_WARN(*** JUnit required for Java test suite ***)
         ],
         [$JUNIT_JAR])
 fi
@@ -198,7 +198,7 @@ DPP_BASIC_PROGS([$PLATFORM], [$OS_TYPE])
 # -----------------------------------------------------------------------------
 VPR_PATH([0.15.0], , [AC_MSG_ERROR([*** VPR required for JCCL ***])])
 TWEEK_PATH_JAVA([0.4.0], ,
-                [AC_MSG_WARN([*** Tweek required for VjControl ***])
+                [AC_MSG_WARN([*** Tweek required for edtior JavaBeans ***])
                  BUILD_JAVA='N'
                 ])
 
@@ -393,7 +393,7 @@ if test "x$OS_TYPE" = "xWin32" ; then
         LIBS=`unix2dos "$LIBS"`
     fi
 
-    LN_S='cp -r'
+    LN_S='cp -pr'
     RM_LN='rm -rf'
     MTREE_CMD=`unix2dos "$MTREE_CMD"`
     JDK_HOME=`unix2dos -p "$JDK_HOME"`
