@@ -1,5 +1,9 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2005-02-08 patrrickh   Added org.vrjuggler.tweek.TweekCore.getMessageDocument()
+                       for easy access to the Tweek Java GUI's informational
+                       message document.
+                       NEW VERSION: 0.92.2
 2005-01-23 patrickh    Added org.vrjuggler.tweek.beans.HelpProvider, an
                        interface used by the Tweek Java GUI for Panel Beans to
                        indicate that they can provide help to users.
