@@ -71,12 +71,6 @@ GlWindowXWin::~GlWindowXWin() {
 
 
 
-void GlWindowXWin::swapBuffers()
-{
-   glXSwapBuffers (x_display,  x_window);
-}
-
-
 
 int GlWindowXWin::open()
 {
@@ -306,7 +300,10 @@ int GlWindowXWin::close()
 
 } /* close() */
 
-
+void GlWindowXWin::swapBuffers()
+{
+   glXSwapBuffers( x_display, x_window );
+}
 
 bool GlWindowXWin::makeCurrent()
 {
