@@ -392,7 +392,7 @@ private:
 };
 
 /// Ouput operator.
-std::ostream& operator<<(std::ostream& out, BaseThread* threadPtr);
+VPR_API(std::ostream&) operator<<(std::ostream& out, BaseThread* threadPtr);
 
 } // End of vpr namespace
 
