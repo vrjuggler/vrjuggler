@@ -90,7 +90,7 @@ public:
    virtual vpr::Uint64 readUint64();
    virtual float readFloat();
    virtual double readDouble();
-   virtual std::string readString(unsigned len);
+   virtual std::string readString();
    virtual bool readBool();
 
    /* Helper methods */
@@ -106,8 +106,8 @@ public:
    { val = this->readFloat(); }
    virtual void readDouble(double& val)
    { val = this->readDouble(); }
-   virtual void readString(std::string& str, unsigned len)
-   { str = this->readString(len); }
+   virtual void readString(std::string& str)
+   { str = this->readString(); }
    virtual void readBool(bool& val)
    { val = this->readBool(); }
 
@@ -162,6 +162,7 @@ protected:
    std::stringstream       mAttribSource;    /**< Source of attribute data */
    CurSource               mCurSource;       /**< The current source of reading data */
 };
+
 
 } // namespace vpr
 
