@@ -89,9 +89,8 @@ public interface ConfigBroker
    public boolean containsDataSource(String name);
 
    /**
-    * Adds the given configuration element to the current context. If the
-    * context contains more than one resource, a dialog will prompt the user
-    * for which resource they wish to add the element to.
+    * Adds the given configuration element to the given context and a
+    * resource associated with that context.
     *
     * @param context    the context in which to add the element
     * @param elt        the configuration element to add
@@ -101,11 +100,43 @@ public interface ConfigBroker
    public boolean add(ConfigContext context, ConfigElement elt);
 
    /**
-    * Removes the given configuration element from the current context. If the
-    * element appears in more than one resource in the context, a dialog will
-    * prompt the user for which resource they wish to remove the element from.
-    * If the element does not appear in any resource in the context, this method
-    * will return false.
+    * Adds the given configuration element to the given context and the named
+    * resource within that context.  The named resource must exist and must
+    * be associated with the given context.
+    *
+    * @param context            the context in which to add the element
+    * @param elt                the configuration element to add
+    * @param dataSourceName     the name of the resource to which the element
+    *                           will be added
+    *
+    * @return  true if the addition was successful, false otherwise
+    *
+    * @since 0.92.5
+    */
+   public boolean add(ConfigContext context, ConfigElement elt,
+                      String dataSourceName);
+
+   /**
+    * Adds the given configuration element to the given context and the given
+    * resource within that context.  The given resource must exist and must
+    * be associated with the given context.
+    *
+    * @param context    the context in which to add the element
+    * @param elt        the configuration element to add
+    * @param dataSource the resource to which the element will be added
+    *
+    * @return  true if the addition was successful, false otherwise
+    *
+    * @since 0.92.5
+    */
+   public boolean add(ConfigContext context, ConfigElement elt,
+                      DataSource dataSource);
+
+   /**
+    * Removes the given configuration element from the current context.  All
+    * the resources in the given context are searched for the given element.
+    * If the element does not appear in any resource in the context, this
+    * method will return false.
     *
     * @param context    the context from which to remove the element
     * @param elt        the element to remove
@@ -114,6 +145,43 @@ public interface ConfigBroker
     *          the removal or the element does not exist in any resource
     */
    public boolean remove(ConfigContext context, ConfigElement elt);
+
+   /**
+    * Removes the given configuration element from the current context and the
+    * named resource within that context.  The named resource must exist and
+    * must be associated with the given context.  If the element does not
+    * appear in any resource in the context, this method will return false.
+    *
+    * @param context            the context from which to remove the element
+    * @param elt                the element to remove
+    * @param dataSourceName     the name of the resource from which the element
+    *                           will be removed
+    *
+    * @return  true if the removal was successful, false if the user cancelled
+    *          the removal or the element does not exist in any resource
+    *
+    * @since 0.92.5
+    */
+   public boolean remove(ConfigContext context, ConfigElement elt,
+                         String dataSourceName);
+
+   /**
+    * Removes the given configuration element from the current context and the
+    * given resource within that context.  The given resource must exist and
+    * must be associated with the given context.  If the element does not
+    * appear in any resource in the context, this method will return false.
+    *
+    * @param context    the context from which to remove the element
+    * @param elt        the element to remove
+    * @param dataSource the resource from which the element will be removed
+    *
+    * @return  true if the removal was successful, false if the user cancelled
+    *          the removal or the element does not exist in any resource
+    *
+    * @since 0.92.5
+    */
+   public boolean remove(ConfigContext context, ConfigElement elt,
+                         DataSource dataSource);
 
    /**
     * Gets a list of all the configuration elements within the given context.
