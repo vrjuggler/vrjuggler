@@ -6,7 +6,6 @@
 #include <Kernel/vjDebug.h>
 #include <Input/InputManager/vjPosInterface.h>
 
-#include <mstring.h>
 
 class vjSimulator
 {
