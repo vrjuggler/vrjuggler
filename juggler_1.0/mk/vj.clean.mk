@@ -24,7 +24,7 @@
 # 'cleandepend' target is finished.
 # -----------------------------------------------------------------------------
 
-CLEAN_FILES	= core so_locations
+CLEAN_FILES	= core so_locations vc60.*
 CLEAN_DIRS	= ii_files
 
 clean:
