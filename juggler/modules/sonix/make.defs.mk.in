@@ -132,14 +132,14 @@ LDOPTS          = @LDOPTS@ $(DPP_EXTRA_LDOPTS) $(EXTRA_LDOPTS)          \
                   $(DSOVERSIONOPTS)
 LDOPTS_DBG      = @LDOPTS_DBG@ $(EXTRA_LDOPTS_DBG)
 LDOPTS_OPT      = @LDOPTS_OPT@ $(EXTRA_LDOPTS_OPT)
-MKPATH		?= @srcdir_absolute@/Doozer++/mk
+MKPATH		?= @projectdir@/Doozer++/mk
 OBJEXT		= @OBJEXT@
 OBJ_NAME_FLAG	= @OBJ_NAME_FLAG@
 OS_TYPE		= @OS_TYPE@
 PERL            = @PERL@
 RANLIB          = @RANLIB@
-MKINSTALLDIRS = @srcdir_absolute@/mkinstalldirs
-ROOT_ABS = @srcdir_absolute@
+MKINSTALLDIRS = @projectdir@/mkinstalldirs
+ROOT_ABS      = @projectdir@
 
 # SGI-specific dynamic-shared-object information.
 DSOREGFILE	= @DSOREGFILE@

@@ -248,7 +248,7 @@ dnl echo "+ setting aj_libs == $aj_libs"
 dnl -------------------------------------------------------------
 
 DPP_SUBST
-DPP_GET_SRCDIR_ABSOLUTE
+DPP_GET_PROJECTDIR
 
 # Export variables defined above.
 AC_SUBST(topdir)
