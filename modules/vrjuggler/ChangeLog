@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Dec-07-2003 allenb      Added vrj::App::latePreFrame()
+                        NEW VERSION: 1.1.148
 Oct-06-2003 allenb      Fixed bug where resizing of glx windows was not
                         updating projection information for the display.
                         Added code to allow glx windows to be closed at
