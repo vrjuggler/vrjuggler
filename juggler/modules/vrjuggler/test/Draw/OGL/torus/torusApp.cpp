@@ -101,7 +101,7 @@ void torusApp::draw()
       doughnut(1.5f,3.0f,30,30);
       //doughnut(0.5f,1.0f,100,100);
    glPopMatrix();
-   vpr::System::msleep(2000);
+//   vpr::System::msleep(2000);
 }
 
 void torusApp::initGLState()

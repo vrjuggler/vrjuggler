@@ -84,8 +84,8 @@ public:
    // calculations and state modifications here.
    virtual void preFrame()
    {
-      static vpr::Interval last_time;
-      static long iteration=0;
+      //static vpr::Interval last_time;
+      //static long iteration=0;
 
       //static long count=0;
       //count++;
@@ -104,14 +104,14 @@ public:
       if(mTorusRotation >= 360.0f)
          mTorusRotation = rot_inc;
 
-      iteration++;
-      vpr::Interval cur_time = mWand->getTimeStamp();
-      vpr::Interval diff_time(cur_time-last_time);
+      //iteration++;
+      //vpr::Interval cur_time = mWand->getTimeStamp();
+      //vpr::Interval diff_time(cur_time-last_time);
       
-      std::cout << "\nREADANDWRITE Iteration: " << iteration << "  Delta: " << diff_time.getBaseVal() << std::endl;
-      std::cout << "READANDWRITE Current: " << cur_time.getBaseVal() << "Last: " << last_time.getBaseVal() << "\n" << std::endl;
+      //std::cout << "\nREADANDWRITE Iteration: " << iteration << "  Delta: " << diff_time.getBaseVal() << std::endl;
+      //std::cout << "READANDWRITE Current: " << cur_time.getBaseVal() << "Last: " << last_time.getBaseVal() << "\n" << std::endl;
       
-      last_time = cur_time;
+      //last_time = cur_time;
       
    }
 
