@@ -64,9 +64,9 @@
 namespace vpr {
 
 /**
- * Cross-platform block-based socket interface.  <code>vpr::Socket</code>
- * objects cannot be instantiated.  Instead, see <code>vpr::SocketStream</code>
- * and <code>vpr::SocketDatagram</code>.
+ * Cross-platform block-based socket interface.  vpr::Socket
+ * objects cannot be instantiated.  Instead, see vpr::SocketStream
+ * and vpr::SocketDatagram.
  *
  * @author Patrick Hartling
  * @author Allen Bierbaum
@@ -138,9 +138,9 @@ public:
      *       returned to the caller.  If the socket is opened, m_open is set
      *       to true.
      *
-     * @return <code>vpr::Status::Success</code> is returned if this socket is
+     * @return vpr::Status::Success is returned if this socket is
      *         opened successfully.<br>
-     *         <code>vpr::Status::Failure</code> is returned otherwise.
+     *         vpr::Status::Failure is returned otherwise.
      */
     inline vpr::Status
     open (void) {
@@ -155,9 +155,9 @@ public:
      *       is returned to the caller.  If the socket is closed, m_open
      *       is set to false.
      *
-     * @return <code>vpr::Status::Success</code> is returned if this socket is
+     * @return vpr::Status::Success is returned if this socket is
      *         closed successfully.<br>
-     *         <code>vpr::Status::Failure</code> is returned otherwise.
+     *         vpr::Status::Failure is returned otherwise.
      */
     inline vpr::Status
     close (void) {
@@ -171,8 +171,8 @@ public:
      * @post The boolean value giving the open state is returned to the
      *       caller.
      *
-     * @return <code>true</code> is returned if this socket is open;
-     *         <code>false</code> otherwise.
+     * @return true is returned if this socket is open;
+     *         false otherwise.
      */
     inline bool
     isOpen (void) {
@@ -184,9 +184,9 @@ public:
      *
      * @pre None
      *
-     * @return <code>true</code> is returned if this socket is connected to a
+     * @return true is returned if this socket is connected to a
      *         remote address.<br>
-     *         <code>false</code> is returned if this socket is not currently
+     *         false is returned if this socket is not currently
      *         connected (the other wise may have disconnected).
      */
     bool isConnected()
@@ -206,9 +206,9 @@ public:
      * @pre The socket is open.
      * @post Processes will block when accessing the socket.
      *
-     * @return <code>vpr::Status::Success</code> is returned if the socket's
+     * @return vpr::Status::Success is returned if the socket's
      *         blocking mode is set to blocking.<br>
-     *         <code>vpr::Status::Failure</code> is returned otherwise.
+     *         vpr::Status::Failure is returned otherwise.
      */
     inline vpr::Status
     enableBlocking (void) {
@@ -221,9 +221,9 @@ public:
      * @pre The socket is open.
      * @post Processes will not block when accessing the socket.
      *
-     * @return <code>vpr::Status::Success</code> is returned if the socket's
+     * @return vpr::Status::Success is returned if the socket's
      *         blocking mode is set to non-blocking.<br>
-     *         <code>vpr::Status::Failure</code> is returned otherwise.
+     *         vpr::Status::Failure is returned otherwise.
      */
     inline vpr::Status
     enableNonBlocking (void) {
@@ -236,8 +236,8 @@ public:
      * @pre m_blocking is set correctly
      * @post
      *
-     * @return <code>true</code> is returned if the socket is in blocking
-     *         mode.  Otherwise, <code>false</code> is returned.
+     * @return true is returned if the socket is in blocking
+     *         mode.  Otherwise, false is returned.
      */
     inline bool
     getBlocking (void) const {
@@ -250,8 +250,8 @@ public:
      * @pre m_blocking is set correctly
      * @post
      *
-     * @return <code>true</code> is returned if the socket is in non-blocking
-     *         mode.  Otherwise, <code>false</code> is returned.
+     * @return true is returned if the socket is in non-blocking
+     *         mode.  Otherwise, false is returned.
      */
     inline bool
     getNonBlocking (void) const {
@@ -264,9 +264,9 @@ public:
      * @pre The socket is open.
      * @post The socket is bound to the address defined in the constructor.
      *
-     * @return <code>vpr::Status::Success</code> is returned if this socket was
+     * @return vpr::Status::Success is returned if this socket was
      *         bound to its designated local address successfully.<br>
-     *         <code>vpr::Status::Failure</code> is returned otherwise.
+     *         vpr::Status::Failure is returned otherwise.
      */
     inline vpr::Status
     bind (void) {
@@ -289,14 +289,14 @@ public:
      *       communication has been established.  For a datagram socket, the
      *       default destination for all packets is now m_host_addr.
      *
-     * @return <code>vpr::Status::Success</code> is returned if the connection
+     * @return vpr::Status::Success is returned if the connection
      *         succeeded.<br>
-     *         <code>vpr::Status::InProgress</code> is returned if this is a
+     *         vpr::Status::InProgress is returned if this is a
      *         non-blocking socket and the connection is still in progress.
      *         The connection will be completed "in the background".<br>
-     *         <code>vpr::Status::Timeout</code> is returned if the connection
+     *         vpr::Status::Timeout is returned if the connection
      *         could not be made within the given timeout interval.<br>
-     *         <code>vpr::Status::Failure</code> is returned if the connection
+     *         vpr::Status::Failure is returned if the connection
      *         could not be made.
      */
     inline vpr::Status
@@ -309,18 +309,18 @@ public:
      * given buffer.
      *
      * @pre The socket is open for reading, and the buffer is at least
-     *      <code>length</code> bytes long.
-     * @post The given buffer has <code>length</code> bytes copied into it from
+     *      length bytes long.
+     * @post The given buffer has length bytes copied into it from
      *       the socket, and the number of bytes read successfully is returned
-     *       to the caller via the <code>bytes_read</code> argument.
+     *       to the caller via the bytes_read argument.
      *
-     * @return <code>vpr::Status::Success</code> is returned if the read
+     * @return vpr::Status::Success is returned if the read
      *         operation completed successfully.<br>
-     *         <code>vpr::Status::Failure</code> is returned if the read
+     *         vpr::Status::Failure is returned if the read
      *         operation failed.<br>
-     *         <code>vpr::Status::WouldBlock</code> if the device is in
+     *         vpr::Status::WouldBlock if the device is in
      *         non-blocking mode, and there is no data to receive.<br>
-     *         <code>vpr::Status::Timeout</code> is returned if the read
+     *         vpr::Status::Timeout is returned if the read
      *         could not begin within the timeout interval.
      *
      * @param buffer     A pointer to the buffer where the socket's buffer
@@ -329,7 +329,7 @@ public:
      * @param bytes_read The number of bytes read into the buffer.
      * @param timeout    The maximum amount of time to wait for data to be
      * available for reading.  This argument is optional and defaults to
-     * <code>vpr::Interval::NoTimeout</code>.
+     * vpr::Interval::NoTimeout.
      */
     inline vpr::Status
     recv (void* buffer, const vpr::Uint32 length, vpr::Uint32& bytes_read,
@@ -343,27 +343,27 @@ public:
      * given buffer.
      *
      * @pre The device is open for reading, and the buffer is at least
-     *      <code>length</code> bytes long.
-     * @post The given buffer has <code>length</code> bytes copied into it
+     *      length bytes long.
+     * @post The given buffer has length bytes copied into it
      *       from the device, and the number of bytes read successfully is
-     *       returned to the caller via the <code>bytes_read</code> argument.
+     *       returned to the caller via the bytes_read argument.
      *
-     * @param buffer     A reference to the buffer (a <code>std::string</code>
+     * @param buffer     A reference to the buffer (a std::string
      *                   object) where the device's buffer contents are to be
      *                   stored.
      * @param length     The number of bytes to be read.
      * @param bytes_read The number of bytes read into the buffer.
      * @param timeout    The maximum amount of time to wait for data to be
      *                   available for reading.  This argument is optional
-     *                   and defaults to <code>vpr::Interval::NoTimeout</code>.
+     *                   and defaults to vpr::Interval::NoTimeout.
      *
-     * @return <code>vpr::Status::Success</code> is returned if the read
+     * @return vpr::Status::Success is returned if the read
      *         operation completed successfully.<br>
-     *         <code>vpr::Status::Failure</code> is returned if the read
+     *         vpr::Status::Failure is returned if the read
      *         operation failed.<br>
-     *         <code>vpr::Status::WouldBlock</code> if the device is in
+     *         vpr::Status::WouldBlock if the device is in
      *         non-blocking mode, and there is no data to receive.<br>
-     *         <code>vpr::Status::Timeout</code> is returned if the read
+     *         vpr::Status::Timeout is returned if the read
      *         could not begin within the timeout interval.
      */
     inline vpr::Status
@@ -379,27 +379,27 @@ public:
      * given buffer.
      *
      * @pre The device is open for reading, and the buffer is at least
-     *      <code>length</code> bytes long.
-     * @post The given buffer has <code>length</code> bytes copied into it
+     *      length bytes long.
+     * @post The given buffer has length bytes copied into it
      *       from the device, and the number of bytes read successfully is
-     *       returned to the caller via the <code>bytes_read</code> argument.
+     *       returned to the caller via the bytes_read argument.
      *
      * @param buffer     A pointer to the buffer (a vector of
-     *                   <code>char</code>s) where the device's buffer
+     *                   chars) where the device's buffer
      *                   contents are to be stored.
      * @param length     The number of bytes to be read.
      * @param bytes_read The number of bytes read into the buffer.
      * @param timeout    The maximum amount of time to wait for data to be
      *                   available for reading.  This argument is optional
-     *                   and defaults to <code>vpr::Interval::NoTimeout</code>.
+     *                   and defaults to vpr::Interval::NoTimeout.
      *
-     * @return <code>vpr::Status::Success</code> is returned if the read
+     * @return vpr::Status::Success is returned if the read
      *         operation completed successfully.<br>
-     *         <code>vpr::Status::Failure</code> is returned if the read
+     *         vpr::Status::Failure is returned if the read
      *         operation failed.<br>
-     *         <code>vpr::Status::WouldBlock</code> if the device is in
+     *         vpr::Status::WouldBlock if the device is in
      *         non-blocking mode, and there is no data to receive.<br>
-     *         <code>vpr::Status::Timeout</code> is returned if the read
+     *         vpr::Status::Timeout is returned if the read
      *         could not begin within the timeout interval.
      */
     inline vpr::Status
@@ -415,10 +415,10 @@ public:
      * given buffer.
      *
      * @pre The device is open for reading, and the buffer is at least
-     *      <code>length</code> bytes long.
-     * @post The given buffer has <code>length</code> bytes copied into it from
+     *      length bytes long.
+     * @post The given buffer has length bytes copied into it from
      *       the device, and the number of bytes read successfully is returned
-     *       to the caller via the <code>bytes_read</code> parameter.
+     *       to the caller via the bytes_read parameter.
      *
      * @param buffer     A pointer to the buffer where the device's buffer
      *                   contents are to be stored.
@@ -426,13 +426,13 @@ public:
      * @param bytes_read The number of bytes read into the buffer.
      * @param timeout    The maximum amount of time to wait for data to be
      *                   available for reading.  This argument is optional
-     *                   and defaults to <code>vpr::Interval::NoTimeout</code>.
+     *                   and defaults to vpr::Interval::NoTimeout.
      *
-     * @return <code>vpr::Status::Success</code> is returned if the read
+     * @return vpr::Status::Success is returned if the read
      *         operation completed successfully.<br>
-     *         <code>vpr::Status::Failure</code> is returned if the read
+     *         vpr::Status::Failure is returned if the read
      *         operation failed.<br>
-     *         <code>vpr::Status::WouldBlock</code> if the device is in
+     *         vpr::Status::WouldBlock if the device is in
      *         non-blocking mode, and there is no data to receive.
      */
     inline vpr::Status
@@ -447,24 +447,24 @@ public:
      * given buffer.
      *
      * @pre The device is open for reading, and the buffer is at least
-     *      <code>length</code> bytes long.
-     * @post The given buffer has <code>length</code> bytes copied into it from
+     *      length bytes long.
+     * @post The given buffer has length bytes copied into it from
      *       the device, and the number of bytes read successfully is returned
-     *       to the caller via the <code>bytes_read</code> parameter.
+     *       to the caller via the bytes_read parameter.
      *
-     * @param buffer     A reference to the buffer (a <code>std::string</code>
+     * @param buffer     A reference to the buffer (a std::string
      *                   object) where the device's buffer contents are to be
      *                   stored.
      * @param length     The number of bytes to be read.
      * @param bytes_read The number of bytes read into the buffer.
      * @param timeout    The maximum amount of time to wait for data to be
      *                   available for reading.  This argument is optional
-     *                   and defaults to <code>vpr::Interval::NoTimeout</code>.
+     *                   and defaults to vpr::Interval::NoTimeout.
      *
-     * @return <code>vpr::Status::Success</code> is returned if the read
+     * @return vpr::Status::Success is returned if the read
      *         operation completed successfully.
-     *         <code>vpr::Status::Failure</code> is returned if the read
-     *         operation failed.  <code>vpr::Status::WouldBlock</code> if the
+     *         vpr::Status::Failure is returned if the read
+     *         operation failed.  vpr::Status::WouldBlock if the
      *         device is in non-blocking mode, and there is no data to
      *         receive.
      */
@@ -481,27 +481,27 @@ public:
      * given buffer.
      *
      * @pre The device is open for reading, and the buffer is at least
-     *      <code>length</code> bytes long.
-     * @post The given buffer has <code>length</code> bytes copied into it from
+     *      length bytes long.
+     * @post The given buffer has length bytes copied into it from
      *       the device, and the number of bytes read successfully is returned
      *       to the caller.
      *
      * @param buffer     A pointer to the buffer (a vector of
-     *                   <code>char</code>s) where the device's buffer contents
+     *                   chars) where the device's buffer contents
      *                   are to be stored.
      * @param length     The number of bytes to be read.
      * @param bytes_read The number of bytes read into the buffer.
      * @param timeout    The maximum amount of time to wait for data to be
      *                   available for reading.  This argument is optional
-     *                   and defaults to <code>vpr::Interval::NoTimeout</code>.
+     *                   and defaults to vpr::Interval::NoTimeout.
      *
-     * @return <code>vpr::Status::Success</code> is returned if the read
+     * @return vpr::Status::Success is returned if the read
      *         operation completed successfully.<br>
-     *         <code>vpr::Status::Failure</code> is returned if the read
+     *         vpr::Status::Failure is returned if the read
      *         operation failed.<br>
-     *         <code>vpr::Status::WouldBlock</code> if the device is in
+     *         vpr::Status::WouldBlock if the device is in
      *         non-blocking mode, and there is no data to receive.<br>
-     *         <code>vpr::Status::Timeout</code> is returned if the read
+     *         vpr::Status::Timeout is returned if the read
      *         could not begin within the timeout interval.
      */
     inline vpr::Status
@@ -518,7 +518,7 @@ public:
      * @pre The device is open for writing.
      * @post The given buffer is written to the I/O device, and the number of
      *       bytes written successfully is returned to the caller via the
-     *       <code>bytes_written</code> parameter.
+     *       bytes_written parameter.
      *
      * @param buffer        A pointer to the buffer to be written.
      * @param length        The length of the buffer.
@@ -526,16 +526,16 @@ public:
      * @param timeout       The maximum amount of time to wait for data to be
      *                      available for writing.  This argument is optional
      *                      and defaults to
-     *                      <code>vpr::Interval::NoTimeout</code>.
+     *                      vpr::Interval::NoTimeout.
      *
-     * @return <code>vpr::Status::Success</code> is returned if the write
+     * @return vpr::Status::Success is returned if the write
      *         operation completed successfully.<br>
-     *         <code>vpr::Status::Failure</code> is returned if the write
+     *         vpr::Status::Failure is returned if the write
      *         operation failed.
-     *         <code>vpr::Status::WouldBlock</code> is returned if the handle
+     *         vpr::Status::WouldBlock is returned if the handle
      *         is in non-blocking mode, and the write operation could not be
      *         completed.<br>
-     *         <code>vpr::Status::Timeout</code> is returned if the write
+     *         vpr::Status::Timeout is returned if the write
      *         could not begin within the timeout interval.
      */
     inline vpr::Status
@@ -552,7 +552,7 @@ public:
      * @pre The device is open for writing.
      * @post The given buffer is written to the I/O device, and the number of
      *       bytes written successfully is returned to the caller via the
-     *       <code>bytes_written</code> parameter.
+     *       bytes_written parameter.
      *
      * @param buffer        A reference to the buffer (a std::string object)
      *                      to be written.
@@ -561,16 +561,16 @@ public:
      * @param timeout       The maximum amount of time to wait for data to be
      *                      available for writing.  This argument is optional
      *                      and defaults to
-     *                      <code>vpr::Interval::NoTimeout</code>.
+     *                      vpr::Interval::NoTimeout.
      *
-     * @return <code>vpr::Status::Success</code> is returned if the write
+     * @return vpr::Status::Success is returned if the write
      *         operation completed successfully.<br>
-     *         <code>vpr::Status::Failure</code> is returned if the write
+     *         vpr::Status::Failure is returned if the write
      *         operation failed.
-     *         <code>vpr::Status::WouldBlock</code> is returned if the handle
+     *         vpr::Status::WouldBlock is returned if the handle
      *         is in non-blocking mode, and the send operation could not be
      *         completed.<br>
-     *         <code>vpr::Status::Timeout</code> is returned if the write
+     *         vpr::Status::Timeout is returned if the write
      *         could not begin within the timeout interval.
      */
     inline vpr::Status
@@ -588,7 +588,7 @@ public:
      * @pre The device is open for writing.
      * @post The given buffer is written to the I/O device, and the number of
      *       bytes written successfully is returned to the caller via the
-     *       <code>bytes_written</code> parameter.
+     *       bytes_written parameter.
      *
      * @param buffer        A reference to the buffer (a std::string object)
      *                      to be written.
@@ -597,16 +597,16 @@ public:
      * @param timeout       The maximum amount of time to wait for data to be
      *                      available for writing.  This argument is optional
      *                      and defaults to
-     *                      <code>vpr::Interval::NoTimeout</code>.
+     *                      vpr::Interval::NoTimeout.
      *
-     * @return <code>vpr::Status::Success</code> is returned if the write
+     * @return vpr::Status::Success is returned if the write
      *         operation completed successfully.<br>
-     *         <code>vpr::Status::Failure</code> is returned if the write
+     *         vpr::Status::Failure is returned if the write
      *         operation failed.
-     *         <code>vpr::Status::WoudlBlock</code> is returned if the handle
+     *         vpr::Status::WoudlBlock is returned if the handle
      *         is in non-blocking mode, and the send operation could not be
      *         completed.<br>
-     *         <code>vpr::Status::Timeout</code> is returned if the write
+     *         vpr::Status::Timeout is returned if the write
      *         could not begin within the timeout interval.
      */
     inline vpr::Status
@@ -711,15 +711,15 @@ protected:
     }
 
     /**
-     * Implementation of the <code>read</code> template method.  This reads at
+     * Implementation of the read template method.  This reads at
      * most the specified number of bytes from the socket into the given
      * buffer.
      *
      * @pre The device is open for reading, and the buffer is at least
-     *      <code>length</code> bytes long.
+     *      length bytes long.
      * @post The given buffer has length bytes copied into it from the device,
      *       and the number of bytes read successfully is returned to the
-     *       caller via the <code>bytes_read</code> parameter.
+     *       caller via the bytes_read parameter.
      *
      * @param buffer     A pointer to the buffer where the device's buffer
      *                   contents are to be stored.
@@ -727,7 +727,7 @@ protected:
      * @param bytes_read The number of bytes read into the buffer.
      * @param timeout    The maximum amount of time to wait for data to be
      *                   available for reading.  This argument is optional and
-     *                   defaults to <code>vpr::Interval::NoTimeout</code>
+     *                   defaults to vpr::Interval::NoTimeout
      *
      * @return vpr::Status::Success is returned if the read operation
      *         completed successfully.<br>
@@ -745,15 +745,15 @@ protected:
     }
 
     /**
-     * Implementation of the <code>readn</code> template method.  This reads
+     * Implementation of the readn template method.  This reads
      * exactly the specified number of bytes from the socket into the given
      * buffer.
      *
      * @pre The device is open for reading, and the buffer is at least
-     *      <code>length</code> bytes long.
-     * @post The given buffer has <code>length</code> bytes copied into
+     *      length bytes long.
+     * @post The given buffer has length bytes copied into
      *       it from the device, and the number of bytes read successfully
-     *       is returned to the caller via the <code>bytes_read</code>
+     *       is returned to the caller via the bytes_read
      *       parameter.
      *
      * @param buffer     A pointer to the buffer where the device's buffer
@@ -762,7 +762,7 @@ protected:
      * @param bytes_read The number of bytes read into the buffer.
      * @param timeout    The maximum amount of time to wait for data to be
      *                   available for reading.  This argument is optional and
-     *                   defaults to <code>vpr::Interval::NoTimeout</code>
+     *                   defaults to vpr::Interval::NoTimeout
      *
      * @return vpr::Status::Success is returned if the read operation
      *         completed successfully.<br>
@@ -780,13 +780,13 @@ protected:
     }
 
     /**
-     * Implementation of the <code>write</code> template method.  This writes
+     * Implementation of the write template method.  This writes
      * the buffer to the socket.
      *
      * @pre The device is open for writing.
      * @post The given buffer is written to the I/O device, and the number
      *       of bytes written successfully is returned to the caller via the
-     *       <code>bytes_written</code> parameter.
+     *       bytes_written parameter.
      *
      * @param buffer        A pointer to the buffer to be written.
      * @param length        The length of the buffer.
@@ -794,7 +794,7 @@ protected:
      * @param timeout       The maximum amount of time to wait for data to be
      *                      available for writing.  This argument is optional
      *                      and defaults to
-     *                      <code>vpr::Interval::NoTimeout</code>.
+     *                      vpr::Interval::NoTimeout.
      *
      * @return vpr::Status::Success is returned if the write operation
      *         completed successfully.<br>
