@@ -40,7 +40,6 @@ import VjConfig.ConfigChunkDB;
 import VjConfig.ChunkDescDB;
 import VjConfig.ChunkFactory;
 import VjConfig.ConfigIOStatus;
-import VjConfig.ConfigParserException;
 
 public interface ConfigIOHandler {
 
