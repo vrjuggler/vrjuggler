@@ -983,10 +983,15 @@ ifneq (@OS_TYPE@, Win32)
 endif
 	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
           ${topdir}/GUI/VjControl.jar ${bindir}
+ifneq (@OS_TYPE@, Win32)
 	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
           ${VJROOT_ABS}/GUI/vjcontrol ${bindir}/vjcontrol
 	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
           ${VJROOT_ABS}/GUI/vjcontrol1.1 ${bindir}/vjcontrol1.1
+else
+	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX} 			\
+          ${VJROOT_ABS}/GUI/vjcontrol.bat ${bindir}/vjcontrol.bat
+endif
 else
 	@echo "------------------------------------------------"
 	@echo "Skipping installation of vjcontrol (not built)"
