@@ -103,12 +103,6 @@ AC_ARG_ENABLE(osg-api,
 # usable on Windows.
 DPP_WITH_GCC(no)
 
-# Build the DTK wrapper using the DTK installation found at the given path.
-# There is default path.
-AC_ARG_WITH(dtk,
-            [  --with-dtk=<PATH>       DTK installation],
-            _with_dtk="$withval", _with_dtk='no')
-
 # Define the binary format.
 DPP_ABI_SETUP
 
@@ -281,99 +275,6 @@ if test "x${_enable_osg_api}" = "xyes" ; then
     LIBS="${_vjsave_LIBS}"
 fi
 
-# ----
-# DTK
-# ----
-try_dtk='no'
-vpr_subsystem=`$VPR_CONFIG --subsystem`
-SUBSYSTEM="$vpr_subsystem"
-
-# We can use DTK in one of the following two situations:
-#     1) If the NSPR subsystem is enabled, the target platform is UNIX-based,
-#        and NSPR threads are not being used.
-#     2) If the POSIX subsystem is enabled.
-case $vpr_subsystem in
-    NSPR)
-        if test "x$OS_TYPE" = "xUNIX"; then
-            try_dtk='yes'
-        fi
-        ;;
-    POSIX)
-        try_dtk='yes'
-        ;;
-esac
-
-# The user requested that the DTK wrapper be built, and the subsystem
-# configuration is right for use with DTK.
-if test "x${_with_dtk}" != "xno" -a "x$try_dtk" = "xyes" ; then
-    # Try to find dtk-config unless the user has already set a value for
-    # $DTK_CONFIG in their environment.
-    if test "x$DTK_CONFIG" = "x" ; then
-        AC_PATH_PROG(DTK_CONFIG, dtk-config, no, "${_with_dtk}/bin")
-    fi
-
-    $ If dtk-config was not found, we cannot proceed with the DTK checks.
-    if test "x$DTK_CONFIG" = "xno" ; then
-        AC_MSG_WARN(*** Cannot build DTK wrapper without dtk-config ***)
-    $ If dtk-config was found, $DTK_CONFIG has the path to it, so we can
-    # set things up to compile with DTK.
-    else
-        DPP_LANG_SAVE
-        DPP_LANG_CPLUSPLUS
-
-        _vjsave_CXXFLAGS="$CXXFLAGS"
-        _vjsave_CPPFLAGS="$CPPFLAGS"
-        _vjsave_LDFLAGS="$LDFLAGS"
-        _vjsave_LIBS="$LIBS"
-
-        # Based on the default ABI, tell $DTK_CONFIG 
-        if test "x$ABI" = "xN32" ; then
-            bits='n32'
-        elif test "x$ABI" = "x64" ; then
-            bits='64'
-        fi
-
-        DTK_ROOT=`$DTK_CONFIG --root`
-        CXXFLAGS="$CXXFLAGS `$DTK_CONFIG --cflags $bits`"
-        CPPFLAGS="$CPPFLAGS `$DTK_CONFIG --include`"
-        LDFLAGS="$LDFLAGS -L`$DTK_CONFIG --lib-dir $bits`"
-        LIBS="$LIBS -ldtk"
-
-        HAVE_DTK='N'
-
-        # Determine if the installed DTK library is usable.
-        AC_CACHE_CHECK(for dtkMath_matrixPrint in -ldtk,
-            ac_cv_dtkMath_matrixPrint_in_dtk,
-            AC_TRY_LINK([
-#include <dtk.h>
-void dtkMath_matrixPrint(FILE *file, dtkMath_matrix* m); ],
-                        [ dtkMath_matrixPrint(0, 0); ],
-                        [ ac_cv_dtkMath_matrixPrint_in_dtk='yes'
-                          rm -rf ./ii_files ],
-                        ac_cv_dtkMath_matrixPrint_in_dtk='no'))
-
-        if test "x$ac_cv_dtkMath_matrixPrint_in_dtk" = "xyes" ; then
-            HAVE_DTK='Y'
-            AC_DEFINE(VJ_HAVE_DTK)
-            DTK_INCLUDES=`$DTK_CONFIG --include`
-            DTK_LDFLAGS=`$DTK_CONFIG --libs $bits`
-        else
-            AC_MSG_WARN(*** Cannot find DTK ***)
-        fi
-
-        CXXFLAGS="${_vjsave_CXXFLAGS}"
-        CPPFLAGS="${_vjsave_CPPFLAGS}"
-        LDFLAGS="${_vjsave_LDFLAGS}"
-        LIBS="${_vjsave_LIBS}"
-
-        DPP_LANG_RESTORE
-    fi
-# If the user wanted to compile the DTK wrapper but this script determined that
-# the subsystem configuation would not allow its use, warn the user.
-elif test "x${_with_dtk}" != "xno" -a "x$try_dtk" = "xno" ; then
-    AC_MSG_WARN(*** DTK cannot be used with this subsystem ***)
-fi
-
 # -----------------------------------------------------------------------------
 # Checks for header files.
 # -----------------------------------------------------------------------------
@@ -432,10 +333,6 @@ if test "x$OSG_INCLUDES" != "x" -a "x$OSG_API" = "xY" ; then
     INCLUDES="$INCLUDES $OSG_INCLUDES"
 fi
 
-if test "x$DTK_INCLUDES" != "x" ; then
-    INCLUDES="$INCLUDES $DTK_INCLUDES"
-fi
-
 # Add these C++ options when compiling with G++.
 if test "x$GXX" = "xyes" ; then
 #    CXXFLAGS="-fhonor-std -Wall -Werror-implicit-function-declaration $CXXFLAGS"
@@ -485,7 +382,7 @@ UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 if test "x$OS_TYPE" = "xWin32" ; then
     APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_LD $JCCL_LIBS_LD $GADGET_LIBS_LD $SNX_LIBS_LD $LIBS comctl32.lib user32.lib gdi32.lib ws2_32.lib"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_CC $JCCL_LIBS_CC $GADGET_LIBS_CC $SNX_LIBS_CC $LIBS $DTK_LDFLAGS -lm"
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_CC $JCCL_LIBS_CC $GADGET_LIBS_CC $SNX_LIBS_CC $LIBS -lm"
 fi
 
 # Variables set in Makefiles found in the application trees.  All variables
@@ -659,8 +556,6 @@ AC_SUBST(PERFORMER_API)
 AC_SUBST(OSGROOT)
 AC_SUBST(OSG_API)
 AC_SUBST(OSG_INCLUDES)
-AC_SUBST(DTK_CONFIG)
-AC_SUBST(HAVE_DTK)
 
 AC_SUBST(APP_BASE_DIR)
 AC_SUBST(APP_BASE_DIR_INST)
