@@ -26,10 +26,11 @@ jexplorer bug: find out why new images wont load under a jitfolder
 
 Kevin:
 ------------
-logo
 compressed xml files - does JExplorer support it?
+interview, or overview of juggler, containing words from dr cruz... :)
 
 Allen:
 ------------
+Overview guide.
 Add tutorials.
 Add vj Arch book
