@@ -648,7 +648,7 @@ case $SUBSYSTEM in
             subsystem_libs="$NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE comctl32.lib user32.lib gdi32.lib ws2_32.lib"
             vpr_ldflags_compiler="/link /libpath:\$prefix/lib/debug"
             vpr_ldflags_linker="/libpath:\$prefix/lib/debug"
-            vpr_extra_ldflags_compiler="/link $NSPR_LDFLAGS"
+            vpr_extra_ldflags_compiler="/link $NSPR_LDFLAGS_LINK_EXE"
             vpr_extra_ldflags_linker="$NSPR_LDFLAGS_LINK_EXE"
             vpr_libs='vpr.lib'
         else
