@@ -208,9 +208,8 @@ public class ConfigChunkDB {
 		    ((st.ttype == ConfigStreamTokenizer.TT_WORD) &&
 		     st.sval.equalsIgnoreCase ("end")))
 		    return null;
-		d = descs.get(st.sval);
-		if (d != null) {
-		    c = new ConfigChunk(d, descs);
+		c = ChunkFactory.createChunkWithDescToken(st.sval);
+		if (c != null) {
 		    c.read(st);
 		    if ((c.name == null) || (c.name.equals(""))) {
 			c.name = getNewName (c.desc.name);    
