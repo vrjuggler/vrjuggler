@@ -43,7 +43,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     getKeepAlive (bool& enabled) {
         SocketOptions::Data option;
         int retval;
@@ -60,7 +60,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     setKeepAlive (const bool enable_val) {
         SocketOptions::Data option;
         option.keep_alive = enable_val;
@@ -70,7 +70,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     getLingerOnClose (bool& enabled, int& linger_sec) {
         SocketOptions::Data opt;
         int retval;
@@ -88,7 +88,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     setLingerOnClose (const bool enable_val, const int linger_sec) {
         SocketOptions::Data opt;
 
@@ -101,7 +101,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     getRecvBufferSize (Int32& size) {
         SocketOptions::Data opt;
         int retval;
@@ -121,7 +121,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     setRecvBufferSize (const Int32 size) {
         SocketOptions::Data opt;
 
@@ -133,7 +133,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     getSendBufferSize (int& size) {
         SocketOptions::Data opt;
         int retval;
@@ -153,7 +153,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     setSendBufferSize (const Int32 size) {
         SocketOptions::Data opt;
 
@@ -165,7 +165,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     getReuseAddr (bool& enabled) {
         SocketOptions::Data option;
         int retval;
@@ -184,7 +184,7 @@ public:
      *
      * PRE: The socket has been opened, but bind() has not been called.
      */
-    inline int
+    inline bool
     setReuseAddr (const bool enable_val) {
         SocketOptions::Data option;
         option.reuse_addr = enable_val;
@@ -195,14 +195,14 @@ protected:
     /**
      *
      */
-    virtual int getOption(const SocketOptions::Types option,
-                          struct SocketOptions::Data& data) = 0;
+    virtual bool getOption(const SocketOptions::Types option,
+                           struct SocketOptions::Data& data) = 0;
 
     /**
      *
      */
-    virtual int setOption(const SocketOptions::Types option,
-                          const struct SocketOptions::Data& data) = 0;
+    virtual bool setOption(const SocketOptions::Types option,
+                           const struct SocketOptions::Data& data) = 0;
 };
 
 }; // End of vpr namespace

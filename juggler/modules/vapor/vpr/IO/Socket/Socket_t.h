@@ -275,7 +275,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     getKeepAlive (bool& enabled) const {
         return m_socket_imp->getKeepAlive(enabled);
     }
@@ -283,7 +283,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     setKeepAlive (const bool enable_val) {
         return m_socket_imp->setKeepAlive(enable_val);
     }
@@ -291,7 +291,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     getLingerOnClose (bool& enabled, int& linger_sec) const {
         return m_socket_imp->getLingerOnClose(enabled, linger_sec);
     }
@@ -299,7 +299,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     setLingerOnClose (const bool enable_val, const int linger_sec) {
         return m_socket_imp->setLingerOnClose(enable_val, linger_sec);
     }
@@ -307,7 +307,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     getRecvBufferSize (Int32& size) const {
         return m_socket_imp->getRecvBufferSize(size);
     }
@@ -315,7 +315,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     setRecvBufferSize (const Int32 size) {
         return m_socket_imp->getRecvBufferSize(size);
     }
@@ -323,7 +323,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     getSendBufferSize (int& size) const {
         return m_socket_imp->getSecvBufferSize(size);
     }
@@ -331,7 +331,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     setSendBufferSize (const Int32 size) {
         return m_socket_imp->getSecvBufferSize(size);
     }
@@ -339,7 +339,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     getReuseAddr (bool& enabled) const {
         return m_socket_imp->getReuseAddr(enabled);
     }
@@ -349,7 +349,7 @@ public:
      *
      * PRE: The socket has been opened, but bind() has not been called.
      */
-    inline int
+    inline bool
     setReuseAddr (const bool enable_val) {
         return m_socket_imp->setReuseAddr(enable_val);
     }
@@ -358,7 +358,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     getTypeOfService (SocketOptions::TypeOfService& tos) {
         return m_socket_imp->getTypeOfService(tos);
     }
@@ -366,7 +366,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     setTypeOfService (const SocketOptions::TypeOfService& tos) {
         return m_socket_imp->setTypeOfService(tos);
     }
@@ -375,7 +375,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     getTimeToLive (Int32& ttl) {
         return m_socket_imp->getTimeToLive(ttl);
     }
@@ -383,7 +383,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     setTimeToLive (const Int32 ttl) {
         return m_socket_imp->setTimeToLive(ttl);
     }

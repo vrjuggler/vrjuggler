@@ -294,11 +294,12 @@ union sockopt_data {
     Uint8          mcast_loop;
 };
 
-int
+bool
 SocketImpWinSock::getOption (const SocketOptions::Types option,
                              struct SocketOptions::Data& data)
 {
-    int opt_name, opt_level, retval;
+    int opt_name, opt_level;
+    bool retval;
     socklen_t opt_size;
     union sockopt_data opt_data;
     bool do_get;
@@ -372,13 +373,15 @@ SocketImpWinSock::getOption (const SocketOptions::Types option,
     }
 
     if ( do_get ) {
-        retval = getsockopt(m_sockfd, opt_level, opt_name, (char*) &opt_data,
+        status = getsockopt(m_sockfd, opt_level, opt_name, (char*) &opt_data,
                             &opt_size);
 
-        if ( retval == 0 ) {
-            // This extracts the information from the union passed to getsockopt(2)
-            // and puts it in our friendly SocketOptions::Data object.  This code
-            // depends on the type of that object being a union!
+        if ( status == 0 ) {
+            retval = false;
+
+            // This extracts the information from the union passed to
+            // getsockopt(2) and puts it in our friendly SocketOptions::Data
+            // object.
             switch (option) {
               case SocketOptions::Linger:
                 data.linger.enabled = (opt_data.linger_val.l_onoff != 0 ? true
@@ -445,6 +448,7 @@ SocketImpWinSock::getOption (const SocketOptions::Types option,
             }
         }
         else {
+            retval = false;
             fprintf(stderr,
                     "[vpr::SocketImpWinSock] ERROR: Could not get socket "
                     "option for socket %s: %s\n", getName().c_str(),
@@ -452,13 +456,13 @@ SocketImpWinSock::getOption (const SocketOptions::Types option,
         }
     }
     else {
-        retval = -1;
+        retval = false;
     }
 
     return retval;
 }
 
-int
+bool
 SocketImpWinSock::setOption (const SocketOptions::Types option,
                              const struct SocketOptions::Data& data)
 {

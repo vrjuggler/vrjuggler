@@ -53,7 +53,7 @@ namespace vpr {
 bool
 SocketImpNSPR::open () {
     bool retval;
-    PRFileDesc* new_sock;
+    PRFileDesc* new_sock = NULL;
 
     // NSPR has not concept of domain in socket creation
     // switch (m_local_addr.getFamily())
@@ -181,11 +181,11 @@ SocketImpNSPR::~SocketImpNSPR ()
 /**
  *
  */
-int
+bool
 SocketImpNSPR::getOption (const SocketOptions::Types option,
                           struct SocketOptions::Data& data)
 {
-    PRStatus retval;
+    bool retval;
     PRSocketOptionData opt_data;
     bool get_opt;
 
@@ -238,9 +238,13 @@ SocketImpNSPR::getOption (const SocketOptions::Types option,
     }
 
     if ( get_opt ) {
-        retval = PR_GetSocketOption(m_handle, &opt_data);
+        PRStatus status;
 
-        if ( retval == PR_SUCCESS ) {
+        status = PR_GetSocketOption(m_handle, &opt_data);
+
+        if ( status == PR_SUCCESS ) {
+            retval = false;
+
             // This extracts the information from the union passed to
             // PR_GetSocketOption() and puts it in our friendly
             // SocketOptions::Data object.
@@ -305,13 +309,14 @@ SocketImpNSPR::getOption (const SocketOptions::Types option,
             }
         }
         else {
+            retval = false;
             fprintf(stderr,
                     "[vpr::SocketImpNSPR] ERROR: Could not get socket option "
                     "for socket");
         }
     }
     else {
-        retval = PR_FAILURE;
+        retval = false;
     }
 
     return retval;
@@ -320,7 +325,7 @@ SocketImpNSPR::getOption (const SocketOptions::Types option,
 /**
  *
  */
-int
+bool
 SocketImpNSPR::setOption (const SocketOptions::Types option,
                           const struct SocketOptions::Data& data)
 {
@@ -409,7 +414,7 @@ SocketImpNSPR::setOption (const SocketOptions::Types option,
         break;
     }
 
-    return PR_SetSocketOption(m_handle, &opt_data);
+    return (PR_SetSocketOption(m_handle, &opt_data) == PR_SUCCESS);
 }
 
 }; // End of vpr namespace
