@@ -28,4 +28,4 @@
 from PyJuggler import gmtl
 
 def myFunc(vec):
-   print "Wand position:", vec[0], vec[1], vec[2]
+   print "Wand position:", vec
