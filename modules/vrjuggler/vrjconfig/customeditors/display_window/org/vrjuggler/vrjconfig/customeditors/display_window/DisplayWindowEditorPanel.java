@@ -40,14 +40,13 @@ import javax.swing.event.*;
 import info.clearthought.layout.*;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.editors.*;
+import java.beans.*;
 
 
 public class DisplayWindowEditorPanel
    extends JPanel
    implements CustomEditor, InternalFrameListener
 {
-   private static String mBaseResourcePath = "org/vrjuggler/vrjconfig/customeditors/display_window";
-
    /**
     * For testing purposes only.
     *
@@ -70,8 +69,8 @@ public class DisplayWindowEditorPanel
       try
       {
          jbInit();
-         mWidthField.setText(String.valueOf(mCurrentResolution.width));
-         mHeightField.setText(String.valueOf(mCurrentResolution.height));
+         mWidthField.setValue(new Integer(mCurrentResolution.width));
+         mHeightField.setValue(new Integer(mCurrentResolution.height));
       }
       catch (Exception e)
       {
@@ -79,7 +78,7 @@ public class DisplayWindowEditorPanel
       }
 
       ClassLoader loader = getClass().getClassLoader();
-      String root_path = mBaseResourcePath + "/images";
+      String root_path = EditorConstants.imageBase;
 
       try
       {
@@ -200,7 +199,7 @@ public class DisplayWindowEditorPanel
 
    public void internalFrameActivated(InternalFrameEvent e)
    {
-      setActiveDisplayWindow(e.getInternalFrame());
+      setActiveDisplayWindow((DisplayWindowFrame) e.getInternalFrame());
    }
 
    public void internalFrameClosed(InternalFrameEvent e)
@@ -250,7 +249,7 @@ public class DisplayWindowEditorPanel
             System.err.println("WARNING: Opened internal frame is already active");
          }
 
-         setActiveDisplayWindow(e.getInternalFrame());
+         setActiveDisplayWindow((DisplayWindowFrame) e.getInternalFrame());
       }
    }
 
@@ -270,14 +269,17 @@ public class DisplayWindowEditorPanel
       mDisplayCreateButton.addActionListener(new DisplayWindowEditorPanel_mDisplayCreateButton_actionAdapter(this));
       mSurfaceViewportButton.setEnabled(false);
       mSurfaceViewportButton.setToolTipText("Add a new Surface Viewport to the display window ");
+      mSurfaceViewportButton.addActionListener(new DisplayWindowEditorPanel_mSurfaceViewportButton_actionAdapter(this));
       mSimViewportButton.setEnabled(false);
       mSimViewportButton.setToolTipText("Add a new Simulator Viewport to the display window");
+      mSimViewportButton.addActionListener(new DisplayWindowEditorPanel_mSimViewportButton_actionAdapter(this));
       mResolutionLabel.setLabelFor(mWidthField);
       mResolutionLabel.setText("Screen Resolution:");
       mWidthField.setMinimumSize(new Dimension(40, 21));
       mWidthField.setPreferredSize(new Dimension(40, 21));
       mWidthField.setToolTipText("Screen resolution width");
       mWidthField.setHorizontalAlignment(SwingConstants.TRAILING);
+      mWidthField.addPropertyChangeListener(new DisplayWindowEditorPanel_mWidthField_propertyChangeAdapter(this));
       mWidthField.addFocusListener(new DisplayWindowEditorPanel_Resolution_focusAdapter(this));
       mResolutionXLabel.setRequestFocusEnabled(true);
       mResolutionXLabel.setText("\u00D7");
@@ -327,6 +329,7 @@ public class DisplayWindowEditorPanel
       mHelpButton.setText("Help");
       mCloseButton.setMnemonic('0');
       mCloseButton.setText("Close");
+      mCloseButton.addActionListener(new DisplayWindowEditorPanel_mCloseButton_actionAdapter(this));
       mMainButtonPanel.setLayout(flowLayout1);
       flowLayout1.setAlignment(FlowLayout.RIGHT);
       this.add(mMainPanel, BorderLayout.CENTER);
@@ -340,8 +343,8 @@ public class DisplayWindowEditorPanel
       mEditorPanel.add(mDesktopEditor, BorderLayout.CENTER);
       mMainEditorPanel.add(mResolutionPanel, BorderLayout.NORTH);
       mMainPanel.add(mExtraEditorPanel, BorderLayout.SOUTH);
-      this.add(mMainButtonPanel,  BorderLayout.SOUTH);
-      mMainButtonPanel.add(mCloseButton, null);
+      this.add(mMainButtonPanel, BorderLayout.SOUTH);
+//      mMainButtonPanel.add(mCloseButton, null);
       mMainButtonPanel.add(mHelpButton, null);
       mButtonPanel.add(mDisplayCreateButton,
                        new TableLayoutConstraints(1, 1, 1, 1,
@@ -370,7 +373,7 @@ public class DisplayWindowEditorPanel
       mContextMenu.add(mAddDisplayItem);
    }
 
-   private void setActiveDisplayWindow(JInternalFrame w)
+   private void setActiveDisplayWindow(DisplayWindowFrame w)
    {
       mActiveWindow = w;
       boolean enabled = (w != null);
@@ -383,15 +386,17 @@ public class DisplayWindowEditorPanel
       return mCurrentResolution;
    }
 
-   private Frame getOwner()
+   private Container getOwner()
    {
-      return (Frame) SwingUtilities.getRoot(this);
+      Object owner = SwingUtilities.getRoot(this);
+      System.out.println("owner class: " + owner.getClass());
+      return (Container) owner;
    }
 
    /**
     * Positions the given Dialog object relative to this window frame.
     */
-   private void positionDialog(Dialog dialog, Frame parent)
+   private void positionDialog(Dialog dialog, Container parent)
    {
       Dimension dlg_size   = dialog.getPreferredSize();
       Dimension frame_size = parent.getSize();
@@ -405,9 +410,9 @@ public class DisplayWindowEditorPanel
 
    void createDisplayClicked(ActionEvent e)
    {
-      Frame owner = getOwner();
+      Container owner = getOwner();
       DisplayWindowStartDialog dlg =
-         new DisplayWindowStartDialog(owner, mCurrentResolution);
+         new DisplayWindowStartDialog(mCurrentResolution);
       positionDialog(dlg, owner);
       dlg.show();
 
@@ -510,12 +515,110 @@ public class DisplayWindowEditorPanel
       return name;
    }
 
+   void addSurfaceViewportClicked(ActionEvent e)
+   {
+      Container owner = getOwner();
+      SurfaceViewportCreateDialog dlg = new SurfaceViewportCreateDialog();
+      positionDialog(dlg, owner);
+      dlg.show();
+
+      if ( dlg.getStatus() == DisplayWindowStartDialog.OK_OPTION )
+      {
+         ConfigBrokerProxy broker = new ConfigBrokerProxy();
+         ConfigDefinition vp_def =
+            broker.getRepository().get("surface_viewport");
+         ConfigElementFactory factory =
+            new ConfigElementFactory(broker.getRepository().getAllLatest());
+
+         ConfigElement display_elt = mActiveWindow.getConfiguration();
+
+         // Set the title for the new viewport based on the number of
+         // simulator viewports that already exist in the window's
+         // configuration.
+         int sim_vps = display_elt.getPropertyValueCount("surface_viewports");
+         String title = "Surface Viewport " + sim_vps;
+
+         // Create a new config element based on the initial information we have.
+         ConfigElement elt = factory.create(title, vp_def);
+
+         Rectangle bounds = dlg.getViewportBounds();
+         float origin_x = (float) bounds.x / 100.0f;
+         float origin_y = (float) bounds.y / 100.0f;
+         float width    = (float) bounds.width / 100.0f;
+         float height   = (float) bounds.height / 100.0f;
+
+         elt.setProperty("origin", 0, new Float(origin_x));
+         elt.setProperty("origin", 1, new Float(origin_y));
+         elt.setProperty("size", 0, new Float(width));
+         elt.setProperty("size", 1, new Float(height));
+         elt.setProperty("view", 0, dlg.getViewpoint());
+         elt.setProperty("user", 0, dlg.getUser());
+         elt.setProperty("tracked", 0, dlg.isTracked());
+
+         if ( dlg.isTracked() == Boolean.TRUE )
+         {
+            elt.setProperty("tracker_proxy", 0, dlg.getTrackerProxy());
+         }
+
+         display_elt.addProperty("surface_viewports", elt);
+      }
+   }
+
+   void addSimulatorViewportClicked(ActionEvent e)
+   {
+      Container owner = getOwner();
+      SimulatorViewportCreateDialog dlg = new SimulatorViewportCreateDialog();
+      positionDialog(dlg, owner);
+      dlg.show();
+
+      if ( dlg.getStatus() == DisplayWindowStartDialog.OK_OPTION )
+      {
+         ConfigBrokerProxy broker = new ConfigBrokerProxy();
+         ConfigDefinition vp_def =
+            broker.getRepository().get("simulator_viewport");
+         ConfigElementFactory factory =
+            new ConfigElementFactory(broker.getRepository().getAllLatest());
+
+         ConfigElement display_elt = mActiveWindow.getConfiguration();
+
+         // Set the title for the new viewport based on the number of
+         // simulator viewports that already exist in the window's
+         // configuration.
+         int sim_vps = display_elt.getPropertyValueCount("simulator_viewports");
+         String title = "Simulator Viewport " + sim_vps;
+
+         // Create a new config element based on the initial information we have.
+         ConfigElement elt = factory.create(title, vp_def);
+
+         Rectangle bounds = dlg.getViewportBounds();
+         float origin_x = (float) bounds.x / 100.0f;
+         float origin_y = (float) bounds.y / 100.0f;
+         float width    = (float) bounds.width / 100.0f;
+         float height   = (float) bounds.height / 100.0f;
+
+         elt.setProperty("origin", 0, new Float(origin_x));
+         elt.setProperty("origin", 1, new Float(origin_y));
+         elt.setProperty("size", 0, new Float(width));
+         elt.setProperty("size", 1, new Float(height));
+         elt.setProperty("view", 0, dlg.getViewpoint());
+         elt.setProperty("user", 0, dlg.getUser());
+         elt.setProperty("vertical_fov", 0, dlg.getVertialFOV());
+
+         ConfigElement sim_elt =
+            (ConfigElement) elt.getProperty("simulator_plugin", 0);
+         sim_elt.setProperty("camera_pos", 0, dlg.getCameraPosition());
+         sim_elt.setProperty("wand_pos", 0, dlg.getWandPosition());
+
+         display_elt.addProperty("simulator_viewports", elt);
+      }
+   }
+
    private ConfigElement mElement = null;
    private ConfigContext mContext = null;
 
    private JDesktopPane mDesktopEditor = new JDesktopPane();
    private DesktopBackgroundImage mDesktopBackground = new DesktopBackgroundImage();
-   private JInternalFrame mActiveWindow = null;
+   private DisplayWindowFrame mActiveWindow = null;
    private java.util.List mAllWindows = new ArrayList();
    private boolean mIsDesktopEditor = false;
    private Dimension mCurrentResolution = new Dimension(1280, 1024);
@@ -538,9 +641,9 @@ public class DisplayWindowEditorPanel
    private JButton mSimViewportButton = new JButton();
    private JLabel mSimViewportLabel = new JLabel();
    private JLabel mResolutionLabel = new JLabel();
-   private JTextField mWidthField = new JTextField();
+   private JFormattedTextField mWidthField = new JFormattedTextField();
    private JLabel mResolutionXLabel = new JLabel();
-   private JTextField mHeightField = new JTextField();
+   private JFormattedTextField mHeightField = new JFormattedTextField();
    private JPanel mExtraEditorPanel = new JPanel();
    private BorderLayout mEditorPanelLayout = new BorderLayout();
    private JMenuItem mAddDisplayItem = new JMenuItem();
@@ -554,8 +657,8 @@ public class DisplayWindowEditorPanel
       // XXX: The size and/or aspect ration of mDesktopEditor should probably
       // be updated too.
 
-      int new_width  = Integer.parseInt(mWidthField.getText());
-      int new_height = Integer.parseInt(mHeightField.getText());
+      int new_width  = ((Integer) mWidthField.getValue()).intValue();
+      int new_height = ((Integer) mHeightField.getValue()).intValue();
 
       if ( new_width != mCurrentResolution.width ||
            new_height != mCurrentResolution.height )
@@ -602,6 +705,18 @@ public class DisplayWindowEditorPanel
       createDisplayClicked(e);
    }
 
+   void closeClicked(ActionEvent e)
+   {
+   }
+
+   void resolutionWidthValueChanged(PropertyChangeEvent e)
+   {
+      if ( e.getPropertyName().equals("text") )
+      {
+         System.out.println("Old width text: " + e.getOldValue());
+         System.out.println("New width text: " + e.getNewValue());
+      }
+   }
 }
 
 class DisplayWindowEditorPanel_mDisplayCreateButton_actionAdapter
@@ -676,5 +791,61 @@ class DisplayWindowEditorPanel_mAddDisplayItem_actionAdapter implements java.awt
    public void actionPerformed(ActionEvent e)
    {
       adaptee.mAddDisplayItem_actionPerformed(e);
+   }
+}
+
+class DisplayWindowEditorPanel_mSurfaceViewportButton_actionAdapter implements java.awt.event.ActionListener
+{
+   private DisplayWindowEditorPanel adaptee;
+
+   DisplayWindowEditorPanel_mSurfaceViewportButton_actionAdapter(DisplayWindowEditorPanel adaptee)
+   {
+      this.adaptee = adaptee;
+   }
+   public void actionPerformed(ActionEvent e)
+   {
+      adaptee.addSurfaceViewportClicked(e);
+   }
+}
+
+class DisplayWindowEditorPanel_mSimViewportButton_actionAdapter implements java.awt.event.ActionListener
+{
+   private DisplayWindowEditorPanel adaptee;
+
+   DisplayWindowEditorPanel_mSimViewportButton_actionAdapter(DisplayWindowEditorPanel adaptee)
+   {
+      this.adaptee = adaptee;
+   }
+   public void actionPerformed(ActionEvent e)
+   {
+      adaptee.addSimulatorViewportClicked(e);
+   }
+}
+
+class DisplayWindowEditorPanel_mCloseButton_actionAdapter implements java.awt.event.ActionListener
+{
+   private DisplayWindowEditorPanel adaptee;
+
+   DisplayWindowEditorPanel_mCloseButton_actionAdapter(DisplayWindowEditorPanel adaptee)
+   {
+      this.adaptee = adaptee;
+   }
+   public void actionPerformed(ActionEvent e)
+   {
+      adaptee.closeClicked(e);
+   }
+}
+
+class DisplayWindowEditorPanel_mWidthField_propertyChangeAdapter implements java.beans.PropertyChangeListener
+{
+   private DisplayWindowEditorPanel adaptee;
+
+   DisplayWindowEditorPanel_mWidthField_propertyChangeAdapter(DisplayWindowEditorPanel adaptee)
+   {
+      this.adaptee = adaptee;
+   }
+   public void propertyChange(PropertyChangeEvent e)
+   {
+      adaptee.resolutionWidthValueChanged(e);
    }
 }
