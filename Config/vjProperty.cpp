@@ -170,37 +170,37 @@ vjEnumEntry* vjProperty::getEnumEntryWithValue (int val) const {
 ostream& operator << (ostream &out, vjProperty& p) {
     out << p.getToken().c_str() << " { ";
     for (unsigned int i = 0; i < p.value.size(); i++) {
-   vjVarValue *v = ((p.value))[i];
-   
-   if ((p.type == T_STRING) || (p.type == T_CHUNK)) {
-       out << '"' << *v << '"';
-   }
-   else if (p.type == T_EMBEDDEDCHUNK) {
-       out << "\n" << *v;
-   }
-   else if ((p.type == T_FLOAT) || (p.type == T_BOOL)) {
-       out << *v;
-   }
-   else {
-       vjEnumEntry *e = p.getEnumEntryWithValue((int)(*v));
-       if (e)
-      out << '"' << e->getName().c_str() << '"';
-       else
-      out << *v;
-   }
-   out << " ";
+        vjVarValue *v = ((p.value))[i];
+        
+        if ((p.type == T_STRING) || (p.type == T_CHUNK)) {
+            out << '"' << *v << '"';
+        }
+        else if (p.type == T_EMBEDDEDCHUNK) {
+            out << "\n" << *v;
+        }
+        else if ((p.type == T_FLOAT) || (p.type == T_BOOL)) {
+            out << *v;
+        }
+        else {
+            vjEnumEntry *e = p.getEnumEntryWithValue((int)(*v));
+            if (e)
+                out << '"' << e->getName().c_str() << '"';
+            else
+                out << *v;
+        }
+        out << " ";
     }
     if (p.type == T_DISTANCE)
-   out << " " << unitString (p.units);
+        out << " " << unitString (p.units);
     out << " } ";
     return out;
 }
 
 
 
-vjVarValue& vjProperty::getValue (int ind) {
-    if ((ind < 0) || (ind >= value.size())) {
-   return vjVarValue::getInvalidInstance();
+vjVarValue& vjProperty::getValue (unsigned int ind) {
+    if (ind >= value.size()) {
+        return vjVarValue::getInvalidInstance();
     }
     return *((value)[ind]);
 }
@@ -223,22 +223,20 @@ const std::string& vjProperty::getToken () const {
 }
 
 
-bool vjProperty::preSet (int ind) {
-    int i;
+bool vjProperty::preSet (unsigned int ind) {
+    unsigned int i;
     vjVarValue *v;
 
-    if (ind < 0)
-   return false;
     if (ind >= value.size()) {
-   if (num == -1) {
-       for (i = value.size(); i <= ind; i++) {
-      v = createVarValue();
-      value.push_back(v);
-       }
-       return true;
-   }
-   else
-       return false;
+        if (num == -1) {
+            for (i = value.size(); i <= ind; i++) {
+                v = createVarValue();
+                value.push_back(v);
+            }
+            return true;
+        }
+        else
+            return false;
     }
     return true;
 }
@@ -247,7 +245,7 @@ bool vjProperty::preSet (int ind) {
 
 bool vjProperty::setValue (int val, int ind ) {
     if (!preSet(ind))
-   return false;
+        return false;
     *((value)[ind]) = val;
     return true;
 }
