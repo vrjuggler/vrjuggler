@@ -1,0 +1,53 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PyJuggler.vpr module", "vpr\vpr.vcproj", "{69CEC8D9-E7A7-44B7-9651-CD4AB9CEE89D}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PyJuggler.jccl module", "jccl\jccl.vcproj", "{09B1EA98-0701-410D-B0E9-5582F2748220}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PyJuggler.gadget module", "gadget\gadget.vcproj", "{26D13DFB-7670-4FF0-90AC-991171367DFC}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PyJuggler.__vrj module", "vrj\vrj.vcproj", "{E3475F16-816E-4CC8-B90A-606EE2D2A705}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PyJuggler.__osgapp module", "osgapp\osgapp.vcproj", "{1AC6A573-D42D-4E79-9E25-CCB0BC63413F}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{69CEC8D9-E7A7-44B7-9651-CD4AB9CEE89D}.Debug.ActiveCfg = Debug|Win32
+		{69CEC8D9-E7A7-44B7-9651-CD4AB9CEE89D}.Debug.Build.0 = Debug|Win32
+		{69CEC8D9-E7A7-44B7-9651-CD4AB9CEE89D}.Release.ActiveCfg = Release|Win32
+		{69CEC8D9-E7A7-44B7-9651-CD4AB9CEE89D}.Release.Build.0 = Release|Win32
+		{09B1EA98-0701-410D-B0E9-5582F2748220}.Debug.ActiveCfg = Debug|Win32
+		{09B1EA98-0701-410D-B0E9-5582F2748220}.Debug.Build.0 = Debug|Win32
+		{09B1EA98-0701-410D-B0E9-5582F2748220}.Release.ActiveCfg = Release|Win32
+		{09B1EA98-0701-410D-B0E9-5582F2748220}.Release.Build.0 = Release|Win32
+		{26D13DFB-7670-4FF0-90AC-991171367DFC}.Debug.ActiveCfg = Debug|Win32
+		{26D13DFB-7670-4FF0-90AC-991171367DFC}.Debug.Build.0 = Debug|Win32
+		{26D13DFB-7670-4FF0-90AC-991171367DFC}.Release.ActiveCfg = Release|Win32
+		{26D13DFB-7670-4FF0-90AC-991171367DFC}.Release.Build.0 = Release|Win32
+		{E3475F16-816E-4CC8-B90A-606EE2D2A705}.Debug.ActiveCfg = Debug|Win32
+		{E3475F16-816E-4CC8-B90A-606EE2D2A705}.Debug.Build.0 = Debug|Win32
+		{E3475F16-816E-4CC8-B90A-606EE2D2A705}.Release.ActiveCfg = Release|Win32
+		{E3475F16-816E-4CC8-B90A-606EE2D2A705}.Release.Build.0 = Release|Win32
+		{1AC6A573-D42D-4E79-9E25-CCB0BC63413F}.Debug.ActiveCfg = Debug|Win32
+		{1AC6A573-D42D-4E79-9E25-CCB0BC63413F}.Debug.Build.0 = Debug|Win32
+		{1AC6A573-D42D-4E79-9E25-CCB0BC63413F}.Release.ActiveCfg = Release|Win32
+		{1AC6A573-D42D-4E79-9E25-CCB0BC63413F}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
