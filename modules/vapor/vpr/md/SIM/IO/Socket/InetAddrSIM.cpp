@@ -54,7 +54,7 @@ namespace vpr
 
   const InetAddrSIM InetAddrSIM::AnyAddr;
 
-  vpr::ReturnStatus getLocalHost (vpr::InetAddrSIM& host_addr)
+  vpr::ReturnStatus InetAddrSIM::getLocalHost(vpr::InetAddrSIM& host_addr)
   {
      vpr::ReturnStatus status;
 
