@@ -57,8 +57,10 @@ import org.vrjuggler.jccl.config.io.*;
  * @version 1.0
  */
 public class RTRCDataSourceBrokerImpl
-   implements CommunicationListener, TweekFrameListener, RTRCDataSourceBroker
-   {
+   extends TweekFrameAdapter
+   implements CommunicationListener
+            , RTRCDataSourceBroker
+{
    public RTRCDataSourceBrokerImpl()
    {
       System.out.println("RTRCDataSourceBroker started");
@@ -113,15 +115,14 @@ public class RTRCDataSourceBrokerImpl
    /**
     * Catch a frame close event to cleanly shutdown our CORBA subjects.
     */
-   public void frameStateChanged (TweekFrameEvent e)
+   public boolean frameClosing(TweekFrameEvent e)
    {
-      //TODO: Find a way to close the RTRCDataSource that has lost its connection.
-      //if ( e.getType() == TweekFrameEvent.FRAME_CLOSE )
-      //{
-      //   disconnect();
-      //}
+      //TODO: Find a way to close the RTRCDataSource that has lost its
+      //connection.
+      //disconnect();
+      return true;
    }
-   
+
    /**
     * Create a new RTRCDataSource for a new RemoteReconfigSubject. And add it
     * to the list of active RTRCDataSources.
