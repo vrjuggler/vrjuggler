@@ -61,7 +61,9 @@ SUBOBJDIR=	$(VPR_LIBRARY)
 # not installed with the rest of Boost.
 EXTRA_INCLUDES+=	-I$(JUGGLERROOT_ABS)/external/boost_fs
 
-SRCS=		LibraryFinder.cpp
+SRCS=		DsoLoader.cpp		\
+		LibraryFinder.cpp	\
+		LoaderError.cpp
 
 include $(MKPATH)/dpp.obj.mk
 
