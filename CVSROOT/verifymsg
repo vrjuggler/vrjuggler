@@ -24,4 +24,4 @@
 ^CVSROOT echo
 
 # Otherwise, run log_verify.
-DEFAULT $CVSROOT/CVSROOT/log_verify
+DEFAULT /cvsroot/vrjuggler/CVSROOT/log_verify
