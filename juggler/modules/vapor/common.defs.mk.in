@@ -28,21 +28,25 @@
 #
 # -----------------------------------------------------------------
 # File:          common.defs.mk.in,v
-# Date modified: 2001/06/29 23:47:52
-# Version:       1.20
+# Date modified: 2001/12/19 17:36:59
+# Version:       1.24
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# common.defs.mk.in,v 1.20 2001/06/29 23:47:52 patrickh Exp
+# common.defs.mk.in,v 1.24 2001/12/19 17:36:59 patrickh Exp
 #
 # This file <common.defs.mk> provides variable assignments based on the
-# results of running a Doozer++-aware configure script.
+# results of running a Doozer++-aware configure script.  It is distributed
+# with Doozer++ as a means for users to get quick, effortless access to all
+# these variables.  It is recommended that user build systems include this
+# file in their own local definitions file and override settings therein as
+# necessary.
+#
+# All makefiles in a source tree should include this file through some means
+# for maximum information sharing.
 #
 # Generated for use on @PLATFORM@
-# -----------------------------------------------------------------------------
-# All makefiles in a source tree should include this file for maximum
-# information sharing.
 # -----------------------------------------------------------------------------
 # Variables defined here are:
 #
@@ -73,10 +77,12 @@
 # CFLAGS          - Flags for $(CC).
 # CFLAGS_DYLINB   - Special flags used only when building dynamically linked
 #                   libraries with the C compiler.
+# CC_PROF_FLAGS   - Flag(s) to enable compiling profiled C objects.
 # CPPFLAGS        - Flags for $(CPP) and $(CXXCPP).
 # CXXFLAGS        - Flags for $(CXX).
 # CXXFLAGS_DYLINB - Special flags used only when building dynamically linked
 #                   libraries with the C++ compiler.
+# CXX_PROF_FLAGS  - Flag(s) to enable compiling profiled C++ objects.
 # DEFS            - Command-line preprocessor definitions (-Dvariable=value).
 # DEP_GEN_FLAG    - Flag passed to the compiler to generate dependencies.
 # DEPEND_FLAGS    - Flags passed to makedepend(1) (or equivalent program for
@@ -91,6 +97,7 @@
 # DYLIB_NAME_FLAG - Flag passed to the linker to name a dynamic library.
 # EXE_NAME_FLAG   - Flag passed to the linker to name an executable file.
 # INCLUDES        - Additions to the include path (-I/path/to/include).
+# JCPS            - The Java classpath separator character for this platform.
 # JAR             - Command for creating Java JAR files.
 # JAVAC           - Java compiler.
 # JAVAH           - javah utility.
@@ -101,6 +108,12 @@
 # LD              - Path to ld(1) (or equivalent program).
 # LDFLAGS         - Flags for $(LD).
 # LDOPTS          - Extra, often platform-specific, options for the linker.
+# LDOPTS_DBG      - Extra, often platform-specific, debugging options for the
+#                   linker.
+# LDOPTS_OPT      - Extra, often platform-specific, optimization options for
+#                   the linker.
+# LDOPTS_PROF     - Extra, often platform-specific, profiling options for the
+#                   linker.
 # LIBS            - Extra external libraries needed at link time.
 # LN_S            - Working 'ln -s' command.
 # MAKEDEPEND      - The makedepend(1) program (if needed).
@@ -156,9 +169,11 @@ CPP		= @CPP@
 CXXCPP		= @CXXCPP@
 CFLAGS		= @CFLAGS@ $(OPTIMIZER) $(EXTRA_CFLAGS)
 CFLAGS_DYNLIB	= @CFLAGS_DYNLIB@
+CC_PROF_FLAGS	= @CC_PROF_FLAGS@
 CPPFLAGS	= @CPPFLAGS@ $(EXTRA_CPPFLAGS)
 CXXFLAGS	= @CXXFLAGS@ $(OPTIMIZER) $(EXTRA_CXXFLAGS)
 CXXFLAGS_DYNLIB	= @CXXFLAGS_DYNLIB@
+CXX_PROF_FLAGS	= @CXX_PROF_FLAGS@
 DEFS		= @DEFS@ $(EXTRA_DEFS)
 DEP_GEN_FLAG	= @DEP_GEN_FLAG@
 DEPEND_FLAGS	= @DEPEND_FLAGS@  -I$(topdir) $(EXTRA_DEPEND_FLAGS) @INCLUDES@
@@ -167,6 +182,7 @@ DYLIB_NAME_FLAG	= @DYLIB_NAME_FLAG@
 EXE_NAME_FLAG	= @EXE_NAME_FLAG@
 INCLUDES	= -I$(topdir) $(EXTRA_INCLUDES) @INCLUDES@
 INSTALL		= @INSTALL@
+JCPS		= @JCPS@
 JAR		= @JAR@
 JAVAC		= @JAVAC@
 JAVAH		= @JAVAH@
@@ -180,6 +196,7 @@ LDOPTS		= @LDOPTS@ $(DPP_EXTRA_LDOPTS) $(EXTRA_LDOPTS)		\
                   $(DSOVERSIONOPTS)
 LDOPTS_DBG	= @LDOPTS_DBG@ $(EXTRA_LDOPTS_DBG)
 LDOPTS_OPT	= @LDOPTS_OPT@ $(EXTRA_LDOPTS_OPT)
+LDOPTS_PROF	= @LDOPTS_PROF@ $(EXTRA_LDOPTS_PROF)
 LIBS		= @LIBS@ $(EXTRA_LIBS)
 LN_S		= @LN_S@
 MAKEDEPEND	= @MAKEDEPEND@
