@@ -2,26 +2,80 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
-#include <signal.h>
 #include <limits.h>
 #include <sys/prctl.h>
 #include <sys/schedctl.h>
-#include "trackd.h"
+#include <unistd.h>
+
+#include <Input/Multi/trackdmem.h>
+
+#define TRACKD_MAX_SENSORS  30
+#define CAVE_MAX_VALUATORS  20
+#define CAVE_MAX_BUTTONS    20
+
+struct TRACKD_TRACKING
+{
+   CAVE_TRACKDTRACKER_HEADER  header;
+   CAVE_SENSOR_ST             sensor[TRACKD_MAX_SENSORS];
+};
+
+struct TRACKD_CONTROLLER
+{
+   CAVE_TRACKDCONTROLLER_HEADER  header;
+   int                           button[CAVE_MAX_BUTTONS];
+   float                         valuator[CAVE_MAX_VALUATORS];
+};
+
+static int tracker_shmid=-1, controller_shmid=-1;
+static TRACKD_TRACKING*    tracker =NULL;
+static TRACKD_CONTROLLER*  controller=NULL;
 
 #define PERMS 0666
 
-static int tracker_shmid=-1, controller_shmid=-1;
-static struct TRACKD_TRACKING	*tracker=NULL;
-static struct TRACKD_CONTROLLER	*controller=NULL;
+// Allocate tracker mem
+void allocateTrackerMem(int trackdKey)
+{
+ tracker_shmid = shmget(trackdKey, sizeof(TRACKD_TRACKING), PERMS | IPC_CREAT);
+ if (tracker_shmid < 0)
+        {
+        fprintf(stderr,"can't get shared memory\n");
+        exit(-1);
+        }
+ tracker = (struct TRACKD_TRACKING *) shmat(tracker_shmid,(char *) 0, 0);
+ if (tracker == (struct TRACKD_TRACKING *) -1)
+        {
+        fprintf(stderr,"can't attach shared memory\n");
+        exit(-1);
+        }
+}
 
-		
+// Allocate controller
+void allocateControllerMem(int controllerKey)
+{
+ controller_shmid = shmget(controllerKey,
+                        sizeof(struct TRACKD_CONTROLLER), PERMS | IPC_CREAT);
+ if (controller_shmid < 0)
+        {
+        fprintf(stderr,"can't get shared memory\n");
+        exit(-1);
+        }
+ controller = (struct TRACKD_CONTROLLER *)
+                        shmat(controller_shmid,(char *) 0, 0);
+ if (controller == (struct TRACKD_CONTROLLER *) -1)
+        {
+        fprintf(stderr,"can't attach shared memory\n");
+        exit(-1);
+        }
+}
+
 // Initialize tracker
 void initTracker()
 {
- TrackdSensor sensor;
+ CAVE_SENSOR_ST sensor;
 
  tracker->header.version = CAVELIB_2_6;
  tracker->header.numSensors = 0;
@@ -39,34 +93,32 @@ void initTracker()
  sensor.calibrated = 0;
 
  for (int loop=0; loop < TRACKD_MAX_SENSORS; ++loop)
-	tracker->sensor[loop] = sensor;
+   tracker->sensor[loop] = sensor;
 }
 
-		
+
 // Intiializae controller data
 void initController()
 {
  controller->header.version = CAVELIB_2_6;
- controller->header.buttonOffset = ((char *)&controller->controller.button[0]) -
-					((char *)controller);
- controller->header.valuatorOffset = ((char *)&controller->controller.valuator[0]) -
-					((char *)controller);
+ controller->header.buttonOffset = ((char *)&controller->button[0]) - ((char *)controller);
+ controller->header.valuatorOffset = ((char *)&controller->valuator[0]) - ((char *)controller);
  controller->header.numButtons = 0;
  controller->header.numValuators = 0;
  controller->header.timestamp[0] = controller->header.timestamp[1] = 0;
  controller->header.command = 0;
 
  int loop;
- for (loop=0; loop < CAVE_MAX_BUTTONS; ++loop) 
-		controller->controller.button[loop] = 0;
- for (loop=0; loop < CAVE_MAX_VALUATORS; ++loop) 
-		controller->controller.valuator[loop] = 0.0;
- controller->controller.num_buttons = 0;
- controller->controller.num_valuators = 0;
+ for (loop=0; loop < CAVE_MAX_BUTTONS; ++loop)
+      controller->button[loop] = 0;
+ for (loop=0; loop < CAVE_MAX_VALUATORS; ++loop)
+      controller->valuator[loop] = 0.0;
+ //controller->num_buttons = 0;
+ //controller->num_valuators = 0;
 }
 
 
-void get_timestamp(uint32_t stamp[2])
+void getTimeStamp(uint32_t stamp[2])
 {
  struct timeval curtime;
  gettimeofday(&curtime,NULL);
@@ -75,66 +127,66 @@ void get_timestamp(uint32_t stamp[2])
 }
 
 
-int get_new_tracker_data(int numSensors,CAVE_SENSOR_ST *sensor,int *sensorNum)
+void setNewTrackerData(int numSensors)
 {
  static int nextSensor=0, first=1;
  float t;
  struct timeval curtime;
  static struct timeval starttime;
  if (first)
-	{
-	gettimeofday(&starttime,NULL);
-	first=0;
-	}
+ {
+   gettimeofday(&starttime,NULL);
+   first=0;
+ }
  gettimeofday(&curtime,NULL);
  t = curtime.tv_sec-starttime.tv_sec + (curtime.tv_usec-starttime.tv_usec)/1000000.0f;
- if (nextSensor==0)	/* Head */
-	{
-	sensor->x = fsin(t/2.0f) * 2.0f;
-	sensor->y = 6;
-	sensor->z = fcos(t) * 3.0f;
-	sensor->elev = fsin(t/10.0f) * 45.0f;
-	sensor->azim = fsin(t/3.0f) * 120.0f;
-	sensor->roll = 0;
-	sensor->calibrated = 0;
-	}
+ if (nextSensor==0)  /* Head */
+ {
+   tracker->sensor[0].x = fsin(t/2.0f) * 2.0f;
+   tracker->sensor[0].y = 6;
+   tracker->sensor[0].z = fcos(t) * 3.0f;
+   tracker->sensor[0].elev = fsin(t/10.0f) * 45.0f;
+   tracker->sensor[0].azim = fsin(t/3.0f) * 120.0f;
+   tracker->sensor[0].roll = 0;
+   tracker->sensor[0].calibrated = 0;
+ }
  else
-	{
-	sensor->x = fsin(t+nextSensor) + nextSensor*2.0f - 2.0f;
-	sensor->y = fcos(t+nextSensor) + 4.0f;
-	sensor->z = -4.0f;
-	sensor->elev = fsin(t/4.0f+nextSensor) * 180.0f;
-	sensor->azim = fsin(t/2.0f+nextSensor) * 120.0f;
-	sensor->roll = fsin(t/7.0f+nextSensor) * 90.0f;
-	sensor->calibrated = 0;
-	}
- *sensorNum = nextSensor;
- nextSensor = (nextSensor+1) % numSensors;
- return 1;
+ {
+   tracker->sensor[nextSensor].x = fsin(t+nextSensor) + nextSensor*2.0f - 2.0f;
+   tracker->sensor[nextSensor].y = fcos(t+nextSensor) + 4.0f;
+   tracker->sensor[nextSensor].z = -4.0f;
+   tracker->sensor[nextSensor].elev = fsin(t/4.0f+nextSensor) * 180.0f;
+   tracker->sensor[nextSensor].azim = fsin(t/2.0f+nextSensor) * 120.0f;
+   tracker->sensor[nextSensor].roll = fsin(t/7.0f+nextSensor) * 90.0f;
+   tracker->sensor[nextSensor].calibrated = 0;
+ }
+ nextSensor = ((nextSensor+1) % numSensors);
 }
 
 
-int get_new_controller_data(int numButtons,int numValuators,CAVE_CONTROLLER_ST *controller)
+int get_new_controller_data(int numButtons,int numValuators)
 {
  int i, buttonChange=0, t=time(NULL);
  static int lastButtonChangeTime=-1;
- controller->num_buttons = numButtons;
- controller->num_valuators = numValuators;
+ //controller->num_buttons = numButtons;
+ //controller->num_valuators = numValuators;
  if ((numButtons > 0) && (t > lastButtonChangeTime))
-	{
-	int b = random()%numButtons;
-	controller->button[b] = !(controller->button[b]);
-	lastButtonChangeTime = t;
-	buttonChange=1;
-	}
+ {
+   int b = random()%numButtons;
+   controller->button[b] = !(controller->button[b]);
+   lastButtonChangeTime = t;
+   buttonChange=1;
+ }
+
  for (i=0; i < numValuators; i++)
-	{
-	controller->valuator[i] += (drand48()-0.5f)/20.0f;
-	if (controller->valuator[i] < -1.0f)
-		controller->valuator[i] = -1.0f;
-	else if (controller->valuator[i] > 1.0f)
-		controller->valuator[i] = 1.0f;
-	}
+ {
+   controller->valuator[i] += (drand48()-0.5f)/20.0f;
+   if (controller->valuator[i] < -1.0f)
+      controller->valuator[i] = -1.0f;
+   else if (controller->valuator[i] > 1.0f)
+      controller->valuator[i] = 1.0f;
+ }
+
  return ((numValuators > 0) || (buttonChange));
 }
 
@@ -142,59 +194,59 @@ int get_new_controller_data(int numButtons,int numValuators,CAVE_CONTROLLER_ST *
 
 main(int argc,char **argv)
 {
- int numSensors=0, numButtons=0, numValuators=0;
- int i, sensornum;
- CAVE_CONFIG_ST config;
- CAVE_SENSOR_ST sensor;
- CAVE_CONTROLLER_ST controlvals;
+   int numSensors=0, numButtons=0, numValuators=0;
+   int trackerKey=0, controllerKey=0;
 
- if (argc < 3)
-	{
-	fprintf(stderr,"Usage: %s [-sensors <numsensors>] [-buttons <numbuttons>]"
-		" [-valuators <numvaluators>]\n", argv[0]);
-	exit(1);
-	}
+   int i;      // sensornum;
+   //CAVE_CONFIG_ST config;
+   //CAVE_SENSOR_ST sensor;
+   //CAVE_CONTROLLER_ST controlvals;
 
+   if (argc < 5)
+   {
+      fprintf(stderr,"Usage: %s [-sensors <numsensors>] [-buttons <numbuttons>]"
+              " [-valuators <numvaluators>] [-trackerkey <keynum>] [-controllerkey <keynum>]\n", argv[0]);
+      exit(1);
+   }
 
- if (!getenv("CAVEDEBUGCONFIG"))
-        putenv("CAVEDEBUGCONFIG=OFF");
- CAVEConfigurationInit(&argc,argv,NULL,&config);
-	
- get_tracker_mem(&config);
- get_controller_mem(&config);
+   // Get command line
+   for (i=1; i < argc; i++)
+   {
+      if (!strcmp(argv[i],"-sensors"))
+         numSensors = atoi(argv[++i]);
+      else if (!strcmp(argv[i],"-buttons"))
+         numButtons = atoi(argv[++i]);
+      else if (!strcmp(argv[i],"-valuators"))
+         numValuators = atoi(argv[++i]);
+      else if (!strcmp(argv[i],"-trackerkey"))
+         trackerKey = atoi(argv[++i]);
+      else if (!strcmp(argv[i],"-controllerkey"))
+         controllerKey = atoi(argv[++i]);
+      else
+         printf("Unknown option \"%s\"\n",argv[i]);
+   }
 
- init_tracker_data(&config);
- init_controller_data(&config);
+   allocateTrackerMem(trackerKey);
+   allocateControllerMem(controllerKey);
 
- for (i=1; i < argc; i++)
-	{
-	if (!strcmp(argv[i],"-sensors"))
-		numSensors = atoi(argv[++i]);
-	else if (!strcmp(argv[i],"-buttons"))
-		numButtons = atoi(argv[++i]);
-	else if (!strcmp(argv[i],"-valuators"))
-		numValuators = atoi(argv[++i]);
-	else
-		printf("Unknown option \"%s\"\n",argv[i]);
-	}
- tracker->header.numSensors = numSensors;
- controller->header.numButtons = numButtons;
- controller->controller.num_buttons = numButtons;
- controller->header.numValuators = numValuators;
- controller->controller.num_valuators = numValuators;
+   initTracker();
+   initController();
 
- while (1)
-	{
-	if (get_new_tracker_data(numSensors,&sensor,&sensornum))
-		{
-		tracker->sensor[sensornum] = sensor;
-		get_timestamp(tracker->header.timestamp);
-		}
-	if (get_new_controller_data(numButtons,numValuators,&controlvals))
-		{
-		controller->controller = controlvals;
-		get_timestamp(controller->header.timestamp);
-		}
-	sginap(1);
-	}
+   tracker->header.numSensors = numSensors;
+   controller->header.numButtons = numButtons;
+   //controller->controller.num_buttons = numButtons;
+   controller->header.numValuators = numValuators;
+   //controller->controller.num_valuators = numValuators;
+
+   while (1)
+   {
+      setNewTrackerData(numSensors);
+      getTimeStamp(tracker->header.timestamp);
+
+      if (get_new_controller_data(numButtons,numValuators))
+      {
+         getTimeStamp(controller->header.timestamp);
+      }
+      usleep(100);
+   }
 }
