@@ -553,6 +553,21 @@ public class DisplayWindowEditorPanel
          elt.setProperty("size", 1, new Float(height));
          elt.setProperty("view", 0, dlg.getViewpoint());
          elt.setProperty("user", 0, dlg.getUser());
+
+         Point3D[] corners = dlg.getCorners();
+         elt.setProperty("lower_left_corner", 0, new Double(corners[0].x));
+         elt.setProperty("lower_left_corner", 1, new Double(corners[0].y));
+         elt.setProperty("lower_left_corner", 2, new Double(corners[0].z));
+         elt.setProperty("lower_right_corner", 0, new Double(corners[1].x));
+         elt.setProperty("lower_right_corner", 1, new Double(corners[1].y));
+         elt.setProperty("lower_right_corner", 2, new Double(corners[1].z));
+         elt.setProperty("upper_right_corner", 0, new Double(corners[2].x));
+         elt.setProperty("upper_right_corner", 1, new Double(corners[2].y));
+         elt.setProperty("upper_right_corner", 2, new Double(corners[2].z));
+         elt.setProperty("upper_left_corner", 0, new Double(corners[3].x));
+         elt.setProperty("upper_left_corner", 1, new Double(corners[3].y));
+         elt.setProperty("upper_left_corner", 2, new Double(corners[3].z));
+
          elt.setProperty("tracked", 0, dlg.isTracked());
 
          if ( dlg.isTracked() == Boolean.TRUE )

@@ -34,6 +34,7 @@ package org.vrjuggler.vrjconfig.customeditors.display_window;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.*;
 import java.util.Iterator;
 import javax.swing.*;
 import javax.swing.border.*;
@@ -50,9 +51,15 @@ public class SurfaceViewportCreateDialog
    {
       super("Basic Surface Viewport Parameters");
 
+      mCorners[Plane.LL_CORNER] = "Lower Left Corner";
+      mCorners[Plane.LR_CORNER] = "Lower Right Corner";
+      mCorners[Plane.UR_CORNER] = "Upper Right Corner";
+      mCorners[Plane.UL_CORNER] = "Upper Left Corner";
+
       initUI();
 
       mUnitsList.add(new UnitConversion("Meters", 1.0));
+      mUnitsList.add(new UnitConversion("Centimeters", 0.01));
       mUnitsList.add(new UnitConversion("Feet", 0.30487804878048780487));
       mUnitsList.add(new UnitConversion("Inches", 0.02540005080010160020));
 
@@ -61,7 +68,7 @@ public class SurfaceViewportCreateDialog
          mUnitsComboBox.addItem(((UnitConversion) i.next()).name);
       }
 
-      mUnitsComboBox.setSelectedIndex(0);
+      mUnitsComboBox.setSelectedIndex(2);
 
       this.pack();
    }
@@ -87,14 +94,67 @@ public class SurfaceViewportCreateDialog
       return mTrackerProxy;
    }
 
+   public Point3D[] getCorners()
+   {
+      double wall_width = ((Number) mWallWidthField.getValue()).doubleValue();
+      double wall_height = ((Number) mWallHeightField.getValue()).doubleValue();
+
+      Plane surface_plane = new Plane(wall_width, wall_height);
+
+      if ( mPlaneChooser.getSelectedIndex() == XY_PLANE )
+      {
+         surface_plane.setOrientation(0.0, 0.0, 0.0);
+      }
+      else if ( mPlaneChooser.getSelectedIndex() == YZ_PLANE )
+      {
+         surface_plane.setOrientation(0.0, 90.0, 0.0);
+      }
+      else if ( mPlaneChooser.getSelectedIndex() == XZ_PLANE )
+      {
+         surface_plane.setOrientation(-90.0, 0.0, 0.0);
+      }
+      else
+      {
+         double x_angle = ((Number) mCustomPlaneXField.getValue()).doubleValue();
+         double y_angle = ((Number) mCustomPlaneYField.getValue()).doubleValue();
+         double z_angle = ((Number) mCustomPlaneZField.getValue()).doubleValue();
+         surface_plane.setOrientation(x_angle, y_angle, z_angle);
+      }
+
+      // Pull the value for the corner that the user entered.  This information
+      // will be used to reposition surface_plane relative to the selected
+      // corner.
+      double corner_x = ((Number) mCornerXField.getValue()).doubleValue();
+      double corner_y = ((Number) mCornerYField.getValue()).doubleValue();
+      double corner_z = ((Number) mCornerZField.getValue()).doubleValue();
+      surface_plane.setCorner(new Point3D(corner_x, corner_y, corner_z),
+                              mCornerChooser.getSelectedIndex());
+
+      // Before returning, scale the corners by the unit conversion factor
+      // chosen by the user.
+      Point3D[] corners = surface_plane.getCorners();
+      Point3D[] scaled_corners = new Point3D[corners.length];
+      for ( int i = 0; i < corners.length; ++i )
+      {
+         scaled_corners[i] = new Point3D(corners[i]);
+         scaled_corners[i].scale(getUnitConversionFactor());
+//         System.out.println(corners[i]);
+      }
+
+      return scaled_corners;
+   }
+
    public double getUnitConversionFactor()
    {
-      return mConversionFactor.floatValue();
+      return mConversionFactor.doubleValue();
    }
 
    protected void initUI()
    {
       super.initUI();
+
+      mCornerChooser = new JComboBox(mCorners);
+      mCornerChooser.setSelectedIndex(Plane.LL_CORNER);
 
       ConfigBrokerProxy broker = new ConfigBrokerProxy();
       ConfigDefinition vp_def = broker.getRepository().get("surface_viewport");
@@ -121,6 +181,11 @@ public class SurfaceViewportCreateDialog
                                TableLayout.PREFERRED, TableLayout.PREFERRED}};
 
       mPhysicalCharPanelLayout = new TableLayout(phys_size);
+
+      double[][] corner_size = {{TableLayout.FILL},
+                                {TableLayout.PREFERRED, 5,
+                                 TableLayout.PREFERRED}};
+      mCornerPanelLayout = new TableLayout(corner_size);
 
       ClassLoader loader = getClass().getClassLoader();
       String img_base = EditorConstants.imageBase;
@@ -151,11 +216,66 @@ public class SurfaceViewportCreateDialog
       try
       {
          jbInit();
+         mCustomPlaneXField.setValue(new Double(0.0));
+         mCustomPlaneYField.setValue(new Double(0.0));
+         mCustomPlaneZField.setValue(new Double(0.0));
+         mWallWidthField.setValue(new Double(0.0));
+         mWallHeightField.setValue(new Double(0.0));
          mPlaneChooser.setRenderer(new PlaneRenderer());
+         mCornerXField.setValue(new Double(0.0));
+         mCornerYField.setValue(new Double(0.0));
+         mCornerZField.setValue(new Double(0.0));
       }
       catch(Exception e)
       {
          e.printStackTrace();
+      }
+
+      try
+      {
+         mCornerIcons[XY_PLANE][Plane.LL_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/xy-plane-ll.png"));
+         mCornerIcons[XY_PLANE][Plane.LR_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/xy-plane-lr.png"));
+         mCornerIcons[XY_PLANE][Plane.UR_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/xy-plane-ur.png"));
+         mCornerIcons[XY_PLANE][Plane.UL_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/xy-plane-ul.png"));
+         mCornerIcons[YZ_PLANE][Plane.LL_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/yz-plane-ll.png"));
+         mCornerIcons[YZ_PLANE][Plane.LR_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/yz-plane-lr.png"));
+         mCornerIcons[YZ_PLANE][Plane.UR_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/yz-plane-ur.png"));
+         mCornerIcons[YZ_PLANE][Plane.UL_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/yz-plane-ul.png"));
+         mCornerIcons[XZ_PLANE][Plane.LL_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/xz-plane-ll.png"));
+         mCornerIcons[XZ_PLANE][Plane.LR_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/xz-plane-lr.png"));
+         mCornerIcons[XZ_PLANE][Plane.UR_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/xz-plane-ur.png"));
+         mCornerIcons[XZ_PLANE][Plane.UL_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/xz-plane-ul.png"));
+         mCornerIcons[CUSTOM_PLANE][Plane.LL_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/custom-plane-ll.png"));
+         mCornerIcons[CUSTOM_PLANE][Plane.LR_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/custom-plane-lr.png"));
+         mCornerIcons[CUSTOM_PLANE][Plane.UR_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/custom-plane-ur.png"));
+         mCornerIcons[CUSTOM_PLANE][Plane.UL_CORNER] =
+            new ImageIcon(loader.getResource(img_base + "/custom-plane-ul.png"));
+         mCornerLabel.setIcon(mCornerIcons[mPlaneChooser.getSelectedIndex()][mCornerChooser.getSelectedIndex()]);
+      }
+      catch(NullPointerException ex)
+      {
+         for ( int i = 0; i < 4; ++i )
+         {
+            for ( int j = 0; j < 4; ++j )
+            {
+               mCornerIcons[i][j] = null;
+            }
+         }
       }
    }
 
@@ -169,6 +289,7 @@ public class SurfaceViewportCreateDialog
       mMainPanel.setLayout(mMainPanelLayout);
       mPhysicalCharPanel.setBorder(mPhysicalCharPanelBorder);
       mPhysicalCharPanel.setLayout(mPhysicalCharPanelLayout);
+      mCornerPanel.setLayout(mCornerPanelLayout);
       mUnitsLabel.setLabelFor(mUnitsComboBox);
       mUnitsLabel.setText("Physical Units");
       mPlaneLabel.setLabelFor(mPlanePanel);
@@ -180,7 +301,6 @@ public class SurfaceViewportCreateDialog
       mCustomPlaneXField.setMinimumSize(new Dimension(40, 19));
       mCustomPlaneXField.setPreferredSize(new Dimension(45, 19));
       mCustomPlaneXField.setToolTipText("Rotation about the X-axis in degrees");
-      mCustomPlaneXField.setValue(new Double(0.0));
       mCustomPlaneXField.setHorizontalAlignment(SwingConstants.TRAILING);
       mCustomPlaneYLabel.setEnabled(false);
       mCustomPlaneYLabel.setLabelFor(mCustomPlaneYField);
@@ -189,7 +309,6 @@ public class SurfaceViewportCreateDialog
       mCustomPlaneYField.setMinimumSize(new Dimension(40, 19));
       mCustomPlaneYField.setPreferredSize(new Dimension(45, 19));
       mCustomPlaneYField.setToolTipText("Rotation about the Y-axis in degrees");
-      mCustomPlaneYField.setValue(new Double(0.0));
       mCustomPlaneYField.setHorizontalAlignment(SwingConstants.TRAILING);
       mCustomPlaneZLabel.setEnabled(false);
       mCustomPlaneZLabel.setLabelFor(mCustomPlaneZField);
@@ -198,40 +317,39 @@ public class SurfaceViewportCreateDialog
       mCustomPlaneZField.setMinimumSize(new Dimension(40, 19));
       mCustomPlaneZField.setPreferredSize(new Dimension(45, 19));
       mCustomPlaneZField.setToolTipText("Rotation about the Z-axis in degrees");
-      mCustomPlaneZField.setValue(new Double(0.0));
       mCustomPlaneZField.setHorizontalAlignment(SwingConstants.TRAILING);
       jLabel1.setText("(");
       mCornerXField.setMinimumSize(new Dimension(35, 19));
       mCornerXField.setPreferredSize(new Dimension(35, 19));
       mCornerXField.setToolTipText("X-coordinate for the surface corner");
-      mCornerXField.setValue(new Double(0.0));
       mCornerXField.setHorizontalAlignment(SwingConstants.TRAILING);
       jLabel2.setText(",");
       mCornerYField.setMinimumSize(new Dimension(35, 19));
       mCornerYField.setPreferredSize(new Dimension(35, 19));
       mCornerYField.setToolTipText("Y-coordinate for the surface corner");
-      mCornerYField.setValue(new Double(0.0));
       mCornerYField.setHorizontalAlignment(SwingConstants.TRAILING);
       jLabel3.setText(",");
       mCornerZField.setMinimumSize(new Dimension(35, 19));
       mCornerZField.setPreferredSize(new Dimension(35, 19));
       mCornerZField.setToolTipText("Z-coordinate for the surface corner");
-      mCornerZField.setValue(new Double(0.0));
       mCornerZField.setHorizontalAlignment(SwingConstants.TRAILING);
       jLabel4.setText(")");
       mDimensionsLabel.setLabelFor(mDimensionsPanel);
       mDimensionsLabel.setText("Surface Dimensions");
       mWallWidthField.setMinimumSize(new Dimension(40, 19));
       mWallWidthField.setPreferredSize(new Dimension(40, 19));
-      mWallWidthField.addFocusListener(new SurfaceViewportCreateDialog_mWallWidthField_focusAdapter(this));
-      mWallWidthField.setValue(new Double(0.0));
+      mWallWidthField.addPropertyChangeListener(new SurfaceViewportCreateDialog_mWallWidthField_propertyChangeAdapter(this));
       mWallWidthField.setHorizontalAlignment(SwingConstants.TRAILING);
       mDimensionsXLabel.setText("\u00d7");
       mWallHeightField.setMinimumSize(new Dimension(40, 19));
       mWallHeightField.setPreferredSize(new Dimension(40, 19));
-      mWallHeightField.addFocusListener(new SurfaceViewportCreateDialog_mWallHeightField_focusAdapter(this));
-      mWallHeightField.setValue(new Double(0.0));
-      mCornerLabel.setText("Lower Left Corner");
+      mWallHeightField.addPropertyChangeListener(new SurfaceViewportCreateDialog_mWallHeightField_propertyChangeAdapter(this));
+      mCornerLabel.setHorizontalAlignment(SwingConstants.CENTER);
+      mCornerLabel.setHorizontalTextPosition(SwingConstants.LEADING);
+      mCornerLabel.setLabelFor(mCornerPanel);
+      mCornerLabel.setText("Set Single Corner");
+      mCornerLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+      mCornerLabel.setVerticalTextPosition(javax.swing.SwingConstants.CENTER);
       mUnitsComboBox.addActionListener(new SurfaceViewportCreateDialog_mUnitsComboBox_actionAdapter(this));
       mPlaneChooser.addActionListener(new SurfaceViewportCreateDialog_mPlaneChooser_actionAdapter(this));
       mUnitsComboBox.setToolTipText("The units of measurement used for physical locations to be entered below");
@@ -243,6 +361,7 @@ public class SurfaceViewportCreateDialog
       mTrackerProxyLabel.setLabelFor(mTrackerProxyEditor);
       mTrackerProxyLabel.setText("Surface Tracker Proxy");
       mTrackerProxyEditor.setEnabled(false);
+      mCornerChooser.addActionListener(new SurfaceViewportCreateDialog_mCornerChooser_actionAdapter(this));
       mMainPanel.add(mBoundsPanel,
                      new TableLayoutConstraints(0, 0, 0, 0,
                                                 TableLayout.FULL,
@@ -303,6 +422,12 @@ public class SurfaceViewportCreateDialog
                              new TableLayoutConstraints(2, 7, 2, 7,
                                                         TableLayout.FULL,
                                                         TableLayout.FULL));
+      mCornerPanel.add(mCornerChooser,
+                       new TableLayoutConstraints(0, 0, 0, 0, TableLayout.FULL,
+                                                  TableLayout.FULL));
+      mCornerPanel.add(mCustomCornerPanel,
+                       new TableLayoutConstraints(0, 2, 0, 2, TableLayout.FULL,
+                                                  TableLayout.FULL));
       mPlanePanel.add(mPlaneChooser, null);
       mPlanePanel.add(mCustomPlaneXLabel, null);
       mPlanePanel.add(mCustomPlaneXField, null);
@@ -310,13 +435,13 @@ public class SurfaceViewportCreateDialog
       mPlanePanel.add(mCustomPlaneYField, null);
       mPlanePanel.add(mCustomPlaneZLabel, null);
       mPlanePanel.add(mCustomPlaneZField, null);
-      mCornerPanel.add(jLabel1, null);
-      mCornerPanel.add(mCornerXField, null);
-      mCornerPanel.add(jLabel2, null);
-      mCornerPanel.add(mCornerYField, null);
-      mCornerPanel.add(jLabel3, null);
-      mCornerPanel.add(mCornerZField, null);
-      mCornerPanel.add(jLabel4, null);
+      mCustomCornerPanel.add(jLabel1, null);
+      mCustomCornerPanel.add(mCornerXField, null);
+      mCustomCornerPanel.add(jLabel2, null);
+      mCustomCornerPanel.add(mCornerYField, null);
+      mCustomCornerPanel.add(jLabel3, null);
+      mCustomCornerPanel.add(mCornerZField, null);
+      mCustomCornerPanel.add(jLabel4, null);
       mDimensionsPanel.add(mWallWidthField, null);
       mDimensionsPanel.add(mDimensionsXLabel, null);
       mDimensionsPanel.add(mWallHeightField, null);
@@ -324,10 +449,17 @@ public class SurfaceViewportCreateDialog
 
    protected boolean validateCustomInput()
    {
-      boolean wall_dim_set, tracker_set;
+      boolean wall_width_set = false, wall_height_set = false, tracker_set;
 
-      wall_dim_set = ((Integer) mWallWidthField.getValue()).intValue() > 0 &&
-                     ((Integer) mWallHeightField.getValue()).intValue() > 0;
+      if ( mWallWidthField.getValue() != null )
+      {
+         wall_width_set = ((Number) mWallWidthField.getValue()).doubleValue() > 0.0;
+      }
+
+      if ( mWallHeightField.getValue() != null )
+      {
+         wall_height_set = ((Number) mWallHeightField.getValue()).doubleValue() > 0.0;
+      }
 
       if ( mTracked )
       {
@@ -338,7 +470,17 @@ public class SurfaceViewportCreateDialog
          tracker_set = true;
       }
 
-      return wall_dim_set && tracker_set;
+      return wall_width_set && wall_height_set && tracker_set;
+   }
+
+   private void changeCornerIcon()
+   {
+      int plane = mPlaneChooser.getSelectedIndex();
+      int corner = mCornerChooser.getSelectedIndex();
+      if ( mCornerIcons[plane][corner] != null )
+      {
+         mCornerLabel.setIcon(mCornerIcons[plane][corner]);
+      }
    }
 
    private static final int XY_PLANE = 0;
@@ -358,6 +500,10 @@ public class SurfaceViewportCreateDialog
    private String[] mSurfaceTypes = {"Fixed-Position Wall", "Desk/Bench",
                                      "HMD Eye"};
 
+   private String[] mCorners = new String[4];
+
+   private ImageIcon[][] mCornerIcons = new ImageIcon[4][4];
+
    private TitledBorder mBoundsPanelBorder;
    private TitledBorder mUserPanelBorder;
    private JPanel mPhysicalCharPanel = new JPanel();
@@ -375,8 +521,10 @@ public class SurfaceViewportCreateDialog
    private JLabel mCustomPlaneZLabel = new JLabel();
    private JFormattedTextField mCustomPlaneZField = new JFormattedTextField();
    private JLabel mCornerLabel = new JLabel();
-//   private JComboBox mCornerChooser = new JComboBox(new String[] {"Lower Left Corner", "Lower Right Corner", "Upper Right Corner", "Upper Left Corner"});
    private JPanel mCornerPanel = new JPanel();
+   private TableLayout mCornerPanelLayout = null;
+   private JComboBox mCornerChooser = null;
+   private JPanel mCustomCornerPanel = new JPanel();
    private JLabel jLabel1 = new JLabel();
    private JFormattedTextField mCornerXField = new JFormattedTextField();
    private JLabel jLabel2 = new JLabel();
@@ -460,6 +608,7 @@ public class SurfaceViewportCreateDialog
       mCustomPlaneYField.setEnabled(enabled);
       mCustomPlaneZLabel.setEnabled(enabled);
       mCustomPlaneZField.setEnabled(enabled);
+      changeCornerIcon();
    }
 
    void surfaceTypeChanged(ActionEvent e)
@@ -470,11 +619,34 @@ public class SurfaceViewportCreateDialog
       // is true.
       mTrackerProxyLabel.setEnabled(mTracked);
       mTrackerProxyEditor.setEnabled(mTracked);
+      validateUserInput();
    }
 
-   void wallDimensionsChanged(FocusEvent e)
+   void wallWidthPropertyChanged(PropertyChangeEvent e)
    {
-      validateUserInput();
+      // XXX: Detecting changes this way is slow and awkward.  It would be
+      // better if we could listen for an event that occurs after the freshly
+      // formatted input is committed.
+      if ( e.getPropertyName().equals("value") && e.getNewValue() != null )
+      {
+         validateUserInput();
+      }
+   }
+
+   void wallHeightPropertyChanged(PropertyChangeEvent e)
+   {
+      // XXX: Detecting changes this way is slow and awkward.  It would be
+      // better if we could listen for an event that occurs after the freshly
+      // formatted input is committed.
+      if ( e.getPropertyName().equals("value") && e.getNewValue() != null )
+      {
+         validateUserInput();
+      }
+   }
+
+   void cornerChanged(ActionEvent e)
+   {
+      changeCornerIcon();
    }
 
 }
@@ -524,30 +696,44 @@ class SurfaceViewportCreateDialog_mSurfaceTypeChooser_actionAdapter
    }
 }
 
-class SurfaceViewportCreateDialog_mWallWidthField_focusAdapter extends java.awt.event.FocusAdapter
+class SurfaceViewportCreateDialog_mWallWidthField_propertyChangeAdapter implements java.beans.PropertyChangeListener
 {
    private SurfaceViewportCreateDialog adaptee;
 
-   SurfaceViewportCreateDialog_mWallWidthField_focusAdapter(SurfaceViewportCreateDialog adaptee)
+   SurfaceViewportCreateDialog_mWallWidthField_propertyChangeAdapter(SurfaceViewportCreateDialog adaptee)
    {
       this.adaptee = adaptee;
    }
-   public void focusLost(FocusEvent e)
+   public void propertyChange(PropertyChangeEvent e)
    {
-      adaptee.wallDimensionsChanged(e);
+      adaptee.wallWidthPropertyChanged(e);
    }
 }
 
-class SurfaceViewportCreateDialog_mWallHeightField_focusAdapter extends java.awt.event.FocusAdapter
+class SurfaceViewportCreateDialog_mWallHeightField_propertyChangeAdapter implements java.beans.PropertyChangeListener
 {
    private SurfaceViewportCreateDialog adaptee;
 
-   SurfaceViewportCreateDialog_mWallHeightField_focusAdapter(SurfaceViewportCreateDialog adaptee)
+   SurfaceViewportCreateDialog_mWallHeightField_propertyChangeAdapter(SurfaceViewportCreateDialog adaptee)
    {
       this.adaptee = adaptee;
    }
-   public void focusLost(FocusEvent e)
+   public void propertyChange(PropertyChangeEvent e)
    {
-      adaptee.wallDimensionsChanged(e);
+      adaptee.wallWidthPropertyChanged(e);
+   }
+}
+
+class SurfaceViewportCreateDialog_mCornerChooser_actionAdapter implements java.awt.event.ActionListener
+{
+   private SurfaceViewportCreateDialog adaptee;
+
+   SurfaceViewportCreateDialog_mCornerChooser_actionAdapter(SurfaceViewportCreateDialog adaptee)
+   {
+      this.adaptee = adaptee;
+   }
+   public void actionPerformed(ActionEvent e)
+   {
+      adaptee.cornerChanged(e);
    }
 }
