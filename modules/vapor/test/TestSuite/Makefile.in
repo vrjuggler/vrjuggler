@@ -49,6 +49,10 @@ DEFAULT_SET=	1
 # Set to "Y" to enable usage of the qt test runner
 USE_QTRUNNER = N
 
+CPPDOM_ROOT = ${JUGGLERROOT_ABS}/external/cppdom
+EXTRA_SRCS_PATH = ${CPPDOM_ROOT}/cppdom
+EXTRA_INCLUDES += ${CPPDOM_ROOT}
+
 include test.defs.mk
 
 BUILD_PROF_C=	@BUILD_PROF_C@
@@ -98,7 +102,8 @@ LINKALL_OFF=	@APP_LINKALL_OFF@
 # -----------------------------------------------------------------------------
 # Build stuff.
 # -----------------------------------------------------------------------------
-SRCS=		main.cpp
+CPPDOM_SRCS= cppdom.cpp version.cpp xmlparser.cpp xmltokenizer.cpp
+SRCS=		main.cpp ${CPPDOM_SRCS}
 ALL_OBJS=	$(OBJDIR)/*.@OBJEXT@
 SUBDIR=		TestCases
 
