@@ -406,7 +406,7 @@ value</screen>
             <listitem>
                <para><filename>standalone.config</filename> - A configuration file that stands on its own and combines the functionality of <filename>sim.base.config</filename>, <filename>sim.wand.mixin.config</filename>, and <filename>sim.displays.config</filename>. Note that it uses a single display window for all input.</para>
                <note>
-                  <para>At the time of this writing, this configuration file only works with OpenGL, OpenSG, and OpenSceneGraph applications running on UNIX-based platforms. It will not work with OpenGL Performer, nor will it work on Win32 or Mac OS X.</para>
+                  <para>At the time of this writing, this configuration file only works with OpenGL, OpenSG, and OpenSceneGraph applications on UNIX and Win32. It will not work with OpenGL Performer, nor will it work on Mac OS X.</para>
                </note>
             </listitem>
          </itemizedlist>
