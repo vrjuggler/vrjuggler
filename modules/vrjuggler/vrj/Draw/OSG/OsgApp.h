@@ -94,6 +94,8 @@ public:
    // Make sure to call initScene if you override this function
    virtual void init()
    {
+      GlApp::init();
+
       //Create the scene
       this->initScene();
    }

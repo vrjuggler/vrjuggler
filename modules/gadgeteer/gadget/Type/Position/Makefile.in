@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for gadgeteer/gadget/Type.  It requires GNU make.
+# Makefile.in for gadgeteer/gadget/Type/Position.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -41,32 +41,15 @@ default: all
 # Include common definitions
 include @topdir@/make.defs.mk
 
-includedir=	@includedir@/gadget/Type
+includedir=	@includedir@/gadget/Type/Position
 srcdir=		@srcdir@
 top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(GADGET_LIBRARY)
 
-#
-DIRPRFX=	gadget/Type
+SRCS=				
 
-SUBDIR=		Position
-
-SRCS=		AnalogProxy.cpp			\
-		DeviceFactory.cpp		\
-		BaseTypeFactory.cpp		\
-		DeviceInterface.cpp		\
-		DigitalProxy.cpp		\
-		Input.cpp			\
-		KeyboardProxy.cpp		\
-		Position.cpp			\
-		PositionProxy.cpp		\
-		Glove.cpp			\
-		GloveProxy.cpp			\
-		GestureProxy.cpp		\
-		GloveGesture.cpp		
-
-include $(MKPATH)/dpp.obj-subdir.mk
+include $(MKPATH)/dpp.obj.mk
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.
