@@ -1,23 +1,15 @@
-#ifndef _JCCL_RTRC_INTERFACE_SUBJECT_IMPL_H_
-#define _JCCL_RTRC_INTERFACE_SUBJECT_IMPL_H_
+#ifndef _JCCL_RTRC_INTERFACE_H_
+#define _JCCL_RTRC_INTERFACE_H_
 
 #include <jccl/jcclConfig.h>
 #include <jccl/Net/JackalControl.h>
-#include <jccl/Config/ConfigChunkDB.h>
-#include <jccl/Config/ChunkDescDB.h>
-#include <jccl/Config/ConfigChunk.h>
-#include <jccl/RTRC/XMLConfigCommunicator.h>
-#include <vpr/Sync/Mutex.h>
-#include <vpr/Sync/Guard.h>
+
 #include <jccl/Util/Debug.h>
-#include <vpr/Util/Assert.h>
-#include <vpr/Util/Singleton.h>
 
 #include <tweek/CORBA/CorbaManager.h>
+
 #include <jccl/RTRC/RTRCInterfaceSubjectImpl.h>
 
-#include <list>
-#include <sstream>
 
 namespace jccl 
 {
@@ -31,6 +23,7 @@ namespace jccl
 
 class JCCL_CLASS_API RTRCInterface
 {
+
 public:
    RTRCInterface()
    {
@@ -74,9 +67,8 @@ public:
    void disable();
 
 private:
-
    tweek::CorbaManager* mCorbaManager;
-   jccl::RTRCInterfaceSubjectImpl* mInterface;
+   RTRCInterfaceSubjectImpl* mInterface;
    std::string mInterfaceName;
 
 };
