@@ -118,7 +118,7 @@
    #define VPR_MAX_DBG_LEVEL 100
 #else
    #define LOCK_DEBUG_STREAM
-   #define VPR_MAX_DBG_LEVEL vpr::DBG_WARNING_LVL
+   #define VPR_MAX_DBG_LEVEL vprDBG_WARNING_LVL
 
 //#   define vprDEBUG(cat,val) if (1) ; else std::cout
 //#   define vprDEBUG_BEGIN(cat,val) if (1) ; else std::cout
@@ -202,9 +202,9 @@ namespace vpr {
 
    public:
       // Get the debug stream to use
-      std::ostream& getStream(vpr::GUID cat, int level, bool show_thread_info = true,
-                              bool use_indent = true, int indentChange = 0,
-                              bool lockStream = true);
+      std::ostream& getStream(const vpr::GUID& cat, const int level, const bool show_thread_info = true,
+                              const bool use_indent = true, const int indentChange = 0,
+                              const bool lockStream = true);
 
       int getLevel()
       { return debugLevel;}
@@ -213,13 +213,13 @@ namespace vpr {
       { return mDebugLock;}
 
       /// Adds a category name.
-      void addCategoryName(std::string name, vpr::GUID catId);
+      void addCategoryName(std::string name, const vpr::GUID& catId);
 
       /// Allows the given category.
-      void addAllowedCategory(vpr::GUID catId);
+      void addAllowedCategory(const vpr::GUID& catId);
 
       /// Are we allowed to print this category??
-      bool isCategoryAllowed(vpr::GUID catId);
+      bool isCategoryAllowed(const vpr::GUID& catId);
 
       /// Sets up the default categories.
       void setDefaultCategoryNames();

@@ -112,9 +112,9 @@ public:
 
 public:
    /**
-    * Generates a random GUID.
+    * Generates empty guid
     */
-   GUID(bool genRandom=false);
+   GUID();
 
    /**
     * Generates a GUID from the given struct.
@@ -155,6 +155,8 @@ public:
       m_guid.packed.l2 = obj.m_guid.packed.l2;
       m_guid.packed.l3 = obj.m_guid.packed.l3;
    }
+
+   
 
    void operator= (const GUID& obj)
    {
