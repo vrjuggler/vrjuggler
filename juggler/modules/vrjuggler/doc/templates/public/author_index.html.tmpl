@@ -1,0 +1,42 @@
+<html><head><TITLE>Example Class Index</TITLE></head>
+<body BGCOLOR=#FFFFFF>
+<CENTER>
+<TABLE BORDER=3 CELLPADDING=10>
+<CAPTION><FONT SIZE=4><B>Class Index by Author</B></FONT></CAPTION>
+
+<TR>
+  <B>
+  <TD ALIGN=CENTER>Class</TD>
+  <TD ALIGN=CENTER>Modified</TD>
+  <TD ALIGN=CENTER>Description</TD>
+  </B>
+</TR>
+
+{foreach author}
+
+<TR>
+  <TD COLSPAN=3 ALIGN=CENTER>
+    <FONT FACE="Helvetica" SIZE=4><B>
+    {if !author}Other Authors{endif}{else}{author}{endelse}
+    </B></FONT>
+  </TD>
+</TR>
+{foreach class}
+{nobreak}
+
+<TR >{br}
+  
+  <TD  ALIGN=CENTER VALIGN=TOP><A HREF="{name}.html">
+      <FONT FACE="Helvetica" SIZE=3><B>{name}{templ}</B></FONT></A></TD>
+  <TD ALIGN=CENTER VALIGN=TOP><FONT FACE="Times" SIZE=3><B>{modtime}</B></TD>
+  <TD VALIGN=TOP><FONT FACE="Times" SIZE=3><B>{brief}</B></TD>
+  
+</TR>
+{endnobreak}
+{next class}
+
+{next author}
+
+</TABLE>
+</BODY>
+</HTML>
