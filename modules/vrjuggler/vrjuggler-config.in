@@ -213,7 +213,7 @@ if test "$echo_libs" = "yes"; then
     if test "$use_base_dir" = "yes"; then
         ldflags="-L$VJ_BASE_DIR/lib@LIBBITSUF@"
     else
-        ldflags='@vrj_ldflags@'
+        ldflags="@vrj_ldflags@"
     fi
 
     if test "x$lib_Juggler_all" = "xyes" ; then
