@@ -5,9 +5,13 @@
 #include <Threads/vjThread.h>
 #include <Threads/vjTSObjectProxy.h>
 #include <Threads/vjTSObject.h>
+#include <Sync/vjMutex.h>
 #include <Kernel/vjDebug.h>
 
 int num_threads_to_create = 6;
+int threads_created = 0;
+int threads_exited = 0;
+vjMutex create_mutex;
 
 void doFunc(void*);
 
@@ -17,6 +21,9 @@ int main(void)
 
    vjThread* new_thread = new vjThread(doFunc, (void*)(&tsCounter));
 
+   create_mutex.acquire();
+      threads_created++;
+   create_mutex.release();
 
    while(1)
    {
@@ -27,26 +34,47 @@ int main(void)
 
 void doFunc(void* TSCounterPtr)
 {
+   int i;
    vjTSObjectProxy<int>&  ts_counter = *(static_cast<vjTSObjectProxy<int>*>(TSCounterPtr));
 
-   num_threads_to_create -= 1;
-   if(num_threads_to_create > 0)
-      vjThread* new_thread = new vjThread(doFunc, TSCounterPtr);
-   if(num_threads_to_create > 0)
-      vjThread* new_thread2 = new vjThread(doFunc, TSCounterPtr);
-   if(num_threads_to_create > 0)
-      vjThread* new_thread3 = new vjThread(doFunc, TSCounterPtr);
+   create_mutex.acquire();
+      num_threads_to_create -= 1;
+   create_mutex.release();
+
+   for ( i = 0; i < 3; i++ ) {
+      create_mutex.acquire();
+         // All the threads we want have been created.
+         if ( num_threads_to_create == 0 ) {
+               vjDEBUG(0) << "All " << threads_created << " threads created\n"
+                          << vjDEBUG_FLUSH;
+         }
+         else if ( num_threads_to_create > 0 ) {
+            vjThread* new_thread = new vjThread(doFunc, TSCounterPtr);
+            threads_created++;
+         }
+      create_mutex.release();
+   }
 
    (*ts_counter) = 0;
-   vjDEBUG(0) << "Starting with: " << *ts_counter << endl << flush << vjDEBUG_FLUSH;
+   vjDEBUG(0) << "Starting with: " << *ts_counter << endl << flush
+              << vjDEBUG_FLUSH;
 
    while((*ts_counter) < 1000)
    {
-      for(int i=0;i<1000;i++)
+      for(i=0;i<1000;i++)
          float x = sin(i);
       (*ts_counter)++;
    }
 
-   vjDEBUG(0) << "Finished counting: Final val:" << *ts_counter << endl << vjDEBUG_FLUSH;
-}
+   vjDEBUG(0) << "Finished counting: Final val:" << *ts_counter << endl
+              << vjDEBUG_FLUSH;
 
+   create_mutex.acquire();
+      threads_exited++;
+
+      if ( threads_exited == threads_created ) {
+          vjDEBUG(0) << "All threads have finished execution\n"
+                     << vjDEBUG_FLUSH;
+      }
+   create_mutex.release();
+}
