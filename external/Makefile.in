@@ -152,14 +152,20 @@ links-boost:
           $(instlinks)/lib$(LIBBITSUF)
 
 links-cppdom:
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/lib$(LIBBITSUF)
+	-$(RM_LN) $(instlinks)/bin/cppdom-config
+	$(LN_S) $(CPPDOM_ROOT)/bin/cppdom-config $(instlinks)/bin/cppdom-config
 	-$(RM_LN) $(instlinks)/include/cppdom
 	$(LN_S) $(CPPDOM_ROOT)/include/cppdom $(instlinks)/include/cppdom
 	$(INSTALL) -l $(CPPDOM_ROOT)/lib/libcppdom* $(instlinks)/lib$(LIBBITSUF)
 
 links-gmtl:
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
+	-$(RM_LN) $(instlinks)/bin/gmtl-config
+	$(LN_S) $(GMTL_ROOT)/bin/gmtl-config $(instlinks)/bin/gmtl-config
 	-$(RM_LN) $(instlinks)/include/gmtl
 	$(LN_S) $(GMTL_INC_DIR)/gmtl $(instlinks)/include/gmtl
 
@@ -172,8 +178,12 @@ links-audiere:
           $(instlinks)/lib$(LIBBITSUF)
 
 links-cppunit:
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/lib$(LIBBITSUF)
+	-$(RM_LN) $(instlinks)/bin/cppunit-config
+	$(LN_S) $(CPPUNIT_ROOT)/bin/cppunit-config			\
+          $(instlinks)/bin/cppunit-config
 	-$(RM_LN) $(instlinks)/include/cppunit
 	$(LN_S) $(CPPUNIT_ROOT)/include/cppunit $(instlinks)/include/cppunit
 	$(INSTALL) -l $(CPPUNIT_ROOT)/lib/libcppunit*			\
@@ -269,8 +279,11 @@ install-boost:
           $(deps_prefix)/lib$(LIBBITSUF)
 
 install-cppdom:
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/bin
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/cppdom
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib$(LIBBITSUF)
+	$(INSTALL) $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)			\
+          $(CPPDOM_ROOT)/bin/cppdom-config $(deps_prefix)/bin
 	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
           $(GROUP_OPT_UNIX) -e .h -i $(CPPDOM_ROOT)/include/cppdom	\
           -o $(deps_prefix)/include/cppdom
@@ -280,7 +293,10 @@ install-cppdom:
           $(CPPDOM_ROOT)/lib/libcppdom*.so* $(deps_prefix)/lib$(LIBBITSUF)
 
 install-gmtl:
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/bin
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/gmtl
+	$(INSTALL) $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)			\
+          $(GMTL_ROOT)/bin/gmtl-config $(deps_prefix)/bin
 	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
           $(GROUP_OPT_UNIX) -e .h -i $(GMTL_INC_DIR)/gmtl		\
           -o $(deps_prefix)/include/gmtl
@@ -296,8 +312,11 @@ install-audiere:
           $(AUDIERE_ROOT)/lib/libaudiere*.so* $(deps_prefix)/lib$(LIBBITSUF)
 
 install-cppunit:
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/bin
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/cppunit
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib$(LIBBITSUF)
+	$(INSTALL) $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)			\
+          $(CPPUNIT_ROOT)/bin/cppunit-config $(deps_prefix)/bin
 	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
           $(GROUP_OPT_UNIX) -e .h -i $(CPPUNIT_ROOT)/include/cppunit	\
           -o $(deps_prefix)/include/cppunit
