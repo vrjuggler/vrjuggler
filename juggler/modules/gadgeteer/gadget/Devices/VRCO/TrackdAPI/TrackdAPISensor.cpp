@@ -23,9 +23,9 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          TrackdSensor.cpp,v
- * Date modified: 2002/06/05 22:30:48
- * Version:       1.22
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
@@ -40,30 +40,31 @@
 namespace gadget
 {
 
- // ------------------------------------------------------------------------
- //: Constructor.
- // ------------------------------------------------------------------------
+ /**
+  * Constructor.
+  */
  TrackdAPISensor::TrackdAPISensor(): mTrackerReader(NULL)
  {;}
 
- // ------------------------------------------------------------------------
- //: Destructor.
- //
- //! PRE: None.
- //! POST: Shared memory is released
- // ------------------------------------------------------------------------
+ /**
+  * Destructor.
+  *
+  * @pre None.
+  * @post Shared memory is released.
+  */
  TrackdAPISensor::~TrackdAPISensor()
  {
     // This may cause problems on windows
     delete mTrackerReader;
  }
 
- // ------------------------------------------------------------------------
- //: Configure the trackd sensor with the given config chunk.
- //
- // -Create the trackdSensor based on config info
- // -set to active
- // -grow the vector to however many values we need
+ /**
+  * Configures the trackd sensor with the given config chunk.
+  *
+  * -Create the trackdSensor based on config info<br>
+  * -set to active<br>
+  * -grow the vector to however many values we need<br>
+  */
  bool TrackdAPISensor::config(jccl::ConfigChunkPtr c)
  {
     if(! (Input::config(c) && Position::config(c)))
@@ -83,17 +84,17 @@ namespace gadget
 
     // grow vector
     mCurSensorValues.resize(mTrackerReader->trackdGetNumberOfSensors());
-    
+
     return true;
  }
 
 
- // ------------------------------------------------------------------------
- //: Update to the sampled data.
- //
- //! PRE: None.
- //! POST: Most recent value is copied over to temp area
- // ------------------------------------------------------------------------
+ /**
+  * Updates the sampled data.
+  *
+  * @pre None.
+  * @post Most recent value is copied over to temp area.
+  */
  void TrackdAPISensor::updateData()
  {
     vprASSERT(mTrackerReader != NULL && "Make sure that trackd sensors has been initialized");
@@ -115,15 +116,15 @@ namespace gadget
     mPosSamples.swapBuffers();
  }
 
- // Return the position of the given sensor
+/** Returns the position of the given sensor. */
 gmtl::Matrix44f TrackdAPISensor::getSensorPos(int sensorNum)
 {
    assert(mTrackerReader != NULL && "We don't have a valid trackd memory area");
    assert(sensorNum < mTrackerReader->trackdGetNumberOfSensors() && "Out of bounds request for a sensor");
 
    gmtl::Matrix44f ret_val;
-   float mat_data[4][4]; 
-   
+   float mat_data[4][4];
+
    mTrackerReader->trackdGetMatrix(sensorNum, mat_data);
 
    // AJS - some obvious set/get functions seem to be missing in GMTL
@@ -151,7 +152,4 @@ gmtl::Matrix44f TrackdAPISensor::getSensorPos(int sensorNum)
    return ret_val;
 }
 
-
-
-
-};
+} // End of gadget namespace
