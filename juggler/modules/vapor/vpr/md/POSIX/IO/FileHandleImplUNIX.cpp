@@ -346,7 +346,7 @@ FileHandleImplUNIX::enableAsynchronousWrite () {
 ReturnStatus
 FileHandleImplUNIX::read_i (void* buffer, const vpr::Uint32 length,
                             vpr::Uint32& bytes_read,
-        		    const vpr::Interval timeout)
+                            const vpr::Interval timeout)
 {
     ReturnStatus status;
 
@@ -448,7 +448,7 @@ FileHandleImplUNIX::write_i (const void* buffer, const vpr::Uint32 length,
                              vpr::Uint32& bytes_written,
                              const vpr::Interval timeout)
 {
-    ReturnStatus status;
+    vpr::ReturnStatus status;
 
     status = isWriteable(timeout);
 
@@ -498,40 +498,47 @@ FileHandleImplUNIX::setFlags (const int flags) {
 // ----------------------------------------------------------------------------
 ReturnStatus
 FileHandleImplUNIX::isReadable (const vpr::Interval timeout) {
-    ReturnStatus ready;
+    vpr::ReturnStatus ready;
     fd_set read_set;
     int num_events;
     struct timeval timeout_obj;
 
-    if ( timeout == vpr::Interval::NoWait ) {
-        timeout_obj.tv_sec  = 0;
-        timeout_obj.tv_usec = 0;
+    if ( m_fdesc == -1 )
+    {
+       ready.setCode(vpr::ReturnStatus::Fail);
     }
-    else {
-        if ( timeout.msec() >= 1000 ) {
-            timeout_obj.tv_sec  = timeout.msec() / 1000;
-            timeout_obj.tv_usec = (timeout.msec() % 1000) * 1000000;
-        }
-        else {
-            timeout_obj.tv_sec  = 0;
-            timeout_obj.tv_usec = timeout.msec() * 1000;
-        }
-    }
+    else
+    {
+       if ( timeout == vpr::Interval::NoWait ) {
+           timeout_obj.tv_sec  = 0;
+           timeout_obj.tv_usec = 0;
+       }
+       else {
+           if ( timeout.msec() >= 1000 ) {
+               timeout_obj.tv_sec  = timeout.msec() / 1000;
+               timeout_obj.tv_usec = (timeout.msec() % 1000) * 1000000;
+           }
+           else {
+               timeout_obj.tv_sec  = 0;
+               timeout_obj.tv_usec = timeout.msec() * 1000;
+           }
+       }
 
-    FD_ZERO(&read_set);
-    FD_SET(m_fdesc, &read_set);
+       FD_ZERO(&read_set);
+       FD_SET(m_fdesc, &read_set);
 
-    num_events = select(m_fdesc + 1, &read_set, NULL, NULL,
-                        (timeout != vpr::Interval::NoTimeout) ? &timeout_obj :
-                                                                NULL);
+       num_events = select(m_fdesc + 1, &read_set, NULL, NULL,
+                           (timeout != vpr::Interval::NoTimeout) ? &timeout_obj :
+                                                                   NULL);
 
-    if ( num_events == 0 ) {
-        if ( ! FD_ISSET(m_fdesc, &read_set) ) {
-            ready.setCode(vpr::ReturnStatus::Timeout);
-        }
-    }
-    else if ( num_events < 0 ) {
-        ready.setCode(vpr::ReturnStatus::Fail);
+       if ( num_events == 0 ) {
+           if ( ! FD_ISSET(m_fdesc, &read_set) ) {
+               ready.setCode(vpr::ReturnStatus::Timeout);
+           }
+       }
+       else if ( num_events < 0 ) {
+           ready.setCode(vpr::ReturnStatus::Fail);
+       }
     }
 
     return ready;
@@ -541,40 +548,47 @@ FileHandleImplUNIX::isReadable (const vpr::Interval timeout) {
 // ----------------------------------------------------------------------------
 ReturnStatus
 FileHandleImplUNIX::isWriteable (const vpr::Interval timeout) {
-    ReturnStatus ready;
+    vpr::ReturnStatus ready;
     fd_set write_set;
     int num_events;
     struct timeval timeout_obj;
 
-    if ( timeout == vpr::Interval::NoWait ) {
-        timeout_obj.tv_sec  = 0;
-        timeout_obj.tv_usec = 0;
+    if ( m_fdesc == -1 )
+    {
+       ready.setCode(vpr::ReturnStatus::Fail);
     }
-    else {
-        if ( timeout.msec() >= 1000 ) {
-            timeout_obj.tv_sec  = timeout.msec() / 1000;
-            timeout_obj.tv_usec = (timeout.msec() % 1000) * 1000000;
-        }
-        else {
-            timeout_obj.tv_sec  = 0;
-            timeout_obj.tv_usec = timeout.msec() * 1000;
-        }
-    }
+    else
+    {
+       if ( timeout == vpr::Interval::NoWait ) {
+           timeout_obj.tv_sec  = 0;
+           timeout_obj.tv_usec = 0;
+       }
+       else {
+           if ( timeout.msec() >= 1000 ) {
+               timeout_obj.tv_sec  = timeout.msec() / 1000;
+               timeout_obj.tv_usec = (timeout.msec() % 1000) * 1000000;
+           }
+           else {
+               timeout_obj.tv_sec  = 0;
+               timeout_obj.tv_usec = timeout.msec() * 1000;
+           }
+       }
 
-    FD_ZERO(&write_set);
-    FD_SET(m_fdesc, &write_set);
+       FD_ZERO(&write_set);
+       FD_SET(m_fdesc, &write_set);
 
-    num_events = select(m_fdesc + 1, NULL, &write_set, NULL,
-                        (timeout != vpr::Interval::NoTimeout) ? &timeout_obj :
-                                                                NULL);
+       num_events = select(m_fdesc + 1, NULL, &write_set, NULL,
+                           (timeout != vpr::Interval::NoTimeout) ? &timeout_obj :
+                                                                   NULL);
 
-    if ( num_events == 0 ) {
-        if ( ! FD_ISSET(m_fdesc, &write_set) ) {
-            ready.setCode(vpr::ReturnStatus::Timeout);
-        }
-    }
-    else if ( num_events < 0 ) {
-        ready.setCode(vpr::ReturnStatus::Fail);
+       if ( num_events == 0 ) {
+           if ( ! FD_ISSET(m_fdesc, &write_set) ) {
+               ready.setCode(vpr::ReturnStatus::Timeout);
+           }
+       }
+       else if ( num_events < 0 ) {
+           ready.setCode(vpr::ReturnStatus::Fail);
+       }
     }
 
     return ready;
