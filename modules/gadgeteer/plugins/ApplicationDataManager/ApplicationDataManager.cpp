@@ -153,6 +153,11 @@ namespace cluster
     void ApplicationDataManager::postPostFrame()
     {;
     }
+    
+    bool ApplicationDataManager::isPluginReady()
+    {
+       return (0 == mPendingUserDataRequests.size());
+    }
 
     void ApplicationDataManager::updateAll()
     {

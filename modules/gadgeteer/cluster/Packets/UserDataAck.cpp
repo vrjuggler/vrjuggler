@@ -158,39 +158,7 @@ namespace cluster
    }
 
    bool UserDataAck::action(ClusterNode* node)
-   {
-/*      // -If ACK
-      //   -Create VirtualDevice
-      // -If Nack
-      //   -Do nothing(let the config manager worry about re-trying)
-      if (node == NULL)
-      {
-         return false;
-      }
-      if (mAck)
-      {
-         //vpr::ReturnStatus status =  RemoteInputManager::instance()->addVirtualDevice(mDeviceId, mDeviceName, mDeviceBaseType);
-         node->removeDeviceRequest(mDeviceName);
-
-         if (RemoteInputManager::instance()->getVirtualDevice(mDeviceName) != NULL)
-         {
-            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrRED, "ERROR:") 
-               << "Somehow we already have a virtual device named: " << mDeviceName << std::endl << vprDEBUG_FLUSH;
-         }                                                                  
-         else
-         {
-            RemoteInputManager::instance()->addVirtualDevice(mDeviceId, mDeviceName, mDeviceBaseType, mHostname);
-            // Tell the input Mangager that we may now have the device it was trying to point to
-            gadget::InputManager::instance()->refreshAllProxies();      
-         }
-      }
-      else
-      {
-         // Do Nothing Since we will just re-try later
-         //RemoteInputManager::instance()->createPendingConfigRemoveAndAdd(mDeviceName);
-         //jccl::ConfigManager::instance()->delayStalePendingList();
-      }
-*/    
+   {  
       if (mAck)
       {
          ApplicationDataManager::instance()->removePendingUserDataRequest(mDeviceName);

@@ -72,6 +72,29 @@ namespace cluster
    {
       ;
    }
+
+
+   bool ClusterManager::isClusterReady()
+   {
+      vpr::Guard<vpr::Mutex> guard(mPluginsLock);
+      
+      for (std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
+           i != mPlugins.end() ; i++)
+      {
+         if (!(*i)->isPluginReady())
+         {
+//            std::cout << "Waiting on: " << (*i)->getManagerName() << std::endl;
+            return false;
+         }                  
+      }
+//      if (!ClusterNetwork::instance()->isClusterNetworkReady())
+//      {
+//         std::cout << "Waiting on ClusterNetwork." << std::endl;
+//      }
+      return(ClusterNetwork::instance()->isClusterNetworkReady());
+   }
+
+
    /** Add the pending chunk to the configuration.
     *  PRE: configCanHandle (chunk) == true.
     *  @return true iff chunk was successfully added to configuration.
@@ -249,6 +272,7 @@ namespace cluster
 
    void ClusterManager::preDraw()
    {
+      // Idea is to not create frame lock if we do not need to
       bool updateNeeded = false;
       vpr::Guard<vpr::Mutex> guard(mPluginsLock);
       
@@ -268,6 +292,7 @@ namespace cluster
    }
    void ClusterManager::postPostFrame()
    {
+      // Idea is to not create frame lock if we do not need to
       bool updateNeeded = false;
       vpr::Guard<vpr::Mutex> guard(mPluginsLock);
       
