@@ -5,7 +5,7 @@
 #include <TestCases/IO/Socket/InetAddrTest.h>
 
 
-using namespace vpr;
+//using namespace vpr;
 
 int main (int ac, char **av)
 {
@@ -20,7 +20,7 @@ int main (int ac, char **av)
    // add tests to the suite
    //suite_1->addTest( /* put your test here */ );
    noninteractive_suite->addTest(vprTest::InetAddrTest::suite());
-   noninteractive_suite->addTest(SocketTest::suite());
+   noninteractive_suite->addTest(vprTest::SocketTest::suite());
 
    // Add the test suite to the runner
    runner.addTest( "noninteractive", noninteractive_suite );
