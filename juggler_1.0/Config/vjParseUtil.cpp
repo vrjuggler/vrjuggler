@@ -175,10 +175,23 @@ float toFeet (float val, CfgUnit unit) {
 
 
 bool vjstrcasecmp (const std::string& a, const std::string& b) {
-  if (a.size() != b.size())
-    return true;
-  for (int i = 0; i < a.size(); i++)
-    if (toupper(a[i]) != toupper(b[i]))
-      return true;
-  return false;
+    if (a.size() != b.size())
+	return true;
+    for (int i = 0; i < a.size(); i++)
+	if (toupper(a[i]) != toupper(b[i]))
+	    return true;
+    return false;
+}
+
+
+bool vjstrncasecmp (const std::string& a, const std::string& b, int _n) {
+
+    int n = VJ_MIN2 (a.size(), b.size());
+    if (_n >= 0)
+	n = VJ_MIN2 (n, _n);
+
+    for (int i = 0; i < n; i++)
+	if (toupper(a[i]) != toupper(b[i]))
+	    return true;
+    return false;
 }
