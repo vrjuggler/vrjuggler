@@ -21,13 +21,16 @@
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(NSPR_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;..;..\..\..\modules\vapor;..\..\VPR;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\JCCL;..\..\..\modules\gadgeteer;..\..\..\modules\gadgeteer\drivers;..\..\..\external\GMTL"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_GADGET_DRIVER_BUILD_"
-				MinimalRebuild="TRUE"
+				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
+				RuntimeLibrary="3"
+				BufferSecurityCheck="FALSE"
+				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="4"/>
+				DebugInformationFormat="1"
+				DisableSpecificWarnings="4244;4251;4267;4275;4290;4312;4800"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -70,12 +73,16 @@
 				AdditionalIncludeDirectories="&quot;$(NSPR_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;..;..\..\..\modules\vapor;..\..\VPR;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\JCCL;..\..\..\modules\gadgeteer;..\..\..\modules\gadgeteer\drivers;..\..\..\external\GMTL"
 				PreprocessorDefinitions="WIN32;_OPT;NDEBUG;_WINDOWS;_USRDLL;_GADGET_DRIVER_BUILD_"
 				StringPooling="TRUE"
-				RuntimeLibrary="0"
+				MinimalRebuild="FALSE"
+				RuntimeLibrary="2"
+				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="TRUE"
+				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="3"/>
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4244;4251;4267;4275;4290;4312;4800"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool

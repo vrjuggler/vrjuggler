@@ -21,19 +21,21 @@
 				Optimization="0"
 				AdditionalIncludeDirectories=".;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;..\..\..\external\GMTL;..\..\..\modules\vapor;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\..\modules\gadgeteer;..\..\..\modules\vrjuggler;..;..\..\VPR;..\..\JCCL;..\..\Gadgeteer"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_VRJ_BUILD_"
-				MinimalRebuild="TRUE"
+				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
+				RuntimeLibrary="3"
+				BufferSecurityCheck="FALSE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="2"
 				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="4"/>
+				DebugInformationFormat="1"
+				DisableSpecificWarnings="4244;4251;4275;4312"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vrj_d.lib gadget_d.lib jccl_d.lib vpr_d.lib opengl32.lib glu32.lib"
+				AdditionalDependencies="vrj_d.lib gadget_d.lib jccl_d.lib vpr_d.lib libnspr4.lib libplc4.lib user32.lib gdi32.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj_ogl_d.dll"
 				Version="1.1.149"
 				LinkIncremental="2"
@@ -72,18 +74,21 @@
 				AdditionalIncludeDirectories=".;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;..\..\..\external\GMTL;..\..\..\modules\vapor;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\..\modules\gadgeteer;..\..\..\modules\vrjuggler;..;..\..\VPR;..\..\JCCL;..\..\Gadgeteer"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_VRJ_BUILD_;_OPT"
 				StringPooling="TRUE"
-				RuntimeLibrary="0"
+				MinimalRebuild="FALSE"
+				RuntimeLibrary="2"
+				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="2"
 				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="3"/>
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4244;4251;4275;4312"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vrj.lib gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib opengl32.lib glu32.lib"
+				AdditionalDependencies="vrj.lib gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib user32.lib gdi32.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj_ogl.dll"
 				Version="1.1.149"
 				LinkIncremental="1"
@@ -120,14 +125,16 @@
 				Optimization="0"
 				AdditionalIncludeDirectories=".;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;..\..\..\external\GMTL;..\..\..\modules\vapor;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\..\modules\gadgeteer;..\..\..\modules\vrjuggler;..;..\..\VPR;..\..\JCCL;..\..\Gadgeteer"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_VRJ_BUILD_"
-				MinimalRebuild="TRUE"
+				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
+				BufferSecurityCheck="FALSE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="2"
 				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="4"/>
+				DebugInformationFormat="1"
+				DisableSpecificWarnings="4244;4251;4275;4312"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -160,13 +167,16 @@
 				AdditionalIncludeDirectories=".;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;..\..\..\external\GMTL;..\..\..\modules\vapor;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\..\modules\gadgeteer;..\..\..\modules\vrjuggler;..;..\..\VPR;..\..\JCCL;..\..\Gadgeteer"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_VRJ_BUILD_;_OPT"
 				StringPooling="TRUE"
+				MinimalRebuild="FALSE"
 				RuntimeLibrary="0"
+				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="2"
 				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="3"/>
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4244;4251;4275;4312"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool

@@ -21,19 +21,21 @@
 				Optimization="0"
 				AdditionalIncludeDirectories=".;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;&quot;$(OMNIORB_ROOT)\include&quot;;..;..\..\..\modules\vapor;..\..\VPR;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\JCCL;..\..\..\modules\gadgeteer;..\..\..\modules\gadgeteer\drivers;..\..\..\external\GMTL;..\..\..\modules\tweek;..\..\Tweek_CXX;..\..\Tweek_CXX\tweek\CORBA"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_GADGET_DRIVER_BUILD_;__NT__=1;__OSVERSION__=5;__WIN32__=1;__x86__=1"
-				MinimalRebuild="TRUE"
+				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
+				RuntimeLibrary="3"
+				BufferSecurityCheck="FALSE"
+				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="4"
-				DisableSpecificWarnings="4311;4312"/>
+				DebugInformationFormat="1"
+				DisableSpecificWarnings="4244;4251;4267;4275;4290;4311;4312;4800"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="omniORB402_rtd.lib omnithread30_rtd.lib omniDynamic402_rtd.lib gadget_d.lib jccl_d.lib tweek_d.lib vpr_d.lib cppdom.lib libnspr4.lib libplc4.lib ws2_32.lib comctl32.lib gdi32.lib user32.lib"
+				AdditionalDependencies="omniORB402_rtd.lib omnithread30_rtd.lib omniDynamic402_rtd.lib gadget_d.lib jccl_d.lib tweek_d.lib vpr_d.lib cppdom.lib libnspr4.lib libplc4.lib ws2_32.lib comctl32.lib gdi32.lib user32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/TweekGadget_drv_d.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib\DebugDLL&quot;;&quot;$(OMNIORB_ROOT)\lib\x86_win32&quot;;..\DebugDLL;..\..\Tweek_CXX\DebugDLL;..\..\JCCL\DebugDLL;..\..\VPR\DebugDLL"
@@ -76,13 +78,16 @@ $(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -I..\..\..\modules\tw
 				AdditionalIncludeDirectories=".;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;&quot;$(OMNIORB_ROOT)\include&quot;;..;..\..\..\modules\vapor;..\..\VPR;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\JCCL;..\..\..\modules\gadgeteer;..\..\..\modules\gadgeteer\drivers;..\..\..\external\GMTL;..\..\..\modules\tweek;..\..\Tweek_CXX;..\..\Tweek_CXX\tweek\CORBA"
 				PreprocessorDefinitions="WIN32;_OPT;NDEBUG;_WINDOWS;_USRDLL;_GADGET_DRIVER_BUILD_;__NT__=1;__OSVERSION__=5;__WIN32__=1;__x86__=1"
 				StringPooling="TRUE"
-				RuntimeLibrary="0"
+				MinimalRebuild="FALSE"
+				RuntimeLibrary="2"
+				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="TRUE"
+				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4311;4312"/>
+				DisableSpecificWarnings="4244;4251;4267;4275;4290;4311;4312;4800"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool

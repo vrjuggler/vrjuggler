@@ -21,23 +21,25 @@
 				Optimization="0"
 				AdditionalIncludeDirectories=".;..\..\modules\vrjuggler;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;..\..\external\GMTL;..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\..\modules\gadgeteer;..\..\modules\sonix;..\VPR;..\JCCL;..\Gadgeteer;..\Sonix"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_VRJ_BUILD_;VJ_SHARE_DIR=&quot;\&quot;share\\vrjuggler\&quot;&quot;"
-				MinimalRebuild="TRUE"
+				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				BufferSecurityCheck="FALSE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="2"
 				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="4"/>
+				DebugInformationFormat="1"
+				DisableSpecificWarnings="4244;4251;4275;4312"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="sonix_d.lib gadget_d.lib jccl_d.lib vpr_d.lib cppdom.lib libnspr4.lib"
+				AdditionalDependencies="sonix_d.lib gadget_d.lib jccl_d.lib vpr_d.lib cppdom.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj_d.dll"
 				Version="1.1.149"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\VPR\DebugDLL;..\JCCL\DebugDLL;..\Gadgeteer\DebugDLL;..\Sonix\DebugDLL;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib\DebugDLL&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib\DebugDLL&quot;;&quot;$(BOOST_ROOT)\lib&quot;;..\VPR\DebugDLL;..\JCCL\DebugDLL;..\Gadgeteer\DebugDLL;..\Sonix\DebugDLL"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/vrj_d.pdb"
 				SubSystem="2"
@@ -73,21 +75,23 @@
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_VRJ_BUILD_;_OPT;VJ_SHARE_DIR=&quot;\&quot;share\\vrjuggler\&quot;&quot;"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
+				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="2"
 				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="3"/>
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4244;4251;4275;4312"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="sonix.lib gadget.lib jccl.lib vpr.lib cppdom.lib libnspr4.lib"
+				AdditionalDependencies="sonix.lib gadget.lib jccl.lib vpr.lib cppdom.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj.dll"
 				Version="1.1.149"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\VPR\ReleaseDLL;..\JCCL\ReleaseDLL;..\Gadgeteer\ReleaseDLL;..\Sonix\ReleaseDLL;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib\ReleaseDLL&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib\ReleaseDLL&quot;;&quot;$(BOOST_ROOT)\lib&quot;;..\VPR\ReleaseDLL;..\JCCL\ReleaseDLL;..\Gadgeteer\ReleaseDLL;..\Sonix\ReleaseDLL"
 				GenerateDebugInformation="FALSE"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -120,14 +124,16 @@
 				Optimization="0"
 				AdditionalIncludeDirectories=".;..\..\modules\vrjuggler;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;..\..\external\GMTL;..\..\modules\vapor;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc;..\..\modules\gadgeteer;..\..\modules\sonix;..\VPR;..\JCCL;..\Gadgeteer;..\Sonix"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_VRJ_BUILD_;VJ_SHARE_DIR=&quot;\&quot;share\\vrjuggler\&quot;&quot;"
-				MinimalRebuild="TRUE"
+				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
+				BufferSecurityCheck="FALSE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="2"
 				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="4"/>
+				DebugInformationFormat="1"
+				DisableSpecificWarnings="4244;4251;4275;4312"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -161,12 +167,14 @@
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_VRJ_BUILD_;_OPT;VJ_SHARE_DIR=&quot;\&quot;share\\vrjuggler\&quot;&quot;"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
+				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="2"
 				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="3"/>
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4244;4251;4275;4312"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
