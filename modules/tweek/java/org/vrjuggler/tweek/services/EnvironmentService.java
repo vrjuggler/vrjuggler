@@ -94,6 +94,13 @@ public class EnvironmentService implements java.io.Serializable
             new_str = input_str.substring(0, index) + value +
                       input_str.substring(end_index + 1);
          }
+         else
+         {
+            System.err.println("WARNING: Environment variable " + env_var +
+                               " has no value");
+            new_str = input_str.substring(0, index) +
+                      input_str.substring(end_index + 1);
+         }
       }
 
       return new_str;
