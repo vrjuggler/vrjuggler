@@ -79,7 +79,7 @@ int pfSoundNode::app(pfTraverser *trav)
 // is derived from a Performer class.  It creates a new pfType
 // which identifies objects of this class.  All constructors for
 // this class must then call setType(classType_).
-pfType *pfSoundNode::classType = NULL;
+pfType* pfSoundNode::classType = NULL;
 
 void pfSoundNode::init(void)
 {
