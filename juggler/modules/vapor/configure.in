@@ -674,6 +674,13 @@ if test "x$OS_TYPE" = "xWin32" ; then
    CPPDOM_CXXFLAGS="-I$cppdom_root/include"
    CPPDOM_LDFLAGS="/libpath:$cppdom_root/lib"
    CPPDOM_LIBS="cppdom.lib"
+
+   # Get the CppDOM version number components.
+   cppdom_major_ver=`grep 'define CPPDOM_VERSION_MAJOR ' $cppdom_root/include/cppdom/version.h | awk '{ print $3 }' -`
+   cppdom_minor_ver=`grep 'define CPPDOM_VERSION_MINOR ' $cppdom_root/include/cppdom/version.h | awk '{ print $3 }' -`
+   cppdom_patch_ver=`grep 'define CPPDOM_VERSION_PATCH ' $cppdom_root/include/cppdom/version.h | awk '{ print $3 }' -`
+
+   cppdom_version="$cppdom_major_ver.$cppdom_minor_ver.$cppdom_patch_ver"
 else
    AC_PATH_PROG(CPPDOM_CONFIG, [cppdom-config], [no], [$cppdom_path])
 
@@ -685,18 +692,14 @@ else
       CPPDOM_LDFLAGS=`echo $cppdom_lib_output | sed -e 's/-l[^ ]*//g'`
       CPPDOM_LIBS=`echo $cppdom_lib_output | sed -e 's/-L[^ ]*//g'`
       changequote([, ])
+
+      cppdom_version=`$CPPDOM_CONFIG --version`
    else
       AC_MSG_ERROR([*** CppDOM is required for VPR ***])
    fi
 fi
 
-# Get the CppDOM version number components.
-cppdom_major_ver=`grep 'define CPPDOM_VERSION_MAJOR ' $cppdom_root/include/cppdom/version.h | awk '{ print $3 }' -`
-cppdom_minor_ver=`grep 'define CPPDOM_VERSION_MINOR ' $cppdom_root/include/cppdom/version.h | awk '{ print $3 }' -`
-cppdom_patch_ver=`grep 'define CPPDOM_VERSION_PATCH ' $cppdom_root/include/cppdom/version.h | awk '{ print $3 }' -`
-
 # Verify that we have a new enough version of CppDOM.
-cppdom_version="$cppdom_major_ver.$cppdom_minor_ver.$cppdom_patch_ver"
 min_cppdom_version='0.3.1'
 AC_MSG_CHECKING([whether CppDOM version is >= $min_cppdom_version])
 AC_MSG_RESULT([$cppdom_version])
