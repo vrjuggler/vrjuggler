@@ -105,6 +105,7 @@ private:
    /** Rotation of the screen from base
    */
    gmtl::Matrix44f   m_surftrans_M_surf;
+   gmtl::Matrix44f   m_base_M_surftrans;
 
 
    /** Tracker connected to the surface.
