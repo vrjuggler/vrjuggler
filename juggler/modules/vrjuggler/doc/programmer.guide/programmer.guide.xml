@@ -7806,113 +7806,109 @@ private:
         object is a C++ class that defines methods to encapsulate the
         functionality of the application within a single C++ object.</para>
 
-        <section>
-          <title>In <productname>CAVElibs</productname></title>
+        <bridgehead>In <productname>CAVElibs</productname></bridgehead>
 
-          <para>The following lists the draw, frame, and initialize routines
-          used in the <productname>CAVElibs</productname> software.</para>
+        <para>The following lists the draw, frame, and initialize routines
+        used in the <productname>CAVElibs</productname> software.</para>
 
-          <itemizedlist>
-            <listitem>
-              <para>Draw: An application's display callback function is
-              defined by passing a function pointer to
-              <function>CAVEDisplay()</function></para>
-            </listitem>
+        <itemizedlist>
+          <listitem>
+            <para>Draw: An application's display callback function is defined
+            by passing a function pointer to
+            <function>CAVEDisplay()</function></para>
+          </listitem>
 
-            <listitem>
-              <para>Frame: The frame function is defined with
-              <function>CAVEFrameFunction()</function></para>
-            </listitem>
+          <listitem>
+            <para>Frame: The frame function is defined with
+            <function>CAVEFrameFunction()</function></para>
+          </listitem>
 
-            <listitem>
-              <para>Init: The initialization callback is defined using
-              <function>CAVEInitApplication()</function></para>
-            </listitem>
-          </itemizedlist>
-        </section>
+          <listitem>
+            <para>Init: The initialization callback is defined using
+            <function>CAVEInitApplication()</function></para>
+          </listitem>
+        </itemizedlist>
 
-        <section>
-          <title>In VR Juggler</title>
+        <bridgehead>In VR Juggler</bridgehead>
 
-          <para>With VR Juggler, no C function pointers are necessary, but a
-          pointer to an application object must be given to the VR Juggler
-          kernel. As described in earlier sections of this chapter, the first
-          step is to derive a new application class from
-          <classname>vrj::GlApp</classname>. For more information on
-          application objects, it may be helpful to review <xref
-          linkend="chapter.app.basics" />. Briefly, the application class
-          definition would appear similar to the following:</para>
+        <para>With VR Juggler, no C function pointers are necessary, but a
+        pointer to an application object must be given to the VR Juggler
+        kernel. As described in earlier sections of this chapter, the first
+        step is to derive a new application class from
+        <classname>vrj::GlApp</classname>. For more information on application
+        objects, it may be helpful to review <xref
+        linkend="chapter.app.basics" />. Briefly, the application class
+        definition would appear similar to the following:</para>
 
-          <programlisting>class MyApplication : public vrj::GlApp
+        <programlisting>class MyApplication : public vrj::GlApp
 {
    ...
 };</programlisting>
 
-          <para>The draw, frame, and initialize routine concepts in VR Juggler
-          are presented in the following list.</para>
+        <para>The draw, frame, and initialize routine concepts in VR Juggler
+        are presented in the following list.</para>
 
-          <itemizedlist>
-            <listitem>
-              <para>Draw: An application's display <quote>callback</quote>
-              function is defined by a member function called
-              <methodname>draw()</methodname> in the derived class. This is
-              where OpenGL rendering commands such as
-              <function>glBegin()</function>, <function>glVertex()</function>,
-              etc. are placed.</para>
-            </listitem>
+        <itemizedlist>
+          <listitem>
+            <para>Draw: An application's display <quote>callback</quote>
+            function is defined by a member function called
+            <methodname>draw()</methodname> in the derived class. This is
+            where OpenGL rendering commands such as
+            <function>glBegin()</function>, <function>glVertex()</function>,
+            etc. are placed.</para>
+          </listitem>
 
-            <listitem>
-              <para>Frame: Calculations such as navigation, collision,
-              physics, artificial intelligence, etc. are often placed in the
-              frame function. The frame function is split across three member
-              functions:</para>
+          <listitem>
+            <para>Frame: Calculations such as navigation, collision, physics,
+            artificial intelligence, etc. are often placed in the frame
+            function. The frame function is split across three member
+            functions:</para>
 
-              <orderedlist>
-                <listitem>
-                  <para><methodname>MyApplication::preFrame()</methodname>,
-                  called before <methodname>draw()</methodname></para>
-                </listitem>
+            <orderedlist>
+              <listitem>
+                <para><methodname>MyApplication::preFrame()</methodname>,
+                called before <methodname>draw()</methodname></para>
+              </listitem>
 
-                <listitem>
-                  <para><methodname>MyApplication::intraFrame()</methodname>,
-                  called during <methodname>draw()</methodname></para>
-                </listitem>
+              <listitem>
+                <para><methodname>MyApplication::intraFrame()</methodname>,
+                called during <methodname>draw()</methodname></para>
+              </listitem>
 
-                <listitem>
-                  <para><methodname>MyApplication::postFrame()</methodname>,
-                  called after <methodname>draw()</methodname></para>
-                </listitem>
-              </orderedlist>
-            </listitem>
+              <listitem>
+                <para><methodname>MyApplication::postFrame()</methodname>,
+                called after <methodname>draw()</methodname></para>
+              </listitem>
+            </orderedlist>
+          </listitem>
 
-            <listitem>
-              <para>Init: There is an initialization member function for data
-              and an initialization member function for creating
-              context-specific data (display lists, texture objects). The
-              latter is called for each <glossterm
-              linkend="gloss.display.context">display context</glossterm> in
-              the system. These two member functions are:</para>
+          <listitem>
+            <para>Init: There is an initialization member function for data
+            and an initialization member function for creating
+            context-specific data (display lists, texture objects). The latter
+            is called for each <glossterm
+            linkend="gloss.display.context">display context</glossterm> in the
+            system. These two member functions are:</para>
 
-              <orderedlist>
-                <listitem>
-                  <para><methodname>MyApplication::init()</methodname>, called
-                  once per application startup</para>
-                </listitem>
+            <orderedlist>
+              <listitem>
+                <para><methodname>MyApplication::init()</methodname>, called
+                once per application startup</para>
+              </listitem>
 
-                <listitem>
-                  <para><methodname>MyApplication::contextInit()</methodname>,
-                  called once per display context
-                  <emphasis>creation</emphasis></para>
-                </listitem>
-              </orderedlist>
-            </listitem>
-          </itemizedlist>
+              <listitem>
+                <para><methodname>MyApplication::contextInit()</methodname>,
+                called once per display context
+                <emphasis>creation</emphasis></para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </itemizedlist>
 
-          <para>Readers who find some of these concepts unfamiliar are
-          encouraged to read <xref linkend="section.opengl.apps" />. For
-          information about context-specific data, refer to <xref
-          linkend="section.csdata.intro" />.</para>
-        </section>
+        <para>Readers who find some of these concepts unfamiliar are
+        encouraged to read <xref linkend="section.opengl.apps" />. For
+        information about context-specific data, refer to <xref
+        linkend="section.csdata.intro" />.</para>
       </section>
 
       <section>
@@ -7922,88 +7918,105 @@ private:
         same, but the implementations are quite different between the
         <productname>CAVElibs</productname> software and VR Juggler.</para>
 
-        <section>
-          <title>In <productname>CAVElibs</productname></title>
+        <bridgehead>In <productname>CAVElibs</productname></bridgehead>
 
-          <para>To get tracking information, the following functions are
-          used:</para>
+        <para>To get tracking information, the following functions are
+        used:</para>
 
-          <itemizedlist>
-            <listitem>
-              <para><function>CAVEGetPosition(id, pos)</function></para>
-            </listitem>
+        <itemizedlist>
+          <listitem>
+            <para><function>CAVEGetPosition(id, pos)</function></para>
+          </listitem>
 
-            <listitem>
-              <para><function>CAVEGetOrientation(id, orient)</function></para>
-            </listitem>
+          <listitem>
+            <para><function>CAVEGetOrientation(id, orient)</function></para>
+          </listitem>
 
-            <listitem>
-              <para><function>CAVEGetVector(id, vec)</function></para>
-            </listitem>
+          <listitem>
+            <para><function>CAVEGetVector(id, vec)</function></para>
+          </listitem>
 
-            <listitem>
-              <para><function>CAVEGetSensorPosition(sensor, coords,
-              pos)</function></para>
-            </listitem>
+          <listitem>
+            <para><function>CAVEGetSensorPosition(sensor, coords,
+            pos)</function></para>
+          </listitem>
 
-            <listitem>
-              <para><function>CAVEGetSensorOrientation(sensor, coords,
-              orient)</function></para>
-            </listitem>
+          <listitem>
+            <para><function>CAVEGetSensorOrientation(sensor, coords,
+            orient)</function></para>
+          </listitem>
 
-            <listitem>
-              <para><function>CAVEGetSensorVector(sensor, id,
-              vec)</function></para>
-            </listitem>
-          </itemizedlist>
+          <listitem>
+            <para><function>CAVEGetSensorVector(sensor, id,
+            vec)</function></para>
+          </listitem>
+        </itemizedlist>
 
-          <para>For button input, the following macros are used:</para>
+        <para>For button input, the following macros are used:</para>
 
-          <itemizedlist>
-            <listitem>
-              <para><constant>CAVEBUTTON1</constant>,
-              <constant>CAVEBUTTON2</constant>,
-              <constant>CAVEBUTTON3</constant>,
-              <constant>CAVEBUTTON4</constant>,
-              <constant>CAVE_JOYSTICK_X</constant>, and
-              <constant>CAVE_JOYSTICK_Y</constant></para>
-            </listitem>
+        <itemizedlist>
+          <listitem>
+            <para><constant>CAVEBUTTON1</constant>,
+            <constant>CAVEBUTTON2</constant>,
+            <constant>CAVEBUTTON3</constant>,
+            <constant>CAVEBUTTON4</constant>,
+            <constant>CAVE_JOYSTICK_X</constant>, and
+            <constant>CAVE_JOYSTICK_Y</constant></para>
+          </listitem>
 
-            <listitem>
-              <para><function>CAVEButtonChange()</function></para>
-            </listitem>
-          </itemizedlist>
-        </section>
+          <listitem>
+            <para><function>CAVEButtonChange()</function></para>
+          </listitem>
+        </itemizedlist>
 
-        <section>
-          <title>In VR Juggler</title>
+        <bridgehead>In VR Juggler</bridgehead>
 
-          <para>To get device input, use the classes derived from
-          <classname>gadget::DeviceInterface</classname>. They include the
-          following:</para>
+        <para>To get device input, use the type-specific instantiations of
+        <classname>gadget::DeviceInterface&lt;T&gt;</classname><indexterm>
+            <primary>classes</primary>
 
-          <itemizedlist>
-            <listitem>
-              <para><classname>gadget::PositionInterface</classname> (for
-              trackers and other positional devices)</para>
-            </listitem>
+            <secondary>gadget::DeviceInterface&lt;T&gt;</secondary>
+          </indexterm>. They include the following:</para>
 
-            <listitem>
-              <para><classname>gadget::DigitalInterface</classname> (for
-              buttons and other on/off devices)</para>
-            </listitem>
+        <itemizedlist>
+          <listitem>
+            <para><classname>gadget::PositionInterface</classname><indexterm>
+                <primary>classes</primary>
 
-            <listitem>
-              <para><classname>gadget::AnalogInterface</classname> (for
-              potentiometers and other multi-range data devices)</para>
-            </listitem>
-          </itemizedlist>
+                <secondary>gadget::PositionInterface</secondary>
+              </indexterm> for trackers and other positional devices</para>
+          </listitem>
 
-          <para>For more information about the VR Juggler device interfaces,
-          refer to <xref linkend="chapter.helper.classes" />. A tutorial on
-          getting device input in VR Juggler applications can be found in
-          <xref linkend="section.get.input" />.</para>
-        </section>
+          <listitem>
+            <para><classname>gadget::DigitalInterface</classname><indexterm>
+                <primary>classes</primary>
+
+                <secondary>gadget::DigitalInterface</secondary>
+              </indexterm> for buttons and other on/off devices</para>
+          </listitem>
+
+          <listitem>
+            <para><classname>gadget::AnalogInterface</classname><indexterm>
+                <primary>classes</primary>
+
+                <secondary>gadget::AnalogInterface</secondary>
+              </indexterm> for potentiometers and other multi-range data
+            devices</para>
+          </listitem>
+
+          <listitem>
+            <para><classname>gadget::KeyboardMouseInterface</classname><indexterm>
+                <primary>classes</primary>
+
+                <secondary>gadget::KeyboardMouseInterface</secondary>
+              </indexterm> for keyboard and mouse input</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>For more information about the VR Juggler device interfaces,
+        refer to <xref linkend="section.gadget.proxies.devif" />. A tutorial
+        on getting device input in VR Juggler applications can be found in
+        <xref linkend="section.get.input" />.</para>
       </section>
 
       <section>
@@ -8015,32 +8028,27 @@ private:
         overview and a pointer to the documentation that explains
         configuration of VR Juggler.</para>
 
-        <section>
-          <title>In <productname>CAVElibs</productname></title>
+        <bridgehead>In <productname>CAVElibs</productname></bridgehead>
 
-          <para>All configurable parameters go in a single file called
-          <filename>.caverc</filename>. The configuration mechanism is
-          proprietary and not usable by external VR system software. In
-          particular, VR Juggler cannot get its configuration information from
-          an existing <filename>.caverc</filename> file.</para>
-        </section>
+        <para>All configurable parameters go in a single file called
+        <filename>.caverc</filename>. The configuration mechanism is
+        proprietary and not usable by external VR system software. In
+        particular, VR Juggler cannot get its configuration information from
+        an existing <filename>.caverc</filename> file.</para>
 
-        <section>
-          <title>In VR Juggler</title>
+        <bridgehead>In VR Juggler</bridgehead>
 
-          <para>Configuration of VR Juggler is much more powerful and flexible
-          than what is used by the <productname>CAVElibs</productname>
-          software. As a result, it is also more complex. All configurable
-          parameters could be in one or more files with any names desired. VR
-          Juggler comes with example configuration files that may be found in
-          the directory
-          <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>.</para>
+        <para>Configuration of VR Juggler is much more powerful and flexible
+        than what is used by the <productname>CAVElibs</productname> software.
+        As a result, it is also more complex. All configurable parameters
+        could be in one or more files with any names desired. VR Juggler comes
+        with example configuration files that may be found in the directory
+        <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>.</para>
 
-          <para>The VR Juggler configuration system is completely extensible
-          and could be used outside of VR Juggler. Indeed, it could be used
-          outside of any VR paradigm altogether. Refer to the Configuration
-          Guide for more information on configuring VR Juggler.</para>
-        </section>
+        <para>The VR Juggler configuration system is completely extensible and
+        could be used outside of VR Juggler. Indeed, it could be used outside
+        of any VR paradigm altogether. Refer to the Configuration Guide for
+        more information on configuring VR Juggler.</para>
       </section>
 
       <section>
@@ -8198,197 +8206,210 @@ int main(int argc, char* argv[])
       <section>
         <title>The Initialize, Draw, and Frame Routines</title>
 
-        <section>
-          <title>In GLUT</title>
+        <bridgehead>In GLUT</bridgehead>
 
-          <para>In GLUT, the initialize, draw, and frame routines are known as
-          <glossterm linkend="gloss.callback">callbacks</glossterm>
-          implemented with C function pointers. In VR juggler, the equivalent
-          routines are <firstterm>called back</firstterm> using an application
-          object. An application object is a C++ class that defines methods to
-          encapsulate the functionality of the application within a single C++
-          object.</para>
+        <para>In GLUT, the initialize, draw, and frame routines are known as
+        <glossterm linkend="gloss.callback">callbacks</glossterm> implemented
+        with C function pointers. In VR juggler, the equivalent routines are
+        <firstterm>called back</firstterm> using an application object. An
+        application object is a C++ class that defines methods to encapsulate
+        the functionality of the application within a single C++
+        object.</para>
 
-          <itemizedlist>
-            <listitem>
-              <para>Draw: OpenGL commands are placed in the draw routine. The
-              callback function is defined by passing a function pointer to
-              <function>glutDisplayFunc()</function>.</para>
-            </listitem>
+        <itemizedlist>
+          <listitem>
+            <para>Draw: OpenGL commands are placed in the draw routine. The
+            callback function is defined by passing a function pointer to
+            <function>glutDisplayFunc()</function>.</para>
+          </listitem>
 
-            <listitem>
-              <para>Frame: Operations on application data are done within the
-              frame routine. No OpenGL commands are allowed here because the
-              display window is undefined at this point. The frame function is
-              defined with <function>glutIdleFunc()</function>. This function
-              generally does a <function>glutPostRedisplay()</function> to
-              cause the display callback to be executed.</para>
-            </listitem>
+          <listitem>
+            <para>Frame: Operations on application data are done within the
+            frame routine. No OpenGL commands are allowed here because the
+            display window is undefined at this point. The frame function is
+            defined with <function>glutIdleFunc()</function>. This function
+            generally does a <function>glutPostRedisplay()</function> to cause
+            the display callback to be executed.</para>
+          </listitem>
 
-            <listitem>
-              <para>Init: There is no callback for initialization. Data
-              initialization is done usually before the application starts.
-              Context initialization is done during the first run of the
-              function set with <function>glutDisplayFunc()</function> (once
-              for each window opened).</para>
-            </listitem>
-          </itemizedlist>
-        </section>
+          <listitem>
+            <para>Init: There is no callback for initialization. Data
+            initialization is done usually before the application starts.
+            Context initialization is done during the first run of the
+            function set with <function>glutDisplayFunc()</function> (once for
+            each window opened).</para>
+          </listitem>
+        </itemizedlist>
 
-        <section>
-          <title>In VR Juggler</title>
+        <bridgehead>In VR Juggler</bridgehead>
 
-          <para>With VR Juggler, no C function pointers are necessary, but a
-          pointer to an application object must be given to the VR Juggler
-          kernel. As described in earlier sections of this chapter, the first
-          step is to derive a new application class from
-          <classname>vrj::GlApp</classname>. For more information on
-          application objects, it may be helpful to review <xref
-          linkend="chapter.app.basics" />. Briefly, the application class
-          definition would appear similar to the following:</para>
+        <para>With VR Juggler, no C function pointers are necessary, but a
+        pointer to an application object must be given to the VR Juggler
+        kernel. As described in earlier sections of this chapter, the first
+        step is to derive a new application class from
+        <classname>vrj::GlApp</classname>. For more information on application
+        objects, it may be helpful to review <xref
+        linkend="chapter.app.basics" />. Briefly, the application class
+        definition would appear similar to the following:</para>
 
-          <programlisting>class MyApplication : public vrj::GlApp
+        <programlisting>class MyApplication : public vrj::GlApp
 {
    ...
 };</programlisting>
 
-          <para>The draw, frame, and initialize routine concepts in VR Juggler
-          are presented in the following list.</para>
+        <para>The draw, frame, and initialize routine concepts in VR Juggler
+        are presented in the following list.</para>
 
-          <itemizedlist>
-            <listitem>
-              <para>Draw: An application's display <quote>callback</quote>
-              function is defined by a new member function called
-              <methodname>draw()</methodname> in the derived class. This is
-              where OpenGL rendering commands such as
-              <function>glBegin()</function>, <function>glVertex()</function>,
-              etc. are placed.</para>
-            </listitem>
+        <itemizedlist>
+          <listitem>
+            <para>Draw: An application's display <quote>callback</quote>
+            function is defined by a new member function called
+            <methodname>draw()</methodname> in the derived class. This is
+            where OpenGL rendering commands such as
+            <function>glBegin()</function>, <function>glVertex()</function>,
+            etc. are placed.</para>
+          </listitem>
 
-            <listitem>
-              <para>Frame: Calculations such as navigation, collision,
-              physics, artificial intelligence, etc. are often placed in the
-              frame function. The frame function is split across three member
-              functions:</para>
+          <listitem>
+            <para>Frame: Calculations such as navigation, collision, physics,
+            artificial intelligence, etc. are often placed in the frame
+            function. The frame function is split across three member
+            functions:</para>
 
-              <orderedlist>
-                <listitem>
-                  <para><methodname>MyApplication::preFrame()</methodname>,
-                  called before <methodname>draw()</methodname></para>
-                </listitem>
+            <orderedlist>
+              <listitem>
+                <para><methodname>MyApplication::preFrame()</methodname>,
+                called before <methodname>draw()</methodname></para>
+              </listitem>
 
-                <listitem>
-                  <para><methodname>MyApplication::intraFrame()</methodname>,
-                  called during <methodname>draw()</methodname></para>
-                </listitem>
+              <listitem>
+                <para><methodname>MyApplication::intraFrame()</methodname>,
+                called during <methodname>draw()</methodname></para>
+              </listitem>
 
-                <listitem>
-                  <para><methodname>MyApplication::postFrame()</methodname>,
-                  called after <methodname>draw()</methodname></para>
-                </listitem>
-              </orderedlist>
-            </listitem>
+              <listitem>
+                <para><methodname>MyApplication::postFrame()</methodname>,
+                called after <methodname>draw()</methodname></para>
+              </listitem>
+            </orderedlist>
+          </listitem>
 
-            <listitem>
-              <para>Init: There is an initialization member function for data
-              and an initialization member function for creating
-              context-specific data (display lists, texture objects). The
-              latter is called for each display context in the system. These
-              two member functions are:</para>
+          <listitem>
+            <para>Init: There is an initialization member function for data
+            and an initialization member function for creating
+            context-specific data (display lists, texture objects). The latter
+            is called for each display context in the system. These two member
+            functions are:</para>
 
-              <orderedlist>
-                <listitem>
-                  <para><methodname>MyApplication::init()</methodname>, called
-                  once per application startup</para>
-                </listitem>
+            <orderedlist>
+              <listitem>
+                <para><methodname>MyApplication::init()</methodname>, called
+                once per application startup</para>
+              </listitem>
 
-                <listitem>
-                  <para><methodname>MyApplication::contextInit()</methodname>,
-                  called once per display context creation</para>
-                </listitem>
-              </orderedlist>
-            </listitem>
-          </itemizedlist>
+              <listitem>
+                <para><methodname>MyApplication::contextInit()</methodname>,
+                called once per display context creation</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </itemizedlist>
 
-          <para>Readers who find some of these concepts unfamiliar are
-          encouraged to read <xref linkend="section.opengl.apps" />. For
-          information about context-specific data, refer to <xref
-          linkend="section.csdata.intro" />.</para>
-        </section>
+        <para>Readers who find some of these concepts unfamiliar are
+        encouraged to read <xref linkend="section.opengl.apps" />. For
+        information about context-specific data, refer to <xref
+        linkend="section.csdata.intro" />.</para>
       </section>
 
       <section>
         <title>Getting Input from Devices</title>
 
-        <section>
-          <title>In GLUT</title>
+        <bridgehead>In GLUT</bridgehead>
 
-          <para>For keyboard input, the following functions are used:</para>
+        <para>For keyboard input, the following functions are used:</para>
 
-          <itemizedlist>
-            <listitem>
-              <para><function>glutKeyboardFunc(OnKeyboardDown)</function></para>
-            </listitem>
+        <itemizedlist>
+          <listitem>
+            <para><function>glutKeyboardFunc(OnKeyboardDown)</function></para>
+          </listitem>
 
-            <listitem>
-              <para><function>glutKeyboardUpFunc(OnKeyboardUp)</function></para>
-            </listitem>
+          <listitem>
+            <para><function>glutKeyboardUpFunc(OnKeyboardUp)</function></para>
+          </listitem>
 
-            <listitem>
-              <para><function>glutSpecialFunc(OnSpecialKeyboardDown)</function></para>
-            </listitem>
+          <listitem>
+            <para><function>glutSpecialFunc(OnSpecialKeyboardDown)</function></para>
+          </listitem>
 
-            <listitem>
-              <para><function>glutSpecialUpFunc(OnSpecialKeyboardUp)</function></para>
-            </listitem>
-          </itemizedlist>
+          <listitem>
+            <para><function>glutSpecialUpFunc(OnSpecialKeyboardUp)</function></para>
+          </listitem>
+        </itemizedlist>
 
-          <para>For mouse input, the following functions are used:</para>
+        <para>For mouse input, the following functions are used:</para>
 
-          <itemizedlist>
-            <listitem>
-              <para><function>glutMouseFunc(OnMouseButton)</function></para>
-            </listitem>
+        <itemizedlist>
+          <listitem>
+            <para><function>glutMouseFunc(OnMouseButton)</function></para>
+          </listitem>
 
-            <listitem>
-              <para><function>glutMotionFunc(OnMousePosition)</function></para>
-            </listitem>
+          <listitem>
+            <para><function>glutMotionFunc(OnMousePosition)</function></para>
+          </listitem>
 
-            <listitem>
-              <para><function>glutPassiveMotionFunc(OnMousePosition)</function></para>
-            </listitem>
-          </itemizedlist>
-        </section>
+          <listitem>
+            <para><function>glutPassiveMotionFunc(OnMousePosition)</function></para>
+          </listitem>
+        </itemizedlist>
 
-        <section>
-          <title>In VR Juggler</title>
+        <bridgehead>In VR Juggler</bridgehead>
 
-          <para>To get device input, use the classes derived from
-          <classname>gadget::DeviceInterface</classname>. They include the
-          following:</para>
+        <para>To get device input, use the type-specific instantiations of
+        <classname>gadget::DeviceInterface&lt;T&gt;</classname><indexterm>
+            <primary>classes</primary>
 
-          <itemizedlist>
-            <listitem>
-              <para><classname>gadget::PositionInterface</classname> (for
-              trackers and other positional devices)</para>
-            </listitem>
+            <secondary>gadget::DeviceInterface&lt;T&gt;</secondary>
+          </indexterm>. They include the following:</para>
 
-            <listitem>
-              <para><classname>gadget::DigitalInterface</classname> (for
-              buttons and other on/off devices)</para>
-            </listitem>
+        <itemizedlist>
+          <listitem>
+            <para><classname>gadget::PositionInterface</classname><indexterm>
+                <primary>classes</primary>
 
-            <listitem>
-              <para><classname>gadget::AnalogInterface</classname> (for
-              potentiometers and other multi-range data devices)</para>
-            </listitem>
-          </itemizedlist>
+                <secondary>gadget::PositionInterface</secondary>
+              </indexterm> for trackers and other positional devices</para>
+          </listitem>
 
-          <para>For more information about the VR Juggler device interfaces,
-          refer to <xref linkend="chapter.helper.classes" />. A tutorial on
-          getting device input in VR Juggler applications can be found in
-          <xref linkend="section.get.input" />.</para>
-        </section>
+          <listitem>
+            <para><classname>gadget::DigitalInterface</classname><indexterm>
+                <primary>classes</primary>
+
+                <secondary>gadget::DigitalInterface</secondary>
+              </indexterm> for buttons and other on/off devices</para>
+          </listitem>
+
+          <listitem>
+            <para><classname>gadget::AnalogInterface</classname><indexterm>
+                <primary>classes</primary>
+
+                <secondary>gadget::AnalogInterface</secondary>
+              </indexterm> for potentiometers and other multi-range data
+            devices</para>
+          </listitem>
+
+          <listitem>
+            <para><classname>gadget::KeyboardMouseInterface</classname><indexterm>
+                <primary>classes</primary>
+
+                <secondary>gadget::KeyboardMouseInterface</secondary>
+              </indexterm> for keyboard and mouse input</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>For more information about the VR Juggler device interfaces,
+        refer to <xref linkend="section.gadget.proxies.devif" />. A tutorial
+        on getting device input in VR Juggler applications can be found in
+        <xref linkend="section.get.input" />.</para>
       </section>
 
       <section>
@@ -8401,28 +8422,24 @@ int main(int argc, char* argv[])
         written into the application somehow. This can lead to very static,
         hard-coded configurations.</para>
 
-        <section>
-          <title>In GLUT</title>
+        <bridgehead>In GLUT</bridgehead>
 
-          <para>There is no built-in configuration system. All system settings
-          are coded using the GLUT API.</para>
-        </section>
+        <para>There is no built-in configuration system. All system settings
+        are coded using the GLUT API.</para>
 
-        <section>
-          <title>In VR Juggler</title>
+        <bridgehead>In VR Juggler</bridgehead>
 
-          <para>VR Juggler has a powerful and flexible configuration system.
-          As a result, it is also complex. All configurable parameters could
-          be in one or more files with any names desired. VR Juggler comes
-          with example configuration files that may be found in the directory
-          <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>.</para>
+        <para>VR Juggler has a powerful and flexible configuration system. As
+        a result, it is also complex. All configurable parameters could be in
+        one or more files with any names desired. VR Juggler comes with
+        example configuration files that may be found in the directory
+        <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>.</para>
 
-          <para>The VR Juggler configuration system is completely extensible
-          and could be used outside of VR Juggler. Indeed, it could be used
-          outside of any VR paradigm altogether. Refer to the
-          <emphasis>VRJConfig Guide</emphasis> for more information on
-          configuring VR Juggler.</para>
-        </section>
+        <para>The VR Juggler configuration system is completely extensible and
+        could be used outside of VR Juggler. Indeed, it could be used outside
+        of any VR paradigm altogether. Refer to the VR Juggler
+        <emphasis>Configuration Guide</emphasis> for more information on
+        configuring VR Juggler.</para>
       </section>
 
       <section>
