@@ -113,9 +113,7 @@ public class ConfigBrokerImpl
       else if (resource_doc.getRootElement().getName().equals("ConfigChunkDB"))
       {
          // We just loaded a ConfigChunkDB
-         ChunkDescDB all_descs = new ChunkDescDB();
-         all_descs.addAll(getDescs(context));
-         ChunkFactory.setChunkDescDB(all_descs);
+         ChunkFactory.setDescs(getDescs(context));
          ConfigChunkDB chunk_db = new ConfigChunkDB();
          chunk_db.build(resource_doc);
          resources.put(name, chunk_db);

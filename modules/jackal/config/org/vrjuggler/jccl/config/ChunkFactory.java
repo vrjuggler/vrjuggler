@@ -31,92 +31,101 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 package org.vrjuggler.jccl.config;
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import org.jdom.Element;
 
-
+/**
+ * The <code>ChunkFactory</code> is responsible for the creation of new
+ * <code>ConfigChunk</code>s from a specific set up <code>ChunkDesc</code>s.
+ */
 public class ChunkFactory
 {
-   static private ChunkDescDB descdb = null;
-
-   static public void setChunkDescDB(ChunkDescDB _db)
+   /**
+    * Sets the list of ChunkDescs this factory uses when it creates new
+    * ConfigChunks.
+    *
+    * @param descs   the list of chunk descs this factory should use
+    */
+   public static void setDescs(List descs)
    {
-      descdb = _db;
+      mDescs = descs;
    }
 
-   static public void addChunkDescDB(ChunkDescDB _db)
+   /**
+    * Gets the list of ChunkDescs this factory uses when it creates new
+    * ConfigChunks.
+    */
+   public static List getDescs()
    {
-      descdb.addAll(_db);
+      return mDescs;
    }
 
-   static public ChunkDesc getChunkDescByToken(String s)
+   /**
+    * Adds the given ChunkDesc to this factory.
+    *
+    * @param desc    the ChunkDesc to add
+    */
+   public static void add(ChunkDesc desc)
    {
-      List descs = ConfigUtilities.getDescsWithToken(descdb.getAll(), s);
-      if (descs.size() > 0)
+      mDescs.add(desc);
+   }
+
+   /**
+    * Removes the given ChunkDesc from this factory.
+    *
+    * @param desc    the ChunkDesc to remove
+    */
+   public static void remove(ChunkDesc desc)
+   {
+      mDescs.remove(desc);
+   }
+
+   /**
+    * Creates a new ConfigChunk using the ChunkDesc with the given token. If
+    * this factory has more than one ChunkDesc identified by the given token,
+    * the first one will be used.
+    *
+    * @param token   the unique token identifying the ChunkDesc to use when
+    *                creating the ConfigChunk
+    *
+    * @return  the new ConfigChunk if successful; null if this factory doesn't
+    *          know about a ChunkDesc with the given token
+    */
+   public static ConfigChunk createConfigChunk(String token)
+   {
+      ConfigChunk new_chunk = null;
+
+      List matches = ConfigUtilities.getDescsWithToken(mDescs, token);
+      if (matches.size() > 0)
       {
-         return (ChunkDesc)descs.get(0);
+         ChunkDesc cd = (ChunkDesc)matches.get(0);
+         new_chunk = new ConfigChunk(cd);
+      }
+
+      return new_chunk;
+   }
+
+   /**
+    * Gets the ChunkDesc in this factory identified by the given token.
+    *
+    * @param token   the unique token identifying the ChunkDesc to retrieve
+    *
+    * @return  the ChunkDesc with the given token; null if this factory doesn't
+    *          know about a ChunkDesc with the given token
+    */
+   protected static ChunkDesc getChunkDescByToken(String token)
+   {
+      List matches = ConfigUtilities.getDescsWithToken(mDescs, token);
+      if (matches.size() > 0)
+      {
+         return (ChunkDesc)matches.get(0);
       }
       return null;
    }
 
-   static public ConfigChunk createChunkWithDescName(String s)
-   {
-      ConfigChunk newchunk = null;
-
-      if (descdb != null)
-      {
-         List descs = ConfigUtilities.getDescsWithToken(descdb.getAll(), s);
-         if (descs.size() > 0)
-         {
-            ChunkDesc cd = (ChunkDesc)descs.get(0);
-            newchunk = new ConfigChunk(cd);
-         }
-      }
-
-      return newchunk;
-   }
-
-   static public ConfigChunk createChunkWithDescToken(String s)
-   {
-      ConfigChunk newchunk = null;
-
-      if (descdb != null)
-      {
-         List descs = ConfigUtilities.getDescsWithToken(descdb.getAll(), s);
-         if (descs.size() > 0)
-         {
-            ChunkDesc cd = (ChunkDesc)descs.get(0);
-            newchunk = new ConfigChunk(cd);
-         }
-      }
-
-      return newchunk;
-   }
-
-   static public ConfigChunk createChunk(ChunkDesc cd)
-   {
-      return new ConfigChunk(cd);
-   }
-
-   // Utility functions dealing with the global DescDB
-   /** Returns the names of all ChunkDescs defined in any of our DBs.
-    *  This is useful for GUI components that want to provide a list
-    *  or menu of desc names.
+   /**
+    * The list of ChunkDescs this factory uses when trying to create a new
+    * ConfigChunk.
     */
-   static public String[] getDescNames()
-   {
-      int n = descdb.size();
-      String[] names = new String[n];
-      for (int i = 0; i < n; i++)
-      {
-         names[i] = ((ChunkDesc)descdb.get(i)).getName();
-      }
-      return names;
-   }
-
-   static public String getNameFromToken(String tok)
-   {
-      return descdb.getNameFromToken(tok);
-   }
+   private static List mDescs = new ArrayList();
 }

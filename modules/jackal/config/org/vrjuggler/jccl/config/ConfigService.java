@@ -56,7 +56,7 @@ public class ConfigService
       throws IOException
    {
       // Read in the config chunks
-      ChunkFactory.setChunkDescDB(descDB);
+//      ChunkFactory.setChunkDescDB(descDB);
       ConfigChunkDB chunk_db = new ConfigChunkDB();
       chunk_db.build(input);
 //      ChunkFactory.setChunkDescDB(null);
@@ -95,7 +95,7 @@ public class ConfigService
       // Read in the config chunks
       ChunkDescDB desc_db = new ChunkDescDB();
       desc_db.build(input);
-      ChunkFactory.setChunkDescDB(desc_db);
+//      ChunkFactory.setChunkDescDB(desc_db);
       return desc_db;
    }
 
