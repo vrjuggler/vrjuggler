@@ -193,7 +193,10 @@ esac
 dnl # -------------------------------------------------------------------------
 dnl # System-dependent stuff.
 dnl # -------------------------------------------------------------------------
-AC_CANONICAL_HOST
+
+dnl # We use AC_CANONICAL SYSTEM so that we can find out information about
+dnl # the build, target and host platforms rather than only the host.
+AC_CANONICAL_SYSTEM
 
 dnl # Operating system release information.  This may contain anything and
 dnl # should be treated as a string.
@@ -232,9 +235,9 @@ DSOVERSIONOPTS=''
 ABI_LIST=''		dnl # List of supported ABIs on a given platform
 PLATFORM=''		dnl # Platform name
 
-dnl # Depending on the host operating system, set various command options and
+dnl # Depending on the target operating system, set various command options and
 dnl # such.
-case $host_os in
+case $target_os in
     dnl # SGI running IRIX [56].*.
     irix*)
         dnl # Set compiler flags and the location of $DSOREGFILE depending on
@@ -308,7 +311,7 @@ case $host_os in
         AC_DEFINE(VJ_OS_DUX,)
         PLATFORM='alpha-DUX'
         ;;
-    dnl # A machine running FreeBSD.  Currently only i386 is supported.
+    dnl # A machine running FreeBSD.  Currently only i386 is known to compile.
     freebsd*)
         AR='ar -r'
         INCLUDES="$INCLUDES -I/usr/include"
@@ -319,13 +322,13 @@ case $host_os in
 
         AC_DEFINE(VJ_OS_FreeBSD,)
         ABI='ELF'
-        ISA='i386'
+        ISA="$target_cpu"
         ABI_LIST='ELF'
         LIBBITSUF=''
         _EXTRA_FLAGS='-elf'
         PLATFORM='FreeBSD'
         ;;
-    dnl # A machine running Linux.  Currently only i386 is supported.
+    dnl # A machine running Linux.  Currently only i386 is known to work.
     linux*)
         AR='ar -r'
         INCLUDES="$INCLUDES -I/usr/include"
@@ -343,14 +346,14 @@ case $host_os in
 
         AC_DEFINE(VJ_OS_Linux,)
         ABI='ELF'
-        ISA='i386'
+        ISA="$target_cpu"
         ABI_LIST='ELF'
         LIBBITSUF=''
         _EXTRA_FLAGS=''
         PLATFORM='Linux'
         ;;
     dnl # A machine running Solaris (aka SunOS).  Currently only i386 is
-    dnl # supported.
+    dnl # known to work.
     solaris*)
         AR='ar -r'
         LD='${CXX} -G'
@@ -366,7 +369,7 @@ case $host_os in
 
         AC_DEFINE(VJ_OS_Solaris,)
         ABI='ELF'
-        ISA='i386'
+        ISA="$target_cpu"
         ABI_LIST='ELF'
         LIBBITSUF=''
         _EXTRA_FLAGS=''
