@@ -42,6 +42,12 @@
 #include <vrj/Display/Projection.h>
 
 
+#ifdef BUILD_AS_VRJ_PLUGIN
+VRJ_APP_PLUGIN vrj::App* createAppObj(vrj::Kernel* kernel)
+{
+   return new cubesApp(kernel);
+}
+#else
 int main(int argc, char* argv[])
 {
    vrj::Projection::setNearFar(0.01, 10000.0f);
@@ -80,3 +86,4 @@ int main(int argc, char* argv[])
    kernel->waitForKernelStop();
    return 0;
 }
+#endif
