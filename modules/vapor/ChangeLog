@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2001-09-12 alleb    Added wait interval to the cond var abstractions.
+           patrick
 2001-09-04 kevn     vpr::ReturnStatus::Success renamed to
                     vpr::ReturnStatus::Succeed; vpr::ReturnStatus::Failure
                     renamed to vpr::ReturnStatus::Fail.
