@@ -7,7 +7,8 @@
             xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
    <definition_version version="1" label="Fastrak">
       <help>Polhemus Fastrak 3D tracker.</help>
-      <parent/>
+      <parent>positional_device</parent>
+      <parent>digital_device</parent>
       <category>/Devices/Positional</category>
       <property valuetype="string" variable="false" name="port">
          <help>Serial port the fastrack is associated to.</help>

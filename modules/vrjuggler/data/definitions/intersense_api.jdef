@@ -7,7 +7,9 @@
             xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
    <definition_version version="1" label="IntersenseAPI">
       <help>Intersense Tracking Devices</help>
-      <parent/>
+      <parent>positional_device</parent>
+      <parent>digital_device</parent>
+      <parent>analog_device</parent>
       <category>/Devices</category>
       <property valuetype="string" variable="false" name="driver">
          <help>Each value is the full path to a driver DSO (.so or .dll, usually).  The path may make use of environment variables.  For example: ${VJ_BASE_DIR}/lib/gadgeteer/drivers/libPinchGlove.so.</help>

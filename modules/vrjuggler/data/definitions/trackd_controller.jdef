@@ -7,7 +7,8 @@
             xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
    <definition_version version="1" label="TrackdController">
       <help>Configure the interface to a trackd controller memory area.</help>
-      <parent/>
+      <parent>digital_device</parent>
+      <parent>analog_device</parent>
       <category>/Devices</category>
       <property valuetype="integer" variable="false" name="shared_memory_key">
          <help>This is the shared memory key for the trackd information.</help>

@@ -7,7 +7,7 @@
             xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
    <definition_version version="1" label="MotionStar">
       <help>Ascension MotionStar server chassis configuration</help>
-      <parent/>
+      <parent>positional_device</parent>
       <category>/Devices/Positional</category>
       <property valuetype="string" variable="false" name="address">
          <help>Hostname or IP address of the server.</help>

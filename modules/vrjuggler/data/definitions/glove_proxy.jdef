@@ -7,16 +7,12 @@
             xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
    <definition_version version="1" label="Glove Proxy">
       <help>A Glove Proxy points to a glove device and unit</help>
-      <parent/>
+      <parent>proxy</parent>
       <category>/Proxies</category>
       <property valuetype="configelementpointer" variable="false" name="device">
          <help>The glove device the proxy connects to.</help>
          <value label="Device"/>
-         <allowed_type>cyber_glove</allowed_type>
-         <allowed_type>data_glove</allowed_type>
-         <allowed_type>pinch_glove</allowed_type>
-         <allowed_type>simulated_digital_glove</allowed_type>
-         <allowed_type>simulated_glove_gesture</allowed_type>
+         <allowed_type>glove_device</allowed_type>
       </property>
       <property valuetype="integer" variable="false" name="unit">
          <help>The unit number in the device to hook to.</help>

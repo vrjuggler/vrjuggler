@@ -7,7 +7,9 @@
             xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
    <definition_version version="1" label="Tweek Device">
       <help />
-      <parent/>
+      <parent>positional_device</parent>
+      <parent>digital_device</parent>
+      <parent>analog_device</parent>
       <category>/Devices</category>
       <property valuetype="string" variable="false" name="naming_service_host">
          <help>The hostname (or IP address) for the CORBA Naming Service host.</help>
