@@ -46,7 +46,7 @@ public class ConfigElement
    /**
     * Create a new configuration element with the given properties.
     */
-   public ConfigElement(ChunkDesc def, String name, Map props)
+   public ConfigElement(ConfigDefinition def, String name, Map props)
    {
       mName = name;
       mDefinition = def;
@@ -77,7 +77,7 @@ public class ConfigElement
    /**
     * Gets the object that defines the contents of this element.
     */
-   public ChunkDesc getDefinition()
+   public ConfigDefinition getDefinition()
    {
       return mDefinition;
    }
@@ -142,8 +142,8 @@ public class ConfigElement
       List values = getPropertyValues(name);
 
       // Verify that this property supports variable values
-      PropertyDesc prop_def = mDefinition.getPropertyDesc(name);
-      if (! prop_def.hasVariableNumberOfValues())
+      PropertyDefinition prop_def = mDefinition.getPropertyDefinition(name);
+      if (! prop_def.isVariable())
       {
          throw new IllegalArgumentException(name + " does not support a variable number of values");
       }
@@ -173,8 +173,8 @@ public class ConfigElement
       List values = getPropertyValues(name);
 
       // Verify that this property supports variable values
-      PropertyDesc prop_def = mDefinition.getPropertyDesc(name);
-      if (! prop_def.hasVariableNumberOfValues())
+      PropertyDefinition prop_def = mDefinition.getPropertyDefinition(name);
+      if (! prop_def.isVariable())
       {
          throw new IllegalArgumentException(name + " does not support a variable number of values");
       }
@@ -352,7 +352,7 @@ public class ConfigElement
    private String mName;
 
    /** The definition of the format of this element. */
-   private ChunkDesc mDefinition;
+   private ConfigDefinition mDefinition;
 
    /** The properties in this configuration element. */
    private Map mProps;

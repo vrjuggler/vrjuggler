@@ -31,18 +31,26 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 package org.vrjuggler.jccl.config.event;
 
-/**
- * Default implementation of the ConfigElementListener that does nothing in
- * order to make the creating of ConfigElement listeners easier.
- */
-public abstract class ConfigElementAdapter
-   implements ConfigElementListener
-{
-   public void nameChanged(ConfigElementEvent evt) {}
-   
-   public void propertyValueChanged(ConfigElementEvent evt) {}
-   
-   public void propertyValueAdded(ConfigElementEvent evt) {}
+import java.util.EventListener;
 
-   public void propertyValueRemoved(ConfigElementEvent evt) {}
+/**
+ * Interface for objects that wish to be notified when a ConfigDefinition
+ * changes in some way.
+ */
+public interface ConfigDefinitionListener
+   extends EventListener
+{
+   public void nameChanged(ConfigDefinitionEvent evt);
+
+   public void tokenChanged(ConfigDefinitionEvent evt);
+
+   public void helpChanged(ConfigDefinitionEvent evt);
+
+   public void categoryAdded(ConfigDefinitionEvent evt);
+
+   public void categoryRemoved(ConfigDefinitionEvent evt);
+
+   public void propertyDefinitionAdded(ConfigDefinitionEvent evt);
+
+   public void propertyDefinitionRemoved(ConfigDefinitionEvent evt);
 }
