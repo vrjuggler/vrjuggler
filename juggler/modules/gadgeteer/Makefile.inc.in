@@ -328,7 +328,7 @@ post-install-headers:
 install-drivers install-drivers-dbg install-drivers-opt install-drivers-prof:
 	if [ -d $(DSO_DRIVER_DIR) ] ; then				\
           $(PERL) $(scriptdir)/install-dir.pl -m $(EXEC_PERMS)		\
-            $(GROUP_OPT_UNIX) -e .so $(EXTRA_INSTALL_ARGS)		\
+            $(GROUP_OPT_UNIX) -e .so,.dll $(EXTRA_INSTALL_ARGS)		\
             -o $(libdir)$(LIBBITSUF)/$(DSO_DRIVER_SUBDIR) -i		\
             $(DSO_DRIVER_DIR) ;						\
         fi
