@@ -55,8 +55,8 @@ std::vector<SimInput::KeyModPair> SimInput::readKeyList(std::vector<jccl::Config
             i != keyList.end();
             ++i )
       {
-         key_vec.push_back(KeyModPair((*i)->getProperty<int>("key"),
-                                      (*i)->getProperty<int>("modKey")));
+         key_vec.push_back(KeyModPair((gadget::Keys) (*i)->getProperty<int>("key"),
+                                      (gadget::Keys) (*i)->getProperty<int>("modKey")));
       }
    }
 
@@ -86,10 +86,12 @@ int SimInput::checkKeyPair(KeyModPair& pair)
       return mEventWin->keyPressed(pair.mKey);
    }
    else                 // Mod not pressed
+   {
       return 0;
+   }
 }
 
-int SimInput::checkKey(int keyId)
+int SimInput::checkKey(gadget::Keys keyId)
 {
    return mEventWin->keyPressed(keyId);
 }

@@ -77,7 +77,7 @@ vpr::ReturnStatus EventWindow::readObject(vpr::ObjectReader* reader)
  * @return true if key pressed exclusively.
  */
 //virtual bool modifierOnly(int modKey) =0;
-bool EventWindow::modifierOnly(int modKey)
+bool EventWindow::modifierOnly(gadget::Keys modKey)
 {
    switch (modKey)
    {
@@ -95,7 +95,7 @@ bool EventWindow::modifierOnly(int modKey)
    }
 }
 
-std::string EventWindow::getKeyName(int keyId)
+std::string EventWindow::getKeyName(gadget::Keys keyId)
 {
    switch(keyId)
    {
