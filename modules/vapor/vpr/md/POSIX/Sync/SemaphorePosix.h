@@ -61,6 +61,14 @@
 
 #include <vpr/Util/ReturnStatus.h>
 
+#if defined(VPR_OS_Darwin) && VPR_OS_RELEASE_MAJOR < 7 || \
+    (VPR_OS_RELEASE_MAJOR == 7 && VPR_OS_RELEASE_MINOR <= 5)
+#define VPR_USE_NAMED_SEMAPHORE 1
+#endif
+
+#ifdef VPR_USE_NAMED_SEMAPHORE
+#include <string.h>
+#endif
 
 namespace vpr
 {
@@ -75,8 +83,10 @@ public:
     * Constructor for vpr::SemaphorePosix class.
     *
     * @pre None.
-    * @post The semaphore variable for the class is initilized as an
-    *       unnamed semaphore.
+    * @post The semaphore variable for this object is initialized as an
+    *       unnamed semaphore on all platforms except Darwin (Mac OS X).
+    *       On Darwin 7.5 and earlier, unnamed semaphores are not
+    *       supported.
     *
     * @param initialValue The initial number of resources controlled by
     *                     the semaphore.  If not specified, the default
@@ -84,6 +94,21 @@ public:
     */
    SemaphorePosix(int initialValue = 1)
    {
+#ifdef VPR_USE_NAMED_SEMAPHORE
+      // Use strdup(3) here so that mktemp(3) can modify the memory.  Trying
+      // to modify a constant string would be bad.
+      // NOTE: The memory allocated by strdup(3) will be released in the
+      // destructor.
+      mSemaFile = mktemp(strdup("/tmp/vprsema.XXXXXX"));
+
+      // ----- Allocate the named semaphore ----- //
+      mSema = sem_open(mSemaFile, O_CREAT, 0600, initialValue);
+
+      if ( mSema == (sem_t*) SEM_FAILED )
+      {
+         perror("sem_init() error");
+      }
+#else
       // ----- Allocate the unnamed semaphore ----- //
       mSema = (sem_t*) malloc(sizeof(sem_t));
 
@@ -91,6 +116,7 @@ public:
       {
          perror("sem_init() error");
       }
+#endif
    }
 
    /**
@@ -102,12 +128,22 @@ public:
    ~SemaphorePosix()
    {
       // ---- Delete the semaphore --- //
+#ifdef VPR_USE_NAMED_SEMAPHORE
+      if ( sem_close(mSema) != 0 )
+      {
+         perror("sem_close() error");
+      }
+
+      sem_unlink(mSemaFile);
+      free(mSemaFile);
+#else
       if ( sem_destroy(mSema) != 0 )
       {
          perror("sem_destroy() error");
       }
 
       free(mSema);
+#endif
    }
 
    /**
@@ -277,18 +313,32 @@ public:
     */
    vpr::ReturnStatus reset(int val)
    {
+      vpr::ReturnStatus status;
+
+#ifdef VPR_USE_NAMED_SEMAPHORE
+      // First destroy the current semaphore.
+      sem_unlink(mSemaFile);
+
+      // Now recreate it with the new value in val.
+      mSema = sem_open(mSemaFile, O_CREAT, 0600, val);
+
+      if ( mSema == (sem_t*) SEM_FAILED )
+      {
+         perror("sem_init() error");
+         status.setCode(vpr::ReturnStatus::Fail);
+      }
+#else
       // First destroy the current semaphore.
       sem_destroy(mSema);
 
       // Now recreate it with the new value in val.
-      if ( sem_init(mSema, 0, val) == 0 )
+      if ( sem_init(mSema, 0, val) != 0 )
       {
-         return vpr::ReturnStatus();
+         status.setCode(vpr::ReturnStatus::Fail);
       }
-      else
-      {
-         return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
-      }
+#endif
+
+      return status;
    }
 
    /**
@@ -313,6 +363,9 @@ public:
    }
 
 protected:
+#ifdef VPR_USE_NAMED_SEMAPHORE
+   char* mSemaFile;
+#endif
    sem_t* mSema;   /**< Semaphore variable for the class. */
 
    // Prevent assignment and initialization.
@@ -329,5 +382,6 @@ protected:
 
 } // End of vpr namespace
 
+#undef VPR_USE_NAMED_SEMAPHORE
 
 #endif  /* _VPR_SEMAPHORE_POSIX_H_ */
