@@ -29,7 +29,7 @@ $path_subst{"CLASS_PATH"} = 'java.class/ver1.07/';
 $path_subst{"JEXPLORER_DOCS"} = 'JExplorer/JEXPLORE.HTM';
 ## put all binaries, tarballs, and pdf's here...
 $path_subst{"PUB"} = 'pub/';
-$path_subst{"PDFBOOKS"} = 'pub/books';
+$path_subst{"PDFBOOKS"} = 'html/books';
 
 
 # directories within the ~/html directory

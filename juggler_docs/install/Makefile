@@ -10,7 +10,8 @@ default: books
 # Variables.
 # ----------------------------------------------------------------------------
 prefix		= !!FILL ME IN!!
-bookdir		= $(prefix)/html/books
+book_srcdir	= $(prefix)/html/books
+book_distdir	= $(book_srcdir)
 
 PSGEN		= /home/users/patrick/bin/html2ps
 PSGEN_FLAGS	= -f $(BOOK_CFG_FILE)
@@ -26,11 +27,11 @@ BOOKS		= getting.started.guide	\
                   programmer.guide	\
                   vjcontrol.guide
 
-HTML_BOOKS	= $(addsuffix .html, $(addprefix $(bookdir), $(BOOKS)))
+HTML_BOOKS	= $(addsuffix .html, $(addprefix $(book_srcdir), $(BOOKS)))
 PS_BOOKS	= $(addsuffix .ps, $(BOOKS))
 PDF_BOOKS	= $(addsuffix .pdf, $(BOOKS))
 
-vpath %.html $(bookdir)
+vpath %.html $(book_srcdir)
 
 # ----------------------------------------------------------------------------
 # Targets
@@ -39,12 +40,12 @@ books: $(PDF_BOOKS)
 	@echo "Done."
 
 install-books:
-	@if test ! -d $(prefix)/pub/books ; then	\
-            mkdir -p $(prefix)/pub/books ;		\
+	@if test ! -d $(book_distdir) ; then	\
+            mkdir -p $(book_distdir) ;		\
         fi
-	@for book in $(PDF_BOOKS) ; do			\
-            echo "$$book --> $(prefix)/pub/books" ;	\
-            cp $$book $(prefix)/pub/books ;		\
+	@for book in $(PDF_BOOKS) ; do		\
+            echo "$$book --> $(book_distdir)" ;	\
+            cp $$book $(book_distdir) ;		\
         done
 
 %.pdf: %.html
