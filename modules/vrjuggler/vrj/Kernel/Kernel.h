@@ -137,11 +137,6 @@ protected:
    /// Config Stuff
    vjChunkDescDB*    mConfigDesc;
    vjConfigChunkDB*  mChunkDB;            //: The current chunk db for the system
-<<<<<<< vjKernel.h
-
-=======
-   std::string       mProgramConfigFile;  //: Config file specified by program
->>>>>>> 1.21
 
    /// Shared Memory stuff
    vjMemPool*       sharedMemPool;
