@@ -34,19 +34,13 @@ top_srcdir	= @top_srcdir@
 # Prefix for recursive stuff.
 DIRPRFX		= TestCases/
 
-SUBDIR		= 
-#IO		\
-#                  Simulator	\
-#                  Socket	\
-#                  Thread	\
-#                  Util
-
 SRCS		= \
+	ConfigChunkDBTest.cpp		\
 	IncludesTest.cpp		\
 	LabeledPerfDataBufferTest.cpp
 
 
-include $(MKPATH)/dpp.obj-subdir.mk
+include $(MKPATH)/dpp.obj.mk
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.
