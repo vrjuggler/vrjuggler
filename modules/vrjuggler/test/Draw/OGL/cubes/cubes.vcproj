@@ -53,7 +53,7 @@
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\Debug/cubes.tlb"/>
+				TypeLibraryName="$(OutDir)/cubes.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -111,7 +111,7 @@
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\Release/cubes.tlb"/>
+				TypeLibraryName="$(OutDir)/cubes.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
