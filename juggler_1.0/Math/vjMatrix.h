@@ -103,7 +103,7 @@ public:
    vjMatrix( const vjMatrix& matrix )
    {
       this->copy( matrix );
-   }   
+   }
 
 public:
    //: Set from a memory region
@@ -167,26 +167,34 @@ public:
 
    //: extract the yaw information from the matrix
    //!POST:  returned value is from -180 to 180, where 0 is none
-   float    getYaw() const;
+   float    getYRot() const;
+   float    getYaw() const
+   { return getYRot(); }
 
    //: extract the pitch information from the matrix
    //!POST:  returned value is from -180 to 180, where 0 none
-   float    getPitch() const;
-   
+   float    getXRot() const;
+   float    getPitch() const
+   {return getXRot();}
+
    //: extract the roll information from the matrix
    //!POST:  returned value is from -180 to 180, where 0 is no roll
-   float    getRoll() const;
-  
+   float    getZRot() const;
+   float    getRoll() const
+   { return getZRot();}
+
    //: constrain the matrix rotation to a certain axis or axes
    //  Uses getTrans, getYaw, getPitch, getRoll to recreate the matrix.<BR><BR>
    //
-   //!ARGS:  set pitch = true to keep the pitch info<BR>
-   //+       set yaw = true to keep the yaw info<BR>
-   //+       set roll = true to keep the roll info<BR>
+   //!ARGS:  allowXRot = true to keep the x rotation info<BR>
+   //+       allowYRot = true to keep the y rotation info<BR>
+   //+       allowZRot = true to keep the z rotation info<BR>
    //!POST:  result returned is a constrained matrix.
-   void     constrainRotAxis( const bool& pitch, const bool& yaw, const bool& roll, vjMatrix& result );
+   void     constrainRotAxis( const bool& allowXRot, const bool& allowYRot, const bool& allowZRot, vjMatrix& result );
+   void     _kevn_constrainRotAxis( const bool& pitch, const bool& yaw, const bool& roll, vjMatrix& result );
 
-   
+
+
    //: Make a matrix using direction cosines
    //
    //!ARGS: secXAxis - The x-axis of the secondary coord system in terms of the first
@@ -226,14 +234,14 @@ public:
    //: Make scale matrix
    void makeScale(float _x, float _y, float _z);
 
-//    void	makeVecRotVec(const vjVec3&  _v1, const vjVec3&  _v2)
-//	{;}
-//    void	makeCoord(const sgCoord* _c)
-//	{;}
+//    void  makeVecRotVec(const vjVec3&  _v1, const vjVec3&  _v2)
+// {;}
+//    void  makeCoord(const sgCoord* _c)
+// {;}
 
    //: Copy matrix
    //!POST: *this' = _m
-   void copy( const vjMatrix& _m ) 
+   void copy( const vjMatrix& _m )
    {
       ((mat)[0][0] = (_m)[0][0]); ((mat)[0][1] = (_m)[0][1]); ((mat)[0][2] = (_m)[0][2]); ((mat)[0][3] = (_m)[0][3]);
       ((mat)[1][0] = (_m)[1][0]); ((mat)[1][1] = (_m)[1][1]); ((mat)[1][2] = (_m)[1][2]); ((mat)[1][3] = (_m)[1][3]);
@@ -354,11 +362,11 @@ public:
 
    //: Pre rotate a matrix
    //!POST: mat' = rot(_degrees, axis) * _m
-   void preRot(float _degrees, vjVec3& axis, vjMatrix&  _m);
+   void preRot(const float& _degrees, const vjVec3& axis, vjMatrix&  _m);
 
    //: Post rotate a matrix
    //!POST: mat' = _m * rot(_degrees, axis)
-   void postRot( const vjMatrix&  _m, float _degrees, vjVec3& axis );
+   void postRot( const vjMatrix&  _m, const float& _degrees, const vjVec3& axis );
 
    void preXYZEuler( float x, float y, float z, vjMatrix& _m );
    void postXYZEuler( vjMatrix& _m, float x, float y, float z );
@@ -381,34 +389,34 @@ public:
    inline float&        operator()( const int& row, const int& column ) { return mat[column][row];}
    inline const float&  operator()( const int& row, const int& column ) const { return mat[column][row];}
 
-   int operator==( const vjMatrix&  _m ) const 
+   int operator==( const vjMatrix&  _m ) const
    {
       return this->equal(_m);
    }
 
-   int operator!=( const vjMatrix&  _m ) const 
+   int operator!=( const vjMatrix&  _m ) const
    {
       return !this->equal(_m);
    }
 
 public:
    // vjMatrix operators (N.B. return by value can be quite slow)
-   vjMatrix operator*( const vjMatrix&  _m ) const 
+   vjMatrix operator*( const vjMatrix&  _m ) const
    {
       vjMatrix dst; dst.mult(*this, _m); return dst;
    }
 
    //: addition
-   vjMatrix operator+( const vjMatrix&  _m ) const 
+   vjMatrix operator+( const vjMatrix&  _m ) const
    {
       vjMatrix dst; dst.add(*this, _m); return dst;
    }
-   
+
    //: subtraction
-   vjMatrix operator-(const vjMatrix&  _m) const 
+   vjMatrix operator-(const vjMatrix&  _m) const
    {
-      vjMatrix dst; 
-      dst.sub(*this, _m); 
+      vjMatrix dst;
+      dst.sub(*this, _m);
       return dst;
    }
 
@@ -420,13 +428,13 @@ public:
 public:
    // Assignment operators
    //!POST: *this' = _m
-   inline vjMatrix&  operator=( const vjMatrix&  _m ) 
-   { 
+   inline vjMatrix&  operator=( const vjMatrix&  _m )
+   {
       this->copy( _m );
       return *this;
    }
 
-   vjMatrix&  operator*=( const vjMatrix&  _m )  
+   vjMatrix&  operator*=( const vjMatrix&  _m )
    {
       this->postMult(_m); return *this;
    }
