@@ -66,9 +66,10 @@ class GADGET_CLASS_API BaseDeviceInterface
 {
 public:
    BaseDeviceInterface(const BaseDeviceInterface& other)
+      : mProxyName(other.mProxyName)
+      , mNameSet(other.mNameSet)
    {
       BaseDeviceInterface::addDevInterface(this);    // Keep reference to the interface
-      boost::ignore_unused_variable_warning(other);
    }
 
 public:
