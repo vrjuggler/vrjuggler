@@ -536,9 +536,22 @@ void PfDrawManager::addDisplay(Display* disp)
 void PfDrawManager::removeDisplay(Display* disp)
 {
    // Find the pfDisplay
+#ifdef VPR_OS_Win32
+   // Visual C++ does not have std::compose1(), so we have to do this the
+   // tedious, non-template-coolness way.
+   std::vector<pfDisplay>::iterator disp_i;
+   for ( disp_i = mDisplays.begin(); disp_i != mDisplays.end(); ++disp_i )
+   {
+      if ( disp == (*disp_i).disp )
+      {
+         break;
+      }
+   }
+#else
    std::vector<pfDisplay>::iterator disp_i = std::find_if(mDisplays.begin(), mDisplays.end(),
                          std::compose1( std::bind2nd( std::equal_to<Display*>(),disp),
                                         pfDisplay_disp()) );
+#endif
 
 
    if(mDisplays.end() == disp_i)
@@ -715,7 +728,11 @@ std::vector<int> PfDrawManager::getMonoFBConfig(vrj::Display* disp)
    std::vector<int> app_fb = app->getFrameBufferAttrs();
    mono_fb.insert(mono_fb.end(), app_fb.begin(), app_fb.end());
 
+#ifdef VPR_OS_Win32
+   mono_fb.push_back(0);
+#else
    mono_fb.push_back(None);
+#endif
 
    return mono_fb;
 }
@@ -733,7 +750,12 @@ std::vector<int> PfDrawManager::getStereoFBConfig(vrj::Display* disp)
    std::vector<int> app_fb = app->getFrameBufferAttrs();
    stereo_fb.insert(stereo_fb.end(), app_fb.begin(), app_fb.end());
 
+#ifdef VPR_OS_Win32
+   stereo_fb.push_back(0);
+#else
    stereo_fb.push_back(None);
+#endif
+
    return stereo_fb;
 }
 
