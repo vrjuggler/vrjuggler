@@ -66,6 +66,7 @@
     In addition to what is listed on the download page, the following
     packages are needed for Win32 development of Juggler (but not for
     application development):
+  </P>
 
     <UL>
       <LI>
@@ -87,7 +88,6 @@
         modification using the Cygwin tools.
       </LI>
     </UL>
-  </P>
 
 <H3><A NAME="env">Environment Variables</A></H3>
 
@@ -97,6 +97,7 @@
     applications.  These variables apply to all users, both those who are
     compiling and running applications as well as those who are compiling
     Juggler itself.
+  </P>
 
     <DL>
       <DT><TT>PATH</TT>
@@ -135,7 +136,6 @@
             case with DOS/Win32 paths.  It just simplifies things all
             around to use a UNIX-style path in this case.
     </DL>
-  </P>
 
 <H3><A NAME="compile">Compiling Juggler</A></H3>
 
@@ -154,17 +154,21 @@
     <TT>vjDefines.h.in</TT> have already been generated.)  If running in a
     DOS shell, <TT>configure</TT> must be invoked using the <TT>sh</TT>
     utility.  The following will <I>not</I> work:
+  </P>
 
 <PRE>
     % <B>./configure [options]</B>
 </PRE>
 
+  <P>
     Instead, it must be run as:
+  </P>
 
 <PRE>
     % <B>sh ./configure [options]</B>
 </PRE>
 
+  <P>
     As with the UNIX environment, it can be run from a separate build
     directory.  Refer to the
     <A HREF="${TEAMGUIDE}/build/juggler/use.configure.html">configuration
@@ -200,6 +204,7 @@
     environment.  It is not as stable as its UNIX counterpart due, for the
     most part, to reasons beyond the control of this project.  Please read
     this in full before reporting problems with the Win32 build.
+  </P>
 
     <UL>
       <LI>
@@ -260,6 +265,5 @@
         makefiles to accommodate this particular version of make.
       </LI>
     </UL>
-  </P>
 
 </BODY>

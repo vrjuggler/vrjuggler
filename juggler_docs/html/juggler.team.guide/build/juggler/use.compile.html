@@ -42,6 +42,7 @@
   <P>
     In this file, the following conventions are used for text formatting
     and naming:
+  </P>
 
     <UL>
       <LI>
@@ -68,7 +69,6 @@
         <TT>%</TT>'s respectively.)
       </LI>
     </UL>
-  </P>
 
 <H4><A NAME="required">Required Reading</A></H4>
 
@@ -98,12 +98,15 @@
     use of make in general.  It is assumed that the GNU make command is
     ``gmake''.  To verify that the version of GNU available is one of the
     known working versions, do:
+  </P>
 
 <PRE>
     % <B>gmake -v</B>
 </PRE>
 
+  <P>
     It will return something similar to the following output:
+  </P>
 
 <PRE>
     <B>GNU Make version 3.76.1</B>, by Richard Stallman and Roland McGrath.
@@ -112,6 +115,7 @@
     ...
 </PRE>
 
+  <P>
     The text in bold is the version information.  For best results, this
     should be one of the version numbers listed in the
     <A HREF="#intro">introduction</A>.
@@ -120,11 +124,13 @@
   <P>
     Most, if not all, versions of make (not just GNU make) use the following
     syntax for execution:
+  </P>
 
 <PRE>
     make [VARIABLE1=&lt;value1&gt;] [VARIABLE2=&lt;value2&gt;] [...] [target1] [target2] [...]
 </PRE>
 
+  <P>
     The options in square brackets are not required.  The <TT>[...]</TT>
     strings mean that any number of the previous option can be given.  If
     executed with no arguments, the default target will be built.  This is
@@ -144,6 +150,7 @@
 
   <P>
     Other useful options for GNU make are the following:
+  </P>
 
     <UL>
       <LI>
@@ -162,7 +169,6 @@
         the specified value when doing a parallel build
       </LI>
     </UL>
-  </P>
 
 <H4><A NAME="targets">Targets</A></H4>
 
@@ -317,12 +323,14 @@
     was run rather than in the <TT>obj</TT> subdirectory.  For example, the
     following process would build only the object files in the
     <TT>Config</TT> directory:
+  </P>
 
 <PRE>
     % <B>cd Config</B>
     % <B>gmake opt</B>
 </PRE>
 
+  <P>
     Those object files can be removed by running the `<TT>clean</TT>' target
     in that directory.
   </P>
@@ -402,6 +410,7 @@
     `<TT>world</TT>', and this information can be applied accordingly.
     Note that `<TT>world</TT>' can only be run from the top-level directory
     of the build environment.  The steps are:
+  </P>
 
     <OL>
       <LI>
@@ -451,6 +460,7 @@
       </LI>
     </OL>
 
+  <P>
     The remainder of the work done is installation.  More information
     on installing is available in the
     <A HREF="${TEAMGUIDE}/build/juggler/use.install.html">installation

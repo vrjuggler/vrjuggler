@@ -41,6 +41,7 @@
   <P>
     In this file, the following conventions are used for text formatting
     and naming:
+  </P>
 
     <UL>
       <LI>
@@ -67,7 +68,6 @@
         <TT>%</TT>'s respectively.)
       </LI>
     </UL>
-  </P>
 
 <H4><A NAME="required">Required Reading</A></H4>
 
@@ -247,6 +247,7 @@
     run by the user.  These four targets install library binaries and all
     associated Juggler files (data files, VjControl, headers, sample apps,
     etc.).  The steps are:
+  </P>
 
     <OL>
       <LI>
@@ -290,7 +291,6 @@
         complete.
       </LI>
     </OL>
-  </P>
 
 <H4><A NAME="scripts">Custom Scripts</A></H4>
 
@@ -331,6 +331,7 @@
 
     <P>
       The options that are used during installation are the following:
+    </P>
 
       <DL>
         <DT><TT>-U</TT>
@@ -354,7 +355,6 @@
         <DT><TT>-p &lt;path&gt;</TT>
           <DD>Start at the name directory rather than the current directory.
       </DL>
-    </P>
 
     <P>
       <TT>mtree</TT>(1) provides a wide range of features but unfortunately
@@ -375,6 +375,7 @@
       general, the base of the tree to be installed and the destination
       directory are all that is necessary.  Options for the script are as
       follows:
+    </P>
 
       <DL>
         <DT><TT>-i &lt;source directory&gt;</TT> (required)
@@ -395,7 +396,6 @@
               <TT>mtree</TT>(1), permissions can be set on a per-file basis
               after this script is run.
       </DL>
-    </P>
 
     <P>
       Currently, this script is used to install the <TT>Data</TT> directory
@@ -439,6 +439,7 @@
       clarity since some of the options correspond directly to a
       ``<TT>@...@</TT>'' string to be expanded.  The options described here
       are required unless otherwise noted.
+    </P>
 
       <DL>
         <DT><TT>--vars=&lt;filename&gt;</TT>
@@ -482,18 +483,19 @@
           <DD>Give the permissions (UNIX octal style) to be set for the
               installed files.  This defaults to the running user's umask.
       </DL>
-    </P>
 
     <P>
       The key to this script is <TT>VARS.pl.in</TT>, located in the top-level
       Juggler source directory.  It is a Perl file that can be evaluated at
       run time by the script to set values used for substitution.  The format
       used in the file is:
+    </P>
 
 <PRE>
     $VARS{'<I>VAR_NAME</I>'} = '@<I>VAR_NAME</I>@';
 </PRE>
 
+    <P>
       Note that <TT><I>VAR_NAME</I></TT> should be the same in both places
       for ease of understanding.  The <TT>%VARS</TT> hash is used in the
       substitution process.  Occurrences of its keys found in a
@@ -514,6 +516,7 @@
       enough to be used in writing new scripts that can be added to the
       installation process.  A short description of the available subroutines
       and their use is provided here.
+    </P>
 
       <DL>
         <DT><TT>recurseDir($start_dir, $base_inst_dir)</TT>
@@ -546,6 +549,5 @@
               and the replacement values are the values associated with
               those keys.
       </DL>
-    </P>
 
 </BODY>
