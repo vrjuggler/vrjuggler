@@ -55,8 +55,20 @@ DOC_PKGS=	$(BASE_PKG)			\
 		$(BASE_PKG).event		\
 		$(BASE_PKG).services		\
 		$(BASE_PKG).text		\
-		$(BASE_PKG).iconviewer		\
-		$(BASE_PKG).treeviewer
+		tweek				\
+		tweek.SubjectManagerPackage
+
+SWING_LAF_DIR=	../../../external/swing-laf
+JGOODIES_DIR=	$(SWING_LAF_DIR)/jgoodies-looks
+KUNSTSTOFF_DIR=	$(SWING_LAF_DIR)/kunststoff/sources
+LIQUID_DIR=	$(SWING_LAF_DIR)/liquid
+
+JDOM_DIR=	../../../external/jdom
+
+CLASSPATH=	$(JDOM_DIR)/build/jdom.jar:$(JGOODIES_DIR)/looks.jar:$(LIQUID_DIR)/liquidlnf.jar:$(KUNSTSTOFF_DIR)
+
+JACORB_DIR=	../../../external/JacORB
+IDL=		$(JACORB_DIR)/idl
 
 include ../doc/version.mk
 
@@ -66,8 +78,12 @@ doc_prefix=	$(webroot)/$(instdir)
 DOC_ROOT=	programmer.reference.java
 
 docs:
-	$(JDK_HOME)/bin/javadoc -d $(DOC_ROOT) -sourcepath $(srcdir)	\
+	JAVA_HOME=$(JDK_HOME) JACORB_PATH=$(JACORB_DIR) $(IDL) -d temp -I.. ../tweek/idl/*.idl
+	@echo '<html><body>Contains classes that are generated automatically by an IDL-to-Java compiler from the Tweek IDL sources.</body></html>' >temp/tweek/package.html
+	$(JDK_HOME)/bin/javadoc -d $(DOC_ROOT)				\
+          -sourcepath $(srcdir):temp					\
           -classpath "$(CLASSPATH)" $(DOC_PKGS)
+	rm -rf temp
 
 install-docs:
 	mkdir -p $(doc_prefix)
