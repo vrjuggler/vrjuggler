@@ -100,6 +100,10 @@ public class FileDataSource
       {
          throw new IOException("File already exists: "+filename);
       }
+      
+      //Date date = new Date();
+      //mFile.setLastModified(date.getTime());
+      resetLastModified();
 
       mConfig = new Configuration(filename);
    }
@@ -142,6 +146,8 @@ public class FileDataSource
       {
          throw new IOException(pe.getMessage());
       }
+
+      resetLastModified();
    }
 
    /**
@@ -228,6 +234,8 @@ public class FileDataSource
    {
       ConfigurationWriter writer = new ConfigurationWriter(mFile);
       writer.writeConfiguration(mConfig);
+      
+      resetLastModified();
    }
 
    /**
@@ -251,6 +259,16 @@ public class FileDataSource
          read_only = false;
       }
       return read_only;
+   }
+
+   public boolean isOutOfDate()
+   {
+      return ( mLastKnownModify != mFile.lastModified());
+   }
+
+   public void resetLastModified()
+   {
+      mLastKnownModify = mFile.lastModified();
    }
 
    /**
@@ -295,4 +313,6 @@ public class FileDataSource
 
    /** The repository from which configuration definitions are retrieved. */
    private ConfigDefinitionRepository mDefinitionRepos;
+
+   private long mLastKnownModify = 0;
 }
