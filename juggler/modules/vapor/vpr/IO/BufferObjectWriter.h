@@ -46,6 +46,7 @@
 #include <vector>
 
 #include <boost/static_assert.hpp>
+#include <vpr/System.h>
 #include <vpr/IO/ObjectWriter.h>
 
 namespace vpr
