@@ -183,7 +183,7 @@ void vjGlDrawManager::initDrawing()
 {
    vjDEBUG(vjDBG_DRAW_MGR,3) << "vjGlDrawManager::initDrawing: Entering." << endl << vjDEBUG_FLUSH;
 }
-   
+
 
 //: Callback when display is added to display manager
 //! PRE: Must be in kernel controlling thread
@@ -386,24 +386,47 @@ void vjGlDrawManager::drawProjections(vjSimDisplay* sim)
          if((!red_on) && (!blue_on) && (!green_on))      // Case of 0's (black is bad)
             red = blue = green = 0.75f;
 
+         vjVec3 surf_color;
+         if(sim->shouldDrawProjections())
+         {
+            surf_color = vjVec3(red,blue,green);
+         }
+         else
+         {
+            surf_color = sim->getSurfaceColor();
+         }
+
+         // Compute scaled colors for the corners
+         // ll is going to be lighter and upper right is going to be darker
+         const float ll_scale(0.10f); const float ul_scale(0.55); const float ur_scale(1.0f);
+         vjVec4 ll_clr(ll_scale*surf_color[0],ll_scale*surf_color[1],ll_scale*surf_color[2],ALPHA_VALUE);
+         vjVec4 ul_clr(ul_scale*surf_color[0],ul_scale*surf_color[1],ul_scale*surf_color[2],ALPHA_VALUE);
+         vjVec4 lr_clr(ul_scale*surf_color[0],ul_scale*surf_color[1],ul_scale*surf_color[2],ALPHA_VALUE);
+         vjVec4 ur_clr(ur_scale*surf_color[0],ur_scale*surf_color[1],ur_scale*surf_color[2],ALPHA_VALUE);
+
          // Draw the thingy
          proj->getFrustumApexAndCorners(apex, ur, lr, ul, ll);
+         glColor4fv(ur_clr.vec);
          glPushMatrix();
             if(sim->shouldDrawProjections())
             {
-               glColor4f(red, green, blue, ALPHA_VALUE);
                drawLine(apex, ur); drawLine(apex, lr); drawLine(apex, ul); drawLine(apex, ll);
             }
-            else
-               glColor4f(sim->getSurfaceColor()[0], sim->getSurfaceColor()[1],
-                         sim->getSurfaceColor()[2], ALPHA_VALUE);
+
+            // Draw the outline
             drawLine(ur, lr); drawLine(lr, ll); drawLine(ll, ul); drawLine(ul, ur);
 
+            // Draw the surface
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             glBegin(GL_TRIANGLES);
-               glVertex3fv(ll.vec); glVertex3fv(lr.vec); glVertex3fv(ur.vec);
-               glVertex3fv(ur.vec); glVertex3fv(ul.vec); glVertex3fv(ll.vec);
+               glColor4fv(ll_clr.vec);  glVertex3fv(ll.vec);
+               glColor4fv(lr_clr.vec);  glVertex3fv(lr.vec);
+               glColor4fv(ur_clr.vec);  glVertex3fv(ur.vec);
+
+               glColor4fv(ur_clr.vec); glVertex3fv(ur.vec);
+               glColor4fv(ul_clr.vec); glVertex3fv(ul.vec);
+               glColor4fv(ll_clr.vec); glVertex3fv(ll.vec);
             glEnd();
             glDisable(GL_BLEND);
          glPopMatrix();
@@ -439,7 +462,7 @@ void vjGlDrawManager::drawSimulator(vjSimDisplay* sim)
 
       glDisable(GL_TEXTURE_2D);
       glDisable(GL_TEXTURE_1D);
-      
+
       // Draw base coordinate axis
       ///*
       glDisable(GL_LIGHTING);
@@ -451,13 +474,13 @@ void vjGlDrawManager::drawSimulator(vjSimDisplay* sim)
             glColor3f(0.0f, 0.0f, 1.0f); glVertex3fv(origin.vec); glVertex3fv(z_axis.vec);
          glEnd();
       glPopMatrix();
-      //*/               
-      
+      //*/
+
       glEnable(GL_LIGHTING);
       // Draw the user's head
       glPushMatrix();
          glMultMatrixf(sim->getHeadPos().getFloatPtr());
-            
+
          //glEnable(GL_BLEND);
          //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
          glColor4f(0.5f, 0.75f, 0.90f, 0.67f);
