@@ -45,8 +45,8 @@ import org.vrjuggler.tweek.beans.BeanPreferences;
 
 
 /**
- * An extension of javax.swing.JDialog that acts as a containe for any
- * preference editors that Beans may have need.  The Beans themselves are
+ * An extension of javax.swing.JDialog that acts as a container for any
+ * preference editors that Beans may have.  The Beans themselves are
  * responsible for providing their own preferences editors--this class just
  * collects them into a single dialog box and presents it to the GUI user.
  *
