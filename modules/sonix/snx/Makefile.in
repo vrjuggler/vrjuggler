@@ -4,7 +4,7 @@
 # sonix
 #
 # Original Authors:
-#   Kevin Meinert, Carolina Cruz-Neira
+#   Kevin Meinert
 #
 # -----------------------------------------------------------------
 # File:          $RCSfile$
@@ -52,8 +52,13 @@ ifeq ($(OS_TYPE), Win32)
     SRCS        += dirent-win32.cpp
 endif
 
+# compile in the plugins... (for now, todo: refactor this).
 ifeq (@OPENAL_API@, Y)
     SRCS        += OpenALSoundImplementation.cpp
+endif
+
+ifeq (@SUBSYNTH_API@, Y)
+    SRCS        += SubsynthSoundImplementation.cpp
 endif
 
 ifeq (@AUDIOWORKS_API@, Y)
@@ -101,7 +106,7 @@ include $(MKPATH)/dpp.obj.mk
 
 kevin: ${OBJECTS}
 	${AR} ${ARFLAGS} libsonix.a ${OBJECTS}
-#	${CXX} ${CXXFLAGS} ${OBJECTS} -o audiojuggler.a ${LIBS}
+#	${CXX} ${CXXFLAGS} ${OBJECTS} -o libsonix.a ${LIBS}
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.
