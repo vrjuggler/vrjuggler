@@ -65,7 +65,7 @@ static void addMetrics (CppUnit::TestSuite* suite)
 
 int main (int ac, char **av)
 {
-   vjDEBUG(0,0) << "Starting test\n" << vjDEBUG_FLUSH;       // Do this here to get init text out of the way
+   vprDEBUG(0,0) << "Starting test\n" << vprDEBUG_FLUSH;       // Do this here to get init text out of the way
 
    CppUnit::TestSuite suite;
 

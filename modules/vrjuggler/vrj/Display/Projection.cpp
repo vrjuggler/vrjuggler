@@ -90,9 +90,9 @@ std::ostream& Projection::outStream(std::ostream& out)
 
 void Projection::setNearFar(float near_val, float far_val)
 {
-   vjDEBUG(vjDBG_ALL,vjDBG_STATE_LVL) << clrOutNORM(clrCYAN,"vjProjection::setNearFar:")
+   vprDEBUG(vprDBG_ALL,vprDBG_STATE_LVL) << clrOutNORM(clrCYAN,"vjProjection::setNearFar:")
                            << "near: " << near_val << " far:" << far_val
-                           << std::endl << vjDEBUG_FLUSH;
+                           << std::endl << vprDEBUG_FLUSH;
    mNearDist = near_val;
    mFarDist = far_val;
 }

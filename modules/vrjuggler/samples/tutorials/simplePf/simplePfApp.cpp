@@ -44,7 +44,7 @@ using namespace vrj;
 void simplePfApp::initScene()
 {
    // Load the scene
-   vjDEBUG(vjDBG_ALL, 0) << "simplePfApp::initScene\n" << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_ALL, 0) << "simplePfApp::initScene\n" << vprDEBUG_FLUSH;
 
    // Allocate all the nodes needed
    mRootNode             = new pfGroup;            // Root of our graph

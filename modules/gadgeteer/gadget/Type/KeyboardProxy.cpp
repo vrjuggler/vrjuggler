@@ -40,7 +40,7 @@ namespace vrj
 
 bool KeyboardProxy::config(ConfigChunk* chunk)
 {
-   vjDEBUG_BEGIN(vjDBG_INPUT_MGR,3) << "------------------ KEYBOARD PROXY config()-----------------\n" << vjDEBUG_FLUSH;
+   vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,3) << "------------------ KEYBOARD PROXY config()-----------------\n" << vprDEBUG_FLUSH;
    vprASSERT(((std::string)chunk->getType()) == "KeyboardProxy");
 
    mDeviceName = (std::string)chunk->getProperty("device");

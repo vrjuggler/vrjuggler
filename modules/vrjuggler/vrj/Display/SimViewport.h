@@ -74,10 +74,10 @@ public:
 
       if(!mCamera.isConnected())
       {
-         vjDEBUG(vjDBG_ERROR,0)
+         vprDEBUG(vprDBG_ERROR,0)
             << clrOutNORM(clrRED,"ERROR:")
             << "vjSimViewport:: Fatal Error: Camera not found named: "
-            << camera_proxy_str.c_str() << vjDEBUG_FLUSH;
+            << camera_proxy_str.c_str() << vprDEBUG_FLUSH;
          exit(1);
       }
 

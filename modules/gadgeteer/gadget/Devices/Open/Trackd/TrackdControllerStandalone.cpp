@@ -1,5 +1,5 @@
 #include <vrj/Input/Devices/Open/Trackd/TrackdControllerStandalone.h>
-//#include <vrj/Util/vjDebug.h>
+//#include <vrj/Util/vprDEBUG.h>
 
 #include <assert.h>
 

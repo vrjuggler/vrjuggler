@@ -75,14 +75,14 @@ int Intersense::getStationIndex(int stationNum, int bufferIndex)
 
 Intersense::Intersense()
 {
-    vjDEBUG(vjDBG_INPUT_MGR,1) << "*** Intersense::Intersense() ***\n" << vjDEBUG_FLUSH;
-    //vjDEBUG(vjDBG_INPUT_MGR,1) << "*** Intersense::deviceAbilities = " << deviceAbilities << " ***\n" << vjDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_INPUT_MGR,1) << "*** Intersense::Intersense() ***\n" << vprDEBUG_FLUSH;
+    //vprDEBUG(vrjDBG_INPUT_MGR,1) << "*** Intersense::deviceAbilities = " << deviceAbilities << " ***\n" << vprDEBUG_FLUSH;
 }
 
 bool Intersense::config(ConfigChunk *c)
 {
-    vjDEBUG(vjDBG_INPUT_MGR,1) << "         Intersense::Intersense(ConfigChunk*)"
-                               << std::endl << vjDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_INPUT_MGR,1) << "         Intersense::Intersense(ConfigChunk*)"
+                               << std::endl << vprDEBUG_FLUSH;
 
 // read in Position's, Digital's, and Analog's config stuff,
 // --> this will be the port and baud fields
@@ -91,7 +91,7 @@ bool Intersense::config(ConfigChunk *c)
 
 // keep IntersenseStandalone's port and baud members in sync with Input's port
 // and baud members.
-    vjDEBUG(vjDBG_INPUT_MGR,1) << "   Intersense::Intersense(ConfigChunk*) -> Input::getPort() = " << Input::getPort() << std::endl << vjDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_INPUT_MGR,1) << "   Intersense::Intersense(ConfigChunk*) -> Input::getPort() = " << Input::getPort() << std::endl << vprDEBUG_FLUSH;
     mTracker.setPortName( Input::getPort() );
     mTracker.rBaudRate() = Input::getBaudRate();
     mTracker.rNumStations() = c->getNum("stations");
@@ -179,26 +179,26 @@ int Intersense::startSampling()
 // make sure inertia cubes aren't already started
     if (this->isActive() == true)
     {
-        vjDEBUG(vjDBG_INPUT_MGR,2) << "vjIntersense was already started."
-                                   << std::endl << vjDEBUG_FLUSH;
+        vprDEBUG(vrjDBG_INPUT_MGR,2) << "vjIntersense was already started."
+                                   << std::endl << vprDEBUG_FLUSH;
         return 0;
     }
 
 // Has the thread actually started already
     if(myThread != NULL)
     {
-        vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
+        vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
                                                 << "vjIntersense: startSampling called, when already sampling.\n"
-                                                << vjDEBUG_FLUSH;
+                                                << vprDEBUG_FLUSH;
         vprASSERT(false);
     } else {
 
 // open the tracker connection
    mTracker.open();
       if (this->isActive() == false) {
-      vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
+      vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
                   << "vjIntersense: mTracker.open() failed to connect to tracker.\n"
-                  << vjDEBUG_FLUSH;
+                  << vprDEBUG_FLUSH;
       return 0;
       }
 
@@ -306,7 +306,7 @@ int Intersense::stopSampling()
 
     if (myThread != NULL)
     {
-   vjDEBUG(vjDBG_INPUT_MGR,1) << "vjIntersense::stopSampling(): Stopping the intersense thread... " << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_INPUT_MGR,1) << "vjIntersense::stopSampling(): Stopping the intersense thread... " << vprDEBUG_FLUSH;
 
    myThread->kill();
    delete myThread;
@@ -316,13 +316,13 @@ int Intersense::stopSampling()
 
    if (this->isActive() == true)
    {
-       vjDEBUG(vjDBG_INPUT_MGR,0)  << clrOutNORM(clrRED,"\nERROR:")
+       vprDEBUG(vrjDBG_INPUT_MGR,0)  << clrOutNORM(clrRED,"\nERROR:")
                << "vjIntersense::stopSampling(): Intersense tracker failed to stop.\n"
-               << vjDEBUG_FLUSH;
+               << vprDEBUG_FLUSH;
        return 0;
    }
 
-        vjDEBUG(vjDBG_INPUT_MGR,1) << "stopped." << std::endl << vjDEBUG_FLUSH;
+        vprDEBUG(vrjDBG_INPUT_MGR,1) << "stopped." << std::endl << vprDEBUG_FLUSH;
     }
 
     return 1;

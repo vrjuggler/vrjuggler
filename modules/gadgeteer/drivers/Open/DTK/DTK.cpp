@@ -69,8 +69,8 @@ DTK::DTK()
 
 bool DTK::config(ConfigChunk *c)
 {
-    vjDEBUG(vjDBG_INPUT_MGR,1) << "  DTK::config(ConfigChunk*)"
-                   << std::endl << vjDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_INPUT_MGR,1) << "  DTK::config(ConfigChunk*)"
+                   << std::endl << vprDEBUG_FLUSH;
 
     if (!Position::config(c) || !Digital::config(c) || !Analog::config(c))
     return false;
@@ -194,24 +194,24 @@ int DTK::startSampling()
 // make sure inertia cubes aren't already started
     if (this->isActive() == true)
     {
-    vjDEBUG(vjDBG_INPUT_MGR,2) << "vjDTK was already started."
-                                   << std::endl << vjDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_INPUT_MGR,2) << "vjDTK was already started."
+                                   << std::endl << vprDEBUG_FLUSH;
     return 0;
     }
 
 // Has the thread actually started already
     if(myThread != NULL)
     {
-    vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
+    vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
                         << "vjIsense: startSampling called, when already sampling.\n"
-                        << vjDEBUG_FLUSH;
+                        << vprDEBUG_FLUSH;
     vprASSERT(false);
 
     } else {
         if (!this->startDTK()) {
-        vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
+        vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
                         << "vjDTK: \n"
-                        << vjDEBUG_FLUSH;
+                        << vprDEBUG_FLUSH;
         return 0;
         }
 
@@ -325,8 +325,8 @@ int DTK::stopSampling()
 
     if (myThread != NULL)
     {
-    vjDEBUG(vjDBG_INPUT_MGR,1) << "vjDTK::stopSampling(): Stopping the DTK thread... "
-                   << vjDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_INPUT_MGR,1) << "vjDTK::stopSampling(): Stopping the DTK thread... "
+                   << vprDEBUG_FLUSH;
 
     myThread->kill();
     delete myThread;
@@ -334,7 +334,7 @@ int DTK::stopSampling()
 
     this->stopDTK();
 
-    vjDEBUG(vjDBG_INPUT_MGR,1) << "stopped." << std::endl << vjDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_INPUT_MGR,1) << "stopped." << std::endl << vprDEBUG_FLUSH;
     }
 
     return 1;

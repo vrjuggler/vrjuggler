@@ -183,12 +183,12 @@ VarValue::operator int() const {
     case T_FLOAT:
         return (int)floatval;
     case VJ_T_INVALID:
-        vjDEBUG(vjDBG_CONFIG,4) << using_invalid_msg.c_str() << 1
-                                << std::endl << vjDEBUG_FLUSH;
+        vprDEBUG(vrjDBG_CONFIG,4) << using_invalid_msg.c_str() << 1
+                                << std::endl << vprDEBUG_FLUSH;
         return 0;
     default:
-        vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in cast to int.\n"
-                               << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,0) << "vjVarValue: type mismatch in cast to int.\n"
+                               << vprDEBUG_FLUSH;
         return 0;
     }
 }
@@ -208,11 +208,11 @@ VarValue::operator ConfigChunk*() const {
             return NULL;
         }
     case VJ_T_INVALID:
-        vjDEBUG(vjDBG_CONFIG,4) << using_invalid_msg.c_str() << 2
-                 << std::endl << vjDEBUG_FLUSH;
+        vprDEBUG(vrjDBG_CONFIG,4) << using_invalid_msg.c_str() << 2
+                 << std::endl << vprDEBUG_FLUSH;
         return NULL;
     default:
-        vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in cast to ConfigChunk* - real type is " << typeString(type) << ".\n" << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,0) << "vjVarValue: type mismatch in cast to ConfigChunk* - real type is " << typeString(type) << ".\n" << vprDEBUG_FLUSH;
         return NULL;
     }
 }
@@ -232,12 +232,12 @@ VarValue::operator bool() const {
     case T_FLOAT:
         return (bool)floatval;
     case VJ_T_INVALID:
-        vjDEBUG(vjDBG_CONFIG,4) << using_invalid_msg.c_str() << 3
-                                << std::endl << vjDEBUG_FLUSH;
+        vprDEBUG(vrjDBG_CONFIG,4) << using_invalid_msg.c_str() << 3
+                                << std::endl << vprDEBUG_FLUSH;
         return false;
     default:
-        vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in cast to bool.\n"
-                               << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,0) << "vjVarValue: type mismatch in cast to bool.\n"
+                               << vprDEBUG_FLUSH;
    return false;
     }
 }
@@ -255,11 +255,11 @@ VarValue::operator float () const {
     case T_BOOL:
         return (float)boolval;
     case VJ_T_INVALID:
-        vjDEBUG(vjDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 4
-                                << std::endl << vjDEBUG_FLUSH;
+        vprDEBUG(vrjDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 4
+                                << std::endl << vprDEBUG_FLUSH;
         return 0.0f;
     default:
-        vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in cast to float.\n" << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,0) << "vjVarValue: type mismatch in cast to float.\n" << vprDEBUG_FLUSH;
         return 0.0f;
     }
 }
@@ -283,11 +283,11 @@ char* VarValue::cstring () const {
     case T_BOOL:
         return strdup (boolval?"true":"false");
     case VJ_T_INVALID:
-        vjDEBUG(vjDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 5
-                                << std::endl << vjDEBUG_FLUSH;
+        vprDEBUG(vrjDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 5
+                                << std::endl << vprDEBUG_FLUSH;
         return strdup("");
     default:
-        vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in cstring().\n" << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,0) << "vjVarValue: type mismatch in cstring().\n" << vprDEBUG_FLUSH;
         return strdup("");
     }
 }
@@ -330,11 +330,11 @@ VarValue::operator std::string () const {
     case T_BOOL:
         return boolval?"true":"false";
     case VJ_T_INVALID:
-        vjDEBUG(vjDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 6
-                                << std::endl << vjDEBUG_FLUSH;
+        vprDEBUG(vrjDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 6
+                                << std::endl << vprDEBUG_FLUSH;
         return (std::string)"";
     default:
-        vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in cast to std::string.\n" << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,0) << "vjVarValue: type mismatch in cast to std::string.\n" << vprDEBUG_FLUSH;
         return (std::string)"";
     }
 }
@@ -355,7 +355,7 @@ VarValue &VarValue::operator = (int i) {
         boolval = (bool)i;
         break;
     default:
-        vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in assignment - VarValue(" << typeString(type) << ") = int.\n" << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,0) << "vjVarValue: type mismatch in assignment - VarValue(" << typeString(type) << ") = int.\n" << vprDEBUG_FLUSH;
     }
     return *this;
 }
@@ -373,7 +373,7 @@ VarValue& VarValue::operator = (bool i) {
         boolval = i;
         break;
     default:
-        vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in assignment - VarValue(" << typeString(type) << ") = bool.\n" << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,0) << "vjVarValue: type mismatch in assignment - VarValue(" << typeString(type) << ") = bool.\n" << vprDEBUG_FLUSH;
     }
     return *this;
 }
@@ -389,7 +389,7 @@ VarValue &VarValue::operator = (float i) {
         floatval = i;
         break;
     default:
-        vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in assignment - VarValue(" << typeString(type) << ") = float.\n" << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,0) << "vjVarValue: type mismatch in assignment - VarValue(" << typeString(type) << ") = float.\n" << vprDEBUG_FLUSH;
     }
     return *this;
 }
@@ -450,12 +450,12 @@ VarValue &VarValue::operator = (const char *val) {
         }
         break;
     default:
-        vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in assignment - VarValue(" << typeString(type) << ") = string/char*.\n" << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,0) << "vjVarValue: type mismatch in assignment - VarValue(" << typeString(type) << ") = string/char*.\n" << vprDEBUG_FLUSH;
         break;
     }
     if (err)
-        vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: couldn't assign string '"
-                               << val << "'.\n" << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,0) << "vjVarValue: couldn't assign string '"
+                               << val << "'.\n" << vprDEBUG_FLUSH;
     return *this;
 }
 
@@ -476,7 +476,7 @@ VarValue &VarValue::operator = (const ConfigChunk *s) {
                embeddedchunkval = NULL;
            break;
        default:
-           vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in assignment - VarValue(" << typeString(type) << ") = ConfigChunk*.\n" << vjDEBUG_FLUSH;
+           vprDEBUG(vprDBG_ERROR,0) << "vjVarValue: type mismatch in assignment - VarValue(" << typeString(type) << ") = ConfigChunk*.\n" << vprDEBUG_FLUSH;
        }
    return *this;
 }
@@ -486,7 +486,7 @@ VarValue &VarValue::operator = (const ConfigChunk *s) {
 std::ostream& operator << (std::ostream& out, const VarValue& v) {
     v.assertValid();
 
-    //      vjDEBUG(vjDBG_ERROR,0) << "in << func" << vjDEBUG_FLUSH;
+    //      vprDEBUG(vprDBG_ERROR,0) << "in << func" << vprDEBUG_FLUSH;
 
     switch (v.type) {
     case T_INT:

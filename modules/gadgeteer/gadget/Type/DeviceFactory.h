@@ -58,7 +58,7 @@ public:
    //: Create the device
    virtual Input* createDevice(ConfigChunk* chunk)
    {
-      vjDEBUG(vjDBG_ALL,0) << "ERROR: DeviceConstructorBase::createDevice: Should never be called" << vjDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,0) << "ERROR: DeviceConstructorBase::createDevice: Should never be called" << vprDEBUG_FLUSH;
       return NULL;
    }
 

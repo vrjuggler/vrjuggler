@@ -194,7 +194,7 @@ protected:     // --- Config handling functions --- //
    //!RETURNS: success
    virtual bool configRemove(ConfigChunk* chunk)
    {
-      vjDEBUG(vjDBG_ALL,vjDBG_CRITICAL_LVL) << "vjPfDrawManager::configRemove: configRemove is not supported.\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "vjPfDrawManager::configRemove: configRemove is not supported.\n" << vprDEBUG_FLUSH;
       return false;
    }
 

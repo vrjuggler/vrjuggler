@@ -63,17 +63,17 @@ bool SimGloveGesture::config(ConfigChunk* chunk)
    while(num_gestures < mSimKeys.size())     // If we have to many keys
    {
       mSimKeys.pop_back();
-      vjDEBUG(vjDBG_INPUT_MGR,1)
+      vprDEBUG(vrjDBG_INPUT_MGR,1)
          << "vjSimGloveGesture: Not enough gestures. Trimming" << std::endl
-         << vjDEBUG_FLUSH;
+         << vprDEBUG_FLUSH;
    }
 
    // Find pos proxy
    std::string glove_pos_proxy = chunk->getProperty("glovePos");    // Get the name of the pos_proxy
    if(glove_pos_proxy == std::string(""))
    {
-      vjDEBUG(vjDBG_INPUT_MGR,0) << clrOutNORM(clrRED, "ERROR:") << " SimGloveGesture has no posProxy."
-                                 << std::endl << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_INPUT_MGR,0) << clrOutNORM(clrRED, "ERROR:") << " SimGloveGesture has no posProxy."
+                                 << std::endl << vprDEBUG_FLUSH;
       return false;
    }
    // init glove proxy interface
@@ -82,9 +82,9 @@ bool SimGloveGesture::config(ConfigChunk* chunk)
    if(proxy_index != -1)
       mGlovePos[0] = Kernel::instance()->getInputManager()->getPosProxy(proxy_index);
    else
-      vjDEBUG(vjDBG_INPUT_MGR,0)
+      vprDEBUG(vrjDBG_INPUT_MGR,0)
          << clrOutNORM(clrRED, "ERROR:") << " SimGloveGesture::CyberGlove: Can't find posProxy."
-         << std::endl << std::endl << vjDEBUG_FLUSH;
+         << std::endl << std::endl << vprDEBUG_FLUSH;
    */
 
    // Set the indexes to defaults
@@ -136,9 +136,9 @@ void SimGloveGesture::updateData()
       if(checkKeyPair(mSimKeys[i]) > 0)
       {
          mCurGesture = i;
-         vjDEBUG(vjDBG_INPUT_MGR,3) << "vjSimGloveGesture: Got gesture: "
+         vprDEBUG(vrjDBG_INPUT_MGR,3) << "vjSimGloveGesture: Got gesture: "
                                     << getGestureString(mCurGesture).c_str()
-                                    << std::endl << vjDEBUG_FLUSH;
+                                    << std::endl << vprDEBUG_FLUSH;
 
          // Set the glove to the sample
          mTheData[0][current] = mGestureExamples[mCurGesture];    // Copy over the example
@@ -162,9 +162,9 @@ void SimGloveGesture::loadTrainedFile(std::string fileName)
    }
    else
    {
-      vjDEBUG(vjDBG_INPUT_MGR,0)
+      vprDEBUG(vrjDBG_INPUT_MGR,0)
          << "vjSimGloveGesture:: Can't load trained file: "
-         << fileName.c_str() << std::endl << vjDEBUG_FLUSH;
+         << fileName.c_str() << std::endl << vprDEBUG_FLUSH;
    }
 }
 

@@ -54,7 +54,7 @@ Input::Input()
    lock(),
    baudRate(0)
 {
-   //vjDEBUG(vjDBG_ALL,4)<<"*** Input::Input()\n"<< vjDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL,4)<<"*** Input::Input()\n"<< vprDEBUG_FLUSH;
    /*
    sPort = NULL;
    myThread = NULL;

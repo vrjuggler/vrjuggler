@@ -178,7 +178,7 @@ public:
 public:  /**** Static Helpers *****/
    /* static */ virtual bool createHardwareSwapGroup(std::vector<GlWindow*> wins)
    {
-      vjDEBUG(vjDBG_ALL,0) << "WARNING: hardware swap not supported.\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,vprDBG_WARNING_LVL) << "WARNING: hardware swap not supported.\n" << vprDEBUG_FLUSH;
       return false;
    }
 

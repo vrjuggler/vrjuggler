@@ -80,7 +80,7 @@ protected:
 public:
    SimInput()
    {
-      //vjDEBUG(vjDBG_ALL,4)<<"*** SimInput::SimInput()\n"<< vjDEBUG_FLUSH;
+      //vprDEBUG(vprDBG_ALL,4)<<"*** SimInput::SimInput()\n"<< vprDEBUG_FLUSH;
    }
    virtual ~SimInput() {}
 

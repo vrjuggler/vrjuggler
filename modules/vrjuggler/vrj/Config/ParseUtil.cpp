@@ -120,8 +120,8 @@ bool readString (std::istream &in, char *buffer, int size, bool *quoted) {
             while (in.get(buffer[i]) && (buffer[i] != '"'))
                 ;
             buffer[i] = '\0';
-            vjDEBUG (vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " Truncated string in config file: '"
-                                    << buffer << "'\n" << vjDEBUG_FLUSH;
+            vprDEBUG (vprDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " Truncated string in config file: '"
+                                    << buffer << "'\n" << vprDEBUG_FLUSH;
         }
         retval = true;
     }
@@ -371,9 +371,9 @@ const std::string findFileUsingPathVar (std::ifstream& in, const std::string& fi
     if ( (path_string_tmp = getenv(env_name.c_str())) != NULL ) {
         path_string = path_string_tmp;
 
-        vjDEBUG(vjDBG_ALL, vjDBG_STATE_LVL)
+        vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
             << "Falling back on " << env_name << ": " << path_string << "\n"
-            << vjDEBUG_FLUSH;
+            << vprDEBUG_FLUSH;
     }
 
     // If the user set a value for $VJ_CFG_PATH, parse it, baby!
@@ -433,9 +433,9 @@ const std::string findFileUsingPathVar (std::ifstream& in, const std::string& fi
             full_path += "/";
             full_path += file_name;
 
-            vjDEBUG(vjDBG_CONFIG, vjDBG_STATE_LVL)
+            vprDEBUG(vrjDBG_CONFIG, vprDBG_STATE_LVL)
                 << "vjConfigChunkDB::load(): opening file " << full_path
-                << "\n" << vjDEBUG_FLUSH;
+                << "\n" << vprDEBUG_FLUSH;
 
             // Try to open the file name constructed above.
             in.open(full_path.c_str());

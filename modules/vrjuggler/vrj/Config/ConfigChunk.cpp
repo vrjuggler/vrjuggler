@@ -376,8 +376,8 @@ std::istream& operator >> (std::istream& in, ConfigChunk& self) {
 
         // We have a string token; assumably a property name.
         if (!(p = self.getPropertyPtrFromToken (buf))) {
-            vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " Property '" << buf << "' is not found in"
-                                   << " Chunk " << self.desc->name.c_str() << std::endl << vjDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " Property '" << buf << "' is not found in"
+                                   << " Chunk " << self.desc->name.c_str() << std::endl << vprDEBUG_FLUSH;
             continue;
         }
 
@@ -404,28 +404,28 @@ std::istream& operator >> (std::istream& in, ConfigChunk& self) {
                 //       }
                 else {
                     if (!p->tryAssign (i++, buf))
-                        vjDEBUG(vjDBG_ERROR,2) << clrOutNORM(clrRED, "ERROR:") << " Assigning to property "
-                                               << p->getName().c_str() << std::endl << vjDEBUG_FLUSH;
+                        vprDEBUG(vprDBG_ERROR,2) << clrOutNORM(clrRED, "ERROR:") << " Assigning to property "
+                                               << p->getName().c_str() << std::endl << vprDEBUG_FLUSH;
                 }
             }
 
             if (p->hasFixedNumberOfValues() && (p->num != i))
-                vjDEBUG(vjDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") << " Property " << p->getName().c_str() << " should have "
-                                       << p->num << " values; " << i << " found" << std::endl << vjDEBUG_FLUSH;
+                vprDEBUG(vprDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") << " Property " << p->getName().c_str() << " should have "
+                                       << p->num << " values; " << i << " found" << std::endl << vprDEBUG_FLUSH;
         }
         else {
             // we're just doing one value.
             if (!p->tryAssign (0, buf))
-                vjDEBUG(vjDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") << " Assigning to property "
-                                       << p->getName().c_str() << std::endl << vjDEBUG_FLUSH;
+                vprDEBUG(vprDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") << " Assigning to property "
+                                       << p->getName().c_str() << std::endl << vprDEBUG_FLUSH;
             //        self.getVJCFGToken (in,tok);
             //        if (tok.type == TK_Unit) {
             //       p->applyUnits (tok.unitval);
             //       self.getVJCFGToken (in, tok);
             //        }
             if (p->num > 1) {
-                vjDEBUG(vjDBG_ERROR,3) << clrOutNORM(clrRED, "ERROR:") << " Property " << p->getName().c_str()
-                                       << " expects " << p->num << " values." << std::endl << vjDEBUG_FLUSH;
+                vprDEBUG(vprDBG_ERROR,3) << clrOutNORM(clrRED, "ERROR:") << " Property " << p->getName().c_str()
+                                       << " expects " << p->num << " values." << std::endl << vprDEBUG_FLUSH;
             }
         }
     }
@@ -464,8 +464,8 @@ const VarValue& ConfigChunk::getProperty (const std::string& property_token, int
 
     Property *p = getPropertyPtrFromToken (property_token);
     if (!p) {
-        vjDEBUG(vjDBG_CONFIG,2) << "getProperty(\"" << property_token.c_str() << "\") in chunk \""
-                                << getProperty("Name") << "\" - no such property; returning T_INVALID\n" << vjDEBUG_FLUSH;
+        vprDEBUG(vrjDBG_CONFIG,2) << "getProperty(\"" << property_token.c_str() << "\") in chunk \""
+                                << getProperty("Name") << "\" - no such property; returning T_INVALID\n" << vprDEBUG_FLUSH;
         return VarValue::getInvalidInstance();
     }
     return p->getValue (ind);
@@ -512,8 +512,8 @@ bool ConfigChunk::setProperty (const std::string& property, ConfigChunk* val, in
     Property *p;
     p = getPropertyPtrFromToken (property);
     if (!p) {
-        vjDEBUG (vjDBG_ERROR, 1) << "ConfigChunk.setProperty: no such property " << property.c_str()
-                                 << "\n" << vjDEBUG_FLUSH;
+        vprDEBUG (vprDBG_ERROR, 1) << "ConfigChunk.setProperty: no such property " << property.c_str()
+                                 << "\n" << vprDEBUG_FLUSH;
         return false;
     }
     return p->setValue (val, ind);

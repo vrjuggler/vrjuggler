@@ -65,8 +65,8 @@ int GlPipe::start()
 
     mActiveThread = new vpr::Thread(memberFunctor);
 
-    vjDEBUG(vjDBG_DRAW_MGR,1) << "vjGlPipe::start: Started control loop. "
-                              << mActiveThread << std::endl << vjDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_DRAW_MGR,1) << "vjGlPipe::start: Started control loop. "
+                              << mActiveThread << std::endl << vprDEBUG_FLUSH;
     return 1;
 }
 
@@ -77,7 +77,7 @@ void GlPipe::triggerRender()
    //vprASSERT(mThreadRunning == true);      // We must be running
    while(!mThreadRunning)
    {
-      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_HVERB_LVL) << "Waiting in for thread to start triggerRender.\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_HVERB_LVL) << "Waiting in for thread to start triggerRender.\n" << vprDEBUG_FLUSH;
       vpr::Thread::yield();
    }
 
@@ -113,9 +113,9 @@ void GlPipe::completeSwap()
 void GlPipe::addWindow(GlWindow* win)
 {
    vpr::Guard<vpr::Mutex> guardNew(newWinLock);       // Protect the data
-   vjDEBUG(vjDBG_DRAW_MGR,3) << "vjGlPipe::addWindow: Pipe: " << mPipeNum
+   vprDEBUG(vrjDBG_DRAW_MGR,3) << "vjGlPipe::addWindow: Pipe: " << mPipeNum
                              << " adding window (to new wins):\n" << win
-                             << std::endl << vjDEBUG_FLUSH;
+                             << std::endl << vprDEBUG_FLUSH;
    newWins.push_back(win);
 }
 
@@ -124,9 +124,9 @@ void GlPipe::addWindow(GlWindow* win)
 void GlPipe::removeWindow(GlWindow* win)
 {
    vpr::Guard<vpr::Mutex> guardClosing(mClosingWinLock);
-   vjDEBUG(vjDBG_DRAW_MGR,3) << "vjGlPipe:: removeWindow: Pipe: " << mPipeNum
+   vprDEBUG(vrjDBG_DRAW_MGR,3) << "vjGlPipe:: removeWindow: Pipe: " << mPipeNum
                              << " window added to closingWins.\n" << win
-                             << std::endl << vjDEBUG_FLUSH;
+                             << std::endl << vprDEBUG_FLUSH;
    mClosingWins.push_back(win);
 }
 
@@ -252,15 +252,15 @@ void GlPipe::checkForNewWindows()
       {
           if (newWins[winNum]->open()) {
               newWins[winNum]->makeCurrent();
-              vjDEBUG(vjDBG_DRAW_MGR,1) << "vjGlPipe::checkForNewWindows: Just opened window: "
+              vprDEBUG(vrjDBG_DRAW_MGR,1) << "vjGlPipe::checkForNewWindows: Just opened window: "
                                         << newWins[winNum]->getDisplay()->getName().c_str()
-                                        << std::endl << vjDEBUG_FLUSH;
+                                        << std::endl << vprDEBUG_FLUSH;
               openWins.push_back(newWins[winNum]);
           }
           else {
-              vjDEBUG(vjDBG_ALL,0) << clrOutBOLD(clrRED,"ERROR:") << "vjGlPipe::checkForNewWindows: Failed to open window: "
+              vprDEBUG(vprDBG_ALL,0) << clrOutBOLD(clrRED,"ERROR:") << "vjGlPipe::checkForNewWindows: Failed to open window: "
                                    << newWins[winNum]->getDisplay()->getName().c_str()
-                                   << std::endl << vjDEBUG_FLUSH;
+                                   << std::endl << vprDEBUG_FLUSH;
               // BUG!!
               // should we do something to tell the current config that it
               // didn't get enabled properly?
@@ -284,9 +284,9 @@ void GlPipe::renderWindow(GlWindow* win)
 
    glManager->setCurrentContext(win->getId());     // Set TSS data of context id
 
-   vjDEBUG(vjDBG_DRAW_MGR,5) << "vjGlPipe::renderWindow: Set context to: "
+   vprDEBUG(vrjDBG_DRAW_MGR,5) << "vjGlPipe::renderWindow: Set context to: "
                              << GlDrawManager::instance()->getCurrentContext()
-                             << std::endl << vjDEBUG_FLUSH;
+                             << std::endl << vprDEBUG_FLUSH;
       mPerfBuffer->set(++mPerfPhase);
 
    // --- SET CONTEXT --- //

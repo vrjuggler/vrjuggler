@@ -119,11 +119,11 @@ void SurfaceViewport::updateProjections()
    Matrix cur_head_pos = *(mUser->getHeadPos());
    Coord  head_coord(cur_head_pos);       // Create a user readable version
 
-   vjDEBUG(vjDBG_ALL,5)
+   vprDEBUG(vprDBG_ALL,5)
       << "vjDisplay::updateProjections: Getting head position" << std::endl
-      << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_ALL,5) << "\tHeadPos:" << head_coord.pos << "\tHeadOr:"
-                        << head_coord.orient << std::endl << vjDEBUG_FLUSH;
+      << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,5) << "\tHeadPos:" << head_coord.pos << "\tHeadOr:"
+                        << head_coord.orient << std::endl << vprDEBUG_FLUSH;
 
    // Compute location of left and right eyes
    //float interocularDist = 2.75f/12.0f;
@@ -164,8 +164,8 @@ void SurfaceViewport::calculateCornersInBaseFrame()
    mxULCorner.xformFull(mSurfaceRotation,mULCorner);
 
    // Verify that they are all in the same x,y plane
-   vjDEBUG(vjDBG_ALL,5) << mxLLCorner[VJ_Z]  << " " << mxLRCorner[VJ_Z]
-                      << " " <<  mxURCorner[VJ_Z]  << " " <<  mxULCorner[VJ_Z] << "\n" << vjDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,5) << mxLLCorner[VJ_Z]  << " " << mxLRCorner[VJ_Z]
+                      << " " <<  mxURCorner[VJ_Z]  << " " <<  mxULCorner[VJ_Z] << "\n" << vprDEBUG_FLUSH;
    vprASSERT((mxLLCorner[VJ_Z] == mxLRCorner[VJ_Z]) &&
             (mxURCorner[VJ_Z] == mxULCorner[VJ_Z]) &&
             (mxLLCorner[VJ_Z] == mxULCorner[VJ_Z]));

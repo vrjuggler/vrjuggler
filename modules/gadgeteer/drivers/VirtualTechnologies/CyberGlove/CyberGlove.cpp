@@ -66,8 +66,8 @@ bool CyberGlove::config(ConfigChunk *c)
     std::string glove_pos_proxy = c->getProperty("glovePos");    // Get the name of the pos_proxy
     if(glove_pos_proxy == std::string(""))
     {
-       vjDEBUG(vjDBG_INPUT_MGR,0) << clrOutNORM(clrRED, "ERROR:") << " Cyberglove has no posProxy."
-                                  << std::endl << vjDEBUG_FLUSH;
+       vprDEBUG(vrjDBG_INPUT_MGR,0) << clrOutNORM(clrRED, "ERROR:") << " Cyberglove has no posProxy."
+                                  << std::endl << vprDEBUG_FLUSH;
        return false;
     }
 
@@ -77,9 +77,9 @@ bool CyberGlove::config(ConfigChunk *c)
     if(proxy_index != -1)
        mGlovePos[0] = Kernel::instance()->getInputManager()->getPosProxy(proxy_index);
     else
-       vjDEBUG(vjDBG_INPUT_MGR,0)
+       vprDEBUG(vrjDBG_INPUT_MGR,0)
           << clrOutNORM(clrRED, "ERROR:") << " CyberGlove::CyberGlove: Can't find posProxy."
-          << std::endl << std::endl << vjDEBUG_FLUSH;
+          << std::endl << std::endl << vprDEBUG_FLUSH;
     */
 
     mGlove = new CyberGloveBasic( mCalDir, sPort, baudRate );
@@ -106,7 +106,7 @@ CyberGlove::startSampling()
       }
       else
       {
-         vjDEBUG(vjDBG_INPUT_MGR,1) << "vjCyberGlove is active " << std::endl << vjDEBUG_FLUSH;
+         vprDEBUG(vrjDBG_INPUT_MGR,1) << "vjCyberGlove is active " << std::endl << vprDEBUG_FLUSH;
          active = 1;
          return 1;
       }
@@ -122,7 +122,7 @@ void CyberGlove::controlLoop(void* nullParam)
    // Open the port and run with it
    if(mGlove->open() == 0)
    {
-     vjDEBUG(vjDBG_INPUT_MGR,0) << clrOutNORM(clrRED, "ERROR:") << " Can't open Cyberglove or it is already opened." << vjDEBUG_FLUSH;
+     vprDEBUG(vrjDBG_INPUT_MGR,0) << clrOutNORM(clrRED, "ERROR:") << " Can't open Cyberglove or it is already opened." << vprDEBUG_FLUSH;
      return;
    }
 
@@ -166,7 +166,7 @@ int CyberGlove::stopSampling()
       vpr::System::usleep(100);
 
       mGlove->close();
-      vjDEBUG(vjDBG_INPUT_MGR,1) << "stopping CyberGlove.." << std::endl << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_INPUT_MGR,1) << "stopping CyberGlove.." << std::endl << vprDEBUG_FLUSH;
    }
    return 1;
 }

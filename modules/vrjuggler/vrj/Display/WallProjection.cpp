@@ -113,19 +113,19 @@ void WallProjection::calcViewFrustum(Matrix& eyePos)
    eye_pos = eye_coord.pos;
    Vec3   eye_xformed;         // Xformed position of eyes
 
-   vjDEBUG(vjDBG_DISP_MGR,7)
+   vprDEBUG(vrjDBG_DISP_MGR,7)
       << "vjWallProjection::calcWallProjection:  Wall Proj:\n" << *this
-      << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_DISP_MGR,7)
+      << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DISP_MGR,7)
       << "vjWallProjection::calcWallProjection:    Base eye:" << eye_coord.pos
-      << std::endl << vjDEBUG_FLUSH;
+      << std::endl << vprDEBUG_FLUSH;
 
    // Convert eye coords into the wall's coord system
    eye_xformed.xformFull(mWallRotationMatrix, eye_pos);
 
-   vjDEBUG(vjDBG_DISP_MGR,7)
+   vprDEBUG(vrjDBG_DISP_MGR,7)
       << "vjWallProjection::calcWallProjection:    Xformed eye:" << eye_xformed
-      << std::endl << vjDEBUG_FLUSH;
+      << std::endl << vprDEBUG_FLUSH;
 
    // Compute dist from eye to screen/edges
    eye_to_screen = mOriginToScreen + eye_xformed[VJ_Z];
@@ -148,12 +148,12 @@ void WallProjection::calcViewFrustum(Matrix& eyePos)
 
    mFocusPlaneDist = eye_to_screen;    // Needed for drawing
 
-   vjDEBUG(vjDBG_DISP_MGR,7)
+   vprDEBUG(vrjDBG_DISP_MGR,7)
       << "vjWallProjection::calcWallProjection: \n\tFrustum: " << mFrustum
-      << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_DISP_MGR,7)
+      << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DISP_MGR,7)
       << "vjWallProjection::calcWallProjection: B4 Trans:\n"
-      << mWallRotationMatrix << std::endl << vjDEBUG_FLUSH;
+      << mWallRotationMatrix << std::endl << vprDEBUG_FLUSH;
 }
 
 

@@ -83,33 +83,33 @@ bool XercesXMLParser::readFile (const std::string& file_name, DOM_Node& doc) {
         parser->parse(file_name.c_str());
     }
     catch (const XMLException& e) {
-        vjDEBUG(vjDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") <<
+        vprDEBUG(vprDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") <<
             "XercesXMLParser threw XMLException: " << e.getMessage() <<
-            "\n" << vjDEBUG_FLUSH;
+            "\n" << vprDEBUG_FLUSH;
         retval = false;
     }
     catch (SAXParseException& e) {
         char* id = (DOMString(e.getSystemId())).transcode();
         char* msg = (DOMString(e.getMessage())).transcode();
-        vjDEBUG (vjDBG_ERROR,1) << clrOutNORM (clrRED, "ERROR:") <<
+        vprDEBUG (vprDBG_ERROR,1) << clrOutNORM (clrRED, "ERROR:") <<
             " in file \"" << id << "\", line " << e.getLineNumber() <<
             ", column " << e.getColumnNumber() << ": " <<
-            msg << "\n" << vjDEBUG_FLUSH;
+            msg << "\n" << vprDEBUG_FLUSH;
         delete[] id;
         delete[] msg;
         retval = false;
     }
     // Supposedly this one will never happen.
 //     catch (const DOM_DOMException& e) {
-//         vjDEBUG(vjDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") <<
+//         vprDEBUG(vprDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") <<
 //             "XercesXMLParser threw DOMException: " << //e.getMessage() <<
-//             "\n" << vjDEBUG_FLUSH;
+//             "\n" << vprDEBUG_FLUSH;
 //         retval = false;
 //     }
     catch (...) {
-        vjDEBUG(vjDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") <<
+        vprDEBUG(vprDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") <<
             " XercesXMLParser threw unidentified exception.\n" <<
-            vjDEBUG_FLUSH;
+            vprDEBUG_FLUSH;
         retval = false;
     }
     if (retval) {
@@ -128,31 +128,31 @@ bool XercesXMLParser::readStream (std::istream& input, DOM_Node& doc) {
         parser->parse(input_source);
     }
     catch (const XMLException& e) {
-        vjDEBUG(vjDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") <<
+        vprDEBUG(vprDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") <<
             "XercesXMLParser threw XMLException: " << e.getMessage() <<
-            "\n" << vjDEBUG_FLUSH;
+            "\n" << vprDEBUG_FLUSH;
         retval = false;
     }
     catch (SAXParseException& e) {
         char* msg = (DOMString(e.getMessage())).transcode();
-        vjDEBUG (vjDBG_ERROR,1) << clrOutNORM (clrRED, "ERROR:") <<
+        vprDEBUG (vprDBG_ERROR,1) << clrOutNORM (clrRED, "ERROR:") <<
             " in file \"<unnamed stream>\", line " << e.getLineNumber() <<
             ", column " << e.getColumnNumber() << ": " <<
-            msg << "\n" << vjDEBUG_FLUSH;
+            msg << "\n" << vprDEBUG_FLUSH;
         delete[] msg;
         retval = false;
     }
     // Supposedly this one will never happen.
 //     catch (const DOM_DOMException& e) {
-//         vjDEBUG(vjDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") <<
+//         vprDEBUG(vprDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") <<
 //             "XercesXMLParser threw DOMException: " << //e.getMessage() <<
-//             "\n" << vjDEBUG_FLUSH;
+//             "\n" << vprDEBUG_FLUSH;
 //         retval = false;
 //     }
     catch (...) {
-        vjDEBUG(vjDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") <<
+        vprDEBUG(vprDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") <<
             " XercesXMLParser threw unidentified exception.\n" <<
-            vjDEBUG_FLUSH;
+            vprDEBUG_FLUSH;
         retval = false;
     }
     if (retval) {

@@ -75,23 +75,23 @@ void Display::configDisplayWindow(ConfigChunk* chunk)
    // NOTE: If there are errors, set them to some default value
    if(sizeX <= 0)
    {
-      vjDEBUG(vjDBG_DISP_MGR,2) << "WARNING: window sizeX set to: " << sizeX
+      vprDEBUG(vrjDBG_DISP_MGR,2) << "WARNING: window sizeX set to: " << sizeX
                                 << ".  Setting to 10." << std::endl
-                                << vjDEBUG_FLUSH;
+                                << vprDEBUG_FLUSH;
       sizeX = 10;
    }
 
    if(sizeY <= 0)
    {
-      vjDEBUG(vjDBG_DISP_MGR,2) << "WARNING: window sizeY set to: " << sizeY
+      vprDEBUG(vrjDBG_DISP_MGR,2) << "WARNING: window sizeY set to: " << sizeY
                                 << ".  Setting to 10." << std::endl
-                                << vjDEBUG_FLUSH;
+                                << vprDEBUG_FLUSH;
       sizeY = 10;
    }
 
    if(pipe < 0)
    {
-      vjDEBUG(vjDBG_DISP_MGR,2) << "WARNING: pipe was negative, pipe set to: " << pipe << ".  Setting to 0.\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_DISP_MGR,2) << "WARNING: pipe was negative, pipe set to: " << pipe << ".  Setting to 0.\n" << vprDEBUG_FLUSH;
       pipe = 0;
    }
 

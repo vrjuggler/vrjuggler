@@ -73,7 +73,7 @@ public:
    /* Constructor/Destructors */
    Digital()
    {
-      //vjDEBUG(vjDBG_ALL,4)<<"*** Digital::Digital()\n"<< vjDEBUG_FLUSH;
+      //vprDEBUG(vprDBG_ALL,4)<<"*** Digital::Digital()\n"<< vprDEBUG_FLUSH;
    }
 
    virtual ~Digital()
@@ -82,7 +82,7 @@ public:
 
    virtual bool config(ConfigChunk* c)
    {
-      //vjDEBUG(vjDBG_ALL,4)<<"*** Digital::config()\n"<< vjDEBUG_FLUSH;
+      //vprDEBUG(vprDBG_ALL,4)<<"*** Digital::config()\n"<< vprDEBUG_FLUSH;
       return true;;
    }
 

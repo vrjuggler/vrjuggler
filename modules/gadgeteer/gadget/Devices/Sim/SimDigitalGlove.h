@@ -85,7 +85,7 @@ public:
    // dev = finger (see finger enum above)
    virtual int getDigitalData( int dev = 0 )
    {
-      //vjDEBUG(vjDBG_ALL,0)<<"*** SimDigitalGlove::getDigitalData("<<dev<<")\n"<< vjDEBUG_FLUSH;
+      //vprDEBUG(vprDBG_ALL,0)<<"*** SimDigitalGlove::getDigitalData("<<dev<<")\n"<< vprDEBUG_FLUSH;
       vprASSERT( dev < (int)mDigitalData.size() );    // Make sure we have enough space
       return mDigitalData[dev];
    }
@@ -93,17 +93,17 @@ public:
    /* These functions don't do anything */
    virtual int startSampling()
    {
-     //vjDEBUG(vjDBG_ALL,3)<<"start\n"<<vjDEBUG_FLUSH;
+     //vprDEBUG(vprDBG_ALL,3)<<"start\n"<<vprDEBUG_FLUSH;
      return 1;
    }
    virtual int stopSampling()
    {
-     //vjDEBUG(vjDBG_ALL,3)<<"stop\n"<<vjDEBUG_FLUSH;
+     //vprDEBUG(vprDBG_ALL,3)<<"stop\n"<<vprDEBUG_FLUSH;
      return 1;
    }
    virtual int sample()
    {
-     //vjDEBUG(vjDBG_ALL,3)<<"sample\n"<<vjDEBUG_FLUSH;
+     //vprDEBUG(vprDBG_ALL,3)<<"sample\n"<<vprDEBUG_FLUSH;
      return 1;
    }
 
