@@ -326,6 +326,10 @@ jccl_cxxflags="$STD_FLAGS"
 # left.
 jccl_dep_scripts='vpr-config'
 
+if test "x$HAVE_TWEEK_CXX" = "xY" ; then
+   jccl_dep_scripts="tweek-config $jccl_dep_scripts"
+fi
+
 # If the user has a local copy of CppDOM, add its path to the C++ flags.
 if test "x$LOCAL_CPPDOM" = "xY" ; then
    jccl_cxxflags="$jccl_cxxflags $CPPDOM_INCLUDES"
