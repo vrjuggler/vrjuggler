@@ -43,7 +43,10 @@
 #include <Kernel/vjConfigChunkHandler.h>
 #include <Utils/vjSingleton.h>
 
-class vjBaseThread;
+namespace vpr
+{
+   class BaseThread;
+};
 class vjDisplayManager;
 class vjDrawManager;
 class vjEnvironmentManager;
@@ -191,7 +194,7 @@ public:      // Global "get" interface
    std::vector<vjUser*> getUsers()
    { return mUsers; }
 
-   const vjBaseThread* getThread()
+   const vpr::BaseThread* getThread()
    { return mControlThread; }
 
 protected:
@@ -199,7 +202,7 @@ protected:
    vjApp*      mNewApp;                      //: New application to set
    bool        mNewAppSet;                   //: Flag to notify that a new application should be set
 
-   vjBaseThread*   mControlThread;             //: The thread in control of me.
+   vpr::BaseThread*   mControlThread;             //: The thread in control of me.
 
    /// Factories and Managers
    vjSystemFactory*        mSysFactory;            //: The current System factory

@@ -39,8 +39,8 @@
 #include <vjConfig.h>
 #include <stdlib.h>
 
-#include <VPR/Sync/vjMutex.h>
-#include <VPR/Sync/vjGuard.h>
+#include <vpr/Sync/Mutex.h>
+#include <vpr/Sync/Guard.h>
 #include <Utils/vjStreamLock.h>
 #include <Utils/vjSingleton.h>
 
@@ -210,7 +210,7 @@ public:
    int getLevel()
    { return debugLevel; }
 
-   vjMutex& debugLock()
+   vpr::Mutex& debugLock()
    { return mDebugLock; }
 
    // Add a category name
@@ -234,7 +234,7 @@ private:
    int debugLevel;      // Debug level to use
    int indentLevel;     // Amount to indent
 
-   vjMutex          mDebugLock;
+   vpr::Mutex          mDebugLock;
 
    std::vector<bool> mAllowedCategories;      //: The categories we allow
    std::map<std::string,int> mCategoryNames; //: The names and id of allowed catagories
@@ -245,7 +245,7 @@ public:
    {
       if(_instance == NULL)                     // First check
       {
-         vjGuard<vjMutex> guard(_inst_lock);    // Serial critical section
+         vpr::Guard<vpr::Mutex> guard(_inst_lock);    // Serial critical section
          if (_instance == NULL)                 // Second check
             _instance = new vjDebug;
       }
@@ -254,7 +254,7 @@ public:
    }
 private:
    static vjDebug* _instance;
-   static vjMutex _inst_lock;
+   static vpr::Mutex _inst_lock;
    */
 vjSingletonHeader(vjDebug);
 };

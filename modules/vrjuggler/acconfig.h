@@ -42,30 +42,6 @@
 
 @TOP@
 
-/* Define all of the following to use POSIX threads. */
-#undef VJ_USE_PTHREADS
-#undef VJ_THREAD_SCOPE
-#undef VJ_POSIX_C_SOURCE
-#undef _THREAD_SAFE
-#undef RWSTD_MULTI_THREAD
-#undef RW_MULTI_THREAD
-#undef _REENTRANT
-
-/* Define if using POSIX threads Draft 4. */
-#undef _PTHREADS_DRAFT_4
-
-/* Define if using POSIX threads Draft 10 (the "final" draft). */
-#undef _PTHREADS_DRAFT_10
-
-/* Define to use POSIX semaphores. */
-#undef VJ_POSIX_SEMAPHORES
-
-/* Define to use the IRIX sproc(2) threading model instead of POSIX threads. */
-#undef VJ_IRIX_SPROC
-
-/* Define to use the NSPR subsystem. */
-#undef VJ_USE_NSPR
-
 /* Define to use the OpenGL API. */
 #undef VJ_API_OPENGL
 
@@ -136,9 +112,6 @@
 
 /* Definte if DTK is installed. */
 #undef VJ_HAVE_DTK
-
-/* Define to `int' if the socklen_t type is not available.  */
-#undef socklen_t
 
 /*
  * Define to `unsigned int' if the u_int and/or u_int32_t types are not

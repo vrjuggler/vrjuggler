@@ -33,7 +33,7 @@
 // VR Juggler
 #include <Kernel/vjKernel.h>     // vr juggler kernel
 #include <Kernel/vjProjection.h> // for setNearFar
-#include <VPR/vjSystem.h>
+#include <vpr/System.h>
 
 // the application
 #include <application.h>         // the application
@@ -82,6 +82,6 @@ int main( int argc, char* argv[] )
    std::cout << "Press CTRL-C to exit\n" << std::flush;
    while (1)
    {
-      vjSystem::usleep( 100000 );
+      vpr::System::usleep( 100000 );
    }
 }

@@ -39,7 +39,7 @@
 #include <Input/vjInput/vjIbox.h>
 #include <Input/ibox/hci.h>
 #include <Input/ibox/ibox.h>
-#include <VPR/vjSystem.h>
+#include <vpr/System.h>
 
 int main()
 {
@@ -73,7 +73,7 @@ int main()
 	std::cout << t1->getDigitalData(2);
 	std::cout << t1->getDigitalData(3);        
          std::cout << std::endl; 
-         vjSystem::sleep(2);
+         vpr::System::sleep(2);
     }
      break;
    }

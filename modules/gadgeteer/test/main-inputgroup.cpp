@@ -37,7 +37,7 @@
 #include <Input/vjPosition/vjFlock.h>
 #include <Input/vjInput/vjIbox.h>
 #include <VPR/SharedMem/vjMemPool.h>
-#include <VPR/vjSystem.h>
+#include <vpr/System.h>
 
 int main()
 {
@@ -113,7 +113,7 @@ int main()
       << "Y: " << data0->y << "  " << data1->y << "  " << data2->y << endl
       << "Z: " << data0->z << "  " << data1->z << "  " << data2->z << endl;
 
-      vjSystem::sleep(1);
+      vpr::System::sleep(1);
    }
 
    aFlock->stopSampling();
@@ -137,7 +137,7 @@ int main()
                 << input_manager->getDinput_managerData(1);
       std::cout << " dinput_managerital2: "
                 << input_manager->getDinput_managerData(2) << std::endl;
-      vjSystem::sleep(1);
+      vpr::System::sleep(1);
    }
 
 

@@ -40,7 +40,7 @@
 
 /*
 vjConfigManager* vjConfigManager::_instance = NULL;
-vjMutex  vjConfigManager::_inst_lock;
+vpr::Mutex  vjConfigManager::_inst_lock;
 */
 vjSingletonImp(vjConfigManager);
 

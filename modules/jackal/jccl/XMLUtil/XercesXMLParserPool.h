@@ -66,7 +66,7 @@ private:
     parser_v free_parsers;
     parser_v used_parsers;
 
-    vjMutex pool_lock;
+    vpr::Mutex pool_lock;
 
     vjXercesXMLParserPool(const vjXercesXMLParserPool& o) {;}
     void operator=(const vjXercesXMLParserPool& o) {;}

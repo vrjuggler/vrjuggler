@@ -57,14 +57,6 @@ DPP_GEN_RECONFIG
 
 DPP_STD_CPP(yes)
 
-# Define which threading model to use.  Possible values are "SPROC", "POSIX",
-# "WIN32", or "NSPR".
-# The default is "SPROC".
-AC_ARG_ENABLE(subsystem,
-              [  --enable-subsystem=<SPROC|POSIX|WIN32|NSPR>
-                          Define OS abstraction subsystem],
-              SUBSYSTEM="$enableval", SUBSYSTEM='none')
-
 AC_ARG_ENABLE(sound,
               [  --enable-sound          Enable AudioJuggler sound       [default=no]],
               AJSOUNDMANAGER="$enableval", AJSOUNDMANAGER='no')
@@ -120,11 +112,6 @@ AC_ARG_ENABLE(performance,
                 fi
               ], _enable_perf='SGI')
 
-# This enables the use of so-called "NSPR threads".  By default, NSPR is not
-# compiled to use NSPR threads, so we do not want to use them by default
-# either.
-DPP_ENABLE_NSPR_THREADS(no)
-
 # -------------------------------------------- #
 # --with-pkg[=arg] and --without-pkg arguments #
 # -------------------------------------------- #
@@ -176,22 +163,11 @@ case $target_os in
     irix6*)
         DBG_FLAGS="$DBG_FLAGS -gslim"
 
-        if test "x$SUBSYSTEM" = "xnone" ; then
-            AC_MSG_WARN(*** Forcing the use of SPROC subsystem ***)
-            SUBSYSTEM='SPROC'
-        fi
-
         AC_DEFINE(VJ_OS_IRIX,)
         AC_DEFINE(_BSD_TYPES,)
         ;;
     # HP PA-RISC machine running HP-UX 10.20.
     hpux10.20)
-        # We have to use the NSPR subsystem on HP-UX 10.20.
-        if test "x$SUBSYSTEM" != "xNSPR" ; then
-            AC_MSG_WARN(*** Forcing the use of NSPR subsystem ***)
-            SUBSYSTEM='NSPR'
-        fi
-
         AC_DEFINE(VJ_OS_HPUX,)
         AC_DEFINE(VJ_HPUX_VERSION, 10)
         AC_DEFINE(_INCLUDE_TERMIO,)
@@ -212,22 +188,12 @@ case $target_os in
     freebsd*)
         CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
 
-        if test "x$SUBSYSTEM" = "xnone" ; then
-            AC_MSG_WARN(*** Forcing the use of POSIX subsystem ***)
-            SUBSYSTEM='POSIX'
-        fi
-
         AC_DEFINE(VJ_OS_FreeBSD,)
         ;;
     # A machine running Linux.  Currently only i386 is known to work.
     linux*)
         # CXXFLAGS="-fhonor-std -Wall -Werror-implicit-function-declaration $CXXFLAGS"
         CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
-
-        if test "x$SUBSYSTEM" = "xnone" ; then
-            AC_MSG_WARN(*** Forcing the use of POSIX subsystem ***)
-            SUBSYSTEM='POSIX'
-        fi
 
         AC_DEFINE(VJ_OS_Linux,)
         ;;
@@ -236,20 +202,10 @@ case $target_os in
     solaris*)
         CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
 
-        if test "x$SUBSYSTEM" = "xnone" ; then
-            AC_MSG_WARN(*** Forcing the use of POSIX subsystem ***)
-            SUBSYSTEM='POSIX'
-        fi
-
         AC_DEFINE(VJ_OS_Solaris,)
         ;;
     # IBM RS/6000 running AIX.
     aix*)
-        if test "x$SUBSYSTEM" = "xnone" ; then
-            AC_MSG_WARN(*** Forcing the use of POSIX subsystem ***)
-            SUBSYSTEM='POSIX'
-        fi
-
         AC_DEFINE(VJ_OS_AIX)
         ;;
     # i386-class machine running Windows {98,NT} with Cygnus GNU-Win32.
@@ -260,20 +216,9 @@ case $target_os in
             _enable_perf='NONE'
         fi
 
-        # We have to use Win32 subsystem on Win32.
-        if test "x$SUBSYSTEM" = "xnone" ; then
-            AC_MSG_WARN(*** Forcing the use of WIN32 subsystem ***)
-            SUBSYSTEM='WIN32'
-        fi
-
         AC_DEFINE(VJ_OS_Win32,)
         ;;
     darwin1.*)
-        if test "x$SUBSYSTEM" != "xNSPR" ; then
-            AC_MSG_WARN(*** Forcing the use of NSPR subsystem ***)
-            SUBSYSTEM='NSPR' 
-        fi
-
         AC_DEFINE(VJ_OS_Darwin,)
         AC_DEFINE(_BSD_TYPES,) 
         ;;
@@ -314,17 +259,6 @@ fi
 # -----------------------------------------------------------------------------
 VJ_COMPILER_SETUP
 
-# Now check to see if the compiler accepts the -pthread option.
-if test "x$SUBSYSTEM" != "xSPROC" -a "x$SUBSYSTEM" != "xWIN32" -a \
-        "x$NSPR_THREADS_ENABLED" != "xyes"
-then
-    DPP_CC_PTHREAD_ARG
-
-    if test "x$CC_ACCEPTS_PTHREAD" = "xno" ; then
-        DPP_CC_PTHREADS_ARG
-    fi
-fi
-
 # Check for the JDK.
 DPP_PATH_JAVA
 
@@ -352,103 +286,7 @@ DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-
-# Shared memory and synchronization primitives.
-SEMAPHORE_SYS=''		# POSIX, SPROC, WIN32, NSPR
-MUTEX_SYS=''			# POSIX, SPROC, WIN32, NSPR
-SHMEM_SYS=''			# POSIX, SPROC, WIN32, NSPR
-THREAD_SYS=''			# POSIX, SPROC, WIN32, NSPR
-
-# Find the library with the pthreads symbols.
-if test "x$SUBSYSTEM" = "xPOSIX" ; then
-    DPP_GET_PTHREAD_LIB
-
-    # If $PTHREAD_LIB has a value at this point, then the pthread
-    # libraries needed are in $LIBS, so now we make a check for the draft
-    # revision being used.  This is done by determining if pthread_kill()
-    # is in the library.  If it is, Draft 10 is in use.  Otherwise, assume
-    # it is Draft 4.
-    if test "$xPTHREAD_LIB" != "x" ; then
-        DPP_GET_PTHREAD_VER($PLATFORM, VJ_POSIX_C_SOURCE)
-
-        # Define the default thread scope depending on the platform.  On
-        # IRIX, only process scope is avaiable without special configuration
-        # options.  Other systems may support system scope.
-        if test "$PLATFORM" = "IRIX" ; then
-            AC_DEFINE(VJ_THREAD_SCOPE, PTHREAD_SCOPE_PROCESS)
-        else
-            AC_DEFINE(VJ_THREAD_SCOPE, PTHREAD_SCOPE_SYSTEM)
-        fi
-
-        USE_PTHREADS='yes'
-        DPP_GET_POSIX_SEMAPHORE_LIB( ,
-            AC_MSG_ERROR(*** POSIX semaphores are required for POSIX subsystem ***))
-    else
-        AC_MSG_WARN(*** POSIX threads will not be used (no library found) ***)
-    fi
-
-    # Do not define _POSIX_C_SOURCE here because it will cause problems when
-    # compiling on IRIX.  Instead, define that in the source files where
-    # appropriate.
-    AC_DEFINE(VJ_USE_PTHREADS,)
-    AC_DEFINE(VJ_POSIX_SEMAPHORES,)
-    AC_DEFINE(RWSTD_MULTI_THREAD,)
-    AC_DEFINE(RW_MULTI_THREAD,)
-    AC_DEFINE(_THREAD_SAFE,)
-
-    # On Linux, defining _THREAD_SAFE is the same as defining _REENTRANT, so
-    # we will not define both.
-    if test "x$PLATFORM" != "xLinux" ; then
-        AC_DEFINE(_REENTRANT,)
-    fi
-
-    # Use POSIX threading, mutexes and shared memory.
-    MUTEX_SYS='POSIX'
-    SHMEM_SYS='POSIX'
-    THREAD_SYS='POSIX'
-    SEMPANORE_SYS='POSIX'
-# We are using WIN32 threads.
-elif test "x$SUBSYSTEM" = "xWIN32" ; then
-    # Set to Win32 threading, synchronization and shared memory.
-    SEMPANORE_SYS='WIN32'
-    THREAD_SYS='WIN32'
-    MUTEX_SYS='WIN32'
-    SHMEM_SYS='WIN32'
-# If we are not using POSIX threads, we must be using the IRIX sproc(2) model,
-# but we test $SUBSYSTEM just to be sure it is set right.
-elif test "x$SUBSYSTEM" = "xSPROC" ; then
-    AC_CHECK_HEADERS(sys/prctl.h, ,
-        AC_MSG_ERROR(*** IRIX sproc(2) threading will not be used (no headers found) ***))
-
-    AC_DEFINE(VJ_IRIX_SPROC,)
-
-    # Set to IRIX sproc threading, synchronization and shared memory.
-    THREAD_SYS='SPROC'
-    SEMAPHORE_SYS='SPROC'
-    SHMEM_SYS='SPROC'
-    MUTEX_SYS='SPROC'
-# NSPR subsystem.
-else
-    if test "x$NSPR_THREADS_ENABLED" = "xno" -a "x$OS_TYPE" = "xUNIX" ; then
-        DPP_GET_PTHREAD_LIB
-        DPP_GET_POSIX_SEMAPHORE_LIB( ,
-            AC_MSG_ERROR(*** POSIX semaphores are required for NSPR subsystem ***))
-        USE_PTHREADS='yes'
-    else
-        USE_PTHREADS='no'
-    fi
-
-    DPP_HAVE_NSPR(4.0, "$USE_PTHREADS",
-        AC_MSG_ERROR(*** NSPR requried for compiling ***))
-
-    AC_DEFINE(VJ_USE_NSPR,)
-
-    # Set to NSPR threading, synchronization and shared memory.
-    SEMPANORE_SYS='NSPR'
-    THREAD_SYS='NSPR'
-    MUTEX_SYS='NSPR'
-    SHMEM_SYS='NSPR'
-fi
+VPR_PATH(0.3.0, , AC_MSG_ERROR(*** VPR required for Plexus***))
 
 # ------------
 # OpenGL API.
@@ -553,6 +391,8 @@ fi
 # ----
 try_dtk='no'
 
+# XXX/TODO: broken...
+#
 # We can use DTK in one of the following two situations:
 #     1) If the NSPR subsystem is enabled, the target platform is UNIX-based,
 #        and NSPR threads are not being used.
@@ -715,20 +555,6 @@ AC_CHECK_HEADERS(fcntl.h limits.h strings.h sys/file.h sys/ioctl.h	\
 AC_TYPE_PID_T
 AC_TYPE_SIZE_T
 
-# The following checks for availability of the socklen_t type.  Since it is
-# supposed to be defined in sys/socket.h, the usual AC_CHECK_TYPE method will
-# not work.
-AC_CACHE_CHECK(for socklen_t, ac_cv_has_socklen_t,
-    AC_TRY_COMPILE([#include <sys/types.h>
-                    #include<sys/socket.h> ],
-                   [ socklen_t var; ],
-                   ac_cv_has_socklen_t='yes',
-                   ac_cv_has_socklen_t='no'))
-
-if test "x$ac_cv_has_socklen_t" = "xno" ; then
-    AC_DEFINE(socklen_t, int)
-fi
-
 DPP_CHECK_TYPE_POSIX
 
 # -----------------------------------------------------------------------------
@@ -804,26 +630,17 @@ EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" = "xno" ; then
     CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
-    CXXFLAGS="$CXXFLAGS -woff 3322 -w2"
+    CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS -woff 3322 -w2"
     EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -J4 -all"
 elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     CFLAGS="$CFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
-    CXXFLAGS="$CXXFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
+    CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
     EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /nologo /incremental:no"
     DBG_FLAGS="$DBG_FLAGS /MTd"
     OPT_FLAGS="$OPT_FLAGS /MT"
 fi
 
 DPP_SYSTEM_SUBST
-
-# If we are using pthreads, add the library containing the pthread calls to
-# $LIBS.  This must be done here because the $APP_VJ_LIBS* stuff below uses
-# $LIBS.
-if test "x$USE_PTHREADS" = "xyes" ; then
-    DPP_PTHREAD_FINISH
-fi
-
-INCLUDES="$INCLUDES $NSPR_INCLUDES"
 
 # For makedepend(1) to work properly on HP-UX with aCC, we have to include
 # these extra paths.
@@ -839,17 +656,20 @@ fi
 # the directory where configure is being run ($topdir).
 cd "$srcdir"
 VJROOT_ABS=`pwd`
+cd "$VJROOT_ABS/../.."
+JUGGLERROOT_ABS=`pwd`
 cd "$topdir"
 
 # Define the base path to the source directory using $(VJROOT_ABS) as an
 # alternative to using $(srcdir).
 VJ_SRCDIR='$(VJROOT_ABS)'
 UNIX_VJROOT_ABS="$VJROOT_ABS"
+UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $LIBS $XERCES_LDFLAGS $XERCES_LIB.lib comctl32.lib user32.lib gdi32.lib ws2_32.lib"
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS $LIBS $XERCES_LDFLAGS $XERCES_LIB.lib comctl32.lib user32.lib gdi32.lib ws2_32.lib"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $PTHREAD_ARG $XERCES_LDFLAGS -l$XERCES_LIB $LIBS $DTK_LDFLAGS $NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB -lm"
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS $XERCES_LDFLAGS -l$XERCES_LIB $LIBS $DTK_LDFLAGS -lm"
 fi
 
 # Variables set in Makefiles found in the application trees.  All variables
@@ -927,6 +747,7 @@ fi
 # Translate paths from UNIX-style to Win32.
 if test "x$OS_TYPE" = "xWin32" ; then
     SAFE_VJROOT_ABS=`unix2dos -p "$VJROOT_ABS"`
+    SAFE_JUGGLERROOT_ABS=`unix2dos -p "$JUGGLERROOT_ABS"`
     VJ_SRCDIR=`unix2dos "$VJ_SRCDIR"`
 
     DEPEND_EXTRAS=`unix2dos "$DEPEND_EXTRAS"`
@@ -943,6 +764,7 @@ if test "x$OS_TYPE" = "xWin32" ; then
     APP_EXTRA_LIBS_OSG=`unix2dos "$APP_EXTRA_LIBS_OSG"`
 else
     SAFE_VJROOT_ABS="$VJROOT_ABS"
+    SAFE_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 fi
 
 # Set up some sed expressions that will help separate the share directory from
@@ -961,55 +783,19 @@ VJ_SHARE_DIR=`echo "$datadir" | sed -e 's|^${prefix}/||'`
 VJ_SHARE_DIR=`echo "$VJ_SHARE_DIR" | sed -e "${_prefix_exp}"`
 
 # Information needed to generate juggler-config.
-case $SUBSYSTEM in
-    SPROC)
-        subsystem_cxxflags="$INCLUDES"
-        subsystem_libs="$SEM_LIB $SOCKET_LIB"
-        static_begin="-B static"
-        static_end="-B dynamic"
-        vrj_ldflags="-L\$prefix/lib$LIBBITSUF"
-        vrj_libs='-lJuggler -lJuggler_utils -lJuggler_ogl'
-        ;;
-    POSIX)
-        subsystem_cxxflags="$INCLUDES"
-        subsystem_libs="$PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
-
-        if test "x$GXX" = "xyes" ; then
-            static_begin="-Wl,-Bstatic"
-            static_end="-Wl,-Bdynamic"
-        else
-            static_begin="-B static"
-            static_end="-B dynamic"
-        fi
-
-        vrj_ldflags="-L\$prefix/lib$LIBBITSUF"
-        vrj_libs='-lJuggler -lJuggler_utils -lJuggler_ogl'
-        ;;
-    NSPR)
-        subsystem_cxxflags="$INCLUDES"
-        subsystem_libs="$NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
-
-        if test "x$GXX" = "xyes" ; then
-            static_begin="-Wl,-Bstatic"
-            static_end="-Wl,-Bdynamic"
-        else
-            static_begin="-B static"
-            static_end="-B dynamic"
-        fi
-
-        vrj_ldflags="-L\$prefix/lib$LIBBITSUF"
-        vrj_libs='-lJuggler -lJuggler_utils -lJuggler_ogl'
-        ;;
-    WIN32)
-        subsystem_cxxflags="$INCLUDES"
-        subsystem_libs="$NSPR_LIB comctl32.lib user32.lib gdi32.lib ws2_32.lib"
-        vrj_ldflags="/link /libpath:\$prefix/lib/debug $NSPR_LDFLAGS"
-        vrj_libs='Juggler.lib Juggler_utils.lib Juggler_ogl.lib'
-        ;;
-esac
-
 case $OS_TYPE in
     UNIX)
+        if test "x$GXX" = "xyes" ; then
+            static_begin="-Wl,-Bstatic"
+            static_end="-Wl,-Bdynamic"
+        else
+            static_begin="-B static"
+            static_end="-B dynamic"
+        fi
+
+        vrj_ldflags="-L\$prefix/lib$LIBBITSUF"
+        vrj_libs='-lJuggler -lJuggler_utils -lJuggler_ogl'
+
         Juggler_lib='-lJuggler'
         Juggler_utils_lib='-lJuggler_utils'
         Juggler_ogl_lib='-lJuggler_ogl'
@@ -1020,6 +806,9 @@ case $OS_TYPE in
 
         ;;
     WIN32)
+        vrj_ldflags="/link /libpath:\$prefix/lib/debug "
+        vrj_libs='Juggler.lib Juggler_utils.lib Juggler_ogl.lib'
+
         Juggler_lib='Juggler.lib'
         Juggler_utils_lib='Juggler_utils.lib'
         Juggler_ogl_lib='Juggler_ogl.lib'
@@ -1034,7 +823,9 @@ DPP_SUBST
 
 AC_SUBST(topdir)
 AC_SUBST(UNIX_VJROOT_ABS)
+AC_SUBST(UNIX_JUGGLERROOT_ABS)
 AC_SUBST(SAFE_VJROOT_ABS)
+AC_SUBST(SAFE_JUGGLERROOT_ABS)
 AC_SUBST(VJ_SRCDIR)
 AC_SUBST(VJ_SHARE_DIR)
 
@@ -1051,12 +842,6 @@ AC_SUBST(DTK_CONFIG)
 AC_SUBST(HAVE_DTK)
 AC_SUBST(XERCESROOT)
 
-AC_SUBST(SUBSYSTEM)
-AC_SUBST(SEMAPHORE_SYS)
-AC_SUBST(SHMEM_SYS)
-AC_SUBST(MUTEX_SYS)
-AC_SUBST(THREAD_SYS)
-
 AC_SUBST(DYLIB_DEPS_VJ)
 AC_SUBST(DYLIB_DEPS_UTILS)
 AC_SUBST(DYLIB_DEPS_GL)
@@ -1071,8 +856,6 @@ AC_SUBST(APP_EXTRA_LIBS_GL)
 AC_SUBST(APP_EXTRA_LIBS_PF)
 AC_SUBST(APP_EXTRA_LIBS_OSG)
 
-AC_SUBST(subsystem_cxxflags)
-AC_SUBST(subsystem_libs)
 AC_SUBST(static_begin)
 AC_SUBST(static_end)
 AC_SUBST(vrj_ldflags)
@@ -1109,31 +892,16 @@ AC_OUTPUT(Makefile
           Input/vjKeyboard/Makefile
           Input/vjPosition/Makefile
           Input/vjSim/Makefile
-	  Input/intersense/Makefile
+          Input/intersense/Makefile
           Kernel/Makefile
           Kernel/GL/Makefile
           Kernel/OSG/Makefile
           Kernel/Pf/Makefile
           Math/Makefile
           Performance/Makefile
-          SharedMem/Makefile
           Sound/Makefile
           Sound/pf/Makefile
-          Sync/Makefile
-          Threads/Makefile
           Utils/Makefile
-          VPR/Makefile
-          VPR/IO/Makefile
-          VPR/IO/Port/Makefile
-          VPR/IO/Socket/Makefile
-          VPR/SharedMem/Makefile
-          VPR/Sync/Makefile
-          VPR/Threads/Makefile
-          VPR/md/Makefile
-          VPR/md/NSPR/Makefile
-          VPR/md/POSIX/Makefile
-          VPR/md/SPROC/Makefile
-          VPR/md/WIN32/Makefile
           samples/Makefile
           samples/ogl/Makefile
           samples/ogl/combo/Makefile
@@ -1167,12 +935,9 @@ AC_OUTPUT(Makefile
           test/Performance/analyzer/Makefile
           test/Performance/perfdatabuffer-test/Makefile
           test/Quat/Makefile
-          test/SerialPort/Makefile 
-          test/Socket/Makefile 
           test/Sync/Makefile 
           test/input/Makefile
           test/testDynamicCastSTL/Makefile
-          test/threads/Makefile
           tools/Makefile
           Doc/Makefile
           release/mtree/VJ.data.dist

@@ -33,7 +33,7 @@
 
 #include <vjConfig.h>
 #include <Kernel/GL/vjGlDrawManager.h>
-#include <VPR/Threads/vjThread.h>
+#include <vpr/Thread/Thread.h>
 #include <Kernel/vjDisplayManager.h>
 #include <Kernel/vjKernel.h>
 
@@ -86,12 +86,12 @@ void vjGlDrawManager::start()
 {
    // --- Setup Multi-Process stuff --- //
    // Create a new thread to handle the control
-   vjThread* control_thread;
+   vpr::Thread* control_thread;
 
-   vjThreadMemberFunctor<vjGlDrawManager>* memberFunctor =
-      new vjThreadMemberFunctor<vjGlDrawManager>(this, &vjGlDrawManager::main, NULL);
+   vpr::ThreadMemberFunctor<vjGlDrawManager>* memberFunctor =
+      new vpr::ThreadMemberFunctor<vjGlDrawManager>(this, &vjGlDrawManager::main, NULL);
 
-   control_thread = new vjThread(memberFunctor);
+   control_thread = new vpr::Thread(memberFunctor);
 
    vjDEBUG(vjDBG_DRAW_MGR,1) << "vjGlDrawManager started. thread: "
                              << control_thread << std::endl << vjDEBUG_FLUSH;

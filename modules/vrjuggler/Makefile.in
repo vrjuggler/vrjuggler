@@ -132,12 +132,8 @@ SUBDIR		= Config	\
                   Kernel	\
                   Math		\
                   Performance	\
-                  SharedMem	\
                   Sound		\
-                  Sync		\
-                  Threads	\
-                  Utils		\
-                  VPR
+                  Utils
 
 # =============================================================================
 # Library targets.  The default is 'debug' as defined above.  The steps for 

@@ -128,7 +128,7 @@ bool vjSimDigitalGlove::config( vjConfigChunk* chunk )
 void vjSimDigitalGlove::updateData()
 {
    // this unlocks when this object is destructed (upon return of the function)
-   vjGuard<vjMutex> updateGuard(lock);
+   vpr::Guard<vpr::Mutex> updateGuard(lock);
 
    // Copy the valid data to the current data so that both are valid
    mTheData[0][current] = mTheData[0][valid];   // first hand

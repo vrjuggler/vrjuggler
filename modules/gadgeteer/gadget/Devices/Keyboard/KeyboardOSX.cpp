@@ -33,9 +33,9 @@
 #include <Input/vjKeyboard/vjOSXKeyboard.h>
 #include <Utils/vjDebug.h>
 #include <Kernel/vjDisplayManager.h>
-#include <VPR/Threads/vjThread.h>
+#include <vpr/Thread/Thread.h>
 #include <Config/vjConfigChunk.h>
-#include <VPR/vjSystem.h>
+#include <vpr/System.h>
 #include <ApplicationServices/ApplicationServices.h>
 
 //: Constructor
@@ -118,7 +118,7 @@ void vjOSXKeyboard::controlLoop(void* nullParam)
             sample();
             
 	usleep_time = mSleepTimeMS*1000;
-	vjSystem::usleep(usleep_time);
+	vpr::System::usleep(usleep_time);
         
         // This will update the window location/size information.  Which is needed to correctly lock and track the mouse
         if(mLockState == Unlocked)
@@ -151,11 +151,11 @@ int vjOSXKeyboard::startSampling()
    resetIndexes();      // Reset the buffering variables
       
    // Create a new thread to handle the control
-   vjThreadMemberFunctor<vjOSXKeyboard>* memberFunctor =
-      new vjThreadMemberFunctor<vjOSXKeyboard>(this, &vjOSXKeyboard::controlLoop, NULL);
+   vpr::ThreadMemberFunctor<vjOSXKeyboard>* memberFunctor =
+      new vpr::ThreadMemberFunctor<vjOSXKeyboard>(this, &vjOSXKeyboard::controlLoop, NULL);
 
-   vjThread* new_thread;
-   new_thread = new vjThread(memberFunctor);
+   vpr::Thread* new_thread;
+   new_thread = new vpr::Thread(memberFunctor);
    myThread = new_thread;
 
    return 1;
@@ -180,7 +180,7 @@ int vjOSXKeyboard::onlyModifier(int mod)
 
 void vjOSXKeyboard::updateData()
 {
-    vjGuard<vjMutex> guard(mKeysLock);      // Lock access to the m_keys array
+    vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
     // Scale mouse values based on sensitivity
     if(mHandleEventsHasBeenCalled)            // If we haven't updated anything, then don't swap stuff
     {
@@ -204,7 +204,7 @@ void vjOSXKeyboard::updateData()
 
 void vjOSXKeyboard::HandleEvents()
 {
-    vjGuard<vjMutex> guard(mKeysLock);      // Lock access to the m_keys array for the duration of this function
+    vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array for the duration of this function
     int vj_key = 255;
     int vjOSXKey = -1;
     int i = 0, j = 0;
@@ -330,7 +330,7 @@ int vjOSXKeyboard::stopSampling()
   if (myThread != NULL)
   {
     mExitFlag = true;
-    vjSystem::sleep(1);
+    vpr::System::sleep(1);
   }
 
   return 1;

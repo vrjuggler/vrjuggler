@@ -46,7 +46,7 @@
 #include <Environment/vjTimedUpdate.h>
 #include <Kernel/vjConfigManager.h>
 #include <Config/vjConfigTokens.h>
-#include <VPR/vjSystem.h>
+#include <vpr/System.h>
 //#include <Config/vjXMLConfigIO.h>
 
 #include <Environment/vjXMLConfigCommunicator.h>
@@ -163,20 +163,20 @@ bool vjConnect::startProcess() {
 
    if (mode == VJC_OUTPUT || mode == VJC_INTERACTIVE)
    {
-      vjThreadMemberFunctor<vjConnect> *writeMemberFunctor =
-      new vjThreadMemberFunctor<vjConnect>(this,
+      vpr::ThreadMemberFunctor<vjConnect> *writeMemberFunctor =
+      new vpr::ThreadMemberFunctor<vjConnect>(this,
                                            &vjConnect::writeControlLoop,
                                            NULL);
-      write_connect_thread = new vjThread (writeMemberFunctor);
+      write_connect_thread = new vpr::Thread (writeMemberFunctor);
       success = success && write_connect_thread;
    }
    if (mode == VJC_INPUT || mode == VJC_INTERACTIVE)
    {
-      vjThreadMemberFunctor<vjConnect> *readMemberFunctor =
-      new vjThreadMemberFunctor<vjConnect>(this,
+      vpr::ThreadMemberFunctor<vjConnect> *readMemberFunctor =
+      new vpr::ThreadMemberFunctor<vjConnect>(this,
                                            &vjConnect::readControlLoop,
                                            NULL);
-      read_connect_thread = new vjThread (readMemberFunctor);
+      read_connect_thread = new vpr::Thread (readMemberFunctor);
       success = success && read_connect_thread;
    }
 
@@ -314,7 +314,7 @@ void vjConnect::writeControlLoop(void* nullParam) {
 //          *outstream << "yet another test : ( \n" << flush;
 //          cout << " -done\n" << flush;
 
-        vjSystem::usleep (300000); // half a sec - find a better way to do this...
+        vpr::System::usleep (300000); // half a sec - find a better way to do this...
         if (!outstream)
             break;
 

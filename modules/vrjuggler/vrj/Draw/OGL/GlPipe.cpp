@@ -35,8 +35,8 @@
 #include <Kernel/vjKernel.h>
 #include <Kernel/GL/vjGlPipe.h>
 #include <Kernel/GL/vjGlApp.h>
-#include <VPR/Threads/vjThread.h>
-#include <VPR/Sync/vjGuard.h>
+#include <vpr/Thread/Thread.h>
+#include <vpr/Sync/Guard.h>
 #include <Utils/vjDebug.h>
 
 #include <Kernel/vjSurfaceViewport.h>
@@ -57,10 +57,10 @@ int vjGlPipe::start()
     vjASSERT(mThreadRunning == false);        // We should not be running yet
 
     // Create a new thread to handle the control loop
-    vjThreadMemberFunctor<vjGlPipe>* memberFunctor =
-         new vjThreadMemberFunctor<vjGlPipe>(this, &vjGlPipe::controlLoop, NULL);
+    vpr::ThreadMemberFunctor<vjGlPipe>* memberFunctor =
+         new vpr::ThreadMemberFunctor<vjGlPipe>(this, &vjGlPipe::controlLoop, NULL);
 
-    mActiveThread = new vjThread(memberFunctor);
+    mActiveThread = new vpr::Thread(memberFunctor);
 
     vjDEBUG(vjDBG_DRAW_MGR,1) << "vjGlPipe::start: Started control loop. "
                               << mActiveThread << std::endl << vjDEBUG_FLUSH;
@@ -75,7 +75,7 @@ void vjGlPipe::triggerRender()
    while(!mThreadRunning)
    {
       vjDEBUG(vjDBG_DRAW_MGR,vjDBG_HVERB_LVL) << "Waiting in for thread to start triggerRender.\n" << vjDEBUG_FLUSH;
-      vjThread::yield();
+      vpr::Thread::yield();
    }
 
    renderTriggerSema.release();
@@ -109,7 +109,7 @@ void vjGlPipe::completeSwap()
 // Control loop must now open the window on the next frame
 void vjGlPipe::addWindow(vjGlWindow* win)
 {
-   vjGuard<vjMutex> guardNew(newWinLock);       // Protect the data
+   vpr::Guard<vpr::Mutex> guardNew(newWinLock);       // Protect the data
    vjDEBUG(vjDBG_DRAW_MGR,3) << "vjGlPipe::addWindow: Pipe: " << mPipeNum
                              << " adding window (to new wins):\n" << win
                              << std::endl << vjDEBUG_FLUSH;
@@ -120,7 +120,7 @@ void vjGlPipe::addWindow(vjGlWindow* win)
 //! NOTE: The window is not actually removed until the next draw trigger
 void vjGlPipe::removeWindow(vjGlWindow* win)
 {
-   vjGuard<vjMutex> guardClosing(mClosingWinLock);
+   vpr::Guard<vpr::Mutex> guardClosing(mClosingWinLock);
    vjDEBUG(vjDBG_DRAW_MGR,3) << "vjGlPipe:: removeWindow: Pipe: " << mPipeNum
                              << " window added to closingWins.\n" << win
                              << std::endl << vjDEBUG_FLUSH;
@@ -198,9 +198,9 @@ void vjGlPipe::checkForWindowsToClose()
 {
    if(mClosingWins.size() > 0)   // If there are windows to close
    {
-      vjGuard<vjMutex> guardClosing(mClosingWinLock);
-      vjGuard<vjMutex> guardNew(newWinLock);
-      vjGuard<vjMutex> guardOpen(openWinLock);
+      vpr::Guard<vpr::Mutex> guardClosing(mClosingWinLock);
+      vpr::Guard<vpr::Mutex> guardNew(newWinLock);
+      vpr::Guard<vpr::Mutex> guardOpen(openWinLock);
 
       for(unsigned int i=0;i<mClosingWins.size();i++)
       {
@@ -242,8 +242,8 @@ void vjGlPipe::checkForNewWindows()
 {
    if (newWins.size() > 0)  // If there are new windows added
    {
-      vjGuard<vjMutex> guardNew(newWinLock);
-      vjGuard<vjMutex> guardOpen(openWinLock);
+      vpr::Guard<vpr::Mutex> guardNew(newWinLock);
+      vpr::Guard<vpr::Mutex> guardOpen(openWinLock);
 
       for (unsigned int winNum=0; winNum<newWins.size(); winNum++)
       {

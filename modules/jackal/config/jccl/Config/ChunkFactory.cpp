@@ -80,6 +80,6 @@ void vjChunkFactory::setupInitialEnvironment() {
 
 /*
 vjChunkFactory* vjChunkFactory::_instance = NULL;
-vjMutex  vjChunkFactory::_inst_lock;
+vpr::Mutex  vjChunkFactory::_inst_lock;
 */
 vjSingletonImp(vjChunkFactory);

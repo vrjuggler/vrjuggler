@@ -35,5 +35,5 @@
 
 #include <Kernel/vjSystem.h>
 
-vjSystem* vjSystem::_instance = NULL;
-vjSharedPool* vjSystem::baseMemPool = NULL;
+vpr::System* vpr::System::_instance = NULL;
+vjSharedPool* vpr::System::baseMemPool = NULL;

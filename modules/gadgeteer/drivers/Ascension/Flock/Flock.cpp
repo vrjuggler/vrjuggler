@@ -52,7 +52,7 @@
 #include <Utils/vjFileIO.h>
 #include <Input/vjPosition/aFlock.h>
 #include <Config/vjConfigChunk.h>
-#include <VPR/vjSystem.h>
+#include <vpr/System.h>
 #include <Input/vjPosition/vjFlock.h>
 
 // Helper to return the index for theData array
@@ -224,10 +224,10 @@ int vjFlock::startSampling()
       vjFlock* devicePtr = this;
 
       // Create a new thread to handle the control
-      vjThreadMemberFunctor<vjFlock>* memberFunctor =
-          new vjThreadMemberFunctor<vjFlock>(this, &vjFlock::controlLoop, NULL);
-      vjThread* new_thread;
-      new_thread = new vjThread(memberFunctor);
+      vpr::ThreadMemberFunctor<vjFlock>* memberFunctor =
+          new vpr::ThreadMemberFunctor<vjFlock>(this, &vjFlock::controlLoop, NULL);
+      vpr::Thread* new_thread;
+      new_thread = new vpr::Thread(memberFunctor);
       myThread = new_thread;
 
       if ( myThread == NULL )
@@ -253,7 +253,7 @@ int vjFlock::sample()
    sampletime.set();
    mFlockOfBirds.sample();
 
-   vjThread::yield();
+   vpr::Thread::yield();
 
    // For each bird
    for (i=0; i < (mFlockOfBirds.getNumBirds()); i++)
@@ -350,7 +350,7 @@ void vjFlock::updateData()
       return;
 
    // this unlocks when this object is destructed (upon return of the function)
-   vjGuard<vjMutex> updateGuard(lock);
+   vpr::Guard<vpr::Mutex> updateGuard(lock);
 
    // Copy the valid data to the current data so that both are valid
    for(int i=0;i<getNumBirds();i++)

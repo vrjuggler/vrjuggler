@@ -38,7 +38,7 @@
 #include <queue>
 #include <Environment/vjSocket.h>
 #include <Environment/vjNetCommunicator.h>
-#include <VPR/Threads/vjThread.h>
+#include <vpr/Thread/Thread.h>
 #include <Performance/vjTimeStamp.h>
 #include <Environment/vjCommand.h>
 
@@ -128,8 +128,8 @@ private:
     bool                    shutdown;        // set to stop procs
     std::string             name;
     std::string             filename;
-    vjThread*               read_connect_thread;
-    vjThread*               write_connect_thread;
+    vpr::Thread*               read_connect_thread;
+    vpr::Thread*               write_connect_thread;
     vjSocket*               sock;
     vjConnectMode           mode;
     bool                    read_die;    // if true, thread suicide
@@ -150,7 +150,7 @@ private:
 
     //: controls access to commands & timed_commands queues.
     //  could we dispense with this???
-    vjMutex                    commands_mutex;
+    vpr::Mutex                    commands_mutex;
 
     //: used to see if it's time to spring a timed_command
     vjTimeStamp             current_time;

@@ -48,7 +48,7 @@
 #include <vjConfig.h>
 #include <Input/vjInput/vjInput.h>
 #include <Input/vjPosition/vjPosition.h>
-#include <VPR/Threads/vjThread.h>
+#include <vpr/Thread/Thread.h>
 #include <Input/vjPosition/aFlock.h>
 
 //----------------------------------------------------------------------------
@@ -259,7 +259,7 @@ private:
 
     int getBirdIndex(int birdNum, int bufferIndex);
 
-    vjThread*   myThread;      // The thread doing the flock sampling
+    vpr::Thread*   myThread;      // The thread doing the flock sampling
 
     aFlock mFlockOfBirds;
 };

@@ -42,8 +42,8 @@ class vjConfigChunk;
 #include <Config/vjConfigChunkDB.h>
 #include <Config/vjChunkDescDB.h>
 //#include <Config/vjChunkFactory.h>
-#include <VPR/Sync/vjMutex.h>
-#include <VPR/Sync/vjGuard.h>
+#include <vpr/Sync/Mutex.h>
+#include <vpr/Sync/Guard.h>
 #include <list>
 
 #include <Utils/vjSingleton.h>
@@ -75,7 +75,7 @@ public: // -- Query functions --- //
    //! NOTE: This locks the active list to do processing
    bool isChunkInActiveList(std::string chunk_name)
    {
-   vjGuard<vjMutex> guard(mActiveLock);     // Lock the current list
+   vpr::Guard<vpr::Mutex> guard(mActiveLock);     // Lock the current list
 
       std::vector<vjConfigChunk*>::iterator i;
       for(i=mActiveConfig.begin(); i != mActiveConfig.end();i++)
@@ -253,12 +253,12 @@ public:
 private:
    vjConfigChunkDB            mActiveConfig;   //: List of current configuration
    std::list<vjPendingChunk>  mPendingConfig;   //: List of pending configuration changes
-   vjMutex                    mPendingLock;     //: Lock on pending list
-   vjMutex                    mActiveLock;     //: Lock for current config list
+   vpr::Mutex                    mPendingLock;     //: Lock on pending list
+   vpr::Mutex                    mActiveLock;     //: Lock for current config list
 
    // The following variables are used to implment some logic
    // that "stales" the pending list.   (see pendingNeedsChecked)
-   vjMutex                    mPendingCountMutex;
+   vpr::Mutex                    mPendingCountMutex;
    int                        mPendingCheckCount;  //: How many pending checks since last change to pending
    int                        mLastPendingSize;    //: The size of pending at last check
 protected:
@@ -273,7 +273,7 @@ public:
    {
       if(_instance == NULL)                     // First check
       {
-         vjGuard<vjMutex> guard(_inst_lock);    // Serial critical section
+         vpr::Guard<vpr::Mutex> guard(_inst_lock);    // Serial critical section
          if (_instance == NULL)                 // Second check
             _instance = new vjConfigManager;
       }
@@ -284,7 +284,7 @@ public:
 
 private:
    static vjConfigManager* _instance;   //: The instance
-   static vjMutex _inst_lock;
+   static vpr::Mutex _inst_lock;
    */
    vjSingletonHeader(vjConfigManager);
 };

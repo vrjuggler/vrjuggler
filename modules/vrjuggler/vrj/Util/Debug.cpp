@@ -32,14 +32,14 @@
 
 #include <vjConfig.h>
 
-#include <VPR/Sync/vjMutex.h>
+#include <vpr/Sync/Mutex.h>
 #include <Utils/vjStreamLock.h>
 #include <Utils/vjDebug.h>
 
 
 /*
 vjDebug* vjDebug::_instance = NULL;
-vjMutex  vjDebug::_inst_lock;
+vpr::Mutex  vjDebug::_inst_lock;
 */
 
 vjSingletonImp(vjDebug);
@@ -47,8 +47,8 @@ vjSingletonImp(vjDebug);
 #include <vjConfig.h>
 #include <stdlib.h>
 
-#include <VPR/Sync/vjMutex.h>
-#include <VPR/Threads/vjThread.h>
+#include <vpr/Sync/Mutex.h>
+#include <vpr/Thread/Thread.h>
 //#include <Kernel/vjStreamLock.h>
 
 
@@ -93,7 +93,7 @@ std::ostream& vjDebug::getStream(int cat, int level, bool show_thread_info,
    // --- Create stream header --- //
    /*
    if(show_thread_info)
-      std::cout << vjDEBUG_STREAM_LOCK << vjThread::self() << " VJ:";
+      std::cout << vjDEBUG_STREAM_LOCK << vpr::Thread::self() << " VJ:";
    else
       std::cout << vjDEBUG_STREAM_LOCK << "              ";
    */
@@ -101,7 +101,7 @@ std::ostream& vjDebug::getStream(int cat, int level, bool show_thread_info,
    // Ouput thread info
    // If not, then output space if we are also using indent (assume this means new line used)
    if(show_thread_info)
-      std::cout << "[" << vjThread::self() << "] VJ: ";
+      std::cout << "[" << vpr::Thread::self() << "] VJ: ";
    else if(use_indent)
       std::cout << "                  ";
 
