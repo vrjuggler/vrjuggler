@@ -15,6 +15,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef __sun
+#include <sys/filio.h>
+#endif
+
 #include "isense.h"
 #include "isdriver.h"
 #include "wsock.h"
