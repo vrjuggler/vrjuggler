@@ -754,8 +754,8 @@ AC_CONFIG_FILES([
    test/Draw/OGL/torus/Makefile
    test/Draw/OGL/WallTest/Makefile
    test/Draw/OGL/wand/Makefile
-   test/Perfmon/Makefile
-   test/Perfmon/collideApp/Makefile
+   test/PerfMon/Makefile
+   test/PerfMon/collideApp/Makefile
    test/RTRC/Makefile
    test/TestSuite/Makefile
    test/TestSuite/test.defs.mk
