@@ -51,7 +51,8 @@
 namespace tweek
 {
 
-/**
+/** \class CorbaService CorbaService.h tweek/Client/CorbaService.h
+ *
  * This is a convenience class that wraps all CORBA functionality that will be
  * needed by Tweek client code.
  */
