@@ -14,10 +14,11 @@ Released: <month> <day>, 2002
  Version: 0.14.0
 Released: May 23, 2002
     Required changes when upgrading from all previous versions:
-        * Use of vpr::InetAddr and vpr::Uint64 in STL hash types (e.g.,
+        * Use of vpr::InetAddr, vpr::Uint64, vpr::GUID in STL hash types (e.g.,
           std::hash_map<> and std::hash_set<>) requires that third template
           parameter be specified.  This parameter names the hasher.  The
-          hashers are vpr::InetAddrHash and vpr::Uint64Hash.
+          hashers are vpr::InetAddr::hash, vpr::Uint64Hash, and
+          vpr::GUID::hash.
 
  Version: 0.12.0
 Released: April 1, 2002

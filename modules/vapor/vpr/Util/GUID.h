@@ -221,6 +221,18 @@ public:
 
    static const vpr::GUID NullGUID;
 
+   /**
+    * Hasher for vpr::GUID.  This can be used with std::hash_map and
+    * friends.
+    */
+   struct hash
+   {
+      vpr::Uint32 operator() (const vpr::GUID& guid) const
+      {
+         return guid.mGuid.packed.l0 + guid.mGuid.packed.l1 + guid.mGuid.packed.l2 + guid.mGuid.packed.l3;
+      }
+   };
+
 private:
 
    /**
@@ -239,20 +251,6 @@ inline std::ostream& operator<<(std::ostream& out, const vpr::GUID& guid)
    out << guid.toString();
    return out;
 }
-
-}
-
-// --- HASH Functions ---- //
-namespace vpr
-{
-
-struct GUIDHash
-{
-   vpr::Uint32 operator() (const vpr::GUID& guid) const
-   {
-      return guid.mGuid.packed.l0 + guid.mGuid.packed.l1 + guid.mGuid.packed.l2 + guid.mGuid.packed.l3;
-   }
-};
 
 }
 
