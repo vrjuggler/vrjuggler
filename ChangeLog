@@ -1,5 +1,8 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jun-10-2002 patrickh  Fixed a bug in the declaration of vjDeviceConstructor
+                      that prevented user-defined devices from registering.
+                      Submitted by Daniel Keefe <dfk@cs.brown.edu>.
 Jun-09-2002 patrickh  Fixed a bug that prevented stereo from being enabled on
                       Win32.  Submitted by Romano Jose Magacho da Silva
                       <mgacho@predialnet.com.br>.
