@@ -52,7 +52,7 @@ public:
    //
    // function will auto scale your model based on the units you provide,
    // default is no conversion.
-   static pfNode* autoloadFile( std::string fileName, const units& un );
+   static pfNode* autoloadFile(const std::string& fileName, const pfFileIO::units& un );
 
    //: Write node to File
    // stores the geometry under node, in file originalFltName.pbf
@@ -65,9 +65,9 @@ public:
 
    //: check the filename.  Does it look like it is already optimized?
    //  returns true if so.
-   static bool isOptimized( const std::string& fileName )
+   static bool isOptimized( const std::string& fileName );
 
-   
+
    // returns a DCS that will scale an flt model to the suitable size for
    // viewing in a cave environment.
    // setting the units in multigen doesn't seem to do anything, but if anything
