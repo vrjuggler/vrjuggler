@@ -133,17 +133,6 @@ sub readInput (@) {
 		# Match a "path" block.
 		elsif ( $line =~ /^\s*path\s+{\s*$/ ) {
 		    $DEFAULT{'path'}{"$file"} = readBlock(INPUT);
-
-		    # Replace any environment variables in the .adf file's
-		    # pathname strings with the expanded value of the
-		    # environment variable.
-		    my $pathname = '';
-		    foreach $pathname ( @{$DEFAULT{'path'}{"$file"}} ) {
-		        if ( $pathname =~ /\${(\w+)}/ ) {
-			    my $env_var = "$1";
-			    $pathname =~ s/\${\w+}/$ENV{$env_var}/;
-			}
-		    }
 		}
 		# Match an "awEngine Default" block.
 		elsif ( $line =~ /^\s*awEngine\s+Default\s+{\s*$/ &&
@@ -336,6 +325,14 @@ sub readBlock ($) {
     while ( $line = <$handle> ) {
 	if ( $line !~ /^\s*}\s*$/ ) {
 	    chomp($line);
+
+	    # Replace any environment variables in the .adf file with the
+	    # expanded value of the environment variable.
+	    if ( $line =~ /\${(\w+)}/ ) {
+		my $env_var = "$1";
+		$line =~ s/\${\w+}/$ENV{$env_var}/;
+	    }
+
 	    push(@block, "$line");
 	}
 	else {
