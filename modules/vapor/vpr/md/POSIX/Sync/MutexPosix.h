@@ -55,9 +55,9 @@
 #include <stdio.h>
 #include <pthread.h>
 #include <errno.h>
+#include <assert.h>
 
 #include <vpr/Util/ReturnStatus.h>
-#include <assert.h>
 
 
 namespace vpr
@@ -78,24 +78,7 @@ public:
     *       initialized before any other member functions can do anything
     *       with it.
     */
-   MutexPosix()
-   {
-      // Initialize the mutex.
-#ifndef _DEBUG
-      pthread_mutex_init(&mMutex, NULL);
-#else
-#ifdef VPR_OS_Linux
-      // If Linux and debug, then use error checking mutex
-      pthread_mutexattr_t mutex_attr;
-      pthread_mutexattr_init(&mutex_attr);
-      pthread_mutexattr_settype(&mutex_attr, PTHREAD_MUTEX_ERRORCHECK_NP);
-      pthread_mutex_init(&mMutex, &mutex_attr);
-      pthread_mutexattr_destroy(&mutex_attr);
-#else
-      pthread_mutex_init(&mMutex, NULL);
-#endif
-#endif
-   }
+   MutexPosix();
 
    /**
     * Destructor for vpr::MutexPosix class.
@@ -140,7 +123,7 @@ public:
       // was reported.
       else if ( retval == EDEADLK )
       {
-         perror("Tried to lock mutex twice (MutexPosix.h:118)");
+         perror("Tried to lock mutex twice");
          assert(false && "Mutex deadlock detected");
          return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
       }
@@ -252,8 +235,8 @@ public:
     * @pre The mutex variable must be locked.
     * @post The mutex variable is unlocked.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the lock is released successfully.<br>
-    *         -1 is returned otherwise.
+    * @return vpr::ReturnStatus::Succeed is returned if the lock is released
+    *         successfully.  vpr::ReturnStatus::Fail is returned otherwise.
     */
    vpr::ReturnStatus release()
    {
@@ -265,7 +248,7 @@ public:
       }
       else if(EPERM == retval)
       {
-         perror("Tried to lock mutex twice (MutexPosix.h:263)");
+         perror("Tried to release a mutex we do not own");
          assert(false && "Mutex release by non-owning thread.");
          return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
       }
