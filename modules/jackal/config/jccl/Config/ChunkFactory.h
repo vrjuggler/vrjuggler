@@ -36,6 +36,7 @@
 
 #include <jccl/jcclConfig.h>
 #include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ChunkDesc.h>
 #include <jccl/Config/ChunkDescDB.h>
 #include <jccl/Util/Debug.h>
 #include <vpr/Sync/Mutex.h>
@@ -88,12 +89,12 @@ public:
     //+          whose token matches the argument.  If no such
     //+          ChunkDesc is found, an "empty" ChunkDesc,
     //+          containing only a Name PropertyDesc, is used.
-    ConfigChunk* createChunk (const std::string& desctoken, bool use_defaults = true) {
+    ConfigChunkPtr createChunk (const std::string& desctoken, bool use_defaults = true) {
         return createChunk (descdb.getChunkDesc (desctoken), use_defaults);
     }
 
     //: Creates a Chunk using the given description
-    ConfigChunk* createChunk (ChunkDescPtr d, bool use_defaults = true);
+    ConfigChunkPtr createChunk (ChunkDescPtr d, bool use_defaults = true);
 
 
 

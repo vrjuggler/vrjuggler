@@ -73,14 +73,14 @@ public:
 
    // Can we handle the given chunk type?
    // Default to true, because the default checker can check anything
-   virtual bool canHandle(ConfigChunk* chunk)
+   virtual bool canHandle(ConfigChunkPtr chunk)
    {
       return true;
    }
 
    //: Are the dependencies satisfied?
    //! RETURNS: true - dependencies are satisfied
-   virtual bool depSatisfied(ConfigChunk* chunk)
+   virtual bool depSatisfied(ConfigChunkPtr chunk)
    {
       bool pass=true;
 
@@ -99,7 +99,7 @@ public:
    }
 
    // Write out the dependencies to the vprDEBUG macro
-   virtual void debugOutDependencies(ConfigChunk* chunk,int dbg_lvl=vprDBG_WARNING_LVL)
+   virtual void debugOutDependencies(ConfigChunkPtr chunk,int dbg_lvl=vprDBG_WARNING_LVL)
    {
       vprDEBUG_NEXT_BEGIN(vprDBG_ALL,dbg_lvl) << "---- Dependencies for: item: "
                                             << chunk->getProperty("name")

@@ -33,6 +33,7 @@
 #include <jccl/jcclConfig.h>
 
 #include <jccl/Config/ChunkDesc.h>
+#include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ParseUtil.h>
 #include <vpr/Util/Assert.h>
 #include <jccl/Config/ConfigIO.h>
@@ -46,7 +47,6 @@ ChunkDesc::ChunkDesc () :plist() {
     name = "unnamed";
     token = "unnamed";
     help = "";
-    default_chunk = 0;
     default_node = 0;
     PropertyDesc *d = new PropertyDesc("name",1,T_STRING," ");
     add (d);
@@ -172,15 +172,21 @@ void ChunkDesc::add (PropertyDesc *pd) {
 void ChunkDesc::setDefaultChunk (DOM_Node* n) {
     default_node = new DOM_Node;
     *default_node = *n;
-    default_chunk = 0; // memory leak?
+    default_chunk.reset(0);
 }
 
-ConfigChunk* ChunkDesc::getDefaultChunk() const {
+
+    void ChunkDesc::setDefaultChunk (ConfigChunkPtr ch) {
+        default_chunk = ch;
+    }
+
+
+ConfigChunkPtr ChunkDesc::getDefaultChunk() const {
     // thread safety???
-    if ((default_chunk == NULL) && (default_node != 0)) {
+    if ((default_chunk.get() == 0) && (default_node != 0)) {
         XMLConfigIOHandler* handler = (XMLConfigIOHandler*)ConfigIO::instance()->getHandler("xml_config");
-        ConfigChunk* ch = handler->buildConfigChunk (*default_node, false);
-        if (ch) {
+        ConfigChunkPtr ch = handler->buildConfigChunk (*default_node, false);
+        if (ch.get()) {
             // this is a cheat.  and ugly cuz we have to get the real pointer,
             // not the shared_ptr, and then const_cast it :(
             (const_cast<ChunkDesc*>(&(*this)))->default_chunk = ch;

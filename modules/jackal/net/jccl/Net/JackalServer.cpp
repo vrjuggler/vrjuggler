@@ -41,6 +41,7 @@
 #include <jccl/JackalServer/Connect.h>
 #include <jccl/Config/ChunkDescDB.h>
 #include <jccl/Config/ConfigChunkDB.h>
+#include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ParseUtil.h>
 #include <jccl/Util/Debug.h>
 
@@ -143,7 +144,7 @@ namespace jccl {
     //: ConfigChunkHandler stuff
     //! PRE: configCanHandle(chunk) == true
     //! RETURNS: success
-    bool JackalServer::configAdd(ConfigChunk* chunk) {
+    bool JackalServer::configAdd(ConfigChunkPtr chunk) {
         bool networkingchanged = false;
         int newport;
         
@@ -199,7 +200,7 @@ namespace jccl {
     //: Remove the chunk from the current configuration
     //! PRE: configCanHandle(chunk) == true
     //!RETURNS: success
-    bool JackalServer::configRemove(ConfigChunk* chunk) {
+    bool JackalServer::configRemove(ConfigChunkPtr chunk) {
 
         std::string s = chunk->getType();
         if (!vjstrcasecmp (s, "EnvironmentManager")) {
@@ -231,7 +232,7 @@ namespace jccl {
     //: Can the handler handle the given chunk?
     //! RETURNS: true - Can handle it
     //+          false - Can't handle it
-    bool JackalServer::configCanHandle(ConfigChunk* chunk) {
+    bool JackalServer::configCanHandle(ConfigChunkPtr chunk) {
         std::string s = chunk->getType();
         return (!vjstrcasecmp (s, "EnvironmentManager") ||
                 !vjstrcasecmp (s, "JackalServer") ||

@@ -73,8 +73,8 @@ int ConfigChunkHandler::configProcessPending()
       while(current != end)
       {
          // Get information about the current chunk
-         ConfigChunk* cur_chunk = (*current).mChunk;
-         vprASSERT(cur_chunk != NULL && "Trying to use an invalid chunk");
+         ConfigChunkPtr cur_chunk = (*current).mChunk;
+         vprASSERT(cur_chunk.get() != NULL && "Trying to use an invalid chunk");
          std::string chunk_name = cur_chunk->getProperty("name");
          std::string chunk_type = cur_chunk->getType();
 

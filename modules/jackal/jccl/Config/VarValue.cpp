@@ -61,24 +61,25 @@ VarValue::VarValue (const VarValue &v)
     //strval = std::string("");
     intval = 0;
     floatval = 0.0;
-    embeddedchunkval = NULL;
+    //embeddedchunkval = NULL;
     boolval = false;
     *this = v;
 }
 
 
-VarValue::VarValue (const ConfigChunk* ch)
+VarValue::VarValue (const ConfigChunkPtr ch)
 {
     validation = 1;
 
     //strval = std::string("");
     intval = 0;
     floatval = 0.0;
-    embeddedchunkval = NULL;
+    //embeddedchunkval = NULL;
     boolval = false;
     type = T_EMBEDDEDCHUNK;
-    if (ch)
-        embeddedchunkval = new ConfigChunk(*ch);
+    embeddedchunkval = ch;
+//      if (ch)
+//          embeddedchunkval = new ConfigChunk(*ch);
 }
 
 
@@ -90,7 +91,7 @@ VarValue::VarValue ( VarType t )
     type = t;
     intval = 0;
     floatval = 0.0;
-    embeddedchunkval = NULL;
+    //embeddedchunkval = NULL;
     boolval = false;
 }
 
@@ -107,7 +108,7 @@ VarValue::~VarValue() {
 #ifdef JCCL_DEBUG
 void VarValue::assertValid () const {
     vprASSERT (validation == 1 && "Trying to use deleted VarValue");
-    if ((type == T_EMBEDDEDCHUNK) && embeddedchunkval)
+    if ((type == T_EMBEDDEDCHUNK) && embeddedchunkval.get())
         embeddedchunkval->assertValid();
 }
 #endif
@@ -123,18 +124,19 @@ VarValue& VarValue::operator= (const VarValue &v) {
 
     type = v.type;
 
-    if (embeddedchunkval) {
-        // delete embeddedchunkval; XXX
-        embeddedchunkval = NULL;
-    }
+//      if (embeddedchunkval) {
+//          // delete embeddedchunkval; XXX
+//          embeddedchunkval = NULL;
+//      }
     intval = v.intval;
     floatval = v.floatval;
     boolval = v.boolval;
     strval = v.strval;
-    if (v.embeddedchunkval) {
+    embeddedchunkval = v.embeddedchunkval;
+//      if (v.embeddedchunkval) {
 
-        embeddedchunkval = new ConfigChunk (*v.embeddedchunkval);
-    }
+//          embeddedchunkval = new ConfigChunk (*v.embeddedchunkval);
+//      }
     return *this;
 }
 
@@ -158,14 +160,14 @@ bool VarValue::operator == (const VarValue& v) const {
     case T_BOOL:
         return (boolval == v.boolval);
     case T_EMBEDDEDCHUNK:
-        if (embeddedchunkval) {
-            if (v.embeddedchunkval)
+        if (embeddedchunkval.get()) {
+            if (v.embeddedchunkval.get())
                 return (*embeddedchunkval == *(v.embeddedchunkval));
             else
                 return false;
         }
         else
-            return (!v.embeddedchunkval);
+            return (!v.embeddedchunkval.get());
     default:
         return false;
     }
@@ -197,25 +199,26 @@ VarValue::operator int() const {
 
 
 
-VarValue::operator ConfigChunk*() const {
+VarValue::operator ConfigChunkPtr() const {
     assertValid();
 
     switch (type) {
     case T_EMBEDDEDCHUNK:
-        // we need to make a copy because if the value is deleted, it deletes
-        // its embeddedchunk
-        if (embeddedchunkval)
-            return new ConfigChunk (*embeddedchunkval);
-        else {
-            return NULL;
-        }
+        return embeddedchunkval;
+//          // we need to make a copy because if the value is deleted, it deletes
+//          // its embeddedchunk
+//          if (embeddedchunkval)
+//              return new ConfigChunk (*embeddedchunkval);
+//          else {
+//              return NULL;
+//          }
     case VJ_T_INVALID:
         vprDEBUG(jcclDBG_CONFIG,4) << using_invalid_msg.c_str() << 2
                  << std::endl << vprDEBUG_FLUSH;
-        return NULL;
+        return ConfigChunkPtr(0);
     default:
-        vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in cast to ConfigChunk* - real type is " << typeString(type) << ".\n" << vprDEBUG_FLUSH;
-        return NULL;
+        vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in cast to ConfigChunkPtr - real type is " << typeString(type) << ".\n" << vprDEBUG_FLUSH;
+        return ConfigChunkPtr(0);
     }
 }
 
@@ -462,23 +465,24 @@ VarValue &VarValue::operator = (const char *val) {
 }
 
 
-VarValue &VarValue::operator = (const ConfigChunk *s) {
+VarValue &VarValue::operator = (const ConfigChunkPtr ch) {
    assertValid();
 
    switch (type)
        {
        case T_EMBEDDEDCHUNK:
-           /* XXX: Leave it hanging for now.
-              if (embeddedchunkval)
-              delete embeddedchunkval;
-           */
-           if (s)
-               embeddedchunkval = new ConfigChunk (*s);
-           else
-               embeddedchunkval = NULL;
+           embeddedchunkval = ch;
+//             /* XXX: Leave it hanging for now.
+//                if (embeddedchunkval)
+//                delete embeddedchunkval;
+//             */
+//             if (s)
+//                 embeddedchunkval = new ConfigChunk (*s);
+//             else
+//                 embeddedchunkval = NULL;
            break;
        default:
-           vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in assignment - VarValue(" << typeString(type) << ") = ConfigChunk*.\n" << vprDEBUG_FLUSH;
+           vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in assignment - VarValue(" << typeString(type) << ") = ConfigChunkPtr.\n" << vprDEBUG_FLUSH;
        }
    return *this;
 }
@@ -506,7 +510,7 @@ std::ostream& operator << (std::ostream& out, const VarValue& v) {
         out << v.strval.c_str();
         return out;
     case T_EMBEDDEDCHUNK:
-        if (v.embeddedchunkval)
+        if (v.embeddedchunkval.get())
             out << *(v.embeddedchunkval);
         return out;
     default:

@@ -39,6 +39,7 @@
 #include <jccl/JackalServer/Connect.h>
 #include <jccl/Config/ChunkDescDB.h>
 #include <jccl/Config/ConfigChunkDB.h>
+//#include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ChunkFactory.h>
 #include <jccl/Config/ConfigTokens.h>
 #include <vpr/System.h>
@@ -65,7 +66,7 @@ Connect::Connect(Socket* s, const std::string& _name,
 
     // we need to add a chunk describing ourself
     connect_chunk = ChunkFactory::instance()->createChunk ("FileConnect");
-    if (connect_chunk) {
+    if (connect_chunk.get()) {
         connect_chunk->setProperty ("Name", name);
         connect_chunk->setProperty ("Mode", VJC_INTERACTIVE);
         connect_chunk->setProperty ("filename", filename);
@@ -83,7 +84,7 @@ Connect::Connect(Socket* s, const std::string& _name,
 
 
 
-Connect::Connect(ConfigChunk* c): commands_mutex(), communicators() {
+Connect::Connect(ConfigChunkPtr c): commands_mutex(), communicators() {
 
     connect_chunk = c;
     sock = NULL;
@@ -209,29 +210,11 @@ bool Connect::stopProcess() {
 }
 
 
-//  void Connect::sendDescDB (ChunkDescDB* db) {
-//      if (mode != VJC_INPUT)
-//          commands.push (new CommandSendDescDB (db));
-//  }
-
-
 void Connect::sendDisconnect () {
     std::cerr << "Connect::sendDisconnect not implemented!!!" << std::endl;
     //    if (mode != VJC_INPUT)
     //   commands.push (new CommandDisconnect());
 }
-
-
-//  void Connect::sendChunkDB (ConfigChunkDB* db, bool all) {
-//      if (mode != VJC_INPUT)
-//          commands.push (new CommandSendChunkDB (db, all));
-//  }
-
-
-//  void Connect::sendRefresh () {
-//      if (mode == VJC_INTERACTIVE)
-//          commands.push (new CommandRefresh);
-//  }
 
 
 void Connect::addCommand (Command* cmd) {

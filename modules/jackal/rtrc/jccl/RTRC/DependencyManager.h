@@ -36,7 +36,7 @@
 
 #include <jccl/jcclConfig.h>
 #include <jccl/Plugins/ConfigManager/DepChecker.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigChunkPtr.h>
 #include <typeinfo>
 #include <vpr/Util/Singleton.h>
 
@@ -74,16 +74,16 @@ public:
    //: Are the dependencies satisfied for the given chunk?
    //
    //!RETURNS: true - dependencies are currently satisifed for the chunk
-   bool depSatisfied(ConfigChunk* chunk)
+   bool depSatisfied(ConfigChunkPtr chunk)
    {
-      vprASSERT(NULL != chunk);
+      vprASSERT(NULL != chunk.get());
       DepChecker* checker = findDepChecker(chunk);
       return checker->depSatisfied(chunk);
    }
 
-   void debugOutDependencies(ConfigChunk* chunk,int dbg_lvl)
+   void debugOutDependencies(ConfigChunkPtr chunk,int dbg_lvl)
    {
-      vprASSERT(NULL != chunk);
+      vprASSERT(NULL != chunk.get());
       DepChecker* checker = findDepChecker(chunk);
       checker->debugOutDependencies(chunk,dbg_lvl);
    }
@@ -92,7 +92,7 @@ private:
    //: Returns a dependency checker for the given chunk
    //! RETURNS: If checker found, it is returned
    //+          Otherwise, it returns the default checker
-   DepChecker* findDepChecker(ConfigChunk* chunk);
+   DepChecker* findDepChecker(ConfigChunkPtr chunk);
 
    void debugDump();
 

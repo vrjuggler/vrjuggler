@@ -40,9 +40,9 @@ namespace jccl {
 vprSingletonImp(DependencyManager);
 
 
-DepChecker* DependencyManager::findDepChecker(ConfigChunk* chunk)
+DepChecker* DependencyManager::findDepChecker(ConfigChunkPtr chunk)
 {
-   vprASSERT(NULL != chunk);
+   vprASSERT(NULL != chunk.get());
 
    //std::string chunk_type;
    //chunk_type = (std::string)chunk->getType();
