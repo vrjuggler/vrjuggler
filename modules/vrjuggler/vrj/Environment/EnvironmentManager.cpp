@@ -44,7 +44,7 @@ EnvironmentManager::EnvironmentManager() {
 
     jackal_server = jccl::JackalServer::instance();
     config_manager = jccl::ConfigManager::instance();
-    performance_monitor = new jccl::PerformanceMonitor();
+    performance_monitor = jccl::PerformanceMonitor::instance();
 
     jackal_server->addJackalControl (config_manager);
     jackal_server->addJackalControl (performance_monitor);
