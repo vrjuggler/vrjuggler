@@ -129,7 +129,7 @@ bool Analog::config(jccl::ConfigChunkPtr c)
 
 // XXX: Add a "sample" filter that does the normalization in here instead
 // of in the driver.
-AnalogData Analog::getAnalogData(int devNum = 0)
+AnalogData Analog::getAnalogData(int devNum)
 {
    SampleBuffer_t::buffer_t& stable_buffer = mAnalogSamples.stableBuffer();
 
