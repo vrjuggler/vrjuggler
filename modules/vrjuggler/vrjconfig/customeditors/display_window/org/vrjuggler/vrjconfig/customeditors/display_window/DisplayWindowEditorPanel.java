@@ -430,6 +430,7 @@ public class DisplayWindowEditorPanel
          elt.setProperty(START_LOCKED_PROPERTY, 0, dlg.shouldStartLocked());
          elt.setProperty(SLEEP_TIME_PROPERTY, 0, dlg.getSleepTime());
 
+         dlg.getResource().add(elt);
          addDisplay(elt);
       }
    }
