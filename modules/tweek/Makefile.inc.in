@@ -90,9 +90,12 @@ STATIC_LIBS	= $(LIBS)
 DYNAMIC_LIBS	= $(LIBS)
 
 DYLIB_DEPS	= @DYLIB_DEPS@
+DYLIB_PROF_DEPS	= @DYLIB_PROF_DEPS@
 
 TWEEK_LIB_STATIC	= $(TWEEK_LIBRARY).$(STATICLIB_EXT)
 TWEEK_LIB_DYNAMIC	= $(TWEEK_LIBRARY).$(DYNAMICLIB_EXT)
+TWEEK_PROF_LIB_STATIC	= $(TWEEK_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
+TWEEK_PROF_LIB_DYNAMIC	= $(TWEEK_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
 
 # Version information.
 PARAM_HEADER	= tweek/tweekParam.h
@@ -145,7 +148,7 @@ afterbuild:
 # -----------------------------------------------
 # Construct the static version of the libraries.
 # -----------------------------------------------
-$(LIBDIR)/$(TWEEK_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(TWEEK_LIB_STATIC) $(LIBDIR)/$(TWEEK_PROF_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
 ifneq ($(OS_TYPE), Win32)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
@@ -168,6 +171,24 @@ $(LIBDIR)/$(TWEEK_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) $(DYLIB_DEPS)
+ifeq (@OS_TYPE@, Win32)
+	cd $(LIBDIR_BASE) && cp $(LIBDIR)/* .
+else
+	cd $(LIBDIR_BASE) && $(RM_LN) $(notdir $@) && $(LN_S) $@ ./
+endif
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
+
+# ---------------------------------------------------------
+# Construct the profiled dynamic version of the libraries.
+# ---------------------------------------------------------
+$(LIBDIR)/$(TWEEK_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) $(DYLIB_PROF_DEPS)
 ifeq (@OS_TYPE@, Win32)
 	cd $(LIBDIR_BASE) && cp $(LIBDIR)/* .
 else
@@ -229,7 +250,8 @@ links:
 	@echo "------------------------------------------------"
 	@echo "Setting up developer installation"
 	@echo "------------------------------------------------"
-	@$(MAKE) SYMLINK=-l prefix="$(instlinks)" install-debug
+	@$(MAKE) SYMLINK=-l prefix="$(instlinks)"			\
+          DEFAULT_DIR="$(DBG_DIR)" installworld
 	@echo ""
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$TWEEK_BASE_DIR to:'

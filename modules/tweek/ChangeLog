@@ -1,5 +1,6 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2002-08-01 patrickh    Enabled compiling of profiled libraries.
 2002-07-14 patrickh    Extended org.vrjuggler.tweek.beans.FileLoader to include
                        a method for indicating that the user wants to save an
                        open file with a different name (a "Save As ..."-type
