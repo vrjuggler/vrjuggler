@@ -470,7 +470,6 @@ public class DisplayWindowFrame
 
       if ( dlg.getStatus() == DisplayWindowStartDialog.OK_OPTION )
       {
-
          Rectangle bounds  = dlg.getDisplayWindowBounds();
          mElement.setProperty("origin", 0, new Integer(bounds.x));
          mElement.setProperty("origin", 1, new Integer(bounds.y));
@@ -490,8 +489,6 @@ public class DisplayWindowFrame
          mElement.setProperty("stereo", 0, dlg.inStereo());
          mElement.setProperty("border", 0, dlg.hasBorder());
          mElement.setProperty("act_as_event_source", 0, dlg.isEventSource());
-
-         updateContextMenuItems();
       }
    }
 
