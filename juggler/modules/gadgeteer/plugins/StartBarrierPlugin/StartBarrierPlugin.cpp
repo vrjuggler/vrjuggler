@@ -139,7 +139,7 @@ namespace cluster
       mBarrierMachineElementName = element->getProperty<std::string>(std::string("start_master"));
       jccl::ConfigElementPtr barrier_machine_element =
          ClusterManager::instance()->getConfigElementPointer(mBarrierMachineElementName);
-      vprASSERT(NULL != barrier_machine_element.get() && "ConfigManager element MUST have a barrier_master.");
+      vprASSERT(NULL != barrier_machine_element.get() && "StartBarrierPlugin element must have a start_master.");
       mBarrierMasterHostname = barrier_machine_element->getProperty<std::string>(std::string("host_name"));
 
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
@@ -218,27 +218,27 @@ namespace cluster
          {
             if (!mBarrierMaster)
             {
-               ClusterNode* barrier_master = ClusterNetwork::instance()->getClusterNodeByName(mBarrierMachineElementName);
-               if (NULL == barrier_master)
+               ClusterNode* start_master = ClusterNetwork::instance()->getClusterNodeByName(mBarrierMachineElementName);
+               if (NULL == start_master)
                {
                   vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) 
                      << clrOutBOLD(clrRED,"[StartBarrierPlugin] Barrier machine configuration element not yet loaded.")
                      << std::endl << vprDEBUG_FLUSH;
                }
-               else if (barrier_master->isConnected())
+               else if (start_master->isConnected())
                {
                   //Send packet to server machine
                   StartBlock temp_start_block(getPluginGUID(), 0);
-                  barrier_master->send(&temp_start_block);
+                  start_master->send(&temp_start_block);
                   vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrOutBOLD(clrCYAN,"[StartBarrierPlugin] ")
                      << "Sending signal to start master: " << mBarrierMasterHostname << std::endl << vprDEBUG_FLUSH;
                }
                else
                {
                   //If we are not connected and we are not in pending list, add to the pending list
-                  if (NULL == ClusterNetwork::instance()->getPendingNode(barrier_master->getHostname()))
+                  if (NULL == ClusterNetwork::instance()->getPendingNode(start_master->getHostname()))
                   {
-                     ClusterNetwork::instance()->addPendingNode(barrier_master);
+                     ClusterNetwork::instance()->addPendingNode(start_master);
                   }
                }
             }
