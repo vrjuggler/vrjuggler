@@ -282,27 +282,27 @@ public class ChunkOrgTreePane extends JPanel
     }
 
 
-  public void mouseClicked(MouseEvent e) {
-  }
-  public void mouseEntered(MouseEvent e) {}
-  public void mouseExited(MouseEvent e) {}
-  public void mousePressed(MouseEvent e) {
-      int mod = e.getModifiers();
-      if ((mod == MouseEvent.BUTTON2_MASK) || (mod == MouseEvent.BUTTON3_MASK)) {
-	  //System.out.println ("RightButtonClick");
-	  treeitem_menu_path = tree.getPathForLocation (e.getX(), e.getY());
-	  //System.out.println (tp);
-	  if (treeitem_menu_path != null) {
-	      DefaultMutableTreeNode n = (DefaultMutableTreeNode)treeitem_menu_path.getLastPathComponent();
-	      if (n.getAllowsChildren())
-		  treeitem_menu.show (tree, e.getX(), e.getY());
-	      else
-		  childlesstreeitem_menu.show (tree, e.getX(), e.getY());
-	  }
-      }
-  }
-  public void mouseReleased(MouseEvent e) {
-  }
+    public void mouseClicked(MouseEvent e) {}
+    public void mouseEntered(MouseEvent e) {}
+    public void mouseExited(MouseEvent e) {}
+
+    public void mousePressed(MouseEvent e) {
+	int mod = e.getModifiers();
+	if ((mod == MouseEvent.BUTTON2_MASK) || (mod == MouseEvent.BUTTON3_MASK)) {
+	    //System.out.println ("RightButtonClick");
+	    treeitem_menu_path = tree.getPathForLocation (e.getX(), e.getY());
+	    //System.out.println (tp);
+	    if (treeitem_menu_path != null) {
+		DefaultMutableTreeNode n = (DefaultMutableTreeNode)treeitem_menu_path.getLastPathComponent();
+		if (n.getAllowsChildren())
+		    treeitem_menu.show (tree, e.getX(), e.getY());
+		else
+		    childlesstreeitem_menu.show (tree, e.getX(), e.getY());
+	    }
+	}
+    }
+    public void mouseReleased(MouseEvent e) {
+    }
  
 
     public void editingCanceled (ChangeEvent e) {

@@ -7,12 +7,14 @@ import java.net.*;
 import javax.swing.*;
 import javax.swing.tree.*;
 import javax.swing.event.*;
+import java.util.Vector;
 import VjGUI.*;
+import VjGUI.util.JFrameParent;
 import VjGUI.configchunk.ConfigChunkFrame;
 import VjConfig.*;
 
 public class ControlUI  extends JFrame 
-  implements ActionListener, WindowListener, ConfigChunkFrame.ConfigChunkFrameParent {
+  implements ActionListener, WindowListener, ConfigChunkFrame.ConfigChunkFrameParent, JFrameParent {
 
 
     JPanel main_panel;
@@ -23,22 +25,22 @@ public class ControlUI  extends JFrame
     ChunkOrgTreePane orgtree_pane;
 
     JMenuBar main_menubar;
-    JMenu file_menu, options_menu, help_menu, looknfeel_menu, preferences_menu, helptech_menu;
+    JMenu file_menu, options_menu, help_menu, looknfeel_menu, preferences_menu, helptech_menu, helpdesc_menu;
     JMenuItem quit_mi, lnf_win_mi, lnf_java_mi, lnf_motif_mi, lnf_mac_mi;
     JMenuItem lnf_organic1_mi;
     JMenuItem editprefs_mi, saveprefs_mi;
     JMenuItem helpbugs_mi, helpabout_mi, helpstart_mi, helpchunk_mi, helpdesc_mi, helporgtree_mi, helpcmdline_mi, descformat_mi, chunkformat_mi, orgtreeformat_mi, helpprefs_mi;
     JLabel status_label;
     ConfigChunkFrame prefs_frame;
-    HTMLFrame help_frame;
 
+    //HTMLFrame help_frame;
+    Vector help_frames;
 
     public ControlUI () {
 	super ("VR Juggler Control Program");
 
-
+	help_frames = new Vector();
 	prefs_frame = null;
-	help_frame = null;
 
 	JTabbedPane tabpane;
 	main_panel = new JPanel();
@@ -100,6 +102,7 @@ public class ControlUI  extends JFrame
 	helptech_menu.add (descformat_mi = new JMenuItem ("ChunkDesc File Format"));
 	helptech_menu.add (chunkformat_mi = new JMenuItem ("Config File Format"));
 	helptech_menu.add (orgtreeformat_mi = new JMenuItem ("ChunkOrgTree File Format"));
+	help_menu.add (helpdesc_menu = new JMenu ("Chunk-Specific Help"));
 
 	setJMenuBar (main_menubar);
 
@@ -155,9 +158,19 @@ public class ControlUI  extends JFrame
 
 
     public void addDescDB (ChunkDescDB db) {
+	int i;
+	ChunkDesc d;
+	JMenuItem newmenu;
+
 	descdb_pane.addDescDB (db.name);
 	configure_pane.updateInsertTypes();
 	orgtree_pane.updateInsertTypes();
+	// update our helpdesc_menu
+	for (i = 0; i < db.size(); i++) {
+	    d = (ChunkDesc)db.elementAt(i);
+	    helpdesc_menu.add (newmenu = new JMenuItem (d.getName()));
+	    newmenu.addActionListener(this);
+	}
     }
 
 
@@ -235,21 +248,54 @@ public class ControlUI  extends JFrame
 	    loadHelp ("VjFiles/ConfigChunkFormat.html");
 	else if (o == orgtreeformat_mi)
 	    loadHelp ("VjFiles/OrgTreeFormat.html");
+	else if (o instanceof JMenuItem) {
+	    // the default case - we'll assume the menuitem is a chunk-
+	    // specific help request. it's name will be a chunkdesc name
+	    String name = ((JMenuItem)o).getText();
+	    ChunkDesc d = Core.descdb.getByName (name);
+	    if (d != null)
+		loadDescHelp (d.getToken());
+	}
     }
 
 
+    public void loadDescHelp (String s) {
+	// where does desc help come from???
+	URL url;
+	url = ClassLoader.getSystemResource (System.getProperty ("user.dir") + "/.vjconfig/DescHelp/" + s + ".html");
+	if (url == null)
+	    url = ClassLoader.getSystemResource (System.getProperty ("VJ_BASE_DIR") + "/Data/DescHelp/" + s + ".html");
+	if (url == null)
+	    url = ClassLoader.getSystemResource ("Data/DescHelp/" +s + ".html");
+	if (url == null)
+	    url = ClassLoader.getSystemResource ("VjFiles/DescHelp/" + s + ".html");
+	if (url == null)
+	    url = ClassLoader.getSystemResource ("VjFiles/NoHelpAvailable.html");
+	if (url == null)
+	    return;
 
+	HTMLFrame help_frame = new HTMLFrame (this, "VjControl Help", url);
+	help_frames.addElement (help_frame);
+	help_frame.show();
+    }
+
+	
 
     public void loadHelp (String s) {
 	//System.out.println ("loadhelp: " + s);
 	URL url = ClassLoader.getSystemResource (s);
-	if (help_frame == null)
-	    help_frame = new HTMLFrame ("VjControl Help", url);
-	else
-	    help_frame.setURL (url);
+	HTMLFrame help_frame = new HTMLFrame (this, "VjControl Help", url);
+	help_frames.addElement (help_frame);
 	help_frame.show();
     }
     
+
+    public void closedChild (JFrame f, boolean ok) {
+	if (f instanceof HTMLFrame) {
+	    help_frames.removeElement (f);
+	    f.dispose();
+	}
+    }
 
 
     public void closedChunkFrame (ConfigChunkFrame f, boolean ok) {
@@ -351,9 +397,6 @@ public class ControlUI  extends JFrame
 	    dbt = (ChunkDBTreeModel)Core.chunkdbs.elementAt (i);
 	    changeFont (dbt.tree, newfont);
 	}
-
-	if (help_frame != null)
-	    help_frame.setFont (newfont);
 
 	changeMenuBarFont (main_menubar, newfont);
 
