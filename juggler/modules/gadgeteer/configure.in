@@ -161,8 +161,9 @@ DPP_PROG_INSTALL(no)
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH(0.15.0, , AC_MSG_ERROR(*** VPR required for Gadgeteer ***))
-JCCL_PATH(0.2.0, , AC_MSG_ERROR(*** JCCL required for Gadgeteer ***))
+VPR_PATH([0.15.0], , [AC_MSG_ERROR([*** VPR required for Gadgeteer ***])])
+JCCL_PATH_CXX([0.2.0], ,
+              [AC_MSG_ERROR([*** JCCL C++ API required for Gadgeteer ***])])
 
 gadsave_CPPFLAGS="$CPPFLAGS"
 CPPFLAGS="$CPPFLAGS $STDFLAGS"
