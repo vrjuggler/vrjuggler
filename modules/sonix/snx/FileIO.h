@@ -110,6 +110,7 @@ namespace snxFileIO
          return 0;
 
       FILE* fh = fopen( filename, "rb" );
+      assert( fh != NULL ); 
       
       const int one_kilobyte = 1024;
       const int arbitraliy_chosen_size = one_kilobyte * 1000;
