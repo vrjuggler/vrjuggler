@@ -43,9 +43,8 @@
 */
 #define GADGET_REGISTER_POSFILTER_CREATOR( FilterType ) \
 class FilterType; \
-namespace \
-{ const bool reg_ctr_ ## FilterType = gadget::PositionFilterFactory::instance()->registerCreator( FilterType::getChunkType(), \
-                                             vpr::CreateProduct<PositionFilter, FilterType>); }
+const bool reg_ctr_ ## FilterType = gadget::PositionFilterFactory::instance()->registerCreator( FilterType::getChunkType(), \
+                                             vpr::CreateProduct<PositionFilter, FilterType>);
 
 namespace gadget
 {

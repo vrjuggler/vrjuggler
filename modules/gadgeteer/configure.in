@@ -585,6 +585,8 @@ AC_OUTPUT(gadgeteer-config
           gadget/Devices/VRCO/TrackdAPI/Makefile
           gadget/Devices/VirtualTechnologies/Makefile
           gadget/Devices/VirtualTechnologies/CyberGlove/Makefile
+	  gadget/Filter/Makefile
+	  gadget/Filter/Position/Makefile
           gadget/RemoteInputManager/Makefile
           gadget/Type/Makefile
           gadget/Util/Makefile

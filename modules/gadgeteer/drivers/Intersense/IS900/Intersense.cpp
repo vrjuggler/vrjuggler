@@ -291,18 +291,7 @@ int Intersense::sample()
          }
       }
 
-   // Transforms between the cord frames
-   // See transform documentation and VR System pg 146
-   // Since we want the reciver in the world system, Rw
-   // wTr = wTt*tTr
-
-      gmtl::Matrix44f world_T_transmitter, transmitter_T_reciever, world_T_reciever;
-
-      world_T_transmitter = xformMat;                                       // Set transmitter offset from local info
-      transmitter_T_reciever = *(cur_pos_samples[i].getPosition());           // Get reciever data from sampled data
-      gmtl::mult( world_T_reciever, world_T_transmitter, transmitter_T_reciever);   // compute total transform
-      *(cur_pos_samples[i].getPosition()) = world_T_reciever;                                     // Store corrected xform back into data
-   }
+    }
 
     // Locks and then swaps the indices
     addAnalogSample(cur_sample.analog);
