@@ -804,7 +804,7 @@ dnl # Checks for header files.
 dnl # -------------------------------------------------------------------------
 AC_HEADER_STDC
 AC_CHECK_HEADERS(fcntl.h limits.h strings.h sys/file.h sys/ioctl.h	\
-                 sys/time.h termio.h unistd.h sys/z8530.h sys/stdsyms.h)
+                 sys/time.h termios.h unistd.h sys/z8530.h sys/stdsyms.h)
 
 dnl # All of the above header file checks may not be necessary ...
 
