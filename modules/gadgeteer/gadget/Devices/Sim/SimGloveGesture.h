@@ -64,7 +64,7 @@ public:
    //! RETURNS: id of current gesture
    virtual int getGesture();
 
-   virtual int getDigitalData(int devNum = 0);
+   virtual DigitalData* getDigitalData(int devNum = 0);
 
    //: Load trained data for the gesture object
    // Loads the file for trained data
@@ -89,7 +89,8 @@ public:
 
 private:
    std::vector<KeyModPair> mSimKeys;    //: The keys to press for the gestures
-   int                     mCurGesture;   //: The current gesture id
+   int             mCurGesture;   //: The current gesture id
+    DigitalData    mDigitalData;  // result of table lookup of mCurGesture
 };
 
 };

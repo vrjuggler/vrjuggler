@@ -46,18 +46,29 @@ public:
 
     /** Constructor. */
     DigitalData (): InputData() {
-
+        mDigitalData = 0;
     }
 
 
-    int getDigitalData() {
+    int getDigitalData () {
         return mDigitalData;
+    }
+
+
+    void setDigitalData (int d) {
+        mDigitalData = d;
     }
 
 
     DigitalData& operator= (const DigitalData& pd) {
         InputData::copy (pd);
         mDigitalData = pd.mDigitalData;
+        return *this;
+    }
+
+
+    DigitalData& operator= (int data) {
+        mDigitalData = data;
         return *this;
     }
 

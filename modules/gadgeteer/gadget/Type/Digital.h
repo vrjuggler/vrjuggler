@@ -41,6 +41,7 @@
 
 #include <gadget/gadgetConfig.h>
 #include <jccl/Config/ConfigChunkPtr.h>
+#include <gadget/Type/DigitalData.h>
 
 namespace gadget
 {
@@ -92,7 +93,7 @@ public:
    //  Returns -1 if function fails or if devNum is out of range.<BR>
    //  NOTE: If devNum is out of range, function will fail, possibly issueing
    //  an error to a log or console - but will not ASSERT.<BR>
-   virtual int getDigitalData(int devNum = 0) = 0;
+   virtual DigitalData* getDigitalData(int devNum = 0) = 0;
 };
 
 };

@@ -83,11 +83,11 @@ public:
       RTHUMB = 6, RINDEX = 7, RMIDDLE = 8, RRING = 9, RPINKY = 10
    };
    // dev = finger (see finger enum above)
-   virtual int getDigitalData( int dev = 0 )
+   virtual DigitalData* getDigitalData( int dev = 0 )
    {
       //vprDEBUG(vprDBG_ALL,0)<<"*** SimDigitalGlove::getDigitalData("<<dev<<")\n"<< vprDEBUG_FLUSH;
       vprASSERT( dev < (int)mDigitalData.size() );    // Make sure we have enough space
-      return mDigitalData[dev];
+      return &(mDigitalData[dev]);
    }
 
    /* These functions don't do anything */
@@ -124,7 +124,7 @@ public:
    //virtual int getGesture();
 
 private:
-   std::vector<int>          mDigitalData;   //: The digital data that we have
+   std::vector<DigitalData>          mDigitalData;   //: The digital data that we have
    std::vector<KeyModPair> mSimKeys;       //: The keys to press for digital simulation
 
    Hand                     mLeftHand, mRightHand;

@@ -59,7 +59,7 @@ bool SimDigital::config(jccl::ConfigChunkPtr chunk)
    mSimKeys = readKeyList(key_list);
 
    int num_pairs = mSimKeys.size();
-   mDigitalData = std::vector<int>(num_pairs,0);      // Initialize to all zeros
+   mDigitalData = std::vector<DigitalData>(num_pairs); //std::vector<int>(num_pairs,0);      // Initialize to all zeros
 
    return true;
 }

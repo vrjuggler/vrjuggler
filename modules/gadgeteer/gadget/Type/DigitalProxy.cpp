@@ -55,8 +55,9 @@ void DigitalProxy::updateData()
 {
    if(!mStupified)
    {
-      int new_state = mTypedDevice->getDigitalData(m_unitNum);
-       int old_state = m_data;
+       int old_state = m_data.getDigitalData();
+       m_data = *mTypedDevice->getDigitalData(m_unitNum);
+       int new_state = m_data.getDigitalData();
        if(Digital::OFF == old_state)
       {
           if(new_state)     // Button now pressed

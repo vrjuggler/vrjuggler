@@ -49,7 +49,7 @@ namespace gadget
 {
 
 struct IBOX_DATA {
-   int button[4];
+   DigitalData button[4];
    int analog[4];
 };
 
@@ -84,7 +84,7 @@ public:
 
    static std::string getChunkType() { return std::string( "IBox" ); }
 
-   int getDigitalData( int d = 0 );
+   DigitalData* getDigitalData( int d = 0 );
 
    //: Return "analog data"..
    //  Gee, that's ambiguous especially on a discrete system such as a digital computer....

@@ -67,7 +67,7 @@ namespace gadget
 {
 
 struct Isense_Data {
-    int digital[IS_BUTTON_NUM];
+    DigitalData digital[IS_BUTTON_NUM];
     float analog[IS_ANALOG_NUM];
 };
 
@@ -166,7 +166,7 @@ class Intersense :  public Input, public Position,  public Digital,  public Anal
 //+   Most configurations have the wand on port 2... so the device number is 1
 //+   The rest button layout is described in the Intersense Manual
 //+     (this value is set in the juggler config files)
-    int getDigitalData(int d = 0);
+    DigitalData* getDigitalData(int d = 0);
     float getAnalogData(int d = 0);
 
 
@@ -185,7 +185,7 @@ private:
 
     PositionData* mData;
 
-    std::vector<int> mDigitalData;
+    std::vector<DigitalData> mDigitalData;
     std::vector<int> mAnalogData;
 
 //KLUDGE: work around the inherent difference between Position and Digital (and Analog)

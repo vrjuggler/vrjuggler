@@ -334,12 +334,12 @@ PositionData* Intersense::getPositionData (int dev) {
 }
 
 
-int Intersense::getDigitalData( int d )
+DigitalData* Intersense::getDigitalData( int d )
 {
     if(this->isActive() == false)
         return 0;
 
-    return mInput[current].digital[d];
+    return &(mInput[current].digital[d]);
 }
 
 float Intersense::getAnalogData( int d )
