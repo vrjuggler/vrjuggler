@@ -179,12 +179,12 @@ value</screen>
                <varlistentry>
                   <term>VJ_BASE_DIR</term>
                   <listitem>
-                     <para>The environment variable <varname>VJ_BASE_DIR</varname> tells a VR Juggler application where to find important data files. It is required to compile and run any Juggler app. It should be set to the base directory of the installed VR Juggler library. For example, if you downloaded a UNIX version of VR Juggler 1.0 and extracted it to the directory <filename>/home/software/</filename>, you would set <varname>VJ_BASE_DIR</varname> with this command:</para>
-                     <screen>% VJ_BASE_DIR = /home/software/vrjuggler-1.0</screen>
+                     <para>The environment variable <varname>VJ_BASE_DIR</varname> tells a VR Juggler application where to find important data files. It is required to compile and run any Juggler app. It should be set to the base directory of the installed VR Juggler library. For example, if you downloaded a UNIX version of VR Juggler 2.0 and extracted it to the directory <filename>/home/software/</filename>, you would set <varname>VJ_BASE_DIR</varname> with this command:</para>
+                     <screen>% VJ_BASE_DIR = /home/software/vrjuggler-2.0</screen>
                      <para>The last component of the path depends on the particular version of Juggler you have downloaded.</para>
                      <para>If you downloaded and built VR Juggler from the source code, the compilation creates a directory called <filename>instlinks</filename> which can be used as a VR Juggler base:</para>
                      <screen>% VJ_BASE_DIR = $HOME/juggler/my_build_dir/instlinks</screen>
-                     <para>In any case, on a Win32 platform, you should use /'s as the path separator for <varname>VJ_BASE_DIR</varname> rather than \'s. The compiler tools can handle either, and the utilities in <filename>juggler-tools</filename> will behave much better if UNIX-style paths are used. It is safe to use the drive letter at the start of the path (e.g., <filename>C:/software/vrjuggler-1.0.5</filename>).</para>
+                     <para>In any case, on a Win32 platform, you should use /'s as the path separator for <varname>VJ_BASE_DIR</varname> rather than \'s. The compiler tools can handle either, and the utilities in <filename>juggler-tools</filename> will behave much better if UNIX-style paths are used. It is safe to use the drive letter at the start of the path (e.g., <filename>C:/software/vrjuggler-2.0</filename>).</para>
                   </listitem>
                </varlistentry>
                <varlistentry>
@@ -219,19 +219,19 @@ value</screen>
                   </listitem>
                </varlistentry>
                <varlistentry>
-                  <term>VJ_DEBUG_NFY_LEVEL</term>
+                  <term>VPR_DEBUG_NFY_LEVEL</term>
                   <listitem>
                      <para>This variable can be used to control the amount of diagnostic information a VR Juggler application outputs. Its value is a number between 0 (only very important messages are printed) and 7 (vast amounts of data) inclusive. Non-hackers are advised to use levels 0 through 3, as higher debug levels become increasingly cryptic and <emphasis>can severely impact application performance</emphasis>. The default is level 1&mdash;only errors and critical information are output. An example of setting a value for this variable is:</para>
-                     <screen>% VJ_DEBUG_NFY_LEVEL = 3</screen>
+                     <screen>% VPR_DEBUG_NFY_LEVEL = 3</screen>
                   </listitem>
                </varlistentry>
                <varlistentry>
-                  <term>VJ_DEBUG_CATEGORIES</term>
+                  <term>VPR_DEBUG_CATEGORIES</term>
                   <listitem>
-                     <para>This variable can be used to control which components of VR Juggler are allowed to output diagnostic data. If for some reason you set <varname>VJ_DEBUG_NFY_LEVEL</varname> to 5 or higher, this variable can be used to filter the output. The value of <varname>VJ_DEBUG_CATEGORIES</varname> is a space-separated list of Juggler debug component names (defined in <filename>$VJ_BASE_DIR/include/Kernel/vjDebug.h</filename>). The default value is <quote>DBG_ALL</quote>, which performs no filtering whatsoever. Examples of setting it are as follows:</para>
-                     <screen>% VJ_DEBUG_CATAGORIES = DBG_ERROR
-% VJ_DEBUG_CATAGORIES = "DBG_KERENEL DBG_INPUT"
-% VJ_DEBUG_CATAGORIES = "DBG_CONFIGDB DBG_ENV_MGR"</screen>
+                     <para>This variable can be used to control which components of VR Juggler are allowed to output diagnostic data. If for some reason you set <varname>VPR_DEBUG_NFY_LEVEL</varname> to 5 or higher, this variable can be used to filter the output. The value of <varname>VPR_DEBUG_CATEGORIES</varname> is a space-separated list of Juggler debug component names (defined in <filename>$VJ_BASE_DIR/include/vrj/Util/Debug.h</filename>). The default value is <quote>DBG_ALL</quote>, which performs no filtering whatsoever. Examples of setting it are as follows:</para>
+                     <screen>% VPR_DEBUG_CATAGORIES = DBG_ERROR
+% VPR_DEBUG_CATAGORIES = "DBG_KERNEL DBG_INPUT_MGR DBG_DRAW_MGR"
+% VPR_DEBUG_CATAGORIES = "DBG_CONFIG DBG_RECONFIGURATION"</screen>
                   </listitem>
                </varlistentry>
             </variablelist>
@@ -243,7 +243,7 @@ value</screen>
       <para>VR Juggler comes with several sample applications in its <filename>samples</filename> directory tree. Many of them are very simple and are designed to demonstrate a specific feature of VR Juggler or a technique to use when writing your own applications. This chapter lists the current sample applications as of this writing and gives a quick description of what you as a potential developer might find interesting in the code. Those users who just want to run applications can safely skip this chapter.</para>
       <section>
          <title>OpenGL Applications</title>
-         <para>The OpenGL sample applications are in <filename>$VJ_BASE_DIR/share/samples/ogl</filename>. They are as follows:</para>
+         <para>The OpenGL sample applications are in <filename>$VJ_BASE_DIR/share/samples/OGL</filename>. They are as follows:</para>
          <itemizedlist>
             <listitem>
                <para>Analog: A very simple demo that allows you to test out analog input to VR Juggler. Use an analog simulator, or a real analog device (like a potentiometer hooked up to an IBOX, etc), you can move a cube from the floor to 6 feet above the floor.</para>
@@ -285,7 +285,7 @@ value</screen>
       </section>
       <section>
          <title>OpenGL Performer Applications </title>
-         <para>Examples of OpenGL Performer applications can be found in <filename>$VJ_BASE_DIR/share/samples/pf</filename>. These are for more advanced developers who are familiar with Performer and some of the more complicated aspects of VR Juggler. There are two main programs there:</para>
+         <para>Examples of OpenGL Performer applications can be found in <filename>$VJ_BASE_DIR/share/samples/Pf</filename>. These are for more advanced developers who are familiar with Performer and some of the more complicated aspects of VR Juggler. There are two main programs there:</para>
          <itemizedlist>
             <listitem>
                <para>pfNav: A starting point for basic VR Juggler Performer applications that need to load a model and navigate through it. Users implement their application by inheriting from a provided class, <classname>simplePfNav</classname>. This is a good place for Performer beginners to start because <classname>simplePfNav</classname> hides many of the complicated details (which actually makes that class far from simple).</para>
@@ -309,7 +309,7 @@ value</screen>
          <section>
             <title>Compiling from the Command Line</title>
             <para>All the sample programs in <filename>$VJ_BASE_DIR/share/samples</filename> use the same basic steps to compile unless otherwise noted. Always refer to the top of the sample application's <filename>Makefile</filename> for information that may be specific to building that application. In general, though, all applications' makefiles are compatible with the standard version of the <command>make</command>(1) utility. This includes the <command>nmake</command> command provided with Visual C++.</para>
-            <para>The example used here will be the Torus application found in <filename>$VJ_BASE_DIR/share/samples/ogl/torus</filename>. It is an OpenGL-based application that will compile and run on all platforms supported by VR Juggler. Begin by changing into the directory <filename>$VJ_BASE_DIR/share/samples/ogl/torus</filename> in a command shell.</para>
+            <para>The example used here will be the Torus application found in <filename>$VJ_BASE_DIR/share/test/Draw/OGL/torus</filename>. It is an OpenGL-based application that will compile and run on all platforms supported by VR Juggler. Begin by changing into the directory <filename>$VJ_BASE_DIR/share/test/Draw/OGL/torus</filename> in a command shell.</para>
             <para>To compile Torus, simply enter the following:</para>
             <screen>% make</screen>
             <para>or on Win32 without Cygwin, enter:</para>
@@ -382,7 +382,7 @@ value</screen>
    </chapter>
    <chapter id="running.app.chapter">
       <title>Running a VR Juggler Sample Program</title>
-      <para>It is important to note that the same VR Juggler application can be run in simulator mode or in a full-scale VR system with no modifications. What does change is the configuration files used when starting the program. In <filename>$VJ_BASE_DIR/share/Data/configFiles</filename>, you can find many basic configuration files including those for running in simulator using a mouse and keyboard to simulate VR input devices and some example files based on those used for the VRAC C2 systems. In the directory, you will see some files with names containing <quote>mixin</quote>. These are special files that provide a specific capability not necessarily needed by all applications. They can be mixed in (hence the name) with other configuration files as needed. The configuration files found in the <filename>configFiles</filename> directory will be referenced in the examples provided, so be sure you know where they are.</para>
+      <para>It is important to note that the same VR Juggler application can be run in simulator mode or in a full-scale VR system with no modifications. What does change is the configuration files used when starting the program. In <filename>$VJ_BASE_DIR/share/data/configFiles</filename>, you can find many basic configuration files including those for running in simulator using a mouse and keyboard to simulate VR input devices and some example files based on those used for the VRAC C2 systems. In the directory, you will see some files with names containing <quote>mixin</quote>. These are special files that provide a specific capability not necessarily needed by all applications. They can be mixed in (hence the name) with other configuration files as needed. The configuration files found in the <filename>configFiles</filename> directory will be referenced in the examples provided, so be sure you know where they are.</para>
       <section>
          <title><anchor id="reading"/>Required Reading </title>
          <para>Before reading any further, make sure you have already read the instructions on how to install VR Juggler (see <xref linkend="install.vrj.chapter"/>) and on how to configure your environment (see <xref linkend="envvar.chapter"/>). That information will not be repeated, and it is assumed that you already know what we mean by <varname>VJ_BASE_DIR</varname> and <varname>LD_LIBRARY_PATH</varname> to name two environment variables. At this point, it is also assumed that you already have compiled an application (Torus in the case of the examples provided), so you should be sure to have read about how to compile a sample VR Juggler application (in <xref linkend="app.compile.chapter"/>) before proceeding.</para>
@@ -422,8 +422,8 @@ value</screen>
          <screen>% torus sim.base.config sim.displays.config sim.wand.mixin.config</screen>
          <para>You will notice that no paths are specified for finding the three configuration files. This is intentional to shorten the command line given in the example. In general, you always have to give the full path to the files. VR Juggler 1.0 does not have any logic for defining a path that would contain configuration files<footnote>
                <para>This has been fixed for VR Juggler 1.1 and beyond.</para>
-            </footnote>. Beginning users will typically want to reference the example configuration files in <filename>$VJ_BASE_DIR/share/Data/configFiles</filename>. As you get more comfortable with VR Juggler and its configuration system, you may want to make your own modified files and put them in the directory <filename>$HOME/.vjconfig</filename>. To simplify running applications, you may want to make a shell script (or batch file as appropriate) that does all the work of passing configuration files and common command-line arguments. For now, though, use the path <filename>$VJ_BASE_DIR/share/Data/configFiles</filename> for each of the configuration files you pass on the command line.</para>
-         <para>As the application starts, you will see a plethora of output (more or less depending on how you have <varname>$VJ_DEBUG_NFY_LEVEL</varname> and <varname>$VJ_DEBUG_CATAGORIES</varname> set), and then one moderately sized simulator display window will open on the left side of your screen while three blank keyboard input windows open on the right side of your screen. The display window will be titled <quote>SimWindow1</quote>, and the keyboard input windows will be titled <quote>Head Keyboard</quote>, <quote>Sim View Cameras Control</quote> and <quote>Wand Keyboard</quote> (in order from the top of the display to the bottom). Do not worry that the keyboard windows are black&mdash;that is normal. The display window will have a purple torus, a cyan sphere and a green cone. The torus is what you have come to see; the sphere is the simulated user's head; and the cone is the simulated user's wand. In <xref linkend="torus.running.figure"/>, we show what this looks on an IRIX 6.5 desktop for comparison with what you are seeing. Note that the head and wand are only rendered in the simulator windows. They are present because head and wand input are being simulated, and it is typically quite helpful to see the results of that simulated input.</para>
+            </footnote>. Beginning users will typically want to reference the example configuration files in <filename>$VJ_BASE_DIR/share/data/configFiles</filename>. As you get more comfortable with VR Juggler and its configuration system, you may want to make your own modified files and put them in the directory <filename>$HOME/.vjconfig</filename>. To simplify running applications, you may want to make a shell script (or batch file as appropriate) that does all the work of passing configuration files and common command-line arguments. For now, though, use the path <filename>$VJ_BASE_DIR/share/data/configFiles</filename> for each of the configuration files you pass on the command line.</para>
+         <para>As the application starts, you will see a plethora of output (more or less depending on how you have <varname>$VPR_DEBUG_NFY_LEVEL</varname> and <varname>$VPR_DEBUG_CATAGORIES</varname> set), and then one moderately sized simulator display window will open on the left side of your screen while three blank keyboard input windows open on the right side of your screen. The display window will be titled <quote>SimWindow1</quote>, and the keyboard input windows will be titled <quote>Head Keyboard</quote>, <quote>Sim View Cameras Control</quote> and <quote>Wand Keyboard</quote> (in order from the top of the display to the bottom). Do not worry that the keyboard windows are black&mdash;that is normal. The display window will have a purple torus, a cyan sphere and a green cone. The torus is what you have come to see; the sphere is the simulated user's head; and the cone is the simulated user's wand. In <xref linkend="torus.running.figure"/>, we show what this looks on an IRIX 6.5 desktop for comparison with what you are seeing. Note that the head and wand are only rendered in the simulator windows. They are present because head and wand input are being simulated, and it is typically quite helpful to see the results of that simulated input.</para>
          <figure float="1" id="torus.running.figure">
             <title>torus running on an IRIX desktop</title>
             <mediaobject>
@@ -643,7 +643,7 @@ value</screen>
          <para>Before continuing on to running an application in a full-scale VR system, we provide two asides: using a simulated glove and using a simulated analog device. The examples provided thus far have not discussed this because the information was not relevant to the particular sample application being used. Knowing how to use these simulated devices is important, however, and it is treated separately as a reference for your future endeavors in running VR Juggler applications.</para>
          <section>
             <title>Using a Simulated Glove </title>
-            <para>If you include the <filename>sim.glove.mixin.config</filename> file, your application will also have access to a simulated glove, with position and gesture inputs. The glove is controlled by a window titled <quote>Glove Keyboard</quote>. This window lets you control the glove position and selected gesture. Movement control of the glove uses the mouse and is the same as that of the wand. The mouse buttons are used to select gestures. The mapping of the gesture numbers to actual hand positions is controlled by the <quote>training file</quote> for the sim glove. The default training file is <filename>$VJ_BASE_DIR/share/Data/gesture/simpleSimGestures.dat</filename>.</para>
+            <para>If you include the <filename>sim.glove.mixin.config</filename> file, your application will also have access to a simulated glove, with position and gesture inputs. The glove is controlled by a window titled <quote>Glove Keyboard</quote>. This window lets you control the glove position and selected gesture. Movement control of the glove uses the mouse and is the same as that of the wand. The mouse buttons are used to select gestures. The mapping of the gesture numbers to actual hand positions is controlled by the <quote>training file</quote> for the sim glove. The default training file is <filename>$VJ_BASE_DIR/share/data/gesture/simpleSimGestures.dat</filename>.</para>
          </section>
          <section>
             <title>Using a Simulated Analog Device </title>
@@ -702,7 +702,7 @@ value</screen>
       <section>
          <title>Running an Application in a VR System</title>
          <para>Running an application full-scale in a VR system is more complicated than running in simulator mode. The reason for this is that VR systems tend to differ in configuration and in available hardware. VR Juggler is flexible enough to handle most any configuration you throw at it, but those configurations need to be put together first. Examples of configuration files used in VRAC's C2 system are provided, and they are used in this documentation. It should be noted, however, that for any particular system, custom configuration files will probably have to be written. The idea behind this section is to provide a basic understanding of what is needed to get started with running in a VR system.</para>
-         <para>The example configuration files in the directory <filename>$VJ_BASE_DIR/share/Data/configFiles</filename> modeled after those used for VRAC's C2 system are as follows:</para>
+         <para>The example configuration files in the directory <filename>$VJ_BASE_DIR/share/data/configFiles</filename> modeled after those used for VRAC's C2 system are as follows:</para>
          <itemizedlist>
             <listitem>
                <para><filename>C2.base.config</filename> - The basic configuration file needed by all applications when run in the C2. It defines commonly used VR Juggler concepts that are beyond the scope of this particular book.</para>
