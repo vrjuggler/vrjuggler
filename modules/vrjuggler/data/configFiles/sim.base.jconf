@@ -184,7 +184,7 @@
          <initial_rotation>0.0</initial_rotation>
          <initial_rotation>0.0</initial_rotation>
          <initial_rotation>0.0</initial_rotation>
-         <translation_delta>0.02</translation_delta>
+         <translation_delta>0.005</translation_delta>
          <rotation_delta>0.1</rotation_delta>
          <translation_coordinate_system>Local</translation_coordinate_system>
          <rotation_coordinate_system>Local</rotation_coordinate_system>
@@ -288,7 +288,7 @@
          <initial_rotation>0.0</initial_rotation>
          <initial_rotation>0.0</initial_rotation>
          <initial_rotation>0.0</initial_rotation>
-         <translation_delta>0.02</translation_delta>
+         <translation_delta>0.005</translation_delta>
          <rotation_delta>0.1</rotation_delta>
          <translation_coordinate_system>Global</translation_coordinate_system>
          <rotation_coordinate_system>Local</rotation_coordinate_system>
@@ -392,7 +392,7 @@
          <initial_rotation>-15.0</initial_rotation>
          <initial_rotation>10.0</initial_rotation>
          <initial_rotation>0.0</initial_rotation>
-         <translation_delta>0.02</translation_delta>
+         <translation_delta>0.005</translation_delta>
          <rotation_delta>0.1</rotation_delta>
          <translation_coordinate_system>Local</translation_coordinate_system>
          <rotation_coordinate_system>Local</rotation_coordinate_system>
