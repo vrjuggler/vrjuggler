@@ -23,7 +23,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# common.defs.mk.in,v 1.9 2001/02/22 23:34:18 patrick Exp
+# common.defs.mk.in,v 1.17 2001/06/19 22:22:59 patrickh Exp
 #
 # This file <common.defs.mk> provides variable assignments based on the
 # results of running a Doozer++-aware configure script.
@@ -76,23 +76,35 @@
 # GROUP_NAME      - The name of the group that will own the files.
 # FILE_PERMS      - Normal file permissions.
 # EXEC_PERMS      - Executable file permissions.
+# EXE_NAME_FLAG   - Flag passed to the linker to name an executable file.
 # DIR_PERMS       - Directory permissions.
 # INCLUDES        - Additions to the include path (-I/path/to/include).
 # JAR             - Command for creating Java JAR files.
 # JAVAC           - Java compiler.
+# JAVAH           - javah utility.
+# JAVAP           - javap utility.
+# JDK_HOME        - Base Java installation directory.
+# JNI_INC         - The include paths necessary for JNI.
+# JNI_LIB         - The library which needs to be statically linked for JNI.
 # LD              - Path to ld(1) (or equivalent program).
 # LDFLAGS         - Flags for $(LD).
 # LDOPTS          - Extra, often platform-specific, options for the linker.
 # LIBS            - Extra external libraries needed at link time.
 # LN_S            - Working 'ln -s' command.
+# MAKEDEPEND      - The makedepend(1) program (if needed).
 # MKPATH          - Path to shared dpp.*.mk file directory.
 # OBJEXT          - Suffix for object file names (e.g., "o" or "obj").
+# OBJ_BUILD_FLAG  - Flag passed to the compiler to create an object file.
 # OBJ_NAME_FLAG   - Flag passed to the compiler to name an object file.
 # OBJDIR          - Path to the directory where the object files will be built.
 # OS_TYPE         - Type of the target operating system (UNIX or Win32).
 # PERL            - Path to Perl 5 binary.
 # RANLIB          - Path to ranlib(1) binary if it is available.  ':'
 #                   otherwise.
+# RMIC            - Java RMI compiler utility.
+#
+# USE_MAKEDEPEND  - Tell the dependency-generation code whether to use
+#                   makedepend(1).  The value will be either 'Y' or 'N'.
 #
 # C_COMPILE       - Command for compiling C code.
 # CXX_COMPILE     - Command for compiling C++ code.
@@ -139,10 +151,16 @@ DEFS		= @DEFS@ $(EXTRA_DEFS)
 DEP_GEN_FLAG	= @DEP_GEN_FLAG@
 DEPEND_FLAGS	= @DEPEND_FLAGS@ @INCLUDES@ -I$(topdir) $(EXTRA_DEPEND_FLAGS)
 DEPEND_EXTRAS	= @DEPEND_EXTRAS@ $(DEFS)
+EXE_NAME_FLAG	= @EXE_NAME_FLAG@
 INCLUDES	= @INCLUDES@ -I$(topdir) $(EXTRA_INCLUDES)
 INSTALL		= @INSTALL@
 JAR		= @JAR@
 JAVAC		= @JAVAC@
+JAVAH		= @JAVAH@
+JAVAP		= @JAVAP@
+JDK_HOME	= @JDK_HOME@
+JNI_INC		= @JNI_INC@
+JNI_LIB		= @JNI_LIB@
 LD		= @LD@ $(DPP_EXTRA_LDFLAGS) $(EXTRA_LDFLAGS)
 LDFLAGS		= @LDFLAGS@ -L/usr/lib$(LIBBITSUF) -L/usr/lib
 LDOPTS		= @LDOPTS@ $(DPP_EXTRA_LDOPTS) $(EXTRA_LDOPTS)		\
@@ -151,17 +169,22 @@ LDOPTS_DBG	= @LDOPTS_DBG@ $(EXTRA_LDOPTS_DBG)
 LDOPTS_OPT	= @LDOPTS_OPT@ $(EXTRA_LDOPTS_OPT)
 LIBS		= @LIBS@ $(EXTRA_LIBS)
 LN_S		= @LN_S@
+MAKEDEPEND	= @MAKEDEPEND@
 MKPATH		?=
 OBJEXT		= @OBJEXT@
+OBJ_BUILD_FLAG	= @OBJ_BUILD_FLAG@
 OBJ_NAME_FLAG	= @OBJ_NAME_FLAG@
 OS_TYPE		= @OS_TYPE@
 PERL		= @PERL@
 RANLIB		= @RANLIB@
+RMIC		= @RMIC@
 
 # SGI-specific dynamic-shared-object information.
 DSOREGFILE	= @DSOREGFILE@
 DSOVERSION	= @DSOVERSION@
 DSOVERSIONOPTS	= @DSOVERSIONOPTS@
+
+USE_MAKEDEPEND	= @USE_MAKEDEPEND@
 
 # Installation information (permissions, ownership).
 OWNER_NAME	= @OWNER_NAME@
