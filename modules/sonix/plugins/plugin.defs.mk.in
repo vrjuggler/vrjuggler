@@ -43,16 +43,7 @@
 # -----------------------------------------------------------------------------
 # Common code for plug-in DSOs.
 # -----------------------------------------------------------------------------
-ifeq ($(BUILD_TYPE), dbg)
-   BUILD_TYPE_DIR=	dbg
-endif
-ifeq ($(BUILD_TYPE), opt)
-   BUILD_TYPE_DIR=	opt
-endif
-ifeq ($(BUILD_TYPE), prof)
-   BUILD_TYPE_DIR=	dbg
-endif
-
+BUILD_TYPE_DIR=	$(BUILD_TYPE)
 LIBDIR_NAME?=	lib$(LIBBITSUF)
 
 # $(LIBDIR_BASE) is the base directory where the libraries will be built.
