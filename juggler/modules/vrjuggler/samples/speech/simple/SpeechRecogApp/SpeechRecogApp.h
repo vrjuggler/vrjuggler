@@ -37,14 +37,15 @@
 
 #include <iostream>
 #include <iomanip>
+#include <GL/gl.h>
 
 #include <vrj/Draw/OGL/GlApp.h>
 #include <vpr/Util/Interval.h>
 
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
-#include <gadget/Type/SpeechRecogDigitalInterface.h>
-#include <gadget/Type/SpeechRecogStringInterface.h>
+#include <gadget/Type/CommandInterface.h>
+#include <gadget/Type/StringInterface.h>
 
 using namespace vrj;
 
@@ -231,8 +232,8 @@ private:
    gadget::PositionInterface  mHead;    /**< Positional interface for Head position */
    gadget::DigitalInterface   mButton0; /**< Digital interface for button 0 */
    gadget::DigitalInterface   mButton1; /**< Digital interface for button 1 */
-   gadget::SpeechRecogDigitalInterface   mSpRecDigital;
-   gadget::SpeechRecogStringInterface   mSpRecString;
+   gadget::CommandInterface   mSpRecDigital;
+   gadget::StringInterface    mSpRecString;
 
    std::string mLastRecString;
    int mLastRecDigital;
