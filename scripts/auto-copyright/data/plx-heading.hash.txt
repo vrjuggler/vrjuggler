@@ -1,0 +1,12 @@
+#
+# Plexus
+#
+# Original Authors:
+#   Allen Bierbaum, Patrick Hartling, Kevin Meinert
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
