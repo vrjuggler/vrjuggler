@@ -258,23 +258,27 @@ public class WizardBuilder
       d.setVisible(true);
 
       // Get the currently selected item
-      String classname = d.selectedItem;
-      if (classname == null)
+      WizardStep step = d.getSelectedItem();
+      if (step != null)
       {
-         return;
+         addStep(step);
       }
-
-      // Try to create the step and add it to the wizard
-      try
-      {
-         Class clazz = Class.forName(classname);
-         WizardStep child = (WizardStep)clazz.newInstance();
-         addStep(child);
-      }
-      catch (Exception ex)
-      {
-         ex.printStackTrace();
-      }
+//      if (classname == null)
+//      {
+//         return;
+//      }
+//
+//      // Try to create the step and add it to the wizard
+//      try
+//      {
+//         Class clazz = Class.forName(classname);
+//         WizardStep child = (WizardStep)clazz.newInstance();
+//         addStep(child);
+//      }
+//      catch (Exception ex)
+//      {
+//         ex.printStackTrace();
+//      }
    }
 
    /**

@@ -45,6 +45,14 @@ public class WelcomePane
    implements WizardPane
 {
    /**
+    * Register ourself with the WizardStepFactory.
+    */
+   static
+   {
+      WizardStepFactory.registerWizardStep(WelcomePane.class);
+   }
+
+   /**
     * Creates a new WelcomePane with no text.
     */
    public WelcomePane()

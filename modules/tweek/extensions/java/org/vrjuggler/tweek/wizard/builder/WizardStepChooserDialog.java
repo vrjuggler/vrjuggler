@@ -92,8 +92,12 @@ public class WizardStepChooserDialog
       sequencesList.setCellRenderer(new WizardStepListCellRenderer());
 
       // Add in the default panes
-      panesModel.addElement("org.vrjuggler.tweek.wizard.panes.WelcomePane");
-      panesModel.addElement("org.vrjuggler.vrjconfig.wizard.panes.SimDisplayPane");
+      for (int i=0; i<WizardStepFactory.getNumWizardSteps(); ++i)
+      {
+         panesModel.addElement(WizardStepFactory.getWizardStep(i));
+      }
+//      panesModel.addElement("org.vrjuggler.tweek.wizard.panes.WelcomePane");
+//      panesModel.addElement("org.vrjuggler.vrjconfig.wizard.panes.SimDisplayPane");
    }
 
    private void jbInit() throws Exception
@@ -142,6 +146,11 @@ public class WizardStepChooserDialog
       tabPane.setSelectedIndex(0);
    }
 
+   public WizardStep getSelectedItem()
+   {
+      return selectedItem;
+   }
+
    /**
     * Handle cancel action.
     */
@@ -160,11 +169,11 @@ public class WizardStepChooserDialog
       // get the selected item
       if (tabIdx == 0)
       {
-         selectedItem = (String)panesList.getSelectedValue();
+         selectedItem = (WizardStep)panesList.getSelectedValue();
       }
       else
       {
-         selectedItem = (String)sequencesList.getSelectedValue();
+         selectedItem = (WizardStep)sequencesList.getSelectedValue();
       }
 
       this.setVisible(false);
@@ -173,9 +182,9 @@ public class WizardStepChooserDialog
    /**
     * The step that was chosen through this dialog.
     */
-   String selectedItem;
+   private WizardStep selectedItem;
 
-   DefaultListModel panesModel, sequencesModel;
+   private DefaultListModel panesModel, sequencesModel;
 }
 
 class WizardStepListCellRenderer
@@ -186,8 +195,12 @@ class WizardStepListCellRenderer
                                                  boolean focus)
    {
       super.getListCellRendererComponent(list, value, index, sel, focus);
-      String cn = (String)value;
-      setText(cn.substring(cn.lastIndexOf('.')+1));
+//      String cn = (String)value;
+//      String cn = step.getName();
+//      setText(cn.substring(cn.lastIndexOf('.')+1));
+
+      WizardStep step = (WizardStep)value;
+      setText(step.getName());
       return this;
    }
 }
