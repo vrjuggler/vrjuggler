@@ -26,7 +26,9 @@ include ${MKPATH}/vj.rec.mk
 DIRPRFX		= Input/
 
 # Subdirectories to compile.
-SUBDIRS		= vjGlove vjInput vjPosition InputManager ibox vjKeyboard
+SUBDIRS		= vjGlove vjInput vjPosition \
+		  InputManager ibox vjKeyboard \
+		  vjSim vjGesture
 
 # -----------------------------------------------------------------------------
 # Library targets.

@@ -24,7 +24,7 @@ public:
 
 public:  // **** GET GESTURES **** //
    //: Retuns the id of the named gesture.
-   //! RETURNS: Null string - Gesture name Not found.
+   //! RETURNS: -1 - Gesture name Not found.
    virtual int getGestureIndex(string name) = 0;
 
    //: Get the string name of the gesture.

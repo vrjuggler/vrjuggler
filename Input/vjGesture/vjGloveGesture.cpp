@@ -4,7 +4,7 @@
 //: Get a gesture name
 //! RETURNS: (gestureId in range) - string desc of gesture
 //! RETURNS: (gesture not in range) - empty string
-void vjGloveGesture::getGestureString(int gestureId)
+string vjGloveGesture::getGestureString(int gestureId)
 {
    if(gestureId < 0)
       return getGestureString(this->getGesture());    // Get string of current gesture
