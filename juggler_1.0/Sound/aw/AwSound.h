@@ -1,13 +1,11 @@
 #ifndef AWSOUND_H
 #define AWSOUND_H
 
-#include <vjConfig.h>
-
 #include <assert.h>
 #include <stdio.h>
 #include <string>
 #include <aw.h> //audio works
-#include <Sound/Sound.h>
+#include <Sound/vjSound.h>
 
 // you need an Observer node in your .adf file named you
 // usually set it's position to 0,0,0
@@ -19,11 +17,11 @@
 // awSound node's position can only change with observer position change,
 //  so i'd keep it flexible by using awPlayer nodes for each sound you want.
 // Ambient sounds can be defined as plain awSound nodes.
-class AwSound : public Sound
+class AwSound : public vjSound
 {
 public:
    //specify the sound's name in the adf file...
-   AwSound( SoundEngine& engine );
+   AwSound( vjSoundEngine& engine );
    
    // loads the sound from an alias as specified in the audioworks .adf file
    virtual bool load( const char* const alias );
@@ -35,7 +33,7 @@ public:
    // allows a user to enable or disable a sound without worring about its state set by start or stop.
    // NOTE: to hear a sound enable() and play() must be active.
    //       default is ON
-   virtual void enable( Sound::BinaryState state = Sound::ON );
+   virtual void enable( vjSound::BinaryState state = vjSound::ON );
     
    virtual void trigger();
    

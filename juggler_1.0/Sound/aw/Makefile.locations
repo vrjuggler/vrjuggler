@@ -1,7 +1,0 @@
-AW_LIB = 	-L/usr/lib32/PSI -law -lawhwi -lpsi -laudiofile
-AW_INCLUDE = -I/usr/include/PSI
-BASE_CLASS_INCLUDES = -I../
-
-############################################################
-ADDITIONAL_INCLUDES = $(AW_INCLUDE) $(BASE_CLASS_INCLUDES)
-ADDITIONAL_LIBS = $(AW_LIB)

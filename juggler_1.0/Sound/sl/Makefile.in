@@ -40,8 +40,7 @@ vpath %.${OBJ_FILE_SUFFIX} ${OBJDIR}
 SL		:= @SL@
 
 SL_SRCS 	:= SlSound.cpp			\
-                   SlSoundEngine.cpp		\
-                   SlSoundEngineCreator.cpp
+            SlSoundEngine.cpp
 
 SL_OBJECTS	:= ${addprefix ${OBJDIR}/,${SL_SRCS:.cpp=.${OBJ_FILE_SUFFIX}}}
 DEPEND_FILES	:= ${SL_SRCS:.cpp=.d}

@@ -1,20 +1,18 @@
 #ifndef SLSOUND_H
 #define SLSOUND_H
 
-#include <vjConfig.h>
-
 #include <assert.h>
 #include <stdio.h>
 #include <string>
-#include <sl.h>
+#include "sl.h"
 #include <Sound/sl/SlSoundEngine.h>
 
-#include <Sound/Sound.h> // base class...
+#include <Sound/vjSound.h> // base class...
 
-class SlSound : public Sound
+class SlSound : public vjSound
 {
 public:
-   SlSound( SoundEngine& engine );
+   SlSound( vjSoundEngine& engine );
    virtual ~SlSound();
    
    // load the sound from filename...
@@ -25,7 +23,7 @@ public:
    // allows a user to enable or disable a sound without worring about its state set by start or stop.
    // NOTE: to hear a sound enable() and play() must be active.
    //       default is ON
-   virtual void enable( Sound::BinaryState state = Sound::ON );
+   virtual void enable( vjSound::BinaryState state = vjSound::ON );
     
    virtual void trigger();
    

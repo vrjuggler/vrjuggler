@@ -1,10 +1,7 @@
-#include <vjConfig.h>
-
-#include <assert.h>
 #include <unistd.h>
 #include <iostream.h>
 #include <aw.h> //audio works
-#include <Sound/SoundEngine.h>   // base class
+#include <Sound/vjSoundEngine.h>   // base class
 #include <Sound/aw/AwSound.h>       // my sound type...
 
 #include <Sound/aw/AwSoundEngine.h> // my header
@@ -15,7 +12,7 @@ AwSoundEngine::AwSoundEngine() : mObserver( NULL )
 
 AwSoundEngine::~AwSoundEngine() {}
 
-void AwSoundEngine::init( const char* const adfFileName )
+void AwSoundEngine::init()
 {
    // initialize the AudioWorks system
    awOpenAWD("");
@@ -28,11 +25,11 @@ void AwSoundEngine::init( const char* const adfFileName )
 
    // The three stages in setting up a AudioWorks application are
    // - Initialization
-   assert( awInitSys() != -1 );
+   vjASSERT( awInitSys() != -1 );
 
    // - Definition
    // Call awDefineSys() with the name of an application definition file
-   assert( awDefineSys( adfFileName ) != -1 );
+   vjASSERT( awDefineSys( mAdfFileName ) != -1 );
    // Make explicit function calls to create instances of AudioWorks classes.
 
    // - Configuration
@@ -44,7 +41,7 @@ void AwSoundEngine::init( const char* const adfFileName )
    // the list.  Passing in a value of 0 will skip all of the mapping
    // function calls.  These functions must be called by the application 
    // for each sound and engine that will be used in the same simulation.
-   assert( awConfigSys( 1 ) == 0 );
+   vjASSERT( awConfigSys( 1 ) == 0 );
 
    // use a separate process for the sound engine.
    // OFF is default
@@ -78,7 +75,7 @@ void AwSoundEngine::aliasToFileName( const char* const alias, std::string& filen
 
 //: Factory function to create a new sound.
 // memory managed by engine
-Sound* AwSoundEngine::newSound()
+vjSound* AwSoundEngine::newSound()
 {
    return new AwSound( *this );
 }
@@ -106,7 +103,7 @@ void AwSoundEngine::kill()
 // set observer position
 void AwSoundEngine::setPosition( const vjMatrix& position )
 {
-   SoundEngine::setPosition( position );
+   vjSoundEngine::setPosition( position );
    
    if (mObserver != NULL)
    {
@@ -122,7 +119,7 @@ void AwSoundEngine::setPosition( const vjMatrix& position )
 // set observer position
 void AwSoundEngine::setPosition( const float& x, const float& y, const float& z )
 {
-   SoundEngine::setPosition( x, y, z );
+   vjSoundEngine::setPosition( x, y, z );
    
    if (mObserver != NULL)
    {
@@ -131,3 +128,19 @@ void AwSoundEngine::setPosition( const float& x, const float& y, const float& z 
       awXYZHPR( mObserver, xyz, hpr );
    }
 }
+
+bool AwSoundEngine::config( vjConfigChunk* chunk )
+{
+	vjASSERT( (std::string)chunk->getType() == AwSoundEngine::getChunkType() );
+
+	mAdfFileName = (std::string)chunk->getProperty( "adfConfigFile" );
+   
+   if (mAdfFileName != "")
+   {
+      return true;
+   }
+   
+   return false;
+}
+
+

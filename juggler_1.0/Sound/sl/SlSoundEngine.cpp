@@ -1,10 +1,8 @@
-#include <vjConfig.h>
-
 #include <assert.h>
 #include <unistd.h>
 #include <iostream.h>
-#include <sl.h>
-#include <Sound/SoundEngine.h> // base class..
+#include "sl.h"
+#include <Sound/vjSoundEngine.h> // base class..
 #include <Sound/sl/SlSound.h>     // my sound handle type...
 
 #include <Sound/sl/SlSoundEngine.h> //my header
@@ -26,9 +24,8 @@ SlSoundEngine::~SlSoundEngine()
 }
 
 // pass the config filename here...
-void SlSoundEngine::init( const char* const aliasDatabase )
+void SlSoundEngine::init()
 {
-   mAliasDatabase.loadDatabase( aliasDatabase );
    //sched.setSafetyMargin( 0.128f );
 }
 
@@ -36,12 +33,21 @@ void SlSoundEngine::init( const char* const aliasDatabase )
 // the "filename" returned can be used in a call to Sound::load()
 void SlSoundEngine::aliasToFileName( const char* const alias, std::string& filename )
 {
-   filename = mAliasDatabase.lookup( alias );
-}   
+	std::string alias_name( alias );
+   std::map<std::string, std::string>::iterator i = mAliasDatabase.find( alias_name );
+
+	if (i == mAliasDatabase.end())
+	{
+		//then not found.
+		filename = "file_not_found_in_alias_database";
+	} else {
+		filename = (*i).second;
+	}
+}
 
 //: Factory function to create a new sound.
 // memory managed by engine
-Sound* SlSoundEngine::newSound()
+vjSound* SlSoundEngine::newSound()
 { 
    // return the sound handle, user must delete.
    return new SlSound( *this );
@@ -93,18 +99,39 @@ void SlSoundEngine::kill()
 // set position
 void SlSoundEngine::setPosition( const vjMatrix& position )
 {
-   SoundEngine::setPosition( position );
+   vjSoundEngine::setPosition( position );
    
    //TODO: compute the SL sound volume
+   // can't do this, because sl's setVolume member actually changes the entire sound data.
+   //this would reduce the sound stream to noisyness pretty quickly
 }
 
 // set position
 void SlSoundEngine::setPosition( const float& x, const float& y, const float& z )
 {
-   SoundEngine::setPosition( x, y, z );
+   vjSoundEngine::setPosition( x, y, z );
    
-   float xyz[3] = { x, y, z };
-   float hpr[3] = { 0.0f, 0.0f, 0.0f };
+   //float xyz[3] = { x, y, z };
+   //float hpr[3] = { 0.0f, 0.0f, 0.0f };
 
    //TODO: compute the SL sound volume
+   // can't do this, because sl's setVolume member actually changes the entire sound data.
+   //this would reduce the sound stream to noisyness pretty quickly
 }
+
+bool SlSoundEngine::config( vjConfigChunk* chunk )
+{
+	vjASSERT( (std::string)chunk->getType() == SlSoundEngine::getChunkType() );
+
+	int num_sounds = chunk->getNum( "Sounds" );
+	for (int x = 0; x < num_sounds; ++x)
+	{
+		vjConfigChunk* sound_chunk = (vjConfigChunk*)chunk->getProperty("Sounds",x);
+		vjASSERT(NULL != sound_chunk);
+		std::string alias = sound_chunk->getProperty( "Alias" );
+		std::string filename = sound_chunk->getProperty( "Filename" );
+		mAliasDatabase[alias] = filename;
+	}
+   return true;
+}
+
