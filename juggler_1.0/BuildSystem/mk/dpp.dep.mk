@@ -1,5 +1,29 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# Doozer++ is (C) Copyright 2000, 2001 by Iowa State University
+#
+# Original Author:
+#   Patrick Hartling
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
 # =============================================================================
-# dpp.dep.mk,v 1.2 2000/12/19 17:10:35 patrick Exp
+# dpp.dep.mk,v 1.6 2001/02/16 22:05:26 patrick Exp
 #
 # This include file <dpp.dep.mk> handles source code dependencies.  It
 # generates makefiles corresponding to each source file (ending in .c or .cpp)
@@ -8,19 +32,35 @@
 # -----------------------------------------------------------------------------
 # The Makefile including this file must define the following variables:
 #
-# C_COMPILE    - The compiler command for C files.
-# CXX_COMPILE  - The compiler command for C++ files.
-# DEP_GEN_FLAG - The flag passed to the compiler to generate dependencies.
-# OBJDIR       - The directory to which the object file(s) will be written.
-# OBJEXT       - Suffix for object file names (e.g., "o" or "obj").
-# SRCS         - The list of source files for which dependencies are to be
-#                generated.
+# BASIC_OBJECTS - The list of objects files (with extension .$(OBJEXT)) to be
+#                 compiled.  The dependency file names are generated based on
+#                 the contents of this variable.
+# C_COMPILE     - The compiler command for C files.
+# CXX_COMPILE   - The compiler command for C++ files.
+# DEPDIR        - The directory to which the depenecy file(s) will be written.
+#                 If not given, it defaults to the current directory.
+# DEP_GEN_FLAG  - The flag passed to the compiler to generate dependencies.
+# MKDEP_C       - The dependency generator command for C files.  If not given,
+#                 this defaults to the value of $(C_COMPILE).  Note that this
+#                 should not include the flag that actually generates the
+#                 dependency list.
+# MKDEP_CXX     - The dependency generator command for C++ files.  If not
+#                 given, this defaults to the value of $(CXX_COMPILE).  Note
+#                 that this should not include the flag that actually
+#                 generates the dependency list.
+# OBJDIR        - The directory to which the object file(s) will be written.
+#                 If not given, it defaults to the current directory.
+# OBJEXT        - Suffix for object file names (e.g., "o" or "obj").
+# SRCS          - The list of source files for which dependencies are to be
+#                 generated.
 #
 # Example:
 #         srcdir = /usr/src/proj1
+#         DEPDIR = /usr/src/proj1
 #         OBJDIR = /usr/obj/proj1
+#         OBJEXT = o
+#  BASIC_OBJECTS = file1.$(OBJEXT) file2.$(OBJEXT) file3.$(OBJEXT)
 #   DEP_GEN_FLAG = -M
-#   DEPEND_FILES = file1.d file2.d file3.d
 #
 # With these settings, the source code comes from /usr/src/proj1 and the
 # object files go into /usr/obj/proj1.
@@ -29,6 +69,8 @@
 # Conditionally set $(OBJDIR) and $(DEPDIR) just to be safe.
 OBJDIR		?= .
 DEPDIR		?= .
+MKDEP_C		?= $(C_COMPILE)
+MKDEP_CXX	?= $(CXX_COMPILE)
 
 DEPEND_FILES	:= $(addprefix $(DEPDIR)/, $(BASIC_OBJECTS:.$(OBJEXT)=.d))
 
@@ -60,9 +102,9 @@ ifeq ($(CC), cl)
                       -- $< | sed $(_MKDEP_SED_EXP) > $@ ; [ -s $@ ] ||	\
                       rm -f $@'
 else
-    _C_DEPGEN	= $(SHELL) -ec '$(C_COMPILE) $(DEP_GEN_FLAG) $< |	\
+    _C_DEPGEN	= $(SHELL) -ec '$(MKDEP_C) $(DEP_GEN_FLAG) $< |		\
                       sed $(_CC_SED_EXP) > $@ ; [ -s $@ ] || rm -f $@'
-    _CXX_DEPGEN	= $(SHELL) -ec '$(CXX_COMPILE) $(DEP_GEN_FLAG) $< |	\
+    _CXX_DEPGEN	= $(SHELL) -ec '$(MKDEP_CXX) $(DEP_GEN_FLAG) $< |	\
                       sed $(_CC_SED_EXP) > $@ ; [ -s $@ ] || rm -f $@'
 endif
 

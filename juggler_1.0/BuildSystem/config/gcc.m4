@@ -1,11 +1,38 @@
+dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
+dnl
+dnl Doozer++ is (C) Copyright 2000, 2001 by Iowa State University
+dnl
+dnl Original Author:
+dnl   Patrick Hartling
+dnl
+dnl This library is free software; you can redistribute it and/or
+dnl modify it under the terms of the GNU Library General Public
+dnl License as published by the Free Software Foundation; either
+dnl version 2 of the License, or (at your option) any later version.
+dnl
+dnl This library is distributed in the hope that it will be useful,
+dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
+dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+dnl Library General Public License for more details.
+dnl
+dnl You should have received a copy of the GNU Library General Public
+dnl License along with this library; if not, write to the
+dnl Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+dnl Boston, MA 02111-1307, USA.
+dnl
+dnl ************** <auto-copyright.pl END do not edit this line> **************
+
 dnl ===========================================================================
 dnl Perform tests related to the use of GCC as the compiler.
 dnl ---------------------------------------------------------------------------
 dnl Macros:
-dnl     DPP_WITH_GCC      - Adds a command-line argument telling whether or
-dnl                         not to force the use of GCC as the compiler suite.
-dnl     DPP_GPLUSPLUS_VER - Verify that the version of g++ available is at
-dnl                         least the given version.
+dnl     DPP_WITH_GCC         - Adds a command-line argument telling whether or
+dnl                            not to force the use of GCC as the compiler
+dnl                            suite.
+dnl     DPP_GPLUSPLUS_VER    - Verify that the version of g++ available is at
+dnl                            least the given version.
+dnl     DPP_GPLUSPLUS_MODERN - Verify that the version of g++ is at least
+dnl                            2.91 (EGCS 1.1.2).
 dnl
 dnl Command-line options added:
 dnl     --with-gcc 
@@ -16,7 +43,7 @@ dnl               be "no" or the empty string.  This is set by the
 dnl               DPP_WITH_GCC macro.
 dnl ===========================================================================
 
-dnl gcc.m4,v 1.2 2001/01/07 16:02:02 patrick Exp
+dnl gcc.m4,v 1.4 2001/02/19 23:24:29 patrick Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Force the use of GCC as the compiler suite.
@@ -62,4 +89,21 @@ AC_DEFUN(DPP_GPLUSPLUS_VER,
         $2
         true
     fi
+])
+
+dnl ---------------------------------------------------------------------------
+dnl Verify that g++ is at least 2.91 (aka, EGCS 1.1.2) since it implements the
+dnl more modern C++ features such as templates.
+dnl
+dnl Usage:
+dnl     DPP_GPLUSPLUS_MODERN([action-if-not-found])
+dnl
+dnl     action-if-not-found - The action to take if the version is less than
+dnl                           that specified.  Optional.
+dnl ---------------------------------------------------------------------------
+AC_DEFUN(DPP_GPLUSPLUS_MODERN,
+[
+    DPP_GPLUSPLUS_VER(2.91,
+        AC_CHECK_PROG(CC, egcc, egcc, $3)
+        AC_CHECK_PROG(CXX, eg++, eg++, $3))
 ])

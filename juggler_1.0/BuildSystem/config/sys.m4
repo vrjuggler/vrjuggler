@@ -1,3 +1,27 @@
+dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
+dnl
+dnl Doozer++ is (C) Copyright 2000, 2001 by Iowa State University
+dnl
+dnl Original Author:
+dnl   Patrick Hartling
+dnl
+dnl This library is free software; you can redistribute it and/or
+dnl modify it under the terms of the GNU Library General Public
+dnl License as published by the Free Software Foundation; either
+dnl version 2 of the License, or (at your option) any later version.
+dnl
+dnl This library is distributed in the hope that it will be useful,
+dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
+dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+dnl Library General Public License for more details.
+dnl
+dnl You should have received a copy of the GNU Library General Public
+dnl License along with this library; if not, write to the
+dnl Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+dnl Boston, MA 02111-1307, USA.
+dnl
+dnl ************** <auto-copyright.pl END do not edit this line> **************
+
 dnl ===========================================================================
 dnl Determine the canonical system type and define a ton of variables for
 dnl system-dependent settings.  The platforms supported in this file are AIX,
@@ -64,7 +88,7 @@ dnl     IRIXREL      - Defined to the string "IRIX5" or "IRIX6" based on the
 dnl                    determined version of IRIX.
 dnl ===========================================================================
 
-dnl sys.m4,v 1.11 2001/01/19 15:55:29 patrick Exp
+dnl sys.m4,v 1.12 2001/02/16 22:05:24 patrick Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Based on the given target host and CPU, set up the system-specific

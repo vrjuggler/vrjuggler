@@ -1,3 +1,27 @@
+dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
+dnl
+dnl Doozer++ is (C) Copyright 2000, 2001 by Iowa State University
+dnl
+dnl Original Author:
+dnl   Patrick Hartling
+dnl
+dnl This library is free software; you can redistribute it and/or
+dnl modify it under the terms of the GNU Library General Public
+dnl License as published by the Free Software Foundation; either
+dnl version 2 of the License, or (at your option) any later version.
+dnl
+dnl This library is distributed in the hope that it will be useful,
+dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
+dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+dnl Library General Public License for more details.
+dnl
+dnl You should have received a copy of the GNU Library General Public
+dnl License along with this library; if not, write to the
+dnl Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+dnl Boston, MA 02111-1307, USA.
+dnl
+dnl ************** <auto-copyright.pl END do not edit this line> **************
+
 dnl ===========================================================================
 dnl Provide command-line options and checks for Java utilities in the
 dnl configuration process.  This does the substitution of the variables
@@ -16,7 +40,7 @@ dnl     JAR      - The path up to and including the jar(1) utility.
 dnl     RMIC     - The RMI stub and skeleton compiler.
 dnl ===========================================================================
 
-dnl java.m4,v 1.3 2001/01/09 16:07:25 patrick Exp
+dnl java.m4,v 1.4 2001/02/16 22:05:23 patrick Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Find the path to the Java installation.  Substition is performed on the

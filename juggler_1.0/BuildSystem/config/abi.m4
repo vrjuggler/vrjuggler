@@ -1,3 +1,27 @@
+dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
+dnl
+dnl Doozer++ is (C) Copyright 2000, 2001 by Iowa State University
+dnl
+dnl Original Author:
+dnl   Patrick Hartling
+dnl
+dnl This library is free software; you can redistribute it and/or
+dnl modify it under the terms of the GNU Library General Public
+dnl License as published by the Free Software Foundation; either
+dnl version 2 of the License, or (at your option) any later version.
+dnl
+dnl This library is distributed in the hope that it will be useful,
+dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
+dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+dnl Library General Public License for more details.
+dnl
+dnl You should have received a copy of the GNU Library General Public
+dnl License along with this library; if not, write to the
+dnl Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+dnl Boston, MA 02111-1307, USA.
+dnl
+dnl ************** <auto-copyright.pl END do not edit this line> **************
+
 dnl ===========================================================================
 dnl Provide functionality for application binary interface (ABI) and
 dnl instruction set architecture (ISA) configurations.  The code here performs
@@ -38,7 +62,7 @@ dnl                    $CFLAGS and $CXXFLAGS.
 dnl     DPP_ABI_TYPE - The argument given to --with-abi.
 dnl ===========================================================================
 
-dnl abi.m4,v 1.1.1.1 2000/12/08 06:16:37 patrick Exp
+dnl abi.m4,v 1.2 2001/02/16 22:05:23 patrick Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Define a macro DPP_ABI_CFG for setting up the configuration parameters

@@ -1,3 +1,27 @@
+dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
+dnl
+dnl Doozer++ is (C) Copyright 2000, 2001 by Iowa State University
+dnl
+dnl Original Author:
+dnl   Patrick Hartling
+dnl
+dnl This library is free software; you can redistribute it and/or
+dnl modify it under the terms of the GNU Library General Public
+dnl License as published by the Free Software Foundation; either
+dnl version 2 of the License, or (at your option) any later version.
+dnl
+dnl This library is distributed in the hope that it will be useful,
+dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
+dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+dnl Library General Public License for more details.
+dnl
+dnl You should have received a copy of the GNU Library General Public
+dnl License along with this library; if not, write to the
+dnl Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+dnl Boston, MA 02111-1307, USA.
+dnl
+dnl ************** <auto-copyright.pl END do not edit this line> **************
+
 dnl ===========================================================================
 dnl Perform checks for various programs that are helpful for a complete build
 dnl system.  Currently, it checks for a BSD-compatible install(1), for
@@ -5,7 +29,7 @@ dnl ranlib(1) (except on IRIX) and for a working 'ln -s' command.  It also
 dnl determines whether make(1) sets $(MAKE).
 dnl ===========================================================================
 
-dnl basic_progs.m4,v 1.4 2001/01/16 21:00:05 patrick Exp
+dnl basic_progs.m4,v 1.5 2001/02/16 22:05:23 patrick Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Test for basic programs need by most, if not all, build systems.

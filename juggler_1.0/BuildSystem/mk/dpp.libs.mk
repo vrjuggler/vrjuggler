@@ -1,5 +1,29 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# Doozer++ is (C) Copyright 2000, 2001 by Iowa State University
+#
+# Original Author:
+#   Patrick Hartling
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
 # =============================================================================
-# dpp.libs.mk,v 1.3 2001/01/22 16:40:35 patrick Exp
+# dpp.libs.mk,v 1.6 2001/02/16 22:05:26 patrick Exp
 #
 # This file <dpp.libs.mk> defines many targets for use in compiling a software
 # library (or a set of libraries).  An including makefile can take advantage
@@ -10,6 +34,7 @@
 #
 # topdir         - The top of the build tree.
 # MKINSTALLDIRS  - Path to shell script for making directories.
+# MKPATH         - The path to the Doozer++ .mk files.
 #
 # ABI            - Application Binary Interface type.  This may be used for
 #                  other binary types when supported by the operating system
@@ -29,6 +54,17 @@
 # STATICLIB_EXT  - File extension for shared libraries.
 #
 # Optionally, it can define the following variables for added functionality:
+#
+# UMASK               - The permissions mask to use when installing files.  If
+#                       not specified, it defaults to 002.
+# GROUP_NAME          - The name of the group used for ownership of installed
+#                       files.
+# GROUP_OPT_UNIX      - The argument given to UNIX-based commands for changing
+#                       the group ownersihp on files and directories.  This
+#                       must be of the form "-g <group name>".  If
+#                       $(GROUP_NAME) is given and a value for this variable
+#                       is not specified, it defaults to -g $(GROUP_NAME).
+#                       Otherwise, no value is defined.
 #
 # BEFOREBUILD         - Extra steps to take before any object files are built.
 # AFTERBUILD          - Extra steps to take after all object files are built.
@@ -97,38 +133,8 @@
 #
 # EXTRA_OBJ_TARGETS   - Extra targets to build when making object files.
 # -----------------------------------------------------------------------------
-# Targets provided are:
-#
-# all             - Build everything.
-# all-abi         - Build everything using all supported ABIs.
-# debug           - Build the libraries (dynamic and static) with debugging
-#                   symbols.
-# dbg             - Build the debugging, static copy of the libraries.
-# ddso            - Build the debugging, dynamic shared object version of the
-#                   libraries.
-# optim           - Build the libraries (dynamic and static) with optimization
-#                   enabled.
-# opt             - Build the optimized, static version of the libraries.
-# dso             - Build the dynamic shared object version of the libraries.
-# obj             - Build the object files using the default value for
-#                   $(OBJDIR).
-#
-# install-all     - Install all versions of the libraries, all header files,
-#                   the Data directory, the configuration GUI and the test
-#                   code.
-# install-all-abi - Install every ABI possible on the target platform.
-# install         - Install the full debugging version of the libraries (both
-#                   static and dynamic libraries). 
-# install-debug   - Same as 'install'.
-# install-dbg     - Install the debugging, static version of the libraries.
-# install-ddso    - Install the debugging, dynamic shared object version of
-#                   the libraries.
-# install-optim   - Install the full optimized version of the libraries (both
-#                   static and dynamic libraries).
-# install-opt     - Install the optimized, static version of the libraries.
-# install-dso     - Install the dynamic shared object version of the
-#                   libraries.
-# install-headers - Install only the header files.
+# Refer to the comments at the top of dpp.libs.targets.mk for the list of
+# provided targets.
 # =============================================================================
 
 MKINSTALLDIRS	?= mkinstalldirs
@@ -181,520 +187,13 @@ LIBDIR		?= $(LIBDIR_BASE)/$(ISA)
 DBG_LIBDIR	?= $(LIBDIR)/$(DBG_DIR)
 OPT_LIBDIR	?= $(LIBDIR)/$(OPT_DIR)
 
-# $(_install_libdir_abs) is the full path to the base directory (minus any
+# $(INSTALL_LIBDIR_ABS) is the full path to the base directory (minus any
 # debugging or optimized subdirectories) where the libraries will be
-# installed.  $(_install_libdir_rel) is only the $(ISA) subdirectory of the
+# installed.  $(INSTALL_LIBDIR_REL) is only the $(ISA) subdirectory of the
 # full path.
-_install_libdir_abs = $(libdir)$(LIBBITSUF)/$(ISA)
-_install_libdir_rel = ./$(ISA)
+INSTALL_LIBDIR_ABS = $(libdir)$(LIBBITSUF)/$(ISA)
+INSTALL_LIBDIR_REL = ./$(ISA)
 
-# =============================================================================
-# The steps for building the 'dbg', 'ddso', 'opt' and 'dso' are as follows:
-#
-#    1) Build dependencies (if necessary).
-#    2) Compile all object files that are out of date.
-#    3) Compile the actual libraries from the object files.
-#    4) Any user-defined steps.
-# =============================================================================
+MAKE_REL_SYMLINKS	= 1
 
-# ------------------------------------------
-# Build all four versions of the libraries.
-# ------------------------------------------
-all:
-	@echo "==============================================================="
-	@echo "Building everything"
-	@echo "==============================================================="
-ifdef BEFOREBUILD
-	@$(MAKE) $(BEFOREBUILD)
-endif
-	@$(MAKE) libs $(EXTRA_OBJ_TARGETS)
-ifdef AFTERBUILD
-	@$(MAKE) $(AFTERBUILD)
-endif
-	@echo "==============================================================="
-	@echo "$@ complete"
-	@echo "==============================================================="
-
-# -------------------------------
-# Build all ABIs in $(ABI_LIST).
-# -------------------------------
-all-abi:
-	@echo "==============================================================="
-	@echo "Building everything using all ABIs"
-	@echo "==============================================================="
-ifdef BEFOREBUILD
-	@$(MAKE) $(BEFOREBUILD)
-endif
-	@for abi in $(ABI_LIST) ; do					\
-              echo "------------------------------------------------" ;	\
-              echo "Building libraries using $$abi" ;			\
-              echo "------------------------------------------------" ;	\
-              $(MAKE) dppABI=$$abi libs ;				\
-          done
-ifdef EXTRA_OBJ_TARGETS
-	@$(MAKE) $(EXTRA_OBJ_TARGETS)
-endif
-ifdef AFTERBUILD
-	@$(MAKE) $(AFTERBUILD)
-endif
-	@echo "==============================================================="
-	@echo "$@ complete"
-	@echo "==============================================================="
-
-# ---------------------------------------------
-# Make the debugging version of the libraries.
-# ---------------------------------------------
-dbg:
-	@echo "========================================================"
-	@echo "Making static debugging version"
-	@echo "========================================================"
-ifdef BEFOREBUILD
-	@$(MAKE) $(BEFOREBUILD)
-endif
-	@$(MAKE) obj.dbg.build $(EXTRA_OBJ_TARGETS)
-	@$(MAKE) lib.static.dbg.build
-ifdef AFTERBUILD
-	@$(MAKE) $(AFTERBUILD)
-endif
-	@echo "========================================================"
-	@echo "$@ complete"
-	@echo "========================================================"
-
-# ------------------------------------------------------------
-# Make the debugging version of the libraries that uses DSOs.
-# ------------------------------------------------------------
-ddso:
-	@echo "========================================================"
-	@echo "Making dynamic debugging version"
-	@echo "========================================================"
-ifdef BEFOREBUILD
-	@$(MAKE) $(BEFOREBUILD)
-endif
-	@$(MAKE) obj.dbg.build $(EXTRA_OBJ_TARGETS)
-	@$(MAKE) lib.dynamic.dbg.build
-ifdef AFTERBUILD
-	@$(MAKE) $(AFTERBUILD)
-endif
-	@echo "========================================================"
-	@echo "$@ complete"
-	@echo "========================================================"
-
-# ---------------------------------------------
-# Make the optimized version of the libraries.
-# ---------------------------------------------
-opt:
-	@echo "========================================================"
-	@echo "Making static optimized version"
-	@echo "========================================================"
-ifdef BEFOREBUILD
-	@$(MAKE) $(BEFOREBUILD)
-endif
-	@$(MAKE) obj.opt.build $(EXTRA_OBJ_TARGETS)
-	@$(MAKE) lib.static.opt.build
-ifdef AFTERBUILD
-	@$(MAKE) $(AFTERBUILD)
-endif
-	@echo "========================================================"
-	@echo "$@ complete"
-	@echo "========================================================"
-
-# ------------------------------------------------------------
-# Make the optimized version of the libraries that uses DSOs.
-# ------------------------------------------------------------
-dso:
-	@echo "========================================================"
-	@echo "Making dynamic optimized version"
-	@echo "========================================================"
-ifdef BEFOREBUILD
-	@$(MAKE) $(BEFOREBUILD)
-endif
-	@$(MAKE) obj.opt.build $(EXTRA_OBJ_TARGETS)
-	@$(MAKE) lib.dynamic.opt.build
-ifdef AFTERBUILD
-	@$(MAKE) $(AFTERBUILD)
-endif
-	@echo "========================================================"
-	@echo "$@ complete"
-	@echo "========================================================"
-
-# Build the optimized and debugging object files, static libraries and
-# dynamic libraries.  Once this has been done, make the links in $(LIBDIR).
-libs:
-ifdef PRELIB
-	@$(MAKE) $(PRELIB)
-endif
-	@$(MAKE) obj.opt.build
-	@$(MAKE) lib.static.opt.build
-	@$(MAKE) lib.dynamic.opt.build
-	@$(MAKE) obj.dbg.build
-	@$(MAKE) lib.static.dbg.build
-	@$(MAKE) lib.dynamic.dbg.build
-	@$(MAKE) _LIB_LINK_DIR="$(LIBDIR)" lib.links.build
-ifdef POSTLIB
-	@$(MAKE) $(POSTLIB)
-endif
-
-# Make symlinks in $(_LIB_LINK_DIR) pointing to the library binaries in
-# $(DEFAULT_DIR).
-lib.links.build:
-	@echo "------------------------------------------------"
-	@echo "Creating symlinks in $(_LIB_LINK_DIR)"
-	@echo "------------------------------------------------"
-	@for lib in $(LIBS) ; do					\
-            cd $(_LIB_LINK_DIR) && rm -f ./$$lib.$(STATICLIB_EXT) &&	\
-              $(LN_S) $(DEFAULT_DIR)/$$lib.$(STATICLIB_EXT) ./ ;	\
-            cd $(_LIB_LINK_DIR) && rm -f ./$$lib.$(DYNAMICLIB_EXT) &&	\
-              $(LN_S) $(DEFAULT_DIR)/$$lib.$(DYNAMICLIB_EXT) ./ ;	\
-          done
-
-# ----------------------------------------------------------------------------
-# Make the debugging version of the libraries building both static and
-# dynamic versions of the library binaries.
-# ----------------------------------------------------------------------------
-debug:
-	@echo "========================================================"
-	@echo "Making debugging version"
-	@echo "========================================================"
-ifdef BEFOREBUILD
-	@$(MAKE) $(BEFOREBUILD)
-endif
-	@$(MAKE) obj.dbg.build $(EXTRA_OBJ_TARGETS)
-	@$(MAKE) lib.static.dbg.build
-	@$(MAKE) lib.dynamic.dbg.build
-ifdef AFTERBUILD
-	@$(MAKE) $(AFTERBUILD)
-endif
-	@echo "========================================================"
-	@echo "$@ complete"
-	@echo "========================================================"
-
-# ----------------------------------------------------------------------------
-# Make the optimized version of the libraries building both static and
-# dynamic versions of the library binaries.
-# ----------------------------------------------------------------------------
-optim:
-	@echo "========================================================"
-	@echo "Making optimized version"
-	@echo "========================================================"
-ifdef BEFOREBUILD
-	@$(MAKE) $(BEFOREBUILD)
-endif
-	@$(MAKE) obj.opt.build $(EXTRA_OBJ_TARGETS)
-	@$(MAKE) lib.static.opt.build
-	@$(MAKE) lib.dynamic.opt.build
-ifdef AFTERBUILD
-	@$(MAKE) $(AFTERBUILD)
-endif
-	@echo "========================================================"
-	@echo "$@ complete"
-	@echo "========================================================"
-
-# --------------------------------------------------------------------
-# Build only the object files using the default values for $(OBJDIR).
-# --------------------------------------------------------------------
-obj:
-	@echo "------------------------------------------------"
-	@echo "Making library object files"
-	@echo "------------------------------------------------"
-	@$(MAKE) RECTARGET="$@" recursive
-	@echo "------------------------------------------------"
-	@echo "Object files built"
-	@echo "------------------------------------------------"
-
-# Build the object files with the debugging flags enabled.
-obj.dbg.build:
-	@echo "------------------------------------------------"
-	@echo "Building object files with debugging symbols"
-	@echo "------------------------------------------------"
-	@$(SHELL) $(MKINSTALLDIRS) $(DBG_BUILDDIR)
-	@for lib in $(LIBS) ; do					\
-              $(SHELL) $(MKINSTALLDIRS) $(DBG_BUILDDIR)/$$lib ;		\
-          done
-	@$(MAKE) RECTARGET="dbg" OPTIMIZER="$(DBG_FLAGS)"		\
-          BASE_OBJDIR="$(DBG_BUILDDIR)" recursive
-
-# Build the object files with the optimization flags enabled.
-obj.opt.build:
-	@echo "------------------------------------------------"
-	@echo "Building optimized object files"
-	@echo "------------------------------------------------"
-	@$(SHELL) $(MKINSTALLDIRS) $(OPT_BUILDDIR)
-	@for lib in $(LIBS) ; do					\
-              $(SHELL) $(MKINSTALLDIRS) $(OPT_BUILDDIR)/$$lib ;		\
-          done
-	@$(MAKE) RECTARGET="opt" OPTIMIZER="$(OPT_FLAGS)"		\
-          BASE_OBJDIR="$(OPT_BUILDDIR)" recursive
-
-# Build the static libraries with the debugging flags enabled.
-lib.static.dbg.build:
-	@echo "================================================"
-	@echo "Building static debugging libraries"
-	@echo "================================================"
-ifneq ("$(STATIC_LIBS)", "")
-	@for lib in $(STATIC_LIBS) ; do					\
-            $(MAKE) OBJDIR="$(DBG_BUILDDIR)/$$lib" LIBDIR="$(DBG_LIBDIR)" \
-              $(DBG_LIBDIR)/$$lib.$(STATICLIB_EXT) ;			\
-          done
-endif
-
-# Build the dynamic libraries with the debugging flags enabled.
-lib.dynamic.dbg.build:
-	@echo "================================================"
-	@echo "Building dynamic debugging libraries"
-	@echo "================================================"
-ifneq ("$(DYNAMIC_LIBS)", "")
-	@for lib in $(DYNAMIC_LIBS) ; do				\
-            $(MAKE) OBJDIR="$(DBG_BUILDDIR)/$$lib" LIBDIR="$(DBG_LIBDIR)" \
-              $(DBG_LIBDIR)/$$lib.$(DYNAMICLIB_EXT) ;			\
-          done
-endif
-
-# Build the static libraries with the optimization flags enabled.
-lib.static.opt.build:
-	@echo "================================================"
-	@echo "Building static optmized libraries"
-	@echo "================================================"
-ifneq ("$(STATIC_LIBS)", "")
-	@for lib in $(STATIC_LIBS) ; do					\
-            $(MAKE) OBJDIR="$(OPT_BUILDDIR)/$$lib" LIBDIR="$(OPT_LIBDIR)" \
-              $(OPT_LIBDIR)/$$lib.$(STATICLIB_EXT) ;			\
-          done
-endif
-
-# Build the static libraries with the optimization flags enabled.
-lib.dynamic.opt.build:
-	@echo "================================================"
-	@echo "Building dynamic optmized libraries"
-	@echo "================================================"
-ifneq ("$(DYNAMIC_LIBS)", "")
-	@for lib in $(DYNAMIC_LIBS) ; do				\
-            $(MAKE) OBJDIR="$(OPT_BUILDDIR)/$$lib" LIBDIR="$(OPT_LIBDIR)" \
-              $(OPT_LIBDIR)/$$lib.$(DYNAMICLIB_EXT) ;			\
-          done
-endif
-
-# =============================================================================
-# Installation targets.  The default (what is done by 'install') is to install
-# the static debugging version of the libraries.  The steps taken for a full
-# installation are:
-#
-#     1) Create the full installation directory hierarchy.
-#     2) Install the libraries.
-#     3) Install the header files.
-#     4) Any user-defined installation steps.
-# =============================================================================
-
-# ------------------------------------------------------------------------
-# Do a full installation all versions of the libraries and the associated
-# files.
-# ------------------------------------------------------------------------
-install-all:
-	@echo "==============================================================="
-	@echo "Installing everything"
-	@echo "==============================================================="
-ifdef BEFOREINSTALL
-	@$(MAKE) $(BEFOREINSTALL)
-endif
-	@$(MAKE) install-libs
-	@$(MAKE) do-post-install
-ifdef AFTERINSTALL
-	@$(MAKE) $(AFTERINSTALL)
-endif
-
-# -----------------------------------------------------------------------------
-# Do a full installation of all versions of the libraries built in each of the
-# ABIs in $(ABI_LIST).
-# -----------------------------------------------------------------------------
-install-all-abi:
-	@echo "==============================================================="
-	@echo "Installing everything using all ABIs"
-	@echo "==============================================================="
-ifdef BEFOREINSTALL
-	@$(MAKE) $(BEFOREINSTALL)
-endif
-	@for abi in $(ABI_LIST) ; do					\
-              echo "------------------------------------------------" ;	\
-              echo "Installing $$abi version of libraries" ;		\
-              echo "------------------------------------------------" ;	\
-              $(MAKE) dppABI=$$abi install-libs ;			\
-          done
-	@$(MAKE) do-post-install
-ifdef AFTERINSTALL
-	@$(MAKE) $(AFTERINSTALL)
-endif
-
-# Install all versions of the libraries (static optimized, dynamic optimized,
-# static debugging and dynamic debugging).  The final step of this is to
-# make the syminks using the default value for $(DEFAULT_DIR).  None of the
-# library installation targets are allowed to make their symlinks through
-# the use of the $(NOLINK) variable.
-install-libs:
-	@$(MAKE) NOLINK=1 install-opt
-	@$(MAKE) NOLINK=1 install-dso
-	@$(MAKE) NOLINK=1 install-dbg
-	@$(MAKE) NOLINK=1 install-ddso
-	@$(MAKE) lib.links.install
-
-# Do everything needed after installing the library binaries.
-do-post-install:
-	@$(MAKE) install-headers
-ifdef POSTINSTALL
-	@$(MAKE) $(POSTINSTALL)
-endif
-
-# ------------------------------------------------------------
-# Install the debugging version.
-# ------------------------------------------------------------
-install install-debug:
-	@echo "==============================================================="
-	@echo "Installing debugging version"
-	@echo "==============================================================="
-ifdef BEFOREINSTALL
-	@$(MAKE) $(BEFOREINSTALL)
-endif
-	@$(MAKE) install-dbg
-	@$(MAKE) install-ddso
-	@$(MAKE) do-post-install
-ifdef AFTERINSTALL
-	@$(MAKE) $(AFTERINSTALL)
-endif
-
-# ------------------------------------------------------------
-# Install only the static debugging version of the libraries.
-# ------------------------------------------------------------
-install-dbg:
-	@echo "------------------------------------------------"
-	@echo "Installing static debugging libraries"
-	@echo "------------------------------------------------"
-ifdef PREINSTALL
-	@$(MAKE) $(PREINSTALL)
-endif
-ifneq ("$(STATIC_LIBS)", "")
-	@for lib in $(STATIC_LIBS) ; do					\
-            echo "$(DBG_LIBDIR)/$$lib.$(STATICLIB_EXT) ==> $(_install_libdir_abs)/$(DBG_DIR)/" ; \
-            $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
-              $(DBG_LIBDIR)/$$lib.$(STATICLIB_EXT)			\
-              $(_install_libdir_abs)/$(DBG_DIR)/ ;			\
-          done
-	@$(MAKE) DEFAULT_DIR="$(DBG_DIR)" lib.links.install
-endif
-
-# -------------------------------------------------------------
-# Install only the dynamic debugging version of the libraries.
-# -------------------------------------------------------------
-install-ddso:
-	@echo "------------------------------------------------"
-	@echo "Installing dynamic debugging libraries"
-	@echo "------------------------------------------------"
-ifdef PREINSTALL
-	@$(MAKE) $(PREINSTALL)
-endif
-ifneq ("$(DYNAMIC_LIBS)", "")
-	@for lib in $(DYNAMIC_LIBS) ; do				\
-            echo "$(DBG_LIBDIR)/$$lib.$(DYNAMICLIB_EXT) ==> $(_install_libdir_abs)/$(DBG_DIR)/" ; \
-            $(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)		\
-              $(DBG_LIBDIR)/$$lib.$(DYNAMICLIB_EXT)			\
-              $(_install_libdir_abs)/$(DBG_DIR)/ ;			\
-          done
-	@$(MAKE) DEFAULT_DIR="$(DBG_DIR)" lib.links.install
-endif
-
-# ------------------------------------------------------------
-# Install the optimized version.
-# ------------------------------------------------------------
-install-optim:
-	@echo "==============================================================="
-	@echo "Installing optimized version"
-	@echo "==============================================================="
-ifdef BEFOREINSTALL
-	@$(MAKE) $(BEFOREINSTALL)
-endif
-	@$(MAKE) install-opt
-	@$(MAKE) install-dso
-	@$(MAKE) do-post-install
-ifdef AFTERINSTALL
-	@$(MAKE) $(AFTERINSTALL)
-endif
-
-# ------------------------------------------------------------
-# Install only the static optimized version of the libraries.
-# ------------------------------------------------------------
-install-opt:
-	@echo "------------------------------------------------"
-	@echo "Installing static optimized libraries"
-	@echo "------------------------------------------------"
-ifdef PREINSTALL
-	@$(MAKE) $(PREINSTALL)
-endif
-ifneq ("$(STATIC_LIBS)", "")
-	@for lib in $(STATIC_LIBS) ; do					\
-            echo "$(OPT_LIBDIR)/$$lib.$(STATICLIB_EXT) ==> $(_install_libdir_abs)/$(OPT_DIR)/" ; \
-            $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
-              $(OPT_LIBDIR)/$$lib.$(STATICLIB_EXT)			\
-              $(_install_libdir_abs)/$(OPT_DIR)/ ;			\
-          done
-	@$(MAKE) DEFAULT_DIR="$(OPT_DIR)" lib.links.install
-endif
-
-# -------------------------------------------------------------
-# Install only the dynamic optimized version of the libraries.
-# -------------------------------------------------------------
-install-dso:
-	@echo "------------------------------------------------"
-	@echo "Installing dynamic optimizied libraries"
-	@echo "------------------------------------------------"
-ifdef PREINSTALL
-	@$(MAKE) $(PREINSTALL)
-endif
-ifneq ("$(DYNAMIC_LIBS)", "")
-	@for lib in $(DYNAMIC_LIBS) ; do				\
-            echo "$(OPT_LIBDIR)/$$lib.$(DYNAMICLIB_EXT) ==> $(_install_libdir_abs)/$(OPT_DIR)/" ; \
-            $(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)		\
-              $(OPT_LIBDIR)/$$lib.$(DYNAMICLIB_EXT)			\
-              $(_install_libdir_abs)/$(OPT_DIR)/ ;			\
-          done
-	@$(MAKE) DEFAULT_DIR="$(OPT_DIR)" lib.links.install
-endif
-
-# Install symlinks to the installed library binaries in the destination
-# directory.
-lib.links.install:
-ifndef NOLINK
-	@echo "------------------------------------------------"
-	@echo "Creating symlinks in $(libdir)$(LIBBITSUF)"
-	@echo "------------------------------------------------"
-	@for lib in $(LIBS) ; do					\
-            for ext in $(DYNAMICLIB_EXT) $(STATICLIB_EXT) ; do		\
-                echo "$$lib.$$ext -> $(_install_libdir_rel)/$(DEFAULT_DIR)/$$lib.$$ext" ; \
-                cd $(libdir)$(LIBBITSUF) && umask $(UMASK) &&		\
-                  rm -f ./$$lib.$$ext &&				\
-                  $(LN_S) $(_install_libdir_rel)/$(DEFAULT_DIR)/$$lib.$$ext ./ ; \
-            done ;							\
-          done
-	@echo "------------------------------------------------"
-	@echo "Creating symlinks in $(_install_libdir_abs)"
-	@echo "------------------------------------------------"
-	@for lib in $(LIBS) ; do					\
-            for ext in $(DYNAMICLIB_EXT) $(STATICLIB_EXT) ; do		\
-                echo "$$lib.$$ext -> $(DEFAULT_DIR)/$$lib.$$ext" ;	\
-                cd $(_install_libdir_abs) && umask $(UMASK) &&		\
-                  rm -f ./$$lib.$$ext &&				\
-                  $(LN_S) $(DEFAULT_DIR)/$$lib.$$ext ./ ;		\
-            done ;							\
-          done
-endif
-
-# Install the header files.
-install-headers:
-	@echo "------------------------------------------------"
-	@echo "Installing header files"
-	@echo "------------------------------------------------"
-ifdef PREINSTALL_HEADERS
-	@$(MAKE) $(PREINSTALL_HEADERS)
-endif
-	@$(MAKE) RECTARGET="install" recursive
-ifdef POSTINSTALL_HEADERS
-	@$(MAKE) $(POSTINSTALL_HEADERS)
-endif
-
-CLEAN_DIRS	+= $(DBG_BUILDDIR) $(OPT_BUILDDIR)
+include $(MKPATH)/dpp.libs.targets.mk

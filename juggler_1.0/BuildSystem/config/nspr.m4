@@ -1,3 +1,27 @@
+dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
+dnl
+dnl Doozer++ is (C) Copyright 2000, 2001 by Iowa State University
+dnl
+dnl Original Author:
+dnl   Patrick Hartling
+dnl
+dnl This library is free software; you can redistribute it and/or
+dnl modify it under the terms of the GNU Library General Public
+dnl License as published by the Free Software Foundation; either
+dnl version 2 of the License, or (at your option) any later version.
+dnl
+dnl This library is distributed in the hope that it will be useful,
+dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
+dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+dnl Library General Public License for more details.
+dnl
+dnl You should have received a copy of the GNU Library General Public
+dnl License along with this library; if not, write to the
+dnl Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+dnl Boston, MA 02111-1307, USA.
+dnl
+dnl ************** <auto-copyright.pl END do not edit this line> **************
+
 dnl ===========================================================================
 dnl Provide command-line functions and checks for including the NSPR library
 dnl in the configuration process.  This does the substitution of the variable
@@ -23,7 +47,7 @@ dnl     PLC_LIB_STATIC  - Full path to the static NSPR PLC library.
 dnl     PLDS_LIB_STATIC - Full path to the static NSPR PLDS library.
 dnl ===========================================================================
 
-dnl nspr.m4,v 1.7 2001/01/23 19:59:11 patrick Exp
+dnl nspr.m4,v 1.9 2001/02/17 19:00:57 patrick Exp
 
 dnl ---------------------------------------------------------------------------
 dnl State that NSPR threads are in use within NSPR.
@@ -83,19 +107,19 @@ AC_DEFUN(DPP_HAVE_NSPR,
     AC_LANG_SAVE
     AC_LANG_C
 
-    dpp_save_CPPFLAGS="$CPPFLAGS"
-    dpp_save_LDFLAGS="$LDFLAGS"
-    dpp_save_LIBS="$LIBS"
-
-    CPPFLAGS="$CPPFLAGS -I$NSPR_ROOT/include"
-    LDFLAGS="$PTHREAD_ARG -L$NSPR_ROOT/lib $LDFLAGS"
-
     dnl Check the NSPR version if a version number was given.
     if test "x$1" != "x" ; then
         DPP_NSPR_VER($NSPR_ROOT, $1, $3)
     else
         AC_MSG_ERROR(*** No NSPR version given! ***)
     fi
+
+    dpp_save_CPPFLAGS="$CPPFLAGS"
+    dpp_save_LDFLAGS="$LDFLAGS"
+    dpp_save_LIBS="$LIBS"
+
+    CPPFLAGS="$CPPFLAGS -I$NSPR_ROOT/include"
+    LDFLAGS="$PTHREAD_ARG -L$NSPR_ROOT/lib $LDFLAGS"
 
     AC_CHECK_LIB(nspr$NSPR_VER, PR_CreateThread, AC_CHECK_HEADER(nspr.h, , $3),
                  $3, [$PTHREAD_LIB $SEM_LIB])
