@@ -50,7 +50,7 @@ void usage( int argc, char* argv[] )
 {
    std::cout<<"Usage: "<<argv[0]<<" apiname filename\n"<<std::flush;
    std::cout<<"       "<<argv[0]<<" OpenAL sample.wav\n"<<std::flush;
-   std::cout<<"       "<<argv[0]<<" JugglerWorks sample.aifc\n"<<std::flush;
+   std::cout<<"       "<<argv[0]<<" AudioWorks sample.aifc\n"<<std::flush;
 }
 
 int main( int argc, char* argv[] )
@@ -131,7 +131,7 @@ int main( int argc, char* argv[] )
 
 #include "snxSoundFactory.h"
 #include "snxSoundImplementation.h"
-#include "snxJugglerWorksSoundImplementation.h"  
+#include "snxAudioWorksSoundImplementation.h"  
 #include "snxSoundInfo.h"
 #include "snxOpenALSoundImplementation.h"      
 #include "snxStubSoundImplementation.h"
