@@ -256,7 +256,7 @@ int KeyboardWin32::onlyModifier( int mod )
     case VJKEY_CTRL:
       return (!m_curKeys[VJKEY_SHIFT] && m_curKeys[VJKEY_CTRL] && !m_curKeys[VJKEY_ALT]);
     case VJKEY_ALT:
-      return (!m_curKeys[VJKEY_SHIFT] && !m_keys[VJKEY_CTRL] && m_curKeys[VJKEY_ALT]);
+      return (!m_curKeys[VJKEY_SHIFT] && !m_curKeys[VJKEY_CTRL] && m_curKeys[VJKEY_ALT]);
     default:
       vprASSERT(false);
       return 0;
@@ -806,16 +806,6 @@ std::string KeyboardWin32::getChunkType()
 int KeyboardWin32::isKeyPressed( int Key )
 {  
    return m_curKeys[Key];
-}
-
-int KeyboardWin32::keyPressed( int keyId )
-{ 
-   return this->isKeyPressed( keyId ); 
-}
-
-bool KeyboardWin32::modifierOnly( int modKey )
-{ 
-   return this->onlyModifier( modKey ) > 0; 
 }
 
 void KeyboardWin32::lockMouse() 

@@ -116,6 +116,9 @@ void BaseTypeFactory::hackLoadKnownDevices()
 	BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Analog>::MixedPlaceholderType >* siminput_input_analog
 			=new BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Analog>::MixedPlaceholderType >;
 
+    // Input Keyboard
+	BaseTypeConstructor< InputMixer<Input,Keyboard>::MixedPlaceholderType >* input_keyboard
+			=new BaseTypeConstructor< InputMixer<Input,Keyboard>::MixedPlaceholderType >;
 
 
 	
@@ -129,7 +132,8 @@ void BaseTypeFactory::hackLoadKnownDevices()
 		 (NULL == input_digital_analog_position) ||
          (NULL == siminput_input_position) ||
          (NULL == siminput_input_digital) ||
-         (NULL == siminput_input_analog) )
+         (NULL == siminput_input_analog) ||
+         (NULL == input_keyboard) )
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vprDEBUG_FLUSH;
    }

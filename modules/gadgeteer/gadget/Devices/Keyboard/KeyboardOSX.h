@@ -37,6 +37,7 @@
 
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Keyboard.h>
+#include <gadget/Type/InputMixer.h>
 #include <jccl/Config/ConfigChunkPtr.h>
 #include <gadget/gadgetConfig.h>
 
@@ -72,7 +73,8 @@ pascal OSStatus keyboardHandlerOSX ( EventHandlerCallRef  nextHandler,
 //
 // See also: Keyboard, KeyboardProxy
 //--------------------------------------------------------------
-class KeyboardOSX : public Input, public Keyboard
+
+class KeyboardOSX : public InputMixer<Input,Keyboard>
 {
 public:
    // Enum to keep track of current lock state for state machine
@@ -116,12 +118,7 @@ public:
    int isKeyPressed(int Key)
    {  return m_curKeys[Key];}
 
-   virtual int keyPressed(int keyId)
-   { return isKeyPressed(keyId); }
 
-   virtual bool modifierOnly(int modKey)
-   { return onlyModifier(modKey); }
-   
    // Called by callback function
    // processes the event
    pascal OSStatus gotKeyEvent (  EventHandlerCallRef  nextHandler,
@@ -166,7 +163,6 @@ protected:
    // NOTE: This driver does not use the normal triple buffering mechanism.
    // Instead, it just uses a modified double buffering system.
    int      m_keys[256];         // (0,*): The num key presses during an UpdateData (ie. How many keypress events)
-   int      m_curKeys[256];      // (0,*): Copy of m_keys that the user reads from between updates
    int      m_realkeys[256];     // (0,1): The real keyboard state, all events processed (ie. what is the key now)
    vpr::Mutex  mKeysLock;           // Must hold this lock when accessing m_keys OR mHandleEventsHasBeenCalled
    bool     mHandleEventsHasBeenCalled;  // This flag keeps track of wether or not HandleEvents has been called since the last updateData.
