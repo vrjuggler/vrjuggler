@@ -1,5 +1,9 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2004-11-04 patrickh    Changed the location of Tweek data files to $HOME/.tweek
+                       on UNIX-based platforms.  Along with this,
+                       $HOME/.tweekrc has been renamed to $HOME/.tweek/tweekrc.
+                       NEW VERSION: 0.19.0
 2004-11-04 patrickh    Added EnvironmentService.getOS().
                        NEW VERSION: 0.18.2
 2004-10-29 patrickh    Extended the Tweek Java GUI to integrate into Mac OS X.
