@@ -32,6 +32,7 @@
          <min>0.0</min>
          <max>255.0</max>
          <initial_value>0.0</initial_value>
+         <device_host />
       </simulated_analog_device>
       <event_window name="Sim Analog Input" version="1">
          <width>300</width>

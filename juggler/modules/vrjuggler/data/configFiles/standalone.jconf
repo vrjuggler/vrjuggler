@@ -134,6 +134,7 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
+         <device_host />
       </simulated_positional_device>
       <simulated_positional_device name="SimHeadPos" version="2">
          <event_window_proxy>SimEventWindow Proxy</event_window_proxy>
@@ -237,6 +238,7 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
+         <device_host />
       </simulated_positional_device>
       <position_proxy name="Wand Proxy" version="1">
          <device>SimWandRelativePos</device>
@@ -421,6 +423,7 @@
                <key>15</key>
             </key_modifier_pair>
          </key_pair>
+         <device_host />
       </simulated_digital_device>
       <display_window name="SimWindow" version="2">
          <origin>50</origin>
@@ -584,10 +587,12 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
+         <device_host />
       </simulated_positional_device>
       <simulated_relative_position name="Sim Cam Relative Position" version="1">
          <base_frame_proxy>Head Proxy</base_frame_proxy>
          <relative_proxy>Sim Cam Offset Proxy</relative_proxy>
+         <device_host />
       </simulated_relative_position>
       <position_proxy name="Sim Cam Offset Proxy" version="1">
          <device>Sim Cam Offset</device>
@@ -627,6 +632,7 @@
                <key>44</key>
             </key_modifier_pair>
          </key_pair>
+         <device_host />
       </simulated_digital_device>
       <simulated_digital_device name="AppDigitalSim" version="1">
          <event_window_proxy>SimEventWindow Proxy</event_window_proxy>
@@ -654,6 +660,7 @@
                <key>35</key>
             </key_modifier_pair>
          </key_pair>
+         <device_host />
       </simulated_digital_device>
       <alias name="VJAppExit" version="1">
          <proxy>VJAppExitProxy</proxy>
@@ -664,6 +671,7 @@
       <simulated_relative_position name="SimWandRelativePos" version="1">
          <base_frame_proxy>Head Proxy</base_frame_proxy>
          <relative_proxy>RelativeWand Proxy</relative_proxy>
+         <device_host />
       </simulated_relative_position>
    </elements>
 </configuration>

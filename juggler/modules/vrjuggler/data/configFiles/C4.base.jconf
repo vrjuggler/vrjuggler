@@ -31,6 +31,7 @@
                <key>KEY_ESC</key>
             </key_modifier_pair>
          </key_pair>
+         <device_host />
       </simulated_digital_device>
       <event_window_proxy name="MainSimEventWindow" version="1">
          <device>Exit Event Window</device>

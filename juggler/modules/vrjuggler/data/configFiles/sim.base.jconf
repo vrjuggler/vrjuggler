@@ -206,6 +206,7 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
+         <device_host />
       </simulated_positional_device>
       <simulated_positional_device name="SimHeadPos" version="2">
          <event_window_proxy>MainSimevent_window</event_window_proxy>
@@ -309,6 +310,7 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
+         <device_host />
       </simulated_positional_device>
       <simulated_positional_device name="SimCamera2" version="2">
          <event_window_proxy>Cameraevent_window_proxy</event_window_proxy>
@@ -412,6 +414,7 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
+         <device_host />
       </simulated_positional_device>
       <user name="User1" version="1">
          <head_position>VJHead</head_position>
@@ -439,6 +442,7 @@
                <key>KEY_ESC</key>
             </key_modifier_pair>
          </key_pair>
+         <device_host />
       </simulated_digital_device>
       <simulated_digital_device name="AppDigitalSim" version="1">
          <event_window_proxy>MainSimevent_window</event_window_proxy>
@@ -466,6 +470,7 @@
                <key>KEY_R</key>
             </key_modifier_pair>
          </key_pair>
+         <device_host />
       </simulated_digital_device>
       <simulated_positional_device name="Sim Cam Offset" version="2">
          <event_window_proxy>MainSimevent_window</event_window_proxy>
@@ -551,6 +556,7 @@
          <rotation_delta>0.0</rotation_delta>
          <translation_coordinate_system>Local</translation_coordinate_system>
          <rotation_coordinate_system>Local</rotation_coordinate_system>
+         <device_host />
       </simulated_positional_device>
       <display_system name="Pipe Setup" version="1">
          <number_of_pipes>1</number_of_pipes>

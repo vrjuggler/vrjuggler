@@ -94,6 +94,7 @@
                <key>MOUSE_NEGX</key>
             </key_modifier_pair>
          </key_pair>
+         <device_host />
       </simulated_digital_device>
       <event_window_proxy name="WandEventWindowProxy" version="1">
          <device>Wand Event Window</device>
