@@ -27,7 +27,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-import gmtl
+from PyJuggler import gmtl
 
 mat1 = gmtl.Matrix44f()
 mat2 = gmtl.Matrix44f()
