@@ -154,12 +154,13 @@ istream& operator >> (istream& in, vjChunkDescDB& self) {
 
 
 
-bool vjChunkDescDB::load (const char *fname) {
-    ifstream in(fname);
+bool vjChunkDescDB::load (const std::string& filename, const std::string& parentfile) {
+    std::string fname = demangleFileName (filename, parentfile);
+    ifstream in(fname.c_str());
 
     if (!in) {
         vjDEBUG(vjDBG_ERROR,0) << "vjChunkDescDB::load(): Unable to open file '"
-                   << fname << "'" << endl << vjDEBUG_FLUSH;
+                   << fname.c_str() << "'" << endl << vjDEBUG_FLUSH;
         return false;
     }
     in >> *this;

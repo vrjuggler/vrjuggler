@@ -62,9 +62,6 @@ private:
     //: name of the file this DB was loaded from - used for includes
     std::string file_name;
 
-    //: utility for load() - replaces $HOME and $VJ_BASE_DIR
-    std::string demangleFileName (const std::string& n, std::string parentfile);
-
 public:
 
     typedef std::vector<vjConfigChunk*>::iterator iterator;

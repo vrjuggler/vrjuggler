@@ -139,7 +139,7 @@ public:
     //!NOTE: Return value only deals with opening the file, and
     //+      true doesn't neccessarily mean no parsing errors
     //+      occurred.
-    bool load (const char *fname);
+    bool load (const std::string& filename, const std::string& parentfile = "");
 
 
     //:Saves a chunkdesc file
