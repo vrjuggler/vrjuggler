@@ -45,7 +45,8 @@ ifndef INSTALL_PATH
 endif
 
 install: ${INSTALL_DEPS}
-	for file in ${INSTALL_FILES} ; do				\
+	@for file in ${INSTALL_FILES} ; do				\
+            echo "  $${file} -> ${INSTALL_PATH}" ;			\
             ${INSTALL} -m ${FILE_PERMS} ${GROUP_OPT} $${file}		\
               ${INSTALL_PATH} ;						\
         done
