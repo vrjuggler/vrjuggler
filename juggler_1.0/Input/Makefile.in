@@ -22,6 +22,10 @@ _LOCAL_CLEAN	= 1
 # Include the recursive target code.
 include ${MKPATH}/vj.rec.mk
 
+# Prefix for recursive stuff.
+DIRPRFX		= Input/
+
+# Subdirectories to compile.
 SUBDIRS		= vjGlove vjInput vjPosition InputManager ibox
 
 # -----------------------------------------------------------------------------
@@ -31,7 +35,7 @@ all: dbg opt dso ddso
 
 dbg opt dso ddso obj depend newdepend install:
 	${MAKE} RECTARGET="$@" OPTIMIZER="${OPTIMIZER}"		\
-            DIRPRFX="Input/" BASE_OBJDIR="${BASE_OBJDIR}" recursive
+            BASE_OBJDIR="${BASE_OBJDIR}" recursive
 
 # -----------------------------------------------------------------------------
 # Clean-up.
