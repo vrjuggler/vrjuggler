@@ -372,7 +372,7 @@ install-m4:
 # directories.
 # =============================================================================
 _cleandepend:
-	@$(MAKE) -C gadget/Devices cleandepend
+	@$(MAKE) -C gadget/Devices DO_CLEANDEPEND=1 cleandepend
 
 _clobber:
 	@$(MAKE) cleandepend
