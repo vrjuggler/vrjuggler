@@ -43,15 +43,16 @@ import org.vrjuggler.jccl.editors.PropertyEditorPanel;
 public class SimulatorViewportCreateDialog
    extends ViewportCreateDialog
 {
-   public SimulatorViewportCreateDialog()
+   public SimulatorViewportCreateDialog(Container parent)
    {
-      this(null, null);
+      this(parent, null, null);
    }
 
-   public SimulatorViewportCreateDialog(ConfigContext ctx, ConfigElement viewportElt)
+   public SimulatorViewportCreateDialog(Container parent, ConfigContext ctx,
+                                        ConfigElement viewportElt)
    {
-      super("Basic Simulator Viewport Parameters", ctx,
-            viewportElt, EditorConstants.simulatorViewportType);
+      super("Basic Simulator Viewport Parameters", ctx, viewportElt,
+            EditorConstants.simulatorViewportType);
 
       ConfigBrokerProxy broker = new ConfigBrokerProxy();
       ConfigDefinition sim_def = broker.getRepository().get("default_simulator");
@@ -83,6 +84,7 @@ public class SimulatorViewportCreateDialog
       initUI();
       validateUserInput();
       this.pack();
+      this.setLocationRelativeTo(parent);
    }
 
    public Float getVertialFOV()
