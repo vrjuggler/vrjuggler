@@ -18,6 +18,7 @@
 #
 
 # directories within the ~/  directory
+$web_subst{"ROOT"} = '/';
 $web_subst{"HTML"} = 'html/';
 $web_subst{"IMAGES"} = 'images/';
 $web_subst{"CLASS_PATH"} = 'java.class/ver1.07/';

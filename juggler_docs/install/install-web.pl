@@ -556,8 +556,8 @@ sub recurseAction ($) {
           last SWITCH;
       }
 
-      # Match Java stuff
-      if ( $curfile =~ /\.(class|jar)$/ ) {
+      # Match Java stuff: class,archive,javascript
+      if ( $curfile =~ /\.(class|jar|js)$/ ) {
           installFile("$curfile", $uid, $gid, "$mode", "$full_dest_path", $full_src_path);
           last SWITCH;
       }
