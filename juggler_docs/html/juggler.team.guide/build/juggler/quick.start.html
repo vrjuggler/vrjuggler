@@ -56,21 +56,21 @@ Posting about these subjects to the mailing list will probably be ignored.<BR>
 <ol>
 <a name="one">
 <li> Choose a directory to put Juggler.</a> <BR>
-<b><font color="#ff0000">setenv source_code_dir /home/users/joeuser/src</font></b><BR>
+<b><font color="#ff0000"><span class=blue>[JUGGLER_DIR]</span></font></b><BR>
 <BR>
 </li>
 
 <a name="two">
 <li> Goto that directory and checkout juggler using CVS</a><BR>
     <B>NOTE: make sure CVS is set up, and pointing to the Juggler repository.</b><BR>
-<b><font color="#ff0000">cd "$source_code_dir"</font></b><BR>
+<b><font color="#ff0000">cd <span class=blue>[JUGGLER_DIR]</span></font></b><BR>
 <b><font color="#ff0000">cvs checkout juggler</font></b><BR>
 <BR>
 </li>
 
 <a name="three">
 <li> Enter the newly checked out Juggler source directory</a><BR>
-<b><font color="#ff0000">cd "$source_code_dir"/juggler</font></b><BR>
+<b><font color="#ff0000">cd <span class=blue>[JUGGLER_DIR]</span>/juggler</font></b><BR>
 </li>
 <BR>
 
@@ -86,7 +86,7 @@ Posting about these subjects to the mailing list will probably be ignored.<BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Juggler files will be created in (some-directory)/instlinks/..<BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(in other words, files are created one dir back from instlinks)<BR>
     NOTE: Make sure this line is in your .tcshrc or .cshrc file.<BR><BR>
-<b><font color="#ff0000">setenv VJ_BASE_DIR "$source_code_dir"/juggler/instlinks</font></b><BR>
+<b><font color="#ff0000">setenv VJ_BASE_DIR <span class=blue>[JUGGLER_DIR]</span>/juggler/instlinks</font></b><BR>
 <BR>
 </li>
 <BR>
@@ -105,7 +105,7 @@ Posting about these subjects to the mailing list will probably be ignored.<BR>
 		<li> Configure the Build.  This probes the system for capabilities, generate Makefiles, etc...<BR>
         		this "configures" the source tree for the current system. The 'configure' script will let you change how Juggler compiles.  For example, you could build juggler without the Performer API using an option passed to the 'configure' script.<BR>
 			<b>NOTE:</b> You can type 'configure --help' for options. <BR>
-		<b><font color="#ff0000">"$source_code_dir"/juggler/configure</font></b>
+		<b><font color="#ff0000"><span class=blue>[JUGGLER_DIR]</span>/juggler/configure</font></b>
 		</li>
 
 		<li> "Make" the distribution using gnu-make.<BR>
@@ -123,10 +123,10 @@ Posting about these subjects to the mailing list will probably be ignored.<BR>
         Run this in the directory you want compiler output to go to.<BR>
 	NOTE: You can change the word "myBuildDirectory" to a name of
 	      your choice. <BR> <BR>
-<b><font color="#ff0000">setenv a_different_build_dir myBuildDirectory </font></b><BR>
-<b><font color="#ff0000">mkdir "$source_code_dir"/juggler/"$a_different_build_dir"</font></b> <BR>
-<b><font color="#ff0000">cd "$source_code_dir"/juggler/"$a_different_build_dir"</font></b> <BR>
-<b><font color="#ff0000">"$source_code_dir"/juggler/configure</font></b> <BR>
+<b><font color="#ff0000">Choose a build dir: <span class=blue>[BUILD_DIR]</span> </font></b><BR>
+<b><font color="#ff0000">mkdir <span class=blue>[JUGGLER_DIR]</span>/juggler/<span class=blue>[BUILD_DIR]</span></font></b> <BR>
+<b><font color="#ff0000">cd <span class=blue>[JUGGLER_DIR]</span>/juggler/<span class=blue>[BUILD_DIR]</span></font></b> <BR>
+<b><font color="#ff0000"><span class=blue>[JUGGLER_DIR]</span>/juggler/configure</font></b> <BR>
 <BR>
 </li>
 <HR>
