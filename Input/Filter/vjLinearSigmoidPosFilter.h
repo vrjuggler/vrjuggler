@@ -154,8 +154,8 @@ vjMatrix vjLinearSigmoidPosFilter::getPos(const vjMatrix newPos)
 
       // Compute scaled rotation
       vjQuat      source_rot, goal_rot, slerp_rot;
-      source_rot.makeQuat(mLastReturnedPos);          // Create source
-      goal_rot.makeQuat(newPos);                      // Create goal
+      source_rot.makeRot(mLastReturnedPos);          // Create source
+      goal_rot.makeRot(newPos);                      // Create goal
 
       // ASSERT: We don't have two identical matrices
       slerp_rot.slerp( scale_factor,source_rot,goal_rot );    // Transform part way there

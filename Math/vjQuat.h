@@ -73,21 +73,21 @@ public:
       vec[VJ_W] = w;
    }
    
-   void scale( float value )
-   {
-      vec[VJ_W] *= value;
-      vec[VJ_X] *= value;
-      vec[VJ_Y] *= value;
-      vec[VJ_Z] *= value;
-   }
-   
    //: Construct quat from matrix
-   void makeQuat(const vjMatrix& mat);
+   void makeRot( const vjMatrix& mat );
 
    //: get the quat's twist (radians) and vector
    void getRot( float& rad, float& x, float& y, float& z ) const
    {
-      float halfrad = acosf(vec[VJ_W]);
+      vjQuat quat = *this;
+      
+      // make sure we don't get a NaN result from acos...
+      if (fabsf( quat.vec[VJ_W] ) > 1.0f)
+      {
+         quat.normalize();
+      }
+
+      float halfrad = acosf(quat.vec[VJ_W]);
       float sin_halfrad = sinf( halfrad );
       float oneOverSinHalfRad;
       
@@ -106,9 +106,9 @@ public:
       
 	   rad = halfrad * 2.0f;
       vjVec3 t;
-	   t[0] = vec[VJ_X] * ( oneOverSinHalfRad );
-      t[1] = vec[VJ_Y] * ( oneOverSinHalfRad );
-		t[2] = vec[VJ_Z] * ( oneOverSinHalfRad );
+	   t[0] = quat.vec[VJ_X] * ( oneOverSinHalfRad );
+      t[1] = quat.vec[VJ_Y] * ( oneOverSinHalfRad );
+		t[2] = quat.vec[VJ_Z] * ( oneOverSinHalfRad );
       //t.normalize();
       x = t[0];
       y = t[1];
@@ -141,14 +141,13 @@ public:
 	   vec[VJ_X] = sinHalfRad * vecNormalized[0];
 	   vec[VJ_Y] = sinHalfRad * vecNormalized[1];
 	   vec[VJ_Z] = sinHalfRad * vecNormalized[2];
-	   this->unit();
+	   this->normalizeFast();
    }
  
    //: set to conj of quat
    void conj(const vjQuat& quat)
    {
       *this = quat;
-      normalize();
       vec[VJ_X] = -quat.vec[VJ_X];
       vec[VJ_Y] = -quat.vec[VJ_Y];
       vec[VJ_Z] = -quat.vec[VJ_Z];
@@ -160,7 +159,7 @@ public:
    }
 
    // make a unit quat (normalize it)
-   void unit()
+   void normalizeFast()
    { 
       float n = 1 / this->norm(); 
       vec[VJ_W] = vec[VJ_W] * n; 
@@ -229,6 +228,7 @@ public:
 	   float x, y, z;
 	   this->getRot( rad, x, y, z );
 
+	   //out << vec[VJ_W] << ", " << vec[VJ_X] << ", " << vec[VJ_Y] << ", " << vec[VJ_Z];
 	   out << VJ_RAD2DEG( rad ) << " deg, " << x << ", " << y << ", " << z;
 	   return out;
    }

@@ -233,7 +233,7 @@ void simplePfNavApp::preFrame()
             vjVec3 cur_pos;
             cur_pos = mNavigationDCS->getNavigator()->getCurPos().getTrans();
             vjQuat quat;
-            quat.makeQuat( mNavigationDCS->getNavigator()->getCurPos() );
+            quat.makeRot( mNavigationDCS->getNavigator()->getCurPos() );
 
             std::cout << "You: " << cur_pos << " :|: ";
             quat.outStream( std::cout );
