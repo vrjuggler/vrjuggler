@@ -66,7 +66,7 @@ vpr::ReturnStatus SocketImplSIM::close ()
    vpr::ReturnStatus status;
 
    vprDEBUG_BEGIN(vprDBG_ALL, vprDBG_STATE_LVL) << "SocketImplSIM::close: " << mLocalAddr << std::endl << vprDEBUG_FLUSH;
-      
+
    if ( mPeer != NULL )
    {
       // We tell our peer that we are disconnecting.  This is a little
@@ -205,9 +205,9 @@ vpr::ReturnStatus SocketImplSIM::read_i (void* buffer,
 /** Exactly like read_i except takes MessageDataPtr directly for zero copy networking
 * Updates msgData to point at the new message data.
 */
-vpr::ReturnStatus SocketImplSIM::read_i( vpr::sim::Message::MessageDataPtr& msgData,
-                          vpr::Uint32& data_read,
-                          vpr::Interval timeout = vpr::Interval::NoTimeout )
+vpr::ReturnStatus SocketImplSIM::read_i (vpr::sim::Message::MessageDataPtr& msgData,
+                                         vpr::Uint32& data_read,
+                                         vpr::Interval timeout)
 {
    vpr:: ReturnStatus status;
    vprASSERT(mOpen && "Cannot read on an unopened socket");
@@ -302,9 +302,9 @@ vpr::ReturnStatus SocketImplSIM::write_i (const void* buffer,
 }
 
 /** Exactly like write_i except takes MessageDataPtr directly for zero copy networking */
-vpr::ReturnStatus SocketImplSIM::write_i( vpr::sim::Message::MessageDataPtr msgData,
-                           vpr::Uint32& data_written,
-                           vpr::Interval timeout = vpr::Interval::NoTimeout )
+vpr::ReturnStatus SocketImplSIM::write_i (vpr::sim::Message::MessageDataPtr msgData,
+                                          vpr::Uint32& data_written,
+                                          vpr::Interval timeout)
 {
    vprASSERT(mBound && "We must be bound first");
    vprASSERT(mOpen && "We must be open first");
