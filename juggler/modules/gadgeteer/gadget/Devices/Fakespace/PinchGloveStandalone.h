@@ -50,6 +50,8 @@
 #ifndef PINCH_GLOVE_INCLUDED
 #define PINCH_GLOVE_INCLUDED
 
+#include <string>
+
 class fsPinchGlove
 {
 public:
@@ -59,47 +61,39 @@ public:
     //: Connect to the pinch glove hardware
     bool    connectToHardware( const char* const ttyPort );
     
-    //: call ReSampleStringFromHardware to get most 
+    //: call updateStringFromHardware to get most 
     //:  current pinch data. 
-    void    reSampleStringFromHardware();
+    void    updateStringFromHardware();
     
-    //: get the last sampled string, 
-    //  NOTE: call ReSampleData to get most current pinch data.
-    void    getSampledString( char string[12] );
+    //: get the last sampled string
+    //  NOTE: call updateStringFromHardware to get most current pinch data.
+    void    getSampledString( std::string& gestureString );
     
     //: Use one of these indices to index the string 
     //  returned by "GetSampledString()"
     enum finger 
     {
-	LPINKY = 0, LRING = 1, LMIDDLE = 2, LINDEX = 3, LTHUMB = 4, 
+	LTHUMB = 0, LINDEX = 1, LMIDDLE = 2, LRING = 3, LPINKY = 4, 
 	RTHUMB = 6, RINDEX = 7, RMIDDLE = 8, RRING = 9, RPINKY = 10
     };
     
 protected:
+    std::string 		mGestureString;
+    std::string 		mPreviousGestureString;
+    int pinchfd;
 
-    // I use this for type compatibility when passing 
-    //   char[12] into a function.
-    // This way I can use a pointer to the shared memory, 
-    //   and still be type safe. 
-    // NOTE: is it really more type safe? or am i just full of it...
-    struct charString12
-    {
-	char  data[12]; //one more for the null char.
-    };
-    
-    //TODO: put these into shared memory
-    volatile charString12* _gestureString;
-    volatile charString12* _previousGestureString;
-    
     // equal to "00000.00000"
-    static const char* const _openHandString;
+    static const std::string 	mOpenHandString;
     
     /* functions provided by fakespace */
-    int	    _connectToHardware( const char* const ttyPort = "/dev/ttyd3" );
-    int	    _sendCommandToHardware( const char* const command, char *reply );
+    int	    mConnectToHardware( const char* const ttyPort = "/dev/ttyd3" );
+    int	    mSendCommandToHardware( const char* const command, char *reply );
     
-    int	    _readRecordsFromHardware( const int& rec_max_len, char *records );
-    void    _getStringFromHardware( char string[12] );
+    int	    mReadRecordsFromHardware( const int& rec_max_len, char *records );
+    void    mGetStringFromHardware( char string[12] );
+    
+private:
+    char                        mGestureStringTemp[12];
 };
 
 #endif
