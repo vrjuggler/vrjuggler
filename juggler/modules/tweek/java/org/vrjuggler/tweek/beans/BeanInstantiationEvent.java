@@ -42,16 +42,16 @@ package org.vrjuggler.tweek.beans;
  */
 public class BeanInstantiationEvent extends java.util.EventObject
 {
-   public BeanInstantiationEvent (Object _source, Object _bean)
+   public BeanInstantiationEvent(Object source, TweekBean beanHolder)
    {
-      super(_source);
-      bean = _bean;
+      super(source);
+      tweekBean = beanHolder;
    }
 
-   public Object getBean ()
+   public TweekBean getTweekBean()
    {
-      return bean;
+      return tweekBean;
    }
 
-   private Object bean = null;
+   private TweekBean tweekBean = null;
 }

@@ -260,10 +260,7 @@ public class BeanContainer
     */
    public void beanInstantiated(BeanInstantiationEvent event)
    {
-      // XXX: This is goofy.  The term "bean" is being used in sort of strange
-      // ways here.
-      Object bean = event.getBean();
-      bean = ((TweekBean) bean).getBean();
+      Object bean = event.getTweekBean().getBean();
 
       try
       {

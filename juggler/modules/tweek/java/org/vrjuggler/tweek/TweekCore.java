@@ -202,7 +202,7 @@ public class TweekCore
    public void beanInstantiated (BeanInstantiationEvent evt)
    {
       // If the bean created is a viewer bean, initialize it with tweek
-      Object bean = evt.getBean();
+      TweekBean bean = evt.getTweekBean();
       if ( bean instanceof ViewerBean ) {
          BeanModelViewer viewer = ((ViewerBean)bean).getViewer();
          viewer.setModel(panelTreeModel);

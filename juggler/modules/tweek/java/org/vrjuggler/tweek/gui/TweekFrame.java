@@ -311,9 +311,9 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
     *       interface, its preferences are loaded, and its editor is added to
     *       the Bean-specified editor dialog.
     */
-   public void beanInstantiated (BeanInstantiationEvent e)
+   public void beanInstantiated(BeanInstantiationEvent e)
    {
-      Object new_bean = ((TweekBean) e.getBean()).getBean();
+      Object new_bean = e.getTweekBean().getBean();
 
       if ( new_bean instanceof BeanPreferences )
       {

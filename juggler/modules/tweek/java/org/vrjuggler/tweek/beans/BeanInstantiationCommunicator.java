@@ -51,7 +51,7 @@ import java.util.Vector;
  */
 public class BeanInstantiationCommunicator
 {
-   public static BeanInstantiationCommunicator instance ()
+   public static BeanInstantiationCommunicator instance()
    {
       if ( m_instance == null )
       {
@@ -61,19 +61,19 @@ public class BeanInstantiationCommunicator
       return m_instance;
    }
 
-   public synchronized void addBeanInstantiationListener (BeanInstantiationListener l)
+   public synchronized void addBeanInstantiationListener(BeanInstantiationListener l)
    {
       m_listeners.add(l);
    }
 
-   public synchronized void removeBeanInstantiationListener (BeanInstantiationListener l)
+   public synchronized void removeBeanInstantiationListener(BeanInstantiationListener l)
    {
       m_listeners.remove(l);
    }
 
-   public void fireBeanInstantiationEvent (Object bean)
+   public void fireBeanInstantiationEvent(TweekBean beanHolder)
    {
-      BeanInstantiationEvent e = new BeanInstantiationEvent(this, bean);
+      BeanInstantiationEvent e = new BeanInstantiationEvent(this, beanHolder);
 
       BeanInstantiationListener l = null;
       Vector listeners;
@@ -90,7 +90,7 @@ public class BeanInstantiationCommunicator
       }
    }
 
-   protected BeanInstantiationCommunicator ()
+   protected BeanInstantiationCommunicator()
    {
    }
 
