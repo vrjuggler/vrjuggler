@@ -565,4 +565,4 @@ AC_OUTPUT(Makefile Makefile.base Config/Makefile Math/Makefile Environment/Makef
 	  SharedMem/Makefile Sync/Makefile
           Threads/Makefile test/Makefile test/CfgTest/Makefile
           test/input/Makefile test/ogl/Makefile test/ogl/cubes/Makefile
-          test/pfNav/Makefile)
+          test/pfNav/Makefile test/Sync/Makefile)

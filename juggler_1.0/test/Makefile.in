@@ -38,7 +38,7 @@ LIBS		= @LIBS@
 OBJDIR		= .
 VPATH		= @srcdir@
 
-SUBDIRS		= CfgTest input ogl pfNav
+SUBDIRS		= CfgTest input ogl pfNav Sync
 
 @SET_MAKE@
 
