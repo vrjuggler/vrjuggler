@@ -265,8 +265,6 @@ install-test:
 # =============================================================================
 # Clean-up targets.  '_clobber' removes the developer installation links.
 # =============================================================================
-CLOBBER_DIRS	+= $(BUILDDIR_BASE) $(LIBDIR_NAME)
-
 _clobber:
 	@$(MAKE) clean-links
 
@@ -276,3 +274,6 @@ _LOCAL_CLOBBER	= 1
 
 include $(MKPATH)/dpp.libs.mk
 include $(MKPATH)/dpp.clean.mk
+
+CLEAN_DIRS	+= $(BUILDDIR_BASE) $(LIBDIR_NAME)
+CLOBBER_DIRS	+= $(BUILDDIR_BASE) $(LIBDIR_NAME)
