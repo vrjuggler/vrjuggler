@@ -21,12 +21,9 @@ public:
     * @postconditions if it is, then the loaded sound is triggered.  if it isn't then nothing happens.
     * @semantics Triggers a sound
     */
-   virtual void trigger(const std::string & alias, const unsigned int & looping = 0)
+   virtual void trigger( const std::string & alias, const unsigned int & repeat = -1 )
    {
-      if (mImplementation != NULL)
-      {
-         mImplementation->trigger( alias, looping );
-      }
+      this->impl().trigger( alias, looping );
    }
 
    /**
@@ -35,10 +32,7 @@ public:
     */
    virtual void stop(const std::string & name)
    {
-      if (mImplementation != NULL)
-      {
-         mImplementation->stop( name );
-      }
+      this->impl().stop( name );
    }
 
    /**
@@ -47,76 +41,89 @@ public:
     */
    virtual void step(const float & timeElapsed)
    {
-      if (mImplementation != NULL)
-      {
-         mImplementation->step( timeElapsed );
-      }
+      this->impl().step( timeElapsed );
    }
 
 
    /**
-    * @preconditions provide an alias and a filename
+    * associate a name (alias) to the description
+    * @preconditions provide an alias and a SoundInfo which describes the sound
     * @postconditions alias will point to loaded sound data
     * @semantics associate an alias to sound data.  later this alias can be used to operate on this sound data.
     */
-   virtual void associate(const std::string & alias, const std::string & filename)
+   virtual void associate( const std::string& alias, const SoundInfo& description )
    {
-      if (mImplementation != NULL)
-      {
-         mImplementation->associate( alias, filename );
-      }
+      this->impl().associate( alias, description );
    }
 
 
+   /**
+    * remove alias->sounddata association 
+    */
    virtual void remove(const std::string alias)
    {
-      if (mImplementation != NULL)
-      {
-         mImplementation->remove( alias );
-      }
+      this->impl().remove( alias );
    }
 
+   /**
+    * set sound's 3D position 
+    * @input x,y,z are in OpenGL coordinates.  alias is a name that has been associate()d with some sound data
+    */
    virtual void setPosition( const std::string& alias, float x, float y, float z )
    {
-      if (mImplementation != NULL)
-      {
-         mImplementation->setPosition( alias, x, y, z );
-      }
+      this->impl().setPosition( alias, x, y, z );
    }
 
    /**
+    * get sound's 3D position
+    * @input alias is a name that has been associate()d with some sound data
+    * @output x,y,z are returned in OpenGL coordinates.
+    */
+   virtual void getPosition( const std::string& alias, float& x, float& y, float& z )
+   {
+      this->impl().setPosition( alias, x, y, z );
+   }
+
+   /**
+    * change the underlying sound API to something else.
     * @input usually a name of a valid registered sound API implementation
     * @preconditions sound implementation should be registered
-    * @postconditions interface holds only one implementation, if one is already attached, then this function will detach it first.  if impl is not registered, then attach fails returning false.  otherwise a sound implementation is attached. 
+    * @postconditions underlying API is changed to the requested API name.   if apiName's implementation is not registered, then underlying API is changed to the stub version.
+    * @semantics function is safe: always returns a valid implementation.
+    * @time O(1)
+    * @output a valid sound API.  if apiName is invalid, then a stub implementation is returned.
     */
-   virtual void attachAPI( const std::string& apiName, bool& result )
+   virtual void changeAPI( const std::string& apiName )
    {
-      this->detachAPI();
-      SoundFactory::instance()->createImplementation( apiName, mImplementation, result );
-   }
+      SoundImplementation* oldImpl = mImplementation;
+      SoundFactory::instance()->createImplementation( apiName, mImplementation );
 
-   /**
-    * @input none
-    * @preconditions usually an API was already attached, but doesn't have to be.
-    * @postconditions if an API was attached, then the API implemetation is detached.  Any future calls to trigger etc... results in a stubbed out version of the function until a Sound API Implemention is attached again.
-    */
-   virtual void detachAPI()
-   {
-      if (mImplementation != NULL)
+      mImplementation->copy( oldImpl );
+
+      if (oldImpl != NULL)
       {
-         delete mImplementation;
-         mImplementation = NULL;
+         delete oldImpl;
+         oldImpl = NULL;
       }
    }
 
-privatmImplementation e:
-
+protected:
+   SoundImplementation& impl()
+   {
+      if (mImplementation == NULL)
+      {
+         SoundFactory::instance()->createImplementation( "stub", mImplementation, result );
+         assert( result != false && "couldn't create dummy impl" );
+      }
+      return *mImplementation;
+   }
+private:
    /** @link dependency */
    /*#  SoundFactory lnkSoundFactory; */
 
    /** @link aggregation 
     * @clientCardinality 1
     * @supplierCardinality 1*/
-   ISoundImplementation* mImplementation;
+   SoundImplementation* mImplementation;
 };
 #endif //AJ_H

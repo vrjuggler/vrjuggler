@@ -2,9 +2,89 @@
 
 #ifndef STUBSOUNDIMPLEMENTATION_H
 #define STUBSOUNDIMPLEMENTATION_H
-#include "ISoundImplementation.h"
 #include "SoundImplementation.h"
 class StubSoundImplementation : public SoundImplementation
 {
+public:
+   /**
+    * @input alias of the sound to trigger, and number of times to play
+    * @preconditions alias does not have to be associated with a loaded sound.
+    * @postconditions if it is, then the loaded sound is triggered.  if it isn't then nothing happens.
+    * @semantics Triggers a sound
+    */
+   virtual void trigger(const std::string & alias, const unsigned int & looping = 0)
+   {
+      SoundImplementation::trigger( alias, looping );
+      // do nothing
+   }
+
+   /**
+    * @semantics stop the sound
+    * @input alias of the sound to be stopped
+    */
+   virtual void stop(const std::string & name)
+   {
+      SoundImplementation::stop( name );
+      // do nothing
+   }
+
+   /**
+    * take a time step of [timeElapsed] seconds.
+    * @semantics call once per sound frame (doesn't have to be same as your graphics frame)
+    * @input time elapsed since last frame
+    */
+   virtual void step( const float & timeElapsed )
+   {
+      SoundImplementation::step( timeElapsed );
+      // do nothing
+   }
+
+
+   /**
+    * associate a name (alias) to some data (in this case, a file)
+    * @preconditions provide an alias and a filepath to the sound data to be loaded/used
+    * @postconditions alias will point to loaded sound data
+    * @semantics associate an alias to sound data.  later this alias can be used to operate on this sound data.
+    */
+   virtual void associate( const std::string & alias, const std::string & filepath )
+   {
+      SoundImplementation::associate( alias, filepath );
+      // do nothing
+   }
+
+   /**
+    * remove alias->sounddata association 
+    */
+   virtual void remove( const std::string alias )
+   {
+      SoundImplementation::remove( alias );
+      // do nothing
+   }
+
+   /**
+    * set sound's 3D position 
+    */
+   virtual void setPosition( const std::string& alias, float x, float y, float z )
+   {
+      SoundImplementation::setPosition( alias, x, y, z );
+      mPos[0] = x;
+      mPos[1] = y;
+      mPos[2] = z;
+   }
+
+   /**
+    * get sound's 3D position
+    * @input alias is a name that has been associate()d with some sound data
+    * @output x,y,z are returned in OpenGL coordinates.
+    */
+   virtual void getPosition( const std::string& alias, float& x, float& y, float& z )
+   {
+      SoundImplementation::getPosition( alias, x, y, z );
+      x = mPos[0];
+      y = mPos[1];
+      z = mPos[2];
+   }
+private:
+   float mPos[3];
 };
 #endif //STUBSOUNDIMPLEMENTATION_H
