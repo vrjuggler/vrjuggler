@@ -1,6 +1,6 @@
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
- * VR Juggler is (C) Copyright 1998-2003 by Iowa State University
+ * VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
  *
  * Original Authors:
  *   Allen Bierbaum, Christopher Just,
@@ -22,15 +22,12 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  *
- * -----------------------------------------------------------------
- * File:          $RCSfile$
- * Date modified: $Date$
- * Version:       $Revision$
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
+
+#include <vpr/IO/ObjectReader.h>
+#include <vpr/IO/ObjectWriter.h>
 
 #include <boost/concept_check.hpp>
 #include <gmtl/Matrix.h>
@@ -42,265 +39,290 @@
 #include <gmtl/EulerAngle.h>
 
 #include <gadget/Type/Glove.h>
-
+#include <gadget/Util/DeviceSerializationTokens.h>
 
 namespace gadget
 {
 
-
-/////////////////////////////////////////////////////////////////////////
-//                GloveData                                          //
-/////////////////////////////////////////////////////////////////////////
-
-/*
- * Implementation of the Glove
- * abstract device class
- *
- * This class is the base class for all gloves.
- * We will implment all the necessary data operations
- * on the glove data. (Get finger pos, get vectors, get matrices, etc.)
- */
-
-GloveData::GloveData(): InputData()
-{
-   // Zero out the angles
-   for(int i=0;i<NUM_COMPONENTS;i++)
-      for(int j=0;j<NUM_JOINTS;j++)
-         angles[i][j] = 0.0f;
-
-   // Matrices are already identities
-}
-
-GloveData::GloveData(const GloveData& data) : gadget::InputData(data)
-{
-   int i;
-
-   for (i=0;i<NUM_COMPONENTS;i++) {
-      for(int j=0;j<NUM_JOINTS;j++) {
-          angles[i][j] = data.angles[i][j];
-      }
-   }
-
-   for (i=0;i<NUM_COMPONENTS;i++) {
-      for(int j=0;j<NUM_JOINTS-1;j++) {
-          xforms[i][j] = data.xforms[i][j];
-      }
-   }
-
-   for (i=0;i<NUM_COMPONENTS;i++) {
-      for(int j=0;j<NUM_JOINTS;j++) {
-          dims[i][j] = data.dims[i][j];
-      }
-   }
-}
-
-/**
- * Calulates all the xform matrices
- * This is calculated based upon the angles in the data structure
- * This code will be very complex, so I will HACK it for now.
- * XXX: This hack should be fixed soon though
- *
- * I am just rotating around single axis for fingers, not taking abduct into account
- * The thumb is a complete fudge.
- * Wrist is not being done at all
- */
-int GloveData::calcXforms()
-{
-   gmtl::Vec3f xAxis(1.0f, 0.0f, 0.0f);
-   gmtl::Vec3f yAxis(0.0f, 1.0f, 0.0f);
-   const float oneIn(1/12.0f);
-
-
-   dims[INDEX][DIJ+1] = yAxis * (oneIn * 0.5f);                      // Length distal
-   dims[INDEX][DIJ] = yAxis * (oneIn * 1.0f);                        // Length medial
-   dims[INDEX][PIJ] = yAxis * (oneIn * 1.3f);                        // Length Proximal
-   dims[INDEX][MPJ] = (yAxis * (oneIn * 1.7f)) + (oneIn* xAxis * -0.4f);   // To finger
-
-   dims[MIDDLE][DIJ+1] = yAxis * (oneIn * 0.5f);
-   dims[MIDDLE][DIJ] = yAxis * (oneIn * 1.1f);
-   dims[MIDDLE][PIJ] = yAxis * (oneIn * 1.4f);
-   dims[MIDDLE][MPJ] = (yAxis * (oneIn * 1.8f)) + (oneIn* xAxis * 0.0f);
-
-   dims[RING][DIJ+1] = yAxis * (oneIn * 0.4f);
-   dims[RING][DIJ] = yAxis * (oneIn * 1.0f);
-   dims[RING][PIJ] = yAxis * (oneIn * 1.1f);
-   dims[RING][MPJ] = (yAxis * (oneIn * 1.7f)) + (oneIn* xAxis * 0.4f);
-
-   dims[PINKY][DIJ+1] = yAxis * (oneIn * 0.3f);
-   dims[PINKY][DIJ] = yAxis * (oneIn * 1.0f);
-   dims[PINKY][PIJ] = yAxis * (oneIn * 0.85f);
-   dims[PINKY][MPJ] = (yAxis * (oneIn * 1.6f)) + (oneIn* xAxis * 0.7f);
-
-
-   // ----------------------- //
-   // ----- XFORMS ---------- //
-   // ----------------------- //
-
-   // THUMB
-   // INDEX
-   gmtl::setRot(xforms[INDEX][DIJ], gmtl::AxisAnglef( angles[INDEX][DIJ], xAxis ) );
-   gmtl::preMult(xforms[INDEX][DIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[INDEX][DIJ]));
-   gmtl::setRot(xforms[INDEX][PIJ], gmtl::AxisAnglef( angles[INDEX][PIJ],xAxis ) );
-   gmtl::preMult(xforms[INDEX][PIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[INDEX][PIJ]));
-   gmtl::setRot(xforms[INDEX][MPJ], gmtl::AxisAnglef( angles[INDEX][MPJ],xAxis ) );
-   gmtl::preMult(xforms[INDEX][MPJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[INDEX][MPJ]));
-
-   // MIDDLE
-   gmtl::setRot(xforms[MIDDLE][DIJ], gmtl::AxisAnglef( angles[MIDDLE][DIJ], xAxis ) );
-   gmtl::preMult(xforms[MIDDLE][DIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[MIDDLE][DIJ]));
-   gmtl::setRot(xforms[MIDDLE][PIJ], gmtl::AxisAnglef( angles[MIDDLE][PIJ], xAxis ) );
-   gmtl::preMult(xforms[MIDDLE][PIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[MIDDLE][PIJ]));
-   gmtl::setRot(xforms[MIDDLE][MPJ], gmtl::AxisAnglef( angles[MIDDLE][MPJ], xAxis ) );
-   gmtl::preMult(xforms[MIDDLE][MPJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[MIDDLE][MPJ]));
-
-   // RING
-   gmtl::setRot(xforms[RING][DIJ], gmtl::AxisAnglef( angles[RING][DIJ], xAxis ) );
-   gmtl::preMult(xforms[RING][DIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[RING][DIJ]));
-   gmtl::setRot(xforms[RING][PIJ], gmtl::AxisAnglef( angles[RING][PIJ], xAxis ) );
-   gmtl::preMult(xforms[RING][PIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[RING][PIJ]));
-   gmtl::setRot(xforms[RING][MPJ], gmtl::AxisAnglef( angles[RING][MPJ], xAxis ) );
-   gmtl::preMult(xforms[RING][MPJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[RING][MPJ]));
-
-   // PINKY
-   gmtl::setRot(xforms[PINKY][DIJ], gmtl::AxisAnglef( angles[PINKY][DIJ], xAxis ) );
-   gmtl::preMult(xforms[PINKY][DIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[PINKY][DIJ]));
-   gmtl::setRot(xforms[PINKY][PIJ], gmtl::AxisAnglef( angles[PINKY][PIJ], xAxis ) );
-   gmtl::preMult(xforms[PINKY][PIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[PINKY][PIJ]));
-   gmtl::setRot(xforms[PINKY][MPJ], gmtl::AxisAnglef( angles[PINKY][MPJ], xAxis ) );
-   gmtl::preMult(xforms[PINKY][MPJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[PINKY][MPJ]));
-
-   // WRIST
-
-   return 1;
-}
-
-// Output the angles in one single line
-std::ostream& GloveData::outputAngles(std::ostream& out) const
-{
-   for(int i=0;i<NUM_COMPONENTS;i++)
-      for(int j=0;j<NUM_JOINTS;j++)
-         out << angles[i][j] << " ";
-
-   return out;
-}
-
-// Input the angles from one single line
-std::istream& GloveData::inputAngles(std::istream& in)
-{
-   for(int i=0;i<NUM_COMPONENTS;i++)
-      for(int j=0;j<NUM_JOINTS;j++)
-         in >> angles[i][j];
-
-   return in;
-}
-
-////////////////////////////////////////////////////////////////////////
-//                          Glove                                   //
-////////////////////////////////////////////////////////////////////////
 Glove::Glove()
 {
-   //vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)<<"*** Glove::Glove()\n"<< vprDEBUG_FLUSH;
+   //Initialize the transforms for the default GloveData
+   mDefaultValue.calcXforms();
 
-   for(int i=0;i<GADGET_MAX_GLOVE_DEVS;i++)
-      mGlovePos[i] = NULL;
+   //By default there are 2 gloves
+   mGlovePositions.resize(2);
 }
 
-
-// Just get the data from the current vector entry
-float Glove::getGloveAngle(GloveData::GloveComponent component,
-                           GloveData::GloveJoint joint, int devNum)
+bool Glove::config(jccl::ConfigElementPtr e)
 {
-   // Temporarily removed
-   // return mTheData[devNum][current].angles[component][joint];
-   boost::ignore_unused_variable_warning(component);
-   boost::ignore_unused_variable_warning(joint);
-   boost::ignore_unused_variable_warning(devNum);
-   return 0;
+   // For now, assume just 2 gloves (left & right)
+   std::vector<std::string> positionProxyNames(2);
+   positionProxyNames[0]=e->getProperty<std::string>("left_glove_position");
+   positionProxyNames[1]=e->getProperty<std::string>("right_glove_position");
+
+   mGlovePositions.resize(positionProxyNames.size());
+   unsigned int i;
+   for(i=0;i<positionProxyNames.size();i++)
+	{
+      if(positionProxyNames[i]!="")
+		{
+         mGlovePositions[i].init(positionProxyNames[i]);
+      }
+   }
+
+   return true;
+}
+
+vpr::ReturnStatus Glove::writeObject(vpr::ObjectWriter* writer)
+{
+   SampleBuffer_t::buffer_t& stable_buffer = mGloveSamples.stableBuffer();
+
+   writer->beginTag(Glove::getBaseType());
+   writer->beginAttribute(gadget::tokens::DataTypeAttrib);
+      writer->writeUint16(MSG_DATA_GLOVE);                               // Write out the data type so that we can assert if reading in wrong place
+   writer->endAttribute();
+
+   writer->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
+      writer->writeUint16(stable_buffer.size());         // Write the size of the stable buffer
+   writer->endAttribute();
+
+   if ( !stable_buffer.empty() )
+   {
+      mGloveSamples.lock();
+      for ( unsigned j=0;j<stable_buffer.size();j++ )
+      {
+         writer->beginTag(gadget::tokens::BufferSampleTag);
+         writer->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
+            writer->writeUint16(stable_buffer[j].size());            // Number of glove values for this entry
+         writer->endAttribute();
+
+         for ( unsigned i=0;i<stable_buffer[j].size();i++ )       // For each glove value
+         {
+            writer->beginTag(gadget::tokens::GloveValue);
+
+            // TODO: If we switch the GloveData to only work with Matrix4x4s, then change this.
+            for(unsigned component=0;component<GloveData::NUM_COMPONENTS;component++)
+            {
+               for(unsigned joint=0;joint<GloveData::NUM_JOINTS;joint++)
+               {
+                  float value=stable_buffer[j][i].mAngles[GloveData::NUM_COMPONENTS][GloveData::NUM_JOINTS];
+                  writer->writeFloat(value);
+               }
+            }
+
+            writer->beginAttribute(gadget::tokens::TimeStamp);
+               writer->writeUint64(stable_buffer[j][i].getTime().usec());           // Write Time Stamp vpr::Uint64
+            writer->endAttribute();
+            writer->endTag();
+         }
+         writer->endTag();
+      }
+      mGloveSamples.unlock();
+   }
+   else       // No data or request out of range, return default value
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "Warning: Glove::writeObject: Stable buffer is empty. If this is not the first write, then this is a problem.\n" << vprDEBUG_FLUSH;
+   }
+   writer->endTag();
+
+   return vpr::ReturnStatus::Succeed;
+}
+
+vpr::ReturnStatus Glove::readObject(vpr::ObjectReader* reader)
+{
+   vprASSERT(reader->attribExists("rim.timestamp.delta"));
+   vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");
+
+   reader->beginTag(Glove::getBaseType());
+   reader->beginAttribute(gadget::tokens::DataTypeAttrib);
+      vpr::Uint16 temp = reader->readUint16();
+   reader->endAttribute();
+
+   // XXX: Should there be error checking for the case when vprASSERT() is
+   // compiled out?  -PH 8/21/2003
+   vprASSERT(temp==MSG_DATA_GLOVE && "[Remote Input Manager]Not Glove Data");
+   boost::ignore_unused_variable_warning(temp);
+
+   std::vector<GloveData> dataSample;
+
+   unsigned int numGloveDatas;
+   vpr::Uint64 timeStamp;
+   GloveData gloveData;
+
+   reader->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
+      unsigned int numVectors = reader->readUint16();
+   reader->endAttribute();
+
+   mGloveSamples.lock();
+   for ( unsigned int i=0;i<numVectors;i++ )
+   {
+      reader->beginTag(gadget::tokens::BufferSampleTag);
+      reader->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
+         numGloveDatas = reader->readUint16();
+      reader->endAttribute();
+
+      dataSample.clear();
+
+      for ( unsigned int j=0;j<numGloveDatas;j++ )
+      {
+         reader->beginTag(gadget::tokens::GloveValue);
+         for(unsigned int component=0;component<GloveData::NUM_COMPONENTS;component++)
+         {
+            for(unsigned int joint=0;joint<GloveData::NUM_JOINTS;joint++)
+            {
+               gloveData.mAngles[component][joint]=reader->readFloat();
+            }
+         }
+
+         reader->beginAttribute(gadget::tokens::TimeStamp);
+            timeStamp = reader->readUint64();
+         reader->endAttribute();
+         reader->endTag();
+
+         gloveData.setTime(vpr::Interval(timeStamp + delta,vpr::Interval::Usec));
+         gloveData.calcXforms();
+         dataSample.push_back(gloveData);
+      }
+
+      mGloveSamples.addSample(dataSample);
+      reader->endTag();
+   }
+
+   mGloveSamples.unlock();
+   swapGloveBuffers();
+   reader->endTag();
+
+   return(vpr::ReturnStatus::Succeed);
 }
 
 /**
  * Returns a vector ponting "out" of the component.
  * Can be used for selection, etc.
- * Use getGlovePos to get the transformation matrix.
+ * Use getJointTransform to get the transformation matrix.
  */
-gmtl::Vec3f Glove::getGloveVector(GloveData::GloveComponent component, int devNum)
+gmtl::Vec3f Glove::getTipVector(GloveData::GloveComponent component, int devNum)
 {
-   // Take a normalized ray up default (yAxis), and transform by finger tip rot matrix
-   // ret_val = wTt yAxis
    gmtl::Vec3f y_axis(0.0f, 1.0f, 0.0f);
    gmtl::Vec3f ret_val(0.0f, 0.0f, 0.0f);
 
-   ret_val = getGlovePos(component, devNum) * y_axis;      // Compute the vector direction
+   ret_val = getTipTransform(component, devNum) * y_axis;   // Compute the vector direction
    return ret_val;
 }
 
-// Calculated from the matrices in xforms
-// <sub>world</sub><b>T</b><sub>tip</sub> = <sub>world</sub><b>T</b><sub>base</sub> <sub>base</sub><b>T</b><sub>dij</sub> <sub>dij</sub><b>T</b><sub>tip</sub>
-//  i.e. wTt = wTb bTd dTt
-gmtl::Matrix44f Glove::getGlovePos(GloveData::GloveComponent component, int devNum)
+/**
+ * Returns the transform matrix of the specified finger tip in world space
+ * wTt = wTb bTj jTt
+ */
+gmtl::Matrix44f Glove::getTipTransform(GloveData::GloveComponent component,int devNum)
 {
-   // Temporarily removed
-   /*
-   if(mGlovePos[devNum] != NULL)
+   gmtl::Matrix44f worldTdij;
+
+   worldTdij=getJointTransform(component,GloveData::DIJ,devNum);
+
+   // TODO: Fix this up
+   gmtl::Matrix44f dijTtip;
+   gmtl::setTrans(dijTtip,gmtl::Vec3f(0,0.5f / PositionUnitConversion::ConvertToInches,0));
+   gmtl::postMult(worldTdij,dijTtip);
+
+   return worldTdij;
+}
+
+/**
+ * Returns the transform matrix of the specified joint in world space
+ * wTj = wTb bTj
+ */
+gmtl::Matrix44f Glove::getJointTransform(GloveData::GloveComponent component, GloveData::GloveJoint joint,int devNum)
+{
+   gmtl::Matrix44f result;           // The returned matrix.
+   gmtl::Matrix44f baseTdij;         // Transform from base to dig coord system
+
+   const GloveData data=getGloveData(devNum);
+
+   if(component==GloveData::WRIST)
    {
-      gmtl::Matrix44f ret_val;       // The returned matrix.
-      gmtl::Matrix44f baseTdij;      // Transform from base to dig coord system
-      gmtl::Matrix44f dijTtip;       // Transform to the tip of the finger
-
-      switch(component)
-      {
-      case GloveData::WRIST:
-         baseTdij.makeIdent();      // No transform
-         dijTtip.makeIdent();       // No transform
-         break;
-      case GloveData::INDEX:
-      case GloveData::MIDDLE:
-      case GloveData::RING:
-      case GloveData::PINKY:
-      case GloveData::THUMB:
-         dijTtip.makeTrans(mTheData[devNum][current].dims[component][GloveData::DIJ+1][VJ_X],
-                           mTheData[devNum][current].dims[component][GloveData::DIJ+1][VJ_Y],
-                           mTheData[devNum][current].dims[component][GloveData::DIJ+1][VJ_Z]);
-         baseTdij = mTheData[devNum][current].xforms[component][GloveData::MPJ];            // baseTmpj
-         baseTdij.postMult(mTheData[devNum][current].xforms[component][GloveData::PIJ]);    // mpjTpij
-         baseTdij.postMult(mTheData[devNum][current].xforms[component][GloveData::DIJ]);    // pijTdij
-         break;
-
-      default:
-         vprASSERT(false);
-         break;
-      }
-
-      // Compute return value: retVal = TIPw = wTb bTd dTt
-      ret_val = *(mGlovePos[devNum]->getData());      // wTb
-      ret_val.postMult(baseTdij);                     // bTd
-      ret_val.postMult(dijTtip);                      // dTt
-
-      return ret_val;
+      gmtl::identity(baseTdij);      // No transform
    }
    else
    {
-      vprDEBUG( gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-         << clrOutNORM(clrRED, "ERROR:")
-         << " Glove: Trying to get a glove without a position proxy set for device number: "
-         << devNum << ".\n" << vprDEBUG_FLUSH;
-      vprASSERT( mGlovePos[devNum] != NULL );      // should be false in here
-      return gmtl::Matrix44f();
-   }*/
-   boost::ignore_unused_variable_warning(component);
-   boost::ignore_unused_variable_warning(devNum);
-   gmtl::Matrix44f ret_val;       // The returned matrix.
-   return ret_val;
+      baseTdij = data.getLocalTransformMatrix(component,GloveData::MPJ);
+
+      if(joint>=GloveData::PIJ)
+      {
+         gmtl::postMult(baseTdij,data.getLocalTransformMatrix(component,GloveData::PIJ));       // mpjTpij
+
+         if(joint>=GloveData::DIJ)
+         {
+            gmtl::postMult(baseTdij,data.getLocalTransformMatrix(component,GloveData::DIJ));    // pijTdij
+         }
+      }
+   }
+
+   // Compute return value: result = TIPw = wTb bTd dTt
+   if(devNum<(int)mGlovePositions.size()){
+      result=mGlovePositions[devNum]->getData();      // wTb
+   }
+   gmtl::postMult(result,baseTdij);                     // bTd
+
+   return result;
 }
 
-// Grab a copy of the most current glove data
-GloveData Glove::getGloveData(int devNum)
+GloveData Glove::getGloveData(int devNum = 0)
 {
-   // Temporarily removed
-   boost::ignore_unused_variable_warning(devNum);
-   //return mTheData[devNum][current];
-   return mTheData[0][0];
+   SampleBuffer_t::buffer_t& stable_buffer = mGloveSamples.stableBuffer();
+
+   if ( (!stable_buffer.empty()) && (stable_buffer.back().size() > (unsigned)devNum) )  // If have entry && devNum in range
+   {
+      return stable_buffer.back()[devNum];
+   }
+   else        // No data or request out of range, return default value
+   {
+      if ( stable_buffer.empty() )
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "Warning: Digital::getGloveData: Stable buffer is empty. If this is not the first read, then this is a problem.\n" << vprDEBUG_FLUSH;
+      }
+      else
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "Warning: Digital::getGloveData: Requested devNum " << devNum << " is not in the range available.  May have configuration error\n" << vprDEBUG_FLUSH;
+      }
+      return mDefaultValue;
+   }
 }
 
+/**
+ * Utility function to convert a 10 size vector of DigitalData to GloveData
+ */
+std::vector<GloveData> Glove::getGloveDataFromDigitalData(const std::vector<DigitalData> &digitalData)
+{
+   assert(digitalData.size()>=10);
+
+   std::vector<GloveData> gloveData=std::vector<GloveData>(2);
+
+   for(unsigned int i=0;i<2;i++)
+   {
+      for(unsigned int j=0;j<GloveData::NUM_COMPONENTS-1;j++)
+      {
+		   // Use funky indexing here to access the correct digitalData
+         if( digitalData[i*(GloveData::NUM_COMPONENTS-1)+j].getDigital() == 1)
+         {
+            for(unsigned int k=0;k<GloveData::NUM_JOINTS;k++)
+            {
+               gloveData[i].mAngles[j][k]=gmtl::Math::PI_OVER_2;
+            }
+         }
+         else
+         {
+            for(unsigned int k=0;k<GloveData::NUM_JOINTS;k++)
+            {
+               gloveData[i].mAngles[j][k]=0;
+            }
+         }
+      }
+   }
+   
+   gloveData[0].calcXforms();
+   gloveData[1].calcXforms();
+
+   return gloveData;
+}
 
 } // End of gadget namespace
