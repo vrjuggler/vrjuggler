@@ -29,6 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
 package org.vrjuggler.vrjconfig.ui;
 
 import java.awt.*;
@@ -47,17 +48,14 @@ import org.vrjuggler.tweek.beans.UndoHandler;
 import org.vrjuggler.tweek.event.*;
 import org.vrjuggler.tweek.services.EnvironmentService;
 import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
-import org.vrjuggler.tweek.services.GlobalPreferencesServiceProxy;
-import org.vrjuggler.tweek.services.GlobalPreferencesService;
 
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.config.event.ConfigContextEvent;
 import org.vrjuggler.jccl.config.event.ConfigContextListener;
-import org.vrjuggler.jccl.rtrc.*;
 
 import org.vrjuggler.vrjconfig.PopupButton;
-import org.vrjuggler.vrjconfig.VrjConfig;
 import org.vrjuggler.vrjconfig.VrjConfigConstants;
+
 
 /**
  * A specialized toolbar for configuration contexts that pays attention to the
@@ -65,17 +63,18 @@ import org.vrjuggler.vrjconfig.VrjConfigConstants;
  */
 public class ContextToolbar
    extends JComponent
-   implements VrjConfigConstants, UndoableEditListener
+   implements VrjConfigConstants
+            , UndoableEditListener
 {
-   private static final String SAVED_TITLE   = "Configuration Editor";
-   private static final String UNSAVED_TITLE = SAVED_TITLE + " < Unsaved >";
-
-   public ContextToolbar(File curDir, ConfigContext ctx,
-                         VrjConfig.ConfigIFrame frame, FileLoader fileLoader,
+   public ContextToolbar(ConfigContext ctx, FileLoader fileLoader,
                          UndoHandler undoHandler)
    {
-      mConfigIFrame = frame;
+      this(null, ctx, fileLoader, undoHandler);
+   }
 
+   public ContextToolbar(File curDir, ConfigContext ctx, FileLoader fileLoader,
+                         UndoHandler undoHandler)
+   {
       // Set up the stuff needed for communication with the Tweek Java GUI.
       mFileLoaderBean  = fileLoader;
       mUndoHandlerBean = undoHandler;
@@ -93,7 +92,10 @@ public class ContextToolbar
       // to ensure that buttons are enabled if appropriate.
       this.setConfigContext(ctx);
 
-      fileChooser.setCurrentDirectory(curDir);
+      if ( null != curDir )
+      {
+         fileChooser.setCurrentDirectory(curDir);
+      }
 
       // Try to get icons for the toolbar buttons
       try
@@ -163,7 +165,6 @@ public class ContextToolbar
       undoBtn.setEnabled(true);
       saveBtn.setEnabled(true);
       redoBtn.setEnabled(false);
-      mConfigIFrame.setTitle(UNSAVED_TITLE);
       mFileActionGen.fireChangePerformed(e.getSource(), mFileLoaderBean);
       mUndoActionGen.fireUndoActionPerformed(e.getSource(), mUndoHandlerBean);
    }
@@ -384,7 +385,6 @@ public class ContextToolbar
 
          // Inform the ConfigUndoManager that we have saved changes.
          context.getConfigUndoManager().saveHappened();
-         mConfigIFrame.setTitle(SAVED_TITLE);
 
          // Disable the save button now that the save operation is done.
          saveBtn.setEnabled(false);
@@ -411,12 +411,10 @@ public class ContextToolbar
          redoBtn.setEnabled(true);
          if (context.getConfigUndoManager().getUnsavedChanges())
          {
-            mConfigIFrame.setTitle(UNSAVED_TITLE);
             saveBtn.setEnabled(true);
          }
          else
          {
-            mConfigIFrame.setTitle(SAVED_TITLE);
             saveBtn.setEnabled(false);
          }
       }
@@ -432,14 +430,6 @@ public class ContextToolbar
          context.getConfigUndoManager().redo();
          undoBtn.setEnabled(true);
          redoBtn.setEnabled(context.getConfigUndoManager().canRedo());
-         if (context.getConfigUndoManager().getUnsavedChanges())
-         {
-            mConfigIFrame.setTitle(UNSAVED_TITLE);
-         }
-         else
-         {
-            mConfigIFrame.setTitle(SAVED_TITLE);
-         }
       }
    }
 
@@ -610,7 +600,7 @@ public class ContextToolbar
    /**
     * Gets a handle to the configuration broker service.
     */
-   private ConfigBroker getBroker()
+   protected ConfigBroker getBroker()
    {
       return new ConfigBrokerProxy();
    }
@@ -741,16 +731,6 @@ public class ContextToolbar
       });
 
       this.add(toolbar, BorderLayout.CENTER);
-      toolbar.add(newBtn, null);
-      toolbar.add(openBtn, null);
-      toolbar.add(saveBtn, null);
-      toolbar.add(saveAsBtn, null);
-      toolbar.addSeparator();
-      toolbar.add(undoBtn, null);
-      toolbar.add(redoBtn, null);
-      toolbar.addSeparator();
-      toolbar.add(Box.createHorizontalGlue(), null);
-      toolbar.add(expandBtn, null);
    }
 
    /**
@@ -843,7 +823,6 @@ public class ContextToolbar
 
             // Inform the ConfigUndoManager that we have saved changes.
             context.getConfigUndoManager().saveHappened();
-            mConfigIFrame.setTitle(SAVED_TITLE);
 
             status = true;
          }
@@ -884,7 +863,7 @@ public class ContextToolbar
       return status;
    }
 
-   private Container getParentFrame()
+   protected Container getParentFrame()
    {
       if ( null == mParentFrame )
       {
@@ -1026,24 +1005,24 @@ public class ContextToolbar
    }
 
    // JBuilder GUI variables
-   private JToolBar toolbar = new JToolBar();
-   private JButton newBtn = new JButton();
-   private JButton openBtn = new JButton();
-   private JButton saveBtn = new JButton();
-   private JButton saveAsBtn = new JButton();
-   private JButton undoBtn = new JButton();
-   private JButton redoBtn = new JButton();
-   private JToggleButton expandBtn = new JToggleButton();
-   private JFileChooser fileChooser = new JFileChooser();
+   protected JToolBar toolbar = new JToolBar();
+   protected JButton newBtn = new JButton();
+   protected JButton openBtn = new JButton();
+   protected JButton saveBtn = new JButton();
+   protected JButton saveAsBtn = new JButton();
+   protected JButton undoBtn = new JButton();
+   protected JButton redoBtn = new JButton();
+   protected JToggleButton expandBtn = new JToggleButton();
+   protected JFileChooser fileChooser = new JFileChooser();
 
-   private ConfigContext context = new ConfigContext();
+   protected ConfigContext context = new ConfigContext();
+
    private EditContextPopup contextEditor;
    private ContextChangeListener contextListener = new ContextChangeListener();
 
    private EnvironmentService mEnvService = new EnvironmentServiceProxy();
 
    private Container mParentFrame = null;
-   private VrjConfig.ConfigIFrame mConfigIFrame = null;
    private TweekFrameAdapter mTweekFrameListener = null;
 
    private FileLoader          mFileLoaderBean = null;
