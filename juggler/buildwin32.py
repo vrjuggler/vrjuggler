@@ -1316,8 +1316,15 @@ class GuiFrontEnd:
       temp.set(inputStr)
       return temp
 
+   def __writeCacheFile(self):
+      cache_file = open(getCacheFileName(), 'w')
+      for k, v in self.mOptions.iteritems():
+         output = "options['%s'] = r'%s'\n" % (k, v.get())
+         cache_file.write(output)
+      cache_file.close()
+
    def cleanup(self):
-      writeCacheFile(self.mOptions)
+      self.__writeCacheFile()
       self.mRoot.destroy()
 
    def makeOptionsInterface(self, required, optional):
@@ -1593,7 +1600,7 @@ class GuiFrontEnd:
 
       if True:#self.validateOptions():
          postProcessOptions()
-         writeCacheFile(self.mOptions)
+         self.__writeCacheFile()
 
          self.BuildThread = threading.Thread(None, self.runVisualStudio,
                                              "BuildThread")
