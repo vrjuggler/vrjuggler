@@ -69,7 +69,7 @@
       <jar destfile="Tweek.jar" basedir=".">
          <include name="org/vrjuggler/tweek/*.class" />
          <include name="org/vrjuggler/tweek/gui/**" />
-         <include name="org/vrjuggler/tweek/mac/**" />
+         <include if="eawt.present" name="org/vrjuggler/tweek/mac/**" />
          <include name="org/vrjuggler/tweek/text/**" />
          <fileset dir="${srcdir}"
                   includes="org/vrjuggler/tweek/gui/*.gif" />
