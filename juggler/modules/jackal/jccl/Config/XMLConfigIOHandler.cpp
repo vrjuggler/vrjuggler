@@ -282,54 +282,17 @@ bool XMLConfigIOHandler::parseTextValues (Property* p, int& startval, char* text
    char *ch, *ptr;
    bool retval = true;
 
-   switch ( p->getType() )
+   // need to cut apart if there are multiple quote-separated strings.
+   ch = stringTokenizer (text, ptr);
+   for ( ;retval; )
    {
-      case T_STRING:
-      case T_CHUNK:
-         // need to cut apart if there are multiple quote-separated strings.
-         ch = stringTokenizer (text, ptr);
-         for ( ;retval; )
-         {
-            if ( !ch )
-            {
-               break;
-            }
-
-            retval = p->tryAssign (startval++, ch);
-            ch = stringTokenizer (0, ptr);
-         }
+      if ( !ch )
+      {
          break;
-      case T_INT:
-      case T_FLOAT:
-      case T_BOOL:
-         // these 3 we need to cut text apart on whitespace to get
-         // individual values.
-#ifdef HAVE_STRTOK_R
-         ch = strtok_r (text, " \t\n", &ptr);
-#else
-         ch = strtok (text, " \t\n");
-#endif
-         for ( ;retval; )
-         {
-            if ( !ch )
-            {
-               break;
-            }
-
-            ch = stripQuotes(ch);
-            retval = p->tryAssign(startval++, ch);
-#ifdef HAVE_STRTOK_R
-            ch = strtok_r(0, " \t\n", &ptr);
-#else
-            ch = strtok(0, " \t\n");
-#endif
-         }
-         break;
-      case T_EMBEDDEDCHUNK:
-         // not handled here
-         break;
-      default:
-         break;
+      }
+      
+      retval = p->tryAssign (startval++, ch);
+      ch = stringTokenizer (0, ptr);
    }
 
    if ( !retval )
