@@ -31,22 +31,22 @@ all: ${SYNC_PROGS}
 test: test.o
 	${COMPILE} -o $@ test.o ${VJ_LIBS} ${EXTRA_LIBS}
 
-test.o: 
-	${COMPILE} -c -o $@ ${srcdir}/test.C
+test.o:
+	${COMPILE} -c -o $@ ${srcdir}/test.cpp
 
 testBarrier: testBarrier.o
 	${COMPILE} -o $@ testBarrier.o ${VJ_LIBS} ${EXTRA_LIBS}
 
-testBarrier.o: 
-	${COMPILE} -c -o $@ ${srcdir}/testBarrier.C
+testBarrier.o:
+	${COMPILE} -c -o $@ ${srcdir}/testBarrier.cpp
 
 testCond: testCond.o
 	${COMPILE} -o $@ testCond.o ${VJ_LIBS} ${EXTRA_LIBS}
 
-testCond.o: 
-	${COMPILE} -c -o $@ ${srcdir}/testCond.C
+testCond.o:
+	${COMPILE} -c -o $@ ${srcdir}/testCond.cpp
 
-.C.o:
+.cpp.o:
 	${COMPILE} -c -o $@ $<
 
 # -----------------------------------------------------------------------------

@@ -23,17 +23,17 @@ include ${MKPATH}/vj.install.mk
 #--- Search path -------
 vpath
 vpath %.c @srcdir@
-vpath %.C @srcdir@
+vpath %.cpp @srcdir@
 vpath %.o ${OBJDIR}
 #------------------------
 
-DEPEND_SRCS	:= vjMatrix.C	\
-                   vjVec3.C	\
-                   vjVec4.C	\
-                   vjQuat.C	\
-                   vjCoord.C
+DEPEND_SRCS	:= vjMatrix.cpp	\
+                   vjVec3.cpp	\
+                   vjVec4.cpp	\
+                   vjQuat.cpp	\
+                   vjCoord.cpp
 
-MATH_OBJECTS	:= $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.C=.o))
+MATH_OBJECTS	:= $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.cpp=.o))
 
 # -----------------------------------------------------------------------------
 # Library targets.

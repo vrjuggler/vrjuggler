@@ -23,18 +23,18 @@ include ${MKPATH}/vj.install.mk
 #--- Search path -------
 vpath
 vpath %.c @srcdir@
-vpath %.C @srcdir@
+vpath %.cpp @srcdir@
 vpath %.o ${OBJDIR}
 #------------------------
 
 # ---- Determine what objects to use ----
 ifeq (@SYNC_SYS@,POSIX)
-    DEPEND_SRCS := 
+    DEPEND_SRCS :=
 else
-    DEPEND_SRCS := vjMutexSGI.C vjSemaphoreSGI.C
+    DEPEND_SRCS := vjMutexSGI.cpp vjSemaphoreSGI.cpp
 endif
 
-SYNC_OBJECTS	= $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.C=.o))
+SYNC_OBJECTS	= $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.cpp=.o))
 
 # -----------------------------------------------------------------------------
 # Library targets.

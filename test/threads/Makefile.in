@@ -31,10 +31,10 @@ all: test
 test: ${TEST_OBJECTS}
 	${COMPILE} -o $@ ${TEST_OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
 
-test.o: 
-	${COMPILE} -c -o $@ ${srcdir}/test.C
+test.o:
+	${COMPILE} -c -o $@ ${srcdir}/test.cpp
 
-.C.o:
+.cpp.o:
 	${COMPILE} -c -o $@ $<
 
 # -----------------------------------------------------------------------------

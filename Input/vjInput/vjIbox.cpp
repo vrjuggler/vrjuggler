@@ -53,7 +53,7 @@ int vjIBox::StartSampling()
 
   if (myThread == NULL)
   {
-      int retval;
+//      int retval;
 
       current = 0;
       valid = 1;

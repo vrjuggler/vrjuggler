@@ -23,17 +23,17 @@ include ${MKPATH}/vj.install.mk
 #--- Search path -------
 vpath
 vpath %.c @srcdir@
-vpath %.C @srcdir@
+vpath %.cpp @srcdir@
 vpath %.o ${OBJDIR}
 #------------------------
 
-DEPEND_SRCS	:= vjBird.C		\
-                   vjDummyPosition.C	\
-                   vjFlock.C		\
-                   vjPosition.C		\
-                   logiclass.C
+DEPEND_SRCS	:= vjBird.cpp		\
+                   vjDummyPosition.cpp	\
+                   vjFlock.cpp		\
+                   vjPosition.cpp		\
+                   logiclass.cpp
 
-VJPOS_OBJECTS	:= $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.C=.o))
+VJPOS_OBJECTS	:= $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.cpp=.o))
 
 # -----------------------------------------------------------------------------
 # Library targets.

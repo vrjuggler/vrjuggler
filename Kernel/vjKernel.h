@@ -68,7 +68,7 @@ public:  // --- Config interface --- //
    void config(vjConfigChunkDB* chunkDB);
    void configRemove(vjConfigChunkDB* chunkDB);
    vjConfigChunkDB* getChunkDB()
-   { return chunkDB; }
+   { return mChunkDB; }
 
 protected:
    //: Updates any data that needs updated once a frame (Trackers, etc.)
@@ -88,9 +88,6 @@ protected:      // --- STARTUP ROUTINES --- //
    void setupDrawManager();
 
 public:      // Global "get" interface
-      //: Get the global config database
-   vjConfigChunkDB* getChunkDB()
-   { return chunkDB;}
 
       //: Get the system Factory
    vjSystemFactory* getSysFactory()

@@ -31,13 +31,13 @@ all: testQuat
 testQuat: ${OBJECTS}
 	${COMPILE} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
 
-testQuat.o: 
-	${COMPILE} -c -o $@ ${srcdir}/testQuat.C
+testQuat.o:
+	${COMPILE} -c -o $@ ${srcdir}/testQuat.cpp
 
 glquat.o:
 	${COMPILE} -c -o $@ ${srcdir}/glquat.c
 
-.C.o:
+.cpp.o:
 	${COMPILE} -c -o $@ $<
 
 # -----------------------------------------------------------------------------

@@ -24,19 +24,19 @@ include ${MKPATH}/vj.install.mk
 #--- Search path -------
 vpath
 vpath %.c @srcdir@
-vpath %.C @srcdir@
+vpath %.cpp @srcdir@
 vpath %.o ${OBJDIR}
 #------------------------
 
 PF_API		:= @PERFORMER_API@
-PF_SRCS 	:= vjPfDrawManager.C
+PF_SRCS 	:= vjPfDrawManager.cpp
 DEPEND_SRCS	:=
 
 ifeq ($(PF_API),Y)
     DEPEND_SRCS += $(PF_SRCS)
 endif
 
-PF_OBJECTS	= $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.C=.o))
+PF_OBJECTS	= $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.cpp=.o))
 
 # -----------------------------------------------------------------------------
 # Library targets.

@@ -1,7 +1,7 @@
 //----------------------------------------
 // Test OpenGL C2Lib program
 //
-// main.C
+// main.cpp
 //----------------------------------------
 #include <wandApp.h>
 
@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
    wandApp* application = new wandApp(kernel);       // Declare an instance of the app
 
    kernel->setApplication(application);               // Set application
-   
+
    if(argc > 1)
       kernel->setProgramSpecifiedConfigFile(argv[1]);
 

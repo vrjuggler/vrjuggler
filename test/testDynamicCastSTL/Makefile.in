@@ -21,8 +21,8 @@ all: run
 run: ${OBJECTS}
 	${COMPILE} -o $@ ${OBJECTS}
 
-main.o: main.C
-	${COMPILE} -c -o $@ ${srcdir}/main.C
+main.o: main.cpp
+	${COMPILE} -c -o $@ ${srcdir}/main.cpp
 
 # -----------------------------------------------------------------------------
 # Clean-up.
