@@ -16,7 +16,7 @@
 #include <vpr/IO/ObjectWriter.h>
 #include <cluster/Plugins/ApplicationDataManager/UserData.h>
 
-/** Navigation data to share across cluster
+/** Class to wrap the navigation matrix to share across cluster.
  */
 class NavData : public vpr::SerializableObject
 {
@@ -43,10 +43,12 @@ public:
       return vpr::ReturnStatus::Succeed;
    }
 public:
-   gmtl::Matrix44f mCurPos;
+   gmtl::Matrix44f mCurPos;      /**< Current position */
 };
 
-/** Class to control all navigation */
+/** Class to control all navigation. 
+*
+*/
 class OsgNavigater
 {
    /** Navigation mode */
@@ -64,7 +66,7 @@ public:
    {
       mActive = true;
       vpr::GUID new_guid("d6be4359-e8cf-41fc-a72b-a5b4f3f29aa2");
-      std::string hostname = "crash";
+      std::string hostname = "crash";              // XXX: Hardcoded for now.  Change to name of server machine.
       mNavData.init(new_guid, hostname);
    }
 
@@ -161,8 +163,8 @@ public:
    }
 
 private:
-   bool                    mActive;
-   NavMode                 mMode;
+   bool                    mActive;      /**< True if we have been initialized */
+   NavMode                mMode;        /**< Current navigation mode */
 
    /** Current postion (as userdate for sharing across cluster */
    cluster::UserData< NavData >  mNavData;
@@ -170,4 +172,5 @@ private:
    gmtl::Vec3f             mVelocity;        /**< Current trans velocity */
    gmtl::Matrix44f         mRotVelocity;     /**< Current angular velocity */
 };
+
 #endif /* _OSG_NAVIGATE_H */
