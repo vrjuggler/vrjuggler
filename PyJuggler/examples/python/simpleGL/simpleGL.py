@@ -37,16 +37,16 @@ from PyJuggler import *
 
 
 class SimpleGlApp(vrj.GlApp):
-   mButton0 = gadget.DigitalInterface()
-   mButton1 = gadget.DigitalInterface()
-   mButton2 = gadget.DigitalInterface()
-   mWand    = gadget.PositionInterface()
-   mHead    = gadget.PositionInterface()
-
-   mGrabbed = 0
-
    def __init__(self):
       vrj.GlApp.__init__(self)
+
+      self.mButton0 = gadget.DigitalInterface()
+      self.mButton1 = gadget.DigitalInterface()
+      self.mButton2 = gadget.DigitalInterface()
+      self.mWand    = gadget.PositionInterface()
+      self.mHead    = gadget.PositionInterface()
+
+      self.mGrabbed = False
 
    def init(self):
       self.mButton0.init("VJButton0")
@@ -60,9 +60,9 @@ class SimpleGlApp(vrj.GlApp):
 
    def preFrame(self):
       if self.mButton0.getData():
-         self.mGrabbed = 1
+         self.mGrabbed = True
       else:
-         self.mGrabbed = 0
+         self.mGrabbed = False
 
    def bufferPreDraw(self):
       glClearColor(0.0, 0.0, 0.0, 0.0)
