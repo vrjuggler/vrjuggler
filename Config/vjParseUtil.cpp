@@ -346,7 +346,7 @@ std::string demangleFileName (const std::string& n, std::string parentfile) {
       }
         if (lastslash) {
             std::string s(parentfile, 0, lastslash+1);
-            fname = s + n;
+            fname = s + fname;
         }
     }
 
