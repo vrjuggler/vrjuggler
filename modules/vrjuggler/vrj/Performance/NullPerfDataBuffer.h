@@ -1,0 +1,62 @@
+
+
+#include "vjTimeStamp.h"
+#include <iostream.h>
+
+
+//---------------------------------------------------------------
+//: Dummy standin for vjPerfDataBuffer
+class vjPerfDataBuffer {
+
+
+ public:
+
+    //: constructor
+    //! PRE: true
+    //! POST: self is created and has _numbufs buffers
+    //! ARGS: _numbufs - number of buffers to allocate
+    //+       (default 25)
+    vjPerfDataBuffer (int _numbufs=25) {
+    }
+
+    //: destructor
+    //: POST: all memory & buffers have been freed.
+    ~vjPerfDataBuffer () {
+    }
+
+    //: writes a new time entry to the buffer
+    //! POST: if a buffer is available, it is stamped with 
+    //+       the current time and _phase.  If not, the
+    //+       'lost' counter is incremented.
+    //! ARGS: _phase - an integer index used to differentiate
+    //+       between different stamping points in the process
+    //+       that calls set. e.g. 1 = point right before
+    //+       entering some big computation, and 2 = point
+    //+       right after.
+    void set(int _phase) {
+    }
+
+
+
+    // for below: need a version w/ max buffers to write
+
+    //: writes buffer contents to an ostream
+    //! POST: As many buffers as available are written to
+    //+       the ostream out and released so they can be
+    //+       used again by the writer.
+    //! ARGS: out - an ostream to write contents to.
+    //! NOTE: The format for a buffer is 'ind timestamp\n',
+    //+       e.g.: (for four buffers, say we have 3 indices)
+    //+       <br>1 15
+    //+       <br>2 25
+    //+       <br>3 27
+    //+       <br>1 42
+    void write (ostream& out) {
+	out << "0 0\n";
+    }
+
+    /* problem.. lost count not entirely accurate */
+};
+
+
+
