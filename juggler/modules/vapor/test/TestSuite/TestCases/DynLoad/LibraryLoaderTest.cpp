@@ -1,5 +1,6 @@
 #include <fstream>
 #include <string>
+#include <boost/filesystem/path.hpp>
 
 #include <vpr/vpr.h>
 #include <vpr/DynLoad/Library.h>
@@ -10,6 +11,8 @@
 
 #include <TestCases/DynLoad/LibraryLoaderTest.h>
 
+
+namespace fs = boost::filesystem;
 
 namespace vprTest
 {
@@ -93,13 +96,19 @@ void LibraryLoaderTest::loadAndInitTestFunctor()
 
 void LibraryLoaderTest::findAndInitTest()
 {
-   vpr::LibraryLoader loader;
+   vpr::LibraryLoader loader1, loader2;
    vpr::ReturnStatus status;
-   std::vector<std::string> path(1);
+   std::vector<std::string> path1(1);
 
-   path[0] = std::string(MODULE_DIR);
-   status = loader.findAndInitDSO("loadermod1", path, mModules[0].second,
-                                  (bool(*)(void*)) rawCallback);
+   path1[0] = std::string(MODULE_DIR);
+   status = loader1.findAndInitDSO("loadermod1", path1, mModules[0].second,
+                                   (bool(*)(void*)) rawCallback);
+   CPPUNIT_ASSERT(status.success());
+
+   std::vector<fs::path> path2(1);
+   path2[0] = fs::path(std::string(MODULE_DIR), fs::native);
+   status = loader2.findAndInitDSO("loadermod1", path2, mModules[0].second,
+                                   (bool(*)(void*)) rawCallback);
    CPPUNIT_ASSERT(status.success());
 }
 
