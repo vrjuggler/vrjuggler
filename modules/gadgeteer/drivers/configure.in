@@ -66,7 +66,7 @@ DPP_STD_CPP(yes)
 DPP_WITH_GCC(no)
 
 AC_ARG_WITH(trackdapi,
-            [  --with-trackdapi=<PATH>  Trackd API installation root   [default=/usr/local]],
+            [  --with-trackdapi=<PATH> Trackd API installation root    [default=/usr/local]],
             [trackdapi_root="$withval"], [trackdapi_root='/usr/local'])
 
 # Build the DTK wrapper using the DTK installation found at the given path.
