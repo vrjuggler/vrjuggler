@@ -480,7 +480,7 @@ fi
 
 jccl_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
 
-jars='jccl_config.jar jccl_editors.jar'
+jars='jccl_config.jar jccl_editors.jar jccl_rtrc.jar'
 
 if test "x$JDOM_JAR" != "xnone" ; then
    jars="$jars $JDOM_JAR"
@@ -568,6 +568,7 @@ AC_OUTPUT(jccl-config
           editors/build.xml
           editors/Makefile
           editors/Makefile.inc
+          rtrc/build.xml
           rtrc/Makefile
           rtrc/Makefile.inc
           rtrc/jccl/Makefile
