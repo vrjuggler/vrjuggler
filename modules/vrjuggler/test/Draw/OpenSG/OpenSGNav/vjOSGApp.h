@@ -58,10 +58,8 @@ inline void OpenSGApp::draw()
 {
    std::cout << "vjOSGApp::draw called\n";
 
-    /*
-    std::cout << "vjOSGApp::draw called\n";
-    _win->render(getAction());
-    */
+   std::cout << "vjOSGApp::draw called\n";
+   _win->render(getAction());
 }
 
 };
