@@ -30,10 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <CppUnit/framework/TestSuite.h>
-#include <CppUnit/textui/TestRunner.h>
+#include <TestSuite.h>
+#include <TestRunner.h>
 #include <TestCases/Math/QuatSelfTest.h>
-#include <Utils/vjDebug.h>
+#include <vrj/Util/Debug.h>
 
 
 //using namespace vpr;
