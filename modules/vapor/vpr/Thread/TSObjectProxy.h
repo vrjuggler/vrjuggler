@@ -68,18 +68,14 @@ template <class T>
 class TSObjectProxy
 {
 public:
-   //-----------------------------------------------------------------
-   //: Constructor for proxy.
-   //-----------------------------------------------------------------
+   /// Constructor for proxy.
    TSObjectProxy() : mObjectKey(-1)
    {
       // Get a TS key for the object(s) that this will proxy
       mObjectKey = ThreadManager::instance()->generateNewTSKey();
    }
 
-   //-----------------------------------------------------------------
-   //: Destructor.
-   //-----------------------------------------------------------------
+   /// Destructor.  This does nothing.
    ~TSObjectProxy()
    {;}
 
@@ -155,7 +151,7 @@ private:
    {;}
 
 private:
-   long  mObjectKey;    // The key to find the object
+   long  mObjectKey;    //! The key to find the object
 };
 
 }; // End of vpr namespace
