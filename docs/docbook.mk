@@ -30,11 +30,11 @@ XSLT_TOOL?=	Xalan
 # FO.  The default is to use FOP.  XEP or Passive TeX can be used instead by
 # defining $(USE_XEP) or $(USE_PASSIVE_TEX) respectively.
 ifeq ($(FO_VERSION), FOP)
-   XALAN_FO_PARAMS=	-PARAM fop.extensions "1" # -PARAM column.count "2"
+   XALAN_FO_PARAMS=	-PARAM fop.extensions "1"
    SAXON_FO_PARAMS=	fop.extensions=1
 else
 ifeq ($(FO_VERSION), XEP)
-   XALAN_FO_PARAMS=	-PARAM xep.extensions "1" # -PARAM column.count "2"
+   XALAN_FO_PARAMS=	-PARAM xep.extensions "1"
    SAXON_FO_PARAMS=	xep.extensions=1
 else
 ifeq ($(FO_VERSION), PASSIVE_TEX)
