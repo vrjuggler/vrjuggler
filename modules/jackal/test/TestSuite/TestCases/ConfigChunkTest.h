@@ -156,6 +156,19 @@ namespace jcclTest
 
       void testEqual()
       {
+         std::string file_path(TESTFILES_PATH);
+         jccl::ChunkFactory::instance()->loadDescs (file_path + "ConfigChunkTest/ConfigChunkTest.desc");
+         jccl::ChunkDescPtr desc = jccl::ChunkFactory::instance()->getChunkDesc( "config-chuck-the-beaver" );
+
+         // set property integer
+         jccl::ConfigChunk chunk_int( desc );
+         bool retval = chunk_int.setProperty( "test prop int", 2, 0 );
+         CPPUNIT_ASSERT( retval == true );
+         
+         jccl::ConfigChunk receiving( desc );
+         CPPUNIT_ASSERT( chunk_int.getProperty( "test prop int", 0 ) != receiving.getProperty( "test prop int", 0 ) );
+         receiving = chunk_int;
+         CPPUNIT_ASSERT( chunk_int.getProperty( "test prop int", 0 ) == receiving.getProperty( "test prop int", 0 ) );
       }
 
       void testCopyConstr()
