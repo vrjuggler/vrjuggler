@@ -10,6 +10,14 @@
 //: Base Juggler Gesture interface class
 // This class is the base interface for all gesture recognition objects
 //
+// All gesture objects have two parts to their interfaces. <br>
+// Getting gestures and Trainging new gestures
+//
+// In order to retrieve gesture information from the device,
+// the user call the get functions to get the index, or
+// string representation of the current gesture.
+//
+//-------------------------------------------------------------------------
 class vjGesture : virtual public vjInput
 {
 public:
