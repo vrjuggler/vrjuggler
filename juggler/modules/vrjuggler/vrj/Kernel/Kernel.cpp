@@ -98,9 +98,29 @@ int Kernel::start()
 // NOTE: The kernel should not actually stop until the application has been close (ie. mApp is NULL)
 void Kernel::stop()
 {
-   mExitFlag = true;
+   mExitWaitCondVar.acquire();
+   {
+      mExitFlag = true;
+      mExitWaitCondVar.signal();
+   }
+   mExitWaitCondVar.release();
+   
    setApplication(NULL);      // Set NULL application so that the app gets closed
 }
+
+/** Blocks until the kernel exits */
+void Kernel::waitForKernelStop()
+{
+   mExitWaitCondVar.acquire();
+   {
+      while ( mExitFlag != false )
+      {
+         mExitWaitCondVar.wait();
+      }
+   }
+   mExitWaitCondVar.release();
+}
+
 
 /// The Kernel loop
 void Kernel::controlLoop(void* nullParam)
