@@ -413,8 +413,6 @@ install-data:
 # Clean-up targets.  '_clean' removes all the files in the build directories.  
 # '_clobber' removes the $(BUILDDIR_BASE) and $(LIBDIR_NAME) directories.
 # =============================================================================
-CLOBBER_DIRS	+= $(BUILDDIR_BASE) $(LIBDIR_NAME)
-
 _clobber:
 	@$(MAKE) clean-links
 
@@ -424,3 +422,6 @@ _LOCAL_CLOBBER	= 1
 
 include $(MKPATH)/dpp.libs.mk
 include $(MKPATH)/dpp.clean.mk
+
+CLEAN_DIRS	+= $(BUILDDIR_BASE) $(LIBDIR_NAME)
+CLOBBER_DIRS	+= $(BUILDDIR_BASE) $(LIBDIR_NAME)
