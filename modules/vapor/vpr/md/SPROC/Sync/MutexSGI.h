@@ -43,7 +43,9 @@
 #define _VPR_MutexSGI_h_
 
 #include <vpr/vprConfig.h>
+#include <string.h>
 #include <ulocks.h>
+#include <errno.h>
 #include <vpr/md/SPROC/SharedMem/MemPool.h>
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/ReturnStatus.h>
@@ -78,7 +80,13 @@ public:
 
       // ----- Allocate the mutex ----- //
       mMutex = usnewlock(mMutexPool->getArena());
-      vprASSERT(mMutex != NULL && "in vpr::MutexSGI::MutexSGI() mMutex is NULL");
+
+      if ( NULL == mMutex )
+      {
+         std::cerr << "ERROR: Failed to allocate new mutex -- "
+                   << strerror(errno) << std::endl;
+         vprASSERT(mMutex != NULL && "in vpr::MutexSGI::MutexSGI() mMutex is NULL");
+      }
    }
 
    ~MutexSGI()
