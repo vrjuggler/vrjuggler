@@ -53,14 +53,16 @@
 // make the connection
 #if defined(VPR_USE_NSPR)
 #   include <vpr/md/NSPR/IO/FileHandleImplNSPR.h>
-namespace vpr {
-  typedef FileHandle_t<FileHandleImplNSPR> FileHandle;
+namespace vpr
+{
+   typedef FileHandle_t<FileHandleImplNSPR> FileHandle;
 }
 
 #else
 #   include <vpr/md/POSIX/IO/FileHandleImplUNIX.h>
-namespace vpr {
-  typedef FileHandle_t<FileHandleImplUNIX> FileHandle;
+namespace vpr
+{
+   typedef FileHandle_t<FileHandleImplUNIX> FileHandle;
 }
 #endif
 
