@@ -3986,7 +3986,7 @@ void simpleApp::draw()
 {
    ...
    // Create box offset matrix
-   Matrix44f box_offset;		
+   Matrix44f box_offset;
    const EulerAngleXYZf euler_ang(Math::deg2Rad(-90.0f), Math::deg2Rad(0.0f),
                                   Math::deg2Rad(0.0f));
    box_offset = gmtl::makeRot&lt;Matrix44f&gt;(euler_ang);
@@ -5410,7 +5410,7 @@ public:
             <programlisting linenumbering="numbered">void OpenSGNav::initScene()
 {
    // Load the model to use
-   if (mFileToLoad ==  std::string("none"))                               <co
+   if (mFileToLoad == std::string("none"))                      <co
                 id="OpenSGNav.load.model.co"
                 linkends="OpenSGNav.load.model.desc" />
    {
@@ -5425,12 +5425,14 @@ public:
    // --- Light setup --- //
    // - Add directional light for scene
    // - Create a beacon for it and connect to that beacon
-   mLightNode   = OSG::Node::create();                                    <co
+   mLightNode   = OSG::Node::create();                          <co
                 id="OpenSGNav.create.light.co"
                 linkends="OpenSGNav.load.model.desc" />
    mLightBeacon = OSG::Node::create();
-   OSG::DirectionalLightPtr light_core = OSG::DirectionalLight::create();
-   OSG::TransformPtr light_beacon_core = OSG::Transform::create();
+   OSG::DirectionalLightPtr light_core =
+      OSG::DirectionalLight::create();
+   OSG::TransformPtr light_beacon_core =
+      OSG::Transform::create();
 
    // Setup light beacon
    OSG::Matrix light_pos;
@@ -5460,20 +5462,21 @@ public:
    OSG::endEditCP(light_core);
 
    // --- Setup Scene -- //
-   // add the loaded scene to the light node, so that it is lit by the light
+   // add the loaded scene to the light node, so that it is lit
+   // by the light
    OSG::addRefCP(mModelRoot);
-   OSG::beginEditCP(mLightNode);                                          <co
+   OSG::beginEditCP(mLightNode);                                <co
                 id="OpenSGNav.model.add.co"
                 linkends="OpenSGNav.model.add.desc" />
       mLightNode-&gt;addChild(mModelRoot);
    OSG::endEditCP(mLightNode);
 
    // create the root part of the scene
-   mRootNode = OSG::Node::create();                                       <co
+   mRootNode = OSG::Node::create();                             <co
                 id="OpenSGNav.root.create.co"
                 linkends="OpenSGNav.root.create.desc" />
    mSceneScale = OSG::Transform::create();
-   mSceneRoot = OSG::Node::create();                                      <co
+   mSceneRoot = OSG::Node::create();                            <co
                 id="OpenSGNav.scene.root.create.co"
                 linkends="OpenSGNav.scene.root.create.desc" />
    mSceneTransform = OSG::Transform::create();
@@ -5481,14 +5484,14 @@ public:
    // Set the root node
    OSG::beginEditCP(mRootNode);
       mRootNode-&gt;setCore(mSceneScale);
-      mRootNode-&gt;addChild(mSceneRoot);                                    <co
+      mRootNode-&gt;addChild(mSceneRoot);                          <co
                 id="OpenSGNav.add.scene.root.co"
                 linkends="OpenSGNav.add.scene.root.desc" />
    OSG::endEditCP(mRootNode);
 
    OSG::beginEditCP(mSceneRoot);
       mSceneRoot-&gt;setCore(mSceneTransform);
-      mSceneRoot-&gt;addChild(mLightNode);                                   <co
+      mSceneRoot-&gt;addChild(mLightNode);                         <co
                 id="OpenSGNav.add.light.co"
                 linkends="OpenSGNav.add.light.desc" />
    OSG::endEditCP(mSceneRoot);
@@ -5863,7 +5866,7 @@ public:
    myInit();
 }</programlisting>
 
-            <para> Within the <methodname>myInit()</methodname> method, we see
+            <para>Within the <methodname>myInit()</methodname> method, we see
             the real work for initializing the scene. In this method, we
             create the scene graph root node, the lighting node, and load a
             user-specified model. The implementation, found in
@@ -9233,10 +9236,10 @@ public:
             <filename>config_app.jdef</filename></title>
 
             <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;?org-vrjuggler-jccl-settings definition.version="3.0"?&gt;
-&lt;definition xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition"
+&lt;?org-vrjuggler-jccl-settings definition.version="3.1"?&gt;
+&lt;definition xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/definition http://www.vrjuggler.org/jccl/xsd/3.0/definition.xsd"
+            xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd"
             name="config_app"&gt;
    &lt;definition_version version="1" label="ConfigApp configuration"&gt;
       &lt;help&gt;This is an application-specific configuration definition for use with the ConfigApp OpenGL sample application.&lt;/help&gt;
