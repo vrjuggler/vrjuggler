@@ -40,7 +40,7 @@
 # related to the Tweek website.
 # -----------------------------------------------------------------------------
 
-srcdir=		.:../extensions/java
+srcdir=		.
 JDK_HOME?=	/usr/java
 
 # List the packages for which JavaDoc documentation will be generated.
@@ -67,6 +67,7 @@ JGOODIES_DIR=	$(SWING_LAF_DIR)/jgoodies-looks
 KUNSTSTOFF_DIR=	$(SWING_LAF_DIR)/kunststoff/sources
 LIQUID_DIR=	$(SWING_LAF_DIR)/liquid
 
+SRC_PATH=	$(srcdir):$(srcdir)/../extensions/java
 JDOM_DIR=	../../../external/jdom
 
 CLASSPATH=	$(JDOM_DIR)/build/jdom.jar:$(JGOODIES_DIR)/looks.jar:$(LIQUID_DIR)/liquidlnf.jar:$(KUNSTSTOFF_DIR)
@@ -82,10 +83,11 @@ doc_prefix=	$(webroot)/$(instdir)
 DOC_ROOT=	programmer.reference.java
 
 docs:
-	JAVA_HOME=$(JDK_HOME) JACORB_PATH=$(JACORB_DIR) $(IDL) -d temp -I.. ../tweek/idl/*.idl
+	JAVA_HOME=$(JDK_HOME) JACORB_PATH=$(JACORB_DIR) $(IDL) -d temp	\
+          -I.. ../tweek/idl/*.idl
 	@echo '<html><body>Contains classes that are generated automatically by an IDL-to-Java compiler from the Tweek IDL sources.</body></html>' >temp/tweek/package.html
 	$(JDK_HOME)/bin/javadoc -d $(DOC_ROOT)				\
-          -sourcepath $(srcdir):temp					\
+          -sourcepath $(SRC_PATH):temp					\
           -classpath "$(CLASSPATH)" $(DOC_PKGS)
 	rm -rf temp
 
