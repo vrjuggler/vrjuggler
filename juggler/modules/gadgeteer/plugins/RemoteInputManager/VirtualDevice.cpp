@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <cluster/Plugins/PluginConfig.h>
-#include <cluster/Plugins/RemoteInputManager/VirtualDevice.h> // my header...
+#include <cluster/PluginConfig.h>
+#include <plugins/RemoteInputManager/VirtualDevice.h> // my header...
 
 
 namespace cluster

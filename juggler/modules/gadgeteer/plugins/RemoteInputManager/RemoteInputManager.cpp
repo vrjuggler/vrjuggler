@@ -30,10 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <cluster/Plugins/PluginConfig.h>
+#include <cluster/PluginConfig.h>
 #include <gadget/Util/Debug.h>
 
-#include <cluster/Plugins/RemoteInputManager/RemoteInputManager.h>
+#include <plugins/RemoteInputManager/RemoteInputManager.h>
 
 // Accept Thread
 #include <vpr/Thread/Thread.h>
@@ -41,8 +41,8 @@
 
 // Sharing Devices
 #include <gadget/Type/BaseTypeFactory.h>
-#include <cluster/Plugins/RemoteInputManager/VirtualDevice.h>
-#include <cluster/Plugins/RemoteInputManager/DeviceServer.h>
+#include <plugins/RemoteInputManager/VirtualDevice.h>
+#include <plugins/RemoteInputManager/DeviceServer.h>
 #include <gadget/Type/DeviceFactory.h>
 #include <gadget/InputManager.h>
 
@@ -620,7 +620,10 @@ namespace cluster
             jccl::ConfigManager::PendingElement pending;
             pending.mType = jccl::ConfigManager::PendingElement::REMOVE;
             pending.mElement = (*i);
+
+            cfg_mgr->lockPending();
             cfg_mgr->addPending(pending);
+            cfg_mgr->unlockPending();
 
             cfg_mgr->unlockActive();
             cfg_mgr->removeActive(device_name);
@@ -646,12 +649,18 @@ namespace cluster
             jccl::ConfigManager::PendingElement pending_remove;
             pending_remove.mType = jccl::ConfigManager::PendingElement::REMOVE;
             pending_remove.mElement = (*i);
+
+            cfg_mgr->lockPending();
             cfg_mgr->addPending(pending_remove);
+            cfg_mgr->unlockPending();
 
             jccl::ConfigManager::PendingElement pending_add;
             pending_add.mType = jccl::ConfigManager::PendingElement::ADD;
             pending_add.mElement = (*i);
+
+            cfg_mgr->lockPending();
             cfg_mgr->addPending(pending_add);
+            cfg_mgr->unlockPending();
 
             cfg_mgr->unlockActive();
             cfg_mgr->removeActive(device_name);

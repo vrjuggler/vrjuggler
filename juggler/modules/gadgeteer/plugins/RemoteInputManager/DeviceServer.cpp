@@ -30,11 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <cluster/Plugins/PluginConfig.h>
+#include <cluster/PluginConfig.h>
 #include <boost/concept_check.hpp>
 #include <gadget/Util/Debug.h>
 #include <cluster/ClusterNetwork/ClusterNode.h>
-#include <cluster/Plugins/RemoteInputManager/DeviceServer.h> // my header...
+#include <plugins/RemoteInputManager/DeviceServer.h> // my header...
 
 
 
