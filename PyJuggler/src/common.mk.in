@@ -8,7 +8,7 @@
 
 prefix=		@prefix@
 scriptdir=	$(top_srcdir)/release/scripts
-top_srcdir=	@top_srcdir@
+top_srcdir=	@abs_top_srcdir@
 
 MKINSTALLDIRS=		$(scriptdir)/mkinstalldirs
 PYTHON_VERSION=		@PYTHON_VERSION@
