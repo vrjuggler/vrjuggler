@@ -1,203 +1,363 @@
 # -----------------------------------------------------------------------------
-# Base Makefile.in for c2lib
-# $Date$
+# $Id$
+#
+# Base Makefile.in for VR Juggler.  It requires GNU make.
 # -----------------------------------------------------------------------------
-# -----------------------------------------------------------------------------
-
-SHELL		= /bin/sh
-
-bindir		= @bindir@
-headerdir	= @headerdir@
-datadir		= @datadir@
-exec_prefix	= @exec_prefix@
-includedir	= @includedir@
-libdir		= @libdir@
-libexecdir	= @libexecdir@
-prefix		= @prefix@
-sbindir		= @sbindir@
-srcdir		= @srcdir@
-sysconfdir	= @sysconfdir@
-topdir		= @topdir@
-top_srcdir	= @top_srcdir@
-wwwdir		= ${srcdir}/Doc
-VJROOT		= ${top_srcdir}
-VJROOT_ABS	= @VJROOT_ABS@
-VJ_SRCDIR	= @VJ_SRCDIR@
-WORKDIR		= ${topdir}
-
-# Include commom definitions
-include @topdir@/Makefile.base
-
-
-LD		= @LD@
-LIBOPTS		= @LIBOPTS@
-LDOPTS		= @LDOPTS@
-LDFLAGS		= @LDFLAGS@ -L/usr/lib${LIBBITSUF} -L/usr/lib
-LIBS		= @LIBS@
-OBJDIR		= .
-
-OPT_FLAGS	= @OPT_FLAGS@
-VPATH		= @srcdir@
-
-DSOREGFILE	= @DSOREGFILE@
-DSOVERSION	= @DSOVERSION@
-DSOVERSIONOPTS	= @DSOVERSIONOPTS@
-
-ABI		= @ABI@
-LIBBITSUF	= @LIBBITSUF@
-PLATFORM	= @PLATFORM@
-
-DBG_BUILDDIR	= ${VJROOT_ABS}/lib/DBG.${ABI}.${PLATFORM}
-OPT_BUILDDIR	= ${VJROOT_ABS}/lib/OPT.${ABI}.${PLATFORM}
-
-LIBRARY		= libJuggler
-SHAREDLIB_EXT	= @SHAREDLIB_EXT@
-SUBDIRS		= Math Config Kernel Input SharedMem Sync Threads
-
-@SET_MAKE@
-
-# -----------------------------------------------------------------------------
-# Library targets.
+# Targets are:
+#
+# all             - Build everything.
+# dbg             - Build a debugging, static copy of the library.
+# ddso            - Build a debugging, dynamic shared object version of the
+#                   library.
+# opt             - Build an optimized, static copy of the library.
+# dso             - Build a dynamic shared object version of the library.
+# obj             - Build the object files using the default value for
+#                   ${OBJDIR}.
+#
+# links           - Define links (for developer use only) that provide
+#                   functionality allowing the use of the $VJ_BASE_DIR
+#                   environment variable.  This target depends on a correct
+#                   value for ${OBJDIR} (whose default value is set in
+#                   Makefile.base).
+# clean-links     - Remove the symlinks created by 'links'.
+#
+# lib-static      - Build the static version of the library.  This target
+#                   depends on a correct value for ${OBJDIR} (whose default
+#                   value is set in Makefile.base).
+# lib-dynamic     - Build the dynamic shared version of the library.  This
+#                   target depends on a correct value for ${OBJDIR} (whose
+#                   default value is set in Makefile.base).
+#
+# install-all     - Install all versions of the library, all header files,
+#                   the Data directory and the test code.
+# install         - Install the library, all header files, the Data
+#                   directory and the test code.
+# install-dbg     - Install the debugging, static version of the library.
+# install-ddso    - Install the debugging, dynamic shared object version of
+#                   the library.
+# install-opt     - Install the optimized, static version of the library.
+# install-dso     - Install the dynamic shared object version of the library.
+# install-headers - Install only the header files.
+# install-test    - Install only the test code.
+# install-data    - Install only the Data directory.
+#
+# depend          - Recursively build the dependencies for the source files.
+# newdepend       - Recursively (and forcibly) rebuild the dependencies for
+#                   the source files.
+#
+# clean           - Clean up everything (uses common 'clean' target).
+# clobber         - Clean up everything and remove the directory containing
+#                   the compiled library.
+#
+# info            - Print out information about the build process that may be
+#                   useful to the user.
+#
+# The default target is 'dbg'.  'install' will install the debugging, static
+# version of the library.
 # -----------------------------------------------------------------------------
 
 default: dbg
 
-all: dbg opt dso ddso
+# Variables whose values are specific to this file.
+includedir	= @includedir@
+instlinks	= ${topdir}/instlinks
+srcdir		= @srcdir@
+topdir		= @topdir@
+top_srcdir	= @top_srcdir@
+wwwdir		= ${srcdir}/Doc
+VJROOT		= ${top_srcdir}
+VJ_SRCDIR	= @VJ_SRCDIR@
+WORKDIR		= ${topdir}
 
-install: install-dbg
+# Define ${_LOCAL_CLEAN} to inform the shared clean target that there is a
+# '_clean' target to be run besides the standard 'clean' target.
+_LOCAL_CLEAN	= 1
 
-install-dbg: dbg install-recursive
-	${top_srcdir}/mkinstalldirs ${libdir}
-	cp ${DBG_BUILDDIR}/${LIBRARY}.a ${libdir}
+# Include common definitions.
+include ${topdir}/Makefile.base
+include ${MKPATH}/vj.rec.mk
 
-install-opt: opt install-recursive
-	${top_srcdir}/mkinstalldirs ${libdir}
-	cp ${OPT_BUILDDIR}/${LIBRARY}.a ${libdir}
+# Extra compiler and linker options needed only by this file.
+LDOPTS		= @LDOPTS@
+OPT_FLAGS	= -O @OPT_FLAGS@
 
-install-ddso: ddso install-recursive
-	${top_srcdir}/mkinstalldirs ${libdir}
-	cp ${DBG_BUILDDIR}/${LIBRARY}.a ${libdir}
+# SGI-specific dynamic-shared-object information.
+DSOREGFILE	= @DSOREGFILE@
+DSOVERSION	= @DSOVERSION@
+DSOVERSIONOPTS	= @DSOVERSIONOPTS@
 
-install-dso: dso install-recursive
-	${top_srcdir}/mkinstalldirs ${libdir}
-	cp ${OPT_BUILDDIR}/${LIBRARY}.a ${libdir}
-  	
+# Object file build directories for debugging and optimized versions of the
+# library made unique by ABI and platform types.
+DBG_BUILDDIR	= ${VJROOT_ABS}/lib/DBG.${ABI}.${PLATFORM}
+OPT_BUILDDIR	= ${VJROOT_ABS}/lib/OPT.${ABI}.${PLATFORM}
 
-all-recursive install-recursive dbg-recursive opt-recursive		\
-dso-recursive ddso-recursive obj-recursive depend-recursive		\
-newdepend-recursive:
-	@set fnord ${MAKEFLAGS}; amf=$$2;				\
-            list='${SUBDIRS}';						\
-            for subdir in $$list; do					\
-                target=`echo $@ | sed s/-recursive//`;			\
-                echo "Making $$target in $$subdir";			\
-                (cd $$subdir && ${MAKE} OPTIMIZER="${OPTIMIZER}"	\
-                                    OBJDIR=${OBJDIR} $$target)		\
-                    || case "$$amf" in					\
-                         *=*) exit 1;;					\
-                         *k*) fail=yes;;				\
-                         *) exit 1;;					\
-                       esac;						\
-            done && test -z "$$fail"
+# Full name of the static and dynamic versions of the library.
+LIB_STATIC	= ${LIBRARY}.a
+LIB_DYNAMIC	= ${LIBRARY}.@SHAREDLIB_EXT@
+
+# Subdirectories used for recursion through the source tree.
+SUBDIRS		= Math Config Kernel Input SharedMem Sync Threads
+
+# Subdirectories used for recursion through the test source tree when
+# installing.
+TEST_SUBDIRS	= . CfgTest Quat input ogl ogl/cubes ogl/wand pfNav
+
+# -----------------------------------------------------------------------------
+# Library targets.
+# -----------------------------------------------------------------------------
+all: dbg ddso opt dso
 
 # Make a debugging version of the library.
-dbg:
-	@echo "Making DBG version of ${LIBRARY}"
-	@if test ! -d ${DBG_BUILDDIR}; then mkdir -p ${DBG_BUILDDIR} ; fi
-	${MAKE} depend-recursive
-	${MAKE} OPTIMIZER="-g" OBJDIR=${DBG_BUILDDIR} dbg-recursive
-	${MAKE} OBJDIR=${DBG_BUILDDIR} ${LIBRARY}.a
-	@echo "${LIBRARY}.a done"
-
-# Make an optimized version of the library.
-opt:
-	@echo "Making OPT version of ${LIBRARY}"
-	@if test ! -d ${OPT_BUILDDIR}; then mkdir -p ${OPT_BUILDDIR} ; fi
-	${MAKE} depend-recursive
-	${MAKE} OPTIMIZER="-O ${OPT_FLAGS}" OBJDIR=${OPT_BUILDDIR} opt-recursive
-	${MAKE} OBJDIR=${OPT_BUILDDIR} ${LIBRARY}.a
-	@echo "${LIBRARY}.a done"
-
-# Make an optimized version of the library that uses DSOs.
-dso:
-	@echo "Making DSO version of ${LIBRARY}"
-	@if test ! -d ${OPT_BUILDDIR}; then mkdir -p ${OPT_BUILDDIR} ; fi
-	${MAKE} depend-recursive
-	${MAKE} OPTIMIZER="-O ${OPT_FLAGS}" OBJDIR=${OPT_BUILDDIR} dso-recursive
-	${MAKE} OBJDIR=${OPT_BUILDDIR} ${LIBRARY}.${SHAREDLIB_EXT}
-	@echo "${LIBRARY}.${SHAREDLIB_EXT} done"
+dbg: _build_dbg
+	${MAKE} OBJDIR="${DBG_BUILDDIR}" lib-static
+	${MAKE} OBJDIR="${DBG_BUILDDIR}" links
 
 # Make a debugging version of the library that uses DSOs.
-ddso:
-	@echo "Making DDSO version of ${LIBRARY}"
-	@if test ! -d ${DBG_BUILDDIR}; then mkdir -p ${DBG_BUILDDIR} ; fi
-	${MAKE} depend-recursive
-	${MAKE} OPTIMIZER="-O ${OPT_FLAGS}" OBJDIR=${DBG_BUILDDIR} ddso-recursive
-	${MAKE} OBJDIR=${DBG_BUILDDIR} ${LIBRARY}.${SHAREDLIB_EXT}
-	@echo "${LIBRARY}.${SHAREDLIB_EXT} done"
+ddso: _build_dbg
+	${MAKE} OBJDIR="${DBG_BUILDDIR}" lib-dynamic
+	${MAKE} OBJDIR="${OPT_BUILDDIR}" links
+
+# Make an optimized version of the library.
+opt: _build_opt
+	${MAKE} OBJDIR="${OPT_BUILDDIR}" lib-static
+	${MAKE} OBJDIR="${OPT_BUILDDIR}" links
+
+# Make an optimized version of the library that uses DSOs.
+dso: _build_opt
+	${MAKE} OBJDIR="${OPT_BUILDDIR}" lib-dynamic
+	${MAKE} OBJDIR="${OPT_BUILDDIR}" links
+
+# Build the object files with the debugging flags enabled.
+_build_dbg:
+	@echo "------------------------------------------------"
+	@echo "Making DBG version of ${LIBRARY}"
+	@echo "------------------------------------------------"
+	${scriptdir}/mkinstalldirs ${DBG_BUILDDIR}
+	${MAKE} depend
+	@echo "------------------------------------------------"
+	@echo "Building object files"
+	@echo "------------------------------------------------"
+	${MAKE} RECTARGET="dbg" OPTIMIZER="-g" OBJDIR="${DBG_BUILDDIR}"	\
+          recursive
+
+# Build the object files with the optimization flags enabled.
+_build_opt:
+	@echo "------------------------------------------------"
+	@echo "Making OPT version of ${LIBRARY}"
+	@echo "------------------------------------------------"
+	${scriptdir}/mkinstalldirs ${OPT_BUILDDIR}
+	${MAKE} depend
+	@echo "------------------------------------------------"
+	@echo "Building object files"
+	@echo "------------------------------------------------"
+	${MAKE} RECTARGET="opt" OPTIMIZER="${OPT_FLAGS}"		\
+          OBJDIR="${OPT_BUILDDIR}" recursive
 
 # Build only the object files using the default values for ${OBJDIR}.
 obj:
+	@echo "------------------------------------------------"
 	@echo "Making ${LIBRARY} object files"
-	${MAKE} obj-recursive
+	@echo "------------------------------------------------"
+	${MAKE} RECTARGET="$@" recursive
+	@echo "------------------------------------------------"
 	@echo "Object files built"
+	@echo "------------------------------------------------"
 
-${LIBRARY}.a:
-	cd ${OBJDIR} && ${AR} $@ *.o
+# Construct the static version of the library from the object files.
+lib-static ${LIB_STATIC}:
+	@echo "------------------------------------------------"
+	@echo "Creating ${LIB_STATIC}"
+	@echo "------------------------------------------------"
+	cd ${OBJDIR} && ${AR} ${LIB_STATIC} *.o
+	@echo "------------------------------------------------"
+	@echo "${LIB_STATIC} done"
+	@echo "------------------------------------------------"
 
-${LIBRARY}.${SHAREDLIB_EXT}:
-	cd ${OBJDIR} && \
-          ${LD} ${LIBOPTS} ${DSOREGFILE} ${DSOVERSIONOPTS} ${LDOPTS} *.o -o $@
+# Construct the dynamic shared version of the library from the object files.
+lib-dynamic ${LIB_DYNAMIC}:
+	@echo "------------------------------------------------"
+	@echo "Creating ${LIB_DYNAMIC}"
+	@echo "------------------------------------------------"
+	cd ${OBJDIR} && 						\
+          ${LD} ${LIBOPTS} ${DSOREGFILE} ${DSOVERSIONOPTS} ${LDOPTS}	\
+            *.o -o ${LIB_DYNAMIC}
+	@echo "------------------------------------------------"
+	@echo "${LIB_DYNAMIC} done"
+	@echo "------------------------------------------------"
 
-depend: depend-recursive
+# Make links for developer use that provide the needed functionality for
+# the $VJ_BASE_DIR environment variable to be used when needed.  $VJ_BASE_DIR
+# should be set to ${VJROOT_ABS}.
+links:
+	@echo "------------------------------------------------"
+	@echo "Setting up developer installation links"
+	@echo "------------------------------------------------"
+	${scriptdir}/mkinstalldirs ${instlinks}
+	cd ${instlinks} && rm -f ./include && ln -s ${VJROOT_ABS} ./include
+	cd ${instlinks} && rm -f ./lib && ln -s ${VJROOT_ABS}/lib ./lib
+	cd ${instlinks}/include && ln -sf ${topdir}/config.h ./config.h
+	cd ${instlinks}/lib && ln -sf ${OBJDIR}/${LIB_STATIC} ./
+	cd ${instlinks}/lib && ln -sf ${OBJDIR}/${LIB_DYNAMIC} ./
+	@echo "\n\n"
+	@echo "---------------------------------------------------------------"
+	@echo 'You should now set $$VJ_BASE_DIR to:'
+	@cd ${instlinks} && echo "  `pwd`"
+	@echo "---------------------------------------------------------------"
 
-newdepend: newdepend-recursive
+# Remove the links in ${instlinks}.
+clean-links:
+	@echo "------------------------------------------------"
+	@echo "Removing developer installation links"
+	@echo "------------------------------------------------"
+	-cd ${instlinks}/lib && rm -f ${LIB_DYNAMIC} ${LIB_STATIC}
+	-cd ${instlinks}/include && rm -f ./config.h
+	-cd ${instlinks} && rm -f ./include ./lib
+	rmdir ${instlinks}
+
+# Installation targets.
+install-all: install-header install-test install-data install-dbg	\
+             install-ddso install-opt install-dso
+
+install: install-dbg
+	${MAKE} install-header
+	${MAKE} install-test
+	${MAKE} install-data
+	@echo "------------------------------------------------"
+	@echo "Install done"
+	@echo "------------------------------------------------"
+
+install-dbg: dbg
+	@echo "------------------------------------------------"
+	@echo "Installing static debugging library"
+	@echo "------------------------------------------------"
+	${scriptdir}/mkinstalldirs ${libdir}
+	${INSTALL} -m 644 ${DBG_BUILDDIR}/${LIB_STATIC} ${libdir}
+
+install-ddso: ddso
+	@echo "------------------------------------------------"
+	@echo "Installing dynamic debugging library"
+	@echo "------------------------------------------------"
+	${scriptdir}/mkinstalldirs ${libdir}
+	${INSTALL} -m 755 ${DBG_BUILDDIR}/${LIB_DYNAMIC} ${libdir}
+
+install-opt: opt
+	@echo "------------------------------------------------"
+	@echo "Installing static optimized library"
+	@echo "------------------------------------------------"
+	${scriptdir}/mkinstalldirs ${libdir}
+	${INSTALL} -m 644 ${OPT_BUILDDIR}/${LIB_STATIC} ${libdir}
+
+install-dso: dso
+	@echo "------------------------------------------------"
+	@echo "Installing static debugging library"
+	@echo "------------------------------------------------"
+	${scriptdir}/mkinstalldirs ${libdir}
+	${INSTALL} -m 755 ${OPT_BUILDDIR}/${LIB_DYNAMIC} ${libdir}
+
+install-header:
+	@echo "------------------------------------------------"
+	@echo "Installing header files"
+	@echo "------------------------------------------------"
+	${MAKE} RECTARGET="install" recursive
+	${INSTALL} -m 644 ${topdir}/config.h ${includedir}
+
+install-test:
+	@echo "------------------------------------------------"
+	@echo "Installing test programs"
+	@echo "------------------------------------------------"
+	${scriptdir}/install-src.pl -i ${top_srcdir}/test -o ${prefix}/test
+	${scriptdir}/makefiles-gen.pl --CXX="${CXX}" --DEFS="${DEFS}"	\
+          --CPPFLAGS="${CPPFLAGS}" --CXXFLAGS="${CXXFLAGS}" 		\
+          --INCLUDES="@INCLUDES@" --startdir="${top_srcdir}/test" 	\
+          --SUBDIRS="${TEST_SUBDIRS}" --srcdir="."			\
+          --prefix="${prefix}/test"					\
+          --TEST_EXTRA_LIBS="@TEST_EXTRA_LIBS@"
+
+install-data:
+	@echo "------------------------------------------------"
+	@echo "Installing standard data files"
+	@echo "------------------------------------------------"
+	${scriptdir}/install-dir.pl -i ${top_srcdir}/Data -o ${prefix}/Data
+
+# Dependency generation.
+depend: .depend_done
+
+newdepend:
+	@echo "------------------------------------------------"
+	@echo "Regenerating dependencies"
+	@echo "------------------------------------------------"
+	-@rm -f .depend_done
+	${MAKE} RECTARGET="$@" recursive
+	@touch .depend_done
+
+.depend_done:
+	@echo "------------------------------------------------"
+	@echo "Generating dependencies"
+	@echo "------------------------------------------------"
+	${MAKE} RECTARGET="depend" recursive
+	@touch .depend_done
 
 # -----------------------------------------------------------------------------
-# Clean-up.
+# Clean-up.  '_clean' removes all the files in the build directories.  
+# 'clobber' removes the ${DBG_BUILDDIR} and ${OPT_BUILDDR} directories.
 # -----------------------------------------------------------------------------
-clean-recursive:
-	@set fnord ${MAKEFLAGS}; amf=$$2;		\
-            rev=''; list='${SUBDIRS}';			\
-            for subdir in $$list; do			\
-                rev="$$subdir $$rev";			\
-            done;					\
-            for subdir in $$rev; do			\
-                target=`echo $@ | sed s/-recursive//`;	\
-                echo "Making $$target in $$subdir";	\
-                (cd $$subdir && ${MAKE} $$target)	\
-                    || case "$$amf" in			\
-                         *=*) exit 1;;			\
-                         *k*) fail=yes;;		\
-                         *) exit 1;;			\
-                       esac;				\
-            done && test -z "$$fail"
-
-clean: clean-recursive
-	@if test -d ${DBG_BUILDDIR}; then			\
-            echo "Cleaning in ${DBG_BUILDDIR} ...";	\
-            cd ${DBG_BUILDDIR};				\
-            rm -f *.o core so_locations;		\
-	    rm -rf ./ii_files;				\
+_clean:
+	@echo "------------------------------------------------"
+	@echo "Cleaning up the source tree"
+	@echo "------------------------------------------------"
+	${MAKE} RECTARGET="clean" recursive
+	@if test -d ${DBG_BUILDDIR}; then				\
+            echo "------------------------------------------------" ;	\
+            echo "Cleaning in ${DBG_BUILDDIR} ..."                  ;	\
+            echo "------------------------------------------------" ;	\
+            cd ${DBG_BUILDDIR} ;					\
+            rm -f *.o core so_locations ;				\
+            rm -rf ./ii_files ;						\
         fi
-	@if test -d $OPT_BUILDDIR; then			\
-            echo "Cleaning in ${OPT_BUILDDIR} ...";	\
-            cd ${OPT_BUILDDIR};				\
-            rm -f *.o core so_locations;		\
-	    rm -rf ./ii_files;				\
+	@if test -d ${OPT_BUILDDIR}; then				\
+            echo "------------------------------------------------" ;	\
+            echo "Cleaning in ${OPT_BUILDDIR} ..."                  ;	\
+            echo "------------------------------------------------" ;	\
+            cd ${OPT_BUILDDIR} ;					\
+            rm -f *.o core so_locations ;				\
+            rm -rf ./ii_files ;						\
         fi
+	-@rm -f .*_done
 	rm -f so_locations
+	@echo "------------------------------------------------"
+	@echo "Done"
+	@echo "------------------------------------------------"
 
-clobber: clean
-	@if test -d ${DBG_BUILDDIR}; then			\
-            echo "Removing ${DBG_BUILDDIR} ...";		\
-            rm -rf ${DBG_BUILDDIR};			\
+clobber: _clean
+	@echo "------------------------------------------------"
+	@echo "Clobbering build directories"
+	@echo "------------------------------------------------"
+	@if test -d ${DBG_BUILDDIR}; then				\
+            echo "------------------------------------------------" ;	\
+            echo "Removing ${DBG_BUILDDIR} ..."                     ;	\
+            echo "------------------------------------------------" ;	\
+            rm -rf ${DBG_BUILDDIR} ;					\
         fi
-	@if test -d ${OPT_BUILDDIR}; then			\
-            echo "Removing ${OPT_BUILDDIR} ...";		\
-            rm -rf ${OPT_BUILDDIR};			\
+	@if test -d ${OPT_BUILDDIR}; then				\
+            echo "------------------------------------------------" ;	\
+            echo "Removing ${DBG_BUILDDIR} ..."                     ;	\
+            echo "------------------------------------------------" ;	\
+            rm -rf ${OPT_BUILDDIR} ;					\
         fi
+	@echo "------------------------------------------------"
+	@echo "Done"
+	@echo "------------------------------------------------"
 
+# -----------------------------------------------------------------------------
+# Human-readable information about the build system.
+# -----------------------------------------------------------------------------
 info::
 	@echo "\nInfo for the make of ${LIBRARY}"
 	@echo "\nOBJDIR: ${OBJDIR}"
+	@echo "VJROOT_ABS: ${VJROOT_ABS}"
+	@echo "DBG_BUILDDIR: ${DBG_BUILDDIR}"
+	@echo "OPT_BUILDDIR: ${OPT_BUILDDIR}"
+	@echo "Installation prefix: ${prefix}"
+	@echo "includedir: ${includedir}"
+	@echo "libdir: ${libdir}"
+	@${scriptdir}/print-targets.sh
