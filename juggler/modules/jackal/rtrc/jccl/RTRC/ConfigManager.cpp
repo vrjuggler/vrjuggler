@@ -146,7 +146,19 @@ void ConfigManager::loadRemoteReconfig()
    const std::string reconfig_dso("corba_rtrc");
    const std::string init_func("initPlugin");
    Callable functor(this);
-   mPluginLoader.findAndInitDSO(reconfig_dso, search_path, init_func, functor);
+   vpr::ReturnStatus status;
+   status = mPluginLoader.findAndInitDSO(reconfig_dso, search_path, init_func,
+                                         functor);
+
+   if ( ! status.success() )
+   {
+      vprDEBUG(jcclDBG_RECONFIG, vprDBG_WARNING_LVL)
+         << "Failed to load the remote run-time reconfiguration plug-in."
+         << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(jcclDBG_RECONFIG, vprDBG_WARNING_LVL)
+         << "Remote run-time reconfiguration is disabled."
+         << std::endl << vprDEBUG_FLUSH;
+   }
 }
 
 void ConfigManager::setRemoteReconfigPlugin(jccl::RemoteReconfig* plugin)
