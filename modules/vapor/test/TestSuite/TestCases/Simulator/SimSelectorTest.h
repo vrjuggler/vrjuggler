@@ -101,13 +101,11 @@ public:
       status = sender.write(buffer, buffer.length(), bytes_written);
       CPPUNIT_ASSERT(status.success() && "Failed to send buffer to receiver");
 
-      char buffer2[20];
       vpr::Uint32 bytes_read;
-
+      char buffer2[20];
       selector.addHandle(receiver.getHandle(), vpr::Selector::Read);
 
       do {
-         vpr::sim::Controller::instance()->processNextEvent();
          status = selector.select(num_events);
       } while (status == vpr::ReturnStatus::Timeout);
 
