@@ -363,17 +363,19 @@ void InputManager::updateAllData()
    for (tDevTableType::iterator i = mDevTable.begin(); i != mDevTable.end(); i++)      // all DEVICES
      if ((*i).second != NULL)
          i->second->updateData();
+   
+     // send and receive net device messages
+   if (mRemoteInputManager->isActive())
+   {
+      mRemoteInputManager->updateAll();
+   }
 
-   // Update proxies MIGHT NOT NEED
+
+      // Update proxies MIGHT NOT NEED
    for (std::map<std::string, Proxy*>::iterator i_p = mProxyTable.begin();
        i_p != mProxyTable.end(); i_p++)
    {
       (*i_p).second->updateData();
-   }
-   // send and receive net device messages
-   if (mRemoteInputManager->isActive())
-   {
-      mRemoteInputManager->updateAll();
    }
 }
 
