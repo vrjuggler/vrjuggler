@@ -32,6 +32,12 @@ public abstract class MovableObject
       recalc();
    }
 
+   public void setRotation(Rotf rot)
+   {
+      orientation = rot;
+      recalc();
+   }
+
    public Vec3f getPosition()
    {
       return center;
