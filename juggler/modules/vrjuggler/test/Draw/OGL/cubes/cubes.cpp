@@ -44,9 +44,9 @@
 
 int main(int argc, char* argv[])
 {
-   Projection::setNearFar(0.01, 10000.0f);
+   vrj::Projection::setNearFar(0.01, 10000.0f);
 
-   Kernel* kernel = Kernel::instance();        // Get the kernel
+   vrj::Kernel* kernel = vrj::Kernel::instance();  // Get the kernel
    cubesApp* application = new cubesApp(kernel);   // Declare an instance of the app
 
    if (argc <= 1)
