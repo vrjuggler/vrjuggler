@@ -165,7 +165,7 @@ public:
     *         mode is set to blocking.<br>
     *         vpr::ReturnStatus::Fail is returned otherwise.
     */
-   virtual ReturnStatus setBlocking(const bool& blocking) = 0;
+   virtual ReturnStatus setBlocking(bool blocking) = 0;
 
    /**
     * Gets the current blocking state for the I/O device.

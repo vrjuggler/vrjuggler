@@ -175,7 +175,7 @@ public:
     *         mode is set to blocking.<br>
     *         vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus setBlocking(const bool& blocking)
+   vpr::ReturnStatus setBlocking(bool blocking)
    {
       return mSioImpl.setBlocking(blocking);
    }
@@ -446,7 +446,7 @@ public:
     * @return vpr::ReturnStatus::Succeed is returned if reading was enabled.
     *         vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus setRead(const bool& flag)
+   vpr::ReturnStatus setRead(bool flag)
    {
       return mSioImpl.setRead(flag);
    }
@@ -477,7 +477,7 @@ public:
     * @return A vpr::ReturnStatus object describing the results of the
     *         operation.
     */
-   vpr::ReturnStatus setLocalAttach(const bool& flag)
+   vpr::ReturnStatus setLocalAttach(bool flag)
    {
       return mSioImpl.setLocalAttach(flag);
    }
@@ -555,7 +555,7 @@ public:
     *
     * @see getCanonicalState
     */
-   vpr::ReturnStatus setCanonicalInput(const bool& flag)
+   vpr::ReturnStatus setCanonicalInput(bool flag)
    {
       return mSioImpl.setCanonicalInput(flag);
    }
@@ -589,7 +589,7 @@ public:
     *         enabled.
     *         vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus setBadByteIgnore(const bool& flag)
+   vpr::ReturnStatus setBadByteIgnore(bool flag)
    {
       return mSioImpl.setBadByteIgnore(flag);
    }
@@ -620,7 +620,7 @@ public:
     * @return vpr::ReturnStatus::Succeed is returned if BREAK byte ignoring is
     *         enabled.  vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus setBreakByteIgnore(const bool& flag)
+   vpr::ReturnStatus setBreakByteIgnore(bool flag)
    {
       return mSioImpl.setBreakByteIgnore(flag);
    }
@@ -651,7 +651,7 @@ public:
     * @return A vpr::ReturnStatus object describing the results of the
     *         operation.
     */
-   vpr::ReturnStatus setInputParityCheck(const bool& flag)
+   vpr::ReturnStatus setInputParityCheck(bool flag)
    {
       return mSioImpl.setInputParityCheck(flag);
    }
@@ -683,7 +683,7 @@ public:
     * @return A vpr::ReturnStatus object describing the results of the
     *         operation.
     */
-   vpr::ReturnStatus setBitStripping(const bool& flag)
+   vpr::ReturnStatus setBitStripping(bool flag)
    {
       return mSioImpl.setBitStripping(flag);
    }
@@ -721,7 +721,7 @@ public:
     * @return A vpr::ReturnStatus object describing the results of the
     *         operation.
     */
-   vpr::ReturnStatus setStartStopInput(const bool& flag)
+   vpr::ReturnStatus setStartStopInput(bool flag)
    {
       return mSioImpl.setStartStopInput(flag);
    }
@@ -759,7 +759,7 @@ public:
     *
     * @see getStartStopOutputState
     */
-   vpr::ReturnStatus setStartStopOutput(const bool& flag)
+   vpr::ReturnStatus setStartStopOutput(bool flag)
    {
       return mSioImpl.setStartStopOutput(flag);
    }
@@ -794,7 +794,7 @@ public:
     * @return A vpr::ReturnStatus object describing the results of the
     *         operation.
     */
-   vpr::ReturnStatus setParityGeneration(const bool& flag)
+   vpr::ReturnStatus setParityGeneration(bool flag)
    {
       return mSioImpl.setParityGeneration(flag);
    }
@@ -831,7 +831,7 @@ public:
     *
     * @see setInputParityCheck
     */
-   vpr::ReturnStatus setParityErrorMarking(const bool& flag)
+   vpr::ReturnStatus setParityErrorMarking(bool flag)
    {
       return mSioImpl.setParityErrorMarking(flag);
    }
@@ -991,7 +991,7 @@ public:
     *
     * @see controlFlow
     */
-   vpr::ReturnStatus setHardwareFlowControl(const bool& flag)
+   vpr::ReturnStatus setHardwareFlowControl(bool flag)
    {
       return mSioImpl.setHardwareFlowControl(flag);
    }
