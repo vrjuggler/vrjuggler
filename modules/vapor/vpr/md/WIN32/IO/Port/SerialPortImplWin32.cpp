@@ -1,19 +1,18 @@
+#include <vpr/vprConfig.h>
+
 #include <iostream.h>
 #include <stdlib.h>
 #include <string.h>
-#include <errno.h>
 
-#include <md/Win32/SerialPortImpWin32.h>
+#include <vpr/md/WIN32/IO/Port/SerialPortImplWin32.h>
 
-extern int errno;
 
 namespace vpr{
-
 
 // ----------------------------------------------------------------------------
 // Constructor.  This sets all the default values for the given port name.
 // ----------------------------------------------------------------------------
-SerialPortImpWin32::SerialPortImpWin32 (const std::string& port_name)
+SerialPortImplWin32::SerialPortImplWin32 (const std::string& port_name)
     : Port(port_name), m_handle(NULL)
 {
 	openFlag = GENERIC_READ | GENERIC_WRITE;
@@ -25,7 +24,7 @@ SerialPortImpWin32::SerialPortImpWin32 (const std::string& port_name)
 // ----------------------------------------------------------------------------
 // Destructor.  If the file handle is non-NULL, its memory is released.
 // ----------------------------------------------------------------------------
-SerialPortImpWin32::~SerialPortImpWin32 () {
+SerialPortImplWin32::~SerialPortImplWin32 () {
     if ( m_handle != NULL ) {
         delete m_handle;
     }
@@ -34,7 +33,7 @@ SerialPortImpWin32::~SerialPortImpWin32 () {
 // ----------------------------------------------------------------------------
 // Open the serial port and initialize its flags.
 // ----------------------------------------------------------------------------
-Status SerialPortImpWin32::open () {
+Status SerialPortImplWin32::open () {
 	Status status;
 	COMMTIMEOUTS gct;
 	m_handle = CreateFile( pName,
@@ -77,7 +76,7 @@ vpr::SerialTypes::UpdateActionOption getUpdateAction(void){
 }
 
 
-void SerialPortImpWin32::setUpdateAction (SerialTypes::UpdateActionOption action)
+void SerialPortImplWin32::setUpdateAction (SerialTypes::UpdateActionOption action)
 {
 	/* Do Nothing */
 	cout << "Update action always NOW in Win32" << endl;
@@ -86,7 +85,7 @@ void SerialPortImpWin32::setUpdateAction (SerialTypes::UpdateActionOption action
 // ----------------------------------------------------------------------------
 // Query the serial port for the maximum buffer size.
 // ----------------------------------------------------------------------------
-Status SerialPortImpWin32::getBufferSize(Uint16 &size){
+Status SerialPortImplWin32::getBufferSize(Uint16 &size){
 	Status s;	
 	COMMPROP lpCommProp;
 	if(!GetCommProperties(m_handle, &lpCommProp) || (int)lpCommProp.dwCurrentTxQueue == 0){
@@ -102,7 +101,7 @@ Status SerialPortImpWin32::getBufferSize(Uint16 &size){
 // ----------------------------------------------------------------------------
 // Attempt to change the buffer size to the given argument.
 // ----------------------------------------------------------------------------
-Status SerialPortImpWin32::setBufferSize(const Uint8 size){
+Status SerialPortImplWin32::setBufferSize(const Uint8 size){
 	Status s;
 	if(!SetupComm(m_handle, (int)size, (int)size)){
 		s.setCode(Status::Failure);
@@ -115,7 +114,7 @@ Status SerialPortImpWin32::setBufferSize(const Uint8 size){
 // Get the value of the timeout (in tenths of a second) to wait for data to
 // arrive.  This is only applicable in non-canonical mode.
 // ----------------------------------------------------------------------------
-Status SerialPortImpWin32::getTimeout (Uint8& timeout) {
+Status SerialPortImplWin32::getTimeout (Uint8& timeout) {
     COMMTIMEOUTS t;
 	Status retval;
 	if(!GetCommTimeouts(m_handle, &t)){
@@ -131,7 +130,7 @@ Status SerialPortImpWin32::getTimeout (Uint8& timeout) {
 // must be in tenths of a second.  This is only applicable in non-canonical
 // mode.
 // ----------------------------------------------------------------------------
-Status SerialPortImpWin32::setTimeout (const Uint8 timeout) {
+Status SerialPortImplWin32::setTimeout (const Uint8 timeout) {
     COMMTIMEOUTS t;
 	Status retval;
 	GetCommTimeouts(m_handle, &t);
@@ -149,7 +148,7 @@ Status SerialPortImpWin32::setTimeout (const Uint8 timeout) {
 // ----------------------------------------------------------------------------
 // Get the character size (the bits per byte).
 // ----------------------------------------------------------------------------
-Status SerialPortImpWin32::getCharacterSize (SerialTypes::CharacterSizeOption& size)
+Status SerialPortImplWin32::getCharacterSize (SerialTypes::CharacterSizeOption& size)
 {
     Status retval;
 	DCB dcb;
@@ -181,7 +180,7 @@ Status SerialPortImpWin32::getCharacterSize (SerialTypes::CharacterSizeOption& s
 // include the parity bit (if any).
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpWin32::setCharacterSize (const SerialTypes::CharacterSizeOption bpb)
+SerialPortImplWin32::setCharacterSize (const SerialTypes::CharacterSizeOption bpb)
 {
 	Status retval;
 	DCB dcb;
@@ -210,7 +209,7 @@ SerialPortImpWin32::setCharacterSize (const SerialTypes::CharacterSizeOption bpb
 
 
 
-Status SerialPortImpWin32::getStopBits (Uint8& num_bits) {
+Status SerialPortImplWin32::getStopBits (Uint8& num_bits) {
     DCB dcb;
 	
 	Status retval;
@@ -235,7 +234,7 @@ Status SerialPortImpWin32::getStopBits (Uint8& num_bits) {
 // ----------------------------------------------------------------------------
 // Set the number of stop bits to use.  The value must be either 1 or 2.
 // ----------------------------------------------------------------------------
-Status SerialPortImpWin32::setStopBits (const Uint8 num_bits) {
+Status SerialPortImplWin32::setStopBits (const Uint8 num_bits) {
 	DCB dcb;
 	
 	Status retval;
@@ -259,7 +258,7 @@ Status SerialPortImpWin32::setStopBits (const Uint8 num_bits) {
 // ----------------------------------------------------------------------------
 // Get the state of parity checking for input.
 // ----------------------------------------------------------------------------
-bool SerialPortImpWin32::getInputParityCheckState () {
+bool SerialPortImplWin32::getInputParityCheckState () {
 	DCB dcb;
 	bool b;
 	if(!GetCommState(m_handle, &dcb)){
@@ -276,7 +275,7 @@ bool SerialPortImpWin32::getInputParityCheckState () {
 // ----------------------------------------------------------------------------
 // Enable input parity checking.
 // ----------------------------------------------------------------------------
-Status SerialPortImpWin32::enableInputParityCheck () {
+Status SerialPortImplWin32::enableInputParityCheck () {
 	Status s;
 	DCB dcb;
 	
@@ -295,7 +294,7 @@ Status SerialPortImpWin32::enableInputParityCheck () {
 // Disable input parity checking.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpWin32::disableInputParityCheck () {
+SerialPortImplWin32::disableInputParityCheck () {
 	Status s;
 	DCB dcb;
 	GetCommState(m_handle,&dcb);
@@ -307,7 +306,7 @@ SerialPortImpWin32::disableInputParityCheck () {
 // ----------------------------------------------------------------------------
 // Get the current parity checking type (either odd or even).
 // ----------------------------------------------------------------------------
-SerialTypes::ParityType SerialPortImpWin32::getParity () {
+SerialTypes::ParityType SerialPortImplWin32::getParity () {
 	DCB dcb;
 	GetCommState(m_handle, &dcb);
 	if(dcb.Parity == EVENPARITY){
@@ -324,7 +323,7 @@ SerialTypes::ParityType SerialPortImpWin32::getParity () {
 // ----------------------------------------------------------------------------
 // Enable odd parity.
 // ----------------------------------------------------------------------------
-Status SerialPortImpWin32::setOddParity () {
+Status SerialPortImplWin32::setOddParity () {
 	Status s;
 	DCB dcb;
 	GetCommState(m_handle, &dcb);
@@ -336,7 +335,7 @@ Status SerialPortImpWin32::setOddParity () {
 // ----------------------------------------------------------------------------
 // Enable even parity.
 // ----------------------------------------------------------------------------
-Status SerialPortImpWin32::setEvenParity () {
+Status SerialPortImplWin32::setEvenParity () {
 	Status s;
 	DCB dcb;
 	GetCommState(m_handle, &dcb);
@@ -347,7 +346,7 @@ Status SerialPortImpWin32::setEvenParity () {
 
 
 
-Status SerialPortImpWin32::write_i (const void* buffer, const size_t length, ssize_t& bytes_written){
+Status SerialPortImplWin32::write_i (const void* buffer, const size_t length, ssize_t& bytes_written){
 	Status s;
 	unsigned long bytes;
 	if(!WriteFile(m_handle, buffer, length, &bytes, NULL)){
@@ -359,7 +358,7 @@ Status SerialPortImpWin32::write_i (const void* buffer, const size_t length, ssi
 	
 }
 
-Status SerialPortImpWin32::read_i(void* buffer, const size_t length, ssize_t& bytes_read){
+Status SerialPortImplWin32::read_i(void* buffer, const size_t length, ssize_t& bytes_read){
 	Status s;
 	unsigned long bytes;
 	if(!ReadFile( m_handle, buffer, length, &bytes,NULL)){
@@ -373,7 +372,7 @@ Status SerialPortImpWin32::read_i(void* buffer, const size_t length, ssize_t& by
 // Get the current state of ignoring bytes with framing errors (other than a
 // BREAK) or parity errors.
 // ----------------------------------------------------------------------------
-bool SerialPortImpWin32::getBadByteIgnoreState () {
+bool SerialPortImplWin32::getBadByteIgnoreState () {
     DCB dcb;
 	GetCommState(m_handle, &dcb);
 	if(dcb.fErrorChar == true){
@@ -386,7 +385,7 @@ bool SerialPortImpWin32::getBadByteIgnoreState () {
 // ----------------------------------------------------------------------------
 // Enable ignoring of received bytes with framing errors or parity errors.
 // ----------------------------------------------------------------------------
-Status SerialPortImpWin32::enableBadByteIgnore () {
+Status SerialPortImplWin32::enableBadByteIgnore () {
 	Status s;
 	DCB dcb;
 	GetCommState(m_handle, &dcb);
@@ -402,7 +401,7 @@ Status SerialPortImpWin32::enableBadByteIgnore () {
 // Disable ignoring of received bytes with framing errors or parity errors.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpWin32::disableBadByteIgnore () {
+SerialPortImplWin32::disableBadByteIgnore () {
 	Status s;
 	DCB dcb;
 	GetCommState(m_handle, &dcb);
@@ -419,7 +418,7 @@ SerialPortImpWin32::disableBadByteIgnore () {
 // Get the current state of parity generation for outgoing bytes and parity
 // checking for incoming bytes.
 // ----------------------------------------------------------------------------
-bool SerialPortImpWin32::getParityGenerationState () {
+bool SerialPortImplWin32::getParityGenerationState () {
 	DCB dcb;
 	GetCommState(m_handle, &dcb);
 	if(dcb.fParity = false){
@@ -438,7 +437,7 @@ bool SerialPortImpWin32::getParityGenerationState () {
 // Enable parity generation for outgoing bytes and parity checking for
 // incoming bytes.
 // ----------------------------------------------------------------------------
-Status SerialPortImpWin32::enableParityGeneration () {
+Status SerialPortImplWin32::enableParityGeneration () {
     Status s;
 	DCB dcb;
 	GetCommState(m_handle, &dcb);
@@ -459,7 +458,7 @@ Status SerialPortImpWin32::enableParityGeneration () {
 // Disable parity generation for outgoing bytes and parity checking for
 // incoming bytes.
 // ----------------------------------------------------------------------------
-Status SerialPortImpWin32::disableParityGeneration () {
+Status SerialPortImplWin32::disableParityGeneration () {
     Status s;
 	DCB dcb;
 	GetCommState(m_handle, &dcb);
@@ -479,14 +478,14 @@ Status SerialPortImpWin32::disableParityGeneration () {
 // If bit stripping is enabled, a valid \377 byte is passed as the two-byte
 // sequence \377 \377.
 // ----------------------------------------------------------------------------
-bool SerialPortImpWin32::getParityErrorMarkingState () {
+bool SerialPortImplWin32::getParityErrorMarkingState () {
 	return parityMark;
 }
 
 // ----------------------------------------------------------------------------
 // Enable parity error and framing error marking.
 // ----------------------------------------------------------------------------
-Status SerialPortImpWin32::enableParityErrorMarking () {
+Status SerialPortImplWin32::enableParityErrorMarking () {
     Status s;
 	DCB dcb;
 	GetCommState(m_handle, &dcb);
@@ -501,7 +500,7 @@ Status SerialPortImpWin32::enableParityErrorMarking () {
 // ----------------------------------------------------------------------------
 // Disable parity error and framing error marking.
 // ----------------------------------------------------------------------------
-Status SerialPortImpWin32::disableParityErrorMarking () {
+Status SerialPortImplWin32::disableParityErrorMarking () {
 	Status s;
 	DCB dcb;
 	GetCommState(m_handle, &dcb);
@@ -515,7 +514,7 @@ Status SerialPortImpWin32::disableParityErrorMarking () {
 // ----------------------------------------------------------------------------
 // Get the current input baud rate.
 // ----------------------------------------------------------------------------
-Status SerialPortImpWin32::getInputBaudRate (Uint32& rate) {
+Status SerialPortImplWin32::getInputBaudRate (Uint32& rate) {
 	Status s;
 	DCB dcb;
 	GetCommState(m_handle, &dcb);
@@ -526,7 +525,7 @@ Status SerialPortImpWin32::getInputBaudRate (Uint32& rate) {
 // ----------------------------------------------------------------------------
 // Set the current input baud rate.
 // ----------------------------------------------------------------------------
-Status SerialPortImpWin32::setInputBaudRate (const Uint32 baud) {
+Status SerialPortImplWin32::setInputBaudRate (const Uint32 baud) {
 	Status s;
 	DCB dcb;
 	GetCommState(m_handle, &dcb);
@@ -541,7 +540,7 @@ Status SerialPortImpWin32::setInputBaudRate (const Uint32 baud) {
 // ----------------------------------------------------------------------------
 // Get the current output baud rate.
 // ----------------------------------------------------------------------------
-Status SerialPortImpWin32::getOutputBaudRate (Uint32& rate) {
+Status SerialPortImplWin32::getOutputBaudRate (Uint32& rate) {
 	Status s;
 	DCB dcb;
 	GetCommState(m_handle, &dcb);
@@ -552,7 +551,7 @@ Status SerialPortImpWin32::getOutputBaudRate (Uint32& rate) {
 // ----------------------------------------------------------------------------
 // Set the current output baud rate.
 // ----------------------------------------------------------------------------
-Status SerialPortImpWin32::setOutputBaudRate (const Uint32 baud) {
+Status SerialPortImplWin32::setOutputBaudRate (const Uint32 baud) {
 	Status s;
 	DCB dcb;
 	GetCommState(m_handle, &dcb);
@@ -570,102 +569,102 @@ Status SerialPortImpWin32::setOutputBaudRate (const Uint32 baud) {
 // Otherwise, the duration specfies the number of seconds to send the zero bit
 // stream.
 // ----------------------------------------------------------------------------
-Status SerialPortImpWin32::sendBreak (const Int32 duration) {
+Status SerialPortImplWin32::sendBreak (const Int32 duration) {
 	Status s;
 	cout << "sendBreak Not yet implemented for Win32" << endl;
 	s.setCode(Status::Failure);
 	return s;
 }
 
-Status SerialPortImpWin32::drainOutput(void){
+Status SerialPortImplWin32::drainOutput(void){
 	Status s;
 	// do nothing
 	return s;
 }
 
-Status SerialPortImpWin32::controlFlow(SerialTypes::FlowActionOption opt){
+Status SerialPortImplWin32::controlFlow(SerialTypes::FlowActionOption opt){
 	Status s;
 	// do nothing
 	return s;
 }
 
-Status SerialPortImpWin32::flushQueue(SerialTypes::FlushQueueOption queue){
+Status SerialPortImplWin32::flushQueue(SerialTypes::FlushQueueOption queue){
 	Status s;
 	// do nothing
 	return s;
 }
 
 
-bool SerialPortImpWin32::getCanonicalState(void){
+bool SerialPortImplWin32::getCanonicalState(void){
 	cout << "Canonical State not yet implemented, EOF is enabled." << endl;
 	return false;
 }
 
-Status SerialPortImpWin32::enableCanonicalInput(void){
+Status SerialPortImplWin32::enableCanonicalInput(void){
 	Status s;
 	cout << "Canoncial State not yet implemented, EOF is enabled." << endl;
 	s.setCode(Status::Failure);
 	return s;
 }
 
-Status SerialPortImpWin32::disableCanonicalInput(void){
+Status SerialPortImplWin32::disableCanonicalInput(void){
 	Status s;
 	cout << "Canoncial State not yet implemented on Win32, EOF is enabled." << endl;
 	s.setCode(Status::Failure);
 	return s;
 }
 
-bool SerialPortImpWin32::getBitStripState(void){
+bool SerialPortImplWin32::getBitStripState(void){
 	cout << "Bit Stripping is not yet implemented on Win32." << endl;
 	return false;
 }
 
-Status SerialPortImpWin32::enableBitStripping(void){
+Status SerialPortImplWin32::enableBitStripping(void){
 	Status s;
 	cout << "Bit Stripping is not yet implemented on Win32." << endl;
 	s.setCode(Status::Failure);
 	return s;
 }
 
-Status SerialPortImpWin32::disableBitStripping(void){
+Status SerialPortImplWin32::disableBitStripping(void){
 	Status s;
 	cout << "Bit Stripping is not yet implemented on Win32." << endl;
 	s.setCode(Status::Failure);
 	return s;
 }
 
-bool SerialPortImpWin32::getStartStopInputState(void){
+bool SerialPortImplWin32::getStartStopInputState(void){
 	cout << "Start/Stop Input is not yet implemented on Win32." << endl;
 	return false;
 }
 
-bool SerialPortImpWin32::getStartStopOutputState(void){
+bool SerialPortImplWin32::getStartStopOutputState(void){
 	cout << "Start/Stop Output is not yet implemented on Win32." << endl;
 	return false;
 }
 
-Status SerialPortImpWin32::enableStartStopInput(void){
+Status SerialPortImplWin32::enableStartStopInput(void){
 	Status s;
 	cout << "Start/Stop Input is not yet implemented on Win32." << endl;
 	s.setCode(Status::Failure);
 	return s;
 }
 
-Status SerialPortImpWin32::disableStartStopInput(void){
+Status SerialPortImplWin32::disableStartStopInput(void){
 	Status s;
 	cout << "Start/Stop Input is not yet implemented on Win32." << endl;
 	s.setCode(Status::Failure);
 	return s;
 }
 
-Status SerialPortImpWin32::enableStartStopOutput(void){
+Status SerialPortImplWin32::enableStartStopOutput(void){
 	Status s;
 	cout << "Start/Stop output is not yet implemented on Win32." << endl;
 	s.setCode(Status::Failure);
 	return s;
 }
 
-Status SerialPortImpWin32::disableStartStopOutput(void){
+Status SerialPortImplWin32::disableStartStopOutput(void){
 	Status s;
 	cout << "Start/Stop Output is not yet implemented on Win32." << endl;
 	s.setCode(Status::Failure);
