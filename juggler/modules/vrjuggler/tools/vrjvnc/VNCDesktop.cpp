@@ -66,11 +66,14 @@ VNCDesktop::VNCDesktop(const std::string& hostname, const vpr::Uint16& port,
      mDesktopWandIsect(false), mDesktopGrabbed(false),
      mTextureData(NULL)
 {
+   mVncWidth = mVncIf.getWidth();
+   mVncHeight = mVncIf.getHeight();
+
    mTexWidth  = getNearestMultipleOfTwo(mVncIf.getWidth());
    mTexHeight = getNearestMultipleOfTwo(mVncIf.getHeight());
 
-   mWidthScale  = mTexWidth / mDesktopWidth;
-   mHeightScale = mTexHeight / mDesktopHeight;
+   mDesktopToVncWidthScale  = mVncWidth / mDesktopWidth;
+   mDesktopToVncHeightScale = mVncHeight / mDesktopHeight;
 
    const float half_width(mDesktopWidth / 2.0f);
    const float half_height(mDesktopHeight / 2.0f);
@@ -295,6 +298,9 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          << "Got an intersection at " << isect << std::endl << vprDEBUG_FLUSH;
 
       // Translate that point into the coordinates VNC wants to see.
+      //
+      // x,y desktop point just like x desktop.  origin upper left, y increases going down
+      //     The valid range is the 
       gmtl::Point3f vnc_isect = isect - desktop_ul_trans[1];
       float x(isect[0] - desktop_ul_trans[2][0]);
       float y(mDesktopWidth - isect[1] - desktop_ul_trans[2][1]);
@@ -316,7 +322,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          button_mask |= rfbButton3Mask;
       }
 
-      mVncIf.pointerEvent(int(x * mWidthScale), int(y * mHeightScale),
+      mVncIf.pointerEvent(int(x * mDesktopToVncWidthScale), int(y * mDesktopToVncHeightScale),
                           button_mask);
 
       if ( mHaveKeyboard )

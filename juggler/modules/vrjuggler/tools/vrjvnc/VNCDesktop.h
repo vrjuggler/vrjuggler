@@ -88,12 +88,18 @@ private:
 
    bool mHaveKeyboard;
 
+   // The desktop window (ie. the texture of the desktop) is assumed to be
+   // centered on 0,0,0 in the local coordinate frame with 
+   //
    float mDesktopWidth, mDesktopHeight;      /**< Width and height of the virtual desktop. VRJ units */
-   int   mTexWidth;                          /**< Width of the texture in pixels */
-   int   mTexHeight;                         /**< Height of the texture in pixels */
+   int   mTexWidth, mTextHeight;             /**< Width and height of the texture in pixels */
+   int   mVncWidth, mVncHeight;              /**< The width and height of the vnc/X desktop */
 
-   float          mWidthScale;
-   float          mHeightScale;
+   /** Scale value for converting from virt desktop size to VNC coords
+   *    ex. vnc.x = desktoppoly.x * mDesktopToVncWidthScale;
+   */
+   float          mDesktopToVncWidthScale;   
+   float          mDesktopToVncHeightScale;
 
    gmtl::Matrix44f  mDesktopMatrix;  /**< vnc_T_world */
    gmtl::AABoxf     mDesktopBox;
