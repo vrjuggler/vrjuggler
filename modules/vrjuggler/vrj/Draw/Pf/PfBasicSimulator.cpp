@@ -62,14 +62,14 @@
 #include <vrj/Display/SimViewport.h>
 #include <vrj/Display/SurfaceViewport.h>
 
-#include <vrj/Draw/DrawSimInterfaceFactory.h>
+#include <vrj/Draw/Pf/PfSimInterfaceFactory.h>
 #include <vrj/Draw/Pf/PfBasicSimulator.h>
 
 
 namespace vrj
 {
 
-VRJ_REGISTER_SIM_INTERFACE_CREATOR(PfBasicSimulator);
+VRJ_REGISTER_PF_SIM_INTERFACE_CREATOR(PfBasicSimulator);
 
 PfBasicSimulator::PfBasicSimulator() : mRootWithSim(NULL),
    mSimTree(NULL), mHeadDCS(NULL), mWandDCS(NULL)

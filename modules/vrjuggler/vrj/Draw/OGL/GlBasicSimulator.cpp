@@ -50,14 +50,14 @@
 #include <vrj/Display/SimViewport.h>
 #include <vrj/Display/SurfaceViewport.h>
 
-#include <vrj/Draw/DrawSimInterfaceFactory.h>
+#include <vrj/Draw/OGL/GlSimInterfaceFactory.h>
 #include <vrj/Draw/OGL/GlBasicSimulator.h>
 
 
 namespace vrj
 {
 
-VRJ_REGISTER_SIM_INTERFACE_CREATOR(GlBasicSimulator);
+VRJ_REGISTER_GL_SIM_INTERFACE_CREATOR(GlBasicSimulator);
 
 GlBasicSimulator::GlBasicSimulator() : mQuadObj(NULL)
 {
