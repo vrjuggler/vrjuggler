@@ -39,7 +39,7 @@
 #include <sys/socket.h>
 #endif
 
-#include <jccl/JackalServer/vjSockStream.h>
+#include <jccl/JackalServer/SockStream.h>
 
 namespace jccl {
 

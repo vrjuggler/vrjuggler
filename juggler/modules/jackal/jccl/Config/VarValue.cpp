@@ -33,12 +33,12 @@
 
 #include <jccl/jcclConfig.h>
 #include <ctype.h>
-#include <jccl/Config/vjVarValue.h>
-#include <jccl/Config/vjConfigChunk.h>
+#include <jccl/Config/VarValue.h>
+#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ParseUtil.h>
+#include <jccl/Config/ConfigTokens.h>
 #include <vpr/Util/Debug.h>
 #include <vpr/Util/Assert.h>
-#include <jccl/Config/vjParseUtil.h>
-#include <jccl/Config/vjConfigTokens.h>
 
 namespace jccl
 {

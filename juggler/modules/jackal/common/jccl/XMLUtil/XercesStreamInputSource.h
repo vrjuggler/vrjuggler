@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJXERCESSTREAMINPUTSOURCE_H_
-#define _VJXERCESSTREAMINPUTSOURCE_H_
+#ifndef _JCCL_XERCESSTREAMINPUTSOURCE_H_
+#define _JCCL_XERCESSTREAMINPUTSOURCE_H_
 
 #include <jccl/jcclConfig.h>
 

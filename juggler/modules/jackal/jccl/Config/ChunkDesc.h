@@ -31,11 +31,11 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-#ifndef _VJ_CHUNKDESC_H_
-#define _VJ_CHUNKDESC_H_
+#ifndef _JCCL_CHUNKDESC_H_
+#define _JCCL_CHUNKDESC_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Config/vjPropertyDesc.h>
+#include <jccl/Config/PropertyDesc.h>
 //#include <dom/DOM.hpp>
 
 class DOM_Node;

@@ -32,7 +32,7 @@
 
 
 #include <sax/SAXParseException.hpp>
-#include <jccl/XMLUtil/vjXercesXMLError.h>
+#include <jccl/XMLUtil/XercesXMLError.h>
 #include <iostream.h>
 #include <stdlib.h>
 #include <string.h>

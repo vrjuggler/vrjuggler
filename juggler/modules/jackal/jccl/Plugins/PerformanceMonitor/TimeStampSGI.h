@@ -32,8 +32,8 @@
 
 
 
-#ifndef _VJ_TIMESTAMP_SGI_
-#define _VJ_TIMESTAMP_SGI_
+#ifndef _JCCL_TIMESTAMP_SGI_
+#define _JCCL_TIMESTAMP_SGI_
 
 #include <jccl/jcclConfig.h>
 #include <sys/types.h>

@@ -34,19 +34,19 @@
 
 // commands used by connections...
 
-#ifndef _VJ_COMMAND_H_
-#define _VJ_COMMAND_H_
+#ifndef _JCCL_COMMAND_H_
+#define _JCCL_COMMAND_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Performance/vjTimeStamp.h>
+#include <jccl/Performance/TimeStamp.h>
 
 namespace jccl {
 
-class vjTimedUpdate;
+class TimedUpdate;
 class ConfigChunkDB;
 class ChunkDescDB;
 
-class VJ_CLASS_API vjCommand {
+class VJ_CLASS_API Command {
 public:
     float next_fire_time; // milliseconds
     float refresh_time;      // millisecs
@@ -54,21 +54,21 @@ public:
 public:
     virtual void call (std::ostream& out) const = 0;
 
-    void resetFireTime (vjTimeStamp& ts);
+    void resetFireTime (TimeStamp& ts);
 
-    int operator < (const vjCommand& cmd2) const;
+    int operator < (const Command& cmd2) const;
     
     virtual const std::string& getName () const = 0;
 };
 
 
 
-class VJ_CLASS_API vjCommandRefresh: public vjCommand {
+class VJ_CLASS_API CommandRefresh: public Command {
 private:
     static const std::string command_name;
 
 public:
-    vjCommandRefresh();
+    CommandRefresh();
     
     virtual void call (std::ostream& out) const;
 
@@ -77,14 +77,14 @@ public:
 
 
 
-class VJ_CLASS_API vjCommandSendChunkDB: public vjCommand {
+class VJ_CLASS_API CommandSendChunkDB: public Command {
 private:
     ConfigChunkDB* db;
     bool all;
     static const std::string command_name;
     
 public:
-    vjCommandSendChunkDB (ConfigChunkDB* _db, bool _all = false);
+    CommandSendChunkDB (ConfigChunkDB* _db, bool _all = false);
 
     virtual void call (std::ostream& out) const;
 
@@ -93,14 +93,14 @@ public:
 
 
 
-class VJ_CLASS_API vjCommandSendDescDB: public vjCommand {
+class VJ_CLASS_API CommandSendDescDB: public Command {
 private:
     ChunkDescDB* db;
     bool all;
     static const std::string command_name;
 
 public:
-    vjCommandSendDescDB (ChunkDescDB* _db, bool _all = false);
+    CommandSendDescDB (ChunkDescDB* _db, bool _all = false);
     
     virtual void call (std::ostream& out) const;
 
@@ -109,12 +109,12 @@ public:
 
 
 
-class vjCommandTimedUpdate: public vjCommand {
+class CommandTimedUpdate: public Command {
 public:
-    vjTimedUpdate* timed_update;
+    TimedUpdate* timed_update;
     static const std::string command_name;
     
-    vjCommandTimedUpdate (vjTimedUpdate* _tu, float _refresh_time);
+    CommandTimedUpdate (TimedUpdate* _tu, float _refresh_time);
     
     virtual void call (std::ostream& out) const;
 

@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJXERCESXMLPARSER_H_
-#define _VJXERCESXMLPARSER_H_
+#ifndef _JCCL_XERCESXMLPARSER_H_
+#define _JCCL_XERCESXMLPARSER_H_
 
 #include <jccl/jcclConfig.h>
 

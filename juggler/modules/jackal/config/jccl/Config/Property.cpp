@@ -32,13 +32,13 @@
 
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Config/vjProperty.h>
-#include <jccl/Config/vjConfigChunk.h>
-#include <jccl/Config/vjChunkFactory.h>
-#include <jccl/Config/vjPropertyDesc.h>
-#include <jccl/Config/vjEnumEntry.h>
-#include <jccl/Config/vjParseUtil.h>
-#include <jccl/Config/vjConfigTokens.h>
+#include <jccl/Config/Property.h>
+#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ChunkFactory.h>
+#include <jccl/Config/PropertyDesc.h>
+#include <jccl/Config/EnumEntry.h>
+#include <jccl/Config/ParseUtil.h>
+#include <jccl/Config/ConfigTokens.h>
 #include <vpr/Util/Debug.h>
 #include <vpr/Util/Assert.h>
 

@@ -31,18 +31,18 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-// Implementation of vrj::ConfigChunk DB
+// Implementation of jccl::ConfigChunk DB
 //
 // Author: Christopher Just
 
 #include <jccl/jcclConfig.h>
 
-#include <jccl/Config/vjConfigChunkDB.h>
-#include <jccl/Config/vjChunkFactory.h>
-#include <jccl/Config/vjParseUtil.h>
+#include <jccl/Config/ConfigChunkDB.h>
+#include <jccl/Config/ChunkFactory.h>
+#include <jccl/Config/ParseUtil.h>
 #include <vpr/Util/Debug.h>
-#include <jccl/Config/vjConfigTokens.h>
-#include <jccl/Config/vjConfigIO.h>
+#include <jccl/Config/ConfigTokens.h>
+#include <jccl/Config/ConfigIO.h>
 
 #include <sys/types.h>
 

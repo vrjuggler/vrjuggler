@@ -31,13 +31,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-
-#ifndef _VJ_CHUNKFACTORY_H_
-#define _VJ_CHUNKFACTORY_H_
+#ifndef _JCCL_CHUNKFACTORY_H_
+#define _JCCL_CHUNKFACTORY_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Config/vjConfigChunk.h>
-#include <jccl/Config/vjChunkDescDB.h>
+#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ChunkDescDB.h>
 #include <vpr/Util/Debug.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Util/Singleton.h>

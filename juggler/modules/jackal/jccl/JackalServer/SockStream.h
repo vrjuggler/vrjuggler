@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJ_SOCKSTREAM_H_
-#define _VJ_SOCKSTREAM_H_
+#ifndef _JCCL_SOCKSTREAM_H_
+#define _JCCL_SOCKSTREAM_H_
 
 #include <jccl/jcclConfig.h>
 

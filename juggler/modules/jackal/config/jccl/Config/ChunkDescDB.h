@@ -31,11 +31,11 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-#ifndef _VJ_CHUNKDESCDB_H_
-#define _VJ_CHUNKDESCDB_H_
+#ifndef _JCCL_CHUNKDESCDB_H_
+#define _JCCL_CHUNKDESCDB_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Config/vjChunkDesc.h>
+#include <jccl/Config/ChunkDesc.h>
 
 namespace jccl {
    

@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <jccl/XMLUtil/vjXercesStreamInputSource.h>
-#include <jccl/XMLUtil/vjXercesStreamInputStream.h>
+#include <jccl/XMLUtil/XercesStreamInputSource.h>
+#include <jccl/XMLUtil/XercesStreamInputStream.h>
 
 namespace jccl {
 

@@ -37,14 +37,14 @@
 #include <jccl/jcclConfig.h>
 //#include <Kernel/vjConfigChunkHandler.h>
 #include <vpr/Thread/Thread.h>
-#include <jccl/JackalServer/vjSocket.h>
+#include <jccl/JackalServer/Socket.h>
 #include <vpr/Sync/Mutex.h>
 
 namespace jccl {
 
-class vjConnect;
-class vjPerfDataBuffer;
-class vjConfigChunkDB;
+class Connect;
+class PerfDataBuffer;
+class ConfigChunkDB;
 
 
 //-------------------------------------
@@ -69,7 +69,7 @@ class vjConfigChunkDB;
 // Date 2-27-98
 //---------------------------------------
 
-class VJ_CLASS_API JackalServer: public vjConfigChunkHandler {
+class VJ_CLASS_API JackalServer: public ConfigChunkHandler {
 
 public:
 
@@ -92,16 +92,16 @@ public:
 
 
     //: registers a buffer containing perf data... 
-    void addPerfDataBuffer (vjPerfDataBuffer *v);
+    void addPerfDataBuffer (PerfDataBuffer *v);
 
 
     //: unregisters a buffer of perf data
-    void removePerfDataBuffer (vjPerfDataBuffer *v);
+    void removePerfDataBuffer (PerfDataBuffer *v);
 
 
 
     //: tells EM that a connection has died (ie by gui disconnecting)
-    void connectHasDied (vjConnect* con);
+    void connectHasDied (Connect* con);
 
 
     //: sends a 'refresh' message to all open connections
@@ -112,21 +112,21 @@ public:
     //: ConfigChunkHandler stuff
     //! PRE: configCanHandle(chunk) == true
     //! RETURNS: success
-    virtual bool configAdd(vjConfigChunk* chunk);
+    virtual bool configAdd(ConfigChunk* chunk);
 
 
 
     //: Remove the chunk from the current configuration
     //! PRE: configCanHandle(chunk) == true
     //!RETURNS: success
-    virtual bool configRemove(vjConfigChunk* chunk);
+    virtual bool configRemove(ConfigChunk* chunk);
 
 
     
     //: Can the handler handle the given chunk?
     //! RETURNS: true - Can handle it
     //+          false - Can't handle it
-    virtual bool configCanHandle(vjConfigChunk* chunk);
+    virtual bool configCanHandle(ConfigChunk* chunk);
 
 
 
@@ -136,11 +136,11 @@ private:
     std::vector<vjPerfDataBuffer*> perf_buffers;
     vpr::Thread*                 listen_thread;
     int                       Port;
-    vjSocket*                 listen_socket;
-    vjConnect*                perf_target;
+    Socket*                 listen_socket;
+    Connect*                perf_target;
     float                     perf_refresh_time;  // in milliseconds
     bool                      configured_to_accept;
-    vjConfigChunk*            current_perf_config;
+    ConfigChunk*            current_perf_config;
     vpr::Mutex                   connections_mutex;
     vpr::Mutex                   perf_buffers_mutex;
 
@@ -151,12 +151,12 @@ private:
     void activatePerfBuffers();
     void deactivatePerfBuffers();
 
-    void setPerformanceTarget (vjConnect* con);
+    void setPerformanceTarget (Connect* con);
 
-    void removeConnect (vjConnect* con);
+    void removeConnect (Connect* con);
 
     //: returns a pointer to a connection with the given name
-    vjConnect* getConnect (const std::string& _name);
+    Connect* getConnect (const std::string& _name);
 
 
     //: allows the Environment Manager to accept connections.

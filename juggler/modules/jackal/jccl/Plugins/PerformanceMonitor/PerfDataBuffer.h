@@ -33,11 +33,11 @@
 
 
 
-#ifndef _VJ_PERF_DATA_BUFFER_H_
-#define _VJ_PERF_DATA_BUFFER_H_
+#ifndef _JCCL_PERF_DATA_BUFFER_H_
+#define _JCCL_PERF_DATA_BUFFER_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Environment/TimedUpdate.h>
+#include <jccl/JackalServer/TimedUpdate.h>
 #include <jccl/Performance/TimeStamp.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Util/Debug.h>
@@ -71,7 +71,7 @@ namespace jccl {
 // write() call.
 //
 //----------------------------------------------------------------
-class _CLASS_API PerfDataBuffer: public TimedUpdate {
+class VJ_CLASS_API PerfDataBuffer: public TimedUpdate {
 
     struct buf_entry {
 
