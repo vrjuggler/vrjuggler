@@ -25,6 +25,10 @@
 #include <gadget/InputManager.h>
 
 #include <gadget/Devices/Sim/SimPosition.h>
+#include <gadget/Devices/Sim/SimDigital.h>
+#include <gadget/Devices/Sim/SimInput.h>
+
+#include <jccl/Config/ConfigChunkPtr.h>
 
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/AnalogInterface.h>
@@ -80,6 +84,7 @@ public:
 
    bool addChunkFile( std::string filename );
    bool removeChunkFile( std::string filename );
+   bool swapChunkFiles( std::string remove_file, std::string add_file );
    bool removeRecentChunkDB();
 
    bool checkTime();
