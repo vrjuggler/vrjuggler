@@ -98,6 +98,13 @@ $Win32 = (defined($ENV{'OS'}) && $ENV{'OS'} =~ /^win/i);
 
 my $base_dir = '';
 
+# Set the location of the collection of dependencies.  If $SNX_DEPS_DIR is
+# not defined, then $deps_dir will be an empty string.  If the dependencies
+# are installed in $SNX_BASE_DIR, then the user gets the right compiler and
+# linker path options for free.  Otherwise, it is up to the user to provide
+# those paths.
+my $deps_dir = "$ENV{'SNX_DEPS_DIR'}" if defined($ENV{'SNX_DEPS_DIR'});
+
 # Get the directory where this script is located.
 if ( defined($ENV{'SNX_BASE_DIR'}) )
 {
@@ -267,6 +274,7 @@ sub make_CXXFLAGS ($;$)
 
    my $cxxflags = qq(@snx_cxxflags@ $dep_cxxflags $snx_extra_cxxflags ) .
                   qq(-I@includedir@ $snx_extra_includes);
+   $cxxflags   .= " -I$deps_dir/include" if $deps_dir;
 
    # Strip out extra whitespace.
    $cxxflags =~ s/\s{2,}/ /g;
@@ -363,6 +371,7 @@ sub make_EXTRA_LDFLAGS ($;$$$)
 
    my $extra_ldflags = ($use_linker ? qq(@snx_extra_ldflags_linker@)
                                     : qq(@snx_extra_ldflags_compiler@));
+   $extra_ldflags = "-L$deps_dir/lib $extra_ldflags" if $deps_dir;
 
    # Add the full set of extra flags if the user specified --min on the
    # command line.

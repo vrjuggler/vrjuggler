@@ -163,7 +163,7 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS_MIN $GMTL_INCLUDES"
 BASE_APP_LINK_FLAGS="$STDFLAGS $BASE_APP_LINK_FLAGS"
 DEPEND_FLAGS="$VPR_INCLUDES_MIN $GMTL_INCLUDES"
-snx_cxxflags="$STDFLAGS $GMTL_INCLUDES"
+snx_cxxflags="$STDFLAGS"
 
 # List the scripts sonix-config will call to get flags.  This should be in the
 # order used for linking.  That means the dependencies are satisfied right to
