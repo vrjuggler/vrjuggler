@@ -63,7 +63,7 @@ include ${MKPATH}/vj.install.mk
 # ----------------------------------------------------------------------------- # Library targets.
 # -----------------------------------------------------------------------------
 all dbg opt dso ddso obj: ${KERNEL_OBJECTS}
-	@${MAKE} RECTARGET="$@" OPTIMIZER="${OPTIMIZIER}"	\
+	@${MAKE} RECTARGET="$@" OPTIMIZER="${OPTIMIZER}"	\
             BASE_OBJDIR="${BASE_OBJDIR}" recursive
 
 install-recursive depend-recursive newdepend-recursive:
