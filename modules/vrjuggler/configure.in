@@ -661,6 +661,8 @@ AC_OUTPUT(vrjuggler-config
           samples/Makefile
           samples/OGL/Makefile
           samples/OGL/glove/Makefile
+          samples/OGL/sonix/Makefile
+          samples/OGL/soundManager/Makefile
           samples/OSG/Makefile
           samples/OSG/osgNav/Makefile
           samples/Pf/Makefile
