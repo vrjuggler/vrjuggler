@@ -52,10 +52,10 @@
         call's documentation can be found.
       </LI>
       <LI>
-        Environment variables are named as <TT>ENV_VAR_NAME</TT>.  (This is
-        to avoid confusion between UNIX and Win32 environments where
-        environment variables are evaluated using <TT>$</TT>'s and
-        <TT>%</TT>'s respectively.)
+        Environment variables are named as defined in the
+        <A HREF="${GETTINGSTARTED}/environment.variables.html">Enviroment
+        Variables</A> chapter in the <I><A HREF="${GETTINGSTARTED}">Getting
+        Started Guide</A></I>.
       </LI>
     </UL>
 
@@ -161,8 +161,8 @@
       reasonable and must include tools such as C and C++ compilers, a
       working GNU make and standard UNIX utilities such as <TT>cat</TT>,
       <TT>sh</TT>, <TT>test</TT>, etc.  The configuration process can of
-      course uses environment variables such as <TT>CC</TT>, <TT>CXX</TT>,
-      <TT>CFLAGS</TT>, etc. as it runs.  Users can define values for these
+      course uses environment variables such as <TT>$CC</TT>, <TT>$CXX</TT>,
+      <TT>$CFLAGS</TT>, etc. as it runs.  Users can define values for these
       variables to force the configuration process to use user-defined
       settings.  This is common in configure script use.
     </P>

@@ -63,10 +63,10 @@
         variables are named as <TT>${VAR_NAME}</TT>.
       </LI>
       <LI>
-        Environment variables are named as <TT>ENV_VAR_NAME</TT>.  (This is
-        to avoid confusion between UNIX and Win32 environments where
-        environment variables are evaluated using <TT>$</TT>'s and
-        <TT>%</TT>'s respectively.)
+        Environment variables are named as defined in the
+        <A HREF="${GETTINGSTARTED}/environment.variables.html">Enviroment
+        Variables</A> chapter in the <I><A HREF="${GETTINGSTARTED}">Getting
+        Started Guide</A></I>.
       </LI>
     </UL>
 
@@ -482,11 +482,11 @@
   <P>
     When the build process completes, a message is printed telling the
     developer the value to which s/he should set the environment variable
-    <TT>VJ_BASE_DIR</TT>.  By doing this simple step, the developer is
+    <TT>$VJ_BASE_DIR</TT>.  By doing this simple step, the developer is
     given a pseudo-installation where Juggler applications (that are part
     of the source tree) can be compiled and executed.  These applications
     are linked statically on IRIX, but on all other UNIX-based platforms,
-    they are linked dynamically.  In those cases, <TT>LD_LIBRARY_PATH</TT>
+    they are linked dynamically.  In those cases, <TT>$LD_LIBRARY_PATH</TT>
     should be set to the value ``<TT>$VJ_BASE_DIR/lib</TT>'' which is a
     normal step in the setup process for using an actual installation.
   </P>
@@ -498,7 +498,7 @@
     application development.  Suggestions for enabling an equivalent
     development environment for Win32 are welcomed.  It is possible, after
     installing Juggler, to continue working within the build environment.
-    Set <TT>VJ_BASE_DIR</TT> to the installation directory and continue
+    Set <TT>$VJ_BASE_DIR</TT> to the installation directory and continue
     working as on any other platform.  All library binaries and headers
     will be referenced from the installed version, but source code (for
     applications as an example) comes from the Juggler source tree.
