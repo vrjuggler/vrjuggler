@@ -517,6 +517,10 @@ int main(int argc, char* argv[])
     cout<<"               a - configure sound object to sol.wav\n"<<flush;
     cout<<"               b - configure sound object to drumsolo.wav\n"<<flush;
     cout<<"               c - configure sound object to suck.wav\n"<<flush;
+    cout<<"               7 - trigger drum44100.wav\n"<<flush;
+    cout<<"               8 - trigger attack.wav\n"<<flush;
+    cout<<"               9 - trigger sol.wav\n"<<flush;
+    cout<<"               0 - trigger sep.wav\n"<<flush;
     cout<<"\n"<<flush;
     
    // display callbacks.
