@@ -172,12 +172,18 @@ void vncApp::bufferPreDraw()
    glClear(GL_COLOR_BUFFER_BIT);
 }
 
+void vncApp::contextPreDraw()
+{
+   if ( mEmbeddedGUI )
+   {  mDesktop->contextPreDraw(); }
+}
+
 
 //----------------------------------------------
 //  Draw the scene.  A box on the end of the wand
 //----------------------------------------------
 
-void vncApp::myDraw()
+void vncApp::draw()
 {
    glClear(GL_DEPTH_BUFFER_BIT);
    //std::cout << "\n--- myDraw() ---\n";
