@@ -280,8 +280,14 @@ endif
 # -----------------------------------------------------------------------------
 
 clean:
-	$(RM) *.aux *.out *.tex *.log *.fo *~
+	$(RM) *.aux *.out *.tex *.log *.fo *~ $(CLEAN_FILES)
+ifneq ($(CLEAN_DIRS), )
+	$(RM) -r $(CLEAN_DIRS)
+endif
 
 clobber:
 	@$(MAKE) clean
-	$(RM) *.html *.pdf $(LINK_DEPS)
+	$(RM) *.html *.pdf $(LINK_DEPS) $(CLOBBER_FILES)
+ifneq ($(CLOBBER_DIRS), )
+	$(RM) -r $(CLOBBER_DIRS)
+endif
