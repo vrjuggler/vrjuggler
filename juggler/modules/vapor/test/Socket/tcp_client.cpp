@@ -39,10 +39,12 @@ main (int argc, char* argv[]) {
     vpr::SocketStream* sock;
 
     if ( argc == 2 ) {
-        sock = new vpr::SocketStream(argv[1]);
+        sock = new vpr::SocketStream(vpr::InetAddr::AnyAddr,
+	                             vpr::InetAddr(argv[1]));
     }
     else if ( argc == 3 ) {
-        sock = new vpr::SocketStream(argv[1], (unsigned short) atoi(argv[2]));
+        sock = new vpr::SocketStream(vpr::InetAddr::AnyAddr,
+                                     vpr::InetAddr(argv[1], atoi(argv[2])));
     }
     else {
         return 1;

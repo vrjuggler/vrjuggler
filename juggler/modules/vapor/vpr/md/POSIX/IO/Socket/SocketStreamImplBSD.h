@@ -63,37 +63,9 @@ public:
     SocketStreamImpBSD(void);
 
     // ------------------------------------------------------------------------
-    // Constructor.  This takes the address (either hostname or IP address) of
-    // a remote site and a port and stores the values for later use in the
-    // member variables of the object.
-    //
-    // PRE: None.
-    // POST: The member variables are initialized with the m_type variable in
-    //       particular set to SOCK_STREAM.
-    //
-    // Arguments:
-    //     address - The hostname or IP address of the site to which we will
-    //               connect.
-    //     port    - The port on the remote site to which we will connect.
     // ------------------------------------------------------------------------
-    SocketStreamImpBSD(const std::string& address, const Uint16 port);
-
-    // ------------------------------------------------------------------------
-    // Constructor.  This takes the address (either hostname or IP address) of
-    // a remote site and a port and stores the values for later use in the
-    // member variables of the object.
-    //
-    // PRE: None.
-    // POST: The member variables are initialized with the m_type variable in
-    //       particular set to SOCK_STREAM.
-    //
-    // Arguments:
-    //     address - The hostname or IP address of the site to which we will
-    //               connect.
-    //     port    - The port on the remote site to which we will connect.
-    // ------------------------------------------------------------------------
-    SocketStreamImpBSD(const std::string& address, const Uint16 port,
-                       const SocketTypes::Domain domain);
+    SocketStreamImpBSD(const InetAddr& local_addr,
+                       const InetAddr& remote_addr);
 
     // ------------------------------------------------------------------------
     // Destructor.  This currently does nothing.
@@ -101,7 +73,9 @@ public:
     // PRE: None.
     // POST: None.
     // ------------------------------------------------------------------------
-    virtual ~SocketStreamImpBSD(void);
+    virtual ~SocketStreamImpBSD (void) {
+        /* Do nothing. */ ;
+    }
 
     // ------------------------------------------------------------------------
     // Listen on the socket for incoming connection requests.
@@ -153,11 +127,11 @@ protected:
     //       directly resulting in a ready-to-use socket.
     //
     // Arguments:
-    //     sock      - The open socket returned by the operating system.
-    //     host_addr - The host address structure of the site to which we are
-    //                 connected.
+    //     sock        - The open socket returned by the operating system.
+    //     remote_addr - The host address structure of the site to which we
+    //                   are connected.
     // ------------------------------------------------------------------------
-    SocketStreamImpBSD(const int sock, InetAddr& host_addr);
+    SocketStreamImpBSD(const int sock, InetAddr& remote_addr);
 };
 
 }; // End of vpr namespace

@@ -37,13 +37,13 @@
 
 int
 main (int argc, char* argv[]) {
-    unsigned short port = 5432;
+    vpr::Uint16 port = 5432;
 
     if ( argc == 2 ) {
         port = (unsigned short) atoi(argv[1]);
     }
 
-    vpr::SocketDatagram sock(port);
+    vpr::SocketDatagram sock(vpr::InetAddr(port), vpr::InetAddr::AnyAddr);
     int status;
 
     if ( sock.open() && sock.bind() ) {

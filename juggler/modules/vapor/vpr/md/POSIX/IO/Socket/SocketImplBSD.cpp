@@ -67,7 +67,7 @@ SocketImpBSD::open () {
     int domain, type, sock;
     bool retval;
 
-    switch (m_addr.getFamily()) {
+    switch (m_local_addr.getFamily()) {
       case SocketTypes::LOCAL:
 #ifdef PF_LOCAL
         domain = PF_LOCAL;
@@ -94,13 +94,13 @@ SocketImpBSD::open () {
 #else
         fprintf(stderr,
                 "[vpr::SocketImpBSD] WARNING: Cannot use LINK sockets. domain %d\n",
-                m_addr.getFamily());
+                m_local_addr.getFamily());
 #endif
         break;
       default:
         fprintf(stderr,
                 "[vpr::SocketImpBSD] ERROR: Unknown socket domain value %d\n",
-                m_addr.getFamily());
+                m_local_addr.getFamily());
         break;
     }
 
@@ -117,11 +117,12 @@ SocketImpBSD::open () {
       default:
         fprintf(stderr,
                 "[vpr::SocketImpBSD] ERROR: Unknown socket type value %d\n",
-                m_addr.getFamily());
+                m_local_addr.getFamily());
         break;
     }
 
-    // Attempt to create a new socket using the values in m_addr and m_type.
+    // Attempt to create a new socket using the values in m_local_addr and
+    // m_type.
     sock = socket(domain, type, 0);
 
     // If socket(2) failed, print an error message and return error status.
@@ -137,11 +138,11 @@ SocketImpBSD::open () {
         retval = true;
     }
 
-    if ( retval ) {
-        // If the value in m_address is the string "INADDR_ANY", use the
+    if ( retval != 0 ) {
+        // If the value in m_local_addr is the string "INADDR_ANY", use the
         // INADDR_ANY constant.
         if ( m_name == "INADDR_ANY" || m_name == "" ) {
-            m_addr.setAddressValue(INADDR_ANY);
+            m_local_addr.setAddressValue(INADDR_ANY);
         }
         // Otherwise, look up the address and save the return status as the
         // return value for this method.
@@ -161,9 +162,9 @@ SocketImpBSD::bind () {
     bool retval;
     int status;
 
-    // Bind the socket to the address in m_addr.
-    status = ::bind(m_handle->m_fdesc, (struct sockaddr*) &m_addr.m_addr,
-                    m_addr.size());
+    // Bind the socket to the address in m_local_addr.
+    status = ::bind(m_handle->m_fdesc, (struct sockaddr*) &m_local_addr.m_addr,
+                    m_local_addr.size());
 
     // If that fails, print an error and return error status.
     if ( status == -1 ) {
@@ -192,8 +193,9 @@ SocketImpBSD::connect () {
     int status;
 
     // Attempt to connect to the address in m_addr.
-    status = ::connect(m_handle->m_fdesc, (struct sockaddr*) &m_addr.m_addr,
-                       m_addr.size());
+    status = ::connect(m_handle->m_fdesc,
+                       (struct sockaddr*) &m_remote_addr.m_addr,
+                       m_remote_addr.size());
 
     // If connect(2) failed, print an error message explaining why and return
     // error status.
@@ -376,22 +378,24 @@ fprintf(stderr, "vpr::SocketImpBSD default constructor\n");
 // the member variables for use when opening the socket and performing
 // communications.
 // ----------------------------------------------------------------------------
-SocketImpBSD::SocketImpBSD (const std::string& address,
-                            const unsigned short port,
-                            const SocketTypes::Domain domain,
-                            const SocketTypes::Type type)
-    : SocketImp_i(address, port, domain, type)
+SocketImpBSD::SocketImpBSD (const InetAddr& local_addr,
+                            const InetAddr& remote_addr,
+                            const SocketTypes::Type sock_type)
+    : SocketImp_i(local_addr, remote_addr, sock_type)
 {
-    m_name = address;
-    m_addr.setPort(port);
-    m_addr.setFamily(domain);
-    m_type = type;
-fprintf(stderr, "vpr::SocketImpBSD(address, port, domain, type) constructor\n");
-fprintf(stderr, "    Address: %s -> %s\n", address.c_str(), m_name.c_str());
-fprintf(stderr, "    Port: %hu -> %hu\n", port, m_addr.getPort());
-fprintf(stderr, "    Domain: %d -> %d\n", domain, m_addr.getFamily());
-fprintf(stderr, "    Type: %d -> %d\n", type, m_type);
-    m_handle = new FileHandleUNIX(address);
+fprintf(stderr, "vpr::SocketImpBSD(local, remote) constructor\n");
+fprintf(stderr, "    Local Address: %s\n",
+        m_local_addr.getAddressString().c_str());
+fprintf(stderr, "    Local Port: %hu -> %hu\n", local_addr.getPort(),
+        m_local_addr.getPort());
+fprintf(stderr, "    Remote Address: %s\n",
+        m_remote_addr.getAddressString().c_str());
+fprintf(stderr, "    Remote Port: %hu -> %hu\n", remote_addr.getPort(),
+        m_remote_addr.getPort());
+fprintf(stderr, "    Domain: %d -> %d\n", local_addr.getFamily(),
+        m_local_addr.getFamily());
+fprintf(stderr, "    Type: %d -> %d\n", sock_type, m_type);
+    m_handle = new FileHandleUNIX(m_name);
 }
 
 // ----------------------------------------------------------------------------
@@ -405,7 +409,7 @@ SocketImpBSD::~SocketImpBSD () {
 }
 
 // ----------------------------------------------------------------------------
-// Look up the address in m_name and store the address in the m_addr
+// Look up the address in m_name and store the address in the m_remote_addr
 // object.
 // ----------------------------------------------------------------------------
 bool
@@ -416,9 +420,9 @@ SocketImpBSD::lookupAddress () {
     // First, try looking the host up by name.
     host_entry = gethostbyname(m_name.c_str());
 
-    // If that succeeded, put the result in m_addr.
+    // If that succeeded, put the result in m_remote_addr.
     if ( host_entry != NULL ) {
-        m_addr.copyAddressValue(host_entry->h_addr);
+        m_remote_addr.copyAddressValue(host_entry->h_addr);
         retval = true;
     }
     // If gethostbyname(3) failed, the address string may be an IP address.
@@ -438,7 +442,7 @@ SocketImpBSD::lookupAddress () {
         }
         // Otherwise, we found the integer address successfully.
         else {
-            m_addr.setAddressValue(addr);
+            m_remote_addr.setAddressValue(addr);
             retval = true;
         }
     }

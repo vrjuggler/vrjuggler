@@ -45,7 +45,7 @@
 namespace vpr {
 
 // ----------------------------------------------------------------------------
-//: Stream socket interface.
+//: Cross-platform stream socket class.
 // ----------------------------------------------------------------------------
 //! PUBLIC_API:
 template<class RealSocketStreamImp, class RealSocketStreamImpParent>
@@ -55,112 +55,27 @@ public:
     //: Default constructor.
     // ------------------------------------------------------------------------
     SocketStream_t (void)
-        : m_socket_stream_imp()
+        : Socket_t<RealSocketStreamImpParent>(), m_socket_stream_imp()
     {
         m_socket_imp = &m_socket_stream_imp;
     }
 
     // ------------------------------------------------------------------------
-    //: Constructor.  This takes a port number and stores the value for later
-    //+ use in the member variables of the object.  The address defaults to
-    //+ "INADDR_ANY" which is interpreted properly when the socket is created.
-    //
-    //! PRE: None.
-    //! POST: The member variables are initialized with the m_type variable in
-    //+       particular set to vpr::SocketTypes::STREAM.
-    //
-    //! ARGS: port - The port on the remote site to which we will connect.
-    // ------------------------------------------------------------------------
-    SocketStream_t (const Uint16 port)
-        : m_socket_stream_imp("INADDR_ANY", port)
-    {
-        m_socket_imp = &m_socket_stream_imp;
-    }
-
-    // ------------------------------------------------------------------------
-    // Constructor.  This takes the address (either hostname or IP address) of
-    // a remote site and a port and stores the values for later use in the
-    // member variables of the object.
-    //
-    // PRE: None.
-    // POST: The member variables are initialized with the m_type variable in
-    //       particular set to vpr::SocketTypes::STREAM.
-    //
-    // Arguments:
-    //     address - The hostname or IP address of the site to which we will
-    //               connect.
-    //     port    - The port on the remote site to which we will connect.
-    // ------------------------------------------------------------------------
-    SocketStream_t (const std::string& address, const Uint16 port)
-        : Socket_t<RealSocketStreamImpParent>(address),
-          m_socket_stream_imp(address, port)
-    {
-        m_socket_imp = &m_socket_stream_imp;
-    }
-
-    // ------------------------------------------------------------------------
-    // Constructor.  This takes the address (either hostname or IP address) of
-    // a remote site and a port and stores the values for later use in the
-    // member variables of the object.
-    //
-    // PRE: None.
-    // POST: The member variables are initialized with the m_type variable in
-    //       particular set to vpr::SocketTypes::STREAM.
-    //
-    // Arguments:
-    //     address - The hostname or IP address of the site to which we will
-    //               connect.
-    //     port    - The port on the remote site to which we will connect.
-    //     domain  -
-    // ------------------------------------------------------------------------
-    SocketStream_t (const std::string& address, const Uint16 port,
-                    const SocketTypes::Domain domain)
-        : Socket_t<RealSocketStreamImpParent>(address),
-          m_socket_stream_imp(address, port, domain)
-    {
-        m_socket_imp = &m_socket_stream_imp;
-    }
-
-    // ------------------------------------------------------------------------
-    //: Constructor.  This takes an address of the form
-    //+ <host addr>:<port number> and creates a socket.
-    //
-    //! PRE: The given address is of the form <host addr>:<port number> where
-    //+      <host addr> is either a hostname or a dotted-decimal IPv4
-    //+      address and <port number> is a valid port number.
-    //! POST: The host address and port number are extracted, and a socket is
-    //+       created using those values.
-    //
-    //! ARGS: address - An address of the form <host addr>:<port number>.
-    // ------------------------------------------------------------------------
-    SocketStream_t (const std::string& address)
-        : m_socket_stream_imp()
-    {
-        std::string::size_type pos;
-        std::string host_addr, host_port;
-        Uint16 port;
-
-        pos       = address.find(":");
-        host_addr = address.substr(0, pos);
-        host_port = address.substr(pos + 1);
-        port      = atoi(host_port.c_str());
-    
-//        m_socket_stream_imp.getRemoteAddress().setAddress(host_addr);
-//        m_socket_stream_imp.getRemoteAddress().setPort(port);
-        m_socket_imp = &m_socket_stream_imp;
-    }
-
-    // ------------------------------------------------------------------------
-    //: Constructor.  This takes a reference to a vpr::InetAddr object and
-    //+ creates a socket using its address value and port number.
+    //: Constructor.  This takes a reference to a vpr::InetAddr object giving
+    //+ the local socket address and a reference to a vpr::InetAddr object
+    //+ giving the remote address.
     //
     //! PRE: addr is a reference to a valid vpr::InetAddr object.
     //! POST: A socket is created using the contents of addr.
     //
-    //! ARGS: addr - A reference to a vpr::InetAddr object.
+    //! ARGS: local_addr  - A reference to a vpr::InetAddr object for the
+    //+                     local socket address.
+    //! ARGS: remote_addr - A reference to a vpr::InetAddr object for the
+    //+                     remote socket address.
     // ------------------------------------------------------------------------
-    SocketStream_t (const InetAddr& addr)
-        : m_socket_stream_imp(addr)
+    SocketStream_t (const InetAddr& local_addr, const InetAddr& remote_addr)
+        : Socket_t<RealSocketStreamImpParent>(),
+          m_socket_stream_imp(local_addr, remote_addr)
     {
         m_socket_imp = &m_socket_stream_imp;
     }
@@ -213,8 +128,12 @@ public:
     // ------------------------------------------------------------------------
     inline virtual SocketStream_t*
     accept (void) {
+        SocketStream_t* new_socket;
         RealSocketStreamImp* sock_imp = m_socket_stream_imp.accept();
-        return new SocketStream_t(sock_imp);
+        new_socket = new SocketStream_t(sock_imp);
+        delete sock_imp;
+
+        return new_socket;
     }
 
     // ------------------------------------------------------------------------
@@ -255,12 +174,10 @@ protected:
     //+ vpr::SocketStreamImp object pointer.  This is needed by accept().
     //
     //! PRE: sock_imp points to a valid vpr::SocketStreamImp object.
-    //! POST: sock_imp is passed on to the vpr::Socket constructor, and
-    //+       m_socket_stream_imp is assigned the value of sock_imp.
+    //! POST: sock_imp is copied into m_socket_stream_imp.
     //
     //! ARGS: sock_imp - A pointer to a vpr::SocketStreamImp object.
     // ------------------------------------------------------------------------
-// XXX: This stuff could be a problem!!
     SocketStream_t (RealSocketStreamImp* sock_imp)
         : Socket_t<RealSocketStreamImpParent>(), m_socket_stream_imp(*sock_imp)
     {

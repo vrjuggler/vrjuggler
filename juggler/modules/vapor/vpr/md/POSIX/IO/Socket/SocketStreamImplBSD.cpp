@@ -69,49 +69,24 @@ fprintf(stderr, "vpr::SocketStreamImpBSD default constructor\n");
 // remote site and a port and stores the values for later use in the member
 // variables of the object.
 // ----------------------------------------------------------------------------
-SocketStreamImpBSD::SocketStreamImpBSD (const std::string& address,
-                                        const unsigned short port)
-    : SocketImpBSD(address, port, SocketTypes::INET, SocketTypes::STREAM),
-      SocketStreamImp_i(address, port, SocketTypes::INET)
+SocketStreamImpBSD::SocketStreamImpBSD (const InetAddr& local_addr,
+                                        const InetAddr& remote_addr)
+    : SocketImpBSD(local_addr, remote_addr, SocketTypes::STREAM),
+      SocketStreamImp_i(local_addr, remote_addr)
 {
-    m_name = address;
-    m_addr.setPort(port);
-    m_addr.setFamily(SocketTypes::INET);
-    m_type = SocketTypes::STREAM;
 fprintf(stderr, "vpr::SocketStreamImpBSD(address, port) constructor\n");
-fprintf(stderr, "    Address: %s -> %s\n", address.c_str(), m_name.c_str());
-fprintf(stderr, "    Port: %hu -> %hu\n", port, m_addr.getPort());
-fprintf(stderr, "    Domain: %d\n", m_addr.getFamily());
+fprintf(stderr, "    Local Address: %s -> %s\n",
+        local_addr.getAddressString().c_str(),
+        m_local_addr.getAddressString().c_str());
+fprintf(stderr, "    Local Port: %hu -> %hu\n", local_addr.getPort(),
+        m_local_addr.getPort());
+fprintf(stderr, "    Remote Address: %s -> %s\n",
+        remote_addr.getAddressString().c_str(),
+        m_remote_addr.getAddressString().c_str());
+fprintf(stderr, "    Remote Port: %hu -> %hu\n", remote_addr.getPort(),
+        m_remote_addr.getPort());
+fprintf(stderr, "    Domain: %d\n", m_local_addr.getFamily());
 fprintf(stderr, "    Type: %d\n", m_type);
-}
-
-// ----------------------------------------------------------------------------
-// Constructor.  This takes the address (either hostname or IP address) of a
-// remote site and a port and stores the values for later use in the member
-// variables of the object.
-// ----------------------------------------------------------------------------
-SocketStreamImpBSD::SocketStreamImpBSD (const std::string& address,
-                                        const unsigned short port,
-                                        const SocketTypes::Domain domain)
-    : SocketImpBSD(address, port, domain, SocketTypes::STREAM),
-      SocketStreamImp_i(address, port, domain)
-{
-    m_name = address;
-    m_addr.setPort(port);
-    m_addr.setFamily(domain);
-    m_type = SocketTypes::STREAM;
-fprintf(stderr, "vpr::SocketStreamImpBSD(address, port, domain) constructor\n");
-fprintf(stderr, "    Address: %s -> %s\n", address.c_str(), m_name.c_str());
-fprintf(stderr, "    Port: %hu -> %hu\n", port, m_addr.getPort());
-fprintf(stderr, "    Domain: %d -> %d\n", domain, m_addr.getFamily());
-fprintf(stderr, "    Type: %d\n", m_type);
-}
-
-// ----------------------------------------------------------------------------
-// Destructor.  This currently does nothing.
-// ----------------------------------------------------------------------------
-SocketStreamImpBSD::~SocketStreamImpBSD () {
-    /* Do nothing. */ ;
 }
 
 // ----------------------------------------------------------------------------
@@ -175,19 +150,19 @@ SocketStreamImpBSD::accept () {
 // Protected constructor.  This is used when the socket is created by the
 // operating system, typically by the accept(2) system call.
 // ----------------------------------------------------------------------------
-SocketStreamImpBSD::SocketStreamImpBSD (const int sock, InetAddr& host_addr)
+SocketStreamImpBSD::SocketStreamImpBSD (const int sock, InetAddr& remote_addr)
     : SocketImpBSD(), SocketStreamImp_i()
 {
 fprintf(stderr, "Protected vpr::SocketStreamImpBSD constructor\n");
 // XXX: Merge
-    std::string addr = host_addr.getAddressString();
-fprintf(stderr, "Client addr: %s:%hu\n", addr.c_str(), host_addr.getPort());
+    std::string addr = remote_addr.getAddressString();
+fprintf(stderr, "Client addr: %s:%hu\n", addr.c_str(), remote_addr.getPort());
     m_handle          = new FileHandleUNIX(addr);
     m_handle->m_fdesc = sock;
     m_type            = SocketTypes::STREAM;
 
     // Copy the given vpr::InetAddr to the new object's member variable.
-    m_addr = host_addr;
+    m_remote_addr = remote_addr;
 }
 
 }; // End of vpr namespace
