@@ -795,9 +795,9 @@ else
     fi
 fi
 
-dnl # $srcdir is the root directory of the vjlib source tree.  To get a value
-dnl # for $VJROOT_ABS, we cd there and save the value of running pwd.  Then
-dnl # return to the directory where configure is being run ($topdir).
+dnl # $srcdir is the root directory of the juggler source tree.  To get a
+dnl # value for $VJROOT_ABS, we cd there and save the value of running pwd.
+dnl # Then return to the directory where configure is being run ($topdir).
 topdir=`pwd`
 cd "$srcdir"
 VJROOT_ABS=`pwd`
