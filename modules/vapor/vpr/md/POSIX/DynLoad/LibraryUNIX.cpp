@@ -57,11 +57,11 @@ vpr::ReturnStatus LibraryUNIX::load()
 
    if ( std::string("") != mName )
    {
-      mLibrary = dlopen(mName.c_str(), RTLD_NOW);
+      mLibrary = dlopen(mName.c_str(), RTLD_NOW | RTLD_GLOBAL);
    }
    else
    {
-      mLibrary = dlopen(NULL, RTLD_NOW);
+      mLibrary = dlopen(NULL, RTLD_NOW | RTLD_GLOBAL);
    }
 
    if ( NULL == mLibrary )
