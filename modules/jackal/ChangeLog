@@ -1,6 +1,10 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
-Jan-15-2002 nonchocoboy The java VarValue is dead.
+Jan-15-2003 nonchocoboy Description files now use a new "allowedtype" token
+                        rather than overloading the "enumeration" token to
+                        specify allowed chunk types for embedded chunks and
+                        chunk pointers. Bumped desc file format version to 2.2.
+Jan-15-2003 nonchocoboy VarValue is dead.
 Jan-12-2003 patrickh    CppDOM is no longer compiled into JCCL.
                         NEW VERSION: 0.10.0
 Jan-10-2003 allenb      Update to use the HEAD version of cppdom.

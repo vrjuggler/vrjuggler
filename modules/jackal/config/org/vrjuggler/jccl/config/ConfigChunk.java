@@ -435,10 +435,7 @@ public class ConfigChunk
                if (ValType.EMBEDDEDCHUNK == val_type)
                {
                   // This gets the child of prop that is the embedded chunk.
-                  // Using the description enumeration string seems like a
-                  // strange way to get it, but that's what the API has right
-                  // now.
-                  String chunk_type = prop_desc.getEnumAt(0).getName();
+                  String chunk_type = prop_desc.getAllowedType(0);
 
                   Element child = prop.getChild(chunk_type);
 

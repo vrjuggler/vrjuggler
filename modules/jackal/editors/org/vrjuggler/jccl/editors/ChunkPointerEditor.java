@@ -89,11 +89,11 @@ public class ChunkPointerEditor
       // For each ChunkDesc token this desc can point to, look for matching
       // ConfigChunks we can use.
       mTags.clear();
-      for (int i=0; i<desc.getNumEnums(); ++i)
+      for (Iterator at_itr = desc.getAllowedTypes().iterator(); at_itr.hasNext(); )
       {
-         DescEnum de = desc.getEnumAt(i);
+         String type = (String)at_itr.next();
 
-         List chunks = getChunksWithDescToken(de.getName());
+         List chunks = getChunksWithDescToken(type);
 
          // Grab the name of each matching ConfigChunk
          for (Iterator chk_itr = chunks.iterator(); chk_itr.hasNext(); )
