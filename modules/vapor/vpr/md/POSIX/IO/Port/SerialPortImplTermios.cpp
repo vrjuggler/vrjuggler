@@ -86,10 +86,14 @@ vpr::ReturnStatus SerialPortImplTermios::open()
    // If the serial port could not be opened, print an error message.
    if ( status == vpr::ReturnStatus::Fail )
    {
-      fprintf(stderr,
-              "[vpr::SerialPortImplTermios] Could not open serial port %s: %s\n",
-              getName().c_str(), strerror(errno));
+      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+         << clrOutBOLD(clrRED, "ERROR:")
+         << " [vpr::SerialPortImplTermios::open()] Could not open serial port "
+         << getName() << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+         << strerror(errno) << std::endl << vprDEBUG_FLUSH;
    }
+
    return status;
 }
 
@@ -347,9 +351,11 @@ vpr::ReturnStatus SerialPortImplTermios::setStopBits(const Uint8 num_bits)
             term.c_cflag |= CSTOPB;
             break;
          default:
-            fprintf(stderr,
-                    "[vpr::SerialPortImplTermios] Stop bits may only be set to "
-                    "1 or 2 on port %s\n", getName().c_str());
+            vprDEBUG(vprDBG_ERROR, vprDBG_WARNING_LVL)
+               << clrOutBOLD(clrYELLOW, "WARNING:")
+               << " [vpr::SerialPortImplTermios::setStopBits()] Stop bits "
+               << "may only be set to 1 or 2 on port " << getName()
+               << std::endl << vprDEBUG_FLUSH;
             break;
       }
 
@@ -554,9 +560,13 @@ vpr::ReturnStatus SerialPortImplTermios::setInputBaudRate(const vpr::Uint32& bau
 
       if ( cfsetispeed(&term, new_rate) == -1 )
       {
-         fprintf(stderr,
-                 "Failed to set the input baud rate to %u on port %s: %s\n",
-                 baud, getName().c_str(), strerror(errno));
+         vprDEBUG(vprDBG_ERROR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " [vpr::SerialPortImplTermios::setInputBaudRate()] "
+            << "Failed to set the input baud rate to " << baud << " on port "
+            << getName() << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_WARNING_LVL)
+            << strerror(errno) << std::endl << vprDEBUG_FLUSH;
          retval.setCode(ReturnStatus::Fail);
       }
       else
@@ -608,9 +618,13 @@ vpr::ReturnStatus SerialPortImplTermios::setOutputBaudRate(const vpr::Uint32& ba
 
       if ( cfsetospeed(&term, new_rate) == -1 )
       {
-         fprintf(stderr,
-                 "Failed to set the output baud rate to %u on port %s: %s\n",
-                 baud, getName().c_str(), strerror(errno));
+         vprDEBUG(vprDBG_ERROR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " [vpr::SerialPortImplTermios::setOutputBaudRate()] "
+            << "Failed to set the output baud rate to " << baud << " on port "
+            << getName() << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_WARNING_LVL)
+            << strerror(errno) << std::endl << vprDEBUG_FLUSH;
          retval.setCode(ReturnStatus::Fail);
       }
       else
@@ -634,9 +648,13 @@ vpr::ReturnStatus SerialPortImplTermios::drainOutput()
 
    if ( tcdrain(mHandle->mFdesc) == -1 )
    {
-      fprintf(stderr,
-              "[vpr::SerialPortImplTermios] Failed to drain output on port %s: %s\n",
-              getName().c_str(), strerror(errno));
+      vprDEBUG(vprDBG_ERROR, vprDBG_WARNING_LVL)
+         << clrOutBOLD(clrYELLOW, "WARNING:")
+         << " [vpr::SerialPortImplTermios::drainOutput()] "
+         << "Failed drain output on port " << getName() << std::endl
+         << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_WARNING_LVL)
+         << strerror(errno) << std::endl << vprDEBUG_FLUSH;
       retval.setCode(ReturnStatus::Fail);
    }
 
@@ -671,9 +689,13 @@ vpr::ReturnStatus SerialPortImplTermios::controlFlow(SerialTypes::FlowActionOpti
 
    if ( tcflow(mHandle->mFdesc, action) == -1 )
    {
-      fprintf(stderr,
-              "[vpr::SerialPortImplTermios] Failed to alter flow control on "
-              "port %s: %s\n", getName().c_str(), strerror(errno));
+      vprDEBUG(vprDBG_ERROR, vprDBG_WARNING_LVL)
+         << clrOutBOLD(clrYELLOW, "WARNING:")
+         << " [vpr::SerialPortImplTermios::controlFlow()] "
+         << "Failed alter flow control on port " << getName() << std::endl
+         << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_WARNING_LVL)
+         << strerror(errno) << std::endl << vprDEBUG_FLUSH;
       retval.setCode(ReturnStatus::Fail);
    }
 
@@ -739,9 +761,13 @@ vpr::ReturnStatus SerialPortImplTermios::flushQueue(SerialTypes::FlushQueueOptio
             break;
       }
 
-      fprintf(stderr,
-              "[vpr::SerialPortImplTermios] Failed to flush %s on port %s: %s\n",
-              queue_name.c_str(), getName().c_str(), strerror(errno));
+      vprDEBUG(vprDBG_ERROR, vprDBG_WARNING_LVL)
+         << clrOutBOLD(clrYELLOW, "WARNING:")
+         << " [vpr::SerialPortImplTermios::flushQueue()] "
+         << "Failed to flush " << queue_name << " on port " << getName()
+         << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_WARNING_LVL)
+         << strerror(errno) << std::endl << vprDEBUG_FLUSH;
       retval.setCode(ReturnStatus::Fail);
    }
 
@@ -759,9 +785,13 @@ vpr::ReturnStatus SerialPortImplTermios::sendBreak(const Int32 duration)
 
    if ( tcsendbreak(mHandle->mFdesc, duration) == -1 )
    {
-      fprintf(stderr,
-              "[vpr::SerialPortImplTermios] Failed to send break on port %s: %s\n",
-              getName().c_str(), strerror(errno));
+      vprDEBUG(vprDBG_ERROR, vprDBG_WARNING_LVL)
+         << clrOutBOLD(clrYELLOW, "WARNING:")
+         << " [vpr::SerialPortImplTermios::sendBreak()] "
+         << "Failed to send break on port " << getName() << std::endl
+         << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_WARNING_LVL)
+         << strerror(errno) << std::endl << vprDEBUG_FLUSH;
       retval.setCode(ReturnStatus::Fail);
    }
 
@@ -887,9 +917,10 @@ void SerialPortImplTermios::setControlCharacter(const Uint32 index,
       }
       else
       {
-         fprintf(stderr,
-                 "[vpr::SerialPortImplTermios] Index %u too large for "
-                 "control character array\n", index);
+         vprDEBUG(vprDBG_ERROR, vprDBG_WARNING_LVL)
+            << "[vpr::SerialPortImplTermios::setControlCharacter()] Index "
+            << index << " too large for control character array\n"
+            << vprDEBUG_FLUSH;
       }
    }
 }
@@ -910,9 +941,10 @@ Uint8 SerialPortImplTermios::getControlCharacter(const Uint32 index) const
       }
       else
       {
-         fprintf(stderr,
-                 "[vpr::SerialPortImplTermios] Index %u too large for "
-                 "control character array\n", index);
+         vprDEBUG(vprDBG_ERROR, vprDBG_WARNING_LVL)
+            << "[vpr::SerialPortImplTermios::getControlCharacter()] Index "
+            << index << " too large for control character array\n"
+            << vprDEBUG_FLUSH;
       }
    }
 
@@ -926,9 +958,13 @@ vpr::ReturnStatus SerialPortImplTermios::getAttrs(struct termios* term) const
 
    if ( tcgetattr(mHandle->mFdesc, term) == -1 )
    {
-      fprintf(stderr,
-              "[vpr::SerialPortImplTermios] Could not get attributes for port %s: %s\n",
-              getName().c_str(), strerror(errno));
+      vprDEBUG(vprDBG_ERROR, vprDBG_WARNING_LVL)
+         << clrOutBOLD(clrYELLOW, "WARNING:")
+         << " [vpr::SerialPortImplTermios::getAttrs()] "
+         << "Could not get attributes for port " << getName() << std::endl
+         << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_WARNING_LVL)
+         << strerror(errno) << std::endl << vprDEBUG_FLUSH;
       retval.setCode(ReturnStatus::Fail);
    }
 
@@ -936,8 +972,8 @@ vpr::ReturnStatus SerialPortImplTermios::getAttrs(struct termios* term) const
 }
 
 vpr::ReturnStatus SerialPortImplTermios::setAttrs(struct termios* term,
-                                                   const char* err_msg,
-                                                   const bool print_sys_err)
+                                                  const char* err_msg,
+                                                  const bool print_sys_err)
 {
    vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
    vprASSERT(term != NULL);
@@ -976,15 +1012,15 @@ vpr::ReturnStatus SerialPortImplTermios::setAttrs(struct termios* term,
 
    if ( tcsetattr(mHandle->mFdesc, mActions, term) == -1 )
    {
-      fprintf(stderr, "[vpr::SerialPortImplTermios] %s (port '%s')", err_msg,
-              getName().c_str());
+      vprDEBUG(vprDBG_ERROR, vprDBG_WARNING_LVL)
+         << " [vpr::SerialPortImplTermios::setAttrs()] " << err_msg
+         << " (port '" << getName() << "'\n" << vprDEBUG_FLUSH;
 
       if ( print_sys_err )
       {
-         fprintf(stderr, ": %s", strerror(errno));
+         vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_WARNING_LVL)
+            << strerror(errno) << std::endl << vprDEBUG_FLUSH;
       }
-
-      fprintf(stderr, "\n");
 
       retval.setCode(ReturnStatus::Fail);
    }
