@@ -184,7 +184,7 @@ int DataGloveStandalone::mConnectToHardware(const std::string& ttyPort, int baud
       port->clearAll();      
       baud = 9600;
       port->setRead(true);
-      port->setBufferSize(1);
+      port->setMinInputSize(1);
       port->setOutputBaudRate(baud); // Put me before input to be safe
       port->setInputBaudRate(baud);
       port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
