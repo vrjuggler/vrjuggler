@@ -35,17 +35,20 @@
 
 
 /*
- * Define to the 9-digit VR Juggler version integer.  This is the "internal
- * version number" that is intended for internal feature checks by VR Juggler
+ * Define to the 9-digit Sonix version integer.  This is the "internal
+ * version number" that is intended for internal feature checks by VR Sonix
  * itself.
  */
-#define __VJ_version @VER_NUMBER@
+#define __SNX_version @VER_NUMBER@
 
 /*
- * This is the "human-readable" VR Juggler version _string_.  It is of the
+ * This is the "human-readable" Sonix version _string_.  It is of the
  * form <major>.<minor>.<days since last major release>.
  */
-#define VJ_VERSION @VER_STRING@
+namespace snx
+{
+   const char* SNX_VERSION = @VER_STRING@;
+}
 
 
 #endif	/* _VJ_PARAM_H_ */

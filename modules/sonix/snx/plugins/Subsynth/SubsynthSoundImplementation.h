@@ -280,17 +280,17 @@ private:
          // source --> gain --> filter -->
          syn::TerminalPtr output, input;
          bool result = false;
-         std::cout<<"source -> velocity connection\n"<<std::flush;
+         vpr::DebugOutputGuard output1(snxDBG, vprDBG_CONFIG_LVL, std::string("source -> velocity connection\n"), std::string("\n"));
          result = source->getOutput( "mono audio", output );
          result = velocity->getInput( "mono audio0", input );
          syn::Terminal::connect( input, output );
 
-         std::cout<<"velocity -> filter connection\n"<<std::flush;
+         vpr::DebugOutputGuard output2(snxDBG, vprDBG_CONFIG_LVL, std::string("velocity -> filter connection\n"), std::string("\n"));
          result = velocity->getOutput( "mono audio", output );
          result = filter->getInput( "mono audio", input );
          syn::Terminal::connect( input, output );
          
-         std::cout<<"add source/velocity/filter to instrument\n"<<std::flush;
+         vpr::DebugOutputGuard output3(snxDBG, vprDBG_CONFIG_LVL, std::string("add source/velocity/filter to instrument\n"), std::string("\n"));
          i->addModule( source );
          i->addModule( velocity );
          i->addModule( filter );

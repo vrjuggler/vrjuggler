@@ -51,7 +51,8 @@ ifeq ($(OS_TYPE), Win32)
     SRCS        += dirent-win32.cpp
 endif
 
-SUBDIR	= plugins
+SUBDIR	= plugins \
+			  Util
 
 # ABI            - Application Binary Interface type.  This may be used for
 #                  other binary types when supported by the operating system
