@@ -79,8 +79,7 @@ SocketImplNSPR::open () {
 
       // If socket(2) failed, print an error message and return error status.
       if ( new_sock == NULL ) {
-         fprintf(stderr,
-                 "[vpr::SocketImplNSPR] Could not create socket: \n");
+         NSPR_PrintError("[vpr::SocketImplNSPR] Could not create socket");
          retval.setCode(vpr::Status::Failure);
       }
       // Otherwise, return success.
@@ -487,9 +486,7 @@ SocketImplNSPR::getOption (const vpr::SocketOptions::Types option,
         }
         else {
             retval.setCode(vpr::Status::Failure);
-            fprintf(stderr,
-                    "[vpr::SocketImplNSPR] ERROR: Could not get socket option "
-                    "for socket");
+            NSPR_PrintError("[vpr::SocketImplNSPR] ERROR: Could not get socket option for socket");
         }
     }
     else {
