@@ -101,7 +101,7 @@ _DEFAULT_DIR	= ${_DEBUG_DIR}
 # Object file build and installation directories.
 # ------------------------------------------------
 _BUILDDIR_BASE	= ${topdir}/obj
-_BUILDDIR	= ${_BUILDDIR_BASE}/${PLATFORM}/${ABI}/${INST_SET}
+_BUILDDIR	= ${_BUILDDIR_BASE}/${PLATFORM}/${ABI}/${ISA}
 _DBG_BUILDDIR	= ${_BUILDDIR}/${_DEBUG_DIR}
 _OPT_BUILDDIR	= ${_BUILDDIR}/${_OPT_DIR}
 
@@ -111,7 +111,7 @@ _OPT_BUILDDIR	= ${_BUILDDIR}/${_OPT_DIR}
 
 # ${_install_libdir} is the base directory (minus any debugging or optimized
 # subdirectories) where the library will be installed.
-_install_libdir = ${libdir}${LIBBITSUF}/${INST_SET}
+_install_libdir = ${libdir}${LIBBITSUF}/${ISA}
 
 # ${_LIBDIR_NAME} is the name of the library directory including an ABI suffix
 # if applicable.
@@ -121,8 +121,8 @@ _LIBDIR_NAME	= lib${LIBBITSUF}
 _LIBDIR_BASE	= ${topdir}/${_LIBDIR_NAME}
 
 # ${_LIBDIR} is the first-level subdirectory of ${_LIBDIR_BASE} that is
-# named by the instruction set being used (${INST_SET}).
-_LIBDIR		= ${_LIBDIR_BASE}/${INST_SET}
+# named by the instruction set being used (${ISA}).
+_LIBDIR		= ${_LIBDIR_BASE}/${ISA}
 
 # ${_DBG_LIBDIR} and ${_OPT_LIBDIR} are the directories where the library
 # is actually built.  The first is for a debugging copy of the library and
@@ -516,7 +516,7 @@ info::
 	@echo "\nOBJDIR: ${OBJDIR}"
 	@echo "VJROOT_ABS: ${VJROOT_ABS}"
 	@echo "Default ABI: ${ABI}"
-	@echo "Default instruction set: ${INST_SET}"
+	@echo "Default instruction set architecture: ${ISA}"
 	@echo "ABI list: ${ABI_LIST}"
 	@echo "DBG_BUILDDIR: ${_DBG_BUILDDIR}"
 	@echo "OPT_BUILDDIR: ${_OPT_BUILDDIR}"
