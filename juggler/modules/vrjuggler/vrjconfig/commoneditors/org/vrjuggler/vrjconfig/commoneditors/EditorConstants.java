@@ -107,6 +107,9 @@ public interface EditorConstants
    /** Config element type intersense_api. */
    public static final String INTERSENSE_API_TYPE = "intersense_api";
 
+   /** Config element type intersense_station. */
+   public static final String INTERSENSE_STATION_TYPE = "intersense_station";
+
    /** Config element type keyboard_mouse_device. */
    public static final String KEYBOARD_MOUSE_DEVICE_TYPE =
       "keyboard_mouse_device";
@@ -207,6 +210,12 @@ public interface EditorConstants
    /** Property type active. */
    public static final String ACTIVE_PROPERTY = "active";
 
+   /** Property type analog_count. */
+   public static final String ANALOG_COUNT_PROPERTY = "analog_count";
+
+   /** Property type analog_first. */
+   public static final String ANALOG_FIRST_PROPERTY = "analog_first";
+
    /** Property type auxiliary_buffer_count. */
    public static final String AUX_BUFFER_COUNT_PROPERTY =
       "auxiliary_buffer_count";
@@ -247,6 +256,12 @@ public interface EditorConstants
 
    /** Property type device_units. */
    public static final String DEVICE_UNITS_PROPERTY = "device_units";
+
+   /** Property type digital_count. */
+   public static final String DIGITAL_COUNT_PROPERTY = "digital_count";
+
+   /** Property type digital_first. */
+   public static final String DIGITAL_FIRST_PROPERTY = "digital_first";
 
    /** Property type frame_buffer_config. */
    public static final String FRAME_BUFFER_PROPERTY = "frame_buffer_config";
@@ -363,6 +378,12 @@ public interface EditorConstants
 
    /** Property type user. */
    public static final String USER_PROPERTY = "user";
+
+   /** Property type use_analog. */
+   public static final String USE_ANALOG_PROPERTY = "use_analog";
+
+   /** Property type use_digital. */
+   public static final String USE_DIGITAL_PROPERTY = "use_digital";
 
    /** Property type vertical_fov. */
    public static final String VERTICAL_FOV_PROPERTY = "vertical_fov";
