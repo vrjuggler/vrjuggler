@@ -42,16 +42,6 @@
 namespace vrj
 {
 
-
-void Viewport::recordLatency (int trackertimeindex, int currenttimeindex) 
-{
-   vpr::Interval it = mUser->getHeadUpdateTime();
-   mLatencyMeasure.set (jcclPERF_ALL, "Head tracking timestamp (ignore)",
-                        it);
-   mLatencyMeasure.set (jcclPERF_ALL, "tracking latency");
-}
-
-
 void Viewport::config(jccl::ConfigChunkPtr chunk)
 {
    vprASSERT(chunk.get() != NULL);
@@ -102,7 +92,6 @@ void Viewport::config(jccl::ConfigChunkPtr chunk)
     mViewportChunk = chunk;        // Save the chunk for later use
 
     std::string bufname = "Head Latency " + name;
-    mLatencyMeasure.setName (bufname);
 }
 
 std::ostream& operator<<(std::ostream& out, Viewport& viewport)

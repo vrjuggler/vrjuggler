@@ -54,9 +54,8 @@
 
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ChunkFactory.h>
-//#include <jccl/Net/JackalServer.h>
 #include <jccl/RTRC/ConfigManager.h>
-#include <jccl/PerfMonitor/PerformanceMonitor.h>
+
 
 namespace vrj
 {
@@ -142,8 +141,6 @@ void Kernel::controlLoop(void* nullParam)
    // --- MAIN CONTROL LOOP -- //
    while(! (mExitFlag && (mApp == NULL)))     // While not exit flag set and don't have app. (can't exit until app is closed)
    {
-      jcclTIMESTAMP(jcclPERF_ALL, "kernel/startframe");
-
       // Might not want the Kernel to know about the ClusterNetwork
       // It is currently being registered as a ConfigChunkHandler in
       // the ClusterManager constructor
@@ -157,24 +154,18 @@ void Kernel::controlLoop(void* nullParam)
       {
             vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->preFrame()\n" << vprDEBUG_FLUSH;
          mApp->preFrame();         // PREFRAME: Do Any application pre-draw stuff
-            jcclTIMESTAMP(jcclPERF_ALL, "kernel/app/preFrame()");
             vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: Update ClusterManager preDraw()\n" << vprDEBUG_FLUSH;
          mClusterManager->preDraw();
-            jcclTIMESTAMP(jcclPERF_ALL, "kernel/cluster/preDraw()");            
             vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: drawManager->draw()\n" << vprDEBUG_FLUSH;
          mDrawManager->draw();    // DRAW: Trigger the beginning of frame drawing
          mSoundManager->update();
-            jcclTIMESTAMP(jcclPERF_ALL, "kernel/trigger Draw");
             vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->intraFrame()\n" << vprDEBUG_FLUSH;
          mApp->intraFrame();        // INTRA FRAME: Do computations that can be done while drawing.  This should be for next frame.
-            jcclTIMESTAMP(jcclPERF_ALL, "kernel/app/intraFrame()");
             vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: drawManager->sync()\n" << vprDEBUG_FLUSH;
          mSoundManager->sync();
          mDrawManager->sync();    // SYNC: Block until drawing is done
-            jcclTIMESTAMP(jcclPERF_ALL, "kernel/wait for draw threads");
             vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->postFrame()\n" << vprDEBUG_FLUSH;
          mApp->postFrame();        // POST FRAME: Do processing after drawing is complete
-           jcclTIMESTAMP(jcclPERF_ALL, "kernel/app/postFrame");
       }
       else
       {
@@ -186,17 +177,13 @@ void Kernel::controlLoop(void* nullParam)
       // --- Stop for reconfiguration -- //
       checkForReconfig();        // Check for any reconfiguration that needs done (system or application)
       checkSignalButtons();      // Check for any pending control requests
-       jcclTIMESTAMP(jcclPERF_ALL, "kernel/checkForReconfig");
 
          vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: Update Trackers\n" << vprDEBUG_FLUSH;
       getInputManager()->updateAllData();    // Update the trackers
-         jcclTIMESTAMP(jcclPERF_ALL, "kernel/input/updateAllData()");
          vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: Update ClusterManager\n" << vprDEBUG_FLUSH;
       mClusterManager->postPostFrame();   // Can I move to before pre-frame to allow future config barrier
-         jcclTIMESTAMP(jcclPERF_ALL, "kernel/cluster/postPostFrame()");
          vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: Update Projections\n" << vprDEBUG_FLUSH;
       updateFrameData();         // Any frame-based manager data
-         jcclTIMESTAMP(jcclPERF_ALL, "kernel/updateFrameData");
    }
 
    vprDEBUG(vrjDBG_KERNEL,1) << "vjKernel::controlLoop: Exiting. \n" << vprDEBUG_FLUSH;
@@ -366,7 +353,6 @@ void Kernel::initConfig()
 
    jccl::ConfigManager::instance()->addConfigChunkHandler(jccl::JackalServer::instance());
 */
-   jccl::ConfigManager::instance()->addConfigChunkHandler(jccl::PerformanceMonitor::instance());
 
    //??// processPending() // Should I do this here
 
@@ -382,7 +368,7 @@ void Kernel::initConfig()
 
 void Kernel::updateFrameData()
 {
-   // When we have a draw manager, tell it to update it's projections
+   // When we have a draw manager, tell it to update its projections
    // XXX: Moved to be updated on demand
    // mDisplayManager->updateProjections();
 }

@@ -36,9 +36,7 @@
 #include <vrj/vrjConfig.h>
 
 #include <gmtl/Vec.h>
-#include <jccl/PerfMonitor/LabeledPerfDataBuffer.h>
 #include <jccl/Config/ConfigChunkPtr.h>
-#include <jccl/PerfMonitor/PerformanceMonitor.h>
 
 namespace vrj
 {
@@ -58,7 +56,7 @@ class VJ_CLASS_API Viewport
 public:
    Viewport()
       : mUser(NULL), mDisplay(NULL),
-        mLatencyMeasure(), mLeftProj(NULL), mRightProj(NULL)
+        mLeftProj(NULL), mRightProj(NULL)
    {
       mXorigin = mYorigin = mXsize = mYsize = -1.0f;
       mType = Viewport::UNDEFINED;
@@ -72,14 +70,10 @@ public:
         mYorigin(v.mYorigin), mXsize(v.mXsize), mYsize(v.mYsize),
         mLeftProj(v.mLeftProj), mRightProj(v.mRightProj)
    {
-      // XXX: mLatencyMeasure is not copyable ...
    }
 
    virtual ~Viewport()
    {;}
-
-   // XXX: Hack, should be removed
-   void recordLatency (int trackertimeindex, int currenttimeindex);
 
    /** Type of viewport */
    enum Type
@@ -189,7 +183,6 @@ protected:
    Display*          mDisplay;            /**< The parent display */
 
    jccl::ConfigChunkPtr          mViewportChunk;        /**< The chunk data for this display */
-   jccl::LabeledPerfDataBuffer   mLatencyMeasure;
 
    /** @name Location and size of viewport
    * ASSERT: all values are >= 0.0 and <= 1.0
