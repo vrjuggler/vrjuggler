@@ -91,48 +91,23 @@ public:
    virtual bool readBool() = 0;
 
    /* Helper methods */
-   void readUint8(vpr::Uint8& val);
-   void readUint16(vpr::Uint16& val);
-   void readUint32(vpr::Uint32& val);
-   void readUint64(vpr::Uint64& val);
-   void readFloat(float& val);
-   void readDouble(double& val);
-   void readString(std::string& str, unsigned len);
-   void readBool(bool& val);
+   virtual void readUint8(vpr::Uint8& val)
+   { val = this->readUint8(); }
+   virtual void readUint16(vpr::Uint16& val)
+   { val = this->readUint16(); }
+   virtual void readUint32(vpr::Uint32& val)
+   { val = this->readUint32(); }
+   virtual void readUint64(vpr::Uint64& val)
+   { val = this->readUint64(); }
+   virtual void readFloat(float& val)
+   { val = this->readFloat(); }
+   virtual void readDouble(double& val)
+   { val = this->readDouble(); }
+   virtual void readString(std::string& str, unsigned len)
+   { str = this->readString(len); }
+   virtual void readBool(bool& val)
+   { val = this->readBool(); }
 };
-
-inline void ObjectReader::readUint8(vpr::Uint8& val)
-{
-   val = readUint8();
-}
-inline void ObjectReader::readUint16(vpr::Uint16& val)
-{
-   val = readUint16();
-}
-inline void ObjectReader::readUint32(vpr::Uint32& val)
-{
-   val = readUint32();
-}
-inline void ObjectReader::readUint64(vpr::Uint64& val)
-{
-   val = readUint64();
-}
-inline void ObjectReader::readFloat(float& val)
-{
-   val = readFloat();
-}
-inline void ObjectReader::readDouble(double& val)
-{
-   val = readDouble();
-}
-inline void ObjectReader::readString(std::string& str, unsigned len)
-{
-   str = readString(len);
-}
-inline void ObjectReader::readBool(bool& val)
-{
-   val = readBool();
-}
 
 } // namespace vpr
 
