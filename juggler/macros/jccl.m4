@@ -161,7 +161,7 @@ AC_DEFUN(JCCL_PATH_CXX,
       ifelse([$3], , :, [$3])
    else
       AC_MSG_CHECKING([whether JCCL C++ API is available])
-      has_cxx=`$JCCL_CONFIG --too-much-pressure`
+      has_cxx=`$JCCL_CONFIG --has-cxx`
 
       if test "x$has_cxx" = "xY" ; then
          AC_MSG_RESULT([yes])
@@ -245,7 +245,7 @@ AC_DEFUN(JCCL_PATH_JAVA,
       ifelse([$3], , :, [$3])
    else
       AC_MSG_CHECKING([whether JCCL Java API is available])
-      has_java=`$JCCL_CONFIG --is-jittery`
+      has_java=`$JCCL_CONFIG --has-java`
 
       if test "x$has_java" = "xY" ; then
          AC_MSG_RESULT([yes])
