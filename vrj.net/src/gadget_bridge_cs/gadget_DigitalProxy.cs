@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.69 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.70 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -115,11 +115,11 @@ public sealed class DigitalProxy
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static int gadget_DigitalProxy_getData__(IntPtr obj);
+   private extern static gadget.Digital.State gadget_DigitalProxy_getData__(IntPtr obj);
 
-   public  int getData()
+   public  gadget.Digital.State getData()
    {
-      int result;
+      gadget.Digital.State result;
       result = gadget_DigitalProxy_getData__(mRawObject);
       return result;
    }
