@@ -53,6 +53,7 @@ sub make_INCLUDES($);
 sub make_LDFLAGS($;$$);
 sub make_EXTRA_LDFLAGS($;$$);
 sub handleOptArg($$);
+sub stripDuplicateArgs($);
 
 usage(1) if $#ARGV == -1;
 
@@ -339,7 +340,7 @@ sub make_CXXFLAGS ($;$)
    # Strip out extra whitespace.
    $cxxflags =~ s/\s{2,}/ /g;
 
-   return "$cxxflags";
+   return stripDuplicateArgs("$cxxflags");
 }
 
 sub make_INCLUDES ($)
@@ -493,4 +494,25 @@ sub handleOptArg ($$)
          last SWITCH;
       }
    }
+}
+
+# This is a fairly brute-force method for removing duplicated arguments from
+# the given string.  It should not be used for argument lists such as those
+# passed to the linker where functionality can be turned on and off (for
+# example, the repeated use of -Wl,-Bstatic ... -Wl,-Bdynamic for selective
+# static linking).
+sub stripDuplicateArgs ($)
+{
+   my @arg_list   = split(/\s+/, "$_[0]");
+   my %known_args = ();
+   my @new_args   = ();
+
+   foreach ( @arg_list )
+   {
+      next if exists($known_args{"$_"});  # Skip previously seen arguments
+      $known_args{"$_"} = 1;              # Register this argument
+      push(@new_args, "$_");              # Add the argument to the new list
+   }
+
+   return join(" ", @new_args);
 }
