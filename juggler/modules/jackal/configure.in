@@ -31,16 +31,19 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Base configure.in for Juggler App Control & Configuration Library (JCCL).
+# Base configure.in for JCCL.
 # -----------------------------------------------------------------------------
 # This file is "compiled" by GNU autoconf to generate the configure script
 # that is actually run.
 # -----------------------------------------------------------------------------
 
+AC_INIT([JCCL], [0.10], [vrjuggler-devel@lists.sourceforge.net])
+AC_CONFIG_HEADERS([common/jccl/jcclDefines.h])
+AC_PREREQ([2.53])
+AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2003 by Iowa State University])
+AC_CONFIG_SRCDIR([common/jccl/jcclConfig.h])
 AC_REVISION($Revision$)
-AC_INIT(common/jccl/jcclConfig.h)
-AC_CONFIG_AUX_DIR(../../share/config)
-AC_CONFIG_HEADER(common/jccl/jcclDefines.h)
+AC_CONFIG_AUX_DIR([../../share/config])
 DPP_PREREQ([1.5.1])
 DPP_INIT
 
@@ -92,7 +95,8 @@ AC_ARG_ENABLE(performance,
 
 # Enable performance-gathering code if the user requested it.
 if test "x${_enable_perf}" = "xyes" ; then
-    AC_DEFINE(USE_JCCL_PERF,)
+    AC_DEFINE(USE_JCCL_PERF, ,
+              [Define if performance-gathering code will be used.])
 fi
 
 # -------------------------------------------- #
@@ -206,7 +210,8 @@ VPR_PATH([0.24.0], , [AC_MSG_ERROR([*** VPR required for JCCL ***])])
 
 if test "x$enable_corba_rtrc" = "xyes" ; then
    TWEEK_PATH_CXX([0.10.1],
-                  [AC_DEFINE([HAVE_TWEEK_CXX],)
+                  [AC_DEFINE([HAVE_TWEEK_CXX], ,
+                     [Define if the Tweek C++ API (the C++ CORBA stuff) is available.])
                    HAVE_TWEEK_CXX='Y'
                   ],
                   [AC_MSG_WARN([*** Tweek C++ required for remote reconfig ***])
@@ -489,52 +494,48 @@ AC_SUBST(jccl_java_api_jars)
 
 VJ_MTREE_LIB_GEN([JCCL], [mtree], [$PLATFORM], [$ISA])
 
-AC_OUTPUT(jccl-config
-          Makefile
-          Makefile.inc
-          common.defs.mk
-          make.defs.mk
-          common/Makefile
-          common/Makefile.inc
-          common/jccl/Makefile
-          common/jccl/Util/Makefile
-          config/build.xml
-          config/Makefile
-          config/Makefile.inc
-          config/jccl/Makefile
-          config/jccl/Config/Makefile
-          editors/build.xml
-          editors/Makefile
-          editors/Makefile.inc
-          rtrc/build.xml
-          rtrc/Makefile
-          rtrc/Makefile.inc
-          rtrc/jccl/Makefile
-          rtrc/jccl/RTRC/Makefile
-          perfmonitor/Makefile
-          perfmonitor/Makefile.inc
-          perfmonitor/jccl/Makefile
-          perfmonitor/jccl/PerfMonitor/Makefile
-          test/Makefile
-          test/TestSuite/Makefile
-          test/TestSuite/test.defs.mk
-          test/TestSuite/TestCases/Makefile
-          test/TestSuite/java/Makefile
-          tools/Makefile
-          tools/ConfigUpdater/build.xml
-          tools/ConfigUpdater/Makefile
-          mtree/JCCL.data.dist
-          mtree/JCCL.include.dist
-          mtree/JCCL.install.dist
-          mtree/JCCL.test.dist
-          mtree/JCCL.tools.dist
-          VARS.pl,
-    [chmod a+x jccl-config])
+AC_CONFIG_FILES([
+   jccl-config
+   Makefile
+   Makefile.inc
+   common.defs.mk
+   make.defs.mk
+   common/Makefile
+   common/Makefile.inc
+   common/jccl/Makefile
+   common/jccl/Util/Makefile
+   config/build.xml
+   config/Makefile
+   config/Makefile.inc
+   config/jccl/Makefile
+   config/jccl/Config/Makefile
+   editors/build.xml
+   editors/Makefile
+   editors/Makefile.inc
+   rtrc/build.xml
+   rtrc/Makefile
+   rtrc/Makefile.inc
+   rtrc/jccl/Makefile
+   rtrc/jccl/RTRC/Makefile
+   perfmonitor/Makefile
+   perfmonitor/Makefile.inc
+   perfmonitor/jccl/Makefile
+   perfmonitor/jccl/PerfMonitor/Makefile
+   test/Makefile
+   test/TestSuite/Makefile
+   test/TestSuite/test.defs.mk
+   test/TestSuite/TestCases/Makefile
+   test/TestSuite/java/Makefile
+   tools/Makefile
+   tools/ConfigUpdater/build.xml
+   tools/ConfigUpdater/Makefile
+   mtree/JCCL.data.dist
+   mtree/JCCL.include.dist
+   mtree/JCCL.install.dist
+   mtree/JCCL.test.dist
+   mtree/JCCL.tools.dist
+   VARS.pl
+   ],
+   [chmod a+x jccl-config])
 
-cat <<BUILD_INFO
-
- Remember that you need to build JCCL with GNU make.
- GNU make is called 'gmake' on most systems.
- See the file README for more details on compiling the JCCL distribution.
-
-BUILD_INFO
+AC_OUTPUT
