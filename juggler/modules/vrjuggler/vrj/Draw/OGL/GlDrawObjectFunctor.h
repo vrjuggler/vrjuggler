@@ -36,36 +36,36 @@
 namespace vrj
 {
 
-/** Base interface for an object drawing functor
-* 
-* Any GL draw objects should be derived from this class.
-* This is used for drawing things like wands and gloves
-*/
+/**
+ * Base interface for an object drawing functor.
+ * 
+ * Any GL draw objects should be derived from this class.
+ * This is used for drawing things such as wands and gloves.
+ */
 class GlDrawObjectFunctor
 {
 public:   
-   /* Called to initialize any context specific information
-   */
+   /** Called to initialize any context specific information. */
    virtual void contextInit() = 0;
    
-   /** Callback function for drawing
-   * Called when the object should be drawn
-   * @pre GL context is set and ready to go
-   */
+   /**
+    * Callback function for drawing.
+    * Called when the object should be drawn.
+    * @pre OpenGL context is set and ready to go.
+    */
    virtual void draw() = 0;
 };
 
-/** Base class for glove drawing
-* Adds a function for setting glove parameters
-*/
+/**
+ * Base class for glove drawing.
+ * Adds a function for setting glove parameters.
+ */
 class GlDrawGloveObjectFunctor : public GlDrawObjectFunctor
 {
 public:
    virtual void setGlove() = 0;
 };
 
-
-};
+}
 
 #endif
-
