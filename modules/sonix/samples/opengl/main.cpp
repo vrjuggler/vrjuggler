@@ -53,8 +53,9 @@
 #include <GL/glu.h>
 #include <GL/glut.h>
 
-#include "snx/sonix.h"    // interface
-#include "snx/SoundHandle.h"
+#include <snx/sonix.h>    // interface
+#include <snx/SoundHandle.h>
+#include "StopWatch.h"
 
 #include <iostream.h>
 #include <stdlib.h>
@@ -68,6 +69,8 @@ public:
 };
 int AppWindow::width = 0, AppWindow::height = 0;
 int AppWindow::mainWin_contextID = -1;
+
+StopWatch stopWatch;
 
 int soundpos = 0;
 float pitchbend = 1.0f;
@@ -137,8 +140,8 @@ static void OnIdle()
    // tell glut to call redisplay (which then calls OnRedisplay)
    glutPostRedisplay();
    
-   usleep( 10000 );
-   sonix::instance()->step( 0.1 );
+   sonix::instance()->step( stopWatch.timeInstant() );
+   stopWatch.pulse();
 }
 
 /////////////////////////////////////////////
@@ -411,6 +414,7 @@ static void OnApplicationInit()
    
    
    kevinSound.init( "kevin" );
+   stopWatch.pulse();
 }
 
 
