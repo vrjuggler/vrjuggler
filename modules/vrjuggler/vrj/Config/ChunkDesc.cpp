@@ -1,6 +1,7 @@
 
 
 #include <Config/vjChunkDesc.h>
+#include <Config/vjParseUtil.h>
 
 vjChunkDesc::vjChunkDesc () :plist() {
     name = "unnamed";
