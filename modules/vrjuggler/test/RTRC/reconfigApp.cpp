@@ -1067,37 +1067,57 @@ bool reconfigApp::readdKeyboardWin_check()
 
 bool reconfigApp::addSimPos_exec()
 {
-   std::cout << "Beginning test for adding a sim position device...\n" << std::flush;
-   return true;
+   std::cout << "Beginning test for adding a sim position device and pointing proxies at it...\n" << std::flush;
+   return (  addChunkFile( "./Chunks/sim.positiondevice.config" ) 
+          && addChunkFile( "./Chunks/sim.positiondeviceproxy.config" ));
 }
 
 bool reconfigApp::addSimPos_check()
 {
-   return true;
+   //Check that the sim pos device exists and that the proxy points at it
+   return verifyProxy( "ExtraPositionProxy", "ExtraPositionDevice" );
 }
 
 
 bool reconfigApp::removeSimPos_exec()
 {
-   std::cout << "Beginning test for removing a sim position device...\n" << std::flush;
-   return true;
+   std::cout << "Beginning test for removing a sim position device and checking its proxies...\n" << std::flush;
+   return removeChunkFile( "./Chunks/sim.positiondevice.config" );
 }
 
 bool reconfigApp::removeSimPos_check()
 {
+
+   //Look at the button proxy and see what it points at
+   gadget::Proxy* proxy = gadget::InputManager::instance()->getProxy( "ExtraPositionProxy" );
+
+   if (proxy == NULL)
+   {
+      std::cout << "\tError: Could not find the proxy\n" << std::flush;
+      return false;
+   }
+
+   if (!proxy->isStupified())
+   {
+      std::cout << "\tError: Proxy is not stupified\n" << std::flush;
+      return false;
+   }
+ 
    return true;
+
 }
 
 
 bool reconfigApp::readdSimPos_exec()
 {
-   std::cout << "Beginning test for readding a sim position device...\n" << std::flush;
-   return true;
+   std::cout << "Beginning test for readding a sim position device and checking its proxies...\n" << std::flush;
+   return addChunkFile( "./Chunks/sim.positiondevice.config" );
 }
 
 bool reconfigApp::readdSimPos_check()
 {
-   return true;
+   //Check that the sim pos device exists and that the proxy points at it
+   return verifyProxy( "ExtraPositionProxy", "ExtraPositionDevice" );
 }
 
 
@@ -1132,6 +1152,7 @@ bool reconfigApp::reconfigSimPos_check()
    }
 
    vrj::Matrix mat = *(device->getPositionData().getPosition());
+
    vrj::Vec3 pos = mat.getTrans();
 
    if ((pos[0] != 1.0) || (pos[1] != 2.0) || (pos[2] != 3.0))
