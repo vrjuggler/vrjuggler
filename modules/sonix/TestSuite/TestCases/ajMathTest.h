@@ -4,6 +4,10 @@
 #include <TestSuite.h>
 #include <TestCaller.h>
 
+#include <aj/Matrix44.h> // 4x4 matrix math
+#include <aj/Vec3.h>     // vector math
+#include <aj/MatVec.h>   // for matrix/vec math
+
 //#include <IO/Socket/InetAddr.h>
 
 namespace ajTest
@@ -28,14 +32,14 @@ public:
 
    void testSimple()
    {
-      ajMatrix mat;
+      aj::Matrix44 mat;
       mat.makeRot( 180, 0, 1, 0 );
       
-      ajVec3 forward( 0,0,-1 );
+      aj::Vec3 forward( 0,0,-1 );
       
-      ajVec3 vec = xformVec( mat, forward );
+      aj::Vec3 vec = aj::xformVec( mat, forward );
       std::cout<<vec[0]<<", "<<vec[1]<<", "<<vec[2]<<"\n"<<std::flush;
-      vec = xformFull( mat, forward );
+      vec = aj::xformFull( mat, forward );
       std::cout<<vec[0]<<", "<<vec[1]<<", "<<vec[2]<<"\n"<<std::flush;
       
       assertTest( true );
