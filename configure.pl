@@ -51,6 +51,7 @@ sub configureModule($);
 sub regenModuleInfo($);
 sub generateMakefile(;$);
 sub generateReconfig($@);
+sub listModules();
 sub printHelp();
 sub getConfigureHelp($$);
 sub parseOutput($$);
@@ -64,6 +65,7 @@ $module         = '';
 my $script_help = 0;
 my $manual      = 0;
 my $regen       = 0;
+my $mod_list    = 0;
 
 $CONFIG_ARGS    = 0;
 $PATH_ARGS      = 1;
@@ -77,7 +79,7 @@ my @save_argv = @ARGV;
 Getopt::Long::Configure('pass_through');
 GetOptions('help|?' => \$help, 'cfg=s' => \$cfg, 'module=s' => \$module,
            'script-help' => \$script_help, 'manual' => \$manual,
-           'regen' => \$regen)
+           'regen' => \$regen, 'modlist' => \$mod_list)
    or pod2usage(2);
 
 # Print the help output and exit if --script-help was on the command line or
@@ -96,6 +98,7 @@ $Win32 = 1 if $ENV{'OS'} && $ENV{'OS'} =~ /Windows/;
 
 parseConfigFile("$cfg");
 
+listModules() && exit(0) if $mod_list;
 printHelp() && exit(0) if $help;
 
 if ( $regen )
@@ -421,6 +424,32 @@ sub generateReconfig ($@)
    chmod(0755, "reconfig");
 }
 
+sub listModules ()
+{
+   my $mod_name;
+   foreach $mod_name ( keys(%MODULES) )
+   {
+      print "$mod_name";
+
+#      if ( $#{$MODULES{"$mod_name"}} != -1 )
+#      {
+#         print " (Requires:";
+#
+#         my $dep_ref;
+#         foreach $dep_ref ( @{$MODULES{"$mod_name"}} )
+#         {
+#            print " ${$dep_ref}{'path'}";
+#         }
+#
+#         print ")";
+#      }
+
+      print "\n";
+   }
+
+   return 1;
+}
+
 sub printHelp ()
 {
    my @help_output = ();
@@ -617,6 +646,10 @@ output may be limited using the --module argument, described below.
 =item B<--manual>
 
 Print usage information of this script alone in UNIX manpage format and exit.
+
+=item B<--modlist>
+
+Print a list of the available modules.
 
 =item B<--cfg>=file
 
