@@ -45,7 +45,7 @@ class DigitalProxy;
 class GestureProxy;
 class GloveProxy;
 class KeyboardProxy;
-class PosProxy;
+class PositionProxy;
 
 //: Base class for simplified proxy interfaces
 //
@@ -152,7 +152,7 @@ typedef DeviceInterface<DigitalProxy>    DigitalInterface;
 typedef DeviceInterface<GestureProxy>    GestureInterface;
 typedef DeviceInterface<GloveProxy>      GloveInterface;
 typedef DeviceInterface<KeyboardProxy>   KeyboardInterface;
-typedef DeviceInterface<PosProxy>        PosInterface;
+typedef DeviceInterface<PositionProxy>   PositionInterface;
 
 } // end namespace
 

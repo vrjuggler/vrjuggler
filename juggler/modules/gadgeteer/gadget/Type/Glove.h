@@ -37,7 +37,7 @@
 #include <gad/gadConfig.h>
 #include <gad/Type/Input.h>
 //#include <gad/Type/DeviceInterface.h>
-#include <gad/Type/PosProxy.h>
+#include <gad/Type/PositionProxy.h>
 #include <vrj/Math/Vec3.h>
 #include <vrj/Math/Matrix.h>
 
@@ -157,7 +157,7 @@ protected:
    // "center" of the glove. "center" could be different for each glove type.
    // TODO: VJ_MAX_GLOVE_DEVS = 2 here is a hack until we make
    //       the pinch glove act more like the flock of birds.
-   PosProxy*  mGlovePos[VJ_MAX_GLOVE_DEVS];
+   PositionProxy*  mGlovePos[VJ_MAX_GLOVE_DEVS];
 
 };
 
