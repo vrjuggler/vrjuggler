@@ -625,6 +625,7 @@ public class DisplayWindowEditorPanel
             ConfigDefinition sim_def =
                broker.getRepository().get("default_simulator");
             sim_elt = factory.create("Simulator Plug-in", sim_def);
+            elt.addProperty("simulator_plugin", sim_elt);
          }
          else
          {
