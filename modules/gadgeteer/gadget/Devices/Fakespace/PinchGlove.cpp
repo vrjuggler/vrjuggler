@@ -77,22 +77,23 @@ int PinchGlove::startSampling()
                                     << mPortName << " at "
                                     << mBaudRate << "...\n"
                                     << vprDEBUG_FLUSH;
+
       while ( mGlove->connectToHardware() != vpr::ReturnStatus::Succeed )
       {
-         vprDEBUG(gadgetDBG_INPUT_MGR,0)
-            << "[PinchGlove] ERROR: Can't open port or port is already opened."
-            << vprDEBUG_FLUSH;
          vpr::System::msleep(100);
          maxAttempts++;
          if (maxAttempts==5)
          {
+            vprDEBUG(gadgetDBG_INPUT_MGR,0)
+               << "[PinchGlove] Could not connect to PinchGlove on port " 
+               << mPortName << std::endl << vprDEBUG_FLUSH;
             return(vpr::ReturnStatus::Fail);
          }
       }
 
       vprDEBUG(gadgetDBG_INPUT_MGR,0)
-         << "[PinchGlove] Successfully connected, Now sampling pinch data."
-         << vprDEBUG_FLUSH;
+         << "[PinchGlove] Successfully connected to Fakespace Hardware on " 
+         << mPortName << std::endl << vprDEBUG_FLUSH;
 
       // Create a new thread to handle the control
       vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "[PinchGlove] Spawning control thread\n"
@@ -135,28 +136,31 @@ int PinchGlove::sample()
 
    // Get data from hardware
    std::string gesture;
-   mGlove->updateStringFromHardware();
-   mGlove->getSampledString( gesture );
-
+   gesture = mGlove->getGestureFromHardware();
+   //std::cout << "PinchGlove::sample() " << gesture << std::endl;
+   
+   
    unsigned char ch;
    int num;
    int i;
+   //std::cout << "DigitalData: ";
    for ( i=0;i<11;i++ )
    {
-
       if ( i<5 )
       {
-         ch=gesture[i];
-         num = ch - '0';
+         num = gesture.c_str()[i] - '0';
          mDigitalData[i]=num;
+   //      std::cout << mDigitalData[i].getDigital() << " ";
       }
       else if ( i>5 )
       {
          ch=gesture[i];
-         num = ch - '0';
+         num = gesture.c_str()[i] - '0';
          mDigitalData[i-1]=num;
+   //      std::cout << mDigitalData[i-1].getDigital() << " ";
       }
    }
+   //std::cout << std::endl;
 
    mDigitalSamples.lock();
    mDigitalSamples.addSample(mDigitalData);
