@@ -153,7 +153,7 @@ public:
          else if(cur_value < old_sample)
          {
             std::cout << "Changed metric for [" << test_key << "]  new value:" << cur_value
-                      << " --- decrease of [" << (old_sample-cur_value)/old_sample << "] percent." << std::endl;
+                      << " --- decrease of [" << 100.0f*(old_sample-cur_value)/old_sample << "] percent." << std::endl;
             setMetric(test_key, cur_value);
          }
       }
