@@ -387,10 +387,7 @@ namespace cluster
            return false;
         }
         
-        vpr::GUID new_id;
-        new_id.generate();
-
-        DeviceRequest* device_req = new DeviceRequest(new_id, device_name);
+        DeviceRequest* device_req = new DeviceRequest(device_name);
         //device_req->send(node->getSockStream());
         //delete device_req;
         //node->addDeviceRequest(device_req);
