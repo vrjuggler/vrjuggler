@@ -235,9 +235,7 @@ ifeq ($(BUILD_JAVA), Y)
           $(LN_S) $(JUGGLERROOT_ABS)/external/JacORB/idl* ./
 endif
 endif
-	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
-          -t $(TWEEKROOT_ABS)/tweek-config.in -p 'use_base_dir=yes'	\
-          -v $(TWEEKROOT_ABS)/VERSION -o $(instlinks)/bin/tweek-config -x
+	cd $(instlinks)/bin && cp -p $(topdir)/tweek-config .
 	@echo ""
 	@echo ""
 	@echo "---------------------------------------------------------------"
