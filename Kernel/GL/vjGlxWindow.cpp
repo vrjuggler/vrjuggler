@@ -78,6 +78,9 @@ int vjGlxWindow::open() {
     XEvent fooevent;
     XSetWindowAttributes w_attrib;
     int screen;
+    char* foo;
+    XSizeHints *sizehints;
+    XClassHint *classhint;
 
     vjDEBUG(vjDBG_DRAW_MGR,3) << "glxWindow: Open window\n" << vjDEBUG_FLUSH;
 
@@ -136,7 +139,7 @@ int vjGlxWindow::open() {
     /* Before we map the window, we need a name for it (this is also useful for
      * the resource cruft that'll get rid of the borders).
      */
-    XClassHint *classhint = XAllocClassHint();
+    classhint = XAllocClassHint();
     classhint->res_name = (char*)window_name.c_str();
     classhint->res_class = "vj GLX";
     //XSetClassHint (x_display, x_window, classhint);
@@ -144,7 +147,7 @@ int vjGlxWindow::open() {
     // InSoc makes things simple
     // X makes things complicated
     XTextProperty w_name;
-    char* foo = (char*)window_name.c_str();
+    foo = (char*)window_name.c_str();
     XStringListToTextProperty(&foo, 1, &w_name);
 
     /* The next few lines of crud are needed to get it through the window
@@ -153,7 +156,7 @@ int vjGlxWindow::open() {
      * go, thank you very much, I'M the APPLICATION so stop $%^*&%#@! SECOND
      * GUESSING ME!
      */
-    XSizeHints *sizehints = XAllocSizeHints();
+    sizehints = XAllocSizeHints();
     sizehints->flags = USPosition;
 
     XSetWMProperties (x_display, x_window, &w_name, &w_name, 
@@ -334,8 +337,10 @@ void vjGlxWindow::config(vjDisplay* _display)
    return true;
 }
 
-/* private member functions.  these get profoundly painful */
 
+/***********************************************************/
+/* private member functions.  these get profoundly painful */
+/***********************************************************/
 XVisualInfo* vjGlxWindow::GetGlxVisInfo (Display *display, int screen)
 {
    /* pre:  screen is a screen on the current XDisplay, and
@@ -361,6 +366,9 @@ XVisualInfo* vjGlxWindow::GetGlxVisInfo (Display *display, int screen)
       GLX_BLUE_SIZE, 1,
       GLX_ALPHA_SIZE, 1,
    };
+   int NumAttribs = 12;
+   int AlphaAttribIndex = 11;
+   
    /* Notes on viattrib:  by using 1 for GLX_RED_SIZE et.al. we ask
     * for the _largest_ available buffers.  If this fails,  we might
     * want to try setting alpha size to 0 (smallest possible, maybe 0)
@@ -370,7 +378,7 @@ XVisualInfo* vjGlxWindow::GetGlxVisInfo (Display *display, int screen)
     * exact order of the arguments in viattrib.  Alter those, & you'll
     * Need to redo the indices used.
     */
-   int NumAttribs = 12;
+   
 
    if (!glXQueryExtension (display, NULL, NULL))
    {
@@ -400,16 +408,16 @@ XVisualInfo* vjGlxWindow::GetGlxVisInfo (Display *display, int screen)
                  << "' couldn't get display in stereo - trying mono.\n"
                  << vjDEBUG_FLUSH;
       in_stereo = false;
-      viattrib[12] = GLX_USE_GL; // should be a reasonable 'ignore' tag
+      viattrib[NumAttribs-1] = GLX_USE_GL; // should be a reasonable 'ignore' tag
       if( (vi = glXChooseVisual (display, screen, viattrib)) )
          return vi;
    }
 
    // if we reach here, we didn't.  Maybe we should make alpha optional.
-   vjDEBUG(vjDBG_DRAW_MGR,2) << "WARNING: Display process for '" << display_name
+   vjDEBUG(vjDBG_DRAW_MGR,0) << "WARNING: Display process for '" << display_name
               << "' couldn't get display with alpha channel - trying without.\n"
               << vjDEBUG_FLUSH;
-   viattrib[11] = 0;
+   viattrib[AlphaAttribIndex] = 0;
    if( (vi = glXChooseVisual (display, screen, viattrib)) )
       return vi;
 
