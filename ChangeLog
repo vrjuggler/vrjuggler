@@ -1,5 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Mar-28-2001 kevn      vjQuat::unit() is now vjQuat::normalizeFast()
+                      vjQuat::makeQuat() is now vjQuat::makeRot()
 Feb-14-2001 cjust     Fixed VjControl problems with recognizing backspace
 	              on linux.
 Feb-07-2001 patrick   The extra VR Juggler data files, sample applications,
@@ -18,6 +20,17 @@ Jan-09-2001 patrick   RELENG_1_0 CVS branch created in preparation for 1.0
                       release.  The branch point is the same as for RELENG_0_2,
                       and all changes on RELENG_0_2 were merged onto this
                       branch.  RELENG_0_2 is now dead.
+Jan-04-2001 kevn      vjSingleton is a little more robust now:
+                      fixed a case where you could create one before it's
+                      static data member was initialized.  Moved this static
+                      data member to static function data to ensure init
+                      when instance() is called.  The is one more bug/issue
+                      and that is the problem that static local function data
+                      is not thread safe.  This appears only when ThreadManager
+                      has not been initialized/accessed yet.
+                      This could cause two simultaneous calls to instance() to
+                      try to access the thread manager, and one will recieve a
+                      NULL mutex. 
 Dec-18-2000 bthomp    UNIX version of IS-900 driver converted to use termios
                       which in turn fixes cross-platform building
 Dec-13-2000 patrick   RELENG_0_2 CVS branch created in preparation for 0.2.0
