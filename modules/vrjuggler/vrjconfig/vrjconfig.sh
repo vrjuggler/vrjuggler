@@ -66,6 +66,10 @@ fi
 
 EXTRA_JDK_ARGS="-DJCCL_BASE_DIR=${JCCL_BASE_DIR} -DVJ_BASE_DIR=${VJ_BASE_DIR} -DJCCL_DEFINITION_PATH=${JCCL_DEFINITION_PATH}"
 
-. $TWEEK_BASE_DIR/bin/tweek-base.sh --defaultbean="Configuration Editor" "$@"
+APP_NAME='VRJConfig'
+
+. $TWEEK_BASE_DIR/bin/tweek-base.sh \
+   --beanpath="$JCCL_BASE_DIR/share/jccl/beans" \
+   --defaultbean="Configuration Editor" "$@"
 
 exit $status
