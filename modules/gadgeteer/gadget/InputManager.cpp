@@ -119,11 +119,12 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
    }
 
    //DumpStatus();                      // Dump the status   
-   vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,vprDBG_VERB_LVL)
-      << "New input manager state:\n" << vprDEBUG_FLUSH;
-   vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_VERB_LVL) << (*this) << vprDEBUG_FLUSH;
-   vprDEBUG_END(gadgetDBG_INPUT_MGR,vprDBG_VERB_LVL) << std::endl
-                                                     << vprDEBUG_FLUSH;
+   {
+      vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
+                              std::string("New Input Manager state:\n"),
+                              std::string("-- end state -- \n"));
+      vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_VERB_LVL) << (*this) << vprDEBUG_FLUSH;   
+   }
 
    if(ret_val)
    {
@@ -221,6 +222,10 @@ bool InputManager::configureDevice(jccl::ConfigChunkPtr chunk)
    bool ret_val;
    std::string dev_name = chunk->getFullName();
    
+   vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
+                                 std::string("InputManager::configureDevice: dev[") + dev_name + std::string("]\n"),
+                                 std::string("done configuring device\n"));
+
    Input* new_device;
    new_device = DeviceFactory::instance()->loadDevice(chunk);
 
@@ -239,8 +244,7 @@ bool InputManager::configureDevice(jccl::ConfigChunkPtr chunk)
 	  delete new_device;
 	  ret_val = false;
    }
-   vprDEBUG_END(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL) << std::endl
-	        		<< vprDEBUG_FLUSH;
+   
    return ret_val;
 }
 
