@@ -30,19 +30,44 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_DEBUG_H_
-#define _GADGET_DEBUG_H_
-//#pragma once
-
 #include <gadget/gadgetConfig.h>
-#include <stdlib.h>
-
-#include <vpr/Util/Debug.h>
-
-// Gadgeteer categories
-const vpr::DebugCategory gadgetDBG_INPUT_MGR(vpr::GUID("d6be4359-e8cf-41fc-a72b-a5b4f3f29aa2"), "DBG_INPUT_MGR", "gadgetINP:");
-const vpr::DebugCategory gadgetDBG_RIM(vpr::GUID("2af7e28f-a831-4b7c-b5c9-beda5289ffde"), "DBG_RIM", "gadgetRIM:");
-const vpr::DebugCategory gadgetDBG_NET_MGR(vpr::GUID("02be47d5-c5f8-4487-b08c-e99ee23cc1d5"), "DBG_NET_MGR", "gadgetNET:");
+#include <gadget/VirtualDevice.h>
 
 
-#endif
+namespace gadget
+{
+   VirtualDevice::VirtualDevice(const std::string& name, const vpr::GUID& id, const std::string& base_type, 
+                                const std::string& hostname, gadget::Input* device)
+   {
+      mName = name;
+      mId = id;
+      mBaseType = base_type;
+      mRemoteHostname = hostname;
+      mDevice = device;
+//      mBufferObjectReader = NULL;
+   }
+
+   VirtualDevice::~VirtualDevice()
+   {
+/*      if (mBufferObjectReader != NULL)
+      {
+         delete mBufferObjectReader;
+      }
+*/      
+      if (mDevice != NULL)
+      {
+         delete mDevice;
+      }
+   }
+
+   void VirtualDevice::debugDump(int debug_level)
+   {
+      vpr::DebugOutputGuard dbg_output(gadgetDBG_RIM,debug_level,
+                                 std::string("-------------- VirtualDevice --------------\n"),
+                                 std::string("-----------------------------------------\n"));
+
+      vprDEBUG(gadgetDBG_RIM,debug_level) << "Local ID: " << mId.toString() << std::endl << vprDEBUG_FLUSH; 
+      vprDEBUG(gadgetDBG_RIM,debug_level) << "Name:     " << mName << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,debug_level) << "BaseType: " << mBaseType << std::endl << vprDEBUG_FLUSH;
+   }
+} // End of gadget namespace
