@@ -10,6 +10,9 @@ void SliderSubjectImpl::setValue (long value)
    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
       << "Setting m_value to " << value << std::endl << vprDEBUG_FLUSH;
    m_value = value;
+
+   // Notify any observers that our value has changed.  This is very
+   // important.
    SubjectImpl::notify();
 }
 
