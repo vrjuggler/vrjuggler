@@ -876,6 +876,10 @@ public class ConfigChunkDBEditor
                // Get the node for the property value to remove
                MutableTreeNode prop_node = (MutableTreeNode)child.getChildAt(evt.getIndex());
 
+               // Stop listening to the embedded chunk
+               ConfigChunk removed_chunk = (ConfigChunk)evt.getValue();
+               removed_chunk.removeConfigChunkListener(this);
+
                // Remove the node from the tree
                treeModel.removeNodeFromParent(prop_node);
             }
