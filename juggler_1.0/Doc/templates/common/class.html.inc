@@ -20,7 +20,7 @@
 
   <FRAMESET ROWS="*,110">
     <FRAME
-	NAME="class_desc" SRC="{class}_desc.html" MARGINWIDTH="5"
+	NAME="class_desc" SRC="{class}.html" MARGINWIDTH="5"
 	MARGINHEIGHT="5" SCROLLING="Auto">
     <FRAME
 	NAME="applet" SRC="{class}_appl.html" MARGINHEIGHT="0" MARGINWIDTH="0"

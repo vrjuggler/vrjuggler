@@ -8,8 +8,8 @@
 <TT>
 {nolink true}
 <A
-    HREF="{defclass}_desc.html#{memberef}"
-    TARGET="class_desc"><B>{mname}</B></A>({args})
+    HREF="{defclass}.html#{memberef}"
+    TARGET="Body"><B>{mname}</B></A>({args})
 {nolink false}
 {if const} const {endif}
 {if throws}

@@ -4,16 +4,16 @@ The formatting is tight because perceps leave a LOT of white space in the file
 {foreach gmember sort}
 {if PUBLIC_API} {if class}
 {if gmember}
-	<folder title="{classname}" link="classes/{class}_desc.html#{memberef}" {if brief} info="{brief}" {endif} image="Class.gif">
+	<folder title="{classname}" link="classes/{class}.html#{memberef}" {if brief} info="{brief}" {endif} image="Class.gif">
 {endif}	 
 {if class}
-	<folder title="{classname}" link="classes/{class}_desc.html" {if brief} info="{brief}" {endif} image="Class.gif">
+	<folder title="{classname}" link="classes/{class}.html" {if brief} info="{brief}" {endif} image="Class.gif">
 {endif}	     
    Public Funcs
     <font style="Bold" color="000022">
     {foreach public all}
     {if func}        
-         <item title="{mname}" info="{type} {mname}({args}): {if brief} {brief} {endif}" link="classes/{class}_desc.html#{memberef}" image="Public_Method.gif">
+         <item title="{mname}" info="{type} {mname}({args}): {if brief} {brief} {endif}" link="classes/{class}.html#{memberef}" image="Public_Method.gif">
     {endif}	 
     {next public}
     </font>
@@ -21,7 +21,7 @@ The formatting is tight because perceps leave a LOT of white space in the file
     <font style="Bold" color="002200">
     {foreach protected all}
     {if func}        
-         <item title="{mname}" info="{type} {mname}({args}): {if brief} {brief} {endif}" link="classes/{class}_desc.html#{memberef}" image="Protected_Method.gif">
+         <item title="{mname}" info="{type} {mname}({args}): {if brief} {brief} {endif}" link="classes/{class}.html#{memberef}" image="Protected_Method.gif">
     {endif}	 
     {next public}
     </font>
@@ -29,7 +29,7 @@ The formatting is tight because perceps leave a LOT of white space in the file
     <font style="Bold" color="220000">
     {foreach private all}
     {if func}
-         <item title="{mname}" info="{type} {mname}({args}): {if brief} {brief} {endif}" link="classes/{class}_desc.html#{memberef}" image="Protected_Method.gif">
+         <item title="{mname}" info="{type} {mname}({args}): {if brief} {brief} {endif}" link="classes/{class}.html#{memberef}" image="Protected_Method.gif">
     {endif}	 
     {next public}
     </font>
@@ -37,7 +37,7 @@ The formatting is tight because perceps leave a LOT of white space in the file
     <font style="Plain" color="000022">
     {foreach public all}
     {if !func}        
-         <item title="{mname}: {type}" info="{type} {mname}: {if brief} {brief} {endif}" link="classes/{class}_desc.html#{memberef}" image="Public_Method.gif">
+         <item title="{mname}: {type}" info="{type} {mname}: {if brief} {brief} {endif}" link="classes/{class}.html#{memberef}" image="Public_Method.gif">
     {endif}	 
     {next public}
     </font>
@@ -45,7 +45,7 @@ The formatting is tight because perceps leave a LOT of white space in the file
     <font style="Plain" color="002200">
     {foreach protected all}        
     {if !func}        
-         <item title="{mname}: {type}" info="{type} {mname}: {if brief} {brief} {endif}" link="classes/{class}_desc.html#{memberef}" image="Protected_Method.gif">
+         <item title="{mname}: {type}" info="{type} {mname}: {if brief} {brief} {endif}" link="classes/{class}.html#{memberef}" image="Protected_Method.gif">
     {endif}	 
     {next public}
     </font>
@@ -53,7 +53,7 @@ The formatting is tight because perceps leave a LOT of white space in the file
     <font style="Plain" color="220000">
     {foreach private all}        
     {if !func}        
-         <item title="{mname}: {type}" info="{type} {mname}: {if brief} {brief} {endif}" link="classes/{class}_desc.html#{memberef}" image="Protected_Method.gif">
+         <item title="{mname}: {type}" info="{type} {mname}: {if brief} {brief} {endif}" link="classes/{class}.html#{memberef}" image="Protected_Method.gif">
     {endif}	 
     {next public}
     </font>
