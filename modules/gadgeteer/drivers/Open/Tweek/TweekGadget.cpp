@@ -42,10 +42,10 @@
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/Util/Debug.h>
 
-#include <gadget/Devices/Tweek/TweekPositionSubjectImpl.h>
-#include <gadget/Devices/Tweek/TweekDigitalSubjectImpl.h>
-#include <gadget/Devices/Tweek/TweekAnalogSubjectImpl.h>
-#include <gadget/Devices/Tweek/TweekGadget.h>
+#include <drivers/Open/Tweek/TweekPositionSubjectImpl.h>
+#include <drivers/Open/Tweek/TweekDigitalSubjectImpl.h>
+#include <drivers/Open/Tweek/TweekAnalogSubjectImpl.h>
+#include <drivers/Open/Tweek/TweekGadget.h>
 
 
 void initDevice(gadget::InputManager* inputMgr)
