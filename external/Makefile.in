@@ -86,6 +86,10 @@ links-cppdom:
 	cd $(instlinks)/include && $(RM_LN) ./cppdom &&			\
           $(LN_S) $(EXTROOT_ABS)/cppdom/cppdom ./
 
+links-gmtl:
+	cd $(instlinks)/include && $(RM_LN) ./gmtl &&			\
+          $(LN_S) $(EXTROOT_ABS)/GMTL/gmtl ./
+
 install install-debug install-optim install-dbg install-dbg-dso		\
 install-opt install-opt-dso install-profiled install-prof		\
 install-prof-dso installworld:
@@ -110,6 +114,9 @@ install-boost:
 
 install-cppdom:
 	@$(MAKE) DIRS="cppdom/cppdom" generic-header-install
+
+install-gmtl:
+	@$(MAKE) DIRS="GMTL/gmtl" generic-header-install
 
 generic-header-install:
 ifneq ($(DIRS), )
