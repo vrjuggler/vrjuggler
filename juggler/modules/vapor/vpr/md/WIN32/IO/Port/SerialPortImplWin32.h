@@ -58,31 +58,30 @@
 
 namespace vpr {
 
-// ----------------------------------------------------------------------------
-//: vpr::SerialPort implementation for Win32.
-// ----------------------------------------------------------------------------
+/**
+ * vpr::SerialPort implementation for Win32.
+ *
+ * @author Josh Brown
+ */
 class VPR_CLASS_API SerialPortImplWin32 {
 public:
-    // ------------------------------------------------------------------------
-    //: Constructor.  This creates a file handle object connected to the given
-    //+ port name and sets the update action to happen immediately.
-    //
-    //! PRE: None.
-    //! POST: m_handle is allocated and connected to port_name, and the update
-    //+       action is set to vpr::SerialTypes::NOW.
-    //
-    //! ARGS: port_name - The name of the serial port that will be accessed.
-    // ------------------------------------------------------------------------
+    /**
+     * Constructor.  This creates a file handle object connected to the given
+     * port name and sets the update action to happen immediately.
+     *
+     * @post m_handle is assigned a value and connected to port_name, and the
+     *       update action is set to vpr::SerialTypes::NOW.
+     *
+     * @param port_name The name of the serial port that will be accessed.
+     */
     SerialPortImplWin32(const std::string& port_name);
 
-    // ------------------------------------------------------------------------
-    //: Destructor.  If the file handle is non-NULL, its memory is released.
-    //
-    //! PRE: None.
-    //! POST: If m_handle is non-NULL, its memory is released.
-    // ------------------------------------------------------------------------
-    virtual ~SerialPortImplWin32(void);
-
+    /**
+     * Destructor.  If the serial port is still open, it is closed.
+     *
+     * @post The serial port is closed.
+     */
+    ~SerialPortImplWin32(void);
 
     // ========================================================================
     // vpr::BlockIO basics.
@@ -91,7 +90,6 @@ public:
     /**
      * Gets the name of this serial port.
      *
-     * @pre None.
      * @post
      *
      * @return An object containing the name of the serial port.
@@ -105,7 +103,6 @@ public:
      * Sets the open flags so that the serial port is opened in read-only
      * mode.
      *
-     * @pre None.
      * @post The open flags are updated so that when the port is opened, it is
      *       opened in read-only mode.  If the port is already open, this has
      *       no effect.
@@ -119,7 +116,6 @@ public:
      * Sets the open flags so that the serial port is opened in write-only
      * mode.
      *
-     * @pre None.
      * @post The open flags are updated so that when the port is opened, it is
      *       opened in write-only mode.  If the port is already open, this has
      *       no effect.
@@ -133,7 +129,6 @@ public:
      * Sets the open flags so that the serial port is opened in read/write
      * mode.
      *
-     * @pre None.
      * @post The open flags are updated so that when the port is opened, it is
      *       opened in read/write mode.  If the port is already open, this has
      *       no effect.
@@ -143,59 +138,59 @@ public:
         openFlag = GENERIC_READ | GENERIC_WRITE;
     }
 
-    // ------------------------------------------------------------------------
-    //: Set the blocking flags so that the serial port is opened in blocking
-    //+ mode.
-    //
-    //! PRE: None.
-    //! POST: The open flags are updated so that when the port is opened, it
-    //+       is opened in blocking mode.  If the port is already open, this
-    //+       has no effect.
-    // ------------------------------------------------------------------------
+    /**
+     * Sets the blocking flags so that the serial port is opened in blocking
+     * mode.
+     *
+     * @post The open flags are updated so that when the port is opened, it
+     *       is opened in blocking mode.  If the port is already open, this
+     *       has no effect.
+     */
     inline void
     setOpenBlocking (void) {
         std::cout << "'setOpenBlocking' not implemented for Win32" << std::endl;
     }
 
-    // ------------------------------------------------------------------------
-    //: Set the blocking flags so that the serial port is opened in
-    //+ non-blocking mode.
-    //
-    //! PRE: None.
-    //! POST: The open flags are updated so that when the port is opened, it
-    //+       is opened in non-blocking mode.  If the port is already open,
-    //+       this has no effect.
-    // ------------------------------------------------------------------------
+    /**
+     * Sets the blocking flags so that the serial port is opened in
+     * non-blocking mode.
+     *
+     * @post The open flags are updated so that when the port is opened, it
+     *       is opened in non-blocking mode.  If the port is already open,
+     *       this has no effect.
+     */
     inline void
     setOpenNonBlocking (void) {
         std::cout << "'setOpenBlocking' not implemented for Win32" << std::endl;
     }
 
-    // ------------------------------------------------------------------------
-    //: Open the serial port and initialize its flags.
-    //
-    //! PRE: The serial port is not already open.
-    //! POST: An attempt is made to open the port.  If it is successful, the
-    //+       port's flags are initaialized to 0.  The resulting status is
-    //+       returned to the caller.  If the port is opened, m_open is set to
-    //+       true.
-    //
-    //! RETURNS: true  - The serial port was opened successfully.
-    //! RETURNS: false - The serial port could not be opened
-    // ------------------------------------------------------------------------
+    /**
+     * Opens the serial port and initializes its flags.
+     *
+     * @pre The serial port is not already open.
+     * @post An attempt is made to open the port.  If it is successful, the
+     *       port's flags are initaialized to 0.  The resulting status is
+     *       returned to the caller.  If the port is opened, m_open is set to
+     *       true.
+     *
+     * @return vpr::Status::Success is returned if the serial port was opened
+     *         successfully.<br>
+     *         vpr::Status::Failure is returned otherwise.
+     */
     vpr::Status open(void);
 
-    // ------------------------------------------------------------------------
-    //: Close the serial port.
-    //
-    //! PRE: The serial port is open.
-    //! POST: An attempt is made to close the port.  The resulting status is
-    //+       returned to the caller.  If the port is closed, m_open is set to
-    //+       false.
-    //
-    //! RETURNS: true  - The serial port was closed successfully.
-    //! RETURNS: false - The serial port could not be closed for some reason.
-    // ------------------------------------------------------------------------
+    /**
+     * Closes the serial port.
+     *
+     * @pre The serial port is open.
+     * @post An attempt is made to close the port.  The resulting status is
+     *       returned to the caller.  If the port is closed, m_open is set to
+     *       false.
+     *
+     * @return vpr::Status::Success is returned if the serial port was closed
+     *         successfully.<br>
+     *         vpr::Status::Failure is returned otherwise.
+     */
     inline vpr::Status
     close (void) {
         vpr::Status retval;
@@ -206,37 +201,34 @@ public:
         return retval;
     }
 
-    // ------------------------------------------------------------------------
-    //: Reconfigure the serial port so that it is in blocking mode.
-    //
-    //! PRE: The serial port is open.
-    //! POST: Processes will block when accessing the port.
-    //
-    //! RETURNS: true  - The blocking mode was changed successfully.
-    //! RETURNS: false - The blocking mode could not be changed for some
-    //+                  reason.
-    // ------------------------------------------------------------------------
+    /**
+     * Reconfigures the serial port so that it is in blocking mode.
+     *
+     * @pre The serial port is open.
+     * @post Processes will block when accessing the port.
+     *
+     * @return vpr::Status::Success is returned if the blocking mode was
+     *         changed successfully; vpr::Status::Failure otherwise.
+     */
     inline vpr::Status
     enableBlocking (void) {
-        vpr::Status status;
-        status.setCode(vpr::Status::Failure);
+        vpr::Status status(vpr::Status::Failure);
         std::cout << "Enabling blocking mode after port open is unsuported in Win32." << std::endl;
         return status;
     }
 
-    // ------------------------------------------------------------------------
-    //: Reconfigure the serial port so that it is in non-blocking mode.
-    //
-    //! PRE: The serial port is open.
-    //! POST: Processes will not block when accessing the port.
-    //
-    //! RETURNS:  0 - The blocking mode was changed successfully.
-    //! RETURNS: -1 - The blocking mode could not be changed for some reason.
-    // ------------------------------------------------------------------------
+    /**
+     * Reconfigures the serial port so that it is in non-blocking mode.
+     *
+     * @pre The serial port is open.
+     * @post Processes will not block when accessing the port.
+     *
+     * @return vpr::Status::Success is returned if the blocking mode was
+     *         changed successfully; vpr::Status::Failure otherwise.
+     */
     inline vpr::Status
     enableNonBlocking (void) {
-        vpr::Status status;
-        status.setCode(vpr::Status::Failure);
+        vpr::Status status(vpr::Status::Failure);
         std::cout << "Enabling Nonblocking mode after port open is unsuported in Win32." << std::endl;
         return status;
     }
@@ -330,90 +322,88 @@ public:
     // VPR serial port interface implementation.
     // ========================================================================
 
-    // ------------------------------------------------------------------------
-    //: Get the current update action.  This tells when updates to the serial
-    //+ device take effect.
-    //
-    //! PRE: None.
-    //! POST: The current update action is returned to the caller.
-    //
-    //! RETURNS: A vpr::SerialTypes::UpdateActionOption value stating when
-    //+          updates take effect.
-    // ------------------------------------------------------------------------
+    /**
+     * Gets the current update action.  This tells when updates to the serial
+     * device take effect.
+     *
+     * @post The current update action is returned to the caller.
+     *
+     * RETURNS: A vpr::SerialTypes::UpdateActionOption value stating when
+     *          updates take effect.
+     */
     vpr::SerialTypes::UpdateActionOption getUpdateAction(void);
 
-    // ------------------------------------------------------------------------
-    //: Change the current update action to take place as described by the
-    //+ given value.
-    //
-    //! PRE: None.
-    //! POST: The update action is modified to use the new value.  The results
-    //+       will be seen with the next device operation.
-    //
-    //! ARGS: action - The new update action value.
-    // ------------------------------------------------------------------------
+    /**
+     * Changes the current update action to take place as described by the
+     * given value.
+     *
+     * @post The update action is modified to use the new value.  The results
+     *       will be seen with the next device operation.
+     *
+     * @param action The new update action value.
+     */
     void setUpdateAction (vpr::SerialTypes::UpdateActionOption action);
 
-    // ------------------------------------------------------------------------
-    //: Query the serial port for the maximum buffer size.
-    //
-    //! PRE: The serial port is open.
-    //! POST: The maximum buffer size is returned to the caller through the
-    //+       by-reference argument.
-    //
-    //! ARGS: size - A reference to a vpr::Uint8 where the buffer size is
-    //+              stored for return to the caller.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
+    /**
+     * Queries the serial port for the maximum buffer size.
+     *
+     * @pre The serial port is open.
+     * @post The maximum buffer size is returned to the caller through the
+     *       by-reference argument.
+     *
+     * @param size A reference to a vpr::Uint8 where the buffer size is
+     *             stored for return to the caller.
+     *
+     * @return vpr::Status::Success is returned if the buffer size was
+     *         retrieved successfully; vpr::Status::Failure otherwise.
+     */
     vpr::Status getBufferSize(vpr::Uint16& size);
 
-    // ------------------------------------------------------------------------
-    //: Attempt to change the buffer size to the given argument.
-    //
-    //! PRE: The serial port is open.
-    //! POST: If the buffer size is usable on the port, the port attributes
-    //+       are updated and success is returned.  Otherwise, a failure
-    //+       status is returned.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
+    /**
+     * Attempts to change the buffer size to the given argument.
+     *
+     * @pre The serial port is open.
+     * @post If the buffer size is usable on the port, the port attributes
+     *       are updated and success is returned.  Otherwise, a failure
+     *       status is returned.
+     *
+     * @param size The new size for the buffer.
+     *
+     * @return vpr::Status::Success is returned if the buffer size was set
+     *         successfully; vpr::Status::Failure otherwise.
+     */
     vpr::Status setBufferSize(const vpr::Uint8 size);
 
-    // ------------------------------------------------------------------------
-    //: Get the value of the timeout (in tenths of a second) to wait for data
-    //+ to arrive.  This is only applicable in non-canonical mode.
-    //
-    //! PRE: The serial port is open.
-    //! POST: The current timeout setting is returned to the caller in the
-    //+       by-reference argument.
-    //
-    //! ARGS: timeout - A reference to a vpr::Uint8 to be used as storage for
-    //+                 the timeout value.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    //
-    //! NOTE: See page 353 of <I>Advanced Programming in the UNIX
-    //+       Environment</I> for more details.
-    // ------------------------------------------------------------------------
+    /**
+     * Gets the value of the timeout (in tenths of a second) to wait for data
+     * to arrive.  This is only applicable in non-canonical mode.
+     *
+     * @pre The serial port is open.
+     * @post The current timeout setting is returned to the caller in the
+     *       by-reference argument.
+     *
+     * @param timeout A reference to a vpr::Uint8 to be used as storage for
+     *                the timeout value.
+     *
+     * @return vpr::Status::Success is returned if the timeout was requested
+     *         successfully; vpr::Status::Failure otherwise.
+     */
     vpr::Status getTimeout(vpr::Uint8& timeout);
 
-    // ------------------------------------------------------------------------
-    //: Set the value of the timeout to wait for data to arrive.  The value
-    //+ given must be in tenths of a second.  This is only applicable in
-    //+ non-canonical mode.
-    //
-    //! PRE: The serial port is open.
-    //! POST: The timeout interval is updated to use the given value.
-    //
-    //! ARGS: timeout_val - The new timeout value measured in tenths of a
-    //+                     second.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    //
-    //! NOTE: See page 353 of <I>Advanced Programming in the UNIX
-    //+       Environment</I> for more details.
-    // ------------------------------------------------------------------------
+    /**
+     * Sets the value of the timeout to wait for data to arrive.  The value
+     * given must be in tenths of a second.  This is only applicable in
+     * non-canonical mode.
+     *
+     * @pre The serial port is open.
+     * @post The timeout interval is updated to use the given value.
+     *
+     * @param timeout_val The new timeout value measured in tenths of a
+     *                    second.
+     *
+     * @return vpr::Status::Success is returned if the timeout was set
+     *         successfully; vpr::Status::Failure otherwise.
+     */
     vpr::Status setTimeout(const vpr::Uint8 timeout);
 
     // ------------------------------------------------------------------------
@@ -921,7 +911,7 @@ public:
      * @param bytes_read The number of bytes read into the buffer.
      * @param timeout    The maximum amount of time to wait for data to be
      *                   available for reading.  This argument is optional and
-     *                   defaults to <code>vpr::Interval::NoTimeout</code>
+     *                   defaults to vpr::Interval::NoTimeout.
      *
      * @return vpr::Status::Success is returned if the read operation
      *         completed successfully.<br>
@@ -953,7 +943,7 @@ public:
      * @param bytes_read The number of bytes read into the buffer.
      * @param timeout    The maximum amount of time to wait for data to be
      *                   available for reading.  This argument is optional and
-     *                   defaults to <code>vpr::Interval::NoTimeout</code>
+     *                   defaults to vpr::Interval::NoTimeout.
      *
      * @return vpr::Status::Success is returned if the read operation
      *         completed successfully.<br>
