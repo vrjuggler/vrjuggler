@@ -1,4 +1,4 @@
-#codewizard.rulesdirlist /home/users/allenb/Source/juggler_1.1/share/codewizard/cw_default-rules.txt
+codewizard.rulesdirlist /home/users/allenb/Source/juggler/share/codewizard/Rules/Default/cw_default-rules.txt
 
 CodeWizard.Unsuppress item * type SV class * file *
 CodeWizard.Unsuppress item ecpp* type PV class * file *
@@ -13,4 +13,25 @@ CodeWizard.Unsuppress item ucs-32 class * file *
 CodeWizard.Unsuppress item ucs-33 class * file *
 CodeWizard.Unsuppress item ucs-34 class * file *
 CodeWizard.Unsuppress item ucs-35 class * file *
+CodeWizard.Unsuppress item user-* class * file *
 CodeWizard.Suppress item mecpp-24 class * file *
+
+
+# Items to supress from the system libraries
+# Don't get errors from any gcc stuff
+CodeWizard.Suppress item * type * class * file *gcc*
+
+
+#####################################################
+######## Items to allow because we suck #############
+#####################################################
+CodeWizard.Suppress item mecpp-2 type V class * file *
+CodeWizard.Suppress item ecpp-19 type * class * file *
+CodeWizard.Suppress item ecpp-20 type * class * file *
+
+# Allow returning references to private data (yuck!!)
+CodeWizard.Suppress item ucs-18 type * class * file *
+
+# Vapor is vaporized
+CodeWizard.Suppress item * type * class * file *vpr*
+CodeWizard.Suppress item * type * class * file *boost*
