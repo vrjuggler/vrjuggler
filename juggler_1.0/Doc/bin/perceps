@@ -629,6 +629,10 @@ sub GENTEXT {
 	my $group_name = $class_paths{"$cname"};
 	$str =~ s|$TO([^$TO$TC]*)$TC|$group_name|;
       }
+      elsif ( "$arg[0]" eq "override_parent" ) {
+        my $parent = overrides("$cname", "$mname");
+	$str =~ s/$TO([^$TO$TC]*)$TC/$parent/;
+      }
       elsif ($arg[0] eq "name") {
         if ($curglob) {
           $cleaned=&FILTER($curglobval{$curglob},"$filterdir${X}$curglob.flt");
