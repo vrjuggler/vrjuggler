@@ -30,16 +30,38 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-
+/** Event spawned by ConfigModule for add/remove databases.
+ *  By becoming a ConfigModuleListener, an object can receive these
+ *  events, which give information about addition or removal of
+ *  ConfigChunkDBs and ChunkDescDBs.
+ */
 package VjComponents.PerfMonitor;
 
-import javax.swing.*;
+import java.util.EventObject;
 
-abstract public class GenericGraphPanel extends JPanel {
+import VjComponents.PerfMonitor.PerfDataCollector;
 
-    abstract public void refresh();
 
-    abstract public void destroy();
+public class PerformanceModuleEvent extends EventObject {
+    private PerfDataCollector collector;
+    private int id;
+
+    public final static int ADD_COLLECTOR = 1;
+    public final static int REMOVE_COLLECTOR = 2;
+    public final static int REMOVE_ALL = 3;
+
+    public PerformanceModuleEvent (Object _source, int _id, 
+                                   PerfDataCollector _collector) {
+        super (_source);
+        id = _id;
+        collector = _collector;
+    }
+
+    public PerfDataCollector getPerfDataCollector () {
+        return collector;
+    }
 
 }
+
+
+
