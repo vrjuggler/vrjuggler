@@ -38,7 +38,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="vrj_d.lib gadget_d.lib jccl_d.lib vpr_d.lib libnspr4.lib libplc4.lib user32.lib gdi32.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj_ogl_d.dll"
-				Version="1.1.161"
+				Version="1.1.164"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\DebugDLL;..\..\VPR\DebugDLL;..\..\JCCL\DebugDLL;..\..\Gadgeteer\DebugDLL;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
 				GenerateDebugInformation="TRUE"
@@ -92,7 +92,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="vrj.lib gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib user32.lib gdi32.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj_ogl.dll"
-				Version="1.1.161"
+				Version="1.1.164"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\ReleaseDLL;..\..\VPR\ReleaseDLL;..\..\JCCL\ReleaseDLL;..\..\Gadgeteer\ReleaseDLL;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
 				GenerateDebugInformation="FALSE"
@@ -199,9 +199,6 @@
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
 			<File
-				RelativePath=".\vrjuggler.ico">
-			</File>
-			<File
 				RelativePath=".\VRJuggler.rc">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -215,6 +212,9 @@
 						Name="VCResourceCompilerTool"
 						AdditionalIncludeDirectories=""/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\vrjuggler.ico">
 			</File>
 		</Filter>
 	</Files>

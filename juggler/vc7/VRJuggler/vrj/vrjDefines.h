@@ -81,7 +81,4 @@
 /* Define to the version of this package. */
 #define PACKAGE_VERSION "1.1"
 
-/* Define to enable the OpenGL API. */
-#define VJ_API_OPENGL 
-
 #endif
