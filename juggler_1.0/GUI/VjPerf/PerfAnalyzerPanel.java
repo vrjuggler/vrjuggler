@@ -39,6 +39,7 @@ import java.util.Vector;
 import VjPerf.*;
 import VjGUI.FileControl;
 import VjGUI.util.*;
+import VjGUI.Core;
 
 public class PerfAnalyzerPanel extends JPanel implements ActionListener, JFrameParent {
 
@@ -232,12 +233,12 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener, JFrameP
     float anomalycutoff;
     boolean doanomaly;
 
-    public PerfAnalyzerPanel (VjPerf.PerfDataCollection _data_collection) {
+    public PerfAnalyzerPanel () {
 	super();
 
 	child_frames = new Vector();
 	datapanel_elems = new Vector();
-	collection = _data_collection;
+	collection = Core.perf_collection;
 	current_collector = null;
 	text_area = null;
 
@@ -259,7 +260,7 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener, JFrameP
 
 
 	JPanel epanel = new JPanel ();
-	epanel.setLayout (new BoxLayout (epanel, BoxLayout.Y_AXIS));
+	epanel.setLayout (new GridLayout (10, 1, 2, 0));
 	add (epanel, "East");
 
 	load_button = new JButton ("Load");
@@ -420,10 +421,11 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener, JFrameP
     }
 
 
-    public void closedChild (JFrame f, boolean ok) {
+    public void closedChild (ChildFrame f, boolean ok) {
 	child_frames.removeElement(f);
-	f.dispose();
+	f.destroy();
     }
+
 }
 
 
