@@ -237,17 +237,64 @@
             <xsl:value-of select="@name"/>
          </xsl:attribute>
          <xsl:attribute name="version">
-            <xsl:text>1</xsl:text>
+            <xsl:text>2</xsl:text>
          </xsl:attribute>
+
+         <!--
+            If there are one or more plug-ins listed, get the path information
+            from the first.  This will be used for the new <plugin_path>
+            element.
+            XXX: This does not handle the case when there are different paths
+            used in the configuration.
+         -->
+         <xsl:if test="count(./clusterPlugin) &gt; 0">
+            <xsl:element name="plugin_path">
+               <xsl:call-template name="get-path">
+                  <xsl:with-param name="original" select="./clusterPlugin"/>
+                  <xsl:with-param name="path_sep"><xsl:text>/</xsl:text></xsl:with-param>
+               </xsl:call-template>
+            </xsl:element>
+            <xsl:value-of select="$newline"/>
+         </xsl:if>
+
          <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
 
    <!-- ClusterManager property "clusterPlugin". -->
    <xsl:template match="ClusterManager/clusterPlugin">
+      <xsl:variable name="no_ext">
+         <xsl:choose>
+            <xsl:when test="contains(., '.dll')">
+               <xsl:value-of select="substring-before(., '.dll')"/>
+            </xsl:when>
+            <xsl:when test="contains(., '.dylib')">
+               <xsl:value-of select="substring-before(., '.dylib')"/>
+            </xsl:when>
+            <xsl:otherwise>
+               <xsl:value-of select="substring-before(., '.so')"/>
+            </xsl:otherwise>
+         </xsl:choose>
+      </xsl:variable>
+
+      <xsl:variable name="plugin_name">
+         <xsl:call-template name="strip-path">
+            <xsl:with-param name="original" select="$no_ext"/>
+            <xsl:with-param name="path_sep"><xsl:text>/</xsl:text></xsl:with-param>
+         </xsl:call-template>
+      </xsl:variable>
+
       <xsl:element name="plugin">
-         <xsl:value-of select="." />
+         <xsl:choose>
+            <xsl:when test="starts-with($plugin_name, 'lib')">
+               <xsl:value-of select="substring-after($plugin_name, 'lib')"/>
+            </xsl:when>
+            <xsl:otherwise>
+               <xsl:value-of select="$plugin_name"/>
+            </xsl:otherwise>
+         </xsl:choose>
       </xsl:element>
+      <xsl:value-of select="$newline"/>
    </xsl:template>
 
 
