@@ -22,11 +22,6 @@ AC_ARG_ENABLE(performance,
 # --with-pkg[=arg] and --without-pkg arguments #
 # -------------------------------------------- #
 
-# Force the use of GCC as the compiler.
-# NOTE: This is not fully implemented yet for any platform, but it is partially
-# usable on Windows.
-DPP_WITH_GCC(no)
-
 # Define the root directory for the Xerces-c installation.
 AC_ARG_WITH(xercesroot,
             [  --with-xercesroot=<PATH>
