@@ -108,6 +108,12 @@ long long vjTimeStampSGI::maxval;
  */
 #include "Performance/vjTimeStampPosix.h"
 
+vjTimeStampPosix& vjTimeStampPosix::operator= (const vjTimeStamp& t2) {
+    val = t2.val;
+    return *this;
+}
+
+
 float vjTimeStampPosix::initval = 0.0;
 
 #elif VJ_PERFORMANCE == VJ_PERF_NONE

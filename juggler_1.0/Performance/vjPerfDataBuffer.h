@@ -65,6 +65,7 @@ class vjPerfDataBuffer {
     //: Buffer should be made active when EM is active
     bool        enabled;
 
+public:
     char*       name;
     int         nindex;
 

@@ -117,51 +117,47 @@ void vjPerfDataBuffer::write (ostream& out) {
 
     //out.width(13);
     
+    if (!active)
+	return;
+
+    //out << "PerfData " << name << "\n";
+    begin = read_begin;
+    end = (write_pos - 1 + numbufs)%numbufs;
+    //cout << "begin/end are " << begin <<' '<< end << endl;
+    if (begin == end)
+	return;
     out << "PerfData1 \"" << name << "\" " << nindex << endl; 
-
-    if (active) {
-	//out << "PerfData " << name << "\n";
-	begin = read_begin;
-	end = (write_pos - 1 + numbufs)%numbufs;
-	//cout << "begin/end are " << begin <<' '<< end << endl;
-	if (begin == end)
-	    return;
-	else if (begin < end) {
-	    for (i = begin; i < end; i++) {
-		b = &(buffer[i]);
-		out << b->phase << ' ' 
-		    << setiosflags(ios::fixed) << b->ts << '\n';
-	    }
-	    //read_begin = end;
+    if (begin < end) {
+	for (i = begin; i < end; i++) {
+	    b = &(buffer[i]);
+	    out << b->phase << ' ' 
+		<< setiosflags(ios::fixed) << b->ts << '\n';
 	}
-	else { /* wraparound */
-	    for (i = begin; i < numbufs; i++) {
-		b = &(buffer[i]);
-		out << b->phase << ' ' << setiosflags(ios::fixed)
-		    << b->ts << '\n';
-	    }
-	    for (i = 0; i < end; i++) {
-		b = &(buffer[i]);
-		out << b->phase << ' ' << setiosflags(ios::fixed)
-		    << b->ts << '\n';
-	    }
-	    //read_begin = end;
-	    
+    }
+    else { /* wraparound */
+	for (i = begin; i < numbufs; i++) {
+	    b = &(buffer[i]);
+	    out << b->phase << ' ' << setiosflags(ios::fixed)
+		<< b->ts << '\n';
 	}
+	for (i = 0; i < end; i++) {
+	    b = &(buffer[i]);
+	    out << b->phase << ' ' << setiosflags(ios::fixed)
+		<< b->ts << '\n';
+	}
+    }
 	
-	lost_lock.acquire();
-	tlost = lost;
-	lost = 0;
-	lost_lock.release();
-	read_begin = end;
+    lost_lock.acquire();
+    tlost = lost;
+    lost = 0;
+    lost_lock.release();
+    read_begin = end;
 
-	out << -1 << ' ' << tlost << endl;
-    }
-    else { // not active
-	out << "-1 0\n";
-    }
-    out << flush;
+    out << -1 << ' ' << tlost << endl;
+
 }
+
+
 
 // this probably isn't safe in a multitasking environment
 void vjPerfDataBuffer::writeTotal(ostream& out, int preskip, int postskip, float discrep) {

@@ -32,9 +32,17 @@ public:
 	return 0.0;
     }
 
+
+    //: assignment operator
+    inline vjTimeStampNone& operator= (vjTimeStampNone& t2) {
+	return *this;
+    }
+
+
     inline friend ostream& operator << (ostream& out, vjTimeStampNone& ts); {
 	return out;
     }
+
 
     //: returns resolution of timer in microseconds
     inline float getResolution() {
