@@ -297,11 +297,13 @@ void vjConnect::readCommand(ifstream& fin) {
             }
 	}
 	else if (!strcasecmp (s, "chunks")) {
-            while (s = strtok (NULL, " \t\n")) {
-		// ALLEN: THIS IS WHERE THE GUI HAS SENT A COMMAND TO
-		// REMOVE A CHUNK - S IS THE NAME OF THE CHUNK
-		//chunkdb->removeNamed(s);
-            }
+	    vjConfigChunkDB db (vjKernel::instance()->getInitialChunkDB()->getChunkDescDB());
+	    fin >> db;
+	    vjDEBUG(vjDBG_ALL,0) << "EM: message to remove chunks:\n" << db 
+				 << vjDEBUG_FLUSH;
+	    // ALLEN: THIS IS WHERE THE GUI HAS SENT A COMMAND TO
+	    // REMOVE A CHUNK - S IS THE NAME OF THE CHUNK
+	    //chunkdb->removeNamed(s);
 
 	}
 	else
@@ -309,6 +311,7 @@ void vjConnect::readCommand(ifstream& fin) {
 		       << s << endl << vjDEBUG_FLUSH;
     }
 #if 0
+    // obsolete timed update stuff
     else if (!strncasecmp (s, "update", 5))
 	{
 	    s = strtok (NULL, " \t\n");
