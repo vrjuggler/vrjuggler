@@ -46,7 +46,7 @@ namespace vrj
 
 /**
  * vrj::GlApp encapulates an actual OpenGL application object.
- * This class defines the class from which OpenGL-based application classes
+ * This defines the base class from which OpenGL-based application classes
  * should be derived.  The interface given is what the kernel and the OpenGL
  * Draw Manager expect in order to interact with the application.
  *
@@ -98,7 +98,7 @@ public:
     * Function that is called immediately after a new context is created.
     * Use this function to create context-specific data structures such as
     * display lists and texture objects that are known to be required when
-    * the context is created..
+    * the context is created.
     *
     * @pre The OpenGL context has been set to the new context.
     * @post The application has completed context-specific initialization.

@@ -49,7 +49,7 @@ class SoundManager;
 /**
  * Encapsulates the actual application.
  *
- * This class defines the base class for all graphics API-specific application
+ * This defines the base class for all graphics API-specific application
  * object types.  The interface given is what the VR Juggler kernel expects in
  * order to communicate with the application.  Most of the application's
  * interface will be defined in the derived graphics API-specific classes.
