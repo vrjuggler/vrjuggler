@@ -38,8 +38,6 @@
 /set type=dir mode=@DIR_PERMS@ uname=@OWNER_NAME@ gname=@GROUP_NAME@
 .
     test
-        CfgTest
-        ..
         Draw
             OGL
                 analog
@@ -68,29 +66,21 @@
             Pf
             ..
         ..
+        Input
+            cbird
+            ..
+            fob
+            ..
+        ..
         Math
         ..
         Matrix
-        ..
-        Performance
-            analyzer
-            ..
-            perfdatabuffer-test
-            ..
-            timestamp-test
-            ..
         ..
         Quat
         ..
         TestSuite
         ..
         Win32k
-        ..
-        input
-            cbird
-            ..
-            fob
-            ..
         ..
     ..
 ..
