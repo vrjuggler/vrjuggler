@@ -117,8 +117,9 @@ int vjIBox::startSampling()
       void sampleBox(void*);
       myThread = new vjThread(sampleBox, (void*)devicePtr, 0);
       if (!myThread->valid())
-	      return 0; //fail
-      else {
+         return 0; //fail
+      else 
+      {
 	      return 1;
       }
   }
@@ -238,7 +239,7 @@ int vjIBox::stopSampling()
 //        vjAnalog::normalizeMinToMax()
 float vjIBox::getAnalogData( int d )
 {
-    float value = static_cast<float>( theData[current].button[d] );
+    float value = static_cast<float>( theData[current].analog[d] );
     float normalized;
     this->normalizeMinToMax( value, normalized );
     return normalized;
