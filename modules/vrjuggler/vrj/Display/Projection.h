@@ -62,14 +62,14 @@ class VJ_CLASS_API Projection
 {
 public:
    // Eye and type
-   enum
-   {LEFT = 1, RIGHT = 2, SURFACE, SIM};
+   enum Eye
+   {LEFT = 1, RIGHT = 2,};
 
 public:
    Projection()
    {
       //mType = -1;
-      mEye = 0;
+      mEye = LEFT;
       mFocusPlaneDist = 1.0f;
       mViewport = NULL;
    }
@@ -77,7 +77,7 @@ public:
    virtual void config(jccl::ConfigChunkPtr chunk)
    {;}
 
-   void setEye(int _eye)
+   void setEye(Projection::Eye _eye)
    { mEye = _eye; }
 
    int getEye()
@@ -109,7 +109,7 @@ public:
    Frustum   mFrustum;
 
 protected:
-   int mEye;
+   Eye         mEye;
    //int mType;
    Viewport*   mViewport;     /**< The containing viewport for the projection. Used in some projections to get size */
 
