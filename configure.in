@@ -156,6 +156,12 @@ AC_ARG_WITH(pfroot,
                           directory                       [default=/usr]],
             PFROOT="$withval", PFROOT='/usr')
 
+dnl # Define the version of Perfromer to use.
+dnl # The default is 2.4.
+AC_ARG_WITH(pfver,
+            [  --with-pfver=<VER>      Performer version to use        [default=2.4]],
+            PF_VER="$withval", PF_VER='2.4')
+
 dnl # Define the root directory for the OpenGL installation.
 dnl # The default is /usr.
 AC_ARG_WITH(oglroot,
@@ -1212,6 +1218,7 @@ if test "x${_enable_pf_api}" = "xyes" ; then
     _vjsave_CPPFLAGS="$CPPFLAGS"
     _vjsave_INCLUDES="$INCLUDES"
     _vjsave_LDFLAGS="$LDFLAGS"
+    _vjsave_LIBS="$LIBS"
 
     dnl # Ensure that /usr/include and /usr/lib are not included multiple
     dnl # times if $PFROOT is "/usr".
@@ -1223,11 +1230,19 @@ if test "x${_enable_pf_api}" = "xyes" ; then
 
     CFLAGS="$CFLAGS $INCLUDES ${_EXTRA_FLAGS}"
 
+    dnl # We are using Performer 2.[23] as defined by the --with-pfver
+    dnl # command-line argument.
+    if test "x$PF_VER" = "x2.2" -o "x$PF_VER" = "x2.3" ; then
+        pf_ext='_ogl'
+    dnl # We are using Performer 2.4 or newer.
+    else
+        pf_ext=''
+    fi
+
     dnl # On Linux, we have to link all the Performer libraries AND libdl to
     dnl # get the check for pfInit() in libpf to compile.
     if test "$PLATFORM" = "Linux" ; then
-        _vjsave_LIBS="$LIBS"
-        LIBS="$LIBS -lpf_ogl -lpfdu_ogl -lpfui -lpfutil_ogl -ldl"
+        LIBS="$LIBS -lpf$pf_ext -lpfdu$pf_ext -lpfui -lpfutil$pf_ext -ldl"
     fi
 
     dnl # If the Performer library was found, add the API object files to the
@@ -1236,38 +1251,33 @@ if test "x${_enable_pf_api}" = "xyes" ; then
     AC_CHECK_LIB(pf, pfInit,
         AC_CHECK_HEADER(Performer/pf.h,
             [ PERFORMER_API="Y";
-              _PFOGLLIB='-lpf_ogl -lpfdu_ogl -lpfui -lpfutil_ogl';
+              LIBPERFORMER="-lpf$pf_ext -lpfdu$pf_ext -lpfui -lpfutil$pf_ext";
               AC_DEFINE(VJ_API_PERFORMER,) ],
             AC_MSG_WARN(*** Performer API will not be used (pf.h not found) ***)),
         AC_MSG_WARN(*** Performer API will not be used (library not found) ***))
 
-    dnl # Restore $LIBS to its original value if we are using Linux (it was
-    dnl # modified before the previous check block).  Also append -ldl to
-    dnl # $LIBS if the Performer library was found.
-    if test "$PLATFORM" = "Linux" ; then
-        LIBS="${_vjsave_LIBS}"
-
-        if test "x$PERFORMER_API" != "x" ; then
-            _PFOGLLIB="${_PFOGLLIB} -ldl"
-        fi
-    fi
-    
-    dnl # Under Irix users will need -limage to load .flt files 
-    dnl # referencing .sgi images
-    if test "$PLATFORM" = "IRIX" ; then
-            _PFOGLLIB="${_PFOGLLIB} -limage"
-    fi
-
-    dnl # Restore $CFLAGS and $CPPFLAGS now that we are done testing.
-    CFLAGS="${_vjsave_CFLAGS}"
-    CPPFLAGS="${_vjsave_CPPFLAGS}"
-
+    if test "x$PERFORMER_API" != "x" ; then
+        case $PLATFORM in
+            dnl # Under IRIX users will need -limage to load .flt files 
+            dnl # referencing .sgi images.
+            IRIX)
+                LIBPERFORMER="$LIBPERFORMER -limage"
+                ;;
+            dnl Append -ldl to $LIBPERFORMER on Linux.
+            Linux)
+                LIBPERFORMER="$LIBPERFORMER -ldl"
+                ;;
+        esac
     dnl # No Performer API files were added, so restore $INCLUDES and $LDFLAGS
     dnl # so that no OpenGL stuff in included in them.
-    if test "x$PERFORMER_API" = "x" ; then
+    else
         INCLUDES="${_vjsave_INCLUDES}"
         LDFLAGS="${_vjsave_LDFLAGS}"
     fi
+
+    CFLAGS="${_vjsave_CFLAGS}"
+    CPPFLAGS="${_vjsave_CPPFLAGS}"
+    LIBS="${_vjsave_LIBS}"
 fi
 
 dnl # -----------
@@ -1715,7 +1725,7 @@ if test "$OS_TYPE" = "UNIX" ; then
     APP_VJ_LIBS_UTILS="-lJuggler_utils"
     APP_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
     APP_EXTRA_LIBS_GL="${_LIBOPENGL}"
-    APP_EXTRA_LIBS_PF="${_PFOGLLIB}"
+    APP_EXTRA_LIBS_PF="$LIBPERFORMER"
 
     if test "x$PLATFORM" = "xLinux" ; then
         APP_EXTRA_FLAGS_PF="-O $APP_EXTRA_FLAGS_PF"
@@ -1733,7 +1743,7 @@ elif test "$OS_TYPE" = "Win32" ; then
     APP_VJ_LIBS_UTILS='Juggler_utils.lib'
     APP_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
     APP_EXTRA_LIBS_GL="${_LIBOPENGL}"
-    APP_EXTRA_LIBS_PF="${_PFOGLLIB}"
+    APP_EXTRA_LIBS_PF="$LIBPERFORMER"
 fi
 
 dnl # Translate paths from UNIX-style to Win32.
