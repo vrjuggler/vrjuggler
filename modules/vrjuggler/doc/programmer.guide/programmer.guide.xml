@@ -6154,6 +6154,7 @@ private:
    writer-&gt;writeUint32(mIntData);
    writer-&gt;writeInt8(mByteData);
    writer-&gt;writeFloat(mFloatData);
+   return vpr::ReturnStatus();
 }
 
 vpr::ReturnStatus MyType::readObject(vpr::ObjectReader* reader)
@@ -6161,6 +6162,7 @@ vpr::ReturnStatus MyType::readObject(vpr::ObjectReader* reader)
    mIntData   = reader-&gt;readUint32();
    mByteData  = reader-&gt;readInt8();
    mFloatData = reader-&gt;readFloat();
+   return vpr::ReturnStatus();
 }</programlisting>
           </example>
 
@@ -6208,7 +6210,7 @@ vpr::SerializableObjectMixin&lt;SomeType&gt;::
    writer-&gt;writeUint32(getIntData());
    writer-&gt;writeInt8(getByteData());
    write-&gt;writeFloat(getFloatData());
-   return vpr::ReturnStatus::Success;
+   return vpr::ReturnStatus();
 }
 
 template&lt;&gt;
@@ -6219,7 +6221,7 @@ vpr::SerializableObjectMixin&lt;SomeType&gt;::
    setIntData(reader-&gt;readUint32());
    setByteData(reader-&gt;readInt8());
    setFloatData(reader-&gt;readFloat());
-   return vpr::ReturnStatus::Success;
+   return vpr::ReturnStatus();
 }</programlisting>
           </example>
 
