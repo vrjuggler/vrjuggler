@@ -522,7 +522,7 @@ dnl # Ensure that a version of Perl greater than or equal to 5.004 is
 dnl # available.
 chkPerl ( ) {
     if test -x "$1" ; then
-        retval=`$1 -e 'printf("%s\n", (($] >= 5.004) ? 0 : 1))'`
+        retval=`$1 -e "printf("%s\n", (($] >= 5.004) ? 0 : 1))"`
     else
         retval=1
     fi
