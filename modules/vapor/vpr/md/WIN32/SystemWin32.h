@@ -33,21 +33,21 @@
 /*
  * --------------------------------------------------------------------------
  * NOTES:
- *    - This file (vprSystemWin32.h) MUST be included by vprSystemBase.h, 
+ *    - This file (vprSystemWin32.h) MUST be included by vprSystemBase.h,
  *      not the other way around.
  * --------------------------------------------------------------------------
  */
 
-/* this define is the same as the Win32/Posix/NSPR version */
-/* in order to protect against including both */
-#ifndef _VPR_SYSTEM_H_
-#define _VPR_SYSTEM_H_
+#ifndef _VPR_SYSTEM_WIN32_H_
+#define _VPR_SYSTEM_WIN32_H_
 
 #include <vprConfig.h>
 
 #include <stdlib.h>
 #include <windows.h>
 #include <winsock2.h>
+
+#include <SystemBase.h>
 
 
 #ifndef HAVE_GETTIMEOFDAY
@@ -59,7 +59,7 @@ struct timezone {
 
 namespace  {
 
-class System : public SystemBase {
+class SystemWin32 : public SystemBase {
 public:
     // ------------------------------------------------------------------------
     // NOTE:
@@ -97,6 +97,6 @@ public:
 };
 
 }; // End of vpr namespace
- 
+
 
 #endif   /* _VPR_SYSTEM_H_ */
