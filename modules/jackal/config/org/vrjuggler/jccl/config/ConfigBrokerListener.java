@@ -43,23 +43,16 @@ public interface ConfigBrokerListener
    extends EventListener
 {
    /**
-    * Gives notification that a resource was opened in the config broker.
+    * Gives notification that a resource was added to the config broker.
     *
     * @param evt     the config broker event
     */
-   public void resourceOpened(ConfigBrokerEvent evt);
+   public void resourceAdded(ConfigBrokerEvent evt);
 
    /**
-    * Gives notification that a resource was closed in the config broker.
+    * Gives notification that a resource was remove from the config broker.
     *
     * @param evt     the config broker event
     */
-   public void resourceClosed(ConfigBrokerEvent evt);
-
-   /**
-    * Gives notification that a resource was saved in the config broker.
-    *
-    * @param evt     the config broker event
-    */
-   public void resourceSaved(ConfigBrokerEvent evt);
+   public void resourceRemoved(ConfigBrokerEvent evt);
 }
