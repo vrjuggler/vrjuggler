@@ -50,7 +50,16 @@ VJ_INCLUDES	= @APP_INCLUDES@ $(AW_INCLUDES) -I$(srcdir)		\
                   -I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/pf/advanced/nav \
                   -I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/pf/advanced/pfTools
 VJ_LIBS		= @APP_BASIC_LIBS_BEGIN@ @APP_BASIC_LIBS@		\
-                  @APP_VJ_LIBS_GL@ @APP_VJ_LIBS_PF@ $(VJ_AUDIO_LIBS) @APP_BASIC_LIBS_END@
+                  @APP_VJ_LIBS_GL@ @APP_VJ_LIBS_PF@ $(VJ_AUDIO_LIBS) \
+                  @APP_BASIC_LIBS_END@
+
+
+#ifeq (@USE_AUDIOJUGGLER@, Y)
+    VJ_INCLUDES +=  -I$(AJ_BASE_DIR)/include
+    VJ_LIBS += -L$(AJ_BASE_DIR)/lib@LIBBITSUF@ -lAudioJuggler
+    CXXFLAGS += -DUSE_AUDIOJUGGLER
+#endif
+
 
 VJ_LIB_DEPS	= $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler.a		\
                   $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler_ogl.a	\

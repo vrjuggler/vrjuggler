@@ -38,9 +38,12 @@
 #include <Math/vjCoord.h>
 #include <Utils/vjDebug.h>
 #include <Kernel/Pf/vjPfUtil.h>
-#include <Sound/vjSound.h> //juggler sound
 #include <Performer/pf/pfDCS.h>
 #include <Performer/pf/pfTraverser.h>
+
+#ifdef USE_AUDIOJUGGLER
+   #include <aj/AudioJuggler.h>
+#endif
 
 //: Performer-Juggler sound node.
 //  this node automatically updates the Sound's position information.
@@ -55,30 +58,25 @@ public:
    //       mean that it was aquired with a getHandle function... fixme..
    //  who manages this memory?  should be sound manager... but...
    //  what if it wasn't created by the manager?
-   pfSoundNode( vjSound* sound, bool isPositional = true );
+   pfSoundNode( const std::string& soundHandle, bool isPositional = true );
    virtual ~pfSoundNode()
    {
-      // vjSounds recieved with a sound handle are managed by
-      // the sound manager.
-      // TODO: the constructor takes a vjSound, which does not
-      //       mean that it was aquired with a getHandle function... fixme..
-      mSound = NULL;
    }
 
    float mX, mY, mZ;
 
+   // set the listener
    void setObs( float x, float y, float z )
    {
       mX = x; mY = y; mZ = z;
    }
 
-   vjSound& sound()
+   const std::string& sound() const
    {
-      vjASSERT( mSound != NULL );
-      return *mSound;
+      return mSound;
    }
 
-   void setSound( vjSound* sound )
+   void setSound( const std::string& sound )
    {
       mSound = sound;
    }
@@ -107,7 +105,7 @@ public:  // Required for Performer class
 
 private:
    static pfType* classType;
-   vjSound*         mSound;
+   std::string mSound;
    bool mIsPositional;
 };
 

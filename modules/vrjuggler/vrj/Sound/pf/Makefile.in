@@ -57,7 +57,7 @@ endif
 ifeq (@PERFORMER_API@, Y)
 SRCS		= pfSoundNode.cpp
 endif
-
+INCLUDES += -I@top_srcdir@/AudioJuggler
 include $(MKPATH)/dpp.obj.mk
 
 # -----------------------------------------------------------------------------
