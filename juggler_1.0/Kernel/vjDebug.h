@@ -105,12 +105,20 @@
 // vjDEBUG - Outputs debug info
 // vjDEBUG_BEGIN - Starts some indenting of the thread information
 // vjDEBUG_END - Ends the indengint level of the information
+// vjDEBUG_CONT - Continue on the same line (no thread info, no indent)
+// vjDEBUG_NEXT - Outputing more info on next line (no thread info)
+// vjDEBUG_NEXT_BEGIN - Output more infor on next line AND indent one level more
+// vjDEBUG_NEXT_END - Ouput more info on the next line AND decrease indent one level
 #define vjDEBUG(cat,val) if (val>MAX_DBG_LEVEL) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, true)
 #define vjDEBUGlg(cat,val,show_thread,use_indent) if (val>MAX_DBG_LEVEL) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, show_thread, use_indent)
 #define vjDEBUG_BEGIN(cat,val) if (val>MAX_DBG_LEVEL) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, true, true, 1)
 #define vjDEBUG_BEGINlg(cat,val,show_thread,use_indent) if (val>MAX_DBG_LEVEL) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, show_thread, use_indent, 1)
 #define vjDEBUG_END(cat,val) if (val>MAX_DBG_LEVEL) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, true, true, -1)
 #define vjDEBUG_ENDlg(cat,val,show_thread,use_indent) if (val>MAX_DBG_LEVEL) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, show_thread, use_indent, -1)
+#define vjDEBUG_CONT(cat,val) vjDEBUGlg(cat,val,false,false)
+#define vjDEBUG_NEXT(cat,val) vjDEBUGlg(cat,val,false,true)
+#define vjDEBUG_NEXT_BEGIN(cat,val) vjDEBUG_BEGINlg(cat,val,false,true)
+#define vjDEBUG_NEXT_END(cat,val) vjDEBUG_ENDlg(cat,val,false,true)
 
 
 #ifdef LOCK_DEBUG_STREAM

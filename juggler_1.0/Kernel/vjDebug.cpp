@@ -76,9 +76,9 @@ ostream& vjDebug::getStream(int cat, int level, bool show_thread_info, bool use_
 
    //cout << "VJ " << level << ": ";
    if(show_thread_info)
-      cout << vjDEBUG_STREAM_LOCK << setw(6) << vjThread::self() << "  VJ: ";
+      cout << vjDEBUG_STREAM_LOCK << vjThread::self() << " VJ:";
    else
-      cout << vjDEBUG_STREAM_LOCK;
+      cout << vjDEBUG_STREAM_LOCK << "             ";
 
       // Insert the correct number of tabs into the stream for indenting
    if(use_indent)
