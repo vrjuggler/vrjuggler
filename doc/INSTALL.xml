@@ -362,10 +362,10 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
       <section id="config.vrjuggler.section">
         <title>Configuring VR Juggler</title>
 
-        <para>Every time you update the source code acquired from CVS and
-        <command>cvs-gather</command>, it is recommended that you run
-        <command>autogen.sh</command>. This script is found in the top-level
-        <filename>juggler</filename> directory, and it is run as follows:</para>
+        <para>Every time you update the source code acquired from CVS, it is
+        recommended that you run <command>autogen.sh</command>. This script is
+        found in the top-level <filename>juggler</filename> directory, and it
+        is run as follows:</para>
 
         <screen>./autogen.sh</screen>
 
@@ -477,28 +477,16 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
           <title>Using Locally Installed Software</title>
 
           <para>As noted in <xref linkend="source.code.section" />, VR Juggler
-          depends on several external software packages. The
-          <command>cvs-gather</command> tool collects the source code for
-          those packages into the directory <filename>juggler/external</filename>,
-          but some users may already have one or more of these installed
-          locally. For those users, they have the option of referring to the
-          local installation(s) and limiting the work done by
-          <command>cvs-gather</command> (see <xref
-          linkend="cvs-gather.advanced.section" /> for more details).</para>
+          depends on several external software packages. As an example,
+          consider the case where the GMTL library is installed in
+          <filename>/home/user1/pkgs/GMTL</filename> with the headers in
+          <filename>/home/user1/pkgs/GMTL/include</filename>. To use thi
+          installation, run <command>configure.pl</command> as follows:</para>
 
-          <para>As an example, consider the case where the GMTL library is
-          installed in <filename>/usr/local</filename> with the headers in
-          <filename>/usr/local/include</filename>. To use this instead of the
-          version downloaded into <filename>juggler/external</filename>, run
-          <command>configure.pl</command> as follows:</para>
+          <screen>../configure.pl --with-gmtl-prefix=/home/user1/pkgs/GMTL</screen>
 
-          <screen>../configure.pl --with-gmtl-prefix=/usr/local</screen>
-
-          <para>This option could of course be mixed in with those shown in
-          the previous section. In this situation, all paths for the GMTL
-          headers will reference <filename>/usr/local/include</filename>;
-          everything in <filename>juggler/external/GMTL</filename> will be
-          ignored.</para>
+          <para>The --<option>with-gmtl-prefix</option> option could of course
+          be mixed in with those shown in the previous section.</para>
         </section>
       </section>
 
