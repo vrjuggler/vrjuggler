@@ -579,9 +579,8 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
                     child = child.getNextSibling();
                 }
             }
-            else {
+            else
                 iostatus.addWarning ("Unrecognized element '" + name + "'.\n");
-            }
             break;
         case Node.COMMENT_NODE:
         case Node.NOTATION_NODE:
@@ -628,15 +627,12 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
                 // parse child elements
                 child = doc.getFirstChild();
                 while (child != null) {
-                    //buildProperty (ch, child);
-                    parseChunkDescChildElement (desc, child);
+                    parseChunkDescChildElement (desc, child, iostatus);
                     child = child.getNextSibling();
                 }
             }
-            else {
-                System.out.println ("Error: buildChunkDesc - unrecognized element '" + name + "'\n");
-                //retval = false;
-            }
+            else
+                iostatus.addWarning ("Unrecognized element '" + name + "'.\n");
             break;
         case Node.COMMENT_NODE:
         case Node.NOTATION_NODE:
@@ -644,7 +640,7 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         case Node.TEXT_NODE:
             break;
         default:
-            System.out.println ("Unexpected node type...");
+            iostatus.addWarning ("Unrecognized DOM Node type...\n");
         }
 
         return desc;
@@ -657,10 +653,10 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
      *  The children of ChunkDesc nodes include PropertyDesc, help,
      *  and Defaults nodes.
      */
-    private boolean parseChunkDescChildElement (ChunkDesc desc, Node doc) {
+    private void parseChunkDescChildElement (ChunkDesc desc, Node doc,
+                                             ConfigIOStatus iostatus) {
         String name = doc.getNodeName();
         String value = doc.getNodeValue();
-        boolean retval = true;
         Node child;
         String childname;
         String childval;
@@ -705,9 +701,11 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
                 // parse child elements
                 child = doc.getFirstChild();
                 while (child != null) {
-                    parsePropertyDescChildElement (p, child);
+                    parsePropertyDescChildElement (p, child, iostatus);
                     child = child.getNextSibling();
                 }
+                // right here we should add some validation of the new
+                // propertydesc...
                 desc.addPropertyDesc (p);
             }
             else if (name.equalsIgnoreCase ("help")) {
@@ -719,7 +717,9 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
                         h = h + child.getNodeValue();
                         break;
                     default:
-                        System.out.println ("parser confused about an element value: '" + child.getNodeValue() + "'\n");
+                        iostatus.addWarning (
+                            "Unexpected element '" + child.getNodeValue() + 
+                            "' in ChunkDesc help text element.\n");
                     }
                     child = child.getNextSibling();
                 }
@@ -741,21 +741,13 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
                         // it's just white space & crap like that.
                         break;
                     default:
-                        //vjDEBUG(vjDBG_CONFIG,2) << 
-                        //  "Warning: vjXMLConfigIOHandler:"
-                        //  "parsing ChunkDesc defaults value: "
-                        //  "Unexpected DOM Node.\n" << vjDEBUG_FLUSH;
+                        iostatus.addWarning ("Unrecognized DOM Node type...\n");
                     }
                     child = child.getNextSibling();
                 }
-                //vjDEBUG(vjDBG_CONFIG,2) << 
-                //  "Warning: vjXMLConfigIOHandler: parsing ChunkDesc Defaults: "
-                //  "No argument for <Defaults> tag.\n" << vjDEBUG_FLUSH;
             }
-            else {
-                System.out.println ("whoa... unexpected element " + name);
-                retval = false;
-            }
+            else
+                iostatus.addWarning ("Unrecognized element '" + name + "'.\n");
             break;
         case Node.COMMENT_NODE:
         case Node.NOTATION_NODE:
@@ -763,10 +755,8 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         case Node.TEXT_NODE:
             break;
         default:
-            System.out.println ("Unexpected node type...");
+            iostatus.addWarning ("Unrecognized DOM Node type...\n");
         }
-
-        return retval;
     }
 
 
@@ -776,10 +766,10 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
      *  The children of a PropertyDesc node include label, enumeration,
      *  and help nodes.
      */
-    private boolean parsePropertyDescChildElement (PropertyDesc p, Node doc) {
+    private void parsePropertyDescChildElement (PropertyDesc p, Node doc,
+                                                ConfigIOStatus iostatus) {
         String name = doc.getNodeName();
         String value = doc.getNodeValue();
-        boolean retval = true;
         Node child;
         String childname;
         String childval;
@@ -799,7 +789,8 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
                     if (childname.equalsIgnoreCase ("name"))
                         enumname = child.getNodeValue();
                     else
-                        System.out.println ("unidentified attribute: " + childname);
+                        iostatus.addError ("Unidentified attribute: '" +
+                                           childname + "' in value label.\n");
                 }
                 if (!enumname.equals(""))
                     p.appendValueLabel (enumname);
@@ -818,7 +809,8 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
                     else if (childname.equalsIgnoreCase ("value"))
                         enumval = child.getNodeValue();
                     else
-                        System.out.println ("unidentified attribute: " + childname);
+                        iostatus.addError ("Unidentified attribute: '" +
+                                           childname + "' in enumeration label.\n");
                 }
                 if (!enumname.equals(""))
                     p.appendEnumeration (enumname, enumval);
@@ -833,16 +825,16 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
                         h = h + child.getNodeValue();
                         break;
                     default:
-                        System.out.println ("parser confused about an element value: '" + child.getNodeValue() + "'\n");
+                        iostatus.addWarning (
+                            "Unexpected element '" + child.getNodeValue() + 
+                            "' in PropertyDesc help text element.\n");
                     }
                     child = child.getNextSibling();
                 }
                 p.setHelp (h);
             }
-            else {
-                System.out.println ("whoa... unexpected element " + name);
-                retval = false;
-            }
+            else
+                iostatus.addWarning ("Unrecognized element '" + name + "'.\n");
             break;
         case Node.COMMENT_NODE:
         case Node.NOTATION_NODE:
@@ -850,10 +842,8 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         case Node.TEXT_NODE:
             break;
         default:
-            System.out.println ("Unexpected node type...");
+            iostatus.addWarning ("Unrecognized DOM Node type...\n");
         }
-
-        return retval;
     }
 
 
