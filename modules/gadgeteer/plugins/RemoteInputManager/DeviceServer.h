@@ -39,15 +39,6 @@
 #include <vpr/Sync/Semaphore.h>
 #include <vpr/Thread/Thread.h>
 
-
-// TODO: Remove this header by moving all needed data to a new location
-//#include <gadget/RemoteInputManager/NetUtils.h>
-//#include <gadget/RemoteInputManager/NetDevice.h>
-//#include <vpr/IO/BufferObjectWriter.h>
-//#include <vpr/IO/BufferObjectReader.h>
-//#include <jccl/RTRC/ConfigChunkHandler.h>
-//#include <gadget/RemoteInputManager/ClusterSync.h>
-
 namespace cluster
 {
    class ClusterNode;

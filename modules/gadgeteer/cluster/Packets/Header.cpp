@@ -34,11 +34,6 @@
 #include <cluster/Packets/Header.h>
 #include <gadget/Util/Debug.h>
 
-// REMOVE SOON
-
-//#include <gadget/RemoteInputManager/IO/Packet.h>
-
-
 namespace cluster
 {  
    Header::Header(vpr::Uint16 RIM_code, vpr::Uint16 packet_type, 

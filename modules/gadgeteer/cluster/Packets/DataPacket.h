@@ -49,8 +49,6 @@
 #define _GADGET_RIM_DATA_PACKET_H
 
 #include <vpr/vprTypes.h>
-#include <vpr/IO/BufferObjectReader.h>
-#include <vpr/IO/BufferObjectWriter.h>
 #include <vpr/IO/Socket/SocketStream.h>
 
 #include <gadget/gadgetConfig.h>

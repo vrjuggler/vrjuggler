@@ -36,14 +36,12 @@
 #include <vpr/Util/Singleton.h>
 
 #include <gadget/gadgetConfig.h>
-#include <gadget/Type/DeviceFactory.h>
 
 // Must implement the Abstract Base Class in order to be a manager used on the ClusterNetwork
 #include <cluster/ClusterPlugin.h>
 
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ConfigChunkPtr.h>
-#include <jccl/RTRC/ConfigChunkHandler.h>
 
 #include <map>
 

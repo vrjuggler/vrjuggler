@@ -34,7 +34,6 @@
 #define _CLUSTER_USER_DATA_H
 
 #include <gadget/gadgetConfig.h>
-#include <cluster/Plugins/ApplicationDataManager/ApplicationDataManager.h>
 #include <cluster/Plugins/ApplicationDataManager/ApplicationData.h>
 #include <cluster/SerializableData.h>
 #include <vpr/IO/SerializableObject.h>

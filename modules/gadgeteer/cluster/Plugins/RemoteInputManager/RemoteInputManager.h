@@ -72,7 +72,16 @@ public:
    {
       return mPluginGUID;
    }
-
+   
+   /**
+    * This function is called when the  ClusterNetwork losses
+    * a connection to a ClusterNode. The RemoteInputManager
+    * needs to handle this by removing all VirtualDevices on 
+    * the lost node. And removing the node as a client from 
+    * all DeviceServers.
+    */
+   void recoverFromLostNode(ClusterNode* lost_node);
+   
    /**
     * Handle a incoming packet.
     */

@@ -40,7 +40,6 @@
 #include <vpr/IO/BufferObjectWriter.h>
 #include <vpr/IO/BufferObjectReader.h>
 #include <cluster/ClusterDelta.h>
-//#include <gadget/RemoteInputManager/NetUtils.h>
 #include <gmtl/Math.h>
 
 

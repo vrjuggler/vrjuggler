@@ -65,6 +65,13 @@ public:
     */
    virtual void handlePacket(Packet* packet, ClusterNode* node) = 0;
    
+   /**
+    * Virtual function used to inform all plugins that the ClusterNetwork
+    * has lost its connection to the given ClusterNode.
+    */
+   virtual void recoverFromLostNode(ClusterNode* lost_node)
+   {;}
+
    virtual void load();
    void setActive(bool active);
    bool isActive();

@@ -36,9 +36,6 @@
 
 #include <gadget/InputManager.h>
 #include <gadget/Type/Input.h>
-#include <cluster/Plugins/RemoteInputManager/RemoteInputManager.h>
-#include <cluster/Plugins/RemoteInputManager/DeviceServer.h>
-#include <cluster/Packets/DeviceAck.h>
 #include <cluster/ClusterNetwork/ClusterNode.h>
 #include <jccl/RTRC/ConfigManager.h>
 

@@ -34,10 +34,6 @@
 #include <cluster/Packets/ApplicationDataRequest.h>
 #include <gadget/Util/Debug.h>
 
-#include <cluster/ClusterManager.h>
-#include <cluster/Plugins/ApplicationDataManager/ApplicationDataManager.h>
-#include <cluster/Plugins/ApplicationDataManager/ApplicationDataServer.h>
-#include <cluster/Packets/ApplicationDataAck.h>
 #include <cluster/ClusterNetwork/ClusterNode.h>
 
 namespace cluster
