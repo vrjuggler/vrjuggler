@@ -802,8 +802,8 @@ def installSonix(prefix):
 def installSonixPlugins(prefix):
    print "Installing Sonix plug-ins ..."
 
-   destdir_dbg = os.path.join(prefix, 'lib', 'snx', 'dbg')
-   destdir_opt = os.path.join(prefix, 'lib', 'snx', 'opt')
+   destdir_dbg = os.path.join(prefix, 'lib', 'snx', 'plugins', 'dbg')
+   destdir_opt = os.path.join(prefix, 'lib', 'snx', 'plugins', 'opt')
 
    srcroot = os.path.join(juggler_dir, 'vc7', 'Sonix', 'OpenAL')
    installLibs(srcroot, destdir_dbg, ['DebugDLL'], ['.dll'])
