@@ -219,11 +219,13 @@ endif
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(VPRROOT_ABS)/ChangeLog $(prefix)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(VPRROOT_ABS)/COPYING $(prefix)
+          $(VPRROOT_ABS)/COPYING.txt $(prefix)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(VPRROOT_ABS)/README $(prefix)
+          $(VPRROOT_ABS)/INSTALL.txt $(prefix)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(VPRROOT_ABS)/INSTALL $(prefix)
+          $(VPRROOT_ABS)/README.txt $(prefix)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(VPRROOT_ABS)/RELEASE_NOTES.txt $(prefix)
 	@echo "Build time: `LTIME=C date`" > $(prefix)/BUILD_TIME
 	@echo "==============================================================="
 	@echo ">>> VPR make release started on $(STARTTIME)"

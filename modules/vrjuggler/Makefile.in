@@ -221,13 +221,13 @@ endif
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(VJROOT_ABS)/ChangeLog $(prefix)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(VJROOT_ABS)/COPYING $(prefix)
+          $(VJROOT_ABS)/COPYING.txt $(prefix)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(VJROOT_ABS)/README $(prefix)
+          $(VJROOT_ABS)/INSTALL.txt $(prefix)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(VJROOT_ABS)/INSTALL $(prefix)
+          $(VJROOT_ABS)/README.txt $(prefix)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(VJROOT_ABS)/RELEASE_NOTES $(prefix)
+          $(VJROOT_ABS)/RELEASE_NOTES.txt $(prefix)
 	@echo "Build time: `LTIME=C date`" > $(prefix)/BUILD_TIME
 	@echo "==============================================================="
 	@echo ">>> VR Juggler make release started on $(STARTTIME)"
