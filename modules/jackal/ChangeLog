@@ -1,7 +1,14 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
-Jun-03-2003 browner     removed the perfMonitor stuff so we could rewrite it
-                        from scratch
+Jul-10-2003 nonchocoboy Merged everything from jccl_config_refactor_branch.
+                        Among other things, this officially renames "config
+                        chunk" to "config element" and "chunk desc" to
+                        "config definition."  The configuration and definition
+                        file formats have changed extensively as part of this.
+                        NEW VERSION: 0.12.0
+Jun-03-2003 browner     Removed the perfMonitor stuff so we could rewrite it
+                        from scratch.
+                        NEW VERSION: 0.11.0
 May-20-2003 patrickh    configure.in requries Autoconf 2.53 or newer.
 May-06-2003 patrickh    Restored the ability to read symbolic values from
                         configuration files where value enumerations are used.
