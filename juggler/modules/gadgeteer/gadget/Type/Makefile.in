@@ -57,7 +57,7 @@ SRCS=		Analog.cpp			\
 		DeviceFactory.cpp		\
 		BaseTypeFactory.cpp		\
 		DeviceInterface.cpp		\
-      Digital.cpp \
+		Digital.cpp			\
 		DigitalProxy.cpp		\
 		Input.cpp			\
 		KeyboardProxy.cpp		\
