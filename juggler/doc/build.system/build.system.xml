@@ -1009,13 +1009,13 @@ include ../docbook.mk
          <glossentry id="gloss.autoconf">
             <glossterm>Autoconf</glossterm>
             <glossdef>
-               <para>Blah blah</para>
+               <para>A tool used to generate cross-platform shell scripts that test the functionality of software development tools such as compilers and of local software installations. The results of the tests can be used to configure a software build system to work with the local system setup. Autoconf-generated scripts aid in the development of cross-platform software by detecting and managing platform-specific idiosyncracies. Autoconf is part of the GNU software distribution.</para>
             </glossdef>
          </glossentry>
          <glossentry id="gloss.automake">
             <glossterm>Automake</glossterm>
             <glossdef>
-               <para>Blah blah</para>
+               <para>A tool used in conjunction with Autoconf to generate complex makefiles from simple input files. Automake is part of the GNU software distribution.</para>
             </glossdef>
          </glossentry>
       </glossdiv>
@@ -1051,7 +1051,14 @@ include ../docbook.mk
          <glossentry id="gloss.idl-compiler">
             <glossterm>IDL compiler</glossterm>
             <glossdef>
-               <para>A software tool that reads an IDL file and generates code in a specific language (e.g., Java, C++, Smalltalk, etc.). This code may be anything, but typically, it is stub or skeleton code that is extended by user-defined code that completes the interface implementation.</para>
+               <para>A software tool that reads an <glossterm linkend="gloss.idl">IDL</glossterm> file and generates code in a specific language (e.g., Java, C++, Smalltalk, etc.). This code may be anything, but typically, it is stub or skeleton code that is extended by user-defined code that completes the interface implementation.</para>
+            </glossdef>
+         </glossentry>
+         <glossentry id="gloss.idl">
+            <glossterm>Interface Definition Language</glossterm>
+            <acronym>IDL</acronym>
+            <glossdef>
+               <para>The Interface Definition Language is a simple language used to define the interface (or signature) an object will have. An interface is composed solely of methods (functions) that may be invoked on an object (data element). No data members are present in the interface definition. IDL is not tied to a specific language but instead must be compiled into another language where the interface will be implemented.</para>
             </glossdef>
          </glossentry>
       </glossdiv>
@@ -1076,9 +1083,10 @@ include ../docbook.mk
       <glossdiv>
          <title>X</title>
          <glossentry id="gloss.xslt">
-            <glossterm>XSLT</glossterm>
+            <glossterm>XSL Transformations</glossterm>
+            <acronym>XSLT</acronym>
             <glossdef>
-               <para></para>
+               <para>One of two parts that make up the Extensible Stylesheet Language (XSL). This part defines an XML-based programming language used to perform transfroms on XML documents.</para>
             </glossdef>
          </glossentry>
       </glossdiv>
