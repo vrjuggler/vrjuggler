@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<control_panel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.1/beanlist.xsd"
-          title="Choose a category">
+<control_panel title="Choose a category">
    <category label="Display" title="Choose a display"
              icon="org/vrjuggler/vrjconfig/images/display64.png">
       <wizard label="Test wizard"
