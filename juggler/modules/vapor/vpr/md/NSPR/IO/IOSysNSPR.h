@@ -34,15 +34,18 @@
 #define _VPR_IOSYS_NSPR_H_
 
 #include <vprConfig.h>
+#include <IO/IOSysBase.h>
+
+#include <prio.h>
 
 namespace vpr {
 
 // Base class for all for the IOSys class.
 // The "real" impl is in an included file.
-class IOSysNSPR
+class IOSysNSPR : public IOSysBase
 {
 public:
-
+   typedef PRFileDesc* Handle;
 };
 
 

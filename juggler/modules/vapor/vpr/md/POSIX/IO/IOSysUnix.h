@@ -43,7 +43,7 @@ namespace vpr {
 class IOSysUnix
 {
 public:
-
+   typedef int Handle;
 };
 
 
