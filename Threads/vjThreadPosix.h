@@ -230,7 +230,16 @@ public:
     virtual int
     setRunOn (int cpu) {
 #ifdef VJ_OS_IRIX
-        return pthread_setrunon_np(cpu);
+        int ret_val;
+
+        if ( mScope == PTHREAD_SCOPE_SYSTEM ) {
+            ret_val = pthread_setrunon_np(cpu);
+        } else {
+            cerr << "This thread is not a system-scope thread!\n";
+            ret_val = -1;
+        }
+
+        return ret_val;
 #else
         cerr << "vjThreadPosix::setRunOn(): Not available on this system.\n";
 
@@ -259,7 +268,16 @@ public:
     virtual int
     getRunOn (int* cur_cpu) {
 #ifdef VJ_OS_IRIX
-        return pthread_getrunon_np(cur_cpu);
+        int ret_val;
+
+        if ( mScope == PTHREAD_SCOPE_SYSTEM ) {
+            ret_val = pthread_getrunon_np(cur_cpu);
+        } else {
+            cerr << "This thread is not a system-scope thread!\n";
+            ret_val = -1;
+        }
+
+        return ret_val;
 #else
         cerr << "vjThreadPosix::getRunOn(): Not available on this system.\n";
 
