@@ -29,7 +29,6 @@ void XMLReaderWriterTest::testBasicWriteRead()
    vpr::Uint64 read_uint64;
    float       read_float;
    double      read_double;
-   vpr::Uint8  read_str_len;
    std::string read_string;
    std::string read_string_attrib;
    std::string read_long_string;
@@ -86,15 +85,15 @@ void XMLReaderWriterTest::testBasicWriteRead()
          xml_reader.readUint64(read_uint64);
          xml_reader.beginTag("LargeNumberLevel");
             xml_reader.readFloat(read_float);
-            xml_reader.beginAttribute("StringAttrib");
-               xml_reader.readString(read_string_attrib, read_str_len);
+            xml_reader.beginAttribute("String Attrib");
+               xml_reader.readString(read_string_attrib);
             xml_reader.endAttribute();
             xml_reader.readDouble(read_double);
          xml_reader.endTag();
-         xml_reader.readString(read_string, read_str_len);
+         xml_reader.readString(read_string);
          xml_reader.readBool(read_bool);
          xml_reader.beginTag("DataLevel");
-            xml_reader.readString(read_long_string, 0);
+            xml_reader.readString(read_long_string);
          xml_reader.endTag();
       xml_reader.endTag();
    }
