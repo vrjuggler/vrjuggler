@@ -55,7 +55,7 @@ TEMPLATES_INT	= ${PERCEPS_DIR}/templates/internal
 TEMPLATES_PUB	= ${PERCEPS_DIR}/templates/public
 
 # Fill these two in!!  Together, they form the installation prefix.
-webroot=	${HOME}/public_html/phpjug
+webroot=	${HOME}/public_html/jugglerweb
 instdir=	vrjuggler/1.0/programmer.reference
 
 prefix_pub=	${webroot}/${instdir}

@@ -47,7 +47,7 @@ OUT_EX = ./ex_html
 JAVA_CLASS = $(PERCEPS_DIR)/classes
 
 # Fill these two in!!  Together, they form the installation prefix.
-webroot=	$(HOME)/public_html/phpjug
+webroot=	$(HOME)/public_html/jugglerweb
 instdir=	vrjuggler/1.0/programmer.reference
 
 prefix_pub=	$(webroot)/$(instdir)
