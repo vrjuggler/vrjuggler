@@ -258,7 +258,7 @@ pre-install:
 
 # Do everything needed after installing the library binaries.
 post-install:
-	@$(MAKE) install-test
+#	@$(MAKE) install-test
 	@$(MAKE) install-m4
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/vpr-config $(bindir)
