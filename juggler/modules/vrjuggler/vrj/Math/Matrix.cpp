@@ -142,6 +142,118 @@ void vjMatrix::makeZXYEuler(float zRot, float xRot, float yRot)
    zeroClamp();     // Clamp ~ zero values
 }
 
+//: extract the yaw information from the matrix
+//  returned value is from -180 to 180, where 0 is none
+float vjMatrix::getYaw() const
+{
+   const vjVec3 forwardPoint( 0, 0, -1 );
+   const vjVec3 originPoint( 0, 0, 0 );
+   vjVec3 endPoint, startPoint;
+   endPoint.xformFull( *this, forwardPoint );
+   startPoint.xformFull( *this, originPoint );
+   vjVec3 directionVector = endPoint - startPoint;
+
+   // constrain the direction to x/z plane only
+   directionVector[1] = 0.0f;
+   directionVector.normalize();
+   float yaw = VJ_RAD2DEG( acosf(directionVector.dot( forwardPoint )) );
+   vjVec3 whichSide = directionVector.cross( forwardPoint );
+   if (whichSide[1] > 0.0f)
+      yaw = -yaw;
+
+   return yaw;
+}
+
+//: extract the pitch information from the matrix
+//  returned value is from -180 to 180, where 0 none
+float vjMatrix::getPitch() const
+{
+   const vjVec3 forwardPoint( 0, 0, -1 );
+   const vjVec3 originPoint( 0, 0, 0 );
+   vjVec3 endPoint, startPoint;
+   endPoint.xformFull( *this, forwardPoint );
+   startPoint.xformFull( *this, originPoint );
+   vjVec3 directionVector = endPoint - startPoint;
+
+   // constrain the direction to y/z plane only
+   directionVector[0] = 0.0f;
+   directionVector.normalize();
+   float yaw = VJ_RAD2DEG( acosf(directionVector.dot( forwardPoint )) );
+   vjVec3 whichSide = directionVector.cross( forwardPoint );
+   if (whichSide[1] > 0.0f)
+      yaw = -yaw;
+
+   return yaw;
+}
+
+//: extract the roll information from the matrix
+//  returned value is from -180 to 180, where 0 is no roll
+float vjMatrix::getRoll() const
+{
+   const vjVec3 upPoint( 0, 1, 1 );
+   const vjVec3 originPoint( 0, 0, 0 );
+   vjVec3 endPoint, startPoint;
+   endPoint.xformFull( *this, upPoint );
+   startPoint.xformFull( *this, originPoint );
+   vjVec3 directionVector = endPoint - startPoint;
+
+   // constrain the direction to x/y plane only
+   directionVector[2] = 0.0f;
+   directionVector.normalize();
+   float yaw = VJ_RAD2DEG( acosf(directionVector.dot( upPoint )) );
+   vjVec3 whichSide = directionVector.cross( upPoint );
+   if (whichSide[1] > 0.0f)
+      yaw = -yaw;
+
+   return yaw;
+}
+
+// constrain the matrix rotation to a certain axis or axes
+// result returned is a constrained matrix.
+void vjMatrix::constrainRotAxis( const bool& usePitch, const bool& useYaw, const bool& useRoll, vjMatrix& result )
+{
+   // temporary matrix
+   vjMatrix constrainedMatrix;
+   
+   // Restrict the rotation to only the axis specified
+   float xRot, yRot, zRot;
+   vjVec3 xAxis( 1, 0, 0 ), yAxis( 0, 1, 0 ), zAxis( 0, 0, 1 );
+   
+   // Add back the translation:
+   vjVec3 trans;
+   this->getTrans( trans[0],trans[1],trans[2] );
+   constrainedMatrix.makeTrans( trans[0],trans[1],trans[2] );
+   
+   // Add back pure pitch
+   if (usePitch) // allow rotation about X
+   {
+      vjMatrix mx;
+      xRot = this->getPitch();
+      mx.makeRot( xRot, xAxis );
+      constrainedMatrix.preMult( mx );
+   }
+   
+   // Add back pure yaw
+   if (useYaw) // allow rotation about Y
+   {
+      vjMatrix my;
+      yRot = this->getYaw();
+      my.makeRot( yRot, yAxis );
+      constrainedMatrix.postMult( my );
+   }
+   
+   // Add back pure roll
+   if (useRoll) // allow rotation about Z
+   {
+      vjMatrix mz;
+      zRot = this->getRoll();
+      mz.makeRot( zRot, zAxis );
+      constrainedMatrix.preMult( mz );
+   }
+   
+   result.copy( constrainedMatrix );
+}
+
 void vjMatrix::getZXYEuler(float& zRot, float& xRot, float& yRot)
 {
    // Extract the rotation directly fromt he matrix
