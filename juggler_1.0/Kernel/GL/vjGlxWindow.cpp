@@ -319,11 +319,12 @@ void vjGlxWindow::config(vjDisplay* _display)
 {
    // Convert to glx windows
    std::vector<vjGlxWindow*> glx_wins;
+   unsigned int i;
 
    if(wins.size() <= 0)
       vjDEBUG(vjDBG_ERROR,0) << "WARNING: createHardwareSwapGroup called with no windows\n" << vjDEBUG_FLUSH;
 
-   for(unsigned int i=0;i<wins.size();i++)
+   for(i=0;i<wins.size();i++)
    {
       vjGlxWindow* glx_win = dynamic_cast<vjGlxWindow*>(wins[i]);
       vjASSERT(glx_win != NULL);    // Make sure we have the right type
