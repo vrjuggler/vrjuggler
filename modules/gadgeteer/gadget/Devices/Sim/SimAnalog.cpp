@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/Devices/Sim/SimAnalog.h>
-
+#include <gmtl/Math.h>
 
 namespace gadget
 {
@@ -76,15 +76,14 @@ bool SimAnalog::config(jccl::ConfigChunkPtr chunk)
    mSimKeysDown = readKeyList(key_dec_list);
 
    mAnaStep = chunk->getProperty<float>( "anastep" );
-   mInitialValue = chunk->getProperty<float>("inital_value");
+   mInitialValue = chunk->getProperty<float>("initial_value");
 
    // Initialize all the data to the inital_value
    size_t num_pairs = mSimKeysUp.size();
+   mAnaData = std::vector<AnalogData>(num_pairs);
    for (size_t i=0; i<num_pairs; ++i)
    {
-      AnalogData data;
-      data.setAnalog(mInitialValue);
-      mAnaData.push_back(data);
+      mAnaData[i].setAnalog(mInitialValue);
    }
 
    return true;
@@ -93,6 +92,9 @@ bool SimAnalog::config(jccl::ConfigChunkPtr chunk)
 void SimAnalog::updateData()
 {
    //vprDEBUG(vprDBG_ALL,4)<<"*** SimAnalog::updateData()\n"<< vprDEBUG_FLUSH;
+
+   // Make an list of the data that will be normalized
+   std::vector<AnalogData> norm_data(mAnaData.size());
 
    // -- Update analog data --- //
    for (unsigned int i = 0; i < mSimKeysUp.size(); ++i)
@@ -103,20 +105,20 @@ void SimAnalog::updateData()
       mAnaData[i].setAnalog(mAnaData[i].getAnalog()
                                 - (float)checkKeyPair(mSimKeysDown[i]) * mAnaStep);
 
-      if (mAnaData[i].getAnalog() < 0.0f)
-      {   mAnaData[i].setAnalog(0.0f); }
-      if (mAnaData[i].getAnalog() > 255.0f)
-      {  mAnaData[i].setAnalog(255.0f); }
+      // Clamp to the min/max range
+      mAnaData[i].setAnalog(gmtl::Math::clamp(mAnaData[i].getAnalog(),
+                                              getMin(), getMax()));
 
-      float f;
-      this->normalizeMinToMax( mAnaData[i].getAnalog(), f );
-      mAnaData[i] = f;
+      float normalized_value;
+      normalizeMinToMax(mAnaData[i].getAnalog(), normalized_value);
 
-      mAnaData[i].setTime();     // Set the sample time
+      // Set the normalized data
+      norm_data[i] = normalized_value;
+      norm_data[i].setTime();
    }
 
    // Locks and then swaps the indices.
-   addAnalogSample(mAnaData);
+   addAnalogSample(norm_data);
    swapAnalogBuffers();
 }
 
