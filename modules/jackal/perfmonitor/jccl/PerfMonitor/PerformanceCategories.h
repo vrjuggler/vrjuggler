@@ -65,7 +65,7 @@ private:
         bool        mActive;
     };
 
-    typedef std::map<vpr::GUID, CategoryInfo > category_map_t;
+    typedef std::map<const vpr::GUID*, CategoryInfo > category_map_t;
     category_map_t mCategories; 
     
     bool mActive;
@@ -161,7 +161,7 @@ struct PerfCatRegistrator
 }; // namespace jccl
 
 // Perf measurement internal to jackal itself
-const vpr::GUID jcclPERF_JACKAL ("29ecd55b-e68e-40ce-9db2-99e7682b36b4");
-const vpr::GUID jcclPERF_ALL ("0b6b599c-f90c-43f6-8fbb-08454dd78872");
+extern const vpr::GUID jcclPERF_JACKAL;// ("29ecd55b-e68e-40ce-9db2-99e7682b36b4");
+extern const vpr::GUID jcclPERF_ALL;// ("0b6b599c-f90c-43f6-8fbb-08454dd78872");
 
 #endif
