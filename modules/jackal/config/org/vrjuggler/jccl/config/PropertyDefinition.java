@@ -619,7 +619,7 @@ public class PropertyDefinition
 
    /**
     * A list of all the allowed types. This is only used if the value type is
-    * ChunkPointer.class.
+    * ConfigElementPointer.class.
     */
    private List mAllowedTypes;
 

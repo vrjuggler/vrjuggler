@@ -373,7 +373,7 @@ public class ResourceChooser
          {
             fireIntervalRemoved(this, 0, index1);
          }
-         // Notify listeners of the new chunk descs
+         // Notify listeners of the new config definitions
          if (this.resources.size() > 0)
          {
             fireIntervalAdded(this, 0, this.resources.size()-1);
