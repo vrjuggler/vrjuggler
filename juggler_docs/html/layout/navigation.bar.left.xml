@@ -21,7 +21,7 @@ Builder: JExplorerBuilder V 1. 0. 7
                 < item title="VRJ Performance: IPT 2000 (powerpoint format)." info="IPT 2000 (ppt format)" link="${PUB}/cj.ipt2k.ppt" image="Leaf.gif" >
                 < item title="VR Juggler: A Framework for VR Development, 1998. IPT 98" info="A paper accepted at IPT: VR Juggler: A Framework for VR Development, 1998. IPT 98" link="${PUB}/vr.juggler.framework.for.vr.dev.1998.IPT98.pdf" image="Leaf.gif" >
                 < item title="VR Development Tools, 1998.  SIGGRAPH 98" info="A paper accepted at SIGGRAPH: VR Development Tools, 1998.  SIGGRAPH 98" link="${PUB}/vr.dev.tools.1998.SIGGRAPH98.pdf" image="Leaf.gif" >
-                < item title="Learning VR Juggler.  VRAC 99" info="A presentation given at VRAC: Learning VR Juggler.  VRAC 99" link="publications/howtoprogramjuggler/index.html" image="slide.gif" >
+                < item target="_top" rtarget="NewWindow" title="Learning VR Juggler.  VRAC 99" info="A presentation given at VRAC: Learning VR Juggler.  VRAC 99" link="publications/howtoprogramjuggler/index.html" image="slide.gif" >
     </folder>
 
     < item title="User Community" link="contact.info/usercommunity.html"  info="Can't find it in the Books?  Reach out and ask someone." image="Chat.gif" >
