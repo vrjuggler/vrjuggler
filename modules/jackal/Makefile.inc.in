@@ -50,7 +50,7 @@ top_srcdir=	@top_srcdir@
 DBG_FLAGS=	-D_DEBUG @DBG_FLAGS@
 OPT_FLAGS=	-D_OPT @OPT_FLAGS@
 
-HAVE_TWEEK_CXX=		@HAVE_TWEEK_CXX@
+HAVE_TWEEK_CXX=	@HAVE_TWEEK_CXX@
 
 BUILD_JAVA=	@BUILD_JAVA@
 JDOM_JAR=	@JDOM_JAR@
@@ -75,8 +75,12 @@ SHLIB_MAJOR=	@MAJOR_VERSION@
 SHLIB_MINOR=	@MINOR_VERSION@
 SHLIB_MICRO=	@MICRO_VERSION@
 
+# We do not do version numbering for dynamic libraries on Win32.
 ifneq (@OS_TYPE@, Win32)
 DYNAMICLIB_VER=	.$(SHLIB_MAJOR).$(SHLIB_MINOR).$(SHLIB_MICRO)
+# But we will name the static libraries differently than the dynamic libraries.
+else
+STATIC_SUFFIX=	_s
 endif
 
 STATICLIB_EXT=	@STATICLIB_EXT@
@@ -90,9 +94,9 @@ DYNAMIC_LIBS=	$(LIBS)
 # Dependencies for each of the various dynamic libraries we build.
 DYLIB_DEPS_JCCL=	@DYLIB_DEPS_JCCL@
 DYLIB_PROF_DEPS_JCCL=	@DYLIB_PROF_DEPS_JCCL@
-JCCL_LIB_STATIC=	$(JCCL_LIBRARY).$(STATICLIB_EXT)
+JCCL_LIB_STATIC=	$(JCCL_LIBRARY)$(STATIC_SUFFIX).$(STATICLIB_EXT)
 JCCL_LIB_DYNAMIC=	$(JCCL_LIBRARY).$(DYNAMICLIB_EXT)
-JCCL_PROF_LIB_STATIC=	$(JCCL_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
+JCCL_PROF_LIB_STATIC=	$(JCCL_LIBRARY)$(PROFLIB_EXT)$(STATIC_SUFFIX).$(STATICLIB_EXT)
 JCCL_PROF_LIB_DYNAMIC=	$(JCCL_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
 
 # Version information.
@@ -148,7 +152,6 @@ endif
 # Construct the static version of the libraries.
 # -----------------------------------------------
 $(LIBDIR)/$(JCCL_LIB_STATIC) $(LIBDIR)/$(JCCL_PROF_LIB_STATIC): $(OBJDIR)/../*/*.$(OBJEXT)
-ifneq (@OS_TYPE@, Win32)
 	@echo BUILDDIR_BASE=$(BUILDDIR_BASE)
 	@echo BUILDDIR=$(BUILDDIR)
 	@echo BASE_OBJDIR=$(BASE_OBJDIR)
@@ -163,7 +166,6 @@ ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
-endif
 
 # ------------------------------------------------
 # Construct the dynamic version of the libraries.
