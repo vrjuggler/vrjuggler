@@ -161,6 +161,10 @@ public:
       return m_open;
    }
 
+   bool isBound() const
+   {  return m_bound; }
+
+
    /**
     * Binds this socket to the address in the host address member variable.
     *
