@@ -464,8 +464,10 @@
          <head_position>VJHead</head_position>
          <interocular_distance>0.069</interocular_distance>
       </user>
-      <input_manager name="Input Manager" version="1">
-         <driver>${VJ_BASE_DIR}/lib32/gadgeteer/drivers/Flock_drv.so</driver>
+      <input_manager name="Input Manager" version="2">
+         <driver_path>${VJ_BASE_DIR}/lib/gadgeteer/drivers</driver_path>
+         <driver_path>${VJ_BASE_DIR}/lib32/gadgeteer/drivers</driver_path>
+         <driver>Flock_drv</driver>
       </input_manager>
       <flock name="Flock_o_Birds" version="1">
          <port>/dev/ttyd3</port>
