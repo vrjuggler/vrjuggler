@@ -430,7 +430,7 @@ if test "x${_with_vrpn}" != "xno" ; then
    fi
 
    if test "x$OS_TYPE" = "xWin32" ; then
-      TEST_VRPN_LDFLAGS="/libpath\"$VRPNROOT/quat/$VRPNLIBDIR\" /libpath:\"$VRPNROOT/vrpn/$VRPNLIBDIR\" vrpn.lib quat.lib"
+      TEST_VRPN_LDFLAGS="/libpath:\"$VRPNROOT/quat/$VRPNLIBDIR\" /libpath:\"$VRPNROOT/vrpn/$VRPNLIBDIR\" vrpn.lib quat.lib"
    else
       # SGI link order seems to clash with default rule VRPN_LDFLAGS
       # reset below to proper value for subsequent builds.
