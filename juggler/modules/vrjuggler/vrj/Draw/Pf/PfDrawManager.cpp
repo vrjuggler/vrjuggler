@@ -247,10 +247,24 @@ pfPipe* PfDrawManager::getPfPipe(unsigned pipe_num)
    vprASSERT((mPfHasForked) && "Tried to get pipe before forking happened");
    vprASSERT((pipe_num < mNumPipes) && "Tried to request out of bounds pipe");
    vprASSERT((pipe_num < mPipes.size()) && "Tried to get out of range pipe");
-
-   // Return the actual pipe
    vprASSERT((NULL != mPipes[pipe_num]) && "Have NULL pipe");
-   return mPipes[pipe_num];
+
+   // Print an error message if an invalid pipe was requested.  This will
+   // probably only happen when a configuration is broken.
+   if ( pipe_num >= mNumPipes || pipe_num >= mPipes.size() ||
+        NULL == mPipes[pipe_num] )
+   {
+      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+         << clrOutNORM(clrRED, "ERROR:")
+         << " Invalid pipe number (" << pipe_num << ") requested.  "
+         << "Check display system configuration\n" << vprDEBUG_FLUSH;
+      return NULL;
+   }
+   else
+   {
+      // Return the actual pipe
+      return mPipes[pipe_num];
+   }
 }
 
 // Initialize all the pipes that the system may need to use
@@ -323,7 +337,14 @@ void PfDrawManager::addDisplay(Display* disp)
 
    int xo, yo, xs, ys;
    pfPipe* pipe = getPfPipe(disp->getPipe());      // Get the pipe
-   vprASSERT(NULL != pipe);                         // Make sure we have a good pipe
+
+   // Make sure we have a good pipe.  If not, there isn't anything we can do
+   // to recover.
+   if ( NULL == pipe )
+   {
+      vprASSERT(NULL != pipe);
+      return;
+   }
 
    // --- SETUP PWIN --- //
    pf_disp.pWin = allocatePipeWin(disp->getPipe());     //  new pfPipeWindow(pipe);
@@ -441,7 +462,7 @@ void PfDrawManager::addDisplay(Display* disp)
 
             // Create the simulator stuff
             vprASSERT(1 == vp_chunk->getNum("simPlugIn") && "You must supply a simulator plugin.");
-               
+
             jccl::ConfigChunkPtr sim_chunk =
                vp_chunk->getProperty<jccl::ConfigChunkPtr>("simPlugIn");
 
