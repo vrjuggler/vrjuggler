@@ -769,6 +769,7 @@ AC_CONFIG_FILES([
    cluster/Plugins/RemoteInputManager/Makefile
    cluster/Plugins/StartBarrierPlugin/Makefile
    cluster/Plugins/SwapLockTCPPlugin/Makefile
+   cluster/Plugins/SwapLockWiredPlugin/Makefile
    gadget/Makefile
    gadget/Devices/Makefile
    gadget/Devices/driver.defs.mk
