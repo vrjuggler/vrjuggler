@@ -88,7 +88,7 @@
          <xsl:attribute name="name">
             <xsl:value-of select="@name"/>
          </xsl:attribute>
-         <xsl:attribute name="xsl:scehmaLocation"
+         <xsl:attribute name="xsl:schemaLocation"
                         namespace="http://www.w3.org/2001/XMLSchema-instance">
             <xsl:value-of select="@xsi:schemaLocation"/>
          </xsl:attribute>
@@ -284,6 +284,24 @@
       </xsl:element>
    </xsl:template>
 -->
+
+   <xsl:template match="jconf:sound_manager">
+      <xsl:element name="sound_manager_sonix">
+         <xsl:attribute name="name">
+            <xsl:value-of select="@name" />
+         </xsl:attribute>
+         <xsl:attribute name="version">
+            <xsl:text>1</xsl:text>
+         </xsl:attribute>
+
+         <xsl:copy-of select="./jconf:api" />
+
+         <!-- The following copies all elements of the named type. -->
+         <xsl:copy-of select="./jconf:listener_position" />
+         <xsl:copy-of select="./jconf:file_search_path" />
+         <xsl:copy-of select="./jconf:sound" />
+      </xsl:element>
+   </xsl:template>
 
 
 <!-- EVERYTHING ELSE ======================================================= -->
