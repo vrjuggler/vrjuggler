@@ -30,59 +30,25 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-# This file defines the specification for the sample code directory tree for
-# the VR Juggler installation.
+# -----------------------------------------------------------------------------
+# Makefile.in for juggler/samples/pf
 #
-# $Id$
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
 
-/set type=dir mode=@DIR_PERMS@ uname=@OWNER_NAME@ gname=@GROUP_NAME@
-.
-    samples
-	ogl
-	    analog
-	    ..
-	    combo
-	    ..
-	    cones
-	    ..
-	    cubes
-	    ..
-	    digitalGlove
-	    ..
-	    simpleGlove
-	    ..
-	    texture
-		ImageFileLoaderCode
-		..
-	    ..
-	    torus
-	    ..
-	    wand
-	    ..
-	    glove
-	    ..
-	..
-	pf
-	    advanced
-	        nav
-	        ..
-	        pfConfigNav
-	        ..
-	        pfNav
-	        ..
-	        pfTools
-	        ..
-	    ..
-	    simple
-	    ..
-	..
-	tutorials
-	    simpleInput
-	    ..
-	    simplePfApp
-	    ..
-	..
-	tools
-	..
-    ..
-..
+# -----------------------------------------------------------------------------
+# Build targets.
+# -----------------------------------------------------------------------------
+default: all
+
+all: pfConfigNav pfNav
+
+pfConfigNav pfNav::
+	cd $@ && $(MAKE) all
+
+# -----------------------------------------------------------------------------
+# Clean-up.
+# -----------------------------------------------------------------------------
+clean:
+	-cd pfConfigNav && $(MAKE) clean
+	-cd pfNav       && $(MAKE) clean

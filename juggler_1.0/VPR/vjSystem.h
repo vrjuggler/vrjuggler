@@ -179,7 +179,7 @@ public:
     // -----------------------------------------------------------------------
     inline static int
     msleep (u_int32_t milli) {
-        return vjThread::usleep(milli);
+        return vjThread::msleep(milli);
     }
 
     // -----------------------------------------------------------------------

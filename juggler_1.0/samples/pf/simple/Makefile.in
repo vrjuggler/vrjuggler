@@ -31,24 +31,61 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/samples/pf
+# Makefile.in for juggler/samples/pf/pfNav.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-# -----------------------------------------------------------------------------
-# Build targets.
-# -----------------------------------------------------------------------------
-default: all
+.SUFFIXES: .cpp .@OBJEXT@
 
-all: simple advanced
+srcdir		= @srcdir@
 
-simple advanced::
-	cd $@ && $(MAKE) all
+EXTRA_FLAGS	= @APP_EXTRA_FLAGS@ -all 
+COMPILE		= @CXX@ @DEFS@ -I$(srcdir)  $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@ @DBG_FLAGS@ $(EXTRA_FLAGS)
+LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@ $(EXTRA_FLAGS)
+
+VJ_INCLUDES	= @INCLUDES@ -I$(VJ_BASE_DIR)/include
+VJ_LIBS		= @APP_VJ_LIBS_BEGIN@ @APP_VJ_LIBS_BASIC@ @APP_VJ_LIBS_GL@ @APP_VJ_LIBS_PF@ @APP_VJ_LIBS_END@ @APP_LIBS_BASIC@ 
+
+VJ_LIB_DEPS	= $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler.a		\
+              $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler_ogl.a	\
+              $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler_pf.a
+
+vpath %.cpp $(srcdir)
+
+# This Performer sample program requires the following libraries to be linked:
+#
+#   -lpf_ogl -lpfdu_ogl -lpfui -lpfutil_ogl -limage -lGLU -lGL -lX11 -lXext -lm
+#
+# If the library uses POSIX threads, the appropriate pthread enabling option
+# must also be added to the list of libraries.  In most cases, this will be
+# "-lpthread".
+#
+# The proper library path must be specified depending on the Application
+# Binary Interface (ABI) used.  For n32 binaries, use -L/usr/lib32.  For
+# 64-bit binaries, use -L/usr/lib64.
+EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ $(AW_LIBS) @APP_EXTRA_LIBS_PF@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
+
+SIMPLEPF_OBJECTS	= main.@OBJEXT@
+
+# -----------------------------------------------------------------------------
+# Targets.
+# -----------------------------------------------------------------------------
+default: simplePf
+
+all: simplePf
+
+simplePf: $(SIMPLEPF_OBJECTS) $(VJ_LIB_DEPS) $(srcdir)/simplePfApp.h
+	$(LINK) -o $@ $(SIMPLEPF_OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
+
+.cpp.@OBJEXT@:
+	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	-cd advanced && $(MAKE) clean
-	-cd simple       && $(MAKE) clean
+	rm -f simplePf $(SIMPLEPF_OBJECTS) *core
+	rm -rf ./ii_files
+
+

@@ -1255,8 +1255,10 @@ AC_OUTPUT(Makefile
           samples/ogl/analog/Makefile
           samples/ogl/wand/Makefile
           samples/pf/Makefile
-          samples/pf/pfConfigNav/Makefile
-          samples/pf/pfNav/Makefile
+          samples/pf/simple/Makefile
+          samples/pf/advanced/Makefile
+          samples/pf/advanced/pfConfigNav/Makefile
+          samples/pf/advanced/pfNav/Makefile
           samples/tutorials/Makefile
           samples/tutorials/simpleInput/Makefile
           samples/tutorials/simplePf/Makefile

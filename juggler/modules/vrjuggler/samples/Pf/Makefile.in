@@ -41,14 +41,14 @@
 # -----------------------------------------------------------------------------
 default: all
 
-all: pfConfigNav pfNav
+all: simple advanced
 
-pfConfigNav pfNav::
+simple advanced::
 	cd $@ && $(MAKE) all
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	-cd pfConfigNav && $(MAKE) clean
-	-cd pfNav       && $(MAKE) clean
+	-cd advanced && $(MAKE) clean
+	-cd simple       && $(MAKE) clean
