@@ -2,11 +2,7 @@
 rem
 rem ************* <auto-copyright.pl BEGIN do not edit this line> *************
 rem
-rem VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
-rem VRJuggler
-rem   Copyright (C) 1997,1998,1999,2000
-rem   Iowa State University Research Foundation, Inc.
-rem   All Rights Reserved
+rem VR Juggler is (C) Copyright 1998-2003 by Iowa State University
 rem
 rem Original Authors:
 rem   Allen Bierbaum, Christopher Just,
