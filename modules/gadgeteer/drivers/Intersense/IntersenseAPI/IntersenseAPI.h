@@ -149,9 +149,7 @@ private:
       int stationIndex;
       bool enabled;
 
-      int dig_min;
       int dig_num;
-      int ana_min;
       int ana_num;
 
       bool useDigital;
