@@ -14,7 +14,7 @@ webroot=	$(HOME)/public_html/phpjug
 instdir=	tweek/1.0/programmer.guide
 
 prefix=		$(webroot)/$(instdir)
-INSTALL_DIRS=	figures
+#INSTALL_DIRS=	figures
 INSTALL_FILES=	$(webroot)/base_style.css
 
 NEED_DB_IMAGES=	1
