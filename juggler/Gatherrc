@@ -25,11 +25,3 @@ Doozer++
    Tag: HEAD;
    Path: .;
 };
-
-cppdom
-{
-   CVSROOT:  :pserver:anonymous@cvs.xml-cppdom.sourceforge.net:/cvsroot/xml-cppdom;
-   Module: cppdom;
-   Tag: HEAD;
-   Path: external;
-};
