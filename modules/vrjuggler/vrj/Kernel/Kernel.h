@@ -41,6 +41,7 @@
 #include <vrj/Kernel/SystemFactory.h>
 #include <jccl/Plugins/PerformanceMonitor/PerfDataBuffer.h>
 #include <vrj/Environment/EnvironmentManager.h>
+#include <vpr/Sync/CondVar.h>
 
 #include <gadget/InputManager.h>
 
@@ -91,6 +92,9 @@ public:
    /** Return status of kernel */
    bool isRunning() const
    { return mIsRunning; }
+
+   /** Blocks until the kernel exits */
+   void waitForKernelStop();
 
    /** Load initial configuration data for the managers
    * @post InputManager, DisplayManager, and kernel
@@ -233,6 +237,7 @@ protected:
    bool               mIsRunning;               /**< Flag for wether the kernel is currently running */
    bool               mExitFlag;                /**< Set true when the kernel should exit */
    vpr::BaseThread*   mControlThread;           /**< The thread in control of me */
+   vpr::CondVar       mExitWaitCondVar;         /**< Cond var for waiting for exit */
 
    /// Factories and Managers
    vrj::SystemFactory*        mSysFactory;            /**< The current System factory */
