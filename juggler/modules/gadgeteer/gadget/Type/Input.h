@@ -118,7 +118,7 @@ namespace vrj
 //+       it is being updated to the most recent copy.
 //-----------------------------------------------------------------------------
 //!PUBLIC_API:
-class VJ_CLASS_API Input
+class GAD_CLASS_API Input
 {
 public:
    //: Default Constructor

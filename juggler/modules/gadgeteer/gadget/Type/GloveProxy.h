@@ -50,7 +50,7 @@ namespace vrj
 
 //: Glove proxy class.
 //!PUBLIC_API:
-class VJ_CLASS_API GloveProxy : public TypedProxy<Glove>
+class GAD_CLASS_API GloveProxy : public TypedProxy<Glove>
 {
 public:
      //: Construct the proxy to point to the given glove device and sub-unit number.

@@ -59,7 +59,7 @@ namespace vrj
 //
 // See also: Gesture
 //!PUBLIC_API:
-class VJ_CLASS_API GestureProxy : public TypedProxy<Gesture>
+class GAD_CLASS_API GestureProxy : public TypedProxy<Gesture>
 {
 public:
    //: Construct the proxy to point to the given gesture device.

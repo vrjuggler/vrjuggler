@@ -42,7 +42,7 @@ namespace vrj
 
 //: Proxy class to Keyboard based devices.
 //!PUBLIC_API:
-class VJ_CLASS_API KeyboardProxy : public TypedProxy<Keyboard>
+class GAD_CLASS_API KeyboardProxy : public TypedProxy<Keyboard>
 {
 public:
    KeyboardProxy()

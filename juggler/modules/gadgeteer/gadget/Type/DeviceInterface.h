@@ -59,7 +59,7 @@ class PosProxy;
 //+         application
 //!PUBLIC_API:
 //------------------------------------------------------------------------------
-class VJ_CLASS_API BaseDeviceInterface
+class GAD_CLASS_API BaseDeviceInterface
 {
 protected:
    BaseDeviceInterface(const BaseDeviceInterface& other) {;}
@@ -107,7 +107,7 @@ private:    // Static information
 // ---- Type specific interfaces ----
 
 template<class PROXY_TYPE>
-class VJ_CLASS_API DeviceInterface : public BaseDeviceInterface
+class GAD_CLASS_API DeviceInterface : public BaseDeviceInterface
 {
 protected:
    DeviceInterface(DeviceInterface& other) {;}

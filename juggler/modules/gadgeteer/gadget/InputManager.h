@@ -65,7 +65,7 @@ class Input;
 //  (for speed)
 //-------------------------------------------------------------------------------
 //!PUBLIC_API:
-class VJ_CLASS_API InputManager : public ConfigChunkHandler
+class GAD_CLASS_API InputManager : public ConfigChunkHandler
 {
 public:
    InputManager();
