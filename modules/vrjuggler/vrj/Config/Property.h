@@ -48,9 +48,6 @@ public:
     //: ChunkDesc for embedded chunk (if valtype is T_EMBEDDEDCHUNK)
     vjChunkDesc *embeddesc;
 
-    //: ChunkDescDB (for creating embedded chunks)
-    vjChunkDescDB *descdb;
-
     //: Constructor
     //! PRE: true
     //! POST: Property is created.  If num values is not -1, num
@@ -59,7 +56,7 @@ public:
     //! ARGS: pd - a pointer to a valid vjPropertyDesc. 
     //! NOTE: Self stores a pointer to its PropertyDesc pd.  pd
     //+       should not be deleted while self exists.
-    vjProperty (vjPropertyDesc *pd, vjChunkDescDB *_descdb);
+    vjProperty (vjPropertyDesc *pd);
 
 
 

@@ -3,8 +3,6 @@
  *
  * Author: Christopher Just
  *
- * Storage class for vjChunkDescs used by the ConfigChunkDB.
- *
  */
 
 
@@ -15,72 +13,110 @@
 #include <iostream.h>
 #include <Config/vjChunkDesc.h>
 
+//-----------------------------------------------------------------
+//: Storage for vjChunkDescs
+//
+//  A vjChunkDescDB is a container for vjChunkDescs.  Includes
+//  functions to search for particular vjChunkDescs, and to read
+//  and write ChunkDesc files.
+//
+//-----------------------------------------------------------------
+
+
 class vjChunkDescDB {
 
 private:
-  vector<vjChunkDesc*> descs;
+
+    //:Internal storage of vjChunkDescs
+    vector<vjChunkDesc*> descs;
 
 public:
 
-  vjChunkDescDB ();
-  /* PRE:  true.
-   * POST: self is created as an empty vector of Chunkdescs
-   */
 
-  ~vjChunkDescDB ();
+    //:Default Constructor
+    //!POST: Self is created with an empty vector of vjChunkDescs
+    vjChunkDescDB ();
 
-  vjChunkDesc *getChunkDesc (char *token);
-  /* PRE:  name is a non-null string.
-   * POST: returns a pointer to an entry in self with the given token.
-   *       Returns NULL if no such entry is found.
-   */
 
-  bool insert (vjChunkDesc *d);
-  /* PRE:  d points to a vjChunkDesc.
-   * POST: d is inserted into self.  If a vjChunkDesc with the same name as
-   *       d is inself, d replaces the older vjChunkDesc.
-   *       Returns TRUE.
-   */
+    //:Destructor
+    //!POST: Self is destroyed; all memory (including contained
+    //+      vjChunkDescs) is destroyed.
+    ~vjChunkDescDB ();
 
-  bool remove (char *name);
-  /* PRE:  name is a string of characters.  Empty string is OK; NULL isn't.
-   * POST: Any vjChunkDesc whose name matches (ignoring case) is removed from
-   *       self and deleted.
-   */
 
-  void removeAll ();
-  /* PRE:  none
-   * POST: All vjChunkDescs are removed from self & their associated memory 
-   *       freed.  This _can_ be dangerous, if there still exist ConfigChunks
-   *       that refer to the deleted vjChunkDescs.
-   */
+    //:Searches for a particular vjChunkDesc
+    //!RETURNS: desc - a vjChunkDesc whose token matches _token
+    //!RETURNS: NULL - if no such vjChunkDesc is found
+    vjChunkDesc *getChunkDesc (char *_token);
 
-  int size ();
-  /* PRE:  TRUE.
-   * POST: Returns the number of vjChunkDescs in self.
-   */
 
-  friend ostream& operator << (ostream& out, vjChunkDescDB& self);
-  /* PRE:  out is an open ostream.
-   * POST: The format of every vjChunkDesc in self is written to out,
-   *       in a format that can be read with >>.
-   */
+    //:Inserts a vjChunkDesc
+    //!ARGS: d - non-NULL pointer to vjChunkDesc
+    //!POST: d is inserted into self, replacing any vjChunkDesc
+    //+      with the same token.
+    //!RETURNS: True - always.
+    bool insert (vjChunkDesc *d);
 
-  friend istream& operator >> (istream& in, vjChunkDescDB& self);
-  /* PRE:  in is an open istream.
-   * POST: Reads 0 or more vjChunkDescs from in and adds them to self.
-   *       Stops reading when an "End" string (that isn't part of
-   *       a vjChunkDesc) is read, or eof is reached.
-   */
 
-  bool load (char *fname);
-  bool save (char *fname);
-  /* PRE:  fname is a non-null string.
-   * POST: load and save are convenience functions, that attempt to open
-   *       the named file and read or write self.  Returns true if no 
-   *       errors are encountered.  False most likely means failure to open
-   *       the given file.
-   */
+    //:Removes vjChunkDesc from self
+    //!ARGS: _token - a non-NULL C string
+    //!POST: Any vjChunkDesc in self whose token equals _token
+    //+      is removed and destroyed.
+    //!RETURNS: true - if a matching chunk was found
+    //!RETURNS: false - if no matching chunk was found
+    bool remove (char *name);
+
+
+    //:Removes all vjChunkDescs from self
+    //!POST: All vjChunkDescs in self have been removed and 
+    //+      destroyed
+    //!NOTE: This <b>can</b> be dangerous, if there exist
+    //+      vjConfigChunks somewhere that rever to any of 
+    //+      the deleted vjChunkDescs.
+    void removeAll ();
+
+    
+    //:Returns the number of vjChunkDescs in self.
+    //!RETURNS: n - the number of vjChunkDescs in self.
+    int size ();
+
+
+    //:Writes self to out
+    //!POST: A text representation of self is appended to out
+    //!RETURNS: out
+    //!NOTE: The output format is zero or more vjChunkDescs
+    //+      followed by "end"
+    friend ostream& operator << (ostream& out, vjChunkDescDB& self);
+
+
+    //:Reads from in
+    //!POST: vjChunkDescs read from in are appended to self.
+    //+      vjChunkDescs previously in self are retained.
+    //!NOTE: input format is zero or more vjChunkDescs followed
+    //+      by "End" or eof.
+    friend istream& operator >> (istream& in, vjChunkDescDB& self);
+
+
+    //:Loads a chunkdesc file
+    //!ARGS: fname - name of file to load
+    //!POST: File is opened and vjChunkDescs are read and inserted
+    //+      into self (using >>).
+    //!RETURNS: true - if file was opened succesfully
+    //!RETURNS: false - otherwise
+    //!NOTE: Return value only deals with opening the file, and
+    //+      true doesn't neccessarily mean no parsing errors
+    //+      occurred.
+    bool load (char *fname);
+
+
+    //:Saves a chunkdesc file
+    //!ARGS: fname - name of file to load
+    //!POST: File is opened and vjChunkDescs are written to it
+    //+      using << operator.
+    //!RETURNS: true - if file was opened succesfully
+    //!RETURNS: false - otherwise
+    bool save (char *fname);
+
 
 };
 
