@@ -98,11 +98,11 @@ public class BeanJarClassLoader extends ClassLoader
     * @post Those dependency JAR files that are found are added to the vector
     *       of known JAR files.
     */
-   public void addDependencies (Vector deps)
+   public void addDependencies (List deps)
    {
-      for ( int i = 0; i < deps.size(); i++ )
+      for ( Iterator i = deps.iterator(); i.hasNext(); )
       {
-         String name = (String) deps.elementAt(i);
+         String name = (String) i.next();
 
          // If our set of found classes already contains the name of the item
          // being looked up, don't bother searching for it again.

@@ -36,7 +36,7 @@
 
 package org.vrjuggler.tweek.beans.loader;
 
-import java.util.Vector;
+import java.util.List;
 import java.util.jar.JarFile;
 
 
@@ -48,7 +48,7 @@ import java.util.jar.JarFile;
  */
 class BeanJarFile
 {
-   public BeanJarFile (JarFile jar_file, Vector deps, String class_path)
+   public BeanJarFile (JarFile jar_file, List deps, String class_path)
    {
       m_jar_file  = jar_file;
       m_deps      = deps;
@@ -60,7 +60,7 @@ class BeanJarFile
       return m_jar_file;
    }
 
-   public Vector getDependencies ()
+   public List getDependencies ()
    {
       return m_deps;
    }
@@ -71,6 +71,6 @@ class BeanJarFile
    }
 
    protected JarFile m_jar_file  = null;
-   protected Vector  m_deps      = null;
+   protected List    m_deps      = null;
    protected String  m_classpath = null;
 }
