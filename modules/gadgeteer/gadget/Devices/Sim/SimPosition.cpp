@@ -111,45 +111,45 @@ void SimPosition::updateData()
    vpr::Interval delta_time(vpr::Interval::now() - mPos.getTime());
 
    //Modify the distance and rotation amount by the time factor
+   float delta_val = delta_time.secf();
+   
    amt = checkKeyPair(mSimKeys[FORWARD]);
-   amt *= delta_time.secf();                     // Comput amount/per sec
-
-   if(amt)
-      moveFor( 1 * amt);
+   if(amt > 0.0f)
+      moveFor( 1 * amt * delta_val);
    amt = checkKeyPair(mSimKeys[BACK]);
-   if(amt)
-      moveFor( -1 * amt);
+   if(amt > 0.0f)
+      moveFor( -1 * amt * delta_val);
    amt = checkKeyPair(mSimKeys[LEFT]);
-   if(amt)
-      moveLeft( 1 * amt);
+   if(amt > 0.0f)
+      moveLeft( 1 * amt * delta_val);
    amt = checkKeyPair(mSimKeys[RIGHT]);
-   if(amt)
-      moveLeft( -1 * amt);
+   if(amt > 0.0f)
+      moveLeft( -1 * amt * delta_val);
    amt = checkKeyPair(mSimKeys[UP]);
-   if(amt)
-      moveUp ( 1 * amt);
+   if(amt > 0.0f)
+      moveUp ( 1 * amt * delta_val);
    amt = checkKeyPair(mSimKeys[DOWN]);
-   if(amt)
-      moveUp (-1 * amt);
+   if(amt > 0.0f)
+      moveUp (-1 * amt * delta_val);
 
    amt = checkKeyPair(mSimKeys[ROTR]);
-   if(amt)
-      rotLeft( -1 * amt);
+   if(amt > 0.0f)
+      rotLeft( -1 * amt * delta_val);
    amt = checkKeyPair(mSimKeys[ROTL]);
-   if(amt)
-      rotLeft( 1  * amt);
+   if(amt > 0.0f)
+      rotLeft( 1  * amt * delta_val);
    amt = checkKeyPair(mSimKeys[ROTU]);
-   if(amt)
-      rotUp( 1 * amt);
+   if(amt > 0.0f)
+      rotUp( 1 * amt * delta_val);
    amt = checkKeyPair(mSimKeys[ROTD]);
-   if(amt)
-      rotUp( -1 * amt);
+   if(amt > 0.0f)
+      rotUp( -1 * amt * delta_val);
    amt = checkKeyPair(mSimKeys[ROT_ROLL_CCW]);
-   if(amt)
-      rotRollCCW( 1 * amt);
+   if(amt > 0.0f)
+      rotRollCCW( 1 * amt * delta_val);
    amt = checkKeyPair(mSimKeys[ROT_ROLL_CW]);
-   if(amt)
-      rotRollCCW( -1 * amt);
+   if(amt > 0.0f)
+      rotRollCCW( -1 * amt * delta_val);
 
    // Debug output
    //vjCoord pos_data(mPos);
