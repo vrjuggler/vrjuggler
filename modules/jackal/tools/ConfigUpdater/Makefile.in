@@ -48,8 +48,13 @@ srcdir	= @srcdir@
 JDK_HOME	= @JDK_HOME@
 JAR		= @JAR@
 JAVAC		= @JAVAC@
-JAVAC_CMD	= $(JAVAC) -d . -sourcepath $(srcdir)/src
+JAVAC_CMD	= $(JAVAC) -d . -sourcepath $(srcdir)/src		\
+                  -classpath "$(CLASSPATH):."
 JAVADOC		= $(JAVAC:javac=javadoc)
+
+JCPS		= @JCPS@
+JDOM_JAR	= @JDOM_JAR@
+CLASSPATH	= $(JDOM_JAR)
 
 DOC_DIR		= $(HOME)/public_html/vjcontrol
 
@@ -77,9 +82,10 @@ ConfigUpdater.jar: 	$(srcdir)/src/ConfigUpdater/Main.java
 	$(JAVAC_CMD) $(srcdir)/src/VjConfig/*.java	\
                      $(srcdir)/src/ConfigUpdater/*.java	
 	$(JAR) cv0mf $(srcdir)/META-INF/MANIFEST.MF ConfigUpdater.jar \
-	 	VjConfig/*.class \
-		ConfigUpdater/*.class -C $(srcdir) ConfigUpdater.desc
-
+          VjConfig/*.class ConfigUpdater/*.class
+	cd $(srcdir) &&							\
+          $(JAR) uvf $(topdir)/tools/ConfigUpdater/ConfigUpdater.jar	\
+            ConfigUpdater.desc
 
 # -----------------------------------------------------------------------------
 # Clean-up.

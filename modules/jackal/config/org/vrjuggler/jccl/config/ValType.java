@@ -69,27 +69,27 @@ public final class ValType
    public static ValType getValType(String s)
    {
       String s2 = s.toLowerCase().trim();
-      if (s2.equalsIgnoreCase("string"))
+      if (s2.equals(ConfigTokens.string_TOKEN))
       {
          return STRING;
       }
-      else if (s2.equalsIgnoreCase("float"))
+      else if (s2.equals(ConfigTokens.float_TOKEN))
       {
          return FLOAT;
       }
-      else if (s2.equalsIgnoreCase("int"))
+      else if (s2.equals(ConfigTokens.int_TOKEN))
       {
          return INT;
       }
-      else if (s2.equalsIgnoreCase("bool"))
+      else if (s2.equals(ConfigTokens.bool_TOKEN))
       {
          return BOOL;
       }
-      else if (s2.equalsIgnoreCase("chunk"))
+      else if (s2.equals(ConfigTokens.chunk_TOKEN))
       {
          return CHUNK;
       }
-      else if (s2.equalsIgnoreCase("embeddedchunk"))
+      else if (s2.equals(ConfigTokens.embeddedchunk_TOKEN))
       {
          return EMBEDDEDCHUNK;
       }
@@ -108,19 +108,19 @@ public final class ValType
       switch (val)
       {
       case t_string:
-         return "String";
+         return ConfigTokens.string_TOKEN;
       case t_float:
-         return "Float";
+         return ConfigTokens.float_TOKEN;
       case t_int:
-         return "Int";
+         return ConfigTokens.int_TOKEN;
       case t_bool:
-         return "Bool";
+         return ConfigTokens.bool_TOKEN;
       case t_chunk:
-         return "Chunk";
+         return ConfigTokens.chunk_TOKEN;
       case t_embeddedchunk:
-         return "EmbeddedChunk";
+         return ConfigTokens.embeddedchunk_TOKEN;
       default:
-         return "Invalid";
+         return ConfigTokens.invalid_TOKEN;
       }
    }
 

@@ -25,8 +25,8 @@ public class PropertyDescTest
       assertEquals( d.getName(), "JimmyJohns" );
 
       d = new PropertyDesc();
-      d.setName( null );
-      assertNull( d.getName() );
+      d.setName( "" );
+      assertEquals( d.getName(), "" );
    }
 
    /**
@@ -39,8 +39,8 @@ public class PropertyDescTest
       assertEquals( d.getToken(), "SomeToken" );
 
       d = new PropertyDesc();
-      d.setToken( null );
-      assertNull( d.getToken() );
+      d.setToken( "" );
+      assertEquals( d.getToken(), "" );
    }
 
    /**
@@ -53,8 +53,8 @@ public class PropertyDescTest
       assertEquals( d.getHelp(), "Help me test successfully!" );
 
       d = new PropertyDesc();
-      d.setHelp( null );
-      assertNull( d.getHelp() );
+      d.setHelp( "" );
+      assertEquals( d.getHelp(), "" );
    }
 
    /**
@@ -67,8 +67,8 @@ public class PropertyDescTest
       assertEquals( d.getValType(), ValType.STRING );
 
       d = new PropertyDesc();
-      d.setValType( null );
-      assertNull( d.getValType() );
+      d.setValType( ValType.INT );
+      assertEquals( d.getValType(), ValType.INT );
    }
 
    /**
@@ -78,25 +78,25 @@ public class PropertyDescTest
    {
       PropertyDesc d = new PropertyDesc();
       d.setHasVariableNumberOfValues( true );
-      assertEquals( d.getHasVariableNumberOfValues(), true );
+      assertEquals( d.hasVariableNumberOfValues(), true );
 
       d = new PropertyDesc();
       d.setHasVariableNumberOfValues( false );
-      assertEquals( d.getHasVariableNumberOfValues(), false );
+      assertEquals( d.hasVariableNumberOfValues(), false );
    }
 
    /**
-    * Tests get/setNumValues() methods.
+    * Tests get/setNumAllowed() methods.
     */
-   public void testNumValues()
+   public void testNumAllowed()
    {
       PropertyDesc d = new PropertyDesc();
-      d.setNumValues( 20 );
-      assertEquals( d.getNumValues(), 20 );
+      d.setNumAllowed( 20 );
+      assertEquals( d.getNumAllowed(), 20 );
 
       d = new PropertyDesc();
-      d.setNumValues( -1 );
-      assertEquals( d.getNumValues(), -1 );
+      d.setNumAllowed( -1 );
+      assertEquals( d.getNumAllowed(), -1 );
    }
 
    /**
@@ -119,12 +119,9 @@ public class PropertyDescTest
    public void testValueLabels()
    {
       PropertyDesc d = new PropertyDesc();
-      String[] labelArray = null;
       
       // should initially be empty
       assertEquals( d.getValueLabelsSize(), 0 );
-      labelArray = d.getValueLabels();
-      assertEquals( labelArray.length, 0 );
 
       // request a label outside our range
       assertEquals( d.getValueLabel(0), "" );
@@ -133,17 +130,12 @@ public class PropertyDescTest
       d.appendValueLabel( "SomeLabel" );
       assertEquals( d.getValueLabelsSize(), 1 );
       assertEquals( d.getValueLabel(0), "SomeLabel" );
-      labelArray = d.getValueLabels();
-      assertEquals( labelArray[0], "SomeLabel" );
 
       // add another label
       d.appendValueLabel( "AnotherLabel" );
       assertEquals( d.getValueLabelsSize(), 2 );
       assertEquals( d.getValueLabel(0), "SomeLabel" );
       assertEquals( d.getValueLabel(1), "AnotherLabel" );
-      labelArray = d.getValueLabels();
-      assertEquals( labelArray[0], "SomeLabel" );
-      assertEquals( labelArray[1], "AnotherLabel" );
 
       // replace the labels
       ArrayList list = new ArrayList();
@@ -155,18 +147,12 @@ public class PropertyDescTest
       assertEquals( d.getValueLabel(0), "Me" );
       assertEquals( d.getValueLabel(1), "Myself" );
       assertEquals( d.getValueLabel(2), "I" );
-      labelArray = d.getValueLabels();
-      assertEquals( labelArray[0], "Me" );
-      assertEquals( labelArray[1], "Myself" );
-      assertEquals( labelArray[2], "I" );
 
       // replace labels with empty list
       list = new ArrayList();
       d.setValueLabels( list );
       assertEquals( d.getValueLabelsSize(), 0 );
       assertEquals( d.getValueLabel(0), "" );
-      labelArray = d.getValueLabels();
-      assertEquals( labelArray.length, 0 );
    }
 
    /**

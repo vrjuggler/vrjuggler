@@ -81,21 +81,14 @@ DPP_WITH_GCC(no)
 # Define the binary format.
 DPP_ABI_SETUP
 
-# Define the root directory for the Xerces-c installation.
-AC_ARG_WITH(xercesroot,
-            [  --with-xercesroot=<PATH>
-                          Xerces-C installation directory [default=/usr]],
-            XERCESROOT="$withval", XERCESROOT="/usr")
+AC_ARG_WITH(cppdomroot,
+            [  --with-cppdomroot=<PATH>
+                          cppdom installation directory (remember that "cppdom/" should be a subdir of this dir [default=/usr]],
+            CPPDOM_ROOT="$withval", CPPDOM_ROOT='/usr')
 
-AC_ARG_WITH(xerceslib,
-            [  --with-xerceslib=<NAME>
-                          Xerces-C base library name      [default=xerces-c]],
-            XERCES_LIB="$withval", XERCES_LIB='xerces-c')
-
-# Specify location of JAXP jars
-AC_ARG_WITH(jaxp,
-            [  --with-jaxp=<PATH>      Path to JAXP JAR file(s) ],
-            JAXP_JAR="$withval", JAXP_JAR='none')
+# Specify where JDOM is located
+AC_ARG_WITH(jdom, [  --with-jdom=<PATH>      Path to JDOM JAR file(s) ],
+            JDOM_JAR="$withval", JDOM_JAR='none')
 
 # Specify where JUnit is located
 AC_ARG_WITH(junit,
@@ -157,14 +150,13 @@ if test "x$JAVAC" = "xno" ; then
     AC_MSG_WARN([*** VjControl requires javac -- it will not be built ***])
     BUILD_VJCONTROL='N'
 else
-    # Check for JAXP extensions to JDK
-    DPP_CHECK_JAVA_STATIC_METHOD([javax.xml.parsers.DocumentBuilderFactory],
-        [newInstance()], ,
-        [BUILD_VJCONTROL='Y'],
-        [ BUILD_VJCONTROL='N' ;
-          AC_MSG_WARN(*** VjControl requires JAXP extensions for java -- it will not be built ***)
-        ],
-        [$JAXP_JAR])
+    # Check for JDOM.
+    DPP_CHECK_JAVA_STATIC_METHOD([org.jdom.Namespace],
+       [getNamespace(uri)], [String uri = new String("test")],
+       [BUILD_VJCONTROL='Y'],
+       [ AC_MSG_WARN([*** JDOM required for VjControl ***])
+         BUILD_VJCONTROL='N' ],
+       [$JDOM_JAR])
 fi
 
 # If we're building VjControl, we should build the test cases too.
@@ -189,67 +181,46 @@ DPP_BASIC_PROGS([$PLATFORM], [$OS_TYPE])
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH([0.13.0], , [AC_MSG_ERROR([*** VPR required for Jackal***])])
+VPR_PATH([0.13.0], , [AC_MSG_ERROR([*** VPR required for JCCL ***])])
 
 # -----------
-# Xerces-c
+# cppdom
 # -----------
 _vjsave_CFLAGS="$CFLAGS"
 _vjsave_CPPFLAGS="$CPPFLAGS"
 _vjsave_INCLUDES="$INCLUDES"
 _vjsave_LDFLAGS="$LDFLAGS"
-_vjsave_LIBS="$LIBS"
+
+# XXX: There are problems with the use of $CPPDOM_ROOT for installed versions
+# of cppdom!!!
 
 # Ensure that /usr/include and /usr/lib are not included multiple times
-# if XERCESROOT is "/usr".
-if test "x$XERCESROOT" != "x/usr" ; then
-    CPPFLAGS="-I$XERCESROOT/include $CPPFLAGS"
-    INCLUDES="-I$XERCESROOT/include $INCLUDES"
-    LDFLAGS="-L$XERCESROOT/lib $LDFLAGS"
+# if $CPPDOM_ROOT is "/usr".
+# XXX: Should be -I$CPPDOM_ROOT/include
+if test "x$CPPDOM_ROOT" != "x/usr" ; then
+    CPPFLAGS="$STDFLAGS -I$CPPDOM_ROOT $CPPFLAGS"
+    INCLUDES="-I$CPPDOM_ROOT $INCLUDES"
+    LDFLAGS="-L$CPPDOM_ROOT/lib $LDFLAGS"
 fi
 
-CFLAGS="$CFLAGS $INCLUDES ${_EXTRA_FLAGS}"
-LIBS="$LIBS -l$XERCES_LIB `$VPR_CONFIG --extra-libs`"
+CXXFLAGS="$CXXFLAGS $STDFLAGS $INCLUDES ${_EXTRA_FLAGS}"
 
 DPP_LANG_SAVE
 DPP_LANG_CPLUSPLUS
 
-AC_CHECK_HEADER([xercesc/util/XercesDefs.hpp],
-    [xerces_include="$XERCESROOT/include"],
-    [AC_MSG_ERROR([*** Xerces-C headers not found ***])])
-
-# Extract the full Xerces version number and transform it into the form x.y.z.
-changequote(<<, >>)
-xerces_ver_str=`grep gXercesFullVersionStr $xerces_include/xercesc/util/XercesDefs.hpp | sed -e 's/.*"\([1-9][0-9_]*\)".*/\1/' | sed -e 's/_/./g'`
-changequote([, ])
-
-DPP_VERSION_CHECK_MSG([Xerces C++], [$xerces_ver_str], [1.7.0],
-                      [jccl_cv_xerces_c_version_okay], ,
-                      [AC_MSG_ERROR([*** Xerces-C version too old ***])])
-
-# Finally, check that the library actually exists where we expect it to be.
-AC_CACHE_CHECK([for XMLPlatformUtils::Initialize in $XERCES_LIB],
-    [jccl_cv_initialize_in_xerces_c],
-    [AC_TRY_LINK([#include <xercesc/util/PlatformUtils.hpp> ],
-                 [ XMLPlatformUtils::Initialize(); ],
-                 [ jccl_cv_initialize_in_xerces_c='yes' ; rm -rf ./ii_files ],
-                 [AC_MSG_ERROR([*** Xerces-C library not found ***])])])
+# XXX: Should be $CPPDOM_ROOT/include
+AC_CHECK_HEADER([cppdom/config.h],
+    [cppdom_include="$CPPDOM_ROOT"],
+    [AC_MSG_ERROR([*** cppdom headers not found ***])])
 
 DPP_LANG_RESTORE
 
-XERCES_INCLUDES="-I$xerces_include"
-
-if test "x$OS_TYPE" = "xWin32" ; then
-    XERCES_LDFLAGS="/libpath:$XERCESROOT/lib"
-else
-    XERCES_LDFLAGS="-L$XERCESROOT/lib"
-fi
+CPPDOM_INCLUDES="-I$cppdom_include"
 
 CFLAGS="${_vjsave_CFLAGS}"
 CPPFLAGS="${_vjsave_CPPFLAGS}"
 INCLUDES="${_vjsave_INCLUDES}"
 LDFLAGS="${_vjsave_LDFLAGS}"
-LIBS="${_vjsave_LIBS}"
 
 # -----------------------------------------------------------------------------
 # Checks for header files.
@@ -293,8 +264,8 @@ if test "x$GXX" = "xyes" ; then
     CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
 fi
 
-if test "x$XERCES_INCLUDES" != "x" ; then
-    INCLUDES="$INCLUDES $XERCES_INCLUDES"
+if test "x$CPPDOM_INCLUDES" != "x" ; then
+    INCLUDES="$INCLUDES $CPPDOM_INCLUDES"
 fi
 
 CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS"
@@ -345,12 +316,12 @@ UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 # JCCL.
 # $jccl_extra_libs_juggler lists the Juggler Project libraries needed by JCCL.
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_LD $LIBS $XERCES_LDFLAGS $XERCES_LIB.lib $VPR_EXTRA_LIBS_LD"
-    jccl_extra_libs="$LDFLAGS $LIBS $XERCES_LDFLAGS $XERCES_LIB.lib"
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_LD $LIBS $VPR_EXTRA_LIBS_LD"
+    jccl_extra_libs="$LDFLAGS $LIBS"
     jccl_extra_libs_juggler="$VPR_LIBS_LD $VPR_EXTRA_LIBS_LD"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_CC $XERCES_LDFLAGS -l$XERCES_LIB $LIBS $VPR_EXTRA_LIBS_CC"
-    jccl_extra_libs="$LDFLAGS $XERCES_LDFLAGS -l$XERCES_LIB $LIBS"
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_CC $LIBS $VPR_EXTRA_LIBS_CC"
+    jccl_extra_libs="$LDFLAGS $LIBS"
     jccl_extra_libs_juggler="$VPR_LIBS_CC $VPR_EXTRA_LIBS_CC"
 fi
 
@@ -469,13 +440,13 @@ AC_SUBST(RM_LN)
 AC_SUBST(EXTRA_LINK_FLAGS)
 
 AC_SUBST(BUILD_VJCONTROL)
-AC_SUBST(JAXP_JAR)
+AC_SUBST(JDOM_JAR)
 
 AC_SUBST(BUILD_JAVA_TEST_SUITE)
 AC_SUBST(JUNIT_JAR)
 
-AC_SUBST(XERCESROOT)
-AC_SUBST(XERCES_INCLUDES)
+AC_SUBST(CPPDOM_ROOT)
+AC_SUBST(CPPDOM_INCLUDES)
 
 AC_SUBST(APP_BASE_DIR)
 AC_SUBST(APP_BASE_DIR_INST)
@@ -545,6 +516,8 @@ AC_OUTPUT(jccl-config
           test/TestSuite/test.defs.mk
           test/TestSuite/java/Makefile
           test/TestSuite/TestCases/Makefile
+          tools/Makefile
+          tools/ConfigUpdater/Makefile
           vjcontrol/Makefile
           vjcontrol/Makefile.inc
           mtree/JCCL.data.dist

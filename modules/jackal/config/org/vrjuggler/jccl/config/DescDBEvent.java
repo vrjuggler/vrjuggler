@@ -40,23 +40,29 @@ import java.util.EventObject;
 public class DescDBEvent
    extends EventObject
 {
-   private ChunkDesc new_desc;
-   private ChunkDesc old_desc;
-
-   int action;
+   private String origDescName = "";
+   private ChunkDesc desc      = null;
+   private int action;
 
    public final static int INSERT = 1;
    public final static int REMOVE = 2;
    public final static int REPLACE = 3;
    public final static int REMOVEALL = 4;
 
-   public DescDBEvent(Object _source, int _action, ChunkDesc _olddesc,
-                      ChunkDesc _newdesc)
+   public DescDBEvent (Object source, int action, ChunkDesc newDesc)
    {
-      super(_source);
-      action = _action;
-      new_desc = _newdesc;
-      old_desc = _olddesc;
+      super(source);
+      this.action = action;
+      this.desc   = newDesc;
+   }
+
+   public DescDBEvent (Object source, int action, String origName,
+                       ChunkDesc newDesc)
+   {
+      super(source);
+      this.action       = action;
+      this.origDescName = origName;
+      this.desc         = newDesc;
    }
 
    public int getAction()
@@ -64,13 +70,13 @@ public class DescDBEvent
       return action;
    }
 
-   public ChunkDesc getOldDesc()
+   public ChunkDesc getDesc()
    {
-      return old_desc;
+      return desc;
    }
 
-   public ChunkDesc getNewDesc()
+   public String getOrigDescName ()
    {
-      return new_desc;
+      return origDescName;
    }
 }

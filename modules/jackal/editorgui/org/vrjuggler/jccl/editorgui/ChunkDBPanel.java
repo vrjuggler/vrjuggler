@@ -44,19 +44,19 @@ import org.vrjuggler.jccl.vjcontrol.*;
 import org.vrjuggler.jccl.vjcontrol.ui.*;
 import org.vrjuggler.jccl.vjcontrol.ui.widgets.*;
 
-/** An individual subpanel of ConfigurePane.  
+/** An individual subpanel of ConfigurePane.
  *  ChunkDBPanel views and edits a single ChunkDB (at a time).  It has
  *  methods to copy chunks to another ChunkDBPanel.
- * 
+ *
  *  @version $Revision$
  */
-public class ChunkDBPanel 
+public class ChunkDBPanel
    extends JPanel
-   implements PlugPanel, 
-              ActionListener, 
-              MouseListener, 
+   implements PlugPanel,
+              ActionListener,
+              MouseListener,
               ConfigModuleListener
-{ 
+{
    protected ConfigModule mConfigModule;
    protected ConfigUIHelper mConfigHelperModule;
    protected ControlUIModule mUIModule;
@@ -150,7 +150,7 @@ public class ChunkDBPanel
       int i;
       mSelectDBBox.addItem ("No Selection");
       String[] names = mConfigModule.getChunkDBNames();
-      for (i = 0; i < names.length; i++) 
+      for (i = 0; i < names.length; i++)
       {
          mSelectDBBox.addItem (names[i]);
       }
@@ -160,7 +160,7 @@ public class ChunkDBPanel
    {
       /* changes the currently displayed db in the panel to name... */
       ConfigChunkDB newChunkDB = mConfigModule.getChunkDB (name);
-      if (newChunkDB == mCurrentDB) 
+      if (newChunkDB == mCurrentDB)
       {
          return;
       }
@@ -171,9 +171,9 @@ public class ChunkDBPanel
          mTreeModel.tree.removeMouseListener (this);
          mConfigHelperModule.releaseChunkDBTreeModel (mTreeModel);
       }
-	    
+
       mTreeModel = mConfigHelperModule.getChunkDBTreeModel (mCurrentDB);
-      if (mCurrentFont != null) 
+      if (mCurrentFont != null)
       {
          mTreeModel.tree.setFont(mCurrentFont);
       }
@@ -183,7 +183,7 @@ public class ChunkDBPanel
       validate();
       mScrollPane.repaint();
 
-      if (mTreeModel == null) 
+      if (mTreeModel == null)
       {
          System.out.println ("mTreeModel is null & shouldn't be");
       }
@@ -191,21 +191,21 @@ public class ChunkDBPanel
       {
          System.out.println ("mTreeModel tree is null & shouldn't be");
       }
-        
+
       setButtonsEnabled (mCurrentDB != null);
 
    }
 
    protected String getDBName()
    {
-      return (mCurrentDB != null)? mCurrentDB.name: null;
+      return (mCurrentDB != null)? mCurrentDB.getName(): null;
    }
 
-   // typically, one ChunkDBpanel will call this on another to perform a 
+   // typically, one ChunkDBpanel will call this on another to perform a
    // sendacross action
    protected void addAll (ConfigChunkDB newdb)
    {
-      if (mCurrentDB == null) 
+      if (mCurrentDB == null)
       {
          return;
       }
@@ -213,13 +213,13 @@ public class ChunkDBPanel
       {
          mConfigModule.addChunks (mCurrentDB, newdb);
       }
-   }	
-   
+   }
+
    // updates the list of chunk types which can be inserted.
    protected void updateInsertTypes ()
    {
       int i, j;
-      if (mInsertTypeBox == null) 
+      if (mInsertTypeBox == null)
       {
          return;
       }
@@ -230,7 +230,7 @@ public class ChunkDBPanel
       {
          mInsertTypeBox.removeItemAt (0);
       }
-        
+
       String[] desc_names = mConfigModule.getDescNames();
       for (i = 0; i < desc_names.length; i++)
       {
@@ -278,11 +278,11 @@ public class ChunkDBPanel
                ni = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)tp[i].getLastPathComponent()).getUserObject());
                if (ni.isChunkNode())
                {
-                  v.add (ni.getChunk());
+                  v.add(ni.getChunk());
                }
             }
          }
-         if (mSendTarget != null) 
+         if (mSendTarget != null)
          {
             mSendTarget.addAll (v);
          }
@@ -314,7 +314,7 @@ public class ChunkDBPanel
             }
          }
          DependencyFrame dependency_frame = (DependencyFrame)mUIModule.getChildFrameMatching ("org.vrjuggler.jccl.editorgui.DependencyFrame", mCurrentDB, null);
-         if (dependency_frame != null) 
+         if (dependency_frame != null)
          {
             dependency_frame.refreshData (vec);
          }
@@ -338,7 +338,7 @@ public class ChunkDBPanel
             ni = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)tp[i].getLastPathComponent()).getUserObject());
             if (ni.isChunkNode())
             {
-               db.add (ni.getChunk());
+               db.add(ni.getChunk());
             }
          }
          mConfigModule.removeChunks (mCurrentDB, db);
@@ -349,7 +349,7 @@ public class ChunkDBPanel
          if (ch != null)
          {
             ch.setName(mCurrentDB.getNewName(ch.getDescName()));
-            mCurrentDB.add (ch);
+            mCurrentDB.add(ch);
          }
       }
       else if (source == mChunkHelpButton)
@@ -370,13 +370,13 @@ public class ChunkDBPanel
                // create a copy of this node...
                ch = new ConfigChunk (ni.getChunk());
                ch.setName (mCurrentDB.getNewName("copy of " + ch.getName()));
-               mCurrentDB.add (ch);
+               mCurrentDB.add(ch);
             }
          }
       }
       else if (source == mLoadButton)
       {
-         File default_dir = (mCurrentDB == null)?null:mCurrentDB.file.getParentFile();
+         File default_dir = (mCurrentDB == null)?null:mCurrentDB.getInputFile().getParentFile();
          File f = mUIModule.getEasyFileDialog().requestOpenFile (default_dir, mUIModule, mChunkDBFilter);
          if (f != null)
          {
@@ -391,7 +391,7 @@ public class ChunkDBPanel
       {
          if (mCurrentDB != null)
          {
-            File f = mCurrentDB.file;
+            File f = mCurrentDB.getInputFile();
             f = mUIModule.getEasyFileDialog().requestSaveFile (f, mUIModule, mChunkDBFilter);
             if (f != null)
             {
@@ -407,11 +407,11 @@ public class ChunkDBPanel
       else if (source == mHelp1MI || source == mHelp2MI)
       {
          ni = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)mTreeItemMenuPath.getLastPathComponent()).getUserObject());
-         if (ni.isDescNode()) 
+         if (ni.isDescNode())
          {
             mConfigHelperModule.loadDescHelp (mConfigModule.getDescTokenFromName (ni.toString()));
          }
-         else if (ni.isChunkNode()) 
+         else if (ni.isChunkNode())
          {
             mConfigHelperModule.loadDescHelp (ni.getChunk().getDescToken());
          }
@@ -433,7 +433,7 @@ public class ChunkDBPanel
             if (ch != null)
             {
                ch.setName (mCurrentDB.getNewName(ni.toString()));
-               mCurrentDB.add (ch);
+               mCurrentDB.add(ch);
             }
             else
             {
@@ -450,7 +450,7 @@ public class ChunkDBPanel
       {
          return;
       }
-      
+
       int selRow = mTreeModel.tree.getRowForLocation(e.getX(), e.getY());
       if (selRow == -1)
       {
@@ -475,7 +475,7 @@ public class ChunkDBPanel
          else if (ni.isDescNode())
          {
             ChunkDesc d = Core.descdb.getByName (ni.toString());
-            String h = ((d == null) || d.help.equals(""))?"No help available":d.help;
+            String h = ((d == null) || d.getHelp().equals(""))?"No help available":d.getHelp();
             String n = (d == null)?"Undefined ChunkDesc":d.getName();
             Core.consoleTempMessage (n, h);
          }
@@ -513,7 +513,7 @@ public class ChunkDBPanel
       {
          return;
       }
-        
+
       int selRow = mTreeModel.tree.getRowForLocation(e.getX(), e.getY());
       if (selRow == -1)
       {
@@ -521,7 +521,7 @@ public class ChunkDBPanel
       }
       mTreeItemMenuPath = mTreeModel.tree.getPathForLocation(e.getX(), e.getY());
       ChunkTreeNodeInfo ni = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)mTreeItemMenuPath.getLastPathComponent()).getUserObject());
-	
+
       int mod = e.getModifiers();
       if ((mod == MouseEvent.BUTTON2_MASK) || (mod == MouseEvent.BUTTON3_MASK))
       {
@@ -588,19 +588,19 @@ public class ChunkDBPanel
    {
       mComponentChunk = ch;
       mComponentName = ch.getName();
-        
+
       // get pointers to the modules we need.
-      Property p = ch.getPropertyFromToken ("Dependencies");
-      if (p != null)
+      String prop_val = ch.getProperty(VjComponentTokens.DEPENDENCIES).toString();
+      PropertyDesc prop_desc = ch.getPropertyDesc(VjComponentTokens.DEPENDENCIES);
+
+      if ( null != prop_val )
       {
-         int i;
-         int n = p.getNum();
-         String s;
          VjComponent c;
-         for (i = 0; i < n; i++)
+
+         for ( int i = 0; i < prop_desc.getNumAllowed(); ++i )
          {
-            s = p.getValue(i).toString();
-            c = Core.getVjComponent (s);
+            c = Core.getVjComponent(ch.getProperty(VjComponentTokens.DEPENDENCIES, i).toString());
+
             if (c != null)
             {
                if (c instanceof ControlUIModule)
@@ -643,7 +643,7 @@ public class ChunkDBPanel
       }
       mChunkDBFilter = new SuffixFilter ("Config Files (*.config, *.cfg)", ".config");
       mChunkDBFilter.addSuffix(".cfg");
-      mChunkDBFilter = (SuffixFilter)mUIModule.getEasyFileDialog().addFilter (mChunkDBFilter, "ConfigChunkDB");
+      mChunkDBFilter = (SuffixFilter)mUIModule.getEasyFileDialog().addFilter (mChunkDBFilter, ConfigTokens.chunk_db_TOKEN);
 
    }
 
@@ -676,13 +676,13 @@ public class ChunkDBPanel
 
          // side panel - add/load etc. buttons
 
-         mLoadButton = new JButton ("Load", 
+         mLoadButton = new JButton ("Load",
                                     mUIModule.getIcon ("open file", 0));
-         mSaveButton = new JButton ("Save", 
+         mSaveButton = new JButton ("Save",
                                     mUIModule.getIcon ("save file", 0));
-         mNewButton = new JButton ("New", 
+         mNewButton = new JButton ("New",
                                    mUIModule.getIcon ("new file", 0));
-         mCloseButton = new JButton ("Close", 
+         mCloseButton = new JButton ("Close",
                                      mUIModule.getIcon ("close file", 0));
 
          Insets ins = new Insets (0,0,0,0);
@@ -739,13 +739,13 @@ public class ChunkDBPanel
          GridBagLayout gbl = new GridBagLayout();
          GridBagConstraints gbc = new GridBagConstraints();
          center_panel.setLayout (gbl);
-            
+
          gbc.gridwidth = gbc.REMAINDER;
          gbc.anchor = gbc.EAST;
          gbc.weightx = 1;
          gbc.fill = gbc.BOTH;
          gbc.weighty = 0;
-            
+
          mSelectDBBox = new JComboBox();
          gbl.setConstraints (mSelectDBBox, gbc);
          center_panel.add (mSelectDBBox);

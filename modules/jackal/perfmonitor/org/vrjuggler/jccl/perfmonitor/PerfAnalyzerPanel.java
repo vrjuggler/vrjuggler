@@ -50,17 +50,17 @@ import org.vrjuggler.jccl.vjcontrol.ui.*;
  *  gadgest to control what gets displayed.
  *
  *  @see PerformanceModule
- * 
+ *
  *  @version $Revision$
  */
-public class PerfAnalyzerPanel 
-   extends JPanel 
-   implements PlugPanel, 
+public class PerfAnalyzerPanel
+   extends JPanel
+   implements PlugPanel,
                ActionListener,
 PerformanceModuleListener
 {
 
-   protected interface DataPanelElem 
+   protected interface DataPanelElem
       extends ActionListener
    {
 
@@ -72,7 +72,7 @@ PerformanceModuleListener
    }
 
 
-   protected class LabeledDataPanelElem 
+   protected class LabeledDataPanelElem
       implements DataPanelElem
    {
 
@@ -80,7 +80,7 @@ PerformanceModuleListener
       protected DefaultMutableTreeNode col_root;
       protected HashMap node_map; // maps IndexInfos to TreeNodes
 
-      
+
       public LabeledDataPanelElem (LabeledPerfDataCollector _col, MutableTreeNode global_root)
       {
          col = _col;
@@ -89,7 +89,7 @@ PerformanceModuleListener
          node_map = new HashMap();
       }
 
-      
+
       public void initialize ()
       {
          Iterator i = col.indexIterator();
@@ -102,7 +102,7 @@ PerformanceModuleListener
          col.addActionListener (this);
       }
 
-      
+
       public void destroy ()
       {
          col.removeActionListener (this);
@@ -177,7 +177,7 @@ PerformanceModuleListener
          tree_model.nodeChanged (col_root);
       }
 
-       
+
       /** Utility for update.
        *  Does a preorder traversal of this' subtree.
        */
@@ -288,7 +288,7 @@ PerformanceModuleListener
 
    }
 
-   
+
    /** Utility method for various printing routines. */
    private String padFloat (double f)
    {
@@ -313,7 +313,7 @@ PerformanceModuleListener
       for (int i = 0; i < datapanel_elems.size(); i++)
       {
          dpe = (DataPanelElem)datapanel_elems.elementAt(i);
-         if (col == dpe.getPerfDataCollector()) 
+         if (col == dpe.getPerfDataCollector())
          {
             return dpe;
          }
@@ -367,22 +367,22 @@ PerformanceModuleListener
          }
       }
       else if (source == max_samples_box)
-      {   
+      {
          int numsamps;
          String s = (String)max_samples_box.getSelectedItem();
-         if (s.equalsIgnoreCase("<Infinite>")) 
+         if (s.equalsIgnoreCase("<Infinite>"))
          {
             numsamps = -1;
          }
-         else 
+         else
          {
             numsamps = Integer.parseInt(s);
          }
-            
+
          //System.out.println ("setting max samples to " + numsamps);
          perf_module.setMaxSamples(numsamps);
       }
-      else if (source == display_choice) 
+      else if (source == display_choice)
       {
          refreshDisplay();
       }
@@ -523,16 +523,16 @@ PerformanceModuleListener
       component_name = ch.getName();
 
       // get pointers to the modules we need.
-      Property p = ch.getPropertyFromToken ("Dependencies");
-      if (p != null)
+      VarValue prop_val = ch.getProperty(VjComponentTokens.DEPENDENCIES);
+      if ( null != prop_val )
       {
          int i;
-         int n = p.getNum();
+         int n = ch.getPropertyCount(VjComponentTokens.DEPENDENCIES);
          String s;
          VjComponent c;
          for (i = 0; i < n; i++)
          {
-            s = p.getValue(i).toString();
+            s = ch.getProperty(VjComponentTokens.DEPENDENCIES, i).toString();
             c = Core.getVjComponent (s);
             if (c != null)
             {
@@ -552,11 +552,11 @@ PerformanceModuleListener
 
    public void initialize () throws VjComponentException
    {
-      if (perf_module == null || ui_module == null) 
+      if (perf_module == null || ui_module == null)
       {
          throw new VjComponentException (component_name + ": Instantiated with unmet dependencies.");
       }
-      
+
       perf_module.addPerformanceModuleListener (this);
       // get all the alread-added perf modules...
       for (int i = 0; i < perf_module.getSize(); i++)
@@ -582,13 +582,13 @@ PerformanceModuleListener
       return false;
    }
 
-   
+
    public JComponent getUIComponent ()
    {
       return this;
    }
 
-   
+
    public boolean initUIComponent()
    {
       if (!ui_initialized)
@@ -601,7 +601,7 @@ PerformanceModuleListener
          gbc = new GridBagConstraints();
          gbc.insets = new Insets (0, 4, 0, 4);
          gbc.fill = gbc.HORIZONTAL;
-            
+
 
          JPanel epanel = new JPanel ();
          epanel.setLayout (new GridLayout (10, 1, 2, 0));
@@ -617,7 +617,7 @@ PerformanceModuleListener
          print_all_button = new JButton ("Print");
          print_all_button.addActionListener (this);
          epanel.add (print_all_button);
-       
+
          graph_button = new JButton ("Graph");
          graph_button.addActionListener (this);
          epanel.add (graph_button);
@@ -628,7 +628,7 @@ PerformanceModuleListener
          JPanel ntoppanel = new JPanel();
          ntoppanel.setLayout (new BoxLayout (ntoppanel, BoxLayout.X_AXIS));
          npanel.add (ntoppanel);
-            
+
          ntoppanel.add (new JLabel ("Maximum stored samples"));
          ntoppanel.add (max_samples_box = new JComboBox());
          max_samples_box.addItem ("100");
@@ -650,7 +650,7 @@ PerformanceModuleListener
          display_pane = new JScrollPane (tree, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
 //              display_pane = new JScrollPane (data_panel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-            
+
          add (display_pane, "Center");
 
 //              for (int i = 0; i < datapanel_elems.size(); i++) {
@@ -679,7 +679,7 @@ PerformanceModuleListener
 //              data_panel.add (comp);
          //data_panel.add (Box.createVerticalGlue());
 //              display_pane = new JScrollPane (panel_tree, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-            
+
 //              add (display_pane, "Center");
 
          ui_initialized = true;

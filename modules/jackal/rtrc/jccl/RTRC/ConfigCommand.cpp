@@ -29,10 +29,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <jccl/RTRC/ConfigCommand.h>
+
+#include <jccl/jcclConfig.h>
 #include <jccl/Config/ConfigChunkDB.h>
+#include <jccl/Config/ChunkDesc.h>
 #include <jccl/Config/ChunkDescDB.h>
-#include <jccl/Config/ConfigIO.h>
+#include <jccl/RTRC/ConfigCommand.h>
 
 namespace jccl {
 
@@ -46,7 +48,7 @@ namespace jccl {
         ;
     }
 
-    
+
     /*virtual*/ void CommandRefresh::call (std::ostream& out) const {
         out << "<refresh_all/>\n";
     }
@@ -74,7 +76,7 @@ namespace jccl {
             out << "<apply_chunks all=\"true\">\n";
         else
             out << "<apply_chunks>\n";
-        ConfigIO::instance()->writeConfigChunkDB (out, *db);
+        out << *db;
         out << "</apply_chunks>\n";
     }
 
@@ -86,7 +88,7 @@ namespace jccl {
 
 
     //CommandSendDescDB
-    
+
     /*static*/ const std::string CommandSendDescDB::protocol_name ("xml_config");
 
 
@@ -95,13 +97,13 @@ namespace jccl {
         all = _all;
     }
 
-    
+
     /*virtual*/ void CommandSendDescDB::call (std::ostream& out) const {
         if (all)
             out << "<apply_descs all=\"true\">\n";
         else
             out << "<apply_descs>\n";
-        ConfigIO::instance()->writeChunkDescDB (out, *db);
+        out << *db;
         out << "</apply_descs>\n";
     }
 

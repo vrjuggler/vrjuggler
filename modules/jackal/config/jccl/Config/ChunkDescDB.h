@@ -34,137 +34,94 @@
 #define _JCCL_CHUNKDESCDB_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Config/ChunkDescPtr.h>
 
+#include <string>
+#include <cppdom/cppdom.h>
+/*
+#include <vpr/vpr.h>
+#include VPR_HASH_MAP_INCLUDE
+*/
+#include <map>
+
+#include <jccl/Config/ChunkDescPtr.h>
 
 namespace jccl
 {
 
-/** Storage class for ChunkDescs.
- *  A ChunkDescDB is a container for ChunkDescs.  It includes
- *  functions for searching, as well as reading and writing
- *  ChunkDescDB files.
+/** List of chunk deskcs
  *  All ChunkDescs contained in a DB are guaranteed to have a
  *  unique token.  If a ChunkDesc with an already used token is
  *  added to a ChunkDescDB, it replaces the previous ChunkDesc.
+ *
+ * Based off a map to guarantee unique indexing and to increase
+ * lookup speed.  Also, allows more general methods for merging
+ * and iterating through the db.
+ *
+ *  XML rep:
+ *  <ChunkDescDB>
+ *    <ChunkDesc ...>...</ChunkDesc> (one for each chunk desc)
+ *  </ChunkDescDB>
  */
-class JCCL_CLASS_API ChunkDescDB
+class JCCL_CLASS_API ChunkDescDB : public std::map<std::string, ChunkDescPtr>
 {
-private:
-
-   /** Internal storage of ChunkDescs.
-    *  Note that we use boost shared_ptrs for storage, so we never have
-    *  to explicitly delete a ChunkDesc - they are automatically freed
-    *  when all ChunkDescPtrs referencing them are out of scope.
-    *  This also means that ChunkDescs can be (and are) shared between
-    *  ChunkDescDBs.
-    */
-   std::vector<ChunkDescPtr> descs;
-
 public:
 
    /** Constructor.  Creates an empty ChunkDescDB. */
-   ChunkDescDB ();
-
+   ChunkDescDB ()
+   {;}
 
    /** Destructor.  Doesn't really do anything. */
-   ~ChunkDescDB ();
+   ~ChunkDescDB ()
+   {;}
 
-   typedef std::vector<ChunkDescPtr>::iterator iterator;
-   typedef std::vector<ChunkDescPtr>::const_iterator const_iterator;
+   /** Get the chunk desc for the given token
+   * @returns NULL ptr if not found, else a shared ptr to the desc
+   */
+   ChunkDescPtr get(const std::string descToken);
 
-   inline iterator begin()
-   {
-      return descs.begin();
-   }
-
-   inline const_iterator begin() const
-   {
-      return descs.begin();
-   }
-
-   inline iterator end()
-   {
-      return descs.end();
-   }
-
-   inline const_iterator end() const
-   {
-      return descs.end();
-   }
-
-   /** Finds a ChunkDesc by token.
-    *  @param token - The token of a ChunkDesc to find.
-    *  @return A ChunkDesc in self matching token, or a NULL
-    *          ChunkDescPtr if none was found.
-    */
-   ChunkDescPtr getChunkDesc (const std::string& _token);
-
-   //:Inserts a ChunkDesc
-   //!ARGS: d - non-NULL pointer to ChunkDesc
-   //!POST: d is inserted into self, replacing any ChunkDesc
-   //+      with the same token.
-   //!RETURNS: True - always.
-   bool insert (ChunkDescPtr d);
-
-   //:Inserts all ChunkDescs in db
-   //!ARGS: db - a non-NULL pointer to a ChunkDescDB
-   //!POST: all elements of db are inserted into self, replacing any
-   //+      existing ChunkDescs with the same token.
-   void insert (ChunkDescDB* db);
-
-   //:Removes ChunkDesc from self
-   //!ARGS: _token - a non-NULL C string
-   //!POST: Any ChunkDesc in self whose token equals _token
-   //+      is removed and destroyed.
-   //!RETURNS: true - if a matching chunk was found
-   //!RETURNS: false - if no matching chunk was found
-   bool remove (const std::string& name);
-
-   //:Removes all ChunkDescs from self
-   //!POST: All ChunkDescs in self have been removed and
-   //+      destroyed
-   //!NOTE: This <b>can</b> be dangerous, if there exist
-   //+      ConfigChunks somewhere that rever to any of
-   //+      the deleted ChunkDescs.
-   void removeAll ();
-
-   //:Returns the number of ChunkDescs in self.
-   //!RETURNS: n - the number of ChunkDescs in self.
-   int size () const;
-
-   //:Writes self to out
-   //!POST: A text representation of self is appended to out
-   //!RETURNS: out
-   //!NOTE: The output format is zero or more ChunkDescs
-   //+      followed by "end"
+   /** Writes self to out
+   * @post out is appended with the xml rep of ChunkDescDB
+   */
    friend std::ostream& operator << (std::ostream& out, const ChunkDescDB& self);
 
-   //:Reads from in
-   //!POST: ChunkDescs read from in are appended to self.
-   //+      ChunkDescs previously in self are retained.
-   //!NOTE: input format is zero or more ChunkDescs followed
-   //+      by "End" or eof.
+   /** Reads self in from out
+   * @pre  in must be at the start of the CheckDescDB xml element token
+   * @post Clears db and fills with the contents of in
+   */
    friend std::istream& operator >> (std::istream& in, ChunkDescDB& self);
 
-   //:Loads a chunkdesc file
-   //!ARGS: fname - name of file to load
-   //!POST: File is opened and ChunkDescs are read and inserted
-   //+      into self (using >>).
-   //!RETURNS: true - if file was opened succesfully
-   //!RETURNS: false - otherwise
-   //!NOTE: Return value only deals with opening the file, and
-   //+      true doesn't neccessarily mean no parsing errors
-   //+      occurred.
+   /** Loads a chunkdesc file
+   * @param fname - name of file to load
+   * @post File is opened and ChunkDescs are read and inserted
+   *      into self (using >>).
+   * @returns true - if file was opened succesfully
+   * @returns false - otherwise
+   * @returns Return value only deals with opening the file, and
+   *      true doesn't neccessarily mean no parsing errors
+   *      occurred.
+   */
    bool load (const std::string& filename, const std::string& parentfile = "");
 
-   //:Saves a chunkdesc file
-   //!ARGS: fname - name of file to load
-   //!POST: File is opened and ChunkDescs are written to it
-   //+      using << operator.
-   //!RETURNS: true - if file was opened succesfully
-   //!RETURNS: false - otherwise
-   bool save (const char *fname);
+   /** Saves a chunkdesc file
+   * ARGS: fname - name of file to load
+   * POST: File is opened and ChunkDescs are written to it
+   *      using << operator.
+   * @returns true - if file was opened succesfully
+   * @returns false - otherwise
+   */
+   bool save (const std::string& filename);
+
+protected:
+   /** Load the chunks from a given "ChunkDescDB" element into the db
+   * @post All ChunkDesc's that are children of chunkDescDBNode are loaded
+   */
+   bool loadFromChunkDescDBNode(cppdom::XMLNodePtr chunkDescDBNode);
+
+   /** Creates a chunkDescDB element node and puts all the contained descs under it
+   * @param chunkDescDBNode - returns with the new node that contains all the children desc
+   * This function is used to create the root descdb node for writing out dbs
+   */
+   void createChunkDescDBNode(cppdom::XMLNodePtr& chunkDescDBNode) const;
 };
 
 } // End of jccl namespace

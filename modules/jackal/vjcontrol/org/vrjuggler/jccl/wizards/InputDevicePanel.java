@@ -52,9 +52,9 @@ import org.vrjuggler.jccl.vjcontrol.ui.widgets.*;
  */
 
 public class InputDevicePanel
-    extends JPanel 
+    extends JPanel
     implements WizardSubPanel,
-               ActionListener, 
+               ActionListener,
                FocusListener,
                MouseListener,
                ListSelectionListener {
@@ -254,7 +254,7 @@ public class InputDevicePanel
     }
 
 
-    /** Sets the state of the UI components to reflect the resultsDB. 
+    /** Sets the state of the UI components to reflect the resultsDB.
      *  This is called when the ui is initialized or when a new input db
      *  is set.
      */
@@ -296,13 +296,13 @@ public class InputDevicePanel
         while (it.hasNext()) {
             ch = (ConfigChunk)it.next();
             processDeviceChunk (ch, null);
-        }        
+        }
         chunks = results_db.getOfDescToken ("AnaProxy");
         it = chunks.iterator();
         while (it.hasNext()) {
             ch = (ConfigChunk)it.next();
             processDeviceChunk (ch, null);
-        }        
+        }
         it = devices_list.iterator();
         while (it.hasNext()) {
             id = (InputDeviceData)it.next();
@@ -319,7 +319,7 @@ public class InputDevicePanel
     /** Utility for setUIState and adding new devices.
      *  Processes the ConfigChunks proxy_chunk and device_chunk, and
      *  adds a new InputDeviceData entry.
-     *  If device_chunk is null, it assumes that proxy_chunk's device 
+     *  If device_chunk is null, it assumes that proxy_chunk's device
      *  property is valid and checks the resultsDB for the device's chunk.
      */
     private void processDeviceChunk (ConfigChunk proxy_chunk, ConfigChunk device_chunk) {
@@ -331,16 +331,16 @@ public class InputDevicePanel
 
         proxy_name = proxy_chunk.getName();
 
-//          if (proxy_name.endsWith ("_helper")) // it doesn't warrant it's own 
+//          if (proxy_name.endsWith ("_helper")) // it doesn't warrant it's own
 //              return;                          // mention
 
-        device_name = proxy_chunk.getValueFromToken ("device",0).getString();
-        device_unit = proxy_chunk.getValueFromToken ("unit", 0).getInt();
+        device_name = proxy_chunk.getProperty("device",0).getString();
+        device_unit = proxy_chunk.getProperty("unit", 0).getInt();
 
         if (device_chunk == null)
             device_chunk = results_db.get(device_name);
 
-        VarValue v = device_chunk.getValueFromToken ("keyboardProxy",0);
+        VarValue v = device_chunk.getProperty("keyboardProxy",0);
         if (v == null)
             input_source = "";
         else
@@ -386,7 +386,7 @@ public class InputDevicePanel
         id.device_chunk = device_chunk;
 
         id.dirty = false;
-        
+
         if (do_insert) {
             devices_list.add (id);
             devices_jlist_model.addElement (id);
@@ -401,8 +401,6 @@ public class InputDevicePanel
 
         // get key values for old current device
         VarValueMiniChunkPanel vp;
-        Property p;
-        ConfigChunk ch;
 
         String new_input_source = (String)source_select.getSelectedItem();
         if (!new_input_source.equalsIgnoreCase("<No Selection>"))
@@ -431,15 +429,11 @@ public class InputDevicePanel
         // get key bindings
         switch (current_editing_device.device_type) {
         case ANALOG:
-            p = current_editing_device.device_chunk.getPropertyFromToken ("KeyPairsInc");
-            ch = p.getValue(0).getEmbeddedChunk();
             vp = (VarValueMiniChunkPanel)keys_panel_list.get(0);
-            p.setValue (vp.getValue(), 0);
+            current_editing_device.device_chunk.setProperty("KeyPairsInc", 0, vp.getValue());
 
-            p = current_editing_device.device_chunk.getPropertyFromToken ("KeyPairsDec");
-            ch = p.getValue(0).getEmbeddedChunk();
             vp = (VarValueMiniChunkPanel)keys_panel_list.get(1);
-            p.setValue (vp.getValue(), 0);
+            current_editing_device.device_chunk.setProperty("KeyPairsDec", 0, vp.getValue());
             break;
         case FIRST_PERSON_CAMERA:
             break;
@@ -449,16 +443,16 @@ public class InputDevicePanel
         case POSITION:
         case USER_HEAD_TRACKING:
         default:
-            p = current_editing_device.device_chunk.getPropertyFromToken ("KeyPairs");
-            int i, n = p.getNum();
-            for (i = 0; i < n; i++) {
-                ch = p.getValue(i).getEmbeddedChunk();
-                vp = (VarValueMiniChunkPanel)keys_panel_list.get(i);
-                p.setValue (vp.getValue(), i);
+            int n = current_editing_device.device_chunk.getPropertyCount("KeyPairs");
+            for ( int i = 0; i < n; ++i )
+            {
+                vp = (VarValueMiniChunkPanel) keys_panel_list.get(i);
+                current_editing_device.device_chunk.setProperty("KeyPairs", i,
+                                                                vp.getValue());
             }
         }
 
-        System.out.println ("updated stuff:\n" + current_editing_device.proxy_chunk.xmlRep() + current_editing_device.device_chunk.xmlRep());
+        System.out.println ("updated stuff:\n" + current_editing_device.proxy_chunk + current_editing_device.device_chunk);
     }
 
 
@@ -549,15 +543,13 @@ public class InputDevicePanel
                 GridBagConstraints gbc = new GridBagConstraints();
                 gbc.fill = gbc.HORIZONTAL;
                 //gbc.weighty = 0.0;
-                Property p;
-                ConfigChunk ch;
+                VarValue val;
                 VarValueMiniChunkPanel vp;
                 JLabel l;
 
                 switch (id.device_type) {
                 case ANALOG:
-                    p = id.device_chunk.getPropertyFromToken ("KeyPairsInc");
-                    ch = p.getValue(0).getEmbeddedChunk();
+                    val = id.device_chunk.getProperty("KeyPairsInc", 0);
                     gbc.gridwidth = gbc.RELATIVE;
                     gbc.weightx = 0.0;
                     l = new JLabel ("Increment");
@@ -567,14 +559,13 @@ public class InputDevicePanel
                     gbc.weightx = 1.0;
                     vp = new VarValueMiniChunkPanel ();
                     vp.setConfigUIHelper (uihelper_module);
-                    vp.setPropertyDesc (p.getDesc());
-                    vp.setValue (p.getValue(0)); // yech... this api sucks
+                    vp.setPropertyDesc(id.device_chunk.getPropertyDesc("KeyPairsInc"));
+                    vp.setValue(val);
                     keys_panel_int_layout.setConstraints (vp, gbc);
                     keys_panel_int.add (vp);
                     keys_panel_list.add (vp);
 
-                    p = id.device_chunk.getPropertyFromToken ("KeyPairsDec");
-                    ch = p.getValue(0).getEmbeddedChunk();
+                    val = id.device_chunk.getProperty("KeyPairsDec", 0);
                     gbc.gridwidth = gbc.RELATIVE;
                     gbc.weightx = 0.0;
                     l = new JLabel ("Decrement");
@@ -584,8 +575,8 @@ public class InputDevicePanel
                     gbc.weightx = 1.0;
                     vp = new VarValueMiniChunkPanel ();
                     vp.setConfigUIHelper (uihelper_module);
-                    vp.setPropertyDesc (p.getDesc());
-                    vp.setValue (p.getValue(0)); // yech... this api sucks
+                    vp.setPropertyDesc(id.device_chunk.getPropertyDesc("KeyPairsDec"));
+                    vp.setValue(val);
                     keys_panel_int_layout.setConstraints (vp, gbc);
                     keys_panel_int.add (vp);
                     keys_panel_list.add (vp);
@@ -600,25 +591,25 @@ public class InputDevicePanel
                 case USER_HEAD_TRACKING:
                 case DIGITAL:
                 default:
-                    p = id.device_chunk.getPropertyFromToken ("KeyPairs");
-                    int i, n = p.getNum();
-                    for (i = 0; i < n; i++) {
-                        ch = p.getValue(i).getEmbeddedChunk();
+                    val = id.device_chunk.getProperty("KeyPairs");
+                    int n = id.device_chunk.getPropertyCount("KeyPairs");
+                    for ( int i = 0; i < n; ++i )
+                    {
+                        val = id.device_chunk.getProperty("KeyPairs", i);
                         gbc.gridwidth = gbc.RELATIVE;
                         gbc.weightx = 0.0;
-                        l = new JLabel (p.getDesc().getValueLabel(i));
+                        l = new JLabel(id.device_chunk.getPropertyDesc("KeyPairs").getValueLabel(i));
                         keys_panel_int_layout.setConstraints (l, gbc);
                         keys_panel_int.add (l);
                         gbc.gridwidth = gbc.REMAINDER;
                         gbc.weightx = 1.0;
                         vp = new VarValueMiniChunkPanel ();
                         vp.setConfigUIHelper (uihelper_module);
-                        vp.setPropertyDesc (p.getDesc());
-                        vp.setValue (p.getValue(i)); // yech... this api sucks
+                        vp.setPropertyDesc(id.device_chunk.getPropertyDesc("KeyPairs"));
+                        vp.setValue(val);
                         keys_panel_int_layout.setConstraints (vp, gbc);
                         keys_panel_int.add (vp);
                         keys_panel_list.add (vp);
-
                     }
                 }
                 keys_scrollpane.validate();
@@ -713,13 +704,13 @@ public class InputDevicePanel
     public boolean checkState () {
         if (getInputDeviceData ("VJHead") == null) {
             JOptionPane.showMessageDialog (
-                null, "No Head Tracking device has been defined.", 
+                null, "No Head Tracking device has been defined.",
                 "Wizard Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         if (getInputDeviceData ("SimCamera") == null) {
             JOptionPane.showMessageDialog (
-                null, "No Camera has been defined.", 
+                null, "No Camera has been defined.",
                 "Wizard Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
@@ -742,33 +733,30 @@ public class InputDevicePanel
         //if (results_dirty && (results_db != null)) {
             // query the GUI widgets to update results_db
             java.util.List chunks;
-            ConfigChunk ch;
-            Property p;
             InputDeviceData id;
-            
+
             Iterator it = devices_list.iterator();
             while (it.hasNext()) {
                 id = (InputDeviceData)it.next();
-                ch = id.proxy_chunk;
 
-                ch.setName (id.proxy_name);
-                
-                p = ch.getPropertyFromToken ("device");
-                p.setValue (id.device_name, 0);
+                id.proxy_chunk.setName(id.proxy_name);
+                id.proxy_chunk.setProperty("device", 0, new VarValue(id.device_name));
 
-                ch = id.device_chunk;
-                ch.setName (id.device_name);
+                id.device_chunk.setName(id.device_name);
+                VarValue proxy_val = id.device_chunk.getProperty("keyboardProxy");
 
-                p = ch.getPropertyFromToken ("keyboardProxy");
-                if (p != null)
-                    p.setValue (id.input_source, 0);
+                if ( proxy_val != null )
+                {
+                   id.device_chunk.setProperty("keyboardProxy", 0,
+                                               new VarValue(id.input_source));
 
-//                 p = ch.getPropertyFromToken ("origin");
-//                 p.setValue (new VarValue(iw.x), 0);
-//                 p.setValue (new VarValue(iw.y), 1);
+//                   id.device_chunk.setProperty("keyboardProxy", 0,
+//                                               new VarValue(iw.x));
+//                   id.device_chunk.setProperty("keyboardProxy", 1,
+//                                               new VarValue(iw.y));
+                }
 
-
-                // we depend on chunk default values etc. to set the rest 
+                // we depend on chunk default values etc. to set the rest
                 // of these things...
             }
 
@@ -814,7 +802,6 @@ public class InputDevicePanel
 
     public void actionPerformed (ActionEvent e) {
         ConfigChunk device_chunk, proxy_chunk;
-        Property p;
         InputDeviceData id;
 
         Object source = e.getSource();
@@ -846,9 +833,9 @@ public class InputDevicePanel
             if (id != null) {
                 Object[] options = { "OK", "CANCEL" };
                 int result = JOptionPane.showOptionDialog(
-                    null, 
+                    null,
                     "Adding a new head will replace the current head",
-                    "Warning", 
+                    "Warning",
                     JOptionPane.DEFAULT_OPTION,
                     JOptionPane.WARNING_MESSAGE,
                     null, options, options[0]);
@@ -867,8 +854,7 @@ public class InputDevicePanel
             proxy_chunk = ChunkFactory.createChunkWithDescToken ("PosProxy");
             proxy_chunk.setName (results_db.getNewName ("VJHead"));
             device_chunk.setName (proxy_chunk.getName() + "_device");
-            p = proxy_chunk.getPropertyFromToken ("device");
-            p.setValue (device_chunk.getName(), 0);
+            proxy_chunk.setProperty("device", 0, new VarValue(device_chunk.getName()));
             processDeviceChunk (proxy_chunk, device_chunk);
             results_db.add (proxy_chunk);
             results_db.add (device_chunk);
@@ -879,9 +865,9 @@ public class InputDevicePanel
             if (id != null) {
                 Object[] options = { "OK", "CANCEL" };
                 int result = JOptionPane.showOptionDialog(
-                    null, 
+                    null,
                     "Adding a new Camera will replace the current Camera",
-                    "Warning", 
+                    "Warning",
                     JOptionPane.DEFAULT_OPTION,
                     JOptionPane.WARNING_MESSAGE,
                     null, options, options[0]);
@@ -897,26 +883,23 @@ public class InputDevicePanel
                 if (id == current_editing_device)
                     setEditingDevice (null);
             }
+
             proxy_chunk = ChunkFactory.createChunkWithDescToken ("PosProxy");
             proxy_chunk.setName (results_db.getNewName ("SimCamera"));
-            p = proxy_chunk.getPropertyFromToken ("device");
-            p.setValue ("VJHead_device", 0);
-            p = proxy_chunk.getPropertyFromToken ("translate");
-            p.setValue (new VarValue (-1.0f), 2);
-            p = proxy_chunk.getPropertyFromToken ("etrans");
-            p.setValue (true, 0);
+            proxy_chunk.setProperty("device", 0, new VarValue("VJHead_device"));
+            proxy_chunk.setProperty("translate", 0, new VarValue(-1.0f));
+            proxy_chunk.setProperty("etrans", 0, new VarValue(true));
             processDeviceChunk (proxy_chunk, null);
             results_db.add (proxy_chunk);
-
         }
         else if (source == add_thirdp_camera_mi) {
             id = getInputDeviceData ("SimCamera");
             if (id != null) {
                 Object[] options = { "OK", "CANCEL" };
                 int result = JOptionPane.showOptionDialog(
-                    null, 
+                    null,
                     "Adding a new Camera will replace the current Camera",
-                    "Warning", 
+                    "Warning",
                     JOptionPane.DEFAULT_OPTION,
                     JOptionPane.WARNING_MESSAGE,
                     null, options, options[0]);
@@ -935,8 +918,7 @@ public class InputDevicePanel
             proxy_chunk = ChunkFactory.createChunkWithDescToken ("PosProxy");
             proxy_chunk.setName (results_db.getNewName ("SimCamera"));
             device_chunk.setName (proxy_chunk.getName() + "_device");
-            p = proxy_chunk.getPropertyFromToken ("device");
-            p.setValue (device_chunk.getName(), 0);
+            proxy_chunk.setProperty("device", 0, new VarValue(device_chunk.getName()));
             processDeviceChunk (proxy_chunk, device_chunk);
             results_db.add (proxy_chunk);
             results_db.add (device_chunk);
@@ -948,8 +930,7 @@ public class InputDevicePanel
             proxy_chunk = ChunkFactory.createChunkWithDescToken ("PosProxy");
             proxy_chunk.setName (results_db.getNewName ("VJWand"));
             device_chunk.setName (proxy_chunk.getName() + "_device");
-            p = proxy_chunk.getPropertyFromToken ("device");
-            p.setValue (device_chunk.getName(), 0);
+            proxy_chunk.setProperty("device", 0, new VarValue(device_chunk.getName()));
             processDeviceChunk (proxy_chunk, device_chunk);
             results_db.add (proxy_chunk);
             results_db.add (device_chunk);
@@ -958,8 +939,7 @@ public class InputDevicePanel
             proxy_chunk = ChunkFactory.createChunkWithDescToken ("DigProxy");
             proxy_chunk.setName (results_db.getNewName ("VJButton"));
             device_chunk.setName (proxy_chunk.getName() + "_device");
-            p = proxy_chunk.getPropertyFromToken ("device");
-            p.setValue (device_chunk.getName(), 0);
+            proxy_chunk.setProperty("device", 0, new VarValue(device_chunk.getName()));
             processDeviceChunk (proxy_chunk, device_chunk);
             results_db.add (proxy_chunk);
             results_db.add (device_chunk);
@@ -968,8 +948,7 @@ public class InputDevicePanel
             proxy_chunk = ChunkFactory.createChunkWithDescToken ("DigProxy");
             proxy_chunk.setName (results_db.getNewName ("VJButton"));
             device_chunk.setName (proxy_chunk.getName() + "_device");
-            p = proxy_chunk.getPropertyFromToken ("device");
-            p.setValue (device_chunk.getName(), 0);
+            proxy_chunk.setProperty("device", 0, new VarValue(device_chunk.getName()));
             processDeviceChunk (proxy_chunk, device_chunk);
             results_db.add (proxy_chunk);
             results_db.add (device_chunk);
@@ -978,8 +957,7 @@ public class InputDevicePanel
             proxy_chunk = ChunkFactory.createChunkWithDescToken ("DigProxy");
             proxy_chunk.setName (results_db.getNewName ("VJButton"));
             device_chunk.setName (proxy_chunk.getName() + "_device");
-            p = proxy_chunk.getPropertyFromToken ("device");
-            p.setValue (device_chunk.getName(), 0);
+            proxy_chunk.setProperty("device", 0, new VarValue(device_chunk.getName()));
             processDeviceChunk (proxy_chunk, device_chunk);
             results_db.add (proxy_chunk);
             results_db.add (device_chunk);
@@ -989,8 +967,7 @@ public class InputDevicePanel
             proxy_chunk = ChunkFactory.createChunkWithDescToken ("DigProxy");
             proxy_chunk.setName (results_db.getNewName ("VJDigital"));
             device_chunk.setName (proxy_chunk.getName() + "_device");
-            p = proxy_chunk.getPropertyFromToken ("device");
-            p.setValue (device_chunk.getName(), 0);
+            proxy_chunk.setProperty("device", 0, new VarValue(device_chunk.getName()));
             processDeviceChunk (proxy_chunk, device_chunk);
             results_db.add (proxy_chunk);
             results_db.add (device_chunk);
@@ -1000,8 +977,7 @@ public class InputDevicePanel
             proxy_chunk = ChunkFactory.createChunkWithDescToken ("AnaProxy");
             proxy_chunk.setName (results_db.getNewName ("VJAnalog"));
             device_chunk.setName (proxy_chunk.getName() + "_device");
-            p = proxy_chunk.getPropertyFromToken ("device");
-            p.setValue (device_chunk.getName(), 0);
+            proxy_chunk.setProperty("device", 0, new VarValue(device_chunk.getName()));
             processDeviceChunk (proxy_chunk, device_chunk);
             results_db.add (proxy_chunk);
             results_db.add (device_chunk);
@@ -1011,8 +987,7 @@ public class InputDevicePanel
             proxy_chunk = ChunkFactory.createChunkWithDescToken ("PosProxy");
             proxy_chunk.setName (results_db.getNewName ("VJPosition"));
             device_chunk.setName (proxy_chunk.getName() + "_device");
-            p = proxy_chunk.getPropertyFromToken ("device");
-            p.setValue (device_chunk.getName(), 0);
+            proxy_chunk.setProperty("device", 0, new VarValue(device_chunk.getName()));
             processDeviceChunk (proxy_chunk, device_chunk);
             results_db.add (proxy_chunk);
             results_db.add (device_chunk);
@@ -1022,8 +997,7 @@ public class InputDevicePanel
             proxy_chunk = ChunkFactory.createChunkWithDescToken ("PosProxy");
             proxy_chunk.setName (results_db.getNewName ("VJPosition"));
             device_chunk.setName (proxy_chunk.getName() + "_device");
-            p = proxy_chunk.getPropertyFromToken ("device");
-            p.setValue (device_chunk.getName(), 0);
+            proxy_chunk.setProperty("device", 0, new VarValue(device_chunk.getName()));
             processDeviceChunk (proxy_chunk, device_chunk);
             results_db.add (proxy_chunk);
             results_db.add (device_chunk);
@@ -1135,22 +1109,20 @@ public class InputDevicePanel
         }
 
         // apply input device data...
-        String base_name = id.device_chunk.getValueFromToken("base_frame_proxy", 0).getString();
+        String base_name = id.device_chunk.getProperty("base_frame_proxy", 0).getString();
         InputDeviceData id2 = getInputDeviceData (base_name);
         relative_base_model.setSelectedItem (id2);
-        String dev_name = id.device_chunk.getValueFromToken("relative_proxy", 0).getString();
+        String dev_name = id.device_chunk.getProperty("relative_proxy", 0).getString();
         id2 = getInputDeviceData (dev_name);
         relative_device_model.setSelectedItem (id2);
         return relative_defaults_panel;
     }
 
     private void updateRelativeDefaults (InputDeviceData id) {
-        Property p;
-        p = id.device_chunk.getPropertyFromToken ("base_frame_proxy");
-        p.setValue(relative_base_model.getSelectedItem().toString(), 0);
-        p = id.device_chunk.getPropertyFromToken ("relative_proxy");
-        p.setValue(relative_device_model.getSelectedItem().toString(), 0);
-
+        id.device_chunk.setProperty("base_frame_proxy", 0,
+                                    new VarValue(relative_base_model.getSelectedItem().toString()));
+        id.device_chunk.setProperty("relative_proxy", 0,
+                                    new VarValue(relative_device_model.getSelectedItem().toString()));
     }
 
     private JComponent getAnalogDefaults (InputDeviceData id) {
@@ -1198,29 +1170,28 @@ public class InputDevicePanel
 
         // apply input device data...
         float val;
-        val = id.device_chunk.getValueFromToken ("min",0).getFloat();
+        val = id.device_chunk.getProperty("min",0).getFloat();
         analog_min_field.setText (Float.toString(val));
 
-        val = id.device_chunk.getValueFromToken ("max",0).getFloat();
+        val = id.device_chunk.getProperty("max",0).getFloat();
         analog_max_field.setText (Float.toString(val));
 
-        val = id.device_chunk.getValueFromToken ("anastep",0).getFloat();
+        val = id.device_chunk.getProperty("anastep",0).getFloat();
         analog_delta_field.setText (Float.toString(val));
 
         return analog_defaults_panel;
     }
 
     private void updateAnalogDefaults (InputDeviceData id) {
-        Property p;
         try {
-            p = id.device_chunk.getPropertyFromToken ("min");
-            p.setValue(new VarValue(Float.parseFloat(analog_min_field.getText())), 0);
+            id.device_chunk.setProperty("min", 0,
+                                        new VarValue(Float.parseFloat(analog_min_field.getText())));
 
-            p = id.device_chunk.getPropertyFromToken ("max");
-            p.setValue(new VarValue(Float.parseFloat(analog_max_field.getText())), 0);
+            id.device_chunk.setProperty("max", 0,
+                                        new VarValue(Float.parseFloat(analog_max_field.getText())));
 
-            p = id.device_chunk.getPropertyFromToken ("anastep");
-            p.setValue(new VarValue(Float.parseFloat(analog_delta_field.getText())), 0);
+            id.device_chunk.setProperty("anastep", 0,
+                                        new VarValue(Float.parseFloat(analog_delta_field.getText())));
         }
         catch (Exception e) {
             System.out.println ("hey, who put an illegal value in my floatTextField?");
@@ -1330,56 +1301,53 @@ public class InputDevicePanel
 
         // apply input device data...
         float val;
-        Property p;
 
-        p = id.device_chunk.getPropertyFromToken ("initialPos");
         for (i = 0; i < 3; i++) {
-            val = p.getValue(i).getFloat();
+            val = id.device_chunk.getProperty("initialPos", i).getFloat();
             position_startpos[i].setText(Float.toString(val));
         }
 
-        p = id.device_chunk.getPropertyFromToken ("initialRot");
         for (i = 0; i < 3; i++) {
-            val = p.getValue(i).getFloat();
+            val = id.device_chunk.getProperty("initialRot", i).getFloat();
             position_startrot[i].setText(Float.toString(val));
         }
 
-        val = id.device_chunk.getValueFromToken ("dtrans",0).getFloat();
+        val = id.device_chunk.getProperty("dtrans",0).getFloat();
         position_transdelta.setText (Float.toString(val));
 
-        val = id.device_chunk.getValueFromToken ("drot",0).getFloat();
+        val = id.device_chunk.getProperty("drot",0).getFloat();
         position_rotdelta.setText (Float.toString(val));
 
-        int j = id.device_chunk.getValueFromToken("transCoordSystem",0).getInt();
+        int j = id.device_chunk.getProperty("transCoordSystem",0).getInt();
         position_coordsystem.setSelectedIndex (j);
 
         return position_defaults_panel;
     }
 
     private void updatePositionDefaults (InputDeviceData id) {
-        Property p;
-        int i;
         try {
-            p = id.device_chunk.getPropertyFromToken ("initialPos");
-            for (i = 0; i < 3; i++) {
-                p.setValue(new VarValue(Float.parseFloat(position_startpos[i].getText())), i);
+            for ( int i = 0; i < 3; ++i )
+            {
+                id.device_chunk.setProperty("initialPos", i,
+                                            new VarValue(Float.parseFloat(position_startpos[i].getText())));
             }
 
-            p = id.device_chunk.getPropertyFromToken ("initialRot");
-            for (i = 0; i < 3; i++) {
-                p.setValue(new VarValue(Float.parseFloat(position_startrot[i].getText())), i);
+            for ( int i = 0; i < 3; ++i )
+            {
+                id.device_chunk.setProperty("initialRot", i,
+                                            new VarValue(Float.parseFloat(position_startrot[i].getText())));
             }
 
-            p = id.device_chunk.getPropertyFromToken ("dtrans");
-            p.setValue (new VarValue(Float.parseFloat(position_transdelta.getText())), 0);
+            id.device_chunk.setProperty("dtrans", 0,
+                                        new VarValue(Float.parseFloat(position_transdelta.getText())));
 
-            p = id.device_chunk.getPropertyFromToken ("drot");
-            p.setValue (new VarValue(Float.parseFloat(position_rotdelta.getText())), 0);
+            id.device_chunk.setProperty("drot", 0,
+                                        new VarValue(Float.parseFloat(position_rotdelta.getText())));
 
-            p = id.device_chunk.getPropertyFromToken("transCoordSystem");
-            p.setValue (new VarValue(position_coordsystem.getSelectedIndex()),0);
-            p = id.device_chunk.getPropertyFromToken("rotCoordSystem");
-            p.setValue (new VarValue(position_coordsystem.getSelectedIndex()),0);
+            id.device_chunk.setProperty("transCoordSystem", 0,
+                                        new VarValue(position_coordsystem.getSelectedIndex()));
+            id.device_chunk.setProperty("rotCoordSystem", 0,
+                                        new VarValue(position_coordsystem.getSelectedIndex()));
 
         }
         catch (Exception e) {

@@ -143,7 +143,7 @@ public final class VarValue
       String s = null;
       if (valtype == ValType.BOOL)
       {
-         s = (boolval)?"True":"False";
+         s = boolval ? "1" : "0";
       }
       else if (valtype == ValType.STRING)
       {
@@ -167,7 +167,7 @@ public final class VarValue
       }
       return s;
    }
-   
+
    public ValType getValType()
    {
       return valtype;
@@ -186,7 +186,16 @@ public final class VarValue
          }
          else if (valtype == ValType.BOOL)
          {
-            boolval = s.equalsIgnoreCase("true") ? true : false;
+            boolval = s.equals("1");
+
+            // Some config files may not use "0" and "1" for false and true.
+            // They need to be updated, and this facilitates that updating.
+            if ( ! boolval )
+            {
+               // This will handle the case when s is "true" or "false"
+               // (ignoring case.
+               boolval = Boolean.valueOf(s).booleanValue();
+            }
          }
          else if (valtype == ValType.INT)
          {
@@ -214,7 +223,7 @@ public final class VarValue
          {
             return;
          }
-         throw new VarValueException("Error assigning '" + s 
+         throw new VarValueException("Error assigning '" + s
                                      + "' to VarValue");
       }
    }

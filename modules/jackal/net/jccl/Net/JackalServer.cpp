@@ -29,14 +29,17 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <jccl/Net/JackalServer.h>
+
+#include <jccl/jcclConfig.h>
 #include <jccl/Net/JackalControl.h>
 #include <jccl/Net/Connect.h>
 #include <jccl/Config/ChunkDescDB.h>
+#include <jccl/Config/ChunkDesc.h>
 #include <jccl/Config/ConfigChunkDB.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ParseUtil.h>
 #include <jccl/Util/Debug.h>
+#include <jccl/Net/JackalServer.h>
 
 namespace jccl {
 
@@ -74,7 +77,7 @@ namespace jccl {
 
     void JackalServer::addJackalControl (JackalControl* jc) {
         vprASSERT (jc != NULL);
-        
+
         jackal_controls_mutex.acquire();
         jackal_controls.push_back (jc);
         // eeks... scary deadlock warnings are going off in my head...
@@ -83,13 +86,13 @@ namespace jccl {
             jc->addConnect (connections[i]);
         connections_mutex.release();
         jackal_controls_mutex.release();
-        
+
     }
 
 
     void JackalServer::removeJackalControl (JackalControl* jc) {
         vprASSERT (jc != NULL);
-        
+
         std::vector<JackalControl*>::iterator it;
         jackal_controls_mutex.acquire();
         for (it = jackal_controls.begin(); it != jackal_controls.end(); it++) {
@@ -102,7 +105,7 @@ namespace jccl {
     }
 
 
-    
+
     //: tells EM that a connection has died (ie by gui disconnecting)
     //  not for the case of removal by configRemove
     void JackalServer::connectHasDied (Connect* con) {
@@ -113,12 +116,12 @@ namespace jccl {
         for (; i < n; i++)
             jackal_controls[i]->removeConnect (con);
         jackal_controls_mutex.release();
-        
+
         connections_mutex.acquire();
         removeConnection(con);
         connections_mutex.release();
     }
-    
+
 
 
     std::vector<Connect*>& JackalServer::getConnections() {
@@ -138,18 +141,19 @@ namespace jccl {
     bool JackalServer::configAdd(ConfigChunkPtr chunk) {
         bool networkingchanged = false;
         int newport;
-        
-        std::string s = chunk->getType();
-        if (!vjstrcasecmp (s, "EnvironmentManager") || 
-            !vjstrcasecmp (s, "JackalServer"))  {
-            configured_to_accept = chunk->getProperty ("AcceptConnections");
-            newport = chunk->getProperty("Port");
-            
+
+        std::string s = chunk->getDescToken();
+        if ( s == std::string("EnvironmentManager") ||
+             s == std::string("JackalServer") )
+        {
+            configured_to_accept = chunk->getProperty<bool>("AcceptConnections");
+            newport = chunk->getProperty<int>("Port");
+
             if (newport == 0)
                 newport = Port;
             if ((newport != Port) || (configured_to_accept != isAccepting()))
                 networkingchanged = true;
-            
+
             connections_mutex.acquire();
             if (networkingchanged) {
                 Port = newport;
@@ -161,17 +165,17 @@ namespace jccl {
                     killConnections();
             }
             connections_mutex.release();
-            
+
             return true;
         }
-        else if (!vjstrcasecmp (s, "FileConnect")) {
+        else if ( s == std::string("FileConnect") ) {
             // I wanted to just look if the fileconnect had been added yet.
             // however I seem to have a chicken/egg problem.
             // so the kludge we'll do now is to not directly add a chunk that's
             // of type INTERACTIVE_CONNECT. sigh.
             // Unfortunately, this means that for other cases (such as attaching
             // to a named pipe) we're still broken
-            if ((int)chunk->getProperty("Mode") != INTERACTIVE_CONNECT) {
+            if ( chunk->getProperty<int>("Mode") != INTERACTIVE_CONNECT ) {
                 // it's new to us
                 Connect* vn = new Connect (chunk);
                 vprDEBUG (jcclDBG_SERVER, 1) << "EM adding connection: " << vn->getName().c_str() << '\n'
@@ -193,8 +197,8 @@ namespace jccl {
     //!RETURNS: success
     bool JackalServer::configRemove(ConfigChunkPtr chunk) {
 
-        std::string s = chunk->getType();
-        if (!vjstrcasecmp (s, "EnvironmentManager")) {
+        std::string s = chunk->getDescToken();
+        if ( s == std::string("EnvironmentManager") ) {
             // this could be trouble if the chunk being removed isn't the chunk
             // we were configured with...
             rejectConnections();
@@ -202,11 +206,12 @@ namespace jccl {
             configured_to_accept = false;
             return true;
         }
-        else if (!vjstrcasecmp (s, "FileConnect")) {
+        else if ( s == std::string("FileConnect") ) {
             vprDEBUG (jcclDBG_SERVER,1) << "EM Removing connection: "
-                                        << chunk->getProperty ("Name") << '\n' << vprDEBUG_FLUSH;
+                                        << chunk->getName() << '\n'
+                                        << vprDEBUG_FLUSH;
             connections_mutex.acquire();
-            Connect* c = getConnection (chunk->getProperty ("Name"));
+            Connect* c = getConnection(chunk->getName());
             if (c) {
                 removeConnection (c);
             }
@@ -214,7 +219,7 @@ namespace jccl {
             vprDEBUG (jcclDBG_SERVER,4) << "EM completed connection removal\n" << vprDEBUG_FLUSH;
             return true;
         }
-        
+
         return false;
     }
 
@@ -224,10 +229,10 @@ namespace jccl {
     //! RETURNS: true - Can handle it
     //+          false - Can't handle it
     bool JackalServer::configCanHandle(ConfigChunkPtr chunk) {
-        std::string s = chunk->getType();
-        return (!vjstrcasecmp (s, "EnvironmentManager") ||
-                !vjstrcasecmp (s, "JackalServer") ||
-                !vjstrcasecmp (s, "FileConnect"));
+        std::string s = chunk->getDescToken();
+        return ( s == std::string("EnvironmentManager") ||
+                 s == std::string("JackalServer") ||
+                 s == std::string("FileConnect"));
     }
 
 
@@ -237,7 +242,7 @@ namespace jccl {
     // should only be called when we own connections_mutex
     void JackalServer::removeConnection (Connect* con) {
         vprASSERT (con != 0);
-        
+
         std::vector<Connect*>::iterator i;
         for (i = connections.begin(); i != connections.end(); i++) {
             if (con == *i) {
@@ -265,15 +270,15 @@ namespace jccl {
         //struct sockaddr_in servaddr;
         Socket* servsock;
         Connect* connection;
-        
+
         vprDEBUG(jcclDBG_SERVER,4) << "JackalServer started control loop.\n"
                                    << vprDEBUG_FLUSH;
-        
+
         for (;;) {
             servsock = listen_socket->accept();
             char name[128];
             sprintf (name, "Network Connect %d", servsock->getID());
-            vprDEBUG(jcclDBG_SERVER,vprDBG_CONFIG_LVL) 
+            vprDEBUG(jcclDBG_SERVER,vprDBG_CONFIG_LVL)
                 << "JackalServer: Accepted connection: id: "
                 << servsock->getID() << " on port: N/A\n" << vprDEBUG_FLUSH;
             connection = new Connect (servsock, (std::string)name);
@@ -298,10 +303,10 @@ namespace jccl {
 
 
     bool JackalServer::acceptConnections() {
-        
+
         if (listen_thread != NULL)
             return true;
-        
+
         listen_socket = new Socket ();
         if (!listen_socket->listen (Port)) {
             vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) <<  clrOutNORM(clrRED,"ERROR:") << "Jackal Server couldn't open socket\n"
@@ -320,7 +325,7 @@ namespace jccl {
                                                        &JackalServer::controlLoop,
                                                        NULL);
         listen_thread = new vpr::Thread(memberFunctor);
-        
+
         return (listen_thread != NULL);
     }
 
@@ -342,7 +347,7 @@ namespace jccl {
     // should only be called while we own connections_mutex
     void JackalServer::killConnections() {
         unsigned int i;
-        
+
         //connections_mutex.acquire();
         for (i = 0; i < connections.size(); i++) {
             connections[i]->stopProcess();

@@ -49,7 +49,7 @@ import org.vrjuggler.jccl.vjcontrol.ui.ControlUIModule;
  * Company:      VRAC
  */
 
-public class SavePanel 
+public class SavePanel
     extends JPanel
     implements WizardSubPanel,
                ActionListener {
@@ -100,7 +100,7 @@ public class SavePanel
     }
 
 
-    /** Sets the state of the UI components to reflect the resultsDB. 
+    /** Sets the state of the UI components to reflect the resultsDB.
      *  This is called when the ui is initialized or when a new input db
      *  is set.
      */
@@ -123,7 +123,7 @@ public class SavePanel
 
             if (results_db != null)
                 setUIState();
-            
+
             ui_initialized = true;
         }
         return ui_initialized;
@@ -163,7 +163,7 @@ public class SavePanel
 
     public void actionPerformed (ActionEvent e) {
         if (e.getSource() == save_button) {
-            File f = results_db.file;
+            File f = results_db.getInputFile();
             // this is inexcusable cheating, but i'm in a terrible hurry
             // BUG BUG BUG BUG BUG BUG BUG BUG!!! CJ LOOK HERE!!!
             ConfigModule config_module;
@@ -172,7 +172,7 @@ public class SavePanel
             config_module = (ConfigModule)Core.getVjComponent ("Config Module");
             SuffixFilter chunkdb_filter = new SuffixFilter ("Config Files (*.config, *.cfg)", ".config");
             chunkdb_filter.addSuffix(".cfg");
-            chunkdb_filter = (SuffixFilter)ui_module.getEasyFileDialog().addFilter (chunkdb_filter, "ConfigChunkDB");
+            chunkdb_filter = (SuffixFilter)ui_module.getEasyFileDialog().addFilter (chunkdb_filter, ConfigTokens.chunk_db_TOKEN);
 
             f = ui_module.getEasyFileDialog().requestSaveFile (f, ui_module, chunkdb_filter);
             if (f != null) {

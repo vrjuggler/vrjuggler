@@ -39,141 +39,190 @@
 #include <jccl/Config/ChunkDesc.h>
 #include <jccl/Config/ParseUtil.h>
 #include <jccl/Config/ConfigTokens.h>
-#include <jccl/Config/ConfigIO.h>
+#include <jccl/Config/ChunkFactory.h>
 
 namespace jccl
 {
 
-ChunkDescDB::ChunkDescDB (): descs()
-{
-   ;
-}
-
-ChunkDescDB::~ChunkDescDB()
-{
-   ;
-}
-
-ChunkDescPtr ChunkDescDB::getChunkDesc (const std::string& _token)
-{
-   for ( unsigned int i = 0; i < descs.size(); i++ )
-   {
-      if ( !vjstrcasecmp(descs[i]->token, _token) )
-      {
-         return descs[i];
-      }
-   }
-
-   return ChunkDescPtr();
-}
-
-
-
-bool ChunkDescDB::insert (ChunkDescPtr d)
-{
-   for ( unsigned int i = 0; i < descs.size(); i++ )
-   {
-      if ( !vjstrcasecmp (descs[i]->token, d->token) )
-      {
-         if ( *descs[i] != *d )
-         {
-            vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
-               <<  clrOutNORM(clrRED, "ERROR:")
-               << " redefinition of ChunkDesc ("
-               << d->name.c_str() << ") not allowed:\n  Original Desc: \n"
-               << *descs[i] << "\n  New Desc: \n" << *d
-               << "\n (multiple definitions must be identical)\n"
-               << vprDEBUG_FLUSH;
-            vprASSERT(false);
-            return false;
-         }
-         return true;
-      }
-   }
-
-   descs.push_back(d);
-   return true;
-}
-
-void ChunkDescDB::insert (ChunkDescDB* db)
-{
-   iterator begin = db->descs.begin();
-   while ( begin != db->descs.end() )
-   {
-      insert (*begin);//(new ChunkDesc(**begin));
-      begin++;
-   }
-}
-
-bool ChunkDescDB::remove (const std::string& tok)
-{
-
-   iterator cur_desc = descs.begin();
-   while ( cur_desc != descs.end() )
-   {
-      if ( !vjstrcasecmp ((*cur_desc)->token, tok) )
-      {
-         /// delete(*begin);     XXX:
-         cur_desc = descs.erase(cur_desc);
-         return true;
-      }
-      else
-         cur_desc++;
-   }
-   return false;
-}
-
-void ChunkDescDB::removeAll ()
-{
-   descs.clear();
-}
-
-int ChunkDescDB::size () const
-{
-   return descs.size();
-}
-
+/** Write self out
+* Create temporary parent ChunkDescDB node and make all node children
+* Then write this node out
+*/
 std::ostream& operator << (std::ostream& out, const ChunkDescDB& self)
 {
-   ConfigIO::instance()->writeChunkDescDB (out, self);
+   cppdom::XMLNodePtr chunk_desc_db_node;
+   self.createChunkDescDBNode(chunk_desc_db_node);
+
+   try
+   {
+      chunk_desc_db_node->save(out);
+   }
+   catch (cppdom::XMLError& xml_e)
+   {
+      cppdom::XMLLocation where( chunk_desc_db_node->getContext()->getLocation() );
+      cppdom::XMLString errmsg;
+      xml_e.getStrError(errmsg);
+
+      // print out where the error occured
+      std::cout << "ChunkDescDB::<< XMLError:" << where.getLine() << " "
+                << "at position " << where.getPos()
+                << ": error: " << errmsg.c_str() << std::endl;
+   }
+   catch (std::exception& std_e)
+   {
+      std::cerr << "ChunkDescDB::<<: std::exception: " << std_e.what() << std::endl;
+      throw;   // rethrow exception
+   }
+
    return out;
 }
 
 std::istream& operator >> (std::istream& in, ChunkDescDB& self)
 {
-   ConfigIO::instance()->readChunkDescDB (in, self);
+   cppdom::XMLNodePtr chunk_desc_db_node = ChunkFactory::instance()->createXMLNode();
+   cppdom::XMLContextPtr context_ptr = chunk_desc_db_node->getContext();
+
+   try
+   {
+      chunk_desc_db_node->load( in, context_ptr );
+   }
+   catch (cppdom::XMLError& xml_e)
+   {
+      cppdom::XMLLocation where( chunk_desc_db_node->getContext()->getLocation() );
+      cppdom::XMLString errmsg;
+      xml_e.getStrError(errmsg);
+
+      // print out where the error occured
+      std::cout << "ChunkDescDB::>> XMLError:" << where.getLine() << " "
+                << "at position " << where.getPos()
+                << ": error: " << errmsg.c_str() << std::endl;
+   }
+   catch (std::exception& std_e)
+   {
+      std::cerr << "ChunkDescDB::>>: std::exception: " << std_e.what() << std::endl;
+      throw;   // rethrow exception
+   }
+
+   self.loadFromChunkDescDBNode( chunk_desc_db_node );
+
    return in;
+}
+
+ChunkDescPtr ChunkDescDB::get (const std::string descToken)
+{
+   ChunkDescDB::iterator desc;
+   desc = find(descToken);
+   if(desc != end())
+   {  return (*desc).second;  }
+   else
+   {  return ChunkDescPtr(); }
 }
 
 bool ChunkDescDB::load (const std::string& filename, const std::string& parentfile)
 {
    std::string fname = demangleFileName (filename, parentfile);
-   bool retval = ConfigIO::instance()->readChunkDescDB (fname, *this);
+   cppdom::XMLDocumentPtr chunk_desc_doc = ChunkFactory::instance()->createXMLDocument();
+   bool status(false);
 
-   return retval;
+   try
+   {
+      chunk_desc_doc->loadFile( fname );
+
+      cppdom::XMLNodePtr chunk_desc_db_node = chunk_desc_doc->getChild( jccl::chunk_desc_db_TOKEN);
+      vprASSERT(chunk_desc_db_node.get() != NULL);
+
+      loadFromChunkDescDBNode( chunk_desc_db_node );
+      status = true;
+   }
+   catch (cppdom::XMLError& xml_e)
+   {
+      cppdom::XMLLocation where( chunk_desc_doc->getContext()->getLocation() );
+      cppdom::XMLString errmsg;
+      xml_e.getStrError(errmsg);
+
+      // print out where the error occured
+      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+         << clrOutNORM(clrRED, "ChunkDescDB: XMLError:") << fname << ": line "
+         << where.getLine() << " at position " << where.getPos()
+         << ": error: " << errmsg.c_str() << std::endl << vprDEBUG_FLUSH;
+   }
+   catch (std::exception& std_e)
+   {
+      std::cerr << "ChunkDescDB::load: std::exception: " << std_e.what() << std::endl;
+      //throw;   // rethrow exception
+   }
+   catch (...)
+   {
+      std::cerr << "other exception\n";
+      //throw;
+   }
+
+   return status;
 }
 
-bool ChunkDescDB::save (const char *file_name)
+bool ChunkDescDB::save (const std::string& file_name)
 {
+   cppdom::XMLNodePtr chunk_desc_db_node;
+   createChunkDescDBNode(chunk_desc_db_node);                              // Get base db element
+   cppdom::XMLDocumentPtr chunk_desc_db_doc = ChunkFactory::instance()->createXMLDocument();        // Put in in a document
+   chunk_desc_db_doc->addChild(chunk_desc_db_node);
 
-   vprDEBUG(jcclDBG_CONFIG,3)
-      << "ChunkDescDB::save(): saving file " << file_name
-      << " -- " << vprDEBUG_FLUSH;
-   bool retval = ConfigIO::instance()->writeChunkDescDB (file_name, *this);
-
-   if ( retval )
+   try
    {
-      vprDEBUG(jcclDBG_CONFIG,3) << " finished.\n" << vprDEBUG_FLUSH;
+      chunk_desc_db_doc->saveFile(file_name);                                 // Write out the document
    }
-   else
+   catch (cppdom::XMLError& xml_e)
    {
-      vprDEBUG(vprDBG_ERROR,1)
-         << clrOutNORM(clrRED, "ERROR:") << " ChunkDescDB::save() - "
-         << "Unable to open file '"
-         << file_name << "'\n" << vprDEBUG_FLUSH;
+      cppdom::XMLLocation where( chunk_desc_db_doc->getContext()->getLocation() );
+      cppdom::XMLString errmsg;
+      xml_e.getStrError(errmsg);
+
+      // print out where the error occured
+      std::cout << "ChunkDescDB::>> XMLError:" << file_name << ":" << where.getLine() << " "
+                << "at position " << where.getPos()
+                << ": error: " << errmsg.c_str() << std::endl;
+   }
+   catch (std::exception& std_e)
+   {
+      std::cerr << "ChunkDescDB::>>: std::exception: " << std_e.what() << std::endl;
+      throw;   // rethrow exception
    }
 
-   return retval;
+   return true;
 }
+
+/** Load the chunks from a given "ChunkDescDB" element into the db */
+bool ChunkDescDB::loadFromChunkDescDBNode(cppdom::XMLNodePtr chunkDescDBNode)
+{
+   if(chunkDescDBNode->getName() != chunk_desc_db_TOKEN)
+   {
+      vprASSERT(false && "Trying to load a chunk desc node that is not a chunkdesc node");
+      return false;
+   }
+
+   for(cppdom::XMLNodeList::iterator cur_child = chunkDescDBNode->getChildren().begin();
+        cur_child != chunkDescDBNode->getChildren().end(); cur_child++)
+   {
+      ChunkDescPtr new_desc(new ChunkDesc( *cur_child ) );     // New desc
+      (*this)[(*cur_child)->getAttribute(token_TOKEN).getValue<std::string>()] = new_desc;
+   }
+
+   return true;
+}
+
+void ChunkDescDB::createChunkDescDBNode(cppdom::XMLNodePtr& chunkDescDBNode) const
+{
+   chunkDescDBNode = ChunkFactory::instance()->createXMLNode();
+   chunkDescDBNode->setName(chunk_desc_db_TOKEN);
+
+   ChunkDescDB::const_iterator cur_desc;
+
+   for(cur_desc = begin(); cur_desc != end(); cur_desc++)
+   {
+      cppdom::XMLNodePtr child_node = (*cur_desc).second->getNode();
+      chunkDescDBNode->addChild( child_node );
+   }
+}
+
 
 } // namespace jccl

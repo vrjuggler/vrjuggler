@@ -75,7 +75,8 @@ public class Init {
 
         loadExtensions (extension_dirs);
 
-        Core.consoleInfoMessage ("VjControl 1.0", "VR Juggler Control and Configuration Program");
+        Core.consoleInfoMessage("VjControl 1.1",
+                                "VR Juggler Control and Configuration Program");
     }
 
 
@@ -91,15 +92,14 @@ public class Init {
         List v = Core.vjcontrol_chunkdb.getOfDescToken ("vjcontrol");
         if (v.size() == 0) {
             System.err.println ("didn't get chunk");
-            ch = ChunkFactory.createChunkWithDescToken ("vjcontrol");
+            ch = ChunkFactory.createChunkWithDescToken("vjcontrol");
             ch.setName ("VjControl global preferences");
-            ch.setPropertyFromToken ("fontname", new VarValue ("Courier"), 0);
-            ch.setPropertyFromToken ("fontsize", new VarValue (12), 0);
-            ch.setPropertyFromToken ("looknfeel", new VarValue ("Java"), 0);
-            ch.setPropertyFromToken ("name", new VarValue ("VjControl Config"), 0);
-            ch.setPropertyFromToken ("host", new VarValue ("localhost"), 0);
-            ch.setPropertyFromToken ("port", new VarValue (4450), 0);
-            Core.vjcontrol_chunkdb.add (ch);
+            ch.setProperty(VjComponentTokens.FONT_NAME, 0, new VarValue("Courier"));
+            ch.setProperty(VjComponentTokens.FONT_SIZE, 0, new VarValue(12));
+            ch.setProperty(VjComponentTokens.LOOKNFEEL, 0, new VarValue("Java"));
+            ch.setProperty(VjComponentTokens.HOST, 0, new VarValue("localhost"));
+            ch.setProperty(VjComponentTokens.PORT, 0, new VarValue (4450));
+            Core.vjcontrol_chunkdb.add(ch);
         }
     }
 
@@ -127,7 +127,6 @@ public class Init {
 
     public static void loadVjControlConfig() {
         ConfigStreamTokenizer st;
-        ConfigIOStatus iostatus;
         File f1 = null;
         File f2 = null;
         FileReader r;
@@ -139,13 +138,7 @@ public class Init {
         URL descurl = ClassLoader.getSystemResource ("VjFiles/vjcontrol.dsc");
 
         try {
-            iostatus = ConfigIO.readChunkDescDB (descurl.openStream(), Core.descdb);
-            Core.consoleInfoMessage ("Init", iostatus.toString());
-            if (iostatus.getStatus() == iostatus.FAILURE) {
-                Core.consoleErrorMessage ("Init", "Couldn't load " + descurl
-                                          + "- vjcontrol.jar may be corrupt");
-                System.exit(1);
-            }
+            Core.descdb.build(descurl.openStream());
         }
         catch (IOException e) {
             // from descurl.openStream()...
@@ -156,19 +149,25 @@ public class Init {
 
 
         f1 = new File (Core.file.mangleFileName ("$HOME/.vjconfig/vjcontrol.cfg"));
-        Core.vjcontrol_chunkdb.setName (f1.getName());
-        Core.vjcontrol_chunkdb.setFile (f1);
+        Core.vjcontrol_chunkdb.setName(f1.getName());
 
-        iostatus = ConfigIO.readConfigChunkDB (f1, Core.vjcontrol_chunkdb);
-        if (iostatus.getStatus() == iostatus.FAILURE) {
-            f2 = new File (Core.file.mangleFileName ("$VJ_SHARE_DIR/data/vjcontrol.cfg"));
-            iostatus = ConfigIO.readConfigChunkDB (f2, Core.vjcontrol_chunkdb);
-            Core.consoleInfoMessage ("Init", iostatus.toString());
-            if (iostatus.getStatus() == iostatus.FAILURE) {
-                Core.consoleErrorMessage ("Init","Couldn't load VjControl prefs '" + f1 + "' or '" + f2 + "'.");
+        try
+        {
+            Core.vjcontrol_chunkdb.build(f1);
+        }
+        catch (IOException io_ex)
+        {
+            try
+            {
+                f2 = new File(Core.file.mangleFileName("$VJ_SHARE_DIR/data/vjcontrol.cfg"));
+                Core.vjcontrol_chunkdb.build(f2);
+            }
+            catch (IOException io_ex2)
+            {
+                 Core.consoleErrorMessage("Init",
+                                          "Couldn't load VjControl prefs '" +
+                                          f1 + "' or '" + f2 + "'.");
             }
         }
-        else
-            Core.consoleInfoMessage ("Init", iostatus.toString());
     }
 }

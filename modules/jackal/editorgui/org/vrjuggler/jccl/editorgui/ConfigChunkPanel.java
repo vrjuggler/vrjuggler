@@ -43,7 +43,7 @@ import org.vrjuggler.jccl.vjcontrol.ui.EditorPanel;
  *
  *  @version $Revision$
  */
-public interface ConfigChunkPanel extends EditorPanel { 
+public interface ConfigChunkPanel extends EditorPanel {
 
 
     /** Set the ConfigChunk and DB to display.
@@ -67,24 +67,12 @@ public interface ConfigChunkPanel extends EditorPanel {
      */
     public ConfigChunkDB getChunkDB ();
 
+    /** Returns the chunk loaded for editing by the panel. */
+    public ConfigChunk getChunk();
 
-    /** Returns the old value of the configchunk.
-     *  This should return the _same_object_ passed via setChunk.
-     */
-    public ConfigChunk getOldValue ();
+    /** Returns the original name of the edited chunk. */
+    public String getOrigChunkName();
 
-
-    /** Returns the new value of the configchunk.
-     *  This should return a ConfigChunk based on the current state
-     *  of the panel's UI elements.
-     */
-    public ConfigChunk getNewValue();
-
-
-    
+    /** Commits any and all changes the user made to the loaded chunk. */
+    public void commit() throws ConfigUIException;
 }
-
-
-
-
-

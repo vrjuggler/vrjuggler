@@ -173,7 +173,7 @@ public class DisplayWindowPanel extends JPanel implements WizardSubPanel, FocusL
     public void setConfigUIHelper (ConfigUIHelper _uihelper_module) {
     }
 
-    /** Sets the state of the UI components to reflect the resultsDB. 
+    /** Sets the state of the UI components to reflect the resultsDB.
      *  This is called when the ui is initialized or when a new input db
      *  is set.
      */
@@ -190,21 +190,22 @@ public class DisplayWindowPanel extends JPanel implements WizardSubPanel, FocusL
 
         chunks = results_db.getOfDescToken ("displayWindow");
         ch = (ConfigChunk)chunks.get(0);
-        x = ch.getValueFromToken ("origin",0).getInt();
-        y = ch.getValueFromToken ("origin",1).getInt();
-        width = ch.getValueFromToken ("size",0).getInt();
-        height = ch.getValueFromToken ("size",1).getInt();
-        window_name = ch.getName();//ch.getValueFromToken ("name",0).getString();
-        input_source = ch.getValueFromToken ("act_as_keyboard_device",0).getBoolean();
-        stereo = ch.getValueFromToken ("stereo",0).getBoolean();
+        x = ch.getProperty("origin",0).getInt();
+        y = ch.getProperty("origin",1).getInt();
+        width = ch.getProperty("size",0).getInt();
+        height = ch.getProperty("size",1).getInt();
+        window_name = ch.getName();
+        //ch.getProperty("name",0).getString();
+        input_source = ch.getProperty("act_as_keyboard_device",0).getBoolean();
+        stereo = ch.getProperty("stereo",0).getBoolean();
 
-        ch = ch.getValueFromToken ("sim_viewports",0).getEmbeddedChunk();
-        //view_mode = ch.getValueFromToken ("view",0).getInt();
+        ch = ch.getProperty("sim_viewports",0).getEmbeddedChunk();
+        //view_mode = ch.getProperty("view",0).getInt();
         //view_mode = (view_mode == 2)?1:0;
 
-        String user_name = ch.getValueFromToken ("user",0).getString();
+        String user_name = ch.getProperty("user",0).getString();
         ch = results_db.get(user_name);
-        interocular = ch.getValueFromToken ("interocular_distance",0).getFloat();
+        interocular = ch.getProperty("interocular_distance",0).getFloat();
 
         // now that we got all that information from the chunkdb, let's
         // put it into our ui widgets.
@@ -255,7 +256,7 @@ public class DisplayWindowPanel extends JPanel implements WizardSubPanel, FocusL
 
             if (results_db != null)
                 setUIState();
-            
+
             ui_initialized = true;
         }
         return ui_initialized;
@@ -281,38 +282,33 @@ public class DisplayWindowPanel extends JPanel implements WizardSubPanel, FocusL
             // query the GUI widgets to update results_db
             java.util.List chunks;
             ConfigChunk ch;
-            Property p;
             String window_name;
 
             chunks = results_db.getOfDescToken ("displayWindow");
             ch = (ConfigChunk)chunks.get(0);
             window_name = ch.getName();
 
-            p = ch.getPropertyFromToken ("origin");
-            p.setValue (new VarValue(x), 0);
-            p.setValue (new VarValue(y), 1);
+            ch.setProperty("origin", 0, new VarValue(x));
+            ch.setProperty("origin", 1, new VarValue(y));
 
-            p = ch.getPropertyFromToken ("size");
-            p.setValue (new VarValue(width), 0);
-            p.setValue (new VarValue(height), 1);
+            ch.setProperty("size", 0, new VarValue(width));
+            ch.setProperty("size", 1, new VarValue(height));
 
             ch.setName (window_name);
 
-            p = ch.getPropertyFromToken ("act_as_keyboard_device");
-            p.setValue (input_source, 0);
-           
-            p = ch.getPropertyFromToken ("stereo");
-            p.setValue (stereo, 0);
+            ch.setProperty("act_as_keyboard_device", 0, new VarValue(input_source));
 
-            ch = ch.getValueFromToken ("sim_viewports", 0).getEmbeddedChunk();
+            ch.setProperty("stereo", 0, new VarValue(stereo));
 
-            p = ch.getPropertyFromToken ("view");
-            p.setValue (new VarValue((stereo==true)?3:1), 0);
+            ConfigChunk viewport_chunk =
+               ch.getProperty("sim_viewports", 0).getEmbeddedChunk();
 
-            String user_name = ch.getValueFromToken ("user",0).getString();
+            int stereo_val = (stereo==true) ? 3 : 1;
+            viewport_chunk.setProperty("view", 0, new VarValue(stereo_val));
+
+            String user_name = ch.getProperty("user", 0).getString();
             ch = results_db.get(user_name);
-            p = ch.getPropertyFromToken ("interocular_distance");
-            p.setValue (new VarValue (interocular), 0);
+            ch.setProperty("interocular_distance", 0, new VarValue(interocular));
 
             // create or delete a keyboard proxy as needed
             ch = results_db.get (window_name + "_input");
@@ -320,13 +316,12 @@ public class DisplayWindowPanel extends JPanel implements WizardSubPanel, FocusL
                 if (ch == null) {
                     ch = ChunkFactory.createChunkWithDescToken ("KeyboardProxy");
                     ch.setName (window_name + "_input");
-                    p = ch.getPropertyFromToken ("device");
-                    p.setValue (window_name, 0);
-                    results_db.add (ch);
+                    ch.setProperty("device", 0, new VarValue(window_name));
+                    results_db.add(ch);
                 }
             }
             else {
-                if (ch != null) 
+                if (ch != null)
                     results_db.remove (ch);
             }
 

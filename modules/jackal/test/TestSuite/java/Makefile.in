@@ -6,9 +6,9 @@ JAVAC_FLAGS		= -classpath "$(CLASSPATH)" -sourcepath "$(srcdir)" -d .
 JCPS           = @JCPS@
 
 JUNIT_JAR		= @JUNIT_JAR@
-JAXP_JAR			= @JAXP_JAR@
+JDOM_JAR		= @JDOM_JAR@
 VJCONTROL_JARS = $(JCCL_BASE_DIR)/bin/jccl_config.jar
-CLASSPATH		= $(JUNIT_JAR)$(JCPS)$(VJCONTROL_JARS)$(JCPS)$(JAXP_JAR)
+CLASSPATH		= $(JUNIT_JAR)$(JCPS)$(VJCONTROL_JARS)$(JCPS)$(JDOM_JAR)
 
 # Commands to execute.
 JAVA_COMPILE   = @JAVAC@ $(JAVAC_FLAGS)
@@ -24,7 +24,6 @@ RUNNER = \
 TESTCASES = \
 	test.ChunkDescTest \
 	test.DescEnumTest \
-	test.PropertyTest \
 	test.PropertyDescTest \
 	test.ValTypeTest \
 	test.VarValueTest

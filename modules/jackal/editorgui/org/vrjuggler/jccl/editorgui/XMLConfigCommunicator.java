@@ -32,10 +32,11 @@
 package org.vrjuggler.jccl.editorgui;
 
 import java.io.*;
+import java.util.Iterator;
+import java.util.List;
 import javax.xml.parsers.*;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.w3c.dom.*;
+import org.jdom.*;
+import org.jdom.input.SAXBuilder;
 
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.net.DefaultNetCommunicator;
@@ -47,7 +48,7 @@ import org.vrjuggler.jccl.vjcontrol.*;
  *  requests - commands to send and receive ChunkDescs and
  *  ConfigChunks.
  *  <p>
- *  It is illegal to call any of the reading or message sending 
+ *  It is illegal to call any of the reading or message sending
  *  functions until the XMLConfigCommunicator has been assigned a
  *  NetworkModule object to talk to.
  *
@@ -64,7 +65,6 @@ public class XMLConfigCommunicator
     protected ConfigChunkDB active_chunkdb;
     protected ChunkDescDB active_descdb;
     protected boolean connected;
-    protected XMLConfigIOHandler config_handler;
 
     public XMLConfigCommunicator () {
         super();
@@ -75,21 +75,23 @@ public class XMLConfigCommunicator
         active_chunkdb = null;
         active_descdb = null;
         connected = false;
-        config_handler = null;
     }
 
     public void setConfiguration (ConfigChunk ch) throws VjComponentException {
         component_name = ch.getName();
 
         // get pointers to the modules we need.
-        Property p = ch.getPropertyFromToken ("Dependencies");
-        if (p != null) {
-            int i;
-            int n = p.getNum();
+        VarValue prop_val = ch.getProperty(VjComponentTokens.DEPENDENCIES);
+
+        if ( prop_val != null )
+        {
+            int n = ch.getPropertyCount(VjComponentTokens.DEPENDENCIES);
             String s;
             VjComponent c;
-            for (i = 0; i < n; i++) {
-                s = p.getValue(i).toString();
+
+            for ( int i = 0; i < n; ++i )
+            {
+                s = ch.getProperty(VjComponentTokens.DEPENDENCIES, i).toString();
                 c = Core.getVjComponent (s);
                 if (c != null) {
                     if (c instanceof ConfigModule)
@@ -102,10 +104,6 @@ public class XMLConfigCommunicator
     public void initialize () throws VjComponentException {
         if (config_module == null)
             throw new VjComponentException (component_name + ": Initialized with unmet dependencies.");
-
-        config_handler = (XMLConfigIOHandler)ConfigIO.getHandler();
-        if (config_handler == null)
-            throw new VjComponentException (component_name + ": Couldn't get XML IO Handler.");
     }
 
     public void destroy () {
@@ -149,24 +147,20 @@ public class XMLConfigCommunicator
         return id.equalsIgnoreCase ("xml_config");
     }
 
-    /** Reads a command stream from the network.  
+    /** Reads a command stream from the network.
      *  Returns control when it reaches the end of a single command.
      */
-    public void readStream (InputStream instream, String id) 
+    public void readStream (InputStream instream, String id)
     throws IOException {
 
-	ConfigChunk c;
-        Document doc;
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+   ConfigChunk c;
 
-	// build the XML stream into a DOM tree
-        try {
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            //System.out.println ("xml parse begin");
-            doc = builder.parse (instream);
-            //System.out.println ("xml parse end");
-            parseCommands (doc.getDocumentElement());
-            //System.out.println ("xml parse interpret end");
+   // build the XML stream into a DOM tree
+        try
+        {
+            SAXBuilder builder = new SAXBuilder();
+            Document doc = builder.build(instream);
+            parseCommands (doc.getRootElement());
         }
         catch (Exception e) {
             IOException e1 = new IOException ("XML Config protocol error: " + e.getMessage());
@@ -176,32 +170,22 @@ public class XMLConfigCommunicator
     }
 
     protected void parseCommands (Element node) throws Exception {
-        Node child;
-        String name = node.getTagName ();
+        String name = node.getName();
         ConfigIOStatus iostatus = new ConfigIOStatus();
 
         System.out.println ("reading command: '" + name + "'");
         if (name.equalsIgnoreCase ("apply_chunks")) {
-            boolean all = node.getAttribute("all").equalsIgnoreCase("true");
+            boolean all = node.getAttribute("all").getBooleanValue();
             Core.consoleTempMessage (component_name, "Reading ConfigChunks");
 
             ConfigChunkDB db = new ConfigChunkDB();
             // parse the db itself
-            child = node.getFirstChild();
-            while (child != null) {
-                switch (child.getNodeType()) {
-                case Node.ELEMENT_NODE:
-                    config_handler.buildChunkDB (db, child, iostatus);
-                    break;
-                case Node.COMMENT_NODE:
-                case Node.NOTATION_NODE:
-                case Node.PROCESSING_INSTRUCTION_NODE:
-                case Node.TEXT_NODE: // whitespace
-                    break;
-                default:
-                    System.out.println ("Unexpected node type...");
-                }
-                child = child.getNextSibling();
+            List children = node.getChildren();
+            Iterator j    = children.iterator();
+
+            while ( j.hasNext() )
+            {
+               db.build((Element) j.next());
             }
             //System.out.println ("read ConfigChunkDB:\n" + db.xmlRep());
             if (iostatus.getStatus() != iostatus.FAILURE) {
@@ -221,35 +205,25 @@ public class XMLConfigCommunicator
             //Core.consoleTempMessage (component_name, "Reading ConfigChunks -- Finished");
         }
         else if (name.equalsIgnoreCase ("apply_descs")) {
-            boolean all = node.getAttribute("all").equalsIgnoreCase("true");
+            boolean all = node.getAttribute("all").getBooleanValue();
             // don't do anything for all.
 
             Core.consoleTempMessage (component_name, "Reading ChunkDescs");
 
             ChunkDescDB db = new ChunkDescDB();
             // parse the db itself
-            child = node.getFirstChild();
-            while (child != null) {
-                switch (child.getNodeType()) {
-                case Node.ELEMENT_NODE:
-                    config_handler.buildChunkDescDB (db, child, iostatus);
-                    break;
-                case Node.COMMENT_NODE:
-                case Node.NOTATION_NODE:
-                case Node.PROCESSING_INSTRUCTION_NODE:
-                case Node.TEXT_NODE: // whitespace
-                    break;
-                default:
-                    System.out.println ("Unexpected node type...");
-                }
+            List children = node.getChildren();
+            Iterator j    = children.iterator();
 
-                child = child.getNextSibling();
+            while ( j.hasNext() )
+            {
+               db.build((Element) j.next());
             }
 
             if (iostatus.getStatus() != iostatus.FAILURE) {
                 active_descdb.addAll (db);
                 // we're not going thru the ConfigModule to add values to this
-                // db, so we have to inform the ChunkFactory ourselves that 
+                // db, so we have to inform the ChunkFactory ourselves that
                 // new ChunkDescs are available.
                 ChunkFactory.addChunkDescDB (db);
             }
@@ -290,10 +264,10 @@ public class XMLConfigCommunicator
     //----------------------- Send Commands --------------------------
 
     public boolean getChunks () {
-	/* requests the server's complete chunkdb */
-	if (!connected) {
+   /* requests the server's complete chunkdb */
+   if (!connected) {
             Core.consoleErrorMessage ("Net", "XMLConfigCommunicator send command requested, but no connection.");
-	    return false;
+       return false;
         }
         synchronized (outstream) {
             try {
@@ -311,17 +285,21 @@ public class XMLConfigCommunicator
     }
 
     public boolean sendChunk (ConfigChunk ch) {
-	if (!connected) {
+        if (!connected) {
             Core.consoleErrorMessage ("Net", "XMLConfigCommunicator send command requested, but no connection.");
-	    return false;
+            return false;
         }
         synchronized (outstream) {
             try {
+                // XXX: This should be fixed so that it does not write out XML
+                // tags this way.
+                // (PH 5/9/2002)
                 outstream.writeBytes ("<protocol handler=\"xml_config\">\n" +
-                                      "<apply_chunks>\n<ConfigChunkDB>\n" +
-                                      ch.xmlRep ("  ") +
-                                      "</ConfigChunkDB></apply_chunks>\n" +
-                                      "</protocol>\n");
+                                      "<apply_chunks>\n<" +
+                                      ConfigTokens.chunk_db_TOKEN +
+                                      ">\n" + ch + "</" +
+                                      ConfigTokens.chunk_db_TOKEN +
+                                      "></apply_chunks>\n</protocol>\n");
                 outstream.flush();
                 return true;
             }
@@ -334,15 +312,14 @@ public class XMLConfigCommunicator
     public boolean sendChunks (ConfigChunkDB db) {
         if (!connected) {
             Core.consoleErrorMessage ("Net", "XMLConfigCommunicator send command requested, but no connection.");
-	    return false;
+       return false;
         }
         synchronized (outstream) {
             try {
-                outstream.writeBytes ("<protocol handler=\"xml_config\">\n" +
-                                      "<apply_chunks>\n" +
-                                      db.xmlRep() +
-                                      "</apply_chunks>\n" +
-                                      "</protocol>\n");
+                outstream.writeBytes("<protocol handler=\"xml_config\">\n" +
+                                     "<apply_chunks>\n");
+                db.write(outstream);
+                outstream.writeBytes("</apply_chunks>\n</protocol>\n");
                 outstream.flush();
                 return true;
             }
@@ -363,12 +340,12 @@ public class XMLConfigCommunicator
                 //outstream.writeBytes ("remove chunks\n" + db.fileRep());
                 outstream.writeBytes ("<protocol handler=\"xml_config\">\n" +
                                       "<remove_chunks>\n");
-                outstream.writeBytes (db.xmlRep());
+                db.write(outstream);
 //                 for (int i = 0; i < db.size(); i++) {
 //                     ConfigChunk ch = db.elementAt (i);
 //                     outstream.writeBytes ("  <name>\"" + ch.getName() + "\"</name>\n");
 //                 }
-                outstream.writeBytes ("</remove_chunks>\n" + 
+                outstream.writeBytes ("</remove_chunks>\n" +
                                       "</protocol>\n");
                 outstream.flush();
                 return true;
@@ -382,7 +359,7 @@ public class XMLConfigCommunicator
     public boolean removeChunk (ConfigChunk ch) {
         if (!connected) {
             Core.consoleErrorMessage ("Net", "XMLConfigCommunicator send command requested, but no connection.");
-	    return false;
+       return false;
         }
         synchronized (outstream) {
             try {
@@ -391,7 +368,9 @@ public class XMLConfigCommunicator
                 outstream.writeBytes ("<protocol handler=\"xml_config\">\n" +
                                       "<remove_chunks>\n");
 //                 outstream.writeBytes ("  <name>\"" + ch.getName() + "\"</name>\n");
-                outstream.writeBytes ("<ConfigChunkDB>\n" + ch.xmlRep() + "</ConfigChunkDB>\n");
+                outstream.writeBytes ("<" + ConfigTokens.chunk_db_TOKEN +
+                                      ">\n" + ch + "</" +
+                                      ConfigTokens.chunk_db_TOKEN + ">\n");
                 outstream.writeBytes ("</remove_chunks>\n" +
                                       "</protocol>\n");
 
@@ -405,9 +384,9 @@ public class XMLConfigCommunicator
     }
 
     public boolean getChunkDescs () {
-	/* the idea behind this function is to send a msg to the server
-	 * requesting all ChunkDescs, which we'll put into the DB.
-	 */
+   /* the idea behind this function is to send a msg to the server
+    * requesting all ChunkDescs, which we'll put into the DB.
+    */
         if (!connected) {
             Core.consoleErrorMessage ("Net", "XMLConfigCommunicator send command requested, but no connection.");
             return false;
@@ -428,7 +407,7 @@ public class XMLConfigCommunicator
     }
 
     public boolean sendChunkDesc (ChunkDesc d) {
-	/* sends a ChunkDesc to the server. */
+   /* sends a ChunkDesc to the server. */
         if (!connected) {
             Core.consoleErrorMessage ("Net", "XMLConfigCommunicator send command requested, but no connection.");
             return false;
@@ -437,10 +416,11 @@ public class XMLConfigCommunicator
             try {
                 Core.consoleTempMessage ("Net", "Sending Descriptions");
                 outstream.writeBytes ("<protocol handler=\"xml_config\">\n" +
-                                      "<apply_descs>\n<ChunkDescDB>\n" +
-                                      d.xmlRep("  ") +
-                                      "</ChunkDescDB>\n</apply_descs>\n" +
-                                      "</protocol>\n");
+                                      "<apply_descs>\n<" +
+                                      ConfigTokens.chunk_desc_db_TOKEN +
+                                      ">\n" + d +
+                                      "</" + ConfigTokens.chunk_desc_db_TOKEN +
+                                      ">\n</apply_descs>\n</protocol>\n");
                 //outstream.writeBytes ("descriptions\n");
                 // write out d;
                 //outstream.writeBytes (d.toString());
@@ -468,7 +448,7 @@ public class XMLConfigCommunicator
                 //ConfigChunk ch = db.elementAt (i);
                 outstream.writeBytes ("  <name>\"" + s + "\"</name>\n");
                 //}
-                outstream.writeBytes ("</remove_descs>\n" + 
+                outstream.writeBytes ("</remove_descs>\n" +
                                       "</protocol>\n");
                 //outstream.writeBytes ("remove descriptions " + s + "\n");
                 outstream.flush();

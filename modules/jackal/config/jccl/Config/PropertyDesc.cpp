@@ -35,31 +35,35 @@
 #include <jccl/Util/Debug.h>
 #include <vpr/Util/Assert.h>
 #include <jccl/Config/ConfigTokens.h>
-#include <jccl/Config/ConfigIO.h>
+#include <jccl/Config/ChunkFactory.h>
+
+#include <sstream>
 
 
 namespace jccl
 {
 
-PropertyDesc::PropertyDesc () : valuelabels(), enumv()
+PropertyDesc::PropertyDesc ()
 {
-   validation = 1;
-   name = "";
-   token = "";
-   num = 0;
-   type = VJ_T_INVALID;
-   help = "";
-   enum_val = 0;
+   mIsValid = true;
+   mNode = ChunkFactory::instance()->createXMLNode(); // cppdom::XMLNodePtr(new cppdom::XMLNode);  // Set a default node
 }
 
-PropertyDesc::PropertyDesc (const PropertyDesc& d): valuelabels(), enumv()
+PropertyDesc::PropertyDesc(cppdom::XMLNodePtr node)
 {
-   validation = 1;
+   mIsValid = true;
+   mNode = node;
+}
+
+PropertyDesc::PropertyDesc (const PropertyDesc& d)
+{
+   mIsValid = true;
    *this = d;
 }
 
+/*
 PropertyDesc::PropertyDesc (const std::string& n, int i, VarType t,
-                            const std::string& h): valuelabels(), enumv()
+                            const std::string& h)
 {
    validation = 1;
    name = n;
@@ -69,30 +73,86 @@ PropertyDesc::PropertyDesc (const std::string& n, int i, VarType t,
    type = t;
    enum_val = 0;
 }
+*/
 
 PropertyDesc::~PropertyDesc ()
 {
-   unsigned int i;
-   for ( i = 0; i < enumv.size(); i++ )
-   {
-      delete enumv[i];
-   }
-
-   for ( i = 0; i < valuelabels.size(); i++ )
-   {
-      delete valuelabels[i];
-   }
-
-   validation = 0;
+   mIsValid = false;
 }
 
 #ifdef JCCL_DEBUG
 void PropertyDesc::assertValid () const
 {
-   vprASSERT (validation == 1 && "Trying to use deleted PropertyDesc");
+   vprASSERT (mIsValid == true && "Trying to use deleted PropertyDesc");
 }
 #endif
 
+std::string PropertyDesc::getHelp () const
+{
+   std::string help_str("");
+
+   cppdom::XMLNodePtr help_node = mNode->getChild(jccl::help_TOKEN);
+
+   if ( help_node.get() != NULL )
+   {
+      cppdom::XMLNodePtr help_cdata = help_node->getChild("cdata");
+
+      if ( help_cdata.get() != NULL )
+      {
+         help_str = help_cdata->getCdata();
+      }
+   }
+
+   return help_str;
+}
+
+void PropertyDesc::setHelp (const std::string& help)
+{
+   cppdom::XMLNodePtr help_node = mNode->getChild(jccl::help_TOKEN);
+
+   // If this chunk description does not have a <help> child, create one.
+   if ( help_node.get() == NULL )
+   {
+      help_node = jccl::ChunkFactory::instance()->createXMLNode();
+      help_node->setName(jccl::help_TOKEN);
+      mNode->addChild(help_node);
+      vprASSERT(mNode->getChild(jccl::help_TOKEN).get() != NULL && "Node addition failed");
+   }
+
+   cppdom::XMLNodePtr help_cdata = help_node->getChild("cdata");
+
+   if ( help_cdata.get() == NULL )
+   {
+      help_cdata = jccl::ChunkFactory::instance()->createXMLNode();
+      help_cdata->setName("cdata");
+      help_cdata->setType(cppdom::xml_nt_cdata);
+      help_node->addChild(help_cdata);
+      vprASSERT(help_node->getChild("cdata").get() != NULL && "CDATA addition failed");
+   }
+
+   help_cdata->setCdata(help);
+}
+
+cppdom::XMLString PropertyDesc::getDefaultValueString (int index)
+{
+   cppdom::XMLString value_str("");
+
+   if ( mNode.get() != NULL )
+   {
+      cppdom::XMLNodeList children(mNode->getChildren(item_TOKEN));
+
+      if ( unsigned(index) < children.size() )
+      {
+         cppdom::XMLNodeList::iterator i(children.begin());
+         std::advance(i, index);
+         value_str = (*i)->getAttribute(default_value_TOKEN).getString();
+      }
+   }
+
+   return value_str;
+}
+
+/*
 void PropertyDesc::appendValueLabel (const std::string& _label)
 {
    valuelabels.push_back (new EnumEntry (_label, T_STRING));
@@ -146,7 +206,7 @@ void PropertyDesc::appendEnumeration (const std::string& _label,
       {
          *v = _value;
       }
-      //*v = (_value == "")?enum_val:_value;
+      // *v = (_value == "")?enum_val:_value;
    }
    enum_val++;
    enumv.push_back (new EnumEntry (_label, *v));
@@ -194,82 +254,28 @@ EnumEntry* PropertyDesc::getEnumEntryWithValue (const VarValue& val) const
 
    return NULL;
 }
+*/
 
 std::ostream& operator << (std::ostream& out, const PropertyDesc& self)
 {
    self.assertValid();
-   ConfigIO::instance()->writePropertyDesc (out, self);
+   self.mNode->save(out);
    return out;
 }
 
-PropertyDesc& PropertyDesc::operator= (const PropertyDesc& pd)
-{
-   assertValid();
-
-   unsigned int i;
-   if ( &pd == this )
-   {
-      return *this;
-   }
-
-   name = pd.name;
-   token = pd.token;
-   help = pd.help;
-   type = pd.type;
-   num = pd.num;
-
-   for ( i = 0; i < valuelabels.size(); i++ )
-   {
-      delete valuelabels[i];
-   }
-
-   for ( i = 0; i < enumv.size(); i++ )
-   {
-      delete enumv[i];
-   }
-
-   valuelabels.clear();
-   enumv.clear();
-   for ( i = 0; i < pd.valuelabels.size(); i++ )
-   {
-      valuelabels.push_back (new EnumEntry(*(pd.valuelabels[i])));
-   }
-
-   for ( i = 0; i < pd.enumv.size(); i++ )
-   {
-      enumv.push_back (new EnumEntry(*(pd.enumv[i])));
-   }
-
-   return *this;
-}
 
 //: Equality Operator
 // BUG (IPTHACK) - doesn't check equality of enumerations and valuelabels
 bool PropertyDesc::operator== (const PropertyDesc& pd) const
 {
    assertValid();
+   pd.assertValid();
 
-   if ( vjstrcasecmp (name, pd.name) )
-   {
-      return false;
-   }
+   std::ostringstream self_string, d_string;
+   mNode->save(self_string);
+   pd.mNode->save(d_string);
 
-   if ( vjstrcasecmp (token, pd.token) )
-   {
-      return false;
-   }
-
-   if ( type != pd.type )
-   {
-      return false;
-   }
-
-   if ( num != pd.num )
-   {
-      return false;
-   }
-
-   return true;
+   return (self_string == d_string);
 }
 
 } // End of jccl namespace

@@ -40,23 +40,34 @@ import java.util.EventObject;
 public class ChunkDBEvent
    extends EventObject
 {
-   private ConfigChunk mNewChunk;
-   private ConfigChunk mOldChunk;
-
-   int mAction;
+   private String mOrigName = "";
+   private ConfigChunk mChunk = null;
+   private int mAction;
 
    public final static int INSERT = 1;
    public final static int REMOVE = 2;
    public final static int REPLACE = 3;
    public final static int REMOVEALL = 4;
 
-   public ChunkDBEvent(Object source, int action, ConfigChunk oldChunk,
-                       ConfigChunk newChunk)
+   public ChunkDBEvent (Object source, int action, ConfigChunk chunk)
    {
       super(source);
       mAction = action;
-      mNewChunk = newChunk;
-      mOldChunk = oldChunk;
+      mChunk  = chunk;
+   }
+
+   // XXX: The use of "origName" seems a little like a hack to me.  It is
+   // basically needed so that, in the event that a chunk is renamed, the
+   // original name can be found in ChunkDBTreeModel.  Is there a better way
+   // to do this?
+   // (PH 5/11/2002)
+   public ChunkDBEvent (Object source, int action, String origName,
+                        ConfigChunk chunk)
+   {
+      super(source);
+      mAction   = action;
+      mOrigName = origName;
+      mChunk    = chunk;
    }
 
    public int getAction()
@@ -64,16 +75,13 @@ public class ChunkDBEvent
       return mAction;
    }
 
-   public ConfigChunk getOldChunk()
+   public String getOrigChunkName ()
    {
-      return mOldChunk;
+      return mOrigName;
    }
 
-   public ConfigChunk getNewChunk()
+   public ConfigChunk getChunk()
    {
-      return mNewChunk;
+      return mChunk;
    }
 }
-
-
-

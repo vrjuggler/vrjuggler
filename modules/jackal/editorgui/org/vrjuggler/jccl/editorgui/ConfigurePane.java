@@ -41,10 +41,10 @@ import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.vjcontrol.ui.*;
 
 /** PlugPanel for editing a pair of ConfigChunkDB files side-by-side.
- * 
+ *
  *  @version $Revision$
  */
-public class ConfigurePane extends JSplitPane 
+public class ConfigurePane extends JSplitPane
     implements PlugPanel, MouseListener {
 
     protected ChunkDBPanel leftpanel, rightpanel;
@@ -58,8 +58,8 @@ public class ConfigurePane extends JSplitPane
 
 
     public ConfigurePane() {
-	super(JSplitPane.HORIZONTAL_SPLIT);
-	
+   super(JSplitPane.HORIZONTAL_SPLIT);
+
         ui_module = null;
         config_module = null;
         confighelper_module = null;
@@ -97,10 +97,10 @@ public class ConfigurePane extends JSplitPane
 
     // MouseListener stuff
     public void mouseClicked(MouseEvent e) {
-	if (e.getSource() == leftpanel)
-	    System.out.println ("left panel click");
-	else
-	    System.out.println ("right panel click");
+   if (e.getSource() == leftpanel)
+       System.out.println ("left panel click");
+   else
+       System.out.println ("right panel click");
     }
 
     public void mouseEntered(MouseEvent e) {}
@@ -136,14 +136,16 @@ public class ConfigurePane extends JSplitPane
         component_name = ch.getName();
 
         // get pointers to the modules we need.
-        Property p = ch.getPropertyFromToken ("Dependencies");
-        if (p != null) {
-            int i;
-            int n = p.getNum();
+        VarValue prop_val = ch.getProperty(VjComponentTokens.DEPENDENCIES);
+
+        if ( null != prop_val )
+        {
+            int n = ch.getPropertyCount(VjComponentTokens.DEPENDENCIES);
             String s;
             VjComponent c;
-            for (i = 0; i < n; i++) {
-                s = p.getValue(i).toString();
+            for ( int i = 0; i < n; i++ )
+            {
+                s = ch.getProperty(VjComponentTokens.DEPENDENCIES, i).toString();
                 c = Core.getVjComponent (s);
                 if (c != null) {
                     if (c instanceof ControlUIModule)
@@ -198,7 +200,7 @@ public class ConfigurePane extends JSplitPane
                 leftpanel.setConfigUIHelper (confighelper_module);
                 leftpanel.setSendAcrossTarget (rightpanel);
                 leftpanel.initialize();
-                
+
                 rightpanel.setComponentName ("Right ConfigurePane");
                 rightpanel.setControlsOnSide (leftpanel.CONTROLS_ON_LEFT);
                 rightpanel.setControlUIModule (ui_module);
@@ -206,12 +208,12 @@ public class ConfigurePane extends JSplitPane
                 rightpanel.setConfigUIHelper (confighelper_module);
                 rightpanel.setSendAcrossTarget (leftpanel);
                 rightpanel.initialize();
-                
+
                 leftpanel.setMinimumSize (new Dimension (0, 0));
                 rightpanel.setMinimumSize (new Dimension (0, 0));
                 setDividerLocation (0.5d);
                 setOneTouchExpandable (true);
-            
+
 //              leftpanel.addMouseListener (this);
 //              rightpanel.addMouseListener (this);
 

@@ -567,12 +567,12 @@ public class ConfigChunkDB implements Cloneable {
 
     public String xmlRep () {
         StringBuffer s = new StringBuffer(512);
-        s.append("<ConfigChunkDB>\n");
+        s.append("<" + ConfigTokens.chunk_db_TOKEN + ">\n");
         int n = size();
         for (int i = 0; i < size(); i++) {
             s.append (((ConfigChunk)chunks.get(i)).xmlRep("  "));
         }
-        s.append ("</ConfigChunkDB>\n");
+        s.append ("</" + ConfigTokens.chunk_db_TOKEN + ">\n");
         return s.toString();
     }
 

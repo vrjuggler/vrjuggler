@@ -37,9 +37,7 @@
  * or valuelabel data
  */
 
-
 #include <jccl/jcclConfig.h>
-#include <jccl/Config/VarValue.h>
 
 namespace jccl
 {

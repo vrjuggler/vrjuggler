@@ -131,7 +131,7 @@ public class WizardPanel extends JPanel implements PlugPanel, ActionListener {
         return null;
     }
 
-    
+
     public ConfigChunk getConfiguration () {
         return component_chunk;
     }
@@ -142,14 +142,17 @@ public class WizardPanel extends JPanel implements PlugPanel, ActionListener {
         component_name = ch.getName();
 
         // get pointers to the modules we need.
-        Property p = ch.getPropertyFromToken ("Dependencies");
-        if (p != null) {
-            int i;
-            int n = p.getNum();
+        VarValue prop_val = ch.getProperty(VjComponentTokens.DEPENDENCIES);
+
+        if ( null != prop_val)
+        {
+            int n = ch.getPropertyCount(VjComponentTokens.DEPENDENCIES);
             String s;
             VjComponent c;
-            for (i = 0; i < n; i++) {
-                s = p.getValue(i).toString();
+
+            for ( int i = 0; i < n; ++i )
+            {
+                s = ch.getProperty(VjComponentTokens.DEPENDENCIES, i).toString();
                 c = Core.getVjComponent (s);
                 if (c != null) {
                     if (c instanceof ConfigUIHelper)
@@ -194,8 +197,7 @@ public class WizardPanel extends JPanel implements PlugPanel, ActionListener {
             initial_chunkdb = new ConfigChunkDB();
             try {
                 URL init_url = ClassLoader.getSystemResource("org/vrjuggler/jccl/wizards/data/SimWizardDB.config");
-                ConfigIO.readConfigChunkDB (init_url.openStream(), 
-                                            initial_chunkdb);  
+                initial_chunkdb.build(init_url.openStream());
             }
             catch (IOException e) {
                 return false;
@@ -224,12 +226,12 @@ public class WizardPanel extends JPanel implements PlugPanel, ActionListener {
             addSubPanel (new InputDevicePanel(), icon, "Step 3: Input Devices");
             addSubPanel (new MiscInfoPanel(), icon, "Step 4: Final Setup");
             addSubPanel (new SavePanel(), icon, "Step 5: Save File");
-            
+
             // init and display first subpanel...
             setSubPanel (0);
 
             //setButtonStates();
-            
+
             // setup event handling
             help_button.addActionListener (this);
             prev_button.addActionListener (this);
@@ -303,7 +305,7 @@ public class WizardPanel extends JPanel implements PlugPanel, ActionListener {
                 // copy results db into config module...
 
                 ConfigChunkDB results = current_subpanel.getResultDB();
-                System.out.println(results.xmlRep());
+                System.out.println(results);
 
                 // this is inexcusable cheating, but i'm in a terrible hurry
                 // BUG BUG BUG BUG BUG BUG BUG BUG!!! CJ LOOK HERE!!!
@@ -315,7 +317,7 @@ public class WizardPanel extends JPanel implements PlugPanel, ActionListener {
                 for (int i = 0; i < subpanels.size(); i++)
                     ((WizardSubPanel)subpanels.get(i)).reset();
 
-                ((WizardSubPanel)subpanels.get(0)).setInitialDB 
+                ((WizardSubPanel)subpanels.get(0)).setInitialDB
                     (initial_chunkdb);
                 setSubPanel (0);
             }

@@ -21,7 +21,7 @@ public class VarValueTest
    {
       VarValue t = new VarValue( true );
       assertEquals( t.getValType(), ValType.BOOL );
-      assertEquals( t.toString(), "True" );
+      assertEquals( t.toString(), "1" );
       assertEquals( t.getBoolean(), true );
       assertTrue( t.get() instanceof Boolean );
       assertEquals( ((Boolean)t.get()).booleanValue(), true );
@@ -30,7 +30,7 @@ public class VarValueTest
 
       VarValue f = new VarValue( false );
       assertEquals( f.getValType(), ValType.BOOL );
-      assertEquals( f.toString(), "False" );
+      assertEquals( f.toString(), "0" );
       assertEquals( f.getBoolean(), false );
       assertTrue( f.get() instanceof Boolean );
       assertEquals( ((Boolean)f.get()).booleanValue(), false );

@@ -41,66 +41,76 @@
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Util/Singleton.h>
 
+#include <cppdom/cppdom.h>
+
 namespace jccl
 {
 
-//------------------------------------------------------------------
-//: Generator of ConfigChunks...  (singleton)
-//
-//        The notion of embedded chunks complicated the configuration
-//        system - suddenly a chunk needs to be able to find an
-//        arbitrary ChunkDesc in order to instantiate embedded chunks,
-//        which may themselves embed chunks.
-//        We needed a simpler way to generate ConfigChunks on-the-fly
-//        inside Juggler apps.  The singleton ChunkFactory is a way to
-//        do that.  Note that it relies on the notion that there will be
-//        only one ChunkDescDB in the Juggler app, and that it gets
-//        told what it is.
-//
-// @author  Christopher Just
-// February 1999
-//------------------------------------------------------------------
-
+/** Factory for chunks and place holder for some other system wide factory functions
+*/
 class JCCL_CLASS_API ChunkFactory
 {
 public:
    //: Adds descriptions in _descdb to the factory
+   /*
    void addDescs (ChunkDescDB* _descdb)
    {
       descdb.insert (_descdb);
    }
+   */
 
-   //: Adds descriptions in file 'filename' to the factory
-   bool loadDescs (const std::string& filename);
+   /** Adds descriptions in file 'filename' to the factory */
+   bool loadDescs (const std::string& filename, const std::string& parentFile = "");
 
    // we actually do need this so that the EM can send the descdb to the gui...
    ChunkDescDB* getChunkDescDB ()
    {
-      return &descdb;
+      return &mDescDB;
    }
 
    ChunkDescPtr getChunkDesc (const std::string& token)
    {
-      return descdb.getChunkDesc (token);
+      return mDescDB.get(token);
    }
 
-   //: Creates a Chunk using the named description
-   //! RETURNS: chunk - a ConfigChunk based on a ChunkDesc
-   //+          whose token matches the argument.  If no such
-   //+          ChunkDesc is found, an "empty" ChunkDesc,
-   //+          containing only a Name PropertyDesc, is used.
-   ConfigChunkPtr createChunk (const std::string& desctoken, bool use_defaults = true)
+   /** Creates a Chunk using the named description */
+   ConfigChunkPtr createChunk (const std::string& desctoken)
    {
-      return createChunk (descdb.getChunkDesc (desctoken), use_defaults);
+      return createChunk (mDescDB.get(desctoken) );
    }
 
    //: Creates a Chunk using the given description
-   ConfigChunkPtr createChunk (ChunkDescPtr d, bool use_defaults = true);
+   ConfigChunkPtr createChunk (ChunkDescPtr d);
+
+   /** Get the global XML context that we are using system-wide */
+   cppdom::XMLContextPtr getXMLContext()
+   {
+      vprASSERT(mGlobalContext.get() != NULL);
+      return mGlobalContext;
+   }
+
+   /** Creates a new (empty) XML node using global context */
+   cppdom::XMLNodePtr createXMLNode()
+   {
+      return cppdom::XMLNodePtr(new cppdom::XMLNode(getXMLContext()));
+   }
+
+   /** Creates a new (empty) XML document using global context */
+   cppdom::XMLDocumentPtr createXMLDocument()
+   {
+      return cppdom::XMLDocumentPtr(new cppdom::XMLDocument(getXMLContext()));
+   }
+
+protected:
+   /** Loads the default descs */
+   void loadDefaultDescs();
 
 private:
    ChunkFactory ();
 
-   ChunkDescDB descdb;
+   ChunkDescDB             mDescDB;
+   cppdom::XMLContextPtr    mGlobalContext;      /**< The global context to use for jccl */
+   bool                    mLoadedDefaultDescs; /**< Flag to signal if default descs have been loaded */
 
    vprSingletonHeader(ChunkFactory);
 }; // class ChunkFactory

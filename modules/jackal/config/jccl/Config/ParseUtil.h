@@ -34,7 +34,7 @@
 #define _JCCL_PARSEUTIL_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Config/VarValue.h>
+#include <jccl/Config/ConfigTokens.h>
 
 namespace jccl
 {
@@ -43,13 +43,13 @@ namespace jccl
  *  @param str A non-NULL c string.
  *  @return The VarType named by str (VJ_T_INVALID if no match).
  */
-VarType stringToVarType (const char* str);
+VarType stringToVarType (const std::string& str);
 
 /** Converts a VarType enum elem to a c string.
  *  @param t A VarType (see jccl/Config/VarValue.h)
  *  @return A non-NULL c string.
  */
-char *typeString (VarType t);
+std::string typeString (const VarType t);
 
 /** Converts a CfgUnit to a c string. */
 char *unitString (CfgUnit t);
@@ -61,39 +61,11 @@ char *unitString (CfgUnit t);
  */
 float toFeet (float val, CfgUnit unit);
 
-/** A variant of stdlib's strcasecmp, but with std::string args.
- *  @param a An std::string
- *  @param b An std::string
- *  @return 0 if the strings are equal, else nonzero.  The comparison
- *            is not case sensitive.
- */
-bool vjstrcasecmp (const std::string& a, const std::string& b);
-
-/** A variant of stdlib's strncasecmp, but with std::string args.
- *  @param a An std::string
- *  @param b An std::string
- *  @param n Maximum number of characters to compare.  If n < 0 or is
- *           omitted, n is set to the length of the shorter string.
- *  @return 0 if the strings are equal, else nonzero.  The comparison
- *            is not case sensitive.
- */
-bool vjstrncasecmp (const std::string& a, const std::string& b, int _n = -1);
-
-/** A variant of stdlib's strncmp, but with std::string args.
- *  @param a An std::string
- *  @param b An std::string
- *  @param n Maximum number of characters to compare.  If n < 0 or is
- *           omitted, n is set to the length of the shorter string.
- *  @return 0 if the strings are equal, else nonzero.  The comparison
- *            is case sensitive.
- */
-bool vjstrncmp (const std::string& a, const std::string& b, int _n = -1);
-
-/** Mangles a filename so that it can be passed to open().
+/** Demangle a filename so that it can be passed to open().
  *  @param n A filename.
  *  @param parentfile The name of the file that n is being loaded
  *         relative to.
- *  @return A "mangled" version of the string n.  All environment variables
+ *  @return A demangled version of the string n.  All environment variables
  *          are expanded.  If n is not an absolute path and parentfile
  *          is not "", the path part of parentfile will be prepended to
  *          the result.  Note that parentfile is always assumed to refer
@@ -116,6 +88,15 @@ std::string demangleFileName (const std::string& n, std::string parentfile);
 const std::string findFileUsingPathVar (std::ifstream& in,
                                         const std::string& file_name,
                                         const std::string& env_name);
+
+/** Does the given path have a separator */
+bool hasSeparator (const std::string &path);
+
+/** Get the part of the path after the separator */
+std::string getRemainder (const std::string &path);
+
+/** Get the part of the path before the separator */
+std::string getFirstNameComponent (const std::string& path);
 
 } // End of jccl namespace
 
