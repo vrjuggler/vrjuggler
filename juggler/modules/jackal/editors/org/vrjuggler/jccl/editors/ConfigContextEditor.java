@@ -348,7 +348,9 @@ public class ConfigContextEditor
          
          // -Our temporary Solution is to try to make it obvious to the user that they 
          // need to change it.
-         ConfigElement element = temp_factory.create("CHANGEME", chooser.getSelectedDefinition());
+         
+         //ConfigElement element = temp_factory.create("CHANGEME", chooser.getSelectedDefinition());
+         ConfigElement element = temp_factory.createUnique(chooser.getSelectedDefinition(), getContext());
          
 
          // Make sure this add goes through successfully

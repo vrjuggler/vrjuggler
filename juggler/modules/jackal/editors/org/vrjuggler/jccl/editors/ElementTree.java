@@ -151,7 +151,6 @@ class ElementNameEditor implements TreeCellEditor
       mTextField = new JTextField(mElement.getName());
       mTree = tree;
      
-      
       // Specify what should happen when done editing.
       mTextField.addActionListener(new ActionListener()
       {
@@ -165,7 +164,7 @@ class ElementNameEditor implements TreeCellEditor
             // This is no longer needed since the above line will force a
             // focusLostEvent. But I have choosen to leave this line here in
             // case it might become useful later.
-            stopCellEditing();
+            //stopCellEditing();
             mTree.clearSelection();
          }
       });
@@ -205,7 +204,14 @@ class ElementNameEditor implements TreeCellEditor
    { return true; }
    public boolean stopCellEditing()
    {
-      System.out.println("Stop Cell Editing...");
+      ConfigContext ctx = ((ConfigContextModel)mTree.getModel()).getContext();
+      if (ctx.containsElementNamed(mTextField.getText()))
+      {
+         JOptionPane.showMessageDialog(null, "A ConfigElement named \""
+               + mTextField.getText() + "\" already exists.",
+               "Invalid Name", JOptionPane.ERROR_MESSAGE);
+         return false;
+      }
       mElement.setName(mTextField.getText());      
       return true; 
    }
