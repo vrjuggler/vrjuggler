@@ -1795,7 +1795,7 @@ my_vec.getData()[3] = 1.0;</programlisting>
         </section>
       </section>
 
-      <section>
+      <section id="section.gmtl.Matrix44f">
         <title>The <classname>gmtl::Matrix44f</classname> Helper Class</title>
 
         <indexterm>
@@ -2815,80 +2815,345 @@ vj_mat = vrj::GetVjMatrix(pf_mat);</programlisting>
         </section>
       </section>
 
-      <section id="section.gadget.DeviceInterface">
-        <title>The <classname>gadget::DeviceInterface&lt;T&gt;</classname>
-        Helper Class</title>
+      <section id="section.gadget.proxies.devif">
+        <title>Device Proxies and Device Interfaces</title>
 
-        <indexterm>
-          <primary>gadget::DeviceInterface&lt;T&gt;</primary>
+        <indexterm zone="section.gadget.proxies.devif">
+          <primary>device proxies</primary>
         </indexterm>
 
-        <para>The concept of device interfaces in VR Juggler applications is
-        something that often causes confusion for new users. Two
-        object-oriented design patterns are combined by
+        <indexterm zone="section.gadget.proxies.devif">
+          <primary>device interfaces</primary>
+        </indexterm>
+
+        <indexterm zone="section.gadget.proxies.devif">
+          <primary>applications</primary>
+
+          <secondary>getting input</secondary>
+
+          <seealso>device proxies</seealso>
+        </indexterm>
+
+        <indexterm zone="section.gadget.proxies.devif">
+          <primary>applications</primary>
+
+          <secondary>getting input</secondary>
+
+          <seealso>device interfaces</seealso>
+        </indexterm>
+
+        <para>When writing a VR Juggler application object, direct access to
+        hardware devices is not allowed<indexterm>
+            <primary>applications</primary>
+
+            <secondary>device access</secondary>
+          </indexterm>. This is a design choice that helps facilitate the
+        portability of VR applications by preventing them from depending on
+        specific input device makes and models. Instead, the applications are
+        granted access to the device through a <glossterm
+        linkend="gloss.proxy">proxy</glossterm><indexterm>
+            <primary>proxy</primary>
+
+            <secondary>application-level access</secondary>
+          </indexterm>. A proxy is nothing more than an intermediary who
+        forwards information between two parties<indexterm>
+            <primary>proxy</primary>
+
+            <secondary>definition of</secondary>
+          </indexterm>. In this case, the two parties are a VR Juggler
+        application and an input device. The application makes requests on the
+        input device through the proxy.</para>
+
+        <para>Proxies are acquired through the Gadgeteer Input Manager, but
+        the process is not entirely straightforward. To assist with the use of
+        device proxies, Gadgeteer provides what are called <glossterm
+        linkend="gloss.device.interface">device interfaces</glossterm>. Device
+        interfaces hide the details of proxy acquisition through the Input
+        Manager, but the concept of device interfaces is something that often
+        causes confusion for those new to VR Juggler application programming.
+        Two object-oriented design patterns are combined by device interfaces:
+        smart pointers and proxies. Within this section, we aim to explain
+        Gadgeteer device proxies and device interfaces clearly and simply. We
+        begin with high-level descriptions of both and then move on to their
+        use in VR Juggler application objects.</para>
+
+        <para>
         <classname>gadget::DeviceInterface&lt;T&gt;</classname><indexterm>
             <primary>classes</primary>
 
             <secondary>gadget::DeviceInterface&lt;T&gt;</secondary>
 
             <seealso>gadget::DeviceInterface&lt;T&gt;</seealso>
-          </indexterm>: smart pointers and proxies. Within this section, we
-        aim to explain Gadgeteer device interfaces clearly and simply. We
-        begin with a high-level description and then move right into using the
-        class.</para>
+          </indexterm></para>
 
-        <section>
-          <title>High-Level Description</title>
+        <section id="section.proxies.description">
+          <title>High-Level Description of Device Proxies</title>
 
-          <indexterm>
+          <indexterm zone="section.proxies.description">
+            <primary>device proxies</primary>
+
+            <secondary>description of</secondary>
+          </indexterm>
+
+          <para>As noted above, access to input device data is granted through
+          device proxies allocated by the Gadgeteer Input Manager. For each
+          type of input device (digital, analog, keyboard/mouse, etc.), there
+          is a device proxy class. As a programmer of VR Juggler applications,
+          knowledge of such proxies does not have to be terribly in-depth. The
+          fact is, most VR Juggler application object programmers will
+          probably never need to know more about the interface of a
+          type-specific device proxy than the return type of its data request
+          method (usually named <methodname>getData()</methodname>). We will
+          see more about the data request method in the explanation of device
+          interfaces below. Most of the perceived complexity in the
+          type-specific proxy classes is only important to Gadgeteer's
+          internal maintenance of the active proxies. The following is the
+          complete list of proxy classes in Gadgeteer 1.0 (used by VR Juggler
+          2.0):</para>
+
+          <indexterm zone="list.gadget.TypedProxy.subclasses">
+            <primary>gadget::TypedProxy&lt;T&gt;</primary>
+
+            <secondary>subclasses of</secondary>
+          </indexterm>
+
+          <indexterm zone="list.gadget.TypedProxy.subclasses">
+            <primary>device proxies</primary>
+
+            <secondary>available types</secondary>
+          </indexterm>
+
+          <variablelist id="list.gadget.TypedProxy.subclasses">
+            <varlistentry>
+              <term><classname>gadget::AnalogProxy</classname><indexterm>
+                  <primary>classes</primary>
+
+                  <secondary>gadget::AnalogProxy</secondary>
+                </indexterm></term>
+
+              <listitem>
+                <para>The proxy type for analog input devices (those of type
+                <classname>gadget::Analog</classname><indexterm>
+                    <primary>classes</primary>
+
+                    <secondary>gadget::Analog</secondary>
+                  </indexterm>). It is defined in the header file
+                <filename>gadget/Type/AnalogProxy.h</filename>. The return
+                type of
+                <methodname>gadget::AnalogProxy::getData()</methodname> is
+                <type>float</type>.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><classname>gadget::CommandProxy</classname><indexterm>
+                  <primary>classes</primary>
+
+                  <secondary>gadget::CommandProxy</secondary>
+                </indexterm></term>
+
+              <listitem>
+                <para>The proxy type for command-oriented input devices (those
+                of type <classname>gadget::Command</classname><indexterm>
+                    <primary>classes</primary>
+
+                    <secondary>gadget::Command</secondary>
+                  </indexterm>). It is defined in the header file
+                <filename>gadget/Type/CommandProxy.h</filename>. The return
+                type of
+                <methodname>gadget::CommandProxy::getData()</methodname> is
+                <type>int</type>.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><classname>gadget::DigitalProxy</classname><indexterm>
+                  <primary>classes</primary>
+
+                  <secondary>gadget::DigitalProxy</secondary>
+                </indexterm></term>
+
+              <listitem>
+                <para>The proxy type for digital (on/off) input devices (those
+                of type <classname>gadget::Digital</classname><indexterm>
+                    <primary>classes</primary>
+
+                    <secondary>gadget::Digital</secondary>
+                  </indexterm>). It is defined in the header file
+                <filename>gadget/Type/DigitalProxy.h</filename>. The return
+                type of
+                <methodname>gadget::DigitalProxy::getData()</methodname> is
+                <type>gadget::Digital::State</type>, an enumerated type. This
+                means that values returned by
+                <methodname>gadget::DigitalProxy::getData()</methodname> can
+                be treated as integers.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><classname>gadget::GloveProxy</classname><indexterm>
+                  <primary>classes</primary>
+
+                  <secondary>gadget::GloveProxy</secondary>
+                </indexterm></term>
+
+              <listitem>
+                <para>The proxy type for glove input devices (those of type
+                <classname>gadget::Glove</classname><indexterm>
+                    <primary>classes</primary>
+
+                    <secondary>gadget::Glove</secondary>
+                  </indexterm>). It is defined in the header file
+                <filename>gadget/Type/GloveProxy.h</filename>. The return type
+                of <methodname>gadget::GloveProxy::getData()</methodname> is
+                <classname>gadget::GloveData</classname>.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><classname>gadget::KeyboardMouseProxy</classname><indexterm>
+                  <primary>classes</primary>
+
+                  <secondary>gadget::KeyboardMouseProxy</secondary>
+                </indexterm></term>
+
+              <listitem>
+                <para>The proxy type for keyboard/mouse input handlers (those
+                of type <classname>gadget::KeyboardMouse</classname><indexterm>
+                    <primary>classes</primary>
+
+                    <secondary>gadget::KeyboardMouse</secondary>
+                  </indexterm>). It is defined in the header file
+                <filename>gadget/Type/KeyboardMouseProxy.h</filename>. There
+                is no method
+                <methodname>gadget::KeyboardMouse::getData()</methodname>.
+                Rather, the method to use for querying input data is
+                <methodname>gadget::KeyboardMouseProxy::getEventQueue()</methodname>,
+                the return type of which is
+                <classname>gadget::KeyboardMouse::EventQueue</classname><indexterm>
+                    <primary>classes</primary>
+
+                    <secondary>gadget::KeyboardMouse::EventQueue</secondary>
+                  </indexterm>. We explain more about this below in <xref
+                linkend="section.using.gadget.KeyboardMouseInterface" />.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><classname>gadget::PositionProxy</classname><indexterm>
+                  <primary>classes</primary>
+
+                  <secondary>gadget::PositionProxy</secondary>
+                </indexterm></term>
+
+              <listitem>
+                <para>The proxy type for position tracking input devices
+                (those of type
+                <classname>gadget::Position</classname><indexterm>
+                    <primary>classes</primary>
+
+                    <secondary>gadget::Position</secondary>
+                  </indexterm>). It is defined in the header file
+                <filename>gadget/Type/PositionProxy.h</filename>. The return
+                type of
+                <methodname>gadget::PositionProxy::getData()</methodname> is
+                <classname>gmtl::Matrix44f</classname>.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><classname>gadget::StringProxy</classname><indexterm>
+                  <primary>classes</primary>
+
+                  <secondary>gadget::StringProxy</secondary>
+                </indexterm></term>
+
+              <listitem>
+                <para>The proxy type for string (text- or word-driven) input
+                devices (those of type
+                <classname>gadget::String</classname><indexterm>
+                    <primary>classes</primary>
+
+                    <secondary>gadget::String</secondary>
+                  </indexterm>). It is defined in the header file
+                <filename>gadget/Type/StringProxy.h</filename>. The return
+                type of
+                <methodname>gadget::StringProxy::getData()</methodname> is
+                <classname>std::string</classname>.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+
+          <para>In summary, the important thing to know is that a proxy is a
+          pointer to a physical device<indexterm>
+              <primary>gadget::Proxy</primary>
+
+              <secondary>as pointer to physical device</secondary>
+            </indexterm><indexterm>
+              <primary>device proxy</primary>
+
+              <secondary>as pointer to physical device</secondary>
+            </indexterm>. Application object programmers should normally use
+          the higher level device interface as the mechanism to acquire a
+          proxy and read data from the proxied device. The device interface
+          encapsulates some type of proxy that in turn points to an input
+          device. That device can be a wand, a keyboard, a light sensor, or a
+          home-brewed device that reads some input and returns it to Gadgeteer
+          in a meaningful way. That is a lot of indirection, but it makes the
+          handling of physical devices by Gadgeteer incredibly
+          powerful.</para>
+        </section>
+
+        <section id="section.device.interfaces.description">
+          <title>High-Level Description of Device Interfaces</title>
+
+          <indexterm zone="section.device.interfaces.description">
             <primary>gadget::DeviceInterface&lt;T&gt;</primary>
 
             <secondary>description of</secondary>
           </indexterm>
 
-          <para>Physical devices are never accessed directly by VR Juggler
-          applications<indexterm>
-              <primary>applications</primary>
+          <indexterm zone="section.device.interfaces.description">
+            <primary>device interfaces</primary>
 
-              <secondary>device access</secondary>
-            </indexterm>. Instead, the applications are granted access to the
-          device through a <glossterm
-          linkend="gloss.proxy">proxy</glossterm><indexterm>
-              <primary>proxy</primary>
+            <secondary>description of</secondary>
+          </indexterm>
 
-              <secondary>application-level access</secondary>
-            </indexterm>. A proxy is nothing more than an intermediary who
-          forwards information between two parties<indexterm>
-              <primary>proxy</primary>
+          <para>Device interfaces are designed to act as wrappers around
+          type-specific device properties. This is implemented through the
+          (template) class
+          <classname>gadget::DeviceInterface&lt;T&gt;</classname><indexterm>
+              <primary>classes</primary>
 
-              <secondary>definition of</secondary>
-            </indexterm>. In this case, the two parties are a VR Juggler
-          application and an input device. The application makes requests on
-          the input device through the proxy.</para>
-
-          <para>The (template) class
-          <classname>gadget::DeviceInterface&lt;T&gt;</classname> is designed
-          to be a wrapper class around the proxies. Applications could use the
-          proxy classes directly, but
-          <classname>gadget::DeviceInterface&lt;T&gt;</classname> and its
-          type-specific instances (such as
+              <secondary>gadget::DeviceInterface&lt;T&gt;</secondary>
+            </indexterm>. Applications could use the proxy classes directly,
+          but as we have already noted, acquiring the desired proxies from the
+          Gadgeteer Input Manager is not wholly straightforward. The
+          type-specific instances of
+          <classname>gadget::DeviceInterface&lt;T&gt;</classname> (such as
           <classname>gadget::PositionInterface</classname>,
-          <classname>gadget::DigitalInterface</classname>, etc.) simplify use
-          of the contained proxy object. Thus, typical VR Juggler application
-          objects will have one or more device interface member variables and
-          no proxy member variables.</para>
+          <classname>gadget::DigitalInterface</classname>, etc.) simplify
+          acquisition of proxies. Thus, typical VR Juggler application objects
+          will have one or more device interface member variables and no proxy
+          member variables.</para>
 
           <para>The class
           <classname>gadget::DeviceInterface&lt;T&gt;</classname> is a
           templated class based on the proxy type it wraps. The following is
           the complete list of available
           <classname>gadget::DeviceInterface&lt;T&gt;</classname>
-          instantiations in VR Juggler 2.0:</para>
+          instantiations in Gadgeteer 1.0 (used by VR Juggler 2.0):</para>
 
           <indexterm zone="list.gadget.DeviceInterface.instantiations">
             <primary>gadget::DeviceInterface&lt;T&gt;</primary>
 
             <secondary>instantiations of</secondary>
+          </indexterm>
+
+          <indexterm zone="list.gadget.DeviceInterface.instantiations">
+            <primary>device interfaces</primary>
+
+            <secondary>available types</secondary>
           </indexterm>
 
           <variablelist id="list.gadget.DeviceInterface.instantiations">
@@ -2952,27 +3217,6 @@ vj_mat = vrj::GetVjMatrix(pf_mat);</programlisting>
                   </indexterm> and is used for reading data from digital
                 (on/off) devices. Include the header file
                 <filename>gadget/Type/DigitalInterface.h</filename>.</para>
-              </listitem>
-            </varlistentry>
-
-            <varlistentry>
-              <term><classname>gadget::GestureInterface</classname><indexterm>
-                  <primary>classes</primary>
-
-                  <secondary>gadget::GestureInterface</secondary>
-                </indexterm></term>
-
-              <listitem>
-                <para>This is a typedef for the template instantiation
-                <classname>gadget::DeviceInterface&lt;gadget::GestureProxy&gt;</classname>.
-                It wraps the proxy type
-                <classname>gadget::GestureProxy</classname><indexterm>
-                    <primary>classes</primary>
-
-                    <secondary>gadget::GestureProxy</secondary>
-                  </indexterm> and is used for reading data from
-                gesture-oriented devices. Include the header file
-                <filename>gadget/Type/GestureInterface.h</filename>.</para>
               </listitem>
             </varlistentry>
 
@@ -3074,20 +3318,16 @@ vj_mat = vrj::GetVjMatrix(pf_mat);</programlisting>
           action can be taken when the <quote>pointer</quote> is dereferenced.
           The dereference operator is just another operator like the addition
           and subtraction operators, and overloading the deference operator
-          allows some <quote>magic</quote> to occur behind the scenes. On the
-          surface, the code looks exactly the same as a normal pointer
-          dereference, and in most cases, people reading and writing the code
-          can think of the smart pointer as a standard pointer. It may also be
-          convenient to think of a smart pointer as a handle.</para>
+          allows some extra work to be done behind the scenes. On the surface,
+          the code looks exactly the same as a normal pointer dereference, and
+          in most cases, people reading and writing the code can think of the
+          smart pointer as a standard pointer. It may also be convenient to
+          think of a smart pointer as a handle.</para>
 
           <para>With that background, we can move on to explain how
           <classname>gadget::DeviceInterface&lt;T&gt;</classname> uses these
-          concepts. First, know that
-          <classname>gadget::DeviceInterface&lt;T&gt;</classname> is a base
-          class for all other device interface classes such as digital
-          interfaces (wand buttons), position interfaces (wands, a tracked
-          user's head), etc. In user code, there will be instances of objects
-          such as <classname>gadget::DigitalInterface</classname><indexterm>
+          concepts. In user code, there will be instances of types such as
+          <classname>gadget::DigitalInterface</classname><indexterm>
               <primary>classes</primary>
 
               <secondary>gadget::DigitalInterface</secondary>
@@ -3103,27 +3343,8 @@ vj_mat = vrj::GetVjMatrix(pf_mat);</programlisting>
               <secondary>gadget::KeyboardMouseInterface</secondary>
             </indexterm>, and the like. Once they are properly initialized,
           device interface objects (whatever their types may be) will act as
-          smart pointers to the actual Gadgeteer device proxy objects they
-          wrap.</para>
-
-          <para>All the instances of
-          <classname>gadget::DeviceInterface&lt;T&gt;</classname> encapsulate
-          a pointer to a Gadgeteer device proxy object. (Remember that these
-          proxy objects act as an intermediary between the application and an
-          input device.) The subclasses also overload the dereference operator
-          -&gt; which allows them to act as smart pointers. The dereference
-          operator on a device interface object gives access to the object's
-          hidden proxy pointer. With that access, the methods of the
-          encapsulated proxy object can be invoked, usually to read data. The
-          end result is that user applications get access to the proxy objects
-          they need but through a simpler interface than using the proxies
-          directly<indexterm>
-              <primary>device proxies</primary>
-
-              <secondary>access through device interfaces</secondary>
-
-              <seealso>gadget::DeviceInterface&lt;T&gt;</seealso>
-            </indexterm>.</para>
+          smart pointers to the actual Gadgeteer device proxy objects that
+          they encapsulate.</para>
 
           <para>At this point, it is perfectly reasonable to wonder why
           Gadgeteer uses a concept that requires all sorts of documentation
@@ -3134,54 +3355,47 @@ vj_mat = vrj::GetVjMatrix(pf_mat);</programlisting>
           button presses. All that matters is knowing which buttons are
           pressed at a given instant. The class
           <classname>gadget::DigialInterface</classname> gives exactly that
-          information, and it quietly hides the messiness of dealing with that
-          crazy mouse, its ugly driver, and its overly complex
-          protocol.</para>
+          information, and it quietly hides the messiness of dealing with the
+          mouse, its driver, and its communication protocol.</para>
         </section>
 
         <section>
-          <title>Using
-          <classname>gadget::DeviceInterface&lt;T&gt;</classname></title>
-
-          <indexterm>
-            <primary>classes</primary>
-
-            <secondary>gadget::DeviceInterface&lt;T&gt;</secondary>
-          </indexterm>
-
-          <para>As noted above, VR Juggler applications do not usually use
-          <classname>gadget::DeviceInterface&lt;T&gt;</classname> directly.
-          Instead, the typedefs for specific instantiations of
-          <classname>gadget::DeviceInterface&lt;T&gt;</classname> mentioned
-          above will be used. Within this section, we will refer to
-          instantiations of
-          <classname>gadget::DeviceInterface&lt;T&gt;</classname> as
-          <quote>device interfaces.</quote> The high-level description has
-          already made use of this convention.</para>
+          <title>Using Device Interfaces</title>
 
           <para>Before using a device interface, some objects must be
           declared. Programmers must choose the type that is appropriate for
           the type of devices relevant to a given application. All device
           interface objects must be initialized in the application object's
-          <methodname>init()</methodname> method<indexterm>
+          override of the method <methodname>vrj::App::init()</methodname>
+          method<indexterm>
               <primary>device interfaces</primary>
 
               <secondary>initialization of</secondary>
-            </indexterm>. Each device interface type has a method called
-          <methodname>init()</methodname>. This method takes a single string
-          argument naming the proxy to which the interface will connect.
-          Example names are <quote>VJHead</quote>, <quote>VJWand</quote>,
-          <quote>VJButton0</quote>, and <quote>VJAccelerate</quote><indexterm>
+            </indexterm>. Because we are dealing with a templated type
+          (<classname>gadget::DeviceInterface&lt;T&gt;</classname><indexterm>
+              <primary>classes</primary>
+
+              <secondary>gadget::DeviceInterface&lt;T&gt;</secondary>
+            </indexterm>), every type-specific instantiation has the same
+          interface. Hence, all type-specific device interfaces are
+          initialized using the
+          <methodname>gadget::DeviceInterface&lt;T&gt;::init()</methodname>
+          method. This method takes a single string argument naming the proxy
+          to which the interface will connect. The name can be the name of a
+          proxy or a proxy alias, both of which are defined in VR Juggler
+          configuration files. Example names are <quote>VJHead</quote>,
+          <quote>Wand</quote>, <quote>VJButton0</quote>, and <quote>Accelerate
+          Button</quote><indexterm>
               <primary>device aliases</primary>
 
               <secondary>examples of</secondary>
-            </indexterm>. These are all symbolic names specified in VR Juggler
-          configuration files. This makes them easier to remember, and it also
-          contributes to hiding the details about the physical device. With
-          this system, no one needs to care how transformation information
-          from the user's head is generated. Gadgeteer cares, but there is no
-          need for it to tell anyone else. All developers care about is the
-          head transformation matrix. An example of initializing a
+            </indexterm>. Using meaningful symbolic names makes them easier to
+          remember, and it also contributes to hiding the details about the
+          physical device. With this system, no one needs to care how
+          transformation information from the user's head is generated.
+          Gadgeteer cares, but there is no need for it to tell anyone else.
+          All developers care about is the head transformation matrix. An
+          example of initializing a
           <classname>gadget::PositionInterface</classname> that connects with
           the user head proxy is:</para>
 
@@ -3189,7 +3403,7 @@ vj_mat = vrj::GetVjMatrix(pf_mat);</programlisting>
 
 head.init("VJHead");</programlisting>
 
-          <para>Remember that this is to be done in an application object's
+          <para>Remember that this has to be done in an application object's
           <methodname>init()</methodname> method. The actual object used would
           be a member variable of the application class. Note that here, the
           normal syntax for calling the method of a C++ object is used rather
@@ -3203,35 +3417,340 @@ head.init("VJHead");</programlisting>
               <secondary>as smart pointers</secondary>
 
               <seealso>smart pointer</seealso>
-            </indexterm>. This is best part! VR Juggler and Gadgeteer are
-          already working hard in the background to update device proxies, and
-          the application is free to access them. (It is usually best to
-          reference them in the <methodname>preFrame()</methodname> method,
-          but this may not necessarily be true for all proxies.) Continuing
-          with our example of a
-          <classname>gadget::PositionInterface</classname> to the user head
+            </indexterm>. VR Juggler and Gadgeteer are already working hard in
+          the background to update device proxies, and the application is free
+          to access them. It is usually best to acquire data from the device
+          proxy through the device interface in the
+          <methodname>preFrame()</methodname> method, but this may not
+          necessarily be true for all proxies. Continuing with our example of
+          a <classname>gadget::PositionInterface</classname> to the user head
           proxy, the following code shows how to read the transformation
           matrix for the user's head:</para>
 
-          <programlisting>gmtl::Matrix44f head_mat;
+          <programlisting>gmtl::Matrix44f head_mat = head-&gt;getData();</programlisting>
 
-head_mat = head-&gt;getData();</programlisting>
-
-          <para>But wait, that was easy! Believe it or not, the code really is
-          that simple. Simply use the overloaded dereference operator to get
-          access to the position proxy object hidden in
+          <para>Believe it or not, the code really is that easy. Simply use
+          the overloaded dereference operator to get access to the position
+          proxy object hidden in
           <classname>gadget::PositionInterface</classname> to read data from
-          the proxy. Of course, we have not explained the
-          <methodname>getData()</methodname> method at all yet. That comes
-          from the position proxy class, and that is documented
-          elsewhere.</para>
+          the proxy. We now move on to explain the use of type-specific device
+          interfaces.</para>
+
+          <section>
+            <title>Using
+            <classname>gadget::AnalogInterface</classname></title>
+
+            <para>Analog devices return floating-point data. As noted above,
+            the return type of
+            <methodname>gadget::AnalogProxy::getData()</methodname> is
+            <type>float</type>. Behind the scenes, analog devices in Gadgeteer
+            scale their input so that application objects always receive it in
+            the range 0.0 to 1.0 inclusive (also denoted [0.0,1.0] in
+            mathematically oriented descriptions). Hence, application objects
+            can always expect analog data to be in that range regardless of
+            the specific type of analog device being used.</para>
+          </section>
+
+          <section>
+            <title>Using
+            <classname>gadget::CommandInterface</classname></title>
+
+            <para>Command-oriented devices were introduced in Gadgeteer 1.0
+            Beta 1. They are an evolving device type geared towards complex
+            input that can be interpreted at an abstract level. In Gadgeteer
+            1.0, such input comes in the form of spoken phrases that are
+            reinterpreted as commands identified by unique integer values. In
+            future versions of Gadgeteer, this device type will be used for
+            scalable gesture recognition. The return type of
+            <methodname>gadget::CommandProxy::getData()</methodname> is
+            <type>int</type>, and it is up to the person configuring the
+            command-oriented device to set up the command-to-integer
+            mappings.</para>
+          </section>
+
+          <section>
+            <title>Using
+            <classname>gadget::DigitalInterface</classname></title>
+
+            <para>Digital devices are those that have distinct on and off
+            states. The method
+            <methodname>gadget::DigitalProxy::getData()</methodname> returns
+            the current state of such a device as a value of the enumerated
+            type <type>gadget::Digital::State</type>. This type is defined to
+            allow for easy on/off testing, but it also provides state toggling
+            information. The possible values of
+            <type>gadget::Digital::State</type> are <constant>OFF</constant>
+            (integer value 0), <constant>ON</constant> (integer value 1),
+            <constant>TOGGLE_ON</constant> (integer value 2),
+            <constant>TOGGLE_OFF</constant> (integer value 3). In <xref
+            linkend="example.using.gadget.DigitalInterface" />, we see some
+            example uses of the information returned by
+            <methodname>gadget::DigitalProxy::getData()</methodname>.</para>
+
+            <example id="example.using.gadget.DigitalInterface">
+              <title>Using gadget::DigitalInterface in an Application
+              Object</title>
+
+              <programlisting linenumbering="numbered">void MyApp::preFrame()
+{
+   if ( mButton0-&gt;getData() )
+   {
+      // Set state for when mButton0 is pressed, has been pressed
+      // since the last frame, or has been released since the
+      // last frame ...
+   }
+   else
+   {
+      // Set state for when mButton0 is not pressed ...
+   }
+
+   switch (mButton1-&gt;getData()
+   {
+      case gadget::Digital::OFF:
+         // Set state for when mButton1 is not pressed ...
+         break;
+      case gadget::Digital::ON:
+         // Set state for when mButton1 is pressed ...
+         break;
+      case gadget::Digital::TOGGLE_ON:
+         // Set state for when mButton1 has been pressed since
+         // the last frame ...
+         break;
+      case gadget::Digital::TOGGLE_OFF:
+         // Set state for when mButton1 has been released since
+         // the last frame ...
+         break;
+   }
+
+   if ( mButton2-&gt;getData() == gadget::Digital::TOGGLE_ON )
+   {
+      // Set state when mButton2 goes "high" (is toggled on) ...
+   }
+   else if ( mButton2-&gt;getData() == gadget::Digital::TOGGLE_OFF )
+   {
+      // Set state when mButton2 goes "low" (is toggled off) ...
+   }
+}</programlisting>
+            </example>
+          </section>
+
+          <section>
+            <title>Using <classname>gadget::GloveInterface</classname></title>
+
+            <para></para>
+          </section>
+
+          <section id="section.using.gadget.KeyboardMouseInterface">
+            <title>Using
+            <classname>gadget::KeyboardMouseInterface</classname></title>
+
+            <para>Input read from a keyboard and a mouse is provided through
+            <classname>gadget::KeyboardMouseProxy</classname><indexterm>
+                <primary>classes</primary>
+
+                <secondary>gadget::KeyboardMouseProxy</secondary>
+              </indexterm>, instances of which are acquired through
+            <classname>gadget::KeyboardMouseInterface</classname><indexterm>
+                <primary>classes</primary>
+
+                <secondary>gadget::KeyboardMouseInterface</secondary>
+              </indexterm>. Unlike most other device proxy types,
+            <classname>gadget::KeyboardMouseProxy</classname> does not have a
+            <methodname>getData()</methodname> method. Rather, it has a method
+            called <methodname>getEventQueue()</methodname> with return type
+            <classname>gadget::KeyboardMouse::EventQueue</classname><indexterm>
+                <primary>classes</primary>
+
+                <secondary>gadget::KeyboardMouse::EventQueue</secondary>
+              </indexterm> that is the <quote>event queue.</quote> Keyboard
+            and mouse input is handled as events, either key press events or
+            mouse events. Key press events come from the keyboard and are for
+            both the pressing and releasing of individual keys or keys with
+            modifiers (<keycap>CTRL</keycap>, <keycap>ALT</keycap>, and
+            <keycap>SHIFT</keycap>). Mouse events include both the motion of
+            the mouse in the X &amp; Y axes and the pressing and releasing of
+            mouse buttons which may or may not be associated with a keyboard
+            modifier.</para>
+
+            <para>The event queue contains all the key press and mouse events
+            that occurred since the last frame. Each event is contained in an
+            object of type <classname>gadget::EventPtr</classname><indexterm>
+                <primary>classes</primary>
+
+                <secondary>gadget::EventPtr</secondary>
+              </indexterm><footnote>
+                <para>Behind the scenes,
+                <classname>gadget::KeyboardMouse::EventQueue</classname> is a
+                typedef for
+                <classname>std::vector&lt;gadget::EventPtr&gt;</classname>.</para>
+              </footnote>. The type <classname>gadget::EventPtr</classname> is
+            a reference-counted smart pointer for instances of
+            <classname>gadget::Event</classname><indexterm>
+                <primary>classes</primary>
+
+                <secondary>gadget::Event</secondary>
+              </indexterm>, which is in turn a base class for
+            <classname>gadget::KeyEvent</classname><indexterm>
+                <primary>classes</primary>
+
+                <secondary>gadget::KeyEvent</secondary>
+              </indexterm> and
+            <classname>gadget::MouseEvent</classname><indexterm>
+                <primary>classes</primary>
+
+                <secondary>gadget::MouseEvent</secondary>
+              </indexterm>. Each of these has its own reference-counted smart
+            pointer, namely
+            <classname>gadget::KeyEventPtr</classname><indexterm>
+                <primary>classes</primary>
+
+                <secondary>gadget::KeyEventPtr</secondary>
+              </indexterm> and
+            <classname>gadget::MouseEventPtr</classname><indexterm>
+                <primary>classes</primary>
+
+                <secondary>gadget::MouseEventPtr</secondary>
+              </indexterm>. This seems like a lot of types to understand, but
+            it is simple enough to use by keeping in mind that there are only
+            two types of events: key press events and mouse events.
+            Furthermore, user code should only be interested in
+            <classname>gadget::KeyEventPtr</classname> and
+            <classname>gadget::MouseEventPtr</classname>.</para>
+
+            <para>At this point, observant readers will be wondering how to
+            downcast instances of <classname>gadget::EventPtr</classname> to
+            either <classname>gadget::KeyEventPtr</classname> or
+            <classname>gadget::MouseEventPtr</classname>. All three of the
+            reference-counted smart pointer types make use of <ulink
+            url="http://www.boost.org/">Boost</ulink> shared pointers
+            (instantiations of the type
+            <classname>boost::shared_ptr&lt;T&gt;</classname>), part of the
+            <ulink
+            url="http://www.boost.org/libs/smart_ptr/smart_ptr.htm">Boost
+            smart pointer library</ulink>. Boost shared pointers have their
+            own version of the built-in C++ operation
+            <function>dynamic_cast&lt;T,U&gt;()</function> called
+            <function>boost::dynamic_pointer_cast&lt;T,U&gt;()</function>. It
+            works the same way as
+            <function>dynamic_cast&lt;T,U&gt;()</function>, but it is designed
+            specifically for Boost shared pointers. The specific event type is
+            determined through the method
+            <methodname>gadget::Event::type()</methodname>. In <xref
+            linkend="example.using.gadget.KeyboardMouseInterface" />, we see
+            how to put all of this together in order to handle keyboard and
+            mouse input.</para>
+
+            <example id="example.using.gadget.KeyboardMouseInterface">
+              <title>Using
+              <classname>gadget::KeyboardMouseInterface</classname> in an
+              Application Object</title>
+
+              <programlisting linenumbering="numbered">#include &lt;boost/shared_ptr.hpp&gt;
+#include &lt;gadget/Type/KeyboardMouseInterface.h&gt;
+#include &lt;vrj/Draw/OGL/GlApp.h&gt;
+
+
+// This is here to shorten the use of the function in preFrame()
+// boost::dynamic_pointer_cast&lt;T,U&gt;() below.
+using namespace boost;
+
+class MyApp : public vrj::GlApp
+{
+public:
+   MyApp() : vrj::GlApp()
+   {
+      /* Do nothing. */ ;
+   }
+
+   void init()
+   {
+      mKeyboard("VJKeyboard");
+   }
+
+   void preFrame()
+   {
+      gadget::KeyboardMouse::EventQueue evt_queue =
+         mKeyboard-&gt;getEventQueue();
+      gadget::KeyboardMouse::EventQueue::iterator i;
+
+      // Loop over all the keyboard and mouse events that
+      // occurred since the last frame.
+      for ( i = evt_queue.begin(); i != evt_queue.end(); ++i )
+      {
+         const gadget::EventType type = (*i)-&gt;type();
+
+         if ( type == gadget::KeyPressEvent ||
+              type == gadget::KeyReleaseEvent )
+         {
+            gadget::KeyEventPtr key_evt =
+               dynamic_pointer_cast&lt;gadget::KeyEvent&gt;(*i);
+            // Handle the key press event ...
+         }
+         else if ( type == gadget::MouseButtonPressEvent ||
+                   type == gadget::MouseButtonReleaseEvent ||
+                   type == gadget::MouseMoveEvent )
+         {
+            gadget::MouseEventPtr mouse_evt =
+               dynamic_pointer_cast&lt;gadget::MouseEvent&gt;(*i);
+            // Handle the mouse event ...
+         }
+      }
+   }
+
+   void draw()
+   {
+      // Draw something ...
+   }
+
+private:
+   gadget::KeyboardMouseInterface mKeyboard;
+};</programlisting>
+            </example>
+          </section>
+
+          <section>
+            <title>Using
+            <classname>gadget::PositionInterface</classname></title>
+
+            <para>Position tracking devices return data to application objects
+            as 4×4 transformation matrices. The return type of
+            <methodname>gadget::PositionProxy::getData()</methodname> is
+            <classname>gmtl::Matrix44f</classname>, which was introduced in
+            <xref linkend="section.gmtl.Matrix44f" />. All tracking devices
+            return a full transformation matrix even if the physical tracking
+            hardware is only capable of returning translation or orientation
+            data.</para>
+          </section>
+
+          <section>
+            <title>Using
+            <classname>gadget::StringInterface</classname></title>
+
+            <para>String (text- or word-driven) devices were introduced in
+            Gadgeteer 1.0 Beta 1. They are an evolving device type geared
+            towards textual or spoken input. In Gadgeteer 1.0, such input
+            comes in the form of spoken phrases that are returned to the
+            application object as strings matching those in a pre-defined
+            grammar. In future versions of Gadgeteer, this device type may be
+            used for additional forms of high-level input. The return type of
+            <methodname>gadget::StringProxy::getData()</methodname> is
+            <classname>std::string</classname>, and it is up to the person
+            configuring the string device to set up the recognized
+            grammar.</para>
+          </section>
         </section>
 
-        <section>
+        <section id="section.device.interface.details">
           <title>The Gory Details</title>
 
-          <indexterm>
+          <indexterm zone="section.device.interface.details">
             <primary>gadget::DeviceInterface&lt;T&gt;</primary>
+
+            <secondary>details</secondary>
+          </indexterm>
+
+          <indexterm zone="section.device.interface.details">
+            <primary>device interfaces</primary>
 
             <secondary>details</secondary>
           </indexterm>
@@ -3244,27 +3763,21 @@ head_mat = head-&gt;getData();</programlisting>
           header files as a reference.</para>
 
           <para>As mentioned, the class
-          <classname>gadget::DeviceInterface&lt;T&gt;</classname> is a base
-          class for all the specific types of device interfaces such as
-          positional interfaces, digital interfaces, and analog interfaces.
-          This class maintains the name of the proxy and the proxy index, it
-          provides the all-important <methodname>init()</methodname> method,
-          and it overloads the dereference operator. C++ templates then handle
-          the different type instantiations for the different Gadgeteer proxy
-          types.</para>
+          <classname>gadget::DeviceInterface&lt;T&gt;</classname><indexterm>
+              <primary>classes</primary>
 
-          <para>Instantiations of
-          <classname>gadget::DeviceInterface&lt;T&gt;</classname> are used to
-          provide the wrapper to a specific type of proxy<indexterm>
-              <primary>gadget::DeviceInterface</primary>
+              <secondary>gadget::DeviceInterface&lt;T&gt;</secondary>
+            </indexterm> provides the method interface for all the
+          type-specific instantiations, including the overloaded dereference
+          operator. The base class of
+          <classname>gadget::DeviceInterface&lt;T&gt;</classname>,
+          <classname>gadget::BaseDeviceInterface</classname><indexterm>
+              <primary>classes</primary>
 
-              <secondary>instantiations of</secondary>
-            </indexterm>. They each contain a pointer to a proxy object of the
-          same conceptual type (positional, digital, and so on). Regardless of
-          the specific instantiations of
-          <classname>gadget::DeviceInterface&lt;T&gt;</classname>, they all
-          return a pointer to their contained proxy so that user code can get
-          the current data from the proxy.</para>
+              <secondary>gadget::BaseDeviceInterface</secondary>
+            </indexterm>, maintains the name of the proxy and the proxy
+          reference itself, and it provides the all-important
+          <methodname>init()</methodname> method.</para>
 
           <para>The beauty of it all is that the proxy object being pointed to
           by the device interface can be changed without affecting the
@@ -3274,141 +3787,6 @@ head_mat = head-&gt;getData();</programlisting>
           is still using the smart pointer interface and getting data of some
           sort. This flexibility is one of the most important features of
           Gadgeteer, and it is important to understand.</para>
-        </section>
-      </section>
-
-      <section id="section.gadget.Proxy">
-        <title>The <classname>gadget::Proxy</classname> Helper Class</title>
-
-        <indexterm>
-          <primary>gadget::Proxy</primary>
-        </indexterm>
-
-        <para>This whole proxy scheme can be confusing. We admit that it makes
-        the learning curve for VR Juggler a little steeper, but once you get
-        it, you will know it all. An alternate title for this section is
-        <quote>Horton Hears a Proxy.</quote> In this case, Horton is VR
-        Juggler (it is rather elephant-like at times), and the complexity of
-        dealing with these ethereal, ubiquitous proxies causes VR Juggler to
-        take a lot of guff. This section presents the
-        <classname>gadget::Proxy</classname><indexterm>
-            <primary>classes</primary>
-
-            <secondary>gadget::Proxy</secondary>
-
-            <seealso>gadget::Proxy</seealso>
-          </indexterm> class, the base class for the input proxies, making it
-        the one that is used the most. It should be noted, however, that the
-        concept is spreading to other parts of VR Juggler because it is so
-        useful. While this is only the introduction, we will give you the
-        moral of the story now: proxies are important concepts, and you should
-        not step on them.</para>
-
-        <section>
-          <title>High-Level Description</title>
-
-          <indexterm>
-            <primary>gadget::Proxy</primary>
-
-            <secondary>description of</secondary>
-          </indexterm>
-
-          <para>The class <classname>gadget::Proxy</classname> is the base
-          class for all the type-specific proxies in the Gadgeteer Input
-          Manager. As a programmer of VR Juggler applications, knowledge of
-          such proxies does not have to be terribly in-depth. The fact is,
-          most VR Juggler programmers will probably never need to know more
-          about the interface of a type-specific device proxy than the return
-          type of its <methodname>getData()</methodname> method. Most of the
-          apparent complexity in the type-specific proxy classes is only
-          important to Gadgeteer's internal maintenance of the active
-          proxies.</para>
-
-          <para>That said, this section is relatively short. As a programmer,
-          the important thing to know is that a proxy is a pointer to a
-          physical device<indexterm>
-              <primary>gadget::Proxy</primary>
-
-              <secondary>as pointer to physical device</secondary>
-            </indexterm>. Application programmers use the higher level device
-          interface as the mechanism to read data in some form from the
-          device. The device interface encapsulates some type of proxy that in
-          turn points to an input device. That device can be a wand, a
-          keyboard, a light sensor, or a home-brewed device that reads some
-          input and returns it to Gadgeteer in a meaningful way. That is a lot
-          of indirection, but it makes the handling of physical devices by
-          Gadgeteer incredibly powerful. Most importantly, it prevents VR
-          Juggler applications from being tied to specific hardware
-          devices.</para>
-        </section>
-
-        <section>
-          <title>Using <classname>gadget::Proxy</classname></title>
-
-          <indexterm>
-            <primary>classes</primary>
-
-            <secondary>gadget::Proxy</secondary>
-          </indexterm>
-
-          <para>To be blunt, application programmers do not use
-          <classname>gadget::Proxy</classname>. Instead, access to a subclass
-          of <classname>gadget::Proxy</classname> is given through a device
-          interface acting as a smart pointer. The
-          <methodname>getData()</methodname> method of that subclass is
-          used<indexterm>
-              <primary>gadget::Proxy</primary>
-
-              <secondary>getData() method</secondary>
-            </indexterm>. That method is the window into the soul of an input
-          device. The device interface allows calling
-          <methodname>getData()</methodname> for the specific proxy object it
-          encapsulates, and the current state of the device pointed to by the
-          proxy is returned.</para>
-
-          <para>Therefore, what must be known is the return type of the
-          specific proxy to which access is granted through the device
-          interface. The naming conventions for the proxies and their
-          interfaces makes it relatively simple to determine which proxy
-          object is being encapsulated by which device interface. For example,
-          a <classname>gadget::DigitalInterface</classname><indexterm>
-              <primary>classes</primary>
-
-              <secondary>gadget::DigitalInterface</secondary>
-            </indexterm> holds a
-          <classname>gadget::DigitalProxy</classname><indexterm>
-              <primary>classes</primary>
-
-              <secondary>gadget::DigitalProxy</secondary>
-            </indexterm> pointer. In that case, refer to the documentation for
-          the <classname>gadget::DigitalProxy</classname> class and find the
-          return type of <methodname>getData()</methodname> (<type>int</type>
-          in this case). The proxy header files have the information, too.
-          These are located in
-          <filename>$GADGET_BASE_DIR/include/gadget/Type</filename>. Just
-          search for the <methodname>getData()</methodname> methods
-          therein.</para>
-        </section>
-
-        <section>
-          <title>The Gory Details</title>
-
-          <indexterm>
-            <primary>gadget::Proxy</primary>
-
-            <secondary>details</secondary>
-          </indexterm>
-
-          <para>The gory details of <classname>gadget::Proxy</classname> and
-          its subclasses are not really relevant to this particular section.
-          The subclasses look complicated, and they can be. It is important to
-          note, however, that the complication is part of the interface used
-          <emphasis>internally</emphasis> by Gadgeteer rather than the
-          interface used by the application programmer. Because of that and
-          because each device proxy class is different, those details will not
-          be addressed here. It is sufficient to deal with
-          <methodname>getData()</methodname> alone in applications. Leave the
-          ugliness up to VR Juggler and Gadgeteer; they can handle it.</para>
         </section>
       </section>
     </chapter>
@@ -3530,13 +3908,13 @@ public:
         </indexterm>
 
         <para>There are many types of input devices that VR Juggler
-        applications can use including positional, digital, and
+        application objects can use including positional, digital, and
         analog<indexterm>
             <primary>input device types</primary>
-          </indexterm>. All applications share the same processes and concepts
-        for acquiring input from devices. The main thing to remember about
-        getting input in applications is that all VR Juggler applications
-        receive input through device handles managed by
+          </indexterm>. All application objects share the same processes and
+        concepts for acquiring input from devices. The main thing to remember
+        about getting input in applications is that all VR Juggler
+        applications receive input through device proxies managed by
         <classname>gadget::DeviceInterface&lt;T&gt;</classname><indexterm>
             <primary>classes</primary>
 
@@ -3544,10 +3922,11 @@ public:
           </indexterm> instantiations. There are
         <classname>gadget::DeviceInterface&lt;T&gt;</classname> instantiations
         for each type of input data that Gadgeteer can handle. There is one
-        for positional input, one for analog, and so on. They all have very
-        similar interfaces and behave exactly the same. (Refer to <xref
-        linkend="section.gadget.DeviceInterface" /> and <xref
-        linkend="section.gadget.Proxy" /> for more information.)</para>
+        for positional input, one for analog, and so on. In this section, we
+        will only demonstrate the use of position and digital device
+        interfaces. Refer to <xref linkend="section.gadget.proxies.devif" />
+        for more detailed information on the use of all the available device
+        interfaces.</para>
 
         <section>
           <title>How to Get Input</title>
@@ -3593,9 +3972,9 @@ gmtl::Matrix44f wand_pos(mWand-&gt;getData());
           application copies the positional information from a device
           interface. When it is dereferenced, the device interface figures out
           what device it points to and returns the data from that device.
-          Again, refer to <xref linkend="section.gadget.DeviceInterface" />
-          for more information about using
-          <classname>gadget::DeviceInterface&lt;T&gt;</classname>.</para>
+          Again, refer to <xref linkend="section.gadget.proxies.devif" /> for
+          more information about using device proxies and device
+          interfaces.</para>
         </section>
 
         <section>
@@ -10084,6 +10463,22 @@ public:
           example, a web server runs a daemon (often called
           <command>httpd</command>) that manages incoming HTTP
           requests.</para>
+        </glossdef>
+      </glossentry>
+
+      <glossentry id="gloss.device.interface">
+        <glossterm>device interface</glossterm>
+
+        <glossdef>
+          <para>A high-level feature provided by Gadgeteer for getting easy
+          access to a type-specific device proxy. For each input device type,
+          there is one device proxy type, and for each device proxy type,
+          there is one device interface type. For example, digital input
+          devices are of type <classname>gadget::Digital</classname>. Digital
+          input data is accessed by VR Juggler application objects through a
+          <classname>gadget::DigitalProxy</classname>. The proxy reference is
+          most easily acquired through a
+          <classname>gadget::DigitalInterface</classname> object.</para>
         </glossdef>
       </glossentry>
 
