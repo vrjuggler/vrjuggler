@@ -27,12 +27,12 @@
 
 default: all
 
-CXX=		c++
+CXX=		c++ -g
 CSC=		mcs /debug
-LD=		c++ -shared
+LD=		c++ -g -shared
 
 CXXFLAGS=	$(shell vpr-config --cxxflags)
-LIBDIR=		../../../src/lib
+LIBDIR=		$(VRJNET_BASE_DIR)/lib
 LDFLAGS=	$(shell vpr-config --libs) $(shell vpr-config --extra-libs)
 DSO_NAME=	handle_obj
 EXE_NAME=	tester
