@@ -711,8 +711,8 @@ bool InputManager::removeDevice(jccl::ConfigElementPtr element)
  */
 GADGET_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, InputManager& iMgr)
 {
-   out << "\n========== InputManager Status ==========" << std::endl;
-   out << "Devices:\n";
+   out << "\n========== Input Manager Status ==========" << std::endl;
+   out << "Device List:\n";
 
    // Dump DEVICES
    for ( InputManager::tDevTableType::iterator i = iMgr.mDevTable.begin();
@@ -721,19 +721,17 @@ GADGET_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, InputManager& iMgr
    {
       if ((*i).second != NULL)
       {
-         out << std::setw(2) << std::setfill(' ') << i->first << ":"
-             << "  name:" << std::setw(30) << std::setfill(' ') << i->second->getInstanceName()
-             << "  type:" << std::setw(12) << std::setfill(' ') << typeid(*(i->second)).name()
-             << std::endl;
+         out << "    '" << i->first << "' (type: "
+             << typeid(*(i->second)).name() << ")" << std::endl;
       }
    }
 
-   out << "\nProxies:\n";
+   out << "\nProxy List:\n";
    for (std::map<std::string, Proxy*>::iterator i_p = iMgr.mProxyTable.begin();
         i_p != iMgr.mProxyTable.end();
         ++i_p)
    {
-      out << (*i_p).second->getName() << "   Proxies:";
+      out << "    '" << (*i_p).second->getName() << "' refers to ";
       if(NULL != ((*i_p).second->getProxiedInputDevice()))
       {
          out << ((*i_p).second->getProxiedInputDevice())->getInstanceName();
@@ -753,8 +751,8 @@ GADGET_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, InputManager& iMgr
          cur_alias != iMgr.mProxyAliases.end();
          ++cur_alias )
    {
-      out << "    " << (*cur_alias).first.c_str() << "  proxy: "
-          << (*cur_alias).second << std::endl;
+      out << "    '" << (*cur_alias).first.c_str() << "' (alias for "
+          << (*cur_alias).second << ")" << std::endl;
    }
 
    out << "========== InputManager Status ==========" << std::endl;
