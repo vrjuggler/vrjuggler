@@ -1,5 +1,5 @@
 Builder: JExplorerBuilder V 1. 0. 7   
-< treecontrol linkurl="" imageurl="../../images/Icons/W98_Images/" >
+< treecontrol linkurl="" imageurl="${IMAGES}/Icons/W98_Images/" >
 	< font face="Helvetica" style="Plain" size="${TREE_FONTSIZE}">
 		< idefault title="Item" image="Book_Closed.gif" imagetwo="" info="VR Juggler" target="Body" link="" rlink="">
 
@@ -19,7 +19,7 @@ Builder: JExplorerBuilder V 1. 0. 7
 			< folder title="Getting Started" 
 				link="getting.started/index.html" 
 				info="Where do I begin?" 
-				image="Leaf_Script2.gif" >
+				image="Leaf_Script2.gif" imagetwo="Leaf_Write.gif" >
 				
 				< item title="Introduction" 
 					link="getting.started/introduction.html" 
@@ -28,7 +28,7 @@ Builder: JExplorerBuilder V 1. 0. 7
 				
 				< folder title="Get Juggler" 
 					info="How to get juggler on your machine.  Covers downloading and nstalling." 
-					image="Leaf.gif" >
+					image="Leaf_Script2.gif" imagetwo="Leaf_Write.gif" >
 					
 					< item title="Download Juggler" 
 						link="${DOWNLOAD}/index.html" 
@@ -42,7 +42,7 @@ Builder: JExplorerBuilder V 1. 0. 7
 				
 				< folder title="User Setup" 
 					info="Configure your account to run and compile juggler and it's related tools" 
-					image="Leaf.gif" >
+					image="Leaf_Script2.gif" imagetwo="Leaf_Write.gif" >
 					< item title="Configuration Files" 
 						link="getting.started/User.Setup/configuration.html" 
 						info="Set up your default Juggler configuration." 
@@ -55,9 +55,9 @@ Builder: JExplorerBuilder V 1. 0. 7
 			
 				< folder title="Sample Applications" 
 					info="Choose a sample application to test your installation." 
-					image="Leaf.gif">
+					image="Leaf_Script2.gif" imagetwo="Leaf_Write.gif">
 
-					< item title="Sample Applications" 
+					< item title="Introduction" 
 						link="getting.started/Sample.Applications/sample.apps.html" 
 						info="Choose a sample application to test your installation." 
 						image="Leaf.gif">
@@ -88,11 +88,11 @@ Builder: JExplorerBuilder V 1. 0. 7
 			< folder title="Case Studies: Learn by example" 
 				link="examples/index.html" 
 				info="Learn by example"
-				image="Leaf_Script2.gif" >
+				image="Leaf_Script2.gif" imagetwo="Leaf_Write.gif" >
 				< folder title="Cubes Example - Using OpenGL display lists in VR Juggler" 
 					link="examples/cubes/index.html" 
 					info="Cubes Example - Using OpenGL display lists in VR Juggler" 
-					image="Leaf_Script2.gif" >
+					image="Leaf_Script2.gif" imagetwo="Leaf_Write.gif" >
 					< item title="Context Specific Data" 
 						link="examples/cubes/context.data.html" 
 						info="Keeping track of display lists with: Context Specific Data" 
@@ -107,7 +107,7 @@ Builder: JExplorerBuilder V 1. 0. 7
 				< folder title="Wand Example - Getting Input" 
 					link="examples/wand/index.html" 
 					info="Wand Example - Getting Input" 
-					image="Leaf_Script2.gif" >
+					image="Leaf_Script2.gif" imagetwo="Leaf_Write.gif" >
 							
 					< item title="Application" 
 						link="examples/wand/app.class.html" 
@@ -127,15 +127,15 @@ Builder: JExplorerBuilder V 1. 0. 7
 				< folder title="pfNav Example - Juggler + IRIS Performer + Navigation" 
 					link="examples/pfNav/index.html" 
 					info="pfNav Example - Juggler + IRIS Performer + Navigation" 
-					image="Leaf_Script2.gif" >
+					image="Leaf_Script2.gif" imagetwo="Leaf_Write.gif">
 					<!-- TODO: under construction, add more content! -->
 				</folder>
 			</folder>
 
 			< item title="Classroom Notes" 
-        	                        link="./classroom.html"
+        	                        link="classroom.html"
                 	                info="Overview of Juggler Concepts, Ideas, and Techniques"
-                        	        image="Leaf.gif" >       
+                        	        image="Note.gif" >       
 
 
 		</idefault>
