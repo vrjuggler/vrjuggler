@@ -96,7 +96,6 @@ public class DeviceGraphModel
             // Hence, the source cannot be accepted.
             catch (ClassCastException ex)
             {
-               ex.printStackTrace();
                /* Oh well. */ ;
             }
          }
@@ -139,7 +138,6 @@ public class DeviceGraphModel
          // the target cannot be accepted.
          catch (ClassCastException ex)
          {
-            ex.printStackTrace();
             /* Oh well. */ ;
          }
       }
