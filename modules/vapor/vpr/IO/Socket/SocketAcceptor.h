@@ -54,7 +54,7 @@ namespace vpr
  * Socket connection acceptor factory.
  * Wraps all the nitty-gritty details of accepting a connection.
  */
-class VPR_CLASS_API SocketAcceptor
+class SocketAcceptor
 {
 public:
     /**
