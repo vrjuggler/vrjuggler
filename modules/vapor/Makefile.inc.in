@@ -170,7 +170,7 @@ ifneq (@OS_TYPE@, Win32)
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
 	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
             -t $(VPRROOT_ABS)/vpr-config.in -p 'use_base_dir=yes'	\
-            -o $(instlinks)/bin/vpr-config -x
+            -v $(VPRROOT_ABS)/VERSION -o $(instlinks)/bin/vpr-config -x
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$VPR_BASE_DIR to:'
