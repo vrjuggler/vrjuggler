@@ -50,7 +50,7 @@ public:
 
    // Update the navigation position
    virtual void update();
-   
+
    // Set the action buttons that can be used
    void setActionButtons(std::vector<std::string> action_btn_names);
 
@@ -282,6 +282,16 @@ void velocityNav::update()
    stopWatch.stop();
    stopWatch.start();
 
+   if(stopWatch.timeInstant > 2.0f)    // If the time is greater than 2 seconds ( 1/2 fps)
+   {
+      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"VelNav: timeInstant to large: ") << stopWatch.timeInstant << endl << vjDEBUG_FLUSH;
+      stopWatch.stop();    // Get a REALLY small delta time
+      stopWatch.start();
+   }
+
+   //vjDEBUG_BEGIN(vjDBG_ALL,0) << "VelNav: ----- Update ----\n" << vjDEBUG_FLUSH;
+   //vjDEBUG(vjDBG_ALL,0) << "VelNav: timeInstant: " << stopWatch.timeInstant << endl << vjDEBUG_FLUSH;
+
    // If we are not supposed to be active, then don't run
    if(!this->isActive())
    {
@@ -342,9 +352,14 @@ void velocityNav::update()
       // add the velocity this timeslice/frame by the acceleration from gravity.
       velocityAccumulator += mVelocityFromGravityAccumulator;
 
+      //vjDEBUG(vjDBG_ALL,0) << "velNav: drive: gravAccum: " << mVelocityFromGravityAccumulator << vjDEBUG_FLUSH;
+
       // recalculate the current downward velocity from gravity.
       // this vector then is accumulated with the rest of the velocity vectors each frame.
       mVelocityFromGravityAccumulator += (gravity * stopWatch.timeInstant);
+
+      //vjDEBUG_CONT(vjDBG_ALL,0) << " new vel: " << velocityAccumulator
+      //                          << " new grav: " << mVelocityFromGravityAccumulator << endl << vjDEBUG_FLUSH;
    }
    if (mAllowTrans)
    {
@@ -362,6 +377,8 @@ void velocityNav::update()
    // NOTE: this is not the final distance, since we still have to do collision correction.
    vjVec3 distanceToMove = velocityAccumulator * stopWatch.timeInstant;
 
+   //vjDEBUG(vjDBG_ALL,0) << "velNav: distToMove = velAcum * instant: " << velocityAccumulator << " * " << stopWatch.timeInstant << endl << vjDEBUG_FLUSH;
+
    // --- TRANSLATION and COLLISION DETECTION --- //
    bool     did_collide;               // Did we collide with anything
    vjVec3   total_correction;          // The total correction on the movement (in modelspace)
@@ -369,8 +386,10 @@ void velocityNav::update()
 
    if(did_collide)      // If we hit something, stop falling
    {
+      //vjDEBUG(vjDBG_ALL,0) << "Did collide: Setting gravAccum to 0,0,0\n" << vjDEBUG_FLUSH;
       mVelocityFromGravityAccumulator.set( 0.0f, 0.0f, 0.0f );
    }
+   //vjDEBUG_END(vjDBG_ALL,0) << "---------------------\n" << vjDEBUG_FLUSH;
 }
 
 void velocityNav::scaled_rotate(vjMatrix rot_mat)
@@ -434,6 +453,8 @@ void velocityNav::reset()
    mVelocityFromGravityAccumulator.set( 0,0,0 );
    mRotationalAcceleration.makeIdent();
    navigator::reset();
+   stopWatch.start();   // Reset the stop watch
+   stopWatch.stop();
 }
 
 
