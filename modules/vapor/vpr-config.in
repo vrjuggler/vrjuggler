@@ -32,6 +32,9 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
+%{
+%}
+
 subsystem_cflags="@subsystem_cflags@"
 subsystem_cxxflags="@subsystem_cxxflags@"
 subsystem_libs="@subsystem_libs@"
