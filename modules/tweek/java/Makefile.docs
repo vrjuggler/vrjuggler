@@ -70,7 +70,7 @@ LIQUID_DIR=	$(SWING_LAF_DIR)/liquid
 SRC_PATH=	$(srcdir):$(srcdir)/../extensions/java
 JDOM_DIR=	../../../external/jdom
 
-CLASSPATH=	$(JDOM_DIR)/build/jdom.jar:$(JGOODIES_DIR)/looks.jar:$(LIQUID_DIR)/liquidlnf.jar:$(KUNSTSTOFF_DIR)
+CLASSPATH=	$(JDOM_DIR)/build/jdom.jar:$(JGOODIES_DIR)/looks.jar:$(LIQUID_DIR)/liquidlnf.jar:$(KUNSTSTOFF_DIR):$(TWEEK_BASE_DIR)/share/tweek/java/Tweek.jar:$(TWEEK_BASE_DIR)/share/tweek/java/TweekBeans.jar:$(TWEEK_BASE_DIR)/share/tweek/java/TweekEvents.jar:$(TWEEK_BASE_DIR)/share/tweek/java/TweekNet.jar:$(TWEEK_BASE_DIR)/share/tweek/java/TweekServices.jar
 
 JACORB_DIR=	../../../external/JacORB
 IDL=		$(JACORB_DIR)/idl
@@ -87,8 +87,12 @@ docs:
           -I.. ../tweek/idl/*.idl
 	@echo '<html><body>Contains classes that are generated automatically by an IDL-to-Java compiler from the Tweek IDL sources.</body></html>' >temp/tweek/package.html
 	$(JDK_HOME)/bin/javadoc -d $(DOC_ROOT)				\
-          -sourcepath $(SRC_PATH):temp					\
-          -classpath "$(CLASSPATH)" $(DOC_PKGS)
+          -sourcepath $(SRC_PATH):temp -classpath "$(CLASSPATH)"	\
+          -windowtitle "Tweek Java API v$(PROJECT_NUMBER)"		\
+          -doctitle "Tweek Java API v$(PROJECT_NUMBER)"			\
+          -link "http://java.sun.com/j2se/1.4.2/docs/api/"		\
+          -link "http://www.jdom.org/docs/apidocs/" 			\
+          $(DOC_PKGS)
 	rm -rf temp
 
 install-docs:
