@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?org-vrjuggler-jccl-settings definition.version="3.0"?>
-<definition name="simulated_positional_device"
-            icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/VRJConfig.jar!/org/vrjuggler/vrjconfig/images/positional_devices64.png"
-            xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/definition http://www.vrjuggler.org/jccl/xsd/3.0/definition.xsd"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="simulated_positional_device" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/VRJConfig.jar!/org/vrjuggler/vrjconfig/images/positional_devices64.png" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
    <definition_version version="2" label="Simulated Positional Device">
       <help>A simulated positional device. Gets input from an event window proxy.</help>
       <parent>positional_device</parent>
@@ -53,14 +49,18 @@
       <property valuetype="integer" variable="false" name="translation_coordinate_system">
          <help>Do the translations apply to the tracker's local coordinate system?  Ex. Wand - global, Camera - Local</help>
          <value label="Translation Coordinate System" defaultvalue="0"/>
-         <enum label="Local" value="0"/>
-         <enum label="Global" value="1"/>
+         <enumeration editable="false">
+            <enum label="Local" value="0"/>
+            <enum label="Global" value="1"/>
+         </enumeration>
       </property>
       <property valuetype="integer" variable="false" name="rotation_coordinate_system">
          <help>Do the rotations apply to the tracker's local coordinate system?</help>
          <value label="Rotation Coordinate System" defaultvalue="0"/>
-         <enum label="Local" value="0"/>
-         <enum label="Global" value="1"/>
+         <enumeration editable="false">
+            <enum label="Local" value="0"/>
+            <enum label="Global" value="1"/>
+         </enumeration>
       </property>
       <property valuetype="configelement" variable="true" name="position_filters">
          <help>This is a list of all the filters that are to be applied to the postional device data. The filters are applied in the order that they are specified in this configuration.</help>

@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?org-vrjuggler-jccl-settings definition.version="3.0"?>
-<definition name="directx_joystick"
-            icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg"
-            xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/definition http://www.vrjuggler.org/jccl/xsd/3.0/definition.xsd"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="directx_joystick" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
    <definition_version version="1" label="DirectX Joystick">
       <help>Element for configuring a DirectX joystick input device.  This device is only available on Windows.</help>
       <parent>digital_device</parent>
@@ -14,7 +10,7 @@
          <help>Indices of analog/axes that should be added as extra buttons.  This is useful for example when the analog axis is a hat switch that should be treated as a button instead.  Axes with these given indices will be added as extra buttons at the end of the current set of buttons.</help>
          <value label="Axis Buttons" defaultvalue="0"/>
       </property>
-         <property valuetype="float" variable="false" name="min">
+      <property valuetype="float" variable="false" name="min">
          <help/>
          <value label="Range Minimum" defaultvalue="0.0"/>
       </property>

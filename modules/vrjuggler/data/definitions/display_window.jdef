@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?org-vrjuggler-jccl-settings definition.version="3.0"?>
-<definition name="display_window"
-            icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg"
-            xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/definition http://www.vrjuggler.org/jccl/xsd/3.0/definition.xsd"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="display_window" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
    <definition_version version="2" label="Display Window">
       <help>This is display window. It contains viewports.</help>
       <parent/>
@@ -120,17 +116,14 @@
          <allowed_type>surface_viewport</allowed_type>
       </property>
       <upgrade_transform>
-         <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                         xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration">
-           
+         <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
             <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
             <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
-           
+
             <xsl:template match="/">
-                <xsl:apply-templates />
+                <xsl:apply-templates/>
             </xsl:template>
-           
+
             <xsl:template match="jconf:display_window">
                <xsl:element namespace="{$jconf}" name="display_window">
                   <xsl:attribute name="name">
@@ -138,7 +131,7 @@
                   </xsl:attribute>
                   <xsl:attribute name="version">3</xsl:attribute>
                   <xsl:copy-of select="./*"/>
-                  <xsl:element  namespace="{$jconf}" name="hide_mouse">
+                  <xsl:element namespace="{$jconf}" name="hide_mouse">
                      <xsl:text>false</xsl:text>
                   </xsl:element>
                </xsl:element>
@@ -146,5 +139,4 @@
          </xsl:stylesheet>
       </upgrade_transform>
    </definition_version>
-
 </definition>
