@@ -85,11 +85,12 @@ public:
     *       will result in a one update lag in detecting the button not being
     *       pressed.
     */
-   int getData() const
+   gadget::Digital::State getData() const
    {
       // If we're stupified, return gadget::Digital::OFF.  Otherwise, return
       // the current digital value.
-      return (isStupified() ? Digital::OFF : mData.getDigital());
+      return (isStupified() ? Digital::OFF
+                            : (gadget::Digital::State) mData.getDigital());
    }
 
    DigitalData* getDigitalData()
