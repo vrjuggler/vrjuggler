@@ -737,7 +737,7 @@ int main(int argc, char* argv[])
           application to improve the frame rate and the level of
           interactivity.</para>
 
-          <section>
+          <section id="section.getDrawScaleFactor">
             <title><methodname>vrj::App::getDrawScaleFactor()</methodname></title>
 
             <para>As of VR Juggler 2.0 Alpha 1, applications can specify the
@@ -3656,6 +3656,11 @@ public:
       /* Do nothing. */ ;
    }
 
+   virtual ~MyApp()
+   {
+      /* Do nothing. */ ;
+   }
+
    void init()
    {
       mKeyboard.init("VJKeyboard");
@@ -3714,6 +3719,79 @@ private:
             return a full transformation matrix even if the physical tracking
             hardware is only capable of returning translation or orientation
             data.</para>
+
+            <tip>
+              <para>When querying a positional device for its data, it is
+              critical to ask for the data in the units that the application
+              expects. An easy way to do this is to pass the result of
+              <methodname>getDrawScaleFactor()</methodname> to
+              <methodname>gadget::PositionProxy::getData()</methodname>. By
+              default,
+              <methodname>gadget::PositionProxy::getData()</methodname>
+              returns data in feet, and the implementation of
+              <methodname>vrj::App::getDrawScaleFactor()</methodname> returns
+              <constant>gadget::PositionUnitConversion::ConvertToFeet</constant>.
+              This is for backwards compatibility with VR Juggler 1.0
+              behavior. See <xref linkend="example.query.pos.data.units" />
+              for an example of this. Refer to <xref
+              linkend="section.getDrawScaleFactor" /> for more information
+              about <methodname>getDrawScaleFactor()</methodname>.</para>
+            </tip>
+
+            <example id="example.query.pos.data.units">
+              <title>Requesting Positional Data in Application-Specific
+              Units</title>
+
+              <programlisting linenumbering="numbered">#include &lt;gmtl/Matrix.h&gt;
+
+#include &lt;gadget/Type/Position/PositionUnitConversion.h&gt;
+#include &lt;gadget/Type/PositionInterface.h&gt;
+
+#include &lt;vrj/Draw/OGL/GlApp.h&gt;
+
+
+class MyApp : public vrj::GlApp
+{
+public:
+   MyApp() : vrj::GlApp()
+   {
+      /* Do nothing. */ ;
+   }
+
+   virtual ~MyApp()
+   {
+      /* Do nothing. */ ;
+   }
+
+   void init()
+   {
+      mWand.init("VJWand");
+   }
+
+   // Use meters for the application units.
+   float getDrawScaleFactor()
+   {
+      return gadget::PositionUnitConversion::ConvertToMeters;
+   }
+
+   void preFrame()
+   {
+      // Request the current wand transformation matrix in
+      // application units (meters).
+      const float units = getDrawScaleFactor();
+      gmtl::Matrix44f wand_mat(mWand-&gt;getData(units));
+      // Do something with the wand transformation ...
+   }
+
+   void draw()
+   {
+      // Draw something ...
+   }
+
+private:
+   gadget::PositionInterface mWand;
+};</programlisting>
+            </example>
           </section>
 
           <section>
@@ -3761,15 +3839,16 @@ private:
 
           <para>To determine whether a proxy is stupefied, the method
           <methodname>gadget::Proxy::isStupefied()</methodname> can be used.
-          The stupefication state cannot be changed programatically by user
-          code, however. Only the Input Manager is capable of reconfiguring a
-          proxy to point at a new valid device. Hence, changing the
-          stupefication state of a proxy from an application object will have
-          no effect and may cause the application to crash.</para>
+          The stupefied state cannot be changed programatically by user code,
+          however. Only the Input Manager is capable of reconfiguring a proxy
+          to point at a new valid device. Hence, changing the stupefication
+          state of a proxy from an application object will have no effect and
+          may cause the application to crash.</para>
 
           <warning>
             <para>In all versions of VR Juggler prior to 2.0 Beta 3, the word
-            <quote>stupefied</quote> was misspelled as stupified. The method
+            <quote>stupefied</quote> was misspelled as
+            <quote>stupified.</quote> The method
             <methodname>gadget::Proxy::isStupified()</methodname> is retained
             in Gadgeteer 1.0 for backwards compatibility, but it will be
             removed in Gadgeteer 1.2 (which will ship as part of VR Juggler
