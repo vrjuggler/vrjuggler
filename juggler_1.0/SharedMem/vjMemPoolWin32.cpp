@@ -32,6 +32,7 @@
  */
 
 #include <vjConfig.h>
+#include <SharedMem/vjMemPool.h>
 #include <SharedMem/vjMemPoolWin32.h>
 
 
