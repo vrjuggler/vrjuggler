@@ -18,12 +18,8 @@
 #ifndef _ISD_isenseh
 #define _ISD_isenseh
 
-#define UNIX 
-
-/*Remove these lines when you wish to build the driver without Juggler */
-#include <vjDefines.h>
-#if defined VJ_OS_Win32
-#undef UNIX
+#if !defined(WIN32)
+#define UNIX
 #endif
 
 /* -------------------------------------- */
