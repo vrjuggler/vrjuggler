@@ -134,13 +134,13 @@ vjMotionStar::config (vjConfigChunk* c) {
 // ----------------------------------------------------------------------------
 int
 vjMotionStar::startSampling () {
-   int retval;
+   int retval = 0;
 
    // Make sure the device isn't already started.
    if ( isActive() ) {
       vjDEBUG(vjDBG_INPUT_MGR, 2) << "vjMotionStar was already started.\n"
                                   << vjDEBUG_FLUSH;
-      retval = 0;
+      retval = 1;
    }
    else {
       if ( m_my_thread == NULL ) {
@@ -173,14 +173,14 @@ vjMotionStar::startSampling () {
                vjDEBUG(vjDBG_INPUT_MGR, 0)
                   << "vjMotionStar failed to connect to server\n"
                   << vjDEBUG_FLUSH;
-               retval = 1;
+               retval = 0;
                break;
             // No socket could be created, so no connection can be made.
             case -2:
                vjDEBUG(vjDBG_INPUT_MGR, 0)
                   << "vjMotionStar could not create a socket\n"
                   << vjDEBUG_FLUSH;
-               retval = 1;
+               retval = 0;
                break;
             // No address has been set for the server, so no connection can be
             // made.
@@ -188,14 +188,14 @@ vjMotionStar::startSampling () {
                vjDEBUG(vjDBG_INPUT_MGR, 0)
                   << "No server address set for vjMotionStar\n"
                   << vjDEBUG_FLUSH;
-               retval = 1;
+               retval = 0;
                break;
             // Unkonwn return value from aMotionStar::start().
             default:
                vjDEBUG(vjDBG_INPUT_MGR, 0)
                   << "Abnormal return from aMotionStar::start()\n"
                   << vjDEBUG_FLUSH;
-               retval = 1;
+               retval = 0;
                break;
          }
 
@@ -203,7 +203,7 @@ vjMotionStar::startSampling () {
          if ( ! isActive() ) {
             vjDEBUG(vjDBG_INPUT_MGR, 0) << "vjMotionStar failed to start.\n"
                                         << vjDEBUG_FLUSH;
-            retval = 1;
+            retval = 0;
          }
          else {
             vjDEBUG(vjDBG_INPUT_MGR, 1) << "vjMotionStar ready to go.\n"
@@ -216,6 +216,7 @@ vjMotionStar::startSampling () {
                   << "vjMotionStar could not create sampling thread.\n"
                   << vjDEBUG_FLUSH;
                 vjASSERT(false);  // Fail
+                retval = 0;   // failure
             }
             else {
                 retval = 1;   // success
@@ -224,7 +225,7 @@ vjMotionStar::startSampling () {
       }
       // The thread has been started, so we are already sampling.
       else {
-         retval = 0;
+         retval = 1;
       }
    }
 
