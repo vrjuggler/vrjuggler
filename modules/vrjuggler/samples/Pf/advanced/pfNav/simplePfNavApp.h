@@ -39,6 +39,10 @@
 #include "StopWatch.h"    // for time
 #include <vrj/Draw/Pf/PfApp.h>    // the performer application base type
 
+#ifdef USE_SONIX
+#include <snx/SoundHandle.h>
+#endif
+
 class pfNavDCS;
 class navigator;
 
@@ -147,7 +151,7 @@ public:
 
    //: These must be set before the kernel starts calling the application
    void addModelFile( const std::string& filename );
-
+   
    // Add a model to the application
    void addModel( const Model& m );
 
@@ -211,6 +215,20 @@ public:
    pfGroup*       mSoundNodes;               // The sounds of the world
    pfGroup*       mCollidableModelGroup;     // Part of the world that is collidable
    pfGroup*       mUnCollidableModelGroup;   // Part of the world that is collidable
+
+   #ifdef USE_SONIX
+   snx::SoundHandle mStopSound;
+   snx::SoundHandle mAccelSound;
+   snx::SoundHandle mLandSound;
+   snx::SoundHandle mBumpSound, mAmbientSound, mWalkingSound;
+   #endif
+   gadget::DigitalInterface      mGoButton;  
+   gadget::DigitalInterface      mStopButton;
+   
+   float mWalkingCount, mRideCount;
+   bool mColliding, mRiding;
+   gmtl::Vec3f mVelocity;
+   gmtl::Vec3f mPrevPosition;
 };
 
 #endif
