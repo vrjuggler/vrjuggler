@@ -51,8 +51,8 @@ public:
     {
         totalTime = 0;
         timeCount = 0;
-        startTime = 0;
-        endTime = 0;
+        startTime = wallclock();
+        endTime = startTime;
     }
 
     //: Start a timing
@@ -89,8 +89,8 @@ public:
     {
         totalTime = 0;
         timeCount = 0;
-        startTime = 0;
-        endTime = 0;
+        startTime = wallclock();
+        endTime = startTime;
     }
 
 #ifdef VPR_OS_Win32
