@@ -35,6 +35,7 @@ import org.vrjuggler.jccl.config.*;
                                            String.class,
                                            "Your name",
                                            prop_value_defs,
+                                           false,
                                            new TreeMap(),
                                            new ArrayList(),
                                            false));
@@ -46,6 +47,7 @@ import org.vrjuggler.jccl.config.*;
                                            Integer.class,
                                            "Your age",
                                            prop_value_defs,
+                                           false,
                                            new TreeMap(),
                                            new ArrayList(),
                                            false));
@@ -57,6 +59,7 @@ import org.vrjuggler.jccl.config.*;
                                            ConfigElement.class,
                                            "Your friends",
                                            prop_value_defs,
+                                           false,
                                            new TreeMap(),
                                            new ArrayList(),
                                            true));
@@ -94,6 +97,7 @@ import org.vrjuggler.jccl.config.*;
                                            ConfigElement.class,
                                            "The corners that make up the wall.",
                                            prop_value_defs,
+                                           false,
                                            new TreeMap(),
                                            allowed_types,
                                            false));
@@ -127,6 +131,7 @@ import org.vrjuggler.jccl.config.*;
                                            Float.class,
                                            "The position of the corner in 3D space.",
                                            prop_value_defs,
+                                           false,
                                            new TreeMap(),
                                            new ArrayList(),
                                            false));
