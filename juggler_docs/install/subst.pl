@@ -94,3 +94,6 @@ $alias_subst{"PATTERNS"} = 'http://hillside.net/patterns/patterns.html';
 $alias_subst{"DESIGNPATTERNSBOOK"} = 'http://www.amazon.com/exec/obidos/ASIN/0201633612/o/qid=947544224/sr=2-1/002-9163340-6788217';
 $alias_subst{"OPENGLREDBOOK"} = 'http://www.amazon.com/exec/obidos/ASIN/0201604582/o/qid=947802795/sr=2-1/002-9163340-6788217';
 $alias_subst{"PERFORMERBOOK"} = 'http://techpubs.sgi.com';
+
+# Miscellaneous
+$alias_subst{'CONFIGURE_REV'} = '1.164';
