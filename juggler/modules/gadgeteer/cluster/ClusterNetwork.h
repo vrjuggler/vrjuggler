@@ -30,19 +30,18 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_DEBUG_H_
-#define _GADGET_DEBUG_H_
-//#pragma once
+#ifndef _CLUSTER_NETWORK_H
+#define _CLUSTER_NETWORK_H
 
 #include <gadget/gadgetConfig.h>
-#include <stdlib.h>
 
-#include <vpr/Util/Debug.h>
+#include <gadget/Acceptor.h>
+#include <gadget/Connector.h>
+#include <gadget/NetworkManager.h>
 
-// Gadgeteer categories
-const vpr::DebugCategory gadgetDBG_INPUT_MGR(vpr::GUID("d6be4359-e8cf-41fc-a72b-a5b4f3f29aa2"), "DBG_INPUT_MGR", "gadgetINP:");
-const vpr::DebugCategory gadgetDBG_RIM(vpr::GUID("2af7e28f-a831-4b7c-b5c9-beda5289ffde"), "DBG_RIM", "gadgetRIM:");
-const vpr::DebugCategory gadgetDBG_NET_MGR(vpr::GUID("02be47d5-c5f8-4487-b08c-e99ee23cc1d5"), "DBG_NET_MGR", "gadgetNET:");
+namespace cluster
+{
+   typedef gadget::NetworkManager<gadget::Acceptor, gadget::Connector> ClusterNetwork;
+} // end namespace cluster
 
-
-#endif
+#endif /* _CLUSTER_NETWORK_H */

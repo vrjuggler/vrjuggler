@@ -55,7 +55,7 @@
 #include <gadget/Type/BaseTypeFactory.h>
 #include <gadget/InputLogger.h>
 
-#include <gadget/InputManager.h> // my header...
+#include <gadget/InputManager.h>
 
 
 namespace fs = boost::filesystem;
@@ -637,7 +637,7 @@ bool InputManager::addDevice(Input* devPtr)
 }
 
 /**
- *   Add a remote device from the RemoteInputManager to the InputManager.
+ *   Add a remote device to the InputManager that is being updated by a RemoteInputManager.
  */
 bool InputManager::addRemoteDevice(Input* devPtr, const std::string& device_name)
 {
@@ -962,7 +962,6 @@ gadget::InputLoggerPtr InputManager::getInputLogger()
 
    return mInputLogger;
 }
-
 
 bool InputManager::configureInputLogger(jccl::ConfigElementPtr element)
 {
