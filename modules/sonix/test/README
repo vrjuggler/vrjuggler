@@ -1,0 +1,14 @@
+tests (unit, regression, performance)
+
+these tests should pass with no asserts (you may need to compile in debug mode)
+
+
+
+- apps
+  These are standalone test applications.  
+  Usually interactive in that they cannot test themselves.
+  
+  
+- TestSuite
+  A test framework for automated tests.  
+  These are usually non interactive, but can include interactive tests also.
