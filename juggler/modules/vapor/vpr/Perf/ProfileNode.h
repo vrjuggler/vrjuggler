@@ -102,6 +102,7 @@ namespace vpr
 
       ProfileNode*  getSubNode( const char * name, const unsigned int queueSize);
 
+      ProfileNode*  getNamedNode( const char* nodeName );
       /**
        * return This nodes parent.
        */

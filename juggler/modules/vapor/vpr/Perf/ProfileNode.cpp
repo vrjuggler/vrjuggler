@@ -125,6 +125,24 @@ namespace vpr
       return node;
    }
 
+   ProfileNode* ProfileNode::getNamedNode( const char* nodeName )
+   {
+      // Try to find this sub node
+      ProfileNode* child = mChild;
+      while ( child )
+      {
+         if ( child->mName == nodeName )
+         {
+            return child;
+         }
+         child = child->mSibling;
+      }
+
+      return NULL;
+   }
+
+   
+
    void ProfileNode::printTree(ProfileNode* node)
    {
       if ( node == NULL )
