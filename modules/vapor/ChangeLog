@@ -1,5 +1,6 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2001-07-24 allenb   Added destructor code to SocketNSPRImpl.
 2001-07-23 allenb   Added vprTest::BoostTest for testing boost functionality
                     required for vapor and other Juggler libs.
 2001-07-22 allenb   Replace vpr::Status with vpr::ReturnStatus
