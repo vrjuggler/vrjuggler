@@ -65,7 +65,7 @@
 namespace gadget
 {
 
-class KeyboardWin32 : public InputMixer<Input,Keyboard>
+class GADGET_CLASS_API KeyboardWin32 : public Input, public Keyboard
 {
 public:
    // Enum to keep track of current lock state for state machine
