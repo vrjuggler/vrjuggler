@@ -33,9 +33,6 @@ public:
     //: Pointer to this vjProperty's description.
     vjPropertyDesc *description;
 
-    //: Name of the vjProperty (shortcut for description->name)
-    //char *name;
-
     //: Number of values.  -1 for variable number (use getNum() )
     int num;
 
@@ -77,6 +74,12 @@ public:
 
     vjProperty& operator= (const vjProperty& p);
 
+
+
+    bool operator== (const vjProperty& p);
+    inline bool operator != (const vjProperty& p) {
+	return !(*this == p);
+    }
 
 
     //: Returns actual current number of values in self

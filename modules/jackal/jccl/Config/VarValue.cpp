@@ -94,7 +94,7 @@ bool vjVarValue::operator == (const vjVarValue& v) {
     case T_BOOL:
 	return (val.boolval == v.val.boolval);
     case T_EMBEDDEDCHUNK:
-	return (val.embeddedchunkval == v.val.embeddedchunkval);
+	return (*(val.embeddedchunkval) == *(v.val.embeddedchunkval));
     default:
 	return false;
     }
@@ -115,10 +115,10 @@ vjVarValue::operator int() {
 
 vjVarValue::operator vjConfigChunk*() {
     if ((type == T_EMBEDDEDCHUNK))
-	return new vjConfigChunk (*val.embeddedchunkval);
+	//	return new vjConfigChunk (*val.embeddedchunkval);
+	return val.embeddedchunkval;
     if (type != T_INVALID)
 	cerr << "Type error in cast!\n";
-    // this is a very bad thing to do...
     return NULL;
 }
 
@@ -144,18 +144,6 @@ vjVarValue::operator float () {
 
 
 
-//  vjVarValue::operator char* () {
-//      if ((type == T_STRING) || (type == T_CHUNK)) {
-//  	if (val.strval) {
-//  	    return strdup (val.strval);
-//  	}
-//  	else
-//  	    return strdup("");
-//      }
-//      if (type != T_INVALID)
-//  	cerr << "Type error in cast to char*!\n";
-//      return NULL;
-//  }
 char* vjVarValue::cstring () {
     if ((type == T_STRING) || (type == T_CHUNK)) {
 	return strdup (val.strval.c_str());

@@ -66,6 +66,37 @@ vjConfigChunk& vjConfigChunk::operator = (const vjConfigChunk& c) {
     return *this;
 }
 
+
+//: tests for equality of two vjConfigChunks
+bool vjConfigChunk::operator== (const vjConfigChunk& c) {
+    // equality operator - this makes a couple of assumptions:
+    // 1. the descs must be the _same_object_, not just equal.
+    // 2. the properties will be in the _same_order_.  This is
+    //    reasonable if 1. is true.
+
+    if (descdb != c.descdb)
+	return false;
+    if (desc != c.desc)
+	return false;
+    if (props.size() != c.props.size()) // probably redundant
+	return false;
+    for (int i = 0; i < props.size(); i++) {
+	if (*(props[i]) != *(c.props[i]))
+	    return false;
+    }
+    return true;
+}
+
+
+//: Compares two vjConfigChunks based on their instance names
+bool vjConfigChunk::operator< (vjConfigChunk& c) {
+    std::string s1 = getProperty ("name");
+    std::string s2 = c.getProperty ("name");
+    return s1 < s2;
+}
+
+
+
 //: Return a list of chunk names dependant upon this one
 // This is used to sort a db by dependancy.
 std::vector<std::string> vjConfigChunk::getDependencies()
@@ -96,7 +127,7 @@ std::vector<std::string> vjConfigChunk::getDependencies()
 }
 
 
-vjProperty* vjConfigChunk::getPropertyPtr (const std::string& property) {
+vjProperty* vjConfigChunk::getPropertyPtrFromName (const std::string& property) {
     for (int i = 0; i < props.size(); i++) {
 	if (!vjstrcasecmp (props[i]->getName(), property))
 	    return props[i];
@@ -106,7 +137,7 @@ vjProperty* vjConfigChunk::getPropertyPtr (const std::string& property) {
 
 
 
-vjProperty* vjConfigChunk::getPropertyFromToken (const std::string& token) {
+vjProperty* vjConfigChunk::getPropertyPtrFromToken (const std::string& token) {
   for (int i = 0; i < props.size(); i++) {
     if (!vjstrcasecmp(props[i]->description->getToken(), token))
       return props[i];
@@ -303,7 +334,7 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
 	}
 	
 	// We have a string token; assumably a property name.
-	if (!(p = self.getPropertyFromToken (tok.strval))) {
+	if (!(p = self.getPropertyPtrFromToken (tok.strval))) {
 	    vjDEBUG(vjDBG_ALL,3) << "ERROR: Property '" << tok.strval << "' is not found in"
 		       << " Chunk " << self.desc->name << endl << vjDEBUG_FLUSH;
 	    self.getVJCFGToken(in,tok);
@@ -363,7 +394,7 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
 
 
 int vjConfigChunk::getNum (const std::string& property_token) {
-    vjProperty* p = getPropertyFromToken (property_token);
+    vjProperty* p = getPropertyPtrFromToken (property_token);
     if (p)
 	return p->getNum();
     else
@@ -384,7 +415,7 @@ vjVarValue& vjConfigChunk::getProperty (const std::string& property_token, int i
       return type_as_varvalue;
    }
 
-   vjProperty *p = getPropertyFromToken (property_token);
+   vjProperty *p = getPropertyPtrFromToken (property_token);
    if (!p)
    {
       return vjVarValue::getInvalidInstance();
@@ -399,7 +430,7 @@ vjVarValue& vjConfigChunk::getProperty (const std::string& property_token, int i
 
 bool vjConfigChunk::setProperty (const std::string& property, int val, int ind) {
     vjProperty *p;
-    p = getPropertyPtr (property);
+    p = getPropertyPtrFromToken (property);
     if (!p)
 	return false;
     return p->setValue (val, ind);
@@ -407,7 +438,7 @@ bool vjConfigChunk::setProperty (const std::string& property, int val, int ind) 
 
 bool vjConfigChunk::setProperty (const std::string& property, float val, int ind) {
     vjProperty *p;
-    p = getPropertyPtr (property);
+    p = getPropertyPtrFromToken (property);
     if (!p)
 	return false;
     return p->setValue (val, ind);
@@ -415,7 +446,7 @@ bool vjConfigChunk::setProperty (const std::string& property, float val, int ind
 
 bool vjConfigChunk::setProperty (const std::string& property, const std::string& val, int ind) {
     vjProperty *p;
-    p = getPropertyPtr (property);
+    p = getPropertyPtrFromToken (property);
     if (!p)
 	return false;
     return p->setValue (val, ind);
@@ -423,16 +454,19 @@ bool vjConfigChunk::setProperty (const std::string& property, const std::string&
 
 bool vjConfigChunk::setProperty (const std::string& property, vjConfigChunk* val, int ind) {
     vjProperty *p;
-    p = getPropertyPtr (property);
-    if (!p)
+    p = getPropertyPtrFromToken (property);
+    if (!p) {
+	vjDEBUG (vjDBG_ALL, 0) << "setProperty: no such property " << property
+			       << "\n" << vjDEBUG_FLUSH;
 	return false;
+    }
     return p->setValue (val, ind);
 }
 
 
 bool vjConfigChunk::addValue (const std::string& property, int val) {
     vjProperty *p;
-    p = getPropertyPtr (property);
+    p = getPropertyPtrFromToken (property);
     if (p == NULL)
 	return false;
     if (p->num != -1)
@@ -442,7 +476,7 @@ bool vjConfigChunk::addValue (const std::string& property, int val) {
 
 bool vjConfigChunk::addValue (const std::string& property, float val) {
     vjProperty *p;
-    p = getPropertyPtr (property);
+    p = getPropertyPtrFromToken (property);
     if (p == NULL)
 	return false;
     if (p->num != -1)
@@ -452,7 +486,7 @@ bool vjConfigChunk::addValue (const std::string& property, float val) {
 
 bool vjConfigChunk::addValue (const std::string& property, const std::string& val) {
     vjProperty *p;
-    p = getPropertyPtr (property);
+    p = getPropertyPtrFromToken (property);
     if (p == NULL)
 	return false;
     if (p->num != -1)
@@ -462,7 +496,7 @@ bool vjConfigChunk::addValue (const std::string& property, const std::string& va
 
 bool vjConfigChunk::addValue (const std::string& property, vjConfigChunk* val) {
     vjProperty *p;
-    p = getPropertyPtr (property);
+    p = getPropertyPtrFromToken (property);
     if (p == NULL)
 	return false;
     if (p->num != -1)

@@ -102,7 +102,9 @@ public:
 
     //: Equality Operator
     bool operator == (const vjVarValue& v);
-
+    inline bool operator != (const vjVarValue& v) {
+	return !(*this == v);
+    }
 
 
     /*  Cast Operators
