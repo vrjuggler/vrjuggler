@@ -403,7 +403,9 @@ public class TweekCore
          else if ( args[i].startsWith("--defaultbean=") )
          {
             int start = args[i].indexOf('=') + 1;
-            defaultBean = args[i].substring(start);
+            // Replace instances of non-breaking space characters with ASCII
+            // space characters.
+            defaultBean = args[i].substring(start).replace('\u00A0', ' ');
          }
          else if ( args[i].startsWith("--validate") )
          {
