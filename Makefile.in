@@ -53,6 +53,7 @@
 # install-opt     - Install the optimized, static version of the libraries.
 # install-dso     - Install the dynamic shared object version of the libraries.
 # install-headers - Install only the header files.
+# install-sample  - Install only the sample applications.
 # install-test    - Install only the test code.
 # install-data    - Install only the Data directory.
 # install-gui     - Install only the configuration GUI.
@@ -185,9 +186,10 @@ endif
 
 # Subdirectories used for recursion through the test source tree when
 # installing.
-TEST_SUBDIRS	= . CfgTest Math Matrix Quat Sync input ogl ogl/combo	\
-                  ogl/cubes ogl/glove ogl/simpleGlove ogl/torus		\
-                  ogl/wand pfNav testDynamicCastSTL threads
+SAMPLE_SUBDIRS	= . ogl ogl/combo ogl/cubes ogl/glove ogl/simpleGlove	\
+                  ogl/torus ogl/wand pfNav
+TEST_SUBDIRS	= . CfgTest Math Matrix Quat Sync input			\
+                  testDynamicCastSTL threads
 
 # The list of ABIs supported on this platform.
 ABI_LIST	= @ABI_LIST@
@@ -712,6 +714,7 @@ _install_libs:
 # Do everything needed after installing the library binaries.
 _install_post_libs:
 	@${MAKE} install-headers
+	@${MAKE} install-sample
 	@${MAKE} install-test
 	@${MAKE} install-data
 	@${MAKE} install-gui
@@ -885,6 +888,29 @@ install-headers:
 	@-rm -f ./vjConfig.tmp
 	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
           ${topdir}/vjDefines.h ${includedir}
+
+# Install the sample applications.
+install-sample:
+	@echo "------------------------------------------------"
+	@echo "Installing sample applications"
+	@echo "------------------------------------------------"
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.samples.dist -p ${prefix}
+	${PERL} ${scriptdir}/install-src.pl -i ${top_srcdir}/samples	\
+          -m ${_FILE_PERMS} -g ${_GROUP_NAME} -o ${prefix}/samples
+	${PERL} ${scriptdir}/makefiles-gen.pl --CXX="${CXX}"		\
+          --DEFS="${DEFS}" --CPPFLAGS="${CPPFLAGS}"			\
+          --CXXFLAGS="${CXXFLAGS}" --INCLUDES="@INCLUDES@"		\
+          --startdir="${top_srcdir}/samples"				\
+          --SUBDIRS="${SAMPLE_SUBDIRS}"	--mode="${_FILE_PERMS}"		\
+          --gname="${_GROUP_NAME}" --srcdir="."				\
+          --prefix="${prefix}/samples"					\
+          --TEST_VJ_LIBS_BASIC='@TEST_VJ_LIBS_BASIC_SUBST@'		\
+          --TEST_VJ_LIBS_GL='@TEST_VJ_LIBS_GL@'				\
+          --TEST_VJ_LIBS_PF='@TEST_VJ_LIBS_PF@'				\
+          --TEST_LIBS_BASIC='@TEST_LIBS_BASIC@'				\
+          --TEST_EXTRA_LIBS_BASIC="@TEST_EXTRA_LIBS_BASIC_SUBST@"	\
+          --TEST_EXTRA_LIBS_GL="@TEST_EXTRA_LIBS_GL_SUBST@"		\
+          --TEST_EXTRA_LIBS_PF="@TEST_EXTRA_LIBS_PF@"
 
 # Install the test programs.
 install-test:
