@@ -37,6 +37,11 @@
 #include <string.h>
 #include <math.h>
 #include <sstream>
+#include <gmtl/EulerAngle.h>
+#include <gmtl/Generate.h>
+#include <gmtl/Math.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/Vec.h>
 
 #include <vpr/vpr.h>
 #include <vpr/vprTypes.h>
@@ -46,12 +51,6 @@
 #include <vpr/Util/Debug.h>
 
 #include <drivers/Ascension/MotionStar/MotionStarStandalone.h>
-
-#ifdef VPR_OS_Win32
-#define M_PI   3.14159265358979323846
-#endif
-
-#define RAD2DEG(x) ((x) * 180.0 / M_PI)
 
 
 namespace FLOCK
@@ -73,10 +72,8 @@ const unsigned char AC_NARROW_FILTER     = 0x04;
 const unsigned char AC_WIDE_FILTER       = 0x02;
 const unsigned char DC_FILTER            = 0x01;
 
-// ----------------------------------------------------------------------------
 // Convert the given Flock data format into a human-readable string that
 // names the format.
-// ----------------------------------------------------------------------------
 std::string getFormatName(const data_format format)
 {
    std::string name;
@@ -116,10 +113,8 @@ std::string getFormatName(const data_format format)
    return name;
 }
 
-// ----------------------------------------------------------------------------
 // Convert the given Flock hemisphere ID into a human-readable string that
 // names the hemisphere.
-// ----------------------------------------------------------------------------
 std::string getHemisphereName(const hemisphere hemi)
 {
    std::string name;
@@ -196,7 +191,6 @@ const unsigned char BN_PROTOCOL = 3;
 // Public methods.
 // ============================================================================
 
-// ----------------------------------------------------------------------------
 // Debugging method
 /*
 static std::ostream& operator<<(std::ostream& out,
@@ -247,10 +241,8 @@ static std::ostream& operator<<(std::ostream& out,
 // Public methods.
 // ============================================================================
 
-// ----------------------------------------------------------------------------
 // Constructor.  This initializes member variables and determines the
 // endianness of the host machine.
-// ----------------------------------------------------------------------------
 MotionStarStandalone::MotionStarStandalone(const char* address,
                                            const unsigned short port,
                                            const BIRDNET::protocol proto,
@@ -259,14 +251,21 @@ MotionStarStandalone::MotionStarStandalone(const char* address,
                                            const FLOCK::data_format birdFormat,
                                            const BIRDNET::run_mode runMode,
                                            const unsigned char reportRate,
-                                           const double measurementRate,
-                                           const unsigned int birdsRequested)
-   : m_active(false), m_address(), m_socket(NULL), m_proto(proto),
-     m_master(master), m_seq_num(0), m_cur_mrate(0.0),
-     m_measurement_rate(measurementRate), m_run_mode(runMode),
-     m_hemisphere(hemisphere), m_bird_format(birdFormat),
-     m_report_rate(reportRate), m_birds_requested(birdsRequested),
-     m_birds_active(0), mExpectedUnits(BIRDNET::INCHES)
+                                           const double measurementRate)
+   : m_active(false)
+   , m_address()
+   , m_socket(NULL)
+   , m_proto(proto)
+   , m_master(master)
+   , m_seq_num(0)
+   , m_cur_mrate(0.0)
+   , m_measurement_rate(measurementRate)
+   , m_run_mode(runMode)
+   , m_hemisphere(hemisphere)
+   , m_bird_format(birdFormat)
+   , m_report_rate(reportRate)
+   , mNumSensors(0)
+   , mExpectedUnits(BIRDNET::INCHES)
 {
    union
    {
@@ -304,9 +303,7 @@ MotionStarStandalone::MotionStarStandalone(const char* address,
    m_big_endian = (endian.c[0] ? true : false);
 }
 
-// ----------------------------------------------------------------------------
 // Destructor.
-// ----------------------------------------------------------------------------
 MotionStarStandalone::~MotionStarStandalone()
 {
    unsigned int i;
@@ -316,20 +313,13 @@ MotionStarStandalone::~MotionStarStandalone()
       stop();
    }
 
-   for ( i = 0; i < m_erc_vec.size(); i++ )
-   {
-      delete m_erc_vec[i];
-   }
-
    for ( i = 0; i < m_birds.size(); i++ )
    {
       delete m_birds[i];
    }
 }
 
-// ----------------------------------------------------------------------------
 // Initializes the driver, setting the status for each bird.
-// ----------------------------------------------------------------------------
 vpr::ReturnStatus MotionStarStandalone::start()
    throw(mstar::NetworkException, mstar::ConnectException,
          mstar::ScaleFactorUnknownException)
@@ -519,10 +509,8 @@ vpr::ReturnStatus MotionStarStandalone::start()
    return retval;
 }
 
-// ----------------------------------------------------------------------------
 // Stop the data flow (if it is in continuous mode), shut down the server and
 // close the connection to it.
-// ----------------------------------------------------------------------------
 void MotionStarStandalone::stop() throw(mstar::CommandException)
 {
    stopData();
@@ -544,11 +532,9 @@ void MotionStarStandalone::stop() throw(mstar::CommandException)
    m_seq_num = 0;
 }
 
-// ----------------------------------------------------------------------------
 // Based on the current run mode, a single sample is taken (run mode is
 // BIRDNET::SINGLE_SHOT), or continuous samples are taken (run mode is
 // BIRDNET::CONTINUOUS).
-// ----------------------------------------------------------------------------
 void MotionStarStandalone::sample()
 {
    BIRDNET::DATA_PACKET recv_pkt;
@@ -580,6 +566,10 @@ void MotionStarStandalone::sample()
    {
       // First, we need to read the header for the incoming data packet so we
       // know how much data to expect.
+      // XXX: This hangs indefinitely if the backpack is not turned on prior
+      // to this driver making a connection to the MotionStar chassis and
+      // requesting tracker data.  This was not a problem before.
+      //    -PH 11/16/2004
       getRsp(&recv_pkt.header);
 
       if ( recv_pkt.header.error_code != 0 )
@@ -595,6 +585,7 @@ void MotionStarStandalone::sample()
             BIRDNET::DATA_RECORD* rec_ptr;
             unsigned char format_code;
             unsigned int rec_data_words;
+            unsigned short total_bytes(0), processed_bytes(0);
             size_t rec_data_size;
 
             vpr::ReturnStatus resp_status;
@@ -610,8 +601,8 @@ void MotionStarStandalone::sample()
                {
                   // Read the remainder of the waiting packet from the receive
                   // buffer.
-                  resp_status = getRsp(&recv_pkt.buffer,
-                                       vpr::System::Ntohs(recv_pkt.header.number_bytes));
+                  total_bytes = vpr::System::Ntohs(recv_pkt.header.number_bytes);
+                  resp_status = getRsp(&recv_pkt.buffer, total_bytes);
                }
                // Catch exceptions relating to the lack of data.  If this
                // happens, something is very wrong because we were able to
@@ -653,11 +644,56 @@ void MotionStarStandalone::sample()
             // beginning of the received packet's buffer field.
             base_ptr = (char*) &recv_pkt.buffer[0];
 
-            for ( unsigned char bird = 0; bird < m_birds_active; bird++ )
+            bool data_mismatch(false);
+
+            for ( unsigned char bird = 0;
+                  processed_bytes < total_bytes && bird < m_birds.size();
+                  ++bird )
             {
                // Set the record pointer to the current data record's address
                // as defined by base_ptr.
                rec_ptr = (BIRDNET::DATA_RECORD*) base_ptr;
+
+               unsigned char fbb_addr = rec_ptr->address & 0x7f;
+
+               // If the FBB address from which the current data record was
+               // read does not match the FBB address of m_birds[bird], then
+               // we can either skip ahead in our iteration through m_birds
+               // or we have a newly connected sensor.
+               if ( fbb_addr != m_birds[bird]->address )
+               {
+                  // m_birds is 0-based, but the FBB addressing is 1-based.
+                  unsigned char bird_data_addr(fbb_addr - 1);
+
+                  // If we have a data record from m_birds[bird_data_addr]
+                  // but we did not know it had a sensor, then we need to
+                  // reconfigure ourselves.
+                  if ( ! m_birds[bird_data_addr]->has_sensor )
+                  {
+                     data_mismatch = true;
+                     vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+                        << "Data mismatch detected.  A sensor is available "
+                        << "at FBB address " << (unsigned int) fbb_addr
+                        << " where one was not connected before."
+                        << vprDEBUG_FLUSH;
+                     break;
+                  }
+                  // If we have a data record from m_birds[bird_data_addr] and
+                  // we knew it has a sensor, we can skip ahead in m_birds.
+                  else
+                  {
+                     vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+                        << "Skipping from " << (unsigned int) bird << " to "
+                        << (unsigned int) bird_data_addr << std::endl
+                        << vprDEBUG_FLUSH;
+                     bird = bird_data_addr;
+                  }
+               }
+
+               if ( ! m_birds[bird]->has_sensor || m_birds[bird]->is_erc )
+               {
+                  continue;
+               }
 
                // The least significant four bits of the data_info field
                // contain the number of words (2 bytes) of formatted data.
@@ -665,18 +701,6 @@ void MotionStarStandalone::sample()
                // read it from the packet to be safe.
                rec_data_words = (rec_ptr->data_info) & 0x0f;
                rec_data_size  = rec_data_words * 2;
-
-               if ( rec_data_words != m_birds[bird]->data_words )
-               {
-                  // XXX: Figure out how to print this out neatly using vprDEBUG.
-                  fprintf(stderr,
-                          "[MotionStarStandalone] WARNING: Expecting %u data words from bird %u, got %u\n"
-                          "                       You may have requested more birds than you\n"
-                          "                       have connected, or the birds may not be\n"
-                          "                       connected sequentially\n"
-                          "                       Verify that your configuration is correct\n",
-                          m_birds[bird]->data_words, bird, rec_data_words);
-               }
 
                // Get the four most significant bits of the data_info field.
                // This gives the format code.  See page 134 of the Operation
@@ -711,7 +735,7 @@ void MotionStarStandalone::sample()
                // address.
                else
                {
-                  memcpy(&m_birds[bird]->data, &rec_ptr->data, rec_data_size);
+                  storeSample(m_birds[bird], &rec_ptr->data);
                }
 
                // The size of each record may vary depending on the data
@@ -719,8 +743,8 @@ void MotionStarStandalone::sample()
                // record by the statically known sizes and by the size of
                // the current record's data block (each bird may have a
                // different sized data block).
-               base_ptr += sizeof(rec_ptr->address) +
-                              sizeof(rec_ptr->data_info) + rec_data_size;
+               size_t offset = sizeof(rec_ptr->address) +
+                                  sizeof(rec_ptr->data_info) + rec_data_size;
 
                // If the most significant bit is set in address, then there
                // is also button data for this record.
@@ -731,7 +755,61 @@ void MotionStarStandalone::sample()
                   m_birds[bird]->buttons[1] = rec_ptr->button_data[1];
 
                   // Increment the pointer to account for the button data.
-                  base_ptr += sizeof(rec_ptr->button_data);
+                  offset += sizeof(rec_ptr->button_data);
+               }
+
+               base_ptr        += offset;
+               processed_bytes += offset;
+            }
+
+            // Attempt to deal with the case when we have detected that
+            // sensors have been added or removed.
+            // XXX: This is not working.  The initial call to getRsp() to
+            // get the header of the sensor readings hangs indefinitely when
+            // the backpack is not turned on prior to this driver connecting
+            // to the server chassis.  This was not a problem before...
+            //    -PH 11/16/2004
+            if ( data_mismatch )
+            {
+               vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+                  << "[MotionStarStandalone::sample()] Data record size "
+                  << "changed.  Querying new system status ..." << std::endl
+                  << vprDEBUG_FLUSH;
+
+               // Temporarily stop the data sampling if we are receiving
+               // continuous data.  (This may not be quite so simple...)
+               if ( m_run_mode == BIRDNET::CONTINUOUS )
+               {
+                  stopData();
+               }
+
+               try
+               {
+                  getSystemStatus();
+                  configureBirds();
+
+                  if ( m_run_mode == BIRDNET::CONTINUOUS )
+                  {
+                     try
+                     {
+                        setContinuous();
+                        printDeviceStatus();
+                     }
+                     catch(mstar::CommandException& ex)
+                     {
+                        vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+                           << "[MotionStarStandalone::sample()] ERROR: "
+                           << "Failed to re-enable continous run mode!"
+                           << std::endl << vprDEBUG_FLUSH;
+                     }
+                  }
+               }
+               catch(mstar::CommandException& ex)
+               {
+                  vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+                     << "[MotionStarStandalone::sample()] ERROR: "
+                     << "Failed to query changed system status!" << std::endl
+                     << vprDEBUG_FLUSH;
                }
             }
          }
@@ -754,9 +832,7 @@ void MotionStarStandalone::sample()
    }
 }
 
-// ----------------------------------------------------------------------------
 // Stops the data flow if it is in continuous mode.
-// ----------------------------------------------------------------------------
 vpr::ReturnStatus MotionStarStandalone::stopData() throw(mstar::CommandException)
 {
    vpr::ReturnStatus status;
@@ -803,9 +879,7 @@ vpr::ReturnStatus MotionStarStandalone::stopData() throw(mstar::CommandException
    return status;
 }
 
-// ----------------------------------------------------------------------------
 // Shut down the server chassis.
-// ----------------------------------------------------------------------------
 vpr::ReturnStatus MotionStarStandalone::shutdown() throw(mstar::CommandException)
 {
    vpr::ReturnStatus status;
@@ -847,9 +921,7 @@ vpr::ReturnStatus MotionStarStandalone::shutdown() throw(mstar::CommandException
    return status;
 }
 
-// ----------------------------------------------------------------------------
 // Get the current server address for the device.
-// ----------------------------------------------------------------------------
 void MotionStarStandalone::setRunMode(const BIRDNET::run_mode mode)
    throw(mstar::CommandException)
 {
@@ -936,201 +1008,13 @@ void MotionStarStandalone::setRunMode(const BIRDNET::run_mode mode)
    m_run_mode = mode;
 }
 
-// ----------------------------------------------------------------------------
-// Get the x position of the i'th bird.
-// ----------------------------------------------------------------------------
-float MotionStarStandalone::getXPos(const unsigned int i) const
-{
-   float x_pos;
-   FLOCK::data_format format;
-
-   format = m_birds[i]->format;
-
-   if ( format == FLOCK::POSITION || format == FLOCK::POSITION_ANGLES ||
-        format == FLOCK::POSITION_MATRIX ||
-        format == FLOCK::POSITION_QUATERNION )
-   {
-      // Ahh, the beauty of a union is is that this statement works for
-      // any of these data formats since the memory address is the same in
-      // all cases.
-      x_pos = toXPos((unsigned char*) &m_birds[i]->data);
-   }
-   else
-   {
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "[MotionStarStandalone] getXPos() for bird " << i
-         << " does not support data format " << FLOCK::getFormatName(format)
-         << std::endl << vprDEBUG_FLUSH;
-      x_pos = 0.0;
-   }
-
-   return x_pos;
-}
-
-// ----------------------------------------------------------------------------
-// Get the y position of the i'th bird.
-// ----------------------------------------------------------------------------
-float MotionStarStandalone::getYPos(const unsigned int i) const
-{
-   float y_pos;
-   FLOCK::data_format format;
-
-   format = m_birds[i]->format;
-
-   if ( format == FLOCK::POSITION || format == FLOCK::POSITION_ANGLES ||
-        format == FLOCK::POSITION_MATRIX ||
-        format == FLOCK::POSITION_QUATERNION )
-   {
-      // Ahh, the beauty of a union is is that this statement works for
-      // any of these data formats since the memory address is the same in
-      // all cases.
-      y_pos = toYPos((unsigned char*) &m_birds[i]->data);
-   }
-   else
-   {
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "[MotionStarStandalone] getYPos() for bird " << i
-         << " does not support data format " << FLOCK::getFormatName(format)
-         << std::endl << vprDEBUG_FLUSH;
-      y_pos = 0.0;
-   }
-
-   return y_pos;
-}
-
-// ----------------------------------------------------------------------------
-// Get the z position of the i'th bird.
-// ----------------------------------------------------------------------------
-float MotionStarStandalone::getZPos(const unsigned int i) const
-{
-   float z_pos;
-   FLOCK::data_format format;
-
-   format = m_birds[i]->format;
-
-   if ( format == FLOCK::POSITION || format == FLOCK::POSITION_ANGLES ||
-        format == FLOCK::POSITION_MATRIX ||
-        format == FLOCK::POSITION_QUATERNION )
-   {
-      // Ahh, the beauty of a union is is that this statement works for
-      // any of these data formats since the memory address is the same in
-      // all cases.
-      z_pos = toZPos((unsigned char*) &m_birds[i]->data);
-   }
-   else
-   {
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "[MotionStarStandalone] getZPos() for bird " << i
-         << " does not support data format " << FLOCK::getFormatName(format)
-         << std::endl << vprDEBUG_FLUSH;
-      z_pos = 0.0;
-   }
-
-   return z_pos;
-}
-
-// ----------------------------------------------------------------------------
-// Get the z rotation of the i'th bird.
-// ----------------------------------------------------------------------------
-float MotionStarStandalone::getZRot(const unsigned int i) const
-{
-   float z_rot;
-   FLOCK::data_format format;
-
-   format = m_birds[i]->format;
-
-   if ( format == FLOCK::ANGLES )
-   {
-      z_rot = toZRot(&(m_birds[i]->data.ANGLES[0]));
-   }
-   else if ( format == FLOCK::POSITION_ANGLES )
-   {
-      z_rot = toZRot(&(m_birds[i]->data.POSITION_ANGLES[6]));
-   }
-   else
-   {
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "[MotionStarStandalone] getZRot() for bird " << i
-         << " does not support data format " << FLOCK::getFormatName(format)
-         << std::endl << vprDEBUG_FLUSH;
-      z_rot = 0.0;
-   }
-
-   return z_rot;
-}
-
-// ----------------------------------------------------------------------------
-// Get the y rotation of the i'th bird.
-// ----------------------------------------------------------------------------
-float MotionStarStandalone::getYRot(const unsigned int i) const
-{
-   float y_rot;
-   FLOCK::data_format format;
-
-   format = m_birds[i]->format;
-
-   if ( format == FLOCK::ANGLES )
-   {
-      y_rot = toYRot(&(m_birds[i]->data.ANGLES[0]));
-   }
-   else if ( format == FLOCK::POSITION_ANGLES )
-   {
-      y_rot = toYRot(&(m_birds[i]->data.POSITION_ANGLES[6]));
-   }
-   else
-   {
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "[MotionStarStandalone] getYRot() for bird " << i
-         << " does not support data format " << FLOCK::getFormatName(format)
-         << std::endl << vprDEBUG_FLUSH;
-      y_rot = 0.0;
-   }
-
-   return y_rot;
-}
-
-// ----------------------------------------------------------------------------
-// Get the x rotation of the i'th bird.
-// ----------------------------------------------------------------------------
-float MotionStarStandalone::getXRot(const unsigned int i) const
-{
-   float x_rot;
-   FLOCK::data_format format;
-
-   format = m_birds[i]->format;
-
-   if ( format == FLOCK::ANGLES )
-   {
-      x_rot = toXRot(&(m_birds[i]->data.ANGLES[0]));
-   }
-   else if ( format == FLOCK::POSITION_ANGLES )
-   {
-      x_rot = toXRot(&(m_birds[i]->data.POSITION_ANGLES[6]));
-   }
-   else
-   {
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "[MotionStarStandalone] getXRot() for bird " << i
-         << " does not support data format " << FLOCK::getFormatName(format)
-         << std::endl << vprDEBUG_FLUSH;
-      x_rot = 0.0;
-   }
-
-   return x_rot;
-}
-
-// ----------------------------------------------------------------------------
 // Get the rotation angles of the requested bird as matrix elements that are
 // then stored in the given array.
-// ----------------------------------------------------------------------------
-void MotionStarStandalone::getMatrixAngles(const unsigned int bird,
+void MotionStarStandalone::getMatrixAngles(const FLOCK::data_format format,
+                                           const FLOCK::data_block* data,
                                            float angles[3])
    const
 {
-   FLOCK::data_format format;
-
-   format = m_birds[bird]->format;
-
    if ( format == FLOCK::MATRIX || format == FLOCK::POSITION_MATRIX )
    {
       float x_val, y_val, z_val, radians;
@@ -1147,70 +1031,60 @@ void MotionStarStandalone::getMatrixAngles(const unsigned int bird,
       if ( format == FLOCK::MATRIX )
       {
          // Element (2, 3).
-         x_val = toFloat(m_birds[bird]->data.MATRIX[14],
-                         m_birds[bird]->data.MATRIX[15]);
+         x_val = toFloat(data->MATRIX[14], data->MATRIX[15]);
 
          // Element (1, 3).
-         y_val = toFloat(m_birds[bird]->data.MATRIX[12],
-                         m_birds[bird]->data.MATRIX[13]);
+         y_val = toFloat(data->MATRIX[12], data->MATRIX[13]);
 
          // Element (1, 2).
-         z_val = toFloat(m_birds[bird]->data.MATRIX[6],
-                         m_birds[bird]->data.MATRIX[7]);
+         z_val = toFloat(data->MATRIX[6], data->MATRIX[7]);
       }
       // POSITION/MATRIX format.
       else
       {
          // Element (2, 3).
-         x_val = toFloat(m_birds[bird]->data.POSITION_MATRIX[20],
-                         m_birds[bird]->data.POSITION_MATRIX[21]);
+         x_val = toFloat(data->POSITION_MATRIX[20], data->POSITION_MATRIX[21]);
 
          // Element (1, 3).
-         y_val = toFloat(m_birds[bird]->data.POSITION_MATRIX[18],
-                         m_birds[bird]->data.POSITION_MATRIX[19]);
+         y_val = toFloat(data->POSITION_MATRIX[18], data->POSITION_MATRIX[19]);
 
          // Element (1, 2).
-         z_val = toFloat(m_birds[bird]->data.POSITION_MATRIX[12],
-                         m_birds[bird]->data.POSITION_MATRIX[13]);
+         z_val = toFloat(data->POSITION_MATRIX[12], data->POSITION_MATRIX[13]);
       }
 
       // Get the y-axis rotation first.  It is the opposite of the arcsine
       // of element (1, 3) in the matrix.
       radians   = asin(-y_val);
       y_cos     = cos(radians);
-      angles[1] = RAD2DEG(radians);
+      angles[1] = gmtl::Math::rad2Deg(radians);
 
       // Get the x-axis rotation.  It is the arcsine of element (2, 3)
       // divided by the cosine of y.
       radians   = asin(x_val / y_cos);
-      angles[0] = RAD2DEG(radians);
+      angles[0] = gmtl::Math::rad2Deg(radians);
 
       // Get the z-axis rotation.  It is the arcsine of element (1, 2)
       // divided by the cosine of y.
       radians   = asin(z_val / y_cos);
-      angles[2] = RAD2DEG(radians);
+      angles[2] = gmtl::Math::rad2Deg(radians);
    }
    else
    {
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "[MotionStarStandalone] getMatrixAngles() for bird " << bird
-         << " does not support data format " << FLOCK::getFormatName(format)
-         << std::endl << vprDEBUG_FLUSH;
-      angles[0] = angles[1] = angles[2] = 0.0;
+         << "[MotionStarStandalone::getMatrixAngles()] Bird  does not "
+         << "support data format " << FLOCK::getFormatName(format) << std::endl
+         << vprDEBUG_FLUSH;
+      angles[0] = angles[1] = angles[2] = 0.0f;
    }
 }
 
-// ----------------------------------------------------------------------------
 // Get the rotation angles of the i'th bird as quaternion parameters that are
 // then stored in the given array.
-// ----------------------------------------------------------------------------
-void MotionStarStandalone::getQuaternion(const unsigned int bird, float quat[4])
+void MotionStarStandalone::getQuaternion(const FLOCK::data_format format,
+                                         const FLOCK::data_block* data,
+                                         float quat[4])
    const
 {
-   FLOCK::data_format format;
-
-   format = m_birds[bird]->format;
-
    // Read the quaternion parameters from the data block.  Refer to page 92
    // of the MotionStar Installation and Operation Guide for details on the
    // data format.  Data is read in network byte order (MS byte, LS byte).
@@ -1220,8 +1094,7 @@ void MotionStarStandalone::getQuaternion(const unsigned int bird, float quat[4])
    {
       for ( int i = 0, word = 0; word < 8; i++, word += 2 )
       {
-         quat[i] = toFloat(m_birds[bird]->data.QUATERNION[word],
-                           m_birds[bird]->data.QUATERNION[word + 1]);
+         quat[i] = toFloat(data->QUATERNION[word], data->QUATERNION[word + 1]);
       }
    }
    // POSITION/QUATERNION format.
@@ -1229,17 +1102,17 @@ void MotionStarStandalone::getQuaternion(const unsigned int bird, float quat[4])
    {
       for ( int i = 0, word = 6; word < 14; i++, word += 2 )
       {
-         quat[i] = toFloat(m_birds[bird]->data.POSITION_QUATERNION[word],
-                           m_birds[bird]->data.POSITION_QUATERNION[word + 1]);
+         quat[i] = toFloat(data->POSITION_QUATERNION[word],
+                           data->POSITION_QUATERNION[word + 1]);
       }
    }
    else
    {
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "[MotionStarStandalone] getQuaternion() for bird " << bird
-         << " does not support data format " << FLOCK::getFormatName(format)
-         << std::endl << vprDEBUG_FLUSH;
-      quat[0] = quat[1] = quat[2] = quat[3] = 0.0;
+         << "[MotionStarStandalone::getQuaternion()] Bird does not support "
+         << "data format " << FLOCK::getFormatName(format) << std::endl
+         << vprDEBUG_FLUSH;
+      quat[0] = quat[1] = quat[2] = quat[3] = 0.0f;
    }
 }
 
@@ -1247,9 +1120,7 @@ void MotionStarStandalone::getQuaternion(const unsigned int bird, float quat[4])
 // Private methods.
 // ============================================================================
 
-// ----------------------------------------------------------------------------
 // Send a wake-up call to the MotionStar server.
-// ----------------------------------------------------------------------------
 vpr::ReturnStatus MotionStarStandalone::sendWakeUp()
    throw(mstar::CommandException)
 {
@@ -1326,9 +1197,7 @@ vpr::ReturnStatus MotionStarStandalone::sendWakeUp()
    return status;
 }
 
-// ----------------------------------------------------------------------------
 // Get the system status.
-// ----------------------------------------------------------------------------
 BIRDNET::SYSTEM_STATUS* MotionStarStandalone::getSystemStatus()
    throw(mstar::CommandException)
 {
@@ -1353,6 +1222,26 @@ BIRDNET::SYSTEM_STATUS* MotionStarStandalone::getSystemStatus()
       m_chassis_dev_count = status_info->chassisDevices;
       m_cur_mrate         = convertMeasurementRate(status_info->measurementRate);
 
+      mNumSensors = 0;
+      mAddrToSensorIdMap.clear();
+      mAddrToSensorIdMap.resize(flock_number, -1);
+
+      for ( std::vector<FBB::Device*>::iterator b = m_birds.begin();
+            b != m_birds.end();
+            ++b )
+      {
+         if ( *b != NULL )
+         {
+            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+               << "Wiping out an old FBB::Device object in m_birds...\n"
+               << vprDEBUG_FLUSH;
+            delete *b;
+            *b = NULL;
+         }
+      }
+
+      m_birds.resize(flock_number, NULL);
+
       // If this is the master chassis, get the extra system information
       // about all of the devices connected to the chassis.  This will tell
       // us how many birds there are in the system and fill the m_birds
@@ -1367,26 +1256,20 @@ BIRDNET::SYSTEM_STATUS* MotionStarStandalone::getSystemStatus()
          // status block.
          fbb_devices = &sys_status->buffer[sizeof(BIRDNET::SYSTEM_STATUS)];
 
-         for ( unsigned char i = 0; i < flock_number; i++ )
+         for ( unsigned char i = 0; i < flock_number; ++i )
          {
             // Create a new FBB Device object.
             cur_dev = new FBB::Device();
+            m_birds[i] = cur_dev;
 
             // The ERC device is not put into the m_birds vector.  We do
             // not want to try reading data from it.
             if ( fbb_devices[i] & FBB::ERC )
             {
-               m_erc_vec.push_back(cur_dev);
-
                cur_dev->ert3_present = fbb_devices[i] & FBB::ERT3;
                cur_dev->ert2_present = fbb_devices[i] & FBB::ERT2;
                cur_dev->ert1_present = fbb_devices[i] & FBB::ERT1;
                cur_dev->ert0_present = fbb_devices[i] & FBB::ERT0;
-            }
-            // Put all non-ERC devices in the m_birds vector.
-            else
-            {
-               m_birds.push_back(cur_dev);
             }
 
             cur_dev->accessible = fbb_devices[i] & FBB::ACCESS;
@@ -1397,17 +1280,12 @@ BIRDNET::SYSTEM_STATUS* MotionStarStandalone::getSystemStatus()
             // This is how we handle remembering which device this is
             // after this point.
             cur_dev->addr = i + 1;
-         }
 
-         // If the number of birds connected to the server is less than
-         // the number of birds we want to sample, we have a problem.
-         if ( flock_number < m_birds_requested )
-         {
-            vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-               << "[MotionStarStandalone] WARNING: Needed "
-               << (unsigned int) m_birds_requested
-               << " birds, but the server only has "
-               << (unsigned int) flock_number << std::endl << vprDEBUG_FLUSH;
+            if ( cur_dev->has_sensor )
+            {
+               mAddrToSensorIdMap[cur_dev->addr] = mNumSensors;
+               mNumSensors += 1;
+            }
          }
 //      }
    }
@@ -1421,9 +1299,7 @@ BIRDNET::SYSTEM_STATUS* MotionStarStandalone::getSystemStatus()
    return status_info;
 }
 
-// ----------------------------------------------------------------------------
 // Set the system status.
-// ----------------------------------------------------------------------------
 vpr::ReturnStatus MotionStarStandalone::setSystemStatus(BIRDNET::SYSTEM_STATUS* sysStatus,
                                                         const unsigned char xmtrNum,
                                                         const char dataRate[6])
@@ -1449,161 +1325,156 @@ vpr::ReturnStatus MotionStarStandalone::setSystemStatus(BIRDNET::SYSTEM_STATUS* 
                           sizeof(BIRDNET::SYSTEM_STATUS));
 }
 
-// ----------------------------------------------------------------------------
 // Read the configurations of all the birds and send our configuration data
 // to them.
-// ----------------------------------------------------------------------------
 unsigned int MotionStarStandalone::configureBirds()
 {
-   BIRDNET::BIRD_STATUS* bird_status;
-   unsigned int bird_count;
-   bool values_set;
-
-   bird_count = 0;
-   values_set = false;
+   BIRDNET::BIRD_STATUS* bird_status(NULL);
+   unsigned int erc_count(0), active_bird_count(0), inactive_bird_count(0);
+   bool values_set(false);
 
    // Configure each of the birds on the server chassis.
    for ( unsigned int bird = 0; bird < m_birds.size(); bird++ )
    {
-      // First, read the current configuration for the bird in question.
-      bird_status = getBirdStatus(bird);
-
-      if ( bird_status == NULL )
+      if ( m_birds[bird]->is_erc )
       {
-         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-            << "[MotionStarStandalone] Could not get status for bird "
-            << bird << std::endl << vprDEBUG_FLUSH;
+         erc_count++;
       }
-      // If we got the status for bird, parse it and send a new
-      // configuration based on the bird's current configuration and our
-      // own desired configuration.
       else
       {
-         // Read the position scaling factor from the first available
-         // device.
-         if ( ! values_set )
+         // First, read the current configuration for the bird in question.
+         bird_status = getBirdStatus(bird);
+
+         if ( bird_status == NULL )
          {
-            getUnitInfo(bird, bird_status);
-
-            // We have the values we need, and we don't want to set them again.
-            values_set = true;
+            vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+               << "[MotionStarStandalone] Could not get status for bird "
+               << bird << std::endl << vprDEBUG_FLUSH;
          }
-
-         // If we are still reading configuration information for
-         // requested birds, handle the setup steps.
-         if ( bird < m_birds_requested )
-         {
-            unsigned char format(0);
-
-            // XXX: Eventually, we would like to have all birds get their
-            // format value set individually.
-            switch (m_bird_format)
-            {
-               // 0 words, mode 0.
-               case FLOCK::NO_BIRD_DATA:
-                  format = 0x00;
-                  m_birds[bird]->data_words = 0;
-                  break;
-               // 3 words, mode 1.
-               case FLOCK::POSITION:
-                  format = 0x31;
-                  m_birds[bird]->data_words = 3;
-                  break;
-               // 3 words, mode 2.
-               case FLOCK::ANGLES:
-                  format = 0x32;
-                  m_birds[bird]->data_words = 3;
-                  break;
-               // 9 words, mode 3.
-               case FLOCK::MATRIX:
-                  format = 0x93;
-                  m_birds[bird]->data_words = 9;
-                  break;
-               // 6 words, mode 4.
-               case FLOCK::POSITION_ANGLES:
-                  format = 0x64;
-                  m_birds[bird]->data_words = 6;
-                  break;
-               // 12 words (hex c), mode 5.
-               case FLOCK::POSITION_MATRIX:
-                  format = 0xc5;
-                  m_birds[bird]->data_words = 12;
-                  break;
-               // 0 words, mode 6.
-               case FLOCK::INVALID:
-                  format = 0x06;
-                  m_birds[bird]->data_words = 0;
-                  break;
-               // 4 words, mode 7.
-               case FLOCK::QUATERNION:
-                  format = 0x47;
-                  m_birds[bird]->data_words = 4;
-                  break;
-               // 7 words, mode 8.
-               case FLOCK::POSITION_QUATERNION:
-                  format = 0x78;
-                  m_birds[bird]->data_words = 7;
-                  break;
-            }
-
-            // Set the current bird's format to the value in
-            // m_bird_format.  Also set the report rate to the value in
-            // m_report_rate and the hemisphere to the value in
-            // m_hemisphere.
-            m_birds[bird]->format      = m_bird_format;
-            m_birds[bird]->hemisphere  = m_hemisphere;
-            m_birds[bird]->report_rate = bird_status->status.reportRate;
-            m_birds[bird]->setup       = bird_status->status.setup;
-
-            // Fill in the bird_status struct.
-            bird_status->status.setup      |= FLOCK::APPEND_BUTTON_DATA;
-            bird_status->status.dataFormat = format;
-            bird_status->status.reportRate = m_report_rate;
-            bird_status->status.hemisphere = m_hemisphere;
-
-            // XXX: The second clause in the conditional is here so that
-            // we can use the 0-based m_birds_active in the sample()
-            // method and use the < operator for comparison.
-            if ( m_birds[bird]->data_words > 0 && bird < m_birds_requested )
-            {
-               m_birds_active++;
-            }
-         }
-         // Otherwise, disable any birds we do not request.
+         // If we got the status for bird, parse it and send a new
+         // configuration based on the bird's current configuration and our
+         // own desired configuration.
          else
          {
-            // Disable the current bird in the m_birds vector.
-            m_birds[bird]->data_words  = 0;
-            m_birds[bird]->format      = FLOCK::NO_BIRD_DATA;
-            m_birds[bird]->report_rate = 1;
-            m_birds[bird]->hemisphere  = m_hemisphere;
+            // Read the position scaling factor from the first available
+            // device.
+            if ( ! values_set )
+            {
+               getUnitInfo(bird, bird_status);
 
-            // Fill in the bird_status struct with disabling values.
-            bird_status->status.dataFormat = 0x00;
-            bird_status->status.reportRate = 1;
+               // We have the values we need, and we don't want to set them
+               // again.
+               values_set = true;
+            }
+
+            // Handle the setup steps for active birds.
+            if ( m_birds[bird]->has_sensor )
+            {
+               unsigned char format(0);
+
+               // XXX: Eventually, we would like to have all birds get their
+               // format value set individually.
+               switch (m_bird_format)
+               {
+                  // 0 words, mode 0.
+                  case FLOCK::NO_BIRD_DATA:
+                     format = 0x00;
+                     m_birds[bird]->data_words = 0;
+                     break;
+                  // 3 words, mode 1.
+                  case FLOCK::POSITION:
+                     format = 0x31;
+                     m_birds[bird]->data_words = 3;
+                     break;
+                  // 3 words, mode 2.
+                  case FLOCK::ANGLES:
+                     format = 0x32;
+                     m_birds[bird]->data_words = 3;
+                     break;
+                  // 9 words, mode 3.
+                  case FLOCK::MATRIX:
+                     format = 0x93;
+                     m_birds[bird]->data_words = 9;
+                     break;
+                  // 6 words, mode 4.
+                  case FLOCK::POSITION_ANGLES:
+                     format = 0x64;
+                     m_birds[bird]->data_words = 6;
+                     break;
+                  // 12 words (hex c), mode 5.
+                  case FLOCK::POSITION_MATRIX:
+                     format = 0xc5;
+                     m_birds[bird]->data_words = 12;
+                     break;
+                  // 0 words, mode 6.
+                  case FLOCK::INVALID:
+                     format = 0x06;
+                     m_birds[bird]->data_words = 0;
+                     break;
+                  // 4 words, mode 7.
+                  case FLOCK::QUATERNION:
+                     format = 0x47;
+                     m_birds[bird]->data_words = 4;
+                     break;
+                  // 7 words, mode 8.
+                  case FLOCK::POSITION_QUATERNION:
+                     format = 0x78;
+                     m_birds[bird]->data_words = 7;
+                     break;
+               }
+
+               // Set the current bird's format to the value in
+               // m_bird_format.  Also set the report rate to the value in
+               // m_report_rate and the hemisphere to the value in
+               // m_hemisphere.
+               m_birds[bird]->format      = m_bird_format;
+               m_birds[bird]->hemisphere  = m_hemisphere;
+               m_birds[bird]->report_rate = bird_status->status.reportRate;
+               m_birds[bird]->setup       = bird_status->status.setup;
+
+               // Fill in the bird_status struct.
+               bird_status->status.setup      |= FLOCK::APPEND_BUTTON_DATA;
+               bird_status->status.dataFormat = format;
+               bird_status->status.reportRate = m_report_rate;
+               bird_status->status.hemisphere = m_hemisphere;
+
+               active_bird_count++;
+            }
+            // Otherwise, disable any birds we do not request.
+            else
+            {
+               // Disable the current bird in the m_birds vector.
+               m_birds[bird]->data_words  = 0;
+               m_birds[bird]->format      = FLOCK::NO_BIRD_DATA;
+               m_birds[bird]->report_rate = 1;
+               m_birds[bird]->hemisphere  = m_hemisphere;
+
+               // Fill in the bird_status struct with disabling values.
+               bird_status->status.dataFormat = 0x00;
+               bird_status->status.reportRate = 1;
+
+               inactive_bird_count++;
+            }
+
+            // Finally, send the new configuration to the current bird.
+            setBirdStatus(bird, bird_status);
+
+//            delete bird_status;
          }
-
-         // Finally, send the new configuration to the current bird.
-         setBirdStatus(bird, bird_status);
-
-         bird_count++;
-//         delete bird_status;
       }
    }
 
    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-      << "[MotionStarStandalone] Configured " << bird_count << " birds ("
-      << (unsigned int) m_birds_requested << " requested, "
-      << (unsigned int) m_birds_active << " active, "
-      << (unsigned int) bird_count - m_birds_active << " disabled)"
-      << std::endl << vprDEBUG_FLUSH;
+      << "[MotionStarStandalone] Configured " << m_birds.size() << " birds ("
+      << active_bird_count << " active, " << inactive_bird_count
+      << " disabled, " << erc_count << " ERC" << (erc_count == 1 ? "" : "s")
+      << " skipped)" << std::endl
+      << vprDEBUG_FLUSH;
 
-   return bird_count;
+   return active_bird_count + inactive_bird_count;
 }
 
-// ----------------------------------------------------------------------------
 // Get the status of an individual bird.
-// ----------------------------------------------------------------------------
 BIRDNET::BIRD_STATUS* MotionStarStandalone::getBirdStatus(const unsigned char bird)
 {
    BIRDNET::BIRD_STATUS* bird_status;
@@ -1710,9 +1581,7 @@ BIRDNET::BIRD_STATUS* MotionStarStandalone::getBirdStatus(const unsigned char bi
    return bird_status;
 }
 
-// ----------------------------------------------------------------------------
 // Set the status of an individual bird.
-// ----------------------------------------------------------------------------
 vpr::ReturnStatus MotionStarStandalone::setBirdStatus(const unsigned char bird,
                                                       BIRDNET::BIRD_STATUS* status)
 {
@@ -1722,12 +1591,10 @@ vpr::ReturnStatus MotionStarStandalone::setBirdStatus(const unsigned char bird,
                           sizeof(BIRDNET::BIRD_STATUS));
 }
 
-// ----------------------------------------------------------------------------
 // Get the status of the requested FBB device.  The device number must be that
 // of the device's address on the Fast Bird Bus.  Thus, a value of 0 is
 // interpreted as a request for the overall system status.  The birds are
 // addressed from 1 through 120.
-// ----------------------------------------------------------------------------
 BIRDNET::DATA_PACKET* MotionStarStandalone::getDeviceStatus(const unsigned char device)
    throw(mstar::NoDeviceStatusException)
 {
@@ -1806,12 +1673,10 @@ BIRDNET::DATA_PACKET* MotionStarStandalone::getDeviceStatus(const unsigned char 
    return rsp;
 }
 
-// ----------------------------------------------------------------------------
 // Set the status of the requested FBB device using the given configuration
 // block.  The device number must be that of the device's address on the Fast
 // Bird Bus.  Thus, a value of 0 is interpreted as a configuation block for
 // the overall system.  The birds are addressed from 1 through 120.
-// ----------------------------------------------------------------------------
 vpr::ReturnStatus MotionStarStandalone::setDeviceStatus(const unsigned char device,
                                                         const char* buffer,
                                                         const unsigned short bufferSize)
@@ -1868,9 +1733,7 @@ vpr::ReturnStatus MotionStarStandalone::setDeviceStatus(const unsigned char devi
    return status;
 }
 
-// ----------------------------------------------------------------------------
 // Tell the MotionStar server to sample continuously.
-// ----------------------------------------------------------------------------
 vpr::ReturnStatus MotionStarStandalone::setContinuous()
    throw(mstar::CommandException)
 {
@@ -1908,11 +1771,122 @@ vpr::ReturnStatus MotionStarStandalone::setContinuous()
    return status;
 }
 
-// ----------------------------------------------------------------------------
+void MotionStarStandalone::storeSample(FBB::Device* birdDev,
+                                       FLOCK::data_block* data)
+{
+   const int sensor_id = mAddrToSensorIdMap[birdDev->address];
+   gmtl::Matrix44f& sample_matrix = mSampleData[sensor_id];
+   gmtl::identity(sample_matrix);
+
+   switch (birdDev->format)
+   {
+      case FLOCK::NO_BIRD_DATA:
+      case FLOCK::INVALID:
+         break;
+      case FLOCK::POSITION:
+         gmtl::setTrans(sample_matrix,
+                        gmtl::Vec3f(toXPos((unsigned char*) data),
+                                    toYPos((unsigned char*) data),
+                                    toZPos((unsigned char*) data)));
+         break;
+      case FLOCK::ANGLES:
+      {
+         gmtl::EulerAngleZYXf euler;
+         euler.set(gmtl::Math::deg2Rad(toZRot(&(data->ANGLES[0]))),
+                   gmtl::Math::deg2Rad(toYRot(&(data->ANGLES[0]))),
+                   gmtl::Math::deg2Rad(toXRot(&(data->ANGLES[0]))));
+         gmtl::setRot(sample_matrix, euler);
+         break;
+      }
+      case FLOCK::MATRIX:
+      {
+         float angles[3];
+         getMatrixAngles(birdDev->format, data, angles);
+
+         gmtl::EulerAngleZYXf euler;
+         euler.set(gmtl::Math::deg2Rad(angles[0]),
+                   gmtl::Math::deg2Rad(angles[1]),
+                   gmtl::Math::deg2Rad(angles[2]));
+         gmtl::setRot(sample_matrix, euler);
+
+         break;
+      }
+      case FLOCK::POSITION_ANGLES:
+      {
+         gmtl::Matrix44f trans_mat, rot_mat;
+         gmtl::setTrans(trans_mat,
+                        gmtl::Vec3f(toXPos((unsigned char*) data),
+                                    toYPos((unsigned char*) data),
+                                    toZPos((unsigned char*) data)));
+
+         gmtl::EulerAngleZYXf euler;
+         euler.set(gmtl::Math::deg2Rad(toZRot(&(data->POSITION_ANGLES[6]))),
+                   gmtl::Math::deg2Rad(toYRot(&(data->POSITION_ANGLES[6]))),
+                   gmtl::Math::deg2Rad(toXRot(&(data->POSITION_ANGLES[6]))));
+         gmtl::setRot(rot_mat, euler);
+
+         gmtl::mult(sample_matrix, trans_mat, rot_mat);
+//         sample_matrix = (trans_mat * rot_mat);
+         break;
+      }
+      case FLOCK::POSITION_MATRIX:
+      {
+         float angles[3];
+         gmtl::Matrix44f trans_mat, rot_mat;
+         gmtl::setTrans(trans_mat,
+                        gmtl::Vec3f(toXPos((unsigned char*) data),
+                                    toYPos((unsigned char*) data),
+                                    toZPos((unsigned char*) data)));
+
+         getMatrixAngles(birdDev->format, data, angles);
+
+         gmtl::EulerAngleZYXf euler;
+         euler.set(gmtl::Math::deg2Rad(angles[2]),
+                   gmtl::Math::deg2Rad(angles[1]),
+                   gmtl::Math::deg2Rad(angles[0]));
+         gmtl::setRot(rot_mat, euler);
+
+         gmtl::mult(sample_matrix, trans_mat, rot_mat);
+//         sample_matrix = trans_mat * rot_mat;
+         break;
+      }
+      case FLOCK::QUATERNION:
+      {
+         float quat[4];
+         getQuaternion(birdDev->format, data, quat);
+         gmtl::set(sample_matrix,
+                   gmtl::Quatf(quat[1], quat[2], quat[3], quat[0]));
+         break;
+      }
+      case FLOCK::POSITION_QUATERNION:
+      {
+         float quat[4];
+         gmtl::Matrix44f trans_mat, rot_mat;
+         gmtl::setTrans(trans_mat,
+                        gmtl::Vec3f(toXPos((unsigned char*) data),
+                                    toYPos((unsigned char*) data),
+                                    toZPos((unsigned char*) data)));
+
+         getQuaternion(birdDev->format, data, quat);
+         gmtl::set(rot_mat,
+                   gmtl::Quatf(quat[1], quat[2], quat[3], quat[0]));
+
+         gmtl::mult(sample_matrix, trans_mat, rot_mat);
+//         sample_matrix = trans_mat * rot_mat;
+         break;
+      }
+      case FLOCK::FEEDTHROUGH_DATA:
+         vprASSERT(false && "We don't handle feedthrough data");
+         break;
+      default:
+         vprASSERT(false && "Unknown data-type");
+         break;
+   }
+}
+
 // Combine the two given bytes (passed as high byte and low byte respectively)
 // into a single word in host byte order.  This is used for reading bytes from
 // the packets and converting them into usable values.
-// ----------------------------------------------------------------------------
 short MotionStarStandalone::toShort(const char highByte, const char lowByte)
    const
 {
@@ -1940,11 +1914,9 @@ short MotionStarStandalone::toShort(const char highByte, const char lowByte)
    return result.value;
 }
 
-// ----------------------------------------------------------------------------
 // Convert the given two bytes into a single-precision floating-point value
 // that falls within a defined range.  This is documented in the MotionStar
 // Operation and Installation Guide.
-// ----------------------------------------------------------------------------
 float MotionStarStandalone::toFloat(const unsigned char highByte,
                                     const unsigned char lowByte)
    const
@@ -1983,10 +1955,8 @@ float MotionStarStandalone::toFloat(const unsigned char highByte,
    return result;
 }
 
-// ----------------------------------------------------------------------------
 // Convert the given 6-byte array of characters to a double-precision
 // floating-point number representing the data rate.
-// ----------------------------------------------------------------------------
 double MotionStarStandalone::convertMeasurementRate(const unsigned char rate[6])
 {
    double data_rate;
@@ -2011,10 +1981,8 @@ double MotionStarStandalone::convertMeasurementRate(const unsigned char rate[6])
    return data_rate;
 }
 
-// ----------------------------------------------------------------------------
 // Convert the given double-precision floating-point number to a 6-byte array
 // of characters representing the data rate.
-// ----------------------------------------------------------------------------
 void MotionStarStandalone::convertMeasurementRate(const double rate,
                                                   std::string& strRate)
 {
@@ -2028,10 +1996,8 @@ void MotionStarStandalone::convertMeasurementRate(const double rate,
    strRate = rate_a;
 }
 
-// ----------------------------------------------------------------------------
 // Extract the information regarding the measurement units (e.g., inches) and
 // the position scaling factor.
-// ----------------------------------------------------------------------------
 void MotionStarStandalone::getUnitInfo(const unsigned int bird,
                                        const BIRDNET::BIRD_STATUS* birdStatus)
 {
@@ -2075,9 +2041,7 @@ void MotionStarStandalone::getUnitInfo(const unsigned int bird,
    m_xmtr_pos_scale = (float) toShort(high_byte, low_byte);
 }
 
-// ----------------------------------------------------------------------------
 // Send the given message to the server.
-// ----------------------------------------------------------------------------
 vpr::ReturnStatus MotionStarStandalone::sendMsg(const void* packet,
                                                 const size_t packetSize)
    throw(mstar::NetworkWriteException, mstar::NoDataWrittenException)
@@ -2128,9 +2092,7 @@ vpr::ReturnStatus MotionStarStandalone::sendMsg(BIRDNET::HEADER* packet)
    return sendMsg((void*) packet, sizeof(BIRDNET::HEADER));
 }
 
-// ----------------------------------------------------------------------------
 // Get the server's response to a sent message.
-// ----------------------------------------------------------------------------
 vpr::ReturnStatus MotionStarStandalone::getRsp(void* packet,
                                                const size_t packetSize)
    throw(mstar::NetworkReadException, mstar::NoDataReadException)
@@ -2197,9 +2159,7 @@ vpr::ReturnStatus MotionStarStandalone::getRsp(BIRDNET::HEADER* packet)
    return status;
 }
 
-// ----------------------------------------------------------------------------
 // Print the system status as read from the server.
-// ----------------------------------------------------------------------------
 void MotionStarStandalone::printSystemStatus(const BIRDNET::SYSTEM_STATUS* status)
 {
    unsigned char erc_addr, xmtr_num;
@@ -2264,9 +2224,7 @@ void MotionStarStandalone::printSystemStatus(const BIRDNET::SYSTEM_STATUS* statu
    std::cout << std::flush;
 }
 
-// ----------------------------------------------------------------------------
 // Print the status for all the devices that have not been disabled.
-// ----------------------------------------------------------------------------
 void MotionStarStandalone::printDeviceStatus()
 {
    unsigned int pad_width_full, pad_width_dot;
@@ -2284,72 +2242,79 @@ void MotionStarStandalone::printDeviceStatus()
    // XXX: This should use vprDEBUG somehow...
    // Print a short heading.
    std::cout << std::endl;
-   std::cout << std::setw(pad_width_full) << std::setfill('=') << "" << "\n";
-   std::cout << "Ascension MotionStar Device Status\n";
-   std::cout << std::setw(pad_width_full) << std::setfill('-') << "" << "\n";
+   std::cout << std::setw(pad_width_full) << std::setfill('=') << ""
+             << std::endl;
+   std::cout << "Ascension MotionStar Device Status" << std::endl;
+   std::cout << std::setw(pad_width_full) << std::setfill('-') << ""
+             << std::endl;
 
    std::cout << std::setw(pad_width_dot) << std::setfill('.')
-             << "* Position scaling factor " << " " << m_xmtr_pos_scale << "\n";
+             << "* Position scaling factor " << " " << m_xmtr_pos_scale
+             << std::endl;
    std::cout << std::setw(pad_width_dot) << std::setfill('.')
-             << "* Rotation scaling factor " << " " << m_xmtr_rot_scale << "\n";
+             << "* Rotation scaling factor " << " " << m_xmtr_rot_scale
+             << std::endl;
 
    // Loop over the birds that we are actually using and print their status.
-   for ( unsigned int i = 0; i < m_birds_active; i++ )
+   for ( unsigned int i = 0; i < m_birds.size(); ++i )
    {
-      std::cout << "* Bird " << i + 1 << " (unit " << i << "):\n";
-      std::cout << std::setw(pad_width_dot) << std::setfill('.')
-                << "*     FBB address " << " "
-                << (unsigned int) m_birds[i]->address << "\n";
-      std::cout << std::setw(pad_width_dot) << std::setfill('.')
-                << "*     Accessible " << " "
-                << (m_birds[i]->accessible ? "YES" : "NO") << "\n";
-      std::cout << std::setw(pad_width_dot) << std::setfill('.')
-                << "*     Running " << " "
-                << (m_birds[i]->running ? "YES" : "NO") << "\n";
-      std::cout << std::setw(pad_width_dot) << std::setfill('.')
-                << "*     Data format " << " "
-                << FLOCK::getFormatName(m_birds[i]->format) << "\n";
-      std::cout << std::setw(pad_width_dot) << std::setfill('.')
-                << "*     Hemisphere " << " "
-                << FLOCK::getHemisphereName(m_birds[i]->hemisphere)
-                << "\n";
-      std::cout << std::setw(pad_width_dot) << std::setfill('.')
-                << "*     Report rate " << " "
-                << (unsigned int) m_birds[i]->report_rate << "\n";
-      std::cout << std::setw(pad_width_dot) << std::setfill('.')
-                << "*     Sudden change filtering " << " "
-                << (m_birds[i]->setup & FLOCK::SUDDEN_OUTPUT_CHANGE ? "ON" :
-                                                                      "OFF")
-                << "\n";
-      std::cout << std::setw(pad_width_dot) << std::setfill('.')
-                << "*     Button data " << " "
-                << (m_birds[i]->setup & FLOCK::APPEND_BUTTON_DATA ? "ON" :
-                                                                    "OFF")
-                << "\n";
-      std::cout << std::setw(pad_width_dot) << std::setfill('.')
-                << "*     AC narrow filter " << " "
-                << (m_birds[i]->setup & FLOCK::AC_NARROW_FILTER ? "ON" :
-                                                                  "OFF")
-                << "\n";
-      std::cout << std::setw(pad_width_dot) << std::setfill('.')
-                << "*     AC wide filter " << " "
-                << (m_birds[i]->setup & FLOCK::AC_WIDE_FILTER ? "ON" : "OFF")
-                << "\n";
-      std::cout << std::setw(pad_width_dot) << std::setfill('.')
-                << "*     DC filter " << " "
-                << (m_birds[i]->setup & FLOCK::DC_FILTER ? "ON" : "OFF")
-                << "\n";
+      if ( m_birds[i]->has_sensor )
+      {
+         std::cout << "* Bird " << i << " (unit "
+                   << mAddrToSensorIdMap[m_birds[i]->address] << "):"
+                   << std::endl;
+         std::cout << std::setw(pad_width_dot) << std::setfill('.')
+                   << "*     FBB address " << " "
+                   << (unsigned int) m_birds[i]->address << std::endl;
+         std::cout << std::setw(pad_width_dot) << std::setfill('.')
+                   << "*     Accessible " << " "
+                   << (m_birds[i]->accessible ? "YES" : "NO") << std::endl;
+         std::cout << std::setw(pad_width_dot) << std::setfill('.')
+                   << "*     Running " << " "
+                   << (m_birds[i]->running ? "YES" : "NO") << std::endl;
+         std::cout << std::setw(pad_width_dot) << std::setfill('.')
+                   << "*     Data format " << " "
+                   << FLOCK::getFormatName(m_birds[i]->format) << std::endl;
+         std::cout << std::setw(pad_width_dot) << std::setfill('.')
+                   << "*     Hemisphere " << " "
+                   << FLOCK::getHemisphereName(m_birds[i]->hemisphere)
+                   << std::endl;
+         std::cout << std::setw(pad_width_dot) << std::setfill('.')
+                   << "*     Report rate " << " "
+                   << (unsigned int) m_birds[i]->report_rate << std::endl;
+         std::cout << std::setw(pad_width_dot) << std::setfill('.')
+                   << "*     Sudden change filtering " << " "
+                   << (m_birds[i]->setup & FLOCK::SUDDEN_OUTPUT_CHANGE ? "ON" :
+                                                                         "OFF")
+                   << std::endl;
+         std::cout << std::setw(pad_width_dot) << std::setfill('.')
+                   << "*     Button data " << " "
+                   << (m_birds[i]->setup & FLOCK::APPEND_BUTTON_DATA ? "ON" :
+                                                                       "OFF")
+                   << std::endl;
+         std::cout << std::setw(pad_width_dot) << std::setfill('.')
+                   << "*     AC narrow filter " << " "
+                   << (m_birds[i]->setup & FLOCK::AC_NARROW_FILTER ? "ON" :
+                                                                     "OFF")
+                   << std::endl;
+         std::cout << std::setw(pad_width_dot) << std::setfill('.')
+                   << "*     AC wide filter " << " "
+                   << (m_birds[i]->setup & FLOCK::AC_WIDE_FILTER ? "ON" : "OFF")
+                   << std::endl;
+         std::cout << std::setw(pad_width_dot) << std::setfill('.')
+                   << "*     DC filter " << " "
+                   << (m_birds[i]->setup & FLOCK::DC_FILTER ? "ON" : "OFF")
+                   << std::endl;
+      }
    }
 
    // Finish off with another line of = signs.
-   std::cout << std::setw(pad_width_full) << std::setfill('=') << "" << "\n";
-   std::cout << std::flush;
+   std::cout << std::setw(pad_width_full) << std::setfill('=') << ""
+             << std::endl;
 }
 
-// ----------------------------------------------------------------------------
 // Print the error message that corresponds to the given error code.  The
 // message is based on the table on page 140 of the MotionStar manual.
-// ----------------------------------------------------------------------------
 void MotionStarStandalone::printError(const unsigned char errCode)
 {
    // Map the error code to a human-readable string.  These messages are

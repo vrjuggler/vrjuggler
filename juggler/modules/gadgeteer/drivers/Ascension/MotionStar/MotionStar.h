@@ -101,7 +101,6 @@ public:
     *                         BIRDNET::CONTINUOUS.
     * @param report_rate
     * @param measurement_rate
-    * @param birds_required   The number of birds required.  The default is 10.
     */
    MotionStar(const char* address = NULL, const unsigned short port = 6000,
               const enum BIRDNET::protocol proto = BIRDNET::TCP,
@@ -110,8 +109,7 @@ public:
               const FLOCK::data_format bird_format = FLOCK::POSITION_ANGLES,
               const BIRDNET::run_mode run_mode = BIRDNET::CONTINUOUS,
               const unsigned char report_rate = 1,
-              const double measurement_rate = 68.3,
-              const unsigned int birds_required = 10);
+              const double measurement_rate = 68.3);
 
    /**
     * Destructor.  Sampling is stopped, and the data pool is deallocated.
@@ -371,27 +369,16 @@ public:
    }
 
    /**
-    * Sets the number of birds connected to the flock.
+    * Gets the number of sensors currently connected to the flock.
     *
     * @pre mMotionStar has been initialized.
-    * @post If the device is not active, the number of birds is updated to
-    *        the new value.
+    * @post The current number of connected sensors is returned to the caller.
     *
-    * @param n The new value for the number of birds in use.
+    * @return An unsigned integer value for the number of connected sensors.
     */
-   void setNumBirds(const unsigned int n);
-
-   /**
-    * Gets the number of bird currently connected to the flock.
-    *
-    * @pre mMotionStar has been initialized.
-    * @post The current number of connected birds is returned to the caller.
-    *
-    * @return An unsigned integer value for the number of connected birds.
-    */
-   unsigned int getNumBirds() const
+   unsigned int getNumSensors() const
    {
-      return mMotionStar.getNumBirds();
+      return mMotionStar.getNumSensors();
    }
 
    /**
@@ -465,96 +452,6 @@ public:
    double getMeasurementRate() const
    {
       return mMotionStar.getMeasurementRate();
-   }
-
-   /**
-    * Gets the x position of the i'th reciever.
-    *
-    * @pre mMotionStar has been initialized.
-    * @post The x position for the given bird number is returned to the
-    *       caller.
-    *
-    * @return A floating-point value for the current x position of the
-    *         given bird.
-    */
-   float getXPos(const unsigned int i) const
-   {
-      return mMotionStar.getXPos(i);
-   }
-
-   /**
-    * Gets the y position of the i'th reciever.
-    *
-    * @pre mMotionStar has been initialized.
-    * @post The y position for the given bird number is returned to the
-    *       caller.
-    *
-    * @return A floating-point value for the current y position of the
-    *         given bird.
-    */
-   float getYPos(const unsigned int i) const
-   {
-      return mMotionStar.getYPos(i);
-   }
-
-   /**
-    * Gets the z position of the i'th reciever.
-    *
-    * @pre mMotionStar has been initialized.
-    * @post The z position for the given bird number is returned to the
-    *       caller.
-    *
-    * @return A floating-point value for the current z position of the
-    *         given bird.
-    */
-   float getZPos(const unsigned int i) const
-   {
-      return mMotionStar.getZPos(i);
-   }
-
-   /**
-    * Gets the z rotation of the i'th reciever.
-    *
-    * @pre mMotionStar has been initialized.
-    * @post The z rotation for the given bird number is returned to the
-    *       caller.
-    *
-    * @return A floating-point value for the current z rotation of the
-    *         given bird.
-    */
-   float getZRot(const unsigned int i) const
-   {
-      return mMotionStar.getZRot(i);
-   }
-
-   /**
-    * Gets the y rotation of the i'th reciever.
-    *
-    * @pre mMotionStar has been initialized.
-    * @post The y rotation for the given bird number is returned to the
-    *       caller.
-    *
-    * @return A floating-point value for the current y rotation of the
-    *         given bird.
-    */
-   float getYRot(const unsigned int i) const
-   {
-      return mMotionStar.getYRot(i);
-   }
-
-   /**
-    * Gets the x rotation of the i'th reciever.
-    *
-    * @pre mMotionStar has been initialized.
-    * @post The x rotation for the given bird number is returned to the
-    *       caller.
-    *
-    * @return A floating-point value for the current x rotation of the
-    *         given bird.
-    */
-   float getXRot(const unsigned int i) const
-   {
-      return mMotionStar.getXRot(i);
    }
 
    /**
