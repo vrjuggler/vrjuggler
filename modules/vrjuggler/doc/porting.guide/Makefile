@@ -5,9 +5,7 @@ default: html
 docs: html pdf
 install-docs: install-html install-pdf
 
-XSLT_TOOL=Saxon 
-XSLT_TOOL=Xalan 
-FO_VERSION=XEP
+XSLT_TOOL=      Saxon
 
 NAME=		porting.guide
 
