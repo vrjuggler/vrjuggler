@@ -37,18 +37,14 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Insets;
 import java.awt.datatransfer.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 //import java.awt.event.MouseEvent;
+import java.awt.Insets;
 import java.util.Iterator;
 import java.util.Map;
 import javax.swing.*;
-import javax.swing.border.Border;
 
 import org.jgraph.JGraph;
 import org.jgraph.graph.AttributeMap;
@@ -88,9 +84,8 @@ public class ProxyVertexView
    }
 
    private static class ProxyVertexRenderer
-      extends JPanel
-      implements CellViewRenderer
-               , ClipboardOwner
+      extends AbstractCustomVertexRenderer
+      implements ClipboardOwner
    {
       private static final int LABEL_START_COLUMN   = 1;
       private static final int LABEL_END_COLUMN     = 1;
@@ -118,8 +113,7 @@ public class ProxyVertexView
 
       public ProxyVertexRenderer()
       {
-         mDefaultForeground = UIManager.getColor("Tree.textForeground");
-         mDefaultBackground = UIManager.getColor("Tree.textBackground");
+         super();
 
          double[][] sizes =
             {
@@ -133,7 +127,7 @@ public class ProxyVertexView
 
          // Set some text in the name label so that it has a preferred size
          // that can be used for later calculations.
-         mNameLabel.setText(" ");
+         nameLabel.setText(" ");
 
          mAddAliasButton.setEnabled(false);
          mAddAliasButton.setToolTipText("Add a new alias for this proxy");
@@ -238,7 +232,7 @@ public class ProxyVertexView
             }
          );
 
-         this.add(mNameLabel,
+         this.add(nameLabel,
                   new TableLayoutConstraints(SPAN_START_COLUMN, NAME_ROW,
                                              SPAN_END_COLUMN, NAME_ROW,
                                              TableLayoutConstraints.FULL,
@@ -283,7 +277,7 @@ public class ProxyVertexView
 
                mAddAliasButton.setEnabled(true);
 
-               Dimension label_size = mNameLabel.getPreferredSize();
+               Dimension label_size = nameLabel.getPreferredSize();
                Dimension add_size   = mAddAliasButton.getPreferredSize();
                Dimension paste_size = mPasteAliasButton.getPreferredSize();
 
@@ -323,123 +317,18 @@ public class ProxyVertexView
 
          if ( graph.getEditingCell() != view.getCell() )
          {
-            mNameLabel.setText(mProxyInfo.getElement().getName());
+            nameLabel.setText(mProxyInfo.getElement().getName());
          }
          else
          {
-            mNameLabel.setText(" ");
+            nameLabel.setText(" ");
          }
 
          return this;
       }
 
-      public void paint(Graphics g)
-      {
-         if ( gradientColor != null && ! preview )
-         {
-            setOpaque(false);
-            Graphics2D graphics = (Graphics2D) g;
-            graphics.setPaint(new GradientPaint(0, 0, getBackground(),
-                                                getWidth(), getHeight(),
-                                                gradientColor, true));
-            graphics.fillRect(0, 0, getWidth(), getHeight());
-         }
-
-         super.paint(g);
-         paintSelectionBorder(g);
-      }
-
-      private void paintSelectionBorder(Graphics g)
-      {
-         ((Graphics2D) g).setStroke(GraphConstants.SELECTION_STROKE);
-
-         if ( hasFocus && selected )
-         {
-            g.setColor(graph.getLockedHandleColor());
-         }
-         else if ( selected )
-         {
-            g.setColor(graph.getHighlightColor());
-         }
-
-         if ( selected )
-         {
-            Dimension d = getSize();
-            g.drawRect(0, 0, d.width - 1, d.height - 1);
-         }
-      }
-
       public void lostOwnership(Clipboard clipboard, Transferable contents)
       {
-      }
-
-      private void installAttributes(JGraph graph, Map attributes)
-      {
-         setOpaque(GraphConstants.isOpaque(attributes));
-
-         mNameLabel.setIcon(GraphConstants.getIcon(attributes));
-         mNameLabel.setVerticalAlignment(
-            GraphConstants.getVerticalAlignment(attributes)
-         );
-         mNameLabel.setHorizontalAlignment(
-            GraphConstants.getHorizontalAlignment(attributes)
-         );
-         mNameLabel.setVerticalTextPosition(
-            GraphConstants.getVerticalTextPosition(attributes)
-         );
-         mNameLabel.setHorizontalTextPosition(
-            GraphConstants.getHorizontalTextPosition(attributes)
-         );
-
-         Color foreground = GraphConstants.getForeground(attributes);
-
-         if ( foreground == null )
-         {
-            setForeground(mDefaultForeground);
-         }
-         else
-         {
-            setForeground(foreground);
-         }
-
-         Color background = GraphConstants.getBackground(attributes);
-
-         if ( background == null )
-         {
-            setBackground(mDefaultBackground);
-         }
-         else
-         {
-            setForeground(background);
-         }
-
-         java.awt.Font font = GraphConstants.getFont(attributes);
-
-         if ( font == null )
-         {
-            mNameLabel.setFont(graph.getFont());
-         }
-         else
-         {
-            mNameLabel.setFont(font);
-         }
-
-         Border border      = GraphConstants.getBorder(attributes);
-         Color border_color = GraphConstants.getBorderColor(attributes);
-
-         if ( border != null )
-         {
-            setBorder(border);
-         }
-         else if ( border_color != null )
-         {
-            int border_width =
-               Math.max(1, Math.round(GraphConstants.getLineWidth(attributes)));
-            setBorder(BorderFactory.createLineBorder(border_color,
-                                                     border_width));
-         }
-
-         gradientColor = GraphConstants.getGradientColor(attributes);
       }
 
       private ConfigElement createAlias()
@@ -502,7 +391,7 @@ public class ProxyVertexView
 
          final JLabel name_field = new JLabel(aliasElt.getName());
          name_field.setFont(new Font("Dialog", Font.ITALIC,
-                                      mNameLabel.getFont().getSize()));
+                                     nameLabel.getFont().getSize()));
          name_field.setBorder(BorderFactory.createLineBorder(Color.black));
          name_field.setBackground(
             gradientColor != null ? gradientColor.brighter().brighter()
@@ -807,19 +696,9 @@ public class ProxyVertexView
       }
 
       private transient CellView mView = null;
-
-      private transient JGraph graph        = null;
-      private transient Color gradientColor = null;
-      private transient boolean hasFocus    = false;
-      private transient boolean selected    = false;
-      private transient boolean preview     = false;
-
       private transient ProxyInfo mProxyInfo = null;
 
-      private Color mDefaultBackground;
-      private Color mDefaultForeground;
       private TableLayout mMainLayout = null;
-      private JLabel mNameLabel = new JLabel();
       private JButton mAddAliasButton = new JButton();
       private JButton mPasteAliasButton = new JButton();
    }
