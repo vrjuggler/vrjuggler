@@ -152,28 +152,28 @@ void Kernel::controlLoop(void* nullParam)
    // --- MAIN CONTROL LOOP -- //
    while(! (mExitFlag && (mApp == NULL)))     // While not exit flag set and don't have app. (can't exit until app is closed)
    {
-       jcclTIMESTAMP (jcclPERF_ALL, "kernel/startframe");
+       jcclTIMESTAMP(jcclPERF_ALL, "kernel/startframe");
 
       // Iff we have an app and a draw manager
       if((mApp != NULL) && (mDrawManager != NULL))
       {
             vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->preFrame()\n" << vprDEBUG_FLUSH;
          mApp->preFrame();         // PREFRAME: Do Any application pre-draw stuff
-            jcclTIMESTAMP (jcclPERF_ALL, "kernel/app/preFrame()");
+            jcclTIMESTAMP(jcclPERF_ALL, "kernel/app/preFrame()");
             vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: drawManager->draw()\n" << vprDEBUG_FLUSH;
          mDrawManager->draw();    // DRAW: Trigger the beginning of frame drawing
          mSoundManager->update();
-            jcclTIMESTAMP (jcclPERF_ALL, "kernel/trigger Draw");
+            jcclTIMESTAMP(jcclPERF_ALL, "kernel/trigger Draw");
             vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->intraFrame()\n" << vprDEBUG_FLUSH;
          mApp->intraFrame();        // INTRA FRAME: Do computations that can be done while drawing.  This should be for next frame.
-            jcclTIMESTAMP (jcclPERF_ALL, "kernel/app/intraFrame()");
+            jcclTIMESTAMP(jcclPERF_ALL, "kernel/app/intraFrame()");
             vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: drawManager->sync()\n" << vprDEBUG_FLUSH;
          mSoundManager->sync();
          mDrawManager->sync();    // SYNC: Block until drawing is done
-            jcclTIMESTAMP (jcclPERF_ALL, "kernel/wait for draw threads");
+            jcclTIMESTAMP(jcclPERF_ALL, "kernel/wait for draw threads");
             vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->postFrame()\n" << vprDEBUG_FLUSH;
          mApp->postFrame();        // POST FRAME: Do processing after drawing is complete
-           jcclTIMESTAMP (jcclPERF_ALL, "kernel/app/postFrame");
+           jcclTIMESTAMP(jcclPERF_ALL, "kernel/app/postFrame");
       }
       else
       {
@@ -185,14 +185,14 @@ void Kernel::controlLoop(void* nullParam)
       // --- Stop for reconfiguration -- //
       checkForReconfig();        // Check for any reconfiguration that needs done (system or application)
       checkSignalButtons();      // Check for any pending control requests
-       jcclTIMESTAMP (jcclPERF_ALL, "kernel/checkForReconfig");
+       jcclTIMESTAMP(jcclPERF_ALL, "kernel/checkForReconfig");
 
          vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: Update Trackers\n" << vprDEBUG_FLUSH;
       getInputManager()->updateAllData();    // Update the trackers
-         jcclTIMESTAMP (jcclPERF_ALL, "kernel/input/updateAllData()");
+         jcclTIMESTAMP(jcclPERF_ALL, "kernel/input/updateAllData()");
          vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: Update Projections\n" << vprDEBUG_FLUSH;
       updateFrameData();         // Update the projections, etc.
-         jcclTIMESTAMP (jcclPERF_ALL, "kernel/updateFrameData");
+         jcclTIMESTAMP(jcclPERF_ALL, "kernel/updateFrameData");
    }   
 
    vprDEBUG(vrjDBG_KERNEL,1) << "vjKernel::controlLoop: Exiting. \n" << vprDEBUG_FLUSH;
@@ -280,7 +280,7 @@ void Kernel::changeApplication(App* newApp)
    // EXIT Previous application
    if(mApp != NULL)
    {
-      cfg_mgr->removeConfigChunkHandler (mApp);
+      cfg_mgr->removeConfigChunkHandler(mApp);
       mApp->exit();
       mApp = NULL;      // ASSERT: We have no handles to the application any more (ie. the app could be deleted)
    }
@@ -295,12 +295,12 @@ void Kernel::changeApplication(App* newApp)
       if (new_draw_mgr != mDrawManager)      // Have NEW draw manager
       {
          stopDrawManager();                           // Stop old one
-         cfg_mgr->removeConfigChunkHandler (mDrawManager);
+         cfg_mgr->removeConfigChunkHandler(mDrawManager);
 
          mDrawManager = mApp->getDrawManager();             // Get the new draw manager
          mSoundManager = mApp->getSoundManager();           // Get the new sound manager
-         cfg_mgr->addConfigChunkHandler (mDrawManager);     // Tell config manager about them
-         cfg_mgr->addConfigChunkHandler (mSoundManager);    // Tell config manager about them
+         cfg_mgr->addConfigChunkHandler(mDrawManager);      // Tell config manager about them
+         cfg_mgr->addConfigChunkHandler(mSoundManager);     // Tell config manager about them
          startDrawManager(true);                      // Start the new one
       }
       else     // SAME draw manager
@@ -308,7 +308,7 @@ void Kernel::changeApplication(App* newApp)
          startDrawManager(false);                     // Start new app
       }
 
-      cfg_mgr->addConfigChunkHandler (mApp);
+      cfg_mgr->addConfigChunkHandler(mApp);
       cfg_mgr->refreshPendingList();                  // New managers, so we may be able to handle config requests now
    }
    else                 // No app, clear to NULL
