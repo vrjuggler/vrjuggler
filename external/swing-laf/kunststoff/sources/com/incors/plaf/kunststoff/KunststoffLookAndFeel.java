@@ -61,6 +61,11 @@ public class KunststoffLookAndFeel extends MetalLookAndFeel {
   }
 
 
+  public static void setIsInstalled(boolean val) {
+    isInstalled = val;
+  }
+
+
   public String getID() {
     return "Kunststoff";
   }
