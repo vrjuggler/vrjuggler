@@ -49,7 +49,7 @@ include @topdir@/make.defs.mk
 SRCS = SoundFactory.cpp
 
 ifeq ($(OS_TYPE), Win32)
-    SRCS        += dirent-win32.c
+    SRCS        += dirent-win32.cpp
 endif
 
 ifeq (@OPENAL_API@, Y)
