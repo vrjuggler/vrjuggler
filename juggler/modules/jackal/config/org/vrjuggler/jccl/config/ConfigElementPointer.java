@@ -70,7 +70,7 @@ public class ConfigElementPointer
       String old_target = mTarget;
       mTarget = target;
       fireTargetChanged(old_target);
-      System.out.println("Adding a new Pointer edit...");
+      System.out.println("Adding edit for ConfigElementPointer: ");
       ConfigUndoManager.instance().addEdit(new ConfigElementPointerEdit(old_target, target));
    }
 
