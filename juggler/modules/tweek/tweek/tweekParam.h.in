@@ -48,7 +48,10 @@
  * This is the "human-readable" Tweek version _string_.  It is of the form
  * <major>.<minor>.<days since last major release>.
  */
-#define TWEEK_VERSION @VER_STRING@
+namespace tweek
+{
+   const char* TWEEK_VERSION = @VER_STRING@;
+}
 
 
 #endif	/* _TWEEK_PARAM_H_ */
