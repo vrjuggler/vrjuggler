@@ -50,6 +50,7 @@
 #define VPR_DOMAIN_NSPR       1
 #define VPR_DOMAIN_POSIX      2
 #define VPR_DOMAIN_IRIX_SPROC 3
+#define VPR_DOMAIN_SIMULATOR  4
 
 // This is the VPR I/O domain.  It defines all the platform-independent types
 // used for doing I/O (sockets and serial ports mostly) in VPR.
@@ -62,6 +63,26 @@ namespace vpr
 
    template<class> class BaseIOStatsStrategy;
    template<class BASE_ONE, class BASE_TWO> class IOStatsStrategyAdapter;
+
+#ifdef VPR_SIMULATOR
+#  define VPR_IO_DOMAIN_INCLUDE VPR_DOMAIN_SIMULATOR
+
+   struct SocketConfiguration
+   {
+      typedef class SocketImplSIM           SocketImpl;
+      typedef class SocketDatagramImplSIM   SocketDatagramImpl;
+      typedef class SocketStreamImplSIM     SocketStreamImpl;
+      typedef class IOStatsStrategyAdapter<class BaseIOStatsStrategy<BlockIO>, class BandwidthIOStatsStrategy>     SocketIOStatsStrategy;
+   };
+
+   typedef class InetAddrSIM InetAddr;
+   typedef class IOSysSIM    IOSys;
+
+   typedef class Selector_t<class SelectorImplSIM> Selector;
+
+   /* No serial ports for simulator mode. */
+
+#else /* ! ifdef VPR_SIMULATOR */
 
 #ifdef VPR_USE_NSPR
 #  define VPR_IO_DOMAIN_INCLUDE VPR_DOMAIN_NSPR
@@ -104,6 +125,7 @@ namespace vpr
    typedef class SerialPort_t<class SerialPortImplTermios> SerialPort;
 
 #endif /* ifdef VPR_USE_NSPR */
+#endif /* ifdef VPR_SIMULATOR */
 
 }
 

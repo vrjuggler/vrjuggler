@@ -43,6 +43,9 @@
 #define _VPR_SERIAL_PORT_H_
 
 #include <vpr/vprConfig.h>
+
+#ifndef VPR_SIMULATOR
+
 #include <vpr/IO/Port/Port.h>
 #include <vpr/IO/Port/SerialTypes.h>
 
@@ -58,5 +61,7 @@
 #elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
 #   include <vpr/md/POSIX/IO/Port/SerialPortImplTermios.h>
 #endif
+
+#endif /* ifndef VPR_SIMULATOR */
 
 #endif	/* _VPR_SERIAL_PORT_H_ */

@@ -1,5 +1,9 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2001-12-09 patrickh Added socket/network simulator code.  This can be
+                    compiled instead of "real" sockets using the new
+                    --enable-simuatlor configure option.
+                    NEW VERSION: 0.6.0
 2001-12-09 patrickh Disallowed the overriding of the VPR "domain" (the thing
                     that defines what sockets, threads, etc. to use) by user
                     code.  The class vpr::BaseIOStatsStrategy is now a

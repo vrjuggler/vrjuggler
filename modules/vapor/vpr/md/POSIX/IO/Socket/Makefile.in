@@ -56,11 +56,13 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VPR_LIBRARY)
 
+ifneq (@SIMULATOR@, Y)
 ifeq (@SOCKET_ABS@, BSD)
     SRCS	= InetAddrBSD.cpp		\
                   SocketDatagramImplBSD.cpp	\
                   SocketImplBSD.cpp		\
                   SocketStreamImplBSD.cpp
+endif
 endif
 
 include $(MKPATH)/dpp.obj.mk

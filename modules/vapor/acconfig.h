@@ -120,6 +120,8 @@
 #undef VPR_OS_RELEASE_MAJOR
 #undef VPR_OS_RELEASE_MINOR
 
+#undef VPR_SIMULATOR
+
 /* Define to `int' if the socklen_t type is not available.  */
 #undef socklen_t
 
