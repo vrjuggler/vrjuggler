@@ -1,5 +1,5 @@
 // Juggler dependencies
-// Run as: cvs-gather.pl --cfg=deps.esrc
+// Run as: cvs-gather.pl
 
 GMTL
 {
@@ -32,4 +32,12 @@ Doozer++
    Module: Doozer++;
    Tag: RELENG_1_5;
    Path: .;
+};
+
+Xmlpp     // Get xmlpp from the gamedev club site for now
+{
+   CVSROOT:  :pserver:anonymous@cvs.isugamedev.sourceforge.net:/cvsroot/isugamedev;
+   Module: lib/gamekernel/xmlpp  [external/xmlpp];
+   Tag: HEAD;
+   Path: .;          // Put me right here
 };
