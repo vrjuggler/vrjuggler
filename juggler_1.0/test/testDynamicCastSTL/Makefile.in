@@ -8,6 +8,7 @@
 srcdir		= @srcdir@
 
 COMPILE		= @CXX@ @DEFS@ ${VJ_INCLUDES} @CPPFLAGS@ @CXXFLAGS@ -g
+LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ -g
 VJ_INCLUDES	= @INCLUDES@ -I${VJ_BASE_DIR}/include -I${srcdir}
 VPATH		= @srcdir@
 
@@ -21,7 +22,7 @@ default: all
 all: run
 
 run: ${OBJECTS}
-	${COMPILE} -o $@ ${OBJECTS}
+	${LINK} -o $@ ${OBJECTS}
 
 .cpp.o:
 	${COMPILE} -c $<

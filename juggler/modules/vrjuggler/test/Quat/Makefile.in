@@ -8,6 +8,7 @@
 srcdir		= @srcdir@
 
 COMPILE		= @CXX@ @DEFS@ ${VJ_INCLUDES} @CPPFLAGS@ @CXXFLAGS@ -g
+LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ -g
 VJ_INCLUDES	= @INCLUDES@ -I${VJ_BASE_DIR}/include -I${srcdir}
 VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_LIBS_BASIC@
 VPATH		= @srcdir@
@@ -31,7 +32,7 @@ default: all
 all: testQuat
 
 testQuat: ${OBJECTS}
-	${COMPILE} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
+	${LINK} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
 
 .c.o:
 	${COMPILE} -c $<

@@ -13,6 +13,7 @@ srcdir		= @srcdir@
 # If compiling against the optimized version, you must add -D_OPT instead.
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 COMPILE		= @CXX@ @DEFS@ ${VJ_INCLUDES} @CPPFLAGS@ @CXXFLAGS@ -g
+LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ -g
 VJ_INCLUDES	= @INCLUDES@ -I${VJ_BASE_DIR}/include -I${srcdir}
 VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_LIBS_BASIC@
 VPATH		= @srcdir@
@@ -36,13 +37,13 @@ default: all
 all: ${SYNC_PROGS}
 
 test: test.o
-	${COMPILE} -o $@ test.o ${VJ_LIBS} ${EXTRA_LIBS}
+	${LINK} -o $@ test.o ${VJ_LIBS} ${EXTRA_LIBS}
 
 testBarrier: testBarrier.o
-	${COMPILE} -o $@ testBarrier.o ${VJ_LIBS} ${EXTRA_LIBS}
+	${LINK} -o $@ testBarrier.o ${VJ_LIBS} ${EXTRA_LIBS}
 
 testCond: testCond.o
-	${COMPILE} -o $@ testCond.o ${VJ_LIBS} ${EXTRA_LIBS}
+	${LINK} -o $@ testCond.o ${VJ_LIBS} ${EXTRA_LIBS}
 
 .cpp.o:
 	${COMPILE} -c $<
