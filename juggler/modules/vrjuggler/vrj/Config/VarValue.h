@@ -38,7 +38,7 @@
 
 #include <vjConfig.h>
 #include <ctype.h>
-#include <string.h>
+
 
 typedef enum { T_INT, T_FLOAT, T_BOOL, T_STRING, T_DISTANCE, 
 	       T_CHUNK, T_EMBEDDEDCHUNK, T_INVALID } VarType;
