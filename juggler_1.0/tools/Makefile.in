@@ -9,7 +9,7 @@
 
 srcdir		= @srcdir@
 
-COMPILE		= @CXX@ @DEFS@ $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@
+COMPILE		= @CXX@ @DEFS@ $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@ @DBG_FLAGS@
 LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@
 
 GLUT_LIB	= -B static -L/home/users/allenb/Libs/glut/lib32 -lglut
