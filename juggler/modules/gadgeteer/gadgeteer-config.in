@@ -127,7 +127,7 @@ $ECHO_LIBS        = 0;
 $ECHO_EXTRA_LIBS  = 0;
 
 my $script_help    = 0;
-my $print_all      = 0;
+my $print_min      = 0;
 my $echo_includes  = 0;
 my $echo_subsystem = 0;
 my $echo_version   = 0;
@@ -138,7 +138,7 @@ my $cxxflags_arg   = '';
 my $libs_arg       = '';
 my $extra_libs_arg = '';
 
-GetOptions('help|?' => \$script_help, 'all' => \$print_all,
+GetOptions('help|?' => \$script_help, 'min' => \$print_min,
            'version' => \$echo_version, 'subsystem' => \$echo_subsystem,
            'prefix:s' => \&handleOptArg, 'exec-prefix:s' => \&handleOptArg,
            'cxxflags:s' => \&handleOptArg, 'includes' => \$echo_includes,
@@ -148,11 +148,11 @@ GetOptions('help|?' => \$script_help, 'all' => \$print_all,
 usage(0) if $script_help;
 
 # Construct the (potentially complex) strings that may be printed.
-my $cxxflags      = make_CXXFLAGS("$cxxflags_arg", $print_all);
+my $cxxflags      = make_CXXFLAGS("$cxxflags_arg", $print_min);
 my $includes      = make_INCLUDES("$cxxflags");
 my $ldflags       = make_LDFLAGS("$libs_arg", $echo_static, $use_linker);
 my $extra_ldflags = make_EXTRA_LDFLAGS("$extra_libs_arg", $use_linker,
-                                       $print_all);
+                                       $print_min);
 
 # Finally, print out the requested information.
 print "$prefix\n" if $ECHO_PREFIX;
@@ -188,8 +188,6 @@ Options:
         [--libs [N32|64]]       Print the basic Gadgeteer-specific libraries
         [--extra-libs [N32|64]] Print the extra linker options needed for
                                 making an executable
-        [--all]                 Print all the flags used for compiling or
-                                linking (depending on other options)
         [--linker]              Print libraries as direct arguments to the
                                 linker rather than to the compiler
         [--subsystem]           Print the VPR OS abstraction layer being used
@@ -201,9 +199,21 @@ EOF
 sub make_CXXFLAGS ($;$)
 {
    my $cxxflags_arg = shift;
-   my $print_all    = shift || 0;
+   my $print_min    = shift || 0;
 
-   my $cxxflags = '';
+   my $dep_cxxflags = '';
+
+   unless ( $print_min )
+   {
+      my @dep_scripts = qw(@gadget_dep_scripts@);
+
+      foreach ( @dep_scripts )
+      {
+         my $cur_dep_cxxflags = `$_ --min --cxxflags $cxxflags_arg`;
+         chomp($cur_dep_cxxflags);
+         $dep_cxxflags = "$cur_dep_cxxflags $dep_cxxflags";
+      }
+   }
 
    # Default setting from configure.
    my $gadget_extra_cxxflags = qq(@gadget_extra_cxxflags@);
@@ -233,11 +243,8 @@ sub make_CXXFLAGS ($;$)
 #      }
 #   }
 
-   my $gadget_cxxflags_addtl = ($print_all ? qq(@gadget_cxxflags_all@) : '');
-
-   $cxxflags =
-      qq(@gadget_cxxflags@ $gadget_cxxflags_addtl $gadget_extra_cxxflags ) .
-      qq(-I@includedir@ $gadget_extra_includes);
+   my $cxxflags = qq(@gadget_cxxflags@ $dep_cxxflags $gadget_extra_cxxflags ) .
+                  qq(-I@includedir@ $gadget_extra_includes);
 
    # Strip out extra whitespace.
    $cxxflags =~ s/\s{2,}/ /g;
@@ -296,7 +303,27 @@ sub make_EXTRA_LDFLAGS ($;$$)
 {
    my $extra_libs_arg = shift;
    my $use_linker     = shift || 0;
-   my $print_all      = shift || 0;
+   my $print_min      = shift || 0;
+
+   my $dep_libs       = '';
+   my $dep_extra_libs = '';
+
+   unless ( $print_min )
+   {
+      my @dep_scripts = qw(@gadget_dep_scripts@);
+      my $extra_arg = ($use_linker ? '--linker' : '');
+
+      foreach ( @dep_scripts )
+      {
+         my $cur_dep_libs = `$_ --min --libs $extra_libs_arg $extra_arg`;
+         chomp($cur_dep_libs);
+         $dep_libs .= " $cur_dep_libs";
+
+         my $cur_dep_extra_libs = `$_ --min --extra-libs $extra_libs_arg $extra_arg`;
+         chomp($cur_dep_extra_libs);
+         $dep_extra_libs .= " $cur_dep_extra_libs";
+      }
+   }
 
    if ( $extra_libs_arg =~ /n32/i )
    {
@@ -310,10 +337,10 @@ sub make_EXTRA_LDFLAGS ($;$$)
    my $extra_ldflags = ($use_linker ? qq(@gadget_extra_ldflags_linker@)
                                     : qq(@gadget_extra_ldflags_compiler@));
 
-   # Add the full set of extra flags if the user specified --all on the
+   # Add the full set of extra flags if the user specified --min on the
    # command line.
-   my $gadget_extra_libs_addtl = ($print_all ? qq(@gadget_extra_libs_juggler@)
-                                             : '');
+   my $gadget_extra_libs_addtl =
+      ($print_min ? '' : "$dep_libs $dep_extra_libs");
 
    my $full_extra_ldflags = qq($extra_ldflags @gadget_extra_libs@ ) .
                             "$gadget_extra_libs_addtl";

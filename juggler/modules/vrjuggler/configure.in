@@ -65,6 +65,7 @@ AC_ARG_ENABLE(sonix,
 if test "$SONIX_SOUNDMANAGER" = "yes" ; then
    USE_SONIX='Y'
    SNX_PATH(0.0.3, , AC_MSG_ERROR(*** Can't find sonix ***))
+   vrj_sonix_config='sonix-config'
 else
    USE_SONIX='N'
 fi
@@ -345,11 +346,15 @@ if test "x$GXX" = "xyes" ; then
     CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
 fi
 
-CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS $JCCL_CXXFLAGS $GADGET_CXXFLAGS $SNX_CXXFLAGS $GMTL_INCLUDES"
+CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS_MIN $JCCL_CXXFLAGS_MIN $GADGET_CXXFLAGS_MIN $SNX_CXXFLAGS $GMTL_INCLUDES"
 EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
 
 vrj_cxxflags="$STDFLAGS"
-vrj_cxxflags_all="$VPR_CXXFLAGS $JCCL_CXXFLAGS $GADGET_CXXFLAGS $SNX_CXXFLAGS"
+
+# List the scripts vrjuggler-config will call to get flags.  This should be
+# in the order used for linking.  That means the dependencies are satisfied
+# right to left.
+vrj_dep_scripts="$vrj_sonix_config gadgeteer-config jccl-config vpr-config"
 
 # Compiler-specific settings when GCC is not being used.
 if test "x$USE_GCC" != "xyes" ; then
@@ -402,7 +407,7 @@ elif test "x$OS_TYPE" = "xWin32" ; then
     DEPEND_EXTRAS="$DEPEND_EXTRAS -D__cplusplus"
 fi
 
-VJ_APP_CXXFLAGS='$(VRJ_CXX_FLAGS_MIN) $(GADGET_CXX_FLAGS_MIN) $(JCCL_CXX_FLAGS_MIN) $(VPR_CXX_FLAGS_MIN)'
+VJ_APP_CXXFLAGS='$(VRJ_CXX_FLAGS)'
 VJ_APP_EXTRA_LIBS='$(VRJ_EXTRA_LIBS_MIN) $(GADGET_LIBS_MIN) $(JCCL_LIBS_MIN) $(VPR_LIBS_MIN) $(GADGET_EXTRA_LIBS_MIN) $(JCCL_EXTRA_LIBS_MIN) $(VPR_EXTRA_LIBS_MIN)'
 
 if test "x$SONIX_SOUNDMANAGER" != "xno" ; then
@@ -432,7 +437,7 @@ APP_BASE_DIR='$(topdir)/instlinks'
 APP_BASE_DIR_INST='$(VJ_BASE_DIR)'
 
 if test "$OS_TYPE" = "UNIX" ; then
-    REQ_EXTRA_LIBS="$LDFLAGS $GADGET_LIBS_CC $SNX_LIBS_CC $JCCL_LIBS_CC $JCCL_EXTRA_LIBS_CC $VPR_LIBS_CC $VPR_EXTRA_LIBS_CC $LIBS -lm"
+    REQ_EXTRA_LIBS="$LDFLAGS $GADGET_LIBS_CC_MIN $SNX_LIBS_CC $JCCL_LIBS_CC_MIN $JCCL_EXTRA_LIBS_CC_MIN $VPR_LIBS_CC_MIN $VPR_EXTRA_LIBS_CC_MIN $LIBS -lm"
     DYLIB_DEPS_VJ="$SNX_LIBS_CC $REQ_EXTRA_LIBS"
     DYLIB_DEPS_GL="-L\$(LIBDIR) -lJuggler $OGL_LDFLAGS $LIBOPENGL $REQ_EXTRA_LIBS"
     DYLIB_DEPS_PF="-L\$(LIBDIR) -lJuggler $PF_LDFLAGS $LIBPERFORMER $REQ_EXTRA_LIBS"
@@ -463,9 +468,9 @@ if test "$OS_TYPE" = "UNIX" ; then
         APP_EXTRA_LIBS_OSG="$LIBOSG"
     fi
 elif test "$OS_TYPE" = "Win32" ; then
-    REQ_EXTRA_LIBS="$LDFLAGS $GADGET_LIBS_LD $SNX_LIBS_LD $JCCL_LIBS_LD $JCCL_EXTRA_LIBS_LD $VPR_LIBS_LD $VPR_EXTRA_LIBS_LD $LIBS"
+    REQ_EXTRA_LIBS="$LDFLAGS $GADGET_LIBS_LD_MIN $SNX_LIBS_LD $JCCL_LIBS_LD_MIN $JCCL_EXTRA_LIBS_LD_MIN $VPR_LIBS_LD_MIN $VPR_EXTRA_LIBS_LD_MIN $LIBS"
     BASIC_WIN32_LIBS='comctl32.lib user32.lib gdi32.lib ws2_32.lib'
-    DYLIB_DEPS_BASIC="$LDFLAGS $GADGET_LIBS_LD $SNX_LIBS_LD $JCCL_LIBS_LD $JCCL_LIBS_LD $VPR_LIBS_LD $LIBS $VPR_EXTRA_LIBS_LD $BASIC_WIN32_LIBS"
+    DYLIB_DEPS_BASIC="$REQ_EXTRA_LIBS $BASIC_WIN32_LIBS"
     DYLIB_DEPS_VJ="/libpath:\$(LIBDIR) $DYLIB_DEPS_BASIC"
     DYLIB_DEPS_GL="/libpath:\$(LIBDIR) Juggler.lib $DYLIB_DEPS_BASIC $OGL_LDFLAGS $LIBOPENGL"
 
@@ -521,15 +526,12 @@ VJ_SHARE_DIR=`echo "$VJ_SHARE_DIR" | sed -e "${_prefix_exp}"`
 # Information needed to generate vrjuggler-config.
 # $vrj_extra_libs only lists the external (non-Juggler) libraries needed by
 # VR Juggler.
-# $vrj_extra_libs_juggler lists the Juggler Project libraries needed by VR
-# Juggler.
 case $OS_TYPE in
     UNIX)
         vrj_ldflags_compiler="-L\$prefix/lib$LIBBITSUF"
         vrj_ldflags_linker="$vrj_ldflags_compiler"
         vrj_libs='-lJuggler -lJuggler_ogl'
         vrj_extra_libs="$LDFLAGS $APP_EXTRA_LIBS_GL $APP_EXTRA_LIBS_X11 $LIBS"
-        vrj_extra_libs_juggler="$GADGET_LIBS_CC $SNX_LIBS_CC $JCCL_LIBS_CC $JCCL_EXTRA_LIBS_CC $VPR_LIBS_CC $VPR_EXTRA_LIBS_CC"
 
         Juggler_lib='-lJuggler'
         Juggler_ogl_lib='-lJuggler_ogl'
@@ -548,7 +550,6 @@ case $OS_TYPE in
         vrj_ldflags_linker="/libpath:\$prefix/lib/debug "
         vrj_libs='Juggler.lib Juggler_ogl.lib'
         vrj_extra_libs="$LDFLAGS $APP_EXTRA_LIBS_GL $BASIC_WIN32_LIBS $LIBS"
-        vrj_extra_libs_juggler="$GADGET_LIBS_LD $SNX_LIBS_LD $JCCL_LIBS_LD $JCCL_EXTRA_LIBS_LD $VPR_LIBS_LD $VPR_EXTRA_LIBS_LD"
 
         Juggler_lib='Juggler.lib'
         Juggler_ogl_lib='Juggler_ogl.lib'
@@ -601,8 +602,8 @@ AC_SUBST(DYLIB_DEPS_PF)
 
 AC_SUBST(APP_EXTRA_LIBS_OSG)
 
+AC_SUBST(vrj_dep_scripts)
 AC_SUBST(vrj_cxxflags)
-AC_SUBST(vrj_cxxflags_all)
 AC_SUBST(vrj_extra_cxxflags)
 AC_SUBST(vrj_ldflags_compiler)
 AC_SUBST(vrj_ldflags_linker)
@@ -610,7 +611,6 @@ AC_SUBST(vrj_libs)
 AC_SUBST(vrj_extra_ldflags_compiler)
 AC_SUBST(vrj_extra_ldflags_linker)
 AC_SUBST(vrj_extra_libs)
-AC_SUBST(vrj_extra_libs_juggler)
 AC_SUBST(vrj_n32_flags)
 AC_SUBST(vrj_64_flags)
 

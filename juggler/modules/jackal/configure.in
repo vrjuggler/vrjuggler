@@ -286,10 +286,14 @@ if test "x$CPPDOM_INCLUDES" != "x" ; then
     INCLUDES="$INCLUDES $CPPDOM_INCLUDES"
 fi
 
-CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS"
+CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS_MIN"
 EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
 jccl_cxxflags="$STD_FLAGS"
-jccl_cxxflags_all="$VPR_CXXFLAGS"
+
+# List the scripts jccl-config will call to get flags.  This should be in the
+# order used for linking.  That means the dependencies are satisfied right to
+# left.
+jccl_dep_scripts='vpr-config'
 
 # If the user has a local copy of CppDOM, add its path to the C++ flags.
 if test "x$LOCAL_CPPDOM" = "xY" ; then
@@ -330,15 +334,12 @@ UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 # application.
 # $jccl_extra_libs only lists the external (non-Juggler) libraries needed by
 # JCCL.
-# $jccl_extra_libs_juggler lists the Juggler Project libraries needed by JCCL.
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_LD $LIBS $VPR_EXTRA_LIBS_LD"
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_LD_MIN $LIBS $VPR_EXTRA_LIBS_LD_MIN"
     jccl_extra_libs="$LDFLAGS $LIBS"
-    jccl_extra_libs_juggler="$VPR_LIBS_LD $VPR_EXTRA_LIBS_LD"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_CC $LIBS $VPR_EXTRA_LIBS_CC"
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_CC_MIN $LIBS $VPR_EXTRA_LIBS_CC_MIN"
     jccl_extra_libs="$LDFLAGS $LIBS"
-    jccl_extra_libs_juggler="$VPR_LIBS_CC $VPR_EXTRA_LIBS_CC"
 fi
 
 # Variables set in Makefiles found in the application trees.  All variables
@@ -476,8 +477,8 @@ AC_SUBST(APP_EXTRA_LIBS)
 
 AC_SUBST(static_begin)
 AC_SUBST(static_end)
+AC_SUBST(jccl_dep_scripts)
 AC_SUBST(jccl_cxxflags)
-AC_SUBST(jccl_cxxflags_all)
 AC_SUBST(jccl_ldflags_compiler)
 AC_SUBST(jccl_ldflags_linker)
 AC_SUBST(jccl_libs)
@@ -486,7 +487,6 @@ AC_SUBST(jccl_extra_cxxflags)
 AC_SUBST(jccl_extra_include_dirs)
 AC_SUBST(jccl_extra_ldflags)
 AC_SUBST(jccl_extra_libs)
-AC_SUBST(jccl_extra_libs_juggler)
 AC_SUBST(jccl_n32_flags)
 AC_SUBST(jccl_64_flags)
 
