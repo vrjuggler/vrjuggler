@@ -164,7 +164,7 @@ public:
    {
       std::string prop_string = getPropertyString(prop,ind);
 
-      T ret_val;
+      T ret_val = T();
       std::istringstream iss(prop_string);
       iss >> ret_val;
       return ret_val;
