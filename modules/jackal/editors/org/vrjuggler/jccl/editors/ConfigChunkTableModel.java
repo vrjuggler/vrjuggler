@@ -248,7 +248,16 @@ public class ConfigChunkTableModel
          // the property to the index into that property
          int base_row = getRowFor(desc);
          int value_idx = row - base_row;
-         return mChunk.getProperty(desc.getToken(), value_idx).get();
+         int num_values = mChunk.getNumPropertyValues(desc.getToken());
+
+         if (desc.hasVariableNumberOfValues() && (value_idx == num_values))
+         {
+            return "Add";
+         }
+         else
+         {
+            return mChunk.getProperty(desc.getToken(), value_idx).get();
+         }
       }
    }
 

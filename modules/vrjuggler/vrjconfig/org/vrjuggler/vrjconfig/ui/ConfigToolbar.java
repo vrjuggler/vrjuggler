@@ -29,6 +29,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
+import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.vrjconfig.PopupButton;
 
 /**
@@ -56,6 +57,7 @@ public class ConfigToolbar
          saveBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/save.gif")));
          saveAsBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/saveas.gif")));
          saveAllBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/saveall.gif")));
+         expandBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/expand_toolbar.gif")));
       }
       catch (Exception e)
       {
@@ -64,6 +66,7 @@ public class ConfigToolbar
          saveBtn.setText("Save");
          saveAsBtn.setText("Save As");
          saveAllBtn.setText("Save All");
+         expandBtn.setText("Expand");
       }
 
       // Get some of the icons we care about
@@ -109,6 +112,16 @@ public class ConfigToolbar
       toolbar.add(comp);
    }
 
+   public void setConfigContext(ConfigContext context)
+   {
+      this.context = context;
+   }
+
+   public ConfigContext getConfigContext()
+   {
+      return context;
+   }
+
    public void addActionListener(ActionListener listener)
    {
       listenerList.add(ActionListener.class, listener);
@@ -134,6 +147,35 @@ public class ConfigToolbar
             ((ActionListener)listeners[i+1]).actionPerformed(evt);
          }
       }
+   }
+
+   protected void toggleContextEditor()
+   {
+      boolean show_editor = expandBtn.isSelected();
+      EditContextPopup contextEditor = getContextEditor();
+      if (! show_editor)
+      {
+         contextEditor.setVisible(false);
+         contextEditor.setPreferredSize(null);
+      }
+      else
+      {
+         contextEditor.setConfigContext(getConfigContext());
+         Dimension pref_size = contextEditor.getPreferredSize();
+         pref_size.width = this.getWidth();
+         contextEditor.setPreferredSize(pref_size);
+         contextEditor.setBackground(Color.pink);
+         contextEditor.show(this, 0, this.getHeight());
+      }
+   }
+
+   private EditContextPopup getContextEditor()
+   {
+      if (contextEditor == null)
+      {
+         contextEditor = new EditContextPopup();
+      }
+      return contextEditor;
    }
 
    /**
@@ -164,6 +206,9 @@ public class ConfigToolbar
       saveAllBtn.setToolTipText("Save All Open Configurations");
       saveAllBtn.setActionCommand("SaveAll");
       saveAllBtn.setFocusPainted(false);
+      expandBtn.setToolTipText("Expand Toolbar");
+      expandBtn.setActionCommand("Expand");
+      expandBtn.setFocusPainted(false);
       openBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
@@ -192,6 +237,13 @@ public class ConfigToolbar
             fireAction("SaveAll");
          }
       });
+      expandBtn.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            toggleContextEditor();
+         }
+      });
       this.add(titleLbl, BorderLayout.NORTH);
       this.add(toolbar, BorderLayout.CENTER);
       toolbar.add(newPopupBtn, null);
@@ -199,6 +251,8 @@ public class ConfigToolbar
       toolbar.add(saveBtn, null);
       toolbar.add(saveAsBtn, null);
       toolbar.add(saveAllBtn, null);
+      toolbar.add(Box.createHorizontalGlue(), null);
+      toolbar.add(expandBtn, null);
    }
 
    // JBuilder GUI variables
@@ -209,4 +263,8 @@ public class ConfigToolbar
    private JButton saveBtn = new JButton();
    private JButton saveAsBtn = new JButton();
    private JButton saveAllBtn = new JButton();
+   private JToggleButton expandBtn = new JToggleButton();
+
+   private ConfigContext context = new ConfigContext();
+   private EditContextPopup contextEditor;
 }
