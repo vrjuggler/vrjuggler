@@ -124,6 +124,8 @@ AC_DEFUN([VJ_PROG_CXX_PROF_FLAG],
 
 AC_DEFUN([VJ_COMPILER_SETUP],
 [
+    DPP_PREREQ([1.99.21])
+
     AC_REQUIRE([DPP_WITH_GCC])
     AC_REQUIRE([DPP_SYSTEM_SETUP])
 
@@ -196,6 +198,7 @@ AC_DEFUN([VJ_COMPILER_SETUP],
 
     DPP_PROG_CC([$CC], , [AC_MSG_ERROR($CC_ERR)])
     DPP_PROG_CXX([$CXX], , [AC_MSG_ERROR($CXX_ERR)])
+    DPP_SETUP_COMPILER
     DPP_GET_EXT
 
     # GCC is our compiler (g++ will compile the C++ code).
@@ -226,39 +229,23 @@ AC_DEFUN([VJ_COMPILER_SETUP],
     #    3: Private constructor(s) and destructor, inability to inline
     #    4: Shadowing of methods, variables, etc.; unreachable code; ...
     #    5: Recommendations from Scott Meyers, cast issues, etc.
-    if test "x$GXX" = "xyes" ; then
-        case $CXX in
-            # The Intel C++ compiler masquerades as GCC, and trying to detect
-            # it this way is rather kludgy.
-            icc*)
-                C_WARNS_LEVEL_0="-w"
-                C_WARNS_LEVEL_1="-Wall -wd180,279,310,383,444,810,981,1418,1469"
-                C_WARNS_LEVEL_2="-Wall -wd180,279,310,383,810,981,1418,1469"
-                C_WARNS_LEVEL_3="-Wall -wd279,310,981,1418,1469"
-                C_WARNS_LEVEL_4="-Wall -wd279,981,1469 -Wcheck"
-                C_WARNS_LEVEL_5="-Wall -Wcheck"
-
-                # Use the same settings for C++ as for C since the compiler is
-                # the same and therefore accepts all the same options.
-                CXX_WARNS_LEVEL_0="$C_WARNS_LEVEL_0"
-                CXX_WARNS_LEVEL_1="$C_WARNS_LEVEL_1"
-                CXX_WARNS_LEVEL_2="$C_WARNS_LEVEL_2"
-                CXX_WARNS_LEVEL_3="$C_WARNS_LEVEL_3"
-                CXX_WARNS_LEVEL_4="$C_WARNS_LEVEL_4"
-                CXX_WARNS_LEVEL_5="$C_WARNS_LEVEL_5"
-                ;;
-            # The real GCC settings.
-            *)
-                # Doozer++ gives us reasonable defaults for C code.
-
-                CXX_WARNS_LEVEL_0="-w"
-                CXX_WARNS_LEVEL_1="-Wall"
-                CXX_WARNS_LEVEL_2="$CXX_WARNS_LEVEL_1 -W -Woverloaded-virtual -Wsign-promo -Wnon-virtual-dtor"
-                CXX_WARNS_LEVEL_3="$CXX_WARNS_LEVEL_2 -Winline -Wctor-dtor-privacy"
-                CXX_WARNS_LEVEL_4="$CXX_WARNS_LEVEL_3 -Wshadow -Wunreachable-code"
-                CXX_WARNS_LEVEL_5="$CXX_WARNS_LEVEL_4 -Weffc++ -Wold-style-cast"
-                ;;
-        esac
+    if test "x$ICPC" = "xyes" ; then
+        # Doozer++ gives us reasonable defaults for C code, and we will just
+        # use those settings for C++.
+        CXX_WARNS_LEVEL_0="$C_WARNS_LEVEL_0"
+        CXX_WARNS_LEVEL_1="$C_WARNS_LEVEL_1"
+        CXX_WARNS_LEVEL_2="$C_WARNS_LEVEL_2"
+        CXX_WARNS_LEVEL_3="$C_WARNS_LEVEL_3"
+        CXX_WARNS_LEVEL_4="$C_WARNS_LEVEL_4"
+        CXX_WARNS_LEVEL_5="$C_WARNS_LEVEL_5"
+    elif test "x$GXX" = "xyes" ; then
+        # Doozer++ gives us reasonable defaults for C code.
+        CXX_WARNS_LEVEL_0="-w"
+        CXX_WARNS_LEVEL_1="-Wall"
+        CXX_WARNS_LEVEL_2="$CXX_WARNS_LEVEL_1 -W -Woverloaded-virtual -Wsign-promo -Wnon-virtual-dtor"
+        CXX_WARNS_LEVEL_3="$CXX_WARNS_LEVEL_2 -Winline -Wctor-dtor-privacy"
+        CXX_WARNS_LEVEL_4="$CXX_WARNS_LEVEL_3 -Wshadow -Wunreachable-code"
+        CXX_WARNS_LEVEL_5="$CXX_WARNS_LEVEL_4 -Weffc++ -Wold-style-cast"
     # MIPSpro is our compiler.  The warning levels go in reverse here be we
     # disable fewer warnings at higher levels.
     elif test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
