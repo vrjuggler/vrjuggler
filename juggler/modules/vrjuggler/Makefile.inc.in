@@ -173,6 +173,12 @@ $(LIBDIR)/$(VJ_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
             $(DYLIB_DEPS_VJ)
 	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+ifeq (@OS_TYPE@, Win32)
+	cd $(LIBDIR_BASE) && rm -f $(VJ_LIB_STATIC) &&			\
+            $(LN_S) $(LIBDIR)/$(VJ_LIB_STATIC) ./
+	cd $(LIBDIR_BASE) && rm -f $(VJ_LIBRARY).exp &&			\
+            $(LN_S) $(LIBDIR)/$(VJ_LIBRARY).exp ./
+endif
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
@@ -185,6 +191,12 @@ $(LIBDIR)/$(UTILS_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
             $(DYLIB_DEPS_UTILS)
 	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+ifeq (@OS_TYPE@, Win32)
+	cd $(LIBDIR_BASE) && rm -f $(UTILS_LIB_STATIC) &&		\
+            $(LN_S) $(LIBDIR)/$(UTILS_LIB_STATIC) ./
+	cd $(LIBDIR_BASE) && rm -f $(UTILS_LIBRARY).exp &&		\
+            $(LN_S) $(LIBDIR)/$(UTILS_LIBRARY).exp ./
+endif
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
@@ -197,6 +209,12 @@ $(LIBDIR)/$(GL_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
             $(DYLIB_DEPS_GL)
 	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+ifeq (@OS_TYPE@, Win32)
+	cd $(LIBDIR_BASE) && rm -f $(GL_LIB_STATIC) &&			\
+            $(LN_S) $(LIBDIR)/$(GL_LIB_STATIC) ./
+	cd $(LIBDIR_BASE) && rm -f $(GL_LIBRARY).exp &&			\
+            $(LN_S) $(LIBDIR)/$(GL_LIBRARY).exp ./
+endif
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
