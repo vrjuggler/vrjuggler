@@ -124,6 +124,9 @@ private:
     ConfigChunk*            current_perf_config;
     vpr::Mutex                   perf_buffers_mutex;
 
+    vpr::Mutex                connections_mutex;
+    std::vector<Connect*>     connections;
+
     // PRIVATE utility functions
 
 //      void controlLoop (void* nullParam);
@@ -132,6 +135,12 @@ private:
     void deactivatePerfBuffers();
 
     void setPerformanceTarget (Connect* con);
+
+    /* connections needs to be locked */
+    Connect* getConnect (const std::string&);
+
+
+
 
 
     // These are needed to appease Visual C++ in its creation of DLLs.
