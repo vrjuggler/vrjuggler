@@ -9,6 +9,8 @@ vjXWinKeyboard::vjXWinKeyboard(vjConfigChunk *c) : vjPosition(c), vjDigital(c),
     cout << "     vjKeyboard::vjKeyboard(vjConfigChunk*c) " << endl;
     myThread = NULL;
 
+    oldMouseX = 0; oldMouseY = 0;
+
     int i;
     for(i =0; i < 256; i++)
          m_realkeys[i] = m_keys[i] = 0;
@@ -92,75 +94,78 @@ vjXWinKeyboard::vjXWinKeyboard(vjConfigChunk *c) : vjPosition(c), vjDigital(c),
 int vjXWinKeyboard::StartSampling()
 {
 
-if (myThread == NULL) {
-  //UnUsed// int processID;
-  int i;
+   if (myThread == NULL)
+   {
+      //UnUsed// int processID;
+      int i;
 
-  current = 0;
-  valid = 1;
-  progress = 2;
+      current = 0;
+      valid = 1;
+      progress = 2;
 
-  m_display = XOpenDisplay(NULL);
-  if (m_display == NULL)
-  {
-     cerr << "vjKeyboard::StartSampling() : failed to open display" << endl;
-     return 0;
-  }
-  m_screen = DefaultScreen(m_display);
+      m_display = XOpenDisplay(NULL);
+      if (m_display == NULL)
+      {
+         cerr << "vjKeyboard::StartSampling() : failed to open display" << endl;
+         return 0;
+      }
+      m_screen = DefaultScreen(m_display);
 
-  XVisualInfo vTemplate;
-  long vMask = VisualScreenMask;
-  vTemplate.screen = m_screen;
-  int nVisuals;
+      XVisualInfo vTemplate;
+      long vMask = VisualScreenMask;
+      vTemplate.screen = m_screen;
+      int nVisuals;
 
-  m_visual = XGetVisualInfo( m_display, vMask, &vTemplate, &nVisuals);
-  XVisualInfo* p_visinfo;
-  for(i = 0, p_visinfo = m_visual; i < nVisuals; i++, p_visinfo++)
-  {
-    if (p_visinfo->depth > 8)
-    {
-	m_visual = p_visinfo;
-        break;
-    }
-  }
+      m_visual = XGetVisualInfo( m_display, vMask, &vTemplate, &nVisuals);
+      XVisualInfo* p_visinfo;
+      for (i = 0, p_visinfo = m_visual; i < nVisuals; i++, p_visinfo++)
+      {
+         if (p_visinfo->depth > 8)
+         {
+            m_visual = p_visinfo;
+            break;
+         }
+      }
 
-  if (i == nVisuals)
-  {
-    cerr << "vjKeyboard::StartSampling() : find visual failed" << endl;
-    return 0;
-  }
+      if (i == nVisuals)
+      {
+         cerr << "vjKeyboard::StartSampling() : find visual failed" << endl;
+         return 0;
+      }
 
-  m_swa.colormap = XCreateColormap(m_display,
-                                   RootWindow(m_display,m_visual->screen),
-                                   m_visual->visual, AllocNone);
-  m_swa.border_pixel = 0;
-  m_swa.event_mask = ExposureMask | StructureNotifyMask | KeyPressMask;
-  CheckGeometry();
+      m_swa.colormap = XCreateColormap(m_display,
+                                       RootWindow(m_display,m_visual->screen),
+                                       m_visual->visual, AllocNone);
+      m_swa.border_pixel = WhitePixel(m_display,m_screen);
+      m_swa.event_mask = ExposureMask | StructureNotifyMask | KeyPressMask;
+      m_swa.background_pixel = BlackPixel(m_display,m_screen);
+      CheckGeometry();
 
-  m_window = CreateWindow ( DefaultRootWindow(m_display) ,
-		       1, BlackPixel(m_display,m_screen),
-             WhitePixel(m_display,m_screen), ExposureMask |
-		StructureNotifyMask |
-		KeyPressMask | KeyReleaseMask | ButtonPressMask |
-		ButtonReleaseMask | ButtonMotionMask | PointerMotionMask);
-  SetHints(m_window, instName , "VJm_keys" , "VJKeyboard2", "VJInputD" );
-  XSelectInput(m_display,m_window, KeyPressMask | KeyReleaseMask | ButtonPressMask |
-		ButtonReleaseMask);
-  XMapWindow(m_display, m_window);
-  XFlush(m_display);
-  XRaiseWindow(m_display,m_window);
+      m_window = CreateWindow ( DefaultRootWindow(m_display) ,
+                                1, BlackPixel(m_display,m_screen),
+                                WhitePixel(m_display,m_screen), ExposureMask |
+                                StructureNotifyMask |
+                                KeyPressMask | KeyReleaseMask | ButtonPressMask |
+                                ButtonReleaseMask | ButtonMotionMask | PointerMotionMask);
+      SetHints(m_window, instName , "VJm_keys" , "VJKeyboard2", "VJInputD" );
+      XSelectInput(m_display,m_window, KeyPressMask | KeyReleaseMask | ButtonPressMask |
+                   ButtonReleaseMask);
+      XMapWindow(m_display, m_window);
+      XFlush(m_display);
+      XRaiseWindow(m_display,m_window);
+      XClearWindow(m_display,m_window);    // Try to clear the background
 
 
-  vjDEBUG(0) << "vjKeyboard::StartSampling() : ready to go.." << endl << vjDEBUG_FLUSH;
+      vjDEBUG(0) << "vjKeyboard::StartSampling() : ready to go.." << endl << vjDEBUG_FLUSH;
 
-  //UnUsed// vjKeyboard* devicePtr = this;
-  void Samplem_keys(void*);
+      //UnUsed// vjKeyboard* devicePtr = this;
+      void Samplem_keys(void*);
 
-  myThread = (vjThread *) 1;
-  return 1;
+      myThread = (vjThread *) 1;
+      return 1;
 
-  }
-  else return 0; // already sampling
+   }
+   else return 0; // already sampling
 
 
 }
@@ -322,8 +327,6 @@ void vjXWinKeyboard::UpdKeys()
 {
    XEvent event;
    KeySym key;
-   static int oldx;
-   static int oldy;
    Window win1, win2;
    int wX, wY, rootX, rootY;
    unsigned int mask;
@@ -356,27 +359,33 @@ void vjXWinKeyboard::UpdKeys()
    XQueryPointer(m_display, m_window, &win1, &win2, &rootX, &rootY,
 		   &wX, &wY, &mask);
 	
-   if ((rootX - oldx) > 0)
-      m_keys[VJMOUSE_POSX] = (rootX - oldx) * m_mouse_sensitivity;
+   //vjDEBUG(0) << "XWin Mouse: delta X: " << setw(3) << (rootX - oldMouseX)
+   //           << "   delta Y: " << setw(3) << (rootY - oldMouseY) << endl << vjDEBUG_FLUSH;
+
+   int delta_x = (rootX - oldMouseX);
+   int delta_y = (rootY - oldMouseY);
+
+   if (delta_x > 0)
+      m_keys[VJMOUSE_POSX] = delta_x * m_mouse_sensitivity;
    else
       m_keys[VJMOUSE_POSX] = 0;
 
-   if ((rootX - oldx) < 0)
-      m_keys[VJMOUSE_NEGX] = -(rootX - oldx) * m_mouse_sensitivity;
+   if (delta_x < 0)
+      m_keys[VJMOUSE_NEGX] = -delta_x * m_mouse_sensitivity;
    else
       m_keys[VJMOUSE_NEGX] = 0;
 
-   if ((rootY - oldy) > 0)
-      m_keys[VJMOUSE_POSY] = (rootY - oldy) * m_mouse_sensitivity;
+   if (delta_y > 0)     // Mouse moving down
+      m_keys[VJMOUSE_POSY] = delta_y * m_mouse_sensitivity;
    else
       m_keys[VJMOUSE_POSY] = 0;
 
-   if ((rootY - oldy) > 0)
-      m_keys[VJMOUSE_NEGY] = -(rootY - oldy) * m_mouse_sensitivity;
+   if (delta_y < 0)     // Mouse moving up
+      m_keys[VJMOUSE_NEGY] = -delta_y * m_mouse_sensitivity;
    else
       m_keys[VJMOUSE_NEGY] = 0;
 
-  oldx = rootX; oldy = rootY;
+  oldMouseX = rootX; oldMouseY = rootY;
 
    m_keys[VJMBUTTON1] = ((mask | Button1Mask) == mask) ? 1 : 0;
    m_keys[VJMBUTTON2] = ((mask | Button2Mask) == mask) ? 1 : 0;
