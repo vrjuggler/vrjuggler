@@ -2,6 +2,13 @@ DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
 
 ==[ 0.1.97 ]=========================
+Jul-13-2000 cjust     Environment Manager works under NT
+                      Config files can have includes for chunkdesc files
+                      Config file includes now use relative paths correctly
+                      Vjcontrol fixes for editing embedded chunks
+                      Vjcontrol internal event architecture expanded
+                      Vjcontrol componentization (partial)
+                      Numerous fixes in ConfigChunkDB code
 Jul-13-2000 allenb    Initial ChangeLog file started
 Jul-11-2000 allenb    Rewrote the way that threads call self()
                       Rewrote thread specific data
