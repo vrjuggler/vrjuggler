@@ -45,38 +45,46 @@
 
 namespace jccl {
    
-Property::Property (PropertyDesc *pd): value() {
+Property::Property (PropertyDesc *pd): mValues() {
     //cout << "Property(): desc is '" << flush << *pd << "'" << endl;
     int j;
     VarValue *v;
 
-    validation = 1;
+    mValidation = 1;
 
     pd->assertValid();
-    description = pd;
+    mDescription = pd;
 
-    num = pd->getNumAllowed();
-    type = pd->getType();
-    embeddesc.reset(NULL);
+    mNum = pd->getNumAllowed();
+    mType = pd->getType();
+    mEmbedDesc.reset(NULL);
 
-    if (type == T_EMBEDDEDCHUNK) {
-        EnumEntry *e = description->getEnumEntryAtIndex (0);
+    if (mType == T_EMBEDDEDCHUNK) {
+        EnumEntry *e = mDescription->getEnumEntryAtIndex (0);
         if (e)
-            embeddesc = ChunkFactory::instance()->getChunkDesc (e->getName());
+            mEmbedDesc = ChunkFactory::instance()->getChunkDesc (e->getName());
     }
 
     /* the idea here is that if num == -1 we can add values to
      * a property, e.g. add another active wall.
      * otherwise we can just set the extant values.
      */
-    if (num != -1) {
+    if (mNum != -1) {
         /* we're filling the vector with num copies of a
          * default VarValue */
-        for (j = 0; j < num; j++ ) {
+        for (j = 0; j < mNum; j++ ) {
             v = createVarValue (j);
-            value.push_back(v);
+            mValues.push_back(v);
         }
     }
+}
+
+
+
+Property::Property (const Property& p):mValues() {
+    mDescription = NULL;
+    mValidation = 1;
+    *this = p;
 }
 
 
@@ -86,18 +94,18 @@ VarValue *Property::createVarValue (int i) {
 
     // if i == -1, we're just tacking onto the end
     if (i == -1)
-        i = value.size();
-    if (type == T_EMBEDDEDCHUNK) {
-        ConfigChunkPtr ch = ChunkFactory::instance()->createChunk (embeddesc);
-        if (description->getValueLabelsSize() > i)
-            ch->setProperty ("Name", description->getValueLabel(i));
+        i = mValues.size();
+    if (mType == T_EMBEDDEDCHUNK) {
+        ConfigChunkPtr ch = ChunkFactory::instance()->createChunk (mEmbedDesc);
+        if (mDescription->getValueLabelsSize() > i)
+            ch->setProperty ("Name", mDescription->getValueLabel(i));
         else {
-            ch->setProperty ("Name", description->getName());
+            ch->setProperty ("Name", mDescription->getName());
         }
         return new VarValue (ch);
     }
     else
-        return new VarValue (type);
+        return new VarValue (mType);
 }
 
 
@@ -105,31 +113,23 @@ Property::~Property () {
 
     unsigned int i;
 
-    for (i = 0; i < value.size(); i++)
-        delete (value)[i];
+    for (i = 0; i < mValues.size(); i++)
+        delete mValues[i];
 
-    validation = 0;
-}
-
-
-
-Property::Property (const Property& p):value() {
-    description = NULL;
-    validation = 1;
-    *this = p;
+    mValidation = 0;
 }
 
 
 
 #ifdef JCCL_DEBUG
 void Property::assertValid () const {
-    vprASSERT (validation == 1 && "Trying to use deleted Property");
+    vprASSERT (mValidation == 1 && "Trying to use deleted Property");
 
-    for (unsigned int i = 0; i < value.size(); i++)
-        value[i]->assertValid();
+    for (unsigned int i = 0; i < mValues.size(); i++)
+        mValues[i]->assertValid();
 
-    if (description)
-        description->assertValid();
+    if (mDescription)
+        mDescription->assertValid();
 }
 #endif
 
@@ -144,20 +144,20 @@ Property& Property::operator= (const Property& p) {
     if (&p == this)
         return *this;
 
-    description = p.description;
-    type = p.type;
-    units = p.units;
-    embeddesc = p.embeddesc;
-    num = p.num;
+    mDescription = p.mDescription;
+    mType = p.mType;
+    mUnits = p.mUnits;
+    mEmbedDesc = p.mEmbedDesc;
+    mNum = p.mNum;
 
 
-    for (i = 0; i < value.size(); i++)
-        delete (value[i]);
+    for (i = 0; i < mValues.size(); i++)
+        delete (mValues[i]);
 
-    value.clear();
+    mValues.clear();
 
-    for (i = 0; i < p.value.size(); i++) {
-        value.push_back (new VarValue(*(p.value[i])));
+    for (i = 0; i < p.mValues.size(); i++) {
+        mValues.push_back (new VarValue(*(p.mValues[i])));
     }
     return *this;
 }
@@ -168,12 +168,12 @@ bool Property::operator== (const Property& p) const {
     assertValid();
     p.assertValid();
 
-    if (description != p.description)
+    if (mDescription != p.mDescription)
         return false;
-    if (value.size() != p.value.size())
+    if (mValues.size() != p.mValues.size())
         return false;
-    for (unsigned int i = 0; i < value.size(); i++)
-        if (*(value[i]) != *(p.value[i]))
+    for (unsigned int i = 0; i < mValues.size(); i++)
+        if (*(mValues[i]) != *(p.mValues[i]))
             return false;
     return true;
 }
@@ -183,28 +183,17 @@ bool Property::operator== (const Property& p) const {
 bool Property::applyUnits (CfgUnit u) {
     assertValid();
 
-    if (type == T_DISTANCE) {
-        for (unsigned int j = 0; j < value.size(); j++)
+    if (mType == T_DISTANCE) {
+        for (unsigned int j = 0; j < mValues.size(); j++)
             setValue( toFeet (getValue(j), u), j);
         return true;
     }
     else {
-        //cerr << "Units may only be applied to Distance values." <<endl;
+        //cerr << "Units may only be applied to Distance mValuess." <<endl;
         return false;
     }
 }
 
-
-
-
-EnumEntry* Property::getEnumEntryWithValue (int val) const {
-    assertValid();
-
-    // gets an enumentry based on the value, instead of the name
-    VarValue v(T_INT);
-    v = val;
-    return description->getEnumEntryWithValue (v);
-}
 
 
 
@@ -220,10 +209,10 @@ std::ostream& operator << (std::ostream &out, Property& p) {
 const VarValue& Property::getValue (unsigned int ind) const {
     assertValid();
 
-    if (ind >= value.size()) {
+    if (ind >= mValues.size()) {
         return VarValue::getInvalidInstance();
     }
-    return *((value)[ind]);
+    return *((mValues)[ind]);
 }
 
 
@@ -231,7 +220,7 @@ const VarValue& Property::getValue (unsigned int ind) const {
 int Property::getNum () const {
     assertValid();
 
-    return value.size();
+    return mValues.size();
 }
 
 
@@ -239,14 +228,14 @@ int Property::getNum () const {
 const std::string& Property::getName () const {
     assertValid();
 
-    return description->getName();
+    return mDescription->getName();
 }
 
 
 const std::string& Property::getToken () const {
     assertValid();
 
-    return description->getToken();
+    return mDescription->getToken();
 }
 
 
@@ -256,11 +245,11 @@ bool Property::preSet (unsigned int ind) {
     unsigned int i;
     VarValue *v;
 
-    if (ind >= value.size()) {
-        if (num == -1) {
-            for (i = value.size(); i <= ind; i++) {
+    if (ind >= mValues.size()) {
+        if (mNum == -1) {
+            for (i = mValues.size(); i <= ind; i++) {
                 v = createVarValue();
-                value.push_back(v);
+                mValues.push_back(v);
             }
             return true;
         }
@@ -277,7 +266,7 @@ bool Property::setValue (int val, int ind ) {
 
     if (!preSet(ind))
         return false;
-    *((value)[ind]) = val;
+    *((mValues)[ind]) = val;
     return true;
 }
 
@@ -288,7 +277,7 @@ bool Property::setValue (float val, int ind ) {
 
     if (!preSet(ind))
         return false;
-    *((value)[ind]) = val;
+    *((mValues)[ind]) = val;
     return true;
 }
 
@@ -299,7 +288,7 @@ bool Property::setValue (const std::string& val, int ind) {
 
     if (!preSet(ind))
         return false;
-    *((value)[ind]) = val;
+    *((mValues)[ind]) = val;
     return true;
 }
 
@@ -312,7 +301,7 @@ bool Property::setValue (ConfigChunkPtr val, int ind) {
         vprDEBUG(vprDBG_ERROR, 1) << "Property::Preset failed!\n" << vprDEBUG_FLUSH;
         return false;
     }
-    *(value[ind]) = val;
+    *(mValues[ind]) = val;
     return true;
 }
 
@@ -323,7 +312,7 @@ bool Property::setValue (const VarValue& val, int ind) {
 
     if (!preSet (ind))
         return false;
-    *(value[ind]) = val;
+    *(mValues[ind]) = val;
     return true;
 }
 
@@ -333,13 +322,13 @@ bool Property::tryAssign (int index, const char* val) {
     assertValid();
 
     /* This does some type-checking and translating before just
-     * doing an assign into the right value entry of p. Some of
+     * doing an assign into the right mValues entry of p. Some of
      * this functionality ought to just be subsumed by VarValue
      * itself, but this way we get back some feedback about
      * wether a type mismatch occurred (ie we return false if
      * a type mismatch occurs ).
      *
-     * Incidentally, this is also where string values get
+     * Incidentally, this is also where string Values get
      * mangled into enumeration entries when assigning strings
      * to T_INTs.
      */
@@ -348,15 +337,15 @@ bool Property::tryAssign (int index, const char* val) {
     float f;
     bool b;
 
-    if (type != T_CHUNK) {          // T_CHUNKS have enumeration, but they are really strings (or something)
-        EnumEntry* e = getEnumEntry (val);
+    if (mType != T_CHUNK) {          // T_CHUNKS have enumeration, but they are really strings (or something)
+        EnumEntry* e = mDescription->getEnumEntry (val);
         if (e) {
             setValue (e->getValue());
             return true;
         }
     }
 
-    switch (type) {
+    switch (mType) {
     case T_INT:
         i = strtol (val, &endval, 0);
         if (*endval != '\0')
@@ -377,7 +366,7 @@ bool Property::tryAssign (int index, const char* val) {
             b = true;
         else if (!strcasecmp (val, false_TOKEN))
             b = false;
-        else { // we'll try to accept a numeric value
+        else { // we'll try to accept a numeric mValues
             b = strtol (val, &endval, 0) != 0;
             if (endval != '\0') {
                 b = false;
