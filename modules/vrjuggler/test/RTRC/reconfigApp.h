@@ -13,9 +13,9 @@
 #include <fstream.h>
 #include <unistd.h>
 
-#include <gmtl/Wrapper/Vec3.h>
-#include <gmtl/Wrapper/Matrix.h>
-#include <gmtl/Wrapper/Quat.h>
+#include <deprecated/Math/Vec3.h>
+#include <deprecated/Math/Matrix.h>
+#include <deprecated/Math/Quat.h>
 
 #include <vrj/Draw/OGL/GlApp.h>
 #include <vrj/Util/Debug.h>
