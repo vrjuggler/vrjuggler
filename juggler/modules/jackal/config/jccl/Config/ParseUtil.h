@@ -41,12 +41,6 @@
 namespace jccl
 {
 
-/** Converts a char* to a jccl::VarType.
- *  @param str A non-NULL string.
- *  @return The VarType named by str (jccl::VJ_T_INVALID if no match).
- */
-VarType stringToVarType(const std::string& str);
-
 /** Demangle a filename so that it can be passed to open().
  *  @param n A filename.
  *  @param parentfile The name of the file that n is being loaded

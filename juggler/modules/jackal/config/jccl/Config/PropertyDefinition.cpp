@@ -111,7 +111,34 @@ std::string PropertyDefinition::getHelp() const
 
 VarType PropertyDefinition::getVarType() const
 {
-   return stringToVarType(mNode->getAttribute(tokens::VALUETYPE));
+   const std::string str(mNode->getAttribute(tokens::VALUETYPE));
+
+   if (str == jccl::types_tokens::INTEGER)
+   {
+      return T_INT;
+   }
+   if (str == jccl::types_tokens::FLOAT)
+   {
+      return T_FLOAT;
+   }
+   if (str == jccl::types_tokens::BOOLEAN)
+   {
+      return T_BOOL;
+   }
+   if (str == jccl::types_tokens::STRING)
+   {
+      return T_STRING;
+   }
+   if (str == jccl::types_tokens::CONFIGELEMENTPOINTER)
+   {
+      return T_ELEMENT_PTR;
+   }
+   if (str == jccl::types_tokens::CONFIGELEMENT)
+   {
+      return T_CHILD_ELEMENT;
+   }
+
+   return VJ_T_INVALID;
 }
 
 int PropertyDefinition::getNumAllowed() const
