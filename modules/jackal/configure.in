@@ -572,6 +572,7 @@ AC_OUTPUT(jccl-config
           samples/jccl/serverdemo/Makefile
           test/Makefile
           test/TestSuite/Makefile
+          test/TestSuite/java/Makefile
           test/TestSuite/test.defs.mk
           test/TestSuite/TestCases/Makefile
           tools/Makefile
