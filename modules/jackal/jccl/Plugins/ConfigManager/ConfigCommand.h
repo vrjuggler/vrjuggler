@@ -42,84 +42,103 @@
 
 namespace jccl {
 
-class TimedUpdate;
+    //class TimedUpdate;
 class ConfigChunkDB;
 class ChunkDescDB;
 
-class VJ_CLASS_API Command {
-public:
-    float next_fire_time; // milliseconds
-    float refresh_time;      // millisecs
+    class VJ_CLASS_API Command {
 
-public:
-    virtual void call (std::ostream& out) const = 0;
+    public:
+        
+        Command ();
 
-    void resetFireTime (TimeStamp& ts);
+        virtual void call (std::ostream& out) const = 0;
 
-    int operator < (const Command& cmd2) const;
+        virtual const std::string& getProtocolName () const = 0;
+
+    };
+
     
-    virtual const std::string& getName () const = 0;
-};
+    class VJ_CLASS_API PeriodicCommand: public Command {
+
+    public:
+
+        float next_fire_time;
+        const float refresh_time;
+
+        PeriodicCommand (float _refresh_time);
+
+        void resetFireTime (TimeStamp& ts);
+
+        int operator < (const PeriodicCommand& cmd2) const;
+
+    };
 
 
+    //------------- ConfigurationManager Commands -------------------
 
-class VJ_CLASS_API CommandRefresh: public Command {
-private:
-    static const std::string command_name;
 
-public:
-    CommandRefresh();
+    class VJ_CLASS_API CommandRefresh: public Command {
+    private:
+        static const std::string protocol_name;
+
+    public:
+        CommandRefresh();
     
-    virtual void call (std::ostream& out) const;
+        virtual void call (std::ostream& out) const;
 
-    virtual const std::string& getName() const;
-};
-
-
-
-class VJ_CLASS_API CommandSendChunkDB: public Command {
-private:
-    ConfigChunkDB* db;
-    bool all;
-    static const std::string command_name;
-    
-public:
-    CommandSendChunkDB (ConfigChunkDB* _db, bool _all = false);
-
-    virtual void call (std::ostream& out) const;
-
-    virtual const std::string& getName() const;
-};
+        virtual const std::string& getProtocolName() const;
+    };
 
 
 
-class VJ_CLASS_API CommandSendDescDB: public Command {
-private:
-    ChunkDescDB* db;
-    bool all;
-    static const std::string command_name;
+    class VJ_CLASS_API CommandSendChunkDB: public Command {
+    private:
+        ConfigChunkDB* db;
+        bool all;
+        static const std::string protocol_name;
+        
+    public:
+        CommandSendChunkDB (ConfigChunkDB* _db, bool _all = false);
+        
+        virtual void call (std::ostream& out) const;
+        
+        virtual const std::string& getProtocolName() const;
+    };
 
-public:
-    CommandSendDescDB (ChunkDescDB* _db, bool _all = false);
-    
-    virtual void call (std::ostream& out) const;
-
-    virtual const std::string& getName() const;
-};
 
 
+    class VJ_CLASS_API CommandSendDescDB: public Command {
+    private:
+        ChunkDescDB* db;
+        bool all;
+        static const std::string protocol_name;
+        
+    public:
+        CommandSendDescDB (ChunkDescDB* _db, bool _all = false);
+        
+        virtual void call (std::ostream& out) const;
+        
+        virtual const std::string& getProtocolName() const;
+    };
 
-class CommandTimedUpdate: public Command {
-public:
-    TimedUpdate* timed_update;
-    static const std::string command_name;
-    
-    CommandTimedUpdate (TimedUpdate* _tu, float _refresh_time);
-    
-    virtual void call (std::ostream& out) const;
 
-    virtual const std::string& getName () const;
-};
+
+    //------------------ PerfManager Commands --------------------------
+
+    class PerfDataBuffer;
+
+    class CommandWritePerfData: public PeriodicCommand {
+    public:
+        PerfDataBuffer* perf_buffer;
+        static const std::string protocol_name;
+        
+        CommandWritePerfData (PerfDataBuffer *pd, float _refresh_time);
+        
+        virtual void call (std::ostream& out) const;
+        
+        virtual const std::string& getProtocolName () const;
+    };
 
 };
 

@@ -178,13 +178,13 @@ bool XMLConfigCommunicator::interpretDOM_Node (Connect* con, DOM_Node& doc) {
             
             //vprDEBUG(vprDBG_ENV_MGR,4) << "Connect: Sending (requested) chunkdb.\n" << vprDEBUG_FLUSH;
             //vprDEBUG(vprDBG_ENV_MGR,5) << *db << std::endl << vprDEBUG_FLUSH;
-            con->sendCommand (new CommandSendChunkDB (db, true));
+            con->addCommand (new CommandSendChunkDB (db, true));
         }
         else if (!strcasecmp (name, "request_current_descs")) {
             ChunkDescDB* db = ChunkFactory::instance()->getChunkDescDB();
             vprDEBUG(vprDBG_ENV_MGR,4) << "Connect: Sending (requested) chunkdesc.\n" << vprDEBUG_FLUSH;
             vprDEBUG(vprDBG_ENV_MGR,5) << *db << std::endl << vprDEBUG_FLUSH;
-            con->sendCommand (new CommandSendDescDB (db));
+            con->addCommand (new CommandSendDescDB (db));
         }
         else {
             vprDEBUG (vprDBG_ENV_MGR,0) << "Connect: Unrecognized command: '"
