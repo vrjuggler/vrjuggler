@@ -37,76 +37,89 @@
 #include <vpr/Util/Debug.h>
 
 
-int
-main (int argc, char* argv[]) {
-    vpr::InetAddr remote_addr;
-    vpr::SocketStream* sock;
+int main (int argc, char* argv[])
+{
+   vpr::InetAddr remote_addr;
+   vpr::SocketStream* sock;
 
-    // If we got one argument, it is of the form <address>:<port>.
-    if ( argc == 2 ) {
-        if ( ! remote_addr.setAddress(argv[1]).success() ) {
-            fprintf(stderr, "Failed to set address %s\n", argv[1]);
-            return 1;
-        }
+   // If we got one argument, it is of the form <address>:<port>.
+   if ( argc == 2 )
+   {
+      if ( ! remote_addr.setAddress(argv[1]).success() )
+      {
+         fprintf(stderr, "Failed to set address %s\n", argv[1]);
+         return 1;
+      }
 
-        sock = new vpr::SocketStream(vpr::InetAddr::AnyAddr, remote_addr);
-    }
-    // If we got two arguments, they are <address> and <port>.
-    else if ( argc == 3 ) {
-        if ( ! remote_addr.setAddress(argv[1], atoi(argv[2])).success() ) {
-            fprintf(stderr, "Failed to set address %s %s\n", argv[1], argv[2]);
-            return 1;
-        }
+      sock = new vpr::SocketStream(vpr::InetAddr::AnyAddr, remote_addr);
+   }
+   // If we got two arguments, they are <address> and <port>.
+   else if ( argc == 3 )
+   {
+      if ( ! remote_addr.setAddress(argv[1], atoi(argv[2])).success() )
+      {
+         fprintf(stderr, "Failed to set address %s %s\n", argv[1], argv[2]);
+         return 1;
+      }
 
-        sock = new vpr::SocketStream(vpr::InetAddr::AnyAddr, remote_addr);
-    }
-    else {
-        fprintf(stderr, "Usage: %s <address>:<port>\n", argv[0]);
-        fprintf(stderr, "       %s <address> <port>\n", argv[0]);
-        return 1;
-    }
+      sock = new vpr::SocketStream(vpr::InetAddr::AnyAddr, remote_addr);
+   }
+   else
+   {
+      fprintf(stderr, "Usage: %s <address>:<port>\n", argv[0]);
+      fprintf(stderr, "       %s <address> <port>\n", argv[0]);
+      return 1;
+   }
 
-    if ( sock->open().success() ) {
-        char buffer[40];
+   if ( sock->open().success() )
+   {
+      char buffer[40];
 
-        // Connect to the server.
-        if ( sock->connect().success() ) {
-            vpr::ReturnStatus status;
-            vpr::Uint32 bytes;
+      // Connect to the server.
+      if ( sock->connect().success() )
+      {
+         vpr::ReturnStatus status;
+         vpr::Uint32 bytes;
 
-            // Read from teh server.
-            status = sock->read(buffer, 40, bytes,
-                                vpr::Interval(5, vpr::Interval::Sec));
+         // Read from teh server.
+         status = sock->read(buffer, 40, bytes,
+                             vpr::Interval(5, vpr::Interval::Sec));
 
-            if ( status.success() ) {
-                // If we read anything, print it.
-                if ( bytes > 0 ) {
-                    printf("Read %d bytes from server\n", bytes);
-                    printf("    Got '%s'\n", buffer);
-                }
-                else if ( bytes == -1 ) {
-                    printf("Error reading!\n");
-                }
-                else {
-                    printf("What the ???\n");
-                }
+         if ( status.success() )
+         {
+            // If we read anything, print it.
+            if ( bytes > 0 )
+            {
+               printf("Read %d bytes from server\n", bytes);
+               printf("    Got '%s'\n", buffer);
             }
-            else if ( status == vpr::ReturnStatus::Timeout ) {
-                vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-                    << "No resposne from server within timeout period!\n"
-                    << vprDEBUG_FLUSH;
+            else if ( bytes == -1 )
+            {
+               printf("Error reading!\n");
             }
+            else
+            {
+               printf("What the ???\n");
+            }
+         }
+         else if ( status == vpr::ReturnStatus::Timeout )
+         {
+            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+            << "No resposne from server within timeout period!\n"
+            << vprDEBUG_FLUSH;
+         }
 
-            fflush(stdout);
+         fflush(stdout);
 
-            sock->close();
-        }
-    }
-    else {
-        printf("Socket failed to open!\n");
-    }
+         sock->close();
+      }
+   }
+   else
+   {
+      printf("Socket failed to open!\n");
+   }
 
-    delete sock;
+   delete sock;
 
-    return 0;
+   return 0;
 }

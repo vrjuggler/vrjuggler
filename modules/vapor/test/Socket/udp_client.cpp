@@ -36,40 +36,44 @@
 #include <vpr/IO/Socket/SocketDatagram.h>
 
 
-int
-main (int argc, char* argv[]) {
-    vpr::InetAddr remote_addr;
+int main (int argc, char* argv[])
+{
+   vpr::InetAddr remote_addr;
 
-    if ( argc != 3 ) {
-        fprintf(stderr, "Usage: %s <address> <port>\n", argv[0]);
-    }
+   if ( argc != 3 )
+   {
+      fprintf(stderr, "Usage: %s <address> <port>\n", argv[0]);
+   }
 
-    // Create a socket that is sending to a remote host named in the first
-    // argument listening on the port named in the second argument.
-    remote_addr.setAddress(argv[1], atoi(argv[2]));
-    vpr::SocketDatagram sock(vpr::InetAddr::AnyAddr, remote_addr);
+   // Create a socket that is sending to a remote host named in the first
+   // argument listening on the port named in the second argument.
+   remote_addr.setAddress(argv[1], atoi(argv[2]));
+   vpr::SocketDatagram sock(vpr::InetAddr::AnyAddr, remote_addr);
 
-    if ( sock.open().success() ) {
-        char buffer[40];
+   if ( sock.open().success() )
+   {
+      char buffer[40];
 
-        // We only send to one host, so call connect().
-        if ( sock.connect().success() ) {
-            vpr::Uint32 bytes;
+      // We only send to one host, so call connect().
+      if ( sock.connect().success() )
+      {
+         vpr::Uint32 bytes;
 
-            // Read from the server.
-            strcpy(buffer, "Hi, I'm a client");
-            sock.write(buffer, 40, bytes);
+         // Read from the server.
+         strcpy(buffer, "Hi, I'm a client");
+         sock.write(buffer, 40, bytes);
 
-            // Read from the server.
-            vpr::ReturnStatus status = sock.read(buffer, 40, bytes);
+         // Read from the server.
+         vpr::ReturnStatus status = sock.read(buffer, 40, bytes);
 
-            // If the server reasponded, print the result.
-            if ( status.success() ) {
-                printf("Read %d bytes from server\n", bytes);
-                printf("    Got '%s'\n", buffer);
-            }
+         // If the server reasponded, print the result.
+         if ( status.success() )
+         {
+            printf("Read %d bytes from server\n", bytes);
+            printf("    Got '%s'\n", buffer);
+         }
 
-            sock.close();
-        }
-    }
+         sock.close();
+      }
+   }
 }
