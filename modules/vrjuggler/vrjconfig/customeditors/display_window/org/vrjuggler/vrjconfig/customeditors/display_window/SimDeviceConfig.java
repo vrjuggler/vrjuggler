@@ -78,6 +78,72 @@ public class SimDeviceConfig
    }
 
    /**
+    * Simple constructor for a simulated device type's config element.
+    * This looks in the context for all proxies of then given type pointing at
+    * the given simulated device's config element and all aliases referring to
+    * those discovered proxies.  For device types that allow multiple proxy
+    * types to be used, use the constructor overload that performs an untyped
+    * proxy search.
+    *
+    * @param ctx                the context where the config element is used
+    * @param simDeviceElt       the config element for a Juggler simulated
+    *                           device type
+    * @param proxyTypeName      the name of the proxy type that can point at
+    *                           simDeviceElt
+    *
+    * @see #SimDeviceConfig(ConfigContext,ConfigElement)
+    */
+   public SimDeviceConfig(ConfigContext ctx, ConfigElement simDeviceElt,
+                          String proxyTypeName)
+   {
+      device = simDeviceElt;
+
+      findTypedProxies(ctx, proxyTypeName);
+
+      if ( proxies.size() == 0 )
+      {
+         System.out.println("No proxy found for " + device.getName());
+      }
+      else
+      {
+         findAliases(ctx);
+      }
+   }
+
+   /**
+    * Simple constructor for a simulated device type's config element.
+    * This looks in the context for all proxies of then given type pointing at
+    * the given simulated device's config element and all aliases referring to
+    * those discovered proxies.  For device types that allow multiple proxy
+    * types to be used, use the constructor overload that performs an untyped
+    * proxy search.
+    *
+    * @param ctx                the context where the config element is used
+    * @param simDeviceElt       the config element for a Juggler simulated
+    *                           device type
+    * @param proxyType          the config definition for the proxy type that
+    *                           can point at simDeviceElt
+    *
+    * @see #SimDeviceConfig(ConfigContext,ConfigElement)
+    */
+   public SimDeviceConfig(ConfigContext ctx, ConfigElement simDeviceElt,
+                          ConfigDefinition proxyType)
+   {
+      device = simDeviceElt;
+
+      findTypedProxies(ctx, proxyType);
+
+      if ( proxies.size() == 0 )
+      {
+         System.out.println("No proxy found for " + device.getName());
+      }
+      else
+      {
+         findAliases(ctx);
+      }
+   }
+
+   /**
     * Device + proxy list constructor.  This constructor assumes that the
     * given list of proxy config elements is both correct (the proxies
     * refer to the givem simulated device config element) and complete (the
@@ -228,6 +294,12 @@ public class SimDeviceConfig
       return device.getName();
    }
 
+   /**
+    * Searches the context for any proxy that points to our config element.
+    * Proxy config elements are determined by checking the element's config
+    * definition for a parent of type EditorConstants.PROXY_TYPE.  This is a
+    * slow search, but it is exhaustive.
+    */
    private void findProxies(ConfigContext ctx)
    {
       ConfigBroker broker = new ConfigBrokerProxy();
@@ -256,6 +328,33 @@ public class SimDeviceConfig
       }
    }
 
+   private void findTypedProxies(ConfigContext ctx, String proxyTypeName)
+   {
+      ConfigBroker broker = new ConfigBrokerProxy();
+      findTypedProxies(ctx, broker.getRepository().get(proxyTypeName));
+   }
+
+   private void findTypedProxies(ConfigContext ctx, ConfigDefinition proxyType)
+   {
+      ConfigBroker broker = new ConfigBrokerProxy();
+      List proxy_elts =
+         ConfigUtilities.getElementsWithDefinition(broker.getElements(ctx),
+                                                   proxyType);
+
+      for ( Iterator i = proxy_elts.iterator(); i.hasNext(); )
+      {
+         ConfigElement cur_elt = (ConfigElement) i.next();
+         ConfigElementPointer dev_ptr =
+            (ConfigElementPointer) cur_elt.getProperty(DEVICE_PROPERTY, 0);
+
+         if ( dev_ptr.getTarget() != null &&
+              dev_ptr.getTarget().equals(device.getName()) )
+         {
+            proxies.add(cur_elt);
+         }
+      }
+   }
+
    private void findAliases(ConfigContext ctx)
    {
       ConfigBroker broker = new ConfigBrokerProxy();
@@ -267,7 +366,7 @@ public class SimDeviceConfig
       {
          ConfigElement cur_elt = (ConfigElement) i.next();
          ConfigElementPointer proxy_ptr =
-            (ConfigElementPointer) cur_elt.getProperty("proxy", 0);
+            (ConfigElementPointer) cur_elt.getProperty(PROXY_PROPERTY, 0);
 
          for ( Iterator j = proxies.iterator(); j.hasNext(); )
          {
