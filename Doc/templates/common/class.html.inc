@@ -2,8 +2,6 @@
   Main page for each class/struct/union.  It defines the frame layout for
   the page.
   This is intended to be shared between multiple sets of templates.
-
-  $Id$
  -->
 
 <HEAD>

@@ -4,8 +4,6 @@
   some general heading information.
   While this is specific to VR Juggler, it could be modified to be used for
   more general-purpose functionality.
-
-  $Id$
  -->
 
 <TABLE BORDER="0" CELLPADDING="3" WIDTH="100%">

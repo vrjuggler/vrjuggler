@@ -2,8 +2,6 @@
   This file is specific to the VR Juggler documentation layout and template
   information describing a method's contract.  It inserts a table with the
   heading "Contract" and body containing the method's contract.
-
-  $Id$
  -->
 
 <TABLE BORDER="1" WIDTH="100%">

@@ -4,8 +4,6 @@
   looping over all members) will be listed with arguments and a link to that
   method's description.
   This can be used anywhere looping over members is done.
-
-  $Id$
  -->
 
 {if func}
