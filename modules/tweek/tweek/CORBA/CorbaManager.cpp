@@ -180,6 +180,7 @@ vpr::ReturnStatus CorbaManager::init(const std::string& local_id, int& argc,
          << "Caught CORBA::Exception during initialization.\n"
          << vprDEBUG_FLUSH;
    }
+#ifdef OMNIORB_VER
    catch (omniORB::fatalException& fe)
    {
       status.setCode(vpr::ReturnStatus::Fail);
@@ -192,6 +193,7 @@ vpr::ReturnStatus CorbaManager::init(const std::string& local_id, int& argc,
       vprDEBUG_NEXT(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
          << "  mesg: " << fe.errmsg() << std::endl << vprDEBUG_FLUSH;
    }
+#endif
    catch(...)
    {
       vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
