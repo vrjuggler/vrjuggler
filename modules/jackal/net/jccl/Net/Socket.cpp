@@ -29,8 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-#include <jccl/JackalServer/Socket.h>
+#include <jccl/Net/Socket.h>
 
 #ifndef VPR_OS_Win32
 
@@ -43,7 +42,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
-#include <jccl/JackalServer/SockStream.h>
+#include <jccl/Net/SockStream.h>
 
 namespace jccl {
 
@@ -150,7 +149,7 @@ SocketPosix* SocketPosix::accept () {
 /****************************** Winsock2 Version ***************************/
 
 #include <winsock2.h>
-#include <jccl/JackalServer/SockStream.h>
+#include <jccl/Net/SockStream.h>
 
 namespace jccl {
 

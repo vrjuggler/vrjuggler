@@ -29,8 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-#include <jccl/JackalServer/NetCommunicator.h>
+#include <jccl/Net/NetCommunicator.h>
 
 namespace jccl {
 

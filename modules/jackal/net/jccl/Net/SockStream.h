@@ -29,7 +29,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 #ifndef _JCCL_SOCKSTREAM_H_
 #define _JCCL_SOCKSTREAM_H_
 

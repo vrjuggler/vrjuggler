@@ -29,12 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-// File/socket io for JackalServer
-
-
-#include <jccl/JackalServer/Connect.h>
+#include <jccl/Net/Connect.h>
 #include <jccl/Config/ChunkDescDB.h>
 #include <jccl/Config/ConfigChunkDB.h>
 //#include <jccl/Config/ConfigChunk.h>
@@ -42,6 +37,7 @@
 #include <jccl/Config/ConfigTokens.h>
 #include <vpr/System.h>
 
+// File/socket io for JackalServer
 
 namespace jccl {
 
