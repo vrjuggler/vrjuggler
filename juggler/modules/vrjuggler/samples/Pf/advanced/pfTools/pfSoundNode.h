@@ -37,7 +37,6 @@
 
 #include <Performer/pr/pfLinMath.h>
 
-//#include <vrj/Math/Coord.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Draw/Pf/PfUtil.h>
 #include <Performer/pf/pfDCS.h>
@@ -50,9 +49,10 @@
  * This node automatically updates the Sound's position information.
  * You should keep a pointer to the Sound, so that you can trigger
  * and change other properties of it.
+ *
  * @note This pfSoundNode does not trigger the Sound object, you must do that.
  */
-class VJ_CLASS_API pfSoundNode : public pfDCS
+class pfSoundNode : public pfDCS
 {
 public:
    /**
@@ -61,7 +61,8 @@ public:
     *  who manages this memory?  should be sound manager... but...
     *  what if it wasn't created by the manager?
     */
-   pfSoundNode( const std::string& soundHandle, bool isPositional = true );
+   pfSoundNode(const std::string& soundHandle, bool isPositional = true);
+
    virtual ~pfSoundNode()
    {
    }
@@ -79,9 +80,11 @@ public:
    }
 
    /** Sets the listener. */
-   void setObs( float x, float y, float z )
+   void setObs(const float x, const float y, const float z)
    {
-      mX = x; mY = y; mZ = z;
+      mX = x;
+      mY = y;
+      mZ = z;
    }
 
    const std::string& sound() const
@@ -89,12 +92,12 @@ public:
       return mSound;
    }
 
-   void setSound( const std::string& sound )
+   void setSound(const std::string& sound)
    {
       mSound = sound;
    }
 
-   void setPositional( bool isPositional)
+   void setPositional(const bool isPositional)
    {
       mIsPositional = isPositional;
    }
@@ -102,8 +105,9 @@ public:
 
 
 public:  // APP traversal
-   virtual int app( pfTraverser* );
-   virtual int needsApp( void )
+   virtual int app(pfTraverser*);
+
+   virtual int needsApp()
    {
       return TRUE;
    }
@@ -116,14 +120,14 @@ protected:
 
 public:  // Required for Performer class
    static void init();
-   static pfType* getClassType( void )
+
+   static pfType* getClassType()
    {
       return classType;
    }
 
 private:
    static pfType* classType;
-
 };
 
 

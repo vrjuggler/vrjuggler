@@ -155,6 +155,12 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\pfTools\pfSoundNode.cpp">
+			</File>
+			<File
+				RelativePath="..\pfTools\pfSoundTraverser.cpp">
+			</File>
+			<File
 				RelativePath="..\nav\pfTerryBoxCollide.cpp">
 			</File>
 			<File
@@ -220,6 +226,12 @@
 			</File>
 			<File
 				RelativePath="..\pfTools\pfNavDCS.h">
+			</File>
+			<File
+				RelativePath="..\pfTools\pfSoundNode.h">
+			</File>
+			<File
+				RelativePath="..\pfTools\pfSoundTraverser.h">
 			</File>
 			<File
 				RelativePath="..\nav\pfPogoCollider.h">
