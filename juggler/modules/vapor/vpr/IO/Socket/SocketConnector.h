@@ -95,22 +95,7 @@ public:
 protected:
    // Make sure we have opened the socket
    // If not, then open it with the given params
-   bool checkOpen(SocketStream& newStream)
-   {
-      vpr::ReturnStatus status;
-
-      if (!newStream.isOpen())
-      {
-          status = newStream.open();
-
-          if(!status.success())
-          {
-             vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "vpr::Connector:CheckOpen: Failed to open socket\n" << vprDEBUG_FLUSH;
-          }
-      }
-
-      return status.success();
-   }
+   bool checkOpen(SocketStream& newStream);
 
    // Do preconnection rituals
    // - If not bound, then bind to local addr
