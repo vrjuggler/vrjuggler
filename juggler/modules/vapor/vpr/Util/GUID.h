@@ -45,6 +45,7 @@
 #include <vpr/vprConfig.h>
 
 #include <string>
+#include <ctype.h>
 //#include <uuid/sysdep.h>
 //#include <uuid/uuid.h>
 
@@ -144,7 +145,7 @@ public:
    GUID (const char* guid_string)
    {
       vprASSERT( (guid_string != NULL) && "Tried to initialize with NULL ptr");
-      vprASSERT( ((*guid_string) >= 0) && "Possibly invalid pointer passed to constructor");
+      vprASSERT( (isalpha(*guid_string) || isdigit(*guid_string)) && "Possibly invalid pointer passed to constructor");
       if(NULL != guid_string)
       {
          std::string temp(guid_string);
