@@ -326,11 +326,22 @@ sub configureModule ($)
       my $mod_path = $depencency->getPath();
 
       mkpath("$mod_path", 1, 0755) unless -d "$mod_path";
-      chdir("$mod_path")
-         or warn "WARNING: Could not chdir to $mod_path\n";
+
+      # Do not try to proceed with $dependency unless we can chdir to
+      # $mod_path.
+      unless ( chdir("$mod_path") )
+      {
+         warn "WARNING: Could not chdir to $mod_path: $!\n";
+         next;
+      }
 
       my $src_root;
 
+      # Dependeing on the value of $base_dir, assign $src_root such that it
+      # is an absolute path.
+      # XXX: This creates a problem on Win32 with $(srcdir) in generated
+      # makefiles!  Win32 utilities will not understand the Cygwin path, but
+      # they would understand a relative path...
       if ( $base_dir =~ /^\// )
       {
          $src_root = "$base_dir";
