@@ -83,9 +83,8 @@ public:
       //mThread = NULL; -- Should be done in base constructor
 
       mPrevX = 0; mPrevY = 0;
-      mLockState = Unlocked;     // Initialize to unlocked.
+      mLockState = Unlocked;                    // Initialize to unlocked.
       mExitFlag = false;
-      mHandleEventsHasBeenCalled = false;      // Initialize it to not being called yet
       mWeOwnTheWindow = true;
    }
    ~KeyboardXWin() { stopSampling();}
@@ -150,9 +149,7 @@ private:
    void unlockMouse();
 
 protected:
-   bool         mWeOwnTheWindow;       // True if this class owns the window (is reposible for opening and closing)
-                                       // NOTE: In a case where it does not, then the window vars must be set prior
-                                       //    to starting the controlLoop (startSampling)
+   bool         mWeOwnTheWindow;       // True if this class owns the window (is reposible for opening, closing, and event processing)                                       
       
    ::Window       m_window;
    ::XVisualInfo* m_visual;
@@ -167,9 +164,7 @@ protected:
    int      m_keys[256];         // (0,*): The num key presses during an UpdateData (ie. How many keypress events)
    int      m_curKeys[256];      // (0,*): Copy of m_keys that the user reads from between updates
    int      m_realkeys[256];     // (0,1): The real keyboard state, all events processed (ie. what is the key now)
-   vpr::Mutex  mKeysLock;           // Must hold this lock when accessing m_keys OR mHandleEventsHasBeenCalled
-   bool     mHandleEventsHasBeenCalled;  // This flag keeps track of wether or not HandleEvents has been called since the last updateData.
-                                    // It is used by updateData to make sure we don't get a "blank" update where no keys are pressed.
+   vpr::Mutex  mKeysLock;           // Must hold this lock when accessing m_keys
    bool     mExitFlag;           // Should we exit
 
    lockState   mLockState;       // The current state of locking

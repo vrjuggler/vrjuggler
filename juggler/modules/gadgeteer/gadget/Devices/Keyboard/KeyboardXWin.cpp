@@ -204,34 +204,31 @@ int KeyboardXWin::onlyModifier(int mod)
 void KeyboardXWin::updateData()
 {
 vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
-   if(mHandleEventsHasBeenCalled)            // If we haven't updated anything, then don't swap stuff
-   {
-      mHandleEventsHasBeenCalled = false;
+   
+// Scale mouse values based on sensitivity
+   m_keys[VJMOUSE_POSX] = int(float(m_keys[VJMOUSE_POSX]) * m_mouse_sensitivity);
+   m_keys[VJMOUSE_NEGX] = int(float(m_keys[VJMOUSE_NEGX]) * m_mouse_sensitivity);
+   m_keys[VJMOUSE_POSY] = int(float(m_keys[VJMOUSE_POSY]) * m_mouse_sensitivity);
+   m_keys[VJMOUSE_NEGY] = int(float(m_keys[VJMOUSE_NEGY]) * m_mouse_sensitivity);
 
-      // Scale mouse values based on sensitivity
-      m_keys[VJMOUSE_POSX] = int(float(m_keys[VJMOUSE_POSX]) * m_mouse_sensitivity);
-      m_keys[VJMOUSE_NEGX] = int(float(m_keys[VJMOUSE_NEGX]) * m_mouse_sensitivity);
-      m_keys[VJMOUSE_POSY] = int(float(m_keys[VJMOUSE_POSY]) * m_mouse_sensitivity);
-      m_keys[VJMOUSE_NEGY] = int(float(m_keys[VJMOUSE_NEGY]) * m_mouse_sensitivity);
+   /*
+   vprDEBUG(vprDBG_ALL,0)   << "gadget::KeyboardXWin::updateData:" << mInstName << " -- "
+                          << "mouse_keys: px:" << m_keys[VJMOUSE_POSX]
+                                     << " nx:" << m_keys[VJMOUSE_NEGX]
+                                     << " py:" << m_keys[VJMOUSE_POSY]
+                                     << " ny:" << m_keys[VJMOUSE_NEGY]
+                                     << std::endl << vprDEBUG_FLUSH;
+   */
 
-      /*
-      vprDEBUG(vprDBG_ALL,0)   << "gadget::KeyboardXWin::updateData:" << mInstName << " -- "
-                             << "mouse_keys: px:" << m_keys[VJMOUSE_POSX]
-                                        << " nx:" << m_keys[VJMOUSE_NEGX]
-                                        << " py:" << m_keys[VJMOUSE_POSY]
-                                        << " ny:" << m_keys[VJMOUSE_NEGY]
-                                        << std::endl << vprDEBUG_FLUSH;
-      */
+   // Copy over values
+   for(unsigned int i=0;i<256;i++)
+      m_curKeys[i] = m_keys[i];
 
-      // Copy over values
-      for(unsigned int i=0;i<256;i++)
-         m_curKeys[i] = m_keys[i];
-
-      // Re-initialize the m_keys based on current key state in realKeys
-      // Set the initial state of the m_key key counts based on the current state of the system
-      for(unsigned int j = 0; j < 256; j++)
-         m_keys[j] = m_realkeys[j];
-   }
+   // Re-initialize the m_keys based on current key state in realKeys
+   // Set the initial state of the m_key key counts based on the current state of the system
+   // this is to ensure that if a key is still down, we get at least one event for it
+   for(unsigned int j = 0; j < 256; j++)
+      m_keys[j] = m_realkeys[j];   
 }
 
 void KeyboardXWin::HandleEvents()
@@ -245,10 +242,7 @@ void KeyboardXWin::HandleEvents()
    const long event_mask = (KeyPressMask | KeyReleaseMask | ButtonPressMask |
                              ButtonReleaseMask | ButtonMotionMask |
                              PointerMotionMask | StructureNotifyMask);
-   mKeysLock.acquire();
-   mHandleEventsHasBeenCalled = true;       // We have been called now -- Tell them to swap data because we don't have events
-   mKeysLock.release();
-
+      
    // Check for events
    // If we own, 
    //  - Wait until we actually have some events -- THIS BLOCKS for an event
@@ -269,7 +263,7 @@ void KeyboardXWin::HandleEvents()
 // In order to copy data over to the m_curKeys array
 vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array for the duration of this function
 
-   mHandleEventsHasBeenCalled = true;       // We have been called now - Tell tehm to swap because we do have data
+      
    // Loop while the event queue contains events for m_window that are part
    // of the given event mask.
    while(have_events_to_check)
@@ -349,10 +343,11 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
             unlockMouse();
          }
 
-         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)    //vprDBG_HVERB_LVL
             << "KeyPress:  " << std::hex << key
             << " state:" << ((XKeyEvent*)&event)->state
             << " ==> " << xKeyToKey(key) << std::endl << vprDEBUG_FLUSH;
+
          break;
 
       // A KeyRelease event occurred.  Flag the key that was released (as a
@@ -445,13 +440,16 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
          switch ( event.xbutton.button )
          {
          case Button1:
-            m_realkeys[VJMBUTTON1] = m_keys[VJMBUTTON1] = 1;
+            m_realkeys[VJMBUTTON1] = 1;
+            m_keys[VJMBUTTON1] += 1;
             break;
          case Button2:
-            m_realkeys[VJMBUTTON2] = m_keys[VJMBUTTON2] = 1;
+            m_realkeys[VJMBUTTON2] = 1;
+            m_keys[VJMBUTTON2] += 1;
             break;
          case Button3:
-            m_realkeys[VJMBUTTON3] = m_keys[VJMBUTTON3] = 1;
+            m_realkeys[VJMBUTTON3] = 1;
+            m_keys[VJMBUTTON3] += 1;
             break;
          }
 
@@ -462,13 +460,13 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
          switch ( event.xbutton.button )
          {
          case Button1:
-            m_realkeys[VJMBUTTON1] = m_keys[VJMBUTTON1] = 0;
+            m_realkeys[VJMBUTTON1] = 0;
             break;
          case Button2:
-            m_realkeys[VJMBUTTON2] = m_keys[VJMBUTTON2] = 0;
+            m_realkeys[VJMBUTTON2] = 0;
             break;
          case Button3:
-            m_realkeys[VJMBUTTON3] = m_keys[VJMBUTTON3] = 0;
+            m_realkeys[VJMBUTTON3] = 0;
             break;
          }
 
@@ -650,11 +648,12 @@ int KeyboardXWin::openTheWindow()
                                     m_visual->visual, AllocNone);
    // Try to make it just a black window
    m_swa.border_pixel = WhitePixel(m_display,m_screen);
-   m_swa.event_mask = ExposureMask | StructureNotifyMask | KeyPressMask;
-   m_swa.background_pixel = BlackPixel(m_display,m_screen);
    unsigned long event_mask = ExposureMask | StructureNotifyMask | KeyPressMask |
                               KeyReleaseMask | ButtonPressMask | ButtonReleaseMask |
                               ButtonMotionMask | PointerMotionMask | StructureNotifyMask;
+   m_swa.event_mask = event_mask;
+   m_swa.background_pixel = BlackPixel(m_display,m_screen);
+   
    m_window = createWindow ( DefaultRootWindow(m_display) ,
                              1,
                              BlackPixel(m_display,m_screen),
