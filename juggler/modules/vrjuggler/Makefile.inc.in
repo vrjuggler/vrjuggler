@@ -133,7 +133,8 @@ AFTERBUILD	= afterbuild
 beforebuild:
 	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
 	@$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
-            -t $(VJROOT_ABS)/vrjuggler-config.in -o $(topdir)/vrjuggler-config
+            -t $(VJROOT_ABS)/vrjuggler-config.in			\
+            -v $(VJROOT_ABS)/VERSION -o $(topdir)/vrjuggler-config
 	@chmod +x $(topdir)/vrjuggler-config
 
 # Things to do after the object files and library are built.
@@ -258,7 +259,7 @@ ifneq (@OS_TYPE@, Win32)
           $(LN_S) $(VJROOT_ABS)/tools/catadf.pl ./catadf.pl
 	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
             -t $(VJROOT_ABS)/vrjuggler-config.in -p 'use_base_dir=yes'	\
-            -o $(instlinks)/bin/vrjuggler-config -x
+            -v $(VJROOT_ABS)/VERSION -o $(instlinks)/bin/vrjuggler-config -x
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$VJ_BASE_DIR to:'
