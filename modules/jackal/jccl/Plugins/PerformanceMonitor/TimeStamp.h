@@ -42,14 +42,14 @@
 #include <vpr/Util/Singleton.h>
 
 
-#if VJ_PERFORMANCE == VJ_PERF_SGI
+#if JCCL_PERFORMANCE == JCCL_PERF_SGI
 
 #include <jccl/Plugins/PerformanceMonitor/TimeStampSGI.h>
 namespace jccl {
 typedef class TimeStampSGI TimeStamp;
 };
 
-#elif VJ_PERFORMANCE == VJ_PERF_POSIX
+#elif JCCL_PERFORMANCE == JCCL_PERF_POSIX
 
 #include <jccl/Plugins/PerformanceMonitor/TimeStampPosix.h>
 namespace jccl {

@@ -32,7 +32,7 @@
 
 #include <jccl/jcclConfig.h>
 
-#ifdef VJ_OS_Win32
+#ifdef JCCL_OS_Win32
 #include <winsock2.h>
 #else
 #include <sys/types.h>

@@ -32,7 +32,7 @@
 
 #include <jccl/JackalServer/Socket.h>
 
-#ifndef VJ_OS_Win32
+#ifndef JCCL_OS_Win32
 
 /***************************** BSD Sockets Version **************************/
 
@@ -127,7 +127,7 @@ SocketPosix* SocketPosix::accept () {
     sockaddr_in servaddr;
     int servsock;
 
-#ifdef VJ_OS_HPUX
+#ifdef JCCL_OS_HPUX
     int len;
 #else
     socklen_t len;
@@ -264,5 +264,5 @@ SocketWin32* SocketWin32::accept () {
 
 };
 
-#endif //ifndef VJ_OS_Win32
+#endif //ifndef JCCL_OS_Win32
 
