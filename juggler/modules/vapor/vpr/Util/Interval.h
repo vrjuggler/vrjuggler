@@ -59,11 +59,16 @@ namespace vpr
 class VPR_CLASS_API Interval
 {
 public:
-   enum Unit { Sec, Msec, Usec };     // Time times
+   /// Time times
+   enum Unit {
+      Sec,     /**< Seconds */
+      Msec,    /**< Millieconds */
+      Usec     /**< Microeconds */
+   };
 
 public:
-   static const Interval NoWait;
-   static const Interval NoTimeout;
+   static const Interval NoWait;     /**< Do not wait at all */
+   static const Interval NoTimeout;  /**< Wait indefinitely */
 
 public:
    Interval()
