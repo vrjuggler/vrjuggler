@@ -132,53 +132,73 @@ CXX_COMPILE	= ${CXX} ${DEFS} ${INCLUDES} ${CPPFLAGS} ${CXXFLAGS}
 # ${ABI}, further settings may be made to allow for building with multiple
 # ABIs.
 # -----------------------------------------------------------------------------
-ABI		= @ABI@
-LIBBITSUF	= @LIBBITSUF@
+ifdef vjABI
+    ifeq (${vjABI}, O32)
+        ABI		= O32
+        INST_SET	= mips2
+        LIBBITSUF	=
+    endif
+    ifeq (${vjABI}, N32_M3)
+        ABI		= N32
+        INST_SET	= mips3
+        LIBBITSUF	= 32
+    endif
+    ifeq (${vjABI}, N32_M4)
+        ABI		= N32
+        INST_SET	= mips4
+        LIBBITSUF	= 32
+    endif
+    ifeq (${vjABI}, 64_M3)
+        ABI		= 64
+        INST_SET	= mips3
+        LIBBITSUF	= 64
+    endif
+    ifeq (${vjABI}, 64_M4)
+        ABI		= 64
+        INST_SET	= mips4
+        LIBBITSUF	= 64
+    endif
+else
+    ABI		= @ABI@
+    INST_SET	= @INST_SET@
+    LIBBITSUF	= @LIBBITSUF@
+endif
+
 PLATFORM	= @PLATFORM@
 
-# C and C++ compiler flags used for compiling a specific ABI.
-_O32_FLAGS	= -o32 -mips2
-_N32_M3_FLAGS	= -n32 -mips3
-_N32_M4_FLAGS	= -n32 -mips4
-_64_M3_FLAGS	= -64 -mips3
-_64_M4_FLAGS	= -64 -mips4
-
-# Depending on the value of ${ABI}, modify variables such as ${CFLAGS} and
-# ${LDOPTS} as necessary to build with the desired ABI.
 ifeq (${ABI}, O32)
-    ARFLAGS	:= ${_O32_FLAGS} ${ARFLAGS}
-    CFLAGS	+= ${_O32_FLAGS}
-    CXXFLAGS	+= ${_O32_FLAGS}
-    LDOPTS	+= ${_O32_FLAGS}
+    ARFLAGS	:= -o32 -mips2 ${ARFLAGS}
+    CFLAGS	+= -o32 -mips2
+    CXXFLAGS	+= -o32 -mips2
+    LDOPTS	+= -o32 -mips2
     LIBBITSUF	=
 endif
-ifeq (${ABI}, N32_M3)
-    ARFLAGS	:= ${_N32_M3_FLAGS} ${ARFLAGS}
-    CFLAGS	+= ${_N32_M3_FLAGS}
-    CXXFLAGS	+= ${_N32_M3_FLAGS}
-    LDOPTS	+= ${_N32_M3_FLAGS}
+ifeq (${ABI}, N32)
+    ARFLAGS	:= -n32 ${ARFLAGS}
+    CFLAGS	+= -n32
+    CXXFLAGS	+= -n32
+    LDOPTS	+= -n32
     LIBBITSUF	= 32
 endif
-ifeq (${ABI}, N32_M4)
-    ARFLAGS	:= ${_N32_M4_FLAGS} ${ARFLAGS}
-    CFLAGS	+= ${_N32_M4_FLAGS}
-    CXXFLAGS	+= ${_N32_M4_FLAGS}
-    LDOPTS	+= ${_N32_M4_FLAGS}
-    LIBBITSUF	= 32
-endif
-ifeq (${ABI}, 64_M3)
-    ARFLAGS	:= ${_64_M3_FLAGS} ${ARFLAGS}
-    CFLAGS	+= ${_64_M3_FLAGS}
-    CXXFLAGS	+= ${_64_M3_FLAGS}
-    LDOPTS	+= ${_64_M3_FLAGS}
+ifeq (${ABI}, 64)
+    ARFLAGS	:= -64 ${ARFLAGS}
+    CFLAGS	+= -64
+    CXXFLAGS	+= -64
+    LDOPTS	+= -64
     LIBBITSUF	= 64
 endif
-ifeq (${ABI}, 64_M4)
-    ARFLAGS	:= ${_64_M4_FLAGS} ${ARFLAGS}
-    CFLAGS	+= ${_64_M4_FLAGS}
-    CXXFLAGS	+= ${_64_M4_FLAGS}
-    LDOPTS	+= ${_64_M4_FLAGS}
-    LIBBITSUF	= 64
+
+ifeq (${INST_SET}, mips3)
+    ARFLAGS	:= -mips3 ${ARFLAGS}
+    CFLAGS	+= -mips3
+    CXXFLAGS	+= -mips3
+    LDOPTS	+= -mips3
+endif
+ifeq (${INST_SET}, mips4)
+    ARFLAGS	:= -mips4 ${ARFLAGS}
+    CFLAGS	+= -mips4
+    CXXFLAGS	+= -mips4
+    LDOPTS	+= -mips4
 endif
 
 # -----------------------------------------------------------------------------
