@@ -34,7 +34,6 @@
 
 #include <string>
 #include <string.h>
-#include <unistd.h>
 #include <vpr/vpr.h>
 #include <vpr/System.h>
 #include <vpr/Util/Assert.h>
@@ -123,7 +122,11 @@ void FastrackStandalone::readloop(void *unused)
    vpr::Uint32 bytes_written;
    vpr::Uint32 sleep_time(10000000/mConf.baud);
 
+   // XXX: Maybe this could be replaced with VPR's signal abstraction?
+#ifndef VPR_OS_Win32
    sigignore(SIGINT);
+#endif
+
    for ( ;; )
    {
       if ( mDoFlush )
