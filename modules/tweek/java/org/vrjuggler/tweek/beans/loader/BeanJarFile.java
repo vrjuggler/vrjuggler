@@ -48,29 +48,29 @@ import java.util.jar.JarFile;
  */
 class BeanJarFile
 {
-   public BeanJarFile (JarFile jar_file, List deps, String class_path)
+   public BeanJarFile (JarFile jarFile, List deps, String classPath)
    {
-      m_jar_file  = jar_file;
-      m_deps      = deps;
-      m_classpath = class_path;
+      this.jarFile      = jarFile;
+      this.dependencies = deps;
+      this.classPath    = classPath;
    }
 
    public JarFile getJarFile ()
    {
-      return m_jar_file;
+      return jarFile;
    }
 
    public List getDependencies ()
    {
-      return m_deps;
+      return dependencies;
    }
 
    public String getClassPath ()
    {
-      return m_classpath;
+      return classPath;
    }
 
-   protected JarFile m_jar_file  = null;
-   protected List    m_deps      = null;
-   protected String  m_classpath = null;
+   protected JarFile jarFile      = null;
+   protected List    dependencies = null;
+   protected String  classPath    = null;
 }

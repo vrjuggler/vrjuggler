@@ -75,7 +75,7 @@ public class BeanLoader
       java.net.URL jar_url = new java.net.URL("jar:" + url + "!/");
       JarURLConnection jar_conn = (JarURLConnection) jar_url.openConnection();
 
-      m_bean_jar = new BeanJarFile(jar_conn.getJarFile(), deps, class_path);
+      mBeanJar = new BeanJarFile(jar_conn.getJarFile(), deps, class_path);
    }
 
    /**
@@ -92,12 +92,12 @@ public class BeanLoader
       if ( ! verifyBean(bean_class) )
       {
          throw new BeanInstantiationException("Bean not found in " +
-                                              m_bean_jar.getJarFile().getName());
+                                              mBeanJar.getJarFile().getName());
       }
 
-      loader.addJarFile(m_bean_jar.getJarFile());
-      loader.extendClassPath(m_bean_jar.getClassPath());
-      loader.addDependencies(m_bean_jar.getDependencies());
+      loader.addJarFile(mBeanJar.getJarFile());
+      loader.extendClassPath(mBeanJar.getClassPath());
+      loader.addDependencies(mBeanJar.getDependencies());
 
       try
       {
@@ -128,11 +128,11 @@ public class BeanLoader
    protected boolean verifyBean (String bean_class)
    {
       boolean found   = false;
-      JarEntry entry  = m_bean_jar.getJarFile().getJarEntry(bean_class + ".class");
+      JarEntry entry  = mBeanJar.getJarFile().getJarEntry(bean_class + ".class");
 
       if ( entry == null )
       {
-         entry = m_bean_jar.getJarFile().getJarEntry(bean_class + ".ser");
+         entry = mBeanJar.getJarFile().getJarEntry(bean_class + ".ser");
 
          if ( entry != null )
          {
@@ -174,5 +174,5 @@ public class BeanLoader
    // Private data members.
    // =========================================================================
 
-   private BeanJarFile m_bean_jar = null; /**< The JAR file holding the Bean */
+   private BeanJarFile mBeanJar = null; /**< The JAR file holding the Bean */
 }
