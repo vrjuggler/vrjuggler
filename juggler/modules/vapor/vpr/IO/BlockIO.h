@@ -748,6 +748,9 @@ protected:
      *                   contents are to be stored.
      * @param length     The number of bytes to be read.
      * @param bytes_read The number of bytes read into the buffer.
+     * @param timeout    The maximum amount of time to wait for data to be
+     *                   available for reading.  This argument is optional and
+     *                   defaults to <code>vpr::Interval::NoTimeout</code>
      *
      * @return <code>vpr::Status::Success</code> is returned if the read
      *         operation completed successfully.<br>
@@ -776,6 +779,9 @@ protected:
      *                   contents are to be stored.
      * @param length     The number of bytes to be read.
      * @param bytes_read The number of bytes read into the buffer.
+     * @param timeout    The maximum amount of time to wait for data to be
+     *                   available for reading.  This argument is optional and
+     *                   defaults to <code>vpr::Interval::NoTimeout</code>
      *
      * @return <code>vpr::Status::Success</code> is returned if the read
      *         operation completed successfully.<br>
@@ -791,7 +797,7 @@ protected:
                            const vpr::Interval timeout = vpr::Interval::NoTimeout) = 0;
 
     /**
-     * Writes the buffer to the I/O device.
+     * Implementation of the <code>write</code> template method.
      *
      * @pre The device is open for writing.
      * @post The given buffer is written to the I/O device, and the number
