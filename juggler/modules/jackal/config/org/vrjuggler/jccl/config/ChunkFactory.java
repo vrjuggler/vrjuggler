@@ -39,7 +39,6 @@ import org.jdom.Element;
 public class ChunkFactory
 {
    static private ChunkDescDB descdb = null;
-   static private ConfigChunkDB default_chunkdb = null;
 
    static public void setChunkDescDB(ChunkDescDB _db)
    {
@@ -49,11 +48,6 @@ public class ChunkFactory
    static public void addChunkDescDB(ChunkDescDB _db)
    {
       descdb.addAll(_db);
-   }
-
-   static public void setDefaultChunkDB(ConfigChunkDB _db)
-   {
-      default_chunkdb = _db;
    }
 
    static public ChunkDesc getChunkDescByToken(String s)
@@ -70,16 +64,6 @@ public class ChunkFactory
    {
       ConfigChunk newchunk = null;
 
-      // XXX: What is this??
-      if (default_chunkdb != null)
-      {
-         List v = default_chunkdb.getOfDescName(s);
-         if (!v.isEmpty())
-         {
-            //System.out.println ("creating chunk from default");
-            newchunk = new ConfigChunk((ConfigChunk)v.get(0));
-         }
-      }
       if (descdb != null)
       {
          List descs = ConfigUtilities.getDescsWithToken(descdb.getAll(), s);
@@ -97,16 +81,6 @@ public class ChunkFactory
    {
       ConfigChunk newchunk = null;
 
-      // XXX: What is this??
-      if (default_chunkdb != null)
-      {
-         List v = ConfigUtilities.getChunksWithDescToken(default_chunkdb.getAll(), s);
-         if (!v.isEmpty())
-         {
-            //System.out.println ("creating chunk from default");
-            newchunk = new ConfigChunk((ConfigChunk)v.get(0));
-         }
-      }
       if (descdb != null)
       {
          List descs = ConfigUtilities.getDescsWithToken(descdb.getAll(), s);
