@@ -429,7 +429,11 @@ setup_omniORB ( )
       fi
 
       if test "x$OS_TYPE" = "xWin32" ; then
-         LIBS="$LIBS -l$tweek_omni_lib -lomnithread /LINK /NODEFAULTLIB:LIBC"
+         omni_win32_libs="-l$tweek_omni_lib -lomnithread -lomniDynamic$OMNI_VER -lws2_32 -ladvapi32 /link /NODEFAULTLIB:libc"
+         changequote(<<, >>)
+         omni_win32_link_args=`echo $omni_win32_libs | sed -e 's/-l\([^ ][^ ]*\)/\1.lib/g'`
+         changequote([, ])
+         LIBS="$LIBS $omni_win32_libs"
       else
          LIBS="$LIBS -l$tweek_omni_lib -lomnithread $tweek_extra_libs"
       fi
@@ -500,10 +504,10 @@ int omni_main_i(int argc, char** const argv)
                CXX_ORB_LIB="$CXX_ORB_LIB -lomniGK_stub"
             fi
 
-            CXX_ORB_LIB_MSVCCC="-l$tweek_omni_lib -lomnithread -lomniDynamic$OMNI_VER -lomniGK_stub"
+            CXX_ORB_LIB_MSVCCC="$omni_win32_libs"
             CXX_ORB_LDFLAGS_MSVCCC="-L$OMNI_LIB_DIR"
 
-            CXX_ORB_LIB_LINK_EXE="$tweek_omni_lib.lib omnithread.lib omniDynamic$OMNI_VER.lib omniGK_stub.lib"
+            CXX_ORB_LIB_LINK_EXE="$omni_win32_link_args"
             CXX_ORB_LDFLAGS_LINK_EXE="/libpath:$OMNI_LIB_DIR"
 
             AC_DEFINE_UNQUOTED(OMNIORB_VER, $OMNI_VER)
