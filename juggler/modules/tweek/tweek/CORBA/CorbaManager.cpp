@@ -37,6 +37,7 @@
 #include <tweek/tweekConfig.h>
 
 #include <vpr/Util/Debug.h>
+#include <vpr/Util/Assert.h>
 
 #include <tweek/CORBA/SubjectManager.h>
 #include <tweek/CORBA/CorbaManager.h>
@@ -80,6 +81,8 @@ void CorbaManager::init (int argc, char** argv)
 
 void CorbaManager::registerSubjectManager (tweek::SubjectManagerImpl* mgr)
 {
+   vprASSERT(! CORBA::is_nil(m_root_context) && "No naming service available");
+
    tweek::SubjectManager_ptr mgr_ptr;
    const char* id   = "SubjectManager";
    const char* kind = "Object";
