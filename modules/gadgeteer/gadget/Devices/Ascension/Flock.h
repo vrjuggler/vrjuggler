@@ -255,6 +255,7 @@ class vjFlock : public vjPosition {
 
 
 private:
+    void controlLoop(void* nullParam);
     void positionCorrect(float&x,float&y,float&z);
     void initCorrectionTable(const char*);
 
