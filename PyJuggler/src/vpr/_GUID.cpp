@@ -74,7 +74,7 @@ void _Export_GUID()
             "Generates a GUID from the given string representation of the GUID using\n"
             "a string.\n"
             "Format: \"8x-4x-4x-2x2x-2x2x2x2x2x2x\"\n\n"
-            "Keyword arguments:\n"
+            "Arguments:\n"
             "guid_string -- A string that is used to initialize a GUID.\n\n"
             "__init__(GUID, 'name')\n"
             "Generates a GUID based on the given name that is part of the namespace\n"
