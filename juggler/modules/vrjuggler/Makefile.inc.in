@@ -111,12 +111,6 @@ PF_LIB_DYNAMIC		= $(PF_LIBRARY).$(DYNAMICLIB_EXT)
 PF_PROF_LIB_STATIC	= $(PF_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
 PF_PROF_LIB_DYNAMIC	= $(PF_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
 
-# On Linux, we have to compile the Performer library with -O for things to
-# link properly.
-#ifeq ($(PLATFORM), Linux)
-#    EXTRA_LDOPTS = -O
-#endif
-
 # Version information.
 PARAM_HEADER	= vrj/vrjParam.h
 BRANCH		= HEAD
