@@ -429,11 +429,25 @@ setup_omniORB ( )
       fi
 
       if test "x$OS_TYPE" = "xWin32" ; then
-         omni_win32_libs="-l$tweek_omni_lib -lomnithread -lomniDynamic$OMNI_VER -lws2_32 -ladvapi32"
+         # XXX: This is utterly pathetic.  What I really want is a way to get
+         # the full omniORB version number and use it to figure out these file
+         # names.
+         orb_rt_file=`ls $OMNI_LIB_DIR/omniORB*_rt.lib`
+         thread_rt_file=`ls $OMNI_LIB_DIR/omnithread*_rt.lib`
+         dynamic_rt_file=`ls $OMNI_LIB_DIR/omniDynamic*_rt.lib`
+
+         # XXX: More hackery.  This strips off the path to the .lib files
+         # along with the .lib extension.  This is needed so that our wrapper
+         # around MSVC++ can translate the -l<libname> argument correctly.
+         orb_rt=`basename $orb_rt_file | sed -e 's/.lib$//'`
+         thread_rt=`basename $thread_rt_file | sed -e 's/.lib$//'`
+         dynamic_rt=`basename $dynamic_rt_file | sed -e 's/.lib$//'`
+
+         omni_win32_libs="-l$orb_rt -l$thread_rt -l$dynamic_rt -lws2_32 -ladvapi32"
          changequote(<<, >>)
          omni_win32_link_args=`echo $omni_win32_libs | sed -e 's/-l\([^ ][^ ]*\)/\1.lib/g'`
          changequote([, ])
-         LIBS="$LIBS $omni_win32_libs /link /NODEFAULTLIB:libc"
+         LIBS="$LIBS $omni_win32_libs"
       else
          LIBS="$LIBS -l$tweek_omni_lib -lomnithread $tweek_extra_libs"
       fi
