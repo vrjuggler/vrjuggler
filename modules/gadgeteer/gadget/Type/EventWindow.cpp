@@ -90,7 +90,9 @@ vpr::ReturnStatus EventWindow::writeObject(vpr::ObjectWriter* writer)
 
    // Serialize all events.
    for(unsigned i = 0; i<mCurEventQueue.size(); ++i)
+   {
       mCurEventQueue[i]->writeObject(writer);
+   }
 
    return vpr::ReturnStatus::Succeed;
 }
@@ -117,6 +119,7 @@ vpr::ReturnStatus EventWindow::readObject(vpr::ObjectReader* reader)
    unsigned int num_keys = reader->readUint16();
    
    vprASSERT(gadget::LAST_KEY == num_keys && "[EventWindow::readObject()] Different number of keys.");
+   
    for ( unsigned int i = 0; i < num_keys; ++i )
    {
       mCurKeys[i] = reader->readUint32();
