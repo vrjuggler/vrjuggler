@@ -154,14 +154,15 @@ public class ConfigBrokerImpl
     * context contains more than one resource, a dialog will prompt the user for
     * which resource they wish to add the element to.
     *
-    * @param context    the context in which to add the chunk
+    * @param context    the context in which to add the element
     * @param elt        the element to add
     *
     * @return  true if the addition was successful, false otherwise
     */
    public boolean add(ConfigContext context, ConfigElement elt)
    {
-      // Get a list of the resources in this context that can handle ConfigChunks
+      // Get a list of the resources in this context that can handle
+      // ConfigElements.
       List resources = context.getResources();
       DataSource target_ds = null;
 
@@ -214,7 +215,7 @@ public class ConfigBrokerImpl
     * If the element does not appear in any resource in the context, this method
     * will return false.
     *
-    * @param context    the context from which to remove the chunk
+    * @param context    the context from which to remove the element
     * @param elt        the element to remove
     *
     * @return  true if the removal was successful, false if the user cancelled
