@@ -1,6 +1,6 @@
 Name: org/vrjuggler/tweek/iconviewer/BeanIconViewer.class
 Java-Bean: True
-Specification-Title: Environment Service
+Specification-Title: Bean Icon Viewer
 Specification-Version: 0.0.1
 Specification-Vendor: vrjuggler.org
 Implementation-Title: org.vrjuggler.tweek.iconviewer.BeanIconViewer
@@ -9,7 +9,7 @@ Implementation-Vendor: vrjuggler.org
 
 Name: org/vrjuggler/tweek/treeviewer/BeanTreeViewer.class
 Java-Bean: True
-Specification-Title: Environment Service
+Specification-Title: Bean Tree Viewer
 Specification-Version: 0.0.1
 Specification-Vendor: vrjuggler.org
 Implementation-Title: org.vrjuggler.tweek.treeviewer.BeanTreeViewer
