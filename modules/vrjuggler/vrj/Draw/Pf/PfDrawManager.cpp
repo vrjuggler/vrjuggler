@@ -106,10 +106,23 @@ bool PfDrawManager::configDisplaySystem(jccl::ConfigElementPtr element)
 
    vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "NumPipes: " << mNumPipes
                                             << std::endl << vprDEBUG_FLUSH;
+
+   // Make sure that the user has specified a valid number of pipes in the
+   // configuration. This becomes an issue normally since the default number of
+   // pipes when creating a new display_system element is 0. It needs to be this
+   // because we can not fill in the list of pipes with default values.
+   if(mNumPipes < 1)
+   {
+      mNumPipes = 1;
+   }
+   
    for (unsigned int i=0;i<mNumPipes;i++)
    {
       std::string cur_disp_name = "-1";
-
+      
+      // NOTE: ConfigElements return the default value for a property if a value is
+      //       not present. So if a pipe string is not specified for this pipe then
+      //       it gets the default value of "-1".
       mPipeStrs.push_back(element->getProperty<std::string>("x11_pipes", i));
 
       if(mPipeStrs[i] == cur_disp_name)    // Use display env
