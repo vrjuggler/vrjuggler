@@ -45,10 +45,10 @@
 
 namespace vpr {
 
-// ---------------------------------------------------------------------------
-// Block the caller until all <count> threads have called <wait> and then
-// allow all the caller threads to continue in parallel.
-// ---------------------------------------------------------------------------
+/**
+ * Block the caller until all <count> threads have called <wait> and then
+ * allow all the caller threads to continue in parallel.
+ */
 int
 Barrier::wait (void) {
     Guard<Mutex> guard(mutex);

@@ -56,26 +56,28 @@
 
 namespace vpr {
 
-//---------------------------------------------------------------------
-//: Helper class for vpr::Barrier
-//---------------------------------------------------------------------
+/**
+ * Helper class for vpr::Barrier.
+ *
+ * @author Allen Bierbaum
+ */
 class SubBarrier
 {
 public:
-    // ------------------------------------------------------------------------
-    //: Initialization.
-    // ------------------------------------------------------------------------
+    /**
+     * Initialization.
+     */
     SubBarrier (int count, Mutex* lock)
        : barrierFinished(lock), runningThreads(count)
     {}
 
-    CondVar barrierFinished; // True if this generation of the barrier is done.
+    CondVar barrierFinished; //! True if this generation of the barrier is done
 
-    int runningThreads;  //: Number of threads that are still running.
+    int runningThreads;  //! Number of threads that are still running
 
-    // ------------------------------------------------------------------------
-    //: Dump the state of an object.
-    // ------------------------------------------------------------------------
+    /**
+     * Dumps the state of this object.
+     */
     void dump (void)
     {
         std::cerr << "vpr::SubBarrier::dump" << std::endl;
@@ -83,24 +85,25 @@ public:
     }
 };
 
-//---------------------------------------------------------------------
-//: Implements "barrier synchronization".
-//
-//     This class allows <count> number of threads to synchronize
-//     their completion (so-called "barrier synchronization").  The
-//     implementation uses a "sub-barrier generation numbering"
-//     scheme to avoid overhead and to ensure that all threads exit
-//     the barrier correct.  This code is based on an article from
-//     SunOpsis Vol. 4, No. 1 by Richard Marejka
-//     (Richard.Marejka@canada.sun.com).
-//!PUBLIC_API:
-//---------------------------------------------------------------------
+/**
+ * Implements "barrier synchronization".
+ *
+ *    This class allows <count> number of threads to synchronize
+ *    their completion (so-called "barrier synchronization").  The
+ *    implementation uses a "sub-barrier generation numbering"
+ *    scheme to avoid overhead and to ensure that all threads exit
+ *    the barrier correct.  This code is based on an article from
+ *    SunOpsis Vol. 4, No. 1 by Richard Marejka
+ *    (Richard.Marejka@canada.sun.com).
+ *
+ * @author Allen Bierbaum
+ */
 class Barrier
 {
 public:
-    // ------------------------------------------------------------------------
-    //: Initialize the barrier to synchronize <count> threads.
-    // ------------------------------------------------------------------------
+    /**
+     * Initializes the barrier to synchronize <count> threads.
+     */
     Barrier (int count) : currentGeneration(0),
         count(count),
         subBarrier1(count, &mutex),
@@ -111,46 +114,48 @@ public:
         subBarrier[1] = &subBarrier2;
     }
 
-    // -----------------------------------------------------------------------
-    //: Block the caller until all <count> threads have called <wait> and
-    //+ then allow all the caller threads to continue in parallel.
-    // -----------------------------------------------------------------------
+    /**
+     * Blocks the caller until all <count> threads have called <wait> and
+     * then allows all the caller threads to continue in parallel.
+     */
     int wait(void);
 
-    // -----------------------------------------------------------------------
-    //: Tell the barrier to increase the count of the number of threads to
-    //+ syncronize.
-    // -----------------------------------------------------------------------
+    /**
+     * Tells the barrier to increase the count of the number of threads to
+     * syncronize.
+     */
     void addProcess()
     {
         std::cerr << "vpr::Barrier::addProcess: Not implemented yet."
                   << std::endl;
     }
 
-    // -----------------------------------------------------------------------
-    //: Tell the barrier to decrease the count of the number of threads to
-    //+ syncronize.
-    // -----------------------------------------------------------------------
+    /**
+     * Tells the barrier to decrease the count of the number of threads to
+     * syncronize.
+     */
     void removeProcess()
     {
         std::cerr << "vpr::Barrier::removeProcess: Not implemented yet."
                   << std::endl;
     }
 
-    // -----------------------------------------------------------------------
-    //: Dump the state of an object.
-    // -----------------------------------------------------------------------
+    /**
+     * Dumps the state of this object.
+     */
     void dump (void) const {}
 
 private:
-    Mutex mutex;   // Serialize access to the barrier state.
+    Mutex mutex;   //! Serialize access to the barrier state.
 
-    // Either 0 or 1, depending on whether we are the first generation
-    // of waiters or the next generation of waiters.
+    /**
+     * Either 0 or 1, depending on whether we are the first generation
+     * of waiters or the next generation of waiters.
+     */
     int currentGeneration;
 
 
-    int count; // Total number of threads that can be waiting at any one time.
+    int count; //! Total number of threads that can be waiting at any one time.
 
     SubBarrier subBarrier1;
     SubBarrier subBarrier2;

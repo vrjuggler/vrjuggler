@@ -51,11 +51,13 @@
 
 namespace vpr {
 
-//: A guarded queue
-// Guards an STL queue and implements the basic interface
-// All the functions pass directly through to the corresponding STL
-// queue function but they are guarded so that only a single
-// thread can interact with the queue at once.
+/**
+ * A guarded queue.
+ * Guards an STL queue and implements the basic interface
+ * All the functions pass directly through to the corresponding STL
+ * queue function but they are guarded so that only a single
+ * thread can interact with the queue at once.
+ */
 template <class value_type>
 class GuardedQueue
 {
@@ -100,7 +102,7 @@ public:
    { return mQ.size(); }
 
 private:
-   Mutex           mMutexGuard;      // The mutex to guard the queue
+   Mutex           mMutexGuard;      //! The mutex to guard the queue
    std::queue<value_type> mQ;
 };
 
