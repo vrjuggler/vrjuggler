@@ -163,7 +163,7 @@ public class ConfigBrokerImpl
    {
       // Get a list of the resources in this context that can handle ConfigChunks
       List resources = context.getResources();
-      DataSource target = null;
+      DataSource target_ds = null;
 
       // Check if this context has nothing to add to
       if (resources.size() == 0)
@@ -187,7 +187,8 @@ public class ConfigBrokerImpl
          int result = chooser.showDialog(null);
          if (result == ResourceChooser.APPROVE_OPTION)
          {
-            target = (DataSource)mResources.get(chooser.getSelectedResource());
+            String data_source_name = (String)mResources.get(chooser.getSelectedResource());
+            target_ds = get(data_source_name);
          }
          else
          {
@@ -197,11 +198,12 @@ public class ConfigBrokerImpl
       }
       else
       {
-         target = (DataSource)resources.get(0);
+         String data_source_name = (String)resources.get(0);
+         target_ds = get(data_source_name);
       }
 
-      target.add(elt);
-      fireConfigElementAdded(getNameFor(target), elt);
+      target_ds.add(elt);
+      fireConfigElementAdded(getNameFor(target_ds), elt);
       return true;
    }
 
