@@ -106,17 +106,20 @@ Submitting Patches</H2>
     that aspect of it here.  Assuming a shell that allows redirection of
     standard output to a file, the command should be used as follows to
     create the patch for a single file:
+  </P>
 
 <PRE>
     % <B>cvs diff <I>filename</I> &gt; <I>filename</I>.patch</B>
 </PRE>
 
+  <P>
     Since CVS knows about the entire repository, you can use <TT>cvs diff</TT>
     to make a larger patch of several files, a single directory, a
     subtree of the larger directory tree or the entire VR Juggler source
     tree.  You should be careful to keep only related patches together in
     a single file.  Examples of how to perform each of these operations
     follow.
+  </P>
 
     <UL>
       <LI>
@@ -153,7 +156,6 @@ Submitting Patches</H2>
         the top-level directory of the source tree.
       </LI>
     </UL>
-  </P>
 
 <H5><A NAME="diff">Using <TT>diff</TT>(1) to Make a Patch</A></H5>
 
@@ -169,11 +171,13 @@ Submitting Patches</H2>
     work is complete, use the <TT>diff</TT>(1) utility to create the
     patch as follows (assuming a shell that supports redirection of
     standard out to a file):
+  </P>
 
 <PRE>
     % <B>diff [options] <I>filename</I>.orig <I>filename</I> &gt; <I>filename</I>.patch</B>
 </PRE>
 
+  <P>
     This must be repeated for every modified file.  Make sure that the
     original file always goes <I>first</I>.
   </P>
@@ -188,6 +192,7 @@ Submitting Patches</H2>
     fab.)  Assuming a UNIX or UNIX-like shell with redirection and
     appending of files, there are two ways to combine individual patches
     into a single file:
+  </P>
 
     <OL>
       <LI>
@@ -212,7 +217,6 @@ Submitting Patches</H2>
 </PRE>
       </LI>
     </OL>
-  </P>
 
 <H5><A NAME="formats">Patch Formats</A></H5>
 
@@ -222,6 +226,7 @@ Submitting Patches</H2>
     experience, unified diffs are the easiest to read, and standard diffs
     are the hardest to read.  The following two pages from the enline VR
     Juggler CVS repository show how unified and context diffs look:
+  </P>
 
     <UL>
       <LI>
@@ -234,6 +239,7 @@ Submitting Patches</H2>
       </LI>
     </UL>
 
+  <P>
     We cannot generate <A HREF="http://cvs.sourceforge.net/cgi-bin/cvsweb.cgi/juggler/configure.in.diff?cvsroot=vrjuggler&r1=text&tr1=1.259&r2=text&tr2=1.260&f=h">fancy,
     colored diffs</A> for use as patches unfortunately.  It certainly is
     nice that
@@ -249,11 +255,11 @@ Submitting Patches</H2>
     the <TT>diff</TT>(1) utility.  To always create a specific kind of diff
     by default with CVS, add the following line to your
     <TT>$HOME/.cvsrc</TT> file:
+  </P>
 
 <PRE>
     diff <I>option</I>
 </PRE>
-  </P>
 
 <H4><A NAME="submit">Submitting Patches</A></H4>
 
@@ -274,6 +280,7 @@ Submitting Patches</H2>
     what kind of patches you have made.  As of this writing, the most
     common types of patches we would like to see and expect to see are
     as follows:
+  </P>
 
     <UL>
       <LI>
@@ -292,15 +299,16 @@ Submitting Patches</H2>
       </LI>
     </UL>
 
+  <P>
     If your patch is accepted, you will be given proper credit in the
     commit log as follows:
+  </P>
 
 <PRE>
     <I>Description of patch</I>
 
         Submitted by: Helpful User &lt;great.person@wonderful.net&gt;
 </PRE>
-  </P>
 
 <H5><A NAME="bug">Submitting Bug Fixes</A></H5>
 
