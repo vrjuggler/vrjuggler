@@ -24,6 +24,7 @@
 #include <vjConfig.h>
 #include <Kernel/vjConfigChunkHandler.h>
 #include <Threads/vjThread.h>
+#include <Environment/vjSocket.h>
 
 class vjConnect;
 class vjPerfDataBuffer;
@@ -119,7 +120,7 @@ private:
     std::vector<vjPerfDataBuffer*> perf_buffers;
     vjThread*                 listen_thread;
     int                       Port;
-    int                       listen_socket;
+    vjSocket*                 listen_socket;
     vjConnect*                perf_target;
     float                     perf_refresh_time;  // in milliseconds
     bool                      configured_to_accept;
@@ -130,23 +131,14 @@ private:
 
     void controlLoop (void* nullParam);
 
-    //! NOTE: calling thread must own connections_mutex
     void activatePerfBuffers();
-
-    //! NOTE: calling thread must own connections_mutex
     void deactivatePerfBuffers();
 
-    //! NOTE: calling thread must own connections_mutex
     void setPerformanceTarget (vjConnect* con);
 
-    //: closes and removes a connection
-    //! RETURNS: true - if a matching connection was found and removed
-    //! RETURNS: false - con was NULL or no match was found
-    //! NOTE: calling thread must own connections_mutex
-    bool removeConnect (vjConnect* con);
+    void removeConnect (vjConnect* con);
 
     //: returns a pointer to a connection with the given name
-    //! NOTE: calling thread must own connections_mutex
     vjConnect* getConnect (const std::string& _name);
 
 

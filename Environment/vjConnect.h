@@ -27,6 +27,8 @@
 #include <Environment/vjCommand.h>
 #include <queue>
 
+#include <Environment/vjSocket.h>
+
 class vjTimedUpdate;
 class vjConfigChunk;
 
@@ -41,7 +43,7 @@ enum vjConnectMode { VJC_INTERACTIVE, VJC_INPUT, VJC_OUTPUT };
 class vjConnect {
  public:
 
-    vjConnect (int fd, const std::string& _name="unnamed", 
+    vjConnect (vjSocket* s, const std::string& _name="unnamed", 
 	       vjConnectMode _mode = VJC_INTERACTIVE);
 
 
@@ -92,7 +94,7 @@ class vjConnect {
     void sendDescDB (vjChunkDescDB* db);
     void sendChunkDB (vjConfigChunkDB* db, bool all);
     void sendRefresh ();
-
+    void sendDisconnect();
 
     //: Attaches a timed update object to this connection
     //! ARGS: _tu - a vjTimedUpdate* 
@@ -107,17 +109,18 @@ class vjConnect {
 private:
 
 
-    ofstream                output;
-    ifstream                fin;
+    ostream*     outstream;
+    istream*      instream;
     bool                    shutdown;        // set to stop procs
     std::string             name;
     std::string             filename;
     vjThread*               read_connect_thread;
     vjThread*               write_connect_thread;
-    int                     fd;
+    vjSocket*               sock;
     vjConnectMode           mode;
-    bool                    read_die;
-    bool                    write_die;
+    bool                    read_die;    // if true, thread suicide
+    bool                    write_die;   // if true, thread suicide
+    bool                    write_alive; // true when thread running
 
     //: used for storing vjCommand* in a priority queue
     struct vjCommandPtrCmp {
@@ -143,7 +146,7 @@ private:
     void writeControlLoop (void* nullParam);
 
     //: utility for controlLoop()
-    bool readCommand (ifstream& fin);
+    bool readCommand (istream& fin);
 
 
 }; // end vjConnect
