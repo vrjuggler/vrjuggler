@@ -41,6 +41,6 @@
 #include <vpr/Util/Debug.h>
 
 // Gadgeteer categories
-const vpr::GUID gadgetDBG_INPUT_MGR("9cce60c9-9cf9-44e6-a852-1cac224d8b4c");       /* Input output */
+const vpr::GUID gadgetDBG_INPUT_MGR("d6be4359-e8cf-41fc-a72b-a5b4f3f29aa2");       /* Input output */
 
 #endif
