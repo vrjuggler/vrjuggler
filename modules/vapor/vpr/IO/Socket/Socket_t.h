@@ -518,6 +518,12 @@ public:
       return readn(buffer, length, bytes_read, timeout);
    }
 
+   /** Return the number of avaiable bytes for reading */
+   virtual vpr::Uint32 availableBytes()
+   {
+      return m_socket_imp->availableBytes();
+   }
+
    /**
     * Sends the buffer to the remote side of the socket.
     *

@@ -27,7 +27,7 @@ public:
    /** Constructor
    * @param staMaxTime  The max age for samples in the sta computation
    */
-   StatCollector(unsigned sampleLimit = 100 )
+   SampleLimitedStatCollector(unsigned sampleLimit = 100 )
    {
       mSTASampleLimit = sampleLimit;
       reset();
@@ -109,12 +109,13 @@ void SampleLimitedStatCollector<TYPE, TimeBased>::addSample(const TYPE sample)
    // Limit the size of the queue
    if(mSampleBuffer.size() > mSTASampleLimit)
    {
-      mRunningSTATotal -= (*mSampleBuffer.back()).first;
+      TYPE popped_sample = mSampleBuffer.back().first;
+      mRunningSTATotal -= popped_sample;
       mSampleBuffer.pop_back();
    }
 
    // --- UPDATE MAXES ---- //
-   double sta_val = getSTA();
+   double sta_value = getSTA();
    if(sta_value > mMaxSTA)                        // Check for new max
    {  mMaxSTA = sta_value; }
 }
@@ -164,12 +165,6 @@ double SampleLimitedStatCollector<TYPE, TimeBased>::getInstAverage()
       diff_time = cur_time - mPrevSampleTime1;     // Get time to compute the average over
       diff_sec = diff_time.secf();
 
-      vpr::Interval cur_time, diff_time;
-      double diff_sec;                       // Num secs different in send times
-      cur_time.setNow();                     // Set current time
-      diff_time = cur_time - mPrevSampleTime1;     // Get time to compute the average over
-      diff_sec = diff_time.secf();
-
       // Compute -- INST BANDWIDTH
       if(diff_sec > 0)
       {
@@ -197,15 +192,13 @@ double SampleLimitedStatCollector<TYPE, TimeBased>::getSTA()
 
    if(mSampleBuffer.size() > 0)
    {
-      double sum(0.0f);
-
       if(TimeBased)
       {
          vpr::Interval cur_time, diff_time;
          double diff_sec;                       // Num secs different in send times
          cur_time.setNow();                     // Set current time
 
-         vpr::Interval first_sample_time( (*mSampleBuffer.back()).second );
+         vpr::Interval first_sample_time( mSampleBuffer.back().second );
          diff_time = cur_time - first_sample_time;
          diff_sec = diff_time.secf();
          sta_value = mRunningSTATotal/diff_sec;
