@@ -54,7 +54,7 @@ main (int argc, char* argv[]) {
 
         // We only send to one host, so call connect().
         if ( sock.connect().success() ) {
-            ssize_t bytes;
+            vpr::Uint32 bytes;
 
             // Read from the server.
             strcpy(buffer, "Hi, I'm a client");

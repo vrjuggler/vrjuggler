@@ -72,7 +72,7 @@ main (int argc, char* argv[]) {
         // Connect to the server.
         if ( sock->connect().success() ) {
             vpr::Status status;
-            ssize_t bytes;
+            vpr::Uint32 bytes;
 
             // Read from teh server.
             status = sock->read(buffer, 40, bytes,

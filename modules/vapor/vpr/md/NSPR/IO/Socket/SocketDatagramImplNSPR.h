@@ -89,14 +89,15 @@ public:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    vpr::Status recvfrom(void* msg, const size_t length, const int flags,
-                         vpr::InetAddr& from, ssize_t& bytes_read,
+    vpr::Status recvfrom(void* msg, const vpr::Uint32 length, const int flags,
+                         vpr::InetAddr& from, vpr::Uint32& bytes_read,
                          const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    vpr::Status sendto(const void* msg, const size_t length, const int flags,
-                       const vpr::InetAddr& to, ssize_t& bytes_sent,
+    vpr::Status sendto(const void* msg, const vpr::Uint32 length,
+                       const int flags, const vpr::InetAddr& to,
+                       vpr::Uint32& bytes_sent,
                        const vpr::Interval timeout = vpr::Interval::NoTimeout);
 };
 

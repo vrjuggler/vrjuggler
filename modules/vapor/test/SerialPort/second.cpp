@@ -52,7 +52,7 @@ main (int argc, char* argv[]) {
     if ( port->open().success() ) {
         char read_buffer[10], write_buffer[10];
         int val;
-        ssize_t bytes;
+        vpr::Uint32 bytes;
 
         std::cerr << "Port opened\n";
         val = 1;

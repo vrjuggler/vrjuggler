@@ -47,7 +47,7 @@ main (int argc, char* argv[]) {
 
     if ( read_port->open().success() ) {
         char buffer[80];
-        ssize_t bytes;
+        vpr::Uint32 bytes;
 
 //        read_port->setUpdateAction(vpr::SerialIO::NOW);
 //        read_port->enableLocalAttach();

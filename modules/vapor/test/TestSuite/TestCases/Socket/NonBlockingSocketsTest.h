@@ -186,7 +186,7 @@ public:
 
    void testNonBlockingTransfer_acceptor (void* arg) {
       vpr::Status status;
-      ssize_t bytes_written;
+      vpr::Uint32 bytes_written;
       vpr::SocketAcceptor acceptor;
       vpr::SocketStream client_sock;
       vpr::InetAddr acceptor_addr(mAcceptorPort);
@@ -240,7 +240,7 @@ public:
       vpr::SocketConnector connector;
       vpr::SocketStream con_sock;
       std::string data;
-      ssize_t bytes_read;
+      vpr::Uint32 bytes_read;
 
       remote_addr.setAddress("localhost", mAcceptorPort);
 
@@ -375,7 +375,7 @@ public:
 
       // s:    write...
       std::string message = "Hi Maynard, My leg hurts";
-      int bytes_written;
+      vpr::Uint32 bytes_written;
       status = spawned_socket.write( message, message.size(), bytes_written );
       assertTestThread( status.success() && "Problem writing in acceptor" );
 

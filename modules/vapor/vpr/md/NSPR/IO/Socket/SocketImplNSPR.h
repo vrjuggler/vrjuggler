@@ -305,18 +305,20 @@ public:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    vpr::Status read_i(void* buffer, const size_t length, ssize_t& bytes_read,
+    vpr::Status read_i(void* buffer, const vpr::Uint32 length,
+                       vpr::Uint32& bytes_read,
                        const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    vpr::Status readn_i(void* buffer, const size_t length, ssize_t& bytes_read,
+    vpr::Status readn_i(void* buffer, const vpr::Uint32 length,
+                        vpr::Uint32& bytes_read,
                         const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    vpr::Status write_i(const void* buffer, const size_t length,
-                        ssize_t& bytes_written,
+    vpr::Status write_i(const void* buffer, const vpr::Uint32 length,
+                        vpr::Uint32& bytes_written,
                         const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     /**

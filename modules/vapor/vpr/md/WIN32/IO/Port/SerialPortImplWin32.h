@@ -890,7 +890,8 @@ public:
      *         within the timeout interval.<br>
      *         vpr::Status::Failure is returned if the read operation failed.
      */
-    vpr::Status read_i (void* buffer, const size_t length, ssize_t& bytes_read,
+    vpr::Status read_i (void* buffer, const vpr::Uint32 length,
+                        vpr::Uint32& bytes_read,
                         const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     /**
@@ -921,7 +922,8 @@ public:
      *         within the timeout interval.<br>
      *         vpr::Status::Failure is returned if the read operation failed.
      */
-    vpr::Status readn_i (void* buffer, const size_t length, ssize_t& bytes_read,
+    vpr::Status readn_i (void* buffer, const vpr::Uint32 length,
+                         vpr::Uint32& bytes_read,
                          const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         // XXX: Fix me!!!
@@ -954,9 +956,9 @@ public:
      *         vpr::Status::Failure is returned if the write operation failed.
      */
     vpr::Status
-    write_i (const void* buffer, const size_t length, ssize_t& bytes_written,
+    write_i (const void* buffer, const vpr::Uint32 length,
+             vpr::Uint32& bytes_written,
              const vpr::Interval timeout = vpr::Interval::NoTimeout);
-
 
 protected:
     HANDLE m_handle;    /**< handle to communication file */

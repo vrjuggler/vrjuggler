@@ -211,8 +211,8 @@ public:
          assertTestThread( result != false && "Socket::connect() failed" );
 
             // find out how much data is coming...
-            int size_of_data;
-            ssize_t amount_read;
+            vpr::Uint32 size_of_data;
+            vpr::Uint32 amount_read;
             result = connector_socket.readn(&size_of_data, sizeof(int),
                                             amount_read).success();
             assertTestThread( result && "readn didn't read" );
@@ -271,9 +271,9 @@ public:
          assertTestThread( result && "Socket::accept() failed" );
 
             // send the size of the data to be sent
-            ssize_t amount_sent;
+            vpr::Uint32 amount_sent;
             std::string buffer = testSendRecv_buffer;
-            int size = buffer.size();
+            vpr::Uint32 size = buffer.size();
             result = child_socket.write( &size, sizeof( int ), amount_sent ).success();
             assertTestThread( result && "write didn't send" );
             assertTestThread( amount_sent == sizeof( int ) && "write didn't send all" );
@@ -281,7 +281,7 @@ public:
             // send the data...
             result = child_socket.write( &buffer[0], buffer.size(), amount_sent).success();
             assertTestThread( result && "write didn't send" );
-            assertTestThread( amount_sent == (int)buffer.size() && "write didn't send all" );
+            assertTestThread( amount_sent == buffer.size() && "write didn't send all" );
 
             //std::cout<<"Sent buffer: "<<buffer<<"\n"<<std::flush;
             //std::cout<<"+"<<std::flush;
@@ -597,7 +597,7 @@ public:
          char    buffer[40];
          bool    result = 0;
          char    buffer2[]="Oops!";
-         ssize_t amount_read, amount_written;
+         vpr::Uint32 amount_read, amount_written;
 
          // make a new socket that will connect to port "port"
          vpr::SocketStream connector_socket(vpr::InetAddr::AnyAddr,
@@ -658,7 +658,7 @@ public:
       char  buffer[40];
       char  buffer1[]="Hello, there!";
       char  buffer2[]="Hello";
-      ssize_t amount_read (0), amount_written;
+      vpr::Uint32 amount_read (0), amount_written;
       vpr::InetAddr local_addr;
 
       local_addr.setPort(port);
@@ -727,7 +727,7 @@ public:
             assertTestThread(amount_read == 6 && "Should return 6");
             break;
          case 2:
-            assertTestThread(amount_read == -1 && "Should return 20");
+            assertTestThread(amount_read == 0 && "Should return 20");
             break;
          case 3:
             assertTestThread(amount_read==6 && "Should return 6");
@@ -855,7 +855,7 @@ public:
          char buffer1[40];
          //char buffer2[] = "What's up?";
          if ( sock->connect().success() ) {
-            ssize_t bytes, bytes_written;
+            vpr::Uint32 bytes, bytes_written;
             sock->read(buffer1, 40, bytes);
          //sock->write(buffer2, sizeof(buffer2), bytes_written);
             sock->write(buffer1, bytes, bytes_written);
@@ -875,7 +875,7 @@ public:
       _thread_args* tArg=(_thread_args *) arg;
       char buffer1[] = "Hello there!";
       char buffer2[40];
-      ssize_t bytes, bytes_written;
+      vpr::Uint32 bytes, bytes_written;
 
       vpr::SocketStream* ss_sock;
       ss_sock=tArg->mSock;
@@ -883,7 +883,7 @@ public:
       ss_sock->write(buffer1, sizeof(buffer1), bytes_written);
       //receive a string from client
       ss_sock->read(buffer2,40, bytes);
-      assertTest(bytes != -1);
+      assertTest(bytes != 0);
       long compareString=strcmp(buffer1,buffer2);
       if (compareString!=0) {
          mServerCheck=1;
@@ -908,7 +908,7 @@ public:
 
       assertTestThread(client_sock.open().success() && "Client socket open failed");
       assertTestThread(client_sock.connect().success() && "Client could not connect");
-      ssize_t bytes;
+      vpr::Uint32 bytes;
       client_sock.readn(buffer, sizeof(buffer), bytes);
       assertTestThread((bytes == sizeof(buffer)) && "readn didn't read enough!");
       client_sock.close();
@@ -920,7 +920,7 @@ public:
       local_addr.setPort(server_port);
       vpr::SocketStream server_sock(local_addr, vpr::InetAddr::AnyAddr);
       const unsigned int pkt_size = 5;
-      ssize_t bytes;
+      vpr::Uint32 bytes;
       char buffer[pkt_size];
 
       //std::cout << "]==================================================\n"
@@ -947,7 +947,7 @@ public:
           snprintf(buffer, sizeof(buffer), "%04d", i);
 
           client_sock.write(buffer, pkt_size, bytes);
-          assertTest(bytes != -1 && "Server could not write to client");
+          assertTest(bytes != 0 && "Server could not write to client");
       }
 
       client_sock.close();

@@ -57,7 +57,7 @@ main (int argc, char* argv[]) {
     if ( sock.open().success() && sock.bind().success() ) {
         char recv_buf[32];
         char send_buf[] = "Hello there!";
-        ssize_t bytes;
+        vpr::Uint32 bytes;
         vpr::Status sock_stat;
 
         // Loop forever reading messages from clients.
