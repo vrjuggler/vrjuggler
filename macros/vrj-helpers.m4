@@ -130,11 +130,11 @@ AC_DEFUN(VJ_COMPILER_SETUP,
             CC_PIC_IRIX='-KPIC'
         # On Solaris/SPARC, we can use Sun WorkShop or GCC.  We default to
         # WorkShop.
-#        elif test "x$PLATFORM" = "xSolaris" -a "x$USE_GCC" != "xyes" \
-#               -a "x$ISA" = "xsparc"
-#        then
-#            CC_Solaris='cc'
-#            CC_PIC_Solaris='-KPIC'
+        elif test "x$PLATFORM" = "xSolaris" -a "x$USE_GCC" != "xyes" \
+               -a "x$ISA" = "xsparc"
+        then
+            CC_Solaris='cc'
+            CC_PIC_Solaris='-KPIC'
         fi
     # Otherwise, force the use of the alternate C compiler.
     else
@@ -159,11 +159,11 @@ AC_DEFUN(VJ_COMPILER_SETUP,
             CXX_PIC_IRIX='-KPIC'
         # On Soalris/SPARC, we can use WorkShop or GCC.  We default to
         # WorkShop.
-#        elif test "x$PLATFORM" = "xSolaris" -a "x$USE_GCC" != "xyes" \
-#               -a "x$ISA" = "xsparc"
-#        then
-#            CXX_Solaris='CC'
-#            CXX_PIC_Solaris='-KPIC'
+        elif test "x$PLATFORM" = "xSolaris" -a "x$USE_GCC" != "xyes" \
+               -a "x$ISA" = "xsparc"
+        then
+            CXX_Solaris='CC'
+            CXX_PIC_Solaris='-KPIC'
         fi
     # Otherwise, force the use of the alternate C++ compiler.
     else
