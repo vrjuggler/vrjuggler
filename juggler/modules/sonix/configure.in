@@ -245,7 +245,7 @@ if test "x$OPENAL_ENABLED" = "xno" ; then
 else
    DPP_HAVE_OPENAL( /usr/local, AC_MSG_RESULT(+ Found OpenAL), )
    if test "x$OPENAL" = "xyes" ; then
-      if test "x$HAVE_VAPOR" = "xY" -a "x$VPR_SUBSYSTEM" != "xSPROC"; then
+      if test "x$VPR_SUBSYSTEM" != "xSPROC"; then
          DPP_PTHREAD_FINISH
          OPENAL_API='Y'
          echo "+ added OpenAL to the compile and link paths"
@@ -287,7 +287,7 @@ if test "x$AUDIOWORKS_ENABLED" = "xno" ; then
 else
    DPP_HAVE_AUDIOWORKS( /usr, AC_MSG_RESULT(+ Found AudioWorks), )
    if test "x$AUDIOWORKS" = "xyes" ; then
-      if test "x$HAVE_VAPOR" = "xY" -a "x$VPR_SUBSYSTEM" = "xSPROC"; then
+      if test "x$VPR_SUBSYSTEM" = "xSPROC"; then
          AUDIOWORKS_API='Y'
          echo "+ added AudioWorks to the compile and link paths"
       else
