@@ -66,6 +66,17 @@ vjConfigChunk* vjConfigChunkDB::getChunk (char *name) {
   return NULL;
 }
 
+// Return a copy of the chunks vector
+vector<vjConfigChunk*> vjConfigChunkDB::getChunks()
+{
+   return chunks;
+}
+
+// Add the given chunks to the end of the chunk list
+void vjConfigChunkDB::addChunks(vector<vjConfigChunk*> new_chunks)
+{
+   chunks.insert(chunks.end(), new_chunks.begin(), new_chunks.end());
+}
 
 
 // GetMatching: These functions return a vector of all chunks with a
@@ -208,8 +219,9 @@ int vjConfigChunkDB::dependencySort()
    */
 
    // Create new src list to work from
+   // Targetting the local data
    vector<vjConfigChunk*> src_chunks = chunks;
-   chunks = vector<vjConfigChunk*>(0);
+   chunks = vector<vjConfigChunk*>(0);             // Chunks is the local data
 
    bool dep_pass(true);             // Pass dependency check
    vector<string> deps;             // Source dependencies
@@ -218,7 +230,7 @@ int vjConfigChunkDB::dependencySort()
 
    while(cur_item != src_chunks.end())          // While not at end of src list
    {
-      deps = (*cur_item)->getDependencies();    // Get src dependencies
+      deps = (*cur_item)->getDependencies();             // Get src dependencies
       for(int dep_num=0;dep_num<deps.size();dep_num++)   // May have multiple dependencies
          if (getChunk((char*)deps[dep_num].c_str()) == NULL)    // Check dependency
             dep_pass = false;                            // Failed check

@@ -36,6 +36,7 @@ class vjConfigChunk;
 //  kind of vjVarValue he's getting and what it can do.  Hey, you're
 //  the one who queryed the ConfigChunk, not me. <br>
 //
+//!PUBLIC_API
 class vjVarValue {
 
   /* general question of using objects in here.
