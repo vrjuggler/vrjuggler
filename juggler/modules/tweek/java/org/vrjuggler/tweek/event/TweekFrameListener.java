@@ -37,7 +37,59 @@
 package org.vrjuggler.tweek.event;
 
 
+/**
+ * The listener interface for events related to the main Tweek GUI window.
+ */
 public interface TweekFrameListener extends java.util.EventListener
 {
-   public void frameStateChanged(TweekFrameEvent e);
+   /**
+    * Invoked when the Tweek GUI has been closed as the result of calling
+    * dispose on the window.
+    */
+   public void frameClosed(TweekFrameEvent e);
+
+   /**
+    * Invoke when the user has attempted to close the Tweek GUI.  This method
+    * can be used to prevent the Tweek Java GUI from closing by returning
+    * false. 
+    *
+    * @return If true is returned, then the Tweek GUI Frame will close.
+    *         Otherwise, the window closing operation is cancelled.
+    */
+   public boolean frameClosing(TweekFrameEvent e);
+
+   /**
+    * Invoked when the Tweek GUI is changed from a minimized to a normal
+    * state.
+    */
+   public void frameDeiconified(TweekFrameEvent e);
+
+   /**
+    * Invoked when the Tweek GUI is set to be the active Window (when it gains
+    * focus).  The native windowing system may denote the active Window or its
+    * children with special decorations, such as a highlighted title bar.  The
+    * active Window is always either the focused Window, or the first Frame or
+    * Dialog that is an owner of the focused Window.
+    */
+   public void frameFocused(TweekFrameEvent e);
+
+   /**
+    * Invoked when the Tweek GUI is changed from a normal to a minimized
+    * state.
+    */
+   public void frameIconified(TweekFrameEvent e);
+
+   /**
+    * Invoked the first time the Tweek GUI is made visible.
+    */
+   public void frameOpened(TweekFrameEvent e);
+
+   /**
+    * Invoked when the Tweek GUI is no longer the active Window (when it loses
+    * focus).  The native windowing system may denote the active Window or its
+    * children with special decorations, such as a highlighted title bar.  The
+    * active Window is always either the focused Window, or the first Frame or
+    * Dialog that is an owner of the focused Window.
+    */
+   public void frameUnfocused(TweekFrameEvent e);
 }

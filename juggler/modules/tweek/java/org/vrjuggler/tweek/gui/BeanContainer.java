@@ -93,11 +93,6 @@ public class BeanContainer
          {
             addUserLevelChangeListener((UserLevelChangeListener) bean);
          }
-
-         if ( bean instanceof TweekFrameListener )
-         {
-            addTweekFrameListener((TweekFrameListener) bean);
-         }
       }
 
       BeanInstantiationCommunicator.instance().addBeanInstantiationListener(this);
@@ -229,30 +224,6 @@ public class BeanContainer
       }
    }
 
-   // XXX: Should this be here or in TweekFrame?
-   public synchronized void addTweekFrameListener(TweekFrameListener l)
-   {
-      System.out.println("Adding new TweekFrameListener");
-      mFrameListeners.add(l);
-   }
-
-   public synchronized void removeTweekFrameListener(TweekFrameListener l)
-   {
-      mFrameListeners.removeElement(l);
-   }
-
-   public void fireFrameOpened()
-   {
-      TweekFrameEvent e = new TweekFrameEvent(this, TweekFrameEvent.FRAME_OPEN);
-      fireFrameStateChangeEvent(e);
-   }
-
-   public void fireFrameClosed()
-   {
-      TweekFrameEvent e = new TweekFrameEvent(this, TweekFrameEvent.FRAME_CLOSE);
-      fireFrameStateChangeEvent(e);
-   }
-
    /**
     * Implementation of BeanInstantiationListener.beanInstantiation().  Upon
     * instantiation of a JavaBean by the BeanTree, the Bean is inspected to
@@ -274,11 +245,6 @@ public class BeanContainer
          if ( Beans.isInstanceOf(bean, Class.forName("org.vrjuggler.tweek.event.UserLevelChangeListener")) )
          {
             addUserLevelChangeListener((UserLevelChangeListener) bean);
-         }
-
-         if ( Beans.isInstanceOf(bean, Class.forName("org.vrjuggler.tweek.event.TweekFrameListener")) )
-         {
-            addTweekFrameListener((TweekFrameListener) bean);
          }
       }
       // This better not happen (i.e., org.vrjuggler.tweek.net.* and
@@ -305,23 +271,6 @@ public class BeanContainer
    private void jbInit() throws Exception
    {
       this.setLayout(mContainerLayout);
-   }
-
-   private void fireFrameStateChangeEvent(TweekFrameEvent e)
-   {
-      TweekFrameListener l = null;
-      Vector listeners;
-
-      synchronized (this)
-      {
-         listeners = (Vector) mFrameListeners.clone();
-      }
-
-      for ( int i = 0; i < listeners.size(); i++ )
-      {
-         l = (TweekFrameListener) listeners.elementAt(i);
-         l.frameStateChanged(e);
-      }
    }
 
    private void addBeanDeliveryObserver(CorbaService corbaService)
@@ -393,7 +342,6 @@ public class BeanContainer
 
    private Vector mCommListeners  = new Vector();
    private Vector mLevelListeners = new Vector();
-   private Vector mFrameListeners = new Vector();
 
    private java.util.Map mBeanDeliveryObserverMap = new java.util.HashMap();
 
