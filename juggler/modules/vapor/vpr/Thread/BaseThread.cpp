@@ -74,7 +74,7 @@ void vpr::BaseThread::registerThread(bool succesfulCreation)
 {
    if(succesfulCreation)   // Succeed
    {
-      create_thread_id();
+      createThreadId();
       ThreadManager::instance()->addThread(this); // Add the thread to the table
    }
    else
