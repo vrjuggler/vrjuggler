@@ -53,7 +53,28 @@ next to the Property name, and a <b>Remove</b> button next to each value.
 Click the <b>OK</b> button to exit the window, or <b>Cancel</b> to close
 the window without saving the changes you've made.
 
-<br><br><br><br>
+<br><br>
+
+<hr>
+<h3>Including other Config Files</h3>
+
+VR Juggler config files can include references to other config files.  If a config file with
+includes is loaded by a Juggler app, all the files it includes are loaded first (so a chunk
+in the file can replace a chunk in an included file with the same name).
+<p>
+If a config file with includes is loaded into vjcontrol, the included files are automatically
+loaded, though each file is viewed separately.
+<p>
+To include a file, simply add an "Include File" chunk to the config file.  The name of the 
+"Include File" chunk is the complete path name of the file to load.  You can use the strings
+"$HOME" and "$VJ_BASE_DIR" at the start of the name to refer to your home directory and the
+Juggler install directory, respectively.
+<p>
+Note that path names should be absolute paths (paths starting with "/" or "$HOME" or "$VJ_BASE_DIR").
+Relative path names should be relative to the file including them, but this may not work
+correctly in Juggler Beta1
+
+<br><br>
 </body>
 </html>
 
