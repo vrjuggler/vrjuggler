@@ -53,7 +53,7 @@ namespace sim
 
 void Clock::setCurrentTime (const vpr::Interval& time)
 {
-   mTensOfUsec = time.usec() / 10;
+   setCurrentTime(time.usec() / 10);
 }
 
 } // End of sim namespace
