@@ -62,6 +62,7 @@ namespace snx
  * info struct that describes one sound entry.
  * typically, you will fill this out and pass it to a SoundHandle object
  * to configure your sound.
+ * @ingroup SonixAPI
  */
 struct SoundInfo
 {
