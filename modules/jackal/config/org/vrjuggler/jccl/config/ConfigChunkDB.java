@@ -99,7 +99,7 @@ public class ConfigChunkDB extends Vector {
 	}
 	return v;
     }
-
+    
 
 
     public Vector getOfDescToken (String typename) {
@@ -124,7 +124,7 @@ public class ConfigChunkDB extends Vector {
 	remove(c.name);
 	for (i = 0; i < size(); i++) {
 	    t = (ConfigChunk)elementAt(i);
-	    if (t.getDescName().equalsIgnoreCase(c.getDescName())) 
+	    if (t.getDescToken().equalsIgnoreCase(c.getDescToken())) 
 		break;
 	}
 	if (i == size())
@@ -132,7 +132,7 @@ public class ConfigChunkDB extends Vector {
 	else {
 	    for ( ; i < size(); i++) {
 		t = (ConfigChunk)elementAt(i);
-		if (!t.getDescName().equalsIgnoreCase(c.getDescName()))
+		if (!t.getDescToken().equalsIgnoreCase(c.getDescToken()))
 		    break;
 	    }
 	    insertElementAt(c, i);
@@ -179,7 +179,8 @@ public class ConfigChunkDB extends Vector {
 	    while (c == null) {
 		st.nextToken();
 		if ((st.ttype == ConfigStreamTokenizer.TT_EOF) ||
-		    st.sval.equalsIgnoreCase ("end"))
+		    ((st.ttype == ConfigStreamTokenizer.TT_WORD) &&
+		     st.sval.equalsIgnoreCase ("end")))
 		    return null;
 		d = descs.get(st.sval);
 		if (d != null) {
