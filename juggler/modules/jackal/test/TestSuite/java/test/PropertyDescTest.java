@@ -1,6 +1,6 @@
 package test;
 
-import java.util.ArrayList;
+import java.util.*;
 import junit.framework.*;
 import org.vrjuggler.jccl.config.*;
 
@@ -86,20 +86,6 @@ public class PropertyDescTest
    }
 
    /**
-    * Tests get/setNumAllowed() methods.
-    */
-   public void testNumAllowed()
-   {
-      PropertyDesc d = new PropertyDesc();
-      d.setNumAllowed( 20 );
-      assertEquals( d.getNumAllowed(), 20 );
-
-      d = new PropertyDesc();
-      d.setNumAllowed( -1 );
-      assertEquals( d.getNumAllowed(), -1 );
-   }
-
-   /**
     * Tests get/setUserLevel() methods.
     */
    public void testUserLevel()
@@ -162,49 +148,39 @@ public class PropertyDescTest
    {
       PropertyDesc d = new PropertyDesc();
       d.setValType( ValType.STRING );
-      DescEnum[] deArray = null;
+      List list = new ArrayList();
+      
 
       // should initially be empty
-      assertEquals( d.getEnumerationsSize(), 0 );
-      deArray = d.getEnumerations();
-      assertEquals( deArray.length, 0 );
+      assertEquals(d.getNumEnums(), 0);
+      list = d.getEnums();
+      assertEquals(list.size(), 0);
 
       // add an enum
-      d.appendEnumeration( "Enum1", "Val1" );
-      assertEquals( d.getEnumerationsSize(), 1 );
-      assertTrue( d.getEnumAtIndex(0).equals(new DescEnum("Enum1", new VarValue("Val1"))) );
-      deArray = d.getEnumerations();
-      assertTrue( deArray[0].equals(new DescEnum("Enum1", new VarValue("Val1"))) );
+      DescEnum enum1 = new DescEnum("Enum1", new VarValue("Val1"));
+      d.addEnum(enum1);
+      assertEquals(d.getNumEnums(), 1);
+      assertTrue(d.getEnumAt(0).equals(enum1));
+      list = d.getEnums();
+      assertTrue(list.get(0).equals(enum1));
+//      assertTrue(list.get(0).getName().equals(enum1.getName()));
+//      assertTrue(list.get(0).getValue().equals(enum1.getValue()));
 
       // add another enum
-      d.appendEnumeration( "Enum2", "Val2" );
-      assertEquals( d.getEnumerationsSize(), 2 );
-      assertTrue( d.getEnumAtIndex(0).equals(new DescEnum("Enum1", new VarValue("Val1"))) );
-      assertTrue( d.getEnumAtIndex(1).equals(new DescEnum("Enum2", new VarValue("Val2"))) );
-      deArray = d.getEnumerations();
-      assertTrue( deArray[0].equals(new DescEnum("Enum1", new VarValue("Val1"))) );
-      assertTrue( deArray[1].equals(new DescEnum("Enum2", new VarValue("Val2"))) );
+      DescEnum enum2 = new DescEnum("Enum2", new VarValue("Val2"));
+      d.addEnum(enum2);
+      assertEquals(d.getNumEnums(), 2);
+      assertTrue(d.getEnumAt(0).equals(enum1));
+      assertTrue(d.getEnumAt(1).equals(enum2));
+      list = d.getEnums();
+      assertTrue(list.get(0).equals(enum1));
+      assertTrue(list.get(1).equals(enum2));
 
-      // replace the enums
-      ArrayList list = new ArrayList();
-      list.add( new DescEnum("Me", new VarValue("Me")) );
-      list.add( new DescEnum("Myself", new VarValue("Myself")) );
-      list.add( new DescEnum("I", new VarValue("I")) );
-      d.setEnumerations( list );
-      assertEquals( d.getEnumerationsSize(), 3 );
-      assertTrue( d.getEnumAtIndex(0).equals(new DescEnum("Me", new VarValue("Me"))) );
-      assertTrue( d.getEnumAtIndex(1).equals(new DescEnum("Myself", new VarValue("Myself"))) );
-      assertTrue( d.getEnumAtIndex(2).equals(new DescEnum("I", new VarValue("I"))) );
-      deArray = d.getEnumerations();
-      assertTrue( deArray[0].equals(new DescEnum("Me", new VarValue("Me"))) );
-      assertTrue( deArray[1].equals(new DescEnum("Myself", new VarValue("Myself"))) );
-      assertTrue( deArray[2].equals(new DescEnum("I", new VarValue("I"))) );
-
-      // replace with the empty list
-      list = new ArrayList();
-      d.setEnumerations( list );
-      assertEquals( d.getEnumerationsSize(), 0 );
-      deArray = d.getEnumerations();
-      assertEquals( deArray.length, 0 );
+      // remove an enum
+      d.removeEnum(enum2);
+      assertEquals(d.getNumEnums(), 1);
+      assertTrue(d.getEnumAt(0).equals(enum1));
+      list = d.getEnums();
+      assertTrue(list.get(0).equals(enum1));
    }
 }

@@ -15,32 +15,6 @@ public class DescEnumTest
    }
 
    /**
-    * Test the toString representation.
-    */
-   public void testToString()
-   {
-      DescEnum de = new DescEnum( "ShoeSize", new VarValue(13) );
-      assertEquals( de.toString(), "ShoeSize=13" );
-
-      // null value case
-      de.val = null;
-      assertEquals( de.toString(), "ShoeSize" );
-   }
-
-   /**
-    * Tests the copy constructor.
-    */
-   public void testCopyConstructor()
-   {
-      DescEnum orig = new DescEnum( "PizzaTopping", new VarValue("Pepperoni") );
-      DescEnum copy = new DescEnum( orig );
-      assertEquals( orig.str, copy.str );
-//      assertTrue( orig.str != copy.str );
-      assertTrue( orig.val.equals(copy.val) );
-      assertTrue( orig.val != copy.val );
-   }
-
-   /**
     * Tests the clone() method.
     */
    public void testClone()
@@ -55,10 +29,10 @@ public class DescEnumTest
       {
          assertTrue( cnse.getMessage(), false );
       }
-      assertEquals( orig.str, clone.str );
-//      assertTrue( orig.str != clone.str );
-      assertTrue( orig.val.equals(clone.val) );
-      assertTrue( orig.val != clone.val );
+      assertEquals( orig.getName(), clone.getName() );
+//      assertTrue( orig.getName() != clone.getName() );
+      assertTrue( orig.getValue().equals(clone.getValue()) );
+      assertTrue( orig.getValue() != clone.getValue() );
    }
 
    /**
@@ -68,13 +42,9 @@ public class DescEnumTest
    {
       DescEnum de1 = new DescEnum( "Pipe", new VarValue(1) );
       DescEnum de2 = new DescEnum( "Pipe", new VarValue(1) );
-      assertTrue( de1.equals(de2) );
-      de2.str = "Display";
-      assertTrue( ! de1.equals(de2) );
-      de2.str = "Pipe";
-      de2.val.set(2);
-      assertTrue( ! de1.equals(de2) );
-      de2.val = new VarValue( 1.0f );
-      assertTrue( ! de1.equals(de2) );
+      assertTrue(de1.equals(de1));
+      assertTrue(de2.equals(de2));
+      assertTrue(! de1.equals(de2));
+      assertTrue(! de2.equals(de1));
    }
 }
