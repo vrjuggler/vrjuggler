@@ -145,6 +145,7 @@ std::string EventWindow::getKeyName(gadget::Keys keyId)
       case gadget::KEY_Y: return std::string("KEY_Y");
       case gadget::KEY_Z: return std::string("KEY_Z");
       case gadget::KEY_ESC: return std::string("KEY_ESC");
+
       case gadget::MOUSE_POSX: return std::string("MOUSE_POSX");
       case gadget::MOUSE_NEGX: return std::string("MOUSE_NEGX");
       case gadget::MOUSE_POSY: return std::string("MOUSE_POSY");
@@ -152,10 +153,111 @@ std::string EventWindow::getKeyName(gadget::Keys keyId)
       case gadget::MBUTTON1: return std::string("MBUTTON1");
       case gadget::MBUTTON2: return std::string("MBUTTON2");
       case gadget::MBUTTON3: return std::string("MBUTTON3");
+      case gadget::MBUTTON4: return std::string("MBUTTON4");
+      case gadget::MBUTTON5: return std::string("MBUTTON5");
+      case gadget::NO_MBUTTON: return std::string("NO_MBUTTON");
+
+      case gadget::KEY_TAB          : return std::string("KEY_TAB");
+      case gadget::KEY_BACKTAB      : return std::string("KEY_BACKTAB");
+      case gadget::KEY_BACKSPACE    : return std::string("KEY_BACKSPACE");
+      case gadget::KEY_RETURN       : return std::string("KEY_RETURN");
+      case gadget::KEY_ENTER        : return std::string("KEY_ENTER");
+      case gadget::KEY_INSERT       : return std::string("KEY_INSERT");
+      case gadget::KEY_DELETE       : return std::string("KEY_DELETE");
+      case gadget::KEY_PAUSE        : return std::string("KEY_PAUSE");
+      case gadget::KEY_PRINT        : return std::string("KEY_PRINT");
+      case gadget::KEY_SYSREQ       : return std::string("KEY_SYSREQ");
+      case gadget::KEY_HOME         : return std::string("KEY_HOME");
+      case gadget::KEY_END          : return std::string("KEY_END");
+      case gadget::KEY_PRIOR        : return std::string("KEY_PRIOR");
+      case gadget::KEY_NEXT         : return std::string("KEY_NEXT");
+      case gadget::KEY_CAPS_LOCK    : return std::string("KEY_CAPS_LOCK");
+      case gadget::KEY_NUM_LOCK     : return std::string("KEY_NUM_LOCK");
+      case gadget::KEY_SCROLL_LOCK  : return std::string("KEY_SCROLL_LOCK");
+      case gadget::KEY_F1           : return std::string("KEY_F1");
+      case gadget::KEY_F2           : return std::string("KEY_F2");
+      case gadget::KEY_F3           : return std::string("KEY_F3");
+      case gadget::KEY_F4           : return std::string("KEY_F4");
+      case gadget::KEY_F5           : return std::string("KEY_F5");
+      case gadget::KEY_F6           : return std::string("KEY_F6");
+      case gadget::KEY_F7           : return std::string("KEY_F7");
+      case gadget::KEY_F8           : return std::string("KEY_F8");
+      case gadget::KEY_F9           : return std::string("KEY_F9");
+      case gadget::KEY_F10          : return std::string("KEY_F10");
+      case gadget::KEY_F11          : return std::string("KEY_F11");
+      case gadget::KEY_F12          : return std::string("KEY_F12");
+      case gadget::KEY_F13          : return std::string("KEY_F13");
+      case gadget::KEY_F14          : return std::string("KEY_F14");
+      case gadget::KEY_F15          : return std::string("KEY_F15");
+      case gadget::KEY_F16          : return std::string("KEY_F16");
+      case gadget::KEY_F17          : return std::string("KEY_F17");
+      case gadget::KEY_F18          : return std::string("KEY_F18");
+      case gadget::KEY_F19          : return std::string("KEY_F19");
+      case gadget::KEY_F20          : return std::string("KEY_F20");
+      case gadget::KEY_F21          : return std::string("KEY_F21");
+      case gadget::KEY_F22          : return std::string("KEY_F22");
+      case gadget::KEY_F23          : return std::string("KEY_F23");
+      case gadget::KEY_F24          : return std::string("KEY_F24");
+      case gadget::KEY_F25          : return std::string("KEY_F25");
+      case gadget::KEY_F26          : return std::string("KEY_F26");
+      case gadget::KEY_F27          : return std::string("KEY_F27");
+      case gadget::KEY_F28          : return std::string("KEY_F28");
+      case gadget::KEY_F29          : return std::string("KEY_F29");
+      case gadget::KEY_F30          : return std::string("KEY_F30");
+      case gadget::KEY_F31          : return std::string("KEY_F31");
+      case gadget::KEY_F32          : return std::string("KEY_F32");
+      case gadget::KEY_F33          : return std::string("KEY_F33");
+      case gadget::KEY_F34          : return std::string("KEY_F34");
+      case gadget::KEY_F35          : return std::string("KEY_F35");
+
+      case gadget::KEY_SUPER_L : return std::string("KEY_SUPER_L");
+      case gadget::KEY_SUPER_R : return std::string("KEY_SUPER_R");
+      case gadget::KEY_MENU    : return std::string("KEY_MENU");
+      case gadget::KEY_HYPER_L : return std::string("KEY_HYPER_L");
+      case gadget::KEY_HYPER_R : return std::string("KEY_HYPER_R");
+      case gadget::KEY_HELP    : return std::string("KEY_HELP");
+      case gadget::KEY_SPACE   : return std::string("KEY_SPACE");
+      case gadget::KEY_ANY     : return std::string("KEY_ANY");
+
+      case gadget::KEY_EXCLAM        : return std::string("KEY_EXCLAM");
+      case gadget::KEY_QUOTE_DBL     : return std::string("KEY_QUOTE_DBL");
+      case gadget::KEY_NUMBER_SIGN   : return std::string("KEY_NUMBER_SIGN");
+      case gadget::KEY_DOLLAR        : return std::string("KEY_DOLLAR");
+      case gadget::KEY_PERCENT       : return std::string("KEY_PERCENT");
+      case gadget::KEY_AMPERSAND     : return std::string("KEY_AMPERSAND");
+      case gadget::KEY_APOSTROPHE    : return std::string("KEY_APOSTROPHE");
+      case gadget::KEY_PAREN_LEFT    : return std::string("KEY_PAREN_LEFT");
+      case gadget::KEY_PAREN_RIGHT   : return std::string("KEY_PAREN_RIGHT");
+      case gadget::KEY_ASTERISK      : return std::string("KEY_ASTERISK");
+      case gadget::KEY_PLUS          : return std::string("KEY_PLUS");
+      case gadget::KEY_COMMA         : return std::string("KEY_COMMA");
+      case gadget::KEY_MINUS         : return std::string("KEY_MINUS");
+      case gadget::KEY_PERIOD        : return std::string("KEY_PERIOD");
+      case gadget::KEY_SLASH         : return std::string("KEY_SLASH");
+      case gadget::KEY_COLON         : return std::string("KEY_COLON");
+      case gadget::KEY_SEMICOLON     : return std::string("KEY_SEMICOLON");
+      case gadget::KEY_LESS          : return std::string("KEY_LESS");
+      case gadget::KEY_EQUAL         : return std::string("KEY_EQUAL");
+      case gadget::KEY_GREATER       : return std::string("KEY_GREATER");
+      case gadget::KEY_QUESTION      : return std::string("KEY_QUESTION");
+      case gadget::KEY_AT            : return std::string("KEY_AT");
+      case gadget::KEY_BRACKET_LEFT  : return std::string("KEY_BRACKET_LEFT");
+      case gadget::KEY_BACKSLASH     : return std::string("KEY_BACKSLASH");
+      case gadget::KEY_BRACKET_RIGHT : return std::string("KEY_BRACKET_RIGHT");
+      case gadget::KEY_ASCII_CIRCUM  : return std::string("KEY_ASCII_CIRCUM");
+      case gadget::KEY_UNDERSCORE    : return std::string("KEY_UNDERSCORE");
+      case gadget::KEY_QUOTE_LEFT    : return std::string("KEY_QUOTE_LEFT");
+      case gadget::KEY_BRACE_LEFT    : return std::string("KEY_BRACE_LEFT");
+      case gadget::KEY_BAR           : return std::string("KEY_BAR");
+      case gadget::KEY_BRACE_RIGHT   : return std::string("KEY_BRACE_RIGHT");
+      case gadget::KEY_ASCII_TILDE   : return std::string("KEY_ASCII_TILDE");
+
+      case gadget::KEY_UNKNOWN : return std::string("KEY_UNKNOWN");
+      case gadget::LAST_KEY    : return std::string("LAST_KEY");
    }
 
    // If all of the above fell through ...
-   return std::string("Unknown key");
+   return std::string("Unrecognized key");
 }
 
 std::queue<gadget::EventPtr> EventWindow::getEventQueue()
