@@ -31,9 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-// File output for Environment Manager
-//
-// author: Christopher Just
+// File/socket io for JackalServer
 
 
 #include <jccl/JackalServer/Connect.h>
@@ -121,7 +119,8 @@ Connect::Connect(ConfigChunkPtr c): commands_mutex(), communicators() {
 
     // logging information to output file...
     if (mode == OUTPUT_CONNECT) {
-      *outstream << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl;
+      *outstream << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+      *outstream << "<jcclstream>\n";
 //          *outstream << "VR Juggler FileConnect output " << name.c_str()
 //                     << std::endl;
     }
@@ -197,6 +196,11 @@ bool Connect::stopProcess() {
         delete write_connect_thread;
         write_connect_thread = NULL;
     }
+
+    if (mode == OUTPUT_CONNECT) {
+        *outstream << "</jcclstream>\n";
+    }
+
     if (sock) {
         delete (sock);
     }
