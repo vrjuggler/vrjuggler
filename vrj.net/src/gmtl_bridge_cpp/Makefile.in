@@ -26,11 +26,11 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 srcdir=		@srcdir@
-LIBDIR=		../lib
+top_srcdir=	@top_srcdir@
 
-CXXFLAGS=	
-INCLUDES=	-I$(srcdir) -I@top_srcdir@/src $(shell vpr-config --includes)
-LDFLAGS=	
+EXTRA_CXXFLAGS=	
+EXTRA_INCLUDES=	-I$(top_srcdir)/src $(shell vpr-config --includes)
+EXTRA_LDFLAGS=	
 MOD_NAME=	gmtl
 
 SRCS=		gmtl_Matrix33f.cpp		\

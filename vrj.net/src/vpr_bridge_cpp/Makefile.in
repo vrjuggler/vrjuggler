@@ -26,11 +26,11 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 srcdir=		@srcdir@
-LIBDIR=		../lib
+top_srcdir=	@top_srcdir@
 
-CXXFLAGS=	@VPR_CXXFLAGS@
-INCLUDES=	-I$(srcdir) -I@top_srcdir@/src
-LDFLAGS=	@VPR_LIBS_CC@ @VPR_EXTRA_LIBS_CC@
+EXTRA_CXXFLAGS=	@VPR_CXXFLAGS@
+EXTRA_INCLUDES=	-I$(top_srcdir)/src
+EXTRA_LDFLAGS=	@VPR_LIBS_CC@ @VPR_EXTRA_LIBS_CC@
 MOD_NAME=	vpr
 
 SRCS=		vpr_GUID.cpp			\

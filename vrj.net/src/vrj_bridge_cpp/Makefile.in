@@ -26,11 +26,11 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 srcdir=		@srcdir@
-LIBDIR=		../lib
+top_srcdir=	@top_srcdir@
 
-CXXFLAGS=	@VRJ_CXXFLAGS@ @CLI_CFLAGS@
-INCLUDES=	-I$(srcdir) -I@top_srcdir@/src
-LDFLAGS=	@CLI_LDFLAGS@ @CLI_LIBS@ @VRJ_LIBS_CC@ @VRJ_EXTRA_LIBS_CC@
+EXTRA_CXXFLAGS=	@VRJ_CXXFLAGS@ @CLI_CFLAGS@
+EXTRA_INCLUDES=	-I$(top_srcdir)/src
+EXTRA_LDFLAGS=	@CLI_LDFLAGS@ @CLI_LIBS@ @VRJ_LIBS_CC@ @VRJ_EXTRA_LIBS_CC@
 MOD_NAME=	vrj
 
 SRCS=		vrj_App.cpp		\

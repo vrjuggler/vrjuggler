@@ -26,11 +26,11 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 srcdir=		@srcdir@
-LIBDIR=		../lib
+top_srcdir=	@top_srcdir@
 
-CXXFLAGS=	@JCCL_CXXFLAGS@
-INCLUDES=	-I$(srcdir) -I@top_srcdir@/src
-LDFLAGS=	@JCCL_LIBS_CC@ @JCCL_EXTRA_LIBS_CC@
+EXTRA_CXXFLAGS=	@JCCL_CXXFLAGS@
+EXTRA_INCLUDES=	-I$(top_srcdir)/src
+EXTRA_LDFLAGS=	@JCCL_LIBS_CC@ @JCCL_EXTRA_LIBS_CC@
 MOD_NAME=	jccl
 
 SRCS=		jccl_ConfigDefinition.cpp	\
