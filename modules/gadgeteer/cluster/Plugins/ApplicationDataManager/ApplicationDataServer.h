@@ -33,7 +33,7 @@
 #ifndef CLUSTER_ApplicationData_SERVER_H
 #define CLUSTER_ApplicationData_SERVER_H
 
-#include <gadget/gadgetConfig.h>
+#include <cluster/Plugins/PluginConfig.h>
 #include <cluster/Packets/DataPacket.h>
 
 namespace cluster
@@ -41,7 +41,7 @@ namespace cluster
    class ClusterNode;
    class ApplicationData;
 
-   class GADGET_CLASS_API ApplicationDataServer
+   class GADGET_CLUSTER_PLUGIN_CLASS_API ApplicationDataServer
    {
    public:
       /**

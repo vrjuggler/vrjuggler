@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <gadget/gadgetConfig.h>
+#include <cluster/Plugins/PluginConfig.h>
 
 #include <cluster/Plugins/ApplicationDataManager/ApplicationDataManager.h> // my header...
 

@@ -33,7 +33,7 @@
 #ifndef GADGET_VIRTUAL_DEVICE_H
 #define GADGET_VIRTUAL_DEVICE_H
 
-#include <gadget/gadgetConfig.h>
+#include <cluster/Plugins/PluginConfig.h>
 #include <gadget/Util/Debug.h>
 #include <gadget/Type/Input.h>
 
@@ -43,7 +43,7 @@
 
 namespace cluster
 {
-   class GADGET_CLASS_API VirtualDevice
+   class GADGET_CLUSTER_PLUGIN_CLASS_API VirtualDevice
    {
    public:
       VirtualDevice(const std::string& name, const vpr::GUID& local_id, const std::string& base_type, 
