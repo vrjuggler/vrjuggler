@@ -30,11 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _MemPool_h_
-#define _MemPool_h_
+#ifndef _VPR_MemPool_h_
+#define _VPR_MemPool_h_
 //#pragma once
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 #include <stdlib.h>
 
 namespace vpr 
@@ -68,41 +68,12 @@ public:
 } // End of vpr namespace
 
 #if defined(VPR_USE_IRIX_SPROC)
-#   include <md/SPROC/MemPoolSGI.h>
-#   include <SharedMem/MemPoolHeap.h>
+#   include <vpr/md/SPROC/SharedMem/MemPoolSGI.h>
 
 namespace vpr {
     typedef MemPoolSGI  SharedPool;
-    typedef MemPoolHeap HeapPool;
     typedef MemPoolSGI  SyncPool;
-};
-#elif defined(VPR_USE_WIN32)
-#   include <md/WIN32/MemPoolWin32.h>
-#   include <SharedMem/MemPoolHeap.h>  // Everything is heap!!!
-
-namespace vpr {
-    typedef MemPoolHeap SharedPool;
-    typedef MemPoolHeap HeapPool;
-    typedef MemPoolHeap SyncPool;
-};
-#elif defined(VPR_USE_PTHREADS)
-#   include <md/POSIX/MemPoolPosix.h>
-#   include <SharedMem/MemPoolHeap.h>
-
-namespace vpr {
-    typedef MemPoolPosix SharedPool;
-    typedef MemPoolHeap  HeapPool;
-    typedef MemPoolPosix SyncPool;
-};
-#else
-#   include <md/NSPR/MemPoolNSPR.h>
-#   include <SharedMem/MemPoolHeap.h>
-
-namespace vpr {
-    typedef MemPoolNSPR SharedPool;
-    typedef MemPoolHeap HeapPool;
-    typedef MemPoolNSPR SyncPool;
 };
 #endif	/* VPR_IRIX_SPROC */
 
-#endif	/* _MemPool_h_ */
+#endif	/* _VPR_MemPool_h_ */

@@ -38,8 +38,8 @@
 # -----------------------------------------------------------------------------
 
 AC_REVISION($Revision$)
-AC_INIT(include/vprConfig.h)
-AC_CONFIG_HEADER(include/vprDefines.h)
+AC_INIT(vpr/vprConfig.h)
+AC_CONFIG_HEADER(vpr/vprDefines.h)
 DPP_PREREQ(1.3)
 DPP_INIT
 
@@ -382,6 +382,9 @@ if test "x$SUBSYSTEM" = "xPOSIX" ; then
     SHMEM_SYS='POSIX'
     THREAD_SYS='POSIX'
     SEMPANORE_SYS='POSIX'
+    HANDLE_ABS='UNIX'
+    SERIAL_PORT_ABS='TERMIOS'
+    SOCKET_ABS='BSD'
 # We are using WIN32 threads.
 elif test "x$SUBSYSTEM" = "xWIN32" ; then
     AC_DEFINE(VPR_USE_WIN32,)
@@ -391,6 +394,9 @@ elif test "x$SUBSYSTEM" = "xWIN32" ; then
     THREAD_SYS='WIN32'
     MUTEX_SYS='WIN32'
     SHMEM_SYS='WIN32'
+    HANDLE_ABS='WIN32'
+    SERIAL_PORT_ABS='WIN32'
+    SOCKET_ABS='WIN32'
 # If we are not using POSIX threads, we must be using the IRIX sproc(2) model,
 # but we test $SUBSYSTEM just to be sure it is set right.
 elif test "x$SUBSYSTEM" = "xSPROC" ; then
@@ -404,6 +410,9 @@ elif test "x$SUBSYSTEM" = "xSPROC" ; then
     SEMAPHORE_SYS='SPROC'
     SHMEM_SYS='SPROC'
     MUTEX_SYS='SPROC'
+    HANDLE_ABS='UNIX'
+    SERIAL_PORT_ABS='TERMIOS'
+    SOCKET_ABS='BSD'
 # NSPR subsystem.
 else
     if test "x$NSPR_THREADS_ENABLED" = "xno" -a "x$OS_TYPE" = "xUNIX" ; then
@@ -425,6 +434,15 @@ else
     THREAD_SYS='NSPR'
     MUTEX_SYS='NSPR'
     SHMEM_SYS='NSPR'
+
+    if test "x$OS_TYPE" = "xUNIX" ; then
+        SERIAL_PORT_ABS='TERMIOS'
+    else
+        SERIAL_PORT_ABS='WIN32'
+    fi
+
+    HANDLE_ABS='NSPR'
+    SOCKET_ABS='NSPR'
 fi
 
 # -----------------------------------------------------------------------------
@@ -735,6 +753,9 @@ AC_SUBST(SEMAPHORE_SYS)
 AC_SUBST(SHMEM_SYS)
 AC_SUBST(MUTEX_SYS)
 AC_SUBST(THREAD_SYS)
+AC_SUBST(HANDLE_ABS)
+AC_SUBST(SERIAL_PORT_ABS)
+AC_SUBST(SOCKET_ABS)
 
 AC_SUBST(APP_EXTRA_FLAGS)
 AC_SUBST(APP_VPR_LIBS_BEGIN)
@@ -851,25 +872,41 @@ AC_OUTPUT(Makefile
           Makefile.inc
           common.defs.mk
           make.defs.mk
-          include/Makefile
-          md/Makefile
-          md/NSPR/Makefile
-          md/POSIX/Makefile
-          md/SPROC/Makefile
-          md/WIN32/Makefile
-          IO/Makefile
-          IO/Port/Makefile
-          IO/Socket/Makefile
-          SharedMem/Makefile
-          Sync/Makefile
-          Threads/Makefile
-          Utils/Makefile
+          vpr/Makefile
+          vpr/md/Makefile
+          vpr/md/NSPR/Makefile
+          vpr/md/NSPR/IO/Makefile
+          vpr/md/NSPR/IO/Socket/Makefile
+          vpr/md/NSPR/Sync/Makefile
+          vpr/md/NSPR/Thread/Makefile
+          vpr/md/POSIX/Makefile
+          vpr/md/POSIX/IO/Makefile
+          vpr/md/POSIX/IO/Port/Makefile
+          vpr/md/POSIX/IO/Socket/Makefile
+          vpr/md/POSIX/Sync/Makefile
+          vpr/md/POSIX/Thread/Makefile
+          vpr/md/SPROC/Makefile
+          vpr/md/SPROC/SharedMem/Makefile
+          vpr/md/SPROC/Sync/Makefile
+          vpr/md/SPROC/Thread/Makefile
+          vpr/md/WIN32/Makefile
+          vpr/md/WIN32/IO/Makefile
+          vpr/md/WIN32/IO/Port/Makefile
+          vpr/md/WIN32/IO/Socket/Makefile
+          vpr/md/WIN32/Sync/Makefile
+          vpr/md/WIN32/Thread/Makefile
+          vpr/IO/Makefile
+          vpr/IO/Port/Makefile
+          vpr/IO/Socket/Makefile
+          vpr/Sync/Makefile
+          vpr/Thread/Makefile
+          vpr/Util/Makefile
           test/Makefile
           test/TestSuite/Makefile
           test/SerialPort/Makefile
           test/Socket/Makefile
           test/Sync/Makefile
-          test/Threads/Makefile
+          test/Thread/Makefile
           release/mtree/VPR.include.dist
           release/mtree/VPR.install.dist
           release/mtree/VPR.test.dist

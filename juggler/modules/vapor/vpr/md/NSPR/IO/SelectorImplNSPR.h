@@ -1,4 +1,3 @@
-
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
@@ -31,19 +30,20 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_SELECTOR_IMP_NSPR_H_
-#define _VPR_SELECTOR_IMP_NSPR_H_
+#ifndef _VPR_SELECTOR_IMPL_NSPR_H_
+#define _VPR_SELECTOR_IMPL_NSPR_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <vector>
 #include <map>
 #include <string>
 #include <prio.h>
 
-#include <IO/SelectorBase.h>
-#include <IO/IOSys.h>
-#include <Utils/Debug.h>
+#include <vpr/IO/SelectorBase.h>
+#include <vpr/IO/IOSys.h>
+#include <vpr/Util/Debug.h>
+#include <vpr/Util/Status.h>
 
 
 namespace vpr {
@@ -57,7 +57,7 @@ namespace vpr {
 // Implementation site of the Selector_t bridge.
 // ----------------------------------------------------------------------------
 //!PUBLIC_API:
-class SelectorImpNSPR : public SelectorBase
+class SelectorImplNSPR : public SelectorBase
 {
 public:
    
@@ -132,4 +132,4 @@ struct PRPollDesc {
 }; // End of vpr namespace
 
 
-#endif  /* _VPR_SELECTOR_BRIDGE_H_ */
+#endif  /* _VPR_SELECTOR_IMP_NSPR_H_ */

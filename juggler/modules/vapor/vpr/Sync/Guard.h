@@ -33,9 +33,9 @@
 #ifndef _VPR_Guard_h_
 #define _VPR_Guard_h_
 
-#include <vprConfig.h>
-//#include <Sync/Semaphore.h>
-//#include <Sync/Mutex.h>
+#include <vpr/vprConfig.h>
+//#include <vpr/Sync/Semaphore.h>
+//#include <vpr/Sync/Mutex.h>
 
 
 namespace vpr {

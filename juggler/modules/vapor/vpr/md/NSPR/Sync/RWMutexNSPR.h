@@ -33,7 +33,7 @@
 #ifndef _VPR_RW_MUTEX_NSPR_H_
 #define _VPR_RW_MUTEX_NSPR_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <stdio.h>
 #include <prrwlock.h>

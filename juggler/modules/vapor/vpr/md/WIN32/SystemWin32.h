@@ -41,14 +41,14 @@
 #ifndef _VPR_SYSTEM_WIN32_H_
 #define _VPR_SYSTEM_WIN32_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <stdlib.h>
 #include <string>
 #include <windows.h>
 #include <winsock2.h>
 
-#include <SystemBase.h>
+#include <vpr/SystemBase.h>
 
 
 #ifndef HAVE_GETTIMEOFDAY

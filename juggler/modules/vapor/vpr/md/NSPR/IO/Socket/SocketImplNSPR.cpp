@@ -30,15 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <stdio.h>
 #include <string.h>
 #include <prinrval.h>
 #include <prio.h>
 
-#include <md/NSPR/SocketImpNSPR.h>
-#include <md/NSPR/NSPRHelpers.h>
+#include <vpr/md/NSPR/IO/Socket/SocketImplNSPR.h>
+#include <vpr/md/NSPR/NSPRHelpers.h>
 
 namespace vpr {
 
@@ -51,7 +51,7 @@ namespace vpr {
 // options set through member variables.
 // ----------------------------------------------------------------------------
 Status
-SocketImpNSPR::open () {
+SocketImplNSPR::open () {
    Status retval;
    PRFileDesc* new_sock = NULL;
 
@@ -71,7 +71,7 @@ SocketImpNSPR::open () {
           break;
         default:
           fprintf(stderr,
-                  "[vpr::SocketImpNSPR] ERROR: Unknown socket type value %d\n",
+                  "[vpr::SocketImplNSPR] ERROR: Unknown socket type value %d\n",
                   m_local_addr.getFamily());
           break;
       }
@@ -79,7 +79,7 @@ SocketImpNSPR::open () {
       // If socket(2) failed, print an error message and return error status.
       if ( new_sock == NULL ) {
          fprintf(stderr,
-                 "[vpr::SocketImpNSPR] Could not create socket: \n");
+                 "[vpr::SocketImplNSPR] Could not create socket: \n");
          retval.setCode(Status::Failure);
       }
       // Otherwise, return success.
@@ -96,7 +96,7 @@ SocketImpNSPR::open () {
 // Close the socket.
 // ----------------------------------------------------------------------------
 Status
-SocketImpNSPR::close () {
+SocketImplNSPR::close () {
     Status retval;
     PRStatus status;
 
@@ -118,7 +118,7 @@ SocketImpNSPR::close () {
 // Bind this socket to the address in the host address member variable.
 // ----------------------------------------------------------------------------
 Status
-SocketImpNSPR::bind () {
+SocketImplNSPR::bind () {
     Status retval;
     PRStatus status;
 
@@ -129,7 +129,7 @@ SocketImpNSPR::bind () {
     if ( status == PR_FAILURE )
     {
        retval.setCode(Status::Failure);
-       NSPR_PrintError("SocketImpNSPR::bind: Failed to bind.");
+       NSPR_PrintError("SocketImplNSPR::bind: Failed to bind.");
     }
     // Otherwise, return success.
     else {
@@ -142,7 +142,7 @@ SocketImpNSPR::bind () {
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
 Status
-SocketImpNSPR::enableBlocking () {
+SocketImplNSPR::enableBlocking () {
 
    assert( m_open && "precondition says you must open() the socket first" );
        
@@ -164,7 +164,7 @@ SocketImpNSPR::enableBlocking () {
       // If that fails, print an error and return error status.
       if ( status == PR_FAILURE )
       {
-         NSPR_PrintError("SocketImpNSPR::enableBlocking: Failed to set.");
+         NSPR_PrintError("SocketImplNSPR::enableBlocking: Failed to set.");
          retval.setCode(Status::Failure);
       }
    }
@@ -175,7 +175,7 @@ SocketImpNSPR::enableBlocking () {
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
 Status
-SocketImpNSPR::enableNonBlocking () {
+SocketImplNSPR::enableNonBlocking () {
    Status retval;
 
    assert( m_open && "precondition says you must open() the socket first" );
@@ -197,7 +197,7 @@ SocketImpNSPR::enableNonBlocking () {
       // If that fails, print an error and return error status.
       if ( status == PR_FAILURE )
       {
-         NSPR_PrintError("SocketImpNSPR::enableNonBlocking: Failed to set.");
+         NSPR_PrintError("SocketImplNSPR::enableNonBlocking: Failed to set.");
          retval.setCode(Status::Failure);
       }
    }
@@ -212,13 +212,13 @@ SocketImpNSPR::enableNonBlocking () {
 // establishing a connection with the destination.
 // ----------------------------------------------------------------------------
 Status
-SocketImpNSPR::connect () {
+SocketImplNSPR::connect () {
    Status retval;
    PRStatus status;
 
    if(m_bound)
    {
-      vprDEBUG(0,0) << "SocketImpNSPR::connect: Socket alreay bound.  Can't connect"
+      vprDEBUG(0,0) << "SocketImplNSPR::connect: Socket alreay bound.  Can't connect"
                     << vprDEBUG_FLUSH; 
       retval.setCode(Status::Failure);
    }
@@ -236,7 +236,7 @@ SocketImpNSPR::connect () {
             retval.setCode( Status::InProgress );
          }
          else {
-            NSPR_PrintError("SocketImpNSPR::connect: Failed to connect.");
+            NSPR_PrintError("SocketImplNSPR::connect: Failed to connect.");
             retval.setCode(Status::Failure);
          }
       }
@@ -258,7 +258,7 @@ SocketImpNSPR::connect () {
 // Default constructor.  This just initializes member variables to reasonable
 // defaults.
 // ----------------------------------------------------------------------------
-SocketImpNSPR::SocketImpNSPR (const SocketTypes::Type sock_type)
+SocketImplNSPR::SocketImplNSPR (const SocketTypes::Type sock_type)
     : BlockIO(std::string("INADDR_ANY")), m_handle(NULL), m_type(sock_type),
       m_bound(false)
 {
@@ -271,17 +271,18 @@ SocketImpNSPR::SocketImpNSPR (const SocketTypes::Type sock_type)
 // the member variables for use when opening the socket and performing
 // communications.
 // ----------------------------------------------------------------------------
-SocketImpNSPR::SocketImpNSPR (const InetAddr& local_addr,
-                            const InetAddr& remote_addr,
-                            const SocketTypes::Type sock_type)
+SocketImplNSPR::SocketImplNSPR (const InetAddr& local_addr,
+                                const InetAddr& remote_addr,
+                                const SocketTypes::Type sock_type)
     : BlockIO(std::string("INADDR_ANY")), m_handle(NULL),
-      m_local_addr(local_addr), m_remote_addr(remote_addr), m_type(sock_type), m_bound(false)
+      m_local_addr(local_addr), m_remote_addr(remote_addr), m_type(sock_type),
+      m_bound(false)
 {;}
 
 // ----------------------------------------------------------------------------
 // Destructor.  This currently does nothing.
 // ----------------------------------------------------------------------------
-SocketImpNSPR::~SocketImpNSPR ()
+SocketImplNSPR::~SocketImplNSPR ()
 {
     if ( m_handle != NULL ) {
        // PRClose(m_handle);     // XXX: Let it dangle
@@ -293,8 +294,8 @@ SocketImpNSPR::~SocketImpNSPR ()
  *
  */
 Status
-SocketImpNSPR::getOption (const SocketOptions::Types option,
-                          struct SocketOptions::Data& data)
+SocketImplNSPR::getOption (const SocketOptions::Types option,
+                           struct SocketOptions::Data& data)
 {
     Status retval;
     PRSocketOptionData opt_data;
@@ -328,7 +329,7 @@ SocketImpNSPR::getOption (const SocketOptions::Types option,
       case SocketOptions::AddMember:
       case SocketOptions::DropMember:
         fprintf(stderr,
-                "[vpr::SocketImpNSPR] Cannot get add/drop member socket option!\n");
+                "[vpr::SocketImplNSPR] Cannot get add/drop member socket option!\n");
         get_opt = false;
         break;
       case SocketOptions::McastInterface:
@@ -420,7 +421,7 @@ SocketImpNSPR::getOption (const SocketOptions::Types option,
         else {
             retval.setCode(Status::Failure);
             fprintf(stderr,
-                    "[vpr::SocketImpNSPR] ERROR: Could not get socket option "
+                    "[vpr::SocketImplNSPR] ERROR: Could not get socket option "
                     "for socket");
         }
     }
@@ -435,8 +436,8 @@ SocketImpNSPR::getOption (const SocketOptions::Types option,
  *
  */
 Status
-SocketImpNSPR::setOption (const SocketOptions::Types option,
-                          const struct SocketOptions::Data& data)
+SocketImplNSPR::setOption (const SocketOptions::Types option,
+                           const struct SocketOptions::Data& data)
 {
     PRSocketOptionData opt_data;
 
@@ -484,7 +485,7 @@ SocketImpNSPR::setOption (const SocketOptions::Types option,
 //            opt_data.value.tos = ???;
 #else
             fprintf(stderr,
-                    "[vpr::SocketImpNSPR] WARNING: This subsystem does not "
+                    "[vpr::SocketImplNSPR] WARNING: This subsystem does not "
                     "support LowCost type of service!\n");
 #endif
             break;

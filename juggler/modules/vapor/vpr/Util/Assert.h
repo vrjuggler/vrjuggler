@@ -33,7 +33,7 @@
 #ifndef _VPR_ASSERT_H_
 #define _VPR_ASSERT_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 // -- ASSERT -- //
 #define VPR_DEBUG

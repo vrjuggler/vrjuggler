@@ -33,12 +33,12 @@
 #ifndef _VPR_FILE_HANDLE_H_
 #define _VPR_FILE_HANDLE_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <string>
 #include <vector>
 
-#include <IO/BlockIO.h>
+#include <vpr/IO/BlockIO.h>
 
 
 namespace vpr {

@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <string.h>
 #include <sys/types.h>
@@ -42,11 +42,11 @@
 #   include <sys/capability.h>
 #endif
 
-#include <Threads/ThreadManager.h>
-#include <Threads/ThreadFunctor.h>
-#include <Threads/Thread.h>
-#include <Utils/Assert.h>
-#include <md/POSIX/ThreadPosix.h>
+#include <vpr/Thread/ThreadManager.h>
+#include <vpr/Thread/ThreadFunctor.h>
+#include <vpr/Thread/Thread.h>
+#include <vpr/Util/Assert.h>
+#include <vpr/md/POSIX/Thread/ThreadPosix.h>
 
 
 typedef struct sched_param sched_param_t;

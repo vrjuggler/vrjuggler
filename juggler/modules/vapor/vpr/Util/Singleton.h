@@ -33,9 +33,9 @@
 #ifndef _VPR_SINGLETON_H_
 #define _VPR_SINGLETON_H_
 
-#include <vprConfig.h>
-#include <Sync/Mutex.h>
-#include <Sync/Guard.h>
+#include <vpr/vprConfig.h>
+#include <vpr/Sync/Mutex.h>
+#include <vpr/Sync/Guard.h>
 
 // Double checked locking version
 

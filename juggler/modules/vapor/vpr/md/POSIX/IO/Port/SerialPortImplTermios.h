@@ -30,16 +30,16 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_SERIAL_PORT_IMP_TERMIOS_H_
-#define _VPR_SERIAL_PORT_IMP_TERMIOS_H_
+#ifndef _VPR_SERIAL_PORT_IMPL_TERMIOS_H_
+#define _VPR_SERIAL_PORT_IMPL_TERMIOS_H_
 
 #include <termios.h>
 #include <string>
 #include <vector>
 
-#include <IO/Port/Port.h>
-#include <IO/Port/SerialTypes.h>
-#include <md/POSIX/FileHandleUNIX.h>
+#include <vpr/IO/Port/Port.h>
+#include <vpr/IO/Port/SerialTypes.h>
+#include <vpr/md/POSIX/IO/FileHandleUNIX.h>
 
 
 namespace vpr {
@@ -47,7 +47,7 @@ namespace vpr {
 // ----------------------------------------------------------------------------
 //: vpr::SerialPort implementation using termios.
 // ----------------------------------------------------------------------------
-class SerialPortImpTermios : public Port {
+class SerialPortImplTermios : public Port {
 public:
     // ------------------------------------------------------------------------
     //: Constructor.  This creates a file handle object connected to the given
@@ -59,7 +59,7 @@ public:
     //
     //! ARGS: port_name - The name of the serial port that will be accessed.
     // ------------------------------------------------------------------------
-    SerialPortImpTermios(const std::string& port_name);
+    SerialPortImplTermios(const std::string& port_name);
 
     // ------------------------------------------------------------------------
     //: Destructor.  If the file handle is non-NULL, its memory is released.
@@ -67,7 +67,7 @@ public:
     //! PRE: None.
     //! POST: If m_handle is non-NULL, its memory is released.
     // ------------------------------------------------------------------------
-    virtual ~SerialPortImpTermios(void);
+    virtual ~SerialPortImplTermios(void);
 
     // ========================================================================
     // vpr::BlockIO overrides.
@@ -905,4 +905,4 @@ protected:
 }; // End of vpr namespace
 
 
-#endif	/* _VPR_SERIAL_PORT_IMP_TERMIOS_H_ */
+#endif	/* _VPR_SERIAL_PORT_IMPL_TERMIOS_H_ */

@@ -33,13 +33,13 @@
 #ifndef _VPR_RW_MUTEX_H_
 #define _VPR_RW_MUTEX_H_
 
-#include <vprConfig.h>
-#include <Sync/Semaphore.h>
-#include <Sync/Cond.h>
-#include <Sync/Mutex.h>
+#include <vpr/vprConfig.h>
+#include <vpr/Sync/Semaphore.h>
+#include <vpr/Sync/CondVar.h>
+#include <vpr/Sync/Mutex.h>
 
 #ifdef VPR_USE_NSPR
-#   include <md/NSPR/RWMutexNSPR.h>
+#   include <vpr/md/NSPR/Sync/RWMutexNSPR.h>
 
 namespace vpr {
     typedef RWMutexNSPR RWMutex;
@@ -149,10 +149,10 @@ public:
 
 protected:
     Mutex stateLock;        //: Serialize access to internal state.
-    Cond waitingReaders;    //: Reader threads waiting to acquire the lock.
+    CondVar waitingReaders; //: Reader threads waiting to acquire the lock.
     int numWaitingReaders;    //: Number of waiting readers.
 
-    Cond waitingWriters;    //: Writer threads waiting to acquire the lock.
+    CondVar waitingWriters; //: Writer threads waiting to acquire the lock.
     int numWaitingWriters;    //: Number of waiting writers.
 
     // Value is -1 if writer has the lock, else this keeps track of the

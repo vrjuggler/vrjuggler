@@ -30,9 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vprConfig.h>
-#include <Threads/ThreadFunctor.h>
-#include <Threads/ThreadManager.h>
+#include <vpr/vprConfig.h>
+#include <vpr/Thread/ThreadFunctor.h>
+#include <vpr/Thread/ThreadManager.h>
 
 
 namespace vpr {

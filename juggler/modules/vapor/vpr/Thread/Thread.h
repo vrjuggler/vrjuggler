@@ -34,10 +34,10 @@
 #define _VPR_THREAD_H_
 //#pragma once
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 //#include <unistd.h>
 
-#include <Threads/BaseThread.h>
+#include <vpr/Thread/BaseThread.h>
 
 
 namespace vpr {
@@ -54,14 +54,14 @@ namespace vpr {
     typedef class ThreadKeySGI KeyId;
 };
 
-#   include <md/SPROC/ThreadSGI.h>
-#   include <md/SPROC/ThreadKeySGI.h>
+#   include <vpr/md/SPROC/Thread/ThreadSGI.h>
+#   include <vpr/md/SPROC/Thread/ThreadKeySGI.h>
 
 /* Win32 */
 #elif defined(VPR_USE_WIN32)
 #   include <process.h>
-#   include <md/WIN32/ThreadWin32.h>
-#   include <md/WIN32/ThreadKeyWin32.h>
+#   include <vpr/md/WIN32/Thread/ThreadWin32.h>
+#   include <vpr/md/WIN32/Thread/ThreadKeyWin32.h>
 
 namespace vpr {
     typedef ThreadWin32    Thread;
@@ -80,12 +80,12 @@ namespace vpr {
 #   define _POSIX_C_SOURCE VPR_POSIX_C_SOURCE
 #endif
 
-#   include <md/POSIX/ThreadPosix.h>
-#   include <md/POSIX/ThreadKeyPosix.h>
+#   include <vpr/md/POSIX/Thread/ThreadPosix.h>
+#   include <vpr/md/POSIX/Thread/ThreadKeyPosix.h>
 
 /* NSPR */
 #else
-#   include <md/NSPR/ThreadNSPR.h>
+#   include <vpr/md/NSPR/Thread/ThreadNSPR.h>
 
 namespace vpr {
     typedef class ThreadNSPR    Thread;

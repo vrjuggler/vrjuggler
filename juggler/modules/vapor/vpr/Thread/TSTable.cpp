@@ -30,10 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
-#include <Utils/Assert.h>
-#include <Threads/TSTable.h>
+#include <vpr/Util/Assert.h>
+#include <vpr/Thread/TSTable.h>
 
 
 namespace vpr {

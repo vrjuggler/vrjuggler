@@ -33,14 +33,14 @@
 #ifndef _VPR_INET_ADDR_WINSOCK_H_
 #define _VPR_INET_ADDR_WINSOCK_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <string.h>
 #include <string>
 #include <winsock2.h>
 
-#include <IO/Socket/InetAddrBase.h>
-#include <IO/Socket/SocketTypes.h>
+#include <vpr/IO/Socket/InetAddrBase.h>
+#include <vpr/IO/Socket/SocketTypes.h>
 
 
 // XXX: Extend to work with IPv6.
@@ -297,9 +297,9 @@ public:
     }
 
 protected:
-    friend class SocketImpWinSock;
-    friend class SocketDatagramImpWinSock;
-    friend class SocketStreamImpWinSock;
+    friend class SocketImplWinSock;
+    friend class SocketDatagramImplWinSock;
+    friend class SocketStreamImplWinSock;
 
     // ------------------------------------------------------------------------
     //: Construct a vpr::InetAddrWinSock object from a pointer to a sockaddr

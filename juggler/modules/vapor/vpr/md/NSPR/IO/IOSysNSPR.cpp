@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <md/NSPR/IOSysNSPR.h>
+#include <vpr/md/NSPR/IO/IOSysNSPR.h>
 
 namespace vpr {
 

@@ -30,9 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
-#include <md/POSIX/MutexPosix.h>
+#include <vpr/md/POSIX/Sync/MutexPosix.h>
 
 
 // ---------------------------------------------------------------------------

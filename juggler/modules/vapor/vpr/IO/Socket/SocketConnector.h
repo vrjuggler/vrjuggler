@@ -30,15 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VPR_SOCK_CONNECTOR_H_
+#define _VPR_SOCK_CONNECTOR_H_
 
-#ifndef SOCK_CONNECTOR_H
-#define SOCK_CONNECTOR_H
-
-#include <vprConfig.h>
-#include <IO/Socket/InetAddr.h>
-#include <IO/Socket/SocketStream.h>
-#include <Utils/Assert.h>
-#include <Utils/Status.h>
+#include <vpr/vprConfig.h>
+#include <vpr/IO/Socket/InetAddr.h>
+#include <vpr/IO/Socket/SocketStream.h>
+#include <vpr/Util/Assert.h>
+#include <vpr/Util/Status.h>
 
 
 namespace vpr
@@ -183,5 +182,4 @@ bool SocketConnector::connectStart (SocketStream& newStream,
 
 }  // namespace vpr
 
-#endif //SOCK_CONNECTOR_H
-
+#endif /* _VPR_SOCK_CONNECTOR_H_ */

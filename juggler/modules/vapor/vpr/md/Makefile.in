@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vpr/src/md.  It requires GNU make.
+# Makefile.in for vpr/md.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -40,7 +40,7 @@
 include @topdir@/make.defs.mk
 
 # Prefix for recursive stuff.
-DIRPRFX		= md/
+DIRPRFX		= vpr/md/
 
 SUBDIR		= NSPR	\
                   POSIX	\

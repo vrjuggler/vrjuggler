@@ -34,10 +34,10 @@
 #define _VPR_SOCKET_STREAM_BRIDGE_H_
 // NOTE: this is the bridge class for use with SocketStream.h
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 // base bridge class..
-#include <IO/Socket/Socket_t.h>
+#include <vpr/IO/Socket/Socket_t.h>
 
 namespace vpr {
 
@@ -45,14 +45,14 @@ namespace vpr {
 //: Cross-platform stream socket class.
 // ----------------------------------------------------------------------------
 //! PUBLIC_API:
-template<class RealSocketStreamImp, class RealSocketStreamImpParent>
-class SocketStream_t : public Socket_t<RealSocketStreamImpParent> {
+template<class RealSocketStreamImpl, class RealSocketStreamImplParent>
+class SocketStream_t : public Socket_t<RealSocketStreamImplParent> {
 public:
     // ------------------------------------------------------------------------
     //: Default constructor.
     // ------------------------------------------------------------------------
     SocketStream_t (void)
-        : Socket_t<RealSocketStreamImpParent>(), m_socket_stream_imp()
+        : Socket_t<RealSocketStreamImplParent>(), m_socket_stream_imp()
     {
         m_socket_imp = &m_socket_stream_imp;
     }
@@ -71,7 +71,7 @@ public:
     //+                     remote socket address.
     // ------------------------------------------------------------------------
     SocketStream_t (InetAddr local_addr, InetAddr remote_addr)
-        : Socket_t<RealSocketStreamImpParent>(),
+        : Socket_t<RealSocketStreamImplParent>(),
           m_socket_stream_imp(local_addr, remote_addr)
     {
         m_socket_imp = &m_socket_stream_imp;
@@ -137,7 +137,7 @@ public:
         Status status;
 
         status = m_socket_stream_imp.accept(sock.m_socket_stream_imp);
-        vprASSERT((! status.failure()) && "Impl:accept: failed.  This may be non-blocking accept");
+        vprASSERT((! status.failure()) && "Impll:accept: failed.  This may be non-blocking accept");
 
         return status;
     }
@@ -219,21 +219,21 @@ public:
 protected:
     // ------------------------------------------------------------------------
     //: Constructor.  Create a vpr::SocketStream object using the given
-    //+ vpr::SocketStreamImp object pointer.  This is needed by accept().
+    //+ vpr::SocketStreamImpl object pointer.  This is needed by accept().
     //
-    //! PRE: sock_imp points to a valid vpr::SocketStreamImp object.
+    //! PRE: sock_imp points to a valid vpr::SocketStreamImpl object.
     //! POST: sock_imp is copied into m_socket_stream_imp.
     //
-    //! ARGS: sock_imp - A pointer to a vpr::SocketStreamImp object.
+    //! ARGS: sock_imp - A pointer to a vpr::SocketStreamImpl object.
     // ------------------------------------------------------------------------
-    SocketStream_t (RealSocketStreamImp* sock_imp)
-        : Socket_t<RealSocketStreamImpParent>(), m_socket_stream_imp(*sock_imp)
+    SocketStream_t (RealSocketStreamImpl* sock_imp)
+        : Socket_t<RealSocketStreamImplParent>(), m_socket_stream_imp(*sock_imp)
     {
         m_socket_imp = &m_socket_stream_imp;
     }
 
-    RealSocketStreamImp m_socket_stream_imp; //: Platform-specific stream
-                                             //+ socket implementation
+    RealSocketStreamImpl m_socket_stream_imp; //: Platform-specific stream
+                                              //+ socket implementation
 };
 
 }; // End of vpr namespace

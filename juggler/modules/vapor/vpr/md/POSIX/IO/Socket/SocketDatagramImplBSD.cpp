@@ -37,8 +37,8 @@
 #include <sys/socket.h>
 #include <errno.h>
 
-#include <Utils/Assert.h>
-#include <md/POSIX/SocketDatagramImpBSD.h>
+#include <vpr/Util/Assert.h>
+#include <vpr/md/POSIX/IO/Socket/SocketDatagramImplBSD.h>
 
 
 // ============================================================================
@@ -55,9 +55,9 @@ namespace vpr {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SocketDatagramImpBSD::recvfrom (void* msg, const size_t length,
-                                const int flags, InetAddr& from,
-                                ssize_t& bytes_read)
+SocketDatagramImplBSD::recvfrom (void* msg, const size_t length,
+                                 const int flags, InetAddr& from,
+                                 ssize_t& bytes_read)
 {
     socklen_t fromlen;
     Status retval;
@@ -68,7 +68,7 @@ SocketDatagramImpBSD::recvfrom (void* msg, const size_t length,
 
     if ( bytes_read == -1 ) {
         fprintf(stderr,
-                "[vpr::SocketDatagramImpBSD] ERROR: Could not read from socket (%s:%hu): %s\n",
+                "[vpr::SocketDatagramImplBSD] ERROR: Could not read from socket (%s:%hu): %s\n",
                 m_remote_addr.getAddressString().c_str(),
                 m_remote_addr.getPort(), strerror(errno));
         retval.setCode(Status::Failure);
@@ -80,9 +80,9 @@ SocketDatagramImpBSD::recvfrom (void* msg, const size_t length,
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SocketDatagramImpBSD::recvfrom (std::string& msg, const size_t length,
-                                const int flags, InetAddr& from,
-                                ssize_t& bytes_read)
+SocketDatagramImplBSD::recvfrom (std::string& msg, const size_t length,
+                                 const int flags, InetAddr& from,
+                                 ssize_t& bytes_read)
 {
     msg.resize(length);
     memset(&msg[0], '\0', msg.size());
@@ -93,9 +93,9 @@ SocketDatagramImpBSD::recvfrom (std::string& msg, const size_t length,
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SocketDatagramImpBSD::recvfrom (std::vector<vpr::Uint8>& msg,
-                                const size_t length, const int flags,
-                                InetAddr& from, ssize_t& bytes_read)
+SocketDatagramImplBSD::recvfrom (std::vector<vpr::Uint8>& msg,
+                                 const size_t length, const int flags,
+                                 InetAddr& from, ssize_t& bytes_read)
 {
     Status retval;
 
@@ -116,9 +116,9 @@ SocketDatagramImpBSD::recvfrom (std::vector<vpr::Uint8>& msg,
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SocketDatagramImpBSD::sendto (const void* msg, const size_t length,
-                              const int flags, const InetAddr& to,
-                              ssize_t& bytes_sent)
+SocketDatagramImplBSD::sendto (const void* msg, const size_t length,
+                               const int flags, const InetAddr& to,
+                               ssize_t& bytes_sent)
 {
     Status retval;
 
@@ -127,7 +127,7 @@ SocketDatagramImpBSD::sendto (const void* msg, const size_t length,
 
     if ( bytes_sent == -1 ) {
         fprintf(stderr,
-                "[vpr::SocketDatagramImpBSD] ERROR: Could not send to %s:%hu on socket (%s:%hu): %s\n",
+                "[vpr::SocketDatagramImplBSD] ERROR: Could not send to %s:%hu on socket (%s:%hu): %s\n",
                 to.getAddressString().c_str(), to.getPort(),
                 m_remote_addr.getAddressString().c_str(),
                 m_remote_addr.getPort(), strerror(errno));
@@ -140,9 +140,9 @@ SocketDatagramImpBSD::sendto (const void* msg, const size_t length,
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SocketDatagramImpBSD::sendto (const std::string& msg, const size_t length,
-                              const int flags, const InetAddr& to,
-                              ssize_t& bytes_sent)
+SocketDatagramImplBSD::sendto (const std::string& msg, const size_t length,
+                               const int flags, const InetAddr& to,
+                               ssize_t& bytes_sent)
 {
     vprASSERT(length <= msg.size() && "Length is bigger than data given");
     return sendto(msg.c_str(), length, flags, to, bytes_sent);
@@ -151,9 +151,9 @@ SocketDatagramImpBSD::sendto (const std::string& msg, const size_t length,
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SocketDatagramImpBSD::sendto (const std::vector<vpr::Uint8>& msg,
-                              const size_t length, const int flags,
-                              const InetAddr& to, ssize_t& bytes_sent)
+SocketDatagramImplBSD::sendto (const std::vector<vpr::Uint8>& msg,
+                               const size_t length, const int flags,
+                               const InetAddr& to, ssize_t& bytes_sent)
 {
     vprASSERT(length <= msg.size() && "Length is bigger than data given");
     return sendto((const void*) &msg[0], length, flags, to, bytes_sent);

@@ -41,8 +41,8 @@
 #include <netinet/ip.h>
 #include <errno.h>
 
-#include <md/POSIX/SocketImpBSD.h>
-#include <Utils/Debug.h>
+#include <vpr/md/POSIX/IO/Socket/SocketImplBSD.h>
+#include <vpr/Util/Debug.h>
 
 #ifndef INADDR_NONE
 #define INADDR_NONE 0xffffffff	/* -1 return */
@@ -65,7 +65,7 @@ namespace vpr {
 // options set through member variables.
 // ----------------------------------------------------------------------------
 Status
-SocketImpBSD::open () {
+SocketImplBSD::open () {
     int domain, type, sock;
     Status retval;
 
@@ -85,7 +85,7 @@ SocketImpBSD::open () {
         domain = PF_INET6;
 #else
         fprintf(stderr,
-                "[vpr::SocketImpBSD] WARNING: IPv6 not supported on this host!\n");
+                "[vpr::SocketImplBSD] WARNING: IPv6 not supported on this host!\n");
 #endif
         break;
       case SocketTypes::LINK:
@@ -95,13 +95,13 @@ SocketImpBSD::open () {
         domain = PF_RAW;
 #else
         fprintf(stderr,
-                "[vpr::SocketImpBSD] WARNING: Cannot use LINK sockets. domain %d\n",
+                "[vpr::SocketImplBSD] WARNING: Cannot use LINK sockets. domain %d\n",
                 m_local_addr.getFamily());
 #endif
         break;
       default:
         fprintf(stderr,
-                "[vpr::SocketImpBSD] ERROR: Unknown socket domain value %d\n",
+                "[vpr::SocketImplBSD] ERROR: Unknown socket domain value %d\n",
                 m_local_addr.getFamily());
         break;
     }
@@ -118,7 +118,7 @@ SocketImpBSD::open () {
         break;
       default:
         fprintf(stderr,
-                "[vpr::SocketImpBSD] ERROR: Unknown socket type value %d\n",
+                "[vpr::SocketImplBSD] ERROR: Unknown socket type value %d\n",
                 m_local_addr.getFamily());
         break;
     }
@@ -130,7 +130,7 @@ SocketImpBSD::open () {
     // If socket(2) failed, print an error message and return error status.
     if ( sock == -1 ) {
         fprintf(stderr,
-                "[vpr::SocketImpBSD] Could not create socket (%s): %s\n",
+                "[vpr::SocketImplBSD] Could not create socket (%s): %s\n",
                 m_name.c_str(), strerror(errno));
         retval.setCode(Status::Failure);
     }
@@ -161,7 +161,7 @@ SocketImpBSD::open () {
 // Bind this socket to the address in the host address member variable.
 // ----------------------------------------------------------------------------
 Status
-SocketImpBSD::bind () {
+SocketImplBSD::bind () {
     Status retval;
     int status;
 
@@ -172,7 +172,7 @@ SocketImpBSD::bind () {
     // If that fails, print an error and return error status.
     if ( status == -1 ) {
         fprintf(stderr,
-                "[vpr::SocketImpBSD] Cannot bind socket to address: %s\n",
+                "[vpr::SocketImplBSD] Cannot bind socket to address: %s\n",
                 strerror(errno));
         retval.setCode(Status::Failure);
     }
@@ -190,7 +190,7 @@ SocketImpBSD::bind () {
 // establishing a connection with the destination.
 // ----------------------------------------------------------------------------
 Status
-SocketImpBSD::connect () {
+SocketImplBSD::connect () {
     Status retval;
     int status;
 
@@ -202,7 +202,7 @@ SocketImpBSD::connect () {
     // If connect(2) failed, print an error message explaining why and return
     // error status.
     if ( status == -1 ) {
-        fprintf(stderr, "[vpr::SocketImpBSD] Error connecting to %s: %s\n",
+        fprintf(stderr, "[vpr::SocketImplBSD] Error connecting to %s: %s\n",
                 m_remote_addr.getAddressString().c_str(), strerror(errno));
         retval.setCode(Status::Failure);
     }
@@ -215,12 +215,12 @@ SocketImpBSD::connect () {
 }
 
 Status
-SocketImpBSD::setLocalAddr (const InetAddr& addr) {
+SocketImplBSD::setLocalAddr (const InetAddr& addr) {
     Status status;
 
     if ( m_bound || m_connected ) {
         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-            << "SocketImpBSD::setLocalAddr: Can't set address of a "
+            << "SocketImplBSD::setLocalAddr: Can't set address of a "
             << "bound or connected socket.\n" << vprDEBUG_FLUSH;
         status.setCode(Status::Failure);
     }
@@ -232,7 +232,7 @@ SocketImpBSD::setLocalAddr (const InetAddr& addr) {
 }
 
 Status
-SocketImpBSD::setRemoteAddr (const InetAddr& addr) {
+SocketImplBSD::setRemoteAddr (const InetAddr& addr) {
     Status status;
 
     if ( m_connected ) {
@@ -252,7 +252,7 @@ SocketImpBSD::setRemoteAddr (const InetAddr& addr) {
 // ----------------------------------------------------------------------------
 // Destructor.  This currently does nothing.
 // ----------------------------------------------------------------------------
-SocketImpBSD::~SocketImpBSD () {
+SocketImplBSD::~SocketImplBSD () {
     if ( m_handle != NULL ) {
         delete m_handle;
         m_handle = NULL;
@@ -276,8 +276,8 @@ union sockopt_data {
  *
  */
 Status
-SocketImpBSD::getOption (const SocketOptions::Types option,
-                         struct SocketOptions::Data& data)
+SocketImplBSD::getOption (const SocketOptions::Types option,
+                          struct SocketOptions::Data& data)
 {
     int opt_name, opt_level, status;
     Status retval;
@@ -416,7 +416,7 @@ SocketImpBSD::getOption (const SocketOptions::Types option,
     else {
         retval.setCode(Status::Failure);
         fprintf(stderr,
-                "[vpr::SocketImpBSD] ERROR: Could not get socket option for socket %s: %s\n",
+                "[vpr::SocketImplBSD] ERROR: Could not get socket option for socket %s: %s\n",
                 m_handle->getName().c_str(), strerror(errno));
     }
 
@@ -427,8 +427,8 @@ SocketImpBSD::getOption (const SocketOptions::Types option,
  *
  */
 Status
-SocketImpBSD::setOption (const SocketOptions::Types option,
-                         const struct SocketOptions::Data& data)
+SocketImplBSD::setOption (const SocketOptions::Types option,
+                          const struct SocketOptions::Data& data)
 {
     int opt_name, opt_level;
     socklen_t opt_size;
@@ -495,7 +495,7 @@ SocketImpBSD::setOption (const SocketOptions::Types option,
             opt_data.size = IPTOS_LOWCOST;
 #else
             fprintf(stderr,
-                    "[vpr::SocketImpBSD] WARNING: This platform does not "
+                    "[vpr::SocketImplBSD] WARNING: This platform does not "
                     "support LowCost type of service!\n");
 #endif
             break;

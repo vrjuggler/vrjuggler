@@ -40,12 +40,12 @@
 #ifndef _VPR_SEMAPHORE_NSPR_H_
 #define _VPR_SEMAPHORE_NSPR_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <stdio.h>
 #include <pratom.h>
 
-#include <Sync/Cond.h>
+#include <vpr/Sync/CondVar.h>
 
 
 namespace vpr {
@@ -67,7 +67,7 @@ public:
     //+                      value is 1.
     // -----------------------------------------------------------------------
     SemaphoreNSPR (int initial_value = 1) {
-        mCondVar = new Cond;
+        mCondVar = new CondVar;
         PR_AtomicSet(&mValue, initial_value);
     }
 
@@ -272,7 +272,7 @@ public:
     }
 
 protected:
-    Cond*     mCondVar;       //: Semaphore simulator variable for the class
+    CondVar*  mCondVar;       //: Semaphore simulator variable for the class
     PRInt32   mValue;
 
     // Prevent assignment and initialization.

@@ -34,9 +34,9 @@
 #define _VPR_SOCKET_DATAGRAM_BRIDGE_H_
 // NOTE: this is the bridge class for use with SocketDatagram.h
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
-#include <IO/Socket/Socket_t.h>
+#include <vpr/IO/Socket/Socket_t.h>
 
 
 namespace vpr {
@@ -45,8 +45,8 @@ namespace vpr {
 //: Datagram socket interface.
 // ----------------------------------------------------------------------------
 //! PUBLIC_API:
-template<class RealSocketDatagramImp, class RealSocketDatagramImpParent>
-class SocketDatagram_t : public Socket_t<RealSocketDatagramImpParent> {
+template<class RealSocketDatagramImpl, class RealSocketDatagramImplParent>
+class SocketDatagram_t : public Socket_t<RealSocketDatagramImplParent> {
 public:
     // ------------------------------------------------------------------------
     //: Default constructor.
@@ -68,7 +68,7 @@ public:
     //! ARGS: addr - A reference to a vpr::InetAddr object.
     // ------------------------------------------------------------------------
     SocketDatagram_t (const InetAddr& local_addr, const InetAddr& remote_addr)
-        : Socket_t<RealSocketDatagramImpParent>(),
+        : Socket_t<RealSocketDatagramImplParent>(),
           m_socket_dgram_imp(local_addr, remote_addr)
     {
         m_socket_imp = &m_socket_dgram_imp;
@@ -212,8 +212,8 @@ public:
     }
 
 protected:
-    RealSocketDatagramImp m_socket_dgram_imp;  //: Platform-specific datagram
-                                               //+ socket implementation object
+    RealSocketDatagramImpl m_socket_dgram_imp;  //: Platform-specific datagram
+                                                //+ socket implementation object
 };
 
 }; // End of vpr namespace

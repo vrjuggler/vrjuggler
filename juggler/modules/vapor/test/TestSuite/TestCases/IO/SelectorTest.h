@@ -4,33 +4,33 @@
 #include <stdio.h>
 #include <string.h>
 #include <iostream>
+#include <vector>
+#include <map>
+#include <numeric>
+#include <algorithm>
 
 #include <TestCase.h>
 #include <TestSuite.h>
 #include <TestCaller.h>
 
-#include <vprConfig.h>
+#include <vpr/vpr.h>
 
-#include <IO/Socket/Socket.h>
-#include <IO/Socket/SocketStream.h>
-#include <IO/Socket/InetAddr.h>
-#include <IO/Socket/SocketAcceptor.h>
-#include <IO/Socket/SocketConnector.h>
-#include <IO/IOSys.h>
-#include <IO/Selector.h>
-#include <Utils/Status.h>
+#include <vpr/IO/Socket/Socket.h>
+#include <vpr/IO/Socket/SocketStream.h>
+#include <vpr/IO/Socket/InetAddr.h>
+#include <vpr/IO/Socket/SocketAcceptor.h>
+#include <vpr/IO/Socket/SocketConnector.h>
+#include <vpr/IO/IOSys.h>
+#include <vpr/IO/Selector.h>
+#include <vpr/Util/Status.h>
 
-#include <System.h>
+#include <vpr/System.h>
 
-#include <Threads/Thread.h>
-#include <Threads/ThreadFunctor.h>
-#include <Sync/Mutex.h>
-#include <Sync/Cond.h>
+#include <vpr/Thread/Thread.h>
+#include <vpr/Thread/ThreadFunctor.h>
+#include <vpr/Sync/Mutex.h>
+#include <vpr/Sync/CondVar.h>
 
-#include <vector>
-#include <map>
-#include <numeric>
-#include <algorithm>
 
 using namespace vpr;
 
@@ -454,7 +454,7 @@ protected:
 
     enum State { ACCEPTOR_READY, NOT_READY, CONNECTOR_CLOSED, DATA_SENT, DONE_READING };
     State           mState;         // State variable
-    vpr::Cond       mCondVar;       // Condition variable
+    vpr::CondVar    mCondVar;       // Condition variable
 
     std::vector<vpr::Uint16>     mSelectedPorts;      // List of ports that were selected to send data
     

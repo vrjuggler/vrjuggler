@@ -30,39 +30,39 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_Cond_h_
-#define _VPR_Cond_h_
+#ifndef _VPR_CondVar_h_
+#define _VPR_CondVar_h_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #if defined(VPR_USE_IRIX_SPROC)
 #    include <ulocks.h>
-#    include <Sync/CondGeneric.h>
+#    include <vpr/Sync/CondVarGeneric.h>
 
 namespace vpr {
-    typedef CondGeneric Cond;
+    typedef CondVarGeneric CondVar;
 };
 #elif defined(VPR_USE_PTHREADS)
 #ifndef _POSIX_C_SOURCE
 #   define _POSIX_C_SOURCE VPR_POSIX_C_SOURCE
 #endif
 
-#   include <md/POSIX/CondPosix.h>
+#   include <vpr/md/POSIX/Sync/CondVarPosix.h>
 
 namespace vpr {
-    typedef CondPosix Cond;
+    typedef CondVarPosix CondVar;
 };
 #elif defined(VPR_USE_WIN32)
-#    include <Sync/CondGeneric.h>
+#    include <vpr/Sync/CondVarGeneric.h>
  
 namespace vpr {
-    typedef CondGeneric Cond;
+    typedef CondVarGeneric CondVar;
 };
 #else
-#   include <md/NSPR/CondNSPR.h>
+#   include <vpr/md/NSPR/Sync/CondVarNSPR.h>
 
 namespace vpr {
-    typedef CondNSPR Cond;
+    typedef CondVarNSPR CondVar;
 };
 #endif   /* VPR_IRIX_SPROC */
 

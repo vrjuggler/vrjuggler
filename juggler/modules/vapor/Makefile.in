@@ -114,13 +114,11 @@ STARTTIME	:= $(shell LC_TIME=C date)
 # =============================================================================
 
 # Subdirectories used for recursion through the source tree.
-SUBDIR		= IO		\
-                  SharedMem	\
-                  Sync		\
-                  Threads	\
-                  Utils		\
-                  include	\
-                  md
+SUBDIR		= vpr/IO	\
+                  vpr/Sync	\
+                  vpr/Thread	\
+                  vpr/Util	\
+                  vpr/md
 
 # =============================================================================
 # Library targets.  The default is 'debug' as defined above.  The steps for 

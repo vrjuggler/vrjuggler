@@ -30,10 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
-#include <Threads/BaseThread.h>
-#include <Threads/ThreadManager.h>
+#include <vpr/Thread/BaseThread.h>
+#include <vpr/Thread/ThreadManager.h>
 
 vpr::Int32 vpr::BaseThread::mNextThreadId = 0;
 

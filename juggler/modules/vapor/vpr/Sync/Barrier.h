@@ -33,11 +33,11 @@
 #ifndef _VPR_Barrier_h_
 #define _VPR_Barrier_h_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #ifdef VPR_USE_IRIX_SPROC    // ---- SGI IPC Barrier ------ //
 #   include <ulocks.h>
-#   include <md/SPROC/BarrierSGI.h>
+#   include <vpr/md/SPROC/Sync/BarrierSGI.h>
 
 namespace vpr {
     typedef  vprBarrierSGI vprBarrier;
@@ -45,9 +45,9 @@ namespace vpr {
 
 #else
 
-#include <Sync/Cond.h>
-#include <Sync/Mutex.h>
-#include <Sync/Guard.h>
+#include <vpr/Sync/CondVar.h>
+#include <vpr/Sync/Mutex.h>
+#include <vpr/Sync/Guard.h>
 
 
 namespace vpr {
@@ -65,7 +65,7 @@ public:
        : barrierFinished(lock), runningThreads(count)
     {}
 
-    Cond barrierFinished;   // True if this generation of the barrier is done.
+    CondVar barrierFinished; // True if this generation of the barrier is done.
 
     int runningThreads;  //: Number of threads that are still running.
 

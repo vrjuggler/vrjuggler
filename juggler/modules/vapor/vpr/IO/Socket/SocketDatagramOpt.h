@@ -33,7 +33,7 @@
 #ifndef _VPR_SOCKET_DATAGRAM_OPT_H_
 #define _VPR_SOCKET_DATAGRAM_OPT_H_
 
-#include <IO/Socket/SocketIpOpt.h>
+#include <vpr/IO/Socket/SocketIpOpt.h>
 
 
 namespace vpr {

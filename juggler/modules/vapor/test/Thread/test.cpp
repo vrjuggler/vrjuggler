@@ -30,15 +30,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vpr/vpr.h>
+
 #include <iostream>
 #include <stdio.h>
 #include <math.h>
 
-#include <Threads/Thread.h>
-#include <Threads/TSObjectProxy.h>
-#include <Threads/TSObject.h>
-#include <Sync/Mutex.h>
-#include <Utils/Debug.h>
+#include <vpr/Thread/Thread.h>
+#include <vpr/Thread/TSObjectProxy.h>
+#include <vpr/Thread/TSObject.h>
+#include <vpr/Sync/Mutex.h>
+#include <vpr/Util/Debug.h>
 
 int num_threads_to_create = 6;
 int threads_created = 0;

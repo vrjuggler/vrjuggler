@@ -30,7 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
+
 #include <new.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -49,10 +50,10 @@
 #   include <sys/resource.h>
 #endif
 
-#include <Threads/ThreadPool.h>
-#include <Threads/Thread.h>
-#include <Sync/Guard.h>
-#include <Utils/Debug.h>
+#include <vpr/Thread/ThreadPool.h>
+#include <vpr/Thread/Thread.h>
+#include <vpr/Sync/Guard.h>
+#include <vpr/Util/Debug.h>
 
 // XXX: There is a bug that causes a memory leak
 //   - We never delete the Functors

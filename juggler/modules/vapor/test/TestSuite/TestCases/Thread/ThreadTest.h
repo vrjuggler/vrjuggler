@@ -1,19 +1,18 @@
-#include <vprConfig.h>
 #include <iostream>
+#include <vector>
 
 #include <TestCase.h>
 #include <TestSuite.h>
 #include <TestCaller.h>
 
-#include <Threads/Thread.h>
-#include <Threads/ThreadFunctor.h>
-#include <Threads/TSTable.h>
-#include <Threads/TSObject.h>
-#include <Threads/TSObjectProxy.h>
-#include <Threads/ThreadManager.h>
-#include <Sync/Mutex.h>
-
-#include <vector>
+#include <vpr/vpr.h>
+#include <vpr/Thread/Thread.h>
+#include <vpr/Thread/ThreadFunctor.h>
+#include <vpr/Thread/TSTable.h>
+#include <vpr/Thread/TSObject.h>
+#include <vpr/Thread/TSObjectProxy.h>
+#include <vpr/Thread/ThreadManager.h>
+#include <vpr/Sync/Mutex.h>
 
 #define ThreadTest_INC_COUNT 5000
 

@@ -33,7 +33,7 @@
 #ifndef _VPR_MCAST_REQ_H_
 #define _VPR_MCAST_REQ_H_
 
-#include <IO/Socket/InetAddr.h>
+#include <vpr/IO/Socket/InetAddr.h>
 
 
 namespace vpr {

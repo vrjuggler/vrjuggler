@@ -37,7 +37,7 @@
 #include <string>
 #include <vector>
 
-#include <IO/FileHandle.h>
+#include <vpr/IO/FileHandle.h>
 
 
 namespace vpr {
@@ -170,10 +170,10 @@ public:
 
 protected:
     // Friends.
-    friend class SerialPortImpTermios;
-    friend class SocketDatagramImpBSD;
-    friend class SocketImpBSD;
-    friend class SocketStreamImpBSD;
+    friend class SerialPortImplTermios;
+    friend class SocketDatagramImplBSD;
+    friend class SocketImplBSD;
+    friend class SocketStreamImplBSD;
 
     // ------------------------------------------------------------------------
     //! Read the specified number of bytes from the file handle into the given

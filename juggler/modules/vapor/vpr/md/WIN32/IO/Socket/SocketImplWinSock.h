@@ -30,23 +30,23 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_SOCKET_IMP_WINSOCK_H_
-#define _VPR_SOCKET_IMP_WINSOCK_H_
+#ifndef _VPR_SOCKET_IMPL_WINSOCK_H_
+#define _VPR_SOCKET_IMPL_WINSOCK_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <winsock2.h>
 #include <string>
 #include <vector>
 
-#include <IO/BlockIO.h>
-#include <IO/Socket/InetAddr.h>
-#include <IO/Socket/SocketIpOpt.h>
+#include <vpr/IO/BlockIO.h>
+#include <vpr/IO/Socket/InetAddr.h>
+#include <vpr/IO/Socket/SocketIpOpt.h>
 
 
 namespace vpr {
 
-class SocketImpWinSock : public BlockIO, public SocketIpOpt {
+class SocketImplWinSock : public BlockIO, public SocketIpOpt {
 public:
     // ========================================================================
     // vpr::BlockIO overrides.
@@ -214,7 +214,7 @@ protected:
     // POST: The member variables are initialized accordingly to reasonable
     //       defaults.
     // ------------------------------------------------------------------------
-    SocketImpWinSock(void);
+    SocketImplWinSock(void);
 
     // ------------------------------------------------------------------------
     // Standard constructor.  This takes two InetAddr objects, a local address
@@ -227,8 +227,8 @@ protected:
     //     local_addr  - The local address for the socket.
     //     remote_addr - The remote address for the socket.
     // ------------------------------------------------------------------------
-    SocketImpWinSock(const InetAddr& local_addr, const InetAddr& remote_addr,
-                     const SocketTypes::Type type);
+    SocketImplWinSock(const InetAddr& local_addr, const InetAddr& remote_addr,
+                      const SocketTypes::Type type);
 
     // ------------------------------------------------------------------------
     // Destructor.  This currently does nothing.
@@ -236,7 +236,7 @@ protected:
     // PRE: None.
     // POST: None.
     // ------------------------------------------------------------------------
-    virtual ~SocketImpWinSock(void);
+    virtual ~SocketImplWinSock(void);
 
     // ------------------------------------------------------------------------
     //: Do the WinSock initialization required before any socket stuff can
@@ -357,4 +357,4 @@ protected:
 }; // End of vpr namespace
 
 
-#endif   /* _VPR_SOCKET_IMP_WINSOCK_H_ */
+#endif   /* _VPR_SOCKET_IMPL_WINSOCK_H_ */

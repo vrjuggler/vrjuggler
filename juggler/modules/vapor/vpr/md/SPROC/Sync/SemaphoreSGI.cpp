@@ -30,10 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
-#include <Sync/Semaphore.h>
-#include <md/SPROC/SemaphoreSGI.h>
+#include <vpr/Sync/Semaphore.h>
+#include <vpr/md/SPROC/Sync/SemaphoreSGI.h>
 
 vpr::MemPoolSGI* vpr::SemaphoreSGI::semaphorePool = NULL;
 int* vpr::SemaphoreSGI::attachedCounter           = NULL;

@@ -46,11 +46,10 @@
 // Date: 1-20-97
 //-----------------------------------------------
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 #include <ulocks.h>
-#include <SharedMem/MemPool.h>
-#include <Utils/Assert.h>
-#include <md/SPROC/MemPoolSGI.h>
+#include <vpr/md/SPROC/SharedMem/MemPool.h>
+#include <vpr/Util/Assert.h>
 
 
 namespace vpr {

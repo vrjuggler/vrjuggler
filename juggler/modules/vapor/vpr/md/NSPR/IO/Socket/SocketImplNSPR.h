@@ -30,28 +30,28 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_SOCKET_IMP_NSPR_H_
-#define _VPR_SOCKET_IMP_NSPR_H_
+#ifndef _VPR_SOCKET_IMPL_NSPR_H_
+#define _VPR_SOCKET_IMPL_NSPR_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <string>
 #include <vector>
 #include <prio.h>
 #include <prerror.h>
 
-#include <IO/BlockIO.h>
-#include <IO/Socket/InetAddr.h>
-#include <md/NSPR/NSPRHelpers.h>
-#include <IO/Socket/SocketTypes.h>
-#include <IO/Socket/SocketIpOpt.h>
-#include <IO/IOSys.h>
+#include <vpr/IO/BlockIO.h>
+#include <vpr/IO/Socket/InetAddr.h>
+#include <vpr/md/NSPR/NSPRHelpers.h>
+#include <vpr/IO/Socket/SocketTypes.h>
+#include <vpr/IO/Socket/SocketIpOpt.h>
+#include <vpr/IO/IOSys.h>
 
-#include <Utils/Debug.h>
+#include <vpr/Util/Debug.h>
 
 namespace vpr {
 
-class SocketImpNSPR : public BlockIO, public SocketIpOpt
+class SocketImplNSPR : public BlockIO, public SocketIpOpt
 {
 public:
     // ========================================================================
@@ -194,7 +194,7 @@ public:
 
       if (m_bound)
        {
-          vprDEBUG(0,0) << "SocketImpNSPR::setLocalAddr: Cant' set address of bound socket.\n" << vprDEBUG_FLUSH;
+          vprDEBUG(0,0) << "SocketImplNSPR::setLocalAddr: Cant' set address of bound socket.\n" << vprDEBUG_FLUSH;
           status.setCode(Status::Failure);
        }
        else
@@ -216,7 +216,7 @@ public:
 
        if (m_bound)
        { 
-           vprDEBUG(0,0) << "SocketImpNSPR::setRemoteAddr: Cant' set address of bound socket.\n" << vprDEBUG_FLUSH;
+           vprDEBUG(0,0) << "SocketImplNSPR::setRemoteAddr: Cant' set address of bound socket.\n" << vprDEBUG_FLUSH;
            status.setCode(Status::Failure);
        }
        else
@@ -234,7 +234,7 @@ protected:
     // POST: The member variables are initialized accordingly to reasonable
     //       defaults.
     // ------------------------------------------------------------------------
-    SocketImpNSPR(const SocketTypes::Type sock_type);
+    SocketImplNSPR(const SocketTypes::Type sock_type);
 
     // ------------------------------------------------------------------------
     // Standard constructor.  This takes two InetAddr objects, a local address
@@ -247,14 +247,14 @@ protected:
     //     local_addr  - The local address for the socket.
     //     remote_addr - The remote address for the socket.
     // ------------------------------------------------------------------------
-    SocketImpNSPR(const InetAddr& local_addr, const InetAddr& remote_addr,
-                  const SocketTypes::Type sock_type);
+    SocketImplNSPR(const InetAddr& local_addr, const InetAddr& remote_addr,
+                   const SocketTypes::Type sock_type);
 
     // ------------------------------------------------------------------------
     // Copy constructor.
     // XXX: We need to have a reference count here
     // ------------------------------------------------------------------------
-    SocketImpNSPR (const SocketImpNSPR& sock) : BlockIO(sock)
+    SocketImplNSPR (const SocketImplNSPR& sock) : BlockIO(sock)
     {
         m_local_addr      = sock.m_local_addr;
         m_remote_addr     = sock.m_remote_addr;
@@ -269,7 +269,7 @@ protected:
     // PRE: None.
     // POST: None.
     // ------------------------------------------------------------------------
-    virtual ~SocketImpNSPR(void);
+    virtual ~SocketImplNSPR(void);
 
 protected:
     // ------------------------------------------------------------------------

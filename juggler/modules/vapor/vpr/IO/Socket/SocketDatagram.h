@@ -33,31 +33,31 @@
 #ifndef _VPR_SOCKET_DATAGRAM_H_
 #define _VPR_SOCKET_DATAGRAM_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
-#include <IO/Socket/Socket.h>
-#include <IO/Socket/InetAddr.h>
+#include <vpr/IO/Socket/Socket.h>
+#include <vpr/IO/Socket/InetAddr.h>
 
 // include bridge class
-#include <IO/Socket/SocketDatagram_t.h>
+#include <vpr/IO/Socket/SocketDatagram_t.h>
 
 #if defined(VPR_USE_NSPR)
-#   include <md/NSPR/SocketDatagramImpNSPR.h>
+#   include <vpr/md/NSPR/IO/Socket/SocketDatagramImplNSPR.h>
 
 namespace vpr {
-  typedef SocketDatagram_t<SocketDatagramImpNSPR, SocketImpNSPR> SocketDatagram;
+  typedef SocketDatagram_t<SocketDatagramImplNSPR, SocketImplNSPR> SocketDatagram;
 };
 #elif defined(VPR_USE_WIN32)
-#   include <md/WIN32/SocketDatagramImpWinSock.h>
+#   include <vpr/md/WIN32/IO/Socket/SocketDatagramImplWinSock.h>
 
 namespace vpr {
-  typedef SocketDatagram_t<SocketDatagramImpWinSock, SocketImpWinSock> SocketDatagram;
+  typedef SocketDatagram_t<SocketDatagramImplWinSock, SocketImplWinSock> SocketDatagram;
 };
 #else
-#   include <md/POSIX/SocketDatagramImpBSD.h>
+#   include <vpr/md/POSIX/IO/Socket/SocketDatagramImplBSD.h>
 
 namespace vpr {
-  typedef SocketDatagram_t<SocketDatagramImpBSD, SocketImpBSD> SocketDatagram;
+  typedef SocketDatagram_t<SocketDatagramImplBSD, SocketImplBSD> SocketDatagram;
 };
 #endif
 

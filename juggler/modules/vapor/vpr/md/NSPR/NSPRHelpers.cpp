@@ -37,7 +37,7 @@
 #include <prerror.h>
 #include <prerr.h>
 
-#include <md/NSPR/NSPRHelpers.h>
+#include <vpr/md/NSPR/NSPRHelpers.h>
 
 
 namespace vpr {

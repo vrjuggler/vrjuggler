@@ -33,28 +33,28 @@
 #ifndef _VPR_SELECTOR_H_
 #define _VPR_SELECTOR_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 // include bridge class
-#include <IO/Selector_t.h>
+#include <vpr/IO/Selector_t.h>
 
 // make the connection
 #if defined(VPR_USE_NSPR)
-#   include <md/NSPR/SelectorImpNSPR.h>
+#   include <vpr/md/NSPR/IO/SelectorImplNSPR.h>
 namespace vpr {
-  typedef Selector_t<SelectorImpNSPR> Selector;
+  typedef Selector_t<SelectorImplNSPR> Selector;
 };
 
 #elif defined(VPR_USE_WIN32)
-#   include <md/WIN32/SelectorImpWinSock.h>
+#   include <vpr/md/WIN32/IO/SelectorImplWinSock.h>
 namespace vpr {
-  typedef Selector_t<SelectorImpWinSock> Selector;
+  typedef Selector_t<SelectorImplWinSock> Selector;
 };
 
 #else
-#   include <md/POSIX/SelectorImpBSD.h>
+#   include <vpr/md/POSIX/IO/SelectorImplBSD.h>
 namespace vpr {
-  typedef Selector_t<SelectorImpBSD> Selector;
+  typedef Selector_t<SelectorImplBSD> Selector;
 };
 #endif
 

@@ -30,20 +30,20 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_SOCKET_STREAM_IMP_BSD_H_
-#define _VPR_SOCKET_STREAM_IMP_BSD_H_
+#ifndef _VPR_SOCKET_STREAM_IMPL_BSD_H_
+#define _VPR_SOCKET_STREAM_IMPL_BSD_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <string>
 
-#include <md/POSIX/SocketImpBSD.h>
-#include <IO/Socket/SocketStreamOpt.h>
+#include <vpr/md/POSIX/IO/Socket/SocketImplBSD.h>
+#include <vpr/IO/Socket/SocketStreamOpt.h>
 
 
 namespace vpr {
 
-class SocketStreamImpBSD : public SocketStreamOpt, public SocketImpBSD {
+class SocketStreamImplBSD : public SocketStreamOpt, public SocketImplBSD {
 public:
     // ========================================================================
     // vpr::SocketStreamImp implementation.
@@ -58,17 +58,17 @@ public:
     // POST: The member variables are initialized with the m_type variable in
     //       particular set to SOCK_STREAM.
     // ------------------------------------------------------------------------
-    SocketStreamImpBSD (void)
-        : SocketImpBSD(SocketTypes::STREAM)
+    SocketStreamImplBSD (void)
+        : SocketImplBSD(SocketTypes::STREAM)
     {
         /* Do nothing. */ ;
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    SocketStreamImpBSD (const InetAddr& local_addr,
+    SocketStreamImplBSD (const InetAddr& local_addr,
                         const InetAddr& remote_addr)
-        : SocketImpBSD(local_addr, remote_addr, SocketTypes::STREAM)
+        : SocketImplBSD(local_addr, remote_addr, SocketTypes::STREAM)
     {
         /* Do nothing. */ ;
     }
@@ -76,8 +76,8 @@ public:
     // ------------------------------------------------------------------------
     // Copy constructor.
     // ------------------------------------------------------------------------
-    SocketStreamImpBSD (const SocketStreamImpBSD& sock)
-        : SocketImpBSD(SocketTypes::STREAM)
+    SocketStreamImplBSD (const SocketStreamImplBSD& sock)
+        : SocketImplBSD(SocketTypes::STREAM)
     {
         m_local_addr      = sock.m_local_addr;
         m_remote_addr     = sock.m_remote_addr;
@@ -91,7 +91,7 @@ public:
     // PRE: None.
     // POST: None.
     // ------------------------------------------------------------------------
-    virtual ~SocketStreamImpBSD (void) {
+    virtual ~SocketStreamImplBSD (void) {
         /* Do nothing. */ ;
     }
 
@@ -132,7 +132,7 @@ public:
     //     This is a blocking call and will block until a connection is
     //     established.
     // ------------------------------------------------------------------------
-    virtual Status accept(SocketStreamImpBSD& sock);
+    virtual Status accept(SocketStreamImplBSD& sock);
 
 protected:
     // ------------------------------------------------------------------------
@@ -141,7 +141,7 @@ protected:
     getOption (const SocketOptions::Types option,
                struct SocketOptions::Data& data)
     {
-        return SocketImpBSD::getOption(option, data);
+        return SocketImplBSD::getOption(option, data);
     }
 
     // ------------------------------------------------------------------------
@@ -150,11 +150,11 @@ protected:
     setOption (const SocketOptions::Types option,
                const struct SocketOptions::Data& data)
     {
-        return SocketImpBSD::setOption(option, data);
+        return SocketImplBSD::setOption(option, data);
     }
 };
 
 }; // End of vpr namespace
 
 
-#endif	/* _VJ_SOCKET_STREAM_IMP_BSD_H_ */
+#endif	/* _VJ_SOCKET_STREAM_IMPL_BSD_H_ */

@@ -31,20 +31,21 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 /*
- * --------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * Author:
  *   Patrick Hartling (based on vpr::SemaphoreSGI by Allen Bierbaum).
- * --------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * NOTES:
- *    - This file (vprSemaphorePosix.h) must be included by vprSemaphore.h,
+ *    - This file (SemaphorePosix.h) must be included by vpr/Sync/Semaphore.h,
  *      not the other way around.
- * --------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  */
 
 #ifndef _VPR_SEMAPHORE_POSIX_H_
 #define _VPR_SEMAPHORE_POSIX_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
+
 #include <stdlib.h>
 #include <unistd.h>
 #include <limits.h>

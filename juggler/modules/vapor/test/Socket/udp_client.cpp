@@ -31,7 +31,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <stdio.h>
-#include <IO/Socket/SocketDatagram.h>
+
+#include <vpr/vpr.h>
+#include <vpr/IO/Socket/SocketDatagram.h>
 
 
 int

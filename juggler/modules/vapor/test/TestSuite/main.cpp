@@ -8,7 +8,7 @@
 #include <TestCases/StatusTest.h>
 #include <TestCases/Socket/SocketConnectorAcceptorTest.h>
 #include <TestCases/IO/SelectorTest.h>
-#include <Utils/Debug.h>
+#include <vpr/Util/Debug.h>
 
 
 //using namespace vpr;

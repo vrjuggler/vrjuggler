@@ -34,11 +34,11 @@
 #define _VPR_SELECTOR_BRIDGE_H_
 // NOTE: this is the bridge class for use with Selector.h
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <string>
-#include <IO/IOSys.h>
-#include <IO/SelectorBase.h>
+#include <vpr/IO/IOSys.h>
+#include <vpr/IO/SelectorBase.h>
 
 
 namespace vpr {

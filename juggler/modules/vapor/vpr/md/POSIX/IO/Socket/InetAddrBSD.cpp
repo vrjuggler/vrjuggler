@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <stdio.h>
 #include <sys/types.h>
@@ -40,7 +40,7 @@
 #include <netdb.h>
 #include <errno.h>
 
-#include <md/POSIX/InetAddrBSD.h>
+#include <vpr/md/POSIX/IO/Socket/InetAddrBSD.h>
 
 #ifndef INADDR_NONE
 #define INADDR_NONE 0xffffffff   /* -1 return */

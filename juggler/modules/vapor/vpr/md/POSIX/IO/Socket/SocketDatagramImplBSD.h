@@ -30,20 +30,20 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_SOCKET_DATAGRAM_IMP_BSD_H_
-#define _VPR_SOCKET_DATAGRAM_IMP_BSD_H_
+#ifndef _VPR_SOCKET_DATAGRAM_IMPL_BSD_H_
+#define _VPR_SOCKET_DATAGRAM_IMPL_BSD_H_
 
 #include <string>
 
-#include <md/POSIX/SocketImpBSD.h>
-#include <IO/Socket/SocketDatagramOpt.h>
+#include <vpr/md/POSIX/IO/Socket/SocketImplBSD.h>
+#include <vpr/IO/Socket/SocketDatagramOpt.h>
 
 
 namespace vpr {
 
-class SocketDatagramImpBSD : public SocketDatagramOpt, public SocketImpBSD {
+class SocketDatagramImplBSD : public SocketDatagramOpt, public SocketImplBSD {
 public:
-    typedef SocketImpBSD Parent;
+    typedef SocketImplBSD Parent;
 
     // ========================================================================
     // vpr::SocketDatagram implementation.
@@ -55,8 +55,8 @@ public:
     //! PRE: None.
     //! POST: None.
     // ------------------------------------------------------------------------
-    SocketDatagramImpBSD (void)
-        : SocketImpBSD(SocketTypes::DATAGRAM)
+    SocketDatagramImplBSD (void)
+        : SocketImplBSD(SocketTypes::DATAGRAM)
     {
         /* Do nothing. */ ;
     }
@@ -68,9 +68,9 @@ public:
     //+       set to vpr::SocketTypes::DATAGRAM.
     //
     // ------------------------------------------------------------------------
-    SocketDatagramImpBSD (const InetAddr& local_addr,
-                          const InetAddr& remote_addr)
-        : SocketImpBSD(local_addr, remote_addr, SocketTypes::DATAGRAM)
+    SocketDatagramImplBSD (const InetAddr& local_addr,
+                           const InetAddr& remote_addr)
+        : SocketImplBSD(local_addr, remote_addr, SocketTypes::DATAGRAM)
     {
         /* Do nothing. */ ;
     }
@@ -78,8 +78,8 @@ public:
     // ------------------------------------------------------------------------
     // Copy constructor.
     // ------------------------------------------------------------------------
-    SocketDatagramImpBSD (const SocketDatagramImpBSD& sock)
-        : SocketImpBSD(SocketTypes::DATAGRAM)
+    SocketDatagramImplBSD (const SocketDatagramImplBSD& sock)
+        : SocketImplBSD(SocketTypes::DATAGRAM)
     {
         m_local_addr      = sock.m_local_addr;
         m_remote_addr     = sock.m_remote_addr;
@@ -93,7 +93,7 @@ public:
     //! PRE: None.
     //! POST: None.
     // ------------------------------------------------------------------------
-    virtual ~SocketDatagramImpBSD (void) {
+    virtual ~SocketDatagramImplBSD (void) {
         /* Do nothing. */ ;
     }
 
@@ -139,7 +139,7 @@ protected:
     getOption (const SocketOptions::Types option,
                struct SocketOptions::Data& data)
     {
-        return SocketImpBSD::getOption(option, data);
+        return SocketImplBSD::getOption(option, data);
     }
 
     // ------------------------------------------------------------------------
@@ -148,11 +148,11 @@ protected:
     setOption (const SocketOptions::Types option,
                const struct SocketOptions::Data& data)
     {
-        return SocketImpBSD::setOption(option, data);
+        return SocketImplBSD::setOption(option, data);
     }
 };
 
 }; // End of namespace
 
 
-#endif	/* _VPR_SOCKET_DATAGRAM_IMP_BSD_H_ */
+#endif	/* _VPR_SOCKET_DATAGRAM_IMPL_BSD_H_ */

@@ -41,11 +41,11 @@
 #ifndef _VPR_THREAD_KEY_WIN_32_H_
 #define _VPR_THREAD_KEY_WIN_32_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <stdio.h>
 
-#include <Threads/ThreadFunctor.h>
+#include <vpr/Thread/ThreadFunctor.h>
 
 
 namespace vpr {

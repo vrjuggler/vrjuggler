@@ -30,9 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <md/NSPR/SelectorImpNSPR.h>
-#include <md/NSPR/NSPRHelpers.h>
-#include <Utils/Assert.h>
+#include <vpr/vprConfig.h>
+
+#include <vpr/md/NSPR/NSPRHelpers.h>
+#include <vpr/Util/Assert.h>
+#include <vpr/md/NSPR/IO/SelectorImplNSPR.h>
 
 namespace vpr {
 
@@ -40,7 +42,7 @@ namespace vpr {
 //: Add the given handle to the selector
 //! PRE: handle is a valid handle
 //! POST: handle is added to the handle set, and initialized to a mask of no-events
-bool SelectorImpNSPR::addHandle(IOSys::Handle handle)
+bool SelectorImplNSPR::addHandle(IOSys::Handle handle)
 {
    if(getHandle(handle) != mPollDescs.end())
    {
@@ -60,7 +62,7 @@ bool SelectorImpNSPR::addHandle(IOSys::Handle handle)
 //: Remove a handle from the selector
 //! PRE: handle is in the selector
 //! POST: handle is removed from the set of valid handles
-bool SelectorImpNSPR::removeHandle(IOSys::Handle handle)
+bool SelectorImplNSPR::removeHandle(IOSys::Handle handle)
 {
    std::vector<PRPollDesc>::iterator i = getHandle(handle);
    
@@ -76,7 +78,7 @@ bool SelectorImpNSPR::removeHandle(IOSys::Handle handle)
 }
 
 //: Set the event flags going in to the select to mask
-bool SelectorImpNSPR::setIn(IOSys::Handle handle, vpr::Uint16 mask)
+bool SelectorImplNSPR::setIn(IOSys::Handle handle, vpr::Uint16 mask)
 {
    std::vector<PRPollDesc>::iterator i = getHandle(handle);
    
@@ -91,7 +93,7 @@ bool SelectorImpNSPR::setIn(IOSys::Handle handle, vpr::Uint16 mask)
 }
 
 //: Get the current in flag mask
-vpr::Uint16 SelectorImpNSPR::getIn(IOSys::Handle handle)
+vpr::Uint16 SelectorImplNSPR::getIn(IOSys::Handle handle)
 {
    std::vector<PRPollDesc>::iterator i = getHandle(handle);
    
@@ -105,7 +107,7 @@ vpr::Uint16 SelectorImpNSPR::getIn(IOSys::Handle handle)
 }
 
 //: Get the current out flag mask
-vpr::Uint16 SelectorImpNSPR::getOut(IOSys::Handle handle)
+vpr::Uint16 SelectorImplNSPR::getOut(IOSys::Handle handle)
 {
    std::vector<PRPollDesc>::iterator i = getHandle(handle);
    
@@ -121,7 +123,7 @@ vpr::Uint16 SelectorImpNSPR::getOut(IOSys::Handle handle)
 //: Select
 //! ARGS: numWithEvents - Upon completion, this holds the number of items that have events
 //! ARGS: timeout - The number of msecs to select for (0 - don't wait)
-Status SelectorImpNSPR::select(vpr::Uint16& numWithEvents, vpr::Uint16 timeout)
+Status SelectorImplNSPR::select(vpr::Uint16& numWithEvents, vpr::Uint16 timeout)
 {
    vpr::Status ret_val;
 
@@ -132,7 +134,7 @@ Status SelectorImpNSPR::select(vpr::Uint16& numWithEvents, vpr::Uint16 timeout)
 
    if( -1 == result)
    {
-      NSPR_PrintError("SelectorImpNSPR::select: Error selecting. ");
+      NSPR_PrintError("SelectorImplNSPR::select: Error selecting. ");
       numWithEvents = 0;
       ret_val.setCode(Status::Failure);
    }
@@ -149,7 +151,7 @@ Status SelectorImpNSPR::select(vpr::Uint16& numWithEvents, vpr::Uint16 timeout)
 
 // Get the index of the handle given
 //! RETURNS: .end() - Not found, else the index to the handle in mPollDescs
-std::vector<PRPollDesc>::iterator SelectorImpNSPR::getHandle(PRFileDesc const* handle)
+std::vector<PRPollDesc>::iterator SelectorImplNSPR::getHandle(PRFileDesc const* handle)
 {
    // XXX: Should probably be replaced by a map in the future for speed
 
@@ -164,7 +166,7 @@ std::vector<PRPollDesc>::iterator SelectorImpNSPR::getHandle(PRFileDesc const* h
 }
 
 
-PRUint16 SelectorImpNSPR::convertMaskVprToNspr(vpr::Uint16 mask)
+PRUint16 SelectorImplNSPR::convertMaskVprToNspr(vpr::Uint16 mask)
 {
    PRUint16 ret_mask(0);
    if(mask & VPR_READ)
@@ -181,7 +183,7 @@ PRUint16 SelectorImpNSPR::convertMaskVprToNspr(vpr::Uint16 mask)
    return ret_mask;
 }
 
-vpr::Uint16 SelectorImpNSPR::convertMaskNsprToVpr(PRUint16 mask)
+vpr::Uint16 SelectorImplNSPR::convertMaskNsprToVpr(PRUint16 mask)
 {
    vpr::Uint16 ret_mask(0);
    if(mask & PR_POLL_READ)

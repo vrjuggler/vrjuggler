@@ -34,15 +34,15 @@
 #define _VPR_THREAD_MANAGER_H_
 //#pragma once
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
-#include <Threads/BaseThread.h>
-#include <Threads/TSTable.h>
-#include <Sync/Mutex.h>
-#include <Sync/Guard.h>
+#include <vpr/Thread/BaseThread.h>
+#include <vpr/Thread/TSTable.h>
+#include <vpr/Sync/Mutex.h>
+#include <vpr/Sync/Guard.h>
 
-#include <Utils/Debug.h>
-#include <Utils/Singleton.h>
+#include <vpr/Util/Debug.h>
+#include <vpr/Util/Singleton.h>
 
 
 namespace vpr {

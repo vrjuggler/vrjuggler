@@ -30,10 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
-#include <SharedMem/MemPool.h>
-#include <md/SPROC/MemPoolSGI.h>
+#include <vpr/md/SPROC/SharedMem/MemPool.h>
+
 
 usptr_t* vpr::MemPoolSGI::arenaForMemPools      = NULL;
 char* vpr::MemPoolSGI::arenaForMemPoolsFileName = NULL;

@@ -33,13 +33,11 @@
 #ifndef _vprBarrierSGI_h_
 #define _vprBarrierSGI_h_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 #include <ulocks.h>
-#include <SharedMem/MemPool.h>
-#include <md/SPROC/MemPoolSGI.h>
-//#include <SharedMem/SharedType.h>
-#include <Sync/Mutex.h>
-#include <Sync/Guard.h>
+#include <vpr/md/SPROC/SharedMem/MemPool.h>
+#include <vpr/Sync/Mutex.h>
+#include <vpr/Sync/Guard.h>
 
 
 namespace vpr {

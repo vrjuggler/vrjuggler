@@ -36,12 +36,12 @@
 // NOTE: This file (vprThreadWin32.h) MUST be included by vprThread.h.
 // Not the other way around
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <process.h>
 
-#include <Threads/ThreadFunctor.h>
-#include <Threads/BaseThread.h>
+#include <vpr/Thread/ThreadFunctor.h>
+#include <vpr/Thread/BaseThread.h>
 
 
 //typedef int cancel_state_t;

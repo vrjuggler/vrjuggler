@@ -41,7 +41,7 @@
 #ifndef _VPR_THREAD_POSIX_H_
 #define _VPR_THREAD_POSIX_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <stdlib.h>
 #include <pthread.h>
@@ -51,11 +51,11 @@
 #include <sched.h>
 
 // To get the posix key stuff for storing self.
-#include <md/POSIX/ThreadKeyPosix.h>
+#include <vpr/md/POSIX/Thread/ThreadKeyPosix.h>
 
 namespace vpr {
 
-typedef Uint32 thread_id_t;
+typedef vpr::Uint32 thread_id_t;
 
 //: Threads implementation using POSIX threads (both Draft 4 and the "final"
 //+ draft of the standard are supported).

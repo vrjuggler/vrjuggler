@@ -36,28 +36,62 @@
 /set type=dir mode=@DIR_PERMS@ uname=@OWNER_NAME@ gname=@GROUP_NAME@
 .
     include
-        IO
-            Port
+        vpr
+            IO
+                Port
+                ..
+                Socket
+                ..
             ..
-            Socket
+            Sync
             ..
-        ..
-        SharedMem
-        ..
-        Sync
-        ..
-        Threads
-        ..
-        Utils
-        ..
-        md
-            NSPR
+            Thread
             ..
-            POSIX
+            Util
             ..
-            SPROC
-            ..
-            WIN32
+            md
+                NSPR
+                    IO
+                        Socket
+                        ..
+                    ..
+                    Sync
+                    ..
+                    Thread
+                    ..
+                ..
+                POSIX
+                    IO
+                        Port
+                        ..
+                        Socket
+                        ..
+                    ..
+                    Sync
+                    ..
+                    Thread
+                    ..
+                ..
+                SPROC
+                    SharedMem
+                    ..
+                    Sync
+                    ..
+                    Thread
+                    ..
+                ..
+                WIN32
+                    IO
+                        Port
+                        ..
+                        Socket
+                        ..
+                    ..
+                    Sync
+                    ..
+                    Thread
+                    ..
+                ..
             ..
         ..
     ..

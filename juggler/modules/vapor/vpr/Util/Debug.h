@@ -33,16 +33,16 @@
 #ifndef _VPR_Debug_h_
 #define _VPR_Debug_h_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 #include <stdlib.h>
 #include <vector>
 #include <string>
 #include <map>
 
-#include <Sync/Mutex.h>
-#include <Sync/Guard.h>
-#include <Utils/StreamLock.h>
-#include <Utils/Singleton.h>
+#include <vpr/Sync/Mutex.h>
+#include <vpr/Sync/Guard.h>
+#include <vpr/Util/StreamLock.h>
+#include <vpr/Util/Singleton.h>
 
 // Debug output categories
 #define vprDBG_BASE 0

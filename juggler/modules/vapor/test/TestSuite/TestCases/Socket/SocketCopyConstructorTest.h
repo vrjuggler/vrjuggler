@@ -9,16 +9,16 @@
 #include <TestSuite.h>
 #include <TestCaller.h>
 
-#include <IO/Socket/Socket.h>
-#include <IO/Socket/SocketStream.h>
-#include <IO/Socket/InetAddr.h>
+#include <vpr/IO/Socket/Socket.h>
+#include <vpr/IO/Socket/SocketStream.h>
+#include <vpr/IO/Socket/InetAddr.h>
 
-#include <System.h>
+#include <vpr/System.h>
 
-#include <Threads/Thread.h>
-#include <Threads/ThreadFunctor.h>
-#include <Sync/Mutex.h>
-#include <Sync/Cond.h>
+#include <vpr/Thread/Thread.h>
+#include <vpr/Thread/ThreadFunctor.h>
+#include <vpr/Sync/Mutex.h>
+#include <vpr/Sync/CondVar.h>
 
 #include <vector>
 
@@ -251,7 +251,7 @@ private:
    bool             mThreadAssertTest; // true for no error
    
 protected:
-    vpr::Cond       mCondVar;       // Condition variable
+    vpr::CondVar    mCondVar;       // Condition variable
     enum State { READY, NOT_READY, CONNECTOR_CLOSED
     };
     State           mState;         // State variable   

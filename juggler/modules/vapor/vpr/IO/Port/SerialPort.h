@@ -32,28 +32,28 @@
 #ifndef _VPR_SERIAL_PORT_H_
 #define _VPR_SERIAL_PORT_H_
 
-#include <IO/Port/Port.h>
-#include <IO/Port/SerialTypes.h>
+#include <vpr/IO/Port/Port.h>
+#include <vpr/IO/Port/SerialTypes.h>
 
 // Include the bridge class.
-#include <IO/Port/SerialPort_t.h>
+#include <vpr/IO/Port/SerialPort_t.h>
 
 #if defined(VPR_USE_NSPR)
-#   include <md/NSPR/SerialPortImpNSPR.h>
+#   include <vpr/md/NSPR/IO/Port/SerialPortImplNSPR.h>
 namespace vpr {
-  typedef SerialPort_t<SerialPortImpNSPR> SerialPort;
+  typedef SerialPort_t<SerialPortImplNSPR> SerialPort;
 };
 
 #elif defined(VPR_USE_WIN32)
-#   include <md/WIN32/SerialPortImpWin32.h>
+#   include <vpr/md/WIN32/IO/Port/SerialPortImplWin32.h>
 namespace vpr {
-  typedef SerialPort_t<SerialPortImpWin32> SerialPort;
+  typedef SerialPort_t<SerialPortImplWin32> SerialPort;
 };
 
 #else
-#   include <md/POSIX/SerialPortImpTermios.h>
+#   include <vpr/md/POSIX/IO/Port/SerialPortImplTermios.h>
 namespace vpr {
-  typedef SerialPort_t<SerialPortImpTermios> SerialPort;
+  typedef SerialPort_t<SerialPortImplTermios> SerialPort;
 };
 #endif
 

@@ -41,7 +41,7 @@
 # -----------------------------------------------------------------------------
 
 # Variables whose values are specific to this file.
-includedir	= @includedir@
+includedir	= @includedir@/vpr
 instlinks	= $(topdir)/instlinks
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
@@ -89,8 +89,8 @@ VPR_LIB_DYNAMIC		= $(VPR_LIBRARY).$(DYNAMICLIB_EXT)
 # Version information.
 BRANCH		= HEAD
 VER_ARGS	= -f $(VPRROOT_ABS)/VERSION -s @SUBSYSTEM@ -b $(BRANCH)	\
-                  -i $(VPRROOT_ABS)/include/vprParam.h.in		\
-                  -o include/vprParam.h -d "`date '+%b %e, %Y %H:%M:%S'`"
+                  -i $(VPRROOT_ABS)/vpr/vprParam.h.in -o vpr/vprParam.h	\
+                  -d "`date '+%b %e, %Y %H:%M:%S'`"
 
 ifdef VERSION
     VER_ARGS	+= -v $(VERSION)
@@ -154,7 +154,7 @@ ifneq (@OS_TYPE@, Win32)
 	@echo "Setting up developer installation links"
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/vpr
 	cd $(instlinks)/include &&					\
           for dir in $(SUBDIR) ; do					\
               rm -f ./$$dir ;						\
@@ -162,12 +162,12 @@ ifneq (@OS_TYPE@, Win32)
           done
 	cd $(instlinks) && rm -f ./$(LIBDIR_NAME) &&			\
           ln -s $(LIBDIR_BASE) ./$(LIBDIR_NAME)
-	cd $(instlinks)/include && rm -f ./*.h &&			\
-          $(LN_S) $(VPRROOT_ABS)/include/*.h ./
-	cd $(instlinks)/include && rm -f ./vprDefines.h &&		\
-	  $(LN_S) $(topdir)/include/vprDefines.h ./vprDefines.h
-	cd $(instlinks)/include && rm -f ./vprParam.h &&		\
-	  $(LN_S) $(topdir)/include/vprParam.h ./vprParam.h
+	cd $(instlinks)/include/vpr && rm -f ./*.h &&			\
+          $(LN_S) $(VPRROOT_ABS)/vpr/*.h ./
+	cd $(instlinks)/include/vpr && rm -f ./vprDefines.h &&		\
+	  $(LN_S) $(topdir)/vpr/vprDefines.h ./vprDefines.h
+	cd $(instlinks)/include/vpr && rm -f ./vprParam.h &&		\
+	  $(LN_S) $(topdir)/vpr/vprParam.h ./vprParam.h
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
 	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
             -t $(VPRROOT_ABS)/vpr-config.in -p 'use_base_dir=yes'	\
@@ -251,9 +251,19 @@ pre-install-headers:
 
 post-install-headers:
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/include/vprDefines.h $(includedir)
+          $(VPRROOT_ABS)/vpr/System.h $(includedir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/include/vprParam.h $(includedir)
+          $(VPRROOT_ABS)/vpr/SystemBase.h $(includedir)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(VPRROOT_ABS)/vpr/vpr.h $(includedir)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(VPRROOT_ABS)/vpr/vprConfig.h $(includedir)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(VPRROOT_ABS)/vpr/vprTypes.h $(includedir)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(topdir)/vpr/vprDefines.h $(includedir)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(topdir)/vpr/vprParam.h $(includedir)
 
 # Install the test programs.
 install-test:

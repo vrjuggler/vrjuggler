@@ -30,20 +30,21 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_SOCKET_DATAGRAM_IMP_NSPR_H_
-#define _VPR_SOCKET_DATAGRAM_IMP_NSPR_H_
+#ifndef _VPR_SOCKET_DATAGRAM_IMPL_NSPR_H_
+#define _VPR_SOCKET_DATAGRAM_IMPL_NSPR_H_
 
 #include <string>
 
-#include <md/NSPR/SocketImpNSPR.h>
-#include <IO/Socket/SocketDatagramOpt.h>
+#include <vpr/md/NSPR/IO/Socket/SocketImplNSPR.h>
+#include <vpr/IO/Socket/SocketDatagramOpt.h>
 
 
 namespace vpr {
 
-class SocketDatagramImpNSPR : public SocketDatagramOpt, public SocketImpNSPR {
+class SocketDatagramImplNSPR : public SocketDatagramOpt, public SocketImplNSPR
+{
 public:
-    typedef SocketImpNSPR Parent;
+    typedef SocketImplNSPR Parent;
 
     // ========================================================================
     // vpr::SocketDatagram implementation.
@@ -55,8 +56,8 @@ public:
     //! PRE: None.
     //! POST: None.
     // ------------------------------------------------------------------------
-    SocketDatagramImpNSPR (void)
-        : SocketImpNSPR(SocketTypes::DATAGRAM)
+    SocketDatagramImplNSPR (void)
+        : SocketImplNSPR(SocketTypes::DATAGRAM)
     {
         /* Do nothing. */ ;
     }
@@ -68,9 +69,9 @@ public:
     //+       set to vpr::SocketTypes::DATAGRAM.
     //
     // ------------------------------------------------------------------------
-    SocketDatagramImpNSPR (const InetAddr& local_addr,
+    SocketDatagramImplNSPR (const InetAddr& local_addr,
                            const InetAddr& remote_addr)
-        : SocketImpNSPR(local_addr, remote_addr, SocketTypes::DATAGRAM)
+        : SocketImplNSPR(local_addr, remote_addr, SocketTypes::DATAGRAM)
     {
         /* Do nothing. */ ;
     }
@@ -78,8 +79,8 @@ public:
     // ------------------------------------------------------------------------
     // Copy constructor.
     // ------------------------------------------------------------------------
-    SocketDatagramImpNSPR (const SocketDatagramImpNSPR& sock)
-        : SocketImpNSPR(SocketTypes::DATAGRAM)
+    SocketDatagramImplNSPR (const SocketDatagramImplNSPR& sock)
+        : SocketImplNSPR(SocketTypes::DATAGRAM)
     {
         m_local_addr      = sock.m_local_addr;
         m_remote_addr     = sock.m_remote_addr;
@@ -91,7 +92,7 @@ public:
     //! PRE: None.
     //! POST: None.
     // ------------------------------------------------------------------------
-    virtual ~SocketDatagramImpNSPR (void) {
+    virtual ~SocketDatagramImplNSPR (void) {
         /* Do nothing. */ ;
     }
 
@@ -137,7 +138,7 @@ protected:
     getOption (const SocketOptions::Types option,
                struct SocketOptions::Data& data)
     {
-        return SocketImpNSPR::getOption(option, data);
+        return SocketImplNSPR::getOption(option, data);
     }
 
     // ------------------------------------------------------------------------
@@ -146,11 +147,11 @@ protected:
     setOption (const SocketOptions::Types option,
                const struct SocketOptions::Data& data)
     {
-        return SocketImpNSPR::setOption(option, data);
+        return SocketImplNSPR::setOption(option, data);
     }
 };
 
 }; // End of namespace
 
 
-#endif	/* _VPR_SOCKET_DATAGRAM_IMP_NSPR_H_ */
+#endif	/* _VPR_SOCKET_DATAGRAM_IMPL_NSPR_H_ */

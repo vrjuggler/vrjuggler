@@ -30,21 +30,22 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_SOCKET_STREAM_IMP_WINSOCK_H_
-#define _VPR_SOCKET_STREAM_IMP_WINSOCK_H_
+#ifndef _VPR_SOCKET_STREAM_IMPL_WINSOCK_H_
+#define _VPR_SOCKET_STREAM_IMPL_WINSOCK_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <string>
 
-#include <md/WIN32/SocketImpWinSock.h>
-#include <IO/Socket/InetAddr.h>
-#include <IO/Socket/SocketStreamOpt.h>
+#include <vpr/md/WIN32/IO/Socket/SocketImplWinSock.h>
+#include <vpr/IO/Socket/InetAddr.h>
+#include <vpr/IO/Socket/SocketStreamOpt.h>
 
 
 namespace vpr {
 
-class SocketStreamImpWinSock : public SocketStreamOpt, public SocketImpWinSock
+class SocketStreamImplWinSock : public SocketStreamOpt,
+                                public SocketImplWinSock
 {
 public:
     // ========================================================================
@@ -60,12 +61,12 @@ public:
     // POST: The member variables are initialized with the m_type variable in
     //       particular set to SOCK_STREAM.
     // ------------------------------------------------------------------------
-    SocketStreamImpWinSock(void);
+    SocketStreamImplWinSock(void);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    SocketStreamImpWinSock(const InetAddr& local_addr,
-                           const InetAddr& remote_addr);
+    SocketStreamImplWinSock(const InetAddr& local_addr,
+                            const InetAddr& remote_addr);
 
     // ------------------------------------------------------------------------
     // Constructor.  This takes the address (either hostname or IP address) of
@@ -81,9 +82,9 @@ public:
     //               connect.
     //     port    - The port on the remote site to which we will connect.
     // ------------------------------------------------------------------------
-    SocketStreamImpWinSock(const std::string& address,
-                           const unsigned short port,
-                           const SocketTypes::Domain domain);
+    SocketStreamImplWinSock(const std::string& address,
+                            const unsigned short port,
+                            const SocketTypes::Domain domain);
 
     // ------------------------------------------------------------------------
     // Destructor.  This currently does nothing.
@@ -91,7 +92,7 @@ public:
     // PRE: None.
     // POST: None.
     // ------------------------------------------------------------------------
-    virtual ~SocketStreamImpWinSock (void) {
+    virtual ~SocketStreamImplWinSock (void) {
         /* Do nothing. */ ;
     }
 
@@ -118,11 +119,11 @@ public:
     //
     // PRE: The socket is open and is in a listening state.
     // POST: When a connection is established, a new
-    //       vpr::SocketStreamImpWinSock object will be created that can be
+    //       vpr::SocketStreamImplWinSock object will be created that can be
     //       used for further communication with the remote site.
     //
     // Returns:
-    //     Non-NULL - A new vpr::SocketStreamImpWinSock object that can be
+    //     Non-NULL - A new vpr::SocketStreamImplWinSock object that can be
     //                used to communicate with the remote site.
     //     NULL     - A socket could not be created to establish communication
     //                with the remote site.  An error message is printed
@@ -132,7 +133,7 @@ public:
     //     This is a blocking call and will block until a connection is
     //     established.
     // ------------------------------------------------------------------------
-    virtual Status accept(SocketStreamImpWinSock& sock);
+    virtual Status accept(SocketStreamImplWinSock& sock);
 
 protected:
     // ------------------------------------------------------------------------
@@ -141,7 +142,7 @@ protected:
     getOption (const SocketOptions::Types option,
                struct SocketOptions::Data& data)
     {
-        return SocketImpWinSock::getOption(option, data);
+        return SocketImplWinSock::getOption(option, data);
     }
 
     // ------------------------------------------------------------------------
@@ -150,11 +151,11 @@ protected:
     setOption (const SocketOptions::Types option,
                const struct SocketOptions::Data& data)
     {
-        return SocketImpWinSock::setOption(option, data);
+        return SocketImplWinSock::setOption(option, data);
     }
 };
 
 }; // End of vpr namespace
 
 
-#endif	/* _VPR_SOCKET_STREAM_IMP_WINSOCK_H_ */
+#endif	/* _VPR_SOCKET_STREAM_IMPL_WINSOCK_H_ */

@@ -33,15 +33,15 @@
 #ifndef _VPR_INET_ADDR_BSD_H_
 #define _VPR_INET_ADDR_BSD_H_
 
-#include <vprConfig.h>
-#include <IO/Socket/InetAddrBase.h>
+#include <vpr/vprConfig.h>
 
 #include <string.h>
 #include <string>
 #include <sys/types.h>
 #include <netinet/in.h>
 
-#include <IO/Socket/SocketTypes.h>
+#include <vpr/IO/Socket/InetAddrBase.h>
+#include <vpr/IO/Socket/SocketTypes.h>
 
 
 // XXX: Extend to work with IPv6.
@@ -299,9 +299,9 @@ public:
     }
 
 protected:
-    friend class SocketImpBSD;
-    friend class SocketDatagramImpBSD;
-    friend class SocketStreamImpBSD;
+    friend class SocketImplBSD;
+    friend class SocketDatagramImplBSD;
+    friend class SocketStreamImplBSD;
 
     // ------------------------------------------------------------------------
     //: Construct a vpr::InetAddrBSD object from a pointer to a sockaddr

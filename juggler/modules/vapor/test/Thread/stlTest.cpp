@@ -38,11 +38,10 @@
 #include <time.h>
 #include <sys/time.h>
 
-#include <SharedMem/MemPool.h>
-#include <Threads/ThreadPool.h>
-#include <Utils/Debug.h>
-#include <Sync/Mutex.h>
-#include <System.h>
+#include <vpr/Thread/ThreadPool.h>
+#include <vpr/Util/Debug.h>
+#include <vpr/Sync/Mutex.h>
+#include <vpr/System.h>
 
 void doIt(void*);
 
@@ -56,8 +55,7 @@ std::vector<int> intVector;
     
 int main(void)
 {
-    vpr::SharedPool myPool(65536, 16);    // size, num threads
-    vpr::ThreadPool* thePool = new(&myPool) vpr::ThreadPool(NUMTHREADS);
+    vpr::ThreadPool* thePool = new vpr::ThreadPool(NUMTHREADS);
     vpr::Mutex DebugLock;
     
     std::cout << "\nMax: " << intVector.max_size() << std::endl;

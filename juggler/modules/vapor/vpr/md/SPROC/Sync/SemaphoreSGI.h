@@ -33,10 +33,9 @@
 #ifndef _vprSemaphoreSGI_h_
 #define _vprSemaphoreSGI_h_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 #include <ulocks.h>
-#include <SharedMem/MemPool.h>
-#include <md/SPROC/MemPoolSGI.h>
+#include <vpr/md/SPROC/SharedMem/MemPool.h>
 
 
 namespace vpr {

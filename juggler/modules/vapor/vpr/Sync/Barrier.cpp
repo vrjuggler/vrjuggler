@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vprConfig.h>
-#include <Sync/Barrier.h>
+#include <vpr/vprConfig.h>
+#include <vpr/Sync/Barrier.h>
 
 
 namespace vpr {

@@ -37,7 +37,7 @@
 #include <sys/socket.h>
 #include <errno.h>
 
-#include <md/POSIX/SocketStreamImpBSD.h>
+#include <vpr/md/POSIX/IO/Socket/SocketStreamImplBSD.h>
 
 
 // ============================================================================
@@ -56,14 +56,14 @@ namespace vpr {
 // Listen on the socket for incoming connection requests.
 // ----------------------------------------------------------------------------
 Status
-SocketStreamImpBSD::listen (const int backlog) {
+SocketStreamImplBSD::listen (const int backlog) {
     Status retval;
 
     // Put the socket into listning mode.  If that fails, print an error and
     // return error status.
     if ( ::listen(m_handle->m_fdesc, backlog) == -1 ) {
         fprintf(stderr,
-                "[vpr::SocketStreamImpBSD] Cannot listen on socket: %s\n",
+                "[vpr::SocketStreamImplBSD] Cannot listen on socket: %s\n",
                 strerror(errno));
         retval.setCode(Status::Failure);
     }
@@ -75,7 +75,7 @@ SocketStreamImpBSD::listen (const int backlog) {
 // Accept an incoming connection request.
 // ----------------------------------------------------------------------------
 Status
-SocketStreamImpBSD::accept (SocketStreamImpBSD& sock) {
+SocketStreamImplBSD::accept (SocketStreamImplBSD& sock) {
     int accept_sock;
     Status retval;
     InetAddr addr;
@@ -93,7 +93,7 @@ SocketStreamImpBSD::accept (SocketStreamImpBSD& sock) {
         }
         else {
             fprintf(stderr,
-                    "[vpr::SocketStreamImpBSD] Error while accepting incoming "
+                    "[vpr::SocketStreamImplBSD] Error while accepting incoming "
                     "connection: %s\n", strerror(errno));
             retval.setCode(Status::Failure);
         }
