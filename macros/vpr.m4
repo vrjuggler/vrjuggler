@@ -42,8 +42,7 @@ dnl ************** <auto-copyright.pl END do not edit this line> **************
 dnl ---------------------------------------------------------------------------
 dnl VPR_PATH([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULES]]]])
 dnl
-dnl Test for VPR and then define VPR_CFLAGS, VPR_CXXFLAGS, VPR_LIBS, and
-dnl VPR_LIBS_STATIC.
+dnl Test for VPR and then define VPR_CXXFLAGS, VPR_LIBS, and VPR_LIBS_STATIC.
 dnl ---------------------------------------------------------------------------
 AC_DEFUN(VPR_PATH,
 [
@@ -97,7 +96,6 @@ dnl    done
     if test "x$VPR_CONFIG" = "xno" ; then
         no_vpr=yes
     else
-        VPR_CFLAGS=`$VPR_CONFIG $vpr_config_args --cflags`
         VPR_CXXFLAGS=`$VPR_CONFIG $vpr_config_args --cxxflags`
         VPR_EXTRA_LIBS=`$VPR_CONFIG $vpr_config_args --extra-libs`
         VPR_LIBS="`$VPR_CONFIG $vpr_config_args --libs` $VPR_EXTRA_LIBS"
@@ -114,14 +112,12 @@ dnl    done
             echo "*** your path, or set the VPR_CONFIG environment variable to the"
             echo "*** full path to vpr-config."
         fi
-        VPR_CFLAGS=""
         VPR_CXXFLAGS=""
         VPR_LIBS=""
         VPR_LIBS_STATIC=""
         ifelse([$3], , :, [$3])
     fi
 
-    AC_SUBST(VPR_CFLAGS)
     AC_SUBST(VPR_CXXFLAGS)
     AC_SUBST(VPR_LIBS)
     AC_SUBST(VPR_LIBS_STATIC)
