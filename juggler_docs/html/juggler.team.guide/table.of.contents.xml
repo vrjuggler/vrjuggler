@@ -25,6 +25,10 @@ Builder: JExplorerBuilder V 1. 0. 7
 				link="${TEAMGUIDE}/build/index.html" 
 				info="What to do once you have the source" 
 				image="Battery.gif" >
+				< item title="Requirements" 
+				   link="${TEAMGUIDE}/build/requirements.html" 
+				   info="Required tools and utilities for building"
+				   image="Leaf_Script2.gif" >
 				< item title="Download Source" 
 				   link="${TEAMGUIDE}/build/get.source.html" 
 				   info="How to get the source"
