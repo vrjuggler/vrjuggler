@@ -184,6 +184,7 @@ case $target_os in
         fi
 
         AC_DEFINE(VPR_OS_Linux,)
+        AC_DEFINE(_GNU_SOURCE,)
         ;;
     # DEC Alpha running Digital UNIX 4.0.
     osf4.0)
