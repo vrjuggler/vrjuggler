@@ -269,14 +269,17 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
    bool ray_intersects(false);
    ray_intersects = gmtl::intersect(z_plane, mWandRay, t_isect);
 
-   mIsectPoint = (mWandRay.mOrigin + (mWandRay.mDir*t_isect));
-   vprASSERT( gmtl::Math::isEqual(mIsectPoint[2], 0.0f, 0.01f) && "Point should be on z=0 plane");
+   if ( ray_intersects )
+   {
+      mIsectPoint = (mWandRay.mOrigin + (mWandRay.mDir*t_isect));
+      vprASSERT(gmtl::Math::isEqual(mIsectPoint[2], 0.0f, 0.01f) && "Point should be on z=0 plane");
 
-   // Compute drawing objects
-   mWandRay.setDir(mWandRay.getDir()*t_isect);     // Scale it back
+      // Compute drawing objects
+      mWandRay.setDir(mWandRay.getDir()*t_isect);     // Scale it back
 
-   vprDEBUG(vrjDBG_VNC, vprDBG_VERB_LVL)
-      << "VNC: Isect point: " << mIsectPoint << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_VNC, vprDBG_VERB_LVL)
+         << "VNC: Isect point: " << mIsectPoint << std::endl << vprDEBUG_FLUSH;
+   }
 
    // Get button states
    bool select_button_state = mLeftButton->getData();
