@@ -61,7 +61,7 @@ namespace gadget
        * Default Ctor
        */
       PositionCalibrationFilter()
-         : mWMatrix(NULL), mAlphaVec(NULL)
+         : mWMatrix(NULL)
       {}
 
       ~PositionCalibrationFilter();
@@ -75,7 +75,7 @@ namespace gadget
    private:
 
       /** The calibration table. */
-      std::vector< std::pair< gmtl::Vec3f, gmtl::Vec3f > > mTable;
+      std::vector< std::pair< gmtl::Vec3d, gmtl::Vec3d > > mTable;
 
       /** The name of the calibration file. */
       std::string mFileName;
@@ -94,50 +94,10 @@ namespace gadget
        * (                      .                          )
        * ( w[1](p[N]) w[2](p[N]) w[3](p[N]) ... w[N](p[N]) )
        */
-      float** mWMatrix;
+      double** mWMatrix;
 
       /** The Alpha Vector. */
-      gmtl::Vec3f* mAlphaVec;
-      
-      /**
-       * Performs Backsubstitution on a matrix; designed to be used
-       * in conjunction with the LU Decomposition algorithm.  Both
-       * this and the LU Decomposition algorithm are used to solve
-       * the set of n linear equations A * X = B as described in
-       * _Numerical Recipes in C++_.
-       *
-       * @param   decomposedA    The LU Decomposition of A.
-       * @param   size           The size of the square matrix A.
-       * @param   permutation    The permutation vector as returned by
-       *                         LU Decomposition.
-       * @param   solution       The solution matrix B.
-       *
-       * @return     solution will be replaced with the solution matrix X.
-       */
-      void luBacksubstitution(float** decomposedA, int size, 
-                              int* permutation, float* solution);
-
-      /**
-       * Performs LU Decomposition on a set of n linear equations.  
-       * This is designed to solve the set of equations:
-       * A * x = B.  LU Decomposition does this by
-       * L * U = A.
-       * => (L * U) * x = B
-       * => L * (U * x) = B
-       * 
-       * This routine actually does the LU Decomposition of a rowwise
-       * permutation of *the given matrix, and then hands that to
-       * luBacksubstitution for completion, as described in
-       * <i>Numerical Recipes in C</i>.
-       *
-       * @note    matrix will be destroyed through this process!
-       * 
-       * @param   matrix         the matrix to decompose.
-       * @param   size           the size of the square matrix.
-       * @param   permutation    the permutation vector.
-       */
-      void luDecomposition(float** matrix, int size, int* permutation);
-
+      std::vector<gmtl::Vec3d> mAlphaVec;
    };
 }
 #endif
