@@ -75,6 +75,7 @@ import org.vrjuggler.jccl.config.event.*;
                                   "person",
                                   "",
                                   1,
+                                  false,
                                   parents,
                                   "A person on the VR Juggler team.",
                                   categories,

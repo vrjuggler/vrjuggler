@@ -402,10 +402,20 @@ public class ConfigContextEditor
 
       // Get a list of all known ConfigDefinitions.
       java.util.List defs = getBroker().getRepository().getAllLatest();
+      java.util.List non_abstract_defs = new ArrayList();
+
+      for ( Iterator i = defs.iterator(); i.hasNext(); )
+      {
+         ConfigDefinition d = (ConfigDefinition) i.next();
+         if ( ! d.isAbstract() )
+         {
+            non_abstract_defs.add(d);
+         }
+      }
 
       // Ask the user to choose a base ConfigDefinition.
       ConfigDefinitionChooser chooser = new ConfigDefinitionChooser();
-      chooser.setDefinitions(defs);
+      chooser.setDefinitions(non_abstract_defs);
       int result = chooser.showDialog(this);
 
       // If the user did not cancel their choice, make a new ConfigElement

@@ -237,6 +237,14 @@ public class ConfigDefinitionRepositoryEditor
                                              "Config Definition Editor Error",
                                              JOptionPane.ERROR_MESSAGE);
             }
+            public void abstractChanged(ConfigDefinitionEvent evt)
+            {
+               mDefinitionChanged = true;
+
+               System.out.println("Config Definition Abstract Changed..." +
+                     ((ConfigDefinition)evt.getSource()).getToken() +
+                     " " + mCurConfigDef.getToken());
+            }
             public void helpChanged(ConfigDefinitionEvent evt)
             {
                mDefinitionChanged = true;
@@ -443,6 +451,7 @@ public class ConfigDefinitionRepositoryEditor
                                                      token,
                                                      "",
                                                      1,
+                                                     false,
                                                      new ArrayList(),
                                                      "",
                                                      categories,
@@ -574,7 +583,9 @@ public class ConfigDefinitionRepositoryEditor
    {
       return new ConfigDefinition(oldDef.getName(), oldDef.getToken(),
                                   oldDef.getIconLocation(),
-                                  oldDef.getVersion() + 1, oldDef.getParents(),
+                                  oldDef.getVersion() + 1,
+                                  oldDef.isAbstract(),
+                                  oldDef.getParents(),
                                   oldDef.getHelp(), oldDef.getCategories(),
                                   oldDef.getPropertyDefinitions(), null);
    }

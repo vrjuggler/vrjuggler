@@ -32,6 +32,7 @@
    <!-- The type for an individual version of a definition. -->
    <xs:complexType name="definition_version">
       <xs:sequence>
+         <xs:element name="abstract" type="xs:boolean" minOccurs="0" maxOccurs="1" default="false" />
          <xs:element name="help" type="xs:token" />
          <xs:element name="parent" type="parent" minOccurs="0" maxOccurs="unbounded" />
          <xs:element name="category" type="xs:string" minOccurs="0" maxOccurs="unbounded" />

@@ -64,6 +64,7 @@ import org.vrjuggler.jccl.config.event.*;
                                   "person",
                                   "",
                                   1,
+                                  false,
                                   parents,
                                   "A person",
                                   categories,
