@@ -256,11 +256,10 @@ void vjKernel::initConfig()
 
    // --- CREATE SHARED MEMORY --- //
    vjSharedPool::init();         // Try to init the pool stuff
-   sharedMemPool = new vjSharedPool(1024*1024);      // Create shared memory pool
 
    // ---- ALLOCATE MANAGERS --- //
    //initialSetupInputManager();
-   mInputManager = new (sharedMemPool) vjInputManager;
+   mInputManager = new vjInputManager;
    //initialSetupDisplayManager();
    mDisplayManager = vjDisplayManager::instance();  // Get display manager
    vjASSERT(mDisplayManager != NULL);                 // Did we get an object
