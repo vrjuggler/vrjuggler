@@ -10,6 +10,7 @@
 #include <gadget/RemoteInputManager/RecvBuffer.h>
 #include <gadget/Type/NetPosition.h>
 #include <gadget/Type/NetDigital.h>
+#include <jccl/jcclDefines.h>
 
 
 namespace gadget{
@@ -41,6 +42,7 @@ RemoteInputManager::RemoteInputManager(InputManager* input_manager){
    // setWaitingForHostsFlagOff();
    mManagerId.generate(); 
    vprDEBUG(vrjDBG_INPUT_MGR,2) << "Remote Input Manager Id: " << mManagerId << std::endl << vprDEBUG_FLUSH;
+   mNetClockSync.setClockSrcId(mManagerId);
 }
 
 RemoteInputManager::~RemoteInputManager(){
@@ -122,9 +124,11 @@ void RemoteInputManager::acceptLoop(void* nullParam){
               sprintf(stream_port_str, "%d", streamPort);
               std::string streamAlias = streamHostname + ":" + stream_port_str;
 
-              if( addConnection(streamAlias, streamHostname, streamPort, streamManagerId, client_sock)){  // pass the host:port as the alias_name also.
+              NetConnection* new_connection = addConnection(streamAlias, streamHostname, streamPort, streamManagerId, client_sock);  // pass the host:port as the alias_name also.
+              if(new_connection != NULL){ 
                  // if connection is successfully added, send handshake
                  this->sendHandshake(mShortHostname, local_port_str, mManagerId.toString(), client_sock);   // send my name: send my hostname & port
+                 mNetClockSync.syncWithMyClock(new_connection);
                  client_sock = new vpr::SocketStream;
               }
               else{  
@@ -203,6 +207,8 @@ void RemoteInputManager::updateAll()
 
    vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_STATE_LVL) << "Receiving data from remote net devices.\n" << vprDEBUG_FLUSH;
    receiveDeviceNetData();
+
+   updateManagerStatus();  // for any messages just received that require separate negotiation (i.e. Time Sync)
 
    mConfigMutex.release();  // Don't allow devices to be added or removed when we are accessing them
 
@@ -531,7 +537,9 @@ bool RemoteInputManager::makeConnection(const std::string& connection_alias, con
    std::string received_hostname, received_manager_id;
    int received_port;
    if(this->receiveHandshake(received_hostname, received_port, received_manager_id, sock_stream)){ // receive parameters from other manager, but to addConnection we'll actually use the variable names passed in from above
-      this->addConnection(connection_alias, connection_hostname, connection_port, received_manager_id, sock_stream);    // hostname and port are saved to identify the connection.
+      NetConnection* new_connection = this->addConnection(connection_alias, connection_hostname, connection_port, received_manager_id, sock_stream);    // hostname and port are saved to identify the connection.
+      vprASSERT(new_connection != NULL); // addConnection should never fail since we requested connection
+      mNetClockSync.syncWithOtherClock(new_connection);
    }
    return true;
 }
@@ -952,20 +960,19 @@ void RemoteInputManager::initNetwork(){
 */
 
 // addConnection if it doesn't exist already
-bool RemoteInputManager::addConnection(const std::string &connection_alias, const std::string& connection_hostname, const int connection_port, const std::string& manager_id, vpr::SocketStream* sock_stream){   
+NetConnection* RemoteInputManager::addConnection(const std::string &connection_alias, const std::string& connection_hostname, const int connection_port, const std::string& manager_id, vpr::SocketStream* sock_stream){   
    // make sure connection doesn't exist already:
    if(getConnectionByManagerId(manager_id) != NULL){
       vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_CONFIG_LVL) << "RemoteInputManager: Connection to " << connection_hostname 
          <<" : "<< connection_port <<" : "<< manager_id << " already exists." << std::endl << vprDEBUG_FLUSH;
-      return false;
+      return NULL;
    }
    else{ // add connection
       NetConnection* connection = new NetConnection(connection_alias, connection_hostname, connection_port, manager_id, sock_stream);
       mConnections.push_back(connection);
       vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_CONFIG_LVL) << "RemoteInputManager: Added connection to " << connection_hostname 
          <<" : "<< connection_port <<" : "<< manager_id << std::endl << vprDEBUG_FLUSH;
-
-      return true;
+      return connection;
    }
 }
 
@@ -1144,6 +1151,17 @@ void RemoteInputManager::resendRequestsForNackedDevices(){
       i != mConnections.end(); i++){
       (*i)->resendRequestsForNackedDevices();
    }
+}
+
+void RemoteInputManager::updateManagerStatus(){
+#if JCCL_PERFORMANCE == JCCL_PERF_POSIX        
+#ifdef GADGET_USING_RIM_SYNC
+   // jccl::TimeStamp::resync() not implemented for SPROC yet
+   if(mNetClockSync.syncNeeded()){
+      mNetClockSync.sync();
+   }
+#endif
+#endif
 }
 
 }  // end namespace gadget
