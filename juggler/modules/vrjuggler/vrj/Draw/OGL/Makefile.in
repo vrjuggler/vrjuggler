@@ -53,6 +53,7 @@ SRCS=		GlApp.cpp			\
 		GlDrawHeadFunctors.cpp		\
 		GlDrawWandFunctors.cpp		\
 		GlPipe.cpp			\
+		GlProcApp.cpp			\
 		GlSimInterfaceFactory.cpp	\
 		GlWindow.cpp
 

@@ -33,31 +33,34 @@
 #ifndef _VRJ_GL_PROC_APP_H_
 #define _VRJ_GL_PROC_APP_H_
 
-#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/vrjConfig.h>
+
 #include <boost/function.hpp>     // Could use function pointers, but this is a little easier to read
 
-using namespace vrj;    // Use vrj namespace for simplicity
+#include <vrj/Draw/OGL/GlApp.h>
+
 
 namespace vrj
 {
 
 /** \class GlProcAppWrapper GlProcApp.h vrj/Draw/OGL/GlProcApp.h
  *
- * Class to wrap a bunch of callback method for an OpenGL app.
+ * Wrapper class used to allow procedural-style application programming.
+ * Callbacks are registered with this class using helper functions.  Those
+ * callbacks are invoked indirectly by the VR Juggler kernel through the
+ * \c vrj::App and \c vrj::GlApp interface methods implemented in this class.
  */
-class GlProcAppWrapper : public vrj::GlApp
+class VJ_CLASS_API GlProcAppWrapper : public vrj::GlApp
 {
 public:
    typedef boost::function0<void> callback_t;      /** Type for callbacks */
 
-public:
-   GlProcAppWrapper()      
-   {;}
+   GlProcAppWrapper();
 
-   virtual ~GlProcAppWrapper()
-   {;}
+   virtual ~GlProcAppWrapper();
 
-public:  //** Getters and setters for the callback methods */
+   /** @name Getters and setters for the callback methods */
+   //@{
    void setDrawMethod(callback_t f)
    {
       mDrawMethod = f;
@@ -87,55 +90,19 @@ public:  //** Getters and setters for the callback methods */
    {
       mIntraframeMethod = f;
    }
+   //@}
 
-public:
-   virtual void draw()
-   {
-      if (!mDrawMethod.empty())
-      {
-         mDrawMethod();
-      }
-   }
+   virtual void contextInit();
 
-   virtual void contextInit()
-   {
-      if (!mContextInit.empty())
-      {
-         mContextInit();
-      }
-   }
+   virtual void preFrame();
 
-   virtual void bufferPreDraw()
-   {
-      if (!mBufferPredrawMethod.empty())
-      {
-         mBufferPredrawMethod();
-      }
-   }
+   virtual void intraFrame();
 
-   virtual void preFrame()
-   {
-      if (!mPreframeMethod.empty())
-      {
-         mPreframeMethod();
-      }
-   }
+   virtual void postFrame();
 
-   virtual void intraFrame()
-   {
-      if (!mIntraframeMethod.empty())
-      {
-         mIntraframeMethod();
-      }
-   }
+   virtual void bufferPreDraw();
 
-   virtual void postFrame()
-   {
-      if (!mPostframeMethod.empty())
-      {
-         mPostframeMethod();
-      }
-   }
+   virtual void draw();
 
 protected:
    callback_t  mDrawMethod;
@@ -146,86 +113,27 @@ protected:
    callback_t  mBufferPredrawMethod;
 };
 
-}
-
 /**
  * Set of procedures for wrapping an application using a procedural interface.
  */
-namespace
-{
-   vrj::GlProcAppWrapper proc_app_singleton;    /** The singleton application to use */
-}
+//@{
+   VJ_API(void) VRJSetGLDrawMethod(vrj::GlProcAppWrapper::callback_t m);
 
-namespace vrj
-{
-   void VRJSetGLDrawMethod(vrj::GlProcAppWrapper::callback_t m)
-   {
-      proc_app_singleton.setDrawMethod(m);
-   }
+   VJ_API(void) VRJSetGLContextInitMethod(vrj::GlProcAppWrapper::callback_t m);
 
-   void VRJSetGLContextInitMethod(vrj::GlProcAppWrapper::callback_t m)
-   { 
-      proc_app_singleton.setContextInitMethod(m);
-   }
-   
-   void VRJSetBufferPredrawMethod(vrj::GlProcAppWrapper::callback_t m)
-   { 
-      proc_app_singleton.setBufferPredrawMethod(m);
-   }
+   VJ_API(void) VRJSetBufferPredrawMethod(vrj::GlProcAppWrapper::callback_t m);
 
-   void VRJSetPreFrameMethod(vrj::GlProcAppWrapper::callback_t m)
-   {
-      proc_app_singleton.setPreFrameMethod(m);
-   }
+   VJ_API(void) VRJSetPreFrameMethod(vrj::GlProcAppWrapper::callback_t m);
 
-   void VRJSetIntraFrameMethod(vrj::GlProcAppWrapper::callback_t m)
-   {
-      proc_app_singleton.setIntraFrameMethod(m);
-   }
-   
-   void VRJSetPostFrameMethod(vrj::GlProcAppWrapper::callback_t m)
-   {
-      proc_app_singleton.setPostFrameMethod(m);
-   }
+   VJ_API(void) VRJSetIntraFrameMethod(vrj::GlProcAppWrapper::callback_t m);
 
-   void VRJConfigure(int argc, char* argv[])
-   {
-       // Allocate the kernel object and the application object
-      Kernel* kernel = Kernel::instance();           // Get the kernel
-      
-      // IF no args passed to the program
-      //    Display usage information and exit
-      if (argc <= 1)
-      {
-         std::cout << "\n\n";
-         std::cout << "Usage: " << argv[0]
-                   << " vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n]"
-                   << std::endl;
-         exit(1);
-      }
+   VJ_API(void) VRJSetPostFrameMethod(vrj::GlProcAppWrapper::callback_t m);
 
-      // Load any config files specified on the command line
-      for( int i = 1; i < argc; ++i )
-      {
-         kernel->loadConfigFile(argv[i]);
-      }
-   }
+   VJ_API(void) VRJConfigure(int argc, char* argv[]);
 
    /** Start everything running */
-   void VRJProcRunSystem()
-   {
-       // Allocate the kernel object and the application object
-      Kernel* kernel = Kernel::instance();           // Get the kernel
-      
-      // Start the kernel running
-      kernel->start();
-
-      // Give the kernel an application to execute
-      kernel->setApplication(&proc_app_singleton);
-
-      // Keep thread alive and waiting
-      kernel->waitForKernelStop();
-   }   
+   VJ_API(void) VRJProcRunSystem();
+//@}
 }
 
 
