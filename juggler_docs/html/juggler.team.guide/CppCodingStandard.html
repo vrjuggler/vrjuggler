@@ -5,9 +5,11 @@
 <BODY BGCOLOR=#ffffff>
 
 <CENTER>
+   <!--NewPage-->
    <H1> Juggler C++ Coding Standard </H1>
-   <H4>Last Modified: 2000-10-1</H2>
-   <H5>Original document can be found <a href="http://www.possibility.com/Cpp/CppCodingStandard.html">here</a>.</H5>
+   <B>Last Modified: 2000-10-1</B>
+   Original document can be found
+   <a href="http://www.possibility.com/Cpp/CppCodingStandard.html">here</a>.
    <P>
    <TABLE WIDTH="65%">
    <TR>
@@ -22,7 +24,7 @@
 </CENTER>
 
 <P>
-<H1> Contents </H1>
+<H2> Contents </H2>
 <UL>
 <LI> <A HREF="#intro"> <B>Introduction</B> </A> 
      <UL>
@@ -191,10 +193,10 @@
 
 
 <P> <HR> <A NAME="intro"></A>
-<H1> Introduction </H1>
+<H2> Introduction </H2>
 
 <A NAME="important"></A>
-<H2> Standardization is Important </H2>
+<H3> Standardization is Important </H3>
 
 It helps if the standard annoys everyone in some way so everyone
 feels they are on the same playing field. The proposal here
@@ -245,9 +247,9 @@ is fundamentally a team effort.
 <P>
 
 <A NAME="interp"></A>
-<H2> Interpretation </H2>
+<H3> Interpretation </H3>
 
-<H3> Conventions </H3>
+<H4> Conventions </H4>
 The use of the word "shall" in this document requires that any project using
 this document must comply with the stated standard.
 <P>
@@ -261,7 +263,7 @@ The use of the word "may" is similar to "should", in that it designates
 optional requirements.
 <P>
 
-<H3> Terminology </H3>
+<H4> Terminology </H4>
 
 For the sake of simplicity, the use of the word "compiler" means compiler or
 translator.<p>
@@ -272,7 +274,7 @@ refers to the standard C++ language definition.<P>
 
 
 <P><A NAME="enforce"></A>
-<H2> Standards Enforcement </H2>
+<H3> Standards Enforcement </H3>
 
 First, any serious concerns about the standard should be brought
 up and worked out within the group. Maybe the standard is not
@@ -296,7 +298,7 @@ offending party.
 <P>
 
 <A NAME="accept"></A>
-<H2> Accepting an Idea </H2>
+<H3> Accepting an Idea </H3>
 
 <OL>
 <LI> It's impossible.
@@ -312,7 +314,7 @@ but there's a road you must follow to accept something different.
 Allow yourself to travel it for a while.
 
 <A NAME="phases"></A>
-<H2> 6 Phases of a Project </H2>
+<H3> 6 Phases of a Project </H3>
 
 <OL>
 <LI> Enthusiasm
@@ -325,10 +327,10 @@ Allow yourself to travel it for a while.
 
 <HR>
 <A NAME="names"></A>
-<H1> Names </H1>
+<H2> Names </H2>
 
 <A NAME="descriptive"></A>
-<H2> Make Names Fit </H2>
+<H3> Make Names Fit </H3>
 
 Names are the heart of programming. In the
 past people believed knowing someone's true name gave them magical
@@ -343,9 +345,9 @@ everything fits together naturally, relationships are clear, meaning is derivabl
 and reasoning from common human expectations works as expected. <P>
 
 If you find all your names could be Thing and DoIt then you should probably
-revisit your design. <P
+revisit your design. <P>
 
-<H3> <B>Class Names</B> </H3>
+<H4> Class Names </H4>
 
 <UL>
 <LI> Name the class after what it is. If you can't think of what it is that is a clue
@@ -360,7 +362,7 @@ revisit your design. <P
      something DownloadAgent conveys real information.
 </UL>
 
-<H3> Method and Function Names </H3>
+<H4> Method and Function Names </H4>
 
 <UL>
 <LI> Usually every method and function performs an action, so the name
@@ -387,7 +389,7 @@ revisit your design. <P
 <P>
 
 <A NAME="noabbrev"></A>
-<H2> No All Upper Case Abbreviations </H2>
+<H3> No All Upper Case Abbreviations </H3>
 
 <UL>
 <LI> When confronted with a situation where you could use an all
@@ -395,7 +397,7 @@ revisit your design. <P
      letter followed by all lower case letters. No matter what.
 </UL>
 
-<H3> Justification </H3>
+<H4> Justification </H4>
 
 <UL>
 <LI> People seem to have very different intuitions when making names
@@ -408,7 +410,7 @@ revisit your design. <P
      policies in different code so you never know what to call something.
 </UL>
 
-<H3> Example </H3>
+<H4> Example </H4>
 <PRE>
    class FluidOz             // NOT FluidOZ
    class NetworkAbcKey       // NOT NetworkABCKey
@@ -417,7 +419,7 @@ revisit your design. <P
 <P>
 <HR>
 <A NAME="classnames"></A>
-<H2> Class Names </H2>
+<H3> Class Names </H3>
 
 <UL>
 <LI> Use upper case letters as word separators, lower case for the rest of a word
@@ -425,14 +427,14 @@ revisit your design. <P
 <LI> No underbars ('_')
 </UL>
 
-<H3> Justification </H3>
+<H4> Justification </H4>
 
 <UL>
 <LI> Of all the different naming strategies many people found this one the 
      best compromise.
 </UL>
 
-<H3> Example </H3>
+<H4> Example </H4>
 <PRE>
    class NameOneTwo
   
@@ -442,7 +444,7 @@ revisit your design. <P
 <P>
 <HR>
 <A NAME="classlnames"></A>
-<H2> Class Library Names </H2>
+<H3> Class Library Names </H3>
 
 <UL>
 <LI> Now that name spaces are becoming more widely implemented, name spaces
@@ -453,7 +455,7 @@ revisit your design. <P
      but a longer length is fine. 
 </UL>
 
-<H3> Example </H3>
+<H4> Example </H4>
 
 John Johnson's complete data structure library could use <I>JJ</I>
 as a prefix, so classes would be:
@@ -466,20 +468,20 @@ as a prefix, so classes would be:
 <P>
 <HR>
 <A NAME="methodsnames"></A>
-<H2> Method Names </H2>
+<H3> Method Names </H3>
 
 <UL>
 <LI> Use the same rule as for class names.
 </UL>
 
-<H3> Justification </H3>
+<H4> Justification </H4>
 
 <UL>
 <LI> Of all the different naming strategies many people found this one the 
      best compromise.
 </UL>
 
-<H3> Example </H3>
+<H4> Example </H4>
 <PRE>
    class NameOneTwo
    {
@@ -492,7 +494,7 @@ as a prefix, so classes would be:
 <P>
 <HR>
 <A NAME="attrnames"></A>
-<H2> Class Attribute Names </H2>
+<H3> Class Attribute Names </H3>
 
 <UL>
 <LI> Attribute names should be prepended with the character 'm'. 
@@ -500,7 +502,7 @@ as a prefix, so classes would be:
 <LI> 'm' always precedes other name modifiers like 'p' for pointer.
 </UL>
 
-<H3> Justification </H3>
+<H4> Justification </H4>
 
 <UL>
 <LI> Prepending 'm' prevents any conflict with method names. Often your
@@ -508,7 +510,7 @@ as a prefix, so classes would be:
      accessors.
 </UL>
 
-<H3> Example </H3>
+<H4> Example </H4>
 <PRE>
    class NameOneTwo
    {
@@ -525,7 +527,7 @@ as a prefix, so classes would be:
 <P>
 <HR>
 <A NAME="margnames"></A>
-<H2> Method Argument Names </H2>
+<H3> Method Argument Names </H3>
 
 <UL>
 <LI> The first character should be lower case.
@@ -533,14 +535,14 @@ as a prefix, so classes would be:
      as with class names.
 </UL>
 
-<H3> Justification </H3>
+<H4> Justification </H4>
 
 <UL>
 <LI> You can always tell which variables are passed in variables.
 <LI> You can use names similar to class names without conflicting with class names.
 </UL>
 
-<H3> Example </H3>
+<H4> Example </H4>
 <PRE>
    class NameOneTwo
    {
@@ -554,14 +556,14 @@ as a prefix, so classes would be:
 <P>
 <HR>
 <A NAME="stacknames"></A>
-<H2> Variable Names on the Stack </H2>
+<H3> Variable Names on the Stack </H3>
 
 <UL>
 <LI> use all lower case letters 
 <LI> use '_' as the word separator.
 </UL>
 
-<H3> Justification </H3>
+<H4> Justification </H4>
 
 <UL>
 <LI> With this approach the scope of the variable is clear in
@@ -569,7 +571,7 @@ as a prefix, so classes would be:
 <LI> Now all variables look different and are identifiable in the code.
 </UL>
 
-<H3> Example </H3>
+<H4> Example </H4>
 <PRE>
    int
    NameOneTwo::HandleError(int errorNumber)
@@ -583,14 +585,14 @@ as a prefix, so classes would be:
 <P>
 <HR>
 <A NAME="pnames"></A>
-<H2> Pointer Variables </H2>
+<H3> Pointer Variables </H3>
 
 <UL>
 <LI> pointers should be prepended by a 'p' in most cases
 <LI> place the <I>*</I> close to the pointer type not the variable name
 </UL>
 
-<H3> Justification </H3>
+<H4> Justification </H4>
 
 <UL>
 <LI> The idea is that the difference between a pointer, object, and a 
@@ -607,7 +609,7 @@ so you can document each variable.
 
 </UL>
 
-<H3> Example </H3>
+<H4> Example </H4>
 <PRE>
   String* pName= new String;
 
@@ -617,12 +619,12 @@ so you can document each variable.
 <P>
 <HR>
 <A NAME="rnames"></A>
-<H2> Reference Variables and Functions Returning References</H2>
+<H3> Reference Variables and Functions Returning References</H3>
 <UL>
 <LI> References should be prepended with 'r'.
 </UL>
 
-<H3> Justification </H3>
+<H4> Justification </H4>
 
 <UL>
 <LI> The difference between variable types is clarified.
@@ -631,7 +633,7 @@ so you can document each variable.
      non-modifiable object.
 </UL>
 
-<H3> Example </H3>
+<H4> Example </H4>
 <PRE>
    class Test
    {
@@ -649,18 +651,18 @@ so you can document each variable.
 <P>
 <HR>
 <A NAME="gnames"></A>
-<H2> Global Variables </H2>
+<H3> Global Variables </H3>
 <UL>
 <LI> Global variables should be prepended with a 'g'.
 </UL>
 
-<H3> Justification </H3>
+<H4> Justification </H4>
 
 <UL>
 <LI> It's important to know the scope of a variable.
 </UL>
 
-<H3> Example </H3>
+<H4> Example </H4>
 <PRE>
     Logger  gLog;
     Logger* gpLog;
@@ -669,18 +671,18 @@ so you can document each variable.
 <P>
 <HR>
 <A NAME="gconstants"></A>
-<H2> Global Constants </H2>
+<H3> Global Constants </H3>
 <UL>
 <LI> Global constants should be all caps with '_' separators.
 </UL>
 
-<H3> Justification </H3>
+<H4> Justification </H4>
 
 It's tradition for global constants to named this way.
 You must be careful to not conflict with other global
 <I>#define</I>s and enum labels.
 
-<H3> Example </H3>
+<H4> Example </H4>
 <PRE>
     const int A_GLOBAL_CONSTANT= 5;
 </PRE>
@@ -688,19 +690,19 @@ You must be careful to not conflict with other global
 <P>
 <HR>
 <A NAME="snames"></A>
-<H2> Static Variables </H2>
+<H3> Static Variables </H3>
 <UL>
 <LI> Static variables may be prepended with 's'.
 </UL>
 
-<H3> Justification </H3>
+<H4> Justification </H4>
 
 <UL>
 <LI> It's important to know the scope of a variable.
 </UL>
 
 
-<H3> Example </H3>
+<H4> Example </H4>
 <PRE>
    class Test
    {
@@ -713,7 +715,7 @@ You must be careful to not conflict with other global
 <P>
 <HR>
 <A NAME="tnames"></A>
-<H2> Type Names </H2>
+<H3> Type Names </H3>
 
 <UL>
 <LI> When possible for types based on native types make a typedef.
@@ -721,7 +723,7 @@ You must be careful to not conflict with other global
      with the word <I>Type</I> appended.
 </UL>
 
-<H3> Justification </H3>
+<H4> Justification </H4>
 
 <UL>
 <LI> Of all the different naming strategies many people found this one the 
@@ -731,7 +733,7 @@ You must be careful to not conflict with other global
 </UL>
 
 
-<H3> Example </H3>
+<H4> Example </H4>
 <PRE>
    typedef uint16  ModuleType;
    typedef uint32  SystemType;
@@ -740,13 +742,13 @@ You must be careful to not conflict with other global
 <P>
 <HR>
 <A NAME="mnames"></A>
-<H2> #define and Macro Names </H2>
+<H3> #define and Macro Names </H3>
 
 <UL>
 <LI> Put #defines and macros in all upper using '_' separators.
 </UL>
 
-<H3> Justification </H3>
+<H4> Justification </H4>
 
 This makes it very clear that the value is not 
 alterable and in the case of macros, makes it clear that you are using a 
@@ -755,7 +757,7 @@ construct that requires care. <P>
 Some subtle errors can occur when macro names and enum labels use the
 same name. 
 
-<H3> Example </H3>
+<H4> Example </H4>
 
 <PRE>
 #define MAX(a,b) blah
@@ -765,7 +767,7 @@ same name.
 <P>
 <HR>
 <A NAME="cnames"></A>
-<H2> C Function Names </H2>
+<H3> C Function Names </H3>
 
 <UL>
 <LI> In a C++ project there should be very few C functions.
@@ -773,13 +775,13 @@ same name.
      letters with  '_' as the word delimiter.
 </UL>
 
-<H3> Justification </H3>
+<H4> Justification </H4>
 
 <UL>
 <LI> It makes C functions very different from any C++ related names.
 </UL>
 
-<H3> Example </H3>
+<H4> Example </H4>
 
 <PRE>
    int
@@ -791,9 +793,9 @@ same name.
 <P>
 <HR>
 <A NAME="enames"></A>
-<H2> Enum Names </H2>
+<H3> Enum Names </H3>
 
-<H3> Labels All Upper Case with '_' Word Separators </H3>
+<H4> Labels All Upper Case with '_' Word Separators </H4>
 
 This is the standard rule for enum labels.
 
@@ -806,7 +808,7 @@ This is the standard rule for enum labels.
    }
 </PRE>
 
-<H3> Enums as Constants without Class Scoping </H3>
+<H4> Enums as Constants without Class Scoping </H4>
 
 Sometimes people use enums as constants. When an enum is not
 embedded in a class make sure you use some sort of differentiating
@@ -821,13 +823,13 @@ name before the label so as to prevent name clashes.
    };
 </PRE>
 
-<H3> Enums with Class Scoping </H3>
+<H4> Enums with Class Scoping </H4>
 
 Just name the enum items what you wish and always qualify
 with the class name: Aclass::PIN_OFF.
 
 
-<H3> Make a Label for an Error State </H3>
+<H4> Make a Label for an Error State </H4>
 
 It's often useful to be able to say an enum is not
 in any of its <I>valid</I> states. Make a label for
@@ -842,7 +844,7 @@ enum { STATE_ERR,  STATE_OPEN, STATE_RUNNING, STATE_DYING};
 <P>
 <HR>
 <A NAME="errorret"></A>
-<H1> Error Return Check Policy </H1> 
+<H3> Error Return Check Policy </H3> 
 
 <UL>
 <LI> Check every system call for an error return, unless you know
@@ -858,7 +860,7 @@ enum { STATE_ERR,  STATE_OPEN, STATE_RUNNING, STATE_DYING};
 <P>
 <HR>
 <A NAME="req"></A>
-<H1> Required Methods for a Class </H1>
+<H3> Required Methods for a Class </H3>
 
 To be good citizens almost all classes should implement
 the following methods. If you don't have to define and implement any of 
@@ -915,7 +917,7 @@ not.
 </UL>
 <P>
 
-<H2> Justification </H2>
+<H4> Justification </H4>
 
 <UL>
 <LI> 
@@ -935,7 +937,7 @@ The copy constructor and assignment operator ensure an object
 is always properly constructed.
 </UL>
 
-<H2> Example </H2>
+<H4> Example </H4>
 
 The default <A HREF="#classtmpl"> class template </A> with all required
 methods. An example using default values:
@@ -955,11 +957,12 @@ public:
 };
 </PRE>
 
+<H2> Formatting </H2>
 
 <P>
 <HR>
 <A NAME="brace"></A>
-<H1> Braces <I>{}</I> Policy </H1>
+<H3> Braces <I>{}</I> Policy </H3>
 
 Of the three major brace placement strategies two are acceptable,
 with the first one listed being preferable:
@@ -983,7 +986,7 @@ with the first one listed being preferable:
 </PRE>
 </UL>
 
-<H2> Justification </H2>
+<H4> Justification </H4>
 
 <UL>
 <LI> Another religious issue of great debate solved by compromise.
@@ -1017,7 +1020,7 @@ with the first one listed being preferable:
 <P>
 <HR>
 <A NAME="indent"></A>
-<H1> Indentation/Tabs/Space Policy </H1>
+<H3> Indentation/Tabs/Space Policy </H3>
 
 <UL>
 <LI> Indent using 3, 4, or 8 spaces for each level.
@@ -1031,7 +1034,7 @@ with the first one listed being preferable:
      code.
 </UL>
 
-<H2> Justification </H2>
+<H4> Justification </H4>
 
 <UL>
 <LI> Tabs aren't used because 8 space indentation severely limits the number
@@ -1051,7 +1054,7 @@ with the first one listed being preferable:
      programmers will choose wisely how deep to nest code.
 </UL>
 
-<H2> Example </H2>
+<H4> Example </H4>
 <PRE>
    void
    func()
@@ -1071,7 +1074,7 @@ with the first one listed being preferable:
 <P>
 <HR>
 <A NAME="parens"></A>
-<H1> Parens <I>()</I> with Key Words and Functions Policy </H1> 
+<H3> Parens <I>()</I> with Key Words and Functions Policy </H3> 
 
 <UL>
 <LI> Do not put parens next to keywords. Put a space between.
@@ -1079,14 +1082,14 @@ with the first one listed being preferable:
 <LI> Do not use parens in return statements when it's not necessary.
 </UL>
 
-<H2> Justification </H2>
+<H4> Justification </H4>
 
 <UL>
 <LI> Keywords are not functions. By putting parens next to keywords
      keywords and function names are made to look alike.
 </UL>
 
-<H2> Example </H2>
+<H4> Example </H4>
 <PRE>
 
     if (condition)
@@ -1106,7 +1109,7 @@ with the first one listed being preferable:
 <P>
 <HR>
 <A NAME="rcs"></A>
-<H1> RCS Keywords, Change Log, and History Policy </H1>
+<H3> RCS Keywords, Change Log, and History Policy </H3>
 
 When using RCS directly this policy must change, but when
 using other source code control systems like CVS that
@@ -1118,7 +1121,7 @@ support RCS style keywords:
 <LI> Do not keep author information in files.
 </UL>
 
-<H2> Justification </H2>
+<H4> Justification </H4>
 
 <UL>
 <LI> The reasoning is your source control system already keeps
@@ -1140,7 +1143,7 @@ support RCS style keywords:
 <P>
 <HR>
 <A NAME="classlayout"></A>
-<H1> Class Layout </H1>
+<H3> Class Layout </H3>
 
 A common class layout is critical from a code comprehension point of view and
 for automatically generating documentation. C++ programmers, through a new
@@ -1148,7 +1151,7 @@ set of tools, can enjoy the same level generated documentation Java programmers
 take for granted. 
 <P>
 
-<H2> Class and Method Documentation </H2>
+<H4> Class and Method Documentation </H4>
 
 It is recommended a program like
 <A HREF="http://www.joelinoff.com/ccdoc/index.html"> ccdoc </A>
@@ -1161,7 +1164,7 @@ should be integrated with the build system where possible.
 
 
 
-<H2> Template </H2>
+<H4> Template </H4>
 
 Please use the following template when creating a new class.
 <P>
@@ -1246,13 +1249,13 @@ private:
 </PRE>
 
 
-<H2> Required Methods Placeholders </H2>
+<H4> Required Methods Placeholders </H4>
 
 The template has placeholders for <A HREF="#req"> required methods </A>.
 You can delete them or implement them.
 
 <A NAME="pubpropriorder">
-<H2> Ordering is: public, protected, private </H2>
+<H4> Ordering is: public, protected, private </H4>
 
 Notice that the public interface is placed first in the class, protected next,
 and private last. The reasons are:
@@ -1267,26 +1270,26 @@ the private section, first is a historical accident as the first examples
 used the private first layout. Over time emphasis has switched deemphasizing 
 a class's interface over implementation details.
 
-<H2> LIFECYCLE </H2>
+<H4> LIFECYCLE </H4>
 
 The life cycle section is for methods that control the life cycle of an 
 object. Typically these methods include constructors, destructors, and 
 state machine methods.
 
-<H2> OPERATORS </H2>
+<H4> OPERATORS </H4>
 
 Place all operators in this section.
 
-<H2> OPERATIONS </H2>
+<H4> OPERATIONS </H4>
 
 Place the bulk of a class's non access and inquiry method methods here. 
 A programmer will look here for the meat of a class's interface.
 
-<H2> ACCESS </H2>
+<H4> ACCESS </H4>
 
 Place attribute accessors here.
 
-<H2> INQUIRY </H2>
+<H4> INQUIRY </H4>
 
 These are the <I>Is*</I> methods. Whenever you have a question to ask about
 an object it can be asked via in <I>Is</I> method. For example: IsOpen()
@@ -1296,45 +1299,45 @@ object thus reducing the exposure of internal structure. Without the IsOpen()
 method we might have had to do: if (State() == STATE_OPEN) which is much uglier.
 
 <A NAME="pubpropri">
-<H2> What should go in public/protected/private? </H2>
+<H4> What should go in public/protected/private? </H4>
 
-<H2> Public Section </H2>
+<H5> Public Section </H5>
 
 Only put an object's interface in the public section. <B>DO NOT</B> expose
 any private data items in the public section. At least encapsulate
 access via access methods. Ideally your method interface should make most
 access methods unnecessary. Do not put data in the public interface.
 
-<H2> Protected and Private Section </H2>
+<H5> Protected and Private Section </H5>
 
 What should go into the protected section versus the private section is
 always a matter of debate. 
 
-<H3> All Protected </H3>
+<H5> All Protected </H5>
 
 Some say there should be no private section
 and everything not in the public section should go in the protected section.
 After all, we should allow all our children to change anything they wish.
 <P>
 
-<H3> All Private </H3>
+<H5> All Private </H5>
 
 Another camp says by making the public interface virtual any derived
 class can change behavior without mucking with internals.
 <P>
 
-<H3> Wishy Washy </H3>
+<H5> Wishy Washy </H5>
 
 Rationally decide where elements should go and put them there. Not
 very helpful.
 
-<H3> And the Winner Is... </H3>
+<H5> And the Winner Is... </H5>
 
 Keeping everything all private seems the easiest approach. By
 making the public methods virtual flexibility is preserved.
 
 <A NAME="mlayout"></A>
-<H2> Method Layout </H2>
+<H4> Method Layout </H4>
 
 The approach used is to place a comment block before each method that
 can be extracted by a tool and be made part of the class documentation.
@@ -1343,7 +1346,7 @@ which supports the Javadoc format. See the ccdoc documentation for
 a list of attributes supported by the document generator. 
 <P>
 
-<H3> Method Header </H3>
+<H5> Method Header </H5>
 
 Every parameter should be documented. Every return code should
 be documented. All exceptions should be documented.
@@ -1363,7 +1366,7 @@ may need and encode them in with the @see attributes.
 </PRE>
 
 
-<H4> Additional Sections </H4>
+<H5> Additional Sections </H5>
 
 In addition to the standard attribute set, the following
 sections can be included in the documentation:
@@ -1420,7 +1423,7 @@ For example:
 </PRE>
 <P>
 
-<H4> Common Exception Sections </H4>
+<H5> Common Exception Sections </H5>
 
 If the same exceptions are being used in a number of
 methods, then the exceptions can be documented once
@@ -1430,7 +1433,7 @@ documentation.
 
 
 <A NAME="multimethods"></A>
-<H3> Formatting Methods with Multiple Arguments </H3>
+<H5> Formatting Methods with Multiple Arguments </H5>
 
 We should try and make methods have as few parameters as possible. If you find yourself
 passing the same variables to every method then that variable should probably be
@@ -1447,7 +1450,7 @@ like this:
 
 
 <A NAME="idoc"></A>
-<H2> Include Statement Documentation </H2>
+<H4> Include Statement Documentation </H4>
 
 Include statements should be documented, telling the user why a
 particular file was included. If the file includes a class
@@ -1458,7 +1461,7 @@ used by the class then it's useful to specify a class relationship:
 <LI> USES
 </UL>
 
-<H3> Example </H3>
+<H5> Example </H5>
 <PRE>
 
 #ifndef XX_h
@@ -1475,7 +1478,7 @@ Notice how the comments for include statements align on the third <I>X</I>.
 
 <P>
 <A NAME="blockdoc"></A>
-<H2> Block Comments </H2>
+<H4> Block Comments </H4>
 
 Use comments on starting and ending a Block:
 <PRE>
@@ -1497,7 +1500,7 @@ don't have an intelligent editor.
 <P>
 <HR>
 <A NAME="nowork"></A>
-<H1> Do Not do Real Work in Object Constructors </H1>
+<H3> Do Not do Real Work in Object Constructors </H3>
 
 Do not do any real work in an object's constructor. Inside a
 constructor initialize variables only and/or do only
@@ -1507,7 +1510,7 @@ actions that can't fail.
 Create an Open() method for an object which completes construction. 
 Open() should be called after object instantiation.
 
-<H2> Justification </H2>
+<H4> Justification </H4>
 
 <UL>
 <LI> Constructors can't return an error, object instantiators
@@ -1523,7 +1526,7 @@ Open() should be called after object instantiation.
      available services can be violated by these subtle changes.
 </UL>
 
-<H2> Example </H2>
+<H4> Example </H4>
 <PRE>
    class Device
    {
@@ -1538,7 +1541,7 @@ Open() should be called after object instantiation.
 <P>
 <HR>
 <A NAME="destexcept"></A>
-<H1> Be Careful Throwing Exceptions in Destructors </H1>
+<H3> Be Careful Throwing Exceptions in Destructors </H3>
 
 An object is presumably created to do something. Some of the
 changes made by an object should persist after an object dies
@@ -1573,7 +1576,7 @@ object destruction. Special care must also be taken to fully destruct
 an object when it throws an exception.
 
 <P> <HR> <A NAME="cfile"></A>
-<H1> Prototype Source File </H1>
+<H3> Prototype Source File </H3>
 
 <PRE>
 
@@ -1616,7 +1619,7 @@ XX::operator=(XX&);
 
 
 <P> <HR> <A NAME="namespace"></A>
-<H1> Use of Namespaces </H1>
+<H3> Use of Namespaces </H3>
 
 Namespaces are now commonly implemented by compilers. 
 They should be used if you are sure your compiler supports them
@@ -1624,13 +1627,13 @@ completely. I don't have a lot of experience with C++
 namespaces in a project setting so this section is very thin.
 <P>
 
-<H2> Naming Policy </H2>
+<H4> Naming Policy </H4>
 
 There are two basic strategies for naming: root that name at some naming
 authority, like the company name and division name; try and make names globally 
 independent.
 
-<H2> Don't Globally Define using </H2> 
+<H4> Don't Globally Define using </H4>
 
 Don't place "using namespace" directive at global scope in a header file.
 This can cause lots of magic invisible conflicts that are hard to track.
@@ -1638,7 +1641,7 @@ Keep using statements to implementation files.
 
 
 <P> <HR> <A NAME="reentrant"></A> 
-<H1> Make Functions Reentrant </H1>
+<H3> Make Functions Reentrant </H3>
 
 Functions should not keep static variables that prevent
 a function from being reentrant. Functions can declare
@@ -1659,7 +1662,7 @@ worry about buffer space any more :-)
 <P>
 <HR>
 <A NAME="useenums"></A> 
-<H1> To Use Enums or Not to Use Enums </H1>
+<H3> To Use Enums or Not to Use Enums </H3>
 
 C++ allows constant variables, which should deprecate the
 use of enums as constants. Unfortunately, in most compilers 
@@ -1681,7 +1684,7 @@ integer size and use constants or <I>#define</I>. Casting
 between integers and enums is very error prone as you could
 cast a value not in the enum.
 
-<H2> A C++ Workaround </H2>
+<H3> A C++ Workaround </H3>
 
 C++ allows static class variables. These variables are available 
 anywhere and only the expected amount of space is taken.
@@ -1700,7 +1703,7 @@ public:
 <P>
 <HR>
 <A NAME="guards"></A>
-<H1> Use Header File Guards </H1>
+<H3> Use Header File Guards </H3>
 
 Include files should protect against multiple inclusion through
 the use of guards:
@@ -1732,13 +1735,13 @@ should be used as the guard name.
 <P>
 <HR>
 <A NAME="linelen"></A>
-<H1> A Line Should Not Exceed 78 Characters </H1> 
+<H3> A Line Should Not Exceed 78 Characters </H3> 
 
 <UL>
 <LI> Lines should not exceed 78 characters.
 </UL>
 
-<H2> Justification </H2>
+<H4> Justification </H4>
 
 <UL>
 <LI> Even though with big monitors we stretch windows wide
@@ -1753,9 +1756,9 @@ should be used as the guard name.
 <P>
 <HR>
 <A NAME="ifthen"></A>
-<H1> <I>If Then Else</I> Formatting </H1>
+<H3> <I>If Then Else</I> Formatting </H3>
 
-<H2> Layout </H2>
+<H4> Layout </H4>
 
 It's up to the programmer. Different bracing styles will yield 
 slightly different looks. One common approach is:
@@ -1776,7 +1779,7 @@ to always have an else block for finding unhandled cases. Maybe put a log
 message in the else even if there is no corrective action taken.
 <P>
 
-<H2> Condition Format </H2>
+<H4> Condition Format </H4>
 
 Always put the constant on the left hand side of an equality/inequality 
 comparison. For example: <P>
@@ -1793,7 +1796,7 @@ format, but then it really gets useful.
 <P>
 <HR>
 <A NAME="switch"></A>
-<H1> <I>switch</I> Formatting </H1>
+<H3> <I>switch</I> Formatting </H3>
 
 <UL>
 <LI> Falling through a case statement into the next case statement
@@ -1803,7 +1806,7 @@ format, but then it really gets useful.
 <LI> If you need to create variables put all the code in a block.
 </UL>
 
-<H2> Example </H2>
+<H3> Example </H3>
 <PRE>
    switch (...)
    {
@@ -1825,9 +1828,9 @@ format, but then it really gets useful.
 <P>
 <HR>
 <A NAME="goto"></A>
-<H1> Use of <I>goto,continue,break</I> and <I>?:</I> </H1>
+<H3> Use of <I>goto,continue,break</I> and <I>?:</I> </H3>
 
-<H2> Goto </H2>
+<H4> Goto </H4>
 
 Goto statements should be used sparingly, as in any well-structured code. 
 The goto debates are boring so we won't go into them here. The main
@@ -1857,7 +1860,7 @@ to the left of the code that follows. The goto should be
 commented (possibly in the block header) as to its utility and purpose.
 
 <A NAME="contbreak"></A>
-<H2> Continue and Break </H2>
+<H4> Continue and Break </H4>
 
 Continue and break are really disguised gotos so they are covered
 here.
@@ -1900,7 +1903,7 @@ From the above example, a further rule may be given:
 Mixing continue with break in the same loop is a sure way to disaster.
 <P>
 
-<H2> ?: </H2>
+<H4> ?: </H4>
 
 The trouble is people usually try and stuff too much code
 in between the <I>?</I> and <I>:</I>. Here are a couple of
@@ -1912,7 +1915,7 @@ clarity rules to follow:
      unless it can be clearly put on one line.
 </UL>
 
-<H3> Example </H3>
+<H5> Example </H5>
 <PRE>
    (condition) ? funct1() : func2();
 
@@ -1927,13 +1930,13 @@ clarity rules to follow:
 <P>
 <HR>
 <A NAME="aligndecls"></A>
-<H1> Alignment of Declaration Blocks </H1> 
+<H3> Alignment of Declaration Blocks </H3> 
 
 <UL>
 <LI> Block of declarations should be aligned.
 </UL>
 
-<H2> Justification </H2>
+<H4> Justification </H4>
 
 <UL>
 <LI> 
@@ -1946,7 +1949,7 @@ Similarly blocks of initialization of variables should be tabulated.
 The ‘&’ and ‘*’ tokens should be adjacent to the type, not the name.
 </UL>
 
-<H2> Example </H2>
+<H4> Example </H4>
 <PRE>
    DWORD       mDword
    DWORD*      mpDword
@@ -1962,18 +1965,18 @@ The ‘&’ and ‘*’ tokens should be adjacent to the type, not the name.
 <P>
 <HR>
 <A NAME="macros"></A>
-<H1> Macros </H1>
+<H3> Macros </H3>
 
-<H2> Don't Turn C++ into Pascal </H2>
+<H4> Don't Turn C++ into Pascal </H4>
 
 Don't change syntax via macro substitution. It makes the program
 unintelligible to all but the perpetrator.
 
-<H2> Replace Macros with Inline Functions </H2>
+<H4> Replace Macros with Inline Functions </H4>
 
 In C++ macros are not needed for code efficiency. Use inlines.
 
-<H3> Example </H3>
+<H4> Example </H4>
 
 <PRE>
 #define  MAX(x,y)	(((x) &gt; (y) ? (x) : (y))	// Get the maximum
@@ -1990,12 +1993,12 @@ with no loss of efficiency:
    }
 </PRE>
 
-<H2> Be Careful of Side Effects </H2>
+<H4> Be Careful of Side Effects </H4>
 
 Macros should be used with caution because of the potential for error when
 invoked with an expression that has side effects.
 
-<H3> Example </H3>
+<H4> Example </H4>
 
 <PRE>
    MAX(f(x),z++);
@@ -2003,13 +2006,13 @@ invoked with an expression that has side effects.
 
 
 <P> <HR> <A NAME="initvar"></A>
-<H1> Initialize all Variables </H1> 
+<H3> Initialize all Variables </H3> 
 
 <UL>
 <LI> You shall always initialize variables. Always. Every time.
 </UL>
 
-<H2> Justification </H2>
+<H4> Justification </H4>
 
 <UL>
 <LI> More problems than you can believe are eventually traced
@@ -2020,7 +2023,7 @@ invoked with an expression that has side effects.
 
 
 <P> <HR> <A NAME="init"></A>
-<H1> Init Idiom for Initializing Objects </H1> 
+<H3> Init Idiom for Initializing Objects </H3> 
 
 <UL>
 <LI> Objects with multiple constructors and/or multiple attributes
@@ -2030,7 +2033,7 @@ invoked with an expression that has side effects.
 	 constructor initialization syntax can/should be used.
 </UL>
 
-<H2> Justification </H2>
+<H4> Justification </H4>
 
 <UL>
 <LI> When using C++'s ability to initialize variables in the constructor
@@ -2053,7 +2056,7 @@ invoked with an expression that has side effects.
      </UL> 
 </UL>
 
-<H2> Example </H2>
+<H4> Example </H4>
 <PRE>
    class Test
    {
@@ -2096,7 +2099,7 @@ written as:
 
 
 <P> <HR> <A NAME="one"></A>
-<H1> One Statement Per Line </H1>
+<H3> One Statement Per Line </H3>
 
 There should be only one statement per line unless the statements 
 are very closely related. 
@@ -2104,13 +2107,13 @@ are very closely related.
 
 <HR>
 <A NAME="shortmethods"></A>
-<H1> Short Methods </H1>
+<H3> Short Methods </H3>
 
 <UL>
 <LI> Methods should limit themselves to a single page of code.
 </UL>
 
-<H3> Justification </H3>
+<H4> Justification </H4>
 
 <UL>
 <LI> 
@@ -2126,7 +2129,7 @@ thought out decision (see premature optimization).
 
 <HR>
 <A NAME="docnull"></A>
-<H1> Document Null Statements </H1>
+<H3> Document Null Statements </H3>
 
 Always document a null body for a for or while statement so that it is clear
 that the null body is intentional and not missing code. 
@@ -2138,7 +2141,7 @@ that the null body is intentional and not missing code.
 
 <HR>
 <A NAME="nztest"></A>
-<H1> Do Not Default If Test to Non-Zero </H1>
+<H3> Do Not Default If Test to Non-Zero </H3>
 
 Do not default the test for non-zero, i.e. 
 <PRE><TT>
@@ -2196,7 +2199,7 @@ expressions which meet the following restrictions:
 
 <HR>
 <A NAME="boolean"></A>
-<H1> The Bull of Boolean Types </H1>
+<H3> The Bull of Boolean Types </H3>
 
 Any project using source code from many sources knows the pain
 of multiple conflicting boolean types. The new C++ standard
@@ -2239,7 +2242,7 @@ must be written
 
 <HR>
 <A NAME="eassign"></A>
-<H1> Usually Avoid Embedded Assignments </H1>
+<H3> Usually Avoid Embedded Assignments </H3>
 
 There is a time and a place for embedded assignment statements. In some
 constructs there is no better way to accomplish the results without making the
@@ -2278,7 +2281,7 @@ going on in the latter piece of code begins to fade.
 
 <HR>
 <A NAME="reuse"></A>
-<H1> Reusing Your Hard Work and the Hard Work of Others </H1> 
+<H3> Reusing Your Hard Work and the Hard Work of Others </H3> 
 
 Reuse across projects is almost impossible without
 a common framework in place. Objects conform to the
@@ -2294,7 +2297,7 @@ whatever reasons, there are several techniques
 one can use to encourage reuse:
 <P>
 
-<H2> Ask! Email a Broadcast Request to the Group </H2>
+<H3> Ask! Email a Broadcast Request to the Group </H3>
 
 This simple technique is rarely done. For some reason
 programmers feel it makes them <B>seem</B> less capable
@@ -2313,14 +2316,14 @@ are doing. You may even find someone is looking for something
 to do and will volunteer to do the code for you. There's always a 
 gold mine out there if people work together.
 
-<H2> Tell! When You do Something Tell Everyone </H2>
+<H3> Tell! When You do Something Tell Everyone </H3>
 
 Let other people know if you have done something reusable.
 Don't be shy. And don't hide your work to protect your pride.
 Once people get in the habit of sharing work everyone gets
 better.
 
-<H2> Don't be Afraid of Small Libraries </H2>
+<H3> Don't be Afraid of Small Libraries </H3>
 
 One common enemy of reuse is people not making
 libraries out of their code. A reusable class may be
@@ -2349,7 +2352,7 @@ libraries for a service change only the lower level makefiles will
 have to change.
 <P>
 
-<H2> Keep a Repository </H2>
+<H3> Keep a Repository </H3>
 
 Most companies have no idea what code they have. And most
 programmers still don't communicate what they have done or
@@ -2373,10 +2376,10 @@ pages and repository entries.
 <P>
 <HR>
 <A NAME="comments"></A>
-<H1> Comments on Comments </H1> 
+<H3> Comments on Comments </H3> 
 
 <A NAME="cstas"></A>
-<H2> Comments Should Tell a Story </H2>
+<H3> Comments Should Tell a Story </H3>
 
 Consider your comments a story describing the system. Expect
 your comments to be extracted by a robot and formed into
@@ -2388,7 +2391,7 @@ and inform someone else at another point of time just
 exactly what you did and why.
 
 <A NAME="cdd"></A>
-<H2> Document Decisions </H2>
+<H3> Document Decisions </H3>
 
 Comments should document decisions. At every point
 where you had a choice of what to do place a comment
@@ -2396,7 +2399,7 @@ describing which choice you made and why. Archeologists
 will find this the most useful information.
 
 <A NAME="cuh"></A>
-<H2> Use Headers </H2>
+<H3> Use Headers </H3>
 
 Use a document extraction system like
 <A HREF="http://www.joelinoff.com/ccdoc/index.html"> ccdoc </A>.
@@ -2412,12 +2415,12 @@ necessary. See <A HREF="#classlayout">  Class Layout </A>
 for more information.
 <P>
 
-<H2> Comment Layout </H2>
+<H3> Comment Layout </H3>
 
 Each part of the project has a specific comment layout.
 
 <A NAME="mge"></A>
-<H2> Make Gotchas Explicit </H2>
+<H3> Make Gotchas Explicit </H3>
 
 Explicitly comment variables changed out of the normal control
 flow or other code likely to break during maintenance. Embedded
@@ -2426,7 +2429,7 @@ will parse your comments looking for keywords, stripping them out, and making
 a report so people can make a special effort where needed.
 <P>
 
-<H3> Gotcha Keywords </H3>
+<H4> Gotcha Keywords </H4>
      
 <UL>
 <LI> <B>:TODO: topic</B><BR> Means there's more to do here, don't forget. <P>
@@ -2451,7 +2454,7 @@ a report so people can make a special effort where needed.
 </UL>
 <P>
 
-<H3> Gotcha Formatting </H3>
+<H4> Gotcha Formatting </H4>
 
 <UL>
 <LI> Make the gotcha keyword the first symbol in the comment.
@@ -2466,7 +2469,7 @@ a report so people can make a special effort where needed.
 </UL>
 
 
-<H3> Example </H3>
+<H4> Example </H4>
 <PRE>
    // :TODO: tmh 960810: possible performance problem
    // We should really use a hash table here but for now we'll
@@ -2477,7 +2480,7 @@ a report so people can make a special effort where needed.
    // probably use a virtual method or template.
 </PRE>
 
-<H2> See Also </H2>
+<H3> See Also </H3>
 
 See <A HREF="#two"> Interface and Implementation Documentation </A> 
 for more details on how documentation should be laid out.
@@ -2485,7 +2488,7 @@ for more details on how documentation should be laid out.
 <P>
 <HR>
 <A NAME="two"></A>
-<H1> Interface and Implementation Documentation </H1>
+<H3> Interface and Implementation Documentation </H3>
 
 There are two main audiences for documentation:
 <UL>
@@ -2496,7 +2499,7 @@ There are two main audiences for documentation:
 With a little forethought we can extract both types of
 documentation directly from source code.
 
-<H2> Class Users </H2>
+<H4> Class Users </H4>
 
 Class users need class interface information which when structured
 correctly can be extracted directly from  a header file. When
@@ -2506,7 +2509,7 @@ Don't delve into algorithm implementation details unless the
 details are needed by a user of the class. Consider comments
 in a header file a man page in waiting.
 
-<H2> Class Implementors </H2>
+<H4> Class Implementors </H4>
 
 Class implementors require in-depth knowledge of how a class
 is implemented. This comment type is found in
@@ -2518,7 +2521,7 @@ within a method's implementation should explain even more.
 <P>
 <HR>
 <A NAME="dirdoc"></A>
-<H1> Directory Documentation </H1>
+<H3> Directory Documentation </H3>
 
 Every directory should have a README file that covers:
 <UL>
@@ -2546,7 +2549,7 @@ reading README files, Makefiles, and source file headers.
 <P>
 <HR>
 <A NAME="demeter"></A>
-<H1> Follow the Law of Demeter </H1>
+<H3> Follow the Law of Demeter </H3>
 
 The <I>Law of Demeter</I> states that you shouldn't
 access a contained object directly from the containing
@@ -2554,7 +2557,7 @@ object, you should use a method of the containing object
 that does what you want and accesses any of its objects
 as needed.
 
-<H2> Justification </H2>
+<H4> Justification </H4>
 
 The purpose of this law is to break dependencies
 so implementations can change without breaking code.
@@ -2563,7 +2566,7 @@ it won't be able to do so because some other object is using it.
 If instead the service was through an interface the object
 could change its implementation anytime without ill effect.
 
-<H2> Caveat </H2>
+<H4> Caveat </H4>
 
 As for most laws the Law of Demeter should be ignored in
 certain cases. If you have a really high level object
@@ -2571,7 +2574,7 @@ that contains a lot of subobjects, like a car contains
 thousands of parts, it can get absurd to created a method
 in car for every access to a subobject.
 
-<H2> Example </H2>
+<H4> Example </H4>
 <PRE>
    class SunWorkstation
    {
@@ -2593,7 +2596,7 @@ in car for every access to a subobject.
 <P>
 <HR>
 <A NAME="abstract"></A>
-<H1> Minimize Dependencies with Abstract Base Classes </H1>
+<H3> Minimize Dependencies with Abstract Base Classes </H3>
 
 One of the most important strategies in C++ is to remove dependencies
 among different subsystems. Abstract base classes (ABCs) are
@@ -2736,16 +2739,16 @@ Because Gui doesn't contain any Frog objects it will not
 be recompiled when Frog changes.
 
 
-<H2> Downside </H2>
+<H4> Downside </H4>
 
 Wow! Great stuff! Yes but there are a few downsides:
 
-<H3> Overhead for Virtual Methods </H3>
+<H5> Overhead for Virtual Methods </H5>
 
 Virtual methods have a space and time penalty. It's not huge,
 but should be considered in design.
 
-<H3> Make Everything an ABC! </H3>
+<H5> Make Everything an ABC! </H5>
 
 Sometimes people overdo it, making everything an ABC.
 The rule is make an ABC when you need one not when you
@@ -2758,7 +2761,7 @@ make use of the reuse then make an ABC and don't look back.
 <P>
 <HR>
 <A NAME="design"></A>
-<H1> Use a Design Notation and Process </H1>
+<H3> Use a Design Notation and Process </H3>
 
 Programmers need to have a common language for talking
 about coding, designs, and the software process in general.
@@ -2790,7 +2793,7 @@ even a whole book on it: Using CRC Cards by Nancy M. Wilkinson.
 
 <HR>
 <A NAME="usecases"></A>
-<H1> Using Use Cases </H1>
+<H3> Using Use Cases </H3>
 
 A <I>use case</I> is a generic description of an entire transaction
 involving several objects. A use case can also describe the behaviour
@@ -2806,7 +2809,7 @@ description of the external actors and the sequences of events
 between objects that make up the transaction. Use cases can
 include other use cases as part of their behaviour.
 
-<H2> Requirements Capture </H2>
+<H4> Requirements Capture </H4>
 
 Use cases attempt to capture the requirements for a system in
 an understandable form. The idea is by running through a set
@@ -2817,7 +2820,7 @@ should be doing.
 Have as many use cases as needed to describe what a system needs 
 to accomplish.
 
-<H2> The Process </H2>
+<H4> The Process </H4>
 
 <UL>
 <LI> Start by understanding the system you are trying to build.
@@ -2832,7 +2835,7 @@ to accomplish.
 <P>
 <HR>
 <A NAME="uml"></A>
-<H1> Unified Modeling Language </H1>
+<H3> Unified Modeling Language </H3>
 
 The Unified Modeling Language is too large to present here. Fortunately
 you can see it at <A HREF="http://www.rational.com/ot/uml.html"> Rational's </A>
@@ -2845,7 +2848,7 @@ junk the rest.
 <P>
 <HR>
 <A NAME="oml"></A>
-<H1> OPEN Method </H1>
+<H3> OPEN Method </H3>
 
 <A HREF="http://www.scism.sbu.ac.uk/cios/mirrors/OPEN/"> OPEN </A> stands for 
 <B>Object-oriented Process, Environment and Notation</B> and
@@ -2859,7 +2862,7 @@ some competition going.
 <P>
 <HR>
 <A NAME="liskov"></A>
-<H1> Liskov's Substitution Principle (LSP) </H1>
+<H3> Liskov's Substitution Principle (LSP) </H3>
 
 This principle states:
 <PRE>
@@ -2893,7 +2896,7 @@ a bit. In general people support LSP and have LSP as a goal.
 <P>
 <HR>
 <A NAME="open"></A>
-<H1> Open/Closed Principle </H1>
+<H3> Open/Closed Principle </H3>
 
 The Open/Closed principle states a class must be open and
 closed where:
@@ -2920,7 +2923,7 @@ to by derived classes. In C++ we are talking about using
 <P>
 <HR>
 <A NAME="contract"></A>
-<H1> Design by Contract </H1>
+<H3> Design by Contract </H3>
 
 The idea of design by contract is strongly related to <A HREF="#liskov"> LSP </A>.
 A contract is a formal statement of what to expect from another party. In this case
@@ -2942,7 +2945,7 @@ is a very powerful idea. It makes programming more like assembling spec'd parts.
 <P>
 <HR>
 <A NAME="nooper"></A>
-<H1> Don't Over Use Operators </H1>
+<H3> Don't Over Use Operators </H3>
 
 C++ allows the overloading of all kinds of weird operators.
 Unless you are building a class directly related to math
@@ -2950,7 +2953,7 @@ there are very few operators you should override. Only
 override an operator when the semantics will be clear
 to users.
 
-<H2> Justification </H2>
+<H4> Justification </H4>
 
 <UL>
 <LI> Very few people will have the same intuition as you about what
@@ -2960,9 +2963,9 @@ to users.
 <P>
 <HR>
 <A NAME="cflayout"></A>
-<H1> Naming Class Files</H1>
+<H3> Naming Class Files</H3>
 
-<H2> Class Definition in One File </H2>
+<H4> Class Definition in One File </H4>
 
 Each class definition should be in its own file where each file is named directly 
 after the class's name:
@@ -2970,14 +2973,14 @@ after the class's name:
    ClassName.h
 </PRE>
 
-<H2> Implementation in One File </H2>
+<H4> Implementation in One File </H4>
 
 In general each class should be implemented in one source file:
 <PRE>
    ClassName.cc   // or whatever the extension is: cpp, c++
 </PRE>
 
-<H2> But When it Gets Really Big... </H2>
+<H4> But When it Gets Really Big... </H4>
 
 If the source file gets too large or you want to avoid compiling
 templates all the time then add additional files named according
@@ -2992,7 +2995,7 @@ together. The class name and section name are separated by '_'.
 <P>
 <HR>
 <A NAME="misc"></A>
-<H1> Miscellaneous </H1>
+<H3> Miscellaneous </H3>
 
 This section contains some miscellaneous do's and don'ts. 
 <P>
@@ -3055,7 +3058,7 @@ This section contains some miscellaneous do's and don'ts.
 </UL>
 
 <P> <HR> <A NAME="const"></A>
-<H1> Be Const Correct </H1>
+<H3> Be Const Correct </H3>
 
 C++ provides the <I>const</I> key word to allow passing as parameters 
 objects that cannot change to indicate when a method doesn't modify 
@@ -3069,46 +3072,46 @@ Const Correctness </A> in the C++ FAQ.
 
 
 <P> <HR> <A NAME="streams"></A>
-<H1> Use Streams </H1>
+<H3> Use Streams </H3>
 
 Programmers transitioning from C to C++ find stream IO strange
 preferring the familiarity of good old stdio. Printf and gang
 seem to be more convenient and are well understood.
 <P>
 
-<H2> Type Safety </H2>
+<H4> Type Safety </H4>
 
 Stdio is not type safe, which is one of the reasons you
 are using C++, right? Stream IO is type safe. That's one good
 reason to use streams.
 <P>
 
-<H2> Standard Interface </H2>
+<H4> Standard Interface </H4>
 
 When you want to dump an object to a stream there is
 a standard way of doing it: with the <I>&lt;&lt;</I> operator.
 This is not true of objects and stdio. 
 
-<H2> Interchangeablity of Streams </H2>
+<H4> Interchangeablity of Streams </H4>
 
 One of the more advanced reasons for using streams is that
 once an object can dump itself to a stream it can dump itself
 to any stream. One stream may go to the screen, but another stream
 may be a serial port or network connection. Good stuff.
 
-<H2> Streams Got Better </H2>
+<H4> Streams Got Better </H4>
 
 Stream IO is not perfect. It is however a lot better than
 it used to be. Streams are now standardized, acceptably efficient,
 more reliable, and now there's lots of documentation on how to use 
 streams. 
 
-<H2> Check Thread Safety </H2>
+<H4> Check Thread Safety </H4>
 
 Some stream implementations are not yet thread safe. Make sure
 that yours is.
 
-<H2> But Not Perfect </H2>
+<H4> But Not Perfect </H4>
 
 For an embedded target tight on memory streams do not make sense.
 Streams inline a lot of code so you might find the image
@@ -3117,7 +3120,7 @@ work on your target.
 
 
 <P> <HR> <A NAME="ifdef"></A>
-<H1> Use #if Not #ifdef </H1>
+<H3> Use #if Not #ifdef </H3>
 
 Use #if MACRO not #ifdef MACRO. Someone might write code like:
 
@@ -3155,7 +3158,7 @@ to the conditional without editing text that's already in the program:
 
 
 <P> <HR> <A NAME="if0"></A>
-<H1> Use #if 0 to Comment Out Code Blocks </H1>
+<H3> Use #if 0 to Comment Out Code Blocks </H3>
 
 Sometimes large blocks of code need to be commented out for testing.
 The easiest way to do this is with an #if 0 block:
@@ -3185,7 +3188,7 @@ compiler command line.
 <P>
 <HR>
 <A NAME="register"></A>
-<H1> Register/Dispatch Idiom </H1>
+<H3> Register/Dispatch Idiom </H3>
 
 Another strategy for reducing dependencies in a system is
 the Register/Dispatch Idiom (RDI). RDI treats large
@@ -3235,9 +3238,9 @@ success on other projects, being both simple and efficient. <P>
 
 <P><HR>
 <A NAME="accessor"></A>
-<H1> Different Accessor Styles </H1>
+<H3> Different Accessor Styles </H3>
 
-<H2> Why Accessors? </H2>
+<H4> Why Accessors? </H4>
 
 Access methods provide access to the physical or logical attributes of 
 an object. Accessing an object's attributes directly as we do for C 
@@ -3260,18 +3263,18 @@ a contract with the user to provide access to a particular
 attribute; it should not promise how it gets those attributes.
 Accessing a physical attribute makes such a promise.
 
-<H2> Accessors Considered Somewhat Harmful </H2>
+<H4> Accessors Considered Somewhat Harmful </H4>
 
 At least in the public interface having accessors many times is an admission
 of failure, a failure to make an object's interface complete.
 At the protected or private level accessors are fine as these
 are the implementation levels of a class.
 
-<H2> Implementing Accessors </H2>
+<H4> Implementing Accessors </H4>
 
 There are three major idioms for creating accessors.
 
-<H3> Get/Set </H3>
+<H5> Get/Set </H5>
 <PRE>
    class X
    {
@@ -3297,7 +3300,7 @@ when used with messages the set method can transparently transform
 from native machine representations to network byte order.
 
 
-<H3> One Method Name </H3>
+<H5> One Method Name </H5>
 <PRE>
    class X
    {
@@ -3313,7 +3316,7 @@ Similar to Get/Set but cleaner. Use this approach when not
 using the <I>Attributes as Objects</I> approach.
 
 
-<H3> Attributes as Objects </H3>
+<H5> Attributes as Objects </H5>
 <PRE>
    class X
    {
@@ -3360,7 +3363,7 @@ When possible use this approach to attribute access.
 <P>
 <HR>
 <A NAME="layering"></A>
-<H1> Layering </H1>
+<H3> Layering </H3>
 
 Layering is the primary technique for reducing complexity in
 a system. A system should be divided into layers. Layers
@@ -3383,7 +3386,7 @@ appropriately.
 <P>
 <HR>
 <A NAME="delegation"></A>
-<H1> Delegation </H1>
+<H3> Delegation </H3>
 
 Delegation is the idea of a method using another object's
 method to do the real work. In some sense the top layer method
@@ -3404,7 +3407,7 @@ encourages the formation of abstract class interfaces
 and HASA relationships. Both of which encourage reuse
 and dependency breaking.
 
-<H2> Example </H2>
+<H4> Example </H4>
 <PRE>
    class TestTaker
    {
@@ -3422,7 +3425,7 @@ example of delegation!
 
 <HR>
 <A NAME="codereview"></A>
-<H1> Code Reviews </H1>
+<H3> Code Reviews </H3>
 
 If you can make a formal code review work then my hat is off
 to you. Code reviews can be very useful. Unfortunately they
@@ -3466,7 +3469,7 @@ and doesn't take the time of 6 people to do it. <P>
 
 <HR>
 <A NAME="getsome">  
-<H1> Create a Source Code Control System Early and Not Often </H1> 
+<H3> Create a Source Code Control System Early and Not Often </H3> 
 
 A common build system and source code control system should be put in place
 as early as possible in a project's lifecycle, preferably before anyone starts
@@ -3533,7 +3536,7 @@ Some issues to keep in mind:
      night and sent to interested parties.
 </UL>
     
-<H2> Sources </H2>
+<H4> Sources </H4>
 
 If you have the money many projects have found <A HREF="http://www.pureatria.com/">
 Clear Case </A> a good system. Perfectly workable systems have been build on top
@@ -3543,7 +3546,7 @@ software. <P>
 
 <HR>
 <A NAME="bugs">  
-<H1> Create a Bug Tracking System Early and Not Often </H1>
+<H3> Create a Bug Tracking System Early and Not Often </H3>
 
 The earlier people get used to using a bug tracking system the better. If you
 are 3/4 through a project and then install a bug tracking system it won't
@@ -3573,7 +3576,7 @@ of a project where source is frozen before a release only checkins accompanied
 by a valid bug ID should be accepted. And when code is changed to fix a bug
 the bug ID should be included in the checkin comments. <P>
 
-<H2> Sources </H2>
+<H4> Sources </H4>
 
 Several projects have found <A HREF="http://www.pureatria.com/products/pureddts/"> DDTS </A>
 a workable system. There is also a GNU bug tracking system available.
@@ -3583,7 +3586,7 @@ seems more cost efficient.
 
 <HR>
 <A NAME="resp"></A>
-<H1> Honor Responsibilities </H1>
+<H3> Honor Responsibilities </H3>
 
 Responsibility for software modules is scoped. Modules are either the responsibility of a 
 particular person or are common. Honor this division of responsibility. Don't
@@ -3622,7 +3625,7 @@ As an aside, module responsibilities must also be assigned for bug tracking purp
 
 <HR>
 <A NAME="fext">  
-<H1> C++ File Extensions </H1>
+<H3> C++ File Extensions </H3>
 
 In short: Use the <I>.h</I> extension for header files and <I>.cc</I> for source files. <P>
 
@@ -3639,7 +3642,7 @@ any extension. Historically speaking here have been the options:
 <LI> Source Files: .C, .cpp, .cc
 </UL>
 
-<H2> Header File Extension Discussion </H2>
+<H4> Header File Extension Discussion </H4>
 
 Using <I>.hh</I> extension is not widely popular but makes a certain kind
 of sense. C header files use <I>.h</I> file extension and C++ based
@@ -3650,7 +3653,7 @@ Using preprocessor directives this is possible and common. The recommendation is
 to stick with using the <I>.h</I> extension.
 <P>
 
-<H2> Source File Extension Discussion </H2>
+<H4> Source File Extension Discussion </H4>
 
 The problem with the <I>.C</I> extension is that it is indistinguishable from
 the <I>.c</I> extensions in operating systems that aren't case sensitive. Yes,
@@ -3662,7 +3665,7 @@ So the <I>.cc</I> extension wins by default.
 <P>
 <HR>
 <A NAME="callc"></A>
-<H1> Mixing C and C++ </H1>
+<H3> Mixing C and C++ </H3>
 
 In order to be backward compatible with dumb linkers C++'s link time type safety
 is implemented by encoding type information in link symbols, a process
@@ -3674,7 +3677,7 @@ to create a C function in C++ you must wrap it with the above syntax. If
 you want to call a C function in a C library from C++ you must wrap in the
 above syntax. Here are some examples:<P>
 
-<H2> Calling C Functions from C++ </H2>
+<H4> Calling C Functions from C++ </H4>
 
 <PRE>
 extern "C" int strncpy(...);
@@ -3686,7 +3689,7 @@ extern "C"
 };
 </PRE>
 
-<H2> Creating a C Function in C++ </H2>
+<H4> Creating a C Function in C++ </H4>
 
 <PRE>
 extern "C" void
@@ -3695,7 +3698,7 @@ a_c_function_in_c++(int a)
 }
 </PRE>
 
-<H2> <I>__cplusplus</I> Preprocessor Directive </H2>
+<H4> <I>__cplusplus</I> Preprocessor Directive </H4>
 
 If you have code that must compile in a C and C++ environment then you must use the
 <I>__cplusplus</I> preprocessor directive. For example: <P>
@@ -3715,7 +3718,7 @@ extern some_function();
 <P>
 <HR>
 <A NAME="nomagic"></A>
-<H1> No Magic Numbers </H1>
+<H3> No Magic Numbers </H3>
 
 A magic number is a bare naked number used in source code. It's magic
 because no-one has a clue what it means including the author inside
@@ -3728,7 +3731,7 @@ else                { cry_cause_im_lost(); }
 </PRE> 
 
 In the above example what do 22 and 19 mean? If there was a number change or the
-numbers were just plain wrong how would you know? <P?
+numbers were just plain wrong how would you know? <P>
 
 Heavy use of magic numbers marks a programmer as an amateur 
 more than anything else. Such a programmer has never worked in a team
@@ -3754,9 +3757,11 @@ else                                  { happy_days_i_know_why_im_here(); }
 Now isn't that better?
 <P>
 
+<H2> Popular Myths </H2>
+
 <A NAME="promiss">
 <HR>
-<H1> Promise of OO </H1>
+<H3> Promise of OO </H3>
 
 OO has been hyped to the extent you'd figure it would solve world hunger
 and usher in a new era of world peace. Not! OO is an approach, a philosophy,
@@ -3794,7 +3799,7 @@ Robert Martin put OO in perspective:
 <P>
 <HR>
 <A NAME="embedded">     
-<H1> You can't use OO and C++ on Embedded Systems </H1>
+<H3> You can't use OO and C++ on Embedded Systems </H3>
 
 Oh yes you can. I've used C++ on several embedded systems as
 have many others. And if you can't why not? Please don't give in to vague
@@ -3816,7 +3821,7 @@ make a dent. Examples like improving the speed of a driver by inlining certain
 methods and not hacking the code to death gently roll into the bit bucket.
 <P>
 
-<H2> Techniques </H2>
+<H4> Techniques </H4>
 
 Of course C++ can be a disaster for an embedded system when used incorrectly, 
 which of course is true of any tool. Here's some ideas to use C++ safely
@@ -3958,7 +3963,7 @@ volatile.
 
 
 <P> <HR> <A NAME="thinfat"></A>
-<H1> Thin vs. Fat Class Interfaces </H1>
+<H3> Thin vs. Fat Class Interfaces </H3>
 
 How many methods should an object have? The right answer of course is just the right amount, we'll call
 this the Goldilocks level. But what is the Goldilocks level? It doesn't
@@ -3997,17 +4002,17 @@ retested, and rereleased.
 
 
 <P> <HR> <A NAME="portability"></A>
-<H1>  Portability </H1> 
+<H2>  Portability </H2>
 
 <A NAME="usetypedefs"></A>
-<H2> Use Typedefs for Types </H2> 
+<H3> Use Typedefs for Types </H3> 
 
 It's good to typedef int32, int64, int16 etc instead of 
 assuming it'll be done with int, long and short.
 
 
 <A NAME="mininlines"></A>
-<H2> Minimize Inlines </H2> 
+<H3> Minimize Inlines </H3> 
 
 Minimize inlining in declarations or inlining in general. As soon as you 
 put your C++ code in a shared library which you want to maintain compatibility 
@@ -4016,7 +4021,7 @@ it, for most cases.
 
 
 <A NAME="cdexcept"></A>
-<H2> Compiler Dependent Exceptions </H2> 
+<H3> Compiler Dependent Exceptions </H3> 
 
 Using exceptions across the shared library boundary
 could cause some problems if the shared library and
@@ -4025,14 +4030,14 @@ vendors.
 
 
 <A NAME="cdrtti"></A>
-<H2> Compiler Dependent RTTI </H2> 
+<H3> Compiler Dependent RTTI </H3> 
 
 Different compilers are not guranteed to name types
 the same.
 
 
 <A NAME="alignment"></A>
-<H2> Alignment of Class Members </H2> 
+<H3> Alignment of Class Members </H3> 
 
 There seems to be disagreement on how to align class data 
 members. Be aware that different platforms have different
