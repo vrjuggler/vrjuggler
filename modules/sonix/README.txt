@@ -207,6 +207,8 @@ Table of contents:
       cd $juggler_root/gadgeteer/build.$HOSTTYPE
       gmake -j $parallel_compile
 
+      cd $juggler_root/vrjuggler/build.$HOSTTYPE
+      gmake -j $parallel_compile
 
       cd $juggler_root/sonix
       autogen.sh

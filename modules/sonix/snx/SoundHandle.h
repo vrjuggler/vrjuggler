@@ -62,23 +62,34 @@ namespace snx
       
       /**  default constructor
        *   @semantics you should call init to name this handle...
+       *   @see init
        */
-      SoundHandle() : mAlias( "unnamed" )
+      SoundHandle() : mDefaultName( "unnamed_sound_handle" ), mAlias( mDefaultName )
       {
       }
       
-      /**  constructor
+      /**  name constructor.
        *   @semantics gives the handle your chosen name.
        *   this name is what is used in all sonix:: class calls (SoundHandle is a wrapper for sonix::)
+       *   @post you do not need to call init if you use the name constructor.
+       *   @see init
        */
       SoundHandle( const std::string& myUniqueName ) : mAlias( myUniqueName )
       {
       }
 
-      /**  init
+      /**  initialize the name of this sound.
        *   @semantics initialize the handle your chosen name.
-       *   this name is what is used in all sonix:: class calls (SoundHandle is a wrapper for sonix::)
-       * important: you must configure() your sound, if this name hasn't been configured before...
+       *   important: you must configure() your sound after calling init(), if this name hasn't been configured before...
+       * 
+       * <h3> "Example:" </h3>
+       * \code
+       *    snx::SoundHandle click_sound;
+       *    click_sound.init( "click" );
+       *    click_sound.configure( sound_info );
+       * \endcode
+       * 
+       *  @see snx::SoundHandle::configure
        */
       void init( const std::string& myUniqueName )
       {
@@ -88,12 +99,12 @@ namespace snx
       //: virtual destructor
       virtual ~SoundHandle()
       {
-         
+         mAlias = "deleted";
       }
 
    public:
 
-      /**
+      /** trigger a sound.
        * @input number of times to play
        * @preconditions object does not have to be a valid sound (but it helps :)
        * @postconditions if it is, then the loaded sound is triggered.  if it isn't then nothing happens.
@@ -104,7 +115,7 @@ namespace snx
          sonix::instance()->trigger( mAlias, repeat );
       }
 
-      /*
+      /* specify whether sound retriggers from beginning when triggered while playing.
        * when sound is already playing then you call trigger,
        * does the sound restart from beginning?
        */
@@ -124,7 +135,7 @@ namespace snx
          sonix::instance()->setAmbient( mAlias, setting );
       }
 
-      /**
+      /**stop the sound.
        * @semantics stop the sound
        * @input
        */
@@ -158,7 +169,7 @@ namespace snx
       }
 
       /**
-       * unmute, let the muted-playing sound be heard again
+       * unmute, let the muted-playing sound be heard again.
        */
       virtual void unmute()
       {
@@ -166,7 +177,7 @@ namespace snx
       }
 
       /**
-       * set sound's 3D position 
+       * set sound's 3D position .
        * @input x,y,z are in OpenGL coordinates (right handed sys, x right, y up, z towards you)
        */
       virtual void setPosition( const float& x, const float& y, const float& z )
@@ -175,7 +186,7 @@ namespace snx
       }
 
       /**
-       * get sound's 3D position
+       * get sound's 3D position.
        * @output x,y,z are returned in OpenGL coordinates.
        */
       virtual void getPosition( float& x, float& y, float& z )
@@ -184,7 +195,7 @@ namespace snx
       }
 
       /**
-       * set the position of the listener
+       * set the position of the listener.
        */
       virtual void setListenerPosition( const vrj::Matrix& mat )
       {
@@ -192,7 +203,7 @@ namespace snx
       }
 
       /**
-       * get the position of the listener
+       * get the position of the listener.
        */
       virtual void getListenerPosition( vrj::Matrix& mat )
       {
@@ -200,7 +211,7 @@ namespace snx
       }
 
       /**
-        * configure/reconfigure this sound
+        * configure/reconfigure this sound.
         * configure: associate a name (alias) to the description if not already done
         * reconfigure: change properties of the sound to the descriptino provided.
         * @preconditions provide a SoundInfo which describes the sound
@@ -209,28 +220,21 @@ namespace snx
         */
       virtual void configure( const snx::SoundInfo& description )
       {
+         assert( mAlias != mDefaultName && "you must call init to set your sound's name" );
          sonix::instance()->configure( mAlias, description );
       }
 
       /**
-        * remove a configured sound, any future reference to the mAlias will not
+        * remove a configured sound. any future reference to the mAlias will not
         * cause an error, but will not result in a rendered sound
         */
       virtual void remove()
       {
          sonix::instance()->remove( mAlias );
       }   
-
-      /**
-        * @semantics call once per sound frame (doesn't have to be same as your graphics frame)
-        * @input time elapsed since last frame
-        */
-      virtual void step( const float& timeElapsed )
-      {
-         sonix::instance()->step( timeElapsed );
-      }
       
    private:
+      const std::string mDefaultName;
       std::string mAlias;
    };
 }
