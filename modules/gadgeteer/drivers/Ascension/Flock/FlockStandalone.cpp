@@ -160,8 +160,10 @@ vpr::ReturnStatus FlockStandalone::open ()
    bool open_successfull;
    unsigned attempt_num = 0;
    const unsigned max_open_attempts(7);
-   // do-while(not successfull)
-   //if(1)
+   
+   // do: open port and try to read
+   // while: not successful
+   // --> Repetitively try to open port and setup parameters until connection works correctly
    do
    {
       open_successfull = true;
@@ -176,7 +178,6 @@ vpr::ReturnStatus FlockStandalone::open ()
 
       mSerialPort->setOpenReadWrite();
 
-      // - Open the port for the last time
       //   - Set the port attributes to use
       if ( mSerialPort->open().success() )
       {
@@ -229,18 +230,18 @@ vpr::ReturnStatus FlockStandalone::open ()
 
          mStatus = FlockStandalone::OPEN;
 
-         try
+         // If open was successfull so far, then try to read the initial configuration information
+         if(open_successfull)
          {
-            if(open_successfull)    // Only try if we are successfull thus far
+            try
             {
-               // Get the initial configuration from the flock
-               readInitialFlockConfiguration();
+               readInitialFlockConfiguration();    // Get the initial configuration from the flock            
             }
-         }
-         catch(Flock::CommandFailureException& cfe)
-         {
-            vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "Flockstandalone::open: command exception: " << cfe.getMessage() << std::endl << vprDEBUG_FLUSH;
-            open_successfull = false;
+            catch(Flock::CommandFailureException& cfe)
+            {
+               vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "Flockstandalone::open: command exception: " << cfe.getMessage() << std::endl << vprDEBUG_FLUSH;
+               open_successfull = false;
+            }
          }
 
          if(!open_successfull)
@@ -331,7 +332,7 @@ vpr::ReturnStatus FlockStandalone::configure()
    vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Flock configured and ready to run." << vprDEBUG_FLUSH;
 
    // Check for errors
-   //checkError();
+   checkError();
 
    // flock is active.
    mStatus = FlockStandalone::RUNNING;
@@ -846,9 +847,10 @@ std::vector<vpr::Uint8> FlockStandalone::querySystemStatus()
 void FlockStandalone::printFlockStatus()
 {
    // Print the info out
-   std::cout << "System status:\n";
+   std::cout << "Flock Status:\n";
 
    std::cout << "      status:" << getStatusString() << std::endl;
+   std::cout << "        mode:" << Flock::getModeString(mMode) << std::endl;
    std::cout << "   addr mode:" << getAddressingModeString(mAddrMode) << std::endl;
    std::cout << "   mstr addr:" << mMasterAddr << std::endl;
    std::cout << "  output fmt:" << Flock::Output::getFormatString(mOutputFormat) << std::endl;
@@ -1313,6 +1315,13 @@ void FlockStandalone::readInitialFlockConfiguration()
          }
       }
 
+      if(mMode == Flock::Standalone)
+      {
+         vprASSERT(1 == mNumSensors);
+         vprASSERT(mAddrToSensorIdMap[0] == 0);
+         vprASSERT((mXmitterIndices.size() == 1) && (mXmitterIndices[0] == 0));
+      }
+
    }
    catch(Flock::FlockException& e)
    {
@@ -1346,6 +1355,12 @@ void FlockStandalone::setupFlockUnitsDataStructure()
    {
       mFlockUnits[0].mAddr = 0;     // Manually set the correct bird address
       mActiveUnitEndIndex = 1;      // Manually position it past first unit
+
+      // XXX: For now manually setup sensor info to hack around flock system status issues
+      mFlockUnits[0].mAccessible = true;
+      mFlockUnits[0].mIsRunning = true;
+      mFlockUnits[0].mHasSensor = true;
+      mFlockUnits[0].mTransmitterType = Transmitter::Standard;      
    }
    else
    {
