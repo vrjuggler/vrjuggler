@@ -1,5 +1,6 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Sep-18-2000 allenb    Added interocular distance configuration
 Sep-15-2000 patrick   Fixed positioning of keyboard input windows on Win32
 Sep-03-2000 allenb    Fixed a couple of race conditions on start up.
 Sep-03-2000 allenb    Fixed bug that prevented X-Win keyboards from
