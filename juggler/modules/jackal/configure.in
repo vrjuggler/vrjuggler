@@ -66,7 +66,7 @@ cd "$topdir"
 if test "x$CYGPATH" != "xno" ; then
    JUGGLERROOT_ABS=`cygpath -w "$UNIX_JUGGLERROOT_ABS" | sed -e 's/\\\\/\\//g'`
 else
-   JUGGLERROOT_ABS="$UNIX_JUGGLER_ROOT"
+   JUGGLERROOT_ABS="$UNIX_JUGGLERROOT_ABS"
 fi
 
 # -----------------------------------------------------------------------------
@@ -240,6 +240,10 @@ CPPDOM_INCLUDES="-I$cppdom_include"
 
 if test "x$CPPDOM_ROOT" != "x$JUGGLERROOT_ABS/external/cppdom" ; then
     LOCAL_CPPDOM='Y'
+fi
+
+if test "x$CYGPATH" != "xno" ; then
+   UNIX_CPPDOM_ROOT=`cygpath -u $CPPDOM_ROOT`
 fi
 
 CFLAGS="${_vjsave_CFLAGS}"
@@ -468,6 +472,7 @@ AC_SUBST(JUNIT_JAR)
 
 AC_SUBST(CPPDOM_ROOT)
 AC_SUBST(CPPDOM_INCLUDES)
+AC_SUBST(UNIX_CPPDOM_ROOT)
 AC_SUBST(LOCAL_CPPDOM)
 
 AC_SUBST(APP_BASE_DIR)

@@ -131,7 +131,7 @@ cd "$topdir"
 if test "x$CYGPATH" != "xno" ; then
    JUGGLERROOT_ABS=`cygpath -w "$UNIX_JUGGLERROOT_ABS" | sed -e 's/\\\\/\\//g'`
 else
-   JUGGLERROOT_ABS="$UNIX_JUGGLER_ROOT"
+   JUGGLERROOT_ABS="$UNIX_JUGGLERROOT_ABS"
 fi
 
 # -----------------------------------------------------------------------------
