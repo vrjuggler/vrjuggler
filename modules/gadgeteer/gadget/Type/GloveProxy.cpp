@@ -41,9 +41,9 @@ namespace gadget
 
 bool GloveProxy::config(jccl::ConfigChunkPtr chunk)
 {
-   vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,3)
-      << "------------------ GLOVE PROXY config() -----------------\n"
-      << vprDEBUG_FLUSH;
+vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
+      std::string("------------------ Glove PROXY config() -----------------\n"),
+      std::string("\n"));
    vprASSERT(chunk->getDescToken() == "GloveProxy");
 
    mUnitNum = chunk->getProperty<int>("unit");

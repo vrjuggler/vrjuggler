@@ -41,9 +41,10 @@ namespace gadget
 
 bool GestureProxy::config(jccl::ConfigChunkPtr chunk)
 {
-   vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,3)
-      << "------------------ GESTURE PROXY config() -----------------\n"
-      << vprDEBUG_FLUSH;
+vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
+      std::string("------------------ GESTURE PROXY config() -----------------\n"),
+      std::string("\n"));
+
    vprASSERT(chunk->getDescToken() == "GestureProxy");
 
    mDeviceName = chunk->getProperty<std::string>("device");
