@@ -56,20 +56,13 @@
 # opt             - Build the optimized, static version of the libraries.
 # dso             - Build the dynamic shared object version of the libraries.
 # obj             - Build the object files using the default value for
-#                   ${OBJDIR}.
-# gui             - Build the Java-based configuration GUI.
+#                   $(OBJDIR).
+# gui             - Build VjControl, the Java-based configuration GUI.
 #
 # links           - Define links (for developer use only) that provide
 #                   functionality allowing the use of the $VJ_BASE_DIR
 #                   environment variable.
 # clean-links     - Remove the symlinks created by 'links'.
-#
-# static-libs     - Build the static version of the libraries.  This target
-#                   depends on a correct value for ${LIBDIR} (that does not
-#                   have a default value).
-# shared-libs     - Build the dynamic shared version of the libraries.  This
-#                   target depends on a correct value for ${LIBDIR} (that does
-#                   not have a default value).
 #
 # hier            - Make the full directory hierarchy for the installation.
 # install-all     - Install all versions of the libraries, all header files,
@@ -112,135 +105,25 @@
 
 default: debug
 
-# Define ${_LOCAL_CLEAN} and ${_LOCAL_CLEANDEP} to inform the shared 'clean'
-# and 'cleandepend' targets that there is a '_clean' target and a
-# '_cleandepend' target to be run besides the standard targets.  This must
-# be done before Makefile.base is inlcuded (which in turn includes vj.clean.mk)
-# so that the variable will be defined when parsing reaches the test for it.
-_LOCAL_CLEAN	= 1
-_LOCAL_CLEANDEP	= 1
+# This is a hack to deal with GNU make's ignorance about defined targets.
+# Without this, the 'default' set in dpp.subdir.mk becomes the default
+# target, and that's not what we want.
+DEFAULT_SET	= 1
 
 # Include common definitions.
-include @topdir@/Makefile.base
+include @topdir@/make.defs.mk
 
-# Variables whose values are specific to this file.
-includedir	= @includedir@
-instlinks	= ${topdir}/instlinks
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
-VJROOT		= ${top_srcdir}
-VJ_SRCDIR	= @VJ_SRCDIR@
-WORKDIR		= ${topdir}
-
-BUILD_START	= $(shell date)
-
-# Extra compiler and linker options needed only by this file.
-DBG_FLAGS	= -D_DEBUG @DBG_FLAGS@
-OPT_FLAGS	= -D_OPT @OPT_FLAGS@
-
-# SGI-specific dynamic-shared-object information.
-DSOREGFILE	= @DSOREGFILE@
-DSOVERSION	= @DSOVERSION@
-DSOVERSIONOPTS	= @DSOVERSIONOPTS@
-
-# Append ${DSOVERSIONOPTS} to ${LDOPTS} so that those extra options (if any)
-# will be used by ${LD}.
-LDOPTS		:= ${LDOPTS} ${DSOVERSIONOPTS}
+STARTTIME	:= $(shell LC_TIME=C date)
 
 # State whether or not to build the configuration editor GUI.
 BUILD_GUI	= @BUILD_GUI@
-
-# =============================================================================
-# Build and installation directory naming and permission information.
-# =============================================================================
-_DEBUG_DIR	= debug
-_OPT_DIR	= opt
-_DEFAULT_DIR	= ${_OPT_DIR}
-
-_UMASK		= 002
-
-# If we have a name for the install group, define group-setting options for
-# UNIX commands (chown(1), chgrp(1)) and for local Perl scripts
-# (makefiles-gen.pl in particular).
-ifdef GROUP_NAME
-    _GROUP_OPT_UNIX	= -g ${GROUP_NAME}
-    _GROUP_OPT_PL	= --gname="${GROUP_NAME}"
-endif
-
-# ------------------------------------------------
-# Object file build and installation directories.
-# ------------------------------------------------
-_BUILDDIR_BASE	= ${topdir}/obj
-_BUILDDIR	= ${_BUILDDIR_BASE}/${PLATFORM}/${ABI}/${ISA}
-_DBG_BUILDDIR	= ${_BUILDDIR}/${_DEBUG_DIR}
-_OPT_BUILDDIR	= ${_BUILDDIR}/${_OPT_DIR}
-
-# --------------------------------------------
-# Library build and installation directories.
-# --------------------------------------------
-
-# ${_install_libdir_abs} is the full path to the base directory (minus any
-# debugging or optimized subdirectories) where the libraries will be
-# installed.  ${_install_libdir_rel} is only the ${ISA} subdirectory of the
-# full path.
-_install_libdir_abs = ${libdir}${LIBBITSUF}/${ISA}
-_install_libdir_rel = ./${ISA}
-
-# ${_LIBDIR_NAME} is the name of the library directory including an ABI suffix
-# if applicable.
-_LIBDIR_NAME	= lib${LIBBITSUF}
-
-# ${_LIBDIR_BASE} is the base directory where the libraries will be built.
-_LIBDIR_BASE	= ${topdir}/${_LIBDIR_NAME}
-
-# ${_LIBDIR} is the first-level subdirectory of ${_LIBDIR_BASE} that is
-# named by the instruction set being used (${ISA}).
-_LIBDIR		= ${_LIBDIR_BASE}/${ISA}
-
-# ${_DBG_LIBDIR} and ${_OPT_LIBDIR} are the directories where the libraries
-# are actually built.  The first is for a debugging copy of the libraries and
-# the second is for an optimized version of the libraries.
-_DBG_LIBDIR	= ${_LIBDIR}/${_DEBUG_DIR}
-_OPT_LIBDIR	= ${_LIBDIR}/${_OPT_DIR}
-
-SHLIB_MAJOR	= 1
-SHLIB_MINOR	= 0
-
-# Full names of the static and dynamic versions of the libraries.
-VJ_LIB_STATIC	= ${VJ_LIBRARY}.@STATICLIB_EXT@
-VJ_LIB_DYNAMIC	= ${VJ_LIBRARY}.@SHAREDLIB_EXT@
-
-UTILS_LIB_STATIC	= ${UTILS_LIBRARY}.@STATICLIB_EXT@
-UTILS_LIB_DYNAMIC	= ${UTILS_LIBRARY}.@SHAREDLIB_EXT@
-
-GL_API		= @OPENGL_API@
-GL_LIB_STATIC	= ${GL_LIBRARY}.@STATICLIB_EXT@
-GL_LIB_DYNAMIC	= ${GL_LIBRARY}.@SHAREDLIB_EXT@
-
-PF_API		= @PERFORMER_API@
-PF_LIB_STATIC	= ${PF_LIBRARY}.@STATICLIB_EXT@
-PF_LIB_DYNAMIC	= ${PF_LIBRARY}.@SHAREDLIB_EXT@
-
-AUDIO_WORKS	= @AUDIO_WORKS@
-AW_LIB_STATIC	= ${AW_LIBRARY}.@STATICLIB_EXT@
-AW_LIB_DYNAMIC	= ${AW_LIBRARY}.@SHAREDLIB_EXT@
-
-SL		= @SL@
-SL_LIB_STATIC	= ${SL_LIBRARY}.@STATICLIB_EXT@
-SL_LIB_DYNAMIC	= ${SL_LIBRARY}.@SHAREDLIB_EXT@
-
-# On Linux, we have to compile the Performer library with -O for things to
-# link properly.
-ifeq (${PLATFORM}, Linux)
-    _PF_EXTRA_LDOPTS = -O
-endif
 
 # =============================================================================
 # Lists used for various types of recursion.
 # =============================================================================
 
 # Subdirectories used for recursion through the source tree.
-SUBDIRS		= Config	\
+SUBDIR		= Config	\
                   Environment	\
                   Input		\
                   Kernel	\
@@ -251,9 +134,6 @@ SUBDIRS		= Config	\
                   Sync		\
                   Threads	\
                   Utils
-
-# The list of ABIs supported on this platform.
-ABI_LIST	= @ABI_LIST@
 
 # =============================================================================
 # Library targets.  The default is 'debug' as defined above.  The steps for 
@@ -266,28 +146,25 @@ ABI_LIST	= @ABI_LIST@
 #    5) Set up the developer installation links.
 # =============================================================================
 
-# Include recursive target code.
-include ${MKPATH}/vj.rec.mk
-
 # ------------------------------------------------
 # Build and install everything (i.e., the world).
 # ------------------------------------------------
 world:
 	@echo "==============================================================="
-	@echo ">>> VR Juggler make world started $(BUILD_START)"
+	@echo ">>> VR Juggler make world started $(STARTTIME)"
 	@echo "==============================================================="
 ifndef NO_CLEAN
-	@${MAKE} clobber
+	@$(MAKE) clobber
 endif
-	@${MAKE} _libs gui
+	@$(MAKE) libs gui
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning VR Juggler installation process"
 	@echo "---------------------------------------------------------------"
-	@${MAKE} beforeinstall
-	@${MAKE} _install_libs
-	@${MAKE} _install_post_libs
+	@$(MAKE) beforeinstall
+	@$(MAKE) install-libs
+	@$(MAKE) do-post-install
 	@echo "==============================================================="
-	@echo ">>> VR Juggler make world started $(BUILD_START)"
+	@echo ">>> VR Juggler make world started $(STARTTIME)"
 	@echo ">>> VR Juggler make world completed `LTIME=C date`"
 	@echo "==============================================================="
 
@@ -296,32 +173,31 @@ endif
 # ------------------------------------------------------------------------
 world-all-abi:
 	@echo "==============================================================="
-	@echo ">>> VR Juggler make world started on `LTIME=C date`"
+	@echo ">>> VR Juggler make world started on $(STARTTIME)"
 	@echo "==============================================================="
 ifndef NO_CLEAN
-	@${MAKE} clobber
+	@$(MAKE) clobber
 endif
-	@abi_list='${ABI_LIST}' ;					\
-          for abi in $$abi_list ; do					\
-              echo "------------------------------------------------" ;	\
-              echo "Building libraries using $$abi" ;			\
-              echo "------------------------------------------------" ;	\
-              ${MAKE} vjABI=$$abi _libs ;				\
+	@for abi in $(ABI_LIST) ; do					\
+            echo "------------------------------------------------" ;	\
+            echo "Building libraries using $$abi" ;			\
+            echo "------------------------------------------------" ;	\
+            $(MAKE) vjABI=$$abi libs ;					\
           done
-	@${MAKE} gui
+	@$(MAKE) gui
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning VR Juggler installation process"
 	@echo "---------------------------------------------------------------"
-	@${MAKE} beforeinstall
-	@abi_list='${ABI_LIST}' ;					\
-          for abi in $$abi_list ; do					\
-              echo "------------------------------------------------" ;	\
-              echo "Installing $$abi version of libraries" ;		\
-              echo "------------------------------------------------" ;	\
-              ${MAKE} vjABI=$$abi _install_libs ;			\
+	@$(MAKE) beforeinstall
+	@for abi in $(ABI_LIST) ; do					\
+            echo "------------------------------------------------" ;	\
+            echo "Installing $$abi version of libraries" ;		\
+            echo "------------------------------------------------" ;	\
+            $(MAKE) vjABI=$$abi install-libs ;				\
           done
-	@${MAKE} _install_post_libs
+	@$(MAKE) do-post-install
 	@echo "==============================================================="
+	@echo ">>> VR Juggler make world started on $(STARTTIME)"
 	@echo ">>> VR Juggler make world completed on `LTIME=C date`"
 	@echo "==============================================================="
 
@@ -332,903 +208,42 @@ endif
 
 release:
 	@echo "==============================================================="
-	@echo ">>> VR Juggler make release started on `LTIME=C date`"
+	@echo ">>> VR Juggler make release started on $(STARTTIME)"
 	@echo "==============================================================="
 ifndef NO_CLEAN
-	@${MAKE} clobber
+	@$(MAKE) clobber
 endif
-	@${MAKE} _libs gui
+	@$(MAKE) libs gui
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning VR Juggler release installation process"
 	@echo "---------------------------------------------------------------"
-	@${MAKE} beforeinstall
-	@${MAKE} _install_libs
-	@${MAKE} _install_post_libs
-	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${VJROOT_ABS}/ChangeLog ${VJROOT_ABS}/COPYING	 		\
-          ${VJROOT_ABS}/README ${VJROOT_ABS}/RELEASE_NOTES 		\
-          ${prefix}
-	@echo "Build time: `LTIME=C date`" > ${prefix}/BUILD_TIME
+	@$(MAKE) beforeinstall
+	@$(MAKE) install-libs
+	@$(MAKE) do-post-install
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(VJROOT_ABS)/ChangeLog $(prefix)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(VJROOT_ABS)/COPYING $(prefix)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(VJROOT_ABS)/README $(prefix)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(VJROOT_ABS)/RELEASE_NOTES $(prefix)
+	@echo "Build time: `LTIME=C date`" > $(prefix)/BUILD_TIME
 	@echo "==============================================================="
+	@echo ">>> VR Juggler make release started on $(STARTTIME)"
 	@echo ">>> VR Juggler make release completed on `LTIME=C date`"
 	@echo "==============================================================="
 
-# ------------------------------------------
-# Build all four versions of the libraries.
-# ------------------------------------------
-all buildworld:
-	@echo "==============================================================="
-	@echo "Building everything"
-	@echo "==============================================================="
-	@${MAKE} beforebuild
-	@${MAKE} _libs gui
-	@${MAKE} afterbuild
-	@echo "==============================================================="
-	@echo "$@ complete"
-	@echo "==============================================================="
-
-# -------------------------------
-# Build all ABIs in ${ABI_LIST}.
-# -------------------------------
-all-abi:
-	@echo "==============================================================="
-	@echo "Building everything using all ABIs"
-	@echo "==============================================================="
-	@${MAKE} beforebuild
-	@abi_list='${ABI_LIST}' ;					\
-          for abi in $$abi_list ; do					\
-              echo "------------------------------------------------" ;	\
-              echo "Building libraries using $$abi" ;			\
-              echo "------------------------------------------------" ;	\
-              ${MAKE} vjABI=$$abi _libs ;				\
-          done
-	@${MAKE} gui
-	@${MAKE} afterbuild
-	@echo "==============================================================="
-	@echo "$@ complete"
-	@echo "==============================================================="
-
-# Things to do before the object files and library are built.
-beforebuild:
-
-# Things to do after the object files and library are built.
-afterbuild:
-	@${MAKE} links
-
-# Build the optimized and debugging object files, static libraries and
-# shared libraries.  Once this has been done, make the links in ${_LIBDIR}.
-_libs:
-	@${MAKE} _build_opt_obj
-	@${MAKE} _build_opt_lib_static
-	@${MAKE} _build_opt_lib_shared
-	@${MAKE} _build_dbg_obj
-	@${MAKE} _build_dbg_lib_static
-	@${MAKE} _build_dbg_lib_shared
-	@${MAKE} _LIB_LINK_DIR="${_LIBDIR}" _lib_links
-
-# Make symlinks in ${_LIB_LINK_DIR} pointing to the library binaries in
-# ${_DEFAULT_DIR}.
-_lib_links:
-	@echo "------------------------------------------------"
-	@echo "Creating symlinks in ${_LIB_LINK_DIR}"
-	@echo "------------------------------------------------"
-	cd ${_LIB_LINK_DIR} && rm -f ./${VJ_LIB_STATIC} &&	\
-          ${LN_S} ${_DEFAULT_DIR}/${VJ_LIB_STATIC} ./
-	cd ${_LIB_LINK_DIR} && rm -f ./${VJ_LIB_DYNAMIC} &&	\
-          ${LN_S} ${_DEFAULT_DIR}/${VJ_LIB_DYNAMIC} ./
-	cd ${_LIB_LINK_DIR} && rm -f ./${UTILS_LIB_STATIC} &&	\
-          ${LN_S} ${_DEFAULT_DIR}/${UTILS_LIB_STATIC} ./
-	cd ${_LIB_LINK_DIR} && rm -f ./${UTILS_LIB_DYNAMIC} &&	\
-          ${LN_S} ${_DEFAULT_DIR}/${UTILS_LIB_DYNAMIC} ./
-ifeq (${GL_API}, Y)
-	cd ${_LIB_LINK_DIR} && rm -f ./${GL_LIB_STATIC} &&	\
-          ${LN_S} ${_DEFAULT_DIR}/${GL_LIB_STATIC} ./
-	cd ${_LIB_LINK_DIR} && rm -f ./${GL_LIB_DYNAMIC} &&	\
-          ${LN_S} ${_DEFAULT_DIR}/${GL_LIB_DYNAMIC} ./
-endif
-ifeq (${PF_API}, Y)
-	cd ${_LIB_LINK_DIR} && rm -f ./${PF_LIB_STATIC} &&	\
-          ${LN_S} ${_DEFAULT_DIR}/${PF_LIB_STATIC} ./
-	cd ${_LIB_LINK_DIR} && rm -f ./${PF_LIB_DYNAMIC} &&	\
-          ${LN_S} ${_DEFAULT_DIR}/${PF_LIB_DYNAMIC} ./
-endif
-ifeq (${AUDIO_WORKS}, Y)
-	cd ${_LIB_LINK_DIR} && rm -f ./${AW_LIB_STATIC} &&	\
-          ${LN_S} ${_DEFAULT_DIR}/${AW_LIB_STATIC} ./
-	cd ${_LIB_LINK_DIR} && rm -f ./${AW_LIB_DYNAMIC} &&	\
-          ${LN_S} ${_DEFAULT_DIR}/${AW_LIB_DYNAMIC} ./
-endif
-ifeq (${SL}, Y)
-	cd ${_LIB_LINK_DIR} && rm -f ./${SL_LIB_STATIC} &&	\
-          ${LN_S} ${_DEFAULT_DIR}/${SL_LIB_STATIC} ./
-	cd ${_LIB_LINK_DIR} && rm -f ./${SL_LIB_DYNAMIC} &&	\
-          ${LN_S} ${_DEFAULT_DIR}/${SL_LIB_DYNAMIC} ./
-endif
-
-# ----------------------------------------------------------------------------
-# Make the debugging version of the libraries building both static and shared
-# versions of the library binaries.
-# ----------------------------------------------------------------------------
-debug:
-	@echo "========================================================"
-	@echo "Making debugging version of VR Juggler"
-	@echo "========================================================"
-	@${MAKE} beforebuild
-	@${MAKE} _build_dbg_obj gui
-	@${MAKE} _build_dbg_lib_static
-	@${MAKE} _build_dbg_lib_shared
-	@${MAKE} afterbuild
-	@echo "========================================================"
-	@echo "$@ complete"
-	@echo "========================================================"
-
-# ---------------------------------------------
-# Make the debugging version of the libraries.
-# ---------------------------------------------
-dbg:
-	@echo "========================================================"
-	@echo "Making DBG version of VR Juggler"
-	@echo "========================================================"
-	@${MAKE} beforebuild
-	@${MAKE} _build_dbg_obj gui
-	@${MAKE} _build_dbg_lib_static
-	@${MAKE} afterbuild
-	@echo "========================================================"
-	@echo "$@ complete"
-	@echo "========================================================"
-
-# ------------------------------------------------------------
-# Make the debugging version of the libraries that uses DSOs.
-# ------------------------------------------------------------
-ddso:
-	@echo "========================================================"
-	@echo "Making DBG version of VR Juggler"
-	@echo "========================================================"
-	@${MAKE} beforebuild
-	@${MAKE} _build_dbg_obj gui
-	@${MAKE} _build_dbg_lib_shared
-	@${MAKE} afterbuild
-	@echo "========================================================"
-	@echo "$@ complete"
-	@echo "========================================================"
-
-# ----------------------------------------------------------------------------
-# Make the optimized version of the libraries building both static and shared
-# versions of the library binaries.
-# ----------------------------------------------------------------------------
-optim:
-	@echo "========================================================"
-	@echo "Making optimized version of VR Juggler"
-	@echo "========================================================"
-	@${MAKE} beforebuild
-	@${MAKE} _build_opt_obj gui
-	@${MAKE} _build_opt_lib_static
-	@${MAKE} _build_opt_lib_shared
-	@${MAKE} afterbuild
-	@echo "========================================================"
-	@echo "$@ complete"
-	@echo "========================================================"
-
-# ---------------------------------------------
-# Make the optimized version of the libraries.
-# ---------------------------------------------
-opt:
-	@echo "========================================================"
-	@echo "Making OPT version of VR Juggler"
-	@echo "========================================================"
-	@${MAKE} beforebuild
-	@${MAKE} _build_opt_obj gui
-	@${MAKE} _build_opt_lib_static
-	@${MAKE} afterbuild
-	@echo "========================================================"
-	@echo "$@ complete"
-	@echo "========================================================"
-
-# ------------------------------------------------------------
-# Make the optimized version of the libraries that uses DSOs.
-# ------------------------------------------------------------
-dso:
-	@echo "========================================================"
-	@echo "Making OPT version of VR Juggler"
-	@echo "========================================================"
-	@${MAKE} beforebuild
-	@${MAKE} _build_opt_obj gui
-	@${MAKE} _build_opt_lib_shared
-	@${MAKE} afterbuild
-	@echo "========================================================"
-	@echo "$@ complete"
-	@echo "========================================================"
-
-# Build the object files with the debugging flags enabled.
-_build_dbg_obj:
-	@echo "------------------------------------------------"
-	@echo "Building object files with debugging symbols"
-	@echo "------------------------------------------------"
-	${SHELL} ${scriptdir}/mkinstalldirs ${_DBG_BUILDDIR}
-	@${MAKE} RECTARGET="dbg" OPTIMIZER="${DBG_FLAGS}"		\
-          BASE_OBJDIR="${_DBG_BUILDDIR}" recursive
-
-# Build the object files with the optimization flags enabled.
-_build_opt_obj:
-	@echo "------------------------------------------------"
-	@echo "Building optimized object files"
-	@echo "------------------------------------------------"
-	${SHELL} ${scriptdir}/mkinstalldirs ${_OPT_BUILDDIR}
-	@${MAKE} RECTARGET="opt" OPTIMIZER="${OPT_FLAGS}"		\
-          BASE_OBJDIR="${_OPT_BUILDDIR}" recursive
-
-# Build the static libraries with the debugging flags enabled.
-_build_dbg_lib_static:
-	@echo "================================================"
-	@echo "Building static debugging libraries"
-	@echo "================================================"
-	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}"	\
-          ${_DBG_LIBDIR}/${VJ_LIB_STATIC}
-	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/Utils"			\
-          LIBDIR="${_DBG_LIBDIR}" ${_DBG_LIBDIR}/${UTILS_LIB_STATIC}
-ifeq (${GL_API}, Y)
-	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/GL"			\
-          LIBDIR="${_DBG_LIBDIR}" ${_DBG_LIBDIR}/${GL_LIB_STATIC}
-endif
-ifeq (${PF_API}, Y)
-	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/Pf"			\
-          LIBDIR="${_DBG_LIBDIR}" ${_DBG_LIBDIR}/${PF_LIB_STATIC}
-endif
-ifeq (${AUDIO_WORKS}, Y)
-	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/aw"			\
-          LIBDIR="${_DBG_LIBDIR}" ${_DBG_LIBDIR}/${AW_LIB_STATIC}
-endif
-ifeq (${SL}, Y)
-	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/sl"			\
-          LIBDIR="${_DBG_LIBDIR}" ${_DBG_LIBDIR}/${SL_LIB_STATIC}
-endif
-
-# Build the shared libraries with the debugging flags enabled.
-_build_dbg_lib_shared:
-ifneq (@OS_TYPE@, Win32)
-	@echo "================================================"
-	@echo "Building shared debugging libraries"
-	@echo "================================================"
-	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}"	\
-          ${_DBG_LIBDIR}/${VJ_LIB_DYNAMIC}
-	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/Utils"			\
-          LIBDIR="${_DBG_LIBDIR}" ${_DBG_LIBDIR}/${UTILS_LIB_DYNAMIC}
-ifeq (${GL_API}, Y)
-	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/GL"			\
-          LIBDIR="${_DBG_LIBDIR}" ${_DBG_LIBDIR}/${GL_LIB_DYNAMIC}
-endif
-ifeq (${PF_API}, Y)
-	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/Pf"			\
-          EXTRA_LDOPTS="${_PF_EXTRA_LDOPTS}" LIBDIR="${_DBG_LIBDIR}"	\
-          ${_DBG_LIBDIR}/${PF_LIB_DYNAMIC}
-endif
-ifeq (${AUDIO_WORKS}, Y)
-	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/aw"			\
-          LIBDIR="${_DBG_LIBDIR}" ${_DBG_LIBDIR}/${AW_LIB_DYNAMIC}
-endif
-ifeq (${SL}, Y)
-	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/sl"			\
-          LIBDIR="${_DBG_LIBDIR}" ${_DBG_LIBDIR}/${SL_LIB_DYNAMIC}
-endif
-else
-	@echo "================================================"
-	@echo "Cannot build shared libs on Win32 yet!"
-	@echo "================================================"
-endif
-
-# Build the static libraries with the optimization flags enabled.
-_build_opt_lib_static:
-	@echo "================================================"
-	@echo "Building static optmized libraries"
-	@echo "================================================"
-	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}"	LIBDIR=${_OPT_LIBDIR}	\
-          ${_OPT_LIBDIR}/${VJ_LIB_STATIC}
-	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/Utils"			\
-          LIBDIR=${_OPT_LIBDIR} ${_OPT_LIBDIR}/${UTILS_LIB_STATIC}
-ifeq (${GL_API}, Y)
-	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/GL"			\
-          LIBDIR=${_OPT_LIBDIR} ${_OPT_LIBDIR}/${GL_LIB_STATIC}
-endif
-ifeq (${PF_API}, Y)
-	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/Pf"			\
-          LIBDIR=${_OPT_LIBDIR} ${_OPT_LIBDIR}/${PF_LIB_STATIC}
-endif
-ifeq (${AUDIO_WORKS}, Y)
-	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/aw"			\
-          LIBDIR=${_OPT_LIBDIR} ${_OPT_LIBDIR}/${AW_LIB_STATIC}
-endif
-ifeq (${SL}, Y)
-	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/sl"			\
-          LIBDIR=${_OPT_LIBDIR} ${_OPT_LIBDIR}/${SL_LIB_STATIC}
-endif
-
-# Build the shared libraries with the optimization flags enabled.
-_build_opt_lib_shared:
-ifneq (@OS_TYPE@, Win32)
-	@echo "================================================"
-	@echo "Building shared optmized libraries"
-	@echo "================================================"
-	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}"	\
-          ${_OPT_LIBDIR}/${VJ_LIB_DYNAMIC}
-	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/Utils"			\
-          LIBDIR="${_OPT_LIBDIR}" ${_OPT_LIBDIR}/${UTILS_LIB_DYNAMIC}
-ifeq (${GL_API}, Y)
-	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/GL"			\
-          LIBDIR="${_OPT_LIBDIR}" ${_OPT_LIBDIR}/${GL_LIB_DYNAMIC}
-endif
-ifeq (${PF_API}, Y)
-	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/Pf"			\
-          LIBDIR="${_OPT_LIBDIR}" ${_OPT_LIBDIR}/${PF_LIB_DYNAMIC}
-endif
-ifeq (${AUDIO_WORKS}, Y)
-	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/aw"			\
-          LIBDIR="${_OPT_LIBDIR}" ${_OPT_LIBDIR}/${AW_LIB_DYNAMIC}
-endif
-ifeq (${SL}, Y)
-	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/sl"			\
-          LIBDIR="${_OPT_LIBDIR}" ${_OPT_LIBDIR}/${SL_LIB_DYNAMIC}
-endif
-else
-	@echo "================================================"
-	@echo "Cannot build shared libs on Win32 yet!"
-	@echo "================================================"
-endif
-
-
-# --------------------------------------------------------------------
-# Build only the object files using the default values for ${OBJDIR}.
-# --------------------------------------------------------------------
-obj:
-	@echo "------------------------------------------------"
-	@echo "Making library object files"
-	@echo "------------------------------------------------"
-	@${MAKE} RECTARGET="$@" recursive
-	@echo "------------------------------------------------"
-	@echo "Object files built"
-	@echo "------------------------------------------------"
-
-# -----------------------------------------------
-# Construct the static version of the libraries.
-# -----------------------------------------------
-static-libs: ${VJ_LIB_STATIC} ${UTILS_LIB_STATIC} ${GL_LIB_STATIC}	\
-             ${PF_LIB_STATIC} ${AW_LIB_STATIC} ${SL_LIB_STATIC}
-
-${LIBDIR}/${VJ_LIB_STATIC} ${LIBDIR}/${UTILS_LIB_STATIC}		\
-${LIBDIR}/${GL_LIB_STATIC} ${LIBDIR}/${PF_LIB_STATIC}			\
-${LIBDIR}/${AW_LIB_STATIC} ${LIBDIR}/${SL_LIB_STATIC}: ${OBJDIR}/*.${OBJ_FILE_SUFFIX}
-	@echo "------------------------------------------------"
-	@echo "Creating $@"
-	@echo "------------------------------------------------"
-	@${SHELL} ${scriptdir}/mkinstalldirs ${LIBDIR}
-	${AR} ${AR_NAME_FLAG}$@ ${OBJDIR}/*.${OBJ_FILE_SUFFIX}
-	${RANLIB} $@
-	cd ${_LIBDIR_BASE} && rm -f ${notdir $@} && ${LN_S} $@ ./
-	@echo "------------------------------------------------"
-	@echo "$@ done"
-	@echo "------------------------------------------------"
-
-# -------------------------------------------------------
-# Construct the dynamic shared version of the libraries.
-# -------------------------------------------------------
-shared-libs: ${VJ_LIB_DYNAMIC} ${UTILS_LIB_DYNAMIC} ${GL_LIB_DYNAMIC}	\
-             ${PF_LIB_DYNAMIC} ${AW_LIB_DYNAMIC} ${SL_LIB_DYNAMIC}
-
-${LIBDIR}/${VJ_LIB_DYNAMIC} ${LIBDIR}/${UTILS_LIB_DYNAMIC}		\
-${LIBDIR}/${GL_LIB_DYNAMIC} ${LIBDIR}/${PF_LIB_DYNAMIC}			\
-${LIBDIR}/${AW_LIB_DYNAMIC} ${LIBDIR}/${SL_LIB_DYNAMIC}: ${OBJDIR}/*.${OBJ_FILE_SUFFIX}
-	@echo "------------------------------------------------"
-	@echo "Creating $@"
-	@echo "------------------------------------------------"
-	@${SHELL} ${scriptdir}/mkinstalldirs ${LIBDIR}
-	${LD} ${LDOPTS} -o $@ ${OBJDIR}/*.${OBJ_FILE_SUFFIX}
-	cd ${_LIBDIR_BASE} && rm -f ${notdir $@} && ${LN_S} $@ ./
-	@echo "------------------------------------------------"
-	@echo "$@ done"
-	@echo "------------------------------------------------"
-
-# =============================================================================
-# Java-based configuration editor targets.
-# =============================================================================
-
-# 'gui' must be a phony target so that platforms that do not have
-# case-sensitive file names will not get it confused with the GUI directory.
-.PHONY: gui
-
-# Build the Java-based configuration GUI.
-gui:
-ifndef NO_JAVA_GUI
-ifeq (${BUILD_GUI}, Y)
-	@echo "===> GUI"
-	@${MAKE} -C GUI all
-	@echo "<=== GUI"
-else
-	@echo "------------------------------------------------"
-	@echo "GUI cannot be built without javac"
-	@echo "------------------------------------------------"
-endif
-endif	# ifndef NO_JAVA_GUI
-
-# =============================================================================
-# Make links for developer use that provide the needed functionality for
-# the $VJ_BASE_DIR environment variable to be used when needed.  $VJ_BASE_DIR
-# should be set to ${instlinks}.
-# =============================================================================
-links:
-	@echo "------------------------------------------------"
-	@echo "Setting up developer installation links"
-	@echo "------------------------------------------------"
-	${SHELL} ${scriptdir}/mkinstalldirs ${instlinks}
-	${SHELL} ${scriptdir}/mkinstalldirs ${instlinks}/include
-	cd ${instlinks}/include &&					\
-          dir_list='${SUBDIRS}' ;					\
-            for dir in $$dir_list ; do					\
-                rm -f ./$$dir ;						\
-                ln -s ${VJROOT_ABS}/$$dir ./$$dir ;			\
-            done
-	cd ${instlinks} && rm -f ./${_LIBDIR_NAME} &&			\
-          ln -s ${_LIBDIR_BASE} ./${_LIBDIR_NAME}
-	cd ${instlinks} && rm -f ./Data && ln -s ${VJROOT_ABS}/Data ./Data
-	cd ${instlinks} && rm -f ./samples &&				\
-          ln -s ${VJROOT_ABS}/samples ./samples
-	cd ${instlinks}/include && rm -f ./vjConfig.h &&		\
-          ${LN_S} ${VJROOT_ABS}/vjConfig.h ./vjConfig.h
-	cd ${instlinks}/include && rm -f ./vjDefines.h &&		\
-	  ${LN_S} ${topdir}/vjDefines.h ./vjDefines.h
-	cd ${instlinks}/include && rm -f ./vjParam.h &&			\
-	  ${LN_S} ${topdir}/vjParam.h ./vjParam.h
-	${SHELL} ${scriptdir}/mkinstalldirs ${instlinks}/bin
-	cd ${instlinks}/bin && rm -f ./catadf.pl &&			\
-          ${LN_S} ${VJROOT_ABS}/tools/catadf.pl ./catadf.pl
-ifndef NO_JAVA_GUI
-	cd ${instlinks}/bin && rm -f ./VjControl.jar &&			\
-          ${LN_S} ${topdir}/GUI/VjControl.jar ./
-	cd ${instlinks}/bin && rm -f ./vjcontrol &&			\
-          ${LN_S} ${VJROOT_ABS}/GUI/vjcontrol ./vjcontrol
-endif
-	@echo "\n\n"
-	@echo "---------------------------------------------------------------"
-	@echo 'You should now set $$VJ_BASE_DIR to:'
-	@cd ${instlinks} && echo "  `pwd`"
-	@echo "---------------------------------------------------------------"
-
-# Remove the links in ${instlinks}.
-clean-links:
-	@echo "------------------------------------------------"
-	@echo "Removing developer installation links"
-	@echo "------------------------------------------------"
-	rm -rf ${instlinks}
-
-# =============================================================================
-# Installation targets.  The default (what is done by 'install') is to install
-# the static debugging version of the libraries.  The steps taken for a full
-# installation are:
-#
-#     1) Create the full installation directory hierarchy.
-#     2) Install the libraries.
-#     3) Install the header files.
-#     4) Install the test programs.
-#     5) Install the contents of the Data directory.
-#     6) Install the Java-based config editor (if possible).
-# =============================================================================
-
-# Steps to take before beginning the installation process.  This target is
-# independent of the current ABI.
-beforeinstall:
-	@${MAKE} hier
-
-# Make the full directory hierarchy for the installation.
-hier:
-	@echo "------------------------------------------------"
-	@echo "Making hierarchy"
-	@echo "------------------------------------------------"
-	${SHELL} ${scriptdir}/mkinstalldirs ${prefix}
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.install.dist -p ${prefix}
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.data.dist -p ${prefix}
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.include.dist -p ${prefix}
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.lib.dist -p ${prefix}
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.samples.dist -p ${prefix}
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.test.dist -p ${prefix}
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.tools.dist -p ${prefix}
-
-# Steps to take after the installation process is complete.  This target is
-# independent of the current ABI.
-afterinstall:
-	@echo "==============================================================="
-	@echo "VR Juggler installation complete"
-	@echo "==============================================================="
+# -------------------------------------
+# Build all versions of the libraries.
+# -------------------------------------
+buildworld: all
 
 # ------------------------------------------------------------------------
 # Do a full installation all versions of the libraries and the associated
 # files.
 # ------------------------------------------------------------------------
-install-all installworld:
-	@echo "==============================================================="
-	@echo "Installing everything"
-	@echo "==============================================================="
-	@${MAKE} beforeinstall
-	@${MAKE} _install_libs
-	@${MAKE} _install_post_libs
-	@${MAKE} afterinstall
-
-# -----------------------------------------------------------------------------
-# Do a full installation of all versions of the libraries built in each of the
-# ABIs in ${ABI_LIST}.
-# -----------------------------------------------------------------------------
-install-all-abi:
-	@echo "==============================================================="
-	@echo "Installing everything using all ABIs"
-	@echo "==============================================================="
-	@${MAKE} beforeinstall
-	@abi_list='${ABI_LIST}' ;					\
-          for abi in $$abi_list ; do					\
-              echo "------------------------------------------------" ;	\
-              echo "Installing $$abi version of libraries" ;		\
-              echo "------------------------------------------------" ;	\
-              ${MAKE} vjABI=$$abi _install_libs ;			\
-          done
-	@${MAKE} _install_post_libs
-	@${MAKE} afterinstall
-
-# Install all versions of the libraries (static optimized, shared optimized,
-# static debugging and shared debugging).  The final step of this is to
-# make the syminks using the default value for ${_DEFAULT_DIR}.  None of the
-# library installation targets are allowed to make their symlinks through
-# the use of the ${NOLINK} variable.
-_install_libs:
-	@${MAKE} NOLINK=1 install-opt
-	@${MAKE} NOLINK=1 install-dso
-	@${MAKE} NOLINK=1 install-dbg
-	@${MAKE} NOLINK=1 install-ddso
-	@${MAKE} _install_lib_links
-
-# Do everything needed after installing the library binaries.
-_install_post_libs:
-	@${MAKE} install-headers
-	@${MAKE} install-samples
-	@${MAKE} install-test
-	@${MAKE} install-tools
-	@${MAKE} install-data
-	@${MAKE} install-gui
-
-# ---------------------------------------------
-# Install the debugging version of VR Juggler.
-# ---------------------------------------------
-install install-debug:
-	@echo "==============================================================="
-	@echo "Installing debugging version of VR Juggler"
-	@echo "==============================================================="
-	@${MAKE} beforeinstall
-	@${MAKE} install-dbg
-	@${MAKE} install-ddso
-	@${MAKE} _install_post_libs
-	@${MAKE} afterinstall
-
-# ------------------------------------------------------------
-# Install only the static debugging version of the libraries.
-# ------------------------------------------------------------
-install-dbg:
-	@echo "------------------------------------------------"
-	@echo "Installing static debugging libraries"
-	@echo "------------------------------------------------"
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.lib.dist -p ${prefix}
-	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${_DBG_LIBDIR}/${VJ_LIB_STATIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
-	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${_DBG_LIBDIR}/${UTILS_LIB_STATIC}				\
-          ${_install_libdir_abs}/${_DEBUG_DIR}/
-ifeq (${GL_API}, Y)
-	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${_DBG_LIBDIR}/${GL_LIB_STATIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
-endif
-ifeq (${PF_API}, Y)
-	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${_DBG_LIBDIR}/${PF_LIB_STATIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
-endif
-ifeq (${AUDIO_WORKS}, Y)
-	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${_DBG_LIBDIR}/${AW_LIB_STATIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
-endif
-ifeq (${SL}, Y)
-	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${_DBG_LIBDIR}/${SL_LIB_STATIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
-endif
-	@${MAKE} _DEFAULT_DIR="${_DEBUG_DIR}" _install_lib_links
-
-# -------------------------------------------------------------
-# Install only the dynamic debugging version of the libraries.
-# -------------------------------------------------------------
-install-ddso:
-ifneq (@OS_TYPE@, Win32)
-	@echo "------------------------------------------------"
-	@echo "Installing dynamic debugging libraries"
-	@echo "------------------------------------------------"
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.lib.dist -p ${prefix}
-	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${_DBG_LIBDIR}/${VJ_LIB_DYNAMIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
-	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${_DBG_LIBDIR}/${UTILS_LIB_DYNAMIC}				\
-          ${_install_libdir_abs}/${_DEBUG_DIR}/
-ifeq (${GL_API}, Y)
-	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${_DBG_LIBDIR}/${GL_LIB_DYNAMIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
-endif
-ifeq (${PF_API}, Y)
-	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${_DBG_LIBDIR}/${PF_LIB_DYNAMIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
-endif
-ifeq (${AUDIO_WORKS}, Y)
-	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${_DBG_LIBDIR}/${AW_LIB_DYNAMIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
-endif
-ifeq (${SL}, Y)
-	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${_DBG_LIBDIR}/${SL_LIB_DYNAMIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
-endif
-	@${MAKE} _DEFAULT_DIR="${_DEBUG_DIR}" _install_lib_links
-endif
-
-# ------------------------------------------------------------
-# Install the optimized version of VR Juggler.
-# ------------------------------------------------------------
-install-optim:
-	@echo "==============================================================="
-	@echo "Installing optimized version of VR Juggler"
-	@echo "==============================================================="
-	@${MAKE} beforeinstall
-	@${MAKE} install-opt
-	@${MAKE} install-dso
-	@${MAKE} _install_post_libs
-	@${MAKE} afterinstall
-
-# ------------------------------------------------------------
-# Install only the static optimized version of the libraries.
-# ------------------------------------------------------------
-install-opt:
-	@echo "------------------------------------------------"
-	@echo "Installing static optimized libraries"
-	@echo "------------------------------------------------"
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.lib.dist -p ${prefix}
-	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${_OPT_LIBDIR}/${VJ_LIB_STATIC} ${_install_libdir_abs}/${_OPT_DIR}/
-	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${_OPT_LIBDIR}/${UTILS_LIB_STATIC}				\
-          ${_install_libdir_abs}/${_OPT_DIR}/
-ifeq (${GL_API}, Y)
-	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${_OPT_LIBDIR}/${GL_LIB_STATIC} ${_install_libdir_abs}/${_OPT_DIR}/
-endif
-ifeq (${PF_API}, Y)
-	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${_OPT_LIBDIR}/${PF_LIB_STATIC} ${_install_libdir_abs}/${_OPT_DIR}/
-endif
-ifeq (${AUDIO_WORKS}, Y)
-	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${_OPT_LIBDIR}/${AW_LIB_STATIC} ${_install_libdir_abs}/${_OPT_DIR}/
-endif
-ifeq (${SL}, Y)
-	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${_OPT_LIBDIR}/${SL_LIB_STATIC} ${_install_libdir_abs}/${_OPT_DIR}/
-endif
-	@${MAKE} _DEFAULT_DIR="${_OPT_DIR}" _install_lib_links
-
-# -------------------------------------------------------------
-# Install only the dynamic optimized version of the libraries.
-# -------------------------------------------------------------
-install-dso:
-ifneq (@OS_TYPE@, Win32)
-	@echo "------------------------------------------------"
-	@echo "Installing dynamic optimizied libraries"
-	@echo "------------------------------------------------"
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.lib.dist -p ${prefix}
-	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${_OPT_LIBDIR}/${VJ_LIB_DYNAMIC} ${_install_libdir_abs}/${_OPT_DIR}/
-	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${_OPT_LIBDIR}/${UTILS_LIB_DYNAMIC}				\
-          ${_install_libdir_abs}/${_OPT_DIR}/
-ifeq (${GL_API}, Y)
-	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${_OPT_LIBDIR}/${GL_LIB_DYNAMIC} ${_install_libdir_abs}/${_OPT_DIR}/
-endif
-ifeq (${PF_API}, Y)
-	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${_OPT_LIBDIR}/${PF_LIB_DYNAMIC} ${_install_libdir_abs}/${_OPT_DIR}/
-endif
-ifeq (${AUDIO_WORKS}, Y)
-	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${_OPT_LIBDIR}/${AW_LIB_DYNAMIC} ${_install_libdir_abs}/${_OPT_DIR}/
-endif
-ifeq (${SL}, Y)
-	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${_OPT_LIBDIR}/${SL_LIB_DYNAMIC} ${_install_libdir_abs}/${_OPT_DIR}/
-endif
-	@${MAKE} _DEFAULT_DIR="${_OPT_DIR}" _install_lib_links
-endif
-
-# Install symlinks to the installed library binaries in the destination
-# directory.
-_install_lib_links:
-ifndef NOLINK
-	@echo "------------------------------------------------"
-	@echo "Creating symlinks in ${libdir}${LIBBITSUF}"
-	@echo "------------------------------------------------"
-	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          rm -f ./${VJ_LIB_STATIC} &&					\
-          ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${VJ_LIB_STATIC} ./
-	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          rm -f ./${VJ_LIB_DYNAMIC} &&					\
-          ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${VJ_LIB_DYNAMIC} ./
-	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          rm -f ./${UTILS_LIB_STATIC} &&				\
-          ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${UTILS_LIB_STATIC} ./
-	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          rm -f ./${UTILS_LIB_DYNAMIC} &&				\
-          ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${UTILS_LIB_DYNAMIC} ./
-ifeq (${GL_API}, Y)
-	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          rm -f ./${GL_LIB_STATIC} &&					\
-          ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${GL_LIB_STATIC} ./
-	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          rm -f ./${GL_LIB_DYNAMIC} &&					\
-          ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${GL_LIB_DYNAMIC} ./
-endif
-ifeq (${PF_API}, Y)
-	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          rm -f ./${PF_LIB_STATIC} &&					\
-          ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${PF_LIB_STATIC} ./
-	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          rm -f ./${PF_LIB_DYNAMIC} &&					\
-          ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${PF_LIB_DYNAMIC} ./
-endif
-ifeq (${AUDIO_WORKS}, Y)
-	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          rm -f ./${AW_LIB_STATIC} &&					\
-          ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${AW_LIB_STATIC} ./
-	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          rm -f ./${AW_LIB_DYNAMIC} &&					\
-          ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${AW_LIB_DYNAMIC} ./
-endif
-ifeq (${SL}, Y)
-	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          rm -f ./${SL_LIB_STATIC} &&					\
-          ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${SL_LIB_STATIC} ./
-	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          rm -f ./${SL_LIB_DYNAMIC} &&					\
-          ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${SL_LIB_DYNAMIC} ./
-endif
-	@echo "------------------------------------------------"
-	@echo "Creating symlinks in ${_install_libdir_abs}"
-	@echo "------------------------------------------------"
-	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
-          rm -f ./${VJ_LIB_STATIC} &&					\
-          ${LN_S} ${_DEFAULT_DIR}/${VJ_LIB_STATIC} ./
-	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
-          rm -f ${VJ_LIB_DYNAMIC} &&					\
-          ${LN_S} ${_DEFAULT_DIR}/${VJ_LIB_DYNAMIC} ./
-	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
-          rm -f ./${UTILS_LIB_STATIC} &&				\
-          ${LN_S} ${_DEFAULT_DIR}/${UTILS_LIB_STATIC} ./
-	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
-          rm -f ${UTILS_LIB_DYNAMIC} &&					\
-          ${LN_S} ${_DEFAULT_DIR}/${UTILS_LIB_DYNAMIC} ./
-ifeq (${GL_API}, Y)
-	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
-	  rm -f ${GL_LIB_STATIC} &&					\
-          ${LN_S} ${_DEFAULT_DIR}/${GL_LIB_STATIC} ./
-	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
-	  rm -f ${GL_LIB_DYNAMIC} &&					\
-          ${LN_S} ${_DEFAULT_DIR}/${GL_LIB_DYNAMIC} ./
-endif
-ifeq (${PF_API}, Y)
-	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
-          rm -f ${PF_LIB_STATIC} &&					\
-          ${LN_S} ${_DEFAULT_DIR}/${PF_LIB_STATIC} ./
-	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
-          rm -f ${PF_LIB_DYNAMIC} &&					\
-          ${LN_S} ${_DEFAULT_DIR}/${PF_LIB_DYNAMIC} ./
-endif
-ifeq (${AUDIO_WORKS}, Y)
-	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
-          rm -f ${AW_LIB_STATIC} &&					\
-          ${LN_S} ${_DEFAULT_DIR}/${AW_LIB_STATIC} ./
-	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
-          rm -f ${AW_LIB_DYNAMIC} &&					\
-          ${LN_S} ${_DEFAULT_DIR}/${AW_LIB_DYNAMIC} ./
-endif
-ifeq (${SL}, Y)
-	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
-          rm -f ${SL_LIB_STATIC} &&					\
-          ${LN_S} ${_DEFAULT_DIR}/${SL_LIB_STATIC} ./
-	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
-          rm -f ${SL_LIB_DYNAMIC} &&					\
-          ${LN_S} ${_DEFAULT_DIR}/${SL_LIB_DYNAMIC} ./
-endif
-endif	# ifndef NOLINK
-
-# Install the header files.
-install-headers:
-	@echo "------------------------------------------------"
-	@echo "Installing header files"
-	@echo "------------------------------------------------"
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.include.dist -p ${prefix}
-	@${MAKE} RECTARGET="install" recursive
-	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${VJROOT_ABS}/vjConfig.h ${includedir}/vjConfig.h
-	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${topdir}/vjDefines.h ${includedir}
-	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${topdir}/vjParam.h ${includedir}
-
-# Install the sample applications.
-install-samples:
-	@echo "------------------------------------------------"
-	@echo "Installing sample applications"
-	@echo "------------------------------------------------"
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.samples.dist -p ${prefix}
-	${PERL} ${scriptdir}/install-src.pl -i ${top_srcdir}/samples	\
-          -m ${FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${prefix}/samples
-	${PERL} ${scriptdir}/makefiles-gen.pl				\
-          --vars="${topdir}/VARS.pl" --startdir="${top_srcdir}/samples"	\
-          --mode="${FILE_PERMS}" ${_GROUP_OPT_PL} --srcdir="."		\
-          --prefix="${prefix}/samples"
-
-# Install the test programs.
-install-test:
-	@echo "------------------------------------------------"
-	@echo "Installing test programs"
-	@echo "------------------------------------------------"
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.test.dist -p ${prefix}
-	${PERL} ${scriptdir}/install-src.pl -i ${top_srcdir}/test	\
-          -m ${FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${prefix}/test
-	${PERL} ${scriptdir}/makefiles-gen.pl --prefix="${prefix}/test"	\
-          --vars="${topdir}/VARS.pl" --startdir="${top_srcdir}/test"	\
-          --mode="${FILE_PERMS}" ${_GROUP_OPT_PL} --srcdir="."
-
-# Install the user tools code.
-install-tools:
-	@echo "------------------------------------------------"
-	@echo "Installing user tools"
-	@echo "------------------------------------------------"
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.tools.dist -p ${prefix}
-	${PERL} ${scriptdir}/install-src.pl -i ${top_srcdir}/tools	\
-          -m ${FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${prefix}/tools
-	${PERL} ${scriptdir}/makefiles-gen.pl				\
-          --prefix="${prefix}/tools" --vars="${topdir}/VARS.pl"		\
-          --startdir="${top_srcdir}/tools" --mode="${FILE_PERMS}"	\
-          ${_GROUP_OPT_PL} --srcdir="."
-	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${VJROOT_ABS}/tools/catadf.pl ${bindir}/catadf.pl
-
-# Install the standard data files.
-install-data:
-	@echo "------------------------------------------------"
-	@echo "Installing standard data files"
-	@echo "------------------------------------------------"
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.data.dist -p ${prefix}
-	${PERL} ${scriptdir}/install-dir.pl -i ${top_srcdir}/Data	\
-          -m ${FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${prefix}/Data
-
-# Install the Java-based config editor if possible.
-install-gui:
-ifdef NO_JAVA_GUI
-	@echo "------------------------------------------------"
-	@echo "Skipping installation of vjcontrol (not built)"
-	@echo "------------------------------------------------"
-else
-ifeq (${BUILD_GUI}, Y)
-	@echo "------------------------------------------------"
-	@echo "Installing vjcontrol"
-	@echo "------------------------------------------------"
-ifeq (@OS_TYPE@, UNIX)
-	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${VJROOT_ABS}/GUI/vjcontrol ${bindir}/vjcontrol
-else
-	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX} 			\
-          ${VJROOT_ABS}/GUI/vjcontrol.bat ${bindir}/vjcontrol.bat
-endif	# if OS_TYPE == UNIX
-	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
-          ${topdir}/GUI/VjControl.jar ${bindir}
-endif	# if ${BUILD_GUI} == Y
-endif	# ifdef NO_JAVA_GUI
+installworld: install-all
 
 # =============================================================================
 # Automatically generated documentation.
@@ -1236,83 +251,27 @@ endif	# ifdef NO_JAVA_GUI
 docs: doc-internal doc-public
 
 doc-internal:
-	${MAKE} -C Doc SUBDIRS="${SUBDIRS}" $@
+	$(MAKE) -C Doc SUBDIRS="$(SUBDIRS)" $@
 
 doc-public:
-	${MAKE} -C Doc SUBDIRS="${SUBDIRS}" $@
-
-# =============================================================================
-# Clean-up targets.  '_clean' removes all the files in the build directories.  
-# '_cleandepend' removes all the dependency files (the .d makefiles) in the
-# build directories.  'clobber' removes the ${_BUILDDIR_BASE} and
-# ${_LIBDIR_NAME} directories.
-# =============================================================================
-_clean:
-	@echo "------------------------------------------------"
-	@echo "Cleaning up the build tree"
-	@echo "------------------------------------------------"
-	@${MAKE} RECTARGET="clean" recursive
-	${MAKE} -C GUI clean
-	@if test -d ${_DBG_BUILDDIR}; then				\
-            echo "------------------------------------------------" ;	\
-            echo "Removing ${_DBG_BUILDDIR} ..."                    ;	\
-            echo "------------------------------------------------" ;	\
-            rm -r ${_DBG_BUILDDIR} ;					\
-        fi
-	@if test -d ${_OPT_BUILDDIR}; then				\
-            echo "------------------------------------------------" ;	\
-            echo "Removing ${_OPT_BUILDDIR} ..."                    ;	\
-            echo "------------------------------------------------" ;	\
-            rm -r ${_OPT_BUILDDIR} ;					\
-        fi
-	@echo "------------------------------------------------"
-	@echo "Done with 'clean'"
-	@echo "------------------------------------------------"
-
-_cleandepend:
-	@echo "------------------------------------------------"
-	@echo "Cleaning up dependency files in the build tree"
-	@echo "------------------------------------------------"
-	@${MAKE} DO_CLEANDEPEND=1 RECTARGET="cleandepend" recursive
-	@echo "------------------------------------------------"
-	@echo "Done with 'cleandepend'"
-	@echo "------------------------------------------------"
-
-clobber:
-	@${MAKE} DO_CLEANDEPEND=1 _clean
-	@${MAKE} clean-links
-	@echo "------------------------------------------------"
-	@echo "Clobbering build directories"
-	@echo "------------------------------------------------"
-	@if test -d ${_BUILDDIR_BASE} ; then				\
-            echo "------------------------------------------------" ;	\
-            echo "Removing ${_BUILDDIR_BASE} ..."                   ;	\
-            echo "------------------------------------------------" ;	\
-            rm -rf ${_BUILDDIR_BASE} ;					\
-        fi
-	@if test -d ${_LIBDIR_NAME}; then				\
-            echo "------------------------------------------------" ;	\
-            echo "Removing ${_LIBDIR_NAME} ..."                     ;	\
-            echo "------------------------------------------------" ;	\
-            rm -rf ${_LIBDIR_NAME} ;					\
-        fi
-	@echo "------------------------------------------------"
-	@echo "Done with 'clobber'"
-	@echo "------------------------------------------------"
+	$(MAKE) -C Doc SUBDIRS="$(SUBDIRS)" $@
 
 # =============================================================================
 # Human-readable information about the build system.
 # =============================================================================
 info:
-	@echo "\nInfo for the make of ${VJ_LIBRARY}"
-	@echo "\nOBJDIR: ${OBJDIR}"
-	@echo "VJROOT_ABS: ${VJROOT_ABS}"
-	@echo "Default ABI: ${ABI}"
-	@echo "Default instruction set architecture: ${ISA}"
-	@echo "ABI list: ${ABI_LIST}"
-	@echo "DBG_BUILDDIR: ${_DBG_BUILDDIR}"
-	@echo "OPT_BUILDDIR: ${_OPT_BUILDDIR}"
-	@echo "Installation prefix: ${prefix}"
-	@echo "includedir: ${includedir}"
-	@echo "libdir: ${libdir}"
-	@${SHELL} ${scriptdir}/print-targets.sh
+	@echo "\nInfo for the make of $(VJ_LIBRARY)"
+	@echo "\nOBJDIR: $(OBJDIR)"
+	@echo "VJROOT_ABS: $(VJROOT_ABS)"
+	@echo "Default ABI: $(ABI)"
+	@echo "Default instruction set architecture: $(ISA)"
+	@echo "ABI list: $(ABI_LIST)"
+	@echo "DBG_BUILDDIR: $(DBG_BUILDDIR)"
+	@echo "OPT_BUILDDIR: $(OPT_BUILDDIR)"
+	@echo "Installation prefix: $(prefix)"
+	@echo "includedir: $(includedir)"
+	@echo "libdir: $(libdir)"
+	@$(SHELL) $(scriptdir)/print-targets.sh
+
+include $(MKPATH)/dpp.subdir.mk
+include Makefile.inc

@@ -64,16 +64,8 @@ Build targets are:
     dso             - Build the dynamic shared object version of the
                       libraries.
     obj             - Build the object files using the default value for
-                      \${OBJDIR}.
+                      $(OBJDIR).
     gui             - Build the Java-based configuration GUI.
-
-Library type targets are:
-    static-libs     - Build the static versions of the libraries.  This target
-                      depends on a correct value for \${LIBDIR} (that does not
-                      have a default value).
-    shared-libs     - Build the dynamic shared versions of the libraries.
-                      This target depends on a correct value for \${LIBDIR}
-                      (that does not have a default value).
 
 Install targets are:
     hier            - Make the full directory hierarchy for the installation.

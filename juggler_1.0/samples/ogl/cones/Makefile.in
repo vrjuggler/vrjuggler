@@ -36,7 +36,7 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-.SUFFIXES: .cpp .@OBJ_FILE_SUFFIX@
+.SUFFIXES: .cpp .@OBJEXT@
 
 srcdir		= @srcdir@
 
@@ -60,8 +60,8 @@ VPATH		= @srcdir@
 # use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
-OBJECTS		= cones.@OBJ_FILE_SUFFIX@ ConesApp.@OBJ_FILE_SUFFIX@	\
-                  UserData.@OBJ_FILE_SUFFIX@
+OBJECTS		= cones.@OBJEXT@ ConesApp.@OBJEXT@	\
+                  UserData.@OBJEXT@
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -73,10 +73,10 @@ all: cones
 cones: $(OBJECTS)
 	$(LINK) -o $@ $(OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
-cones.@OBJ_FILE_SUFFIX@ ConesApp.@OBJ_FILE_SUFFIX@: ConesApp.h UserData.h
-UserData.@OBJ_FILE_SUFFIX@: UserData.h
+cones.@OBJEXT@ ConesApp.@OBJEXT@: ConesApp.h UserData.h
+UserData.@OBJEXT@: UserData.h
 
-.cpp.@OBJ_FILE_SUFFIX@:
+.cpp.@OBJEXT@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
 # -----------------------------------------------------------------------------

@@ -40,20 +40,20 @@ default: all
 
 srcdir	= @srcdir@
 
-# JDK-related variables.  ${JAVAC_CMD} is the compile line for javac when
+# JDK-related variables.  $(JAVAC_CMD) is the compile line for javac when
 # building .java files.
 JAR		= @JAR@
 JAVAC		= @JAVAC@
-JAVAC_CMD	= ${JAVAC} -d . -classpath ${GUI_CLASSPATH}
+JAVAC_CMD	= $(JAVAC) -d . -classpath $(GUI_CLASSPATH)
 JDK_HOME	= @JDK_HOME@
 
-# If the user defined ${CLASSPATH} (either as an environment variable or a
-# command-line argument), put it in ${GUI_CLASSPATH}.  Otherwise, leave it
+# If the user defined $(CLASSPATH) (either as an environment variable or a
+# command-line argument), put it in $(GUI_CLASSPATH).  Otherwise, leave it
 # out.
 ifdef CLASSPATH
-    GUI_CLASSPATH	= ${CLASSPATH}:${srcdir}:${JDK_HOME}/lib/classes.zip:${VJ_BASE_DIR}/bin/swingall.jar
+    GUI_CLASSPATH	= $(CLASSPATH):$(srcdir):$(JDK_HOME)/lib/classes.zip:$(VJ_BASE_DIR)/bin/swingall.jar
 else
-    GUI_CLASSPATH	= ${srcdir}:${JDK_HOME}/lib/classes.zip:${VJ_BASE_DIR}/bin/swingall.jar
+    GUI_CLASSPATH	= $(srcdir):$(JDK_HOME)/lib/classes.zip:$(VJ_BASE_DIR)/bin/swingall.jar
 endif
 
 # Include common definitions.
@@ -61,7 +61,7 @@ include @topdir@/Makefile.base
 
 ANALYZER_SOURCES = Analyzer.java DataLine.java PerfDataCollector.java
 
-ANALYZER_OBJS = ${ANALYZER_SOURCES:.java=.class}
+ANALYZER_OBJS = $(ANALYZER_SOURCES:.java=.class)
 
 
 # Search path information.
@@ -74,21 +74,21 @@ vpath %.class .
 # -----------------------------------------------------------------------------
 all: classfiles
 
-classfiles: ${ANALYZER_OBJS} 
+classfiles: $(ANALYZER_OBJS) 
 	@echo "------------------------------------------------"
 	@echo "Made all classfiles"
 	@echo "------------------------------------------------"
 
 VjConfig/%.class: %.java
-	${JAVAC_CMD} $<
+	$(JAVAC_CMD) $<
 
 VjGUI/%.class: %.java
-	${JAVAC_CMD} $<
+	$(JAVAC_CMD) $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
-CLEAN_FILES	+= ${ANALYZER_OBJS} 
+CLEAN_FILES	+= $(ANALYZER_OBJS) 
 
 clobber: clean
 

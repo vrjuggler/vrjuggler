@@ -36,7 +36,7 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-.SUFFIXES: .cpp .@OBJ_FILE_SUFFIX@
+.SUFFIXES: .cpp .@OBJEXT@
 
 srcdir		= @srcdir@
 
@@ -69,10 +69,10 @@ VPATH		= @srcdir@:@srcdir@/common
 # use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ $(GLUI_LIB) $(GLUT_LIB) -B dynamic @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ -lXmu @APP_EXTRA_LIBS_END@
 
-TRACKER_CONFIG_OBJECTS = trackerConfig.@OBJ_FILE_SUFFIX@	\
-                         sgGlutApp.@OBJ_FILE_SUFFIX@		\
-                         sgGlutWin.@OBJ_FILE_SUFFIX@		\
-                         sgInput.@OBJ_FILE_SUFFIX@
+TRACKER_CONFIG_OBJECTS = trackerConfig.@OBJEXT@		\
+                         sgGlutApp.@OBJEXT@		\
+                         sgGlutWin.@OBJEXT@		\
+                         sgInput.@OBJEXT@
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -84,7 +84,7 @@ all: trackerConfig
 trackerConfig: $(TRACKER_CONFIG_OBJECTS)
 	$(LINK) -o $@ $(TRACKER_CONFIG_OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
-.cpp.@OBJ_FILE_SUFFIX@:
+.cpp.@OBJEXT@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
 # -----------------------------------------------------------------------------

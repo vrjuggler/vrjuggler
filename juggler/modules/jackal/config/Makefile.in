@@ -38,83 +38,85 @@
 
 default: VjControl.jar
 
+# Include common definitions.
+include @topdir@/make.defs.mk
+
 srcdir	= @srcdir@
 
-# JDK-related variables.  ${JAVAC_CMD} is the compile line for javac when
+# JDK-related variables.  $(JAVAC_CMD) is the compile line for javac when
 # building .java files.
 JDK_HOME	= @JDK_HOME@
-GUI_CLASSPATH	= ${srcdir}:${JDK_HOME}/lib/classes.zip
+GUI_CLASSPATH	= $(srcdir):$(JDK_HOME)/lib/classes.zip
 JAR		= @JAR@
 JAVAC		= @JAVAC@
 ifeq (@OS_TYPE@, Win32)
-    JAVAC_CMD	= ${JAVAC} -d . -sourcepath ${srcdir}
+    JAVAC_CMD	= $(JAVAC) -d . -sourcepath $(srcdir)
 else
-    JAVAC_CMD	= ${JAVAC} -d . -classpath ${GUI_CLASSPATH}
+    JAVAC_CMD	= $(JAVAC) -d . -classpath $(GUI_CLASSPATH)
 endif
 
-# If the user defined ${CLASSPATH} (either as an environment variable or a
-# command-line argument), put it in ${GUI_CLASSPATH}.  Otherwise, leave it
+# If the user defined $(CLASSPATH) (either as an environment variable or a
+# command-line argument), put it in $(GUI_CLASSPATH).  Otherwise, leave it
 # out.
 ifdef CLASSPATH
-    GUI_CLASSPATH	:= ${CLASSPATH}:${GUI_CLASSPATH}
+    GUI_CLASSPATH	:= $(CLASSPATH):$(GUI_CLASSPATH)
 endif
 
 # Prevent anything in this file from being built in parallel.
 MAKEFLAGS	+= -j 1
 
-# Include common definitions.
-include @topdir@/Makefile.base
-
 # Include the .mk files for VjConfig and VjGUI so that the Java code in those
 # directories can be built using this Makefile.
-include ${srcdir}/VjConfig/VjConfig.mk
-include ${srcdir}/VjPerf/VjPerf.mk
-include ${srcdir}/VjGUI/VjGUI.mk
-include ${srcdir}/VjGUI/chunkdesc/chunkdesc.mk
-include ${srcdir}/VjGUI/configchunk/configchunk.mk
-include ${srcdir}/VjGUI/util/util.mk
+include $(srcdir)/VjConfig/VjConfig.mk
+include $(srcdir)/VjPerf/VjPerf.mk
+include $(srcdir)/VjGUI/VjGUI.mk
+include $(srcdir)/VjGUI/chunkdesc/chunkdesc.mk
+include $(srcdir)/VjGUI/configchunk/configchunk.mk
+include $(srcdir)/VjGUI/util/util.mk
+
+JAVA_SRCS	= $(VJCONFIG_SOURCES)		\
+                  $(VJPERF_SOURCES)		\
+                  $(VJGUI_SOURCES)		\
+                  $(VJGUICHUNKDESC_SOURCES)	\
+                  $(VJGUICONFIGCHUNK_SOURCES)	\
+                  $(VJGUIUTIL_SOURCES)
 
 # Search path information.
 vpath
-vpath %.java @srcdir@ @srcdir@/VjConfig @srcdir@/VjPerf @srcdir@/VjGUI @srcdir@/VjGUI/chunkdesc @srcdir@/VjGUI/configchunk @srcdir@/VjGUI/util
-vpath %.class VjConfig VjPerf VjGUI VjGUI/chunkdesc VjGUI/configchunk VjGUI/util
+vpath %.java $(srcdir) $(srcdir)/VjConfig $(srcdir)/VjPerf		\
+             $(srcdir)/VjGUI $(srcdir)/VjGUI/chunkdesc			\
+             $(srcdir)/VjGUI/configchunk $(srcdir)/VjGUI/util
+vpath %.class VjConfig VjPerf VjGUI VjGUI/chunkdesc VjGUI/configchunk	\
+              VjGUI/util
+
+include $(MKPATH)/dpp.obj.mk
 
 # -----------------------------------------------------------------------------
 # Library targets.
 # -----------------------------------------------------------------------------
-all: VjControl.jar
+JAVA_TARGETS	= VjControl.jar
 
 # there's no way to append to a jar file, so this must all be done in one
 # step.  This is incredibly stupid...
-VjControl.jar: ${VJGUI_SOURCES} ${VJCONFIG_SOURCES} ${VJPERF_SOURCES}   \
-               ${VJGUICHUNKDESC_SOURCES}	\
-               ${VJGUICONFIGCHUNK_SOURCES} ${VJGUIUTIL_SOURCES} VjFiles
-	${JAVAC_CMD} ${srcdir}/*/*.java ${srcdir}/*/*/*.java
-	${JAR} cvf VjControl.jar VjGUI/*.class VjGUI/chunkdesc/*.class	\
-            VjGUI/configchunk/*.class VjGUI/util/*.class		\
-            VjConfig/*.class VjPerf/*.class VjFiles
+VjControl.jar: $(JAVA_SRCS) VjFiles
+	$(JAVAC_CMD) $(srcdir)/*/*.java $(srcdir)/*/*/*.java
+	$(JAR) cvf VjControl.jar $(CLASSES) VjFiles
 
 VjFiles:
-	${PERL} ${scriptdir}/install-dir.pl -i ${srcdir}/VjFiles	\
-            -o ${topdir}/GUI/VjFiles
+	$(PERL) $(scriptdir)/install-dir.pl -i $(srcdir)/VjFiles	\
+            -o $(topdir)/GUI/VjFiles
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
-CLEAN_FILES	+= VjConfig/*.class VjConfig/*~                         \
-                   VjPerf/*.class VjPerf/*~                             \
-                   VjGUI/*.class VjGUI/*~				\
-                   VjGUI/chunkdesc/*.class VjGUI/chunkdesc/*~		\
-                   VjGUI/configchunk/*.class VjGUI/configchunk/*~	\
-                   VjGUI/util/*.class VjGUI/util/*~
+CLEAN_FILES	+= VjConfig/*~ VjPerf/*~ VjGUI/*~ VjGUI/chunkdesc/*~	\
+                   VjGUI/configchunk/*~ VjGUI/util/*~
 
-# Append VjFiles to ${CLEAN_DIRS} only if ${srcdir} is not the current
-# directory.  If ${srcdir} is the current directory, removing VjFiles would
+# Append VjFiles to $(CLEAN_DIRS) only if $(srcdir) is not the current
+# directory.  If $(srcdir) is the current directory, removing VjFiles would
 # blow away the VjFiles directory in the source tree.
-ifneq (${srcdir}, .)
+ifneq ($(srcdir), .)
     CLEAN_DIRS	+= VjFiles
 endif
 
-clobber:
-	${MAKE} clean
-	rm VjControl.jar
+CLOBBER_FILES	+= VjControl.jar

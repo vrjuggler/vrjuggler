@@ -20,11 +20,10 @@ Table of contents:
 3.) Enter the newly checked out Juggler source directory
 4.) Set the environment variable VJ_BASE_DIR
 5.) Compile juggler (using the autoconf system, and gnu-make):
-    a.) Auto-Generate Headers
-    b.) Auto-Generate the configuration script "configure"
-    c.) Probe the system for capabilities, generate Makefiles, etc...
+    a.) Auto-Generate aclocal.m4, headers, configure script
+    b.) Probe the system for capabilities, generate Makefiles, etc...
         this "configures" the source tree for the current system
-    d.) "Make" the distribution using gnu-make. 
+    c.) "Make" the distribution using gnu-make. 
 6.) Advanced topics
     a.) Send compiler output to a different directory than the source tree.
 
@@ -55,17 +54,14 @@ setenv VJ_BASE_DIR [JUGGLER_DIR]/juggler/instlinks
 
 
 5.) Compile juggler (using the autoconf system, and gnu-make):
-    a.) Auto-Generate Headers
-autoheader
+    a.) Auto-Generate aclocal.m4, headers, configure script
+autogen.sh
     
-    b.) Auto-Generate the configuration script "configure"
-autoconf
-    
-    c.) Probe the system for capabilities, generate Makefiles, etc...
+    b.) Probe the system for capabilities, generate Makefiles, etc...
         this "configures" the source tree for the current system
 [JUGGLER_DIR]/juggler/configure
 
-    d.) "Make" the distribution using gnu-make.  
+    c.) "Make" the distribution using gnu-make.  
         This compiles, links, and creates the final distribution tree 
         (in the form of sym-links).
 gmake

@@ -39,7 +39,7 @@
 #     This application will not compile unless you are using GNU make.
 # -----------------------------------------------------------------------------
 
-.SUFFIXES: .cpp .@OBJ_FILE_SUFFIX@
+.SUFFIXES: .cpp .@OBJEXT@
 
 srcdir		= @srcdir@
 
@@ -64,8 +64,8 @@ VPATH		= @srcdir@:@srcdir@/../cubes:@srcdir@/../wand:@srcdir@/../torus
 # use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
-OBJECTS		= combo.@OBJ_FILE_SUFFIX@ cubesApp.@OBJ_FILE_SUFFIX@	\
-                  wandApp.@OBJ_FILE_SUFFIX@ torusApp.@OBJ_FILE_SUFFIX@
+OBJECTS		= combo.@OBJEXT@ cubesApp.@OBJEXT@	\
+                  wandApp.@OBJEXT@ torusApp.@OBJEXT@
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -77,12 +77,12 @@ all: combo
 combo: $(OBJECTS)
 	$(LINK) -o $@ $(OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
-combo.@OBJ_FILE_SUFFIX@: torusApp.h wandApp.h cubesApp.h
-cubesApp.@OBJ_FILE_SUFFIX@: cubesApp.h
-wandApp.@OBJ_FILE_SUFFIX@: wandApp.h
-torusApp.@OBJ_FILE_SUFFIX@: torusApp.h
+combo.@OBJEXT@: torusApp.h wandApp.h cubesApp.h
+cubesApp.@OBJEXT@: cubesApp.h
+wandApp.@OBJEXT@: wandApp.h
+torusApp.@OBJEXT@: torusApp.h
 
-.cpp.@OBJ_FILE_SUFFIX@:
+.cpp.@OBJEXT@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
 # -----------------------------------------------------------------------------

@@ -36,7 +36,7 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-.SUFFIXES: .cpp .@OBJ_FILE_SUFFIX@
+.SUFFIXES: .cpp .@OBJEXT@
 
 srcdir		= @srcdir@
 
@@ -70,28 +70,28 @@ default: all
 
 all: $(TEST_PROGS)
 
-test: test.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ test.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
+test: test.@OBJEXT@
+	$(LINK) -o $@ test.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-stlTest: stlTest.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ stlTest.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
+stlTest: stlTest.@OBJEXT@
+	$(LINK) -o $@ stlTest.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-testPool: testPool.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ testPool.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
+testPool: testPool.@OBJEXT@
+	$(LINK) -o $@ testPool.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 	
-testSelfPerformance: testSelfPerformance.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ testSelfPerformance.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
+testSelfPerformance: testSelfPerformance.@OBJEXT@
+	$(LINK) -o $@ testSelfPerformance.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 	
-testTSD_Performance: testTSD_Performance.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ testTSD_Performance.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)		
+testTSD_Performance: testTSD_Performance.@OBJEXT@
+	$(LINK) -o $@ testTSD_Performance.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)		
 
-.cpp.@OBJ_FILE_SUFFIX@:
+.cpp.@OBJEXT@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend $(TEST_PROGS) *.exe *.ilk *.@OBJ_FILE_SUFFIX@	\
+	rm -f Makedepend $(TEST_PROGS) *.exe *.ilk *.@OBJEXT@	\
           *core *.?db so_locations
 	rm -rf ./ii_files

@@ -36,7 +36,7 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-.SUFFIXES: .cpp .@OBJ_FILE_SUFFIX@
+.SUFFIXES: .cpp .@OBJEXT@
 
 srcdir		= @srcdir@
 
@@ -65,25 +65,25 @@ default: all
 
 all: $(MATH_PROGS)
 
-reader: reader.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ reader.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
+reader: reader.@OBJEXT@
+	$(LINK) -o $@ reader.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-writer: writer.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ writer.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
+writer: writer.@OBJEXT@
+	$(LINK) -o $@ writer.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-first: first.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ first.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
+first: first.@OBJEXT@
+	$(LINK) -o $@ first.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-second: second.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ second.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
+second: second.@OBJEXT@
+	$(LINK) -o $@ second.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-.cpp.@OBJ_FILE_SUFFIX@:
+.cpp.@OBJEXT@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend $(MATH_PROGS) *.exe *.ilk *.@OBJ_FILE_SUFFIX@	\
-          *core *.?db so_locations
+	rm -f Makedepend $(MATH_PROGS) *.exe *.ilk *.@OBJEXT@ *core	\
+          *.?db so_locations
 	rm -rf ./ii_files

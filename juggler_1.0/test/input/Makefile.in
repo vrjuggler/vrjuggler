@@ -36,7 +36,7 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-.SUFFIXES: .cpp .@OBJ_FILE_SUFFIX@
+.SUFFIXES: .cpp .@OBJEXT@
 
 srcdir		= @srcdir@
 
@@ -72,66 +72,66 @@ all: $(PROGS)
 # ----------------
 # aFlock test driver
 # ----------------
-aFlockTest: aFlockTest.@OBJ_FILE_SUFFIX@ aFlock.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ aFlockTest.@OBJ_FILE_SUFFIX@ aFlock.@OBJ_FILE_SUFFIX@ 
+aFlockTest: aFlockTest.@OBJEXT@ aFlock.@OBJEXT@
+	$(LINK) -o $@ aFlockTest.@OBJEXT@ aFlock.@OBJEXT@ 
 
 # ----------------
 # vjFlock test driver
 # ----------------
-vjFlockTest: vjFlockTest.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ vjFlockTest.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
+vjFlockTest: vjFlockTest.@OBJEXT@
+	$(LINK) -o $@ vjFlockTest.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 # ----------------
 # trackd test driver
 # ----------------
-dummyTrackd: dummyTrackd.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ dummyTrackd.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
+dummyTrackd: dummyTrackd.@OBJEXT@
+	$(LINK) -o $@ dummyTrackd.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 # ----------------
 # aMotionStar test driver
 # ----------------
-aMotionStarTest: aMotionStarTest.@OBJ_FILE_SUFFIX@			\
-                 aMotionStar.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ aMotionStarTest.@OBJ_FILE_SUFFIX@			\
-          aMotionStar.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
+aMotionStarTest: aMotionStarTest.@OBJEXT@			\
+                 aMotionStar.@OBJEXT@
+	$(LINK) -o $@ aMotionStarTest.@OBJEXT@			\
+          aMotionStar.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 # ----------------
 # new
 # ----------------
-new: new.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ new.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
+new: new.@OBJEXT@
+	$(LINK) -o $@ new.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 # ----------------
 # go
 # ----------------
-go: main.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ main.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
+go: main.@OBJEXT@
+	$(LINK) -o $@ main.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 # ----------------
 # go-ibox
 # ----------------
-go-ibox: main-ibox.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ main-ibox.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
+go-ibox: main-ibox.@OBJEXT@
+	$(LINK) -o $@ main-ibox.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 # ----------------
 # go-inputgroup
 # ----------------
-go-inputgroup: main-inputgroup.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ main-inputgroup.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
+go-inputgroup: main-inputgroup.@OBJEXT@
+	$(LINK) -o $@ main-inputgroup.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 # ----------------
 # go-logiclass
 # ----------------
-go-logiclass: main-logiclass.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ main-logiclass.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
+go-logiclass: main-logiclass.@OBJEXT@
+	$(LINK) -o $@ main-logiclass.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-.cpp.@OBJ_FILE_SUFFIX@:
+.cpp.@OBJEXT@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend $(PROGS) *.exe *.ilk *.@OBJ_FILE_SUFFIX@ *core	\
+	rm -f Makedepend $(PROGS) *.exe *.ilk *.@OBJEXT@ *core	\
           *.?db so_locations
 	rm -rf ./ii_files

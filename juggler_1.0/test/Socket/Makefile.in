@@ -36,7 +36,7 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-.SUFFIXES: .cpp .@OBJ_FILE_SUFFIX@
+.SUFFIXES: .cpp .@OBJEXT@
 
 srcdir		= @srcdir@
 
@@ -65,25 +65,25 @@ default: all
 
 all: $(MATH_PROGS)
 
-tcp_server: tcp_server.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ tcp_server.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
+tcp_server: tcp_server.@OBJEXT@
+	$(LINK) -o $@ tcp_server.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-tcp_client: tcp_client.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ tcp_client.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
+tcp_client: tcp_client.@OBJEXT@
+	$(LINK) -o $@ tcp_client.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-udp_server: udp_server.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ udp_server.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
+udp_server: udp_server.@OBJEXT@
+	$(LINK) -o $@ udp_server.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-udp_client: udp_client.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ udp_client.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
+udp_client: udp_client.@OBJEXT@
+	$(LINK) -o $@ udp_client.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-.cpp.@OBJ_FILE_SUFFIX@:
+.cpp.@OBJEXT@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend $(MATH_PROGS) *.exe *.ilk *.@OBJ_FILE_SUFFIX@	\
-          *core *.?db so_locations
+	rm -f Makedepend $(MATH_PROGS) *.exe *.ilk *.@OBJEXT@ *core	\
+          *.?db so_locations
 	rm -rf ./ii_files

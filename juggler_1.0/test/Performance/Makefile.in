@@ -44,10 +44,10 @@ default: all
 all: perfdatabuffer-test
 
 perfdatabuffer-test::
-	cd $@ && ${MAKE} all
+	cd $@ && $(MAKE) all
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	-cd perfdatabuffer-test && ${MAKE} clean
+	-cd perfdatabuffer-test && $(MAKE) clean

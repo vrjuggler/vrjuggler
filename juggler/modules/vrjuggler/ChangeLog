@@ -1,5 +1,9 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Dec-30-2000 patrick   Build system converted to use Doozer++ 1.0.  Automake 1.4
+                      is now required for compiling in addition to Autoconf.
+                      Use autogen.sh to do the auto generation phase before
+                      compiling.
 Dec-28-2000 patrick   Added initial version of serial and socket I/O
                       abstraction layers.  These are to be used for making
                       cross-platform drivers with very little effort.
