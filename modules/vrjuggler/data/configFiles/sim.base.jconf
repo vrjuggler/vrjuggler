@@ -552,10 +552,6 @@
          <translation_coordinate_system>Local</translation_coordinate_system>
          <rotation_coordinate_system>Local</rotation_coordinate_system>
       </simulated_positional_device>
-      <simulated_relative_position name="Sim Cam Relative Position" version="1">
-         <base_frame_proxy>Head Proxy</base_frame_proxy>
-         <relative_proxy>Sim Cam Offset Proxy</relative_proxy>
-      </simulated_relative_position>
       <display_system name="Pipe Setup" version="1">
          <number_of_pipes>1</number_of_pipes>
          <x11_pipes>-1</x11_pipes>
