@@ -162,7 +162,7 @@ int pfSoundTraverser::soundNodesTrigger(pfuTraverser* trav)
       }
 
       // unpause the sound, unmute it too
-      sonix::instance()->trigger(nodeName);
+      snx::sonix::instance()->trigger(nodeName);
       vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
          << clrOutNORM(clrYELLOW, "[SoundTrigger] ")
          << "Setting the " << nodeName << " sound to <triggered>\n"
@@ -192,7 +192,7 @@ int pfSoundTraverser::soundNodesStop(pfuTraverser* trav)
       }
 
       // unpause the sound, unmute it too
-      sonix::instance()->stop(nodeName);
+      ronix::instance()->stop(nodeName);
 
       vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
          << clrOutNORM(clrYELLOW,"[SoundStop] ")
@@ -223,7 +223,7 @@ int pfSoundTraverser::soundNodesEnable(pfuTraverser* trav)
       }
 
       // unpause the sound, unmute it too
-      sonix::instance()->unpause(nodeName);
+      snx::sonix::instance()->unpause(nodeName);
 
       vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
          << clrOutNORM(clrYELLOW,"[SoundEnable] ")
@@ -254,7 +254,7 @@ int pfSoundTraverser::soundNodesDisable(pfuTraverser* trav)
       }
 
       // pause the sound, mute it too in case it is triggered again
-      sonix::instance()->pause(nodeName);
+      snx::sonix::instance()->pause(nodeName);
 
       vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
          << clrOutNORM(clrYELLOW,"[SoundDisable] ")
@@ -333,7 +333,7 @@ int pfSoundTraverser::nodesReplaceWithSound(pfuTraverser* trav)
                sn->setName(newName.c_str());
             }
             parent->addChild(sn);
-            sonix::instance()->trigger(soundName);
+            snx::sonix::instance()->trigger(soundName);
 
             vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
                 << clrOutNORM(clrGREEN, "[SoundReplacer]     ")

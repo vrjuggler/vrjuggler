@@ -189,7 +189,7 @@ JCCL_PATH_CXX([$vrj_min_jccl_ver], ,
               [AC_MSG_ERROR(*** JCCL C++ API required for VR Juggler ***)])
 GADGETEER_PATH([0.20.0], ,
                [AC_MSG_ERROR(*** Gadgeteer required for VR Juggler ***)])
-SNX_PATH([0.0.3], [vrj_sonix_config='sonix-config'],
+SNX_PATH([0.5.0], [vrj_sonix_config='sonix-config'],
          [AC_MSG_ERROR(*** Sonix required for VR Juggler ***)])
 
 VRJ_USE_X11="$GADGET_USE_X11"
