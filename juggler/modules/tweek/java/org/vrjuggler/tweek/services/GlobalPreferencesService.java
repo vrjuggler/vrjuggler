@@ -273,6 +273,26 @@ public class GlobalPreferencesService
       return lazyPanelBeanInstantiation;
    }
 
+   public void setDefaultCorbaHost (String host)
+   {
+      defaultCorbaHost = host;
+
+      Element e = mPrefsDocRoot.getChild("corba");
+
+      if ( e == null )
+      {
+         e = new Element("corba");
+         mPrefsDocRoot.addContent(e);
+      }
+
+      e.setAttribute("host", host);
+   }
+
+   public String getDefaultCorbaHost ()
+   {
+      return defaultCorbaHost;
+   }
+
    public void setDefaultCorbaPort (int port)
    {
       defaultCorbaPort = port;
@@ -372,6 +392,13 @@ public class GlobalPreferencesService
 
             if ( corba_element != null )
             {
+               Attribute corba_host_attr = corba_element.getAttribute("host");
+
+               if ( null != corba_host_attr )
+               {
+                  defaultCorbaHost = corba_host_attr.getValue();
+               }
+
                defaultCorbaPort = corba_element.getAttribute("port").getIntValue();
             }
          }
@@ -431,6 +458,7 @@ public class GlobalPreferencesService
          mPrefsDocRoot.addContent(lazyinst_element);
 
          Element corba_element = new Element("corba");
+         corba_element.setAttribute("host", defaultCorbaHost);
          corba_element.setAttribute("port", String.valueOf(defaultCorbaPort));
          mPrefsDocRoot.addContent(corba_element);
 
@@ -503,5 +531,6 @@ public class GlobalPreferencesService
    private String  chooserStartDir  = CWD_START;
    private int     chooserOpenStyle = WINDOWS_CHOOSER;
    private boolean lazyPanelBeanInstantiation = true;
+   private String  defaultCorbaHost = "";
    private int     defaultCorbaPort = 2809;
 }
