@@ -605,6 +605,26 @@ if test "$PLATFORM" = "FreeBSD" ; then
     fi
 fi
 
+dnl # Ensure that the C++ compiler we've found is capable of compiling the
+dnl # newer C++ features that we need.
+_vjsave_CC="$CC"
+CC="$CXX"
+
+dnl # When compiling on Windows, we need to force the compiler to treat the
+dnl # source file as a .cpp file even though it will end in .c.
+if test "$OS_TYPE" = "Win32" -a "x${_use_gcc}" != "xyes" ; then
+    CC="$CC -TP"
+fi
+
+AC_CACHE_CHECK(whether the C++ compiler handles templates properly,
+    ac_cv_CXX_is_current,
+    AC_TRY_COMPILE([#include <map> ],
+                   [ std::map<const char*, int> test_map; ],
+                   ac_cv_CXX_is_current='yes',
+                   [ ac_cv_CXX_is_current='no' ;
+                     AC_MSG_ERROR(*** The library requires a current C++ compiler) ]))
+CC="${_vjsave_CC}"
+
 AC_PROG_CPP
 AC_PROG_CXXCPP
 
