@@ -13,12 +13,27 @@ NOTE: This document explains OpenGL versions of Juggler and CAVElib
        <ul>
           <li><a href="#comparison">Detailed Comparison</a>
        </ul>
+       <li><a href="#input">Getting input from devices</a>
+       <ul>
+          <li><a href="#inputcomparison">Cave Input</a>
+          <li><a href="#inputcomparison">VRJuggler Input</a>
+       </ul>
        <li><a href="#context">OpenGL Context Data</a>
        <li><a href="#memory">Memory</a>
+       <li><a href="#config">Configuration</a>
+       <ul>
+          <li><a href="#CaveConfig">Cave Configuration</a>
+          <li><a href="#JugglerCode">VRJuggler Configuration</a>
+       </ul>
+       <li><a href="#code">Code</a>
+       <ul>
+          <li><a href="#CaveCode">Form of a basic CAVELib program</a>
+          <li><a href="#JugglerCode">Form of a basic VRJuggler program</a>
+       </ul>
 </ul>
 
 <p>
-<h3>Draw, frame, and init routines</h3>
+<h3><a name="idf">Draw, frame, and init routines</a></h3>
 <li>In CAVElib(TM) these routines are "called-back" using function pointers (C-style).
 <li>In VR Juggler, these routines are "called-back" using an application object, a C++ class which defines these
 methods to encapsulate the functionality of the application within one C++ class object.<BR>
@@ -26,40 +41,62 @@ methods to encapsulate the functionality of the application within one C++ class
 
 <ul>
   <p>
-  <h4>Detail Comparison</h4>
+  <h4><a name="comparison">Detail Comparison</a></h4>
   <li>In CAVElib(TM)
   <ul>
     <li>- An application's display callback function is defined by passing a function pointer to CAVEDisplay(). 
     <li>- The frame function is defined with CAVEFrameFunction(). 
     <li>- The initialization callback is defined using CAVEInitApplication(). 
   </ul>
-</ul
 
-<li>In VR Juggler (OpenGL), you derive a new application class from vjGlApp <BR>
-  NOTE that no C-style function pointers are nessesary, you only pass Juggler a pointer to your application class.
-<ul>
-  <li>- an application's display callback function is defined by simply defining a new method/function draw() in
-your derived class.<BR>
-        (This is where you put OpenGL rendering commands such as glBegin, glVertex, glWhatever...)
-  <li>- The frame function is split across 3 functions<BR>
-       (This is where you put your calculations such as navigation, collision, physics, AI, nurbs surface
-sampling, etc...)
-  <ul>
-    <li>  - yourDerivedApp::preFrame (called before draw)
-    <li>  - yourDerivedApp::intraFrame (called during draw)
-    <li>  - yourDerivedApp::postFrame (called after draw)
-  </ul>
-  <li>- The initialization callback is also split across 2 functions:<BR>
-        (one for data initialization.  and one for <a href="${GLOSSARY}#display context">OpenGL context</a>
-         initialization where you put things like displaylist and texture object creation)
-  <li>- yourDerivedApp::init()        (called once on application startup)
-  <li>- yourDerivedApp::contextInit()  (called once per window)
+
+   <li>In VR Juggler (OpenGL), you derive a new application class from vjGlApp <BR>
+     NOTE that no C-style function pointers are nessesary, you only pass Juggler a pointer to your application class.
+   <ul>
+        <li>- an application's display callback function is defined by simply defining a new method/function draw() in
+      your derived class.<BR>
+              (This is where you put OpenGL rendering commands such as glBegin, glVertex, glWhatever...)
+        <li>- The frame function is split across 3 functions<BR>
+             (This is where you put your calculations such as navigation, collision, physics, AI, nurbs surface
+      sampling, etc...)
+        <ul>
+          <li>  - yourDerivedApp::preFrame (called before draw)
+          <li>  - yourDerivedApp::intraFrame (called during draw)
+          <li>  - yourDerivedApp::postFrame (called after draw)
+        </ul>
+        <li>- The initialization callback is also split across 2 functions:<BR>
+              (one for data initialization.  and one for <a href="${GLOSSARY}#display context">OpenGL context</a>
+               initialization where you put things like displaylist and texture object creation)
+        <li>- yourDerivedApp::init()        (called once on application startup)
+        <li>- yourDerivedApp::contextInit()  (called once per window)
+   </ul>
+   </p>
 </ul>
-</p>
 
 
 <p>
-<h3>Context Data</h3>
+<h3><a href="#input">Getting input from devices</h3>
+<ul>
+To get input from a tracker in CAVElib call these functions:
+CAVEGetPosition(id,pos) 
+CAVEGetOrientation(id,or) 
+CAVEGetVector(id,vec) 
+CAVEGetSensorPosition(sensor,coords,pos) 
+CAVEGetSensorOrientation(sensor,coords,or) 
+CAVEGetSensorVector(sensor,id,vec) 
+
+For buttons, use the following MACROS:
+CAVEBUTTON1, CAVEBUTTON2, CAVEBUTTON3, CAVEBUTTON4, CAVE_JOYSTICK_X, and CAVE_JOYSTICK_Y
+CAVEButtonChange()
+
+<h4>In VR Juggler:</h4>
+
+
+</ul>
+</p>
+
+<p>
+<h3><a name="context">Context Data</a></h3>
 
 VR Juggler, unlike the CAVElib, can handle drawing multiple displays in one process, so it's nessesary to
 manage "context data".  A <a href="${GLOSSARY}#display context">display context</a> is the OpenGL state
@@ -70,7 +107,7 @@ valid.
 </p>
 
 <p>
-<h3> Memory </h3>
+<h3><a name="memory"> Memory </a></h3>
 
 VR Juggler, unlike the CAVElib, has no need to manage <a href="${GLOSSARY}#shared memory">shared memory</a> with
 other Juggler instances.  Instead, running other Juggler instances and syncing them together does not work at this
@@ -78,6 +115,86 @@ time.  So all you need to do is create your memory as you normally would in a C 
 malloc (we would suggest new).
 </p>
 
+<p>
+<li><a href="#config">Configuration</a>
+<ul>
+   <p>
+   <li><a href="#CaveConfig">Cave Configuration</a>
+   <BR><BR>
+   TODO... fininish this...
+   </p>
+   <p>
+   <li><a href="#JugglerCode">VRJuggler Configuration</a>
+   VR Juggler has a completly extensible configuration system, that 
+   theoretically you could use outside of VRJuggler or even outside of any 
+   sort of VR paradigm.  
+   <BR><BR>
+   TODO... fininish this...
+   </p>
+</ul>
+</p>
+       
+<h3><a name="code"> Code </a></h3>
+<h4><a name="CaveCode">Form of a basic CAVELib program</a></h4>
+<pre>
+  #include <cave.h>
+
+  void app_shared_init();
+  void app_compute_init();
+  void app_init_gl();
+  void app_draw();
+  void app_compute();
+
+  main(int argc,char **argv)
+  {
+   CAVEConfigure(&argc,argv,NULL);
+   app_shared_init(argc,argv);  
+   CAVEInit();  
+   CAVEInitApplication(app_init_gl,0);  
+   CAVEDisplay(app_draw,0);       
+   app_compute_init(argc,argv);  
+   while (!getbutton(ESCKEY))
+          app_compute();
+   CAVEExit();
+  }
+</pre>
+
+<h4><a name="JugglerCode">Form of a basic VRJuggler program</a></h4>
+<pre>
+   class MyApplication
+   {
+      virtual void init();
+      void draw();
+      void preFrame();
+      void postFrame();
+      void intraFrame();
+   };
+
+   int main(int argc, char* argv[]) 
+   {
+      // configure kernel with *.config files
+      vjKernel* kernel = vjKernel::instance(); // Get the kernel
+      for(int i=1;i<argc;i++)
+      {
+         cout << "Loading file: " << argv[i] << endl << flush;
+         kernel->loadConfigFile(argv[i]);
+      }
+
+      // start the kernel
+      kernel->start();
+
+      // set the application for the kernel to run
+      MyApplication* application = new MyApplication();
+      kernel->setApplication(application);
+
+      // hit CTRL-C to exit.
+      while (1)
+      {
+         // Juggler executes within other threads, so sleep here.
+         usleep( 100000 );
+      }
+   }
+</pre>
 
 
 </body>
