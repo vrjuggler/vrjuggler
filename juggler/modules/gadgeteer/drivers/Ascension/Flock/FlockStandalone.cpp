@@ -151,6 +151,8 @@ FlockStandalone::~FlockStandalone()
 // - Acquires the initial configuration of the flock
 vpr::ReturnStatus FlockStandalone::open ()
 {
+   vpr::ReturnStatus ret_stat;
+
    // Allocate the port if we need to
    if ( NULL == mSerialPort )
    {
@@ -165,9 +167,11 @@ vpr::ReturnStatus FlockStandalone::open ()
 
    mSerialPort->setOpenReadWrite();
 
-   if (mSerialPort->open().success() )
+   //if (mSerialPort->open().success() )
+   if(1)
    {
       // Reset the port by opening it and then closing it
+      /*
       vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Resetting bird port:\n" << vprDEBUG_FLUSH;
       vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) <<"   holding port open" << vprDEBUG_FLUSH;
       for(unsigned i=0;i<5;++i)
@@ -185,6 +189,7 @@ vpr::ReturnStatus FlockStandalone::open ()
          vprDEBUG_CONT(vprDBG_ALL, vprDBG_CONFIG_LVL) << "." << vprDEBUG_FLUSH;
       }
       vprDEBUG_CONT(vprDBG_ALL,vprDBG_CONFIG_LVL) << " ok\n" << vprDEBUG_FLUSH;
+      */
 
       // - Open the port for the last time
       //   - Set the port attributes to use
@@ -195,21 +200,22 @@ vpr::ReturnStatus FlockStandalone::open ()
 
          // Set the basic port attributes to use
          mSerialPort->setUpdateAction(vpr::SerialTypes::NOW);  // Changes apply immediately
-         mSerialPort->clearAll();
-         mSerialPort->setBlocking(true);              // Open in blocking mode
-         mSerialPort->setCanonicalInput(true);              // enable binary reading and timeouts
-         mSerialPort->setTimeout(10);                       // Set to 1 inter-byte read second timeout
-         mSerialPort->setRead(true);                        // Allow reading from port
-         mSerialPort->setLocalAttach(true);                 // Say we are directly attached
-         mSerialPort->setBreakByteIgnore(true);             // Ignore terminal breaks
+         ret_stat = mSerialPort->clearAll();
+         ret_stat = mSerialPort->setBlocking(true);              // Open in blocking mode
+         ret_stat = mSerialPort->setCanonicalInput(false);              // enable binary reading and timeouts
 
-         vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "  Setting baud rate: " << mBaud << std::endl << vprDEBUG_FLUSH;
-         mSerialPort->setInputBaudRate(mBaud);
-         mSerialPort->setOutputBaudRate(mBaud);
+         ret_stat = mSerialPort->setTimeout(10);                       // Set to 1 inter-byte read second timeout
+         ret_stat = mSerialPort->setRead(true);                        // Allow reading from port
+         ret_stat = mSerialPort->setLocalAttach(true);                 // Say we are directly attached
+         ret_stat = mSerialPort->setBreakByteIgnore(true);             // Ignore terminal breaks
 
-         mSerialPort->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
-         mSerialPort->setHardwareFlowControl(false);     // No hardware flow control
-         mSerialPort->setParityGeneration(false);        // No parity checking
+          vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "  Setting baud rate: " << mBaud << std::endl << vprDEBUG_FLUSH;
+         ret_stat = mSerialPort->setInputBaudRate(mBaud);
+         ret_stat = mSerialPort->setOutputBaudRate(mBaud);
+
+         ret_stat = mSerialPort->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
+         ret_stat = mSerialPort->setHardwareFlowControl(false);     // No hardware flow control
+         ret_stat = mSerialPort->setParityGeneration(false);        // No parity checking
 
          // --- Reset the flock with RTS signal --- //
          // - When RTS signal is high, bird is put into reset mode
@@ -230,6 +236,9 @@ vpr::ReturnStatus FlockStandalone::open ()
             vprDEBUG_CONT(vprDBG_ALL, vprDBG_CONFIG_LVL) << "." << vprDEBUG_FLUSH;
          }
          vprDEBUG_CONT(vprDBG_ALL,vprDBG_CONFIG_LVL) << " done.\n" << vprDEBUG_FLUSH;
+
+         ret_stat = mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
+         vprASSERT(ret_stat.success());
 
          vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Port setup completed.\n" << vprDEBUG_FLUSH;
 
@@ -1102,6 +1111,7 @@ void FlockStandalone::sendCommandAll(vpr::Uint8 cmd, std::vector<vpr::Uint8> dat
  */
 void FlockStandalone::getAttribute(vpr::Uint8 attrib, unsigned respSize, std::vector<vpr::Uint8>& respData)
 {
+   vpr::ReturnStatus ret_stat;
    vpr::Uint8 exam_cmd[2];       // The command to send for the examine
    exam_cmd[0] = Flock::Command::ExamineValue;
    exam_cmd[1] = attrib;
@@ -1112,8 +1122,12 @@ void FlockStandalone::getAttribute(vpr::Uint8 attrib, unsigned respSize, std::ve
    { throw Flock::ConnectionException("NULL port"); }
 
    //vpr::System::msleep(200);                                   // Wait for any random input
-   mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);       // Clear the buffers
+   vpr::System::msleep(50);
+   ret_stat = mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);       // Clear the buffers
+   if(!ret_stat.success())
+   {   throw Flock::CommandFailureException("Failed to flush queue before command"); }
    //vpr::System::msleep(300);                                   // Let the buffers clear
+   //vpr::System::msleep(50);         // Let the buffers clear.  Don't know if this is needed
 
    // Send command
    mSerialPort->write(exam_cmd, 2, bytes_written);
@@ -1123,6 +1137,8 @@ void FlockStandalone::getAttribute(vpr::Uint8 attrib, unsigned respSize, std::ve
    if(bytes_written != sizeof(exam_cmd))
    {  throw Flock::CommandFailureException("Full command not written"); }
 
+   //vpr::System::msleep(500);
+   
    // Read response and then flush the port to make sure we don't leave anything extra
    mSerialPort->read(respData, respSize, bytes_read, mReadTimeout);
    mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
