@@ -38,7 +38,7 @@ vpath %.cpp @srcdir@ @srcdir@/../nav @srcdir@/../pfTools
 # Binary Interface (ABI) used.  For o32 binaries, -L/usr/lib is the
 # appropriate path.  For n32 binaries, use -L/usr/lib32.  For 64-bit binaries,
 # use -L/usr/lib64.
-EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_PF@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
+EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ $(AW_LIBS) @APP_EXTRA_LIBS_PF@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
 COMMON_OBJECTS = fileIO.@OBJ_FILE_SUFFIX@		\
                   pfFileIO.@OBJ_FILE_SUFFIX@		\
@@ -61,15 +61,13 @@ default: pfNav
 all: pfNav pfBasicConfigNav pfSwitcher
 
 pfNav: $(PFNAV_OBJECTS) $(VJ_LIB_DEPS)
-	$(LINK) -o $@ $(PFNAV_OBJECTS) $(VJ_LIBS) $(AW_LIBS) $(EXTRA_LIBS)
+	$(LINK) -o $@ $(PFNAV_OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
 pfBasicConfigNav: $(PF_BASIC_CONFIG_NAV_OBJECTS) $(VJ_LIB_DEPS)
-	$(LINK) -o $@ $(PF_BASIC_CONFIG_NAV_OBJECTS) $(VJ_LIBS)		\
-          $(AW_LIBS) $(EXTRA_LIBS)
+	$(LINK) -o $@ $(PF_BASIC_CONFIG_NAV_OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
 pfSwitcher: $(PF_SWITCHER_OBJECTS) $(VJ_LIB_DEPS)
-	$(LINK) -o $@ $(PF_SWITCHER_OBJECTS) $(VJ_LIBS) $(AW_LIBS)	\
-          $(EXTRA_LIBS)
+	$(LINK) -o $@ $(PF_SWITCHER_OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
 .cpp.@OBJ_FILE_SUFFIX@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
