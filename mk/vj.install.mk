@@ -7,8 +7,6 @@
 # The Makefile including this file must define the following variables:
 #
 # includedir - The installation directory for the header files.
-# scriptdir  - The location of the scripts used in the build and release
-#              process.
 # srcdir     - The directory where the source file(s) is/are located.
 # INSTALL    - The path to a BSD-compatible install program.
 # -----------------------------------------------------------------------------
