@@ -1,5 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Oct-17-2001 kevn      Fixed bug where vjGetVjMatrix returns the wrong 
+                      conversion.
 Oct-17-2001 patrick   Renamed the "Data" directory to "data".
 Oct-15-2001 patrick   Renamed the juggler-config script to vrjuggler-config.
 Oct-12-2001 allenb    Removed vrj::Debug.  We now use vpr::Debug for all
@@ -14,6 +16,8 @@ Sep-21-2001 patrick   Complete restructuring of the VR Juggler source tree.
                       updating after this change.
 Sep-20-2001 patrick   The default chunk description file for VR Juggler is now
                       vrj-chunks.desc.
+Sep-19-2001 kevn      Added compatibility include files put 
+                      -I$(VJ_BASE_DIR)/include/deprecated in your makefile.
 Sep-19-2001 kevn      Now using the vrj namespace instead of the prefix "vj"
                       on classes.
 Aug-27-2001 patrick   We build DLLs on Win32 now.
