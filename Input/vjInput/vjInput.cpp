@@ -38,6 +38,7 @@
 
 vjInput::vjInput()
 {
+   //vjDEBUG(vjDBG_ALL,4)<<"*** vjInput::vjInput()\n"<< vjDEBUG_FLUSH;
    deviceAbilities = 0;
    instName = NULL;
    sPort = NULL;

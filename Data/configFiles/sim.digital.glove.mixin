@@ -7,7 +7,15 @@ PosProxy
   device { "SimGlovePos" }
   unit { "0" }
   etrans { "True" }
-  translate { "0.166" "0.0" "0.0" }
+  translate { "0.0" "0.0" "0.0" }
+  rotate { "0.0" "0.0" "0.0" }
+  end
+PosProxy
+  Name "Right GlovePos Proxy"
+  device { "Right SimGlovePos" }
+  unit { "0" }
+  etrans { "True" }
+  translate { "0.0" "0.0" "0.0" }
   rotate { "0.0" "0.0" "0.0" }
   end
 SimPosition
@@ -86,8 +94,91 @@ SimPosition
         key { "MOUSE_BUT3" }
         end
  }
-  initialPos { "1.0" "5.0" "0.0" }
-  initialRot { "0.0" "0.0" "0.0" }
+  initialPos { "-1.5" "5.0" "0.0" }
+  initialRot { "-90.0" "0.0" "0.0" }
+  dtrans { "0.05" }
+  drot { "0.5" }
+  transCoordSystem { "Global" }
+  rotCoordSystem { "Local" }
+  end
+SimPosition
+  Name "Right SimGlovePos"
+  keyboardProxy { "GloveKeyProxy" }
+  keyPairs { 
+      KeyModPair
+        Name "Forward"
+        modKey { "ALT" }
+        key { "KEY_UP" }
+        end
+ 
+      KeyModPair
+        Name "Back"
+        modKey { "ALT" }
+        key { "KEY_DOWN" }
+        end
+ 
+      KeyModPair
+        Name "Left"
+        modKey { "CTRL" }
+        key { "KEY_LEFT" }
+        end
+ 
+      KeyModPair
+        Name "Right"
+        modKey { "CTRL" }
+        key { "KEY_RIGHT" }
+        end
+ 
+      KeyModPair
+        Name "Up"
+        modKey { "CTRL" }
+        key { "KEY_DOWN" }
+        end
+ 
+      KeyModPair
+        Name "Down"
+        modKey { "CTRL" }
+        key { "KEY_UP" }
+        end
+ 
+      KeyModPair
+        Name "Rot Right"
+        modKey { "SHIFT" }
+        key { "KEY_LEFT" }
+        end
+ 
+      KeyModPair
+        Name "Rot Left"
+        modKey { "SHIFT" }
+        key { "KEY_RIGHT" }
+        end
+ 
+      KeyModPair
+        Name "Rot Up"
+        modKey { "SHIFT" }
+        key { "KEY_DOWN" }
+        end
+ 
+      KeyModPair
+        Name "Rot Down"
+        modKey { "SHIFT" }
+        key { "KEY_UP" }
+        end
+ 
+      KeyModPair
+        Name "Rot CCW"
+        modKey { "SHIFT" }
+        key { "KEY_A" }
+        end
+ 
+      KeyModPair
+        Name "Rot CW"
+        modKey { "SHIFT" }
+        key { "KEY_Z" }
+        end
+ }
+  initialPos { "1.5" "5.0" "0.0" }
+  initialRot { "-90.0" "0.0" "0.0" }
   dtrans { "0.05" }
   drot { "0.5" }
   transCoordSystem { "Global" }
@@ -96,52 +187,52 @@ SimPosition
 proxyAlias
   Name "LeftThumb"
   aliasName { "LeftThumb" }
-  proxyPtr { "PinchLeftThumb" }
+  proxyPtr { "DigitalLeftThumb" }
   end
 proxyAlias
   Name "LeftIndex"
   aliasName { "LeftIndex" }
-  proxyPtr { "PinchLeftIndex" }
+  proxyPtr { "DigitalLeftIndex" }
   end
 proxyAlias
   Name "LeftMiddle"
   aliasName { "LeftMiddle" }
-  proxyPtr { "PinchLeftMiddle" }
+  proxyPtr { "DigitalLeftMiddle" }
   end
 proxyAlias
   Name "LeftRing"
   aliasName { "LeftRing" }
-  proxyPtr { "PinchLeftRing" }
+  proxyPtr { "DigitalLeftRing" }
   end
 proxyAlias
   Name "LeftPinky"
   aliasName { "LeftPinky" }
-  proxyPtr { "PinchLeftPinky" }
+  proxyPtr { "DigitalLeftPinky" }
   end
 proxyAlias
   Name "RightThumb"
   aliasName { "RightThumb" }
-  proxyPtr { "PinchRightThumb" }
+  proxyPtr { "DigitalRightThumb" }
   end
 proxyAlias
   Name "RightIndex"
   aliasName { "RightIndex" }
-  proxyPtr { "PinchRightIndex" }
+  proxyPtr { "DigitalRightIndex" }
   end
 proxyAlias
   Name "RightMiddle"
   aliasName { "RightMiddle" }
-  proxyPtr { "PinchRightMiddle" }
+  proxyPtr { "DigitalRightMiddle" }
   end
 proxyAlias
   Name "RightRing"
   aliasName { "RightRing" }
-  proxyPtr { "PinchRightRing" }
+  proxyPtr { "DigitalRightRing" }
   end
 proxyAlias
   Name "RightPinky"
   aliasName { "RightPinky" }
-  proxyPtr { "PinchRightPinky" }
+  proxyPtr { "DigitalRightPinky" }
   end
 Keyboard
   Name "Glove Keyboard"
@@ -151,57 +242,57 @@ Keyboard
   msens { "2.0" }
   end
 DigProxy
-  Name "PinchLeftThumb"
-  device { "SimPinchGlove" }
+  Name "DigitalLeftThumb"
+  device { "SimDigitalGlove" }
   unit { "0" }
   end
 DigProxy
-  Name "PinchLeftIndex"
-  device { "SimPinchGlove" }
+  Name "DigitalLeftIndex"
+  device { "SimDigitalGlove" }
   unit { "1" }
   end
 DigProxy
-  Name "PinchLeftMiddle"
-  device { "SimPinchGlove" }
+  Name "DigitalLeftMiddle"
+  device { "SimDigitalGlove" }
   unit { "2" }
   end
 DigProxy
-  Name "PinchLeftRing"
-  device { "SimPinchGlove" }
+  Name "DigitalLeftRing"
+  device { "SimDigitalGlove" }
   unit { "3" }
   end
 DigProxy
-  Name "PinchLeftPinky"
-  device { "SimPinchGlove" }
+  Name "DigitalLeftPinky"
+  device { "SimDigitalGlove" }
   unit { "4" }
   end
 DigProxy
-  Name "PinchRightThumb"
-  device { "SimPinchGlove" }
+  Name "DigitalRightThumb"
+  device { "SimDigitalGlove" }
   unit { "6" }
   end
 DigProxy
-  Name "PinchRightIndex"
-  device { "SimPinchGlove" }
+  Name "DigitalRightIndex"
+  device { "SimDigitalGlove" }
   unit { "7" }
   end
 DigProxy
-  Name "PinchRightMiddle"
-  device { "SimPinchGlove" }
+  Name "DigitalRightMiddle"
+  device { "SimDigitalGlove" }
   unit { "8" }
   end
 DigProxy
-  Name "PinchRightRing"
-  device { "SimPinchGlove" }
+  Name "DigitalRightRing"
+  device { "SimDigitalGlove" }
   unit { "9" }
   end
 DigProxy
-  Name "PinchRightPinky"
-  device { "SimPinchGlove" }
+  Name "DigitalRightPinky"
+  device { "SimDigitalGlove" }
   unit { "10" }
   end
-SimDigital
-  Name "SimPinchGlove"
+SimDigitalGlove
+  Name "SimDigitalGlove"
   keyboardProxy { "GloveKeyProxy" }
   keyPairs { 
       KeyModPair
@@ -270,5 +361,19 @@ SimDigital
         key { "KEY_0" }
         end
  }
+  glovePos { "GlovePos Proxy" }
+  rightGlovePos { "Right GlovePos Proxy" }
+  end
+GloveProxy
+  Name "Glove Proxy"
+  device { "SimDigitalGlove" }
+  unit { "0" }
+  visible { "True" }
+  end
+GloveProxy
+  Name "Right Glove Proxy"
+  device { "SimDigitalGlove" }
+  unit { "1" }
+  visible { "True" }
   end
 End

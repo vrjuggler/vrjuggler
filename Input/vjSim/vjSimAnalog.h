@@ -49,8 +49,9 @@
 class vjSimAnalog : virtual public vjAnalog, public vjSimInput
 {
 public:
-   vjSimAnalog() {;}
-   virtual ~vjSimAnalog() {;}
+   vjSimAnalog();
+   
+   virtual ~vjSimAnalog();
 
    virtual bool config(vjConfigChunk* chunk);
 

@@ -35,8 +35,23 @@
 #include <vjConfig.h>
 #include <Input/vjSim/vjSimDigital.h>
 
+
+//: Default Constructor
+vjSimDigital::vjSimDigital() : vjDigital(), vjSimInput()
+{
+   vjDEBUG(vjDBG_ALL,4)<<"*** vjSimDigital::vjSimDigital()\n"<< vjDEBUG_FLUSH;
+}
+
+//: Destructor
+vjSimDigital::~vjSimDigital() 
+{
+   //vjDEBUG(vjDBG_ALL,4)<<"*** vjSimDigital::~vjSimDigital()\n"<< vjDEBUG_FLUSH;
+}
+
 bool vjSimDigital::config(vjConfigChunk* chunk)
 {
+   //vjDEBUG(vjDBG_ALL,4)<<"*** vjSimDigital::config()\n"<< vjDEBUG_FLUSH;
+   
    if((!vjDigital::config(chunk)) || (!vjSimInput::config(chunk)))
       return false;
 
@@ -55,6 +70,8 @@ bool vjSimDigital::config(vjConfigChunk* chunk)
 //+     When key is release, digital goes to off state
 void vjSimDigital::updateData()
 {
+   //vjDEBUG(vjDBG_ALL,4)<<"*** vjSimDigital::updateData()\n"<< vjDEBUG_FLUSH;
+   
    // -- Update digital data --- //
    for (unsigned int i = 0; i < mSimKeys.size(); i++)
    {
