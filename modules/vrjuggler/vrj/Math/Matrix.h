@@ -222,14 +222,17 @@ public:
    //: Make translation matrix
    //!POST: mat = matrix with only the new translation
    void makeTrans(float _x, float _y, float _z);
+   void makeTrans(const vjVec3& trans);
 
    //: Sets given translation to current matrix
    //!POST: mat = old(mat) with the tranlation portion set to the parameters
    void setTrans(float _x, float _y, float _z);
+   void setTrans(const vjVec3& trans);
 
    //: Get the translation portion of the matrix
    //!POST: _x, _y, and _z contain the translation portion of the matrix
    void getTrans(float& _x, float& _y, float& _z);
+   vjVec3 getTrans();
 
    //: Make scale matrix
    void makeScale(float _x, float _y, float _z);
