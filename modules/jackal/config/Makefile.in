@@ -81,7 +81,18 @@ instdir		= jccl/config/1.0
 doc_prefix	= $(webroot)/$(instdir)
 DOC_ROOT		= programmer.reference.java
 
+JAVA_BEFOREBUILD = tester
 JAVA_AFTERBUILD = jars
+
+tester:
+	@echo pwd=$(shell pwd)
+	@echo CONFIG_PKG=$(CONFIG_PKG)
+	@echo CONFIG_DIR=$(CONFIG_DIR)
+	@echo srcdir=$(srcdir)
+	@echo
+	@echo CONFIG_SRCS=$(CONFIG_SRCS)
+	@echo
+	@echo CONFIG_CLASSES=$(CONFIG_CLASSES)
 
 # Hack to make sure we build Java sources after the C++ library is built
 AFTERBUILD = java
@@ -158,7 +169,7 @@ endif
 ifdef JAVA_BEFOREBUILD
 	@$(MAKE) $(JAVA_BEFOREBUILD)
 endif
-	@$(MAKE) do-java-build
+	@$(MAKE) do-java-build OBJDIR=.
 ifdef JAVA_AFTERBUILD
 	@$(MAKE) $(JAVA_AFTERBUILD)
 endif

@@ -159,7 +159,7 @@ endif
 ifdef JAVA_BEFOREBUILD
 	@$(MAKE) $(JAVA_BEFOREBUILD)
 endif
-	@$(MAKE) do-java-build
+	@$(MAKE) do-java-build OBJDIR=.
 ifdef JAVA_AFTERBUILD
 	@$(MAKE) $(JAVA_AFTERBUILD)
 endif
