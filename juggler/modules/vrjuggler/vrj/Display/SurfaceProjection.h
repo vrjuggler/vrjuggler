@@ -44,14 +44,10 @@ namespace vrj
 class Matrix;
 
 /**
- * Wall specific class for viewport definitions.
+ * Surface specific class for projection definitions.
  *
  * Responsible for storing and computing projection information of a surface
  * specified.
- *
- * XXX: This should be renamed SurfaceProjection
- *
- * @date 10-5-97
  */
 class SurfaceProjection : public Projection
 {
