@@ -40,7 +40,7 @@
 AC_REVISION($Revision$)
 AC_INIT(vpr/vprConfig.h)
 AC_CONFIG_HEADER(vpr/vprDefines.h)
-DPP_PREREQ(1.3)
+DPP_PREREQ(1.3.10)
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -542,6 +542,8 @@ if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
 elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     CFLAGS="$CFLAGS /W3 /GR /GX -EHc /QIfdiv /QI0f"
     CXXFLAGS="$CXXFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
+    DBG_FLAGS="$DBG_FLAGS /MTd"
+    OPT_FLAGS="$OPT_FLAGS /MT"
     EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /MTd"
 fi
 
