@@ -753,6 +753,7 @@ endif
 # Install only the dynamic debugging version of the libraries.
 # -------------------------------------------------------------
 install-ddso:
+ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "Installing dynamic debugging libraries"
 	@echo "------------------------------------------------"
@@ -769,6 +770,7 @@ ifeq (${PF_API}, Y)
           ${_DBG_LIBDIR}/${PF_LIB_DYNAMIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
 endif
 	@${MAKE} _DEFAULT_DIR="${_DEBUG_DIR}" _install_lib_links
+endif
 
 # ------------------------------------------------------------
 # Install the optimized version of VR Juggler.
