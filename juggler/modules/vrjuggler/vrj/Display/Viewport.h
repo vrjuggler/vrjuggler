@@ -53,7 +53,7 @@ class User;
  *
  * @date 3-5-2001
  */
-class Viewport
+class VJ_CLASS_API Viewport
 {
 public:
    Viewport()
