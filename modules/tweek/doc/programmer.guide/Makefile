@@ -5,9 +5,9 @@ default: html
 docs: html chunk-html pdf
 install-docs: install-html install-chunk-html install-pdf
 
-XML_FILES=	book.xml
-HTML_FILES=	book.html
-PDF_FILES=	book.pdf
+XML_FILES=	programmer.guide.xml
+HTML_FILES=	programmer.guide.html
+PDF_FILES=	programmer.guide.pdf
 
 # Fill these in!!  Together, they make up the installation prefix.
 webroot=	$(HOME)/public_html/jugglerweb
@@ -19,8 +19,8 @@ INSTALL_FILES=	$(webroot)/base_style.css
 
 NEED_DB_IMAGES=	1
 
-book.html: book.xml
-book.pdf: book.xml book.fo
+programmer.guide.html: programmer.guide.xml
+programmer.guide.pdf: programmer.guide.xml programmer.guide.fo
 
 #include ../version.mk
 include ../../../../doc/docbook.mk
