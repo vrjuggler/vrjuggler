@@ -163,10 +163,11 @@ if ( $#ARGV != -1 )
       $LIBS{"$_"} = 1;
    }
 }
-# Fall back on printing whatever configure tells us is the "default" setting.
+# Fall back on printing the dependencies for OpenGL applications.
 else
 {
    $LIBS{'vrj'} = 1;
+   $LIBS{'vrj_ogl'} = 1;
 }
 
 # Print out the requested information.
