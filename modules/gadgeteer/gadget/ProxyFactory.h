@@ -38,7 +38,7 @@
 #include <gadget/Type/Proxy.h>
 #include <jccl/Config/ConfigChunkPtr.h>
 #include <vpr/Util/Singleton.h>
-#include <jccl/Plugins/ConfigManager/DependencyManager.h>
+#include <jccl/RTRC/DependencyManager.h>
 
 
 namespace gadget

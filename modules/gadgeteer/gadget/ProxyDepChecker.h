@@ -36,8 +36,8 @@
 #include <gadget/gadgetConfig.h>
 
 // Dependency checker includes
-#include <jccl/Plugins/ConfigManager/DependencyManager.h>
-#include <jccl/Plugins/ConfigManager/DepChecker.h>
+#include <jccl/RTRC/DependencyManager.h>
+#include <jccl/RTRC/DepChecker.h>
 
 
 namespace gadget

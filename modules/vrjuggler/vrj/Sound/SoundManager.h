@@ -4,7 +4,7 @@
 
 #include <vrj/vrjConfig.h>
 #include <jccl/Config/ConfigChunk.h>
-#include <jccl/Plugins/ConfigManager/ConfigChunkHandler.h>
+#include <jccl/RTRC/ConfigChunkHandler.h>
 
 namespace vrj
 {

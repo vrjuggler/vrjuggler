@@ -36,7 +36,7 @@
 #include <vrj/vrjConfig.h>
 #include <vpr/Util/Assert.h>
 #include <vrj/Util/Debug.h>
-#include <jccl/Plugins/ConfigManager/ConfigChunkHandler.h>
+#include <jccl/RTRC/ConfigChunkHandler.h>
 #include <vrj/Sound/SoundManagerFactory.h>
 
 
