@@ -226,12 +226,6 @@ void Kernel::checkForReconfig()
    }
    while (num_processed > 0);
 
-//     // If we changed the active configuration, then the environment manager needs to refresh
-//     if((total_chunks_processed > 0) && (environmentManager != NULL))
-//     {
-//        environmentManager->sendRefresh();
-//     }
-
    // ---- APP SWITCH ---- //
    // check for a new applications
    if(mNewAppSet)
@@ -346,13 +340,6 @@ void Kernel::initConfig()
    vprASSERT(mDisplayManager != NULL);                 // Did we get an object
 
    mClusterManager = cluster::ClusterManager::instance();
-   //setupEnvironmentManager();
-/*
-   jccl::JackalServer::instance()->addJackalControl(jccl::ConfigManager::instance());
-   jccl::JackalServer::instance()->addJackalControl(jccl::PerformanceMonitor::instance());
-
-   jccl::ConfigManager::instance()->addConfigChunkHandler(jccl::JackalServer::instance());
-*/
 
    //??// processPending() // Should I do this here
 
