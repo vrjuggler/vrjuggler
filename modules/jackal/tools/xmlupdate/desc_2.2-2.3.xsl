@@ -114,7 +114,7 @@
         Here is the change from the previous format.  We have to add the
         'version' attribute.
       -->
-      <xsl:attribute name="version">1.1</xsl:attribute>
+      <xsl:attribute name="version">1.0</xsl:attribute>
 
       <xsl:value-of select="$newline"/>
 
