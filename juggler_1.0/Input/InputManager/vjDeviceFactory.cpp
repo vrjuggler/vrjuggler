@@ -54,6 +54,8 @@
 #include <Input/vjKeyboard/vjXWinKBDepChecker.h>
 #include <Input/vjPosition/logiclass.h>
 #include <Input/vjPosition/vjMotionStar.h>
+#include <Input/Multi/vjTrackdController.h>
+#include <Input/Multi/vjTrackdSensor.h>
 #else
 #include <Input/vjKeyboard/vjKeyboardWin32.h>
 #endif
@@ -89,13 +91,17 @@ void vjDeviceFactory::hackLoadKnownDevices()
 #ifndef WIN32
    vjDeviceConstructor<vjFlock>* flock = new vjDeviceConstructor<vjFlock>;
    vjDeviceConstructor<vjMotionStar>* MotionStar = new vjDeviceConstructor<vjMotionStar>;
+   vjDeviceConstructor<vjTrackdSensor>* trackd_sensor = new vjDeviceConstructor<vjTrackdSensor>;
+   vjDeviceConstructor<vjTrackdController>* trackd_controller = new vjDeviceConstructor<vjTrackdController>;
    vjDeviceConstructor<vjIBox>* ibox = new vjDeviceConstructor<vjIBox>;
    vjDeviceConstructor<vjPinchGlove>* pinch_glove = new vjDeviceConstructor<vjPinchGlove>;
    vjDeviceConstructor<vjCyberGlove>* cyber_glove = new vjDeviceConstructor<vjCyberGlove>;
    vjDeviceConstructor<vjXWinKeyboard>* xwin_key = new vjDeviceConstructor<vjXWinKeyboard>;
    vjDependencyManager::instance()->registerChecker(new vjXWinKBDepChecker());
    vjDeviceConstructor<vjThreeDMouse>* threed_mouse = new vjDeviceConstructor<vjThreeDMouse>;
+
 #else
+
    vjDeviceConstructor<vjKeyboardWin32>* key_win32 = new vjDeviceConstructor<vjKeyboardWin32>;
 #endif
 }

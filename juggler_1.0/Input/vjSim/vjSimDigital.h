@@ -57,7 +57,7 @@ public:
 
    virtual bool config(vjConfigChunk* chunk);
 
-   //: Return analog data
+   //: Return digital data
    virtual int getDigitalData(int devNum=0)
    {
       vjASSERT(devNum < (int)mDigitalData.size());    // Make sure we have enough space

@@ -114,8 +114,8 @@ vjMotionStar::config (vjConfigChunk *c) {
    mMotionStar.setRunMode(static_cast<int>(c->getProperty("mode")));
    mMotionStar.setAddress(static_cast<std::string>(c->getProperty("address")).c_str());
    mMotionStar.setServerPort((unsigned short) static_cast<int>(c->getProperty("serverPort")));
-//   mMotionStar.setReportRate(static_cast<unsigned char>(c->getProperty("rrate"))); 
- 
+//   mMotionStar.setReportRate(static_cast<unsigned char>(c->getProperty("rrate")));
+
    return true;
 }
 
@@ -148,7 +148,7 @@ vjMotionStar::startSampling () {
       vjDEBUG(vjDBG_INPUT_MGR,1) << "    Getting MotionStar ready ...\n"
                                  << vjDEBUG_FLUSH;
 
-      retval = mMotionStar.start(); 
+      retval = mMotionStar.start();
 
       switch (retval) {
          // Proper startup.

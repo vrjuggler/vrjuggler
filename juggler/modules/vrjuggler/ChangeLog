@@ -1,6 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
 
+Aug-21-2000 allenb    Added initial trackd driver support
 Aug-05-2000 patrick   Now using std namespace for all C++ I/O
 Aug-03-2000 patrick   -LANG:std is now used when compiling on IRIX
 Jul-18-2000           VR Juggler 0.1.97 released

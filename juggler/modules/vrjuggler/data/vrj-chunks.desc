@@ -276,4 +276,12 @@ chunk SlSoundEngine "SL Sound Engine" "Use the SL sound engine (8bit mono)"
   Sounds EmbeddedChunk -1 "Sounds" vj_enumeration { "SlSoundInfo" } ""
   FilePath String 1 "FilePath" "the search path to use to find your .wav files."
   end
+chunk TrackdSensor "TrackdSensor" "Configure the interface to a trackd sensor memory area"
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
+  shm_key Int 1 "SharedMemoryKey" "This is the shared memory key for the trackd information."
+  end
+chunk TrackdController "TrackdController" "Configure the interface to a trackd controller memory area."
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
+  shm_key Int 1 "SharedMemoryKey" "This is the shared memory key for the trackd information."
+  end
 End
