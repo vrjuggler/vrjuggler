@@ -43,13 +43,13 @@
 
 // Debug output categories
 #define vjDBG_BASE 0
-#define vjDBG_ALL (vjDBG_BASE+0)         // Use if you always want it ouput
+#define vjDBG_ALL (vjDBG_BASE+0)         /* Use if you always want it ouput */
 #define vjDBG_ALLstr std::string("DBG_ALL")
-#define vjDBG_ERROR (vjDBG_BASE+1)       // Error output
+#define vjDBG_ERROR (vjDBG_BASE+1)       /* Error output */
 #define vjDBG_ERRORstr std::string("DBG_ERROR")
-#define vjDBG_KERNEL (vjDBG_BASE+2)      // Kernel output
+#define vjDBG_KERNEL (vjDBG_BASE+2)      /* Kernel output */
 #define vjDBG_KERNELstr std::string("DBG_KERNEL")
-#define vjDBG_INPUT_MGR (vjDBG_BASE+3)       // Input output
+#define vjDBG_INPUT_MGR (vjDBG_BASE+3)       /* Input output */
 #define vjDBG_INPUT_MGRstr std::string("DBG_INPUT_MGR")
 #define vjDBG_DRAW_MGR (vjDBG_BASE+4)
 #define vjDBG_DRAW_MGRstr std::string("DBG_DRAW_MGR")

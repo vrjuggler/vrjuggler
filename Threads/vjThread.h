@@ -46,7 +46,7 @@ typedef void (*THREAD_FUNC)(void *);
 #include <Threads/vjBaseThread.h>
 
 
-#if defined(VJ_IRIX_SPROC)      // ---- SGI IPC Barrier ------ //
+#if defined(VJ_IRIX_SPROC)      /* ---- SGI IPC Barrier ------ */
     typedef struct cancel_state cancel_state_t;
 
 #   include <Threads/vjThreadSGI.h>
