@@ -60,10 +60,9 @@
 namespace vpr
 {
 
-//: Add the given handle to the selector
-//! PRE: handle is a valid handle
-//! POST: handle is added to the handle set, and initialized to a mask of
-//+       no-events
+/**
+ * Adds the given handle to the selector.
+ */
 bool SelectorImplBSD::addHandle (vpr::IOSys::Handle handle, vpr::Uint16 mask)
 {
    bool status;
@@ -86,9 +85,9 @@ bool SelectorImplBSD::addHandle (vpr::IOSys::Handle handle, vpr::Uint16 mask)
    return status;
 }
 
-//: Remove a handle from the selector
-//! PRE: handle is in the selector
-//! POST: handle is removed from the set of valid handles
+/**
+ * Removes a handle from the selector.
+ */
 bool SelectorImplBSD::removeHandle (vpr::IOSys::Handle handle)
 {
    bool status;
@@ -107,7 +106,7 @@ bool SelectorImplBSD::removeHandle (vpr::IOSys::Handle handle)
    return status;
 }
 
-//: Set the event flags going in to the select to mask
+/**< Sets the event flags going in to the select to mask. */
 bool SelectorImplBSD::setIn (vpr::IOSys::Handle handle, vpr::Uint16 mask)
 {
    bool status;
@@ -126,7 +125,7 @@ bool SelectorImplBSD::setIn (vpr::IOSys::Handle handle, vpr::Uint16 mask)
    return status;
 }
 
-//: Get the current in flag mask
+/**< Gets the current in flag mask. */
 vpr::Uint16 SelectorImplBSD::getIn (vpr::IOSys::Handle handle)
 {
    vpr::Uint16 flags;
@@ -145,7 +144,7 @@ vpr::Uint16 SelectorImplBSD::getIn (vpr::IOSys::Handle handle)
    return flags;
 }
 
-//: Get the current out flag mask
+/**< Gets the current out flag mask. */
 vpr::Uint16 SelectorImplBSD::getOut (vpr::IOSys::Handle handle)
 {
    vpr::Uint16 flags;
@@ -164,10 +163,9 @@ vpr::Uint16 SelectorImplBSD::getOut (vpr::IOSys::Handle handle)
    return flags;
 }
 
-//: Select
-//! ARGS: numWithEvents - Upon completion, this holds the number of items that
-//+                       have events
-//! ARGS: timeout - The number of msecs to select for (0 - don't wait)
+/**
+ * Select.
+ */
 vpr::ReturnStatus SelectorImplBSD::select (vpr::Uint16& numWithEvents,
                                            const vpr::Interval timeout)
 {
@@ -279,8 +277,9 @@ vpr::ReturnStatus SelectorImplBSD::select (vpr::Uint16& numWithEvents,
    return ret_val;
 }
 
-// Get the index of the handle given
-//! RETURNS: .end() - Not found, else the index to the handle in mPollDescs
+/**
+ * Gets the index of the handle given.
+ */
 std::vector<SelectorImplBSD::BSDPollDesc>::iterator SelectorImplBSD::getHandle (int handle)
 {
    // XXX: Should probably be replaced by a map in the future for speed

@@ -51,11 +51,9 @@ namespace vpr {
 vprSingletonImp(ThreadManager);
 
 
-//-----------------------------------------------------
-//: Called when a thread has been added to the system.
-//
-//! PRE: Manager must be locked.
-//-----------------------------------------------------
+/**
+ * Called when a thread has been added to the system.
+ */
 void ThreadManager::addThread(BaseThread* thread)
 {
    vprASSERT(mThreadVectorMutex.test()==1); // Assert manager locked
@@ -69,12 +67,9 @@ void ThreadManager::addThread(BaseThread* thread)
    debugDump();               // Dump current state
 }
 
-//-----------------------------------------------------
-//: Called when a thread has been removed from the
-//+ system.
-//
-//! PRE: Manager must be locked.
-//-----------------------------------------------------
+/**
+ * Called when a thread has been removed from the system.
+ */
 void ThreadManager::removeThread(BaseThread* thread)
 {
    vprASSERT(mThreadVectorMutex.test()==1); // Assert manager locked
@@ -83,7 +78,9 @@ void ThreadManager::removeThread(BaseThread* thread)
 }
 
 
-//: Dump the state of the manager to debug
+/**
+ * Dumps the state of the manager to debug.
+ */
 void ThreadManager::debugDump()
 {
    vprDEBUG(vprDBG_VPR, vprDBG_VERB_LVL)

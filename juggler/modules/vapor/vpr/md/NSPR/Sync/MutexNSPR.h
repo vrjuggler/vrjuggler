@@ -273,8 +273,8 @@ public:
    friend class CondVarNSPR;
 
 protected:
-   PRLock* mMutex;     //: Mutex variable for the class.
-   int     mLocked;    //:
+   PRLock* mMutex;     /**<  Mutex variable for the class. */
+   int     mLocked;    /**< */
 
    // = Prevent assignment and initialization.
    MutexNSPR& operator= (const MutexNSPR& r)

@@ -120,6 +120,8 @@ protected:
     * Done this way, because I need to call this based on stuff that happens
     * in derived class's constructor.
     *
+    * @pre The thread manager should be lock()'ed before calling this function
+    *       so that the addThread function can execute correctly
     * @post Thread is setup correctly to run.
     *       The thread has been registered with the system.
     *       Creates the thread's id (mThreadId)

@@ -63,30 +63,30 @@
 namespace vpr
 {
 
-//: Threads implementation using multiple processes created with sproc(2).
-
-//!PUBLIC_API:
+/**
+ * Threads implementation using multiple processes created with sproc(2).
+ */
 class ThreadSGI : public BaseThread
 {
 public:
    /***** CONSTRUCTORS ******/
 
-   // -----------------------------------------------------------------------
-   //: Spawning constructor.
-   //  This will actually start a new thread that will execute the specified
-   //  function.
-   // -----------------------------------------------------------------------
+   /**
+    * Spawning constructor.
+    * This will actually start a new thread that will execute the specified
+    * function.
+    */
    ThreadSGI(thread_func_t func, void* arg = 0,
              BaseThread::VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
              BaseThread::VPRThreadScope scope = VPR_LOCAL_THREAD,
              BaseThread::VPRThreadState state = VPR_JOINABLE_THREAD,
              size_t stack_size = 0);
 
-   // -----------------------------------------------------------------------
-   //: Spawning constructor with arguments (functor version).
-   //  This will start a new thread that will execute the specified
-   //  function.
-   // -----------------------------------------------------------------------
+   /**
+    * Spawning constructor with arguments (functor version).
+    * This will start a new thread that will execute the specified
+    * function.
+    */
    ThreadSGI(BaseThreadFunctor* functorPtr,
              BaseThread::VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
              BaseThread::VPRThreadScope scope = VPR_LOCAL_THREAD,
@@ -96,22 +96,22 @@ public:
    virtual ~ThreadSGI()
    {;}
 
-   // -----------------------------------------------------------------------
-   //: Spawns a new thread that will execute functorPtr.
-   //
-   //! PRE: None.
-   //! POST: A thread (with any specified attributes) is created that begins
-   //+       executing func().  Depending on the scheduler, it may being
-   //+       execution immediately, or it may block for a short time before
-   //+       beginning execution.
-   //
-   //! ARGS: functorPtr - Function to be executed by the thread.
-   //! ARGS: flags - Flags for the thread--not currently used in this
-   //+               implementation (optional).
-   //
-   //! RETURNS: non-zero - Succeedful thread creation
-   //! RETURNS:       -1 - Error
-   // -----------------------------------------------------------------------
+   /**
+    * Spawns a new thread that will execute functorPtr.
+    *
+    * @pre None.
+    * @post A thread (with any specified attributes) is created that begins
+    *        executing func().  Depending on the scheduler, it may being
+    *        execution immediately, or it may block for a short time before
+    *        beginning execution.
+    *
+    * @param functorPtr  Function to be executed by the thread.
+    * @param flags  Flags for the thread--not currently used in this
+    *                implementation (optional).
+    *
+    * @return non-zero - Succeedful thread creation
+    * @return       -1 - Error
+    */
    virtual int spawn (BaseThreadFunctor* functorPtr,
                       BaseThread::VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
                       BaseThread::VPRThreadScope scope = VPR_LOCAL_THREAD,
@@ -124,71 +124,76 @@ public:
       return mThreadPID;
    }
 
-   // Called by the spawn routine to start the user thread function
-   // PRE: Called ONLY by a new thread
-   // POST: The new thread will have started the user thread function
+   /**
+    * Called by the spawn routine to start the user thread function.
+    *
+    * @pre Called ONLY by a new thread
+    * @post The new thread will have started the user thread function
+    */
    void startThread(void* null_param);
 
 private:
-   // The functor to call from startThread
+   /**
+    * The functor to call from startThread
+    */
    BaseThreadFunctor* mUserThreadFunctor;
 
 public:
 
-   // -----------------------------------------------------------------------
-   //: Make the calling thread wait for the termination of the specified
-   //+ thread.
-   //
-   //! RETURNS:  0 - Succeedful completion
-   //! RETURNS: -1 - Error
-   // -----------------------------------------------------------------------
+   /**
+    * Makes the calling thread wait for the termination of the specified
+    * thread.
+    *
+    * @return  0 - Succeedful completion
+    * @return -1 - Error
+    */
    virtual int join (void** = 0);
 
-   // -----------------------------------------------------------------------
-   //: Resume the execution of a thread that was previously suspended using
-   //+ suspend().
-   //
-   //! PRE: The specified thread was previously suspended using the
-   //+      suspend() member function.
-   //! POST: The specified thread is sent the SIGCONT signal and is allowed
-   //+       to begin executing again.
-   //
-   //! RETURNS:  0 - Succeedful completion
-   //! RETURNS: -1 - Error
-   // -----------------------------------------------------------------------
+   /**
+    * Resumes the execution of a thread that was previously suspended using
+    * suspend().
+    *
+    * @pre The specified thread was previously suspended using the
+    *       suspend() member function.
+    * @post The specified thread is sent the SIGCONT signal and is allowed
+    *        to begin executing again.
+    *
+    * @return  0 - Succeedful completion
+    * @return -1 - Error
+    */
    virtual int resume (void)
    {
       return ::kill(mThreadPID, SIGCONT);
    }
 
-   // -----------------------------------------------------------------------
-   //: Suspend the execution of this thread.
-   //
-   //! PRE: None.
-   //! POST: This thread is sent the SIGSTOP signal and is thus suspended
-   //+       from execution until the member function resume() is called.
-   //
-   //! RETURNS:  0 - Succeedful completion
-   //! RETURNS: -1 - Error
-   // -----------------------------------------------------------------------
+   /**
+    * Suspends the execution of this thread.
+    *
+    * @pre None.
+    * @post This thread is sent the SIGSTOP signal and is thus suspended
+    *        from execution until the member function resume() is called.
+    *
+    * @return  0 - Succeedful completion
+    * @return -1 - Error
+    */
    virtual int suspend (void)
    {
       return ::kill(mThreadPID, SIGSTOP);
    }
 
-   // -----------------------------------------------------------------------
-   //: Get this thread's priority.
-   //
-   //! PRE: None.
-   //! POST: The priority of this thread is returned in the integer pointer
-   //+       variable.
-   //
-   //! ARGS: prio - Pointer to an int variable that will have the thread's
-   //+              priority stored in it.
-   //
-   //! RETURNS:  0 - Succeedful completion
-   //! RETURNS: -1 - Error
-   // -----------------------------------------------------------------------
+   /**
+    * Gets this thread's priority.
+    *
+    * @pre None.
+    * @post The priority of this thread is returned in the integer pointer
+    *        variable.
+    *
+    * @param prio  Pointer to an int variable that will have the thread's
+    *               priority stored in it.
+    *
+    * @return  0 - Succeedful completion
+    * @return -1 - Error
+    */
    virtual int getprio (int* prio)
    {
       *prio = getpriority(PRIO_PROCESS, mThreadPID);
@@ -203,93 +208,87 @@ public:
       }
    }
 
-   // -----------------------------------------------------------------------
-   //: Set this thread's priority.
-   //
-   //! PRE: None.
-   //! POST: This thread has its priority set to the specified value.
-   //
-   //! ARGS: prio - The new priority of the specified thread.
-   //
-   //! RETURNS:  0 - Succeedful completion
-   //! RETURNS: -1 - Error
-   // -----------------------------------------------------------------------
+   /**
+    * Sets this thread's priority.
+    *
+    * @pre None.
+    * @post This thread has its priority set to the specified value.
+    *
+    * @param prio  The new priority of the specified thread.
+    *
+    * @return  0 - Succeedful completion
+    * @return -1 - Error
+    */
    int setprio (int prio)
    {
       return setpriority(PRIO_PROCESS, mThreadPID, prio);
    }
 
-   // -----------------------------------------------------------------------
-   //: Yield execution of the calling thread to allow a different blocked
-   //+ thread to execute.
-   //
-   //! PRE: None.
-   //! POST: The caller yields its execution control to another thread or
-   //+       process.
-   // -----------------------------------------------------------------------
+   /**
+    * Yields execution of the calling thread to allow a different blocked
+    * thread to execute.
+    *
+    * @pre None.
+    * @post The caller yields its execution control to another thread or
+    *        process.
+    */
    static void yield (void)
    {
       sginap(0);
    }
 
-   // -----------------------------------------------------------------------
-   // -----------------------------------------------------------------------
    static int usleep (vpr::Uint32 micro) {
        return ::usleep(micro);
    }
 
-   // -----------------------------------------------------------------------
-   // -----------------------------------------------------------------------
    static int msleep (vpr::Uint32 milli)
    {
        return ::usleep(milli * 1000);
    }
 
-   // -----------------------------------------------------------------------
-   // -----------------------------------------------------------------------
    static int sleep (vpr::Uint32 seconds)
    {
        return ::sleep(seconds);
    }
 
-   // -----------------------------------------------------------------------
-   //: Send the specified signal to this thread (not necessarily SIGKILL).
-   //
-   //! PRE: None.
-   //! POST: This thread receives the specified signal.
-   //
-   //! ARGS: signum - The signal to send to the specified thread.
-   //
-   //! RETURNS:  0 - Succeedful completion
-   //! RETURNS: -1 - Error
-   // -----------------------------------------------------------------------
+   /**
+    * Sends the specified signal to this thread (not necessarily SIGKILL).
+    *
+    * @pre None.
+    * @post This thread receives the specified signal.
+    *
+    * @param signum  The signal to send to the specified thread.
+    *
+    * @return  0 - Succeedful completion
+    * @return -1 - Error
+    */
    virtual int kill (int signum)
    {
       return ::kill(mThreadPID, signum);
    }
 
-   // -----------------------------------------------------------------------
-   //: Kill (cancel) this thread.
-   //
-   //! PRE: None.
-   //! POST: This thread is cancelled.  Depending on the cancellation
-   //+       attributes of the specified thread, it may terminate
-   //+       immediately, it may wait until a pre-defined cancel point to
-   //+       stop or it may ignore the cancel altogether.  Thus, immediate
-   //+       cancellation is not guaranteed.
-   //
-   //! NOTE: For the sake of clarity, it is probably better to use the
-   //+       cancel() routine instead of kill() because a two-argument
-   //+       version of kill() is also used for sending signals to threads.
-   // -----------------------------------------------------------------------
+   /**
+    * Kills (cancels) this thread.
+    *
+    * @pre None.
+    * @post This thread is cancelled.  Depending on the cancellation
+    *        attributes of the specified thread, it may terminate
+    *        immediately, it may wait until a pre-defined cancel point to
+    *        stop or it may ignore the cancel altogether.  Thus, immediate
+    *        cancellation is not guaranteed.
+    *
+    * @note For the sake of clarity, it is probably better to use the
+    *        cancel() routine instead of kill() because a two-argument
+    *        version of kill() is also used for sending signals to threads.
+    */
    virtual void kill (void)
    {
       kill(SIGKILL);
    }
 
-   // -----------------------------------------------------------------------
-   //: Output the state of the object.
-   // -----------------------------------------------------------------------
+   /**
+    * Outputs the state of the object.
+    */
    std::ostream& outStream(std::ostream& out)
    {
       out.setf(std::ios::right);
@@ -301,39 +300,46 @@ public:
    }
 
 private:
-   pid_t mThreadPID;      //: pid_t data structure for this thread
+   pid_t mThreadPID;      /**<  pid_t data structure for this thread */
 
    // --------  STATICS ------ //
    // This data is used to maintain a thread table in the system
    // It is here because the self() function needs to use system specific
    // information.
 public:
-   // -----------------------------------------------------------------------
-   //: Get a ptr to the thread we are in.
-   //
-   //! RETURNS: NULL - Thread is not in global table
-   //! RETURNS: NonNull - Ptr to the thread that we are running within
-   // -----------------------------------------------------------------------
+   /**
+    * Gets a pointer to the thread we are in.
+    *
+    * @return NULL - Thread is not in global table
+    * @return NonNull - Ptr to the thread that we are running within
+    */
    static BaseThread* self()
    {
       return getLocalThreadPtr();
    }
 
 private:
-   // Set the thread ptr stored in the local PRDA area
-   // NOTE: PRDA is a memory address that each thread has a seperate copy of.
+   /**
+    * Sets the thread ptr stored in the local PRDA area.
+    *
+    * @note PRDA is a memory address that each thread has a seperate copy of.
+    */
    static void setLocalThreadPtr(ThreadSGI* threadPtr)
    {
       ((ThreadInfo*)PRDA->usr_prda.fill)->mThreadPtr = threadPtr;
    }
 
-   // Get the thread ptr stored in the local PRDA area
+   /**
+    * Gets the thread ptr stored in the local PRDA area.
+    */
    static ThreadSGI* getLocalThreadPtr()
    {
       return ((ThreadInfo*)PRDA->usr_prda.fill)->mThreadPtr;
    }
 
-   // Structure for storing thread specific information
+   /**
+    * Structure for storing thread specific information.
+    */
    struct ThreadInfo
    {
       ThreadSGI* mThreadPtr;
