@@ -96,50 +96,54 @@ void vjKernel::updateFrameData()
 void vjKernel::loadConfig()
 {
    vjDEBUG(5) << "   vjKernel::loadConfig:\n" << vjDEBUG_FLUSH;
+
+   // ------ OPENG chunksDesc file ----- //
+   char* vj_base_dir = getenv("VJ_BASE_DIR");
+   if(vj_base_dir == NULL)
+   {
+      cerr << "vjKernel::loadConfig: Env var VJ_BASE_DIR not defined." << endl;
+      exit(1);
+   }
+
+   char chunk_desc_file[250];
+   strcpy(chunk_desc_file, vj_base_dir);
+   strcat(chunk_desc_file, "/Data/chunksDesc");
+
    configDesc = new vjChunkDescDB;
-   if (!configDesc->load("/home/users/allenb/Source/juggler/Data/chunksDesc"))
+   if (!configDesc->load(chunk_desc_file))
    {
       cerr << "vjKernel::loadConfig: Config Desc failed to load file: " << endl;
       exit(1);
    }
 
+   chunkDB = new vjConfigChunkDB(configDesc);      // Create config database
+
+   // ------- OPEN User Config file ----------- //
+      /*
    char  configFile[250];
    char* homeDir = getenv("HOME");     // Get users home directory
    strcpy(configFile, homeDir);
    strcat(configFile, "/.vjconfig/activeConfig");
    
-   chunkDB = new vjConfigChunkDB(configDesc);
    if (!chunkDB->load(configFile))
    {
       cerr << "vjKernel::loadConfig: DB Load failed to load file: " << configFile << endl;
       exit(1);
    }
+   */
+   // ------- OPEN Program specified Config file ------ //
+   if(!mProgramConfigFile.empty())   // We have a filename
+   {
+      if (!chunkDB->load(mProgramConfigFile.c_str()))
+      {
+         cerr << "vjKernel::loadConfig: DB Load failed to load file: " << mProgramConfigFile << endl;
+         exit(1);
+      }
+   }
 
    vjDEBUG(2) << "------------  Config Chunks ----------" << vjDEBUG_FLUSH;
    vjDEBUG(2) << (*chunkDB) << vjDEBUG_FLUSH;
 
-   /*  XXX: I think this code was just here to display config data.  It didn't do anything??
-   vjDEBUG(2) << "----- Displays -------" << vjDEBUG_FLUSH;
-   vector<vjConfigChunk*>* displayChunks;
-   displayChunks = chunkDB->getMatching("display");
-
-   for (int i = 0; i < displayChunks->size(); i++)
-   {
-      vjConfigChunk* chunk = (*displayChunks)[i];
-
-      vjDEBUG(2) << "\n\nDisplay: " << i << endl << vjDEBUG_FLUSH;
-      vjDEBUG(2) << "Name:"
-                  << (char*)chunk->getProperty("name") << endl << vjDEBUG_FLUSH;
-      vjDEBUG(2) << "Proj:"
-                  << (char*)chunk->getProperty("projectiontype") << endl << vjDEBUG_FLUSH;
-      vjDEBUG(2) << "Origin:"
-                  << (int)chunk->getProperty("origin", 0) << " "
-                  << (int)chunk->getProperty("origin", 1) << endl << vjDEBUG_FLUSH;
-      vjDEBUG(2) << "Size:"
-                  << (int)chunk->getProperty("size", 0) << " "
-                  << (int)chunk->getProperty("size", 1) << endl << vjDEBUG_FLUSH;
-   }
-   */
 }
 
 void vjKernel::setupInputManager()

@@ -1,8 +1,10 @@
 #ifndef _VJ_KERNEL_
 #define _VJ_KERNEL_
+#pragma once
 
 #include <config.h>
 #include <iostream.h>
+#include <mstring.h>
 #include <Kernel/vjApp.h>
 #include <Kernel/vjSystemFactory.h>
 #include <Kernel/vjAPIFactory.h>
@@ -51,6 +53,9 @@ public:
    //  application first then restart all API specific Managers. 
    void setApplication(vjApp* _app)
    { app = _app; }
+
+   void setProgramSpecifiedConfigFile(string filename)
+   { mProgramConfigFile = filename; }
 
    // Stops the current application but leaves the kernel running.
    // It closes all API specific stuff (DrawManager,  etc.)
@@ -110,6 +115,7 @@ protected:
    /// Config Stuff
    vjChunkDescDB*    configDesc;
    vjConfigChunkDB*  chunkDB;
+   string            mProgramConfigFile;  //: Config file specified by program
 
    /// Shared Memory stuff
    vjMemPool*       sharedMemPool;   
@@ -119,7 +125,7 @@ protected:
    // ----------------------- //
 protected:
    //: Constructor:  Hidden, so no instantiation is allowed
-   vjKernel()
+   vjKernel() : mProgramConfigFile("")
    { app = NULL;}   
 
 public:
