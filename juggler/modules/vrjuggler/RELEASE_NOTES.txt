@@ -11,7 +11,7 @@ For all versions:
 ===============================================================================
 
  Version: 1.1.91 (dev build)
-Released: <month> <day>, 2001
+Released: October 16, 2001
 
     Required application and configuration changes for upgrading from all
     versions previous releases (including 1.1.x up through 1.1.90):
