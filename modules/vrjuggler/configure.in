@@ -321,7 +321,6 @@ if test "x$PLATFORM" = "xDarwin" ; then
 fi
 
 INCLUDES="$INCLUDES $GMTL_INCLUDES"
-vrj_cxxflags="$vrj_cxxflags $GMTL_INCLUDES"
 
 if test "x$x_includes" != "xNONE" -a "x$x_includes" != "x" ; then
    INCLUDES="$INCLUDES -I$x_includes"
