@@ -30,6 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vrj/vrjConfig.h>
+
 #include <iostream>
 #include <math.h>
 #include <GL/gl.h>
