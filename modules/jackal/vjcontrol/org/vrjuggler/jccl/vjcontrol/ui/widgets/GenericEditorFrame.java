@@ -37,6 +37,7 @@ package VjComponents.UI.Widgets;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.*;
+import java.util.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
@@ -48,6 +49,13 @@ import VjComponents.UI.*;
 /** Generic frame for editing something (ie it has some panel, and it
  *  has OK, Apply, Cancel, and Help buttons).
  * 
+ *  GenericEditorFrame is a source for ActionEvents, with the following
+ *  action commands (accessible via ActionEvent.getActionCommand()):
+ *      "Apply"  - when the user presses its OK or Apply button.
+ *      "Close"  - when the user presses the OK or Cancel button.  In the
+ *                 case of OK, the Close command is sent immediately after
+ *                 the Apply command.
+ *
  *  @author Christopher Just
  *  @version $Revision$
  */
@@ -63,17 +71,17 @@ public class GenericEditorFrame
     JButton okbutton;
     JButton applybutton;
     JButton helpbutton;
-    ChildFrameParent parent;
 
+    protected java.util.List action_listeners;
 
-    public GenericEditorFrame (ChildFrameParent par, 
-			     EditorPanel _editor_panel) {
+    public GenericEditorFrame (EditorPanel _editor_panel) {
 	super("Edit: " + _editor_panel.getComponentName());
-
 	Core.consoleTempMessage ("Opening Editor Frame: " + _editor_panel.getComponentName());
+
+        action_listeners = new ArrayList();
+
 	JPanel southpanel;
 
-	parent = par;
 	JPanel mainp = new JPanel();
 	mainp.setBorder (new EmptyBorder (5, 5, 0, 5));
 	mainp.setLayout (new BorderLayout (5,5));
@@ -139,17 +147,19 @@ public class GenericEditorFrame
     }
 
 
+    //-------------------- ActionListener Stuff ------------------------------
+
 
     public void actionPerformed (ActionEvent e) {
 	if (e.getSource() == cancelbutton) {
-	    parent.closeChild (this);
+	    notifyActionListenersClose();
 	}
 	else if (e.getSource() == okbutton) {
-            parent.applyChild (this);
-	    parent.closeChild (this);
+            notifyActionListenersApply();
+	    notifyActionListenersClose();
 	}
         else if (e.getSource() == applybutton) {
-            parent.applyChild (this);
+            notifyActionListenersApply();
         }
 	else if (e.getSource() == helpbutton) {
             editor_panel.showHelp();
@@ -158,11 +168,13 @@ public class GenericEditorFrame
 
 
 
-    /* WindowListener Stuff */
+    //---------------------- WindowListener Stuff --------------------------
+
+
     public void windowActivated(WindowEvent e) {}
     public void windowClosed(WindowEvent e) {}
     public void windowClosing(WindowEvent e) {
-	parent.closeChild (this);
+        notifyActionListenersClose();
     }
     public void windowDeactivated(WindowEvent e) {}
     public void windowDeiconified(WindowEvent e) {}
@@ -171,7 +183,48 @@ public class GenericEditorFrame
 
 
 
+    //--------------------- ActionEvent Stuff ------------------------
+
+    public void addActionListener (ActionListener l) {
+	synchronized (action_listeners) {
+	    action_listeners.add (l);
+	}
+    }
+
+    public void removeActionListener (ActionListener l) {
+	synchronized (action_listeners) {
+	    action_listeners.remove (l);
+	}
+    }
+
+
+    private void notifyActionListenersApply () {
+        ActionEvent e = new ActionEvent (this, ActionEvent.ACTION_PERFORMED,
+                                         "Apply");
+        notifyActionListeners (e);
+    }
+
+    private void notifyActionListenersClose () {
+        ActionEvent e = new ActionEvent (this, ActionEvent.ACTION_PERFORMED,
+                                         "Close");
+        notifyActionListeners (e);
+    }
+
+    private void notifyActionListeners (ActionEvent e) {
+        ActionListener l;
+        int i, n;
+        synchronized (action_listeners) {
+            n = action_listeners.size();
+            for (i = 0; i < n; i++) {
+                l = (ActionListener)action_listeners.get(i);
+                l.actionPerformed (e);
+            }
+        }
+    }
+
+
     //------------------------ ChildFrame Stuff ----------------------------
+
     public void destroy () {
         editor_panel.destroy();
 	dispose();

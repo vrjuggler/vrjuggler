@@ -59,7 +59,7 @@ import VjConfig.*;
  *  @author Christopher Just
  *  @version $Revision$
  */
-public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListener, ChildFrameParent {
+public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListener {
 
 
     private class CollectorSummaryButton extends JButton {
@@ -309,25 +309,36 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
 
 
     public void actionPerformed (ActionEvent e) {
-	if (e.getSource() instanceof AnomaliesButton) {
+        Object source = e.getSource();
+
+        if (source instanceof GenericGraphFrame) {
+            GenericGraphFrame f = (GenericGraphFrame)source;
+            child_frames.removeElement(f);
+            f.destroy();
+        }
+	else if (source instanceof AnomaliesButton) {
 	    System.out.println ("not implemented");
 	}
-	else if (e.getSource() instanceof GraphButton) {
+	else if (source instanceof GraphButton) {
 	    GraphButton b = (GraphButton)e.getSource();
 	    GenericGraphPanel gp = new SummaryGraphPanel (b.collector, b.phase);
-	    GenericGraphFrame gf = new GenericGraphFrame (gp, "Graph of " + b.collector.getName() + " phase " + b.phase, this);
+	    GenericGraphFrame gf = new GenericGraphFrame (gp, "Graph of " + b.collector.getName() + " phase " + b.phase);
+            gf.addActionListener (this);
+
 	    child_frames.addElement(gf);
 	    gf.show();
 
 	}
-	else if (e.getSource() instanceof CollectorSummaryButton) {
+	else if (source instanceof CollectorSummaryButton) {
 	    PerfDataCollector col = ((CollectorSummaryButton)e.getSource()).collector;
 	    GenericGraphPanel gp = new SummaryGraphPanel (col);
-	    GenericGraphFrame gf = new GenericGraphFrame (gp, "Summary Graph of " + col.getName() , this);
+	    GenericGraphFrame gf = new GenericGraphFrame (gp, "Summary Graph of " + col.getName());
+            gf.addActionListener (this);
+
 	    child_frames.addElement(gf);
 	    gf.show();
 	}
-	else if (e.getSource() == max_samples_box) {
+	else if (source == max_samples_box) {
 	    int numsamps;
 	    String s = (String)max_samples_box.getSelectedItem();
 	    if (s.equalsIgnoreCase("<Infinite>"))
@@ -337,9 +348,9 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
 	    //System.out.println ("setting max samples to " + numsamps);
 	    perf_module.setMaxSamples(numsamps);
 	}
-	else if (e.getSource() == display_choice)
+	else if (source == display_choice)
 	    refreshDisplay();
-//  	else if (e.getSource() == collection_choice) {
+//  	else if (source == collection_choice) {
 //  	    Object o = collection_choice.getSelectedItem();
 //  	    if (o instanceof String)
 //  		setCurrentCollector (null);
@@ -348,20 +359,20 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
 //  	    //current_collector = (PerfDataCollector)collection_choice.getSelectedItem();
 //  	    //refreshDisplay();
 //  	}
-	else if (e.getSource() == preskip_box) {
+	else if (source == preskip_box) {
 	    preskip = Integer.parseInt (preskip_box.getText().trim());
 	    refreshDisplay();
 	}
-	else if (e.getSource() == postskip_box) {
+	else if (source == postskip_box) {
 	    postskip = Integer.parseInt (postskip_box.getText().trim());
 	    refreshDisplay();
 	}
-	else if (e.getSource() == savecontents_button) {
+	else if (source == savecontents_button) {
 	    //collection.savePerfDataFile ();
             File f = ui_module.getEasyFileDialog().requestSaveFile(perf_module.getFile(), ui_module, perf_filter);
             perf_module.savePerfDataFile (f);
 	}
-	else if (e.getSource() == load_button) {
+	else if (source == load_button) {
             File f = ui_module.getEasyFileDialog().requestOpenFile (perf_module.getFile().getParentFile(), ui_module, perf_filter);
             if (f != null) {
                 String name = perf_module.loadNewPerfDataFile (f);
@@ -369,11 +380,11 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
                     refreshDisplay();
             }
 	}
-	else if (e.getSource() == print_button) {
+	else if (source == print_button) {
 	     String s = current_collector.dumpAverages (preskip, postskip, true, anomalycutoff);
 	     System.out.println (s);
 	}
-	else if (e.getSource() == print_all_button) {
+	else if (source == print_all_button) {
 	    String s = "";
 	    PerfDataCollector col;
 	    for (int i = 0; i < perf_module.getSize(); i++) {
@@ -382,7 +393,7 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
 	    }
 	    System.out.println (s);
 	}
-	else if (e.getSource() == perf_module) {
+	else if (source == perf_module) {
 	    String s = e.getActionCommand();
 	    if (s.equalsIgnoreCase ("update"))
 		refreshDisplay();
@@ -417,20 +428,6 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
 //      public void refresh() {
 //  	refreshDisplay();
 //      }
-
-
-
-    /********************** JFrameParent Stuff **********************/
-
-    public void closeChild (ChildFrame f) {
-	child_frames.removeElement(f);
-	f.destroy();
-    }
-
-
-    public void applyChild (ChildFrame f) {
-        ;
-    }
 
 
 

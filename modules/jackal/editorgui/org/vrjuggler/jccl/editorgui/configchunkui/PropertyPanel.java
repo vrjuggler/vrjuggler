@@ -203,26 +203,6 @@ public class PropertyPanel extends JPanel implements ActionListener {
 
 
 
-//     public void removePanel (VarValuePanel p) {
-// 	valuepanels.remove(p);
-// 	// annoying but true: we need to remove p and the label component left of it
-// 	Component comps[] = eastpanel.getComponents();
-// 	for (int i = 0; i < comps.length; i++) {
-// 	    if (comps[i] == p) {
-// 		eastpanel.remove (comps[i-1]);
-// 		eastpanel.remove(p);
-// 		Box pr = (Box)getParent();
-// 		pr.validate();
-// 		//pr.repaint (pr.getBounds());
-//                 pr.repaint();  // in jdk < 1.4, box isn't a JComponent.
-//                                // what in cthulhu's name were they thinking?
-// 		return;
-// 	    }
-// 	}
-//     }
-
-
-
     public Property getValue() {
 	Property p = new Property (prop);
 	//p.vals.removeAllElements();
