@@ -39,6 +39,7 @@
 
 #include <GL/gl.h>
 
+#include <gadget/Devices/EventWindow/InputAreaWin32.h>
 #include <gadget/Devices/EventWindow/EventWindowWin32.h>
 
 #include <vrj/Draw/OGL/GlWindow.h>
@@ -46,7 +47,9 @@
 namespace vrj
 {
 
-class VJ_CLASS_API GlWindowWin32 : public GlWindow, public gadget::EventWindowWin32
+class VJ_CLASS_API GlWindowWin32 : public GlWindow
+	, public gadget::InputAreaWin32
+//	, public gadget::EventWindowWin32
 {
 public:
    GlWindowWin32();
@@ -89,6 +92,15 @@ public:
 
    void configWindow( vrj::Display* disp );
 
+	virtual void setDelegate(gadget::EventWindowWin32* delegate)
+	{
+		InputAreaWin32::setDelegate(delegate);
+		mIsEventSource = true;
+		mUseOwnDisplay = false;
+	   // Custom configuration
+      gadget::InputAreaWin32::mWidth = GlWindowWin32::mWindowWidth;
+      gadget::InputAreaWin32::mHeight = GlWindowWin32::mWindowHeight;
+	}
 protected:
    // WindowProcedure to deal with the events generated.
    // Called only for the window that we are controlling
@@ -127,30 +139,13 @@ protected:
 
    static std::map<HWND, GlWindowWin32*> mGlWinMap;
 
-   /**
-    * Called with any events to process from win keyboard.
-    * Called from seperate process (event window device update).
-    */
-   virtual void processEvent( UINT message, UINT wParam, LONG lParam );
-
-   /** do the stuff needed to become a gadgeteer device.
-    *  @pre can be called any time
-    */
-   void becomeEventWindowDevice();
-
-   /** do the stuff to make this not a gadgeteer device.
-    *  @pre can be called any time
-    */
-   void removeEventWindowDevice();
-
 private:
-    HWND  mWinHandle;      /**< Window handle */
-    HGLRC mRenderContext;  /**< Permenant Rendering context */
-    HDC   mDeviceContext;  /**< Private GDI Device context */
+   HGLRC mRenderContext;  /**< Permenant Rendering context */
+   HDC   mDeviceContext;  /**< Private GDI Device context */
 
-    std::string    mWindowName;
-    int            mPipe;
-    std::string    mXDisplayName;       /**<  Name of the x display to use */
+   std::string						mWindowName;
+   int								mPipe;
+   std::string						mXDisplayName;       /**<  Name of the x display to use */
 };
 
 } // End of vrj namespace
