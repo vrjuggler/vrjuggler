@@ -430,6 +430,7 @@ case $OS_TYPE in
         gadget_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
         gadget_ldflags_linker="$gadget_ldflags_compiler"
         gadget_libs='-lgadget'
+        gadget_prof_libs='-lgadget_p'
         gadget_extra_libs="$LDFLAGS $LIBS $DTK_LDFLAGS $APP_EXTRA_LIBS_X11"
 
         Gadgeteer_lib='-lgadget'
@@ -438,6 +439,7 @@ case $OS_TYPE in
         gadget_ldflags_compiler="/link /libpath:\$prefix/lib/debug "
         gadget_ldflags_linker="/libpath:\$prefix/lib/debug "
         gadget_libs='gadget.lib'
+        gadget_prof_libs='gadget.lib'
         gadget_extra_libs="$LDFLAGS $LIBS $DTK_LDFLAGS"
 
         Gadgeteer_lib='gadget.lib'
@@ -486,7 +488,7 @@ AC_SUBST(gadget_extra_cxxflags)
 AC_SUBST(gadget_ldflags_compiler)
 AC_SUBST(gadget_ldflags_linker)
 AC_SUBST(gadget_libs)
-AC_SUBST(gadget_libs_all)
+AC_SUBST(gadget_prof_libs)
 AC_SUBST(Gadgeteer_lib)
 AC_SUBST(gadget_extra_ldflags_compiler)
 AC_SUBST(gadget_extra_ldflags_linker)
