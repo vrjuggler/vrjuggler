@@ -124,7 +124,7 @@ public class PropertySheetFactory extends PropertyComponent
             if(value.getClass() == ConfigElement.class)
             {
                // Embedded Element.
-               addEmbeddedElement(sheet, ctx, elm, value, prop_def, row, 0);
+               addEmbeddedElement(sheet, ctx, elm, value, prop_def, row);
                ++row;
             }
             else
@@ -207,8 +207,7 @@ public class PropertySheetFactory extends PropertyComponent
          if(value.getClass() == ConfigElement.class)
          {
             // Embedded Element.
-            addEmbeddedElement(sheet, ctx, elm, value, propDef, row,
-                               list_number);
+            addEmbeddedElement(sheet, ctx, elm, value, propDef, row);
          }
          else // List of normal values.
          {
@@ -241,7 +240,7 @@ public class PropertySheetFactory extends PropertyComponent
     */
    private void addDeleteButton(PropertySheet sheet, ConfigContext ctx,
                                 ConfigElement elm, PropertyDefinition propDef,
-                                int propValueNum, int row)
+                                int row)
    {
       ClassLoader loader = getClass().getClassLoader();
       Icon remove_icon =
@@ -263,30 +262,24 @@ public class PropertySheetFactory extends PropertyComponent
          final ConfigContext temp_ctx = ctx;
          final ConfigElement temp_elm = elm;
 
-         // Use the index of the property value that the delete button is
-         // being associated with to perform the property removal.  Using the
-         // value won't work because the value could change between now and
-         // the time that the user performs the value delete operation.
-         // XXX: What happens when value re-ordering is supported?
-         final int temp_index = propValueNum;
-
          remove_button.addActionListener(new ActionListener()
          {
             public void actionPerformed(ActionEvent evt)
             {
                Component source = (Component) evt.getSource();
                PropertyComponent temp = (PropertyComponent) source.getParent();
-               temp_elm.removeProperty(temp_string, temp_index, temp_ctx);
+               TableLayout tl = (TableLayout)temp.getLayout();
 
-               if(temp.getLayout() instanceof TableLayout)
-               {
-                  TableLayout tl = (TableLayout)temp.getLayout();
-                  // Get the row that this panel is in.
-                  TableLayoutConstraints tlc = tl.getConstraints(source);
-                  int row = tlc.row1;
-                  temp.remove(source);
-                  tl.deleteRow(row);
-               }
+               // Get the row that this panel is in.
+               TableLayoutConstraints tlc = tl.getConstraints(source);
+               int row = tlc.row1;
+
+               // Calculate the property index on the fly bsaed on our row.
+               int value_index = row - PropertySheet.VAR_LIST_VALUE_START_ROW;
+               temp_elm.removeProperty(temp_string, value_index, temp_ctx);
+
+               temp.remove(source);
+               tl.deleteRow(row);
 
                temp.revalidate();
                temp.repaint();
@@ -347,7 +340,7 @@ public class PropertySheetFactory extends PropertyComponent
       sheet.add(new JLabel(label),
                 PropertySheet.LABEL_COLUMN + "," + row + ",F,F");
 
-      addDeleteButton(sheet, ctx, elm, propDef, propValueIndex, row);
+      addDeleteButton(sheet, ctx, elm, propDef, row);
 
       revalidate();
       repaint();
@@ -355,8 +348,7 @@ public class PropertySheetFactory extends PropertyComponent
 
    public void addEmbeddedElement(PropertySheet sheet, ConfigContext ctx,
                                   ConfigElement elm, Object value,
-                                  PropertyDefinition propDef, int row,
-                                  int propValueNum)
+                                  PropertyDefinition propDef, int row)
    {
       // Embedded Element
       // Adding a List
@@ -373,7 +365,7 @@ public class PropertySheetFactory extends PropertyComponent
                                     TableLayout.FULL, TableLayout.FULL);
       sheet.add(editor_list, c);
 
-      addDeleteButton(sheet, ctx, elm, propDef, propValueNum, row);
+      addDeleteButton(sheet, ctx, elm, propDef, row);
 
       revalidate();
       repaint();
