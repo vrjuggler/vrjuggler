@@ -173,12 +173,8 @@ public class XMLConfigCommunicator
     /** Reads a command stream from the network.  
      *  Returns control when it reaches the end of a single command.
      */
-    public boolean readStream (InputStream instream, String id) 
+    public void readStream (InputStream instream, String id) 
     throws IOException {
-        if (!connected) {
-            Core.consoleErrorMessage ("Net", "XMLConfigCommunicator.readStream called without connection.");
-            return false;
-        }
 
 	ConfigChunk c;
         Document doc;
@@ -190,19 +186,19 @@ public class XMLConfigCommunicator
             //System.out.println ("xml parse begin");
             doc = builder.parse (instream);
             //System.out.println ("xml parse end");
-            return parseCommands (doc.getDocumentElement());
+            parseCommands (doc.getDocumentElement());
             //System.out.println ("xml parse interpret end");
         }
         catch (Exception e) {
-            System.out.println ("jaxp parsin' error.\n");
-            e.printStackTrace();
-            return false;
+            IOException e1 = new IOException ("XML Config protocol error: " + e.getMessage());
+            //e1.initCause (e);
+            throw e1;
         }
     }
 
 
 
-    protected boolean parseCommands (Element node) {
+    protected void parseCommands (Element node) throws Exception {
         Node child;
         String name = node.getTagName ();
 
@@ -234,7 +230,7 @@ public class XMLConfigCommunicator
                 active_chunkdb.clear();
             active_chunkdb.addAll(db);
             Core.consoleTempMessage (component_name, "Reading ConfigChunks -- Finished");
-            return true;
+//             return true;
         }
         else if (name.equalsIgnoreCase ("apply_descs")) {
             boolean all = node.getAttribute("all").equalsIgnoreCase("true");
@@ -268,11 +264,11 @@ public class XMLConfigCommunicator
             // new ChunkDescs are available.
             ChunkFactory.addChunkDescDB (db);
             Core.consoleTempMessage (component_name, "Reading ChunkDescs -- Finished");
-            return true;
+//             return true;
         }
         else if (name.equalsIgnoreCase ("refresh_all")) {
             getChunks();
-            return true;
+//             return true;
         }
         else if (name.equalsIgnoreCase ("remove_chunks")) {
 //             boolean all = node.getAttribute("all").equalsIgnoreCase("true");
@@ -285,14 +281,15 @@ public class XMLConfigCommunicator
 
             active_chunkdb.removeAll (db);
             Core.consoleTempMessage (component_name, "Removing ConfigChunks -- Finished");
-            return true;
+//             return true;
         }
         else if (name.equalsIgnoreCase ("remove_descs")) {
-            return true; // do nothing
+//             return true; // do nothing
         }
         else {
-            System.out.println ("Unrecognized command: " + name);
-            return false;
+            throw new Exception ("Unrecognized command: " + name);
+//             System.out.println ("Unrecognized command: " + name);
+//             return false;
         }
     }
 

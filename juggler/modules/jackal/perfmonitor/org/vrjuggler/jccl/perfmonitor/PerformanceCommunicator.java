@@ -140,11 +140,10 @@ public class PerformanceCommunicator
     /** Reads a command stream from the network.  
      *  Returns control when it reaches the end of a single command.
      */
-    public boolean readStream (InputStream instream, String id) 
+    public void readStream (InputStream instream, String id) 
     throws IOException {
         ConfigStreamTokenizer in = new ConfigStreamTokenizer (new InputStreamReader (instream));
         perf_module.readStream (in, id);
-        return true;
     }
 
 

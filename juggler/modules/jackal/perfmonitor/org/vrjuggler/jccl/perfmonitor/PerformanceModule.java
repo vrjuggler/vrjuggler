@@ -52,7 +52,7 @@ import VjControl.*;
 public class PerformanceModule extends DefaultCoreModule {
 
 
-    public Vector collectors;  // v of PerfDataCollector
+    public List collectors;  // v of PerfDataCollector
     public int max_samples;
     public File file;
     public List performance_module_listeners;
@@ -119,14 +119,14 @@ public class PerformanceModule extends DefaultCoreModule {
 
     public void write (DataOutputStream out) throws IOException {
 	for (int i = 0; i < collectors.size(); i++) {
-	    PerfDataCollector col = (PerfDataCollector)collectors.elementAt(i);
+	    PerfDataCollector col = (PerfDataCollector)collectors.get(i);
 	    col.write (out);
 	}
     }
 
 
     public void removeAllData () {
-	collectors.removeAllElements();
+	collectors.clear();
         notifyPerformanceModuleListenersRemoveAll();
     }
 
@@ -134,7 +134,7 @@ public class PerformanceModule extends DefaultCoreModule {
     public void setMaxSamples (int n) {
 	max_samples = n;
 	for (int i = 0; i < collectors.size(); i++)
-	    ((PerfDataCollector)collectors.elementAt(i)).setMaxSamples(n);
+	    ((PerfDataCollector)collectors.get(i)).setMaxSamples(n);
     }
 
 
@@ -143,20 +143,17 @@ public class PerformanceModule extends DefaultCoreModule {
 	return collectors.size();
     }
 
-    public PerfDataCollector getCollector (int i) {
-	try {
-	    return (PerfDataCollector)collectors.elementAt(i);
-	}
-	catch (ArrayIndexOutOfBoundsException e) {
-	    return null;
-	}
+
+    public PerfDataCollector getCollector (int i) throws ArrayIndexOutOfBoundsException {
+        return (PerfDataCollector)collectors.get(i);
     }
+
 
     public PerfDataCollector getCollector (String _name) {
 	int i;
 	PerfDataCollector p;
 	for (i = 0; i < collectors.size(); i++) {
-	    p = (PerfDataCollector) collectors.elementAt (i);
+	    p = (PerfDataCollector) collectors.get (i);
 	    if (p.name.equalsIgnoreCase (_name))
 		return p;
 	}
@@ -166,7 +163,7 @@ public class PerformanceModule extends DefaultCoreModule {
     
     public PerfDataCollector addCollector (String _name, int _num) {
 	PerfDataCollector p = new PerfDataCollector (_name, _num, max_samples);
-	collectors.addElement (p);
+	collectors.add (p);
         notifyPerformanceModuleListenersAdd (p);
 	return p;
     }
@@ -256,7 +253,7 @@ public class PerformanceModule extends DefaultCoreModule {
 	String s = "";
 
 	for (i = 0; i < collectors.size(); i++) {
-	    p = (PerfDataCollector) collectors.elementAt (i);
+	    p = (PerfDataCollector) collectors.get (i);
 	    s += p.dumpAverages (preskip, postskip, doanomaly, anomalycutoff);
 	    s += "--------------------------------------\n";
 	}

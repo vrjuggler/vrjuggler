@@ -375,24 +375,17 @@ public class NetworkModule
     public void run() {
         try {
             while (connected) {
-                //System.out.println ("a");
-                if (!read())
-                    break;
+                read();
             }
         }
-        catch (Exception e) {
-            if (connected) {
-                Core.consoleInfoMessage (component_name, 
-                                         "Network IO exception: " + e);
-                disconnect ();
-            }
-            else
-                System.out.println ("Net exception: " + e);
+        catch (EOFException e) {
+            disconnect();
         }
         System.out.println ("quitting network listen thread");
     }
 
 
+    /** Utility for read. */
     protected String readLine (InputStream instream) throws IOException {
         StringBuffer s = new StringBuffer(64);
         char ch;
@@ -400,7 +393,7 @@ public class NetworkModule
         for (;;) {
             i = instream.read();
             if (i == -1)
-                throw new IOException();
+                throw new EOFException();
             ch = (char)i;
             if (ch == '\n')
                 break;
@@ -411,33 +404,44 @@ public class NetworkModule
 
 
     /** Attempts to read a command from the network.
-     *  Networking currently fails if one of the readers encounters
-     *  an error, which is a little too fragile...
+     *  Throws EOFException when the stream ends, or if we are not
+     *  currently connected.
      */
-    protected boolean read () throws IOException {
+    protected void read () throws EOFException {
 	ConfigChunk c;
         String id = null;
 	NetCommunicator comm = null;
         boolean accepted = false;
         boolean retval = false;
-
-	if (!connected)
-	    return false;
-
         String s;
         int j, k;
-        // need to parse the <protocol handler="foo"> line
-        do {
-            s = readLine (instream);
-            System.out.println ("read stream begin: '" + s + "'");
-            j = s.indexOf ("<protocol handler=\"");
-            k = s.lastIndexOf ('"');
-            if ((j != -1) && (k >= j + 19))
-                id = s.substring (j+19,k);
-            
-        } while (id == null);
-        System.out.println ("protocol id name is '" + id + "'");
 
+	if (!connected)
+	    throw new EOFException();
+
+        try {
+            // need to parse the <protocol handler="foo"> line
+            do {
+                s = readLine (instream);
+                System.out.println ("read stream begin: '" + s + "'");
+                j = s.indexOf ("<protocol handler=\"");
+                k = s.lastIndexOf ('"');
+                if ((j != -1) && (k >= j + 19))
+                    id = s.substring (j+19,k);
+                
+            } while (id == null);
+            System.out.println ("protocol id name is '" + id + "'");
+        }
+        catch (IOException e) {
+            if (e instanceof EOFException)
+                // Throw the EOFException here to terminate the read thread.
+                throw (EOFException)e;
+            else {
+                Core.consoleInfoMessage (component_name, e.toString());
+                return;
+            }
+        }
+            
         // check communicators
         synchronized (communicators) {
             int i, n = communicators.size();
@@ -449,16 +453,26 @@ public class NetworkModule
                 }
             }
         }
-        if (accepted) {
-            ProtocolInputStream in = new ProtocolInputStream (instream, "</protocol>");
-            retval = comm.readStream (in, id);
-            in.windToEnd();
+        ProtocolInputStream in = new ProtocolInputStream (instream, "</protocol>");
+        try {
+            if (accepted) {
+                comm.readStream (in, id);
+                in.windToEnd();
+            }
+            else {
+                Core.consoleErrorMessage (component_name, "Unknown protocol handler: '" + s + "'");
+                in.windToEnd();
+            }
         }
-        else {
-            Core.consoleErrorMessage (component_name, "Unknown protocol handler: '" + s + "'");
-            retval = false;;
+        catch (IOException e) {
+            // We ignore EOFExceptions thrown by readStream because that 
+            // would only signal the end of the ProtocolInputStream, and
+            // not its parent input stream.
+            if (e instanceof EOFException)
+                return;
+            else
+                Core.consoleInfoMessage (component_name, e.toString());
         }
-        return retval;
     }
 
 
