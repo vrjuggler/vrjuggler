@@ -124,7 +124,7 @@ DOC_PKGS	= $(BASE_PKG)			\
                   $(BASE_PKG).iconviewer	\
                   $(BASE_PKG).treeviewer
 
-webroot		= $(HOME)/public_html/phpjug
+webroot		= $(HOME)/public_html/jugglerweb
 instdir		= tweek/1.0
 doc_prefix	= $(webroot)/$(instdir)
 DOC_ROOT	= programmer.reference.java
