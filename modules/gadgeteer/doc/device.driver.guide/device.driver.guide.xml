@@ -7,7 +7,7 @@
 
     <subtitle>Device Driver Authoring Guide</subtitle>
 
-    <releaseinfo>Version 0.1</releaseinfo>
+    <releaseinfo>Version 0.2</releaseinfo>
 
     <pubdate>$Date$</pubdate>
   </bookinfo>
@@ -820,7 +820,7 @@
             <methodsynopsis>
               <modifier>virtual</modifier>
 
-              <type>int</type>
+              <type>bool</type>
 
               <methodname>startSampling</methodname>
 
@@ -862,7 +862,7 @@ mThread = new vpr::Thread(functor);</programlisting>
             <methodsynopsis>
               <modifier>virtual</modifier>
 
-              <type>int</type>
+              <type>bool</type>
 
               <methodname>stopSampling</methodname>
 
@@ -879,7 +879,7 @@ mThread = new vpr::Thread(functor);</programlisting>
             <methodsynopsis>
               <modifier>virtual</modifier>
 
-              <type>int</type>
+              <type>bool</type>
 
               <methodname>sample</methodname>
 
@@ -1472,9 +1472,9 @@ public:
    }
 
    virtual void updateData();
-   virtual int  startSampling();
-   virtual int  sample();
-   virtual int  stopSampling();
+   virtual bool startSampling();
+   virtual bool sample();
+   virtual bool stopSampling();
 
    static std::string getElementType();
 
@@ -1565,7 +1565,7 @@ void ButtonDevice::updateData()
 /**
  * Spanws the sample thread, which calls MyButtonDevice::sample() repeatedly.
  */
-int ButtonDevice::startSampling()
+bool ButtonDevice::startSampling()
 {
    mRunning = true;
    mSampleThread = new vpr::Thread(threadedSampleFunction, (void*) this);
@@ -1573,11 +1573,11 @@ int ButtonDevice::startSampling()
    if ( ! mSampleThread-&#62;valid() )
    {
       mRunning = false;
-      return 0; // thread creation failed
+      return false; // thread creation failed
    }
    else
    {
-      return 1; // thread creation success
+      return true; // thread creation success
    }
 }
 
@@ -1585,9 +1585,9 @@ int ButtonDevice::startSampling()
  * Records (or samples) the current data.  This is called repeatedly by the
  * sample thread created by startSampling().
  */
-int ButtonDevice::sample()
+bool ButtonDevice::sample()
 {
-   int status(0);
+   bool status(false);
 
    if ( mRunning )
    {
@@ -1598,14 +1598,14 @@ int ButtonDevice::sample()
       addDigitalSample(samples);
 
       // Successful sample.
-      status = 1;
+      status = true;
    }
 
    return status;
 }
 
 /** Kills the sample thread. */
-int ButtonDevice::stopSampling()
+bool ButtonDevice::stopSampling()
 {
    mRunning = false;
 
@@ -1616,7 +1616,7 @@ int ButtonDevice::stopSampling()
       delete mSampleThread;
       mSampleThread = NULL;
    }
-   return 1;
+   return true;
 }
 
 /**
