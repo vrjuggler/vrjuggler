@@ -92,7 +92,8 @@ MAKEFLAGS	+= --no-print-directory
 DEPGEN_TOOL_CC	= @CC@
 DEPGEN_TOOL_CXX	= @CXX@
 MKINSTALLDIRS	= $(scriptdir)/mkinstalldirs
-MKPATH		= $(JUGGLERROOT_ABS)/Doozer++/mk
+DPP_DIR		= $(JUGGLERROOT_ABS)/Doozer++
+MKPATH		= $(DPP_DIR)/mk
 MTREE_CMD	= @MTREE_CMD@
 RM_LN		= @RM_LN@
 TWEEKROOT_ABS	= @SAFE_TWEEKROOT_ABS@
@@ -107,6 +108,7 @@ EXTRA_CXXFLAGS		= $(CXXFLAGS_DYNLIB) @VPR_CXXFLAGS@
 EXTRA_DEFS		= -D_TWEEK_BUILD_ @EXTRA_DEFS@
 EXTRA_DEPEND_FLAGS	= -I$(top_srcdir)
 EXTRA_INCLUDES		= -I$(top_srcdir)
+EXTRA_INSTALL_ARGS	+= $(SYMLINK)
 
 # -----------------------------------------------------------------------------
 # Makedepend commands.  Doozer++ uses $(MKDEP_C) and $(MKDEP_CXX).

@@ -250,15 +250,15 @@ endif
 	@$(MAKE) beforeinstall
 	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N install-libs
 	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N do-post-install
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
           $(VPRROOT_ABS)/ChangeLog $(projdatadir)
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
           $(VPRROOT_ABS)/COPYING.txt $(projdatadir)
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
           $(VPRROOT_ABS)/INSTALL.txt $(projdatadir)
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
           $(VPRROOT_ABS)/README.txt $(projdatadir)
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
           $(VPRROOT_ABS)/RELEASE_NOTES.txt $(projdatadir)
 	@echo "Build time: `LTIME=C date`" > $(projdatadir)/BUILD_TIME
 	@echo "==============================================================="

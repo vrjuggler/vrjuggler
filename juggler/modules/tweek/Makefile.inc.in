@@ -227,40 +227,9 @@ endif	# ifndef NO_JAVA
 # =============================================================================
 links:
 	@echo "------------------------------------------------"
-	@echo "Setting up developer installation links"
+	@echo "Setting up developer installation"
 	@echo "------------------------------------------------"
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/tweek
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_NAME)
-	@$(MAKE) -C tweek instlinks="$(instlinks)" links
-ifeq ($(BUILD_CXX), Y)
-ifeq (@OS_TYPE@, Win32)
-	cd $(instlinks)/$(LIBDIR_NAME) && cp -r $(LIBDIR_BASE)/* .
-else
-	for lib in $(LIBS) ; do 					\
-            cd $(instlinks)/$(LIBDIR_NAME) && $(RM_LN) $$lib* &&	\
-              $(LN_S) $(LIBDIR_BASE)/$$lib* ./ ;			\
-          done
-endif
-	cd $(instlinks)/include/tweek && $(RM_LN) ./*.h &&		\
-          $(LN_S) $(TWEEKROOT_ABS)/tweek/*.h ./
-	cd $(instlinks)/include/tweek && $(RM_LN) ./tweekDefines.h &&	\
-          $(LN_S) $(topdir)/tweek/tweekDefines.h ./
-	cd $(instlinks)/include/tweek && $(RM_LN) ./tweekParam.h &&	\
-          $(LN_S) $(topdir)/tweek/tweekParam.h ./
-endif
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
-ifndef NO_JAVA
-ifeq ($(BUILD_JAVA), Y)
-	@$(MAKE) -C java instlinks="$(instlinks)" tweek-gui-links
-ifeq ($(BUILD_EXTENSIONS), Y)
-	@$(MAKE) -C extensions/java instlinks="$(instlinks)" extensions-gui-links
-endif
-	cd $(instlinks)/bin && $(RM_LN) ./idl* &&			\
-          $(LN_S) $(JUGGLERROOT_ABS)/external/JacORB/idl* ./
-endif
-endif
-	cd $(instlinks)/bin && cp -p $(topdir)/tweek-config .
-	@echo ""
+	@$(MAKE) SYMLINK=-l prefix="$(instlinks)" install-debug
 	@echo ""
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$TWEEK_BASE_DIR to:'
@@ -328,7 +297,7 @@ post-install:
 	@$(MAKE) install-test
 	@$(MAKE) install-m4
 	@$(MAKE) install-java-idl
-	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
+	$(INSTALL) $(SYMLINK) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)	\
           $(topdir)/tweek-config $(bindir)
 
 install-java-idl:
@@ -359,14 +328,14 @@ pre-install-headers:
 	$(MTREE_CMD) -Ude -f $(mtreedir)/TWEEK.include.dist -p $(prefix)
 
 post-install-headers:
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
           $(TWEEKROOT_ABS)/tweek/tweekConfig.h				\
           $(includedir)/tweek/tweekConfig.h
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
           $(TWEEKROOT_ABS)/tweek/tweek.h $(includedir)/tweek/tweek.h
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
           $(topdir)/tweek/tweekDefines.h $(includedir)/tweek
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
           $(topdir)/tweek/tweekParam.h $(includedir)/tweek
 
 # Install the Java-based software if possible.
@@ -402,7 +371,7 @@ install-m4:
 	@echo "Installing Autoconf m4 macros"
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(datadir)/aclocal
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
           $(JUGGLERROOT_ABS)/macros/tweek.m4 $(datadir)/aclocal
 
 # =============================================================================
