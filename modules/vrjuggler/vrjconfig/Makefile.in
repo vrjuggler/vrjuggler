@@ -109,28 +109,6 @@ VRJConfig.jar: $(VRJCONFIG_CLASSES) $(UI_CLASSES) $(PLACER_CLASSES) $(WIZARD_CLA
 		$(UI_DIR)/images/*.png \
 		LICENSE-java-laf.txt
 
-links:
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin/beans
-ifneq ($(JARS), )
-	cd $(instlinks)/bin &&						\
-          for jar in $(JARS) ;						\
-          do								\
-              rm -f ./$$jar ;						\
-              $(LN_S) $(topdir)/vrjconfig/$$jar ./ ;			\
-          done
-endif
-ifneq ($(BEANS), )
-	cd $(instlinks)/bin/beans &&					\
-          for bean in $(BEANS) ;					\
-          do								\
-              rm -f ./$$bean.jar ./$$bean.xml ;				\
-              $(LN_S) $(topdir)/vrjconfig/$$bean.jar ./ ;		\
-              $(LN_S) $(VJROOT_ABS)/vrjconfig/$$bean.xml ./ ;	\
-          done
-endif
-	cd $(instlinks)/bin && rm -f ./vrjconfig &&			\
-          $(LN_S) $(VJROOT_ABS)/vrjconfig/vrjconfig.sh ./vrjconfig
-
 # This cannot be named 'install' because Doozer++ already defines that.
 vrjconfig-install:
 	@echo "------------------------------------------------"
