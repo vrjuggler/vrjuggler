@@ -35,6 +35,7 @@
 
 #include <vrj/vrjConfig.h>
 
+#include <string>
 #include <gmtl/Vec.h>
 #include <jccl/Config/ConfigChunkPtr.h>
 
@@ -125,12 +126,16 @@ public:
    bool isActive()
    { return mActive; }
 
-    void setName(std::string name)
-   { mName = name; }
+   void setName(const std::string& name)
+   {
+      mName = name;
+   }
 
    /** Gets the name of this display. */
-   std::string getName()
-   { return mName;}
+   const std::string& getName()
+   {
+      return mName;
+   }
 
    /**
     * @note If we are in simulator, we can not be in stereo.
