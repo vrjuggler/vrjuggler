@@ -187,8 +187,20 @@ public class ConfigChunkCellEditor
          }
       }
 
-      // If there is no specialized editor for the PropertyDesc, find an editor
-      // for its value.
+      // If there is no specialized editor for the PropertyDesc, check if this
+      // editor has enumerated values.
+      if (ed == null)
+      {
+         // This editor has enumerated values, use a special editor
+         if (desc.getNumEnums() > 0)
+         {
+            EnumeratedPropertyValueEditor epve = new EnumeratedPropertyValueEditor();
+            epve.setPropertyDesc(desc);
+            ed = epve;
+         }
+      }
+
+      // As a last resort, find an editor for the value class
       if (ed == null)
       {
          ed = PropertyEditorManager.findEditor(value.getClass());
