@@ -104,13 +104,11 @@ public:
    /**
     * Constructs an address that is associated with the given port number.
     * The address will be set to a wildcard.
-    *
-    * @param port The port to associate with the IP address.
     */
-   InetAddrSIM( const vpr::Uint32 port = 0 )
+   InetAddrSIM()
    {
       this->copy( InetAddrSIM::AnyAddr );
-      setAddress(0x7F000001, port);   // 127.0.0.1:port
+      setAddress(0x7F000001, 0);   // 127.0.0.1:port
       setFamily( vpr::SocketTypes::INET );
       setDebugData();
    }
