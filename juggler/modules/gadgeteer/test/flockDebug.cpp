@@ -106,7 +106,8 @@ int main()
 {
    // Flock parameters
    flock.setPort("/dev/ttyS0");  // linux
-   flock.setBaudRate(38400);
+   //flock.setBaudRate(38400);
+   flock.setBaudRate(115200);
    //fconfig.numBirds = 1;
    flock.setHemisphere(UPPER_HEM);
    flock.setFilterType(AC_NARROW);
@@ -183,6 +184,7 @@ int main()
             else
             {  flock.setOutputFormat(Flock::Output::Format(unsigned(cur_format)+1)); }
          }
+         break;
       
       case '8':
       {
@@ -194,6 +196,19 @@ int main()
          {  std::cout << "success.\n";}   
       }
       break;
+      case '9':
+         {
+            FlockStandalone::Status stat = flock.getStatus();
+            if(FlockStandalone::RUNNING == stat)
+            {
+               flock.startStreaming();
+            }
+            else if(FlockStandalone::STREAMING == stat)
+            {
+               flock.stopStreaming();
+            }
+         }
+         break;
       case 'a':
          printSamples();
          break;
@@ -314,7 +329,7 @@ void setRtsValue()
 
 void printSamples()
 {
-   unsigned num_samples(20);
+   unsigned num_samples(5);
    std::cout << "Printing " << num_samples << " samples:" << std::endl;
    
    for(unsigned s=0;s<num_samples;++s)
@@ -323,7 +338,11 @@ void printSamples()
       gmtl::Matrix44f s0 = flock.getSensorPosition(0);
       gmtl::Coord3fXYZ coord;
       gmtl::set(coord, s0);
-      std::cout << s << ":  p:" << coord.mPos << "  r:" << coord.mRot << std::endl;
+      gmtl::Quatf quat = gmtl::make<gmtl::Quatf>(s0);
+      std::cout << s << ":  p:" << coord.mPos << "  r:" 
+                     << " {" << gmtl::Math::rad2Deg(coord.mRot[0]) << ", "
+                     << gmtl::Math::rad2Deg(coord.mRot[1]) << ", "
+                     << gmtl::Math::rad2Deg(coord.mRot[2]) <<  "  q:" << quat << std::endl;
    }  
 }
 
@@ -340,7 +359,7 @@ void printContinuousSamples()
       gmtl::Matrix44f s0 = flock.getSensorPosition(0);
       gmtl::Coord3fXYZ coord;
       gmtl::set(coord, s0);
-      std::cout << "p:" << coord.mPos << "  r:" << coord.mRot << "\r";
+      std::cout << "p:" << coord.mPos << "  r:" << coord.mRot << "\n";
    }  
 }
 
