@@ -5,9 +5,27 @@ import os;
 import sys;
 import os.path
 
+try:
+   import wing.wingdbstub;       # stuff for debugging
+except ImportError:
+   pass
+
+# Set current path to local path so the following path additions work
+our_file_name = os.path.abspath(sys.argv[0])
+our_dir = os.path.dirname(our_file_name)
+module_dir = sys.path[0]
+#print "our file: ", our_file_name
+#print "our dir: ", our_dir
+#print "module dir: ", module_dir
+
+os.chdir(our_dir)
+pj = os.path.join
+
 # Add another path to the search path
-sys.path.insert(0,os.path.abspath("../Server"))
-#sys.path.insert(0,os.path.abspath("../deps/Pyro"))   # Pyro deps
+sys.path.insert(0, os.path.normpath(pj(module_dir, "../Server")) )
+
+print "sys path:\n", sys.path, "\n"
+
 
 import MainWindow;
 import ServerConfig
