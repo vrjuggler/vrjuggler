@@ -43,7 +43,6 @@
 #include <arpa/inet.h>
 #include <time.h>
 
-#define MYPORT 4000 /* Indy port number */
 #define TCP_PORT 6000 /* bird server port */
 
 
