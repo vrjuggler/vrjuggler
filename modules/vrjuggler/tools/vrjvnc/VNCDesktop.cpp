@@ -235,11 +235,8 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
 
       // Translate that point into the coordinates VNC wants to see.
       //
-      // x,y desktop point just like x desktop.  origin upper left, y increases going down
+      // vnc x,y desktop point just like x desktop.  origin upper left, y increases going down
       //     The valid range is [0,mVncWidth or mVncHeight]
-//      float x(isect[0] - desktop_ul_trans[2][0]);
-//      float y(mDesktopWidth - isect[1] - desktop_ul_trans[2][1]);    // This flips to the x coordinate system
-
       float vnc_x = isect_point[gmtl::Xelt] * mDesktopToVncWidthScale;                          // Scale
       float vnc_y = -(isect_point[gmtl::Yelt] - mDesktopHeight) * mDesktopToVncHeightScale;     // Flip and scale
 
@@ -335,8 +332,6 @@ void VNCDesktop::draw()
       }
       else
       {
-         //glMultMatrixf(mDesktopMatrix.mData);
-
          glColor3f(1.0f, 1.0f, 1.0f);
          glBindTexture(GL_TEXTURE_2D, tex_name);
          glBegin(GL_QUADS);
@@ -354,9 +349,8 @@ void VNCDesktop::draw()
             glVertex3f(0.0f, mDesktopHeight, 0.0f);
          glEnd();
 
-         // XXX: It would probably be good to render nothing on the back
-         // side of the desktop polygon.
 
+         // Check for errors
          err = glGetError();
 
          if ( err != GL_NO_ERROR )
