@@ -258,9 +258,9 @@ public class PropertySheetFactory extends PropertyComponent
                   temp.remove((Component)evt.getSource()); 
                   tl.deleteRow(row);
                }
-               temp.refresh();
-               temp.invalidate();
-               temp.validate();
+
+               temp.revalidate();
+               temp.repaint();
             }
          });
       }
@@ -281,9 +281,9 @@ public class PropertySheetFactory extends PropertyComponent
       
       TableLayoutConstraints c = new TableLayoutConstraints(0, row, 1, row, TableLayout.FULL, TableLayout.FULL);
       sheet.add(editor_list, c);
-      
-      sheet.refresh();
-      editor_list.refresh();
+
+      revalidate();
+      repaint();
    }
    
    public void addNormalEditor(PropertySheet sheet, ConfigElement elm, Object value, 
@@ -300,11 +300,8 @@ public class PropertySheetFactory extends PropertyComponent
       
       addDeleteButton(sheet, elm, prop_def, value, row);
 
-      //We must refresh things in the following order:
-      // 1) This control.
-      // 2) All contained containers recursively.
-      sheet.refresh();
-      editor.refresh();
+      revalidate();
+      repaint();
    }
    
    public void addEmbeddedElement(PropertySheet sheet, ConfigElement elm, Object value, PropertyDefinition prop_def, int row)
@@ -319,9 +316,9 @@ public class PropertySheetFactory extends PropertyComponent
       sheet.add(editor_list, c);
       
       addDeleteButton(sheet, elm, prop_def, value, row);
-      
-      sheet.refresh();
-      editor_list.refresh();
+
+      revalidate();
+      repaint();
    }
    
    private void addNewNormalEditor(ConfigElement elm, PropertyDefinition prop_def)

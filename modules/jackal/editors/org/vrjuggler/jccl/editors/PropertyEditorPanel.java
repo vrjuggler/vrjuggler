@@ -36,16 +36,9 @@ public class PropertyEditorPanel extends PropertyComponent
       this.add(mEditorComponent, BorderLayout.CENTER);
    }
 
-   public void refresh()
-   {
-      updateMyRow();
-      this.getLayout().layoutContainer(this);
-      this.repaint();
-      updateMyRow();
-   }
-
    public void nameChanged(ConfigElementEvent evt)
    {;}
+
    public void propertyValueChanged(ConfigElementEvent evt)
    {
       if(evt.getProperty().equals(mPropName))
