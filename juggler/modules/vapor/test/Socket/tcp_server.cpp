@@ -37,6 +37,7 @@
 int
 main (int argc, char* argv[]) {
     int status;
+    vpr::InetAddr local;
     vpr::Uint16 port = 15432;    // Default listening port
 
     // If we got an argument, it names a different value for the port.
@@ -44,11 +45,9 @@ main (int argc, char* argv[]) {
         port = (unsigned short) atoi(argv[1]);
     }
 
-    vpr::InetAddr local(port);
-    const vpr::InetAddr& remote = vpr::InetAddr::AnyAddr;
-
     // Create an acceptor socket that listens on port.
-    vpr::SocketStream sock(local, remote);
+    local.setPort(port);
+    vpr::SocketStream sock(local, vpr::InetAddr::AnyAddr);
 
     // Open in server mode.
     if ( sock.openServer() ) {

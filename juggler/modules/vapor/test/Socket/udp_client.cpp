@@ -36,14 +36,16 @@
 
 int
 main (int argc, char* argv[]) {
+    vpr::InetAddr remote_addr;
+
     if ( argc != 3 ) {
         fprintf(stderr, "Usage: %s <address> <port>\n", argv[0]);
     }
 
     // Create a socket that is sending to a remote host named in the first
     // argument listening on the port named in the second argument.
-    vpr::SocketDatagram sock(vpr::InetAddr::AnyAddr,
-                             vpr::InetAddr(argv[1], atoi(argv[2])));
+    remote_addr.setAddress(argv[1], atoi(argv[2]));
+    vpr::SocketDatagram sock(vpr::InetAddr::AnyAddr, remote_addr);
 
     if ( sock.open() ) {
         char buffer[40];

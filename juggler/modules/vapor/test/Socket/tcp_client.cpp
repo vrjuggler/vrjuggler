@@ -36,17 +36,26 @@
 
 int
 main (int argc, char* argv[]) {
+    vpr::InetAddr remote_addr;
     vpr::SocketStream* sock;
 
     // If we got one argument, it is of the form <address>:<port>.
     if ( argc == 2 ) {
-        sock = new vpr::SocketStream(vpr::InetAddr::AnyAddr,
-	                             vpr::InetAddr(argv[1]));
+        if ( ! remote_addr.setAddress(argv[1]) ) {
+            fprintf(stderr, "Failed to set address %s\n", argv[1]);
+            return 1;
+        }
+
+        sock = new vpr::SocketStream(vpr::InetAddr::AnyAddr, remote_addr);
     }
     // If we got two arguments, they are <address> and <port>.
     else if ( argc == 3 ) {
-        sock = new vpr::SocketStream(vpr::InetAddr::AnyAddr,
-                                     vpr::InetAddr(argv[1], atoi(argv[2])));
+        if ( ! remote_addr.setAddress(argv[1], atoi(argv[2])) ) {
+            fprintf(stderr, "Failed to set address %s %s\n", argv[1], argv[2]);
+            return 1;
+        }
+
+        sock = new vpr::SocketStream(vpr::InetAddr::AnyAddr, remote_addr);
     }
     else {
         fprintf(stderr, "Usage: %s <address>:<port>\n", argv[0]);

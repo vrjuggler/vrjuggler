@@ -83,7 +83,9 @@ public:
       bool result = 0;
       
       // make a new socket that will connect to port "port"
-      vpr::SocketStream	connector_socket( vpr::InetAddr::AnyAddr, vpr::InetAddr(port) );
+      vpr::InetAddr remote_addr;
+      remote_addr.setPort(port);
+      vpr::SocketStream	connector_socket( vpr::InetAddr::AnyAddr, remote_addr );
       
       // run the test many times.
       for (int x = 0; x < num_of_times_to_test; ++x)
@@ -111,8 +113,11 @@ public:
       const int backlog = 5;
       bool result = 0;
 
+      vpr::InetAddr local_addr;
+
       // make a new socket listening on port "port"
-      vpr::SocketStream	acceptor_socket( vpr::InetAddr((int)port), vpr::InetAddr::AnyAddr );
+      local_addr.setPort(port);
+      vpr::SocketStream	acceptor_socket( local_addr, vpr::InetAddr::AnyAddr );
       
       // start/stop the acceptor many times...
       for (int x = 0; x < num_of_times_to_test; ++x)
@@ -203,9 +208,11 @@ public:
       vpr::Uint16 port = 6940;
       //const int backlog = 5;
       bool result = 0;
-      
+      vpr::InetAddr remote_addr;
+
       // make a new socket that will connect to port "port"
-      vpr::SocketStream	connector_socket( vpr::InetAddr::AnyAddr, vpr::InetAddr(port) );
+      remote_addr.setPort(port);
+      vpr::SocketStream	connector_socket( vpr::InetAddr::AnyAddr, remote_addr );
       
       // run the test many times.
       for (int x = 0; x < num_of_times_to_test; ++x)
@@ -248,9 +255,11 @@ public:
       vpr::Uint16 port = 6940;
       const int backlog = 5;
       bool result = 0;
+      vpr::InetAddr local_addr;
 
       // make a new socket listening on port "port"
-      vpr::SocketStream	acceptor_socket( vpr::InetAddr((int)port), vpr::InetAddr::AnyAddr );
+      local_addr.setPort(port);
+      vpr::SocketStream	acceptor_socket( local_addr, vpr::InetAddr::AnyAddr );
       
       // open socket
       result = acceptor_socket.open();
@@ -333,8 +342,11 @@ public:
       bool bindSuccess( false );
       
       vpr::Uint16 port=15432;
+      vpr::InetAddr local_addr;
       vpr::SocketStream*	sock;
-      sock = new vpr::SocketStream(vpr::InetAddr("localhost",port), vpr::InetAddr::AnyAddr);	
+
+      local_addr.setAddress("localhost", port);
+      sock = new vpr::SocketStream(local_addr, vpr::InetAddr::AnyAddr);	
       openSuccess=sock->open();
       if (openSuccess){
          //std::cout<< " Open...";
@@ -358,9 +370,11 @@ public:
       bool openSuccess( false );
       bool closeSuccess( false );
       bool bindSuccess( false );
-      
+      vpr::InetAddr local_addr;
       vpr::Uint16 port = 6976;
-      vpr::SocketStream sock( vpr::InetAddr("localhost",port), vpr::InetAddr::AnyAddr );	
+
+      local_addr.setAddress("localhost", port);
+      vpr::SocketStream sock( local_addr, vpr::InetAddr::AnyAddr );	
       
       // make sure aditional calls to bind() fails...
       openSuccess = sock.open();
@@ -388,9 +402,11 @@ public:
       int openSuccess( 0 );
       int closeSuccess( 0 );
       int bindSuccess( 0 );
-      
+      vpr::InetAddr local_addr;
       vpr::Uint16 port = 6977;
-      vpr::SocketStream sock( vpr::InetAddr("localhost",port), vpr::InetAddr::AnyAddr );	
+
+      local_addr.setAddress("localhost", port);
+      vpr::SocketStream sock( local_addr, vpr::InetAddr::AnyAddr );	
       
       // same address, open-bind-close
       const int runs = 100;
@@ -418,13 +434,17 @@ public:
       int openSuccess( 0 );
       int closeSuccess( 0 );
       int bindSuccess( 0 );
-      
+      vpr::InetAddr local_addr;
+      vpr::Uint16 port;
+
       // same address, open-bind-close
       const int runs = 100;
       for (int xx = 0; xx < runs; ++xx)
       {
-         vpr::Uint16 port = 5977 + xx;
-         vpr::SocketStream sock( vpr::InetAddr("localhost", port), vpr::InetAddr::AnyAddr );	
+         port = 5977 + xx;
+	 assertTest(local_addr.setAddress("localhost", port));
+
+         vpr::SocketStream sock( local_addr, vpr::InetAddr::AnyAddr );	
       
          openSuccess += sock.open() ? 1 : 0;
          bindSuccess += sock.bind() ? 1 : 0;
@@ -445,11 +465,15 @@ public:
    {
       //std::cout<<"]==================================================\n"<<std::flush; 
       //std::cout<<" Reuse Address Test (simple version)"<<endl;
-      vpr::InetAddr addr1(13768);
-      //vpr::InetAddr addr2("129.186.232.58", 5438);
+      vpr::InetAddr addr1;
+      //vpr::InetAddr addr2;
       vpr::SocketStream*	sock1;
       vpr::SocketStream*	sock2;
       vpr::SocketStream*	sock3;
+
+      addr1.setPort(13768);
+      //assertTest(addr2("129.186.232.58", 5438));
+
       sock1 = new vpr::SocketStream(addr1, vpr::InetAddr::AnyAddr);
       sock2 = new vpr::SocketStream(addr1, vpr::InetAddr::AnyAddr);
       sock3 = new vpr::SocketStream(addr1, vpr::InetAddr::AnyAddr);
@@ -480,9 +504,11 @@ public:
    {
       vpr::Uint16 port = 6667;
       bool result = 0;
-      
+      vpr::InetAddr remote_addr;
+
       // make a new socket that will connect to port "port"
-      vpr::SocketStream	connector_socket( vpr::InetAddr::AnyAddr, vpr::InetAddr(port) );
+      remote_addr.setPort(port);
+      vpr::SocketStream	connector_socket( vpr::InetAddr::AnyAddr, remote_addr );
 
       // open socket
       result = connector_socket.open();
@@ -498,10 +524,13 @@ public:
    }   
    void reuseAddrTest_acceptor( void* data )
    {
-      vpr::InetAddr addr1( "localhost", 6667 );
+      vpr::InetAddr addr1;
+      
+      threadAssertTest(addr1.setAddress( "localhost", 6667 ));
+
       vpr::SocketStream sock1( addr1, vpr::InetAddr::AnyAddr );
       vpr::SocketStream sock2( addr1, vpr::InetAddr::AnyAddr );
-      
+
       assertTest( sock1.open() && "server Socket::open() failed" );
       sock1.setReuseAddr( true );
       threadAssertTest( sock1.bind() && "server Socket::bind() failed" );
@@ -563,7 +592,10 @@ public:
    void testBlocking_connector(void* arg)
    {
       vpr::Uint16 port = 7001;
-      
+      vpr::InetAddr remote_addr;
+
+      remote_addr.setPort(port);
+
       //keep testing until acceptor says finish
       while (mFinishFlag == false) {
          char  buffer[40];
@@ -572,7 +604,8 @@ public:
          int   amount_read;
          
          // make a new socket that will connect to port "port"
-         vpr::SocketStream	connector_socket( vpr::InetAddr::AnyAddr, vpr::InetAddr(port) );
+         vpr::SocketStream connector_socket(vpr::InetAddr::AnyAddr,
+                                            remote_addr);
       
          // open socket
          connector_socket.setOpenBlocking();
@@ -631,9 +664,12 @@ public:
       char  buffer1[]="Hello, there!";
       char  buffer2[]="Hello! Can you hear me?";
       int   amount_read (0);
-      
+      vpr::InetAddr local_addr;
+
+      local_addr.setPort(port);
+
       // make a new socket listening on port "port"
-      vpr::SocketStream	acceptor_socket( vpr::InetAddr((int)port), vpr::InetAddr::AnyAddr );
+      vpr::SocketStream	acceptor_socket( local_addr, vpr::InetAddr::AnyAddr );
       acceptor_socket.setOpenBlocking();
       
       // open socket
@@ -798,9 +834,11 @@ public:
 
       std::vector<vpr::ThreadMemberFunctor<SocketTest>*> sServerFunctors(mNumSServer);
       std::vector<vpr::Thread*> sServerThreads(mNumSServer);
+      vpr::InetAddr local_addr;
 
+      local_addr.setPort(port);
       vpr::SocketStream*	sock;
-      sock = new vpr::SocketStream(vpr::InetAddr(port), vpr::InetAddr::AnyAddr);	
+      sock = new vpr::SocketStream(local_addr, vpr::InetAddr::AnyAddr);	
       if ( sock->openServer() ) {
          vpr::SocketStream* client_sock;
          thread_args_t* tArgs;
@@ -830,8 +868,10 @@ public:
    void clientFunc(void* arg)
    {
       vpr::SocketStream*	sock;
+      vpr::InetAddr remote_addr;
 
-      sock = new vpr::SocketStream(vpr::InetAddr::AnyAddr, vpr::InetAddr("localhost", 15432));
+      remote_addr.setAddress("localhost", 15432);
+      sock = new vpr::SocketStream(vpr::InetAddr::AnyAddr, remote_addr);
       if ( sock->open() ) {
          char buffer1[40];
 //         char buffer2[] = "What's up?";
@@ -880,8 +920,10 @@ public:
    // =========================================================================
    void testReadnClient (void* arg) {
       vpr::Uint16 port = *((vpr::Uint16*) arg);
-      vpr::SocketStream client_sock(vpr::InetAddr::AnyAddr,
-                                    vpr::InetAddr("localhost", port));
+      vpr::InetAddr remote_addr;
+
+      threadAssertTest(remote_addr.setAddress("localhost", port) && "Could not assign address");
+      vpr::SocketStream client_sock(vpr::InetAddr::AnyAddr, remote_addr);
       char buffer[20];
 
       threadAssertTest(client_sock.open() && "Client socket open failed");
@@ -893,8 +935,9 @@ public:
 
    void testReadn () {
       vpr::Uint16 server_port = 55446;
-      vpr::SocketStream server_sock(vpr::InetAddr((int)server_port),
-                                    vpr::InetAddr::AnyAddr);
+      vpr::InetAddr local_addr;
+      local_addr.setPort(server_port);
+      vpr::SocketStream server_sock(local_addr, vpr::InetAddr::AnyAddr);
       const unsigned int pkt_size = 5;
       ssize_t bytes;
       char buffer[pkt_size];
