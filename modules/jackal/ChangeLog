@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Aug-21-2002 nonchocoboy Integrated DataSource abstraction into the ConfigBroker
+                        NEW VERSION: 0.8.2
 Aug-21-2002 nonchocoboy Introduced the DataSource abstraction for configuration
                         resource retrieval in VRJConfig.
 Aug-20-2002 nonchocoboy Filled in the search tab of the ChunkDescChooser. This
