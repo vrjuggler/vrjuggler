@@ -4,6 +4,7 @@
 #include <tweek/tweekConfig.h>
 
 #include <vector>
+#include <vpr/Sync/Mutex.h>
 
 #include <tweek/CORBA/Subject.h>
 #include <tweek/CORBA/Observer.h>
@@ -37,6 +38,7 @@ public:
 
 private:
    std::vector<Observer_var> m_observers;
+   vpr::Mutex m_observers_mutex;
 };
 
 } // End of tweek namespace
