@@ -448,6 +448,11 @@ void aMotionStar::sample() {
         lpBuffer = (char*)lpBuffer + bytesReceived;
 
       }
+
+      if ( response.header.error_code != 0 ) {
+        printf("WARNING: Got error code %d from packet\n",
+               (int) response.header.error_code);
+      }
     }
     //    printf(" .....received data #bytes = %d", totalBytesReceived);
 
