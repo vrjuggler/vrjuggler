@@ -132,7 +132,7 @@ bool Flock::config(jccl::ConfigElementPtr e)
       mFlockOfBirds.setMasterAddress( e->getProperty<unsigned>("master_address") );
       mFlockOfBirds.setAddressingMode( (::Flock::AddressingMode) e->getProperty<int>("addressing_mode") );
       mFlockOfBirds.setFilterType( (BIRD_FILT) e->getProperty<int>("filter") ); //
-      mFlockOfBirds.setOutputFormat(::Flock::Output::PositionAngle);          // Default to pos quaternion
+      mFlockOfBirds.setOutputFormat(::Flock::Output::PositionQuaternion);          // Default to pos quaternion
    }
 
    return status;
