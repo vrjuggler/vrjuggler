@@ -52,11 +52,22 @@ public:
    virtual void config(vjConfigChunk* chunk)
    {
       vjProjection::config(chunk);
+
+      vjASSERT((std::string)chunk->getType() == std::string("simDisplay"));
+
+      // Set fov and make sure that it is not 0.0
+      mVertFOV = chunk->getProperty("vert_fov");
+      if(mVertFOV == 0.0f)
+         mVertFOV = 60.0f;
+      mAspectRatio = chunk->getProperty("aspect_ratio");
+      if(mAspectRatio == 0.0f)
+         mAspectRatio = 1.0f;
    }
 
    virtual void calcViewMatrix(vjMatrix& cameraPos)
    {
       mViewMat = cameraPos;
+      // XXX: The frustum is not used
       mFrustum.set(-0.6f, 0.6f, -0.6f, 0.6f, mNearDist, mFarDist);
    }
 
@@ -65,6 +76,10 @@ public:
       out << "vjCameraProjection:\n";
       return out;
    }
+
+public:
+   float mAspectRatio;     // w/h
+   float mVertFOV;         // The vertical field of view
 };
 
 #endif
