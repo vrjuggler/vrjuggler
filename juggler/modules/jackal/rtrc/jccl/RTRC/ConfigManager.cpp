@@ -139,8 +139,13 @@ void ConfigManager::loadRemoteReconfig()
 #endif
 
    std::vector<std::string> search_path(1);
+#ifdef VPR_OS_Win32
+   search_path[0] = base_dir + std::string("\\lib") + 
+                    std::string("\\jccl\\plugins");
+#else
    search_path[0] = base_dir + std::string("/lib") + bit_suffix +
                     std::string("/jccl/plugins");
+#endif
 
    // In the long run, we may not want to hard-code the base name of the
    // plug-in we load.  If we ever reach a point where we have multiple ways
