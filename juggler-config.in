@@ -126,7 +126,7 @@ while test $# -gt 0; do
             echo_cxxflags=yes
             ;;
         --subsystem)
-            echo @THREADS@
+            echo @THREAD_SYS@
             ;;
         --libs)
             echo_libs=yes
