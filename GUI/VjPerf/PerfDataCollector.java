@@ -16,10 +16,12 @@ public class PerfDataCollector {
     public int num; // # of different indices used for datapoints.
     public int numsamps[];
     public double maxvals[];
+    public double sums[];
     int prevplace = -1;
     double prevval = 0.0;
     DataLine dl;
     int place;
+    ConfigChunk infochunk;
 
     public PerfDataCollector(String _name, int _num) {
         datalines = new Vector();
@@ -27,13 +29,48 @@ public class PerfDataCollector {
 	num = _num;
 	numsamps = new int[num];
 	maxvals = new double[num];
+	sums = new double[num];
 	for (int i = 0; i < num; i++) {
 	    numsamps[i] = 0;
 	    maxvals[i] = 0.0;
+	    sums[i] = 0.0;
 	}
 	dl = new DataLine (num);
 	place = 0;
+
+	infochunk = Core.findPrefixMatchChunk (name);
+//  	if (infochunk != null) {
+//  	    //System.out.println ("woo-hoo I found a chunk");
+//  	    //labelsprop = ch.getProperty ("labels");
+//  	}
+//  	else
+//  	    System.out.println ("foo. no chunk");
+
     }
+
+    public int getNumPhases() {
+	return num;
+    }
+
+    public String getName() {
+	return name;
+    }
+
+    public double getAverageForPhase (int _phase) {
+	return sums[_phase]/numsamps[_phase];
+    }
+
+    public String getLabelForPhase (int _phase) {
+	if (infochunk == null)
+	    return "";
+	Property labelsprop = infochunk.getProperty ("labels");
+	if (labelsprop != null) {
+	    if ( _phase < labelsprop.getNum())
+		return labelsprop.getValue(_phase).getString();
+	}
+	return "";
+    }
+
 
     public String toString () {
 	return name;
@@ -82,15 +119,57 @@ public class PerfDataCollector {
     }
 
 
-    public String dumpAverages (int preskip, int postskip, boolean doanomoly, double cutoff) {
+    public void generateAverages (int preskip, int postskip) {
+
 	DataLine dl,dl2;
-	double sums[] = new double[num];
-	//int numsamps[] = new int[num];
 	double total = 0.0;
 	int totalsamps = 0;
 	int i,j;
 	Property labelsprop = null;
 	String label;
+
+	if (preskip < 1)
+	    preskip = 1;
+
+	for (i = 0; i < num; i++) {
+	    sums[i] = 0.0;
+	    maxvals[i] = 0.0;
+	    numsamps[i] = 0;
+	}
+	for (j = preskip; j < datalines.size()-postskip; j++) {
+	    dl = (DataLine)datalines.elementAt(j);
+	    if (j < datalines.size()-1) {
+		dl2 = (DataLine)datalines.elementAt(j+1);
+		if (dl.numlost == 0) {
+		    double t = dl2.vals[0] - dl.vals[0];
+		    if (!Double.isNaN (t)) {
+			totalsamps++;
+			total += t;
+		    }
+		}
+	    }
+	    for (i = 0; i < num; i++) {
+		if (!Double.isNaN(dl.diffs[i])) {
+		    numsamps[i]++;
+		    if (dl.diffs[i] > maxvals[i])
+			maxvals[i] = dl.diffs[i];
+		    sums[i] += dl.diffs[i];
+		    //totalsamps++;
+		    //total += dl.diffs[i];
+		}
+	    }
+	}
+
+    }
+
+    public String dumpAverages (int preskip, int postskip, boolean doanomoly, double cutoff) {
+	DataLine dl,dl2;
+	double total = 0.0;
+	int totalsamps = 0;
+	int i,j;
+	Property labelsprop = null;
+	String label;
+
 
 	ConfigChunk ch = Core.findPrefixMatchChunk (name);
 	if (ch != null) {
@@ -191,8 +270,6 @@ public class PerfDataCollector {
 
 
     try {
-	//place = 0;
-      //dl = new DataLine (num);
       for (;;) {
 	  st.nextToken();
 	  index = (int)st.nval;
@@ -224,15 +301,11 @@ public class PerfDataCollector {
 	      dl.diffs[place] = 0.0;
 	      if (place == index)
 		  break; //kludge
-	      //if (prevplace < place)
 	  }
 	  place = index;
 	  //System.out.println ("place2 is " + place); 
 	  dl.vals[place] = val;
 	  if (prevplace != -1) {
-	      //if (prevplace < index)
-	      //for (j = prevplace +1; j < index; j++) 
-	      //dl.diffs[j] = 0.0;
 	      dl.diffs[place] = dl.vals[place] - prevval;
 	  }
 	  else
@@ -241,7 +314,6 @@ public class PerfDataCollector {
 	  prevval = val;
 	  place = (place+1);
 	  if (place >= num) {
-	      //dl.numlost = 0;
 	      datalines.addElement(dl);
 	      dl = new DataLine(num);
 	      place = 0;
