@@ -43,35 +43,35 @@ namespace gadget
 {
 
 Input::Input()
- : sPort(NULL),
-   instName(""),
-   port_id(0),
-   myThread(NULL),
-   active(0),
+ : mPort(NULL),
+   mInstName(""),
+   mPortId(0),
+   mThread(NULL),
+   mActive(0),
    current(0),
    valid(1),
    progress(2),
    lock(),
-   baudRate(0)
+   mBaudRate(0)
 {
    //vprDEBUG(vprDBG_ALL,4)<<"*** Input::Input()\n"<< vprDEBUG_FLUSH;
    /*
-   sPort = NULL;
-   myThread = NULL;
-   active = 0;
+   mPort = NULL;
+   mThread = NULL;
+   mActive = true;
    */
 }
 
 Input::~Input()
 {
-    if (sPort != NULL)
-        delete [] sPort;
+    if (mPort != NULL)
+        delete [] mPort;
 }
 
 bool Input::config( jccl::ConfigChunkPtr c)
 {
-  //sPort = NULL;
-  if((sPort != NULL) && (!instName.empty()))
+  //mPort = NULL;
+  if((mPort != NULL) && (!mInstName.empty()))
   {
      // ASSERT: We have already been configured
      //         this prevents config from being called multiple times (once for each derived class)
@@ -82,12 +82,12 @@ bool Input::config( jccl::ConfigChunkPtr c)
   char* t = c->getProperty("port").cstring();
   if (t != NULL)
   {
-    sPort = new char[ strlen(t) + 1 ];
-    strcpy(sPort,t);
+    mPort = new char[ strlen(t) + 1 ];
+    strcpy(mPort,t);
   }
 
-  instName = (std::string)c->getProperty("name");
-  baudRate = c->getProperty("baud");
+  mInstName = (std::string)c->getProperty("name");
+  mBaudRate = c->getProperty("baud");
 
   return true;
 }
@@ -95,23 +95,23 @@ bool Input::config( jccl::ConfigChunkPtr c)
 
 void Input::setPort(const char* serialPort)
 {
-if (myThread != NULL) {
+if (mThread != NULL) {
      std::cerr << "Cannot change the serial Port while active\n";
      return;
   }
-  strncpy(sPort,serialPort,(size_t)30);
+  strncpy(mPort,serialPort,(size_t)30);
 }
 
 char* Input::getPort()
 {
-  if (sPort == NULL) return "No port";
-  return sPort;
+  if (mPort == NULL) return "No port";
+  return mPort;
 }
 
 void Input::setBaudRate(int baud)
 {
-  if (myThread != NULL)
-     baudRate = baud;
+  if (mThread != NULL)
+     mBaudRate = baud;
 }
 
 /*

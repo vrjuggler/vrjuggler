@@ -108,8 +108,8 @@ private:
    IBOX_DATA theData[3];
    // ibox native data in the range of [0..255]
    ibox2 thingie;
-   std::string port_id;
-   long baudRate;
+   std::string mPortStr;
+   long mBaudRate;
 };
 
 };

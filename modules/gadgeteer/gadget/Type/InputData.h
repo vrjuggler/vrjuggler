@@ -98,8 +98,8 @@ protected:
         mTimeStamp = id.mTimeStamp;
     }
 
-    vpr::Interval mInterval;
-    jccl::TimeStamp mTimeStamp;
+    vpr::Interval    mInterval;
+    jccl::TimeStamp  mTimeStamp;
 
 
 }; // class InputData

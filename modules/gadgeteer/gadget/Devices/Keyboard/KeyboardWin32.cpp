@@ -96,7 +96,7 @@ bool KeyboardWin32::config(jccl::ConfigChunkPtr c)
 // processing it's messages
 int KeyboardWin32::startSampling()
 {
-   if (myThread == NULL) {
+   if (mThread == NULL) {
       resetIndexes();
 
       vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
@@ -105,7 +105,7 @@ int KeyboardWin32::startSampling()
 
       KeyboardWin32* devicePtr = this;
 
-      if (0 == (myThread = new vpr::Thread(samplem_keys,(void*)devicePtr)))
+      if (0 == (mThread = new vpr::Thread(samplem_keys,(void*)devicePtr)))
          return 0; //fail
       else {
          return 1;
@@ -156,7 +156,7 @@ int KeyboardWin32::onlyModifier(int mod)
      case VJKEY_ALT:
         return (!m_keys[VJKEY_SHIFT] && !m_keys[VJKEY_CTRL] && m_keys[VJKEY_ALT]);
      default:
-       vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_CONFIG_LVL) << instName << ": OnlyModifier: bad modifier key" << vprDEBUG_FLUSH;
+       vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_CONFIG_LVL) << mInstName << ": OnlyModifier: bad modifier key" << vprDEBUG_FLUSH;
        return 0;
   }
 }
@@ -175,7 +175,7 @@ void KeyboardWin32::updateData()
 
    if (m_keys[VJKEY_CTRL] || m_keys[VJKEY_ALT] || m_keys[VJKEY_SHIFT])
    {
-      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HVERB_LVL) << instName << ": Modifier key is down\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HVERB_LVL) << mInstName << ": Modifier key is down\n" << vprDEBUG_FLUSH;
    }
 */
 
@@ -195,7 +195,7 @@ void KeyboardWin32::updateData()
 // to forward on messages to be handled from in the keyboard object.
 void KeyboardWin32::updKeys(UINT message, UINT wParam, LONG lParam)
 {
-   //vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HVERB_LVL) << instName << ": KeyWin32::updKeys: Processing keys.\n" << vprDEBUG_FLUSH;
+   //vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HVERB_LVL) << mInstName << ": KeyWin32::updKeys: Processing keys.\n" << vprDEBUG_FLUSH;
 
    int key;
    //static HWND lCapture;
@@ -222,7 +222,7 @@ void KeyboardWin32::updKeys(UINT message, UINT wParam, LONG lParam)
                 key = VKKeyToKey(wParam);
                 m_realkeys[key] = 1;
                 m_framekeys[key] += 1;
-                vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HVERB_LVL) << instName
+                vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HVERB_LVL) << mInstName
                            << ": WM_KEYDOWN: " << key << ": "
                            << getKeyName(key).c_str() << std::endl
                            << vprDEBUG_FLUSH;
@@ -231,7 +231,7 @@ void KeyboardWin32::updKeys(UINT message, UINT wParam, LONG lParam)
         case WM_KEYUP:
                 key = VKKeyToKey(wParam);
                 m_realkeys[key] = 0;
-                vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HVERB_LVL) << instName
+                vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HVERB_LVL) << mInstName
                            << ": WM_KEYUP: " << key << std::endl
                      << vprDEBUG_FLUSH;
                 break;
@@ -340,10 +340,10 @@ void KeyboardWin32::updKeys(UINT message, UINT wParam, LONG lParam)
 
 int KeyboardWin32::stopSampling()
 {
-   if (myThread != NULL)
+   if (mThread != NULL)
    {
-      myThread->kill();
-      myThread = NULL;
+      mThread->kill();
+      mThread = NULL;
       std::cout << "Stoppping Keyboard.." << std::endl;
    }
    return 1;
@@ -553,7 +553,7 @@ void KeyboardWin32::createWindowWin32 ()
    root_height = GetSystemMetrics(SM_CYSCREEN);
 
    /* Create the app. window */
-   m_hWnd = CreateWindow(("Juggler Keyboard"), instName.c_str(),
+   m_hWnd = CreateWindow(("Juggler Keyboard"), mInstName.c_str(),
                          WS_OVERLAPPEDWINDOW, m_x,
                          root_height - m_y - m_height, m_width, m_height,
                          (HWND) NULL, NULL, m_hInst, (LPSTR) NULL);

@@ -28,8 +28,8 @@ char BEGIN_STR[6] = "BEGIN";
 // ----------------------------------------------------------------------------
 ibox2::ibox2() {
         port = NULL;
-        slow_timeout = 3.0;
-        fast_timeout = 0.1;
+        slow_timeout = 30; // Set to 3 seconds
+        fast_timeout = 1;  // Set to 1 tenth of a second
         overlap = 0;
         
         /* Set all descr. strings to null strings */

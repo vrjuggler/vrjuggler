@@ -90,7 +90,7 @@ class ThreeDMouse : public gadget::Input, public gadget::Position
 public:
    //: Default constructor
    ThreeDMouse() {
-      myThreadID = NULL;
+      mThreadID = NULL;
    }
 
    virtual bool config(jccl::ConfigChunkPtr c);
@@ -166,7 +166,7 @@ public:
 //     gadget::POS_DATA theData[3];
     gadget::PositionData mData[3];
 
-   vpr::Thread*   myThreadID; // Ptr to the thread object
+   vpr::Thread*   mThreadID; // Ptr to the thread object
    vrj::Vec3      baseVector; // Used to store the base location tooffset from
             // Originally set to 0,0,0
 

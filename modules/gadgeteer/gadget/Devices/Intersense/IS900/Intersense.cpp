@@ -181,7 +181,7 @@ int Intersense::startSampling()
     }
 
 // Has the thread actually started already
-    if(myThread != NULL)
+    if(mThread != NULL)
     {
         vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
                                                 << "vjIntersense: startSampling called, when already sampling.\n"
@@ -203,10 +203,10 @@ int Intersense::startSampling()
             new vpr::ThreadMemberFunctor<Intersense>(this, &Intersense::controlLoop, NULL);
         vpr::Thread* new_thread;
         new_thread = new vpr::Thread(memberFunctor);
-        myThread = new_thread;
+        mThread = new_thread;
 
 
-        if ( myThread == NULL )
+        if ( mThread == NULL )
         {
             return 0;  // Fail
         } else {
@@ -310,13 +310,13 @@ int Intersense::stopSampling()
     if (this->isActive() == false)
         return 0;
 
-    if (myThread != NULL)
+    if (mThread != NULL)
     {
    vprDEBUG(vrjDBG_INPUT_MGR,1) << "vjIntersense::stopSampling(): Stopping the intersense thread... " << vprDEBUG_FLUSH;
 
-   myThread->kill();
-   delete myThread;
-   myThread = NULL;
+   mThread->kill();
+   delete mThread;
+   mThread = NULL;
 
    mTracker.close();
 

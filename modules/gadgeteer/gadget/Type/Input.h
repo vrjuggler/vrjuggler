@@ -126,7 +126,7 @@ public:
    *
    *  The default constructor is intended only for use by the DummyProxies
    *  which do not need to have their serial port and baud rate etc set up.
-   * Also, initializes myThread, and active to null values
+   * Also, initializes mThread, and active to null values
    */
    Input();
 
@@ -190,7 +190,7 @@ public:
    void setPort(const char* serialPort);
    char* getPort();
    void setBaudRate(int baud);
-   int  getBaudRate() { return baudRate;}
+   int  getBaudRate() { return mBaudRate;}
    //@}
 
    /** getInstanceName()
@@ -199,13 +199,13 @@ public:
    * This is the name given to the device in it's config chunk (ie. "MyFlockOfBirds", "TheIbox", etc)
    */
    const std::string getInstanceName() {
-      if (instName.empty())
+      if (mInstName.empty())
          return "Undefined";
-      return instName;
+      return mInstName;
    }
 
    /** Is this input device active?. */
-   int isActive() { return active;}
+   int isActive() { return mActive;}
 
 protected:  // Helpers
    /** Reset the Index Holders
@@ -228,11 +228,11 @@ protected:  // Helpers
    void assertIndexes();
 
 protected:
-   char*       sPort;
-   std::string instName;
-   int         port_id;
-   vpr::Thread*   myThread;   //: The thread being used by the driver
-   int         active;     //: Is the driver active
+   char*          mPort;
+   std::string    mInstName;
+   int            mPortId;
+   vpr::Thread*   mThread;   //: The thread being used by the driver
+   int            mActive;     //: Is the driver active
 
    /** Index holders
    * Current is the index to the current data being returned by GetData
@@ -244,8 +244,8 @@ protected:
    */
    int current, valid, progress;
 
-   vpr::Mutex lock;        //: Mutex for swapping the pointers.
-   int baudRate;           //: Baud rate of the device (if it is serial device)
+   vpr::Mutex  lock;        //: Mutex for swapping the pointers.
+   int         mBaudRate;           //: Baud rate of the device (if it is serial device)
 
    Input (const Input& o) {;}
    void operator= (const Input& o) {;}

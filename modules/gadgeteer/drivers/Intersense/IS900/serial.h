@@ -51,9 +51,9 @@ typedef struct comm_port
 
 #endif
 
-int   rs232InitCommunications( COMM_PORT *port, const char* comPort, DWORD baudRate );
+int   rs232InitCommunications( COMM_PORT *port, const char* comPort, DWORD mBaudRate );
 int   rs232DeinitCommunications( COMM_PORT *port );
-int   rs232SetSpeed( COMM_PORT *port, DWORD baudRate );
+int   rs232SetSpeed( COMM_PORT *port, DWORD mBaudRate );
 int   rs232RxFlush( COMM_PORT *port, WORD numBytes );
 int   rs232InChar( COMM_PORT *port, char *c, int flush );
 WORD  rs232RxCount( COMM_PORT *port );

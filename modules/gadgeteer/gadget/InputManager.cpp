@@ -336,16 +336,16 @@ bool InputManager::removeDevice(const Input* devPtr)
 
 
 /**********************************************************
-  InputManager::removeDevice(char* instName)
+  InputManager::removeDevice(char* mInstName)
 
-  InputManager remove instName from the InputManager,
+  InputManager remove mInstName from the InputManager,
   currently stupifies all the proxies connected to it.
 
 *********************************************** ahimberg */
-bool InputManager::removeDevice(std::string instName)
+bool InputManager::removeDevice(std::string mInstName)
 {
    tDevTableType::iterator dev_found;
-   dev_found = mDevTable.find(instName);
+   dev_found = mDevTable.find(mInstName);
    if(dev_found == mDevTable.end())
       return false;
 
