@@ -317,10 +317,6 @@ public class ConfigChunkDBEditor
       // Run through all chunk descs in the context
       List chunks = getConfigBroker().getChunks(context);
       addChunks(chunks);
-
-      // Expand the root node
-      TreePath path = new TreePath(treeModel.getPathToRoot((TreeNode)treeModel.getRoot()));
-      chunkPropTree.expandPath(path);
    }
 
    /**
@@ -333,6 +329,10 @@ public class ConfigChunkDBEditor
       {
          addChunk((ConfigChunk)itr.next());
       }
+
+      // Make sure the root node is expanded
+      TreePath path = new TreePath(treeModel.getPathToRoot((TreeNode)treeModel.getRoot()));
+      chunkPropTree.expandPath(path);
    }
 
    /**
@@ -625,7 +625,16 @@ public class ConfigChunkDBEditor
          // Remove the config chunk node from its parent. In this case, the
          // tree model will automatically fire off the removed event for us.
          DefaultMutableTreeNode chunk_node = (DefaultMutableTreeNode)itr.next();
+         MutableTreeNode parent = (MutableTreeNode)chunk_node.getParent();
          treeModel.removeNodeFromParent(chunk_node);
+
+         // Walk our way up the tree cleaning up empty parents
+         while ((parent.getParent() != null) && (parent.getChildCount() == 0))
+         {
+            MutableTreeNode next_parent = (MutableTreeNode)parent.getParent();
+            treeModel.removeNodeFromParent(parent);
+            parent = next_parent;
+         }
       }
    }
 
