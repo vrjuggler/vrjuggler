@@ -86,11 +86,10 @@ public:
     * Constructor.
     * @param kern The Kernel that is active (so application has easy access to
     *             the kernel).
-    *    
     */
    App(Kernel* kern);
 
-   /** Just call App(Kernel::instance()). */
+   /** Just call App(vrj::Kernel::instance()). */
    App();
 
    virtual ~App()
@@ -142,7 +141,8 @@ public:
     * This is used when the system (or applications) would like the application
     * to reset to the initial state that it started in.
     */
-   virtual void reset() {;}
+   virtual void reset()
+   {;}
 
    /**
     * Does the application currently have focus?
@@ -217,15 +217,17 @@ protected:
    /** @note Inherited from jccl::ConfigElementHandler. */
    virtual bool configAdd(jccl::ConfigElementPtr element)
    {
-     boost::ignore_unused_variable_warning(element);
-     vprASSERT(false);  return false;
+      boost::ignore_unused_variable_warning(element);
+      vprASSERT(false);
+      return false;
    }
 
    /** @note Inherited from jccl::ConfigElementHandler. */
    virtual bool configRemove(jccl::ConfigElementPtr element)
    {
       boost::ignore_unused_variable_warning(element);
-      vprASSERT(false); return false;
+      vprASSERT(false);
+      return false;
    }
 
 public:
