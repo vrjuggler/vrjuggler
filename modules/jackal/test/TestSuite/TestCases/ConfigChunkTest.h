@@ -72,9 +72,9 @@ public:
 
       // Test chunk ptr
       CPPUNIT_ASSERT( chunk1->getNum("single_chunk") == 1);
-      jccl::ConfigChunkPtr chunk2;
-      chunk2 = chunk1->getProperty("single_chunk",0);
-
+      std::string chunk2_name = chunk1->getProperty("single_chunk");    // Have to get chunk ptr and string "chunk name"
+      jccl::ConfigChunkPtr chunk2 = chunkdb.getChunk(chunk2_name);
+            
       CPPUNIT_ASSERT(chunk2.get() != NULL);
       CPPUNIT_ASSERT( int(chunk2->getProperty("single_int")) == 21);
     }
