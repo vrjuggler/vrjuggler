@@ -198,7 +198,7 @@ int vjGlxWindow::close() {
    if (x_window)
    {
       XDestroyWindow (x_display, x_window);
-      x_window = NULL;
+      x_window = 0;
    }
    if (visual_info)
    {
@@ -237,7 +237,7 @@ void vjGlxWindow::config(vjDisplay* _display)
    window_name = _display->getName();
    pipe = _display->getPipe();
 
-   display_name = (*dispSysChunk)[0]->getProperty("xpipes", pipe);
+   display_name = (*dispSysChunk)[0]->getProperty("xpipes", pipe).cstring();
    if(strcmp(display_name, "-1") == 0)    // Use display env
       strcpy(display_name, getenv("DISPLAY"));
    vjDEBUG(0) << "glxWindow display name is: " << display_name << endl << vjDEBUG_FLUSH;
