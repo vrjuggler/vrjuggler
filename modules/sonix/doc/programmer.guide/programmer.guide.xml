@@ -34,7 +34,7 @@
                <para>Small learning curve, Simple interface and usage.</para>
             </listitem>
             <listitem>
-               <para>Runs on top of several well known audio systems - currently OpenAL and Multigen/Paradigm's AudioWorks. </para>
+               <para>Runs on top of several well known audio systems&mdash;currently OpenAL and Multigen/Paradigm's AudioWorks. </para>
             </listitem>
             <listitem>
                <para>Supports reconfigurability at runtime.</para>
@@ -148,7 +148,7 @@ int main( int argc, char* argv[] )
    <section>
       <title>Reconfiguration</title>
       <para>Sonix is reconfigurable allowing audio APIs to be safely swapped out at runtime without the dependent systems noticing. Application using Sonix expect to be completely portable. Changing sound APIs at run time can be useful so that the user can experiment with quality and latency differences of different hardware and sound APIs. </para>
-      <para>If no audio API is available on a given platform, your calls to Sonix simply are ignored. This gives the benefit that you need no special code in your application to enable or disable sound - it is handled by Sonix. </para>
+      <para>If no audio API is available on a given platform, your calls to Sonix simply are ignored. This gives the benefit that you need no special code in your application to enable or disable sound&mdash;it is handled by Sonix. </para>
       <para>The benefit of reconfiguration is that when something changes, your application code does not need to be aware or do any special handling. Everything in Sonix is changeable behind the scenes during application execution. See <xref linkend="reconfigCode"/> for an example of how to reconfigure Sonix in C++. This probably makes more sense in a more complex application where there is some application logic that triggers sounds and does not want or need to know when a sound has changed state, or when the user has tried out a new audio API.</para>
       <example
         id = "reconfigCode"
@@ -209,7 +209,7 @@ int main( int argc, char* argv[] )
                <para>Adapter (<classname>snx::SoundImplementation</classname>). This adapter provides a common interface to the underlying sound API. </para>
             </listitem>
             <listitem>
-               <para>Prototype (<classname>snx::SoundImplementation</classname>). Making the sound implemention a Prototype allows a new cloned object to be created from it that has duplicate state.</para>
+               <para>Prototype (<classname>snx::SoundImplementation</classname>). Making <classname>snx::SoundImplementation</classname> a Prototype allows a new cloned object to be created from it that has duplicate state.</para>
             </listitem>
             <listitem>
                <para>Store/plugin-method (<classname>snx::SoundFactory</classname>). Each sound implementation is registered with a Store called <classname>snx::SoundFactory</classname>. This Store allows users to select items from its inventory. Another name for Store is "Abstract Factory".</para>
@@ -221,12 +221,12 @@ int main( int argc, char* argv[] )
                <para>Bridge (<classname>sonix</classname> interface class and <classname>snx::SoundImplementation</classname>). The <classname>sonix</classname> class is the audio system abstraction which is decoupled from its implementation <classname>snx::SoundImplementation</classname>. This way the two can vary independently. Bridge also facilitates run-time configuration of the sound API.</para>
             </listitem>
             <listitem>
-               <para>Proxy (<classname>std::string</classname> and <classname>snx::SoundHandle</classname>). <classname>snx::SoundHandle</classname> is how users manipulate their sound object. <classname>snx::SoundHandle</classname> is actually a proxy to a <classname>std::string</classname> proxy. The <classname>std::string</classname> Proxy is what allows Sonix reconfiguration of resources. Rather than using pointers which can easily be left to dangle, the <classname>std::string</classname> serves as a lookup for a protected sound resource located internally to the Sonix tool. The <classname>snx::SoundHandle</classname> wraps this <classname>std::string</classname> to provide a simple and familier C++ object to use as the sound handle. The Sonix class acts as Mediator between every Proxy method and the actual audio system Adapter.</para>
+               <para>Proxy (<classname>std::string</classname> and <classname>snx::SoundHandle</classname>). <classname>snx::SoundHandle</classname> is how users manipulate their sound object. <classname>snx::SoundHandle</classname> is actually a proxy to a <classname>std::string</classname> proxy. The <classname>std::string</classname> Proxy is what allows Sonix reconfiguration of resources. Rather than using pointers which can easily be left to dangle, the <classname>std::string</classname> serves as a lookup for a protected sound resource located internally to the Sonix tool. The <classname>snx::SoundHandle</classname> wraps this <classname>std::string</classname> to provide a simple and familiar C++ object to use as the sound handle. The Sonix class acts as Mediator between every Proxy method and the actual audio system Adapter.</para>
             </listitem>
          </itemizedlist>
       </section>
       <section>
-         <title>Plug-in audio subsystems</title>
+         <title>Pluggable audio subsystems</title>
          <figure
            id    = "howPluginsWork"
          >
