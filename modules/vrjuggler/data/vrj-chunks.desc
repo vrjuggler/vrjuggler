@@ -1193,7 +1193,7 @@ The filters are applied in the order that they are specified in this configurati
       <enumeration name="Centimeters" value="0.01" />
       <enumeration name="Feet" value="0.3048" />
       <enumeration name="Inches" value="0.0254" />
-      <item label="" defaultvalue="" />
+      <item label="Device Units" defaultvalue="1.0" />
     </PropertyDesc>
     <PropertyDesc token="post_translate" name="Post Translation" type="float" variable="0">
       <help>base_T_sensor translation. In units of the current sensor data.</help>
