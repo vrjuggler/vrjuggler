@@ -92,12 +92,9 @@ int main(int argc, char* argv[])
    kernel->loadConfigFile( path + "startup/sim.camerakeyboardproxy.config" );
    kernel->loadConfigFile( path + "startup/sim.digitalsystemcontrols.config" );
    kernel->loadConfigFile( path + "startup/sim.displaysystem.config" );
-   kernel->loadConfigFile( path + "startup/sim.emfileoutput1.config" );
-   kernel->loadConfigFile( path + "startup/sim.envmanager1.config" );
    kernel->loadConfigFile( path + "startup/sim.headkeyboard.config" );
    kernel->loadConfigFile( path + "startup/sim.headproxy.config" );
    kernel->loadConfigFile( path + "startup/sim.mainsimkeyboardproxy.config" );
-   kernel->loadConfigFile( path + "startup/sim.perfmeasure1.config" );
    kernel->loadConfigFile( path + "startup/sim.simcam1proxy.config" );
    kernel->loadConfigFile( path + "startup/sim.simcam2proxy.config" );
    kernel->loadConfigFile( path + "startup/sim.simcamera1pos.config" );
