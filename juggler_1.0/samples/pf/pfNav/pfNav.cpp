@@ -191,6 +191,7 @@ public:
 
       // load these files into perfly to see just what your scenegraph 
       // looked like. . . . .useful for debugging.
+      cout<<"Saving entire scene into lastscene.pfb, COULD TAKE A WHILE!\n"<<flush;
       pfuTravPrintNodes( rootNode, "lastscene.out" );
       pfdStoreFile( rootNode, "lastscene.pfb" );
    }
