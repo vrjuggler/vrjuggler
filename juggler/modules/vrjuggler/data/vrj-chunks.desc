@@ -1240,8 +1240,9 @@
     <PropertyDesc token="sync_method" name="Sync Method" type="int" variable="0">
       <help>Cluster Node that is responsible for syncronizing all other nodes.</help>
       <item label="Sync Method" defaultvalue="0" />
-      <enumeration name="TCP/IP Sockets" value="0" />
-      <enumeration name="TCP/IP Sockets &amp; Serial Port" value="1" />
+      <enumeration name="None" value="0" />
+      <enumeration name="TCP/IP Sockets" value="1" />
+      <enumeration name="TCP/IP Sockets &amp; Serial Port" value="2" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="sigmoid_linear_pos_filter" name="SigmoidLinearPosFilter">
