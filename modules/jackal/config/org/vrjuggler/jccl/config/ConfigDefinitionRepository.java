@@ -102,6 +102,10 @@ public class ConfigDefinitionRepository
    {
       // Get the maximal key
       Map version_map = (Map)mDefs.get(token);
+      if(null == version_map)
+      {
+         throw new IllegalArgumentException("Can not find a definition for token: " + token);  
+      }
       Integer latest_version = (Integer)Collections.max(version_map.keySet());
       return latest_version;
    }
