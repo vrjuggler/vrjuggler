@@ -95,16 +95,21 @@ public:  // APP traversal
    // Required for Performer class
 public:
    static void init();
-   static pfType* getClassType(void){ return classType;}
+   static pfType* getClassType(void){ return classType();}
 private:
-   static pfType* classType;
+   // Performer type data - this part is required for any class which
+   // is derived from a Performer class.  It creates a new pfType
+   // which identifies objects of this class.  All constructors for
+   // this class must then call this->setType( classType() ).
+   static pfType* &classType() { static pfType* ct = NULL; return ct; }
 };
 
 
 
 inline pfNavDCS::pfNavDCS() : pfDCS()
 {
-   setType(classType);  // Set the type
+   assert( pfNavDCS::classType() != NULL && "you must call pfNavDCS::init() before performer inits" );
+   setType( pfNavDCS::classType() );  // Set the type
    mActive = true;
    mNaver = NULL;
 }
@@ -114,13 +119,13 @@ inline pfNavDCS::pfNavDCS() : pfDCS()
 // and set the DCS with it
 inline void pfNavDCS::updateTransformMatrix()
 {
-   vprASSERT(mNaver != NULL);     // We mut have a naver
+   vprASSERT( mNaver != NULL );     // We mut have a naver
 
    // Set the navigation DCS to the new navigation matrix
    // cur_pos = modelspace_M_user
    vrj::Matrix cur_pos_inv, cur_pos;
    cur_pos = mNaver->getCurPos();
-   cur_pos_inv.invert(cur_pos);
+   cur_pos_inv.invert( cur_pos );
    pfMatrix model_move = vrj::GetPfMatrix( cur_pos_inv );
    this->setMat( model_move );
 }
@@ -154,21 +159,12 @@ inline int pfNavDCS::app(pfTraverser *trav)
    return pfDCS::app(trav);        /* Finish by calling the parent class's app() */
 }
 
-
-
-//---------------------------------------------------------------------//
-// Performer type data - this part is required for any class which
-// is derived from a Performer class.  It creates a new pfType
-// which identifies objects of this class.  All constructors for
-// this class must then call setType(classType_).
-pfType *pfNavDCS::classType = NULL;
-
 inline void pfNavDCS::init(void)
 {
- if (classType == NULL)
+   if (pfNavDCS::classType() == NULL)
    {
         pfDCS::init();           // Initialize my parent
-        classType =  new pfType(pfDCS::getClassType(), "pfNavDCS");  // Create the new type
+        pfNavDCS::classType() =  new pfType(pfDCS::getClassType(), "pfNavDCS");  // Create the new type
    }
 }
 //----------------------------------------------------------------------//
