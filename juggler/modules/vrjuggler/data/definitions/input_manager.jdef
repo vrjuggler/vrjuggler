@@ -22,4 +22,28 @@
       </property>
       <upgrade_transform/>
    </definition_version>
+   <definition_version version="2" label="Input Manager">
+      <help>Configuration of the Gadgeteer Input Manager.</help>
+      <parent/>
+      <category>/Input</category>
+      <property valuetype="string" variable="true" name="driver_path">
+         <help>Each value adds to the path where dynamically loadable driver objects can be found.  The path may make use of environment variables.  For example: ${VJ_BASE_DIR}/lib/gadgeteer/drivers</help>
+         <value label="DSO Path" defaultvalue=""/>
+      </property>
+      <property valuetype="string" variable="true" name="driver">
+         <help>The base name of a dynamically loadable driver object.  For example: PinchGlove_drv</help>
+         <value label="Driver module" defaultvalue=""/>
+      </property>
+      <property valuetype="string" variable="true" name="driver_scan_path">
+         <help>This property defines zero or more directories containing dynamically loadable device drivers.  Within the directory, all driver DSOs that are discovered at runtime will be loaded.</help>
+         <value label="DSO directory" defaultvalue=""/>
+      </property>
+      <upgrade_transform>
+         <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+            <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+            <xsl:template match="/">
+            </xsl:template>
+         </xsl:stylesheet>
+      </upgrade_transform>
+   </definition_version>
 </definition>
