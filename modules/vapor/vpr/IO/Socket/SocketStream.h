@@ -170,10 +170,11 @@ public:
      */
     inline int
     getMaxSegmentSize (Int32& size) const {
-        SocketTypes::OptionData option;
+        SocketOptions::Data option;
         int retval;
 
-        retval = m_socket_stream_imp.getOption(SocketTypes::MaxSegment, option);
+        retval = m_socket_stream_imp.getOption(SocketOptions::MaxSegment,
+                                               option);
 
         if ( retval == 0 ) {
             size = option.max_segment;
@@ -187,9 +188,9 @@ public:
      */
     inline int
     setMaxSegmentSize (const Int32 size) {
-        SocketTypes::OptionData option;
+        SocketOptions::Data option;
         option.max_segment = size;
-        return m_socket_stream_imp.setOption(SocketTypes::MaxSegment, option);
+        return m_socket_stream_imp.setOption(SocketOptions::MaxSegment, option);
     }
 
     /**
@@ -197,10 +198,10 @@ public:
      */
     inline int
     getNoDelay (bool& enabled) const {
-        SocketTypes::OptionData option;
+        SocketOptions::Data option;
         int retval;
 
-        retval = m_socket_stream_imp.getOption(SocketTypes::NoDelay, option);
+        retval = m_socket_stream_imp.getOption(SocketOptions::NoDelay, option);
 
         if ( retval == 0 ) {
             enabled = option.no_delay;
@@ -214,9 +215,9 @@ public:
      */
     inline int
     setNoDelay (const bool enable_val) {
-        SocketTypes::OptionData option;
+        SocketOptions::Data option;
         option.no_delay = enable_val;
-        return m_socket_stream_imp.setOption(SocketTypes::NoDelay, option);
+        return m_socket_stream_imp.setOption(SocketOptions::NoDelay, option);
     }
 
 protected:
