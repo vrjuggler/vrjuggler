@@ -104,7 +104,7 @@ namespace gadget
       void getClusterSync()
       {
          mDelta = mClusterSync.getClusterSync(mSockStream);
-         std::cout << "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX " << mDelta.getBaseVal() << std::endl;
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Cluster Sync returned a delta of: " << mDelta.getBaseVal() << std::endl << vprDEBUG_FLUSH;
       }
       
       vpr::Uint64* getDelta()
