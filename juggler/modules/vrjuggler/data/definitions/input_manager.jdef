@@ -43,16 +43,22 @@
          <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                          xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration">
-            <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
-            <xsl:template match="jconf:input_manager">
-               <xsl:element name="input_manager">
+           
+           <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+           <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
+           
+           <xsl:template match="/">
+                <xsl:apply-templates />
+           </xsl:template>
+           
+           <xsl:template match="jconf:input_manager">
+               <xsl:element namespace="{$jconf}" name="input_manager_mine">
                   <xsl:attribute name="name">
                      <xsl:value-of select="@name"/>
                   </xsl:attribute>
-                  <xsl:attribute name="version">2</xsl:attribute>
-
+                  <xsl:attribute namespace="{$jconf}" name="version">2</xsl:attribute>
                   <xsl:if test="count(./jconf:driver) &gt; 0">
-                     <xsl:element name="driver_path">
+                     <xsl:element namespace="{$jconf}" name="driver_path">
                         <xsl:call-template name="get-path">
                            <xsl:with-param name="original" select="./jconf:driver"/>
                            <xsl:with-param name="path_sep"><xsl:text>/</xsl:text></xsl:with-param>
@@ -78,7 +84,7 @@
                   </xsl:choose>
                </xsl:variable>
 
-               <xsl:element name="driver">
+               <xsl:element namespace="{$jconf}" name="driver">
                   <xsl:call-template name="strip-path">
                      <xsl:with-param name="original" select="$no_ext"/>
                      <xsl:with-param name="path_sep"><xsl:text>/</xsl:text></xsl:with-param>
@@ -87,11 +93,13 @@
             </xsl:template>
 
             <xsl:template match="jconf:driver_directory">
-               <xsl:element name="driver_scan_path">
+               <xsl:element namespace="{$jconf}" name="driver_scan_path">
                   <xsl:value-of select="."/>
                </xsl:element>
             </xsl:template>
 
+            <xsl:template match="jconf:dso_file_extension" />
+            
             <xsl:template name="get-path">
                <xsl:param name="original"/>
                <xsl:param name="path_sep"/>
@@ -103,7 +111,7 @@
                </xsl:variable>
                <xsl:value-of select="substring-before($original, $driver_name)"/>
             </xsl:template>
-
+            
             <xsl:template name="strip-path">
                <xsl:param name="original"/>
                <xsl:param name="path_sep"/>
