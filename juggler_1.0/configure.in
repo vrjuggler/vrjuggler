@@ -413,7 +413,7 @@ fi
 OPENGL_API=''			# 'Y' then we are using OpenGL
 
 LIBOPENGL=''
-SYSTEM_OPENGL=''
+_SYSTEM_OPENGL=''
 
 # Test for the OpenGL library if the OpenGL API was enabled.
 if test "x$enable_opengl" = "xyes" ; then
@@ -484,14 +484,14 @@ if test "x$enable_opengl" = "xyes" ; then
         LIBOPENGL="-L${OGLROOT} -lGLU -lGL -lXext"
 
         if test "$PLATFORM" = "HP" ; then
-            SYSTEM_OPENGL="$LIBOPENGL -lX11 -lm -lC"
+            _SYSTEM_OPENGL="$LIBOPENGL -lX11 -lm -lC"
         else
             if test "$ABI" = "64" ; then
-                SYSTEM_OPENGL="-limage $LIBOPENGL -lXmu -lX11 -lm -lC"
+                _SYSTEM_OPENGL="-limage $LIBOPENGL -lXmu -lX11 -lm -lC"
             elif test "$ABI" = "N32" ; then
-                SYSTEM_OPENGL="-limage $LIBOPENGL -lXmu -lX11 -lm -lC"
+                _SYSTEM_OPENGL="-limage $LIBOPENGL -lXmu -lX11 -lm -lC"
             elif test "$ABI" = "O32" ; then
-                SYSTEM_OPENGL="-lmpc -limage -lGLw $LIBOPENGL -lfpe -lXm -lXt -lXmu -lX11 -lm -lmalloc -lC"
+                _SYSTEM_OPENGL="-lmpc -limage -lGLw $LIBOPENGL -lfpe -lXm -lXt -lXmu -lX11 -lm -lmalloc -lC"
             fi
         fi
     # No OpenGL API files were added, so restore $INCLUDES and $LDFLAGS so
@@ -527,7 +527,7 @@ if test "x$enable_perf" = "xyes" ; then
     AC_CHECK_LIB(pf, pfInit,
         AC_CHECK_HEADER(Performer/pf.h,
             PERFORMER_API="Y";	\
-            OGLLIB='-ignore_unresolved -lpf_ogl -lpfdu_ogl -lpfui -lpfutil_ogl'; \
+            _PFOGLLIB='-ignore_unresolved -lpf_ogl -lpfdu_ogl -lpfui -lpfutil_ogl'; \
             AC_DEFINE(VJ_API_PERFORMER,),
             AC_MSG_WARN(*** Performer API will not be used (pfChannel.h not found) ***)),
         AC_MSG_WARN(*** Performer API will not be used (library not found) ***))
@@ -613,11 +613,38 @@ cd "$topdir"
 # alternative to using ${srcdir}.
 VJ_SRCDIR='${VJROOT_ABS}'
 
-# Variables set in Makefiles found in the test tree.
-TEST_VJ_LIBS="-B static -L\${VJ_BASE_DIR}/lib${LIBBITSUF} -lJuggler"
-TEST_VJ_LIBS_SUBST="-B dynamic -L$\${VJ_BASE_DIR}/lib\${LIBBITSUF} -lJuggler"
-TEST_EXTRA_LIBS="$LDFLAGS -B dynamic -L${OGLROOT}/lib${LIBBITSUF} $OGLLIB $SYSTEM_OPENGL $LIBS"
-TEST_EXTRA_LIBS_SUBST="$LDFLAGS -B dynamic -L${OGLROOT}/lib\${LIBBITSUF} $OGLLIB $SYSTEM_OPENGL $LIBS"
+# Variables set in Makefiles found in the test tree.  All variables listed are
+# for use only in the Makefile.in's found in that tree unless otherwise noted.
+# They are used in the following way:
+#
+#     * TEST_VJ_LIBS_BASIC: The basic VR Juggler library.
+#     * TEST_VJ_LIBS_BASIC_SUBST: Used only in the top-level Makefile.in.  It
+#       is used when generating Makefiles in the test directory tree during
+#       the installation process.  Some variables in its assigned value are
+#       not interpolated until that time (making it different from
+#       $TEST_VJ_LIBS_BASIC whose varabiles are interpolated at assignment
+#       time).
+#     * TEST_VJ_LIBS_GL: The VR Juggler OpenGL API library.
+#     * TEST_VJ_LIBS_PF: The VR Juggler Performer API library.
+#     * TEST_EXTRA_LIBS_BASIC: A basic set of extra libraries and linker flags
+#       needed for compiling.  These are put after those listed in the
+#       previous variables in the compile line.
+#     * TEST_VJ_LIBS_GL: The OpenGL libraries needed for compiling with the
+#       OpenGL API.
+#     * TEST_VJ_LIBS_GL_SUBST: Used only in the top-level Makefile.in  It is
+#       used in the same way as $TEST_VJ_LIBS_BASIC_SUBST but is for the
+#       $TEST_VJ_LIBS_GL variable.
+#     * TEST_VJ_LIBS_PF: The Performer libraries needed for compiling with the
+#       Performer API.
+#
+TEST_VJ_LIBS_BASIC="-B static -L\${VJ_BASE_DIR}/lib${LIBBITSUF} -lJuggler"
+TEST_VJ_LIBS_BASIC_SUBST="-B dynamic -L$\${VJ_BASE_DIR}/lib\${LIBBITSUF} -lJuggler"
+TEST_VJ_LIBS_GL="-lJuggler_ogl"
+TEST_VJ_LIBS_PF="-lJuggler_pf"
+TEST_EXTRA_LIBS_BASIC="$LDFLAGS -B dynamic $LIBS"
+TEST_EXTRA_LIBS_GL="-L${OGLROOT}/lib${LIBBITSUF} $_SYSTEM_OPENGL"
+TEST_EXTRA_LIBS_GL_SUBST="-L${OGLROOT}/lib\${LIBBITSUF} $_SYSTEM_OPENGL"
+TEST_EXTRA_LIBS_PF="$_PFOGLLIB"
 
 dnl # AC_SUBST(builddir)
 AC_SUBST(topdir)
@@ -661,10 +688,15 @@ AC_SUBST(SHMEM_SYS)
 AC_SUBST(SYNC_SYS)
 AC_SUBST(THREAD_SYS)
 
-AC_SUBST(TEST_VJ_LIBS)
-AC_SUBST(TEST_VJ_LIBS_SUBST)
-AC_SUBST(TEST_EXTRA_LIBS)
-AC_SUBST(TEST_EXTRA_LIBS_SUBST)
+AC_SUBST(TEST_VJ_LIBS_BASIC)
+AC_SUBST(TEST_VJ_LIBS_BASIC_SUBST)
+AC_SUBST(TEST_VJ_LIBS_GL)
+AC_SUBST(TEST_VJ_LIBS_PF)
+AC_SUBST(TEST_EXTRA_LIBS_BASIC)
+AC_SUBST(TEST_EXTRA_LIBS_BASIC_SUBST)
+AC_SUBST(TEST_EXTRA_LIBS_GL)
+AC_SUBST(TEST_EXTRA_LIBS_GL_SUBST)
+AC_SUBST(TEST_EXTRA_LIBS_PF)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.

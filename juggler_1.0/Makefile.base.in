@@ -120,7 +120,14 @@ LDFLAGS		= @LDFLAGS@ -L/usr/lib${LIBBITSUF} -L/usr/lib
 LDOPTS		= @LDOPTS@
 LIBS		= @LIBS@
 MKPATH		= ${VJROOT_ABS}/mk
-OBJDIR		= .
+
+# Allow overriding the default value of ${OBJDIR} by setting ${BASE_OBJDIR}
+# (probably using an externally defined value).
+ifdef BASE_OBJDIR
+    OBJDIR	:= ${BASE_OBJDIR}
+else
+    OBJDIR	= .
+endif
 
 # -----------------------------------------------------------------------------
 # Compiler command lines.
@@ -204,9 +211,11 @@ ifeq (${ISA}, mips4)
 endif
 
 # -----------------------------------------------------------------------------
-# Library name.
+# Library names.
 # -----------------------------------------------------------------------------
-LIBRARY		= libJuggler
+VJ_LIBRARY	= libJuggler
+GL_LIBRARY	= libJuggler_ogl
+PF_LIBRARY	= libJuggler_pf
 
 @SET_MAKE@
 
