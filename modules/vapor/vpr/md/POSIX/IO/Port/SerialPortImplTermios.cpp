@@ -806,9 +806,13 @@ int SerialPortImplTermios::getCarrierDetect() const
 int SerialPortImplTermios::getDataSetReady() const
 {
    if(getLineFlag(TIOCM_DSR))
+   {
       return 1;
+   }
    else
+   {
       return 0;
+   }
 }
 
 /**
@@ -819,9 +823,13 @@ int SerialPortImplTermios::getDataSetReady() const
 int SerialPortImplTermios::getClearToSend() const
 {
    if(getLineFlag(TIOCM_CTS))
+   {
       return 1;
+   }
    else
+   {
       return 0;
+   }
 }
 
 /**
@@ -832,9 +840,13 @@ int SerialPortImplTermios::getClearToSend() const
 int SerialPortImplTermios::getRingIndicator() const
 {
    if(getLineFlag(TIOCM_RI))
+   {
       return 1;
+   }
    else
+   {
       return 0;
+   }
 }
 
 /** Set the data terminal ready line. */
@@ -848,7 +860,6 @@ vpr::ReturnStatus SerialPortImplTermios::setRequestToSend(bool val)
 {
    return setLineFlag(TIOCM_RTS, val);
 }
-
 
 // ============================================================================
 // Protected methods.
@@ -1068,7 +1079,7 @@ vpr::ReturnStatus SerialPortImplTermios::setBit(const tcflag_t bit,
    return retval;
 }
 
-vpr::ReturnStatus SerialPortImplTermios::setLineFlag(Uint8 flag, bool val)
+vpr::ReturnStatus SerialPortImplTermios::setLineFlag(Uint16 flag, bool val)
 {
    vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
    vprASSERT( ((TIOCM_DTR == flag) || (TIOCM_RTS == flag)) && "Tried to set line flag that can't be set");
@@ -1095,10 +1106,9 @@ vpr::ReturnStatus SerialPortImplTermios::setLineFlag(Uint8 flag, bool val)
    return vpr::ReturnStatus::Succeed;
 }
 
-bool SerialPortImplTermios::getLineFlag(Uint8 flag) const
+bool SerialPortImplTermios::getLineFlag(Uint16 flag) const
 {
    vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
-   //vprASSERT( ((TIOCM_CD
    int line_status;
 
    if(ioctl(mHandle->mFdesc, TIOCMGET, &line_status) == -1)
