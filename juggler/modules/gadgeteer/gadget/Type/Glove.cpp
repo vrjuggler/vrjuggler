@@ -160,6 +160,7 @@ istream& vjGloveData::inputAngles(istream& in)
 ////////////////////////////////////////////////////////////////////////
 vjGlove::vjGlove()
 {
+   //vjDEBUG(vjDBG_INPUT_MGR,3)<<"*** vjGlove::vjGlove()\n"<< vjDEBUG_FLUSH;
    deviceAbilities = deviceAbilities | DEVICE_GLOVE;
    for(int i=0;i<VJ_MAX_GLOVE_DEVS;i++)
       mGlovePos[i] = NULL;
@@ -231,8 +232,8 @@ vjMatrix vjGlove::getGlovePos(vjGloveData::vjGloveComponent component, int devNu
    }
    else
    {
-      vjDEBUG(vjDBG_INPUT_MGR,0) << "ERROR: vjGlove: Trying to get a glove without a position proxy set.\n" << vjDEBUG_FLUSH;
-      vjASSERT(mGlovePos[devNum] != NULL);      // should be false in here
+      vjDEBUG( vjDBG_INPUT_MGR,0) << "ERROR: vjGlove: Trying to get a glove without a position proxy set for device number: "<<devNum<<".\n" << vjDEBUG_FLUSH;
+      vjASSERT( mGlovePos[devNum] != NULL );      // should be false in here
       return vjMatrix();
    }
 }

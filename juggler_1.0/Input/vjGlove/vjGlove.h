@@ -112,12 +112,14 @@ class vjGlove : virtual public vjInput
 {
 public:
    vjGlove();
+   
+   virtual ~vjGlove() {}  
 
    // Let constructor take care of device abilities and init
    virtual bool config(vjConfigChunk* chunk)
    {return vjInput::config(chunk);}
 
-   char* getDeviceName() { return "vjGlove"; }
+   virtual char* getDeviceName() { return "vjGlove"; }
 
 public:  // ---- GLOVE INTERFACE ---- //
    //: Return the angle of the given joint.
@@ -138,8 +140,8 @@ public:  // ---- GLOVE INTERFACE ---- //
    vjGloveData getGloveData(int devNum);
 
 protected:
-   // NOTE: make sure you use the "vjInput::progress" member in the [3] slot here.
-   // you'll then be gaurenteed to not go off the end of this array.
+   // NOTE: make sure you use the "vjInput::progress" member in the [3] slot 
+   // here. Then you'll not go off the end of this array.
    vjGloveData mTheData[VJ_MAX_GLOVE_DEVS][3];
 
   //: This is the positional proxy of the glove.  It defines the location of the

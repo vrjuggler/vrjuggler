@@ -139,7 +139,6 @@ public:
    //-------------------------------------------------------
    //: Transform as vector.
    // w initial = 0.0  ==> Translation doesn't effect vector
-   // No scale by 1/w at end.... why???
    //--------------------------------------------------------
    void xformVec(const vjMatrix& _m, const vjVec3& _v);
 

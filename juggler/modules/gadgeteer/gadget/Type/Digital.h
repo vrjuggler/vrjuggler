@@ -69,11 +69,21 @@ public:
 
 public:
    /* Constructor/Destructors */
-   vjDigital() { deviceAbilities = deviceAbilities | DEVICE_DIGITAL;}
-   ~vjDigital() {}
+   vjDigital() 
+   { 
+      //vjDEBUG(vjDBG_ALL,4)<<"*** vjDigital::vjDigital()\n"<< vjDEBUG_FLUSH; 
+      deviceAbilities = deviceAbilities | DEVICE_DIGITAL;
+   }
+   
+   virtual ~vjDigital()
+   {
+   }
 
    virtual bool config(vjConfigChunk* c)
-   { return vjInput::config(c); }
+   { 
+      //vjDEBUG(vjDBG_ALL,4)<<"*** vjDigital::config()\n"<< vjDEBUG_FLUSH; 
+      return vjInput::config(c); 
+   }
 
    /* Pure virtual functions required from vjInput */
    virtual int startSampling() = 0;
@@ -82,7 +92,7 @@ public:
    virtual void updateData() = 0;
 
    //: Get the name of the digital device
-   char* getDeviceName() { return "vjDigital";}
+   virtual char* getDeviceName() { return "vjDigital";}
 
    //: Get the digital data for the given devNum
    //  Returns digital 0 or 1, if devNum makes sense.<BR>

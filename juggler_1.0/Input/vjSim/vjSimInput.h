@@ -64,21 +64,25 @@ protected:
    };
 
 public:
-   vjSimInput() {;}
+   vjSimInput() 
+   {
+      //vjDEBUG(vjDBG_ALL,4)<<"*** vjSimInput::vjSimInput()\n"<< vjDEBUG_FLUSH;
+   }
+   virtual ~vjSimInput() {}   
 
    //: Configure the simulated input device
    //! POST: Keyboard proxy is configured <br>
-   bool config(vjConfigChunk* chunk);
+   virtual bool config(vjConfigChunk* chunk);
 
 protected:
    //: Check the given keypair
    //! RETURNS: Number of times the key was pressed
    //           with the modifier alone held down
-   int  checkKeyPair(vjKeyModPair& pair);
+   virtual int  checkKeyPair(vjKeyModPair& pair);
 
    //: Get number of time key pressed
    //! RETURNS: Number of time the key is pressed
-   int   checkKey(int keyId);
+   virtual int   checkKey(int keyId);
 
    //: Constructs a vector of key mod pairs
    // Takes as input a chunk that has a list of KeyModPair embeded chunks

@@ -68,6 +68,8 @@ public:
    // Initialize interfaces
    virtual void init()
    {
+      //cout<<"simpleGloveApp::init()"<<flush;
+      
       mGlove.init("VJGlove");
       
       // for the digital glove fingers.
@@ -81,18 +83,24 @@ public:
       mRightMiddle.init("RightMiddle");
       mRightRing.init("RightRing");
       mRightPinky.init("RightPinky");
+      
+      //cout<<" --- done\n"<<flush;
    }
 
    // Execute any initialization needed after API is started
    //  but before the drawManager starts the drawing loops.
    virtual void apiInit()
-   {;}
+   {
+      //cout<<"simpleGloveApp::apiInit()\n"<<flush; 
+   }
 
    //: Function to draw the scene
    //! PRE: OpenGL state has correct transformation and buffer selected
    //! POST: The current scene has been drawn
    virtual void draw()
    {
+      //cout<<"simpleGloveApp::draw()\n"<<flush; 
+      
       initGLState();    // This should really be in another function
       myDraw();
    }
@@ -120,7 +128,9 @@ public:
    /// Function called after tracker update but before start of drawing
    virtual void preFrame()
    {
-      cout<<mLeftThumb->getData()
+     //cout<<"simpleGloveApp::preFrame()\n"<<flush; 
+      
+       cout<<mLeftThumb->getData()
           <<mLeftIndex->getData()
           <<mLeftMiddle->getData()
           <<mLeftRing->getData()

@@ -27,12 +27,12 @@ Begin "Zelda"
             "Motion Star"
         End
         Begin "Simulated Devices"
+            "SimDigitalGlove"
             "Position Simulator"
             "Analog Simulator"
             "Digital Simulator"
             "Glove Gesture Simulator"
             "SimRelativePosition"
-            "SimPinchGlove"
         End
     End
     "Juggler User"

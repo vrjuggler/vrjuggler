@@ -34,7 +34,7 @@ VJSIM_SRCS	:= vjSimAnalog.cpp           \
                   vjSimGloveGesture.cpp  \
                   vjSimInput.cpp         \
                   vjSimPosition.cpp      \
-                  vjSimPinchGlove.cpp    \
+                  vjSimDigitalGlove.cpp    \
                   vjSimRelativePosition.cpp
 
 VJSIM_OBJECTS	:= ${addprefix ${OBJDIR}/,${VJSIM_SRCS:.cpp=.${OBJ_FILE_SUFFIX}}}

@@ -52,8 +52,8 @@
 class vjSimDigital : virtual public vjDigital, public vjSimInput
 {
 public:
-   vjSimDigital() {;}
-   virtual ~vjSimDigital() {;}
+   vjSimDigital();
+   virtual ~vjSimDigital();
 
    virtual bool config(vjConfigChunk* chunk);
 
@@ -65,15 +65,15 @@ public:
    }
 
    /* These functions don't do anything */
-   int startSampling() { return 1; }
-   int stopSampling() { return 1; }
-   int sample() { return 1; }
+   virtual int startSampling() { return 1; }
+   virtual int stopSampling() { return 1; }
+   virtual int sample() { return 1; }
 
    //: Update the data
    virtual void updateData();
 
    //: Get the name of the digital device
-   char* getDeviceName() { return "vjSimDigital";}
+   virtual char* getDeviceName() { return "vjSimDigital";}
    static std::string getChunkType() { return std::string("SimDigital");}
 
 private:

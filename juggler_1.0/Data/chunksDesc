@@ -15,6 +15,13 @@ chunk PinchGlove "PinchGlove" "Configuration for the PinchGlove"
   baud Int 1 "Baud Rate" "Serial port speed (9600)"
   glovePos Chunk 1 "Glove Position" vj_enumeration { "proxyAlias" "PosProxy" } "The position proxy for the glove position. i.e. the tracker on the glove."
   end
+chunk SimDigitalGlove "SimDigitalGlove" "A digital glove simulator"
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
+  keyboardProxy Chunk 1 "Keyboard Proxy" vj_enumeration { "KeyboardProxy" } "The Keyboard to use for event input"
+  keyPairs EmbeddedChunk -1 "KeyPresses" vj_enumeration { "KeyModPair" } "Keypresses to trigger multiple digital inputs"
+  glovePos Chunk 1 "Glove Position" vj_enumeration { "PosProxy" } "The position proxy for the left hand glove position."
+  rightGlovePos Chunk 1 "Right Glove Position" vj_enumeration { "PosProxy" } "The position proxy for the right hand glove position."
+  end
 chunk CyberGlove "CyberGlove" "Configuration for the CyberGlove"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   port String 1 "Port" "Serial port that the CyberGlove is connected to"
@@ -44,7 +51,7 @@ chunk AnaProxy "Analog Proxy" "Used to access a single analog input source"
   end
 chunk DigProxy "Digital Proxy" "Used to access a single digital (binary) input source"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
-  device Chunk 1 "Device" vj_enumeration { "SimDigital" "IBox" "PinchGlove" "ThreeDMouse" "SimPinchGlove" } "The device this proxy attaches to"
+  device Chunk 1 "Device" vj_enumeration { "SimDigital" "IBox" "PinchGlove" "ThreeDMouse" "SimDigitalGlove" } "The device this proxy attaches to"
   unit Int 1 "Unit" "The unit in the device this proxy attaches to"
   end
 chunk apiPerformer "Performer API" "This is information for configuring the Performer API.  It only pertains to Performer."
@@ -89,7 +96,7 @@ chunk Keyboard "Keyboard" "Configures a window that accepts keyboard & mouse inp
   end
 chunk GloveProxy "Glove Proxy" "A Glove Proxy points to a glove device and unit"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
-  device Chunk 1 "Device" vj_enumeration { "CyberGlove" "SimGloveGesture" "PinchGlove" "SimPinchGlove" } "The glove device the proxy connects to."
+  device Chunk 1 "Device" vj_enumeration { "CyberGlove" "SimGloveGesture" "PinchGlove" "SimDigitalGlove" } "The glove device the proxy connects to."
   unit Int 1 "Unit" "The unit number in the device to hook to."
   visible Bool 1 "Visible" "If true, the glove will be rendered in display windows."
   end
@@ -238,10 +245,5 @@ chunk SimRelativePosition "SimRelativePosition" "A positional device simulator f
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   base_frame_proxy Chunk 1 "base_frame_proxy" vj_enumeration { "PosProxy" } "Pos proxy that devices the base frame of reference"
   relative_proxy Chunk 1 "relative_proxy" vj_enumeration { "PosProxy" } "device that is relative to the base frame"
-  end
-chunk SimPinchGlove "SimPinchGlove" "Pinch Glove (or digital glove) Simulator"
-  Name String 1 "Name" "Unique name of an instance of this chunk type"
-  keyboardProxy Chunk 1 "Keyboard Proxy" vj_enumeration { "KeyboardProxy" } "The Keyboard to use for event input"
-  keyPairs EmbeddedChunk -1 "KeyPresses" vj_enumeration { "KeyModPair" } "Keypresses to trigger multiple digital inputs"
   end
 End
