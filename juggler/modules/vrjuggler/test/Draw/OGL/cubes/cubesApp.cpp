@@ -51,7 +51,7 @@
 // Uses a quaternion to do rotation in the environment
 void UserData::updateNavigation()
 {
-   gmtl::Vec3f xyzAngles;
+   gmtl::EulerAngleXYZf xyzAngles;
    gmtl::Vec3f xyzTrans;
 
    // Cur*Transform = New Location
@@ -59,29 +59,24 @@ void UserData::updateNavigation()
    gmtl::Quatf     source_rot, goal_rot, slerp_rot;
 
    gmtl::identity(transformIdent);
-//   gmtl::normalize(source_rot);
-//   source_rot.makeRot(transformIdent);
 
    gmtl::Matrix44f* wand_matrix;
    wand_matrix = mWand->getData();
-   gmtl::setRot( xyzAngles[0], xyzAngles[1], xyzAngles[2], 
-                 gmtl::XYZ, *wand_matrix );
-//   wand_matrix->getXYZEuler(xyzAngles[0], xyzAngles[1], xyzAngles[2]);
-
+   gmtl::setRot( xyzAngles, *wand_matrix );
 
    vprDEBUG(vprDBG_ALL,6) << "===================================\n"
                         << vprDEBUG_FLUSH;
    vprDEBUG(vprDBG_ALL,6) << "Wand:\n" << *wand_matrix << std::endl
                         << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL,6) << "Wand XYZ: " << xyzAngles << std::endl
-                        << vprDEBUG_FLUSH;
+//   vprDEBUG(vprDBG_ALL,6) << "Wand XYZ: " << xyzAngles << std::endl
+//                        << vprDEBUG_FLUSH;
 
    gmtl::set(goal_rot, *wand_matrix); // Create the goal rotation quaternion
 
    if(transformIdent != *wand_matrix)  // If we don't have two identity matrices
    {
       gmtl::slerp(slerp_rot, 0.05f, source_rot, goal_rot); // Transform part way there
-      gmtl::set(slerp_rot, transform);      // Create the transform matrix to use
+      gmtl::set(transform, slerp_rot);      // Create the transform matrix to use
    }
    else
    {
@@ -90,10 +85,9 @@ void UserData::updateNavigation()
 
    vprDEBUG(vprDBG_ALL,6) << "Transform:\n" << transform << std::endl
                         << vprDEBUG_FLUSH;
-   gmtl::setRot(xyzAngles[0],  xyzAngles[1], xyzAngles[2],
-                gmtl::XYZ, transform );
-   vprDEBUG(vprDBG_ALL,6) << "Transform XYZ: " << xyzAngles << std::endl
-                        << vprDEBUG_FLUSH;
+   gmtl::setRot(xyzAngles, transform);
+//   vprDEBUG(vprDBG_ALL,6) << "Transform XYZ: " << xyzAngles << std::endl
+//                        << vprDEBUG_FLUSH;
 
    vprDEBUG(vprDBG_ALL,6) << "Nav:\n" << mNavMatrix << std::endl << std::endl
                         << vprDEBUG_FLUSH;
@@ -130,22 +124,16 @@ void UserData::updateNavigation()
    gmtl::Matrix44f rot_mat, local_xform;
    gmtl::invert(rot_mat, transform);
 
-//   local_xform.makeTrans(0, 0, mCurVelocity);
-//   local_xform.postMult(rot_mat);
    local_xform = gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f(0.0f, 0.0f,
                                                               mCurVelocity));
    gmtl::postMult(local_xform, rot_mat);
 
-//   mNavMatrix.preMult(local_xform);
    gmtl::preMult(mNavMatrix, local_xform);
 
-//   local_xform.getXYZEuler(xyzAngles[0], xyzAngles[1], xyzAngles[2]);
-//   local_xform.getTrans(xyzTrans[0], xyzTrans[1], xyzTrans[2]);
-   gmtl::setRot(xyzAngles[0], xyzAngles[1], xyzAngles[2],
-                gmtl::XYZ, local_xform );
-   gmtl::setTrans(local_xform, xyzTrans[0], xyzTrans[1], xyzTrans[2]);
-   vprDEBUG(vprDBG_ALL,6) << "Transform   Rot: " << xyzAngles << std::endl
-                        << vprDEBUG_FLUSH;
+   gmtl::setRot(xyzAngles, local_xform );
+   gmtl::setTrans(xyzTrans, local_xform);
+//   vprDEBUG(vprDBG_ALL,6) << "Transform   Rot: " << xyzAngles << std::endl
+//                        << vprDEBUG_FLUSH;
    vprDEBUG(vprDBG_ALL,6) << "Transform Trans: " << xyzTrans << std::endl
                         << vprDEBUG_FLUSH;
    vprDEBUG(vprDBG_ALL,6) << "-------------------------------------------"
