@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2004-07-13 patrickh Fixed obscure RTTI problems relating to vpr::TSObject.
+                    NEW VERSION: 0.36.3
 2004-05-20 browner  vpr::Debug can now be told to output to a file instead of
                     just std::cout
 2004-05-17 patrickh Use UuidCreate() on Windows to generate GUIDs.
