@@ -12,21 +12,29 @@
 
 <p><img border="0" src="../../images/myAppHierarchy-highlightVjOglApp.gif"></p>
 <h2>Context specific data&nbsp;</h2>
-<h3>Idea</h3>
-<p>What is a context</p>
-<p>Examples of context specific data</p>
-<p>Why do you need it</p>
+<h3>What is a context</h3>
+<p>OpenGL Window --&gt; context for OGL state machine</p>
+<h3>Examples of context specific data</h3>
+<p>Display lists, texture objects, etc</p>
+<h3>Why do you need it</h3>
+<p>VR Juggler uses a single memory pool for all threads. ie. All threads have
+access to the same variables.&nbsp; So for context specific data...</p>
 <h3>Using</h3>
+
 <p>What does it look like</p>
 <p>How does it work</p>
+<p>Template based smart pointer class</p>
+<p>Dereference like normal pointer</p>
+<p>ie. operator*(), operator-&gt;()</p>
+
+<pre>vjGlContextData&lt;GLunit&gt; myDispList;
+...
+(*myDispList) = glGenList(1);
+...
+glCallList(*myDispList);</pre>
+
 <p>contextInit(), contextClose(), contextPreDraw()<br>
 &nbsp;</p>
-<h2>Tutorial: Application that receives and prints head &amp; wand location</h2>
-<p>[Code here]</p>
-<h3>How does an app get input &nbsp;</h3>
-<h3>Data members</h3>
-<h3>Member functions</h3>
-<p>draw, context, etc</p>
 
 </body>
 
