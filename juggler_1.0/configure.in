@@ -21,7 +21,7 @@ dnl # -------------------------------------------- #
 dnl # Enable binary format.  Possible values are "O32", "N32" or "64".
 dnl # The default is "N32".
 AC_ARG_WITH(abi,
-            [  --with-abi=[O32|N32_M3|N32_M4|64_M3|64_M4|HP|AOUT_i386|ELF_i386]
+            [  --with-abi=<O32|N32_M3|N32_M4|64_M3|64_M4|HP|AOUT_i386|ELF_i386>
                           define the Application Binary Interface to use
                           [default=N32_M3]],
             _abi_type="$withval", _abi_type='N32_M3')
@@ -30,7 +30,7 @@ dnl # Define the location where the library will be built.  This is not
 dnl # currently used anyhwere in this script.
 dnl # The default is "$srcdir/lib".
 AC_ARG_WITH(builddir,
-            [  --with-builddir=[PATH]
+            [  --with-builddir=<PATH>
                           define the location where the library will be built
                           [default=\$srcdir/lib]],
             _vj_builddir="$withval")
@@ -39,7 +39,7 @@ dnl # Define which threading model to use.  Possible values are "SGI_IPC" or
 dnl # "POSIX".
 dnl # The default is "SGI_IPC".
 AC_ARG_WITH(threads,
-            [  --with-threads=[SGI_IPC|POSIX]
+            [  --with-threads=<SGI_IPC,POSIX>
                           define thread package [default=SGI_IPC]],
             _thread_pkg="$withval", _thread_pkg='SGI_IPC')
 
@@ -48,25 +48,25 @@ dnl # The default is /usr/java.
 _JDK_HOME_DEFAULT="/usr/java"
 _JDK_HOME_ALT_LIST="/usr/local/java"
 AC_ARG_WITH(jdkhome,
-            [  --with-jdkhome=[PATH]  JDK installation directory [default=/usr/java]],
+            [  --with-jdkhome=<PATH>   JDK installation directory [default=/usr/java]],
             JDK_HOME="$withval", JDK_HOME="${_JDK_HOME_DEFAULT}")
 
 dnl # Define the root directory for the Performer installation.
 dnl # The default is /usr.
 AC_ARG_WITH(pfroot,
-            [  --with-pfroot=[PATH]    Performer installation directory [default=/usr]],
+            [  --with-pfroot=<PATH>    Performer installation directory [default=/usr]],
             PFROOT="$withval", PFROOT='/usr')
 
 dnl # Define the root directory for the OpenGL installation.
 dnl # The default is /usr.
 AC_ARG_WITH(oglroot,
-            [  --with-oglroot=[PATH]   OpenGL installation directory [default=/usr]],
+            [  --with-oglroot=<PATH>   OpenGL installation directory [default=/usr]],
             OGLROOT="$withval", OGLROOT='/usr')
 
 dnl # Specify a directory containing a working Perl 5.004 (or newer) binary.
 dnl # There is no default since standard locations are always available.
 AC_ARG_WITH(perl,
-            [  --with-perl=[PATH]      Directory containing Perl 5.004 or newer binary],
+            [  --with-perl=<PATH>      Directory containing Perl 5.004 or newer binary],
             _user_perl_path="$withval")
 
 dnl # ------------------------------------------------------ #
