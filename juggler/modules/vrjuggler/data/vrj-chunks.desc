@@ -210,7 +210,7 @@ The filters are applied in the order that they are specified in this configurati
       <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="default_simulator" name="DefaultSimulator" version="1.0">
+  <ChunkDesc token="default_simulator" name="DefaultSimulator" version="1.1">
     <category>Display/Simulator</category>
     <help />
     <PropertyDesc token="cameraPos" name="cameraPos" type="chunk" variable="0">
@@ -234,10 +234,6 @@ The filters are applied in the order that they are specified in this configurati
       <item label="red" defaultvalue="0.0" />
       <item label="green" defaultvalue="0.0" />
       <item label="blue" defaultvalue="0.0" />
-    </PropertyDesc>
-    <PropertyDesc token="vert_fov" name="Vertical FOV" type="float" variable="0">
-      <help>Vertical field of view in degrees</help>
-      <item label="Vertical Field Of View" defaultvalue="80.0" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="DigProxy" name="Digital Proxy" version="1.0">
@@ -1436,7 +1432,7 @@ The filters are applied in the order that they are specified in this configurati
     <category>Devices/Simulator</category>
     <help>A positional device simulator for one device relative to another.</help>
   </ChunkDesc>
-  <ChunkDesc token="simViewport" name="Simulator Viewport" version="1.1">
+  <ChunkDesc token="simViewport" name="Simulator Viewport" version="1.2">
     <category>Display/Simulator</category>
     <help>This is a viewport surface that simulator images are projected on.</help>
     <PropertyDesc token="origin" name="origin" type="float" variable="0">
@@ -1463,6 +1459,10 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="active" name="active" type="bool" variable="0">
       <help>Is the window active?</help>
       <item label="Use this viewport?" defaultvalue="1" />
+    </PropertyDesc>
+    <PropertyDesc token="vert_fov" name="Vertical FOV" type="float" variable="0">
+      <help>Vertical field of view in degrees</help>
+      <item label="Vertical Field Of View" defaultvalue="80.0" />
     </PropertyDesc>
     <PropertyDesc name="Enable Sim Plug-in" token="hasSimPlugin" type="bool" variable="0">
       <item label="hasSimPlugin" defaultvalue="false" />
