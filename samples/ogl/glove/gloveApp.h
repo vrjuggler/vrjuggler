@@ -46,13 +46,9 @@
 #include <Input/InputManager/vjAnalogInterface.h>
 #include <Input/InputManager/vjDigitalInterface.h>
 
-#include <navigator.h>
-#include <collider.h>
-#include <vjStdCaveNavigator.h>
-
 #include "defines.h"
 #include "Scene.h"
-//#include "navigation.h"
+#include "navigation.h"
 
 
 //: GloveApp - A Demonstration OpenGL application class
@@ -72,6 +68,11 @@
 //
 //       UpdateTrackers();
 //  }
+//
+// NOTE: this application has a really BAD example of navigation.
+// the nav is a hack, and well, it works for this silly little app.
+// be warned, it (navigation.h) won't be fun to extend 
+
 class gloveApp : public vjGlApp
 {
 // utility functions
@@ -84,11 +85,11 @@ public:
                                 mCubeSelected(false),
                                 mSphereSelected(false),
                                 mConeSelected(false),
-            mCubePos(0.0f, 3.5f, -20.0f),
-            mConePos(-2.5f, 3.5f, -20.0f),
-            mSpherePos(2.5f, 3.5f, -20.0f)
+            mCubePos( 0.0f, 3.5f, -20.0f ),
+            mConePos( -2.5f, 3.5f, -20.0f ),
+            mSpherePos( 2.5f, 3.5f, -20.0f )
    {
-      /* Do nothing */ ;
+      // Do nothing
    }
 
    //: Initialize
@@ -96,20 +97,21 @@ public:
    // Initialize VR Juggler device interfaces here.
    virtual void init()
    {
+      vjGlApp::init();
       // for the glove position
       mGlove.init("VJGlove");
       
       // for the glove fingers.
-      mPinchLeftThumb.init("PinchLeftThumb");
-      mPinchLeftIndex.init("PinchLeftIndex");
-      mPinchLeftMiddle.init("PinchLeftMiddle");
-      mPinchLeftRing.init("PinchLeftRing");
-      mPinchLeftPinky.init("PinchLeftPinky");
-      mPinchRightThumb.init("PinchRightThumb");
-      mPinchRightIndex.init("PinchRightIndex");
-      mPinchRightMiddle.init("PinchRightMiddle");
-      mPinchRightRing.init("PinchRightRing");
-      mPinchRightPinky.init("PinchRightPinky");
+      mPinchLeftThumb.init("LeftThumb");
+      mPinchLeftIndex.init("LeftIndex");
+      mPinchLeftMiddle.init("LeftMiddle");
+      mPinchLeftRing.init("LeftRing");
+      mPinchLeftPinky.init("LeftPinky");
+      mPinchRightThumb.init("RightThumb");
+      mPinchRightIndex.init("RightIndex");
+      mPinchRightMiddle.init("RightMiddle");
+      mPinchRightRing.init("RightRing");
+      mPinchRightPinky.init("RightPinky");
 
       //mGloveTracker.init("GlovePos Proxy");
    }
@@ -119,6 +121,7 @@ public:
    // allocation here.
    virtual void contextInit()
    {
+      vjGlApp::contextInit();
       // Init the scene's displaylists for this context.
       mScene->init();
    }
@@ -142,14 +145,19 @@ public:
    //  but before the drawManager starts the drawing loops.
    virtual void apiInit()
    {
-      /* Do nothing. */ ;
+      vjGlApp::apiInit();
+      // Do nothing
    }
 
    // Function called after tracker update but before start of drawing.  Do
    // calculations and state modifications here.
    // In the glove application, this function does the logic for picking the
    // objects.
-   virtual void preFrame();
+   virtual void preFrame()
+   {
+      vjGlApp::preFrame();
+      // Do nothing
+   }   
 
    // Function to draw the scene.  Put OpenGL draw functions here.
    //
@@ -163,15 +171,13 @@ public:
    // Function called after drawing has been triggered but BEFORE it completes
    virtual void intraFrame()
    {
-      /* Do nothing. */ ;
+      vjGlApp::intraFrame();
+      // Do nothing
    }
 
    // Function called before updating trackers but after the frame is drawn.
    // Do calculations here.
-   virtual void postFrame()
-   {
-      /* Do nothing. */ ;
-   }
+   virtual void postFrame();
 
 private:
     void initGlState();
@@ -205,7 +211,7 @@ protected:
    vjVec3               mConePos;
    vjVec3               mSpherePos;
 
-   vjStdCaveNavigator    mNavigation;
+   vjMatrix    mNavigation;
 
    vjGlContextData<Scene> mScene;
 };
