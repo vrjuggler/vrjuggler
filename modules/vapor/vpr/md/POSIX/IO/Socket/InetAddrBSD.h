@@ -324,7 +324,7 @@ protected:
     //+              address.
     // ------------------------------------------------------------------------
     InetAddrBSD (const struct sockaddr* addr) {
-        memcpy((void*) &m_addr, (void*) addr, sizeof(m_addr));
+        setSockaddr(addr);
     }
 
     // ------------------------------------------------------------------------
@@ -386,6 +386,21 @@ protected:
     inline size_t
     addressSize (void) const {
         return sizeof(m_addr.sin_addr.s_addr);
+    }
+
+    /**
+     * Initializes the internal socket address structure using the given
+     * sockaddr* object.  This will overwrite a previously set address.
+     *
+     * @post The memory pointed to by the given object is copied into this
+     *       object's m_addr structure.
+     *
+     * @param addr A pointer to the sockaddr object being used to initialize
+     *             this object's address.
+     */
+    inline void
+    setSockaddr (const struct sockaddr* addr) {
+        memcpy((void*) &m_addr, (void*) addr, sizeof(m_addr));
     }
 
     // ------------------------------------------------------------------------
