@@ -47,11 +47,11 @@ class __options {
 }/**
 @__positions 
 <oigroup:<oiref:cpp#Class#userOglApp:oiref>=330,280,153,183,1:oigroup>
-<oigroup:<oiref:cpp#Extends#vrj::GlApp#vrj::App:oiref>=150,280,150,240:oigroup>
-<oigroup:<oiref:cpp#Extends#userOglApp#vrj::GlApp:oiref>=330,355,240,355:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::GlApp#vrj::App:oiref>=125,280,125,240:oigroup>
+<oigroup:<oiref:cpp#Extends#userOglApp#vrj::GlApp:oiref>=330,371,240,371:oigroup>
 <oigroup:<oiref:cpp#Member#userOglApp#apiInit#(##)#:oiref>=110,130,211,13,1:oigroup>
 <oigroup:<oiref:cpp#Member#userOglApp#preFrame#(##)#:oiref>=110,150,211,13,1:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::GlApp:oiref>=60,280,180,210,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::GlApp:oiref>=10,280,230,210,0:oigroup>
 <oigroup:<oiref:cpp#Class#vrj::App:oiref>=10,10,240,230,0:oigroup>
 */
 class __positions {
