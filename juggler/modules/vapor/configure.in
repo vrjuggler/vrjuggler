@@ -269,8 +269,10 @@ if test "x${_alt_cxx}" = "xnone" ; then
         CXX_ERR='*** The library requires the HP-UX aCC C++ compiler ***'
     # On Windows, we have to use the Microsoft Visual C++ compiler CL.EXE.
     elif test "$OS_TYPE" = "Win32" -a "x$USE_GCC" != "xyes" ; then
-        CXX='cl'
+        CXX='msvccc'
         CC="$CXX"
+        CC_FALLBACKS='cl'
+        CXX_FALLBACKS="$CC_FALLBACKS"
         CXX_ERR='*** The library requires the MS Visual C++ compiler ***'
     # On IRIX, we have to use CC (not g++).
     elif test "x$PLATFORM" = "xIRIX" ; then
@@ -423,9 +425,6 @@ else
     THREAD_SYS='NSPR'
     MUTEX_SYS='NSPR'
     SHMEM_SYS='NSPR'
-
-    NSPR_INCLUDES="-I$NSPR_ROOT/include"
-    NSPR_LIBS="-L$NSPR_ROOT/lib -lnspr$NSPR_VER $UCB_LIB"
 fi
 
 # -----------------------------------------------------------------------------
@@ -533,9 +532,9 @@ if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
     CXXFLAGS="$CXXFLAGS -woff 3322 -w2"
     EXTRA_LINK_FLAGS="-all"
 elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
-    CFLAGS="$CFLAGS -W3 -GR -GX -EHc -QIfdiv -QI0f"
-    CXXFLAGS="$CXXFLAGS -W3 -GR -GX -EHc -QIfdiv -QI0f"
-    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -MTd"
+    CFLAGS="$CFLAGS /W3 /GR /GX -EHc /QIfdiv /QI0f"
+    CXXFLAGS="$CXXFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
+    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /MTd"
 fi
 
 DPP_SYSTEM_SUBST
@@ -600,7 +599,7 @@ if test "$OS_TYPE" = "UNIX" ; then
         APP_VPR_LIBS_BASIC_INST='-lvpr'
 
         APP_EXTRA_LIBS_BEGIN='-B dynamic'
-        APP_EXTRA_LIBS_END="$NSPR_LIBS $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
+        APP_EXTRA_LIBS_END="$NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
     elif test "x$GXX" = "xyes" ; then
         APP_VPR_LIBS_BEGIN="-Wl,-Bstatic -L\$(VPR_BASE_DIR)/lib${LIBBITSUF}"
         APP_VPR_LIBS_END=''
@@ -611,7 +610,7 @@ if test "$OS_TYPE" = "UNIX" ; then
         APP_VPR_LIBS_BASIC_INST="$APP_VPR_LIBS_BASIC"
 
         APP_EXTRA_LIBS_BEGIN='-Wl,-Bdynamic'
-        APP_EXTRA_LIBS_END="$NSPR_LIBS $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
+        APP_EXTRA_LIBS_END="$NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
     else
         # For now, we are disabling static linking for the sample applications
         # when compiled in a developer's build tree.  This is only the csae on
@@ -624,7 +623,7 @@ if test "$OS_TYPE" = "UNIX" ; then
         APP_VPR_LIBS_END_INST="$APP_VPR_LIBS_END"
         APP_VPR_LIBS_BASIC_INST="$APP_VPR_LIBS_BASIC"
 
-        APP_EXTRA_LIBS_END="$NSPR_LIBS $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
+        APP_EXTRA_LIBS_END="$NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
     fi
 
     # FreeBSD needs to use libcompat for linking.
@@ -634,13 +633,13 @@ if test "$OS_TYPE" = "UNIX" ; then
 
     APP_EXTRA_LIBS_BASIC="$LDFLAGS $PTHREAD_ARG $LIBS"
 elif test "$OS_TYPE" = "Win32" ; then
-    APP_VPR_LIBS_BEGIN="-link -libpath:\$(VPR_BASE_DIR)/lib/debug"
+    APP_VPR_LIBS_BEGIN="/link /libpath:\$(VPR_BASE_DIR)/lib/debug $NSPR_LDFLAGS"
     APP_VPR_LIBS_END=''
     APP_VPR_LIBS_BASIC='vpr.lib'
     APP_VPR_LIBS_BEGIN_INST="$APP_VPR_LIBS_BEGIN"
     APP_VPR_LIBS_END_INST="$APP_VPR_LIBS_END"
     APP_VPR_LIBS_BASIC_INST="$APP_VPR_LIBS_BASIC"
-    APP_LIBS_BASIC='comctl32.lib user32.lib gdi32.lib ws2_32.lib'
+    APP_LIBS_BASIC="$NSPR_LIB comctl32.lib user32.lib gdi32.lib ws2_32.lib"
     APP_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
 fi
 
@@ -698,7 +697,7 @@ case $SUBSYSTEM in
     NSPR)
         subsystem_cflags="$INCLUDES"
         subsystem_cxxflags="$INCLUDES"
-        subsystem_libs="$NSPR_LIBS $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
+        subsystem_libs="$NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
 
         if test "x$USE_GCC" = "xyes" ; then
             static_begin="-Wl,-Bstatic"
@@ -714,8 +713,8 @@ case $SUBSYSTEM in
     WIN32)
         subsystem_cflags="$INCLUDES"
         subsystem_cxxflags="$INCLUDES"
-        subsystem_libs='comctl32.lib user32.lib gdi32.lib ws2_32.lib'
-        vpr_ldflags="-link -libpath:$prefix/lib/debug"
+        subsystem_libs="$NSPR_LIB comctl32.lib user32.lib gdi32.lib ws2_32.lib"
+        vpr_ldflags="/link /libpath:$prefix/lib/debug $NSPR_LDFLAGS"
         vpr_libs='vpr.lib'
         ;;
 esac
