@@ -242,6 +242,15 @@
 				RelativePath="..\..\modules\vapor\vpr\IO\Port\Port.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\Perf\ProfileIterator.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\Perf\ProfileManager.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\Perf\ProfileNode.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\md\NSPR\Sync\RWMutexNSPR.cpp">
 			</File>
 			<File
@@ -448,6 +457,15 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\IO\Port\Port.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\Perf\ProfileIterator.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\Perf\ProfileManager.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vapor\vpr\Perf\ProfileNode.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vapor\vpr\Sync\RWGuard.h">
