@@ -57,7 +57,7 @@ CliGuard::CliGuard()
 
 CliGuard::~CliGuard()
 {
-   // XXX: What do we do here?
+   ;
 }
 
 CliGuard::State::State() : mDomain(NULL)
