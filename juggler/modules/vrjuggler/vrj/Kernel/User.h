@@ -95,6 +95,9 @@ private:
 
 private:
    static int mNextUserId;     //: the next user id to assign
+
+   vjUser(const vjUser& u) {;}
+   void operator=(const vjUser& u) {;}
 };
 
 
