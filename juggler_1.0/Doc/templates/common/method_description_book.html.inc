@@ -26,10 +26,14 @@
     {endprivate}
 
     {if ARGS}
-      {ARGS}
+      <P>
+	{ARGS}
+      </P>
     {endif}
     {if RETURNS}
-      {RETURNS}
+      <P>
+	{RETURNS}
+      </P>
     {endif}
   </BLOCKQUOTE>
 </BLOCKQUOTE>
