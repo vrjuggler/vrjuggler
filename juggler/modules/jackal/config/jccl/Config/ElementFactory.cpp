@@ -93,7 +93,7 @@ namespace jccl
             vprDEBUG(jcclDBG_CONFIG, vprDBG_CONFIG_LVL)
                << "Appending JCCL_DEFINITION_PATH value (" << add_path
                << ")\n" << vprDEBUG_FLUSH;
-            vprDEBUG_NEXT(jcclDBG_CONFIG, vprDBG_CRITICAL_LVL)
+            vprDEBUG_NEXT(jcclDBG_CONFIG, vprDBG_CONFIG_LVL)
                << "to the .jdef search path." << std::endl << vprDEBUG_FLUSH;
             jccl_def_path = defaultPath + path_sep + add_path;
          }
