@@ -62,8 +62,6 @@ class vjPerfDataBuffer {
 
     //: Buffer is currently active
     bool        active;
-    //: Buffer should be made active when EM is active
-    bool        enabled;
 
 public:
     char*       name;
@@ -76,7 +74,7 @@ public:
     //! POST: self is created and has _numbufs buffers
     //! ARGS: _numbufs - number of buffers to allocate
     //+       (default 50)
-    vjPerfDataBuffer (char* _name, int _numbufs, int _nindex, bool _enabled);
+    vjPerfDataBuffer (char* _name, int _numbufs, int _nindex);
 
 
 
@@ -101,6 +99,12 @@ public:
     //+       write anything.
     void deactivate();
 
+
+
+    //: is the buffer active?
+    //! RETURNS: True - buffer is currently active
+    //! RETURNS: False - buffer is not active
+    bool isActive();
 
 
     //: writes a new time entry to the buffer
