@@ -65,7 +65,7 @@ bool SimDigitalGlove::config( jccl::ConfigChunkPtr chunk )
    mSimKeys = readKeyList( key_list );
 
    int num_pairs = mSimKeys.size();
-   mDigitalData = std::vector< int >( num_pairs, 0 );      // Initialize to all zeros
+   mDigitalData = std::vector<DigitalData>(num_pairs); //std::vector< int >( num_pairs, 0 );      // Initialize to all zeros
 
    ////////////////  left posProxy
    vprASSERT( GADGET_MAX_GLOVE_DEVS >= 2 );
@@ -186,16 +186,16 @@ void SimDigitalGlove::updateFingerAngles()
     vprASSERT( RIGHT_HAND < GADGET_MAX_GLOVE_DEVS );
 
     // use the digital data set the angles for each joint.
-    mLeftHand.setFingers( mDigitalData[LPINKY] == 1,
-                     mDigitalData[LRING] == 1,
-                     mDigitalData[LMIDDLE] == 1,
-                     mDigitalData[LINDEX] == 1,
-                     mDigitalData[LTHUMB] == 1 );
-    mRightHand.setFingers( mDigitalData[RPINKY] == 1,
-                     mDigitalData[RRING] == 1,
-                     mDigitalData[RMIDDLE] == 1,
-                     mDigitalData[RINDEX] == 1,
-                     mDigitalData[RTHUMB] == 1 );
+    mLeftHand.setFingers( mDigitalData[LPINKY].getDigitalData() == 1,
+                     mDigitalData[LRING].getDigitalData() == 1,
+                     mDigitalData[LMIDDLE].getDigitalData() == 1,
+                     mDigitalData[LINDEX].getDigitalData() == 1,
+                     mDigitalData[LTHUMB].getDigitalData() == 1 );
+    mRightHand.setFingers( mDigitalData[RPINKY].getDigitalData() == 1,
+                     mDigitalData[RRING].getDigitalData() == 1,
+                     mDigitalData[RMIDDLE].getDigitalData() == 1,
+                     mDigitalData[RINDEX].getDigitalData() == 1,
+                     mDigitalData[RTHUMB].getDigitalData() == 1 );
 
     //Now, set the ugly ambiguously named array, mTheData:
 

@@ -160,7 +160,7 @@ void PinchGlove::controlLoop(void* nullParam)
 //  Returns -1 if function fails or if devNum is out of range.<BR>
 //  NOTE: If devNum is out of range, function will fail, possibly issueing
 //  an error to a log or console - but will not ASSERT.<BR>
-int PinchGlove::getDigitalData(int devNum)
+DigitalData* PinchGlove::getDigitalData(int devNum)
 {
    // get the fakespace "gesture", it's a string like this "00000.00000"
    std::string gesture;
@@ -178,7 +178,8 @@ int PinchGlove::getDigitalData(int devNum)
       // TODO: what to do if the PinchGloveStandalone ever gives us something
       //       other than 0,1?
       int number = atoi( character ); //probably a better way to do this...
-      return number;
+      mDigitalData[devNum] = number;
+      // XXX CJ Do something w/ mDigitalData's timestamp... copy from govedata?
    }
 
    else
@@ -189,7 +190,8 @@ int PinchGlove::getDigitalData(int devNum)
    }
 
    // function failed
-   return -1;
+   //return -1;
+      return &(mDigitalData[devNum]);
 }
 
 int PinchGlove::sample()

@@ -86,8 +86,14 @@ public:
       if(mStupified)
          return defaultDigital;
       else
-         return m_data;
+         return m_data.getDigitalData();
    }
+
+
+    DigitalData* getDigitalData () {
+        return &m_data;
+    }
+
 
    Digital* getDigitalPtr()
    {
@@ -121,7 +127,7 @@ private:
 
       //: Copy of the digital data we are dealing with
       // See also: GetData - for definition of values for the data item
-   int         m_data;
+   DigitalData         m_data;
 
 };
 
