@@ -63,8 +63,10 @@
 
 @BOTTOM@
 
-/* Define this macro to replace calls to sginap(2) if sginap(2) is not
-  avialable. */
+/*
+ * Define this macro to replace calls to sginap(2) if sginap(2) is not
+ * avialable.
+ */
 #ifndef HAVE_SGINAP
 #   define sginap(x) (usleep(x * 333333))
 #endif
