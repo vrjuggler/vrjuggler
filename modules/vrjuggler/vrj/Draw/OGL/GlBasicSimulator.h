@@ -37,7 +37,6 @@
 
 #include <vrj/Draw/OGL/GlSimInterface.h>
 #include <vrj/Draw/OGL/GlDrawObjectFunctor.h>
-#include <vrj/Draw/OGL/GlDrawWandFunctors.h>
 
 #ifdef VPR_OS_Darwin
 #   include <OpenGL/gl.h>
@@ -135,14 +134,21 @@ protected: // Drawing functions used by library
     */
    void drawSimulator(const float scaleFactor);
 
-   /** Set the functor used to draw the wand */
+   /** Sets the functor used to render the wand. */
    void setDrawWandFunctor(GlDrawObjectFunctor* functor)
-   { mDrawWandFunctor = functor; }
+   {
+      mDrawWandFunctor = functor;
+   }
+
+   /** Sets the functor used to render the head. */
+   void setDrawHeadFunctor(GlDrawObjectFunctor* functor)
+   {
+      mDrawHeadFunctor = functor;
+   }
 
 protected:     // --- Geom helpers --- //
    void initQuadObj();
    void drawLine(gmtl::Vec3f& start, gmtl::Vec3f& end);
-   void drawSphere(float radius, int slices, int stacks);
    void drawCone(float base, float height, int slices, int stacks);
    void drawBox(float size, GLenum type);
    void drawWireCube(float size);
@@ -151,8 +157,9 @@ protected:     // --- Geom helpers --- //
 
 
 protected:
-   GlDrawObjectFunctor* mDrawWandFunctor;    /**< The functor to draw the wand */
-   GLUquadricObj* mQuadObj;                  /**< Quadric for drawing stuff */
+   GlDrawObjectFunctor* mDrawWandFunctor;  /**< The functor to draw the wand */
+   GlDrawObjectFunctor* mDrawHeadFunctor;  /**< The functor to draw the head */
+   GLUquadricObj* mQuadObj;                /**< Quadric for drawing stuff */
 
 protected:
    SimViewport*   mSimViewport;
@@ -172,4 +179,3 @@ protected:
 }
 
 #endif
-
