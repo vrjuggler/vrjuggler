@@ -120,11 +120,16 @@ protected:
    }
 
 
+protected:
+   // get the minimum "real" data value (real == from hardware)
+   // this value is used to normalize the return value of getAnalogData
+   // NOTE: this function is not needed by an application author.
    float getMin() const { return mMin; }
    float getMax() const { return mMax; }
-   void setMin( float min ) { mMin = min; }
-   void setMax( float max ) { mMax = max; }
+   void setMin( float mIn ) { mMin = mIn; }
+   void setMax( float mAx ) { mMax = mAx; }
 
+private:
    float mMin, mMax;
 };
 

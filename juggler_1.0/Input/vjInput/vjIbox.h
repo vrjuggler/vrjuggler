@@ -63,29 +63,26 @@ struct vjIBOX_DATA {
 class vjIBox : public vjInput, public vjDigital, public vjAnalog
 {
 public:
-   /** @name Construction/Destruction */
-   //@{
-   vjIBox()
+   //: Construction/Destruction
+   vjIBox() : vjInput(), vjDigital(), vjAnalog()
    {
-     mMin=0.0f;
-     mMax=255.0f;
+      // re-set vjAnalog min/max values to ibox defaults.
+      this->setMin( 0.0f );
+      this->setMax( 255.0f );
    }
    ~vjIBox();
-   //@}
+   
+   virtual bool config( vjConfigChunk* c );
 
-   virtual bool config(vjConfigChunk* c);
-
-   /** @name vjInput Pure Virtual Functions */
-   //@{
+   // vjInput Pure Virtual Functions
    int startSampling();
    int stopSampling();
    int sample();
    void updateData();
-   //@}
+   
+   static std::string getChunkType() { return std::string( "IBox" ); }
 
-   static std::string getChunkType() { return std::string("IBox");}
-
-   int getDigitalData(int d = 0);
+   int getDigitalData( int d = 0 );
 
    //: Return "analog data"..
    //  Gee, that's ambiguous especially on a discrete system such as a digital computer....
@@ -102,14 +99,13 @@ public:
    //        "min" and "max" are set to 0.0f and 1.0f respectivly.
    //! NOTE: TO ALL ANALOG DEVICE DRIVER WRITERS, you *must* normalize your data using
    //        vjAnalog::normalizeMinToMax()
-   float getAnalogData(int d = 0);
+   float getAnalogData( int d = 0 );
 
 private:
-   /** @name Private member variables */
-   //@{
+   // juggler ibox data in the range of [0..255]
    vjIBOX_DATA theData[3];
+   // ibox native data in the range of [0..255]
    hci_rec thingie;
-   //@}
 };
 
 #endif
