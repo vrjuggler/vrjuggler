@@ -168,13 +168,19 @@ obj:
 
 # Build the Java-based configuration GUI.
 gui:
+ifeq (@BUILD_GUI@, yes)
 	@echo "------------------------------------------------"
 	@echo "Building GUI"
 	@echo "------------------------------------------------"
 	cd GUI && ${MAKE} all
 	@echo "------------------------------------------------"
-	@echo "Done"
+	@echo "GUI done"
 	@echo "------------------------------------------------"
+else
+	@echo "------------------------------------------------"
+	@echo "GUI cannot be built without javac"
+	@echo "------------------------------------------------"
+endif
 
 # Construct the static version of the library from the object files.
 lib-static ${LIB_STATIC}:
