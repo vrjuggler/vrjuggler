@@ -139,10 +139,22 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
+				RelativePath="..\..\src\jccl\_ConfigDefinition.cpp">
+			</File>
+			<File
 				RelativePath="..\..\src\jccl\_ConfigElement.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\jccl\_ConfigElementHandler.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\jccl\_ConfigManager.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\jccl\_PropertyDefinition.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\jccl\_VarType.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\jccl\jccl.cpp">
