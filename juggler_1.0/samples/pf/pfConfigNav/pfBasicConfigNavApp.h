@@ -172,8 +172,8 @@ bool pfBasicConfigNavApp::configApp(vjConfigChunk* chunk)
       mSoundList.push_back( s );
    }
 
-   setFilePath(file_path);
-   setInitialNavPos(initial_pos);
+   this->setFilePath( file_path );
+   this->setInitialNavPos( initial_pos );
 
    vjDEBUG_NEXT(vjDBG_ALL,0) << "filepath: " << file_path << endl << vjDEBUG_FLUSH;
    vjDEBUG_NEXT(vjDBG_ALL,0) << "initial pos: " << initial_pos << endl << vjDEBUG_FLUSH;
