@@ -105,7 +105,12 @@ vpr::ReturnStatus LibraryLoader::findAndInitDSO(const std::string& dsoBaseName,
 
       try
       {
-         if ( boost::filesystem::exists(temp_name) )
+         // Use a Boost FS path object here so that we can indicate that
+         // native path names are allowed.
+         boost::filesystem::path temp_path =
+            boost::filesystem::path(temp_name, boost::filesystem::native);
+
+         if ( boost::filesystem::exists(temp_path) )
          {
             // If any part of the driver loading fails, the object
             // dsowill go out of scope at the end of this block, thereby
