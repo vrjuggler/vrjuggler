@@ -50,6 +50,7 @@ VPRROOT		= $(top_srcdir)
 VPR_SRCDIR	= @VPR_SRCDIR@/vpr/Thread
 
 SRCS		= BaseThread.cpp	\
+                  Signal.cpp		\
                   TSTable.cpp		\
                   ThreadFunctor.cpp	\
                   ThreadManager.cpp	\
