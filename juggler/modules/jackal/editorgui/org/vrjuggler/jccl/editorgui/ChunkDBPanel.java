@@ -75,6 +75,9 @@ public class ChunkDBPanel
     protected SuffixFilter chunkdb_filter;
 
     protected int controls_on_side; // 0 for left, 1 for right;
+    public static final int CONTROLS_ON_RIGHT = 0;
+    public static final int CONTROLS_ON_LEFT = 1;
+
     protected ChunkDBTreeModel dbt;
     protected ConfigChunkDB chunkdb;
     protected ChunkDBPanel sendacross_target; // target for the >>, >all> buttons
@@ -103,7 +106,7 @@ public class ChunkDBPanel
 
     protected boolean ui_initialized;
 
-    public ChunkDBPanel (int _controls_on_side) {
+    public ChunkDBPanel () {
 	super();
 
         component_name = "Unconfigured ChunkDBPanel";
@@ -120,7 +123,7 @@ public class ChunkDBPanel
 	dbt = null;
 	sendacross_target = null;
 
-	controls_on_side = _controls_on_side;
+	controls_on_side = CONTROLS_ON_RIGHT;
     }
 
 
@@ -134,12 +137,15 @@ public class ChunkDBPanel
     }
 
 
+    public void setControlsOnSide (int _controls_on_side) {
+        controls_on_side = _controls_on_side;
+    }
+
 
     // sets the target for >> and >all> buttons
     public void setSendAcrossTarget (ChunkDBPanel _target) {
 	sendacross_target = _target;
     }
-
 
 
     public void setFont (Font f) {

@@ -194,10 +194,11 @@ public class ConfigurePane extends JSplitPane
     public boolean initUIComponent () {
         if (!ui_initialized) {
             try {
-                leftpanel = new ChunkDBPanel(0);
-                rightpanel = new ChunkDBPanel(1);
+                leftpanel = new ChunkDBPanel ();
+                rightpanel = new ChunkDBPanel ();
 
                 leftpanel.setComponentName ("Left ConfigurePane");
+                leftpanel.setControlsOnSide (leftpanel.CONTROLS_ON_RIGHT);
                 leftpanel.setControlUIModule (ui_module);
                 leftpanel.setConfigModule (config_module);
                 leftpanel.setConfigUIHelper (confighelper_module);
@@ -205,6 +206,7 @@ public class ConfigurePane extends JSplitPane
                 leftpanel.initialize();
                 
                 rightpanel.setComponentName ("Right ConfigurePane");
+                rightpanel.setControlsOnSide (leftpanel.CONTROLS_ON_LEFT);
                 rightpanel.setControlUIModule (ui_module);
                 rightpanel.setConfigModule (config_module);
                 rightpanel.setConfigUIHelper (confighelper_module);
