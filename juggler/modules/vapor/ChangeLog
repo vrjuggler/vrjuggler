@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2003-01-14 patrickh Fixed the implementation of vpr::GUID::generate() for the
+                    non-Leach UUID case.
+                    NEW VERSION: 0.26.1
 2003-01-13 patrickh Removed vpr::Thread::usleep(), vpr::Thread::msleep(), and
                     vpr::Thread::sleep() in favor of having them exist only in
                     vpr::System.

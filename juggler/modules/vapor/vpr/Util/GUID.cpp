@@ -50,6 +50,12 @@
 
 #if defined(VPR_USE_LEACH_UUID)
 #  include <uuid/sysdep.h>
+#else
+#  define PROTOTYPES 1
+extern "C" {
+#  include <global.h>
+#  include <md5.h>
+}
 #endif
 
 // Too bad there isn't a standard location for uuid.h ...
@@ -69,6 +75,7 @@ extern "C" {
 #  endif
 #endif
 
+#include <vpr/System.h>
 #include <vpr/Util/GUID.h>
 
 
@@ -161,22 +168,48 @@ void GUID::generate()
 
 void GUID::generate(const GUID& ns_guid, const std::string& name)
 {
-// DCE 1.1 UUID.
-#if defined(VPR_USE_DCE_1_1_UUID)
-   uint32_t status(0);
-   // XXX: This cast to char* is to deal with the IRIX version of this
-   // function being goofy and not taking a const char*.
-   uuid_from_string((char*) name.c_str(), (uuid_t*) &mGuid.standard, &status);
-// Linux e2fsprogs libuuid.
-#elif defined(VPR_USE_LIBUUID)
-   vprASSERT(false && "Unimplemented method!");
 // Leach UUID (see juggler/external/leach-uuid).
-#else
+#if defined(VPR_USE_LEACH_UUID)
    uuid_t temp_ns_id = *((uuid_t*)(&ns_guid.mGuid.standard));    // nasty, but works
 
-   uuid_create_from_name((uuid_t*)(&mGuid.standard),
-                         temp_ns_id,
+   uuid_create_from_name((uuid_t*) (&mGuid.standard), temp_ns_id,
                          (void*) name.c_str(), name.length());
+
+// Implementation of the algorithm for creating a name-based UUID.
+#else
+   // Convert to network byte order.
+   vpr::GUID net_ns_guid = ns_guid;
+   net_ns_guid.mGuid.standard.m0 = vpr::System::Htonl(net_ns_guid.mGuid.standard.m0);
+   net_ns_guid.mGuid.standard.m1 = vpr::System::Htons(net_ns_guid.mGuid.standard.m1);
+   net_ns_guid.mGuid.standard.m2 = vpr::System::Htons(net_ns_guid.mGuid.standard.m2);
+
+   // The following uses the MD5 implementation in juggler/external/md5-c.
+   // Using that version is undesirable, however, because it generates files
+   // in the working directory.  Argh!
+   MD5_CTX c;
+   unsigned char hash[16];
+
+   MD5Init(&c);
+   MD5Update(&c, (unsigned char*) &net_ns_guid.mGuid.standard,
+             sizeof(net_ns_guid.mGuid.standard));
+   MD5Update(&c, (unsigned char*) name.c_str(), name.length());
+   MD5Final(hash, &c);
+
+   // At this point, the hash is in network byte order.
+   memcpy((void*) &mGuid.standard, hash, sizeof(mGuid.standard));
+
+   // Convert to host byte order.
+   mGuid.standard.m0 = vpr::System::Ntohl(mGuid.standard.m0);
+   mGuid.standard.m1 = vpr::System::Ntohs(mGuid.standard.m1);
+   mGuid.standard.m2 = vpr::System::Ntohs(mGuid.standard.m2);
+
+   // Put in the variant and version bits.  This is based on the Leach UUID
+   // implementation (the function format_uuid_v3).
+   mGuid.standard.m2 &= 0x0FFF;
+//   mGuid.standard.m2 |= (3 << 12);
+   mGuid.standard.m2 |= 0x3000; // Version 3 UUID
+   mGuid.standard.m3 &= 0x3F;
+   mGuid.standard.m3 |= 0x80;
 #endif
 }
 
