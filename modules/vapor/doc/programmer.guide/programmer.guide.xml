@@ -13,7 +13,7 @@
   </bookinfo>
 
   <preface>
-    <title>What is the VR Juggler Portable Runtime?</title>
+    <title>Vaporous Programming</title>
 
     <para>For those developers new to the <ulink
     url="http://www.vrjuggler.org/vapor/">VR Juggler Portable Runtime</ulink>
@@ -35,9 +35,21 @@
     even better portability. These details are all hidden behind the classes
     that make up VPR, and users of VPR do not need to worry about
     platform-specific details as a result.</para>
+
+    <para>VPR is basically a collection of utility classes. As such, the
+    biggest part of using VPR is knowing the interface for a given class. In
+    this book, we provide high-level information about various pieces of VPR
+    in hopes of making VPR easier to use. The book itself is designed so that
+    readers can focus on what they need to know about VPR classes. For
+    example, someone who wants to learn about using the VPR thread abstraction
+    can go straight to that part of the book (i.e., <xref
+    linkend="part.multi-threading" />). Within each part, however, the
+    chapters build up the concepts incrementally, so it is advisable, for
+    example, to understand the basics of VPR I/O before trying to learn about
+    the serial port abstraction.</para>
   </preface>
 
-  <part>
+  <part id="part.io">
     <title>Input/Output</title>
 
     <partintro>
@@ -48,32 +60,110 @@
       socket I/O.</para>
     </partintro>
 
-    <chapter>
+    <chapter id="chapter.buffered.io">
       <title>Buffered I/O</title>
 
-      <para>Before discussing features of VPR useful to device driver authors,
-      we must first understand how I/O is handled in VPR. All I/O classes
-      (file handles, serial ports, and sockets) share the base class
-      <classname>vpr::BlockIO</classname>. Reads and writes are performed
-      using blocks of memory (buffers). This design provides an API that more
-      closely resembles that of the underlying operating system (with methods
-      called <methodname>read()</methodname> and <methodname>write()</methodname>),
+      <indexterm zone="chapter.buffered.io">
+        <primary>input/output abstraction</primary>
+      </indexterm>
+
+      <para>One of the largest components of VPR is its I/O abstraction. All
+      I/O classes (file handles, serial ports, and sockets) share the base
+      class <classname>vpr::BlockIO</classname><indexterm><primary>classes</primary><secondary>vpr::BlockIO</secondary></indexterm>.
+      Reads and writes are performed using contiguous blocks of memory
+      (buffers). This design provides an API that closely resembles that of
+      the underlying operating system (with methods called
+      <methodname>read()</methodname> and <methodname>write()</methodname>),
       but it is in contrast to stream-oriented I/O that is usually seen in
       C++. Streams could be written on top of the buffered I/O classes, but
       thus far, the need has not arisen. With this in mind, the design
       provides an API that is immediately familiar to programmers used to
       POSIX-based interfaces, but the API may seem clumsy to C++ programmers
       who are accustomed to using <type>std::ostream</type> and friends.</para>
+
+      <para>Readers interested in the implementation of the I/O component of
+      VPR are referred to <xref linkend="appendix.io.impl" />. We discuss the
+      use of the VPR socket abstraction, and we provide some insight into how
+      the abstraction is implemented. By providing some implementation
+      details, it is our hope that the online API reference will be easier to
+      understand and navigate.</para>
+
+      <section>
+        <title>Opening and Closing</title>
+
+        <para></para>
+
+        <section>
+          <title>Setting Attributes for Opening</title>
+
+          <para></para>
+        </section>
+
+        <section>
+          <title>Blocking Versus Non-Blocking</title>
+
+          <para></para>
+        </section>
+      </section>
+
+      <section>
+        <title>Reading and Writing</title>
+
+        <para>Reads and writes occur using the <methodname>read()</methodname>
+        and <methodname>write()</methodname> methods respectively. These
+        methods are overloaded for common data structures that may be used to
+        store the information being read or written. For example, strings are
+        used frequently in I/O handling, so the type std::string can be used
+        for easy management of string data. When reading <varname>n</varname>
+        bytes, the <classname>std::string</classname> object will be resized
+        internally by <methodname>read()</methodname> to ensure that it has
+        enough room to store the full buffer. The same is true for the
+        <methodname>read()</methodname> variant that takes a
+        <classname>std::vector&#60;vpr::Unit8&#62;</classname> object
+        reference. This overloaded version of <methodname>read()</methodname>
+        is helpful when dealing in arrays of bytes. Of course, the lowest
+        level variant of <methodname>read()</methodname> is the version that
+        takes a <type>void*</type> buffer. In this case, the buffer pointed to
+        must have at least <varname>n</varname> bytes of contiguous storage
+        prior to calling <methodname>read()</methodname>.</para>
+
+        <para>There is also a special method called <methodname>readn()</methodname>
+        that guarantees that <varname>n</varname> bytes will be read. (The
+        <methodname>read()</methodname> method only guarantees that it read
+        <emphasis>at most</emphasis> <varname>n</varname> bytes.) As such,
+        <methodname>readn()</methodname> is a blocking call, even when a
+        non-blocking data source is being used behind the scenes. It will not
+        return until all <varname>n</varname> bytes have been read or an error
+        occurs while reading.</para>
+
+        <para>Writing to an I/O object works as one might expect. The same
+        overloads are available for <methodname>write()</methodname> as are
+        available for <methodname>read()</methodname> and
+        <methodname>readn()</methodname>. The buffer passed in to
+        <methodname>write()</methodname> must be at least as big as the amount
+        of data to be written (in bytes), or a memory access error can occur.</para>
+
+        <tip>
+          <para>Always make sure that the buffer size matches the amount of
+          data to be read or written. Buffer overflows have long been a source
+          of security problems in software, and they can be avoided by
+          managing memory carefully.</para>
+        </tip>
+      </section>
     </chapter>
 
-    <chapter id="section.vpr.sockets">
+    <chapter id="chapter.vpr.sockets">
       <title>Sockets</title>
 
-      <indexterm>
-        <primary>VPR</primary>
-
-        <secondary>socket abstraction</secondary>
+      <indexterm zone="chapter.vpr.sockets">
+        <primary>socket abstraction</primary>
       </indexterm>
+
+      <para>Socket programming can be a very difficult task, and the API used
+      to write network code is difficult to understand in and of itself. The
+      purpose of the VPR socket abstraction is thus two-fold: it abstracts the
+      platform-specific API, and it aims to simplify the interface so that
+      developers can focus on protocol implementations.</para>
 
       <note>
         <para>Readers not familiar with socket programming should consult a
@@ -88,38 +178,305 @@
       <glossterm linkend="gloss.bsd.sockets">BSD sockets</glossterm> API,
       which was also the model for the Winsock API used on Windows. In VPR,
       two types of sockets may be instantiated: stream-oriented (TCP,
-      <classname>vpr::SocketStream</classname>) and datagram (UDP,
-      <classname>vpr::SocketDatagram</classname>). The helper class
-      <classname>vpr::InetAddr</classname> makes use of Internet Protocol (v4)
-      addresses easier. Built on top of <classname>vpr::SocketStream</classname>
-      are two classes that make writing client/server code easier:
-      <classname>vpr::SocketConnector</classname> and <classname>vpr::SocketAcceptor</classname>.
-      The <classname>vpr::System</classname> interface provides cross-platform
-      data conversion functions to deal with endian issues.</para>
+      <classname>vpr::SocketStream</classname><indexterm><primary>classes</primary><secondary>vpr::SocketStream</secondary></indexterm>)
+      and datagram (UDP, <classname>vpr::SocketDatagram</classname><indexterm><primary>classes</primary><secondary>vpr::SocketDatagram</secondary></indexterm>).
+      The helper class <classname>vpr::InetAddr</classname> makes use of
+      Internet Protocol (v4) addresses easier. Built on top of
+      <classname>vpr::SocketStream</classname> are two classes that make
+      writing client/server code easier: <classname>vpr::SocketConnector</classname><indexterm><primary>classes</primary><secondary>vpr::SocketConnector</secondary></indexterm>
+      and <classname>vpr::SocketAcceptor</classname><indexterm><primary>classes</primary><secondary>vpr::SocketAcceptor</secondary></indexterm>.
+      Finally, VPR provides cross-platform data conversion functions (see
+      <xref linkend="chapter.object.serialization" />) to deal with endian
+      issues.</para>
 
-      <para>The utility of various socket classes will vary depending on the
-      needs of a given driver protocol. It is usually safe to assume that the
-      driver will connect to a server of some sort that will send out device
-      samples. Unpacking information from the samples may or may not be
-      necessary, depending on the protocol. Such concerns are left entirely to
-      the driver authors.</para>
+      <para>We begin our discussion by diving right into the common features
+      of sockets, as collected in the class <classname>vpr::Socket</classname><indexterm><primary>classes</primary><secondary>vpr::Socket</secondary></indexterm>.
+      We assume that readers already have an understanding of the buffered I/O
+      concepts (see <xref linkend="chapter.buffered.io" />) used in VPR I/O
+      programming. The following sections cover datagram-oriented sockets and
+      stream-oriented sockets respectively. We will conclude this chapter with
+      a review of the high-level patterns implemented for simplifying the
+      authoring of client/server architectures.</para>
+
+      <section id="section.inet.address">
+        <title>Internet Addresses</title>
+
+        <indexterm>
+          <primary>sockets</primary>
+
+          <secondary>Internet addresses</secondary>
+        </indexterm>
+
+        <para>All socket code written using the VPR socket abstraction must
+        use Internet Protocol (IP) addresses. The class vpr::InetAddr<indexterm><primary>classes</primary><secondary>vpr::InetAddr</secondary></indexterm>
+        neatly abstracts the low-level details of using Internet addresses<footnote><para>The
+        current implementation of <classname>vpr::InetAddr</classname> only
+        supports IPv4, though support for IPv6 will be added when the need
+        arises.</para></footnote>. This class encapsulates both the IP address
+        and the port number. It manages all the endian issues and the lookup
+        of host names as necessary.</para>
+
+        <para>When constructed, a new <classname>vpr::InetAddr</classname> is
+        initialized to the constant value <constant>vpr::InetAddr::AnyAddr</constant><indexterm><primary>constants</primary><secondary>vpr::InetAddr::AnyAddr</secondary></indexterm>.
+        This value corresponds with the OS-level constant
+        <constant>INADDR_ANY</constant>. Typically, either a host name, a port
+        number, or both must be set after the object is constructed. Such
+        details will vary depending on the application needs. The IP address
+        can be set using a symbolic host name (which will be resolved through
+        DNS queries) or using the human-readable <quote>dotted-decimal</quote>
+        notation. The port number is set using the native byte ordering; it is
+        converted internally to network byte order. It is also possible to set
+        the host name and port number together in a single string that uses
+        the format <quote>host:port</quote>. This format is convenient when
+        the values for the host name and port come in as string values.</para>
+      </section>
+
+      <section>
+        <title>Socket Commonalities</title>
+
+        <indexterm>
+          <primary>sockets</primary>
+
+          <secondary>common features of</secondary>
+        </indexterm>
+
+        <para>At the lowest level, all sockets have several things in common.
+        For example, all sockets must be opened before they are used, and they
+        must be closed when communication is complete. During communication,
+        data is read from and written to a socket, and reads and writes may be
+        blocking (synchronous) or non-blocking (asynchronous). All sockets are
+        bound to a local address, and <emphasis>connected</emphasis> sockets
+        have a remote address<footnote><para>Unconnected sockets may send data
+        to a different destination at every write. They may also receive data
+        from any remote address.</para></footnote>.</para>
+
+        <note>
+          <para>It is important to note that a socket does not have to be
+          stream-oriented to be in a connected state. A datagram-oriented
+          socket may be <quote>connected</quote> to a remote address so that
+          it has a default destination. This alleviates the need to specify
+          the destination address at every send.</para>
+        </note>
+
+        <para>These commonalities are collected into the class
+        <classname>vpr::Socket</classname><indexterm><primary>classes</primary><secondary>vpr::Socket</secondary></indexterm>,
+        which serves as the base interface for datagram- and stream-oriented
+        sockets. The API for this class includes methods such as
+        <methodname>open()</methodname>, <methodname>close()</methodname>,
+        <methodname>send()</methodname>, <methodname>recv()</methodname>, and
+        <methodname>connect()</methodname>. Note that
+        <methodname>recv()</methodname> and <methodname>send()</methodname>
+        are provided as analogues to <methodname>read()</methodname> and
+        <methodname>write()</methodname> respectively. These are included
+        because the BSD sockets API defines the system calls
+        <function>recv</function>(2) and <function>send</function>(2), in
+        addition to <function>read</function>(2) and <function>write</function>(2),
+        for use with socket file descriptors. The extra methods are thus
+        provided to give programmers already familiar with the BSD sockets API
+        an easily recognizable interface.</para>
+
+        <section>
+          <title>Uses of <classname>vpr::Socket</classname></title>
+
+          <indexterm>
+            <primary>vpr::Socket</primary>
+
+            <secondary>polymorphism and</secondary>
+          </indexterm>
+
+          <para>Instances of <classname>vpr::Socket</classname> cannot be
+          created because the constructors are not public. Instances of the
+          concrete types <classname>vpr::SocketDatagram</classname><indexterm><primary>classes</primary><secondary>vpr::SocketDatagram</secondary></indexterm>
+          and <classname>vpr::SocketStream</classname><indexterm><primary>classes</primary><secondary>vpr::SocketStream</secondary></indexterm>
+          can be used polymorphically as instances of <classname>vpr::Socket</classname>
+          (and <classname>vpr::BlockIO</classname>, of course). Because the
+          basic operations such as <methodname>read()</methodname> and
+          <methodname>write()</methodname> are defined by the base class,
+          using the concrete socket types polymorphically could be a
+          convenient mechanism for mixing socket communication protocols in an
+          application.</para>
+        </section>
+
+        <section id="section.fixed.socket.blocking">
+          <title>Fixed Blocking State</title>
+
+          <indexterm>
+            <primary>sockets</primary>
+
+            <secondary>blocking semantics</secondary>
+          </indexterm>
+
+          <para>Due to the semantics of sockets on Windows NT, the VPR socket
+          abstraction contains a slight variation of the behavior that is
+          available on UNIX-based systems. In Windows, once a call to
+          <methodname>read()</methodname>, <methodname>write()</methodname>,
+          <methodname>accept()</methodname>, etc. is made, the blocking state
+          of the socket is fixed<footnote><para>UNIX-based systems allow the
+          blocking state to be changed from blocking to non-blocking or vice
+          versa at any time.</para></footnote>. That is, if the socket is a
+          blocking socket, it will forever remain in a blocking socket after
+          one of these calls. The same is true for non-blocking sockets.
+          Furthermore, for a stream-oriented socket that is accepting
+          connections, the sockets created as clients connect inherit the
+          blocking state of the accepting socket. The full list of methods
+          that fix the blocking state is as follows:</para>
+
+          <itemizedlist>
+            <listitem>
+              <para><methodname>vpr::Socket::read()</methodname>,
+              <methodname>vpr::Socket::readn()</methodname>,
+              <methodname>vpr::Socket::recv()</methodname>,
+              <methodname>vpr::Socket::recvn()</methodname>,
+              <methodname>vpr::SocketDatagram::recvfrom()</methodname></para>
+            </listitem>
+
+            <listitem>
+              <para><methodname>vpr::Socket::write()</methodname>,
+              <methodname>vpr::Socket::send()</methodname>,
+              <methodname>vpr::SocketDatagram::sendto()</methodname></para>
+            </listitem>
+
+            <listitem>
+              <para><methodname>vpr::SocketStream::accept()</methodname></para>
+            </listitem>
+
+            <listitem>
+              <para><methodname>vpr::SocketStream::connect()</methodname></para>
+            </listitem>
+          </itemizedlist>
+
+          <para>The <ulink url="http://www.mozilla.org/projects/nspr/">NSPR
+          documentation</ulink> has a more complete description of this issue.
+          We must implement our socket abstraction in this way in order to
+          provide consistent semantics (not just consistent syntax) across
+          platforms.</para>
+        </section>
+      </section>
+
+      <section id="section.datagram.sockets">
+        <title>Datagram-Oriented Sockets</title>
+
+        <indexterm zone="section.datagram.sockets">
+          <primary>sockets</primary>
+
+          <secondary>datagram</secondary>
+        </indexterm>
+
+        <para>The class <classname>vpr::SocketDatagram</classname><indexterm><primary>classes</primary><secondary>vpr::SocketDatagram</secondary></indexterm>
+        provides VPR&#39;s abstraction to datagram-oriented sockets, typically
+        known as UDP (user datagram protocol) sockets. Indeed, this class
+        wraps the underlying operating system&#39;s implementation of UDP
+        sockets. The interface for <classname>vpr::SocketDatagram</classname>
+        extends <classname>vpr::Socket</classname><indexterm><primary>classes</primary><secondary>vpr::Socket</secondary></indexterm>
+        to include the methods <methodname>sendto()</methodname> and
+        <methodname>recvfrom()</methodname>, overloaded in the same way as
+        <methodname>read()</methodname> and <methodname>write()</methodname>.
+        As with the operating system API, these methods are used to send a
+        message to a specific destination address or to receive a message from
+        a specific remote address, respectively.</para>
+      </section>
+
+      <section id="section.stream.sockets">
+        <title>Stream-Oriented Sockets</title>
+
+        <indexterm zone="section.datagram.sockets">
+          <primary>sockets</primary>
+
+          <secondary>stream</secondary>
+        </indexterm>
+
+        <para>The class <classname>vpr::SocketStream</classname><indexterm><primary>classes</primary><secondary>vpr::SocketStream</secondary></indexterm>
+        wraps the use of TCP (transmission control protocol) sockets. TCP
+        sockets are also known more abstractly as stream-oriented sockets. All
+        such sockets must be connected to a specific peer, and thus there is
+        no interface comparable to <methodname>vpr::SocketDatagram::sendto()</methodname>
+        or <methodname>vpr::SocketDatagram::recvfrom()</methodname>.</para>
+
+        <para>In order for connections to be made, a socket must be listening
+        for incoming connection requests. For that purpose, vpr::SocketStream
+        introduces the methods <methodname>listen()</methodname> (to put a
+        socket into a listening state) and <methodname>accept()</methodname>
+        (for accepting new connections). These work the same way as the system
+        calls after which they are named. However, <methodname>accept()</methodname>
+        is somewhat unique in that it takes an unopened
+        <classname>vpr::SocketStream</classname> object as a parameter. The
+        object reference is <quote>set up</quote> when a successful connection
+        occurs. Thus, when <methodname>vpr::SocketStream::accept()</methodname>
+        returns successfully, the caller can be certain that the
+        <classname>vpr::SocketStream</classname> reference passed in is now a
+        valid, connected socket.</para>
+
+        <para>Finally, since stream-oriented sockets always have an accepting
+        socket that handles incoming connection requests,
+        <classname>vpr::SocketStream</classname> provides a convenience method
+        called <methodname>openServer()</methodname>. This can be used in
+        place of the usual open-bind-listen sequence of calls for setting up
+        an accepting (server) socket. Use of this method is not required for
+        putting a socket into a listening state; rather, it exists to shorten
+        user code slightly. The drawback of using it is that, in the case of
+        failure, the returned status will not tell the caller what stage of
+        setting up the listening socket failed.</para>
+      </section>
+
+      <section id="section.acceptor.connector">
+        <title>The Acceptor/Connector Pattern</title>
+
+        <indexterm zone="section.acceptor.connector">
+          <primary>sockets</primary>
+
+          <secondary>acceptor/connector pattern</secondary>
+        </indexterm>
+
+        <para>Building on the foundation of stream-oriented, connected
+        sockets, VPR implements the Acceptor/Connector Pattern <xref
+        linkend="ref.network.patterns" />. The classes used in the
+        implementation are <classname>vpr::SocketAcceptor</classname><indexterm><primary>classes</primary><secondary>vpr::SocketAcceptor</secondary></indexterm>
+        and <classname>vpr::SocketConnector</classname><indexterm><primary>classes</primary><secondary>vpr::SocketConnector</secondary></indexterm>.
+        This pattern captures the concepts used in writing stream-oriented
+        network software. The software may use a client/server protocol or a
+        peer-to-peer protocol, but in either case, an initial connection must
+        be made to an accepting socket.</para>
+
+        <section>
+          <title>The Acceptor</title>
+
+          <para>The acceptor is created using a <classname>vpr::InetAddr</classname>
+          object that specifies the address on which the acceptor listens for
+          incoming connection requests. Once opened, the acceptor is ready to
+          accept new connections. The call to <methodname>vpr::SocketAcceptor::accept()</methodname>
+          uses the same arguments and behavior as <methodname>vpr::SocketStream::accept()</methodname>,
+          so programmers already familiar with setting up an accepting socket
+          with <classname>vpr::SocketStream</classname> will find
+          <classname>vpr::SocketAcceptor</classname> very easy to use.</para>
+        </section>
+
+        <section>
+          <title>The Connector</title>
+
+          <para>The connector is designed to make non-blocking connections
+          easy to manage. Depending on the arguments passed to
+          <methodname>vpr::SocketConnector::connect()</methodname>, a socket
+          may be put into non-blocking mode if it is not already set as such.
+          Thus, a connection can be made <quote>in the background</quote> if
+          necessary. However, due to the semantics described in <xref
+          linkend="section.fixed.socket.blocking" />, after a background
+          connection is made, the socket must remain in non-blocking mode for
+          the duration of its lifetime.</para>
+        </section>
+      </section>
     </chapter>
 
     <chapter id="chapter.vpr.serial-ports">
       <title>Serial Ports</title>
 
-      <indexterm>
-        <primary>VPR</primary>
-
-        <secondary>serial port abstraction</secondary>
+      <indexterm zone="chapter.vpr.serial-ports">
+        <primary>serial port abstraction</primary>
       </indexterm>
 
       <para>Most input devices used for virtual reality systems today make use
-      of a computer&#39;s serial port for data communication. For that reason,
-      it is important that device driver authors have at least a basic
-      understanding of the concepts behind the VPR serial port abstraction. In
-      our experience, serial port programming is not much different than other
-      I/O programming. Implementing the communication protocol used by a given
+      of a computer&#39;s serial port for data communication. In our
+      experience, serial port programming is not much different than other I/O
+      programming. Implementing the communication protocol used by a given
       device tends to be the hard part, and that will likely be the case
       regardless of the underlying hardware.</para>
 
@@ -135,14 +492,18 @@
       abstraction.</para>
     </chapter>
 
-    <chapter>
+    <chapter id="chapter.object.serialization">
       <title>Object Serialization</title>
+
+      <indexterm zone="chapter.vpr.serial-ports">
+        <primary>object serialization</primary>
+      </indexterm>
 
       <para></para>
     </chapter>
   </part>
 
-  <part>
+  <part id="part.multi-threading">
     <title>Multi-Threading</title>
 
     <partintro>
@@ -639,7 +1000,7 @@ my_id = vpr::Thread::self();</programlisting>
         </section>
       </section>
 
-      <section>
+      <section id="section.thread.functors">
         <title>Thread Functors</title>
 
         <indexterm>
@@ -975,7 +1336,7 @@ thread = new vpr::Thread(my_functor);</programlisting>
       </section>
     </chapter>
 
-    <chapter>
+    <chapter id="chapter.synchronization">
       <title>Synchronization</title>
 
       <para>When multiple processes or threads have access to the same data,
@@ -988,7 +1349,7 @@ thread = new vpr::Thread(my_functor);</programlisting>
       understand how to protect access to shared data so that the
       multi-threaded software will execute correctly.</para>
 
-      <section>
+      <section id="section.using.vprSemaphore">
         <title>Semaphores: Using <classname>vpr::Semaphore</classname></title>
 
         <indexterm>
@@ -1365,7 +1726,7 @@ thread = new vpr::Thread(my_functor);</programlisting>
         </section>
       </section>
 
-      <section>
+      <section id="section.using.vprCondVar">
         <title>Condition Variables: Using <classname>vpr::CondVar</classname></title>
 
         <indexterm>
@@ -1376,7 +1737,7 @@ thread = new vpr::Thread(my_functor);</programlisting>
       </section>
     </chapter>
 
-    <chapter>
+    <chapter id="chapter.signal.handling">
       <title>Signal Handling</title>
 
       <para></para>
@@ -1386,32 +1747,108 @@ thread = new vpr::Thread(my_functor);</programlisting>
   <part>
     <title>Miscellaneous Utilities</title>
 
-    <chapter>
+    <chapter id="chapter.sim.sockets">
+      <title>Simulated Sockets</title>
+
+      <para></para>
+    </chapter>
+
+    <chapter id="chapter.guid">
       <title>Globally Unique Identifiers</title>
 
       <para></para>
     </chapter>
 
-    <chapter>
+    <chapter id="chapter.intervals">
       <title>Intervals</title>
 
       <para></para>
     </chapter>
 
-    <chapter>
+    <chapter id="chapter.singleton">
       <title>Singletons</title>
 
       <para></para>
     </chapter>
 
-    <chapter>
+    <chapter id="chapter.factory">
       <title>Factories</title>
 
       <para></para>
     </chapter>
   </part>
 
+  <part>
+    <title>Appendices</title>
+
+    <appendix id="appendix.io.impl">
+      <title>I/O Implementation Information</title>
+
+      <para>All of the buffered I/O code is based around a Bridge pattern
+      <xref linkend="ref.design.patterns" />, though the actual implementation
+      of the bridge is not as straightforward as described in the literature.
+      However, the implementation can be divided into the platform-specific
+      wrapper classes (e.g., <classname>vpr::SocketStreamImplNSPR</classname><indexterm><primary>classes</primary><secondary>vpr::SocketStreamImplNSPR</secondary></indexterm>)
+      and <quote>containers</quote> for those classes (e.g.,
+      <classname>vpr::SocketStream_t&#60;T&#62;</classname><indexterm><primary>classes</primary><secondary>vpr::SocketStream_t&#60;T&#62;</secondary></indexterm>).
+      Ultimately, the type seen in user code (e.g., <classname>vpr::SocketStream</classname><indexterm><primary>classes</primary><secondary>vpr::SocketStream</secondary></indexterm>)
+      is a <token>typedef</token> for a specific container class
+      instantiation.</para>
+
+      <para>The <token>typedef</token> is based on the concept of a
+      platform-specific <quote>domain</quote>, as specified in the header
+      <filename>vpr/vprDomain.h</filename>. These domains allow a form of
+      parameterization of VPR components using the C preprocessor. For
+      example, when compiling on IRIX with SPROC threads, the domain defines
+      the use of the SPROC threading subsystem, BSD sockets, and termios
+      serial I/O. When compiling on Windows, where only NSPR is used, the
+      domain specifies the use of native Win32 serial I/O and NSPR for
+      everything else. Moreover, the simulated sockets can be mixed with any
+      of the threading subsystems using this paradigm.</para>
+    </appendix>
+  </part>
+
   <bibliography>
+    <biblioentry id="ref.design.patterns">
+      <abbrev>Gam95</abbrev>
+
+      <authorgroup>
+        <author>
+          <firstname>Erich</firstname>
+
+          <surname>Gamma</surname>
+        </author>
+
+        <author>
+          <firstname>Richard</firstname>
+
+          <surname>Helm</surname>
+        </author>
+
+        <author>
+          <firstname>Ralph</firstname>
+
+          <surname>Johnson</surname>
+        </author>
+
+        <author>
+          <firstname>John</firstname>
+
+          <surname>Vlissides</surname>
+        </author>
+      </authorgroup>
+
+      <title>Design Patterns</title>
+
+      <subtitle>Elements of Reusable Object-Oriented Software</subtitle>
+
+      <publisher>
+        <publishername>Addison-Wesley</publishername>
+      </publisher>
+
+      <pubdate>1995</pubdate>
+    </biblioentry>
+
     <biblioentry id="ref.pthreads.programming">
       <abbrev>Nic96</abbrev>
 
@@ -1448,6 +1885,28 @@ thread = new vpr::Thread(my_functor);</programlisting>
       <pubdate>1996</pubdate>
     </biblioentry>
 
+    <biblioentry id="ref.network.patterns">
+      <abbrev>Sch00</abbrev>
+
+      <author>
+        <firstname>Douglas</firstname>
+
+        <surname>Schmidt</surname>
+      </author>
+
+      <title>Pattern-Oriented Software Architecture</title>
+
+      <volumenum>Volume 2</volumenum>
+
+      <subtitle>Patterns for Concurrent and Networked Objects</subtitle>
+
+      <publisher>
+        <publishername>John Wiley &#38; Sons</publishername>
+      </publisher>
+
+      <pubdate>2000</pubdate>
+    </biblioentry>
+
     <biblioentry id="ref.advanced.prog.unix">
       <abbrev>Ste92</abbrev>
 
@@ -1479,7 +1938,7 @@ thread = new vpr::Thread(my_functor);</programlisting>
 
       <volumenum>Volume 1</volumenum>
 
-      <subtitle>Network APIS: Sockets and XTI</subtitle>
+      <subtitle>Network APIs: Sockets and XTI</subtitle>
 
       <edition>Second Edition</edition>
 
