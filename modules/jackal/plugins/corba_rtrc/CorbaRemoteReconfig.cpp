@@ -61,7 +61,7 @@ CorbaRemoteReconfig::~CorbaRemoteReconfig()
    //Clean up interface by disconnecting first
    if (mInterface != NULL)
    {
-      disable(); 
+      disable();
       delete mInterface;
       mInterface = NULL;
    }
@@ -79,7 +79,7 @@ vpr::ReturnStatus CorbaRemoteReconfig::init()
 {
    // Create new CORBA Manager and initialize it.
    mCorbaManager = new tweek::CorbaManager;
-
+   std::string err_msg("Error occured during initialization");
    vpr::ReturnStatus status;
 
    try
@@ -88,55 +88,51 @@ vpr::ReturnStatus CorbaRemoteReconfig::init()
 
       // Attempt to initialize the CORBA Manager.
       status = mCorbaManager->init("corba_rtrc", dummy_int, NULL);
+
+      // Test to see if init succeeded.
+      if ( status.success() )
+      {
+         try
+         {
+            // Attempt to create the Subject Manager.
+            status = mCorbaManager->createSubjectManager();
+
+            if ( status.success() )
+            {
+               // Create an intstance of our subject.
+               mInterface = new RemoteReconfigSubjectImpl;
+            }
+            else
+            {
+               err_msg = "Tweek Subject Manager failed to initialize.";
+               throw std::exception();
+            }
+         }
+         catch(CORBA::Exception& ex)
+         {
+            err_msg = "Caught a CORBA exception while creating the Subject Manager";
+            throw;  // Rethrow the exception, which will be caught below
+         }
+      }
+      else
+      {
+         err_msg = "Could not initialize tweek::CorbaManager.";
+         throw std::exception();
+      }
    }
-   catch (...)
+   catch(...)
    {
       vprDEBUG(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
-         << "CorbaRemoteReconfig::init: Caught an unknown exception while initializing CorbaManager\n" 
+         << clrOutBOLD(clrRED, "ERROR:") << " [CorbaRemoteReconfig::init()]: "
+         << err_msg << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
+         << "Disabling CORBA remote run-time reconfiguration.\n"
          << vprDEBUG_FLUSH;
 
-      delete mCorbaManager; 
+      delete mCorbaManager;
       mCorbaManager = NULL;
-      return vpr::ReturnStatus::Fail;
+      status.setCode(vpr::ReturnStatus::Fail);
    }
-
-   //Test to see if init succeeded
-   if ( !status.success() )
-   {
-      vprDEBUG(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
-         << "CorbaRemoteReconfig::init: Could not initialize CorbaManager\n" 
-         << vprDEBUG_FLUSH;
-
-      delete mCorbaManager; 
-      mCorbaManager = NULL;
-      return vpr::ReturnStatus::Fail;
-   }
-
-   try
-   {
-      //Attempt to create the subject manager
-      status = mCorbaManager->createSubjectManager();
-   }
-   catch (CORBA::Exception& ex)
-   {
-      vprDEBUG(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
-         << "CorbaRemoteReconfig::init: Caught an unknown CORBA exception while creating the subject manager\n" 
-         << vprDEBUG_FLUSH;
-   }
-      
-   if ( !status.success() )
-   {
-      vprDEBUG(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
-         << "CorbaRemoteReconfig::init: CORBA subject manager failed to initialize\n" 
-         << vprDEBUG_FLUSH;
-
-      delete mCorbaManager; 
-      mCorbaManager = NULL;
-      return vpr::ReturnStatus::Fail;
-   }
-
-   //Create an intstance of our interface subject
-   mInterface = new RemoteReconfigSubjectImpl;
 
    return status;
 }
@@ -147,7 +143,7 @@ vpr::ReturnStatus CorbaRemoteReconfig::enable()
    if ((mInterface == NULL) || (mCorbaManager == NULL))
    {
       vprDEBUG(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
-         << "CorbaRemoteReconfig::enable: Cannot enable interface until it has been initialized\n" 
+         << "CorbaRemoteReconfig::enable: Cannot enable interface until it has been initialized\n"
          << vprDEBUG_FLUSH;
 
       return vpr::ReturnStatus::Fail;
@@ -163,7 +159,7 @@ vpr::ReturnStatus CorbaRemoteReconfig::enable()
    catch (...)
    {
       vprDEBUG(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
-         << "CorbaRemoteReconfig::enable: Caught an exception while trying to register subject\n" 
+         << "CorbaRemoteReconfig::enable: Caught an exception while trying to register subject\n"
          << vprDEBUG_FLUSH;
       return vpr::ReturnStatus::Fail;
    }
@@ -180,7 +176,7 @@ void CorbaRemoteReconfig::disable()
    if ((mInterface == NULL) || (mCorbaManager == NULL))
    {
       vprDEBUG(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
-         << "CorbaRemoteReconfig::disable: Cannot disable interface until it has been initialized\n" 
+         << "CorbaRemoteReconfig::disable: Cannot disable interface until it has been initialized\n"
          << vprDEBUG_FLUSH;
 
       return;
@@ -197,14 +193,14 @@ void CorbaRemoteReconfig::disable()
    catch (...)
    {
       vprDEBUG(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
-         << "CorbaRemoteReconfig::disable: Caught an exception while trying to unregister subject\n" 
+         << "CorbaRemoteReconfig::disable: Caught an exception while trying to unregister subject\n"
          << vprDEBUG_FLUSH;
    }
 
    if (!status.success())
    {
       vprDEBUG(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
-         << "CorbaRemoteReconfig::disable: Could not unregister subject\n" 
+         << "CorbaRemoteReconfig::disable: Could not unregister subject\n"
          << vprDEBUG_FLUSH;
    }
 }
