@@ -28,8 +28,10 @@ TESTCASES = \
 	test.DescEnumTest \
 	test.PropertyDescTest \
 	test.ValTypeTest \
-	test.ConfigElementTest \
-	test.ConfigDefinitionTest \
+	\
+	test.ConfigElementTest	       \
+	test.ConfigElementFactoryTest  \
+	test.ConfigDefinitionTest      \
 	test.PropertyDefinitionTest
 
 RUNNER_CLASSES=		$(addsuffix .class, $(RUNNER))
