@@ -1,7 +1,7 @@
 #ifndef _VPR_TEST_THREAD_TEST_H_
 #define _VPR_TEST_THREAD_TEST_H_
 
-#include <cppunit/TestCase.h>
+#include <cppunit/ThreadTestCase.h>
 #include <cppunit/TestSuite.h>
 #include <cppunit/TestCaller.h>
 
@@ -11,17 +11,17 @@
 
 namespace vprTest{
 
-class ThreadTest : public CppUnit::TestCase
+class ThreadTest : public CppUnit::ThreadTestCase
 {
 public:
    ThreadTest()
-   : CppUnit::TestCase ()
+   : CppUnit::ThreadTestCase ()
    {
       mNumRecursions = 0;
    }
 
    ThreadTest(std::string name)
-   : CppUnit::TestCase (name)
+   : CppUnit::ThreadTestCase (name)
    {
       mNumRecursions = 0;
    }
@@ -83,7 +83,7 @@ public:
    // ---- Thread specific data stuff ---- //
    // ------------------------------------ //
    void ThreadTest::testThreadSpecificData();
-   
+
    /**
    * @param arg - ptr to std::string id of thread
    */
@@ -99,7 +99,7 @@ public:
       //test_suite->addTest( new CppUnit::TestCaller<ThreadTest>("testPriority", &ThreadTest::testPriority));
       //test_suite->addTest( new CppUnit::TestCaller<ThreadTest>("testThreadStackSize", &ThreadTest::testThreadStackSize));
       test_suite->addTest( new CppUnit::TestCaller<ThreadTest>("testThreadSpecificData", &ThreadTest::testThreadSpecificData));
-      
+
       return test_suite;
    }
 

@@ -326,6 +326,8 @@ void ThreadTest::recurseConsumeResources(void* arg)
 // ------------------------------------ //
 void ThreadTest::testThreadSpecificData()
 {
+   threadAssertReset();
+
    // Spawn off a bunch of threads (m)
    // Have each one increment counter n times
    // join all threads
@@ -360,7 +362,9 @@ void ThreadTest::testThreadSpecificData()
       delete threads[t];
       delete functors[t];
       delete thread_names[t];
-   }   
+   }
+
+   checkThreadAssertions();
 }
 
 /**
@@ -373,21 +377,28 @@ void ThreadTest::tsIncCounter(void* arg)
    test_name += (*thread_name);
 
    const unsigned long IncCount(100000);
-   
+
    (*mTSCounter) = 0;
-   
-   CPPUNIT_METRIC_START_TIMING();
 
-   for(unsigned long i=0;i<IncCount;i++)
+   try
    {
-      (*mTSCounter) = (*mTSCounter) + 1;
-//      vpr::System::usleep(0);    // Sleep for 20 micro seconds      
+      CPPUNIT_METRIC_START_TIMING();
+
+      for(unsigned long i=0;i<IncCount;i++)
+      {
+         (*mTSCounter) = (*mTSCounter) + 1;
+//         vpr::System::usleep(0);    // Sleep for 20 micro seconds
+      }
+
+      assertTestThread((*mTSCounter) == IncCount);
+
+      CPPUNIT_METRIC_STOP_TIMING();
+      CPPUNIT_ASSERT_METRIC_TIMING_LE(test_name, IncCount, 0.075f, 0.1f);  // warn at 7.5%, error at 10%
    }
-
-   CPPUNIT_ASSERT((*mTSCounter) == IncCount);
-
-   CPPUNIT_METRIC_STOP_TIMING();
-   CPPUNIT_ASSERT_METRIC_TIMING_LE(test_name, IncCount, 0.075f, 0.1f);  // warn at 7.5%, error at 10%
+   catch (...)
+   {
+      std::cout << "F" << std::flush;
+   }
 }
 
 
