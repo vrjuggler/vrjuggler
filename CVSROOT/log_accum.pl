@@ -401,7 +401,7 @@ sub format_summaries {
 
     my $rev;
     foreach $rev (0 .. $#revs) {
-	$revs[$rev] =~ /^((\d+\.)*\d+)\.(\d)+$/;
+	$revs[$rev] =~ /^((\d+\.)*\d+)\.(\d+)$/;
 	my($major_rev, $minor_rev) = ($1, $3);
 
 	if ( $minor_rev > 1 ) {
