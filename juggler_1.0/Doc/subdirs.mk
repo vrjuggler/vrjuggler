@@ -15,5 +15,5 @@ SUBDIRS		= $(top_srcdir)/Config $(top_srcdir)/Environment	\
                   $(top_srcdir)/Input $(top_srcdir)/Kernel		\
                   $(top_srcdir)/Math $(top_srcdir)/Performance		\
                   $(top_srcdir)/SharedMem $(top_srcdir)/Sound		\
-                  $(top_srcdir)/Syn $(top_srcdir)/Threads		\
+                  $(top_srcdir)/Sync $(top_srcdir)/Threads		\
                   $(top_srcdir)/Utils
