@@ -31,8 +31,8 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# This include file <VjWizards.mk> defines the list of .java files that are built
-# into Java bytecode with javac.
+# This include file <VjWizards.mk> defines the list of .java files that are
+# built into Java bytecode with javac.
 # -----------------------------------------------------------------------------
 # Variables defined here are:
 #
@@ -40,17 +40,14 @@
 # VJWIZARDS_OBJS    - The list of .class files that will be created.
 # -----------------------------------------------------------------------------
 
-VJWIZARDS_SOURCES = \
-		VjWizards/WizardPanel.java		\
-		VjWizards/WizardSubPanel.java		\
-		VjWizards/BeginnerSubPanel1.java	\
-		VjWizards/WindowLayoutPanel.java	\
-		VjWizards/DisplayWindowPanel.java	\
-		VjWizards/InputWindowPanel.java		\
-		VjWizards/InputDevicePanel.java		\
-		VjWizards/MiscInfoPanel.java		\
-		VjWizards/SavePanel.java
+VJWIZARDS_SOURCES = VjWizards/WizardPanel.java		\
+                    VjWizards/WizardSubPanel.java	\
+                    VjWizards/BeginnerSubPanel1.java	\
+                    VjWizards/WindowLayoutPanel.java	\
+                    VjWizards/DisplayWindowPanel.java	\
+                    VjWizards/InputWindowPanel.java	\
+                    VjWizards/InputDevicePanel.java	\
+                    VjWizards/MiscInfoPanel.java	\
+                    VjWizards/SavePanel.java
 
-VJWIZARDS_OBJS = ${VJWIZARDS_SOURCES:.java=.class}
-
-
+VJWIZARDS_OBJS = $(VJWIZARDS_SOURCES:.java=.class)
