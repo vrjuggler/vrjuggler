@@ -134,14 +134,6 @@ public:
    {
      return(ComposedParent::getBaseType() + NewParent::getBaseType());    //Input,Digital,Analog,Position, NEED THIS TOO
    }
-
-   void setDelta(vpr::Uint64 delta)
-   {
-      ComposedParent::setDelta(delta);
-      NewParent::setDelta(delta);
-   }
-
-
 };
 
 } // end namespace
