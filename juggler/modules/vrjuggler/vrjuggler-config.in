@@ -191,7 +191,7 @@ if ( $ECHO_LIBS )
 if ( $ECHO_EXTRA_LIBS )
 {
    my $extra_ldflags = make_EXTRA_LDFLAGS("$extra_libs_arg", $use_linker,
-                                          $print_min);
+                                          $echo_static, $print_min);
    print "$extra_ldflags\n";
 }
 
