@@ -5,9 +5,9 @@ include @topdir@/make.defs.mk
 # -----------------------------------------------------------------------------
 default: all
 
-all: aj vj
+all: aj vj samples
 
-aj vj::
+aj vj samples::
 	cd $@ && $(MAKE) all
 
 # -----------------------------------------------------------------------------
@@ -15,7 +15,8 @@ aj vj::
 # -----------------------------------------------------------------------------
 clean:	
 	-cd aj && $(MAKE) clean
-	-cd vj  && $(MAKE) clean	
+	-cd vj && $(MAKE) clean	
+	-cd samples && $(MAKE) clean	
 
 # this is for "ooops! i configured in the root dir of my project..."
 cleanconfigure:
