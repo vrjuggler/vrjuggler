@@ -41,7 +41,7 @@
 #include <vpr/Sync/Guard.h>
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Singleton.h>
-#include <vpr/DynLoad/LibraryLoader.h>
+#include <vpr/DynLoad/Library.h>
 
 
 namespace vrj
@@ -70,7 +70,7 @@ namespace vrj
          ;
       }
    private:
-      vpr::LibraryLoader mPluginLoader;
+      vpr::LibraryPtr mPluginDSO;
       PerfPlugin* mPerfIf;
    }; // class Mediator
 
