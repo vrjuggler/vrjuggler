@@ -42,7 +42,7 @@
 #include <vpr/vprConfig.h>
 
 #include <vpr/Util/Assert.h>
-#include <vpr/Thread/Thread.h>
+//#include <vpr/Thread/Thread.h>
 #include <vpr/md/NSPR/NSPRHelpers.h>
 #include <vpr/md/NSPR/Thread/ThreadNSPR.h>
 
@@ -133,31 +133,42 @@ vpr::ReturnStatus ThreadNSPR::start()
       ThreadMemberFunctor<ThreadNSPR>* start_functor =
             new ThreadMemberFunctor<ThreadNSPR>(this, &ThreadNSPR::startThread,
                                                 NULL);
-      
+
       // Finally create the thread.
-      mThread = PR_CreateThread(PR_USER_THREAD, vprThreadFunctorFunction,
+      // - On success --> The start method registers the actual thread info
+      mThreadStartCompleted = false;      // Initialize registration flag (uses cond var for this)
+      PRThread* ret_thread = PR_CreateThread(PR_USER_THREAD, vprThreadFunctorFunction,
                                 (void*) start_functor, nspr_prio, nspr_scope,
                                 nspr_state, (PRUint32) mStackSize);
 
       // Inform the caller if the thread was not created successfully.
-      if ( NULL == mThread )
+      if ( NULL == ret_thread )
       {
          ThreadManager::instance()->lock();
          {
             registerThread(false);
          }
          ThreadManager::instance()->unlock();
-               
+
          NSPR_PrintError("vpr::ThreadNSPR::spawn() - Cannot create thread");
          status.setCode(vpr::ReturnStatus::Fail);
       }
       else
       {
-         ThreadManager::instance()->lock();      // Lock manager
+         // start thread will register the thread, so let's wait for it
+         // -- Wait for registration to complete
+         mThreadStartCondVar.acquire();
          {
-            registerThread(true);                     // Register success
+            while ( !mThreadStartCompleted )    // While not desired state (ie. register completed)
+            { mThreadStartCondVar.wait();}
          }
-         ThreadManager::instance()->unlock();
+         mThreadStartCondVar.release();
+         // ASSERT: Thread has completed registration
+         vprASSERT(NULL != mThread && "Thread registration failed");
+         vprASSERT(-1 != getTID() && "Thread id is invalid for successful thread");
+
+         // Set the return code to success
+         status.setCode(vpr::ReturnStatus::Succeed);
       }
    }
 
@@ -177,11 +188,22 @@ void ThreadNSPR::startThread(void* null_param)
 {
    // WE are a new thread... yeah!!!!
    // TELL EVERYONE THAT WE LIVE!!!!
-   ThreadManager::instance()->lock();      // Lock manager
+   mThread = PR_GetCurrentThread();                   // Set the identity of the thread
+   vprASSERT(NULL != mThread && "Invalid thread");    // We should not be able to have a NULL thread
+   ThreadManager::instance()->lock();                 // Lock manager
    {
-      mThreadTable.addThread(this, mThread);    // Store local lookup
+      mThreadTable.addThread(this, mThread);          // Store local lookup
+      registerThread(true);                           // Finish thread initialization
    }
    ThreadManager::instance()->unlock();
+
+   // Signal that registration is completed
+   mThreadStartCondVar.acquire();
+   {
+      mThreadStartCompleted = true;
+      mThreadStartCondVar.signal();
+   }
+   mThreadStartCondVar.release();
 
    // --- CALL USER FUNCTOR --- //
    (*mUserThreadFunctor)();

@@ -62,6 +62,8 @@
 #include <vpr/Thread/ThreadFunctor.h>
 #include <vpr/Thread/ThreadManager.h>
 
+#include <vpr/md/NSPR/Sync/CondVarNSPR.h>
+
 
 namespace vpr
 {
@@ -319,6 +321,9 @@ private:
    VPRThreadScope     mScope;
    VPRThreadState     mState;
    PRUint32           mStackSize;
+
+   bool              mThreadStartCompleted;  /**< Flag for signaling when thread start is completed */
+   vpr::CondVarNSPR  mThreadStartCondVar;    /**< CondVar for thread starting */
 
    /**
     * Checks the status of the thread creation in order to determine if this
