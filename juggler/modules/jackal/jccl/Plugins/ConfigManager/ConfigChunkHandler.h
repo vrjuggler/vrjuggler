@@ -39,25 +39,29 @@
 namespace jccl {
 
 class ConfigChunk;
+class ConfigManager;
 
-//-----------------------------------------
-//: Abstract base class for all classes that can handle config chunks
-//
-// This means that they can be "configured"
-// and queried using the specified interface.
-//
-//
-// The idea is that you override canHandle()
-// to recognize chunks the derived class cares about.
-// Then you over ride configAdd and configRemove
-// to actually process those chunks.
-// It is also possible to override configProcessPending although the 
-// default one will work in most cases.
-//---------------------------------------------
-//! PUBLIC_API:
-class JCCL_CLASS_API ConfigChunkHandler
-{
+
+/** Abstract base class for all classes that can handle ConfigChunks
+ *  Any class supporting this interface can be dynamically reconfigured,
+ *  for example by Jackal's ConfigurationManager.
+ * 
+ *  The idea is that you override configCanHandle() to recognize those
+ *  chunks that your derived class cares about.  Then you override
+ *  configAdd() and configRemove() to actually process those chunks.
+ *
+ *  The actually work of checking the list of pending add and remove
+ *  requests and throwing them at configCanHandle() et. al. is done
+ *  by configProcessPending.  This can also be overriden to provide
+ *  special behavior, however this is strongly discouraged.  The default
+ *  implementation should be sufficient for almost any conceivable
+ *  dynamic reconfiguration need.
+ */
+
+class JCCL_CLASS_API ConfigChunkHandler {
+
 public:
+
    //: Can the handler handle the given chunk?
    //! RETURNS: true - Can handle it
    //+          false - Can't handle it
@@ -77,7 +81,7 @@ public:
    //+       if you override this function and still want to make use of it's abilities
    //+         (ex.  The kernel needs to do this because if has to call configProcessPending on other managers in addition to itself)
    //! RETURNS: Number of chunks it actually processes
-   virtual int configProcessPending(bool lockIt = true);
+   virtual int configProcessPending (ConfigManager* cfg_mgr);
 
    //: Add the chunk to the configuration
    //! PRE: configCanHandle(chunk) == true
