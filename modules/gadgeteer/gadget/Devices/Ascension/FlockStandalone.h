@@ -7,6 +7,10 @@
 #ifndef _ASCENSION_FLOCKOFBIRD_H_
 #define _ASCENSION_FLOCKOFBIRD_H_
 
+// look into this, it may be a KLUDGE!!!
+// it allows this driver to work under 6.5 (6.2 worked fine)
+#define _OLD_TERMIOS
+
 #define POSITION_RANGE 12.0f
 #define ANGLE_RANGE   180.0f
 #define MAX_SENSORS    128
