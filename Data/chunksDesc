@@ -68,7 +68,6 @@ chunk display "display" "This is a surface that images are projected on."
   ScreenPos Float 5 "screenPos" vj_valuelabels { "Dist to Screen" "Dist to left edge" "Dist to right edge" "Dist to bottom edge" "Dist to top edge" } "Dist from origin (screen, left, right, bottom, top)"
   simulator Bool 1 "simulator" "Are we in simulator mode"
   simCamera Chunk 1 "simCamera" vj_enumeration { "PosProxy" "proxyAlias" } "This is the pos proxy that controls the sim view"
-  headPos Chunk 1 "headPos" vj_enumeration { "proxyAlias" "PosProxy" } "The position proxy of the head position to use for this window."
   user Chunk 1 "user" vj_enumeration { "JugglerUser" } "This is the user that the window is drawing for."
   end
 chunk InputManager "InputManager" "Configure the initial Input Manager settings."
