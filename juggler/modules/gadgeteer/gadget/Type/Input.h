@@ -202,8 +202,8 @@ public:
       return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
    }
 
-   /** Is this input device active?. */
-   int isActive()
+   /** Is this input device active? */
+   bool isActive()
    {
       return mActive;
    }
@@ -235,7 +235,7 @@ protected:
    std::string    mPort;
    std::string    mInstName;
    vpr::Thread*   mThread;       /**< The thread being used by the driver */
-   int            mActive;       /**< Is the driver active? */
+   bool           mActive;       /**< Is the driver active? */
    int            mBaudRate;     /**< Baud rate of the device (if it is serial device) */
 
    Input(const Input& o) : vpr::SerializableObject(o)
