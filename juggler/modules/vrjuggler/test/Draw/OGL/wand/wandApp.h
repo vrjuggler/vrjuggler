@@ -140,6 +140,10 @@ public:
                  << " 3:" << mButton3->getData()
                  << " 4:" << mButton4->getData()
                  << " 5:" << mButton5->getData() << std::endl;
+
+      // Get the wand transformation matrix and save it so we can draw a box
+      // on the wand.
+      mWandMatrix = mWand->getData();
    }
 
    //: Function called after drawing has been triggered but BEFORE it completes<BR><BR>
@@ -171,8 +175,11 @@ private:
    }
 
 public:
+   vjMatrix*    mWandMatrix;
+
    vjPosInterface    mWand;      // the Wand
    vjPosInterface    mHead;      // the head
+
    vjDigitalInterface   mButton0;
    vjDigitalInterface   mButton1;
    vjDigitalInterface   mButton2;

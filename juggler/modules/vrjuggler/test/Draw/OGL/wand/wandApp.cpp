@@ -57,14 +57,12 @@ void wandApp::myDraw()
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    glMatrixMode(GL_MODELVIEW);
 
-      // -- Draw box on wand --- //
-   vjMatrix* wandMatrix;
-   wandMatrix = mWand->getData();      // Get the wand matrix
-
    glPushMatrix();
-      // cout << "wand:\n" << *wandMatrix << endl;
+      // cout << "wand:\n" << *mWandMatrix << endl;
       glPushMatrix();
-         glMultMatrixf(wandMatrix->getFloatPtr());    // Push the wand matrix on the stack
+         // Push the wand matrix on the stack
+         glMultMatrixf(mWandMatrix->getFloatPtr());
+
          //glColor3f(1.0f, 0.0f, 1.0f);
          float wand_color[3];
          wand_color[0] = wand_color[1] = wand_color[2] = 0.0f;
@@ -93,7 +91,7 @@ void wandApp::myDraw()
       // Draw Axis
       glDisable(GL_LIGHTING);
       glPushMatrix();
-         glMultMatrixf(wandMatrix->getFloatPtr());    // Goto wand position
+         glMultMatrixf(mWandMatrix->getFloatPtr());    // Goto wand position
 
          vjVec3 x_axis(7.0f,0.0f,0.0f);
          vjVec3 y_axis(0.0f, 7.0f, 0.0f);
