@@ -93,7 +93,7 @@ public:
     * @postconditions if it is, then the loaded sound is triggered.  if it isn't then nothing happens.
     * @semantics Triggers a sound
     */
-   virtual void trigger(const std::string & alias, const unsigned int & looping = 0)
+   virtual void trigger(const std::string & alias, const int & looping = 0)
    {
       snx::SoundImplementation::trigger( alias, looping );
       // do nothing

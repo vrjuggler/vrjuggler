@@ -112,16 +112,16 @@ namespace snx
    public:
 
       /** trigger a sound.
-       * @input number of times to play
-       * @preconditions object does not have to be a valid sound (but it helps :)
+       * @input number of times to play, -1 to repeat infinately, 1 (single shot) is default.
+       * @preconditions object does not have to be a valid sound (but it helps :).
        * @postconditions if it is, then the loaded sound is triggered.  if it isn't then nothing happens.
-       * @semantics Triggers a sound
+       * @semantics Triggers a sound.
        */
-      virtual void trigger( const unsigned int& repeat = 1 )
+      virtual void trigger( const int& repeat = 1 )
       {
          sonix::instance()->trigger( mAlias, repeat );
       }
-
+      
       /* specify whether sound retriggers from beginning when triggered while playing.
        * when sound is already playing then you call trigger,
        * does the sound restart from beginning?
@@ -130,6 +130,46 @@ namespace snx
       {
          sonix::instance()->setRetriggerable( mAlias, onOff );
       }
+      
+      /**
+       * is the sound retriggerable?
+       */
+      virtual bool isRetriggerable()
+      {
+         return sonix::instance()->isRetriggerable( mAlias );
+      }
+
+      /** 
+       * stop the sound.
+       * @semantics stop the sound
+       * @input
+       */
+      virtual void stop()
+      {
+         sonix::instance()->stop( mAlias );
+      }
+
+      /**
+       * pause the sound, use unpause to return playback where you left off...
+       */
+      virtual void pause()
+      {
+         sonix::instance()->pause( mAlias );
+      }
+
+      /**
+       * resume playback from a paused state.  does nothing if sound was not paused.
+       */
+      virtual void unpause()
+      {
+         sonix::instance()->unpause( mAlias );
+      }
+      
+      /** if the sound is paused, then return true. */
+      virtual bool isPaused()
+      {
+         return sonix::instance()->isPaused( mAlias );
+      } 
 
       /** ambient or positional sound.
        * is the sound ambient - attached to the listener, doesn't change volume
@@ -171,47 +211,6 @@ namespace snx
          sonix::instance()->setCutoff( mAlias, amount );
       }
       
-      /**stop the sound.
-       * @semantics stop the sound
-       * @input
-       */
-      virtual void stop()
-      {
-         sonix::instance()->stop( mAlias );
-      }
-
-      /**
-       * pause the sound, use unpause to return playback where you left off...
-       */
-      virtual void pause()
-      {
-         sonix::instance()->pause( mAlias );
-      }
-
-      /**
-       * resume playback from a paused state.  does nothing if sound was not paused.
-       */
-      virtual void unpause()
-      {
-         sonix::instance()->unpause( mAlias );
-      }
-
-      /**
-       * mute, sound continues to play, but you can't hear it...
-       */
-      virtual void mute()
-      {
-         sonix::instance()->mute( mAlias );
-      }
-
-      /**
-       * unmute, let the muted-playing sound be heard again.
-       */
-      virtual void unmute()
-      {
-         sonix::instance()->unmute( mAlias );
-      }
-
       /**
        * set sound's 3D position .
        * @input x,y,z are in OpenGL coordinates (right handed sys, x right, y up, z towards you)
