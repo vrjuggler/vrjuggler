@@ -124,7 +124,7 @@ protected:
             << mContextDataVector.size() << std::endl << vjDEBUG_FLUSH;
       }
 
-      return &mContextDataVector[context_id];
+      return &(mContextDataVector[context_id]);
    }
 
 private:
