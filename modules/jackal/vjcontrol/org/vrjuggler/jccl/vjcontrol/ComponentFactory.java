@@ -92,10 +92,7 @@ import org.vrjuggler.jccl.config.*;
  *  be able to access each other (e.g. by getting references via 
  *  Core.getRegisteredObject()).
  *
- *
- *  @author Christopher Just
- *  @version $Revision$
- *  @see VjControl.VjComponent
+ *  @see VjComponent
  */
 public class ComponentFactory {
 
@@ -259,7 +256,7 @@ public class ComponentFactory {
             //Class cl = loader.loadClass (class_name);
             //Object o = cl.newInstance();
             Object o = Beans.instantiate (loader, class_name);
-            return (VjComponent)Beans.getInstanceOf (o, VjControl.VjComponent.class);
+            return (VjComponent)Beans.getInstanceOf (o, VjComponent.class);
         }
         catch (Exception e) {
             Core.consoleErrorMessage ("CreateComponent", "Failed: " + e.toString());
