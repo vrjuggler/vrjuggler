@@ -14,6 +14,17 @@
 
 int vjGlWindow::mCurMaxWinId = 0;
 
+
+void vjGlWindow::config(vjDisplay* _display)
+{
+   mDisplay = _display;
+   mDisplay->getOriginAndSize( origin_x, origin_y, window_width, window_height);
+   border = mDisplay->shouldDrawBorder();
+
+   /// Other stuff
+}
+
+
 void vjGlWindow::setLeftEyeProjection()
 {
    vjASSERT(mDisplay->getType() == vjDisplay::SURFACE);
@@ -106,7 +117,7 @@ void vjGlWindow::setCameraProjection()
    if (!window_is_open)
       return;
 
-   //float* frust = display->cameraProj->frustum.frust;
+   float* frust = sim_display->getCameraProj()->frustum.frust;
 
    vjDEBUG(2)  << "---- Camera Frustrum ----\n"
                << sim_display->getCameraProj()->frustum.frust << endl << vjDEBUG_FLUSH;
@@ -123,7 +134,9 @@ void vjGlWindow::setCameraProjection()
                  frust[vjFrustum::BOTTOM],frust[vjFrustum::TOP],
                  frust[vjFrustum::NEAR],frust[vjFrustum::FAR]);
       */
-      gluPerspective(80.0f, 1.0f, 0.1, 1000);
+
+      gluPerspective(80.0f, float(window_width)/float(window_height),
+                     frust[vjFrustum::NEAR], frust[vjFrustum::FAR]);
 #ifdef USE_PROJECTION_MATRIX
        // Set camera rotation and position
    glMultMatrixf(sim_display->getCameraProj()->viewMat.getFloatPtr());
