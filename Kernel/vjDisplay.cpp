@@ -17,6 +17,7 @@ void vjDisplay::config(vjConfigChunk* chunk)
     mBorder     = chunk->getProperty("border");
     int pipe    = chunk->getProperty("pipe");
     mStereo  = chunk->getProperty("stereo");
+    mActive  = chunk->getProperty("active");
 
     // -- Check for error in configuration -- //
     // NOTE: If there are errors, set them to some default value
@@ -59,6 +60,7 @@ ostream& operator<<(ostream& out,  vjDisplay& disp)
     out << "\t  Size:" << disp._xs << ", " << disp._ys << endl;
     out << "\t  Pipe:" << disp.mPipe << endl;
     out << "\t  Stereo:" << disp.mStereo << endl;
+    out << "\t  Active:" << disp.mActive << endl;
     out << "\t  User:" << disp.mUser->getName() << endl;
     out << "---------------------------------------\n";
 

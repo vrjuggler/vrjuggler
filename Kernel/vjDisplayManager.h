@@ -17,10 +17,9 @@ class vjDisplay;
 //
 // PURPOSE:
 //	This class is responsible for holding the data about display aspects
-//  of the application.  The displays themselves may be machine/OS specific,
-//  but this class should be able to run for all configurations.  This
-//  includes all machine/OS specific aspects.  For now that basically means
-//  simply tracking window data.
+//  of the application.  The display object are window/system independant
+//  this class is in charge of holding all the display data and keeping it
+//  current.  This includes updating projections, adding/deleting new displays, etc.
 //
 // @author Allen Bierbaum
 //  Date: 9-7-97
@@ -38,8 +37,15 @@ public:
 
    //: Return a list of the current displays
    //! NOTE: DO NOT EDIT THE DISPLAYS
-   std::vector<vjDisplay*> getDisplays()
-   { return mDisplays;}
+   std::vector<vjDisplay*> getActiveDisplays()
+   { return mActiveDisplays;}
+
+   //: Return list of inactive displays
+   std::vector<vjDisplay*> getInActiveDisplays()
+   { return mInactiveDisplays;}
+
+   //: Return list of all displays (inactive and active)
+   std::vector<vjDisplay*> getAllDisplays();
 
 public:     // --- Config stuff -- //
    //: Add the chunk to the configuration
@@ -65,13 +71,14 @@ private:
    virtual int addDisplay(vjDisplay* disp, bool notifyDrawMgr = true);
 
    //: Close the given display
-   virtual int closeDisplay(int dispId);
+   //virtual int closeDisplay(int dispId);
 
    //: Get the display information for the display
-   virtual vjDisplay* getDisplay(int dispId);
+   //virtual vjDisplay* getDisplay(int dispId);
 
 public:
-   std::vector<vjDisplay*>  mDisplays;    //: List of displays currently operating
+   std::vector<vjDisplay*> mActiveDisplays;           //: List of currently active displays
+   std::vector<vjDisplay*> mInactiveDisplays;   //: List of currently inactive displays
 
 protected:
    vjDrawManager*  mDrawManager;     //: The current drawManager to communicate with

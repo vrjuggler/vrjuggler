@@ -55,6 +55,9 @@ public:
    bool isSurface()
    { return (mType == SURFACE); }
 
+   bool isActive()
+   { return mActive; }
+
    void setName(std::string name)
    { mName = name; }
 
@@ -100,6 +103,7 @@ protected:
    bool        mBorder;                //: Should we have a border
    int         mPipe;                  //: Hardware pipe. Index of the rendering hardware
    bool        mStereo;                //: Do we want stereo
+   bool        mActive;                //: Is the display active or not
 
    vjConfigChunk* displayChunk;        //: The chunk data for this display
 };
