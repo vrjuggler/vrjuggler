@@ -475,27 +475,6 @@ public:
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline bool
-    getExtendedHandlingState (void) {
-        return m_sio_imp.getExtendedHandlingState();
-    }
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    inline vpr::Status
-    enableExtendedHandling (void) {
-        return m_sio_imp.enableExtendedHandling();
-    }
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    inline vpr::Status
-    disableExtendedHandling (void) {
-        return m_sio_imp.disableExtendedHandling();
-    }
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    inline bool
     getCRIgnoreState (void) {
         return m_sio_imp.getCRIgnoreState();
     }

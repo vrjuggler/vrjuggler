@@ -443,29 +443,6 @@ SerialPortImpTermios::disableCRTranslation () {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 bool
-SerialPortImpTermios::getExtendedHandlingState () {
-    return getBit(IEXTEN, SerialPortImpTermios::LFLAG);
-}
-
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-Status
-SerialPortImpTermios::enableExtendedHandling () {
-    return setBit(IEXTEN, SerialPortImpTermios::LFLAG, true,
-                  "Could not enable extended character handling mode");
-}
-
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-Status
-SerialPortImpTermios::disableExtendedHandling () {
-    return setBit(IEXTEN, SerialPortImpTermios::LFLAG, false,
-                  "Could not disable extended character handling mode");
-}
-
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-bool
 SerialPortImpTermios::getCRIgnoreState () {
     return getBit(IGNCR, SerialPortImpTermios::IFLAG);
 }
