@@ -5,8 +5,12 @@
 #ifndef _TRACKD_MEM_H_
 #define _TRACKD_MEM_H_
 
+#include <vjDefines.h>
 #include <sys/types.h>
-//#include <stdint.h>
+
+#if defined(VJ_OS_Linux)
+#   include <stdint.h>
+#endif
 
 struct CAVE_SENSOR_ST
    {
