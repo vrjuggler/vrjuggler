@@ -4,7 +4,7 @@
  * sonix
  *
  * Original Authors:
- *   Kevin Meinert, Carolina Cruz-Neira
+ *   Kevin Meinert
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile$
@@ -50,6 +50,7 @@
 #include <string>
 #include <fstream>
 #include "snx/xdl.h"
+#include "snx/PluginAPI.h"
 #include "snx/dirlist.h"
 #include "snx/ReplaceEnvVars.h"
 #include "snx/Singleton.h"
@@ -96,7 +97,6 @@ public:
          if (lib.lookup( "getName" ) == NULL) return false;
 
          // @todo give sonix an internal version number string!
-         //typedef char* (*getVersionFunc)(void);
          //getVersionFunc getVersion = (getVersionFunc)lib.lookup( "getVersion" );
          //if (getVersion != NULL && getVersion() != snx::version) return false;
 
@@ -134,7 +134,6 @@ public:
          mPlugins[x].open( full_path.c_str(), xdl::NOW );
 
          // get the name..
-         typedef char* (*getNameFunc)(void);
          getNameFunc getName = (getNameFunc)mPlugins[x].lookup( "getName" );
          std::string name;
          if (getName != NULL)
@@ -143,7 +142,6 @@ public:
             std::cout << "   o  Got plugin: " << name << " registering..." << std::endl;
          
             // create the implementation
-            typedef ISoundImplementation* (*newPluginFunc)(void);
             newPluginFunc newPlugin = (newPluginFunc)mPlugins[x].lookup( "newPlugin" );
             ISoundImplementation* si = NULL;
             if (newPlugin != NULL)
@@ -163,22 +161,22 @@ public:
       for (unsigned int x = 0; x < mPlugins.size(); ++x)
       {
          // get the name..
-         typedef char* (*getNameFunc)(void);
          getNameFunc getName = (getNameFunc)mPlugins[x].lookup( "getName" );
          std::string name;
+         ISoundImplementation* impl = NULL;
          if (getName != NULL)
          {
             name = getName();
-         
+            impl = mRegisteredImplementations[name];
+             
             // unreg it.
             this->reg( name, NULL );
          }
 
-         // delete the memory         
-         typedef void (*deletePluginFunc)(void);
+         // delete the memory using the delete func that comes with the library...
          deletePluginFunc deletePlugin = (deletePluginFunc)mPlugins[x].lookup( "deletePlugin" );
-         if (deletePlugin != NULL)
-            deletePlugin();
+         if (NULL != deletePlugin && NULL != impl)
+            deletePlugin( impl );
          
          // close the library
          mPlugins[x].close();

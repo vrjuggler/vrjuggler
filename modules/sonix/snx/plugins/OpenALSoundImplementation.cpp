@@ -4,7 +4,7 @@
  * sonix
  *
  * Original Authors:
- *   Kevin Meinert, Carolina Cruz-Neira
+ *   Kevin Meinert
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile$
@@ -67,16 +67,14 @@
 #include "snx/SoundFactory.h"
 #include "snx/plugins/OpenALSoundImplementation.h"
 
-static snx::SoundImplementation* gPlugPtr = NULL;
-
 /////////////////////////
 // plugin API:
 extern "C"
 {
 XDL_EXPORT const char* getVersion() { return "sonix xx.xx.xx"; }
 XDL_EXPORT const char* getName() { return "OpenAL"; }
-XDL_EXPORT void* newPlugin() { return (void*)(gPlugPtr = new snx::OpenALSoundImplementation); }
-XDL_EXPORT void deletePlugin() { if (NULL == gPlugPtr) return; delete gPlugPtr; gPlugPtr = NULL; }
+XDL_EXPORT snx::ISoundImplementation* newPlugin() { return new snx::OpenALSoundImplementation; }
+XDL_EXPORT void deletePlugin( snx::ISoundImplementation* &p ) { if (NULL == p) return; delete p; p = NULL; }
 }
 /////////////////////////
 
