@@ -111,6 +111,11 @@ public class ProxyVertexView
       private static final int BUTTON_PREF_WIDTH  = 30;
       private static final int BUTTON_PREF_HEIGHT = 16;
 
+      private static final int NAME_ROW         = 1;
+      private static final int ADD_BUTTON_ROW   = 2;
+      private static final int PASTE_BUTTON_ROW = 3;
+      private static final int FIRST_ALIAS_ROW  = PASTE_BUTTON_ROW + 1;
+
       private static String IMG_ROOT =
          "org/vrjuggler/vrjconfig/commoneditors/images";
 
@@ -128,11 +133,15 @@ public class ProxyVertexView
             };
          mMainLayout = new TableLayout(sizes);
          this.setLayout(mMainLayout);
-         int name_row = 1, add_button_row = 2, paste_button_row = 3;
+
+         // Set some text in the name label so that it has a preferred size
+         // that can be used for later calculations.
+         mNameLabel.setText(" ");
 
          mAddAliasButton.setEnabled(false);
          mAddAliasButton.setToolTipText("Add a new alias for this proxy");
          mAddAliasButton.setText("Create Alias");
+         mAddAliasButton.setMargin(new Insets(3, 0, 0, 0));
          mAddAliasButton.setBorderPainted(false);
          mAddAliasButton.setFont(new Font("Dialog", Font.PLAIN, 10));
          mAddAliasButton.setContentAreaFilled(false);
@@ -154,9 +163,17 @@ public class ProxyVertexView
                public void actionPerformed(ActionEvent evt)
                {
                   ConfigElement elt = createAlias();
-                  addAliasRow(elt);
-                  ProxyVertexRenderer.this.revalidate();
-                  ProxyVertexRenderer.this.repaint();
+                  Dimension row_size = addAliasRow(elt);
+
+                  ProxyVertexRenderer r = ProxyVertexRenderer.this;
+                  Dimension pref_size = r.getPreferredSize();
+
+                  int width = Math.max(pref_size.width, row_size.width);
+                  int height = pref_size.height + row_size.height;
+
+                  r.setPreferredSize(new Dimension(width, height));
+                  r.revalidate();
+                  r.repaint();
                }
             }
          );
@@ -164,6 +181,7 @@ public class ProxyVertexView
          mPasteAliasButton.setEnabled(false);
          mPasteAliasButton.setToolTipText("Paste alias from the clipboard");
          mPasteAliasButton.setText("Paste Alias");
+         mPasteAliasButton.setMargin(new Insets(0, 0, 3, 0));
          mPasteAliasButton.setBorderPainted(false);
          mPasteAliasButton.setFont(new Font("Dialog", Font.PLAIN, 10));
          mPasteAliasButton.setContentAreaFilled(false);
@@ -201,18 +219,25 @@ public class ProxyVertexView
                         ConfigElement alias_elt =
                            (ConfigElement) contents.getTransferData(flavor);
                         addAlias(alias_elt);
-                        addAliasRow(alias_elt);
+                        Dimension row_size = addAliasRow(alias_elt);
+
+                        ProxyVertexRenderer r = ProxyVertexRenderer.this;
+
+                        Dimension pref_size = r.getPreferredSize();
+
+                        int width = Math.max(pref_size.width, row_size.width);
+                        int height = pref_size.height + row_size.height;
+                        r.setPreferredSize(new Dimension(width, height));
 
                         // Manually disable all the "Paste" buttons in the
                         // proxy vertex renderers.
                         // XXX: It would be better if this would happen
                         // automatically upon reading the contents of the
                         // clipboard.
-                        setAllPasteButtonsEnabled(ProxyVertexRenderer.this.graph,
-                                                  false);
+                        setAllPasteButtonsEnabled(r.graph, false);
 
-                        ProxyVertexRenderer.this.revalidate();
-                        ProxyVertexRenderer.this.repaint();
+                        r.revalidate();
+                        r.repaint();
                      }
                      // The condition above that tests the transferable object
                      // to see if our data flavor is supported makes it so
@@ -236,19 +261,19 @@ public class ProxyVertexView
          );
 
          this.add(mNameLabel,
-                  new TableLayoutConstraints(SPAN_START_COLUMN, name_row,
-                                             SPAN_END_COLUMN, name_row,
+                  new TableLayoutConstraints(SPAN_START_COLUMN, NAME_ROW,
+                                             SPAN_END_COLUMN, NAME_ROW,
                                              TableLayoutConstraints.FULL,
                                              TableLayoutConstraints.CENTER));
          this.add(mAddAliasButton,
-                  new TableLayoutConstraints(SPAN_START_COLUMN, add_button_row,
-                                             SPAN_END_COLUMN, add_button_row,
+                  new TableLayoutConstraints(SPAN_START_COLUMN, ADD_BUTTON_ROW,
+                                             SPAN_END_COLUMN, ADD_BUTTON_ROW,
                                              TableLayoutConstraints.CENTER,
                                              TableLayoutConstraints.CENTER));
          this.add(mPasteAliasButton,
                   new TableLayoutConstraints(SPAN_START_COLUMN,
-                                             paste_button_row, SPAN_END_COLUMN,
-                                             paste_button_row,
+                                             PASTE_BUTTON_ROW, SPAN_END_COLUMN,
+                                             PASTE_BUTTON_ROW,
                                              TableLayoutConstraints.CENTER,
                                              TableLayoutConstraints.CENTER));
       }
@@ -280,11 +305,31 @@ public class ProxyVertexView
 
                ConfigElement proxy_elt = mProxyInfo.getElement();
 
+               int alias_width = 0, alias_height = 0;
+
                for ( Iterator i = mProxyInfo.getAliases().iterator();
                      i.hasNext(); )
                {
-                  addAliasRow((ConfigElement) i.next());
+                  Dimension row_size = addAliasRow((ConfigElement) i.next());
+
+                  alias_width   = Math.max(alias_width, row_size.width);
+                  alias_height += row_size.height;
                }
+
+               this.revalidate();
+
+               Dimension label_size = mNameLabel.getPreferredSize();
+               Dimension add_size   = mAddAliasButton.getPreferredSize();
+               Dimension paste_size = mPasteAliasButton.getPreferredSize();
+               int width = Math.max(alias_width,
+                                    Math.max(label_size.width,
+                                             Math.max(add_size.width,
+                                                      paste_size.width)));
+               int min_height = label_size.height + add_size.height +
+                                   paste_size.height + 10;
+               int pref_height = min_height + alias_height;
+               setMinimumSize(new Dimension(width, min_height));
+               setPreferredSize(new Dimension(width * 2, pref_height));
             }
             catch (Exception ex)
             {
@@ -450,7 +495,14 @@ public class ProxyVertexView
          mProxyInfo.addAlias(aliasElt);
       }
 
-      private void addAliasRow(final ConfigElement aliasElt)
+      /**
+       * Adds a new row for the given config element that is an alias for
+       * the proxy being rendered.
+       *
+       * @return The preferred size of the new row (as the sum of its
+       *         components) is returned.
+       */
+      private Dimension addAliasRow(final ConfigElement aliasElt)
       {
          final ConfigContext ctx = mProxyInfo.getContext();
 
@@ -668,6 +720,13 @@ public class ProxyVertexView
                                              remove_btn_end, row,
                                              TableLayoutConstraints.CENTER,
                                              TableLayoutConstraints.CENTER));
+
+         int width = name_field.getPreferredSize().width +
+                        edit_btn.getPreferredSize().width +
+                        cut_btn.getPreferredSize().width +
+                        remove_btn.getPreferredSize().width;
+         int height = name_field.getPreferredSize().height;
+         return new Dimension(width, height);
       }
 
       private static void setAllPasteButtonsEnabled(JGraph graph,
