@@ -47,7 +47,7 @@ public class SimPosDeviceEditor
    extends JPanel
 {
    /**
-    * Creates a new sim device editor with no chunk to edit.
+    * Creates a new sim device editor with no element to edit.
     */
    public SimPosDeviceEditor(ConfigContext context)
    {
@@ -84,11 +84,11 @@ public class SimPosDeviceEditor
    }
 
    /**
-    * Makes the SimPosDevice chunk active.
+    * Makes the SimPosDevice element active.
     */
    public void setDevice(ConfigElement device)
    {
-      // Make sure the chunk is a SimPosition element.
+      // Make sure the element is a SimPosition element.
       if (device != null && (!device.getDefinition().getToken().equals("simulated_positional_device")))
       {
          throw new IllegalArgumentException("device must be a SimPosition element");
@@ -338,7 +338,7 @@ public class SimPosDeviceEditor
    }
 
    /**
-    * Specialized editor for KeyModPair config chunks.
+    * Specialized editor for KeyModPair config elements.
     */
    public class KeyModPairCellEditor
       extends AbstractCellEditor

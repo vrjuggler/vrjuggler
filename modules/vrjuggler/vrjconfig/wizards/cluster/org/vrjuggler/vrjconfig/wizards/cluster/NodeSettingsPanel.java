@@ -221,7 +221,7 @@ public class NodeSettingsPanel
 
       if(!host_name.equals("") && matches.size() == 0)
       {
-         // Create a MachineSpecific Chunk for the node
+         // Create a machine_specific element for the node
          ConfigElementFactory factory = new ConfigElementFactory(mBroker.getRepository().getAllLatest());
          ConfigElement element = factory.create(element_name, "machine_specific");
          element.setProperty("host_name",0,host_name);
@@ -236,11 +236,11 @@ public class NodeSettingsPanel
    {
       /*
       lstModelNodes.clear();
-      java.util.List chunks_list = mBroker.getChunks(mContext);
-      java.util.List matches = ConfigUtilities.getChunksWithDescToken(chunks_list, "machine_specific");
+      java.util.List elt_list = mBroker.getElements(mContext);
+      java.util.List matches = ConfigUtilities.getElementsWithToken(elt_list, "machine_specific");
       for(int i = 0; i < matches.size() ; i++)
       {
-         lstModelNodes.addElement(((ConfigChunk)matches.get(i)).getName());
+         lstModelNodes.addElement(((ConfigElement)matches.get(i)).getName());
       }
       */
    }
