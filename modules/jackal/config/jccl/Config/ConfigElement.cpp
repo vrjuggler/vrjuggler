@@ -452,8 +452,11 @@ bool ConfigElement::setProperty(const std::string& prop, const int ind, bool val
 
 bool ConfigElement::setProperty(const std::string& prop, const int ind, ConfigElementPtr val)
 {
+   boost::ignore_unused_variable_warning(prop);
+   boost::ignore_unused_variable_warning(ind);
+   boost::ignore_unused_variable_warning(val);
    vprASSERT(false && "Not implemented");
-   return true;
+   return false;
 }
 
 void ConfigElement::setDefinition(ConfigDefinitionPtr def)
