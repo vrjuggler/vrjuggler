@@ -237,16 +237,19 @@ ostream& operator<<(ostream& out, vjBaseThread* threadPtr);
 
 //: Helper class that maintains a table of the threads allocated in the system
 //
-// Used internally
+// Used internally because we can have many types of indexes for the thread list
+// depending upon the type of threads being used.
 template <class IdxType>
 class vjThreadTable
 {
 public:
+   //: Add a thread to the list
    void addThread(vjBaseThread* threadPtr, IdxType index)
    {
       mThreadMap[index] = threadPtr;
    }
 
+   //: Get a thread from the list
    vjBaseThread* getThread(IdxType index)
    {
       hash_map<IdxType, vjBaseThread*>::iterator i;
@@ -257,6 +260,7 @@ public:
          return (*i).second;
    }
 
+   //: Remove a thread from the list
    void removeThread(IdxType index)
    {
       mThreadMap.erase(index);
