@@ -46,12 +46,12 @@ public:
 
    static MetricRegistry* instance()
    {
+      static MetricRegistry* mInstance(NULL);
+
       if(mInstance == NULL)
       { mInstance = new MetricRegistry; }
       return mInstance;
    }
-protected:
-   static MetricRegistry* mInstance;
 
 public:
    void setFilename(std::string filename)
