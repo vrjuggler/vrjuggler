@@ -41,16 +41,16 @@
 # -----------------------------------------------------------------------------
 default: all
 
-all: tutorials OGL OSG OpenSG Pf
+all: sound OGL OSG OpenSG Pf
 
-tutorials OGL OSG OpenSG Pf::
+sound OGL OSG OpenSG Pf::
 	cd $@ && $(MAKE) all
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	-cd tutorials && $(MAKE) clean
+	-cd sound && $(MAKE) clean
 	-cd OGL && $(MAKE) clean
 	-cd OSG && $(MAKE) clean
 	-cd OpenSG && $(MAKE) clean

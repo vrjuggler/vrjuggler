@@ -31,23 +31,28 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vrjuggler/samples/tutorials/simpleInput
-# This requires GNU make.
+# Makefile.in for vrjuggler/samples/sound
+#
+# Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-all: simpleInput@EXEEXT@
-
-APP_NAME=	simpleInput@EXEEXT@
-
-# Basic options.
-srcdir=		@srcdir@
-SRCS=		main.cpp
-
-include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
-include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
+DIRS=	simple # advanced
 
 # -----------------------------------------------------------------------------
-# Application build targets.
+# Build targets.
 # -----------------------------------------------------------------------------
-simpleInput@EXEEXT@: $(OBJS)
-	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
+default: all
+
+all: $(DIRS)
+
+$(DIRS)::
+	cd $@ && $(MAKE)
+
+# -----------------------------------------------------------------------------
+# Clean-up.
+# -----------------------------------------------------------------------------
+clean:
+	@for dir in $(DIRS) ; do		\
+            cd $$dir && $(MAKE) clean ;		\
+            cd .. ;				\
+        done
