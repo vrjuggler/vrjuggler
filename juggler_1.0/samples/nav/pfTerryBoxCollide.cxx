@@ -1,4 +1,4 @@
-#include "collide.h"
+#include "pfTerryBoxCollide.h"
 
 const int pfTerryBoxCollide::COLLIDE_SEGMENTS( 8 );
 

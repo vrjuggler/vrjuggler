@@ -1,4 +1,6 @@
-bool pfTerryGroundCollide::collideGround( pfVec3 &bounce, pfNode *objNode, int mask, pfVec3 pos, float length )
+#include "pfTerryPogoCollide.h"
+
+bool pfTerryPogoCollide::collide( pfVec3 &bounce, pfNode *objNode, int mask, pfVec3 pos, float length )
 {
     pfHit **hit[1];
     pfSegSet segset;
@@ -40,7 +42,7 @@ bool pfTerryGroundCollide::collideGround( pfVec3 &bounce, pfNode *objNode, int m
 
 
 
-bool pfTerryGroundCollide::collideGroundAndRide( pfVec3 &bounce, pfVec3 &ridexyz, pfVec3 &ridehpr, pfNode *objNode, int mask, pfVec3 pos, float length )
+bool pfTerryPogoCollide::collideRide( pfVec3 &bounce, pfVec3 &ridexyz, pfVec3 &ridehpr, pfNode *objNode, int mask, pfVec3 pos, float length )
 {
    pfHit** hit[1];
    pfSegSet segset;

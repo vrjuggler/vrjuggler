@@ -35,7 +35,6 @@
 #define JUGGLER_PFRAY_COLLIDER
 
 #include <collider.h>
-#include <collide.h>
 
 //: Collider class for testing collisions in Performer
 //
@@ -45,12 +44,12 @@
 //     in Juggler (OpenGL) coordinates, not in Performer coords.
 //     So there is some coord system conversion that will be
 //     going on here.
-class pfMoveCollider : public collider
+class pfRayCollider : public collider
 {
 public:
    // ARGS: world - The node to start collision with
    //       it should be the one under the one being used for navigation ( ie. pfNaver)
-   pfMoveCollider( pfNode* world )
+   pfRayCollider( pfNode* world )
    {
       mWorldNode = world;
    }
@@ -87,7 +86,7 @@ protected:
 
 // general ray collision routine with a scene.
 // correctionVector - should be added to whereYouWantToBe after calling this function
-bool pfMoveCollider::testRayCollision( pfVec3& intersectionPt, pfVec3& whereYouReallyAre, pfNode *objNode, int mask, pfVec3 whereYouAre, pfVec3 whereYouWantToBe )
+bool pfRayCollider::testRayCollision( pfVec3& intersectionPt, pfVec3& whereYouReallyAre, pfNode *objNode, int mask, pfVec3 whereYouAre, pfVec3 whereYouWantToBe )
 {
    pfHit **hit[1];
    pfSegSet segset;
@@ -144,7 +143,7 @@ bool pfMoveCollider::testRayCollision( pfVec3& intersectionPt, pfVec3& whereYouR
 }
 
 
-bool pfMoveCollider::testMove(vjVec3 _whereYouAre, vjVec3 _delta, vjVec3& correction, bool whereYouAreWithDelta)
+bool pfRayCollider::testMove(vjVec3 _whereYouAre, vjVec3 _delta, vjVec3& correction, bool whereYouAreWithDelta)
 {
    pfVec3 whereYouAre = vjGetPfVec(_whereYouAre);
    pfVec3 delta = vjGetPfVec(_delta);
@@ -156,7 +155,7 @@ bool pfMoveCollider::testMove(vjVec3 _whereYouAre, vjVec3 _delta, vjVec3& correc
    {
       correction = vjGetVjVec( whereYouReallyAre - whereYouWantToBe );
 
-      cout<<"pfMoveCollider: Collided "<<correction<<"\n"<<flush;
+      cout<<"pfRayCollider: Collided "<<correction<<"\n"<<flush;
       
       setDidCollide(true);
       return true;
