@@ -411,14 +411,14 @@ public class PrefsDialog extends JDialog
    {
       status = OK_OPTION;
       commit();
-      mPrefs.save(false);
+      mPrefs.save();
       setVisible(false);
    }
 
    private void saveButtonAction (ActionEvent e)
    {
       commit();
-      mPrefs.save(false);
+      mPrefs.save();
    }
 
    private void cancelButtonAction (ActionEvent e)
