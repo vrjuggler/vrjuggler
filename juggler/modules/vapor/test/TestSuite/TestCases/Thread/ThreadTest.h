@@ -144,7 +144,7 @@ public:
             sampleValue2=mCounter1;
          mCounter1Mutex.release();
       }
-      
+      std::cout<<sampleValue1<<" : "<<sampleValue2<<endl;
       return sampleValue2-sampleValue1;
    }
 
@@ -176,6 +176,79 @@ public:
       
       counter_thread.kill();
       std::cout << " done\n" << std::flush;
+   }
+
+   
+   // =========================================================================
+   // thread Priority test
+   // =========================================================================
+    
+   void counter2Func(void* arg)
+   {
+      for(int i=0;i<10000;i++)
+      {
+         vpr::System::msleep(10);    // Sleep for 20 micro seconds
+         mCounter1Mutex.acquire();
+         {
+            long temp_counter = mCounter1;
+            mCounter = 0;
+            vpr::System::msleep(10);    // Sleep for 20 micro seconds
+            mCounter1 = temp_counter + 1;
+         }
+         mCounter1Mutex.release();
+      }         
+   }
+   
+   void testPriority()
+   {
+      //std::cout<<"]==================================================\n"<<std::flush; 
+      //std::cout<<" Thread Priority: \n"<<std::flush;
+      
+      mCounter=0;
+      mCounter1=0;
+      
+      long diff1=0;
+      long diff2=0;
+      
+      // spawn two counter threads
+      vpr::ThreadMemberFunctor<ThreadTest> counter1_functor( this, &ThreadTest::counter1Func );
+      vpr::Thread counter1_thread( & counter1_functor);      
+      vpr::System::msleep(500 );
+      
+      vpr::ThreadMemberFunctor<ThreadTest> counter2_functor( this, &ThreadTest::counter2Func );
+      vpr::Thread counter2_thread( & counter2_functor);
+//      counter2_thread.suspend();
+      vpr::System::msleep(500 );
+//      counter2_thread.resume();
+      
+      diff1=sampleCompare(1);
+      diff2=sampleCompare(2);
+      std::cout<<"diff1= "<<diff1<<" : "<<endl;
+      std::cout<<"diff2= "<<diff2<<" : "<<endl;
+//      assertTest(abs(diff2-diff1)<2 && "Counters don't work correctly); 
+      
+      counter1_thread.setPrio(vpr::BaseThread::VPR_PRIORITY_HIGH);
+      counter2_thread.setPrio(vpr::BaseThread::VPR_PRIORITY_LOW);
+      vpr::System::msleep(100 );
+      
+      diff1=sampleCompare(1);
+      diff2=sampleCompare(2);
+      std::cout<<"diff1= "<<diff1<<" : "<<endl;
+      std::cout<<"diff2= "<<diff2<<" : "<<endl;
+//      assertTest(abs(diff2-diff1)<2 && "Counters don't work correctly); 
+
+      counter1_thread.setPrio(vpr::BaseThread::VPR_PRIORITY_LOW);
+      counter2_thread.setPrio(vpr::BaseThread::VPR_PRIORITY_HIGH);
+      vpr::System::msleep(100 );
+      
+      diff1=sampleCompare(1);
+      diff2=sampleCompare(2);
+      std::cout<<"diff1= "<<diff1<<" : "<<endl;
+      std::cout<<"diff2= "<<diff2<<" : "<<endl;
+//      assertTest(abs(diff2-diff1)<2 && "Counters don't work correctly); 
+      
+      counter1_thread.kill();
+      counter2_thread.kill();
    }
 
    // =========================================================================
@@ -286,7 +359,7 @@ public:
       TestSuite *test_suite = new TestSuite ("ThreadTest");
       test_suite->addTest( new TestCaller<ThreadTest>("testCreateJoin", &ThreadTest::testCreateJoin));
       test_suite->addTest( new TestCaller<ThreadTest>("testSuspendResume", &ThreadTest::testSuspendResume));
-//      test_suite->addTest( new TestCaller<ThreadTest>("testPriority", &ThreadTest::testPriority));
+      test_suite->addTest( new TestCaller<ThreadTest>("testPriority", &ThreadTest::testPriority));
       test_suite->addTest( new TestCaller<ThreadTest>("testThreadStackSize", &ThreadTest::testThreadStackSize));
       return test_suite;
    }
