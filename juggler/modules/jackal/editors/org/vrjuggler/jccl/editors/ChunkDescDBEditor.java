@@ -181,7 +181,6 @@ public class ChunkDescDBEditor
     */
    public void resourceAdded(ContextEvent evt)
    {
-      System.out.println("ChunkDescDB.resourceAdded()");
       String resource = evt.getResource();
       addDescs(getConfigBroker().getDescsIn(resource));
    }

@@ -134,7 +134,6 @@ public class ConfigContext
     */
    protected void fireResourceAdded(String resource)
    {
-      System.out.println("ConfigContext["+this+"].fireResourceAdded("+resource+")");
       ContextEvent evt = null;
       Object[] listeners = listenerList.getListenerList();
       for (int i=listeners.length-2; i>=0; i-=2)
@@ -158,7 +157,6 @@ public class ConfigContext
     */
    protected void fireResourceRemoved(String resource)
    {
-      System.out.println("ConfigContext.fireResourceRemoved("+resource+")");
       ContextEvent evt = null;
       Object[] listeners = listenerList.getListenerList();
       for (int i=listeners.length-2; i>=0; i-=2)
