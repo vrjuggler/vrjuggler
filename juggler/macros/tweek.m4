@@ -249,6 +249,7 @@ dnl ---------------------------------------------------------------------------
 dnl TWEEK_PATH_JAVA([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULES]]]])
 dnl
 dnl Tests for Tweek Java API and then defines the following variables:
+dnl     TWEEK_JAVA_IDL
 dnl     TWEEK_JAVA_IDL_OPTS
 dnl     TWEEK_JAVA_IDL_GENDIR_OPT
 dnl     TWEEK_JAVA_IDL_INCFLAG
