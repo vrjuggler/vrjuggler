@@ -7,7 +7,7 @@
 
     <subtitle>The Programmer&#39;s Guide</subtitle>
 
-    <releaseinfo>Version 1.1 DR4</releaseinfo>
+    <releaseinfo>Version 2.0 Alpha 1</releaseinfo>
 
     <pubdate>$Date$</pubdate>
   </bookinfo>
@@ -823,10 +823,10 @@ int main(int argc, char* argv[])
           <section>
             <title><methodname>vrj::GlApp::getDrawScaleFactor()</methodname></title>
 
-            <para>As of VR Juggler 1.1 DR4, applications can specify the units
-            of measure that are the basis for the graphics they render. The
-            default unit of measure is feet (identified by the constant scale
-            factor <constant>gadget::PositionUnitConversion::ConvertToFeet</constant>)
+            <para>As of VR Juggler 2.0 Alpha 1, applications can specify the
+            units of measure that are the basis for the graphics they render.
+            The default unit of measure is feet (identified by the constant
+            scale factor <constant>gadget::PositionUnitConversion::ConvertToFeet</constant>)
             to maintain backwards compatibility with the previous VR Juggler
             semantics. By overriding this method, applications can identify
             the unit of measure they expect. The default implementation is the
