@@ -110,20 +110,20 @@ public class VarListPanel
       // button (yes, this class should probably not have to account for
       // that...).
       int row = evt.getIndex() + 2;
+      int prop_num = evt.getIndex();
 
       if(ConfigElement.class == prop_def.getType())
       {
          // Use the PropertySheetFactory to add an additional embedded element.
          f.addEmbeddedElement((PropertySheet) mComponent, mConfigContext,
-                              elm, evt.getValue(), prop_def, row);
+                              elm, evt.getValue(), prop_def, row, prop_num);
       }
       else
       {
          // Use the PropertySheetFactory to add an aditional normal editor.
          String label = prop_def.getPropertyValueDefinition(0).getLabel();
          f.addNormalEditor((PropertySheet) mComponent, mConfigContext, elm,
-                           evt.getValue(), prop_def, label, row,
-                           elm.getPropertyValueCount(prop_def.getToken()) - 1);
+                           evt.getValue(), prop_def, label, row, prop_num);
       }
 
       revalidate();
