@@ -62,8 +62,10 @@ TSObjectProxy<std::vector<int> > gVprDebugCurColumn;       // What column to ind
 TSObjectProxy<std::vector<std::string> > gVprDebugCurColor;        // What color to display "everything" in
 
 // Register DEBUG categories
-vprREGISTER_DBG_CATEGORY(DBG_ERROR,vprDBG_ERROR);
-vprREGISTER_DBG_CATEGORY(DBG_ALL,vprDBG_ALL);
+vprREGISTER_DBG_CATEGORY(vprDBG_ALL, DBG_ALL, "DBG:");
+vprREGISTER_DBG_CATEGORY(vprDBG_ERROR, DBG_ERROR, "ERR:");
+vprREGISTER_DBG_CATEGORY(vprDBG_SIM, DBG_SIM, "I'm a little simulator:");
+vprREGISTER_DBG_CATEGORY(vprDBG_VPR, DBG_VPR, "VPR:");
 
 
 vprSingletonImp(Debug);
@@ -104,7 +106,7 @@ Debug::Debug()
                 << std::endl << std::flush;
    }
    
-   getAllowedCatsFromEnv();
+//   updateAllowedCategories();
 }
 
 std::ostream& Debug::getStream(const vpr::GUID& cat, const int level, const bool show_thread_info,
@@ -114,9 +116,7 @@ std::ostream& Debug::getStream(const vpr::GUID& cat, const int level, const bool
    if(indentChange < 0)                // If decreasing indent
       indentLevel += indentChange;
 
-   vprASSERT(indentLevel >= 0 && "Decreased indent below 0, look for bad code");
-
-   //cout << "VPR " << level << ": ";
+   vprASSERT(indentLevel >= 0 && "Decreased indent below 0, look for bad code");   
 
    // Lock the stream
 #ifdef LOCK_DEBUG_STREAM
@@ -127,13 +127,6 @@ std::ostream& Debug::getStream(const vpr::GUID& cat, const int level, const bool
 #endif
 
    // --- Create stream header --- //
-   /*
-   if(show_thread_info)
-      std::cout << vprDEBUG_STREAM_LOCK << Thread::self() << " VPR:";
-   else
-      std::cout << vprDEBUG_STREAM_LOCK << "              ";
-   */
-
    // If we have thread local stuff to do
    if(mUseThreadLocal)
    {
@@ -146,8 +139,10 @@ std::ostream& Debug::getStream(const vpr::GUID& cat, const int level, const bool
    // Ouput thread info
    // If not, then output space if we are also using indent (assume this means
    // new line used)
+   vprASSERT(mCategories.find(cat) != mCategories.end());
+
    if(show_thread_info)
-      std::cout << "[" << vpr::Thread::self() << "] VPR: ";
+      std::cout << "[" << vpr::Thread::self() << "] " << (*mCategories.find(cat)).second.mPrefix;
    else if(use_indent)
       std::cout << "                  ";
 
@@ -177,62 +172,71 @@ std::ostream& Debug::getStream(const vpr::GUID& cat, const int level, const bool
    return std::cout;
 }
 
-void Debug::addCategoryName(std::string name, const vpr::GUID& catId)
+void Debug::addCategory(const vpr::GUID& catId, std::string name, std::string prefix)
 {
-   std::cout << "Adding category named '" << name << "'\n" << std::flush;
-   mCategoryNames[name] = catId;
+   std::cout << "Adding category named '" << name << "'  -- prefix: " << prefix << std::endl;
+   mCategories.insert( std::pair<vpr::GUID,CategoryInfo>(catId, CategoryInfo(name, prefix, false)));
+   updateAllowedCategories();   
 }
 
-void Debug::addAllowedCategory(const vpr::GUID& catId)
-{
-   std::cout << "Adding allowed category with identifier '" << catId << "'\n"
-             << std::flush;
-   mAllowedCategories[catId] = true;
-}
 
 // Are we allowed to print this category??
 bool Debug::isCategoryAllowed(const vpr::GUID& catId)
 {
-   return true;
-   /*
+   //return true;
+   
    // If no entry for cat, grow the vector
-   if(mAllowedCategories.find(catId) == mAllowedCategories.end())
-      mAllowedCategories[catId] = false;
+   Debug::category_map_t::iterator cat = mCategories.find(catId);
+   vprASSERT(cat != mCategories.end());    // ASSERT: We have a valid category 
+
+   Debug::category_map_t::iterator cat_all = mCategories.find(vprDBG_ALL);
+   vprASSERT(cat_all != mCategories.end());    // ASSERT: We have a valid category 
       
    // If I specified to listen to all OR
    // If it has category of ALL
    bool cat_is_all = (catId == vprDBG_ALL);
-   bool allow_all = (mAllowedCategories[vprDBG_ALL] == true);
+   bool allow_all = ((*cat_all).second.mAllowed == true);
 
    if(cat_is_all || allow_all)
       return true;
    else
-      return mAllowedCategories[catId];
-   
-   */
+      return (*cat).second.mAllowed;   
 }
 
 
-void Debug::getAllowedCatsFromEnv()
+void Debug::updateAllowedCategories()
 {
-   ///* XXX: For insure
+   // Get the environment variable
    char* dbg_cats_env = getenv("VPR_DEBUG_CATEGORIES");
 
+   Debug::category_map_t::iterator cat_all = mCategories.find(vprDBG_ALL);
+   vprASSERT(cat_all != mCategories.end());    // ASSERT: We have a valid category 
+
+   // 
    if(dbg_cats_env != NULL)
    {
-      std::cout << "vprDEBUG::Found VPR_DEBUG_CATEGORIES: Listing allowed categories. (If blank, then none allowed.\n" << std::flush;
+     (*cat_all).second.mAllowed = false;       // Disable the showing of all for now
+
+      std::cout << "vprDEBUG::Found VPR_DEBUG_CATEGORIES: Updating allowed categories. (If blank, then none allowed.)\n" << std::flush;
       std::string dbg_cats(dbg_cats_env);
 
-      std::map< std::string, vpr::GUID >::iterator i;
-      for(i=mCategoryNames.begin();i != mCategoryNames.end();i++)
+      // For each currently known category name
+      category_map_t::iterator i;
+      for(i=mCategories.begin();i != mCategories.end();i++)
       {
-         std::string cat_name = (*i).first;
+         std::string cat_name = (*i).second.mName;
          if (dbg_cats.find(cat_name) != std::string::npos )    // Found one
          {
-            std::cout << "vprDEBUG::getAllowedCatsFromEnv: Allowing: "
-                      << (*i).first.c_str() << " val:" << (*i).second.toString()
-                      << std::endl << std::flush;
-            addAllowedCategory((*i).second);                   // Add the category
+            std::cout << "vprDEBUG::updateAllowedCategories: Allowing: "
+                      << (*i).second.mName.c_str() << " val:" << (*i).first.toString()
+                      << std::endl << std::flush;            
+            (*i).second.mAllowed = true;
+         }
+         else
+         {
+            //std::cout << "vprDEBUG::updateAllowedCategories: Not found (to allow): "
+            //          << (*i).second.mName.c_str() << " val:" << (*i).first.toString()
+            //          << std::endl << std::flush;
          }
       }
    }
@@ -240,10 +244,8 @@ void Debug::getAllowedCatsFromEnv()
    {
       std::cout << "vprDEBUG::VPR_DEBUG_CATEGORIES not found:\n"
                 << " Setting to: vprDBG_ALL!" << std::endl << std::flush;
-      addAllowedCategory(vprDBG_ALL);
-   }
-   //*/
-   //addAllowedCategory(vprDBG_ALL);
+      (*cat_all).second.mAllowed = true;       // Disable the showing of all for now      
+   }   
 }
 
 

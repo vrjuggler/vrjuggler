@@ -1,4 +1,4 @@
-gfxn1/Debug/GUIDTest/CreationOverhead                                                  0.97
+gfxn1/Debug/GUIDTest/CreationOverhead                                                  0.93952
 gfxn1/Debug/Main/MetricTest                                                  1221.75
 gfxn1/Debug/Sim/GUIDTest/CreationOverhead                                                  0.96342
 gfxn1/Debug/Sim/Main/MetricTest                                                  1221.75

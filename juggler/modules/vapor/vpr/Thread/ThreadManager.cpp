@@ -86,22 +86,23 @@ void ThreadManager::removeThread(BaseThread* thread)
 //: Dump the state of the manager to debug
 void ThreadManager::debugDump()
 {
-   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+   vprDEBUG(vprDBG_VPR, vprDBG_VERB_LVL)
       << "------- Thread Manager DUMP -------\n" << vprDEBUG_FLUSH;
-   vprDEBUG_BEGIN(vprDBG_ALL, vprDBG_STATE_LVL) << "--- Thread List ----\n";
+   vprDEBUG_BEGIN(vprDBG_VPR, vprDBG_STATE_LVL) << "--- Thread List ----\n";
    for (unsigned int i=0;i<mThreads.size();i++)
    {
       if (mThreads[i] != NULL)
-         vprDEBUGnl(vprDBG_ALL, vprDBG_STATE_LVL) << i << ": ["
+         vprDEBUGnl(vprDBG_VPR, vprDBG_STATE_LVL) << i << ": ["
                                                 << (void*)mThreads[i] << "] "
-                                                << mThreads[i] << std::endl;
+                                                << std::endl;
+                                                //<< mThreads[i] << std::endl;
       else
-         vprDEBUGnl(vprDBG_ALL, vprDBG_STATE_LVL) << i << ": ["
+         vprDEBUGnl(vprDBG_VPR, vprDBG_STATE_LVL) << i << ": ["
                                                 << (void*)mThreads[i]
                                                 << "] No thread\n";
    }
 
-   vprDEBUG_ENDnl(vprDBG_ALL, vprDBG_STATE_LVL) << "---------------------\n"
+   vprDEBUG_ENDnl(vprDBG_VPR, vprDBG_STATE_LVL) << "---------------------\n"
                                               << vprDEBUG_FLUSH;
 }
 
