@@ -60,14 +60,17 @@ import VjComponents.ConfigEditor.ConfigCommunicator;
  *  ConfigModule.addChunk (ConfigChunkDB, ConfigChunk) and related functions
  *  to change the DBs.  This will automagically take care of whether the DB
  *  is a file or network connection.
+ *
+ *  @version $Revision$
+ *
  */
 public class ConfigModule extends DefaultCoreModule {
 
     static public Vector chunkdbs;
     static protected Vector descdbs;
 
-    /** When this descdb is created, it subsumes Core.descdb's contents. 
-     *  Actually, current implementation makes this an alias for Core.descdb.
+    /** This is an alias for Core.descdb, the global descdb which is
+     *  used by the ConfigChunkFactory. 
      */
     static public ChunkDescDB descdb;
 
@@ -235,10 +238,6 @@ public class ConfigModule extends DefaultCoreModule {
     }
 
 
-//      public void destroy () {
-//          ;
-//      }
-
 
     //-------------------- ConfigChunkDB Management -------------------------
 
@@ -261,7 +260,7 @@ public class ConfigModule extends DefaultCoreModule {
 
 
 
-    /** Removes a ChunkDB from the system */
+    /** Removes a ChunkDB from the system. */
     public void closeChunkDB (ConfigChunkDB db) {
         if (db == null)
             return;
@@ -270,6 +269,12 @@ public class ConfigModule extends DefaultCoreModule {
     }
 
 
+
+    /** Renames a ChunkDB.
+     *  _db is renamed to newbase (or a uniqified version thereof).
+     *  Listeners are informed via an add and remove of _db.
+     *  @return The actual new name applied to db.
+     */
     public String renameChunkDB (ConfigChunkDB _db, String newbase) {
 	if (_db.name.equals (newbase))
 	    return newbase;
@@ -282,6 +287,9 @@ public class ConfigModule extends DefaultCoreModule {
 
 
 
+    /** Gets a ChunkDB from self.
+     *  @return A chunkDB with matching name (case insensitive), or null.
+     */
     public ConfigChunkDB getChunkDB (String name) {
 	ConfigChunkDB db;
 	for (int i = 0; i < chunkdbs.size(); i++) {
@@ -293,6 +301,9 @@ public class ConfigModule extends DefaultCoreModule {
     }
 
 
+    /** Gets a ChunkDB from self.
+     *  @return A chunkDB with matching (canonical) file, or null.
+     */
     public ConfigChunkDB getChunkDB (File f) {
 	ConfigChunkDB db;
         File canonical, other, other_canonical;
@@ -318,22 +329,29 @@ public class ConfigModule extends DefaultCoreModule {
     }
     
 
-
+    /** Is db an "active" configuration.
+     *  @return True if db is associated with a network connection - ie
+     *          it reflects the current configuration of some remote
+     *          Jackal application.
+     */
     public boolean isActive (ConfigChunkDB db) {
         return (db == active_chunkdb);
     }
 
 
-    protected String createUniqueChunkDBName (String base) {
-	// returns a string, starting with base, which doesn't
-	// conflict with names of any dbs in chunkdbs.
+    /** Creates a unique version of the given base name.
+     *  @return A string, beginning with base_name, which doesn't
+     *          conflict with the names of any other chunkdbs
+     *          managed by the ConfigModule.
+     */
+    protected String createUniqueChunkDBName (String base_name) {
 	int i;
 	String name;
 
-	if (getChunkDB (base) == null)
-	    return base;
+	if (getChunkDB (base_name) == null)
+	    return base_name;
 	for (i = 2; true; i++) {
-	    name = base + " <" + i + ">";
+	    name = base_name + " <" + i + ">";
 	    if (getChunkDB (name) == null)
 		return name;
 	}
@@ -342,94 +360,133 @@ public class ConfigModule extends DefaultCoreModule {
 
     //----------------- ConfigChunkDB Editing Stuff --------------------------
 
-    public ConfigChunk findPrefixMatchChunk (String name) {
-	/* finds a chunk whose name is a prefix of name */
-	ConfigChunk ch;
-	ConfigChunkDB db;
-	int i, j, n, m;
-        n = chunkdbs.size();
-	for (i = 0; i < n; i++) {
-	    db = (ConfigChunkDB)chunkdbs.get(i);
-            m = db.size();
-	    for (j = 0; j < m; j++) {
-		ch = db.get(j);
-		if (name.startsWith (ch.getName()))
-		    return ch;
-	    }
-	}
-	return null;
-    }
+//      public ConfigChunk findPrefixMatchChunk (String name) {
+//  	/* finds a chunk whose name is a prefix of name */
+//  	ConfigChunk ch;
+//  	ConfigChunkDB db;
+//  	int i, j, n, m;
+//          n = chunkdbs.size();
+//  	for (i = 0; i < n; i++) {
+//  	    db = (ConfigChunkDB)chunkdbs.get(i);
+//              m = db.size();
+//  	    for (j = 0; j < m; j++) {
+//  		ch = db.get(j);
+//  		if (name.startsWith (ch.getName()))
+//  		    return ch;
+//  	    }
+//  	}
+//  	return null;
+//      }
 
 
 
-   /** Adds a chunk to a ConfigChunkDB.
+    /** Adds a chunk to a ConfigChunkDB.
+     *  Note that this function is really only requesting a change to db;
+     *  when and if the change actually occurs, a ChunkDB event will be
+     *  sent to all listeners.  This is primarily because "active" dbs
+     *  do not change until the remote side of the connection has
+     *  attempted to apply the change.
+     *
      *  @param db ConfigChunkDB to add to.
      *  @param ch ConfigChunk to add.
-     *  @return True if the ConfigChunk was immediately added (ie db was a
-     *          local file) and false if the addition was delayed (ie db is
-     *          an "active config" associated with a network connection). 
-     *          In the former case, a GUI component calling addChunk should
-     *          update immediately; in the former case, it should wait for
-     *          an event.
+     *  @see VjConfig.ChunkDBEvent
      */
-    public boolean addChunk (ConfigChunkDB db, ConfigChunk ch) {
+    public void addChunk (ConfigChunkDB db, ConfigChunk ch) {
         if (db == active_chunkdb) {
             net.sendChunk (ch);
-            return false;
         }
         else {
             db.add (ch);
-            return true;
         }
     }
 
 
-    public boolean addChunks (ConfigChunkDB db, ConfigChunkDB chunks) {
+
+    /** Adds a collection of chunks to a ConfigChunkDB.
+     *  Note that this function is really only requesting a change to db;
+     *  when and if the change actually occurs, a ChunkDB event will be
+     *  sent to all listeners.  This is primarily because "active" dbs
+     *  do not change until the remote side of the connection has
+     *  attempted to apply the change.
+     *
+     *  @param db ConfigChunkDB to add to.
+     *  @param chunks Group of ConfigChunks to add.
+     *  @see VjConfig.ChunkDBEvent
+     */
+    public void addChunks (ConfigChunkDB db, ConfigChunkDB chunks) {
         if (db == active_chunkdb) {
             net.sendChunks (chunks);
-            return false;
         }
         else {
             db.addAll (chunks);
-            return true;
         }
     }
 
 
-    public boolean removeChunk (ConfigChunkDB db, ConfigChunk chunk) {
+    /** Removes a ConfigChunk from the DB.
+     *  Note that this function is really only requesting a change to db;
+     *  when and if the change actually occurs, a ChunkDB event will be
+     *  sent to all listeners.  This is primarily because "active" dbs
+     *  do not change until the remote side of the connection has
+     *  attempted to apply the change.
+     *
+     *  @param db ConfigChunkDB to remove from.
+     *  @param chunk ConfigChunk to remove.
+     *  @see VjConfig.ChunkDBEvent
+     */
+    public void removeChunk (ConfigChunkDB db, ConfigChunk chunk) {
         if (db == active_chunkdb) {
             net.removeChunk (chunk);
-            return false;
         }
         else {
             db.remove (chunk);
-            return true;
         }
     }
 
 
-    public boolean removeChunks (ConfigChunkDB db, ConfigChunkDB chunks) {
+
+    /** Removes a set of ConfigChunks from the DB.
+     *  Note that this function is really only requesting a change to db;
+     *  when and if the change actually occurs, a ChunkDB event will be
+     *  sent to all listeners.  This is primarily because "active" dbs
+     *  do not change until the remote side of the connection has
+     *  attempted to apply the change.
+     *
+     *  @param db ConfigChunkDB to remove from.
+     *  @param chunks Set of ConfigChunks to remove.
+     *  @see VjConfig.ChunkDBEvent
+     */
+    public void removeChunks (ConfigChunkDB db, ConfigChunkDB chunks) {
         if (db == active_chunkdb) {
             net.removeChunks (chunks);
-            return false;
         }
         else {
             db.removeAll (chunks);
-            return true;
         }
     }
 
 
-    public boolean replaceChunk (ConfigChunkDB db, ConfigChunk oldc, ConfigChunk newc) {
+
+    /** Replace a ConfigChunk in the DB.
+     *  Note that this function is really only requesting a change to db;
+     *  when and if the change actually occurs, a ChunkDB event will be
+     *  sent to all listeners.  This is primarily because "active" dbs
+     *  do not change until the remote side of the connection has
+     *  attempted to apply the change.
+     *
+     *  @param db ConfigChunkDB to remove from.
+     *  @param oldc ConfigChunk to be replaced.
+     *  @param newc New version of the ConfigChunks.
+     *  @see VjConfig.ChunkDBEvent
+     */
+    public void replaceChunk (ConfigChunkDB db, ConfigChunk oldc, ConfigChunk newc) {
         if (db == active_chunkdb) {
             if (!oldc.getName().equals(newc.getName()))
                 net.removeChunk (oldc);
             net.sendChunk (newc);
-            return false;
         }
         else {
             db.replace (oldc, newc);
-            return true;
         }
     }
 
@@ -495,6 +552,9 @@ public class ConfigModule extends DefaultCoreModule {
 
 
 
+    /** Gets a ChunkDB from self.
+     *  @return A chunkDB with matching (canonical) file, or null.
+     */
     public ChunkDescDB getDescDB (File f) {
         ChunkDescDB db;
         File canonical, other, other_canonical;
@@ -520,11 +580,22 @@ public class ConfigModule extends DefaultCoreModule {
     }
 
 
+
+    /** Is db an "active" configuration.
+     *  @return True if db is associated with a network connection - ie
+     *          it reflects the current configuration of some remote
+     *          Jackal application.
+     */
     public boolean isActive (ChunkDescDB db) {
         return (db == active_descdb);
     }
 
 
+    /** Creates a unique version of the given base name.
+     *  @return A string, beginning with base_name, which doesn't
+     *          conflict with the names of any other descdbs
+     *          managed by the ConfigModule.
+     */
     protected String createUniqueDescDBName (String base) {
 	int i;
 	String name;
@@ -539,6 +610,11 @@ public class ConfigModule extends DefaultCoreModule {
 
 
 
+    /** Renames a DescDB.
+     *  _db is renamed to newbase (or a uniqified version thereof).
+     *  Listeners are informed via an add and remove of _db.
+     *  @return The actual new name applied to db.
+     */
     public String renameDescDB (ChunkDescDB _db, String newbase) {
 	if (_db.name.equals (newbase))
 	    return newbase;
@@ -551,6 +627,9 @@ public class ConfigModule extends DefaultCoreModule {
 
 
 
+    /** Gets a ChunkDB from self.
+     *  @return A chunkDB with matching name (case insensitive), or null.
+     */
     public ChunkDescDB getChunkDescDB (String name) {
 	ChunkDescDB db;
 	for (int i = 0; i < descdbs.size(); i++) {
@@ -567,51 +646,75 @@ public class ConfigModule extends DefaultCoreModule {
 
 
     /** Adds a ChunkDesc to a ChunkDescDB.
+     *  Note that this function is really only requesting a change to db;
+     *  when and if the change actually occurs, a ChunkDB event will be
+     *  sent to all listeners.  This is primarily because "active" dbs
+     *  do not change until the remote side of the connection has
+     *  attempted to apply the change.
+     *
      *  @param db ChunkDescDB to add to.
      *  @param desc ChunkDesc to add.
-     *  @return True if the ChunkDesc was immediately added (ie db was a
-     *          local file) and false if the addition was delayed (ie db is
-     *          an "active config" associated with a network connection). 
-     *          In the former case, a GUI component calling addDesc should
-     *          update immediately; in the former case, it should wait for
-     *          an event.
+     *  @see VjConfig.DescDBEvent
      */
-    public boolean addDesc (ChunkDescDB db, ChunkDesc desc) {
+    public void addDesc (ChunkDescDB db, ChunkDesc desc) {
         if (db == active_descdb) {
             //net.sendChunk (ch);
-            return false;
+            //return false;
         }
         else {
             db.add (desc);
-            return true;
+            //return true;
         }
     }
 
 
 
-    public boolean removeDesc (ChunkDescDB db, ChunkDesc desc) {
+    /** Remove a ChunkDesc from a ChunkDescDB.
+     *  Note that this function is really only requesting a change to db;
+     *  when and if the change actually occurs, a ChunkDB event will be
+     *  sent to all listeners.  This is primarily because "active" dbs
+     *  do not change until the remote side of the connection has
+     *  attempted to apply the change.
+     *
+     *  @param db ChunkDescDB to remove from.
+     *  @param desc ChunkDesc to remove.
+     *  @see VjConfig.DescDBEvent
+     */
+    public void removeDesc (ChunkDescDB db, ChunkDesc desc) {
         if (db == active_descdb) {
             //net.removeChunk (chunk);
-            return false;
+            //return false;
         }
         else {
             db.remove (desc);
-            return true;
+            //return true;
         }
     }
 
 
 
-    public boolean replaceDesc (ChunkDescDB db, ChunkDesc olddesc, ChunkDesc newdesc) {
+    /** Replaces a ChunkDesc in a ChunkDescDB.
+     *  Note that this function is really only requesting a change to db;
+     *  when and if the change actually occurs, a ChunkDB event will be
+     *  sent to all listeners.  This is primarily because "active" dbs
+     *  do not change until the remote side of the connection has
+     *  attempted to apply the change.
+     *
+     *  @param db ChunkDescDB to replace in.
+     *  @param olddesc ChunkDesc to be replaced.
+     *  @param newdesc ChunkDesc to replace with.
+     *  @see VjConfig.DescDBEvent
+     */
+    public void replaceDesc (ChunkDescDB db, ChunkDesc olddesc, ChunkDesc newdesc) {
         if (db == active_descdb) {
             // currently no live editing of juggler's descdb; this is pretend.
             // net.removeDesc (old_desc);
             // net.sendDesc (new_desc);
-            return false;
+            //return false;
         }
         else {
             db.replace (olddesc, newdesc);
-            return true;
+            //return true;
         }
     }
 
@@ -659,7 +762,11 @@ public class ConfigModule extends DefaultCoreModule {
 
 
 
-    /** Maps a ChunkDesc name to a token */
+    /** Maps a ChunkDesc name to a token.
+     *  @param name Name of a ChunkDesc in the global DescDB.
+     *  @return The token of the ChunkDesc matching name, or
+     *          null if no such ChunkDesc was found.
+     */
     public String getDescTokenFromName (String name) {
         ChunkDesc d = descdb.getByName (name);
         return (d == null)? null: d.getToken();
@@ -670,18 +777,23 @@ public class ConfigModule extends DefaultCoreModule {
     //--------------------- ConfigModuleListener Stuff -----------------------
 
 
+    /** Adds a listener for ConfigModuleEvents. */
     public synchronized void addConfigModuleListener (ConfigModuleListener l) {
 	synchronized (configmodule_targets) {
 	    configmodule_targets.add (l);
 	}
     }
 
+
+    /** Removes a listener for ConfigModuleEvents. */
     public void removeConfigModuleListener (ConfigModuleListener l) {
 	synchronized (configmodule_targets) {
 	    configmodule_targets.remove (l);
 	}
     }
 
+
+    /** Sends a message to self's listeners. */
     protected void notifyConfigModuleTargets (int msgtype, ConfigChunkDB _chunkdb, ChunkDescDB _descdb) {
 	Vector l;
 	ConfigModuleEvent e = new ConfigModuleEvent (this, _chunkdb, _descdb);
@@ -713,39 +825,12 @@ public class ConfigModule extends DefaultCoreModule {
     //------------------------ Config File Methods ---------------------------
 
 
-
-    // this is used specifically to load into an existing chunkdb without
-    // adding anything into the gui's list of chunkdb's... useful
-    // for loading the default chunkdb and keeping it hidden
-    protected boolean loadChunkDBFileInto (ConfigChunkDB chunkdb, String currentdir) {
-	currentdir = Core.file.mangleFileName (currentdir);
-
-	File f = null;
-	FileReader r;
-	ConfigStreamTokenizer st;
-	boolean retval = true;
-	try {
-	    f = new File (currentdir);
-	    r = new FileReader (f);
-	    st = new ConfigStreamTokenizer(r);
-	    chunkdb.setName(f.getName());
-	    chunkdb.setFile(f);
-	    chunkdb.read(st);
-	    List v = chunkdb.getOfDescToken("vjIncludeFile");
-	    for (int i = 0; i < v.size(); i++)
-		retval = retval && loadChunkDBFileInto(chunkdb, ((ConfigChunk)v.get(i)).getName());
-            chunkdb.need_to_save = true;
-	    return retval;
-	}
-	catch (FileNotFoundException e) {
-	    Core.consoleErrorMessage (component_name, "File Not Found: " + f);
-	    return false;
-	}
-
-    }
-
-
-
+    /** Loads a ConfigChunkDB file.
+     *  If succesful, this method creates a new ConfigChunkDB and adds
+     *  it to self.
+     *  @return The name of the new ConfigChunkDB, or null if it could
+     *          not be loaded.
+     */
     public String loadNewChunkDBFile (String filename) {
 	filename = Core.file.mangleFileName (filename);
         File f = new File (filename);
@@ -754,6 +839,12 @@ public class ConfigModule extends DefaultCoreModule {
 
 
 
+    /** Loads a ConfigChunkDB file.
+     *  If succesful, this method creates a new ConfigChunkDB and adds
+     *  it to self.
+     *  @return The name of the new ConfigChunkDB, or null if it could
+     *          not be loaded.
+     */
     public String loadNewChunkDBFile (File f) {
         if (f == null)
             return null;
@@ -829,6 +920,7 @@ public class ConfigModule extends DefaultCoreModule {
 
 
 
+    /** Saves a ChunkDB to a file. */
     public String saveChunkDBFile (ConfigChunkDB db, File f) {
 	if (f == null)
 	    return db.name;
@@ -860,6 +952,12 @@ public class ConfigModule extends DefaultCoreModule {
 
 
 
+    /** Loads a ChunkDescDB file.
+     *  If succesful, this method creates a new ChunkDescDB and adds
+     *  it to self.
+     *  @return The name of the new ChunkDescDB, or null if it could
+     *          not be loaded.
+     */
     public String loadNewDescDBFile (String currentdir) {
 	currentdir = Core.file.mangleFileName (currentdir);
         File f = new File (currentdir);
@@ -867,6 +965,13 @@ public class ConfigModule extends DefaultCoreModule {
     }
 
 
+
+    /** Loads a ChunkDescDB file.
+     *  If succesful, this method creates a new ChunkDescDB and adds
+     *  it to self.
+     *  @return The name of the new ChunkDescDB, or null if it could
+     *          not be loaded.
+     */
     public String loadNewDescDBFile (File f) {
         if (f == null)
             return null;
@@ -935,6 +1040,8 @@ public class ConfigModule extends DefaultCoreModule {
     }
 
 
+
+    /** Save a ChunkDescDB file. */
     public String saveDescDBFile (ChunkDescDB db, File f) {
 	if (f == null)
 	    return db.name;
