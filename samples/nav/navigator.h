@@ -187,6 +187,9 @@ void navigator::navRotate( vjMatrix rot_mat )
 // returns the modified trans, and the total correction that was applied
 void navigator::navCollideTransCorrect(vjVec3& trans, bool& didCollide, vjVec3& totalCorrection)
 {
+   didCollide = false;
+   totalCorrection.set(0,0,0);
+
    // mCurPos (model_M_user) is already in model coordinates,
    // since it is used to move the geometry from modelspace to userSpace
    vjVec3 whereYouAre = vjCoord(mCurPos).pos;
