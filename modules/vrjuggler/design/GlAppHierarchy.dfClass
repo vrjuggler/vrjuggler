@@ -23,6 +23,9 @@ class diagram {
 @__hiddenMember <oiref:cpp#Member#vrj::App#setFocus#(#bool#)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::App#getDrawManager#(##)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::App#getSoundManager#(##)#:oiref> 
+@__hiddenMember <oiref:cpp#Member#vrj::App#configAdd#(#jccl::ConfigElementPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configRemove#(#jccl::ConfigElementPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configCanHandle#(#jccl::ConfigElementPtr#)#:oiref>
 */
 class reference {
 }/**
@@ -49,7 +52,7 @@ class __options {
 }/**
 @__positions <oigroup:<oiref:cpp#Extends#vrj::GlApp#vrj::App:oiref>=300,120,250,120:oigroup>
 <oigroup:<oiref:cpp#Class#vrj::GlApp:oiref>=300,10,230,250,0:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::App:oiref>=10,20,240,220,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::App:oiref>=10,20,240,200,0:oigroup>
 */
 class __positions {
 }
