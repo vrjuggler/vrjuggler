@@ -58,10 +58,10 @@ namespace vrj
       virtual void updateSimulatorSceneGraph() = 0;
 
       /**
-       * Sets the event window the simulator can use to get input from the
-       * user.
+       * Sets the keyboard/mouse device the simulator can use to get input
+       * from the user.
        */
-      virtual void setKeyboardMouse(gadget::KeyboardMouseInterface ewInterface) = 0;
+      virtual void setKeyboardMouse(gadget::KeyboardMouseInterface kmInterface) = 0;
    };
 }
 

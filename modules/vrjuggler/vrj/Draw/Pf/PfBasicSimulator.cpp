@@ -117,11 +117,12 @@ bool PfBasicSimulator::config(jccl::ConfigElementPtr element)
 }
 
 /**
- * Sets the event window the simulator can use to get input from the user.
+ * Sets the keyboard/mouse device the simulator can use to get input from the
+ * user.
  */
-void PfBasicSimulator::setKeyboardMouse(gadget::KeyboardMouseInterface ewInterface)
+void PfBasicSimulator::setKeyboardMouse(gadget::KeyboardMouseInterface kmInterface)
 {
-   boost::ignore_unused_variable_warning(ewInterface);
+   boost::ignore_unused_variable_warning(kmInterface);
 }
 
 
