@@ -141,5 +141,4 @@ char* RemoteReconfigSubjectImpl::getDefinitions()
    return CORBA::string_dup(defs_output.str().c_str());
 }
 
-
-}; // namespace jccl
+} // namespace jccl
