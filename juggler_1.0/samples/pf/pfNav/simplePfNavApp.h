@@ -309,22 +309,11 @@ public:  // Configure the application
 
    void addFilePath(const std::string path)
    {
-      // initScene could be called already,
-      // so, delegate to the the static fileIO func
-      pfFileIO::addFilePath( mFilePath );
-      vjDEBUG( vjDBG_ALL, 0 ) << clrOutNORM(clrCYAN,"addFilePath: ") << mFilePath <<"\n"<<vjDEBUG_FLUSH;
+      mFilePath += path;
    }
    void setFilePath( const std::string path )
    {
-      // initScene could be called already,
-      // so, delegate to the the static fileIO func
       mFilePath = path;
-
-      // set some common paths first...
-      pfFileIO::setFilePath( ".:./data:/usr/share/Performer/data:/usr/share/Performer/data/town:");
-      pfFileIO::addFilePath( mFilePath );
-
-      vjDEBUG( vjDBG_ALL, 0 ) << clrOutNORM(clrCYAN,"setFilePath: ") << mFilePath <<"\n"<<vjDEBUG_FLUSH;
    }
    void setInitialNavPos(const vjVec3 initialPos)
    {
@@ -398,6 +387,13 @@ void simplePfNavApp::initializeModels()
       return;
    }
 
+   // set some common paths first...
+   pfFileIO::setFilePath( ".:./data:/usr/share/Performer/data:/usr/share/Performer/data/town:");
+   // set the file paths...
+   pfFileIO::addFilePath( mFilePath );
+   vjDEBUG( vjDBG_ALL, 0 ) << clrOutNORM(clrCYAN,"setFilePath: ") << mFilePath <<"\n"<<vjDEBUG_FLUSH;
+
+      
    // ----------- DESTROY OLD -------- //
    // REMOVE old Models
    if(mConfiguredCollideModels != NULL)
@@ -508,23 +504,6 @@ void simplePfNavApp::initScene()
    /*  SHOWS The feet and the head...
    pfNode* no = pfdLoadFile( "ball.flt" ) ;  // ball is at 0.0.0
    pfDCS* noo = new pfDCS;
-   if (no == NULL)
-   {
-      cout<<"@!#$##@$@#!$#@!%#!$^%#!$%^@$!#*%(@!$*%@(#*%(@#*%(@!#*%*@!#$(*%@#*%@(#*%@#\n"<<flush;
-      cout<<"@!#$##@$@#!$#@!%#!$^%#!$%^@$!#*%(@!$*%@(#*%(@#*%(@!#*%*@!#$(*%@#*%@(#*%@#\n"<<flush;
-      cout<<"@!#$##@$@#!$#@!%#!$^%#!$%^@$!#*%(@!$*%@(#*%(@#*%(@!#*%*@!#$(*%@#*%@(#*%@#\n"<<flush;
-      cout<<"@!#$##@$@#!$#@!%#!$^%#!$%^@$!#*%(@!$*%@(#*%(@#*%(@!#*%*@!#$(*%@#*%@(#*%@#\n"<<flush;
-      cout<<"@!#$##@$@#!$#@!%#!$^%#!$%^@$!#*%(@!$*%@(#*%(@#*%(@!#*%*@!#$(*%@#*%@(#*%@#\n"<<flush;
-      cout<<"@!#$##@$@#!$#@!%#!$^%#!$%^@$!#*%(@!$*%@(#*%(@#*%(@!#*%*@!#$(*%@#*%@(#*%@#\n"<<flush;
-      cout<<"@!#$##@$@#!$#@!%#!$^%#!$%^@$!#*%(@!$*%@(#*%(@#*%(@!#*%*@!#$(*%@#*%@(#*%@#\n"<<flush;
-      cout<<"@!#$##@$@#!$#@!%#!$^%#!$%^@$!#*%(@!$*%@(#*%(@#*%(@!#*%*@!#$(*%@#*%@(#*%@#\n"<<flush;
-      cout<<"@!#$##@$@#!$#@!%#!$^%#!$%^@$!#*%(@!$*%@(#*%(@#*%(@!#*%*@!#$(*%@#*%@(#*%@#\n"<<flush;
-      cout<<"@!#$##@$@#!$#@!%#!$^%#!$%^@$!#*%(@!$*%@(#*%(@#*%(@!#*%*@!#$(*%@#*%@(#*%@#\n"<<flush;
-   }
-   else
-   {
-      cout<<"KEVINKEVINKEVINKEVINKEVINKEVINKEVINKEVINKEVINKEVINKEVINKEVINKEVINKEVIN\n"<<flush;
-   }
    mRootNode->addChild( no );
    mRootNode->addChild( noo );
    noo->setTrans( 0.0f, 0.0f, 6.0f );
