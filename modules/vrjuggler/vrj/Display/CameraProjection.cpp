@@ -47,14 +47,6 @@ namespace vrj
 void CameraProjection::config(jccl::ConfigChunkPtr chunk)
 {
    Projection::config(chunk);
-
-   vprASSERT( (chunk->getDescToken() == std::string("simDisplay")) ||
-              (chunk->getDescToken() == std::string("simViewport")) );
-
-   // Set fov and make sure that it is not 0.0
-   mVertFOV = chunk->getProperty<float>("vert_fov");
-   if(mVertFOV == 0.0f)
-      mVertFOV = 60.0f;
 }
 
 /** Calculate the viewmatrix and frustum for the camera
