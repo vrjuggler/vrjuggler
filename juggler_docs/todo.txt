@@ -1,5 +1,29 @@
-put a list of development tools that are preferred by us.
+What's in this file?
+
+Lists of things need to be done in the juggler documentation.
+(may want this included into a web page.)
+-----------------------------------------------------------------
+
+General:
+------------
+<!-- install-web include --> this file into a TODO.html
+- Or, find a better tool to keep track of TODO's
+
+Add a page of development tools that are preferred by us.
 - ddd
 - nedit
 - slick edit
 - ???
+
+make an alternate "small" web page.
+add alt text for when you have java disabled in browser.
+figure out why page wont load local
+find out why new images wont load under a jitfolder
+change the name css_filename to html_header_filename in all the script files. (or just add another var for header)
+
+
+Kevin:
+------------
+fix graphics - finalize them
+logo
+compressed xml files - does JExplorer support it?
