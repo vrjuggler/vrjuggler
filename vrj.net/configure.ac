@@ -145,7 +145,7 @@ case $cli_impl in
       ;;
 esac
 
-VPR_PATH([0.32], , [AC_MSG_ERROR([*** VPR is required for VRJ.NET ***])])
+VPR_PATH([0.34.2], , [AC_MSG_ERROR([*** VPR is required for VRJ.NET ***])])
 JCCL_PATH([0.15], ,
           [AC_MSG_ERROR([*** JCCL is required for VRJ.NET ***])])
 GADGETEER_PATH([0.14.2], ,
