@@ -968,7 +968,7 @@ void FlockStandalone::printFlockStatus()
 
    std::cout << "      status:" << getStatusString() << std::endl;
    std::cout << "        mode:" << Flock::getModeString(mMode) << std::endl;
-   std::cout << "   addr mode:" << getAddressingModeString(mAddrMode) << std::endl;
+   std::cout << "   addr mode:" << Flock::getAddressingModeString(mAddrMode) << std::endl;
    std::cout << "   mstr addr:" << mMasterAddr << std::endl;
    std::cout << "  output fmt:" << Flock::Output::getFormatString(mOutputFormat) << std::endl;
    std::cout << " report rate:" << Flock::getReportRateString(mReportRate) << std::endl;
