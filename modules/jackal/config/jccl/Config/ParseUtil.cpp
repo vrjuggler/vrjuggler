@@ -29,14 +29,15 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
 #include <jccl/jcclConfig.h>
 #include <fstream>
 #include <ctype.h>
-#include <jccl/Config/ParseUtil.h>
-#include <jccl/Util/Debug.h>
-#include <jccl/Config/ConfigTokens.h>
 #include <vpr/System.h>
 #include <vpr/Util/FileUtils.h>
+#include <jccl/Util/Debug.h>
+#include <jccl/Config/ConfigTokens.h>
+#include <jccl/Config/ParseUtil.h>
 
 namespace tokens = jccl::types_tokens;
 
@@ -44,7 +45,7 @@ namespace jccl
 {
 
 /** Is n an absolute path name? */
-bool isAbsolutePathName(const std::string& n)
+static bool isAbsolutePathName(const std::string& n)
 {
 #ifdef WIN32
    return((n.length() > 0) && (n[0] == '\\'))
@@ -191,37 +192,6 @@ vpr::ReturnStatus findFileUsingPathVar(const std::string& file_name,
    }
 
    return status;
-}
-
-bool hasSeparator(const std::string& path)
-{
-   return(path.find(char('/')) != path.npos);
-}
-
-std::string getRemainder(const std::string& path)
-{
-   std::string::size_type i = path.find(char('/'));
-   if ( i == path.npos )
-   {
-      return path;
-   }
-   else
-   {
-      return path.substr(i + 1);    // Skip the "/"
-   }
-}
-
-std::string getFirstNameComponent(const std::string& path)
-{
-   std::string::size_type i = path.find(char('/'));
-   if ( i == path.npos )
-   {
-      return path;
-   }
-   else
-   {
-      return path.substr(0, i);
-   }
 }
 
 } // End of jccl namespace
