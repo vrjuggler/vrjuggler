@@ -12,10 +12,12 @@
 # LIBDIR  - The directory where the library will be made.
 # LIBNAME - The name of the library to generate.
 # OBJS    - The object files to be compiled into the named library.
+# RANLIB  - Path to ranlib(1) if available.  ':' otherwise.
 # -----------------------------------------------------------------------------
 
 static-lib:
 	${AR} ${LIBDIR}/${LIBNAME} ${OBJS}
+	${RANLIB} ${LIBDIR}/${LIBNAME}
 
 shared-lib:
 	${LD} ${LDOPTS} -o ${LIBDIR}/${LIBNAME} ${OBJS}
