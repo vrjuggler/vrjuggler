@@ -74,6 +74,9 @@ public:
       mButton0.init("VJButton0");
       mButton1.init("VJButton1");
       mButton2.init("VJButton2");
+      mButton3.init("VJButton3");
+      mButton4.init("VJButton4");
+      mButton5.init("VJButton5");
    }
 
    // Execute any initialization needed after API is started
@@ -126,6 +129,14 @@ public:
    virtual void preFrame()
    {
       // Put your pre frame computations here.
+
+      cout  << "Wand Buttons:"
+            << " 0:" << mButton0->getData()
+            << " 1:" << mButton1->getData()
+            << " 2:" << mButton2->getData()
+            << " 3:" << mButton3->getData()
+            << " 4:" << mButton4->getData()
+            << " 5:" << mButton5->getData() << endl;
    }
 
    //: Function called after drawing has been triggered but BEFORE it completes<BR><BR>
@@ -162,6 +173,9 @@ public:
    vjDigitalInterface   mButton0;
    vjDigitalInterface   mButton1;
    vjDigitalInterface   mButton2;
+   vjDigitalInterface   mButton3;
+   vjDigitalInterface   mButton4;
+   vjDigitalInterface   mButton5;
 };
 
 
