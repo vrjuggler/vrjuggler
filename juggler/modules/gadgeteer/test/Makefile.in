@@ -50,6 +50,12 @@ vjFlockTest: vjFlockTest.@OBJ_FILE_SUFFIX@
 	$(LINK) -o $@ vjFlockTest.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 # ----------------
+# aMotionStar test driver
+# ----------------
+aMotionStarTest: aMotionStarTest.@OBJ_FILE_SUFFIX@ aMotionStar.@OBJ_FILE_SUFFIX@
+	$(LINK) -o $@ aMotionStarTest.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS) aMotionStar.@OBJ_FILE_SUFFIX@
+
+# ----------------
 # new
 # ----------------
 new: new.@OBJ_FILE_SUFFIX@
