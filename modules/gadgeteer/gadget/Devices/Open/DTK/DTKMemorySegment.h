@@ -56,7 +56,7 @@ typedef enum {
 class dtkSharedMem;
 class dtkClient;
 
-class vjDTKMemorySegment
+class VJ_CLASS_API vjDTKMemorySegment
 {
 public:
     vjDTKMemorySegment();

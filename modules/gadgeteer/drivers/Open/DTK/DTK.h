@@ -44,7 +44,8 @@ typedef vjDTKMemorySegment* vjDTKMemorySegmentHandle;
 
 class dtkClient;
 
-class vjDTK : public vjInput, public vjPosition, public vjDigital, public vjAnalog
+class VJ_CLASS_API vjDTK : public vjInput, public vjPosition, public vjDigital,
+                           public vjAnalog
 {
 public:
     // ------------------------------------------------------------------------
