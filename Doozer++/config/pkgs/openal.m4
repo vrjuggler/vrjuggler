@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          openal.m4,v
-dnl Date modified: 2004/07/02 11:35:55
-dnl Version:       1.17
+dnl Date modified: 2004/10/21 15:59:18
+dnl Version:       1.19
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -44,7 +44,7 @@ dnl     AL_INCLUDES - Extra include path for the OpenAL header directory.
 dnl     AL_LDFLAGS  - Extra linker flags for the OpenAL library directory.
 dnl ===========================================================================
 
-dnl openal.m4,v 1.17 2004/07/02 11:35:55 patrickh Exp
+dnl openal.m4,v 1.19 2004/10/21 15:59:18 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has OpenAL installed.  This
@@ -94,119 +94,150 @@ AC_DEFUN([DPP_HAVE_OPENAL],
                [  --with-openal=<PATH>    OpenAL installation directory   [default=$1]],
                [OALROOT="$withval"], [OALROOT=$1])
 
-   dnl Save these values in case they need to be restored later.
-   dpp_save_CFLAGS="$CFLAGS"
-   dpp_save_CPPFLAGS="$CPPFLAGS"
-   dpp_save_LDFLAGS="$LDFLAGS"
-
-   dnl Add the user-specified OpenAL installation directory to these
-   dnl paths.  Ensure that /usr/include and /usr/lib are not included
-   dnl multiple times if $OALROOT is "/usr".
-   if test "x$OALROOT" != "x/usr" ; then
-      CPPFLAGS="$CPPFLAGS -I$OALROOT/include"
-
-      dnl The OpenAL SDK for Windows has a 'libs' directory.  We set that by
-      dnl default below.  Other platforms use 'lib' (as far as I have seen,
-      dnl anyway).
-      if test "x$OS_TYPE" != "xWin32" ; then
-         LDFLAGS="-L$OALROOT/lib $LDFLAGS"
-      fi
-   fi
-
-   CFLAGS="$CFLAGS $ABI_FLAGS"
-
-   dnl Win32 test.
-   if test "x$OS_TYPE" = "xWin32" ; then
-      DPP_LANG_SAVE
-      DPP_LANG_C
-
-      dnl XXX: I am assuming we'll be using Visual C++.  Worse yet, this may
-      dnl just be a nasty hack to deal with unexpected behavior when spaces
-      dnl appear in path names ...
-dnl      LDFLAGS="/link /libpath:\"$OALROOT/libs\" $LDFLAGS"
-      LDFLAGS="-L\"$OALROOT/libs\" $LDFLAGS"
-      LIBS="$LIBS ALut.lib OpenAL32.lib $DYN_LOAD_LIB"
-
-      AC_CACHE_CHECK([for alEnable in OpenAL32.lib],
-                     [dpp_cv_alEnable_openal_lib],
-                     [AC_TRY_LINK([#include <windows.h>
-#include <al.h>],
-                        [alEnable(0);],
-                        [dpp_cv_alEnable_openal_lib='yes'],
-                        [dpp_cv_alEnable_openal_lib='no'])])
-
-      LIBS="$dpp_save_LIBS"
-
-      dnl Success.
-      if test "x$dpp_cv_alEnable_openal_lib" = "xyes" ; then
-         dpp_have_openal='yes'
-         ifelse([$2], , :, [$2])
-      dnl Failure.
-      else
-         dpp_have_openal='no'
-         ifelse([$3], , :, [$3])
-      fi
-
-      DPP_LANG_RESTORE
-   dnl Non-Win32 platforms.
-   else
-      dpp_saveLDFLAGS="$LDFLAGS"
+   if test "x$OALROOT" != "xno" ; then
+      dnl Save these values in case they need to be restored later.
+      dpp_save_CFLAGS="$CFLAGS"
+      dpp_save_CPPFLAGS="$CPPFLAGS"
+      dpp_save_LDFLAGS="$LDFLAGS"
       dpp_save_LIBS="$LIBS"
 
-      DPP_LANG_SAVE
-      DPP_LANG_C
-
-      dnl The pthreads-related macros will set only one of $PTHREAD_ARG or
-      dnl $PTHREAD_LIB, so it's safe (and simpler) for us to use both here.
-      LDFLAGS="$LDFLAGS $PTHREAD_ARG $PTHREAD_LIB"
-
-      AC_CHECK_LIB([openal], [alEnable],
-         [AC_CHECK_HEADER([AL/al.h], [dpp_have_openal='yes'],
-            [dpp_have_openal='no'])],
-         [dpp_have_openal='no'],
-         [$DYN_LOAD_LIB -lm])
-
-      dnl This is necessary because AC_CHECK_LIB() adds -lopenal to
-      dnl $LIBS.  We want to do that ourselves later.
-      LIBS="$dpp_save_LIBS"
-
-      dnl Success.
-      if test "x$dpp_have_openal" = "xyes" ; then
-         ifelse([$2], , :, [$2])
-      dnl Failure.
-      else
-         ifelse([$3], , :, [$3])
-      fi
-
-      DPP_LANG_RESTORE
-   fi
-
-   dnl If OpenAL API files were found, define this extra stuff that may be
-   dnl helpful in some Makefiles.
-   if test "x$dpp_have_openal" = "xyes" ; then
-      if test "x$OS_TYPE" = "xUNIX" ;  then
-         LIBOPENAL="-lopenal -lm"
-      else
-         LIBOPENAL='ALut.lib OpenAL32.lib'
-      fi
-
+      dnl Add the user-specified OpenAL installation directory to these
+      dnl paths.  Ensure that /usr/include and /usr/lib are not included
+      dnl multiple times if $OALROOT is "/usr".
       if test "x$OALROOT" != "x/usr" ; then
-         AL_INCLUDES="-I$OALROOT/include"
-
-         if test "x$OS_TYPE" = "xWin32" ; then
-            AL_LDFLAGS="-L$OALROOT/libs"
-         else
-            AL_LDFLAGS="-L$OALROOT/lib"
-         fi
+         CPPFLAGS="$CPPFLAGS -I$OALROOT/include"
       fi
 
-      OPENAL='yes'
-   fi
+      CFLAGS="$CFLAGS $ABI_FLAGS"
 
-   dnl Restore all the variables now that we are done testing.
-   CFLAGS="$dpp_save_CFLAGS"
-   CPPFLAGS="$dpp_save_CPPFLAGS"
-   LDFLAGS="$dpp_save_LDFLAGS"
+      dnl Win32 test.
+      if test "x$OS_TYPE" = "xWin32" ; then
+         DPP_LANG_SAVE
+         DPP_LANG_C
+
+         dnl XXX: I am assuming we'll be using Visual C++.  Worse yet, this may
+         dnl just be a nasty hack to deal with unexpected behavior when spaces
+         dnl appear in path names ...
+dnl         LDFLAGS="/link /libpath:\"$OALROOT/libs\" $LDFLAGS"
+         LDFLAGS="-L\"$OALROOT/libs\" $LDFLAGS"
+         LIBS="$LIBS ALut.lib OpenAL32.lib $DYN_LOAD_LIB"
+
+         AC_CACHE_CHECK([for alEnable in OpenAL32.lib],
+                        [dpp_cv_alEnable_openal_lib],
+                        [AC_TRY_LINK([#include <windows.h>
+#include <al.h>],
+                           [alEnable(0);],
+                           [dpp_cv_alEnable_openal_lib='yes'],
+                           [dpp_cv_alEnable_openal_lib='no'])])
+
+         LIBS="$dpp_save_LIBS"
+
+         dnl Success.
+         if test "x$dpp_cv_alEnable_openal_lib" = "xyes" ; then
+            dpp_have_openal='yes'
+            ifelse([$2], , :, [$2])
+         dnl Failure.
+         else
+            dpp_have_openal='no'
+            ifelse([$3], , :, [$3])
+         fi
+
+         DPP_LANG_RESTORE
+      elif test "x$PLATFORM" = "xDarwin" ; then
+         DPP_LANG_SAVE
+         DPP_LANG_C
+
+         CPPFLAGS="-I$OALROOT/OpenAL.framework/Headers $CPPFLAGS"
+         LDFLAGS="-F$OALROOT $LDFLAGS"
+         LIBS="$LIBS -framework OpenAL"
+
+         AC_CACHE_CHECK([for alEnable in OpenAL framework],
+                        [dpp_cv_alEnable_openal_lib],
+                        [AC_TRY_LINK([#include <al.h>], [alEnable(0);],
+                           [dpp_cv_alEnable_openal_lib='yes'],
+                           [dpp_cv_alEnable_openal_lib='no'])])
+
+         LIBS="$dpp_save_LIBS"
+
+         dnl Success.
+         if test "x$dpp_cv_alEnable_openal_lib" = "xyes" ; then
+            dpp_have_openal='yes'
+            ifelse([$2], , :, [$2])
+         dnl Failure.
+         else
+            dpp_have_openal='no'
+            ifelse([$3], , :, [$3])
+         fi
+
+         DPP_LANG_RESTORE
+      dnl Other platforms.
+      else
+         dpp_saveLDFLAGS="$LDFLAGS"
+
+         DPP_LANG_SAVE
+         DPP_LANG_C
+
+         dnl The pthreads-related macros will set only one of $PTHREAD_ARG or
+         dnl $PTHREAD_LIB, so it's safe (and simpler) for us to use both here.
+         LDFLAGS="-L$OALROOT/lib $LDFLAGS $PTHREAD_ARG $PTHREAD_LIB"
+
+         AC_CHECK_LIB([openal], [alEnable],
+            [AC_CHECK_HEADER([AL/al.h], [dpp_have_openal='yes'],
+               [dpp_have_openal='no'])],
+            [dpp_have_openal='no'],
+            [$DYN_LOAD_LIB -lm])
+
+         dnl This is necessary because AC_CHECK_LIB() adds -lopenal to
+         dnl $LIBS.  We want to do that ourselves later.
+         LIBS="$dpp_save_LIBS"
+
+         dnl Success.
+         if test "x$dpp_have_openal" = "xyes" ; then
+            ifelse([$2], , :, [$2])
+         dnl Failure.
+         else
+            ifelse([$3], , :, [$3])
+         fi
+
+         DPP_LANG_RESTORE
+      fi
+
+      dnl If OpenAL API files were found, define this extra stuff that may be
+      dnl helpful in some Makefiles.
+      if test "x$dpp_have_openal" = "xyes" ; then
+         if test "x$OS_TYPE" = "xWin32" ;  then
+            LIBOPENAL='ALut.lib OpenAL32.lib'
+         elif test "x$PLATFORM" = "xDarwin" ; then
+            LIBOPENAL='-framework OpenAL'
+         else
+            LIBOPENAL="-lopenal -lm"
+         fi
+
+         if test "x$PLATFORM" = "xDarwin" ; then
+            if test "x$OALROOT" != "x" ; then
+               AL_INCLUDES="-I$OALROOT/OpenAL.framework/Headers"
+               AL_LDFLAGS="-F$OALROOT"
+            fi
+         else
+            if test "x$OALROOT" != "x/usr" ; then
+               AL_INCLUDES="-I$OALROOT/include"
+
+               if test "x$OS_TYPE" = "xWin32" ; then
+                  AL_LDFLAGS="-L$OALROOT/libs"
+               else
+                  AL_LDFLAGS="-L$OALROOT/lib"
+               fi
+            fi
+         fi
+
+         OPENAL='yes'
+      fi
+
+      dnl Restore all the variables now that we are done testing.
+      CFLAGS="$dpp_save_CFLAGS"
+      CPPFLAGS="$dpp_save_CPPFLAGS"
+      LDFLAGS="$dpp_save_LDFLAGS"
+   fi
 
    dnl Export all of the output vars for use by makefiles and configure script.
    AC_SUBST(OPENAL)
