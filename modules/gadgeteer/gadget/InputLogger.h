@@ -143,18 +143,20 @@ public:
 
 private:
    State       mCurState;        /**< The current state of the logger */
-   
+
    /** When the state becomes inactive, this is the number of frames that
    * we wait before processing any input.
    */
-   unsigned    mSleepFramesLeft; 
+   unsigned    mSleepFramesLeft;
    std::string mActiveStamp;     /**< The active stamp for this frame */
 
-   unsigned    mCompressFactor;  /**< Compression factor.  This is the number of duplicate frames to allow in a row */
+   unsigned                   mCompressFactor;  /**< Compression factor.  This is the number of duplicate frames to allow in a row */
+   std::vector<std::string>   mIgnoreElems;     /**< Elements to ignore when compressing */
+   std::vector<std::string>   mIgnoreAttribs;   /**< Attributes to ignore when compressing */
 
    cppdom::NodePtr   mRootNode;           /**< Root node of the data */
    std::string       mRecordingFilename;  /**< Filename to use for the recording */
-   
+
    bool              mLimitFrameRate;     /**< Flag. true - we should limit the framerate while logging */
    vpr::Interval     mMinFrameTime;       /**< Minimum time we are to allow a frame to take */
    vpr::Interval     mPrevFrameTimestamp; /**< Timestamp to use for calculating the current frame rate */

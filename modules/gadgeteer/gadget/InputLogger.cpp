@@ -97,7 +97,18 @@ bool InputLogger::config( jccl::ConfigChunkPtr chunk)
    int max_frame_rate = chunk->getProperty<int>("max_framerate");
    mCompressFactor = chunk->getProperty<unsigned>("compress_factor");
 
-   if(-1 != max_frame_rate)   // If we are supposed to limit frame rate
+   // Get ignore attribs and elems for compressing
+   unsigned num_ignore_elems, num_ignore_attribs;
+   num_ignore_elems = chunk->getNum("ignore_elems");
+   num_ignore_attribs = chunk->getNum("ignore_attribs");
+
+   for(unsigned i=0;i<num_ignore_elems;i++)
+   { mIgnoreElems.push_back(chunk->getProperty<std::string>("ignore_elems",i)); }
+
+   for(unsigned i=0;i<num_ignore_attribs;i++)
+   { mIgnoreAttribs.push_back(chunk->getProperty<std::string>("ignore_attribs",i)); }
+
+   if(max_frame_rate > 0)   // If we are supposed to limit frame rate
    {
       mLimitFrameRate = true;
 
@@ -107,7 +118,7 @@ bool InputLogger::config( jccl::ConfigChunkPtr chunk)
 
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL) << "\n--- LOGGER: Configured ---\n" << vprDEBUG_FLUSH;
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL) << "StartStop: " << start_name << std::endl
-                                                     << "Stamp: " << stamp_name << std::endl 
+                                                     << "Stamp: " << stamp_name << std::endl
                                                      << "Max framerate: " << max_frame_rate << std::endl
                                                      << "Min frametime: " << mMinFrameTime.msec() << "ms" << std::endl << vprDEBUG_FLUSH;
 
@@ -152,7 +163,7 @@ void InputLogger::process()
          else if(stamp_triggered && (Recording == mCurState))
          {  stampRecord(); }
       }
-   
+
       if(Recording == mCurState)
       {
          addRecordingSample();
@@ -167,7 +178,7 @@ void InputLogger::process()
    }
    else
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "InputLogger: Sleeping: " << mSleepFramesLeft << std::endl << vprDEBUG_FLUSH;                              
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "InputLogger: Sleeping: " << mSleepFramesLeft << std::endl << vprDEBUG_FLUSH;
       mSleepFramesLeft--;
    }
 }
@@ -203,6 +214,12 @@ void InputLogger::stopRecording()
    vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "\n--- LOGGER: stopRecording ---\n" << vprDEBUG_FLUSH;
    vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "Done recording\n"
                                     << "Saving data to: " << mRecordingFilename << std::endl << vprDEBUG_FLUSH;
+
+   // Compress the data before saving
+   std::cout << "Before compressing: size:" << mRootNode->getChildren().size() << std::endl;
+   compressSamples();
+   std::cout << "After compressing: size:" << mRootNode->getChildren().size() << std::endl;
+
    std::ofstream out_file;
    out_file.exceptions(std::ofstream::badbit | std::ofstream::failbit);
    try
@@ -432,7 +449,7 @@ void InputLogger::playNextSample()
       gadget::Input* dev_ptr = input_mgr->getDevice(dev_name);
       if(NULL != dev_ptr)
       {
-         vprDEBUG_OutputGuard(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL, 
+         vprDEBUG_OutputGuard(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
                               std::string("Reading device: ") + dev_name + std::string("\n"), "done reading");
 
          vpr::XMLObjectReader xml_reader(serial_dev_node);     // Create XML reader
@@ -466,7 +483,7 @@ void InputLogger::playNextSample()
       mSleepFramesLeft = 10;     // Wait 10 frames until we start processing anything again
       vprDEBUG(gadgetDBG_INPUT_MGR,0) << "Logger: Done playing.\n" << vprDEBUG_FLUSH;
    }
-   
+
 }
 
 void InputLogger::limitFramerate()
@@ -481,25 +498,26 @@ void InputLogger::limitFramerate()
       vprASSERT(sleep_time.msec() > 0);
       vpr::System::msleep(sleep_time.msec());                     // Sleep
    }
-   
+
    mPrevFrameTimestamp.setNow();
 }
 
 void InputLogger::compressSamples()
 {
    // Get the current children to compress
-   cppdom::NodeList nodes =  mRootNode->getChildren();
+   cppdom::NodeList& nodes(mRootNode->getChildren());
    unsigned total_nodes_start = nodes.size();
 
    // Create a nice little progress bar for the compression
    boost::progress_display compress_progress(nodes.size());
 
-   cppdom::NodeList::iterator cur_node = nodes.begin(); 
+   cppdom::NodeList::iterator cur_node = nodes.begin();
    if(nodes.end() == cur_node)
       return;
-   
+
    cur_node++;       // Can't remove first node
-   
+   unsigned node_index(0);
+
    // Compress the data
    // - While nodes left
    //   - If node is duplicate of one before it
@@ -507,14 +525,25 @@ void InputLogger::compressSamples()
    while(cur_node != nodes.end())
    {
       cppdom::NodeList::iterator dup_node = (cur_node-1);      // Initialize dup node to check
-      
-      if((*cur_node)->isEqual( *dup_node))
+
+      /*
+      std::cout << "-----------------------------------------------------------------------\n"
+                << "-----------------------------------------------------------------------\n"
+                << "Comparing nodes: index: " << node_index++ << std::endl;
+      std::cout << "------ curnode:\n";
+      (*cur_node)->save(std::cout, 1);
+      std::cout << "------ dupnode:\n";
+      (*dup_node)->save(std::cout, 1);
+      std::cout << "------ Start comparison ----\n";
+      */
+
+      if((*cur_node)->isEqual( *dup_node, mIgnoreAttribs, mIgnoreElems))
       {
          cur_node = nodes.erase(cur_node);         // Remove the node and get next one
       }
       else
       {
-         cur_node++;                               // Go to the next 
+         cur_node++;                               // Go to the next
       }
 
       compress_progress += 1;       // Progress a little bit
@@ -522,7 +551,7 @@ void InputLogger::compressSamples()
 
    // --- Print results --- //
    std::cout << std::endl
-             << "Compression: initial/compressed:" << total_nodes_start << "/" << nodes.size() << std::endl 
+             << "Compression: initial/compressed:" << total_nodes_start << "/" << nodes.size() << std::endl
              << "      ratio: " << float(nodes.size())/float(total_nodes_start) << std::endl;
 }
 
