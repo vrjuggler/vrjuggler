@@ -55,7 +55,7 @@ import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.editors.CustomEditor;
 import org.vrjuggler.jccl.editors.CustomEditorRegistry;
 import org.vrjuggler.jccl.editors.PropertyEditorPanel;
-import org.vrjuggler.jccl.editors.commonpanels.*;
+import org.vrjuggler.jccl.editors.*;
 
 public class PinchGlovePanel extends JPanel implements CustomEditor
 {
