@@ -127,6 +127,7 @@ public:
     accept (void) {
         SocketStream_t* new_socket;
         RealSocketStreamImp* sock_imp = m_socket_stream_imp.accept();
+        vprASSERT((sock_imp != NULL) && "Impl:accept: returned null sock.  This may be non-blocking accept");
         new_socket = new SocketStream_t(sock_imp);
         delete sock_imp;
 
