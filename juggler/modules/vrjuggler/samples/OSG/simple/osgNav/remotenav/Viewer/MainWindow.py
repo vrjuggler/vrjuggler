@@ -22,7 +22,9 @@ class MainWindow(MainWindowBase):
    # public slot
    def resetClicked(self):
       self.dbg("Resetting model.")
-      self.mFacade.resetModelRotation()
+      self.mFacade.setPosition(0.0,0.0,0.0)
+      self.mFacade.setOrientation(0.0,0.0,0.0)
+      self.reloadGuiView()
 
    # ------- NON-slot methods -------- #
    def check(self, cond, desc="no description"):

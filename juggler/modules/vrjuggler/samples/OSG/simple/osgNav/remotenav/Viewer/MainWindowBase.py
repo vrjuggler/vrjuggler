@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'MainWindowBase.ui'
 #
-# Created: Wed Nov 26 22:00:45 2003
+# Created: Thu Nov 27 01:15:34 2003
 #      by: The PyQt User Interface Compiler (pyuic) 3.8.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -342,39 +342,41 @@ class MainWindowBase(QMainWindow):
       spacer_4 = QSpacerItem(20,20,QSizePolicy.Expanding,QSizePolicy.Minimum)
       layout13_3.addItem(spacer_4)
 
-      self.mResetButton_2 = QPushButton(self.navTab,"mResetButton_2")
-      layout13_3.addWidget(self.mResetButton_2)
+      self.mResetButton = QPushButton(self.navTab,"mResetButton")
+      layout13_3.addWidget(self.mResetButton)
       spacer_5 = QSpacerItem(20,20,QSizePolicy.Expanding,QSizePolicy.Minimum)
       layout13_3.addItem(spacer_5)
       navTabLayout.addLayout(layout13_3)
       self.jumpTab.insertTab(self.navTab,QString(""))
 
       self.tab = QWidget(self.jumpTab,"tab")
+
+      self.comboBox1 = QComboBox(0,self.tab,"comboBox1")
+      self.comboBox1.setGeometry(QRect(60,20,85,21))
+
+      self.textLabel1 = QLabel(self.tab,"textLabel1")
+      self.textLabel1.setGeometry(QRect(10,20,40,20))
+
+      self.textLabel1_2 = QLabel(self.tab,"textLabel1_2")
+      self.textLabel1_2.setGeometry(QRect(10,120,62,20))
+
+      self.lineEdit1 = QLineEdit(self.tab,"lineEdit1")
+      self.lineEdit1.setGeometry(QRect(80,120,108,21))
+
+      self.pushButton4 = QPushButton(self.tab,"pushButton4")
+      self.pushButton4.setGeometry(QRect(40,50,75,22))
+
+      self.pushButton4_2 = QPushButton(self.tab,"pushButton4_2")
+      self.pushButton4_2.setGeometry(QRect(50,150,75,22))
       self.jumpTab.insertTab(self.tab,QString(""))
 
       self.debugTab = QWidget(self.jumpTab,"debugTab")
-      debugTabLayout = QVBoxLayout(self.debugTab,11,6,"debugTabLayout")
-
-      layout4 = QVBoxLayout(None,0,6,"layout4")
-
-      layout3 = QHBoxLayout(None,0,6,"layout3")
-
-      layout1 = QVBoxLayout(None,0,6,"layout1")
-
-      self.pushButton1 = QPushButton(self.debugTab,"pushButton1")
-      layout1.addWidget(self.pushButton1)
-
-      self.pushButton2 = QPushButton(self.debugTab,"pushButton2")
-      layout1.addWidget(self.pushButton2)
-      layout3.addLayout(layout1)
-      spacer_6 = QSpacerItem(40,20,QSizePolicy.Expanding,QSizePolicy.Minimum)
-      layout3.addItem(spacer_6)
-      layout4.addLayout(layout3)
+      debugTabLayout = QVBoxLayout(self.debugTab,2,6,"debugTabLayout")
 
       self.groupBox1 = QGroupBox(self.debugTab,"groupBox1")
       self.groupBox1.setColumnLayout(0,Qt.Vertical)
       self.groupBox1.layout().setSpacing(6)
-      self.groupBox1.layout().setMargin(11)
+      self.groupBox1.layout().setMargin(3)
       groupBox1Layout = QVBoxLayout(self.groupBox1.layout())
       groupBox1Layout.setAlignment(Qt.AlignTop)
 
@@ -382,9 +384,10 @@ class MainWindowBase(QMainWindow):
       txtDebugOutput_font = QFont(self.txtDebugOutput.font())
       txtDebugOutput_font.setFamily("Monospace")
       self.txtDebugOutput.setFont(txtDebugOutput_font)
+      self.txtDebugOutput.setVScrollBarMode(QTextBrowser.AlwaysOn)
+      self.txtDebugOutput.setHScrollBarMode(QTextBrowser.AlwaysOn)
       groupBox1Layout.addWidget(self.txtDebugOutput)
-      layout4.addWidget(self.groupBox1)
-      debugTabLayout.addLayout(layout4)
+      debugTabLayout.addWidget(self.groupBox1)
       self.jumpTab.insertTab(self.debugTab,QString(""))
       MainWindowBaseLayout.addWidget(self.jumpTab)
 
@@ -394,6 +397,7 @@ class MainWindowBase(QMainWindow):
 
       self.resize(QSize(232,359).expandedTo(self.minimumSizeHint()))
 
+      self.connect(self.mResetButton,SIGNAL("clicked()"),self.resetClicked)
 
 
    def languageChange(self):
@@ -408,11 +412,13 @@ class MainWindowBase(QMainWindow):
       QToolTip.add(self.mNavRotPix,self.__tr("Rotate the user."))
       self.mPosLabel.setText(self.__tr("Pos:"))
       self.mRotLabel.setText(self.__tr("Rot:"))
-      self.mResetButton_2.setText(self.__tr("Reset"))
+      self.mResetButton.setText(self.__tr("Reset"))
       self.jumpTab.changeTab(self.navTab,self.__tr("Nav"))
+      self.textLabel1.setText(self.__tr("Place"))
+      self.textLabel1_2.setText(self.__tr("Place Name"))
+      self.pushButton4.setText(self.__tr("Jump There"))
+      self.pushButton4_2.setText(self.__tr("Add It"))
       self.jumpTab.changeTab(self.tab,self.__tr("Jump"))
-      self.pushButton1.setText(self.__tr("pushButton1"))
-      self.pushButton2.setText(self.__tr("pushButton2"))
       self.groupBox1.setTitle(self.__tr("Output"))
       self.jumpTab.changeTab(self.debugTab,self.__tr("Debug"))
 
