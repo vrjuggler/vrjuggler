@@ -49,24 +49,27 @@ beandir=		$(bindir)/beans
 srcdir=			@srcdir@
 top_srcdir=		@top_srcdir@
 EXTRA_SRCS_PATH=	$(srcdir)/../tweek/idl
-EXTRA_JAVA_SRCS_PATH=	$(srcdir)/tweek
+EXTRA_JAVA_SRCS_PATH=	$(srcdir)/tweek $(KUNSTSTOFF_SRCDIR)
 INSTALL=		@INSTALL@
 INSTALL_FILES=		
 JAVA_IDL_OPTS=		@JAVA_IDL_OPTS@ @JAVA_IDL_GENDIR_OPT@$(srcdir)
 JAVA_IDL_INCLUDES=	@JAVA_IDL_INCFLAG@$(top_srcdir)
 
+LAF_DIR=		$(JUGGLERROOT_ABS)/external/swing-laf
+KUNSTSTOFF_SRCDIR=	$(LAF_DIR)/kunststoff/sources
+JAVA_SRC_PATH=		$(KUNSTSTOFF_SRCDIR)
+
 JDOM_JAR=	@JDOM_JAR@
 JAVA_ORB_JAR=	@JAVA_ORB_JAR@
 
-LAF_DIR=	$(JUGGLERROOT_ABS)/external/swing-laf
-LAF_JARS=	$(LAF_DIR)/kunststoff/kunststoff.jar
+#LAF_JARS=	$(LAF_DIR)/kunststoff/kunststoff.jar
 
 # The following check is done this way to prevent unwanted spaces from
 # appearing in $(CLASSPATH)
 ifneq ($(JAVA_ORB_JAR), none)
-CLASSPATH=	$(JDOM_JAR)$(JCPS)$(JAVA_ORB_JAR)$(JCPS)$(LAF_JARS)
+   CLASSPATH=	$(JDOM_JAR)$(JCPS)$(JAVA_ORB_JAR)
 else
-CLASSPATH=	$(JDOM_JAR)$(JCPS)$(LAF_JARS)
+   CLASSPATH=	$(JDOM_JAR)
 endif
 
 IDL_JAVA_FILES=	SubjectManager.java	\
@@ -130,6 +133,26 @@ TREEVIEWER_DIR=		$(subst .,/,$(TREEVIEWER_PKG))
 TREEVIEWER_SRCS=	$(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(TREEVIEWER_DIR)/*.java))
 TREEVIEWER_CLASSES=	$(TREEVIEWER_SRCS:.java=.class)
 
+INCORS_PLAF_PKG=	com.incors.plaf
+INCORS_PLAF_DIR=	$(subst .,/,$(INCORS_PLAF_PKG))
+INCORS_PLAF_SRCS=	$(patsubst $(KUNSTSTOFF_SRCDIR)/%,%,$(wildcard $(KUNSTSTOFF_SRCDIR)/$(INCORS_PLAF_DIR)/*.java))
+INCORS_PLAF_CLASSES=	$(INCORS_PLAF_SRCS:.java=.class)
+
+KUNSTSTOFF_PKG=		com.incors.plaf.kunststoff
+KUNSTSTOFF_DIR=		$(subst .,/,$(KUNSTSTOFF_PKG))
+KUNSTSTOFF_SRCS=	$(patsubst $(KUNSTSTOFF_SRCDIR)/%,%,$(wildcard $(KUNSTSTOFF_SRCDIR)/$(KUNSTSTOFF_DIR)/*.java))
+KUNSTSTOFF_CLASSES=	$(KUNSTSTOFF_SRCS:.java=.class)
+
+K_THEMES_PKG=		com.incors.plaf.kunststoff.themes
+K_THEMES_DIR=		$(subst .,/,$(K_THEMES_PKG))
+K_THEMES_SRCS=		$(patsubst $(KUNSTSTOFF_SRCDIR)/%,%,$(wildcard $(KUNSTSTOFF_SRCDIR)/$(K_THEMES_DIR)/*.java))
+K_THEMES_CLASSES=	$(K_THEMES_SRCS:.java=.class)
+
+K_MINI_PKG=		com.incors.plaf.kunststoff.mini
+K_MINI_DIR=		$(subst .,/,$(K_MINI_PKG))
+K_MINI_SRCS=		$(patsubst $(KUNSTSTOFF_SRCDIR)/%,%,$(wildcard $(KUNSTSTOFF_SRCDIR)/$(K_MINI_DIR)/*.java))
+K_MINI_CLASSES=		$(K_MINI_SRCS:.java=.class)
+
 TWEEK_AUTO_SRCS=							\
 	tweek/SubjectManagerHolder.java					\
 	tweek/SubjectHolder.java					\
@@ -150,7 +173,11 @@ JAVA_SRCS=			\
 	$(SERVICES_SRCS)	\
 	$(TEXT_SRCS)		\
 	$(TREEVIEWER_SRCS)	\
-	$(TWEEK_AUTO_SRCS)
+	$(TWEEK_AUTO_SRCS)	\
+	$(INCORS_PLAF_SRCS)	\
+	$(KUNSTSTOFF_SRCS)	\
+	$(K_THEMES_SRCS)	\
+	$(K_MINI_SRCS)
 
 JAVA_CLASSES=	$(JAVA_SRCS:.java=.class)
 
@@ -158,7 +185,8 @@ JARS=		Tweek.jar		\
 		TweekBeans.jar		\
 		TweekEvents.jar		\
 		TweekNet.jar		\
-		TweekServices.jar
+		TweekServices.jar	\
+		kunststoff-mod.jar
 BEANS=		Viewers
 
 # Some of our jars need custom manifests
@@ -226,6 +254,13 @@ Viewers.jar: $(ICONVIEWER_CLASSES) $(TREEVIEWER_CLASSES)
 	cd $(srcdir) && $(JAR) uvf $(topdir)/java/$@ \
 		$(ICONVIEWER_DIR)/*.gif \
 		LICENSE-java-laf.txt
+
+kunststoff-mod.jar: $(INCORS_PLAF_CLASSES) $(KUNSTSTOFF_CLASSES)	\
+                    $(K_THEMES_CLASSES) $(K_MINI_CLASSES)
+	$(JAR) cvf $@ com/incors/plaf
+	cd $(LAF_DIR)/kunststoff && $(JAR) uvf $(topdir)/java/$@ licence.txt
+	cd $(KUNSTSTOFF_SRCDIR) && $(JAR) uvf $(topdir)/java/$@		\
+          $(KUNSTSTOFF_DIR)/icons/*.gif $(K_MINI_DIR)/icons/*.gif
 
 # This cannot be named 'install' because Doozer++ already defines that.
 tweek-install:
