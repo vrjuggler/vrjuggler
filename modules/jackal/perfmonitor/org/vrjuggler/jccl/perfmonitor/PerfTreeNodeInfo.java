@@ -26,6 +26,7 @@ public class PerfTreeNodeInfo implements ActionListener {
     protected LabeledPerfDataCollector mCollector;
     protected JComponent mComponent;
     protected JLabel mValueLabel;
+    protected JButton mGraphButton;
 
     public PerfTreeNodeInfo (String _sublabel, LabeledPerfDataCollector.IndexInfo _ii, LabeledPerfDataCollector col) {
 	sublabel = _sublabel;
@@ -41,24 +42,24 @@ public class PerfTreeNodeInfo implements ActionListener {
             mComponent.add (Box.createHorizontalGlue());
 	    mValueLabel = new JLabel (padFloat(ii.getAverage()/1000.0), JLabel.RIGHT);
 	    mComponent.add (mValueLabel);
-	    JButton b = new LabeledPanelButton (col, ii, "Graph");
-	    b.setActionCommand ("Graph");
-	    b.addActionListener (this);
+	    mGraphButton = new LabeledPanelButton (col, ii, "Graph");
+	    mGraphButton.setActionCommand ("Graph");
+	    mGraphButton.addActionListener (this);
 	    //b.addActionListener (PerfAnalyzerPanel.this);
 	    Insets insets = new Insets (1,1,1,1);
-	    b.setMargin(insets);
-	    mComponent.add (b);
+	    mGraphButton.setMargin(insets);
+	    mComponent.add (mGraphButton);
 	}
 	else {
 	    mComponent.add(new JLabel ("<i>" + sublabel + "</i>"));
             mComponent.add (Box.createHorizontalGlue());
-	    JButton b = new LabeledPanelButton (col, null, "Graph");
-	    b.setActionCommand ("Graph");
-	    b.addActionListener (this);
+	    mGraphButton = new LabeledPanelButton (col, null, "Graph");
+	    mGraphButton.setActionCommand ("Graph");
+	    mGraphButton.addActionListener (this);
 	    //b.addActionListener (PerfAnalyzerPanel.this);
 	    Insets insets = new Insets (1,1,1,1);
-	    b.setMargin(insets);
-	    mComponent.add (b);
+	    mGraphButton.setMargin(insets);
+	    mComponent.add (mGraphButton);
 	}
     }
 
@@ -76,6 +77,10 @@ public class PerfTreeNodeInfo implements ActionListener {
 
     public LabeledPerfDataCollector getCollector() {
 	return mCollector;
+    }
+
+    public JButton getGraphButton () {
+	return mGraphButton;
     }
 
     public void update() {
