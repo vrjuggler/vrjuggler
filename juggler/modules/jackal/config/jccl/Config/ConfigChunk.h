@@ -188,24 +188,7 @@ public:
    template<>
    bool getProperty<bool>(const std::string& prop, int ind) const
    {
-      std::string prop_string = getPropertyString(prop,ind);
-      if ("false" == prop_string || "0" == prop_string)
-      {
-         return false;
-      }
-      else if ("true" == prop_string || "1" == prop_string)
-      {
-         return true;
-      }
-      else
-      {
-         vprDEBUG(jcclDBG_CONFIG, vprDBG_CONFIG_LVL)
-            << "Expecting boolean string for property '" << prop
-            << "' in config chunk '" << getName() << "'. Got '"
-            << prop_string << " instead. Assuming value of true."
-            << vprDEBUG_FLUSH;
-         return true;
-      }
+      return getProperty_bool(prop, ind);
    }
 
    template<>
@@ -305,25 +288,33 @@ public:
    }
 
 protected:
-   /** Returns the string value of the given property
-   * @param prop The token string for the property
-   * @param ind  The index of the property
+   /** Returns the string value of the given property.
+   * @param prop The token string for the property.
+   * @param ind  The index of the property.
    * @post  If property is found, then return the contents.  Else return "".
    */
    std::string getPropertyString(const std::string& prop, int ind) const;
 
-   /** Get the property's cdata node
-   * @param prop  The property token
-   * @param ind   The index inside the property
-   * @param autoCreate If true, then autocreate the property node to use
+   /** Get the property's cdata node.
+   * @param prop  The property token.
+   * @param ind   The index inside the property.
+   * @param autoCreate If true, then autocreate the property node to use.
    *
    * @note We always autocreate the cdata node if need be
    */
    cppdom::NodePtr getPropertyCdataNode(const std::string& prop, int ind, bool autoCreate) const;
 
-   /** Get a chunk ptr from the given property
-   * Have to call this way because specialization would use symbols that aren't available
-   */
+   /**
+    * Gets a boolean value from the given property.
+    * Have to call this way because std::stringstring does not convert "true"
+    * and "false" into corresponding bool values.
+    */
+   bool getProperty_bool(const std::string& prop, int ind) const;
+
+   /** Gets a chunk ptr from the given property.
+    * Have to call this way because specialization would use symbols that
+    * aren't available.
+    */
    ConfigChunkPtr getProperty_ChunkPtr(const std::string& prop, int ind) const;
 
 protected:
@@ -347,24 +338,7 @@ inline std::string ConfigChunk::getProperty<std::string>(const std::string& prop
 template<>
 inline bool ConfigChunk::getProperty<bool>(const std::string& prop, int ind) const
 {
-   std::string prop_string = getPropertyString(prop,ind);
-   if ("false" == prop_string || "0" == prop_string)
-   {
-      return false;
-   }
-   else if ("true" == prop_string || "1" == prop_string)
-   {
-      return true;
-   }
-   else
-   {
-      vprDEBUG(jcclDBG_CONFIG, vprDBG_CONFIG_LVL)
-         << "Expecting boolean string for property '" << prop
-         << "' in config chunk '" << getName() << "'. Got '"
-         << prop_string << " instead. Assuming value of true."
-         << vprDEBUG_FLUSH;
-      return true;
-   }
+   return getProperty_bool(prop, ind);
 }
 
 /** Specialization for ConfigChunkPtr's

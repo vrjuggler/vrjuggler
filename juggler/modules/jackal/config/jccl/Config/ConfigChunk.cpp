@@ -247,6 +247,28 @@ std::string ConfigChunk::getFullName() const
    return full_name;
 }
 
+bool ConfigChunk::getProperty_bool(const std::string& prop, int ind) const
+{
+   std::string prop_string = getPropertyString(prop,ind);
+   if ("false" == prop_string || "0" == prop_string)
+   {
+      return false;
+   }
+   else if ("true" == prop_string || "1" == prop_string)
+   {
+      return true;
+   }
+   else
+   {
+      vprDEBUG(jcclDBG_CONFIG, vprDBG_CONFIG_LVL)
+         << "Expecting boolean string for property '" << prop
+         << "' in config chunk '" << getName() << "'. Got '"
+         << prop_string << " instead. Assuming value of true."
+         << vprDEBUG_FLUSH;
+      return true;
+   }
+}
+
 ConfigChunkPtr ConfigChunk::getProperty_ChunkPtr(const std::string& prop, int ind) const
 {
    VarType var_type = mDesc->getPropertyDesc(prop).getVarType();  // Get the var type
