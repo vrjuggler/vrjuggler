@@ -736,7 +736,7 @@ if test "x$OS_TYPE" = "xWin32" ; then
 
     JDK_HOME=`unix2dos -p "$JDK_HOME"`
 
-    APP_EXTRA_LIBS=`unix2dos "$APP_EXTRA_LIBS"`
+#    APP_EXTRA_LIBS=`unix2dos "$APP_EXTRA_LIBS"`
     APP_EXTRA_LIBS_GL=`unix2dos "$APP_EXTRA_LIBS_GL"`
     APP_EXTRA_LIBS_PF=`unix2dos "$APP_EXTRA_LIBS_PF"`
     APP_EXTRA_LIBS_OSG=`unix2dos "$APP_EXTRA_LIBS_OSG"`
