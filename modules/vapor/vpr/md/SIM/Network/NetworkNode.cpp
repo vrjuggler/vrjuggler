@@ -43,6 +43,7 @@
 
 #include <stdlib.h>
 #include <vpr/Util/Assert.h>
+#include <vpr/Util/Debug.h>
 #include <vpr/System.h>
 
 #include <vpr/md/SIM/IO/Socket/SocketImplSIM.h>
@@ -107,6 +108,10 @@ bool NetworkNode::hasSocket (const vpr::Uint32 port,
 void NetworkNode::addSocket (vpr::SocketImplSIM* sock)
 {
    vprASSERT(! hasSocket(sock->getLocalAddr().getPort(), sock->getType()) && "Tried to overwrite an existing socket");
+   vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+      << "NetworkNode::addSocket(): Adding socket (" << sock
+      << ") with local address " << sock->getLocalAddr() << " to node "
+      << mIpStr << "\n" << vprDEBUG_FLUSH;
 
    switch (sock->getType())
    {
@@ -124,6 +129,12 @@ void NetworkNode::deliverMessage (vpr::sim::MessagePtr msg)
 //   vpr::sim::MessagePtr msg_copy(new vpr::sim::Message(*msg));
 
    const vpr::SocketImplSIM* dest_sock = msg->getDestinationSocket();
+
+   vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+      << "NetworkNode::deliverMessage() [" << mIpStr
+      << "]: Delivering message to socket (" << dest_sock
+      << ") with local address " << dest_sock->getLocalAddr() << "\n"
+      << vprDEBUG_FLUSH;
 
    // Pass message to the destination socket.
    switch (dest_sock->getType())
