@@ -16,7 +16,8 @@ Started: April 13, 2001
     Required application and configuration changes for upgrading from older
     versions:
         * Introduced window viewports.  This means all config files from old
-          version are incompatible
+          version are incompatible.  The new chunk type to use is displayWindow.
+          The old chunk types (simDisplay & surfaceDisplay) can not be used.
         * vjGlApp::bufferPreDraw() - New interface function for OpenGL-based
           apps.  Must use if going to use multiviewport code.
 
