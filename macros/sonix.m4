@@ -42,7 +42,21 @@ dnl ************** <auto-copyright.pl END do not edit this line> **************
 dnl ---------------------------------------------------------------------------
 dnl SNX_PATH([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULES]]]])
 dnl
-dnl Test for SNX and then define SNX_CXXFLAGS, SNX_LIBS, and SNX_LIBS_STATIC.
+dnl Test for SNX and then define the following variables:
+dnl     SNX_CXXFLAGS
+dnl     SNX_CXXFLAGS_MIN
+dnl     SNX_INCLUDES
+dnl     SNX_INCLUDES_MIN
+dnl     SNX_LIBS_CC
+dnl     SNX_LIBS_LD
+dnl     SNX_PROF_LIBS_CC
+dnl     SNX_PROF_LIBS_LD
+dnl     SNX_LIBS_STATIC_CC
+dnl     SNX_LIBS_STATIC_LD
+dnl     SNX_PROF_LIBS_STATIC_CC
+dnl     SNX_PROF_LIBS_STATIC_LD
+dnl     SNX_EXTRA_LIBS_CC
+dnl     SNX_EXTRA_LIBS_LD
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([SNX_PATH],
 [
@@ -95,20 +109,30 @@ AC_DEFUN([SNX_PATH],
     else
         SNX_CXXFLAGS=`$SNX_CONFIG $sonix_config_args --cxxflags $ABI`
         SNX_INCLUDES=`$SNX_CONFIG $sonix_config_args --includes`
-        SNX_EXTRA_LIBS_CC=`$SNX_CONFIG $sonix_config_args --extra-libs $ABI`
-        SNX_EXTRA_LIBS_LD=`$SNX_CONFIG $sonix_config_args --extra-libs $ABI --linker`
         SNX_LIBS_CC="`$SNX_CONFIG $sonix_config_args --libs $ABI`"
         SNX_LIBS_LD="`$SNX_CONFIG $sonix_config_args --libs $ABI --linker`"
+        SNX_PROF_LIBS_CC="`$SNX_CONFIG $sonix_config_args --libs $ABI --profiled`"
+        SNX_PROF_LIBS_LD="`$SNX_CONFIG $sonix_config_args --linker --libs $ABI --profiled`"
         SNX_LIBS_STATIC_CC="`$SNX_CONFIG $sonix_config_args --libs $ABI --static`"
         SNX_LIBS_STATIC_LD="`$SNX_CONFIG $sonix_config_args --libs $ABI --linker --static`"
+        SNX_PROF_LIBS_STATIC_CC="`$SNX_CONFIG $sonix_config_args --libs $ABI --static --profiled`"
+        SNX_PROF_LIBS_STATIC_LD="`$SNX_CONFIG $sonix_config_args --linker --libs $ABI --static --profiled`"
+        SNX_EXTRA_LIBS_CC=`$SNX_CONFIG $sonix_config_args --extra-libs $ABI`
+        SNX_EXTRA_LIBS_LD=`$SNX_CONFIG $sonix_config_args --extra-libs $ABI --linker`
         SNX_VERSION=`$SNX_CONFIG --version`
 
         SNX_CXXFLAGS_MIN=`$SNX_CONFIG $sonix_config_args --cxxflags $ABI --min`
         SNX_INCLUDES_MIN=`$SNX_CONFIG $sonix_config_args --includes --min`
-        SNX_EXTRA_LIBS_CC_MIN=`$SNX_CONFIG $sonix_config_args --extra-libs $ABI`
-        SNX_EXTRA_LIBS_LD_MIN=`$SNX_CONFIG $sonix_config_args --extra-libs $ABI --linker`
-        SNX_LIBS_CC="`$SNX_CONFIG $sonix_config_args --libs $ABI --min`"
-        SNX_LIBS_LD="`$SNX_CONFIG $sonix_config_args --libs $ABI --linker --min`"
+        SNX_LIBS_CC_MIN="`$SNX_CONFIG $sonix_config_args --libs $ABI --min`"
+        SNX_LIBS_LD_MIN="`$SNX_CONFIG $sonix_config_args --linker --libs $ABI --min`"
+        SNX_PROF_LIBS_CC_MIN="`$SNX_CONFIG $sonix_config_args --libs $ABI --min --profiled`"
+        SNX_PROF_LIBS_LD_MIN="`$SNX_CONFIG $sonix_config_args --linker --libs $ABI --min --profiled`"
+        SNX_LIBS_STATIC_CC_MIN="`$SNX_CONFIG $sonix_config_args --libs $ABI --static --min`"
+        SNX_LIBS_STATIC_LD_MIN="`$SNX_CONFIG $sonix_config_args --linker --libs $ABI --static --min`"
+        SNX_PROF_LIBS_STATIC_CC_MIN="`$SNX_CONFIG $sonix_config_args --libs $ABI --static --profiled --min`"
+        SNX_PROF_LIBS_STATIC_LD_MIN="`$SNX_CONFIG $sonix_config_args --linker --libs $ABI --static --profiled --min`"
+        SNX_EXTRA_LIBS_CC_MIN=`$SNX_CONFIG $sonix_config_args --extra-libs $ABI --min`
+        SNX_EXTRA_LIBS_LD_MIN=`$SNX_CONFIG $sonix_config_args --extra-libs $ABI --min --linker`
 
         AC_MSG_CHECKING([whether Sonix version is >= $min_sonix_version])
         AC_MSG_RESULT([$SNX_VERSION])
@@ -123,8 +147,31 @@ AC_DEFUN([SNX_PATH],
             echo "*** full path to sonix-config."
         fi
         SNX_CXXFLAGS=""
-        SNX_LIBS=""
-        SNX_LIBS_STATIC=""
+        SNX_INCLUDES=""
+        SNX_LIBS_CC=""
+        SNX_LIBS_LD=""
+        SNX_PROF_LIBS_CC=""
+        SNX_PROF_LIBS_LD=""
+        SNX_LIBS_STATIC_CC=""
+        SNX_LIBS_STATIC_LD=""
+        SNX_PROF_LIBS_STATIC_CC=""
+        SNX_PROF_LIBS_STATIC_LD=""
+        SNX_EXTRA_LIBS_CC=""
+        SNX_EXTRA_LIBS_LD=""
+        SNX_VERSION="-1"
+
+        SNX_CXXFLAGS_MIN=""
+        SNX_INCLUDES_MIN=""
+        SNX_LIBS_CC_MIN=""
+        SNX_LIBS_LD_MIN=""
+        SNX_PROF_LIBS_CC_MIN=""
+        SNX_PROF_LIBS_LD_MIN=""
+        SNX_LIBS_STATIC_CC_MIN=""
+        SNX_LIBS_STATIC_LD_MIN=""
+        SNX_PROF_LIBS_STATIC_CC_MIN=""
+        SNX_PROF_LIBS_STATIC_LD_MIN=""
+        SNX_EXTRA_LIBS_CC_MIN=""
+        SNX_EXTRA_LIBS_LD_MIN=""
         ifelse([$3], , :, [$3])
     fi
 
@@ -132,8 +179,12 @@ AC_DEFUN([SNX_PATH],
     AC_SUBST(SNX_INCLUDES)
     AC_SUBST(SNX_LIBS_CC)
     AC_SUBST(SNX_LIBS_LD)
+    AC_SUBST(SNX_PROF_LIBS_CC)
+    AC_SUBST(SNX_PROF_LIBS_LD)
     AC_SUBST(SNX_LIBS_STATIC_CC)
     AC_SUBST(SNX_LIBS_STATIC_LD)
+    AC_SUBST(SNX_PROF_LIBS_STATIC_CC)
+    AC_SUBST(SNX_PROF_LIBS_STATIC_LD)
     AC_SUBST(SNX_EXTRA_LIBS_CC)
     AC_SUBST(SNX_EXTRA_LIBS_LD)
     AC_SUBST(SNX_VERSION)
@@ -141,7 +192,13 @@ AC_DEFUN([SNX_PATH],
     AC_SUBST(SNX_CXXFLAGS_MIN)
     AC_SUBST(SNX_INCLUDES_MIN)
     AC_SUBST(SNX_LIBS_CC_MIN)
-    AC_SUBST(SNX_EXTRA_LIBS_LD_MIN)
-    AC_SUBST(SNX_EXTRA_LIBS_CC_MIN)
     AC_SUBST(SNX_LIBS_LD_MIN)
+    AC_SUBST(SNX_PROF_LIBS_CC_MIN)
+    AC_SUBST(SNX_PROF_LIBS_LD_MIN)
+    AC_SUBST(SNX_LIBS_STATIC_CC_MIN)
+    AC_SUBST(SNX_LIBS_STATIC_LD_MIN)
+    AC_SUBST(SNX_PROF_LIBS_STATIC_CC_MIN)
+    AC_SUBST(SNX_PROF_LIBS_STATIC_LD_MIN)
+    AC_SUBST(SNX_EXTRA_LIBS_CC_MIN)
+    AC_SUBST(SNX_EXTRA_LIBS_LD_MIN)
 ])
