@@ -435,8 +435,17 @@ setup_omniORB ( )
          LIBS="$LIBS -lomniGK_stub"
       fi
 
+      # XXX: This is a hack to deal with omniORB 4.0.0 not compiling out of
+      # the box on IRIX.
+      if test "x$OMNI_VER" = "x4" -a "x$PLATFORM" = "xIRIX" ; then
+         EXTRA_DEFS="$EXTRA_DEFS -DOMNI_REQUIRES_FQ_BASE_CTOR"
+      fi
+
       DPP_LANG_SAVE
       DPP_LANG_CPLUSPLUS
+
+      tweek_save_CPPFLAGS="$CPPFLAGS"
+      CPPFLAGS="$CPPFLAGS $EXTRA_DEFS"
 
       AC_CACHE_CHECK([for CORBA::ORB_init in -l$tweek_omni_lib],
          [tweek_cv_CORBA__ORB_init_in_omniORB],
@@ -452,6 +461,8 @@ int omni_main_i(int argc, char** const argv)
                      [ tweek_cv_CORBA__ORB_init_in_omniORB='yes'
                        rm -rf ./ii_files ],
                      [tweek_cv_CORBA__ORB_init_in_omniORB='no'])])
+
+      CPPFLAGS="$tweek_save_CPPFLAGS"
 
       DPP_LANG_RESTORE
 
