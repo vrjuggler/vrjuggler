@@ -41,6 +41,9 @@
 
 #include <vpr/vprConfig.h>
 
+#include <iostream>
+#include <iomanip>
+
 #include <vpr/Sync/CondVarGeneric.h>
 
 
@@ -50,7 +53,7 @@
  * @post The condition has been modifed, but may not be satisfied.
  * @note The call blocks until a condition has been signaled
  */
-vpr::ReturnStatus vpr::CondVarGeneric::wait (vpr::Interval time_to_wait)
+vpr::ReturnStatus vpr::CondVarGeneric::wait(vpr::Interval time_to_wait)
 {
    std::cerr << std::setw(5) << getpid() << "  Wait: Begin:" << std::endl;
    // ASSERT:  We have been locked
