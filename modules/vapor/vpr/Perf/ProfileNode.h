@@ -43,7 +43,7 @@
 #ifndef VPR_PROFILE_NODE_H
 #define VPR_PROFILE_NODE_H
 
-/**
+/*
  * Primarily based on
  * Real-Time Hierarchical Profiling for Game Programming Gems 3
  * by Greg Hjelstrom & Byon Garrabrant
@@ -57,18 +57,20 @@
 
 namespace vpr
 {
-/**
- * A node in the Profile Hierarchy Tree.
- *
- * This is the main class for performance profiling.
- * The performance profile is built out of a tree of these nodes.  They are
- * connected in a standard parent child relationship.  Each node can have one
- * parent and 0 or more children.
- *
- * NOTE: This class is not multi-thread safe.  It relies upon only one thread using it at a
- *        time.  This really only makes sense since two threads accessing it at the same time
- *        would lead to invalid data.
- */
+
+   /**
+    * A node in the Profile Hierarchy Tree.
+    *
+    * This is the main class for performance profiling.
+    * The performance profile is built out of a tree of these nodes.  They are
+    * connected in a standard parent child relationship.  Each node can have
+    * one parent and 0 or more children.
+    *
+    * @note This class is not multi-thread safe.  It relies upon only one
+    *       thread using it at a time.  This really only makes sense since
+    *       two threads accessing it at the same time would lead to invalid
+    *       data.
+    */
    class VPR_CLASS_API ProfileNode
    {
    public:

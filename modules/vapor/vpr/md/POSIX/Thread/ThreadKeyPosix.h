@@ -97,7 +97,7 @@ public:
    }
 
    /**
-    * Allocates a <keyp> that is used to identify data that is specific to
+    * Allocates a key that is used to identify data that is specific to
     * each thread in the process, is global to all threads in the process
     * and is destroyed using the spcefied destructor function that takes a
     * single argument.
@@ -109,8 +109,8 @@ public:
     * @param dest_func The destructor function for the key.
     * @param arg       Argument to be passed to destructor (optional).
     *
-    * @return 0 is returned upown successful completion.<br>
-    *         -1 is returned if an error occurs.
+    * @return 0 is returned upown successful completion.
+    * @return -1 is returned if an error occurs.
     *
     * @note Use this routine to construct the key destructor function if
     *       it requires arguments.  Otherwise, use the two-argument version
@@ -125,7 +125,7 @@ public:
    }
 
    /**
-    * Allocates a <keyp> that is used to identify data that is specific to
+    * Allocates a key that is used to identify data that is specific to
     * each thread in the process, is global to all threads in the process
     * and is destroyed by the specified destructor function.
     *
@@ -136,8 +136,8 @@ public:
     * @param desctructor Procedure to be called to destroy a data value
     *                    associated with the key when the thread terminates.
     *
-    * @return 0 is returned upown successful completion.<br>
-    *         -1 is returned if an error occurs.
+    * @return 0 is returned upown successful completion.
+    * @return -1 is returned if an error occurs.
     */
    int keycreate(BaseThreadFunctor* destructor)
    {
@@ -152,8 +152,8 @@ public:
     * @post This key is destroyed using the destructor function previously
     *       associated with it, and its resources are freed.
     *
-    * @return 0 is returned upown successful completion.<br>
-    *         -1 is returned if an error occurs.
+    * @return 0 is returned upown successful completion.
+    * @return -1 is returned if an error occurs.
     *
     * @note This is not currently supported with Pthreads Draft 4.
     */
@@ -163,8 +163,7 @@ public:
    }
 
    /**
-    * Binds value to the thread-specific data key, <key>, for the calling
-    * thread.
+    * Binds value to the thread-specific data key for the calling thread.
     *
     * @pre The specified key must have been properly created using the
     *      keycreate() member function.
@@ -174,8 +173,8 @@ public:
     * @param value Address containing data to be associated with the
     *              specified key for the current thread.
     *
-    * @return 0 is returned upown successful completion.<br>
-    *         -1 is returned if an error occurs.
+    * @return 0 is returned upown successful completion.
+    * @return -1 is returned if an error occurs.
     */
    int setspecific(void* value)
    {
@@ -183,8 +182,8 @@ public:
    }
 
    /**
-    * Stores the current value bound to <key> for the calling thread into
-    * the location pointed to by <valuep>.
+    * Stores the current value bound to key for the calling thread into
+    * the location pointed to by valuep.
     *
     * @pre The specified key must have been properly created using the
     *      keycreate() member function.
@@ -194,8 +193,8 @@ public:
     * @param valuep Address of the current data value associated with the
     *               key.
     *
-    * @return 0 is returned upown successful completion.<br>
-    *         -1 is returned if an error occurs.
+    * @return 0 is returned upown successful completion.
+    * @return -1 is returned if an error occurs.
     */
    int getspecific(void** valuep)
    {

@@ -93,12 +93,11 @@ class VPR_CLASS_API SignalSet
 {
 public:
    /**
-    * Initialize <mSigSet> with <sigset>.  If <sigset> == 0 then fill
-    * the set.
+    * Initializes mSigSet with sigset.  If sigset == 0 then fill the set.
     *
     * @param sigset The signal set used for initializing this object.
     */
-   SignalSet (const sigset_t* const sigset)
+   SignalSet(const sigset_t* const sigset)
    {
       if ( sigset == 0 )
       {
@@ -111,13 +110,12 @@ public:
    }
 
    /**
-    * If <fill> == false then initialize the <mSigSet> to be empty, else
-    * full.
+    * If fill == false then initialize the mSigSet to be empty, else full.
     *
     * @param fill A boolean flag stating whether to fill this object's
-    *        signal set or make it empty.
+    *             signal set or make it empty.
     */
-   SignalSet (bool fill = false)
+   SignalSet(bool fill = false)
    {
       if ( fill )
       {
@@ -135,7 +133,7 @@ public:
     * @return vpr::ReturnStatus::Succeed is returned if this object's signal
     *         set is emptied.  vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus emptySet(void);
+   vpr::ReturnStatus emptySet();
 
    /**
     * Creates a set that includes all signals defined by the system.
@@ -143,10 +141,10 @@ public:
     * @return vpr::ReturnStatus::Succeed is returned if this object's signal
     *         set is filled.  vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus fillSet(void);
+   vpr::ReturnStatus fillSet();
 
    /**
-    * Adds the individual signal specified by <sig_num> to the set.
+    * Adds the individual signal specified by sig_num to the set.
     *
     * @param sig_num The signal number to be added.
     *
@@ -157,7 +155,7 @@ public:
    vpr::ReturnStatus addSignal(const int sig_num);
 
    /**
-    * Deletes the individual signal specified by <sig_num> from the set.
+    * Deletes the individual signal specified by sig_num from the set.
     *
     * @param sig_num The signal number to be removed.
     *
@@ -168,11 +166,11 @@ public:
    vpr::ReturnStatus removeSignal(const int sig_num);
 
    /**
-    * Checks whether the signal specified by <sig_num> is in the set.
+    * Checks whether the signal specified by sig_num is in the set.
     *
     * @param sig_num The signal number being checked.
     *
-    * @return true is returned if <sig_num> is in this object's set.  false
+    * @return true is returned if sig_num is in this object's set.  false
     *         is returned otherwise.
     */
    bool isMember(const int sig_num) const;
@@ -215,8 +213,8 @@ public:
     * @param flags   Options defining the behavior for handling the signal.
     *                This is an optional parameter and defaults to 0.
     */
-   SignalAction (vpr::SignalHandler_t handler,
-                 const vpr::SignalSet* sig_set = NULL, const int flags = 0);
+   SignalAction(vpr::SignalHandler_t handler,
+                const vpr::SignalSet* sig_set = NULL, const int flags = 0);
 
    static const vpr::SignalHandler_t DefaultAction; /**< Use default action */
    static const vpr::SignalHandler_t IgnoreAction;  /**< Ignore the signal */
@@ -225,7 +223,7 @@ private:
    /**
     * Default constructor.  We do not want this to be called.
     */
-   SignalAction (void)
+   SignalAction()
    {
       /* Do nothing. */ ;
    }
@@ -242,14 +240,15 @@ private:
     *                interested in.  If the mask is NULL, no mask is applied.
     * @param flags   Options defining the behavior for handling the signal.
     */
-   void init (vpr::SignalHandler_t handler, const sigset_t* mask,
-              const int flags)
+   void init(vpr::SignalHandler_t handler, const sigset_t* mask,
+             const int flags)
    {
       memset(&mSA, '\0', sizeof(mSA));
       mSA.sa_handler = handler;
       mSA.sa_flags   = flags;
 
-      if ( mask != NULL ) {
+      if ( mask != NULL )
+      {
          memcpy(&mSA.sa_mask, mask, sizeof(sigset_t));
       }
    }
@@ -271,7 +270,7 @@ public:
     * mask is applied, and no option flags are set.  To get a mask and/or
     * option flags, use a vpr::SignalAction object.
     *
-    * @post If <sig_num> is a valid signal number, <handler> is registered
+    * @post If sig_num is a valid signal number, handler is registered
     *       as a handler for that signal.
     *
     * @param sig_num The signal to be handled.
@@ -293,8 +292,8 @@ public:
     * mask is applied, and no option flags are set.  To get a mask and/or
     * option flags, use a vpr::SignalAction object.
     *
-    * @pre  <action> is a reference to a valid vpr::SignalAction object.
-    * @post If <sig_num> is a valid signal number, <action> is registered
+    * @pre  action is a reference to a valid vpr::SignalAction object.
+    * @post If sig_num is a valid signal number, action is registered
     *       as the action to be taken when that signal is raised.
     *
     * @param sig_num The signal to be handled.
@@ -317,7 +316,7 @@ protected:
     * Default constructor.  It is protected because there is no need for this
     * class to be instantiated at this point.
     */
-   SigHandler (void)
+   SigHandler()
    {
       /* Do nothing. */ ;
    }
@@ -325,14 +324,14 @@ protected:
    /**
     * Wrapper around the system call sigaction(2).
     *
-    * @pre  <action> points to a valid sigaction struct or is NULL.
-    * @post If <sig_num> is a valid signal number, <action> is registered as
+    * @pre  action points to a valid sigaction struct or is NULL.
+    * @post If sig_num is a valid signal number, action is registered as
     *       the action to be taken when that signal is raised.
     *
     * @param sig_num The signal to be handled.
     * @param action  A vpr::SignalAction object encapsulating all the
     *                information needed to handle the named signal.  If
-    *                <action> is NULL, the signal will be ignored.
+    *                action is NULL, the signal will be ignored.
     * @param old_act Storage for the previous action registered for the given
     *                signal number.  If it is NULL, the previous action is
     *                discarded.
