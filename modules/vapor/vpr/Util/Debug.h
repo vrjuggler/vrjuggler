@@ -423,30 +423,6 @@ namespace vpr
 
 } // End of vpr namespace
 
-
-namespace vpr
-{
-   
-/*
-   struct DebugCatRegistrator
-   {
-      DebugCatRegistrator(vpr::GUID catGuid, std::string catName, std::string catPrefix)
-      {
-         vpr::Debug::instance()->addCategory(catGuid, catName, catPrefix);
-      }
-   };
-*/
-} // namespace
-
-/** Helper macro for registering category
-* Defines a (file) unique variable that create a registrator in the file prive namespace
-* @param NAME  String name of the category (as used in the environment variable).  Note: This is not in string ("str") form
-* @param CAT   GUID id of the category
-* Use this in the .cpp files to register the actually token with vpr::Debug.
-* @see Debug.cpp
-*/
-//#define vprREGISTER_DBG_CATEGORY(CAT, NAME, PREFIX ) vpr::DebugCatRegistrator NAME ## _registrator (CAT, #NAME, PREFIX);
-
 // Debug output categories
 // GUID, Name, Prefix
 const vpr::DebugCategory vprDBG_ALL(vpr::GUID(std::string("660b4b06-1f5b-4e4b-abb8-d44229ce1319")), "DBG_ALL", "DBG:");
