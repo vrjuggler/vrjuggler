@@ -35,7 +35,7 @@
 #include <string.h>
 
  // --- VR Juggler Stuff --- //
-#include <Kernel/vjKernel.h>
+#include <vrj/Kernel/Kernel.h>
 #include <simplePfApp.h>
 
 void usage(char** argv)
