@@ -40,7 +40,7 @@
 include @topdir@/make.defs.mk
 
 # Prefix for recursive stuff.
-DIRPRFX		= src/md/
+DIRPRFX		= md/
 
 SUBDIR		= NSPR	\
                   POSIX	\
