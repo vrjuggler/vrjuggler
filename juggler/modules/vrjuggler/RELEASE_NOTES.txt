@@ -61,6 +61,14 @@ Released: December 24, 2004
 
              http://sourceforge.net/mailarchive/message.php?msg_id=9550350
 
+         * The Sonix class sonix is now in the snx namespace.  To update,
+           change calls to snx::sonix or add 'using namespace snx;' to your
+           code.
+
+         * VPR_PROFILE() has been renamed to VPR_PROFILE_GUARD().
+           VPR_PROFILE_HISTORY() has been renamed to
+           VPR_PROFILE_GUARD_HISTORY().
+
 Version: 2.0 Alpha 4 (1.1.150-0)
 Released: April 28, 2004
 
