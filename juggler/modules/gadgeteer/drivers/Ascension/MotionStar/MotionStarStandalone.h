@@ -663,7 +663,7 @@ private:
         return (m_xmtr_pos_scale *
                    (float) toShort(response.buffer[2 + offset],
                                    response.buffer[3 + offset]) /
-                   32767.0);
+                   m_xmtr_divisor);
     }
 
     // ------------------------------------------------------------------------
@@ -720,10 +720,10 @@ private:
     // ------------------------------------------------------------------------
     inline float
     getZRot (const int offset) {
-      return (m_xmtr_rot_scale *
-               (float) toShort(response.buffer[8 + offset],
-                               response.buffer[9 + offset]) /
-                m_xmtr_divisor);
+        return (m_xmtr_rot_scale *
+                   (float) toShort(response.buffer[8 + offset],
+                                   response.buffer[9 + offset]) /
+                    m_xmtr_divisor);
     }
 
     // ------------------------------------------------------------------------
