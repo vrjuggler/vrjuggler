@@ -364,8 +364,8 @@ AC_DEFUN(VJ_APP_LINKER,
             APP_LINKALL_ON='-all'
             APP_LINKALL_OFF=''
 
-            APP_BASIC_LIBS_BEGIN="-B static -L\$($5)/lib$LIBBITSUF"
-            APP_BASIC_LIBS_END='-B dynamic'
+            APP_BASIC_LIBS_BEGIN="-B static \$(LINKALL_ON) -L\$($5)/lib$LIBBITSUF"
+            APP_BASIC_LIBS_END='$(LINKALL_OFF) -B dynamic'
             APP_BASIC_LIBS_BEGIN_INST="-B dynamic -L\$($5)/lib$LIBBITSUF"
             APP_BASIC_LIBS_END_INST="-Wl,-rpath,\$($5)/lib$LIBBITSUF"
 
@@ -375,8 +375,8 @@ AC_DEFUN(VJ_APP_LINKER,
             APP_LINKALL_ON='-Wl,--whole-archive'
             APP_LINKALL_OFF='-Wl,--no-whole-archive'
 
-            APP_BASIC_LIBS_BEGIN="-Wl,-Bstatic -L\$($5)/lib$LIBBITSUF"
-            APP_BASIC_LIBS_END="-Wl,-Bdynamic"
+            APP_BASIC_LIBS_BEGIN="-Wl,-Bstatic \$(LINKALL_ON) -L\$($5)/lib$LIBBITSUF"
+            APP_BASIC_LIBS_END="\$(LINKALL_OFF) -Wl,-Bdynamic"
             APP_BASIC_LIBS_BEGIN_INST="-Wl,-Bdynamic -L\$($5)/lib$LIBBITSUF"
             APP_BASIC_LIBS_END_INST="-Wl,-rpath,\$($5)/lib$LIBBITSUF"
 
