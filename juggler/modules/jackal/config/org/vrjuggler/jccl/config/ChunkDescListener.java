@@ -43,7 +43,7 @@ public interface ChunkDescListener
    public void nameChanged(ChunkDescEvent evt);
 
    public void categoryAdded(ChunkDescEvent evt);
-//   public void categoryRemoved(ChunkDescEvent evt);
+   public void categoryRemoved(ChunkDescEvent evt);
 
    public void propertyDescChanged(ChunkDescEvent evt);
    public void propertyDescAdded(ChunkDescEvent evt);
