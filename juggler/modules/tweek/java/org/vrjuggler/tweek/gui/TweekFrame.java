@@ -34,7 +34,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-package org.vrjuggler.tweek;
+package org.vrjuggler.tweek.gui;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -46,6 +46,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultMutableTreeNode;
+import org.vrjuggler.tweek.TweekCore;
 import org.vrjuggler.tweek.beans.*;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 import org.vrjuggler.tweek.net.CommunicationEvent;
@@ -321,8 +322,8 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       mStatusMsgButton.setMinimumSize(new Dimension(24, 24));
       mStatusMsgButton.setToolTipText("Expand or collapse the message panel");
 
-      String bulb_on_icon_name  = "org/vrjuggler/tweek/bulb-on-small.gif";
-      String bulb_off_icon_name = "org/vrjuggler/tweek/bulb-off-small.gif";
+      String bulb_on_icon_name  = "org/vrjuggler/tweek/gui/bulb-on-small.gif";
+      String bulb_off_icon_name = "org/vrjuggler/tweek/gui/bulb-off-small.gif";
 
       try
       {
