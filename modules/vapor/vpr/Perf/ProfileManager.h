@@ -76,34 +76,79 @@ namespace vpr
       ///Convenience typedef; for use by the Performance Monitor Plugin
       typedef std::map<std::string, vpr::Interval> ProfileSampleResult;
 
+      /** @name Profiling methods. */
+      //@{
       /**
       * Steps one level deeper into the tree, if a child already exists with
       * the specified name then it accumulates the profiling;
       * otherwise a new child node is added to the profile tree.
       *
-      * @param name - name of this profiling record
+      * @param name      Name of this profiling record
+      * @param queueSize Size of the queue to use
       * @note
       *   The string used is assumed to be a static string; pointer compares are used throughout
       *   the profiling code for efficiency.
       */
-      static void startProfile( const char * name );
-
-      /** Starts profile for given name.
-       * Same as above but creates the ProfileNode with the given queue size.
-       */
-      static void startProfile( const char * profileName, const unsigned int queueSize);
+      static void startProfile( const char * profileName, const unsigned int queueSize = 0);
 
       /**
        * Stop timing on most resent startProfile and record the results.
        */
       static void stopProfile();
+      //@}
 
+      /** Return the root node of the manager. */
+      static ProfileNode* getRootNode()
+      {
+         return &mRoot;
+      }
+
+      /** Print the profile tree rooted at the root node. */
+      static void printTree()
+      {
+         mTreeLock.acquire();
+         mRoot.printTree();
+         mTreeLock.release();
+      }
+
+      // ------------------------
+      /// @nameIterator handling.
+      // ------------------------
+      //@{
+      /** Returns a new Iterator that is set to the root. */
+      static ProfileIterator begin()
+      {
+         return ProfileIterator(&mRoot);
+      }
+
+      /** Returns a new Iterator that is set to end (NULL). */
+      static ProfileIterator end()
+      {
+         return ProfileIterator(NULL);
+      }
+
+      /** Release the given iterator. */
+      static void releaseIterator( ProfileIterator* iterator )
+      {
+         delete iterator;
+      }
+      //@}
+
+      // ----------------------
+      /// @name Global metrics.
+      // ----------------------
+      //@{
       /**
        * Reset the contents of the profiling system.
        *
        * @post Everything is reset except tree structure. Timing data is reset.
        */
       static void reset();
+
+      /**
+       * @return Returns the elapsed time since last reset
+       */
+      static float getTimeSinceReset();
 
       /**
        * Increment the frame counter.
@@ -119,46 +164,13 @@ namespace vpr
       {
          return mFrameCounter;
       }
+      //@}
 
-      /**
-       * @return Returns the elapsed time since last reset
-       */
-      static float getTimeSinceReset();
-
-      /**
-       * @return Returns a new Iterator that is set to the root.
-       */
-      static ProfileIterator begin()
-      {
-         return ProfileIterator(&mRoot);
-      }
-
-      /**
-       * @return Returns a new Iterator that is set to NULL.
-       */
-      static ProfileIterator end()
-      {
-         return ProfileIterator(NULL);
-      }
-
-      /**
-       * @return Returns the Root Node.
-       */
-      static ProfileNode* getRootNode()
-      {
-         return &mRoot;
-      }
-
-      /**
-       * @return Profile Tree has been printed out using vpr::DBG.
-       */
-      static void printTree()
-      {
-         mTreeLock.acquire();
-         mRoot.printTree();
-         mTreeLock.release();
-      }
-
+   public:
+      // ---------------------------------------------
+      /// @name Data sampling and aggregation methods.
+      // ---------------------------------------------
+      //@{
       /** Get vector of names in the profile.
        * @return vector of the names in the Profile.
        */
@@ -170,7 +182,6 @@ namespace vpr
          mTreeLock.release();
          return names_list;
       }
-
 
       /**
        * @return Returns a ProfileSampleResult that has the names in the profile
@@ -203,14 +214,7 @@ namespace vpr
               return node->getLastSample().msecf();
            }
        }
-
-      /**
-       * @post Iterator has been deleted
-       */
-      static void releaseIterator( ProfileIterator* iterator )
-      {
-         delete iterator;
-      }
+       //@}
 
    private:
       static   vpr::Mutex           mTreeLock;
