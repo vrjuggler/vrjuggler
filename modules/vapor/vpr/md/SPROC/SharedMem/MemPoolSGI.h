@@ -42,45 +42,33 @@
 #ifndef _VPR_MemPoolSGI_h_
 #define _VPR_MemPoolSGI_h_
 
-//----------------------------------------------
-// vpr::MemPoolSGI
-//
-// Purpose:
-//    Shared Memory pool on the SGI systems
-//    Used by vprMemory (Base class) to control allocation
-//    and deallocation from a "memory pool"
-//
-// Use:
-//    Clients should create memory pools as needed
-//    Then when objects are created, they can pass
-//    a pool as a parameter to the new (if the object
-//    is a derived from vprMemory)
-//
-// NOTE:
-//    The static function 'init' MUST be called before
-//    any forks or other process splitting take place.
-//    This is because it sets static data that must
-//    be shared across processes.
-//
-// Author:
-//  Allen Bierbaum
-//
-// Date: 1-9-97
-//-----------------------------------------------
-
 #include <vpr/vprConfig.h>
-#include <stdio.h>
+#include <iostream>
 #include <unistd.h>
 #include <ulocks.h>
 
 
-// - Call usinit in new processes created.  Try to overcome limitation on number of users.
-// otherwise wet to a "big" number.
+// - Call usinit in new processes created.  Try to overcome limitation on
+//   number of users.  Otherwise set to a "big" number.
 
 
 namespace vpr
 {
 
+/**
+ * Shared Memory pool on the SGI systems, used primarily for semaphores and
+ * mutexes.  Used to control allocation and deallocation from a "memory pool."
+ *
+ * Clients should create memory pools as needed.  Then, when objects are
+ * created, they can pass a pool as a parameter to the new (if the object is a
+ * derived from vprMemory).
+ *
+ * @note The static function 'init' MUST be called before any forks or other
+ *       process splitting take place.  This is because it sets static data
+ *       that must be shared across processes.
+ *
+ * @date 1-9-97
+ */
 class MemPoolSGI : public MemPool
 {
 public:
@@ -125,10 +113,12 @@ public:      // Non-virtual functions
    }
 
 public:
-   // Function must be called before any vpr::MemPools are created.
-   // Automatically called by the first new with default values if not called
-   // previously.
-   // Function to initialize any STATIC data structures.
+   /**
+    * Function must be called before any vpr::MemPools are created.
+    * Automatically called by the first new with default values if not called
+    * previously.
+    * Function to initialize any STATIC data structures.
+    */
    static void init(size_t initialSize = 32768, int numProcs = 64,
                     char* staticTempName = "/var/tmp/memPoolsArenaXXXXXX");
 
