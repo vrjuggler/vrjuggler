@@ -314,7 +314,7 @@
         kernel loop. This is accomplished by requiring the ClusterManager to
         receive all data packets. Each plugin is only responsible for sending
         packets to other cluster nodes. Once all plugins have sent their data,
-        the ClusterManager sends a END_BLOCK packet telling the remote nodes
+        the ClusterManager sends an END_BLOCK packet telling the remote nodes
         that it is done sending information and then reads data from the
         network until it receives an END_BLOCK from all other nodes. The
         syncronization occurs because each node must indicate to all other
@@ -725,7 +725,7 @@
 
       <note>
         <para>As new configuration information is added to the system it is
-        delivered to the correct layer or plug in by the ClusterManager. In
+        delivered to the correct layer or plugin by the ClusterManager. In
         order to accomplish this we require that all cluster plugins and the
         ClusterNetwork implement the ConfigChunkHandler abstract base class.</para>
       </note>
