@@ -57,9 +57,32 @@
 #define XML_OR_LEVEL vprDBG_HEX_LVL
 
 
+namespace 
+{
+/** Helper to read the data from the current string */
+ template<class T>
+ vpr::ReturnStatus readValueStringRep(T& val, std::stringstream* inStream)
+ {
+    vprASSERT(inStream != NULL);
+
+    // Just to be safe do this again for the heck of it. :)
+    //in_stream->exceptions( std::ios::eofbit | std::ios::failbit | std::ios::badbit );
+    vprASSERT(!inStream->bad() && "Bad stream, BAAADDD stream.");
+    vprASSERT(!inStream->fail() && "Stream failed.");
+    vprASSERT(!inStream->eof() && "Stream EOF'd.");
+    vprASSERT(inStream->good());
+
+    //stream_content = (*in_stream).str();
+
+    (*inStream) >> val;
+
+    return vpr::ReturnStatus::Succeed;
+ }
+
+}
+
 namespace vpr
 {
-
 
 XMLObjectReader::XMLObjectReader(std::vector<vpr::Uint8> data)
    : mCurSource(CdataSource)
@@ -110,6 +133,24 @@ void XMLObjectReader::NodeState::debugDump(int debug_level)
                                      << "  distance: nextChild-->endChild:" << std::distance(nextChild_i,endChild_i) << std::endl << vprDEBUG_FLUSH;
 }
 
+
+/** Get the current string source we are reading from.
+*/
+std::stringstream* XMLObjectReader::getCurSource()
+{
+   std::stringstream* in_stream(NULL);
+   
+   if(AttribSource == mCurSource)
+   { 
+      in_stream = &mAttribSource;       
+   }
+   else
+   { 
+      in_stream = &(mCurNodeStack.back().cdataSource);      
+   }
+   
+   return in_stream;
+}
 
 /** Initialize the members based on a serialized version of something in the data buffer */
 void XMLObjectReader::initCppDomTree(std::vector<vpr::Uint8> data)
@@ -232,42 +273,42 @@ vpr::Uint8 XMLObjectReader::readUint8()
 {
    // Read a uint16 so that it does not treat it as a single char
    vpr::Uint16 temp_data;
-   readValueStringRep(temp_data);
+   readValueStringRep(temp_data, getCurSource());
    return vpr::Uint8(temp_data);
 }
 
 vpr::Uint16 XMLObjectReader::readUint16()
 {
    vpr::Uint16 val;
-   readValueStringRep(val);
+   readValueStringRep(val, getCurSource());
    return val;
 }
 
 vpr::Uint32 XMLObjectReader::readUint32()
 {
    vpr::Uint32 val;
-   readValueStringRep(val);
+   readValueStringRep(val, getCurSource());
    return val;
 }
 
 vpr::Uint64 XMLObjectReader::readUint64()
 {
    vpr::Uint64 val;
-   readValueStringRep(val);
+   readValueStringRep(val, getCurSource());
    return val;
 }
 
 float XMLObjectReader::readFloat()
 {
    float val;
-   readValueStringRep(val);
+   readValueStringRep(val, getCurSource());
    return val;
 }
 
 double XMLObjectReader::readDouble()
 {
    double val;
-   readValueStringRep(val);
+   readValueStringRep(val, getCurSource());
    return val;
 }
 
@@ -309,7 +350,7 @@ std::string XMLObjectReader::readString()
 bool XMLObjectReader::readBool()
 {
    bool val;
-   readValueStringRep(val);
+   readValueStringRep(val, getCurSource());
    return val;
 }
 

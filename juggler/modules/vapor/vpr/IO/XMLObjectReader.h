@@ -120,38 +120,10 @@ protected:
      CdataSource /**< We are currently targetting cdata */
     };
 
-    /** Helper to read the data from the current string */
-    template<class T>
-    vpr::ReturnStatus readValueStringRep(T& val)
-    {
-       std::stringstream* in_stream(NULL);
-       //std::string stream_content;
-
-       if(AttribSource == mCurSource)
-       { 
-          in_stream = &mAttribSource; 
-          //stream_content = mAttribSource.str();
-       }
-       else
-       { 
-          in_stream = &(mCurNodeStack.back().cdataSource);
-          //stream_content = mCurNodeStack.back().cdataSource.str();
-       }
-
-       // Just to be safe do this again for the heck of it. :)
-       //in_stream->exceptions( std::ios::eofbit | std::ios::failbit | std::ios::badbit );
-       vprASSERT(!in_stream->bad() && "Bad stream, BAAADDD stream.");
-       vprASSERT(!in_stream->fail() && "Stream failed.");
-       vprASSERT(!in_stream->eof() && "Stream EOF'd.");
-       vprASSERT(in_stream->good());
-
-       //stream_content = (*in_stream).str();
-
-       (*in_stream) >> val;
-
-       return vpr::ReturnStatus::Succeed;
-    }
-
+    /** Get the current string source we are reading from.
+    */
+    std::stringstream* getCurSource();
+        
     /** Initialize the members based on a serialized version of something in the data buffer */
     void initCppDomTree(std::vector<vpr::Uint8> data);
 
