@@ -45,13 +45,6 @@
 
 namespace jccl 
 {
-   class ConfigManager;
-}
-
-extern "C" JCCL_PLUGIN_API(jccl::RemoteReconfig*) initPlugin(jccl::ConfigManager* configMgr);
-
-namespace jccl 
-{
 
 class RemoteReconfigSubjectImpl;
 

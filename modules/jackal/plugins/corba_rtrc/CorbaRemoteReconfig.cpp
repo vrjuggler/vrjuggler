@@ -43,9 +43,14 @@
 #include <corba_rtrc/CorbaRemoteReconfig.h>
 
 
-jccl::RemoteReconfig* initPlugin(jccl::ConfigManager* configMgr)
+extern "C"
+{
+
+JCCL_PLUGIN_EXPORT(jccl::RemoteReconfig*) initPlugin(jccl::ConfigManager* configMgr)
 {
    return new jccl::CorbaRemoteReconfig(configMgr);
+}
+
 }
 
 namespace jccl
