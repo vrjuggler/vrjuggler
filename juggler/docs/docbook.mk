@@ -41,7 +41,7 @@ XSL_DIR=	$(DOCBOOK_ROOT)/docbook-xsl-1.49
 
 txt: $(TXT_FILES)
 
-html: $(HTML_FILES)
+html: images $(HTML_FILES)
 
 chunk-html:
 	for file in $(XML_FILES) ; do \
@@ -53,7 +53,14 @@ chunk-html:
           cd $$cur_dir ; \
 	done
 
-pdf: $(PDF_FILES)
+pdf: images $(PDF_FILES)
+
+# The method for specifying a path to the images that come with the DocBook
+# XSL stylesheets sucks.  It requires a path relative to the current directory,
+# and we do not necessarily know how to get to $(XSL_DIR) relative to the
+# current directory.  This hack with a symlink works around that problem.
+images:
+	ln -s $(XSL_DIR)/images ./
 
 # Basic XSL conversions -------------------------------------------------------
 
