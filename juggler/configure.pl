@@ -4,7 +4,7 @@ require 5.004;
 
 use strict 'vars';
 use vars qw($base_dir $module $CONFIG_ARGS $PATH_ARGS $HOST_ARGS $FEATURE_ARGS
-            $CUSTOM_ARGS $LAST_ARG_GROUP);
+            $CUSTOM_ARGS $LAST_ARG_GROUP $DEFAULT_MODULE);
 use vars qw(%MODULES);
 
 use Cwd qw(chdir getcwd);
@@ -20,6 +20,9 @@ sub generateMakefile();
 sub printHelp();
 sub getConfigureHelp($$);
 sub parseOutput($$);
+
+$DEFAULT_MODULE = '';
+%MODULES        = ();
 
 my $help        = 0;
 my $cfg         = "juggler.cfg";
@@ -56,6 +59,10 @@ printHelp() && exit(0) if $help;
 if ( $module )
 {
    configureModule("$module");
+}
+elsif ( $DEFAULT_MODULE && defined($MODULES{"$DEFAULT_MODULE"}) )
+{
+   configureModule("$DEFAULT_MODULE");
 }
 else
 {
@@ -118,6 +125,11 @@ sub parseConfigFile ($)
                $deps ='';
             }
          }
+      }
+      elsif ( $cfg_file =~ /^Default:\s+(\S+)\s*$/m )
+      {
+         $DEFAULT_MODULE = "$1";
+         $cfg_file       = $';
       }
 
       $cfg_file =~ s/^\s*//;
@@ -236,6 +248,10 @@ sub printHelp ()
    if ( $module )
    {
       getConfigureHelp("$module", \@help_output);
+   }
+   elsif ( $DEFAULT_MODULE && defined($MODULES{"$DEFAULT_MODULE"}) )
+   {
+      getConfigureHelp("$DEFAULT_MODULE", \@help_output);
    }
    else
    {
