@@ -50,11 +50,10 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/vpr/Util/uuid
 srcdir		= @srcdir@/../../../../../external/leach-uuid/uuid
 top_srcdir	= @top_srcdir@
 EXTRA_DEFS	+= @UUID_DEFS@
-INSTALL		= @INSTALL@
+INSTALL_FILES	=
 SUBOBJDIR	= $(VPR_LIBRARY)
 
 SRCS		= uuid.c	\
