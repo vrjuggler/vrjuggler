@@ -77,44 +77,61 @@ public:
      * used when the function is invoked through the overloaded operator().
      */
     virtual void setArg(void*) = 0;
+
+    /**
+     * Function to see if we have avlid functor
+     */
+    virtual bool isValid() = 0;
 };
 
 /**
  * Member functor class.  This class allows non-static class member functions
  * to be used as functors.
  */
-template<class T>
+template<class OBJ_TYPE>
 class VPR_CLASS_API ThreadMemberFunctor : public BaseThreadFunctor
 {
 public:
-    typedef void (T::* FunPtr)(void*);
+    typedef void (OBJ_TYPE::* FunPtr)(void*);
 
-    ThreadMemberFunctor(T* theObject, FunPtr func, void* arg = NULL)
+    ThreadMemberFunctor(OBJ_TYPE* theObject, FunPtr func, void* arg = NULL)
     {
-    	object = theObject;
-    	function = func;
-    	argument = arg;
+    	mObject = theObject;
+    	mFunction = func;
+    	mArgument = arg;
     }
 
     void
     operator() (void* arg) {
-        (object->*function)(arg);
+        (mObject->*mFunction)(arg);
     }
 
     void
     operator() () {
-        (object->*function)(argument);
+        (mObject->*mFunction)(mArgument);
     }
 
     void
     setArg (void* arg) {
-        argument = arg;
+        mArgument = arg;
+    }
+
+    bool isValid()
+    {
+       if(NULL == mObject)
+          return false;
+       /*
+       else if(NULL == mFunction)
+          return false;
+          */
+       else
+          return true;
     }
 
 private:
-    T*	    object;
-    FunPtr  function;
-    void*   argument;
+    OBJ_TYPE*  mObject;
+    FunPtr     mFunction;
+    void*      mArgument;
 };
 
 
@@ -135,25 +152,30 @@ public:
      *          argument is optional and defaults to NULL.
      */
     ThreadNonMemberFunctor (NonMemFunPtr f, void* a = NULL)
-       : func(f), argument(a)
+       : mFunc(f), mArgument(a)
     {;}
 
     virtual void operator() (void* arg) {
-        (*func)(arg);
+        (*mFunc)(arg);
     }
 
     virtual void operator() () {
-        (*func)(argument);
+        (*mFunc)(mArgument);
     }
 
     void setArg (void* arg) {
-        argument = arg;
+        mArgument = arg;
+    }
+
+    bool isValid()
+    {
+       return ( mFunc != NULL );
     }
 
     // private:
     // = Arguments to thread startup.
-    NonMemFunPtr func;  /**< Thread startup function (C++ linkage). */
-    void* argument;     /**< Argument to thread startup function. */
+    NonMemFunPtr mFunc;  /**< Thread startup function (C++ linkage). */
+    void* mArgument;     /**< Argument to thread startup function. */
 };
 
 //---------------------------------------------

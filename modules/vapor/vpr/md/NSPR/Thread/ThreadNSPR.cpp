@@ -88,7 +88,8 @@ ThreadNSPR::ThreadNSPR (BaseThreadFunctor* functorPtr,
                         VPRThreadPriority priority, VPRThreadScope scope,
                         VPRThreadState state, PRUint32 stack_size)
 {
-    ThreadManager* vpr_tm_inst;
+   vprASSERT(functorPtr->isValid() );
+   ThreadManager* vpr_tm_inst;
 
     vpr_tm_inst = ThreadManager::instance();
 
@@ -137,6 +138,8 @@ ThreadNSPR::spawn (BaseThreadFunctor* functor_ptr,
     nspr_state = vprThreadStateToNSPR(state);
 
     retval = 0;
+
+    vprASSERT(functor_ptr->isValid());
 
     // Finally create the thread.
     mThread = PR_CreateThread(PR_USER_THREAD, vprThreadFunctorFunction,
