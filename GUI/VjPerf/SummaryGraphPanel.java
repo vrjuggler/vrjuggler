@@ -73,7 +73,7 @@ public class SummaryGraphPanel extends GenericGraphPanel implements ActionListen
 		maxval = Math.ceil(maxval/10000) * 10000;
 	    if (newmaxval > maxval)
 		maxval = Math.ceil(newmaxval/10000) * 10000;
-
+	    //System.out.println ("repaint called for this panel");
 	    repaint();
 	}
 
@@ -187,6 +187,10 @@ public class SummaryGraphPanel extends GenericGraphPanel implements ActionListen
 
     public SummaryGraphPanel (PerfDataCollector _col, int phase) {
 	init (_col, phase);
+    }
+
+    public void refresh () {
+	summarypanel.refresh();
     }
 
     private void init(PerfDataCollector _col, int phase) {
