@@ -54,6 +54,8 @@
                 ..
                 logger
                 ..
+                perfAddon
+                ..
                 simpleGlove
                 ..
                 texture
