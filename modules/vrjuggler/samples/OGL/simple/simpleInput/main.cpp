@@ -74,7 +74,7 @@ int main(int argc, char* argv[])
    kernel->waitForKernelStop();
 
    // Destroy the application
-   delete simpleInput;
+   delete application;
 
    return 0;
 }
