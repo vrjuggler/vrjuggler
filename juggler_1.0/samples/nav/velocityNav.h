@@ -83,7 +83,7 @@ public:
    bool braking() { return mBraking; }
    bool rotating() { return mRotating;}
    bool stopping() { return mStopping;}
-   bool reseting() { return mReseting;}
+   bool resetting() { return mResetting;}
 
    //: damping [0...1], where 0 stops immediately, .99 brakes very slowly
    //  default is no damping (1.0f)
@@ -131,7 +131,7 @@ private:
    bool  mAcceleratingForward;
    bool  mRotating;
    bool  mStopping;
-   bool  mReseting;
+   bool  mResetting;
 
    StopWatch   stopWatch;
    navMode     mMode;
@@ -172,7 +172,7 @@ velocityNav::velocityNav() :
    setRotationActionCombo(rotate_combo);
    setResetActionCombo(reset_combo);
 
-   mBraking = mAcceleratingForward = mRotating = mStopping = mReseting = false;
+   mBraking = mAcceleratingForward = mRotating = mStopping = mResetting = false;
 }
 
 
@@ -204,7 +204,7 @@ void velocityNav::updateInteraction()
    mAcceleratingForward = checkForAction( mActionButtons, mAccelForwardCombo );
    mBraking = checkForAction( mActionButtons, mBrakeCombo );
    mStopping = checkForAction( mActionButtons, mStopCombo );
-   mReseting = checkForAction( mActionButtons, mResetCombo );
+   mResetting = checkForAction( mActionButtons, mResetCombo );
    mRotating = checkForAction( mActionButtons, mRotateCombo );
 
    // Braking
@@ -224,8 +224,8 @@ void velocityNav::updateInteraction()
    if(mAcceleratingForward)
    { accelerate(vjVec3(0, 0, -mAcceleration)); }
 
-   // Reseting
-   if(mReseting)
+   // Resetting
+   if(mResetting)
       navigator::reset();
 
    // Rotating
@@ -241,7 +241,7 @@ void velocityNav::updateInteraction()
       vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Braking") << endl << vjDEBUG_FLUSH;
    if(mStopping)
       vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Stopping") << endl << vjDEBUG_FLUSH;
-   if(mReseting)
+   if(mResetting)
       vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Reseting") << endl << vjDEBUG_FLUSH;
    if(mRotating)
        vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Rotating") << endl << vjDEBUG_FLUSH;
