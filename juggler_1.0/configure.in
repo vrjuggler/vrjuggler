@@ -89,48 +89,57 @@ ABI='32'
 LIBBITSUF=''
 
 dnl # Based on the value of $abi_type, set $ABI for later use and the Makefile
-dnl # substitution variables $LIBBITSUF and $ABI.
-if test "x${_abi_type}" = "x64_M3" ; then
-    ABI='64'
-    ISA='mips3'
-    LIBBITSUF='64'
-    _EXTRA_FLAGS='-64 -mips3'
-elif test "x${_abi_type}" = "x64_M4" ; then
-    ABI='64'
-    ISA='mips4'
-    LIBBITSUF='64'
-    _EXTRA_FLAGS='-64 -mips4'
-elif test "x${_abi_type}" = "xN32_M3" ; then
-    ABI='N32'
-    ISA='mips3'
-    LIBBITSUF='32'
-    _EXTRA_FLAGS='-n32 -mips3'
-elif test "x${_abi_type}" = "xN32_M4" ; then
-    ABI='N32'
-    ISA='mips4'
-    LIBBITSUF='32'
-    _EXTRA_FLAGS='-n32 -mips4'
-elif test "x${_abi_type}" = "xO32" ; then
-    ABI='O32'
-    ISA='mips2'
-    LIBBITSUF=''
-    _EXTRA_FLAGS='-o32 -mips2'
-elif test "x${_abi_type}" = "xHP" ; then
-    ABI=''
-    ISA=''
-    LIBBITSUF=''
-    _EXTRA_FLAGS=''
-elif test "x$abi_type" = "xAOUT_i386" ; then
-    ABI='AOUT'
-    ISA='i386'
-    LIBBITSUF=''
-    _EXTRA_FLAGS='-aout'
-elif test "x$abi_type" = "xELF_i386" ; then
-    ABI='ELF'
-    ISA='i386'
-    LIBBITSUF=''
-    _EXTRA_FLAGS='-elf'
-fi
+dnl # substitution variables $LIBBITSUF and $ISA.
+case "x$_abi_type" in
+    x64_M3)
+        ABI='64'
+        ISA='mips3'
+        LIBBITSUF='64'
+        _EXTRA_FLAGS='-64 -mips3'
+        ;;
+    x64_M4)
+        ABI='64'
+        ISA='mips4'
+        LIBBITSUF='64'
+        _EXTRA_FLAGS='-64 -mips4'
+        ;;
+    xN32_M3)
+        ABI='N32'
+        ISA='mips3'
+        LIBBITSUF='32'
+        _EXTRA_FLAGS='-n32 -mips3'
+        ;;
+    xN32_M4)
+        ABI='N32'
+        ISA='mips4'
+        LIBBITSUF='32'
+        _EXTRA_FLAGS='-n32 -mips4'
+        ;;
+    xO32)
+        ABI='O32'
+        ISA='mips2'
+        LIBBITSUF=''
+        _EXTRA_FLAGS='-o32 -mips2'
+        ;;
+    xHP)
+        ABI=''
+        ISA=''
+        LIBBITSUF=''
+        _EXTRA_FLAGS=''
+        ;;
+    xAOUT_i386)
+        ABI='AOUT'
+        ISA='i386'
+        LIBBITSUF=''
+        _EXTRA_FLAGS='-aout'
+        ;;
+    xELF_i386)
+        ABI='ELF'
+        ISA='i386'
+        LIBBITSUF=''
+        _EXTRA_FLAGS='-elf'
+        ;;
+esac
 
 dnl # -------------------------------------------------------------------------
 dnl # System-dependent stuff.
