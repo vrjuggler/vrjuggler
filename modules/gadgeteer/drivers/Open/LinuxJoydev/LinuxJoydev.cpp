@@ -32,7 +32,7 @@
 
 #include <gadget/Devices/DriverConfig.h>
 #include <vpr/Util/Debug.h>
-#include <jccl/Config/ConfigElement.h>
+#include <jccl/Config/ConfigChunk.h>
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/Util/Debug.h>
 
@@ -72,7 +72,7 @@ LinuxJoydev::~LinuxJoydev()
 {
 }
 
-std::string LinuxJoydev::getElementType()
+std::string LinuxJoydev::getChunkType()
 {
    return "linux_joydev";
 }
@@ -80,7 +80,7 @@ std::string LinuxJoydev::getElementType()
 /**
  *
  */
-bool LinuxJoydev::config(jccl::ConfigElementPtr e)
+bool LinuxJoydev::config(jccl::ConfigChunkPtr e)
 {
    if(! (Input::config(e) && Digital::config(e) && Analog::config(e)))
    {
@@ -104,7 +104,7 @@ bool LinuxJoydev::config(jccl::ConfigElementPtr e)
 /** Begin sampling.
 * Connect to the joystick and prepare to read.
 */
-bool LinuxJoydev::startSampling()
+int LinuxJoydev::startSampling()
 {
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_STATUS_LVL) << "Opening Linux Joystick driver on port: " << mPortName << std::endl << vprDEBUG_FLUSH;
 
@@ -150,6 +150,7 @@ bool LinuxJoydev::startSampling()
    // Allocate initial device data
    // - By default this will clear them out
    mCurAxes.resize(mNumAxes);
+   mCurAxesRanges.resize(mNumAxes, axis_range_t(0.0f, 255.0f));             // Initialize ranges to 0,255
    mCurButtons.resize(mNumButtons + mAxisButtonIndices.size());
 
    // Setup axis as button stuff
@@ -169,7 +170,7 @@ bool LinuxJoydev::startSampling()
 /** Stops sampling.
 * Drop connection to joystick and clear everything.
 */
-bool LinuxJoydev::stopSampling()
+int LinuxJoydev::stopSampling()
 {
    if(mJsFD > 0)
    {
@@ -207,8 +208,30 @@ void LinuxJoydev::updateData()
          //std::cout << "ljs: axis: " << unsigned(cur_event.number) << " val:" << cur_event.value << std::endl;
          unsigned axis_number = unsigned(cur_event.number);
          vprASSERT(axis_number < mCurAxes.size() && "Axis out of range");
-         float max_value(32767.0f);
-         float norm_value = (float(cur_event.value) + max_value)/(2.0f*max_value);
+         vprASSERT(axis_number < mCurAxesRanges.size() && "Axis out of range");
+
+         // Verify range (expand if needed)
+         axis_range_t axis_range = mCurAxesRanges[axis_number];
+         if(cur_event.value < axis_range.first)
+         {
+            axis_range.first = cur_event.value;
+            mCurAxesRanges[axis_number] = axis_range;
+         }
+         if(cur_event.value > axis_range.second)
+         {
+            axis_range.second = cur_event.value;
+            mCurAxesRanges[axis_number] = axis_range;
+         }
+
+         // norm = (val - min)/(min+max)
+         float norm_value = (float(cur_event.value) - axis_range.first)/(axis_range.first+axis_range.second);
+         /*
+         std::cout << "axis: " << axis_number
+                   << "  value: " << cur_event.value
+                   << "  norm:" << norm_value
+                   << "  range: [" << axis_range.first << " - " << axis_range.second << "]" << std::endl;
+                   */
+
          mCurAxes[axis_number] = norm_value;
          mCurAxes[axis_number].setTime();
 
