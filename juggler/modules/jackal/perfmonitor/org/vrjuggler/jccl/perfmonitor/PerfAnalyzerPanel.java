@@ -94,9 +94,6 @@ public class PerfAnalyzerPanel
     protected interface DataPanelElem 
         extends ActionListener {
 
-	public void initialize (JPanel panel, 
-			      GridBagLayout gblayout, GridBagConstraints gbc);
-
         public void destroy ();
 
 	public void update();
@@ -222,62 +219,21 @@ public class PerfAnalyzerPanel
         implements DataPanelElem {
 
 	public LabeledPerfDataCollector col;
-	public JLabel sep_label;
-	public JLabel colname_label;
-	public LabeledPanelButton colsummary_button;
-	public JLabel avgs_label;
-	public java.util.List index_labels;       // list of JLabel
-	public java.util.List avg_labels;         // list of JLabel
-	public java.util.List graph_buttons;      // list of LabeledPanelButton
-	public java.util.List anomalies_buttons;  // list of LabeledPanelButton
-        public JPanel panel;
 	public DefaultMutableTreeNode col_root;
+	protected HashMap node_map; // maps IndexInfos to TreeNodes
 
         public LabeledDataPanelElem (LabeledPerfDataCollector _col, MutableTreeNode global_root) {
             col = _col;
-            index_labels = new ArrayList();
-            avg_labels = new ArrayList();
-            graph_buttons = new ArrayList();
-            anomalies_buttons = new ArrayList();
 	    col_root = new DefaultMutableTreeNode( new PerfTreeNodeInfo (col.getName(), null, col));
 	    tree_model.insertNodeInto (col_root, global_root, global_root.getChildCount());
-	    //tree.expandPath(new TreePath(col_root.getPath()));
-//  	    tree.expandRow(0);
-//  	    tree.expandRow(1);
-//  	    global_root.insert (col_root, global_root.getChildCount());
-//  	    tree_model.nodeChanged (global_root);
+	    node_map = new HashMap();
         }
 
-	public void initialize (JPanel _panel, 
-			      GridBagLayout gblayout, GridBagConstraints gbc) {
-            panel = _panel;
-
-	    col.generateAverages(preskip, postskip);
-	    gbc.gridwidth = gbc.REMAINDER;
-	    sep_label = new JLabel ("----------------------------------------------");
-	    gblayout.setConstraints (sep_label, gbc);
-	    panel.add (sep_label);
-
-	    colname_label = new JLabel (col.getName());
-	    gbc.gridwidth = 1;
-	    gblayout.setConstraints (colname_label, gbc);
-	    panel.add (colname_label);
-
-	    colsummary_button = new LabeledPanelButton (col, null, "Graph");
-            colsummary_button.setActionCommand ("Graph");
-	    colsummary_button.addActionListener (PerfAnalyzerPanel.this);
-	    gbc.gridwidth = gbc.REMAINDER;
-	    gblayout.setConstraints (colsummary_button, gbc);
-	    panel.add (colsummary_button);
-
-	    avgs_label = new JLabel ("Average times in milliseconds:");
-	    gblayout.setConstraints(avgs_label, gbc);
-	    panel.add (avgs_label);
-
+	public void initialize () {
             Iterator i = col.indexIterator();
             while (i.hasNext()) {
                 LabeledPerfDataCollector.IndexInfo ii = (LabeledPerfDataCollector.IndexInfo)i.next();
-                addInitial (ii);
+                addToTree (ii);
  	    }
 
             col.addActionListener (this);
@@ -308,71 +264,32 @@ public class PerfAnalyzerPanel
 		    // didn't find it, create folder node
 		    new_node = new DefaultMutableTreeNode( new PerfTreeNodeInfo ((String)ii.label_components.get(i), null, col));
 		    tree_model.insertNodeInto (new_node, node, node.getChildCount());
-//  		    node.insert (new_node, node.getChildCount());
-//  		    tree_model.nodeChanged (node);
 		}
 		node = new_node;
 	    }
 	    // add ii as a child node of node.
 	    new_node = new DefaultMutableTreeNode(new PerfTreeNodeInfo ((String)ii.label_components.get(ii.label_components.size()-1), ii, col));
 	    tree_model.insertNodeInto (new_node, node, node.getChildCount());
-//  	    node.insert (new_node, node.getChildCount());
-//  	    tree_model.nodeChanged (node);
+
+	    node_map.put (ii, new_node);
 
 	    //System.out.println ("tree is: \n" + col_root);
 	}
 
-        public void addInitial (LabeledPerfDataCollector.IndexInfo ii) {
-	    System.out.println ("addInitial: " + ii.index);
-	    addToTree (ii);
-	    JLabel l;
-	    JButton b;
-	    Insets insets = new Insets (1,1,1,1);
-            double avg = ii.getAverage();
-//             // this below will cause trouble
-//             if (avg == 0.0)
-//                 continue;
-            gbc.gridwidth = 1;
-            l = new JLabel (/*i + ": " + */ii.index);
-            index_labels.add(l);
-            gblayout.setConstraints (l, gbc);
-            panel.add(l);
-            l = new JLabel (padFloat(avg/1000.0), JLabel.RIGHT);
-            avg_labels.add(l);
-            gblayout.setConstraints (l, gbc);
-            panel.add(l);
-            b = new LabeledPanelButton (col, ii, "Graph");
-            graph_buttons.add(b);
-            b.setActionCommand ("Graph");
-            b.addActionListener (PerfAnalyzerPanel.this);
-            b.setMargin(insets);
-            gblayout.setConstraints (b, gbc);
-//          panel.add(b);
-//  	    panel.revalidate();
-// 	    b = anomalies_buttons[j] = new AnomaliesButton (col, j);
-// 	    b.setEnabled(false);
-// 	    b.addActionListener (PerfAnalyzerPanel.this);
-// 	    b.setMargin(insets);
-	    gbc.gridwidth = gbc.REMAINDER;
-	    gblayout.setConstraints (b, gbc);
-	    panel.add(b);
-        }
 
 	public void update() {
- 	    col.generateAverages(preskip, postskip);
-            int num = index_labels.size();
             Iterator i = col.indexIterator();
             int j = 0;
             while (i.hasNext()) {
                 LabeledPerfDataCollector.IndexInfo ii = (LabeledPerfDataCollector.IndexInfo)i.next();
 		System.out.println ("updating " + ii.index);
-                if (j < num) {
-                    JLabel l = (JLabel)avg_labels.get(j);
-                    l.setText (padFloat(ii.getAverage()/1000.0));
-                }
-                else
-                    addInitial (ii);
-                j++;
+		DefaultMutableTreeNode tn = (DefaultMutableTreeNode)node_map.get(ii);
+		if (tn == null)
+		    addToTree (ii);
+		else {
+		    PerfTreeNodeInfo ni = (PerfTreeNodeInfo)tn.getUserObject();
+		    ni.update();
+		}
  	    }
 	}
 
@@ -479,13 +396,17 @@ public class PerfAnalyzerPanel
 
     public void addDataPanelElem (PerfDataCollector col) {
         DataPanelElem dpe;
-        if (col instanceof NumberedPerfDataCollector)
+        if (col instanceof NumberedPerfDataCollector) {
             dpe = new NumberedDataPanelElem ((NumberedPerfDataCollector)col);
-        else
+	    if (ui_initialized)
+		((NumberedDataPanelElem)dpe).initialize (data_panel, gblayout, gbc);
+	}
+        else {
             dpe = new LabeledDataPanelElem ((LabeledPerfDataCollector)col, root);
+	    if (ui_initialized)
+		((LabeledDataPanelElem)dpe).initialize ();
+	}
         datapanel_elems.add(dpe);
-        if (ui_initialized)
-            dpe.initialize (data_panel, gblayout, gbc);
     }
 
 
@@ -738,19 +659,12 @@ public class PerfAnalyzerPanel
 
             for (int i = 0; i < datapanel_elems.size(); i++) {
                 DataPanelElem dpe = (DataPanelElem)datapanel_elems.get(i);
-                dpe.initialize (data_panel, gblayout, gbc);
+		if (dpe instanceof LabeledDataPanelElem)
+		    ((LabeledDataPanelElem)dpe).initialize();
+		else
+		    ((NumberedDataPanelElem)dpe).initialize (data_panel, gblayout, gbc);
             }
 
-	    // setup tree display
-//  	    tree = new JTree (tree_model);
-	
-//    	    DefaultTreeCellRenderer r = (DefaultTreeCellRenderer)tree.getCellRenderer();
-//    	    tree.setCellRenderer (new LabeledPerfTreeCellRenderer(r));
-//  	    tree.setShowsRootHandles (true);
-//  	    tree.setRootVisible (true);
-//  	    //tree.setModel(this);
-//  	    display_pane.setViewportView (tree);
-	    //	    tree_box = new Box (BoxLayout.Y_AXIS);
 	    panel_tree = new PanelTree (tree_model);
 	    data_panel.add (panel_tree);
 
