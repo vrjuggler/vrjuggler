@@ -142,6 +142,7 @@ links-omniORB3 links-omniORB4:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(CXX_ORB_BIN_PATH)
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(CXX_ORB_LIB_PATH)
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(CXX_ORB_LIB_PATH)/$(PYTHON_PKG_DIR)
 	-$(RM_LN) $(instlinks)/include/$(CXX_ORB_NAME)
 	-$(RM_LN) $(instlinks)/include/omniconfig.h
 	-$(RM_LN) $(instlinks)/include/omnithread
