@@ -36,6 +36,7 @@
 #include <stdio.h>
 #include <fstream>
 #include <unistd.h>
+#include <boost/concept_check.hpp>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
@@ -580,7 +581,7 @@ bool reconfigApp::verifyAllViewports( vrj::Display* display, jccl::ConfigChunkPt
 {
    //Check to see if this viewport chunk matches with ANY of the display's viewports
    bool status = false;
-   for (int i=0; i < display->getNumViewports(); i++)
+   for (unsigned int i=0; i < display->getNumViewports(); i++)
    {
       vrj::Viewport* viewport = display->getViewport( i );
       if (verifyViewport( viewport, viewportChunk ))
@@ -696,7 +697,8 @@ bool reconfigApp::verifyViewport( vrj::Viewport* viewport, jccl::ConfigChunkPtr 
       std::cout << "\tError: viewport chunk named " << viewportName << " doesn't have drawProjections properties\n" << std::flush;
       return false;
    }
-   bool drawProjections = (viewportChunk->getProperty<int>("drawProjections", 0) == 1 ? true : false );
+   bool drawProjections = viewportChunk->getProperty<bool>("drawProjections");
+   boost::ignore_unused_variable_warning(drawProjections);
    //TEST drawProjections property
    //There is no test for this property
 
@@ -723,6 +725,7 @@ bool reconfigApp::verifyViewport( vrj::Viewport* viewport, jccl::ConfigChunkPtr 
       return false;
    }
    float vert_fov = viewportChunk->getProperty<float>("vert_fov", 0);
+   boost::ignore_unused_variable_warning(vert_fov);
 
    //Also no test for this
 
@@ -740,10 +743,10 @@ bool reconfigApp::verifyDisplayFile( std::string filename )
    std::vector<jccl::ConfigChunkPtr> machineSpecificChunks;
    fileDB.getByType( "displayWindow", windowChunks );
    fileDB.getByType( "machineSpecific", machineChunks );
-   for (int i=0; i < machineChunks.size(); i++)
+   for (unsigned int i=0; i < machineChunks.size(); i++)
    {
       machineSpecificChunks = windowChunks[i]->getEmbeddedChunks();
-      for (int j=0; j < machineSpecificChunks.size(); j++)
+      for (unsigned int j=0; j < machineSpecificChunks.size(); j++)
       {
          if (machineSpecificChunks[j]->getDescToken() == "displayWindow")
          {
@@ -755,7 +758,7 @@ bool reconfigApp::verifyDisplayFile( std::string filename )
    }
 
    //Verify EACH display in the file
-   for (int i=0; i < windowChunks.size(); i++)
+   for (unsigned int i=0; i < windowChunks.size(); i++)
    {
       //Get its attributes
       std::string displayName = windowChunks[i]->getName();
@@ -1441,7 +1444,7 @@ bool reconfigApp::reconfigSimDigital_check()
 
    bool key_status;
    //For each keymodpair that was defined in the device...
-   for (int i=0; i < keypairs.size(); i++)
+   for (unsigned int i=0; i < keypairs.size(); i++)
    {
       key_status = false;
 
@@ -1512,7 +1515,7 @@ bool reconfigApp::reconfigSimAnalog_check()
       jccl::ConfigChunkPtr key_mod_pair = fileChunks[0]->getProperty<jccl::ConfigChunkPtr>("keyPairs", i);
 
       //Scan the up keys
-      for (int j=0; j < keypairsup.size(); j++)
+      for (unsigned int j=0; j < keypairsup.size(); j++)
       {
          //If they are the same..
          if (( keypairsup[j].mModifier == key_mod_pair->getProperty<int>("modKey", 0))
@@ -1524,7 +1527,7 @@ bool reconfigApp::reconfigSimAnalog_check()
       }
 
       //Scan the down keys
-      for (int j=0; j < keypairsdown.size(); j++)
+      for (unsigned int j=0; j < keypairsdown.size(); j++)
       {
          //If they are the same..
          if (( keypairsdown[j].mModifier == key_mod_pair->getProperty<int>("modKey", 0))
