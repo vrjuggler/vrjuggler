@@ -44,6 +44,8 @@
 
 #include <vpr/vprConfig.h>
 #include <vpr/System.h>
+#include <vpr/Util/Debug.h>
+#include <gadget/Util/Debug.h>
 
 #include <vector>
 
@@ -88,7 +90,8 @@ public:
    vpr::ReturnStatus writeDouble(double val);
    vpr::ReturnStatus writeString(std::string val);
    vpr::ReturnStatus writeBool(bool val);
-   
+   inline void adjust(unsigned d);
+
    /* Write raw data of length len */
    inline vpr::ReturnStatus writeRaw(vpr::Uint8* data, unsigned len=1);
 
@@ -108,18 +111,24 @@ inline vpr::ReturnStatus ObjectWriter::writeUint8(vpr::Uint8 val)
 inline vpr::ReturnStatus ObjectWriter::writeUint16(vpr::Uint16 val)
 {
    vpr::Uint16 nw_val = vpr::System::Htons(val);
+
+   adjust(2);
    return writeRaw((vpr::Uint8*)&nw_val, 2);
 }
 
 inline vpr::ReturnStatus ObjectWriter::writeUint32(vpr::Uint32 val)
 {
    vpr::Uint32 nw_val = vpr::System::Htonl(val);
+   
+   adjust(4);
    return writeRaw((vpr::Uint8*)&nw_val, 4);
 }
 
 inline vpr::ReturnStatus ObjectWriter::writeUint64(vpr::Uint64 val)
 {
    vpr::Uint64 nw_val = vpr::System::Htonll(val);
+   
+   adjust(8);
    return writeRaw((vpr::Uint8*)&nw_val, 8);
 }
 
@@ -128,6 +137,8 @@ inline vpr::ReturnStatus ObjectWriter::writeFloat(float val)
    // We are writing the float as a 4 byte value
    BOOST_STATIC_ASSERT(sizeof(float) == 4);
    vpr::Uint32 nw_val = vpr::System::Htonl(*((vpr::Uint32*)&val));
+   
+   adjust(4);
    return writeRaw((vpr::Uint8*)&nw_val, 4);
 }
 
@@ -136,6 +147,8 @@ inline vpr::ReturnStatus ObjectWriter::writeDouble(double val)
    // We are writing the double as a 8 byte value
    BOOST_STATIC_ASSERT(sizeof(double) == 8);   
    vpr::Uint64 nw_val = vpr::System::Htonll(*((vpr::Uint64*)&val));
+   
+   adjust(8);
    return writeRaw((vpr::Uint8*)&nw_val, 8);
 }
 
@@ -143,7 +156,10 @@ inline vpr::ReturnStatus ObjectWriter::writeDouble(double val)
 inline vpr::ReturnStatus ObjectWriter::writeString(std::string val)
 {
    for(unsigned i=0; i<val.length();++i)
+   {
       writeRaw((vpr::Uint8*)&(val[i]),1);
+   }
+      
    return vpr::ReturnStatus::Succeed;
 }
 
@@ -152,11 +168,22 @@ inline vpr::ReturnStatus ObjectWriter::writeBool(bool val)
    return writeRaw((vpr::Uint8*)&val, 1);
 }
 
+inline void ObjectWriter::adjust(unsigned d)
+{
+   if (mCurHeadPos % d != 0)
+   {
+      for (unsigned i=0;i<( d-(mCurHeadPos%d) );i++)
+      {
+         mData->push_back(0);
+      }
+      mCurHeadPos += ( d-(mCurHeadPos%d) );
+   }
+}
+
 inline vpr::ReturnStatus ObjectWriter::writeRaw(vpr::Uint8* data, unsigned len)
 {
    for(unsigned i=0;i<len;++i)
       mData->push_back(data[i]);
-   
    mCurHeadPos += len;
    return vpr::ReturnStatus::Succeed;
 }
