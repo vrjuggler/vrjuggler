@@ -124,6 +124,7 @@ afterbuild:
 # Construct the static version of the libraries.
 # -----------------------------------------------
 $(LIBDIR)/$(VPR_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
+ifeq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -134,6 +135,7 @@ $(LIBDIR)/$(VPR_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
+endif
 
 # ------------------------------------------------
 # Construct the dynamic version of the libraries.
