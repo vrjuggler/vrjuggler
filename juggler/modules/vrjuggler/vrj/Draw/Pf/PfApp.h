@@ -63,6 +63,11 @@ public:
 
    PfApp() {;}
 
+   virtual ~PfApp()
+   {
+      /* Do nothing. */ ;
+   }
+
    /**
     * Initializes the scene graph.
     * Called after pfInit and pfConfig but before apiInit.
