@@ -1,5 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Nov-14-2001 allenb    Fixed OsgApp to allow for multi-window/multi-pipe apps.
+                      Added method for configuring new osgUtil::SceneViewers.
 Oct-17-2001 kevn      Fixed bug where vjGetVjMatrix returns the wrong 
                       conversion.
 Oct-17-2001 patrick   Renamed the "Data" directory to "data".
