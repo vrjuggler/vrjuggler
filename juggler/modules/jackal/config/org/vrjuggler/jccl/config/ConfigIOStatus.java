@@ -144,7 +144,7 @@ public class ConfigIOStatus {
             StringBuffer s = new StringBuffer();
             s.append ("Loaded with ");
             s.append (num_warnings);
-            s.append ((num_warnings == 1)?" warning.\n":" warnings.");
+            s.append ((num_warnings == 1)?" warning.":" warnings.");
             return new String(s);
         case ERRORS:
             StringBuffer s2 = new StringBuffer();
@@ -152,7 +152,7 @@ public class ConfigIOStatus {
             s2.append (num_errors);
             s2.append ((num_errors == 1)?" error, ":" errors, ");
             s2.append (num_warnings);
-            s2.append ((num_warnings == 1)?" warning.\n":" warnings.");
+            s2.append ((num_warnings == 1)?" warning.":" warnings.");
             return new String(s2);
         case FAILURE:
         default:
