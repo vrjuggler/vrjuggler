@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2002-08-19 allenb   Introduced indentation debugging output in Debug.cpp.
+                    This output can/should be commented out before a major
+                    release.
 2002-08-14 patrickh Fixed major bugs in the readn implementation used by all
                     POSIX- and BSD-based I/O code.
                     NEW VERSION: 0.17.1
