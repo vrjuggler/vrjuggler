@@ -59,13 +59,11 @@ namespace vrj
 
 VRJ_REGISTER_SIM_INTERFACE_CREATOR(GlBasicSimulator);
 
-GlBasicSimulator::GlBasicSimulator()
+GlBasicSimulator::GlBasicSimulator() : mQuadObj(NULL)
 {
-   mQuadObj = NULL;
    //setDrawWandFunctor(new GlDrawConeWandFunctor());
    setDrawWandFunctor(new GlDrawRightAngleWandFunctor());
 }
-
 
 /*
 * Configure the basic simulator config
@@ -252,7 +250,9 @@ void GlBasicSimulator::drawProjections(bool drawFrustum, gmtl::Vec3f surfColor, 
 
                // Compute scaled colors for the corners
                // ll is going to be lighter and upper right is going to be darker
-               const float ll_scale(0.10f); const float ul_scale(0.55); const float ur_scale(1.0f);
+               const float ll_scale(0.10f);
+               const float ul_scale(0.55f);
+               const float ur_scale(1.0f);
                gmtl::Vec4f ll_clr(ll_scale*surf_color[0],ll_scale*surf_color[1],ll_scale*surf_color[2],ALPHA_VALUE);
                gmtl::Vec4f ul_clr(ul_scale*surf_color[0],ul_scale*surf_color[1],ul_scale*surf_color[2],ALPHA_VALUE);
                gmtl::Vec4f lr_clr(ul_scale*surf_color[0],ul_scale*surf_color[1],ul_scale*surf_color[2],ALPHA_VALUE);
