@@ -46,7 +46,7 @@ vjPropertyDesc::~vjPropertyDesc () {
 ostream& operator << (ostream& out, vjPropertyDesc& self) {
   out << self.token << " " << typeString(self.type) << " "
       << self.num << " \"" << self.name << "\"";
-  
+
   if (self.valuelabels.size() > 0) {
     vjEnumEntry *e;
     out << " vj_valuelabels { ";
@@ -71,7 +71,7 @@ ostream& operator << (ostream& out, vjPropertyDesc& self) {
     }
     out << "}";
   }
-  
+
   /* print help string - always quoted. */
   out << " \"" << self.help << '"';
   return out;
@@ -83,9 +83,9 @@ istream& operator >> (istream& in, vjPropertyDesc& self) {
 
   char str[512];
   int size;
-  
+
   /* format of line is: name type size { enums/chunktypes } token. */
-  
+
   readString (in, str, 512);
   //cout << "read propertydesc token " << str << endl;
   if (self.token)
@@ -95,7 +95,7 @@ istream& operator >> (istream& in, vjPropertyDesc& self) {
   strcpy (self.token, str);
   if (!strcasecmp (self.token, "end"))
     return in;
-  
+
   self.type = readType(in);
   in >> self.num;
   readString (in,str,512);
@@ -110,9 +110,9 @@ istream& operator >> (istream& in, vjPropertyDesc& self) {
   /* parsing value labels, if there are any */
   if (!strcasecmp (str, "vj_valuelabels")) {
     readString (in,str,512);
-    if (strcasecmp (str, "{")) 
+    if (strcasecmp (str, "{"))
       vjDEBUG(1) << "ERROR: expected '{'" << endl << vjDEBUG_FLUSH;
-    int j, i = 0;
+    //int j, i = 0;
     vjEnumEntry *e;
     readString (in, str, 512);
     while (strcasecmp (str, "}") && !in.eof()) {
@@ -131,13 +131,13 @@ istream& operator >> (istream& in, vjPropertyDesc& self) {
       do {
 	readString (in, str, 512);
       } while (!strcasecmp (str, "}") && !in.eof());
-    } 
+    }
     else {
       int j, i = 0;
       vjEnumEntry *e;
       readString (in, str, 512);
       while (strcasecmp (str, "}") && !in.eof()) {
-	if (self.type == T_INT) 
+	if (self.type == T_INT)
 	  for (j = 0; j < strlen(str); j++) {
 	    if (str[j] == '=') {
 	      i = atoi (str+j+1);
@@ -152,10 +152,10 @@ istream& operator >> (istream& in, vjPropertyDesc& self) {
     }
     readString (in, str, 512);
   }
-  
+
   self.help = new char [strlen(str) +1];
   strcpy (self.help, str);
-  
+
   return in;
 }
 
