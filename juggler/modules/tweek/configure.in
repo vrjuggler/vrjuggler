@@ -320,13 +320,18 @@ int omni_main_i(int argc, char** const argv)
                     rm -rf ./ii_files ],
                   tweek_cv_omniORB__MaxMessageSize_in_omniORB='no'))
 
-   AC_PATH_PROG(CXX_IDL, omniidl,
-                AC_MSG_ERROR(*** omniORB required for Tweek **),
-                ${OMNI_BIN_DIR}:$PATH)
+   AC_PATH_PROG(CXX_IDL, omniidl, no, ${OMNI_BIN_DIR}:$PATH)
 
-   AC_PATH_PROG(JAVA_IDL, idlj,
-                AC_MSG_WARN(*** Cannot perform IDL-to-Java conversion ***),
-                ${PATH}:$JDK_HOME)
+   if test "x$CXX_IDL" = "xno" ; then
+      AC_MSG_ERROR(*** omniORB required for Tweek **)
+   fi               
+
+   AC_PATH_PROG(JAVA_IDL, idlj, no, ${PATH}:$JDK_HOME/bin)
+
+   if test "x$JAVA_IDL" = "xno" ; then
+      BUILD_JAVA='N'
+      AC_MSG_WARN(*** Cannot perform IDL-to-Java conversion ***)
+   fi
 
    if test "x$tweek_cv_omniORB__MaxMessageSize_in_omniORB" = "xyes" ; then
       OMNI_INCLUDES="-I$tweek_omni_inc"
