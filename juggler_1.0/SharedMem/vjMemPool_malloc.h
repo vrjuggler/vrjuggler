@@ -52,7 +52,7 @@ public:
     vjMemPool_malloc (size_t initialSize = 65536,  int numProcs = 8,
                       char* staticTempName = "/var/tmp/memPool_mallocXXXXXX")
     {
-        vjDEBUG(3) << "\n\nvjMemPool_malloc: Allocating Arena.\n"
+        vjDEBUG(vjDBG_ALL,3) << "\n\nvjMemPool_malloc: Allocating Arena.\n"
                    << "Initial size: " << initialSize << endl << vjDEBUG_FLUSH;
     }
 
@@ -64,7 +64,7 @@ public:
     // -----------------------------------------------------------------------
     virtual
     ~vjMemPool_malloc () {
-        vjDEBUG(6) << "vjMemPool_malloc::~vjMemPool_malloc() entered\n"
+        vjDEBUG(vjDBG_ALL,6) << "vjMemPool_malloc::~vjMemPool_malloc() entered\n"
                    << vjDEBUG_FLUSH;
     }
 
@@ -89,7 +89,7 @@ public:
             cerr << "vjMemPool_malloc: Out of memory!!!" << endl;
         }
 
-        return retval;     
+        return retval;
     }
 
     // -----------------------------------------------------------------------
@@ -127,7 +127,7 @@ public:
             cerr << "vjMemPool_malloc: Out of memory!!!\n";
         }
 
-        return ptr;     
+        return ptr;
     }
 
     // Functions that initialize, allocate and deallocate memory from the
@@ -150,7 +150,7 @@ public:
     init (size_t initialSize = 32768, int numProcs = 64,
           char* staticTempName = "/var/tmp/memPoolsArenaXXXXXX")
     {
-        vjDEBUG(3) << "\n\nvjMemPool_malloc: Allocating Base Arena for ALL "
+        vjDEBUG(vjDBG_ALL,3) << "\n\nvjMemPool_malloc: Allocating Base Arena for ALL "
                    << "vjMemPool_malloc's.\n\tSize: " << initialSize << endl
                    << vjDEBUG_FLUSH;
     }
@@ -166,7 +166,7 @@ public:
     // -----------------------------------------------------------------------
     void*
     operator new (size_t size) {
-        vjDEBUG(6) << "vjMemPool_malloc::new called.\n" << flush
+        vjDEBUG(vjDBG_ALL,6) << "vjMemPool_malloc::new called.\n" << flush
                    << vjDEBUG_FLUSH;
 
         init();
