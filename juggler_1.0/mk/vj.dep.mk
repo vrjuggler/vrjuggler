@@ -8,12 +8,13 @@
 # -----------------------------------------------------------------------------
 # The Makefile including this file must define the following variables:
 #
-# C_COMPILE       - The compiler command for C files.
-# CXX_COMPILE     - The compiler command for C++ files.
-# DEP_GEN_FLAG    - The flag passed to the compiler to generate dependencies.
-# DEPEND_FILES    - The list of dependency makefiles to be generated.
-# OBJDIR          - The directory to which the object file(s) will be written.
-# OBJ_FILE_SUFFIX - Suffix for object file names (e.g., "o" or "obj").
+# MKEPS_C_COMPILE   - The compiler command for C files.
+# MKEPS_CXX_COMPILE - The compiler command for C++ files.
+# DEP_GEN_FLAG      - The flag passed to the compiler to generate dependencies.
+# DEPEND_FILES      - The list of dependency makefiles to be generated.
+# OBJDIR            - The directory to which the object file(s) will be
+#                     written.
+# OBJ_FILE_SUFFIX   - Suffix for object file names (e.g., "o" or "obj").
 #
 # Example:
 #         srcdir = /usr/src/proj1
