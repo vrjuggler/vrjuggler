@@ -436,9 +436,15 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
     }
 
 
+    /********************** JFrameParent Stuff **********************/
+
     public void closedChild (ChildFrame f, boolean ok) {
 	child_frames.removeElement(f);
 	f.destroy();
+    }
+
+    public void applyChild (ChildFrame f) {
+        ;
     }
 
 
