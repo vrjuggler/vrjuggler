@@ -116,6 +116,12 @@ bool Configuration::remove(const std::string& name)
 std::ostream& operator<<(std::ostream& out, const Configuration& self)
 {
    cppdom::NodePtr cfg_node;
+   
+   // TODO: Find a better way of doing this, the java side seems to be able to
+   // do it just fine.
+   out << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+   out << "<?org-vrjuggler-jccl-settings configuration.version=\"3.0\"?>";
+   
    self.createConfigurationNode(cfg_node);
    cfg_node->save(out);
    return out;
@@ -123,11 +129,45 @@ std::ostream& operator<<(std::ostream& out, const Configuration& self)
 
 std::istream& operator>>(std::istream& in, Configuration& self)
 {
-   cppdom::NodePtr cfg_node = ElementFactory::instance()->createXMLNode();
-   cppdom::ContextPtr context_ptr = cfg_node->getContext();
-   cfg_node->load(in, context_ptr);
-   self.setDefinitionPath(cfg_node->getChild(tokens::DEFINITION_PATH));
+   // Create a new XML document
+   cppdom::DocumentPtr cfg_doc(ElementFactory::instance()->createXMLDocument());
+   cppdom::ContextPtr context_ptr = cfg_doc->getContext();
+   
+   // Load the document from the input stream.
+   cfg_doc->load(in, context_ptr);
+
+   // Get the configuration node.
+   cppdom::NodePtr cfg_node(cfg_doc->getChild(tokens::CONFIGURATION));
+   self.setConfigurationNode(cfg_node);
+
+   // Load in the elements from the confiruration node.
    self.loadFromElementNode(cfg_node->getChild(tokens::ELEMENTS));
+
+   // XXX: The following would work, but are not currently being used.
+   
+   /*cppdom::NodePtr def_path_node(cfg_doc->getChild(tokens::DEFINITION_PATH));
+   if ( def_path_node.get() != NULL )
+   {
+      setDefinitionPath(def_path_node);
+   }
+   */
+
+   // Go through the <include> XML elements.
+   /*
+   cppdom::NodeList inc_list = cfg_node->getChildren(tokens::INCLUDE);
+   for ( cppdom::NodeList::iterator itr = inc_list.begin();
+         itr != inc_list.end();
+         ++itr )
+   {
+      std::string cfg_filename = (*itr)->getCdata();
+      vprDEBUG(jcclDBG_CONFIG, vprDBG_CONFIG_LVL)
+         << "Including " << cfg_filename << std::endl
+         << vprDEBUG_FLUSH;
+
+      // Load the file
+      load(cfg_filename, filename);
+   }
+   */
 
    return in;
 }
@@ -150,6 +190,10 @@ bool Configuration::load(const std::string& filename, const std::string& parentf
 
       cppdom::NodePtr cfg_node(cfg_doc->getChild(tokens::CONFIGURATION));
       vprASSERT(cfg_node.get() != NULL);
+
+      // Save the configuration node for later use.
+      
+      mConfigurationNode = cfg_node;
 
       cppdom::NodePtr def_path_node(cfg_doc->getChild(tokens::DEFINITION_PATH));
       if ( def_path_node.get() != NULL )
@@ -212,6 +256,12 @@ void Configuration::setDefinitionPath(cppdom::NodePtr defPathNode)
    mDefsPath.clear();
    extendDefinitionPath(defPathNode);
 }
+
+void Configuration::setConfigurationNode(cppdom::NodePtr cfgNode)
+{
+   mConfigurationNode = cfgNode;
+}
+
 
 void Configuration::extendDefinitionPath(cppdom::NodePtr defPathNode)
 {
@@ -294,23 +344,34 @@ bool Configuration::loadFromElementNode(cppdom::NodePtr elementsNode,
 
 void Configuration::createConfigurationNode(cppdom::NodePtr& cfgNode) const
 {
-   cfgNode = ElementFactory::instance()->createXMLNode();
-   cfgNode->setName(tokens::CONFIGURATION);
-
-   cppdom::NodePtr elements_node = ElementFactory::instance()->createXMLNode();
-   elements_node->setName(tokens::ELEMENTS);
-
-   std::vector<ConfigElementPtr>::const_iterator cur_element;
-
-   for (cur_element = mElements.begin();
-        cur_element != mElements.end();
-        ++cur_element)
+   if (NULL == mConfigurationNode.get())
    {
-      cppdom::NodePtr child_node = (*cur_element)->getNode();
-      elements_node->addChild(child_node);
-   }
+      cfgNode = ElementFactory::instance()->createXMLNode();
+      cfgNode->setName(tokens::CONFIGURATION);
+      cfgNode->setAttribute("xmlns", "http://www.vrjuggler.org/jccl/xsd/3.0/configuration");
+      cfgNode->setAttribute("name", "Active Configuration");
+      cfgNode->setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+      cfgNode->setAttribute("xsi:schemaLocation", "http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd");
 
-   cfgNode->addChild(elements_node);
+      cppdom::NodePtr elements_node = ElementFactory::instance()->createXMLNode();
+      elements_node->setName(tokens::ELEMENTS);
+
+      std::vector<ConfigElementPtr>::const_iterator cur_element;
+
+      for (cur_element = mElements.begin();
+           cur_element != mElements.end();
+           ++cur_element)
+      {
+         cppdom::NodePtr child_node = (*cur_element)->getNode();
+         elements_node->addChild(child_node);
+      }
+
+      cfgNode->addChild(elements_node);
+   }
+   else
+   {
+      cfgNode = mConfigurationNode;
+   }
 }
 
 } // End of jccl namespace

@@ -141,6 +141,8 @@ public:
 public:
    void setDefinitionPath(cppdom::NodePtr definitionPathNode);
 
+   void setConfigurationNode(cppdom::NodePtr cfgNode);
+
    void extendDefinitionPath(cppdom::NodePtr definitionPathNode);
 
    bool loadFromElementNode(cppdom::NodePtr elementsNode,
@@ -160,6 +162,8 @@ protected:
 
    /** All the configuration elements contained in this configuration. */
    std::vector<ConfigElementPtr> mElements;
+private:   
+   cppdom::NodePtr mConfigurationNode;
 };
 
 } // End of jccl namespace
