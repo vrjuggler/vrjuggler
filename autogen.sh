@@ -46,11 +46,6 @@ if test "$DIE" -eq 1; then
   exit 1
 fi
 
-ah_minor=`$AUTOHEADER --version | grep '2\.' | sed -e 's/^.*2\.\([1-9]\).*$/\1/'`
-if test $ah_minor -gt 1 ; then
-   ah_args='--warnings=none'
-fi
-
 search_dirs="${srcdir-.}/modules ${srcdir-.}/external"
 for coin in `find $search_dirs -name configure.in -print`
 do 
@@ -71,7 +66,7 @@ do
       if grep "^AC_CONFIG_HEADER" configure.in >/dev/null
       then
 	echo "Running $AUTOHEADER..."
-	$AUTOHEADER $ah_args
+	$AUTOHEADER
       fi
       echo "Running $AUTOCONF ..."
       $AUTOCONF
