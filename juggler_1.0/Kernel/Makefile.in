@@ -33,26 +33,25 @@ include ${MKPATH}/vj.rec.mk
 include ${MKPATH}/vj.dep.mk
 include ${MKPATH}/vj.install.mk
 
-# Subdirectories to compile
+# Subdirectories to compile.
 SUBDIRS = Pf GL
 
-#--- Search path -------
+# Search path for source code and object files.
 vpath
 vpath %.c @srcdir@
 vpath %.cpp @srcdir@
 vpath %.o ${OBJDIR}
-#------------------------
 
-DEPEND_SRCS	:= vjAPI.cpp		\
-                   vjDebug.cpp		\
+DEPEND_SRCS	:= vjAPI.cpp			\
+                   vjDebug.cpp			\
                    vjDisplay.cpp		\
-                   vjDisplayManager.cpp	\
-                   vjDrawManager.cpp	\
+                   vjDisplayManager.cpp		\
+                   vjDrawManager.cpp		\
                    vjFrustum.cpp		\
-                   vjKernel.cpp		\
-                   vjProjection.cpp	\
-                   vjStreamLock.cpp	\
-                   vjWallProjection.cpp	\
+                   vjKernel.cpp			\
+                   vjProjection.cpp		\
+                   vjStreamLock.cpp		\
+                   vjWallProjection.cpp		\
                    vjSGISystemFactory.cpp
 
 KERNEL_OBJECTS	= $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.cpp=.o))
