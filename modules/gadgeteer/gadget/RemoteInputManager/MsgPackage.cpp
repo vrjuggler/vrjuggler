@@ -447,7 +447,7 @@ namespace gadget
       return true;
    }
 
-   bool MsgPackage::recieveDeviceDataPacket(vpr::ObjectReader* object_reader, Input* virtual_device, vpr::Uint64* delta)
+   bool MsgPackage::receiveDeviceDataPacket(vpr::ObjectReader* object_reader, Input* virtual_device, vpr::Uint64* delta)
    {
       //////////////////////////////////////////////////////////////////////////////////////
       //																			      //
@@ -570,7 +570,7 @@ namespace gadget
       createEndBlock();
    } */
 
-   /*vpr::Uint16 MsgPackage::recieveDeviceDelete(vpr::ObjectReader* object_reader)
+   /*vpr::Uint16 MsgPackage::receiveDeviceDelete(vpr::ObjectReader* object_reader)
    {
       ////////////////////////////////////////////////////////////////////
       //																 //

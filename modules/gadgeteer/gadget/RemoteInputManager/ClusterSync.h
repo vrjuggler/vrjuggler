@@ -54,7 +54,7 @@
    // - Connector sends it's current time
    // - Reciever reads and sends back it's current time
    // - Connector calculates an approximate difference
-   // - Connector sends a message with an approximated recieve time and the calculated diff
+   // - Connector sends a message with an approximated receive time and the calculated diff
    // - Reciever responds with either success or failure
    // - If passed exit loop
    // - else increase tolerance by 1ms
@@ -83,12 +83,12 @@ public:
    void getPacket(unsigned num);
    void sendAndClear();
    void clearIntervals();
-   void recieveExpectedTime();
+   void receiveExpectedTime();
    void createExpectedTime();
-   void recieveHandshake();
+   void receiveHandshake();
    void createHandshake();
    void createResponce();
-   void recieveResponce();
+   void receiveResponce();
    void clientClusterSync(vpr::SocketStream* socket_stream);
    vpr::Interval getClusterSync(vpr::SocketStream* socket_stream);
    void setSocketStream(vpr::SocketStream* socket_stream)

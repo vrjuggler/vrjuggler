@@ -62,7 +62,7 @@ namespace gadget
       std::list<NetDevice*> mReceivingDevices;     /**< devices on remote machines*/
       std::list<NetDevice*> mTransmittingDevices;  /**< devices on local machine sending data*/
       MsgPackage mMsgPackage;                      /**< packet building/parsing class*/
-      bool mAllPacketsReceived;                    /**< flag for when all packets are recieved*/
+      bool mAllPacketsReceived;                    /**< flag for when all packets are received*/
       vpr::GUID mManagerId;                        /**< remote RIM manager ID */
       
       IdGenerator<VJ_NETID_TYPE>    mLocalIdGen;            /**< keeps track of used/free network ids */
