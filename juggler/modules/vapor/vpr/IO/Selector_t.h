@@ -45,70 +45,171 @@
 
 namespace vpr {
 
-// ----------------------------------------------------------------------------
-//: Cross-platform selection interface.
-//
-// A selector is used to wait on a set of Handles untils any of the
-// events occur that the user is interested in.
-// ----------------------------------------------------------------------------
-//!PUBLIC_API:
+/**
+ * Cross-platform selection interface.
+ * A selector is used to wait on a set of Handles untils any of the
+ * events occur that the user is interested in.
+ *
+ * @author Allen Bierbaum
+ */
 template<class RealSelectorImp>
 class Selector_t : public SelectorBase
 {
 public:
-   //: Add the given handle to the selector
-   //! PRE: handle is a valid handle
-   //! POST: handle is added to the handle set, and initialized to a mask of no-events
+   /**
+    * Adds the given handle to the selector.
+    *
+    * <b>PRE:</b> <code>handle</code> is a valid handle.<br>
+    * <b>POST:</b> <code>handle</code> is added to the handle set, and
+    *              initialized to a mask of no-events.
+    *
+    * @param handle The handle to be added to this selector.
+    * @param mask   A bitmask specifying the handle set(s) to which the given
+    *               handle will be added.  This is optional and defaults to 0
+    *               (none).
+    *
+    * @return <code>true</code> is returned if <code>handle</code> is added
+    *         successfully; <code>false</code> otherwise.
+    */
    bool addHandle(IOSys::Handle handle, vpr::Uint16 mask=0)
    {
       return mSelectorImp.addHandle(handle, mask);
    }
 
-   //: Remove a handle from the selector
-   //! PRE: handle is in the selector
-   //! POST: handle is removed from the set of valid handles
+   /**
+    * Removes the named handle from the selector.
+    *
+    * <b>PRE:</b> <code>handle</code> is in the selector.<br>
+    * <b>POST:</b> <code>handle</code> is removed from the set of valid
+    *              handles.
+    *
+    * @param handle The handle to be removed from the selector's handle list.
+    *
+    * @return <code>true</code> is returned if <code>handle</code> is removed
+    *         successfully; <code>false</code> otherwise.
+    */
    bool removeHandle(IOSys::Handle handle)
    {
       return mSelectorImp.removeHandle(handle);
    }
 
-   //: Set the event flags going in to the select to mask
+   /**
+    * Sets the event flags going in to the select to mask.  The flags
+    * specify which events should be selected for the given handle.
+    *
+    * <b>PRE:</b> <code>handle</code> has already been added to the selector
+    *             using <code>addHandle</code>.
+    *
+    * @param handle The handle whose event flags will be updated.
+    * @param mask   A bitmask specifying the handle set(s) to which the given
+    *               handle will be added.  This is optional and defaults to 0
+    *               (none).
+    *
+    * @return <code>true</code> is returned if <code>handle</code>'s event
+    *         flags ar3e set successfully; <code>false</code> otherwise.
+    */
    bool setIn(IOSys::Handle handle, vpr::Uint16 mask)
    {
       return mSelectorImp.setIn(handle, mask);
    }
 
-   //: Get the current in flag mask
+   /**
+    * Gets the current in flag mask.
+    *
+    * <b>PRE:</b> <code>handle</code> has already been added to the selector
+    *             using <code>addHandle</code>.
+    *
+    * @param handle The handle whose "in" event flags will be returned.
+    *
+    * @return A bitmask value representing the "in flags" of
+    *         <code>handle</code>.
+    */
    vpr::Uint16 getIn(IOSys::Handle handle)
    {
       return mSelectorImp.getIn(handle);
    }
 
-   //: Get the current out flag mask
+   /**
+    * Gets the current out flag mask after a call to <code>select</code>.
+    * The value 
+    *
+    * <b>PRE:</b> <code>select</code> has been called.
+    *
+    * @param handle The handle whose "out" event flags will be returned.
+    *
+    * @return A bitmask value representing the "in flags" of
+    *         <code>handle</code>.  These flags state which requested events
+    *         were detected for <code>handle</code>.
+    */
    vpr::Uint16 getOut(IOSys::Handle handle)
    {
       return mSelectorImp.getOut(handle);
    }
 
-   //: Select
-   //! ARGS: numWithEvents - Upon completion, this holds the number of items that have events
-   //! ARGS: timeout - The number of msecs to select for (0 - don't wait)
-   Status select(vpr::Uint16& numWithEvents,  const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   /**
+    * Poll for any ready events among the registered handles using their in
+    * flags.
+    *
+    * @param numWithEvents Upon completion, this holds the number of items that
+    *                      have events.
+    * @param timeout       The interval to wait for an event to be raised.
+    *                      This argument is optional and defaults to
+    *                      <code>vpr::Interval::NoTimeout</code> (wait until
+    *                      an event is detected withotu timing out).  Passing
+    *                      <code>vpr::Interval::NoWait</code> effects a poll
+    *                      on the registered handles and returns immediately.
+    *
+    * @return <code>vpr::Status::Success</code> is returned if at least one
+    *         event was detected within the timeout interval.<br>
+    *         <code>vpr::Status::Timeout</code> is returned if no events were
+    *         detected before the timeout expired or if
+    *         <code>vpr::Interval::NoWait</code> was passed.  In this case,
+    *         <code>numWithEvents</code> should be checked for a value
+    *         greater than 0.<br>
+    *         <code>vpr::Status::Failure</code> is returned if the select
+    *         failed.
+    */
+   Status select(vpr::Uint16& numWithEvents,
+                 const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       return mSelectorImp.select(numWithEvents, timeout);
    }
 
-   // For iteration
+   /**
+    * For iteration over the registered handles.
+    *
+    * @return An unsigned value stating how many handles have been registered.
+    */
    vpr::Uint16 getNumHandles()
    {
       return mSelectorImp.getNumHandles();
    }
+
+   /**
+    * Gets the handle at the given index within the collection of registered
+    * handles.  The index is determined by the order of handle addition
+    * using <code>addHandle</code>.
+    *
+    * @param index The index of the desired handle.
+    *
+    * @return A <code>vpr::IOSys::Handle</code> object representing the
+    *         registered handle at the given index.
+    */
    IOSys::Handle getHandle(vpr::Uint16 index)
    {
       return mSelectorImp.getHandle(index);
    }
 
-   // Does the selector contain the handle
+   /**
+    * Test if the selector contain the given handle.
+    *
+    * @param handle The handle of interest.
+    *
+    * @return <code>true</code> is returned if <code>handle</code> was
+    *         previously registered with this selector.<br>
+    *         <code>false</code> is returned if the handle has not been
+    *         registered.
+    */
    bool containsHandle(IOSys::Handle handle)
    {
       return mSelectorImp.containsHandle(handle);
@@ -116,7 +217,7 @@ public:
 
 
 protected:
-    RealSelectorImp mSelectorImp;     // Platform specific implementation
+    RealSelectorImp mSelectorImp;     /**< Platform-specific implementation */
 };
 
 }; // End of vpr namespace
