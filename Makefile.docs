@@ -84,3 +84,6 @@ clobber:
 	for dir in $(SUBDIR) ; do		\
             $(MAKE) -C $$dir clobber || exit 1;	\
           done
+	$(MAKE) -C modules/tweek/java -f Makefile.docs clobber
+	$(MAKE) -C modules/jackal -f Makefile.docs clobber
+	$(MAKE) -C modules/vrjuggler -f Makefile.docs clobber
