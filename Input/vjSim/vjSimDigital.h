@@ -46,7 +46,7 @@ public:
    //: Return analog data
    virtual int getDigitalData(int devNum=0)
    {
-      vjASSERT(devNum < mDigitalData.size());    // Make sure we have enough space
+      vjASSERT(devNum < (int)mDigitalData.size());    // Make sure we have enough space
       return mDigitalData[devNum];
    }
 

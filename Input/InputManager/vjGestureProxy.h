@@ -51,7 +51,7 @@ public:
    vjGestureProxy()
    { mGesturePtr = NULL; }
 
-   ~vjGestureProxy()
+   virtual ~vjGestureProxy()
    {}
 
    //: Set the gloveProxy to point to another device and subUnit number.

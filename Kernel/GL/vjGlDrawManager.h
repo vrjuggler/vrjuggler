@@ -68,7 +68,7 @@ public:
 
     //: Function to config API specific stuff.
     // Takes a chunkDB and extracts API specific stuff
-   virtual void configInitial(vjConfigChunkDB*  chunkDB);
+   //**//virtual void configInitial(vjConfigChunkDB*  chunkDB);
 
    //: Start the control loop
    virtual void start();
@@ -91,9 +91,9 @@ public:
    //
    //! PRE: API is running (initAPI has been called)
    //! POST: API is ready do draw <br>
-   //+	 Process model is configured <br>
-   //	 Multi-pipe data is set <br>
-   //	 Window list is correct
+   //+    Process model is configured <br>
+   //  Multi-pipe data is set <br>
+   //  Window list is correct
    virtual void initDrawing();
 
    //: Callback when display is added to display manager
@@ -222,6 +222,9 @@ protected:
    {
       mQuadObj = NULL;
    }
+
+   virtual ~vjGlDrawManager() {}
+
 private:
    static vjGlDrawManager* _instance;
 };

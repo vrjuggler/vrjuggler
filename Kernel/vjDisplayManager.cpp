@@ -48,7 +48,7 @@ void vjDisplayManager::setDrawManager(vjDrawManager* drawMgr)
    // Alert the draw manager about all the active windows currently configured
    if(mDrawManager != NULL)
    {
-      for(int i=0;i<mActiveDisplays.size();i++)
+      for(unsigned int i=0;i<mActiveDisplays.size();i++)
       {
          mDrawManager->addDisplay(mActiveDisplays[i]);
       }
@@ -57,14 +57,77 @@ void vjDisplayManager::setDrawManager(vjDrawManager* drawMgr)
 
 //: Add the chunk to the configuration
 //! PRE: configCanHandle(chunk) == true
+bool vjDisplayManager::configAdd(vjConfigChunk* chunk)
+{
+   vjASSERT(configCanHandle(chunk));
+
+   std::string chunk_type = (std::string)chunk->getType();
+
+   if(   (chunk_type == std::string("surfaceDisplay"))
+      || (chunk_type == std::string("simDisplay")) )
+   {
+      return configAddDisplay(chunk);
+   }
+   else if(chunk_type == std::string("displaySystem"))
+   {
+      // XXX: Put signal here to tell draw manager to lookup new stuff
+      mDisplaySystemChunk = chunk;     // Keep track of the display system chunk
+      return true;                     // We successfully configured.
+                                       // This tell processPending to add it to the active config
+   }
+   else
+   { return false; }
+}
+
+//: Remove the chunk from the current configuration
+//! PRE: configCanHandle(chunk) == true
+bool vjDisplayManager::configRemove(vjConfigChunk* chunk)
+{
+   vjASSERT(configCanHandle(chunk));
+
+   std::string chunk_type = (std::string)chunk->getType();
+
+   if(  (chunk_type == std::string("surfaceDisplay"))
+     || (chunk_type == std::string("simDisplay")) )
+   {
+      return configRemoveDisplay(chunk);
+   }
+   else if(chunk_type == std::string("displaySystem"))
+   {
+      // XXX: Put signal here to tell draw manager to lookup new stuff
+      mDisplaySystemChunk = NULL;     // Keep track of the display system chunk
+      return true;                     // We successfully configured.
+                                       // This tell processPending to remove it to the active config
+   }
+   else
+   { return false; }
+
+}
+
+
+//: Is it a display chunk?
+//! RETURNS: true - We have a display chunk
+//+          false - We don't
+bool vjDisplayManager::configCanHandle(vjConfigChunk* chunk)
+{
+   return (( ((std::string)chunk->getType()) == "surfaceDisplay")
+            || (((std::string)chunk->getType()) == "simDisplay")
+            || (((std::string)chunk->getType()) == "displaySystem") );
+}
+
+
+
+
+//: Add the chunk to the configuration
+//! PRE: configCanHandle(chunk) == true
 //! POST: (display of same name already loaded) ==> old display closed, new one opened
 //+       (display is new) ==> (new display is added)
 //+       draw manager is notified of the display change
-bool vjDisplayManager::configAdd(vjConfigChunk* chunk)
+bool vjDisplayManager::configAddDisplay(vjConfigChunk* chunk)
 {
    vjASSERT(configCanHandle(chunk));      // We must be able to handle it first of all
 
-   vjDEBUG_BEGIN(vjDBG_DISP_MGR,3) << "------- vjDisplayManager::configAdd -------\n" << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(vjDBG_DISP_MGR,3) << "------- vjDisplayManager::configAddDisplay -------\n" << vjDEBUG_FLUSH;
 
    // Find out if we already have a window of this name
    // If so, then close it before we open a new one of the same name
@@ -95,18 +158,18 @@ bool vjDisplayManager::configAdd(vjConfigChunk* chunk)
       vjDEBUG(vjDBG_DISP_MGR,4) << "Display: "  << newDisp << endl << flush << vjDEBUG_FLUSH;
    }
 
-   vjDEBUG_END(vjDBG_DISP_MGR,3) << "------- vjDisplayManager::configAdd Done. --------\n" << vjDEBUG_FLUSH;
+   vjDEBUG_END(vjDBG_DISP_MGR,3) << "------- vjDisplayManager::configAddDisplay Done. --------\n" << vjDEBUG_FLUSH;
    return true;
 }
 
 //: Remove the chunk from the current configuration
 //! PRE: configCanHandle(chunk) == true
 //!RETURNS: success
-bool vjDisplayManager::configRemove(vjConfigChunk* chunk)
+bool vjDisplayManager::configRemoveDisplay(vjConfigChunk* chunk)
 {
    vjASSERT(configCanHandle(chunk));      // We must be able to handle it first of all
 
-   vjDEBUG_BEGIN(vjDBG_DISP_MGR,4) << "------- vjDisplayManager::configRemove -------\n" << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(vjDBG_DISP_MGR,4) << "------- vjDisplayManager::configRemoveDisplay -------\n" << vjDEBUG_FLUSH;
 
    bool success_flag(false);
 
@@ -121,18 +184,10 @@ bool vjDisplayManager::configRemove(vjConfigChunk* chunk)
       }
    }
 
-   vjDEBUG_END(vjDBG_DISP_MGR,4) << "------- vjDisplayManager::configRemove done. --------\n" << vjDEBUG_FLUSH;
+   vjDEBUG_END(vjDBG_DISP_MGR,4) << "------- vjDisplayManager::configRemoveDisplay done. --------\n" << vjDEBUG_FLUSH;
    return success_flag;
 }
 
-//: Is it a display chunk?
-//! RETURNS: true - We have a display chunk
-//+          false - We don't
-bool vjDisplayManager::configCanHandle(vjConfigChunk* chunk)
-{
-   return ((((std::string)chunk->getType()) == "surfaceDisplay")
-            || (((std::string)chunk->getType()) == "simDisplay"));
-}
 
 
 
@@ -170,10 +225,12 @@ int vjDisplayManager::closeDisplay(vjDisplay* disp, bool notifyDrawMgr)
       mDrawManager->removeDisplay(disp);
 
    // Remove it from local data structures
-      int num_before_close = mActiveDisplays.size() + mInactiveDisplays.size();
-   mActiveDisplays.erase(std::remove(mActiveDisplays.begin(), mActiveDisplays.end(), disp), mActiveDisplays.end());
-   mInactiveDisplays.erase(std::remove(mInactiveDisplays.begin(), mInactiveDisplays.end(), disp), mInactiveDisplays.end());
-      vjASSERT(num_before_close == (1+mActiveDisplays.size() + mInactiveDisplays.size()));
+   unsigned int num_before_close = mActiveDisplays.size() + mInactiveDisplays.size();
+   mActiveDisplays.erase( std::remove(mActiveDisplays.begin(), mActiveDisplays.end(), disp), 
+                          mActiveDisplays.end());
+   mInactiveDisplays.erase( std::remove(mInactiveDisplays.begin(), mInactiveDisplays.end(), disp), 
+                            mInactiveDisplays.end());
+   vjASSERT(num_before_close == (1+mActiveDisplays.size() + mInactiveDisplays.size()));
 
    // Delete the object
    // XXX: Memory leak.  Can't delete display here because the draw manager

@@ -262,7 +262,7 @@ bool vjSimPosition::isTransAllowed(vjVec3 trans)
 
    std::vector<vjDisplay*> disps = vjDisplayManager::instance()->getAllDisplays();
 
-   for(int i=0;i<disps.size();i++)
+   for(unsigned int i=0;i<disps.size();i++)
    {
       if(disps[i]->isSurface())
       {

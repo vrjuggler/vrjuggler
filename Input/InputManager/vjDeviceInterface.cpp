@@ -46,19 +46,18 @@ void vjDeviceInterface::init(std::string proxyName)
 //! NOTE: If the interface does not have an initialized mProxyName, then don't try to refresh it
 void vjDeviceInterface::refresh()
 {
-   if(mProxyName == std::string("UnInitialized"))
+   int prev_proxy_index = mProxyIndex;    // Keep track of previous value
+
+   mProxyIndex = vjKernel::instance()->getInputManager()->getProxyIndex(mProxyName);
+   if (mProxyIndex == -1)
    {
-      ; // Don't refresh it
+      vjDEBUG(vjDBG_ALL,0) << "WARNING: vjDeviceInterface::refresh: could not find proxy: " << mProxyName.c_str() << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "         Make sure the proxy exists in the current configuration." << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "   referencing device interface will be stupified to point at dummy device." << endl << vjDEBUG_FLUSH;
    }
-   else
+   else if((mProxyIndex != -1) && (prev_proxy_index == -1))   // ASSERT: We have just gotten a valid proxy to point to
    {
-      mProxyIndex = vjKernel::instance()->getInputManager()->getProxyIndex(mProxyName);
-      if (mProxyIndex == -1)
-      {
-         vjDEBUG(vjDBG_ALL,0) << "ERROR: could not find proxy: " << mProxyName.c_str() << endl << vjDEBUG_FLUSH;
-         vjASSERT(false);
-         exit(1);
-      }
+      vjDEBUG(vjDBG_ALL,0) << "vjDeviceInterface::refresh: Success: Now able to find proxy: " << mProxyName.c_str() << endl << vjDEBUG_FLUSH;
    }
 }
 
@@ -71,7 +70,7 @@ void vjDeviceInterface::removeDevInterface(vjDeviceInterface* dev)
 
 void vjDeviceInterface::refreshAllDevices()
 {
-   for(int i=0;i<mAllocatedDevices.size();i++)
+   for(unsigned int i=0;i<mAllocatedDevices.size();i++)
       mAllocatedDevices[i]->refresh();
 }
 

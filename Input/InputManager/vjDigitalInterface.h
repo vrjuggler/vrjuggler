@@ -49,7 +49,7 @@ public:
       if(mProxyIndex != -1)
          mDigProxy = vjKernel::instance()->getInputManager()->getDigProxy(mProxyIndex);
       else
-         mDigProxy = NULL;
+         mDigProxy = vjKernel::instance()->getInputManager()->getDummyDigProxy();
    }
 
 private:

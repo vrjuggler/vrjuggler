@@ -32,7 +32,7 @@ vjDepChecker* vjDependencyManager::findDepChecker(vjConfigChunk* chunk)
    //std::string chunk_type;
    //chunk_type = (std::string)chunk->getType();
 
-   for(int i=0;i<mDepCheckers.size();i++)
+   for(unsigned int i=0;i<mDepCheckers.size();i++)
    {
       // Get next constructor
       vjDepChecker* checker = mDepCheckers[i];
@@ -51,7 +51,7 @@ void vjDependencyManager::debugDump()
    vjDEBUG_BEGIN(vjDBG_KERNEL,0) << "vjDepChecker::debugDump\n" << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_KERNEL,0) << "num checkers:" << mDepCheckers.size() << "\n" << vjDEBUG_FLUSH;
 
-   for(int cNum=0;cNum<mDepCheckers.size();cNum++)
+   for(unsigned int cNum=0;cNum<mDepCheckers.size();cNum++)
    {
       vjDepChecker* checker = mDepCheckers[cNum];
       vjDEBUG(vjDBG_KERNEL,0) << cNum << ": Checker:" << (void*)checker

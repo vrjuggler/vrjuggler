@@ -52,6 +52,9 @@ public:
       mPipe = vjDisplay::NONE;
    }
 
+   virtual ~vjDisplay()
+   {;}
+
    enum DisplayType { UNDEFINED, SURFACE, SIM};             // What type of display is it
    enum DisplayView { NONE=0, LEFT_EYE=1, RIGHT_EYE=2, STEREO=3 };      // For referring to which eye(s) to draw
 

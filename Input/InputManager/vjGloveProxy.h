@@ -1,8 +1,7 @@
 /*
  *  File:          $RCSfile$
  *  Date modified: $Date$
- *  Version:       $Revision$
- *
+ *  Version:       $Revision$ *
  *
  *                                VR Juggler
  *                                    by
@@ -48,7 +47,7 @@ public:
      mVisible = true;
   }
 
-  ~vjGloveProxy()
+  virtual ~vjGloveProxy()
   {}
 
   //: Set the gloveProxy to point to another device and subUnit number.

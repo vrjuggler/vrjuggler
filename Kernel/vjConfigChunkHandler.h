@@ -22,38 +22,30 @@
 #define _VJ_CONFIG_CHUNK_HANDLER_H_
 
 #include <vjConfig.h>
-#include <Config/vjConfigChunk.h>
-#include <Kernel/vjConfigManager.h>
-#include <Kernel/vjDependencyManager.h>
+class vjConfigChunk;
 
 //-----------------------------------------
-//: Base class for all classes that can handle config chunks
+//: Abstract base class for all classes that can handle config chunks
 //
 // This means that they can be "configured"
 // and queried using the specified interface.
 //
+//
+// The idea is that you override canHandle()
+// to recognize chunks the derived class cares about.
+// Then you over ride configAdd and configRemove
+// to actually process those chunks.
+// It is also possible to override configProcessPending although the 
+// default one will work in most cases.
 //---------------------------------------------
 //! PUBLIC_API:
 class vjConfigChunkHandler
 {
 public:
-   //: Add the chunk to the configuration
-   //! PRE: configCanHandle(chunk) == true
-   //! RETURNS: success
-   virtual bool configAdd(vjConfigChunk* chunk)
-   { return false; }
-
-   //: Remove the chunk from the current configuration
-   //! PRE: configCanHandle(chunk) == true
-   //!RETURNS: success
-   virtual bool configRemove(vjConfigChunk* chunk)
-   { return false; }
-
    //: Can the handler handle the given chunk?
    //! RETURNS: true - Can handle it
    //+          false - Can't handle it
-   virtual bool configCanHandle(vjConfigChunk* chunk)
-   { return false; }
+   virtual bool configCanHandle(vjConfigChunk* chunk) = 0;
 
    //: Process any pending reconfiguration that we can deal with
    // This function processes each pending reconfiguration in configuration manager
@@ -67,53 +59,20 @@ public:
    //! ARGS: lockIt - Should we lock the cfg_mgr pending list
    //+       defaults to true.  The only time this should be false is 
    //+       if you override this function and still want to make use of it's abilities
-   //+         (ex.  The kernel needs to do this because if has to call processPending on other managers in addition to itself)
-   virtual void processPending(bool lockIt = true)
-   {
-      vjConfigManager*     cfg_mgr = vjConfigManager::instance();
-      vjDependencyManager* dep_mgr = vjDependencyManager::instance();
-      cfg_mgr->lockPending();     // We need to lock the pending first
-      {
-         std::list<vjConfigManager::vjPendingChunk>::iterator current, end, remove_me;
-         current = cfg_mgr->getPendingBegin();
-         end = cfg_mgr->getPendingEnd();
+   //+         (ex.  The kernel needs to do this because if has to call configProcessPending on other managers in addition to itself)
+   virtual void configProcessPending(bool lockIt = true);
 
-         while(current != end)
-         {
-            vjConfigChunk* cur_chunk = (*current).mChunk;
+protected:
+   //: Add the chunk to the configuration
+   //! PRE: configCanHandle(chunk) == true
+   //! RETURNS: success
+   virtual bool configAdd(vjConfigChunk* chunk) = 0;
 
-            // CONFIG ADD
-            if((*current).mType == vjConfigManager::vjPendingChunk::ADD)
-            {           
-               if(this->configCanHandle(cur_chunk) &&
-                  dep_mgr->depSatisfied(cur_chunk))
-               {
-                  bool added = this->configAdd(cur_chunk);
-                  if(added)      // Was there success adding
-                  {
-                     remove_me = current;
-                     current++;                          // Goto next item
-                     cfg_mgr->removePending(remove_me);  // Delete previous item
-                     cfg_mgr->lockActive();
-                        cfg_mgr->addActive(cur_chunk);     // Add it to the current config
-                     cfg_mgr->unlockActive();
-                  }
-                  else // Failed to add
-                  {
-                     current++;
-                  }
-               }
-            }
-            // CONFIG REMOVE
-            else if((*current).mType == vjConfigManager::vjPendingChunk::REMOVE)
-            {
-               current++;
-            }
-         }        // END: while(current != end)
-
-      }
-      cfg_mgr->unlockPending();   // Unlock it
-   }
+   //: Remove the chunk from the current configuration
+   //! PRE: configCanHandle(chunk) == true
+   //!RETURNS: success
+   virtual bool configRemove(vjConfigChunk* chunk) = 0;
 };
+
 
 #endif

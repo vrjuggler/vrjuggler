@@ -332,8 +332,8 @@ public:
 
 // All private member variables and functions.
 private:
-    pthread_t	mThread;	//: pthread_t data structure for this thread
-    int		mScope;		//: Scope (process or system) of this thread
+    pthread_t  mThread; //: pthread_t data structure for this thread
+    int     mScope;     //: Scope (process or system) of this thread
 
     void checkRegister(int status);
 
@@ -354,7 +354,7 @@ private:
         return mThread.field1;
 #else
         return mThread;
-#endif	/* VJ_OS_IRIX */
+#endif   /* VJ_OS_IRIX */
     }
 
     // -----------------------------------------------------------------------
@@ -377,7 +377,7 @@ private:
         return thread.field1;
 #else
         return thread;
-#endif	/* VJ_OS_IRIX */
+#endif   /* VJ_OS_IRIX */
     }
 
     // -----------------------------------------------------------------------
@@ -398,8 +398,8 @@ private:
         return hash(me);
     }
 
-    static vjThreadTable<thread_id_t>	mThreadTable;
+    static vjThreadTable<thread_id_t>  mThreadTable;
 };
 
 
-#endif	/* _VJ_THREAD_POSIX_H_ */
+#endif   /* _VJ_THREAD_POSIX_H_ */

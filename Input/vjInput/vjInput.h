@@ -41,8 +41,8 @@
 
 #ifdef HAVE_SYS_PRCTL_H
 #   include <sys/prctl.h>
-#endif		/* ifdef HAVE_SYS_PRCTL_H */
-#endif		/* ifndef VJ_OS_Win32 */
+#endif      /* ifdef HAVE_SYS_PRCTL_H */
+#endif      /* ifndef VJ_OS_Win32 */
 
 #include <limits.h>
 #include <string.h>
@@ -115,7 +115,7 @@ public:
    //
    // Free the memory for the Instance Name and Serial Port strings if
    // allocated
-   ~vjInput();
+   virtual ~vjInput();
 
    //: Config method
    //
@@ -228,4 +228,4 @@ protected:
    unsigned int deviceAbilities;    //: Combined mask of device abilities
 };
 
-#endif	/* VJ_INPUT_H */
+#endif   /* VJ_INPUT_H */

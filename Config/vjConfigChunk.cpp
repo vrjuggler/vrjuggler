@@ -44,7 +44,7 @@ vjConfigChunk::vjConfigChunk (vjChunkDesc *d) :props(), type_as_varvalue(T_STRIN
 
 
 vjConfigChunk::~vjConfigChunk () {
-    for (int i = 0; i < props.size(); i++)
+    for (unsigned int i = 0; i < props.size(); i++)
         delete (props[i]);
 }
 
@@ -57,7 +57,7 @@ vjConfigChunk::vjConfigChunk (vjConfigChunk& c):props(), type_as_varvalue(T_STRI
 
 
 void vjConfigChunk::associateDesc (vjChunkDesc* d) {
-    int i;
+    unsigned int i;
 
     desc = d;
     type_as_varvalue = desc->getToken();
@@ -76,7 +76,7 @@ void vjConfigChunk::associateDesc (vjChunkDesc* d) {
 
 
 vjConfigChunk& vjConfigChunk::operator = (const vjConfigChunk& c) {
-    int i;
+    unsigned int i;
     if (this == &c)     // ack! same object!
         return *this;
 
@@ -105,7 +105,7 @@ bool vjConfigChunk::operator== (const vjConfigChunk& c) const {
         return false;
     if (props.size() != c.props.size()) // probably redundant
         return false;
-    for (int i = 0; i < props.size(); i++) {
+    for (unsigned int i = 0; i < props.size(); i++) {
         if (*(props[i]) != *(c.props[i]))
             return false;
     }
@@ -325,7 +325,7 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
                 // this works because the chunk >> expects the typename to have
                 // already been read (which we did when looking for '}')
                 if (p->type == T_EMBEDDEDCHUNK) {
-                    vjConfigChunk *ch = vjChunkFactory::createChunk (p->embeddesc);
+                    vjConfigChunk *ch = vjChunkFactory::instance()->createChunk (p->embeddesc);
                     in >> *ch;
                     p->setValue (ch, i++);
                 }

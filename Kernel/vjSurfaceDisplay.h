@@ -35,8 +35,10 @@
 class vjSurfaceDisplay : public vjDisplay
 {
 public:
-   vjSurfaceDisplay() : mLeftProj(NULL), mRightProj(NULL), mTracked(false)
+   vjSurfaceDisplay() :  mTracked(false), mLeftProj(NULL), mRightProj(NULL)
    {;}
+
+   virtual ~vjSurfaceDisplay() {}
 
 public:
    //: Takes a display chunk and configures the display based one it.

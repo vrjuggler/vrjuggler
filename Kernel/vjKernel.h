@@ -35,13 +35,14 @@ class vjApp;
 #include <Kernel/vjSystemData.h>
 //**//#include <Environment/vjEnvironmentManager.h>
 #include <Performance/vjPerfDataBuffer.h>
-
 #include <Kernel/vjUser.h>
 
 
     // Config stuff
-#include <Config/vjConfigChunkDB.h>
-#include <Kernel/vjQueuedConfigChunkHandler.h>
+//#include <Config/vjConfigChunkDB.h>
+//#include <Config/vjChunkDescDB.h>
+// #include <Kernel/vjQueuedConfigChunkHandler.h>
+#include <Kernel/vjConfigChunkHandler.h>
 
 //-------------------------------------------------------
 //: Main control class for all vj applications.
@@ -56,7 +57,7 @@ class vjApp;
 // Date: 9-7-97
 //-------------------------------------------------------
 //!PUBLIC_API:
-class vjKernel : public vjQueuedConfigChunkHandler
+class vjKernel : public vjConfigChunkHandler
 {
 public:
 
@@ -85,36 +86,47 @@ public:
 
 public:  // --- Config interface --- //
    //: Get the chunks that are actually running in the system
-   vjConfigChunkDB* getChunkDB()
-   {
-      vjASSERT(NULL != mChunkDB);
-      return mChunkDB;
-   }
+   //vjConfigChunkDB* getChunkDB()
+   //{
+   //   vjASSERT(NULL != mChunkDB);
+   //   return mChunkDB;
+   //}
 
    //: Get the initial chunk database
    // Returns the chunks that were originally used to configure
    // the system.
    //! NOTE: This may contain chunks that are not currently running.
-   vjConfigChunkDB* getInitialChunkDB()
-   {
-      vjASSERT(NULL != mInitialChunkDB);
-      return mInitialChunkDB;
-   }
+   //vjConfigChunkDB* getInitialChunkDB()
+   //{
+   //   vjASSERT(NULL != mInitialChunkDB);
+   //   return mInitialChunkDB;
+   //}
 
-protected:
-   // --- Process adds from the queue ---- //
-   //: Take care of adding a single chunk
-   //! RETVAL: true - Chunk has been added
-   bool processChunkAdd(vjConfigChunk* chunk);
+protected:  // -- CHUNK HANDLER
+   //: Can the handler handle the given chunk?
+   //! RETURNS: true - Can handle it
+   //+          false - Can't handle it
+   virtual bool configCanHandle(vjConfigChunk* chunk);
 
-   //: Take care of removing a single chunk
-   //! RETVAL: true - Chunk has been added
-   bool processChunkRemove(vjConfigChunk* chunk);
+   //: Process any pending reconfiguration that we can deal with
+   //  
+   //  Process pending reconfiguration of the kernel and 
+   //  it's dependant managers (basically all of them 
+   //  that don't have a control thread)
+   //
+   // It just calls process pending for dependant processes
+   virtual void configProcessPending(bool lockIt = true);
 
-protected:     // Config chunks local to kernel
-   bool configKernelHandle(vjConfigChunk* chunk);
-   bool configKernelAdd(vjConfigChunk* chunk);
-   bool configKernelRemove(vjConfigChunk* chunk);
+protected:  // -- CHUNK HANDLER
+   //: Add the chunk to the configuration
+   //! PRE: configCanHandle(chunk) == true
+   //! RETURNS: success
+   virtual bool configAdd(vjConfigChunk* chunk);
+
+   //: Remove the chunk from the current configuration
+   //! PRE: configCanHandle(chunk) == true
+   //!RETURNS: success
+   virtual bool configRemove(vjConfigChunk* chunk);
 
 protected:
    //: Updates any data that needs updated once a frame (Trackers, etc.)
@@ -173,19 +185,18 @@ public:      // Global "get" interface
    std::vector<vjUser*> getUsers()
    { return mUsers; }
 
-   const vjThread* getThread()
+   const vjBaseThread* getThread()
    { return mControlThread; }
 
 private:
    vjSystemData    data;   //: Global system data
 
 protected:
-
    vjApp*      mApp;                        //: The app object
    vjApp*      mNewApp;                      //: New application to set
    bool        mNewAppSet;                   //: Flag to notify that a new application should be set
 
-   vjThread*   mControlThread;             //: The thread in control of me.
+   vjBaseThread*   mControlThread;             //: The thread in control of me.
 
    /// Factories and Managers
    vjSystemFactory*  mSysFactory;          //: The current System factory
@@ -199,8 +210,9 @@ protected:
    bool              performanceEnabled;
 
    /// Config Stuff
-   vjConfigChunkDB*  mChunkDB;            //: The current chunk db for the system
-   vjConfigChunkDB*  mInitialChunkDB;     //: Initial chunks added to system before it is started
+   //**//vjChunkDescDB*    mConfigDesc;
+   //**//vjConfigChunkDB*  mChunkDB;            //: The current chunk db for the system
+   //**//vjConfigChunkDB*  mInitialChunkDB;     //: Initial chunks added to system before it is started
    //vjSemaphore       mRuntimeConfigSema;  //: Protects run-time config.  Only when this semaphore
                                           //+ is acquired can run-time config occur
    /// Shared Memory stuff
@@ -227,11 +239,14 @@ protected:
 //**//      environmentManager = NULL;
       perfBuffer = NULL;
 
-      mInitialChunkDB = NULL;
-      mChunkDB = NULL;
-
+      //mInitialChunkDB = NULL;
+      //mChunkDB = NULL;
+     
       sharedMemPool = NULL;
    }
+
+   virtual ~vjKernel()
+   {;}
 
 public:
    //: Get instance of singleton object
