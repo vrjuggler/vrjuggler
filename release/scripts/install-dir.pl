@@ -61,6 +61,9 @@ BEGIN {
 use lib("$path");
 use InstallOps;
 
+# Our recurseAction() subroutine wants the current file as a parameter.
+$InstallOps::pass_rec_func_cur_file = 1;
+
 $Win32 = 1 if $ENV{'OS'} =~ /Windows/;
 
 # Ensure that there are four command-line arguments.  If not, exit with
