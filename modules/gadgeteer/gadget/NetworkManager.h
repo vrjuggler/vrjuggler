@@ -41,6 +41,11 @@
 namespace gadget
 {
 
+/** \class NetworkManager NetworkManager.h gadget/NetworkManager.h
+ *
+ * Network manager.  This is an implementation of
+ * gadget::AbstractNetworkManager.
+ */
 template<typename A, typename C>
 class NetworkManager : public AbstractNetworkManager
 {

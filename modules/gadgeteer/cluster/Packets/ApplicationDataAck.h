@@ -40,19 +40,22 @@
 #include <vpr/IO/BufferObjectWriter.h>
 #include <vpr/IO/Socket/SocketStream.h>
 
-#include <cluster/Packets/Header.h>                                                       
+#include <cluster/Packets/Header.h>
 #include <cluster/Packets/Packet.h>
 
 namespace cluster
 {
 
+/** \class ApplicationDataAck ApplicationDataAck.h cluster/Packets/ApplicationDataAck.h
+ *
+ * Application-specific data acknowledgement packet.
+ */
 class GADGET_CLASS_API ApplicationDataAck : public Packet
 {
 public:
-   
    ApplicationDataAck()
    {;}
-   
+
    /**
     * Create a ApplicationDataAck packet to acknowledge a
     * ApplicationDataRequest.
@@ -64,10 +67,10 @@ public:
     * @param ack         Boolean determining if this is a positive (ACK) or a
     *                    negative (NACK) responce.
     */
-   ApplicationDataAck(const vpr::GUID& plugin_guid, 
-                      const vpr::GUID& id, 
+   ApplicationDataAck(const vpr::GUID& plugin_guid,
+                      const vpr::GUID& id,
                       const bool ack);
-   
+
    /**
     * Serializes member variables into a data stream.
     */
@@ -77,7 +80,7 @@ public:
     * Parses the data stream into the local member variables.
     */
    virtual void parse(vpr::BufferObjectReader* reader);
-   
+
    /**
     * Print the data to the screen in a readable form.
     */
@@ -90,24 +93,26 @@ public:
    {
        return(Header::RIM_APPDATA_ACK);
    }
-   
+
    /**
     * Return the GUID of the ApplicationData object being acknoledged
     */
    vpr::GUID getId() { return mId; }
 
    /**
-    * Return a boolean determining if this is a positive(ACK) or a negative(NACK) responce.
+    * Return a boolean determining if this is a positive(ACK) or a
+    * negative(NACK) responce.
     */
-   bool getAck() { return mAck; }
+   bool getAck()
+   {
+      return mAck;
+   }
+
 private:
    vpr::GUID   mId;  /**< GUID for the ApplicationData object being acknoledged. */
    bool        mAck; /**< Boolean determining if this is a positive(ACK) or a negative(NACK) responce. */
 };
+
 }
 
 #endif
-
-
-
-

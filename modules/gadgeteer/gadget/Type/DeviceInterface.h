@@ -52,7 +52,8 @@ class PositionProxy;
 class StringProxy;
 class CommandProxy;
 
-/**
+/** \class BaseDeviceInterface DeviceInterface.h gadget/Type/DeviceInterface.h
+ *
  * Base class for simplified proxy interfaces.  Device interfaces are wrappers
  * that provide an easier way to access proxy objects from within user
  * applications.  Users can simply declare a local interface variable and use
@@ -127,6 +128,10 @@ private:    // Static information
 
 // ---- Type-specific interfaces ----
 
+/** \class DeviceInterface DeviceInterface.h gadget/Type/DeviceInterface.h
+ *
+ * Type-specific device interface.
+ */
 template<class PROXY_TYPE>
 class DeviceInterface : public BaseDeviceInterface
 {

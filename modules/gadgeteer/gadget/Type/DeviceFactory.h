@@ -46,14 +46,15 @@
 namespace gadget
 {
 
-/**
+/** \class DeviceFactory DeviceFactory.h gadget/Type/DeviceFactory.h
+ *
  * Object used for creating devices.
  * @note Singleton
  */
 class GADGET_CLASS_API DeviceFactory
 {
 private:
-   // Singleton so must be private
+   /** Singleton so must be private. */
    DeviceFactory()
    {
       mConstructors = std::vector<DeviceConstructorBase*>(0);
@@ -82,7 +83,7 @@ public:
 
    /**
     * Loads the specified device.
-    * @pre recognizeDevice(element) == true
+    * @pre recognizeDevice(element) == true.
     * @param element The specification of the device to load.
     * @return NULL is returned if the device failed to load.
     *         Otherwise, a pointer to the loaded device is returned.

@@ -47,7 +47,8 @@
 namespace gadget
 {
 
-/**
+/** \class PositionFilter PositionFilter.h gadget/Filter/Position/PositionFilter.h
+ *
  * PositionFilter is the abstract base class that all position filters derive
  * from.
  */
@@ -95,4 +96,3 @@ public:
 } // End of gadget namespace
 
 #endif
-

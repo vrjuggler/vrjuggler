@@ -56,7 +56,8 @@
 namespace gadget
 {
 
-/**
+/** \class PositionProxy PositionProxy.h gadget/Type/PositionProxy.h
+ *
  * A proxy class to positional devices, used by the Input Manager.
  *
  * A position proxy always points to a positional device and unit number within

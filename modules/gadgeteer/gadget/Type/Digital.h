@@ -49,7 +49,8 @@ namespace gadget
 
    const unsigned short MSG_DATA_DIGITAL = 420;
 
-   /**
+   /** \class Digital Digital.h gadget/Type/Digital.h
+    *
     * Digital is the abstract base class from which devices with digital data
     * derive (through gadget::InputMixer).  This is in addition to
     * gadget::Input.  gadget::Input provides pure virtual function constraints

@@ -38,7 +38,8 @@
 
 namespace gadget
 {
-/// Possible event types.
+
+/** Possible event types. */
 enum EventType
 {
    NoEvent                 = 0,  /**< No event */
@@ -49,7 +50,8 @@ enum EventType
    MouseMoveEvent          = 5   /**< Mouse move event */
 };
 
-/**
+/** \class Event Event.h gadget/Type/KeyboardMouse/Event.h
+ *
  * Base event type that an event source may generate.  This class cannot be
  * instantiated directly, and instead, subclasses must be used.
  */

@@ -47,12 +47,14 @@
 namespace gadget
 {
 
-/** Simulated analog device
-* Simulates an analog device from a keyboard device.
-* It allows any number of simulated analog devices to be created.
-*
-* This class should not be used directly by the user.
-*/
+/** \class SimAnalog SimAnalog.h gadget/Devices/Sim/SimAnalog.h
+ *
+ * Simulated analog device.
+ * Simulates an analog device from a keyboard device.
+ * It allows any number of simulated analog devices to be created.
+ *
+ * This class should not be used directly by the user.
+ */
 //class SimAnalog : public Input, public Analog, public SimInput
 class SimAnalog : public InputMixer<InputMixer<SimInput,Input>,Analog>
 {
@@ -61,20 +63,45 @@ public:
 
    virtual ~SimAnalog();
 
+   /**
+    * Reads the minimum and maximum value configuration information for this
+    * analog device.
+    *
+    * @param element The config element for an analog device.  It must derive
+    *                from the base config element type 'analog'.
+    */
    virtual bool config(jccl::ConfigElementPtr element);
 
    /** These functions don't do anything. */
-   bool startSampling() { return 1; }
-   bool stopSampling() { return 1; }
-   bool sample() { return 1; }
+   bool startSampling()
+   {
+      return true;
+   }
+
+   bool stopSampling()
+   {
+      return true;
+   }
+
+   bool sample()
+   {
+      return true;
+   }
 
    /** Updates the data. */
    virtual void updateData();
 
    static std::string getElementType();
 
-   virtual std::vector<KeyModPair> getUpKeys() { return mSimKeysUp; }
-   virtual std::vector<KeyModPair> getDownKeys() { return mSimKeysDown; }
+   virtual std::vector<KeyModPair> getUpKeys()
+   {
+      return mSimKeysUp;
+   }
+
+   virtual std::vector<KeyModPair> getDownKeys()
+   {
+      return mSimKeysDown;
+   }
 
    /**
     * Invokes the global scope delete operator.  This is required for proper

@@ -42,7 +42,8 @@
 namespace gadget
 {
 
-/**
+/** \class Gesture Gesture.h gadget/Type/Gesture.h
+ *
  * Base Gadgeteer Gesture interface class.
  * This class is the base interface for all gesture recognition objects.
  *

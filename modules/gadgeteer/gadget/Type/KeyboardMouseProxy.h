@@ -43,7 +43,8 @@
 namespace gadget
 {
 
-/**
+/** \class KeyboardMouseProxy KeyboardMouseProxy.h gadget/Type/KeyboardMouseProxy.h
+ *
  * A proxy class to keyboard/mouse devices, used by the Input Manager.
  *
  * A keyboard/mouse proxy always points to a keyboard/mouse device and unit

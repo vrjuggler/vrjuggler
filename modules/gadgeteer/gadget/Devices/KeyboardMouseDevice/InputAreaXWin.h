@@ -53,6 +53,11 @@ namespace gadget
 
 namespace gadget
 {
+
+/** \class InputAreaXWin InputAreaXWin.h gadget/Devices/KeyboardMouseDevice/InputAreaXWin.h
+ *
+ * Base class for X11 windows that accept keyboard and mouse input.
+ */
 class GADGET_CLASS_API InputAreaXWin : public InputArea
 {
 public:
@@ -127,11 +132,12 @@ private:
     *              buttons.
     */
    int getMask(const int& state);
+
    /**
     * Converts X Window key to Key.
     * @note Keypad keys are transformed ONLY to number keys.
     */
-   gadget::Keys xKeyToKey(::KeySym xKey);
+   gadget::Keys xKeyToKey(KeySym xKey);
    //gadget::Keys VKKeyToKey(int vkKey);
    //static void doInternalError( const std::string& msg );
    

@@ -45,31 +45,41 @@
 namespace gadget
 {
 
-/** Placeholder class.
-* This class is provides a generic implementation of the virtual
-* methods of a device.
-*
-* This class is meant to be used to create "place holder" devices
-* that don't actually function on their own but instead just
-* look like a device with a given interface.
-* This can be useful for devices that are progmatically set
-* by systems such as the remote input manager
-*/
+/** \class InputPlaceHolder InputMixer.h gadget/Type/InputMixer.h
+ *
+ * Placeholder class.
+ * This class is provides a generic implementation of the virtual
+ * methods of a device.
+ *
+ * This class is meant to be used to create "place holder" devices
+ * that don't actually function on their own but instead just
+ * look like a device with a given interface.
+ * This can be useful for devices that are progmatically set
+ * by systems such as the remote input manager
+ */
 template <class ParentType>
 class InputPlaceHolder  : public ParentType
 {
 public:
    virtual bool sample()
-    {return(0);}
+   {
+      return false;
+   }
 
    virtual bool startSampling()
-    {return(0);}
+   {
+      return false;
+   }
 
    virtual bool stopSampling()
-    {return(0);}
+   {
+      return false;
+   }
 
    virtual void updateData()
-    {;}
+   {
+      /* Do nothing. */ ;
+   }
 
    /**
     * Invokes the global scope delete operator.  This is required for proper
@@ -91,16 +101,22 @@ protected:
    }
 };
 
-
 /**
-* Class for mixin in base classes of input devices.
-* All devices should derive from a mixed type like below based on their types.
-*
-* This allows us to implement any custom functions that are needed
-* such as writeObject and readObject.
-*
-* InputMixer<InputMixer<InputMixer<Input,Digital>,Analog>,Position>
-*/
+ * @example "Example use of gadget::InputMixer"
+ *
+ * \code
+ * InputMixer<InputMixer<InputMixer<Input,Digital>,Analog>,Position>
+ * \endcode
+ */
+
+/** \class InputMixer InputMixer.h gadget/Type/InputMixer.h
+ *
+ * Class for mixin in base classes of input devices.
+ * All devices should derive from a mixed type like below based on their types.
+ *
+ * This allows us to implement any custom functions that are needed
+ * such as writeObject and readObject.
+ */
 template <class ComposedParent, class NewParent>
 class InputMixer : public ComposedParent, public NewParent
 {
@@ -138,5 +154,5 @@ public:
 
 } // end namespace
 
-#endif   /* _GADGET_INPUT_MIXER_H_ */
 
+#endif   /* _GADGET_INPUT_MIXER_H_ */

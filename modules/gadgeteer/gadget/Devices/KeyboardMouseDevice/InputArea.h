@@ -49,6 +49,11 @@
 
 namespace gadget
 {
+
+/** \class InputArea InputArea.h gadget/Devices/KeyboardMouseDevice/InputArea.h
+ *
+ * Base class for window types that accept keyboard and mouse input.
+ */
 class GADGET_CLASS_API InputArea
 {
 public:

@@ -70,7 +70,7 @@ public:
     * Parses the data stream into the local member variables.
     */
    virtual void parse(vpr::BufferObjectReader* reader);
-   
+
    /**
     * Print the data to the screen in a readable form.
     */
@@ -83,17 +83,17 @@ public:
    {
        return(Header::RIM_END_BLOCK);
    }
+
    vpr::Uint16 getTempVar()
    {
       return mTempVar;
    }
+
 private:
-   vpr::Uint16    mTempVar;    /**< Temporary variable that is no longer used. */
+   vpr::Uint16    mTempVar;  /**< Temporary variable that is no longer used. */
 };
+
 }
 
+
 #endif
-
-
-
-

@@ -65,7 +65,8 @@ namespace gadget
 class Node;
 class PacketHandler;
 
-/**
+/** \class AbstractNetworkManager AbstractNetworkManager.h gadget/AbstractNetworkManager.h
+ *
  * Network abstraction.
  */
 class GADGET_CLASS_API AbstractNetworkManager : public jccl::ConfigElementHandler

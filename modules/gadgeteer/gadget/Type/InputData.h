@@ -39,7 +39,8 @@
 namespace gadget 
 {
 
-/**
+/** \class InputData InputData.h gadget/Type/InputData.h
+ *
  * Base class for all input data returned by Gadgeteer.
  * This provides all input data with a standard timestamping system used to
  * calculate input latency.

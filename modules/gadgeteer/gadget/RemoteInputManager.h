@@ -60,6 +60,12 @@ class DeviceServer;
 class Input;
 class VirtualDevice;
 
+/** \class RemoteInputManager RemoteInputManager.h gadget/RemoteInputManager.h
+ *
+ * Remote Input Manager that handles input from virtual devices.
+ *
+ * @see gadget::Node, gadget::DeviceServer, gadget::VirtualDevice
+ */
 class GADGET_CLASS_API RemoteInputManager
    : public gadget::PacketHandler/*, public jccl::ConfigElementHandler*/
 {
@@ -69,11 +75,10 @@ public:
    virtual ~RemoteInputManager();
 
    /**
-    * This function is called when the network losses
-    * a connection to a Node. The RemoteInputManager
-    * needs to handle this by removing all VirtualDevices on 
-    * the lost node. And removing the node as a client from 
-    * all DeviceServers.
+    * This function is called when the network losses a connection to a Node.
+    * The Remote Input Manager needs to handle this by removing all
+    * virtual devices on the lost node and by removing the node as a client
+    * from all device servers.
     */
    void recoverFromLostNode(Node* lost_node);
    
@@ -83,7 +88,7 @@ public:
    void handlePacket(cluster::Packet* packet, Node* node);
 
    /** 
-    *  Returns the name of the this plugin
+    * Returns the name of the this plugin.
     */
    virtual std::string getHandlerName()
    {
@@ -95,59 +100,75 @@ public:
       return mHandlerGUID;
    }
    
-   /** Calls any action needed by this plugin before postFrame()
+   /**
+    * Calls any action needed by this plugin before postFrame().
     *
-    *  This function was inherited from the
-    *  ClusterPlugin abstract class. 
+    * This function was inherited from the Cluster Plugin abstract class. 
     */
    void sendDataAndSync();
 
-
-   // Methods used by InputManager.
+   /** @name Methods used by InputManager */
+   //@{
    gadget::Input* getVirtualDevice(const vpr::GUID& device_id);
    gadget::Input* getVirtualDevice(const std::string& device_name);
+   //@}
    
-   // Configuration methods.
+   /** @name Configuration methods */
+   //@{
    /*
    bool configAdd(jccl::ConfigElementPtr element);
    bool configRemove(jccl::ConfigElementPtr element);
    bool configCanHandle(jccl::ConfigElementPtr element);  
    */
+   //@}
 
-   // Debug methods.
+   /** @name Debug methods */
+   //@{
    void debugDumpDeviceServers(int debug_level);
    void debugDumpVirtualDevices(int debug_level);
+   //@}
+
 private:
-   // VirtualDevice methods.
+   /** @name VirtualDevice methods */
+   //@{
    vpr::ReturnStatus addVirtualDevice(const vpr::GUID& device_id, const std::string& name, 
                                       const std::string& device_base_type, const std::string& hostname);
    void addVirtualDevice(VirtualDevice* device);
    void removeVirtualDevice(const std::string& device_name);
    void removeVirtualDevice(const vpr::GUID& device_id);
    vpr::ReturnStatus removeVirtualDevicesOnHost(const std::string& host_name);
+   //@}
    
-   // DeviceServer methods.
+   /** @name DeviceServer methods */
+   //@{
    vpr::ReturnStatus addDeviceServer(const std::string& name, gadget::Input* device);
    void addDeviceServer(DeviceServer* device);
    void removeDeviceServer(const std::string& device_name);
    void removeDeviceServer(const vpr::Uint16& device_id);
    DeviceServer* getDeviceServer(const std::string& device_name);
+   //@}
    
-   // Connection management.
+   /** @name Connection management */
+   //@{
    vpr::ReturnStatus removeDeviceClientsForHost(const std::string& host_name);
+   //@}
    
-   // Configuration helpers.
+   /** @name Configuration helpers */
+   //@{
    jccl::ConfigElementPtr getConfigElementPointer(std::string& name);
    vpr::ReturnStatus createPendingConfigRemove(std::string device_name);
    vpr::ReturnStatus createPendingConfigRemoveAndAdd(std::string device_name);
+   //@}
 
-   // Device request management.
+   /** @name Device request management */
+   //@{
 public:
    void addPendingDeviceRequest(cluster::DeviceRequest* new_device_req, Node* node);
    void sendDeviceRequests();
 private:
    void removePendingDeviceRequest(std::string device_name);
    vpr::Uint16 getNumberPendingDeviceRequests();
+   //@}
    
 protected:
    vpr::GUID                            mHandlerGUID;

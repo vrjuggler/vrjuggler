@@ -41,7 +41,10 @@
 namespace gadget
 {
 
-/** InputData subclass for string data. */
+/** \class StringData StringData.h gadget/Type/StringData.h
+ *
+ * InputData subclass for string data.
+ */
 class StringData : public InputData
 {
    // Hack around a GCC 3.3 bug on Mac OS X 10.3 that shows up with

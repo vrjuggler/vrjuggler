@@ -46,7 +46,8 @@
 namespace gadget
 {
 
-   /**
+   /** \class Proxy Proxy.h gadget/Type/Proxy.h
+    *
     * Base class for all input proxies.
     */
    class GADGET_CLASS_API Proxy
@@ -141,7 +142,10 @@ namespace gadget
       bool        mStupified;    /**< Is the proxy current stupified (returns default data) */
    };
 
-
+   /** \class TypedProxy Proxy.h gadget/Type/Proxy.h
+    *
+    * Proxy for specific device types.
+    */
    template <class DEV_TYPE>
    class TypedProxy : public Proxy
    {

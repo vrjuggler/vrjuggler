@@ -37,12 +37,16 @@
 #include <vpr/vprTypes.h>
 #include <vpr/IO/Socket/SocketStream.h>
 
-#include <cluster/Packets/Header.h>                                                       
+#include <cluster/Packets/Header.h>
 #include <cluster/Packets/Packet.h>
 
 namespace cluster
 {
 
+/** \class DataPacket DataPacket.h cluster/Packets/DataPacket.h
+ *
+ * Cluster data packet.
+ */
 class GADGET_CLASS_API DataPacket : public Packet
 {
 public:
@@ -60,8 +64,9 @@ public:
     * @param data      Pointer to the raw data that we want to send across
     *                  the network
     */
-   DataPacket(const vpr::GUID& plugin_id, const vpr::GUID& object_id, std::vector<vpr::Uint8>* data);
-   
+   DataPacket(const vpr::GUID& plugin_id, const vpr::GUID& object_id,
+              std::vector<vpr::Uint8>* data);
+
    /**
     * Clean up all unused memory.
     */
@@ -79,40 +84,42 @@ public:
     * Parses the data stream into the local member variables.
     */
    virtual void parse(vpr::BufferObjectReader* reader);
-   
+
    /**
     * Print the data to the screen in a readable form.
     */
    virtual void printData(int debug_level);
-   
+
    /**
     * Return the type of this packet.
     */
    static vpr::Uint16 getPacketFactoryType()
    {
-       return(Header::RIM_DATA_PACKET);
+      return(Header::RIM_DATA_PACKET);
    }
 
    /**
     * Return the GUID of the object that we are sending raw data for.
     */
    vpr::GUID getObjectId()
-   { return mObjectId; }
-   
+   {
+      return mObjectId;
+   }
+
    /**
     * Return a pointer to the raw data that we are sending across the network
     */
    std::vector<vpr::Uint8>* getDeviceData()
-   { return mDeviceData; }
-   
+   {
+      return mDeviceData;
+   }
+
 private:
    vpr::GUID                  mObjectId;     /**< GUID of the object that we are sending raw data for. */
    std::vector<vpr::Uint8>*   mDeviceData;   /**< Raw data that we are sending across the network. */
 };
+
 }// end namespace cluster
 
+
 #endif
-
-
-
-

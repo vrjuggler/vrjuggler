@@ -41,7 +41,8 @@
 namespace gadget
 {
 
-/**
+/** \class CommandProxy CommandProxy.h gadget/Type/CommandProxy.h
+ *
  * A proxy class to command-oriented devices, used by the Input Manager.
  *
  * A command proxy always points to a command-oriented device and unit number

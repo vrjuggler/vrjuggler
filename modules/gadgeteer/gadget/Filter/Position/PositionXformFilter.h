@@ -47,6 +47,10 @@
 namespace gadget
 {
 
+/** \class PositionXformFilter PositionXformFilter.h gadget/Filter/Position/PositionXformFilter.h
+ *
+ * Position transformation filter.
+ */
 class GADGET_CLASS_API PositionXformFilter : public PositionFilter
 {
 public:

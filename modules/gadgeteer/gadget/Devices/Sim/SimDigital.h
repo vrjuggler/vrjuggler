@@ -43,7 +43,9 @@
 
 namespace gadget
 {
-/**
+
+/** \class SimDigital SimDigital.h gadget/Devices/Sim/SimDigital.h
+ *
  * Simulated digital device.
  * Simulates a digital device from a keyboard device.
  * It allows any number of simulated digital devices to be created.

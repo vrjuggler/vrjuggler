@@ -41,6 +41,10 @@
 namespace cluster
 {
 
+/** \class ClusterNode ClusterNode.h cluster/ClusterNode.h
+ *
+ * Cluster node.
+ */
 class GADGET_CLASS_API ClusterNode : public gadget::Node
 {
 public:

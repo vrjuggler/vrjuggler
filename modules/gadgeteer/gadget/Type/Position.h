@@ -57,7 +57,8 @@ namespace gadget
 class PositionFilter;
 const unsigned short MSG_DATA_POS = 422;
 
-/**
+/** \class Position Position.h gadget/Type/Position.h
+ *
  * Position is the abstract base class from which devices with positional
  * (translation and/or rotation) data derive (through gadget::InputMixer).
  * This is in addition to gadget::Input.  gadget::Input provides pure virtual

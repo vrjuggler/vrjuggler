@@ -40,12 +40,16 @@
 #include <vpr/IO/BufferObjectWriter.h>
 #include <vpr/IO/Socket/SocketStream.h>
 
-#include <cluster/Packets/Header.h>                                                       
+#include <cluster/Packets/Header.h>
 #include <cluster/Packets/Packet.h>
 
 namespace cluster
 {
 
+/** \class SyncRequest SyncRequest.h cluster/Packets/SyncRequest.h
+ *
+ * Synchronization request packet.
+ */
 class GADGET_CLASS_API SyncRequest : public Packet
 {
 public:
@@ -69,7 +73,7 @@ public:
     * Parses the data stream into the local member variables.
     */
    virtual void parse(vpr::BufferObjectReader* reader);
-   
+
    /**
     * Print the data to the screen in a readable form.
     */
@@ -80,18 +84,25 @@ public:
     */
    static vpr::Uint16 getPacketFactoryType()
    {
-       return(Header::RIM_SYNC_REQ);
+      return(Header::RIM_SYNC_REQ);
    }
-   
+
    /**
     * Return the hostname of the node requesting syncronization.
     */
-   std::string getHostname() { return mHostname; }
+   std::string getHostname()
+   {
+      return mHostname;
+   }
 
    /**
     * Return the listening port of the requesting machine.
     */
-   vpr::Uint16 getPort() { return mPort; }
+   vpr::Uint16 getPort()
+   {
+      return mPort;
+   }
+
 private:
    std::string mHostname;  /**< Hostname of the node requesting syncronization. */
    vpr::Uint16 mPort;      /**< Listening port of the requesting machine. */

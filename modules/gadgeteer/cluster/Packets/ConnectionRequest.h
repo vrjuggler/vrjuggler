@@ -40,12 +40,16 @@
 #include <vpr/IO/BufferObjectWriter.h>
 #include <vpr/IO/Socket/SocketStream.h>
 
-#include <cluster/Packets/Header.h>                                                       
+#include <cluster/Packets/Header.h>
 #include <cluster/Packets/Packet.h>
 
 namespace cluster
 {
 
+/** \class ConnectionRequest ConnectionRequest.h cluster/Packets/ConnectionRequest.h
+ *
+ * Connection request packet.
+ */
 class GADGET_CLASS_API ConnectionRequest : public Packet
 {
 public:
@@ -59,7 +63,7 @@ public:
     * @param port      Port that the requesting machine is listening on.
     */
    ConnectionRequest(std::string host_name, vpr::Uint16 port);
-   
+
    /**
     * Serializes member variables into a data stream.
     */
@@ -69,37 +73,42 @@ public:
     * Parses the data stream into the local member variables.
     */
    virtual void parse(vpr::BufferObjectReader* reader);
-   
+
    /**
     * Print the data to the screen in a readable form.
     */
    virtual void printData(int debug_level);
-   
+
    /**
     * Return the type of this packet.
     */
    static vpr::Uint16 getPacketFactoryType()
    {
-       return(Header::RIM_CONNECTION_REQ);
+      return(Header::RIM_CONNECTION_REQ);
    }
-   
+
    /**
     * Return the hostname of the machine requesting the connection.
     */
-   std::string getHostname() { return mHostname; }
+   std::string getHostname()
+   {
+      return mHostname;
+   }
 
    /**
     * Return the port that the requesting machine is listening on.
     */
-   vpr::Uint16 getPort() { return mPort; }
+   vpr::Uint16 getPort()
+   {
+      return mPort;
+   }
+
 private:
    std::string mHostname;  /**< Hostname of the machine requesting the connection. */
    vpr::Uint16 mPort;      /**< Port that the requesting machine is listening on. */
 };
+
 }
 
+
 #endif
-
-
-
-

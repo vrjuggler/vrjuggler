@@ -41,7 +41,8 @@
 namespace gadget
 {
 
-/**
+/** \class DigitalProxy DigitalProxy.h gadget/Type/DigitalProxy.h
+ *
  * A proxy class to digital devices, used by the Input Manager.
  *
  * A digital proxy always points to a digital device and unit number within

@@ -51,6 +51,10 @@ namespace gadget
 namespace gadget
 {
 
+/** \class InputAreaWin32 InputAreaWin32.h gadget/Devices/KeyboardMouseDevice/InputAreaWin32.h
+ *
+ * Base class for Win32 windows that accept keyboard and mouse input.
+ */
 class GADGET_CLASS_API InputAreaWin32 : public gadget::InputArea
 {
 public:

@@ -45,7 +45,8 @@
 namespace gadget
 {
 
-/**
+/** \class GloveGesture GloveGesture.h gadget/Type/GloveGesture.h
+ *
  * Abstract base class for all glove gesture recognition.
  */
 class GloveGesture : public Gesture
@@ -81,15 +82,17 @@ public:
     * This is both for the samples and for the trained files.
     *
     * The header format is:
-    *   -Comments -- # starting
-    *   - <num gestures>
-    *   -Gesture names
-    *   -Gesture samples
-    * infile is a file that is already open and ready for reading.
+    *
+    *   -Comments -- # starting<br>
+    *   -num gestures<br>
+    *   -Gesture names<br>
+    *   -Gesture samples<br>
+    *
+    * \p infile is a file that is already open and ready for reading.
     *
     * @post After running, this routines will leave the file pointer
-    *       immedately after the header.
-    * @post mGestureNames & mGestureExamples will be filled with correct data.
+    *       immedately after the header.  mGestureNames & mGestureExamples
+    *       will be filled with correct data.
     */
    virtual void loadFileHeader(std::ifstream& infile);
 

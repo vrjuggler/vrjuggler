@@ -40,12 +40,16 @@
 #include <vpr/IO/BufferObjectWriter.h>
 #include <vpr/IO/Socket/SocketStream.h>
 
-#include <cluster/Packets/Header.h>                                                       
+#include <cluster/Packets/Header.h>
 #include <cluster/Packets/Packet.h>
 
 namespace cluster
 {
 
+/** \class SyncAck SyncAck.h cluster/Packets/SyncAck.h
+ *
+ * Synchronization acknowledgement packet.
+ */
 class GADGET_CLASS_API SyncAck : public Packet
 {
 public:
@@ -61,7 +65,8 @@ public:
     * @param ack       Boolean determining if this is a positive (ACK) or a
     *                  negative (NACK) responce.
     */
-   SyncAck(const std::string& host_name, const vpr::Uint16& port, const bool ack);
+   SyncAck(const std::string& host_name, const vpr::Uint16& port,
+           const bool ack);
 
    /**
     * Serializes member variables into a data stream.
@@ -72,43 +77,52 @@ public:
     * Parses the data stream into the local member variables.
     */
    virtual void parse(vpr::BufferObjectReader* reader);
-   
+
    /**
     * Print the data to the screen in a readable form.
     */
    virtual void printData(int debug_level);
-   
+
    /**
     * Return the type of this packet.
     */
    static vpr::Uint16 getPacketFactoryType()
    {
-       return(Header::RIM_SYNC_ACK);
+      return(Header::RIM_SYNC_ACK);
    }
-   
+
    /**
     * Returns the hostname of the node acknowledging the SyncRequest.
     */
-   std::string getHostname() { return mHostname; }
-   
+   std::string getHostname()
+   {
+      return mHostname;
+   }
+
    /**
     * Returns the port of the node acknowledging the SyncRequest.
     */
-   vpr::Uint16 getPort() { return mPort; }
-   
+   vpr::Uint16 getPort()
+   {
+      return mPort;
+   }
+
    /**
-    * Returns a boolean determining if this is a positive(ACK) or a negative(NACK) responce.
+    * Returns a boolean determining if this is a positive(ACK) or a
+    * negative(NACK) responce.
     */
-   bool getAck() { return mAck; }
+   bool getAck()
+   {
+      return mAck;
+   }
+
 private:
    std::string mHostname;  /**< Hostname of the node acknowledging the SyncRequest. */
    vpr::Uint16 mPort;      /**< Listening port of the node acknowledging the SyncRequest. */
    bool        mAck;       /**< Boolean determining if this is a positive(ACK) or a negative(NACK) responce. */
 };
+
 }
 
+
 #endif
-
-
-
-

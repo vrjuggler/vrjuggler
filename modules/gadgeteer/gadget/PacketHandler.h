@@ -54,6 +54,10 @@ namespace gadget
 
 class Node;
 
+/** \class PacketHandler PacketHandler.h gadget/PacketHandler.h
+ *
+ * Packet handler interface used for network communication.
+ */
 class GADGET_CLASS_API PacketHandler
 {
 public:

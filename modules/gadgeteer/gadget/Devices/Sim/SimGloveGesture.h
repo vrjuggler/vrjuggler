@@ -45,8 +45,8 @@
 namespace gadget
 {
 
-
-/**
+/** \class SimGloveGesture SimGloveGesture.h gadget/Devices/Sim/SimGloveGesture.h
+ *
  * Simulated glove class.  This class simulates a gesture input device.
  * By default the glove is in gesture 0.
  */
@@ -135,6 +135,6 @@ private:
    DigitalData     mDigitalData;  /**< Result of table lookup of mCurGesture */
 };
 
-};
+}
 
 #endif
