@@ -18,13 +18,10 @@ sub filter {
     $new_str .= addRow("$retval", "$retdesc");
 
     $str = <<END_TABLE;
-<TABLE BORDER="1" CELLPADDING="2">
+<TABLE BORDER="1" CELLPADDING="2" WIDTH="100%">
   <TR>
-    <TH BGCOLOR="#dddddd">
-      <FONT SIZE="2">Return value</FONT>
-    </TH>
-    <TH BGCOLOR="#dddddd">
-      <FONT SIZE="2">Description</FONT>
+    <TH COLSPAN="2" BGCOLOR="#6b92b2" ALIGN="LEFT">
+      <FONT SIZE="-1" COLOR="#ffffff">Return values</FONT>
     </TH>
   </TR>
   $new_str
@@ -39,11 +36,11 @@ sub addRow {
 
     my $str = <<END_ROW;
   <TR>
-    <TD ALIGN="RIGHT">
-      <B><FONT SIZE="2">$value</FONT></B>
+    <TD ALIGN="RIGHT" WIDTH="12%">
+      <B><FONT SIZE="-1">$value</FONT></B>
     </TD>
-    <TD>
-      <FONT SIZE="2">$descr</FONT>
+    <TD WIDTH="88%">
+      <FONT SIZE="-1">$descr</FONT>
     </TD>
   </TR>
 END_ROW
