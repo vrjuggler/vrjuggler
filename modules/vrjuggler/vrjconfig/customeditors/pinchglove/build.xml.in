@@ -14,8 +14,13 @@
       <pathelement path="@JCCL_JARS@" />
    </path>
 
+   <path id="commoneditors.classpath">
+      <pathelement path="${topdir}/commoneditors/CommonEditors.jar" />
+   </path>
+
    <property name="tweek.classpath" refid="tweek.classpath" />
    <property name="jccl.classpath" refid="jccl.classpath" />
+   <property name="commoneditors.classpath" refid="commoneditors.classpath" />
 
    <!-- Compile all java sources -->
    <target name="compile">
@@ -28,6 +33,7 @@
          <classpath>
             <pathelement path="${tweek.classpath}" />
             <pathelement path="${jccl.classpath}" />
+            <pathelement path="${commoneditors.classpath}" />
          </classpath>
       </javac>
    </target>
