@@ -143,6 +143,7 @@
  * Define to `unsigned int' if the u_int and/or u_int32_t types are not
  * available.  On Windows when using Visual C++, define to UINT.
  */
+#undef u_int
 #undef uint32_t
 
 /*
