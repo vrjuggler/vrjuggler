@@ -1,14 +1,14 @@
 /*
  * --------------------------------------------------------------------------
- *  vjMutexPosix.h
+ * vjMutexPosix.h
  * $Revision$
  * $Date$
  *
  * Author:
- *   Patrick Hartling (based on  vjMutexSGI by Allen Bierbaum).
+ *   Patrick Hartling (based on vjMutexSGI by Allen Bierbaum).
  * --------------------------------------------------------------------------
  * NOTES:
- *    - This file ( vjMutexPosix.h) must be included by vjMutex.h, not the
+ *    - This file (vjMutexPosix.h) must be included by vjMutex.h, not the
  *      other way around.
  *    - The following libraries must be linked in at compile time:
  *         HP-UX 10.20 --> -lcma
@@ -28,17 +28,17 @@
 //: Mutex wrapper for POSIX-compliant systems using pthreads mutex variables
 //+ for the implementation.
 
-class  vjMutexPosix {
+class vjMutexPosix {
 public:
     // -----------------------------------------------------------------------
-    //: Constructor for  vjMutexPosix class.
+    //: Constructor for vjMutexPosix class.
     //
     //! PRE: None.
     //! POST: The mutex variable is initialized for use.  It must be
     //+       initialized before any other member functions can do anything
     //+       with it.
     // -----------------------------------------------------------------------
-     vjMutexPosix (void) {
+    vjMutexPosix (void) {
         // ----- Allocate the mutex ----- //
         mutex = (pthread_mutex_t *) malloc(sizeof(pthread_mutex_t));
 
@@ -50,14 +50,14 @@ public:
     }
 
     // -----------------------------------------------------------------------
-    //: Destructor for  vjMutexPosix class.
+    //: Destructor for vjMutexPosix class.
     //
     //! PRE: The mutex variable should be unlocked before being destroyed,
     //+      but if it is not, this routine will unlock it and then destroy
     //+      it.
     //! POST: The mutex variable is destroyed and unlocked if necessary.
     // -----------------------------------------------------------------------
-    ~ vjMutexPosix (void) {
+    ~vjMutexPosix (void) {
         // Destroy the mutex.
         if ( pthread_mutex_destroy(mutex) == -1 ) {
             pthread_mutex_unlock(mutex);
@@ -248,8 +248,8 @@ protected:
     pthread_mutex_t* mutex;	//: Mutex variable for the class.
 
     // = Prevent assignment and initialization.
-    void operator= (const  vjMutexPosix &) {}
-     vjMutexPosix (const  vjMutexPosix &) {}
+    void operator= (const vjMutexPosix &) {}
+    vjMutexPosix (const vjMutexPosix &) {}
 };
 
 #endif	/* ifdef _MUTEX_POSIX_H_ */
