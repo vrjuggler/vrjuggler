@@ -38,12 +38,13 @@
 #include <vector>
 
 #include <vpr/vpr.h>
+#include <jccl/Config/ConfigChunk.h>
+
 #include <vrj/Draw/OGL/GlWindow.h>
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Display/Display.h>
 #include <vrj/Display/DisplayManager.h>
-#include <jccl/Config/ConfigChunk.h>
 
 #include <vrj/Draw/OGL/GlWindowXWin.h>
 
@@ -108,7 +109,7 @@ int GlWindowXWin::open()
    screen = DefaultScreen(mXDisplay);
 
    // get an XVisualInfo*, which we'll need below
-   if ( (mVisualInfo = GetGlxVisInfo(mXDisplay, screen)) == NULL )
+   if ( (mVisualInfo = getGlxVisInfo(mXDisplay, screen)) == NULL )
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
          << clrOutNORM(clrRED,"ERROR:") << "glXChooseVisual failed\n"
@@ -439,7 +440,7 @@ void GlWindowXWin::checkEvents()
 /***********************************************************/
 /* private member functions.  these get profoundly painful */
 /***********************************************************/
-::XVisualInfo* GlWindowXWin::GetGlxVisInfo( ::Display *display, int screen )
+::XVisualInfo* GlWindowXWin::getGlxVisInfo(::Display *display, int screen)
 {
    /* pre:  screen is a screen on the current XDisplay, and
     *       XDisplay is already defined and valid.
