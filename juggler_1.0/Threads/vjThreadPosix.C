@@ -134,8 +134,10 @@ vjThreadPosix::spawn (vjBaseThreadFunctor* functorPtr, long flags,
         }
 #   endif	/* _POSIX_THREAD_ATTR_STACKADDR */
 
+    // If thread priority scheduling is available, set the thread's priority
+    // if it is set to be higher than 0.
 #   ifdef _POSIX_THREAD_PRIORITY_SCHEDULING
-        pthread_attr_setscope(&thread_attrs, PTHREAD_SCOPE_SYSTEM);
+        pthread_attr_setscope(&thread_attrs, VJ_THREAD_SCOPE);
 
         if ( priority > 0 ) {
             prio_param.sched_priority = priority;
