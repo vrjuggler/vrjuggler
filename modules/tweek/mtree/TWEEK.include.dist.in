@@ -43,6 +43,10 @@
         tweek
             CORBA
             ..
+            Util
+            ..
+            idl
+            ..
         ..
     ..
 ..
