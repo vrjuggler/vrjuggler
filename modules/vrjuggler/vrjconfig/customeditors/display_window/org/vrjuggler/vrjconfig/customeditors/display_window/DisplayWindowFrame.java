@@ -84,7 +84,7 @@ public class DisplayWindowFrame
 
    public DisplayWindowFrame(String title, Dimension resolution,
                              Dimension desktopSize, ConfigContext ctx,
-                             ConfigElement elt)
+                             ConfigElement elt, boolean allowKbdEdit)
    {
       super(title, resolution, desktopSize, ctx, elt);
 
@@ -99,6 +99,9 @@ public class DisplayWindowFrame
          mViewportEditor.getPlacer().addPlacerSelectionListener(this);
 
          jbInit();
+
+         mKbdEditor = new KeyboardChooserPanel(ctx, elt, allowKbdEdit);
+         this.getContentPane().add(mKbdEditor, BorderLayout.NORTH);
 
          placeMyself();
 
@@ -125,11 +128,13 @@ public class DisplayWindowFrame
     *
     * Is this the best place (or way) to do this?
     */
+/*
    public void removeNotify()
    {
       super.removeNotify();
       mElement.removeConfigElementListener(mElementListener);
    }
+*/
 
    public void valueChanged(PlacerSelectionEvent e)
    {
@@ -255,6 +260,7 @@ public class DisplayWindowFrame
    private DisplayWindowFrame_this_configElementAdapter mElementListener = null;
    private boolean mHideMouse = false;
 //   private boolean mMousePressed = false;
+   private KeyboardChooserPanel mKbdEditor = null;
    private ViewportPlacer mViewportEditor = null;
    private ConfigElement mSelectedViewport = null;
 
