@@ -109,8 +109,7 @@ namespace Flock
 
 
 /** Configure constructor. */
-FlockStandalone::FlockStandalone(std::string port, const unsigned& numBrds,
-                                 const int& transmit, const int& baud,
+FlockStandalone::FlockStandalone(std::string port, const int& baud,
                                  const int& sync, const BIRD_HEMI& hemi,
                                  const BIRD_FILT& filt, Flock::ReportRate report)
    : mStatus(FlockStandalone::CLOSED),
@@ -120,8 +119,7 @@ FlockStandalone::FlockStandalone(std::string port, const unsigned& numBrds,
     mMode(Flock::UnknownMode),
     mAddrMode(Flock::UnknownAddressing),
     mSwRevision(0.0f),
-    mNumSensors(numBrds),
-    mXmitterUnitNumber(transmit),
+    mNumSensors(0),
     mReportRate(report),
     mHemisphere(hemi),
     mFilter(filt),
@@ -324,6 +322,8 @@ vpr::ReturnStatus FlockStandalone::configure()
    if(Flock::Standalone != mMode)
    {
       // Find address of transmitter to use
+      // XXX: Do not try to automatically get transmitter address right now.
+      /*
       vpr::Uint8 transmitter_addr(0);
       if(!mXmitterIndices.empty())
       {  transmitter_addr = mFlockUnits[mXmitterIndices[0]].mAddr; }
@@ -335,8 +335,10 @@ vpr::ReturnStatus FlockStandalone::configure()
          sendNextTransmitterCmd(transmitter_addr, 0);
          checkError();
       }
+      */
 
       vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting autoconfig\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "    mActiveUnitEndIndex: " << mActiveUnitEndIndex << std::endl << vprDEBUG_FLUSH;
       sendAutoconfigCmd(mActiveUnitEndIndex);    // Add one for flock stupidity
       //checkError();      
    }
@@ -372,7 +374,7 @@ void FlockStandalone::sample()
    const vpr::Uint8 phase_mask(1<<7);     // Mask for finding phasing bit
 
    unsigned single_bird_data_size = Flock::Output::getDataSize(mOutputFormat);
-   if(Flock::Standalone != mMode)      // If we are in group mode, then it is one byte longer
+   if(Flock::Standalone != mMode)      // If we are in group mode, then it is one byte longer (the bird address for the sample)
    {
       single_bird_data_size += 1;
    }
@@ -661,26 +663,19 @@ void FlockStandalone::setOutputFormat(Flock::Output::Format format)
    if (FlockStandalone::RUNNING == mStatus)
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting output format to: " << Flock::Output::getFormatString(mOutputFormat) << "\n" << vprDEBUG_FLUSH;
+      vpr::System::msleep(50);
+      //vpr::ReturnStatus ret_stat = mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);       // Clear the buffers
       sendOutputFormatCmd(mOutputFormat, true);
+      //if(!ret_stat.success())
+      //{   throw Flock::CommandFailureException("Failed to flush queue before command"); }
+      //
    }
-
    if(was_streaming)
    {
       startStreaming();
    }
 }
 
-
-/** Sets the unit number of the transmitter. */
-void FlockStandalone::setTransmitter( const int& Transmit )
-{
-   if ( (FlockStandalone::CLOSED != mStatus) && (FlockStandalone::OPEN != mStatus) )
-   {
-      throw Flock::CommandFailureException("Setting transmitter not allowed after flock configured");
-   }
-
-   mXmitterUnitNumber = Transmit;
-}
 
 /** Sets the number of birds to use in the Flock. */
 void FlockStandalone::setNumSensors( const unsigned& n )
@@ -728,13 +723,20 @@ void FlockStandalone::processDataRecord(std::vector<vpr::Uint8> dataRecord)
       unsigned data_offset = (single_bird_data_size*sensor);
       vprASSERT(dataRecord[data_offset] & phase_mask && "Unit record within data record does not have correct phase mask");
       gmtl::Matrix44f sensor_mat = processSensorRecord(&(dataRecord[data_offset]));
-      int sensor_number(0);
+      int sensor_number(0);                                              // In standalone mode, only read into sensor 0
       if(Flock::Standalone != mMode)
       {
          // Get address from last byte in record for this unit
+         // - Unit address *should* always just be sensor+1 since we are reading in order
+         // XXX: There could be a bug here where we are getting the wrong group address
          vpr::Uint8 unit_addr = dataRecord[data_offset+(single_bird_data_size-1)];
+         if(unit_addr != (sensor+1))
+         {
+            unit_addr = sensor+1;
+            vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "Got out of order unit data from group address byte.\n" << vprDEBUG_FLUSH;
+         }
          vprASSERT(unit_addr <= mActiveUnitEndIndex);
-         sensor_number = mAddrToSensorIdMap[unit_addr];
+         sensor_number = mAddrToSensorIdMap[unit_addr]; 
          vprASSERT(sensor_number != -1 && "Got addr of unit we don't think has sensor");
       }
       mSensorData[unsigned(sensor_number)] = sensor_mat;
@@ -1224,6 +1226,8 @@ void FlockStandalone::pickBird (const vpr::Uint8 birdID)
       cmd_data.push_back(birdID);
    }
 
+   //std::cout << "Picking bird: " << (int)birdID << std::endl;
+
    sendCommand(cmd, cmd_data);
 }
 
@@ -1394,21 +1398,32 @@ void FlockStandalone::readInitialFlockConfiguration()
       sw_rev = querySoftwareRevision();
       mSwRevision = float(sw_rev.first) + (float(sw_rev.second)/100.0f);
       vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "      sw ver: " << mSwRevision << std::endl << vprDEBUG_FLUSH;
-      vprASSERT(mSwRevision >= 2.67f && "This driver only works with fob sw version 3.67 or higher");
+      //vprASSERT(mSwRevision >= 2.67f && "This driver only works with fob sw version 3.67 or higher");
 
       // Get the model id
       mModelId = queryModelIdString();
       vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "    model id: " << mModelId << std::endl << vprDEBUG_FLUSH;
 
-      // Get the addressing mode
-      mAddrMode = queryAddressingMode();
-      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "   addr mode: "
-         << Flock::getAddressingModeString(mAddrMode) << std::endl
-         << vprDEBUG_FLUSH;
-
-      // Get the address of the master
-      mMasterAddr = queryAddress();
-
+      if(mSwRevision < 3.67f)
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "Flock has old firmware, defaulting to: NormalAddressing, Master at address 1\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "   IMPORTANT: Make sure serial port is connected to box with address 1.\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "   NOTE: This means that standalone mode is NOT supported.\n" << vprDEBUG_FLUSH;
+         
+         mAddrMode = Flock::AddressingMode(Flock::NormalAddressing);
+         mMasterAddr = 1;
+      }
+      else
+      {
+         // Get the addressing mode
+         mAddrMode = queryAddressingMode();
+         vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "   addr mode: "
+            << Flock::getAddressingModeString(mAddrMode) << std::endl
+            << vprDEBUG_FLUSH;
+         // Get the address of the master
+         mMasterAddr = queryAddress();
+      }
+      
       // Make initial guess at mode (finalize later after looking for erts)
       if(0 == mMasterAddr)
       { mMode = Flock::Standalone; }
@@ -1416,15 +1431,17 @@ void FlockStandalone::readInitialFlockConfiguration()
       { mMode = Flock::Standard; }
 
       // Setup the flock unit data structure
+      // - Queries all birds in flock for data and then sets up extended data per bird
       setupFlockUnitsDataStructure();
 
       mNumSensors = 0;
       mAddrToSensorIdMap.clear();
       mAddrToSensorIdMap.resize(getMaxBirdAddr(), -1);      // Fill with -1
 
-      // Search for transmitters
-      // - If we have erts set to extended range mode
-      // - Store indicies of the transmitters
+      // Update status variables: mMode, mXmitterIndices, mNumSensors
+      // - Search for transmitters
+      //    - If we have erts set to extended range mode
+      //    - Store indicies of the transmitters
       // - Find number of sensors in system
       for(unsigned u=0;u<mActiveUnitEndIndex;++u)
       {
@@ -1492,7 +1509,8 @@ void FlockStandalone::setupFlockUnitsDataStructure()
       // Find the last active address (last one marked accessible)
       mActiveUnitEndIndex = 0;
       flock_units_t::iterator cur_unit = mFlockUnits.begin();
-      // While(not at end && unit is accessible
+      // While(not at end && unit is accessible)
+      // - Add onto the active unit max
       while( (cur_unit != mFlockUnits.end()) && ((*cur_unit).mAccessible))
       { mActiveUnitEndIndex += 1; cur_unit++; }
 
