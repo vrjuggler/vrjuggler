@@ -1,6 +1,7 @@
 #ifndef _SOCKET_TEST_H
 #define _SOCKET_TEST_H
 
+#include <stdio.h>
 #include <string.h>
 #include <iostream>
 
@@ -864,6 +865,63 @@ public:
       delete arg;
    }
 
+   // =========================================================================
+   // readn() test
+   // =========================================================================
+   void testReadnClient (void* arg) {
+      vpr::Uint16 port = *((vpr::Uint16*) arg);
+      vpr::SocketStream client_sock(vpr::InetAddr::AnyAddr,
+                                    vpr::InetAddr("localhost", port));
+      char buffer[20];
+
+      threadAssertTest(client_sock.open() && "Client socket open failed");
+      threadAssertTest(client_sock.connect() && "Client could not connect");
+      ssize_t bytes = client_sock.readn(buffer, sizeof(buffer));
+      threadAssertTest((bytes == sizeof(buffer)) && "readn didn't read enough!");
+      client_sock.close();
+   }
+
+   void testReadn () {
+      vpr::Uint16 server_port = 55446;
+      vpr::SocketStream server_sock(vpr::InetAddr(server_port),
+                                    vpr::InetAddr::AnyAddr);
+      const unsigned int pkt_size = 5;
+      ssize_t bytes;
+      char buffer[pkt_size];
+
+      std::cout << "]==================================================\n"
+                << std::flush; 
+      std::cout <<" Readn Test:\n" << std::flush; 
+
+      assertTest(server_sock.open() && "Server socket open failed");
+      assertTest(server_sock.bind() && "Server socket bind failed");
+      assertTest(server_sock.listen() && "Server socket listen failed");
+
+      // Start the client thread.
+      vpr::ThreadMemberFunctor<SocketTest> func =
+          vpr::ThreadMemberFunctor<SocketTest>(this, testReadnClient,
+                                               (void*) &server_port);
+      vpr::Thread* client_thread = new vpr::Thread(&func);
+      assertTest(client_thread->valid() && "Server could not create client thread");
+
+      vpr::SocketStream* client_sock = server_sock.accept();
+      assertTest(client_sock != NULL && "Server could not accept connection");
+
+      for ( unsigned int i = 0; i < 20; i += pkt_size ) {
+          memset((void*) buffer, 0, sizeof(buffer));
+          snprintf(buffer, sizeof(buffer), "%04d", i);
+
+          bytes = client_sock->write(buffer, pkt_size);
+          assertTest(bytes != -1 && "Server could not write to client");
+      }
+
+      client_sock->close();
+      delete client_sock;
+      delete client_thread;
+      server_sock.close();
+   }
+   // =========================================================================
+
    static Test* suite()
    {
       TestSuite *test_suite = new TestSuite ("SocketTest");
@@ -880,6 +938,7 @@ public:
       test_suite->addTest( new TestCaller<SocketTest>("testSendRecv", &SocketTest::testSendRecv));
       test_suite->addTest( new TestCaller<SocketTest>("testBlocking", &SocketTest::testBlocking));
       test_suite->addTest( new TestCaller<SocketTest>("testTcpConnection", &SocketTest::testTcpConnection));
+      test_suite->addTest( new TestCaller<SocketTest>("testReadn", &SocketTest::testReadn));
       return test_suite;
    }
 
