@@ -29,6 +29,8 @@
 
 #include <TestCases/IO/SelectorTest.h>
 
+#include <boost/concept_check.hpp>
+
 
 namespace vprTest
 {
@@ -66,6 +68,8 @@ void SelectorTest::testAcceptorPoolSelection ()
 
 void SelectorTest::testAcceptorPoolSelection_acceptor (void* arg)
 {
+   boost::ignore_unused_variable_warning(arg);
+
    unsigned i,j;
    std::map<vpr::IOSys::Handle, vpr::SocketAcceptor*> acceptorTable;
    vpr::Selector selector;
@@ -153,6 +157,8 @@ void SelectorTest::testAcceptorPoolSelection_acceptor (void* arg)
 
 void SelectorTest::testAcceptorPoolSelection_connector( void* arg )
 {
+   boost::ignore_unused_variable_warning(arg);
+
    ReturnStatus ret_val;
    vpr::InetAddr remote_addr;
    vpr::SocketConnector connector;           // Connect to acceptor
@@ -215,6 +221,8 @@ void SelectorTest::testSendThenPoll ()
 
 void SelectorTest::testSendThenPoll_acceptor (void* arg)
 {
+   boost::ignore_unused_variable_warning(arg);
+
    unsigned i;    // j;
    std::map<vpr::IOSys::Handle, vpr::Uint16> handleTable;      // Table mapping Handles to the socket index
    vpr::Selector selector;
@@ -343,6 +351,8 @@ void SelectorTest::testSendThenPoll_acceptor (void* arg)
 
 void SelectorTest::testSendThenPoll_connector (void* arg)
 {
+   boost::ignore_unused_variable_warning(arg);
+
    unsigned i,j;
    ReturnStatus ret_val;
    vpr::Uint32 bytes_written;
