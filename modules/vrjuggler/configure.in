@@ -342,10 +342,7 @@ THREADS=''
 if test "x$thread_pkg" = "xPOSIX" ; then
     AC_CHECK_LIB(pthread, pthread_create,
         AC_CHECK_HEADER(pthread.h,
-            [ THREADS='POSIX'; LIBS="$LIBS -lpthread";
-              AC_CHECK_LIB(pthread, pthread_kill,
-                  AC_DEFINE(_PTHREADS_DRAFT_10,),
-                  AC_DEFINE(_PTHREADS_DRAFT_4,)) ],
+            [ THREADS='POSIX'; LIBS="$LIBS -lpthread"; ],
             AC_MSG_WARN(*** POSIX threads will not be used (header file not found) ***)))
 
     # On HP-UX 10.20, the pthreads library is in the cma library rather than
@@ -353,13 +350,31 @@ if test "x$thread_pkg" = "xPOSIX" ; then
     if test -z "$THREADS" ; then
         AC_CHECK_LIB(cma, pthread_create,
             AC_CHECK_HEADER(pthread.h,
-                [ THREADS='POSIX'; LIBS="$LIBS -lcma";
-                  AC_CHECK_LIB(cma, pthread_kill,
-                      AC_DEFINE(_PTHREADS_DRAFT_10,),
-                      AC_DEFINE(_PTHREADS_DRAFT_4,)) ],
+                [ THREADS='POSIX'; LIBS="$LIBS -lcma"; ],
                 AC_MSG_WARN(*** POSIX threads will not be used (header file not found) ***)),
             AC_MSG_WARN(*** POSIX threads will not be used (no library found) ***))
     fi
+
+    # If $THREADS is equal to "POSIX" at this point, then the pthread
+    # libraries needed are in $LIBS, so now we make a check for the draft
+    # revision being used.  This is done by determining if pthread_kill() is
+    # in the library.  If it is, Draft 10 is in use.  Otherwise, assume it is
+    # Draft 4.
+    if test "$THREADS" = "POSIX" ; then
+        AC_CACHE_CHECK(POSIX threads draft revision,
+            ac_cv_pthread_version,
+            AC_TRY_LINK([ #include <pthread.h> ],
+                [ pthread_t t; pthread_kill(t, 1); ],
+                ac_cv_pthread_version='Draft 10',
+                ac_cv_pthread_version='Draft 4'))
+
+        if test "$ac_cv_pthread_version" = "Draft 10" ; then
+            AC_DEFINE(_PTHREADS_DRAFT_10,)
+        else
+            AC_DEFINE(_PTHREADS_DRAFT_4,)
+        fi
+    fi
+
 # If we are not using POSIX threads, we must be using the SGI IPC model, but
 # we test $thread_pkg just to be sure it is set right.
 elif test "x$thread_pkg" = "xSGI_IPC" ; then
