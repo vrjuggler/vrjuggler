@@ -35,15 +35,15 @@ void PerfTest::testNamedLookupSample ()
    vpr::ProfileManager::startProfile("myNamedProfile");
    
    //do something so there is a little time in the profile
-   int i=0;
-   int j=1;
-   for(; i++; i<10000)
+   int i(0), j(1);
+
+   for ( ; i < 10000; ++i, ++j )
    {
-      j=j+1;
+      ;
    }
-   for(; j--; j>0)
+   for ( ; j > 0; --j, --i )
    {
-      i = i-1;
+      ;
    }
    vpr::ProfileManager::stopProfile();
 
