@@ -221,14 +221,14 @@ fi
 
 if test "$echo_cxxflags" = "yes"; then
     if test "$use_base_dir" = "yes"; then
-        echo @CXXFLAGS@ -I$VJ_BASE_DIR/include $subsystem_cxxflags
+        echo @CXXFLAGS@ -I$JCCL_BASE_DIR/include $subsystem_cxxflags
     else
         echo @CXXFLAGS@ -I@includedir@ $subsystem_cxxflags
     fi
 fi
 #if test "$echo_cxxflags" = "yes"; then
 #    if test "$use_base_dir" = "yes"; then
-#        echo @jccl_cxxflags@ $jccl_extra_cxxflags $subsystem_cxxflags -I$VJ_BASE_DIR/include $jccl_basedir_extra_includes
+#        echo @jccl_cxxflags@ $jccl_extra_cxxflags $subsystem_cxxflags -I$JCCL_BASE_DIR/include $jccl_basedir_extra_includes
 #    else
 #        echo @jccl_cxxflags@ $jccl_extra_cxxflags $subsystem_cxxflags -I@includedir@ $jccl_extra_includes
 #    fi
@@ -244,7 +244,7 @@ if test "$echo_libs" = "yes"; then
     my_subsystem_libs=
 
     if test "$use_base_dir" = "yes"; then
-        ldflags="$ldflags -L$VJ_BASE_DIR/lib$LIBBITSUF"
+        ldflags="$ldflags -L$JCCL_BASE_DIR/lib$LIBBITSUF"
     else
         ldflags="$ldflags @jccl_ldflags@"
     fi

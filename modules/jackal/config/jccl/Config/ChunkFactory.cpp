@@ -51,7 +51,7 @@ ConfigChunk* ChunkFactory::createChunk (ChunkDesc* d, bool use_defaults) {
 //  This just loads $VJ_BASE_DIR/VJ_SHARE_DIR/Data/chunksDesc
 void ChunkFactory::setupInitialEnvironment() {
     // ------ OPEN chunksDesc file ----- //
-    char* vj_base_dir = getenv("VJ_BASE_DIR");
+    char* vj_base_dir = getenv("JCCL_BASE_DIR");
     if(vj_base_dir == NULL) {
         vprDEBUG(vprDBG_ALL,vprDBG_VERB_LVL) << "ChunkFactory::setupInitialEnvironment:\n" << vprDEBUG_FLUSH;
         vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) <<  "Env var VJ_BASE_DIR not defined." << std::endl << vprDEBUG_FLUSH;
@@ -60,7 +60,7 @@ void ChunkFactory::setupInitialEnvironment() {
     
     std::string chunk_desc_file = vj_base_dir;
     chunk_desc_file += "/";
-    chunk_desc_file += VJ_SHARE_DIR;
+    chunk_desc_file += JCCL_SHARE_DIR;
     chunk_desc_file += "/Data/chunksDesc";
     vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Loading chunk desc file: ["
                                         << chunk_desc_file << "]\n" << vprDEBUG_FLUSH;
