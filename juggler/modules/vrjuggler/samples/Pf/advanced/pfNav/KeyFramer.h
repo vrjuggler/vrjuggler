@@ -20,6 +20,7 @@ namespace kev
       public:
          Key() : mRot(), mPos()
          {
+            mRot.identity();
          }
          Key( const Key& key ) : mRot( key.mRot ), mPos( key.mPos ), mTime( key.mTime )
          {
@@ -39,7 +40,7 @@ namespace kev
          {
             assert( timeVal >= 0 && "Keyframes always have positive time value" );
             mTime = timeVal;
-            mRot.makeQuat( mat );
+            mRot.makeRot( mat );
             mPos = mat.getTrans();
          }
          // pos/quat constructor

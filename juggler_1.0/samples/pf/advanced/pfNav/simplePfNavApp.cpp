@@ -221,25 +221,29 @@ void simplePfNavApp::preFrame()
    if (mStopWatch.timeInstant < 1.0)
       mKeyFramer.update( mStopWatch.timeInstant );
 
-   vjMatrix mat;
-   mKeyFramer.getMatrix( mat );
-   pfMatrix pf_mat;
-   pf_mat = vjGetPfMatrix( mat );
-   mAnimDCS->setMat( pf_mat );
+   
 
    if (mDisableNav == true)
    {
       mNavigationDCS->setActive( false );
+      
+      // do animation...
+      vjMatrix mat;
+      mKeyFramer.getMatrix( mat );
+      pfMatrix pf_mat;
+      pf_mat = vjGetPfMatrix( mat );
+      mAnimDCS->setMat( pf_mat );
+      
       // Emit a time
       if (0 == (mStatusMessageEmitCount++ % 60))
       {
          vjVec3 cur_pos;
          cur_pos = mat.getTrans();
          vjQuat quat;
-         quat.makeQuat( mat );
+         quat.makeRot( mat );
 
          std::cout << mKeyFramer.time() << ": "<<cur_pos << " :|: ";
-         quat.outStream( std::cout );
+         quat.outStreamReadable( std::cout );
          std::cout << std::endl;
       }
    }
@@ -261,17 +265,33 @@ void simplePfNavApp::preFrame()
             vjVec3 cur_pos;
             cur_pos = mNavigationDCS->getNavigator()->getCurPos().getTrans();
             vjQuat quat;
-            quat.makeQuat( mNavigationDCS->getNavigator()->getCurPos() );
+            quat.makeRot( mNavigationDCS->getNavigator()->getCurPos() );
 
             std::cout << "You: " << cur_pos << " :|: ";
-            quat.outStream( std::cout );
+            quat.outStreamReadable( std::cout );
             std::cout << std::endl;
 
             cur_pos = -cur_pos;
             quat.invert( quat );
             std::cout << "World: " << cur_pos << " :|: ";
-            quat.outStream( std::cout );
+            quat.outStreamReadable( std::cout );
             std::cout << std::endl << std::endl;
+            
+            // debug//./////
+            /*
+            vjMatrix mmm = mNavigationDCS->getNavigator()->getCurPos();
+            std::cout << "MatrixNav:\n" << mmm << std::endl << std::endl;
+            
+            std::cout << "-----------" << std::endl;
+            
+            std::cout << mKeyFramer.time() << ": "<<(vjVec3)mKeyFramer.key().position() << " :|: ";
+            mKeyFramer.key().rotation().outStreamReadable( std::cout );
+            std::cout << std::endl;
+            
+            std::cout << "MatrixAnim:\n" << mat << std::endl << std::endl;
+            */
+                  // debug//./////
+            
          }
       }
    }
