@@ -48,6 +48,7 @@
 
 AC_REVISION($Revision$)
 AC_INIT(vpr/vprConfig.h)
+AC_CONFIG_AUX_DIR(../../share/config)
 AC_CONFIG_HEADER(vpr/vprDefines.h)
 DPP_PREREQ(1.4.92)
 DPP_INIT
