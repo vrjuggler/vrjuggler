@@ -79,9 +79,9 @@ Intersense::Intersense()
     //vprDEBUG(vrjDBG_INPUT_MGR,1) << "*** Intersense::deviceAbilities = " << deviceAbilities << " ***\n" << vprDEBUG_FLUSH;
 }
 
-bool Intersense::config(jccl::ConfigChunk *c)
+bool Intersense::config(jccl::ConfigChunkPtr c)
 {
-    vprDEBUG(vrjDBG_INPUT_MGR,1) << "         Intersense::Intersense(jccl::ConfigChunk*)"
+    vprDEBUG(vrjDBG_INPUT_MGR,1) << "         Intersense::config(jccl::ConfigChunkPtr)"
                                << std::endl << vprDEBUG_FLUSH;
 
 // read in Position's, Digital's, and Analog's config stuff,
@@ -91,17 +91,17 @@ bool Intersense::config(jccl::ConfigChunk *c)
 
 // keep IntersenseStandalone's port and baud members in sync with Input's port
 // and baud members.
-    vprDEBUG(vrjDBG_INPUT_MGR,1) << "   Intersense::Intersense(jccl::ConfigChunk*) -> Input::getPort() = " << Input::getPort() << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_INPUT_MGR,1) << "   Intersense::config(jccl::ConfigChunkPtr) -> Input::getPort() = " << Input::getPort() << std::endl << vprDEBUG_FLUSH;
     mTracker.setPortName( Input::getPort() );
     mTracker.rBaudRate() = Input::getBaudRate();
     mTracker.rNumStations() = c->getNum("stations");
 
     if(stations != NULL) delete [] stations;
     stations = new ISStationConfig[mTracker.rNumStations()];
-    jccl::ConfigChunk* stationConfig = NULL;
+    jccl::ConfigChunkPtr stationConfig;
     for( int i = 0; i < mTracker.rNumStations(); i++)
     {
-    stationConfig = static_cast<jccl::ConfigChunk*>(c->getProperty("stations", i));
+    stationConfig = static_cast<jccl::ConfigChunkPtr>(c->getProperty("stations", i));
     stations[i].enabled = static_cast<bool>(stationConfig->getProperty("enabled"));
     stations[i].stationIndex = static_cast<int>(stationConfig->getProperty("stationIndex"));
     stations[i].useDigital = static_cast<bool>(stationConfig->getProperty("useDigital"));

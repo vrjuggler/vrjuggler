@@ -74,7 +74,7 @@ public:
    }
    ~IBox();
 
-   virtual bool config( jccl::ConfigChunk* c );
+   virtual bool config( jccl::ConfigChunkPtr c );
 
    // Input Pure Virtual Functions
    int startSampling();

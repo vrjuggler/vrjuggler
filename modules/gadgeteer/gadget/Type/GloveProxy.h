@@ -118,7 +118,7 @@ public:
 
    static std::string getChunkType() { return "GloveProxy"; }
 
-   bool config(jccl::ConfigChunk* chunk);
+   bool config(jccl::ConfigChunkPtr chunk);
 
    virtual Input* getProxiedInputDevice()
    {

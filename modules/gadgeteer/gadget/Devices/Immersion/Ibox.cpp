@@ -44,7 +44,7 @@ namespace gadget
 
 //: Config function
 // Configures the ibox
-bool IBox::config(jccl::ConfigChunk *c)
+bool IBox::config(jccl::ConfigChunkPtr c)
 {
   if(! (Input::config(c) && Analog::config(c) && Digital::config(c) ))
       return false;

@@ -37,7 +37,7 @@
 namespace gadget
 {
 
-bool GestureProxy::config(jccl::ConfigChunk* chunk)
+bool GestureProxy::config(jccl::ConfigChunkPtr chunk)
 {
    vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,3) << "------------------ GESTURE PROXY config() -----------------\n" << vprDEBUG_FLUSH;
    vprASSERT(((std::string)chunk->getType()) == "GestureProxy");

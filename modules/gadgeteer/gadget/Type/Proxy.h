@@ -64,7 +64,7 @@ public:
    //! POST:
    //+  Proxy is configured (it is not registered yet though)
    //! RETURNS: success
-   virtual bool config(jccl::ConfigChunk* chunk)
+   virtual bool config(jccl::ConfigChunkPtr chunk)
    {
       mName = (std::string)chunk->getProperty("name");
       return true;

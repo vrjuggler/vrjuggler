@@ -68,7 +68,7 @@ Input::~Input()
         delete [] sPort;
 }
 
-bool Input::config( jccl::ConfigChunk *c)
+bool Input::config( jccl::ConfigChunkPtr c)
 {
   //sPort = NULL;
   if((sPort != NULL) && (!instName.empty()))

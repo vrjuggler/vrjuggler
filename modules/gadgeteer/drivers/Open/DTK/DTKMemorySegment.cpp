@@ -61,7 +61,7 @@ DTKMemorySegment::~DTKMemorySegment()
 }
 
 
-bool DTKMemorySegment::config(jccl::ConfigChunk* c)
+bool DTKMemorySegment::config(jccl::ConfigChunkPtr c)
 {
     _type = (DTK_dataType)static_cast<int>(c->getProperty("dataType"));
 

@@ -44,7 +44,7 @@ std::vector<SimInput::KeyModPair> SimInput::readKeyList(std::vector<jccl::VarVal
    if(keyList.size() > 0)
    {
 #ifdef GADGET_DEBUG
-      jccl::ConfigChunk* first_chunk = (jccl::ConfigChunk*)(*(keyList[0]));
+      jccl::ConfigChunkPtr first_chunk = (jccl::ConfigChunkPtr)(*(keyList[0]));
       std::string chunk_type = first_chunk->getType();
       vprASSERT(chunk_type == std::string("KeyModPair"));
 #endif
@@ -56,7 +56,7 @@ std::vector<SimInput::KeyModPair> SimInput::readKeyList(std::vector<jccl::VarVal
       {
          KeyModPair key_pair;
          jccl::VarValue* var_val = keyList[i];
-         jccl::ConfigChunk* chunk = (jccl::ConfigChunk*)(*var_val);
+         jccl::ConfigChunkPtr chunk = (jccl::ConfigChunkPtr)(*var_val);
          key_pair.mKey = chunk->getProperty("key");
          key_pair.mModifier = chunk->getProperty("modKey");
          keys.push_back(key_pair);
@@ -71,7 +71,7 @@ std::vector<SimInput::KeyModPair> SimInput::readKeyList(std::vector<jccl::VarVal
 
 // Configure the keyboard interface
 // Grabs it out of the given config chunk
-bool SimInput::config(jccl::ConfigChunk* chunk)
+bool SimInput::config(jccl::ConfigChunkPtr chunk)
 {
    std::string keyboardName = chunk->getProperty("keyboardProxy");    // Get the event source
    mKeyboard.init(keyboardName);

@@ -40,6 +40,7 @@
 #include <gadget/Type/KeyboardProxy.h>
 #include <gadget/ProxyDepChecker.h>
 #include <gadget/ProxyFactory.h>
+#include <jccl/Config/ConfigChunk.h>
 
 #include <typeinfo>
 
@@ -95,7 +96,7 @@ void ProxyFactory::registerProxy(ProxyConstructorBase* constructor)
 
 // Simply query all proxy constructors registered looking
 // for one that knows how to load the proxy
-bool ProxyFactory::recognizeProxy(jccl::ConfigChunk* chunk)
+bool ProxyFactory::recognizeProxy(jccl::ConfigChunkPtr chunk)
 {
    if(findConstructor(chunk) == -1)
       return false;
@@ -108,7 +109,7 @@ bool ProxyFactory::recognizeProxy(jccl::ConfigChunk* chunk)
 //!ARGS: chunk - specification of the proxy to load
 //!RETURNS: null - Proxy failed to load
 //+         other - Pointer to the loaded proxy
-Proxy* ProxyFactory::loadProxy(jccl::ConfigChunk* chunk)
+Proxy* ProxyFactory::loadProxy(jccl::ConfigChunkPtr chunk)
 {
    vprASSERT(recognizeProxy(chunk));
 
@@ -124,7 +125,7 @@ Proxy* ProxyFactory::loadProxy(jccl::ConfigChunk* chunk)
    return new_dev;
 }
 
-int ProxyFactory::findConstructor(jccl::ConfigChunk* chunk)
+int ProxyFactory::findConstructor(jccl::ConfigChunkPtr chunk)
 {
    std::string chunk_type;
    chunk_type = (std::string)chunk->getType();

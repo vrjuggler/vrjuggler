@@ -67,9 +67,9 @@ DTK::DTK()
     port = NULL;
 }
 
-bool DTK::config(jccl::ConfigChunk *c)
+bool DTK::config(jccl::ConfigChunkPtr c)
 {
-    vprDEBUG(vrjDBG_INPUT_MGR,1) << "  DTK::config(jccl::ConfigChunk*)"
+    vprDEBUG(vrjDBG_INPUT_MGR,1) << "  DTK::config(jccl::ConfigChunkPtr)"
                    << std::endl << vprDEBUG_FLUSH;
 
     if (!Position::config(c) || !Digital::config(c) || !Analog::config(c))
@@ -84,7 +84,7 @@ bool DTK::config(jccl::ConfigChunk *c)
 //     String: segmentName
 //        int: dataType
 
-    jccl::ConfigChunk* embeddedChunk = NULL;
+    jccl::ConfigChunkPtr embeddedChunk = NULL;
     int i = 0;
 
 /* Dynamically Load the DTK Library
@@ -104,7 +104,7 @@ bool DTK::config(jccl::ConfigChunk *c)
 
     for(i = 0; i < numSegments; i++)
     {
-        embeddedChunk = static_cast<jccl::ConfigChunk*>(c->getProperty("segments", i));
+        embeddedChunk = static_cast<jccl::ConfigChunkPtr>(c->getProperty("segments", i));
         _dtkSegments[i] = new DTKMemorySegment;
         if(embeddedChunk != NULL)
         {

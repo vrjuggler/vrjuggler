@@ -72,7 +72,7 @@ public:
 
    // Just call base class config
    //! NOTE: Let constructor set device abilities
-   virtual bool config(jccl::ConfigChunk* c)
+   virtual bool config(jccl::ConfigChunkPtr c)
    {
       mMin = static_cast<float>( c->getProperty("min") );
       mMax = static_cast<float>( c->getProperty("max") );

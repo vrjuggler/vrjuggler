@@ -40,9 +40,9 @@ namespace gadget
 {
 
 // Set up the transformation information
-bool Position::config(jccl::ConfigChunk *c)
+bool Position::config(jccl::ConfigChunkPtr c)
 {
-  //vprDEBUG(vprDBG_ALL,0) << "vjPosition::Position(jccl::ConfigChunk*)" << vprDEBUG_FLUSH;
+  //vprDEBUG(vprDBG_ALL,0) << "vjPosition::config(jccl::ConfigChunkPtr)" << vprDEBUG_FLUSH;
   if ((c->getNum("translate") == 3) && (c->getNum("rotate") == 3))
   {
     // These are the transforms from the base tracker coord system

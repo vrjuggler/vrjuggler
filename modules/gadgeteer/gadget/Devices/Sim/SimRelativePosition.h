@@ -37,10 +37,8 @@
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Position.h>
 #include <gadget/Type/PositionInterface.h>
+#include <jccl/Config/ConfigChunkPtr.h>
 
-namespace jccl {
-    class ConfigChunk;
-};
 
 namespace gadget
 {
@@ -61,7 +59,7 @@ public:
    SimRelativePosition() {;}
    virtual ~SimRelativePosition() {;}
 
-   virtual bool config(jccl::ConfigChunk* chunk);
+   virtual bool config(jccl::ConfigChunkPtr chunk);
 
    //: Return position data
    vrj::Matrix* getPosData(int devNum=0)

@@ -35,7 +35,7 @@
 //#pragma once
 
 #include <gadget/gadgetConfig.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigChunkPtr.h>
 
 
 namespace gadget
@@ -63,7 +63,7 @@ public:
    virtual ~Gesture()
    {;}
 
-   virtual bool config(jccl::ConfigChunk* c)
+   virtual bool config(jccl::ConfigChunkPtr c)
    { return true;}
 
 

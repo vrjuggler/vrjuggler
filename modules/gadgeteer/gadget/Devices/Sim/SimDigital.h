@@ -57,7 +57,7 @@ public:
    SimDigital();
    virtual ~SimDigital();
 
-   virtual bool config(jccl::ConfigChunk* chunk);
+   virtual bool config(jccl::ConfigChunkPtr chunk);
 
    //: Return digital data
    virtual int getDigitalData(int devNum=0)

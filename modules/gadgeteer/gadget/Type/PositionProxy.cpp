@@ -64,10 +64,10 @@ void PositionProxy::setTransform(float xoff, float yoff, float zoff,    // Trans
 
 
 
-bool PositionProxy::config(jccl::ConfigChunk* chunk)
+bool PositionProxy::config(jccl::ConfigChunkPtr chunk)
 {
    vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,3) << "------------------ POS PROXY config() -----------------\n" << vprDEBUG_FLUSH;
-   vprASSERT(((std::string)chunk->getType()) == "PositionProxy");
+   vprASSERT(((std::string)chunk->getType()) == "PosProxy");
 
    mUnitNum = chunk->getProperty("unit");
    mDeviceName = (std::string)chunk->getProperty("device");
@@ -98,8 +98,8 @@ bool PositionProxy::config(jccl::ConfigChunk* chunk)
       LinearSigmoidPositionFilter* sig_filter;
       sig_filter = new LinearSigmoidPositionFilter();
 
-      jccl::ConfigChunk* sigmoid_params = (jccl::ConfigChunk*)chunk->getProperty("sigmoidParams");
-      if(sigmoid_params == NULL)
+      jccl::ConfigChunkPtr sigmoid_params = (jccl::ConfigChunkPtr)chunk->getProperty("sigmoidParams");
+      if(sigmoid_params.get() == NULL)
       { vprDEBUG(vprDBG_ERROR,0) << clrOutBOLD(clrRED,"ERROR:") << "Got NULL sigmoid Params.\n" << vprDEBUG_FLUSH; }
 
       sig_filter->setMaxDist(sigmoid_params->getProperty("maxDist"));

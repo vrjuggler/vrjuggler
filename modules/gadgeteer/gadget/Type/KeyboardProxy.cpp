@@ -37,7 +37,7 @@
 namespace gadget
 {
 
-bool KeyboardProxy::config(jccl::ConfigChunk* chunk)
+bool KeyboardProxy::config(jccl::ConfigChunkPtr chunk)
 {
    vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,3) << "------------------ KEYBOARD PROXY config()-----------------\n" << vprDEBUG_FLUSH;
    vprASSERT(((std::string)chunk->getType()) == "KeyboardProxy");

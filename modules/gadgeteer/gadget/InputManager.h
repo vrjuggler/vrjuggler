@@ -82,7 +82,7 @@ public:
    //: Add the chunk to the configuration
    //! PRE: configCanHandle(chunk) == true
    //! RETURNS: success
-   bool configAdd(jccl::ConfigChunk* chunk);
+   bool configAdd(jccl::ConfigChunkPtr chunk);
 
    //: Remove the chunk from the current configuration
    //! PRE: configCanHandle(chunk) == true
@@ -90,25 +90,25 @@ public:
    //+       (chunk is device) ==> (devices is removed && proxies are stupified)
    //+       (chunk is proxyAlias) ==> (proxyAlias is removed && devInterfaces.refreshAll())
    //!RETURNS: success
-   bool configRemove(jccl::ConfigChunk* chunk);
+   bool configRemove(jccl::ConfigChunkPtr chunk);
 
    //: Can the handler handle the given chunk?
    //! RETURNS: true - Can handle it
    //+          false - Can't handle it
-   bool configCanHandle(jccl::ConfigChunk* chunk);
+   bool configCanHandle(jccl::ConfigChunkPtr chunk);
 
 private:
    //: Load the device for the given chunk
    //!RETURNS: true - Device was configured and added
-   bool configureDevice(jccl::ConfigChunk* chunk);
+   bool configureDevice(jccl::ConfigChunkPtr chunk);
 
    //: Load the Proxy for the given chunk
    //!RETURNS: true - Proxy was configured and added
-   bool configureProxy(jccl::ConfigChunk* chunk);
+   bool configureProxy(jccl::ConfigChunkPtr chunk);
 
    //: Remove the device associated with the given chunk
    //!RETURNS: true - Device was removed
-   bool removeDevice(jccl::ConfigChunk* chunk);
+   bool removeDevice(jccl::ConfigChunkPtr chunk);
 
 
    // ------------------------------- //
@@ -167,7 +167,7 @@ public:
 
 protected:
    bool removeProxy(std::string proxyName);
-   bool removeProxy(jccl::ConfigChunk* chunk);
+   bool removeProxy(jccl::ConfigChunkPtr chunk);
 
 protected:
    typedef std::map<std::string,Input*> tDevTableType;
@@ -181,10 +181,10 @@ protected:
 
 private:
    //: Function to configure the proxy Alias array
-   bool configureProxyAlias(jccl::ConfigChunk* chunk);
+   bool configureProxyAlias(jccl::ConfigChunkPtr chunk);
 
    //: Remove a proxy alias
-   bool removeProxyAlias(jccl::ConfigChunk* chunk);
+   bool removeProxyAlias(jccl::ConfigChunkPtr chunk);
 
    //: Add a proxy alias
    void addProxyAlias(std::string alias_name, std::string proxy_name);

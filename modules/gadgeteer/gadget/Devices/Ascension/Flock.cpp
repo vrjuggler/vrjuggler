@@ -110,7 +110,7 @@ Flock::Flock(const char* const port,
    myThread = NULL;
 }
 
-bool Flock::config(jccl::ConfigChunk *c)
+bool Flock::config(jccl::ConfigChunkPtr c)
 {
    port_id = -1;
 

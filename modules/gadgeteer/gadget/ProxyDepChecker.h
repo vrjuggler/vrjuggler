@@ -57,17 +57,17 @@ public:
    { return std::string("gadget::ProxyChecker Checker"); }
 
    // We can handle only keyboard configuration information
-   virtual bool canHandle(jccl::ConfigChunk* chunk);
+   virtual bool canHandle(jccl::ConfigChunkPtr chunk);
 
    //: Are the dependencies satisfied?
    // Defaults to all being handled for it
-   virtual bool depSatisfied(jccl::ConfigChunk* chunk)
+   virtual bool depSatisfied(jccl::ConfigChunkPtr chunk)
    {
       return true;
    }
 
    // Write out the dependencies to the vprDEBUG macro
-   virtual void debugOutDependencies(jccl::ConfigChunk* chunk,int dbg_lvl=vprDBG_WARNING_LVL)
+   virtual void debugOutDependencies(jccl::ConfigChunkPtr chunk,int dbg_lvl=vprDBG_WARNING_LVL)
    {
       ;
    }

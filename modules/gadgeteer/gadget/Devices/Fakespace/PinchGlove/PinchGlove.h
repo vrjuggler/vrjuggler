@@ -59,7 +59,7 @@ public:
    //: Destroy the glove
    virtual ~PinchGlove();
 
-   virtual bool config( jccl::ConfigChunk* c );
+   virtual bool config( jccl::ConfigChunkPtr c );
 
    static std::string getChunkType() { return std::string("PinchGlove");}
 

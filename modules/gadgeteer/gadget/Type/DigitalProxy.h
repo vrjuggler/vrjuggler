@@ -104,7 +104,7 @@ public:
 
    static std::string getChunkType() { return "DigProxy"; }
 
-   bool config(jccl::ConfigChunk* chunk);
+   bool config(jccl::ConfigChunkPtr chunk);
 
    virtual Input* getProxiedInputDevice()
    {
