@@ -260,10 +260,14 @@ install-deps:
 	@for target in $(TARGETS) ; do					\
             $(MAKE) install-$$target || exit 1;				\
           done
+ifneq ($(LIBBITSUF), )
+	[ ! -d $(deps_prefix)/lib$(LIBBITSUF) ] && 			\
+          cd $(deps_prefix) && ln -s lib lib$(LIBBITSUF)
+endif
 
 install-boost:
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/boost
-	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib$(LIBBITSUF)
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib
 	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
           $(GROUP_OPT_UNIX) -e .h,.hpp,.ipp -i $(BOOST_INCLUDES)/boost	\
           -o $(deps_prefix)/include/boost
@@ -272,25 +276,23 @@ install-boost:
           -i $(BOOST_INCLUDES)/boost/compatibility/cpp_c_headers	\
           -o $(deps_prefix)/include/boost/compatibility/cpp_c_headers
 	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
-          $(BOOST_ROOT)/lib/libboost_filesystem*.so*			\
-          $(deps_prefix)/lib$(LIBBITSUF)
+          $(BOOST_ROOT)/lib/libboost_filesystem*.so* $(deps_prefix)/lib
 	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
-          $(BOOST_ROOT)/lib/libboost_python*.so*			\
-          $(deps_prefix)/lib$(LIBBITSUF)
+          $(BOOST_ROOT)/lib/libboost_python*.so* $(deps_prefix)/lib
 
 install-cppdom:
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/bin
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/cppdom
-	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib$(LIBBITSUF)
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib
 	$(INSTALL) $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)			\
           $(CPPDOM_ROOT)/bin/cppdom-config $(deps_prefix)/bin
 	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
           $(GROUP_OPT_UNIX) -e .h -i $(CPPDOM_ROOT)/include/cppdom	\
           -o $(deps_prefix)/include/cppdom
 	$(INSTALL) $(GROUP_OPT_UNIX) -m $(FILE_PERMS)			\
-          $(CPPDOM_ROOT)/lib/libcppdom*.a $(deps_prefix)/lib$(LIBBITSUF)
+          $(CPPDOM_ROOT)/lib/libcppdom*.a $(deps_prefix)/lib
 	$(INSTALL) $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)			\
-          $(CPPDOM_ROOT)/lib/libcppdom*.so* $(deps_prefix)/lib$(LIBBITSUF)
+          $(CPPDOM_ROOT)/lib/libcppdom*.so* $(deps_prefix)/lib
 
 install-gmtl:
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/bin
@@ -303,54 +305,54 @@ install-gmtl:
 
 install-audiere:
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include
-	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib$(LIBBITSUF)
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib
 	$(INSTALL) $(GROUP_OPT_UNIX) -m $(FILE_PERMS)			\
           $(AUDIERE_ROOT)/include/audiere.h $(deps_prefix)/include
 	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(FILE_PERMS)		\
-          $(AUDIERE_ROOT)/lib/libaudiere*.a $(deps_prefix)/lib$(LIBBITSUF)
+          $(AUDIERE_ROOT)/lib/libaudiere*.a $(deps_prefix)/lib
 	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
-          $(AUDIERE_ROOT)/lib/libaudiere*.so* $(deps_prefix)/lib$(LIBBITSUF)
+          $(AUDIERE_ROOT)/lib/libaudiere*.so* $(deps_prefix)/lib
 
 install-cppunit:
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/bin
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/cppunit
-	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib$(LIBBITSUF)
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib
 	$(INSTALL) $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)			\
           $(CPPUNIT_ROOT)/bin/cppunit-config $(deps_prefix)/bin
 	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
           $(GROUP_OPT_UNIX) -e .h -i $(CPPUNIT_ROOT)/include/cppunit	\
           -o $(deps_prefix)/include/cppunit
 	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(FILE_PERMS)		\
-          $(CPPUNIT_ROOT)/lib/libcppunit*.a $(deps_prefix)/lib$(LIBBITSUF)
+          $(CPPUNIT_ROOT)/lib/libcppunit*.a $(deps_prefix)/lib
 	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
-          $(CPPUNIT_ROOT)/lib/libcppunit*.so* $(deps_prefix)/lib$(LIBBITSUF)
+          $(CPPUNIT_ROOT)/lib/libcppunit*.so* $(deps_prefix)/lib
 
 install-nspr:
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/nspr
-	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib$(LIBBITSUF)
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib
 	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
           $(GROUP_OPT_UNIX) -e .h,.cfg -i $(NSPR_INC_DIR)/nspr		\
           -o $(deps_prefix)/include/nspr
 	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(FILE_PERMS)		\
-          $(NSPR_ROOT)/lib/libnspr4*.a $(deps_prefix)/lib$(LIBBITSUF)
+          $(NSPR_ROOT)/lib/libnspr4*.a $(deps_prefix)/lib
 	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
-          $(NSPR_ROOT)/lib/libnspr4*.so* $(deps_prefix)/lib$(LIBBITSUF)
+          $(NSPR_ROOT)/lib/libnspr4*.so* $(deps_prefix)/lib
 	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(FILE_PERMS)		\
-          $(NSPR_ROOT)/lib/libplc4*.a $(deps_prefix)/lib$(LIBBITSUF)
+          $(NSPR_ROOT)/lib/libplc4*.a $(deps_prefix)/lib
 	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
-          $(NSPR_ROOT)/lib/libplc4*.so* $(deps_prefix)/lib$(LIBBITSUF)
+          $(NSPR_ROOT)/lib/libplc4*.so* $(deps_prefix)/lib
 	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(FILE_PERMS)		\
-          $(NSPR_ROOT)/lib/libplds4*.a $(deps_prefix)/lib$(LIBBITSUF)
+          $(NSPR_ROOT)/lib/libplds4*.a $(deps_prefix)/lib
 	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
-          $(NSPR_ROOT)/lib/libplds4*.so* $(deps_prefix)/lib$(LIBBITSUF)
+          $(NSPR_ROOT)/lib/libplds4*.so* $(deps_prefix)/lib
 
 install-omniORB3 install-omniORB4:
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/$(CXX_ORB_NAME)
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/omnithread
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/bin
-	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib$(LIBBITSUF)
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib
 ifneq ($(PYTHON_DIR),)
-	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib$(LIBBITSUF)/$(PYTHON_PKG_DIR)
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib/$(PYTHON_PKG_DIR)
 endif
 	@for c in $(OMNIORB_CMDS) ; do					\
             $(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX) $(CXX_ORB_BIN_DIR)/$$c $(deps_prefix)/bin/$$c || exit 1; \
@@ -366,41 +368,37 @@ endif
 	$(INSTALL) $(GROUP_OPT_UNIX) -m $(FILE_PERMS)			\
           $(CXX_ORB_ROOT)/include/omnithread.h $(deps_prefix)/include
 	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(FILE_PERMS)		\
-          $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libCOS*.a			\
-          $(deps_prefix)/lib$(LIBBITSUF)
+          $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libCOS*.a $(deps_prefix)/lib
 	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
-          $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libCOS*.so*		\
-          $(deps_prefix)/lib$(LIBBITSUF)
+          $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libCOS*.so* $(deps_prefix)/lib
 	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(FILE_PERMS)		\
-          $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libomni*.a		\
-          $(deps_prefix)/lib$(LIBBITSUF)
+          $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libomni*.a $(deps_prefix)/lib
 	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
-          $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libomni*.so*		\
-          $(deps_prefix)/lib$(LIBBITSUF)
+          $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libomni*.so* $(deps_prefix)/lib
 ifneq ($(PYTHON_DIR),)
 	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
           $(CXX_ORB_LIB_DIR)/$(PYTHON_PKG_DIR)/_omni*			\
-          $(deps_prefix)/lib$(LIBBITSUF)/$(PYTHON_PKG_DIR)
+          $(deps_prefix)/lib/$(PYTHON_PKG_DIR)
 	$(PERL) $(scriptdir)/install-dir.pl $(GROUP_OPT_UNIX)		\
           -m $(FILE_PERMS) -e .py					\
           -i $(CXX_ORB_LIB_DIR)/$(PYTHON_PKG_DIR)/omniidl		\
-          -o $(deps_prefix)/lib$(LIBBITSUF)/$(PYTHON_PKG_DIR)/omniidl
+          -o $(deps_prefix)/lib/$(PYTHON_PKG_DIR)/omniidl
 	$(PERL) $(scriptdir)/install-dir.pl $(GROUP_OPT_UNIX)		\
           -m $(FILE_PERMS) -e .py					\
           -i $(CXX_ORB_LIB_DIR)/$(PYTHON_PKG_DIR)/omniidl_be		\
-          -o $(deps_prefix)/lib$(LIBBITSUF)/$(PYTHON_PKG_DIR)/omniidl_be
+          -o $(deps_prefix)/lib/$(PYTHON_PKG_DIR)/omniidl_be
 endif
 
 install-openal:
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/AL
-	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib$(LIBBITSUF)
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib
 	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
           $(GROUP_OPT_UNIX) -e .h -i $(OPENAL_ROOT)/include/AL		\
           -o $(deps_prefix)/include/AL
 	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(FILE_PERMS)		\
-          $(OPENAL_ROOT)/lib/libopenal*.a $(deps_prefix)/lib$(LIBBITSUF)
+          $(OPENAL_ROOT)/lib/libopenal*.a $(deps_prefix)/lib
 	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
-          $(OPENAL_ROOT)/lib/libopenal*.so* $(deps_prefix)/lib$(LIBBITSUF)
+          $(OPENAL_ROOT)/lib/libopenal*.so* $(deps_prefix)/lib
 
 install-doozer:
 	@$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
