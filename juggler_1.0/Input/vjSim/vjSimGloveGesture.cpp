@@ -32,6 +32,8 @@
 
 
 #include <vjConfig.h>
+
+#include <Utils/vjFileIO.h>
 #include <Input/vjSim/vjSimGloveGesture.h>
 
 //: Construct the vjSimGloveGesture
@@ -51,7 +53,7 @@ bool vjSimGloveGesture::config(vjConfigChunk* chunk)
 
    // Get sample filename
    std::string sample_file = chunk->getProperty("trainedFilename");
-   loadTrainedFile(sample_file);
+   loadTrainedFile(vjFileIO::replaceEnvVars(sample_file));
 
    // Trim the lengths
    unsigned int num_gestures = getNumGestures();
