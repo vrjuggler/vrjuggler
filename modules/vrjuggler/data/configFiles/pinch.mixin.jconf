@@ -111,6 +111,7 @@
          <rotation_delta>2.0</rotation_delta>
          <translation_coordinate_system>Global</translation_coordinate_system>
          <rotation_coordinate_system>Local</rotation_coordinate_system>
+         <device_host />
       </simulated_positional_device>
       <alias name="VJGlove" version="1">
          <proxy />
@@ -177,6 +178,7 @@
          </key_presses>
          <trained_filename>${VJ_BASE_DIR}/share/gadgeteer/data/gesture/simpleSimGestures.dat</trained_filename>
          <glove_position>GlovePos Proxy</glove_position>
+         <device_host />
       </simulated_glove_gesture>
       <digital_proxy name="PinchLeftThumb" version="1">
          <device>FakespacePinchGlove</device>

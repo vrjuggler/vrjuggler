@@ -164,6 +164,7 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
+         <device_host />
       </simulated_positional_device>
       <simulated_positional_device name="SimCamera2" version="2">
          <event_window_proxy>CameraEventWindowProxy</event_window_proxy>
@@ -267,6 +268,7 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
+         <device_host />
       </simulated_positional_device>
       <simulated_positional_device name="Position Simulator1" version="2">
          <event_window_proxy>CameraEventWindowProxy</event_window_proxy>
@@ -370,6 +372,7 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
+         <device_host />
       </simulated_positional_device>
       <position_proxy name="Wand Proxy" version="1">
          <device>Flock_o_Birds</device>

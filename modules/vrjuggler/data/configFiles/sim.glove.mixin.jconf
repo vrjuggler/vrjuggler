@@ -30,6 +30,7 @@
          </key_presses>
          <trained_filename>${VJ_BASE_DIR}/share/vrjuggler/data/gesture/simpleSimGestures.dat</trained_filename>
          <glove_position>GlovePos Proxy</glove_position>
+         <device_host />
       </simulated_glove_gesture>
       <event_window_proxy name="GloveKeyProxy" version="1">
          <device>Glove Event Window</device>
@@ -158,6 +159,7 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
+         <device_host />
       </simulated_positional_device>
       <event_window name="Glove Event Window" version="1">
          <width>200</width>
