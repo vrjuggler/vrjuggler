@@ -320,13 +320,13 @@ hier:
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(prefix)
 	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.install.dist -p $(prefix)
-	$(SHELL) $(MKINSTALLDIRS) $(datadir)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.data.dist -p $(datadir)
+	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.data.dist -p $(projdatadir)
 	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.include.dist -p $(prefix)
 	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.lib.dist -p $(prefix)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.samples.dist -p $(datadir)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.test.dist -p $(datadir)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.tools.dist -p $(datadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.samples.dist -p $(projdatadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.test.dist -p $(projdatadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.tools.dist -p $(projdatadir)
 
 # Steps to take after the installation process is complete.  This target is
 # independent of the current ABI.
@@ -375,26 +375,26 @@ install-samples:
 	@echo "------------------------------------------------"
 	@echo "Installing sample applications"
 	@echo "------------------------------------------------"
-	$(SHELL) $(MKINSTALLDIRS) $(datadir)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.samples.dist -p $(datadir)
+	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.samples.dist -p $(projdatadir)
 	$(PERL) $(scriptdir)/install-src.pl -i $(top_srcdir)/samples	\
-          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(datadir)/samples
+          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(projdatadir)/samples
 	$(PERL) $(scriptdir)/makefiles-gen.pl				\
           --vars="$(topdir)/VARS.pl" --startdir="$(top_srcdir)/samples"	\
           --mode="$(FILE_PERMS)" $(_GROUP_OPT_PL) --srcdir="."		\
-          --prefix="$(datadir)/samples"
+          --prefix="$(projdatadir)/samples"
 
 # Install the test programs.
 install-test:
 	@echo "------------------------------------------------"
 	@echo "Installing test programs"
 	@echo "------------------------------------------------"
-	$(SHELL) $(MKINSTALLDIRS) $(datadir)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.test.dist -p $(datadir)
+	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.test.dist -p $(projdatadir)
 	$(PERL) $(scriptdir)/install-src.pl -i $(top_srcdir)/test	\
-          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(datadir)/test
+          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(projdatadir)/test
 	$(PERL) $(scriptdir)/makefiles-gen.pl --mode="$(FILE_PERMS)"	\
-          --prefix="$(datadir)/test" --vars="$(topdir)/VARS.pl"		\
+          --prefix="$(projdatadir)/test" --vars="$(topdir)/VARS.pl"	\
           --startdir="$(top_srcdir)/test" $(_GROUP_OPT_PL) --srcdir="."
 
 # Install the user tools code.
@@ -402,12 +402,12 @@ install-tools:
 	@echo "------------------------------------------------"
 	@echo "Installing user tools"
 	@echo "------------------------------------------------"
-	$(SHELL) $(MKINSTALLDIRS) $(datadir)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.tools.dist -p $(datadir)
+	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.tools.dist -p $(projdatadir)
 	$(PERL) $(scriptdir)/install-src.pl -i $(top_srcdir)/tools	\
-          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(datadir)/tools
+          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(projdatadir)/tools
 	$(PERL) $(scriptdir)/makefiles-gen.pl				\
-          --prefix="$(datadir)/tools" --vars="$(topdir)/VARS.pl"	\
+          --prefix="$(projdatadir)/tools" --vars="$(topdir)/VARS.pl"	\
           --startdir="$(top_srcdir)/tools" --mode="$(FILE_PERMS)"	\
           $(_GROUP_OPT_PL) --srcdir="."
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
@@ -418,10 +418,10 @@ install-data:
 	@echo "------------------------------------------------"
 	@echo "Installing standard data files"
 	@echo "------------------------------------------------"
-	$(SHELL) $(MKINSTALLDIRS) $(datadir)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.data.dist -p $(datadir)
+	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.data.dist -p $(projdatadir)
 	$(PERL) $(scriptdir)/install-dir.pl -i $(top_srcdir)/data	\
-          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(datadir)/data		\
+          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(projdatadir)/data	\
           -v "$(topdir)/VARS.pl"
 
 # =============================================================================

@@ -208,8 +208,8 @@ hier:
 	$(SHELL) $(MKINSTALLDIRS) $(prefix)
 	$(SHELL) $(MKINSTALLDIRS) $(bindir)
 	$(SHELL) $(MKINSTALLDIRS) $(includedir)/snx
-	$(SHELL) $(MKINSTALLDIRS) $(datadir)/sonix/src
-	$(SHELL) $(MKINSTALLDIRS) $(datadir)/sonix/data
+	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)/sonix/src
+	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)/sonix/data
 	@for lib in $(ABI_LIST) ; do					\
             $(MAKE) dppABI=$$lib hier-abi ;   \
           done
@@ -239,9 +239,9 @@ post-install:
           $(topdir)/sonix-config $(bindir)
 
 install-share:
-	cp -r $(ROOT_ABS)/data/*.wav $(datadir)/sonix/data
-	cp -r $(ROOT_ABS)/samples/*.cpp $(topdir)/samples/Makefile $(datadir)/sonix/src
-	cp $(ROOT_ABS)/README.txt $(datadir)/sonix
+	cp -r $(ROOT_ABS)/data/*.wav $(projdatadir)/sonix/data
+	cp -r $(ROOT_ABS)/samples/*.cpp $(topdir)/samples/Makefile $(projdatadir)/sonix/src
+	cp $(ROOT_ABS)/README.txt $(projdatadir)/sonix
 
 install-test:
 

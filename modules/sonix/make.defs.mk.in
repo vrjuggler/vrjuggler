@@ -56,6 +56,8 @@
 #
 # bindir        - Path to bin directory containing executables (usually
 #                 $(exec_prefix)/bin).
+# projdatadir   - Project-specific data directory.  This is a subdirectory
+#                 of $(datadir).
 # datadir       - Path to a directory generally sharing platform-independent
 #                 data (usually $(prefix)/share).
 # exec_prefix   - Path to base directory where executables will be (usually
@@ -149,6 +151,8 @@ prefix		= @prefix@
 sbindir		= @sbindir@
 sysconfdir	= @sysconfdir@
 topdir		= @topdir@
+
+projdatadir     = $(datadir)/sonix
 
 AR              = @AR@ $(DPP_EXTRA_ARFLAGS) $(EXTRA_ARFLAGS) $(ARFLAGS)
 ARFLAGS         = @ARFLAGS@
