@@ -34,7 +34,7 @@
 
 #include <vjConfig.h>
 
-#ifndef WIN32
+#ifndef VJ_OS_Win32
 #include <unistd.h>
 
 #include <termios.h>
@@ -42,7 +42,7 @@
 #ifdef HAVE_SYS_PRCTL_H
 #   include <sys/prctl.h>
 #endif		/* ifdef HAVE_SYS_PRCTL_H */
-#endif		/* ifndef WIN32 */
+#endif		/* ifndef VJ_OS_Win32 */
 
 #include <limits.h>
 #include <string.h>
