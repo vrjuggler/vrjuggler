@@ -329,7 +329,7 @@ public:  // ----- Various other thread functions ------
     inline static int
     usleep (u_int32_t micro) {
 #ifdef VJ_OS_Linux
-        usleep(micro);
+        ::usleep(micro);
         return 0;  // usleep can't report failure, so assume success.
 #else
         return ::usleep(micro);
@@ -340,7 +340,7 @@ public:  // ----- Various other thread functions ------
     // -----------------------------------------------------------------------
     inline static int
     msleep (u_int32_t milli) {
-        return usleep(milli * 1000);
+        return ::usleep(milli * 1000);
     }
 
     // -----------------------------------------------------------------------
@@ -522,7 +522,7 @@ private:
        unsigned          mStaticsInitialized;    // Just a debug helper to try
                                                  // to find times when people
                                                  // call us before the statics
-                                                 // are created    
+                                                 // are created
        vjThreadKeyPosix  mThreadIdKey;           // Key for the id of the
                                                  // local thread
     };
