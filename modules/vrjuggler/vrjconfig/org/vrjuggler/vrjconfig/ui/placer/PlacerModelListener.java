@@ -29,6 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
 package org.vrjuggler.vrjconfig.ui.placer;
 
 import java.util.EventListener;
