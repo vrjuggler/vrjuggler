@@ -62,10 +62,16 @@
 
 class vjThreadKeyPosix {
 public:
+    //: Constructor.
+    // -----------------------------------------------------------------------
+    vjThreadKeyPosix () {
+        keycreate(NULL);
+    } 
+
     // -----------------------------------------------------------------------
     //: Constructor.
     // -----------------------------------------------------------------------
-    vjThreadKeyPosix (THREAD_FUNC destructor, void* arg = 0) {
+    vjThreadKeyPosix (THREAD_FUNC destructor, void* arg) {
         keycreate(destructor, arg);
     }
 
@@ -105,7 +111,7 @@ public:
     //+       of keycreate().
     // -----------------------------------------------------------------------
     int
-    keycreate (THREAD_FUNC destructor, void* arg = 0) {
+    keycreate (THREAD_FUNC destructor, void* arg) {
         vjThreadNonMemberFunctor *NonMemFunctor = new vjThreadNonMemberFunctor(destructor, arg);
 
         return keycreate(NonMemFunctor);
