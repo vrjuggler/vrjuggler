@@ -331,23 +331,6 @@ void vjInputManager::StupifyPos(int ProxyNum)
 }
 
 
-/**********************************************************
-  vjInputManager::GetPosData(int d)
-
-  Get the Positional data from Position Proxy #d
-
-*********************************************** ahimberg */	
-vjMatrix* vjInputManager::GetPosData(int d)
-{
-   return m_posProxyVector[d]->GetData(); 
-}	
-
-// Get positional data
-void vjInputManager::GetPosData(vjMatrix& posData, int index)
-{
-   posData = *(m_posProxyVector[index]->GetData());
-}
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * *
   * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 		DIGITAL PROXY FUNCTIONS
