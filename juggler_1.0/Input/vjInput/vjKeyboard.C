@@ -330,22 +330,22 @@ void vjKeyboard::UpdKeys()
    while(XCheckWindowEvent(m_display,m_window,KeyPressMask |
 		KeyReleaseMask | ButtonPressMask | ButtonReleaseMask, &event))
    {
-      switch(event.type){
-        case KeyPress:
-	   key = XLookupKeysym((XKeyEvent*)&event,0);
-	   m_realkeys[XKeyTovjKey(key)] = 1;
-	   m_keys[XKeyTovjKey(key)] += 1;
-	   cout << "KeyPress:  " << XKeyTovjKey(key) 
-		<< " state:" << ((XKeyEvent*)&event)->state << endl;
-	   break;
-	case KeyRelease:
-	   key = XLookupKeysym((XKeyEvent*)&event,0);
-	   m_realkeys[XKeyTovjKey(key)] = 0;
-	   cout << "KeyRelease:" << XKeyTovjKey(key) 
-		<< " state:" << ((XKeyEvent*)&event)->state << endl;
-	   break;
+      switch (event.type)
+      {
+      case KeyPress:
+         key = XLookupKeysym((XKeyEvent*)&event,0);
+         m_realkeys[XKeyTovjKey(key)] = 1;
+         m_keys[XKeyTovjKey(key)] += 1;
+         cout << "KeyPress:  " << hex << key 
+         << " state:" << ((XKeyEvent*)&event)->state << " ==> " << XKeyTovjKey(key) << endl;
+         break;
+      case KeyRelease:
+         key = XLookupKeysym((XKeyEvent*)&event,0);
+         m_realkeys[XKeyTovjKey(key)] = 0;
+         cout << "KeyRelease:" << hex << key 
+         << " state:" << ((XKeyEvent*)&event)->state << " ==> " << XKeyTovjKey(key) << endl;
+         break;
       }
-    
    }
    
    
@@ -405,13 +405,9 @@ int vjKeyboard::XKeyTovjKey(KeySym xKey)
    switch (xKey)
    {
    case XK_Up        : return VJKEY_UP;
-   case XK_KP_Up     : return VJKEY_UP;
    case XK_Down      : return VJKEY_DOWN;
-   case XK_KP_Down   : return VJKEY_DOWN;
    case XK_Left      : return VJKEY_LEFT;
-   case XK_KP_Left   : return VJKEY_LEFT;
    case XK_Right     : return VJKEY_RIGHT;
-   case XK_KP_Right  : return VJKEY_RIGHT;
    case XK_Control_L : return VJKEY_CTRL;
    case XK_Control_R : return VJKEY_CTRL;
    case XK_Shift_L   : return VJKEY_SHIFT;
@@ -421,26 +417,26 @@ int vjKeyboard::XKeyTovjKey(KeySym xKey)
    
       // Map all number keys
       // Note we map keypad and normal keys making no distinction
-   case XK_1         : return VJKEY_1;
-   case XK_KP_1      : return VJKEY_1;
-   case XK_2         : return VJKEY_2;
-   case XK_KP_2      : return VJKEY_2;
-   case XK_3         : return VJKEY_3;
-   case XK_KP_3      : return VJKEY_3;
-   case XK_4         : return VJKEY_4;
-   case XK_KP_4      : return VJKEY_4;
-   case XK_5         : return VJKEY_5;
-   case XK_KP_5      : return VJKEY_5;
-   case XK_6         : return VJKEY_6;
-   case XK_KP_6      : return VJKEY_6;
-   case XK_7         : return VJKEY_7;
-   case XK_KP_7      : return VJKEY_7;
-   case XK_8         : return VJKEY_8;
-   case XK_KP_8      : return VJKEY_8;
-   case XK_9         : return VJKEY_9;
-   case XK_KP_9      : return VJKEY_9;
-   case XK_0         : return VJKEY_0;
-   case XK_KP_0      : return VJKEY_0;
+   case XK_1            : return VJKEY_1;
+   case XK_KP_End       : return VJKEY_1;
+   case XK_2            : return VJKEY_2;
+   case XK_KP_Down      : return VJKEY_2;
+   case XK_3            : return VJKEY_3;
+   case XK_KP_Page_Down : return VJKEY_3;
+   case XK_4            : return VJKEY_4;
+   case XK_KP_Left      : return VJKEY_4;
+   case XK_5            : return VJKEY_5;
+   case XK_KP_Begin     : return VJKEY_5;
+   case XK_6            : return VJKEY_6;
+   case XK_KP_Right     : return VJKEY_6;
+   case XK_7            : return VJKEY_7;
+   case XK_KP_Home      : return VJKEY_7;
+   case XK_8            : return VJKEY_8;
+   case XK_KP_Up        : return VJKEY_8;
+   case XK_9            : return VJKEY_9;
+   case XK_KP_Page_Up   : return VJKEY_9;
+   case XK_0            : return VJKEY_0;
+   case XK_KP_Insert    : return VJKEY_0;
    
    case XK_A         : return VJKEY_A;
    case XK_B         : return VJKEY_B;
