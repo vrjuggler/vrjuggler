@@ -48,7 +48,7 @@ public:
       if(mProxyIndex != -1)
          mGestProxy = vjKernel::instance()->getInputManager()->getGestureProxy(mProxyIndex);
       else
-         mGestProxy = vjKernel::instance()->getInputManager()->getDummyGestureProxy()
+         mGestProxy = vjKernel::instance()->getInputManager()->getDummyGestureProxy();
    }
 
 private:
