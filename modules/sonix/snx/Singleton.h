@@ -69,7 +69,7 @@ namespace aj
       {                                                 
          // WARNING! race condition possibility, creation of static vars 
          // are not thread safe.  This is only an issue when creating
-         // your first thread, since it uses a singleton thread manager,
+         // your first thread, if your threads uses a singleton thread manager,
          // the two threads might both try to call instance at the same time
          // which then the creation of the following mutex would not be certain.
          static singleClass* the_instance1 = NULL;   
