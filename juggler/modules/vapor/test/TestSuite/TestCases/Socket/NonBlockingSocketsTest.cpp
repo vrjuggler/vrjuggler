@@ -17,6 +17,7 @@
 #include <vpr/IO/IOSys.h>
 #include <vpr/IO/Selector.h>
 #include <vpr/Util/ReturnStatus.h>
+#include <vpr/Util/Debug.h>
 
 #include <vpr/System.h>
 
