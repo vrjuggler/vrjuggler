@@ -27,7 +27,7 @@ vjGlApp* vjGlDrawManager::getApp()
      * Function to config API specific stuff.
      * Takes a chunkDB and extracts API specific stuff
      */
-void vjGlDrawManager::config(vjConfigChunkDB*  chunkDB)
+void vjGlDrawManager::configInitial(vjConfigChunkDB*  chunkDB)
 {
     // Setup any config data
 }
@@ -177,6 +177,30 @@ void vjGlDrawManager::closeAPI()
     // Delete all pipes
 
     // Close and delete all glWindows
+}
+
+/////// CHUNK HANDLERS ////////////////////
+//: Add the chunk to the draw manager config
+//! PRE: configCanHandle(chunk) == true
+//! POST: The chunks have reconfigured the system
+bool vjGlDrawManager::configAdd(vjConfigChunk* chunk)
+{
+   return false;
+}
+
+//: Remove the chunk from the current configuration
+//! PRE: configCanHandle(chunk) == true
+//!RETURNS: success
+bool vjGlDrawManager::configRemove(vjConfigChunk* chunk)
+{
+   return false;
+}
+
+//: Can the handler handle the given chunk?
+//! RETURNS: false - We can't handle anything
+bool vjGlDrawManager::configCanHandle(vjConfigChunk* chunk)
+{
+   return false;
 }
 
 // Draw any objects that we need to display in the scene
