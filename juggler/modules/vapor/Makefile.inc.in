@@ -177,8 +177,10 @@ links:
               $(RM_LN) ./$$dir ;					\
               $(LN_S) $(VPRROOT_ABS)/$$dir ./$$dir ;			\
           done
+ifneq (@LOCAL_BOOST@, Y)
 	cd $(instlinks)/include && $(RM_LN) ./boost &&			\
           $(LN_S) $(JUGGLERROOT_ABS)/external/boost/boost ./
+endif
 ifeq (@OS_TYPE@, Win32)
 	cd $(instlinks)/$(LIBDIR_NAME) && cp -r $(LIBDIR_BASE)/* .
 else
@@ -274,14 +276,6 @@ pre-install-headers:
 	$(MTREE_CMD) -Ude -f $(mtreedir)/VPR.include.dist -p $(prefix)
 
 post-install-headers:
-ifneq (@LOCAL_BOOST@, Y)
-	@$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
-          $(GROUP_OPT_UNIX) -e .hpp -o $(includedir)/../boost		\
-          -i $(JUGGLERROOT_ABS)/external/boost/boost
-	@$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
-          $(GROUP_OPT_UNIX) -o $(includedir)/../boost/compatibility	\
-          -i $(JUGGLERROOT_ABS)/external/boost/boost/compatibility
-endif
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(VPRROOT_ABS)/vpr/System.h $(includedir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
