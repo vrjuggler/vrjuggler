@@ -4774,18 +4774,28 @@ clobber:
 
       <itemizedlist>
         <listitem>
-          <para>JDOM (<ulink
-          url="http://www.jdom.org/">http://www.jdom.org/</ulink>)</para>
-        </listitem>
-
-        <listitem>
           <para>JacORB (<ulink
           url="http://www.jacorb.org/">http://www.jacorb.org/</ulink>)</para>
         </listitem>
 
         <listitem>
-          <para>Kuststoff look and feel (<ulink
+          <para>JDOM (<ulink
+          url="http://www.jdom.org/">http://www.jdom.org/</ulink>)</para>
+        </listitem>
+
+        <listitem>
+          <para>JGoodies look and feel (<ulink
+          url="http://www.jgoodies.org/">http://www.jgoodies.org/</ulink>)</para>
+        </listitem>
+
+        <listitem>
+          <para>Kunststoff look and feel (<ulink
           url="http://www.incors.org/">http://www.incors.org/</ulink>)</para>
+        </listitem>
+
+        <listitem>
+          <para>Liquid look and feel (<ulink
+          url="http://liquidlnf.sourceforge.net/">http://liquidlnf.sourceforge.net/</ulink>)</para>
         </listitem>
 
         <listitem>
@@ -4795,8 +4805,6 @@ clobber:
 
         <listitem>
           <para>OpenORB (<ulink
-          url="http://openorb.exolab.org/">http://openorb.exolab.org/</ulink>
-          or <ulink
           url="http://openorb.sourceforge.net/">http://openorb.sourceforge.net/</ulink>)</para>
         </listitem>
       </itemizedlist>
