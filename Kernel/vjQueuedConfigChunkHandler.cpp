@@ -13,7 +13,7 @@ bool vjQueuedConfigChunkHandler::configAddDB(vjConfigChunkDB* chunkDB)
    if(dep_result == -1)
    {
       vjDEBUG(vjDBG_ERROR,0) << "vjQueuedConfiChunkHandler::processConfigAddQueue: ERROR: Dependency sort failed. Aborting add.\n" << vjDEBUG_FLUSH;
-      return;
+      return false;
    }
 
    std::vector<vjConfigChunk*> sorted_chunks = chunkDB->getChunks();  // Get sorted list of chunks to add
