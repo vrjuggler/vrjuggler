@@ -455,8 +455,7 @@ public class ControlPanelView
     
       try
       {
-         Wizard wizard = WizardLoader.loadWizard(root.getWizardLocation(),
-            this.getClass().getClassLoader());
+         Wizard wizard = WizardLoader.loadWizard(root.getWizardLocation());
 
          Map white_board = new HashMap();
          white_board.put("context", mContext);

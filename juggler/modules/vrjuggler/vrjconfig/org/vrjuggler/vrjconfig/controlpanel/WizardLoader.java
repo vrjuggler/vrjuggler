@@ -42,13 +42,14 @@ import java.io.FileInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 
+import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 import org.vrjuggler.tweek.wizard.*;
 import org.vrjuggler.tweek.services.EnvironmentService;
 import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 
 public class WizardLoader
 {
-   static Wizard loadWizard(String jar_name, ClassLoader class_loader)
+   static Wizard loadWizard(String jar_name)
       throws IOException
    {
       Document doc = null;
@@ -86,10 +87,15 @@ public class WizardLoader
       
       try
       {
+         // Add the .jar file for the wizard to the search path.
+         // XXX: Is this the best way to do this?
+         BeanJarClassLoader class_loader = BeanJarClassLoader.instance();
+         class_loader.addJarFile(new JarFile(jar_name));
+
          SAXBuilder sb = new SAXBuilder(false);
          java.net.URL url = new java.net.URL("jar:file:"
             + jar_name + "!/" + wizard_xml_filename);
-      
+
          doc = sb.build(url);
          
          System.out.println(doc);
