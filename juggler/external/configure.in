@@ -37,11 +37,72 @@
 # that is actually run.
 # -----------------------------------------------------------------------------
 
-AC_REVISION($Revision$)
-AC_INIT([ant/lib/ant.jar])
+AC_INIT([VR Juggler external dependencies], [0.0],
+        [vrjuggler-devel@lists.sourceforge.net])
+AC_PREREQ([2.53])
+AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2003 by Iowa State University])
+AC_REVISION([$Revision$])
+AC_CONFIG_SRCDIR([ant/lib/ant.jar])
 AC_CONFIG_AUX_DIR(../share/config)
 DPP_PREREQ([1.5.1])
 DPP_INIT
+
+# -----------------------------------------------------------------------------
+# Duplicates of the options for the external C++ dependencies.  We use these
+# here so that we can absorb the options that are passed to the configure
+# scripts that actually need the information.
+# -----------------------------------------------------------------------------
+AC_ARG_WITH(audiere,
+            [  --with-audiere=<PATH>   Audiere installation directory  [default=/usr/local]],
+            [AUDIERE_ROOT="$withval"], [AUDIERE_ROOT='/usr/local'])
+
+AC_ARG_WITH([boost],
+            [  --with-boost=<PATH>     Boost installation directory    [default=/usr/local]],
+            [BOOST_ROOT="$withval"], [BOOST_ROOT='/usr/local'])
+
+AC_ARG_WITH(boost-includes,
+            [  --with-boost-includes=<DIR>
+                       Boost header file directory     [default=/usr/local/include]],
+            [BOOST_INCLUDES="$withval"], [BOOST_INCLUDES=no])
+
+AC_ARG_WITH(cppdom,
+            [  --with-cppdom=<PATH>    CppDOM installation directory   [default=/usr/local]],
+            [CPPDOM_ROOT="$withval"], [CPPDOM_ROOT="/usr/local"])
+
+AC_ARG_WITH(cppunit,
+            [  --with-cppunit=<PATH>   CppUnit installation directory  [default=]],
+            [CPPUNIT_ROOT="$withval"], [CPPUNIT_ROOT=''])
+
+AC_ARG_WITH(cxx-orb,
+            [  --with-cxx-orb=<NAME>   Name of C++ ORB to use          [default=omniORB4]
+                          Allowed values are:
+                            omniORB3, omniORB4],
+            [CXX_ORB_NAME="$withval"], [CXX_ORB_NAME='omniORB4'])
+
+AC_ARG_WITH(cxx-orb-root,
+            [  --with-cxx-orb-root=<PATH>                              [default=/usr]
+                          Root directory of C++ ORB
+                          installation],
+            [CXX_ORB_ROOT="$withval"], [CXX_ORB_ROOT='/usr'])
+
+AC_ARG_WITH(cxx-orb-bin,
+            [  --with-cxx-orb-bin=<PATH>                               [default=/usr/bin]
+                          Path to C++ ORB executables],
+            [CXX_ORB_BIN_DIR="$withval"], [CXX_ORB_BIN_DIR='none'])
+
+AC_ARG_WITH(cxx-orb-lib,
+            [  --with-cxx-orb-lib=<PATH>                               [default=/usr/lib]
+                          Path to C++ ORB libraries],
+            [CXX_ORB_LIB_DIR="$withval"], [CXX_ORB_LIB_DIR='none'])
+
+AC_ARG_WITH(gmtl-prefix,
+            [  --with-gmtl-prefix=<PATH>
+                       Prefix where GMTL is installed  [default=/usr/local]],
+            [GMTL_ROOT="$withval"], [GMTL_ROOT=/usr/local])
+
+AC_ARG_WITH(openal,
+            [  --with-openal=<PATH>    OpenAL installation directory   [default=/usr/local]],
+            [OPENAL_ROOT="$withval"], [OPENAL_ROOT='/usr/local'])
 
 # -----------------------------------------------------------------------------
 # Path setup.
@@ -57,21 +118,6 @@ cd "$EXTROOT_ABS/.."
 JUGGLERROOT_ABS=`pwd`
 cd "$topdir"
 
-# Enable/disable installation of Doozer from juggler/external.
-AC_ARG_ENABLE([doozer-install],
-              [  --disable-doozer-install
-                          Disable installation of
-                          juggler/external/Doozer],
-              [install_doozer="$enableval"], [install_doozer='yes'])
-
-# Name the path to a Doozer installation.  This defaults to
-# juggler/external/Doozer (using an absolute path).
-AC_ARG_WITH([doozer-prefix],
-            [  --with-doozer-prefix=<PATH>
-                          Doozer installation directory],
-            [DOOZER_ROOT="$withval"],
-            [DOOZER_ROOT="$JUGGLERROOT_ABS/external/Doozer"])
-
 # -----------------------------------------------------------------------------
 # System-dependent stuff.
 # -----------------------------------------------------------------------------
@@ -84,29 +130,75 @@ DPP_SYSTEM_SETUP
 DPP_PERL_VER(5.004)
 DPP_HAVE_GNU_MAKE([3.78], ,
     [AC_MSG_ERROR([*** The build system requires GNU make 3.78 or newer ***])])
+DPP_PROG_INSTALL
 AC_PROG_LN_S
 
 DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 
-# -----------------------------------------------------------------------------
-# Deal with installing our fun external software.
-# -----------------------------------------------------------------------------
-if test "x$DOOZER_ROOT" != "x$JUGGLERROOT_ABS/external/Doozer" ; then
-   install_doozer='no'
+AC_PATH_PROG(PYTHON, python, no)
+
+# Determine the Python version in case we need to install site-specific
+# Python packages.
+# XXX: Can we ask Python what its site-specific directory name is?
+if test "x$PYTHON" != "xno" ; then
+   AC_MSG_CHECKING([for Python version])
+   changequote(<<, >>)
+   PYTHON_VERSION=`$PYTHON -c "import sys; print sys.version[:3]"`
+   changequote([, ])
+   AC_MSG_RESULT([$PYTHON_VERSION])
+
+   PYTHON_DIR="python$PYTHON_VERSION"
 fi
 
+# -----------------------------------------------------------------------------
+# Deal with installing our external dependencies.
+# -----------------------------------------------------------------------------
 TARGETS=''
 
-if test "x$install_doozer" != "xno" ; then
-   TARGETS="$TARGETS doozer"
+# Brute-force, quicky tests to determine if we need to handle each of the
+# optional dependencies.
+if test -e "$AUDIERE_ROOT/include/audiere.h" ; then
+   TARGETS="$TARGETS audiere"
+fi
+
+if test -d "$CPPUNIT_ROOT/include/cppunit" ; then
+   TARGETS="$TARGETS cppunit"
+fi
+
+if test -d "$OPENAL_ROOT/include/AL" ; then
+   TARGETS="$TARGETS openal"
+fi
+
+case $CXX_ORB_NAME in
+   omniORB3)
+      have_cxx_orb='Y'
+      ;;
+   omniORB4)
+      have_cxx_orb='Y'
+      ;;
+   *)
+      have_cxx_orb='N'
+      ;;
+esac
+
+if test "x$have_cxx_orb" = "xY" ; then
+   if test -d "$CXX_ORB_ROOT/include/$CXX_ORB_NAME" ; then
+      TARGETS="$TARGETS $CXX_ORB_NAME"
+      OMNIORB_CMDS='catior convertior genior nameclt omkdepend omniMapper omniNames omnicpp omniidl omniidlrun.py'
+
+      if test "x$CXX_ORB_BIN_DIR" = "xnone" ; then
+         CXX_ORB_BIN_DIR="$CXX_ORB_ROOT/bin"
+      fi
+
+      if test "x$CXX_ORB_LIB_DIR" = "xnone" ; then
+         CXX_ORB_LIB_DIR="$CXX_ORB_ROOT/lib"
+      fi
+   fi
 fi
 
 # -----------------------------------------------------------------------------
 # Do Makefile substitutions.
 # -----------------------------------------------------------------------------
-
-#UNIX_EXTROOT_ABS="$EXTROOT_ABS"
-#UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 
 if test "x$OS_TYPE" = "xWin32" ; then
     EXTROOT_ABS=`dospath -p "$EXTROOT_ABS"`
@@ -123,4 +215,23 @@ AC_SUBST(EXTROOT_ABS)
 AC_SUBST(JUGGLERROOT_ABS)
 AC_SUBST(TARGETS)
 
-AC_OUTPUT(Makefile)
+AC_SUBST(BOOST_ROOT)
+AC_SUBST(BOOST_INCLUDES)
+AC_SUBST(CPPDOM_ROOT)
+AC_SUBST(GMTL_ROOT)
+
+AC_SUBST(AUDIERE_ROOT)
+AC_SUBST(CPPUNIT_ROOT)
+AC_SUBST(CXX_ORB_NAME)
+AC_SUBST(CXX_ORB_ROOT)
+AC_SUBST(CXX_ORB_BIN_DIR)
+AC_SUBST(CXX_ORB_LIB_DIR)
+AC_SUBST(OPENAL_ROOT)
+
+AC_SUBST(OMNIORB_CMDS)
+AC_SUBST(PYTHON_DIR)
+AC_SUBST(PYTHON_VERSION)
+
+AC_CONFIG_FILES(Makefile)
+
+AC_OUTPUT
