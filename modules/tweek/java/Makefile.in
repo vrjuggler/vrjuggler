@@ -62,14 +62,16 @@ JAVA_SRC_PATH=		$(KUNSTSTOFF_SRCDIR)
 JDOM_JAR=	@JDOM_JAR@
 JAVA_ORB_JAR=	@JAVA_ORB_JAR@
 
-#LAF_JARS=	$(LAF_DIR)/kunststoff/kunststoff.jar
+METOUIA_JAR=	$(LAF_DIR)/metouia/metouia.jar
+
+LAF_JARS=	$(METOUIA_JAR)
 
 # The following check is done this way to prevent unwanted spaces from
 # appearing in $(CLASSPATH)
 ifneq ($(JAVA_ORB_JAR), none)
-   CLASSPATH=	$(JDOM_JAR)$(JCPS)$(JAVA_ORB_JAR)
+   CLASSPATH=	$(JDOM_JAR)$(JCPS)$(JAVA_ORB_JAR)$(JCPS)$(LAF_JARS)
 else
-   CLASSPATH=	$(JDOM_JAR)
+   CLASSPATH=	$(JDOM_JAR)$(JCPS)$(LAF_JARS)
 endif
 
 IDL_JAVA_FILES=	SubjectManager.java	\
