@@ -701,7 +701,7 @@ ${LIBDIR}/${AW_LIB_DYNAMIC} ${LIBDIR}/${SL_LIB_DYNAMIC}: ${OBJDIR}/*.${OBJ_FILE_
 # =============================================================================
 
 # Build the Java-based configuration GUI.
-gui::
+gui:
 ifndef NO_JAVA_GUI
 ifeq (${BUILD_GUI}, Y)
 	@echo "------------------------------------------------"
@@ -1274,7 +1274,7 @@ clobber:
 # =============================================================================
 # Human-readable information about the build system.
 # =============================================================================
-info::
+info:
 	@echo "\nInfo for the make of ${VJ_LIBRARY}"
 	@echo "\nOBJDIR: ${OBJDIR}"
 	@echo "VJROOT_ABS: ${VJROOT_ABS}"
