@@ -97,6 +97,10 @@ public:
       {
          return;
       }
+      if(!mNavData.isLocal())
+      {
+         return;
+      }
       // Clamp delta
       if (delta > 1.0)
       {  delta = 1.0f; }
@@ -108,7 +112,7 @@ public:
       gmtl::Matrix44f delta_rot;          // The delta rotation to use
 
       // Only compute if we don't have identity rotation
-      if (!(gmtl::isEqual(gmtl::MAT_IDENTITY44F, mRotVelocity, 0.001f))
+      if (!gmtl::isEqual(gmtl::MAT_IDENTITY44F, mRotVelocity, 0.001f))
       {
          gmtl::slerp(scaled_qrot, delta, src_rot, qrot);
          gmtl::set(delta_rot, scaled_qrot);
