@@ -11,7 +11,11 @@ if [ -n "$dpp_path" ]; then
 	ACLOCAL_FLAGS="-I $dpp_path/config -I ../../macros $ACLOCAL_FLAGS"
 fi
 
-(autoconf --version) < /dev/null > /dev/null 2>&1 || {
+: ${AUTOCONF=autoconf}
+: ${AUTOHEADER=autoheader}
+: ${ACLOCAL=aclocal}
+
+($AUTOCONF --version) < /dev/null > /dev/null 2>&1 || {
   echo
   echo "**Error**: You must have \`autoconf' installed to compile VR Juggler."
   echo "Download the appropriate package for your distribution,"
@@ -19,7 +23,7 @@ fi
   DIE=1
 }
 
-(aclocal --version) < /dev/null > /dev/null 2>&1 || {
+($ACLOCAL --version) < /dev/null > /dev/null 2>&1 || {
   echo
   echo "**Error**: Missing \`aclocal'.  The version of \`automake'"
   echo "installed doesn't appear recent enough."
@@ -33,12 +37,12 @@ if test "$DIE" -eq 1; then
 fi
 
 aclocalinclude="$ACLOCAL_FLAGS"
-echo "Running aclocal $aclocalinclude ..."
-aclocal $aclocalinclude
+echo "Running $ACLOCAL $aclocalinclude ..."
+$ACLOCAL $aclocalinclude
 if grep "^AC_CONFIG_HEADER" configure.in >/dev/null
 then
-  echo "Running autoheader..."
-  autoheader
+  echo "Running $AUTOHEADER..."
+  $AUTOHEADER
 fi
-echo "Running autoconf ..."
-autoconf
+echo "Running $AUTOCONF ..."
+$AUTOCONF
