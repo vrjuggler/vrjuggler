@@ -30,7 +30,10 @@ VPATH		= @srcdir@
 # use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
-OBJECTS		= main.@OBJ_FILE_SUFFIX@ gloveApp.@OBJ_FILE_SUFFIX@
+OBJECTS		= main.@OBJ_FILE_SUFFIX@		\
+                  gloveApp.@OBJ_FILE_SUFFIX@		\
+                  vjStdCaveNavigator.@OBJ_FILE_SUFFIX@	\
+                  Scene.@OBJ_FILE_SUFFIX@
 
 # -----------------------------------------------------------------------------
 # Targets.

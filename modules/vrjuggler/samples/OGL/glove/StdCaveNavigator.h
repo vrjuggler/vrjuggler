@@ -31,8 +31,8 @@
  * -----------------------------------------------------------------
  */
 
-#ifndef _PF_NAVER_H_
-#define _PF_NAVER_H_
+#ifndef _VJ_STD_CAVE_NAVIGATOR_H_
+#define _VJ_STD_CAVE_NAVIGATOR_H_
 
 
 //#include <Kernel/vjKernel.h>
@@ -120,38 +120,5 @@ protected:
    bool     mNowRotating;
 };
 
-
-
-vjStdCaveNavigator::vjStdCaveNavigator() : vjMatrix(), mNowTranslating( false ), mNowRotating( false )
-{
-   mVNav.setRotAxis(false, true, false);
-   mVNav.setMode( velocityNav::FLY );
-}
-
-//: call once per frame (pre or post frame, not intra frame)
-int vjStdCaveNavigator::update()
-{
-   vjDEBUG(vjDBG_ALL, vjDBG_VERB_LVL) << "b0: " << mNowTranslating
-                         << "b1: " << mNowRotating
-                         //<< "b2: " << button2_state
-                         << "\t" << vjDEBUG_FLUSH;
-
-   mVNav.update( mDeviceMatrix, mNowTranslating, mNowRotating);    // mat, trans, rot
-
-   if(true == mNowTranslating)     // Translate
-      mVNav.incTransVelocity();
-   else
-      mVNav.zeroTransVelocity();       // Set velocity to 0
-
-   // Set the matrix to the navigation matrix
-   vjMatrix cur_pos,world_pos;
-   cur_pos = mVNav.getCurPos();  // Invert because we want to move the world
-   //std::cerr << "Set Pos: " << vjCoord(cur_pos).pos << std::endl;
-   world_pos.invert( cur_pos );
-   this->copy( world_pos );
-
-
-   return 1;
-}
 
 #endif
