@@ -24,10 +24,7 @@
 #include <Config/vjChunkFactory.h>
 
 // Get the system factory we need
-#ifdef VJ_OS_SGI
-#include <Kernel/vjSGISystemFactory.h>
-#endif
-#ifdef VJ_OS_Linux
+#if defined(VJ_OS_SGI) || defined(VJ_OS_Linux) || defined(VJ_OS_Solaris)
 #include <Kernel/vjSGISystemFactory.h>
 #endif
 #ifdef WIN32
@@ -237,7 +234,7 @@ void vjKernel::initConfig()
 #ifdef VJ_OS_SGI
    mSysFactory = vjSGISystemFactory::instance(); // XXX: Should not be system specific
 #else
-#ifdef VJ_OS_Linux
+#if defined(VJ_OS_Linux) || defined(VJ_OS_Solaris)
    mSysFactory = vjSGISystemFactory::instance(); // HACK - this could be trouble, using SGI factory
 #else
 #ifdef WIN32
