@@ -90,34 +90,42 @@ public:
    virtual ~OpenSGApp()
    {;}
    
-   /** Scene initialization function.
-   * User code for initializing the OpenSG scene should be placed here.
-   */
+   /**
+    * Scene initialization function.
+    * User code for initializing the OpenSG scene should be placed here.
+    */
    virtual void initScene() = 0;
    
-   /** Get the OpenSG Scene root.
-   * @return NodePtr to the root of the scene to render.
-   */
+   /**
+    * Get the OpenSG Scene root.
+    * @return NodePtr to the root of the scene to render.
+    */
    virtual OSG::NodePtr getSceneRoot() = 0;
    
-   /** Initialize OpenSG for drawing.
-   * If overridden, MUST call this method
-   */
+   /**
+    * Initializes OpenSG for drawing.
+    * If overridden, the overriding method MUST call this method.
+    */
    virtual void init();
    
-   /** Initialize OpenSG.
-   * Make sure to call initScene if you override this function
-   * User overrided functions MUST call OpenSGApp::apiInit()
-   */
+   /**
+    * Initializes OpenSG.
+    * Make sure to call initScene if you override this function.
+    * If a derived class overrides this method, the overriding function MUST call
+    * OpenSGApp::apiInit().
+    */
    virtual void apiInit();
 
-   /** Shut down OpenSG.  If overridden, MUST call this method.
+   /**
+    * Shuts down OpenSG.  If overridden, the overriding method call this method.
     */
    virtual void exit();
    
-   /** GL Drawing functions.
-   * If user code overrides these functions, it MUST call this method
-   */
+   /**
+    * OpenGL Drawing functions.
+    * If user code overrides these functions, the overriding functions MUST call these
+    * methods.
+    */
    //@{
    virtual void contextInit();
    virtual void contextPreDraw();
@@ -125,8 +133,10 @@ public:
    virtual void draw();
    //@}
    
-   /** Called once per frame, per buffer (basically context)
-   *  need so that we can use subviewports */
+   /**
+    * Called once per frame, per buffer (basically context).
+    * This is needed so that we can use subviewports.
+    */
    virtual void bufferPreDraw()
    {
       glClearColor(0.0, 0.0, 0.0, 0.0);
