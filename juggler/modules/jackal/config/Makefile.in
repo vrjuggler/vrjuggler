@@ -49,6 +49,7 @@ JDK_HOME	= @JDK_HOME@
 JAR		= @JAR@
 JAVAC		= @JAVAC@
 JAVAC_CMD	= $(JAVAC) -d . -sourcepath $(srcdir)
+JAVADOC		= $(JAVAC:javac=javadoc)
 
 # Prevent anything in this file from being built in parallel.
 MAKEFLAGS	+= -j 1
@@ -105,7 +106,7 @@ VjControl.jar: $(VJCONFIG_SOURCES)	\
 # Documentation <just for show>
 #
 doc:
-	/usr/java/bin/javadoc -d ~/public_html/vjcontrol -private	\
+	$(JAVADOC) -d ~/public_html/vjcontrol -private			\
             VjControl VjConfig VjComponents VjComponents.ConfigEditor	\
             VjComponents.ConfigEditor.ConfigChunkUI			\
             VjComponents.ConfigEditor.ChunkDescUI VjComponents.UI	\
