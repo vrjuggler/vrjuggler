@@ -152,6 +152,11 @@ public class ConfigDefinitionWriter
       def_elt.setAttribute(VERSION, Integer.toString(def.getVersion()));
       def_elt.setAttribute(LABEL, def.getName());
 
+      // Add the is_abstract child
+      Element is_abstract = new Element(ABSTRACT, DEF_NS);
+      is_abstract.setText(Boolean.toString(def.isAbstract()));
+      def_elt.addContent(is_abstract);
+
       // Add the help child
       Element help = new Element(HELP, DEF_NS);
       help.setText(def.getHelp());
@@ -293,6 +298,7 @@ public class ConfigDefinitionWriter
 
    private static final Namespace XSI_NS = Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
 
+   private static final String ABSTRACT               = "abstract";
    private static final String ALLOWED_TYPE           = "allowed_type";
    private static final String CATEGORY               = "category";
    private static final String DEFAULTVALUE           = "defaultvalue";

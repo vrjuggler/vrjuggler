@@ -112,6 +112,8 @@ public class ConfigDefinitionEditor
       mNameTxt.setText(name);
       mTokenTxt.setText(token);
 
+      mAbstractBox.setSelected(mDefinition.isAbstract());
+
       // Reset the categories list
       mCategoriesModel.clear();
       if (mDefinition != null)
@@ -170,6 +172,14 @@ public class ConfigDefinitionEditor
             mDefinition.setToken(mTokenTxt.getText());
          }
       });
+      mAbstractBox.setText("Is abstract?");
+      mAbstractBox.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            mDefinition.setAbstract(mAbstractBox.isSelected());
+         }
+      });
       mCategoriesListNewBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
@@ -194,6 +204,8 @@ public class ConfigDefinitionEditor
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 2, 2));
       mBasicPanel.add(mTokenPnl,  new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 2, 2));
+      mBasicPanel.add(mAbstractBox,  new GridBagConstraints(0, 2, 2, 1, 0.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 2, 2));
       mTokenPnl.add(mTokenTxt,  BorderLayout.CENTER);
       this.add(mCategoriesPnl, BorderLayout.CENTER);
       mCategoriesPnl.add(mCategoriesListSP, BorderLayout.CENTER);
@@ -215,6 +227,7 @@ public class ConfigDefinitionEditor
    private JLabel mTokenLbl = new JLabel();
    private JPanel mTokenPnl = new JPanel();
    private BorderLayout mTokenPnlLayout = new BorderLayout();
+   private JCheckBox mAbstractBox = new JCheckBox();
    private JTextField mTokenTxt = new JTextField();
    private JPanel mCategoriesPnl = new JPanel();
    private BorderLayout mCategoriesPnlLayout = new BorderLayout();

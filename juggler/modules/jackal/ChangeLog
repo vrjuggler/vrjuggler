@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Nov-30-2004 patrickh    Extended the config definition file markup to allow
+                        identification of definition versions that should not
+                        be instantiated as config elements in config files.
+                        NEW VERSION: 0.24.0
 Nov-24-2004 patrickh    Sped up validation of .jdef and .jconf files.
                         NEW VERSION: 0.23.3
 Nov-19-2004 patrickh    Restored the ability for .jconf files to extend the
