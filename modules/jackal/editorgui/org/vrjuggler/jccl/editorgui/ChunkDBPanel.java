@@ -313,7 +313,7 @@ public class ChunkDBPanel
                db.searchDependencies (vec);
             }
          }
-         DependencyFrame dependency_frame = (DependencyFrame)mUIModule.getChildFrameMatching ("VjComponents.ConfigEditor.DependencyFrame", mCurrentDB, null);
+         DependencyFrame dependency_frame = (DependencyFrame)mUIModule.getChildFrameMatching ("org.vrjuggler.jccl.editorgui.DependencyFrame", mCurrentDB, null);
          if (dependency_frame != null) 
          {
             dependency_frame.refreshData (vec);
