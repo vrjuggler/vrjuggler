@@ -50,7 +50,7 @@ namespace vrj
 
 class Display;
 
-/** this simple motif-esqe definition was taken from GLUT */
+/** This simple Motif-esque definition was taken from GLUT. */
 typedef struct
 {
 #define MWM_HINTS_DECORATIONS 2
@@ -63,8 +63,8 @@ MotifWmHints;
 
 
 /**
- * A GLX specific glWindow.
- * Has all information specific to dealing with a GLX window in OpenGL.
+ * A GLX-specific window for displaying OpenGL graphics.
+ * It holds all the information specific to dealing with a GLX window.
  */
 class GlWindowXWin: public vrj::GlWindow, public gadget::EventWindowXWin
 {
@@ -77,27 +77,29 @@ public:
    int close();
    bool makeCurrent();
 
-   /** Check events
-   * @post If (areEventSource), checks the x-events and processes them
-   */
+   /**
+    * Checks events.
+    * @post If (areEventSource), checks the x-events and processes them.
+    */
    virtual void checkEvents();
 
    void configWindow(vrj::Display* disp);
 
-public:
-   virtual bool createHardwareSwapGroup(std::vector<vrj::GlWindow*> wins);
+   virtual bool createHardwareSwapGroup(const std::vector<vrj::GlWindow*>& wins);
 
 protected:
-   /* private member functions.  these get profoundly painful */
-   ::XVisualInfo* getGlxVisInfo(::Display* display, int screen);
+   // Non-public member functions.
+
+   XVisualInfo* getGlxVisInfo(::Display* display, int screen);
 
    /**
-    * @pre  window is an xwindow under display.
-    * @post returns true if e is a mapnotify event for window, else false.
-    * @note this is a utility function for InitGfx,  used to wait
-    *       until a window has actually been mapped.
+    * @pre  The window is an X11 window under display.
+    * @post Returns true if e is a mapnotify event for window, else false.
+    *
+    * @note This is a utility function for open(). It is used to wait until a
+    *       window has actually been mapped.
     */
-   static int EventIsMapNotify(::Display* display, ::XEvent* e, ::XPointer window);
+   static int eventIsMapNotify(::Display* display, XEvent* e, XPointer window);
 
    /**
     * Called with any XEvents to process from X-win keyboard.
@@ -106,13 +108,13 @@ protected:
    virtual void processEvent(XEvent event);
 
 private:
-   ::Display*     mXDisplay;
-   ::XVisualInfo* mVisualInfo;
-   ::GLXContext   mGlxContext;
-   ::Window       mXWindow;
-   std::string    mWindowName;
-   int            mPipe;
-   std::string    mXDisplayName;       /**<  Name of the x display to use */
+   ::Display*   mXDisplay;
+   XVisualInfo* mVisualInfo;
+   GLXContext   mGlxContext;
+   Window       mXWindow;
+   std::string  mWindowName;
+   int          mPipe;
+   std::string  mXDisplayName;       /**<  Name of the x display to use */
 };
 
 
