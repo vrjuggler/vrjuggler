@@ -238,8 +238,9 @@ else
    boost_debug_suffix='_debug'
 fi
 
+boost_ver_str=`echo $BOOST_VERSION | sed -e 's/\./_/g'`
+
 if test "x$BOOST_HACKS" = "xyes" ; then
-   boost_ver_str=`echo $BOOST_VERSION | sed -e 's/\./_/g'`
    boost_extra_inc_dir="/boost-$boost_ver_str"
 fi
 
@@ -274,7 +275,7 @@ if test "x$bp_libname" = "x" ; then
          threading='-mt'
       fi
 
-      BOOST_PYTHON_LIB="boost_python-$toolset$threading"
+      BOOST_PYTHON_LIB="boost_python-$toolset$threading-$boost_ver_str"
    else
       BOOST_PYTHON_LIB="boost_python"
    fi
