@@ -11,8 +11,8 @@
 
 srcdir		= @srcdir@
 
-COMPILE		= @CXX@ @DEFS@ ${VJ_INCLUDES} @CPPFLAGS@ @CXXFLAGS@ -g
-LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ -g
+COMPILE		= @CXX@ @DEFS@ ${VJ_INCLUDES} @CPPFLAGS@ @CXXFLAGS@ @DBG_FLAGS@
+LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @DBG_FLAGS@
 VJ_INCLUDES	= @INCLUDES@ -I${VJ_BASE_DIR}/include -I${srcdir} -I${srcdir}/../torus -I${srcdir}/../wand -I${srcdir}/../cubes
 VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_LIBS_BASIC@
 VPATH		= @srcdir@:@srcdir@/../cubes:@srcdir@/../wand:@srcdir@/../torus
@@ -48,11 +48,11 @@ wandApp.o: wandApp.h
 torusApp.o: torusApp.h
 
 .cpp.o:
-	${COMPILE} -c $<
+	${COMPILE} @OBJ_NAME_FLAG@ -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend combo ${OBJECTS} *core so_locations
+	rm -f Makedepend combo ${OBJECTS} *core so_locations vc60.*
 	rm -rf ./ii_files

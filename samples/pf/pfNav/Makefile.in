@@ -42,11 +42,11 @@ pfNav: ${OBJECTS}
 pfNav.o: pfNaver.h
 
 .cpp.o:
-	${COMPILE} -c $<
+	${COMPILE} @OBJ_NAME_FLAG@ -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend pfNav ${OBJECTS} *core so_locations
+	rm -f Makedepend pfNav ${OBJECTS} *core so_locations vc60.*
 	rm -rf ./ii_files
