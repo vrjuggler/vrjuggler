@@ -39,6 +39,7 @@
 #include <vpr/System.h>
 #include <vpr/Thread/Thread.h>
 #include <jccl/Config/ConfigElement.h>
+#include <jccl/RTRC/ConfigManager.h>
 
 #include <gadget/Util/Debug.h>
 #include <gadget/InputManager.h>
@@ -97,6 +98,32 @@ bool EventWindowXWin::config(jccl::ConfigElementPtr e)
       mUseOwnDisplay = false;
       mRemoteDisplayName = remote_display_name;
 
+      jccl::ConfigElementPtr rem_display_config;
+      rem_display_config = jccl::ConfigManager::instance()->getElementNamed(mRemoteDisplayName);
+
+      if(rem_display_config)
+      {
+         // Get size and position
+         mWidth  = rem_display_config->getProperty<int>("size", 0);
+         mHeight = rem_display_config->getProperty<int>("size", 1);
+
+         // Sanity checks.
+         if (mWidth == 0) mWidth = 400;
+         if (mHeight == 0) mHeight = 400;
+
+         mX = rem_display_config->getProperty<int>("origin", 0);
+         mY = rem_display_config->getProperty<int>("origin", 1);
+      }
+      else
+      {
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+            << "WARNING: Could not find remote window element named: '"
+            << mRemoteDisplayName << "'. Failed to properly configure EventWindowX.\n"
+            << vprDEBUG_FLUSH;
+         return false;
+      }
+
+
       WindowRegistry::WindowInfo remote_win_info;
       bool found_window = WindowRegistry::instance()->getWindow(mRemoteDisplayName, remote_win_info);
       if(!found_window)
@@ -121,9 +148,9 @@ bool EventWindowXWin::config(jccl::ConfigElementPtr e)
       mWidth  = e->getProperty<int>("size", 0);
       mHeight = e->getProperty<int>("size", 1);
 
-      // Sanity checks.
-      if (mWidth == 0) mWidth = 400;
-      if (mHeight == 0) mHeight = 400;
+     // Sanity checks.
+     if (mWidth == 0) mWidth = 400;
+     if (mHeight == 0) mHeight = 400;
 
       mX = e->getProperty<int>("origin", 0);
       mY = e->getProperty<int>("origin", 1);
@@ -150,6 +177,7 @@ bool EventWindowXWin::config(jccl::ConfigElementPtr e)
       }
    }
 
+  
    // Get the lock information
    mLockToggleKey = e->getProperty<int>("lock_key");
    bool start_locked = e->getProperty<bool>("start_locked");
@@ -385,7 +413,6 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the mKeys array 
                   << "gadget::EventWindowXWin: STATE switch: <ESCAPE> --> Unlocked\n"
                   << vprDEBUG_FLUSH;
                mLockState = Unlocked;
-               unlockMouse();
             }
             else
             {
@@ -583,6 +610,11 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the mKeys array 
             break;
          }
 
+         break;
+   
+      // The windows size has changed
+      case ConfigureNotify:
+            updateOriginAndSize(event.xconfigure.width, event.xconfigure.height);
          break;
       }
 
@@ -1219,6 +1251,11 @@ void EventWindowXWin::unlockMouse()
 
    vprDEBUG_CONT(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
       << "un-lock finished.\n" << vprDEBUG_FLUSH;
+}
+void EventWindowXWin::updateOriginAndSize(unsigned int width, unsigned int height)
+{
+   mWidth = width;
+   mHeight = height;
 }
 
 /** Add the given window to the registry. */
