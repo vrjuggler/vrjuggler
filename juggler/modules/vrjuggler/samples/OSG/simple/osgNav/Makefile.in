@@ -35,9 +35,9 @@
 # This requires GNU make.
 # -----------------------------------------------------------------------------
 
-all: osgNav$(EXE_EXT)
+all: osgNav@EXEEXT@
 
-APP_NAME=	osgNav$(EXE_EXT)
+APP_NAME=	osgNav@EXEEXT@
 
 # Basic options.
 srcdir=		@srcdir@
@@ -52,5 +52,5 @@ EXTRA_LIBS+=		@APP_EXTRA_LIBS_OSG@
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------
-osgNav$(EXE_EXT): $(OBJS)
+osgNav@EXEEXT@: $(OBJS)
 	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)

@@ -35,9 +35,9 @@
 # This requires GNU make.
 # -----------------------------------------------------------------------------
 
-all: contextApp$(EXE_EXT)
+all: contextApp@EXEEXT@
 
-APP_NAME=	contextApp$(EXE_EXT)
+APP_NAME=	contextApp@EXEEXT@
 
 # Basic options.
 srcdir=		@srcdir@
@@ -49,5 +49,5 @@ include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------
-contextApp$(EXE_EXT): $(OBJS)
+contextApp@EXEEXT@: $(OBJS)
 	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)

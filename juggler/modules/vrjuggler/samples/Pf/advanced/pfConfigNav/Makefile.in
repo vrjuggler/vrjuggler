@@ -35,9 +35,9 @@
 # It requires GNU make.
 # -----------------------------------------------------------------------------
 
-all: pfBasicConfigNav$(EXE_EXT)
+all: pfBasicConfigNav@EXEEXT@
 
-APP_NAME=	pfBasicConfigNav$(EXE_EXT)
+APP_NAME=	pfBasicConfigNav@EXEEXT@
 
 # Basic options.
 srcdir=		@srcdir@
@@ -69,5 +69,5 @@ EXTRA_INCLUDES+=	-I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/Pf/advanced/nav \
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------
-pfBasicConfigNav$(EXE_EXT): $(OBJS)
+pfBasicConfigNav@EXEEXT@: $(OBJS)
 	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
