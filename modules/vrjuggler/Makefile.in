@@ -71,7 +71,7 @@
 # info            - Print out information about the build process that may be
 #                   useful to the user.
 #
-# The default target is 'dbg'.  'install' will install the debugging, static
+# The default target is 'debug'.  'install' will install the debugging, static
 # version of the libraries.
 # -----------------------------------------------------------------------------
 
@@ -207,7 +207,7 @@ TOOLS_SUBDIRS	= .
 ABI_LIST	= @ABI_LIST@
 
 # =============================================================================
-# Library targets.  The default is 'dbg' as defined above.  The steps for 
+# Library targets.  The default is 'debug' as defined above.  The steps for 
 # building the 'dbg', 'ddso', 'opt' and 'dso' are as follows:
 #
 #    1) Build dependencies (if necessary).
