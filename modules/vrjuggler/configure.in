@@ -1636,16 +1636,28 @@ fi
 
 if test "$OS_TYPE" = "UNIX" ; then
     if test "$PLATFORM" = "IRIX" ; then
-        APP_VJ_LIBS_BASIC="-B static -L\$(VJ_BASE_DIR)/lib${LIBBITSUF} -lJuggler"
-        APP_VJ_LIBS_BASIC_INST="-B dynamic -L\$(VJ_BASE_DIR)/lib${LIBBITSUF} -lJuggler"
+        APP_VJ_LIBS_BEGIN="-B static -L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
+        APP_VJ_LIBS_END=''
+        APP_VJ_LIBS_BASIC='-lJuggler'
+
+        APP_VJ_LIBS_BEGIN_INST="-B dynamic -L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
+        APP_VJ_LIBS_END_INST=''
+        APP_VJ_LIBS_BASIC_INST='-lJuggler'
+
         APP_EXTRA_LIBS_BEGIN='-B dynamic'
         APP_EXTRA_LIBS_END='-lm'
     else
         dnl # For now, we are disabling static linking for the sample
         dnl # applications when compiled in a developer's build tree.  This
         dnl # is only the case on non-IRIX platforms.
-        APP_VJ_LIBS_BASIC="-L\$(VJ_BASE_DIR)/lib${LIBBITSUF} -lJuggler"
+        APP_VJ_LIBS_BEGIN="-L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
+        APP_VJ_LIBS_END=''
+        APP_VJ_LIBS_BASIC='-lJuggler'
+
+        APP_VJ_LIBS_BEGIN_INST="$APP_VJ_LIBS_BEGIN"
+        APP_VJ_LIBS_END_INST="$APP_VJ_LIBS_END"
         APP_VJ_LIBS_BASIC_INST="$APP_VJ_LIBS_BASIC"
+
         APP_EXTRA_LIBS_END="-lm"
     fi
 
@@ -1656,7 +1668,11 @@ if test "$OS_TYPE" = "UNIX" ; then
     APP_EXTRA_LIBS_GL="${_LIBOPENGL}"
     APP_EXTRA_LIBS_PF="${_PFOGLLIB}"
 elif test "$OS_TYPE" = "Win32" ; then
-    APP_VJ_LIBS_BASIC="-link -libpath:\$(VJ_BASE_DIR)/lib/debug Juggler.lib"
+    APP_VJ_LIBS_BEGIN="-link -libpath:\$(VJ_BASE_DIR)/lib/debug"
+    APP_VJ_LIBS_END=''
+    APP_VJ_LIBS_BASIC='Juggler.lib'
+    APP_VJ_LIBS_BEGIN_INST="$APP_VJ_LIBS_BEGIN"
+    APP_VJ_LIBS_END_INST="$APP_VJ_LIBS_END"
     APP_VJ_LIBS_BASIC_INST="$APP_VJ_LIBS_BASIC"
     APP_LIBS_BASIC='comctl32.lib user32.lib gdi32.lib ws2_32.lib'
     APP_VJ_LIBS_GL='Juggler_ogl.lib'
@@ -1761,7 +1777,11 @@ AC_SUBST(SL_LIB)
 AC_SUBST(APP_EXTRA_FLAGS)
 AC_SUBST(APP_EXTRA_INC_AW)
 AC_SUBST(APP_EXTRA_INC_SL)
+AC_SUBST(APP_VJ_LIBS_BEGIN)
+AC_SUBST(APP_VJ_LIBS_END)
 AC_SUBST(APP_VJ_LIBS_BASIC)
+AC_SUBST(APP_VJ_LIBS_BEGIN_INST)
+AC_SUBST(APP_VJ_LIBS_END_INST)
 AC_SUBST(APP_VJ_LIBS_BASIC_INST)
 AC_SUBST(APP_VJ_LIBS_GL)
 AC_SUBST(APP_VJ_LIBS_PF)
