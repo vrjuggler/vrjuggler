@@ -43,6 +43,12 @@
     ..
     include
     ..
+    lib
+       vrjuggler
+           customeditors
+           ..
+       ..
+    ..
     share
     ..
 ..

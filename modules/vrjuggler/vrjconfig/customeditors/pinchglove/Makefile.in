@@ -88,8 +88,6 @@ install-editor:
 	@echo "------------------------------------------------"
 	@echo "Installing the PinchGloveEditor code base"
 	@echo "------------------------------------------------"
-	$(MKINSTALLDIRS) $(beandir)
-	$(MKINSTALLDIRS) $(jardir)
 ifneq ($(JARS), )
 	for jar in $(JARS) ;						\
           do								\
