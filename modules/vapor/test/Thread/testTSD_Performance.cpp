@@ -68,8 +68,14 @@ int main(int argc, char* argv[])
 
    int num_threads = atoi(argv[1]);
    std::cout << "Using num_threads: " << num_threads << std::endl;
-   
-   for(int thread_num=0;thread_num < num_threads;thread_num++)
+
+   // Run in primordial thread first.
+   int temp_val = 0;
+   doFunc((void*) temp_val);
+   thread_count++;
+
+   // Then run in num_threads -1 spawned threads.
+   for(int thread_num=1;thread_num < num_threads;thread_num++)
    {
       vpr::Thread* new_thread = new vpr::Thread(doFunc, (void*)(thread_num));
 
@@ -103,15 +109,14 @@ void doFunc(void* void_thread_num)
 
    vprDEBUG(vprDBG_ALL, 0) << "Thread: " << thread_num << ": Entering.\n"
                            << vprDEBUG_FLUSH;
-         
+
    timers[thread_num].startTiming();
    for(long rep=0;rep<num_reps;rep++)
-   {      
+   {
      (*tsDataItem) = rep;
    }
    timers[thread_num].stopTiming();
 
-   
    vprDEBUG(vprDBG_ALL, 0) << "Thread: " << thread_num
                            << ": Exiting: Avg Time of: "
                            << ((timers[thread_num].getTiming()/(double)num_reps)*1000.0f)
