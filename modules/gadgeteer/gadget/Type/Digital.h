@@ -23,7 +23,7 @@
 //  vjAnalog.
 //
 // See also: vjInput
-//!PUBLIC_API
+//!PUBLIC_API:
 //-----------------------------------------------------------------------------
 class vjDigital : virtual public vjInput
 {

@@ -9,7 +9,7 @@
 //: Provides simplified user interface to a keyboard device
 //
 // See also: vjDeviceInterface
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjKeyboardInterface : public vjDeviceInterface
 {
 public:

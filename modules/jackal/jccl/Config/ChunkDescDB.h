@@ -25,7 +25,7 @@
 //  functions to search for particular vjChunkDescs, and to read
 //  and write ChunkDesc files.
 //
-//!PUBLIC_API
+//!PUBLIC_API:
 //-----------------------------------------------------------------
 
 

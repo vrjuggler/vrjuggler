@@ -16,7 +16,7 @@
 #include <Input/vjInput/vjKeyboard.h>
 
 //: A dummy device for the Keyboard proxies to connect to
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjDummyKeyboard : public vjKeyboard
 {
 public:

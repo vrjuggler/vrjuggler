@@ -16,7 +16,7 @@
 // Has the common routines for accessing and seting
 // up keyboard interface
 //
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjSimInput
 {
 protected:

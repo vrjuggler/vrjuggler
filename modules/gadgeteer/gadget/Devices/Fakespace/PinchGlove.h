@@ -5,7 +5,7 @@
 #include <Input/vjGlove/vjGlove.h>
 #include <Input/vjGlove/fsPinchGlove.h>
 
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjPinchGlove : public vjGlove
 {
 public:

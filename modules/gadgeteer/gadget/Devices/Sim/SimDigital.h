@@ -14,7 +14,7 @@
 // When the key is released, the device is no longer set.
 //
 // This class should not be used directly by the user.
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjSimDigital : virtual public vjDigital, public vjSimInput
 {
 public:

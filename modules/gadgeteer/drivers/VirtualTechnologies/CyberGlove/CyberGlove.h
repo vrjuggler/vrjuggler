@@ -6,7 +6,7 @@
 #include <Input/vjGlove/CyberGloveBasic.h>
 
 //: Cyberglove dcevice
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjCyberGlove : virtual public vjGlove
 {
 public:

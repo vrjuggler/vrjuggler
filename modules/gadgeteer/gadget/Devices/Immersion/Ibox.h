@@ -27,7 +27,7 @@ struct vjIBOX_DATA {
 //  the HCI library for a simple interface to the IBox.
 //
 //-----------------------------------------------------------------------------
-//!PUBLIC_API
+//!PUBLIC_API:
 class vjIBox : public vjDigital, public vjAnalog
 {
 public:
