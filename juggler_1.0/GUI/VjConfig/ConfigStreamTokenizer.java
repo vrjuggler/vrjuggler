@@ -69,6 +69,10 @@ public class ConfigStreamTokenizer extends StreamTokenizer {
 
   public int nextToken() throws IOException {
     int retval = super.nextToken();
+if (retval == 13) {
+	//System.err.println ("nexttoken recursing");
+return nextToken();
+}
 
     /*
     System.err.println ("ConfigStreamTokenizer - read token:");
