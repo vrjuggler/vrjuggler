@@ -570,22 +570,25 @@ void VNCDesktop::draw()
 
       glDisable(GL_LIGHTING);    // The stuff below doesn't like the light...
 
-      // Draw the ray
-      glPushMatrix();
-         gmtl::Vec3f ray_start = mWandRay.getOrigin();
-         gmtl::Vec3f ray_end = mIsectPoint;
+      // Draw the ray (if we are pointing at the desktop. ie. it is in focus)
+      if(Nothing != mSelectState)
+      {
+         glPushMatrix();
+            gmtl::Vec3f ray_start = mWandRay.getOrigin();
+            gmtl::Vec3f ray_end = mIsectPoint;
 
-         glPolygonMode(GL_FRONT, GL_LINE);
-         glLineWidth(2);
-         glColor3f(1.0f, 0.0f, 0.0f);
+            glPolygonMode(GL_FRONT, GL_LINE);
+            glLineWidth(2);
+            glColor3f(1.0f, 0.0f, 0.0f);
 
-         glBegin(GL_LINES);
-            glVertex3fv(ray_start.mData);
-            glVertex3fv(ray_end.mData);
-         glEnd();
+            glBegin(GL_LINES);
+               glVertex3fv(ray_start.mData);
+               glVertex3fv(ray_end.mData);
+            glEnd();
 
-         glPolygonMode(GL_FRONT, GL_FILL);
-      glPopMatrix();
+            glPolygonMode(GL_FRONT, GL_FILL);
+         glPopMatrix();
+      }
 
       // Draw the desktop surface
       glEnable(GL_TEXTURE_2D);
