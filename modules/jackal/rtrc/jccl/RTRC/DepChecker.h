@@ -60,7 +60,7 @@ namespace jccl
  *  Note: The DepChecker must be registered BEFORE a
  *  chunk of the given type is checked for dependencies.
  */
-class DepChecker
+class JCCL_CLASS_API DepChecker
 {
 
 public:

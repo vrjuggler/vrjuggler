@@ -29,6 +29,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
+#include <jccl/jcclConfig.h>
+#include <vpr/vpr.h>
 #include <jccl/PerfMonitor/PerformanceCategories.h>
 #include <jccl/PerfMonitor/LabeledPerfDataBuffer.h>
 
@@ -42,8 +45,6 @@ PerformanceCategories::PerformanceCategories ()
    addCategory (jcclPERF_ALL, "PERF_ALL");
    activateCategory ("PERF_ALL");
 }
-
-
 
 void PerformanceCategories::addCategory (const vpr::GUID& catId, const std::string& name)
 {
@@ -108,7 +109,11 @@ void PerformanceCategories::addBuffer (LabeledPerfDataBuffer* buffer)
    mBuffersLock.acquire();
    // need to make sure the buffer gets a unique name
    char s[64];
+#ifdef HAVE_SNPRINTF
    snprintf (s, 64, "%s [%d]", buffer->getName().c_str(), mBuffers.size());
+#else
+   sprintf(s, "%s [%d]", buffer->getName().c_str(), mBuffers.size());
+#endif
    std::string name(s);
    buffer->setName (name);
 
