@@ -191,8 +191,8 @@ public class DeviceGraph
    {
       AttributeMap map = new AttributeMap();
       GraphConstants.setAutoSize(map, true);
-      GraphConstants.setLineEnd(map, GraphConstants.ARROW_TECHNICAL);
-      GraphConstants.setEndSize(map, 10);
+      GraphConstants.setLineEnd(map, GraphConstants.ARROW_CLASSIC);
+      GraphConstants.setEndFill(map, true);
       GraphConstants.setDashPattern(map, new float[]{3, 0});
       return map;
    }
