@@ -34,6 +34,9 @@
 #define _GADGET_ASCENSION_FLOCKOFBIRD_STANDALONE_H_
 
 #include <vpr/IO/Port/SerialPort.h>
+#include <vpr/vprTypes.h>
+#include <string>
+#include <boost/tuple/tuple.hpp>
 
 #define POSITION_RANGE 12.0f
 #define ANGLE_RANGE   180.0f
@@ -51,9 +54,80 @@ enum BIRD_HEMI
 {
    FRONT_HEM, AFT_HEM, UPPER_HEM, LOWER_HEM, LEFT_HEM, RIGHT_HEM
 };
+inline std::string getHemiString(BIRD_HEMI hemi)
+{
+   if(FRONT_HEM == hemi) return "Front";
+   else if(AFT_HEM == hemi) return "Aft";
+   else if(UPPER_HEM == hemi) return "Upper";
+   else if(LOWER_HEM == hemi) return "Lower";
+   else if(LEFT_HEM == hemi) return "Left";
+   else if(RIGHT_HEM == hemi) return "Right";
+   else return "Unknown";
+}
+
 enum BIRD_FILT
 {
    AC_NARROW, AC_WIDE, DC_FILTER
+};
+inline std::string getFiltString(BIRD_FILT filt)
+{
+   if(AC_NARROW == filt) return "AC Narrow";
+   else if(AC_WIDE == filt) return "AC Wide";
+   else if(DC_FILTER == filt) return "DC Filter";
+   else return "Unknown";
+}
+
+namespace ReportRate
+{
+   const vpr::Uint8 Max(0x51);
+   const vpr::Uint8 EveryOther(0x52);
+   const vpr::Uint8 Every8(0x53);
+   const vpr::Uint8 Every32(0x54);
+};
+
+namespace Flock
+{
+   namespace Command
+   {
+      const vpr::Uint8 Angles(0x57);
+      const vpr::Uint8 ChangeValue(0x50);
+      const vpr::Uint8 ExamineValue(0x4F);
+      const vpr::Uint8 FbbReset(0x2F);
+      const vpr::Uint8 Hemisphere(0x4C);
+      const vpr::Uint8 Matrix(0x58);
+      const vpr::Uint8 NextTransmitter(0x30);
+      const vpr::Uint8 Point(0x42);
+      const vpr::Uint8 Position(0x56);
+      const vpr::Uint8 PositionAngles(0x59);
+      const vpr::Uint8 PositionMatrix(0x5A);
+      const vpr::Uint8 PositionQuaternion(0x5D);
+      const vpr::Uint8 Quaternion(0x5C);
+      const vpr::Uint8 ReportRate1(0x51);
+      const vpr::Uint8 ReportRate2(0x52);
+      const vpr::Uint8 ReportRate8(0x53);
+      const vpr::Uint8 ReportRate32(0x54);
+      const vpr::Uint8 ToFbbNormal(0xF0);
+      const vpr::Uint8 ToFbbExpanded(0xE0);
+      const vpr::Uint8 ToFbbSuperExpanded(0xA0);
+      const vpr::Uint8 Run(0x46);
+      const vpr::Uint8 Sleep(0x47);
+      const vpr::Uint8 Stream(0x40);
+      const vpr::Uint8 StreamStop(0x3F);
+   };
+
+   namespace Parameter
+   {
+      const vpr::Uint8 BirdStatus(0x0);
+      const vpr::Uint8 SoftwareRevision(0x01);
+      const vpr::Uint8 ModelIdentification(0xF);
+      const vpr::Uint8 AddressingMode(0x13);
+      const vpr::Uint8 FbbAddress(0x15);
+      const vpr::Uint8 Hemisphere(0x16);
+      const vpr::Uint8 GroupMode(0x23);
+      const vpr::Uint8 FlockSystemStatus(0x24);
+      const vpr::Uint8 FbbAutoConfig(0x32);
+   };
+
 };
 
 /**
@@ -94,6 +168,15 @@ public:
    /**  Destructor */
    ~FlockStandalone();
 
+   /** Send command.
+   * @param cmd - cmd to send
+   */
+   vpr::ReturnStatus sendCommand(vpr::Uint8 cmd);
+
+   vpr::ReturnStatus openPort(void);
+
+
+
    /**
     * Call this to connect to the Flock device.
     * @note flock.isActive() must be false to use this function.
@@ -110,7 +193,7 @@ public:
    bool sample();
 
    /** Checks if the flock is active. */
-   const bool& isActive() const;
+   bool isActive() const;
 
    /**
     * Sets the port to use.
@@ -299,7 +382,7 @@ public:
 // testing functions
 public:
    /** Reads in data from the Flock. */
-   void readData();
+//   void readData();
 
    /**
     * Checks the group state.
@@ -353,14 +436,11 @@ public:
    /**
     * Examines an attribute.
     *
-    * @post Streamed data is output to screen.
-    *
-    * @param exam Attribute to query for - see the Flock manual.
-    * @param format (1)regular output (0)binary output.
-    * @param reps Number of reports.
-    * @param data Not currently used.
+    * @param attrib - Attribute to query for - see the Flock manual.
+    * @param respSize - Expected size of the response
+    * @param respData   - Returned data
     */
-   void examineValue(char exam, int data, int reps, int format);
+   vpr::ReturnStatus getAttribute(vpr::Uint8 attrib, unsigned respSize, std::vector<vpr::Uint8>& respData);
 
 // additional set functions
 public:
@@ -404,6 +484,9 @@ public:
 
    vpr::ReturnStatus readStatus(const int birdNum = 1);
    vpr::ReturnStatus readSoftwareRevision();
+
+   vpr::ReturnStatus getSoftwareRevision(unsigned& major, unsigned& minor);
+
    void printError( unsigned char ErrCode, unsigned char ExpandedErrCode );
    int checkError();
    vpr::ReturnStatus readSystemModel();
@@ -413,8 +496,18 @@ public:
 //  void clearBuffer();
 
 
+public:   // --- Enums --- //
+   enum Status
+   {
+      CLOSED,     /**< Flock is closed */
+      OPEN,       /**< Flock is open */
+      STREAMING   /**< Flock is streaming data */
+   };
+
 // Private data members
 private:
+   FlockStandalone::Status    mStatus;    /**< Current status of the flock */
+
    CalStruct   mCalTable;
    char        mReportRate;
    BIRD_HEMI   mHemisphere;
@@ -440,8 +533,7 @@ private:
 
    const int mSleepFactor;
 
-private:
-   vpr::ReturnStatus openPort(void);
+protected:
    void setBlocking(void);
    void sendSync(void);
    void sendGroup(void);
