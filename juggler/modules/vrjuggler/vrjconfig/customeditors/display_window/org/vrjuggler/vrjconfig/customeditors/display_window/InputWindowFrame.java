@@ -48,7 +48,7 @@ public class InputWindowFrame
 {
    public InputWindowFrame(String title, Dimension resolution,
                            Dimension desktopSize, ConfigContext ctx,
-                           ConfigElement elt)
+                           ConfigElement elt, boolean allowKbdEdit)
    {
       super(title, resolution, desktopSize, ctx, elt);
 
@@ -58,6 +58,9 @@ public class InputWindowFrame
       try
       {
          jbInit();
+
+         mKbdEditor = new KeyboardChooserPanel(ctx, elt, allowKbdEdit);
+         this.getContentPane().add(mKbdEditor, BorderLayout.NORTH);
 
          placeMyself();
 
@@ -91,11 +94,13 @@ public class InputWindowFrame
     *
     * Is this the best place (or way) to do this?
     */
+/*
    public void removeNotify()
    {
       super.removeNotify();
       mElement.removeConfigElementListener(mElementListener);
    }
+*/
 
    private void jbInit() throws Exception
    {
@@ -117,6 +122,7 @@ public class InputWindowFrame
    }
 
    private InputWindowFrame_this_configElementAdapter mElementListener = null;
+   private KeyboardChooserPanel mKbdEditor = null;
 
    private BorderLayout mMainLayout = new BorderLayout();
    private JLabel mIcon = new JLabel();
