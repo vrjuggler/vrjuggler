@@ -46,6 +46,17 @@
 namespace gadget
 {
 
+EventWindowOSX::EventWindowOSX()
+   : InputMixer<Input, EventWindow>()
+   , mHandleEventsHasBeenCalled(false) // Initialize to not being called yet
+   , mLockState(Unlocked)     // Initialize to unlocked.
+   , mAmSampling(false)       // Sampling has not been called yet
+{
+     //mExitFlag = false;
+     //mWeOwnTheWindow = true;
+     //mShared = false;                         // False by default
+}
+
 /** Constructor. */
 bool EventWindowOSX::config(jccl::ConfigChunkPtr c)
 {

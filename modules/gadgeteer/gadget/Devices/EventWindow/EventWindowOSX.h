@@ -85,18 +85,12 @@ public:
       Lock_KeyDown  /**< The mouse is locked due to a key being held down */
    };
 
-   EventWindowOSX()
-      : InputMixer<Input, EventWindow>()
-      , mHandleEventsHasBeenCalled(false) // Initialize to not being called yet
-      , mLockState(Unlocked)     // Initialize to unlocked.
-      , mAmSampling(false)       // Sampling has not been called yet
-   {
-        //mExitFlag = false;
-        //mWeOwnTheWindow = true;
-        //mShared = false;                         // False by default
-   }
+   EventWindowOSX();
 
-   ~EventWindowOSX() { stopSampling();}
+   virtual ~EventWindowOSX()
+   {
+      stopSampling();
+   }
 
    virtual bool config(jccl::ConfigChunkPtr c);
 
