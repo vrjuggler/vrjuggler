@@ -975,9 +975,9 @@ def installGadgeteerDrivers(prefix):
    destdir = os.path.join(prefix, 'lib', 'gadgeteer', 'drivers')
    srcroot = os.path.join(gJugglerDir, 'vc7', 'Gadgeteer')
 
-   drivers = ['DataGlove', 'Fastrak', 'Flock', 'IBox', 'IntersenseAPI',
-              'IS900', 'MotionStar', 'MSFTSpeechRecognition', 'PinchGlove', 'SerialEncoder',
-              'TrackdAPI', 'VRPN']
+   drivers = ['DataGlove', 'DirectXJoystick', 'Fastrak', 'Flock', 'IBox',
+              'IntersenseAPI', 'IS900', 'MotionStar', 'MSFTSpeechRecognition',
+              'PinchGlove', 'SerialEncoder', 'TrackdAPI', 'VRPN']
 
    for d in drivers:
       srcdir = os.path.join(srcroot, d)
