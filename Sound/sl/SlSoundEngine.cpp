@@ -60,6 +60,7 @@ SlSoundEngine::~SlSoundEngine()
 void SlSoundEngine::init()
 {
    //sched.setSafetyMargin( 0.128f );
+   this->setPosition( mPosition );
 }
 
 // lookup a filename, given the sound's alias.
