@@ -64,14 +64,14 @@ pfNaver::pfNaver()
 //	by a program.
 int pfNaver::app(pfTraverser *trav)
 {
-   int button0_state = mButton0->GetData();
-   int button1_state = mButton1->GetData();
+   int button0_state = mButton0->getData();
+   int button1_state = mButton1->getData();
 
    vjDEBUG(vjDBG_ALL, 2) << "b0: " << button0_state << "\t" << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_ALL,2) << "b1: " << button1_state << endl << vjDEBUG_FLUSH;
 
    vjMatrix* wandMatrix;
-   wandMatrix = mWand->GetData();
+   wandMatrix = mWand->getData();
 
    vjCoord wand_coord(*wandMatrix);
    vjDEBUG(vjDBG_ALL,2) << "Wand pos:" << wand_coord.pos << endl << vjDEBUG_FLUSH;
