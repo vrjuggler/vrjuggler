@@ -35,7 +35,7 @@
                   <para>Our <ulink url="http://www.vrjuggler.org/html/juggler.team.guide/CppCodingStandard.html">coding standard</ulink>.</para>
                </listitem>
                <listitem>
-                  <para><emphasis>Design Patterns</emphasis> (<ulink url="http://www.amazon.com/exec/obidos/ASIN/0201633612/o/qid=947544224/sr=2-1/002-9163340-6788217">Book</ulink>: ISBN 0-201-63361-2) and Design Patterns <ulink url="http://hillside.net/patterns/patterns.html">in general</ulink></para>
+                  <para><emphasis>Design Patterns</emphasis> (<ulink url="http://www.amazon.com/exec/obidos/ASIN/0201633612/o/qid=947544224/sr=2-1/002-9163340-6788217">Book</ulink>: ISBN 0-201-63361-2) and Design Patterns <ulink url="http://hillside.net/patterns/patterns.htm">in general</ulink></para>
                </listitem>
                <listitem>
                   <para><ulink url="http://www.gnu.org/software/autoconf/autoconf.html">Autoconf</ulink> documentation. (Try doing <command>info autoconf</command>).</para>
@@ -53,7 +53,7 @@
                   <para><ulink url="http://www.doxygen.org/">Doxygen</ulink> documentation (used in VR Juggler to autogenerate documentation for C++ classes).</para>
                </listitem>
                <listitem>
-                  <para><ulink url="http://www.sourcegear.com/CVS">CVS</ulink> documentation (used for revision control).</para>
+                  <para><ulink url="http://www.cvshome.org/">CVS</ulink> documentation (used for revision control).</para>
                </listitem>
             </itemizedlist>
          </section>
@@ -365,7 +365,7 @@
                      </listitem>
                   </orderedlist>
                   <para>Note that there is no login step in this case. Your SourceForge password is required for all CVS commands.</para>
-                  <para>After this point, you can access the CVS repository as though it is a normal, local repository. As with the anonymous CVS access, you can set the <varname>$CVSROOT</varname> environment variable to the value given with the <option>-d</option> option above. For further information about using SSH with SourceForge, please refer to the appropriate SSH ocumentation and to <ulink url="http://sourceforge.net/docman/display_doc.php?docid=761_id=1">SourceForge's documentation</ulink>.</para>
+                  <para>After this point, you can access the CVS repository as though it is a normal, local repository. As with the anonymous CVS access, you can set the <varname>$CVSROOT</varname> environment variable to the value given with the <option>-d</option> option above. For further information about using SSH with SourceForge, please refer to the appropriate SSH ocumentation and to <ulink url="http://sourceforge.net/docman/?group_id=1">SourceForge's documentation</ulink>.</para>
                </section>
             </section>
             <section>
@@ -1601,7 +1601,7 @@ Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
             </section>
             <section>
                <title>I Want to Fix a Bug</title>
-               <para>Only the most trivial software is bug free, and VR Juggler is certainly non-trivial. We do our best to track down and fix bugs, but our fly swatter is only so big. If you find a bug, then by all means, <ulink url="http://sourceforge.net/bugs/?func=addbug_id=8041">submit a bug report</ulink> and give us a patch! Don't worry, we won't be too embarrassed.</para>
+               <para>Only the most trivial software is bug free, and VR Juggler is certainly non-trivial. We do our best to track down and fix bugs, but our fly swatter is only so big. If you find a bug, then by all means, <ulink url="http://sourceforge.net/tracker/?group_id=8041&amp;atid=108041">submit a bug report</ulink> and give us a patch! Don't worry, we won't be too embarrassed.</para>
             </section>
             <section>
                <title>I Want to Add New Features</title>
@@ -1627,7 +1627,7 @@ Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
             <para>Now that you have decided that you're more than cool enough to contribute to VR Juggler, it is time for some ground rules. These rules are here to help the committers take advantage of your help with maximum efficiency and speed, so please do your best to keep them in mind.</para>
             <section>
                <title>Submitting Patches to Fix Bugs</title>
-               <para>The best way to do this is with a <ulink url="http://sourceforge.net/bugs/?func=addbug_id=8041">bug report</ulink>. Copies of bug reports go to <ulink url="http://sourceforge.net/mail/?group_id=8041">vrjuggler-devel@lists.sourceforge.net</ulink> where they are seen by everyone subscribed. Before submitting a bug report, however, please review the <ulink url="http://sourceforge.net/bugs/?group_id=8041">open bugs</ulink> to verify that the bug you have found is not already reported. If you have a fix for an open bug, attach your patch as a follow-up comment.</para>
+               <para>The best way to do this is with a <ulink url="http://sourceforge.net/tracker/?group_id=8041&amp;atid=108041">bug report</ulink>. Copies of bug reports go to <ulink url="http://sourceforge.net/mail/?group_id=8041">vrjuggler-devel@lists.sourceforge.net</ulink> where they are seen by everyone subscribed. Before submitting a bug report, however, please review the <ulink url="http://sourceforge.net/bugs/?group_id=8041">open bugs</ulink> to verify that the bug you have found is not already reported. If you have a fix for an open bug, attach your patch as a follow-up comment.</para>
                <para>If you have found an unreported bug, your bug report should contain the following information:</para>
                <itemizedlist>
                   <listitem>
@@ -1737,13 +1737,13 @@ Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
                   <para>There are three styles of diffs that can be generated for use as patches: standard diff, unified diff and context diff. In the author's experience, unified diffs are the easiest to read, and standard diffs are the hardest to read. The following two pages from the enline VR Juggler CVS repository show how unified and context diffs look:</para>
                   <itemizedlist>
                      <listitem>
-                        <para><ulink url="http://cvs.sourceforge.net/cgi-bin/cvsweb.cgi/juggler/configure.in.diff?cvsroot=vrjuggler=text=1.259=text=1.260=u">Unified diff</ulink> between Revisions 1.259 and 1.260 of <filename>configure.in</filename></para>
+                        <para><ulink url="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/vrjuggler/juggler_1.0/configure.in.diff?r1=text&amp;tr1=1.259&amp;r2=text&amp;tr2=1.260&amp;diff_format=u">Unified diff</ulink> between Revisions 1.259 and 1.260 of <filename>configure.in</filename></para>
                      </listitem>
                      <listitem>
-                        <para><ulink url="http://cvs.sourceforge.net/cgi-bin/cvsweb.cgi/juggler/configure.in.diff?cvsroot=vrjuggler=text=1.259=text=1.260=c">Context diff</ulink> between Revisions 1.259 and 1.260 of <filename>configure.in</filename></para>
+                        <para><ulink url="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/vrjuggler/juggler_1.0/configure.in.diff?r1=text&amp;tr1=1.259&amp;r2=text&amp;tr2=1.260&amp;diff_format=c">Context diff</ulink> between Revisions 1.259 and 1.260 of <filename>configure.in</filename></para>
                      </listitem>
                   </itemizedlist>
-                  <para>We cannot generate <ulink url="http://cvs.sourceforge.net/cgi-bin/cvsweb.cgi/juggler/configure.in.diff?cvsroot=vrjuggler=text=1.259=text=1.260=h">fancy, colored diffs</ulink> for use as patches unfortunately. It certainly is nice that <ulink url="http://stud.fh-heilbronn.de/~zeller/cgi/cvsweb.cgi/"><command>cvsweb</command></ulink> will do that, however.</para>
+                  <para>We cannot generate <ulink url="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/vrjuggler/juggler_1.0/configure.in.diff?r1=text&amp;tr1=1.259&amp;r2=text&amp;tr2=1.260&amp;diff_format=l">fancy, colored diffs</ulink> for use as patches unfortunately. It certainly is nice that <ulink url="http://stud.fh-heilbronn.de/~zeller/cgi/cvsweb.cgi/"><command>cvsweb</command></ulink> will do that, however.</para>
                   <para>To generate a unified diff, specify the option <option>-u</option> on the command line when running the diff command. To create a context diff, specify the <option>-c</option> option instead. To create a standard diff, give no options at all. These work with both the CVS diff command and the <command>diff</command>(1) utility. To always create a specific kind of diff by default with CVS, add the following line to your <filename>$HOME/.cvsrc</filename> file:</para>
                   <programlisting>diff <emphasis>option</emphasis></programlisting>
                </section>
@@ -1769,11 +1769,11 @@ Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
     Submitted by: Helpful User great.person@wonderful.net</programlisting>
                <section>
                   <title>Submitting Bug Fixes</title>
-                  <para>This is probably the most common type of patch VR Juggler users will submit. The best way to submit a patch for a bug is to attach it to a <ulink url="http://sourceforge.net/bugs/?group_id=8041">bug report</ulink> through <ulink url="http://sourceforge.net/">SourceForge</ulink>. Copies of bug reports are sent to <ulink url="http://sourceforge.net/mail/?group_id=8041">vrjuggler-devel@lists.sourceforge.net</ulink> where all subscribers of that list see them. The bug report will be assigned to a developer with commit access, and that person will take charge of reviewing your patch and any further communication with you, the helpful submitter.</para>
+                  <para>This is probably the most common type of patch VR Juggler users will submit. The best way to submit a patch for a bug is to attach it to a <ulink url="http://sourceforge.net/tracker/?group_id=8041&amp;atid=108041">bug report</ulink> through <ulink url="http://sourceforge.net/">SourceForge</ulink>. Copies of bug reports are sent to <ulink url="http://sourceforge.net/mail/?group_id=8041">vrjuggler-devel@lists.sourceforge.net</ulink> where all subscribers of that list see them. The bug report will be assigned to a developer with commit access, and that person will take charge of reviewing your patch and any further communication with you, the helpful submitter.</para>
                </section>
                <section>
                   <title>Submitting Feature Enhancements</title>
-                  <para>Submitting an enhancement to existing code requires a little bit more work than submitting a bug report. If you are implementing part of an interface that is not yet finished (for example, a method that only prints out <quote>Not implemented yet!</quote>), you should submit a <ulink url="http://sourceforge.net/bugs/?group_id=8041">bug report</ulink> as above but describe it as a feature enhancement in your report. If you are extending an interface, you should first submit your proposed changes (in a high-level format with some pseudocode if appropriate) to <ulink url="mailto:vrjuggler-devel@lists.sourceforge.net">vrjuggler-devel@lists.sourceforge.net</ulink> for discussion before doing any hard work making the changes. This will allow interested people to respond with feedback, questions or a short <quote>Go for it!</quote> message. Once your patches are ready, then you should submit them to the list for reviewing before an interested committer will take them and actually commit them.</para>
+                  <para>Submitting an enhancement to existing code requires a little bit more work than submitting a bug report. If you are implementing part of an interface that is not yet finished (for example, a method that only prints out <quote>Not implemented yet!</quote>), you should submit a <ulink url="http://sourceforge.net/tracker/?group_id=8041&amp;atid=108041">bug report</ulink> as above but describe it as a feature enhancement in your report. If you are extending an interface, you should first submit your proposed changes (in a high-level format with some pseudocode if appropriate) to <ulink url="mailto:vrjuggler-devel@lists.sourceforge.net">vrjuggler-devel@lists.sourceforge.net</ulink> for discussion before doing any hard work making the changes. This will allow interested people to respond with feedback, questions or a short <quote>Go for it!</quote> message. Once your patches are ready, then you should submit them to the list for reviewing before an interested committer will take them and actually commit them.</para>
                </section>
                <section>
                   <title>Submitting Feature Additions</title>
