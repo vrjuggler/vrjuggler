@@ -49,7 +49,7 @@ class vjDependencyManager
 {
 private:
    // Singleton so must be private
-   vjDependencyManager()
+   vjDependencyManager() : mDepCheckers(), mDefaultChecker()
    {
       mDepCheckers = std::vector<vjDepChecker*>(0);
       vjASSERT(mDepCheckers.size() == 0);
