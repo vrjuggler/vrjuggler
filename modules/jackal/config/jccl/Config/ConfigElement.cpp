@@ -83,15 +83,18 @@ bool ConfigElement::initFromNode(cppdom::NodePtr elementNode)
 
    // Lookup our definintion.
    std::string my_type = elementNode->getName();
-   unsigned int my_version = elementNode->getAttribute(tokens::VERSION).getValue<unsigned int>();
+   unsigned int my_version =
+      elementNode->getAttribute(tokens::VERSION).getValue<unsigned int>();
    ConfigDefinitionPtr def_ptr =
       ElementFactory::instance()->getConfigDefinition(my_type, my_version);
 
    if(def_ptr.get() == NULL)
    {
       vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << "WARNING: Failed to get definition for element type: " << my_type
-         << " --- You may have an invalid configuration element.\n"
+         << clrOutBOLD(clrYELLOW, "WARNING")
+         << ": Failed to get definition for element type '" << my_type
+         << "' version " << my_version
+         << "\n\tYou may have an invalid configuration element.\n"
          << vprDEBUG_FLUSH;
       ret_val = false;
    }
