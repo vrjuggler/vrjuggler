@@ -49,6 +49,8 @@ public class ConfigContextEdit extends AbstractUndoableEdit
     *
     * @param ctx        ConfigContext to add/remove the element from.
     * @param elm        ConfigElement to add/remove.
+    * @param source     the data source from which the element was removed or
+    *                   to which the element was added
     * @param addRemove  whether this edit is for adding or removing an element.
     */
    public ConfigContextEdit(ConfigContext ctx, ConfigElement elm,
