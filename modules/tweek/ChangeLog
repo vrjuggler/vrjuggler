@@ -1,5 +1,9 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2004-11-04 patrickh    The Tweek JavaBean Loader is now installed as a bundle
+                       on Mac OS X (in addition to the "traditional" UNIX
+                       installation launched by a shell script).
+                       NEW VERSION: 0.19.1
 2004-11-04 patrickh    Changed the location of Tweek data files to $HOME/.tweek
                        on UNIX-based platforms.  Along with this,
                        $HOME/.tweekrc has been renamed to $HOME/.tweek/tweekrc.
