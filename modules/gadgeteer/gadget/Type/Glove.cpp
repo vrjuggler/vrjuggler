@@ -52,7 +52,7 @@ namespace gadget
  * on the glove data. (Get finger pos, get vectors, get matrices, etc.)
  */
 
-GloveData::GloveData()
+GloveData::GloveData(): InputData()
 {
    // Zero out the angles
    for(int i=0;i<NUM_COMPONENTS;i++)

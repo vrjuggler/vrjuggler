@@ -66,7 +66,7 @@ namespace gadget
 // NOTE: More docs needed here
 //
 //!PUBLIC_API:
-class GADGET_CLASS_API GloveData
+class GADGET_CLASS_API GloveData: public InputData
 {
 public:
    enum { NUM_JOINTS = 4, NUM_COMPONENTS = 6 };
