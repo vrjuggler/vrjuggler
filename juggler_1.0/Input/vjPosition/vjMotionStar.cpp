@@ -91,7 +91,7 @@ bool vjMotionStar::config(vjConfigChunk *c)
    mMotionStar.setNumBirds((unsigned int)(static_cast<int> (c->getProperty("num"))));
    mMotionStar.setBirdRate((double)(static_cast<int>(c->getProperty("brate"))));
    mMotionStar.setRunMode((static_cast<int> (c->getProperty("mode"))));
-   mMotionStar.setAddress(static_cast<std::string>(c->getProperty("ipaddress")).c_str());
+   mMotionStar.setAddress(static_cast<std::string>(c->getProperty("address")).c_str());
 //   mMotionStar.setReportRate( (static_cast<unsigned char>(c->getProperty("rrate"))) ); 
  
 /*
