@@ -211,7 +211,7 @@ cd build.vpr</screen></para>
                      <para><screen>../configure.pl --module=VPR --prefix=$HOME/vpr-inst</screen></para>
                   </listitem>
                   <listitem>
-                     <para><screen>gmake debug install</screen></para>
+                     <para><screen>gmake debug install-debug</screen></para>
                   </listitem>
                   <listitem>
                      <para><screen>setenv VPR_BASE_DIR $HOME/vpr-inst</screen></para>
@@ -233,7 +233,7 @@ cd build.sonix</screen></para>
 ../configure.pl --module=Sonix --prefix=$HOME/sonix-inst --enable-audioworks</screen></para>
                   </listitem>
                   <listitem>
-                     <para><screen>gmake debug install</screen></para>
+                     <para><screen>gmake debug install-debug</screen></para>
                   </listitem>
                   <listitem>
                      <para><screen>setenv SNX_BASE_DIR $HOME/sonix-inst</screen></para>
@@ -252,7 +252,7 @@ cd build.jccl</screen></para>
                      <para><screen>../configure.pl --module=JCCL --prefix=$HOME/jccl-inst --with-jdom="&lt;JDOMPATH&gt;/build/jdom.jar:&lt;JDOMPATH&gt;/lib/xerces.jar"</screen></para>
                   </listitem>
                   <listitem>
-                     <para><screen>gmake debug install</screen></para>
+                     <para><screen>gmake debug install-debug</screen></para>
                   </listitem>
                   <listitem>
                      <para><screen>setenv JCCL_BASE_DIR $HOME/jccl-inst</screen></para>
@@ -271,7 +271,7 @@ cd build.gadgeteer</screen></para>
                      <para><screen>../configure.pl --module=Gadgeteer --prefix=$HOME/gadgeteer-inst --with-jdom="&lt;JDOMPATH&gt;/build/jdom.jar:&lt;JDOMPATH&gt;/lib/xerces.jar"</screen></para>
                   </listitem>
                   <listitem>
-                     <para><screen>gmake debug install</screen></para>
+                     <para><screen>gmake debug install-debug</screen></para>
                   </listitem>
                   <listitem>
                      <para><screen>setenv GADGET_BASE_DIR $HOME/gadgeteer-inst</screen></para>
@@ -303,7 +303,7 @@ cd build.tweek</screen></para>
                      <para><screen>../configure.pl --module=Tweek --prefix=$HOME/tweek-inst --with-jdom=&lt;JDOMPATH&gt;/jdom.jar:&lt;JDOMPATH&gt;/xerces.jar --with-cxx-orb=omniORB3 --with-cxx-orb-root=&lt;OMNIORBPATH&gt; --with-java-orb=OpenORB --with-java-orb-jar=&lt;OPENORBPATH&gt;/lib/openorb-1.2.0.jar</screen></para>
                   </listitem>
                   <listitem>
-                     <para><screen>gmake debug install</screen></para>
+                     <para><screen>gmake debug install-debug</screen></para>
                   </listitem>
                   <listitem>
                      <para><screen>setenv TWEEK_BASE_DIR $HOME/tweek-inst</screen></para>
