@@ -147,6 +147,16 @@ namespace jcclTest
          CPPUNIT_ASSERT( receiving != (*desc) );
       }
 
+      void addPropDesc()
+      {
+         
+      }
+            
+      void remPropDesc()
+      {
+         
+      }      
+      
       static CppUnit::Test* suite()
       {
           CppUnit::TestSuite* test_suite = new CppUnit::TestSuite( "ChunkDescTest" );
@@ -158,6 +168,9 @@ namespace jcclTest
 
           test_suite->addTest( new CppUnit::TestCaller<ChunkDescTest>( "testIsEqual", &ChunkDescTest::testIsEqual ) );
           test_suite->addTest( new CppUnit::TestCaller<ChunkDescTest>( "testIsNotEqual", &ChunkDescTest::testIsNotEqual ) );
+
+          test_suite->addTest( new CppUnit::TestCaller<ChunkDescTest>( "addPropDesc", &ChunkDescTest::addPropDesc ) );
+          test_suite->addTest( new CppUnit::TestCaller<ChunkDescTest>( "remPropDesc", &ChunkDescTest::remPropDesc ) );
 
           return test_suite;
       }
