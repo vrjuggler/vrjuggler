@@ -169,4 +169,4 @@ doughnut(GLfloat r, GLfloat R, GLint nsides, GLint rings)
   }
 }
 
-}; // namespace vrjTest
+} // namespace vrjTest
