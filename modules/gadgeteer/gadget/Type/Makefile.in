@@ -65,6 +65,7 @@ SRCS=		Analog.cpp			\
 		Position.cpp			\
 		PositionProxy.cpp		\
 		Glove.cpp			\
+		GloveData.cpp			\
 		GloveProxy.cpp			\
 		GestureProxy.cpp		\
 		GloveGesture.cpp		
