@@ -83,7 +83,7 @@ SerialPortImplTermios::~SerialPortImplTermios ()
 // ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplTermios::open ()
 {
-   vprASSERT(mHandle->getHandle() == -1 && "The port may already be open");
+   vprASSERT(mHandle->mFdesc == -1 && "The port may already be open");
    vpr::ReturnStatus status;
 
    status = mHandle->open();
@@ -175,7 +175,7 @@ void SerialPortImplTermios::setUpdateAction (vpr::SerialTypes::UpdateActionOptio
 // ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplTermios::getBufferSize (vpr::Uint16& size)
 {
-   vprASSERT(mHandle->getHandle() != -1 && "The port may not be open");
+   vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
    vpr::ReturnStatus retval;
    struct termios term;
 
