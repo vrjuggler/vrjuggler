@@ -891,16 +891,7 @@ AC_OUTPUT(Makefile
           doc/Makefile
           samples/Makefile
           samples/OGL/Makefile
-          samples/OGL/combo/Makefile
-          samples/OGL/cones/Makefile
-          samples/OGL/cubes/Makefile
           samples/OGL/glove/Makefile
-          samples/OGL/digitalGlove/Makefile
-          samples/OGL/simpleGlove/Makefile
-          samples/OGL/torus/Makefile
-          samples/OGL/texture/Makefile
-          samples/OGL/analog/Makefile
-          samples/OGL/wand/Makefile
           samples/OSG/Makefile
           samples/OSG/osgNav/Makefile
           samples/Pf/Makefile
@@ -912,10 +903,21 @@ AC_OUTPUT(Makefile
           samples/tutorials/simpleInput/Makefile
           samples/tutorials/simplePf/Makefile
           test/Makefile 
-          test/TestSuite/Makefile
+          test/Draw/Makefile
+          test/Draw/OGL/Makefile
+          test/Draw/OGL/analog/Makefile
+          test/Draw/OGL/combo/Makefile
+          test/Draw/OGL/cones/Makefile
+          test/Draw/OGL/cubes/Makefile
+          test/Draw/OGL/digitalGlove/Makefile
+          test/Draw/OGL/simpleGlove/Makefile
+          test/Draw/OGL/texture/Makefile
+          test/Draw/OGL/torus/Makefile
+          test/Draw/OGL/wand/Makefile
           test/Math/Makefile
           test/Matrix/Makefile
           test/Quat/Makefile
+          test/TestSuite/Makefile
           test/input/Makefile
           tools/Makefile
           mtree/VJ.data.dist
