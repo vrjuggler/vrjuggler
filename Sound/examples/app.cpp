@@ -102,7 +102,7 @@ void main(int argc, char** argv)
    // Find objects
    //you = awFindObs("you");
  
-   gSoundEngine->setPosition( 10, 0, 0 );
+   /*gSoundEngine->setPosition( 10, 0, 0 );
    sound1->trigger();
    gSoundEngine->update();
    usleep( 1 );
@@ -138,6 +138,50 @@ void main(int argc, char** argv)
    sleep( 1 );
    
    gSoundEngine->setPosition( 30, 0, 0 );
+   sound2->trigger();
+   gSoundEngine->update();
+   sleep( 1 );
+   */
+
+   gSoundEngine->setPosition( 0, 0, 0 );
+   
+   
+   sound1->setPosition( 10, 0, 0 );
+   sound1->trigger();
+   gSoundEngine->update();
+   usleep( 1 );
+   
+   sound2->setPosition( 0, 5, 0 );
+   sound2->trigger();
+   gSoundEngine->update();
+   usleep( 1 );
+   
+   sound3->setPosition( 0, 5, 5 );
+   sound3->trigger();
+   gSoundEngine->update();
+   usleep( 1 );
+   
+   sound2->setPosition( 0, 0, 20 );
+   sound2->trigger();
+   gSoundEngine->update();
+   sleep( 1 );
+   
+   sound1->setPosition( 0, 0, 10 );
+   sound1->trigger();
+   gSoundEngine->update();
+   sleep( 1 );
+   
+   sound3->setPosition( 0, 0, 5 );
+   sound3->trigger();
+   gSoundEngine->update();
+   sleep( 1 );
+   
+   sound1->setPosition( -5, -5, -4 );
+   sound1->trigger();
+   gSoundEngine->update();
+   sleep( 1 );
+   
+   sound2->setPosition( 30, 0, 0 );
    sound2->trigger();
    gSoundEngine->update();
    sleep( 1 );
