@@ -366,6 +366,8 @@ bool vjInputManager::removeDevice(std::string instName)
 
    // Refresh the proxies
    refreshAllProxies();
+
+   return true;
 }
 
 
@@ -498,7 +500,7 @@ void vjInputManager::refreshAllProxies()
 
 }
 
-bool removeProxy(vjConfigChunk* chunk)
+bool vjInputManager::removeProxy(vjConfigChunk* chunk)
 {
    return true;
 }
