@@ -377,14 +377,12 @@ public class PerfAnalyzerPanel
 
 
 
-//    JComboBox  collection_choice;
     JComboBox  display_choice;
     JComboBox  max_samples_box;
     JTextField preskip_box;
     JTextField postskip_box;
     JButton savecontents_button;
     JButton load_button;
-    JButton print_button;
     JButton print_all_button;
     JPanel data_panel;
     GridBagLayout gblayout;
@@ -394,7 +392,6 @@ public class PerfAnalyzerPanel
     JScrollPane display_pane;
     JTextArea text_area;
 
-    PerfDataCollector current_collector;
     PerformanceModule perf_module;
     protected String component_name;
     protected ConfigChunk component_chunk;
@@ -420,7 +417,6 @@ public class PerfAnalyzerPanel
 	datapanel_elems = new Vector();
 	perf_module = null;
         ui_module = null;
-	current_collector = null;
 	text_area = null;
 
 	preskip = 20;
@@ -431,23 +427,6 @@ public class PerfAnalyzerPanel
         ui_initialized = false;
 
     }
-
-
-
-//      public void setCurrentCollector (PerfDataCollector c) {
-//  	if (c == null) {
-//  	    current_collector = null;
-//  	    savecontents_button.setEnabled (false);
-//  	    //print_button.setEnabled (false);
-//  	    //print_all_button.setEnabled (false);
-//  	}
-//  	else {
-//  	    current_collector = c;
-//  	    savecontents_button.setEnabled (true);
-//  	    //print_button.setEnabled (true);
-//  	    print_all_button.setEnabled (true);
-//  	}
-//      }
 
 
 
@@ -532,15 +511,6 @@ public class PerfAnalyzerPanel
 	}
 	else if (source == display_choice)
 	    refreshDisplay();
-//  	else if (source == collection_choice) {
-//  	    Object o = collection_choice.getSelectedItem();
-//  	    if (o instanceof String)
-//  		setCurrentCollector (null);
-//  	    else 
-//  		setCurrentCollector ((PerfDataCollector)collection_choice.getSelectedItem());
-//  	    //current_collector = (PerfDataCollector)collection_choice.getSelectedItem();
-//  	    //refreshDisplay();
-//  	}
 	else if (source == preskip_box) {
 	    preskip = Integer.parseInt (preskip_box.getText().trim());
 	    refreshDisplay();
@@ -561,10 +531,6 @@ public class PerfAnalyzerPanel
                 if (name != null)
                     refreshDisplay();
             }
-	}
-	else if (source == print_button) {
-	     String s = current_collector.dumpAverages (preskip, postskip, true, anomalycutoff);
-	     System.out.println (s);
 	}
 	else if (source == print_all_button) {
 	    String s = "";
@@ -715,10 +681,6 @@ public class PerfAnalyzerPanel
             epanel.add (savecontents_button = new JButton ("Save Data"));
             savecontents_button.addActionListener (this);
 
-            //  	print_button = new JButton ("Print");
-            //  	print_button.addActionListener (this);
-            //  	epanel.add (print_button);
-
             print_all_button = new JButton ("Print");
             print_all_button.addActionListener (this);
             epanel.add (print_all_button);
@@ -742,8 +704,6 @@ public class PerfAnalyzerPanel
             max_samples_box.addActionListener (this);
 
             display_pane = new JScrollPane (data_panel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-            
-            //setCurrentCollector (null);
             
             add (display_pane, "Center");
 
