@@ -99,6 +99,9 @@ DYNAMIC_LIBS	= $(LIBS)
 DYLIB_DEPS_VJ		= @DYLIB_DEPS_VJ@
 DYLIB_DEPS_GL		= @DYLIB_DEPS_GL@
 DYLIB_DEPS_PF		= @DYLIB_DEPS_PF@
+DYLIB_PROF_DEPS_VJ	= @DYLIB_PROF_DEPS_VJ@
+DYLIB_PROF_DEPS_GL	= @DYLIB_PROF_DEPS_GL@
+DYLIB_PROF_DEPS_PF	= @DYLIB_PROF_DEPS_PF@
 
 VJ_LIB_STATIC		= $(VJ_LIBRARY).$(STATICLIB_EXT)
 VJ_LIB_DYNAMIC		= $(VJ_LIBRARY).$(DYNAMICLIB_EXT)
@@ -167,7 +170,7 @@ endif
 # ------------------------------------------------
 # Construct the dynamic version of the libraries.
 # ------------------------------------------------
-$(LIBDIR)/$(VJ_LIB_DYNAMIC) $(LIBDIR)/$(VJ_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(VJ_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -185,7 +188,25 @@ endif
 	@echo "$@ done"
 	@echo "------------------------------------------------"
 
-$(LIBDIR)/$(GL_LIB_DYNAMIC) $(LIBDIR)/$(GL_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(VJ_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
+            $(DYLIB_PROF_DEPS_VJ)
+	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
+ifeq (@OS_TYPE@, Win32)
+	cd $(LIBDIR_BASE) && $(RM_LN) $(VJ_LIB_STATIC) &&		\
+            $(LN_S) $(LIBDIR)/$(VJ_LIB_STATIC) ./
+	cd $(LIBDIR_BASE) && $(RM_LN) $(VJ_LIBRARY).exp &&		\
+            $(LN_S) $(LIBDIR)/$(VJ_LIBRARY).exp ./
+endif
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
+
+$(LIBDIR)/$(GL_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -203,13 +224,43 @@ endif
 	@echo "$@ done"
 	@echo "------------------------------------------------"
 
-$(LIBDIR)/$(PF_LIB_DYNAMIC) $(LIBDIR)/$(PF_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(GL_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
+            $(DYLIB_PROF_DEPS_GL)
+	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
+ifeq (@OS_TYPE@, Win32)
+	cd $(LIBDIR_BASE) && $(RM_LN) $(GL_LIB_STATIC) &&		\
+            $(LN_S) $(LIBDIR)/$(GL_LIB_STATIC) ./
+	cd $(LIBDIR_BASE) && $(RM_LN) $(GL_LIBRARY).exp &&		\
+            $(LN_S) $(LIBDIR)/$(GL_LIBRARY).exp ./
+endif
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
+
+$(LIBDIR)/$(PF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
             $(DYLIB_DEPS_PF)
+	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
+
+$(LIBDIR)/$(PF_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
+            $(DYLIB_PROF_DEPS_PF)
 	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"
