@@ -274,6 +274,8 @@ public class PropertyDesc {
 	 * been read, and we go until we read and consume the
 	 * closing '}'
 	 */
+	DescEnum d;
+
 	try {
 	    Vector v = new Vector();
 
@@ -290,26 +292,20 @@ public class PropertyDesc {
 		j = st.sval.indexOf('=');
 		if (j == -1) {
 		    /* no explicit value */
-		    v.addElement (new DescEnum(st.sval,
-						   enumval++));
+		    if (vt.equals (ValType.t_string) || vt.equals (ValType.t_chunk)
+			|| vt.equals (ValType.t_embeddedchunk))
+			d = new DescEnum (st.sval, st.sval);
+		    else
+			d = new DescEnum (st.sval, enumval++);
+		    v.addElement (new DescEnum(d));
 		}
 		else {
 		    /* explicit value */
+		    VarValue val = new VarValue(vt);
 		    String n = st.sval.substring(0,j);
-		    if (valtype.equals(ValType.t_int)) {
-			enumval = Integer.parseInt(st.sval.substring(j+1));
-			v.addElement (new DescEnum(n, enumval++));
-		    }
-		    else if (valtype.equals(ValType.t_float)) {
-			enumfloatval = Float.valueOf(st.sval.substring(j+1)).floatValue();
-			v.addElement (new DescEnum(n, enumfloatval));
-		    }
-		    else {
-			System.err.println ("Only float and int"
-					    + " enums can have "
-					    +"explicit values");
-			enums.addElement (new DescEnum(st.sval,enumval++));
-		    }
+		    val.set (st.sval.substring(j+1));
+		    d = new DescEnum (n, val);
+		    v.addElement (d);
 		}
 		st.nextToken();
 	    }
@@ -320,11 +316,11 @@ public class PropertyDesc {
 	    System.err.println ("error in ParseEnumerations");
 	    System.err.println (e);
 	}
-	catch (NumberFormatException e2) {
-	    System.err.println ("PropertyDesc.<init>(): Invalid" 
-				+ " number format: " + st.sval);
-	    System.err.println (e2);
-	}
+// 	catch (NumberFormatException e2) {
+// 	    System.err.println ("PropertyDesc.<init>(): Invalid" 
+// 				+ " number format: " + st.sval);
+// 	    System.err.println (e2);
+// 	}
 
 	return new Vector(); // if we had an exception
     }
