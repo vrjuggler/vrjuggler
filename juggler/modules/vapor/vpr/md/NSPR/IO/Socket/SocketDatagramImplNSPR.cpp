@@ -41,19 +41,11 @@
 
 #include <vpr/vprConfig.h>
 
-#include <stdio.h>
-#include <string.h>
-
-#ifdef HAVE_STRINGS_H
-#  include <strings.h>
-#endif
-
 #include <prio.h>
 #include <prinrval.h>
 
-#include <vpr/Util/Assert.h>
-#include <vpr/md/NSPR/IO/Socket/SocketDatagramImplNSPR.h>
 #include <vpr/Util/Error.h>
+#include <vpr/md/NSPR/IO/Socket/SocketDatagramImplNSPR.h>
 
 
 namespace vpr
@@ -63,14 +55,12 @@ namespace vpr
 // Public methods.
 // ============================================================================
 
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SocketDatagramImplNSPR::recvfrom (void* msg,
-                                                    const vpr::Uint32 length,
-                                                    const int flags,
-                                                    vpr::InetAddr& from,
-                                                    vpr::Uint32& bytes_read,
-                                                    const vpr::Interval timeout)
+vpr::ReturnStatus SocketDatagramImplNSPR::recvfrom(void* msg,
+                                                   const vpr::Uint32 length,
+                                                   const int flags,
+                                                   vpr::InetAddr& from,
+                                                   vpr::Uint32& bytes_read,
+                                                   const vpr::Interval timeout)
 {
    ReturnStatus retval;
    PRInt32 bytes;
@@ -82,7 +72,7 @@ vpr::ReturnStatus SocketDatagramImplNSPR::recvfrom (void* msg,
    {
       bytes_read = bytes;
    }
-   if ( bytes == -1 )
+   else if ( bytes == -1 )
    {
       PRErrorCode err_code = PR_GetError();
 
@@ -98,7 +88,8 @@ vpr::ReturnStatus SocketDatagramImplNSPR::recvfrom (void* msg,
       }
       else
       {
-         vpr::Error::outputCurrentError(std::cerr, "SocketDatagramImplNSPR::recvfrom: Could not read from socket");
+         vpr::Error::outputCurrentError(std::cerr,
+                                        "SocketDatagramImplNSPR::recvfrom: Could not read from socket");
          retval.setCode(ReturnStatus::Fail);
       }
    }
@@ -111,14 +102,12 @@ vpr::ReturnStatus SocketDatagramImplNSPR::recvfrom (void* msg,
    return retval;
 }
 
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SocketDatagramImplNSPR::sendto (const void* msg,
-                                                  const vpr::Uint32 length,
-                                                  const int flags,
-                                                  const vpr::InetAddr& to,
-                                                  vpr::Uint32& bytes_sent,
-                                                  const vpr::Interval timeout)
+vpr::ReturnStatus SocketDatagramImplNSPR::sendto(const void* msg,
+                                                 const vpr::Uint32 length,
+                                                 const int flags,
+                                                 const vpr::InetAddr& to,
+                                                 vpr::Uint32& bytes_sent,
+                                                 const vpr::Interval timeout)
 {
    ReturnStatus retval;
    PRInt32 bytes;
@@ -146,7 +135,8 @@ vpr::ReturnStatus SocketDatagramImplNSPR::sendto (const void* msg,
       }
       else
       {
-         vpr::Error::outputCurrentError(std::cerr, "SocketDatagramImplNSPR::sendto: Could not send message");
+         vpr::Error::outputCurrentError(std::cerr,
+                                        "SocketDatagramImplNSPR::sendto: Could not send message");
          retval.setCode(ReturnStatus::Fail);
       }
    }
