@@ -45,7 +45,9 @@ public:
         int i, n;
         i = n = 100000;
 
-        jccl::LabeledPerfDataBuffer::activate();
+        jccl::PerformanceCategories::instance()->activate();
+
+        jccl::PerformanceCategories::instance()->activateCategory ("PERF_JACKAL");
 
         jccl::LabeledPerfDataBuffer buffer1("testSetOverhead buffer 1", n+1);
 
@@ -54,7 +56,7 @@ public:
         ts1.set();
 
         while(i--) {
-            buffer1.set(jcclDBG_PERFORMANCE, "foobar");
+            buffer1.set(jcclPERF_JACKAL, "foobar");
         }
 
         ts2.set();
@@ -71,7 +73,7 @@ public:
         ts1.set();
 
         while(i--) {
-            tsbuffer->set(jcclDBG_PERFORMANCE, "foobar");
+            tsbuffer->set(jcclPERF_JACKAL, "foobar");
         }
 
         ts2.set();
@@ -107,14 +109,14 @@ public:
         int i = 100000;
         data->barrier->wait();
         while (i--) {
-            (*(data->tsbuffer))->set(jcclDBG_PERFORMANCE, name);
+            (*(data->tsbuffer))->set(jcclPERF_JACKAL, name);
         }
         data->barrier->wait();
     }
         
 
     void testSetContentionOverhead () {
-        jccl::LabeledPerfDataBuffer::activate();
+        //jccl::PerformanceCategories::instance()->activate();
 
         vpr::TSObjectProxy<jccl::LabeledPerfDataBuffer> tsbuffer;
         jccl::TimeStamp ts1, ts2;
