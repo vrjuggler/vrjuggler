@@ -47,17 +47,17 @@
 //  this node automatically updates the Sound's position information.
 //  you should keep a pointer to the Sound, so that you can trigger
 //  and change other properties of it.
-//  NOTE: This pjSoundNode does not trigger the Sound object, you must do that.
+//  NOTE: This pfSoundNode does not trigger the Sound object, you must do that.
 //  NOTE: you still need to use the SoundEngine::update function
-class pjSoundNode : public pfDCS
+class pfSoundNode : public pfDCS
 {
 public:
    // TODO: the constructor takes a vjSound, which does not
    //       mean that it was aquired with a getHandle function... fixme..
    //  who manages this memory?  should be sound manager... but...
    //  what if it wasn't created by the manager?
-   pjSoundNode( vjSound* sound, bool isPositional = true );
-   virtual ~pjSoundNode()
+   pfSoundNode( vjSound* sound, bool isPositional = true );
+   virtual ~pfSoundNode()
    {
       // vjSounds recieved with a sound handle are managed by
       // the sound manager.
@@ -114,7 +114,7 @@ private:
 
 
 
-pjSoundNode::pjSoundNode( vjSound* sound, bool isPositional ) : mIsPositional( true )
+pfSoundNode::pfSoundNode( vjSound* sound, bool isPositional ) : mIsPositional( true )
 {
    this->setPositional( isPositional );
    this->setSound( sound );
@@ -128,7 +128,7 @@ pjSoundNode::pjSoundNode( vjSound* sound, bool isPositional ) : mIsPositional( t
 // TRUE).
 // app() is called automatically by Performer; it is not called directly
 // by a program.
-int pjSoundNode::app(pfTraverser *trav)
+int pfSoundNode::app(pfTraverser *trav)
 {
    // update the sound attributes (position) based on the current
    // position of this node.
@@ -189,16 +189,16 @@ int pjSoundNode::app(pfTraverser *trav)
 // is derived from a Performer class.  It creates a new pfType
 // which identifies objects of this class.  All constructors for
 // this class must then call setType(classType_).
-pfType *pjSoundNode::classType = NULL;
+pfType *pfSoundNode::classType = NULL;
 
-void pjSoundNode::init(void)
+void pfSoundNode::init(void)
 {
-   vjDEBUG(vjDBG_ALL,1)<<"[pjSoundNode] Registering sound node with performer.\n"<<vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_ALL,1)<<"[pfSoundNode] Registering sound node with performer.\n"<<vjDEBUG_FLUSH;
 
    if (classType == NULL)
    {
         pfDCS::init();           // Initialize my parent
-        classType =  new pfType(pfDCS::getClassType(), "pjSoundNode");  // Create the new type
+        classType =  new pfType(pfDCS::getClassType(), "pfSoundNode");  // Create the new type
    }
 }
 //----------------------------------------------------------------------//
