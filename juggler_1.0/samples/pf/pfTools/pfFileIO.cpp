@@ -62,9 +62,10 @@ pfNode* pfFileIO::autoloadFile( std::string fileName, const pfFileIO::units& un 
    pfNode* node = NULL;
       
    std::string optimizedFileName = optimizedName( fileName );
-   if (fileExists(optimizedFileName))
+   if (fileIO::fileExists(optimizedFileName))
    {
-      cout<<"Loading "<<optimizedFileName.data()<<"\n"<<flush;
+      // don't need to output this, because performer already does. :)
+      //cout<<"Loading "<<optimizedFileName.data()<<"\n"<<flush;
       node = loadFile( optimizedFileName );
    }
 

@@ -40,55 +40,125 @@
 #include <Kernel/vjKernel.h>
 #include <simplePfNavApp.h>
 
-
-int main(int argc, char* argv[])
+void usage(char** argv)
 {
-   std::string model_filename;
+   cout<<"_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/\n"<<flush;
+   cout<<"\n"<<flush;
+   cout<<"Usage: (where cf is some juggler config file)\n";
+      cout<<"      "<<argv[0]<<" sl modelfile.flt vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n] (for plib's SL library)\n";
+      cout<<"      "<<argv[0]<<" aw modelfile.flt vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n] (for audioworks library)\n"<<flush;
+      cout<<"      "<<argv[0]<<" nosound modelfile.flt vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n] (to stub out the sound)\n"<<flush;
+   cout<<"_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/\n"<<flush;
+}
 
-   // Config params
-   std::string file_path("");
-   const float dcs_scale(1.0f);
-   const vjVec3 dcs_trans(0.0f, 0.0f, 0.0f);
-   const vjVec3 initial_pos(0.0f, 0.0f, 0.0f);
+bool initSoundEngine( const std::string& arg, SoundEngine* engine )
+{
+   if (arg == "sl")
+   {
+      char* filename = "sound.dat";
+      std::string fileNameWithPath;
+      if (fileIO::fileExistsResolvePath( filename, fileNameWithPath ))
+      {
+         engine = SoundFactory::newEngine( SoundFactory::SL, fileNameWithPath.c_str() );
+      }
+      
+      else
+      {
+         cout<<"Couldn't find "<<filename<<"\n"<<flush;
+         exit(1);
+      }      
+   }
+   
+   else if (arg == "aw")
+   {
+      char* filename = "sound.adf";
+      std::string fileNameWithPath;
+      if (fileIO::fileExistsResolvePath( filename, fileNameWithPath ))
+      {  
+         engine = SoundFactory::newEngine( SoundFactory::AW, fileNameWithPath.c_str() );
+      }
+      
+      else
+      {
+         cout<<"Couldn't find "<<filename<<"\n"<<flush;
+         exit(1);
+      }      
+   }
+   
+   else if (arg == "nosound")
+   {
+      engine = SoundFactory::newEngine( SoundFactory::NOSOUND, "nofileneeded" );
+   }   
+   
+   else
+   {
+      return false; //user didn't specify an option
+   }
+   
+   return true; //user specified an option
+}
 
+void main(int argc, char* argv[])
+{
    vjKernel* kernel = vjKernel::instance(); // Declare a new Kernel
-    simplePfNavApp* app = new simplePfNavApp(kernel);  // Delcare an instance of my application
+   simplePfNavApp* application = new simplePfNavApp(kernel);  // Delcare an instance of my application
 
-    cout << "Usage: " << argv[0] << " modelfile vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n]\n" << flush;
-    cout << "\n" << flush;
+   std::string file_path( "" );
+   const float dcs_scale( 1.0f );
+   const vjVec3 dcs_trans( 0.0f, 0.0f, 0.0f );
+   const vjVec3 initial_pos( 0.0f, 0.0f, 0.0f );
+    
+   if (argc < 2)
+   {
+      usage( argv );
+      cout<<"\n\n[ERROR!!!] you must supply at least a model database (then config files)\n\n"<<flush;
+      return;
+   }
+   
+   int a = 1;
+   if (initSoundEngine( argv[a], gSoundEngine ))
+   {
+      ++a;
+   }
+   
+   
+   if (argc < a)
+   {
+      usage( argv );
+      cout<<"\n\n[ERROR!!!] you must supply a model database (then config files)\n\n"<<flush;
+      return;
+   }
 
-    if (argc < 2)
-    {
-       cout<<"\n\n[ERROR!!!] you must supply a model database (then config files)\n\n"<<flush;
-       return 0;
-    }
+   std::string model_filename = argv[a];
+   ++a;
+   
+   if (argc < a)
+   {
+      cout<<"\n\n[ERROR!!!] you must supply config files after the model file...\n\n"<<flush;
+      return;
+   }
 
-    model_filename = std::string(argv[1]);
-
-    if (argc <= 2)
-    {
-       cout<<"\n\n[ERROR!!!] you must supply config files after the model file...\n\n"<<flush;
-       return 0;
-    }
-
-    for ( int i = 2; i < argc; i++ ) {
-        kernel->loadConfigFile(argv[i]);
-    }
-
+    for ( int i = a; i < argc; i++ ) 
+   {
+     kernel->loadConfigFile(argv[i]);
+   }
+   
     kernel->start();
 
     // Configure that application
-    app->setFileName(model_filename);
-    app->setFilePath(file_path);
-    app->setWorldDcsScale(dcs_scale);
-    app->setWorldDcsTrans(dcs_trans);
-    app->setInitialNavPos(initial_pos);
+    application->setFileName( model_filename );
+    application->setFilePath( file_path );
+    application->setWorldDcsScale( dcs_scale );
+    application->setWorldDcsTrans( dcs_trans );
+    application->setInitialNavPos( initial_pos );
 
-    kernel->setApplication(app);    // Set up the kernel
+    kernel->setApplication( application );    // Set up the kernel
 
     //while(!kernel->done())
-    while(1)
-     {;}
+   while (1)
+   {
+      usleep( 100000 );
+   }
 }
 
 
