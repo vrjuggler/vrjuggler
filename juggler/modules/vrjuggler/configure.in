@@ -404,8 +404,10 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
         # scope.
         if test "$PLATFORM" = "SGI" ; then
             AC_DEFINE(VJ_THREAD_SCOPE, PTHREAD_SCOPE_PROCESS)
+            AC_DEFINE(VJ_POSIX_C_SOURCE, 199506L)
         else
             AC_DEFINE(VJ_THREAD_SCOPE, PTHREAD_SCOPE_SYSTEM)
+            AC_DEFINE(VJ_POSIX_C_SOURCE, 2)
         fi
     fi
 
