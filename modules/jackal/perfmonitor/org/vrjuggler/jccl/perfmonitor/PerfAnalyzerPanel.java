@@ -38,13 +38,12 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import java.util.Vector;
+import java.util.*;
 import java.io.File;
 
 import VjComponents.PerfMonitor.*;
 import VjControl.*;
 import VjComponents.UI.*;
-import VjComponents.UI.Widgets.*;
 import VjConfig.*;
 
 
