@@ -106,7 +106,21 @@ public:
    // query the current forward speed.
    const float& yspeed() const;
    
+   //: set the matrix 
+   virtual void setOrigin( const vjMatrix& matrix )
+   {
+      mOrigin = matrix;
+   }   
    
+   // resets the navigator's matrix to the origin (set by setOrigin)
+   virtual void reset()
+   {
+      mVelocity.set( 0,0,0 );
+      mVelocityFromGravityAccumulator.set( 0,0,0 );
+      mRotVelocity = 0;
+      mRotationalAcceleration.makeIdent();
+      this->setCurPos( mOrigin );
+   }
    
 protected:
    // check if we are hitting anything current, and correct for it
@@ -129,10 +143,12 @@ private:
    navMode  mMode;
    int mTimeHack;
    
+   vjMatrix mOrigin;
+   
    std::vector<collider*> mCollider;
 };
 
-velocityNav::velocityNav() : mTimeHack(0), mDamping( 1.0f ), mRotVelocity( 0.0f ),
+velocityNav::velocityNav() : mOrigin(), mTimeHack(0), mDamping( 1.0f ), mRotVelocity( 0.0f ),
    mMaxRotVelocity( 1.0f ),
    mVelocity( 0.0f, 0.0f , 0.0f ),
    mMode( velocityNav::GROUND ),

@@ -102,6 +102,7 @@ bool navigator::navTranslate(vjVec3 trans)
 
 void navigator::navRotate( vjMatrix rot_mat )
 {  
+   //rot_mat.constrainRotAxis( allowAxis[0], allowAxis[1], allowAxis[2], rot_mat );
    mCurPos.postMult( rot_mat );
    mCurPos.constrainRotAxis( allowAxis[0], allowAxis[1], allowAxis[2], mCurPos );
 }
