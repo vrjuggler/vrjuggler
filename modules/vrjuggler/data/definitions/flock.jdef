@@ -74,11 +74,6 @@
          <help>Does an extended range transmitter exist?</help>
          <value label="Extended Range" defaultvalue="false"/>
       </property>
-      <property valuetype="configelementpointer" variable="false" name="device_host">
-         <help>Points to the machine that the device is physically connected to.</help>
-         <value label="Host Node"/>
-         <allowed_type>machine_specific</allowed_type>
-      </property>
       <upgrade_transform/>
    </definition_version>
 </definition>
