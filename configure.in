@@ -194,7 +194,7 @@ case "x${_abi_type}" in
         VJ_ABI_CFG('ELF', 'i386')
         ;;
     xWIN32_i386)
-        VJ_ABI_CFG('WIN32', 'i386')
+        VJ_ABI_CFG('WIN32')
         ;;
 esac
 
@@ -426,7 +426,7 @@ case $target_os in
         dnl # If no ABI has been set yet, default to WIN32 with whatever the
         dnl # target CPU architecture is.
         if test "$ABI" = "" ; then
-            VJ_ABI_CFG('WIN32', "$target_cpu")
+            VJ_ABI_CFG('WIN32')
         fi
 
         dnl # We have to use Win32 threads on Win32.
@@ -1093,8 +1093,8 @@ if test "$OS_TYPE" = "UNIX" ; then
     TEST_EXTRA_LIBS_GL_SUBST="-L${OGLROOT}/lib\${LIBBITSUF} ${_SYSTEM_OPENGL}"
     TEST_EXTRA_LIBS_PF="${_PFOGLLIB}"
 elif test "$OS_TYPE" = "Win32" ; then
-    TEST_VJ_LIBS_BASIC="-link -nodefaultlib:libc -libpath:\${VJ_BASE_DIR}/lib/$ISA/debug Juggler.lib"
-    TEST_VJ_LIBS_BASIC_SUBST="-link -nodefaultlib:libc -libpath:$\${VJ_BASE_DIR}/lib/$ISA/debug Juggler.lib"
+    TEST_VJ_LIBS_BASIC="-link -nodefaultlib:libc -libpath:\${VJ_BASE_DIR}/lib/debug Juggler.lib"
+    TEST_VJ_LIBS_BASIC_SUBST="-link -nodefaultlib:libc -libpath:$\${VJ_BASE_DIR}/lib/debug Juggler.lib"
     TEST_LIBS_BASIC='comctl32.lib user32.lib gdi32.lib libcmtd.lib'
     TEST_VJ_LIBS_GL='Juggler_ogl.lib'
     TEST_VJ_LIBS_PF='Juggler_pf.lib'
