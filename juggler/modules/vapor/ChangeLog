@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2001-11-20 allenb   Created standards StatCollector class for collecting
+                    IO statistics.  Replaced the old BandwidthIOStats
+					collection method with the new collector class.
 2001-11-15 allenb   Added valid() test function to thread functors.  The code
                     now tries to test for valid functors at thread creation.
                     Also added destructor that sets the internal values to ones

@@ -56,8 +56,7 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VPR_LIBRARY)
 
-SRCS	 	= BandwidthIOStatsStrategy.cpp	\
-                  BaseIOStatsStrategy.cpp
+SRCS	 	= BaseIOStatsStrategy.cpp
 
 include $(MKPATH)/dpp.obj.mk
 
