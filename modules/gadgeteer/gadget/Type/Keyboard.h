@@ -102,6 +102,7 @@ const int ROT_ROLL_CW = 11;
 //@}
 
 //: Keyboard class
+// Converts keyboard input into simulated input devices
 class vjKeyboard : public vjPosition, public vjDigital, public vjAnalog
 {
 public:
@@ -157,6 +158,8 @@ private:
    void RotRollCCW(float amt, int n);
 
    /* X-Windows utility functions */
+   //: Convert XKey to vjKey
+   //! NOTE: Keypad keys are transformed ONLY to number keys
    int XKeyTovjKey(KeySym xKey);
    int FilterEvent( XEvent* event, int want_exposes,
                     int width, int height);
