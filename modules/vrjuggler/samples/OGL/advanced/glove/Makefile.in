@@ -41,7 +41,7 @@ APP_NAME=	glove@EXEEXT@
 
 # Basic options.
 srcdir=		@srcdir@
-SRCS=		Scene.cpp gloveApp.cpp main.cpp navigation.cpp
+SRCS=		Scene.cpp gloveApp.cpp main.cpp navigation.cxx
 
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
 include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
