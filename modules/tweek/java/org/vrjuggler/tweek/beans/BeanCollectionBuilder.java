@@ -411,6 +411,12 @@ public class BeanCollectionBuilder
             new_name = name.substring(0, index) + value +
                        name.substring(end_index + 1);
          }
+         else
+         {
+            System.err.println("WARNING: Environment variable " + env_var +
+                               " has no value");
+            new_name = name.substring(0, index) + name.substring(end_index + 1);
+         }
       }
 
       return new_name;
