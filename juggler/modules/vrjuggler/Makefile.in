@@ -426,11 +426,7 @@ install-all-abi:
 	@echo "------------------------------------------------"
 
 
-install: install-dbg
-	${MAKE} install-headers
-	${MAKE} install-test
-	${MAKE} install-data
-	${MAKE} install-gui
+install: install-dbg install-headers install-test install-data install-gui
 	@-cd ${prefix} && chgrp -R c2dev .
 	@-cd ${prefix} && chmod -R g+rw .
 	@echo "------------------------------------------------"
