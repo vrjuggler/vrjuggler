@@ -148,7 +148,7 @@ public:     // RECONFIG STUFF
     //     mModelRoot
     OSG::NodePtr        mSceneRoot;       /**< The root of the scene */
     OSG::TransformPtr   mSceneTransform;  /**< Transform core */
-    OSG::NodePtr        mModelRoot;       /**< Root of the loaded model */
+    OSG::NodePtr        mWorldRoot;       /**< Root of the world */
 
     OSG::NodePtr        mLightNode;       /**< Light node to use */
     OSG::NodePtr        mLightBeacon;     /**< A beacon for the light */

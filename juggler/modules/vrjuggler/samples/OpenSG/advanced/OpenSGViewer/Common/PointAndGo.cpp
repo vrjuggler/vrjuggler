@@ -41,9 +41,7 @@ void PointAndGo::update(User* user)
 
    // Clip delta time
    if (delta_secs > 1.0f)
-   {
-      delta_secs = 1.0f;
-   }
+   { delta_secs = 1.0f; }
 
    // --- MOVE AROUND THE MODEL --- //
    const float accelleration(1.25f);
