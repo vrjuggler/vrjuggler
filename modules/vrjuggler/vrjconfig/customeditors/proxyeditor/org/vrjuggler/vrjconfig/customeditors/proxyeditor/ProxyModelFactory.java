@@ -85,21 +85,14 @@ public class ProxyModelFactory
       PropertyDefinition alias_prop_def = alias_cfg_def.getPropertyDefinition("proxy");
       mAllowedProxies = alias_prop_def.getAllowedTypes();
 
-      // Get a list of all devices that the allowed proxies could point at
-      for(Iterator itr = mAllowedProxies.iterator() ; itr.hasNext() ; )
-      {
-         String proxy = (String)itr.next();
-         ConfigDefinition proxy_cfg_def = repos.get(proxy);
-         if(null == proxy_cfg_def)
-         {
-            System.out.println("ERROR: Alias allows the non existant definition: " + proxy);
-         }
-         else
-         {
-            PropertyDefinition proxy_prop_def = proxy_cfg_def.getPropertyDefinition("device");
-            mAllowedDevices.addAll(proxy_prop_def.getAllowedTypes());
-         }
-      }
+      // Fill mAllowedProxies with all children of proxy.
+      ConfigDefinition proxy_def = repos.get("proxy");
+      mAllowedProxies = proxy_def.getSubDefinitions();
+
+      // Fill mAllowedDevices with all children of input_device.
+      ConfigDefinition input_device_def = repos.get("input_device");
+      mAllowedDevices = input_device_def.getSubDefinitions();
+
       // Sort all needed elements by type
       java.util.List elements = mBroker.getElements(ctx); 
       for(Iterator itr = elements.iterator() ; itr.hasNext() ; )
@@ -121,14 +114,14 @@ public class ProxyModelFactory
             findEmbeddedElements(elm, true);
             return(true);
          }
-         else if(mAllowedProxies.contains(token))
+         else if(mAllowedProxies.contains(elm.getDefinition()))
          {
             mProxies.add(elm);
             addElementNode(elm);
             findEmbeddedElements(elm, true);
             return(true);
          }
-         else if(mAllowedDevices.contains(token))
+         else if(mAllowedDevices.contains(elm.getDefinition()))
          {
             mDevices.add(elm);
             addElementNode(elm);
