@@ -269,7 +269,7 @@ void velocityNav::updateInteraction()
 
    // Output visual feedback
    if(mAcceleratingForward)
-      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Accelerating Forward")                           << std::endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Accelerating Forward") << "(Accel = " << mAcceleration << ")" << std::endl << vjDEBUG_FLUSH;
    if(mBraking)
       vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Braking")
                            << std::endl << vjDEBUG_FLUSH;
