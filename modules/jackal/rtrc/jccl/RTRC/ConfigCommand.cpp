@@ -29,10 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
-#include <jccl/Plugins/ConfigManager/ConfigCommand.h>
+#include <jccl/RTRC/ConfigCommand.h>
 #include <jccl/Config/ConfigChunkDB.h>
 #include <jccl/Config/ChunkDescDB.h>
 #include <jccl/Config/ConfigIO.h>
@@ -113,5 +110,4 @@ namespace jccl {
         return protocol_name;
     }
 
-    
-};
+}
