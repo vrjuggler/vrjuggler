@@ -38,6 +38,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Stack;
 import javax.swing.*;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
 import org.vrjuggler.tweek.services.EnvironmentService;
 import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 import org.vrjuggler.tweek.services.GlobalPreferencesServiceProxy;
@@ -47,6 +49,7 @@ import org.vrjuggler.vrjconfig.PopupButton;
 import org.vrjuggler.vrjconfig.VrjConfigConstants;
 
 import org.vrjuggler.jccl.rtrc.*;
+import org.vrjuggler.vrjconfig.VrjConfig;
 
 /**
  * A specialized toolbar for configuration contexts that pays attention to the
@@ -54,10 +57,12 @@ import org.vrjuggler.jccl.rtrc.*;
  */
 public class ContextToolbar
    extends JComponent
-   implements VrjConfigConstants
+   implements VrjConfigConstants, UndoableEditListener
 {
-   public ContextToolbar(File curDir, ConfigContext ctx)
+   public ContextToolbar(File curDir, ConfigContext ctx, VrjConfig.ConfigIFrame frame)
    {
+      mConfigIFrame = frame;
+
       try
       {
          jbInit();
@@ -81,6 +86,8 @@ public class ContextToolbar
          openBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/open.gif")));
          saveBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/save.gif")));
          saveAsBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/saveas.gif")));
+         undoBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/undo.gif")));
+         redoBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/redo.gif")));
          expandBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/expand_toolbar.gif")));
       }
       catch (Exception e)
@@ -90,10 +97,19 @@ public class ContextToolbar
          openBtn.setText("Open");
          saveBtn.setText("Save");
          saveAsBtn.setText("Save As");
+         undoBtn.setText("Undo");
+         redoBtn.setText("Redo");
          expandBtn.setText("Expand");
       }
    }
-
+   
+   public void undoableEditHappened(UndoableEditEvent e)
+   {
+      undoBtn.setEnabled(true);
+      redoBtn.setEnabled(false);
+      mConfigIFrame.setTitle("Configuration Editor < Unsaved >");
+   }
+   
    public void addToToolbar(Component comp)
    {
       toolbar.add(comp);
@@ -101,6 +117,7 @@ public class ContextToolbar
 
    private void setConfigContext(ConfigContext ctx)
    {
+      this.context.removeUndoableEditListener(this);
       this.context.removeContextListener(contextListener);
       this.context = ctx;
 
@@ -111,7 +128,10 @@ public class ContextToolbar
       }
       saveBtn.setEnabled(nonempty_context);
       expandBtn.setEnabled(nonempty_context);
+      undoBtn.setEnabled(false);
+      redoBtn.setEnabled(false);
       context.addContextListener(contextListener);
+      context.addUndoableEditListener(this);
    }
 
    public ConfigContext getConfigContext()
@@ -294,6 +314,10 @@ public class ContextToolbar
             }
          }
          success = true;
+         
+         // Inform the ConfigUndoManager that we have saved changes.
+         context.getConfigUndoManager().saveHappened();
+         mConfigIFrame.setTitle("Configuration Editor");
       }
       catch (IOException ioe)
       {
@@ -306,12 +330,69 @@ public class ContextToolbar
    }
 
    /**
+    * Programmatically execute an undo action.
+    */
+   public void doUndo()
+   {
+      if (context.getConfigUndoManager().canUndo())
+      {
+         context.getConfigUndoManager().undo();
+         undoBtn.setEnabled(context.getConfigUndoManager().canUndo());
+         redoBtn.setEnabled(true);
+         if (context.getConfigUndoManager().getUnsavedChanges())
+         {
+            mConfigIFrame.setTitle("Configuration Editor < Unsaved >");
+         }
+         else
+         {
+            mConfigIFrame.setTitle("Configuration Editor");
+         }
+      }
+   }
+
+   /**
+    * Programmatically execte a redo action.
+    */
+   public void doRedo()
+   {
+      if (context.getConfigUndoManager().canRedo())
+      {
+         context.getConfigUndoManager().redo();
+         undoBtn.setEnabled(true);
+         redoBtn.setEnabled(context.getConfigUndoManager().canRedo());
+         if (context.getConfigUndoManager().getUnsavedChanges())
+         {
+            mConfigIFrame.setTitle("Configuration Editor < Unsaved >");
+         }
+         else
+         {
+            mConfigIFrame.setTitle("Configuration Editor");
+         }
+      }
+   }
+
+   /**
     * Programmatically execute a close action.
     */
    public boolean doClose()
    {
-      System.out.println("ConfigToolbar.doClose()");
-      //XXX: Check if we need to save first
+      if (context.getConfigUndoManager().getUnsavedChanges())
+      {
+         int result = JOptionPane.showConfirmDialog(null,
+                           "You have unsaved changes, do you want to save them?",
+                           "Unsaved Changes",
+                           JOptionPane.YES_NO_OPTION,
+                           JOptionPane.INFORMATION_MESSAGE);
+         switch (result)
+         {
+            case JOptionPane.YES_OPTION:
+               doSave();
+               break;
+            case JOptionPane.NO_OPTION:
+               break;
+         }
+      }
+      
       ConfigBroker broker = new ConfigBrokerProxy();
       for (Iterator itr = context.getResources().iterator(); itr.hasNext(); )
       {
@@ -427,10 +508,19 @@ public class ContextToolbar
       saveAsBtn.setToolTipText("Save Configuration As");
       saveAsBtn.setActionCommand("SaveAs");
       saveAsBtn.setFocusPainted(false);
+      undoBtn.setEnabled(true);
+      undoBtn.setToolTipText("Undo");
+      undoBtn.setActionCommand("Undo");
+      undoBtn.setFocusPainted(false);
+      redoBtn.setEnabled(true);
+      redoBtn.setToolTipText("Redo");
+      redoBtn.setActionCommand("Redo");
+      redoBtn.setFocusPainted(false);
       expandBtn.setEnabled(false);
       expandBtn.setToolTipText("Expand Toolbar");
       expandBtn.setActionCommand("Expand");
       expandBtn.setFocusPainted(false);
+      
       newBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
@@ -459,6 +549,20 @@ public class ContextToolbar
             doSaveAs();
          }
       });
+      undoBtn.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            doUndo();
+         }
+      });
+      redoBtn.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            doRedo();
+         }
+      });
       expandBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
@@ -471,6 +575,8 @@ public class ContextToolbar
       toolbar.add(openBtn, null);
       toolbar.add(saveBtn, null);
       toolbar.add(saveAsBtn, null);
+      toolbar.add(undoBtn, null);
+      toolbar.add(redoBtn, null);
       toolbar.addSeparator();
       toolbar.add(Box.createHorizontalGlue(), null);
       toolbar.add(expandBtn, null);
@@ -539,6 +645,10 @@ public class ContextToolbar
             context.add(cur);
             new_resource.commit();
          }
+         
+         // Inform the ConfigUndoManager that we have saved changes.
+         context.getConfigUndoManager().saveHappened();
+         mConfigIFrame.setTitle("Configuration Editor");
          return true;
       }
       catch(IOException ioe)
@@ -566,6 +676,8 @@ public class ContextToolbar
    private JButton openBtn = new JButton();
    private JButton saveBtn = new JButton();
    private JButton saveAsBtn = new JButton();
+   private JButton undoBtn = new JButton();
+   private JButton redoBtn = new JButton();
    private JToggleButton expandBtn = new JToggleButton();
    private JFileChooser fileChooser = new JFileChooser();
 
@@ -576,6 +688,7 @@ public class ContextToolbar
    private EnvironmentService mEnvService = new EnvironmentServiceProxy();
 
    private Container mParentFrame = null;
+   private VrjConfig.ConfigIFrame mConfigIFrame = null;
 
    /**
     * Our special context change listener used to toggle the save and expand

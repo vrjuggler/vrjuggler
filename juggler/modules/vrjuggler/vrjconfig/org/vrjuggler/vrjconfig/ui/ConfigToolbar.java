@@ -75,8 +75,7 @@ public class ConfigToolbar
          saveAllBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/saveall.gif")));
          copyBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/Copy16.gif")));
          pasteBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/Paste16.gif")));
-         undoBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/undo.gif")));
-         redoBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/redo.gif")));
+
          RTRCBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/vrjuggler.gif")));
       }
       catch (Exception e)
@@ -87,8 +86,6 @@ public class ConfigToolbar
          saveAllBtn.setText("Save All");
          copyBtn.setText("Copy");
          pasteBtn.setText("Paste");
-         undoBtn.setText("Undo");
-         redoBtn.setText("Redo");
          RTRCBtn.setText("RTRC");
       }
 
@@ -503,47 +500,10 @@ public class ConfigToolbar
    }
 
    /**
-    * Programmatically execute an undo action.
-    */
-   public void doUndo()
-   {
-      if(ConfigUndoManager.instance().canUndo())
-      {
-         ConfigUndoManager.instance().undo();
-      }
-      else
-      {
-         System.out.println("Can not undo right now.");
-      }
-   }
-
-   /**
-    * Programmatically execte a redo action.
-    */
-   public void doRedo()
-   {
-      if(ConfigUndoManager.instance().canRedo())
-      {
-         ConfigUndoManager.instance().redo();
-      }
-      else
-      {
-         System.out.println("Can not redo right now.");
-      }
-   }
-
-   /**
     * Programmatically execute a close action.
     */
    public boolean doClose()
    {
-      System.out.println("ConfigToolbar.doClose()");
-      //XXX: Check if we need to save first
-      ConfigBroker broker = new ConfigBrokerProxy();
-      for (Iterator itr = context.getResources().iterator(); itr.hasNext(); )
-      {
-         broker.remove((String)itr.next());
-      }
       return true;
    }
 
@@ -642,14 +602,6 @@ public class ConfigToolbar
       pasteBtn.setActionCommand("paste");
       pasteBtn.setFocusPainted(false);
       
-      undoBtn.setEnabled(true);
-      undoBtn.setToolTipText("Undo");
-      undoBtn.setActionCommand("Undo");
-      undoBtn.setFocusPainted(false);
-      redoBtn.setEnabled(true);
-      redoBtn.setToolTipText("Redo");
-      redoBtn.setActionCommand("Redo");
-      redoBtn.setFocusPainted(false);
       newBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
@@ -685,20 +637,6 @@ public class ConfigToolbar
             fireAction(evt.getActionCommand());
          }
       });
-      undoBtn.addActionListener(new ActionListener()
-      {
-         public void actionPerformed(ActionEvent evt)
-         {
-            doUndo();
-         }
-      });
-      redoBtn.addActionListener(new ActionListener()
-      {
-         public void actionPerformed(ActionEvent evt)
-         {
-            doRedo();
-         }
-      });
       RTRCBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
@@ -716,8 +654,6 @@ public class ConfigToolbar
       toolbar.add(copyBtn, null);
       toolbar.add(pasteBtn, null);
       toolbar.addSeparator();
-      toolbar.add(undoBtn, null);
-      toolbar.add(redoBtn, null);
       toolbar.add(Box.createHorizontalGlue(), null);
    }
 
@@ -813,8 +749,6 @@ public class ConfigToolbar
    private JButton saveAllBtn = new JButton();
    private JButton copyBtn = new JButton();
    private JButton pasteBtn = new JButton();
-   private JButton undoBtn = new JButton();
-   private JButton redoBtn = new JButton();
    private JButton RTRCBtn = new JButton();
    private JFileChooser fileChooser = new JFileChooser();
 
