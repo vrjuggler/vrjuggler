@@ -117,7 +117,7 @@ beforebuild:
 	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
 	@$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
             -t $(GADGETROOT_ABS)/gadgeteer-config.in			\
-            -o $(topdir)/gadgeteer-config
+            -o $(topdir)/gadgeteer-config -v $(GADGETROOT_ABS)/VERSION
 	@chmod +x $(topdir)/gadgeteer-config
 
 # Things to do after the object files and library are built.
@@ -178,7 +178,8 @@ ifneq (@OS_TYPE@, Win32)
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
 	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
             -t $(GADGETROOT_ABS)/gadgeteer-config.in			\
-            -p 'use_base_dir=yes' -o $(instlinks)/bin/gadgeteer-config -x
+            -p 'use_base_dir=yes' -o $(instlinks)/bin/gadgeteer-config	\
+            -v $(GADGETROOT_ABS)/VERSION -x
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$GADGET_BASE_DIR to:'
