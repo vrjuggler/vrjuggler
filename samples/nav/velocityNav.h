@@ -34,7 +34,7 @@
 #include <vjQuat.h>
 #include <navigator.h>
 #include <collider.h>
-#include "../StopWatch.h"
+#include "StopWatch.h"
 
 class velocityNav : public navigator
 {
