@@ -116,7 +116,7 @@ const unsigned int DEVICE_GROW2    = 128;
 //+       it is being updated to the most recent copy.
 //-----------------------------------------------------------------------------
 //!PUBLIC_API:
-class vjInput : public vjMemory
+class vjInput
 {
 public:
    //: Default Constructor

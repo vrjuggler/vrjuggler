@@ -75,7 +75,8 @@ bool vjBird::config(vjConfigChunk *c)
 
   strncpy(sPort,"/dev/ttyd3", 30);
   initCorrectionTable();
-  theData = (vjMatrix*)allocate(3*sizeof(vjMatrix));
+  //theData = (vjMatrix*)allocate(3*sizeof(vjMatrix));
+  theData = new vjMatrix[3];
 
   return true;
 }
@@ -84,7 +85,8 @@ vjBird::~vjBird()
 {
   stopSampling();
     if (theData != NULL)
-       getMyMemPool()->deallocate((void*)theData);
+      delete theData;
+       //getMyMemPool()->deallocate((void*)theData);
 }
 
 static void sampleBirds(void* pointer)
@@ -100,7 +102,7 @@ static void sampleBirds(void* pointer)
      start_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
 
      for(int i = 0; i < 60; i++)
-	devPointer->sample();
+   devPointer->sample();
 
      gettimeofday(&tv,0);
      stop_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
@@ -114,11 +116,6 @@ int vjBird::startSampling()
    if (myThread == NULL) {
       //int processID;
       //int i;
-
- // if (theData != NULL)
- //      getMyMemPool()->deallocate((void*)theData);
- // theData = (vjPOS_DATA*)allocate((theTransmitter-1)*3*sizeof(vjPOS_DATA));
-
 
   current = 0;
   valid = 1;
@@ -163,15 +160,15 @@ int vjBird::sample()
 
      //for(i=1; i < theTransmitter; i++)
      {
-	//int subNum;
-        getReading(&theData[progress], port_id);	
-	/* XXX:
+   //int subNum;
+        getReading(&theData[progress], port_id);
+   /* XXX:
    positionCorrect(theData[progress].pos[0],
-			 theData[progress].pos[1],
-			 theData[progress].pos[2]);
+          theData[progress].pos[1],
+          theData[progress].pos[2]);
    */
      }
-	
+
      lock.acquire();
      tmp = valid;
      valid = progress;
@@ -335,7 +332,7 @@ void vjBird::initCorrectionTable()
   inFile.open("calibration.table");
   if (!inFile)
   {
-	std::cout << "Unable to open calibration.table\n";
+   std::cout << "Unable to open calibration.table\n";
         return;
   }
 
@@ -351,11 +348,11 @@ void vjBird::initCorrectionTable()
     for (j = 0; j < ysize; j++)
       for (k = 0; k < zsize; k++)
          {
-	    inFile >> dump >> dump >> dump
-		   >> caltable.xloc[i][j][k]
-		   >> caltable.yloc[i][j][k]
-		   >> caltable.zloc[i][j][k];
-	 }
+       inFile >> dump >> dump >> dump
+         >> caltable.xloc[i][j][k]
+         >> caltable.yloc[i][j][k]
+         >> caltable.zloc[i][j][k];
+    }
 
    inFile.close();
 }
@@ -373,17 +370,17 @@ inline int getReading(vjMatrix *data, int port)
 
   {
         c=i = 0;
-	while(!i && c < 99999) { c++;
-	  if((read(port,buff,1) == 1) && (buff[0] & 0x80))
+   while(!i && c < 99999) { c++;
+     if((read(port,buff,1) == 1) && (buff[0] & 0x80))
               i = 1;
          }
-	while(i != 12 && c < 99999) {
-	  c++;
-	  i += read(port,&buff[i], 12-i);
+   while(i != 12 && c < 99999) {
+     c++;
+     i += read(port,&buff[i], 12-i);
           }
-	
-	//while((read(port,&group,1) == 0) && c < 99999)
-	  //c++;
+
+   //while((read(port,&group,1) == 0) && c < 99999)
+     //c++;
 
         if (c >= 5000) std::cout << "timeout" << std::endl;
         //addr = group;
@@ -457,13 +454,13 @@ static int open_port(char* serialPort, int baud)
 
     switch(baud){
        case 38400:port_a.c_cflag = (B38400 | CS8 | CLOCAL | CREAD);
-  		break;
+      break;
        case 19200:port_a.c_cflag = (B19200 | CS8 | CLOCAL | CREAD);
-		break;
+      break;
        case 9600:port_a.c_cflag = (B9600 | CS8 | CLOCAL | CREAD);
-		break;
+      break;
        case 4800:port_a.c_cflag = (B4800 | CS8 | CLOCAL | CREAD);
-		break;
+      break;
     }
 
     port_a.c_cflag = (B38400 | CS8 | CLOCAL | CREAD);
@@ -535,28 +532,28 @@ static void set_hemisphere(int port, BIRD_HEMI hem)//, int transmitter)
     switch(hem) {
       case FRONT_HEM:
         buff[1] = 0x00;
-	buff[2] = 0x00;
+   buff[2] = 0x00;
         break;
       case AFT_HEM:
         buff[1] = 0x00;
-	buff[2] = 0x01;
-	break;
+   buff[2] = 0x01;
+   break;
       case UPPER_HEM:
         buff[1] = 0x0C;
-	buff[2] = 0x01;
-	break;
+   buff[2] = 0x01;
+   break;
       case LOWER_HEM:
         buff[1] = 0x0C;
-	buff[2] = 0x00;
-	break;		
+   buff[2] = 0x00;
+   break;
       case LEFT_HEM:
         buff[1] = 0x06;
-	buff[2] = 0x01;
-	break;
+   buff[2] = 0x01;
+   break;
       case RIGHT_HEM:
         buff[1] = 0x06;
-	buff[2] = 0x00;
-	break;
+   buff[2] = 0x00;
+   break;
    }
     write(port, buff, 3);
     tcflush(port, TCIFLUSH);

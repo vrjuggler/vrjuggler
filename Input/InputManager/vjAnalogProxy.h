@@ -55,7 +55,7 @@
 // See also: vjAnalog
 //
 //!PUBLIC_API:
-class vjAnalogProxy : public vjMemory, public vjProxy
+class vjAnalogProxy : public vjProxy
 {
 
 public:
