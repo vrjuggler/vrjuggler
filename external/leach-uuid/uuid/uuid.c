@@ -254,7 +254,7 @@ void format_uuid_v3(uuid_t * uuid, unsigned char hash[16]) {
 
     Note:   lexical ordering is not temporal ordering!
 */
-int uuid_compare(uuid_t *u1, uuid_t *u2)
+int uuid_compare(const uuid_t *u1, const uuid_t *u2)
 {
   int i;
 
