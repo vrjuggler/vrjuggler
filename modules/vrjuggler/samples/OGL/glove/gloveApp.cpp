@@ -35,7 +35,8 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-
+#include <Input/vjGlove/fsPinchGlove.h>
+#include <Input/vjGlove/vjPinchGlove.h>
 
 #include <gloveApp.h>
 
@@ -132,115 +133,201 @@ void gloveApp::myDraw()
    glPopMatrix();
 }
 
+bool gloveApp::LeftPointing( )
+{
+   if (mPinchLeftThumb->getData() == 0 &&
+      mPinchLeftIndex->getData() == 0 &&
+      mPinchLeftMiddle->getData() == 1 &&
+      mPinchLeftRing->getData() == 1 &&
+      mPinchLeftPinky->getData() == 1)
+   {
+      return true;
+   }
+   else 
+      return false;
+}
+
+bool gloveApp::LeftOpen()
+{
+   if (mPinchLeftThumb->getData() == 0 &&
+      mPinchLeftIndex->getData() == 0 &&
+      mPinchLeftMiddle->getData() == 0 &&
+      mPinchLeftRing->getData() == 0 &&
+      mPinchLeftPinky->getData() == 0)
+   {
+      return true;
+   }
+   else 
+      return false;
+}
+
+bool gloveApp::RightPointing( )
+{
+   if (mPinchRightThumb->getData() == 0 &&
+      mPinchRightIndex->getData()  == 0 &&
+      mPinchRightMiddle->getData()  == 1 &&
+      mPinchRightRing->getData()  == 1 &&
+      mPinchRightPinky->getData() == 1)
+   {
+      return true;
+   }
+   else 
+      return false;
+}
+
+bool gloveApp::RightOpen()
+{
+   if (mPinchRightThumb->getData() == 0 &&
+      mPinchRightIndex->getData()  == 0 &&
+      mPinchRightMiddle->getData()  == 0 &&
+      mPinchRightRing->getData()  == 0 &&
+      mPinchRightPinky->getData() == 0)
+   {
+      return true;
+   }
+   else 
+      return false;
+}
+
+bool gloveApp::LeftFist()
+{
+   if (mPinchLeftIndex->getData() == 1 ||
+         mPinchThumbIndex->getData() == 1)
+   {
+      return true;
+   }
+   else 
+      return false;
+}
+
+bool gloveApp::RightFist()
+{
+   if (mPinchRightIndex->getData() == 1 ||
+         mPinchRightThumb->getData() == 1 )
+   {
+      return true;
+   }
+   else 
+      return false;
+}
+
 //: Function called after tracker update but before start of drawing
 //  In the glove application, this function does the logic for picking the
 //  objects.
 void gloveApp::preFrame()
 {
-   mNavigation.accelerate( mGesture->getGesture() == mGesture->getGestureIndex("Pointing") );
-   mNavigation.rotate( mGesture->getGesture() != mGesture->getGestureIndex("Closed Fist") );
+   /////////////////////////////////////////////////////////
+   //: Debug stuff
+   cout<<mPinchLeftThumb->getData()
+      <<mPinchLeftIndex->getData()
+      <<mPinchLeftMiddle->getData()
+      <<mPinchLeftRing->getData()
+      <<mPinchLeftPinky->getData()
+      <<mPinchRightThumb->getData()
+      <<mPinchRightIndex->getData()
+      <<mPinchRightMiddle->getData()
+      <<mPinchRightRing->getData()
+      <<mPinchRightPinky->getData()<<"\n"<<flush;
+         
+   if (LeftPointing() == true)
+   {
+      cout<<"Left Pointing"<<flush;
+   } 
+   
+   else if (LeftOpen() == true)
+   {
+      cout<<"Left Open"<<flush;
+   }
+   
+   else if (LeftFist() == true)
+   {
+      cout<<"Left Fist"<<flush;
+   }
+   
+   if (RightPointing() == true)
+   {
+      cout<<", Right Pointing"<<flush;
+   } 
+   
+   else if (RightOpen() == true)
+   {
+      cout<<", Right Open"<<flush;
+   }
+   
+   else if (RightFist() == true)
+   {
+      cout<<", Right Fist"<<flush;
+   }
+   
+   cout<<"\n"<<flush;
+   
+   /////////////////////////////////////////////////////////
+   //: Handle navigation
+   mNavigation.accelerate( LeftPointing() == true );
+   mNavigation.rotate( LeftPointing() == false && LeftOpen() == false );
    mNavigation.setMatrix( mGlove->getPos(vjGloveData::INDEX) );
    mNavigation.update();
-    //: we need to keep track of the wand, and the user.
-    //UserInfo    userInfo;
-    //TrackedInfo wandInfo;
-    //TrackedInfo headInfo;
 
-    vjVec3 glovePos;
-/*
-    vjMatrix finger_matrix;
-    vjMatrix invNav;
-    invNav.invert(mNavigation);
+   vjVec3 glovePos;
 
-    //: Get the position of the index finger:
-    finger_matrix = mGlove->getPos(vjGloveData::INDEX);
-    finger_matrix.getTrans( glovePos[0], glovePos[1], glovePos[2] );
-    glovePos.xformVec( invNav, glovePos );
-*/
-      /*
-    //vjDEBUG(7) << "Gesture: " << mGesture->getGestureString(mGesture->getGesture())<<"\n"<<flush;
-    //vjDEBUG(7) << glovePos[0]<<" "<<glovePos[1]<<" "<<glovePos[2]<<" : "<<mCubePos[0]<<" "<<mCubePos[1]<<" "<<mCubePos[2]<<"\n"<<flush;
+    
+   ////////////////////////////////////////////////////////
+   //: pick up the object if you're grabbing.
+   //  set the object position equal to the glove position.
 
-    ////////////////////////
-    // NAVIGATION         //
-    ////////////////////////////////////////////////////////
-    static float userVelocity = 0;
-
-    if (mGesture->getGesture() == mGesture->getGestureIndex("Pointing"))
-    {
-       cout<<"Pointing"<<mGesture->getGesture()<<"\n"<<flush;
-      userVelocity += 0.0001f;
-    } else
-    if (mGesture->getGesture() == mGesture->getGestureIndex("Closed Fist"))
-    {
-       cout<<"Closed Fist"<<mGesture->getGesture()<<"\n"<<flush;
-   userVelocity = 0.0f;
-    }
-    userInfo.setVelocity( userVelocity );
-    userInfo.setAngularVelocity( 0.01f );
-    wandInfo.updateWithMatrix( mGlove->getPos() );
-    userInfo.update( wandInfo, vjVec3(0.0f, 0.0f, 0.0f) );
-    userInfo.getSceneTransform( mNavigation );
-    ////////////////////////////////////////////////////////
-*/
-    ////////////////////////////////////////////////////////
-    //: pick up the object if you're pointing.
-    //  set the object position equal to the glove position.
-      
-      /*
-      
-    if ( mGesture->getGesture() == mGesture->getGestureIndex("Open Hand"))
-    {
-       cout<<"Open Hand"<<mGesture->getGesture()<<"\n"<<flush;
+   if ( this->RightFist() == true )
+   {
       if (mConeSelected)
           mConePos = glovePos;
       else if (mSphereSelected)
           mSpherePos = glovePos;
       else if (mCubeSelected)
           mCubePos = glovePos;
-    }
-
-    float cubeDistance   = (glovePos - mCubePos).length();
-    float sphereDistance = (glovePos - mSpherePos).length();
-    float coneDistance   = (glovePos - mConePos).length();
-    float min = nMin( cubeDistance, sphereDistance, coneDistance);
-
-     //: If the distance between hand and object is too far
-     //  don't highlight any of them.
-     if (min > 1.0f)
-     {
-    mCubeSelected = false;
-    mSphereSelected = false;
-    mConeSelected = false;
-     }
-
-    // ...otherwise,
-    //   If glove is not pointing, or
-    //   we don't already have a selected one, then...
-    else if ( mGesture->getGesture() != mGesture->getGestureIndex("Open Hand") ||
-         (mCubeSelected   == false &&
-          mSphereSelected == false &&
-          mConeSelected   == false)   )
-    {
-       cout<<"NotOpenHand"<<mGesture->getGesture()<<"\n"<<flush;
-   // ... highlight the closest one to the glove.
-      if (min == coneDistance)
-   {
-      
-       mCubeSelected = false;
-       mSphereSelected = false;
-       mConeSelected = true;
-   } else if (min == sphereDistance)
-   {
-       mCubeSelected = false;
-       mSphereSelected = true;
-       mConeSelected = false;
-   } else if (min == cubeDistance)
-   {
-       mCubeSelected = true;
-       mSphereSelected = false;
-       mConeSelected = false;
    }
-    }
-    */
+
+   float cubeDistance   = (glovePos - mCubePos).length();
+   float sphereDistance = (glovePos - mSpherePos).length();
+   float coneDistance   = (glovePos - mConePos).length();
+   float min = nMin( cubeDistance, sphereDistance, coneDistance);
+
+   //: If the distance between hand and object is too far
+   //  don't highlight any of them.
+   if (min > 1.0f)
+   {
+      mCubeSelected = false;
+      mSphereSelected = false;
+      mConeSelected = false;
+   }
+
+   // ...otherwise,
+   //   If glove is not grabbing, or
+   //   we don't already have a selected one, then...
+   else if ( this->RightOpen() == true ||
+      (mCubeSelected   == false &&
+       mSphereSelected == false &&
+       mConeSelected   == false)   )
+   {
+      // ... highlight the closest one to the glove.
+      if (min == coneDistance)
+      {
+
+          mCubeSelected = false;
+          mSphereSelected = false;
+          mConeSelected = true;
+      } 
+
+      else if (min == sphereDistance)
+      {
+          mCubeSelected = false;
+          mSphereSelected = true;
+          mConeSelected = false;
+      } 
+
+      else if (min == cubeDistance)
+      {
+          mCubeSelected = true;
+          mSphereSelected = false;
+          mConeSelected = false;
+      }
+   }
 }
