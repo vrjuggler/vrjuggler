@@ -75,7 +75,7 @@ public class VarValueStandardPanel extends VarValuePanel implements ActionListen
 		    for (j = 0; j < db.size(); j++) {
 			ch = (ConfigChunk)db.elementAt(j);
 			for (k = 0; k < desc.enums.size(); k++) {
-			    if (ch.getDescName().equalsIgnoreCase (((DescEnum)desc.enums.elementAt(k)).str)) {
+			    if (ch.getDescToken().equalsIgnoreCase (((DescEnum)desc.enums.elementAt(k)).str)) {
 				bm.addObject (db.getName() + ": " + ch.getName());
 				break;
 			    }
@@ -159,6 +159,8 @@ public class VarValueStandardPanel extends VarValuePanel implements ActionListen
 	else if (choice != null) {
 	    /* enumeration */
 	    String s = desc.getEnumValue((String)choice.getSelectedItem()).toString();
+	    if (s == null)
+		s = "";
 	    // remove the "filename: " prefix if it's there...
 	    int i = s.indexOf(": ");
 	    if (i != -1)

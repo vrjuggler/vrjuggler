@@ -64,6 +64,10 @@ public class ConfigChunk {
 	return desc.name;
     }
 
+    public String getDescToken() {
+	return desc.token;
+    }
+
 
 
     public boolean equals (ConfigChunk c) {
