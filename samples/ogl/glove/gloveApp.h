@@ -47,9 +47,13 @@
 #include <Input/InputManager/vjAnalogInterface.h>
 #include <Input/InputManager/vjDigitalInterface.h>
 
+#include <navigator.h>
+#include <collidor.h>
+#include <vjStdCaveNavigator.h>
+
 #include "defines.h"
 #include "Scene.h"
-#include "navigation.h"
+//#include "navigation.h"
 
 
 //: GloveApp - A Demonstration OpenGL application class
@@ -157,7 +161,7 @@ protected:
    vjVec3               mConePos;
    vjVec3               mSpherePos;
 
-   vjMatrix    mNavigation;
+   vjStdCaveNavigator    mNavigation;
 
    vjGlContextData<Scene> mScene;
 };
