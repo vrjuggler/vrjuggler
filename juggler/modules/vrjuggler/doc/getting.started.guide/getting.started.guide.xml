@@ -62,7 +62,7 @@
             <title>Windows Folder View of ZIP File</title>
             <mediaobject>
                <imageobject>
-                  <imagedata fileref="figures/Window.Temp.png" format="PNG" align="center"/>
+                  <imagedata fileref="figures/Window.Download.png" format="PNG" align="center"/>
                </imageobject>
             </mediaobject>
          </figure>
@@ -306,12 +306,12 @@ value</screen>
             <note>
                <para>This section has not been updated for VR Juggler 1.1/2.0 yet. Until it is updated, Win32 users must compile from the command line or create Visual C++ workspaces themselves.</para>
             </note>
-            <para>All OpenGL sample applications are shipped with pre-configured Microsoft Visual C++ workspaces. This is done to help new users get started with compiling VR Juggler applications and to give experienced Visual Studio users a starting place for their application development. To use the workspace for the Torus application, begin by opening the folder containing the source code and double-clicking on <filename>torus.dsw</filename>.</para>
+            <para>All OpenGL sample applications are shipped with pre-configured Microsoft Visual C++ projects. This is done to help new users get started with compiling VR Juggler applications and to give experienced Visual Studio users a starting place for their application development. To use the workspace for the Torus application, begin by opening the folder containing the source code and double-clicking on <filename>MPApp.vcproj</filename>.</para>
             <figure>
                <title>Selecting the Workspace File</title>
                <mediaobject>
                   <imageobject>
-                     <imagedata fileref="figures/torus.dir.png" format="PNG" align="center"/>
+                     <imagedata fileref="figures/MPApp.dir.png" format="PNG" align="center"/>
                   </imageobject>
                </mediaobject>
             </figure>
@@ -320,7 +320,7 @@ value</screen>
                <title>torus Project</title>
                <mediaobject>
                   <imageobject>
-                     <imagedata fileref="figures/torus.visual.c++.png" format="PNG" align="center"/>
+                     <imagedata fileref="figures/MPApp.visual.c++.png" format="PNG" align="center"/>
                   </imageobject>
                </mediaobject>
             </figure>
@@ -329,7 +329,7 @@ value</screen>
                <title>Project Menu</title>
                <mediaobject>
                   <imageobject>
-                     <imagedata fileref="figures/torus.visual.c++.settings.png" format="PNG" align="center"/>
+                     <imagedata fileref="figures/MPApp.visual.c++.properties.png" format="PNG" align="center"/>
                   </imageobject>
                </mediaobject>
             </figure>
@@ -338,26 +338,26 @@ value</screen>
                <title>Project Settings Dialog</title>
                <mediaobject>
                   <imageobject>
-                     <imagedata fileref="figures/torus.visual.c++.args.png" format="PNG" align="center"/>
+                     <imagedata fileref="figures/MPApp.visual.c++.args.png" format="PNG" align="center"/>
                   </imageobject>
                </mediaobject>
             </figure>
             <para>Note that in this example, the / directory separator is used instead of \ for the program arguments. This is not strictly required in this case, but doing it this way maintains consistency with other examples.</para>
-            <para>Once the program arguments are set up, compile the application. Under the <guimenu>Build</guimenu> menu, choose the <guimenuitem>Build torus.exe</guimenuitem> item as shown in <xref linkend="visual.studio.build-menu.figure"/>.</para>
+            <para>Once the program arguments are set up, compile the application. Under the <guimenu>Build</guimenu> menu, choose the <guimenuitem>Build MPApp</guimenuitem> item as shown in <xref linkend="visual.studio.build-menu.figure"/>.</para>
             <figure id="visual.studio.build-menu.figure">
-               <title>Build <filename>torus.exe</filename></title>
+               <title>Build <filename>MPApp.exe</filename></title>
                <mediaobject>
                   <imageobject>
-                     <imagedata fileref="figures/torus.visual.c++.build.png" format="PNG" align="center"/>
+                     <imagedata fileref="figures/MPApp.visual.c++.build.png" format="PNG" align="center"/>
                   </imageobject>
                </mediaobject>
             </figure>
-            <para>Visual C++ will compile the application, and if you have everything configured properly on your computer, the compiling will complete successfully. Once it is done, execute the torus program by choosing the <guimenuitem>Execute torus.exe</guimenuitem> item from the <guimenu>Build</guimenu> menu, shown below in <xref linkend="visual.studio.build-menu.exectue.figure"/>.</para>
-            <figure id="visual.studio.build-menu.exectue.figure">
-               <title>Execute <filename>torus.exe</filename></title>
+            <para>Visual C++ will compile the application, and if you have everything configured properly on your computer, the compiling will complete successfully. Once it is done, execute the torus program by choosing the <guimenuitem>Start</guimenuitem> item from the <guimenu>Debug</guimenu> menu, shown below in <xref linkend="visual.studio.debug-menu.exectue.figure"/>.</para>
+            <figure id="visual.studio.debug-menu.exectue.figure">
+               <title>Execute <filename>MPApp.exe</filename></title>
                <mediaobject>
                   <imageobject>
-                     <imagedata fileref="figures/torus.visual.c++.run.png" format="PNG" align="center"/>
+                     <imagedata fileref="figures/MPApp.visual.c++.run.png" format="PNG" align="center"/>
                   </imageobject>
                </mediaobject>
             </figure>
