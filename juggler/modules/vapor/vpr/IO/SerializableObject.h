@@ -78,6 +78,9 @@ protected:
    WriteableObject(const WriteableObject&)
    {;}
 
+   virtual ~WriteableObject()
+   {;}
+
 private:
    /** @link dependency
     * @stereotype use*/
@@ -108,6 +111,9 @@ protected:
    {;}
 
    ReadableObject(const ReadableObject&)
+   {;}
+
+   virtual ~ReadableObject()
    {;}
 
 private:
