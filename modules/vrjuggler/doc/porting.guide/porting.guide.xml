@@ -916,7 +916,7 @@ gmtl::Matrix44f mat = posInt.getData(gadget::PositionUnitConversion::ConvertToFe
 
           <listitem>
             <para>1.9: The first iteration on the XML format, in use between
-            August 2001 and May 23, 2002. This format has no version number
+            August 2001, and May 23, 2002. This format has no version number
             information.</para>
           </listitem>
 
@@ -933,11 +933,35 @@ gmtl::Matrix44f mat = posInt.getData(gadget::PositionUnitConversion::ConvertToFe
           <listitem>
             <para>2.1: An iteration on 2.0 that removed some unnecessary
             complexity in dealing with the number of property values for a
-            given configuration element. This version has been in use since
-            July 18, 2002, and all files should have the following as the
-            second line of the file:</para>
+            given configuration element. This version was in use between July
+            18, 2002, and January 15, 2003. All files created during this time
+            period should have the following as the second line of the file:</para>
 
             <programlisting>&#60;?org-vrjuggler-jccl-settings desc.db.version=&#34;2.1&#34;?&#62;</programlisting>
+          </listitem>
+
+          <listitem>
+            <para>2.2: An iteration on 2.1 that improved the way that embedded
+            configuration element types and element pointer types are
+            specified . Instead of overloading the <quote>enumeration</quote>
+            concept, a new element (<sgmltag>allowedType</sgmltag>) was added.
+            This version was in use between January 15, 2003, and February 27,
+            2003. Note that no developer release snapshots were made during
+            this time. All files created during this short period should have
+            the following as the second line of the file:</para>
+
+            <programlisting>&#60;?org-vrjuggler-jccl-settings desc.db.version=&#34;2.2&#34;?&#62;</programlisting>
+          </listitem>
+
+          <listitem>
+            <para>2.3: An iteration on 2.2 that added version support to
+            individual configuration element definitions .This version has
+            been in use since February 27, 2003. Note that the version
+            information is not used in VR Juggler 2.0 Alpha 1, so updating
+            from the 2.2 format is not strictly required. All files should
+            have the following as the second line of the file:</para>
+
+            <programlisting>&#60;?org-vrjuggler-jccl-settings desc.db.version=&#34;2.3&#34;?&#62;</programlisting>
           </listitem>
         </itemizedlist>
       </section>
