@@ -65,7 +65,7 @@ public:
    /**
     * Initializes the barrier to synchronize count threads.
     */
-   BarrierSGI (int count) : syncCount(count)
+   BarrierSGI(int count) : syncCount(count)
    {
       if (barrierPool == NULL)
       {
@@ -101,15 +101,15 @@ public:
    }
 
    /**
-    * Blocks the caller until all <count> threads have called <wait> and
-    * then allow all the caller threads to continue in parallel.
+    * Blocks the caller until all numProcs threads have called wait() and
+    * then allows all the caller threads to continue in parallel.
     */
    int wait(int numProcs)
    {
       return -1;
    }
 
-   int wait ()
+   int wait()
    {
       barrier(theBarrier, syncCount);
       //init_barrier(theBarrier);       // -- How do I reset the barrier -- //
@@ -148,8 +148,8 @@ protected:
    barrier_t* theBarrier;
 
    // = Prevent assignment and initialization.
-   void operator= (const BarrierSGI &) {}
-   BarrierSGI (const BarrierSGI &) {}
+   void operator=(const BarrierSGI &) {;}
+   BarrierSGI(const BarrierSGI &) {;}
 
    static MemPoolSGI* barrierPool;
    static int* attachedCounter;
