@@ -82,19 +82,19 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
          if ( bean != null )
          {
             BeanModelViewer bv = bean.getViewer();
-            m_bean_container.replaceViewer(bv);
+            mBeanContainer.replaceViewer(bv);
          }
          else
          {
             MessagePanel.instance().printWarning("WARNING: Unknown viewer type: '" + viewer + "'\n");
             ViewerBean defaultBean = (ViewerBean)registry.getBeansOfType( ViewerBean.class.getName() ).get( 0 );
-            m_bean_container.replaceViewer((BeanModelViewer)defaultBean.getViewer() );
+            mBeanContainer.replaceViewer((BeanModelViewer)defaultBean.getViewer() );
          }
       }
       else
       {
          ViewerBean defaultBean = (ViewerBean)registry.getBeansOfType( ViewerBean.class.getName() ).get( 0 );
-         m_bean_container.replaceViewer((BeanModelViewer)defaultBean.getViewer() );
+         mBeanContainer.replaceViewer((BeanModelViewer)defaultBean.getViewer() );
       }
    }
 
@@ -122,7 +122,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       // Validate frames that have preset sizes.
       // Pack frames that have useful preferred size info, e.g. from their
       // layout.
-      if ( packFrame )
+      if ( mPackFrame )
       {
          this.pack();
       }
@@ -148,9 +148,9 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
 
    public void messageAdded (MessageAdditionEvent e)
    {
-      if ( m_bulb_on_icon != null )
+      if ( mBulbOnIcon != null )
       {
-         m_status_msg_button.setIcon(m_bulb_on_icon);
+         mStatusMsgButton.setIcon(mBulbOnIcon);
       }
 
       // If the user's skill level is below intermediate, give them a hint that
@@ -160,7 +160,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
          (GlobalPreferencesService)BeanRegistry.instance().getBean( "GlobalPreferences" );
       if ( prefs.getUserLevel() <= 5 )
       {
-         m_status_msg_label.setText("New message in message panel ");
+         mStatusMsgLabel.setText("New message in message panel ");
       }
    }
 
@@ -178,16 +178,16 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
          (GlobalPreferencesService)BeanRegistry.instance().getBean( "GlobalPreferences" );
       setBeanViewer( prefs.getBeanViewer() );
 
-      m_content_pane = (JPanel) this.getContentPane();
-      m_content_pane.setLayout(m_content_pane_layout);
+      mContentPane = (JPanel) this.getContentPane();
+      mContentPane.setLayout(mContentPaneLayout);
       this.setSize(new Dimension(1024, 768));
       this.setTitle("Tweek JavaBean Loader");
 
       // Define the Connect option in the Network menu.
-      m_menu_net_connect.setMnemonic('C');
-      m_menu_net_connect.setText("Connect to ORB ...");
-      m_menu_net_connect.setAccelerator(javax.swing.KeyStroke.getKeyStroke(67, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK, false));
-      m_menu_net_connect.addActionListener(new ActionListener()
+      mMenuNetConnect.setMnemonic('C');
+      mMenuNetConnect.setText("Connect to ORB ...");
+      mMenuNetConnect.setAccelerator(javax.swing.KeyStroke.getKeyStroke(67, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK, false));
+      mMenuNetConnect.addActionListener(new ActionListener()
          {
             public void actionPerformed (ActionEvent e)
             {
@@ -196,10 +196,10 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
          });
 
       // Define the Disconnect option in the Network menu.
-      m_menu_net_disconnect.setEnabled(false);
-      m_menu_net_disconnect.setMnemonic('D');
-      m_menu_net_disconnect.setText("Disconnect from ORB ...");
-      m_menu_net_disconnect.addActionListener(new ActionListener()
+      mMenuNetDisconnect.setEnabled(false);
+      mMenuNetDisconnect.setMnemonic('D');
+      mMenuNetDisconnect.setText("Disconnect from ORB ...");
+      mMenuNetDisconnect.addActionListener(new ActionListener()
          {
             public void actionPerformed (ActionEvent e)
             {
@@ -208,9 +208,9 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
          });
 
       // Define the Edit Global option in the Preferences menu.
-      m_menu_prefs_gedit.setMnemonic('G');
-      m_menu_prefs_gedit.setText("Edit Global ...");
-      m_menu_prefs_gedit.addActionListener(new ActionListener()
+      mMenuPrefsGlobalEdit.setMnemonic('G');
+      mMenuPrefsGlobalEdit.setText("Edit Global ...");
+      mMenuPrefsGlobalEdit.addActionListener(new ActionListener()
          {
             public void actionPerformed (ActionEvent e)
             {
@@ -219,14 +219,14 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
          });
 
       // Define the Edit Local option in the Preferences menu.
-      m_menu_prefs_ledit.setMnemonic('L');
-      m_menu_prefs_ledit.setText("Edit Local ...");
-      m_menu_prefs_ledit.setEnabled(false);
+      mMenuPrefsLocalEdit.setMnemonic('L');
+      mMenuPrefsLocalEdit.setText("Edit Local ...");
+      mMenuPrefsLocalEdit.setEnabled(false);
 
-      m_menu_beans_load.setMnemonic('L');
-      m_menu_beans_load.setText("Load Beans ...");
-      m_menu_beans_load.setAccelerator(javax.swing.KeyStroke.getKeyStroke(66, KeyEvent.CTRL_MASK, false));
-      m_menu_beans_load.addActionListener(new ActionListener ()
+      mMenuBeansLoad.setMnemonic('L');
+      mMenuBeansLoad.setText("Load Beans ...");
+      mMenuBeansLoad.setAccelerator(javax.swing.KeyStroke.getKeyStroke(66, KeyEvent.CTRL_MASK, false));
+      mMenuBeansLoad.addActionListener(new ActionListener ()
          {
             public void actionPerformed (ActionEvent e)
             {
@@ -235,9 +235,9 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
          });
 
       // Define the About option in the Help menu.
-      m_menu_help_about.setMnemonic('A');
-      m_menu_help_about.setText("About ...");
-      m_menu_help_about.addActionListener(new ActionListener ()
+      mMenuHelpAbout.setMnemonic('A');
+      mMenuHelpAbout.setText("About ...");
+      mMenuHelpAbout.addActionListener(new ActionListener ()
          {
             public void actionPerformed(ActionEvent e)
             {
@@ -245,11 +245,11 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
             }
          });
 
-      m_menu_file_open.setText("Open ...");
-      m_menu_file_open.setMnemonic('O');
-      m_menu_file_open.setAccelerator(javax.swing.KeyStroke.getKeyStroke(79, KeyEvent.CTRL_MASK, false));
+      mMenuFileOpen.setText("Open ...");
+      mMenuFileOpen.setMnemonic('O');
+      mMenuFileOpen.setAccelerator(javax.swing.KeyStroke.getKeyStroke(79, KeyEvent.CTRL_MASK, false));
 /*
-      m_menu_file_open.addActionListener(new ActionListener ()
+      mMenuFileOpen.addActionListener(new ActionListener ()
          {
             public void actionPerformed(ActionEvent e)
             {
@@ -259,10 +259,10 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
 */
 
       // Define the Quit option in the File menu.
-      m_menu_file_quit.setText("Quit");
-      m_menu_file_quit.setMnemonic('Q');
-      m_menu_file_quit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(81, java.awt.event.KeyEvent.CTRL_MASK, false));
-      m_menu_file_quit.addActionListener(new ActionListener ()
+      mMenuFileQuit.setText("Quit");
+      mMenuFileQuit.setMnemonic('Q');
+      mMenuFileQuit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(81, java.awt.event.KeyEvent.CTRL_MASK, false));
+      mMenuFileQuit.addActionListener(new ActionListener ()
          {
             public void actionPerformed(ActionEvent e)
             {
@@ -272,61 +272,61 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
 
       // Set up the File menu.  This adds the Open option, a separator, and
       // the Quit option.
-      m_menu_file.setText("File");
-      m_menu_file.setMnemonic('F');
-      m_menu_file.add(m_menu_file_open);
-      m_menu_file.addSeparator();
-      m_menu_file.add(m_menu_file_quit);
+      mMenuFile.setText("File");
+      mMenuFile.setMnemonic('F');
+      mMenuFile.add(mMenuFileOpen);
+      mMenuFile.addSeparator();
+      mMenuFile.add(mMenuFileQuit);
 
       // Set up the Network menu.
-      m_menu_network.setText("Network");
-      m_menu_network.setMnemonic('N');
-      m_menu_network.add(m_menu_net_connect);
-      m_menu_network.add(m_menu_net_disconnect);
+      mMenuNetwork.setText("Network");
+      mMenuNetwork.setMnemonic('N');
+      mMenuNetwork.add(mMenuNetConnect);
+      mMenuNetwork.add(mMenuNetDisconnect);
 
       // Set up the Preferences menu.
-      m_menu_prefs.setText("Preferences");
-      m_menu_prefs.setMnemonic('P');
-      m_menu_prefs.add(m_menu_prefs_gedit);
-      m_menu_prefs.add(m_menu_prefs_ledit);
+      mMenuPrefs.setText("Preferences");
+      mMenuPrefs.setMnemonic('P');
+      mMenuPrefs.add(mMenuPrefsGlobalEdit);
+      mMenuPrefs.add(mMenuPrefsLocalEdit);
 
       // Set up the Beans menu.
-      m_menu_beans.setText("Beans");
-      m_menu_beans.setMnemonic('B');
-      m_menu_beans.add(m_menu_beans_load);
+      mMenuBeans.setText("Beans");
+      mMenuBeans.setMnemonic('B');
+      mMenuBeans.add(mMenuBeansLoad);
 
       // Add the About option to the Help menu.
-      m_menu_help.setText("Help");
-      m_menu_help.setMnemonic('H');
-      m_menu_help.add(m_menu_help_about);
+      mMenuHelp.setText("Help");
+      mMenuHelp.setMnemonic('H');
+      mMenuHelp.add(mMenuHelpAbout);
 
       // Add the menus to the menu bar.
-      m_menu_bar.add(m_menu_file);
-      m_menu_bar.add(m_menu_network);
-      m_menu_bar.add(m_menu_prefs);
-      m_menu_bar.add(m_menu_beans);
-      m_menu_bar.add(m_menu_help);
+      mMenuBar.add(mMenuFile);
+      mMenuBar.add(mMenuNetwork);
+      mMenuBar.add(mMenuPrefs);
+      mMenuBar.add(mMenuBeans);
+      mMenuBar.add(mMenuHelp);
 
       // Finally, set the menu bar to what we have just defined.
-      this.setJMenuBar(m_menu_bar);
+      this.setJMenuBar(mMenuBar);
 
-      m_main_panel.setTopComponent(m_bean_container);
-      m_main_panel.setBottomComponent(null);
-      m_main_panel.setOrientation(JSplitPane.VERTICAL_SPLIT);
-      m_main_panel.setDividerSize(1);
+      mMainPanel.setTopComponent(mBeanContainer);
+      mMainPanel.setBottomComponent(null);
+      mMainPanel.setOrientation(JSplitPane.VERTICAL_SPLIT);
+      mMainPanel.setDividerSize(1);
 
-      m_status_bar.setLayout(m_status_bar_layout);
-      m_status_bar.setBorder(BorderFactory.createLoweredBevelBorder());
-      m_progress_bar.setMinimumSize(new Dimension(100, 14));
-      m_status_msg_button.setMinimumSize(new Dimension(24, 24));
-      m_status_msg_button.setToolTipText("Expand or collapse the message panel");
+      mStatusBar.setLayout(mStatusBarLayout);
+      mStatusBar.setBorder(BorderFactory.createLoweredBevelBorder());
+      mProgressBar.setMinimumSize(new Dimension(100, 14));
+      mStatusMsgButton.setMinimumSize(new Dimension(24, 24));
+      mStatusMsgButton.setToolTipText("Expand or collapse the message panel");
 
       String bulb_on_icon_name  = "org/vrjuggler/tweek/bulb-on-small.gif";
       String bulb_off_icon_name = "org/vrjuggler/tweek/bulb-off-small.gif";
 
       try
       {
-         m_bulb_on_icon = new ImageIcon(BeanJarClassLoader.instance().getResource(bulb_on_icon_name));
+         mBulbOnIcon = new ImageIcon(BeanJarClassLoader.instance().getResource(bulb_on_icon_name));
       }
       catch (NullPointerException e)
       {
@@ -336,7 +336,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
 
       try
       {
-         m_bulb_off_icon = new ImageIcon(BeanJarClassLoader.instance().getResource(bulb_off_icon_name));
+         mBulbOffIcon = new ImageIcon(BeanJarClassLoader.instance().getResource(bulb_off_icon_name));
       }
       catch (NullPointerException e)
       {
@@ -344,17 +344,17 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
                                               bulb_off_icon_name + "\n");
       }
 
-      if ( m_bulb_off_icon != null )
+      if ( mBulbOffIcon != null )
       {
-         m_status_msg_button.setPreferredSize(new Dimension(24, 24));
-         m_status_msg_button.setIcon(m_bulb_off_icon);
+         mStatusMsgButton.setPreferredSize(new Dimension(24, 24));
+         mStatusMsgButton.setIcon(mBulbOffIcon);
       }
       else
       {
-         m_status_msg_button.setText("Expand");
+         mStatusMsgButton.setText("Expand");
       }
 
-      m_status_msg_button.addActionListener(new ActionListener()
+      mStatusMsgButton.addActionListener(new ActionListener()
          {
             public void actionPerformed (ActionEvent e)
             {
@@ -363,12 +363,12 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
          });
 
       // Add the various components to their respective containers.
-      m_content_pane.add(m_main_panel, BorderLayout.CENTER);
-      m_content_pane.add(m_status_bar,  BorderLayout.SOUTH);
-      m_status_bar.add(m_status_msg_button,  BorderLayout.EAST);
-      m_status_bar.add(m_status_msg_label,  BorderLayout.CENTER);
-      m_status_bar.add(m_progress_bar, BorderLayout.WEST);
-      m_main_panel.setDividerLocation(500);
+      mContentPane.add(mMainPanel, BorderLayout.CENTER);
+      mContentPane.add(mStatusBar,  BorderLayout.SOUTH);
+      mStatusBar.add(mStatusMsgButton,  BorderLayout.EAST);
+      mStatusBar.add(mStatusMsgLabel,  BorderLayout.CENTER);
+      mStatusBar.add(mProgressBar, BorderLayout.WEST);
+      mMainPanel.setDividerLocation(500);
    }
 
    // =========================================================================
@@ -397,14 +397,14 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
     */
    private void fileQuitAction (ActionEvent e)
    {
-      if ( m_bean_container != null )
+      if ( mBeanContainer != null )
       {
-         m_bean_container.fireFrameClosed();
+         mBeanContainer.fireFrameClosed();
       }
 
-      for ( int i = 0; i < m_orbs.size(); i++ )
+      for ( int i = 0; i < mORBs.size(); i++ )
       {
-         ((CorbaService) m_orbs.elementAt(i)).shutdown(true);
+         ((CorbaService) mORBs.elementAt(i)).shutdown(true);
       }
 
       System.exit(0);
@@ -440,9 +440,9 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
                   new_orb.init(null);
                }
 
-               m_bean_container.fireConnectionEvent(new_orb);
-               m_orbs.add(new_orb);
-               m_menu_net_disconnect.setEnabled(true);
+               mBeanContainer.fireConnectionEvent(new_orb);
+               mORBs.add(new_orb);
+               mMenuNetDisconnect.setEnabled(true);
             }
             catch (org.omg.CORBA.SystemException sys_ex)
             {
@@ -458,12 +458,12 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
     */
    private void networkDisconnectAction (ActionEvent e)
    {
-      m_menu_net_disconnect.setEnabled(false);
+      mMenuNetDisconnect.setEnabled(false);
 /*
       try
       {
          m_plex_if.disconnect();
-         m_bean_container.fireDisconnectionEvent();
+         mBeanContainer.fireDisconnectionEvent();
       }
       catch (org.vrjuggler.tweek.net.CommException ex)
       {
@@ -492,7 +492,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
          String viewer = prefs.getBeanViewer();
 
          ViewerBean bean = (ViewerBean)BeanRegistry.instance().getBean( viewer );
-         m_bean_container.replaceViewer( bean.getViewer() );
+         mBeanContainer.replaceViewer( bean.getViewer() );
 
          String new_laf = prefs.getLookAndFeel();
          String old_laf = UIManager.getCrossPlatformLookAndFeelClassName();
@@ -503,7 +503,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
             {
                UIManager.setLookAndFeel(new_laf);
                SwingUtilities.updateComponentTreeUI(this);
-               m_content_pane.updateUI();
+               mContentPane.updateUI();
             }
             catch (Exception laf_e)
             {
@@ -518,7 +518,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
          // If the user level changed, fire an event saying as much.
          if ( old_level != prefs.getUserLevel() )
          {
-            m_bean_container.fireUserLevelChange(old_level,
+            mBeanContainer.fireUserLevelChange(old_level,
                                                  prefs.getUserLevel());
          }
       }
@@ -602,32 +602,32 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
 
    private void statusMessageExpandAction (ActionEvent e)
    {
-      if ( m_msg_panel_expanded )
+      if ( mMsgPanelExpanded )
       {
-         m_main_panel.setBottomComponent(null);
-         m_main_panel.resetToPreferredSizes();
-         m_msg_panel_expanded = false;
+         mMainPanel.setBottomComponent(null);
+         mMainPanel.resetToPreferredSizes();
+         mMsgPanelExpanded = false;
 
-         m_status_msg_label.setText("");
+         mStatusMsgLabel.setText("");
 
-         if ( m_status_msg_button.getIcon() == null )
+         if ( mStatusMsgButton.getIcon() == null )
          {
-            m_status_msg_button.setText("Expand");
+            mStatusMsgButton.setText("Expand");
          }
       }
       else
       {
-         m_main_panel.setBottomComponent(MessagePanel.instance().getPanel());
-         m_main_panel.setDividerLocation(0.85);
-         m_msg_panel_expanded = true;
+         mMainPanel.setBottomComponent(MessagePanel.instance().getPanel());
+         mMainPanel.setDividerLocation(0.85);
+         mMsgPanelExpanded = true;
 
-         if ( m_bulb_off_icon != null )
+         if ( mBulbOffIcon != null )
          {
-            m_status_msg_button.setIcon(m_bulb_off_icon);
+            mStatusMsgButton.setIcon(mBulbOffIcon);
          }
          else
          {
-            m_status_msg_button.setText("Collapse");
+            mStatusMsgButton.setText("Collapse");
          }
       }
    }
@@ -636,40 +636,40 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
    // Private data members.
    // ========================================================================
 
-   private boolean packFrame = false;
+   private boolean mPackFrame = false;
 
    // GUI objects.
-   private JPanel        m_content_pane        = null;    /**< Top-level container */
-   private BorderLayout  m_content_pane_layout = new BorderLayout();
-   private JSplitPane    m_main_panel          = new JSplitPane();
-   private BeanContainer m_bean_container      = new BeanContainer();
+   private JPanel        mContentPane       = null;    /**< Top-level container */
+   private BorderLayout  mContentPaneLayout = new BorderLayout();
+   private JSplitPane    mMainPanel         = new JSplitPane();
+   private BeanContainer mBeanContainer     = new BeanContainer();
 
    // Status bar stuff.
-   private JPanel        m_status_bar         = new JPanel();
-   private JProgressBar  m_progress_bar       = new JProgressBar();
-   private JLabel        m_status_msg_label   = new JLabel();
-   private JButton       m_status_msg_button  = new JButton();
-   private BorderLayout  m_status_bar_layout  = new BorderLayout();
-   private ImageIcon     m_bulb_on_icon       = null;
-   private ImageIcon     m_bulb_off_icon      = null;
-   private boolean       m_msg_panel_expanded = false;
+   private JPanel        mStatusBar        = new JPanel();
+   private JProgressBar  mProgressBar      = new JProgressBar();
+   private JLabel        mStatusMsgLabel   = new JLabel();
+   private JButton       mStatusMsgButton  = new JButton();
+   private BorderLayout  mStatusBarLayout  = new BorderLayout();
+   private ImageIcon     mBulbOnIcon       = null;
+   private ImageIcon     mBulbOffIcon      = null;
+   private boolean       mMsgPanelExpanded = false;
 
    // Menu bar objects.
-   private JMenuBar m_menu_bar             = new JMenuBar();
-   private JMenu m_menu_file               = new JMenu();
-   private JMenuItem m_menu_file_open      = new JMenuItem();
-   private JMenuItem m_menu_file_quit      = new JMenuItem();
-   private JMenu m_menu_network            = new JMenu();
-   private JMenuItem m_menu_net_connect    = new JMenuItem();
-   private JMenuItem m_menu_net_disconnect = new JMenuItem();
-   private JMenu m_menu_prefs              = new JMenu();
-   private JMenuItem m_menu_prefs_gedit    = new JMenuItem();
-   private JMenuItem m_menu_prefs_ledit    = new JMenuItem();
-   private JMenu m_menu_beans              = new JMenu();
-   private JMenuItem m_menu_beans_load     = new JMenuItem();
-   private JMenu m_menu_help               = new JMenu();
-   private JMenuItem m_menu_help_about     = new JMenuItem();
+   private JMenuBar mMenuBar              = new JMenuBar();
+   private JMenu mMenuFile                = new JMenu();
+   private JMenuItem mMenuFileOpen        = new JMenuItem();
+   private JMenuItem mMenuFileQuit        = new JMenuItem();
+   private JMenu mMenuNetwork             = new JMenu();
+   private JMenuItem mMenuNetConnect      = new JMenuItem();
+   private JMenuItem mMenuNetDisconnect   = new JMenuItem();
+   private JMenu mMenuPrefs               = new JMenu();
+   private JMenuItem mMenuPrefsGlobalEdit = new JMenuItem();
+   private JMenuItem mMenuPrefsLocalEdit  = new JMenuItem();
+   private JMenu mMenuBeans               = new JMenu();
+   private JMenuItem mMenuBeansLoad       = new JMenuItem();
+   private JMenu mMenuHelp                = new JMenu();
+   private JMenuItem mMenuHelpAbout       = new JMenuItem();
 
    // Networking stuff.
-   private Vector m_orbs = new Vector();
+   private Vector mORBs = new Vector();
 }
