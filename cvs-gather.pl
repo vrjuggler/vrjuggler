@@ -24,7 +24,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-# cvs-gather.pl,v 1.29 2003/03/08 17:04:48 patrickh Exp
+# cvs-gather.pl,v 1.30 2003/06/06 16:30:07 patrickh Exp
 
 use 5.005;
 
@@ -60,7 +60,7 @@ sub nextSpinnerFrame($);
 # *********************************************************************
 # Here is the version for this script!
 
-my $VERSION = '0.1.8';
+my $VERSION = '0.1.9';
 # *********************************************************************
 
 my $cfg_file         = '';
