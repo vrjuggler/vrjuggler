@@ -51,7 +51,7 @@ namespace gadget
 vpr::ReturnStatus EventWindow::writeObject(vpr::ObjectWriter* writer)
 {
    writer->writeUint16(MSG_DATA_EVENT_WINDOW); // Write out the data type so that we can assert if reading in wrong place
-     
+   
    writer->writeUint64(mSyncTime.getBaseVal());
 
    // Write Current Keys to a stream using the given ObjectWriter
@@ -93,7 +93,10 @@ vpr::ReturnStatus EventWindow::readObject(vpr::ObjectReader* reader)
    vpr::Uint16 data_type = reader->readUint16();
    vprASSERT(data_type==MSG_DATA_EVENT_WINDOW && "[EventWindow::readObject()]Not EventWindow Data");
    
-   mSyncTime.set(reader->readUint64(), vpr::Interval::Base);
+   // We must save this value to set the sync time after we updateEventQueue.
+   // This is because we can not ready the timestamp from an event in the
+   // queue since we do not have events every frame.
+   vpr::Uint64 temp_sync = reader->readUint64();
    
    // Read Current Keys using the given ObjectReader
    unsigned int num_keys = reader->readUint16();
@@ -125,6 +128,10 @@ vpr::ReturnStatus EventWindow::readObject(vpr::ObjectReader* reader)
       addEvent(temp_event);
    }
    updateEventQueue();
+
+   // We must set sync time correctly here since updateEventQueue() changes it.
+   mSyncTime.set(temp_sync, vpr::Interval::Base);
+
    return vpr::ReturnStatus::Succeed;
 }
 
