@@ -12,6 +12,8 @@ OUT_PUB = ./public_doc
 OUT_EX = ./ex_html
 JAVA_CLASS = $(PERCEPS_DIR)/classes
 
+docs: doc-internal doc-public
+
 doc-internal:
 	$(PERCEPS) -a -b -c -h -f -d $(OUT_INT) -F $(FILTERS)		\
           -t $(TEMPLATES_INT) $(SRC)
