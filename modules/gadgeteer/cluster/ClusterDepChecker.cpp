@@ -53,7 +53,7 @@ bool ClusterDepChecker::depSatisfied(jccl::ConfigElementPtr element)
       // simply inserting the child elements into the pending list. This is
       // to fix errors like the embedded keyboard window in a DisplayWindow
       // would always create a dependancy loop.
-      debugOutDependencies(element, vprDBG_WARNING_LVL);
+      debugOutDependencies( element, vprDBG_WARNING_LVL );
       return true;
    }
    else if (cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig(element))
@@ -73,92 +73,33 @@ bool ClusterDepChecker::depSatisfied(jccl::ConfigElementPtr element)
       jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
 
       // device_host exists in active configuration
-      std::string device_host = element->getProperty<std::string>("device_host");
-      gadget::Node* node = cluster::ClusterManager::instance()->getNetwork()->getNodeByName(device_host);
+      std::string device_host = element->getProperty<std::string>( "device_host" );
+      gadget::Node* node = cluster::ClusterManager::instance()->getNetwork()->getNodeByName( device_host );
 
-      if(!cfg_mgr->isElementInActiveList(device_host))
+      if (!cfg_mgr->isElementInActiveList(device_host) || NULL == node)
       {
          pass = false;
-         vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL)
-            << "[ClusterDepChecker] Host node's ConfigElement("
-            << device_host << ") is not in the Active List yet.\n"
-            << vprDEBUG_FLUSH;
       }
-      else if(node == NULL)
-      {
-         pass = false;
-         vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL) << "[ClusterDepChecker] Node("
-               << device_host << ") is NULL, so it is not in the Active List yet.\n" << vprDEBUG_FLUSH;
-      }
-      else if(gadget::Node::DISCONNECTED == node->getStatus())
+      else if (gadget::Node::DISCONNECTED == node->getStatus())
       {
          pass = false;
          
-         vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL) << "[ClusterDepChecker] Remote device: "
-            << element->getName() << " depends on node: " << node->getName()
-            << " changing status to PENDING."
-            << std::endl << vprDEBUG_FLUSH;
-            
-         node->setStatus(gadget::Node::PENDING);
+         node->setStatus( gadget::Node::PENDING );
       }
-      else if( gadget::Node::PENDING == node->getStatus() ||
-               gadget::Node::NEWCONNECTION == node->getStatus() )
+      else if (gadget::Node::PENDING == node->getStatus() ||
+               gadget::Node::NEWCONNECTION == node->getStatus())
       {
          // Wait until we are fully connected.
          pass = false;
       }
-      //Not needed, we kind of just did it above
-      // debugOutDependencies(element, vprDBG_WARNING_LVL);
 
       return pass;
    }
-   /*else if (cluster::ClusterManager::instance()->recognizeClusterManagerConfig(element))
-   {
-      // We need the following for the Cluster to be setup correctly
-      // - All Nodes connected(All listed machines connected)
-      // - All Devices configured
-
-      // HERE
-      // - No clsuter_node elements Pending
-
-
-      int number_nodes = element->getNum("cluster_node");
-      for (int i = 0 ; i < number_nodes ; i++)
-      {
-         std::string node_name = element->getProperty<std::string>("cluster_node",i);
-         jccl::ConfigElementPtr node_element = ClusterManager::instance()->getConfigElementPointer(node_name);
-         if (node_element.get() == NULL)
-         {
-            // Node not in current configuration
-            jccl::ConfigManager::instance()->delayStalePendingList();
-            std::cout << "L" << std::flush;
-            return(false);
-         }
-         std::string host_name = node_element->getProperty<std::string>("host_name");
-         if (! ClusterNetwork::isLocalHost(host_name) )
-         {
-            gadget::Node* node = ClusterManager::instance()->getNetwork()->getNodeByName(node_name);
-            if (node == NULL)
-            {
-               jccl::ConfigManager::instance()->delayStalePendingList();
-               std::cout << "N" << std::flush;
-               return(false);
-            }
-            else if (!node->isConnected())
-            {
-               jccl::ConfigManager::instance()->delayStalePendingList();
-               std::cout << "D" << std::flush;
-               return(false);
-            }
-         }
-      }
-      return(true);
-   }*/
    else
    {
-      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "ERROR, Something is seriously wrong, we should never get here\n"
-      << vprDEBUG_FLUSH;
-      return(true);
+      vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL ) << "ERROR, Something is seriously wrong, we should never get here\n"
+         << vprDEBUG_FLUSH;
+      return true;
    }
 }
 
@@ -168,66 +109,70 @@ bool ClusterDepChecker::depSatisfied(jccl::ConfigElementPtr element)
 bool ClusterDepChecker::canHandle(jccl::ConfigElementPtr element)
 {
    return (element->getID() == ClusterNetwork::getClusterNodeElementType() ||
-           cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig(element) /*||
-           cluster::ClusterManager::instance()->recognizeClusterManagerConfig(element)*/ );
+           cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig( element ));
 }
 
 void ClusterDepChecker::debugOutDependencies(jccl::ConfigElementPtr element,
                                              const int dbg_lvl)
 {
-   boost::ignore_unused_variable_warning(dbg_lvl);
+   vprDEBUG_NEXT_BEGIN( vprDBG_ALL, dbg_lvl )
+      << "---- Dependencies for " << element->getName()
+      << " (type: " << element->getID() << ") ----\n" << vprDEBUG_FLUSH;
+
+   jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
 
    if (element->getID() == ClusterNetwork::getClusterNodeElementType())
    {
       // Machine Specific element should have no dependencies since we are
       // simply inserting the child elements into the pending list.
-      //vprDEBUG(vprDBG_ALL,dbg_lvl) << "clsuter_node elements have NO Deps!!!\n" << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT( vprDBG_ALL, dbg_lvl ) << "0: "
+          << "Host node's ConfigElement"
+          << " ==> " << vprDEBUG_FLUSH;
+      
+      vprDEBUG_CONT( vprDBG_ALL, dbg_lvl ) << "none.\n"
+         << vprDEBUG_FLUSH;
    }
-   else if (cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig(element))
+   else if (cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig( element ))
    {
-      // Remote devices should have no dependencies since we are not actually
-      // configuring anything, we are only creating a data structure that we
-      // can determine without any other elements.
-      //vprDEBUG(vprDBG_ALL,dbg_lvl) << "Virtual Device: " << element->getName()
-      //   << " has NO Deps since it is Virtual!!!\n" << vprDEBUG_FLUSH;
-   }
-   /*else if (cluster::ClusterManager::instance()->recognizeClusterManagerConfig(element))
-   {
-      //int number_nodes = element->getNum("cluster_node");
-      //for (int i = 0 ; i < number_nodes ; i++)
-      //{
-      //   std::string node_name = element->getProperty<std::string>("cluster_node",i);
-      //   jccl::ConfigElementPtr node_element = RmoteInputManager::instance()->getConfigElementPointer(node_name);
-      //   if (node_element.get() == NULL)
-      //   {
-      //      vprDEBUG(vprDBG_ALL, dbg_lvl) << node_name << " Node not in current configuration."
-      //         << std::endl << vprDEBUG_FLUSH;
-      //      return;
-      //   }
-      //   std::string host_name = node_element->getProperty<std::string>("host_name");
-      //   if ( !ClusterNetwork::isLocalHost(host_name) )
-      //   {
-      //      gadget::Node* node = cluster::ClusterManager::instance()->getNetwork()->getNodeByName(node_name);
-      //      if (node == NULL)
-      //      {
-      //         vprDEBUG(vprDBG_ALL, dbg_lvl) << node_name << " does not exist in ClusterNetwork."
-      //            << std::endl << vprDEBUG_FLUSH;
-      //         return;
-      //      }
-      //      else if (!node->isConnected())
-      //      {
-      //         node->debugDump(dbg_lvl);
-      //         return;
-      //      }
-      //   }
-      //}
-   }*/
-   else
-   {
-      //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "ERROR, Something is seriously wrong, we should never get here\n"
-      //   << vprDEBUG_FLUSH;
-   }
+      std::string device_host = element->getProperty<std::string>( "device_host ");
+      gadget::Node* node = cluster::ClusterManager::instance()->getNetwork()->getNodeByName( device_host );
 
+      vprDEBUG_NEXT( vprDBG_ALL, dbg_lvl ) << "1: "
+          << "Device node's ConfigElement"
+          << " ==> " << vprDEBUG_FLUSH;
+      
+      if (!cfg_mgr->isElementInActiveList( device_host ) || NULL == node)
+      {
+         vprDEBUG_CONT( vprDBG_ALL, dbg_lvl ) << "not in active list.\n"
+            << vprDEBUG_FLUSH;
+      }
+      else
+      {
+         vprDEBUG_CONT( vprDBG_ALL, dbg_lvl ) << "in active list.\n"
+            << vprDEBUG_FLUSH;
+      }
+
+      vprDEBUG_NEXT( vprDBG_ALL, dbg_lvl ) << "2: "
+          << "Device host connection status"
+          << " ==> " << vprDEBUG_FLUSH;
+      
+      if (gadget::Node::DISCONNECTED == node->getStatus())
+      {
+         vprDEBUG_CONT( vprDBG_ALL, dbg_lvl ) << "disconnected.\n"
+            << vprDEBUG_FLUSH;
+      }
+      else if (gadget::Node::PENDING == node->getStatus())
+      {
+         vprDEBUG_CONT( vprDBG_ALL, dbg_lvl ) << "pending.\n"
+            << vprDEBUG_FLUSH;
+      }
+      else if (gadget::Node::NEWCONNECTION == node->getStatus())
+      {
+         vprDEBUG_CONT( vprDBG_ALL, dbg_lvl ) << "new connection.\n"
+            << vprDEBUG_FLUSH;
+      }
+   }
+   vprDEBUG_CONT_END( vprDBG_ALL, dbg_lvl ) << std::endl << vprDEBUG_FLUSH;
 }
 
-}  // end namespace gadget
+}  // end namespace cluster

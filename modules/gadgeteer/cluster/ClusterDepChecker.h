@@ -60,7 +60,7 @@ public:
     */
    virtual std::string getCheckerName()
    {
-      return std::string("Cluster Dependency Checker");
+      return std::string( "Cluster Dependency Checker" );
    }
 
    /** We can handle only remote device configuration information. */
@@ -76,10 +76,10 @@ public:
 
    /** Write out the dependencies to the vprDEBUG macro. */
    virtual void debugOutDependencies(jccl::ConfigElementPtr element,
-                                     int dbg_lvl=vprDBG_WARNING_LVL);
+                                     int dbg_lvl = vprDBG_WARNING_LVL);
 
 };
 
-}  // end namespace gadget
+}  // end namespace cluster
 
 #endif
