@@ -40,37 +40,42 @@ package VjConfig;
 import java.util.EventObject;
 import VjConfig.ConfigChunk;
 
-public class ChunkDBEvent extends EventObject {
-    private ConfigChunk newchunk;
-    private ConfigChunk oldchunk;
+public class ChunkDBEvent
+   extends EventObject
+{
+   private ConfigChunk mNewChunk;
+   private ConfigChunk mOldChunk;
 
-    int action;
+   int mAction;
 
-    public final static int INSERT = 1;
-    public final static int REMOVE = 2;
-    public final static int REPLACE = 3;
-    public final static int REMOVEALL = 4;
+   public final static int INSERT = 1;
+   public final static int REMOVE = 2;
+   public final static int REPLACE = 3;
+   public final static int REMOVEALL = 4;
 
-    public ChunkDBEvent (Object _source, int _action, ConfigChunk _oldchunk, ConfigChunk _newchunk) {
-	super (_source);
-	action = _action;
-	newchunk = _newchunk;
-	oldchunk = _oldchunk;
-    }
+   public ChunkDBEvent(Object source, int action, ConfigChunk oldChunk,
+                       ConfigChunk newChunk)
+   {
+      super(source);
+      mAction = action;
+      mNewChunk = newChunk;
+      mOldChunk = oldChunk;
+   }
 
+   public int getAction()
+   {
+      return mAction;
+   }
 
-    public int getAction() {
-	return action;
-    }
+   public ConfigChunk getOldChunk()
+   {
+      return mOldChunk;
+   }
 
-    public ConfigChunk getOldChunk () {
-	return oldchunk;
-    }
-
-    public ConfigChunk getNewChunk () {
-	return newchunk;
-    }
-
+   public ConfigChunk getNewChunk()
+   {
+      return mNewChunk;
+   }
 }
 
 
