@@ -234,7 +234,7 @@ public class PinchGlovePanel extends JPanel implements CustomEditor
 
       ConfigDefinition cfg_def = mConfigElement.getDefinition();
 
-      mSerialPort = new PropertyEditorPanel(mConfigElement.getProperty("port", 0),
+      mSerialPort = new PropertyEditorPanel(mConfigContext, mConfigElement.getProperty("port", 0),
                                             cfg_def.getPropertyDefinition("port"),
                                             mConfigElement, 0, getBackground());
 
@@ -276,13 +276,13 @@ public class PinchGlovePanel extends JPanel implements CustomEditor
          }
       });
 
-      mBaud = new PropertyEditorPanel(mConfigElement.getProperty("baud", 0),
+      mBaud = new PropertyEditorPanel(mConfigContext, mConfigElement.getProperty("baud", 0),
                                       cfg_def.getPropertyDefinition("baud"),
                                       mConfigElement, 0, getBackground());
-      mGlovePosition = new PropertyEditorPanel(mConfigElement.getProperty("glove_position", 0),
+      mGlovePosition = new PropertyEditorPanel(mConfigContext, mConfigElement.getProperty("glove_position", 0),
                                                cfg_def.getPropertyDefinition("glove_position"),
                                                mConfigElement, 0, getBackground());
-      mDeviceHost = new PropertyEditorPanel(mConfigElement.getProperty("device_host", 0),
+      mDeviceHost = new PropertyEditorPanel(mConfigContext, mConfigElement.getProperty("device_host", 0),
                                             cfg_def.getPropertyDefinition("device_host"),
                                             mConfigElement, 0, getBackground());
 

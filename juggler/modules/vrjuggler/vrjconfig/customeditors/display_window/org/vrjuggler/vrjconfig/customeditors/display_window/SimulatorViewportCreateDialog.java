@@ -45,10 +45,10 @@ public class SimulatorViewportCreateDialog
 {
    public SimulatorViewportCreateDialog()
    {
-      this(null);
+      this(null, null);
    }
 
-   public SimulatorViewportCreateDialog(ConfigElement viewportElt)
+   public SimulatorViewportCreateDialog(ConfigContext ctx, ConfigElement viewportElt)
    {
       super("Basic Simulator Viewport Parameters", viewportElt,
             EditorConstants.simulatorViewportType);
@@ -72,11 +72,11 @@ public class SimulatorViewportCreateDialog
       mSimElt.addConfigElementListener(this);
 
       mCameraPosEditor =
-         new PropertyEditorPanel(mSimElt.getProperty("camera_pos", 0),
+         new PropertyEditorPanel(ctx, mSimElt.getProperty("camera_pos", 0),
                                  sim_def.getPropertyDefinition("camera_pos"),
                                  mSimElt, 0, Color.white);
       mWandPosEditor =
-         new PropertyEditorPanel(mSimElt.getProperty("wand_pos", 0),
+         new PropertyEditorPanel(ctx, mSimElt.getProperty("wand_pos", 0),
                                  sim_def.getPropertyDefinition("wand_pos"),
                                  mSimElt, 0, Color.white);
 

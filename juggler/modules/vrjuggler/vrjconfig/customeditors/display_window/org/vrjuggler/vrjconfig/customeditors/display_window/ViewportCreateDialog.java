@@ -47,8 +47,8 @@ public abstract class ViewportCreateDialog
 {
    private static int VP_ELT_COUNT = 0;
 
-   public ViewportCreateDialog(String title, ConfigElement elt,
-                               String elementType)
+   public ViewportCreateDialog(String title, ConfigContext ctx, 
+                               ConfigElement elt, String elementType)
    {
       super();
       this.setTitle(title);
@@ -68,7 +68,7 @@ public abstract class ViewportCreateDialog
       mViewportElement = elt;
       mViewportElement.addConfigElementListener(this);
       mBoundsPanel = new ViewportBoundsEditorPanel(elt);
-      mUserPanel = new ViewportUserEditorPanel(elt);
+      mUserPanel = new ViewportUserEditorPanel(ctx, elt);
       this.setResizable(false);
    }
 

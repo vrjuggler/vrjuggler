@@ -48,12 +48,12 @@ public class SurfaceViewportCreateDialog
 {
    public SurfaceViewportCreateDialog()
    {
-      this(null);
+      this(null, null);
    }
 
-   public SurfaceViewportCreateDialog(ConfigElement elt)
+   public SurfaceViewportCreateDialog(ConfigContext ctx, ConfigElement elt)
    {
-      super("Basic Surface Viewport Parameters", elt,
+      super("Basic Surface Viewport Parameters", ctx, elt,
             EditorConstants.surfaceViewportType);
 
       mCorners[Plane.LL_CORNER] = "Lower Left Corner";
@@ -66,7 +66,7 @@ public class SurfaceViewportCreateDialog
          broker.getRepository().get(EditorConstants.surfaceViewportType);
 
       mTrackerProxyEditor =
-         new PropertyEditorPanel(mViewportElement.getProperty("tracker_proxy", 0),
+         new PropertyEditorPanel(ctx, mViewportElement.getProperty("tracker_proxy", 0),
                                  vp_def.getPropertyDefinition("tracker_proxy"),
                                  mViewportElement, 0, Color.white);
 

@@ -37,6 +37,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import org.vrjuggler.jccl.config.ConfigBrokerProxy;
+import org.vrjuggler.jccl.config.ConfigContext;
 import org.vrjuggler.jccl.config.ConfigDefinition;
 import org.vrjuggler.jccl.config.ConfigElement;
 import org.vrjuggler.jccl.config.event.ConfigElementAdapter;
@@ -81,10 +82,12 @@ public class DisplayWindowFrame
    }
 
    public DisplayWindowFrame(String title, Dimension resolution,
-                             Dimension desktopSize, ConfigElement elt)
+                             Dimension desktopSize, ConfigContext ctx,
+                             ConfigElement elt)
    {
       super(title, true, true, true, false);
 
+      mContext = ctx;
       mElement = elt;
       mResolution = resolution;
       mDesktopSize = desktopSize;
@@ -331,6 +334,7 @@ public class DisplayWindowFrame
    private Dimension mResolution = null;
    private Dimension mDesktopSize = null;
    private ConfigElement mElement = null;
+   private ConfigContext mContext = null;
    private boolean mHideMouse = false;
 //   private boolean mMousePressed = false;
    private ViewportPlacer mViewportEditor = null;
@@ -540,7 +544,7 @@ public class DisplayWindowFrame
       if ( mSelectedViewport.getDefinition().getToken().equals(EditorConstants.surfaceViewportType) )
       {
          SurfaceViewportCreateDialog dlg =
-            new SurfaceViewportCreateDialog(mSelectedViewport);
+            new SurfaceViewportCreateDialog(mContext, mSelectedViewport);
          positionDialog(dlg, owner);
          dlg.show();
 
@@ -598,7 +602,7 @@ public class DisplayWindowFrame
       else
       {
          SimulatorViewportCreateDialog dlg =
-            new SimulatorViewportCreateDialog(mSelectedViewport);
+            new SimulatorViewportCreateDialog(mContext, mSelectedViewport);
          positionDialog(dlg, owner);
          dlg.show();
 

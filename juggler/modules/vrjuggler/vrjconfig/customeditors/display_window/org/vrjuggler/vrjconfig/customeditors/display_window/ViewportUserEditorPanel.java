@@ -38,24 +38,25 @@ import javax.swing.JPanel;
 import info.clearthought.layout.*;
 
 import org.vrjuggler.jccl.config.ConfigDefinition;
+import org.vrjuggler.jccl.config.ConfigContext;
 import org.vrjuggler.jccl.config.ConfigElement;
 import org.vrjuggler.jccl.editors.PropertyEditorPanel;
 
 
 public class ViewportUserEditorPanel extends JPanel
 {
-   public ViewportUserEditorPanel(ConfigElement elt)
+   public ViewportUserEditorPanel(ConfigContext ctx, ConfigElement elt)
    {
       mElt = elt;
 
       ConfigDefinition vp_def = elt.getDefinition();
 
       mViewpointEditor =
-         new PropertyEditorPanel(mElt.getProperty("view", 0),
+         new PropertyEditorPanel(ctx, mElt.getProperty("view", 0),
                                  vp_def.getPropertyDefinition("view"),
                                  mElt, 0, Color.white);
       mUserEditor =
-         new PropertyEditorPanel(mElt.getProperty("user", 0),
+         new PropertyEditorPanel(ctx, mElt.getProperty("user", 0),
                                  vp_def.getPropertyDefinition("user"),
                                  mElt, 0, Color.white);
 

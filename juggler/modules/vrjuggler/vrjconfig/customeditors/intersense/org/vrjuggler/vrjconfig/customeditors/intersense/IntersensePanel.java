@@ -351,13 +351,13 @@ public class IntersensePanel extends JPanel implements CustomEditor
 
       ConfigDefinition cfg_def = mConfigElement.getDefinition();
 
-      mBaudEditor = new PropertyEditorPanel(mConfigElement.getProperty("baud", 0),
-                                      cfg_def.getPropertyDefinition("baud"),
-                                      mConfigElement, 0, getBackground());
-      mPortEditor = new PropertyEditorPanel(mConfigElement.getProperty("port", 0),
-                                               cfg_def.getPropertyDefinition("port"),
-                                               mConfigElement, 0, getBackground());
-      mDriverEditor = new PropertyEditorPanel(mConfigElement.getProperty("driver", 0),
+      mBaudEditor = new PropertyEditorPanel(mConfigContext, mConfigElement.getProperty("baud", 0),
+                                            cfg_def.getPropertyDefinition("baud"),
+                                            mConfigElement, 0, getBackground());
+      mPortEditor = new PropertyEditorPanel(mConfigContext, mConfigElement.getProperty("port", 0),
+                                            cfg_def.getPropertyDefinition("port"),
+                                            mConfigElement, 0, getBackground());
+      mDriverEditor = new PropertyEditorPanel(mConfigContext, mConfigElement.getProperty("driver", 0),
                                             cfg_def.getPropertyDefinition("driver"),
                                             mConfigElement, 0, getBackground());
       
