@@ -67,17 +67,6 @@ public class DisplayWindowStartDialog
          setSpinnerModel(mAlphaDepthSpinner, 1, 1, 8);
          setSpinnerModel(mDepthBufferSpinner, 1, 1, 32);
 
-         // It should be okay for all the text fields to share the same
-         // validator object since no two can be modified simultaneously.
-/*
-         DocumentListener l = new DisplayInfoValidator();
-         mNameField.getDocument().addDocumentListener(l);
-         mWidthField.getDocument().addDocumentListener(l);
-         mHeightField.getDocument().addDocumentListener(l);
-         mPositionXField.getDocument().addDocumentListener(l);
-         mPositionYField.getDocument().addDocumentListener(l);
-*/
-
          // Validate the default values for the various text fields.
          validateUserInput();
       }
@@ -606,72 +595,6 @@ public class DisplayWindowStartDialog
          else
          {
          }
-      }
-   }
-
-   private class DisplayInfoValidator implements DocumentListener
-   {
-      public void changedUpdate(DocumentEvent e)
-      {
-         validateUserInput();
-      }
-
-      public void insertUpdate(DocumentEvent e)
-      {
-         validateUserInput();
-      }
-
-      public void removeUpdate(DocumentEvent e)
-      {
-         validateUserInput();
-      }
-   }
-
-   private class WindowNameValidator implements DocumentListener
-   {
-      public void changedUpdate(DocumentEvent e)
-      {
-      }
-
-      public void insertUpdate(DocumentEvent e)
-      {
-      }
-
-      public void removeUpdate(DocumentEvent e)
-      {
-      }
-   }
-
-   private class WindowPositionValidator implements DocumentListener
-   {
-      public void changedUpdate(DocumentEvent e)
-      {
-//         validateWindowBounds(e);
-      }
-
-      public void insertUpdate(DocumentEvent e)
-      {
-//         validateWindowBounds(e);
-      }
-
-      public void removeUpdate(DocumentEvent e)
-      {
-//         validateWindowBounds(e);
-      }
-   }
-
-   private class WindowSizeValidator implements DocumentListener
-   {
-      public void changedUpdate(DocumentEvent e)
-      {
-      }
-
-      public void insertUpdate(DocumentEvent e)
-      {
-      }
-
-      public void removeUpdate(DocumentEvent e)
-      {
       }
    }
 
