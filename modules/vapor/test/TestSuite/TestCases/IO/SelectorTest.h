@@ -140,8 +140,9 @@ public:
           vpr::Uint16 num_events;
           Status ret = selector.select(num_events, 50000);
 
-          threadAssertTest((ret.success()) && "Selection did not return successfully");
-          threadAssertTest((num_events == 1) && "There was not only 1 event");
+          threadAssertTest((ret.success()),
+                           "Selection did not return successfully");
+          threadAssertTest((num_events == 1), "There was not only 1 event");
 
           
           // get an acceptor that has a connection request pending (ready_acceptor)
@@ -152,14 +153,15 @@ public:
             // if selector's out flag is VPR_READ|VPR_EXCEPT
             if(selector.getOut(selector.getHandle(j)) & (vpr::Selector::VPR_READ | vpr::Selector::VPR_EXCEPT))
             {
-               threadAssertTest((acceptorTable.find(selector.getHandle(j)) != acceptorTable.end()) && "Handle not found int acceptor table");
+               threadAssertTest((acceptorTable.find(selector.getHandle(j)) != acceptorTable.end()),
+                                "Handle not found int acceptor table");
                ready_acceptor = acceptorTable[selector.getHandle(j)];               
                num_found += 1;
             }
           }
 
-          threadAssertTest((num_found == 1) && "Wrong number of acceptors found");
-          threadAssertTest(ready_acceptor != NULL && "no ready acceptor");
+          threadAssertTest((num_found == 1), "Wrong number of acceptors found");
+          threadAssertTest(ready_acceptor != NULL, "no ready acceptor");
 
           // ACCEPT connection (generate a sock)
           SocketStream sock;
@@ -307,8 +309,10 @@ public:
           vpr::Uint16 num_events;
           Status ret = selector.select(num_events, 50000);
 
-          threadAssertTest((ret.success()) && "Selection did not return successfully");
-          threadAssertTest((num_events == mSelectedPorts.size()) && "There was an incorrect number of events");
+          threadAssertTest((ret.success()),
+                           "Selection did not return successfully");
+          threadAssertTest((num_events == mSelectedPorts.size()),
+                           "There was an incorrect number of events");
 
           // mSelectedPorts holds the index numbers of the sockets that data was sent on          
           // Read from each selected socket
@@ -318,7 +322,8 @@ public:
              // If have data to read
              if(selector.getOut(selector.getHandle(j)) & (vpr::Selector::VPR_READ))      
             {
-               threadAssertTest((handleTable.find(selector.getHandle(j)) != handleTable.end()) && "Handle not found int acceptor table");
+               threadAssertTest((handleTable.find(selector.getHandle(j)) != handleTable.end()),
+                                "Handle not found int acceptor table");
                vpr::Uint16 sock_index = handleTable[selector.getHandle(j)];
                threadAssertTest((std::find(mSelectedPorts.begin(), mSelectedPorts.end(), sock_index) != mSelectedPorts.end()), "Found a port that wasn't supposed to have data");
                num_found += 1;
@@ -329,7 +334,8 @@ public:
                threadAssertTest((bytes_read == mMessageLen), "Data recieved is of wrong length");
             }
           }
-          threadAssertTest((num_found == mSelectedPorts.size()) && "Wrong number of readers found");
+          threadAssertTest((num_found == mSelectedPorts.size()),
+                           "Wrong number of readers found");
           
           // Tell senders that we are DONE_READING
           mCondVar.acquire();
