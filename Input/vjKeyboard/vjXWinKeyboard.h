@@ -79,6 +79,7 @@ public:
       mPrevX = 0; mPrevY = 0;
       mLockState = Unlocked;     // Initialize to unlocked.
       mExitFlag = false;
+      mUpdKeysHasBeenCalled = false;      // Initialize it to not being called yet
    }
    ~vjXWinKeyboard() { stopSampling();}
 
@@ -152,9 +153,11 @@ private:
    // NOTE: This driver does not use the normal triple buffering mechanism.
    // Instead, it just uses a modified double buffering system.
    int      m_keys[256];         // (0,*): The num key presses during an UpdateData (ie. How many keypress events)
-   int      m_curKeys[256];     // (0,*): Copy of m_keys that the user reads from between updates
+   int      m_curKeys[256];      // (0,*): Copy of m_keys that the user reads from between updates
    int      m_realkeys[256];     // (0,1): The real keyboard state, all events processed (ie. what is the key now)
-   vjMutex  mKeysLock;           // Must hold this lock when accessing m_keys.
+   vjMutex  mKeysLock;           // Must hold this lock when accessing m_keys OR mUpdKeysHasBeenCalled
+   bool     mUpdKeysHasBeenCalled;  // This flag keeps track of wether or not updKeys has been called since the last updateData.
+                                    // It is used by updateData to make sure we don't get a "blank" update where no keys are pressed.
    bool     mExitFlag;           // Should we exit
 
    lockState   mLockState;       // The current state of locking
@@ -164,6 +167,7 @@ private:
    std::string mXDisplayString;   // The display string to use from systemDisplay config info
 
    float m_mouse_sensitivity;
+   int   mSleepTimeMS;            // Amount of time to sleep in milliseconds between updates
    int   mPrevX, mPrevY;          // Previous mouse location
 };
 

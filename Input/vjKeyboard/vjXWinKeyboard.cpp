@@ -87,6 +87,10 @@ bool vjXWinKeyboard::config(vjConfigChunk *c)
                << m_mouse_sensitivity << endl << vjDEBUG_FLUSH;
     vjDEBUG_END(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << endl << vjDEBUG_FLUSH;
 
+    mSleepTimeMS = c->getProperty("sleep_time");
+    if(mSleepTimeMS <  0)
+       mSleepTimeMS = 0;
+
     return true;
 }
 
@@ -110,7 +114,8 @@ void vjXWinKeyboard::controlLoop(void* nullParam)
    while(!mExitFlag)
    {
       sample();
-      usleep(100);
+      //usleep(25000);           // Sleep for 25 milliseconds (ie. max  hz)
+      usleep(mSleepTimeMS);
       //vjDEBUG(vjDBG_ALL,0) << "xwinKeyboard: loop\n" << vjDEBUG_FLUSH;
    }
 
@@ -160,19 +165,44 @@ int vjXWinKeyboard::onlyModifier(int mod)
 void vjXWinKeyboard::updateData()
 {
 vjGuard<vjMutex> guard(mKeysLock);      // Lock access to the m_keys array
+   if(mUpdKeysHasBeenCalled)
+   {
+      vjDEBUG(vjDBG_ALL,0)  << vjDEBUG_FLUSH;
+      mUpdKeysHasBeenCalled = false;
 
-   // Copy over values
-   for(unsigned int i=0;i<256;i++)
-      m_curKeys[i] = m_keys[i];
+      // Scale mouse values based on sensitivity
+      m_keys[VJMOUSE_POSX] = int(ftrunc(float(m_keys[VJMOUSE_POSX]) * m_mouse_sensitivity));
+      m_keys[VJMOUSE_NEGX] = int(ftrunc(float(m_keys[VJMOUSE_NEGX]) * m_mouse_sensitivity));
+      m_keys[VJMOUSE_POSY] = int(ftrunc(float(m_keys[VJMOUSE_POSY]) * m_mouse_sensitivity));
+      m_keys[VJMOUSE_NEGY] = int(ftrunc(float(m_keys[VJMOUSE_NEGY]) * m_mouse_sensitivity));
 
-   // Re-initialize the m_keys based on current key state in realKeys
-   // Set the initial state of the m_key key counts based on the current state of the system
-   for(unsigned int j = 0; j < 256; j++)
-      m_keys[j] = m_realkeys[j];
+      /*
+      vjDEBUG(vjDBG_ALL,0)   << "vjXWinKeyboard::updateData:" << instName << " -- "
+                             << "mouse_keys: px:" << m_keys[VJMOUSE_POSX]
+                                        << " nx:" << m_keys[VJMOUSE_NEGX]
+                                        << " py:" << m_keys[VJMOUSE_POSY]
+                                        << " ny:" << m_keys[VJMOUSE_NEGY] << endl << vjDEBUG_FLUSH;
+      */
+
+      // Copy over values
+      for(unsigned int i=0;i<256;i++)
+         m_curKeys[i] = m_keys[i];
+
+      // Re-initialize the m_keys based on current key state in realKeys
+      // Set the initial state of the m_key key counts based on the current state of the system
+      for(unsigned int j = 0; j < 256; j++)
+         m_keys[j] = m_realkeys[j];
+   }
 }
 
 void vjXWinKeyboard::updKeys()
 {
+// GUARD m_keys for duration of loop
+// Doing it here gives makes sure that we process all events and don't get only part of them for an update
+// In order to copy data over to the m_curKeys array
+vjGuard<vjMutex> guard(mKeysLock);      // Lock access to the m_keys array for the duration of this function
+   mUpdKeysHasBeenCalled = true;       // We have been called now
+
    XEvent event;
    KeySym key;
    int    vj_key;    // The key in vj space
@@ -184,12 +214,6 @@ void vjXWinKeyboard::updKeys()
                              ButtonReleaseMask | ButtonMotionMask |
                              PointerMotionMask, &event) )
    {
-      // GUARD m_keys for duration of loop
-      // Doing it here gives the input manager the opprotunity to interrupt the processing of a group of x-events
-      // In order to copy data over to the m_curKeys array
-      vjGuard<vjMutex> guard(mKeysLock);      // Lock access to the m_keys array for the duration of this function
-
-
       switch (event.type)
       {
       // A KeyPress event occurred.  Flag the key that was pressed (as a
@@ -313,7 +337,7 @@ void vjXWinKeyboard::updKeys()
 
                // Warp back to center, IF we are not there already
                // This prevents us from sending an event based on our XWarp event
-               if((dx != 0) && (dy != 0))
+               if((dx != 0) || (dy != 0))
                {
                   vjDEBUG(vjDBG_ALL,vjDBG_HVERB_LVL) << "CORRECTING: x:"
                                                      << setw(6) << dx
@@ -325,26 +349,17 @@ void vjXWinKeyboard::updKeys()
                }
             }
 
-            // Positive movement in the x direction.
+            // Update m_keys based on key pressed
             if ( dx > 0 ) {
-               m_keys[VJMOUSE_POSX] = int(ftrunc(float(dx) * m_mouse_sensitivity));
-               m_keys[VJMOUSE_NEGX] = 0;
-            }
-            // Negative movement in the x direction.
-            else if ( dx < 0 ) {
-               m_keys[VJMOUSE_NEGX] = int(ftrunc(float(-dx) * m_mouse_sensitivity));
-               m_keys[VJMOUSE_POSX] = 0;
+               m_keys[VJMOUSE_POSX] += dx;      // Positive movement in the x direction.
+            } else {
+               m_keys[VJMOUSE_NEGX] += -dx;     // Negative movement in the x direction.
             }
 
-            // Positive movement in the y direction.
             if ( dy > 0 ) {
-               m_keys[VJMOUSE_POSY] = int(ftrunc(float(dy) * m_mouse_sensitivity));
-               m_keys[VJMOUSE_NEGY] = 0;
-            }
-            // Negative movement in the y direction.
-            else {
-               m_keys[VJMOUSE_NEGY] = int(ftrunc(float(-dy) * m_mouse_sensitivity));
-               m_keys[VJMOUSE_POSY] = 0;
+               m_keys[VJMOUSE_POSY] += dy;      // Positive movement in the y direction.
+            } else {
+               m_keys[VJMOUSE_NEGY] += -dy;     // Negative movement in the y direction.
             }
          }
 
