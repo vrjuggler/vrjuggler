@@ -83,7 +83,7 @@ public:
    ConfigElementPtr get(const std::string& name) const;
 
    /** Returns all jccl::ConfigElement objects of a given type.
-    *  @param typeName The token of a ChunkDesc.
+    *  @param typeName The token of a config definition.
     *  @param elements Vector that will return with only the elements found of
     *                  the given type.
     */

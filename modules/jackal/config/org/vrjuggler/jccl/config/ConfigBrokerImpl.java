@@ -271,7 +271,7 @@ public class ConfigBrokerImpl
       List all_elts = getElements(context);
       List result = new ArrayList();
       
-      // Get the chunks embedded within the current element
+      // Get the elements embedded within the current element
       for (Iterator itr = all_elts.iterator(); itr.hasNext(); )
       {
          ConfigElement elt = (ConfigElement)itr.next();

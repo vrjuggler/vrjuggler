@@ -277,8 +277,8 @@ public class ConfigContextEditor
       chooser.setDefinitions(defs);
       int result = chooser.showDialog(this);
 
-      // If the user did not cancel their choice, make a new ConfigChunk for
-      // the chosen ConfigDefinition.
+      // If the user did not cancel their choice, make a new ConfigElement
+      // for the chosen ConfigDefinition.
       if (result == ConfigDefinitionChooser.APPROVE_OPTION)
       {
          ConfigElementFactory temp_factory = new ConfigElementFactory(defs);
