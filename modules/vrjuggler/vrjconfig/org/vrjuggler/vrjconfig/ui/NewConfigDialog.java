@@ -38,6 +38,7 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.table.*;
 
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
@@ -90,6 +91,7 @@ public class NewConfigDialog
 
       // Init the includes list
       includesList.setModel(includesTableModel);
+      includesList.getColumnModel().getColumn(0).setCellEditor(new FileCellEditor(fileChooser));
       includesTableModel.add(expandEnvVars(DEFAULT_DEFINITION_FILE));
 
       // Default to the user's home dir
@@ -555,4 +557,129 @@ public class NewConfigDialog
 
       private java.util.List mData = new ArrayList();
    }
+}
+
+/**
+ * Custom cell editor for editing a filename.
+ */
+class FileCellEditor
+   extends AbstractCellEditor
+   implements TableCellEditor
+{
+   /**
+    * Creates a new file cell editor that will use a default file chooser when
+    * the user chooses to select a file.
+    */
+   public FileCellEditor()
+   {
+      this(new JFileChooser());
+   }
+
+   /**
+    * Creates a new file cell editor that will use the given file chooser when
+    * the user chooses to select a file.
+    */
+   public FileCellEditor(JFileChooser chooser)
+   {
+      mChooser = chooser;
+
+      // Init the filename textfield
+      mFilenameTxt.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            stopCellEditing();
+         }
+      });
+
+      // Init the browse button
+      mBrowseBtn.setText("...");
+      mBrowseBtn.setMargin(new Insets(2, 2, 2, 2));
+      mBrowseBtn.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            // Point the file chooser at the directory containing the file that
+            // is the current value in the cell if it exists
+            File cur_file = new File((String)getCellEditorValue());
+            if (cur_file.exists())
+            {
+               if (! cur_file.isDirectory() && cur_file.getParentFile() != null)
+               {
+                  cur_file = cur_file.getParentFile();
+               }
+               mChooser.setCurrentDirectory(cur_file);
+            }
+
+            // Setup the file chooser options
+            mChooser.setMultiSelectionEnabled(false);
+            mChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            mChooser.setFileFilter(new FileFilter()
+            {
+               public boolean accept(File f)
+               {
+                  return f.getName().endsWith(".desc") || f.isDirectory();
+               }
+
+               public String getDescription()
+               {
+                  return "Configuration Definition Files (.desc)";
+               }
+            });
+
+
+            int result = mChooser.showOpenDialog((Component)evt.getSource());
+            if (result == JFileChooser.APPROVE_OPTION)
+            {
+               mFilenameTxt.setText(mChooser.getSelectedFile().getAbsolutePath());
+            }
+         }
+      });
+      mEditPnl.setLayout(new BorderLayout());
+      mEditPnl.add(mFilenameTxt, BorderLayout.CENTER);
+      mEditPnl.add(mBrowseBtn, BorderLayout.EAST);
+   }
+
+   public Component getTableCellEditorComponent(JTable table,
+                                                Object value,
+                                                boolean selected,
+                                                int row,
+                                                int col)
+   {
+      mFilenameTxt.setText((String)value);
+      mFilenameTxt.selectAll();
+      mFilenameTxt.requestFocus();
+      mEditPnl.revalidate();
+      return mEditPnl;
+   }
+
+   /**
+    * Editing is invalid if the file does not exist.
+    */
+   public boolean stopCellEditing()
+   {
+      File file = new File((String)getCellEditorValue());
+      if (! file.exists())
+      {
+         return false;
+      }
+      return super.stopCellEditing();
+   }
+
+   public Object getCellEditorValue()
+   {
+      return mFilenameTxt.getText();
+   }
+
+   /** The filename text field. */
+   private JTextField mFilenameTxt = new JTextField();
+
+   /** The browse button. */
+   private JButton mBrowseBtn = new JButton();
+
+   /** The panel containing the filename textfield and browse button. */
+   private JPanel mEditPnl = new JPanel();
+
+   /** The file chooser to use with this editor. */
+   private JFileChooser mChooser;
 }
