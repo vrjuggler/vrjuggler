@@ -37,6 +37,7 @@
 #include <vpr/vprConfig.h>
 
 #include <vpr/IO/Socket/Socket_t.h>
+#include <vpr/IO/Socket/SocketDatagramOpt.h>
 
 
 namespace vpr {
@@ -49,7 +50,9 @@ namespace vpr {
  * @author Kevin Meinert
  */
 template<class RealSocketDatagramImpl, class RealSocketDatagramImplParent>
-class SocketDatagram_t : public Socket_t<RealSocketDatagramImplParent> {
+class SocketDatagram_t : public Socket_t<RealSocketDatagramImplParent>,
+                         public SocketDatagramOpt
+{
 public:
     /**
      * Default constructor.
@@ -188,73 +191,21 @@ public:
                       timeout);
     }
 
-    /**
-     * Gets the multicast interface for this datagram socket.
-     */
-    inline bool
-    getMcastInterface (vpr::InetAddr& mcast_if) {
-        return m_socket_imp->getMcastInterface(mcast_if);
-    }
-
-    /**
-     * Sets the multicast interface for this datagram socket.
-     */
-    inline bool
-    setMcastInterface (const vpr::InetAddr& mcast_if) {
-        return m_socket_imp->setMcastInterface(mcast_if);
-    }
-
-    /**
-     * Gets the multicast time-to-live parameter for packets sent on this
-     * socket.
-     */
-    inline bool
-    getMcastTimeToLive (vpr::Uint8& ttl) {
-        return m_socket_imp->getMcastTimeToLive(ttl);
-    }
-
-    /**
-     * Sets the multicast time-to-live parameter for packets sent on this
-     * socket.
-     */
-    inline bool
-    setMcastTimeToLive (const vpr::Uint8 ttl) {
-        return m_socket_imp->setMcastTimeToLive(ttl);
-    }
-
-    /**
-     *
-     */
-    inline bool
-    getMcastLoopback (vpr::Uint8& loop) {
-        return m_socket_imp->getMcastLoopback(loop);
-    }
-
-    /**
-     *
-     */
-    inline bool
-    setMcastLoopback (const vpr::Uint8 loop) {
-        return m_socket_imp->setMcastLoopback(loop);
-    }
-
-    /**
-     *
-     */
-    inline bool
-    addMcastMember (const vpr::McastReq& request) {
-        return m_socket_imp->addMcastMember(request);
-    }
-
-    /**
-     *
-     */
-    inline bool
-    dropMcastMember (const vpr::McastReq& request) {
-        return m_socket_imp->dropMcastMember(request);
-    }
-
 protected:
+    virtual vpr::Status
+    getOption (const vpr::SocketOptions::Types option,
+               struct vpr::SocketOptions::Data& data)
+    {
+        return m_socket_dgram_imp.getOption(option, data);
+    }
+
+    virtual vpr::Status
+    setOption (const vpr::SocketOptions::Types option,
+               const struct vpr::SocketOptions::Data& data)
+    {
+        return m_socket_dgram_imp.setOption(option, data);
+    }
+
     /// Platform-specific datagram socket implementation object
     RealSocketDatagramImpl m_socket_dgram_imp;
 };

@@ -37,10 +37,10 @@
 
 #include <vpr/IO/Socket/InetAddr.h>
 #include <vpr/IO/Socket/McastReq.h>
+#include <vpr/Util/Status.h>
 
 
 namespace vpr {
-
 
 namespace SocketOptions {
     enum Types {
@@ -89,6 +89,34 @@ namespace SocketOptions {
         McastReq      mcast_add_member;
         McastReq      mcast_drop_member;
     };
+};
+
+class VPR_CLASS_API SocketOptionWrapper {
+protected:
+    /**
+     * Retrieves the value for the given option as set on the socket.
+     *
+     * @param option The option to be queried.
+     * @param data   A data buffer that will be used to store the value of the
+     *               given option.
+     *
+     * @return vpr::Status::Success is returned if the value for the given
+     *         option was retrieved successfully.<br>
+     *         vpr::Status;:Failure is returned otherwise.
+     */
+    virtual vpr::Status getOption(const vpr::SocketOptions::Types option,
+                                  struct vpr::SocketOptions::Data& data) = 0;
+
+    /**
+     * Sets a value for the given option on the socket using the given data
+     * block.
+     *
+     * @param option The option whose value will be set.
+     * @param data   A data buffer containing the value to be used in setting
+     *               the socket option.
+     */
+    virtual vpr::Status setOption(const vpr::SocketOptions::Types option,
+                                  const struct vpr::SocketOptions::Data& data) = 0;
 };
 
 }; // End of vpr namespace

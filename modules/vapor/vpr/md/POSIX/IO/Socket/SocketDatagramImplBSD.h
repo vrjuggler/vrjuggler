@@ -36,7 +36,6 @@
 #include <string>
 
 #include <vpr/md/POSIX/IO/Socket/SocketImplBSD.h>
-#include <vpr/IO/Socket/SocketDatagramOpt.h>
 
 
 namespace vpr {
@@ -46,7 +45,7 @@ namespace vpr {
  *
  * @author Patrick Hartling
  */
-class SocketDatagramImplBSD : public SocketDatagramOpt, public SocketImplBSD {
+class SocketDatagramImplBSD : public SocketImplBSD {
 public:
     typedef SocketImplBSD Parent;
 
@@ -118,21 +117,6 @@ public:
                           const int flags, const InetAddr& to,
                           ssize_t& bytes_sent,
                           const vpr::Interval timeout = vpr::Interval::NoTimeout);
-
-protected:
-    virtual Status
-    getOption (const SocketOptions::Types option,
-               struct SocketOptions::Data& data)
-    {
-        return SocketImplBSD::getOption(option, data);
-    }
-
-    virtual Status
-    setOption (const SocketOptions::Types option,
-               const struct SocketOptions::Data& data)
-    {
-        return SocketImplBSD::setOption(option, data);
-    }
 };
 
 }; // End of namespace

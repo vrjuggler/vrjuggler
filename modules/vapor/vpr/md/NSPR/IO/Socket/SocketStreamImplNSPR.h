@@ -38,13 +38,11 @@
 #include <prio.h>
 
 #include <vpr/md/NSPR/IO/Socket/SocketImplNSPR.h>
-#include <vpr/IO/Socket/SocketStreamOpt.h>
 #include <vpr/Util/Debug.h>
 
 namespace vpr {
 
-class VPR_CLASS_API SocketStreamImplNSPR : public SocketStreamOpt,
-                                           public SocketImplNSPR
+class VPR_CLASS_API SocketStreamImplNSPR : public SocketImplNSPR
 {
 public:
     // ========================================================================
@@ -111,31 +109,8 @@ public:
     //       with the remote site.
     //
     // Returns:
-    //
-    // Note:
-    //     This is a blocking call and will block until a connection is
-    //     established.
     // ------------------------------------------------------------------------
     virtual Status accept(SocketStreamImplNSPR& sock, const vpr::Interval timeout = vpr::Interval::NoTimeout);
-
-protected:
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    virtual Status
-    getOption (const SocketOptions::Types option,
-               struct SocketOptions::Data& data)
-    {
-        return SocketImplNSPR::getOption(option, data);
-    }
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    virtual Status
-    setOption (const SocketOptions::Types option,
-               const struct SocketOptions::Data& data)
-    {
-        return SocketImplNSPR::setOption(option, data);
-    }
 };
 
 }; // End of vpr namespace

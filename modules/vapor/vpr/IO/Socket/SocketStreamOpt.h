@@ -33,7 +33,12 @@
 #ifndef _VPR_SOCKET_STREAM_OPT_H_
 #define _VPR_SOCKET_STREAM_OPT_H_
 
+#include <vpr/vprConfig.h>
+
+#include <vpr/vprTypes.h>
+#include <vpr/IO/Socket/SocketOptions.h>
 #include <vpr/IO/Socket/SocketIpOpt.h>
+#include <vpr/Util/Status.h>
 
 
 namespace vpr {
@@ -43,17 +48,17 @@ namespace vpr {
  *
  * @author Patrick Hartling
  */
-class VPR_CLASS_API SocketStreamOpt : public SocketIpOpt {
+class VPR_CLASS_API SocketStreamOpt : public vpr::SocketOptionWrapper {
 public:
     /**
      *
      */
-    inline Status
-    getMaxSegmentSize (Int32& size) {
-        SocketOptions::Data option;
-        Status retval;
+    inline vpr::Status
+    getMaxSegmentSize (vpr::Int32& size) {
+        vpr::SocketOptions::Data option;
+        vpr::Status retval;
 
-        retval = getOption(SocketOptions::MaxSegment, option);
+        retval = getOption(vpr::SocketOptions::MaxSegment, option);
 
         if ( retval.success() ) {
             size = option.max_segment;
@@ -65,11 +70,11 @@ public:
     /**
      *
      */
-    inline Status
-    setMaxSegmentSize (const Int32 size) {
-        SocketOptions::Data option;
+    inline vpr::Status
+    setMaxSegmentSize (const vpr::Int32 size) {
+        vpr::SocketOptions::Data option;
         option.max_segment = size;
-        return setOption(SocketOptions::MaxSegment, option);
+        return setOption(vpr::SocketOptions::MaxSegment, option);
     }
 
     /**
@@ -83,12 +88,12 @@ public:
      *                segements.  Otherwise, the Nagel alorithm is delaying
      *                the transmission.
      */
-    inline Status
+    inline vpr::Status
     getNoDelay (bool& enabled) {
-        SocketOptions::Data option;
-        Status retval;
+        vpr::SocketOptions::Data option;
+        vpr::Status retval;
 
-        retval = getOption(SocketOptions::NoDelay, option);
+        retval = getOption(vpr::SocketOptions::NoDelay, option);
 
         if ( retval.success() ) {
             enabled = option.no_delay;
@@ -104,11 +109,11 @@ public:
      * @param enable_val The Boolean enable/disable state for no-delay on this
      *                   socket.
      */
-    inline Status
+    inline vpr::Status
     setNoDelay (const bool enable_val) {
-        SocketOptions::Data option;
+        vpr::SocketOptions::Data option;
         option.no_delay = enable_val;
-        return setOption(SocketOptions::NoDelay, option);
+        return setOption(vpr::SocketOptions::NoDelay, option);
     }
 };
 

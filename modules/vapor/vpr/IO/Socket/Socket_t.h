@@ -40,6 +40,8 @@
 
 #include <vpr/IO/BlockIO.h> // base class.
 #include <vpr/IO/IOSys.h>
+#include <vpr/IO/Socket/SocketOptions.h>
+#include <vpr/IO/Socket/SocketIpOpt.h>
 
 #include <vpr/Util/Interval.h>
 #include <vpr/Util/Status.h>
@@ -65,7 +67,7 @@ namespace vpr {
  * @see vpr::SocketDatagram_t
  */
 template<class RealSocketImpl, class IO_STATS_STRATEGY = NullIOStatsStrategy>
-class Socket_t : public vpr::BlockIO {
+class Socket_t : public vpr::BlockIO, public vpr::SocketIpOpt {
 public:
     // ========================================================================
     // Block I/O interface.
@@ -78,7 +80,8 @@ public:
      * @pre None.
      * @post
      *
-     * @return An object containing the "name" of this socket.*/
+     * @return An object containing the "name" of this socket.
+     */
     virtual const std::string&
     getName (void) {
         return m_socket_imp->getName();
@@ -176,7 +179,7 @@ public:
     }
 
     /// Gets the handle to this socket
-    IOSys::Handle getHandle()
+    vpr::IOSys::Handle getHandle()
     {
         return m_socket_imp->getHandle();
     }
@@ -652,123 +655,6 @@ public:
        return m_socket_imp->setRemoteAddr(addr);
     }
 
-    /**
-     *
-     */
-    inline vpr::Status
-    getKeepAlive (bool& enabled) const {
-        return m_socket_imp->getKeepAlive(enabled);
-    }
-
-    /**
-     *
-     */
-    inline vpr::Status
-    setKeepAlive (const bool enable_val) {
-        return m_socket_imp->setKeepAlive(enable_val);
-    }
-
-    /**
-     *
-     */
-    inline vpr::Status
-    getLingerOnClose (bool& enabled, int& linger_sec) const {
-        return m_socket_imp->getLingerOnClose(enabled, linger_sec);
-    }
-
-    /**
-     *
-     */
-    inline vpr::Status
-    setLingerOnClose (const bool enable_val, const int linger_sec) {
-        return m_socket_imp->setLingerOnClose(enable_val, linger_sec);
-    }
-
-    /**
-     *
-     */
-    inline vpr::Status
-    getRecvBufferSize (Int32& size) const {
-        return m_socket_imp->getRecvBufferSize(size);
-    }
-
-    /**
-     *
-     */
-    inline vpr::Status
-    setRecvBufferSize (const Int32 size) {
-        return m_socket_imp->setRecvBufferSize(size);
-    }
-
-    /**
-     *  the default max size that you can send using this socket
-     *  you can change the max size with setSendBufferSize
-     */
-    inline vpr::Status
-    getSendBufferSize (int& size) const {
-        return m_socket_imp->getSendBufferSize(size);
-    }
-
-    /**
-     *
-     */
-    inline vpr::Status
-    setSendBufferSize (const Int32 size) {
-        return m_socket_imp->setSendBufferSize(size);
-    }
-
-    /**
-     *
-     */
-    inline vpr::Status
-    getReuseAddr (bool& enabled) const {
-        return m_socket_imp->getReuseAddr(enabled);
-    }
-
-    /**
-     * Enables reuse of the address that will be bound by this socket.
-     *
-     * @pre The socket has been opened, but bind() has not been called.
-     */
-    inline vpr::Status
-    setReuseAddr (const bool enable_val) {
-        return m_socket_imp->setReuseAddr(enable_val);
-    }
-
-#ifdef FIX_TOS_LATER
-    /**
-     *
-     */
-    inline vpr::Status
-    getTypeOfService (SocketOptions::TypeOfService& tos) {
-        return m_socket_imp->getTypeOfService(tos);
-    }
-
-    /**
-     *
-     */
-    inline vpr::Status
-    setTypeOfService (const SocketOptions::TypeOfService& tos) {
-        return m_socket_imp->setTypeOfService(tos);
-    }
-#endif
-
-    /**
-     *
-     */
-    inline vpr::Status
-    getTimeToLive (Int32& ttl) {
-        return m_socket_imp->getTimeToLive(ttl);
-    }
-
-    /**
-     *
-     */
-    inline vpr::Status
-    setTimeToLive (const Int32 ttl) {
-        return m_socket_imp->setTimeToLive(ttl);
-    }
-
 protected:
     /**
      * Default constructor.  The socket address is set to "INADDRY_ANY", and
@@ -926,6 +812,20 @@ protected:
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         return m_socket_imp->write_i(buffer, length, bytes_written, timeout);
+    }
+
+    virtual vpr::Status
+    getOption (const vpr::SocketOptions::Types option,
+               struct vpr::SocketOptions::Data& data)
+    {
+        return m_socket_imp->getOption(option, data);
+    }
+
+    virtual vpr::Status
+    setOption (const vpr::SocketOptions::Types option,
+               const struct vpr::SocketOptions::Data& data)
+    {
+        return m_socket_imp->setOption(option, data);
     }
 
     /// Platform-specific socket implementation object

@@ -37,7 +37,9 @@
 #include <vpr/vprConfig.h>
 
 #include <vpr/Util/Status.h>
+#include <vpr/IO/Socket/SocketStreamOpt.h>
 #include <vpr/IO/Socket/Socket_t.h> /* base bridge class.. */
+
 
 namespace vpr {
 
@@ -49,7 +51,9 @@ namespace vpr {
  * @author Kevin Meinert
  */
 template<class RealSocketStreamImpl, class RealSocketStreamImplParent, class IO_STATS_STRATEGY = NullIOStatsStrategy>
-class SocketStream_t : public Socket_t<RealSocketStreamImplParent, IO_STATS_STRATEGY> {
+class SocketStream_t : public Socket_t<RealSocketStreamImplParent, IO_STATS_STRATEGY>,
+                       public SocketStreamOpt
+{
 public:
     /**
      * Default constructor.
@@ -193,50 +197,6 @@ public:
         return status;
     }
 
-    /**
-     *
-     */
-    inline vpr::Status
-    getMaxSegmentSize (vpr::Int32& size) const {
-        return m_socket_stream_imp.getMaxSegmentSize(size);
-    }
-
-    /**
-     *
-     */
-    inline vpr::Status
-    setMaxSegmentSize (const vpr::Int32 size) {
-        return m_socket_stream_imp.setMaxSegmentSize(size);
-    }
-
-    /**
-     * Gets the current no-delay status for this socket.  If no-delay is true,
-     * then the Nagel algorithm has been disabled.
-     *
-     * @param enabled A reference to a <code>bool</code> variable to be used as
-     *                storage for the current no-delay enable state.  If the
-     *                value is <code>true</code>, the Nagel algorithm is
-     *                <i>not</i> being used to delay the transmission of TCP
-     *                segements.  Otherwise, the Nagel alorithm is delaying
-     *                the transmission.
-     */
-    inline vpr::Status
-    getNoDelay (bool& enabled) const {
-        return m_socket_stream_imp.getNoDelay(enabled);
-    }
-
-    /**
-     * Sets the current no-delay status for this socket.  If no-delay is true,
-     * then the Nagel algorithm will be disabled.
-     *
-     * @param enable_val The Boolean enable/disable state for no-delay on this
-     *                   socket.
-     */
-    inline vpr::Status
-    setNoDelay (const bool enable_val) {
-        return m_socket_stream_imp.setNoDelay(enable_val);
-    }
-
 protected:
     /**
      * Constructor.  Create a vpr::SocketStream object using the given
@@ -251,6 +211,20 @@ protected:
         : Socket_t<RealSocketStreamImplParent>(), m_socket_stream_imp(*sock_imp)
     {
         m_socket_imp = &m_socket_stream_imp;
+    }
+
+    virtual vpr::Status
+    getOption (const vpr::SocketOptions::Types option,
+               struct vpr::SocketOptions::Data& data)
+    {
+        return m_socket_stream_imp.getOption(option, data);
+    }
+
+    virtual vpr::Status
+    setOption (const vpr::SocketOptions::Types option,
+               const struct vpr::SocketOptions::Data& data)
+    {
+        return m_socket_stream_imp.setOption(option, data);
     }
 
     /// Platform-specific stream socket implementation
