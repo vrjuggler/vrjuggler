@@ -101,16 +101,13 @@ public class IntersensePanel extends JPanel implements CustomEditor
                   
                   ListSelectionModel lsm = (ListSelectionModel)e.getSource();
                   
-                  if (lsm.isSelectionEmpty())
-                  {
-                     // Do Nothing
-                  }
-                  else
+                  if (!lsm.isSelectionEmpty())
                   {
                      int selectedRow = lsm.getMinSelectionIndex();
                      Object value = mStationsTable.getModel().getValueAt(selectedRow, 0);
                      StationModel station_model = (StationModel)value;
                      mProxyTree.setModel(station_model.getProxyModel());
+                     mProxyTree.expandAll(true);
                   }
                }
             });
@@ -182,6 +179,7 @@ public class IntersensePanel extends JPanel implements CustomEditor
       // TODO: Make it display nothing by default.
       StationModel station_model = (StationModel)mModel.getStationModels().get(0);
       mProxyTree.setModel((DefaultTreeModel)station_model.getProxyModel());
+      mProxyTree.expandAll(true);
    }
 
    /**

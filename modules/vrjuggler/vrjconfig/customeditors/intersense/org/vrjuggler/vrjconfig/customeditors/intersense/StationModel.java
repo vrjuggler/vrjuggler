@@ -34,12 +34,13 @@ package org.vrjuggler.vrjconfig.customeditors.intersense;
 import javax.swing.tree.*;
 import java.util.*;
 import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.config.event.*;
 import org.vrjuggler.jccl.editors.*;
 
 /**
  * Represents a single Intersense tracker station.
  */
-public class StationModel
+public class StationModel implements ConfigElementListener
 {
    /** ConfigElement for this station. */
    private ConfigElement        mStationElement         = null;
@@ -88,6 +89,8 @@ public class StationModel
       mStationElement = elm;
       mStationContext = context;
 
+      mStationElement.addConfigElementListener(this);
+
       System.out.println("=======================================");
       System.out.println("Parsing ISense Station Element: " + elm.getName());
       System.out.println("=======================================");
@@ -129,8 +132,143 @@ public class StationModel
     */
    public void setName(String name)
    {
-      mStationName = name;
       mStationElement.setName(mStationName);
+   }
+
+   /**
+    * Return the station index of this Intersense station.
+    */
+   int getStationIndex()
+   {
+      return mStationIndex;
+   }
+
+   /**
+    * ConfigElementListener interface to catch all changes in existing proxies by
+    * calling a helper method, elementChanged.
+    *
+    * @see ConfigElementListener
+    * @see #elementChanged
+    */
+   public void nameChanged(ConfigElementEvent evt)
+   {
+      ConfigElement elm = (ConfigElement)evt.getSource();
+      if(elm == mStationElement)
+      {
+         mStationName = elm.getName();
+      }
+   }
+   public void propertyValueChanged(ConfigElementEvent evt)
+   {
+      ConfigElement elm = (ConfigElement)evt.getSource();
+      String token = elm.getDefinition().getToken();
+
+      if(token.equals("intersense_station") && elm == mStationElement)
+      {
+         if(evt.getProperty().equals("digital_count"))
+         {
+            mDigitalCount = ((Integer)mStationElement.getProperty("digital_count", 0)).intValue();
+         }
+         else if(evt.getProperty().equals("analog_count"))
+         {
+            mAnalogCount = ((Integer)mStationElement.getProperty("analog_count", 0)).intValue();
+         }
+         else if(evt.getProperty().equals("digital_first"))
+         {
+            int new_first = ((Integer)evt.getValue()).intValue();
+            int delta = new_first - mDigitalFirst;
+         
+            List proxies = findDigitalProxies();
+            for(Iterator itr = proxies.iterator() ; itr.hasNext() ; )
+            {
+               ConfigElement temp_proxy = (ConfigElement)itr.next();
+               int unit = ((Integer)temp_proxy.getProperty("unit", 0)).intValue();
+               temp_proxy.setProperty("unit", 0, new Integer(unit + delta));
+            }
+         
+            mDigitalFirst += delta;
+            mProxyModel.rebuildTree();
+         }
+         else if(evt.getProperty().equals("analog_first"))
+         {
+            int new_first = ((Integer)evt.getValue()).intValue();
+            int delta = new_first - mAnalogFirst;
+         
+            List proxies = findAnalogProxies();
+            for(Iterator itr = proxies.iterator() ; itr.hasNext() ; )
+            {
+               ConfigElement temp_proxy = (ConfigElement)itr.next();
+               int unit = ((Integer)temp_proxy.getProperty("unit", 0)).intValue();
+               temp_proxy.setProperty("unit", 0, new Integer(unit + delta));
+            }
+         
+            mAnalogFirst += delta;
+            mProxyModel.rebuildTree();
+         }
+
+      }
+   }
+   public void propertyValueAdded(ConfigElementEvent evt)
+   {;}
+   public void propertyValueRemoved(ConfigElementEvent evt)
+   {;}
+   
+   /**
+    * Return the index of the starting location in the digital buffer.
+    */
+   public int getDigitalFirst()
+   {
+      return mDigitalFirst;
+   }
+
+   public void setDigitalFirst(int first)
+   {
+      mStationElement.setProperty("digital_first", 0, new Integer(first));
+   }
+
+   /**
+    * Return the number of digital inputs.
+    */
+   public int getDigitalCount()
+   {
+      return mDigitalCount;
+   }
+   
+   /**
+    * Set the number of digital inputs.
+    */
+   public void setDigitalCount(int num)
+   {
+      mStationElement.setProperty("digital_count", 0, new Integer(num));
+   }
+   
+   /**
+    * Return the index of the starting location in the analog buffer.
+    */
+   public int getAnalogFirst()
+   {
+      return mAnalogFirst;
+   }
+   
+   public void setAnalogFirst(int first)
+   {
+      mStationElement.setProperty("analog_first", 0, new Integer(first));
+   }
+   
+   /**
+    * Return the number of analog inputs.
+    */
+   public int getAnalogCount()
+   {
+      return mAnalogCount;
+   }
+   
+   /**
+    * Set the number of analog inputs.
+    */
+   public void setAnalogCount(int num)
+   {
+      mStationElement.setProperty("analog_count", 0, new Integer(num));
    }
 
    /**
@@ -171,25 +309,24 @@ public class StationModel
    {
       List digital_proxies = new ArrayList();
       
-      List elms = getBroker().getElements(mStationContext);
+      List elms = getBroker().getElementsIncludingEmbedded(mStationContext);
       List proxies = ConfigUtilities.getElementsWithDefinition(elms, "digital_proxy");
 
       for(Iterator itr = proxies.iterator() ; itr.hasNext() ; )
       {
          ConfigElement elm = (ConfigElement)itr.next();
          
-         ConfigElementPointer device = (ConfigElementPointer)elm.getProperty("device", 0);
-
+         String device_name = ((ConfigElementPointer)elm.getProperty("device", 0)).getTarget();
          int unit = ((Integer)elm.getProperty("unit", 0)).intValue();
          
          //System.out.println("Device: " + device + " Unit: " + unit);
          //System.out.println("Name: " + mISenseElement.getName() + " Index: " + mStationIndex);
          
-         if(mUseDigital && device.getTarget().equals(mISenseElement.getName()))
+         if(mUseDigital && device_name.equals(mISenseElement.getName()))
          {
-            if(unit >= mDigitalFirst && unit <= (mDigitalFirst + mDigitalCount))
+            if(unit >= mDigitalFirst && unit < (mDigitalFirst + mDigitalCount))
             {
-               System.out.println("Matched Proxy: " + elm.getName());
+               //System.out.println("Matched Proxy: " + elm.getName());
                digital_proxies.add(elm);
             }
          }
@@ -201,25 +338,24 @@ public class StationModel
    {
       List analog_proxies = new ArrayList();
       
-      List elms = getBroker().getElements(mStationContext);
+      List elms = getBroker().getElementsIncludingEmbedded(mStationContext);
       List proxies = ConfigUtilities.getElementsWithDefinition(elms, "analog_proxy");
 
       for(Iterator itr = proxies.iterator() ; itr.hasNext() ; )
       {
          ConfigElement elm = (ConfigElement)itr.next();
          
-         ConfigElementPointer device = (ConfigElementPointer)elm.getProperty("device", 0);
-
+         String device_name = ((ConfigElementPointer)elm.getProperty("device", 0)).getTarget();
          int unit = ((Integer)elm.getProperty("unit", 0)).intValue();
          
          //System.out.println("Device: " + device + " Unit: " + unit);
          //System.out.println("Name: " + mISenseElement.getName() + " Index: " + mStationIndex);
          
-         if(mUseAnalog && device.getTarget().equals(mISenseElement.getName()))
+         if(mUseAnalog && device_name.equals(mISenseElement.getName()))
          {
-            if(unit >= mAnalogFirst && unit <= (mAnalogFirst + mAnalogCount))
+            if(unit >= mAnalogFirst && unit < (mAnalogFirst + mAnalogCount))
             {
-               System.out.println("Matched Proxy: " + elm.getName());
+               //System.out.println("Matched Proxy: " + elm.getName());
                analog_proxies.add(elm);
             }
          }
@@ -231,26 +367,25 @@ public class StationModel
    {
       List position_proxies = new ArrayList();
       
-      List elms = getBroker().getElements(mStationContext);
+      List elms = getBroker().getElementsIncludingEmbedded(mStationContext);
       List proxies = ConfigUtilities.getElementsWithDefinition(elms, "position_proxy");
 
       for(Iterator itr = proxies.iterator() ; itr.hasNext() ; )
       {
          ConfigElement elm = (ConfigElement)itr.next();
          
-         ConfigElementPointer device = (ConfigElementPointer)elm.getProperty("device", 0);
-
+         String device_name = ((ConfigElementPointer)elm.getProperty("device", 0)).getTarget();
          int unit = ((Integer)elm.getProperty("unit", 0)).intValue();
          
          //System.out.println("Device: " + device + " Unit: " + unit);
          //System.out.println("Name: " + mISenseElement.getName() + " Index: " + mStationIndex);
          
          
-         if(device.getTarget().equals(mISenseElement.getName()))
+         if(device_name.equals(mISenseElement.getName()))
          {
             if(unit == mStationIndex)
             {
-               System.out.println("Matched Proxy: " + elm.getName());
+               //System.out.println("Matched Proxy: " + elm.getName());
                position_proxies.add(elm);
             }
          }

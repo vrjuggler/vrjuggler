@@ -67,6 +67,13 @@ public class ProxyTreeModel extends DefaultTreeModel
 
    /** ConfigContext that all active ConfigElements reside in. */
    private ConfigContext        mContext                = null;
+      
+   /** Nodes that represent the digital units. */
+   private List                 mDigitalButtonNodes     = null;
+   
+   /** Nodes that represent the analog units. */
+   private List                 mAnalogButtonNodes      = null;
+      
 
    /**
     * Constructor used for testing.
@@ -88,6 +95,15 @@ public class ProxyTreeModel extends DefaultTreeModel
       mContext = context;
       mStationModel = model;
       mISenseElement = isense_elm;
+      rebuildTree();
+   }
+
+   public void rebuildTree()
+   {  
+      mAnalogButtonNodes      = new ArrayList();
+      mDigitalButtonNodes     = new ArrayList();
+
+      System.out.println("Building Tree");
       
       // Find all proxies pointing at this station.
       mPositionProxies = mStationModel.findPositionProxies();
@@ -97,51 +113,52 @@ public class ProxyTreeModel extends DefaultTreeModel
       // Create root node with the name of the station.
       DefaultMutableTreeNode root_node = new DefaultMutableTreeNode(mStationModel.getName());
       
-      //XXX: HACK this should not be 0, but the station index.
       // Create category nodes for position, digital, and analog.
       mPositionNode = new DefaultMutableTreeNode(new DeviceUnit("Position Proxies",
                                                                 mISenseElement.getName(),
-                                                                "position_proxy", 0));
+                                                                "position_proxy",
+                                                                mStationModel.getStationIndex()));
       mDigitalNode = new DefaultMutableTreeNode(new ProxyType("Digital Proxies", "digital_proxy"));
       mAnalogNode = new DefaultMutableTreeNode(new ProxyType("Analog Proxies", "analog_proxy"));
 
-      // Create lists that contain the nodes that represent 
-      // the different digital and analog units.
-      List mDigitalButtonNodes = new ArrayList();
-      List mAnalogButtonNodes = new ArrayList();
-      
       // XXX: Hard coding for 4 buttons right now.
       // For each button add a node.
+      int digital_first = mStationModel.getDigitalFirst();
       for(int i = 0 ; i < 4 ; ++i)
       {
          DefaultMutableTreeNode button_node = new DefaultMutableTreeNode(
                new DeviceUnit("Button " + Integer.toString(i), 
                               mISenseElement.getName(),
-                              "digital_proxy", i));
+                              "digital_proxy",
+                              digital_first + i));
          mDigitalNode.add(button_node);
          mDigitalButtonNodes.add(button_node);
       }
+
       // Add in the joysitck and trigger buttons with special names.
       DefaultMutableTreeNode joystick_node = new DefaultMutableTreeNode(
-            new DeviceUnit("Joystick", mISenseElement.getName(), "digital_proxy", 4));
+            new DeviceUnit("Joystick", mISenseElement.getName(), "digital_proxy",
+                           digital_first + 4));
       mDigitalNode.add(joystick_node);
       mDigitalButtonNodes.add(joystick_node);
          
       DefaultMutableTreeNode trigger_node = new DefaultMutableTreeNode(
-            new DeviceUnit("Trigger", mISenseElement.getName(), "digital_proxy", 5));
+            new DeviceUnit("Trigger", mISenseElement.getName(), "digital_proxy",
+                           digital_first + 5));
       mDigitalNode.add(trigger_node);
       mDigitalButtonNodes.add(trigger_node);
 
 
-      
       // XXX: Hard coding for 2 analogs right now.
       // For each button add a node.
+      int analog_first = mStationModel.getAnalogFirst();
       for(int i = 0 ; i < 2 ; ++i)
       {
          DefaultMutableTreeNode ana_node = new DefaultMutableTreeNode(
                new DeviceUnit("Analog " + Integer.toString(i),
                               mISenseElement.getName(),
-                              "analog_proxy", i));
+                              "analog_proxy",
+                              analog_first + i));
          mAnalogNode.add(ana_node);
          mAnalogButtonNodes.add(ana_node);
       }
@@ -166,11 +183,9 @@ public class ProxyTreeModel extends DefaultTreeModel
          DefaultMutableTreeNode dig_node = new DefaultMutableTreeNode(dig_elm);
          
          int unit = ((Integer)dig_elm.getProperty("unit", 0)).intValue();
-         if(unit < 0 || unit >= 5)
-         {
-            System.out.println("Invalid unit number: " + unit);
-         }
-         else
+         unit = unit - mStationModel.getDigitalFirst();
+         
+         if(unit >= 0 && unit < mDigitalButtonNodes.size())
          {
             ((DefaultMutableTreeNode)mDigitalButtonNodes.get(unit)).add(dig_node);
          }
@@ -183,11 +198,8 @@ public class ProxyTreeModel extends DefaultTreeModel
          DefaultMutableTreeNode ana_node = new DefaultMutableTreeNode(ana_elm);
          
          int unit = ((Integer)ana_elm.getProperty("unit", 0)).intValue();
-         if(unit < 0 || unit >= 2)
-         {
-            System.out.println("Invalid unit number: " + unit);
-         }
-         else
+         unit = unit - mStationModel.getAnalogFirst();
+         if(unit >= 0 && unit < mAnalogButtonNodes.size())
          {
             ((DefaultMutableTreeNode)mAnalogButtonNodes.get(unit)).add(ana_node);
          }
@@ -214,6 +226,38 @@ public class ProxyTreeModel extends DefaultTreeModel
       return mContext;
    }
 
+   /**
+    * Gets a list of all the tree nodes that contain the given Object.
+    */
+   protected List getNodesFor(Object obj)
+   {
+      return getNodesFor(obj, (DefaultMutableTreeNode)getRoot());
+   }
+
+   /**
+    * Recursive helper for getNodesFor(Object).
+    *
+    * @see #getNodesFor(Object)
+    */
+   private List getNodesFor(Object obj, DefaultMutableTreeNode node)
+   {
+      List results = new ArrayList();
+
+      // Check if we found a match
+      if (node.getUserObject().equals(obj))
+      {
+         results.add(node);
+      }
+
+      // Check all children of the current node
+      for (Enumeration e = node.children(); e.hasMoreElements(); )
+      {
+         DefaultMutableTreeNode child = (DefaultMutableTreeNode)e.nextElement();
+         results.addAll(getNodesFor(obj, child));
+      }
+
+      return results;
+   }
 
    /**
     * IntersenseModelListener method that gets called whenever a new proxy 
@@ -222,20 +266,41 @@ public class ProxyTreeModel extends DefaultTreeModel
    public void proxyAdded(IntersenseModelEvent evt)
    {
       ConfigElement elm = evt.getElement();
+      
+      int unit = ((Integer)elm.getProperty("unit", 0)).intValue();
+      
       DefaultMutableTreeNode parent = null;
         
+      
       // Get the appropriate parent.
       if(evt.getToken().equals("digital_proxy"))
       {
-         parent = (DefaultMutableTreeNode)mDigitalNode.getChildAt(evt.getUnitNumber());
+         unit = unit - mStationModel.getDigitalFirst();
+         if(unit >= 0 && unit < mDigitalButtonNodes.size())
+         {
+            parent = (DefaultMutableTreeNode)mDigitalNode.getChildAt(unit);
+         }
       }
       else if(evt.getToken().equals("analog_proxy"))
       {
-         parent = (DefaultMutableTreeNode)mAnalogNode.getChildAt(evt.getUnitNumber());
+         unit = unit - mStationModel.getAnalogFirst();
+         if(unit >= 0 && unit < mAnalogButtonNodes.size())
+         {
+            parent = (DefaultMutableTreeNode)mAnalogNode.getChildAt(unit);
+         }
       }
       else if(evt.getToken().equals("position_proxy"))
       {
-         parent = (DefaultMutableTreeNode)mPositionNode;
+         if(unit == mStationModel.getStationIndex())
+         {
+            parent = (DefaultMutableTreeNode)mPositionNode;
+         }
+      }
+
+      // If we don't have the parent of this new proxy return.
+      if(null == parent)
+      {
+         return;
       }
         
       // If we already have this child skip it.
@@ -249,10 +314,8 @@ public class ProxyTreeModel extends DefaultTreeModel
          }
       }
       
-      // Create a new child for this proxy.
+      // Create a new child for this proxy and add it to the correct parent.
       DefaultMutableTreeNode new_child = new DefaultMutableTreeNode(elm);
-      
-      System.out.println("Adding proxy...");
       parent.add(new_child);
 
       // Inform the JTree that the structure has changed.
@@ -261,7 +324,7 @@ public class ProxyTreeModel extends DefaultTreeModel
 
    /**
     * IntersenseModelListener method that gets called whenever a new proxy 
-    * for this Intersense is removed..
+    * for this Intersense is removed.
     */
    public void proxyRemoved(IntersenseModelEvent evt)
    {
@@ -296,8 +359,7 @@ public class ProxyTreeModel extends DefaultTreeModel
          }
       }
    }
-   
-  
+
    /** Reference to the ConfigBroker used in this object. */
    private ConfigBroker mBroker = null;
    
