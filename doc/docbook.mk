@@ -112,6 +112,12 @@ chunk-html:
             $(SAXON) -i $$cur_dir/$$file -xsl $(XSL_DIR)/html/chunk.xsl \
               $(SAXON_HTML_PARAMS) $(EXTRA_SAXON_HTML_PARAMS) ; \
             cd $$cur_dir ; \
+ifdef INSTALL_FILES
+            cp $(INSTALL_FILES) $$dir ; \
+endif
+ifdef INSTALL_DIRS
+            cp -r $(INSTALL_DIRS) $$dir ; \
+endif
         done
 
 pdf: $(LINK_DEPS) $(PDF_FILES)
