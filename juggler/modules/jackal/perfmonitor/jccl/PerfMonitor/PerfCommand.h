@@ -40,23 +40,28 @@
 #include <jccl/jcclConfig.h>
 #include <jccl/JackalServer/Command.h>
 
-namespace jccl {
+namespace jccl
+{
 
 
-    //------------------ PerfManager Commands --------------------------
+//------------------ PerfManager Commands --------------------------
 
-    class LabeledPerfDataBuffer;
+class LabeledPerfDataBuffer;
 
-    class CommandWriteLabeledPerfData: public PeriodicCommand {
-    public:
-        static const std::string protocol_name;
+class CommandWriteLabeledPerfData: public PeriodicCommand
+{
+public:
+
+   static const std::string protocol_name;
         
-        CommandWriteLabeledPerfData (float _refresh_time);
+   CommandWriteLabeledPerfData (float _refresh_time);
         
-        virtual void call (std::ostream& out) const;
+   virtual void call (std::ostream& out) const;
         
-        virtual const std::string& getProtocolName () const;
-    };
+   virtual const std::string& getProtocolName () const;
+
+};
+
 
 };
 

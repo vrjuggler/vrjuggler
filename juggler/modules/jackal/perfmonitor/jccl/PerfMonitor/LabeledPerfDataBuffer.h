@@ -32,7 +32,6 @@
 
 
 
-
 #ifndef _JCCL_LABELED_PERF_DATA_BUFFER_H_
 #define _JCCL_LABELED_PERF_DATA_BUFFER_H_
 
@@ -44,7 +43,9 @@
 #include <vpr/Util/Singleton.h>
 #include <vpr/Util/Interval.h>
 
-namespace jccl {
+
+namespace jccl
+{
 
 /** Storage buffer for performance data.
  *  LabeledPerfDataBuffer is responsible for collecting performance data 
@@ -72,102 +73,108 @@ namespace jccl {
  * 
  *  @version $Revision$, $Date$
  */
-class JCCL_CLASS_API LabeledPerfDataBuffer {
+class JCCL_CLASS_API LabeledPerfDataBuffer
+{
 
-    struct buf_entry {
+   struct BufEntry
+   {
 
-        const std::string      *index;
-        char*                   index_cstring;
-        const vpr::GUID*              category;
+      const std::string*  mIndexString;
+      char*               mIndexCString;
+      const vpr::GUID*    mCategory;
         
-        vpr::Interval        stamp;
+      vpr::Interval       mStamp;
         
-        buf_entry() {
-            index = 0;
-            index_cstring = 0;
-        }
-    };
+      BufEntry()
+      {
+         mIndexString = 0;
+         mIndexCString = 0;
+      }
+   };
 
 
-    buf_entry*  mBuffer;
-    int         mBufferCount;
-    int         mLost;
-    vpr::Mutex  mLostLock;
+   BufEntry*   mBuffer;        /**< Buffer array. */
+   int         mBufferCount;   /**< Length of mBuffer. */
+   int         mLost;          /**< Count of 'lost' samples. */
+   vpr::Mutex  mLostLock;
 
-    int         mReadBegin;
-    int         mWritePos;
-
-    std::string mName;
+   int         mReadBegin;     /**< Index of first unread sample. */
+   int         mWritePos;      /**< Index to write next sample. */
+   
+   std::string mName;
 
 public:
 
 
-    /** Constructor.
-     *  Creates a new, inactive PerfDataBuffer.  The caller is 
-     *  responsible for deciding the size of the buffer and the 
-     *  number of indices that will be stored in it via set().
-     *
-     *  @param _name String identifier for this buffer.
-     *  @param _numbufs Number of samples to store (default = 50).
-     *  @param _nindex Number of unique indices this buffer will use.
-     */
-    LabeledPerfDataBuffer (const std::string& _name, int _numbufs);
+   /** Constructor.
+    *  Creates a new, inactive PerfDataBuffer.  The caller is 
+    *  responsible for deciding the size of the buffer and the 
+    *  number of indices that will be stored in it via set().
+    *
+    *  @param _name String identifier for this buffer.
+    *  @param _numbufs Number of samples to store (default = 50).
+    *  @param _nindex Number of unique indices this buffer will use.
+    */
+   LabeledPerfDataBuffer (const std::string& _name, int _numbufs);
 
 
-    /** Default constructor. */
-    LabeledPerfDataBuffer ();
+   /** Default constructor. */
+   LabeledPerfDataBuffer ();
 
 
-    /** Destructor. */
-    virtual ~LabeledPerfDataBuffer ();
+   /** Destructor. */
+   virtual ~LabeledPerfDataBuffer ();
 
 
-    void setBufferSize (int n);
+   void setBufferSize (int n);
 
-    /** Returns the name of this instance. */
-    virtual const std::string& getName() const {
-        return mName;
-    }
-
-
-    virtual void setName (std::string& _name) {
-        mName = _name;
-    }
+   
+   /** Returns the name of this instance. */
+   virtual const std::string& getName() const
+   {
+      return mName;
+   }
 
 
-    /** Records a new data point.
-     *  If self is active and the buffer is not full, a new data
-     *  point is recorded with the given index and the current
-     *  time.
-     *  <p>
-     *  If the buffer is full, the lost counter is incremented.
-     *
-     *  @param category Category of this data point.
-     *  @param index_name A name indicating where in the calling
-     *                    thread's code the data point was gathered.
-     */
-    void set (const vpr::GUID &category, const std::string& index_name);
-
-    void set (const vpr::GUID &category, char* index_name);
+   virtual void setName (std::string& _name)
+   {
+      mName = _name;
+   }
 
 
-    /** Records a new data point.
-     *  If self is active and the buffer is not full, a new data
-     *  point is recorded with the given index and the given
-     *  time.
-     *  <p>
-     *  If the buffer is full, the lost counter is incremented.
-     *
-     *  @param category Category of this data point.
-     *  @param index_name A name indicating where in the calling
-     *                    thread's code the data point was gathered.
-     *  @param _value A TimeStamp.
-     */
-    void set (const vpr::GUID &category, const std::string& index_name,
-              vpr::Interval& _value);
+   /** Records a new data point.
+    *  If self is active and the buffer is not full, a new data
+    *  point is recorded with the given index and the current
+    *  time.
+    *  <p>
+    *  If the buffer is full, the lost counter is incremented.
+    *
+    *  @param category Category of this data point.
+    *  @param index_name A name indicating where in the calling
+    *                    thread's code the data point was gathered.
+    */
+   void set (const vpr::GUID &category, const std::string& index_name);
 
-    void set (const vpr::GUID &category, char* index_name,
-              vpr::Interval& _value);
+   void set (const vpr::GUID &category, char* index_name);
+
+
+   /** Records a new data point.
+    *  If self is active and the buffer is not full, a new data
+    *  point is recorded with the given index and the given
+    *  time.
+    *  <p>
+    *  If the buffer is full, the lost counter is incremented.
+    *
+    *  @param category Category of this data point.
+    *  @param index_name A name indicating where in the calling
+    *                    thread's code the data point was gathered.
+    *  @param _value A TimeStamp.
+    */
+   void set (const vpr::GUID &category, const std::string& index_name,
+             vpr::Interval& _value);
+   
+   void set (const vpr::GUID &category, char* index_name,
+             vpr::Interval& _value);
 
 
 //        /** Marks the "top" of the calling thread's loop. 
@@ -177,23 +184,24 @@ public:
 //        void setBeginCycle (const vpr::GUID& category);
 
 
-    /** Writes buffer contents to an ostream.
-     *  As many buffers as available are written to the ostream
-     *  and released so that they can be used again by set.
-     *  The format for the output is, well, not yet defined.
-     *  The stamp values are written in microseconds.
-     *
-     *  @param out An std::ostream that data is written to.
-     */
-    void write (std::ostream& out, const std::string& pad);
+   /** Writes buffer contents to an ostream.
+    *  As many buffers as available are written to the ostream
+    *  and released so that they can be used again by set.
+    *  The format for the output is, well, not yet defined.
+    *  The stamp values are written in microseconds.
+    *
+    *  @param out An std::ostream that data is written to.
+    */
+   void write (std::ostream& out, const std::string& pad);
 
 
 
 private:
-    // win32 dlls need these for no good reason.
-    LabeledPerfDataBuffer (const LabeledPerfDataBuffer& o) {;}
-    void operator= (const LabeledPerfDataBuffer& o) {;}
+   // win32 dlls need these for no good reason.
+   LabeledPerfDataBuffer (const LabeledPerfDataBuffer& o) {;}
+   void operator= (const LabeledPerfDataBuffer& o) {;}
 };
+
 
 }; // namespace jccl
 

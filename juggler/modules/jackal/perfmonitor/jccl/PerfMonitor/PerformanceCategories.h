@@ -42,7 +42,8 @@
 #include <vpr/Util/GUID.h>
 #include <vpr/Util/Singleton.h>
 
-namespace jccl {
+namespace jccl
+{
 
 class LabeledPerfDataBuffer;
 
@@ -51,74 +52,81 @@ class LabeledPerfDataBuffer;
  *  of all buffers, this is an increasingly innacurately named
  *  class.  but there'll be time for renaming after it works.
  */
-class PerformanceCategories {
+class PerformanceCategories
+{
 private:
 
-    struct CategoryInfo
-    {
-        CategoryInfo(std::string name, bool active)
-            : mName(name), mActive(active)
-        {;}
+   struct CategoryInfo
+   {
+      CategoryInfo(std::string name, bool active)
+         : mName(name), mActive(active)
+      {;}
         
-        std::string mName;
-        bool        mActive;
-    };
+      std::string mName;
+      bool        mActive;
+   };
 
-    typedef std::map<const vpr::GUID*, CategoryInfo > category_map_t;
-    category_map_t mCategories; 
+   typedef std::map<const vpr::GUID*, CategoryInfo > category_map_t;
+   category_map_t mCategories; 
     
-    bool mActive;
+   bool mActive;
     
 
-    std::vector<LabeledPerfDataBuffer*> mBuffers;
-    vpr::Mutex mBuffersLock;
+   std::vector<LabeledPerfDataBuffer*> mBuffers;
+   vpr::Mutex mBuffersLock;
 
 protected:
 
-    PerformanceCategories ();
+   PerformanceCategories ();
     
 public:
 
-    inline void activate () {
-        mActive = true;
-    }
+   inline void activate ()
+   {
+      mActive = true;
+   }
+
+   
+   inline void deactivate ()
+   {
+      mActive = false;
+   }
+
+   
+   inline bool isActive () const
+   {
+      return mActive;
+   }
+
+   
+   void addCategory (const vpr::GUID& catId, const std::string& name);
+
+   void activateCategory (const std::string& catname);
+
+   void deactivateCategory (const std::string& catname);
+
+
+   /** Returns whether the given category is active.
+    *  @return True iff the category is active.
+    */
+   bool isCategoryActive (const vpr::GUID& category);
     
-    inline void deactivate () {
-        mActive = false;
-    }
 
-    inline bool isActive () const {
-        return mActive;
-    }
+   void addBuffer (LabeledPerfDataBuffer* buffer);
 
-    void addCategory (const vpr::GUID& catId, const std::string& name);
+   void removeBuffer (LabeledPerfDataBuffer* buffer);
 
-    void activateCategory (const std::string& catname);
+   LabeledPerfDataBuffer* getBufferNoLock (const std::string& n);
 
-    void deactivateCategory (const std::string& catname);
+   void writeAllBuffers (std::ostream& out, const std::string& pad = "");
 
 
-    /** Returns whether the given category is active.
-     *  @return True iff the category is active.
-     */
-    bool isCategoryActive (const vpr::GUID& category);
-    
-
-    void addBuffer (LabeledPerfDataBuffer* buffer);
-
-    void removeBuffer (LabeledPerfDataBuffer* buffer);
-
-    LabeledPerfDataBuffer* getBufferNoLock (const std::string& n);
-
-    void writeAllBuffers (std::ostream& out, const std::string& pad = "");
-
-
-    vprSingletonHeader (PerformanceCategories);
+   vprSingletonHeader (PerformanceCategories);
 
 private:
-    // win32 dlls need these for no good reason.
-    PerformanceCategories (const PerformanceCategories& o) {;}
-    void operator= (const PerformanceCategories& o) {;}
+   // win32 dlls need these for no good reason.
+   PerformanceCategories (const PerformanceCategories& o) {;}
+   void operator= (const PerformanceCategories& o) {;}
     
 };
 
