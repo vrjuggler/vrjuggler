@@ -29,9 +29,6 @@ Table of contents:
               i. vrjuggler-info@lists.sourceforge.net
              ii. vrjuggler-devel@lists.sourceforge.net
     3. Compiling VR Juggler from source
-        A. Overview
-        B. Details
-        C. Advanced topics
 
 ==============================================================================
 1. Getting started
@@ -148,93 +145,7 @@ Table of contents:
     http://www.vrjuggler.org/html/juggler.team.guide/build/juggler/index.html
     before sending email to the mailing lists.
 
-    A. Overview
+    The documentation for compiling VR Juggler from source is now in the
+    INSTALL file.
 
-          i. Choose a directory to put the VR Juggler source code
-         ii. Go to that directory and checkout VR Juggler using CVS
-        iii. Enter the newly checked out Juggler source directory
-         iv. Compile VR Juggler (using the Autoconf system and GNU make)
-
-              a. Generate aclocal.m4, header template, and the configure
-                 script
-              b. Probe the system for capabilities, generate Makefiles,
-                 etc. (this configures the source tree for the current
-                 system)
-              c. Make the distribution using GNU make
-
-          v. Set the environment variable $VJ_BASE_DIR
-         iv. Compile applications
-
-    B. Details
-
-          i. Choose a directory to put the VR Juggler source code
-             (referred to as <JUGGLER_DIR> from now on).
-
-         ii. Go to that directory and checkout VR Juggler using CVS
-             NOTE: make sure CVS is set up, and pointing to the VR Juggler
-             repository.  For more information about this, see the
-             following page:
-
-    http://www.vrjuggler.org/html/juggler.team.guide/build/get.source.html
-
-            The simple version is:
-
-                cd <JUGGLER_DIR>
-                cvs checkout juggler
-
-        iii. Enter the newly checked out Juggler source directory
-
-                cd <JUGGLER_DIR>/juggler
-
-         iv. Compile VR Juggler (using the Autoconf system and GNU make)
-
-              a. Generate aclocal.m4, header template (vjDefines.h.in), and
-                 the configure script
-
-                    ./autogen.sh
-    
-              b. Probe the system for capabilities, generate Makefiles, etc.
-                 (this configures the source tree for the current system)
-
-                    ./configure
-
-              c. Make the distribution using GNU make.  This compiles, links,
-                 and creates the final distribution tree (in the form of
-                 symlinks)
-
-                    gmake
-
-          v. Set the environment variable $VJ_BASE_DIR.  This is *required*
-             by VR Juggler's application makefiles and runtime environment.
-
-             NOTES:
-                 1. The directory "instlinks" is semi-important. 
-                    It is a working distribution of the VR Juggler library.
-                    After "gmake" is done, you'll be able to use this
-                    directory to compile and link your application code.
-                    This will not work on Win32, so a full installation
-                    must be performed.
-                 2. It is helpful to have something similar to the following
-                    line your $HOME/.tcshrc or $HOME/.cshrc file (assuming
-                    the use of tcsh for your shell):
-
-                        setenv VJ_BASE_DIR [JUGGLER_DIR]/juggler/instlinks
-
-                    Use whatever is appropriate for your shell (BASH, ksh,
-                    DOS, etc.)
-
-    C. Advanced topics
-
-       Sending compiler output to a different directory than the source
-       tree can be helpful for debugging and development.  This is done
-       by making a directory to put the object files and compiled
-       libraries before building.
-
-       The following steps set up a build directory within your VR Juggler
-       source directory.  Here, we use the name <BUILD_DIR> to refer to
-       the directory that will contain the object files and libraries.  It
-       can be called whatever you want.
-
-           mkdir <JUGGLER_DIR>/juggler/<BUILD_DIR>
-           cd <JUGGLER_DIR>/juggler/<BUILD_DIR>
-           <JUGGLER_DIR>/juggler/configure
+$Id$
