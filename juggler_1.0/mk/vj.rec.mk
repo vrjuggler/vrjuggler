@@ -15,6 +15,7 @@
 recursive:
 	@amf=$$2; list='${SUBDIRS}';					\
             for subdir in $$list; do					\
+                echo "===> ${DIRPRFX}$$subdir" ;			\
                 (cd $$subdir && ${MAKE} OPTIMIZER="${OPTIMIZER}"	\
                                     BASE_OBJDIR="${BASE_OBJDIR}"	\
                                     ${RECTARGET})			\
