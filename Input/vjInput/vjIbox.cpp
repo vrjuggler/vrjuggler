@@ -53,11 +53,7 @@ int vjIBox::StartSampling()
 
   if (myThread == NULL)
   {
-//      int retval;
-
-      current = 0;
-      valid = 1;
-      progress = 2;
+      resetIndexes();      // Reset the indexes for triple buffering
 
       result = ibox_connect(&thingie, port_id, baudRate);
       if (result == SUCCESS)
@@ -151,11 +147,7 @@ int vjIBox::Sample()
 	theData[progress].analog[2] = thingie.analog[2];
 	theData[progress].analog[3] = thingie.analog[3];
 
-	lock.acquire();
-	tmp = valid;
-	valid= progress;
-	progress = tmp;
-	lock.release();
+	swapValidIndices();     // Swap the buffers since we just read in a complete value
      }
      return 1;
 }
@@ -211,12 +203,7 @@ int vjIBox::GetDigitalData(int d)
 void vjIBox::UpdateData()
 {
   // swap the indicies for the pointers
-
-  lock.acquire();
-  int tmp = current;
-  current = valid;
-  valid = tmp;
-  lock.release();
+   swapCurrentIndexes();
 
   return;
 }
