@@ -383,7 +383,20 @@ Compiling
 
  ./autogen.sh
 
-  Note
+   This autogen.sh script must be run from the directory where it exists. Do
+   not try to run it from a build directory or any other place in the Juggler
+   source tree. The same holds for the individual autogen.sh scripts in the
+   various modules, should you need to run one individually.
+
+      Win32 issues
+
+   The VR Juggler build system is "unified" in that the same build code runs
+   on UNIX-based systems as on Windows. However, the build system is very
+   UNIX-centric, and as a result, using it on Windows is a little more
+   complicated than we would like. It does not help that Cygwin is a poor
+   substitute for a real UNIX-like environment.
+
+        Dealing with Cygwin Autoconf and Automake
 
    On Win32, recent versions of Cygwin install Autoconf 2.13 and Autoconf
    2.5x. Similarly, Automake 1.4 and Automake 1.5 are installed. The former
@@ -399,6 +412,33 @@ Compiling
    If you are using tcsh, use the following command instead:
 
  env ACLOCAL=/usr/autotool/stable/bin/aclocal ./autogen.sh
+
+        Paths
+
+   Paths are a major source of confusion when building VR Juggler on Win32.
+   It is very important that everyone who tries to build on Win32 read this
+   section and understand it. The basic principle is that using the VR
+   Juggler build system works the same on Windows as on UNIX-based systems.
+   However, paths must be handled specially due to the fundamental
+   differences between Windows and UNIX.
+
+   The most important part of dealing with paths on Win32 is this: the path
+   must be given as the full DOS drive path, but / should be used instead of
+   \ as the path separator. The Cygwin /cygdrive paths cannot be used when
+   running the configure scripts. This is because the paths are passed onto
+   Windows software such as Visual Studio and the Java compiler. These are
+   not Cygwin programs, and thus, they do not understand the /cygdrive
+   syntax.
+
+   This issue is really not that complicated if you exercise some common
+   sense and keep the following rule of thumb in mind: any path that will be
+   used by a compiler must be a DOS-style path, and any path that will be
+   used by the shell must be a Cygwin-style path. In general, the only time
+   to use a Cygwin-style path is when extending your $PATH environment
+   variable from within a Cygwin shell. If you are using the DOS COMMAND.COM
+   shell, you never use Cygwin paths for anything. In the end, it is probably
+   easier to use a DOS shell to configure and compile VR Juggler, as long as
+   you can deal with the inherent limitations of DOS shells.
 
       Using configure.pl
 
@@ -442,9 +482,6 @@ Compiling
        file list.
 
  ../configure.pl --prefix=$HOME/vrjuggler-2.0 --with-jdom="<JDOM_PATH>/build/jdom.jar:<JDOM_PATH>/lib/xerces.jar" --with-java-orb=OpenORB --with-java-orb-jar="<JAVA_ORB_PATH>/lib/openorb-1.3.0.jar:<JAVA_ORB_PATH>/lib/avalon-framework.jar:<JAVA_ORB_PATH>/lib/logkit.jar"
-
-       On Win32, remember that the path is given as the full DOS drive path,
-       but / should be used instead of \ as the path separator.
 
    By default, the configuration process will configure VR Juggler and all of
    its dependencies. This includes Sonix, which is an interesting special
