@@ -335,6 +335,10 @@ int omni_main_i(int argc, char** const argv)
       AC_MSG_ERROR(*** omniORB required for Tweek **)
    fi               
 
+   CXX_IDL_OPTS='-bcxx -Wbh=.h,s=.cpp'
+   CXX_IDL_GENDIR_OPT='-C'
+   CXX_IDL_INCFLAG='-I'
+
    if test "x$tweek_cv_omniORB__MaxMessageSize_in_omniORB" = "xyes" ; then
       OMNI_INCLUDES="-I$tweek_omni_inc"
       OMNI_LIB="-l$tweek_omni_lib -lomnithread -lomniDynamic$OMNI_VER -lomniGK_stub"
@@ -366,6 +370,10 @@ AC_PATH_PROG(JAVA_IDL, idlj, no, ${PATH}:$JDK_HOME/bin)
 if test "x$JAVA_IDL" = "xno" ; then
    BUILD_JAVA='N'
    AC_MSG_WARN(*** Cannot perform IDL-to-Java conversion ***)
+else
+   JAVA_IDL_OPTS='-emitAll'
+   JAVA_IDL_GENDIR_OPT='-td '
+   JAVA_IDL_INCFLAG='-i '
 fi
    
 if test "x${_enable_javaidl}" != "xno" ; then
@@ -405,12 +413,23 @@ fi
 # For use in linking applications.
 EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
 
-IDL_GEN_DIRS="tweek/CORBA"
+tweek_idlflags_cxx="$CXX_IDL_OPTS ${CXX_IDL_INCFLAG}\${TWEEK_BASE_DIR}/include"
+tweek_idlflags_java="$JAVA_IDL_OPTS ${JAVA_IDL_INCFLAG}\${TWEEK_BASE_DIR}/include"
+tweek_idlgendir_cxx="$CXX_IDL_GENDIR_OPT"
+tweek_idlgendir_java="$JAVA_IDL_GENDIR_OPT"
 
-for dir in "$IDL_GEN_DIRS" ; do
-    IDL_GEN_INCLUDES="$IDL_GEN_INCLUDES -I\$(TWEEK_BASE_DIR)/include/$dir"
-    tweek_idl_gen_includes="$tweek_idl_gen_includes -I\${TWEEK_BASE_DIR}/include/$dir"
+idl_gen_dirs="tweek/CORBA"
+#idl_src_dirs=''
+
+for dir in "$idl_gen_dirs" ; do
+   IDL_GEN_INCLUDES="$IDL_GEN_INCLUDES -I\$(TWEEK_BASE_DIR)/include/$dir"
+   tweek_idl_gen_includes="$tweek_idl_gen_includes ${CXX_IDL_INCFLAG}\${TWEEK_BASE_DIR}/include/$dir"
 done
+
+#for dir in "$idl_src_dirs" ; do
+#   tweek_idlflags_cxx="$tweek_idlflags_cxx ${CXX_IDL_INCFLAG}\${TWEEK_BASE_DIR}/include/$dir"
+#   tweek_idlflags_java="$tweek_idlflags_java ${JAVA_IDL_INCFLAG}\${TWEEK_BASE_DIR}/include/$dir"
+#done
 
 CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS"
 INCLUDES="$INCLUDES $OMNI_INCLUDES"
@@ -548,6 +567,12 @@ AC_SUBST(UNIX_JUGGLERROOT_ABS)
 AC_SUBST(SAFE_TWEEKROOT_ABS)
 AC_SUBST(SAFE_JUGGLERROOT_ABS)
 
+AC_SUBST(CXX_IDL_OPTS)
+AC_SUBST(CXX_IDL_GENDIR_OPT)
+AC_SUBST(CXX_IDL_INCFLAG)
+AC_SUBST(JAVA_IDL_OPTS)
+AC_SUBST(JAVA_IDL_GENDIR_OPT)
+AC_SUBST(JAVA_IDL_INCFLAG)
 AC_SUBST(EXTRA_DEFS)
 AC_SUBST(EXTRA_LINK_FLAGS)
 
@@ -584,6 +609,10 @@ AC_SUBST(tweek_extra_ldflags)
 AC_SUBST(tweek_extra_libs)
 AC_SUBST(tweek_n32_flags)
 AC_SUBST(tweek_64_flags)
+AC_SUBST(tweek_idlflags_cxx)
+AC_SUBST(tweek_idlflags_java)
+AC_SUBST(tweek_idlgendir_cxx)
+AC_SUBST(tweek_idlgendir_java)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.
