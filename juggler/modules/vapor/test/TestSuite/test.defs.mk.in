@@ -61,7 +61,7 @@ include @topdir@/make.defs.mk
 # -----------------------------------------------------------------------------
 test_topdir=	@topdir@/test/TestSuite
 test_topsrcdir=	@top_srcdir@/test/TestSuite
-test_srcdir = @srcdir@
+test_srcdir=	@srcdir@
 VPR_BASE_DIR?=	@APP_BASE_DIR@
 CPP_UNIT=	@CPPUNIT_ROOT@
 
