@@ -96,7 +96,7 @@ public class PropertyEditorPanel extends PropertyComponent
       mPropName = prop_def.getToken();
       mPropDef = prop_def;
       mConfigElement = elm;
-      mPropNum = prop_num;
+      mPropIndex = prop_num;
       mColor = color;
 
       fillEditorComponent(value, prop_def);
@@ -114,7 +114,7 @@ public class PropertyEditorPanel extends PropertyComponent
    {
       if(evt.getProperty().equals(mPropName))
       {
-         mEditor.setValue(mConfigElement.getProperty(mPropName, mPropNum));
+         mEditor.setValue(mConfigElement.getProperty(mPropName, mPropIndex));
 
          if (mEditorComponent instanceof JComboBox)
          {
@@ -154,8 +154,13 @@ public class PropertyEditorPanel extends PropertyComponent
             JTextField txt_field = (JTextField)mEditorComponent;
             mEditor.setAsText(txt_field.getText());
          }
-        
-         ConfigElementPropertyEdit new_edit = mConfigElement.setProperty(mPropName, mPropNum, mEditor.getValue());
+         
+         Object old_value = mConfigElement.getProperty(mPropName, mPropIndex);
+         ConfigElementPropertyEdit new_edit = 
+            new ConfigElementPropertyEdit(mConfigElement, mPropName, mPropIndex, 
+                                          old_value, mEditor.getValue());
+            
+         mConfigElement.setProperty(mPropName, mPropIndex, mEditor.getValue());
          System.out.println("Adding: " + new_edit);
          ConfigUndoManager.instance().addEdit(new_edit);
          
@@ -410,7 +415,7 @@ public class PropertyEditorPanel extends PropertyComponent
 
    protected PropertyDefinition mPropDef = null;
    protected ConfigElement      mConfigElement = null;
-   protected int                mPropNum = 0;
+   protected int                mPropIndex = 0;
    protected PropertyEditor     mEditor = null;
    protected Component          mEditorComponent = null;
    protected String             mPropName = null;
