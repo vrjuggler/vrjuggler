@@ -45,8 +45,14 @@ const int ROT_ROLL_CW = 11;
 #define NUM_POS_CONTROLS 12      // How many do we need space for??
 //@}
 
-//: Keyboard class
+//---------------------------------------------------------------
+//: XWin Keyboard class
 // Converts keyboard input into simulated input devices
+//
+// This device is a source of keyboard events.  The device should not be
+// used directly, it should be referenced through proxies.
+//
+// See also: vjKeyboardProxy
 class vjXWinKeyboard : public vjPosition, public vjDigital, public vjAnalog, public vjKeyboard
 {
 public:
@@ -68,20 +74,15 @@ public:
    int Sample() { return 1;}
    void UpdateData();
 
-   /* vjInput virtual functions
-    *
-    *  virtual functions that inherited members should
-    *  override but are not required to
-    */
    char* GetDeviceName() { return "vjKeyboard";}
 
-   /* vjAnalog pure virtual functions */
+   //: Get the analog data
    int GetAnalogData(int devNum = 0) { return m_anadata[devNum];}
 
-   /* vjDigital pure virtual functions */
+   //: Get simulated digital data
    int GetDigitalData(int devNum = 0) { return m_digdata[devNum];}
 
-   /* vjPosition pure virtual functions */
+   // Get simulated positional data
    vjMatrix* GetPosData(int devNum = 0) { return &(m_posdata[devNum]);}
 
    // returns the number of times the key was pressed during the
