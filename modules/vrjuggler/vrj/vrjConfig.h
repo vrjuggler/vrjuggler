@@ -32,6 +32,10 @@
  */
 
 /* This should always be included first. */
+#ifdef WIN32
+#define HAVE_CONFIG_H
+#endif
+
 #ifdef HAVE_CONFIG_H
 #include <vjDefines.h>
 #endif	/* HAVE_CONFIG_H */
@@ -41,6 +45,27 @@
 #else
 #   define VJ_OPT
 #endif
+
+#ifdef WIN32
+//#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
+#pragma warning(disable:4244)  // Converting double to float
+#pragma warning(disable:4800)  // Int forcing value to bool
+#pragma warning(disable:4101)  // unreferenced local variable
+
+#pragma warning(disable:4786)  // identifier truncated to 255 characters in the debug information
+
+#include <windows.h>
+
+typedef __int32 int32_t;
+typedef __int64 int64_t;
+typedef UINT u_int;
+#define strcasecmp _stricmp
+
+//#include <gl\gl.h>
+
+//extern HINSTANCE g_hInst = NULL;
+#endif
+
 
 /* Common includes */
 /* Put here for pre-compiled headers */
@@ -52,6 +77,11 @@
 #include <map>
 #include <string>
 #include <algorithm>
+
+#ifndef WIN32
+#include <strings.h>
+#endif
+
 //#include <Kernel/vjDebug.h>
 #endif
 
