@@ -1209,7 +1209,7 @@ aMotionStar::setSystemStatus (BIRDNET::SYSTEM_STATUS* sys_status,
 // ----------------------------------------------------------------------------
 int
 aMotionStar::configureBirds () {
-    BIRDNET::SINGLE_BIRD_STATUS* bird_status;
+    BIRDNET::BIRD_STATUS* bird_status;
     unsigned int bird_count;
     bool values_set;
 
@@ -1303,10 +1303,10 @@ aMotionStar::configureBirds () {
                 m_birds[bird]->hemisphere  = m_hemisphere;
 
                 // Fill in the bird_status struct.
-                bird_status->setup      |= FLOCK::APPEND_BUTTON_DATA;
-                bird_status->dataFormat = format;
-                bird_status->reportRate = m_report_rate;
-                bird_status->hemisphere = m_hemisphere;
+                bird_status->status.setup      |= FLOCK::APPEND_BUTTON_DATA;
+                bird_status->status.dataFormat = format;
+                bird_status->status.reportRate = m_report_rate;
+                bird_status->status.hemisphere = m_hemisphere;
 
                 // XXX: The second clause in the conditional is here so that
                 // we can use the 0-based m_birds_active in the sample()
@@ -1326,8 +1326,8 @@ aMotionStar::configureBirds () {
                 m_birds[bird]->hemisphere  = m_hemisphere;
 
                 // Fill in the bird_status struct with disabling values.
-                bird_status->dataFormat = 0x00;
-                bird_status->reportRate = 1;
+                bird_status->status.dataFormat = 0x00;
+                bird_status->status.reportRate = 1;
             }
 
             // Finally, send the new configuration to the current bird.
@@ -1349,10 +1349,10 @@ aMotionStar::configureBirds () {
 // ----------------------------------------------------------------------------
 // Get the status of an individual bird.
 // ----------------------------------------------------------------------------
-BIRDNET::SINGLE_BIRD_STATUS*
+BIRDNET::BIRD_STATUS*
 aMotionStar::getBirdStatus (const unsigned char bird) {
     BIRDNET::DATA_PACKET* status;
-    BIRDNET::SINGLE_BIRD_STATUS* bird_status;
+    BIRDNET::BIRD_STATUS* bird_status;
 
     // The value in bird is the index into the m_birds vector.  Using that
     // element from the vector, we get the actual FBB address.
@@ -1365,17 +1365,17 @@ aMotionStar::getBirdStatus (const unsigned char bird) {
     else {
         // The requested bird's status descrpition begins at the returned
         // packet's data buffer.  This is what will be returned to the caller.
-        bird_status = (BIRDNET::SINGLE_BIRD_STATUS*) &(status->buffer[0]);
+        bird_status = (BIRDNET::BIRD_STATUS*) &(status->buffer[0]);
 
         // The dataFormat field contains the number of words (2 bytes) in
         // this bird's formatted data packet.  It is in the most significant
         // four bits.  See page 127 of the MotionStar Operation Guide.
-        m_birds[bird]->data_words = (bird_status->dataFormat >> 4) & 0x0f;
+        m_birds[bird]->data_words = (bird_status->status.dataFormat >> 4) & 0x0f;
 
         // The least significant four bits of dataFormat contain the format
         // of the data this bird will send by default.  Again, refer to page
         // 127 of the MotionStar Operation Guide.
-        switch (bird_status->dataFormat & 0x0f) {
+        switch (bird_status->status.dataFormat & 0x0f) {
           case 0:
             m_birds[bird]->format = FLOCK::NO_BIRD_DATA;
             break;
@@ -1409,11 +1409,11 @@ aMotionStar::getBirdStatus (const unsigned char bird) {
           default:
             fprintf(stderr,
                     "[aMotionStar] WARNING: Got unknown data format %u for "
-                    "bird %u\n", bird_status->dataFormat & 0x0f, bird);
+                    "bird %u\n", bird_status->status.dataFormat & 0x0f, bird);
             break;
         }
 
-        switch (bird_status->hemisphere) {
+        switch (bird_status->status.hemisphere) {
           case 0:
             m_birds[bird]->hemisphere = FLOCK::FRONT_HEMISPHERE;
             break;
@@ -1435,12 +1435,12 @@ aMotionStar::getBirdStatus (const unsigned char bird) {
           default:
             fprintf(stderr,
                     "[aMotionStar] WARNING: Got unknown data hemisphere %u "
-                    "for bird %u\n", bird_status->dataFormat, bird);
+                    "for bird %u\n", bird_status->status.dataFormat, bird);
             break;
         }
 
-        m_birds[bird]->report_rate = bird_status->reportRate;
-        m_birds[bird]->address     = bird_status->FBBaddress;
+        m_birds[bird]->report_rate = bird_status->status.reportRate;
+        m_birds[bird]->address     = bird_status->status.FBBaddress;
     }
 
     return bird_status;
@@ -1451,12 +1451,12 @@ aMotionStar::getBirdStatus (const unsigned char bird) {
 // ----------------------------------------------------------------------------
 int
 aMotionStar::setBirdStatus (const unsigned char bird,
-                            BIRDNET::SINGLE_BIRD_STATUS* status)
+                            BIRDNET::BIRD_STATUS* status)
 {
     // The value in bird is the index into the m_birds vector.  Using that
     // entry, we get the actual FBB address.
     return setDeviceStatus(m_birds[bird]->addr, (char*) status,
-                           sizeof(BIRDNET::SINGLE_BIRD_STATUS));
+                           sizeof(BIRDNET::BIRD_STATUS));
 }
 
 // ----------------------------------------------------------------------------
@@ -1704,12 +1704,12 @@ aMotionStar::convertMeasurementRate (const double rate, std::string& str_rate)
 // ----------------------------------------------------------------------------
 void
 aMotionStar::getUnitInfo (const unsigned int bird,
-                          const BIRDNET::SINGLE_BIRD_STATUS* bird_status)
+                          const BIRDNET::BIRD_STATUS* bird_status)
 {
     unsigned char high_byte, low_byte, units;
 
-    high_byte = bird_status->scaling[0];
-    low_byte  = bird_status->scaling[1];
+    high_byte = bird_status->status.scaling[0];
+    low_byte  = bird_status->status.scaling[1];
 
     // The highest four bits of the high byte tell the measurement system
     // being used.

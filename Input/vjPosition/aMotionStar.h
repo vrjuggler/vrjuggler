@@ -1014,12 +1014,12 @@ private:
     //! ARGS: bird - The bird whose status is being requested.  This is a
     //+              zero-based value.
     //
-    //! RETURNS: Non-NULL - A pointer to a BIRDNET::SINGLE_BIRD_STATUS object
+    //! RETURNS: Non-NULL - A pointer to a BIRDNET::BIRD_STATUS object
     //+                     describing the requested bird's current status.
     //! RETURNS: NULL     - No status information could be read for the
     //+                     requested bird for some reason.
     // ------------------------------------------------------------------------
-    BIRDNET::SINGLE_BIRD_STATUS* getBirdStatus(const unsigned char bird);
+    BIRDNET::BIRD_STATUS* getBirdStatus(const unsigned char bird);
 
     // ------------------------------------------------------------------------
     //: Set the status of an individual bird.
@@ -1032,14 +1032,13 @@ private:
     //
     //! ARGS: bird   - The bird whose status is being set.  This is a
     //+                zero-based value.
-    //! ARGS: status - A pointer to a BIRDNET::SINGLE_BIRD_STATUS object
+    //! ARGS: status - A pointer to a BIRDNET::BIRD_STATUS object
     //+                describing the new configuration for the given bird.
     //
     //! RETURNS:  0 - The bird was configured successfully.
     //! RETURNS: -1 - The bird could not be configured for some reason.
     // ------------------------------------------------------------------------
-    int setBirdStatus(const unsigned char bird,
-                      BIRDNET::SINGLE_BIRD_STATUS* status);
+    int setBirdStatus(const unsigned char bird, BIRDNET::BIRD_STATUS* status);
 
     // ------------------------------------------------------------------------
     //: Get the status of the requested FBB device.  The device number must be
@@ -1361,7 +1360,7 @@ private:
     //+                     unit information.
     // ------------------------------------------------------------------------
     void getUnitInfo(const unsigned int bird,
-                     const BIRDNET::SINGLE_BIRD_STATUS* bird_status);
+                     const BIRDNET::BIRD_STATUS* bird_status);
 
     // ------------------------------------------------------------------------
     //: Send the given message to the server.
