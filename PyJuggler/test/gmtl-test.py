@@ -67,6 +67,14 @@ if gmtl.isEqual(mat1, mat1):
 else:
    print "gmtl.isEqual(mat1, mat2) fail"
 
+#print mat1[1][1]
+#mat1[1][1] = 5
+#
+#if mat1[1][1] == 5:
+#   print "gmtl.Matrix44f element accessor pass"
+#else:
+#   print "gmtl.Matrix44f element accessor fail"
+
 vec1 = gmtl.Vec3f()
 vec2 = gmtl.Vec3f()
 vec3 = gmtl.Vec3f()
@@ -75,11 +83,29 @@ vec1.set(1, 2, 3)
 vec2.set(4, 5, 6)
 vec3.set(7, 8, 9)
 
-dot_prod = gmtl.dot(vec1, vec2)
-print "Dot product = ", dot_prod
+if vec1[0] == 1.0:
+   print "gmtl.Vec3f element accessor pass"
+else:
+   print "gmtl.Vec3f element accessor fail"
 
-print "Length of vec1 = ", gmtl.length(vec1)
-print "Squared length of vec1 = ", gmtl.lengthSquared(vec1)
+if vec1[1] != vec1[2]:
+   print "gmtl.Vec3f element comparison pass"
+else:
+   print "gmtl.Vec3f element comparison fail"
+
+print "vec1[0] =", vec1[0]
+
+vec1[0] = 5.0
+if vec1[0] == 5.0:
+   print "gmtl.Vec3f element accessor pass"
+else:
+   print "gmtl.Vec3f element accessor fail"
+
+dot_prod = gmtl.dot(vec1, vec2)
+print "Dot product =", dot_prod
+
+print "Length of vec1 =", gmtl.length(vec1)
+print "Squared length of vec1 =", gmtl.lengthSquared(vec1)
 
 vec3_orig_length = gmtl.length(vec3)
 vec3_old_length = gmtl.normalize(vec3)
@@ -107,6 +133,17 @@ else:
 
 vec4 = gmtl.cross(vec1, vec2)
 
+trans_mat = gmtl.makeTransMatrix44(vec2)
+print "trans_mat", trans_mat
+
+point1 = gmtl.Point2i(4, 5)
+point1[0] = point1[1]
+
+if point1[0] == point1[1]:
+   print "gmtl.Point2i element assignment pass"
+else:
+   print "gmtl.Point2i element assignment fail"
+
 euler1 = gmtl.EulerAngleXYZf(90.0, 0.0, 0.0)
 euler2 = gmtl.EulerAngleXYZf(0.0, 90.0, 0.0)
 
@@ -114,6 +151,11 @@ if not gmtl.isEqual(euler1, euler2):
    print "gmtl.isEqual(euler1, euler2) pass"
 else:
    print "gmtl.isEqual(euler1, euler2) fail"
+
+if euler1[0] == 90.0:
+   print "gmtl.EulerAngleXYZf element accessor pass"
+else:
+   print "gmtl.EulerAngleXYZf element accessor fail"
 
 rot_mat   = gmtl.makeRotMatrix44(euler1)
 mat_angle = gmtl.makeRotEulerAngleXYZ(rot_mat)
@@ -128,6 +170,6 @@ gmtl.identity(mat1)
 mat3 = gmtl.makeInverse(mat1)
 
 if gmtl.isEqual(mat1, mat3):
-   print "gmtl.makeInverse() pass (bad test!)"
+   print "gmtl.makeInverse() pass (lame test!)"
 else:
    print "gmtl.makeInverse() fail"
