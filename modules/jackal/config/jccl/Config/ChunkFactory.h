@@ -96,21 +96,11 @@ public:
     ConfigChunk* createChunk (ChunkDesc* d, bool use_defaults = true);
 
 
-protected:
-
-
-    //: Setup the intial environment needed for creating chunks
-    //  This just loads $VJ_BASE_DIR/VJ_SHARE_DIR/Data/chunksDesc
-    void setupInitialEnvironment();
 
 
 private:
-   ChunkFactory()
-   {
-      setupInitialEnvironment();
-   }
+    ChunkFactory ();
 
-private:
     ChunkDescDB descdb;
 
 vprSingletonHeader(ChunkFactory);
