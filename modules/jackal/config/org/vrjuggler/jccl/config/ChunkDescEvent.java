@@ -47,7 +47,7 @@ public class ChunkDescEvent
     */
    public ChunkDescEvent(Object src, Object value, int index)
    {
-      this(src, null, 0, value);
+      this(src, null, index, value);
    }
 
    /**
