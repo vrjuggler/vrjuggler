@@ -47,6 +47,7 @@
 #include <string>
 #include <vector>
 
+#include <vpr/vprTypes.h>
 #include <vpr/IO/Socket/SocketTypes.h>
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/ReturnStatus.h>
