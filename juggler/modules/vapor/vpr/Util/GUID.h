@@ -251,7 +251,11 @@ namespace std
 {
 
 template<>
+#ifdef VPR_OS_Win32
+class _Hash<vpr::GUID>
+#else
 struct hash<vpr::GUID>
+#endif
 {
    vpr::Uint32 operator() (const vpr::GUID guid) const
    {

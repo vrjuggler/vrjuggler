@@ -59,11 +59,14 @@
 namespace std
 {
 
-#if defined(HAVE_HASH_MAP) || defined(HAVE_EXT_HASH_MAP) || \
-   defined(HAVE_HASH_MAP_H)
+#ifdef VPR_HASH_MAP_INCLUDE
 /// Nice little helper class for hashing a <code>vpr::InetAddr</code>
 template<>
+#ifdef VPR_OS_Win32
+struct _Hash<vpr::InetAddr>
+#else
 struct hash<vpr::InetAddr>
+#endif
 {
    size_t operator() (vpr::InetAddr addr) const
    {
