@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="file://localhost/home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
-<!DOCTYPE article SYSTEM "file:/home/users/patrick/XMLEditor-1.1.1a/examples/docbook/dtd/docbookx.dtd" [
-]>
+<?xml-stylesheet href="../../../docs/stylesheet/docbook_ab.css" type="text/css"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <article lang="en">
    <articleinfo>
       <title>Juggler Project Overview</title>
@@ -10,18 +9,121 @@
             <othername>The Juggler Team</othername>
          </author>
       </authorgroup>
-      <date>December 21, 2001</date>
+      <pubdate>$Date$</pubdate>
    </articleinfo>
    <section>
       <title>Introduction</title>
       <para>Congratulations, you have downloaded the source code to the Juggler Project, open source software for virtual reality from the Virtual Reality Applications Center at Iowa State University. Within this document, you will find information about the new VR Juggler 2.0 directory structure including descriptions of all the component modules that make up the Juggler Project. Instructions for building the individual modules can be found within the specific module directories and on the VR Juggler website.</para>
    </section>
    <section>
-      <title>Important Note Regarding Compiling</title>
-      <para>Please note that you have downloaded <emphasis>developmental</emphasis> code. It may not be stable, and it may not even compile. As of this writing, compiling VR Juggler itself is very complicated and is not recommended for anyone who does not have a strong background in Autoconf, C++, and make.</para>
+      <title>Compiling</title>
+      <para>In this section, we describe how to compile the Juggler project. As of this writing, the explanation focuses on VR Juggler itself.</para>
+      <section>
+         <title>Important Note Regarding Compiling</title>
+         <para>Please note that you have downloaded <emphasis>developmental</emphasis> code. It may not be stable, and it may not even compile. As of this writing, compiling VR Juggler itself is very complicated and is not recommended for anyone who does not have some background in Autoconf, C++, and make.</para>
+      </section>
+      <section>
+         <title>Compiling VR Juggler</title>
+         <para>As of this writing, VR Juggler is difficult to compile due to circular dependencies in the various modules making up the Juggler Project. More specifically, VR Juggler depends on Gadgeteer, and Gadgeteer depends on VR Juggler. (Refer to <xref linkend="modules-section"/> for more information about the specific modules.) As a result, the steps to build VR Juggler are a little strange. Rest assured that this will be resolved soon. With that in mind, the steps to build VR Juggler follow.</para>
+         <section>
+            <title>Generate <command>configure</command> Scripts</title>
+            <para>Before any code can be built, the project <command>configure</command> scripts must be generated. In the top-level <filename>juggler</filename> directory, run <command>autogen.sh</command>. This will generate all the <command>configure</command> scripts in the Juggler Project source tree.</para>
+         </section>
+         <section>
+            <title>Configure and Compile VPR</title>
+            <para>First, VPR must be configured and compiled. All other projects depend on it.</para>
+            <orderedlist>
+               <listitem>
+                  <para><command>cd modules/vapor</command></para>
+               </listitem>
+               <listitem>
+                  <para><command>./configure --prefix=$HOME/vrjuggler-2.0</command></para>
+               </listitem>
+               <listitem>
+                  <para><command>gmake debug install</command></para>
+               </listitem>
+               <listitem>
+                  <para><command>setenv VPR_BASE_DIR $HOME/vrjuggler-2.0</command></para>
+               </listitem>
+            </orderedlist>
+         </section>
+         <section>
+            <title>Configure and Compile JCCL</title>
+            <para>Next, JCCL must be configured and compiled. JCCL requires a third-party software package called Xerces C++. It can be downloaded from <ulink url="http://xml.apache.org/xerces-c/index.html">the Apache XML site</ulink>. Once Xerces C++ is built and installed, the JCCL configure script can find it.</para>
+            <orderedlist>
+               <listitem>
+                  <para><command>cd modules/jackal</command></para>
+               </listitem>
+               <listitem>
+                  <para><command>./configure --prefix=$HOME/vrjuggler-2.0 --with-xercesroot=&lt;Xerces C++ dir&gt;</command></para>
+               </listitem>
+               <listitem>
+                  <para><command>gmake debug install</command></para>
+               </listitem>
+               <listitem>
+                  <para><command>setenv JCCL_BASE_DIR $HOME/vrjuggler-2.0</command></para>
+               </listitem>
+            </orderedlist>
+            <para>Depending on the version of Xerces C++ available, an extra argument may be required to find the actual library. For example, if Xerces C++ 1.6.0 is installed, add <parameter>--with-xerceslib=libxerces-c1_6_0</parameter> to the command line for running <command>configure</command>. Check the Xerces C++ <filename>lib</filename> directory for the exact name (without <filename>.so</filename> or <filename>.a</filename>).</para>
+         </section>
+         <section>
+            <title>Configure VR Juggler</title>
+            <para>To deal with the circular dependency, VR Juggler must be configured but not built. In addition, a "pseudo-installation" must be created that the Gadgeteer configure script can find.</para>
+            <orderedlist>
+               <listitem>
+                  <para><command>cd modules/vrjuggler</command></para>
+               </listitem>
+               <listitem>
+                  <para><command>./configure --prefix=$HOME/vrjuggler-2.0</command></para>
+               </listitem>
+               <listitem>
+                  <para><command>gmake links</command></para>
+               </listitem>
+               <listitem>
+                  <para><command>setenv VJ_BASE_DIR `pwd`/instlinks</command></para>
+               </listitem>
+            </orderedlist>
+         </section>
+         <section>
+            <title>Configure and Compile Gadgeteer</title>
+            <para>Next, Gadgeteer can be configured and compiled. With the VR Juggler pseudo-installation, this is pretty easy.</para>
+            <orderedlist>
+               <listitem>
+                  <para><command>cd modules/gadgeteer</command></para>
+               </listitem>
+               <listitem>
+                  <para><command>./configure --prefix=$HOME/vrjuggler-2.0</command></para>
+               </listitem>
+               <listitem>
+                  <para><command>gmake debug install</command></para>
+               </listitem>
+               <listitem>
+                  <para><command>setenv GADGET_BASE_DIR $HOME/vrjuggler-2.0</command></para>
+               </listitem>
+            </orderedlist>
+         </section>
+         <section>
+            <title>Re-Configure and Compile VR Juggler</title>
+            <para>Finally, with all of the previous steps taken, VR Juggler can be compiled.</para>
+            <orderedlist>
+               <listitem>
+                  <para><command>cd modules/vrjuggler</command></para>
+               </listitem>
+               <listitem>
+                  <para><command>./configure --prefix=$HOME/vrjuggler-2.0</command></para>
+               </listitem>
+               <listitem>
+                  <para><command>gmake debug install</command></para>
+               </listitem>
+               <listitem>
+                  <para><command>setenv VJ_BASE_DIR $HOME/vrjuggler-2.0</command></para>
+               </listitem>
+            </orderedlist>
+         </section>
+      </section>
    </section>
    <section>
-      <title>Modules</title>
+      <title id="modules-section">Modules</title>
       <para>The Juggler Project is made up of several modules that have evolved from the original VR Juggler source tree. Within this section, we describe each of the modules, what they are used for, and, when possible, how they relate to VR Juggler 1.0.</para>
       <section>
          <title>VR Juggler Portable Runtime (VPR)</title>
