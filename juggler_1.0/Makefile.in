@@ -436,18 +436,18 @@ install-dbg: dbg
 	@echo "Installing static debugging libraries"
 	@echo "------------------------------------------------"
 	${scriptdir}/mkinstalldirs ${_install_libdir}/${_DEBUG_DIR}
-	${INSTALL} -m 644 ${_DBG_LIBDIR}/${VJ_LIB_STATIC}		\
+	${INSTALL} -m 644 -g c2dev ${_DBG_LIBDIR}/${VJ_LIB_STATIC}	\
           ${_install_libdir}/${_DEBUG_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
           ln -sf ${_install_libdir}/${_DEBUG_DIR}/${VJ_LIB_STATIC} ./
 ifeq (${GL_API}, Y)
-	${INSTALL} -m 644 ${_DBG_LIBDIR}/${GL_LIB_STATIC}		\
+	${INSTALL} -m 644 -g c2dev ${_DBG_LIBDIR}/${GL_LIB_STATIC}	\
           ${_install_libdir}/${_DEBUG_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
           ln -sf ${_install_libdir}/${_DEBUG_DIR}/${GL_LIB_STATIC} ./
 endif
 ifeq (${PF_API}, Y)
-	${INSTALL} -m 644 ${_DBG_LIBDIR}/${PF_LIB_STATIC}		\
+	${INSTALL} -m 644 -g c2dev ${_DBG_LIBDIR}/${PF_LIB_STATIC}	\
           ${_install_libdir}/${_DEBUG_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
           ln -sf ${_install_libdir}/${_DEBUG_DIR}/${PF_LIB_STATIC} ./
@@ -458,18 +458,18 @@ install-ddso: ddso
 	@echo "Installing dynamic debugging libraries"
 	@echo "------------------------------------------------"
 	${scriptdir}/mkinstalldirs ${_install_libdir}/${_DEBUG_DIR}
-	${INSTALL} -m 755 ${_DBG_LIBDIR}/${VJ_LIB_DYNAMIC}		\
+	${INSTALL} -m 755 -g c2dev ${_DBG_LIBDIR}/${VJ_LIB_DYNAMIC}	\
           ${_install_libdir}/${_DEBUG_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
           ln -sf ${_install_libdir}/${_DEBUG_DIR}/${VJ_LIB_DYNAMIC} ./
 ifeq (${GL_API}, Y)
-	${INSTALL} -m 755 ${_DBG_LIBDIR}/${GL_LIB_DYNAMIC}		\
+	${INSTALL} -m 755 -g c2dev ${_DBG_LIBDIR}/${GL_LIB_DYNAMIC}	\
           ${_install_libdir}/${_DEBUG_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
           ln -sf ${_install_libdir}/${_DEBUG_DIR}/${GL_LIB_DYNAMIC} ./
 endif
 ifeq (${PF_API}, Y)
-	${INSTALL} -m 755 ${_DBG_LIBDIR}/${PF_LIB_DYNAMIC}		\
+	${INSTALL} -m 755 -g c2dev ${_DBG_LIBDIR}/${PF_LIB_DYNAMIC}	\
           ${_install_libdir}/${_DEBUG_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
           ln -sf ${_install_libdir}/${_DEBUG_DIR}/${PF_LIB_DYNAMIC} ./
@@ -480,18 +480,18 @@ install-opt: opt
 	@echo "Installing static optimized libraries"
 	@echo "------------------------------------------------"
 	${scriptdir}/mkinstalldirs ${_install_libdir}/${_OPT_DIR}
-	${INSTALL} -m 644 ${_OPT_LIBDIR}/${VJ_LIB_STATIC}		\
+	${INSTALL} -m 644 -g c2dev ${_OPT_LIBDIR}/${VJ_LIB_STATIC}	\
           ${_install_libdir}/${_OPT_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
           ln -sf ${_install_libdir}/${_OPT_DIR}/${VJ_LIB_STATIC} ./
 ifeq (${GL_API}, Y)
-	${INSTALL} -m 644 ${_OPT_LIBDIR}/${GL_LIB_STATIC}		\
+	${INSTALL} -m 644 -g c2dev ${_OPT_LIBDIR}/${GL_LIB_STATIC}	\
           ${_install_libdir}/${_OPT_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
           ln -sf ${_install_libdir}/${_OPT_DIR}/${GL_LIB_STATIC} ./
 endif
 ifeq (${PF_API}, Y)
-	${INSTALL} -m 644 ${_OPT_LIBDIR}/${PF_LIB_STATIC}		\
+	${INSTALL} -m 644 -g c2dev ${_OPT_LIBDIR}/${PF_LIB_STATIC}	\
           ${_install_libdir}/${_OPT_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
           ln -sf ${_install_libdir}/${_OPT_DIR}/${PF_LIB_STATIC} ./
@@ -502,18 +502,18 @@ install-dso: dso
 	@echo "Installing dynamic optimizied libraries"
 	@echo "------------------------------------------------"
 	${scriptdir}/mkinstalldirs ${_install_libdir}/${_OPT_DIR}
-	${INSTALL} -m 755 ${_OPT_LIBDIR}/${VJ_LIB_DYNAMIC}		\
+	${INSTALL} -m 755 -g c2dev ${_OPT_LIBDIR}/${VJ_LIB_DYNAMIC}	\
           ${_install_libdir}/${_OPT_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
           ln -sf ${_install_libdir}/${_OPT_DIR}/${VJ_LIB_DYNAMIC} ./
 ifeq (${GL_API}, Y)
-	${INSTALL} -m 755 ${_OPT_LIBDIR}/${GL_LIB_DYNAMIC}		\
+	${INSTALL} -m 755 -g c2dev ${_OPT_LIBDIR}/${GL_LIB_DYNAMIC}	\
           ${_install_libdir}/${_OPT_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
           ln -sf ${_install_libdir}/${_OPT_DIR}/${GL_LIB_DYNAMIC} ./
 endif
 ifeq (${PF_API}, Y)
-	${INSTALL} -m 755 ${_OPT_LIBDIR}/${PF_LIB_DYNAMIC}		\
+	${INSTALL} -m 755 -g c2dev ${_OPT_LIBDIR}/${PF_LIB_DYNAMIC}	\
           ${_install_libdir}/${_OPT_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
           ln -sf ${_install_libdir}/${_OPT_DIR}/${PF_LIB_DYNAMIC} ./
@@ -524,8 +524,8 @@ install-headers:
 	@echo "Installing header files"
 	@echo "------------------------------------------------"
 	${MAKE} RECTARGET="install" recursive
-	${INSTALL} -m 644 ${VJROOT_ABS}/vjConfig.h ${includedir}
-	${INSTALL} -m 644 ${topdir}/vjDefines.h ${includedir}
+	${INSTALL} -m 644 -g c2dev ${VJROOT_ABS}/vjConfig.h ${includedir}
+	${INSTALL} -m 644 -g c2dev ${topdir}/vjDefines.h ${includedir}
 
 install-test:
 	@echo "------------------------------------------------"
@@ -559,8 +559,9 @@ ifeq (@BUILD_GUI@, yes)
 	@echo "Installing vjConfig"
 	@echo "------------------------------------------------"
 	${scriptdir}/mkinstalldirs ${bindir}
-	${INSTALL} -m 644 ${topdir}/GUI/VjCfg.jar ${bindir}
-	${INSTALL} -m 755 ${VJROOT_ABS}/GUI/editconfig ${bindir}/vjConfig
+	${INSTALL} -m 644 -g c2dev ${topdir}/GUI/VjCfg.jar ${bindir}
+	${INSTALL} -m 755 -g c2dev ${VJROOT_ABS}/GUI/editconfig		\
+          ${bindir}/vjConfig
 else
 	@echo "------------------------------------------------"
 	@echo "Skipping installation of vjConfig (not built)"
