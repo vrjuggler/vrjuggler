@@ -23,11 +23,12 @@
 #include <vpr/Thread/Thread.h>
 #include <vpr/Thread/ThreadFunctor.h>
 
-#include <NonBlockingSocketsTest.h>
+#include <TestCases/Socket/NonBlockingSocketsTest.h>
 
 
 namespace vprTest
 {
+CPPUNIT_TEST_SUITE_REGISTRATION( NonBlockingSocketTest );
 
 void NonBlockingSocketTest::testSetOpenNonBlockingThenOpenThenClose()
 {
@@ -508,20 +509,6 @@ void NonBlockingSocketTest::testSendUDP_sender (void* arg)
 
    status = send_sock.close();
    assertTestThread(status.success() && "Could not close sender socket");
-}
-
-CppUnit::Test* NonBlockingSocketTest::suite ()
-{
-   CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("NonBlockingSocketTest");
-
-   test_suite->addTest( new CppUnit::TestCaller<NonBlockingSocketTest>("testSetOpenNonBlockingThenOpenThenClose", &NonBlockingSocketTest::testSetOpenNonBlockingThenOpenThenClose));
-   test_suite->addTest( new CppUnit::TestCaller<NonBlockingSocketTest>("testSetOpenNonBlockingThenOpenThenEnableNonBlockThenClose", &NonBlockingSocketTest::testSetOpenNonBlockingThenOpenThenEnableNonBlockThenClose));
-   test_suite->addTest( new CppUnit::TestCaller<NonBlockingSocketTest>("testConnect2NonBlockingSockets", &NonBlockingSocketTest::testConnect2NonBlockingSockets));
-   test_suite->addTest(new CppUnit::TestCaller<NonBlockingSocketTest>("testNonBlockingTransfer", &NonBlockingSocketTest::testNonBlockingTransfer));
-   test_suite->addTest( new CppUnit::TestCaller<NonBlockingSocketTest>("testConnect2NonBlockingSocketsUsingSelect", &NonBlockingSocketTest::testConnect2NonBlockingSocketsUsingSelect));
-   test_suite->addTest(new CppUnit::TestCaller<NonBlockingSocketTest>("testSendUDP", &NonBlockingSocketTest::testSendUDP));
-
-   return test_suite;
 }
 
 } // End of vprTest namespace

@@ -1,4 +1,4 @@
-#include <TestInterface.h>
+#include <TestCases/DynLoad/modules/TestInterface.h>
 
 class TestClass : public TestInterface
 {

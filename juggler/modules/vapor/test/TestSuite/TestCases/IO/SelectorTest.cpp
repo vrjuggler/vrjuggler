@@ -27,11 +27,13 @@
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/CondVar.h>
 
-#include <SelectorTest.h>
+#include <TestCases/IO/SelectorTest.h>
 
 
 namespace vprTest
 {
+
+CPPUNIT_TEST_SUITE_REGISTRATION( SelectorTest );
 
 void SelectorTest::testAcceptorPoolSelection ()
 {

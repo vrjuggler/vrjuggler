@@ -1,10 +1,12 @@
 #include <vpr/System.h>
 
-#include <SystemTest.h>
+#include <TestCases/SystemTest.h>
 
 
 namespace vprTest
 {
+
+CPPUNIT_TEST_SUITE_REGISTRATION( SystemTest );
 
 void SystemTest::ShortConversions ()
 {

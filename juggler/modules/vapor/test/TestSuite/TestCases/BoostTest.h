@@ -3,16 +3,14 @@
 
 #include <iostream>
 
-#include <cppunit/TestCase.h>
-#include <cppunit/TestSuite.h>
-#include <cppunit/TestCaller.h>
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <MySuites.h>
+
 #include <boost/function.hpp>
-
-#include <vpr/Util/ReturnStatus.h>
-
 #include <boost/static_assert.hpp>
 
-
+#include <vpr/Util/ReturnStatus.h>
 /*****************************************************************
  Test any functionality that we require from BOOST in order for 
  our libraries to work right.
@@ -20,24 +18,17 @@
  This way, if boost is broken we detect it here instead of seeing
  our stuff breaking.
  *******************************************************************/
-
 namespace vprTest
 {
 
-class BoostTest : public CppUnit::TestCase
+class BoostTest : public CppUnit::TestFixture
 {
+CPPUNIT_TEST_SUITE(BoostTest);
+CPPUNIT_TEST( testFunctionBasic );
+CPPUNIT_TEST( testStaticAssert );
+CPPUNIT_TEST_SUITE_END();
+
 public:
-   BoostTest() : CppUnit::TestCase ()
-   {
-   }
-
-   BoostTest (std::string name) : CppUnit::TestCase (name)
-   {
-   }
-
-   virtual ~BoostTest()
-   {
-   }
 
    void shared_ptr_basic();
 
@@ -91,17 +82,6 @@ public:
       BOOST_STATIC_ASSERT(true);
       BOOST_STATIC_ASSERT(1==1);
       BOOST_STATIC_ASSERT(2>1);
-   }
-
-   static CppUnit::Test* suite()
-   {
-      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite ("BoostTest");
-      test_suite->addTest( new CppUnit::TestCaller<BoostTest>("shared_ptr_basic", &BoostTest::shared_ptr_basic));
-      test_suite->addTest( new CppUnit::TestCaller<BoostTest>("shared_ptr_upcast", &BoostTest::shared_ptr_upcast));
-      test_suite->addTest( new CppUnit::TestCaller<BoostTest>("testFunctionBasic", &BoostTest::testFunctionBasic));
-      test_suite->addTest( new CppUnit::TestCaller<BoostTest>("testStaticAssert", &BoostTest::testStaticAssert));
-
-      return test_suite;
    }
 };
 

@@ -12,11 +12,12 @@
 
 #include <cppunit/extensions/MetricRegistry.h>
 
-#include <ThreadTest.h>
+#include <TestCases/Thread/ThreadTest.h>
 
 
 namespace vprTest
 {
+CPPUNIT_TEST_SUITE_REGISTRATION( ThreadTest );
 
 class Tester
 {

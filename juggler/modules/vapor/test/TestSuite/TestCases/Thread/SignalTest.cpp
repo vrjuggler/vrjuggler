@@ -3,7 +3,7 @@
 
 #include <vpr/Thread/Signal.h>
 
-#include <SignalTest.h>
+#include <TestCases/Thread/SignalTest.h>
 
 
 static RETSIGTYPE handlerSIGSEGV
@@ -20,6 +20,8 @@ static RETSIGTYPE handlerSIGSEGV
 
 namespace vprTest
 {
+
+//CPPUNIT_TEST_SUITE_REGISTRATION( SignalTest );
 
 void SignalTest::testSegFault ()
 {

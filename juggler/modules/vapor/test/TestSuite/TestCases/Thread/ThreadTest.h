@@ -1,6 +1,10 @@
 #ifndef _VPR_TEST_THREAD_TEST_H_
 #define _VPR_TEST_THREAD_TEST_H_
 
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <MySuites.h>
+
 #include <cppunit/extensions/ThreadTestCase.h>
 #include <cppunit/TestSuite.h>
 #include <cppunit/TestCaller.h>
@@ -13,6 +17,16 @@ namespace vprTest{
 
 class ThreadTest : public CppUnit::ThreadTestCase
 {
+CPPUNIT_TEST_SUITE(ThreadTest);
+CPPUNIT_TEST(testNoSpawnCtor);
+CPPUNIT_TEST( testAutoSpawnCtor);
+//CPPUNIT_TEST( testCreateJoin);
+//CPPUNIT_TEST( testSuspendResume);
+//CPPUNIT_TEST( testPriority);
+//CPPUNIT_TEST( testThreadStackSize);
+CPPUNIT_TEST( testThreadSpecificData);
+CPPUNIT_TEST_SUITE_END();
+
 public:
    ThreadTest()
    : CppUnit::ThreadTestCase ()
@@ -91,28 +105,15 @@ public:
    */
    void tsIncCounter(void* arg);
 
-
-   static CppUnit::Test* suite()
-   {
-      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("ThreadTest");
-
-      test_suite->addTest(new CppUnit::TestCaller<ThreadTest>("testNoSpawnCtor", &ThreadTest::testNoSpawnCtor));
-      test_suite->addTest(new CppUnit::TestCaller<ThreadTest>("testAutoSpawnCtor", &ThreadTest::testAutoSpawnCtor));
-      //test_suite->addTest( new CppUnit::TestCaller<ThreadTest>("testCreateJoin", &ThreadTest::testCreateJoin));
-      //test_suite->addTest( new CppUnit::TestCaller<ThreadTest>("testSuspendResume", &ThreadTest::testSuspendResume));
-      //test_suite->addTest( new CppUnit::TestCaller<ThreadTest>("testPriority", &ThreadTest::testPriority));
-      //test_suite->addTest( new CppUnit::TestCaller<ThreadTest>("testThreadStackSize", &ThreadTest::testThreadStackSize));
-      test_suite->addTest( new CppUnit::TestCaller<ThreadTest>("testThreadSpecificData", &ThreadTest::testThreadSpecificData));
-
-      return test_suite;
-   }
-
+ 
+   /*
    static CppUnit::Test* interactiveSuite()
    {
       CppUnit::TestSuite* test_suite = new CppUnit::TestSuite ("InteractiveThreadTest");
       test_suite->addTest( new CppUnit::TestCaller<ThreadTest>("interactiveCPUGrind", &ThreadTest::interactiveTestCPUGrind));
       return test_suite;
    }
+   */
 
 protected:
    vpr::Mutex     mItemProtectionMutex;        // Protect an exclusive item

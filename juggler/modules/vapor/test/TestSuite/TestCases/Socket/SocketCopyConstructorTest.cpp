@@ -10,11 +10,12 @@
 #include <vpr/Thread/Thread.h>
 #include <vpr/Thread/ThreadFunctor.h>
 
-#include <SocketCopyConstructorTest.h>
+#include <TestCases/Socket/SocketCopyConstructorTest.h>
 
 
 namespace vprTest
 {
+CPPUNIT_TEST_SUITE_REGISTRATION( SocketCopyConstructorTest );
 
 void SocketCopyConstructorTest::simpleTest ()
 {

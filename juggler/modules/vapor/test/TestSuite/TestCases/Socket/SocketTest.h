@@ -7,6 +7,10 @@
 #include <cppunit/extensions/ThreadTestCase.h>
 #include <cppunit/TestSuite.h>
 
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <MySuites.h>
+
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/CondVar.h>
@@ -30,6 +34,26 @@ namespace vprTest
 
 class SocketTest : public CppUnit::ThreadTestCase
 {
+CPPUNIT_TEST_SUITE(SocketTest);
+// None of these tests can be used with the simulator because they all
+// expect blocking sockets.
+#ifndef VPR_SIMULATOR
+CPPUNIT_TEST(testOpenClose);
+CPPUNIT_TEST(sameAddressOpenBindCloseTest);
+CPPUNIT_TEST(sameAddressOpenBindDestructTest);
+CPPUNIT_TEST(differentAddressOpenBindCloseTest);
+//CPPUNIT_TEST(bindAgainFailTest);
+//CPPUNIT_TEST(reuseAddrSimpleTest);
+//CPPUNIT_TEST(reuseAddrTest);
+//CPPUNIT_TEST(testOpenCloseOpen);
+//CPPUNIT_TEST(testSendRecv);
+//CPPUNIT_TEST(testBlocking);
+//CPPUNIT_TEST(testTcpConnection);
+//CPPUNIT_TEST(testReadn);
+CPPUNIT_TEST(testIsConnected);   
+#endif
+CPPUNIT_TEST_SUITE_END();
+
 public:
    SocketTest( )
       : CppUnit::ThreadTestCase (),
@@ -153,8 +177,7 @@ public:
    void testIsConnected_acceptor(void* arg);
    void testIsConnected_connector(void* arg);
    // =========================================================================
-
-   static CppUnit::Test* suite();
+   
 
 protected:
    void init ()

@@ -6,7 +6,7 @@
 
 #include <vpr/Util/Debug.h>
 
-#include <DebugTest.h>
+#include <TestCases/Util/DebugTest.h>
 
 /*****************************************************************
  tests out the functionality expected of vpr::ReturnStatus
@@ -15,6 +15,7 @@
 namespace vprTest
 {
 
+   CPPUNIT_TEST_SUITE_REGISTRATION( DebugTest );
 
    /** Just outputs some debug info at each level */
    void DebugTest::OutputDebug()

@@ -5,9 +5,9 @@
 
 #include <vpr/Util/ReturnStatus.h>
 
-#include <cppunit/TestCase.h>
-#include <cppunit/TestSuite.h>
-#include <cppunit/TestCaller.h>
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <MySuites.h>
 
 #include <vpr/IO/SerializableObject.h>
 
@@ -15,7 +15,7 @@
 namespace vprTest
 {
 
-class SerializableTest : public CppUnit::TestCase
+class SerializableTest : public CppUnit::TestFixture
 {
 public:
    class Class1 : public vpr::SerializableObject
@@ -101,23 +101,19 @@ public:
    };
 
 public:
-   SerializableTest( std::string name )
-   : CppUnit::TestCase (name)
-   {;}
+CPPUNIT_TEST_SUITE(SerializableTest);
+CPPUNIT_TEST( testReaderWriter );
+CPPUNIT_TEST( testDataOffsets );
+CPPUNIT_TEST( testReadWriteSimple );
+CPPUNIT_TEST( testReadWriteNested );
+CPPUNIT_TEST_SUITE_END();
 
-   SerializableTest()
-   : CppUnit::TestCase ()
-   {;}
-
-   virtual ~SerializableTest()
-   {}
-
+public:
    virtual void setUp()
    {;}
 
    virtual void tearDown()
-   {
-   }
+   {;}
 
    // Test reading and writing of data
    void testReaderWriter();
@@ -125,28 +121,12 @@ public:
    // Test reading and writing data from many memory offsets
    void testDataOffsets();
 
-
    void testReadWriteSimple();
 
    void testReadWriteNested();
-
-//   void testReadWritePlxAddr();
-
-//   void testReadWriteRouterInfo();
-
-   static CppUnit::Test* suite();
-
-   static CppUnit::Test* interactiveSuite()
-   {
-      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite ("InteractiveSerializableTest");
-
-      return test_suite;
-   }
-
-protected:
-
 };
 
 };
 
 #endif
+

@@ -7,11 +7,14 @@
 
 #include <vpr/md/SIM/Controller.h>
 
-#include <SimSelectorTest.h>
+#include <TestCases/Simulator/SimSelectorTest.h>
 
 
 namespace vprTest
 {
+#ifdef VPR_SIMULATOR
+CPPUNIT_TEST_SUITE_REGISTRATION( SimSelectorTest );
+#endif
 
 void SimSelectorTest::singleThreadTest ()
 {

@@ -3,9 +3,9 @@
 
 #include <iostream>
 
-#include <cppunit/TestCase.h>
-#include <cppunit/TestSuite.h>
-#include <cppunit/TestCaller.h>
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <MySuites.h>
 
 
 /*****************************************************************
@@ -15,20 +15,15 @@
 namespace vprTest
 {
 
-class SystemTest : public CppUnit::TestCase
+class SystemTest : public CppUnit::TestFixture
 {
-public:
-   SystemTest() : CppUnit::TestCase ()
-   {
-   }
-
-   SystemTest(std::string name) : CppUnit::TestCase (name)
-   {
-   }
-
-   virtual ~SystemTest()
-   {
-   }
+CPPUNIT_TEST_SUITE(SystemTest);
+CPPUNIT_TEST( ShortConversions );
+CPPUNIT_TEST( LongConversions );
+CPPUNIT_TEST( LongLongConversions );
+CPPUNIT_TEST( GetSetEnvTest );
+CPPUNIT_TEST_SUITE_END();
+public:   
 
    void ShortConversions();
 
@@ -37,20 +32,9 @@ public:
    void LongLongConversions();
 
    void GetSetEnvTest();
-
-   static CppUnit::Test* suite()
-   {
-      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("SystemTest");
-      test_suite->addTest( new CppUnit::TestCaller<SystemTest>("ShortConversions", &SystemTest::ShortConversions));
-      test_suite->addTest( new CppUnit::TestCaller<SystemTest>("LongConversions", &SystemTest::LongConversions));
-      test_suite->addTest( new CppUnit::TestCaller<SystemTest>("LongLongConversions", &SystemTest::LongLongConversions));
-      test_suite->addTest( new CppUnit::TestCaller<SystemTest>("GetSetEnvTest", &SystemTest::GetSetEnvTest));
-
-
-      return test_suite;
-   }
 };
 
 }
 
 #endif
+

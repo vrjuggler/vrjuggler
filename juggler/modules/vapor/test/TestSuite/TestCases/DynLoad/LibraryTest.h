@@ -2,32 +2,25 @@
 #define _VPRTEST_LIBRARY_TEST_H_
 
 #include <string>
-#include <cppunit/TestCase.h>
-#include <cppunit/TestSuite.h>
-#include <cppunit/TestCaller.h>
-
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <MySuites.h>
 
 namespace vprTest
 {
 
-class LibraryTest : public CppUnit::TestCase
+class LibraryTest : public CppUnit::TestFixture
 {
+CPPUNIT_TEST_SUITE(LibraryTest);
+CPPUNIT_TEST( namingTest );
+CPPUNIT_TEST( loadTest );
+CPPUNIT_TEST( unloadTest );
+//CPPUNIT_TEST( libraryPathTest );
+CPPUNIT_TEST( loadCSymbolTest );
+CPPUNIT_TEST( loadCxxSymbolTest );
+CPPUNIT_TEST_SUITE_END();
+
 public:
-   LibraryTest(): CppUnit::TestCase()
-   {
-      ;
-   }
-
-   LibraryTest(std::string name): CppUnit::TestCase(name)
-   {
-      ;
-   }
-
-   virtual ~LibraryTest()
-   {
-      ;
-   }
-
    virtual void setUp();
 
    void namingTest();
@@ -37,20 +30,6 @@ public:
    void loadCSymbolTest();
    void loadCxxSymbolTest();
 
-   static CppUnit::Test* suite()
-   {
-      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("LibraryTest");
-
-      test_suite->addTest(new CppUnit::TestCaller<LibraryTest>("namingTest", &LibraryTest::namingTest));
-      test_suite->addTest(new CppUnit::TestCaller<LibraryTest>("loadTest", &LibraryTest::loadTest));
-      test_suite->addTest(new CppUnit::TestCaller<LibraryTest>("unloadTest", &LibraryTest::unloadTest));
-//      test_suite->addTest(new CppUnit::TestCaller<LibraryTest>("libraryPathTest", &LibraryTest::libraryPathTest));
-      test_suite->addTest(new CppUnit::TestCaller<LibraryTest>("loadCSymbolTest", &LibraryTest::loadCSymbolTest));
-      test_suite->addTest(new CppUnit::TestCaller<LibraryTest>("loadCxxSymbolTest", &LibraryTest::loadCxxSymbolTest));
-
-      return test_suite;
-   }
-
 private:
    std::string mCModuleName;
    std::string mCxxModuleName;
@@ -58,5 +37,5 @@ private:
 
 }
 
-
 #endif /* _VPRTEST_LIBRARY_TEST_H_ */
+

@@ -3,6 +3,10 @@
 
 #include <vector>
 
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <MySuites.h>
+
 #include <cppunit/TestCase.h>
 #include <cppunit/extensions/ThreadTestCase.h>
 #include <cppunit/TestSuite.h>
@@ -54,6 +58,7 @@ public:
       return test_suite;
    }
 
+   /*
    static CppUnit::Test* metric_suite()
    {
       CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("SocketBandwidthIOStatsTest_metric");
@@ -62,6 +67,7 @@ public:
 
       return test_suite;
    }
+   */
 
 
 protected:

@@ -3,6 +3,10 @@
 
 #include <string>
 
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <MySuites.h>
+
 #include <cppunit/TestCase.h>
 #include <cppunit/extensions/ThreadTestCase.h>
 #include <cppunit/TestSuite.h>
@@ -20,6 +24,13 @@ namespace vprTest
 
 class SocketConnectorAcceptorTest : public CppUnit::ThreadTestCase
 {
+CPPUNIT_TEST_SUITE(SocketConnectorAcceptorTest);
+#ifndef VPR_SIMULATOR
+CPPUNIT_TEST( testAcceptorConstruction );
+CPPUNIT_TEST( testSpawnedAcceptor );
+#endif
+CPPUNIT_TEST_SUITE_END();
+
 public:
    SocketConnectorAcceptorTest()
    : CppUnit::ThreadTestCase ()
@@ -53,19 +64,7 @@ public:
    void testSpawnedAcceptor();
    void testSpawnedAcceptor_acceptor(void* arg);
    void testSpawnedAcceptor_connector(void* arg);
-
-   static CppUnit::Test* suite()
-   {
-      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("SocketConnectorAcceptorTest");
-
-#ifndef VPR_SIMULATOR
-      test_suite->addTest( new CppUnit::TestCaller<SocketConnectorAcceptorTest>("testAcceptorConstruction", &SocketConnectorAcceptorTest::testAcceptorConstruction));
-      test_suite->addTest( new CppUnit::TestCaller<SocketConnectorAcceptorTest>("testSpawnedAcceptor", &SocketConnectorAcceptorTest::testSpawnedAcceptor));
-#endif
-
-      return test_suite;
-   }
-
+  
 protected:
     vpr::Uint16     mRendevousPort;     // The port the acceptor will be waiting on
     int             mNumItersA;        // Number of primary iterations

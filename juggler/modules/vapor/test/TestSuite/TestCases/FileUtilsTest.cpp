@@ -1,4 +1,4 @@
-#include <FileUtilsTest.h>
+#include <TestCases/FileUtilsTest.h>
 
 #include <cppunit/TestCase.h>
 #include <cppunit/TestSuite.h>
@@ -13,6 +13,8 @@
 
 namespace vprTest
 {
+
+   CPPUNIT_TEST_SUITE_REGISTRATION( FileUtilsTest );
 
    void FileUtilsTest::ReplaceEnvVarsTest()
    {

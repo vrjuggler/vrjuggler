@@ -3,13 +3,14 @@
 
 #include <vpr/DynLoad/Library.h>
 #include <vpr/System.h>
-#include <modules/TestInterface.h>
+#include <TestCases/DynLoad/modules/TestInterface.h>
 
-#include <LibraryTest.h>
+#include <TestCases/DynLoad/LibraryTest.h>
 
 
 namespace vprTest
 {
+CPPUNIT_TEST_SUITE_REGISTRATION( LibraryTest );
 
 static const std::string C_MOD("libcmod.so");
 
