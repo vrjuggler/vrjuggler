@@ -95,8 +95,8 @@ int IBox::startSampling()
    {
       resetIndexes();      // Reset the indexes for triple buffering
 
-      result = thingie.connect(mPortStr, mBaudRate);
-      if (result == thingie.SUCCESS)
+      result = mPhysicalIbox.connect(mPortStr, mBaudRate);
+      if (result == mPhysicalIbox.SUCCESS)
       {
          mActive = true;
          vprDEBUG(vrjDBG_INPUT_MGR,1) << "     Connected to IBox.\n"
@@ -112,7 +112,7 @@ int IBox::startSampling()
          << vprDEBUG_FLUSH;
          return 0;
       }
-      thingie.std_cmd(0,0,0);
+      mPhysicalIbox.std_cmd(0,0,0);
 
 
       IBox* devicePtr = this;
@@ -124,8 +124,8 @@ int IBox::startSampling()
       {
          return 1;
       }
-   } 
-   else 
+   }
+   else
       return 0; // already sampling
 }
 
@@ -161,14 +161,15 @@ int IBox::sample()
    ibox2_result result;
    //int tmp;
    //static int c = 0;
+   IboxData cur_reading;
 
-   result = thingie.check_packet();
-   if (result == thingie.NO_PACKET_YET)
+   result = mPhysicalIbox.check_packet();
+   if (result == mPhysicalIbox.NO_PACKET_YET)
    {
    }
-   else if (result == thingie.SUCCESS)
+   else if (result == mPhysicalIbox.SUCCESS)
    {
-      thingie.std_cmd(0,0,0);
+      mPhysicalIbox.std_cmd(0,0,0);
       //    if (c == 0) {
       //      gettimeofday(&tv,0);
       //      start_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
@@ -182,24 +183,32 @@ int IBox::sample()
       //      c = 0;
       //    }
 
-      theData[progress].button[0] = thingie.buttonFunc(0);
-      theData[progress].button[1] = thingie.buttonFunc(1);
-      theData[progress].button[2] = thingie.buttonFunc(2);
-      theData[progress].button[3] = thingie.buttonFunc(3);
+      cur_reading.button[0] = mPhysicalIbox.buttonFunc(0);
+      cur_reading.button[1] = mPhysicalIbox.buttonFunc(1);
+      cur_reading.button[2] = mPhysicalIbox.buttonFunc(2);
+      cur_reading.button[3] = mPhysicalIbox.buttonFunc(3);
 
       // we really need to do normalization here instead of in getData.
       // need this so we return consistent AnalogData. -cj
       float f;
-      this->normalizeMinToMax( thingie.analogFunc(0), f );
-      theData[progress].analog[0] = f;
-      this->normalizeMinToMax( thingie.analogFunc(1), f );
-      theData[progress].analog[1] = f;
-      this->normalizeMinToMax( thingie.analogFunc(2), f );
-      theData[progress].analog[2] = f;
-      this->normalizeMinToMax( thingie.analogFunc(3), f );
-      theData[progress].analog[3] = f;
+      this->normalizeMinToMax( mPhysicalIbox.analogFunc(0), f );
+      cur_reading.analog[0] = f;
+      this->normalizeMinToMax( mPhysicalIbox.analogFunc(1), f );
+      cur_reading.analog[1] = f;
+      this->normalizeMinToMax( mPhysicalIbox.analogFunc(2), f );
+      cur_reading.analog[2] = f;
+      this->normalizeMinToMax( mPhysicalIbox.analogFunc(3), f );
+      cur_reading.analog[3] = f;
 
-      swapValidIndexes();     // Swap the buffers since we just read in a complete value
+      cur_reading.setTime();
+
+      //swapValidIndexes();     // Swap the buffers since we just read in a complete value
+      mDigitalSamples.lock();
+      mAnalogSamples.lock();
+      mDigitalSamples.addSample(cur_reading.button);
+      mAnalogSamples.addSample(cur_reading.analog);
+      mAnalogSamples.unlock();
+      mDigitalSamples.unlock();
    }
    return 1;
 }
@@ -221,47 +230,11 @@ int IBox::stopSampling()
 
     vpr::System::usleep(100);        // 100 uSec pause
 
-    thingie.disconnect();
+    mPhysicalIbox.disconnect();
     std::cout << "stopping the ibox.." << std::endl;
 
   }
   return 1;
-}
-
-/**********************************************************
-  float IBox::getAnalogData(int)
-
-*********************************************** bokbok? */
-//: Return "analog data"..
-//  Gee, that's ambiguous especially on a discrete system such as a digital computer....
-//
-//! PRE: give the device number you wish to access.
-//! POST: returns a value that ranges from 0.0f to 1.0f
-//! NOTE: for example, if you are sampling a potentiometer, and it returns reading from
-//        0, 255 - this function will normalize those values (using Analog::normalizeMinToMax())
-//        for another example, if your potentiometer's turn radius is limited mechanically to return
-//        say, the values 176 to 200 (yes this is really low res), this function will still return
-//        0.0f to 1.0f.
-//! NOTE: to specify these min/max values, you must set in your Analog (or analog device) config
-//        file the field "min" and "max".  By default (if these values do not appear),
-//        "min" and "max" are set to 0.0f and 1.0f respectivly.
-//! NOTE: TO ALL ANALOG DEVICE DRIVER WRITERS, you *must* normalize your data using
-//        Analog::normalizeMinToMax()
-AnalogData* IBox::getAnalogData( int d )
-{
-//      float value = static_cast<float>( theData[current].analog[d] );
-//      float normalized;
-//      this->normalizeMinToMax( value, normalized );
-    return &(theData[current].analog[d]);
-}
-
-/**********************************************************
-  int IBox::getDigitalData(int)
-
-*********************************************** ahimberg */
-DigitalData* IBox::getDigitalData(int d)
-{
-    return &(theData[current].button[d]);
 }
 
 /**********************************************************
@@ -272,14 +245,8 @@ DigitalData* IBox::getDigitalData(int d)
 *********************************************** ahimberg */
 void IBox::updateData()
 {
-vpr::Guard<vpr::Mutex> updateGuard(lock);
-
-   // Copy the valid data to the current data so that both are valid
-   theData[current] = theData[valid];   // ASSERT: only one data entry for the ibox
-
-   // swap the indicies for the pointers
-   swapCurrentIndexes();
-
+   mAnalogSamples.swapBuffers();
+   mDigitalSamples.swapBuffers();
    return;
 }
 
