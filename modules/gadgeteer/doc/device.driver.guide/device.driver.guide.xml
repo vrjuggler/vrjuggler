@@ -989,7 +989,7 @@ Definition File for Simple Button Device</title>
                <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;?org-vrjuggler-jccl-settings desc.db.version="2.2"?&gt;
 &lt;ChunkDescDB&gt;
-  &lt;ChunkDesc token="ButtonDevice" name="My Button Device"&gt;              <co linkends="MyButtonDevice.desc.token.decl.co"
+  &lt;ChunkDesc token="ButtonDevice" name="My Button Device"&gt;                <co linkends="MyButtonDevice.desc.token.decl.co"
 id="MyButtonDevice.desc.token.decl"/>
     &lt;category&gt;Devices&lt;/category&gt;
     &lt;help&gt;Configuration for simple one-button device.&lt;/help&gt;
@@ -1067,18 +1067,18 @@ device we have been using thus far:</para>
 File for Simple Button Device</title>
                <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;?org-vrjuggler-jccl-settings config.db.version="2.1"?&gt;
-&lt;?org-vrjuggler-jccl-includedesc file="ButtonDevice.desc"?&gt; <co
+&lt;?org-vrjuggler-jccl-includedesc file="ButtonDevice.desc"?&gt;   <co
 linkends="MyButtonDevice.config.desc.inc.co"
 id="MyButtonDevice.config.desc.inc"/>
 &lt;ConfigChunkDB&gt;
   &lt;InputManager name="Input Manager"&gt;                         <co
 linkends="MyButtonDevice.config.driver.co"
 id="MyButtonDevice.config.InputManager"/>
-    &lt;driver&gt;${HOME}/ButtonDevice_drv.so&lt;/driver&gt;            <co
+    &lt;driver&gt;${HOME}/ButtonDevice_drv.so&lt;/driver&gt;              <co
 linkends="MyButtonDevice.config.driver.co"
 id="MyButtonDevice.config.driver"/>
   &lt;/InputManager&gt;
-  &lt;ButtonDevice name="Button Device"&gt;                       <co
+  &lt;ButtonDevice name="Button Device"&gt;                         <co
 linkends="MyButtonDevice.config.ButtonDevice.co"
 id="MyButtonDevice.config.ButtonDevice"/>
     &lt;port&gt;/dev/ttyd4&lt;/port&gt;                                   <co
