@@ -45,8 +45,7 @@ import org.vrjuggler.jccl.editors.*;
 import org.vrjuggler.tweek.beans.BeanRegistry;
 import org.vrjuggler.tweek.beans.FileLoader;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
-import org.vrjuggler.tweek.event.TweekFrameEvent;
-import org.vrjuggler.tweek.event.TweekFrameListener;
+import org.vrjuggler.tweek.event.*;
 import org.vrjuggler.tweek.services.EnvironmentService;
 import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 
@@ -98,27 +97,56 @@ public class VrjConfig
    {
       mEnvService = new EnvironmentServiceProxy();
    }
-   
-   public void frameStateChanged(TweekFrameEvent e)
+
+   public void frameClosed(TweekFrameEvent e)
    {
-      if (TweekFrameEvent.FRAME_CLOSE == e.getType())
+   }
+
+   /**
+    * This method can be used to prevent the Tweek Java GUI from closing
+    * by returning false.  This could be used as a way to have the user
+    * cancel an accidental closing of the whole GUI.
+    */
+   public boolean frameClosing(TweekFrameEvent e)
+   {
+      try
       {
-         try
+         JInternalFrame[] frames = mDesktop.getAllFrames();
+         for (int i = 0 ; i < frames.length ; i++)
          {
-            JInternalFrame[] frames = mDesktop.getAllFrames();
-            for (int i = 0 ; i < frames.length ; i++)
-            {
-               frames[i].setClosed(true);
-            }
-         }
-         catch (java.beans.PropertyVetoException ex)
-         {
-            System.out.println(ex);
-            ex.printStackTrace();
+            System.out.println("Closing internal frame #" + i);
+            frames[i].setClosed(true);
          }
       }
+      catch (java.beans.PropertyVetoException ex)
+      {
+         System.out.println(ex);
+         ex.printStackTrace();
+      }
+
+      return true;
    }
-   
+
+   public void frameDeiconified(TweekFrameEvent e)
+   {
+   }
+
+   public void frameFocused(TweekFrameEvent e)
+   {
+   }
+
+   public void frameIconified(TweekFrameEvent e)
+   {
+   }
+
+   public void frameOpened(TweekFrameEvent e)
+   {
+   }
+
+   public void frameUnfocused(TweekFrameEvent e)
+   {
+   }
+
    //--------------------------------------------------------------------------
    // FileLoader implementation
    //--------------------------------------------------------------------------
