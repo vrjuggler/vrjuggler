@@ -78,9 +78,9 @@ public:
       wand_matrix->getXYZEuler(xyzAngles[0], xyzAngles[1], xyzAngles[2]);
 
 
-      vjDEBUG(2) << "===================================\n" << vjDEBUG_FLUSH;
-      vjDEBUG(2) << "Wand:\n" << *wand_matrix << endl << vjDEBUG_FLUSH;
-      vjDEBUG(2) << "Wand XYZ: " << xyzAngles << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,2) << "===================================\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,2) << "Wand:\n" << *wand_matrix << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,2) << "Wand XYZ: " << xyzAngles << endl << vjDEBUG_FLUSH;
 
       goal_rot.makeQuat(*wand_matrix);    // Create the goal rotation quaternion
 
@@ -92,11 +92,11 @@ public:
       else
          transform.makeIdent();
 
-      vjDEBUG(2) << "Transform:\n" << transform << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,2) << "Transform:\n" << transform << endl << vjDEBUG_FLUSH;
       transform.getXYZEuler(xyzAngles[0], xyzAngles[1], xyzAngles[2]);
-      vjDEBUG(2) << "Transform XYZ: " << xyzAngles << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,2) << "Transform XYZ: " << xyzAngles << endl << vjDEBUG_FLUSH;
 
-      vjDEBUG(2) << "Nav:\n" << mNavMatrix << endl << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,2) << "Nav:\n" << mNavMatrix << endl << endl << vjDEBUG_FLUSH;
 
       // ----- Translation ------- //
       const float velocity_inc = 0.001f;
@@ -110,16 +110,16 @@ public:
          mCurVelocity = 0.0f;
 
       if(mIncVelocityButton->GetData() || mDecVelocityButton->GetData())
-         vjDEBUG(0) << "Velocity: " << mCurVelocity << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,0) << "Velocity: " << mCurVelocity << endl << vjDEBUG_FLUSH;
 
       if(mIncVelocityButton->GetData() == vjDigital::TOGGLE_ON)
-         vjDEBUG(0) << "-- Toggle ON --" << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,0) << "-- Toggle ON --" << endl << vjDEBUG_FLUSH;
       if(mIncVelocityButton->GetData() == vjDigital::TOGGLE_OFF)
-         vjDEBUG(0) << "-- Toggle OFF --" << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,0) << "-- Toggle OFF --" << endl << vjDEBUG_FLUSH;
       if(mIncVelocityButton->GetData() == vjDigital::ON)
-         vjDEBUG(0) << "-- ON --" << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,0) << "-- ON --" << endl << vjDEBUG_FLUSH;
       if(mIncVelocityButton->GetData() == vjDigital::OFF)
-         vjDEBUG(1) << "-- OFF --" << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,1) << "-- OFF --" << endl << vjDEBUG_FLUSH;
 
       // Find direction vector
       vjVec3   forward(0.0f, 0.0f, -1.0f);
@@ -135,9 +135,9 @@ public:
 
       local_xform.getXYZEuler(xyzAngles[0], xyzAngles[1], xyzAngles[2]);
       local_xform.getTrans(xyzTrans[0], xyzTrans[1], xyzTrans[2]);
-      vjDEBUG(2) << "Transform   Rot: " << xyzAngles << endl << vjDEBUG_FLUSH;
-      vjDEBUG(2) << "Transform Trans: " << xyzTrans << endl << vjDEBUG_FLUSH;
-      vjDEBUG(2) << "-------------------------------------------" << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,2) << "Transform   Rot: " << xyzAngles << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,2) << "Transform Trans: " << xyzTrans << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,2) << "-------------------------------------------" << endl << vjDEBUG_FLUSH;
    }
 
 
@@ -171,7 +171,7 @@ public:
    // Execute any initialization needed before the API is started
    virtual void init()
    {
-      cout << "---------- App:init() ---------------" << endl;
+      vjDEBUG(vjDBG_ALL,0) << "---------- cubes:App:init() ---------------" << endl << vjDEBUG_FLUSH;
       std::vector<vjUser*> users = kernel->getUsers();
       int num_users = users.size();
 
@@ -190,7 +190,7 @@ public:
          vjASSERT(users[0]->getId() == 0);
          break;
       default:
-         vjDEBUG(0) << "ERROR: Bad number of users." << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,0) << "ERROR: Bad number of users." << vjDEBUG_FLUSH;
          exit();
          break;
       }
@@ -200,7 +200,7 @@ public:
    //  but before the drawManager starts the drawing loops.
    virtual void apiInit()
    {
-      ;
+      vjDEBUG(vjDBG_ALL,0) << "---- cubes:App:apiInit() ----\n" << vjDEBUG_FLUSH;
    }
 
    // Called immediately upon opening a new OpenGL context
@@ -210,10 +210,12 @@ public:
       vjASSERT(mDlData->firstTime == true);   // We should not have been here yet
       mDlData->firstTime = false;
 
-      glGenLists(rand()%25);        // Generate some random lists.  NOTE: Needed for testing only
+      int num_dls = rand()%50;
+      glGenLists(num_dls);        // Generate some random lists.  NOTE: Needed for testing only
       mDlData->cubeDLIndex = glGenLists(1);
 
-      vjDEBUG(0) << "Creating DL:" << mDlData->cubeDLIndex << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "Creating DL:" << mDlData->cubeDLIndex << endl << vjDEBUG_FLUSH;
+      cerr << "created displays lists:" << num_dls+1 << endl;
 
       glNewList(mDlData->cubeDLIndex, GL_COMPILE);
          drawbox(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, GL_QUADS);
@@ -253,7 +255,7 @@ public:
    /// Function called after tracker update but before start of drawing
    virtual void preDraw()
    {
-       vjDEBUG(2) << "cubesApp::preDraw()" << endl << vjDEBUG_FLUSH;
+       vjDEBUG(vjDBG_ALL,2) << "cubesApp::preDraw()" << endl << vjDEBUG_FLUSH;
 
        for(int i=0;i<mUserData.size();i++)
           mUserData[i]->updateNavigation();       // Update the navigation matrix
@@ -262,13 +264,13 @@ public:
    /// Function called after drawing has been triggered but BEFORE it completes
    virtual void postDraw()
    {
-       vjDEBUG(2) << "cubesApp::postDraw()" << endl << vjDEBUG_FLUSH;
+       vjDEBUG(vjDBG_ALL,2) << "cubesApp::postDraw()" << endl << vjDEBUG_FLUSH;
    }
 
    /// Function called before updating trackers but after the frame is drawn
    virtual void postSync()
    {
-      vjDEBUG(2) << "cubesApp::postSync" << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,2) << "cubesApp::postSync" << endl << vjDEBUG_FLUSH;
    }
 
 
@@ -281,7 +283,7 @@ private:
 
    void myDraw(vjUser* user)
    {
-      vjDEBUG(2) << "\n--- myDraw() ---\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,2) << "\n--- myDraw() ---\n" << vjDEBUG_FLUSH;
 
       static const float SCALE = 100;
       //static const float SCALE = 10;

@@ -19,8 +19,7 @@ int main(int argc, char* argv[])
    vjKernel* kernel = vjKernel::instance();        // Get the kernel
    torusApp* application = new torusApp(kernel);   // Declare an instance of the app
 
-   kernel->setApplication(application);         // Set application
-
+   
    // Load any config files specified on the command line
    for(int i=1;i<argc;i++)
       kernel->loadConfigFile(argv[i]);
@@ -30,8 +29,17 @@ int main(int argc, char* argv[])
       //- App KernelConfig function
       //- Load user local config
 
+   kernel->setApplication(application);         // Set application
+
    while(1)
-   {
+   {   
+      /*
+      sleep(2);
+      kernel->stopApplication();
+      sleep(2);
+      kernel->setApplication(application);
+      */
+      
       sched_yield();
    }
 }
