@@ -63,6 +63,10 @@ AC_ARG_WITH([pyste],
             [  --with-pytse=<PATH>     Full path to pyste.py script   [default=none]],
             [PYSTE="$withval"], [PYSTE='none'])
 
+AC_ARG_WITH([osg],
+            [ --with-osg=<PATH>        Open Scene Graph installation  [default=$OSGHOME then /usr/local]],
+            [osg_base_dir="$withval"], [osg_base_dir=${OSGHOME-/usr/local}])
+
 # Force the use of GCC as the compiler.
 # NOTE: This is not fully implemented yet for any platform, but it is partially
 # usable on Windows.
@@ -219,6 +223,48 @@ GADGETEER_PATH([0.13], ,
 VRJUGGLER_PATH([1.1.144], ,
                [AC_MSG_ERROR([*** VR Juggler is required for PyJuggler ***])])
 
+pyjsave_CFLAGS="$CFLAGS"
+pyjsave_CPPFLAGS="$CPPFLAGS"
+pyjsave_LDFLAGS="$LDFLAGS"
+pyjsave_LIBS="$LIBS"
+
+# Ensure that /usr/include and /usr/lib are not included multiple times
+# if $OSGROOT is "/usr".
+if test "x$osg_base_dir" != "x/usr" ; then
+   OSG_INCLUDES="-I$osg_base_dir/include"
+
+   if test "x$OS_TYPE" = "xWin32" ; then
+      OSG_LDFLAGS="/libpath:$osg_base_dir/lib"
+      OSG_LIBS='osg.lib osgProducer.lib osgUtil.lib osgDB.lib'
+   else
+      OSG_LDFLAGS="-L$osg_base_dir/lib"
+      OSG_LIBS='-losg -losgProducer -losgUtil -losgDB'
+   fi
+fi
+
+DPP_LANG_SAVE
+DPP_LANG_CPLUSPLUS
+
+CFLAGS="$CFLAGS ${_EXTRA_FLAGS}"
+CPPFLAGS="$CPPFLAGS $OSG_INCLUDES $STDFLAGS"
+LDFLAGS="$LDFLAGS $OSG_LDFLAGS"
+
+AC_CHECK_LIB([osg], [osgGetVersion],
+   [AC_CHECK_HEADER([osg/Vec3], [HAVE_OSG='Y'], [HAVE_OSG='N'])],
+   [HAVE_OSG='N'], [-lX11 -lXext])
+
+DPP_LANG_RESTORE
+
+CFLAGS="$pyjsave_CFLAGS"
+CPPFLAGS="$pyjsave_CPPFLAGS"
+LDFLAGS="$pyjsave_LDFLAGS"
+LIBS="$pyjsave_LIBS"
+
+if test "x$HAVE_OSG" = "xY" ; then
+   AC_DEFINE([PYJUGGLER_HAVE_OSG], 1,
+   	     [Define if the Open Scene Graph is available.])
+fi
+
 # -----------------------------------------------------------------------------
 # Miscellaneous checks.
 # -----------------------------------------------------------------------------
@@ -251,6 +297,11 @@ DPP_SUBST
 
 AC_SUBST(EXTRA_LINK_FLAGS)
 AC_SUBST(PYJUTIL_LDFLAGS)
+
+AC_SUBST(HAVE_OSG)
+AC_SUBST(OSG_INCLUDES)
+AC_SUBST(OSG_LDFLAGS)
+AC_SUBST(OSG_LIBS)
 
 AC_SUBST(PYTHON_ROOT)
 AC_SUBST(PYTHON_INCLUDES)

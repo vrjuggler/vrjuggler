@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Aug-18-2003 patrickh    Exposed vrj::OsgApp so that developers can combine
+                        PyJuggler and PyOSG.
+                        NEW VERSION: 0.8.1
 Aug-03-2003 patrickh    Updated to JCCL 0.12, Gadgeteer 0.13, and VR Juggler
                         1.1.144.
                         NEW VERSION: 0.8.0

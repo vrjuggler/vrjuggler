@@ -35,8 +35,9 @@ MKINSTALLDIRS=	$(scriptdir)/mkinstalldirs
 
 CXX=		@CXX@
 CXXFLAGS=	$(shell vrjuggler-config --cxxflags) @PYTHON_INCLUDES@	\
-		-I$(top_srcdir) -I$(srcdir)
+		-I$(top_srcdir) -I$(srcdir) $(DEFS)
 CXX_PLUGIN=	@CXX_PLUGIN@
+#DEFS=		@DEFS@
 INCLUDES=	$(shell vrjuggler-config --includes) -I$(top_srcdir)	\
 		-I$(srcdir)
 PYTHON=		@PYTHON@
@@ -109,6 +110,14 @@ VRJ_SRCS= \
 	vrj/_SimViewport.cpp		\
 	vrj/_User.cpp			\
 	vrj/_Viewport.cpp
+
+# Add the Open Scene Graph build bits if OSG is available.
+ifeq (@HAVE_OSG@, Y)
+   DEFS+=		-DPYJUGGLER_HAVE_OSG
+   INCLUDES+=		@OSG_INCLUDES@
+   VJ_EXTRA_LIBS+=	@OSG_LDFLAGS@ @OSG_LIBS@
+   VRJ_SRCS+=		vrj/_OsgApp.cpp
+endif
 
 VPR_OBJS=	$(VPR_SRCS:.cpp=.$(OBJEXT))
 JCCL_OBJS=	$(JCCL_SRCS:.cpp=.$(OBJEXT))
