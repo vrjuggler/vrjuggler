@@ -48,6 +48,9 @@
 #include <gmtl/VecOps.h>
 #include <gmtl/Xforms.h>
 
+#include <vpr/Util/Assert.h>
+#include <vpr/Util/Debug.h>
+#include <snx/Util/Debug.h>
 #include <snx/SoundFactory.h>
 #include <snx/sonix.h>
 
@@ -227,20 +230,21 @@ void sonix::pause( const std::string& alias )
  void sonix::changeAPI( const std::string& apiName )
 {
    snx::ISoundImplementation& oldImpl = this->impl();
-   assert( &oldImpl != NULL && "this->impl() should ensure that oldImpl is non-NULL" );
-   
-   std::cout<<"[snx] NOTIFY: Changing API from "<<oldImpl.name();
+   vprASSERT( &oldImpl != NULL && "this->impl() should ensure that oldImpl is non-NULL" );
    
    // change the current api to the newly requested one.
    snx::SoundFactory::instance()->createImplementation( apiName, mImplementation );
 
-   std::cout<<" to "<<mImplementation->name()<<".\n"<<std::flush;
+   vprDEBUG(snxDBG, vprDBG_CRITICAL_LVL) << "Changing sound API from '"
+                                         << oldImpl.name() << "' to '"
+                                         << mImplementation->name() << "'\n"
+                                         << vprDEBUG_FLUSH;
    
    // copy sound state from old to current (doesn't do binding yet)
    snx::SoundImplementation* si = dynamic_cast<snx::SoundImplementation*>( mImplementation );
-   assert( NULL != si && "implementation is not of type SoundImplementation, cast fails" );
+   vprASSERT( NULL != si && "implementation is not of type SoundImplementation, cast fails" );
    snx::SoundImplementation& old_si = dynamic_cast<snx::SoundImplementation&>( oldImpl );
-   assert( NULL != &old_si && "implementation is not of type SoundImplementation, cast fails" );
+   vprASSERT( NULL != &old_si && "implementation is not of type SoundImplementation, cast fails" );
    si->copy( old_si );
 
       // unload all sound data
@@ -251,16 +255,16 @@ void sonix::pause( const std::string& alias )
 
       // delete old api, we're done with it...
       delete &oldImpl;
-   
+
    // startup the new API
    if(!mImplementation->startAPI()) // if it fails to start then we revert back to stub
    {
-      std::cout <<"[snx] NOTIFY: startAPI return 0, changing API back to stub" << std::endl;
+      vprDEBUG(snxDBG, vprDBG_CRITICAL_LVL)
+         << clrOutBOLD(clrRED, "ERROR:") << " Failed to start new API--"
+         << "changing back to Stub\n" << vprDEBUG_FLUSH;
       changeAPI("stub");
    }
-   
-   
-   
+
    // load all sound data
    mImplementation->bindAll();
 }
