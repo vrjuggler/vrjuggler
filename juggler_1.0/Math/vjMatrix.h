@@ -78,7 +78,7 @@ public:
 
 public:
    //: Default Constructor (Identity constructor)
-   vjMatrix() { makeIdent(); };
+   vjMatrix() : mat() { makeIdent(); };
 
    //: Constructor: Specify each element
    vjMatrix(float a00, float a01, float a02, float a03,

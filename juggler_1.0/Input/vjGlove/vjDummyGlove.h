@@ -45,7 +45,7 @@
 // It returns the data in it's default init.
 // i.e. 0 angles, and ident matrices
 //!PUBLIC_API:
-class vjDummyGlove : public vjGlove
+class vjDummyGlove : virtual public vjGlove
 {
 public:
    //: Construct using chunk
@@ -72,4 +72,4 @@ public:
 
 };
 
-#endif	/* _VJ_CYBER_GLOVE_H_ */
+#endif   /* _VJ_CYBER_GLOVE_H_ */
