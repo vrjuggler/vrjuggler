@@ -63,6 +63,8 @@ public:
    ApplicationDataManager();
    virtual ~ApplicationDataManager();
    
+   // ---------- ClusterPlugin Interface ----------- //   
+public:   
    /**
     * Get the GUID associated with this plugin.
     */
@@ -76,16 +78,37 @@ public:
     */
    void handlePacket(Packet* packet, ClusterNode* node);
    
+   /**
+    * Called each frame by the kernel to update all application level data(ApplicationData).
+    */
    virtual void preDraw();
+   
+   /**
+    * Called each frame by the kernel to update the cluster after the InputManager has updated it's data.
+    */
    virtual void postPostFrame();
+
+   /**
+    * Send all pending requests for ApplicationData to other ClusterNodes.
+    */
    virtual void sendRequests();
+
+   /**
+    * Is this ClusterPlugin ready for the cluster to start the application.
+    */
    virtual bool isPluginReady();
+   /**
+    * Return the name of this ClusterPlugin.
+    */
    virtual std::string getPluginName()
    {
       return(std::string("ApplicationDataManager"));
    }
-//   bool recognizeApplicationDataManagerConfig(jccl::ConfigChunkPtr chunk);
    
+
+
+   // ---------- ConfigChunkHandler Interface ----------- //
+public:   
    /** Add the pending chunk to the configuration.
     *  PRE: configCanHandle (chunk) == true.
     *  @return true iff chunk was successfully added to configuration.
@@ -107,20 +130,17 @@ public:
     */
    bool configCanHandle(jccl::ConfigChunkPtr chunk);
 
+private:      
    bool recognizeApplicationDataManagerConfig(jccl::ConfigChunkPtr chunk);
-
-//private:      
    /**
     * Returns the string representation of the chunk type used for the ApplicationDataManager
     */   
    static std::string getChunkType() { return std::string( "ApplicationDataManager" ); }
+   
 
+
+   // ---------- ApplicationData Interface ----------- //
 public:
-   /**
-    * Called each frame by the kernel to update all application level data(ApplicationData)
-    */
-   void updateAll();
-
    /**
     * Add a ApplicationData object to the current configuration.
     *
@@ -138,37 +158,30 @@ public:
     * Print a list of all ApplicationData objects currently in the configuration
     */
    void dumpApplicationData();
+   
 
+
+   // ---------- Helper Functions ----------- //
 private:
-   /**
-    * Send all of the remaining requests for ApplicationData
-    */
-   void sendApplicationDataRequests();
-
-public:
    /**
     * Get a pointer to the ApplicationDataServer for the given name
     */
-   ApplicationDataServer* getApplicationDataServer(vpr::GUID id);
+   ApplicationDataServer* getApplicationDataServer(const vpr::GUID& id);
 
    /**
     * Get a pointer to the ApplicationData object that is being updated by a remote machine
     */
-   ApplicationData* getRemoteApplicationData(vpr::GUID id);
+   ApplicationData* getRemoteApplicationData(const vpr::GUID& id);
 
-private:
    /**
     * Add a request for a ApplicationData machine on a remote mahine
     */
-   void addPendingApplicationDataRequest(ApplicationDataRequest* new_appdata_req, std::string hostname);
+   void addPendingApplicationDataRequest(ApplicationDataRequest* new_appdata_req, const std::string& hostname);
 
-public:
    /**
     * Remove a ApplicationData request that has been fulfilled.
     */
    void removePendingApplicationDataRequest(const vpr::GUID& guid);
-
-
 private:
    std::map<vpr::GUID, ApplicationData*>           mRemoteApplicationData;              /**< Application level ApplicationData list. */
    vpr::Mutex                                      mRemoteApplicationDataLock;          /**< Lock on ApplicationData list.*/   
@@ -179,8 +192,8 @@ private:
    std::map<vpr::GUID, ApplicationDataServer*>     mApplicationDataServers;             /**< ApplicationData Server list. */
    vpr::Mutex                                      mApplicationDataServersLock;         /**< Lock ApplicationData Server list.*/   
 
-   vpr::Uint32                                     mFrameNumber;                 /**< Keeps track of the local frame number */
    vpr::GUID                                       mPluginGUID;
+   vpr::Uint32                                     mFrameNumber;                 /**< Keeps track of the local frame number */   
 };
 
 } // end namespace
