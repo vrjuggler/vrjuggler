@@ -43,11 +43,11 @@
 // a totally cheezy kludge to avoid asserts becasue of some disagreement
 // between xerces & jackal/juggler/etc.  Doing this causes the loader code
 // to leak memory like a sieve.
-#ifdef VPR_OS_Win32
+//  #ifdef VPR_OS_Win32
 
-#define delete[] //
+//  #define delete[] //
 
-#endif
+//  #endif
 
 
 
