@@ -1,5 +1,6 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Nov-27-2000 bthomp    Added initial version of Intersense IS-900 driver
 Nov-02-2000 patrick   Finished new MotionStar driver--config files must be
                       updated to reflect some new options
 Oct-28-2000 allenb    Fixed bug preventing right eye only mono in Performer
