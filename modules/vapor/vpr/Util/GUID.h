@@ -174,7 +174,8 @@ public:
     */
    GUID(const GUID& ns_guid, const std::string& name);
 
-   GUID (const GUID& obj)
+   /** Copy constructor. */
+   GUID(const GUID& obj) : vpr::SerializableObject(obj)
    {
       mGuid.packed.l0 = obj.mGuid.packed.l0;
       mGuid.packed.l1 = obj.mGuid.packed.l1;
