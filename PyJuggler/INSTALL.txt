@@ -123,7 +123,24 @@ The short version of the build instructions for UNIX-based platforms
 
    % mkdir build
    % cd build
-   % ../configure --with-boost-python=<Boost.Python dir>
+   % ../configure --with-boost-python=<Boost installation dir>
    % make
+
+This assumes that you have Boost 1.31.x installed.  If you have 1.30.x
+or a version newer than 1.31 (i.e., 1.32, 1.33, etc.), you must add
+the option --with-boost-version as follows:
+
+   % ../configure --with-boost-python=<Boost installation dir> \
+        --with-boost-version=<Boost version>
+
+Valid values have only the major and minor version number.  DO NOT ADD
+THE PATCH VERSION!!  This extra option is needed because the Boost
+installation procedure incldues the Boost version number in the names of
+installed files and directories.
+
+If, for some reason, your Boost 1.31 (or newer) installation does not
+use the new naming conventions (the Boost.Python library is named
+libboost_python.so rather than libboost_python-gcc-mt.so), then add
+the option --diable-boost-hacks when you run configure.
 
 $Id$
