@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Nov-06-2003 allenb      Fixed bug with SampleBuffer that could allow memory
+                        exhaustion errors if devices are not swapped
+                        for several minutes.
+                        NEW VERSION: 0.14.1
 Oct-27-2003 allenb      Fixed bug with FOB on Linux. RTS was always high.
 Oct-12-2003 allenb      Added driver for Linux joystick devices.
 Oct-12-2003 allenb      Refactored Input interface methods startSampling,
