@@ -172,27 +172,29 @@ docs:
 
 links:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin/beans
-	cd $(instlinks)/bin && rm -f ./*.jar
 	cd $(instlinks)/bin &&						\
           for jar in $(JARS) ;						\
           do								\
+              rm -f ./$$jar ;						\
               $(LN_S) $(topdir)/java/$$jar ./ ;				\
           done
-	cd $(instlinks)/bin/beans && rm -f *.jar *.xml
 	cd $(instlinks)/bin/beans &&					\
           for bean in $(BEANS) ;					\
           do								\
+              rm -f ./$$bean.jar ./$$bean.xml ;				\
               $(LN_S) $(topdir)/java/$$bean.jar ./ ;			\
               $(LN_S) $(TWEEKROOT_ABS)/java/$$bean.xml ./ ;		\
           done
 	cd $(instlinks)/bin &&						\
           for jar in `echo "$(JDOM_JAR)" | sed -e 's/$(JCPS)/ /g'` ;	\
           do								\
+              rm -f `basename $$jar` ;					\
               $(LN_S) $$jar ./ ;					\
           done
 	cd $(instlinks)/bin &&						\
           for jar in `echo "$(JAVA_ORB_JAR)" | sed -e 's/$(JCPS)/ /g'` ; \
           do								\
+              rm -f `basename $$jar` ;					\
               $(LN_S) $$jar ./ ;					\
           done
 	cd $(instlinks)/bin && rm -f ./tweek &&				\
