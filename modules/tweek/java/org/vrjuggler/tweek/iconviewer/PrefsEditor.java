@@ -48,6 +48,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 
 
 public class PrefsEditor extends JPanel
@@ -63,8 +64,20 @@ public class PrefsEditor extends JPanel
          e.printStackTrace();
       }
 
-      mPrefsFileName = System.getProperty("user.home") + File.separator +
-                       ".tweek-iconviewer-prefs";
+      String data_dir = (new EnvironmentServiceProxy()).getAppDataDir();
+
+      // Mac OS X preferences location.
+      if ( System.getProperty("mrj.version") != null ||
+           System.getProperty("os.name").indexOf("Windows") != -1 )
+      {
+         data_dir = data_dir + File.separator + "Tweek";
+         mPrefsFileName = data_dir + File.separator + "tweek-iconviewer-prefs";
+      }
+      // UNIX.
+      else
+      {
+         mPrefsFileName = data_dir + File.separator + ".tweek-iconviewer-prefs";
+      }
    }
 
    public boolean isSmallGui()

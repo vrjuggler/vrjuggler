@@ -76,4 +76,10 @@ public interface EnvironmentService
     * @return  the path to the user's home directory
     */
    public String getUserHome();
+
+   /**
+    * Returns the absolute path to the platfom-specific directory where
+    * preferences files and other application data should be stored.
+    */
+   public String getAppDataDir();
 }
