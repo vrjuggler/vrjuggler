@@ -34,5 +34,51 @@ xmlupdate.py
    This script does not update chunk descriptions.  At this time, it only
    handles those documents whose root is <ConfigChunkDB>.
 
+desc_2.0-2.1.xsl
+----------------
+   An XSLT stylesheet that provides the upgrade path from version 2.0 of
+   the chunk description file format to version 2.1.  Simply use this
+   stylesheet with an XSLT processor to update old chunk description 
+   files.
+   
+   The old files must have the following processing instruction:
+
+      <?org-vrjuggler-jccl-settings desc.db.version="2.0" ?>
+
+   The stylesheet uses this instruction to be sure that its input is
+   the correct version.  Version 2.0 was in use between May 24, 2002,
+   and July 17, 2002.  Any description files created using VjControl
+   between that time qualify as using version 2.0 of the file format,
+   though they may not include the above processing instruction.  In
+   that case, the processing instruction should be added as the second
+   line of the source input description file(s).
+
+   To use this stylesheet with the xsltproc command, run xsltproc as
+   follows:
+
+      xsltproc -o <output.desc> desc_2.0-2.1.xsl <input.desc>
+
+   To use it with Xalan, run the xalan wrapper (shell script or batch
+   file) as follows:
+
+      xalan -in <input.desc> -out <output.desc> -xsl desc_2.0-2.1.xsl
+
+   Fill in your input filename and output filename for appropriately.
+
+   Alternatively, you may use the makefile found in this directory as
+   follows:
+
+      make INPUT_FILE=<input.desc> OUTPUT_FILE=<output.desc> update-2.0-2.1
+
+   This makefile will work with any implementation of make (including
+   Microsoft's nmake utility).  You may need to edit the makefile to
+   provide a path to the 'xsltproc' or 'xalan' executables.
+
+   Once you have updated the file, you should load the generated
+   description file using VRJConfig and review your chunk descriptions.
+   Some additions to the XML content will be made, and generic
+   identifiers are often used for these additions.  Using VRJConfig, you
+   can make customizations for your specific chunk types.
+
 Patrick Hartling <patrick@vrjuggler.org>
-June 2002
+$Id$
