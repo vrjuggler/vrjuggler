@@ -66,6 +66,8 @@ namespace jcclTest
 
         vpr::TSObjectProxy<jccl::LabeledPerfDataBuffer> tsbuffer;
 
+        tsbuffer->setBufferSize(101000);
+
         i = n;
 
         ts1.set();
@@ -105,9 +107,14 @@ namespace jcclTest
         sprintf (names, "thread %d", data->thread_num);
         std::string name (names);
         int i = 100000;
+        vpr::TSObjectProxy<jccl::LabeledPerfDataBuffer>* buffer = data->tsbuffer;
+        (*buffer)->setBufferSize(101000);
+        vpr::GUID new_cat;
         data->barrier->wait();
         while (i--) {
-            (*(data->tsbuffer))->set(jcclPERF_JACKAL, name);
+            (*buffer)->set(jcclPERF_JACKAL, name);
+            //jccl::PerformanceCategories::instance()->isCategoryActive (jcclPERF_JACKAL);
+            //new_cat = jcclPERF_JACKAL;
         }
         data->barrier->wait();
     }
