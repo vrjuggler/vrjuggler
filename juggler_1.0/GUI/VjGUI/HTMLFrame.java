@@ -137,6 +137,7 @@ public class HTMLFrame extends JFrame
     }
 
 
+
     /**
      * Sets the URL to use for the "Contents" button
      */
@@ -231,7 +232,7 @@ public class HTMLFrame extends JFrame
          * I should come up with a more generalized way of doing an
          * "HTML search path" for the HTMLFrame.
          */
-        System.out.println ("setURL: '" + url + "'");
+        //System.out.println ("setURL: '" + url + "'");
         int i = url.toString().indexOf("DescHelp/");
         if (i != -1) {
             String name = url.toString().substring(i);
@@ -290,7 +291,7 @@ public class HTMLFrame extends JFrame
 	}
 	catch (IOException ex) {
 		Core.consoleErrorMessage ("GUI", "Failed to open URL " + url);
-		pane.setText ("<h2>Failed to open URL: " + url + "</h2>");
+		pane.setText ("<h2>Failed to open URL: <br>" + url + "</h2>");
 	}
     }
 
