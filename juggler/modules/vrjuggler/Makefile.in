@@ -177,25 +177,25 @@ clean: clean-recursive
 	@if test -d ${DBG_BUILDDIR}; then			\
             echo "Cleaning in ${DBG_BUILDDIR} ...";	\
             cd ${DBG_BUILDDIR};				\
-            -rm -f *.o core so_locations;		\
-	    -rm -rf ./ii_files;				\
+            rm -f *.o core so_locations;		\
+	    rm -rf ./ii_files;				\
         fi
 	@if test -d $OPT_BUILDDIR; then			\
             echo "Cleaning in ${OPT_BUILDDIR} ...";	\
             cd ${OPT_BUILDDIR};				\
-            -rm -f *.o core so_locations;		\
-	    -rm -rf ./ii_files;				\
+            rm -f *.o core so_locations;		\
+	    rm -rf ./ii_files;				\
         fi
 	rm -f so_locations
 
 clobber: clean
 	@if test -d ${DBG_BUILDDIR}; then			\
             echo "Removing ${DBG_BUILDDIR} ...";		\
-            -rm -rf ${DBG_BUILDDIR};			\
+            rm -rf ${DBG_BUILDDIR};			\
         fi
 	@if test -d ${OPT_BUILDDIR}; then			\
             echo "Removing ${OPT_BUILDDIR} ...";		\
-            -rm -rf ${OPT_BUILDDIR};			\
+            rm -rf ${OPT_BUILDDIR};			\
         fi
 
 info::
