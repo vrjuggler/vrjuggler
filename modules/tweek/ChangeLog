@@ -1,5 +1,10 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2005-01-23 patrickh    Added org.vrjuggler.tweek.beans.HelpProvider, an
+                       interface used by the Tweek Java GUI for Panel Beans to
+                       indicate that they can provide help to users.
+                       NEW VERSION: 0.92.1
+
 [1.0 Beta 2 released - 1.18.2005]==============================================
 2005-01-18 patrickh    NEW VERSION: 0.92.0
 
