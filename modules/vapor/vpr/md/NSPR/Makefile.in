@@ -50,11 +50,11 @@ VPRROOT		= $(top_srcdir)
 VPR_SRCDIR	= @VPR_SRCDIR@/md/NSPR
 
 ifeq (@SUBSYSTEM@, NSPR)
-SRCS		= RWMutexNSPR.cpp	\
-          ThreadNSPR.cpp \
-          InetAddrNSPR.cpp \
-					SocketImpNSPR.cpp \
- 					SocketStreamImpNSPR.cpp
+SRCS		= InetAddrNSPR.cpp		\
+                  RWMutexNSPR.cpp		\
+                  SocketImpNSPR.cpp		\
+                  SocketStreamImpNSPR.cpp	\
+                  ThreadNSPR.cpp
 endif
 
 include $(MKPATH)/dpp.obj.mk
