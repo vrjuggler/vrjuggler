@@ -59,7 +59,7 @@ namespace vpr
 * Handles ts key allocation
 * Allows for friendship (if needed)
 */
-class TSObjectProxyBase
+class VPR_CLASS_API TSObjectProxyBase
 {
 public:
    TSObjectProxyBase()
