@@ -93,12 +93,14 @@
 	Threads
 	..
 	Utils
-	    Port
-	    ..
-	    Socket
-	    ..
 	..
 	VPR
+	    IO
+		Port
+		..
+		Socket
+		..
+	    ..
 	    SharedMem
 	    ..
 	    Sync
