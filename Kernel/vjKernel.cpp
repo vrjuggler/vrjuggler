@@ -32,6 +32,7 @@
 
 
 #include <vjConfig.h>
+#include <vjParam.h>
 #include <string.h>
 #include <Kernel/vjKernel.h>
 #include <Kernel/vjDebug.h>
@@ -486,5 +487,35 @@ vjUser* vjKernel::getUser(std::string userName)
          return mUsers[i];
 
    return NULL;
+}
+
+vjKernel::vjKernel()
+{
+   mApp = NULL;
+   mNewApp = NULL;
+   mNewAppSet = false;
+   mControlThread = NULL;
+   mSysFactory = NULL;
+   mInputManager = NULL;
+   mDrawManager = NULL;
+   mDisplayManager = NULL;
+   mSoundManager = NULL;
+
+   environmentManager = NULL;
+   perfBuffer = NULL;
+
+   //mInitialChunkDB = NULL;
+   //mChunkDB = NULL;
+
+   sharedMemPool = NULL;
+
+   // Print out the Juggler version number when the kernel is created.
+   vjDEBUG(vjDBG_BASE, 0) << "======================================"
+                          << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_BASE, 0) << clrOutNORM(clrGREEN, "VR Juggler version: ")
+                          << clrOutNORM(clrGREEN, VJ_VERSION) << clrRESET
+                          << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_BASE, 0) << "======================================"
+                          << std::endl << vjDEBUG_FLUSH;
 }
 
