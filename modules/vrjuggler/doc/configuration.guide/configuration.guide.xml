@@ -19,8 +19,7 @@
     <para>Configuring software for an immersive VR system can be a difficult and time consuming process. This is largely because of the size and complexity of the hardware components that make up the system - there may be multiple displays and a multitude of input devices. Furthermore, many systems are unique, or at least highly customized.</para>
     <para>VR Juggler attempts to make the configuration process as simple as possible. It includes a GUI application called VjControl to edit config files. Use of the GUI has many advantages: it can provide an organized view of the configuration information, with help information or suggested values readily available. It can prevent many simple mistakes (such as typos in text-based configuration files) and help resolve others.</para>
     <para>In addition to this, the VR Juggler config files themselves are well-structured, allowing the configurations of various elements of the VR system to be created separately and then combined in various ways.</para>
-  </chapter>
-  <chapter>
+  <section>
     <title>An overview of VR Juggler configuration</title>
     <para>VR Juggler's configuration files are composed of units called ConfigChunks. A ConfigChunk contains the configuration information for a single element of VR Juggler. These elements might be display windows, or device drivers, or even applications. Naturally, the ConfigChunk for a display window contains very different information from that of a device driver.</para>
     <para>All ConfigChunks have individual names, so that multiple chunks for the same kind of element can be distinguished. This means, for example, that a VR Juggler configuration can include several display windows with separate screen coordinates and viewing parameters, each with a unique name. It also means that VR Juggler can use an arbitrary number and variety of displays or devices at any time, limited only by the capabilities of the underlying hardware.</para>
@@ -33,6 +32,7 @@
         </imageobject>
       </mediaobject>
     </figure>
+  </section>
   </chapter>
   <chapter>
     <title>Building a configuration file from scratch</title>
@@ -245,7 +245,8 @@
         </figure>
       </section>
     </section>
-    <section>
+  </chapter>
+  <chapter>
       <title>Configuring other hardware devices</title>
       <para>Our step-by-step example above concentrated on a particular hardware setup. In the next several sections, we will discuss configuration for a number of other VR devices.</para>
       <section>
@@ -306,8 +307,8 @@
         <para>Every VR Juggler input device needs to be attached to a proxy so that it can be accessed by applications. For the Pinch Gloves there are two choices. First, the glove can be treated as a digital input source with five boolean values (10 for a pair). This means that you can attach five Digital Proxies to a Pinch Glove (with unit properties in the range 0 to 5), and use it to emulate a wand.</para>
         <para>The other alternative is to attach a Glove Proxy to it. Applications that use the Glove Proxy interface can receive information about the individual finger joint positions of the glove. Of course, because of the capabilities of the Pinch Glove, VR Juggler simply infers these joint positions based on the boolean values for each finger.</para>
       </section>
-    </section>
-    <section>
+    </chapter>
+    <chapter>
       <title>Configuring simulated devices</title>
       <para>While the focus of VR Juggler development is on fully immersive VR systems, the reality is that many times such a system is not available. Often, this is because many developers have to share a single HMD or other device. Researchers also frequently need to demonstrate their applications in a wide range of settings, where the usual paraphernalia of VR is unavailable.</para>
       <para>For all these reasons, VR Juggler supports a set of simulator objects to replace the usual positional, analog, and digital input devices. By configuring these simulated devices, users can interact with an application using only a keyboard and mouse.</para>
@@ -344,7 +345,6 @@
         </figure>
         <para>All simulator devices have a few commonalities. Each is configured with the name of a <property>Keyboard Proxy</property> which it uses as a source of user input. Also, each has a set of key bindings. For example, a position simulator will have keystrokes assigned for movement in each direction. By comparison, a digital simulator will have a single keystroke to indicate "on", and an analog simulator will have a pair of keystrokes to increase and decrease its value. The ConfigChunks for digital and analog simulators can actually configure multiple instances of each, just by creating additional keystrokes. Some sample simulator ConfigChunks are shown in <xref linkend="SimDevChunkFigure"/>. Note how the digital simulator on the right simulates 8 separate digital values, using a combination of mouse buttons and number keys.</para>
         <para>Just like every other input device, simulator devices must be connected to proxies before they can be used by VR Juggler. Simulated devices use the exact same proxy ConfigChunks as real hardware devices, and the proxies are configured with the same combination of (simulated) device name and unit number. Note that position simulators (as well as the glove simulator objects) only supply one set of input data, so the <property>Unit</property> property for any proxy referring to them should be 0. Digital and analog simulators, on the other hand, can be configured to support an arbitrary number of input device units.</para>
-      </section>
     </section>
   </chapter>
 </book>
