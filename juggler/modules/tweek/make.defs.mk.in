@@ -124,6 +124,8 @@ endif
 # -----------------------------------------------------------------------------
 # Library names.
 # -----------------------------------------------------------------------------
-TWEEK_LIBRARY	= @LIB_PREFIX@tweek
+ifeq (@BUILD_CXX@, Y)
+   TWEEK_LIBRARY=	@LIB_PREFIX@tweek
+endif
 
 include $(topdir)/common.defs.mk
