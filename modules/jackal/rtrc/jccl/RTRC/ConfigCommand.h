@@ -29,17 +29,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
-// commands used by Configuration control
-
 #ifndef _JCCL_CONFIG_COMMAND_H_
 #define _JCCL_CONFIG_COMMAND_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/JackalServer/Command.h>
+#include <jccl/Net/Command.h>
 
+// commands used by Configuration control
 
 namespace jccl {
 
@@ -94,7 +90,6 @@ namespace jccl {
         virtual const std::string& getProtocolName() const;
     };
 
-
-};
+}
 
 #endif

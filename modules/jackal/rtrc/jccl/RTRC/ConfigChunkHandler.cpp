@@ -29,15 +29,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 #include <jccl/jcclConfig.h>
-#include <jccl/Plugins/ConfigManager/ConfigChunkHandler.h>
-#include <jccl/Plugins/ConfigManager/ConfigManager.h>
+#include <jccl/RTRC/ConfigChunkHandler.h>
+#include <jccl/RTRC/ConfigManager.h>
 #include <jccl/Config/ConfigChunk.h>
-#include <jccl/Plugins/ConfigManager/DependencyManager.h>
+#include <jccl/RTRC/DependencyManager.h>
 #include <jccl/Util/Debug.h>
 #include <typeinfo>
-
 
 namespace jccl
 {
@@ -225,5 +223,4 @@ void outputPendingItemState(int debugLevel, std::string chunkName, std::string c
 }
 
 
-}; // namespace jccl
-
+}
