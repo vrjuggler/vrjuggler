@@ -119,7 +119,7 @@ public:
     */
    std::vector<ContextDataType*>* getDataVector()
    {
-      return &mContextDataVector;
+      return &(mThreadSpecificContextData->mContextDataVector);
    }
 
 protected:
@@ -170,6 +170,6 @@ private:
    vpr::TSObjectProxy<ThreadContextData<ContextDataType> >  mThreadSpecificContextData;
 };
 
-};
+}
 
 #endif
