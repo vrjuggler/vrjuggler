@@ -21,6 +21,8 @@ namespace gadget
 *
 * Stable - Samples that the application is actually looking at
 * Ready   - Samples that have been completed and could be swapped over to current
+*
+* ASSERTION: There is always at least one valid set of samples on each buffer.
 */
 template <class DATA_TYPE>
 class SampleBuffer
@@ -47,8 +49,9 @@ public:
    vpr::Guard<vpr::Mutex>  guard(mLock);
       vprASSERT(!mReadyBuffer.empty());   // ASSERT: We actually have values in ready buffer
 
-      mStableBuffer = mReadyBuffer;    // Copy over the ready values
-      if(mStableBuffer.size() > 1)       // If we have more then one sample in buffer
+      mStableBuffer = mReadyBuffer;       // Copy over the ready values
+      
+      if(mStableBuffer.size() > 1)        // If we have more then one sample in buffer, erase the rest
       {
          mReadyBuffer.front() = mReadyBuffer.back();                       // Keep copy of most recent sample
          mReadyBuffer.erase(mReadyBuffer.begin()+1, mReadyBuffer.end());   // Erase all but the first value

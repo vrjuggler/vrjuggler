@@ -86,7 +86,7 @@ public:
    virtual bool config(jccl::ConfigChunkPtr c)
    {
       //vprDEBUG(vprDBG_ALL,4)<<"*** Digital::config()\n"<< vprDEBUG_FLUSH;
-      return true;;
+      return true;
    }
 
    //: Get the digital data for the given devNum
@@ -94,18 +94,24 @@ public:
    //  Returns -1 if function fails or if devNum is out of range.<BR>
    //  NOTE: If devNum is out of range, function will fail, possibly issueing
    //  an error to a log or console - but will not ASSERT.<BR>
-   DigitalData* getDigitalData(int devNum = 0)
+   const DigitalData getDigitalData(int devNum = 0)
    {
-      vprASSERT(!mDigitalSamples.stableBuffer().empty() && "Empty stable buffer, can't get sample");
-      vprASSERT((mDigitalSamples.stableBuffer().back().size() > (unsigned)devNum) && 
-                "Trying to get out of range device. No sample available.");
-      
-      // XXX: Fill in;
-      return &(mDigitalSamples.stableBuffer().back()[devNum]);
+      gadget::SampleBuffer<DigitalData>::buffer_t& stable_buffer = mDigitalSamples.stableBuffer();
+
+      if ((!stable_buffer.empty()) &&
+          (stable_buffer.back().size() > (unsigned)devNum))  // If Have entry && devNum in range
+      {
+         return stable_buffer.back()[devNum];
+      } 
+      else        // No data or request out of range, return default value
+      {
+         return mDefaultValue;
+      }
    }
 
 protected:
    gadget::SampleBuffer<DigitalData>  mDigitalSamples;   /**< Position samples */
+   DigitalData                        mDefaultValue;   /**< Default analog value to return */
 };
 
 };

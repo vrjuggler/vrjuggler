@@ -56,7 +56,7 @@ void DigitalProxy::updateData()
    if (!mStupified)
    {
       int old_state = m_data.getDigital();
-      m_data = *mTypedDevice->getDigitalData(m_unitNum);
+      m_data = mTypedDevice->getDigitalData(m_unitNum);
       int new_state = m_data.getDigital();
 
       if (Digital::OFF == old_state)
