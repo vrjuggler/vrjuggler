@@ -2,12 +2,13 @@
 #define _vjCondGeneric_h_
 
 #include <vjConfig.h>
-#include <Sync/vjSemaphore.h>
-#include <Sync/vjMutex.h>
-#include <Kernel/vjDebug.h>
 
 #include <sys/types.h>
 #include <unistd.h>
+
+#include <Sync/vjSemaphore.h>
+#include <Sync/vjMutex.h>
+#include <Kernel/vjDebug.h>
 
 //----------------------------------------------
 //  vjCondGeneric
@@ -48,32 +49,10 @@ public:
            << "-----------------------------------\n";
    }
 
-
    //: Wait for possible condition change
    //! POST: The condition has been modifed, but may not be satisfied.
    //! NOTE: The call blocks until a condition has been signaled
-   int wait()
-   {
-      cerr << setw(5) << getpid() << "  Wait: Begin:" << endl;
-      // ASSERT:  We have been locked
-      if (condMutex->test() == 0)    // Not locked
-         cerr << " vjCondGeneric::wait: INCORRECT USAGE: Mutex was not locked when wait invoked!!!" << endl;
-
-      waiters++;              // We have lock already
-
-      condMutex->release();   // Release it
-
-      sema.acquire();         // Wait for a while
-      sema.dump();
-
-      // We must now regain the lock so that the condition can be re checked upon exit
-      // We also need it to decrement waiters
-      condMutex->acquire();
-      waiters--;
-
-      cerr << setw(5) << getpid() << "  Wait: end:" << endl;
-      return 0;
-   }
+   int wait(void);
 
    //: Signal a condition change
    // This call tells all waiters that the condition has changed.
@@ -108,26 +87,26 @@ public:
       return 0;
    }
 
-   //:  Aquire the condition lock
+   //: Acquire the condition lock.
    int acquire()
    {
       return condMutex->acquire();
    }
 
-   //: Try to acquire the condition lock
+   //: Try to acquire the condition lock.
    int tryAcquire()
    {
       return condMutex->tryAcquire();
    }
 
-   //: Release the condition lock
+   //: Release the condition lock.
    int release()
    {
       return condMutex->release();
    }
 
-   //: Explicitly set the mutex to use
-   //! NOTE: NEVER call except to initialize explicitly
+   //: Explicitly set the mutex to use.
+   //! NOTE: NEVER call except to initialize explicitly.
    void setMutex(vjMutex* mutex)
    {
       mutex->release();       // NOT exactly correct, but just make sure not to leave it locked
@@ -146,10 +125,10 @@ public:
 private:
    // --- These make up the "condition variable" ---- ///
    vjSemaphore sema;          // Condition variable.
-   long waiters;              // The number of processes waiting
+   long waiters;              //: The number of processes waiting
 
-   vjMutex* condMutex;        // Mutex for the condition variable - User specified
-   vjMutex defaultMutex;      // One to use if user does not specify one
+   vjMutex* condMutex;        //: Mutex for the condition variable - User specified
+   vjMutex defaultMutex;      //: Mutex to use if user does not specify one
 
    // = Prevent assignment and initialization.
    void operator= (const  vjCondGeneric&) {}
