@@ -242,7 +242,6 @@ public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener
 	ChunkTreeNodeInfo ni;
 	DefaultMutableTreeNode n;
 	
-	chunkdb.replace(oldc, newc);
 	Enumeration nodes = ((DefaultMutableTreeNode)root).breadthFirstEnumeration();
 	while (nodes.hasMoreElements()) {
 	    n = (DefaultMutableTreeNode)nodes.nextElement();
