@@ -9,12 +9,16 @@ For all versions:
       for the current list of bugs.
 
 ===============================================================================
+
  Version: 1.1 (dev build)
 Started: April 13, 2001
 
-	Required application and configuration changes for upgrading from older versions:
-  		* Introduced window viewports.  This means all config files from old version are incompatible
-      * vjGlApp::bufferPreDraw() - New interface function for OGL-based apps.  Must use if going to use multiviewport code.
+    Required application and configuration changes for upgrading from older
+    versions:
+        * Introduced window viewports.  This means all config files from old
+          version are incompatible
+        * vjGlApp::bufferPreDraw() - New interface function for OpenGL-based
+          apps.  Must use if going to use multiviewport code.
 
 ===============================================================================
 
