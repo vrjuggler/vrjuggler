@@ -113,8 +113,8 @@ typedef struct {
  *   then you can access the data, in order, as 0,1,2.
  *
  * See also: Position
- *class Intersense :  public Input, public Position,  public Digital,  public Analog
  */
+//class Intersense : public Input, public Position, public Digital, public Analog
 class Intersense : public InputMixer<InputMixer<InputMixer<Input,Digital>,Analog>,Position>
 {
 protected:
