@@ -42,7 +42,8 @@ SUBDIR		=
 #                  Util
 
 SRCS		= \
-	IncludesTest.cpp
+	IncludesTest.cpp		\
+	LabeledPerfDataBufferTest.cpp
 
 
 include $(MKPATH)/dpp.obj-subdir.mk
