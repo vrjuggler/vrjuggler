@@ -17,6 +17,7 @@ $VARS{'CPPFLAGS'}              = '@CPPFLAGS@';
 $VARS{'CXXFLAGS'}              = '@CXXFLAGS@';
 $VARS{'DBG_FLAGS'}             = '@DBG_FLAGS@';
 $VARS{'DEFS'}                  = '@DEFS@';
+$VARS{'DEP_GEN_FLAG'}          = '@DEP_GEN_FLAG@';
 $VARS{'EXTRA_LINK_FLAGS'}      = '@EXTRA_LINK_FLAGS@';
 $VARS{'INCLUDES'}              = '@INCLUDES@';
 $VARS{'OBJ_FILE_SUFFIX'}       = '@OBJ_FILE_SUFFIX@';
