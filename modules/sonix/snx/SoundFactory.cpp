@@ -58,7 +58,7 @@
 namespace snx
 {
 
-SoundFactory::SoundFactory() : snx::Singleton<SoundFactory>()
+SoundFactory::SoundFactory() : vpr::Singleton<SoundFactory>()
 {
    std::vector<std::string> search_paths;
    search_paths.push_back( "${SNX_BASE_DIR}/share/sonix/plugins" );
