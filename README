@@ -4,79 +4,257 @@
 #                       Virtual Reality Applications Center (VRAC)
 #
 # Contributors (Alphabetically): 
-#               Al Baker, Allen Bierbaum, Carolina Cruz-Neira, 
-#               Jesse Coats, Patrick Hartling, Chris Just, Kevin Meinert
-#
-# This File's Intent: Describe what to do with this source tree - 
-#                     How to compile, build and test VR Juggler
-#
+#               Albert Baker, Allen Bierbaum, Carolina Cruz-Neira, 
+#               Jesse Coats, Patrick Hartling, Andrew Himberger, 
+#               Chris Johanson, Christopher Just,
+#               Kevin Meinert, Nicolas Tarrin, Ben Thompson
 # 
 
 ------------------
 Table of contents:
 ------------------
-1.) Choose a directory to put Juggler.
-2.) Goto that directory and checkout juggler using CVS
-3.) Enter the newly checked out Juggler source directory
-4.) Set the environment variable VJ_BASE_DIR
-5.) Compile juggler (using the autoconf system, and gnu-make):
-    a.) Auto-Generate Headers
-    b.) Auto-Generate the configuration script "configure"
-    c.) Probe the system for capabilities, generate Makefiles, etc...
-        this "configures" the source tree for the current system
-    d.) "Make" the distribution using gnu-make. 
-6.) Advanced topics
-    a.) Send compiler output to a different directory than the source tree.
 
---------------------------------------------------------------------------
+    1. Getting started
+        A. Supported platforms
+        B. Minimum requirements (compiler, libraries, etc.)
+    2. Questions about VR Juggler
+        A. FAQ
+        B. Documentation
+              i. Getting Started Guide
+             ii. Programmer's Guide
+            iii. Programmer's Reference
+             iv. VjControl
+              v. VR Juggler Team Guide
+        C. Mailing lists
+              i. vrjuggler-info@lists.sourceforge.net
+             ii. vrjuggler-devel@lists.sourceforge.net
+    3. Compiling VR Juggler from source
+        A. Overview
+        B. Details
+        C. Advanced topics
 
-1.) Choose a directory to put Juggler. [JUGGLER_DIR]
+==============================================================================
+1. Getting started
+==============================================================================
 
-2.) Goto that directory and checkout juggler using CVS
-    NOTE: make sure CVS is set up, and pointing to the Juggler repository.
-cd [JUGGLER_DIR]
-cvs checkout juggler
+    A. Supported platforms
 
-3.) Enter the newly checked out Juggler source directory
-cd [JUGGLER_DIR]/juggler
+        VR Juggler is officially supported on the following platforms:
 
-4.) Set the environment variable VJ_BASE_DIR
-    NOTE: This is required by Juggler's build system (makefiles, etc..) 
-    NOTE: 1.) The directory "instlinks" is semi-important. 
-              What does the word "instlinks" mean? 
-	      It is a working distribution of the Juggler library.
-	      After "gmake" is done, you'll be able to use this directory 
-	      to compile your code against.
-          2.) It also determines where juggler files will be created:
-	      Juggler files will be created in (some-directory)/instlinks/..
-	      (in other words, files are created one dir back from instlinks)
-    NOTE: Make sure this line is in your .tcshrc or .cshrc file.
-setenv VJ_BASE_DIR [JUGGLER_DIR]/juggler/instlinks
+            IRIX 6.5
+            RedHat Linux 6.1, 6.2, 7.1, and newer
+            Windows NT 4.0 and 2000
+            Windows 98/Me
 
+        VR Juggler is known to work on the following platforms (but is
+        not officially supported):
 
-5.) Compile juggler (using the autoconf system, and gnu-make):
-    a.) Auto-Generate Headers
-autoheader
-    
-    b.) Auto-Generate the configuration script "configure"
-autoconf
-    
-    c.) Probe the system for capabilities, generate Makefiles, etc...
-        this "configures" the source tree for the current system
-[JUGGLER_DIR]/juggler/configure
+            FreeBSD 4.2 and 5.0-CURRENT (x86)
+            Sun Solaris 7 (x86) with patches up through June 6, 2001
+            Sun Solaris 8 (x86 and SPARC) with patches up through June 25, 2001
 
-    d.) "Make" the distribution using gnu-make.  
-        This compiles, links, and creates the final distribution tree 
-        (in the form of sym-links).
-gmake
+    B. Minimum requirements (by operating system)
 
+        * All
+            GNU make 3.78 or newer
+            GNU Autoconf 2.13
+            GNU Automake 1.4
+            Java 2 Platform 1.2.2 or newer (only for VjControl)
 
-6.) Advanced topics
-    a.) Send compiler output to a different directory than the source tree.
-        Run this in the directory you want compiler output to go to.
-	NOTE: You can change the word "myBuildDirectory" to a name of 
-	      your choice.
-Choose a build dir: [BUILD_DIR] 
-mkdir [JUGGLER_DIR]/juggler/[BUILD_DIR]
-cd [JUGGLER_DIR]/juggler/[BUILD_DIR]
-[JUGGLER_DIR]/juggler/configure
+        * IRIX
+            MIPSpro Compilers 7.3.1.1m or newer
+            OpenGL
+
+        * RedHat Linux 6.x
+            GCC 2.91
+            Mesa3D 3.2 or newer
+
+        * RedHat Linux 7.1
+            GCC 2.96 20000731 (Red Hat Linux 7.1 2.96-81)
+            Mesa3D 3.2 or newer
+             or 
+            OpenGL 1.2 drivers
+
+        * HP-UX 11.00
+            aCC A.03.30
+            OpenGL
+
+        * Solaris 7 (patches including 108377-23)
+            GCC 2.85.2 or newer
+            GNU binutils 2.11.2 or newer
+            OpenGL
+
+        * Solaris 8 (patches including 108652-24 for SPARC or 108653-24 for
+          x86)
+            GCC 3.0 or newer
+            GNU binutils 2.11.2 or newer
+            OpenGL
+
+        * Win32
+            Microsoft Visual Studio 6.0 (SP4 or SP5)
+            Juggler Tools (http://www.vrjuggler.org/pub/juggler-tools-1.1.zip)
+
+==============================================================================
+2. Questions about VR Juggler
+==============================================================================
+
+    As with most open source projects, there is a common path to follow
+    for getting answers to questions.  The first step is to look at the
+    Frequently Asked Questions (FAQ) page on the web site.  If you do
+    not find an answer there, refer to the detailed documentation.  If
+    that too fails, send your question to the appropriate mailing list
+    to get an answer from someone else in the VR Juggler community.
+
+    A. Frequently asked questions (FAQ)
+
+        http://www.vrjuggler.org/html/misc/faq.html
+
+    B. Documentation
+
+          i. Getting Started Guide (for everyone)
+
+            http://www.vrjuggler.org/html/programmer.guide/index.html
+            http://www.vrjuggler.org/html/books/getting.started.guide.pdf
+
+         ii. Programmer's Guide (for VR Juggler application programmers)
+
+            http://www.vrjuggler.org/html/programmer.guide/index.html
+            http://www.vrjuggler.org/html/books/programmer.guide.pdf
+
+        iii. Programmer's Class Reference (for application programmers and VR
+             Juggler developers)
+
+            http://www.vrjuggler.org/html/programmer.reference/index.html
+            http://www.vrjuggler.org/html/books/programmer.reference.pdf
+
+         iv. VjControl (configuration of VR Juggler)
+
+            http://www.vrjuggler.org/html/vjcontrol/index.html
+            http://www.vrjuggler.org/html/books/vjcontrol.guide.pdf
+
+          v. VR Juggler Team Guide (for VR Juggler developers only)
+
+            http://www.vrjuggler.org/html/juggler.team.guide/index.html
+            http://www.vrjuggler.org/html/books/juggler.team.guide.pdf
+
+    C. Mailing lists
+
+         i. vrjuggler-info
+
+             General VR Juggler questions should be sent to the
+             vrjuggler-info@lists.sourceforge.net mailing list.  This is a
+             general discussion and announcement list that usually does not
+             have a lot of technical content.
+
+        ii. vrjuggler-devel
+
+            VR Juggler developer questions and questions relating to
+            complex and/or technical details should be sent to the
+            vrjuggler-devel@lists.sourceforge.net mailing list.
+
+==============================================================================
+3. Compiling VR Juggler from source
+==============================================================================
+
+    For a detailed description of this process, please refer to
+    http://www.vrjuggler.org/html/juggler.team.guide/build/juggler/index.html
+    before sending email to the mailing lists.
+
+    A. Overview
+
+          i. Choose a directory to put the VR Juggler source code
+         ii. Go to that directory and checkout VR Juggler using CVS
+        iii. Enter the newly checked out Juggler source directory
+         iv. Compile VR Juggler (using the Autoconf system and GNU make)
+
+              a. Generate header template and configure script
+              b. Probe the system for capabilities, generate Makefiles,
+                 etc. (this configures the source tree for the current
+                 system)
+              c. Make the distribution using GNU make
+
+          v. Set the environment variable $VJ_BASE_DIR
+         iv. Compile applications
+
+    B. Details
+
+       NOTE: If you are reading this file, then you probably already have
+       the VR Juggler source code and can skip to step iv (Compiling VR
+       Juggler).
+
+          i. Choose a directory to put the VR Juggler source code
+             (referred to as <JUGGLER_DIR> from now on).
+
+         ii. Go to that directory and checkout VR Juggler using CVS.  Of
+             course, if you are reading this, you probably already have
+             the source code, so this step can be skipped.
+             NOTE: Make sure CVS is set up and pointing to the VR Juggler
+             repository.  For more information about this, see the
+             following page:
+
+    http://www.vrjuggler.org/html/juggler.team.guide/build/get.source.html
+
+            The simple (very incomplete) version is:
+
+                cd <JUGGLER_DIR>
+                cvs checkout -rRELENG_1_0 juggler_1.0
+
+        iii. Enter the newly checked-out Juggler source directory
+
+                cd <JUGGLER_DIR>/juggler_1.0
+
+         iv. Compile VR Juggler (using the Autoconf system and GNU make)
+
+              a. Generate header template (vjDefines.h.in) and the
+                 configure script
+
+                    autoheader
+                    autoconf
+
+              b. Probe the system for capabilities, generate Makefiles, etc.
+                 (this configures the source tree for the current system)
+
+                    ./configure
+
+              c. Make the distribution using GNU make.  This compiles, links,
+                 and creates the final distribution tree (in the form of
+                 symlinks)
+
+                    gmake
+
+          v. Set the environment variable $VJ_BASE_DIR.  This is *required*
+             by VR Juggler's application makefiles and runtime environment.
+
+             NOTES:
+                 1. The directory "instlinks" is semi-important. 
+                    It is a working distribution of the VR Juggler library.
+                    After "gmake" is done, you'll be able to use this
+                    directory to compile and link your application code.
+                    This will not work on Win32, so a full installation
+                    must be performed.
+                 2. It is helpful to have something similar to the following
+                    line your $HOME/.tcshrc or $HOME/.cshrc file (assuming
+                    the use of tcsh for your shell):
+
+                        setenv VJ_BASE_DIR [JUGGLER_DIR]/juggler_1.0/instlinks
+
+                    Use whatever is appropriate for your shell (BASH, ksh,
+                    DOS, etc.)
+
+    C. Advanced topics
+
+       Sending compiler output to a different directory than the source
+       tree can be helpful for debugging and development.  This is done
+       by making a directory to put the object files and compiled
+       libraries before building.
+
+       The following steps set up a build directory within your VR Juggler
+       source directory.  Here, we use the name <BUILD_DIR> to refer to
+       the directory that will contain the object files and libraries.  It
+       can be called whatever you want.
+
+           mkdir <JUGGLER_DIR>/juggler_1.0/<BUILD_DIR>
+           cd <JUGGLER_DIR>/juggler_1.0/<BUILD_DIR>
+           <JUGGLER_DIR>/juggler_1.0/configure
+
+$Id$

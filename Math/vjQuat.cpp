@@ -31,9 +31,11 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
+#include <assert.h>
 #include <Math/vjQuat.h>
 
-void vjQuat::makeQuat(const vjMatrix& mat)
+
+void vjQuat::makeRot(const vjMatrix& mat)
 {
    float tr, s;
    //static int nxt[3] = {VJ_Y, VJ_Z, VJ_X};
@@ -94,7 +96,7 @@ void vjQuat::mult(const vjQuat& q1, const vjQuat& q2)
    vec[VJ_Y] = tempQuat[VJ_Y];
    vec[VJ_Z] = tempQuat[VJ_Z];
    vec[VJ_W] = tempQuat[VJ_W];
-   normalize();               // Make sure it is a unit quaternion
+   this->normalize();               // Make sure it is a unit quaternion
 }
 
 // Invert
@@ -165,5 +167,7 @@ void vjQuat::slerp(float t, const vjQuat& p, const vjQuat& q)
 }
 
 void vjQuat::squad(float _t, const vjQuat& _q1, const vjQuat& _q2, const vjQuat& _a, const vjQuat& _b)
-{;}
+{ 
+   assert( false && "not implemented" ); 
+}
 

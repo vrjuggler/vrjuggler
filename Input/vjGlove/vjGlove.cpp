@@ -57,6 +57,29 @@ vjGloveData::vjGloveData()
    // Matrices are already identities
 }
 
+vjGloveData::vjGloveData(const vjGloveData& data)
+{
+   int i;
+
+   for (i=0;i<NUM_COMPONENTS;i++) {
+      for(int j=0;j<NUM_JOINTS;j++) {
+          angles[i][j] = data.angles[i][j];
+      }
+   }
+
+   for (i=0;i<NUM_COMPONENTS;i++) {
+      for(int j=0;j<NUM_JOINTS-1;j++) {
+          xforms[i][j] = data.xforms[i][j];
+      }
+   }
+
+   for (i=0;i<NUM_COMPONENTS;i++) {
+      for(int j=0;j<NUM_JOINTS;j++) {
+          dims[i][j] = data.dims[i][j];
+      }
+   }
+}
+
 //: Calulate all the xform matrices
 // This is calculated based upon the angles in the data structure
 // This code will be very complex, so I will HACK it for now.
@@ -232,7 +255,7 @@ vjMatrix vjGlove::getGlovePos(vjGloveData::vjGloveComponent component, int devNu
    }
    else
    {
-      vjDEBUG( vjDBG_INPUT_MGR,0) << "ERROR: vjGlove: Trying to get a glove without a position proxy set for device number: "<<devNum<<".\n" << vjDEBUG_FLUSH;
+      vjDEBUG( vjDBG_INPUT_MGR,0) << clrOutNORM(clrRED, "ERROR:") << " vjGlove: Trying to get a glove without a position proxy set for device number: "<<devNum<<".\n" << vjDEBUG_FLUSH;
       vjASSERT( mGlovePos[devNum] != NULL );      // should be false in here
       return vjMatrix();
    }

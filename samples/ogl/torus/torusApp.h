@@ -42,8 +42,6 @@
 #include <GL/glu.h>
 
 #include <Kernel/GL/vjGlApp.h>
-#include <Kernel/vjDebug.h>
-
 #include <Math/vjMatrix.h>
 #include <Math/vjVec3.h>
 #include <Math/vjQuat.h>
@@ -69,7 +67,8 @@ public:
       /* Do nothing. */ ;
    }
 
-   // Execute any initialization needed before the API is started
+   // Execute any initialization needed before the API is started.  Put device
+   // initialization here.
    virtual void init()
    {
       mWand.init("VJWand");
@@ -80,27 +79,31 @@ public:
    virtual void apiInit()
    {;}
 
-   // Called immediately upon opening a new OpenGL context
+   // Called immediately upon opening a new OpenGL context.  This is called
+   // once for every display window that is opened.  Put OpenGL resource
+   // allocation here.
    virtual void contextInit()
    {
       initGLState();
    }
 
-   /** Function to draw the scene
-    * PRE: OpenGL state has correct transformation and buffer selected
-    * POST: The current scene has been drawn
-    */
-   virtual void draw();
-
-   /// Function called after tracker update but before start of drawing
+   // Function called after tracker update but before start of drawing.  Do
+   // calculations and state modifications here.
    virtual void preFrame()
    {;}
 
-   /// Function called after drawing has been triggered but BEFORE it completes
+   // Function to draw the scene.  Put OpenGL draw functions here.
+   //
+   // PRE: OpenGL state has correct transformation and buffer selected
+   // POST: The current scene has been drawn
+   virtual void draw();
+
+   // Function called after drawing has been triggered but BEFORE it completes
    virtual void intraFrame()
    {;}
 
-   /// Function called before updating trackers but after the frame is drawn
+   // Function called before updating trackers but after the frame is drawn.
+   // Do calculations here.
    virtual void postFrame()
    {;}
 

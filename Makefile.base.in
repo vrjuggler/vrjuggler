@@ -68,6 +68,9 @@
 # topdir          - The top of the build tree.
 # VJROOT_ABS      - The absolute path to the root of the VR Juggler source
 #                   tree.
+# VJ_SHARE_DIR    - The name of the directory where the VR Juggler data files,
+#                   test programs, and sample apps are installed.  This is
+#                   only the name of the directory, not the full path to it.
 #
 # AR              - Path to ar(1) (or equivalent program).
 # ARFLAGS         - Flags for ${AR}.
@@ -152,6 +155,7 @@ scriptdir	= ${releasedir}/scripts
 sysconfdir	= @sysconfdir@
 topdir		= @topdir@
 VJROOT_ABS	= @SAFE_VJROOT_ABS@
+VJ_SHARE_DIR	= @VJ_SHARE_DIR@
 
 AR		= @AR@ ${EXTRA_ARFLAGS} ${ARFLAGS}
 ARFLAGS		= @ARFLAGS@
@@ -160,10 +164,12 @@ CC		= @CC@
 CXX		= @CXX@
 CPP		= @CPP@
 CXXCPP		= @CXXCPP@
-CFLAGS		= @CFLAGS@ ${OPTIMIZER}
+CFLAGS		= @CFLAGS@ ${OPTIMIZER} ${CFLAGS_DYNLIB}
+CFLAGS_DYNLIB	= @CFLAGS_DYNLIB@
 CPPFLAGS	= @CPPFLAGS@
-CXXFLAGS	= @CXXFLAGS@ ${OPTIMIZER}
-DEFS		= @DEFS@
+CXXFLAGS	= @CXXFLAGS@ ${OPTIMIZER} ${CXXFLAGS_DYNLIB}
+CXXFLAGS_DYNLIB	= @CXXFLAGS_DYNLIB@
+DEFS		= @DEFS@ -DVJ_SHARE_DIR=\"${VJ_SHARE_DIR}\"
 DEP_GEN_FLAG	= @DEP_GEN_FLAG@
 DEPENDFLAGS	= @DEPENDFLAGS@ @INCLUDES@ -I${VJROOT_ABS} -I${topdir}
 DEPEND_EXTRAS	= @DEPEND_EXTRAS@ ${DEFS}

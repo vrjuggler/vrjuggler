@@ -62,8 +62,9 @@ unix2dos ( ) {
     dnl # /tmp instead of //D/tmp if D: is the home drive.  The expression
     dnl # simply prepends "$HOMEDRIVE" (after evaluation) to the path.
     _drive_exp=['s/^\/\/\([[:alpha:]]\)/\1:/']
+    _drive_exp2=['s/^\/cygdrive\/\([[:alpha:]]\)/\1:/']
     _add_home_exp=["s/^\//$HOMEDRIVE\//"]
-    _retval=`echo $1 | sed -e "${_drive_exp}" -e "${_add_home_exp}"`
+    _retval=`echo $1 | sed -e "${_drive_exp}" -e "${_drive_exp2}" -e "${_add_home_exp}"`
 
     echo "${_retval}"
 }
@@ -155,11 +156,20 @@ AC_ARG_WITH(pfroot,
                           directory                       [default=/usr]],
             PFROOT="$withval", PFROOT='/usr')
 
+dnl # Define the version of Perfromer to use.
+dnl # The default is 2.4.
+AC_ARG_WITH(pfver,
+            [  --with-pfver=<VER>      Performer version to use        [default=2.4]],
+            PF_VER="$withval", PF_VER='2.4')
+
+dnl # If no value has been set for $DEFAULT_OGLROOT, use /usr.
+: ${DEFAULT_OGLROOT=/usr}
+
 dnl # Define the root directory for the OpenGL installation.
 dnl # The default is /usr.
 AC_ARG_WITH(oglroot,
             [  --with-oglroot=<PATH>   OpenGL installation directory   [default=/usr]],
-            OGLROOT="$withval", OGLROOT='/usr')
+            OGLROOT="$withval", OGLROOT="$DEFAULT_OGLROOT")
 
 dnl # Use the Mesa OpenGL implementation.  That is, link with libMesaGL and
 dnl # libMesaGLU.
@@ -218,11 +228,6 @@ AC_ARG_WITH(dir-perms,
             [  --with-dir-perms=<DIRECTORY PERMISSIONS>
                           Installed directory permisions  [default=0755]],
             DIR_PERMS="$withval", DIR_PERMS='0755')
-
-AC_ARG_WITH(version,
-            [  --with-version=<major>.<minor>.<micro>
-                          VR Juggler version number       [default=none]],
-            _vj_version="$withval", _vj_version='none')
 
 dnl # ------------------------------------------------------ #
 dnl # --enable-feature[=arg] and --disable-feature arguments #
@@ -375,16 +380,18 @@ case $target_os in
         dnl # $ABI.
         if test "$ABI" = "64" ; then
             DSOREGFILE='/usr/lib64/so_locations'
-            OPT_FLAGS='-O1 -OPT:Olimit=0'
+            OPT_FLAGS='-O2 -OPT:Olimit=0'
         elif test "$ABI" = "N32" ; then
             DSOREGFILE='/usr/lib32/so_locations'
-            OPT_FLAGS='-O1 -OPT:Olimit=0'
+            OPT_FLAGS='-O2 -OPT:Olimit=0'
         fi
 
         AR='${CXX}'
         ARFLAGS='-LANG:std -J6 -ar -WR,-v -o'
         CFLAGS="$CFLAGS -ansi"
+        CFLAGS_DYNLIB="$CFLAGS_DYNLIB -KPIC"
         CXXFLAGS="$CXXFLAGS -ansi -LANG:std"
+        CXXFLAGS_DYNLIB="$CXXFLAGS_DYNLIB -KPIC"
         DBG_FLAGS="-g -gslim"
         LD='${CXX} -shared'
         _LD_REGOPTS='-check_registry ${DSOREGFILE}'
@@ -406,8 +413,13 @@ case $target_os in
             AC_DEFINE(IRIXREL, "IRIX6")
         fi
         ;;
-    dnl # HP PA-RISC machine running HP-UX 10.20.
-    hpux10.20)
+    dnl # HP PA-RISC machine running HP-UX 10.x.  These are not supported
+    dnl # because they lack a complete POSIX.4 real-time implementation.
+    hpux10*)
+        AC_MSG_ERROR(HP-UX 10.x is not supported.  Please upgrade to 11.00!)
+        ;;
+    dnl # HP PA-RISC machine running HP-UX 11.x.
+    hpux11*)
         dnl # If no ABI has been set yet, default to HP PA-RISC.
         if test "$ABI" = "" ; then
             VJ_ABI_CFG('HP', 'PA-RISC')
@@ -415,13 +427,15 @@ case $target_os in
 
         AR='ar'
         ARFLAGS='ru'
-        CFLAGS="-Aa $CFLAGS"
-        CXXFLAGS="+p $CXXFLAGS"
-        LD='ld'
-        LDFLAGS="$LDFLAGS -L/usr/lib/X11R6"
+        CFLAGS_DYNLIB="$CFLAGS_DYNLIB +Z"
+        CXXFLAGS="-AA -mt $CXXFLAGS"
+        CXXFLAGS_DYNLIB="$CXXFLAGS_DYNLIB +Z"
+        DEP_GEN_FLAG='-E +m'
+        LD='aCC'
+        LDFLAGS="$LDFLAGS -mt -L/usr/lib/X11R6"
         LDOPTS='-b'
         DBG_FLAGS='-g'
-        OPT_FLAGS='+inline_level 3'
+        OPT_FLAGS=''
         SHAREDLIB_EXT='sl'
 
         dnl # We have to use POSIX threads on HP-UX.
@@ -430,11 +444,13 @@ case $target_os in
             _thread_pkg='POSIX'
         fi
 
+        dnl # If nothing was given as an alternate OpenGL installation path,
+        dnl # use /opt/graphics/OpenGL.
+        if test "x$OGLROOT" = "x$DEFAULT_OGLROOT" ; then
+            OGLROOT='/opt/graphics/OpenGL'
+        fi
+
         AC_DEFINE(VJ_OS_HPUX,)
-        AC_DEFINE(_HPUX_SOURCE,)
-        AC_DEFINE(_INCLUDE_TERMIO,)
-        AC_DEFINE(_CMA_NOWRAPPERS_,)
-        AC_DEFINE(notdef,)
         ABI_LIST='HP'
         PLATFORM='HP'
         ;;
@@ -558,6 +574,12 @@ case $target_os in
             VJ_ABI_CFG('WIN32')
         fi
 
+        dnl # There is no performance testing/monitoring code for Win32 (yet).
+        if test "x${_enable_perf}" != "xNONE" ; then
+            AC_MSG_WARN(*** Disabling performance testing on $host ***)
+            _enable_perf='NONE'
+        fi
+
         dnl # We have to use Win32 threads on Win32.
         if test "x${_thread_pkg}" != "xWIN32" ; then
             AC_MSG_WARN(*** WIN32 threads must be used on $host ***)
@@ -583,8 +605,8 @@ case $target_os in
             OPT_FLAGS='-GB -MT'
             LD='link -dll'
             LDOPTS="$LDOPTS -nologo -out:\"${OBJDIR}/Juggler.lib\""
-            LDOPTS_DBG='-LDd -MDd -PDB:NONE'
-            LDOPTS_OPT='-LD -MD'
+            LDOPTS_DBG='-DEBUG -PDB:NONE'
+            LDOPTS_OPT='-RELEASE'
             OBJ_FILE_SUFFIX='obj'
             OBJ_NAME_FLAG='-Fo$@'
         fi
@@ -604,7 +626,7 @@ case $target_os in
         dnl # somewhat annoying names.
         case ${_sys_name} in
             dnl # Windows NT 4.0.
-            *NT-4.0)
+            *NT-[[45]].0)
                 PLATFORM='WinNT'
                 ;;
             dnl # Windows 95 and 98.
@@ -670,8 +692,12 @@ _vjsave_CXXFLAGS="$CXXFLAGS"
 dnl # If no alternate C compiler was specified, check to see if it is
 dnl # necessary to force the use of a specific compiler on a given platform.
 if test "x${_alt_cc}" = "xnone" ; then
+    dnl # On HP-UX, we have to use the aCC C++ compiler.
+    if test "$PLATFORM" = "HP" ; then
+        AC_CHECK_PROG(CC, cc, cc,
+            AC_MSG_ERROR(*** The library requires the HP-UX aCC C++ compiler ***))
     dnl # On IRIX, we have to use cc (not gcc).
-    if test "$PLATFORM" = "IRIX" ; then
+    elif test "$PLATFORM" = "IRIX" ; then
         AC_CHECK_PROG(CC, cc, cc,
             AC_MSG_ERROR(*** The library requires the IRIX cc C compiler ***))
     fi
@@ -708,6 +734,18 @@ CXXFLAGS="$CXXFLAGS ${_EXTRA_FLAGS}"
 AC_PROG_CC
 AC_PROG_CXX
 
+dnl # If we are using GCC as the C compiler, the option for making
+dnl # position-independent code is -fPIC.
+if test "x$GCC" = "xyes" ; then
+    CFLAGS_DYNLIB="$CFLAGS_DYNLIB -fPIC"
+fi
+
+dnl # If we are using GCC as the C++ compiler, the option for making
+dnl # position-independent code is -fPIC.
+if test "x$GXX" = "xyes" ; then
+    CXXFLAGS_DYNLIB="$CXXFLAGS_DYNLIB -fPIC"
+fi
+
 dnl # If we are using GCC as the compiler, we need to be using at least egcs
 dnl # 1.1.2.  A newer version (e.g., 2.95.2) is even better.
 if test "x$GXX" = "xyes" ; then
@@ -718,6 +756,9 @@ if test "x$GXX" = "xyes" ; then
                   ac_cv_CXX_is_egcs='yes'
                   ;;
               2.9*)
+                  ac_cv_CXX_is_egcs='yes'
+                  ;;
+              3.*)
                   ac_cv_CXX_is_egcs='yes'
                   ;;
               *)
@@ -757,16 +798,9 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
         ])
 fi
 
-dnl # Ensure that the C++ compiler we've found is capable of compiling the
-dnl # newer C++ features that we need.
-_vjsave_CC="$CC"
-CC="$CXX"
-
-dnl # When compiling on Windows, we need to force the compiler to treat the
-dnl # source file as a .cpp file even though it will end in .c.
-if test "$OS_TYPE" = "Win32" -a "x${_use_gcc}" != "xyes" ; then
-    CC="$CC -TP"
-fi
+AC_LANG_SAVE
+AC_LANG_CPLUSPLUS
+ac_ext='cpp'
 
 AC_CACHE_CHECK(whether the C++ compiler handles templates properly,
     ac_cv_CXX_is_current,
@@ -776,7 +810,7 @@ AC_CACHE_CHECK(whether the C++ compiler handles templates properly,
                    [ ac_cv_CXX_is_current='no' ;
                      AC_MSG_ERROR(*** The library requires a current C++ compiler) ]))
 
-CC="${_vjsave_CC}"
+AC_LANG_RESTORE
 
 AC_PROG_CPP
 AC_PROG_CXXCPP
@@ -859,7 +893,9 @@ AC_PROG_MAKE_SET
 
 dnl # While ranlib(1) is not part of the base IRIX installation, the VRAC SGIs
 dnl # have a ranlib(1) installed that does very bad things to ar archives.
-if test "$PLATFORM" = "IRIX" ; then
+dnl # We also do not want to use the Cygwin ranlib(1) with the Visual C++
+dnl # LINK.EXE command.
+if test "$PLATFORM" = "IRIX" -o "$OS_TYPE" = "Win32" ; then
     RANLIB=':'
 else
     AC_PROG_RANLIB
@@ -884,19 +920,16 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
         LDFLAGS="$LDFLAGS -pthread"
     fi
 
+    dnl # On HP-UX 11.00, HP hides the pthread library from configure.
+    dnl # This forces its use with the -mt flag.
+    if test "$PLATFORM" = "HP" ; then
+        THREADS='POSIX'
+    fi
+
     AC_CHECK_LIB(pthread, pthread_create,
         AC_CHECK_HEADER(pthread.h,
             [ THREADS='POSIX' _pthread_lib='-lpthread'; ],
             AC_MSG_WARN(*** POSIX threads will not be used (header file not found) ***)))
-
-    dnl # On HP-UX 10.20, the pthreads library is in the cma library rather
-    dnl # than pthreads, so test for that if $THREADS was not set above.
-    if test "x$THREADS" = "x" ; then
-        AC_CHECK_LIB(cma, pthread_create,
-            AC_CHECK_HEADER(pthread.h,
-                [ THREADS='POSIX' _pthread_lib='-lcma'; ],
-                AC_MSG_WARN(*** POSIX threads will not be used (header file not found) ***)))
-    fi
 
     dnl # On FreeBSD, the pthreads stuff is in libc_r.
     if test "x$THREADS" = "x" ; then
@@ -922,12 +955,21 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
                 ac_cv_pthread_version='Draft 10',
                 ac_cv_pthread_version='Draft 4'))
 
+        AC_CHECK_FUNC(pthread_attr_setstack,
+            AC_DEFINE(HAVE_PTHREAD_ATTR_SETSTACK, 1))
+
         LIBS="${_vjsave_LIBS}"
 
-        if test "$ac_cv_pthread_version" = "Draft 10" ; then
+        dnl # HP once again, not playing by the rules.  Forcing draft level 10.
+        if test "$PLATFORM" = "HP" ; then
+            AC_MSG_WARN(*** Forcing Pthreads Draft 10 on HP ***)
             AC_DEFINE(_PTHREADS_DRAFT_10,)
         else
-            AC_DEFINE(_PTHREADS_DRAFT_4,)
+            if test "$ac_cv_pthread_version" = "Draft 10" ; then
+                AC_DEFINE(_PTHREADS_DRAFT_10,)
+            else
+                AC_DEFINE(_PTHREADS_DRAFT_4,)
+            fi
         fi
 
         dnl # Define the default thread scope depending on the platform.  On
@@ -941,7 +983,7 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
 
         dnl # Define the appropriate value for _POSIX_C_SOURCE on the current
         dnl # platform.
-        if test "$PLATFORM" = "IRIX" -o "$PLATFORM" = "Linux" -o "$PLATFORM" = "Solaris" ; then
+        if test "$PLATFORM" = "IRIX" -o "$PLATFORM" = "Linux" -o "$PLATFORM" = "Solaris" -o "$PLATFORM" = "HP"; then
             AC_DEFINE(VJ_POSIX_C_SOURCE, 199506L)
         else
             AC_DEFINE(VJ_POSIX_C_SOURCE, 2)
@@ -990,6 +1032,8 @@ if test "$THREADS" = "POSIX" ; then
     dnl # so we will not define both.
     if test "x$PLATFORM" != "xLinux" ; then
         AC_DEFINE(_REENTRANT,)
+    else
+        AC_DEFINE(_GNU_SOURCE,)
     fi
 
     dnl # Use POSIX threading, mutexes and shared memory.
@@ -1017,7 +1061,11 @@ if test "$THREADS" = "POSIX" ; then
             [ _sem_lib='-lposix4' SEMAPHORE_SYS='POSIX' ;
               AC_DEFINE(VJ_POSIX_SEMAPHORES,)
             ],
-            AC_MSG_ERROR(*** POSIX semaphores are required for POSIX threads ***)))
+            AC_CHECK_LIB(rt, sem_init,
+                 [ _sem_lib='-lrt' SEMAPHORE_SYS='POSIX' ;
+                   AC_DEFINE(VJ_POSIX_SEMAPHORES,)
+                 ],
+                 AC_MSG_ERROR(*** POSIX semaphores are required for POSIX threads ***))))
 
     CFLAGS="${_vjsave_CFLAGS}"
     LIBS="${_vjsave_LIBS}"
@@ -1065,10 +1113,9 @@ if test "x${_enable_gl_api}" = "xyes" ; then
     _vjsave_INCLUDES="$INCLUDES"
     _vjsave_LDFLAGS="$LDFLAGS"
 
-    dnl # Add the user-specified OpenGL installation directory to these paths.
-    dnl # Ensure that /usr/include and /usr/lib are not included multiple times
-    dnl # if $OGLROOT is "/usr".
-    if test "x${OGLROOT}" != "x/usr" ; then
+    dnl # Add the user-specified OpenGL installation directory to these paths
+    dnl # if one was given.
+    if test "x$OGLROOT" != "x$DEFAULT_OGLROOT" ; then
         CPPFLAGS="$CPPFLAGS -I${OGLROOT}/include"
         INCLUDES="$INCLUDES -I${OGLROOT}/include"
         LDFLAGS="-L${OGLROOT}/lib${LIBBITSUF} $LDFLAGS"
@@ -1186,23 +1233,34 @@ PERFORMER_API=''		dnl # 'Y' then we are using Performer
 dnl # Test for the Performer library if the Performer API was enabled.
 if test "x${_enable_pf_api}" = "xyes" ; then
     _vjsave_CFLAGS="$CFLAGS"
+    _vjsave_CPPFLAGS="$CPPFLAGS"
     _vjsave_INCLUDES="$INCLUDES"
     _vjsave_LDFLAGS="$LDFLAGS"
+    _vjsave_LIBS="$LIBS"
 
     dnl # Ensure that /usr/include and /usr/lib are not included multiple
     dnl # times if $PFROOT is "/usr".
     if test "x${PFROOT}" != "x/usr" ; then
-        INCLUDES="$INCLUDES -I\${PFROOT}/include"
-        LDFLAGS="-L\${PFROOT}/lib\${LIBBITSUF} $LDFLAGS"
+        CPPFLAGS="$CPPFLAGS -I${PFROOT}/include"
+        INCLUDES="$INCLUDES -I${PFROOT}/include"
+        LDFLAGS="-L${PFROOT}/lib${LIBBITSUF} $LDFLAGS"
     fi
 
     CFLAGS="$CFLAGS $INCLUDES ${_EXTRA_FLAGS}"
 
+    dnl # We are using Performer 2.[23] as defined by the --with-pfver
+    dnl # command-line argument.
+    if test "x$PF_VER" = "x2.2" -o "x$PF_VER" = "x2.3" ; then
+        pf_ext='_ogl'
+    dnl # We are using Performer 2.4 or newer.
+    else
+        pf_ext=''
+    fi
+
     dnl # On Linux, we have to link all the Performer libraries AND libdl to
     dnl # get the check for pfInit() in libpf to compile.
     if test "$PLATFORM" = "Linux" ; then
-        _vjsave_LIBS="$LIBS"
-        LIBS="$LIBS -lpf_ogl -lpfdu_ogl -lpfui -lpfutil_ogl -ldl"
+        LIBS="$LIBS -lpf$pf_ext -lpfdu$pf_ext -lpfui -lpfutil$pf_ext -ldl"
     fi
 
     dnl # If the Performer library was found, add the API object files to the
@@ -1211,37 +1269,33 @@ if test "x${_enable_pf_api}" = "xyes" ; then
     AC_CHECK_LIB(pf, pfInit,
         AC_CHECK_HEADER(Performer/pf.h,
             [ PERFORMER_API="Y";
-              _PFOGLLIB='-lpf_ogl -lpfdu_ogl -lpfui -lpfutil_ogl';
+              LIBPERFORMER="-lpf$pf_ext -lpfdu$pf_ext -lpfui -lpfutil$pf_ext";
               AC_DEFINE(VJ_API_PERFORMER,) ],
             AC_MSG_WARN(*** Performer API will not be used (pf.h not found) ***)),
         AC_MSG_WARN(*** Performer API will not be used (library not found) ***))
 
-    dnl # Restore $LIBS to its original value if we are using Linux (it was
-    dnl # modified before the previous check block).  Also append -ldl to
-    dnl # $LIBS if the Performer library was found.
-    if test "$PLATFORM" = "Linux" ; then
-        LIBS="${_vjsave_LIBS}"
-
-        if test "x$PERFORMER_API" != "x" ; then
-            _PFOGLLIB="${_PFOGLLIB} -ldl"
-        fi
-    fi
-    
-    dnl # Under Irix users will need -limage to load .flt files 
-    dnl # referencing .sgi images
-    if test "$PLATFORM" = "IRIX" ; then
-            _PFOGLLIB="${_PFOGLLIB} -limage"
-    fi
-
-    dnl # Restore $CFLAGS now that we are done testing.
-    CFLAGS="${_vjsave_CFLAGS}"
-
+    if test "x$PERFORMER_API" != "x" ; then
+        case $PLATFORM in
+            dnl # Under IRIX users will need -limage to load .flt files 
+            dnl # referencing .sgi images.
+            IRIX)
+                LIBPERFORMER="$LIBPERFORMER -limage"
+                ;;
+            dnl Append -ldl to $LIBPERFORMER on Linux.
+            Linux)
+                LIBPERFORMER="$LIBPERFORMER -ldl"
+                ;;
+        esac
     dnl # No Performer API files were added, so restore $INCLUDES and $LDFLAGS
     dnl # so that no OpenGL stuff in included in them.
-    if test "x$PERFORMER_API" = "x" ; then
+    else
         INCLUDES="${_vjsave_INCLUDES}"
         LDFLAGS="${_vjsave_LDFLAGS}"
     fi
+
+    CFLAGS="${_vjsave_CFLAGS}"
+    CPPFLAGS="${_vjsave_CPPFLAGS}"
+    LIBS="${_vjsave_LIBS}"
 fi
 
 dnl # -----------
@@ -1364,7 +1418,7 @@ AC_HEADER_STDC
 AC_HEADER_TIME
 AC_CHECK_HEADERS(fcntl.h limits.h strings.h sys/file.h sys/ioctl.h	\
                  sys/time.h termios.h unistd.h sys/z8530.h		\
-                 sys/capability.h sys/stdsyms.h)
+                 sys/capability.h sys/stdsyms.h inttypes.h)
 
 dnl # All of the above header file checks may not be necessary ...
 
@@ -1373,7 +1427,6 @@ dnl # Checks for typedefs, structures, and compiler characteristics.
 dnl # -------------------------------------------------------------------------
 AC_TYPE_PID_T
 AC_TYPE_SIZE_T
-AC_TYPE_SIGNAL
 
 dnl # The following checks for availability of the socklen_t type.  Since it
 dnl # is supposed to be defined in sys/socket.h, the usual AC_CHECK_TYPE
@@ -1416,14 +1469,16 @@ LIBS="${_vjsave_LIBS}"
 dnl # In a Win32 environment with MS Visual C++ as the compiler, these math
 dnl # functions are not in any special library.  Test for them normally.
 if test "$OS_TYPE" = "Win32" -a "x${_use_gcc}" != "xyes" ; then
-    AC_CHECK_FUNCS(sinf sqrtf asinf acosf atan2f)
+    AC_CHECK_FUNCS(sinf cosf sqrtf asinf acosf atan2f fabsf)
 dnl # Otherwise, they are in libmath if they are anywhere.
 else
     AC_CHECK_LIB(m, sinf, AC_DEFINE(HAVE_SINF))
+    AC_CHECK_LIB(m, cosf, AC_DEFINE(HAVE_COSF))
     AC_CHECK_LIB(m, sqrtf, AC_DEFINE(HAVE_SQRTF))
     AC_CHECK_LIB(m, asinf, AC_DEFINE(HAVE_ASINF))
     AC_CHECK_LIB(m, acosf, AC_DEFINE(HAVE_ACOSF))
     AC_CHECK_LIB(m, atan2f, AC_DEFINE(HAVE_ATAN2F))
+    AC_CHECK_LIB(m, fabsf, AC_DEFINE(HAVE_FABSF))
 fi
 
 dnl # All of the above function checks may not be necessary ...
@@ -1489,32 +1544,6 @@ fi
 
 PATH="${_vjsave_PATH}"
 
-dnl # Construct the VR Juggler version using the getversion Perl script (if
-dnl # Perl is available).  This is never cached because the version number
-dnl # can change on a daily basis.  Thus, every time configure is run, there
-dnl # exists the potential for a new version number to be generated.
-dnl # XXX: Get this to work without Perl!
-if test "x${_vj_version}" != "xno" ; then
-    if test "x$PERL" != "xno" ; then
-        _recversion="$PERL $srcdir/release/scripts/record-version.pl"
-        _param_h_args="-i $srcdir/vjParam.h.in -o vjParam.h"
-
-        dnl # If no version number is given, try to extract the current
-        dnl # value from $srcdir/VERSION.
-        if test "x${_vj_version}" = "xnone" ; then
-            ${_recversion} -f "$srcdir/VERSION" ${_param_h_args}
-        dnl # Otherwise, use the given version number.
-        else
-            ${_recversion} -v "${_vj_version}" ${_param_h_args}
-        fi
-    else
-        AC_MSG_WARN(Cannot construct VR Juggler version without Perl)
-        cp "$srcdir/vjParam.h.in" vjParam.h
-    fi
-else
-    cp "$srcdir/vjParam.h.in" vjParam.h
-fi
-
 dnl # -------------------------------------------------------------------------
 dnl # Do Makefile substitutions.
 dnl # -------------------------------------------------------------------------
@@ -1523,6 +1552,7 @@ EXTRA_LINK_FLAGS=''		dnl # For use in linking Juggler applications
 if test "$PLATFORM" = "IRIX" ; then
     CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
     CXXFLAGS="$CXXFLAGS -woff 1183,3322 -w2"
+    EXTRA_LINK_FLAGS="-all"
 elif test "$OS_TYPE" = "Win32" -a "x${_use_gcc}" != "xyes" ; then
     CFLAGS="$CFLAGS -W3 -GR -GX -EHc -QIfdiv -QI0f"
     CXXFLAGS="$CXXFLAGS -W3 -GR -GX -EHc -QIfdiv -QI0f"
@@ -1581,6 +1611,8 @@ dnl # listed are for use only in the Makefile.in's found in that tree unless
 dnl # otherwise noted.  They are used in the following way:
 dnl #
 dnl #     * APP_EXTRA_FLAGS: Extra flags for the compiler and linker.
+dnl #     * APP_EXTRA_FLAGS_PF: Extra flags for the compiler and linker when
+dnl #       building Performer applications.
 dnl #     * APP_VJ_INC_AW: The include path for the AudioWorks header files.
 dnl #     * APP_VJ_INC_SL: The include path for hte SL header files.
 dnl #     * APP_VJ_LIBS_BASIC: The basic VR Juggler library.
@@ -1639,21 +1671,34 @@ if test "$OS_TYPE" = "UNIX" ; then
     if test "$PLATFORM" = "IRIX" ; then
         APP_VJ_LIBS_BEGIN="-B static -L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
         APP_VJ_LIBS_END=''
-        APP_VJ_LIBS_BASIC='-lJuggler'
+        APP_VJ_LIBS_BASIC='-lJuggler -lJuggler_utils'
 
         APP_VJ_LIBS_BEGIN_INST="-B dynamic -L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
-        APP_VJ_LIBS_END_INST=''
-        APP_VJ_LIBS_BASIC_INST='-lJuggler'
+        APP_VJ_LIBS_END_INST="-Wl,-rpath,\$(VJ_BASE_DIR)/lib$LIBBITSUF"
+        APP_VJ_LIBS_BASIC_INST='-lJuggler -lJuggler_utils'
 
         APP_EXTRA_LIBS_BEGIN='-B dynamic'
         APP_EXTRA_LIBS_END='-lm'
+    dnl # If we are compiling with GNU C++, we can pass -Bstatic and -Bdynamic
+    dnl # to the GNU linker to link only the VR Juggler libs statically.
+    elif test "x$GXX" = "xyes" ; then
+        APP_VJ_LIBS_BEGIN="-Wl,-Bstatic -L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
+        APP_VJ_LIBS_END=''
+        APP_VJ_LIBS_BASIC='-lJuggler -lJuggler_utils'
+
+        APP_VJ_LIBS_BEGIN_INST="-Wl,-Bdynamic -L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
+        APP_VJ_LIBS_END_INST="-Wl,-rpath,\$(VJ_BASE_DIR)/lib$LIBBITSUF"
+        APP_VJ_LIBS_BASIC_INST="$APP_VJ_LIBS_BASIC"
+
+        APP_EXTRA_LIBS_BEGIN='-Wl,-Bdynamic'
+        APP_EXTRA_LIBS_END="-lm"
     else
         dnl # For now, we are disabling static linking for the sample
         dnl # applications when compiled in a developer's build tree.  This
         dnl # is only the case on non-IRIX platforms.
         APP_VJ_LIBS_BEGIN="-L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
         APP_VJ_LIBS_END=''
-        APP_VJ_LIBS_BASIC='-lJuggler'
+        APP_VJ_LIBS_BASIC='-lJuggler -lJuggler_utils'
 
         APP_VJ_LIBS_BEGIN_INST="$APP_VJ_LIBS_BEGIN"
         APP_VJ_LIBS_END_INST="$APP_VJ_LIBS_END"
@@ -1662,16 +1707,25 @@ if test "$OS_TYPE" = "UNIX" ; then
         APP_EXTRA_LIBS_END="-lm"
     fi
 
+    dnl # FreeBSD needs to use libcompat for linking.
+    if test "x$PLATFORM" = "xFreeBSD" ; then
+        APP_EXTRA_LIBS_END="$APP_EXTRA_LIBS_END -lcompat"
+    fi
+
     APP_VJ_LIBS_GL="-lJuggler_ogl"
     APP_VJ_LIBS_PF="-lJuggler_pf"
     APP_VJ_LIBS_UTILS="-lJuggler_utils"
     APP_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
     APP_EXTRA_LIBS_GL="${_LIBOPENGL}"
-    APP_EXTRA_LIBS_PF="${_PFOGLLIB}"
+    APP_EXTRA_LIBS_PF="$LIBPERFORMER"
+
+    if test "x$PLATFORM" = "xLinux" ; then
+        APP_EXTRA_FLAGS_PF="-O $APP_EXTRA_FLAGS_PF"
+    fi
 elif test "$OS_TYPE" = "Win32" ; then
     APP_VJ_LIBS_BEGIN="-link -libpath:\$(VJ_BASE_DIR)/lib/debug"
     APP_VJ_LIBS_END=''
-    APP_VJ_LIBS_BASIC='Juggler.lib'
+    APP_VJ_LIBS_BASIC='Juggler.lib Juggler_utils.lib'
     APP_VJ_LIBS_BEGIN_INST="$APP_VJ_LIBS_BEGIN"
     APP_VJ_LIBS_END_INST="$APP_VJ_LIBS_END"
     APP_VJ_LIBS_BASIC_INST="$APP_VJ_LIBS_BASIC"
@@ -1681,7 +1735,7 @@ elif test "$OS_TYPE" = "Win32" ; then
     APP_VJ_LIBS_UTILS='Juggler_utils.lib'
     APP_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
     APP_EXTRA_LIBS_GL="${_LIBOPENGL}"
-    APP_EXTRA_LIBS_PF="${_PFOGLLIB}"
+    APP_EXTRA_LIBS_PF="$LIBPERFORMER"
 fi
 
 dnl # Translate paths from UNIX-style to Win32.
@@ -1693,6 +1747,7 @@ if test "$OS_TYPE" = "Win32" ; then
     DEPEND_EXTRAS=`unix2dos "$DEPEND_EXTRAS"`
     INCLUDES=`unix2dos "$INCLUDES"`
     LIBS=`unix2dos "$LIBS"`
+    LN_S='cp'
     MTREE_CMD=`unix2dos "$MTREE_CMD"`
 
     JDK_HOME=`unix2dos "$JDK_HOME"`
@@ -1706,16 +1761,104 @@ else
     SAFE_VJROOT_ABS="$VJROOT_ABS"
 fi
 
+dnl # Set up some sed expressions that will help separate the share directory
+dnl # from the full installation prefix.
+_prefix_var_exp='s|^${prefix}/||'
+
+if test "x$prefix" = "xNONE" ; then
+    _prefix_exp="s|^$ac_default_prefix/||"
+else
+    _prefix_exp="s|^$prefix/||"
+fi
+
+dnl # Make a best-effort attempt to extract the actual share directory from
+dnl # the full installation prefix.  This is not foolproof, but it will work
+dnl # in almost all cases.  A person would have to be doing something
+dnl # malicious or foolish to make it break.
+VJ_SHARE_DIR=`echo "$datadir" | sed -e "${_prefix_var_exp}"`
+VJ_SHARE_DIR=`echo "$VJ_SHARE_DIR" | sed -e "${_prefix_exp}"`
+
+# Information needed to generate juggler-config.
+case $THREADS in
+    IRIX_SPROC)
+        subsystem_cxxflags="$INCLUDES"
+        subsystem_libs="${_sem_lib}"
+        static_begin="-B static"
+        static_end="-B dynamic"
+        vrj_ldflags="-L\$prefix/lib\$LIBBITSUF"
+        vrj_libs='-lJuggler -lJuggler_utils -lJuggler_ogl'
+        ;;
+    POSIX)
+        subsystem_cxxflags="$INCLUDES"
+        subsystem_libs="${_pthread_lib} ${_sem_lib}"
+
+        if test "x$GXX" = "xyes" ; then
+            static_begin="-Wl,-Bstatic"
+            static_end="-Wl,-Bdynamic"
+        else
+            static_begin="-B static"
+            static_end="-B dynamic"
+        fi
+
+        vrj_ldflags="-L\$prefix/lib\$LIBBITSUF"
+        vrj_libs='-lJuggler -lJuggler_utils -lJuggler_ogl'
+        ;;
+    WIN32)
+        subsystem_cxxflags="$INCLUDES"
+        subsystem_libs="comctl32.lib user32.lib gdi32.lib ws2_32.lib"
+        vrj_ldflags="-link -libpath:\$prefix/lib/debug $NSPR_LDFLAGS"
+        vrj_libs='Juggler.lib Juggler_utils.lib Juggler_ogl.lib'
+        ;;
+esac
+
+case $OS_TYPE in
+    UNIX)
+        Juggler_lib='-lJuggler'
+        Juggler_utils_lib='-lJuggler_utils'
+        Juggler_ogl_lib='-lJuggler_ogl'
+
+        if test "x$PLATFORM" = "xIRIX" ; then
+            vrj_n32_flags='-n32'
+            vrj_64_flags='-64'
+            vrj_libbitsuf_n32='32'
+            vrj_libbitsuf_64='64'
+        fi
+
+        if test "x$PERFORMER_API" = "xY" ; then
+            Juggler_pf_lib='-lJuggler_pf'
+        fi
+
+        if test "x$AUDIO_WORKS" = "xY" ; then
+            Juggler_aw_lib='-lJuggler_aw'
+        fi
+
+        if test "x$SL" = "xY" ; then
+            Juggler_sl_lib='-lJuggler_sl'
+        fi
+        ;;
+    WIN32)
+        Juggler_lib='Juggler.lib'
+        Juggler_utils_lib='Juggler_utils.lib'
+        Juggler_ogl_lib='Juggler_ogl.lib'
+        ;;
+esac
+
+vrj_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
+vrj_extra_libs="$APP_EXTRA_LIBS_BASIC $APP_EXTRA_LIBS_GL $APP_EXTRA_LIBS_END"
+
 AC_SUBST(topdir)
 AC_SUBST(UNIX_VJROOT_ABS)
 AC_SUBST(SAFE_VJROOT_ABS)
 AC_SUBST(VJ_SRCDIR)
+AC_SUBST(VJ_SHARE_DIR)
 
 AC_SUBST(AR)
 AC_SUBST(ARFLAGS)
 AC_SUBST(AR_NAME_FLAG)
 AC_SUBST(CFLAGS)
+AC_SUBST(CFLAGS_DYNLIB)
 AC_SUBST(CXXFLAGS)
+AC_SUBST(CXXFLAGS_DYNLIB)
 AC_SUBST(DEP_GEN_FLAG)
 AC_SUBST(DEPENDFLAGS)
 AC_SUBST(DEPEND_EXTRAS)
@@ -1776,6 +1919,7 @@ AC_SUBST(SL_INC)
 AC_SUBST(SL_LIB)
 
 AC_SUBST(APP_EXTRA_FLAGS)
+AC_SUBST(APP_EXTRA_FLAGS_PF)
 AC_SUBST(APP_EXTRA_INC_AW)
 AC_SUBST(APP_EXTRA_INC_SL)
 AC_SUBST(APP_VJ_LIBS_BEGIN)
@@ -1797,6 +1941,25 @@ AC_SUBST(APP_EXTRA_LIBS_GL)
 AC_SUBST(APP_EXTRA_LIBS_PF)
 AC_SUBST(APP_EXTRA_LIBS_AW)
 AC_SUBST(APP_EXTRA_LIBS_SL)
+
+AC_SUBST(subsystem_cxxflags)
+AC_SUBST(subsystem_libs)
+AC_SUBST(static_begin)
+AC_SUBST(static_end)
+AC_SUBST(vrj_ldflags)
+AC_SUBST(vrj_libs)
+AC_SUBST(Juggler_lib)
+AC_SUBST(Juggler_utils_lib)
+AC_SUBST(Juggler_ogl_lib)
+AC_SUBST(Juggler_pf_lib)
+AC_SUBST(Juggler_aw_lib)
+AC_SUBST(Juggler_pf_lib)
+AC_SUBST(vrj_extra_ldflags)
+AC_SUBST(vrj_extra_libs)
+AC_SUBST(vrj_n32_flags)
+AC_SUBST(vrj_64_flags)
+AC_SUBST(vrj_libbitsuf_n32)
+AC_SUBST(vrj_libbitsuf_64)
 
 dnl # -------------------------------------------------------------------------
 dnl # Final file generation step.
@@ -1921,12 +2084,14 @@ AC_OUTPUT(Makefile
           Utils/Makefile
           samples/Makefile
           samples/ogl/Makefile
+          samples/ogl/analog/Makefile
           samples/ogl/combo/Makefile
           samples/ogl/cones/Makefile
           samples/ogl/cubes/Makefile
           samples/ogl/glove/Makefile
           samples/ogl/digitalGlove/Makefile
           samples/ogl/simpleGlove/Makefile
+          samples/ogl/texture/Makefile
           samples/ogl/torus/Makefile
           samples/ogl/wand/Makefile
           samples/pf/Makefile
@@ -1934,16 +2099,11 @@ AC_OUTPUT(Makefile
           samples/pf/pfNav/Makefile
           samples/tutorials/Makefile
           samples/tutorials/simpleInput/Makefile
-				  samples/tutorials/simplePf/Makefile
+          samples/tutorials/simplePf/Makefile
           test/Makefile 
           test/TestSuite/Makefile
-          test/CfgTest/Makefile 
-          test/GLWindow/Makefile
           test/Math/Makefile 
           test/Matrix/Makefile 
-          test/Performance/Makefile
-          test/Performance/analyzer/Makefile
-          test/Performance/perfdatabuffer-test/Makefile 
           test/Quat/Makefile
           test/Sync/Makefile 
           test/input/Makefile
@@ -1958,6 +2118,19 @@ AC_OUTPUT(Makefile
           release/mtree/VJ.test.dist
           release/mtree/VJ.tools.dist
           VARS.pl)
+
+dnl # Create a script for handy reconfiguration of a build tree.  It removes
+dnl # configure's cache and status files and then runs configure with the
+dnl # same arguments.
+: ${RECONFIG=./reconfig}
+
+echo "creating $RECONFIG"
+rm -f $RECONFIG
+cat > $RECONFIG <<RECONFIG_SCRIPT
+rm -f config.status config.cache config.log
+$0 $ac_configure_args
+RECONFIG_SCRIPT
+chmod 755 $RECONFIG
 
 cat <<BUILD_INFO
 

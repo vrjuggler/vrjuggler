@@ -58,12 +58,14 @@
 class simpleGloveApp : public vjGlApp
 {
 public:
+   // Constructor.
    simpleGloveApp(vjKernel* kern)
       : vjGlApp(kern)            // Initialize base class
    {
       mQuadObj = NULL;
    }
 
+   // Destructor.
    virtual ~simpleGloveApp (void) {
       if ( mQuadObj != NULL ) {
          gluDeleteQuadric(mQuadObj);
@@ -72,7 +74,7 @@ public:
    }
 
    // Execute any initialization needed before the API is started
-   // Initialize interfaces
+   // Initialize VR Juggler device interfaces here.
    virtual void init()
    {
       //std::cout<<"simpleGloveApp::init()"<<std::flush;
@@ -93,17 +95,6 @@ public:
       //std::cout<<"simpleGloveApp::apiInit()\n"<<std::flush;
    }
 
-   //: Function to draw the scene
-   //! PRE: OpenGL state has correct transformation and buffer selected
-   //! POST: The current scene has been drawn
-   virtual void draw()
-   {
-      //std::cout<<"simpleGloveApp::draw()\n"<<std::flush;
-      
-      initGLState();    // This should really be in another function
-      myDraw();
-   }
-
    // ----- Drawing Loop Functions ------
    //
    //  The drawing loop will look similar to this:
@@ -120,45 +111,28 @@ public:
    //  }
    //------------------------------------
 
-   /// Function called before updating trackers but after the frame is drawn
-   virtual void postFrame()
-   {;}
+   // Function called after tracker update but before start of drawing.  Do
+   // calculations and state modifications here.
+   virtual void preFrame();
 
-   /// Function called after tracker update but before start of drawing
-   virtual void preFrame()
+   //: Function to draw the scene.  Put OpenGL draw functions here.
+   //
+   //! PRE: OpenGL state has correct transformation and buffer selected
+   //! POST: The current scene has been drawn
+   virtual void draw()
    {
-     //std::cout<<"simpleGloveApp::preFrame()\n"<<std::flush;
+      //std::cout<<"simpleGloveApp::draw()\n"<<std::flush;
       
-       // what gesture is happening??
-       int currentGesture = mGesture->getGesture();
-       
-       // lookup the name of that gesture, and output it.
-       std::cout << "gestureID[" << currentGesture << "]:"
-                 << mGesture->getGestureString(currentGesture).c_str()
-                 << "\n" << std::flush;
-   
-       if (mGesture->getGesture() == mGesture->getGestureIndex("Open Hand"))
-       {
-          // do openhand stuff.
-          //std::cout<<"OpenHand\n"<<std::flush;
-       }
-       
-       if (mGesture->getGesture() == mGesture->getGestureIndex("Closed Fist"))
-       {
-          // do closed fist stuff.
-          //std::cout<<"Closed Fist\n"<<std::flush;
-       }  
-       
-       if (mGesture->getGesture() == mGesture->getGestureIndex("Pointing"))
-       {
-          // do pointing stuff.
-          //std::cout<<"Pointing\n"<<std::flush;
-       }  
-       
+      initGLState();    // This should really be in another function
+      myDraw();
    }
 
-   /// Function called after drawing has been triggered but BEFORE it completes
+   // Function called after drawing has been triggered but BEFORE it completes
    virtual void intraFrame()
+   {;}
+
+   // Function called before updating trackers but after the frame is drawn
+   virtual void postFrame()
    {;}
 
 private:

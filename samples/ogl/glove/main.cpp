@@ -1,6 +1,8 @@
-/*************** <auto-copyright.pl BEGIN do not edit this line> **************
- *
- * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+/*
+ * VRJuggler
+ *   Copyright (C) 1997,1998,1999,2000
+ *   Iowa State University Research Foundation, Inc.
+ *   All Rights Reserved
  *
  * Original Authors:
  *   Allen Bierbaum, Christopher Just,
@@ -27,8 +29,7 @@
  * Date modified: $Date$
  * Version:       $Revision$
  * -----------------------------------------------------------------
- *
- *************** <auto-copyright.pl END do not edit this line> ***************/
+ */
 
 //----------------------------------------
 // Test OpenGL VR Juggler program
@@ -39,27 +40,12 @@
 
       // --- Lib Stuff --- //
 #include <Kernel/vjKernel.h>
-#include <sched.h>
 
 int main(int argc, char* argv[])
 {
    vjKernel* kernel = vjKernel::instance();           // Get the kernel
    gloveApp* application = new gloveApp(kernel);       // Declare an instance of the app
 
-   if (argc <= 1)
-   {
-      // display some usage info (holding the user by the hand stuff)
-      //  this will probably go away once the kernel becomes separate 
-      //  and can load application plugins.
-      std::cout<<"\n"<<std::flush;
-      std::cout<<"\n"<<std::flush;
-      std::cout<<"Usage: "<<argv[0]
-               <<" vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n]\n"
-               <<std::flush;
-      std::cout<<"\n"<<std::flush;
-      std::cout<<"\n"<<std::flush;
-   }
-   
    // Load any config files specified on the command line
    for(int i=1;i<argc;i++)
       kernel->loadConfigFile(argv[i]);
@@ -75,6 +61,5 @@ int main(int argc, char* argv[])
    while(1)
    {
        usleep (250000);
-       //sched_yield();
    }
 }

@@ -40,39 +40,44 @@
 
 srcdir		= @srcdir@
 
-EXTRA_FLAGS	= @APP_EXTRA_FLAGS@ -all 
+EXTRA_FLAGS	= @APP_EXTRA_FLAGS@ @APP_EXTRA_FLAGS_PF@
 COMPILE		= @CXX@ @DEFS@ $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@ @DBG_FLAGS@ $(EXTRA_FLAGS)
 LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@ $(EXTRA_FLAGS)
 
-AW_INCLUDES 	= @APP_EXTRA_INC_AW@
-AW_LIBS		= @APP_EXTRA_LIBS_AW@
 VJ_INCLUDES	= @INCLUDES@ $(AW_INCLUDES) -I$(VJ_BASE_DIR)/include	\
-                  -I$(srcdir) -I$(VJ_BASE_DIR)/samples/nav		\
-                  -I$(VJ_BASE_DIR)/samples/pf/pfTools
-VJ_LIBS		= @APP_VJ_LIBS_BEGIN@ @APP_VJ_LIBS_BASIC@ @APP_VJ_LIBS_GL@ @APP_VJ_LIBS_PF@ @APP_VJ_LIBS_AW@ @APP_VJ_LIBS_UTILS@ @APP_VJ_LIBS_END@  @APP_LIBS_BASIC@ 
+                  -I$(srcdir) -I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/nav \
+                  -I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/pf/pfTools
+VJ_LIBS		= @APP_VJ_LIBS_BEGIN@ @APP_VJ_LIBS_BASIC@ @APP_VJ_LIBS_GL@ @APP_VJ_LIBS_PF@ $(VJ_AUDIO_LIBS) @APP_VJ_LIBS_END@  @APP_LIBS_BASIC@ 
 
 VJ_LIB_DEPS	= $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler.a		\
                   $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler_ogl.a	\
                   $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler_pf.a
 
-vpath %.cpp $(srcdir) $(VJ_BASE_DIR)/samples/nav $(VJ_BASE_DIR)/samples/tools
-vpath %.cpp $(VJ_BASE_DIR)/samples/pf/pfTools
+# Uncomment all of the following lines if you have AudioWorks and your
+# application needs audio.
+#AW_INCLUDES 	= @APP_EXTRA_INC_AW@
+#AW_LIBS		= @APP_EXTRA_LIBS_AW@
+#VJ_AUDIO_LIBS	= @APP_VJ_LIBS_AW@
 
-# This test program requires the following libraries to be linked:
+vpath %.cpp $(srcdir) $(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/nav
+vpath %.cpp $(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/tools
+vpath %.cpp $(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/pf/pfTools
+
+# This Performer sample program requires the following libraries to be linked:
 #
-#     -lpf_ogl -lpfdu_ogl -lpfui -lpfutil_ogl -limage -lGLU -lGL -lXext \
-#     -lXmu -lX11 -lm
+#   -lpf_ogl -lpfdu_ogl -lpfui -lpfutil_ogl -limage -lGLU -lGL -lX11 -lXext -lm
 #
-# If the library uses POSIX threads, "-lpthread" must also be added to the
-# list of libraries.
+# If the library uses POSIX threads, the appropriate pthread enabling option
+# must also be added to the list of libraries.  In most cases, this will be
+# "-lpthread".
 #
 # The proper library path must be specified depending on the Application
-# Binary Interface (ABI) used.  For o32 binaries, -L/usr/lib is the
-# appropriate path.  For n32 binaries, use -L/usr/lib32.  For 64-bit binaries,
-# use -L/usr/lib64.
+# Binary Interface (ABI) used.  For n32 binaries, use -L/usr/lib32.  For
+# 64-bit binaries, use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ $(AW_LIBS) @APP_EXTRA_LIBS_PF@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
-COMMON_OBJECTS	= pfFileIO.@OBJ_FILE_SUFFIX@		\
+COMMON_OBJECTS	= simplePfNavApp.@OBJ_FILE_SUFFIX@	\
+                  pfFileIO.@OBJ_FILE_SUFFIX@		\
                   pfTerryCollide.@OBJ_FILE_SUFFIX@	\
                   pfTerryPogoCollide.@OBJ_FILE_SUFFIX@	\
                   pfTerryBoxCollide.@OBJ_FILE_SUFFIX@	\
@@ -120,4 +125,4 @@ _CC_SED_EXP	= '\''s/\($*\)\.@OBJ_FILE_SUFFIX@[ :]*/.\/\1.@OBJ_FILE_SUFFIX@ $@: /
 	@$(SHELL) -ec '$(COMPILE) $(DEP_GEN_FLAG) $< |			\
                        sed $(_CC_SED_EXP) > $@ ; [ -s $@ ] || rm -f $@'
 
-include $(DEPEND_FILES)
+-include $(DEPEND_FILES)

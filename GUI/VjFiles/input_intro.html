@@ -1,0 +1,183 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+
+<title>Intro to Devices</title>
+
+<body>
+
+<!--NewPage-->
+<h1>An Introduction to VR Juggler Input Devices</h1>
+
+<p>
+This page describes the basic structure of VR Juggler's input device
+system - device drivers, proxies, and how they fit together.  This is
+useful background both for programmers wanting to develop Juggler
+apps and for users wanting to understand how input devices
+are configured.
+
+<p>
+VR Juggler is designed to provide common interfaces to a variety of 
+input devices.  In addition to allowing applications to be written
+without tying them to particular hardware, the input device system
+also allows for <i>dynamic reconfiguration</i>.  Dynamic reconfiguration
+is the ability to restart, reconfigure, or replace input devices
+without disrupting a running application.
+
+<p>These capabilities are gained automatically by any application using the
+VR Juggler API to access a supported input device.  
+No special effort is required from the 
+programmer.
+
+<p>All this power does have some cost, however.  Juggler's input system 
+may look fairly complicated, especially to those familiar with simpler,
+less powerful interfaces.  Once you understand what the pieces do, and how
+they fit together, everything should fit together pretty well.
+
+<p>
+&nbsp;
+<h2>Devices</h2>
+
+Devices in VR Juggler are drivers for particular pieces of hardware -
+trackers, keyboards, joysticks, and so forth.  These devices are hidden
+behind an abstract interface called a proxy (described below). 
+An application programmer only needs to use the proxy interface,
+instead of worrying about what devices may or may not be used.
+
+<p>
+The vjcontrol program allows users to configure the hardware devices they
+want to use and map them to proxies.  See <a href="configApps.html">
+Configure VR Juggler Applications</a> for a list of input hardware
+supported by Juggler, and detailed information on configuring particular
+devices.
+
+<p>
+In juggler parlance, there are several kinds of input devices:
+<ul>
+  <li>Positional devices - devices that report a position in 3Space, such as
+trackers.
+  <li>Digital devices - devices that report digital (on/off) information, such
+as a button on a joystick.
+  <li>Analog devices - devices that report a value in a range.  The position
+of a car's steering wheel is an example of an analog input.
+  <li>Glove and Gesture devices
+</ul>
+  <li>Keyboard and Keypad devices
+</ul>
+
+<p>
+In reality, many hardware devices are a combination of these abstract types.
+For example, a typical PC joystick consists of two analog inputs for the
+stick position (three if it has a thrust dial) and multiple digital inputs
+(the various fire buttons).  Another common example is Immersion Corp.'s IBox, which
+provides four digital and four analog inputs.
+
+<h3>Simulator Devices</h3>
+
+Even if you have a large hardware budget, you'll probably have to share
+with your coworkers.  Therefore it's important to be able to simulate
+the devices you may not have access to.  VR Juggler includes simulator
+devices for each of the general kinds of input devices.
+
+<p>
+The general idea of input device simulation is this: First, we create a
+Keyboard device.  This "device" is simply a window on your workstation's
+screen that can receive key presses and mouse movement.  Then we create
+a simulator device that attaches to the keyboard device.
+
+<p>
+The simulator device can be configured to control how key presses control
+the device state.  For example, a Position Sim device could be set up
+to use the numeric keypad keys for movement, while holding down the 
+control key with the keypad keys performs rotation.
+
+<p>
+Multiple simulated devices can be attached to the same keyboard window.
+For example, you could add a second Position Sim that uses shift and alt
+with the keypad keys for movement.  Alternately, you could attach the
+second Sim to a new Keyboard window, and have both use the same key mapping.
+Which device reacts to your typing would simply depend on which window is
+active.
+
+<p>
+Remember:  the application and the application programmer never have to
+worry about whether someone will be using real devices or simulator
+devices - or switching between the two.  VR Juggler (and the vjcontrol program)
+take care of that
+for you.
+
+<h2>Proxies</h2>
+
+We mentioned before that all VR Juggler input devices are hidden behind
+common interfaces.  These interfaces are called <i>proxies</i>.  There
+are several kinds of proxies - Position Proxies, Digital Proxies, etc.
+Each proxy refers to a single input of its kind.
+
+<p>
+Each proxy has a name, and is configured with the name of the physical 
+device (or sim device) that it attaches to, and a unit number.  
+The unit number is used
+when a device has multiple inputs of a given type - for example, to 
+differentiate between the various buttons of a joystick.
+
+<p>
+You'll usually have only a few real devices and a lot of proxies.
+For example, if you have a wand that can report its position in 3D space
+and has three buttons:<pre>
+       wand device &quot;my wand device&quot;
+          - a wand with one positional and three digital inputs
+</pre>
+
+You could define four proxies:<pre>
+       Position Proxy &quot;Wand Position&quot;
+          Device &quot;my wand device&quot;
+          Unit   0
+
+       Digital Proxy &quot;Wand Button 0&quot;
+          Device &quot;my wand device&quot;
+          Unit 0
+
+       Digital Proxy &quot;Wand Button 1&quot;
+          Device &quot;my wand device&quot;
+          Unit 1
+     
+       Digital Proxy &quot;Wand Button 2&quot;
+          Device &quot;my wand device&quot;
+          Unit 2
+</pre>
+
+<p>
+The wand device and the Proxies are declared in a Juggler
+configuration file; when Juggler reads that file, it will create
+an instance of the device driver, start it up, and create the
+four Proxy objects that attach to it.
+
+<p>
+The names associated with each proxy (e.g. "Wand Button 1") are used by
+the application to gain access to a device.  This means that the config
+files an application loads should define proxies (or aliases, as described below)
+for all of the device names the application uses.
+
+
+
+<h2>Proxy Aliases</h2>
+
+<p>
+A Proxy Alias is just what its name implies - it creates another name which
+refers to a particular proxy.  The configuration for a Proxy Alias simply
+consists of its name and the name of the Proxy it points to.
+
+<p>
+The advantage of using a proxy alias is this:  If the application requests
+a device whose name is the name of a proxy alias, it will gain access
+to the device that the alias' proxy is set up to use.  But, if the Alias
+is later changed to point to a different Proxy, the application will start
+using the device attached to the new Proxy, without even noticing that 
+something has changed.  The same thing could be done by directly changing
+the first Proxy to point at the new device, but the Proxy Alias provides
+another, possibly more convenient, way to change the device.
+
+<p>
+
+&nbsp;</body>
+</html>

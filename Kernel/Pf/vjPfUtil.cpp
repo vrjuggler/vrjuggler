@@ -42,9 +42,9 @@ vjMatrix vjGetVjMatrix(pfMatrix& perfMat)
    vjMatrix mat;
    vjVec3 x_axis(1,0,0);
    mat.set(&(perfMat.mat[0][0]));
-   mat.preRot(90, x_axis, mat);
-   mat.postRot(mat, -90, x_axis);
-
+   mat.postRot( mat, 90, x_axis );
+   mat.preRot( -90, x_axis, mat );
+   
    return mat;
 }
 

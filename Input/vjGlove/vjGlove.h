@@ -76,6 +76,10 @@ public:
    //! POST: Initialized with zero values and identities
    vjGloveData();
 
+    //: Copy Constructor
+    //! POST: Initialized with the values from data
+    vjGloveData(const vjGloveData &data);
+
    //: From the given angle data, calculate the xforms
    int calcXforms();
 

@@ -46,11 +46,12 @@
 #include <sys/file.h>
 #include <sys/ioctl.h>
 #include <sys/time.h>
-#include <Input/vjPosition/aFlock.h>
+
 #include <Input/vjPosition/vjFlock.h>
 #include <Math/vjCoord.h>
-
 #include <Kernel/vjDebug.h>
+#include <Utils/vjFileIO.h>
+#include <Input/vjPosition/aFlock.h>
 
 // Helper to return the index for theData array
 // given the birdNum we are dealing with and the bufferIndex
@@ -152,7 +153,8 @@ bool vjFlock::config(vjConfigChunk *c)
       << std::endl << vjDEBUG_FLUSH;
 
    // init the correction table with the calibration file.
-   mFlockOfBirds.initCorrectionTable( ((std::string)c->getProperty("calfile")).c_str() );
+   char* calfile = c->getProperty("calfile").cstring();
+   mFlockOfBirds.initCorrectionTable(vjFileIO::replaceEnvVars(calfile).c_str());
 
    return true;
 }

@@ -109,7 +109,7 @@ protected:     // Statics
 public:
    static void setNearFar(float near_val, float far_val)
    {
-      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"vjProjection::setNearFar:")
+      vjDEBUG(vjDBG_ALL,vjDBG_STATE_LVL) << clrOutNORM(clrCYAN,"vjProjection::setNearFar:")
                            << "near: " << near_val << " far:" << far_val
                            << std::endl << vjDEBUG_FLUSH;
       mNearDist = near_val;

@@ -56,6 +56,12 @@
 #include <Input/vjPosition/vjMotionStar.h>
 #include <Input/Multi/vjTrackdController.h>
 #include <Input/Multi/vjTrackdSensor.h>
+
+/* The Polhemus Fastrack driver only works with SPROC right now. */
+#ifdef VJ_IRIX_SPROC
+#   include <Input/vjPosition/vjFastrack.h>
+#endif
+
 #else
 #include <Input/vjKeyboard/vjKeyboardWin32.h>
 #endif
@@ -64,7 +70,8 @@
 
 // Initialize the singleton ptr
 //vjDeviceFactory* vjDeviceFactory::mInstance = NULL;
-vjSingletonImp(vjDeviceFactory);
+//vjSingletonImp( vjDeviceFactory ); //kevin
+vjSingletonImpWithInitFunc( vjDeviceFactory, hackLoadKnownDevices );
 
 template <class DEV>
 vjDeviceConstructor<DEV>::vjDeviceConstructor()
@@ -102,6 +109,10 @@ void vjDeviceFactory::hackLoadKnownDevices()
    vjDependencyManager::instance()->registerChecker(new vjXWinKBDepChecker());
    vjDeviceConstructor<vjThreeDMouse>* threed_mouse = new vjDeviceConstructor<vjThreeDMouse>;
 
+#ifdef VJ_IRIX_SPROC
+   vjDeviceConstructor<vjFastrack>* fastrack = new vjDeviceConstructor<vjFastrack>;
+#endif
+
 #else
 
    vjDeviceConstructor<vjKeyboardWin32>* key_win32 = new vjDeviceConstructor<vjKeyboardWin32>;
@@ -112,10 +123,10 @@ void vjDeviceFactory::registerDevice(vjDeviceConstructorBase* constructor)
 {
    vjASSERT(constructor != NULL);
    mConstructors.push_back(constructor);     // Add the constructor to the list
-   vjDEBUG(vjDBG_INPUT_MGR,1) << "vjDeviceFactory::registerDevice: Device registered for: "
-              << constructor->getChunkType()
-              << "   :" << (void*)constructor
-              << " type:" << typeid(*constructor).name() << std::endl
+   vjDEBUG(vjDBG_INPUT_MGR,1) << "vjDeviceFactory: Registered: "
+              << std::setiosflags(std::ios::right) << std::setw(25) << std::setfill(' ') << constructor->getChunkType() << std::setiosflags(std::ios::right)
+              //<< "   :" << (void*)constructor
+              << "  type: " << typeid(*constructor).name() << std::endl
               << vjDEBUG_FLUSH;
 }
 

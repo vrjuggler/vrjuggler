@@ -1,5 +1,79 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+[Version 1.0.3 - 11.26.2001]===================================================
+Nov-16-2001 allenb    Fixed memory bug in aMotionStar.
+Nov-15-2001 cjust     Resolved VjControl problems with Java 1.4 caused by
+                      changes to the JDK's JComboBox semantics.
+Oct-28-2001 cjust     Patched to prevent errors caused by device drivers
+                      not overriding getPosUpdateTime.
+Oct-17-2001 kevn      Fixed bug where vjGetVjMatrix returns the wrong 
+                      conversion.
+Aug-29-2001 patrick   We build shared libraries on HP-UX 11.x now (submitted by
+                      Daniel Heath <DHeath@fueltechnv.com>).
+
+[Version 1.0.2 - 8.6.2001]=====================================================
+Jul-24-2001 cjust     Fixed a redraw bug in VjControl that happened when
+                      updating the Active chunkdb from a network connection.
+                      This could cause the status bar label or the chunkdb's
+                      JTree to be shifted to the upper-left corner of the
+                      VjControl window.
+Jul-05-2001 patrick   Fixed the TrackdSensor and TrackdController chunk
+                      descriptions so that min and max are correctly listed
+                      with TrackdController.
+Jun-28-2001 patrick   The POSIX thread wrapper no longer calls pthread_exit(3)
+                      in its destructor.  For stack-allocated vjThread objects
+                      (using pthreads), this caused the wrong thread to exit
+                      when the object went out of scope.
+
+[Version 1.0.1 - 6.14.2001]====================================================
+Jun-13-2001 patrick   Added a script called juggler-config that users can run
+                      to get compiler and linker options needed for building
+                      against VR Juggler
+May-29-2001 patrick   Fixed a major bug in the MotionStar driver that was
+                      preventing proper system configuration when the server
+                      was in a bad state
+May-17-2001 patrick   Added support for HP-UX 11.00 (submitted by Daniel Heath
+                      <DHeath@fueltechnv.com>)
+
+[Version 1.0.0 - 4.13.2001]====================================================
+Apr-13-2001 patrick   Polhemus Fastrack driver added (IRIX SPROC only)
+Apr-12-2001 patrick   The MotionStar driver now supports setting the
+                      measurement rate
+Mar-28-2001 kevn      vjQuat::unit() is now vjQuat::normalizeFast()
+                      vjQuat::makeQuat() is now vjQuat::makeRot()
+Feb-14-2001 cjust     Fixed VjControl problems with recognizing backspace
+                      on linux.
+Feb-07-2001 patrick   The extra VR Juggler data files, sample applications,
+                      sample config files, etc. now install in
+                      $VJ_BASE_DIR/share by default.  This includes the
+                      basic chunk description file, so local vjcontrol.cfg
+                      files must be updated.  The easiest way to do this is
+                      to change the descfiles property to have the value
+                      "$VJ_SHARE_DIR/Data/chunksDesc".  VjControl knows how to
+                      expand $VJ_SHARE_DIR on its own.
+Jan-27-2001 patrick   The Juggler_utils library must now be linked for all
+                      applications.
+Jan-26-2001 cjust     Improved Navigation in VjControl help.
+Jan-20-2001 cjust     VjControl now recommends JDK1.3 (1.2 still minimum).
+Jan-09-2001 patrick   RELENG_1_0 CVS branch created in preparation for 1.0
+                      release.  The branch point is the same as for RELENG_0_2,
+                      and all changes on RELENG_0_2 were merged onto this
+                      branch.  RELENG_0_2 is now dead.
+Jan-04-2001 kevn      vjSingleton is a little more robust now:
+                      fixed a case where you could create one before it's
+                      static data member was initialized.  Moved this static
+                      data member to static function data to ensure init
+                      when instance() is called.  The is one more bug/issue
+                      and that is the problem that static local function data
+                      is not thread safe.  This appears only when ThreadManager
+                      has not been initialized/accessed yet.
+                      This could cause two simultaneous calls to instance() to
+                      try to access the thread manager, and one will recieve a
+                      NULL mutex. 
+Dec-18-2000 bthomp    UNIX version of IS-900 driver converted to use termios
+                      which in turn fixes cross-platform building
+Dec-13-2000 patrick   RELENG_0_2 CVS branch created in preparation for 0.2.0
+                      release
 Nov-27-2000 bthomp    Added initial version of Intersense IS-900 driver
 Nov-02-2000 patrick   Finished new MotionStar driver--config files must be
                       updated to reflect some new options

@@ -50,6 +50,7 @@
 #undef RWSTD_MULTI_THREAD
 #undef RW_MULTI_THREAD
 #undef _REENTRANT
+#undef _GNU_SOURCE
 
 /* Define if using POSIX threads Draft 4. */
 #undef _PTHREADS_DRAFT_4
@@ -78,10 +79,6 @@
 
 /* Define all of the following if building on HP-UX. */
 #undef VJ_OS_HPUX
-#undef _HPUX_SOURCE
-#undef _INCLUDE_TERMIO
-#undef _CMA_NOWRAPPERS_
-#undef notdef
 
 /* Define if building on Digital UNIX. */
 #undef VJ_OS_DUX
@@ -148,11 +145,17 @@
 #undef int32_t
 #undef int64_t
 
+/* Define if you have the pthread_attr_setstack function.  */
+#undef HAVE_PTHREAD_ATTR_SETSTACK
+
 /* Define if you have the sched_yield function.  */
 #undef HAVE_SCHED_YIELD
 
 /* Define if you have the sinf function.  */
 #undef HAVE_SINF
+
+/* Define if you have the cosf function.  */
+#undef HAVE_COSF
 
 /* Define if you have the sqrtf function.  */
 #undef HAVE_SQRTF
@@ -165,6 +168,9 @@
 
 /* Define if you have the atan2f function.  */
 #undef HAVE_ATAN2F
+
+/* Define if you have the atan2f function.  */
+#undef HAVE_FABSF
 
 @BOTTOM@
 

@@ -38,6 +38,16 @@
 #include <Kernel/vjDebug.h>
 #include <typeinfo>
 
+namespace {
+   enum PendItemResult
+   { SUCCESS, FAILED, NEED_DEPS };
+
+void outputPendingItemState(int debugLevel, std::string chunkName, std::string chunkType, PendItemResult result);
+
+}
+
+
+
 int vjConfigChunkHandler::configProcessPending(bool lockIt)
 {
    vjConfigManager*     cfg_mgr = vjConfigManager::instance();
@@ -68,7 +78,7 @@ int vjConfigChunkHandler::configProcessPending(bool lockIt)
          std::string chunk_name = cur_chunk->getProperty("name");
          std::string chunk_type = cur_chunk->getType();
 
-         vjDEBUG(vjDBG_ALL,vjDBG_VERB_LVL) << "Item: name:" << chunk_name << " type:" << chunk_type << std::endl << vjDEBUG_FLUSH;
+         vjDEBUG_BEGIN(vjDBG_ALL,vjDBG_VERB_LVL) << "Item: name:" << chunk_name << " type:" << chunk_type << std::endl << vjDEBUG_FLUSH;
 
          // If the current handler (this) knows about the chunk
          if(this->configCanHandle(cur_chunk))
@@ -86,29 +96,29 @@ int vjConfigChunkHandler::configProcessPending(bool lockIt)
                      current++;                          // Goto next item
                      cfg_mgr->removePending(remove_me);  // Delete previous item
                      cfg_mgr->addActive(cur_chunk);      // Add it to the current config
-                     vjDEBUG_NEXT(vjDBG_ALL,vjDBG_CONFIG_LVL)
-                                                 << "Pending item [ADD]: " << clrSetNORM(clrGREEN)
-                                                 << cur_chunk->getProperty("name") << clrRESET
-                                                 << " type: " << ((std::string)cur_chunk->getType()).c_str()
-                                                 << "  --> Successfully added.\n\n"  << vjDEBUG_FLUSH;
+
+                     outputPendingItemState(vjDBG_CONFIG_LVL,
+                                            cur_chunk->getProperty("name"),
+                                            ((std::string)cur_chunk->getType()).c_str(),
+                                            SUCCESS);
                   }
                   else  // FAILED adding
                   {
-                     vjDEBUG_NEXT(vjDBG_ALL,vjDBG_CONFIG_LVL)
-                                                 << "Pending item [ADD]: " << clrSetNORM(clrRED)
-                                                 << cur_chunk->getProperty("name") << clrRESET
-                                                 << " type: " << ((std::string)cur_chunk->getType()).c_str()
-                                                 << "  --> failed to add correctly.\n\n" << vjDEBUG_FLUSH;
+                     outputPendingItemState(vjDBG_CRITICAL_LVL,
+                                            cur_chunk->getProperty("name"),
+                                            ((std::string)cur_chunk->getType()).c_str(),
+                                            FAILED);
                      current++;
                   }
                }
                else     // Dependency failed
                {
-                  vjDEBUG_NEXT(vjDBG_ALL,vjDBG_WARNING_LVL)
-                                                 << "Pending item [ADD]: " << clrSetNORM(clrCYAN)
-                                                 << cur_chunk->getProperty("name") << clrRESET
-                                                 << " type: " << ((std::string)cur_chunk->getType()).c_str()
-                                                 << "  -->  Config Add: Dependencies are not loaded yet.\n" << vjDEBUG_FLUSH;
+
+                  outputPendingItemState(vjDBG_WARNING_LVL,
+                                            cur_chunk->getProperty("name"),
+                                            ((std::string)cur_chunk->getType()).c_str(),
+                                            NEED_DEPS);
+                  vjDEBUG_CONT(vjDBG_ALL,vjDBG_WARNING_LVL) << std::endl << vjDEBUG_FLUSH;
                   dep_mgr->debugOutDependencies(cur_chunk,vjDBG_WARNING_LVL);
                   current++;
                }
@@ -145,6 +155,7 @@ int vjConfigChunkHandler::configProcessPending(bool lockIt)
                                                  << " --> Not handled by this handler.\n" << vjDEBUG_FLUSH;
             current++;
          }
+         vjDEBUG_END(vjDBG_ALL,vjDBG_VERB_LVL) << "==== End item =====\n" << vjDEBUG_FLUSH;
 
       }        // END: while(current != end)
 
@@ -167,5 +178,48 @@ int vjConfigChunkHandler::configProcessPending(bool lockIt)
 
    return (num_pending_before-num_pending_after);
 }
+
+namespace {
+
+void outputPendingItemState(int debugLevel, std::string chunkName, std::string chunkType, PendItemResult result)
+{
+   const int item_width(25);
+   const int type_width(20);
+
+   const std::string name_prefix("Pending item: ");
+   const std::string type_prefix(" type: ");
+   vjDEBUG(vjDBG_ALL,debugLevel) << "Pending item: " << std::setiosflags(std::ios::right) << std::setfill(' ') << std::setw(item_width) << chunkName
+                                 <<    "     type: " << std::setiosflags(std::ios::right) << std::setfill(' ') << std::setw(type_width) << chunkType
+                                                     << std::resetiosflags(std::ios::right) << "  ";
+
+   /*
+   const int prefix_len = name_prefix.length() + type_prefix.length();
+   int item_and_type_len = chunkName.length() + chunkType.length() + prefix_len;
+   const int state_offset(60);
+
+   for(int c=0;c<(state_offset-item_and_type_len);c++)
+   {
+      vjDEBUG_CONTnl(vjDBG_ALL,debugLevel) << " ";
+   }
+   */
+
+   switch(result)
+   {
+   case SUCCESS:
+      vjDEBUG_CONTnl(vjDBG_ALL,debugLevel) << "[ " << clrSetNORM(clrGREEN) << "OK" << clrRESET << " ]";
+      break;
+   case FAILED:
+      vjDEBUG_CONTnl(vjDBG_ALL,debugLevel) << "[ " << clrSetNORM(clrRED) << "FAILED" << clrRESET << " ]";
+      break;
+   case NEED_DEPS:
+      vjDEBUG_CONTnl(vjDBG_ALL,debugLevel) << "[ " << clrSetNORM(clrYELLOW) << "NEED DEPS" << clrRESET << " ]";
+      break;
+   }
+
+   vjDEBUG_CONTnl(vjDBG_ALL,debugLevel) << std::endl << vjDEBUG_FLUSH;
+}
+
+}
+
 
 

@@ -78,7 +78,7 @@ protected:
          pWin = NULL;
       }
 
-      enum {LEFT = 0, RIGHT = 1};
+      enum {PRIMARY = 0, SECONDARY = 1};
 
       vjDisplay*     disp;
       pfPipeWindow*  pWin;
