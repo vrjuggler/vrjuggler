@@ -122,8 +122,8 @@ void vjEnvironmentManager::connectHasDied (vjConnect* con) {
     removeConnect(con);
     connections_mutex.release();
     vjConfigManager::instance()->lockActive();
-      //vjKernel::instance()->getChunkDB()->removeNamed(s);
-      vjConfigManager::instance()->getActiveConfig()->removeNamed(s);
+    //vjKernel::instance()->getChunkDB()->removeNamed(s);
+    vjConfigManager::instance()->getActiveConfig()->removeNamed(s);
     vjConfigManager::instance()->unlockActive();
     sendRefresh();
 }
@@ -147,64 +147,62 @@ bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
     bool networkingchanged = false;
     int newport;
 
-    vjDEBUG(vjDBG_ENV_MGR, 0) << "-------------------------------------- EM GOT CHUNK -------------------------\n" << vjDEBUG_FLUSH;
-
     std::string s = chunk->getType();
     if (!vjstrcasecmp (s, "EnvironmentManager")) {
-   configured_to_accept = chunk->getProperty ("AcceptConnections");
-   newport = chunk->getProperty("Port");
+        configured_to_accept = chunk->getProperty ("AcceptConnections");
+        newport = chunk->getProperty("Port");
 
-   if (newport == 0)
-       newport = Port;
-   if ((newport != Port) || (configured_to_accept != isAccepting()))
-       networkingchanged = true;
-   perf_target_name = (std::string)chunk->getProperty ("PerformanceTarget");
-   connections_mutex.acquire();
+        if (newport == 0)
+            newport = Port;
+        if ((newport != Port) || (configured_to_accept != isAccepting()))
+            networkingchanged = true;
+        perf_target_name = (std::string)chunk->getProperty ("PerformanceTarget");
+        connections_mutex.acquire();
    
-   vjConnect* new_perf_target = getConnect(perf_target_name);
-   if (new_perf_target != perf_target)
-       setPerformanceTarget (NULL);
-
-   if (networkingchanged) {
-       Port = newport;
-       if (isAccepting())
-      rejectConnections();
-       if (configured_to_accept)
-      acceptConnections();
-       else
-      killConnections();
-   }
-   if (new_perf_target)
-       setPerformanceTarget(new_perf_target);
-   connections_mutex.release();
+        vjConnect* new_perf_target = getConnect(perf_target_name);
+        if (new_perf_target != perf_target)
+            setPerformanceTarget (NULL);
+        
+        if (networkingchanged) {
+            Port = newport;
+            if (isAccepting())
+                rejectConnections();
+            if (configured_to_accept)
+                acceptConnections();
+            else
+                killConnections();
+        }
+        if (new_perf_target)
+            setPerformanceTarget(new_perf_target);
+        connections_mutex.release();
    
-   return true;
+        return true;
     }
     else if (!vjstrcasecmp (s, "PerfMeasure")) {
-   current_perf_config = new vjConfigChunk (*chunk);
-   activatePerfBuffers();
-   return true;
+        current_perf_config = new vjConfigChunk (*chunk);
+        activatePerfBuffers();
+        return true;
     }
     else if (!vjstrcasecmp (s, "FileConnect")) {
-   // I wanted to just look if the fileconnect had been added yet.
-   // however I seem to have a chicken/egg problem.
-   // so the kludge we'll do now is to not directly add a chunk that's
-   // of type VJC_INTERACTIVE. sigh.
-   // Unfortunately, this means that for other cases (such as attaching
-   // to a named pipe) we're still broken
-   if ((int)chunk->getProperty("Mode") != VJC_INTERACTIVE) {
-       // it's new to us
-       vjConnect* vn = new vjConnect (chunk);
-       vjDEBUG (vjDBG_ENV_MGR, 1) << "EM adding connection: " << vn->getName().c_str() << '\n'
-                   << vjDEBUG_FLUSH;
-       connections_mutex.acquire();
-       connections.push_back (vn);
-       vn->startProcess();
-       if (!vjstrcasecmp (vn->getName(), perf_target_name))
-      setPerformanceTarget (vn);
-       connections_mutex.release();
-   }
-   return true;
+        // I wanted to just look if the fileconnect had been added yet.
+        // however I seem to have a chicken/egg problem.
+        // so the kludge we'll do now is to not directly add a chunk that's
+        // of type VJC_INTERACTIVE. sigh.
+        // Unfortunately, this means that for other cases (such as attaching
+        // to a named pipe) we're still broken
+        if ((int)chunk->getProperty("Mode") != VJC_INTERACTIVE) {
+            // it's new to us
+            vjConnect* vn = new vjConnect (chunk);
+            vjDEBUG (vjDBG_ENV_MGR, 1) << "EM adding connection: " << vn->getName().c_str() << '\n'
+                                       << vjDEBUG_FLUSH;
+            connections_mutex.acquire();
+            connections.push_back (vn);
+            vn->startProcess();
+            if (!vjstrcasecmp (vn->getName(), perf_target_name))
+                setPerformanceTarget (vn);
+            connections_mutex.release();
+        }
+        return true;
     }
     return false;
 }
