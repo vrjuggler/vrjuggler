@@ -1,0 +1,12 @@
+<GRAMMAR LANGID="409">
+    <DEFINE>
+        <ID NAME="VID_Computer" VAL="6"/>
+    </DEFINE>
+    <RULE ID="VID_Computer" TOPLEVEL="ACTIVE">
+        <P>
+            <L>
+                <P>Computer</P>
+            </L>
+        </P>
+    </RULE>
+</GRAMMAR>
