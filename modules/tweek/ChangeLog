@@ -1,5 +1,8 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2002-07-05 nonchocoboy Added support for programmtic focusing of PanelBeans in
+                       BeanModelViewers. The --defaultbean command-line
+                       argument has been added.
 2002-07-03 patrickh    Subject Manager servants are now named using a GUID to
                        guarantee automatic uniqueness without using a special
                        naming context.  The tweek::SubjectManager interface 
