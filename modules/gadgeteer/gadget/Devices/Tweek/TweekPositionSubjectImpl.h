@@ -41,7 +41,7 @@
 #include <vpr/Sync/Guard.h>
 #include <tweek/CORBA/SubjectImpl.h>
 
-#include <gadget/Devices/Tweek/TweekPositionSubject.h>
+#include <TweekPositionSubject.h>
 
 
 namespace gadget
