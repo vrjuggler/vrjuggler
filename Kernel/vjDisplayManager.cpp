@@ -52,8 +52,8 @@ void vjDisplayManager::updateProjections()
    curHeadPos = *(mHeadInterface->GetData());
    vjCoord  head_coord(curHeadPos);       // Create a user readable version
 
-   vjDEBUG(1) << "vjDisplayManager::updateProjections: Getting head position" << endl << vjDEBUG_FLUSH;
-   vjDEBUG(0) << "\tHeadPos:" << head_coord.pos << "\tHeadOr:" << head_coord.orient << endl << vjDEBUG_FLUSH;
+   vjDEBUG(2) << "vjDisplayManager::updateProjections: Getting head position" << endl << vjDEBUG_FLUSH;
+   vjDEBUG(1) << "\tHeadPos:" << head_coord.pos << "\tHeadOr:" << head_coord.orient << endl << vjDEBUG_FLUSH;
 
    // Compute location of left and right eyes
    float interocularDist = 2.75/12.0f;
