@@ -18,13 +18,14 @@ public class PerfDataCollector {
     public double totalsum;
     public int totalsamps;
     public double maxvals[];
+    public double maxlinetotal;
     public double sums[];
     int prevplace = -1;
     double prevval = 0.0;
     DataLine dl;
     int place;
     ConfigChunk infochunk;
-    int maxdatalines = 500;
+    int maxdatalines;
 
     private void addDataLine (DataLine dl) {
 	int i;
@@ -33,7 +34,7 @@ public class PerfDataCollector {
 	for (i = 0; i < num; i++)
 	    dl.linetotal += dl.diffs[i];
 
-	if (datalines.size() == maxdatalines) {
+	while (datalines.size() > maxdatalines) {
 	    DataLine tmp = (DataLine)datalines.removeFirst();
 	    for (i = 0; i < num; i++) {
 		if (!Double.isNaN (tmp.diffs[i])) {
@@ -53,6 +54,7 @@ public class PerfDataCollector {
 	    }
 	}
 	if (!Double.isNaN(dl.linetotal)) {
+	    maxlinetotal = Math.max(maxlinetotal, dl.linetotal);
 	    totalsum += dl.linetotal;
 	    totalsamps++;
 	}
@@ -61,13 +63,20 @@ public class PerfDataCollector {
 
 
 
+    public void setMaxSamples (int n) {
+	maxdatalines = n;
+	System.out.println ("collector: max lines set to " + maxdatalines);
+    }
 
-    public PerfDataCollector(String _name, int _num) {
+
+
+    public PerfDataCollector(String _name, int _num, int maxsamples) {
         datalines = new LinkedList();
 	name = _name;
 	num = _num;
 	numsamps = new int[num];
 	maxvals = new double[num];
+	maxlinetotal = 0.0;
 	sums = new double[num];
 	totalsum = 0.0;
 	totalsamps = 0;
@@ -78,16 +87,10 @@ public class PerfDataCollector {
 	}
 	dl = new DataLine (num);
 	place = 0;
-
+	maxdatalines = maxsamples;
 	System.out.println ("creating PerfDataCollector " + _name + " with " + _num + " elements.");
 
 	infochunk = Core.findPrefixMatchChunk (name);
-//  	if (infochunk != null) {
-//  	    //System.out.println ("woo-hoo I found a chunk");
-//  	    //labelsprop = ch.getProperty ("labels");
-//  	}
-//  	else
-//  	    System.out.println ("foo. no chunk");
 
     }
 
@@ -99,9 +102,43 @@ public class PerfDataCollector {
 	return name;
     }
 
+
+    public void refreshMaxValues () {
+	DataLine dl;
+	int i;
+	for (i = 0; i < num; i++)
+	    maxvals[i] = 0.0;
+	maxlinetotal = 0.0;
+	ListIterator li = datalines.listIterator(0);
+	while (li.hasNext()) {
+	    dl = (DataLine)li.next();
+	    for (i = 0; i < num; i++)
+		if (!Double.isNaN(dl.diffs[i]))
+		    maxvals[i] = Math.max(maxvals[i], dl.diffs[i]);
+	    if (!Double.isNaN(dl.linetotal))
+		maxlinetotal = Math.max (maxlinetotal, dl.linetotal);
+	}
+//  	for (i = 0; i < num; i++) 
+//  	    System.out.println ("max " + i + " is " + maxvals[i]);
+    }
+
+    public double getMaxValue () {
+	double maxval = 0.0;
+	for (int i = 0; i < num; i++)
+	    maxval += maxvals[i];
+	System.out.println ("alt generation method show " + maxval);
+	return maxlinetotal;
+    }
+
+    public double getMaxValueForPhase (int phase) {
+	    return maxvals[phase];
+    }
+
+
     public double getAverageForPhase (int _phase) {
 	return sums[_phase]/numsamps[_phase];
     }
+
 
     public String getLabelForPhase (int _phase) {
 	if (infochunk == null)
@@ -253,105 +290,6 @@ public class PerfDataCollector {
     }
 
 
-//      public String dumpAverages (int preskip, int postskip, boolean doanomoly, double cutoff) {
-//  	DataLine dl,dl2;
-//  	double total = 0.0;
-//  	int totalsamps = 0;
-//  	int i,j;
-//  	Property labelsprop = null;
-//  	String label;
-//  	ListIterator li;
-
-//  	ConfigChunk ch = Core.findPrefixMatchChunk (name);
-//  	if (ch != null) {
-//  	    System.out.println ("woo-hoo I found a chunk");
-//  	    labelsprop = ch.getProperty ("labels");
-//  	}
-//  	else
-//  	    System.out.println ("foo. no chunk");
-
-
-//  	if (preskip < 1)
-//  	    preskip = 1;
-
-//  	for (i = 0; i < num; i++) {
-//  	    sums[i] = 0.0;
-//  	    maxvals[i] = 0.0;
-//  	    numsamps[i] = 0;
-//  	}
-
-//  	// bug - i'm not handling pre/postskip correctly
-//  	li = datalines.listIterator();
-//  	int numskip = Math.min (preskip, datalines.size());
-//  	for (i = 0; i < numskip; i++)
-//  	    li.next();
-//  	dl = (DataLine)li.next();
-//  	while (li.hasNext()) {
-//  	    dl2 = li.next();
-//  	    if (dl.numlost == 0) {
-//  		double t = dl2.vals[0] - dl.vals[0];
-//  		if (!Double.isNaN (t)) {
-//  		    totalsamps++;
-//  		    total += t;
-//  		}
-//  	    }
-//  	    for (i = 0; i < num; i++) {
-//  		if (!Double.isNaN(dl.diffs[i])) {
-//  		    numsamps[i]++;
-//  		    if (dl.diffs[i] > maxvals[i])
-//  			maxvals[i] = dl.diffs[i];
-//  		    sums[i] += dl.diffs[i];
-//  		    //totalsamps++;
-//  		    //total += dl.diffs[i];
-//  		}
-//  	    }
-//  	    dl = dl2;
-//  	}
-//  	String s = name + ":  averages Report per Cycle\n";
-//  	double avg;
-//  	for (i = 0; i < num; i++) {
-//  	    avg = (sums[i]/numsamps[i]);
-//  	    if (avg == 0.0)
-//  		continue;
-//  	    label = "";
-//  	    if (labelsprop != null) {
-//  		if ( i < labelsprop.getNum())
-//  		    label = labelsprop.getValue(i).getString();
-//  	    }
-//  	    s += "  part " + i + ":  " + padFloat(avg) + " us\t"
-//  		+ label + "\n";
-//  	}
-
-//  	s += "  Total: " + (total/totalsamps) + " us\n";
-
-//  	double sum, diff;
-//  	int numpoints;
-	
-//  	/* we'll handle each index reading separately */
-
-//  //  	if (doanomoly) {
-//  //  	s += "Anomolies report for " + name + "\n";
-//  //  	for ( i = 0; i < num; i++) {
-	    
-//  //  	    avg = sums[i]/numsamps[i];
-//  //  	    s += "index " + i + ": avg value is " + avg + "\n";
-	    
-//  //  	    for (j = preskip; j < datalines.size() - postskip; j++) {
-//  //  		dl = (DataLine)datalines.elementAt(j);
-//  //  		if (Double.isNaN(dl.diffs[i]))
-//  //  		    continue;
-//  //  		// what's the best diff function?
-//  //  		diff = Math.abs(dl.diffs[i]-avg);
-//  //  		if (diff > (avg*cutoff)) {
-//  //  		    s += prebuff(dl.diffs[i], 10) + "       at time " + 
-//  //  			dl.vals[i]/1000000.0 + " seconds\n";
-//  //  		}
-//  //  	    }
-//  //  	    s += "-------------------------------------------\n";
-//  //  	}
-//  //  	}
-//  	return s;
-//      }
 
 
   public void read (ConfigStreamTokenizer st) {
@@ -390,7 +328,6 @@ public class PerfDataCollector {
 	      //System.out.println ("place1 is " + place);
 	      if (place >= num) {
 		  addDataLine (dl);
-		  //datalines.addElement(dl);
 		  dl = new DataLine (num);
 		  place = 0;
 	      }

@@ -8,10 +8,11 @@ package VjPerf;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.border.*;
 import VjPerf.*;
 import VjGUI.util.*;
 
-public class SummaryGraphPanel extends JPanel implements ActionListener {
+public class SummaryGraphPanel extends GenericGraphPanel implements ActionListener {
 
     private class SummaryDisplayPanel extends JPanel {
 	// actual interior display panel...
@@ -20,14 +21,16 @@ public class SummaryGraphPanel extends JPanel implements ActionListener {
 	public int widthscale; //(widthscale is # samples per line)
 	public Color colors[];
 	public double maxval;
+	public double newmaxval;
 
 	public double horizmult;
 	public double vertmult;
 
 	public void setVerticalScale (double y) {
 	    vertmult = y;
-	    Dimension d = new Dimension (col.datalines.size() + 2, (int)(200.0 * vertmult));
+	    Dimension d = new Dimension (col.datalines.size() + 5, (int)(200.0 * vertmult));
 	    setPreferredSize (d);
+	    setMinimumSize(d);
 	    setSize (d);
 	    //System.out.println ("vert scale set: " + vertmult);
 	    //validate();
@@ -36,18 +39,44 @@ public class SummaryGraphPanel extends JPanel implements ActionListener {
 	}
 
 	public SummaryDisplayPanel() {
-	    colors = new Color[50];
-	    for (int i = 0; i < 50; i++) 
-		colors[i] = new Color ((float)i * .02f, 0.0f, 1.0f - (float)i * .02f);
-	    maxval = 70000;
+
+	    colors = new Color[60];
+	    for (int i = 0; i < 60; i+=3) {
+		colors[i] = new Color (.3f + (float)i/90.0f, 0.0f, 0.0f);
+		colors[i+1] = new Color (0.0f, .3f + (float)i/90.0f, 0.0f);
+		colors[i+2] = new Color (0.0f, 0.0f, .3f + (float)i/90.0f);
+	    }
+ 
+	    refigureMax();
 
 	    horizmult = 1.0;
 	    vertmult = 1.0;
 
-	    setPreferredSize (new Dimension (col.datalines.size(),200));
+	    setPreferredSize (new Dimension (col.datalines.size()+5,200));
 
 
 	}
+
+
+	public void refigureMax() {
+	    col.refreshMaxValues();
+	    maxval = 0.0;
+	    for (int i = 0; i < num; i++)
+		if (phase_active[i])
+		    maxval += col.getMaxValueForPhase(i);
+	    maxval = Math.ceil(maxval/10000) * 10000;
+	    newmaxval = maxval;
+	}
+
+	public void refresh() {
+	    if (newmaxval < (maxval/2.0))
+		maxval = Math.ceil(maxval/10000) * 10000;
+	    if (newmaxval > maxval)
+		maxval = Math.ceil(newmaxval/10000) * 10000;
+
+	    repaint();
+	}
+
 
 	private DataLine getAverageDiffs (ListIterator li, int numsamps, int numphases) {
 	    // returns a DataLine whose diffs are the averages of the
@@ -71,10 +100,15 @@ public class SummaryGraphPanel extends JPanel implements ActionListener {
 	public void paint (Graphics g) {
 
 	    cursize = getSize();
-	    System.out.println ("get size is: " + cursize);
+	    cursize.width = col.datalines.size();
+	    setSize (cursize);
+	    setPreferredSize (cursize);
+	    
+	    //System.out.println ("set size is: " + cursize);
 
+	    newmaxval = 0.0;
 
-	    System.out.println ("paint called");
+//  	    System.out.println ("paint called");
 	    g.setColor (Color.white);
 	    g.fillRect (0, 0, cursize.width, cursize.height);
 	    g.setColor (Color.black);
@@ -82,13 +116,14 @@ public class SummaryGraphPanel extends JPanel implements ActionListener {
 	    int curheight, newheight;
 
 	    //widthscale = Math.max (1, col.datalines.size() / cursize.width);
-	    widthscale = (col.datalines.size()/cursize.width) + 1;
+	    widthscale = 1;
+	    //widthscale = (col.datalines.size()/cursize.width) + 1;
 	    heightscale = cursize.height / maxval;
 
-	    System.out.println ("panel width is " + cursize.width);
-	    System.out.println ("NumSamples is " + col.datalines.size());
-	    System.out.println ("widthscale is " + widthscale);
-	    System.out.println ("heightscale is " + heightscale);
+//  	    System.out.println ("panel width is " + cursize.width);
+//  	    System.out.println ("NumSamples is " + col.datalines.size());
+//  	    System.out.println ("widthscale is " + widthscale);
+	    //System.out.println ("heightscale is " + heightscale);
 	    // bug - not handling pre/postskip
 	    ListIterator li = col.datalines.listIterator(0);
 	    for (j = 0; j < col.datalines.size()/widthscale; j++) {
@@ -102,19 +137,29 @@ public class SummaryGraphPanel extends JPanel implements ActionListener {
 			break;
 		    }
 		    else {
-			if (dl.diffs[k] == 0.0)
-			    continue;
-			newheight = curheight + (int)(dl.diffs[k]*heightscale);
-			g.setColor (colors[k]);
-			g.drawLine (j, cursize.height - curheight,
-				    j, cursize.height - newheight);
-			curheight = newheight;
+			if (phase_active[k] && (dl.diffs[k] > 0.0)) {
+			    newmaxval = Math.max (newmaxval, dl.diffs[k]);
+			    newheight = curheight + (int)(dl.diffs[k]*heightscale);
+			    g.setColor (colors[k]);
+			    g.drawLine (j, cursize.height - curheight,
+					j, cursize.height - newheight);
+			    curheight = newheight;
+			}
 		    }
 		}
 	    }
 
 	    // draw some markings...
-	    float horizbarsinterval = 10000.0f;
+	    float horizbarsinterval;
+	    if (maxval > 200000)
+		horizbarsinterval = 20000.0f;
+	    else if (maxval > 20000)
+		horizbarsinterval = 10000.0f;
+	    else if (maxval > 5000)
+		horizbarsinterval = 2000.0f;
+	    else
+		horizbarsinterval = 500.0f;
+
 	    for (float horizbar = horizbarsinterval; horizbar < maxval; horizbar += horizbarsinterval) {
 		int y = (int)(horizbar * heightscale);
 		g.setColor (Color.black);
@@ -131,16 +176,55 @@ public class SummaryGraphPanel extends JPanel implements ActionListener {
     PerfDataCollector col;
     SummaryDisplayPanel summarypanel;
     JComboBox vertscale_box;
+    JFrameParent parent;
+    boolean phase_active[];
+    JCheckBox phase_active_boxes[];
+    int num;
 
     public SummaryGraphPanel (PerfDataCollector _col) {
+	init (_col, -1);
+    }
+
+    public SummaryGraphPanel (PerfDataCollector _col, int phase) {
+	init (_col, phase);
+    }
+
+    private void init(PerfDataCollector _col, int phase) {
+	int i,j;
 
 	setBorder (BorderFactory.createEmptyBorder (5,5,5,5));
 	setLayout (new BorderLayout (5,5));
 
 	col = _col;
+	num = col.getNumPhases();
+
+	phase_active = new boolean[num];
+	for (i = 0; i < num; i++)
+	    phase_active[i] = (phase == -1) || (phase == i);
+
+	phase_active_boxes = new JCheckBox[num];
+	JPanel checkboxpanel = new JPanel();
+	checkboxpanel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder(), "Display Indices", TitledBorder.LEFT, TitledBorder.TOP));
+	for (i = 0, j = 0; i < num; i++) {
+	    if (col.getAverageForPhase(i) > 0.0) {
+		phase_active_boxes[i] = new JCheckBox (Integer.toString(i) + " -" + col.getLabelForPhase(i), phase_active[i]);
+		phase_active_boxes[i].setActionCommand (Integer.toString(i));
+		phase_active_boxes[i].addActionListener(this);
+		checkboxpanel.add(phase_active_boxes[i]);
+		j++;
+	    }
+	    else
+		phase_active_boxes[i] = null;
+	}
+	checkboxpanel.setLayout (new GridLayout (j, 1));//((j+1)/2, 2));
+	add (checkboxpanel, "East");
 
 	JPanel northpanel = new JPanel();
+	//northpanel.add (checkboxpanel);
 	add (northpanel, "North");
+
+	northpanel.add (new JLabel ("Vert scale factor: "));
+
 	vertscale_box = new JComboBox();
 	vertscale_box.addItem ("1.0");
 	vertscale_box.addItem ("2.0");
@@ -155,13 +239,29 @@ public class SummaryGraphPanel extends JPanel implements ActionListener {
 	//display_pane.setRowHeaderView (horizbarcanvas);
 	add (display_pane, "Center");
 
+
     }
 
     public void actionPerformed (ActionEvent e) {
 	if (e.getSource() == vertscale_box) {
 	    summarypanel.setVerticalScale ((new Double((String)vertscale_box.getSelectedItem())).doubleValue());
 	}
+	if (e.getSource() instanceof JCheckBox) {
+	    int i;
+	    for (i = 0; i < num; i++)
+		if (phase_active_boxes[i] == e.getSource())
+		    break;
+	    //System.out.println ("checkbox selected # " + i);
+	    if (i < num) {
+		phase_active[i] = phase_active_boxes[i].isSelected();
+	    }
+	    col.refreshMaxValues();
+	    summarypanel.refigureMax();
+	    summarypanel.refresh();
+	}
     }
 
+
 }
+
 
