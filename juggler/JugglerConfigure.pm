@@ -76,12 +76,12 @@ sub parseConfigFile ($)
 
                $MODULES{"$mod"}->addDependencies($MODULES{"$module_name"}->getDependencies());
             }
-            elsif ( $deps =~ /\s*(\S.+?):\s+(.+?);/ )
+            elsif ( $deps =~ /\s*(\S.+?)(:\s+(.+?)|\s*);/ )
             {
                $deps = $';
 
                my $dep_path = "$1";
-               my @var_list = split(/\s*,\s*/, "$2");
+               my @var_list = split(/\s*,\s*/, "$3");
                my %vars = ();
 
                my $var;
