@@ -32,7 +32,7 @@ public:
 #ifdef VJ_SGI_IPC
 #   include <SharedMem/vjMemPoolSGI.h>
 #   include <SharedMem/vjMemPoolHeap.h>
-    
+
     typedef vjMemPoolSGI vjSharedPool;
     typedef vjMemPoolHeap vjHeapPool;
     typedef vjMemPoolSGI vjSyncPool;
@@ -50,7 +50,7 @@ public:
 #   include <SharedMem/vjMemPoolHeap.h>
 
     typedef vjMemPool_malloc	vjSharedPool;
-    typedef vjMemPoolHeap		vjHeapPool;
+    typedef vjMemPoolHeap	vjHeapPool;
     typedef vjMemPool_malloc	vjSyncPool;
 #endif	// if defined(VJ_OS_HPUX) || defined(VJ_USE_PTHREADS)
 #endif // ifdef WIN32
