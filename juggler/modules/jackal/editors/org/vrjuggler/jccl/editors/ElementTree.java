@@ -47,7 +47,9 @@ import org.vrjuggler.jccl.config.undo.ConfigElementNameEdit;
  * Wraps a ConfigElement to allow us to transfer it from on context to another
  * either using copy/past or drag and drop methods.
  */
-class ConfigElementSelection implements ClipboardOwner, Transferable
+class ConfigElementSelection
+   implements ClipboardOwner
+            , Transferable
 {
    /**
     * Constructor that takes the given ConfigElement and creates a Transferable
@@ -62,14 +64,14 @@ class ConfigElementSelection implements ClipboardOwner, Transferable
    /**
     * Return the ConfigElement that we are transfering.
     */
-   public Object getTransferData(DataFlavor flavor) 
+   public Object getTransferData(DataFlavor flavor)
       throws UnsupportedFlavorException
    {
-      if (flavor.getRepresentationClass().equals(ConfigElement.class)) 
+      if (flavor.getRepresentationClass().equals(ConfigElement.class))
       {
          return mConfigElement;
       }
-      else 
+      else
       {
          throw new UnsupportedFlavorException(flavor);
       }
@@ -88,27 +90,25 @@ class ConfigElementSelection implements ClipboardOwner, Transferable
     * Check if the given DataFlavor is a valid flavor for transfering
     * ConfigElements from one context to another.
     */
-   public boolean isDataFlavorSupported(DataFlavor flavor) 
+   public boolean isDataFlavorSupported(DataFlavor flavor)
    {
-      if (flavor.getRepresentationClass().equals(ConfigElement.class))
-      {
-         return true;
-      }
-      return false;
+      return flavor.getRepresentationClass().equals(ConfigElement.class);
    }
 
    /**
     * Informs the ConfigContextEditor that it has lost the clipboard.
     */
    public void lostOwnership(Clipboard clip, Transferable obj)
-   {;}
-   
+   {
+      ;
+   }
+
    /** ConfigElement that we are transfering. */
    private ConfigElement mConfigElement = null;
 
    /** Array of valid DataFlavors for transfering a ConfigElement. */
-   private DataFlavor flavors[] = {new DataFlavor(ConfigElement.class,
-                                                "VR Juggler Config Element")};
+   private DataFlavor[] flavors =
+      { new DataFlavor(ConfigElement.class, "VR Juggler Config Element") };
 }
 
 /**
@@ -125,33 +125,33 @@ class ElementNameEditor implements TreeCellEditor
    {
       mTree = tree;
    }
-   
+
    /**
     * Returns a component that will be used to edit the name of the
     * ConfigElement.
     */
    public Component getTreeCellEditorComponent(JTree tree,
-                                            Object value,
-                                            boolean isSelected,
-                                            boolean expanded,
-                                            boolean leaf,
-                                            int row)
+                                               Object value,
+                                               boolean isSelected,
+                                               boolean expanded,
+                                               boolean leaf,
+                                               int row)
    {
       // Get a reference to the selected TreeNode.
       DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
-     
+
       if(!(node.getUserObject() instanceof ConfigElement))
       {
          throw new IllegalArgumentException("Error: "
-               + "The selected node contains an object with type:" 
+               + "The selected node contains an object with type:"
                + node.getUserObject().getClass());
       }
-     
+
       // Get a reference to the selected ConfigElement.
       mElement = (ConfigElement)node.getUserObject();
       mTextField = new JTextField(mElement.getName());
       mTree = tree;
-     
+
       // Specify what should happen when done editing.
       mTextField.addActionListener(new ActionListener()
       {
@@ -161,7 +161,7 @@ class ElementNameEditor implements TreeCellEditor
             //mTextField.transferFocusUpCycle();
             // Force the focus to be transfered to the next component.
             //mTextField.transferFocus();
-            
+
             // This is no longer needed since the above line will force a
             // focusLostEvent. But I have choosen to leave this line here in
             // case it might become useful later.
@@ -169,7 +169,7 @@ class ElementNameEditor implements TreeCellEditor
             mTree.clearSelection();
          }
       });
-      
+
       mTextField.addFocusListener(new FocusAdapter()
       {
          public void focusLost(FocusEvent evt)
@@ -177,17 +177,19 @@ class ElementNameEditor implements TreeCellEditor
             stopCellEditing();
          }
       });
-      
+
       return mTextField;
    }
+
    public Object getCellEditorValue()
    {
       return mElement;
    }
+
    public boolean isCellEditable(EventObject evt)
    {
       TreePath current_selection = mTree.getSelectionPath();
-      if (current_selection != null) 
+      if (current_selection != null)
       {
          DefaultMutableTreeNode current_node = (DefaultMutableTreeNode)
             (current_selection.getLastPathComponent());
@@ -198,11 +200,15 @@ class ElementNameEditor implements TreeCellEditor
                return true;
             }
          }
-      } 
+      }
       return false;
    }
+
    public boolean shouldSelectCell(EventObject evt)
-   { return true; }
+   {
+      return true;
+   }
+
    public boolean stopCellEditing()
    {
       // Detect when the user does not actually change the name.
@@ -219,34 +225,49 @@ class ElementNameEditor implements TreeCellEditor
                "Invalid Name", JOptionPane.ERROR_MESSAGE);
          return false;
       }
-      ConfigElementNameEdit new_edit 
-         = new ConfigElementNameEdit(mElement, mElement.getName(), mTextField.getText());
+      ConfigElementNameEdit new_edit =
+         new ConfigElementNameEdit(mElement, mElement.getName(),
+                                   mTextField.getText());
       mElement.setName(mTextField.getText());
       ctx.postEdit(new_edit);
-      return true; 
+      return true;
    }
+
    public void cancelCellEditing()
-   {;}
+   {
+      ;
+   }
+
    public void addCellEditorListener(CellEditorListener l)
-   {;}
+   {
+      ;
+   }
+
    public void removeCellEditorListener(CellEditorListener l)
-   {;}
+   {
+      ;
+   }
 
    private JTree           mTree       = null;
    private JTextField      mTextField  = null;
    private ConfigElement   mElement    = null;
 }
+
 /**
  * A JTree that allows us to transfer ConfigElements to/from other ElementTrees
  * in other contexts.
  */
-class ElementTree extends JTree implements DragGestureListener, 
-         DragSourceListener, DropTargetListener, ActionListener
+class ElementTree
+   extends JTree
+   implements DragGestureListener
+            , DragSourceListener
+            , DropTargetListener
+            , ActionListener
 {
    JPopupMenu mPopup;
-   
-   Clipboard clipboard = getToolkit().getSystemClipboard(); 
-   
+
+   Clipboard clipboard = getToolkit().getSystemClipboard();
+
    /**
     * Create a JTree that supports the dragging and dropping of ConfigElements.
     */
@@ -256,26 +277,31 @@ class ElementTree extends JTree implements DragGestureListener,
 
       // Allow the user to change the name of a leaf node(an element)
       setEditable(true);
-     
-      //setCellEditor(new DefaultTreeCellEditor(this, new DefaultTreeCellRenderer()));
-      setCellEditor(new DefaultTreeCellEditor(this, new DefaultTreeCellRenderer(), new ElementNameEditor(this)));
 
-      
+//      setCellEditor(new DefaultTreeCellEditor(this,
+//                                              new DefaultTreeCellRenderer()));
+      setCellEditor(new DefaultTreeCellEditor(this,
+                                              new DefaultTreeCellRenderer(),
+                                              new ElementNameEditor(this)));
+
       DragSource dragSource = DragSource.getDefaultDragSource();
-      
+
       // Create a new drop target. We do not need to keep a reference to this
       // since internally it associates itself with the componenets that it
       // needs.
-      new DropTarget(this, // Component to associate DropTarget with.
-          DnDConstants.ACTION_COPY_OR_MOVE, // Default acceptable actions.
-          this);  // Drop target listener.
-      
-      // Create a DragGestureRecognizer to watch for drags. Once again we do not
-      // need to keep the reference that is returned from this method.
+      new DropTarget(
+         this,                             // Component to associate with.
+         DnDConstants.ACTION_COPY_OR_MOVE, // Default acceptable actions.
+         this                              // Drop target listener.
+      );
+
+      // Create a DragGestureRecognizer to watch for drags. Once again we do
+      // not need to keep the reference that is returned from this method.
       dragSource.createDefaultDragGestureRecognizer(
-            this, // component where drag originates
-            DnDConstants.ACTION_COPY_OR_MOVE, // actions
-            this); // drag gesture recognizer
+         this,                             // component where drag originates
+         DnDConstants.ACTION_COPY_OR_MOVE, // actions
+         this                              // drag gesture recognizer
+      );
 
       // Load the icons for the popup menu.
       ClassLoader loader = getClass().getClassLoader();
@@ -283,27 +309,34 @@ class ElementTree extends JTree implements DragGestureListener,
       ImageIcon copy_icon = null;
       ImageIcon paste_icon = null;
       ImageIcon remove_icon = null;
-      
+
       try
       {
-         cut_icon = new ImageIcon(loader.getResource("org/vrjuggler/jccl/editors/images/Cut16.gif"));
-         copy_icon = new ImageIcon(loader.getResource("org/vrjuggler/jccl/editors/images/Copy16.gif"));
-         paste_icon = new ImageIcon(loader.getResource("org/vrjuggler/jccl/editors/images/Paste16.gif"));
-         remove_icon = new ImageIcon(loader.getResource("org/vrjuggler/jccl/editors/images/Delete16.gif"));
+         String img_root = "org/vrjuggler/jccl/editors/images";
+         cut_icon    = new ImageIcon(loader.getResource(img_root +
+                                                        "/Cut16.gif"));
+         copy_icon   = new ImageIcon(loader.getResource(img_root +
+                                                        "/Copy16.gif"));
+         paste_icon  = new ImageIcon(loader.getResource(img_root +
+                                                        "/Paste16.gif"));
+         remove_icon = new ImageIcon(loader.getResource(img_root +
+                                                        "/Delete16.gif"));
       }
       catch(Exception ex)
       {
          ex.printStackTrace();
       }
-      
+
       // Set up the pop up menu
       mPopup = new JPopupMenu();
       mDeleteMenuItem = new JMenuItem("Delete", remove_icon);
       mDeleteMenuItem.addActionListener(this);
       mDeleteMenuItem.setActionCommand("delete");
-      mDeleteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+      mDeleteMenuItem.setAccelerator(
+         KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0)
+      );
       mPopup.add(mDeleteMenuItem);
-      
+
       mRenameMenuItem = new JMenuItem("Rename");
       mRenameMenuItem.addActionListener(this);
       mRenameMenuItem.setActionCommand("rename");
@@ -316,19 +349,22 @@ class ElementTree extends JTree implements DragGestureListener,
       mCutMenuItem = new JMenuItem("Cut", cut_icon);
       mCutMenuItem.addActionListener(this);
       mCutMenuItem.setActionCommand("cut");
-      mCutMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, shortcut_mask));
+      mCutMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
+                                                         shortcut_mask));
       mPopup.add(mCutMenuItem);
-      
+
       mCopyMenuItem = new JMenuItem("Copy", copy_icon);
       mCopyMenuItem.addActionListener(this);
       mCopyMenuItem.setActionCommand("copy");
-      mCopyMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, shortcut_mask));
+      mCopyMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
+                                                          shortcut_mask));
       mPopup.add(mCopyMenuItem);
 
       mPasteMenuItem = new JMenuItem("Paste", paste_icon);
       mPasteMenuItem.addActionListener(this);
       mPasteMenuItem.setActionCommand("paste");
-      mPasteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, shortcut_mask));
+      mPasteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V,
+                                                           shortcut_mask));
       mPopup.add(mPasteMenuItem);
 
       mPopup.setOpaque(true);
@@ -336,13 +372,13 @@ class ElementTree extends JTree implements DragGestureListener,
 
       // Add mouse listener to get the popup menu events.
       addMouseListener(
-         new MouseAdapter() 
+         new MouseAdapter()
          {
             // NOTE: XWindows and Windows sense popup trigger events at
             //       different times. On windows it occurs when the mouse is
-            //       released, while on XWindows is occurs when the mouse button
-            //       is pressed.
-         
+            //       released, while on XWindows is occurs when the mouse
+            //       button is pressed.
+
             // Check for a popup trigger on Windows.
             public void mouseReleased( MouseEvent e )
             {
@@ -350,9 +386,10 @@ class ElementTree extends JTree implements DragGestureListener,
                TreePath path = getLeadSelectionPath();
                if (path != null)
                {
-                  DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
+                  DefaultMutableTreeNode node =
+                     (DefaultMutableTreeNode)path.getLastPathComponent();
                   Object temp = node.getUserObject();
-   
+
                   if (temp instanceof ConfigElement)
                   {
                      mDeleteMenuItem.setEnabled(true);
@@ -360,7 +397,7 @@ class ElementTree extends JTree implements DragGestureListener,
                      mCutMenuItem.setEnabled(true);
                      mCopyMenuItem.setEnabled(true);
                      mPasteMenuItem.setEnabled(true);
-           
+
                      // Ensure that the ConfigElement is writable.
                      if ( ((ConfigElement)temp).isReadOnly() )
                      {
@@ -370,55 +407,57 @@ class ElementTree extends JTree implements DragGestureListener,
                         mPasteMenuItem.setEnabled(false);
                      }
 
-                     if ( e.isPopupTrigger()) 
+                     if ( e.isPopupTrigger())
                      {
-                        mPopup.show( (JComponent)e.getSource(), e.getX(), e.getY() );
+                        mPopup.show((JComponent) e.getSource(), e.getX(),
+                                    e.getY());
                      }
                   }
                }
             }
             // Check for a popup trigger on XWindows.
-            public void mousePressed( MouseEvent e ) 
+            public void mousePressed(MouseEvent e)
             {
                mouseReleased(e);
-            } 
+            }
          });
-      
+
       // Add key listener to catch the shortcuts for cut/copy/paste/delete
       addKeyListener(
-            new KeyAdapter()
+         new KeyAdapter()
+         {
+            public void keyPressed(KeyEvent e)
             {
-               public void keyPressed(KeyEvent e)
+               int shortcut_mask =
+                  Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+               if(e.getKeyCode() == KeyEvent.VK_C &&
+                  e.getModifiers() == shortcut_mask)
                {
-                  int shortcut_mask =
-                     Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-                  if(e.getKeyCode() == KeyEvent.VK_C &&
-                     e.getModifiers() == shortcut_mask)
-                  {
-                     System.out.println("We have a copy.");
-                     actionPerformed(new ActionEvent(this, 0, "copy"));
-                  }
-                  if(e.getKeyCode() == KeyEvent.VK_V &&
-                     e.getModifiers() == shortcut_mask)
-                  {
-                     System.out.println("We have a paste.");
-                     actionPerformed(new ActionEvent(this, 0, "paste"));
-                  }
-                  if(e.getKeyCode() == KeyEvent.VK_X &&
-                     e.getModifiers() == shortcut_mask)
-                  {
-                     System.out.println("We have a cut.");
-                     actionPerformed(new ActionEvent(this, 0, "cut"));
-                  }
-                  if(e.getKeyCode() == KeyEvent.VK_DELETE && e.getModifiers() == 0)
-                  {
-                     System.out.println("We have a delete.");
-                     actionPerformed(new ActionEvent(this, 0, "delete"));
-                  }
+                  System.out.println("We have a copy.");
+                  actionPerformed(new ActionEvent(this, 0, "copy"));
                }
-            });
+               if(e.getKeyCode() == KeyEvent.VK_V &&
+                  e.getModifiers() == shortcut_mask)
+               {
+                  System.out.println("We have a paste.");
+                  actionPerformed(new ActionEvent(this, 0, "paste"));
+               }
+               if(e.getKeyCode() == KeyEvent.VK_X &&
+                  e.getModifiers() == shortcut_mask)
+               {
+                  System.out.println("We have a cut.");
+                  actionPerformed(new ActionEvent(this, 0, "cut"));
+               }
+               if(e.getKeyCode() == KeyEvent.VK_DELETE && e.getModifiers() == 0)
+               {
+                  System.out.println("We have a delete.");
+                  actionPerformed(new ActionEvent(this, 0, "delete"));
+               }
+            }
+         }
+      );
    }
-   
+
    public void setContextEditable(boolean val)
    {
       mContextEditable = val;
@@ -427,18 +466,19 @@ class ElementTree extends JTree implements DragGestureListener,
    /**
     * Catch all events for the pop-up menu events.
     */
-   public void actionPerformed(ActionEvent ae) 
+   public void actionPerformed(ActionEvent ae)
    {
       // Get the currently selected ConfigElement.
       TreePath path = this.getLeadSelectionPath();
-      
+
       // Ensure that we have a valid selection path.
       if (null == path)
       {
          return;
       }
-      
-      DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
+
+      DefaultMutableTreeNode node =
+         (DefaultMutableTreeNode)path.getLastPathComponent();
       Object temp = node.getUserObject();
 
       // Make sure that we have a ConfigElement selected.
@@ -453,15 +493,15 @@ class ElementTree extends JTree implements DragGestureListener,
             ConfigElementSelection selection = new ConfigElementSelection(elm);
             // TODO: Change owner of clipboard.
             clipboard.setContents(selection, selection);
-         }      
-         
+         }
+
          if ( !elm.isReadOnly() ) // Ensure that the ConfigElement is writable.
          {
             // If the user selcted the remove menu item.
-            if( ae.getActionCommand().equals("delete") ) 
+            if( ae.getActionCommand().equals("delete") )
             {
                TreeModel model = this.getModel();
-               
+
                // Remove the ConfigElement from the context.
                if( model instanceof ConfigContextModel )
                {
@@ -474,15 +514,16 @@ class ElementTree extends JTree implements DragGestureListener,
                }
             }
 
-            // Start editing the currently selected ConfigElement if we want to rename it.
+            // Start editing the currently selected ConfigElement if we want
+            // to rename it.
             if(ae.getActionCommand().equals("rename"))
             {
                // Get the currently selected ConfigElement.
                startEditingAtPath(path);
             }
 
-            // If the user selects the cut operation we should first copy it into the
-            // clipboard and then delete it from the active context.
+            // If the user selects the cut operation we should first copy it
+            // into the clipboard and then delete it from the active context.
             if(ae.getActionCommand().equals("cut"))
             {
                ActionEvent evt;
@@ -495,7 +536,7 @@ class ElementTree extends JTree implements DragGestureListener,
       }
 
       // If the user selected the paste action.
-      if(ae.getActionCommand().equals("paste") && mContextEditable) 
+      if(ae.getActionCommand().equals("paste") && mContextEditable)
       {
          try
          {
@@ -504,17 +545,19 @@ class ElementTree extends JTree implements DragGestureListener,
             ConfigContextModel config_model = (ConfigContextModel)model;
 
             // Get the ConfigElement to paste out of the clipboard.
-            DataFlavor my_flavor = new DataFlavor(ConfigElement.class, 
-                     "VR Juggler Config Element");
+            DataFlavor my_flavor = new DataFlavor(ConfigElement.class,
+                                                  "VR Juggler Config Element");
             Transferable tr = clipboard.getContents(this);
-            
-            // If this JTree has a valid JTreeModel and the incoming paste supports
-            // the DataFlavor that we are trying to use.
-            if(model instanceof ConfigContextModel && tr.isDataFlavorSupported(my_flavor))
+
+            // If this JTree has a valid JTreeModel and the incoming paste
+            // supports the DataFlavor that we are trying to use.
+            if ( model instanceof ConfigContextModel &&
+                 tr.isDataFlavorSupported(my_flavor) )
             {
                // Get the ConfigElement that we are transfering and make a deep
                // copy of it.
-               ConfigElement old_elm = (ConfigElement)tr.getTransferData(my_flavor);
+               ConfigElement old_elm =
+                  (ConfigElement) tr.getTransferData(my_flavor);
                ConfigElement new_elm = new ConfigElement(old_elm);
 
                // Make sure that we have a meaningful unique name.
@@ -527,14 +570,16 @@ class ElementTree extends JTree implements DragGestureListener,
                   new_elm.setName(new_name);
                   ++num;
                }
-               
-               // Make sure that we are not trying to add an element to ourselves.
+
+               // Make sure that we are not trying to add an element to
+               // ourselves.
                ConfigBroker broker = new ConfigBrokerProxy();
-                
+
                // Make sure this add goes through successfully
                if (!broker.add(config_model.getContext(), new_elm))
                {
-                  throw new Exception("Could not paste ConfigElement into context.");
+                  throw new Exception("Could not paste ConfigElement into " +
+                                      "context.");
                }
                System.out.println("Paste completed...");
             }
@@ -546,12 +591,12 @@ class ElementTree extends JTree implements DragGestureListener,
          }
       }
    }
-   
+
    /**
     * When the user attempts to drag an object out of the JTree we need to
     * prepare the associated transfer object.
     */
-   public void dragGestureRecognized(DragGestureEvent e) 
+   public void dragGestureRecognized(DragGestureEvent e)
    {
       if(e.getDragAction() == DnDConstants.ACTION_COPY)
       {
@@ -565,19 +610,20 @@ class ElementTree extends JTree implements DragGestureListener,
       {
          System.out.println("Something else: " + e.getDragAction());
       }
-      
+
       // Get the selected node the JTree.
       TreePath path = getLeadSelectionPath();
-      DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
-      
+      DefaultMutableTreeNode node =
+         (DefaultMutableTreeNode) path.getLastPathComponent();
+
       // Get the object associated with it, and if it is a ConfigElement
       // prepare it to be transfered.
       Object temp = node.getUserObject();
       if(null != temp && temp instanceof ConfigElement)
       {
          // Start the dragging action with the given icon, transferable object
-         // and listener to listen for the dropEnd event that will only occur in
-         // the case of a successful drag and drop.
+         // and listener to listen for the dropEnd event that will only occur
+         // in the case of a successful drag and drop.
          e.startDrag(DragSource.DefaultCopyDrop, // cursor
                      new ConfigElementSelection((ConfigElement)temp), // transferable
                      this);  // drag source listener
@@ -587,7 +633,7 @@ class ElementTree extends JTree implements DragGestureListener,
    /**
     * Take appropriate actions after a drop has ended.
     */
-   public void dragDropEnd(DragSourceDropEvent e) 
+   public void dragDropEnd(DragSourceDropEvent e)
    {
       if(e.getDropAction() == DnDConstants.ACTION_COPY)
       {
@@ -599,8 +645,10 @@ class ElementTree extends JTree implements DragGestureListener,
       }
       else
       {
-         System.out.println("Something else: " + e.getDropAction() + " has occured.");
-      }    
+         System.out.println("Something else: " + e.getDropAction() +
+                            " has occured.");
+      }
+
       // If the drag was successful and it was not a copy action, then default
       // to a move action and remove the ConfigElement from our context.
       if(e.getDropSuccess() && (e.getDropAction() != DnDConstants.ACTION_COPY))
@@ -608,22 +656,25 @@ class ElementTree extends JTree implements DragGestureListener,
          TreeModel model = this.getModel();
          if(model instanceof ConfigContextModel)
          {
-            DataFlavor my_flavor = new DataFlavor(ConfigElement.class, 
-                     "VR Juggler Config Element");
+            DataFlavor my_flavor = new DataFlavor(ConfigElement.class,
+                                                  "VR Juggler Config Element");
+
             try
             {
                // Get the ConfigElement that we are trying to transfer.
                // NOTE: We could get the selected ConfigElement from the JTree,
                // but this might be more error prone than getting it this way.
-               ConfigElement elm = (ConfigElement)e.getDragSourceContext().getTransferable().getTransferData(my_flavor);
-            
+               ConfigElement elm =
+                  (ConfigElement) e.getDragSourceContext().getTransferable().getTransferData(my_flavor);
+
                ConfigContextModel config_model = (ConfigContextModel)model;
                ConfigBroker broker = new ConfigBrokerProxy();
-               
+
                // Make sure this add goes through successfully
                if (!broker.remove(config_model.getContext(), elm))
                {
-                  throw new Exception("Failed to remove ConfigElement from context after a copy action.");
+                  throw new Exception("Failed to remove ConfigElement from " +
+                                      "context after a copy action.");
                }
             }
             catch(Exception ex)
@@ -634,14 +685,26 @@ class ElementTree extends JTree implements DragGestureListener,
          }
       }
    }
-   public void dragEnter(DragSourceDragEvent e) 
-   {;}
-   public void dragExit(DragSourceEvent e) 
-   {;}
-   public void dragOver(DragSourceDragEvent e) 
-   {;}
-   public void dropActionChanged(DragSourceDragEvent e) 
-   {;}
+
+   public void dragEnter(DragSourceDragEvent e)
+   {
+      ;
+   }
+
+   public void dragExit(DragSourceEvent e)
+   {
+      ;
+   }
+
+   public void dragOver(DragSourceDragEvent e)
+   {
+      ;
+   }
+
+   public void dropActionChanged(DragSourceDragEvent e)
+   {
+      ;
+   }
 
    /**
     * Attept to handle the dropping of a ConfigElement into this JTree.
@@ -659,29 +722,34 @@ class ElementTree extends JTree implements DragGestureListener,
       else
       {
          System.out.println("Dropping Something else: " + e.getDropAction());
-      } 
-      
+      }
+
       try
       {
          TreeModel model = this.getModel();
          ConfigContextModel config_model = (ConfigContextModel)model;
-         DataFlavor my_flavor = new DataFlavor(ConfigElement.class, 
-                  "VR Juggler Config Element");
+         DataFlavor my_flavor = new DataFlavor(ConfigElement.class,
+                                               "VR Juggler Config Element");
          Transferable tr = e.getTransferable();
-         
+
          // If this JTree has a valid JTreeModel and the incoming drop supports
          // the DataFlavor that we are trying to use.
-         if(model instanceof ConfigContextModel && e.isDataFlavorSupported(my_flavor))
+         if ( model instanceof ConfigContextModel &&
+              e.isDataFlavorSupported(my_flavor) )
          {
             // Get the ConfigElement that we are transfering.
             ConfigElement elm = (ConfigElement)tr.getTransferData(my_flavor);
 
             // Make sure that we are not trying to add an element to ourselves.
             ConfigBroker broker = new ConfigBrokerProxy();
-            java.util.List data_sources = config_model.getContext().getResources();
+            java.util.List data_sources =
+               config_model.getContext().getResources();
+
             for(Iterator itr = data_sources.iterator() ; itr.hasNext() ; )
             {
-               java.util.List elm_list = broker.getElementsIn((String)itr.next());
+               java.util.List elm_list =
+                  broker.getElementsIn((String)itr.next());
+
                if(elm_list.contains(elm))
                {
                   System.out.println("You can not drag an Element into a "
@@ -690,15 +758,16 @@ class ElementTree extends JTree implements DragGestureListener,
                   return;
                }
             }
-            
+
             // Accept whatever action was sent to us.
             e.acceptDrop(e.getDropAction());
-            
+
             // Make sure this add goes through successfully
             if (!broker.add(config_model.getContext(), elm))
             {
                e.rejectDrop();
-               throw new Exception("Could not add dropped ConfigElement into context.");
+               throw new Exception("Could not add dropped ConfigElement " +
+                                   "into context.");
             }
             System.out.println("Drop completed...");
             e.dropComplete(true);
@@ -714,16 +783,27 @@ class ElementTree extends JTree implements DragGestureListener,
          ex.printStackTrace();
       }
    }
-   
-   public void dragEnter(DropTargetDragEvent e) 
-   {;}
-   public void dragExit(DropTargetEvent e) 
-   {;}
-   public void dragOver(DropTargetDragEvent e) 
-   {;}
-   public void dropActionChanged(DropTargetDragEvent e) 
-   {;}
-  
+
+   public void dragEnter(DropTargetDragEvent e)
+   {
+      ;
+   }
+
+   public void dragExit(DropTargetEvent e)
+   {
+      ;
+   }
+
+   public void dragOver(DropTargetDragEvent e)
+   {
+      ;
+   }
+
+   public void dropActionChanged(DropTargetDragEvent e)
+   {
+      ;
+   }
+
    private JMenuItem mDeleteMenuItem = null;
    private JMenuItem mRenameMenuItem = null;
    private JMenuItem mCutMenuItem = null;
