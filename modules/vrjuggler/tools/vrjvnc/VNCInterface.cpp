@@ -275,6 +275,7 @@ void VNCInterface::addUpdate(int x, int y, int w, int h)
    Rectangle r;
    r.x = x; r.y = y; r.width = w; r.height = h;
 
+   /*
    // Let's move through the rectangle queue looking for potential
    // merges to eliminate some updates
    std::list<Rectangle>::iterator i = mRectQueue.begin();
@@ -291,6 +292,7 @@ void VNCInterface::addUpdate(int x, int y, int w, int h)
          mRectQueue.erase(temp);
       }
    }
+   */
 
    // Finally, add the new rectangle to the end of the queue
    mRectQueue.push_back(r);
