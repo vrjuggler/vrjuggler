@@ -59,7 +59,6 @@
 #                     libraries.
 # obj               - Build the object files using the default value for
 #                     $(OBJDIR).
-# vjcontrol         - Build VjControl, the Java-based configuration GUI.
 #
 # links             - Define links (for developer use only) that provide
 #                     functionality allowing the use of the $VJ_BASE_DIR
@@ -68,8 +67,7 @@
 #
 # hier              - Make the full directory hierarchy for the installation.
 # install-all       - Install all versions of the libraries, all header files,
-#                     the Data directory, the configuration GUI and the test
-#                     code.
+#                     the Data directory, and the test code.
 # install-all-abi   - Install every ABI possible on the target platform.
 # install           - Install the full debugging version of VR Juggler (with
 #                     both static and dynamic libraries). 
@@ -117,9 +115,6 @@ DEFAULT_SET	= 1
 include @topdir@/make.defs.mk
 
 STARTTIME	:= $(shell LC_TIME=C date)
-
-# State whether or not to build the configuration editor GUI.
-BUILD_GUI	= @BUILD_GUI@
 
 # =============================================================================
 # Lists used for various types of recursion.

@@ -263,10 +263,6 @@ ifneq (@OS_TYPE@, Win32)
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
 	cd $(instlinks)/bin && rm -f ./catadf.pl &&			\
           $(LN_S) $(VJROOT_ABS)/tools/catadf.pl ./catadf.pl
-ifndef NO_JAVA_GUI
-	cd $(instlinks)/bin && rm -f ./VjControl.jar &&			\
-          $(LN_S) $(topdir)/GUI/VjControl.jar ./
-endif
 	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
             -t $(VJROOT_ABS)/juggler-config.in -p 'use_base_dir=yes'	\
             -o $(instlinks)/bin/juggler-config -x
@@ -419,18 +415,13 @@ install-data:
 # Clean-up targets.  '_clean' removes all the files in the build directories.  
 # '_clobber' removes the $(BUILDDIR_BASE) and $(LIBDIR_NAME) directories.
 # =============================================================================
-_clean:
-	@$(MAKE) -C GUI clean
-
 CLOBBER_DIRS	+= $(BUILDDIR_BASE) $(LIBDIR_NAME)
 
 _clobber:
 	@$(MAKE) clean-links
 
-# Define $(_LOCAL_CLEAN) and $(_LOCAL_CLOBBER) to inform the shared 'clean'
-# and 'clobber' targets that there is a '_clean' target and a '_clobber'
-# target to be run besides the standard targets.
-_LOCAL_CLEAN	= 1
+# Define $(_LOCAL_CLOBBER) to inform the shared 'clobber' target that there is
+# a '_clobber' target to be run besides the standard target.
 _LOCAL_CLOBBER	= 1
 
 include $(MKPATH)/dpp.libs.mk
