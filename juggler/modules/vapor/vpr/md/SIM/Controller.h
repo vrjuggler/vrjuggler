@@ -185,6 +185,9 @@ public:
    void addConnectionEvent(const vpr::Interval& event_time,
                            vpr::SocketImplSIM* acceptor_sock);
 
+   void addConnectionCompletionEvent(const vpr::Interval& event_time,
+                                     vpr::SocketImplSIM* connector_sock);
+
    /**
     * Processes the next event in the event queue no matter how far into the
     * (simulated) future it occurs.  If there is an event in the queue, it will
@@ -262,8 +265,9 @@ protected:  // --- Data members --- //
    {
       enum EventType
       {
-         MESSAGE,       /**< Message arrival event */
-         CONNECTION     /**< Connection event */
+         MESSAGE,             /**< Message arrival event */
+         CONNECTION_INIT,     /**< Connection request event */
+         CONNECTION_COMPLETE  /**< Connection completion event */
       };
 
       EventData (const NetworkGraph::net_edge_t _edge,
@@ -273,8 +277,8 @@ protected:  // --- Data members --- //
          ;
       }
 
-      EventData (vpr::SocketImplSIM* acceptor_sock)
-         : type(CONNECTION), socket(acceptor_sock)
+      EventData (vpr::SocketImplSIM* sock, const EventType _type)
+         : type(_type), socket(sock)
       {
          ;
       }
@@ -299,4 +303,3 @@ protected:  // --- Data members --- //
 
 
 #endif
-

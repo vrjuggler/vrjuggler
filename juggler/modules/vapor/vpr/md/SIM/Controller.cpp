@@ -105,9 +105,19 @@ void Controller::addConnectionEvent (const vpr::Interval& event_time,
                                      vpr::SocketImplSIM* acceptor_sock)
 {
    vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
-      << "Controller::addConnectionEvent(): Adding connection event scheduled for time "
+      << "Controller::addConnectionEvent(): Adding connection request event scheduled for time "
       << event_time.getBaseVal() << "\n" << vprDEBUG_FLUSH;
-   mEvents.insert(std::pair<vpr::Interval, EventData>(event_time, EventData(acceptor_sock)));
+   mEvents.insert(std::pair<vpr::Interval, EventData>(event_time, EventData(acceptor_sock, EventData::CONNECTION_INIT)));
+}
+
+void Controller::addConnectionCompletionEvent (const vpr::Interval& event_time,
+                                               vpr::SocketImplSIM* connector_sock)
+{
+   vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+      << "Controller::addConnectionCompletionEvent(): Adding connection "
+      << "completion event scheduled for time " << event_time.getBaseVal()
+      << "\n" << vprDEBUG_FLUSH;
+   mEvents.insert(std::pair<vpr::Interval, EventData>(event_time, EventData(connector_sock, EventData::CONNECTION_COMPLETE)));
 }
 
 void Controller::processNextEvent (vpr::SocketImplSIM** recvSocket)
@@ -155,6 +165,20 @@ void Controller::processNextEvent (vpr::SocketImplSIM** recvSocket)
 
          mClock.setCurrentTime(event_time);
          moveMessage(msg, event_time, recvSocket);
+      }
+      else if ( (*cur_event).second.type == EventData::CONNECTION_COMPLETE )
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+            << "Controller::processNextEvent(): Event is a connection completion for "
+            << (*cur_event).second.socket->getLocalAddr() << "\n"
+            << vprDEBUG_FLUSH;
+
+         mClock.setCurrentTime(event_time);
+
+         if ( recvSocket != NULL )
+         {
+            *recvSocket = (*cur_event).second.socket;
+         }
       }
       else
       {
