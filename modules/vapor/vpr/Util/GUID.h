@@ -85,24 +85,24 @@ private:
 
    union _vpr_guid
    {
-      uuid_t leach_uuid;
+      uuid_t leach;
 
-      struct _allen_uuid
-      {
-         vpr::Uint32 first;
-         vpr::Uint16 second;
-         vpr::Uint16 third;
-         vpr::Uint16 fourth;
-         vpr::Uint8  fifth[6];
-      } allen_uuid;
-
-      struct _moz_uuid
+      struct _std
       {
          vpr::Uint32 m0;
-         vpr::Uint32 m1;
-         vpr::Uint32 m2;
-         vpr::Uint32 m3;
-      } moz_uuid;
+         vpr::Uint16 m1;
+         vpr::Uint16 m2;
+         vpr::Uint16 m3;
+         vpr::Uint8  m4[6];
+      } std;
+
+      struct _packed
+      {
+         vpr::Uint32 l0;
+         vpr::Uint32 l1;
+         vpr::Uint32 l2;
+         vpr::Uint32 l3;
+      } packed;
    } m_guid;
 
    friend class vpr::GUIDFactory;
