@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="/home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
+<?xml-stylesheet href="file://localhost/home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
 <!DOCTYPE book SYSTEM "file:/home/users/patrick/XMLEditor-1.1.1a/examples/docbook/dtd/docbookx.dtd" [
 ]>
 <book>
@@ -217,7 +217,7 @@ simpleApp* app = new simpleApp();    // Create the app object</programlisting></
          </figure>
          <section>
             <title>Definition of a Frame</title>
-            <para>The VR Juggler kernel calls each of the methods in the application object based on a strictly scheduled <emphasis>frame of execution</emphasis>. The frame of execution is shown in <xref linkend="Kernel_seq_diag"/>; it makes up all the lines within the while(running) clause.</para>
+            <para>The VR Juggler kernel calls each of the methods in the application object based on a strictly scheduled <firstterm>frame of execution</firstterm>. The frame of execution is shown in <xref linkend="Kernel_seq_diag"/>; it makes up all the lines within the while(running) clause.</para>
             <para>During the frame of execution, the kernel calls the application methods and performs internal updates (the <methodname>updateAllData()</methodname> data call). Because the kernel has complete control over the frame, it can make changes at pre-defined "safe" times when the application is not doing any processing. At these times, the kernel can change the virtual platform configuration as long as the interface remains the same.</para>
             <para>The frame of execution also serves as a framework for the application. That is, the application can expect that when <methodname>preFrame()</methodname> is called, the devices have just been updated. Applications can rely upon the system being in well-defined stages of the frame when the kernel invokes the application object's methods.</para>
          </section>
@@ -1205,13 +1205,13 @@ vj_mat = vjGetVjMatrix(pf_mat);</programlisting>
          </section>
       </section>
       <section>
-         <title>The <classname>vjDeviceInterface</classname> Helper Class</title>
+         <title>The <classname id="vjDeviceInterface_section">vjDeviceInterface</classname> Helper Class</title>
          <para>The concept of device interfaces in VR Juggler is one which often causes confusion for new users. Two object-oriented design patterns are combined by <classname>vjDeviceInterface</classname>: smart pointers and proxies. Within this section, we aim to explain VR Juggler device interfaces clearly and simply. We begin with a high-level description and then move right into using the class.</para>
          <section>
             <title>High-Level Description</title>
-            <para>Physical devices are never accessed directly by VR Juggler applications. Instead, the applications are granted access to the device through a <emphasis>proxy</emphasis>. A proxy is nothing more than an intermediary who forwards information between two parties. In this case, the two parties are a VR Juggler application and an input device. The application makes requests on the input device through the proxy.</para>
+            <para>Physical devices are never accessed directly by VR Juggler applications. Instead, the applications are granted access to the device through a <firstterm>proxy</firstterm>. A proxy is nothing more than an intermediary who forwards information between two parties. In this case, the two parties are a VR Juggler application and an input device. The application makes requests on the input device through the proxy.</para>
             <para>The class <classname>vjDeviceInterface</classname> is designed to be a wrapper class around the proxies. Applications could use the proxy classes directly, but <classname>vjDeviceInterface</classname> and its subclasses simplify use of the proxy object they contain. Thus, typical VR Juggler application objects will have one or more device interface member variables.</para>
-            <para>In the application object, a device interface member variable is used as a <emphasis>smart pointer</emphasis> to the proxy. In C++, a smart pointer is not usually an actual object pointer. Instead, the class acting as a smart pointer overloads the dereference operator -&gt; so that a special action can be taken when the "pointer" is dereferenced. The derference operator is just another opertor like the addition and subtraction operators, and overloading the derference operator allows some "magic" to occur behind the scenes. On the surface, the code looks exactly the same as a normal pointer dereference, and in most cases, people reading and writing the code can think of the smart pointer as a standard pointer. It may be convenient to think of a smart pointer as a handle.</para>
+            <para>In the application object, a device interface member variable is used as a <firstterm>smart pointer</firstterm> to the proxy. In C++, a smart pointer is not usually an actual object pointer. Instead, the class acting as a smart pointer overloads the dereference operator -&gt; so that a special action can be taken when the "pointer" is dereferenced. The derference operator is just another opertor like the addition and subtraction operators, and overloading the derference operator allows some "magic" to occur behind the scenes. On the surface, the code looks exactly the same as a normal pointer dereference, and in most cases, people reading and writing the code can think of the smart pointer as a standard pointer. It may be convenient to think of a smart pointer as a handle.</para>
             <para>With that background, we can move on to explain how <classname>vjDeviceInterface</classname> uses these concepts. First, know that <classname>vjDeviceInterface</classname> is a base class for all other device interface classes such as digital interfaces (wand buttons), position interfaces (wands, a user's head), etc. In user code, there will be instances of objects such as <classname>vjDigitalInterface</classname>, <classname>vjPosInterface</classname>, <classname>vjKeyboardInterface</classname>, and the like. Once they are properly initialized, device interface objects (whatever their types may be) will act as smart pointers to the actual VR Juggler proxy objects they wrap.</para>
             <para>All the subclasses of <classname>vjDeviceInterface</classname> encapsulate a pointer to a VR Juggler proxy object. (Remember that these proxy objects act as an intermediary between the application and an input device.) The subclasses also overload the dereference operator -&gt; which allows them to act as smart pointers. The dereference operator on a device interface object gives access to the object's hidden proxy pointer. With that access, the methods of the encapsulated proxy object can be invoked, usually to read data. The end result is that user applications get access to the proxy objects they need but through a simpler interface than using the proxies directly.</para>
             <para>At this point, it is perfectly reasonable to wonder why VR Juggler uses a concept that requires all sorts of documentation and explanation. The extra effort is worth it because it allows VR Juggler to hide the actual type of the device being used. There is no need to know that some specific VR system uses a wireless mouse connected to a PC reading bytes from a PS/2 port that represent button presses. All that matters is knowing which buttons are pressed at a given instant. The class<classname>vjDigialInterface</classname> gives exactly that information, and it quietly hides the messiness of dealing with that crazy mouse, its ugly driver, and its overly complex protocol.</para>
@@ -1237,7 +1237,7 @@ head_mat = head-&gt;getData();</programlisting></para>
          </section>
       </section>
       <section>
-         <title>The <classname>vjProxy</classname> Helper Class</title>
+         <title id="vjProxy_section">The <classname>vjProxy</classname> Helper Class</title>
          <para>This whole proxy scheme can be confusing. We admit that it makes the learning curve for VR Juggler a little steeper, but once you get it, you will know it all. An alternate title for this section is ``Horton Hears a Proxy.'' In this case, Horton is VR Juggler (it is rather elephant-like at times), and the complexity of dealing with these ethereal, ubiquitous proxies causes VR Juggler to take a lot of guff. This document presents the <classname>vjProxy</classname> class, the base class for the input proxies making it the one that is used the most. It should be noted, however, that the concept is spreading to other parts of VR Juggler because it is so useful. While this is only the introduction, we'll give you the moral of the story now: proxies are important concepts, and you should not step on them.</para>
          <section>
             <title>High-Level Description</title>
@@ -1252,6 +1252,973 @@ head_mat = head-&gt;getData();</programlisting></para>
          <section>
             <title>The Gory Details</title>
             <para>The gory details of <classname>vjProxy</classname> and its subclasses are not really relevant to this particular document. The subclasses look complicated, and they can be. It is important to note, however, that the complication is part of the interface used <emphasis>internally</emphasis> by VR Juggler rather than the interface used by the application programmer. Because of that and because each device proxy class is different, those details will not be addressed here. It is sufficient to deal with <methodname>getData()</methodname> alone in applications. Leave the ugliness up to VR Juggler; it can handle it.</para>
+         </section>
+      </section>
+   </chapter>
+   <chapter id="ch4">
+      <title>Writing Applications</title>
+      <para>This chapter alone comprises the bulk of information about application development. The sections within are structured around the types of applications that may need to be constructed. Each outlines one area of interest for application developers. For example, there are chapters that show how to get input from the system and chapters that show how to write applications for each of the currently supported graphics APIs. Please note that when writing an application, there will be overlap between these sections. For example, an application that needs input, sound, and OpenGL graphics will be based on concepts from each of the relevant sections.</para>
+      <section>
+         <title>Application Review</title>
+         <para>Before getting into too much detail, we present this section as a review from earlier chapters. There is no new information here, it is simply a quick overview of the basics of VR Juggler applications.</para>
+         <section>
+            <title>Basic Application Information</title>
+            <para>As described in previous chapters (see <xref linkend="ch1"/>, for example), all VR Juggler applications derive from a base VR Juggler application object class (<classname>vjApp</classname>). This class defines the basic interface that VR Juggler expects from all application objects. This means that when constructing an application, the user-defined application object must inherit from <classname>vjApp</classname> or from a draw manager-specific application class that has <classname>vjApp</classname> as a superclass. For example:<programlisting>class userApp : public vjApp
+{
+public:
+   init();
+   preFrame();
+   postFrame();
+}</programlisting></para>
+            <para>This defines a new application class (<classname>userApp</classname>), instances of which can be used anywhere that VR Juggler expects an application object.</para>
+         </section>
+         <section>
+            <title>Draw Manager-Specific Application Classes</title>
+            <para>A user application does not have to (and in most cases does not) derive from <classname>vjApp</classname>. In most cases, an application class is derived from a draw manager-specific application class. For example:<programlisting>class userGlApp : public vjGlApp
+{
+public:
+   init();
+   preFrame();
+   postFrame();
+   
+   draw();
+}</programlisting></para>
+            <para>This is an example of an OpenGL application. The application class (<classname>userGlApp</classname>) has derived directly from the OpenGL draw manager-specific <classname>vjGlApp</classname> application base class. This class provides extra definitions in the interface that are custom for OpenGL applications.</para>
+         </section>
+      </section>
+      <section id="get_input_sect">
+         <title>Getting Input</title>
+         <para>There are many types of input devices that VR Juggler applications can use: positional, digital, analog, and quite a few more. The process and concepts about how to get input from all these devices is exactly the same in all applications. The main thing to remember about getting input in applications is that all VR Juggler applications receive input through device handles managed by <classname>vjDeviceInterface</classname>s. There are <classname>vjDeviceInterface</classname>s for each type of input data that VR Juggler can handle. There is one forpositional input, one for analog, and so on. They all have very similar interfaces and behave exactly the same. (Refer to <xref linkend="vjDeviceInterface_section"/> and <xref linkend="vjProxy_section"/> for more information.) </para>
+         <section>
+            <title>How to Get Input</title>
+            <para>While there has already been a brief presentation about getting input in an application, we need something more. Since all device interfaces look the same, we will focus on an example of getting positional input. All other types are very similar. We begin with a simple application object skeleton.</para>
+            <programlisting>class myApp : public vjApp
+{
+public:
+   init();
+   preFrame();
+private:
+   vjPosInterface mWand;
+}</programlisting>
+            <para>Note the declaration of the variable <varname>mWand</varname> of type <type>vjPosInterface</type>. This is the first addition to an application. Device interfaces are usually member variables of the user application class, as in this example.</para>
+            <programlisting>myApp::init()
+{
+   mWand.init("NameOfPosDevInConfiguration");
+}</programlisting>
+            <para>The device interface has to be told about the device from which it will get data. This is done by calling the device interface object's <methodname>init()</methodname> method with the symbolic string name of the device. This device name comes from the active configuration. We are now ready to read from the device.</para>
+            <programlisting>...
+vjMatrix wand_pos;
+wand_pos = *(mWand-&gt;getData());
+...</programlisting>
+            <para>The above code shows an example of using the device interface in an application. It shows some sample code where the application copies the positional information from a device interface. When it is dereferenced, the device interface figures out what device it points to and returns the data from that device. Again, refer to <xref linkend="vjDeviceInterface_section"/> for more information about using <classname>vjDeviceInterface</classname>.</para>
+         </section>
+         <section>
+            <title>Where to Get Input</title>
+            <para>In the previous section, we showed how to get input from devices, but we never said where to put the code. The location, surprisingly, is application dependent, but there are some very good guidelines regarding where applications should process input. Before explaining them, however, we should review the VR Juggler kernel control loop, presented again in <xref linkend="Kernel_seq_diag2"/>.</para>
+            <figure float="1" id="Kernel_seq_diag2">
+               <title>VR Juggler kernel control loop</title>
+               <mediaobject>
+                  <imageobject>
+                     <imagedata/>
+                  </imageobject>
+               </mediaobject>
+            </figure>
+            <para>This diagram looks complicated, but the key thing to focus on is the <methodname>updateAllData()</methodname> call near the bottom of the diagram. This is where VR Juggler updates all the cached device data that will be used in drawing the next frame. This updated copy is used by all user references to device data until the next update and the end of the next frame of execution.</para>
+            <para>This means two things:</para>
+            <orderedlist>
+               <listitem>
+                  <para>The device data is most fresh in <methodname>vjApp::preFrame()</methodname></para>
+               </listitem>
+               <listitem>
+                  <para>Any time spent in <methodname>vjApp::preFrame()</methodname> increases overall system latency</para>
+               </listitem>
+            </orderedlist>
+            <para>The first point is important because it means that the copy of the device data with the lowest latency is always available in the <methodname>preFrame()</methodname> member function. The second point is equally important because it says why user applications should not waste any time in <methodname>preFrame()</methodname>. Any time spent in <methodname>preFrame()</methodname> increases system latency and in turn decreases the perceived quality of the environment. Hence, it is crucial to avoid placing computations in <methodname>preFrame()</methodname>.</para>
+         </section>
+         <section>
+            <title>Tutorial: Getting Input</title>
+            <informaltable>
+               <tgroup cols="2">
+                  <tbody>
+                     <row>
+                        <entry>Description</entry>
+                        <entry>Simple application that prints the location of the head and the wand</entry>
+                     </row>
+                     <row>
+                        <entry>Objective</entry>
+                        <entry>Understand how to get positional and digital input in a VR Juggler application</entry>
+                     </row>
+                     <row>
+                        <entry>Member functions</entry>
+                        <entry><itemizedlist>
+                              <listitem>
+                                 <para><methodname>vjApp::init()</methodname></para>
+                              </listitem>
+                              <listitem>
+                                 <para><methodname>vjApp::preFrame()</methodname></para>
+                              </listitem>
+                           </itemizedlist></entry>
+                     </row>
+                     <row>
+                        <entry>Directory</entry>
+                        <entry><filename>$VJ_BASE_DIR/share/samples/tutorials/simpleInput</filename></entry>
+                     </row>
+                     <row>
+                        <entry>Files</entry>
+                        <entry><itemizedlist>
+                              <listitem>
+                                 <para><filename>simpleInput.h</filename></para>
+                              </listitem>
+                              <listitem>
+                                 <para><filename>simpleInput.cpp</filename></para>
+                              </listitem>
+                           </itemizedlist></entry>
+                     </row>
+                  </tbody>
+               </tgroup>
+            </informaltable>
+            <section>
+               <title>Class Declaration and Data Members</title>
+               <para>In the following class declaration, note the data members (<varname>mWand</varname>, <varname>mHead</varname>, etc.). This application has four device interface member variables: two for positional input (<varname>mHead</varname> and <varname>mWand</varname>) and two for digital input (<varname>mButton0</varname> and <varname>mButton1</varname>). Each of these member variables will act as a handle to a "real" device from which we will read data in <methodname>preFrame()</methodname>.</para>
+               <programlisting>class simpleInput : public vjGlApp
+{
+public:
+   virtual void init();
+   virtual void preFrame();
+
+public:
+   vjPosInterface     mWand;      // Positional interface for Wand position
+   vjPosInterface     mHead;      // Positional interface for Head position
+   vjDigitalInterface mButton0;   // Digital interface for button 0
+   vjDigitalInterface mButton1;   // Digital interface for button 1
+};</programlisting>
+            </section>
+            <section>
+               <title>Initializing the Device Interfaces: <methodname>vjApp::init()</methodname></title>
+               <para>The devices are initialized in the <methodname>init()</methodname> member function of the application. For each device interface member variable, the application calls the variable's own <methodname>init()</methodname> method. The argument passed is the symbolic name of the configured device from which data will be read. From this point on in the application, the member variables are handles to the named device. </para>
+               <programlisting>virtual void init()
+{
+   // Initialize devices
+   mWand.init("VJWand");
+   mHead.init("VJHead");
+   mButton0.init("VJButton0");
+   mButton1.init("VJButton1");
+}</programlisting>
+            </section>
+            <section>
+               <title>Examining the Device Data: <methodname>vjApp::preFrame()</methodname></title>
+               <para>The following member function implementation gives an example of how to examine the input data using the device interface member variables.</para>
+               <programlisting>virtual void preFrame()
+{
+   if ( mButton0-&gt;getData() )
+   {
+      std::cout &lt;&lt; "Button 0 pressed" &lt;&lt; std::endl;
+   }
+   if( mButton1-&gt;getData() )
+   {
+      std::cout &lt;&lt; "Button 1 pressed" &lt;&lt; std::endl;
+   }
+ 
+   std::cout &lt;&lt; "Wand Buttons:"
+             &lt;&lt; " 0:" &lt;&lt; mButton0-&gt;getData()
+             &lt;&lt; " 1:" &lt;&lt; mButton1-&gt;getData()
+             &lt;&lt; std::endl;
+                 
+   // -- Get Wand matrix --- //
+   vjMatrix wand_matrix;
+   wand_matrix = *(mWand-&gt;getData());
+   std::cout &lt;&lt; "Wand pos: \n" &lt;&lt; wand_matrix &lt;&lt; std::endl;
+}</programlisting>
+               <para>The first several statements check the status of the two digital buttons and write out a line if the button has been pressed. The next line writes out the current state of both buttons. The final section prints out the current location of the wand in the VR environment.</para>
+            </section>
+         </section>
+      </section>
+      <section id="ogl_app_sect">
+         <title>OpenGL Applications</title>
+         <para>We are now ready to describe how to write OpenGL applications in VR Juggler. An OpenGL-based VR Juggler application must be derived from <classname>vjGlApp</classname>. This in turn is derived from <classname>vjApp</classname>. As was discussed in the application object section, <classname>vjApp</classname> defines the base interface that VR Juggler expects of all applications. The <classname>vjGlApp</classname> class extends this interface by adding members that the VR Juggler OpenGL draw manager needs to render an OpenGL application correctly.</para>
+         <figure float="1" id="vjGlApp_class_fig">
+            <title><classname>vjGlApp</classname> application class</title>
+            <mediaobject>
+               <imageobject>
+                  <imagedata fileref="myAppHierarchy-highlightVjOglApp.gif" format="GIF"/>
+               </imageobject>
+            </mediaobject>
+         </figure>
+         <para>In <xref linkend="vjGlApp_class_fig"/>, we see the functions added by the <classname>vjGlApp</classname> interface: <methodname>draw()</methodname>, <methodname>contextInit()</methodname>, and <methodname>contextPreDraw()</methodname>. These functions deal with OpenGL drawing and managing context-specific data (do not worry what context data is right now--we cover that in detail later). There are a few other functions in the interface, but these cover 99% of the issues that most developers face. In the following sections, we will describe how to add OpenGL drawing to an application and how to handle context-specific data. There is also a tutorial for each topic.</para>
+         <section>
+            <title>OpenGL Drawing: <methodname>vjGlApp::draw()</methodname></title>
+            <para>The most important (and visible) component of most OpenGL applications is the OpenGL drawing. The <classname>vjGlApp</classname> class interface defines a <methodname>draw()</methodname> member function to hold the code for drawing a virtual environment. Hence, any OpenGL drawing calls should be placed in the <methodname>vjGlApp::draw()</methodname> function of the user application object.</para>
+            <para>Adding drawing code to an OpenGL-based VR Juggler application is straightforward. The <methodname>draw()</methodname> method is called whenever the OpenGL draw manager needs to render a view of the virtual world created by the user's application. It is called for each defined OpenGL context, and it may be called multiple times per frame in the case of multi-surface setups and/or stereo configurations. Applications should <emphasis>never</emphasis> rely upon the number of times this member function is called per frame.</para>
+            <para>When the method is called, the OpenGL model view and projection matrices have been configured correctly to draw the scene. Input devices are guaranteed to be in the same state (position, value, etc.) for each call to the <methodname>draw()</methodname> method for a given frame.</para>
+            <section>
+               <title>Recommended Uses</title>
+               <para>The only code that should execute in this function is calls to OpenGL drawing routines. It is permissible to read from input devices to determine what to draw, but application data members should not be updated in this function.</para>
+            </section>
+            <section>
+               <title>Possible Misuses</title>
+               <para>The <methodname>draw()</methodname> method should not be used to perform any time-consuming computations. Code in this member function should not change the state of any application variables.</para>
+            </section>
+         </section>
+         <section id="simpe_ogl_app_sect">
+            <title>Tutorial: Drawing a Cube with OpenGL</title>
+            <informaltable>
+               <tgroup cols="2">
+                  <tbody>
+                     <row>
+                        <entry>Description</entry>
+                        <entry>Simple OpenGL application that draws a cube in the environment</entry>
+                     </row>
+                     <row>
+                        <entry>Objectives</entry>
+                        <entry>Understand how the <methodname>draw()</methodname> member function in <classname>vjGlApp</classname> works; create basic OpenGL-based VR Juggler applications</entry>
+                     </row>
+                     <row>
+                        <entry>Member functions</entry>
+                        <entry><itemizedlist>
+                              <listitem>
+                                 <para><methodname>vjApp::init()</methodname></para>
+                              </listitem>
+                              <listitem>
+                                 <para><methodname>vjGlApp::draw()</methodname></para>
+                              </listitem>
+                           </itemizedlist></entry>
+                     </row>
+                     <row>
+                        <entry>Directory</entry>
+                        <entry><filename>$VJ_BASE_DIR/share/samples/tutorials/simpleApp</filename></entry>
+                     </row>
+                     <row>
+                        <entry>Files</entry>
+                        <entry><itemizedlist>
+                              <listitem>
+                                 <para><filename>simpleApp.h</filename></para>
+                              </listitem>
+                              <listitem>
+                                 <para><filename>simpleApp.cpp</filename></para>
+                              </listitem>
+                           </itemizedlist></entry>
+                     </row>
+                  </tbody>
+               </tgroup>
+            </informaltable>
+            <section>
+               <title>Class Declaration</title>
+               <para>The following application class is called <classname>simpleApp</classname>. It is derived from <classname>vjGlApp</classname> and has custom <methodname>init()</methodname> and <methodname>draw()</methodname> methods declared. Note that the application declares several device interface members that are used by the application for getting device data.</para>
+               <programlisting>class simpleApp : public vjGlApp
+{
+public:
+   simpleApp();
+   virtual void init();
+   virtual void draw();
+
+public:
+   vjPosInterface mWand;
+   vjPosInterface mHead;
+   vjDigitalInterface mButton0;
+   vjDigitalInterface mButton1;
+};</programlisting>
+            </section>
+            <section>
+               <title>The <methodname>draw()</methodname> Member Function</title>
+               <para>The implementation of <methodname>draw()</methodname> is located in <filename>simpleApp.cpp</filename>. Its job is to draw the environment. A partial implementation follows.</para>
+               <programlisting>void simpleApp::draw()
+{
+   ...
+   // Create box offset matrix
+   vjMatrix box_offset;		
+   box_offset.makeXYZEuler(-90,0,0);
+   box_offset.setTrans(0.0,1.0f,0.0f);
+   ...
+   glPushMatrix();
+      // Push on offset
+      glMultMatrixf(box_offset.getFloatPtr());
+      ...
+      drawCube();
+   glPopMatrix();
+   ...
+}</programlisting>
+               <para>In the above, there is no projection code in the function. When the function is called by VR Juggler, the projection matrix has already been correctly set up for the system. All the user application must do is draw the environment; VR Juggler handles the rest. In this example, the <methodname>draw()</methodname> function renders a cube at an offset location. The first section of the function creates a <classname>vjMatrix</classname> object that defines the offset of the cube in the virtual world. This matrix is pushed onto the OpenGL modelview matrix stack, and then a cube is drawn.</para>
+            </section>
+            <section>
+               <title>Exercise</title>
+               <para>Change the code so that the cube is drawn at the position of the wand instead of at the <varname>box_offset</varname> location. </para>
+            </section>
+         </section>
+         <section id="cs_data_intro_sec">
+            <title>Context-Specific Data</title>
+            <para>Many readers may already be familiar with the specifics of OpenGL. In this section, we provide a very brief intoduction to context-specific data within OpenGL, and we proceed to explain how it is used by VR Juggler. Those who are already familiar with context-specific data may skip ahead to <xref linkend="cs_data_needed_sect"/> or to <xref linkend="using_csdata_sec"/>.</para>
+            <para>The OpenGL graphics API operates using a state machine that tracks the current settings and attributes set by the OpenGL code. Each window in which we render using OpenGL has a state machine associated with it. The state machines associated with these windows are referred to as <firstterm>OpenGL rendering contexts</firstterm>.</para>
+            <para>Each context stores the current state of an OpenGL renderer instance. The state includes the following:</para>
+            <itemizedlist>
+               <listitem>
+                  <para>Current color</para>
+               </listitem>
+               <listitem>
+                  <para>Current shading mode</para>
+               </listitem>
+               <listitem>
+                  <para>Current texture</para>
+               </listitem>
+               <listitem>
+                  <para>Display lists</para>
+               </listitem>
+               <listitem>
+                  <para>Texture objects</para>
+               </listitem>
+            </itemizedlist>
+            <section>
+               <title id="cs_data_needed_sect">Why it is Needed</title>
+               <para>As outlined in the VR Juggler architecture documentation, VR Juggler uses a single memory area for all application data. All threads can see the same memory area and thus share the same copy of all variables. This makes programming normal application code very easy because programmers never have to worry about which thread can see which variables. In the case of context-specific data, however, it presents a problem.</para>
+               <para>To understand the problem, consider an environment where we use a single display list. That display list is created to draw some object in the scene. We would like to be able to call the display list in our <methodname>draw()</methodname> method and have it draw the primitives that were captured in it.</para>
+               <para>The following class skeleton shows an outline of this idea. Do not worry for now that we do not show the code where we allocate the display list--that will be covered later. For now, we see that there is a variable that stores the display list ID, and we use it in the <methodname>draw()</methodname> method.</para>
+               <programlisting>class userApp : public vjGlApp
+{
+public:
+  draw();
+public:
+  int mDispListId;
+};
+
+userApp::draw()
+{
+   glCallList(mDispListId);
+}</programlisting>
+               <para>Now, imagine that we have a VR system configured that needs more than one display window (a multi-wall projection system, for example). There is a thread for each display, and all the display threads call <methodname>draw()</methodname> in parallel.</para>
+               <para>Since all threads share the same copy of the variables, they all use the same <varname>mDispListId</varname> when calling <function>glCallList()</function>. This is an error because we call draw from multiple windows (that is, multiple OpenGL rendering contexts). The display list ID is not the same in each context. What we need, then, is a way to use a different display list ID depending upon the OpenGL within which we are currently rendering. Context-specific data comes to the rescue to address this problem.</para>
+               <para>Context-specific data provides us with a way to get a separate copy of a variable for each OpenGL rendering context. This may sound daunting at first, but VR Juggler manages this special variable in such a way that it appears just as a normal variable. The developer never has to deal with contexts directly. VR Juggler transparently ensures that the correct copy of the variable is being used.</para>
+            </section>
+            <section>
+               <title>Context-Specific Variables in VR Juggler</title>
+               <para>The following shows how a context-specific variable appears in a VR Juggler application:<programlisting>class userApp : public vjGlApp
+{
+public:
+  draw();
+public:
+  vjGlContextData&lt;int&gt; mDispListId; // Context-specific variable
+};
+
+userApp::draw()
+{
+   glCallList(*mDispListId);
+}</programlisting></para>
+               <para>This code looks nearly the same as the previous example. In this case, <varname>mDispListId</varname> is treated as a pointer, and it has a special template-based type that tells VR Juggler it is context-specific data. When defining a context-specific data member, use the <classname>vjGlContextData&lt;&gt;</classname> template class and pass the "true" type of the variable to the template definition. From then on, it can be treated as a normal pointer.<note>
+                     <para>The types that are used for context-specific data must provide default constructors. The user cannot directly call the constructor for the data item because VR Juggler has to allocate new items on the fly as new contexts are created.</para>
+                  </note></para>
+            </section>
+            <section>
+               <title>The Inner Workings of Context-Specific Variables</title>
+               <para>Curious readers are probably wondering how all of this works. To satisfy any curiostiy, we now provide a brief description.</para>
+               <para>The context data items are allocated using a template-based smart pointer class (<classname>vjGlContextData&lt;&gt;</classname>). Behind the scenes, VR Juggler keeps a list of currently allocated variables for each context. When the application wants to use a context data item, the smart pointer looks in the list and returns a reference to the correct copy for the current context.</para>
+               <para>This is all done in a fairly light-weight manner. It all boils down to one memory lookup and a couple of pointer dereferences. Not bad for all the power that it gives. </para>
+            </section>
+         </section>
+         <section id="using_csdata_sec">
+            <title>Using Context-Specific Data</title>
+            <para>The VR Juggler OpenGL graphics system is a complex multi-headed beast. Luckily, developers do not have to understand how the system is working to use it correctly. As long as developers subscribe to several simple rules for allocating and using context data, everything will work fine. This section contains these allocation and usage rules, but it does not describe the rationale behind the rules. Those readers who are interestd in the details of why these rules should be followed should please read the subsequent section. It contains much more (excruciating) detail.</para>
+            <section>
+               <title>The Rules</title>
+               <para>With the background in how to make a context-specific data member and how to use it in a <methodname>draw()</methodname> function, we can move on to how and where the context-specific data should be allocated. If we want to create display list, we need where we should allocate the display list.</para>
+               <section>
+                  <title>Rule 1: Do not allocate context data in <methodname>draw()</methodname></title>
+                  <para>This is straightforward: do not allocate context data in the <methodname>draw()</methodname> member function. There are many reasons for this, but the primary one is that allocation tetss would be occurring too many times and at incorrect times. There are better places to allocate context data.</para>
+               </section>
+               <section>
+                  <title>Rule 2: Initialize static context data in <methodname>contextInit()</methodname></title>
+                  <para>The place to allocate static context-specific data is the <methodname>vjGlApp::contextInit()</methodname> member function. "Static" context data refers to context data that does not change during the application's execution. An example of static context data would be a display list to render an object model that is preloaded by the application and never changes. It is static because the display list only has to be generated once for each context, and the application can generate the display list as soon as the it starts execution.</para>
+                  <para>The <methodname>contextInit()</methodname> member function is called immediately after creation of any <emphasis>new</emphasis> OpenGL contexts. In other words, it is called whenever new windows open. When it is called, the newly created context is active. This method is the perfect place to allocate static context data because it is only called when we have a new context that we need to prepare (and also because that is what it is designed for).</para>
+                  <para>The following code snippet shows a possible use of the application object's <methodname>contextInit()</methodname> method:<programlisting>void userApp::contextInit()
+{
+   // Allocate context specific data
+   (*mDispListId) = glGenLists(1);
+
+   glNewList((*mDispListId), GL_COMPILE);
+      glScalef(0.50f, 0.50f, 0.50f);
+      // Call func that draws a cube in OpenGL
+      drawCube();
+   glEndList();
+   ...
+}</programlisting></para>
+                  <para>This shows the normal way that display lists should be allocated in VR Juggler. Allocate the display list, store it to a context-specific data member, and then fill the display list. Texture objects and other context-specific data are created in exactly the same manner.</para>
+               </section>
+               <section>
+                  <title>Rule 3: Allocate and update dynamic context data in <methodname>contextPreDraw()</methodname></title>
+                  <para>The place to allocate dynamic context-specific data is the <methodname>contextPreDraw()</methodname> member function. "Dynamic" context data differs from static context data in that dynamic data may change during the application's execution. An example of dynamic data would be a display list for rendering an object from a data set that changes as the applications executes. This requires dynamic context data because the display list has to be regenerated every time the application changes the data set.</para>
+                  <para>Consider also the following example. While running an application, the user requests to load a new model from a file. After the model data is loaded, it may be best to put the drawing functions into a fresh display list for rendering the model. In this case, <methodname>vjGlApp::contextInit()</methodname> cannot be used because it is only called when a new context is created. Here, all the windows have already been created. What we need, then, is a callback that is called once per existing context so that we can add and change the context-specific data. That is what <methodname>contextPreDraw()</methodname> does. It is called once per context for each VR Juggler frame with the current context active.</para>
+                  <para>Please notice, however, that since this method is called often and is called in performance-critical areas, you should not do much work in it. Any time taken by this method directly decreases the draw performance of the application. In most cases, we recommend trying to make the function have a very simple early exit clause such as in the following example. This makes the average cost only that of a single comparison operation.<programlisting>userApp::contextInit()
+{
+   if(have work to do)
+   {
+     // Do it
+   }
+}</programlisting></para>
+               </section>
+            </section>
+         </section>
+         <section>
+            <title>Context-Specific Data Detais</title>
+            <para>Within this setion, we provide the details of context-specific data in VR Juggler and justify the rules presented in the previous section.</para>
+            <figure id="vrj_ogl_system_chart">
+               <title>VR Juggler OpenGL system</title>
+               <mediaobject>
+                  <imageobject>
+                     <imagedata fileref="JugglerOGLSystemChart.gif" format="GIF"/>
+                  </imageobject>
+               </mediaobject>
+            </figure>
+            <section>
+               <title>Do Not Allocate Context-Specific Data in <methodname>draw()</methodname></title>
+               <para>Rule 1 says that context-specific data should not be allocated in an application object's <methodname>draw()</methodname> method. We have already stated that the main reason is that <methodname>draw()</methodname> is called too many times, and it is called at the wrong time for allocation of context-specific data. To be more specific, the <methodname>draw()</methodname> method is called for each surface, or for each eye, every frame. Static context-specific data only needs to be allocated when a new window is opened. (Dynamic context-specific data is handled separately.)</para>
+            </section>
+         </section>
+         <section>
+            <title>Tutorial: Drawing a Cube using OpenGL Display Lists</title>
+            <informaltable>
+               <tgroup cols="2">
+                  <tbody>
+                     <row>
+                        <entry>Description</entry>
+                        <entry>Drawing a cube using a display list in the <methodname>draw()</methodname> member function</entry>
+                     </row>
+                     <row>
+                        <entry>Objectives</entry>
+                        <entry>Understand how to use context-specific data in an application</entry>
+                     </row>
+                     <row>
+                        <entry>Member functions</entry>
+                        <entry><itemizedlist>
+                              <listitem>
+                                 <para><methodname>vjApp::init()</methodname></para>
+                              </listitem>
+                              <listitem>
+                                 <para><methodname>vjGlApp::contextInit()</methodname></para>
+                              </listitem>
+                              <listitem>
+                                 <para><methodname>vjGlApp::draw()</methodname></para>
+                              </listitem>
+                           </itemizedlist></entry>
+                     </row>
+                     <row>
+                        <entry>Directory</entry>
+                        <entry><filename>$VJ_BASE_DIR/share/samples/tutorials/contextApp</filename></entry>
+                     </row>
+                     <row>
+                        <entry>Files</entry>
+                        <entry><itemizedlist>
+                              <listitem>
+                                 <para><filename>contextApp.h</filename></para>
+                              </listitem>
+                              <listitem>
+                                 <para><filename>contextApp.cpp</filename></para>
+                              </listitem>
+                           </itemizedlist></entry>
+                     </row>
+                  </tbody>
+               </tgroup>
+            </informaltable>
+            <section>
+               <title>Class Declaration and Data Members</title>
+               <para>The following code example shows the basics of declaring the class interface and data members for an application that will use context-specific data. This is an extension of the simple OpenGL application presented in <xref linkend="simpe_ogl_app_sect"/>. Note the addition of the <methodname>contextInit()</methodname> declaration and the use of the context-specific data member <varname>mCubeDlId</varname>.</para>
+               <programlisting>class contextApp : public vjGlApp
+{
+public:
+   contextApp() {;}
+   virtual void init();
+   virtual void contextInit();
+   virtual void draw();
+    ...
+public:
+   // Id of the cube display list
+   vjGlContextData&lt;GLuint&gt; mCubeDlId;
+   ...
+};</programlisting>
+            </section>
+            <section>
+               <title>The <methodname>contextInit()</methodname> Member Function</title>
+               <para>We now show the implementation of <methodname>contextApp::contextInit()</methodname> where the display list is created and stored using context-specific data. Recall the code example shown as part of Rule 2 in <xref linkend="using_csdata_sec"/>. That example was based on this tutorial application.</para>
+               <programlisting>void contextApp::contextInit()
+{
+   // Allocate context specific data
+   (*mCubeDlId) = glGenLists(1);
+
+   glNewList((*mCubeDlId), 
+                      GL_COMPILE);
+      glScalef(0.50f, 0.50f, 0.50f);
+      drawCube();
+   glEndList();
+   ...
+}</programlisting>
+            </section>
+            <section>
+               <title>The <methodname>draw()</methodname> Member Function</title>
+               <para>Now that we have a display list ID in context-specific data, we can use it in the <methodname>draw()</methodname> member function. We render the display list by dereferencing the context-specific display list ID.</para>
+               <programlisting>void contextApp::draw()
+{
+   // Get Wand matrix
+   vjMatrix wand_matrix;
+   wand_mat = *(mWand-&gt;getData());
+   ...
+   glPushMatrix();
+      glPushMatrix();
+         glMultMatrixf(wand_mat.getFloatPtr());    
+         glCallList(*mCubeDlId);
+      glPopMatrix();
+      ...
+   glPopMatrix();
+}</programlisting>
+            </section>
+            <section>
+               <title>Exercise</title>
+               <para>In the tutorial application code, replace the call to <methodname>drawAxis()</methodname> with a display list call.</para>
+            </section>
+         </section>
+      </section>
+      <section>
+         <title>OpenGL Performer Applications</title>
+         <para></para>
+      </section>
+      <section>
+         <title>VTK Applications</title>
+         <para></para>
+      </section>
+      <section>
+         <title>Porting to VR Juggler from the <trademark>CAVElib</trademark></title>
+         <para>In this section, we give some methods for porting an application written with the <trademark>CAVElib</trademark> software to VR Juggler. We explain the process for an OpenGL application. Throughout, we compare and contrast the techniques used by VR Juggler and the <trademark>CAVElib</trademark> software, and we translate concepts familiar to <trademark>CAVElib</trademark> programmers into VR Juggler terms.</para>
+         <section>
+            <title>The Initialize, Draw, and Frame Routines</title>
+            <para>In the <trademark>CAVElib</trademark>, the initialize, draw, and frame routines are known as <firstterm>callbacks</firstterm> implemented with C function pointers. In VR juggler, the equivalent routines are <firstterm>called back</firstterm> using an application object. An application object is a C++ class that defines methods to encapsulate the functionality of the application within a single C++ object.</para>
+            <section>
+               <title>In <trademark>CAVElib</trademark></title>
+               <para>The following lists the draw, frame, and initialize routines used in the <trademark>CAVElib</trademark> software.</para>
+               <itemizedlist>
+                  <listitem>
+                     <para>Draw: An application's display callback function is defined by passing a function pointer to <function>CAVEDisplay()</function></para>
+                  </listitem>
+                  <listitem>
+                     <para>Frame: The frame function is defined with <function>CAVEFrameFunction()</function></para>
+                  </listitem>
+                  <listitem>
+                     <para>Init: The initialization callback is defined using <function>CAVEInitApplication()</function></para>
+                  </listitem>
+               </itemizedlist>
+            </section>
+            <section>
+               <title>In VR Juggler</title>
+               <para>With VR Juggler, no C function pointers are necessary, but a pointer to an application object must be given to the VR Juggler kernel. As described in earlier sections of this chapter, the first step is to derive a new application class from <classname>vjGlApp</classname>. For more information on application objects, it may be helpful to review <xref linkend="ch2"/>. Briefly, the application class defiition would appear similar to the following:<programlisting>class MyApplication : public vjGlApp
+{
+   ...
+};</programlisting></para>
+               <para>The draw, frame, and initialize routine concepts in VR Juggler are presented in the following list.</para>
+               <itemizedlist>
+                  <listitem>
+                     <para>Draw: An application's display "callback" function is defined by a new member function called <methodname>draw()</methodname> in the derived class. This is where OpenGL rendering commands such as <function>glBegin()</function>, <function>glVertex()</function>, etc. are placed.</para>
+                  </listitem>
+                  <listitem>
+                     <para>Frame: Calculations such as navigation, collision, physics, artificial intelligence, etc. are often placed in the frame function. The frame function is split across three member functions:</para>
+                     <orderedlist>
+                        <listitem>
+                           <para><methodname>MyApplication::preFrame()</methodname>, called before <methodname>draw()</methodname></para>
+                        </listitem>
+                        <listitem>
+                           <para><methodname>MyApplication::intraFrame()</methodname>, called during <methodname>draw()</methodname></para>
+                        </listitem>
+                        <listitem>
+                           <para><methodname>MyApplication::postFrame()</methodname>, called after <methodname>draw()</methodname></para>
+                        </listitem>
+                     </orderedlist>
+                  </listitem>
+                  <listitem>
+                     <para>Init: There is an initialization member function for data and an initialization member function for creating context-specific data (display lists, texture objects). The latter is called for each display context in the system. These two member functions are:</para>
+                     <orderedlist>
+                        <listitem>
+                           <para><methodname>MyApplication::init()</methodname>, called once per application startup</para>
+                        </listitem>
+                        <listitem>
+                           <para><methodname>MyApplication::contextInit()</methodname>, called once per display context creation</para>
+                        </listitem>
+                     </orderedlist>
+                  </listitem>
+               </itemizedlist>
+               <para>Readers who find some of these concepts unfamiliar are encouraged to read <xref linkend="ogl_app_sect"/>. For information about context-specific data, refer to <xref linkend="cs_data_intro_sec"/>.</para>
+            </section>
+         </section>
+         <section>
+            <title>Getting Input from Devices</title>
+            <para>Getting input from the hardware devices is conceptually the same, but the implementations are quite different between the <trademark>CAVElib</trademark> software and VR Juggler.</para>
+            <section>
+               <title>In <trademark>CAVElib</trademark></title>
+               <para>To get tracking information, the following functions are used:</para>
+               <itemizedlist>
+                  <listitem>
+                     <para><function>CAVEGetPosition(id, pos)</function></para>
+                  </listitem>
+                  <listitem>
+                     <para><function>CAVEGetOrientation(id, orient)</function></para>
+                  </listitem>
+                  <listitem>
+                     <para><function>CAVEGetVector(id, vec)</function></para>
+                  </listitem>
+                  <listitem>
+                     <para><function>CAVEGetSensorPosition(sensor, coords, pos)</function></para>
+                  </listitem>
+                  <listitem>
+                     <para><function>CAVEGetSensorOrientation(sensor, coords, orient)</function></para>
+                  </listitem>
+                  <listitem>
+                     <para><function>CAVEGetSensorVector(sensor, id, vec)</function></para>
+                  </listitem>
+               </itemizedlist>
+               <para>For button input, the following macros are used:</para>
+               <itemizedlist>
+                  <listitem>
+                     <para><function>CAVEBUTTON1</function>, <function>CAVEBUTTON2</function>, <function>CAVEBUTTON3</function>, <function>CAVEBUTTON4</function>, <function>CAVE_JOYSTICK_X</function>, and <function>CAVE_JOYSTICK_Y</function></para>
+                  </listitem>
+                  <listitem>
+                     <para><function>CAVEButtonChange()</function></para>
+                  </listitem>
+               </itemizedlist>
+            </section>
+            <section>
+               <title>In VR Juggler</title>
+               <para>To get device input, use the classes derived from <classname>vjDeviceInterface</classname>. They include the following:</para>
+               <itemizedlist>
+                  <listitem>
+                     <para><classname>vjPosInterface</classname> (for trackers and other positional devices)</para>
+                  </listitem>
+                  <listitem>
+                     <para><classname>vjDigitalInterface</classname> (for buttons and other on/off devices)</para>
+                  </listitem>
+                  <listitem>
+                     <para><classname>vjAnalogInterface</classname> (for potentiometers and other multi-range data devices)</para>
+                  </listitem>
+               </itemizedlist>
+               <para>For more information about the VR Juggler device interfaces, refer to <xref linkend="ch3"/>. A tutorial on getting device input in VR Juggler applications can be found in <xref linkend="get_input_sect"/>.</para>
+            </section>
+         </section>
+         <section>
+            <title>Configuration</title>
+            <para>Configuration of VR Juggler and the <trademark>CAVElib</trademark> software is very different. The differences are too numerous to list here, but we give a brief overview and a pointer to the documentation that explains configuration of VR Juggler.</para>
+            <section>
+               <title>In <trademark>CAVElib</trademark></title>
+               <para>All configurable parameters go in a single file called <filename>.caverc</filename>. The configuration mechanism is proprietary and not usable by external VR system software. In particular, VR Juggler cannot get its configuration information from an existing <filename>.caverc</filename> file.</para>
+            </section>
+            <section>
+               <title>In VR Juggler</title>
+               <para>Configuration of VR Juggler is much more powerful and flexible than what is used by the <trademark>CAVElib</trademark> software. As a result, it is also more complex. All configurable parameters could be in one or more files with any names desired. VR Juggler comes with example configuration files that may be found in the directory <filename>$VJ_BASE_DIR/share/Data/configFiles</filename>.</para>
+               <para>The VR Juggler configuration system is completely extensible and could be used outside of VR Juggler. Indeed, it could be used outside of any VR paradigm altogether. Refer to the VjControl book for more information on configing VR Juggler.</para>
+            </section>
+         </section>
+         <section>
+            <title>Important Notes</title>
+            <para>Finally, before we get to the source code, there are some important notes about programming VR Juggler applications in general. Please read these carefully and refer to the indicated chapters for more information as necessary.</para>
+            <section>
+               <title>Shared Memory</title>
+               <para>Unlike the <trademark>CAVElib</trademark> software, VR Juggler does not have to manage shared memory with other VR Juggler instances. Thus, when writing a VR Juggler application, memory can be created as in a normal, single-threaded C or C++ application.</para>
+            </section>
+            <section>
+               <title>OpenGL Context-Specific Data</title>
+               <para>As a result of the shared memory model described above, VR Juggler has different requirements for context-specific data than the <trademark>CAVElib</trademark> software. Information such as display lists and texture objects must be managed using context-specific data. A <firstterm>display context</firstterm> is the location to which OpenGL rendering commands draw. Compiled OpenGL commands such as display lists do not get shared across multiple contexts (or windows), and thus, they must be initialized once per display context. In a VR Juggler applicatoin, these OpenGL initializations must be placed in <methodname>vjGlApp::contextInit()</methodname>. It is called once per display context after each context has become active. For a more detailed description of these concepts and a tutorial on how to use them, please refer to <xref linkend="cs_data_intro_sec"/>.</para>
+            </section>
+         </section>
+         <section>
+            <title>Source Code</title>
+            <para>This final section is the heart of the porting discussion. We present some source code as a means to illustrate how <trademark>CAVElib</trademark> concepts map to VR Juggler.</para>
+            <section>
+               <title>The Form of a Basic <trademark>CAVElib</trademark> Program</title>
+               <programlisting>void app_shared_init();
+void app_compute_init();
+void app_init_gl();
+void app_draw();
+void app_compute();
+
+void main(int argc, char **argv)
+{
+   CAVEConfigure(&amp;argc,argv,NULL);
+   app_shared_init(argc,argv);
+   CAVEInit();
+   CAVEInitApplication(app_init_gl,0);
+   CAVEDisplay(app_draw,0);
+   app_compute_init(argc,argv);
+   while (!getbutton(ESCKEY))
+   {
+       app_compute();
+   }
+   CAVEExit();
+}</programlisting>
+            </section>
+            <section>
+               <title>The Form of a Basic VR Juggler Program</title>
+               <programlisting>class MyApplication : public vjGlApp
+{
+public:
+// Data callbacks  (Do not put OpenGL code here)
+   virtual void init();
+   virtual void preFrame();
+   virtual void intraFrame();
+   virtual void postFrame();
+      
+// OpenGL callbacks (put only OpenGL code here)
+   virtual void contextInit();
+   virtual void draw();
+};
+
+int main(int argc, char* argv[]) 
+{
+   // configure kernel with *.config files
+   vjKernel* kernel = vjKernel::instance(); // Get the kernel
+   for(int i=1; i&lt;argc; i++)
+   {
+      // loading config file passed on command line...
+      kernel-&gt;loadConfigFile(argv[i]);
+   }
+
+   // start the kernel
+   kernel-&gt;start();
+
+   // set the application for the kernel to run
+   MyApplication* application = new MyApplication();
+   kernel-&gt;setApplication(application);
+
+   // hit CTRL-C to exit.
+   while (1)
+   {
+      // Juggler executes within other threads, so sleep here.
+      usleep( 100000 );
+   }
+}</programlisting>
+            </section>
+         </section>
+      </section>
+      <section>
+         <title>Porting to VR Juggler from GLUT</title>
+         <para>In this section, we give some methods for porting an application written with GLUT to VR Juggler. Throughout, we compare and contrast the techniques used by VR Juggler and GLUT, and we translate concepts familiar to GLUT programmers into VR Juggler terms.</para>
+         <section>
+            <title>Window Creation and Management</title>
+            <para>In VR Juggler, window creation is done behind the scenes based on configuration file settings. There are two display types: Surface and Simulator. A Surface Display can be put into three modes: stereo, right eye, or left eye. Most interesting is the stereo mode. Stereo mode requires special hardware to display stereo, and it creates the most immersive experience. A Simulator Display is special because it emulates an active VR system. It can show the all active user head positions and orientation, any active devices such as gloves or wands, and any Surface Displays. The simulator window is nice for debugging tracking systems and for visualizing configured Surface Displays.</para>
+         </section>
+         <section>
+            <title>The Initialize, Draw, and Frame Routines</title>
+            <para></para>
+            <section>
+               <title>In GLUT</title>
+               <para>In GLUT, the initialize, draw, and frame routines are known as <firstterm>callbacks</firstterm> implemented with C function pointers. In VR juggler, the equivalent routines are <firstterm>called back</firstterm> using an application object. An application object is a C++ class that defines methods to encapsulate the functionality of the application within a single C++ object.</para>
+               <itemizedlist>
+                  <listitem>
+                     <para>Draw: OpenGL commands are placed in the draw routine. The callback function is defined by passing a function pointer to <function>glutDisplayFunc()</function>.</para>
+                  </listitem>
+                  <listitem>
+                     <para>Frame: Operations on application data are done within the frame routine. No OpenGL commands are allowed here because the display window is undefined at this point. The frame function is defined with <function>glutIdleFunc()</function>. This function generally does a <function>glutPostRedisplay()</function> to cause the display callback to be executed.</para>
+                  </listitem>
+                  <listitem>
+                     <para>Init: There is no callback for initialization. Data initialization is done usually before the application starts. Context initialization is done during the first run of the function set with <function>glutDisplayFunc()</function> (once for each window opened).</para>
+                  </listitem>
+               </itemizedlist>
+            </section>
+            <section>
+               <title>In VR Juggler</title>
+               <para>With VR Juggler, no C function pointers are necessary, but a pointer to an application object must be given to the VR Juggler kernel. As described in earlier sections of this chapter, the first step is to derive a new application class from <classname>vjGlApp</classname>. For more information on application objects, it may be helpful to review <xref linkend="ch2"/>. Briefly, the application class defiition would appear similar to the following:<programlisting>class MyApplication : public vjGlApp
+{
+   ...
+};</programlisting></para>
+               <para>The draw, frame, and initialize routine concepts in VR Juggler are presented in the following list.</para>
+               <itemizedlist>
+                  <listitem>
+                     <para>Draw: An application's display "callback" function is defined by a new member function called <methodname>draw()</methodname> in the derived class. This is where OpenGL rendering commands such as <function>glBegin()</function>, <function>glVertex()</function>, etc. are placed.</para>
+                  </listitem>
+                  <listitem>
+                     <para>Frame: Calculations such as navigation, collision, physics, artificial intelligence, etc. are often placed in the frame function. The frame function is split across three member functions:</para>
+                     <orderedlist>
+                        <listitem>
+                           <para><methodname>MyApplication::preFrame()</methodname>, called before <methodname>draw()</methodname></para>
+                        </listitem>
+                        <listitem>
+                           <para><methodname>MyApplication::intraFrame()</methodname>, called during <methodname>draw()</methodname></para>
+                        </listitem>
+                        <listitem>
+                           <para><methodname>MyApplication::postFrame()</methodname>, called after <methodname>draw()</methodname></para>
+                        </listitem>
+                     </orderedlist>
+                  </listitem>
+                  <listitem>
+                     <para>Init: There is an initialization member function for data and an initialization member function for creating context-specific data (display lists, texture objects). The latter is called for each display context in the system. These two member functions are:</para>
+                     <orderedlist>
+                        <listitem>
+                           <para><methodname>MyApplication::init()</methodname>, called once per application startup</para>
+                        </listitem>
+                        <listitem>
+                           <para><methodname>MyApplication::contextInit()</methodname>, called once per display context creation</para>
+                        </listitem>
+                     </orderedlist>
+                  </listitem>
+               </itemizedlist>
+               <para>Readers who find some of these concepts unfamiliar are encouraged to read <xref linkend="ogl_app_sect"/>. For information about context-specific data, refer to <xref linkend="cs_data_intro_sec"/>.</para>
+            </section>
+         </section>
+         <section>
+            <title>Getting Input from Devices</title>
+            <para></para>
+            <section>
+               <title>In GLUT</title>
+               <para>For keyboard input, the following functions are used:</para>
+               <itemizedlist>
+                  <listitem>
+                     <para><function>glutKeyboardFunc(OnKeyboardDown)</function></para>
+                  </listitem>
+                  <listitem>
+                     <para><function>glutKeyboardUpFunc(OnKeyboardUp)</function></para>
+                  </listitem>
+                  <listitem>
+                     <para><function>glutSpecialFunc(OnSpecialKeyboardDown)</function></para>
+                  </listitem>
+                  <listitem>
+                     <para><function>glutSpecialUpFunc(OnSpecialKeyboardUp)</function></para>
+                  </listitem>
+               </itemizedlist>
+               <para>For mouse input, the following functions are used:</para>
+               <itemizedlist>
+                  <listitem>
+                     <para><function>glutMouseFunc(OnMouseButton)</function></para>
+                  </listitem>
+                  <listitem>
+                     <para><function>glutMotionFunc(OnMousePosition)</function></para>
+                  </listitem>
+                  <listitem>
+                     <para><function>glutPassiveMotionFunc(OnMousePosition)</function></para>
+                  </listitem>
+               </itemizedlist>
+            </section>
+            <section>
+               <title>In VR Juggler</title>
+               <para>To get device input, use the classes derived from <classname>vjDeviceInterface</classname>. They include the following:</para>
+               <itemizedlist>
+                  <listitem>
+                     <para><classname>vjPosInterface</classname> (for trackers and other positional devices)</para>
+                  </listitem>
+                  <listitem>
+                     <para><classname>vjDigitalInterface</classname> (for buttons and other on/off devices)</para>
+                  </listitem>
+                  <listitem>
+                     <para><classname>vjAnalogInterface</classname> (for potentiometers and other multi-range data devices)</para>
+                  </listitem>
+               </itemizedlist>
+               <para>For more information about the VR Juggler device interfaces, refer to <xref linkend="ch3"/>. A tutorial on getting device input in VR Juggler applications can be found in <xref linkend="get_input_sect"/>.</para>
+            </section>
+         </section>
+         <section>
+            <title>Configuration</title>
+            <para>Configuration of GLUT applications is quite different than configuration of VR Juggler applications. In particular, VR Juggler is much more dynamic because configurations are maintained as files separate from the application. In GLUT, the configuration must be written into the application somehow. This can lead to very static, hard-coded configurations.</para>
+            <section>
+               <title>In GLUT</title>
+               <para>There is no built-in configuration system. All system settings are coded using the GLUT API.</para>
+            </section>
+            <section>
+               <title>In VR Juggler</title>
+               <para>Configuration of VR Juggler is much more powerful and flexible than what is used by the <trademark>CAVElib</trademark> software. As a result, it is also more complex. All configurable parameters could be in one or more files with any names desired. VR Juggler comes with example configuration files that may be found in the directory <filename>$VJ_BASE_DIR/share/Data/configFiles</filename>.</para>
+               <para>The VR Juggler configuration system is completely extensible and could be used outside of VR Juggler. Indeed, it could be used outside of any VR paradigm altogether. Refer to the VjControl book for more information on configing VR Juggler.</para>
+            </section>
+         </section>
+         <section>
+            <title>Important Notes</title>
+            <para>Finally, before we get to the source code, there are some important notes about programming VR Juggler applications in general. Please read these carefully and refer to the indicated chapters for more information as necessary.</para>
+            <section>
+               <title>Shared Memory</title>
+               <para>VR Juggler is also multi-threaded, and it uses a shared memory model across all threads. Thus, when writing a VR Juggler application, memory can be created as in a normal, single-threaded C or C++ application. VR Juggler is written entirely in C++, and as such, new and delete must be used instead of malloc() and free().</para>
+            </section>
+            <section>
+               <title>OpenGL Context-Specific Data</title>
+               <para>As a result of the shared memory model described above, VR Juggler has different requirements for context-specific data than GLUT. Information such as display lists and texture objects must be managed using context-specific data. A <firstterm>display context</firstterm> is the location to which OpenGL rendering commands draw. Compiled OpenGL commands such as display lists do not get shared across multiple contexts (or windows), and thus, they must be initialized once per display context. In a VR Juggler applicatoin, these OpenGL initializations must be placed in <methodname>vjGlApp::contextInit()</methodname>. It is called once per display context after each context has become active. For a more detailed description of these concepts and a tutorial on how to use them, please refer to <xref linkend="cs_data_intro_sec"/>.</para>
+            </section>
+         </section>
+         <section>
+            <title>Source Code</title>
+            <para>This final section is the heart of the porting discussion. We present some source code as a means to illustrate how GLUT concepts map to VR Juggler.</para>
+            <section>
+               <title>The Form of a Basic GLUT Program</title>
+               <programlisting>void main(int argc, char* argv[])
+{
+   /* initialize the application data here */
+   OnApplicationInit();
+
+   /* create a window to render graphics in
+    * In VR Juggler, window creation is done for you based on your configuration file settings.
+    */
+   glutInitWindowSize( 640, 480 );
+   glutInit( &amp;argc, argv );
+   glutInitDisplayMode( GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE );
+   glutCreateWindow( "GLUT application" );
+
+   /* display callbacks.
+    * NOTE: the first time OnIdle is called is when you should 
+    *       initialize the display context for each window
+    *       (doing this is analogous to VR Juggler's 
+    *       vjGlApp::contextInit() function)
+    */
+   glutReshapeFunc( OnReshape );
+   glutIdleFunc( OnIdle );
+   glutDisplayFunc( OnIdle );
+
+   /* tell glut to not call the keyboard callback repeatedly 
+    * when holding down a key. (uses edge triggering, like the mouse does)
+    */
+   glutIgnoreKeyRepeat( 1 );
+
+   /* keyboard callback functions. */
+   glutKeyboardFunc( OnKeyboardDown );
+   glutKeyboardUpFunc( OnKeyboardUp );
+   glutSpecialFunc( OnSpecialKeyboardDown );
+   glutSpecialUpFunc( OnSpecialKeyboardUp );
+
+   /* mouse callback functions... */
+   glutMouseFunc( OnMouseClick );
+   glutMotionFunc( OnMousePos );
+   glutPassiveMotionFunc( OnMousePos );
+
+   /* start the application loop, your callbacks will now be called
+    * time for glut to sit and spin.  In Juggler this is the same as the while(1) (see below)
+    */
+   glutMainLoop();
+}</programlisting>
+            </section>
+            <section>
+               <title>The Form of a Basic VR Juggler Program</title>
+               <programlisting>class MyApplication : public vjGlApp
+{
+public:
+// Data callbacks  (Do not put OpenGL code here)
+   virtual void init();
+   virtual void preFrame();
+   virtual void intraFrame();
+   virtual void postFrame();
+      
+// OpenGL callbacks (put only OpenGL code here)
+   virtual void contextInit();
+   virtual void draw();
+};
+
+int main(int argc, char* argv[]) 
+{
+   // configure kernel with *.config files
+   vjKernel* kernel = vjKernel::instance(); // Get the kernel
+   for(int i=1; i&lt;argc; i++)
+   {
+      // loading config file passed on command line...
+      kernel-&gt;loadConfigFile(argv[i]);
+   }
+
+   // start the kernel
+   kernel-&gt;start();
+
+   // set the application for the kernel to run
+   MyApplication* application = new MyApplication();
+   kernel-&gt;setApplication(application);
+
+   // hit CTRL-C to exit.
+   while (1)
+   {
+      // Juggler executes within other threads, so sleep here.
+      usleep( 100000 );
+   }
+}</programlisting>
+            </section>
          </section>
       </section>
    </chapter>
