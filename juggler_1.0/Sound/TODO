@@ -3,9 +3,12 @@
 everything is offloaded to AudioJuggler, look there for more info.
 
 Is there anything the SoundManager should do in addition to configure
-AudioJuggler with config chunks?  TODO: look at update and sync funcs
+AudioJuggler with config chunks?  
 
-
+TODO: - look at update and sync funcs
+      - streaming audio
+      - pluggable DSPs
+ 
 [6.5.2000]
 
 get OpenAL working on IRIX.....
