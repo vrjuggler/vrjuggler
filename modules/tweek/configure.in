@@ -505,16 +505,16 @@ fi
 # --------------------
 if test "x${_idl_java}" = "xno" ; then
    jacorb_dir='$(JUGGLERROOT_ABS)/external/JacORB'
-   JAVA_IDL="JACORB_PATH=\"$jacorb_dir\" \"$jacorb_dir/idl\""
+   JAVA_IDL="JAVA_HOME=$JDK_HOME JACORB_PATH=\"$jacorb_dir\" \"$jacorb_dir/idl\""
 
    java_idl_name='JacORB'
 
    app_jacorb_dir='$(TWEEK_BASE_DIR)/bin'
-   APP_JAVA_IDL="JACORB_PATH=\"$app_jacorb_dir\" \"$app_jacorb_dir/idl\""
-   APP_JAVA_IDL_INST="JACORB_PATH=\"\$(TWEEK_BASE_DIR)/bin\" \"\$(TWEEK_BASE_DIR)/bin/idl\""
+   APP_JAVA_IDL="JAVA_HOME=$JDK_HOME JACORB_PATH=\"$app_jacorb_dir\" \"$app_jacorb_dir/idl\""
+   APP_JAVA_IDL_INST="JAVA_HOME=$JDK_HOME JACORB_PATH=\"\$(TWEEK_BASE_DIR)/bin\" \"\$(TWEEK_BASE_DIR)/bin/idl\""
 
    config_jacorb_dir='$prefix/bin'
-   config_java_idl="JACORB_PATH=\"$config_jacorb_dir\" \"$config_jacorb_dir/idl\""
+   config_java_idl="JAVA_HOME=$JDK_HOME JACORB_PATH=\"$config_jacorb_dir\" \"$config_jacorb_dir/idl\""
 else
    # XXX: Need to support more than one IDL compiler for Java by recognizing
    # the name of the compiler and defining options for it below.  Blah.

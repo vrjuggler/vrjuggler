@@ -217,6 +217,7 @@ public class ChunkDesc
    public final void removeCategory(String category)
    {
       boolean removed = false;
+      List dead = new ArrayList();
 
       List cats = mDomElement.getChildren(category_TOKEN);
       for (Iterator itr = cats.iterator(); itr.hasNext(); )
@@ -225,9 +226,15 @@ public class ChunkDesc
          Element element = (Element)itr.next();
          if (element.getText().equals(category))
          {
-            mDomElement.removeContent(element);
+            dead.add(element);
             removed = true;
          }
+      }
+
+      // Remove the elements marked as dead
+      for (Iterator itr = dead.iterator(); itr.hasNext(); )
+      {
+         mDomElement.removeContent((Element)itr.next());
       }
 
       // Notify listeners if something was actually removed

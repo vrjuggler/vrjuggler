@@ -91,6 +91,16 @@ public interface PlacerModel
    public int getSize();
 
    /**
+    * Gets the size of the desktop in this data model.
+    */
+   public Dimension getDesktopSize();
+
+   /**
+    * Sets the size of the desktop in this data model.
+    */
+   public void setDesktopSize(Dimension desktopSize);
+
+   /**
     * Adds a listener that's notified each time this data model changes.
     */
    public void addPlacerModelListener(PlacerModelListener listener);

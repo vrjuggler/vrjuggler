@@ -50,7 +50,7 @@ top_srcdir=	@top_srcdir@
 DBG_FLAGS=	-D_DEBUG @DBG_FLAGS@
 OPT_FLAGS=	-D_OPT @OPT_FLAGS@
 
-HAVE_TWEEK_CXX=	@HAVE_TWEEK_CXX@
+HAVE_TWEEK_CXX=		@HAVE_TWEEK_CXX@
 
 BUILD_JAVA=	@BUILD_JAVA@
 JDOM_JAR=	@JDOM_JAR@
@@ -113,21 +113,22 @@ AFTERBUILD=	afterbuild
 # Things to do before the object files and library are built.
 beforebuild:
 	@$(MAKE) $(PARAM_HEADER)
-ifeq ($(HAVE_TWEEK_CXX), Y)
 	@echo "------------------------------------------------"
 	@echo "IDL code generation phase"
 	@echo "------------------------------------------------"
 	@$(MAKE) cxx-idl
-endif
 
 cxx-idl:
+ifeq ($(HAVE_TWEEK_CXX), Y)
 	@$(MAKE) RECTARGET="cxx_idl" DO_IDL=1 recursive
+endif
 
 $(PARAM_HEADER):
 	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
 
 # Things to do after the object files and library are built.
 afterbuild:
+	@$(MAKE) -C tools/ConfigUpdater
 	@$(MAKE) links
 
 # -----------------------------------------------
@@ -270,7 +271,6 @@ hier:
 	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.lib.dist -p $(prefix)
 	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.samples.dist -p $(projdatadir)
 	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.test.dist -p $(projdatadir)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.tools.dist -p $(projdatadir)
 
 # Steps to take after the installation process is complete.  This target is
 # independent of the current ABI.
@@ -290,7 +290,7 @@ post-install:
 	@$(MAKE) install-java
 	@$(MAKE) install-samples
 #	@$(MAKE) install-test
-#	@$(MAKE) install-tools
+	@$(MAKE) install-tools
 	@$(MAKE) install-data
 	@$(MAKE) install-m4
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
@@ -359,21 +359,12 @@ install-tools:
 	@echo "------------------------------------------------"
 	@echo "Installing user tools"
 	@echo "------------------------------------------------"
-	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.tools.dist -p $(projdatadir)
-	$(PERL) $(scriptdir)/install-src.pl -i $(top_srcdir)/tools	\
-          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(projdatadir)/tools
-	$(PERL) $(scriptdir)/makefiles-gen.pl				\
-          --prefix="$(projdatadir)/tools" --vars="$(topdir)/VARS.pl"	\
-          --startdir="$(top_srcdir)/tools" --mode="$(FILE_PERMS)"	\
-          $(_GROUP_OPT_PL) --srcdir="."
 ifndef NO_JAVA
 ifeq (@OS_TYPE@, UNIX)
 	@sed -e 's,#JCCL_SHARE_DIR#,$(JCCL_SHARE_DIR),g'		\
           $(JCCLROOT_ABS)/tools/ConfigUpdater/cfgupdater.sh > cfgupdater
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) cfgupdater $(bindir)/cfgupdater &&	\
-          rm -f cfgupdater
+          cfgupdater $(bindir)/cfgupdater && rm -f cfgupdater
 else
 	@sed -e 's,#JCCL_SHARE_DIR#,$(JCCL_SHARE_DIR),g'		\
           $(JCCLROOT_ABS)/tools/ConfigUpdater/cfgupdater.bat > cfgupdater.bat

@@ -43,4 +43,4 @@ done
 # The last argument must be the file to process
 IDL_FILE=`fixpath $1`
 
-java  -classpath $JACORB_PATH/idl.jar org.jacorb.idl.parser ${JACORB_ARGS} ${IDL_FILE}
+$JAVA_HOME/bin/java  -classpath $JACORB_PATH/idl.jar org.jacorb.idl.parser ${JACORB_ARGS} ${IDL_FILE}

@@ -206,34 +206,6 @@ public class ConfigChunkDB
    }
 
    /**
-    * Populates the internal collection of chunks with ConfigChunk objects
-    * created from the children of docRoot.
-    */
-//   private void loadChunks(Element docRoot)
-//      throws IOException
-//   {
-//      if ( docRoot.getName().equals(chunk_db_TOKEN) )
-//      {
-//         List children = docRoot.getChildren();
-//         Iterator i    = children.iterator();
-//
-//         while ( i.hasNext() )
-//         {
-//            Element chunk_elem = (Element) i.next();
-//
-//            // We call insertOrdered() directly here because we already have
-//            // chunk_elem as a child of our DOM tree.
-//            insertOrdered(new ConfigChunk(chunk_elem));
-//         }
-//      }
-//      else
-//      {
-//         throw new IOException("Unrecognized element '" +
-//                               docRoot.getName() + "'.");
-//      }
-//   }
-
-   /**
     * Gets the number of ConfigChunks in this database.
     */
    public int size()
@@ -250,7 +222,7 @@ public class ConfigChunkDB
       throws IndexOutOfBoundsException
    {
       Element chunk_elt = (Element)mDoc.getRootElement().getChildren().get(idx);
-      return new ConfigChunk(chunk_elt);
+      return getConfigChunkFor(chunk_elt);
    }
 
    /** Removed all ConfigChunks from self and notifies ChunkDBListeners. */
@@ -281,7 +253,7 @@ public class ConfigChunkDB
       mDoc.getRootElement().removeContent(elt);
 
       // Notify listeners of the removal
-      ConfigChunk chunk = new ConfigChunk(elt);
+      ConfigChunk chunk = getConfigChunkFor(elt);
       ChunkDBEvent e = new ChunkDBEvent(this, ChunkDBEvent.REMOVE, chunk);
       notifyChunkDBTargets(e);
 
@@ -357,7 +329,7 @@ public class ConfigChunkDB
       List chunks = new ArrayList();
       for (Iterator itr = mDoc.getRootElement().getChildren().iterator(); itr.hasNext(); )
       {
-         chunks.add(new ConfigChunk((Element)itr.next()));
+         chunks.add(getConfigChunkFor((Element)itr.next()));
       }
       return chunks;
    }
@@ -492,6 +464,36 @@ public class ConfigChunkDB
       return included;
    }
 
+   /**
+    * Gets the ConfigChunk associated with the given DOM element. If a
+    * ConfigChunk for that element is cached it is returned. Otherwise a new
+    * ConfigChunk is created and cached before being returned.
+    *
+    * @param elt     the element for which to get a ConfigChunk object
+    *
+    * @return  the ConfigChunk associated with the element
+    */
+   private ConfigChunk getConfigChunkFor(Element elt)
+   {
+      ConfigChunk chunk = null;
+
+      // Cache hit
+      if (mChunkCache.containsKey(elt))
+      {
+         chunk = (ConfigChunk)mChunkCache.get(elt);
+         System.out.println("Cache hit for: "+elt.getAttributeValue("name")+"; hashcode="+chunk.hashCode());
+      }
+      // Cache miss
+      else
+      {
+         chunk = new ConfigChunk(elt);
+         mChunkCache.put(elt, chunk);
+         System.out.println("Cache miss for: "+elt.getAttributeValue("name")+"; hashcode="+chunk.hashCode());
+      }
+
+      return chunk;
+   }
+
    /** Generates a name that won't conflict with anything in self.
     *  This generates a new ConfigChunk name, prefixed with root,
     *  that won't conflict with the names of any Chunks already in self.
@@ -597,4 +599,10 @@ public class ConfigChunkDB
 
    /** This is the XML document from which this DB was constructed. */
    protected Document mDoc;
+
+   /**
+    * A cache of the ConfigChunks wrapping the DOM elements within this
+    * database.
+    */
+   private Map mChunkCache = new HashMap();
 }
