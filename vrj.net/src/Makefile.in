@@ -34,7 +34,7 @@ CS_DIRS=	$(addsuffix _bridge_cs, $(MODS))
 DIRS=		$(CXX_DIRS) $(CS_DIRS)
 
 all clean cleandepend clobber debug optim:
-	[ ! -d $(LIBDIR) ] && mkdir $(LIBDIR) || true
-	for d in $(DIRS) ; do			\
+	@[ ! -d $(LIBDIR) ] && mkdir $(LIBDIR) || true
+	@for d in $(DIRS) ; do			\
             $(MAKE) -C $$d $@ || exit 1;	\
           done
