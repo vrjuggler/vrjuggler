@@ -421,11 +421,11 @@ vpr::ReturnStatus FileHandleImplUNIX::read_i(void* buffer,
 // _Effective TCP/IP Programming_ by Jon D. Snader.
 // ----------------------------------------------------------------------------
 vpr::ReturnStatus FileHandleImplUNIX::readn_i(void* buffer,
-                                              const vpr::Uint32 length,
+                                              const vpr::Uint32 buffer_size,
                                               vpr::Uint32& bytes_read,
                                               const vpr::Interval timeout)
 {
-   size_t count;
+   size_t bytes_left;
    ssize_t bytes;
    vpr::ReturnStatus status;
 
@@ -435,12 +435,11 @@ vpr::ReturnStatus FileHandleImplUNIX::readn_i(void* buffer,
                                               << vprDEBUG_FLUSH;
    }
 
-   count = length;
-   bytes = 0;
+   bytes_left = buffer_size;
 
-   while ( count > 0 )
+   while ( bytes_left > 0 )
    {
-      bytes = ::read(mFdesc, buffer, length);
+      bytes = ::read(mFdesc, buffer, buffer_size);
 
       // Read error.
       if ( bytes < 0 )
@@ -454,22 +453,25 @@ vpr::ReturnStatus FileHandleImplUNIX::readn_i(void* buffer,
          else
          {
             status.setCode(ReturnStatus::Fail);
-            break;
+            bytes_read = 0;
+            return status;
          }
       }
-      // May have read EOF, so return bytes read so far.
+      // May have read EOF, so return bytes read so far (possibly less than
+      // buffer_size).
       else if ( bytes == 0 )
       {
-         bytes = length - count;
+         bytes_read = buffer_size - bytes_left;
+         return status;
       }
       else
       {
          buffer = (void*) ((char*) buffer + bytes);
-         count  -= bytes;
+         bytes_left -= bytes;
       }
    }
 
-   bytes_read = bytes;
+   bytes_read = buffer_size;
 
    return status;
 }
