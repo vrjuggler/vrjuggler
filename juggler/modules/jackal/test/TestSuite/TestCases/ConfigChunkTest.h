@@ -155,11 +155,34 @@ public:
     }
         
 
+   void testEqual()
+   {
+   }
+
+   void testCopyConstr()
+   {
+   }
+
+   void testIsEqual()
+   {
+   }
+
+   void testIsNotEqual()
+   {
+   }
+      
+    
    static CppUnit::Test* suite()
    {
       CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("ConfigChunkTest");
       test_suite->addTest( new CppUnit::TestCaller<ConfigChunkTest>("PropertyValueTests", &ConfigChunkTest::PropertyValueTests));
       test_suite->addTest( new CppUnit::TestCaller<ConfigChunkTest>("setPropTests", &ConfigChunkTest::setPropTests));
+
+      test_suite->addTest( new CppUnit::TestCaller<ConfigChunkTest>( "testEqual", &ConfigChunkTest::testEqual ) );
+      test_suite->addTest( new CppUnit::TestCaller<ConfigChunkTest>( "testCopyConstr", &ConfigChunkTest::testCopyConstr ) );
+
+      test_suite->addTest( new CppUnit::TestCaller<ConfigChunkTest>( "testIsEqual", &ConfigChunkTest::testIsEqual ) );
+      test_suite->addTest( new CppUnit::TestCaller<ConfigChunkTest>( "testIsNotEqual", &ConfigChunkTest::testIsNotEqual ) );
 
       return test_suite;
    }
