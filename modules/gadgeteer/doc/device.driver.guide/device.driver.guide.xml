@@ -987,7 +987,7 @@ button device, the definition file will be the following:</para>
                <title><filename>ButtonDevice.desc</filename>: Configuration
 Definition File for Simple Button Device</title>
                <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;?org-vrjuggler-jccl-settings desc.db.version="2.1"?&gt;
+&lt;?org-vrjuggler-jccl-settings desc.db.version="2.2"?&gt;
 &lt;ChunkDescDB&gt;
   &lt;ChunkDesc token="ButtonDevice" name="My Button Device"&gt;              <co linkends="MyButtonDevice.desc.token.decl.co"
 id="MyButtonDevice.desc.token.decl"/>
@@ -1009,7 +1009,7 @@ id="MyButtonDevice.desc.hostchunk.decl"/>
       &lt;help&gt;Points to the machine that the device is physically
             connected to.&lt;/help&gt;
       &lt;item label="Host Node" defaultvalue="" /&gt;
-      &lt;enumeration name="MachineSpecific" value="MachineSpecific" /&gt;
+      &lt;allowedtype&gt;MachineSpecific&lt;/allowedtype&gt;
     &lt;/PropertyDesc&gt;
   &lt;/ChunkDesc&gt;
 &lt;/ChunkDescDB&gt;</programlisting>
