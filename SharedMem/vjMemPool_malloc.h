@@ -82,8 +82,8 @@ public:
                       char* staticTempName = "/var/tmp/memPool_mallocXXXXXX")
     {
         vjDEBUG(vjDBG_ALL,3)
-            << "\n\nvjMemPool_malloc: Allocating Arena.\n" << "Initial size: "
-            << initialSize << std::endl << vjDEBUG_FLUSH;
+            << "vjMemPool_malloc: Allocating arena ("
+            << initialSize << " bytes)\n" << vjDEBUG_FLUSH;
     }
 
     // -----------------------------------------------------------------------
@@ -181,9 +181,11 @@ public:
           char* staticTempName = "/var/tmp/memPoolsArenaXXXXXX")
     {
         vjDEBUG(vjDBG_ALL,3)
-            << "\n\nvjMemPool_malloc: Allocating Base Arena for ALL "
-            << "vjMemPool_malloc's.\n\tSize: " << initialSize << std::endl
-            << vjDEBUG_FLUSH;
+            << "\nvjMemPool_malloc: Allocating Base Arena for ALL "
+            << "vjMemPool_malloc's.\n  "
+            << initialSize << " bytes, "
+            << numProcs << " procs"
+            << "\n" << vjDEBUG_FLUSH;
     }
 
     // -----------------------------------------------------------------------
