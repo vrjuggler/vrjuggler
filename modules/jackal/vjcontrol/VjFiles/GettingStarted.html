@@ -41,7 +41,7 @@ is where vjcontrol stores its own preferences.
 You should also find out where the Juggler config files you should use 
 are located.
 The Juggler distribution includes a number of sample config files
-in the directory <TT>$VJ_BASE_DIR/share/Data/configFiles</TT>.  Your system
+in the directory <TT>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</TT>.  Your system
 administrators may also have a location for customized config files.
 For ease of use, you may wish to copy commonly-used config files to your
 <TT>~/.vjconfig</TT> directory.  This is also a good place to keep any
@@ -67,7 +67,7 @@ VjControl's <a href="Preferences.html">Preferences</a> control what files
 are loaded automatically on startup.  There are also <a href="cmdline.html">
 command-line arguments</a> that can be used to load files at startup.  With
 the default preferences, vjcontrol will attempt to load 
-<TT>$VJ_BASE_DIR/share/Data/chunksDesc</TT>, which contains definitions for the
+<TT>$VJ_BASE_DIR/share/vrjuggler/data/vrj-chunks.desc</TT>, which contains definitions for the
 basic types of VR Juggler configuration information.
 
 <h2>The Main Window</h2>
@@ -110,12 +110,12 @@ VR Juggler uses two types of files: <i>Config Files</i> and <i>ChunkDesc Files</
 <li><i>Config Files</i> are made of 'Chunks' of information.  For example,
 one chunk will describe the setup of a display device while another will
 describe the setup for a keyboard or tracking system.  There will typically
-be several readymade config files in the <tt>$VJ_BASE_DIR/share/Data</tt> directory,
+be several readymade config files in the <tt>$VJ_BASE_DIR/share/vrjuggler/data</tt> directory,
 with names like <tt>simulator.config</tt> or <tt>C2_4wall.config</tt>.
 
 <li><i>ChunkDesc Files</i> define the different kinds of chunks (ie. what kind
 of information a Keyboard chunk should have, or a Display chunk).  The main
-ChunkDesc file for VR Juggler is usually <tt>$VJ_BASE_DIR/share/Data/chunksDesc</tt>.
+ChunkDesc file for VR Juggler is usually <tt>$VJ_BASE_DIR/share/vrjuggler/data/vrj-chunks.desc</tt>.
 </ul>
 
 To load a Config or ChunkDesc file, click on the "Configure" or "Descriptions"

@@ -110,10 +110,10 @@ a "Surface Display" Chunk that's different from a "Position Proxy" Chunk?
 For every kind of ConfigChunk there's an object called a <i>ChunkDesc</i> - 
 short for "Chunk Description".  ChunkDescs live in ChunkDesc files - and
 where are they?  The primary Juggler ChunkDesc file is 
-<tt>$VJ_BASE_DIR/share/Data/chunksDesc</tt> - it defines all the different kinds 
+<tt>$VJ_BASE_DIR/share/vrjuggler/data/vrj-chunks.desc</tt> - it defines all the different kinds 
 of chunks that Juggler beta1 knows about and needs.  When a Juggler
 program starts up, one of the first things it does - even before it reads
-its config files - is to read the primary chunksDesc file.
+its config files - is to read the primary vrj-chunks.desc file.
 
 <p>
 Later in the beta series, Juggler will have the ability to load
