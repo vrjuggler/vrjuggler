@@ -102,7 +102,7 @@ vjThreadWin32::spawn (vjBaseThreadFunctor* functorPtr,
                                             functorPtr, 0, &thread_id);
     if (0 == mThreadHandle)
     {
-        std::cerr << "ERROR: Could not create thread." << std::endl;
+        std::cerr << clrOutNORM(clrRED, "ERROR:") << " Could not create thread." << std::endl;
         return -1;
     }
 

@@ -439,7 +439,7 @@ XVisualInfo* vjGlxWindow::GetGlxVisInfo (Display *display, int screen)
 
    if (!glXQueryExtension (display, NULL, NULL))
    {
-      vjDEBUG(vjDBG_ERROR,0) << "ERROR: X Display '"<< mXDisplayName <<
+      vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " X Display '"<< mXDisplayName <<
       "' doesn't support GLX.\n" << vjDEBUG_FLUSH;
       return NULL;
    }
