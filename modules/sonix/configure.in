@@ -58,7 +58,6 @@ dnl ignore the nasty paths appended by the config scripts...
 saveCXXFLAGS="$CXXFLAGS"
 saveINCLUDES="$INCLUDES"
 
-VJ_VERSION_GROK( VERSION )
 
 # -----------------------------------------------------------------------------
 # Checks for libraries.
@@ -376,6 +375,8 @@ dnl echo "+ setting snx_includes == $snx_includes"
 dnl echo "+ setting snx_ldflags == $snx_ldflags"
 dnl echo "+ setting snx_libs == $snx_libs"
 dnl -------------------------------------------------------------
+
+VJ_VERSION_GROK(VERSION)
 
 DPP_SUBST
 DPP_GET_PROJECTDIR
