@@ -414,7 +414,7 @@ int OpenALSoundImplementation::startAPI()
       mDev = alcOpenDevice( NULL );
       if (mDev == NULL) 
       {
-         vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "OpenAL| ERROR: Could not open device\n" << vprDEBUG_FLUSH;
+         vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "OpenAL| ERROR: Could not open device\n") << vprDEBUG_FLUSH;
          return 0;
       }
 
@@ -507,7 +507,7 @@ void OpenALSoundImplementation::bind( const std::string& alias )
 
    if (this->isStarted() == false)
    {
-      vpr::Debug(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "[snx]OpenAL| ERROR: API not started, bind() failed\n") << vprDEBUG_FLUSH;
+      vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "[snx]OpenAL| ERROR: API not started, bind() failed\n") << vprDEBUG_FLUSH;
       return;
    }
    
@@ -564,7 +564,7 @@ void OpenALSoundImplementation::bind( const std::string& alias )
          err = alGetError();
          if (err != AL_NO_ERROR)
          {
-            vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "OpenAL| ERROR: Could not buffer data [bufferID=") << clrOutNORM(clrYELLOW, bufferID) << clrOutNORM(clrYELLOW, ",err=") << clrOurNORM(clrYELLOW, err) << clrOutNORM(clrYELLOW, "]\n") << vprDEBUG_FLUSH;
+            vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "OpenAL| ERROR:") <<" Could not buffer data [bufferID=" << bufferID << ",err=" << err << "]\n" << vprDEBUG_FLUSH;
             switch (err)
             {
                case AL_ILLEGAL_COMMAND:
@@ -596,7 +596,7 @@ void OpenALSoundImplementation::bind( const std::string& alias )
          alGenSources( 1, &sourceID );
          if (alGetError() != AL_NO_ERROR)
          {
-            vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "OpenAL| ERROR: Could not generate a source\n") << vprDEBUG_FLUSH
+            vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "OpenAL| ERROR: Could not generate a source\n") << vprDEBUG_FLUSH;
             alDeleteBuffers( 1, &bufferID );
             mBindLookup.erase( alias );
             break;
@@ -673,7 +673,7 @@ void OpenALSoundImplementation::unbind( const std::string& alias )
       }
       mBindLookup.erase( alias );
    }
-
+   
    assert( mBindLookup.count( alias ) == 0 && "unbind failed" );
 }
 
