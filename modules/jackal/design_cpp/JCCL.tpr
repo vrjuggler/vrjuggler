@@ -68,8 +68,8 @@ Root.12.package_prefix=jccl
 Root.12.srcControlEnabled=false
 Root.12.srcControlProject=
 [editor]
-recent.file.0=/home9/users/patrick/src/Juggler/main/juggler/modules/jackal/design.cpp/ConcreteDepChecker.h
-recent.file.1=/home9/users/patrick/src/Juggler/main/juggler/modules/jackal/design.cpp/Class1.h
+recent.file.0=/home9/users/patrick/src/Juggler/main/juggler/modules/jackal/design_cpp/ConcreteDepChecker.h
+recent.file.1=/home9/users/patrick/src/Juggler/main/juggler/modules/jackal/design_cpp/Class1.h
 recent.file.2=/home9/users/patrick/src/Juggler/main/juggler/modules/jackal/rtrc/jccl/RTRC/DepChecker.h
 recent.file.3=/home9/users/patrick/src/Juggler/main/juggler/modules/jackal/rtrc/jccl/RTRC/DependencyManager.h
 recent.file.4=/home9/users/patrick/src/Juggler/main/juggler/modules/jackal/config/jccl/Config/ConfigChunkDB.h
