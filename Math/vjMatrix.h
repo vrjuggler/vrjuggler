@@ -306,9 +306,9 @@ public:
 
    // Operators
    /// This accesses in C/C++ way???
-   float*       operator [](int i)        { return &mat[i][0];}
-   const float* operator [](int i) const  { return &mat[i][0];}
-   float    operator ()(int i, int j) { return mat[j][i];}
+   float*       operator[] (int i)        { return &mat[i][0];}
+   const float* operator[] (int i) const  { return &mat[i][0];}
+   const float& operator() (const int& row, const int& column) const { return mat[column][row];}
 
    int operator == (const vjMatrix&  _m) const {
       return this->equal(_m);
