@@ -23,7 +23,14 @@ class diagram {
 @__hiddenMember BeanProperty#<oiref:cpp#Member#vrj::App#setFocus#(#bool#)#:oiref>
 @__hiddenMember BeanProperty#<oiref:cpp#Member#vrj::App#getDrawManager#(##)#:oiref>
 @hideProperties
-@hideAttributes 
+@hideAttributes
+@__hiddenMember <oiref:cpp#Member#vrj::App#configCanHandle#(#jccl::ConfigElementPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$destructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#setFocus#(#bool#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configRemove#(#jccl::ConfigElementPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configAdd#(#jccl::ConfigElementPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#getDrawManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#getSoundManager#(##)#:oiref> 
 */
 class reference {
 }/**
@@ -42,9 +49,9 @@ class __tags {
 */
 class __options {
 }/**
-@__positions <oigroup:<oiref:design#Class#id4s2p1cyax23xmcyb00neu.node.link:oiref>=250,135,180,135:oigroup>
-<oigroup:<oiref:design#Class#id4s2p1cyax23xmcyb00neu.node:oiref>=250,10,210,190,0:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::App:oiref>=10,70,170,210,0:oigroup>
+@__positions <oigroup:<oiref:design#Class#id4s2p1cyax23xmcyb00neu.node.link:oiref>=230,120,190,120:oigroup>
+<oigroup:<oiref:design#Class#id4s2p1cyax23xmcyb00neu.node:oiref>=230,20,230,170,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::App:oiref>=10,50,180,230,0:oigroup>
 */
 class __positions {
 }/**

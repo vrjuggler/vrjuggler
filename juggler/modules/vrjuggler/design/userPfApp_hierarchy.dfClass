@@ -26,6 +26,9 @@ class diagram {
 @__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(##)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(#Kernel*#)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::App#$$destructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configCanHandle#(#jccl::ConfigElementPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configAdd#(#jccl::ConfigElementPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configRemove#(#jccl::ConfigElementPtr#)#:oiref>
 */
 class reference {
 }/**
@@ -60,11 +63,11 @@ class __tags {
 */
 class __options {
 }/**
-@__positions <oigroup:<oiref:cpp#Extends#vrj::PfApp#vrj::App:oiref>=110,290,110,230:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::PfApp:oiref>=20,290,180,260,0:oigroup>
-<oigroup:<oiref:cpp#Extends#userPfApp#vrj::PfApp:oiref>=280,414,200,414:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::App:oiref>=20,10,180,220,0:oigroup>
-<oigroup:<oiref:cpp#Class#userPfApp:oiref>=280,300,114,173,1:oigroup>
+@__positions <oigroup:<oiref:cpp#Extends#vrj::PfApp#vrj::App:oiref>=110,260,110,210:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::PfApp:oiref>=20,260,180,190,0:oigroup>
+<oigroup:<oiref:cpp#Extends#userPfApp#vrj::PfApp:oiref>=280,356,200,356:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::App:oiref>=20,10,180,200,0:oigroup>
+<oigroup:<oiref:cpp#Class#userPfApp:oiref>=280,270,122,173,1:oigroup>
 */
 class __positions {
 }
