@@ -71,18 +71,21 @@ void PfDrawFuncMonoBackbuffer(pfChannel *chan, void* chandata);
 vprSingletonImp(PfDrawManager);
 
 
-//: Can the handler handle the given chunk?
-//! RETURNS: true - Can handle it
-//+          false - Can't handle it
+/**
+ * Can the handler handle the given chunk?
+ * @return true if we can handle it; false if we can't.
+ */
 bool PfDrawManager::configCanHandle(jccl::ConfigChunkPtr chunk)
 {
    std::string chunk_type = chunk->getType();
    return ( chunk_type == std::string("apiPerformer"));
 }
 
-//: Add the chunk to the configuration
-//! PRE: configCanHandle(chunk) == true
-//! RETURNS: success
+/**
+ * Adds the chunk to the configuration.
+ * @pre configCanHandle(chunk) == true
+ * @return success
+ */
 bool PfDrawManager::configAdd(jccl::ConfigChunkPtr chunk)
 {
    vprASSERT(configCanHandle(chunk));
@@ -135,7 +138,7 @@ bool PfDrawManager::configDisplaySystem(jccl::ConfigChunkPtr chunk)
    return true;
 }
 
-//: Configure the performer api stuff
+/** Configures the Performer API stuff. */
 bool PfDrawManager::configPerformerAPI(jccl::ConfigChunkPtr chunk)
 {
    vprASSERT((std::string)chunk->getType() == std::string("apiPerformer"));
@@ -171,7 +174,9 @@ void PfDrawManager::sync()
    pfSync();
 }
 
-//! POST: Calls pfFrame()
+/**
+ * @post Calls pfFrame()
+ */
 void PfDrawManager::draw()
 {
    vprDEBUG(vprDBG_ALL,vprDBG_VERB_LVL) << "vjPfDrawManager::calling appChanFuncs\n" << vprDEBUG_FLUSH;
@@ -183,7 +188,6 @@ void PfDrawManager::draw()
    pfFrame();
 }
 
-//:
 // XXX: Hack for now
 void PfDrawManager::callAppChanFuncs()
 {
@@ -204,9 +208,11 @@ void PfDrawManager::callAppChanFuncs()
 }
 
 
-//: Set the app the draw whould interact with.
-//! PRE: none
-//! POST: dynamic_cast of the app to a pf app
+/**
+ * Sets the app the draw whould interact with.
+ * @pre None.
+ * @post dynamic_cast<> of the app to a Pf app.
+ */
 void PfDrawManager::setApp(App* _app)
 {
    //vprASSERT(app != NULL);
@@ -216,10 +222,12 @@ void PfDrawManager::setApp(App* _app)
 
 }
 
-//! POST: Calls pfInit() and sets up the system
-// - Configures multiprocessing mode
-// - Configures number of pipes
-// - Forks off the processes
+/**
+ * @post Calls pfInit() and sets up the system.
+ * - Configures multiprocessing mode
+ * - Configures number of pipes
+ * - Forks off the processes
+ */
 void PfDrawManager::initAPI()
 {
    pfInit();
@@ -265,9 +273,12 @@ void PfDrawManager::initAPI()
    vprDEBUG_END(vrjDBG_DRAW_MGR,vprDBG_STATE_LVL) << "vjPfDrawManager::initAPI: Exiting." << std::endl << vprDEBUG_FLUSH;
 }
 
-// Get a performer pipe
-//! PRE: pipe_num < mNumPipes
-//       Fork must have happend
+/**
+ * Gets a Performer pipe.
+ *
+ * @pre pipe_num < mNumPipes
+ *       Fork must have happened.
+ */
 pfPipe* PfDrawManager::getPfPipe(unsigned pipe_num)
 {
    vprASSERT((mPfHasForked) && "Tried to get pipe before forking happened");
@@ -301,9 +312,12 @@ void PfDrawManager::initPipes()
 }
 
 
-//: Callback when display is added to display manager
-//! PRE: Must be in kernel controlling thread
-//  PRE: Must have already initialized performer
+/**
+ * Callback when display is added to display manager.
+ *
+ * @pre Must be in kernel controlling thread.
+ *      Must have already initialized Performer.
+ */
 void PfDrawManager::addDisplay(Display* disp)
 {
    vprASSERT(disp != NULL);    // Can't add a null display
@@ -488,9 +502,12 @@ void PfDrawManager::addDisplay(Display* disp)
 }
 
 
-//: Callback when display is removed to display manager
-//! PRE: disp must be a valid display that we have
-//! POST: window for disp is removed from the draw manager and child pipes
+/**
+ * Callback when display is removed to display manager.
+ *
+ * @pre disp must be a valid display that we have.
+ * @post Window for disp is removed from the draw manager and child pipes.
+ */
 void PfDrawManager::removeDisplay(Display* disp)
 {
    // Find the pfDisplay
@@ -661,7 +678,7 @@ void PfDrawManager::initChanGroupAttribs(pfChannel* masterChan)
 }
 
 
-//: Return the needed mono frame buffer config
+/** Returns the needed mono frame buffer config. */
 std::vector<int> PfDrawManager::getMonoFBConfig()
 {
    std::vector<int> mono_fb;
@@ -682,7 +699,7 @@ std::vector<int> PfDrawManager::getMonoFBConfig()
    return mono_fb;
 }
 
-//: Return the needed stereo frame buffer config
+/** Returns the needed stereo frame buffer config. */
 std::vector<int> PfDrawManager::getStereoFBConfig()
 {
    std::vector<int> stereo_fb;
@@ -858,8 +875,10 @@ void PfDrawManager::updateProjections()
    }
 }
 
-//! POST: chan has it's view matrix set to the Performer
-//+        equivalent of proj's projection data.
+/**
+ * @post chan has its view matrix set to the Performer.
+ *       Equivalent of proj's projection data.
+ */
 void PfDrawManager::updatePfProjection(pfChannel* chan, Projection* proj)  //, bool simulator)
 {
    /*
@@ -909,11 +928,14 @@ void PfDrawManager::updatePfProjection(pfChannel* chan, Projection* proj)  //, b
 }
 
 
-//: Helper function that finds the pfDisp given a channel
-// This function just loops through all the entries in the disps variable,
-// looking for one that contains the channel.  When it is found, it is
-// returned.
-// NOTE: The "cool" STL functor search didn't work for some reason
+/**
+ * Helper function that finds the pfDisp given a channel.
+ * This function just loops through all the entries in the disps variable,
+ * looking for one that contains the channel.  When it is found, it is
+ * returned.
+ *
+ * @note The "cool" STL functor search didn't work for some reason.
+ */
 /*
 PfDrawManager::pfDisp* PfDrawManager::getPfDisp(pfChannel* chan)
 {
