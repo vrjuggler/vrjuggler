@@ -203,8 +203,6 @@ public:
       }
    }
 
-//   vpr::Interval processEvents(const vpr::Interval& cur_time);
-
    /**
     */
    vpr::ReturnStatus checkForReadyMessage (const vpr::Interval& event_time,

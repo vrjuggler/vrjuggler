@@ -77,42 +77,6 @@ NetworkLine::NetworkLine (const double miles, const double Mbps,
    }
 }
 
-/*
-vpr::Interval NetworkLine::processEvents (const vpr::Interval& cur_time)
-{
-   vpr::Interval new_event_time;
-   vpr::sim::MessagePtr front_msg;
-
-   // Do active line events.
-
-   if ( mForwardLineQueue.size() > 0 )
-   {
-      front_msg = mForwardLineQueue.front();
-
-      if ( front_msg->whenArrivesFully() >= cur_time )
-      {
-         // XXX: Pass message through node ...
-
-         mForwardLineQueue.pop();
-      }
-   }
-
-   // Do pending events.
-
-   if ( mForwardReadyQueue.size() > 0 )
-   {
-      front_msg = mForwardReadyQueue.front();
-
-      if ( front_msg->whenStartOnWire() <= cur_time )
-      {
-//         front_msg.setFullyOnWireTime();
-      }
-   }
-
-   return new_event_time;
-}
-*/
-
 // ============================================================================
 // Private methods.
 // ============================================================================
