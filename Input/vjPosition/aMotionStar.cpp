@@ -1472,7 +1472,8 @@ aMotionStar::getDeviceStatus (const unsigned char device) {
     BIRDNET::DATA_PACKET* rsp;
 
     // Set the xtype field to the given device number.
-    msg.xtype = device;
+    msg.xtype    = device;
+    msg.sequence = htons(m_seq_num++);;
 
     rsp = NULL;
 
@@ -1537,6 +1538,7 @@ aMotionStar::setDeviceStatus (const unsigned char device, const char* buffer,
     // Fill in the header bits.
     msg.header.type         = BIRDNET::MSG_SEND_SETUP;
     msg.header.xtype        = device;
+    msg.header.sequence     = htons(m_seq_num++);
     msg.header.number_bytes = htons(buffer_size);
 
     // Copy the given buffer into the packet's data buffer.
