@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jan-23-2003 nonchocoboy Removed jccl-chunks.desc.
 Jan-15-2003 nonchocoboy Description files now use a new "allowedtype" token
                         rather than overloading the "enumeration" token to
                         specify allowed chunk types for embedded chunks and
