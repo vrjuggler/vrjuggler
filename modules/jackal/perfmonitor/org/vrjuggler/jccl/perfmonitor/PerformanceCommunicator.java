@@ -91,6 +91,10 @@ public class PerformanceCommunicator
     }
 
 
+    public void setPerformanceModule (PerformanceModule pm) {
+        perf_module = pm;
+    }
+
     public void initialize () throws VjComponentException {
         if (perf_module == null)
             throw new VjComponentException (component_name + ": Initialized with unmet dependencies.");

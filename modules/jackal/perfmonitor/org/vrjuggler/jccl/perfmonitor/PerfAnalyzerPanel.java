@@ -276,7 +276,7 @@ public class PerfAnalyzerPanel
 	    // update indices
             while (i.hasNext()) {
                 LabeledPerfDataCollector.IndexInfo ii = (LabeledPerfDataCollector.IndexInfo)i.next();
-		System.out.println ("updating " + ii.index);
+		//System.out.println ("updating " + ii.index);
 		DefaultMutableTreeNode tn = (DefaultMutableTreeNode)node_map.get(ii);
 		if (tn == null)
 		    addToTree (ii);
@@ -312,7 +312,7 @@ public class PerfAnalyzerPanel
 		}
 		ni.setAverage (sum);
 		ni.update();
-		System.out.println ("set a folder average to: " + sum);
+		//System.out.println ("set a folder average to: " + sum);
 	    }
 	    else {
 		// it was an actual index & already knows its average
@@ -680,20 +680,43 @@ public class PerfAnalyzerPanel
             max_samples_box.setSelectedIndex(1);
             max_samples_box.addActionListener (this);
 
+            //            data_panel.setLayout (new BoxLayout (data_panel, BoxLayout.Y_AXIS));
+            GridBagLayout gbl = new GridBagLayout();
+            data_panel.setLayout (gbl);
+            //data_panel.setBackground (Color.WHITE);
+
             display_pane = new JScrollPane (data_panel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
             
             add (display_pane, "Center");
 
-            for (int i = 0; i < datapanel_elems.size(); i++) {
-                DataPanelElem dpe = (DataPanelElem)datapanel_elems.get(i);
-		if (dpe instanceof LabeledDataPanelElem)
-		    ((LabeledDataPanelElem)dpe).initialize();
-		else
-		    ((NumberedDataPanelElem)dpe).initialize (data_panel, gblayout, gbc);
-            }
-
+//              for (int i = 0; i < datapanel_elems.size(); i++) {
+//                  DataPanelElem dpe = (DataPanelElem)datapanel_elems.get(i);
+//  		if (dpe instanceof LabeledDataPanelElem)
+//  		    ((LabeledDataPanelElem)dpe).initialize();
+//  		else
+//  		    ((NumberedDataPanelElem)dpe).initialize (data_panel, gblayout, gbc);
+//              }
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.anchor = GridBagConstraints.NORTHWEST;
+            gbc.fill = GridBagConstraints.NONE;
+            gbc.gridwidth = GridBagConstraints.RELATIVE;
+            gbc.gridheight = GridBagConstraints.RELATIVE;
 	    panel_tree = new PanelTree (tree_model);
+            gbl.setConstraints (panel_tree, gbc);
 	    data_panel.add (panel_tree);
+            gbc.fill = GridBagConstraints.BOTH;
+            gbc.gridwidth = GridBagConstraints.REMAINDER;
+            Component comp = Box.createHorizontalGlue();
+            gbl.setConstraints (comp, gbc);
+            data_panel.add (comp);
+            gbc.gridheight = GridBagConstraints.REMAINDER;
+            comp = Box.createVerticalGlue();
+            gbl.setConstraints (comp, gbc);
+            data_panel.add (comp);
+            //data_panel.add (Box.createVerticalGlue());
+//              display_pane = new JScrollPane (panel_tree, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            
+//              add (display_pane, "Center");
 
             ui_initialized = true;
         }

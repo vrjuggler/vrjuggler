@@ -47,7 +47,7 @@ import org.w3c.dom.*;
 import VjConfig.ConfigStreamTokenizer;
 import VjConfig.ConfigChunk;
 import VjControl.*;
-
+import VjComponents.Network.ProtocolInputStream;
 
 /** Core Module for storing VR Juggler performance data.
  * 
@@ -387,7 +387,8 @@ public class PerformanceModule extends DefaultCoreModule {
 	    else {
 		// new format
 		removeAllData();
-		readXMLStream (new FileInputStream(f));
+		//readXMLStream (new FileInputStream(f));
+                readXMLPerformanceFile (new FileInputStream (f));
 	    }
 
 	    file = f;
@@ -402,6 +403,66 @@ public class PerformanceModule extends DefaultCoreModule {
 	    Core.consoleErrorMessage (component_name, "Loading error: " + e);
 	    return null;
 	}
+    }
+
+
+    protected String readLine (InputStream instream) throws IOException {
+        StringBuffer s = new StringBuffer(64);
+        char ch;
+        int i;
+        for (;;) {
+            i = instream.read();
+            if (i == -1)
+                throw new EOFException();
+            ch = (char)i;
+            if (ch == '\n')
+                break;
+            s.append (ch);
+        }
+        return new String(s);
+    }
+
+    protected void readXMLPerformanceFile (InputStream instream) {
+	ConfigChunk c;
+        String id = null;
+        String s;
+        int j, k;
+
+        try {
+            while (true) {
+                try {
+                    // need to parse the <protocol handler="foo"> line
+                    id = null;
+                    do {
+                        s = readLine (instream);
+                        System.out.println ("read stream begin: '" + s + "'");
+                        j = s.indexOf ("<protocol handler=\"");
+                        k = s.lastIndexOf ('"');
+                        if ((j != -1) && (k >= j + 19))
+                            id = s.substring (j+19,k);
+                    
+                    } while (id == null);
+                    System.out.println ("protocol id name is '" + id + "'");
+                }
+                catch (IOException e) {
+                    if (e instanceof EOFException)
+                        // Throw the EOFException here to terminate the read thread.
+                        throw (EOFException)e;
+                    else {
+                        Core.consoleInfoMessage (component_name, e.toString());
+                        return;
+                    }
+                }
+                
+                ProtocolInputStream in = new ProtocolInputStream (instream, "</protocol>");
+                readXMLStream (in);
+
+            }
+        }
+        catch (EOFException e) {
+            // expected this, do nothing.
+            ;
+        }
     }
 
 
