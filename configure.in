@@ -606,6 +606,10 @@ elif test -z "$THREADS" ; then
     AC_MSG_ERROR(No threading package defined!)
 fi
 
+dnl # Get the path to the X-Window libraries and header files.  We will need
+dnl # these for all UNIX applications.
+AC_PATH_X
+
 dnl # ------------
 dnl # OpenGL API.
 dnl # ------------
@@ -685,7 +689,13 @@ if test "x${_enable_gl_api}" = "xyes" ; then
     dnl # If OpenGL API files were added, define this extra stuff that is
     dnl # used in some Makefiles.
     if test ! -z "$OPENGL_API" ; then
-        _LIBOPENGL="-L${OGLROOT} -lGLU -lGL -lXext"
+        if test "x" == "x$x_libraries" ; then
+            _x_lib_path=''
+        else
+            _x_lib_path="-L$x_libraries"
+        fi
+
+        _LIBOPENGL="-L${OGLROOT} -lGLU -lGL ${_x_lib_path} -lXext"
 
         dnl # On non-SGI platforms, we need to add only -lX11 when linking
         dnl # OpenGL applications.
@@ -754,7 +764,6 @@ fi
 dnl # -------------------------------------------------------------------------
 dnl # Checks for header files.
 dnl # -------------------------------------------------------------------------
-AC_PATH_X
 AC_HEADER_STDC
 AC_CHECK_HEADERS(fcntl.h limits.h strings.h sys/file.h sys/ioctl.h	\
                  sys/time.h termio.h unistd.h sys/z8530.h sys/stdsyms.h)
