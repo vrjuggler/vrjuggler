@@ -49,6 +49,8 @@ class GestureProxy;
 class GloveProxy;
 class EventWindowProxy;
 class PositionProxy;
+class SpeechRecogStringProxy;
+class SpeechRecogDigitalProxy;
 
 /**
  * Base class for simplified proxy interfaces.
@@ -207,6 +209,8 @@ typedef DeviceInterface<GestureProxy>     GestureInterface;
 typedef DeviceInterface<GloveProxy>       GloveInterface;
 typedef DeviceInterface<EventWindowProxy> EventWindowInterface;
 typedef DeviceInterface<PositionProxy>    PositionInterface;
+typedef DeviceInterface<SpeechRecogDigitalProxy>    SpeechRecogDigitalInterface;
+typedef DeviceInterface<SpeechRecogStringProxy>    SpeechRecogStringInterface;
 
 } // end namespace
 
