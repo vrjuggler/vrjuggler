@@ -169,7 +169,7 @@ links:
 	@echo "------------------------------------------------"
 	@echo "Setting up developer installation"
 	@echo "------------------------------------------------"
-	@$(MAKE) SYMLINK=-l prefix="$(instlinks)"			\
+	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)"		\
           DEFAULT_DIR="$(DBG_DIR)" installworld
 	@echo ""
 	@echo "---------------------------------------------------------------"
@@ -237,8 +237,8 @@ pre-install:
 post-install:
 #	@$(MAKE) install-test
 	@$(MAKE) install-m4
-	$(INSTALL) $(SYMLINK) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)	\
-          $(topdir)/vpr-config $(bindir)
+	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(topdir)/vpr-config $(bindir)
 
 PREINSTALL_HEADERS	= pre-install-headers
 POSTINSTALL_HEADERS	= post-install-headers
@@ -247,22 +247,22 @@ pre-install-headers:
 	$(MTREE_CMD) -Ude -f $(mtreedir)/VPR.include.dist -p $(prefix)
 
 post-install-headers:
-	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
-          $(VPRROOT_ABS)/vpr/System.h $(includedir)
-	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
-          $(VPRROOT_ABS)/vpr/SystemBase.h $(includedir)
-	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
-          $(VPRROOT_ABS)/vpr/vpr.h $(includedir)
-	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
-          $(VPRROOT_ABS)/vpr/vprConfig.h $(includedir)
-	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
-          $(VPRROOT_ABS)/vpr/vprDomain.h $(includedir)
-	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
-          $(VPRROOT_ABS)/vpr/vprTypes.h $(includedir)
-	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
-          $(topdir)/vpr/vprDefines.h $(includedir)
-	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
-          $(topdir)/vpr/vprParam.h $(includedir)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(VPRROOT_ABS)/vpr/System.h $(includedir)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(VPRROOT_ABS)/vpr/SystemBase.h $(includedir)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(VPRROOT_ABS)/vpr/vpr.h $(includedir)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(VPRROOT_ABS)/vpr/vprConfig.h $(includedir)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(VPRROOT_ABS)/vpr/vprDomain.h $(includedir)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(VPRROOT_ABS)/vpr/vprTypes.h $(includedir)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(topdir)/vpr/vprDefines.h $(includedir)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(topdir)/vpr/vprParam.h $(includedir)
 
 # Install the test programs.
 install-test:
@@ -282,8 +282,9 @@ install-m4:
 	@echo "Installing Autoconf m4 macros"
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(datadir)/aclocal
-	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
-          $(JUGGLERROOT_ABS)/macros/vpr.m4 $(datadir)/aclocal
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(JUGGLERROOT_ABS)/macros/vpr.m4	\
+          $(datadir)/aclocal
 
 # =============================================================================
 # Clean-up targets.  '_clobber' removes the developer installation links.
