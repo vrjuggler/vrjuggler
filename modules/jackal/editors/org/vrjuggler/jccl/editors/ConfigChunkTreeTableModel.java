@@ -67,8 +67,8 @@ public class ConfigChunkTreeTableModel
     */
    public void setConfigChunk(ConfigChunk chunk)
    {
-      // First clear out all the old nodes from the tree.
-      ((DefaultMutableTreeNode)getRoot()).removeAllChildren();
+      // Clear out all the old nodes from the tree.
+      clear();
 
       this.chunk = chunk;
       chunk.addConfigChunkListener(this);
@@ -96,6 +96,24 @@ public class ConfigChunkTreeTableModel
    public ConfigChunk getConfigChunk()
    {
       return chunk;
+   }
+
+   /**
+    * Clears the data in the model.
+    */
+   private void clear()
+   {
+      // Stop listening to all config chunks in the tree
+      List nodes = getNodesOfClass(ConfigChunk.class);
+      for (Iterator itr = nodes.iterator(); itr.hasNext(); )
+      {
+         DefaultMutableTreeNode node = (DefaultMutableTreeNode)itr.next();
+         ConfigChunk chunk = (ConfigChunk)node.getUserObject();
+         chunk.removeConfigChunkListener(this);
+      }
+
+      // Clear out all the old nodes from the tree.
+      ((DefaultMutableTreeNode)getRoot()).removeAllChildren();
    }
 
    /**
@@ -154,8 +172,8 @@ public class ConfigChunkTreeTableModel
    private void addEmbeddedChunk(DefaultMutableTreeNode parent, ConfigChunk chunk, int index)
    {
       chunk.addConfigChunkListener(this);
-//      System.out.println("Adding embedded chunk node for chunk: "+
-//                         chunk.getName()+"["+idx+"]");
+      System.out.println("Adding embedded chunk node for chunk: "+
+                         chunk.getName()+"["+index+"]");
       DefaultMutableTreeNode chunk_node = new DefaultMutableTreeNode(chunk);
       insertNodeInto(chunk_node, parent, index);
 
@@ -559,7 +577,7 @@ public class ConfigChunkTreeTableModel
    private DefaultMutableTreeNode getNodeFor(Object obj, DefaultMutableTreeNode node)
    {
       // Check if we found a match
-      if (node.getUserObject() == obj)
+      if (node.getUserObject().equals(obj))
       {
          return node;
       }
@@ -577,6 +595,48 @@ public class ConfigChunkTreeTableModel
 
       // Didn't find anything :(
       return null;
+   }
+
+   /**
+    * Gets a list of the nodes in this model that contain an object of the given
+    * class.
+    *
+    * @param cls        the class to search for
+    *
+    * @return  a list of matching DefaultMutableTreeNodes
+    */
+   public List getNodesOfClass(Class cls)
+   {
+      return getNodesOfClass(cls, (DefaultMutableTreeNode)getRoot());
+   }
+
+   /**
+    * Gets a list of the nodes in this model that contain an object of the given
+    * class starting with the given node.
+    *
+    * @param cls        the class to search for
+    * @param node       the node whose subtree will be searched
+    *
+    * @return  a list of matching DefaultMutableTreeNodes
+    */
+   public List getNodesOfClass(Class cls, DefaultMutableTreeNode node)
+   {
+      List matches = new ArrayList();
+
+      // Check if the current node matches
+      if (cls.isInstance(node.getUserObject()))
+      {
+         matches.add(node);
+      }
+
+      // Recurse to the children of the current node
+      for (Enumeration e = node.children(); e.hasMoreElements(); )
+      {
+         DefaultMutableTreeNode child = (DefaultMutableTreeNode)e.nextElement();
+         matches.addAll(getNodesOfClass(cls, child));
+      }
+
+      return matches;
    }
 
    /**
@@ -696,7 +756,17 @@ public class ConfigChunkTreeTableModel
          if (node.getUserObject().equals(prop_desc))
          {
             // The newly removed property value must be a child to this node
+            System.out.println("Removing child "+idx+" from node: "+node.getUserObject());
             DefaultMutableTreeNode child = (DefaultMutableTreeNode)node.getChildAt(idx);
+
+            // If the child is an embedded chunk, stop listening to it
+            if (child.getUserObject() instanceof ConfigChunk)
+            {
+               ConfigChunk removed_chunk = (ConfigChunk)child.getUserObject();
+               removed_chunk.removeConfigChunkListener(this);
+            }
+
+            // Physically remove the child from the tree
             removeNodeFromParent(child);
          }
       }
