@@ -5,17 +5,18 @@
 
 default: all
 
+# Include common definitions.
+include @topdir@/Makefile.base
+
 includedir	= @includedir@/Config
 srcdir		= @srcdir@
-topdir		= @topdir@
 top_srcdir	= @top_srcdir@
 wwwdir		= ${srcdir}/Doc
 VJROOT		= ${top_srcdir}
 VJ_SRCDIR	= @VJ_SRCDIR@/Config
 WORKDIR		= ${topdir}/Config
 
-# Include common definitions.
-include ${topdir}/Makefile.base
+# Include dependency and installation targets.
 include ${MKPATH}/vj.dep.mk
 include ${MKPATH}/vj.install.mk
 

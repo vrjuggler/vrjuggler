@@ -5,9 +5,11 @@
 
 default: all
 
+# Include common definitions.
+include @topdir@/Makefile.base
+
 includedir	= @includedir@/Kernel
 srcdir		= @srcdir@
-topdir		= @topdir@
 top_srcdir	= @top_srcdir@
 wwwdir		= ${srcdir}/Doc
 VJROOT		= ${top_srcdir}
@@ -18,6 +20,11 @@ WORKDIR		= ${topdir}/Kernel
 # 'clean' target to be run besides the standard 'clean' target.
 _LOCAL_CLEAN	= 1
 
+# Include recursive, dependency and installation targets.
+include ${MKPATH}/vj.rec.mk
+include ${MKPATH}/vj.dep.mk
+include ${MKPATH}/vj.install.mk
+
 # Add 'depend-recursive', 'newdepend-recursive' and 'install-recursive' to
 # the appropriate variables so that dependencies in this directory and in
 # ${SUBDIRS} will be generated and installations will be completed.  This has
@@ -25,12 +32,6 @@ _LOCAL_CLEAN	= 1
 DEPEND_DEPS	+= depend-recursive
 NEWDEPEND_DEPS	+= newdepend-recursive
 INSTALL_DEPS	+= install-recursive
-
-# Include common definitions.
-include @topdir@/Makefile.base
-include ${MKPATH}/vj.rec.mk
-include ${MKPATH}/vj.dep.mk
-include ${MKPATH}/vj.install.mk
 
 # Subdirectories to compile
 SUBDIRS = Pf GL

@@ -97,6 +97,7 @@ releasedir	= ${VJROOT_ABS}/release
 sbindir		= @sbindir@
 scriptdir	= ${releasedir}/scripts
 sysconfdir	= @sysconfdir@
+topdir		= @topdir@
 VJROOT_ABS	= @VJROOT_ABS@
 
 AR		= @AR@ ${ARFLAGS}
