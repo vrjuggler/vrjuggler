@@ -56,6 +56,7 @@
 
 /////////////////////////
 // plugin API:
+#ifdef NO_SELF_REGISTER
 extern "C"
 {
 XDL_EXPORT const char* getVersion() { return "sonix xx.xx.xx"; }
@@ -63,6 +64,7 @@ XDL_EXPORT const char* getName() { return "AudioWorks"; }
 XDL_EXPORT snx::ISoundImplementation* newPlugin() { return new snx::AudioWorksSoundImplementation; }
 XDL_EXPORT void deletePlugin( snx::ISoundImplementation* &p ) { if (NULL == p) return; delete p; p = NULL; }
 }
+#endif
 /////////////////////////
 
 namespace snx
