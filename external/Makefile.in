@@ -82,6 +82,8 @@ CXX_ORB_NAME=		@CXX_ORB_NAME@
 CXX_ORB_ROOT=		@CXX_ORB_ROOT@
 CXX_ORB_BIN_DIR=	@CXX_ORB_BIN_DIR@
 CXX_ORB_LIB_DIR=	@CXX_ORB_LIB_DIR@
+NSPR_ROOT=		@NSPR_ROOT@
+NSPR_INC_DIR=		@NSPR_INC_DIR@
 OPENAL_ROOT=		@OPENAL_ROOT@
 
 OMNIORB_CMDS=		@OMNIORB_CMDS@
@@ -175,6 +177,15 @@ links-cppunit:
 	$(LN_S) $(CPPUNIT_ROOT)/include/cppunit $(instlinks)/include/cppunit
 	$(INSTALL) -l $(CPPUNIT_ROOT)/lib/libcppunit*			\
           $(instlinks)/lib$(LIBBITSUF)
+
+links-nspr:
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/nspr
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/lib$(LIBBITSUF)
+	-$(RM_LN) $(instlinks)/include/nspr
+	$(LN_S) $(NSPR_INC_DIR) $(instlinks)/include/nspr
+	$(INSTALL) -l $(NSPR_ROOT)/lib/libnspr4* $(instlinks)/lib$(LIBBITSUF)
+	$(INSTALL) -l $(NSPR_ROOT)/lib/libplc4* $(instlinks)/lib$(LIBBITSUF)
+	$(INSTALL) -l $(NSPR_ROOT)/lib/libplds4* $(instlinks)/lib$(LIBBITSUF)
 
 links-omniORB3 links-omniORB4:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
@@ -293,6 +304,25 @@ install-cppunit:
           $(CPPUNIT_ROOT)/lib/libcppunit*.a $(deps_prefix)/lib$(LIBBITSUF)
 	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
           $(CPPUNIT_ROOT)/lib/libcppunit*.so* $(deps_prefix)/lib$(LIBBITSUF)
+
+install-nspr:
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/nspr
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib$(LIBBITSUF)
+	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
+          $(GROUP_OPT_UNIX) -e .h,.cfg -i $(NSPR_INC_DIR)/nspr		\
+          -o $(deps_prefix)/include/nspr
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(FILE_PERMS)		\
+          $(NSPR_ROOT)/lib/libnspr4*.a $(deps_prefix)/lib$(LIBBITSUF)
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
+          $(NSPR_ROOT)/lib/libnspr4*.so* $(deps_prefix)/lib$(LIBBITSUF)
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(FILE_PERMS)		\
+          $(NSPR_ROOT)/lib/libplc4*.a $(deps_prefix)/lib$(LIBBITSUF)
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
+          $(NSPR_ROOT)/lib/libplc4*.so* $(deps_prefix)/lib$(LIBBITSUF)
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(FILE_PERMS)		\
+          $(NSPR_ROOT)/lib/libplds4*.a $(deps_prefix)/lib$(LIBBITSUF)
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
+          $(NSPR_ROOT)/lib/libplds4*.so* $(deps_prefix)/lib$(LIBBITSUF)
 
 install-omniORB3 install-omniORB4:
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/$(CXX_ORB_NAME)
