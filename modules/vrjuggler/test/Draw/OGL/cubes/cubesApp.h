@@ -134,13 +134,13 @@ public:
 
 public:
       // Devices to use for the given user
-   gadget::PositionInterface  mWand;                  // the Wand
-   gadget::DigitalInterface   mIncVelocityButton;     // Button for velocity
-   gadget::DigitalInterface   mDecVelocityButton;
-   gadget::DigitalInterface   mStopButton;            // Button to stop
-   gadget::DigitalInterface   mToggleButton;          // Button to toggle shape
+   gadget::PositionInterface mWand;              /**< The wand */
+   gadget::DigitalInterface  mIncVelocityButton; /**< Button for velocity */
+   gadget::DigitalInterface  mDecVelocityButton;
+   gadget::DigitalInterface  mStopButton;        /**< Button to stop */
+   gadget::DigitalInterface  mToggleButton;      /**< Button to toggle shape */
 
-      // Navigation info for the user
+   // Navigation info for the user
    float                mCurVelocity;  // The current velocity
    gmtl::Matrix44f      mNavMatrix;    // Matrix for navigation in the application
 
@@ -158,7 +158,10 @@ class cubesApp : public vrj::GlApp
 {
 public:
    cubesApp(vrj::Kernel* kern)
-      : vrj::GlApp(kern), mConeQuad(NULL), mBaseQuad(NULL), mCurFrameNum(0)
+      : vrj::GlApp(kern)
+      , mConeQuad(NULL)
+      , mBaseQuad(NULL)
+      , mCurFrameNum(0)
    {
       mConeQuad = gluNewQuadric();
       mBaseQuad = gluNewQuadric();
@@ -178,7 +181,8 @@ public:
    //  but before the drawManager starts the drawing loops.
    virtual void apiInit()
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "---- cubesApp::apiInit() ----\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+         << "---- cubesApp::apiInit() ----\n" << vprDEBUG_FLUSH;
    }
 
    // Called immediately upon opening a new OpenGL context.  This is called
@@ -212,13 +216,13 @@ public:
    // calculations and state modifications here.
    virtual void preFrame()
    {
-       vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << "cubesApp::preFrame()" << std::endl
-                            << vprDEBUG_FLUSH;
+       vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << "cubesApp::preFrame()"
+                                              << std::endl << vprDEBUG_FLUSH;
 
        for ( unsigned int i = 0; i < mUserData.size(); ++i )
        {
           mUserData[i]->updateShapeSetting();
-          mUserData[i]->updateNavigation();       // Update the navigation matrix
+          mUserData[i]->updateNavigation();     // Update the navigation matrix
        }
 
        ++mCurFrameNum;     // Goto next frame
@@ -230,7 +234,8 @@ public:
       { 
          ContextTimingData* timing_data = &(*mContextTiming);
          double mean = timing_data->dlist_wait.getMean();
-         vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "dlist wait: " << mean << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "dlist wait: " << mean
+                                               << std::endl << vprDEBUG_FLUSH;
       }
    }
 
@@ -246,14 +251,14 @@ public:
       myDraw(vrj::GlDrawManager::instance()->currentUserData()->getUser());
    }
 
-   // Clear the buffer each frame
+   // Clear the buffer each frame.
    virtual void bufferPreDraw()
    {
       glClearColor(0.0, 0.0, 0.0, 0.0);
       glClear(GL_COLOR_BUFFER_BIT);
    }
 
-   /// Function called after drawing has been triggered but BEFORE it completes
+   /// Function called after drawing has been triggered but BEFORE it completes.
    virtual void intraFrame()
    {
       vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << "cubesApp::intraFrame()" << std::endl
@@ -268,8 +273,8 @@ public:
          << "cubesApp::postFrame" << std::endl << vprDEBUG_FLUSH;
    }
 
-   //: Make sure that all our dependencies are satisfied
-   // Make sure that there are Users registered with the system
+   // Make sure that all our dependencies are satisfied.
+   // Make sure that there are Users registered with the system.
    virtual bool depSatisfied()
    {
       // We can't start until there are users registered wth the system
@@ -289,7 +294,7 @@ private:
    void drawCube()
    {       
       glCallList(mDlCubeData->dlIndex);
-       //drawbox(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, GL_QUADS);
+      //drawbox(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, GL_QUADS);
    }
 
    void drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
