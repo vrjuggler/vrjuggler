@@ -474,6 +474,8 @@ clean-links:
 
 # Steps to take before beginning the installation process.
 beforeinstall:
+	${scriptdir}/mkinstalldirs ${prefix}
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.install.dist -p ${prefix}
 
 # Steps to take after the installation process is complete.
 afterinstall:
@@ -481,12 +483,11 @@ afterinstall:
 	@echo "Library installation complete"
 	@echo "------------------------------------------------"
 
-# Do a full installation all versions of the libraries.
+# Do a full installation all versions of the libraries and the associated
+# files.
 install-all: beforeinstall install-opt install-dso install-dbg		\
              install-ddso install-headers install-test install-data	\
              install-gui
-	@-cd ${prefix} && chgrp -R c2dev .
-	@-cd ${prefix} && chmod -R g+rw .
 	@echo "------------------------------------------------"
 	@echo "Creating symlinks in ${_install_libdir}"
 	@echo "------------------------------------------------"
@@ -525,8 +526,6 @@ install-all-abi:
 # Do a full installation of the static debugging version of the libraries.
 install: beforeinstall install-dbg install-headers install-test		\
          install-data install-gui afterinstall
-	@-cd ${prefix} && chgrp -R c2dev .
-	@-cd ${prefix} && chmod -R g+rw .
 
 # ------------------------------------------------------------
 # Install only the static debugging version of the libraries.
@@ -535,7 +534,8 @@ install-dbg: dbg
 	@echo "------------------------------------------------"
 	@echo "Installing static debugging libraries"
 	@echo "------------------------------------------------"
-	${scriptdir}/mkinstalldirs ${_install_libdir}/${_DEBUG_DIR}
+	${MTREE_CMD} -Ude -p ${prefix}					\
+          -f ${mtreedir_os}/VJ.lib${LIBBITSUF}${ISA}.dist
 	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
           ${_DBG_LIBDIR}/${VJ_LIB_STATIC} ${_install_libdir}/${_DEBUG_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
@@ -560,7 +560,8 @@ install-ddso: ddso
 	@echo "------------------------------------------------"
 	@echo "Installing dynamic debugging libraries"
 	@echo "------------------------------------------------"
-	${scriptdir}/mkinstalldirs ${_install_libdir}/${_DEBUG_DIR}
+	${MTREE_CMD} -Ude -p ${prefix}					\
+          -f ${mtreedir_os}/VJ.lib${LIBBITSUF}${ISA}.dist
 	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
           ${_DBG_LIBDIR}/${VJ_LIB_DYNAMIC} ${_install_libdir}/${_DEBUG_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
@@ -585,7 +586,8 @@ install-opt: opt
 	@echo "------------------------------------------------"
 	@echo "Installing static optimized libraries"
 	@echo "------------------------------------------------"
-	${scriptdir}/mkinstalldirs ${_install_libdir}/${_OPT_DIR}
+	${MTREE_CMD} -Ud -p ${prefix}					\
+          -f ${mtreedir_os}/VJ.lib${LIBBITSUF}${ISA}.dist
 	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
           ${_OPT_LIBDIR}/${VJ_LIB_STATIC} ${_install_libdir}/${_OPT_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
@@ -610,7 +612,8 @@ install-dso: dso
 	@echo "------------------------------------------------"
 	@echo "Installing dynamic optimizied libraries"
 	@echo "------------------------------------------------"
-	${scriptdir}/mkinstalldirs ${_install_libdir}/${_OPT_DIR}
+	${MTREE_CMD} -Ude -p ${prefix}					\
+          -f ${mtreedir_os}/VJ.lib${LIBBITSUF}${ISA}.dist
 	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
           ${_OPT_LIBDIR}/${VJ_LIB_DYNAMIC} ${_install_libdir}/${_OPT_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
@@ -633,6 +636,7 @@ install-headers:
 	@echo "------------------------------------------------"
 	@echo "Installing header files"
 	@echo "------------------------------------------------"
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.include.dist -p ${prefix}
 	${MAKE} RECTARGET="install" recursive
 	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
           ${VJROOT_ABS}/vjConfig.h ${includedir}
@@ -644,6 +648,7 @@ install-test:
 	@echo "------------------------------------------------"
 	@echo "Installing test programs"
 	@echo "------------------------------------------------"
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.test.dist -p ${prefix}
 	${scriptdir}/install-src.pl -i ${top_srcdir}/test		\
           -m ${_FILE_PERMS} -g ${_GROUP_NAME} -o ${prefix}/test
 	${scriptdir}/makefiles-gen.pl --CXX="${CXX}" --DEFS="${DEFS}"	\
@@ -665,6 +670,7 @@ install-data:
 	@echo "------------------------------------------------"
 	@echo "Installing standard data files"
 	@echo "------------------------------------------------"
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.data.dist -p ${prefix}
 	${scriptdir}/install-dir.pl -i ${top_srcdir}/Data		\
           -m ${_FILE_PERMS} -g ${_GROUP_NAME} -o ${prefix}/Data
 
@@ -674,7 +680,6 @@ ifeq (${BUILD_GUI}, Y)
 	@echo "------------------------------------------------"
 	@echo "Installing vjConfig"
 	@echo "------------------------------------------------"
-	${scriptdir}/mkinstalldirs ${bindir}
 	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
           ${topdir}/GUI/VjCfg.jar ${bindir}
 	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\

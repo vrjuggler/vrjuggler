@@ -58,6 +58,7 @@
 # LDOPTS         - Extra, often platform-specific, options for the linker.
 # LIBS           - Extra external libraries needed at link time.
 # MKPATH         - Path to shared vj.*.mk file directory.
+# MTREE_CMD      - Path to a BSD-compatible mtree.
 # OBJDIR         - Path to the directory where the object files will be built.
 #
 # C_COMPILE      - Command for compiling C code.
@@ -93,6 +94,8 @@ datadir		= @datadir@
 exec_prefix	= @exec_prefix@
 libdir		= @libdir@
 libexecdir	= @libexecdir@
+mtreedir	= ${releasedir}/mtree
+mtreedir_os	= ${mtreedir}/${PLATFORM}
 prefix		= @prefix@
 releasedir	= ${VJROOT_ABS}/release
 sbindir		= @sbindir@
@@ -121,6 +124,7 @@ LDOPTS		= @LDOPTS@
 LIBS		= @LIBS@
 MAKEFLAGS	+= --no-print-directory
 MKPATH		= ${VJROOT_ABS}/mk
+MTREE_CMD	= @MTREE_CMD@
 
 # Allow overriding the default value of ${OBJDIR} by setting ${BASE_OBJDIR}
 # (probably using an externally defined value).
