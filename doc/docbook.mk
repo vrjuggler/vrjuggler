@@ -181,7 +181,7 @@ ifdef INSTALL_DIRS
 	cp -r $(INSTALL_DIRS) $(prefix)
 endif
 ifdef NEED_DB_IMAGES
-	cp -rH images $(prefix)/
+	cp -RH images $(prefix)/
 endif
 endif
 
@@ -197,7 +197,7 @@ else
                 cp $(INSTALL_FILES) $(prefix)/$$dir ; \
             fi ; \
             if [ ! -z "$(NEED_DB_IMAGES)" ]; then \
-                cp -rH images $(prefix)/$$dir ; \
+                cp -RH images $(prefix)/$$dir ; \
             fi ; \
             if [ ! -z "$(INSTALL_DIRS)" ]; then \
                 cp -r $(INSTALL_DIRS) $(prefix)/$$dir ; \
