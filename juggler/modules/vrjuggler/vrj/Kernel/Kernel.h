@@ -60,19 +60,13 @@ class User;
 class App;
 
 
-//-------------------------------------------------------
-//: Main control class for all vj applications.
-//
-// Takes care of all initialization and object creation
-// for the system.
-// This class is the only class that MUST be instantiated
-// for all applications.
-//
-// @author  Allen Bierbaum
-//
-// Date: 9-7-97
-//-------------------------------------------------------
-//!PUBLIC_API:
+/** Main control class for all vj applications.
+ *
+ * Takes care of all initialization and object creation
+ * for the system.
+ * This class is the only class that MUST be instantiated
+ * for all applications.
+ */
 class VJ_CLASS_API Kernel : public jccl::ConfigChunkHandler
 {
 public:
