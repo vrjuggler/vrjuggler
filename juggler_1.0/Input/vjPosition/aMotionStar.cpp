@@ -113,7 +113,6 @@ aMotionStar::start () {
   struct sockaddr_in server_addr;
   int rtn;
 
-//  cout << "In start" << endl;
   assert(!mActive);
 
   mRate[0] = 57; // 48
@@ -200,11 +199,6 @@ aMotionStar::start () {
       perror("[aMotionStar] client: Can't connect to server");
       return -1;
     }
-/*
-    printf("connect = %4d, connect error = %4d, ", rtn, errno);
-    perror(NULL);
-    printf("\n");
-*/
 
     fprintf(stderr, "[aMotionStar] Connected to server\n");
 
@@ -296,11 +290,10 @@ aMotionStar::stop () {
 // ----------------------------------------------------------------------------
 void
 aMotionStar::sample () {
-//    cout << "Sampling..." << endl;
     if ( mRunMode == 1 ) {
         singleShot();
     }
-//    cout << "After singleShot() " << endl;
+
 /*
     double        x;
     long          p;
@@ -338,19 +331,6 @@ aMotionStar::sample () {
 
     mSequenceNumber = ntohs(mResponse.header.sequence);
 
-    //        printf("\n#%6d bytes received:%3d", , mBytesReceived);
-    /*        printf("\ntype:%3d seq:%6d #bytes:%4d",mResponse.header.type,
-			mResponse.header.sequence,mResponse.header.number_bytes); */
-
-    /*  printf("\n#%6d:",n);
-     */
-
-    /*      for (i=0;i<16;++i)
-            {
-            printf("%3x",*(mNewptr+i));
-            }
-    */
-
     time_seconds = (unsigned int)(mResponse.header.time[0]) << 24;
     time_seconds = time_seconds | (unsigned int)(mResponse.header.time[1]) << 16;
     time_seconds = time_seconds | (unsigned int)(mResponse.header.time[2]) <<  8;
@@ -362,18 +342,12 @@ aMotionStar::sample () {
     asctime_r(&newtime, time_char);
 #endif
 
-    /*  printf(" TIME: %10d ", time_seconds);     */
-
     if ( ntohs(mResponse.header.milliseconds) > 999 ) {
         short new_ms;
 
         new_ms = ntohs(mResponse.header.milliseconds) - 1000;
         mResponse.header.milliseconds = htons(new_ms);
     }
-    /* printf(" %.19s.%3.3d ", time_char, mResponse.header.milliseconds);
-     */
-    /* printf(" %3.3d ",  mResponse.header.milliseconds);
-     */
 
     total_bytes_received = 0;
     total_bytes_needed   = ntohs(mResponse.header.number_bytes);
@@ -406,9 +380,6 @@ aMotionStar::sample () {
         printError(mResponse.header.error_code);
       }
     }
-    //    printf(" .....received data #bytes = %d", totalBytesReceived);
-
-    //    printf("\n");
 
     int o; // Offset -- 14 * bird number (bnum)
     for ( unsigned int bnum = 0; bnum < mBirdsRequired; bnum++ ) {
@@ -447,8 +418,6 @@ aMotionStar::setAddress (const char* addr) {
 void
 aMotionStar::sendWakeup () {
   /***** send a command to the server wakeup *****/
-//  printf("WAKEUP:");
-
   mCommand.sequence             = htons(mSequenceNumber++);
   mCommand.type                 = BIRDNET::MSG_WAKE_UP;
   mCommand.xtype                = 0;
@@ -460,11 +429,7 @@ aMotionStar::sendWakeup () {
   /*n++;*/
   mNumberBytes = send(mSocket, (void*) mLpCommand, sizeof(mCommand), 0);
 
-//  printf(" - number of bytes sent = %3d errorcode = %d", numberBytes,errno);
-
   mBytesReceived = recv(mSocket, (void*) mLpResponse, sizeof(mResponse), 0);
-
-//  printf("  | WAKEUP ACKNOWLEDGE: - number bytes received = %5d\n", bytesReceived);
 }
 
 // ----------------------------------------------------------------------------
@@ -472,20 +437,13 @@ aMotionStar::sendWakeup () {
 // ----------------------------------------------------------------------------
 void
 aMotionStar::runContinuous () {
-//  cout << "runContinous" << endl;
-
   mCommand.type     = BIRDNET::MSG_RUN_CONTINUOUS;
   mCommand.xtype    = 0;
   mCommand.sequence = htons(mSequenceNumber++);
 //  n++;
   mNumberBytes   = send(mSocket, (void*) mLpCommand, sizeof(mCommand), 0);
 
-//    printf("\n\nSTREAM: - number of bytes sent = %3d errorcode = %d", numberBytes,errno);
-
   mBytesReceived = recv(mSocket, (void*) mLpResponse, sizeof(mResponse), 0);
-
-//    printf("  | STREAM ACKNOWLEDGE: - number bytes received = %5d\n", bytesReceived);
-
 
       /* receive the header */
 /*
@@ -519,14 +477,8 @@ aMotionStar::singleShot () {
   mCommand.sequence = htons(mSequenceNumber++);
   mNumberBytes = send(mSocket, (void*) mLpCommand, sizeof(mCommand), 0);
 
-    //printf("bytes sent = %d errno %d\n", numberBytes,errno);
-
   /* wait for the packet to come back */
-
   mBytesReceived = recv(mSocket, (void*) mLpResponse, sizeof(mResponse), 0);
-
-    //printf("  >>> %3d; sequence=%4d; type=%4d; bytes received=%4d\n",n,mResponse.header.sequence
-	//	,mResponse.header.type, bytesReceived);
 }
 
 // ----------------------------------------------------------------------------
@@ -543,8 +495,6 @@ aMotionStar::getSystemStatus () {
   mCommand.type  = BIRDNET::MSG_GET_STATUS;
   mCommand.xtype = 0;
   mNumberBytes = send(mSocket, (void*) mLpCommand, sizeof(mCommand), 0);
-
-//  printf("\nGET STATUS - number bytes sent = %5d errorno %d", numberBytes,errno);
 
   /***** Receive packet from the server *****/
 
@@ -568,8 +518,6 @@ aMotionStar::getSystemStatus () {
   }
 
   mStatusSize = header_bytes + data_bytes;
-//  printf("\nSYSTEM STATUS RECEIVED - number bytes received = %5d,", bytesReceived);
-//  printf("  type %d\n",mResponse.header.type);
 
   // mResponse.buffer byte 0 -> all
   // mResponse.buffer byte 1 -> FBBerror
@@ -592,14 +540,6 @@ aMotionStar::getSystemStatus () {
   rate              = atoi(sz_rate);
   mRealRate         = ((double) rate) / 1000.0;
 
-/*
-  for(i= 0;i<16;i++) printf(" %2x", mResponse.buffer[i]);
-  printf("  |  ");
-  for(i=16;i<48;i++) printf(" %2x", mResponse.buffer[i]);
-
-  printf("\n\n");
-*/
-
   for ( int i = 0; i < mBirdCount; i++ ) {
       mBird[i].status.status             = mResponse.buffer[16+i*8];
       mBird[i].status.id                 = mResponse.buffer[17+i*8];
@@ -611,18 +551,7 @@ aMotionStar::getSystemStatus () {
         (mResponse.buffer[23+i*8]*256);
       // Lew
       mBird[i].status.hemisphere = mResponse.buffer[26+i*8];
-//      printf("Bird hemisphere = %2x \n", mBird[i].status.hemisphere);
   }
-
-//  printf("");
-
-  /*
-    for (i=0;i<bytesReceived;++i)
-    {
-    printf("%4d,",*(mNewptr+i));
-    }
-    printf("\n");
-*/
 }
 
 // ----------------------------------------------------------------------------
@@ -642,14 +571,8 @@ aMotionStar::setSystemStatus () {
 
      mNumberBytes = send(mSocket,(void*) mLpResponse, mStatusSize, 0);
 
-//     printf("\nSEND STATUS - number bytes sent = %5d errorNumber %d", numberBytes,errno);
-
      /***** Receive packet from the server *****/
-
      mBytesReceived = recv(mSocket, (void*) mLpResponse, sizeof(mResponse), 0);
-
-//     printf("\nSEND STATUS ACK - number bytes received = %5d,", bytesReceived);
-//     printf("  type %d\n",mResponse.header.type);
 
 }
 
@@ -666,8 +589,6 @@ aMotionStar::getBirdStatus (unsigned char fbb_addr) {
   mCommand.number_bytes = 0;
 
   mNumberBytes = send(mSocket, (void*) mLpCommand, sizeof(mCommand), 0);
-
-//  printf("\n\nGET STATUS #%d; number bytes sent = %5d errorno %d ",fbb_addr, numberBytes,errno);
 
   /***** Receive packet from the server *****/
 
@@ -691,13 +612,6 @@ aMotionStar::getBirdStatus (unsigned char fbb_addr) {
   }
 
   mBytesReceived = data_bytes + header_bytes;
-
-/*
-  printf("\nSTATUS RECEIVED - number bytes received = %5d ", bytesReceived);
-  printf("type %d ",mResponse.header.type);
-  for (i=0;i<bytesReceived;++i)
-    printf("%4d",*(mNewptr+i));
-*/
 }
 
 // ----------------------------------------------------------------------------
@@ -712,18 +626,8 @@ aMotionStar::setBirdStatus (unsigned char fbb_addr) {
   // XXX: Hard-coded packet size.
   mNumberBytes = send(mSocket, (void*) mLpResponse, 86, 0);
 
-//  printf("\nSEND SETUP #%d; number bytes sent = %5d errorno %d ",fbb_addr, numberBytes,errno);
-
   /***** Receive packet from the server *****/
-
   mBytesReceived = recv(mSocket, (void*) mLpResponse, sizeof(mResponse), 0);
-
-/*
-  printf("\nSETUP ACKNOWLEDGED - number bytes received = %5d ", bytesReceived);
-  printf("type %d ",mResponse.header.type);
-  for (i=0;i<bytesReceived;++i)
-    printf("%4d",*(mNewptr+i));
-*/
 }
 
 // ----------------------------------------------------------------------------
