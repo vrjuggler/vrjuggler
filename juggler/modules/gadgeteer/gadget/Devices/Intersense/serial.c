@@ -59,7 +59,7 @@ int rs232InitCommunications(COMM_PORT *port, const char* comPort, DWORD baudRate
                             FILE_FLAG_OVERLAPPED,
                             0);
 
-    if(port->portHandle == INVALID_HANDLE_VALUE)  d
+    if(port->portHandle == INVALID_HANDLE_VALUE)
     {
         return FALSE;
     }
