@@ -32,6 +32,7 @@
 
 #include <jccl/jcclConfig.h>
 #include <vpr/vpr.h>
+#include <vpr/System.h>
 #include <jccl/Util/Debug.h>
 #include <jccl/Config/ElementFactory.h>
 #include <jccl/Config/ConfigDefinitionReader.h>
@@ -60,23 +61,65 @@ namespace jccl
       static const std::string path_sep(":");
 #endif
 
-      // Split the path on the native separator character
+      vprDEBUG(jcclDBG_CONFIG, vprDBG_VERB_LVL)
+         << "Given .jdef search path: '" << path << "'\n" << vprDEBUG_FLUSH;
+
+      // Determine if $JCCL_DEFINITION_PATH is set.  If it is, test to see
+      // if the given search path is empty.  In that case, use the value of
+      // $JCCL_DEFINITION_PATH as the whole search path.  Otherwise, append
+      // that value to the given search path.
+      // If $JCCL_DEFINITION_PATH is not set, use the given path as the
+      // search path.
+      std::string add_path, jccl_def_path(path);
+      if ( vpr::System::getenv("JCCL_DEFINITION_PATH", add_path).success() )
+      {
+         // The path provided as a parameter to this function is empty.
+         // Therefore, $JCCL_DEFINITION_PATH becomes the full search path.
+         if ( path.empty() )
+         {
+            vprDEBUG(jcclDBG_CONFIG, vprDBG_CONFIG_LVL)
+               << "Using JCCL_DEFINITION_PATH value (" << add_path << ")\n"
+               << vprDEBUG_FLUSH;
+            vprDEBUG_NEXT(jcclDBG_CONFIG, vprDBG_CRITICAL_LVL)
+               << "as the .jdef search path." << std::endl << vprDEBUG_FLUSH;
+            jccl_def_path = add_path;
+         }
+         // The path provided as a parameter to this function is not empty.
+         // Therefore, $JCCL_DEFINITION_PATH is appended to the full search
+         // path.
+         else
+         {
+            vprDEBUG(jcclDBG_CONFIG, vprDBG_CONFIG_LVL)
+               << "Appending JCCL_DEFINITION_PATH value (" << add_path
+               << ")\n" << vprDEBUG_FLUSH;
+            vprDEBUG_NEXT(jcclDBG_CONFIG, vprDBG_CRITICAL_LVL)
+               << "to the .jdef search path." << std::endl << vprDEBUG_FLUSH;
+            jccl_def_path = path + path_sep + add_path;
+         }
+      }
+
+      // At this point, jccl_def_path contains the full search path to use for
+      // iteration and searching.
+
+      // Split the path on the native separator character.
       std::vector<std::string> search_path;
       std::string::size_type sep_index = 0;
       while (sep_index != std::string::npos)
       {
          std::string::size_type next_sep_index =
-            path.find_first_of(path_sep, sep_index);
+            jccl_def_path.find_first_of(path_sep, sep_index);
 
          std::string dir_str;
          
          if(next_sep_index == std::string::npos)
          {
-            dir_str = path.substr(sep_index, path.size() - sep_index);
+            dir_str = jccl_def_path.substr(sep_index,
+                                           jccl_def_path.size() - sep_index);
          }
          else
          {
-            dir_str = path.substr(sep_index, next_sep_index - sep_index);
+            dir_str = jccl_def_path.substr(sep_index,
+                                           next_sep_index - sep_index);
          }
 
          vprDEBUG(jcclDBG_CONFIG, vprDBG_CONFIG_LVL)

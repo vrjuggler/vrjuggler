@@ -1,5 +1,10 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Feb-03-2005 patrickh    Use $JCCL_DEFINITION_PATH to augment the .jdef search
+                        path rather than having it override the default search
+                        path.
+                        NEW VERSION: 0.92.1
+
 [1.0 Beta 2 released - 1.18.2005]==============================================
 Jan-18-2005 patrickh    NEW VERSION: 0.92.0
 Jan-09-2005 patrickh    Merged the methods setContext() and setConfigElement()
