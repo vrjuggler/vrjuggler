@@ -55,6 +55,10 @@
 namespace vpr
 {
 
+// Forward declare this.  It is defined in vpr/IO/Socket/InetAddr.h which may
+// not be included by this file.
+struct InetAddrHash;
+
 /**
  * Simulated Internet address structures.
  */
@@ -62,6 +66,8 @@ class VPR_CLASS_API InetAddrSIM : public vpr::InetAddrBase
 {
 public:
    static const InetAddrSIM AnyAddr;
+
+   typedef vpr::InetAddrHash hash;
 
    /**
     * Constructs an address object using the given address.  It must be of
