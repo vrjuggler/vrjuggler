@@ -82,6 +82,17 @@ public:
    //! ARGS: timeout - The number of msecs to select for (0 - don't wait)
    bool select(vpr::Uint16& numWithEvents, vpr::Uint16 timeout);
 
+   //: Get the number of handles
+   vpr::Uint16 getNumHandles()
+   {
+      return mPollDescs.size();
+   }
+
+   IOSys::Handle getHandle(vpr::Uint16 index)
+   {
+      return mPollDescs[index].fd;
+   }
+
 protected:
 
    // Get the index of the handle given
