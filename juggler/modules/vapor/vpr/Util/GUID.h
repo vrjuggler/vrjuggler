@@ -243,34 +243,18 @@ inline std::ostream& operator<<(std::ostream& out, const vpr::GUID& guid)
 }
 
 // --- HASH Functions ---- //
-#ifdef VPR_HASH_MAP_INCLUDE
-
-#include VPR_HASH_MAP_INCLUDE
-
-#if defined(__GNUC__) && __GNUC__ == 3 && __GNUC_MINOR__ >= 1
-namespace __gnu_cxx
-#else
-namespace std
-#endif
+namespace vpr
 {
 
-template<>
-#ifdef VPR_OS_Win32
-class _Hash<vpr::GUID>
-#else
-struct hash<vpr::GUID>
-#endif
+struct GUIDHash
 {
-   vpr::Uint32 operator() (const vpr::GUID guid) const
+   vpr::Uint32 operator() (const vpr::GUID& guid) const
    {
       return guid.mGuid.packed.l0 + guid.mGuid.packed.l1 + guid.mGuid.packed.l2 + guid.mGuid.packed.l3;
    }
 };
 
 }
-
-#endif /* ifdef VPR_HASH_MAP_INCLUDE */
-
 
 
 #endif /* _VPR_GUID_H_ */
