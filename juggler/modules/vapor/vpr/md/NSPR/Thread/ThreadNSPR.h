@@ -298,9 +298,19 @@ public:
       return out;
    }
 
+   /**
+    * Called by the spawn routine to start the user thread function
+    *
+    * @pre Called ONLY by a new thread
+    * @post The new thread will have started the user thread function
+    */
+   void startThread(void* null_param);
+
 // All private member variables and functions.
 private:
-   PRThread*   mThread;    /**<  PRThread data structure for this thread */
+   PRThread*          mThread;    /**<  PRThread data structure for this thread */
+   BaseThreadFunctor* mUserThreadFunctor;     /**< The functor to call when
+                                                   the thread starts */
 
    /**
     * Checks the status of the thread creation in order to determine if this
@@ -313,7 +323,7 @@ private:
     *
     * @param status  The integer status returned by spawn().
     */
-   void checkRegister(const int status);
+   //void checkRegister(const int status);
 
    PRThreadPriority vprThreadPriorityToNSPR(const VPRThreadPriority priority);
 
