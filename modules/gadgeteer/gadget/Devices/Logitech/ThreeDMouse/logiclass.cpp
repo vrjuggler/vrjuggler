@@ -59,6 +59,13 @@
 #include <gadget/Devices/Logitech/logiclass.h>   /* classprototypes and data types */
 #include <jccl/Config/ConfigChunk.h>
 
+#include <gmtl/Matrix.h>
+#include <gmtl/Vec.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/Generate.h>
+#include <gmtl/Convert.h>
+
+
 // uncommenting the following will produce debug print statements */
 //
 //#define DEBUG
@@ -427,7 +434,7 @@ void ThreeDMouse::setBaseOrigin()
 /////////////////////////////////////////////////////////////////////////
 // convert from raw Euler data record to absolute data
 ////////////////////////////////////////////////////////////////////////
-void ThreeDMouse::eulerToAbsolute (byte record[], vrj::Matrix* data)
+void ThreeDMouse::eulerToAbsolute (byte record[], gmtl::Matrix44f* data)
 {
   long ax, ay, az, arx, ary, arz;
 
@@ -448,9 +455,9 @@ void ThreeDMouse::eulerToAbsolute (byte record[], vrj::Matrix* data)
   az |= (long)(record[8] & 0x7f) << 7;
   az |= (record[9] & 0x7f);
 
-  data->setTrans (((float) ax) / 1000.0,
-                  ((float) ay) / 1000.0,
-                  ((float) az) / 1000.0);
+  gmtl::setTrans( (*data), gmtl::Vec3f( ((float) ax) / 1000.0,
+                                        ((float) ay) / 1000.0,
+                                        ((float) az) / 1000.0) );
 //    data->pos[0] = ((float) ax) / 1000.0;
 //    data->pos[1] = ((float) ay) / 1000.0;
 //    data->pos[2] = ((float) az) / 1000.0;
@@ -464,9 +471,9 @@ void ThreeDMouse::eulerToAbsolute (byte record[], vrj::Matrix* data)
   arz  = (record[14] & 0x7f) << 7;
   arz += (record[15] & 0x7f);
 
-  data->setTrans (((float) arx) / 40.0,
-                  ((float) ary) / 40.0,
-                  ((float) arz) / 40.0);
+  gmtl::setTrans( (*data), gmtl::Vec3f( ((float) arx) / 40.0,
+                                        ((float) ary) / 40.0,
+                                        ((float) arz) / 40.0) );
 //    data->pos[0] = ((float) arx) / 40.0;
 //    data->pos[1] = ((float) ary) / 40.0;
 //    data->pos[2] = ((float) arz) / 40.0;

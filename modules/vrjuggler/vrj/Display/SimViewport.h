@@ -35,14 +35,20 @@
 //#pragma once
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Math/Matrix.h>
-#include <vrj/Math/Coord.h>
+//#include <vrj/Math/Coord.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Display/Viewport.h>
 #include <vrj/Display/CameraProjection.h>
 
 #include <gadget/Type/PositionInterface.h>
 
+#include <gmtl/Matrix.h>
+#include <gmtl/Generate.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/Vec.h>
+#include <gmtl/VecOps.h>
+#include <gmtl/Xforms.h>
+#include <gmtl/Output.h>
 
 #include <jccl/Config/ConfigChunkPtr.h>
 
@@ -101,38 +107,37 @@ public:
    virtual void updateProjections()
    {
       updateInternalData();
-      Matrix camera_pos = getCameraPos();
+      gmtl::Matrix44f camera_pos = getCameraPos();
+      gmtl::Vec3f camera_trans = gmtl::makeTrans<gmtl::Vec3f>(camera_pos);
+
       //mCameraProj->calcViewMatrix(camera_pos);
 
-      Matrix left_eye_pos, right_eye_pos;     // NOTE: Eye coord system is -z forward, x-right, y-up
+      gmtl::Matrix44f left_eye_pos, right_eye_pos;     // NOTE: Eye coord system is -z forward, x-right, y-up
 
       // -- Calculate camera (eye) Positions -- //
-      Coord  cam_coord(camera_pos);       // Create a user readable version
-
-      vprDEBUG(vprDBG_ALL,5)
+      vprDEBUG(vprDBG_ALL,7)
          << "vjDisplay::updateProjections: Getting cam position" << std::endl
          << vprDEBUG_FLUSH;
-      vprDEBUG(vprDBG_ALL,5) << "CamPos:" << cam_coord.pos << "\tHeadOr:"
-                           << cam_coord.orient << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,7) << "CamPos:" << camera_trans << std::endl << vprDEBUG_FLUSH;
 
       // Compute location of left and right eyes
       float interocularDist = mUser->getInterocularDistance();
       float eye_offset = interocularDist/2.0f;      // Distance to move eye
 
-      left_eye_pos.postTrans(camera_pos, -eye_offset, 0, 0);
-      right_eye_pos.postTrans(camera_pos, eye_offset, 0, 0);
+      left_eye_pos = camera_pos * gmtl::makeTrans<gmtl::Matrix44f>( gmtl::Vec3f(-eye_offset, 0.0f, 0.0f));
+      right_eye_pos = camera_pos * gmtl::makeTrans<gmtl::Matrix44f>( gmtl::Vec3f(eye_offset, 0.0f, 0.0f));
 
       mLeftProj->calcViewMatrix(left_eye_pos);
       mRightProj->calcViewMatrix(right_eye_pos);
    }
 
-   Matrix getCameraPos()
+   gmtl::Matrix44f getCameraPos()
    { return mCameraPos; }
 
-   Matrix getHeadPos()
+   gmtl::Matrix44f getHeadPos()
    { return mHeadPos; }
 
-   Matrix getWandPos()
+   gmtl::Matrix44f getWandPos()
    { return mWandPos; }
 
 
@@ -140,7 +145,7 @@ public:  // Sim Drawing parameters
    bool shouldDrawProjections()
    { return mDrawProjections; }
 
-   Vec3 getSurfaceColor()
+   gmtl::Vec3f getSurfaceColor()
    { return mSurfaceColor; }
 
 protected:
@@ -151,20 +156,20 @@ protected:
       mWandPos = *(mWand->getData());
 
       mCameraPos = *(mCamera->getData());
-      mCameraPos.invert(mCameraPos);         // Invert to get viewing version
+      gmtl::invert(mCameraPos);
    }
 
 private:
    // Drawing attributes
    bool   mDrawProjections;    //: Should we draw projections
-   Vec3   mSurfaceColor;       //: Color to draw surfaces
+   gmtl::Vec3f   mSurfaceColor;       //: Color to draw surfaces
 
    gadget::PositionInterface mCamera;     // Prosy interfaces to devices needed
    gadget::PositionInterface mWand;
 
-   Matrix    mCameraPos;    // The data about the position of all this stuff
-   Matrix    mHeadPos;
-   Matrix    mWandPos;
+   gmtl::Matrix44f    mCameraPos;    // The data about the position of all this stuff
+   gmtl::Matrix44f    mHeadPos;
+   gmtl::Matrix44f    mWandPos;
 };
 
 };

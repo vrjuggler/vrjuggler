@@ -34,8 +34,9 @@
 #define _PLANE_COLLIDER_H_
 
 #include <collider.h>
-#include <vrj/Math/Vec3.h>
-#include <vrj/Math/Matrix.h>
+#include <gmtl/Vec.h>
+#include <gmtl/VecOps.h>
+#include <gmtl/Matrix.h>
 
 class planeCollider : public collider
 {
@@ -44,18 +45,18 @@ public:
    {
    }
 
-   bool testMove(vrj::Vec3 curPos, vrj::Vec3 delta, vrj::Vec3& correction, bool curPosWithDelta = false);
+   bool testMove(gmtl::Vec3f curPos, gmtl::Vec3f delta, gmtl::Vec3f& correction, bool curPosWithDelta = false);
 
 private:
    float mHeight;    // Height of the plane
 };
 
 
-inline bool planeCollider::testMove(vrj::Vec3 curPos, vrj::Vec3 delta, vrj::Vec3& correction, bool curPosWithDelta)
+inline bool planeCollider::testMove(gmtl::Vec3f curPos, gmtl::Vec3f delta, gmtl::Vec3f& correction, bool curPosWithDelta)
 {
    correction.set(0,0,0);
 
-   vrj::Vec3 target_pos = curPos+delta;
+   gmtl::Vec3f target_pos = curPos+delta;
    if(target_pos[1] < mHeight)
    {
       correction[1] = (mHeight-target_pos[1]);  // Get it back up there

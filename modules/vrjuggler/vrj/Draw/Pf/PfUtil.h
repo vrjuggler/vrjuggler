@@ -40,21 +40,22 @@
 #include <vrj/vrjConfig.h>
 
 #include <Performer/pr/pfLinMath.h>
-#include <vrj/Math/Matrix.h>
+#include <gmtl/Matrix.h>
+#include <gmtl/Vec.h>
 
 namespace vrj
 {
 
 
 //: Convert Performer matrix to Juggler matrix
-vrj::Matrix GetVjMatrix( const pfMatrix& perfMat );
+gmtl::Matrix44f GetVjMatrix( const pfMatrix& perfMat );
 
 //: Convert Juggler Matrix to Pf Matrix
-pfMatrix GetPfMatrix( const Matrix& mat );
+pfMatrix GetPfMatrix( const gmtl::Matrix44f& mat );
 
 
-Vec3 GetVjVec( const pfVec3& vec );
-pfVec3 GetPfVec( const Vec3& vec );
+gmtl::Vec3f GetVjVec( const pfVec3& vec );
+pfVec3 GetPfVec( const gmtl::Vec3f& vec );
 
 
 };

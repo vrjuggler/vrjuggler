@@ -55,8 +55,7 @@ bool SimRelativePosition::config(jccl::ConfigChunkPtr chunk)
 
 void SimRelativePosition::updateData()
 {
-   mPos.getPosition()->mult( *(mBaseFrame->getData()),
-                                 *(mRelativePos->getData()) );
+   gmtl::mult( *(mPos.getPosition()), *(mBaseFrame->getData()),*(mRelativePos->getData()) );
 
    // NOTE: This is a little bit of an overkill, but it works and it allows for the
    //       buffering that could be needed in multi-threaded cases

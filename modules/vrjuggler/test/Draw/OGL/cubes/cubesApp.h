@@ -50,8 +50,8 @@
 #include <vrj/Draw/OGL/GlApp.h>
 #include <vrj/Draw/OGL/GlContextData.h>
 
-#include <vrj/Math/Matrix.h>
-#include <vrj/Math/Vec3.h>
+#include <gmtl/Matrix.h>
+#include <gmtl/MatrixOps.h>
 #include <vrj/Util/Debug.h>
 
 #include <gadget/Type/PositionInterface.h>
@@ -89,7 +89,7 @@ public:
             std::string decButton, std::string stopButton)
    {
       mCurVelocity = 0.0;
-      mNavMatrix.makeIdent();
+      gmtl::identity(mNavMatrix);
 
       mUser = user;
       // Initialize devices
@@ -113,7 +113,7 @@ public:
 
       // Navigation info for the user
    float                mCurVelocity;  // The current velocity
-   vrj::Matrix          mNavMatrix;    // Matrix for navigation in the application
+   gmtl::Matrix44f      mNavMatrix;    // Matrix for navigation in the application
 
    vrj::User*           mUser;         // The user we hold data for
 };

@@ -31,15 +31,19 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
-#include <gadget/Type/GloveProxy.h>
 #include <jccl/Config/ConfigChunk.h>
+#include <gadget/Util/Debug.h>
+#include <gadget/Type/GloveProxy.h>
+
 
 namespace gadget
 {
 
 bool GloveProxy::config(jccl::ConfigChunkPtr chunk)
 {
-   vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,3) << "------------------ GLOVE PROXY config() -----------------\n" << vprDEBUG_FLUSH;
+   vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,3)
+      << "------------------ GLOVE PROXY config() -----------------\n"
+      << vprDEBUG_FLUSH;
    vprASSERT(((std::string)chunk->getType()) == "GloveProxy");
 
    mUnitNum = chunk->getProperty("unit");

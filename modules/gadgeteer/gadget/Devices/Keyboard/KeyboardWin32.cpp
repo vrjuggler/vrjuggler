@@ -34,9 +34,8 @@
 
 #include <sys/types.h>
 
-#include <vrj/Math/Coord.h>
 #include <jccl/Config/ConfigChunk.h>
-#include <vrj/Util/Debug.h>
+#include <gadget/Util/Debug.h>
 #include <gadget/Devices/Keyboard/KeyboardWin32.h>
 
 #ifndef GET_X_LPARAM
@@ -54,9 +53,8 @@ void samplem_keys(void*);
 
 bool KeyboardWin32::config(jccl::ConfigChunkPtr c)
 {
-    vprDEBUG_BEGIN(vrjDBG_INPUT_MGR, vprDBG_STATE_LVL)
-                     << "vjKeyboardWin32::config " << std::endl
-                     << vprDEBUG_FLUSH;
+    vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+       << "vjKeyboardWin32::config " << std::endl << vprDEBUG_FLUSH;
 
     // Call base class config function first
     if(! (Input::config(c) && Keyboard::config(c)))
@@ -83,10 +81,11 @@ bool KeyboardWin32::config(jccl::ConfigChunkPtr c)
     m_mouse_sensitivity = c->getProperty("msens");
     if (0 == m_mouse_sensitivity) m_mouse_sensitivity = 0.5;
 
-    vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_STATE_LVL) << "Mouse Sensititivty: "
-               << m_mouse_sensitivity << std::endl << vprDEBUG_FLUSH;
-    vprDEBUG_END(vrjDBG_INPUT_MGR, vprDBG_STATE_LVL) << std::endl
-                                                  << vprDEBUG_FLUSH;
+    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+       << "Mouse Sensititivty: " << m_mouse_sensitivity << std::endl
+       << vprDEBUG_FLUSH;
+    vprDEBUG_END(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+       << std::endl << vprDEBUG_FLUSH;
 
     return true;
 }
@@ -99,9 +98,9 @@ int KeyboardWin32::startSampling()
    if (mThread == NULL) {
 //      resetIndexes();
 
-      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
-                 << "vjWin32Keyboard::startSampling() : ready to go.."
-                 << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+         << "gadget::Win32Keyboard::startSampling() : ready to go.."
+         << std::endl << vprDEBUG_FLUSH;
 
       KeyboardWin32* devicePtr = this;
 
@@ -156,7 +155,8 @@ int KeyboardWin32::onlyModifier(int mod)
      case VJKEY_ALT:
         return (!m_keys[VJKEY_SHIFT] && !m_keys[VJKEY_CTRL] && m_keys[VJKEY_ALT]);
      default:
-       vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_CONFIG_LVL) << mInstName << ": OnlyModifier: bad modifier key" << vprDEBUG_FLUSH;
+       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+          << mInstName << ": OnlyModifier: bad modifier key" << vprDEBUG_FLUSH;
        return 0;
   }
 }
@@ -175,7 +175,8 @@ void KeyboardWin32::updateData()
 
    if (m_keys[VJKEY_CTRL] || m_keys[VJKEY_ALT] || m_keys[VJKEY_SHIFT])
    {
-      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HVERB_LVL) << mInstName << ": Modifier key is down\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
+         << mInstName << ": Modifier key is down\n" << vprDEBUG_FLUSH;
    }
 */
 
@@ -195,7 +196,9 @@ void KeyboardWin32::updateData()
 // to forward on messages to be handled from in the keyboard object.
 void KeyboardWin32::updKeys(UINT message, UINT wParam, LONG lParam)
 {
-   //vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HVERB_LVL) << mInstName << ": KeyWin32::updKeys: Processing keys.\n" << vprDEBUG_FLUSH;
+   //vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
+   //   << mInstName << ": KeyWin32::updKeys: Processing keys.\n"
+   //   << vprDEBUG_FLUSH;
 
    int key;
    //static HWND lCapture;
@@ -222,18 +225,17 @@ void KeyboardWin32::updKeys(UINT message, UINT wParam, LONG lParam)
                 key = VKKeyToKey(wParam);
                 m_realkeys[key] = 1;
                 m_framekeys[key] += 1;
-                vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HVERB_LVL) << mInstName
-                           << ": WM_KEYDOWN: " << key << ": "
-                           << getKeyName(key).c_str() << std::endl
-                           << vprDEBUG_FLUSH;
+                vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
+                   << mInstName << ": WM_KEYDOWN: " << key << ": "
+                   << getKeyName(key).c_str() << std::endl << vprDEBUG_FLUSH;
                 break;
 
         case WM_KEYUP:
                 key = VKKeyToKey(wParam);
                 m_realkeys[key] = 0;
-                vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HVERB_LVL) << mInstName
-                           << ": WM_KEYUP: " << key << std::endl
-                     << vprDEBUG_FLUSH;
+                vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
+                   << mInstName << ": WM_KEYUP: " << key << std::endl
+                   << vprDEBUG_FLUSH;
                 break;
 
       // mouse buttons
@@ -244,37 +246,37 @@ void KeyboardWin32::updKeys(UINT message, UINT wParam, LONG lParam)
         case WM_LBUTTONDOWN:
                 m_framekeys[VJMBUTTON1] = 1;
                 m_realkeys[VJMBUTTON1] = 1;
-                vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HVERB_LVL) << "LeftButtonDown\n"
-                           << vprDEBUG_FLUSH;
+                vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
+                   << "LeftButtonDown\n" << vprDEBUG_FLUSH;
                 break;
         case WM_LBUTTONUP:
                 m_realkeys[VJMBUTTON1] = 0;
-                vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HVERB_LVL) << "LeftButtonUp\n"
-                           << vprDEBUG_FLUSH;
+                vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
+                   << "LeftButtonUp\n" << vprDEBUG_FLUSH;
                 break;
 
         case WM_MBUTTONDOWN:
                 m_framekeys[VJMBUTTON2] = 1;
                 m_realkeys[VJMBUTTON2] = 1;
-                vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HVERB_LVL)
-                           << "MiddleButtonDown\n" << vprDEBUG_FLUSH;
+                vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
+                   << "MiddleButtonDown\n" << vprDEBUG_FLUSH;
                 break;
         case WM_MBUTTONUP:
                 m_realkeys[VJMBUTTON2] = 0;
-                vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HVERB_LVL) << "MiddleButtonUp\n"
-                           << vprDEBUG_FLUSH;
+                vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
+                   << "MiddleButtonUp\n" << vprDEBUG_FLUSH;
                 break;
 
         case WM_RBUTTONDOWN:
                 m_framekeys[VJMBUTTON3] = 1;
                 m_realkeys[VJMBUTTON3] = 1;
-                vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HVERB_LVL)
-                           << "RightButtonDown\n" << vprDEBUG_FLUSH;
+                vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
+                   << "RightButtonDown\n" << vprDEBUG_FLUSH;
                 break;
         case WM_RBUTTONUP:
                 m_realkeys[VJMBUTTON3] = 0;
-                vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HVERB_LVL) << "RightButtonUp\n"
-                           << vprDEBUG_FLUSH;
+                vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
+                   << "RightButtonUp\n" << vprDEBUG_FLUSH;
                 break;
 
         // mouse movement
@@ -319,18 +321,18 @@ void KeyboardWin32::updKeys(UINT message, UINT wParam, LONG lParam)
                         // reset the oldx oldy values in UpdateData
                         //  oldx = newx; oldy = newy;
 
-                    vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HVERB_LVL) << "move PosX: "
-                               << m_framekeys[VJMOUSE_POSX] << std::endl
-                               << vprDEBUG_FLUSH;
-                    vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HVERB_LVL) << "move NegX: "
-                               << m_framekeys[VJMOUSE_NEGX] << std::endl
-                               << vprDEBUG_FLUSH;
-                    vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HVERB_LVL) << "move PosY: "
-                               << m_framekeys[VJMOUSE_POSY] << std::endl
-                               << vprDEBUG_FLUSH;
-                    vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HVERB_LVL) << "move NegY: "
-                               << m_framekeys[VJMOUSE_NEGY] << std::endl
-                               << vprDEBUG_FLUSH;
+                    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
+                       << "move PosX: " << m_framekeys[VJMOUSE_POSX]
+                       << std::endl << vprDEBUG_FLUSH;
+                    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
+                       << "move NegX: " << m_framekeys[VJMOUSE_NEGX]
+                       << std::endl << vprDEBUG_FLUSH;
+                    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
+                       << "move PosY: " << m_framekeys[VJMOUSE_POSY]
+                       << std::endl << vprDEBUG_FLUSH;
+                    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
+                       << "move NegY: " << m_framekeys[VJMOUSE_NEGY]
+                       << std::endl << vprDEBUG_FLUSH;
                 }
 
                 break;
@@ -460,7 +462,7 @@ VOID APIENTRY HandlePaint (HWND hwnd)
     char ln4[255] = "line4";
     char ln5[255] = "line5";
     char ln6[255] = "line6";
-    //vjvrj::Matrix* McurrData = devPtr->GetPosData();
+    //vjgmtl::Matrix44f* McurrData = devPtr->GetPosData();
 
     //vjCoord coord(*McurrData);
     //ThreeDouble2String(ln1, coord.pos[0], coord.pos[1], coord.pos[2]);

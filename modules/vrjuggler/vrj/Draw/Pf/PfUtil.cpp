@@ -32,25 +32,29 @@
 
 #include <vrj/vrjConfig.h>
 #include <vrj/Draw/Pf/PfUtil.h>
-#include <vrj/Math/Vec3.h>
+#include <gmtl/Vec.h>
+
+#include <gmtl/Generate.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/VecOps.h>
 
 namespace vrj
 {
 
 //: Convert Performer matrix to Juggler matrix
-Matrix GetVjMatrix( const pfMatrix& perfMat )
+gmtl::Matrix44f GetVjMatrix( const pfMatrix& perfMat )
 {
-   Matrix mat;
-   Vec3 x_axis( 1,0,0 );
+   gmtl::Matrix44f mat;
+   gmtl::Vec3f x_axis( 1,0,0 );
    mat.set( &(perfMat.mat[0][0]) );
-   mat.postRot( mat, 90, x_axis );
-   mat.preRot( -90, x_axis, mat );
-   
+   gmtl::postMult(mat, gmtl::makeRot<gmtl::Matrix44f>(90, x_axis ));
+   gmtl::preMult(mat, gmtl::makeRot<gmtl::Matrix44f>(-90, x_axis ));
+
    return mat;
 }
 
 //: Convert Juggler Matrix to Pf Matrix
-pfMatrix GetPfMatrix( const Matrix& mat )
+pfMatrix GetPfMatrix( const gmtl::Matrix44f& mat )
 {
    pfMatrix perf_mat;
 
@@ -59,7 +63,7 @@ pfMatrix GetPfMatrix( const Matrix& mat )
    // the man page is correct, there is no reason for a set func to
    // change the source data (unless you're ref counting or something weird)
    // ...this may change in the future so that this cast can someday be removed.
-   float* floatPtr = const_cast<float *>( mat.getFloatPtr() );
+   float* floatPtr = const_cast<float *>( mat.mData );
    perf_mat.set( floatPtr );
 
    perf_mat.preRot( -90, 1, 0, 0, perf_mat );
@@ -70,13 +74,13 @@ pfMatrix GetPfMatrix( const Matrix& mat )
 
 
 
-Vec3 GetVjVec( const pfVec3& vec )
+gmtl::Vec3f GetVjVec( const pfVec3& vec )
 {
    //     Perf     x       z       -y
-   return Vec3( vec[0], vec[2], -vec[1] );
+   return gmtl::Vec3f( vec[0], vec[2], -vec[1] );
 }
 
-pfVec3 GetPfVec( const Vec3& vec )
+pfVec3 GetPfVec( const gmtl::Vec3f& vec )
 {
    //   Juggler   x        -z       y
    return pfVec3( vec[0], -vec[2], vec[1] );

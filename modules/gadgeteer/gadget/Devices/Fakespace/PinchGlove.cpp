@@ -37,9 +37,9 @@
 #include <stdio.h>                      /* need stdio for sprintf */
 #include <vpr/System.h>
 
-#include <gadget/Devices/Fakespace/PinchGloveStandalone.h> /* fakespace pinch driver */
-#include <gadget/Devices/Fakespace/PinchGlove.h> /* vrjuggler pinch driver */
-//#include <vrj/Kernel/Kernel.h>
+#include <gadget/Devices/Fakespace/PinchGloveStandalone.h> /* Fakespace pinch driver */
+#include <gadget/Devices/Fakespace/PinchGlove.h> /* Gadgeteer pinch driver */
+#include <gadget/Util/Debug.h>
 #include <jccl/Config/ConfigChunk.h>
 
 
@@ -66,28 +66,33 @@ PinchGlove::~PinchGlove ()
 
 int PinchGlove::startSampling()
 {
-   vprDEBUG(vrjDBG_INPUT_MGR, 0) << "[Pinch] Begin sampling\n"
-                               << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "[Pinch] Begin sampling\n"
+                                    << vprDEBUG_FLUSH;
+
    if (mThread == NULL)
    {
       int maxAttempts=0;
       bool result = false;
       while (result == false && maxAttempts < 5)
       {
-         vprDEBUG(vrjDBG_INPUT_MGR, 0) << "[Pinch] Connecting to "
-                                            << mPort << " at "
-                                            << mBaudRate << "...\n"
-                                            << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "[Pinch] Connecting to "
+                                          << mPort << " at "
+                                          << mBaudRate << "...\n"
+                                          << vprDEBUG_FLUSH;
          result = mGlove->connectToHardware( mPort , mBaudRate);
          if (result == false)
          {
-            vprDEBUG(vrjDBG_INPUT_MGR,0) << "[Pinch] ERROR: Can't open or it is already opened." << vprDEBUG_FLUSH;
+            vprDEBUG(gadgetDBG_INPUT_MGR,0)
+               << "[Pinch] ERROR: Can't open or it is already opened."
+               << vprDEBUG_FLUSH;
             vpr::System::usleep(14500);
             maxAttempts++;
          }
       }
 
-   vprDEBUG(vrjDBG_INPUT_MGR,0) << "[Pinch] Successfully connected, Now sampling pinch data." << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR,0)
+      << "[Pinch] Successfully connected, Now sampling pinch data."
+      << vprDEBUG_FLUSH;
      
 /* Don't need anymore because SampleBuffers are smarter
       
@@ -103,8 +108,8 @@ int PinchGlove::startSampling()
       */
             
       // Create a new thread to handle the control
-      vprDEBUG(vrjDBG_INPUT_MGR, 0) << "[Pinch] Spawning control thread\n"
-                                  << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "[Pinch] Spawning control thread\n"
+                                       << vprDEBUG_FLUSH;
       vpr::ThreadMemberFunctor<PinchGlove>* memberFunctor =
          new vpr::ThreadMemberFunctor<PinchGlove>(this, &PinchGlove::controlLoop, NULL);
 
@@ -116,8 +121,8 @@ int PinchGlove::startSampling()
       }
       else
       {
-         vprDEBUG(vrjDBG_INPUT_MGR,1) << "[Pinch] PinchGlove is active "
-                                    << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_INPUT_MGR,1) << "[Pinch] PinchGlove is active "
+                                         << std::endl << vprDEBUG_FLUSH;
          mActive = true;
          return 1;
       }
@@ -128,8 +133,8 @@ int PinchGlove::startSampling()
 
 void PinchGlove::controlLoop(void* nullParam)
 {
-   vprDEBUG(vrjDBG_INPUT_MGR, 0) << "[Pinch] Entered control thread\n"
-                               << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "[Pinch] Entered control thread\n"
+                                    << vprDEBUG_FLUSH;
 
    while(1)
    {
@@ -206,8 +211,8 @@ int PinchGlove::stopSampling()
 
       // XXX: there is no "close"
       //mGlove->Close();
-      vprDEBUG(vrjDBG_INPUT_MGR,1) << "[Pinch] stopping PinchGlove.."
-                                 << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR,1) << "[Pinch] stopping PinchGlove.."
+                                      << std::endl << vprDEBUG_FLUSH;
    }
    return 1;
 }

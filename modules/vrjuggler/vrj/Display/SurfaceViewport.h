@@ -38,8 +38,10 @@
 #include <vrj/Util/Debug.h>
 #include <vrj/Display/Viewport.h>
 #include <vrj/Display/Projection.h>
-#include <vrj/Math/Vec3.h>
 #include <jccl/Config/ConfigChunkPtr.h>
+
+#include <gmtl/Vec.h>
+#include <gmtl/VecOps.h>
 
 namespace vrj
 {
@@ -68,7 +70,7 @@ public:
 
    virtual void updateProjections();
 
-   void getCorners(Vec3& ll, Vec3& lr, Vec3& ur, Vec3& ul)
+   void getCorners(gmtl::Vec3f& ll, gmtl::Vec3f& lr, gmtl::Vec3f& ur, gmtl::Vec3f& ul)
    {
       ll = mLLCorner; lr = mLRCorner; ur = mURCorner; ul = mULCorner;
    }
@@ -77,9 +79,11 @@ public:
    {
       Viewport::outStream(out);
 
+      /*
       out << "LL: " << mLLCorner << ", LR: " << mLRCorner
           << ", UR: " << mURCorner << ", UL:" << mULCorner << std::endl;
       out << "surfRot: \n" << mSurfaceRotation << std::endl;
+      */
       out << "leftProj: " << *mLeftProj;
       out << "  rightProj: " << *mRightProj << std::endl;
       return out;
@@ -93,21 +97,21 @@ protected:
    //: Check the pts to make sure they form a legal surface
    void assertPtsLegal()
    {
-      Vec3 norm1, norm2;
-      Vec3 bot_side = mLRCorner-mLLCorner;
-      Vec3 diag = mULCorner-mLRCorner;
-      Vec3 right_side = mURCorner-mLRCorner;
-      norm1 = bot_side.cross(diag);
-      norm2 = bot_side.cross(right_side);
-      norm1.normalize(); norm2.normalize();
+      gmtl::Vec3f norm1, norm2;
+      gmtl::Vec3f bot_side = mLRCorner-mLLCorner;
+      gmtl::Vec3f diag = mULCorner-mLRCorner;
+      gmtl::Vec3f right_side = mURCorner-mLRCorner;
+      gmtl::cross(norm1, bot_side, diag);
+      gmtl::cross(norm2, bot_side, right_side);
+      gmtl::normalize( norm1 ); gmtl::normalize(norm2);
       if(norm1 != norm2)
          vprDEBUG(vprDBG_ERROR,0) << "ERROR: Invalid surface corners.\n" << vprDEBUG_FLUSH;
    }
 
 
 protected:
-   Vec3   mLLCorner, mLRCorner, mURCorner, mULCorner;  //: The corners in 3Space (for config)
-   Matrix mSurfaceRotation;                            //: surfMbase - rotation to base coordinate frame of the surface view plane
+   gmtl::Vec3f   mLLCorner, mLRCorner, mURCorner, mULCorner;  //: The corners in 3Space (for config)
+   gmtl::Matrix44f mSurfaceRotation;                            //: surfMbase - rotation to base coordinate frame of the surface view plane
 
    // Deal with tracked surfaces (ie. HMD, movable walls, desks, etc)
    bool           mTracked;            // Is this surface tracked
@@ -116,7 +120,7 @@ protected:
 private:
          // These values are used to compute the coordinates of the view plane
          // in the transformed coord system of mSurfaceRotation
-   Vec3   mxLLCorner, mxLRCorner, mxURCorner, mxULCorner;    //: The corners transformed onto an x,y plane
+   gmtl::Vec3f   mxLLCorner, mxLRCorner, mxURCorner, mxULCorner;    //: The corners transformed onto an x,y plane
 };
 
 };

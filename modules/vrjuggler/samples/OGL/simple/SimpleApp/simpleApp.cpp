@@ -36,11 +36,13 @@
 #include <GL/gl.h>
 //#include <GL/glu.h>
 
-#include <vrj/Math/Vec3.h>
-#include <vrj/Math/Coord.h>
+#include <gmtl/Matrix.h>
+#include <gmtl/Generate.h>
+#include <gmtl/Vec.h>
 
 #include <simpleApp.h>
 
+using namespace gmtl;
 using namespace vrj;
 
 
@@ -58,13 +60,14 @@ void simpleApp::draw()
    glMatrixMode(GL_MODELVIEW);
 
    // -- Get Wand matrix --- //
-   Matrix wand_matrix;
+   Matrix44f wand_matrix;
    wand_matrix = *(mWand->getData());
 
    // -- Create box offset matrix -- //
-   Matrix box_offset;
-   box_offset.makeXYZEuler(-90,0,0);
-   box_offset.setTrans(0.0,1.0f,0.0f);
+   Matrix44f box_offset;
+   box_offset = makeRot<Matrix44f>(Math::deg2Rad(-90.0f), Math::deg2Rad(0.0f),
+                                   Math::deg2Rad(0.0f), XYZ);
+   setTrans(box_offset, Vec3f(0.0f, 1.0f, 0.0f));
 
    // --- Create a color for the wand --- //
    float wand_color[3];
@@ -74,7 +77,7 @@ void simpleApp::draw()
 
       // --- Draw the box --- //
       glPushMatrix();
-         glMultMatrixf(box_offset.getFloatPtr());    // Push the wand offset matrix on the stack
+         glMultMatrixf(box_offset.mData);    // Push the wand offset matrix on the stack
          glColor3fv(wand_color);
          glScalef(0.5f, 0.5f, 0.5f);
          drawCube();
@@ -84,25 +87,25 @@ void simpleApp::draw()
       glLineWidth(5.0f);
       glDisable(GL_LIGHTING);
       glPushMatrix();
-         glMultMatrixf(box_offset.getFloatPtr());    // Goto wand position
+         glMultMatrixf(box_offset.mData);    // Goto wand position
 
-         Vec3 x_axis(7.0f,0.0f,0.0f);
-         Vec3 y_axis(0.0f, 7.0f, 0.0f);
-         Vec3 z_axis(0.0f, 0.0f, 7.0f);
-         Vec3 origin(0.0f, 0.0f, 0.0f);
+         Vec3f x_axis(7.0f,0.0f,0.0f);
+         Vec3f y_axis(0.0f, 7.0f, 0.0f);
+         Vec3f z_axis(0.0f, 0.0f, 7.0f);
+         Vec3f origin(0.0f, 0.0f, 0.0f);
 
          glBegin(GL_LINES);
             glColor3f(1.0f, 0.0f, 0.0f);
-            glVertex3fv(origin.vec);
-            glVertex3fv(x_axis.vec);
+            glVertex3fv(origin.mData);
+            glVertex3fv(x_axis.mData);
 
             glColor3f(0.0f, 1.0f, 0.0f);
-            glVertex3fv(origin.vec);
-            glVertex3fv(y_axis.vec);
+            glVertex3fv(origin.mData);
+            glVertex3fv(y_axis.mData);
 
             glColor3f(0.0f, 0.0f, 1.0f);
-            glVertex3fv(origin.vec);
-            glVertex3fv(z_axis.vec);
+            glVertex3fv(origin.mData);
+            glVertex3fv(z_axis.mData);
          glEnd();
       glPopMatrix();
       glEnable(GL_LIGHTING);
@@ -144,7 +147,7 @@ void simpleApp::initGLState()
    glShadeModel(GL_SMOOTH);
 }
 
-//: Utility function for drawing a cube
+/// Utility function for drawing a cube
 void drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
              GLdouble z0, GLdouble z1, GLenum type)
 {

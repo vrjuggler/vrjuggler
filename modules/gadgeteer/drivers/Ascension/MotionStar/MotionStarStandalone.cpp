@@ -1791,20 +1791,20 @@ vpr::ReturnStatus MotionStarStandalone::sendMsg (const void* packet,
    // Send the packet to the server.
    status = m_socket->send(packet, packet_size, bytes);
 
-   // Nothing was sent.
-   if ( bytes == 0 )
-   {
-      fprintf(stderr, "[MotionStarStandalone] Sent 0 bytes to %s\n",
-             m_address.getAddressString().c_str());
-   }
    // An error occurred while trying to send the packet.
-   else if ( bytes == -1 )
+   if ( status.failure() )
    {
       fprintf(stderr,
               "[MotionStarStandalone] Could not send message to %s\n",
               m_address.getAddressString().c_str());
    }
-
+   // Nothing was sent.
+   else if ( bytes == 0 )
+   {
+      fprintf(stderr, "[MotionStarStandalone] Sent 0 bytes to %s\n",
+             m_address.getAddressString().c_str());
+   }
+   
    return status;
 }
 
@@ -1820,19 +1820,20 @@ vpr::ReturnStatus MotionStarStandalone::getRsp (void* packet,
    // Get the packet from the server.
    status = m_socket->recvn(packet, packet_size, bytes);
 
-   // Nothing was read.
-   if ( bytes == 0 )
-   {
-      fprintf(stderr, "[MotionStarStandalone] Read 0 bytes from %s\n",
-              m_address.getAddressString().c_str());
-   }
    // An error occurred while trying to receive the packet.
-   else if ( bytes == -1 )
+   if ( status.failure() )
    {
       fprintf(stderr,
               "[MotionStarStandalone] Could not read message from %s\n",
               m_address.getAddressString().c_str());
    }
+   // Nothing was read.
+   else if ( bytes == 0 )
+   {
+      fprintf(stderr, "[MotionStarStandalone] Read 0 bytes from %s\n",
+              m_address.getAddressString().c_str());
+   }
+   
 
    return status;
 }

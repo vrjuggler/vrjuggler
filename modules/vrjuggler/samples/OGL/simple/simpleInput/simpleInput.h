@@ -38,24 +38,24 @@
 #include <iostream>
 #include <iomanip>
 
+#include <gmtl/Matrix.h>
+#include <gmtl/Output.h>
 #include <vrj/Draw/OGL/GlApp.h>
-#include <vrj/Math/Matrix.h>
 
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/AnalogInterface.h>
 #include <gadget/Type/DigitalInterface.h>
 
-
+using namespace gmtl;
 using namespace vrj;
 
-//----------------------------------------------------
-//: Simple Input Demonstration application
-//
-// This application demonstrates getting and printing input
-//
-// NOTE: It is derived from GlApp only because App
-//        is an abstract base class.
-//----------------------------------------------------
+/**
+ * Simple Input Demonstration application.
+ *
+ * This application demonstrates getting and printing input
+ *
+ * @note It is derived from GlApp only because App is an abstract base class.
+ */
 class simpleInput : public GlApp
 {
 public:
@@ -65,11 +65,13 @@ public:
    virtual ~simpleInput (void) {;}
 
 public: // ---- INITIALIZATION FUNCITONS ---- //
-   // Execute any initialization needed before the API is started
-   //
-   // POST: Device interfaces are initialized with the device names
-   //       we want to use
-   //! NOTE: This is called once before OpenGL is initialized
+   /**
+    * Execute any initialization needed before the API is started.
+    *
+    * @post Device interfaces are initialized with the device names
+    *       we want to use.
+    * @note This is called once before OpenGL is initialized.
+    */
    virtual void init()
    {
       std::cout << "---------- App:init() ---------------" << std::endl;
@@ -82,8 +84,11 @@ public: // ---- INITIALIZATION FUNCITONS ---- //
 
 public:
 
-   //: Called before start of frame
-   //!NOTE: Function called after device updates but before start of drawing
+   /**
+    * Called before start of frame.
+    *
+    * @note Function called after device updates but before start of drawing.
+    */
    virtual void preFrame()
    {
       if(mButton0->getData())
@@ -97,7 +102,7 @@ public:
                  << std::endl;
 
       // -- Get Wand matrix --- //
-      Matrix wand_matrix;
+      Matrix44f wand_matrix;
       wand_matrix = *(mWand->getData());
       std::cout << "Wand pos: \n" << wand_matrix << std::endl;
    }
@@ -106,10 +111,10 @@ public:
    virtual void draw() {;}
 
 public:
-   gadget::PositionInterface  mWand;         // Positional interface for Wand position
-   gadget::PositionInterface  mHead;         // Positional interface for Head position
-   gadget::DigitalInterface   mButton0;   // Digital interface for button 0
-   gadget::DigitalInterface   mButton1;   // Digital interface for button 1
+   gadget::PositionInterface  mWand;    /**< Positional interface for Wand position */
+   gadget::PositionInterface  mHead;    /**< Positional interface for Head position */
+   gadget::DigitalInterface   mButton0; /**< Digital interface for button 0 */
+   gadget::DigitalInterface   mButton1; /**< Digital interface for button 1 */
 };
 
 

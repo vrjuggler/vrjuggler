@@ -30,41 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_COORD_H_
-#define _VRJ_COORD_H_
-//#pragma once
+#include <gadget/gadgetConfig.h>
 
-#include <vrj/vrjConfig.h>
-#include <vrj/Math/Vec3.h>
+#include <gadget/Util/Debug.h> /* my header */
 
-namespace vrj
-{
-
-class Matrix;
-
-//---------------------------------------------------
-//: Spatial coordinate with position and orientation
-//
-// Position is XYZ <br>
-// Orientation is XYZ Euler angles <br>
-//!PUBLIC_API:
-//---------------------------------------------------
-class VJ_CLASS_API Coord
-{
-public:
-   Coord()
-   {;}
-
-   //: Construct from a matrix
-   //! ARGS: mat - A matrix used to construct the coord
-   //! POST: this is constructed with pos and orientation
-   //+       specified by the matrix.
-   Coord(Matrix mat);
-
-public:
-   Vec3   pos;        //: The position    - XYZ position
-   Vec3   orient;     //: The orientation - XYZ Euler angles
-};
-
-};
-#endif
+vprREGISTER_DBG_CATEGORY(gadgetDBG_INPUT_MGR, DBG_INPUT_MGR, "gadgetINP:");

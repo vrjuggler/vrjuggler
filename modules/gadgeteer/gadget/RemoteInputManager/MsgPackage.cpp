@@ -1,6 +1,41 @@
-#include <gadget/RemoteInputManager/MsgPackage.h>
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+ *
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
+
+#include <gadget/gadgetConfig.h>
+
 #include <gadget/RemoteInputManager/NetUtils.h>
-#include <vrj/Util/Debug.h>
+#include <gadget/Util/Debug.h>
+#include <gadget/RemoteInputManager/MsgPackage.h>
+
 
 namespace gadget{
 
@@ -50,13 +85,16 @@ void MsgPackage::createDeviceRequest(ushort device_id, const std::string device_
    for(i = 4; i < device_name.length() + 4 ; i++)
       some_name[i-4] = mBuffer[i];
    some_name[i-4] = '\0';
-   vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_DETAILED_LVL) << "createDeviceRequest:code=" << binaryToUshort(code_str,2) << 
-        ", name = " << some_name << std::endl << vprDEBUG_FLUSH;         
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_DETAILED_LVL)
+      << "createDeviceRequest:code=" << binaryToUshort(code_str,2)
+      << ", name = " << some_name << std::endl << vprDEBUG_FLUSH;         
    // END DEBUGGING
 
    // length of message is 2 bytes of instruction code + 2 bytes id + name length + 1 semicolon
    mDataLength = 5 + device_name.size();
-   vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_DETAILED_LVL) << "createDeviceRequest: last char = " << mBuffer[mDataLength - 1] << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_DETAILED_LVL)
+      << "createDeviceRequest: last char = " << mBuffer[mDataLength - 1]
+      << std::endl << vprDEBUG_FLUSH;
 }
 
 
@@ -112,7 +150,8 @@ void MsgPackage::createDeviceNack(const ushort remote_device_id, const ushort lo
 // A return value of zero means unable to process -- complete message not received yet.
 
 int MsgPackage::receiveDeviceRequest(char* ptr, int len){
-   vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HEX_LVL) << "receiveDeviceRequest: len=" << len << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HEX_LVL)
+      << "receiveDeviceRequest: len=" << len << std::endl << vprDEBUG_FLUSH;
    // read sender's id from buffer            
    VJ_NETID_TYPE tmp = binaryToUshort(ptr,len);
    mSenderId = ntohs(tmp);
@@ -130,7 +169,9 @@ int MsgPackage::receiveDeviceRequest(char* ptr, int len){
    }
 
    if(!endline){ // couldn't read a full line, so try again later when there will be more data
-      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_DETAILED_LVL) << "receiveDeviceRequest: couldn't read full line yet" << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_DETAILED_LVL)
+         << "receiveDeviceRequest: couldn't read full line yet"
+         << std::endl << vprDEBUG_FLUSH;
       // for(int i = 0; i < len; i++)
          // std::cout << ptr[i];
       // std::cout << std::endl;
@@ -143,20 +184,25 @@ int MsgPackage::receiveDeviceRequest(char* ptr, int len){
    for(i = 2; i < len - 1 - 2; i++)
       some_name[i-2] = ptr[i];
    some_name[i-2] = '\0';
-   vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_DETAILED_LVL) << "receiveDeviceRequest:SenderId=" << mSenderId << 
-     ", name = " << some_name << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_DETAILED_LVL)
+      << "receiveDeviceRequest:SenderId=" << mSenderId
+      << ", name = " << some_name << std::endl << vprDEBUG_FLUSH;
    // END DEBUGGING
 
    // read the name of the device            
    int name_length = index - 1 - 2;  // don't include the semicolon(-1) or the device_id(-2) in the name
-   vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_DETAILED_LVL) << "receiveDeviceRequest:name_length=" << name_length << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_DETAILED_LVL)
+      << "receiveDeviceRequest:name_length=" << name_length << std::endl
+      << vprDEBUG_FLUSH;
 
    // copy the Device Name string
    mDataString = "";
    for(int j = 0; j < name_length ; j++)
       mDataString += ptr[j+2];             // + 2 is to bypass sender id;
                         
-   vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_STATE_LVL) << "receiveDeviceRequest: name=" << mDataString << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+      << "receiveDeviceRequest: name=" << mDataString << std::endl
+      << vprDEBUG_FLUSH;
    return (2 + name_length + 1);  // sender id(2) name(n) semicolon(1)
 }
 
@@ -183,7 +229,9 @@ int MsgPackage::receiveDeviceAck(char* ptr, int len){
       }
    }
    if(!endline){ // couldn't read a full line, so try again later when there will be more data
-      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_DETAILED_LVL) << "receiveDeviceAck: couldn't read full line yet" << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_DETAILED_LVL)
+         << "receiveDeviceAck: couldn't read full line yet" << std::endl
+         << vprDEBUG_FLUSH;
       // for(int i = 0; i < len; i++)
          // std::cout << ptr[i];
       // std::cout << std::endl;

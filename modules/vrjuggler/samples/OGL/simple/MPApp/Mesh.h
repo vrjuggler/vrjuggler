@@ -36,49 +36,49 @@
 #include <iostream>
 #include <vector>
 #include <GL/gl.h>
-#include <vrj/Math/Vec3.h>
+#include <gmtl/Vec.h>
+#include <gmtl/VecOps.h>
 #include <vpr/System.h>
 
+using namespace gmtl;
 using namespace vrj;
 
-// Simple class to calculate a height-field type mesh
-//
-//
-// Desc:
-//    This is a mesh of triangles based on a height grid
-//  The grid is of unit size (1.0f x 1.0f) with a variable height
-//  on the z-axis.
-//
-// How to use:
-//
-//
-//
-//
-//-------------------------------------------
+/**
+ * Simple class to calculate a height-field type mesh.
+ * This is a mesh of triangles based on a height grid.  The grid is of unit
+ * size (1.0f x 1.0f) with a variable height on the z-axis.
+ */
 class Mesh
 {
 public:
-   //: Constructor
+   /// Constructor
    Mesh()
    {
       setDimensions(50,50);   // Set initial dimensions
    }
 
-   //: Render the mesh in OpenGL
-   // Uses triangle strips to render the mesh
-   //!PRE: compute() must have been called to update
-   //      the mesh data for the given time
+   /**
+    * Renders the mesh in OpenGL.  Uses triangle strips to render the mesh.
+    *
+    * @pre compute() must have been called to update the mesh data for the
+    * given time.
+    */
    inline void render();
 
-   //: Recompute the mesh state
-   //! ARGS: curTime - time variable for the mesh update
-   //                   (No specific units)
-   //! POST: The mesh vertices and normals are updated
-   //          based on the time value and the current dimensions
+   /**
+    * Recomputes the mesh state.
+    *
+    * @post The mesh vertices and normals are updated based on the time value
+    *       and the current dimensions.
+    *
+    * @param curTime time variable for the mesh update (no specific units).
+    */
    inline void compute(float curTime);
 
-   //: Set the size of the grid
-   // The size is reflected the next time that compute is called
+   /**
+    * Sets the size of the grid.  The size is reflected the next time that
+    * compute is called.
+    */
    void setDimensions(int xDim, int yDim)
    {
       mXDim = xDim;
@@ -86,14 +86,14 @@ public:
    }
 
 protected:
-   // Get the height value for the given x and y coords
+   /// Gets the height value for the given x and y coords
    inline float getHeight(float x, float y, float curTime);
 
 private:
    int mXDim, mYDim;
 
-   std::vector<std::vector<Vec3> > mVerts;
-   std::vector<std::vector<Vec3> > mNormals;
+   std::vector<std::vector<Vec3f> > mVerts;
+   std::vector<std::vector<Vec3f> > mNormals;
 };
 
 
@@ -106,10 +106,10 @@ void Mesh::render()
 
       for(int i=0;i<mXDim;i++)
       {
-         glNormal3fv(mNormals[i][j].vec);
-         glVertex3fv(mVerts[i][j].vec);
-         glNormal3fv(mNormals[i][j-1].vec);
-         glVertex3fv(mVerts[i][j-1].vec);
+         glNormal3fv(mNormals[i][j].mData);
+         glVertex3fv(mVerts[i][j].mData);
+         glNormal3fv(mNormals[i][j-1].mData);
+         glVertex3fv(mVerts[i][j-1].mData);
       }
 
       glEnd();
@@ -142,15 +142,15 @@ void Mesh::compute(float curTime)
       for(j=0;j<mYDim;j++)
       {
          y = (1.0f/float(mYDim))*float(j);
-         mVerts[i][j] = Vec3(x,y,getHeight(x,y,curTime));
+         mVerts[i][j] = Vec3f(x,y,getHeight(x,y,curTime));
       }
    }
 
    // --- Compute the normals --- //
-   Vec3 total_normal;     // Total of all normals to average
+   Vec3f total_normal;     // Total of all normals to average
    float  num_normals;        // Number of normals contributing
-   Vec3 v0,v1,temp_normal;
-   Vec3 local_vert;
+   Vec3f v0,v1,temp_normal;
+   Vec3f local_vert;
 
    for(i=0;i<mXDim;i++)
    {
@@ -165,7 +165,7 @@ void Mesh::compute(float curTime)
          {
             v0 = mVerts[i][j+1] - local_vert;
             v1 = mVerts[i-1][j] - local_vert;
-            temp_normal = v0.cross(v1);
+            temp_normal = cross(v0, v1);
             total_normal += temp_normal;
             num_normals++;
          }
@@ -174,7 +174,7 @@ void Mesh::compute(float curTime)
          {
             v0 = mVerts[i+1][j] - local_vert;
             v1 = mVerts[i][j+1] - local_vert;
-            temp_normal = v0.cross(v1);
+            temp_normal = cross(v0, v1);
             total_normal += temp_normal;
             num_normals++;
          }
@@ -183,7 +183,7 @@ void Mesh::compute(float curTime)
          {
             v0 = mVerts[i-1][j] - local_vert;
             v1 = mVerts[i][j-1] - local_vert;
-            temp_normal = v0.cross(v1);
+            temp_normal = cross(v0, v1);
             total_normal += temp_normal;
             num_normals++;
          }
@@ -192,7 +192,7 @@ void Mesh::compute(float curTime)
          {
             v0 = mVerts[i][j-1] - local_vert;
             v1 = mVerts[i+1][j] - local_vert;
-            temp_normal = v0.cross(v1);
+            temp_normal = cross(v0, v1);
             total_normal += temp_normal;
             num_normals++;
          }
@@ -222,9 +222,9 @@ float Mesh::getHeight(float x, float y, float curTime)
 
    float ret_val;
 
-   ret_val = amp1*vrj::Math::sin((phase1*var1)+offset1) +
-             amp2*vrj::Math::sin((phase2*var2)+offset2) +
-             amp3*vrj::Math::sin((phase3*var3)+offset3);
+   ret_val = amp1*Math::sin((phase1*var1)+offset1) +
+             amp2*Math::sin((phase2*var2)+offset2) +
+             amp3*Math::sin((phase3*var3)+offset3);
 
    return ret_val;
 }

@@ -1,12 +1,50 @@
-#include <gadget/RemoteInputManager/NetClockSync.h>
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+ *
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
+
+#include <gadget/gadgetConfig.h>
+
 #include <gadget/RemoteInputManager/MsgPackage.h>
+#include <gadget/Util/Debug.h>
+#include <gadget/RemoteInputManager/NetClockSync.h>
+
 
 namespace gadget
 {
 
 // send 1 msg, recv 1 msg, send 1 msg
 void NetClockSync::firstIterationAsInitiator(SyncConnection& sconn){
-   vprDEBUG(vrjDBG_INPUT_MGR, 5) << "NetClockSync::firstIterationAsInitiator() " << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, 5)
+      << "NetClockSync::firstIterationAsInitiator() " << std::endl
+      << vprDEBUG_FLUSH;
 
    MsgPackage msg;
    bool clock_is_synced = true;
@@ -32,7 +70,9 @@ void NetClockSync::firstIterationAsInitiator(SyncConnection& sconn){
 
 // recv 1 msg, send 1 msg, recv 1 msg
 float NetClockSync::firstIterationAsResponder(SyncConnection& sconn, float& returned_clock1){
-   vprDEBUG(vrjDBG_INPUT_MGR, 5) << "NetClockSync::firstIterationAsResponder() " << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, 5)
+      << "NetClockSync::firstIterationAsResponder() " << std::endl
+      << vprDEBUG_FLUSH;
 
    MsgPackage msg;
    bool clock_is_synced = true;
@@ -54,7 +94,7 @@ float NetClockSync::firstIterationAsResponder(SyncConnection& sconn, float& retu
    sconn.connection->sendMsg(msg);
    msg.clear();
 
-   // recv clock1 
+   // recv clock1
    bytes_to_recv = 2 + 2 * sizeof(float) + 1 + 1;
    sconn.connection->getSockStream()->recvn( (char*)&(sconn.recv_buffer[0]), bytes_to_recv ,tmp_bytes_received);
    msg.receiveClockSync((char*)(&(sconn.recv_buffer[0])) + 2, bytes_to_recv-2, returned_clock1, returned_clock2, other_clock_is_synced);
@@ -68,9 +108,11 @@ float NetClockSync::firstIterationAsResponder(SyncConnection& sconn, float& retu
 }
 
 // recv 1 msg, send 1 msg
-// returns true if other comp needs clock and sync should continue 
+// returns true if other comp needs clock and sync should continue
 bool NetClockSync::iterationLoopAsInitiator(SyncConnection& sconn){
-   vprDEBUG(vrjDBG_INPUT_MGR, 5) << "NetClockSync::iterationLoopAsInitiator() " << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, 5)
+      << "NetClockSync::iterationLoopAsInitiator() " << std::endl
+      << vprDEBUG_FLUSH;
 
    MsgPackage msg;
    bool other_clock_is_synced;
@@ -98,7 +140,9 @@ bool NetClockSync::iterationLoopAsInitiator(SyncConnection& sconn){
 // send 1 msg, recv 1 msg, return delta
 float NetClockSync::iterationLoopAsResponder(SyncConnection& sconn, const float& clock1, float& clock2,
    float& returned_clock1, float& returned_clock2, const bool clock_is_synced){
-   vprDEBUG(vrjDBG_INPUT_MGR, 5) << "NetClockSync::iterationLoopAsResponder() " << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, 5)
+      << "NetClockSync::iterationLoopAsResponder() " << std::endl
+      << vprDEBUG_FLUSH;
 
    MsgPackage msg;
    bool other_clock_is_synced;
@@ -126,7 +170,8 @@ float NetClockSync::iterationLoopAsResponder(SyncConnection& sconn, const float&
 }
 
 void NetClockSync::initiateExchange(SyncConnection& sconn){
-   vprDEBUG(vrjDBG_INPUT_MGR, 5) << "NetClockSync::initiateExchange() " << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, 5) << "NetClockSync::initiateExchange() "
+                                    << std::endl << vprDEBUG_FLUSH;
    // clock synchronization disabled per Eric's suggestion.  This needs to
    // be revisited with vpr intervals and some kind of clock offset per
    // connection or some such - CDJ
@@ -151,12 +196,14 @@ void NetClockSync::initiateExchange(SyncConnection& sconn){
 //    msg.receiveClockSyncHaveSrc((char*)(&(sconn.recv_buffer[0])) + 2, bytes_to_recv - 2, received_id, returned_clock_is_synced);
 
 //    if(returned_clock_is_synced == true) {
-//       vprDEBUG(vrjDBG_INPUT_MGR, 3) << "initiate sync: clock already synced with " 
+//       vprDEBUG(gadgetDBG_INPUT_MGR, 3)
+//          << "initiate sync: clock already synced with " 
 //          << mSrcManagerId.toString() << std::endl << vprDEBUG_FLUSH;
 //       return;   // the other host and its connections are already based on the same clock
 //    }
 //    else{
-//       vprDEBUG(vrjDBG_INPUT_MGR, 3) << "initiate sync: clock sync requested with "  
+//       vprDEBUG(gadgetDBG_INPUT_MGR, 3)
+//          << "initiate sync: clock sync requested with "  
 //          << mSrcManagerId.toString() << std::endl << vprDEBUG_FLUSH;
 //    }
 
@@ -175,7 +222,8 @@ void NetClockSync::initiateExchange(SyncConnection& sconn){
 }
 
 void NetClockSync::respondExchange(SyncConnection& sconn){
-   vprDEBUG(vrjDBG_INPUT_MGR, 5) << "NetClockSync::respondExchange() " << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, 5) << "NetClockSync::respondExchange() "
+                                    << std::endl << vprDEBUG_FLUSH;
 
    // SPROC does not have resync function yet
    // This code is effectively not functional for the time being. It used
@@ -200,7 +248,8 @@ void NetClockSync::respondExchange(SyncConnection& sconn){
 //    msg.clear();
 //    vpr::GUID empty_id;
 //    if(received_id == mSrcManagerId){
-//       vprDEBUG(vrjDBG_INPUT_MGR, 3) << "respond sync: clock already synced with "  
+//       vprDEBUG(gadgetDBG_INPUT_MGR, 3)
+//          << "respond sync: clock already synced with "  
 //          << received_id.toString() << std::endl << vprDEBUG_FLUSH;
 //       bool clock_is_synced = true;
 //       msg.createClockSyncHaveSrc(empty_id, clock_is_synced); 
@@ -209,7 +258,8 @@ void NetClockSync::respondExchange(SyncConnection& sconn){
 //       return; 
 //    }
 //    else{
-//       vprDEBUG(vrjDBG_INPUT_MGR, 3) << "respond sync: clock sync requested with "  
+//       vprDEBUG(gadgetDBG_INPUT_MGR, 3)
+//          << "respond sync: clock sync requested with "  
 //          << received_id.toString() << std::endl << vprDEBUG_FLUSH;
 //       bool clock_is_synced = false;
 //       msg.createClockSyncHaveSrc(empty_id, clock_is_synced);
@@ -259,9 +309,9 @@ void NetClockSync::respondExchange(SyncConnection& sconn){
 //          last_test_threshold_usecs += test_threshold_usecs;
 //       }
 
-//       vprDEBUG(vrjDBG_INPUT_MGR, 3) << "respond sync: clock difference in usecs: " << fabsf(test_threshold_usecs) << " (" << test_threshold_usecs << ")" << std::endl << vprDEBUG_FLUSH;
-//       vprDEBUG(vrjDBG_INPUT_MGR, 3) << "respond sync: acceptable clock difference in usecs: " << error_threshold_usecs << std::endl << vprDEBUG_FLUSH;
-//       vprDEBUG(vrjDBG_INPUT_MGR, 3) << "respond sync: latency in usecs: " << delta << std::endl << vprDEBUG_FLUSH;
+//       vprDEBUG(gadgetDBG_INPUT_MGR, 3) << "respond sync: clock difference in usecs: " << fabsf(test_threshold_usecs) << " (" << test_threshold_usecs << ")" << std::endl << vprDEBUG_FLUSH;
+//       vprDEBUG(gadgetDBG_INPUT_MGR, 3) << "respond sync: acceptable clock difference in usecs: " << error_threshold_usecs << std::endl << vprDEBUG_FLUSH;
+//       vprDEBUG(gadgetDBG_INPUT_MGR, 3) << "respond sync: latency in usecs: " << delta << std::endl << vprDEBUG_FLUSH;
 
 //       try_count++;
 //       if(try_count >= retries){
@@ -287,7 +337,8 @@ bool NetClockSync::syncNeeded(){
 }
 
 void NetClockSync::sync(){
-   vprDEBUG(vrjDBG_INPUT_MGR, 5) << "NetClockSync::sync() " << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, 5) << "NetClockSync::sync() " << std::endl
+                                    << vprDEBUG_FLUSH;
 
    std::vector<SyncConnection*>::iterator i;
    for(i = mConnections.begin(); i != mConnections.end(); i++){
@@ -295,14 +346,15 @@ void NetClockSync::sync(){
          initiateExchange(*(*i));
       else if( (*i)->state == SYNC_RESPOND)
          respondExchange(*(*i));
-     
+
       delete (*i);  // we have synced this item so delete it
    }
    mConnections.clear();
 }
 
 void NetClockSync::syncWithMyClock(NetConnection* conn){
-   vprDEBUG(vrjDBG_INPUT_MGR, 5) << "NetClockSync::syncWithMyClock() " << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, 5) << "NetClockSync::syncWithMyClock() "
+                                    << std::endl << vprDEBUG_FLUSH;
    SyncConnection* sconn = new SyncConnection;
    sconn->state = SYNC_INITIATE;
    sconn->connection = conn;
@@ -310,7 +362,8 @@ void NetClockSync::syncWithMyClock(NetConnection* conn){
 }
 
 void NetClockSync::syncWithOtherClock(NetConnection* conn){
-   vprDEBUG(vrjDBG_INPUT_MGR, 5) << "NetClockSync::syncWithOtherClock() " << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, 5) << "NetClockSync::syncWithOtherClock() "
+                                    << std::endl << vprDEBUG_FLUSH;
    SyncConnection* sconn = new SyncConnection;
    sconn->state = SYNC_RESPOND;
    sconn->connection = conn;

@@ -36,14 +36,16 @@
 // need stdio for sprintf
 #include <stdio.h>
 
+#include <vpr/vpr.h>
+#include <vpr/System.h>
+#include <jccl/Config/ConfigChunk.h>
+#include <gadget/InputManager.h>
+#include <gadget/Util/Debug.h>
 #include <gadget/Devices/VirtualTechnologies/vt_types.h>
-#include <gadget/Devices/VirtualTechnologies/CyberGlove.h>
 #include <gadget/Devices/VirtualTechnologies/vt_globals.h>
 #include <gadget/Devices/VirtualTechnologies/vt_types.h>
 #include <gadget/Devices/VirtualTechnologies/vt_error.h>
-#include <vrj/Kernel/Kernel.h>
-#include <jccl/Config/ConfigChunk.h>
-#include <vpr/System.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove.h>
 
 namespace gadget
 {
@@ -66,20 +68,26 @@ bool CyberGlove::config(jccl::ConfigChunkPtr c)
     std::string glove_pos_proxy = c->getProperty("glovePos");    // Get the name of the pos_proxy
     if(glove_pos_proxy == std::string(""))
     {
-       vprDEBUG(vrjDBG_INPUT_MGR,0) << clrOutNORM(clrRED, "ERROR:") << " Cyberglove has no posProxy."
-                                  << std::endl << vprDEBUG_FLUSH;
+       vprDEBUG(gadgetDBG_INPUT_MGR,0)
+          << clrOutNORM(clrRED, "ERROR:") << " Cyberglove has no posProxy."
+          << std::endl << vprDEBUG_FLUSH;
        return false;
     }
 
     // init glove proxy interface
     /* XXX: Doesn't appear to be used
-    int proxy_index = Kernel::instance()->getInputManager()->getProxyIndex(glove_pos_proxy);
+    int proxy_index = gadget::InputManager::instance()->getProxyIndex(glove_pos_proxy);
     if(proxy_index != -1)
-       mGlovePos[0] = Kernel::instance()->getInputManager()->getPosProxy(proxy_index);
+    {
+       mGlovePos[0] = gadget::InputManager::instance()->->getPosProxy(proxy_index);
+    }
     else
-       vprDEBUG(vrjDBG_INPUT_MGR,0)
-          << clrOutNORM(clrRED, "ERROR:") << " CyberGlove::CyberGlove: Can't find posProxy."
+    {
+       vprDEBUG(gadgetDBG_INPUT_MGR,0)
+          << clrOutNORM(clrRED, "ERROR:")
+          << " CyberGlove::CyberGlove: Can't find posProxy."
           << std::endl << std::endl << vprDEBUG_FLUSH;
+    }
     */
 
     mGlove = new CyberGloveBasic( mCalDir, mPort, mBaudRate );
@@ -106,7 +114,8 @@ CyberGlove::startSampling()
       }
       else
       {
-         vprDEBUG(vrjDBG_INPUT_MGR,1) << "vjCyberGlove is active " << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_INPUT_MGR,1) << "gadget::CyberGlove is active "
+                                         << std::endl << vprDEBUG_FLUSH;
          mActive = true;
          return 1;
       }
@@ -122,7 +131,10 @@ void CyberGlove::controlLoop(void* nullParam)
    // Open the port and run with it
    if(mGlove->open() == 0)
    {
-     vprDEBUG(vrjDBG_INPUT_MGR,0) << clrOutNORM(clrRED, "ERROR:") << " Can't open Cyberglove or it is already opened." << vprDEBUG_FLUSH;
+     vprDEBUG(gadgetDBG_INPUT_MGR,0)
+        << clrOutNORM(clrRED, "ERROR:")
+        << " Can't open Cyberglove or it is already opened.\n"
+        << vprDEBUG_FLUSH;
      return;
    }
 
@@ -166,7 +178,8 @@ int CyberGlove::stopSampling()
       vpr::System::usleep(100);
 
       mGlove->close();
-      vprDEBUG(vrjDBG_INPUT_MGR,1) << "stopping CyberGlove.." << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR,1) << "stopping CyberGlove.."
+                                      << std::endl << vprDEBUG_FLUSH;
    }
    return 1;
 }

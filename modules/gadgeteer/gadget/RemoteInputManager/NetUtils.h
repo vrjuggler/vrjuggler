@@ -1,5 +1,42 @@
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+ *
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
+
 #ifndef GADGET_NETUTILS_H
 #define GADGET_NETUTILS_H
+
+#include <gadget/gadgetConfig.h>
+
+#include <list>
+#include <vpr/vpr.h>
 
 #if defined __WIN32__ || defined WIN32 || defined _Windows || defined _WIN32
 #include <winsock2.h>
@@ -10,11 +47,8 @@
 #include <netdb.h>
 #endif
 
-
-#include <gadget/gadgetConfig.h>
 #include <vpr/IO/Socket/SocketStream.h>
-#include <vrj/Util/Debug.h>
-#include <list>
+#include <gadget/Util/Debug.h>
 
 
 namespace gadget
@@ -74,20 +108,29 @@ public:
 
       mValidBytes += bytes_to_send_param;
 
-      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HEX_LVL) << "SendBuffer successfully stored " <<  bytes_to_send_param  << " bytes.  Total bytes: " << mValidBytes << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HEX_LVL)
+         << "SendBuffer successfully stored " <<  bytes_to_send_param
+         << " bytes.  Total bytes: " << mValidBytes << std::endl
+         << vprDEBUG_FLUSH;
 
    }
 
    void resizeBuffer(unsigned int new_size){
-      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HEX_LVL) << "SendBuffer: Resizing mBuffer to: " <<  new_size  << std::endl << vprDEBUG_FLUSH; 
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HEX_LVL)
+         << "SendBuffer: Resizing mBuffer to: " <<  new_size  << std::endl
+         << vprDEBUG_FLUSH; 
       mBuffer.resize(new_size);
-      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HEX_LVL) << "SendBuffer: Successful resize: " <<  new_size  << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HEX_LVL)
+         << "SendBuffer: Successful resize: " <<  new_size  << std::endl
+         << vprDEBUG_FLUSH;
    }
 
    bool sendAllAndClear(vpr::SocketStream& sock_stream){
       sendAtOnce(sock_stream, &(mBuffer[0]), mValidBytes);  // transmit data
 
-      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HEX_LVL) << "SendBuffer sent " <<  mValidBytes  << " bytes. " << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HEX_LVL)
+         << "SendBuffer sent " <<  mValidBytes  << " bytes. " << std::endl
+         << vprDEBUG_FLUSH;
 
       this->clearBuffer();
       return true;

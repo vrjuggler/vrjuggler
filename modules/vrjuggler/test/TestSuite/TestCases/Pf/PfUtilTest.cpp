@@ -1,7 +1,12 @@
 #include <iostream>
 
-#include <vrj/Math/Math.h>
-#include <vrj/Math/Vec3.h>
+#include <gmtl/Math.h>
+#include <gmtl/Vec.h>
+#include <gmtl/Matrix.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/Generate.h>
+#include <gmtl/Xforms.h>
+
 #include <vrj/Draw/Pf/PfUtil.h>
 
 #include <PfUtilTest.h>
@@ -12,12 +17,12 @@ namespace vrjTest
 
 void PfUtilTest::testMatrixConversion()
 {
-   vrj::Matrix mat;
-   mat.postTrans( mat, 1, 2, 3 );
-   mat.postRot( mat, 90, vrj::Vec3( 0, 1, 0 ) );
+   gmtl::Matrix44f mat;
+   gmtl::postMult( mat, gmtl::makeTrans<gmtl::Matrix44f>( gmtl::Vec3f(1, 2, 3 )));
+   gmtl::postMult( mat, gmtl::makeRot<gmtl::Matrix44f>( 90, gmtl::Vec3f( 0, 1, 0 ) ));
 
    pfMatrix pf_mat = vrj::GetPfMatrix( mat );
-   vrj::Matrix vj_mat = vrj::GetVjMatrix( pf_mat );
+   gmtl::Matrix44f vj_mat = vrj::GetVjMatrix( pf_mat );
 
    /*
    std::cout << pf_mat << "\n\n" << std::flush;
@@ -26,13 +31,13 @@ void PfUtilTest::testMatrixConversion()
    if (!vj_mat.isEqual( mat ))
    {
       std::cout << "BAD!!!\n" << std::flush;
-   }  
+   }
    else
    {
       std::cout << "GOOD!!!\n" << std::flush;
-   }                
+   }
    */
-   CPPUNIT_ASSERT( vj_mat.isEqual( mat ) && "test pf --> vj matrix conversion failed" );
-}     
+   CPPUNIT_ASSERT( gmtl::isEqual( vj_mat, mat ) && "test pf --> vj matrix conversion failed" );
+}
 
 } // End of vrjTest namespace

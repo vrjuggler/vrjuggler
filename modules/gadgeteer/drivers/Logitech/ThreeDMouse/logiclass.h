@@ -53,7 +53,7 @@
 #include <gadget/gadgetConfig.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Position.h>    // The base class for vr_devices
-#include <vrj/Math/Vec3.h>
+#include <gmtl/Vec.h>
 //#include <Inventor/SbLinear.h> // For the vec classes
 
 #ifndef TRUE
@@ -145,12 +145,12 @@ private:
    //gadget::PositionData mData[3];
 
    vpr::Thread*   mThreadID; // Ptr to the thread object
-   vrj::Vec3      baseVector; // Used to store the base location tooffset from
+   gmtl::Vec3f      baseVector; // Used to store the base location tooffset from
             // Originally set to 0,0,0
 
    int  logitechOpen (char *port_name);
 
-   void eulerToAbsolute (byte record[], vrj::Matrix* data);
+   void eulerToAbsolute (byte record[], gmtl::Matrix44f* data);
    void printBin (char a);
 };
 

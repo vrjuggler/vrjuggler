@@ -2,7 +2,7 @@
 #define _GADGET_TRACKD_SENSOR_STANDALONE_H_
 
 #include <gadget/Devices/Open/Trackd/trackdmem.h>
-#include <vrj/Math/Matrix.h>
+#include <gmtl/Matrix.h>
 
 class TrackdSensorStandalone
 {
@@ -25,7 +25,7 @@ public:
    int numSensors();
 
    // Return the position of the given sensor
-   vrj::Matrix getSensorPos(int sensorNum);
+   gmtl::Matrix44f getSensorPos(int sensorNum);
 
 protected:
    //: Attach to the memory segment with key (mShmKey)

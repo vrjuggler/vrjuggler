@@ -127,14 +127,14 @@ void GlWindow::setProjection(vrj::Projection* proj)
                  frust[Frustum::VJ_NEAR],frust[Frustum::VJ_FAR]);
 #ifdef USE_PROJECTION_MATRIX
          // Set camera rotation and position
-      glMultMatrixf(proj->mViewMat.getFloatPtr());
+      glMultMatrixf(proj->mViewMat.mData);
 #endif
    }
    glMatrixMode(GL_MODELVIEW);
 #ifndef USE_PROJECTION_MATRIX
       // Set camera rotation and position
    glLoadIdentity();
-   glMultMatrixf(proj->viewMat.getFloatPtr());
+   glMultMatrixf(proj->viewMat.mData);
 #endif
 }
 

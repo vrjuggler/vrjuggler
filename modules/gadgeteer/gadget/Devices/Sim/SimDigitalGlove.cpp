@@ -32,8 +32,9 @@
 
 #include <gadget/gadgetConfig.h>
 #include <vpr/Util/Assert.h>
-#include <gadget/Devices/Sim/SimDigitalGlove.h>
 #include <jccl/Config/ConfigChunk.h>
+#include <gadget/Util/Debug.h>
+#include <gadget/Devices/Sim/SimDigitalGlove.h>
 
 namespace gadget
 {
@@ -75,7 +76,7 @@ bool SimDigitalGlove::config( jccl::ConfigChunkPtr chunk )
       std::string glove_pos_proxy = chunk->getProperty( "glovePos" );    // Get the name of the pos_proxy
       if (glove_pos_proxy == std::string(""))
       {
-         vprDEBUG( vrjDBG_INPUT_MGR, 0 )
+         vprDEBUG( gadgetDBG_INPUT_MGR, 0 )
             << "[ERROR]: SimPinchglove has no posProxy, config fails."
             << std::endl << vprDEBUG_FLUSH;
          return false;
@@ -87,7 +88,7 @@ bool SimDigitalGlove::config( jccl::ConfigChunkPtr chunk )
       if (proxy_index != -1)
          mGlovePos[LEFT_INDEX] = Kernel::instance()->getInputManager()->getPosProxy( proxy_index );
       else
-         vprDEBUG( vrjDBG_INPUT_MGR, 0 )
+         vprDEBUG( gadgetDBG_INPUT_MGR, 0 )
             << "[ERROR]: SimPinchglove::config(): Can't find posProxy, config fails."
             << std::endl << std::endl << vprDEBUG_FLUSH;
       */
@@ -101,7 +102,7 @@ bool SimDigitalGlove::config( jccl::ConfigChunkPtr chunk )
       std::string glove_pos_proxy = chunk->getProperty( "rightGlovePos" );    // Get the name of the pos_proxy
       if (glove_pos_proxy == std::string(""))
       {
-         vprDEBUG( vrjDBG_INPUT_MGR, 0 )
+         vprDEBUG( gadgetDBG_INPUT_MGR, 0 )
             << "[ERROR]: SimPinchglove has no rightPosProxy, config fails."
             << std::endl << vprDEBUG_FLUSH;
          return false;
@@ -113,7 +114,7 @@ bool SimDigitalGlove::config( jccl::ConfigChunkPtr chunk )
       if (proxy_index != -1)
          mGlovePos[RIGHT_INDEX] = Kernel::instance()->getInputManager()->getPosProxy( proxy_index );
       else
-         vprDEBUG( vrjDBG_INPUT_MGR, 0 )
+         vprDEBUG( gadgetDBG_INPUT_MGR, 0 )
             << "[ERROR]: SimPinchglove::config(): Can't find posProxy, config fails."
             << std::endl << std::endl << vprDEBUG_FLUSH;
             */
@@ -282,7 +283,7 @@ void SimDigitalGlove::loadTrainedFile(std::string fileName)
    }
    else
    {
-      vprDEBUG(vrjDBG_INPUT_MGR,0)
+      vprDEBUG(gadgetDBG_INPUT_MGR,0)
          << "vjSimGloveGesture:: Can't load trained file: " << fileName.c_str()
          << std::endl << vprDEBUG_FLUSH;
    }

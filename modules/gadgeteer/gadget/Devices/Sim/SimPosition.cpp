@@ -32,13 +32,16 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <vrj/Math/Coord.h>
-#include <vrj/Math/Plane.h>
-#include <vrj/Math/Seg.h>
-#include <vrj/Display/DisplayManager.h>
-#include <vrj/Display/Display.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <gadget/Devices/Sim/SimPosition.h>
+
+#include <gmtl/Plane.h>
+#include <gmtl/LineSeg.h>
+#include <gmtl/Matrix.h>
+#include <gmtl/Vec.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/Generate.h>
+#include <gmtl/Convert.h>
 
 namespace gadget
 {
@@ -65,8 +68,7 @@ bool SimPosition::config(jccl::ConfigChunkPtr chunk)
       mSimKeys[i] = key_pairs[i];
    }
 
-
-      // Set initial position
+   // Set initial position
    float x_pos = chunk->getProperty("initialPos",0);
    float y_pos = chunk->getProperty("initialPos",1);
    float z_pos = chunk->getProperty("initialPos",2);
@@ -74,10 +76,19 @@ bool SimPosition::config(jccl::ConfigChunkPtr chunk)
    float y_rot = chunk->getProperty("initialRot",1);
    float z_rot = chunk->getProperty("initialRot",2);
 
+   gmtl::identity( *(mPos.getPosition()) );
+
    if((x_pos != 0.0f) || (y_pos != 0.0f) || (z_pos != 0.0f))
-      mPos.getPosition()->makeTrans(x_pos, y_pos, z_pos);
+   {
+      gmtl::setTrans( *(mPos.getPosition()), gmtl::Vec3f(x_pos, y_pos, z_pos));
+   }
    if((x_rot != 0.0f) || (y_rot != 0.0f) || (z_rot != 0.0f))
-      mPos.getPosition()->postXYZEuler(*(mPos.getPosition()), x_rot, y_rot, z_rot);
+   {
+      gmtl::postMult( (*mPos.getPosition()),
+                      gmtl::makeRot<gmtl::Matrix44f>(gmtl::Math::deg2Rad(x_rot),
+                                                     gmtl::Math::deg2Rad(y_rot),
+                                                     gmtl::Math::deg2Rad(z_rot), gmtl::XYZ) );
+   }
    mPos.setTime();
 
    return true;
@@ -142,148 +153,116 @@ void SimPosition::updateData()
 }
 
 
+void SimPosition::moveDir(const float amt, const gmtl::Vec3f dir)
+{
+   gmtl::Vec3f move_vector(dir);  // Base movement
+   move_vector *= (amt*mDTrans);
+
+   if(isTransAllowed(move_vector))
+   {
+      if(mTransCoordSystem == LOCAL)
+      {
+         gmtl::postMult(*(mPos.getPosition()), gmtl::makeTrans<gmtl::Matrix44f>(move_vector) );
+      }
+      else
+      {
+         gmtl::preMult(*(mPos.getPosition()), gmtl::makeTrans<gmtl::Matrix44f>(move_vector) );
+      }
+
+   }
+   else
+      vprDEBUG(gadgetDBG_INPUT_MGR,4) << "SimPos hit a surface.\n"
+                                      << vprDEBUG_FLUSH;
+
+}
+
+
+
 // Move forward the given amount on position data n
 // Forward is in th -Z direction
 void SimPosition::moveFor(const float amt)
 {
-   vrj::Vec3 move_forward(0.0,0.0,-1.0);  // Base movement
-   move_forward *= (amt*mDTrans);
-
-   if(isTransAllowed(move_forward))
-   {
-      if(mTransCoordSystem == LOCAL)
-         mPos.getPosition()->postTrans(*(mPos.getPosition()), move_forward);
-      else
-         mPos.getPosition()->preTrans(move_forward, *(mPos.getPosition()));
-   }
-   else
-      vprDEBUG(vrjDBG_INPUT_MGR,4) << "SimPos hit a surface.\n" << vprDEBUG_FLUSH;
+   gmtl::Vec3f move_forward(0.0,0.0,-1.0);  // Base movement
+   moveDir(amt, move_forward);
 }
 
 // Move left the given amount on position data n
 // Left is -X dir
 void SimPosition::moveLeft(const float amt)
 {
-   vrj::Vec3 move_left(-1.0,0.0,0.0);  // Base movement
-   move_left *= (amt*mDTrans);
-
-   if(isTransAllowed(move_left))
-   {
-      if(mTransCoordSystem == LOCAL)
-         mPos.getPosition()->postTrans(*(mPos.getPosition()), move_left);
-      else
-         mPos.getPosition()->preTrans(move_left, *(mPos.getPosition()));
-   }
-   else
-      vprDEBUG(vrjDBG_INPUT_MGR,4) << "SimPos hit a surface.\n" << vprDEBUG_FLUSH;
+   gmtl::Vec3f move_left(-1.0,0.0,0.0);  // Base movement
+   moveDir(amt, move_left);
 }
 
 // Move up the given amount on position data n
 // Up is in th +Y dir
 void SimPosition::moveUp(const float amt)
 {
-   vrj::Vec3 move_up(0.0,1.0,0.0);  // Base movement
-   move_up *= (amt*mDTrans);
-
-   if(isTransAllowed(move_up))
-   {
-      if(mTransCoordSystem == LOCAL)
-         mPos.getPosition()->postTrans(*(mPos.getPosition()), move_up);
-      else
-         mPos.getPosition()->preTrans(move_up, *(mPos.getPosition()));
-   }
-   else
-      vprDEBUG(vrjDBG_INPUT_MGR,4) << "SimPos hit a surface.\n" << vprDEBUG_FLUSH;
+   gmtl::Vec3f move_up(0.0,1.0,0.0);  // Base movement
+   moveDir(amt, move_up);
 }
+
+/** Rotation amt around axis */
+void SimPosition::rotAxis(const float amt, const gmtl::Vec3f rotAxis)
+{
+  gmtl::Matrix44f* m = mPos.getPosition();
+  gmtl::Matrix44f delta_rot(gmtl::makeRot<gmtl::Matrix44f>(gmtl::Math::deg2Rad(amt*mDRot), rotAxis));   // make delta rot
+
+  if(mRotCoordSystem == LOCAL)
+  {
+     gmtl::postMult(*m, delta_rot);
+  }
+  else
+  {
+     // Get the translation and rotation seperated
+     // Make new matrix with Trans*DeltaRot*Rot
+     gmtl::Vec3f trans_vec(gmtl::makeTrans<gmtl::Vec3f>(*m));          // Get translation
+     gmtl::Matrix44f trans_mat(gmtl::makeTrans<gmtl::Matrix44f>( trans_vec ));   // Make trans matrix
+     gmtl::Matrix44f rot_mat(*m);
+
+     gmtl::setTrans(rot_mat, gmtl::Vec3f(0.0f,0.0f,0.0f));  // Clear out trans
+     *m = trans_mat * delta_rot * rot_mat;
+     /*
+     gmtl::setTrans(*m, gmtl::Vec3f(0,0,0));      // Get to rotation only
+     gmtl::preMult(*m, delta_rot);
+     gmtl::preMult(*m, trans);
+     */
+  }
+}
+
 
 // Pitch up - rot +x axis
 void SimPosition::rotUp(const float amt)
 {
-   static vrj::Vec3 x_axis(1.0,0.0,0.0);
-   vrj::Matrix* m = mPos.getPosition();
-   if(mRotCoordSystem == LOCAL)
-      m->postRot(*m, amt*mDRot, x_axis);
-   else
-   {
-      // Get the translation and rotation seperated
-      // Make new matrix with Trans*DeltaRot*Rot
-      float x,y,z;
-      m->getTrans(x,y,z);      // Get translation
-      vrj::Matrix trans;
-      trans.makeTrans(x,y,z);
-
-      vrj::Matrix delta_rot;        // make delta rot
-      delta_rot.makeRot(amt*mDRot, x_axis);
-
-      m->setTrans(0,0,0);      // Get to rotation only
-      m->preMult(delta_rot);
-      m->preMult(trans);
-   }
+   static gmtl::Vec3f x_axis(1.0,0.0,0.0);
+   rotAxis(amt, x_axis);
 }
 
 // Yaw left - rot +Y axis
 void SimPosition::rotLeft(const float amt)
 {
-   static vrj::Vec3 y_axis(0.0, 1.0, 0.0);
-   vrj::Matrix* m = mPos.getPosition();
-
-   if(mRotCoordSystem == LOCAL)
-      m->postRot(*m, amt*mDRot, y_axis);
-   else
-   {
-      // Get the translation and rotation seperated
-      // Make new matrix with Trans*DeltaRot*Rot
-      float x,y,z;
-      m->getTrans(x,y,z);      // Get translation
-      vrj::Matrix trans;
-      trans.makeTrans(x,y,z);
-
-      vrj::Matrix delta_rot;        // make delta rot
-      delta_rot.makeRot(amt*mDRot, y_axis);
-
-      m->setTrans(0,0,0);      // Get to rotation only
-      m->preMult(delta_rot);
-      m->preMult(trans);
-   }
+   static gmtl::Vec3f y_axis(0.0, 1.0, 0.0);
+   rotAxis(amt, y_axis);
 }
 
 // Roll Left - rot -z axis
 void SimPosition::rotRollCCW(const float amt)
 {
-   static vrj::Vec3 neg_z_axis(0.0, 0.0, -1.0);
-   vrj::Matrix* m = mPos.getPosition();
-
-   if(mRotCoordSystem == LOCAL)
-      m->postRot(*m, amt*mDRot, neg_z_axis);
-   else
-   {
-      // Get the translation and rotation seperated
-      // Make new matrix with Trans*DeltaRot*Rot
-      float x,y,z;
-      m->getTrans(x,y,z);      // Get translation
-      vrj::Matrix trans;
-      trans.makeTrans(x,y,z);
-
-      vrj::Matrix delta_rot;        // make delta rot
-      delta_rot.makeRot(amt*mDRot, neg_z_axis);
-
-      m->setTrans(0,0,0);      // Get to rotation only
-      m->preMult(delta_rot);
-      m->preMult(trans);
-   }
+   static gmtl::Vec3f neg_z_axis(0.0, 0.0, -1.0);
+   rotAxis(amt, neg_z_axis);
 }
 
 //: Check if movement is allowed
 //! NOTE: It is not allowed if it hits a simulated wall, etc.
-bool SimPosition::isTransAllowed(vrj::Vec3 trans)
+bool SimPosition::isTransAllowed(gmtl::Vec3f trans)
 {
    // check if the movement is goign to intersect with any of the surface displays
    // If it does, then return false
    /*
-   vrj::Vec3 ll, lr, ur, ul;
+   gmtl::Vec3f ll, lr, ur, ul;
    Seg trans_seg;
    float t_dist;
-   vrj::Vec3 src_pt;
+   gmtl::Vec3f src_pt;
    mPos.getTrans(src_pt[0],src_pt[1], src_pt[2]);
    trans_seg.makePts(src_pt, (src_pt+trans));
 

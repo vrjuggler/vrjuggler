@@ -42,6 +42,8 @@
 #include <Performer/pfdu.h>
 #include <Performer/pf/pfTraverser.h>
 
+#include <vpr/Util/FileUtils.h>
+
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Draw/Pf/PfDrawManager.h>
 #include <vrj/Draw/Pf/PfApp.h>
@@ -54,8 +56,6 @@
 #include <vrj/Display/SurfaceViewport.h>
 
 #include <jccl/Config/ConfigChunk.h>
-
-#include <vrj/Util/FileIO.h>
 
 namespace vrj
 {
@@ -155,8 +155,8 @@ bool PfDrawManager::configPerformerAPI(jccl::ConfigChunkPtr chunk)
          << "WARNING: PfDrawManager::config: simWandModel not set."
          << std::endl << vprDEBUG_FLUSH;
 
-   mHeadModel = FileIO::replaceEnvVars(head_file);
-   mWandModel = FileIO::replaceEnvVars(wand_file);
+   mHeadModel = vpr::replaceEnvVars(head_file);
+   mWandModel = vpr::replaceEnvVars(wand_file);
 
    vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL)
       << "Head Model: " << mHeadModel.c_str() << std::endl
@@ -781,8 +781,8 @@ void PfDrawManager::initSimulatorGraph()
 
 void PfDrawManager::updateSimulator(SimViewport* sim_vp)
 {
-   Matrix vj_head_mat = sim_vp->getHeadPos();          // Get Juggler matrices
-   Matrix vj_wand_mat = sim_vp->getWandPos();
+   gmtl::Matrix44f vj_head_mat = sim_vp->getHeadPos();          // Get Juggler matrices
+   gmtl::Matrix44f vj_wand_mat = sim_vp->getWandPos();
    pfMatrix head_mat = GetPfMatrix(vj_head_mat);    // Convert to Performer
    pfMatrix wand_mat = GetPfMatrix(vj_wand_mat);
    mHeadDCS->setMat(head_mat);                        // Set the DCS nodes
@@ -862,11 +862,13 @@ void PfDrawManager::updateProjections()
 //+        equivalent of proj's projection data.
 void PfDrawManager::updatePfProjection(pfChannel* chan, Projection* proj)  //, bool simulator)
 {
+   /*
    vprDEBUG_BEGIN(vrjDBG_DRAW_MGR,vprDBG_HVERB_LVL) << "vjPfDrawManager::updatePfProjection: Entering. viewMat:\n"
                     << proj->mViewMat << std::endl << vprDEBUG_FLUSH;
+                    */
 
    pfMatrix pfViewMat;
-   pfViewMat.set(proj->mViewMat.getFloatPtr());      // Hmm...
+   pfViewMat.set(proj->mViewMat.mData);      // Hmm...
 
       // Basically, Performer does a Rotate of 90 around X
       // first thing in modelview.  So, we have to undo that, put

@@ -31,15 +31,19 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
-#include <gadget/Type/KeyboardProxy.h>
 #include <jccl/Config/ConfigChunk.h>
+#include <gadget/Util/Debug.h>
+#include <gadget/Type/KeyboardProxy.h>
+
 
 namespace gadget
 {
 
 bool KeyboardProxy::config(jccl::ConfigChunkPtr chunk)
 {
-   vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,3) << "------------------ KEYBOARD PROXY config()-----------------\n" << vprDEBUG_FLUSH;
+   vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,3)
+      << "------------------ KEYBOARD PROXY config()-----------------\n"
+      << vprDEBUG_FLUSH;
    vprASSERT(((std::string)chunk->getType()) == "KeyboardProxy");
 
    mDeviceName = (std::string)chunk->getProperty("device");

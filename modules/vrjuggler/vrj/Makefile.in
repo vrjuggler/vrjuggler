@@ -48,7 +48,6 @@ SUBDIR		= \
                   Draw		\
                   Environment	\
                   Kernel	\
-                  Math		\
                   Sound		\
                   Util
 
