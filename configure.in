@@ -1324,8 +1324,8 @@ if test "x${_enable_pf_api}" = "xyes" ; then
         win32_pfinc="-I$PFROOT/include -I$PFROOT/include/Performer"
         CPPFLAGS="$CPPFLAGS $win32_pfinc"
         win32_libpath="/libpath:${PFROOT}/lib"
-        LDFLAGS="/link $win32_libpath $LDFLAGS"
-        LIBPERFORMER="libpf.lib libpfdu.lib libpfui.lib libpfutil.lib"
+        LDFLAGS="-link $win32_libpath $LDFLAGS"
+        LIBPERFORMER="libpf.lib libpfdu-util.lib libpfui.lib"
         LIBS="$LIBS $LIBPERFORMER"
 
         AC_CACHE_CHECK([for pfInit in libpf],
