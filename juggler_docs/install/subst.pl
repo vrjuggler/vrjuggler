@@ -34,20 +34,26 @@ $path_subst{"PUB"} = 'pub/';
 # directories within the ~/html directory
 $path_subst{"BUGS"} = 'html/bugs';
 $path_subst{"CONTACT"} = 'html/contact.info';
+
+# these might not stick around...
 $path_subst{"JUGGLERSTATUS"} = 'html/status';
 $path_subst{"ABOUTJUGGLER"} = 'html/about';
+
+$path_subst{"DOCUMENTATION"} = 'html/documentation';
 $path_subst{"OVERVIEW"} = 'html/juggler.overview';
+$path_subst{"SPECIFICATION"} = 'html/juggler.arch';
+$path_subst{"GETTINGSTARTED"} = 'html/getting.started';
+$path_subst{"PROGRAMMERGUIDE"} = 'html/programmer.guide';
+$path_subst{"PROGRAMMERREF"} = 'html/programmer.reference/';
+$path_subst{"VJCONTROL"} = 'html/vjcontrol';
 $path_subst{"TEAMGUIDE"} = 'html/juggler.team.guide';
+
 $path_subst{"DOWNLOAD"} = 'html/download';
 $path_subst{"LAYOUT"} = 'html/layout';
 $path_subst{"LEGAL"} = 'html/legal';
 $path_subst{"MISC"} = 'html/misc';
 $path_subst{"NEWS"} = 'html/news';
 $path_subst{"PUBLICATIONS"} = 'html/publications';
-$path_subst{"PROGRAMMERGUIDE"} = 'html/programmer.guide';
-$path_subst{"PROGRAMMERREF"} = 'html/programmer.reference/';
-$path_subst{"VJCONTROL"} = 'html/vjcontrol';
-$path_subst{"DOCUMENTATION"} = 'html/documentation';
 $path_subst{"FAQ"} = 'html/misc/FAQ.html';
 
 
