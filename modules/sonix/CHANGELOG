@@ -1,5 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jul-30-2002 patrickh  Fixed problems with building on IRIX wherein the Sonix
+                      library was not put into lib{32,64} correctly.
 Jun-24-2002 patrickh  The sonix-config script is now written in Perl.  It is
                       capable of determining its installation path at runtime.
 Oct-24-2001 subatomic Sonix uses juggler math and vapor singleton now.
