@@ -301,26 +301,36 @@ public class DisplayWindowStartDialog
       //    2 -> spacer between window name label and window name field
       //    3 -> window name field
       //    4 -> panel end
-      double main_size[][] =
-         {{5, TableLayout.MINIMUM, 5, TableLayout.FILL, 5},
-          {TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED,
-           TableLayout.PREFERRED}};
+      double[][] main_size =
+         {
+            {5, TableLayout.MINIMUM, 5, TableLayout.FILL, 5},
+            {TableLayout.PREFERRED, TableLayout.PREFERRED,
+             TableLayout.PREFERRED, TableLayout.PREFERRED}
+         };
       mMainLayout = new TableLayout(main_size);
 
-      double bounds_size[][] =
-         {{TableLayout.PREFERRED, TableLayout.PREFERRED},
-          {TableLayout.PREFERRED, TableLayout.PREFERRED}};
+      double[][] bounds_size =
+         {
+            {TableLayout.PREFERRED, TableLayout.PREFERRED},
+            {TableLayout.PREFERRED, TableLayout.PREFERRED}
+         };
       mBoundsPanelLayout = new TableLayout(bounds_size);
 
-      double fb_size[][] = {{TableLayout.MINIMUM, 5, TableLayout.PREFERRED},
-                            {TableLayout.PREFERRED}};
+      double[][] fb_size =
+         {
+            {TableLayout.MINIMUM, 5, TableLayout.PREFERRED},
+            {TableLayout.PREFERRED}
+         };
       mFrameBufferPanelLayout = new TableLayout(fb_size);
 
-      double fb_settings_size[][] =
-         {{TableLayout.FILL, TableLayout.PREFERRED},
-          {TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED,
-           TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED,
-           TableLayout.PREFERRED}};
+      double[][] fb_settings_size =
+         {
+            {TableLayout.FILL, TableLayout.PREFERRED},
+            {TableLayout.PREFERRED, TableLayout.PREFERRED,
+             TableLayout.PREFERRED, TableLayout.PREFERRED,
+             TableLayout.PREFERRED, TableLayout.PREFERRED,
+             TableLayout.PREFERRED}
+         };
       mFBSettingsLayout = new TableLayout(fb_settings_size);
 
       // Colums are as follows:
@@ -334,12 +344,14 @@ public class DisplayWindowStartDialog
       //
       // NOTE: Column 2 is a hack to make it appear as though the check box
       // is two separate UI components.
-      double window_props_size[][] =
-         {{TableLayout.PREFERRED, 5, 20, TableLayout.MINIMUM, 5,
-           TableLayout.MINIMUM},
-          {TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED,
-           TableLayout.PREFERRED, TableLayout.PREFERRED,
-           TableLayout.PREFERRED}};
+      double[][] window_props_size =
+         {
+            {TableLayout.PREFERRED, 5, 20, TableLayout.MINIMUM, 5,
+             TableLayout.MINIMUM},
+            {TableLayout.PREFERRED, TableLayout.PREFERRED,
+             TableLayout.PREFERRED, TableLayout.PREFERRED,
+             TableLayout.PREFERRED, TableLayout.PREFERRED}
+         };
       mWindowPropsPanelLayout = new TableLayout(window_props_size);
 
       mBoundsPanelBorder =

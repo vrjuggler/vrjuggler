@@ -118,14 +118,20 @@ public class SimulatorViewportCreateDialog
    {
       super.initUI();
 
-      double main_size[][] = {{TableLayout.PREFERRED},
-                              {TableLayout.PREFERRED, TableLayout.PREFERRED,
-                               TableLayout.PREFERRED}};
+      double[][] main_size =
+         {
+            {TableLayout.PREFERRED},
+            {TableLayout.PREFERRED, TableLayout.PREFERRED,
+             TableLayout.PREFERRED}
+         };
       mMainPanelLayout = new TableLayout(main_size);
 
-      double fov_size[][] = {{TableLayout.PREFERRED, 10, TableLayout.PREFERRED},
-                             {TableLayout.PREFERRED, TableLayout.PREFERRED,
-                              TableLayout.PREFERRED}};
+      double[][] fov_size =
+         {
+            {TableLayout.PREFERRED, 10, TableLayout.PREFERRED},
+            {TableLayout.PREFERRED, TableLayout.PREFERRED,
+             TableLayout.PREFERRED}
+         };
       mMiscPanelLayout = new TableLayout(fov_size);
 
       try
