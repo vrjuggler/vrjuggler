@@ -28,13 +28,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.install.mk,v
-# Date modified: 2004/01/29 04:28:00
-# Version:       1.13
+# Date modified: 2004/12/08 14:05:09
+# Version:       1.14
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.install.mk,v 1.13 2004/01/29 04:28:00 patrickh Exp
+# dpp.install.mk,v 1.14 2004/12/08 14:05:09 patrickh Exp
 #
 # This include file <dpp.install.mk> handles install operations.  It adds an
 # 'install' target.
@@ -79,7 +79,7 @@ GROUP_OPT?=	-g $(GROUP_NAME)
 endif
 
 #INSTALL_DEPS?=	
-INSTALL_FILES?=	$(srcdir)/*.h
+INSTALL_FILES?=	$(wildcard $(srcdir)/*.h)
 INSTALL_PATH?=	$(includedir)
 
 install:

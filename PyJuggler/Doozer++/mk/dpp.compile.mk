@@ -28,13 +28,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.compile.mk,v
-# Date modified: 2004/01/29 04:28:00
-# Version:       1.13
+# Date modified: 2004/11/07 21:34:39
+# Version:       1.14
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.compile.mk,v 1.13 2004/01/29 04:28:00 patrickh Exp
+# dpp.compile.mk,v 1.14 2004/11/07 21:34:39 patrickh Exp
 #
 # This include file <dpp.compile.mk> handles source code compiling.
 # -----------------------------------------------------------------------------
@@ -45,6 +45,10 @@
 #                  options).
 # CXX_COMPILE    - The C++ compiler command line (without -c or -o <outfile>
 #                  options).
+# OBJC_COMPILE   - The Objective-C compiler command line (without -c or -o
+#                  <outfile> options).
+# OBJCXX_COMPILE - The Objective-C++ compiler command line (without -c or -o
+#                  <outfile> options).
 # OBJEXT         - Suffix for object file names (e.g., "o" or "obj").
 # OBJ_NAME_FLAG  - Flag (with any extra options) used for naming the object
 #                  file being compiled here.
@@ -61,12 +65,16 @@ OBJ_BUILD_FLAG?=	-c
 # If we are building profiled objects, add the flags to the C and C++ compiler
 # flags.
 ifdef PROF_OBJ_BUILD
-   CFLAGS+=	$(CC_PROF_FLAGS)
-   CXXFLAGS+= 	$(CXX_PROF_FLAGS)
+   CFLAGS+=		$(CC_PROF_FLAGS)
+   CXXFLAGS+= 		$(CXX_PROF_FLAGS)
+   OBJCFLAGS+=	 	$(OBJC_PROF_FLAGS)
+   OBJCXXFLAGS+= 	$(OBJCXX_PROF_FLAGS)
 endif
 
 C_COMPILE_LINE=		$(C_COMPILE) $(OBJ_BUILD_FLAG) $(OBJ_NAME_FLAG) $<
 CXX_COMPILE_LINE=	$(CXX_COMPILE) $(OBJ_BUILD_FLAG) $(OBJ_NAME_FLAG) $<
+OBJC_COMPILE_LINE=	$(OBJC_COMPILE) $(OBJ_BUILD_FLAG) $(OBJ_NAME_FLAG) $<
+OBJCXX_COMPILE_LINE=	$(OBJCXX_COMPILE) $(OBJ_BUILD_FLAG) $(OBJ_NAME_FLAG) $<
 
 # Pattern rule for compiling .$(OBJEXT) files from .c files.
 $(OBJDIR)/%.$(OBJEXT): %.c
@@ -116,6 +124,27 @@ ifdef WARN_MSG
 	$(warning $(WARN_MSG))
 endif
 	$(CXX_COMPILE_LINE)
+
+# Pattern rule for compiling .$(OBJEXT) files from .m files.
+$(OBJDIR)/%.$(OBJEXT): %.m
+ifdef WARN_MSG
+	$(warning $(WARN_MSG))
+endif
+	$(OBJC_COMPILE_LINE)
+
+# Pattern rule for compiling .$(OBJEXT) files from .mm files.
+$(OBJDIR)/%.$(OBJEXT): %.mm
+ifdef WARN_MSG
+	$(warning $(WARN_MSG))
+endif
+	$(OBJCXX_COMPILE_LINE)
+
+# Pattern rule for compiling .$(OBJEXT) files from .M files.
+$(OBJDIR)/%.$(OBJEXT): %.M
+ifdef WARN_MSG
+	$(warning $(WARN_MSG))
+endif
+	$(OBJCXX_COMPILE_LINE)
 
 JAVA_SRC=	$(srcdir)
 
