@@ -277,10 +277,11 @@ NetworkGraph::VertexListPtr NetworkGraph::getShortestPath (const NetworkGraph::n
       p = q;
    }
 
-   vprASSERT((p == src && src != dest) && "Destination is unreachable from source!");
+   vprASSERT(p == src && "Destination is unreachable from source!");
 
-   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "Path (src --> dest): "
-                                         << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+      << "Path (src --> dest): " << node_prop_map[src].getIpAddressString()
+      << vprDEBUG_FLUSH;
 
    while ( vstack.size() > 0 )
    {
