@@ -19,7 +19,7 @@ add ${} variables to <!-- install-web --> tags
 
 fix the minibrowser resize problem.
 
-add alt text for when you have java disabled in browser.
+//add alt text for when you have java disabled in browser.
 
 figure out why page wont load local
 
