@@ -20,6 +20,7 @@ namespace vprTest
 class AttribMapTest : public CppUnit::TestFixture
 {
 CPPUNIT_TEST_SUITE(AttribMapTest);
+#if defined(_MSC_VER) && _MSC_VER >= 1310  // 1310 == VC++ 7.1
 CPPUNIT_TEST( testFundamentalGetSet<float> );
 CPPUNIT_TEST( testFundamentalGetSet<double> );
 CPPUNIT_TEST( testFundamentalGetSet<vpr::Uint8> );
@@ -28,6 +29,7 @@ CPPUNIT_TEST( testFundamentalGetSet<vpr::Uint32> );
 CPPUNIT_TEST( testFundamentalGetSet<vpr::Int8> );
 CPPUNIT_TEST( testFundamentalGetSet<vpr::Int16> );
 CPPUNIT_TEST( testFundamentalGetSet<vpr::Int32> );
+#endif
 CPPUNIT_TEST( testExists );
 CPPUNIT_TEST_SUITE_END();
 
