@@ -60,7 +60,7 @@ dnl # -------------------------------------------- #
 dnl # Enable binary format.  Possible values are "O32", "N32" or "64".
 dnl # The default is "N32".
 AC_ARG_WITH(abi,
-            [  --with-abi=<O32|N32_M3|N32_M4|64_M3|64_M4|HP|ALPHA|ELF_i386>
+            [  --with-abi=<O32|N32_M3|N32_M4|64_M3|64_M4|HP|ALPHA|ELF_i386|WIN32_i386>
                           Define the Application Binary Interface to use],
             _abi_type="$withval")
 
@@ -68,7 +68,7 @@ dnl # Define which threading model to use.  Possible values are "SGI_IPC" or
 dnl # "POSIX".
 dnl # The default is "SGI_IPC".
 AC_ARG_WITH(threads,
-            [  --with-threads=<SGI_IPC|POSIX>
+            [  --with-threads=<SGI_IPC|POSIX|WIN32>
                           Define threading implementation [default=SGI_IPC]],
             _thread_pkg="$withval", _thread_pkg='SGI_IPC')
 
@@ -187,6 +187,9 @@ case "x${_abi_type}" in
         ;;
     xELF_i386)
         VJ_ABI_CFG('ELF', 'i386')
+        ;;
+    xWIN32_i386)
+        VJ_ABI_CFG('WIN32', 'i386')
         ;;
 esac
 
@@ -403,6 +406,51 @@ case $target_os in
         AC_DEFINE(VJ_OS_Solaris,)
         ABI_LIST='ELF'
         PLATFORM='Solaris'
+        ;;
+    dnl # i386-class machine running Windows {98,NT} with Cygnus GNU-Win32.
+    cygwin)
+        dnl # If no ABI has been set yet, default to WIN32 with whatever the
+        dnl # target CPU architecture is.
+        if test "$ABI" = "" ; then
+            VJ_ABI_CFG('WIN32', "$target_cpu")
+        fi
+
+        dnl # We have to use Win32 threads on Win32.
+        if test "x${_thread_pkg}" != "xWIN32" ; then
+            AC_MSG_WARN(*** WIN32 threads must be used on $host ***)
+            _thread_pkg='WIN32'
+        fi
+
+        AR='cl'
+        ARFLAGS="$ARFLAGS -nologo -o"
+        CFLAGS="-nologo"
+        CXXFLAGS="-nologo"
+        DBG_FLAGS='-Od -GZ'
+
+        dnl # Use optimization flags based on the type of CPU.
+        case $target_cpu in
+            i686)
+                OPT_FLAGS='-G6'
+                ;;
+            i586)
+                OPT_FLAGS='-G5'
+                ;;
+            *)
+                OPT_FLAGS='-GB'
+                ;;
+        esac
+
+        LD='cl'
+        LDOPTS="$LDOPTS -nologo"
+
+        AC_DEFINE(VJ_OS_Win32,)
+        ABI_LIST='WIN32'
+        PLATFORM=`uname -s`
+
+        AC_DEFINE(WIN32,)
+        AC_DEFINE(_MBCS,)
+        AC_DEFINE(_LIB,)
+        AC_DEFINE(_MT,)
         ;;
     dnl # Unkown operating system (to config.guess).
     unknown)
