@@ -464,6 +464,7 @@ int rs232InitCommunications(COMM_PORT *port, const char* comPort, DWORD baudRate
 
     if( tcsetattr(port->desc, TCSANOW, &terminfo) != 0 )
     {
+        perror( "Configuring Port for InterSense Tracker" );
         return FALSE;
     }
 
@@ -527,6 +528,7 @@ int rs232SetSpeed(COMM_PORT *port, DWORD baudRate)
 
     if( tcsetattr(port->desc, TCSANOW, &terminfo) != 0 )
     {
+        perror( "Configuring Port for InterSense Tracker" );
         return FALSE;
     }
 
