@@ -30,9 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 #ifndef _VJ_SURFACE_DISPLAY_H_
 #define _VJ_SURFACE_DISPLAY_H_
+
+#include <vjConfig.h>
 
 #include <Kernel/vjDebug.h>
 #include <Kernel/vjDisplay.h>
@@ -207,11 +208,17 @@ protected:
       mxULCorner.xformFull(mSurfaceRotation,mULCorner);
 
       // Verify that they are all in the same x,y plane
-      vjDEBUG(vjDBG_ALL,5) << mxLLCorner[VJ_Z]  << " " << mxLRCorner[VJ_Z]
-                         << " " <<  mxURCorner[VJ_Z]  << " " <<  mxULCorner[VJ_Z] << "\n" << vjDEBUG_FLUSH;
-      vjASSERT((mxLLCorner[VJ_Z] == mxLRCorner[VJ_Z]) &&
-               (mxURCorner[VJ_Z] == mxULCorner[VJ_Z]) &&
-               (mxLLCorner[VJ_Z] == mxULCorner[VJ_Z]));
+      vjDEBUG(vjDBG_ALL,5) << std::setprecision(10) << mxLLCorner[VJ_Z]  << " "
+                           << mxLRCorner[VJ_Z] << " "
+                           << mxURCorner[VJ_Z] << " "
+                           << mxULCorner[VJ_Z] << "\n" << vjDEBUG_FLUSH;
+
+#ifdef VJ_DEBUG
+      const float epsilon = 1e-6;
+#endif
+      vjASSERT(vjIsEqual(mxLLCorner[VJ_Z], mxLRCorner[VJ_Z], epsilon) &&
+               vjIsEqual(mxURCorner[VJ_Z], mxULCorner[VJ_Z], epsilon) &&
+               vjIsEqual(mxLLCorner[VJ_Z], mxULCorner[VJ_Z], epsilon));
    }
 
    //: Check the pts to make sure they form a legal surface
