@@ -88,9 +88,10 @@
     structure. In the source code, you&#39;ll see many standalone modules
     where before they were mixed. The installation of Juggler has more
     directories in the <filename>include</filename> directory (<filename>vrj</filename>,
-    <filename>snx</filename>, <filename>plx</filename>, <filename>vpr</filename>,
-    <filename>gadget</filename>, and <filename>jccl</filename>). Below is a
-    step-by-step list of the things you will need to port and how to do it.</para>
+    <filename>snx</filename>, <filename>tweek</filename>,
+    <filename>vpr</filename>, <filename>gadget</filename>, and
+    <filename>jccl</filename>). Below is a step-by-step list of the things you
+    will need to port and how to do it.</para>
 
     <section>
       <title>Modules and Namespaces</title>
@@ -639,13 +640,13 @@ q.makeRot(q);</programlisting>
 
         <listitem>
           <para>To select your sound API, configure the VR Juggler Sound
-          Manager with config chunks or directly call the Sonix API as in the
-          following example:</para>
+          Manager with configuration elements or directly call the Sonix API
+          as in the following example:</para>
 
           <programlisting>sonix::instance()-&#62;changeAPI(&#34;OpenAL&#34;);</programlisting>
 
           <para>Here, the string &#34;OpenAL&#34; can be &#34;AudioWorks&#34;
-          or &#34;OpenAL&#34; depending on how sonix was compiled.</para>
+          or &#34;OpenAL&#34; depending on how Sonix was compiled.</para>
         </listitem>
 
         <listitem>
@@ -767,7 +768,7 @@ gmtl::Matrix44f mat = posInt.getData(gadget::PositionUnitConversion::ConvertToFe
       <para>Other XSLT 1.0 processors such as <ulink
       url="http://xml.apache.org/xalan-j/">Xalan</ulink> or <ulink
       url="http://saxon.sourceforge.net/">Saxon</ulink> can be used instead of
-      <command>xsltproc</command> if it is not avaialble. Consult the
+      <command>xsltproc</command> if it is not available. Consult the
       documentation for specific tool you use for usage information.</para>
     </section>
 
@@ -859,7 +860,7 @@ gmtl::Matrix44f mat = posInt.getData(gadget::PositionUnitConversion::ConvertToFe
           has been replaced with <methodname>jccl::ConfigChunk::getDescToken()</methodname>,
           which returns a <classname>std::string</classname> object. The value
           of the returned string corresponds to the token for the
-          configuration element in the description file. Most existing code
+          configuration element in the definition file. Most existing code
           will change from the following:</para>
 
           <programlisting>std::string type = (std::string) chunk-&#62;getType();</programlisting>
@@ -915,30 +916,30 @@ gmtl::Matrix44f mat = posInt.getData(gadget::PositionUnitConversion::ConvertToFe
 
         <para>The configuration files used by VR Juggler have undergone two
         overhauls since version 1.0. In August 2001, the first pass at
-        converting to XML was made. In the configuration description files,
-        the complex format was replaced by very straightforward XML. The job
-        done by the description files was already very hierarchical in nature,
-        so the transition to a standard, inherently hierarchical file format
-        was a natural progression. In the actual configuration files, the
-        changes made were not so elegant. Essentially, the key tokens were
-        replaced by XML elements, but the actual values were left as specially
-        formatted strings that required extra parsing <emphasis>after</emphasis>
-        the XML parser had done its job.</para>
+        converting to XML was made. In the configuration definition files, the
+        complex format was replaced by very straightforward XML. The job done
+        by the definition files was already very hierarchical in nature, so
+        the transition to a standard, inherently hierarchical file format was
+        a natural progression. In the actual configuration files, the changes
+        made were not so elegant. Essentially, the key tokens were replaced by
+        XML elements, but the actual values were left as specially formatted
+        strings that required extra parsing <emphasis>after</emphasis> the XML
+        parser had done its job.</para>
 
         <para>In May 2002, the second version of the XML configuration file
-        formats were devised. Little changed in the description file format,
+        formats were devised. Little changed in the definition file format,
         but the configuration files were redesigned so that no extra parsing
         step was required. With no user-level parsing required, we are now
         able to use XSLT stylesheets to process and update files easily. Other
         critical changes included breaking a circular dependency between the
-        description file format and the configuration file format. Versioning
+        definition file format and the configuration file format. Versioning
         was also added to both file formats as part of this change.</para>
       </section>
 
       <section>
-        <title>Description File Versions</title>
+        <title>Configuration Definition File Versions</title>
 
-        <para>The versions of the configuration description files are as
+        <para>The versions of the configuration definition files are as
         follows:</para>
 
         <itemizedlist>
@@ -955,7 +956,7 @@ gmtl::Matrix44f mat = posInt.getData(gadget::PositionUnitConversion::ConvertToFe
 
           <listitem>
             <para>2.0: The revamped XML format, in use between May 24, 2002,
-            and July 17, 2002. Any description files created using VjControl
+            and July 17, 2002. Any definition files created using VjControl
             during that time period qualify as version 2.0, though they may
             lack the version number information. If a version number is
             missing, add the following as the second line of the file:</para>
@@ -1043,17 +1044,16 @@ gmtl::Matrix44f mat = posInt.getData(gadget::PositionUnitConversion::ConvertToFe
 
         <para>We now explain how to update from one version of a file format
         to another. We begin with the first step: updating from the
-        (versionless) VR Juggler 1.0 formats to version 2.0 of the description
+        (versionless) VR Juggler 1.0 formats to version 2.0 of the definition
         file format and version 2.0 of the configuration file format. We then
         move on to explain how to do iterative updates once you have converted
         to the base XML format.</para>
 
         <section>
-          <title>Version 1.0 to 2.0 (Description Files and Configuration
-          Files)</title>
+          <title>Version 1.0 to 2.0 (Definition Files and Configuration Files)</title>
 
           <para>We have included a converter from VR Juggler 1.0 format to
-          version 2.0 of the description file format and version 2.0 of the
+          version 2.0 of the definition file format and version 2.0 of the
           configuration file format. You can find the source in
           <filename>juggler/modules/jackal/tools/ConfigUpdater</filename>. If
           you have a binary distribution of VR Juggler, a compiled version can
@@ -1062,10 +1062,11 @@ gmtl::Matrix44f mat = posInt.getData(gadget::PositionUnitConversion::ConvertToFe
 
           <screen>cfgupdater file1 file2 ...</screen>
 
-          <para>The listed files can be config chunks (those with the
-          extension <filename>.cfg</filename> or <filename>.config</filename>)
-          or chunk descriptions (<filename>.desc</filename>). The utility
-          figures out the file type and makes the appropriate conversions.</para>
+          <para>The listed files can contain configuration elements (those
+          with the extension <filename>.cfg</filename> or
+          <filename>.config</filename>) or configuration definitions (<filename>.desc</filename>).
+          The utility figures out the file type and makes the appropriate
+          conversions.</para>
         </section>
 
         <section>
@@ -1095,16 +1096,16 @@ gmtl::Matrix44f mat = posInt.getData(gadget::PositionUnitConversion::ConvertToFe
           strings to the equivalent constant value.</para>
 
           <note>
-            <para>This script cannot process configuration description files.
+            <para>This script cannot process configuration definition files.
             As of this writing, we have no automated way to update from
-            version 1.9 of the description file format to version 2.0.</para>
+            version 1.9 of the definition file format to version 2.0.</para>
           </note>
         </section>
 
         <section>
-          <title>Version 2.0 to 2.1 (Description Files)</title>
+          <title>Version 2.0 to 2.1 (Configuration Definition Files)</title>
 
-          <para>Updating to version 2.1 of the description file format can be
+          <para>Updating to version 2.1 of the definition file format can be
           done through the use of an XSLT stylesheet. This stylesheet is found
           in <filename>juggler/modules/jackal/tools/xmlupdate</filename> or in
           <filename>$VJ_BASE_DIR/share/jccl/tools/xmlupdate</filename>,
@@ -1112,13 +1113,13 @@ gmtl::Matrix44f mat = posInt.getData(gadget::PositionUnitConversion::ConvertToFe
           VR Juggler. The stylesheet is named <filename>desc_2.0-2.1.xsl</filename>,
           and it can be used with any XSLT 1.0 processor. For example, if you
           have <command>xsltproc</command> available, you can use it to update
-          a description file as follows:</para>
+          a definition file as follows:</para>
 
           <screen>xsltproc -o output.desc desc_2.0-2.1.xsl input.desc</screen>
 
           <para>This will generate a new file, <filename>output.desc</filename>,
           based on <filename>input.desc</filename> that uses version 2.1 of
-          the description file format.</para>
+          the definition file format.</para>
 
           <para>We also provide a simple makefile in the <filename>xmlupdate</filename>
           directory for using this stylesheet with <command>xsltproc</command>
@@ -1149,13 +1150,13 @@ gmtl::Matrix44f mat = posInt.getData(gadget::PositionUnitConversion::ConvertToFe
           VR Juggler. The stylesheet is named <filename>cfg_2.0-2.1.xsl</filename>,
           and it can be used with any XSLT 1.0 processor. For example, if you
           have <command>xsltproc</command> available, you can use it to update
-          a description file as follows:</para>
+          a definition file as follows:</para>
 
           <screen>xsltproc -o output.config cfg_2.0-2.1.xsl input.config</screen>
 
           <para>This will generate a new file, <filename>output.config</filename>,
           based on <filename>input.config</filename> that uses version 2.1 of
-          the description file format.</para>
+          the definition file format.</para>
 
           <para>We also provide a simple makefile in the <filename>xmlupdate</filename>
           directory for using this stylesheet with <command>xsltproc</command>
