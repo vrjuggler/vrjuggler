@@ -34,6 +34,7 @@
 #define _VRJ_GL_DRAW_MANAGER_H_
 
 #include <vrj/vrjConfig.h>
+#include <vector>
 
 #include <vpr/vpr.h>
 //#include <vpr/Sync/CondVar.h>
@@ -54,8 +55,6 @@
 #include <vrj/Draw/OGL/GlWindow.h>
 #include <vrj/Draw/OGL/GlPipe.h>
 #include <vrj/Draw/OGL/GlUserData.h>
-
-#include <vrj/Draw/OGL/GlDrawObjectFunctor.h>
 
 namespace jccl {
     class ConfigChunkDB;
@@ -176,27 +175,6 @@ public: // Chunk handlers
    virtual bool configCanHandle(jccl::ConfigChunkPtr chunk);
 
 
-public:  // Drawing functions used by library
-   /**
-    * Draws any objects that the manager needs to display
-    * i.e. Gloves, etc.
-    */
-   void drawObjects();
-
-   /** Draws projections in OpenGL. */
-   void drawProjections(bool drawFrustum, gmtl::Vec3f surfColor, const float scaleFactor);
-
-   /**
-    * Draws a simulator using OpenGL commands.
-    *
-    * @note This is called internally by the library.
-    */
-   void drawSimulator(SimViewport* sim, const float scaleFactor);
-
-   /** Set the functor used to draw the wand */
-   void setDrawWandFunctor(GlDrawObjectFunctor* functor)
-   { mDrawWandFunctor = functor; }
-
 public:
    /**
     * Gets ptr to the current user data.  Should be used in the draw function.
@@ -214,18 +192,6 @@ public:
     */
    int getCurrentContext()
    { return (*mContextId); }
-
-protected:     // --- Geom helpers --- //
-   void initQuadObj();
-   void drawLine(gmtl::Vec3f& start, gmtl::Vec3f& end);
-   void drawSphere(float radius, int slices, int stacks);
-   void drawCone(float base, float height, int slices, int stacks);
-   void drawBox(float size, GLenum type);
-   void drawWireCube(float size);
-   void drawSolidCube(float size);
-   //void drawGlove(gadget::GloveProxy* gloveProxy);
-
-   GLUquadricObj* mQuadObj;
 
 protected:
    /**
@@ -263,9 +229,6 @@ protected:
    vpr::Semaphore    drawDoneSema;     /**< Semaphore for drawing done */
    vpr::Semaphore    mRuntimeConfigSema;  /**< Protects run-time config.  Only when this semaphore
                                         *  is acquired can run-time config occur */
-
-protected:
-   GlDrawObjectFunctor* mDrawWandFunctor;    /**< The functor to draw the wand */
 
 protected:
    GlDrawManager();

@@ -47,9 +47,10 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(GL_LIBRARY)
 
-SRCS 		= GlDrawManager.cpp		\
-                  GlPipe.cpp			\
-                  GlWindow.cpp
+SRCS 		= GlBasicSimulator.cpp \
+           GlDrawManager.cpp		\
+           GlPipe.cpp			\
+           GlWindow.cpp
 
 ifeq (@OS_TYPE@, Win32)
     SRCS	+= GlWindowWin32.cpp

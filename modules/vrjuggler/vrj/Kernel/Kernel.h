@@ -35,6 +35,7 @@
 //#pragma once
 
 #include <vrj/vrjConfig.h>
+#include <vector>
 
 #include <vpr/Util/Singleton.h>
 
