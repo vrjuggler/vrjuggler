@@ -67,10 +67,8 @@ if test "$SONIX_SOUNDMANAGER" = "yes" ; then
 else
    USE_SONIX='N'
 fi
+
 AC_SUBST(USE_SONIX)
-
-
-
 
 # Enable compilation of the OpenGL API.  Possible values are "yes" or "no".
 # "yes" is set with --enable-gl-api and "no" is set with --disable-gl-api.
@@ -128,22 +126,10 @@ case $target_os in
     # HP PA-RISC machine running HP-UX 10.20.
     hpux10.20)
         AC_DEFINE(VJ_HPUX_VERSION, 10)
-        AC_DEFINE(_INCLUDE_TERMIO,)
-        AC_DEFINE(_CMA_NOWRAPPERS_,)
         ;;
     # HP PA-RISC machine running HP-UX 11.x.
     hpux11*)
         AC_DEFINE(VJ_HPUX_VERSION, 11)
-        AC_DEFINE(_INCLUDE_TERMIO,)
-        AC_DEFINE(_CMA_NOWRAPPERS_,)
-        ;;
-    # i386-class machine running Windows {98,NT} with Cygnus GNU-Win32.
-    cygwin)
-        # There is no performance testing/monitoring code for Win32 (yet).
-        if test "x${_enable_perf}" != "xNONE" ; then
-            AC_MSG_WARN(*** Disabling performance testing on $host ***)
-            _enable_perf='NONE'
-        fi
         ;;
     darwin1.*)
         AC_DEFINE(_BSD_TYPES,) 
@@ -540,7 +526,6 @@ fi
 
 DPP_SUBST
 
-
 AC_SUBST(topdir)
 AC_SUBST(UNIX_VJROOT_ABS)
 AC_SUBST(UNIX_JUGGLERROOT_ABS)
@@ -639,7 +624,6 @@ AC_OUTPUT(Makefile
           test/Draw/OGL/texture/Makefile
           test/Draw/OGL/torus/Makefile
           test/Draw/OGL/wand/Makefile
-          test/Input/Makefile
           test/Math/Makefile
           test/Matrix/Makefile
           test/Quat/Makefile
