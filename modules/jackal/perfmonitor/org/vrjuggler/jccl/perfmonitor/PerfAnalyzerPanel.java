@@ -100,13 +100,14 @@ public class PerfAnalyzerPanel
 
     private class LabeledPanelButton extends JButton {
         public LabeledPerfDataCollector collector;
-        public String index;
+        public LabeledPerfDataCollector.IndexInfo index_info;
 
         public LabeledPanelButton (LabeledPerfDataCollector _collector, 
-                                   String _index, String text) {
+                                   LabeledPerfDataCollector.IndexInfo _ii, 
+                                   String text) {
             super (text);
             collector = _collector;
-            index = _index;
+            index_info = _ii;
         }
     }
 
@@ -254,24 +255,23 @@ public class PerfAnalyzerPanel
 	public JLabel colname_label;
 	public CollectorSummaryButton colsummary_button;
 	public JLabel avgs_label;
-	public JLabel[] phase_labels;
-	public JLabel[] avg_labels;
-	public GraphButton[] graph_buttons;
-	public AnomaliesButton[] anomalies_buttons;
-	public int num;
+	public java.util.List index_labels;       // list of JLabel
+	public java.util.List avg_labels;         // list of JLabel
+	public java.util.List graph_buttons;      // list of LabeledPanelButton
+	public java.util.List anomalies_buttons;  // list of LabeledPanelButton
+        public JPanel panel;
 
         public LabeledDataPanelElem (LabeledPerfDataCollector _col) {
             col = _col;
+            index_labels = new ArrayList();
+            avg_labels = new ArrayList();
+            graph_buttons = new ArrayList();
+            anomalies_buttons = new ArrayList();
         }
 
-	public void initialize (JPanel panel, 
+	public void initialize (JPanel _panel, 
 			      GridBagLayout gblayout, GridBagConstraints gbc) {
-	    Insets insets = new Insets (1,1,1,1);
-	    num = col.getNumIndices();
-	    phase_labels = new JLabel[num];
-	    avg_labels = new JLabel[num];
-	    graph_buttons = new GraphButton[num];
-	    anomalies_buttons = new AnomaliesButton[num];
+            panel = _panel;
 
 	    col.generateAverages(preskip, postskip);
 	    gbc.gridwidth = gbc.REMAINDER;
@@ -294,33 +294,11 @@ public class PerfAnalyzerPanel
 	    gblayout.setConstraints(avgs_label, gbc);
 	    panel.add (avgs_label);
 
-	    JLabel l;
-	    JButton b;
-// 	    for (int j = 0; j < num; j++) {
-// 		double avg = col.getAverageForPhase(j);
-// 		// this below will cause trouble
-// 		if (avg == 0.0)
-// 		    continue;
-// 		gbc.gridwidth = 1;
-// 		l = phase_labels[j] = new JLabel (j + ": " + col.getLabelForPhase(j));
-// 		gblayout.setConstraints (l, gbc);
-// 		panel.add(l);
-// 		l = avg_labels[j] = new JLabel (padFloat(avg/1000.0), JLabel.RIGHT);
-// 		gblayout.setConstraints (l, gbc);
-// 		panel.add(l);
-// 		b = graph_buttons[j] = new GraphButton (col, j);
-// 		b.addActionListener (PerfAnalyzerPanel.this);
-// 		b.setMargin(insets);
-// 		gblayout.setConstraints (b, gbc);
-// 		panel.add(b);
-// 		b = anomalies_buttons[j] = new AnomaliesButton (col, j);
-// 		b.setEnabled(false);
-// 		b.addActionListener (PerfAnalyzerPanel.this);
-// 		b.setMargin(insets);
-// 		gbc.gridwidth = gbc.REMAINDER;
-// 		gblayout.setConstraints (b, gbc);
-// 		panel.add(b);
-// 	    }
+            Iterator i = col.indexIterator();
+            while (i.hasNext()) {
+                LabeledPerfDataCollector.IndexInfo ii = (LabeledPerfDataCollector.IndexInfo)i.next();
+                addInitial (ii);
+ 	    }
 
             col.addActionListener (this);
 	}
@@ -329,15 +307,54 @@ public class PerfAnalyzerPanel
             col.removeActionListener (this);
         }
 
+        public void addInitial (LabeledPerfDataCollector.IndexInfo ii) {
+	    JLabel l;
+	    JButton b;
+	    Insets insets = new Insets (1,1,1,1);
+            double avg = ii.getAverage();
+//             // this below will cause trouble
+//             if (avg == 0.0)
+//                 continue;
+            gbc.gridwidth = 1;
+            l = new JLabel (/*i + ": " + */ii.index);
+            index_labels.add(l);
+            gblayout.setConstraints (l, gbc);
+            panel.add(l);
+            l = new JLabel (padFloat(avg/1000.0), JLabel.RIGHT);
+            avg_labels.add(l);
+            gblayout.setConstraints (l, gbc);
+            panel.add(l);
+            b = new LabeledPanelButton (col, ii, "Graph");
+            graph_buttons.add(b);
+            b.setActionCommand ("Graph");
+            b.addActionListener (PerfAnalyzerPanel.this);
+            b.setMargin(insets);
+            gblayout.setConstraints (b, gbc);
+            panel.add(b);
+// 	    b = anomalies_buttons[j] = new AnomaliesButton (col, j);
+// 	    b.setEnabled(false);
+// 	    b.addActionListener (PerfAnalyzerPanel.this);
+// 	    b.setMargin(insets);
+// 	    gbc.gridwidth = gbc.REMAINDER;
+// 	    gblayout.setConstraints (b, gbc);
+// 	    panel.add(b);
+        }
+
 	public void update() {
-// 	    col.generateAverages(preskip, postskip);
-// 	    for (int i = 0; i < num; i++) {
-// 		double avg = col.getAverageForPhase(i);
-// 		if (avg_labels[i] != null)
-// 		    avg_labels[i].setText(padFloat(avg/1000.0));
-// 		else
-// 		    ; // we should probably add something in this case...
-// 	    }
+ 	    col.generateAverages(preskip, postskip);
+            int num = index_labels.size();
+            Iterator i = col.indexIterator();
+            int j = 0;
+            while (i.hasNext()) {
+                LabeledPerfDataCollector.IndexInfo ii = (LabeledPerfDataCollector.IndexInfo)i.next();
+                if (j < num) {
+                    JLabel l = (JLabel)avg_labels.get(j);
+                    l.setText (padFloat(ii.getAverage()/1000.0));
+                }
+                else
+                    addInitial (ii);
+                j++;
+ 	    }
 	}
 
 
