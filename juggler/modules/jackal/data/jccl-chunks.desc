@@ -49,54 +49,6 @@
     <PropertyDesc token="Enabled" name="Enabled" type="bool" num="1">
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="vjIncludeFile" name="Include File">
-    <help>File that should be loaded along with this one</help>
-  </ChunkDesc>
-  <ChunkDesc token="vjIncludeDescFile" name="Include Descriptions File">
-    <help>Chunk Descriptions File that should be loaded before processing the rest of this file</help>
-  </ChunkDesc>
-  <ChunkDesc token="vjcontrol" name="VjControl Configuration">
-    <help>Configuration information for the VjControl GUI itself</help>
-    <PropertyDesc token="looknfeel" name="Look and Feel" type="string" num="1">
-        <help>The visual 'Look and Feel' to use for the GUI</help>
-        <enumeration name="Java"/>
-        <enumeration name="Motif"/>
-        <enumeration name="Windows"/>
-    </PropertyDesc>
-    <PropertyDesc token="host" name="Default Host" type="string" num="1">
-        <help>A remote host that VjControl should try to connect to</help>
-        <item label="Application location" defaultvalue="localhost"/>
-    </PropertyDesc>
-    <PropertyDesc token="port" name="Default Port" type="int" num="1">
-        <help>Network Port that VjControl should try to connect to</help>
-        <item label="Application port number" defaultvalue="4450"/>
-    </PropertyDesc>
-    <PropertyDesc token="descfiles" name="Preload ChunkDesc Files" type="string" num="variable">
-        <help>The names of Chunk Description files that VjControl should load at startup</help>
-    </PropertyDesc>
-    <PropertyDesc token="chunkfiles" name="Preload ConfigChunk Files" type="string" num="variable">
-        <help>The names of ConfigChunk files that VjControl should load at startup</help>
-    </PropertyDesc>
-    <PropertyDesc token="defaultchunkfiles" name="Default ConfigChunk Files" type="string" num="variable">
-        <help>Files that contain default values for new ConfigChunks</help>
-    </PropertyDesc>
-    <PropertyDesc token="fontname" name="Font Name" type="string" num="1">
-        <help>Name of the font to use for the GUI</help>
-        <enumeration name="Courier"/>
-        <enumeration name="Dialog"/>
-        <enumeration name="DialogInput"/>
-        <enumeration name="Helvetica"/>
-        <enumeration name="TimesRoman"/>
-    </PropertyDesc>
-    <PropertyDesc token="fontsize" name="Font Size" type="int" num="1">
-        <help>Font size to use for GUI</help>
-    </PropertyDesc>
-    <PropertyDesc token="windowsize" name="Max Window Size" type="int" num="2">
-        <help>Maximum size to open vjcontrol windows</help>
-        <item label="Width" defaultvalue="0"/>
-        <item label="Height" defaultvalue="0"/>
-    </PropertyDesc>
-  </ChunkDesc>
   <ChunkDesc token="PerfData" name="Performance Data Display">
     <help>Information for displaying data from perfbuffers with a matching name</help>
     <PropertyDesc token="labels" name="Labels" type="string" num="variable">
