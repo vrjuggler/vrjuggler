@@ -1049,6 +1049,7 @@ AC_CONFIG_FILES([
    test/TestSuite/TestCases/Makefile
    test/TestSuite/TestCases/DynLoad/Makefile
    test/TestSuite/TestCases/DynLoad/modules/Makefile
+   test/TestSuite/TestCases/Perf/Makefile
    test/TestSuite/TestCases/IO/Makefile
    test/TestSuite/TestCases/IO/Port/Makefile
    test/TestSuite/TestCases/IO/Socket/Makefile
