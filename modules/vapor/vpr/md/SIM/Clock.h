@@ -74,7 +74,10 @@ public:
 
    void setCurrentTime (const vpr::Uint32 time)
    {
-      mTensOfUsec = time;
+      if ( time > mTensOfUsec )
+      {
+         mTensOfUsec = time;
+      }
    }
 
    void setCurrentTime(const vpr::Interval& time);
