@@ -37,13 +37,13 @@
 #include <string.h>
 #include <strings.h>    /* Needed for bzero(3) on some platforms */
 #include <math.h>
-#include <unistd.h>     /* Needed for close(2) */
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
-#include <arpa/inet.h>  /* For inet_addr(3) */
 #include <errno.h>
+
+#include <vpr/vpr.h>
+#include <vpr/vprTypes.h>
+#include <vpr/System.h>
+#include <vpr/IO/Socket/SocketDatagram.h>
+#include <vpr/IO/Socket/SocketStream.h>
 
 #include <gad/Devices/Ascension/MotionStarStandalone.h>
 
@@ -202,7 +202,7 @@ operator<< (std::ostream& out, const BIRDNET::SINGLE_BIRD_STATUS& device) {
 // Constructor.  This initializes member variables and determines the
 // endianness of the host machine.
 // ----------------------------------------------------------------------------
-MotionStarStandalone::MotionStarStandalone(const char* address,
+MotionStarStandalone::MotionStarStandalone(const std::string& address,
                                            const unsigned short port,
                                            const BIRDNET::protocol proto,
                                            const bool master,
@@ -212,7 +212,7 @@ MotionStarStandalone::MotionStarStandalone(const char* address,
                                            const unsigned char report_rate,
                                            const double measurement_rate,
                                            const unsigned int birds_requested)
-    : m_active(false), m_socket(-1), m_port(port), m_proto(proto),
+    : m_active(false), m_address(port), m_socket(NULL), m_proto(proto),
       m_master(master), m_seq_num(0), m_cur_mrate(0.0),
       m_measurement_rate(measurement_rate), m_run_mode(run_mode),
       m_hemisphere(hemisphere), m_bird_format(bird_format),
@@ -224,8 +224,10 @@ MotionStarStandalone::MotionStarStandalone(const char* address,
         short  value;
     } endian;
 
-    // Initialize member variables using passed parameters.
-    m_address = address;
+    if ( address.length() > 0 )
+    {
+        m_address.setAddress(address);
+    }
 
     // These are hard-coded because they are always going to be the same
     // values.
@@ -274,193 +276,150 @@ MotionStarStandalone::start () {
 
     retval = 0;
 
-    // Ensure that an address string has been defind for the server before
-    // trying to make the connection to the server.
-    if ( m_address.size() > 0 ) {
-        fprintf(stderr, "\n[MotionStarStandalone] Connecting to %s ...\n",
-                m_address.c_str());
+    fprintf(stderr, "\n[MotionStarStandalone] Connecting to %s ...\n",
+            m_address.getAddressString().c_str());
 
-        // Create the socket based on the protocol in use.
-        switch (m_proto) {
-          case BIRDNET::UDP:
-            m_socket = socket(PF_INET, SOCK_DGRAM, 0);
-            break;
-          case BIRDNET::TCP:
-            m_socket = socket(PF_INET, SOCK_STREAM, 0);
-            break;
-        }
+    // Create the socket based on the protocol in use.
+    switch (m_proto) {
+      case BIRDNET::UDP:
+        m_socket = new vpr::SocketDatagram(vpr::InetAddr::AnyAddr, m_address);
+        break;
+      case BIRDNET::TCP:
+        m_socket = new vpr::SocketStream(vpr::InetAddr::AnyAddr, m_address);
+        break;
+    }
 
-        // If the socket could not be created, we are in trouble.
-        if ( m_socket < 0 ) {
-            fprintf(stderr,
-                    "[MotionStarStandalone] Could not create %s socket: %s\n",
-                    ((m_proto == BIRDNET::UDP) ? "datagram" : "stream"),
-                    strerror(errno));
-            retval = -2;
+    // If the socket could not be opened, we are in trouble.
+    if ( ! m_socket->open().success() ) {
+        fprintf(stderr,
+                "[MotionStarStandalone] Could not open %s socket: %s\n",
+                ((m_proto == BIRDNET::UDP) ? "datagram" : "stream"),
+                strerror(errno));
+        retval = -2;
+    }
+    // Otherwise, keep on truckin'.
+    else {
+        fprintf(stderr, "[MotionStarStandalone] %s socket open\n",
+                ((m_proto == BIRDNET::UDP) ? "Datagram" : "Stream"));
+
+        // Connect to the server.  If this is a datagram socket, it will
+        // set the default recipient of all future packets, so this is a
+        // valid, safe operation regardless of the protocol being used.
+        if ( ! m_socket->connect().success() ) {
+            perror("[MotionStarStandalone] Cannot connect to server");
+            retval = -1;
         }
-        // Otherwise, keep on truckin'.
         else {
-            struct sockaddr_in server_addr;
-            struct hostent* host_entry;
-            int status;
+            fprintf(stderr, "[MotionStarStandalone] Connected to server\n");
 
-            fprintf(stderr, "[MotionStarStandalone] %s socket created\n",
-                    ((m_proto == BIRDNET::UDP) ? "Datagram" : "Stream"));
-
-            // Fill in the structure with the address of the server to which
-            // we will connect.
-            bzero((char*) &server_addr, sizeof(server_addr));
-            server_addr.sin_family = PF_INET;
-            server_addr.sin_port   = htons(m_port);
-
-            // Try to look up address by name.  This will work for an IP
-            // address too, but we fall back on inet_addr(3) below just to be
-            // safe.
-            host_entry = gethostbyname(m_address.c_str());
-
-            // If host_entry is non-NULL, we found an IP address for the
-            // hostname in address.  Move that address into the server struct.
-            if ( host_entry != NULL ) {
-                memmove((void*) &server_addr.sin_addr.s_addr,
-                        (void*) host_entry->h_addr,
-                        sizeof(server_addr.sin_addr.s_addr));
-            }
-            // Otherwise, assume that the value in address is already an IP
-            // address and use inet_addr(3) on it.
-            else {
-                server_addr.sin_addr.s_addr = inet_addr(m_address.c_str());
-            }
-
-            fprintf(stderr,
-                    "[MotionStarStandalone] Got inet address of server\n");
-
-            // Connect to the server.  If this is a datagram socket, it will
-            // set the default recipient of all future packets, so this is a
-            // valid, safe operation regardless of the protocol being used.
-            status = connect(m_socket, (struct sockaddr*) &server_addr,
-                             sizeof(server_addr));
-
-            if ( status == -1 ) {
-                perror("[MotionStarStandalone] Cannot connect to server");
+            // Now that we are connected, send a wake-up call to the
+            // server.
+            if ( ! sendWakeUp().success() ) {
+                fprintf(stderr,
+                        "[MotionStarStandalone] Could not wake up server\n");
                 retval = -1;
             }
             else {
-                fprintf(stderr, "[MotionStarStandalone] Connected to server\n");
+                BIRDNET::SYSTEM_STATUS* sys_status;
 
-                // Now that we are connected, send a wake-up call to the
-                // server.
-                if ( sendWakeUp() != 0 ) {
+                fprintf(stderr,
+                        "[MotionStarStandalone] The Sleeper has awakened!\n");
+
+                // Get the general system status and save it for later.
+                sys_status = getSystemStatus();
+
+                if ( sys_status == NULL ) {
                     fprintf(stderr,
-                            "[MotionStarStandalone] Could not wake up server\n");
-                    retval = -1;
+                            "[MotionStarStandalone] WARNING: Failed to "
+                            "read system status\n");
                 }
+                // We only try to set the system status if we got a valid
+                // copy of the current system status.
                 else {
-                    BIRDNET::SYSTEM_STATUS* sys_status;
-
                     fprintf(stderr,
-                            "[MotionStarStandalone] The Sleeper has awakened!\n");
+                            "[MotionStarStandalone] Got system status\n");
 
-                    // Get the general system status and save it for later.
-                    sys_status = getSystemStatus();
+                    // As long as a positive, non-zero measurement rate is
+                    // given, send it to the MotionStar chassis as a system
+                    // configuration parameter.
+                    if ( m_measurement_rate > 0.0 ) {
+                        std::string str_rate;
+                        vpr::ReturnStatus status;
 
-                    if ( sys_status == NULL ) {
-                        fprintf(stderr,
-                                "[MotionStarStandalone] WARNING: Failed to "
-                                "read system status\n");
-                    }
-                    // We only try to set the system status if we got a valid
-                    // copy of the current system status.
-                    else {
-                        fprintf(stderr,
-                                "[MotionStarStandalone] Got system status\n");
-
-                        // As long as a positive, non-zero measurement rate is
-                        // given, send it to the MotionStar chassis as a system
-                        // configuration parameter.
-                        if ( m_measurement_rate > 0.0 ) {
-                            std::string str_rate;
-                            int status;
-
-                            // Bounds checking on the measumrent rate.
-                            if ( m_measurement_rate > 144.0 ) {
-                                m_measurement_rate = 144.0;
-                            }
-                            else if ( m_measurement_rate < 20.0 ) {
-                                m_measurement_rate = 20.0;
-                            }
-
-                            convertMeasurementRate(m_measurement_rate,
-                                                   str_rate);
-                            status = setSystemStatus(sys_status,
-                                                     sys_status->transmitterNumber,
-                                                     str_rate.c_str());
-
-                            if ( status != 0 ) {
-                                fprintf(stderr,
-                                        "[MotionStarStandalone] WARNING: Failed "
-                                        "to set system status\n");
-                            }
-                            else {
-                                // I use std::cerr here so that I don't have
-                                // to deal with fprintf(3)'s float vs. double
-                                // formatting.
-                                std::cerr << "[MotionStarStandalone] Set measurement "
-                                          << "rate to " << m_measurement_rate
-                                          << std::endl;
-                            }
+                        // Bounds checking on the measumrent rate.
+                        if ( m_measurement_rate > 144.0 ) {
+                            m_measurement_rate = 144.0;
                         }
-                    }
+                        else if ( m_measurement_rate < 20.0 ) {
+                            m_measurement_rate = 20.0;
+                        }
 
-                    // Configure each of the birds.
-                    configureBirds();
+                        convertMeasurementRate(m_measurement_rate, str_rate);
+                        status = setSystemStatus(sys_status,
+                                                 sys_status->transmitterNumber,
+                                                 str_rate.c_str());
 
-                    // If the desired run mode is BIRDNET::CONTINUOUS, we need
-                    // to request that the data start coming from the server.
-                    // If it is BIRDNET::SINGLE_SHOT, there is nothing to do.
-                    if ( m_run_mode == BIRDNET::CONTINUOUS ) {
-                        if ( setContinuous() != 0 ) {
+                        if ( ! status.success() ) {
                             fprintf(stderr,
-                                    "[MotionStarStandalone] WARNING: Continuous data "
-                                    "request failed!\n");
+                                    "[MotionStarStandalone] WARNING: Failed "
+                                    "to set system status\n");
                         }
                         else {
-                            fprintf(stderr,
-                                    "[MotionStarStandalone] Continuous data requested\n");
+                            // I use std::cerr here so that I don't have
+                            // to deal with fprintf(3)'s float vs. double
+                            // formatting.
+                            std::cerr << "[MotionStarStandalone] Set measurement "
+                                      << "rate to " << m_measurement_rate
+                                      << std::endl;
                         }
                     }
+                }
 
-                    // Ensure that the position scaling factor has been set
-                    // by this point.  If it has not been set, we are in big,
-                    // big trouble since no useful data can be extracted from
-                    // the server's data packets.
-                    if ( m_xmtr_pos_scale == -1.0 ) {
+                // Configure each of the birds.
+                configureBirds();
+
+                // If the desired run mode is BIRDNET::CONTINUOUS, we need
+                // to request that the data start coming from the server.
+                // If it is BIRDNET::SINGLE_SHOT, there is nothing to do.
+                if ( m_run_mode == BIRDNET::CONTINUOUS ) {
+                    if ( setContinuous() != 0 ) {
                         fprintf(stderr,
-                                "[MotionStarStandalone] FATAL ERROR: Position scaling "
-                                "factor unknown!\n");
-                        retval = -4;
+                                "[MotionStarStandalone] WARNING: Continuous data "
+                                "request failed!\n");
                     }
                     else {
-                        fprintf(stderr, "[MotionStarStandalone] Driver setup done\n\n");
-
-                        if ( sys_status != NULL ) {
-                            printSystemStatus(sys_status);
-                            delete sys_status;
-                        }
-
-                        printDeviceStatus();
-
-                        // The device setup has completed successfully, so we
-                        // are now considered active.  The return value is
-                        // left at 0 indicating successful startup.
-                        m_active = true;
+                        fprintf(stderr,
+                                "[MotionStarStandalone] Continuous data requested\n");
                     }
+                }
+
+                // Ensure that the position scaling factor has been set
+                // by this point.  If it has not been set, we are in big,
+                // big trouble since no useful data can be extracted from
+                // the server's data packets.
+                if ( m_xmtr_pos_scale == -1.0 ) {
+                    fprintf(stderr,
+                            "[MotionStarStandalone] FATAL ERROR: Position scaling "
+                            "factor unknown!\n");
+                    retval = -4;
+                }
+                else {
+                    fprintf(stderr, "[MotionStarStandalone] Driver setup done\n\n");
+
+                    if ( sys_status != NULL ) {
+                        printSystemStatus(sys_status);
+                        delete sys_status;
+                    }
+
+                    printDeviceStatus();
+
+                    // The device setup has completed successfully, so we
+                    // are now considered active.  The return value is
+                    // left at 0 indicating successful startup.
+                    m_active = true;
                 }
             }
         }
-    }
-    // If no address has been set, we cannot start.
-    else {
-        retval = -3;
     }
 
     return retval;
@@ -476,9 +435,10 @@ MotionStarStandalone::stop () {
     shutdown();
 
     // Close the socket.
-    if ( m_socket != -1 ) {
-        close(m_socket);
-        m_socket = -1;
+    if ( m_socket != NULL ) {
+        m_socket->close();
+//        delete m_socket;
+        m_socket = NULL;
     }
 
     // We reset the sequence number to 0 so that if the driver is restarted
@@ -502,7 +462,7 @@ MotionStarStandalone::sample () {
     if ( m_run_mode == BIRDNET::SINGLE_SHOT ) {
         BIRDNET::HEADER data_req(BIRDNET::MSG_SINGLE_SHOT);
 
-        data_req.sequence = htons(m_seq_num);
+        data_req.sequence = vpr::System::Htons(m_seq_num);
         m_seq_num++;
         sendMsg(&data_req, sizeof(BIRDNET::HEADER));
     }
@@ -513,7 +473,7 @@ MotionStarStandalone::sample () {
 
     // Record the current sequence number so that we know what to use the
     // next time we need to send a packet to the server.
-    m_seq_num = ntohs(recv_pkt.header.sequence);
+    m_seq_num = vpr::System::Ntohs(recv_pkt.header.sequence);
 
     if ( recv_pkt.header.error_code != 0 ) {
         printError(recv_pkt.header.error_code);
@@ -527,7 +487,8 @@ MotionStarStandalone::sample () {
             unsigned int rec_data_words;
             size_t rec_data_size;
 
-            getRsp(&recv_pkt.buffer, ntohs(recv_pkt.header.number_bytes));
+            getRsp(&recv_pkt.buffer,
+                   vpr::System::Ntohs(recv_pkt.header.number_bytes));
 
             // Use a char* for doing pointer arithmetic.  It starts at the
             // beginning of the received packet's buffer field.
@@ -616,24 +577,22 @@ MotionStarStandalone::sample () {
 // ----------------------------------------------------------------------------
 // Stops the data flow if it is in continuous mode.
 // ----------------------------------------------------------------------------
-int
+vpr::ReturnStatus
 MotionStarStandalone::stopData () {
-    int status;
-
-    status = 0;
+    vpr::ReturnStatus status;
 
     // If and only if the server is sending continuous data, we need to stop
     // it.
     if ( m_run_mode == BIRDNET::CONTINUOUS ) {
         BIRDNET::HEADER msg(BIRDNET::MSG_STOP_DATA), rsp;
 
-        msg.sequence = htons(m_seq_num);
+        msg.sequence = vpr::System::Htons(m_seq_num);
         m_seq_num++;
 
         // Send the MSG_STOP_DATA packet.
         status = sendMsg(&msg, sizeof(BIRDNET::HEADER));
 
-        if ( status != 0 ) {
+        if ( ! status.success() ) {
             fprintf(stderr,
                     "[MotionStarStandalone] WARNING: Could not send message to stop "
                     "continuous data\n");
@@ -644,7 +603,7 @@ MotionStarStandalone::stopData () {
 
             // If getRsp() did not return 0, print a warning message stating
             // that the data flow could not be stopped.
-            if ( status != 0 ) {
+            if ( ! status.success() ) {
                 fprintf(stderr,
                         "[MotionStarStandalone] WARNING: Could not stop continuous data\n");
             }
@@ -662,18 +621,18 @@ MotionStarStandalone::stopData () {
 // ----------------------------------------------------------------------------
 // Shut down the server chassis.
 // ----------------------------------------------------------------------------
-int
+vpr::ReturnStatus
 MotionStarStandalone::shutdown () {
     BIRDNET::HEADER msg(BIRDNET::MSG_SHUT_DOWN), rsp;
-    int status;
+    vpr::ReturnStatus status;
 
-    msg.sequence = htons(m_seq_num);
+    msg.sequence = vpr::System::Htons(m_seq_num);
     m_seq_num++;
 
     // Send the MSG_SHUT_DOWN packet.
     status = sendMsg(&msg, sizeof(BIRDNET::HEADER)) ;
 
-    if ( status != 0 ) {
+    if ( ! status.success() ) {
         fprintf(stderr,
                 "[MotionStarStandalone] WARNING: Could not send shutdown request\n");
     }
@@ -682,7 +641,7 @@ MotionStarStandalone::shutdown () {
         status = getRsp(&rsp, sizeof(BIRDNET::HEADER));
 
         // If one could not be read, print a warning message.
-        if ( status != 0 ) {
+        if ( ! status.success() ) {
             fprintf(stderr,
                     "[MotionStarStandalone] WARNING: Could not shutdown server chassis\n");
         }
@@ -711,10 +670,10 @@ MotionStarStandalone::setRunMode (const BIRDNET::run_mode mode) {
         {
             BIRDNET::HEADER msg(BIRDNET::MSG_STOP_DATA), rsp;
 
-            msg.sequence = htons(m_seq_num);
+            msg.sequence = vpr::System::Htons(m_seq_num);
             m_seq_num++;
 
-            if ( sendMsg(&msg, sizeof(BIRDNET::HEADER)) == 0 ) {
+            if ( sendMsg(&msg, sizeof(BIRDNET::HEADER)).success() ) {
                 fprintf(stderr, "[MotionStarStandalone] Continuous data stopped\n");
                 getRsp(&rsp, sizeof(BIRDNET::HEADER));
             }
@@ -732,10 +691,10 @@ MotionStarStandalone::setRunMode (const BIRDNET::run_mode mode) {
         {
             BIRDNET::HEADER msg(BIRDNET::MSG_RUN_CONTINUOUS), rsp;
 
-            msg.sequence = htons(m_seq_num);
+            msg.sequence = vpr::System::Htons(m_seq_num);
             m_seq_num++;
 
-            if ( sendMsg(&msg, sizeof(BIRDNET::HEADER)) == 0 ) {
+            if ( sendMsg(&msg, sizeof(BIRDNET::HEADER)).success() ) {
                 fprintf(stderr, "[MotionStarStandalone] Continuous data requested\n");
                 getRsp(&rsp, sizeof(BIRDNET::HEADER));
             }
@@ -1033,19 +992,19 @@ MotionStarStandalone::getQuaternion (const unsigned int bird, float quat[4]) con
 // ----------------------------------------------------------------------------
 // Send a wake-up call to the MotionStar server.
 // ----------------------------------------------------------------------------
-int
+vpr::ReturnStatus
 MotionStarStandalone::sendWakeUp () {
     BIRDNET::HEADER msg(BIRDNET::MSG_WAKE_UP), rsp;
-    int status;
+    vpr::ReturnStatus status;
 
-    msg.sequence = htons(m_seq_num);
+    msg.sequence = vpr::System::Htons(m_seq_num);
     m_seq_num++;
 
     status = sendMsg((void*) &msg, sizeof(msg));
 
     // If the wake-up packet could not be sent to the server, print a
     // warning message.
-    if ( status != 0 ) {
+    if ( ! status.success() ) {
         fprintf(stderr,
                 "[MotionStarStandalone] WARNING: Could not send wake-up message to "
                 "server!\n");
@@ -1056,14 +1015,14 @@ MotionStarStandalone::sendWakeUp () {
         // If we got a response but there was an error from the server, shut
         // it down and send the wake-up message again.  This is the
         // recommended procedure documented in the operation guide.
-        if ( status == 0 && rsp.error_code != 0 ) {
+        if ( status.success() && rsp.error_code != 0 ) {
             BIRDNET::HEADER shutdown_msg(BIRDNET::MSG_SHUT_DOWN);
 
             fprintf(stderr,
                     "[MotionStarStandalone] Reinitializing server and sending wake-up "
                     "call again\n");
 
-            shutdown_msg.sequence = htons(m_seq_num);
+            shutdown_msg.sequence = vpr::System::Htons(m_seq_num);
             m_seq_num++;
 
             status = sendMsg((void*) &shutdown_msg, sizeof(shutdown_msg));
@@ -1164,7 +1123,7 @@ MotionStarStandalone::getSystemStatus () {
 // ----------------------------------------------------------------------------
 // Set the system status.
 // ----------------------------------------------------------------------------
-int
+vpr::ReturnStatus
 MotionStarStandalone::setSystemStatus (BIRDNET::SYSTEM_STATUS* sys_status,
                                        const unsigned char xmtr_num,
                                        const char data_rate[6])
@@ -1191,7 +1150,7 @@ MotionStarStandalone::setSystemStatus (BIRDNET::SYSTEM_STATUS* sys_status,
 // Read the configurations of all the birds and send our configuration data
 // to them.
 // ----------------------------------------------------------------------------
-int
+unsigned int
 MotionStarStandalone::configureBirds () {
     BIRDNET::SINGLE_BIRD_STATUS* bird_status;
     unsigned int bird_count;
@@ -1432,7 +1391,7 @@ MotionStarStandalone::getBirdStatus (const unsigned char bird) {
 // ----------------------------------------------------------------------------
 // Set the status of an individual bird.
 // ----------------------------------------------------------------------------
-int
+vpr::ReturnStatus
 MotionStarStandalone::setBirdStatus (const unsigned char bird,
                             BIRDNET::SINGLE_BIRD_STATUS* status)
 {
@@ -1450,7 +1409,7 @@ MotionStarStandalone::setBirdStatus (const unsigned char bird,
 // ----------------------------------------------------------------------------
 BIRDNET::DATA_PACKET*
 MotionStarStandalone::getDeviceStatus (const unsigned char device) {
-    int status;
+    vpr::ReturnStatus status;
     BIRDNET::HEADER msg(BIRDNET::MSG_GET_STATUS);
     BIRDNET::DATA_PACKET* rsp;
 
@@ -1462,7 +1421,7 @@ MotionStarStandalone::getDeviceStatus (const unsigned char device) {
     // Send the status request packet to the server.
     status = sendMsg((void*) &msg, sizeof(msg));
 
-    if ( status != 0 ) {
+    if ( ! status.success() ) {
         fprintf(stderr,
                 "[MotionStarStandalone] ERROR: Could not request status for device %u\n",
                 device);
@@ -1476,7 +1435,7 @@ MotionStarStandalone::getDeviceStatus (const unsigned char device) {
         // of the data part of the packet.
         status = getRsp((void*) &(rsp->header), sizeof(rsp->header));
 
-        if ( status != 0 ) {
+        if ( ! status.success() ) {
             fprintf(stderr,
                     "[MotionStarStandalone] ERROR: Could not read status header for "
                     "device %u from server\n", device);
@@ -1485,9 +1444,9 @@ MotionStarStandalone::getDeviceStatus (const unsigned char device) {
         // in the header's number_bytes field.
         else {
             status = getRsp((void*) &(rsp->buffer),
-                            ntohs(rsp->header.number_bytes));
+                            vpr::System::Ntohs(rsp->header.number_bytes));
 
-            if ( status != 0 ) {
+            if ( ! status.success() ) {
                 fprintf(stderr,
                         "[MotionStarStandalone] ERROR: Could not read status data "
                         "buffer for device %u from server\n", device);
@@ -1504,7 +1463,7 @@ MotionStarStandalone::getDeviceStatus (const unsigned char device) {
 // Bird Bus.  Thus, a value of 0 is interpreted as a configuation block for
 // the overall system.  The birds are addressed from 1 through 120.
 // ----------------------------------------------------------------------------
-int
+vpr::ReturnStatus
 MotionStarStandalone::setDeviceStatus (const unsigned char device,
                                        const char* buffer,
                                        const unsigned short buffer_size)
@@ -1512,7 +1471,7 @@ MotionStarStandalone::setDeviceStatus (const unsigned char device,
     BIRDNET::DATA_PACKET msg;
     BIRDNET::HEADER rsp;
     size_t total_size;
-    int status;
+    vpr::ReturnStatus status;
 
     // Get the total size of the packet that we construct based on the size
     // of the header and the size of the passed buffer.
@@ -1521,7 +1480,7 @@ MotionStarStandalone::setDeviceStatus (const unsigned char device,
     // Fill in the header bits.
     msg.header.type         = BIRDNET::MSG_SEND_SETUP;
     msg.header.xtype        = device;
-    msg.header.number_bytes = htons(buffer_size);
+    msg.header.number_bytes = vpr::System::Htons(buffer_size);
 
     // Copy the given buffer into the packet's data buffer.
     memcpy((void*) &msg.buffer[0], (void*) buffer, buffer_size);
@@ -1529,7 +1488,7 @@ MotionStarStandalone::setDeviceStatus (const unsigned char device,
     // Send the constructed packet to the server.
     status = sendMsg(&msg, total_size);
 
-    if ( status != 0 ) {
+    if ( ! status.success() ) {
         fprintf(stderr,
                 "[MotionStarStandalone] WARNING: Could not set device status for "
                 "device %u: %s\n", device, strerror(errno));
@@ -1537,7 +1496,7 @@ MotionStarStandalone::setDeviceStatus (const unsigned char device,
     else {
         status = getRsp(&rsp, sizeof(rsp));
 
-        if ( status != 0 ) {
+        if ( ! status.success() ) {
             fprintf(stderr,
                     "[MotionStarStandalone] WARNING: Could not read server response to "
                     "device %u setup: %s\n", device, strerror(errno));
@@ -1557,8 +1516,8 @@ MotionStarStandalone::setContinuous () {
 
     status = -1;
 
-    if ( sendMsg(&msg, sizeof(BIRDNET::HEADER)) == 0 ) {
-        if ( getRsp(&rsp, sizeof(BIRDNET::HEADER)) == 0 ) {
+    if ( sendMsg(&msg, sizeof(BIRDNET::HEADER)).success() ) {
+        if ( getRsp(&rsp, sizeof(BIRDNET::HEADER)).success() ) {
             if ( rsp.error_code != 0 ) {
                 printError(rsp.error_code);
             }
@@ -1719,29 +1678,23 @@ MotionStarStandalone::getUnitInfo (const unsigned int bird,
 // ----------------------------------------------------------------------------
 // Send the given message to the server.
 // ----------------------------------------------------------------------------
-int
+vpr::ReturnStatus
 MotionStarStandalone::sendMsg (const void* packet, const size_t packet_size) {
-    ssize_t bytes;
-    int status;
+    vpr::Uint32 bytes;
+    vpr::ReturnStatus status;
 
     // Send the packet to the server.
-    bytes = send(m_socket, packet, packet_size, 0);
+    status = m_socket->send(packet, packet_size, bytes);
 
     // Nothing was sent.
     if ( bytes == 0 ) {
         fprintf(stderr, "[MotionStarStandalone] Sent 0 bytes to %s: %s\n",
-               m_address.c_str(), strerror(errno));
-        status = -2;
+               m_address.getAddressString().c_str(), strerror(errno));
     }
     // An error occurred while trying to send the packet.
     else if ( bytes == -1 ) {
         fprintf(stderr, "[MotionStarStandalone] Could not send message to %s: %s\n",
-                m_address.c_str(), strerror(errno));
-        status = -1;
-    }
-    // The packet was sent successfully.
-    else {
-        status = 0;
+                m_address.getAddressString().c_str(), strerror(errno));
     }
 
     return status;
@@ -1750,70 +1703,26 @@ MotionStarStandalone::sendMsg (const void* packet, const size_t packet_size) {
 // ----------------------------------------------------------------------------
 // Get the server's response to a sent message.
 // ----------------------------------------------------------------------------
-int
+vpr::ReturnStatus
 MotionStarStandalone::getRsp (void* packet, const size_t packet_size) {
-    ssize_t bytes;
-    int status;
+    vpr::Uint32 bytes;
+    vpr::ReturnStatus status;
 
     // Get the packet from the server.
-    bytes = recvn(packet, packet_size);
+    status = m_socket->recvn(packet, packet_size, bytes);
 
     // Nothing was read.
     if ( bytes == 0 ) {
         fprintf(stderr, "[MotionStarStandalone] Read 0 bytes from %s: %s\n",
-                m_address.c_str(), strerror(errno));
-        status = -2;
+                m_address.getAddressString().c_str(), strerror(errno));
     }
     // An error occurred while trying to receive the packet.
     else if ( bytes == -1 ) {
         fprintf(stderr, "[MotionStarStandalone] Could not read message from %s: %s\n",
-                m_address.c_str(), strerror(errno));
-        status = -1;
-    }
-    // The packet was received successfully.
-    else {
-        status = 0;
+                m_address.getAddressString().c_str(), strerror(errno));
     }
 
     return status;
-}
-
-// ----------------------------------------------------------------------------
-// Read exactly packet_size bytes from the server.
-// ----------------------------------------------------------------------------
-ssize_t
-MotionStarStandalone::recvn (void* packet, const size_t packet_size, const int flags) {
-    size_t count;
-    ssize_t bytes;
-
-    count = packet_size;
-
-    while ( count > 0 ) {
-        bytes = ::recv(m_socket, packet, packet_size, flags);
-
-        // Read error.
-        if ( bytes < 0 ) {
-            // Restart the read process if we were interrupted by the OS.
-            if ( errno == EINTR ) {
-                continue;
-            }
-            // Otherwise, we have an error situation, so return the value
-            // returned by recv(2).
-            else  {
-                break;
-            }
-        }
-        // May have read EOF, so return bytes read so far.
-        else if ( bytes == 0 ) {
-            bytes = packet_size - count;
-        }
-        else {
-            packet = (void*) ((char*) packet + bytes);
-            count -= bytes;
-        }
-    }
-
-    return bytes;
 }
 
 // ----------------------------------------------------------------------------

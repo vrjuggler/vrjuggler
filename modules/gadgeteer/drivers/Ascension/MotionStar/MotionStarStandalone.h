@@ -37,6 +37,11 @@
 #include <string>
 #include <vector>
 
+#include <vpr/vpr.h>
+#include <vpr/IO/Socket/InetAddr.h>
+#include <vpr/IO/Socket/Socket.h>
+#include <vpr/Util/ReturnStatus.h>
+
 
 //: Ascension Flock namespace.
 namespace FLOCK {
@@ -378,7 +383,7 @@ public:
     //! ARGS: birds_requested  - The number of birds whose data will be
     //+                          sampled.
     // ------------------------------------------------------------------------
-    MotionStarStandalone(const char* address, const unsigned short port,
+    MotionStarStandalone(const std::string& address, const unsigned short port,
                          const BIRDNET::protocol proto, const bool master,
                          const FLOCK::hemisphere hemisphere,
                          const FLOCK::data_format bird_format,
@@ -447,7 +452,7 @@ public:
     //! RETURNS:  0 - The data flow was stopped.
     //! RETURNS: -1 - The data flow could not be stopped for some reason.
     // ------------------------------------------------------------------------
-    int stopData(void);
+    vpr::ReturnStatus stopData(void);
 
     // ------------------------------------------------------------------------
     //: Shut down the server chassis.
@@ -460,7 +465,7 @@ public:
     //! RETURNS:  0 - Data flow was stopped.
     //! RETURNS: -1 - Data flow could not be stopped.
     // ------------------------------------------------------------------------
-    int shutdown(void);
+    vpr::ReturnStatus shutdown(void);
 
     // ------------------------------------------------------------------------
     //: Returns whether the MotionStar is active or not.
@@ -485,8 +490,8 @@ public:
     //! ARGS: addr - The new value for the server address.
     // ------------------------------------------------------------------------
     inline void
-    setAddress (const char* addr) {
-        m_address = addr;
+    setAddressName (const char* addr) {
+        m_address.setAddress(addr);
     }
 
     // ------------------------------------------------------------------------
@@ -494,17 +499,43 @@ public:
     //+ std::string object reference.
     //
     //! PRE: None.
-    //! POST: The value in m_address is replaced with the value in addr.
+    //! POST:
     //
     //! ARGS: addr - The new value for the server address.
     // ------------------------------------------------------------------------
     inline void
-    setAddress (const std::string& addr) {
+    setAddressName (const std::string& addr) {
+        m_address.setAddress(addr);
+    }
+
+    // ------------------------------------------------------------------------
+    //: Get the current server address as a string.
+    //
+    //! PRE: None.
+    //! POST:
+    //
+    //! RETURNS: NULL - No address has been set.
+    //! RETURNS: Non-NULL - A character array naming the server address.
+    // ------------------------------------------------------------------------
+    inline const std::string
+    getAddressName (void) const {
+        return m_address.getAddressString();
+    }
+
+    // ------------------------------------------------------------------------
+    //: Set the address object for the server.
+    //
+    //! PRE: None.
+    //! POST: The value in m_address is replaced with the value in addr.
+    //
+    //! ARGS: addr - The new value for the server address.
+    // ------------------------------------------------------------------------
+    void setAddress (const vpr::InetAddr& addr) {
         m_address = addr;
     }
 
     // ------------------------------------------------------------------------
-    //: Get the current server address.
+    //: Get the current server address object.
     //
     //! PRE: None.
     //! POST: The current value of m_address is returned to the caller.
@@ -512,8 +543,7 @@ public:
     //! RETURNS: NULL - No address has been set.
     //! RETURNS: Non-NULL - A character array naming the server address.
     // ------------------------------------------------------------------------
-    inline const std::string&
-    getAddress (void) const {
+    const vpr::InetAddr& getAddress (void) const {
         return m_address;
     }
 
@@ -526,8 +556,8 @@ public:
     //! ARGS: port - The new value for the server port.
     // ------------------------------------------------------------------------
     inline void
-    setServerPort (const unsigned short port) {
-        m_port = port;
+    setServerPort (const vpr::Uint16 port) {
+        m_address.setPort(port);
     }
 
     // ------------------------------------------------------------------------
@@ -538,9 +568,9 @@ public:
     //
     //! RETURNS: An unsigned short integer containing the server port number.
     // ------------------------------------------------------------------------
-    inline const unsigned short&
+    inline const vpr::Uint16
     getServerPort (void) const {
-        return m_port;
+        return m_address.getPort();
     }
 
     // ------------------------------------------------------------------------
@@ -934,7 +964,7 @@ private:
     //! RETURNS:  0 - The server was awakened.
     //! RETURNS: -1 - The server could not be awakened for some reason.
     // ------------------------------------------------------------------------
-    int sendWakeUp(void);
+    vpr::ReturnStatus sendWakeUp(void);
 
     // ------------------------------------------------------------------------
     //: Get the system status.
@@ -967,8 +997,9 @@ private:
     //! RETURNS:  0 - The configuration was sent successfully.
     //! RETURNS: -1 - The configuration could not be send to the server.
     // ------------------------------------------------------------------------
-    int setSystemStatus(BIRDNET::SYSTEM_STATUS* sys_status,
-                        const unsigned char xmtr_num, const char data_rate[6]);
+    vpr::ReturnStatus setSystemStatus(BIRDNET::SYSTEM_STATUS* sys_status,
+                                      const unsigned char xmtr_num,
+                                      const char data_rate[6]);
 
     // ------------------------------------------------------------------------
     //: Read the configurations of all the birds and send our configuration
@@ -988,7 +1019,7 @@ private:
     //! NOTE: The scaling factor, the measurement units (e.g., inches)  and
     //+       the report rate for all the birds are determined here.
     // ------------------------------------------------------------------------
-    int configureBirds(void);
+    unsigned int configureBirds(void);
 
     // ------------------------------------------------------------------------
     //: Get the status of an individual bird.
@@ -1028,8 +1059,8 @@ private:
     //! RETURNS:  0 - The bird was configured successfully.
     //! RETURNS: -1 - The bird could not be configured for some reason.
     // ------------------------------------------------------------------------
-    int setBirdStatus(const unsigned char bird,
-                      BIRDNET::SINGLE_BIRD_STATUS* status);
+    vpr::ReturnStatus setBirdStatus(const unsigned char bird,
+                                    BIRDNET::SINGLE_BIRD_STATUS* status);
 
     // ------------------------------------------------------------------------
     //: Get the status of the requested FBB device.  The device number must be
@@ -1074,8 +1105,9 @@ private:
     //+                     sent to the server.
     //! ARGS: buffer_size - The size of the configuration buffer.
     // ------------------------------------------------------------------------
-    int setDeviceStatus(const unsigned char device, const char* buffer,
-                        const unsigned short buffer_size);
+    vpr::ReturnStatus setDeviceStatus(const unsigned char device,
+                                      const char* buffer,
+                                      const unsigned short buffer_size);
 
     // ------------------------------------------------------------------------
     //: Tell the MotionStar server to sample continuously.
@@ -1368,7 +1400,7 @@ private:
     //! RETURNS: -2 - Nothing was sent to the server.  This is likely to be
     //+               caused by an attempt to send an empty packet.
     // ------------------------------------------------------------------------
-    int sendMsg(const void* packet, const size_t packet_size);
+    vpr::ReturnStatus sendMsg(const void* packet, const size_t packet_size);
 
     // ------------------------------------------------------------------------
     //: Get the server's response to a sent message.
@@ -1387,23 +1419,7 @@ private:
     //+               caused by the server sending an empty packet for some
     //+               reason.
     // ------------------------------------------------------------------------
-    int getRsp(void* packet, const size_t packet_size);
-
-    // ------------------------------------------------------------------------
-    //: Read exactly packet_size bytes from the server.
-    //
-    //! PRE: The socket to the server is open and is usable for reading data.
-    //! POST: A full packet is read from the server.
-    //
-    //! ARGS: packet      - A pointer to the memory block into which the
-    //+                     server's response packet will be read.
-    //! ARGS: packet_size - The size of the given memory block.
-    //! ARGS: flags       - Flags to pass to recv(2).  This defaults to 0.
-    //
-    //! RETURNS: >0 - packet_size bytes were read from the socket.
-    //! RETURNS: -1 - An error occurred.
-    // ------------------------------------------------------------------------
-    ssize_t recvn(void* packet, const size_t packet_size, const int flags = 0);
+    vpr::ReturnStatus getRsp(void* packet, const size_t packet_size);
 
     // ------------------------------------------------------------------------
     //: Print the system status as read from the server.
@@ -1444,9 +1460,8 @@ private:
     bool              m_active;            //: Active state of the driver
 
     // Server chassis member variables.
-    std::string       m_address;           //: Address of the server
-    int               m_socket;            //: Socket to the server
-    unsigned short    m_port;              //: Port number on the server
+    vpr::InetAddr     m_address;           //: Address of the server 
+    vpr::Socket*      m_socket;            //: Socket to the server
     BIRDNET::protocol m_proto;             //: Transmission protocol in use
     bool              m_master;            //: Flag stating if this server is a
                                            //+ master (true) or a slave (false)
