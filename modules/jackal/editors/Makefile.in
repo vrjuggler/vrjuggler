@@ -126,9 +126,6 @@ endif
 ifneq ($(BEANS), )
 	for bean in $(BEANS) ; \
 	  do \
-		$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-		  $(EXTRA_INSTALL_ARGS) $(top_srcdir)/editors/$$bean.xml \
-                  $(beandir) || exit 1; \
 	  	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
 		  $(EXTRA_INSTALL_ARGS) $(topdir)/editors/$$bean.jar \
                   $(beandir) || exit 1; \
