@@ -107,7 +107,9 @@ PYMOD_EXT=		$(MOD_SUFFIX)@PYMOD_EXT@
 DYLIB_NAME_FLAG=	@DYLIB_NAME_FLAG@
 OBJEXT=			@OBJEXT@
 OBJ_NAME_FLAG=		@OBJ_NAME_FLAG@
-USE_GCC=		@USE_GCC@
+
+OBJCOPY=		@OBJCOPY@
+USE_OBJCOPY=		@USE_OBJCOPY@
 
 PYSTE_FILES=	vpr.pyste	\
 		jccl.pyste	\
@@ -219,8 +221,8 @@ install:
 
 $(OBJDIR)/%.$(OBJEXT): %.cpp
 	$(CXX) $(CXXFLAGS) $(OBJ_NAME_FLAG) -c $<
-ifeq ($(USE_GCC), yes)
-	objcopy -v --set-section-flags .debug_str=contents,debug $@ $@
+ifeq ($(USE_OBJCOPY), yes)
+	$(OBJCOPY) -v --set-section-flags .debug_str=contents,debug $@ $@
 endif
 
 %$(PYMOD_EXT): %.$(OBJEXT)

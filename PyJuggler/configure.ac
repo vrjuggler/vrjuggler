@@ -108,10 +108,6 @@ fi
 # -----------------------------------------------------------------------------
 VJ_COMPILER_SETUP
 
-# If we are using GCC, make sure that $USE_GCC reflects it, even if the use
-# of GCC was not forced on the command line.
-USE_GCC="$GXX"
-
 DPP_CC_PTHREAD_ARG
 
 if test "x$CC_ACCEPTS_PTHREAD" = "xno" ; then
@@ -130,6 +126,15 @@ if test "x$OS_TYPE" = "xWin32" ; then
    python_path="$python_root_cyg:$python_root_cyg/bin:$PATH"
 else
    python_path="$PYTHON_ROOT/bin:$PATH"
+fi
+
+USE_OBJCOPY='no'
+if test "x$GXX" = "xyes" ; then
+   AC_PATH_PROG(OBJCOPY, objcopy, no)
+
+   if test "x$OBJCOPY" != "xno" ; then
+      USE_OBJCOPY='yes'
+   fi
 fi
 
 AC_PATH_PROG(PYTHON, python, no, [$python_path])
@@ -371,6 +376,7 @@ DPP_PTHREAD_FINISH
 
 DPP_SUBST
 
+AC_SUBST(USE_OBJCOPY)
 AC_SUBST(EXTRA_LINK_FLAGS)
 AC_SUBST(PYJUTIL_LDFLAGS_DBG)
 AC_SUBST(PYJUTIL_LDFLAGS_OPT)
