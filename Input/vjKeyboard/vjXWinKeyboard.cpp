@@ -114,8 +114,8 @@ void vjXWinKeyboard::controlLoop(void* nullParam)
    while(!mExitFlag)
    {
       sample();
-      //usleep(25000);           // Sleep for 25 milliseconds (ie. max  hz)
-      usleep(mSleepTimeMS);
+      long sleep_time = mSleepTimeMS*1000;
+      usleep(sleep_time);
       //vjDEBUG(vjDBG_ALL,0) << "xwinKeyboard: loop\n" << vjDEBUG_FLUSH;
    }
 
