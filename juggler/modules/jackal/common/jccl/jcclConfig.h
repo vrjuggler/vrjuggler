@@ -54,17 +54,17 @@
 #else 
 #   define JCCL_OPT 
 #endif 
- 
+
 // Windows
 #ifdef WIN32 
 /* Go with only minimal files */
 #   define WIN32_LEAN_AND_MEAN
- 
+
 /* Turn off: identifier truncated to 255 characters in the debug information */
 #   pragma warning(disable:4786)
 #   include <windows.h>
 #endif /* WIN32 */
- 
+
 /**
  ** ----------------------------------------------------------------------------
  ** DLL-related macros.  These are based on the macros used by NSPR.  Use
@@ -76,41 +76,41 @@
 #    undef _declspec
 #    define _declspec(x) __declspec(x)
 #endif /* GNUC */
- 
+
 #define JCCL_EXPORT(__type)      _declspec(dllexport) __type
 #define JCCL_EXPORT_CLASS        _declspec(dllexport)
 #define JCCL_EXPORT_DATA(__type) _declspec(dllexport) __type
 #define JCCL_IMPORT(__type)      _declspec(dllimport) __type
 #define JCCL_IMPORT_DATA(__type) _declspec(dllimport) __type
 #define JCCL_IMPORT_CLASS        _declspec(dllimport)
- 
+
 #define JCCL_EXTERN(__type)         extern _declspec(dllexport) __type
 #define JCCL_IMPLEMENT(__type)      _declspec(dllexport) __type
 #define JCCL_EXTERN_DATA(__type)    extern _declspec(dllexport) __type
 #define JCCL_IMPLEMENT_DATA(__type) _declspec(dllexport) __type
- 
+
 #define JCCL_CALLBACK
 #define JCCL_CALLBACK_DECL
 #define JCCL_STATIC_CALLBACK(__x) static __x
- 
+
 #else   /* UNIX */
- 
+
 #define JCCL_EXPORT(__type)      __type
 #define JCCL_EXPORT_CLASS
 #define JCCL_EXPORT_DATA(__type) __type
 #define JCCL_IMPORT(__type)      __type
 #define JCCL_IMPORT_CLASS
 #define JCCL_IMPORT_DATA(__type) __type
- 
+
 #define JCCL_EXTERN(__type)         extern __type
 #define JCCL_IMPLEMENT(__type)      __type
 #define JCCL_EXTERN_DATA(__type)    extern __type
 #define JCCL_IMPLEMENT_DATA(__type) __type
- 
+
 #define JCCL_CALLBACK
 #define JCCL_CALLBACK_DECL
 #define JCCL_STATIC_CALLBACK(__x) static __x
- 
+
 #endif	/* #ifdef WIN32 */
 
 # ifdef _JCCL_BUILD_
@@ -122,5 +122,5 @@
 #    define JCCL_CLASS_API		JCCL_IMPORT_CLASS
 #    define JCCL_DATA_API(__type)	JCCL_IMPORT_DATA(__type)
 # endif
- 
+
 #endif   /* _VRJ_JCCL_CONFIG_H_ */
