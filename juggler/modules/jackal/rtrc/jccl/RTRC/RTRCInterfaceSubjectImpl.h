@@ -38,6 +38,7 @@
 #include <sstream>
 
 #include <jccl/Net/JackalControl.h>
+#include <jccl/Config/ChunkFactory.h>
 #include <jccl/Config/ConfigChunkDB.h>
 #include <jccl/Config/ChunkDescDB.h>
 #include <jccl/Config/ConfigChunk.h>
@@ -92,6 +93,11 @@ public:
     * Get the current chunks in the config system
     */
    virtual char* getChunks();
+
+   /**
+    * Get the current chunk descs in the config system
+    */
+   virtual char* getChunkDescs();
 
    /**
     * This overriding method is needed so that the correct type is returned
