@@ -10,6 +10,7 @@
 #include <Kernel/GL/vjGlApp.h>
 #include <Math/vjMatrix.h>
 #include <Math/vjVec3.h>
+#include <Math/vjCoord.h>
 
 #include <Input/InputManager/vjPosInterface.h>
 #include <Input/InputManager/vjAnalogInterface.h>
@@ -30,13 +31,14 @@ public:
    wandApp(vjKernel* kern)
       : vjGlApp(kern)            // Initialize base class
    {;}
-   
+
    // Execute any initialization needed before the API is started
    virtual void init()
    {
       //cout << "---------- App:init() ---------------" << endl;
          // Initialize devices
       mWand.init("VJWand");
+      mHead.init("VJHead");
    }
 
    // Execute any initialization needed after API is started
@@ -48,7 +50,7 @@ public:
    //! PRE: OpenGL state has correct transformation and buffer selected
    //! POST: The current scene has been drawn
    virtual void draw()
-   {    
+   {
       initGLState();    // This should really be in another function
       myDraw();
    }
@@ -64,7 +66,7 @@ public:
    //	       postDraw();      // Drawing is happening while here
    //       sync();
    //        postSync();      // Drawing is now done
-   //      
+   //
    //	      UpdateTrackers();
    //  }
    //------------------------------------
@@ -74,13 +76,13 @@ public:
    {
      // cout << "cubesApp::postSync\n";
    }
-   
+
    /// Function called after tracker update but before start of drawing
    virtual void preDraw()
    {
        //cout << "cubesApp::preDraw()\n";
    }
-   
+
    /// Function called after drawing has been triggered but BEFORE it completes
    virtual void postDraw()
    {
@@ -91,12 +93,13 @@ private:
    //----------------------------------------------
    //  Draw the scene.  A box on the end of the wand
    //----------------------------------------------
-   
+
    void myDraw()
    {
       //cout << "\n--- myDraw() ---\n";
-      
-   
+
+      cout << "HeadPos:" << vjCoord(*mHead->GetData()).pos << endl;
+
       glClearColor(0.0, 0.0, 0.0, 0.0);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       glMatrixMode(GL_MODELVIEW);
@@ -105,7 +108,7 @@ private:
       vjMatrix* wandMatrix;
       wandMatrix = mWand->GetData();
 
-      glPushMatrix();         
+      glPushMatrix();
          // cout << "wand:\n" << *wandMatrix << endl;
          glMultMatrixf(wandMatrix->getFloatPtr());
          glColor3f(1.0f, 0.0f, 1.0f);
@@ -122,47 +125,48 @@ private:
       glPopMatrix();
 
    }
-   
+
    void initGLState()
    {
       GLfloat light0_ambient[] = { 0.1f,  0.1f,  0.1f,  1.0f};
       GLfloat light0_diffuse[] = { 0.8f,  0.8f,  0.8f,  1.0f};
       GLfloat light0_specular[] = { 1.0f,  1.0f,  1.0f,  1.0f};
       GLfloat light0_position[] = {0.0f, 0.75f, 0.75f, 0.0f};
-      
+
       GLfloat mat_ambient[] = { 0.7, 0.7,  0.7,  1.0};
       GLfloat mat_diffuse[] = { 1.0,  0.5,  0.8,  1.0};
       GLfloat mat_specular[] = { 1.0,  1.0,  1.0,  1.0};
       GLfloat mat_shininess[] = { 50.0};
       GLfloat mat_emission[] = { 1.0,  1.0,  1.0,  1.0};
       GLfloat no_mat[] = { 0.0,  0.0,  0.0,  1.0};
-   
+
       glLightfv(GL_LIGHT0, GL_AMBIENT,  light0_ambient);
       glLightfv(GL_LIGHT0, GL_DIFFUSE,  light0_diffuse);
       glLightfv(GL_LIGHT0, GL_SPECULAR,  light0_specular);
       glLightfv(GL_LIGHT0, GL_POSITION,  light0_position);
-      
+
       glMaterialfv( GL_FRONT, GL_AMBIENT, mat_ambient );
-      glMaterialfv( GL_FRONT,  GL_DIFFUSE, mat_diffuse ); 
+      glMaterialfv( GL_FRONT,  GL_DIFFUSE, mat_diffuse );
       glMaterialfv( GL_FRONT, GL_SPECULAR, mat_specular );
-      glMaterialfv( GL_FRONT,  GL_SHININESS, mat_shininess ); 
-      glMaterialfv( GL_FRONT,  GL_EMISSION, no_mat); 
-   
+      glMaterialfv( GL_FRONT,  GL_SHININESS, mat_shininess );
+      glMaterialfv( GL_FRONT,  GL_EMISSION, no_mat);
+
       glEnable(GL_DEPTH_TEST);
       glEnable(GL_NORMALIZE);
       glEnable(GL_LIGHTING);
       glEnable(GL_LIGHT0);
       glEnable(GL_COLOR_MATERIAL);
-      glShadeModel(GL_SMOOTH); 
+      glShadeModel(GL_SMOOTH);
    }
 
    void drawCube()
    {
       drawbox(-0.5, 0.5, -0.5, 0.5, -0.5, 0.5, GL_QUADS);
    }
-   
+
 public:
    vjPosInterface    mWand;      // the Wand
+   vjPosInterface    mHead;      // the head
 };
 
 
@@ -187,11 +191,11 @@ void drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
    }
    if (y0 > y1)
    {
-      tmp = y0; y0 = y1; y1 = tmp; 
+      tmp = y0; y0 = y1; y1 = tmp;
    }
    if (z0 > z1)
    {
-      tmp = z0; z0 = z1; z1 = tmp; 
+      tmp = z0; z0 = z1; z1 = tmp;
    }
    v[0][0] = v[1][0] = v[2][0] = v[3][0] = x0;
    v[4][0] = v[5][0] = v[6][0] = v[7][0] = x1;
