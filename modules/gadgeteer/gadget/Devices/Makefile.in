@@ -43,7 +43,8 @@ include @topdir@/make.defs.mk
 DIRPRFX=	gadget/Devices/
 
 # Subdirectories to compile.
-SUBDIR=	
+SUBDIR=		EventWindow	\
+		Sim
 
 # This is a hack until I can figure out a better way to do this automatically
 # in Doozer++.  The problem is that GNU make doesn't offer much in the way
@@ -51,8 +52,4 @@ SUBDIR=
 # good way to tell it to continue recursing with the given arguments.
 $(RECTARGET): recursive
 
-install-drivers install-drivers-dbg install-drivers-opt install-drivers-prof:
-	$(MAKE) RECTARGET="install" recursive
-
 include $(MKPATH)/dpp.subdir.mk
-include $(MKPATH)/dpp.clean.mk
