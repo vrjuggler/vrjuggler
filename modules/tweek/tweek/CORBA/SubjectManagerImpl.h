@@ -69,6 +69,8 @@ class TWEEK_CLASS_API SubjectManagerImpl
      public PortableServer::RefCountServantBase
 {
 public:
+   virtual ~SubjectManagerImpl();
+
    /**
     * Registers the given SubjectImpl object (a CORBA servant) with this
     * Subject Manager instance.  This also performs the necessary steps to
