@@ -88,7 +88,7 @@ void vjInput::swapCurrentIndexes()
 }
 
 //: Swap the valid and progress indexes (thread safe)
-void vjInput::swapValidIndices()
+void vjInput::swapValidIndexes()
 {
    lock.acquire();
 	int tmp = valid;

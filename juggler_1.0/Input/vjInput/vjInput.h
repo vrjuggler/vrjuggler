@@ -48,12 +48,14 @@ typedef unsigned char byte;
  *  of a vjInput object to query which types it may be
  *  casted up to.
  */
-const int DEVICE_POSITION = 1;
-const int DEVICE_GESTURE  = 2;
-const int DEVICE_DIGITAL  = 4;
-const int DEVICE_ANALOG   = 8;
-const int DEVICE_GLOVE    = 16;
-const int DEVICE_GROW1    = 32;
+const unsigned int DEVICE_POSITION = 1;
+const unsigned int DEVICE_GESTURE  = 2;
+const unsigned int DEVICE_DIGITAL  = 4;
+const unsigned int DEVICE_ANALOG   = 8;
+const unsigned int DEVICE_GLOVE    = 16;
+const unsigned int DEVICE_KEYBOARD = 32;
+const unsigned int DEVICE_GROW1    = 64;
+const unsigned int DEVICE_GROW2    = 128;
 
 //-----------------------------------------------------------------------------
 //: vjInput is the abstract base class that all input objects derive from.
@@ -169,7 +171,7 @@ protected:  // Helpers
    void swapCurrentIndexes();
 
    //: Swap the valid and progress indexes (thread safe)
-   void swapValidIndices();
+   void swapValidIndexes();
 
 protected:
    char *sPort;
@@ -192,7 +194,7 @@ protected:
    //                        an unused datamember?)
    vjMutex lock;
    int baudRate;
-   int deviceAbilities;
+   unsigned int deviceAbilities;
 };
 
 #endif	/* VJ_INPUT_H */

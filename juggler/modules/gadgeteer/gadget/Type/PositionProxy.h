@@ -17,9 +17,9 @@
 //-----------------------------------------------------------------------
 //: A proxy class to positional devices, used by the vjInputManager.
 //
-//  A vjPosProxy always points to a positional device and subUnit number, 
+//  A vjPosProxy always points to a positional device and subUnit number,
 //  the inputgroup can therefore keep an array of these around and
-//  treat them as positional devices which only return a single 
+//  treat them as positional devices which only return a single
 //  subDevice's amount of data.  (one vjPOS_DATA)
 //------------------------------------------------------------------------
 class vjPosProxy : public vjMemory
@@ -30,7 +30,7 @@ class vjPosProxy : public vjMemory
 public:
    vjPosProxy(vjPosition* posPtr, int unitNum)  {
       assert( posPtr->FDeviceSupport(DEVICE_POSITION) );
-      m_posPtr = posPtr;     
+      m_posPtr = posPtr;
       m_unitNum = unitNum;
       etrans = false;            // Default to no transformation
    }
@@ -60,8 +60,8 @@ public:
    void Set(vjPosition* posPtr, int unitNum, int useTransform = 0)
    {
       assert( posPtr->FDeviceSupport(DEVICE_POSITION) );
-      cout << "posPtr: " << posPtr << endl
-      << "unit  : " << unitNum << endl << endl;
+      vjDEBUG(0) << "posPtr: " << posPtr << endl
+                 << "unit  : " << unitNum << endl << endl << vjDEBUG_FLUSH;
       m_posPtr = posPtr;
       m_unitNum = unitNum;
       etrans = useTransform;
@@ -102,7 +102,7 @@ public:
 private:
    vjMatrix     m_posData;
    vjMatrix     m_matrixTransform;
-   vjPosition*  m_posPtr; 
+   vjPosition*  m_posPtr;
    int          m_unitNum;
    bool         etrans;
 };

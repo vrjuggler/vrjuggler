@@ -27,27 +27,31 @@
 #include <Input/InputManager/vjPosProxy.h>
 #include <Input/InputManager/vjAnalogProxy.h>
 #include <Input/InputManager/vjDigitalProxy.h>
+#include <Input/InputManager/vjGloveProxy.h>
+#include <Input/InputManager/vjKeyboardProxy.h>
 #include <Input/vjPosition/vjDummyPosition.h>
 #include <Input/vjInput/vjDummyDigital.h>
 #include <Input/vjInput/vjDummyAnalog.h>
+#include <Input/vjGlove/vjDummyGlove.h>
+#include <Input/vjKeyboard/vjDummyKeyboard.h>
 
 #ifndef WIN32
 #include <Input/vjPosition/vjFlock.h>
 #include <Input/vjInput/vjIbox.h>
 #include <Input/vjGlove/vjCyberGlove.h>
-#include <Input/vjInput/vjKeyboard.h>
+#include <Input/vjKeyboard/vjXWinKeyboard.h>
 #include <Input/vjPosition/logiclass.h>
 #else
 #include <Input/vjInput/vjKeyboardWin32.h>
 #endif
 
-//: The InputManager holds an manages all vj Input devices.  
+//: The InputManager holds an manages all vj Input devices.
 //
 //  The InputManager, handles all the
 //  details behind organizing the input devices in the library.  It
 //  provides an API for adding devices by their configChunk and deleting
-//  them by their chunk (or just their string name).  
-// 
+//  them by their chunk (or just their string name).
+//
 //  Proxies are used to abstract away from the devices so any type and number
 //  of devices may be accessed in the same way.  These proxies are also
 //  set up by configChunks and should be accessed by number, rather than name.
@@ -58,11 +62,11 @@ class vjInputManager : public vjMemory
 public:
    vjInputManager();
    ~vjInputManager();
-  
+
 
    //: Dump the status of the Input manager.
    //
-   //  This will output dumb info on all the devices in the Input Manager, 
+   //  This will output dumb info on all the devices in the Input Manager,
    //  and all of the proxies.
    void DumpStatus();
 
@@ -71,15 +75,15 @@ public:
    //: Function to get an index to the proxy/alias given in str
    //! RETURNS: -1 - Not Found
    int  GetProxyIndex(string proxyName);
-   
 
-   /************************************************************************ 
+
+   /************************************************************************
     *  Device Level API
     *  The Device level functions give direct access to the actual
     *  devices, that is functions that do not take a Config structure.
     *  These functions should primarily be used by the vjInputManager itself.
     *************************************************************************/
-   
+
    //: Add a device to vjInputManager.
    //
    // Add the devPtr to the device Array, devPtr should
@@ -91,7 +95,7 @@ public:
    //                or -1 for fail
    int FAddDevice(vjInput* devPtr);
 
-   //: Remove a device from the vjInputManager.  
+   //: Remove a device from the vjInputManager.
    // Remove the device at position devNum from the
    // device Array.  Returns true on success.
    //
@@ -101,8 +105,8 @@ public:
 
    int RemoveDevice(char* instName);
 
-   //: Update the Data in all the devices. 
-   // 
+   //: Update the Data in all the devices.
+   //
    // Call UpdateData() on all the devices in the devArray
    //
    // modifies: instances pointed to by devArray
@@ -122,11 +126,11 @@ public:
    vjInput* GetDevice(int devNum);
 
 
-   /********************************************************** 
-    *  Position Proxy Level 
+   /**********************************************************
+    *  Position Proxy Level
     *  Functions for Position Proxies
     **********************************************************/
-  
+
    //: Set the index ProxyNum in the posProxy array to proxy
    // device at devNum in the device array, with subNumber <br>
    // <br>
@@ -147,7 +151,7 @@ public:
    // retVal = index of new proxy
    int AddPosProxy(int DevNum, int subNum);
 
-   //: Turn the position proxy at index ProxyNum to point back 
+   //: Turn the position proxy at index ProxyNum to point back
    // to the default dummy proxy. <br>
    // <br>
    // modifies: self <br>
@@ -166,7 +170,7 @@ public:
    // modifies: self <br>
    // post: m_digProxyArray[proxyNum]' = new Proxy at DevNum/subNum
    //       return = 0 for fail, other for success
-   int SetDigProxy(int ProxyNum, int DevNum, int subNum); 
+   int SetDigProxy(int ProxyNum, int DevNum, int subNum);
 
    //: Get the proxy at the given index
    vjDigitalProxy* GetDigProxy(int digProxyIndex)
@@ -182,22 +186,22 @@ public:
    // modifies: self <br>
    // post: m_digProxyVector' contains new Proxy at DevNum/subNum
    //       return = vector index of new proxy
-   int AddDigProxy(int DevNum, int subNum); 
+   int AddDigProxy(int DevNum, int subNum);
 
 
-   //: Turn the digital proxy at index ProxyNum to point back 
+   //: Turn the digital proxy at index ProxyNum to point back
    // to the default dummy proxy.<br>
    // <br>
    // modifies: self<br>
    // postA:  m_digProxyArray[proxyNum]' = m_dummyDig
-   void StupifyDig(int ProxyNum); 
+   void StupifyDig(int ProxyNum);
 
 
    //: Get the digital data at digital Proxy d
    //
    // postA: return = integer for the digital data returned
    int GetDigData(int d);
-     
+
 
    /**************************************************************
     * Analog Proxy Level
@@ -210,7 +214,7 @@ public:
    // modifies: self<br>
    // post: m_anaProxyArray[proxyNum]' = new Proxy at DevNum/subNum
    //       return = 0 for fail, other for success
-   int SetAnaProxy(int ProxyNum, int DevNum, int subNum); 
+   int SetAnaProxy(int ProxyNum, int DevNum, int subNum);
 
    //: Get the proxy at the given index
    vjAnalogProxy* GetAnaProxy(int anaProxyIndex)
@@ -229,12 +233,12 @@ public:
    int AddAnaProxy(int DevNum, int subNum);
 
 
-   //: Turn the analog proxy at index ProxyNum to point back 
+   //: Turn the analog proxy at index ProxyNum to point back
    // to the default dummy proxy.<br>
    //<br>
    // modifies: self<br>
    // postA:  m_anaProxyArray[proxyNum]' = m_dummyAna
-   void StupifyAna(int ProxyNum); 
+   void StupifyAna(int ProxyNum);
 
    //: Get the analog data at analog Proxy d
    //
@@ -243,26 +247,94 @@ public:
 
 
    /**************************************************************
-    *  Gesture Proxy Level
+    *  Glove Proxy Level
     *  Functions for Gesture proxies
     **************************************************************/
-   /* None yet */
+   //: Set the index ProxyNum in the gloveProxy array to proxy
+   // device at devNum in the device array, with subNumber <br>
+   // <br>
+   // modifies: self <br>
+   // post: m_gloveProxyArray[proxyNum]' = new Proxy at DevNum/subNum
+   //       return = 0 for fail, other for success
+   int SetGloveProxy(int ProxyNum, int DevNum, int subNum);
+
+   //: Get the proxy at the given index
+   vjGloveProxy* GetGloveProxy(int gloveProxyIndex)
+   {
+      vjASSERT(m_gloveProxyVector.size() > gloveProxyIndex);    // Check array bounds
+      return m_gloveProxyVector[gloveProxyIndex];
+   }
+
+   //: Add a Glove proxy.
+   // A glove proxy to the dev and subNum is created
+   //! RETURNS: = index of new glove proxy
+   int AddGloveProxy(int DevNum, int subNum);
+
+   //: Turn the glove proxy at index ProxyNum to point back
+   // to the default dummy glove proxy. <br>
+   // <br>
+   // modifies: self <br>
+   // postA:  m_gloveProxyArray[proxyNum]' = m_dummyGlove
+   void StupifyGlove(int ProxyNum);
+
+   //: Find out how many glove proxies are in the system currently
+   // XXX: Experimental, needed to draw the glove objects
+   int getNumGloveProxies()
+   { return m_gloveProxyVector.size(); }
+
+   /**************************************************************
+    *  Keyboard Proxy Level
+    *  Functions for keyboard proxies
+    **************************************************************/
+   //: Set the index ProxyNum in the keyboardProxy array to proxy
+   // device at devNum in the device array<br>
+   // <br>
+   //! MODIFIES: self <br>
+   //! POST: m_keyboardProxyArray[proxyNum]' = new Proxy at DevNum/subNum
+   //       return = 0 for fail, other for success
+   int SetKeyboardProxy(int ProxyNum, int DevNum);
+
+   //: Get the keyboard proxy at the given index
+   vjKeyboardProxy* GetKeyboardProxy(int keyboardProxyIndex)
+   {
+      vjASSERT(m_keyboardProxyVector.size() > keyboardProxyIndex);    // Check array bounds
+      return m_keyboardProxyVector[keyboardProxyIndex];
+   }
+
+   //: Add a keyboard proxy.
+   // A keyboard proxy to the dev is created
+   //! RETURNS: = index of new keyboard proxy
+   int AddKeyboardProxy(int DevNum);
+
+   //: Turn the keyboard proxy at index ProxyNum to point back
+   // to the default dummy keyboard proxy. <br>
+   // <br>
+   //! MODIFIES: self <br>
+   //! POST:  m_keyboardProxyArray[proxyNum]' = m_dummyKeyboard
+   void StupifyKeyboard(int ProxyNum);
+
 
 protected:
 
       // --- Vectors of devices and proxies --- //
-   vector<vjInput*>        m_devVector;
-   vector<vjPosProxy*>     m_posProxyVector;
-   vector<vjDigitalProxy*> m_digProxyVector;
-   vector<vjAnalogProxy*>  m_anaProxyVector;
-   
-   vjDummyPosition  m_dummyPos;
-   vjDummyDigital   m_dummyDig;
-   vjDummyAnalog    m_dummyAna;
+   vector<vjInput*>           m_devVector;
+   vector<vjPosProxy*>        m_posProxyVector;
+   vector<vjDigitalProxy*>    m_digProxyVector;
+   vector<vjAnalogProxy*>     m_anaProxyVector;
+   vector<vjGloveProxy*>      m_gloveProxyVector;
+   vector<vjKeyboardProxy*>   m_keyboardProxyVector;
+
+   vjDummyPosition   m_dummyPos;
+   vjDummyDigital    m_dummyDig;
+   vjDummyAnalog     m_dummyAna;
+   vjDummyGlove      m_dummyGlove;
+   vjDummyKeyboard   m_dummyKeyboard;
+
+   vjPosProxy*      m_dummyPosProxy;      // Proxy to the dummy pos
 
    map<string, int>    proxyAliases;      // List of alias indices for proxies
 
-private:  
+private:
    /// @name Private functions for vjInputManager configuration from a ChunkDB
    //@{
    void ConfigureInputManager(vjConfigChunkDB* cdb);
@@ -270,18 +342,21 @@ private:
    void ConfigureFlock(vjConfigChunkDB* cdb);
    void ConfigureDummyPos(vjConfigChunkDB* cdb);
    void ConfigureIbox(vjConfigChunkDB* cdb);
-   void ConfigurevjCyberGlove(vjConfigChunkDB *cdb);
+   void ConfigureCyberGlove(vjConfigChunkDB *cdb);
    void Configure3DMouse(vjConfigChunkDB *cdb);
 #endif
    void ConfigureKeyboard(vjConfigChunkDB *cdb);
    void ConfigurePosProxy(vjConfigChunkDB* cdb);
    void ConfigureDigProxy(vjConfigChunkDB* cdb);
    void ConfigureAnaProxy(vjConfigChunkDB* cdb);
+   void ConfigureGloveProxy(vjConfigChunkDB* cdb);
+   void ConfigureKeyboardProxy(vjConfigChunkDB* cdb);
+
    //@}
-   
+
    /// Function to configure the proxy Alias array
    void ConfigureProxyAliases(vjConfigChunkDB* cdb);
-   void AddProxyAlias(string str, int proxyIndex);        
+   void AddProxyAlias(string str, int proxyIndex);
 };
 
 #endif
