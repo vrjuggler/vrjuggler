@@ -61,13 +61,13 @@ KUNSTSTOFF_SRCDIR=	$(LAF_DIR)/kunststoff/sources
 JAVA_SRC_PATH=		$(KUNSTSTOFF_SRCDIR)
 
 JDOM_DIR=		$(JUGGLERROOT_ABS)/external/jdom
-JDOM_JARS=		$(JDOM_DIR)/jaxen-core.jar	\
-			$(JDOM_DIR)/jaxen-jdom.jar	\
-			$(JDOM_DIR)/jdom.jar		\
-			$(JDOM_DIR)/saxpath.jar		\
-			$(JDOM_DIR)/xalan.jar		\
-			$(JDOM_DIR)/xerces.jar		\
-			$(JDOM_DIR)/xml-apis.jar
+JDOM_JARS=		$(JDOM_DIR)/build/jdom.jar		\
+			$(JDOM_DIR)/lib/jaxen-core.jar		\
+			$(JDOM_DIR)/lib/jaxen-jdom.jar		\
+			$(JDOM_DIR)/lib/saxpath.jar		\
+			$(JDOM_DIR)/lib/xalan.jar		\
+			$(JDOM_DIR)/lib/xerces.jar		\
+			$(JDOM_DIR)/lib/xml-apis.jar
 
 JAVA_ORB_JAR=	@JAVA_ORB_JAR@
 

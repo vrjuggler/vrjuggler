@@ -10,13 +10,13 @@
    <property name="kunststoff_srcdir" value="${lafdir}/kunststoff/sources" />
 
    <path id="tweek.classpath">
-      <pathelement path="${jdomdir}/jdom.jar" />
-      <pathelement path="${jdomdir}/jaxen-core.jar" />
-      <pathelement path="${jdomdir}/jaxen-jdom.jar" />
-      <pathelement path="${jdomdir}/saxpath.jar" />
-      <pathelement path="${jdomdir}/xalan.jar" />
-      <pathelement path="${jdomdir}/xerces.jar" />
-      <pathelement path="${jdomdir}/xml-apis.jar" />
+      <pathelement path="${jdomdir}/build/jdom.jar" />
+      <pathelement path="${jdomdir}/lib/jaxen-core.jar" />
+      <pathelement path="${jdomdir}/lib/jaxen-jdom.jar" />
+      <pathelement path="${jdomdir}/lib/saxpath.jar" />
+      <pathelement path="${jdomdir}/lib/xalan.jar" />
+      <pathelement path="${jdomdir}/lib/xerces.jar" />
+      <pathelement path="${jdomdir}/lib/xml-apis.jar" />
       <pathelement path="@JAVA_ORB_JAR@" />
       <pathelement path="${lafdir}/liquid/liquidlnf.jar" />
       <pathelement path="${lafdir}/metouia/metouia.jar" />

@@ -1,5 +1,7 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2004-09-11 patrickh    Updated for JDOM 1.0.
+                       NEW VERSION: 0.17.1
 2004-07-13 aronb       Inter-step communication in wizards now occurs using a
                        hash map.
                        NEW VERSION: 0.17.0
