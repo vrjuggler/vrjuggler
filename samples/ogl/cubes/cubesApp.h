@@ -41,8 +41,6 @@
 
 #include <Kernel/GL/vjGlApp.h>
 #include <Kernel/GL/vjGlContextData.h>
-#include <Kernel/vjDebug.h>
-
 #include <Math/vjMatrix.h>
 #include <Math/vjVec3.h>
 #include <Kernel/vjDebug.h>
