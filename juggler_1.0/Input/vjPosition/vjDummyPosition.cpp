@@ -31,14 +31,14 @@
  * -----------------------------------------------------------------
  */
 
-
-
 // vjDummyPosition - a dummy child of vjPosition.
 
 #include <vjConfig.h>
 #include <Input/vjPosition/vjDummyPosition.h>
 #include <Math/vjCoord.h>
 #include <Math/vjMatrix.h>
+#include <Math/vjVec4.h>
+
 
 bool vjDummyPosition::config(vjConfigChunk *c)
 {
