@@ -48,8 +48,8 @@ ISD_TRACKER_HANDLE ISD_OpenTracker( std::string commPort, int baud_rate, BOOL in
         if(ISD_tracker[i].hardware == ISD_NONE)
         {
             /* detect tracker and initialize it to defaults */
-            //if(ISD_openTracker( &ISD_tracker[i], commPort, infoScreen, verbose ))
-            if(ISD_openTrackerJuggler( &ISD_tracker[i], commPort, baud_rate, infoScreen, verbose))
+            //if(ISD_openTrackerOld( &ISD_tracker[i], commPort, infoScreen, verbose ))
+            if(ISD_openTracker( &ISD_tracker[i], commPort, baud_rate, infoScreen, verbose))
             {
                 ISD_tracker[i].ID = i+1;
 

@@ -305,7 +305,7 @@ int wsockBroadcastClientInit( wsockType *wsock, unsigned short networkPort )
 int wsockBroadcastReadByte( wsockType *wsock, char *c )
 {
     struct sockaddr_in server;
-    int fromlen = sizeof(struct sockaddr_in); 
+
 
     /* return data already in the buffer */
     if(wsock->data.dwRead > wsock->data.dwReturned)
@@ -316,23 +316,21 @@ int wsockBroadcastReadByte( wsockType *wsock, char *c )
 
     wsock->data.dwRead = 0;
     wsock->data.dwReturned = 0;
-
-#if defined _Windows || defined __WIN32__ || defined WINDOWS || defined WIN32
 /*
+#if defined _Windows || defined __WIN32__ || defined WINDOWS || defined WIN32
+    int fromlen = sizeof(struct sockaddr_in); 
     wsock->data.dwRead = recvfrom(wsock->data.msgsock, 
         wsock->data.buf, sizeof(wsock->data.buf), 0, 
         (struct sockaddr *)&server, &fromlen);
-*/
 #endif
 
 #if defined VPR_OS_IRIX || defined VPR_OS_Linux || defined VPR_OS_Solaris
-
-/*    wsock->data.dwRead = recvfrom(wsock->data.msgsock, 
+    int fromlen = sizeof(struct sockaddr_in); 
+    wsock->data.dwRead = recvfrom(wsock->data.msgsock, 
         wsock->data.buf, sizeof(wsock->data.buf), 0, 
         (struct sockaddr_in *)&server, &fromlen);
-*/
 #endif
-
+*/
     if(wsock->data.dwRead == SOCKET_ERROR)
     {
 #if defined _Windows || defined __WIN32__ || defined WINDOWS || defined WIN32
@@ -481,7 +479,7 @@ int wsockIsClient( InterSenseTrackerType *tracker )
 ******************************************************************************/
 int wsockClientDecodeData( InterSenseTrackerType *tracker )
 {
-    int i;
+    unsigned i;
     unsigned char cSum;
     unsigned char *buf;
 
