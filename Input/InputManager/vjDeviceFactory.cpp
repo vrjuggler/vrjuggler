@@ -114,7 +114,7 @@ void vjDeviceFactory::registerDevice(vjDeviceConstructorBase* constructor)
    vjASSERT(constructor != NULL);
    mConstructors.push_back(constructor);     // Add the constructor to the list
    vjDEBUG(vjDBG_INPUT_MGR,1) << "vjDeviceFactory: Registered: "
-              << std::right << std::setw(25) << std::setfill(' ') << constructor->getChunkType() << std::left
+              << std::setiosflags(std::ios::right) << std::setw(25) << std::setfill(' ') << constructor->getChunkType() << std::setiosflags(std::ios::right)
               //<< "   :" << (void*)constructor
               << "  type: " << typeid(*constructor).name() << std::endl
               << vjDEBUG_FLUSH;
