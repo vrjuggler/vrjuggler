@@ -450,8 +450,7 @@ void aMotionStar::sample() {
       }
 
       if ( response.header.error_code != 0 ) {
-        printf("WARNING: Got error code %d from packet\n",
-               (int) response.header.error_code);
+        printError(response.header.error_code);
       }
     }
     //    printf(" .....received data #bytes = %d", totalBytesReceived);
@@ -733,3 +732,51 @@ float aMotionStar::yRot( int i) {return posinfo[i][4];}
 float aMotionStar::xRot( int i) {return posinfo[i][5];}
 
 bool& aMotionStar::isActive() {return active;}
+
+// ============================================================================
+// Private methods.
+// ============================================================================
+
+// ----------------------------------------------------------------------------
+// Print the error message that corresponds to the given error code.  The
+// message is based on the table on page 140 of the MotionStar manual.
+// ----------------------------------------------------------------------------
+void
+aMotionStar::printError (const unsigned char err_code) {
+    // Map the error code to a human-readable string.  These messages are
+    // based on the table on page 140 of the MotionStar manual.
+    switch (err_code) {
+      case 1:
+        fprintf(stderr, "WARNING: Single packet missing (error 1)\n");
+        break;
+      case 2:
+        fprintf(stderr, "WARNING: Two or more packets missing (error 2)\n");
+        break;
+      case 3:
+        fprintf(stderr, "WARNING: Many, many packets missing (error 3)\n");
+        break;
+      case 4:
+        fprintf(stderr, "WARNING: Packet sequence number repeated (error 4)\n");
+        break;
+      case 6:
+        fprintf(stderr, "WARNING: Unexpected packet type received (error 6)\n");
+//        fprintf(stderr, "         Illegal packet sequence number: %hu\n",
+//                response.header.error_code_extension);
+        fprintf(stderr, "         Re-syncing may be necessary!\n");
+        break;
+      case 7:
+        fprintf(stderr,
+                "WARNING: Packet contents could not be determined (error 7)\n");
+        break;
+      case 8:
+        fprintf(stderr,
+                "WARNING: Status requested for non-existant FBB device (error 8)\n");
+        break;
+      case 9:
+        fprintf(stderr, "WARNING: Illegal setup data sent (error 9)\n");
+        break;
+      case 100:
+        fprintf(stderr, "WARNING: System not ready (error 100)\n");
+        break;
+    }
+}

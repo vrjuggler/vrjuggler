@@ -401,6 +401,18 @@ private:
                 m_xmtr_divisor);
     }
 
+    // ------------------------------------------------------------------------
+    //: Print the error message that corresponds to the given error code.
+    //+ The message is based on the table on page 140 of the MotionStar
+    //+ manual.
+    //
+    //! PRE: None.
+    //! POST: A human-readable error message is printed to stderr.
+    //
+    //! ARGS: err_code - The single-byte error code.
+    // ------------------------------------------------------------------------
+    void printError(const unsigned char err_code);
+
 float posinfo[3][6];
 bool 			active;
 char*                   address;
