@@ -282,9 +282,11 @@ SocketImplBSD::connect (vpr::Interval timeout) {
 
         if ( status == 0 ) {
             m_local_addr.setSockaddr(&temp_addr);
+/* XXX: This doesn't compile on IRIX, and I don't know why.
             vprDEBUG(0, vprDBG_STATE_LVL) << "Connected, local address is "
                                           << m_local_addr << std::endl
                                           << vprDEBUG_FLUSH;
+*/
         }
         else {
             vprDEBUG(0, vprDBG_WARNING_LVL) << "Failed to get sock name: "
