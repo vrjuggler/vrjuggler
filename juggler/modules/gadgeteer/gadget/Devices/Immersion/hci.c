@@ -249,7 +249,7 @@ hci_result hci_autosynch(hci_rec *hci)
  */
 hci_result hci_begin(hci_rec *hci)
 {
-	int ch, port = hci->port_num;
+	int port = hci->port_num;
 
 	host_write_string(port, BEGIN_STR);
 	if (hci_read_string(hci, hci->product_id) == SUCCESS)
@@ -867,7 +867,7 @@ void hci_invalidate_fields(hci_rec *hci)
  */
 hci_result hci_parse_packet(hci_rec *hci)
 {
-	int cmnd = hci->packet.cmd_byte, bits, i, temp;
+	int cmnd = hci->packet.cmd_byte, bits, temp;
 	hci_result result = SUCCESS;
 	byte *dp;
         int *p, *q;

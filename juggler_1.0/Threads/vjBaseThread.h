@@ -302,7 +302,7 @@ private:
    {;}
 
 private:
-   int32_t  mThreadId;     // The local id for the thread, -1 ==> invalid thread
+   int32_t  mThreadId;    // The local id for the thread, -1 ==> invalid thread
 
    // --- STATICS ---- //
 

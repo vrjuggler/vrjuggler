@@ -46,13 +46,13 @@ class vjHand
 {
 public:
    vjHand( const float& yaw = 0, const float& pitch = 0 ) : 
-         mYaw( yaw ), 
-         mPitch( pitch ), 
          mPinky( -15, -45, -45, 0 ), 
          mRing( -15, -45, -45, 0 ), 
          mMiddle( -15, -45, -45, 0 ), 
          mIndex( -15, -45, -45, 0 ), 
-         mThumb( -15, -45, -45, 0 )
+         mThumb( -15, -45, -45, 0 ),
+         mYaw( yaw ), 
+         mPitch( pitch )
    {
    }   
    

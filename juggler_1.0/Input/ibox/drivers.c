@@ -22,8 +22,7 @@ void openIbox()
 
 void updateIbox()
 {
-	int port=2, timer_flag=0, num_anlg=0, num_encd=0, done=0, count=0;
-	long int baud = 38400L;
+	int port=2, timer_flag=0, num_anlg=0, num_encd=0, count=0;
 	ibox_result result;
 	result = hci_check_packet(&ibox);
 

@@ -45,7 +45,7 @@ void vjThreadManager::debugDump()
       << "------- Thread Manager DUMP -------\n" << vjDEBUG_FLUSH;
    vjDEBUG_BEGIN(vjDBG_ALL, vjDBG_CONFIG_LVL) << "--- Thread List ----\n"
                                                 << vjDEBUG_FLUSH;
-   for (int i=0;i<mThreads.size();i++)
+   for (unsigned int i=0;i<mThreads.size();i++)
    {
       if (mThreads[i] != NULL)
          vjDEBUG(vjDBG_ALL, vjDBG_CONFIG_LVL) << i << ": ["
@@ -73,7 +73,7 @@ vjGuard<vjMutex> guard(mTSMutex);      // MUTEX Protection
    long new_key = generateNewTSKey();
 
    mBaseTSTable.setObject(object, new_key);     // Set it in the base table
-   for (int i=0;i<mTSTables.size();i++)         // For all thread tables
+   for (unsigned int i=0;i<mTSTables.size();i++) // For all thread tables
       mTSTables[i]->setObject(object, new_key); // Add the object (table is mutex protected)
 
    return new_key;
@@ -86,7 +86,7 @@ void vjThreadManager::removeTSObject(long key)
 {
 vjGuard<vjMutex> guard(mTSMutex);      // MUTEX Protection
    mBaseTSTable.releaseObject(key);
-   for (int i=0;i<mTSTables.size();i++)   // For all thread tables
+   for (unsigned int i=0;i<mTSTables.size();i++)   // For all thread tables
       mTSTables[i]->releaseObject(key);   // relase - (table is mutex protected)
 }
 

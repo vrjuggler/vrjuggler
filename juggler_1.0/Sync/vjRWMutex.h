@@ -57,10 +57,10 @@ class vjRWMutex
 {
 public:
     vjRWMutex () : waitingReaders(&stateLock),
+        numWaitingReaders(0),
         waitingWriters(&stateLock),
-        refCount(0),
         numWaitingWriters(0),
-        numWaitingReaders(0)
+        refCount(0)
     {}
 
     ~vjRWMutex(void)

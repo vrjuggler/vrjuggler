@@ -57,7 +57,8 @@ public:
     // ------------------------------------------------------------------------
     //: Initialization.
     // ------------------------------------------------------------------------
-    vjSubBarrier (int count, vjMutex* lock) : runningThreads(count), barrierFinished(lock)
+    vjSubBarrier (int count, vjMutex* lock) : barrierFinished(lock),
+                                              runningThreads(count)
     {}
 
     vjCond barrierFinished;   // True if this generation of the barrier is done.

@@ -540,10 +540,10 @@ private:
     //! ARGS: bufferIndex - The value of current, progress, or valid (it is
     //+                     an offset in the array).
     //
-    //! RETURNS: An integer value given the index into theData for the given
-    //+          bird number and buffer index.
+    //! RETURNS: An unsigned integer value given the index into theData for
+    //+          the given bird number and buffer index.
     // ------------------------------------------------------------------------
-    int getBirdIndex(int birdNum, int bufferIndex);
+    unsigned int getBirdIndex(int birdNum, int bufferIndex);
 
     vjThread*   myThread;      // The thread doing the flock sampling
     aMotionStar mMotionStar;   // Actual MotionStar device driver
