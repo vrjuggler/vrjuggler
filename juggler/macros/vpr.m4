@@ -72,7 +72,7 @@ dnl    done
         fi
     fi
 
-    AC_PATH_PROG(VPR_CONFIG, vpr-config, , no)
+    AC_PATH_PROG(VPR_CONFIG, vpr-config, no)
     min_vpr_version=ifelse([$1], ,0.0.1,$1)
 dnl    AC_MSG_CHECKING(for VPR - version >= $min_vpr_version)
     no_vpr=''
