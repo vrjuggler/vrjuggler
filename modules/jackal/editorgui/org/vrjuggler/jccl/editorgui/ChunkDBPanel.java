@@ -377,8 +377,12 @@ public class ChunkDBPanel
 	    ni = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)treeitem_menu_path.getLastPathComponent()).getUserObject());
 	    if (ni.isDescNode()) {
 		ch = ChunkFactory.createChunkWithDescName (ni.toString());
-		ch.setName (chunkdb.getNewName(ni.toString()));
-		chunkdb.add (ch);
+                if (ch != null) {
+                    ch.setName (chunkdb.getNewName(ni.toString()));
+                    chunkdb.add (ch);
+                }
+                else
+                    Core.consoleErrorMessage (component_name, "Failed to create chunk: Can't find ChunkDesc for '" + ni.toString() + "'.");
 	    }
 	    dbt.tree.expandPath(treeitem_menu_path);
 	}
