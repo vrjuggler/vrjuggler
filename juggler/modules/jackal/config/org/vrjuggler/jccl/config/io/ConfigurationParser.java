@@ -100,9 +100,10 @@ public class ConfigurationParser
       }
 
       // Get the configuration definition lookup path
-      List path = parseDefinitionPath(root.getChild(DEFINITION_PATH, CFG_NS));
-      if ( null != path )
+      Element def_path = root.getChild(DEFINITION_PATH, CFG_NS);
+      if ( null != def_path )
       {
+         List path = parseDefinitionPath(def_path);
          for (Iterator itr = path.iterator(); itr.hasNext(); )
          {
             // Add the configuration definition lookup path
