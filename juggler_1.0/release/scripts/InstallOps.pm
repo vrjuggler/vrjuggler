@@ -209,7 +209,7 @@ sub installFile ($$$$$) {
     my $inst_dir = "$dest_dir/$inst_path";
     $dirstack[0] = "$root";
 
-    print "$inst_path/$src_file -> $inst_dir/$filename\n";
+    print "$inst_path/$src_file ==> $inst_dir/$filename\n";
 
     umask(002);
     mkpath("$inst_dir", 0, 0755) or "mkpath: $!\n";
