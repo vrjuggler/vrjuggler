@@ -34,6 +34,7 @@
 
 #include <plugins/ApplicationDataManager/ApplicationDataManager.h> // my header...
 
+#include <cluster/ClusterManager.h>
 #include <cluster/ClusterNetwork/ClusterNetwork.h>
 #include <cluster/ClusterNetwork/ClusterNode.h>
 #include <cluster/Packets/EndBlock.h>
@@ -57,15 +58,16 @@
 #include <cluster/Packets/ApplicationDataAck.h>
 #include <cluster/Packets/DataPacket.h>
 
-cluster::ClusterPlugin* initPlugin()
+extern "C"
 {
-   return cluster::ApplicationDataManager::instance();
+   GADGET_CLUSTER_PLUGIN_EXPORT(void) initPlugin(cluster::ClusterManager* mgr)
+   {
+      mgr->addPlugin(new cluster::ApplicationDataManager());
+   }
 }
 
 namespace cluster
 {
-   vprSingletonImp( ApplicationDataManager );
-
    ApplicationDataManager::ApplicationDataManager()
       : mPluginGUID("cc6ca39f-03f2-4779-aa4b-048f774ff9a5"),
       mFrameNumber(0)
