@@ -1,9 +1,9 @@
 #include <iostream>
 #include <vector>
 
-#include <TestCase.h>
-#include <TestSuite.h>
-#include <TestCaller.h>
+#include <cppunit/TestCase.h>
+#include <cppunit/TestSuite.h>
+#include <cppunit/TestCaller.h>
 
 #include <vpr/vpr.h>
 #include <vpr/Thread/Thread.h>

@@ -65,8 +65,7 @@ DEPEND_EXTRAS	= @DEPEND_EXTRAS@ $(DEFS)
 EXTRA_CFLAGS	= @APP_EXTRA_CFLAGS@
 EXTRA_LFLAGS	= @APP_EXTRA_LFLAGS@
 INCLUDES	= @INCLUDES@ -I$(topdir) -I$(VPR_BASE_DIR)/include	\
-                  -I$(srcdir) -I$(srcdir)/TestCases			\
-                  -I$(CPP_UNIT)/include	-I$(CPP_UNIT)/include/cppunit
+                  -I$(srcdir) -I$(srcdir)/TestCases -I$(CPP_UNIT)/include
 OPTIMIZER	= @DBG_FLAGS@ -D_DEBUG
 LD		= @LD@
 LDFLAGS		= @LDFLAGS@ -L/usr/lib$(LIBBITSUF)

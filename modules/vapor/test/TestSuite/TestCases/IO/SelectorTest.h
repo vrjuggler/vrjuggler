@@ -9,10 +9,10 @@
 #include <numeric>
 #include <algorithm>
 
-#include <TestCase.h>
-#include <ThreadTestCase.h>
-#include <TestSuite.h>
-#include <TestCaller.h>
+#include <cppunit/TestCase.h>
+#include <cppunit/ThreadTestCase.h>
+#include <cppunit/TestSuite.h>
+#include <cppunit/TestCaller.h>
 
 #include <vpr/vpr.h>
 
