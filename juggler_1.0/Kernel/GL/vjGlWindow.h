@@ -74,6 +74,10 @@ public:
    //+       or explicitly by the functions used in the implementation
    virtual void swapBuffers(){;}
 
+   //: Handle any window events that have occured
+   //
+   virtual void checkEvents() {;}
+
 public:
    //: Sets the projection matrix for this window to draw the left eye frame
    // If the window is in stereo, it changes to the left buffer

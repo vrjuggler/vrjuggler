@@ -126,16 +126,21 @@ void vjGlPipe::controlLoop(void* nullParam)
       checkForWindowsToClose();  // Checks for closing windows
       checkForNewWindows();      // Checks for new windows to open
 
+      // --- handle EVENTS for the windows --- //
+      {
+         for(int winId=0;winId<openWins.size();winId++)
+            openWins[winId]->checkEvents();
+      }      
+      
       // --- RENDER the windows ---- //
       {
          renderTriggerSema.acquire();
 
-            // --- Call the pipe pre-draw function --- //
          vjGlApp* theApp = glManager->getApp();
 
 	         mPerfBuffer->set(mPerfPhase = 0);
-            // Can't get a context since I may not be guaranteed a window
-         theApp->pipePreDraw();                    // Call pipe pre-draw function
+         // --- pipe PRE-draw function ---- //                                   
+         theApp->pipePreDraw();      // Can't get a context since I may not be guaranteed a window
 	         mPerfBuffer->set(++mPerfPhase);
 
          // Render the windows
