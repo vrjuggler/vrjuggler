@@ -5,6 +5,7 @@
 
 #include <string>
 #include "ajSoundInfo.h"
+#include "ajSoundAPIInfo.h"
 
 /** @interface*/
 class IAudioJuggler
@@ -23,30 +24,46 @@ public:
     */
    virtual void trigger(const std::string & alias, const unsigned int & repeat = -1) = 0;
 
+   /*
+    * when sound is already playing then you call trigger,
+    * does the sound restart from beginning?
+    * (if a tree falls and no one is around to hear it, does it make sound?)
+    */
+   virtual void setRetriggerable( const std::string& alias, bool onOff ) = 0;
+
+   /**
+    * ambient or positional sound.
+    * is the sound ambient - attached to the listener, doesn't change volume
+    * when listener moves...
+    * or is the sound positional - changes volume as listener nears or retreats..
+    */
+   void setAmbient( const std::string& alias, bool setting = false ) = 0;
+
    /**
     * @semantics stop the sound
     * @input alias of the sound to be stopped
     */
-   virtual void stop(const std::string & name) = 0;
+   virtual void stop( const std::string & name ) = 0;
 
    /**
-    * @semantics call once per sound frame (doesn't have to be same as your graphics frame)
-    * @input time elapsed since last frame
+    * pause the sound, use unpause to return playback where you left off...
     */
-   virtual void step( const float& timeElapsed ) = 0;
+   virtual void pause( const std::string& alias ) = 0;
 
    /**
-    * associate a name (alias) to the description
-    * @preconditions provide an alias and a SoundInfo which describes the sound
-    * @postconditions alias will point to loaded sound data
-    * @semantics associate an alias to sound data.  later this alias can be used to operate on this sound data.
+    * resume playback from a paused state.  does nothing if sound was not paused.
     */
-   virtual void associate( const std::string& alias, const ajSoundInfo& description ) = 0;
+   virtual void unpause( const std::string& alias ) = 0;
 
    /**
-    * remove alias->sounddata association 
+    * mute, sound continues to play, but you can't hear it...
     */
-   virtual void remove(const std::string alias) = 0;
+   virtual void mute( const std::string& alias ) = 0;
+
+   /**
+    * unmute, let the muted-playing sound be heard again
+    */
+   virtual void unmute( const std::string& alias ) = 0;
 
    /**
     * set sound's 3D position 
@@ -65,18 +82,48 @@ public:
    /**
     * set the position of the listener
     */
-   virtual void setListenerPosition( const float& x, const float& y, const float& z ) = 0;
+   virtual void setListenerPosition( const vjMatrix& mat ) = 0;
 
    /**
     * get the position of the listener
     */
-   virtual void getListenerPosition( float& x, float& y, float& z ) = 0;
+   virtual void getListenerPosition( vjMatrix& mat ) = 0;
 
    virtual void changeAPI( const std::string& apiName ) = 0;
+   
+   virtual void configure( ajSoundAPIInfo& sai ) = 0;
+
+   /**
+     * configure/reconfigure a sound
+     * configure: associate a name (alias) to the description if not already done
+     * reconfigure: change properties of the sound to the descriptino provided.
+     * @preconditions provide an alias and a SoundInfo which describes the sound
+     * @postconditions alias will point to loaded sound data
+     * @semantics associate an alias to sound data.  later this alias can be used to operate on this sound data.
+     */
+   virtual void configure( const std::string& alias, const ajSoundInfo& description ) = 0;
+
+     
+   /**
+    * remove a configured sound, any future reference to the alias will not
+    * cause an error, but will not result in a rendered sound
+    */
+   virtual void remove(const std::string alias) = 0;
+
+   /**
+    * @semantics call once per sound frame (doesn't have to be same as your graphics frame)
+    * @input time elapsed since last frame
+    */
+   virtual void step( const float& timeElapsed ) = 0;
 
 public:
 
    /** @link dependency */
    /*#  ajSoundInfo lnkSoundInfo; */
+private:
+
+   /** @link dependency */
+   /*#  ajSoundAPIInfo lnkajSoundAPIInfo; */
+public:
 };
 #endif  //IAUDIOJUGGLER_H

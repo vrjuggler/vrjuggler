@@ -16,8 +16,20 @@
 
 #include "ajOpenALSoundImplementation.h"
 
+void ajOpenALSoundImplementation::step( const float & timeElapsed )
+{
+   assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
+   
+   ajSoundImplementation::step( timeElapsed );
+}
+void ajOpenALSoundImplementation::remove( const std::string alias )
+{
+   ajSoundImplementation::remove( alias );
+}
 ajOpenALSoundImplementation::ajOpenALSoundImplementation() : ajSoundImplementation(), mContextId( NULL ), mDev( NULL ), mBindLookup()
 {
+   // TODO: set up the defaults for openal...
+   //mSoundAPIInfo.
 }
 
 ajOpenALSoundImplementation::~ajOpenALSoundImplementation()
@@ -92,19 +104,6 @@ void ajOpenALSoundImplementation::stop( const std::string& alias )
 }
 
 /**
- * take a time step of [timeElapsed] seconds.
- * @semantics call once per sound frame (doesn't have to be same as your graphics frame)
- * @input time elapsed since last frame
- */
-void ajOpenALSoundImplementation::step( const float & timeElapsed )
-{
-   assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
-   
-   ajSoundImplementation::step( timeElapsed );
-}
-
-
-/**
  * associate a name (alias) to the description
  * @preconditions provide an alias and a SoundInfo which describes the sound
  * @postconditions alias will point to loaded sound data
@@ -115,28 +114,17 @@ void ajOpenALSoundImplementation::associate( const std::string& alias, const ajS
    ajSoundImplementation::associate( alias, description );
 }
 
-
-/**
- * remove alias->sounddata association 
- */
-void ajOpenALSoundImplementation::remove( const std::string alias )
-{
-   ajSoundImplementation::remove( alias );
-}
-
 /**
  * set sound's 3D position 
  */
 void ajOpenALSoundImplementation::setPosition( const std::string& alias, float x, float y, float z )
 {
    assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
-   
    ajSoundImplementation::setPosition( alias, x, y, z );
 
    if (mBindLookup.count( alias ) > 0)
    {
-      float pos[3];
-      pos[0] = x; pos[1] = y; pos[2] = z;
+      float pos[3] = { x, y, z };
       alSourcefv( mBindLookup[alias].source, AL_POSITION, pos );
    }
 }
@@ -154,45 +142,42 @@ void ajOpenALSoundImplementation::getPosition( const std::string& alias, float& 
 /**
  * set the position of the listener
  */
-void ajOpenALSoundImplementation::setListenerPosition( const float& x, const float& y, const float& z )
+void ajOpenALSoundImplementation::setListenerPosition( const vjMatrix& mat )
 {
    assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
    
-   ajSoundImplementation::setListenerPosition( x, y, z );
+   ajSoundImplementation::setListenerPosition( mat );
 
-   ALfloat position[] = { x, y, z };
+   // extract position from the matrix
+   ALfloat position[3];
+   mat.getTrans( position[0], position[1], position[2] );
+
+   // extract orientation from the matrix
+   const vjVec3 forward( 0.0f, 0.0f, -1.0f );
+   const vjVec3 up( 0.0f, 1.0f, 0.0f );
+   vjVec3 forward_modified, up_modified;
+   forward_modified.xformVec( mat, forward );
+   up_modified.xformVec( mat, up );
+
+   // openal wants a pair of 3 tuples: { forward, up }
+   ALfloat orientation[]  = { forward_modified[0], forward_modified[1], forward_modified[2],
+                             up_modified[0], up_modified[1], up_modified[2] };
+
+   // set position
    alListenerfv( AL_POSITION, position );
+
+   // set orientation
+	alListenerfv( AL_ORIENTATION, orientation );
 }
 
 /**
  * get the position of the listener
  */
-void ajOpenALSoundImplementation::getListenerPosition( float& x, float& y, float& z )
+void ajOpenALSoundImplementation::getListenerPosition( vjMatrix& mat ) const
 {
-   ajSoundImplementation::getListenerPosition( x, y, z );
+   ajSoundImplementation::getListenerPosition( mat );
 }
 
-/**
- * set the orientation of the listener
- */
-void ajOpenALSoundImplementation::setListenerOrientation( const float& rad, const float& x, const float& y, const float&  z )
-{
-   assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
-   
-   //ajSoundImplementation::setListenerOrientation( rad, x, y, z );
-}
-
-/**
- * set the orientation of the listener
- */
-void ajOpenALSoundImplementation::setListenerOrientation( const float& dirx, const float& diry, const float& dirz, const float& upx, const float& upy, const float& upz )
-{
-   assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
-   
-   //ajSoundImplementation::setListenerOrientation( dirx, dirx, dirx, upx, upy, upz );
-   ALfloat orientation[]  = { dirx, dirx, dirx, upx, upy, upz };
-	alListenerfv( AL_ORIENTATION, orientation );
-}
 
 /**
  * start the sound API, creating any contexts or other configurations at startup
@@ -235,8 +220,7 @@ void ajOpenALSoundImplementation::startAPI()
 
    // init the listener...
 
-   this->setListenerPosition( 0.0f, 0.0f, 0.0f );
-	this->setListenerOrientation( 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f );
+   this->setListenerPosition( mat );
 
    // ALfloat velocity[] = { 0.0f, 0.0f,  0.0f };
 	// alListenerfv( AL_VELOCITY, velocity );

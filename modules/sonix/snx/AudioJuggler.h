@@ -7,6 +7,7 @@
 #include "IAudioJuggler.h"
 #include "ajSoundFactory.h"
 #include "ajSoundImplementation.h"
+#include "ajSoundAPIInfo.h"
 
 class AudioJuggler : public IAudioJuggler
 {
@@ -42,6 +43,27 @@ public:
       this->impl().trigger( alias, repeat );
    }
 
+   /*
+    * when sound is already playing then you call trigger,
+    * does the sound restart from beginning?
+    * (if a tree falls and no one is around to hear it, does it make sound?)
+    */
+   virtual void setRetriggerable( const std::string& alias, bool onOff )
+   {
+      this->impl().setRetriggerable( alias, onOff );
+   }
+
+   /**
+    * ambient or positional sound.
+    * is the sound ambient - attached to the listener, doesn't change volume
+    * when listener moves...
+    * or is the sound positional - changes volume as listener nears or retreats..
+    */
+   void setAmbient( const std::string& alias, bool setting = false )
+   {
+      this->impl().setAmbient( alias, setting );
+   }
+
    /**
     * @semantics stop the sound
     * @input alias of the sound to be stopped
@@ -52,33 +74,35 @@ public:
    }
 
    /**
-    * @semantics call once per sound frame (doesn't have to be same as your graphics frame)
-    * @input time elapsed since last frame
+    * pause the sound, use unpause to return playback where you left off...
     */
-   virtual void step( const float& timeElapsed )
+   virtual void pause( const std::string& alias )
    {
-      this->impl().step( timeElapsed );
+      this->impl().pause( alias );
    }
 
-
    /**
-    * associate a name (alias) to the description
-    * @preconditions provide an alias and a SoundInfo which describes the sound
-    * @postconditions alias will point to loaded sound data
-    * @semantics associate an alias to sound data.  later this alias can be used to operate on this sound data.
+    * resume playback from a paused state.  does nothing if sound was not paused.
     */
-   virtual void associate( const std::string& alias, const ajSoundInfo& description )
+   virtual void unpause( const std::string& alias )
    {
-      this->impl().associate( alias, description );
+      this->impl().unpause( alias );
    }
 
+   /**
+    * mute, sound continues to play, but you can't hear it...
+    */
+   virtual void mute( const std::string& alias )
+   {
+      this->impl().mute( alias );
+   }
 
    /**
-    * remove alias->sounddata association 
+    * unmute, let the muted-playing sound be heard again
     */
-   virtual void remove( const std::string alias )
+   virtual void unmute( const std::string& alias )
    {
-      this->impl().remove( alias );
+      this->impl().unmute( alias );
    }
 
    /**
@@ -103,17 +127,17 @@ public:
    /**
     * set the position of the listener
     */
-   virtual void setListenerPosition( const float& x, const float& y, const float& z )
+   virtual void setListenerPosition( const vjMatrix& mat )
    {
-      this->impl().setListenerPosition( x, y, z );
+      this->impl().setListenerPosition( mat );
    }
 
    /**
     * get the position of the listener
     */
-   virtual void getListenerPosition( float& x, float& y, float& z )
+   virtual void getListenerPosition( vjMatrix& mat ) const
    {
-      this->impl().getListenerPosition( x, y, z );
+      this->impl().getListenerPosition( mat );
    }
 
 
@@ -152,6 +176,45 @@ public:
       mImplementation->bindAll();
    }
 
+   /*
+    * configure the sound API global settings
+    */
+   virtual void configure( const ajSoundAPIInfo& sai )
+   {
+      this->impl().configure( sai );
+   }   
+
+   /**
+     * configure/reconfigure a sound
+     * configure: associate a name (alias) to the description if not already done
+     * reconfigure: change properties of the sound to the descriptino provided.
+     * @preconditions provide an alias and a SoundInfo which describes the sound
+     * @postconditions alias will point to loaded sound data
+     * @semantics associate an alias to sound data.  later this alias can be used to operate on this sound data.
+     */
+   virtual void configure( const std::string& alias, const ajSoundInfo& description )
+   {
+      this->impl().associate( alias, description );
+   }   
+
+   /**
+     * remove a configured sound, any future reference to the alias will not
+     * cause an error, but will not result in a rendered sound
+     */
+   virtual void remove( const std::string alias )
+   {
+      this->impl().remove( alias );
+   }   
+
+   /**
+     * @semantics call once per sound frame (doesn't have to be same as your graphics frame)
+     * @input time elapsed since last frame
+     */
+   virtual void step( const float& timeElapsed )
+   {
+      this->impl().step( timeElapsed );
+   }
+   
 protected:
    ajSoundImplementation& impl()
    {
@@ -175,5 +238,8 @@ private:
    /** AudioJuggler API includes objects of this type
     * @link dependency */
    /*#  ajSoundInfo lnkSoundInfo; */
+
+   /** @link dependency */
+   /*#  ajSoundAPIInfo lnkajSoundAPIInfo; */
 };
 #endif //AUDIOJUGGLER_H
