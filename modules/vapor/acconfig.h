@@ -72,15 +72,6 @@
 /* Define to use simulated sockets. */
 #undef VPR_USE_SIM_SOCKETS
 
-/* Define to use System V semaphores. */
-#undef VPR_SYSV_SEMAPHORES
-
-/* Define to use the OpenGL API. */
-#undef VPR_API_OPENGL
-
-/* Define to use the Performer API. */
-#undef VPR_API_PERFORMER
-
 /* Define all of the following if building on IRIX. */
 #undef VPR_OS_IRIX
 #undef _BSD_TYPES
@@ -137,24 +128,10 @@
 #undef socklen_t
 
 /*
- * Define to `unsigned int' if the u_int and/or uint32_t types are not
- * available.  On Windows when using Visual C++, define to UINT.
- */
-#undef u_int
-#undef uint32_t
-
-/*
  * Define to the sizeof a memory address if the type caddr_t is not available.
  * char* is most likely going to be a safe substitute.
  */
 #undef caddr_t
-
-/* 
- * On Windows when using Visual C++, define to __int32 and __int64
- * respectively if these two are not available.
- */
-#undef int32_t
-#undef int64_t
 
 /* Define if you have the sched_yield function.  */
 #undef HAVE_SCHED_YIELD
