@@ -16,8 +16,16 @@
 
 #include "isense.h"
 #include "serial.h"
+#include "wsock.h"
 
-#define ISLIB_VERSION 1.02
+#include <vpr/vpr.h>
+
+#ifdef VPR_OS_Win32
+#include <windows.h>
+#include <winbase.h>
+#endif
+
+#define ISLIB_VERSION 2.09
 
 #define IS300       0x01    /* 3DOF system */
 #define IS600       0x02    /* 6DOF system */
@@ -68,19 +76,24 @@
 #define MAX_NUM_IMUS    4
 
 #define MAX_COM_PORTS   4
-#define MAX_BAUD_RATES  1
+#define MAX_BAUD_RATES  5
+
+#define validStation(sNum) (sNum >= 0 && sNum < MAX_NUM_STATIONS)
 
 /* convert hardware id to array index (just a lookup) */
 #define toIndex(A)   (A==1?0: A==2?1: A==4?2: A==8?3: A==16?4: A==32?5: A==64?6: A==128?7: A==256?8: 0)
 
-#if !defined min
-#define min(A, B)  (A>B ? B : A)
-#endif
+#define NELEM( array ) ( sizeof( array ) / sizeof( array[0] ) )
+
+#define MIN( x, y ) ( (x) < (y) ? (x) : (y) )
+#define MAX( x, y ) ( (x) > (y) ? (x) : (y) )
+#define MINMAX( lo, x, hi ) ( MAX( lo, MIN( x, hi ) ) )
+
 
 #define MAX_HARDWARE_VERSIONS       5
 
 #define MAX_OUTPUT_LIST_ITEMS       20
-#define IT_COM_NUM_LIST_CODES       14
+#define IT_COM_NUM_LIST_CODES       26
 #define IT_COM_NUM_BIT_ERROR_BYTES  3
 #define IT_COM_NUM_VER_BYTES        6
 #define IT_COM_NUM_ID_BYTES         32
@@ -93,18 +106,16 @@
 
 typedef struct
 {
-    WORD   state;
+    DWORD  state;
 
-    WORD   compass;      /* yaw comp */
-    WORD   jumpMode;     /* compatibility with old firmware */       
-    WORD   enhancement;  /* levels 0, 1, or 2 */
-    WORD   sensitivity;  /* levels 1 to 5 */
-    WORD   prediction;   /* 0 to 50 ms */
+    DWORD  compass;      /* yaw comp */
+    DWORD  jumpMode;     /* compatibility with old firmware */       
+    DWORD  enhancement;  /* levels 0, 1, or 2 */
+    DWORD  sensitivity;  /* levels 1 to 5 */
+    DWORD  prediction;   /* 0 to 50 ms */
     LONG   InertiaCube;
 
-    int    outputList[MAX_OUTPUT_LIST_ITEMS];
-
-    double Cbn[NUM_SPATIAL_DIMS][NUM_SPATIAL_DIMS];
+    LONG   outputList[MAX_OUTPUT_LIST_ITEMS];
 
     float  Position[3];
     float  Orientation[4];
@@ -113,25 +124,41 @@ typedef struct
     int    ButtonState[MAX_NUM_BUTTONS];
     short  AnalogData[MAX_ANALOG_CHANNELS]; 
 
+    BYTE   Status;             /* tracking status byte */
+    DWORD  Timecode;           
+    LONG   ApetureEncoder;
+    LONG   FocusEncoder;
+    LONG   ZoomEncoder;
+    DWORD  TimeCodeUserBits;
+    float  Apeture;
+    float  Focus;
+    float  FOV;
+    float  NodalPoint;
+
+    DWORD  NewData;
+    DWORD  NewCameraData;
+
 }ItComSensorStateType;
 
 
 typedef struct
 {
-    DWORD outputFormat;
-    DWORD units;
-    DWORD transmitMode;
-    DWORD timeUnits;
-    DWORD numActive;
     BYTE  productID;
     BYTE  hardwareVersion;
     BYTE  win32Platform;
     BYTE  boresightMode;
     BYTE  ledEnable;
-    char  bitError[IT_COM_NUM_BIT_ERROR_BYTES];
-    char  ver[IT_COM_NUM_VER_BYTES];
-    char  id[IT_COM_NUM_ID_BYTES];
+
+    DWORD outputFormat;
+    DWORD units;
+    DWORD transmitMode;
+    DWORD timeUnits;
+    DWORD numActive;
     float firmwareVersion;
+
+    char  bitError[IT_COM_NUM_BIT_ERROR_BYTES];
+    char  ver[IT_COM_NUM_VER_BYTES+1];
+    char  id[IT_COM_NUM_ID_BYTES+1];
 
 } ItComSystemStateType;
 
@@ -152,6 +179,7 @@ typedef struct
     DWORD ID;
 
     COMM_PORT  CommPort;
+    wsockType  wsock;
     
     ItComSystemStateType     state;
     ItComSensorStateType     station[MAX_NUM_STATIONS];
@@ -163,8 +191,8 @@ typedef struct
     WORD   RecordsPerSec;
     float  KBitsPerSec;    
 
-    char cmdbuf[INPUT_BUFFER_SIZE];
-    char cprev2, cprev1;
+    char   cmdbuf[INPUT_BUFFER_SIZE];
+    char   cprev2, cprev1;
 
     int    nchars;
     float  recordStartTime;
@@ -201,22 +229,30 @@ typedef struct
 } InterSenseTrackerType;
 
 
-BOOL ISD_openTracker( InterSenseTrackerType *, const char*, BOOL, BOOL, DWORD );
+BOOL ISD_openTracker( InterSenseTrackerType *, DWORD, BOOL, BOOL );
+BOOL ISD_openTrackerJuggler( InterSenseTrackerType *, std::string, int, BOOL, BOOL );
 BOOL ISD_closeTracker( InterSenseTrackerType * );
-BOOL ISD_getCommState( InterSenseTrackerType *, ISD_TRACKER_TYPE * );
-BOOL ISD_getTrackerState( InterSenseTrackerType *, ISD_TRACKER_TYPE *, BOOL );
-BOOL ISD_setTrackerState( InterSenseTrackerType *, ISD_TRACKER_TYPE *, BOOL );
-BOOL ISD_getStationState( InterSenseTrackerType *, ISD_STATION_CONFIG_TYPE *, WORD, BOOL );
-BOOL ISD_setStationState( InterSenseTrackerType *, ISD_STATION_CONFIG_TYPE *, WORD, BOOL, BOOL );
+BOOL ISD_getCommInfo( InterSenseTrackerType *, ISD_TRACKER_INFO_TYPE * );
+BOOL ISD_getTrackerConfig( InterSenseTrackerType *, ISD_TRACKER_INFO_TYPE *, BOOL );
+BOOL ISD_setTrackerConfig( InterSenseTrackerType *, ISD_TRACKER_INFO_TYPE *, BOOL );
+BOOL ISD_getStationConfig( InterSenseTrackerType *, ISD_STATION_INFO_TYPE *, WORD, BOOL );
+BOOL ISD_setStationConfig( InterSenseTrackerType *, ISD_STATION_INFO_TYPE *, WORD, BOOL, BOOL );
 void ISD_getTrackerData( InterSenseTrackerType * );
  
+BOOL processInterTraxDataRecord(InterSenseTrackerType *tracker, char *cmdbuf, int numChars);
+
 BOOL ISD_sendCommand( InterSenseTrackerType * , char * );
-BOOL ISD_setOutputRecordList( InterSenseTrackerType *, ISD_STATION_CONFIG_TYPE *, WORD );
+BOOL ISD_setOutputRecordList( InterSenseTrackerType *, ISD_STATION_INFO_TYPE *, WORD );
 BOOL ISD_configureTracker( InterSenseTrackerType *tracker, BOOL verbose );
 BOOL ISD_allowUserCommand( char * );
 BOOL ISD_applyConfiguration( InterSenseTrackerType *tracker, BOOL verbose );
 void ISD_displayTransferRate( float bps, float sps );
 void ISD_printf( InterSenseTrackerType *tracker, char *fs,... );
+
+int  wsockIsClient( InterSenseTrackerType *tracker );
+int  wsockReceiveData( InterSenseTrackerType *tracker );
+BOOL wsockGetStationConfig( InterSenseTrackerType *, ISD_STATION_INFO_TYPE *, WORD, BOOL );
+BOOL wsockSetStationConfig( InterSenseTrackerType *, ISD_STATION_INFO_TYPE *, WORD, BOOL );
 
 void itComLogAdd( InterSenseTrackerType *tracker, char *record );
 void itComLogClear( InterSenseTrackerType *tracker );

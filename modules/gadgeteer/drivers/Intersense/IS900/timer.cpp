@@ -11,34 +11,26 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <vpr/vpr.h>
 
 #include "isense.h"
 #include "timer.h"
 
-#if defined UNIX 
-#include <sys/time.h>
-#else
+#ifdef VPR_OS_Win32
 #include <sys\timeb.h>
+#else
+#include <sys/timeb.h>
 #endif
 
-#ifdef UNIX
-static struct timeval t;
-#else
 static struct timeb t;
-#endif
 static unsigned long initialTime;
 
 
 /************************************************************************/
 void initTimer()
 {
-#ifdef UNIX
-    gettimeofday(&t, NULL);
-    initialTime = t.tv_sec;
-#else
     ftime(&t);
     initialTime = t.time;
-#endif
 }
 
 
@@ -46,13 +38,8 @@ void initTimer()
 /* Returns current time in seconds */
 float timeNow()
 {
-#ifdef UNIX
-    gettimeofday(&t, NULL);
-    return ((float)(t.tv_sec - initialTime) + (float)t.tv_usec);
-#else
     ftime(&t);
     return ((float)(t.time - initialTime) + (float)t.millitm/1000.0f);
-#endif
 }
 
 
@@ -65,3 +52,4 @@ void tdelay(float tsecs)
     tstart = timeNow();
     while(timeNow() - tstart < tsecs);
 }
+

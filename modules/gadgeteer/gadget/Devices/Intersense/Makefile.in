@@ -48,14 +48,15 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(GADGET_LIBRARY)
 
-SRCS		= isdriver.c			\
-                  isense.c 			\
-                  itcom.c 			\
-                  timer.c 			\
-                  serial.c			\
+SRCS		= isdriver.cpp			\
+                  isense.cpp 			\
+                  itcom.cpp 			\
+                  timer.cpp 			\
+                  serial.cpp			\
+                  wsock.cpp			\
                   Intersense.cpp		\
                   IntersenseStandalone.cpp
-
+               
 include $(MKPATH)/dpp.obj.mk
 
 # -----------------------------------------------------------------------------

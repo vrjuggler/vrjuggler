@@ -47,15 +47,16 @@ void IntersenseStandalone::init()
 
 bool IntersenseStandalone::open()
 {
-  if(!mPortName.empty()) {
-      mHandle = ISD_OpenTrackerPort(mPortName.c_str(), FALSE, mVerbose, (DWORD)mBaudRate);
-  } else {
-      mHandle = ISD_OpenTracker(mPort, FALSE, mVerbose, (DWORD)mBaudRate);
-  }
+  //if(!mPortName.empty()) {
+  //    mHandle = ISD_OpenTrackerPort(mPortName.c_str(), FALSE, mVerbose, (DWORD)mBaudRate);
+  //} else {
+   std::cout << "IntersenseStandalone, trying to open: " << mPortName << " at " << mBaudRate << std::endl;
+      mHandle = ISD_OpenTracker(mPortName, mBaudRate, FALSE, mVerbose/*, (DWORD)mBaudRate*/);
+  //}
   bool tracker_connect = false;
   if (-1 != mHandle) {
     tracker_connect = true;
-    sendScript();
+    //sendScript();
   }
 
   mActive = true;
