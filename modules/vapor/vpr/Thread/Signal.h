@@ -261,12 +261,17 @@ public:
      *
      * @param sig_num The signal to be handled.
      * @param handler The callback that does the signal handling.
+     * @param restart Restart a system call interrupted by the named signal.
+     *                This argument is optional and defaults to true.
+     *                However, if sig_num is SIGALARM, the restart parameter
+     *                is ignored and set to false.
      *
      * @returns vpr::ReturnStatus::Succeed is returned if the given handler is
      *          registered successfully; vpr::ReturnStatus::Fail otherwise.
      */
     static vpr::ReturnStatus registerHandler(const int sig_num,
-                                             vpr::SignalHandler_t handler);
+                                             vpr::SignalHandler_t handler,
+                                             const bool restart = true);
 
     /**
      * Reigsters the given callback as a handler for the named signal.  No
@@ -280,12 +285,17 @@ public:
      * @param sig_num The signal to be handled.
      * @param action  A vpr::SignalAction object encapsulating all the
      *                information needed to handle the named signal.
+     * @param restart Restart a system call interrupted by the named signal.
+     *                This argument is optional and defaults to true.
+     *                However, if sig_num is SIGALRM, the restart parameter
+     *                is ignored and set to false.
      *
      * @returns vpr::ReturnStatus::Succeed is returned if the given action is
      *          registered successfully; vpr::ReturnStatus::Fail otherwise.
      */
     static vpr::ReturnStatus registerHandler(const int sig_num,
-                                             vpr::SignalAction& action);
+                                             vpr::SignalAction& action,
+                                             const bool restart = true);
 
 protected:
     /**
