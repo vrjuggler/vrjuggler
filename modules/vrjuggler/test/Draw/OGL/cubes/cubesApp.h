@@ -216,6 +216,7 @@ public:
    // POST: The current scene has been drawn
    virtual void draw()
    {
+      glClear(GL_DEPTH_BUFFER_BIT);
       initGLState();    // This should really be in another function
 
       myDraw(vrj::GlDrawManager::instance()->currentUserData()->getUser());
@@ -225,7 +226,7 @@ public:
    virtual void bufferPreDraw()
    {
       glClearColor(0.0, 0.0, 0.0, 0.0);
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      glClear(GL_COLOR_BUFFER_BIT);
    }
 
    /// Function called after drawing has been triggered but BEFORE it completes

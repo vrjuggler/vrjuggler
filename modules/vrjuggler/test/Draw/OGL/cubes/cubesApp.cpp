@@ -39,6 +39,9 @@
 #include <gmtl/Generate.h>
 #include <gmtl/Output.h>
 
+#include <vrj/Draw/OGL/GlUserData.h>
+#include <vrj/Display/Viewport.h>
+
 #include <cubesApp.h>
 
 
@@ -269,9 +272,27 @@ void cubesApp::myDraw(vrj::User* user)
 {
    vprDEBUG(vprDBG_ALL,5) << "\n--- myDraw() ---\n" << vprDEBUG_FLUSH;
 
+   vrj::GlUserData* user_data = vrj::GlDrawManager::instance()->currentUserData();
+   int cur_eye = user_data->getProjection()->getEye();
+
    static const float SCALE = 100;
    //static const float SCALE = 10;
    static const float INCR = 0.1;
+
+   /*
+   if(cur_eye == vrj::Projection::LEFT)
+   {
+      glColor3f(1.0f, 0.0f, 0.0f);
+   }
+   else if(cur_eye == vrj::Projection::RIGHT)
+   {
+      glColor3f(0.0f, 0.0f, 1.0f);
+   }
+   else
+   {
+      glColor3f(0.0f, 1.0f, 0.0f);
+   }
+   */
 
    glPushMatrix();
          // --- Push on Navigation matrix for the user --- //
@@ -279,7 +300,7 @@ void cubesApp::myDraw(vrj::User* user)
       gmtl::Matrix44f nav_matrix = mUserData[user->getId()]->mNavMatrix;
       glMultMatrixf(nav_matrix.mData);
 
-      
+
       //---- Main box loop -----///
       for (float x=0;x<1;x += INCR)
       {
