@@ -3,3 +3,19 @@ This is the VR Juggler Documentation
 Build the project by running "install-web.pl" from the install directory.
 If you run this with a -z option, it will save your arguments in a script 
 that you can then use to build the project (this is recommended).
+
+
+Directory tree description:
+CVS/           repository directory
+README         project description (this file)
+index.html*    VRJ start page
+pub/           put zip, tar, gz, binaries, pdf, and other downloadable stuff here.
+todo.txt       looking for something to do?  read this file for motivation.
+JExplorer/     information and examples on how to use JExplorer.
+html/          all site content in the form of HTML 
+install/       installation scripts: this will compile the docs using Perl.
+style/         style sheets (.css files)
+LEGAL          The license for the content found in this tree.
+images/        all site images.
+java.class/    all byte code for the java controls (.class files)
+supplemental/  site specific info
