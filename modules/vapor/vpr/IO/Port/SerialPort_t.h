@@ -301,9 +301,10 @@ public:
    /**
     * Queries the serial port for the minimum buffer size.  This is only
     * applicable in non-canonical mode.
+    * The min buffer size determines how many bytes must be read before a read can return.
     *
     * @pre The serial port is open.
-    * @post The maximum buffer size is returned to the caller through the
+    * @post The minimum buffer size is returned to the caller through the
     *       by-reference argument.
     *
     * @param size A reference to a vpr::Uint16 where the buffer size is
@@ -312,10 +313,11 @@ public:
     * @return vpr::ReturnStatus::Succeed is returned if the buffer size was
     *         retrieved successfully.  vpr::ReturnStatus::Fail is returned
     *         otherwise.
+    * @see getTimeout
     */
-   vpr::ReturnStatus getBufferSize(vpr::Uint16& size)
+   vpr::ReturnStatus getMinInputSize(vpr::Uint16& size)
    {
-      return mSioImpl.getBufferSize(size);
+      return mSioImpl.getMinInputSize(size);
    }
 
    /**
@@ -331,10 +333,11 @@ public:
     *
     * @return vpr::ReturnStatus::Succeed is returned if the buffer size was set
     *         successfully.  vpr::ReturnStatus::Fail is returned otherwise.
+    * @see setTimeout
     */
-   vpr::ReturnStatus setBufferSize(const vpr::Uint8 size)
+   vpr::ReturnStatus setMinInputSize(const vpr::Uint8 size)
    {
-      return mSioImpl.setBufferSize(size);
+      return mSioImpl.setMinInputSize(size);
    }
 
    /**
@@ -535,7 +538,7 @@ public:
     * @return true is returned if canonical input mode is enabled.
     *         Otherwise, false is returned.
     *
-    * @see getBufferSize
+    * @see getMinInputSize
     * @see getTimeout
     */
    bool getCanonicalState()

@@ -330,34 +330,40 @@ public:
    void setUpdateAction(SerialTypes::UpdateActionOption action);
 
    /**
-    * Queries the serial port for the maximum buffer size.
+    * Queries the serial port for the minimum buffer size.  This is only
+    * applicable in non-canonical mode.
+    * The min buffer size determines how many bytes must be read before a read can return.
     *
-    * @pre This serial port is open.
-    * @post The maximum buffer size is returned to the caller through the
+    * @pre The serial port is open.
+    * @post The minimum buffer size is returned to the caller through the
     *       by-reference argument.
     *
-    * @param size A reference to a vpr::Uint8 where the buffer size is
+    * @param size A reference to a vpr::Uint16 where the buffer size is
     *             stored for return to the caller.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the buffer size was
-    *         retrieved successfully; vpr::ReturnStatus::Fail otherwise.
+    *         retrieved successfully.  vpr::ReturnStatus::Fail is returned
+    *         otherwise.
+    * @see getTimeout
     */
-   vpr::ReturnStatus getBufferSize(Uint16& size);
+    vpr::ReturnStatus getMinInputSize(Uint16& size);
 
    /**
-    * Attempts to change the buffer size to the given argument.
+    * Attempts to change the minimum buffer size to the given argument.  This
+    * will change the minimum number of bytes required in the buffer before
+    * a <code>read</code> call will return.  This is only applicable in
+    * non-canonical mode.
     *
-    * @pre This serial port is open.
-    * @post If the buffer size is usable on the port, the port attributes
-    *       are updated and success is returned.  Otherwise, a failure
-    *       status is returned.
-    *
-    * @param size The new size for the buffer.
+    * @pre The serial port is open.
+    * @post If the buffer size is usable on the port, the port attributes are
+    *       updated and success is returned.  Otherwise, a failure status is
+    *       returned.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the buffer size was set
-    *         successfully; vpr::ReturnStatus::Fail otherwise.
+    *         successfully.  vpr::ReturnStatus::Fail is returned otherwise.
+    * @see setTimeout
     */
-   vpr::ReturnStatus setBufferSize(const Uint8 size);
+   vpr::ReturnStatus setMinInputSize(const Uint8 size);
 
    /**
     * Gets the value of the timeout (in tenths of a second) to wait for data
@@ -515,7 +521,7 @@ public:
     * assembled into lines.  Otherwise, read requests are satisfied directly
     * from the input queue, and a read will not return until the buffer is
     * at its minimum capacity or the timeout has expired.  See
-    * getBufferSize() and getTimeout() for more information.
+    * getMinInputSize() and getTimeout() for more information.
     *
     * @pre This serial port is open.
     * @post The current state of canonical input is returnd to the caller.

@@ -159,7 +159,7 @@ void SerialPortImplTermios::setUpdateAction(vpr::SerialTypes::UpdateActionOption
 }
 
 // Query the serial port for the maximum buffer size.
-vpr::ReturnStatus SerialPortImplTermios::getBufferSize(vpr::Uint16& size)
+vpr::ReturnStatus SerialPortImplTermios::getMinInputSize(vpr::Uint16& size)
 {
    vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
    vpr::ReturnStatus retval;
@@ -174,7 +174,7 @@ vpr::ReturnStatus SerialPortImplTermios::getBufferSize(vpr::Uint16& size)
 }
 
 // Attempt to change the buffer size to the given argument.
-vpr::ReturnStatus SerialPortImplTermios::setBufferSize(const vpr::Uint8 size)
+vpr::ReturnStatus SerialPortImplTermios::setMinInputSize(const vpr::Uint8 size)
 {
    vpr::ReturnStatus retval;
    struct termios term;
