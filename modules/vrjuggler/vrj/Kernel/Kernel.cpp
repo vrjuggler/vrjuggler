@@ -410,6 +410,12 @@ void vjKernel::loadConfigFile(std::string filename)
    //vjDEBUG(vjDBG_KERNEL,5) << (*mInitialChunkDB) << vjDEBUG_FLUSH;
 }
 
+//: Load a chunk description file
+//! POST: The chunk factory can now manage chunks with the given types
+void vjKernel::loadChunkDescFile(std::string filename)
+{
+   vjChunkFactory::instance()->loadDescs(filename);
+}
 
 
 
