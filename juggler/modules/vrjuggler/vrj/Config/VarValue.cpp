@@ -141,6 +141,19 @@ vjVarValue::operator char* () {
     return NULL;
 }
 
+vjVarValue::operator string () {
+    if ((type == T_STRING) || (type == T_CHUNK)) {
+	if (val.strval) {
+	    return (string)val.strval;
+	}
+	else
+	    return (string)"";
+    }
+    if (type != T_INVALID)
+	cerr << "Type error in cast to string!\n";
+    return (string)"";
+}
+
 
 
 vjVarValue &vjVarValue::operator = (int i) {
