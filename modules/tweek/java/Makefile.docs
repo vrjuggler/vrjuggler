@@ -54,6 +54,7 @@ DOC_PKGS=	$(BASE_PKG)			\
 		$(BASE_PKG).beans.loader	\
 		$(BASE_PKG).event		\
 		$(BASE_PKG).services		\
+		$(BASE_PKG).text		\
 		$(BASE_PKG).iconviewer		\
 		$(BASE_PKG).treeviewer
 
