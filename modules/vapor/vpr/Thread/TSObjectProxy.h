@@ -183,11 +183,6 @@ private:
       // If fails, it means that "real" object was different type than the
       // proxy.
       vprASSERT((real_object != NULL) && "Dynamic_cast of TS object failed");
-      /*
-      if(real_object == NULL)    // Should NEVER return NULL.  If we did, then we can't dereference it.
-         return NULL;
-      else
-      */
 
       // Return the pointer.
       return real_object->getObject();
