@@ -75,14 +75,19 @@ public class ConnectionDialog extends JDialog
       return status;
    }
 
-   public String getOrbHost ()
+   public String getNameServiceHost ()
    {
-      return orbHost;
+      return nameServiceHost;
    }
 
-   public int getOrbPort ()
+   public int getNameServicePort ()
    {
-      return orbPort;
+      return nameServicePort;
+   }
+
+   public String getNamingSubcontext ()
+   {
+      return namingSubcontext;
    }
 
    public static final int OK_OPTION     = JOptionPane.OK_OPTION;
@@ -102,24 +107,30 @@ public class ConnectionDialog extends JDialog
    private void jbInit() throws Exception
    {
       m_main_panel.setLayout(m_main_layout);
-      m_main_panel.setMinimumSize(new Dimension(375, 96));
-      m_main_panel.setPreferredSize(new Dimension(375, 96));
+      m_main_panel.setMinimumSize(new Dimension(375, 130));
+      m_main_panel.setPreferredSize(new Dimension(375, 130));
       m_main_layout.setRows(-1);
       m_main_layout.setColumns(1);
 
-      m_addr_label.setText("Address");
-      m_addr_field.setMinimumSize(new Dimension(80, 17));
-      m_addr_field.setPreferredSize(new Dimension(250, 17));
-      m_addr_panel.setLayout(m_addr_layout);
-      m_addr_panel.add(m_addr_label, null);
-      m_addr_panel.add(m_addr_field, null);
+      m_ns_host_label.setText("NameService Host");
+      m_ns_host_field.setMinimumSize(new Dimension(80, 17));
+      m_ns_host_field.setPreferredSize(new Dimension(225, 17));
+      m_ns_host_panel.setLayout(m_ns_host_layout);
+      m_ns_port_field.setText("2809");
+      m_ns_host_panel.add(m_ns_host_label, null);
+      m_ns_host_panel.add(m_ns_host_field, null);
 
-      m_port_label.setText("Port Number");
-      m_port_field.setMinimumSize(new Dimension(80, 17));
-      m_port_field.setPreferredSize(new Dimension(80, 17));
-      m_port_panel.setLayout(m_port_layout);
-      m_port_panel.add(m_port_label, null);
-      m_port_panel.add(m_port_field, null);
+      m_ns_port_label.setText("NameService Port");
+      m_ns_port_field.setMinimumSize(new Dimension(50, 17));
+      m_ns_port_field.setPreferredSize(new Dimension(50, 17));
+      m_ns_port_panel.setLayout(m_ns_port_layout);
+      m_ns_port_panel.add(m_ns_port_label, null);
+      m_ns_port_panel.add(m_ns_port_field, null);
+
+      m_naming_panel.setLayout(m_naming_layout);
+      m_naming_label.setText("Naming Subcontext");
+      m_naming_field.setMinimumSize(new Dimension(80, 17));
+      m_naming_field.setPreferredSize(new Dimension(150, 17));
 
       m_connected_orbs.setToolTipText("Current connected ORBs");
       m_connected_orbs_panel.setLayout(m_connected_orbs_layout);
@@ -129,6 +140,7 @@ public class ConnectionDialog extends JDialog
 
       m_ok_button.setText("OK");
       m_ok_button.setMnemonic('O');
+      m_ok_button.setSelected(true);
       m_ok_button.addActionListener(new ActionListener()
       {
          public void actionPerformed (ActionEvent e)
@@ -149,13 +161,16 @@ public class ConnectionDialog extends JDialog
 
       this.getContentPane().add(m_main_panel, BorderLayout.CENTER);
 
-      m_main_panel.add(m_addr_panel, null);
-      m_main_panel.add(m_port_panel, null);
+      m_main_panel.add(m_ns_host_panel, null);
+      m_main_panel.add(m_ns_port_panel, null);
+      m_main_panel.add(m_naming_panel, null);
       m_main_panel.add(m_connected_orbs_panel, null);
 
       this.getContentPane().add(m_button_panel, BorderLayout.SOUTH);
       m_button_panel.add(m_ok_button, null);
       m_button_panel.add(m_cancel_button, null);
+      m_naming_panel.add(m_naming_label, null);
+      m_naming_panel.add(m_naming_field, null);
    }
 
    private void okButtonAction (ActionEvent e)
@@ -173,24 +188,34 @@ public class ConnectionDialog extends JDialog
 
    private void commit ()
    {
-      orbHost = m_addr_field.getText();
-      orbPort = Integer.parseInt(m_port_field.getText());
+      nameServiceHost  = m_ns_host_field.getText();
+      nameServicePort  = Integer.parseInt(m_ns_port_field.getText());
+      namingSubcontext = m_naming_field.getText();
    }
 
    private int status;
 
+   private String nameServiceHost  = null;
+   private int    nameServicePort  = 2809;
+   private String namingSubcontext = null;
+
    private JPanel     m_main_panel  = new JPanel();
    private GridLayout m_main_layout = new GridLayout();
 
-   private JPanel     m_addr_panel  = new JPanel();
-   private FlowLayout m_addr_layout = new FlowLayout();
-   private JLabel     m_addr_label  = new JLabel();
-   private JTextField m_addr_field  = new JTextField();
+   private JPanel     m_ns_host_panel  = new JPanel();
+   private FlowLayout m_ns_host_layout = new FlowLayout();
+   private JLabel     m_ns_host_label  = new JLabel();
+   private JTextField m_ns_host_field  = new JTextField();
 
-   private JPanel     m_port_panel  = new JPanel();
-   private FlowLayout m_port_layout = new FlowLayout();
-   private JLabel     m_port_label  = new JLabel();
-   private JTextField m_port_field  = new JTextField();
+   private JPanel     m_ns_port_panel  = new JPanel();
+   private FlowLayout m_ns_port_layout = new FlowLayout();
+   private JLabel     m_ns_port_label  = new JLabel();
+   private JTextField m_ns_port_field  = new JTextField();
+
+   private JPanel     m_naming_panel  = new JPanel();
+   private FlowLayout m_naming_layout = new FlowLayout();
+   private JLabel     m_naming_label  = new JLabel();
+   private JTextField m_naming_field  = new JTextField();
 
    private JPanel     m_connected_orbs_panel  = new JPanel();
    private FlowLayout m_connected_orbs_layout = new FlowLayout();
@@ -200,7 +225,4 @@ public class ConnectionDialog extends JDialog
    private JPanel  m_button_panel  = new JPanel();
    private JButton m_ok_button     = new JButton();
    private JButton m_cancel_button = new JButton();
-
-   private String orbHost = null;
-   private int    orbPort = -1;
 }
