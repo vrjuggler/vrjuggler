@@ -282,7 +282,7 @@ if test "x$DTK_INCLUDES" != "x" ; then
     INCLUDES="$INCLUDES $DTK_INCLUDES"
 fi
 
-CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS $VRJ_CXXFLAGS"
+CXXFLAGS="$CXXFLAGS $VRJ_CXXFLAGS"
 EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xno" ; then
@@ -323,9 +323,9 @@ UNIX_GADROOT_ABS="$GADROOT_ABS"
 UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS $VRJ_LIBS $LIBS $XERCES_LDFLAGS $XERCES_LIB.lib comctl32.lib user32.lib gdi32.lib ws2_32.lib"
+    APP_EXTRA_LIBS="$LDFLAGS $VRJ_LIBS $LIBS $XERCES_LDFLAGS $XERCES_LIB.lib comctl32.lib user32.lib gdi32.lib ws2_32.lib"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS $VRJ_LIBS $LIBS $DTK_LDFLAGS"
+    APP_EXTRA_LIBS="$LDFLAGS $VRJ_LIBS $LIBS $DTK_LDFLAGS"
 fi
 
 # Put together the basic information needed to compile Gadgeteer applications.
