@@ -43,6 +43,7 @@ import javax.swing.border.*;
 import javax.swing.event.*;
 import java.util.Enumeration;
 import VjGUI.*;
+import VjGUI.util.PlugPanel;
 import VjConfig.*;
 
 /* there are some big issues with this piece of code.
@@ -51,7 +52,7 @@ import VjConfig.*;
  */
 
 public class ChunkOrgTreePane extends JPanel 
-    implements ActionListener, CellEditorListener, MouseListener, CoreDBListener {
+    implements PlugPanel, ActionListener, CellEditorListener, MouseListener, CoreDBListener {
 
     private JButton   new_button;
     private JButton   load_button;
@@ -366,12 +367,16 @@ public class ChunkOrgTreePane extends JPanel
 	updateInsertTypes();
     }
 
+
     /********************** PlugPanel Stuff **************************/
     public void destroy () {
     }
 
     public String getName () {
         return "OrgTree";
+    }
+
+    public void rebuildDisplay () {
     }
 
 

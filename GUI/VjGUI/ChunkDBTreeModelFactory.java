@@ -66,4 +66,7 @@ public class ChunkDBTreeModelFactory {
 	dbt.inuse = false;
     }
 
+    public void removeAllElements () {
+        models.removeAllElements();
+    }
 }

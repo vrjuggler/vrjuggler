@@ -77,7 +77,7 @@ public class ChunkDBPanel extends JPanel
     protected JPopupMenu chunktreeitem_menu;
     protected JMenuItem help1_mi, help2_mi, remove_mi, insert_mi;
 
-    protected static ChunkDBTreeModelFactory dbt_factory;
+    public static ChunkDBTreeModelFactory dbt_factory;
 
 
 
@@ -284,6 +284,14 @@ public class ChunkDBPanel extends JPanel
 
 	setButtonsEnabled (chunkdb != null);
 
+    }
+
+
+    public String getDBName() {
+        if (chunkdb != null)
+            return chunkdb.name;
+        else
+            return null;
     }
 
 
@@ -603,7 +611,11 @@ public class ChunkDBPanel extends JPanel
 	Core.removeCoreDBListener (this);
     }
 
-
+    // configure pane takes care of this so we only rebuild the tree factory
+    // cache once
+    public void rebuildDisplay () {
+        ;
+    }
 }
 
 

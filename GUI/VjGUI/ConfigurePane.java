@@ -83,6 +83,14 @@ public class ConfigurePane extends JSplitPane
     }
 
 
+//      public String getLeftDB () {
+//          leftpanel.getDBName();
+//      }
+
+//      public String getRightDB () {
+//          rightpanel.getDBName();
+//      }
+
 
     // MouseListener stuff
     public void mouseClicked(MouseEvent e) {
@@ -109,6 +117,29 @@ public class ConfigurePane extends JSplitPane
         return "Configure";
     }
 
+
+    public void rebuildDisplay () {
+        leftpanel.dbt_factory.removeAllElements();
+        String s = leftpanel.getDBName();
+        leftpanel.selectDB (null);
+        leftpanel.selectDB (s);
+        s = rightpanel.getDBName();
+        rightpanel.selectDB (null);
+        rightpanel.selectDB (s);
+    }
+
+
+//      /********************* GUIRefreshListener Stuff ******************/
+
+//      public void refreshChunkDBDisplays (GUIRefreshEvent e) {
+//          ChunkDBTreeModelFactory.removeAllElements();
+//          String s = leftpanel.getDBName();
+//          leftpanel.selectDB (null);
+//          leftpanel.selectDB (s);
+//          s = rightpanel.getDBName();
+//          rightpanel.selectDB (null);
+//          rightpanel.selectDB (s);
+//      }
 }
 
 
