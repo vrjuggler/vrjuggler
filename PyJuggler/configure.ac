@@ -204,7 +204,7 @@ else
 fi
 
 VPR_PATH([0.27], , [AC_MSG_ERROR([*** VPR is required for PyJuggler ***])])
-GADGETEER_PATH([0.11.0], ,
+GADGETEER_PATH([0.11.1], ,
                [AC_MSG_ERROR([*** Gadgeteer is required for PyJuggler ***])])
 VRJUGGLER_PATH([1.1.140], ,
                [AC_MSG_ERROR([*** VR Juggler is required for PyJuggler ***])])

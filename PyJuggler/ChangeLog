@@ -1,6 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
-Apr-30-2003 patrickh    Updated to Gadgeteer 0.11 API.
+Apr-30-2003 patrickh    Updated to Gadgeteer 0.11.1 API.
+                        NEW VERSION: 0.4.8
+Apr-30-2003 patrickh    Updated to Gadgeteer 0.11.0 API.
                         NEW VERSION: 0.4.7
 Apr-29-2003 patrickh    Exposed new event window classes in Gadgeteer.
                         NEW VERSION: 0.4.6
