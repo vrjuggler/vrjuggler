@@ -51,7 +51,7 @@
 #include <gadget/InputManager.h>
 
 #include <cluster/ClusterManager.h>
-#include <cluster/ClusterNetwork/ClusterNetwork.h>
+#include <cluster/ClusterNetwork.h>
 
 #include <jccl/Config/ParseUtil.h>
 #include <jccl/Config/ConfigElement.h>
@@ -151,7 +151,8 @@ void Kernel::controlLoop(void* nullParam)
       // Might not want the Kernel to know about the ClusterNetwork
       // It is currently being registered as a jccl::ConfigElementHandler in
       // the ClusterManager constructor
-      cluster::ClusterNetwork::instance()->updateNewConnections();
+      cluster::ClusterNetwork* cluster_network = cluster::ClusterManager::instance()->getNetwork();
+      cluster_network->updateNewConnections();
       cluster::ClusterManager::instance()->sendRequests();
 
       bool cluster = !(cluster::ClusterManager::instance()->isClusterActive() &&
