@@ -39,11 +39,11 @@
          </enumeration>
       </property>
       <property valuetype="integer" variable="false" name="number_of_birds">
-         <help>Number of birds connected to this chassis.</help>
+         <help>Number of sensors connected to this chassis.</help>
          <value label="Number of Birds" defaultvalue="2"/>
       </property>
       <property valuetype="integer" variable="false" name="data_format">
-         <help>Data format for the birds.</help>
+         <help>Data format for the sensors.</help>
          <value label="Data Format" defaultvalue="4"/>
          <enumeration editable="false">
             <enum label="No Data" value="0"/>
@@ -65,7 +65,7 @@
          </enumeration>
       </property>
       <property valuetype="integer" variable="false" name="report_rate">
-         <help>Report rate for the birds (0-255).  This should usually be 1.</help>
+         <help>Report rate for the sensors (0-255).  This should usually be 1.</help>
          <value label="Bird Report Rate" defaultvalue="1"/>
       </property>
       <property valuetype="float" variable="false" name="measurement_rate">
@@ -74,13 +74,13 @@
       </property>
       <upgrade_transform/>
    </definition_version>
-   <definition_version version="2" label="MotionStar">
+   <definition_version version="2" label="MotionStar Wireless">
       <abstract>false</abstract>
-      <help>Ascension MotionStar server chassis configuration</help>
+      <help>Ascension MotionStar Wireless server chassis configuration.  One instance of this driver is needed for each pack that will be used.</help>
       <parent>positional_device</parent>
       <category>/Devices/Positional</category>
       <property valuetype="string" variable="false" name="address">
-         <help>Hostname or IP address of the server.</help>
+         <help>Host name or IP address of the server to which this driver will connect.</help>
          <value label="Server Address" defaultvalue=""/>
       </property>
       <property valuetype="integer" variable="false" name="server_port">
@@ -92,7 +92,7 @@
          </enumeration>
       </property>
       <property valuetype="boolean" variable="false" name="is_master">
-         <help>Is this server chassis a master?.</help>
+         <help>Is this server chassis a master?  A slave chassis will be used in a multi-pack configuration.</help>
          <value label="Is master?" defaultvalue="true"/>
       </property>
       <property valuetype="integer" variable="false" name="hemisphere">
@@ -108,7 +108,7 @@
          </enumeration>
       </property>
       <property valuetype="integer" variable="false" name="data_format">
-         <help>Data format for the birds.</help>
+         <help>Data format for the sensors.</help>
          <value label="Data Format" defaultvalue="4"/>
          <enumeration editable="false">
             <enum label="No Data" value="0"/>
@@ -122,7 +122,7 @@
          </enumeration>
       </property>
       <property valuetype="integer" variable="false" name="mode">
-         <help>The sample mode for the running driver.</help>
+         <help>The sample mode for the running driver.  This should almost always be set to "Run Continuous" (0).</help>
          <value label="Sample Mode" defaultvalue="0"/>
          <enumeration editable="false">
             <enum label="Run Continuous" value="0"/>
@@ -130,11 +130,11 @@
          </enumeration>
       </property>
       <property valuetype="integer" variable="false" name="report_rate">
-         <help>Report rate for the birds (0-255).  This should usually be 1.</help>
+         <help>Report rate for the sensors (0-255).  This should usually be 1.</help>
          <value label="Bird Report Rate" defaultvalue="1"/>
       </property>
       <property valuetype="float" variable="false" name="measurement_rate">
-         <help>Measurement rate for the chassis.</help>
+         <help>Measurement rate for the chassis.  This must be set to a valid value based on the configuration of the hardware and the allowed values documented in the MotionStar Wireless manual.</help>
          <value label="Chassis Measurement Rate" defaultvalue="0.0"/>
       </property>
       <upgrade_transform>

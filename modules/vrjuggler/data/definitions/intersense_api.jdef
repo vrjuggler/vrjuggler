@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?org-vrjuggler-jccl-settings definition.version="3.1"?>
 <definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="intersense_api" icon_path="jar:file:${VJ_BASE_DIR}/share/vrjuggler/beans/customeditors/IntersenseEditor.jar!/org/vrjuggler/vrjconfig/customeditors/intersense/images/IS_logo.gif" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
-   <definition_version version="1" label="IntersenseAPI">
+   <definition_version version="1" label="InterSense API">
       <abstract>false</abstract>
-      <help>Intersense Tracking Devices</help>
+      <help>Configuration for all InterSense tracking devices.</help>
       <parent>positional_device</parent>
       <parent>digital_device</parent>
       <parent>analog_device</parent>
       <category>/Devices</category>
       <property valuetype="string" variable="false" name="driver">
-         <help>The directory containing the DLL Intersense distributes for communicating with their hardware.</help>
-         <value label="Intersense DLL Path" defaultvalue=""/>
+         <help>The full path to the InterSense driver DLL (from InterSense Corp.) that will be used for communicating with the hardware. The DLL name must not include the platform-specific file extension (such as .so, .dll, .dylib, etc.)</help>
+         <value label="InterSense DLL Path" defaultvalue=""/>
       </property>
       <property valuetype="string" variable="false" name="port">
-         <help>Serial port the Intersense is attached to</help>
-         <value label="Port" defaultvalue="/dev/ttyd1"/>
+         <help>The name of the serial port (/dev/ttyS0, COM1, etc.) to which the InterSense tracker is attached.</help>
+         <value label="Serial Port" defaultvalue="/dev/ttyd1"/>
       </property>
       <property valuetype="integer" variable="false" name="baud">
-         <help>Serial port speed</help>
-         <value label="Baud Rate" defaultvalue="115200"/>
+         <help>Serial port speed.</help>
+         <value label="Baud" defaultvalue="115200"/>
       </property>
       <property valuetype="configelement" variable="true" name="stations">
          <help>Settings for each Station.</help>
@@ -26,7 +26,7 @@
          <allowed_type>intersense_station</allowed_type>
       </property>
       <property valuetype="boolean" variable="false" name="verbose">
-         <help>Enable output from the Intersense Driver</help>
+         <help>Enable output from the InterSense Driver</help>
          <value label="Verbose Enabled" defaultvalue="false"/>
       </property>
       <property valuetype="string" variable="false" name="script">
@@ -39,7 +39,7 @@
       </property>
       <property valuetype="float" variable="false" name="max">
          <help>The upper bound for the range of valid values for the analog data.</help>
-         <value label="Range Maximum" defaultvalue="0.0"/>
+         <value label="Range Maximum" defaultvalue="1.0"/>
       </property>
       <upgrade_transform/>
    </definition_version>
