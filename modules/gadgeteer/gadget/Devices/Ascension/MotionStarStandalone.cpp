@@ -18,9 +18,14 @@
  */
 
  
-#include <strings.h>
+#ifdef __sun__
+#define _REENTRANT
+#endif
+
 #include <iostream.h>
+#include <strings.h>
 #include <assert.h>
+#include <time.h>
 #include <Input/vjPosition/aMotionStar.h>
  
 aMotionStar::aMotionStar(unsigned int _format,
@@ -337,7 +342,11 @@ void aMotionStar::run_continuous(unsigned long loopNumber) {
     timeSeconds = timeSeconds | (unsigned int)(response.header.time[2]) <<  8;
     timeSeconds = timeSeconds | (unsigned int)(response.header.time[3]);
     localtime_r(&timeSeconds, &newtime);
+#ifdef __sun__
+    asctime_r(&newtime, timeChar, sizeof(timeChar));
+#else
     asctime_r(&newtime, timeChar);
+#endif
  
     /*  printf(" TIME: %10d ", timeSeconds);     */
     if(response.header.milliseconds>999)
@@ -525,7 +534,11 @@ void aMotionStar::single_shot()
     timeSeconds = timeSeconds | (unsigned int)(response.header.time[2]) <<  8;
     timeSeconds = timeSeconds | (unsigned int)(response.header.time[3]);
     localtime_r(&timeSeconds, &newtime);
+#ifdef __sun__
+    asctime_r(&newtime, timeChar, sizeof(timeChar));
+#else
     asctime_r(&newtime, timeChar);
+#endif
  
     //    printf(" TIME: %10d \n", timeSeconds);
     if(response.header.milliseconds>999)
