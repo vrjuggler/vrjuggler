@@ -22,7 +22,9 @@ namespace gadget
 * Stable - Samples that the application is actually looking at
 * Ready   - Samples that have been completed and could be swapped over to current
 *
-* ASSERTION: There is always at least one valid set of samples on each buffer.
+* ASSERTION: The buffers can be empty at the start, but after the first cycle 
+*            (first time stable gets values) the Stable buffer must have at least 
+*            one sample.
 */
 template <class DATA_TYPE>
 class SampleBuffer
@@ -41,24 +43,20 @@ public:
    }
 
    /** Swap the data buffers
-    * @post Values from ready are copied to stable and 
-    *       ready keeps the last value it had (this keeps there from being a frame without data)
+    * @post If ready has values, then copy values from ready to stable 
+    *        if not, then stable keeps its old values
+    * @note This means that until the first sample, StableBuffer is possibly empty.
     */
    void swapBuffers()
    {
    vpr::Guard<vpr::Mutex>  guard(mLock);
-      vprASSERT(!mReadyBuffer.empty());   // ASSERT: We actually have values in ready buffer
-
-      mStableBuffer = mReadyBuffer;       // Copy over the ready values
       
-      if(mStableBuffer.size() > 1)        // If we have more then one sample in buffer, erase the rest
+      if(!mReadyBuffer.empty())            // If Ready buffer has data
       {
-         mReadyBuffer.front() = mReadyBuffer.back();                       // Keep copy of most recent sample
-         mReadyBuffer.erase(mReadyBuffer.begin()+1, mReadyBuffer.end());   // Erase all but the first value
+         mStableBuffer = mReadyBuffer;       // Copy over the ready values
       }
-
-      vprASSERT(!mReadyBuffer.empty());      // ASSERT: We actually have values in ready buffer
-      vprASSERT(!mStableBuffer.empty());     // ASSERT: We actually have values in stable buffer
+      
+      mReadyBuffer.clear();      
    }
    
    void lock()
