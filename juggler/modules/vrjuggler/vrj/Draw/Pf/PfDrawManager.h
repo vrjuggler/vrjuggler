@@ -35,7 +35,8 @@
 #define _VJ_PF_DRAW_MANAGER_
 
 #include <vjConfig.h>
-#include <function.h>
+
+#include <functional>
 #include <algorithm>
 
 #include <Performer/pf/pfChannel.h>
@@ -100,6 +101,11 @@ protected:
       std::vector<pfViewport> viewports;
    };
 
+   struct pfDisplay_disp : public std::unary_function<pfDisplay,vjDisplay*>
+   {
+     vjDisplay* operator()(const pfDisplay disp) const { return disp.disp; }
+   };
+
    /*
    struct findPfDispChan : unary_function<pfDisp, bool>
    {
@@ -151,8 +157,7 @@ public:
    virtual void addDisplay(vjDisplay* disp);
 
    //: Callback when display is removed to display manager
-   virtual void removeDisplay(vjDisplay* disp)
-   {;}
+   virtual void removeDisplay(vjDisplay* disp);
 
       //: Shutdown the drawing API
    virtual void closeAPI();
@@ -235,6 +240,12 @@ protected:
    //       Fork must have happend
    pfPipe* getPfPipe(unsigned pipe_num);
 
+   // Helpers for releasing a display and the associated cruft
+   void releaseDisplay(pfDisplay& disp);
+   void releaseViewport(pfViewport& vp);
+   pfPipeWindow* allocatePipeWin(unsigned pipeNum);
+   void releasePipeWin(pfPipeWindow* pipeWin, unsigned pipeNum);
+
    //: Return the needed mono frame buffer config
    std::vector<int> getMonoFBConfig();
    //: Return the needed stereo frame buffer config
@@ -261,6 +272,11 @@ protected:
    std::vector<pfPipe*>    mPipes;            // Performer pipes we have opened
    std::vector<char*>      mPipeStrs;        // The X-Strs of the pipes
    bool                    mPfHasForked;     // Performer has forked it processes already
+
+   // List of (available) pipe windows grouped by pipe num
+   // This is used as a repository of previously allocated but unused pipe windows
+   // We do this because Performer does not allow the deletion of pfPipeWindows
+   std::vector< std::vector<pfPipeWindow*> > mPipeWindows;
 
    //   mRoot
    //       \

@@ -62,11 +62,11 @@ void vjPfDrawFuncStereoLeft(pfChannel *chan, void* chandata);
 void vjPfDrawFuncStereoRight(pfChannel *chan, void* chandata);
 void vjPfDrawFuncMonoBackbuffer(pfChannel *chan, void* chandata);
 void vjPfDrawFuncSimulator(pfChannel* chan, void* chandata);
-
 //void vjPfAppFunc(pfChannel *chan, void* chandata);
 
 //vjPfDrawManager* vjPfDrawManager::_instance = NULL;
 vjSingletonImp(vjPfDrawManager);
+
 
 //: Can the handler handle the given chunk?
 //! RETURNS: true - Can handle it
@@ -119,7 +119,7 @@ bool vjPfDrawManager::configDisplaySystem(vjConfigChunk* chunk)
 
       if(strcmp(mPipeStrs[i], cur_disp_name) == 0)    // Use display env
       {
-    char env_var[] = "DISPLAY";
+         char env_var[] = "DISPLAY";
          char* display_env = getenv(env_var);
          char* xpipe_name  = new char[strlen(display_env)+1];
          strcpy(xpipe_name, display_env);
@@ -295,7 +295,7 @@ void vjPfDrawManager::initPipes()
       mPipes[pipe_num]->setWSConnectionName(mPipeStrs[pipe_num]);
       mPipes[pipe_num]->setScreen(pipe_num);
 
-      pfPipeWindow* pw = new pfPipeWindow(mPipes[pipe_num]);
+      pfPipeWindow* pw = allocatePipeWin(pipe_num);   // new pfPipeWindow(mPipes[pipe_num]);
       pw->setOriginSize(0,0,1,1);
    }
 }
@@ -341,7 +341,7 @@ void vjPfDrawManager::addDisplay(vjDisplay* disp)
    vjASSERT(NULL != pipe);                         // Make sure we have a good pipe
 
    // --- SETUP PWIN --- //
-   pf_disp.pWin = new pfPipeWindow(pipe);
+   pf_disp.pWin = allocatePipeWin(disp->getPipe());     //  new pfPipeWindow(pipe);
    vjASSERT(NULL != pf_disp.pWin);
 
    disp->getOriginAndSize(xo, yo, xs, ys);
@@ -495,38 +495,134 @@ void vjPfDrawManager::addDisplay(vjDisplay* disp)
 //: Callback when display is removed to display manager
 //! PRE: disp must be a valid display that we have
 //! POST: window for disp is removed from the draw manager and child pipes
-/*
 void vjPfDrawManager::removeDisplay(vjDisplay* disp)
 {
-   vjGlPipe* pipe;  pipe = NULL;
-   vjGlWindow* win; win = NULL;     // Window to remove
+   // Find the pfDisplay
+   std::vector<pfDisplay>::iterator disp_i = std::find_if(mDisplays.begin(), mDisplays.end(),
+                         std::compose1( std::bind2nd( std::equal_to<vjDisplay*>(),disp),
+                                        pfDisplay_disp()) );
 
-   for(unsigned int i=0;i<mWins.size();i++)
+
+   if(mDisplays.end() == disp_i)
    {
-      if(mWins[i]->getDisplay() == disp)      // FOUND it
-      {
-         win = mWins[i];
-         pipe = pipes[win->getDisplay()->getPipe()];
-      }
+      vjDEBUG(vjDBG_DRAW_MGR, vjDBG_CRITICAL_LVL) << "ERROR: vjPfDrawManager::removeDisplay: Tried to remove a non-existant display\n" << vjDEBUG_FLUSH;
+      return;
    }
 
-   // Remove the window from the pipe and our local list
-   if(win != NULL)
+
+   // Release the pfDisplay
+   releaseDisplay(*disp_i);
+
+   // Remove display from the list
+   mDisplays.erase(disp_i);
+}
+
+void vjPfDrawManager::releaseDisplay(pfDisplay& disp)
+{
+   // Release all viewports
+   for(std::vector<pfViewport>::iterator i=disp.viewports.begin(); i != disp.viewports.end(); i++)
    {
-      vjASSERT(pipe != NULL);
-      vjASSERT(isValidWindow(win));
-      pipe->removeWindow(win);                                                   // Remove from pipe
-      mWins.erase(std::remove(mWins.begin(),mWins.end(),win), mWins.end());      // Remove from draw manager
-      vjASSERT(!isValidWindow(win));
+      releaseViewport(*i);
+   }
+
+   // Release the pipe window
+   releasePipeWin(disp.pWin, disp.disp->getPipe());
+}
+
+
+void vjPfDrawManager::releaseViewport(pfViewport& vp)
+{
+   std::vector<pfChannel*>::iterator chan_i;
+
+   // Release the channel stuff
+   for(int i=0;i<2;i++)
+   {
+      pfChannel* chan = vp.chans[i];
+
+      // if we have a channel to delete
+      if(chan != NULL)
+      {
+         if(vp.viewport->isSurface())         // SURFACE display
+         {
+            // Remove the channel from the list of channels
+            chan_i = std::find(mSurfChannels.begin(), mSurfChannels.end(), chan);
+            if(chan_i == mSurfChannels.end())
+            {
+               vjASSERT(false && "Trying to remove a non-existant channel");
+               vjDEBUG(0,0) << "Trying to remove a non-existant pfChannel\n" << vjDEBUG_FLUSH;
+            }
+
+            // Check if we were the master
+            if(chan == mSurfMasterChan)
+            {
+               mSurfMasterChan = NULL;                      // Get new master channel
+               if(mSurfChannels.size() > 0)
+                  mSurfMasterChan = mSurfChannels[0];
+            }
+
+            if(mSurfMasterChan != NULL)                  // Dettach from the channel
+               chan->detach(mSurfMasterChan);
+
+            chan->setScene(NULL);                           // Unref the scene
+         }
+         else if(vp.viewport->isSimulator())    // SIMULATOR display
+         {
+            // Remove the channel from the list of channels
+            chan_i = std::find(mSimChannels.begin(), mSimChannels.end(), chan);
+            if(chan_i == mSimChannels.end())
+            {
+               vjASSERT(false && "Trying to remove a non-existant channel");
+               vjDEBUG(0,0) << "Trying to remove a non-existant pfChannel";
+            }
+
+            // Check if we were the master
+            if(chan == mSimMasterChan)
+            {
+               mSimMasterChan = NULL;                      // Get new master channel
+               if(mSimChannels.size() > 0)
+                  mSimMasterChan = mSimChannels[0];
+            }
+
+            if(mSimMasterChan != NULL)                  // Dettach from the channel
+               chan->detach(mSimMasterChan);
+
+            chan->setScene(NULL);                           // Unref the scene
+         }
+
+         delete chan;      // Delete the channel
+      }
+   }
+}
+
+
+
+// Get a pipe window to use
+// This either allocates a new pipe window or grabs an unused one that was previously released
+pfPipeWindow* vjPfDrawManager::allocatePipeWin(unsigned pipeNum)
+{
+   pfPipeWindow* ret_val;
+
+   if(mPipeWindows[pipeNum].size() > 0)   // Is one available
+   {
+      ret_val = mPipeWindows[pipeNum].back();
+      mPipeWindows[pipeNum].pop_back();
    }
    else
    {
-      vjDEBUG(vjDBG_ERROR, 0) << clrOutNORM(clrRED,"ERROR:") << "vjGlDrawManager::removeDisplay: Attempted to remove a display that was not found.\n" << vjDEBUG_FLUSH;
-      vjASSERT(false);
+      ret_val = new pfPipeWindow(getPfPipe(pipeNum));         // Allocate a new one
    }
 
+   vjASSERT((ret_val != NULL) && "We have a null pfPipeWindow*");
+
+   return ret_val;
 }
-*/
+
+// Just store the old pipe window in the list
+void vjPfDrawManager::releasePipeWin(pfPipeWindow* pipeWin, unsigned pipeNum)
+{
+   mPipeWindows[pipeNum].push_back(pipeWin);
+}
+
 
 
 // Initialize the parameters of the master channel
