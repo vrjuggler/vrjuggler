@@ -248,7 +248,22 @@
          <xsl:attribute name="version">
             <xsl:text>1</xsl:text>
          </xsl:attribute>
-         <xsl:copy-of select="./jconf:device" />
+         <xsl:variable name="dev_name">
+            <xsl:value-of select="./jconf:device" />
+         </xsl:variable>
+         <xsl:choose>
+            <xsl:when test="contains($dev_name, '/event_window_device/')">
+               <xsl:element name="device">
+                  <xsl:call-template name="strip-path">
+                     <xsl:with-param name="original" select="$dev_name" />
+                     <xsl:with-param name="path_sep"><xsl:text>/</xsl:text></xsl:with-param>
+                  </xsl:call-template>
+               </xsl:element>
+            </xsl:when>
+            <xsl:otherwise>
+               <xsl:copy-of select="./jconf:device" />
+            </xsl:otherwise>
+         </xsl:choose>
       </xsl:element>
    </xsl:template>
 
