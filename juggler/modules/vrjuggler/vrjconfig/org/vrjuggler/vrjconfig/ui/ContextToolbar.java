@@ -162,6 +162,7 @@ public class ContextToolbar
       undoBtn.setEnabled(false);
       redoBtn.setEnabled(false);
       saveBtn.setEnabled(false);
+      saveAsBtn.setEnabled(true);
       context.addConfigContextListener(contextListener);
       context.addUndoableEditListener(this);
    }
@@ -698,88 +699,134 @@ public class ContextToolbar
    }
 
    /**
-    * Pragmatically executs a sava as.
+    * Pragmatically executs a save as operation.  This is implemented as a
+    * "consolidation" sort of operation.  All resources in our context are
+    * saved into a single file resource.  The old resources are removed and
+    * replaced with the new single file resource.
     */
    public boolean doSaveAs()
    {
-      try
+      boolean status = true;
+
+      String new_resource_name = pickFileToSave();
+
+      // If new_resource_name is not null, it is the absolute path to a
+      // file that we can write to.  If the file already exists, it will
+      // be safe for us to replace it.
+      if ( null != new_resource_name )
       {
-         fileChooser.setDialogTitle("Save As...");
-         fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
-         fileChooser.setFileFilter( new ConfigFileFilter() );
-         fileChooser.setFileView( new ConfigFileView() );
-         fileChooser.setFileHidingEnabled(false);
-         fileChooser.setAcceptAllFileFilterUsed(false);
-         ConfigBroker broker = new ConfigBrokerProxy();
+         // removed_sources contains the names of all the resources that
+         // will be removed and replaced by the single new resource, named
+         // in new_resource_name.
          ArrayList removed_sources = new ArrayList();
-         ArrayList added_sources = new ArrayList();
-         for (Iterator itr = context.getResources().iterator(); itr.hasNext(); )
+         ArrayList all_elts = new ArrayList();
+
+         ConfigBroker broker = getBroker();
+
+         // First, we need to collect all the DataSource objects that are
+         // in our context so that they can be removed.  While doing that,
+         // we need to pull together all the config elements in all the
+         // data sources.
+         for ( Iterator itr = context.getResources().iterator();
+               itr.hasNext(); )
          {
             String old_name = (String)itr.next();
-            DataSource current_resource = broker.get( old_name );
-            if (! current_resource.isReadOnly())
-            {
-               ///Where is os.path.split when you need it?
-               String[] paths = old_name.split(File.separator);
-               int length = java.lang.reflect.Array.getLength(paths);
-               String title_name = paths[length - 1];
-               fileChooser.setDialogTitle(title_name + " -- Save As...");
-               int result = fileChooser.showSaveDialog(getParentFrame());
-               if (result == JFileChooser.APPROVE_OPTION)
-               {
-                  // XXX: This is kind of ghetto; the only way to "rename" a
-                  //      resource is to remove it and then add it in again
-                  //      with a new name.
-                  String new_name =
-                     fileChooser.getSelectedFile().getAbsolutePath();
+            removed_sources.add(old_name);
+            DataSource cur_source = broker.get(old_name);
 
-                  // JFileChooser implements File Filters, but if the user
-                  // types in a name, the JFile Chooser does NOT automatically
-                  // add the selected file extension to the name.  Go figure.
-                  if ( !new_name.matches(".*\\.jconf") )
-                  {
-                     new_name = new_name + ".jconf";
-                  }
-                  if (!old_name.equals(new_name))
-                  {
-                     // We have to buffer the adds and removes to avoid
-                     // ConcurrentModificationExceptions.
-                     removed_sources.add(old_name);
-                     added_sources.add(new_name);
-                  }
-               }
+            for ( Iterator elt_itr = cur_source.getElements().iterator();
+                  elt_itr.hasNext(); )
+            {
+               all_elts.add(elt_itr.next());
             }
          }
 
-         for (Iterator itr = removed_sources.iterator(); itr.hasNext(); )
+         // If the file to which we are saving everything already exists,
+         // we have to get the old file out of the way first.  This is
+         // because org.vrjuggler.jccl.config.FileDataSource.create() will
+         // throw an exception if the file to create already exists.
+         File temp_file = new File(new_resource_name);
+         boolean have_backup = false;
+         if ( temp_file.exists() )
          {
-            String cur = (String)itr.next();
-            context.remove(cur);
-            getBroker().remove(cur);
+            temp_file.renameTo(new File(new_resource_name + ".bak"));
+            have_backup = true;
          }
 
-         for (Iterator itr = added_sources.iterator(); itr.hasNext(); )
+         try
          {
-            String cur = (String)itr.next();
             FileDataSource new_resource =
-               FileDataSource.create(cur, getBroker().getRepository());
-            getBroker().add(cur, new_resource);
-            context.add(cur);
-            new_resource.commit();
-         }
+               FileDataSource.create(new_resource_name,
+                                     broker.getRepository());
 
-         // Inform the ConfigUndoManager that we have saved changes.
-         context.getConfigUndoManager().saveHappened();
-         mConfigIFrame.setTitle("Configuration Editor");
-         return true;
+            // Now, we can add all the config elements from the old
+            // (to-be-removed) resources into the newly created data source.
+            for ( Iterator i = all_elts.iterator(); i.hasNext(); )
+            {
+               new_resource.add((ConfigElement) i.next());
+            }
+
+            // Write out the new file.
+            new_resource.commit();
+
+            // Now, remove all the old data sources from the broker and from
+            // our context.  This is delayed as long as possible in case
+            // anything goes wrong with the construction of the replacement
+            // file data source.  With any luck, no more exceptions will be
+            // thrown after this point.
+            for ( Iterator i = removed_sources.iterator(); i.hasNext(); )
+            {
+               String cur = (String) i.next();
+               context.remove(cur);
+               broker.remove(cur);
+            }
+
+            // Add the new resource into the context as a replacement for the
+            // old resources that were just removed.
+            broker.add(new_resource_name, new_resource);
+            context.add(new_resource_name);
+
+            // Inform the ConfigUndoManager that we have saved changes.
+            context.getConfigUndoManager().saveHappened();
+            mConfigIFrame.setTitle("Configuration Editor");
+
+            status = true;
+         }
+         catch(Exception ex)
+         {
+            String msg = "Save failed: " + ex.getMessage();
+
+            // Restore the backup copy of the file if we have one.
+            if ( have_backup )
+            {
+               int choice =
+                  JOptionPane.showConfirmDialog(getParent(),
+                                                msg + "\nRestore backup?",
+                                                "Save Failed",
+                                                JOptionPane.YES_NO_OPTION,
+                                                JOptionPane.ERROR_MESSAGE);
+
+               if ( choice == JOptionPane.YES_OPTION )
+               {
+                  temp_file.renameTo(new File(new_resource_name));
+               }
+            }
+            else
+            {
+               JOptionPane.showMessageDialog(getParent(), msg,
+                                             "Save Failed",
+                                             JOptionPane.ERROR_MESSAGE);
+            }
+
+            status = false;
+         }
       }
-      catch(IOException ioe)
+      else
       {
-         JOptionPane.showMessageDialog(getParentFrame(), ioe.getMessage(),
-                                       "Error", JOptionPane.ERROR_MESSAGE);
-         ioe.printStackTrace();
+         status = false;
       }
-      return false;
+
+      return status;
    }
 
    private Container getParentFrame()
@@ -790,6 +837,137 @@ public class ContextToolbar
       }
 
       return mParentFrame;
+   }
+
+   /**
+    * Handles the process of choosing a file name for saving and verifying
+    * that the chosen file name is valie.
+    *
+    * @return A String object containing the chosen file name is returned.
+    *         If null is returned, then no choice was made.
+    */
+   private String pickFileToSave()
+   {
+      fileChooser.setDialogTitle("Save Configuration As...");
+      fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
+      fileChooser.setFileFilter( new ConfigFileFilter() );
+      fileChooser.setFileView( new ConfigFileView() );
+      fileChooser.setFileHidingEnabled(false);
+      fileChooser.setAcceptAllFileFilterUsed(false);
+
+      String chosen_filename = null;
+
+      // Loop until the user selects a valid file name to which data can be
+      // written.
+      while ( true )
+      {
+         int result = fileChooser.showSaveDialog(getParentFrame());
+
+         // If the user pressed the approve option in the file chooser,
+         // then validate the chosen file name and save everything in our
+         // context to that file.
+         if ( result == JFileChooser.APPROVE_OPTION )
+         {
+            File new_file = fileChooser.getSelectedFile();
+
+            // JFileChooser implements File Filters, but if the user
+            // types in a name, the JFile Chooser does NOT automatically
+            // add the selected file extension to the name.  Go figure.
+            if ( ! new_file.getName().endsWith(".jconf") )
+            {
+               new_file = new File(new_file.getAbsolutePath() + ".jconf");
+            }
+
+            if ( new_file.exists() )
+            {
+               result =
+                  JOptionPane.showConfirmDialog(getParentFrame(),
+                                                "Overwrite existing file " +
+                                                   new_file.getName() + "?",
+                                                "Confirm File Overwrite",
+                                                JOptionPane.YES_NO_CANCEL_OPTION);
+
+               // The user chose to cancel the whole save operationl.
+               if ( result == JOptionPane.CANCEL_OPTION )
+               {
+                  chosen_filename = null;
+                  break;
+               }
+               // The user chose not to overwrite the existing file, so we
+               // go back to the top of the loop and open up the file chooser
+               // again.
+               else if ( result == JOptionPane.NO_OPTION )
+               {
+                  chosen_filename = null;
+                  continue;
+               }
+            }
+
+            // Verify that we can write to the file represented by new_file.
+            boolean can_write = false;
+            if ( new_file.exists() && new_file.canWrite() )
+            {
+               can_write = true;
+            }
+            else
+            {
+               try
+               {
+                  // At this point, we know that the file represented by
+                  // new_file does not exist, so we can ignore the return type
+                  // of java.io.File.createNewFile().
+                  new_file.createNewFile();
+                  new_file.delete();
+                  can_write = true;
+               }
+               catch(Exception ex)
+               {
+                  can_write = false;
+               }
+            }
+
+            // If we cannot write to the file represented by new_file, ask
+            // the user what to do next.
+            if ( ! can_write )
+            {
+               result =
+                  JOptionPane.showConfirmDialog(getParentFrame(),
+                                                "Cannot write to " +
+                                                   new_file.getAbsolutePath() +
+                                                   "!\n" +
+                                                   "Pick another file name?",
+                                                "Write Access Denied",
+                                                JOptionPane.YES_NO_OPTION);
+
+               // The user chose to pick another file name, so we go back to
+               // the top of the loop and open up the file chooser again.
+               if ( result == JOptionPane.YES_OPTION )
+               {
+                  chosen_filename = null;
+                  continue;
+               }
+               // Ther user chose to cancel the whole save operation.
+               else
+               {
+                  chosen_filename = null;
+                  break;
+               }
+            }
+
+            // If we have reached this point, then we have our file name, and
+            // we can break out of this loop.
+            chosen_filename = new_file.getAbsolutePath();
+            break;
+         }
+         // The user chose to cancel the file selection, so we are done.
+         else
+         {
+            chosen_filename = null;
+            break;
+         }
+      }
+
+      return chosen_filename;
    }
 
    // JBuilder GUI variables
@@ -823,6 +1001,7 @@ public class ContextToolbar
       public void resourceAdded(ConfigContextEvent evt)
       {
          saveBtn.setEnabled(true);
+         saveAsBtn.setEnabled(true);
          expandBtn.setEnabled(true);
       }
 
@@ -831,6 +1010,7 @@ public class ContextToolbar
          if (context.getResources().size() == 0)
          {
             saveBtn.setEnabled(false);
+            saveAsBtn.setEnabled(false);
          }
          if (getBroker().getResourceNames().size() == 0)
          {
