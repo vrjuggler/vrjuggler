@@ -735,13 +735,33 @@ public class ConfigBrokerImpl
          mProgressBar = new JProgressBar(0, defFileList.size());
          mProgressBar.setValue(0);
          mProgressBar.setStringPainted(true);
+         
+         mProgressPanel.setLayout(new BorderLayout());
+         mProgressPanel.add(mFileNameLabel, BorderLayout.CENTER);
+         mProgressPanel.add(mProgressBar, BorderLayout.SOUTH);
+         
+         this.add(mLogoLabel, BorderLayout.CENTER);
+         this.add(mProgressPanel, BorderLayout.SOUTH);
 
-         this.add(mFileNameLabel, BorderLayout.CENTER);
-         this.add(mProgressBar, BorderLayout.SOUTH);
-
-         java.awt.Dimension size = new java.awt.Dimension(325, 50);
+         java.awt.Dimension size = new java.awt.Dimension(325, 275);
          this.setPreferredSize(size);
          this.setMinimumSize(size);
+
+         // Load the icons for the popup menu.
+         ClassLoader loader = getClass().getClassLoader();
+         ImageIcon vrj_logo = null;
+         
+         try
+         {
+            mLogo = new ImageIcon(loader.getResource("org/vrjuggler/jccl/config/images/jugglerlogo.jpg"));
+         }
+         catch(Exception ex)
+         {
+            ex.printStackTrace();
+         }
+         mLogoLabel.setIcon(mLogo);
+         mLogoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+         this.add(mLogoLabel, BorderLayout.CENTER);
       }
 
       public void showDialog()
@@ -821,7 +841,10 @@ public class ConfigBrokerImpl
 
       private List mDefFileList;
 
+      private JPanel mProgressPanel = new JPanel();
       private JLabel mFileNameLabel = new JLabel();
+      private JLabel mLogoLabel = new JLabel();
+      private ImageIcon mLogo = null;
       private JProgressBar mProgressBar;
       private boolean mTaskFinished = false;
    }
