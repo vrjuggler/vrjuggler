@@ -36,13 +36,14 @@ use Getopt::Std;
 use strict 'vars';
 use vars qw(%opts);
 
-getopts('i:o:p:t:x', \%opts);
+getopts('i:o:p:t:v:x', \%opts);
 
 die "ERROR: No input file given!\n" unless defined($opts{'i'});
 die "ERROR: No tempalte file given!\n" unless defined($opts{'t'});
 
 my $input_file    = "$opts{'i'}";
 my $template_file = "$opts{'t'}";
+my $version_file  = "$opts{'v'}";
 
 if ( ! open(INPUT, "$input_file") ) {
     die "ERROR: Could not open input file $input_file: $!\n";
@@ -59,6 +60,18 @@ else {
     }
 
     close(INPUT) or warn "WARNING: Could not close $input_file: $!\n";
+
+    if ( $version_file && open(INPUT, "$version_file") ) {
+        my $last_ver;
+
+        if ( $last_ver = <INPUT> ) {
+            if ( $last_ver =~ /^(\d+)\.(\d+)\.(\d+) .*$/ ) {
+                $vars{'MAJOR_VERSION'} = $1;
+                $vars{'MINOR_VERSION'} = $2;
+                $vars{'MICRO_VERSION'} = $3;
+            }
+        }
+    }
 
     if ( ! open(TEMPLATE, "$template_file") ) {
     }
