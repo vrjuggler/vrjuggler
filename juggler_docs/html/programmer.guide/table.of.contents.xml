@@ -26,42 +26,51 @@ Builder: JExplorerBuilder V 1. 0. 7
 					info="Introduction: know this before diving into the juggler library.." 
 					image="Leaf.gif" >
 				
-				< item title="Download Juggler" 
-					link="${DOWNLOAD}/index.html" 
-					info="Download it." 
+				< folder title="Get Juggler" 
+					info="How to get juggler on your machine.  Covers downloading and nstalling." 
 					image="Leaf.gif" >
-				< item title="Building Juggler" 
-					link="${TEAMGUIDE}/build/juggler/quick.start.html" 
-					info="Downloaded the source instead of the binaries?  Here's how to build your juggler distribution." 
+					
+					< item title="Download Juggler" 
+						link="${DOWNLOAD}/index.html" 
+						info="Download it." 
+						image="Leaf.gif" >
+					< item title="Installing Juggler" 
+						link="getting.started/Get.Juggler/installing.html" 
+						info="Install Juggler." 
+						image="Leaf.gif" >
+				</folder>
+				
+				< folder title="User Setup" 
+					info="Configure your account to run and compile juggler and it's related tools" 
 					image="Leaf.gif" >
-				< item title="Installing Juggler" 
-					link="getting.started/installing.html" 
-					info="Install Juggler." 
-					image="Leaf.gif" >
-				< item title="Configuration Files" 
-					link="getting.started/configuration.html" 
-					info="Set up your default Juggler configuration." 
-					image="Leaf.gif">
-				< item title="Environment Variables" 
-					link="getting.started/environment.variables.html" 
-					info="Environment Variables: You need these to run some things." 
-					image="Leaf.gif" >
-				< item title="Paths" 
-					link="getting.started/paths.html" 
-					info="Paths environment setup" 
-					image="Leaf.gif">
-				< item title="Sample Applications" 
-					link="getting.started/sample.apps.html" 
+					< item title="Configuration Files" 
+						link="getting.started/User.Setup/configuration.html" 
+						info="Set up your default Juggler configuration." 
+						image="Leaf.gif">
+					< item title="Environment Variables" 
+						link="getting.started/User.Setup/environment.variables.html" 
+						info="Environment Variables: You need these to run some things." 
+						image="Leaf.gif" >
+				</folder>
+			
+				< folder title="Sample Applications" 
 					info="Choose a sample application to test your installation." 
 					image="Leaf.gif">
-				< item title="Compiling" 
-					link="getting.started/compiling.html" 
-					info="Compile a sample application.  Make sure you have everything set up." 
-					image="Leaf.gif">
-				< item title="Run The Application" 
-					link="getting.started/running.html" 
-					info="Run the juggler application, to see if everything worked." 
-					image="Leaf.gif">
+
+					< item title="Sample Applications" 
+						link="getting.started/Sample.Applications/sample.apps.html" 
+						info="Choose a sample application to test your installation." 
+						image="Leaf.gif">
+					< item title="Compiling" 
+						link="getting.started/Sample.Applications/compiling.html" 
+						info="Compile a sample application.  Make sure you have everything set up." 
+						image="Leaf.gif">
+					< item title="Running"
+						link="getting.started/Sample.Applications/running.html" 
+						info="Run the juggler application, to see if everything worked." 
+						image="Leaf.gif">
+				</folder>
+			
 				< item title="Developing" 
 					link="getting.started/developing.html" 
 					info="Get started writing applications for VR Juggler!" 
@@ -70,8 +79,12 @@ Builder: JExplorerBuilder V 1. 0. 7
 					link="${MISC}/faq.html" 
 					info="Find your problem in the FAQ, or mail us if not found!" 
 					image="Leaf.gif">
+				< item title="Conclusion" 
+					link="getting.started/conclusion.html" 
+					info="Where to go from here?" 
+					image="Leaf.gif">
 			</folder>
-			
+						
 			< folder title="Case Studies: Learn by example" 
 				link="examples/index.html" 
 				info="Learn by example"
