@@ -46,22 +46,22 @@ namespace gadget
 
 /**
  * Position derived class for running a Flock of Birds.
- * Also a wrapper class for the real Ascension Flock class "FlockStandalone"
+ * Also a wrapper class for the real Ascension Flock class "FlockStandalone".
  *
- *  Flock adds to the FlockStandalone class shared memory and threading.<br>
- *  Flock is a positional device driver for the Flock of Birds, the config
- *  element in the constructor should set up all the settings, for these to be
- *  changed the Flock has to be deleted and a new instance created with an
- *  updated config element.
+ * Flock adds to the FlockStandalone class shared memory and threading.
+ * Flock is a positional device driver for the Flock of Birds, the config
+ * element in the constructor should set up all the settings, for these to be
+ * changed the Flock has to be deleted and a new instance created with an
+ * updated config element.
  *
  * @note Some functions still remain for changing the options of
- *     the flock when its not in Sampling mode, but in order to stay
- *     consistent with the gadget::Position functionality these
- *     are only left for building apps without jccl::ConfigElement objects.
+ *       the Flock when its not in Sampling mode, but in order to stay
+ *       consistent with the gadget::Position functionality these
+ *       are only left for building apps without jccl::ConfigElement objects.
  * @note A note on reciever access:
- *   Clients of juggler should access tracker recievers as [0-n]
- *   For example, if you have recievers 1,2, and 4 with transmitter on 3,
- *   then you can access the data, in order, as 0,1,2.
+ *       Clients of juggler should access tracker recievers as [0-n]
+ *       For example, if you have recievers 1,2, and 4 with transmitter on 3,
+ *       then you can access the data, in order, as 0,1,2.
  *
  * @see gadget::Position
  */
@@ -72,45 +72,43 @@ public:
    /**
     * Configure Constructor.
     *
-    * @param port  such as "/dev/ttyd3"
-    * @param baud  such as 38400, 19200, 9600, 14400, etc...
-    * @param numBrds  number of birds in flock
-    * @param transmit  transmitter unit number
+    * @param port  such as "/dev/ttyd3".
+    * @param baud  such as 38400, 19200, 9600, 14400, etc.
+    * @param numBrds  number of birds in Flock.
+    * @param transmit  transmitter unit number.
     *
-    * @post configures internal data members,
-    *          doesn't actually talk to the FOB yet.
+    * @post Configures internal data members, doesn't actually talk to the FOB
+    *       yet.
     */
-   Flock(const char* port = "/dev/ttyS0",
-         const int baud = 38400,
-         const int numBrds = 3,
-         const int transmit = 3);
+   Flock(const char* port = "/dev/ttyS0", const int baud = 38400,
+         const int numBrds = 3, const int transmit = 3);
+
    ~Flock();
 
-
-   /**  configure the flock with a config element. */
+   /**  configure the Flock with a config element. */
    virtual bool config(jccl::ConfigElementPtr e);
 
-   /**  begin sampling */
+   /** Begins sampling. */
    bool startSampling();
 
-   /**  stop sampling */
+   /** Stops sampling. */
    bool stopSampling();
 
-   /**  sample data */
+   /** Samples data. */
    bool sample();
 
-   /**  update to the sampled data. */
+   /** Update to the sampled data. */
    void updateData();
 
    /** Returns what element type is associated with this class. */
    static std::string getElementType();
 
-   /**  see if the flock is active or not */
+   /** Checks to see if the Flock is active or not. */
    bool isActive() const
    {
       return (mFlockOfBirds.getStatus() != FlockStandalone::CLOSED);
    }
-   
+
 protected:
    /**
     * Deletes this object.  This is an implementation of the pure virtual
@@ -124,7 +122,7 @@ protected:
    void controlLoop(void* nullParam);
 
 private:
-   vpr::Thread*      mThread;      /**< The thread doing the flock sampling */
+   vpr::Thread*      mThread;      /**< The thread doing the Flock sampling */
    FlockStandalone   mFlockOfBirds; /**< The actual Flock device object */
    bool              mExitFlag;
 };

@@ -152,7 +152,7 @@ void Flock::controlLoop(void* nullParam)
    //    << std::endl << vprDEBUG_FLUSH;
 
    // Loop will flag is set
-  while  ( !mExitFlag )
+   while  ( !mExitFlag )
    {
       this->sample();
    }
@@ -210,17 +210,21 @@ bool Flock::startSampling()
 
 bool Flock::sample()
 {
-   std::vector< gadget::PositionData > cur_samples(mFlockOfBirds.getNumSensors());
+   std::vector<gadget::PositionData> cur_samples(mFlockOfBirds.getNumSensors());
 
    if ( !isActive() )
-   {  return false; }
+   {
+      return false;
+   }
 
    mFlockOfBirds.sample();
 
    // get an initial timestamp for this entire sample. we'll copy it into
    // each PositionData for this sample.
    if (!cur_samples.empty())
-   {  cur_samples[0].setTime(); }
+   {
+      cur_samples[0].setTime();
+   }
 
    vpr::Thread::yield();
 
@@ -229,7 +233,7 @@ bool Flock::sample()
    {
       // Transforms between the cord frames
       gmtl::Matrix44f transmitter_T_reciever = mFlockOfBirds.getSensorPosition(i);
-      
+
       // Set timestamp & Store the corrected xform back into buffer.
       cur_samples[i].mPosData = transmitter_T_reciever;
       cur_samples[i].setTime (cur_samples[0].getTime());
@@ -278,7 +282,6 @@ bool Flock::stopSampling()
    return true;
 }
 
-
 void Flock::updateData()
 {
    if ( isActive() )
@@ -286,6 +289,5 @@ void Flock::updateData()
       swapPositionBuffers();
    }
 }
-
 
 } // End of gadget namespace
