@@ -126,12 +126,12 @@ namespace vpr
 
       static   void                 printTree(void )
       {
-         mSampleLock.acquire();
+         mTreeLock.acquire();
          if ( mRoot.getChild() != NULL )
          {
             mRoot.printTree(mRoot.getChild());
          }
-         mSampleLock.release();
+         mTreeLock.release();
       }
 
       /**
@@ -143,7 +143,7 @@ namespace vpr
       }
 
 
-      static   vpr::Mutex           mSampleLock;
+      static   vpr::Mutex           mTreeLock;
 
    private:
       static   ProfileNode          mRoot;
