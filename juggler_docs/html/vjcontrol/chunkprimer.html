@@ -5,72 +5,24 @@
 <body bgcolor="#ffffcc">
 <h2>VR Juggler Configuration Files and ConfigChunks</h2>
 
-This file provides a very basic introduction to the concepts behind VR Juggler
-configuration files - what they are, what they contain, etc.  It also 
-introduces the idea of ConfigChunks - the building blocks of Juggler
-config files.
+This page provides a very basic introduction to ConfigChunks, the building
+blocks of VR Juggler configuration files.
+
 <p>
-The information on this page is essential to understanding how to modify
+The first part of this page is essential to understanding how to modify
 Juggler configurations and how to use the vjcontrol program.
+The later sections, discussing Chunk Descriptions, are primarily of interest
+to developers attempting to expand VR Juggler's configuration system to support
+new devices or adding dynamic reconfiguration capabilities to application code.
+
 
 <h2>Contents</h2>
 <ul>
-<li><a href="#chunkfiles">Configuration Files</a>
 <li><a href="#chunks">What are ConfigChunks?</a>
 <li><a href="#descfiles">Chunk Description Files</a>
-<li><a href="#descs">What are Chunk Descriptions?</a>
+<li><a href="#descs">What are ChunkDescs?</a>
+<li><a href="#next">Where should I go from here?</a>
 </ul>
-
-
-
-<a name="chunkfiles">
-<h2>Configuration Files</h2>
-
-<p>
-When a VR Juggler application is initialized, it creates an internal
-database of configuration information.  This database will contain information
-about the kind of I/O devices available, the display windows Juggler should
-open, and lots of other stuff.
-
-<p>
-Typically, this database will be filled up by reading one or more configuration
-files.  With many Juggler applications, the names of config files to load
-are given as command-line arguments when the program is run.  For example:
-
-<pre>
-       cubes ~/.vjconfig/sim.base.config ~/.vjconfig/sim.wand.mixin.config
-</pre>
-
-runs the <tt>cubes</tt> demo program and tells it to load two configuration
-files.  <tt>sim.base.config</tt>, which gives a basic simulator-mode
-configuration, is read into the configuration database.  Then 
-<tt>sim.wand.mixin.config</tt>, which tells Juggler how to setup a 
-simulation of a 3-button pointing device, is added.
-
-<p>
-Configuration files can be stored in serveral places:
-<ul>
-<li>The Juggler distribution contains a number of sample files in
-<tt>$VJ_BASE_DIR/Data/configFiles/</tt>.  These include a number of
-files for piecing together a simulator mode configuration, and a set
-of example files based on the configuration of VRAC's C2 device.
-<li>Juggler expects you to have a directory called <tt>.vjconfig</tt> in
-your home directory.  This is a good place to put any config files that
-you've chosen to modify.  For example, if you've changed one of the
-simulator config files because you didn't like the keyboard shortcuts it
-was using, you should put it in <tt>~/.vjconfig</tt>.
-<li>Your system administrators may have also created a repository of
-Juggler config files set up to work with your local systems and 
-hardware.
-</ul>
-
-<p>
-Some of the sample config files are designed to be used in a ``mix-n-match''
-way.  For example, <tt>$VJ_BASE_DIR/Data/configFiles/</tt> contains four
-files for use in simulator mode.  <tt>sim.base.config</tt> provides the
-basic setup, and the other files add features on top of it - a pointing
-device, or a simulated glove, or a set of analog inputs.
-
 
 
 <a name="chunks">
@@ -234,6 +186,12 @@ for each of the values, such as "X coord", "Y coord", and "Z coord", or
 </ul>
 </ul>
 
+
+<a name="next"></a>
+<h2>Where should I go from here?</h2>
+
+The next chapters of this book describe how to use VjControl, VR Juggler's
+config file editing tool.
 
 
 </body>
