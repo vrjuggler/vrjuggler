@@ -122,9 +122,10 @@ void vjXWinKeyboard::controlLoop(void* nullParam)
    while(!mExitFlag)
    {
       sample();
-      long usleep_time; // to be set...
+      long usleep_time(1); // to be set...
 
       // HACK: usleep(0) does not do anything
+      /*
       if (1 > usleep_time)
       {
          usleep_time = 1;
@@ -132,8 +133,9 @@ void vjXWinKeyboard::controlLoop(void* nullParam)
 
       else
       {
+      */
          usleep_time = mSleepTimeMS*1000;
-      }
+
 
       usleep( usleep_time );
       //vjDEBUG(vjDBG_ALL,0) << "xwinKeyboard: loop\n" << vjDEBUG_FLUSH;
