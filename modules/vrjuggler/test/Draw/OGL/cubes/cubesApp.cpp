@@ -242,6 +242,11 @@ void cubesApp::contextClose()
 //----------------------------------------------
 // Draw the scene.  A bunch of boxes of
 // differing color and stuff.
+// Note: This draw routine places extreme stress on VR Juggler's
+//       vrj::GlContextData class (by repeatedly dereferencing it to
+//       access a display list index). As such, performance of
+//       this method will suffer on multipipe configurations.
+//       (i.e. do not imitate this code).
 //----------------------------------------------
 void cubesApp::myDraw(vrj::User* user)
 {
@@ -257,10 +262,6 @@ void cubesApp::myDraw(vrj::User* user)
       gmtl::Matrix44f nav_matrix = mUserData[user->getId()]->mNavMatrix;
       glMultMatrixf(nav_matrix.mData);
 
-
-      // dereferencing a GlContextData is expensive, so we'll do it once
-      // and store the reference.
-      ContextData& cd = *mDlData;
       
       //---- Main box loop -----///
       for (float x=0;x<1;x += INCR)
@@ -270,7 +271,7 @@ void cubesApp::myDraw(vrj::User* user)
                glColor3f(x, y, z);     // Set the Color
                glPushMatrix();
                glTranslatef( (x-0.5)*SCALE, (y-0.5)*SCALE, (z-0.5)*SCALE);
-               glCallList (cd.dlIndex);
+               drawCube();
                glPopMatrix();
             }
 
