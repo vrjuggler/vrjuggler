@@ -77,6 +77,8 @@ public:
 
    virtual void reset();
 
+   void dumpState();
+
 private:
    void initShapes();
 
@@ -94,6 +96,7 @@ private:
    gadget::PositionInterface mWand;
    gadget::DigitalInterface  mGrabButton;
    gadget::DigitalInterface  mResetButton;
+   gadget::DigitalInterface  mDumpStateButton;
 
    gmtl::Point3f mSphereCenter;
    float         mSphereRadius;
