@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.65 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.70 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -105,6 +105,19 @@ public abstract class ObjectReader
    // Operator overloads.
 
    // Converter operators.
+
+   // Start of non-virtual methods.
+   [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
+   private extern static bool vpr_ObjectReader_isBinary__(IntPtr obj);
+
+   public  bool isBinary()
+   {
+      bool result;
+      result = vpr_ObjectReader_isBinary__(mRawObject);
+      return result;
+   }
+
+   // End of non-virtual methods.
 
    // Start of virtual methods.
    // Delegate for the beginTag() callback.
