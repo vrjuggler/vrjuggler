@@ -127,6 +127,8 @@ public class VarValueBigChunkPanel extends VarValuePanel implements ActionListen
     }
 
 
+    /******************** JFrameParent Stuff *****************************/
+
     public void closedChild (ChildFrame frame, boolean ok) {
 	if (chunkframe != frame) {
 	    Core.consoleErrorMessage ("VarValueBigChunkPanel", 
@@ -137,6 +139,11 @@ public class VarValueBigChunkPanel extends VarValuePanel implements ActionListen
 	}
 	chunkframe.dispose();
 	chunkframe = null;
+    }
+
+
+    public void applyChild (ChildFrame frame) {
+        chunk = chunkframe.getNewValue();
     }
 
 }

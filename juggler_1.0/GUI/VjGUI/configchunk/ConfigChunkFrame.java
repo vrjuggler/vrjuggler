@@ -59,6 +59,7 @@ public class ConfigChunkFrame extends JFrame
     JPanel properties;
     JButton cancelbutton;
     JButton okbutton;
+    JButton applybutton;
     JButton helpbutton;
     JTextField namef;
     JTextField helpfield;
@@ -130,6 +131,9 @@ public class ConfigChunkFrame extends JFrame
 	okbutton = new JButton ("  OK  ");
 	okbutton.addActionListener (this);
 	southpanel.add (okbutton);
+	applybutton = new JButton ("Apply");
+	applybutton.addActionListener (this);
+	southpanel.add (applybutton);
 	cancelbutton = new JButton ("Cancel");
 	cancelbutton.addActionListener (this);
 	southpanel.add (cancelbutton);
@@ -208,8 +212,13 @@ public class ConfigChunkFrame extends JFrame
 	    parent.closedChild (this, false);
 	}
 	else if (e.getSource() == okbutton) {
-	    parent.closedChild (this, true);
+            parent.applyChild (this);
+	    parent.closedChild (this, false);
 	}
+        else if (e.getSource() == applybutton) {
+            parent.applyChild (this);
+            chunk = getNewValue();
+        }
 	else if (e.getSource() == helpbutton) {
 	    Core.ui.loadDescHelp (chunk.desc.getToken());
 	}
@@ -237,18 +246,19 @@ public class ConfigChunkFrame extends JFrame
 
 
     public boolean matches (String cl, Object db, Object o) {
-	if (cl != null) {
-	    try {
-		if (!(Class.forName(cl).isInstance(this)))
-		    return false;
-	    }
-	    catch (Exception e) {
-		return false;
-	    }
-	}
-	if (chunkdb != db)
-	    return false;
-	return (o == null) || (o == chunk);
+        try {
+            if (cl != null) {
+                if (!(Class.forName(cl).isInstance(this)))
+                    return false;
+            }
+            if (chunkdb != db)
+                return false;
+            ConfigChunk ch = (ConfigChunk)o;
+            return (ch == null) || (ch.getName().equals(chunk.getName()));
+        }
+        catch (Exception e) {
+            return false;
+        }
     }
 
     

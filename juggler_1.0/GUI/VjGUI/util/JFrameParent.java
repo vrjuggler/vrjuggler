@@ -39,7 +39,11 @@ import VjGUI.util.ChildFrame;
 
 public interface JFrameParent {
 
+    // child hit apply button
+    public void applyChild (ChildFrame frame);
+
     public void closedChild (ChildFrame frame, boolean ok);
 
 }
+
 

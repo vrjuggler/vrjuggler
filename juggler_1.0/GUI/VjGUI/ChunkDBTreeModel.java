@@ -159,7 +159,7 @@ public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener
 	    if (chunkorgtree == null) 
 		Core.consoleErrorMessage ("ChunkDBTreeModel", "chunkorgtree is null..");
 
-	    root = new DefaultMutableTreeNode (new ChunkTreeNodeInfo (chunkdb));
+	    root = new DefaultMutableTreeNode (new ChunkTreeNodeInfo (ChunkTreeNodeInfo.FOLDER, chunkdb, chunkdb.getName()));
 	    buildTreeEntry (chunkorgtree.root, (DefaultMutableTreeNode)root, chunkdb);
 	}
 
@@ -171,8 +171,8 @@ public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener
 	    n = (DefaultMutableTreeNode)e.nextElement();
 	    try {
 		inf = (ChunkTreeNodeInfo)n.getUserObject();
-		if (inf.ch != null)
-		    continue;
+                if (inf.isChunkNode())
+                    continue;
 		ch = n.children();
 		while (ch.hasMoreElements()) {
 		    n2 = (DefaultMutableTreeNode)ch.nextElement();
@@ -204,29 +204,29 @@ public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener
 	for (i = 0; i < on.children.size(); i++) {
 	    if (on.children.elementAt(i) instanceof String) {
 		s = (String)(on.children.elementAt(i));
-		newtn = new DefaultMutableTreeNode (new ChunkTreeNodeInfo(db, s, true));
+		newtn = new DefaultMutableTreeNode (new ChunkTreeNodeInfo(ChunkTreeNodeInfo.DESC_FOLDER, db, s), true);
 		// get all chunks in db of type s & add as childrne of newtn
 		v = db.getOfDescName(s);
 		for (j = 0; j < v.size(); j++) {
 		    ch = (ConfigChunk)v.elementAt(j);
-		    newtn2 = new DefaultMutableTreeNode (new ChunkTreeNodeInfo(db, ch), false);
+		    newtn2 = new DefaultMutableTreeNode (new ChunkTreeNodeInfo(ChunkTreeNodeInfo.CHUNK, db, ch.getName()), false);
 		    newtn.add(newtn2);
 		}
 		tn.add(newtn);
 	    }
 	    else if (on.children.elementAt(i) instanceof OrgTreeElem) {
 		newon = (OrgTreeElem)(on.children.elementAt(i));
-		newtn = new DefaultMutableTreeNode (new ChunkTreeNodeInfo (db, newon.label));
+		newtn = new DefaultMutableTreeNode (new ChunkTreeNodeInfo (ChunkTreeNodeInfo.FOLDER, db, newon.label));
 		
 		if (newon.label.equals ("*")) {
-		    newtn = new DefaultMutableTreeNode (new ChunkTreeNodeInfo (db, "All Chunks"));
+		    newtn = new DefaultMutableTreeNode (new ChunkTreeNodeInfo (ChunkTreeNodeInfo.FOLDER, db, "All Chunks"));
 		    for (j = 0; j < Core.descdb.size(); j++) {
 			s2 = Core.descdb.elementAt(j).name;
-			newtn1 = new DefaultMutableTreeNode (new ChunkTreeNodeInfo (db, s2, true));
+			newtn1 = new DefaultMutableTreeNode (new ChunkTreeNodeInfo (ChunkTreeNodeInfo.DESC_FOLDER, db, s2));
 			v = db.getOfDescName(s2);
 			for (k = 0; k < v.size(); k++) {
 			    ch = (ConfigChunk)v.elementAt(k);
-			    newtn2 = new DefaultMutableTreeNode (new ChunkTreeNodeInfo(db, ch), false);
+			    newtn2 = new DefaultMutableTreeNode (new ChunkTreeNodeInfo(ChunkTreeNodeInfo.CHUNK, db, ch.getName()), false);
 			    newtn1.add(newtn2);
 			}
 			newtn.add(newtn1);
@@ -261,8 +261,8 @@ public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener
 	while (nodes.hasMoreElements()) {
 	    n = (DefaultMutableTreeNode)nodes.nextElement();
 	    ni = (ChunkTreeNodeInfo)n.getUserObject();
-	    if (ni.ch == oldc) {
-		ni.ch = newc;
+	    if (ni.name.equals(oldc.getName())) {
+		ni.name = newc.name;
 		reload (n);
 	    }
 	}
@@ -314,7 +314,7 @@ public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener
 	    ni = (ChunkTreeNodeInfo)n.getUserObject();
 	    if (ni.isDescNode() && 
 		ni.toString().equalsIgnoreCase(ch.getDescName())) {
-		n.add (new DefaultMutableTreeNode (new ChunkTreeNodeInfo(chunkdb, ch), false));
+		n.add (new DefaultMutableTreeNode (new ChunkTreeNodeInfo(ChunkTreeNodeInfo.CHUNK, chunkdb, ch.getName()), false));
 		addedChildCount(n);	
 		reload(n);
 	    } 
