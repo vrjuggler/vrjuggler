@@ -653,9 +653,6 @@ AC_OUTPUT(Makefile
           test/Draw/OGL/wand/Makefile
           test/Draw/OpenSG/Makefile
           test/Draw/OpenSG/OpenSGNav/Makefile
-          test/Math/Makefile
-          test/Matrix/Makefile
-          test/Quat/Makefile
           test/TestSuite/Makefile
           test/TestSuite/test.defs.mk
           test/TestSuite/TestCases/Makefile
