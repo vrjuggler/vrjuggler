@@ -420,12 +420,12 @@ AC_CONFIG_FILES([
    cluster/Packets/Makefile
    gadget/Makefile
    gadget/Devices/Makefile
-   gadget/Devices/EventWindow/Makefile
+   gadget/Devices/KeyboardMouseDevice/Makefile
    gadget/Devices/Sim/Makefile
    gadget/Filter/Makefile
    gadget/Filter/Position/Makefile
    gadget/Type/Makefile
-   gadget/Type/EventWindow/Makefile
+   gadget/Type/KeyboardMouse/Makefile
    gadget/Type/Position/Makefile
    gadget/Util/Makefile
    test/Makefile

@@ -46,7 +46,7 @@
         ..
         gadget
             Devices
-                EventWindow
+                KeyboardMouseDevice
                 ..
                 Sim
                 ..
@@ -56,7 +56,7 @@
                 ..
             ..
             Type
-                EventWindow
+                KeyboardMouse
                 ..
                 Position
                 ..
