@@ -41,7 +41,7 @@
 namespace cluster
 {
 
-class GADGET_CLASS_API ClusterNode : gadget::Node
+class GADGET_CLASS_API ClusterNode : public gadget::Node
 {
 public:
    /**
