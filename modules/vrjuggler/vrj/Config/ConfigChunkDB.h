@@ -19,11 +19,11 @@
 // @author Christopher Just
 // October 1997
 //
+//!PUBLIC_API
 //------------------------------------------------------------------
 class vjConfigChunkDB {
 
 private:
-
     //: We need access to a ChunkDescDB for the >> operator.
     vjChunkDescDB *descs;
 
@@ -106,6 +106,15 @@ public:
     //+       the ConfigChunkDB, and should not be delete()d
     vjConfigChunk *getChunk (char *name);
 
+    //: return a vector of all the chunks
+    //! POST: returns
+    //! RETURNS: Copy of the pointers to the chunks in this.
+    vector<vjConfigChunk*> getChunks();
+
+    //: Add chunks to this
+    //! PRE: Description DB that this points to must have all desc's for added chunks
+    //! POST: this has added the chunks specified
+    void addChunks(vector<vjConfigChunk*> new_chunks);
 
 
     //: Returns all chunks of a given type.

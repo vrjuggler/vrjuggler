@@ -23,12 +23,13 @@
 // <p>author: Christopher Just
 //
 //------------------------------------------------------------------
+//!PUBLIC_API
 class vjProperty {
 
 public:
 
     //: Pointer to this vjProperty's description.
-    vjPropertyDesc *description;      
+    vjPropertyDesc *description;
 
     //: Name of the vjProperty (shortcut for description->name)
     char *name;
@@ -37,13 +38,13 @@ public:
     int num;
 
     //: Type of value entries.
-    VarType type;                   
+    VarType type;
 
     //: A unit, if type is T_DISTANCE. (not fully functional)
-    CfgUnit units;                  
+    CfgUnit units;
 
     //: Vector containing the actual vjVarValues.
-    vector<vjVarValue*> value;        
+    vector<vjVarValue*> value;
 
     //: ChunkDesc for embedded chunk (if valtype is T_EMBEDDEDCHUNK)
     vjChunkDesc *embeddesc;
@@ -53,7 +54,7 @@ public:
     //! POST: Property is created.  If num values is not -1, num
     //+       vjVarValues are created and placed in value.
     //+       Otherwise, value is left empty.
-    //! ARGS: pd - a pointer to a valid vjPropertyDesc. 
+    //! ARGS: pd - a pointer to a valid vjPropertyDesc.
     //! NOTE: Self stores a pointer to its PropertyDesc pd.  pd
     //+       should not be deleted while self exists.
     vjProperty (vjPropertyDesc *pd);
@@ -118,7 +119,7 @@ public:
 
 
     //: creates a vjVarValue of the correct type for this property
-    //! ARGS: i - position of this value.  Useful for giving 
+    //! ARGS: i - position of this value.  Useful for giving
     //+           embedded chunks names based on valuelabels.
     vjVarValue *createVarValue (int i = -1);
 
