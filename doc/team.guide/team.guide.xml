@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet href="../../../../../../../../../home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<!DOCTYPE book SYSTEM "../../../../../../../../../home/users/patrick/Morphon_XML-Editor/examples/docbook/dtd/docbookx.dtd">
 <book>
    <bookinfo>
       <title>The Juggler Project</title>
@@ -10,25 +10,25 @@
    </bookinfo>
    <preface>
       <title>Welcome</title>
-      <para>Do you want to contribute to a cool project? Want to learn more about VR, cross platform techniques, and system abstractions? This is your guide. This book is for those people who wish to go further with their VR Juggler work by contributing to the project and even becoming full-fledged developers with commit access.</para>
+      <para>Do you want to contribute to a cool project? Or do you want to learn more about VR, cross-platform techniques, and system abstractions? Then this is your guide. This book is for those people who wish to go further with their VR Juggler work by contributing to the project and even becoming full-fledged developers with commit access.</para>
+      <para>For those people interested in joining the VR Juggler developer team, you should read <xref linkend="introduction.part"/> and <xref linkend="compile.install.part"/>. Once you have read those and decide you would like to get commit access, refer to <xref linkend="get-commit-access-sect"/>.</para>
       <para>This document is different from the VR Juggler 1.0 Team Guide. That document relates only to VR Juggler whereas this covers the Juggler Suite of Tools as a (unified) whole.</para>
       <section>
          <title>Required Reading</title>
          <para>By now you should have read the <emphasis>Getting Started Guide</emphasis> so that you know about environment variables and about compiling VR Juggler applications. It is expected that you already know about compilers and linkers and shells and most everything else developers of UNIX and Windows software deal with on a regular basis.</para>
       </section>
       <section>
-         <title>Introduction to the Juggler Development Team</title>
-         <para>To become a developer with commit access on the Juggler opensource project, refer to <xref linkend="get-commit-access-sect"/>.</para>
-         <para>As a member of the Juggler Development Team, you will work on extremely scalable and extensible VR system software, use modern software engineering techiniques such as UML and Design Patterns, and gain exposure within the VR development community. It is your contributions that will run on some of the worlds most powerful VR configurations, as well as smaller single-user PC workstations.</para>
+         <title>Introduction to the VR Juggler Development Team</title>
+         <para>As a member of the VR Juggler Development Team, you will work on extremely scalable and extensible VR system software, use modern software engineering techniques such as UML and Design Patterns, and gain exposure within the VR development community. Your contributions will run on some of the world's most powerful VR configurations, as well as smaller single-user PC workstations.</para>
          <para>We don't require much, but in order to coexist happily, we ask that you please refer <xref linkend="intro-req-reading"/> which lists required background information. We appreciate your effort on the team.</para>
          <para>Sincerely, The Juggler Development Team</para>
       </section>
    </preface>
-   <part>
+   <part id="introduction.part">
       <title>Introduction</title>
       <chapter>
          <title>Background Information</title>
-         <para>Before diving into development tasks, we present some background information. This is to help newcomers understand the project and its goals, and it serves to keep existing develoers on track and up to speed.</para>
+         <para>Before diving into development tasks, we present some background information. This is to help newcomers understand the project and its goals, and it serves to keep existing developers on track and up to speed.</para>
          <section id="intro-req-reading">
             <title>Required Reading</title>
             <itemizedlist>
@@ -51,7 +51,7 @@
                   <para><ulink url="http://www.perl.com/">Perl</ulink> documentation. (Try doing a <command>man</command> on <literal>perl</literal>. There are several good books on Perl by <ulink url="http://www.ora.com/">O'Reilly and Associates</ulink>).</para>
                </listitem>
                <listitem>
-                  <para><ulink url="http://www.doxygen.org/">Doxygen</ulink> documentation (used in VR Juggler to autogenerate documentation for C++ classes).</para>
+                  <para><ulink url="http://www.doxygen.org/">Doxygen</ulink> documentation (used in the various modules comprising VR Juggler to auto-generate documentation for C++ classes).</para>
                </listitem>
                <listitem>
                   <para><ulink url="http://www.cvshome.org/">CVS</ulink> documentation (used for revision control).</para>
@@ -60,9 +60,9 @@
          </section>
          <section>
             <title>VR Juggler Virtual Platform: Mission Statement</title>
-            <para>VR technology as a whole is stagnating with its closed source solutions. This means that anyone new to VR need to completely develop a new solution, often inferior than others. Releasing an open VR system is vital to the development of VR. Instead of reinplementing VR systems, people need to focus on implementing new VR ideas and methods so that VR technology can mature. Now, because of VR Juggler, people can focus on implementing these new VR ideas and methods for the future because now this standard technology is readily available to all, free from cost or legal ties.</para>
-            <para>Juggler is a platform for virtual reality applications. The name comes from the delicate balance that must be struck between flexibility, performance, and ease-of-use. You develop your application once for Juggler, then anywhere that Juggler is supported, your application is also supported.</para>
-            <para>VR juggler's design addresses several key requirements for a virtual reality development system.</para>
+            <para>VR technology as a whole is stagnating with its closed source solutions. This means that anyone new to VR may need to develop a new solution, often inferior than others. Releasing an open VR software system is vital to the development of VR. Instead of reimplementing VR software, people need to focus on implementing new VR ideas and methods so that VR technology can mature. Now, because of VR Juggler, people can focus on implementing these new VR ideas and methods for the future because this technology is readily available to all, free from cost or legal ties.</para>
+            <para>VR Juggler is a platform for virtual reality applications. The name comes from the delicate balance that must be struck between flexibility, performance, and ease of use. You develop your application once for VR Juggler, then anywhere that VR Juggler is supported, your application is also supported.</para>
+            <para>VR Juggler's design addresses several key requirements for a virtual reality development system:</para>
             <itemizedlist>
                <listitem>
                   <para>Performance</para>
@@ -83,19 +83,17 @@
                   <para>Portability</para>
                </listitem>
             </itemizedlist>
-            <para>Flexibility is achieved by placing common abstractions over I/O devices. New devices can be added easily, and existing devices can be reconfigured or replaced, even while an application is running.</para>
-            <para>To allow optimal performance, applications are given direct access to graphics APIs (currently including OpenGL and Iris Performer).</para>
-            <para>VR Juggler includes built-in support for performance monitoring of applications and graphics subsystems. It supports multiple-processor machines and will support distributing applications across multiple machines.</para>
-            <para>Using VR Juggler and developing applications are kept as simple as possible. Small base classes provide a skeleton for application development, while the abstractions of I/O devices simplify programming. During run-time, any VR Juggler application can be controlled or reconfigured by a Java-based graphical interface.</para>
-            <para>VR Juggler is designed to support a wide array of VR hardware on a variety of architectures. Several tracking systems, gloves, and input devices are already supported. Juggler supports projection- based displays such as the CAVE or C2, and includes support for head-mounted devices. Development work is being done on <emphasis>IRIX</emphasis>, <emphasis>Linux</emphasis>, <emphasis>Windows NT</emphasis>, <emphasis>Solaris</emphasis>, and <emphasis>FreeBSD</emphasis> systems, with reports of success on <emphasis>HP/UX</emphasis>.</para>
+            <para>Flexibility is achieved by placing common abstractions over I/O devices. New devices can be added easily, and existing devices can be reconfigured or replaced, even while an application is running. To allow optimal performance, applications are given direct access to graphics APIs (currently including OpenGL, OpenGL Performer, OpenSceneGraph, and OpenSG). VR Juggler includes built-in support for performance monitoring of applications and graphics subsystems. It supports multiple-processor machines and will support distributing applications across multiple machines.</para>
+            <para>Using VR Juggler to develop applications is kept as simple as possible. Small base classes provide a skeleton for application development, while the abstractions of I/O devices simplify programming. During run-time, any VR Juggler application can be controlled or reconfigured by a Java-based graphical interface.</para>
+            <para>VR Juggler is designed to support a wide array of VR hardware on a variety of architectures. Several tracking systems, gloves, and input devices are already supported. VR Juggler supports projection- based displays such as the <trademark>CAVE</trademark>, and includes support for head-mounted devices. VR Juggler 2.0 is known to run on IRIX, Linux, Windows, Solaris, FreeBSD, HP-UX, and Mac OS X.</para>
          </section>
       </chapter>
    </part>
-   <part>
+   <part id="compile.install.part">
       <title>Compiling and Installing</title>
       <chapter>
-         <title>Build Systems</title>
-         <para>There are a few different ways to build the projects related to the VR Juggler project. This chapter explains all the ins and outs of compiling VR Juggler and related projects including the documentation you are reading right now.</para>
+         <title>Building from Source</title>
+         <para>There are a few different ways to build the modules related to the VR Juggler project. This chapter explains all the ins and outs of getting the VR Juggler source code and compiling everything, including the documentation you are reading right now.</para>
          <section id="required-tools-sect">
             <title>Required Tools and Utilities for Building VR Juggler from Source</title>
             <para>This section lists the comprehensive set of software tools that we require when compiling VR Juggler from its source. If you are reading a printed version of this file, please check the website to ensure that you have the latest information. There have been several instances where bugs in third party software caused problems with compiling VR Juggler and running VR Juggler applications.</para>
@@ -267,176 +265,155 @@
       </chapter>
       <chapter>
          <title>Get the Source</title>
-         <para></para>
+         <para>As an open source product, the VR Juggler source code is freely available to anyone who wants to use it. In this chapter, we explain how to get the source. There are two ways to get the VR Juggler source code:</para>
+         <orderedlist>
+            <listitem>
+               <para>Get the source directly from the CVS repository.</para>
+            </listitem>
+            <listitem>
+               <para>Download a snapshot of the source code as a TAR file from the <quote>Download</quote> page.</para>
+            </listitem>
+         </orderedlist>
+         <para>Both methods are described in this section, though the second is mostly self-explanatory.</para>
+         <section id="get.source.cvs.section">
+            <title>Getting the Source Code from the CVS Repository</title>
+            <para>Before you can use CVS to get the source code, you must be sure that CVS itself is set up properly on your system. Depending on your platform, CVS may be available in several different forms. The most common version is the original command-line interface. If CVS is not available on your system, you can get the source from <ulink url="http://www.cvshome.org/">CVShome.org</ulink>. This version is available for all platforms including Win32. For graphical interfaces, you can choose from the following:</para>
+            <itemizedlist>
+               <listitem>
+                  <para>MacCVS/WinCVS: A freely available front-end for CVS available from <ulink url="http://www.wincvs.org/">WinCvs.org</ulink></para>
+               </listitem>
+               <listitem>
+                  <para>jCVS: A CVS client written in Java available from <ulink url="http://www.jcvs.org/">jCVS.org</ulink></para>
+               </listitem>
+               <listitem>
+                  <para>tkCVS: A Tcl/Tk-based interface to CVS available from <ulink url="http://www.twobarleycorns.net/tkcvs.html">Two BarleyCorns</ulink></para>
+               </listitem>
+            </itemizedlist>
+            <para>Once you have CVS running in some form, you are ready to download the source from the VR Juggler repository, hosted at <ulink url="http://www.sourceforge.net/">SourceForge</ulink>. The instructions given here are from the <ulink url="http://sourceforge.net/cvs/?group_id=8041">CVS section</ulink> VR Juggler project page and are subject to change if the SourceForge policies change. Note that there are two sets of directions on that page: one for anonymous access and one for developers with commit access. Each of those is discussed in the following subsections.</para>
+            <section>
+               <title>Anonymous CVS Access</title>
+               <para>Anonymous CVS access is for those who want the latest source code but do not have commit access. This would include developers who are working on patches they wish to submit for addition to the source base. As of this writing, the following are the basic instructions for anonymous CVS access:</para>
+               <orderedlist>
+                  <listitem>
+                     <para><quote>Log in</quote> to the SourceForge CVS server. This step only has to be done the first time you access the repository. Afterward, the login setting is saved in your <filename>$HOME/.cvspass</filename> file.</para>
+                     <screen>% cvs -d:pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler login</screen>
+                  </listitem>
+                  <listitem>
+                     <para>Check out a copy of the current VR Juggler source tree:</para>
+                     <screen>% cvs -d:pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler checkout juggler</screen>
+                     <para>If what you really want is the VR Juggler 1.0 release branch instead of the developmental main branch, use the following command:</para>
+                     <screen>% cvs -d:pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler checkout -rRELENG_1_0 juggler_1.0</screen>
+                     <para>(The string <literal>RELENG_1_0</literal> is the name of the branch in the CVS repository containing the VR Juggler 1.0 release code. <quote>RELENG</quote> means <quote>release engineering</quote>.)</para>
+                     <note>
+                        <para>Two different CVS modules are used in the above examples: <literal>juggler</literal> and <literal>juggler_1.0</literal>. This arises from the restructuring of the repository that occurred as part of the VR Juggler 1.1 evolution. In the <literal>juggler_1.0</literal> module, only the <literal>RELENG_1_0</literal> branch is still used. For more information about the branches, please refer to the <ulink url="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/CvsBranches">information on the public Wiki site</ulink>.</para>
+                     </note>
+                  </listitem>
+               </orderedlist>
+               <para>Once you have the source checked out, you can use CVS as you normally would keeping in mind that you have <emphasis>read-only</emphasis> access to the repository when using anonymous access.</para>
+               <para>You may find it useful to retain the CVSROOT value rather than always giving the <option>-d</option> option on the command line. Setting the <varname>$CVSROOT</varname> environment variable does just that. Defining a shell alias such as <command>cvsjuggler</command> that sets the environment variable is the recommended method.</para>
+            </section>
+            <section>
+               <title>Developers with Commit Access</title>
+               <para>For those developers with commit access, the steps are slightly different. You must have some version of SSH installed to access the repository as a developer. This is required by SourceForge, and we (the VR Juggler Team) have no control over this. The steps then to get a read/write copy of the VR Juggler source tree are as follows:</para>
+               <orderedlist>
+                  <listitem>
+                     <para>Set the environment variable <varname>$CVS_RSH</varname> to use <command>ssh</command>(1).</para>
+                     <screen>% CVS_RSH = ssh</screen>
+                     <para>(Note that this is using the shell-independent environment variable syntax defined in the <emphasis>Getting Started Guide</emphasis>.) It is recommended that you set this environment variable in your shell's configuration appropriate configuration file or as part of an alias that configures your environment to work with the VR Juggler CVS repository.</para>
+                  </listitem>
+                  <listitem>
+                     <para>Check out the source using your SourceForge login name.</para>
+                     <screen>% cvs -dlogin_name@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler checkout juggler</screen>
+                     <para>Be sure to use the appropriate branch name.</para>
+                  </listitem>
+               </orderedlist>
+               <para>Note that there is no login step in this case. Your SourceForge password is required for all CVS commands.</para>
+               <para>After this point, you can access the CVS repository as though it is a normal, local repository. As with the anonymous CVS access, you can set the <varname>$CVSROOT</varname> environment variable to the value given with the <option>-d</option> option above. For further information about using SSH with SourceForge, please refer to the appropriate SSH documentation and to <ulink url="http://sourceforge.net/docman/?group_id=1">SourceForge's documentation</ulink>.</para>
+            </section>
+         </section>
          <section>
-            <title>Introduction</title>
-            <para>There are twoays to get the VR Juggler source code:</para>
-            <orderedlist>
-               <listitem>
-                  <para>Get the source directly from the CVS repository.</para>
-               </listitem>
-               <listitem>
-                  <para>Download a snapshot of the source code as a TAR file from the <quote>Download</quote> page.</para>
-               </listitem>
-            </orderedlist>
-            <para>Both methods are described in this section, though the second is mostly self-explanatory.</para>
-            <section>
-               <title>Getting the Source Code from the CVS Repository</title>
-               <para>Before you can use CVS to get the source code, you must be sure that CVS itself is set up properly on your system. Depending on your platform, CVS may be available in several different forms. The most common version is the original command-line interface. If CVS is not available on your system, you can get the source from <ulink url="http://www.cvshome.org/">CVShome.org</ulink>. This version is available for all platforms including Win32. For graphical interfaces, you can choose from the following:</para>
-               <itemizedlist>
-                  <listitem>
-                     <para>MacCVS/WinCVS: Afreely available front-end for CVS available from <ulink url="http://www.wincvs.org/">WinCvs.org</ulink></para>
-                  </listitem>
-                  <listitem>
-                     <para>jCVS: A CVS client written in Java available from <ulink url="http://www.jcvs.org/">jCVS.org</ulink></para>
-                  </listitem>
-                  <listitem>
-                     <para>tkCVS: A Tcl/Tk-based interface to CVS available from <ulink url="http://www.twobarleycorns.net/tkcvs.html">Two BarleyCorns</ulink></para>
-                  </listitem>
-               </itemizedlist>
-               <para>Once you have CVS running in some form, you are ready to download the source from the VR Juggler repository, hosted at <ulink url="http://www.sourceforge.net/">SourceForge</ulink>. The instructions given here are from the <ulink url="http://sourceforge.net/cvs/?group_id=8041">CVS section</ulink> VR Juggler project page and are subject to change if the SourceForge policies change. Note that there are two sets of directions on that page: one for anonymous access and one for developers with commit access. Each of those is discussed in the following subsections.</para>
-               <section>
-                  <title>Anonymous CVS Access</title>
-                  <para>Anonymous CVS access is for those who want the latest source code but do not have commit access. This would include developers who are working on patches they wish to submit for addition to the source base. As of this writing, the following are the basic instructions for anonymous CVS access:</para>
-                  <orderedlist>
-                     <listitem>
-                        <para><quote>Log in</quote> to the SourceForge CVS server. This step only has to be done the first time you access the repository. Afterwards, the login setting is saved in your <filename>$HOME/.cvspass</filename> file.</para>
-                        <screen>% cvs -d:pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler login</screen>
-                     </listitem>
-                     <listitem>
-                        <para>Check out a copy of the current VR Juggler source tree:If what you really want is the VR Juggler 1.0 release branch instead of the developmental main branch, use the following command:</para>
-                        <screen>% cvs -d:pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler checkout juggler</screen>
-                        <para>(The string <literal>RELENG_1_0</literal> is the name of the branch in the CVS repository containing the VR Juggler 1.0 release code. <quote>RELENG</quote> means <quote>release engineering</quote>.)</para>
-                        <screen>% cvs -d:pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler checkout -r RELENG_1_0 juggler_1.0</screen>
-                     </listitem>
-                  </orderedlist>
-                  <para>Once you have the source checked out, you can use CVS as you normally would keeping in mind that you have read-only access to the repository when using anonymous access.</para>
-                  <para>You may find it useful to retain the CVSROOT value rather than always giving the <option>-d</option> option on the command line. Setting the <varname>$CVSROOT</varname> environment variable does just that. Defining an alias such as <command>cvsjuggler</command> that sets the environment variable is the recommended method.</para>
-               </section>
-               <section>
-                  <title>Developers with Commit Access</title>
-                  <para>For those developers with commit access, the steps are slightly different. You must have some version of SSH1 installed to access the repository as a developer. This is required by SourceForge, and we (the VR Juggler Team) have no control over this. The steps then to get a read/write copy of the VR Juggler source tree are as follows:</para>
-                  <orderedlist>
-                     <listitem>
-                        <para>Set the environment variable <varname>$CVS_RSH</varname> to use <literal>ssh</literal>(1).</para>
-                        <screen>% CVS_RSH = ssh</screen>
-                        <para>(Note that this is using the shell-independent environment variable syntax defined in the <emphasis>Getting Started Guide</emphasis>.) It is recommended that you set this environment variable in your shell's configuration appropriate configuration file or as part of an alias that configures your environment to work with the VR Juggler CVS repository.</para>
-                     </listitem>
-                     <listitem>
-                        <para>Check out the source using your SourceForge login name.</para>
-                        <screen>% cvs -dlogin_name@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler checkout juggler</screen>
-                        <para>Be sure to use the appropriate branch name.</para>
-                     </listitem>
-                  </orderedlist>
-                  <para>Note that there is no login step in this case. Your SourceForge password is required for all CVS commands.</para>
-                  <para>After this point, you can access the CVS repository as though it is a normal, local repository. As with the anonymous CVS access, you can set the <varname>$CVSROOT</varname> environment variable to the value given with the <option>-d</option> option above. For further information about using SSH with SourceForge, please refer to the appropriate SSH ocumentation and to <ulink url="http://sourceforge.net/docman/?group_id=1">SourceForge's documentation</ulink>.</para>
-               </section>
-            </section>
-            <section>
-               <title>Getting a Snapshot of the Source Code</title>
-               <para>As a developer, you will probably need access to the latest VR Juggler source and therefore should be getting it from the CVS repository. In some cases, however, it may be helpful to get a snapshot of the code in an archived format. The <ulink url="http://www.vrjuggler.org/html/download/index.html">download page</ulink> on the VR Juggler website has a <ulink url="http://www.vrjuggler.org/html/download/index.html#src">section listing source code snapshots</ulink>. Here, you can get a compressed tar file containing the official source code for a particular release of VR Juggler. These snapshots are not for developmental purposes and will not give you access to the CVS repository.</para>
-            </section>
+            <title>Getting a Snapshot of the Source Code</title>
+            <para>As a developer, you will probably need access to the latest VR Juggler source and therefore should be getting it from the CVS repository. In some cases, however, it may be helpful to get a snapshot of the code in an archived format. The <ulink url="http://www.vrjuggler.org/download.php">download page</ulink> on the VR Juggler website has a section listing source code snapshots. Here, you can get a compressed tar file containing the official source code for a particular release of VR Juggler. These snapshots are not for developmental purposes and will not give you access to the CVS repository.</para>
          </section>
       </chapter>
       <chapter>
          <title>VR Juggler Build System</title>
-         <para></para>
-         <section>
-            <title>Introduction</title>
-            <para>Of particular interest, the VR Juggler project uses the <command>autoconf</command> and <command>automake</command> utilities to stay portable across platforms. This means you will have to <quote>configure</quote> the project before you make it. To make sense of this documentation, please understand the concepts listed in <xref linkend="intro-req-reading"/>. Posting about these subjects to the mailing list will probably be ignored.</para>
-         </section>
-         <section>
-            <title>Sections</title>
-            <itemizedlist>
-               <listitem>
-                  <para>Quick Start: A quick overview of how to build Juggler.</para>
-               </listitem>
-               <listitem>
-                  <para>Win32-Specific Considerations: Getting set up for Juggler use and development in a Win32 environment.</para>
-               </listitem>
-               <listitem>
-                  <para>Using the Configure Script: How to use <command>configure</command> to set up a build environment before compiling.</para>
-               </listitem>
-               <listitem>
-                  <para>Compiling VR Juggler: How to use the Juggler build system in detail.</para>
-               </listitem>
-               <listitem>
-                  <para>Installing VR Juggler: How to install Juggler after compiling it.</para>
-               </listitem>
-            </itemizedlist>
-         </section>
+         <para>Of particular interest, the VR Juggler project uses the <command>autoconf</command> and <command>automake</command> utilities to stay portable across platforms. This means you will have to <quote>configure</quote> the project before you compile it. To make sense of this documentation, please understand the concepts listed in <xref linkend="intro-req-reading"/>. Posting about these subjects to the mailing list will probably be ignored.</para>
+         <para>Please note that this chapter is maintained separately from the build documentation distributed with the VR Juggler source code. As such, it may have incorrect or out-of-date information. For the most accurate documentation on compiling, please refer to the file <filename>juggler/INSTALL.html</filename> (or <filename>juggler/INSTALL.txt</filename>) that comes with the source code.</para>
+         <para>The following is a brief description of each section within this chapter:</para>
+         <itemizedlist>
+            <listitem>
+               <para>Quick Start: A quick overview of how to build Juggler.</para>
+            </listitem>
+            <listitem>
+               <para>Win32-Specific Considerations: Getting set up for Juggler use and development in a Win32 environment.</para>
+            </listitem>
+            <listitem>
+               <para>Using the Configure Script: How to use <command>configure</command> to set up a build environment before compiling.</para>
+            </listitem>
+            <listitem>
+               <para>Compiling VR Juggler: How to use the Juggler build system in detail.</para>
+            </listitem>
+            <listitem>
+               <para>Installing VR Juggler: How to install Juggler after compiling it.</para>
+            </listitem>
+         </itemizedlist>
          <section>
             <title>Compiling VR Juggler Libraries: Quick Start</title>
+            <para>For the impatient, we begin with this section, a quick start for compiling VR Juggler. Ideally, these steps will just work, but there may be unexpected problems. If you are compiling source code checked out from CVS, the code may be broken and thus not compile at all.</para>
             <section>
-               <title>Step by step build of the Juggler distribution</title>
+               <title>Step-by-Step Build of the VR Juggler Source</title>
                <orderedlist>
                   <listitem>
-                     <para>Choose a directory to put Juggler. From this point on, we will refer to that directory as <literal>SRC_DIR</literal>.</para>
+                     <para>Choose a directory to put the VR Juggler source code. From this point on, we will refer to that directory as <literal>SRC_DIR</literal>.</para>
                   </listitem>
                   <listitem>
-                     <para>Go to that directory and checkout juggler using CVS. Make sure CVS is set up and pointing to the VR Juggler repository. Refer to the <ulink url="http://sourceforge.net/cvs/?group_id=8041">SourceForge instructions</ulink> for getting VR Juggler with CVS.</para>
+                     <para>Go to <literal>SRC_DIR</literal> and checkout the source code using CVS. Make sure CVS is set up and pointing to the VR Juggler repository. (Refer to <xref linkend="get.source.cvs.section"/> and to the <ulink url="http://sourceforge.net/cvs/?group_id=8041">SourceForge instructions</ulink> for getting VR Juggler using CVS.)</para>
                      <screen>% cd SRC_DIR
 % cvs checkout juggler</screen>
                   </listitem>
                   <listitem>
-                     <para>Enter the newly checked-out VR Juggler source directory.</para>
-                     <screen>% cd SRC_DIR/juggler</screen>
+                     <para>Enter the newly checked-out VR Juggler source directory, a subdirectory of <literal>SRC_DIR</literal>.</para>
+                     <screen>% cd juggler</screen>
                   </listitem>
                   <listitem>
-                     <para>Set the environment variable <varname>VJ_BASE_DIR</varname><note>
-                           <orderedlist>
-                              <listitem>
-                                 <para>The directory <filename>instlinks</filename> is semi-important. What does the word <quote>instlinks</quote> mean? It is a working distribution of the Juggler library. After gmake is done, you'll be able to use this directory as though it were an installed version of VR Juggler.</para>
-                              </listitem>
-                              <listitem>
-                                 <para>This directory also determines where juggler files will be created. Juggler files will be created in <filename>some-directory/instlinks/..</filename> (in other words, files are created one directory back from <filename>instlinks</filename>).</para>
-                              </listitem>
-                           </orderedlist>
-                           <para>Make sure the following environment variable assignment line is in your shell's startup file:</para>
-                           <screen>VJ_BASE_DIR=SRC_DIR/juggler/instlinks</screen>
-                        </note>This is required by Juggler's build system (makefiles, etc.).</para>
+                     <para>Auto-generate the configuration scripts <command>configure</command> and template headers (<filename>vrjDefines.h.in</filename>, for example):</para>
+                     <screen>% ./autogen.sh</screen>
                   </listitem>
                   <listitem>
-                     <para>Compile juggler (using the Autoconf system and GNU make):<orderedlist>
-                           <listitem>
-                              <para>Auto-generate the configuration script <command>configure</command>:</para>
-                              <screen>% autoconf</screen>
-                           </listitem>
-                           <listitem>
-                              <para>Auto-generate the <filename>vjDefine.h.in</filename> header template:</para>
-                              <screen>% autoheader</screen>
-                           </listitem>
-                           <listitem>
-                              <para>Configure the build. This probes the system for capabilities, generate <filename>Makefiles</filename>, etc. It <quote>configures</quote> the source tree for the current system. The <command>configure</command> script will let you change how VR Juggler compiles. For example, you could build VR Juggler without the Performer API using an option passed to the <command>configure</command> script.</para>
-                              <note>
-                                 <para>You can type <command>configure --help</command> for options.</para>
-                                 <screen>% ./configure</screen>
-                              </note>
-                           </listitem>
-                           <listitem>
-                              <para>Build (make) the distribution using GNU make. This compiles, links, and creates the final distribution tree (in the form of symbolic links).</para>
-                              <screen>% gmake</screen>
-                           </listitem>
-                        </orderedlist></para>
+                     <para>Configure the build. This probes the system for capabilities, generate <filename>Makefiles</filename>, etc. It <quote>configures</quote> the source tree for the current system. The <command>configure</command> script will let you change how VR Juggler compiles. For example, you could build VR Juggler without the Performer API using an option passed to the <command>configure</command> script.</para>
+                     <note>
+                        <para>You can type <command>configure.pl --help</command> for options.</para>
+                        <screen>% ./configure.pl</screen>
+                     </note>
                   </listitem>
                   <listitem>
-                     <para>Advanced Topics</para>
-                     <orderedlist>
-                        <listitem>
-                           <para>Send compiler output to a different directory than the source tree. Run this in the directory you want compiler output to go. This is typically done with a subdirectory in the juggler source tree. We will call it <literal>&lt;BUILD_DIR&gt;</literal>.</para>
-                           <screen>% mkdir &lt;BUILD_DIR&gt;
-% cd &lt;BUILD_DIR&gt;
-% &lt;SRC_DIR&gt;/configure</screen>
-                        </listitem>
-                     </orderedlist>
+                     <para>Build (make) the distribution using GNU make. This compiles, links, and creates the final distribution tree (in the form of symbolic links).</para>
+                     <screen>% gmake</screen>
+                  </listitem>
+                  <listitem>
+                     <para>Set the environment variable <varname>VJ_BASE_DIR</varname> based on the output when the build completes. You must also extend your <varname>PATH</varname> environment variable as directed.This is required by VR Juggler application makefiles.</para>
+                     <note>
+                        <para>The directory <filename>instlinks</filename> is important for developers. What does the word <quote>instlinks</quote> mean? It is a working distribution of the VR Juggler library for developer use. After <command>gmake</command> is done, you will be able to use this directory as though it were a fully installed version of VR Juggler. This directory also determines where VR Juggler files can be found.</para>
+                     </note>
                   </listitem>
                </orderedlist>
+            </section>
+            <section>
+               <title>Advanced Topics</title>
+               <para>The VR Juggler build system (and the build systems for the individual modules) supports the concept of a <firstterm>build directory</firstterm>. This directory is usually created as a subdirectory within the source tree. All the C++ object files, Java class files, and compiled libraries go into it thereby leaving the source tree as a read-only store for the code. Use of a build directory allows easy clean-up because the entire build directory can be removed. It also allows multiple variations of the same source code to be compiled in different, parallel build directories. Variations could be based on operating system, threading subsystem, module subset, and/or compiler version.</para>
+               <para>To make use of a build directory, the instructions from above vary only slightly. Before running <command>configure.pl</command> in step 5, do the following:</para>
+               <screen>% mkdir BUILD_DIR
+% cd BUILD_DIR</screen>
+               <para>Then for step 5, run <command>configure.pl</command> as follows:</para>
+               <screen>% ../configure.pl</screen>
+               <para>If you prefer to use the absolute path to <command>configure.pl</command> rather than the relative path shown above, that will work too.</para>
             </section>
          </section>
          <section>
             <title>Win32 Compiling and Development Issues</title>
-            <para>When VR Juggler was first ported to the Win32 environment, a Microsoft Visual C++ project file was used for compiling the library. Development on the GNU Autoconf-based build system on UNIX platforms had been going strong for a long time prior to this, and it was quickly realized that having two separate methods for compiling would complicate matters. The build system used for compiling VR Juggler is now the same on UNIX and Win32 platforms. Only the Autoconf-based system is supported which provides the same build environment on all platforms.</para>
-            <para>Since the UNIX and Win32 environments have many striking differences, special information must be provided for using the Juggler build system on Windows-based platforms. This document provides all the information necessary for getting set up in a Win32 environment prior to compiling and installing Juggler for developmental use. This is intended primarily for developers who wish to work with the Juggler source and (hopefully) submit work to the Juggler team. Users who are doing application development on a Win32 platform may want to read it too so that they may get a better understanding of what is available as part of the Win32 support.</para>
+            <para>When VR Juggler was first ported to the Win32 environment in late 1997, a Microsoft Visual C++ project file was used for compiling the libraries. Development on the GNU Autoconf-based build system on UNIX platforms began in mid-1998, and it was quickly realized that having two separate methods for compiling would complicate matters. To simplify our work, the build system used for compiling VR Juggler is thus the same on UNIX and Win32 platforms. Only the Autoconf-based system is supported, thus providing the same build environment on all platforms.</para>
+            <para>Since the UNIX and Win32 environments have many striking differences, special information must be provided for using the VR Juggler build system on Windows-based platforms. This document provides all the information necessary for getting set up in a Win32 environment prior to compiling and installing VR Juggler for developmental use. This is intended primarily for developers who wish to work with the VR Juggler source and (hopefully) submit work to the VR Juggler team. Users who are doing application development on a Win32 platform may want to read it too so that they may get a better understanding of what is available as part of the Win32 support.</para>
             <section>
                <title>Necessary Tools</title>
                <para>Developers should refer to the Win32 section of the <ulink url="http://www.vrjuggler.org/html/download/">download page</ulink> for the list of packages that must be installed. The <literal>juggler-tools</literal> package is especially important. It contains exactly the utilities used for compiling Juggler (aside from Visual C++ of course) including some modified versions of programs. Of note, the version of <command>make</command> included is what comes with the Bamboo Win32 tools. It is a modified version of GNU make that will run in a DOS shell and can handle DOS-style paths. Also, <command>makedepend</command> has been modified to output UNIX-safe paths and to know about the <varname>INCLUDE</varname> environment variable used by Visual C++.</para>
@@ -1547,7 +1524,7 @@ Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
          <para>Someday, I will write this.</para>
       </chapter>
    </part>
-   <part>
+   <part id="user.community.part">
       <title>User Community</title>
       <chapter>
          <title>Contributing to VR Juggler</title>
