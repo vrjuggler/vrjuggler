@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="../../../../../software/XMLEditor/examples/docbook/docbook.css" type="text/css"?>
+<?xml-stylesheet href="docbook_ab.css" type="text/css"?>
 <?morphon-document-settings
   morphon.document.settings.whitespaces.amount="3"
   morphon.document.settings.print.fixed.attributes="true"
@@ -109,7 +109,7 @@
                </indexterm>
                <para>Since VR Juggler applications are objects, developers do not write the traditional <function>main()</function> function. Instead, developers create an application object that implements a set of pre-defined interfaces. The VR Juggler kernel controls the application's processing time by calling the object's interface implementation methods.</para>
                <para>In traditional programs, the <function>main()</function> function defines the point where the <firstterm>thread of control</firstterm> enters the application. After the <function>main()</function> function is called, the application starts performing any necessary processing. When the operating system (OS) starts the program, it gives the <function>main()</function> function some unit of processing time. After the time unit (quantum) for the process expires, the OS performs what is called a <quote>context switch</quote> to change control to another process. VR Juggler achieves similar functionality but in a slightly different manner.</para>
-               <para>The application objects correspond to processes in a normal OS. The kernel is the scheduler, and it allocations time to an application by invoking the methods of the application object. Because the kernel has additional information about the resources needed by the applications, it maintains a very strict schedule to define when the application is granted processing time. This is the basis to maintain coherence across the system.</para>
+               <para>The application objects correspond to processes in a normal OS. The kernel is the scheduler, and it allocates time to an application by invoking the methods of the application object. Because the kernel has additional information about the resources needed by the applications, it maintains a very strict schedule to define when the application is granted processing time. This is the basis to maintain coherence across the system.</para>
             </section>
             <section>
                <title>Application Objects Derive from Base Classes for Specific Graphics APIs</title>
@@ -266,7 +266,7 @@ int main (int argc, char* argv[])
                <primary>application object</primary>
                <secondary>base interface of</secondary>
             </indexterm>
-            <para>Within this chapter, we provide a brief overview of the member functions from the base VR Juggler application interface. This interface is defined by <classname>vrj::App</classname><indexterm>
+            <para>Within this section, we provide a brief overview of the member functions from the base VR Juggler application interface. This interface is defined by <classname>vrj::App</classname><indexterm>
                   <primary>classes</primary>
                   <secondary>vrj::App</secondary>
                </indexterm>, and the member functions are shown in <xref linkend="App-if-diag"/>. Refer to <xref linkend="Kernel-seq-diag"/> for a visual presentation of the order in which the methods are invoked.</para>
@@ -445,7 +445,7 @@ int main (int argc, char* argv[])
       </chapter>
       <chapter id="ch3">
          <title>Helper Classes</title>
-         <para>Within this chapter, we present information on some helper classes that are provided with VR Juggler. These classes are intended to make it easier for application programmers to write their code. Ultimately, we want application programmers to focus more on compelling immersive content and less on the many details that are involved with 3D graphics programming. The classes presented in this chapter focus on mathematical computations and on input from hardware devices. In particular, special attention is paid to the VR Juggler Input Manager device interfaces and proxies.</para>
+         <para>Within this chapter, we present information on some helper classes that are provided with VR Juggler. These classes are intended to make it easier for application programmers to write their code. Ultimately, we want application programmers to focus more on compelling immersive content and less on the many details that are involved with 3D graphics programming. The classes presented in this chapter focus on mathematical computations and on input from hardware devices. VJ Juggler uses the Graphics Math Template Library or GMTL (http://ggt.sf.net/) for mathematical computation. An overview of the most commonly used GMTL data types and operations is presented here. In addition to the GMTL operations special attention is paid to the VR Juggler Input Manager device interfaces and proxies.</para>
          <section id="vjVec3-and-vjVec4-sect">
             <title>The <classname>gmtl::Vec</classname> Helper Class</title>
             <indexterm/>
@@ -477,8 +477,8 @@ int main (int argc, char* argv[])
                   </indexterm> <indexterm>
                      <primary>classes</primary>
                      <secondary>vrj::Vec4</secondary>
-                  </indexterm> is designed to work the same was as a mathematical vector, typically of 3 or 4 dimensions. There are predefined vector types that would normally be used in a VR application that are provided for convenience. That is, a <classname>gmtl::Vec3f</classname> object can be thought of as a vector of the form &lt;x, y, z&gt;. Similarly, a <classname>gmtl::Vec4f</classname> can be thought of as a vector of the form &lt;x, y, z, w&gt;. An existing understanding of mathematical vectors is sufficient to know how these classes can be used. The question then becomes, how are they used? We will get to that later, and readers who have experience with vectors can skip ahead. If vectors are an unfamiliar topic, it may be convenient to think of these classes as three- and four-element C++ arrays of floats respectively. Most benefits of the vector concept are lost with that simpler idea, however. Therefore, if the reader needs to think of them as arrays, then arrays should probably be used until vectors feel more comfortable. Once the use of vectors seems familiar and straightforward, readers are encouraged to come back and read further.</para>
-               <para>Vectors are used typically to contain spatial data or something similar. For convenience, however, they can be visualized as a more general-purpose container for numerical data upon which well-defined operations can be performed. There is no need to constrain thinking of them as only holding the coordinates for some point in space or some other limited-scope use. VR Juggler's vectors retain this generality and can be used wherever vectors come in handy.</para>
+                  </indexterm> is designed to work the same way as a mathematical vector, typically of 3 or 4 dimensions. There are predefined vector types that would normally be used in a VR application that are provided for convenience. That is, a <classname>gmtl::Vec3f</classname> object can be thought of as a vector of the form &lt;x, y, z&gt;. Similarly, a <classname>gmtl::Vec4f</classname> can be thought of as a vector of the form &lt;x, y, z, w&gt;. An existing understanding of mathematical vectors is sufficient to know how these classes can be used. The question then becomes, how are they used? We will get to that later, and readers who have experience with vectors can skip ahead. If vectors are an unfamiliar topic, it may be convenient to think of these classes as three- and four-element C++ arrays of floats respectively. Most benefits of the vector concept are lost with that simpler idea, however. Therefore, if the reader needs to think of them as arrays, then arrays should probably be used until vectors feel more comfortable. Once the use of vectors seems familiar and straightforward, readers are encouraged to come back and read further.</para>
+               <para>Vectors are typically used to contain spatial data or something similar. For convenience, however, they can be visualized as a more general-purpose container for numerical data upon which well-defined operations can be performed. There is no need to constrain thinking of them as only holding the coordinates for some point in space or some other limited-scope use. The GMTL vectors use by Juggler retain this generality and can be used wherever vectors come in handy.</para>
                <para><classname>gmtl::Vec3f</classname> and <classname>gmtl::Vec4f</classname>, as specific implementations of mathematical vectors, hide vector operations on single-precision floating-point numbers (<type>float</type>) behind a simple-to-use interface. For a single vector, the following standard vector operations are available:</para>
                <itemizedlist>
                   <listitem>
@@ -521,7 +521,7 @@ int main (int argc, char* argv[])
                      <para>Subtraction</para>
                   </listitem>
                </itemizedlist>
-               <para>Knowing this and keeping in mind that <classname>gmtl::Vec3f</classname> and <classname>gmtl::Vec4f</classname> can be thought of at this high level, using them should be a snap.</para>
+               <para>Knowing this and keeping in mind that <classname>gmtl::Vec3f</classname> and <classname>gmtl::Vec4f</classname> can be thought of at this high level, should make using them a snap.</para>
             </section>
             <section id="vjVec-use-sect">
                <title>Using <classname>gmtl::Vec3f</classname> and <classname>gmtl::Vec4f</classname></title>
@@ -555,7 +555,7 @@ vec1[1] = 1.5;
 vec1[2] = -1.0;</programlisting>
                <para>Note that in the last example, the individual elements of the vector can be accessed exactly as with a normal array. To do the above steps all at once when the vector is created, give the element values when declaring the vector:</para>
                <programlisting>gmtl::Vec3f vec1(1.0, 1.5, -1.0);</programlisting>
-               <para>All of the above code has exactly the same results but accomplishes them in different ways. This flexibility is just one of the ways that VR Juggler vectors are more powerful than C++ arrays (of the same size, of course).</para>
+               <para>All of the above code has exactly the same results but accomplishes them in different ways. This flexibility is just one of the ways that GMTL vectors are more powerful than C++ arrays (of the same size, of course).</para>
             </section>
             <section id="vjVec-inversion-sect">
                <title>Inversion (Finding the Negative of a Vector)</title>
@@ -622,7 +622,7 @@ length = gmtl::length( vec1 );</programlisting>
                   <primary>vrj::Vec4</primary>
                   <secondary>multiplying by a scalar</secondary>
                </indexterm>
-               <para>The VR Juggler vector classes provide an easy way to multiply a vector by a scalar. There are several ways to do it depending on what is required. Examples of each method follow.</para>
+               <para>The GMTL vector classes provide an easy way to multiply a vector by a scalar. There are several ways to do it depending on what is required. Examples of each method follow.</para>
                <para>To multiply a vector by a scalar and store the result in another vector, do the following:</para>
                <programlisting>gmtl::Vec3f vec1(1.0, 1.5, -1.0), vec2;
 
@@ -697,7 +697,7 @@ vj_vec = vrj::GetVjVec(pf_vec);</programlisting>
                <programlisting>gmtl::Vec3f vec1(1.0, 1.5, -1.0), vec2;
 
 vec2 = vec1;</programlisting>
-               <para>After the assignment, vec2 has the value &lt;-1.0, -1.5, 1.0&gt;. Ta da! Note that this is a copy operation which is the case for all types of assignments of VR Juggler vectors.</para>
+               <para>After the assignment, vec2 has the value &lt;-1.0, -1.5, 1.0&gt;. Ta da! Note that this is a copy operation which is the case for all the types of assignments of GMTL vectors.</para>
             </section>
             <section>
                <title>Equality/Inequality Comparison</title>
@@ -742,7 +742,7 @@ if ( vec1 != vec2 )
                   <primary>vrj::Vec4</primary>
                   <secondary>dot product</secondary>
                </indexterm>
-               <para>Given two vectors, finding the dot product is often needed. VR Juggler's vectors provide a way to do this quickly so that programmers can save themselves the time of typing in the formula over and over. It works as follows:</para>
+               <para>Given two vectors, finding the dot product is often needed. GMTL vectors provide a way to do this quickly so that programmers can save themselves the time of typing in the formula over and over. It works as follows:</para>
                <programlisting>gmtl::Vec3f vec1(1.0, 1.5, -1.0), vec2(1.5, 1.0, -1.0);
 float dot_product;
 
@@ -843,12 +843,12 @@ gmtl::xform(result_vec, xform_mat, vec1);</programlisting>
                   <primary>vrj::Vec4</primary>
                   <secondary>details</secondary>
                </indexterm>
-               <para>The details behind <classname>gmtl::Vec3f</classname> and <classname>gmtl::Vec4f</classname> really are not all that gory. Internally, they are represented as three- and four-element arrays of <type>float</type>s respectively. Access to these arrays is provided through the public member variable <varname>vec</varname>. For example, this access can be used in the following way:</para>
+               <para>The details behind <classname>gmtl::Vec3f</classname> and <classname>gmtl::Vec4f</classname> really are not all that gory. Internally, they are represented as three- and four-element arrays of <type>float</type>s respectively. Access to these arrays is provided through the member function <varname>getData()</varname>. For example, this access can be used in the following way:</para>
                <programlisting>gmtl::Vec3f pos(4.0, 1.0982, 10.1241);
 
 glVertex3fv(pos.getData());</programlisting>
                <para>Granted, this particular example is rather silly and much slower than just listing the values as the individual arguments to <function>glVertex3f()</function>, but it should get the point across.</para>
-               <para>In general, the <varname>vec</varname> member variable should be treated very carefully. Access to it is provided mainly so that operations similar to this example can be performed quickly. An example of abusing access to <varname>vec</varname> follows:</para>
+               <para>In general, the <varname>getData()</varname> member function should be treated very carefully. Access to it is provided mainly so that operations similar to this example can be performed quickly. An example of abusing access to <varname>getData()</varname> follows:</para>
                <programlisting>gmtl::Vec4f my_vec;
 
 my_vec.getData()[0] = 4.0;
@@ -986,14 +986,18 @@ mat1.set(mat_vals);</programlisting>
                      3.8, 0.9, 2.1, 0.1);</programlisting>
                <para>All of the above code has exactly the same results but accomplishes those results in different ways.</para>
                <para>To read the elements in a <classname>gmtl::Matrix44f</classname> object, programmers can use either the overloaded [] operator or the overloaded () operator. The overloaded [] operator returns the specified row of the <classname>gmtl::Matrix44f</classname>, and an element in that row can then be read using [] again. The code looks exactly the same as with a normal C++ two-dimensional array:</para>
-               <programlisting>gmtl::Matrix44f mat1(0.0, 1.0, 2.3, 4.1, 8.3, 9.0, 2.2, 1.0,
-                     5.6, 9.9, 9.7, 8.2, 3.8, 0.9, 2.1, 0.1);
+               <programlisting>gmtl::Matrix44f mat1(0.0, 1.0, 2.3, 4.1,
+                     8.3, 9.0, 2.2, 1.0,
+                     5.6, 9.9, 9.7, 8.2,
+                     3.8, 0.9, 2.1, 0.1);
 float val;
 
 val = mat1[3][0];</programlisting>
                <para>Here, <varname>val</varname> is assigned the value 3.8. Using the overloaded () operator results in code that looks similar to the way the matrix element would be referenced in mathematics:</para>
-               <programlisting>gmtl::Matrix44f mat1(0.0, 1.0, 2.3, 4.1, 8.3, 9.0, 2.2, 1.0,
-                 5.6, 9.9, 9.7, 8.2, 3.8, 0.9, 2.1, 0.1);
+               <programlisting>gmtl::Matrix44f mat1(0.0, 1.0, 2.3, 4.1,
+                     8.3, 9.0, 2.2, 1.0,
+                     5.6, 9.9, 9.7, 8.2,
+                     3.8, 0.9, 2.1, 0.1);
 float val;
 
 val = mat1(3, 0);</programlisting>
@@ -1023,7 +1027,7 @@ mat2 = mat1;</programlisting>
                <programlisting>gmtl::Matrix44f mat1(0.0, 1.0, 2.3, 4.1, 8.3, 9.0, 2.2, 1.0,
                      5.6, 9.9, 9.7, 8.2, 3.8, 0.9, 2.1, 0.1);
 gmtl::Matrix44f mat2(0.0, 1.0, 2.3, 4.1, 8.3, 9.0, 2.2, 1.0,
-                 5.6, 9.9, 9.7, 8.2, 3.8, 0.9, 2.1, 0.1);
+                     5.6, 9.9, 9.7, 8.2, 3.8, 0.9, 2.1, 0.1);
 
 if ( gmtl::isEqual(mat1, mat2) )
 {
@@ -1083,7 +1087,7 @@ gmtl::transpose(mat1, mat2);</programlisting>
                   <primary>vrj::Matrix</primary>
                   <secondary>inverting</secondary>
                </indexterm>
-               <para>The transpose operation works conceptually as <inlineequation>
+               <para>The inverse operation works conceptually as <inlineequation>
                      <inlinemediaobject>
                         <imageobject>
                            <imagedata fileref="eq_m1_eq_inv_m2.png" format="PNG"/>
@@ -1304,9 +1308,8 @@ mat = gmtl::makeScale&lt;Matrix44f&gt;(scale);</programlisting>
                <programlisting>float x_rot = (gmtl::makeRot&lt;gmtl::EulerAngleXYZf&gt;(mat))[0];</programlisting>
                <para>Getting translations is even simpler because translations are collected into a single vector easily. </para>
                <programlisting>gmtl::Vec3f trans;
-
 gmtl::setTrans(trans, mat);</programlisting>
-               <para>After this, the translation in <varname>mat</varname> is stored in trans. </para>
+               <para>After this, the translation in <varname>mat</varname> is stored in trans. The same can be done with a Vec4f instead of the Vec3f.</para>
             </section>
             <section>
                <title>Converting to an OpenGL Performer Matrix</title>
@@ -1580,7 +1583,7 @@ head_mat = head-&gt;getData();</programlisting>
             <primary>applications</primary>
             <secondary>writing</secondary>
          </indexterm>
-         <para>This chapter alone comprises the bulk of information about application development. Each section outlines one area of interest for application developers. For example, there are chapters that show how to get input from the system and chapters that show how to write applications for each of the currently supported graphics APIs. Please note that when writing an application, there will be overlap between these sections. For example, an application that needs input, sound, and OpenGL graphics will be based on concepts from each of the relevant sections.</para>
+         <para>This chapter alone comprises the bulk of information about application development. Each section outlines one area of interest for application developers. For example, there are sections that show how to get input from the system and others that show how to write applications for each of the currently supported graphics APIs. Please note that when writing an application, there will be overlap between these sections. For example, an application that needs input, sound, and OpenGL graphics will be based on concepts from each of the relevant sections.</para>
          <section>
             <title>Application Review</title>
             <para>Before getting into too much detail, we present this section as a review from earlier chapters. There is no new information here; it is simply a quick overview of the basics of VR Juggler applications.</para>
@@ -2250,7 +2253,7 @@ void contextApp::draw()
                <primary>application programming</primary>
                <secondary>OpenGL Performer</secondary>
             </indexterm>
-            <para>Programmers familiar with the use of scene graphs may prefer to use that data structure rather than writing OpenGL manually. While VR Juggler does not provide a scene graph of its own, its design allows the use of existing scene graph software. In VR Juggler 1.0, the supported scene graphs are OpenGL Performer from SGI and Open Scene Graph. This section explains how to use OpenGL Performer to write VR Juggler applications.</para>
+            <para>Programmers familiar with the use of scene graphs may prefer to use that data structure rather than writing OpenGL manually. While VR Juggler does not provide a scene graph of its own, its design allows the use of existing scene graph software. In VR Juggler 1.1 DR2, the supported scene graphs are OpenGL Performer from SGI, OpenSG, and Open Scene Graph. This section explains how to use OpenGL Performer to write VR Juggler applications.</para>
             <para>A Performer-based VR Juggler application must derive from <classname>vrj::PfApp</classname><indexterm>
                   <primary>classes</primary>
                   <secondary>vrj::PfApp</secondary>
@@ -2706,7 +2709,7 @@ pfDraw();</programlisting>
             <section>
                <title>In VR Juggler</title>
                <para>Configuration of VR Juggler is much more powerful and flexible than what is used by the <trademark>CAVElib</trademark> software. As a result, it is also more complex. All configurable parameters could be in one or more files with any names desired. VR Juggler comes with example configuration files that may be found in the directory <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>.</para>
-               <para>The VR Juggler configuration system is completely extensible and could be used outside of VR Juggler. Indeed, it could be used outside of any VR paradigm altogether. Refer to the VjControl book for more information on configuring VR Juggler.</para>
+               <para>The VR Juggler configuration system is completely extensible and could be used outside of VR Juggler. Indeed, it could be used outside of any VR paradigm altogether. Refer to the Configuration Guide for more information on configuring VR Juggler.</para>
             </section>
          </section>
          <section>
