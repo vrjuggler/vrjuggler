@@ -33,16 +33,15 @@
 <!-- ************ <auto-copyright.pl END do not edit this line> ************ -->
 
 <!--
-   This stylesheet provides an upgrade path for VR Juggler 2.0 Alpha 2
-   configuration files to changes made for VR Juggler 2.0 Beta 1. This stylesheet
-   assumes that you have already upgraded your old configuration file to the new
-   file format using the xmltools in the JCCL package.
 
-      xsltproc -o new-file.config 2.0a2-2.0b1.xsl old-file.config
+   This stylesheet provides an upgrade path for VR Juggler 2.0 Alpha 2 or
+   Alpha 3 configuration files to changes made for VR Juggler 2.0 Beta 1.
+
+      xsltproc -o new-file.jconf 2.0a2-2.0b1.xsl old-file.config
 
    or
 
-      xalan -in old-file.config -xsl 2.0a2-2.0b1.xsl -out new-file.config
+      xalan -in old-file.config -xsl 2.0a2-2.0b1.xsl -out new-file.jconf
 
 -->
 
@@ -66,7 +65,7 @@
       <!-- XXX: The way the attributes are specified here isn't quite right. -->
       <configuration name="Configuration"
                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                     xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration"
+                     xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration"
                      xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration">
          <!-- Create the tree of elements. -->
          <elements>
