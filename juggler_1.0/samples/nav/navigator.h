@@ -45,13 +45,21 @@
 class navigator
 {
 public:
+   enum ActionState { OFF = 0, ON = 1, EITHER  = 2 };
+
    navigator() : mAllowRot( true ), mAllowTrans( true )
    {
       allowAxis[0] = allowAxis[1] = allowAxis[2] = true;    // Initialize to rot in all axes
    }
 
+   // Updates the state of the navigator that influences the nav update
+   virtual void updateInteraction() = 0;
+
+   // Updates the navigation
+   // PRE: updateInteraction must have been called
    virtual void update() = 0;
-   void setRotAxis(bool allowX, bool allowY, bool allowZ);
+
+  void setRotAxis(bool allowX, bool allowY, bool allowZ);
 
    void allowTrans( const bool& state = true ){mAllowTrans = state;}
    void allowRot( const bool& state = true ){mAllowRot = state;}
@@ -64,15 +72,26 @@ public:
       roll = -roll;
    }
 
-   vjMatrix getCurPos()
+   vjMatrix getCurPos() const
    { return mCurPos; }
 
    void setCurPos(vjMatrix pos)
    { mCurPos = pos; }
 
+   void setHomePosition(vjMatrix pos)
+   { mHomePos = pos; }
+
+   // Reset to home position and initial navigation state
+   virtual void reset()
+   { mCurPos = mHomePos; }
+
    //: Add a collider to the system
    void addCollider( collider* val )
    { mColliders.push_back( val ); }
+
+   // Should allow testing to see if the navigator is currently active
+   bool isActive() const { return mIsActive; }
+   void setActive(bool state) { mIsActive = state; }
 
 protected:
 
@@ -89,13 +108,20 @@ protected:
    // Checks the given translation (in model cordinate space) against
    // the collidors given
    // Returns the corrected trans in trans, also returns the totalCorrection used
-   bool navCollideTransCorrect(vjVec3& trans, bool& didCollide, vjVec3& totalCorrection);
+   void navCollideTransCorrect(vjVec3& trans, bool& didCollide, vjVec3& totalCorrection);
+
+   // HELPER
+   // returns true if the action state is true
+   bool checkForAction(std::vector<vjDigitalInterface*> btns, std::vector<ActionState> state_combo);
 
 protected:
    bool mAllowRot,   mAllowTrans;
    vjMatrix          mCurPos;       // (modelspace_M_user) The current position or the user- In Juggler coords
                                     // Moves the "user" from the models origin to the user's navigated origin (coord system)
+   vjMatrix          mHomePos;      // Resets to this location
+
    bool              allowAxis[3];  // Which axes are we allowed to rotate on
+   bool              mIsActive;     // Is the navigator currently active in the environment
 
    std::vector<collider*>  mColliders;    // The collidors in the system
 };
@@ -141,6 +167,8 @@ void navigator::navRotate( vjMatrix rot_mat )
    //mCurPos.constrainRotAxis( allowAxis[0], allowAxis[1], allowAxis[2], mCurPos );
    vjMatrix old_pos = mCurPos;
    float x_pos, y_pos, z_pos;
+
+
    old_pos.getTrans(x_pos,y_pos,z_pos);
    mCurPos.makeXYZEuler(0,old_pos.getYRot(),0);     // Only allow Yaw (rot y)
    mCurPos.setTrans(x_pos,y_pos,z_pos);
@@ -157,7 +185,7 @@ void navigator::navRotate( vjMatrix rot_mat )
 // Checks the given translation (in model cordinate space) against
 // the collidors given
 // returns the modified trans, and the total correction that was applied
-bool navigator::navCollideTransCorrect(vjVec3& trans, bool& didCollide, vjVec3& totalCorrection)
+void navigator::navCollideTransCorrect(vjVec3& trans, bool& didCollide, vjVec3& totalCorrection)
 {
    // mCurPos (model_M_user) is already in model coordinates,
    // since it is used to move the geometry from modelspace to userSpace
@@ -201,5 +229,31 @@ void navigator::setRotAxis(bool allowX, bool allowY, bool allowZ)
    allowAxis[1] = allowY;
    allowAxis[2] = allowZ;
 }
+
+// HELPER
+// returns true if the action state is true
+bool navigator::checkForAction(std::vector<vjDigitalInterface*> btns, std::vector<navigator::ActionState> state_combo)
+{
+   bool ret_val;
+
+   // Check state of all the required combos
+   for(int i=0;i<state_combo.size();i++)
+   {
+      if(state_combo[i] == navigator::ON)
+      {
+         if(!(*btns[i])->getData())
+         { ret_val = false; }          // We need it on, and it is off
+      }
+      else if(state_combo[i] == navigator::OFF)
+      {
+         if((*btns[i])->getData())
+         { ret_val = false; }          // We need it off, and it is on
+      }
+   }
+
+   return ret_val;
+}
+
+
 
 #endif
