@@ -59,13 +59,15 @@ public:
    // Constructor.
    digitalGloveApp(vrj::Kernel* kern)
       : vrj::GlApp(kern)            // Initialize base class
+      , mQuadObj(NULL)
    {
-      mQuadObj = NULL;
    }
 
    // Destructor.
-   virtual ~digitalGloveApp (void) {
-      if ( mQuadObj != NULL ) {
+   virtual ~digitalGloveApp()
+   {
+      if ( mQuadObj != NULL )
+      {
          gluDeleteQuadric(mQuadObj);
          mQuadObj = NULL;
       }
@@ -145,7 +147,9 @@ protected:
    void drawSphere(float radius, int slices, int stacks)
    {
       if (mQuadObj == NULL)
+      {
          mQuadObj = gluNewQuadric();
+      }
 
       gluQuadricDrawStyle(mQuadObj, (GLenum) GLU_FILL);
       gluQuadricNormals(mQuadObj, (GLenum) GLU_SMOOTH);
@@ -155,19 +159,19 @@ protected:
    GLUquadricObj* mQuadObj;
 
 public:
-   gadget::GloveInterface    mGlove;      // the glove
+   gadget::GloveInterface   mGlove;      /**< The glove */
 
    // for the glove fingers
-   gadget::DigitalInterface  mLeftThumb;
-   gadget::DigitalInterface  mLeftIndex;
-   gadget::DigitalInterface  mLeftMiddle;
-   gadget::DigitalInterface  mLeftRing;
-   gadget::DigitalInterface  mLeftPinky;
-   gadget::DigitalInterface  mRightThumb;
-   gadget::DigitalInterface  mRightIndex;
-   gadget::DigitalInterface  mRightMiddle;
-   gadget::DigitalInterface  mRightRing;
-   gadget::DigitalInterface  mRightPinky;
+   gadget::DigitalInterface mLeftThumb;
+   gadget::DigitalInterface mLeftIndex;
+   gadget::DigitalInterface mLeftMiddle;
+   gadget::DigitalInterface mLeftRing;
+   gadget::DigitalInterface mLeftPinky;
+   gadget::DigitalInterface mRightThumb;
+   gadget::DigitalInterface mRightIndex;
+   gadget::DigitalInterface mRightMiddle;
+   gadget::DigitalInterface mRightRing;
+   gadget::DigitalInterface mRightPinky;
 };
 
 
