@@ -58,16 +58,16 @@ MAKEFLAGS	+= -j 1
 
 # Include the .mk files for VjConfig and VjGUI so that the Java code in those
 # directories can be built using this Makefile.
-include ${srcdir}/VjConfig/VjConfig.mk
-include ${srcdir}/VjControl/VjControl.mk
-include ${srcdir}/VjComponents/UI/UI.mk
-include ${srcdir}/VjComponents/UI/Widgets/Widgets.mk
-include ${srcdir}/VjComponents/Network/Network.mk
-include ${srcdir}/VjComponents/ConfigEditor/ConfigEditor.mk
-include ${srcdir}/VjComponents/ConfigEditor/ChunkDescUI/ChunkDescUI.mk
-include ${srcdir}/VjComponents/ConfigEditor/ConfigChunkUI/ConfigChunkUI.mk
-include ${srcdir}/VjComponents/PerfMonitor/PerfMonitor.mk
-include ${srcdir}/VjWizards/VjWizards.mk
+include $(srcdir)/VjConfig/VjConfig.mk
+include $(srcdir)/VjControl/VjControl.mk
+include $(srcdir)/VjComponents/UI/UI.mk
+include $(srcdir)/VjComponents/UI/Widgets/Widgets.mk
+include $(srcdir)/VjComponents/Network/Network.mk
+include $(srcdir)/VjComponents/ConfigEditor/ConfigEditor.mk
+include $(srcdir)/VjComponents/ConfigEditor/ChunkDescUI/ChunkDescUI.mk
+include $(srcdir)/VjComponents/ConfigEditor/ConfigChunkUI/ConfigChunkUI.mk
+include $(srcdir)/VjComponents/PerfMonitor/PerfMonitor.mk
+include $(srcdir)/VjWizards/VjWizards.mk
 
 # Search path information.
 vpath
@@ -83,32 +83,31 @@ JAVA_TARGETS	= VjControl.jar
 
 # there's no way to append to a jar file, so this must all be done in one
 # step.  This is incredibly stupid...
-VjControl.jar: 	${VJCONFIG_SOURCES} \
-                ${VJCONTROL_SOURCES} \
-                ${UI_SOURCES}		\
-                ${VJCUIUTIL_SOURCES}	\
-                ${VJCNETWORK_SOURCES}	\
-                ${VJCCONF_SOURCES}	\
-                ${CHUNKDESCUI_SOURCES}	\
-                ${CONFIGCHUNKUI_SOURCES}	\
-                ${VJCPERF_SOURCES}	\
-                ${VJWIZARDS_SOURCES}	\
-                ${srcdir}/contents.config
-	${JAVAC_CMD} ${srcdir}/VjConfig/*.java \
-	             ${srcdir}/VjControl/*.java \
-	             ${srcdir}/VjComponents/UI/*.java \
-	             ${srcdir}/VjComponents/UI/*/*.java \
-	             ${srcdir}/VjComponents/Network/*.java \
-	             ${srcdir}/VjComponents/ConfigEditor/*.java \
-	             ${srcdir}/VjComponents/ConfigEditor/*/*.java \
-	             ${srcdir}/VjComponents/PerfMonitor/*.java \
-	             ${srcdir}/VjWizards/*.java 
-	${JAR} cv0f VjControl.jar VjConfig/*.class VjControl/*.class \
-	            VjComponents/*/*.class VjComponents/*/*/*.class \
-	            VjWizards/*.class -C ${srcdir} VjWizards/gfx \
-	            -C ${srcdir} VjWizards/data \
-	            -C ${srcdir} VjFiles -C ${srcdir} contents.config
-
+VjControl.jar: 	$(VJCONFIG_SOURCES)		\
+                $(VJCONTROL_SOURCES)		\
+                $(UI_SOURCES)			\
+                $(VJCUIUTIL_SOURCES)		\
+                $(VJCNETWORK_SOURCES)		\
+                $(VJCCONF_SOURCES)		\
+                $(CHUNKDESCUI_SOURCES)		\
+                $(CONFIGCHUNKUI_SOURCES)	\
+                $(VJCPERF_SOURCES)		\
+                $(VJWIZARDS_SOURCES)		\
+                $(srcdir)/contents.config
+	$(JAVAC_CMD) $(srcdir)/VjConfig/*.java				\
+                     $(srcdir)/VjControl/*.java				\
+                     $(srcdir)/VjComponents/UI/*.java			\
+                     $(srcdir)/VjComponents/UI/*/*.java			\
+                     $(srcdir)/VjComponents/Network/*.java		\
+                     $(srcdir)/VjComponents/ConfigEditor/*.java		\
+                     $(srcdir)/VjComponents/ConfigEditor/*/*.java	\
+                     $(srcdir)/VjComponents/PerfMonitor/*.java		\
+                     $(srcdir)/VjWizards/*.java
+	$(JAR) cv0f VjControl.jar VjConfig/*.class VjControl/*.class	\
+                    VjComponents/*/*.class VjComponents/*/*/*.class	\
+                    VjWizards/*.class -C $(srcdir) VjWizards/gfx	\
+                    -C $(srcdir) VjWizards/data -C $(srcdir) VjFiles	\
+                    -C $(srcdir) contents.config
 
 # -----------------------------------------------------------------------------
 # Documentation.
@@ -116,12 +115,12 @@ VjControl.jar: 	${VJCONFIG_SOURCES} \
 doc:
 	$(MKINSTALLDIRS) $(DOC_DIR)
 	$(JAVADOC) -d $(DOC_DIR) -private -sourcepath $(srcdir)		\
-	    VjControl VjConfig VjComponents.ConfigEditor		\
-	    VjComponents.ConfigEditor.ConfigChunkUI			\
-	    VjComponents.ConfigEditor.ChunkDescUI			\
-	    VjComponents.UI VjComponents.UI.Widgets			\
-	    VjComponents.PerfMonitor VjComponents.Network		\
-	    VjWizards
+            VjControl VjConfig VjComponents.ConfigEditor		\
+            VjComponents.ConfigEditor.ConfigChunkUI			\
+            VjComponents.ConfigEditor.ChunkDescUI			\
+            VjComponents.UI VjComponents.UI.Widgets			\
+            VjComponents.PerfMonitor VjComponents.Network		\
+            VjWizards
 
 # -----------------------------------------------------------------------------
 # Clean-up.

@@ -41,11 +41,11 @@
 # -----------------------------------------------------------------------------
 
 CHUNKDESCUI_SOURCES = \
-        VjComponents/ConfigEditor/ChunkDescUI/ChunkDescPanel.java         \
-        VjComponents/ConfigEditor/ChunkDescUI/DescEnumElemPanel.java      \
-        VjComponents/ConfigEditor/ChunkDescUI/DescEnumFrame.java          \
-        VjComponents/ConfigEditor/ChunkDescUI/PropertyDescPanel.java      \
-        VjComponents/ConfigEditor/ChunkDescUI/ValueLabelFrame.java        \
+        VjComponents/ConfigEditor/ChunkDescUI/ChunkDescPanel.java	\
+        VjComponents/ConfigEditor/ChunkDescUI/DescEnumElemPanel.java	\
+        VjComponents/ConfigEditor/ChunkDescUI/DescEnumFrame.java	\
+        VjComponents/ConfigEditor/ChunkDescUI/PropertyDescPanel.java	\
+        VjComponents/ConfigEditor/ChunkDescUI/ValueLabelFrame.java	\
         VjComponents/ConfigEditor/ChunkDescUI/ValueLabelElemPanel.java
 
 CHUNKDESCUI_OBJS = $(CHUNKDESCUI_SOURCES:.java=.class)

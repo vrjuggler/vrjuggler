@@ -41,19 +41,19 @@
 # -----------------------------------------------------------------------------
 
 VJCONTROL_SOURCES = \
-        VjControl/ComponentFactory.java         \
-        VjControl/ComponentFactoryEvent.java    \
-        VjControl/ComponentFactoryListener.java \
-        VjControl/Core.java                     \
-        VjControl/CoreModule.java               \
-        VjControl/DefaultCoreModule.java        \
-        VjControl/DefaultVjComponent.java       \
-        VjControl/FileControl.java              \
-        VjControl/LogMessageEvent.java          \
-        VjControl/LogMessageListener.java       \
-        VjControl/SuffixFilter.java             \
-        VjControl/VjClassLoader.java            \
-        VjControl/VjComponent.java              \
+        VjControl/ComponentFactory.java		\
+        VjControl/ComponentFactoryEvent.java	\
+        VjControl/ComponentFactoryListener.java	\
+        VjControl/Core.java			\
+        VjControl/CoreModule.java		\
+        VjControl/DefaultCoreModule.java	\
+        VjControl/DefaultVjComponent.java	\
+        VjControl/FileControl.java		\
+        VjControl/LogMessageEvent.java		\
+        VjControl/LogMessageListener.java	\
+        VjControl/SuffixFilter.java		\
+        VjControl/VjClassLoader.java		\
+        VjControl/VjComponent.java		\
         VjControl/UserProfile.java
 
 VJCONTROL_OBJS = $(VJCONTROL_SOURCES:.java=.class)
