@@ -30,9 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <cluster/Plugins/PluginConfig.h>
+#include <cluster/PluginConfig.h>
 
-#include <cluster/Plugins/ApplicationDataManager/ApplicationDataManager.h> // my header...
+#include <plugins/ApplicationDataManager/ApplicationDataManager.h> // my header...
 
 #include <cluster/ClusterNetwork/ClusterNetwork.h>
 #include <cluster/ClusterNetwork/ClusterNode.h>
@@ -49,8 +49,8 @@
 #include <jccl/RTRC/DependencyManager.h>
 
 // ApplicationData
-#include <cluster/Plugins/ApplicationDataManager/ApplicationData.h>
-#include <cluster/Plugins/ApplicationDataManager/ApplicationDataServer.h>
+#include <plugins/ApplicationDataManager/ApplicationData.h>
+#include <plugins/ApplicationDataManager/ApplicationDataServer.h>
 
 #include <cluster/Packets/Packet.h>
 #include <cluster/Packets/ApplicationDataRequest.h>
