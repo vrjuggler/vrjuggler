@@ -50,6 +50,7 @@
 // The list is protected by a mutex to make it thread safe.  Only one
 // thread and remove, add, or access the list at a time
 // XXX: This should be changed to a read/write mutex
+// Q: If I am only accessing it from one thread, then it should already be thread safe???
 //-----------------------------------------------------------------
 class vjTSTable
 {
