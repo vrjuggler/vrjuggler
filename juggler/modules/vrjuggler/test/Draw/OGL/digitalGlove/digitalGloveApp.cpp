@@ -128,7 +128,7 @@ void digitalGloveApp::myDraw()
             finger_matrix =
                mGlove->getTipTransform((gadget::GloveData::GloveComponent) finger);
             origin = finger_matrix * origin;     // Go to new coord system
-            gmtl::Point3f end = origin + (0.25 * mGlove->getTipVector((gadget::GloveData::GloveComponent) finger));
+            gmtl::Point3f end = origin + (0.25f * mGlove->getTipVector((gadget::GloveData::GloveComponent) finger));
             drawLine(origin, end);
          glPopMatrix();
       }
