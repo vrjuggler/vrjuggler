@@ -227,14 +227,16 @@ ARFLAGS=''		dnl # Flags for $AR
 DEP_GEN_FLAG='-M'	dnl # Flag for the compiler to generate dependencies
 LD=''			dnl # Shared library command (usually ld(1))
 LDOPTS=''		dnl # More options for shared library generator
+LDOPTS_DBG=''		dnl # Debugging options for shared library generator
+LDOPTS_OPT=''		dnl # Optimization options for shared library generator
 OBJ_NAME_FLAG='-o $@'	dnl # Flag used for naming a compiled object file
 
 LIB_PREFIX='lib'	dnl # Prefix for library name
 STATICLIB_EXT='a'	dnl # Extension for shared library names (usually 'a')
 SHAREDLIB_EXT=''	dnl # Extension for shared library names (usually 'so')
 
-DBG_FLAGS=''		dnl # Compiler debugging flags
-OPT_FLAGS=''		dnl # Compiler optimization flags
+DBG_FLAGS=''		dnl # Compiler debugging flags for object files
+OPT_FLAGS=''		dnl # Compiler optimization flags for object files
 
 DSOREGFILE=''
 DSOVERSION=''
@@ -447,6 +449,8 @@ case $target_os in
 
         LD='cl'
         LDOPTS="$LDOPTS -nologo"
+        LDOPTS_DBG='-LDd -MDd'
+        LDOPTS_OPT='-LD -MD'
         LIB_PREFIX=''
         OBJ_NAME_FLAG='-Fo$@'
         STATICLIB_EXT='lib'
@@ -1076,6 +1080,8 @@ AC_SUBST(INCLUDES)
 AC_SUBST(LD)
 AC_SUBST(LIBS)
 AC_SUBST(LDOPTS)
+AC_SUBST(LDOPTS_DBG)
+AC_SUBST(LDOPTS_OPT)
 AC_SUBST(OBJ_NAME_FLAG)
 AC_SUBST(DBG_FLAGS)
 AC_SUBST(OPT_FLAGS)
