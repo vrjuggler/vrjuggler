@@ -1,5 +1,12 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2002-10-30 patrickh    Added parameters to tweek::CorbaManager::init() that
+                       allow the caller to specify the key elements of a
+                       corbaloc URI that can be used to get the reference to
+                       the root naming context.  This offers a way around using
+                       an environment variable ($OMNIORB_CONFIG) or esoteric
+                       command-line options to find the Naming Service.
+                       NEW VERSION: 0.13.1
 2002-10-14 patrickh    Added a C++ CORBA client interface that mimics the
                        equivalent Java client interface very closely.  The new
                        class is tweek::CorbaService.
