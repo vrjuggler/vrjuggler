@@ -32,6 +32,9 @@ public:
 
 
 
+    vjTimeStampPosix& operator= (const vjTimeStamp& t2);
+
+
     void set() {
 	gettimeofday (&tp, 0);
         val = tp.tv_sec * 1000000 + tp.tv_usec;

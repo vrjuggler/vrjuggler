@@ -53,6 +53,13 @@ public:
 
 
 
+    //: assignment operator
+    vjTimeStampSGI& operator= (const vjTimeStampSGI& t2) {
+	val = t2.val;
+	return *this;
+    }
+
+
 
     //: returns number of microseconds between self and t2
     //! PRE: t2 is stamped with an earlier time than self
