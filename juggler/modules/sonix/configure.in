@@ -351,6 +351,9 @@ if test "x$OS_TYPE" = "xWin32" ; then
    snx_lib='sonix.lib'
    snx_libs="$snx_libs sonix.lib"
    sample_application_libs="$sample_application_libs /LIBPATH:\$(SNX_BASE_DIR)/lib$LIBBITSUF/sonix.lib $LIBS"
+
+   DYLIB_DEPS='libcd.lib'
+   DYLIB_PROF_DEPS="$DYLIB_DEPS"
 else
    if test "x$GXX" = "xyes" ; then
       static_begin="-Wl,-Bstatic"
@@ -365,6 +368,9 @@ else
    snx_lib='-lsonix'
    snx_libs="$snx_libs -lsonix"
    sample_application_libs="$sample_application_libs -L\$(SNX_BASE_DIR)/lib$LIBBITSUF $APP_LINKALL_ON -lsonix $APP_LINKALL_OFF $LIBS $VPR_LIBS_CC -lm"
+
+   DYLIB_DEPS=''
+   DYLIB_PROF_DEPS="$DYLIB_DEPS"
 fi
 
 #sample_application_libs="$sample_application_libs"
@@ -382,6 +388,9 @@ snx_extra_include_dirs="$snx_extra_include_dirs"
 snx_extra_ldflags="$snx_extra_ldflags $APP_EXTRA_LIBS_BEGIN"
 #snx_extra_libs="$snx_extra_libs $LDFLAGS $VPR_LIBS_CC_MIN $LIBS $APP_EXTRA_LIBS_END"
 snx_extra_libs="$snx_extra_libs $LDFLAGS $LIBS $APP_EXTRA_LIBS_END"
+
+AC_SUBST(DYLIB_DEPS)
+AC_SUBST(DYLIB_PROF_DEPS)
 
 AC_SUBST(static_begin)
 AC_SUBST(static_end)
