@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="docbook_ab.css" type="text/css"?>
+<?xml-stylesheet href="../../../../../../../../../home/users/allenb/Docs/vj_docs/stylesheet/docbook_ab.css" type="text/css"?>
 <?morphon-document-settings
   morphon.document.settings.whitespaces.amount="3"
   morphon.document.settings.print.fixed.attributes="true"
@@ -2565,6 +2565,200 @@ pfDraw();</programlisting>
                      </methodsynopsis></para>
                   <para>This is the function called by the <emphasis>default</emphasis> <methodname>drawChan()</methodname> member function after clearing the channel and drawing the next frame (<function>pfFrame()</function>).</para>
                </section>
+            </section>
+         </section>
+         <section id="opensg-app-sect">
+            <title>OpenSG Applications</title>
+            <indexterm>
+               <primary>application programming</primary>
+               <secondary>OpenSG</secondary>
+            </indexterm>
+            <para>This section explains how to use the OpenSG scene graph in a VR Juggler application. OpenSG is an opensource scenegraph that is available at <ulink url="http://www.opensg.org" link="http://www.opensg.org">www.opensg.org</ulink>.</para>
+            <para>An OpenSG VR Juggler must derive from <classname>vrj::OpenSGApp</classname><indexterm>
+                  <primary>classes</primary>
+                  <secondary>vrj::OpenSGApp</secondary>
+               </indexterm>. The <classname>vrj::OpenSGApp</classname> class is derived from the <classname>vrj::GlApp</classname> presented previously, which in turn derives from <classname>vrj::App</classname>. <classname>vrj::OpenSGApp</classname> extends <classname>vrj::GlApp</classname> by adding methods that deal with scene graph initialization and access. <emphasis>[Insert diagram ref]</emphasis> shows how <classname>vrj::OpenSGApp</classname> fits into the class hierarchy of an OpenSG VR Juggler application.</para>
+            <figure float="1" id="vjOpenSGApp-class-diag">
+               <title><classname>vrj::OpenSGApp</classname> application class</title>
+               <mediaobject>
+                  <imageobject>
+                     <imagedata fileref="figures/userPfApp_hierarchy.png" format="PNG" align="center" scalefit="1"/>
+                  </imageobject>
+               </mediaobject>
+            </figure>
+            <para>The two main application methods for <classname>vrj::OpenSGApp</classname> VR Juggler applications are <methodname>initScene()</methodname> and <methodname>getSceneRoot()</methodname><indexterm>
+                  <primary>vrj::OpenSGApp</primary>
+                  <secondary>extensions to vrj::GlApp</secondary>
+               </indexterm>. These are called by the OpenSG application class wrapper to initialize the application scene graph and to get the root of the scene graph respectively. They must be implemented by the application (they are pure virtual methods within <classname>vrj::OpenSGApp</classname>). The rest of this section gives a more detailed description of these methods and some sample code to illustrate the concepts presented.</para>
+            <section>
+               <title>Scene Graph Initialization: <methodname>vrj::OpenSGApp::initScene()</methodname></title>
+               <indexterm>
+                  <primary>vrj::OpenSGApp</primary>
+                  <secondary>initScene() method</secondary>
+               </indexterm>
+               <indexterm>
+                  <primary>application programming</primary>
+                  <secondary>OpenSG</secondary>
+                  <tertiary>scenegraph initialization</tertiary>
+               </indexterm>
+               <para>In an application using OpenSG, the scene graph must be initialized before it can be used. The method <methodname>vrj::OpenSGApp::initScene()</methodname> is provided for that purpose. Within this method, the root of the application scene graph should be created, and any required models should be loaded and attached to the root in some way. The exact mechanisms for accomplishing this will vary depending on what the application will do.</para>
+               <para>During the api initialization, <methodname>vrj::OpenSGApp::initScene()</methodname> is invoked. This happens after <methodname>OSG::osgInit()</methodname> has been called, so OpenSG should be fully initialized and ready to be used.</para>
+            </section>
+            <section>
+               <title>Scene Graph Access: <methodname>vrj::OpenSGApp::getSceneRoot()</methodname></title>
+               <indexterm>
+                  <primary>vrj::OpenSGApp</primary>
+                  <secondary>getSceneRoot() method</secondary>
+               </indexterm>
+               <indexterm>
+                  <primary>application programming</primary>
+                  <secondary>OpenSG</secondary>
+                  <tertiary>scenegraph access</tertiary>
+               </indexterm>
+               <para>In order for OpenSG to render the application scene graph, it must get access to the scene graph root. The method <methodname>vrj::OpenSGApp::getSceneRoot()</methodname> will be called by the OpenSG application class wrapper so that it can get access to the currently active scene graph whenever the wrapper needs to use it (ex. rendering, updating). Since the job of <methodname>getSceneRoot()</methodname> is straightforward, its implementation can be very simple. A typical implementation will have a single statement that returns a member variable that holds a pointer to the current scene graph root node.</para>
+               <section>
+                  <title>Possible Misuses</title>
+                  <para>Do not do any cpu-heavy processing in this method. Because this method is called frequently, it should only do the minimum amount of processing necessary to return the root scene graph node. In most cases this method should only be one line of code. See the following code for an example.</para>
+                  <programlisting>virtual OSG::NodePtr getSceneRoot()
+{
+   return mSceneRoot;  // Return the root of the graph
+}</programlisting>
+                  <para></para>
+                  <para>If you need to update the scene graph, you should use either <methodname>preFrame()</methodname>, <methodname>intraFrame()</methodname>, or <methodname>postFrame()</methodname>.</para>
+               </section>
+            </section>
+            <section>
+               <title>Tutorial: Loading a Model with OpenSG</title>
+               <indexterm>
+                  <primary>tutorial</primary>
+                  <secondary>loading a model with OpenSG</secondary>
+               </indexterm>
+               <table>
+                  <title>Tutorial Overview</title>
+                  <tgroup cols="2">
+                     <tbody>
+                        <row>
+                           <entry>Description</entry>
+                           <entry>Simple OpenSG application that loads a model</entry>
+                        </row>
+                        <row>
+                           <entry>Objectives</entry>
+                           <entry>Understand how to load a model, add it to a scene graph, and return the root to VR Juggler</entry>
+                        </row>
+                        <row>
+                           <entry>Member functions</entry>
+                           <entry><itemizedlist>
+                                 <listitem>
+                                    <para><methodname>vrj::PfApp::initScene()</methodname></para>
+                                 </listitem>
+                                 <listitem>
+                                    <para><methodname>vrj::PfApp::getScene()</methodname></para>
+                                 </listitem>
+                              </itemizedlist></entry>
+                        </row>
+                        <row>
+                           <entry>Directory</entry>
+                           <entry><filename>$VJ_BASE_DIR/share/vrjuggler/test/Draw/OpenSG/OpenSGNav</filename></entry>
+                        </row>
+                        <row>
+                           <entry>Files</entry>
+                           <entry><itemizedlist>
+                                 <listitem>
+                                    <para><filename>OpenSGNav.h</filename></para>
+                                 </listitem>
+                                 <listitem>
+                                    <para><filename>OpenSGNav.cpp</filename></para>
+                                 </listitem>
+                              </itemizedlist></entry>
+                        </row>
+                     </tbody>
+                  </tgroup>
+               </table>
+               <!-- NEED example app for OpenSG
+               <section>
+                  <title>Class Declaration</title>
+                  <para>The following application class is called <classname>simplePfApp</classname>. It is derived from <classname>vrj::PfApp</classname> and has custom <methodname>initScene()</methodname> and <methodname>getScene()</methodname> methods declared. Note that this application uses <methodname>preForkInit()</methodname> which will be discussed later. Refer to <filename>simplePfApp.h</filename> for the implementations of <methodname>preForkInit()</methodname> and <methodname>setModel()</methodname>.</para>
+                  <programlisting linenumbering="numbered">class simplePfApp : public vrj::PfApp
+{
+public:
+   simplePfApp();
+   virtual ~simplePfApp();
+
+   virtual void preForkInit();
+   virtual void initScene();
+   virtual pfGroup* getScene();
+   void setModel(std::string modelFile);
+
+public:
+   std::string    mModelFileName;
+
+   pfGroup*       mLightGroup;
+   pfLightSource* mSun;
+   pfGroup*       mRootNode;
+   pfNode*        mModelRoot;
+};</programlisting>
+               </section>
+               <section>
+                  <title>The <methodname>initScene()</methodname> Member Function</title>
+                  <para>The implementation of <methodname>initScene()</methodname> is in <filename>simplePfApp.cpp</filename>. Within this method, we create the scene graph root node, the lighting node, and load a user-specified model. The implementation follows:</para>
+                  <programlistingco>
+                     <areaspec>
+                        <area coords="4" id="cr-rootnode.create"/>
+                        <area coords="7" id="cr.light.source.create"/>
+                        <area coords="17" id="cr.model.load"/>
+                        <areaset coords="" id="cr.scenegraph.add.all">
+                           <area coords="20" id="cr.scenegraph.add.model"/>
+                           <area coords="21" id="cr.scenegraph.add.light"/>
+                        </areaset>
+                     </areaspec>
+                     <programlisting linenumbering="numbered">void simplePfApp::initScene ()
+{
+   // Allocate all the nodes needed
+   mRootNode = new pfGroup;
+
+   // Create the SUN light source
+   mLightGroup = new pfGroup;
+   mSun = new pfLightSource;
+   mLightGroup-&gt;addChild(mSun);
+   mSun-&gt;setPos(0.3f, 0.0f, 0.3f, 0.0f);
+   mSun-&gt;setColor(PFLT_DIFFUSE, 1.0f, 1.0f, 1.0f);
+   mSun-&gt;setColor(PFLT_AMBIENT, 0.3f, 0.3f, 0.3f);
+   mSun-&gt;setColor(PFLT_SPECULAR, 1.0f, 1.0f, 1.0f);
+   mSun-&gt;on();
+
+   // - LOAD THE MODEL - //
+   mModelRoot = pfdLoadFile(mModelFileName.c_str());
+
+   // - CONSTRUCT STATIC STRUCTURE OF SCENE GRAPH - //
+   mRootNode-&gt;addChild(mModelRoot);
+   mRootNode-&gt;addChild(mLightGroup);
+}</programlisting>
+                     <calloutlist>
+                        <callout arearefs="rootnode.create">
+                           <para>First, the root node is constructed as a <classname>pfGroup</classname> object.</para>
+                        </callout>
+                        <callout arearefs="light.source.create">
+                           <para>Next, some steps are taken to create a light source for the application.</para>
+                        </callout>
+                        <callout arearefs="model.load">
+                           <para>Finally, the model is loaded using <function>pfdLoadFile()</function>, and the model scene graph root node is stored in <varname>mModelRoot</varname>. (The model loader must be initialized prior to calling <function>pfdLoadFile()</function>. This is done in <methodname>preForkInit()</methodname>.)</para>
+                        </callout>
+                        <callout arearefs="scenegraph.add.all">
+                           <para>Finally, the model and the light source nodes are added as children of the root.</para>
+                        </callout>
+                     </calloutlist>
+                  </programlistingco>
+               </section>
+               <section>
+                  <title>The <methodname>getScene()</methodname> Member Function</title>
+                  <para>The Performer Draw Manager will call the application's <methodname>getScene()</methodname> method to get the root of the scene graph. The implementation of this method can be found in <filename>simplePfApp.h</filename>. The code is as follows:</para>
+                  <programlisting>pfGroup* simplePfApp::getScene ()
+{
+   return mRootNode;
+}</programlisting>
+                  <para>The simplicity of this method implementation is not limited to the simple tutorial from which it is taken. All Performer-based VR Juggler applications can take advantage of this idiom where the root node is a member variable returned in <methodname>getScene()</methodname>.</para>
+               </section>
+-->
             </section>
          </section>
          <section>
