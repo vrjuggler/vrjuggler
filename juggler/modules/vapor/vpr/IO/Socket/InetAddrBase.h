@@ -181,7 +181,7 @@ public:
      *         <code>vpr::ReturnStatus::Fail</code> is returned if the address
      *         could not be looked up.
      */
-    vpr::ReturnStatus setAddress (const std::string& addr)
+    const vpr::ReturnStatus setAddress (const std::string& addr)
     {vprASSERT(false && "Implement me"); return vpr::ReturnStatus(vpr::ReturnStatus::Fail); }
 
     /**
