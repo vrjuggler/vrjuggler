@@ -44,6 +44,7 @@ module jccl
       void remove( in string chunkDBString );
       void swap( in string addChunkDBString, in string removeChunkDBString );
       string getChunks();
+      string getChunkDescs();
 
    };
 
