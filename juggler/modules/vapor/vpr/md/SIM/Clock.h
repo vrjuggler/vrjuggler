@@ -75,7 +75,10 @@ public:
 
    void setCurrentTime (const vpr::Interval& time)
    {
-      mCurrentTime = time;
+      if ( time > mCurrentTime )
+      {
+         mCurrentTime = time;
+      }
    }
 
 private:
