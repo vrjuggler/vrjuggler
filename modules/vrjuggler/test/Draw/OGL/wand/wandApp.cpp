@@ -42,6 +42,8 @@
 
 #include <wandApp.h>
 
+namespace vrjTest
+{
 
 void wandApp::bufferPreDraw()
 {
@@ -206,3 +208,6 @@ void drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
       glEnd();
    }
 }
+
+}; // namespace vrjTest
+

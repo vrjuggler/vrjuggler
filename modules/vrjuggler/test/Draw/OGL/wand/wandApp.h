@@ -43,6 +43,9 @@
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
 
+namespace vrjTest
+{
+
 // Utility function to draw a cube
 void drawbox( GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
                 GLdouble z0, GLdouble z1, GLenum type );
@@ -186,6 +189,8 @@ public:
    gadget::DigitalInterface     mButton3;
    gadget::DigitalInterface     mButton4;
    gadget::DigitalInterface     mButton5;
+};
+
 };
 
 
