@@ -148,6 +148,7 @@ public class ConfigToolbar
             return false;
          }
 
+         ChunkFactory.setDescs(getConfigBroker().getDescs(ctx));
          FileDataSource new_data_source = new FileDataSource(filename,
                                                              FileDataSource.ELEMENTS);
          getConfigBroker().add(filename, new_data_source);
