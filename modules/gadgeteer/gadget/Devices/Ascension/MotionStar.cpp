@@ -283,110 +283,128 @@ int MotionStar::sample()
       // Since we want the reciver in the world system, Rw
       // wTr = wTt*tTr
       gmtl::Matrix44f world_T_transmitter, transmitter_T_receiver, world_T_receiver;
-      mMotionStar.sample();
 
-      // get an initial timestamp for this entire sample. we'll copy it into
-      // each PositionData for this sample.
-      if (!cur_samples.empty())
+      try
       {
-         cur_samples[0].setTime();
-      }
+         mMotionStar.sample();
 
-      // For each bird
-      for ( unsigned int i = 0; i < mMotionStar.getNumBirds(); ++i )
-      {
-         // Get the index to the current read buffer
-         cur_samples[i].setTime( cur_samples[i].getTime() );
-         gmtl::identity(transmitter_T_receiver);
-
-         format = mMotionStar.getBirdDataFormat(i);
-         gmtl::EulerAngleZYXf euler;
-
-         switch (format)
+         // get an initial timestamp for this entire sample. we'll copy it into
+         // each PositionData for this sample.
+         if ( ! cur_samples.empty() )
          {
-            case FLOCK::NO_BIRD_DATA:
-            case FLOCK::INVALID:
-               break;
-            case FLOCK::POSITION:
-               gmtl::setTrans(transmitter_T_receiver,
-                              gmtl::Vec3f( mMotionStar.getXPos(i), mMotionStar.getYPos(i), mMotionStar.getZPos(i)));
-               break;
-            case FLOCK::ANGLES:
-               euler.set(gmtl::Math::deg2Rad(mMotionStar.getZRot(i)),
-                         gmtl::Math::deg2Rad(mMotionStar.getYRot(i)),
-                         gmtl::Math::deg2Rad(mMotionStar.getXRot(i)));
-               gmtl::setRot(transmitter_T_receiver, euler);
-               break;
-            case FLOCK::MATRIX:
-               mMotionStar.getMatrixAngles(i, angles);
-
-               euler.set(gmtl::Math::deg2Rad(angles[0]),
-                         gmtl::Math::deg2Rad(angles[1]),
-                         gmtl::Math::deg2Rad(angles[2]));
-               gmtl::setRot( transmitter_T_receiver, euler );
-
-               break;
-            case FLOCK::POSITION_ANGLES:
-               gmtl::setTrans(trans_mat, gmtl::Vec3f(mMotionStar.getXPos(i),
-                                                     mMotionStar.getYPos(i),
-                                                     mMotionStar.getZPos(i)));
-
-               euler.set(gmtl::Math::deg2Rad(mMotionStar.getZRot(i)),
-                         gmtl::Math::deg2Rad(mMotionStar.getYRot(i)),
-                         gmtl::Math::deg2Rad(mMotionStar.getXRot(i)));
-               gmtl::setRot(rot_mat, euler);
-               transmitter_T_receiver = (trans_mat * rot_mat);
-               break;
-            case FLOCK::POSITION_MATRIX:
-               gmtl::setTrans(trans_mat, gmtl::Vec3f(mMotionStar.getXPos(i),
-                                                     mMotionStar.getYPos(i),
-                                                     mMotionStar.getZPos(i)));
-
-               mMotionStar.getMatrixAngles(i, angles);
-
-               euler.set(gmtl::Math::deg2Rad(angles[2]),
-                         gmtl::Math::deg2Rad(angles[1]),
-                         gmtl::Math::deg2Rad(angles[0]));
-               gmtl::setRot(rot_mat, euler);
-               transmitter_T_receiver = trans_mat * rot_mat;
-               break;
-            case FLOCK::QUATERNION:
-               mMotionStar.getQuaternion(i, quat);
-               gmtl::set(transmitter_T_receiver, gmtl::Quatf(quat[1], quat[2],
-                                                             quat[3], quat[0]));
-               break;
-            case FLOCK::POSITION_QUATERNION:
-               gmtl::setTrans(trans_mat, gmtl::Vec3f(mMotionStar.getXPos(i),
-                                                     mMotionStar.getYPos(i),
-                                                     mMotionStar.getZPos(i)));
-
-               mMotionStar.getQuaternion(i, quat);
-               gmtl::set(rot_mat, gmtl::Quatf(quat[1], quat[2], quat[3], quat[0]));
-
-               transmitter_T_receiver = trans_mat * rot_mat;
-               break;
+            cur_samples[0].setTime();
          }
 
-         // Set transmitter offset from local info.
-         world_T_transmitter = xformMat;
+         // For each bird
+         for ( unsigned int i = 0; i < mMotionStar.getNumBirds(); ++i )
+         {
+            // Get the index to the current read buffer
+            cur_samples[i].setTime( cur_samples[i].getTime() );
+            gmtl::identity(transmitter_T_receiver);
 
-         // Get receiver data from sampled data.
-         //transmitter_T_receiver = *(cur_samples[index].getPosition());
+            format = mMotionStar.getBirdDataFormat(i);
+            gmtl::EulerAngleZYXf euler;
 
-         // Compute total transform.
-         // wTr = wTt * tTr
-         gmtl::mult(world_T_receiver, world_T_transmitter, transmitter_T_receiver);
+            switch (format)
+            {
+               case FLOCK::NO_BIRD_DATA:
+               case FLOCK::INVALID:
+                  break;
+               case FLOCK::POSITION:
+                  gmtl::setTrans(transmitter_T_receiver,
+                                 gmtl::Vec3f(mMotionStar.getXPos(i),
+                                             mMotionStar.getYPos(i),
+                                             mMotionStar.getZPos(i)));
+                  break;
+               case FLOCK::ANGLES:
+                  euler.set(gmtl::Math::deg2Rad(mMotionStar.getZRot(i)),
+                            gmtl::Math::deg2Rad(mMotionStar.getYRot(i)),
+                            gmtl::Math::deg2Rad(mMotionStar.getXRot(i)));
+                  gmtl::setRot(transmitter_T_receiver, euler);
+                  break;
+               case FLOCK::MATRIX:
+                  mMotionStar.getMatrixAngles(i, angles);
 
-         // Store corrected xform back into data.
-         *(cur_samples[i].getPosition()) = world_T_receiver;
+                  euler.set(gmtl::Math::deg2Rad(angles[0]),
+                            gmtl::Math::deg2Rad(angles[1]),
+                            gmtl::Math::deg2Rad(angles[2]));
+                  gmtl::setRot(transmitter_T_receiver, euler);
+
+                  break;
+               case FLOCK::POSITION_ANGLES:
+                  gmtl::setTrans(trans_mat,
+                                 gmtl::Vec3f(mMotionStar.getXPos(i),
+                                             mMotionStar.getYPos(i),
+                                             mMotionStar.getZPos(i)));
+
+                  euler.set(gmtl::Math::deg2Rad(mMotionStar.getZRot(i)),
+                            gmtl::Math::deg2Rad(mMotionStar.getYRot(i)),
+                            gmtl::Math::deg2Rad(mMotionStar.getXRot(i)));
+                  gmtl::setRot(rot_mat, euler);
+                  transmitter_T_receiver = (trans_mat * rot_mat);
+                  break;
+               case FLOCK::POSITION_MATRIX:
+                  gmtl::setTrans(trans_mat,
+                                 gmtl::Vec3f(mMotionStar.getXPos(i),
+                                             mMotionStar.getYPos(i),
+                                             mMotionStar.getZPos(i)));
+
+                  mMotionStar.getMatrixAngles(i, angles);
+
+                  euler.set(gmtl::Math::deg2Rad(angles[2]),
+                            gmtl::Math::deg2Rad(angles[1]),
+                            gmtl::Math::deg2Rad(angles[0]));
+                  gmtl::setRot(rot_mat, euler);
+                  transmitter_T_receiver = trans_mat * rot_mat;
+                  break;
+               case FLOCK::QUATERNION:
+                  mMotionStar.getQuaternion(i, quat);
+                  gmtl::set(transmitter_T_receiver,
+                            gmtl::Quatf(quat[1], quat[2], quat[3], quat[0]));
+                  break;
+               case FLOCK::POSITION_QUATERNION:
+                  gmtl::setTrans(trans_mat,
+                                 gmtl::Vec3f(mMotionStar.getXPos(i),
+                                             mMotionStar.getYPos(i),
+                                             mMotionStar.getZPos(i)));
+
+                  mMotionStar.getQuaternion(i, quat);
+                  gmtl::set(rot_mat,
+                            gmtl::Quatf(quat[1], quat[2], quat[3], quat[0]));
+
+                  transmitter_T_receiver = trans_mat * rot_mat;
+                  break;
+            }
+
+            // Set transmitter offset from local info.
+            world_T_transmitter = xformMat;
+
+            // Get receiver data from sampled data.
+            //transmitter_T_receiver = *(cur_samples[index].getPosition());
+
+            // Compute total transform.
+            // wTr = wTt * tTr
+            gmtl::mult(world_T_receiver, world_T_transmitter,
+                       transmitter_T_receiver);
+
+            // Store corrected xform back into data.
+            *(cur_samples[i].getPosition()) = world_T_receiver;
+         }
+
+         // Locks and then swaps the indices.
+         mPosSamples.lock();
+         mPosSamples.addSample(cur_samples);
+         mPosSamples.unlock();
+
+         retval = 1;
       }
-
-      // Locks and then swaps the indices.
-      mPosSamples.lock();
-      mPosSamples.addSample(cur_samples);
-      mPosSamples.unlock();
-
-      retval = 1;
+      catch (...)
+      {
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+            << clrOutNORM(clrRED, "gadget::MotionStar::sample() caught unknown exception")
+            << std::endl << vprDEBUG_FLUSH;
+         retval = 0;
+      }
    }
 
    return retval;
