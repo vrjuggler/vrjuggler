@@ -33,4 +33,4 @@ rem
 rem ************** <auto-copyright.pl END do not edit this line> **************
 @echo on
 
-java -DVJ_BASE_DIR=%VJ_BASE_DIR% -DVJ_SHARE_DIR=%VJ_BASE_DIR%/#VJ_SHARE_DIR# -DJCCL_BASE_DIR=%JCCL_BASE_DIR% -DJCCL_SHARE_DIR=%JCCL_BASE_DIR%/#JCCL_SHARE_DIR# -jar %JCCL_BASE_DIR%/bin/ConfigUpdater.jar %1 %2 %3 %4 %5 %6 %7 %8 %9
+java -DVJ_BASE_DIR=%VJ_BASE_DIR% -DJCCL_BASE_DIR=%JCCL_BASE_DIR% -jar %JCCL_BASE_DIR%/bin/ConfigUpdater.jar %1 %2 %3 %4 %5 %6 %7 %8 %9

@@ -377,15 +377,13 @@ install-tools:
 	@echo "------------------------------------------------"
 ifndef NO_JAVA
 ifeq (@OS_TYPE@, UNIX)
-	@sed -e 's,#JCCL_SHARE_DIR#,$(JCCL_SHARE_DIR),g'		\
-          $(JCCLROOT_ABS)/tools/ConfigUpdater/cfgupdater.sh > cfgupdater
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-          cfgupdater $(bindir)/cfgupdater && rm -f cfgupdater
+          $(JCCLROOT_ABS)/tools/ConfigUpdater/cfgupdater.sh		\
+	  $(bindir)/cfgupdater
 else
-	@sed -e 's,#JCCL_SHARE_DIR#,$(JCCL_SHARE_DIR),g'		\
-          $(JCCLROOT_ABS)/tools/ConfigUpdater/cfgupdater.bat > cfgupdater.bat
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX) 			\
-          cfgupdater.bat $(bindir)/cfgupdater.bat && rm -f cfgupdater.bat
+          $(JCCLROOT_ABS)/tools/ConfigUpdater/cfgupdater.bat		\
+	  $(bindir)/cfgupdater.bat
 endif	# if OS_TYPE == UNIX
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS)						\
