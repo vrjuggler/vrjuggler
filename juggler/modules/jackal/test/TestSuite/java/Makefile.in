@@ -25,10 +25,12 @@ TESTCASES = \
 	test.ChunkDescTest \
 	test.ChunkDescEventTest \
 	test.ConfigChunkTest \
-	test.ConfigElementTest \
 	test.DescEnumTest \
 	test.PropertyDescTest \
-	test.ValTypeTest
+	test.ValTypeTest \
+	test.ConfigElementTest \
+	test.ConfigDefinitionTest \
+	test.PropertyDefinitionTest
 
 RUNNER_CLASSES=		$(addsuffix .class, $(RUNNER))
 TESTCASE_CLASSES=	$(addsuffix .class, $(subst .,/,$(TESTCASES)))
