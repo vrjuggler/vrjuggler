@@ -93,12 +93,12 @@ $Win32 = (defined($ENV{'OS'}) && $ENV{'OS'} =~ /^win/i);
 
 my $base_dir = '';
 
-# Set the location of the collection of dependencies.  If $TWEEK_DEPS_DIR is
+# Set the location of the collection of dependencies.  If $VJ_DEPS_DIR is
 # not defined, then $deps_dir will be an empty string.  If the dependencies
 # are installed in $TWEEK_BASE_DIR, then the user gets the right compiler and
 # linker path options for free.  Otherwise, it is up to the user to provide
 # those paths.
-my $deps_dir = "$ENV{'TWEEK_DEPS_DIR'}" if defined($ENV{'TWEEK_DEPS_DIR'});
+my $deps_dir = "$ENV{'VJ_DEPS_DIR'}" if defined($ENV{'VJ_DEPS_DIR'});
 
 # Get the directory where this script is located.
 if ( defined($ENV{'TWEEK_BASE_DIR'}) )
