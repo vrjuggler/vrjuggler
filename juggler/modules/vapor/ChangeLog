@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2003-08-11 patrickh Added vpr::LibraryLoader.
+                    NEW VERSION: 0.27.6
 2003-06-30 aronb    Added new debug output level vprDBG_CONFIG_STATUS_LVL.
                     Changed the ordering of the levels so vprDBG_WARNING_LVL
                     comes after vprDBG_CRITICAL_LVL and vprDBG_CONFIG_LVL
