@@ -141,6 +141,7 @@ links:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/share/sonix
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_NAME)
 	cd $(instlinks)/include &&                                      \
           for dir in $(SUBDIR) ; do                                     \
@@ -151,9 +152,7 @@ links:
             cd $(instlinks)/$(LIBDIR_NAME) && rm -f $$lib* &&		\
               $(LN_S) $(LIBDIR_BASE)/$$lib* ./ ;			\
           done
-	cd $(instlinks) && rm -rf ./share &&                  \
-       	  $(SHELL) $(MKINSTALLDIRS) ./share/sonix && \
-           ln -s $(ROOT_ABS)/data ./share/sonix/data
+	cd $(instlinks)/share/sonix && ln -s $(ROOT_ABS)/data ./
 	cd $(instlinks)/share/sonix &&                          \
           ln -s $(topdir)/samples ./src
 	cd $(instlinks)/share/sonix &&                          \
