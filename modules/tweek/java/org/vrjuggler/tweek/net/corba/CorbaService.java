@@ -129,6 +129,7 @@ public class CorbaService
    {
       if ( m_orb_thread != null && m_orb != null )
       {
+         m_root_poa.destroy(true, wait_for_completion);
          m_orb.shutdown(wait_for_completion);
          m_orb        = null;
          m_orb_thread = null;
