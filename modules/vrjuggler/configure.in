@@ -340,6 +340,11 @@ VJ_APP_CXXFLAGS='$(VRJ_CXX_FLAGS)'
 VJ_APP_EXTRA_LIBS='$(VRJ_EXTRA_LIBS_STATIC)'
 VJ_APP_EXTRA_LIBS_INST='$(VRJ_EXTRA_LIBS)'
 
+# Enable warnings when building applications with GCC.
+if test "x$GXX" = "xyes" ; then
+   VJ_APP_CXXFLAGS="$VJ_APP_CXXFLAGS -Wall"
+fi
+
 # Variables set in Makefiles found in the application trees.  All variables
 # listed are for use only in the Makefile.in's found in that tree unless
 # otherwise noted.  They are used in the following way:
@@ -549,7 +554,9 @@ AC_SUBST(DYLIB_PROF_DEPS_GL)
 AC_SUBST(DYLIB_PROF_DEPS_PF)
 
 AC_SUBST(VJ_APP_EXTRA_LIBS_INST)
+AC_SUBST(APP_EXTRA_LIBS_GL)
 AC_SUBST(APP_EXTRA_LIBS_OSG)
+AC_SUBST(APP_EXTRA_LIBS_PF)
 
 AC_SUBST(vrj_dep_scripts)
 AC_SUBST(vrj_cxxflags)
