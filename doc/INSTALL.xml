@@ -123,7 +123,6 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
                      <para><command>setenv SNX_BASE_DIR $HOME/vrjuggler-2.0</command></para>
                   </listitem>
                </orderedlist>
-               <para>Depending on the version of Xerces C++ available, an extra argument may be required to find the actual library. For example, if Xerces C++ 1.6.0 is installed, add <option>--with-xerceslib=xerces-c1_6_0</option> to the command line for running <command>configure</command>. Check the Xerces C++ <filename>lib</filename> directory for the exact name (without <filename>.so</filename> or <filename>.a</filename>).</para>
             </section>
             <section>
                <title>JCCL (individual)</title>
