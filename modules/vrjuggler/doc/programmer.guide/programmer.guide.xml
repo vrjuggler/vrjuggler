@@ -118,11 +118,11 @@
             <para>The following is a typical example of a <function>main()</function> function that will start the VR Juggler kernel and hand it an instance of a user application object. The specifics of what is happening in this code are described below.</para>
             <programlistingco>
                <areaspec>
-                  <area coords="5 75" id="simpleApp.main.body.create-kernel"/>
-                  <area coords="6 75" id="simpleApp.main.body.app-instantiate"/>
-                  <area coords="8 75" id="simpleApp.main.body.loadConfigFile"/>
-                  <area coords="9 75" id="simpleApp.main.body.start"/>
-                  <area coords="10 75" id="simpleApp.main.body.setApp"/>
+                  <area coords="5 75" id="simpleApp.main.body.create-kernel" label="(1)"/>
+                  <area coords="6 75" id="simpleApp.main.body.app-instantiate" label="(2)"/>
+                  <area coords="8 75" id="simpleApp.main.body.loadConfigFile" label="(3)"/>
+                  <area coords="9 75" id="simpleApp.main.body.start" label="(4)"/>
+                  <area coords="10 75" id="simpleApp.main.body.setApp" label="(5)"/>
                </areaspec>
                <programlisting linenumbering="numbered">#include &lt;simpleApp.h&gt;
 
@@ -1372,11 +1372,11 @@ public:
                <programlistingco>
                   <areaspec>
                      <areaset coords="" id="button.reads">
-                        <area coords="3" id="mButton0.read"/>
-                        <area coords="7" id="mButton1.read"/>
+                        <area coords="3" id="mButton0.read" label="(1)"/>
+                        <area coords="7" id="mButton1.read" label="(1)"/>
                      </areaset>
-                     <area coords="12" id="button.print"/>
-                     <area coords="19" id="position.get"/>
+                     <area coords="12" id="button.print" label="(2)"/>
+                     <area coords="19" id="position.get" label="(3)"/>
                   </areaspec>
                   <programlisting linenumbering="numbered">virtual void preFrame()
 {
@@ -1505,9 +1505,9 @@ public:
                <para>The implementation of <methodname>draw()</methodname> is located in <filename>simpleApp.cpp</filename>. Its job is to draw the environment. A partial implementation follows.</para>
                <programlistingco>
                   <areaspec>
-                     <area coords="5" id="box-offset.init"/>
-                     <area coords="11" id="box-offset.push"/>
-                     <area coords="13" id="draw.cube"/>
+                     <area coords="5" id="box-offset.init" label="(1)"/>
+                     <area coords="11" id="box-offset.push" label="(2)"/>
+                     <area coords="13" id="draw.cube" label="(3)"/>
                   </areaspec>
                   <programlisting linenumbering="numbered">void simpleApp::draw()
 {
@@ -1875,12 +1875,12 @@ public:
                <para>The implementation of <methodname>initScene()</methodname> is in <filename>simplePfApp.cpp</filename>. Within this method, we create the scene graph root node, the lighting node, and load a user-specified model. The implementation follows:</para>
                <programlistingco>
                   <areaspec>
-                     <area coords="4" id="rootnode.create"/>
-                     <area coords="7" id="light.source.create"/>
-                     <area coords="17" id="model.load"/>
+                     <area coords="4" id="rootnode.create" label="(1)"/>
+                     <area coords="7" id="light.source.create" label="(2)"/>
+                     <area coords="17" id="model.load" label="(3)"/>
                      <areaset coords="" id="scenegraph.add.all">
-                        <area coords="20" id="scenegraph.add.model"/>
-                        <area coords="21" id="scenegraph.add.light"/>
+                        <area coords="20" id="scenegraph.add.model" label="(4)"/>
+                        <area coords="21" id="scenegraph.add.light" label="(4)"/>
                      </areaset>
                   </areaspec>
                   <programlisting linenumbering="numbered">void simplePfApp::initScene ()
