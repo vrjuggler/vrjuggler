@@ -91,19 +91,19 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gmtl::Coord<gmtl::Vec<float,3>,gmtl::AxisAngle<float> >::getPos()
-   SHARPPY_API const gmtl::Vec3f* gmtl_Coord_gmtl_Vec_float_3__gmtl_AxisAngle_float____getPos__0(gmtl::Coord3fAxisAngle* self_)
+   SHARPPY_API gmtl::Vec3f* gmtl_Coord_gmtl_Vec_float_3__gmtl_AxisAngle_float____getPos__0(gmtl::Coord3fAxisAngle* self_)
    {
-      const gmtl::Vec3f* result;
-      result = new const gmtl::Vec3f(self_->getPos());
+      gmtl::Vec3f* result;
+      result = new gmtl::Vec3f(self_->getPos());
       return result;
    }
 
 
    // Wrapper for non-virtual method gmtl::Coord<gmtl::Vec<float,3>,gmtl::AxisAngle<float> >::getRot()
-   SHARPPY_API const gmtl::AxisAnglef* gmtl_Coord_gmtl_Vec_float_3__gmtl_AxisAngle_float____getRot__0(gmtl::Coord3fAxisAngle* self_)
+   SHARPPY_API gmtl::AxisAnglef* gmtl_Coord_gmtl_Vec_float_3__gmtl_AxisAngle_float____getRot__0(gmtl::Coord3fAxisAngle* self_)
    {
-      const gmtl::AxisAnglef* result;
-      result = new const gmtl::AxisAnglef(self_->getRot());
+      gmtl::AxisAnglef* result;
+      result = new gmtl::AxisAnglef(self_->getRot());
       return result;
    }
 

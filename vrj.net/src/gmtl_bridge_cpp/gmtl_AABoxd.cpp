@@ -64,19 +64,19 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gmtl::AABox<double>::getMin()
-   SHARPPY_API const gmtl::Point3d* gmtl_AABox_double__getMin__0(gmtl::AABoxd* self_)
+   SHARPPY_API gmtl::Point3d* gmtl_AABox_double__getMin__0(gmtl::AABoxd* self_)
    {
-      const gmtl::Point3d* result;
-      result = new const gmtl::Point3d(self_->getMin());
+      gmtl::Point3d* result;
+      result = new gmtl::Point3d(self_->getMin());
       return result;
    }
 
 
    // Wrapper for non-virtual method gmtl::AABox<double>::getMax()
-   SHARPPY_API const gmtl::Point3d* gmtl_AABox_double__getMax__0(gmtl::AABoxd* self_)
+   SHARPPY_API gmtl::Point3d* gmtl_AABox_double__getMax__0(gmtl::AABoxd* self_)
    {
-      const gmtl::Point3d* result;
-      result = new const gmtl::Point3d(self_->getMax());
+      gmtl::Point3d* result;
+      result = new gmtl::Point3d(self_->getMax());
       return result;
    }
 

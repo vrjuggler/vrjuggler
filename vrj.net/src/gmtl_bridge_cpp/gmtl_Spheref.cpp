@@ -63,10 +63,10 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gmtl::Sphere<float>::getCenter()
-   SHARPPY_API const gmtl::Point3f* gmtl_Sphere_float__getCenter__0(gmtl::Spheref* self_)
+   SHARPPY_API gmtl::Point3f* gmtl_Sphere_float__getCenter__0(gmtl::Spheref* self_)
    {
-      const gmtl::Point3f* result;
-      result = new const gmtl::Point3f(self_->getCenter());
+      gmtl::Point3f* result;
+      result = new gmtl::Point3f(self_->getCenter());
       return result;
    }
 

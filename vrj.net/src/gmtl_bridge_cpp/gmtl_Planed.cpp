@@ -82,10 +82,10 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gmtl::Plane<double>::getNormal()
-   SHARPPY_API const gmtl::Vec3d* gmtl_Plane_double__getNormal__0(gmtl::Planed* self_)
+   SHARPPY_API gmtl::Vec3d* gmtl_Plane_double__getNormal__0(gmtl::Planed* self_)
    {
-      const gmtl::Vec3d* result;
-      result = new const gmtl::Vec3d(self_->getNormal());
+      gmtl::Vec3d* result;
+      result = new gmtl::Vec3d(self_->getNormal());
       return result;
    }
 

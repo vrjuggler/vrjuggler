@@ -82,10 +82,10 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gmtl::Plane<float>::getNormal()
-   SHARPPY_API const gmtl::Vec3f* gmtl_Plane_float__getNormal__0(gmtl::Planef* self_)
+   SHARPPY_API gmtl::Vec3f* gmtl_Plane_float__getNormal__0(gmtl::Planef* self_)
    {
-      const gmtl::Vec3f* result;
-      result = new const gmtl::Vec3f(self_->getNormal());
+      gmtl::Vec3f* result;
+      result = new gmtl::Vec3f(self_->getNormal());
       return result;
    }
 

@@ -64,10 +64,10 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gmtl::Ray<double>::getOrigin()
-   SHARPPY_API const gmtl::Point3d* gmtl_Ray_double__getOrigin__0(gmtl::Rayd* self_)
+   SHARPPY_API gmtl::Point3d* gmtl_Ray_double__getOrigin__0(gmtl::Rayd* self_)
    {
-      const gmtl::Point3d* result;
-      result = new const gmtl::Point3d(self_->getOrigin());
+      gmtl::Point3d* result;
+      result = new gmtl::Point3d(self_->getOrigin());
       return result;
    }
 
@@ -81,10 +81,10 @@ extern "C"
 
 
    // Wrapper for non-virtual method gmtl::Ray<double>::getDir()
-   SHARPPY_API const gmtl::Vec3d* gmtl_Ray_double__getDir__0(gmtl::Rayd* self_)
+   SHARPPY_API gmtl::Vec3d* gmtl_Ray_double__getDir__0(gmtl::Rayd* self_)
    {
-      const gmtl::Vec3d* result;
-      result = new const gmtl::Vec3d(self_->getDir());
+      gmtl::Vec3d* result;
+      result = new gmtl::Vec3d(self_->getDir());
       return result;
    }
 

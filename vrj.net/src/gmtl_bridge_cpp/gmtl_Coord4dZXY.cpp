@@ -91,19 +91,19 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gmtl::Coord<gmtl::Vec<double,4>,gmtl::EulerAngle<double,gmtl::ZXY> >::getPos()
-   SHARPPY_API const gmtl::Vec4d* gmtl_Coord_gmtl_Vec_double_4__gmtl_EulerAngle_double_gmtl_ZXY____getPos__0(gmtl::Coord4dZXY* self_)
+   SHARPPY_API gmtl::Vec4d* gmtl_Coord_gmtl_Vec_double_4__gmtl_EulerAngle_double_gmtl_ZXY____getPos__0(gmtl::Coord4dZXY* self_)
    {
-      const gmtl::Vec4d* result;
-      result = new const gmtl::Vec4d(self_->getPos());
+      gmtl::Vec4d* result;
+      result = new gmtl::Vec4d(self_->getPos());
       return result;
    }
 
 
    // Wrapper for non-virtual method gmtl::Coord<gmtl::Vec<double,4>,gmtl::EulerAngle<double,gmtl::ZXY> >::getRot()
-   SHARPPY_API const gmtl::EulerAngleZXYd* gmtl_Coord_gmtl_Vec_double_4__gmtl_EulerAngle_double_gmtl_ZXY____getRot__0(gmtl::Coord4dZXY* self_)
+   SHARPPY_API gmtl::EulerAngleZXYd* gmtl_Coord_gmtl_Vec_double_4__gmtl_EulerAngle_double_gmtl_ZXY____getRot__0(gmtl::Coord4dZXY* self_)
    {
-      const gmtl::EulerAngleZXYd* result;
-      result = new const gmtl::EulerAngleZXYd(self_->getRot());
+      gmtl::EulerAngleZXYd* result;
+      result = new gmtl::EulerAngleZXYd(self_->getRot());
       return result;
    }
 

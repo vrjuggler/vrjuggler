@@ -91,19 +91,19 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gmtl::Coord<gmtl::Vec<double,3>,gmtl::Quat<double> >::getPos()
-   SHARPPY_API const gmtl::Vec3d* gmtl_Coord_gmtl_Vec_double_3__gmtl_Quat_double____getPos__0(gmtl::Coord3dQuat* self_)
+   SHARPPY_API gmtl::Vec3d* gmtl_Coord_gmtl_Vec_double_3__gmtl_Quat_double____getPos__0(gmtl::Coord3dQuat* self_)
    {
-      const gmtl::Vec3d* result;
-      result = new const gmtl::Vec3d(self_->getPos());
+      gmtl::Vec3d* result;
+      result = new gmtl::Vec3d(self_->getPos());
       return result;
    }
 
 
    // Wrapper for non-virtual method gmtl::Coord<gmtl::Vec<double,3>,gmtl::Quat<double> >::getRot()
-   SHARPPY_API const gmtl::Quatd* gmtl_Coord_gmtl_Vec_double_3__gmtl_Quat_double____getRot__0(gmtl::Coord3dQuat* self_)
+   SHARPPY_API gmtl::Quatd* gmtl_Coord_gmtl_Vec_double_3__gmtl_Quat_double____getRot__0(gmtl::Coord3dQuat* self_)
    {
-      const gmtl::Quatd* result;
-      result = new const gmtl::Quatd(self_->getRot());
+      gmtl::Quatd* result;
+      result = new gmtl::Quatd(self_->getRot());
       return result;
    }
 

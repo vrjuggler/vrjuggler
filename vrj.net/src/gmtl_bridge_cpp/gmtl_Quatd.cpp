@@ -74,15 +74,15 @@ extern "C"
       self_->get(p0, p1, p2, p3);
    }
 
-
+/*
    // Wrapper for non-virtual method gmtl::Quat<double>::getData()
-   SHARPPY_API const double* gmtl_Quat_double__getData__0(gmtl::Quatd* self_)
+   SHARPPY_API double* gmtl_Quat_double__getData__0(gmtl::Quatd* self_)
    {
-      const double* result;
+      double* result;
       result = self_->getData();
       return result;
    }
-
+*/
 
 } // extern "C" for gmtl::Quatd
 
