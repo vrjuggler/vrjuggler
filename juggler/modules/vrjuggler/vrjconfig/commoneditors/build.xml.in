@@ -48,6 +48,7 @@
          <include name="org/**" />
          <fileset dir="${srcdir}">
             <include name="org/vrjuggler/vrjconfig/commoneditors/images/*" />
+            <include if="jogl.present" name="org/vrjuggler/vrjconfig/commoneditors/positionaldeviceeditor/images/*"/>
          </fileset>
       </jar>
    </target>
