@@ -54,7 +54,7 @@ public class SurfaceViewportCreateDialog
 
    public SurfaceViewportCreateDialog(ConfigElement elt)
    {
-      super("Basic Surface Viewport Parameters", elt);
+      super("Basic Surface Viewport Parameters", elt, "surface_viewport");
 
       mCorners[Plane.LL_CORNER] = "Lower Left Corner";
       mCorners[Plane.LR_CORNER] = "Lower Right Corner";
@@ -64,19 +64,10 @@ public class SurfaceViewportCreateDialog
       ConfigBrokerProxy broker = new ConfigBrokerProxy();
       ConfigDefinition vp_def = broker.getRepository().get("surface_viewport");
 
-      if ( elt == null )
-      {
-         ConfigElementFactory factory =
-            new ConfigElementFactory(broker.getRepository().getAllLatest());
-         elt = factory.create("SurfaceViewportCreateDialog Junk", vp_def);
-      }
-
-      elt.addConfigElementListener(this);
-
       mTrackerProxyEditor =
-         new PropertyEditorPanel(elt.getProperty("tracker_proxy", 0),
+         new PropertyEditorPanel(mViewportElement.getProperty("tracker_proxy", 0),
                                  vp_def.getPropertyDefinition("tracker_proxy"),
-                                 elt, 0, Color.white);
+                                 mViewportElement, 0, Color.white);
 
       initUI();
 
@@ -95,17 +86,6 @@ public class SurfaceViewportCreateDialog
       this.pack();
    }
 
-   public void propertyValueChanged(ConfigElementEvent e)
-   {
-      super.propertyValueChanged(e);
-
-      if ( e.getProperty().equals("tracker_proxy") )
-      {
-         mTrackerProxy = e.getValue();
-         validateUserInput();
-      }
-   }
-
    public Boolean isTracked()
    {
       return (mTracked ? Boolean.TRUE : Boolean.FALSE);
@@ -113,7 +93,7 @@ public class SurfaceViewportCreateDialog
 
    public Object getTrackerProxy()
    {
-      return mTrackerProxy;
+      return mViewportElement.getProperty("tracker_proxy", 1);
    }
 
    public Point3D[] getCorners()
@@ -472,7 +452,7 @@ public class SurfaceViewportCreateDialog
 
       if ( mTracked )
       {
-         tracker_set = mTrackerProxy != null;
+         tracker_set = (((ConfigElementPointer) getTrackerProxy()).getTarget() != null);
       }
       else
       {
@@ -504,7 +484,6 @@ public class SurfaceViewportCreateDialog
    private Integer[]   mIntArray    = new Integer[mPlaneLabels.length];
    private ImageIcon[] mPlaneImages = new ImageIcon[mPlaneLabels.length];
 
-   private Object   mTrackerProxy = null;
    private boolean  mTracked      = false;
    private String[] mSurfaceTypes = {"Fixed-Position Wall", "Desk/Bench",
                                      "HMD Eye"};
