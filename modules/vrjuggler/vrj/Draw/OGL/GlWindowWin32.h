@@ -40,17 +40,35 @@
 #include <GL/gl.h>
 
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaWin32.h>
-//#include <gadget/Devices/KeyboardMouseDevice/EventWindowWin32.h>
-
 #include <vrj/Draw/OGL/GlWindow.h>
 
 namespace vrj
 {
 
+// NOTE: Win32 message processing works like the following:
+//
+// - GlDrawManager calls checkEvents()
+// - While there are events
+//   - Translate the event
+//   - If we have a valid KeyboardMouseDevice
+//     - Handle the input from the window.
+//   - Dispatch the message to WndPrc
+//   - If WndProc can find GlWindowWin32
+//     - Send message to GlWindowWin32
+//       - Process all context specific stuff
+//   - Else DefWindowProc()
+//
+// Note: We have to have a static registry since Win32 message
+//       processing send messages to a static method of a class
+//       and to handle certain messages like PAINT we need to
+//       have context information contained in each instance
+//       of GlWindowWin32.
+// TODO: Try to find a way to process PAINT event at the same
+//       time as input events.
+
 class VJ_CLASS_API GlWindowWin32
    : public GlWindow
    , public gadget::InputAreaWin32
-// , public gadget::EventWindowWin32
 {
 public:
    GlWindowWin32();
@@ -91,18 +109,10 @@ public:
     */
    virtual void checkEvents();
 
+	/**
+    * Configure the GlWindow using information from the Display.
+	 */
    void configWindow( vrj::Display* disp );
-   /*
-   virtual void setDelegate(gadget::EventWindowWin32* delegate)
-   {
-      InputAreaWin32::setDelegate(delegate);
-      mIsEventSource = true;
-      mUseOwnDisplay = false;
-      // Custom configuration
-      gadget::InputAreaWin32::mWidth = GlWindowWin32::mWindowWidth;
-      gadget::InputAreaWin32::mHeight = GlWindowWin32::mWindowHeight;
-   }
-   */
 
 protected:
    // WindowProcedure to deal with the events generated.
