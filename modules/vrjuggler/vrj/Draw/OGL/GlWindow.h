@@ -54,13 +54,12 @@ namespace vrj
 class Projection;
 class CameraProjection;
 
-//-------------------------------------------------------
-//: Represent cross-platform interface to OpenGL windows
-//-------------------------------------------------------
-// This interface is used by the OpenGL draw manager
-// in order to keep all platform specific code in this
-// one class.
-//-------------------------------------------------------
+/**
+ * Represent cross-platform interface to OpenGL windows.
+ * This interface is used by the OpenGL draw manager
+ * in order to keep all platform specific code in this
+ * one class.
+ */
 class VJ_CLASS_API GlWindow
 {
 public:
@@ -82,85 +81,110 @@ public:
 
 public:
 
-   //: Open the OpenGL window
-   //! PRE: this has been configured
+   /**
+    * Opens the OpenGL window.
+    * @pre this has been configured.
+    */
    virtual int open(){ return 1;}
 
-   //: Close the OpenGL window
+   /** Closes the OpenGL window. */
    virtual int close(){return 1;}
 
-   //: Sets the current OpenGL context to this window
-   //! POST: this.context is active context
+   /**
+    * Sets the current OpenGL context to this window.
+    * @post this.context is active context.
+    */
    virtual bool makeCurrent(){return false;}
 
-   //: Configure the window
-   //! POST: this' is configured based on the data in display
+   /**
+    * Configures the window.
+    * @post this is configured based on the data in display.
+    */
    virtual void config(vrj::Display* displayWindow);
 
-   //: Performs an OpenGL swap buffers command
-   //! POST: a glFlush must be called explicitly by the implementation
-   //+       or explicitly by the functions used in the implementation
+   /**
+    * Performs an OpenGL swap buffers command.
+    * @post A glFlush must be called explicitly by the implementation
+    *       or explicitly by the functions used in the implementation.
+    */
    virtual void swapBuffers(){;}
 
-   //: Handle any window events that have occured
-   //
+   /**
+    * Handles any window events that have occured.
+    */
    virtual void checkEvents() {;}
 
 public:
-   //: Sets the projection matrix for this window to proj
+   /** Sets the projection matrix for this window to proj. */
    void setProjection(vrj::Projection* proj);
 
-   //: Sets the projection matrix for this window to draw the left eye frame
-   // If the window is in stereo, it changes to the left buffer
+   /**
+    * Sets the projection matrix for this window to draw the left eye frame.
+    * If the window is in stereo, it changes to the left buffer.
+    */
    void setLeftEyeProjection();
 
-   //: Sets the projection matrix for this window to draw the right eye frame
-   // If the window is in stereo, it changes to the right buffer
+   /**
+    * Sets the projection matrix for this window to draw the right eye frame.
+    * If the window is in stereo, it changes to the right buffer.
+    */
    void setRightEyeProjection();
 
-   // Set the view buffer for the window (issues glDrawBuffer command)
+   /** Sets the view buffer for the window (issues glDrawBuffer command). */
    void setViewBuffer(vrj::Viewport::View view);
 
-   //: Set the viewport in the GL window based on float values
-   //! ARGS: xo,yo - origin
-   //+       xSize,ySize - viewport size
-   //! NOTE: The xo,yo values must be in the range [0.0,1.0]
-   //+       Where lowerleft is 0,0 and upper right is 1,1
+   /**
+    * Sets the viewport in the GL window based on float values.
+    *
+    * @param xo X-coordinate for the viewport origin.
+    * @param yo Y-coordinate for the viewport origin.
+    * @param xSize Width of the viewport.
+    * @param ySize Height of the viewport.
+    *
+    * @note The xo,yo values must be in the range [0.0,1.0]
+    *       where lowerleft is 0,0 and upper right is 1,1.
+    */
    void setViewport(float xo, float yo, float xSize, float ySize);
 
-   //: Updates the viewport and does any viewport cleaning
+   /** Updates the viewport and does any viewport cleaning. */
    void updateViewport();
 
-   //: Is the context dirty?
+   /** Is the context dirty? */
    bool hasDirtyContext() const
    { return mDirtyContext; }
 
-   //: Set the dirty bit for the context
+   /** Sets the dirty bit for the context. */
    void setDirtyContext(bool val=true)
    { mDirtyContext = val; }
 
-   //: Is the context dirty?
+   /** Is the viewport dirty? */
    bool hasDirtyViewport() const
    { return mDirtyViewport; }
 
-   //: Set the dirty bit for the context
+   /** Sets the dirty bit for the viewport. */
    void setDirtyViewport(bool val=true)
    { mDirtyViewport = val; }
 
-   //: Query wether the window is open
-   //! RETURNS: true - If window is open
+   /**
+    * Queries wether the window is open.
+    * @return true if window is open.
+    */
    bool isOpen() const
    { return window_is_open; }
 
-   //: Query wether the window is in stereo
-   //! RETURNS: true - If window is in stereo
+   /**
+    * Queries wether the window is in stereo.
+    * @return true if window is in stereo.
+    */
    bool isStereo()
    { return in_stereo;}
 
    vrj::Display* getDisplay()
    { return mDisplay;}
 
-   //!RETURNS: A unique window id
+   /**
+    * @return A unique window id.
+    */
    int getId()
    { return mWindowId; }
 
@@ -188,21 +212,24 @@ protected:
      // transforms from.
    vrj::Display* mDisplay;
 
-   bool mDirtyContext;  //: The context is dirty.  We need to (re)initialize it next draw
-   bool mDirtyViewport; //: The gl window setup (viewport, etc) is dirty and needs to be reinited.
+   bool mDirtyContext;  /**<  The context is dirty.  We need to (re)initialize it next draw */
+   bool mDirtyViewport; /**  The GL window setup (viewport, etc) is dirty and needs to be reinited. */
 
-   bool in_stereo;      //: Wether the display is actually in stereo
-                        // if we wanted a stereo display but couldn't open it
-                        // we fall back to mono, and this will be false.
-   bool  border;        //: Do we have a border
-   bool window_is_open; //: Is the window open
+   /**
+    * Wether the display is actually in stereo if we wanted a stereo display
+    * but couldn't open it we fall back to mono, and this will be false.
+    */
+   bool in_stereo;
+
+   bool  border;        /**<  Do we have a border? */
+   bool window_is_open; /**< Is the window open? */
    int  window_width, window_height;
-   int  origin_x, origin_y;          //: lower-left corner of window
-   int  mWindowId;                  //: A unique window id to identify us
+   int  origin_x, origin_y;         /**< lower-left corner of window */
+   int  mWindowId;                  /**< A unique window id to identify us */
 
 private:
    static vpr::Mutex mWinIdMutex;
-   static int        mCurMaxWinId;             // The current maximum window id
+   static int        mCurMaxWinId;  /**< The current maximum window id */
 
    static int getNextWindowId();
 };

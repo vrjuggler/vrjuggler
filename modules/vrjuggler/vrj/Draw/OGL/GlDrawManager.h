@@ -70,119 +70,142 @@ namespace vrj
    class GlApp;
    class SimViewport;
 
-//-----------------------------------------------
-//: Concrete Singleton Class for OpenGL drawing
-//
-//    Responsible for all OGL based rendering.
-//
-//  GlDrawManager is an active object.  It manages
-// ogl pipes and windows.  In addition, it triggers
-// rendering, swapping, and syncing of the windows
-// under it's control.
-//
-// All access to the ogl rendering structures has
-// to happen from the control thread or in the case
-// of context sensitive functions, from the control
-// thread of the managed pipes. Because of this,
-// the object uses queues to hold new windows.
-//
-// @author Allen Bierbaum
-//  Date: 1-7-98
-//------------------------------------------------
-//! PUBLIC_API:
+/**
+ * Concrete Singleton Class for OpenGL drawing.
+ *
+ * Responsible for all OGL based rendering.
+ *
+ * GlDrawManager is an active object.  It manages
+ * ogl pipes and windows.  In addition, it triggers
+ * rendering, swapping, and syncing of the windows
+ * under it's control.
+ *
+ * All access to the ogl rendering structures has
+ * to happen from the control thread or in the case
+ * of context sensitive functions, from the control
+ * thread of the managed pipes. Because of this,
+ * the object uses queues to hold new windows.
+ *
+ * @date 1-7-98
+ */
 class VJ_CLASS_API GlDrawManager : public DrawManager
 {
 public:
    friend class GlPipe;
    friend class GlContextDataBase;
 
-    //: Function to config API specific stuff.
-    // Takes a chunkDB and extracts API specific stuff
+   /**
+    * Function to config API specific stuff.
+    * Takes a chunkDB and extracts API specific stuff
+    */
    //**//virtual void configInitial(jccl::ConfigChunkDB*  chunkDB);
 
-   //: Start the control loop
+   /** Starts the control loop. */
    virtual void start();
 
-   //: Enable a frame to be drawn
+   /** Enables a frame to be drawn. */
    virtual void draw();
 
-    //: Blocks until the end of the frame
-    //! POST: The frame has been drawn
+   /**
+    * Blocks until the end of the frame.
+    *
+    * @post The frame has been drawn.
+    */
    virtual void sync();
 
-   //: Control loop for the manager
+   /** Control loop for the manager. */
    void main(void* nullParam);
 
-   //: Initialize the drawing API (if not already running)
+   /** Initializes the drawing API (if not already running). */
    virtual void initAPI();
 
-   //: Callback when display is added to display manager
-   //! NOTE: This function can only be called by the display manager
-   //+      functioning in the kernel thread to signal a new display added
-   //+      This guarantees that we are not rendering currently.
-   //+      We will most likely be waiting for a render trigger.
+   /**
+    * Callback when display is added to display manager.
+    *
+    * @note This function can only be called by the display manager
+    *       functioning in the kernel thread to signal a new display added
+    *       This guarantees that we are not rendering currently.
+    *       We will most likely be waiting for a render trigger.
+    */
    virtual void addDisplay(Display* disp);
 
-   //: Callback when display is removed to display manager
+   /** Callback when display is removed to display manager. */
    virtual void removeDisplay(Display* disp);
 
-   //: Shutdown the drawing API
+   /** Shutdown the drawing API. */
    virtual void closeAPI();
 
-   //: Output some debug info
+   /** Outputs some debug info. */
    virtual void outStream(std::ostream& out);
 
-   //: Draw all the ogl pipes/windows
+   /** Draws all the ogl pipes/windows. */
    void drawAllPipes();
 
-   //: Set the app the draw should interact with.
+   /** Set the app the draw should interact with. */
    virtual void setApp(App* _app);
 
-   //: Return the app we are rendering
+   /** Returns the app we are rendering. */
    GlApp* getApp();
 
    //void setDisplayManager(DisplayManager* _dispMgr);
 
 public: // Chunk handlers
-   //: Add the chunk to the configuration
-   //! PRE: configCanHandle(chunk) == true
-   //! RETURNS: success
+   /**
+    * Adds the chunk to the configuration.
+    *
+    * @pre configCanHandle(chunk) == true
+    * @return success
+    */
    virtual bool configAdd(jccl::ConfigChunkPtr chunk);
 
-   //: Remove the chunk from the current configuration
-   //! PRE: configCanHandle(chunk) == true
-   //!RETURNS: success
+   /**
+    * Removes the chunk from the current configuration.
+    *
+    * @pre configCanHandle(chunk) == true
+    * @return success
+    */
    virtual bool configRemove(jccl::ConfigChunkPtr chunk);
 
-   //: Can the handler handle the given chunk?
-   //! RETURNS: true - Can handle it
-   //+          false - Can't handle it
+   /**
+    * Can the handler handle the given chunk?
+    *
+    * @return true if we can handle it; false if we can't.
+    */
    virtual bool configCanHandle(jccl::ConfigChunkPtr chunk);
 
 
 public:  // Drawing functions used by library
-   //: Draw any objects that the manager needs to display
-   // i.e. Gloves, etc
+   /**
+    * Draws any objects that the manager needs to display
+    * i.e. Gloves, etc.
+    */
    void drawObjects();
 
-   //: Draw projections in Opengl
+   /** Draws projections in OpenGL. */
    void drawProjections(bool drawFrustum, gmtl::Vec3f surfColor);
 
-   //: Draw a simulator using OpenGL commands
-   //! NOTE: This is called internally by the library
+   /**
+    * Draws a simulator using OpenGL commands.
+    *
+    * @note This is called internally by the library.
+    */
    void drawSimulator(SimViewport* sim);
 
 public:
-   //: Get ptr to the current user data
-   // Should be used in the draw function
-   //! NOTE: This user data is valid ONLY
-   //+ in draw().  It is not valid anywhere else.
+   /**
+    * Gets ptr to the current user data.  Should be used in the draw function.
+    *
+    * @note This user data is valid ONLY in draw().  It is not valid anywhere
+    *       else.
+    */
    GlUserData* currentUserData()
    { return &(*mUserData); }
 
-   //: Returns a unique identifier for the current context
-   //! NOTE: This id is ONLY valid in
-   //+ contextInit() and draw()
+   /**
+    * Returns a unique identifier for the current context.
+    *
+    * @note This id is ONLY valid in contextInit() and draw().
+    */
    int getCurrentContext()
    { return (*mContextId); }
 
@@ -199,38 +222,41 @@ protected:     // --- Geom helpers --- //
    GLUquadricObj* mQuadObj;
 
 protected:
-   //: Factory function to get system specific OpenGL window
-    //! POST: Returns an OpenGL window for the current system
+   /**
+    * Factory function to get system specific OpenGL window.
+    *
+    * @post Returns an OpenGL window for the current system.
+    */
    GlWindow* getGLWindow();
 
    void setCurrentContext(int val)
    { (*mContextId) = val; }
 
-   //: Set the dirty bits off all the gl windows
+   /** Sets the dirty bits off all the GL windows. */
    void dirtyAllWindows();
 
-   //: Is the window a valid window for the draw manager
+   /** Is the window a valid window for the draw manager? */
    bool isValidWindow(GlWindow* win);
 
 
 protected:
    // --- Config Data --- //
-   int      numPipes;     //: The number of pipes in the system
+   int      numPipes;     /**<  The number of pipes in the system */
 
    // --- API data --- //
-   GlApp*                 mApp;      //: The OpenGL application
-   std::vector<GlWindow*> mWins;     //: A list of the windows in the system
-   std::vector<GlPipe*>   pipes;    //: A list of the pipes in the system
+   GlApp*                 mApp;      /**< The OpenGL application */
+   std::vector<GlWindow*> mWins;     /**< A list of the windows in the system */
+   std::vector<GlPipe*>   pipes;    /**< A list of the pipes in the system */
 
    // --- Helper field data --- //
-   vpr::TSObjectProxy<int>             mContextId;    //: TS Data for context id
-   vpr::TSObjectProxy<GlUserData>    mUserData;     //: User data for draw func
+   vpr::TSObjectProxy<int>             mContextId;  /**<  TS Data for context id */
+   vpr::TSObjectProxy<GlUserData>    mUserData;     /**  User data for draw func */
 
    // --- MP Stuff -- //
-   vpr::Semaphore    drawTriggerSema;  // Semaphore for draw trigger
-   vpr::Semaphore    drawDoneSema;     // Semaphore for drawing done
-   vpr::Semaphore    mRuntimeConfigSema;  //: Protects run-time config.  Only when this semaphore
-                                       //+ is acquired can run-time config occur
+   vpr::Semaphore    drawTriggerSema;  /**< Semaphore for draw trigger */
+   vpr::Semaphore    drawDoneSema;     /**< Semaphore for drawing done */
+   vpr::Semaphore    mRuntimeConfigSema;  /**< Protects run-time config.  Only when this semaphore
+                                        *  is acquired can run-time config occur */
 
 protected:
    GlDrawManager() : drawTriggerSema(0), drawDoneSema(0), mRuntimeConfigSema(0)

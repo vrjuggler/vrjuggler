@@ -43,14 +43,13 @@
 namespace vrj
 {
 
-//---------------------------------------------------
-//: Holds data about gl users for draw process
-//
-// This class holds interesting information that can
-// be used in a gl draw callback to find information
-// about the user.
-//---------------------------------------------------
-//!PUBLIC_API:
+/**
+ * Holds data about gl users for draw process.
+ *
+ * This class holds interesting information that can
+ * be used in a gl draw callback to find information
+ * about the user.
+ */
 class GlUserData
 {
 public:

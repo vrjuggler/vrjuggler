@@ -55,8 +55,10 @@ namespace vrj
 {
 
 
-//: Start the pipe running
-//! POST: The pipe has it's own thread of control and is ready to operate
+/**
+ * Starts the pipe running.
+ * @post The pipe has it's own thread of control and is ready to operate.
+ */
 int GlPipe::start()
 {
     vprASSERT(mThreadRunning == false);        // We should not be running yet
@@ -72,8 +74,10 @@ int GlPipe::start()
     return 1;
 }
 
-//: Trigger rendering of the pipe to start
-//! POST: The pipe has be told to start rendering
+/**
+ * Triggers rendering of the pipe to start.
+ * @post The pipe has be told to start rendering.
+ */
 void GlPipe::triggerRender()
 {
    //vprASSERT(mThreadRunning == true);      // We must be running
@@ -86,8 +90,10 @@ void GlPipe::triggerRender()
    renderTriggerSema.release();
 }
 
-//: Blocks until rendering of the windows is completed
-//! POST: The pipe has completed its rendering
+/**
+ * Blocks until rendering of the windows is completed.
+ * @post The pipe has completed its rendering.
+ */
 void GlPipe::completeRender()
 {
    vprASSERT(mThreadRunning == true);      // We must be running
@@ -95,14 +101,14 @@ void GlPipe::completeRender()
    renderCompleteSema.acquire();
 }
 
-//: Trigger swapping of all pipe's windows
+/** Triggers swapping of all pipe's windows. */
 void GlPipe::triggerSwap()
 {
    vprASSERT(mThreadRunning == true);
    swapTriggerSema.release();
 }
 
-//: Blocks until swapping of the windows is completed
+/** Blocks until swapping of the windows is completed. */
 void GlPipe::completeSwap()
 {
    vprASSERT(mThreadRunning == true);
@@ -110,8 +116,10 @@ void GlPipe::completeSwap()
 }
 
 
-/// Add a GLWindow to the window list
-// Control loop must now open the window on the next frame
+/**
+ * Adds a GLWindow to the window list.
+ * Control loop must now open the window on the next frame.
+ */
 void GlPipe::addWindow(GlWindow* win)
 {
    vpr::Guard<vpr::Mutex> guardNew(newWinLock);       // Protect the data
@@ -121,8 +129,10 @@ void GlPipe::addWindow(GlWindow* win)
    newWins.push_back(win);
 }
 
-//: Remove a GLWindow from the window list
-//! NOTE: The window is not actually removed until the next draw trigger
+/**
+ * Removes a GLWindow from the window list.
+ * @note The window is not actually removed until the next draw trigger.
+ */
 void GlPipe::removeWindow(GlWindow* win)
 {
    vpr::Guard<vpr::Mutex> guardClosing(mClosingWinLock);
@@ -198,9 +208,12 @@ void GlPipe::controlLoop(void* nullParam)
 
 }
 
-// Closes all the windows in the list of windows to close
-//! POST: The window to close is removed from the list of open windows
-//+       and the list of newWins
+/**
+ * Closes all the windows in the list of windows to close.
+ *
+ * @post The window to close is removed from the list of open windows
+ *       and the list of newWins.
+ */
 void GlPipe::checkForWindowsToClose()
 {
    if(mClosingWins.size() > 0)   // If there are windows to close
@@ -241,8 +254,10 @@ void GlPipe::checkForWindowsToClose()
    }
 }
 
-//:  Checks for any new windows to add to the pipe
-//! POST: Any new windows will be opened and added to the pipe's rendering list
+/**
+ *  Checks for any new windows to add to the pipe.
+ * @post Any new windows will be opened and added to the pipe's rendering list.
+ */
 void GlPipe::checkForNewWindows()
 {
    if (newWins.size() > 0)  // If there are new windows added
@@ -274,8 +289,10 @@ void GlPipe::checkForNewWindows()
    }
 }
 
-//: Renders the window using OpenGL
-//! POST: win is rendered (In stereo if it is a stereo window)
+/**
+ * Renders the window using OpenGL.
+ * @post win is rendered (In stereo if it is a stereo window).
+ */
 void GlPipe::renderWindow(GlWindow* win)
 {
    float vp_ox, vp_oy, vp_sx, vp_sy;            // Viewport origin and size
@@ -419,8 +436,10 @@ void GlPipe::renderWindow(GlWindow* win)
 
 }
 
-//: Swaps the buffers of the given window
-// Make the context current, and swap the window
+/**
+ * Swaps the buffers of the given window.
+ * Make the context current, and swap the window.
+ */
 void GlPipe::swapWindowBuffers(GlWindow* win)
 {
    win->makeCurrent();           // Set correct context
