@@ -39,7 +39,9 @@
 #include <Config/vjConfigChunk.h>
 class vjInput;
 
-//: Base class for all proxies
+//: Base class for all input proxies
+// TODO rename to vjInputProxy
+//
 //!PUBLIC_API:
 class vjProxy
 {
