@@ -1,6 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
-Aug-25-2002 nonchocoboy Added ability to add new values to properties with
+Aug-15-2002 nonchocoboy Integated editors with the ConfigBroker and contexts.
+                        NEW VERSION: 0.8.0
+Aug-15-2002 nonchocoboy Added ability to add new values to properties with
                         variable-length values.
 Aug-14-2002 nonchocoboy Introduced the concept of a configuration context which
                         provides a view into a subset of the open files which
