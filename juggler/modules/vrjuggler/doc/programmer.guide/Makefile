@@ -21,7 +21,12 @@ SVG_IMAGES= \
 	figures/userOpenSGApp_hierarchy.svg	\
 	figures/userOsgApp_hierarchy.svg	\
 	figures/userPfApp_hierarchy.svg
-IMAGES=		$(SVG_IMAGES:%.svg=%.png)
+IMAGES=		$(SVG_IMAGES:%.svg=%.png)	\
+		figures/eq_m1_eq_inv_m2.png	\
+		figures/eq_m1_eq_m1_m2.png	\
+		figures/eq_m1_eq_m2_m1.png	\
+		figures/eq_m1_eq_tr_m2.png	\
+		figures/eq_v_eq_m_v.png
 
 # Fill these in!!  Together, they make up the installation prefix.
 webroot=	$(HOME)/public_html/jugglerweb
