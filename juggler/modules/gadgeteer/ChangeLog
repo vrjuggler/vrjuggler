@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jun-16-2003 patrickh    Fixed initialization bugs with the MotionStar driver.
+                        NEW VERSION: 0.12.2
 May-30-2003 patrickh    Fixed the Polhemus Fastrak driver.  Submitted by
                         Eric Klein <elklein@ucdavis.edu>.
                         NEW VERSION: 0.12.1
