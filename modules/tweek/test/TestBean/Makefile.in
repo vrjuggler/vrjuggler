@@ -1,0 +1,49 @@
+default: all
+
+# Basic options.
+srcdir			= @srcdir@
+JAVAC_FLAGS		= -classpath $(CLASSPATH) -sourcepath $(srcdir) -d .
+JCPS			= @JCPS@
+
+CLASSPATH		= $(TWEEK_BASE_DIR)/bin/TweekEvents.jar
+
+# Commands to execute.
+JAVA_COMPILE		= @JAVAC@ $(JAVAC_FLAGS)
+JAR			= @JAR@
+
+VPATH		= @srcdir@
+
+CLASSES		= testbean/TestBean.class
+
+# -----------------------------------------------------------------------------
+# Application build targets.
+# -----------------------------------------------------------------------------
+all:
+	$(MAKE) java
+	$(MAKE) TestBean.jar
+	-$(MAKE) install
+
+java: $(CLASSES)
+
+TestBean.jar: $(CLASSES)
+	$(JAR) cvfm $@ $(srcdir)/test.MF $(CLASSES)
+
+install:
+	cp TestBean.jar $(TWEEK_BASE_DIR)/bin/beans
+	cp $(srcdir)/TestBean.xml $(TWEEK_BASE_DIR)/bin/beans
+
+# Suffix rules for building object files.
+.SUFFIXES: .java .class
+
+.java.class:
+	$(JAVA_COMPILE) $<
+
+# -----------------------------------------------------------------------------
+# Clean-up targets.
+# -----------------------------------------------------------------------------
+clean:
+	rm -rf testbean
+
+clobber:
+	@$(MAKE) clean
+	rm -f TestBean.jar

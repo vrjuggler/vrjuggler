@@ -650,6 +650,7 @@ AC_OUTPUT(tweek-config
           tweek/idl/Makefile
           test/Makefile
           test/NetworkTestBean/Makefile
+          test/TestBean/Makefile
           test/corba/Makefile
           mtree/TWEEK.include.dist
           mtree/TWEEK.install.dist
