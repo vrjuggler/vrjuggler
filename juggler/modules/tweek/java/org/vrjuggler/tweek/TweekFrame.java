@@ -338,9 +338,6 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
 
       if ( dialog.getStatus() == ConnectionDialog.OK_OPTION )
       {
-         System.out.println("NameService host: " + dialog.getNameServiceHost());
-         System.out.println("NameService post: " + dialog.getNameServicePort());
-
          if ( dialog.getNameServiceHost() != null )
          {
             CorbaService new_orb = new CorbaService(dialog.getNameServiceHost(),
