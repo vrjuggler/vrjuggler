@@ -76,6 +76,7 @@ public:
 protected:
    int         mProxyIndex;         //: The index of the proxy
    std::string mProxyName;          //: The name of the proxy (or alias) we are looking at
+   bool        mNameSet;            //: Has the user set a name??
 
 public:
    static void refreshAllDevices();
