@@ -33,6 +33,8 @@
 #ifndef _VPR_SOCKET_H_
 #define _VPR_SOCKET_H_
 
+#include <vpr/vprConfig.h>
+
 #include <string>
 
 #include <vpr/IO/BlockIO.h>

@@ -42,6 +42,7 @@
 #include <vpr/IO/IOSys.h>
 
 #include <vpr/Util/Interval.h>
+#include <vpr/Util/Status.h>
 
 
 namespace vpr {
