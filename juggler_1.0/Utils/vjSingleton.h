@@ -10,7 +10,7 @@
 // Double checked locking version
 //
 
-
+///*
 #define vjSingletonHeader(TYPE) \
 public:                                        \
    static TYPE* instance(void)                 \
@@ -50,7 +50,7 @@ private:                                       \
 #define vjSingletonImp(TYPE) \
             TYPE* TYPE::_instance = NULL; \
             vjMutex  TYPE::_inst_lock
-
+//*/
 
 //
 // Non-locking version
