@@ -437,24 +437,6 @@ void aMotionStar::sample() {
 
     //    printf("\n");
 
-    /*    for(cpos= 0;cpos< 42;cpos=cpos+2) {
-      if (cpos % 14 == 0){
-        printf("\n");
-        printf(" %2x%2x=", response.buffer[cpos], response.buffer[cpos+1]);
-      } else if ((cpos % 14) < 8){
-        printf(" %2f",  144 * rawToFloat(response.buffer[cpos], response.buffer[cpos+1]));
-      } else { // angle
-        printf(" %2x%2x=", response.buffer[cpos], response.buffer[cpos+1]);
-        printf(" %2f",  180.0*  rawToFloat(response.buffer[cpos], response.buffer[cpos+1]));
-      }
-
-      for(cpos=50;cpos<100;cpos=cpos+2) {
-        printf(" %2x%2x", response.buffer[cpos], response.buffer[cpos+1]);
-      }
-      printf("\n");
-
-    }
-    */
     int o; // Offset -- 14 * bird number (bnum)
     for (int bnum = 0; bnum < birdsRequired; bnum++)
     {
@@ -705,16 +687,6 @@ void aMotionStar::set_status_fbb(unsigned char fbb_addr)
 
 } // end void aMotionStar::set_status_fbb()
 
-
-float aMotionStar::rawToFloat(char r1,  char r2){
-  short int ival1, ival2, val;
-  ival1 = r1 & 0xff;
-  /*  ival2 = r2; */
-   ival2 = r2 & 0xff;
-  val = (ival1 << 8)|  ival2 << 0;
-  return((float)val)/0x7fff;
-
-} // end float aMotionStar::rawToFloat()
 
 void aMotionStar::setHemisphere (int n) { hemisphere = n; }
 void aMotionStar::setBirdFormat (unsigned int n) { birdFormat = n; }
