@@ -150,7 +150,13 @@ public:
    void secf(const float num)
    { setf(num, Interval::Sec); }
    float secf() const
-   { return (float(mMicroSeconds)/1000000.0f); }
+   {
+#ifdef VPR_OS_Win32
+      return (float((vpr::Int64) mMicroSeconds)/1000000.0f);
+#else
+      return (float(mMicroSeconds)/1000000.0f);
+#endif
+   }
 
    void msec(const vpr::Uint64 num)
    { set(num, Interval::Msec); }
@@ -159,7 +165,13 @@ public:
    void msecf(const float num)
    { setf(num, Interval::Msec); }
    float msecf() const
-   { return (float(mMicroSeconds)/1000.0f); }
+   {
+#ifdef VPR_OS_Win32
+      return (float((vpr::Int64) mMicroSeconds)/1000.0f);
+#else
+      return (float(mMicroSeconds)/1000.0f);
+#endif
+   }
 
    void usec(const vpr::Uint64 num)
    { set(num, Interval::Usec); }
@@ -168,7 +180,13 @@ public:
    void usecf(const float num)
    { setf(num, Interval::Usec); }
    float usecf() const
-   { return (mMicroSeconds); }
+   {
+#ifdef VPR_OS_Win32
+      return ((vpr::Int64) mMicroSeconds);
+#else
+      return (mMicroSeconds);
+#endif
+   }
 
    vpr::Uint64 getBaseVal() const
    { return mMicroSeconds; }
