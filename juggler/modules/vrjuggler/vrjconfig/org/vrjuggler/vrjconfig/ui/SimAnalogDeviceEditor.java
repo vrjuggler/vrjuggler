@@ -97,12 +97,12 @@ public class SimAnalogDeviceEditor
       ConfigChunk old = this.device;
       if (this.device != null)
       {
-         this.device.removePropertyChangeListener(deviceListener);
+         this.device.removeConfigChunkListener(deviceListener);
       }
       this.device = device;
       if (this.device != null)
       {
-         this.device.addPropertyChangeListener(deviceListener);
+         this.device.addConfigChunkListener(deviceListener);
       }
 
       // Let the model know
@@ -219,12 +219,16 @@ public class SimAnalogDeviceEditor
     * Specialized listener on the ConfigChunk.
     */
    private class DeviceListener
-      implements PropertyChangeListener
+      implements ConfigChunkListener
    {
-      public void propertyChange(PropertyChangeEvent evt)
+      public void nameChanged(ConfigChunkEvent evt)
       {
          System.err.println("SimAnalogDeviceEditor.deviceListener: Device changed!");
       }
+
+      public void propertyValueChanged(ConfigChunkEvent evt) { nameChanged(evt); }
+      public void propertyValueAdded(ConfigChunkEvent evt) { nameChanged(evt); }
+      public void propertyValueRemoved(ConfigChunkEvent evt) { nameChanged(evt); }
    }
 
    /**
