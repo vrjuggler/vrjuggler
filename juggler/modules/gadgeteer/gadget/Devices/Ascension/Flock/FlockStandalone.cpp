@@ -57,7 +57,7 @@
 // Result: configures internal data members,
 //         doesn't actually talk to the FOB yet.
 FlockStandalone::FlockStandalone(const char* const port, const int& baud,
-                                 const int& sync, const int& block,
+                                 const int& sync, const bool& block,
                                  const int& numBrds, const int& transmit,
                                  const BIRD_HEMI& hemi, const BIRD_FILT& filt,
                                  const char& report, const char* const calfile)
@@ -431,7 +431,7 @@ void FlockStandalone::setSync(const int& sync)
 //: set blocking of flock
 //  see flock manual for details.
 //  NOTE: flock.isActive() must be false to use this function
-void FlockStandalone::setBlocking( const int& blVal )
+void FlockStandalone::setBlocking( const bool& blVal )
 {
    if ( mActive )
    {
