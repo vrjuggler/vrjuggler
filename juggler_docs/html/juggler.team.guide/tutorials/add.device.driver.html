@@ -245,7 +245,13 @@ See also: <a href="${PROGRAMMERGUIDE}/adv.topics/run.time.config/run-time-how-to
      end
    </pre>
    Of course, depending on your hardware configuration, 
-   you may or may not need all these parameters.<BR>
+   you may or may not need all these parameters. 
+   (currently vjInput requires baud and port though, 
+    but this will change in future versions)<BR><BR>
+    <B>NOTE: <i>The PosProxy chunk within your chunk description file has to be modified
+      to include new position devices.  
+      Since MyButtonDevice is a position device, you'll need to do this.
+    </i></b><BR>
    <BR>
    Next, you need to configure your device by creating a <b>configuration chunk</b>:
    (like before, we suggest you use <a href="${VJCONTROL}">VJControl</a> to 
