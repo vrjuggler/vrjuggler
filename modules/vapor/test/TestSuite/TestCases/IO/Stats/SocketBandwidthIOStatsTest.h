@@ -145,16 +145,17 @@ public:
               // Dump out write stats
               std::cout << "Socket Write bandwidth stats ---\n";
               std::cout << "stats type: " << typeid(stats).name() << std::endl;
-              std::cout << "      sent bytes: " << bw_interface->getTotalBytesSent() << std::endl
-                        << "      read bytes: " << bw_interface->getTotalBytesRead() << std::endl
-                        << "         av send: " << bw_interface->getAverageSendBW()/1024.0f << " k/s" << std::endl
-                        << "         av read: " << bw_interface->getAverageReadBW()/1024.0f << " k/s" << std::endl
-                        << "        STA send: " << bw_interface->getSTASendBW()/1024.0f << " k/s" << std::endl
-                        << "        STA read: " << bw_interface->getSTAReadBW()/1024.0f << " k/s" << std::endl
-                        << "       Inst send: " << bw_interface->getInstSendBW()/1024.0f << " k/s" << std::endl
-                        << "       Inst read: " << bw_interface->getInstReadBW()/1024.0f << " k/s" << std::endl
-                        << "    Max STA send: " << bw_interface->getMaxSTASendBW()/1024.0f << " k/s" << std::endl
-                        << "    Max STA read: " << bw_interface->getMaxSTAReadBW()/1024.0f << " k/s" << std::endl
+              std::cout << "      sent bytes: " << bw_interface->writeStats().getTotal() << std::endl
+                        << "         av send: " << bw_interface->writeStats().getMean()/1024.0f << " k/s" << std::endl
+                        << "        STA send: " << bw_interface->writeStats().getSTA()/1024.0f << " k/s" << std::endl
+                        << "       Inst send: " << bw_interface->writeStats().getInstAverage()/1024.0f << " k/s" << std::endl
+                        << "    Max STA send: " << bw_interface->writeStats().getMaxSTA()/1024.0f << " k/s" << std::endl
+                        
+                        << "      read bytes: " << bw_interface->readStats().getTotal() << std::endl
+                        << "         av read: " << bw_interface->readStats().getMean()/1024.0f << " k/s" << std::endl
+                        << "        STA read: " << bw_interface->readStats().getSTA()/1024.0f << " k/s" << std::endl
+                        << "       Inst read: " << bw_interface->readStats().getInstAverage()/1024.0f << " k/s" << std::endl
+                        << "    Max STA read: " << bw_interface->readStats().getMaxSTA()/1024.0f << " k/s" << std::endl
                         << std::endl;
            }
            else
@@ -204,17 +205,18 @@ public:
                // Dump out write stats
            std::cout << "Socket Read bandwidth stats ---\n";
            std::cout << "stats type: " << typeid(stats).name() << std::endl;
-           std::cout << "      sent bytes: " << bw_interface->getTotalBytesSent() << std::endl
-                     << "      read bytes: " << bw_interface->getTotalBytesRead() << std::endl
-                     << "         av send: " << bw_interface->getAverageSendBW()/1024.0f << " k/s" << std::endl
-                     << "         av read: " << bw_interface->getAverageReadBW()/1024.0f << " k/s" << std::endl
-                     << "        STA send: " << bw_interface->getSTASendBW()/1024.0f << " k/s" << std::endl
-                     << "        STA read: " << bw_interface->getSTAReadBW()/1024.0f << " k/s" << std::endl
-                     << "       Inst send: " << bw_interface->getInstSendBW()/1024.0f << " k/s" << std::endl
-                     << "       Inst read: " << bw_interface->getInstReadBW()/1024.0f << " k/s" << std::endl
-                     << "    Max STA send: " << bw_interface->getMaxSTASendBW()/1024.0f << " k/s" << std::endl
-                     << "    Max STA read: " << bw_interface->getMaxSTAReadBW()/1024.0f << " k/s" << std::endl
-                     << std::endl;
+           std::cout << "      sent bytes: " << bw_interface->writeStats().getTotal() << std::endl
+                        << "         av send: " << bw_interface->writeStats().getMean()/1024.0f << " k/s" << std::endl
+                        << "        STA send: " << bw_interface->writeStats().getSTA()/1024.0f << " k/s" << std::endl
+                        << "       Inst send: " << bw_interface->writeStats().getInstAverage()/1024.0f << " k/s" << std::endl
+                        << "    Max STA send: " << bw_interface->writeStats().getMaxSTA()/1024.0f << " k/s" << std::endl
+                        
+                        << "      read bytes: " << bw_interface->readStats().getTotal() << std::endl
+                        << "         av read: " << bw_interface->readStats().getMean()/1024.0f << " k/s" << std::endl
+                        << "        STA read: " << bw_interface->readStats().getSTA()/1024.0f << " k/s" << std::endl
+                        << "       Inst read: " << bw_interface->readStats().getInstAverage()/1024.0f << " k/s" << std::endl
+                        << "    Max STA read: " << bw_interface->readStats().getMaxSTA()/1024.0f << " k/s" << std::endl
+                        << std::endl;
            }
            else
           {
