@@ -187,7 +187,7 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
               example, we will use the OpenORB 1.3 JAR file list.</p><pre class="screen">../configure.pl --prefix=$HOME/vrjuggler-2.0 --with-java-orb=OpenORB --with-java-orb-jar="&lt;JAVA_ORB_PATH&gt;/lib/openorb-1.3.0.jar:&lt;JAVA_ORB_PATH&gt;/lib/avalon-framework.jar:&lt;JAVA_ORB_PATH&gt;/lib/logkit.jar"</pre><p>If you are using JDK 1.4.0 or newer, your command line can
               be simplified to the following:</p><pre class="screen">../configure.pl --prefix=$HOME/vrjuggler-2.0 --with-java-orb=JDK</pre><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>You will probably have to specify the paths to your
                 local CppDOM, GMTL, and Boost installations using the options
-                <tt class="option">--with-cppdom</tt>, <tt class="option">--with-gmtl-prefix</tt>
+                <tt class="option">--with-cppdom</tt>, <tt class="option">--with-gmtl</tt>
                 and <tt class="option">--with-boost</tt> unless they are installed in
                 the default location (<tt class="filename">/usr/local</tt>). By
                 default, Boost 1.31 installs its header files in a
@@ -216,7 +216,7 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
           consider the case where the GMTL library is installed in
           <tt class="filename">/home/user1/pkgs/GMTL</tt> with the headers in
           <tt class="filename">/home/user1/pkgs/GMTL/include</tt>. To use this
-          installation, run <span><b class="command">configure.pl</b></span> as follows:</p><pre class="screen">../configure.pl --with-gmtl-prefix=/home/user1/pkgs/GMTL</pre><p>The --<tt class="option">with-gmtl-prefix</tt> option could of course
+          installation, run <span><b class="command">configure.pl</b></span> as follows:</p><pre class="screen">../configure.pl --with-gmtl=/home/user1/pkgs/GMTL</pre><p>The <tt class="option">--with-gmtl</tt> option could of course
           be mixed in with those shown in the previous section.</p></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="compile.vrjuggler.section"></a>Compiling VR Juggler</h4></div></div><div></div></div><p>Once the configuration process is complete, the code can be
         compiled. Remember that we require the use of GNU make 3.78 or newer.</p><div class="orderedlist"><ol type="1"><li><p>Compile the source tree using GNU make.</p><pre class="screen">gmake build</pre></li><li><p>Once this completes, you will have a full build of VR
             Juggler. For those who are not interested in developing VR Juggler
