@@ -288,24 +288,6 @@ FileHandleUNIX::read (void* buffer, const size_t length) {
 
 // ----------------------------------------------------------------------------
 // Read the specified number of bytes from the file handle into the given
-// bufer.
-// ----------------------------------------------------------------------------
-ssize_t
-FileHandleUNIX::read (unsigned char* buffer, const size_t length) {
-    return read((void*) buffer, length);
-}
-
-// ----------------------------------------------------------------------------
-// Read the specified number of bytes from the file handle into the given
-// bufer.
-// ----------------------------------------------------------------------------
-ssize_t
-FileHandleUNIX::read (char* buffer, const size_t length) {
-    return read((void*) buffer, length);
-}
-
-// ----------------------------------------------------------------------------
-// Read the specified number of bytes from the file handle into the given
 // buffer.
 // ----------------------------------------------------------------------------
 ssize_t
@@ -411,24 +393,6 @@ FileHandleUNIX::readn (void* buffer, const size_t length) {
 // given buffer.
 // ----------------------------------------------------------------------------
 ssize_t
-FileHandleUNIX::readn (unsigned char* buffer, const size_t length) {
-    return readn((void*) buffer, length);
-}
-
-// ----------------------------------------------------------------------------
-// Read exactly the specified number of bytes from the file handle into the
-// given buffer.
-// ----------------------------------------------------------------------------
-ssize_t
-FileHandleUNIX::readn (char* buffer, const size_t length) {
-    return readn((void*) buffer, length);
-}
-
-// ----------------------------------------------------------------------------
-// Read exactly the specified number of bytes from the file handle into the
-// given buffer.
-// ----------------------------------------------------------------------------
-ssize_t
 FileHandleUNIX::readn (std::string& buffer, const size_t length) {
     size_t buf_len;
     char* temp_buf;
@@ -496,22 +460,6 @@ FileHandleUNIX::write (const void* buffer, const size_t length) {
     }
 
     return bytes;
-}
-
-// ----------------------------------------------------------------------------
-// Write the buffer to the file handle.
-// ----------------------------------------------------------------------------
-ssize_t
-FileHandleUNIX::write (const unsigned char* buffer, const size_t length) {
-    return write((void*) buffer, length);
-}
-
-// ----------------------------------------------------------------------------
-// Write the buffer to the file handle.
-// ----------------------------------------------------------------------------
-ssize_t
-FileHandleUNIX::write (const char* buffer, const size_t length) {
-    return write((void*) buffer, length);
 }
 
 // ----------------------------------------------------------------------------
