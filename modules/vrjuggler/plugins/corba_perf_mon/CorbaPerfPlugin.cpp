@@ -232,7 +232,7 @@ namespace vrj
                         << "exception while trying to register subject.\n"
                         << vprDEBUG_FLUSH;
                      vprDEBUG_NEXT(vrjDBG_PLUGIN, vprDBG_WARNING_LVL)
-                     << "Disabling CORBA remote run-time reconfiguration.\n"
+                     << "Disabling CORBAmremote performance monitoring.\n"
                         << vprDEBUG_FLUSH;
                      status.setCode(vpr::ReturnStatus::Fail);
                   }
@@ -263,7 +263,7 @@ namespace vrj
          << " [CorbaPerfPlugin::startCorba()] " << err_msg << std::endl
             << vprDEBUG_FLUSH;
          vprDEBUG_NEXT(vrjDBG_PLUGIN, vprDBG_WARNING_LVL)
-         << "Disabling CORBA remote run-time reconfiguration.\n"
+         << "Disabling CORBA remote performance monitoring.\n"
             << vprDEBUG_FLUSH;
 
          delete mCorbaManager;

@@ -107,7 +107,7 @@ namespace vrj
    private:
       /**
        * Initializes and activates the local CORBA instance that we need for
-       * handling remote reconfiguration requests.
+       * handling remote performance monitoring requests.
        *
        * @param nsHost  The name of the host computer where the CORBA Naming
        *                Service is running.
