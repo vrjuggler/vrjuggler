@@ -12,8 +12,9 @@
 #
 # 
 
-
+------------------
 Table of contents:
+------------------
 1.) Choose a directory to put Juggler.
 2.) Goto that directory and checkout juggler using CVS
 3.) Enter the newly checked out Juggler source directory
