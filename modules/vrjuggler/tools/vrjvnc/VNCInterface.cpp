@@ -138,8 +138,8 @@ VNCInterface::VNCInterface(const std::string& host, const vpr::Uint16 port,
    mFramebuffer = new char[framebuffer_size];
    memset(mFramebuffer, 0, framebuffer_size);
 
-   // Define the read buffer to read one row at a time.
-   mReadBufferSize = mWidth * (mPf.size / 8);
+   // Define the read buffer to be able to read then entire frame buffer at once
+   mReadBufferSize = framebuffer_size;
 
    vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
       << "VNCInterface(): mReadBufferSize (row size) == " << mReadBufferSize
@@ -331,12 +331,19 @@ Rectangle VNCInterface::merge(const Rectangle &r1, const Rectangle &r2)
    return r;
 }
 
+/** Copy the rectange buffer at buf into the frame buffer.
+* @param buf - The buffer to read from
+* @param x,y - The origin of the target rect in the framebuffer
+* @param w,h - Width and height of the source and target rectangle buffers
+*/
 void VNCInterface::copyRectToFramebuffer(char *buf, int x, int y, int w, int h)
 {
-   int bytes_per_pixel = mPf.size / 8;
+   std::cout << "x:" << x << " y:" << y << " w:" << w << " h:" << h << std::endl;
+
+   int bytes_per_pixel = (mPf.size / 8);
 
    // Find start of the target area in the frame buffer
-   char *fbptr = mFramebuffer + (y * mWidth + x) * bytes_per_pixel;
+   char* fbptr = mFramebuffer + (((y * mWidth) + x) * bytes_per_pixel);
 
    // Copy the contents of the rectangle buffer
    // - Copy one horizontal line at a time
@@ -670,7 +677,6 @@ void VNCInterface::handleVNCFramebufferUpdate()
    for ( int i = 0; i < num_rectangles; ++i )
    {
       rfbFramebufferUpdateRectHeader rect_u;      // The rectangle header info
-      size_t lines_per_read, bytes_per_line;
 
       // Read a rectangle header from the server
       readData(&rect_u, sz_rfbFramebufferUpdateRectHeader);
@@ -698,57 +704,33 @@ void VNCInterface::handleVNCFramebufferUpdate()
          continue;
       }
 
-      // Store away the rectangle for later update
-      int x = rect_u.r.x; int y = rect_u.r.y;
-      int w = rect_u.r.w; int h = rect_u.r.h;
-
       // Now, do different things depending on the encoding
       switch (rect_u.encoding)
       {
-         case rfbEncodingRaw:
+      case rfbEncodingRaw:
+         {
             // How many lines can we copy?
-            bytes_per_line = rect_u.r.w * (mPf.size / 8);
-            lines_per_read = mReadBufferSize / bytes_per_line;
-
-            vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
-               << "Bytes per line: " << bytes_per_line << std::endl
-               << vprDEBUG_FLUSH;
-            vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
-               << "Lines to read: " << lines_per_read << std::endl
-               << vprDEBUG_FLUSH;
+            size_t bytes_in_update = rect_u.r.w * rect_u.r.h * (mPf.size /8);
+            vprASSERT(bytes_in_update <= mReadBufferSize);     // Assert read buffer is large enough
 
             // Read the entire rectangle from the server
-            while (rect_u.r.h > 0)
-            {
-               // Clamp value if too large
-               if ( lines_per_read > rect_u.r.h )
-               {
-                  lines_per_read = rect_u.r.h;
-               }
+            vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << "Reading " << bytes_in_update
+                              << " bytes into the read buffer\n" << vprDEBUG_FLUSH;
 
-               vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
-                  << "Reading " << bytes_per_line * lines_per_read
-                  << " bytes into the read buffer\n" << vprDEBUG_FLUSH;
+            // Read data from the server
+            readData(mReadBuffer, bytes_in_update);
 
-               // Read data from the server
-               readData(mReadBuffer, bytes_per_line * lines_per_read);
+            // Copy the rectangle buffer into the framebuffer
+            copyRectToFramebuffer(mReadBuffer, rect_u.r.x, rect_u.r.y, rect_u.r.w, rect_u.r.h);
+         }
+         break;
 
-               // Copy the rectangle buffer into the framebuffer
-               copyRectToFramebuffer(mReadBuffer, rect_u.r.x, rect_u.r.y, rect_u.r.w,
-                                     lines_per_read);
-
-               // Update readbuffer and framebuffer positions
-               rect_u.r.h -= lines_per_read;
-               rect_u.r.y += lines_per_read;
-            }
-            break;
-
-         default:
-            throw VNCEncodingException("Unknown rectangle encoding.");
+      default:
+         throw VNCEncodingException("Unknown rectangle encoding.");
       }
 
       // Add the rectangle to the update rectangle queue
-      addUpdate(x, y, w, h);
+      addUpdate(rect_u.r.x, rect_u.r.y, rect_u.r.w, rect_u.r.h);
    }
 
    // Finally, we send a framebuffer update request (incremental)
