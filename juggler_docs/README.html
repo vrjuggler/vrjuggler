@@ -23,32 +23,30 @@ VR Juggler Documentation Build System</H2>
 <!-- install-web toc-end -->
 
 
-<a name="intro">
-<H4> Introduction </H4>
-</a>
+<H4><a name="intro">Introduction</a></H4>
+
 The Juggler Documentation project uses a few Perl scripts to generate and
 install the documentation.  In addition, Juggler uses Perceps to auto-generate 
 it's C++ Class reference.  To better understand what you're doing, please read 
 and understand the material in <a href="#required">Required Reading</a>.  
 <BR><BR>
 
-<img border=0 src="${IMAGES}/Icons/24x24_Images/Inform.gif"> 
+<img border=0 src="${IMAGES}/Icons/24x24_Images/Inform.gif" ALT=""> 
 To view the documentation, you must first build it.<BR>
-<img border=0 src="${IMAGES}/Icons/24x24_Images/Caution.gif"> Currently the docs do not load locally due to 
+<img border=0 src="${IMAGES}/Icons/24x24_Images/Caution.gif" ALT=""> Currently the docs do not load locally due to 
 a bug in the java tree control.  <B>You must view the docs over an http connection!!</b> (let us know if you find a better solution than ours! We need a tree control.).<BR><BR>
 
-<a name="required">
-<H4> Required Reading </H4>
-</a>
+<H4><a name="required">Required Reading</a></H4>
+
 <ul>
-<li><a href="http://www.perl.com/">Perl</a> documentation. (Try doing a 'man' or 'info' on perl, there also is a good book by O'Reilly.)</a>.</li>
+<li><a href="http://www.perl.com/">Perl</a> documentation. (Try doing a 'man' or 'info' on perl, there also is a good book by O'Reilly.).</li>
 <li><a href="http://starship.python.net/crew/tbryan/PERCEPS/">perceps</a> documentation (Used in juggler to autogenerate documentation for CPP classes).</li>
 <li><a href="http://www.sourcegear.com/CVS">CVS</a> documentation (used for revision control, lets you directly check in and out source)</li>
 </ul>
 
-<a name="building">
-<H4> Building the project: </H4>
-</a>
+
+<H4><a name="building">Building the project:</a></H4>
+
 To view the documentation, you must first build it.  Many of the HTML files have
 tags which web browsers cannot read - thus you'd get many broken links if you 
 tried load the index.html locally.  The install script (in the install directory) 
@@ -60,12 +58,11 @@ Build the project by running "install-web.pl" from the install directory.
 If you run this with a -z option, it will save your arguments in a script 
 that you can then use to build the project (this is recommended).<BR>
 <BR>
-<img border=0 src="${IMAGES}/Icons/24x24_Images/Caution.gif"> install-web checks for changes by time stamp.  If you notice that one of your files is not getting updated, then you can force a complete rebuild with the -a option.  The build will go much slower with the -a option.<br>
+<img border=0 src="${IMAGES}/Icons/24x24_Images/Caution.gif" ALT=""> install-web checks for changes by time stamp.  If you notice that one of your files is not getting updated, then you can force a complete rebuild with the -a option.  The build will go much slower with the -a option.<br>
 <BR>
 
-<a name="docs">
-<H5> Step by step build of the Juggler documentation. </H5>
-</a>
+<H5><a name="docs">Step by step build of the Juggler documentation.</a></H5>
+
 <ol>
 	<li>Run install-web.pl with no arguments from within the install directory.</li>
 	<BR>
@@ -95,7 +92,7 @@ that you can then use to build the project (this is recommended).<BR>
 	<li> That is a lot to type, luckily the <i>-z</i> option saved your setup into
 	      a script file.  Next time you want to build the project just run that file.<BR>
 	      <BR>
-	      <img border=0 src="${IMAGES}/Icons/24x24_Images/Inform.gif"> Recommended: Use the -Z option to save your build setup! <BR>
+	      <img border=0 src="${IMAGES}/Icons/24x24_Images/Inform.gif" ALT=""> Recommended: Use the -Z option to save your build setup! <BR>
 	</li>
 	<BR>
 	<li> Now run your -Z file (<i>kevinsMakeScript.pl</i>), consider this your 
@@ -105,7 +102,7 @@ that you can then use to build the project (this is recommended).<BR>
 	<li> After running, this script will popup a netscape browser with the web 
 	     site loaded into it.<BR>
 	     <BR>
-	     <img border=0 src="${IMAGES}/Icons/24x24_Images/Inform.gif"> To view this documentation, always run your script.<BR>
+	     <img border=0 src="${IMAGES}/Icons/24x24_Images/Inform.gif" ALT=""> To view this documentation, always run your script.<BR>
 	</li>
 	<BR>
 </ol>
@@ -113,9 +110,9 @@ that you can then use to build the project (this is recommended).<BR>
 <BR>
 <BR>
 	
-<a name="class_ref">
-<H5> Step by step build of the C++ class reference. </H5>
-</a>
+
+<H5><a name="class_ref">Step by step build of the C++ class reference.</a></H5>
+
 <ol>
 	<li>Obtain the Juggler project</li>
 	<li>Change directory to the <b>Doc</b> directory</li>
@@ -126,9 +123,9 @@ that you can then use to build the project (this is recommended).<BR>
 <BR>
 <BR>
 	
-<a name="directories">
-<H4> Directory tree description: </H4>
-</a>
+
+<H4><a name="directories">Directory tree description:</a></H4>
+
 <b>CVS/           </b>repository directory<br>
 <b>pub/           </b>put zip, tar, gz, binaries, pdf, and other downloadable stuff here.<br>
 <b>JExplorer/     </b>information and examples on how to use JExplorer.<br>
@@ -143,22 +140,20 @@ that you can then use to build the project (this is recommended).<BR>
 <b>index.html*    </b>VRJ start page<br>
 <b>todo.txt       </b>looking for something to do?  read this file for motivation.<br>
 
-<a name="adding">
-<H4> Adding your own documentation: </H4>
-</a>
-<a name="jexplorer">
-<H5> JExplorer Tree Control </H5>
-</a>
+
+<H4><a name="adding">Adding your own documentation:</a></H4>
+
+<H5><a name="jexplorer">JExplorer Tree Control</a></H5>
+
 Be sure to check out the .XML files.  This is where the tree control is specified.  
 Note that each book has it's own .xml tree specification in the book's root directory.  
 These are dynamically loaded using the &lt;jitfolder&gt; XML tag.  <BR>
 <BR>
-<img border=0 src="${IMAGES}/Icons/24x24_Images/Inform.gif"> For more info see the <a href="${JEXPLORER_DOCS}">JExplorer documentation</a>.
+<img border=0 src="${IMAGES}/Icons/24x24_Images/Inform.gif" ALT=""> For more info see the <a href="${JEXPLORER_DOCS}">JExplorer documentation</a>.
 <BR>
 
-<a name="filetypes">
-<H5> File types handled by the build script </H5>
-</a>
+<H5><a name="filetypes">File types handled by the build script</a></H5>
+
 <b>install-web.pl</b> does 3 different operations depending on filetype.<BR>
 <li>copied - only does a straight copy if time stamps are different.</li>
 <li>renamed - renames file, for example .placeholder files strip off the extension</li>
@@ -176,9 +171,9 @@ Java files: <b>.class .jar .js</b> - <i>copied</i><BR>
 Style sheets: <b>css</b> - <i>copied</i><BR>
 
 
-<a name="subst">
-<H5> Using Aliases and Path substitutions </H5>
-</a>
+
+<H5><a name="subst">Using Aliases and Path substitutions</a></H5>
+
 With the -w parameter, you can specify a file that defines path and alias substitutions.  In this file, using normal perl syntax, you add stuff to two hash tables: $path_subst, $alias_subst.<br>
 <BR>
 Example:<BR>
@@ -186,9 +181,8 @@ Example:<BR>
 <b>$alias_subst{"CONTACT_US_DIRECTLY"} = 'mailto:vrjuggler-contact@vrjuggler.org';</b><BR>
 
 
-<a name="install-web">
-<H5> Other install-web script commands </H5>
-<p>
+<H5><a name="install-web">Other install-web script commands</a></H5>
+
 install-web also has support for inline commands that are "hidden" in HTML comments.  This is a list of the commands that have
 been implemented so far.
 </a>
