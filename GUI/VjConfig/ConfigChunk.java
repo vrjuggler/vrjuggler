@@ -126,7 +126,7 @@ public class ConfigChunk {
   }  
 
   public String toString() {
-    String s = desc.name + "\n";
+    String s = desc.token + "\n";
     s += "  Name \"" + name + "\"\n";
     for (int i = 0; i < props.size(); i++)
       s += "  " + ((Property)props.elementAt(i)).toString() + "\n";
