@@ -1,5 +1,8 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+May-17-2002 patrickh  Fixed a math bug causing bad tracking information from
+                      positional devices.
+                      NEW VERSION: 0.2.2
 May-07-2002 patrickh  Changed the type of gadget::Input::mPort to be
                       std::string instead of char*.  Drivers that were relying
                       on this member have been updated, and code with
