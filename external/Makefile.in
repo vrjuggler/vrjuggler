@@ -87,9 +87,17 @@ NSPR_ROOT=		@NSPR_ROOT@
 NSPR_INC_DIR=		@NSPR_INC_DIR@
 OPENAL_ROOT=		@OPENAL_ROOT@
 
-OMNIORB_CMDS=		@OMNIORB_CMDS@
 PYTHON_DIR=		@PYTHON_DIR@
 PYTHON_PKG_DIR=		$(PYTHON_DIR)/site-packages
+
+OMNIORB_CMDS=		@OMNIORB_CMDS@
+OMNI_PYTHON_DIR=	@OMNI_PYTHON_DIR@
+OMNI_PYTHON_PKG_DIR=	$(OMNI_PYTHON_DIR)/site-packages
+OMNIIDL_INST_DIR=	python
+
+USE_OMNIPYTHON=		@USE_OMNIPYTHON@
+OMNIPYTHON=		@OMNIPYTHON@
+OMNIPYTHON_HOME=	@OMNIPYTHON_HOME@
 
 # NOTE: There are no spaces between the commas in the $(subst) function call
 # because that introduces whitespace into the resulting string.
@@ -202,8 +210,8 @@ links-omniORB3 links-omniORB4:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/lib$(LIBBITSUF)
-ifneq ($(PYTHON_DIR),)
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/lib$(LIBBITSUF)/$(PYTHON_PKG_DIR)
+ifneq ($(OMNI_PYTHON_DIR),)
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/lib/$(OMNIIDL_INST_DIR)
 endif
 	-$(RM_LN) $(instlinks)/include/$(CXX_ORB_NAME)
 	-$(RM_LN) $(instlinks)/include/omniconfig.h
@@ -225,15 +233,26 @@ endif
           $(instlinks)/lib$(LIBBITSUF)
 	$(INSTALL) -l $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libomni*	\
           $(instlinks)/lib$(LIBBITSUF)
-ifneq ($(PYTHON_DIR),)
-	$(INSTALL) -l $(CXX_ORB_LIB_DIR)/$(PYTHON_PKG_DIR)/_omni*	\
-          $(instlinks)/lib$(LIBBITSUF)/$(PYTHON_PKG_DIR)
+ifneq ($(OMNI_PYTHON_DIR),)
+	$(INSTALL) -l $(CXX_ORB_LIB_DIR)/$(OMNI_PYTHON_PKG_DIR)/_omni*	\
+          $(instlinks)/lib/$(OMNIIDL_INST_DIR)
 	$(PERL) $(scriptdir)/install-dir.pl -l				\
-          -i $(CXX_ORB_LIB_DIR)/$(PYTHON_PKG_DIR)/omniidl		\
-          -o $(instlinks)/lib$(LIBBITSUF)/$(PYTHON_PKG_DIR)/omniidl
+          -i $(CXX_ORB_LIB_DIR)/$(OMNI_PYTHON_PKG_DIR)/omniidl		\
+          -o $(instlinks)/lib/$(OMNIIDL_INST_DIR)/omniidl
 	$(PERL) $(scriptdir)/install-dir.pl -l				\
-          -i $(CXX_ORB_LIB_DIR)/$(PYTHON_PKG_DIR)/omniidl_be		\
-          -o $(instlinks)/lib$(LIBBITSUF)/$(PYTHON_PKG_DIR)/omniidl_be
+          -i $(CXX_ORB_LIB_DIR)/$(OMNI_PYTHON_PKG_DIR)/omniidl_be	\
+          -o $(instlinks)/lib/$(OMNIIDL_INST_DIR)/omniidl_be
+endif
+ifeq ($(USE_OMNIPYTHON), Y)
+	$(RM_LN) $(instlinks)/bin/omnipython
+	$(LN_S) $(OMNIPYTHON) $(instlinks)/bin/omnipython
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/lib/$(OMNI_PYTHON_DIR)
+	$(RM_LN) $(instlinks)/lib/$(OMNI_PYTHON_DIR)/*.pyc
+	$(LN_S) $(OMNIPYTHON_HOME)/lib/$(OMNI_PYTHON_DIR)/*.pyc		\
+          $(instlinks)/lib/$(OMNI_PYTHON_DIR)
+	$(RM_LN) $(instlinks)/lib/$(OMNI_PYTHON_DIR)/lib-dynload
+	$(LN_S) $(OMNIPYTHON_HOME)/lib/$(OMNI_PYTHON_DIR)/lib-dynload	\
+          $(instlinks)/lib/$(OMNI_PYTHON_DIR)
 endif
 
 links-openal:
@@ -351,8 +370,8 @@ install-omniORB3 install-omniORB4:
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/omnithread
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/bin
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib
-ifneq ($(PYTHON_DIR),)
-	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib/$(PYTHON_PKG_DIR)
+ifneq ($(OMNI_PYTHON_DIR),)
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib/$(OMNIIDL_INST_DIR)
 endif
 	@for c in $(OMNIORB_CMDS) ; do					\
             $(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX) $(CXX_ORB_BIN_DIR)/$$c $(deps_prefix)/bin/$$c || exit 1; \
@@ -375,18 +394,32 @@ endif
           $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libomni*.a $(deps_prefix)/lib
 	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
           $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libomni*.so* $(deps_prefix)/lib
-ifneq ($(PYTHON_DIR),)
+ifneq ($(OMNI_PYTHON_DIR),)
 	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
-          $(CXX_ORB_LIB_DIR)/$(PYTHON_PKG_DIR)/_omni*			\
-          $(deps_prefix)/lib/$(PYTHON_PKG_DIR)
+          $(CXX_ORB_LIB_DIR)/$(OMNI_PYTHON_PKG_DIR)/_omni*		\
+          $(deps_prefix)/lib/$(OMNIIDL_INST_DIR)
 	$(PERL) $(scriptdir)/install-dir.pl $(GROUP_OPT_UNIX)		\
           -m $(FILE_PERMS) -e .py					\
-          -i $(CXX_ORB_LIB_DIR)/$(PYTHON_PKG_DIR)/omniidl		\
-          -o $(deps_prefix)/lib/$(PYTHON_PKG_DIR)/omniidl
+          -i $(CXX_ORB_LIB_DIR)/$(OMNI_PYTHON_PKG_DIR)/omniidl		\
+          -o $(deps_prefix)/lib/$(OMNIIDL_INST_DIR)/omniidl
 	$(PERL) $(scriptdir)/install-dir.pl $(GROUP_OPT_UNIX)		\
           -m $(FILE_PERMS) -e .py					\
-          -i $(CXX_ORB_LIB_DIR)/$(PYTHON_PKG_DIR)/omniidl_be		\
-          -o $(deps_prefix)/lib/$(PYTHON_PKG_DIR)/omniidl_be
+          -i $(CXX_ORB_LIB_DIR)/$(OMNI_PYTHON_PKG_DIR)/omniidl_be	\
+          -o $(deps_prefix)/lib/$(OMNIIDL_INST_DIR)/omniidl_be
+endif
+ifeq ($(USE_OMNIPYTHON), Y)
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib/$(OMNI_PYTHON_DIR)/lib-dynload
+	$(INSTALL) $(GROUP_OPT_UNIX) -m $(EXEC_PERMS) $(OMNIPYTHON)	\
+          $(deps_prefix)/bin
+	-$(INSTALL) $(GROUP_OPT_UNIX) -m $(FILE_PERMS)			\
+          $(OMNIPYTHON_HOME)/COPYING.PYTHON $(deps_prefix)
+	$(INSTALL) $(GROUP_OPT_UNIX) -m $(FILE_PERMS)			\
+          $(OMNIPYTHON_HOME)/lib/$(OMNI_PYTHON_DIR)/*.py		\
+          $(deps_prefix)/lib/$(OMNI_PYTHON_DIR)
+	$(INSTALL) $(GROUP_OPT_UNIX) -m $(FILE_PERMS)			\
+          $(OMNIPYTHON_HOME)/lib/$(OMNI_PYTHON_DIR)/*.pyc		\
+          $(deps_prefix)/lib/$(OMNI_PYTHON_DIR)
+	-rm -f $(deps_prefix)/lib/$(OMNI_PYTHON_DIR)/site.pyc
 endif
 
 install-openal:
