@@ -11,6 +11,7 @@ include @topdir@/Makefile.base
 includedir	= @includedir@/Kernel/GL
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
+OBJDIR		:= ${OBJDIR}/GL
 VJROOT		= ${top_srcdir}
 VJ_SRCDIR	= @VJ_SRCDIR@/Kernel/GL
 WORKDIR		= ${topdir}/Kernel/GL
@@ -42,7 +43,12 @@ GL_OBJECTS	= $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.C=.o))
 # -----------------------------------------------------------------------------
 # Library targets.
 # -----------------------------------------------------------------------------
-all dbg opt dso ddso obj: ${GL_OBJECTS}
+all dbg opt dso ddso obj: beforebuild ${GL_OBJECTS}
+
+beforebuild:
+ifeq (${OGL_API}, Y)
+	${scriptdir}/mkinstalldirs ${OBJDIR}
+endif
 
 # -----------------------------------------------------------------------------
 # Clean-up.
