@@ -71,7 +71,6 @@ public class ControlUIModule
     extends JFrame 
     implements ActionListener, 
                WindowListener, 
-               ChildFrameParent, 
 	       LogMessageListener, 
                ChunkDBListener,  
                CoreModule {
@@ -438,8 +437,13 @@ public class ControlUIModule
 
 
     public void actionPerformed (ActionEvent e) {
-	Object o = e.getSource(); 
-	if (o == quit_mi)
+	Object o = e.getSource();
+        if (o instanceof HTMLFrame) {
+            HTMLFrame frame = (HTMLFrame)o;
+	    child_frames.remove (frame);
+	    frame.destroy();
+        }
+	else if (o == quit_mi)
 	    quit();
         else if (o == load_extensions_mi) {
             File f = filedialog.requestOpenFile (null, this, jarfile_filter);
@@ -496,35 +500,13 @@ public class ControlUIModule
     public void loadHelp (String s) {
 	System.out.println ("loadhelp: " + s);
 	URL url = ClassLoader.getSystemResource (s);
-	HTMLFrame help_frame = new HTMLFrame (this, "VjControl Help", url);
+	HTMLFrame help_frame = new HTMLFrame ("VjControl Help", url);
+        help_frame.addActionListener (this);
         help_frame.setContentsURL (ClassLoader.getSystemResource ("VjFiles/VjControlIndex.html"));
 	child_frames.add (help_frame);
 	help_frame.show();
     }
     
-
-
-    /** Callback when one of ControlUI's children is closed.
-     */
-    public void closeChild (ChildFrame frame) {
-	if (frame instanceof HTMLFrame) {
-	    child_frames.remove (frame);
-	    frame.destroy();
-	}
-    }
-
-
-
-    /** Callback when one of ControlUI's children is applied.
-     */
-    public void applyChild (ChildFrame frame) {
-	if (frame instanceof HTMLFrame) {
-            ;
-	}
-        else {
-            Core.consoleErrorMessage (component_name, "Has a child frame that it doesn't know what to do about in applyChild().");
-        }                             
-    }
 
 
     //--------------------- UI & Font handling stuff -------------------------

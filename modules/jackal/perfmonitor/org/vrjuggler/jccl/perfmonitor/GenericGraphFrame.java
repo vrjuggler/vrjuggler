@@ -36,8 +36,8 @@ package VjComponents.PerfMonitor;
 
 import javax.swing.*;
 import java.awt.Dimension;
-import java.awt.event.WindowListener;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
+import java.util.*;
 import VjControl.Core;
 import VjComponents.UI.Widgets.*;
 import VjComponents.PerfMonitor.GenericGraphPanel;
@@ -46,17 +46,18 @@ public class GenericGraphFrame extends JFrame
     implements ChildFrame, WindowListener {
 
 
-    protected ChildFrameParent parent;
     protected GenericGraphPanel panel;
 
+    protected List action_listeners;
 
 
     public GenericGraphFrame (GenericGraphPanel _panel, 
-                              String title, ChildFrameParent _parent) {
+                              String title) {
 	super (title);
 
+        action_listeners = new ArrayList();
+
 	panel = _panel;
-	parent = _parent;
 
 	getContentPane().add (panel);
 	addWindowListener (this);
@@ -81,12 +82,47 @@ public class GenericGraphFrame extends JFrame
     public void windowActivated(WindowEvent e) {}
     public void windowClosed(WindowEvent e) {}
     public void windowClosing(WindowEvent e) {
-	parent.closeChild (this);
+	notifyActionListenersClose();
     }
     public void windowDeactivated(WindowEvent e) {}
     public void windowDeiconified(WindowEvent e) {}
     public void windowIconified(WindowEvent e) {}
     public void windowOpened(WindowEvent e) {}
+
+
+    //--------------------- ActionEvent Stuff ------------------------
+
+    public void addActionListener (ActionListener l) {
+	synchronized (action_listeners) {
+	    action_listeners.add (l);
+	}
+    }
+
+    public void removeActionListener (ActionListener l) {
+	synchronized (action_listeners) {
+	    action_listeners.remove (l);
+	}
+    }
+
+
+    private void notifyActionListenersClose () {
+        ActionEvent e = new ActionEvent (this, ActionEvent.ACTION_PERFORMED,
+                                         "Close");
+        notifyActionListeners (e);
+    }
+
+    private void notifyActionListeners (ActionEvent e) {
+        ActionListener l;
+        int i, n;
+        synchronized (action_listeners) {
+            n = action_listeners.size();
+            for (i = 0; i < n; i++) {
+                l = (ActionListener)action_listeners.get(i);
+                l.actionPerformed (e);
+            }
+        }
+    }
+
 
 
     /***************** ChildFrame Stuff ********************/
