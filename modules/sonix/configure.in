@@ -39,7 +39,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-AC_INIT([Sonix], [0.2], [vrjuggler-devel@lists.sourceforge.net])
+AC_INIT([Sonix], [0.3], [vrjuggler-devel@lists.sourceforge.net])
 AC_CONFIG_HEADERS([snx/snxDefines.h])
 AC_PREREQ([2.53])
 AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2003 by Iowa State University])
@@ -133,7 +133,7 @@ DPP_PROG_LINKER
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH([0.19.0], [VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`],
+VPR_PATH([0.32.0], [VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`],
          [AC_MSG_ERROR([*** VPR required for Sonix ***])])
 
 # find and append GMTL flags...
