@@ -110,7 +110,7 @@ BeanInfo* BeanDeliverySubjectImpl::getBean(const char* beanName)
          vprDEBUG(tweekDBG_CORBA, vprDBG_VERB_LVL)
             << "JAR file buffer size: " << file_size << std::endl
             << vprDEBUG_FLUSH;
-         vprASSERT(bean_data.fileContents.size() == file_size && "Buffer resize failed");
+         vprASSERT(bean_data.fileContents.size() == (unsigned long) file_size && "Buffer resize failed");
 
          bean_file.seekg(0, std::ios::beg);
          vprASSERT((unsigned long) bean_file.tellg() == 0 && "Failed to restore stream pointer to beginning of file");
