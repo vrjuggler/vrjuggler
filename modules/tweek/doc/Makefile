@@ -3,7 +3,7 @@
 default: html
 
 docs: html pdf
-install-docs: install-html install-ps install-pdf
+install-docs: install-html install-pdf
 
 DOXYGEN_FILE=		Tweek.doxy
 HTML_DOXYGEN_FILE=	$(DOXYGEN_FILE)
