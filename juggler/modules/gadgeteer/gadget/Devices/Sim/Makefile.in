@@ -49,8 +49,8 @@ SUBOBJDIR	= $(GADGET_LIBRARY)
 
 SRCS		= SimAnalog.cpp			\
                   SimDigital.cpp		\
-                  SimDigitalGlove.cpp		\
-                  SimGloveGesture.cpp		\
+#                  SimDigitalGlove.cpp		\
+#                  SimGloveGesture.cpp \
                   SimInput.cpp			\
                   SimPosition.cpp		\
                   SimRelativePosition.cpp

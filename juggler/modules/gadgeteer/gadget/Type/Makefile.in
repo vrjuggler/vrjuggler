@@ -51,10 +51,10 @@ SRCS		= AnalogProxy.cpp			\
                   DeviceFactory.cpp			\
                   DeviceInterface.cpp			\
                   DigitalProxy.cpp			\
-                  GestureProxy.cpp			\
-                  Glove.cpp				\
-                  GloveGesture.cpp			\
-                  GloveProxy.cpp			\
+#                  GestureProxy.cpp			\
+#                  Glove.cpp				\
+#                  GloveGesture.cpp			\
+#                  GloveProxy.cpp			\
                   Input.cpp				\
                   KeyboardProxy.cpp			\
                   LinearSigmoidPositionFilter.cpp	\

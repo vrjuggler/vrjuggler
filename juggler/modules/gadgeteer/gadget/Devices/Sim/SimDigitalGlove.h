@@ -124,11 +124,10 @@ public:
    //virtual int getGesture();
 
 private:
-   std::vector<DigitalData>          mDigitalData;   //: The digital data that we have
-   std::vector<KeyModPair> mSimKeys;       //: The keys to press for digital simulation
+   std::vector<DigitalData>   mDigitalData;   //: The digital data that we have
+   std::vector<KeyModPair>    mSimKeys;       //: The keys to press for digital simulation
 
    Hand                     mLeftHand, mRightHand;
-
    //int                     mCurGesture;   //: The current gesture id
 };
 
