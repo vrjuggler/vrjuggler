@@ -488,6 +488,8 @@ def generateAntBuildFiles():
                          'build.xml'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\intersense',
                          'VRJConfig', 'build-intersense.xml'))
+   mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\pinchglove',
+                         'VRJConfig', 'build-pinchglove.xml'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\proxyeditor',
                          'VRJConfig', 'build-proxyeditor.xml'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\surfacedisplayeditor',
