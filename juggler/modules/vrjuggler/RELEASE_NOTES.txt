@@ -10,6 +10,13 @@ For all versions:
 
 ===============================================================================
 
+ Version: 1.1 DR2 (1.1.126)
+Released: September 6, 2002
+
+    Please refer to the following to get started with VR Juggler 1.1 DR2:
+
+       http://www.vrjuggler.org/vrjuggler/1.1-DR2/migration.guide/
+
  Version: 1.1 DR1 (1.1.96)
 Released: June 13, 2002
 
