@@ -2,11 +2,49 @@
 # builder for test suite.  uses kevin's build system in @srcdir@/mk
 ###############################################################################$
 
-default: build
+# project name...
+PROJECT_NAME = driver
+
+default: $(PROJECT_NAME)
 
 srcdir		= @srcdir@
+topdir		= @topdir@
 #top_srcdir	= @top_srcdir@
 
+CC		= @CC@
+CXX		= @CXX@
+CPP		= @CPP@
+CXXCPP		= @CXXCPP@
+CFLAGS		= @CFLAGS@ $(OPTIMIZER)
+CFLAGS_DYNLIB	= @CFLAGS_DYNLIB@
+CPPFLAGS	= @CPPFLAGS@
+CXXFLAGS	= @CXXFLAGS@ $(OPTIMIZER)
+CXXFLAGS_DYNLIB	= @CXXFLAGS_DYNLIB@
+DEFS		= @DEFS@
+DEP_GEN_FLAG	= @DEP_GEN_FLAG@
+DEPEND_FLAGS	= @DEPEND_FLAGS@ @INCLUDES@ -I$(topdir)			\
+                  -I$(VPR_BASE_DIR)/include
+DEPEND_EXTRAS	= @DEPEND_EXTRAS@ $(DEFS)
+INCLUDES	= @INCLUDES@ -I$(topdir) -I$(VPR_BASE_DIR)/include	\
+                 -I$(srcdir) -I$(srcdir)/TestCases			\
+                 -I$(srcdir)/CppUnit/framework -I$(srcdir)/CppUnit/textui
+INSTALL		= @INSTALL@
+LD		= @LD@
+LDFLAGS		= @LDFLAGS@ -L/usr/lib$(LIBBITSUF) -L/usr/lib		\
+                  -L$(VPR_BASE_DIR)/lib$(LIBBITSUF)
+LIBBITSUF	= @LIBBITSUF@
+LIBS		= -B static -lvpr -B dynamic @LIBS@
+OBJEXT		= @OBJEXT@
+OBJ_NAME_FLAG	= @OBJ_NAME_FLAG@
+OS_TYPE		= @OS_TYPE@
+LINK		= $(CXX) $(CPPFLAGS) $(CXXFLAGS) @EXTRA_LINK_FLAGS@	\
+                  $(EXTRA_FLAGS)
+
+# -----------------------------------------------------------------------------
+# Compiler command lines.
+# -----------------------------------------------------------------------------
+C_COMPILE	= $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
+CXX_COMPILE	= $(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
 
 # objects to be included in the project....
 # SRC Files
@@ -19,74 +57,37 @@ CPPUNIT_SRCS = TestCase.cpp \
 TESTDRIVER_SRCS = testSuite.cpp
 SRCS	:= $(TEST_SRCS) $(CPPUNIT_TEXTUI_SRCS) $(CPPUNIT_SRCS) $(TESTDRIVER_SRCS)
 
-# project name...
-PROJECT_NAME = driver
-
 OBJDIR = .
 DEPDIR = 
 
-INCLUDE_PATHS =  -I${srcdir} \
-                 -I${srcdir}/TestCases -I${srcdir}/CppUnit/framework -I${srcdir}/CppUnit/textui \
-                 -I${VPR_BASE_DIR}/include
+INCLUDE_PATHS = 
 PATH_TO_SRCS = ${srcdir} ${srcdir}/TestCases ${srcdir}/CppUnit/framework ${srcdir}/CppUnit/textui
 MK_DIR = ${srcdir}/mk
 
-########################################################################
-# system dependent stuff that users will want to change...
-# stuff that isn't abstracted in the build system...
-##########################################################################
-include ${MK_DIR}/mk.hosttype
-# IRIX
-ifeq ($(HOSTTYPE), IRIX)
-    LIBS = 
-   include ${MK_DIR}/mk.irix
-endif
-
-#LiNUX
-ifeq ($(HOSTTYPE), Linux)
-endif
-
-# Win32
-ifeq ($(HOSTTYPE), Win32)
-   LIBS = 
-   DEPENDFLAGS = -D__cplusplus -D_WIN32 -DWIN32 $(INCLUDE_PATHS)
-   include ${MK_DIR}/mk.win32
-endif
-
-# gnu2
-ifeq ($(HOSTTYPE), GNU)
-   LIBS = 
-   include ${MK_DIR}/mk.gnu
-endif
-########################################################################
-
 include ${MK_DIR}/mk.objs
 
-LIBS += -L${VPR_BASE_DIR}/lib32 -B static -lvpr -B dynamic
-
 # Compile then Link
-build: $(OBJS)
-	-@echo ""
-	-@echo "-------------------------------------------"
-	-@echo "Linking... (.$(OBJ_FILE_SUFFIX)'s --> .so)"
-	-@echo "-------------------------------------------"
-	$(EXE_LINKER) $(EXE_FLAGS) $(OBJS) $(OUTPUT_EXE_FLAG)$(FILENAME) $(LIBS)
-	-@echo ""
-	-@echo "-------------------------------------------"
-	-@echo "$(FILENAME) done"
-	-@echo "-------------------------------------------"
+$(PROJECT_NAME): $(OBJS)
+	@echo ""
+	@echo "-------------------------------------------"
+	@echo "Linking... (.$(OBJEXT)'s --> executable)"
+	@echo "-------------------------------------------"
+	$(LINK) -o $@ $(OBJS) $(LDFLAGS) $(LIBS) $(EXTRA_LIBS)
+	@echo ""
+	@echo "-------------------------------------------"
+	@echo "$(PROJECT_NAME) done"
+	@echo "-------------------------------------------"
 
 # Remove the compiled stuff from the system
 clean:
-	-@echo ""
-	-@echo "-------------------------------------------"
-	-@echo "Removing compiled stuff from the system	 "
-	-@echo "-------------------------------------------"
-	-rm -r $(OBJS) $(FILENAME) *.ncb *.opt *.plg *.ilk *.idb *.pdb *.pch Debug/ Release/ ii_files/
-
-
+	@echo ""
+	@echo "-------------------------------------------"
+	@echo "Removing compiled stuff from the system	 "
+	@echo "-------------------------------------------"
+	rm -fr $(OBJS) $(PROJECT_NAME) *.ncb *.opt *.plg *.ilk *.idb	\
+          *.pdb *.pch Debug/ Release/ ii_files/
 
 clobber: clean
-	-rm *.d
+	rm -f *.d
 
 include ${MK_DIR}/mk.depend
