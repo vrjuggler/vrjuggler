@@ -36,6 +36,7 @@ protected:
    int mSendIterations;  // for debugging
    int mRecvIterations;  // for debugging
    SendBuffer mSendBuffer;
+   vpr::GUID mManagerId;  // id of the remote input manager connecting on this connection.
 
    // Test of proxies instead of  inputs
    // std::list<vjNetProxy*> mReceivingProxies;
@@ -43,7 +44,7 @@ protected:
    
 public:
    NetConnection();
-   NetConnection(const std::string& alias_name, const std::string& hostname, const int port, vpr::SocketStream* sock_stream);
+   NetConnection(const std::string& alias_name, const std::string& hostname, const int port, const std::string& manager_id, vpr::SocketStream* sock_stream);
    ~NetConnection();
 
    // usually contains the host:port.  Mostly for helpful identification.

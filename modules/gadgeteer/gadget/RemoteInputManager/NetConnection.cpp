@@ -19,13 +19,14 @@ NetConnection::NetConnection(){
    mRecvIterations = 0;
 }
 
-NetConnection::NetConnection(const std::string& alias_name, const std::string& hostname, const int port, vpr::SocketStream* sock_stream){
+NetConnection::NetConnection(const std::string& alias_name, const std::string& hostname, const int port, const std::string& manager_id, vpr::SocketStream* sock_stream){
    char port_str[32];
    sprintf(port_str, "%d", port);
    mName = hostname + ":" + port_str; // name contains "host:port"
 
    mHostname = hostname;
    mPort = port;
+   mManagerId = vpr::GUID(manager_id); // set the id of the other computer's remote manager
    mAliasList.push_back(alias_name);
    mSockStream = sock_stream;
    mRecvBuffer = new RecvBuffer;
