@@ -1,6 +1,7 @@
 Begin "Zelda"
     Begin "Display"
-        "Display"
+        "simDisplay"
+	"surfaceDisplay"
         "DisplaySystem"
     End
     Begin "Input"
