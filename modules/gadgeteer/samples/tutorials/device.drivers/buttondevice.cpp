@@ -39,6 +39,7 @@
 #include <vpr/Thread/Thread.h>
 #include <vpr/System.h>
 
+#include <gadget/gadgetParam.h>
 #include <gadget/InputManager.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Digital.h>
@@ -107,6 +108,12 @@ private:
 };
 
 /** Entry point function for the device driver plug-in. */
+extern "C" GADGET_DRIVER_EXPORT(vpr::Uint32) getGadgeteerVersion()
+{
+   return __GADGET_version;
+}
+
+/** Entry point function for the device driver plug-in. */
 extern "C" GADGET_DRIVER_EXPORT(void) initDevice(InputManager* inputMgr)
 {
    new DeviceConstructor<MyButtonDevice>(inputMgr);
@@ -115,7 +122,7 @@ extern "C" GADGET_DRIVER_EXPORT(void) initDevice(InputManager* inputMgr)
 /** Returns a string that matches this device's configuration element type. */
 std::string MyButtonDevice::getElementType()
 {
-   return std::string("MyButtonDevice");
+   return std::string("button_device");
 }
 
 //: When the system detects a configuration change for your driver, it will
