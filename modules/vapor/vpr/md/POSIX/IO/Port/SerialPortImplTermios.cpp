@@ -836,6 +836,23 @@ vpr::ReturnStatus SerialPortImplTermios::controlFlow (SerialTypes::FlowActionOpt
    return retval;
 }
 
+bool SerialPortImplTermios::getHardwareFlowControlState ()
+{
+   return getBit(CRTSCTS, SerialPortImplTermios::CFLAG);
+}
+
+vpr::ReturnStatus SerialPortImplTermios::enableHardwareFlowControl ()
+{
+   return setBit(CRTSCTS, SerialPortImplTermios::CFLAG, true,
+                 "Could not enable hardware flow control");
+}
+
+vpr::ReturnStatus SerialPortImplTermios::disableHardwareFlowControl ()
+{
+   return setBit(CRTSCTS, SerialPortImplTermios::CFLAG, false,
+                 "Could not disable hardware flow control");
+}
+
 // ----------------------------------------------------------------------------
 // Discard either the input buffer (unread data received from the terminal
 // device) or the output buffer (data written but not yet transmitted to the
