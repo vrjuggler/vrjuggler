@@ -263,6 +263,11 @@ std::string ConfigElement::getFullName() const
    return full_name;
 }
 
+unsigned int ConfigElement::getVersion() const
+{
+   return mNode->getAttribute(tokens::VERSION).getValue<unsigned int>();
+}
+
 bool ConfigElement::getProperty_bool(const std::string& prop, int ind) const
 {
    std::string prop_string = getPropertyString(prop,ind);
