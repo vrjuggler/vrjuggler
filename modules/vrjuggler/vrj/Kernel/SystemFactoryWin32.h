@@ -42,14 +42,10 @@ namespace vrj
 
 class DisplayManager;
 
-//---------------------------------------------------
-//: Concrete class for SGI System specific Factory.
-//
-//  Concrete class to create SGI system specific objects.
-//
-// @author Allen Bierbaum
-//  Date: 9-9-97
-//----------------------------------------------------
+/** Concrete class for SGI System specific Factory.
+ *
+ *  Concrete class to create SGI system specific objects.
+ */
 class SystemFactoryWin32 : public SystemFactory
 {
 public:
