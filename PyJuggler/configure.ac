@@ -347,17 +347,19 @@ pyjsave_CPPFLAGS="$CPPFLAGS"
 pyjsave_LDFLAGS="$LDFLAGS"
 pyjsave_LIBS="$LIBS"
 
-# Ensure that /usr/include and /usr/lib are not included multiple times
-# if $OSGROOT is "/usr".
-if test "x$osg_base_dir" != "x/usr" ; then
-   OSG_INCLUDES="-I$osg_base_dir/include"
+if test "x$osg_base_dir" != "xno" ; then
+   # Ensure that /usr/include and /usr/lib are not included multiple times
+   # if $OSGROOT is "/usr".
+   if test "x$osg_base_dir" != "x/usr" ; then
+      OSG_INCLUDES="-I$osg_base_dir/include"
 
-   if test "x$OS_TYPE" = "xWin32" ; then
-      OSG_LDFLAGS="/libpath:$osg_base_dir/lib"
-      OSG_LIBS='osg.lib osgProducer.lib osgUtil.lib osgDB.lib'
-   else
-      OSG_LDFLAGS="-L$osg_base_dir/lib"
-      OSG_LIBS='-losg -losgProducer -losgUtil -losgDB'
+      if test "x$OS_TYPE" = "xWin32" ; then
+         OSG_LDFLAGS="/libpath:$osg_base_dir/lib"
+         OSG_LIBS='osg.lib osgProducer.lib osgUtil.lib osgDB.lib'
+      else
+         OSG_LDFLAGS="-L$osg_base_dir/lib"
+         OSG_LIBS='-losg -losgProducer -losgUtil -losgDB'
+      fi
    fi
 fi
 
