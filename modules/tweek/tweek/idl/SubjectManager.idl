@@ -45,7 +45,25 @@ module tweek
 
 interface SubjectManager
 {
+   struct RegisteredSubject
+   {
+      string  subject_name;
+      Subject subject_ref;
+   };
+
+   typedef sequence<RegisteredSubject> SubjectList;
+
+   /**
+    * Returns the named Tweek Subject reference to the caller if the Subject
+    * is registered.  If not, a reference equal to CORBA::nil() is returned.
+    */
    Subject getSubject(in string name);
+
+   /**
+    * Returns a sequence of all the registered Tweek Subjects packaged in the
+    * structure RegisteredSubject.
+    */
+   SubjectList getAllSubjects();
 };
 
 };

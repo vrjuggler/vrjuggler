@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2001-11-18 patrickh Added the ability to request all subjects currently
+                    registered with a tweek::SubjectManager.
 2001-11-18 patrickh Changed the use of tweek::SubjectManagerImpl so that there
                     is one associated with each tweek::CorbaManager instance
                     rather than one per memory space.

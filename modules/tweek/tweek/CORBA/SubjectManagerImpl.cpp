@@ -94,4 +94,25 @@ Subject_ptr SubjectManagerImpl::getSubject (const char* name)
    return subject;
 }
 
+tweek::SubjectManager::SubjectList* SubjectManagerImpl::getAllSubjects ()
+{
+   subject_map_t::iterator i;
+   CORBA::ULong j;
+
+   // Create the sequence and size it.
+   tweek::SubjectManager::SubjectList* subjects =
+      new tweek::SubjectManager::SubjectList(m_subjects.size());
+
+   for ( i = m_subjects.begin(), j = 0; i != m_subjects.end(); i++, j++ )
+   {
+      tweek::SubjectManager::RegisteredSubject rs;
+      rs.subject_name = CORBA::string_dup((*i).first.c_str());
+      rs.subject_ref  = Subject::_duplicate((*i).second);
+
+      (*subjects)[j] = rs;
+   }
+
+   return subjects;
+}
+
 } // End of tweek namespace
