@@ -9,7 +9,9 @@ Approved by:
 Obtained from:	
 CVS: ----------------------------------------------------------------------
 CVS: Please format log message lines to be no longer than the above line.
-CVS: ----------------------------------------------------------------------
+CVS:
+CVS: *** PLEASE READ THE EXPLANATIONS BELOW BEFORE COMMITTING ***
+CVS:
 CVS: Log header strings:
 CVS: New feature:     Fill this in if a new feature is being added.
 CVS: Refactor:        Fill this in if the change is a refactoring
