@@ -521,9 +521,6 @@ public class ViewEditorPanel
       
       public ScreenComboBoxModel( CaveModel cm )
       {
-         Exception e = new Exception("");
-         e.printStackTrace();
-               
          mCaveModel = cm;
          generateTags();
          
