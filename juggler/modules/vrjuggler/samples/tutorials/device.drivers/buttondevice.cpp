@@ -16,6 +16,9 @@ private:
    static void   threadedSampleFunction( void* classPointer );
    int           mDigitalData;
    vjThread*     mSampleThread;
+   
+   // configuration data set by config()
+   int           mPortId, mBaud;
 };
 
 vjDeviceConstructor<MyButtonDevice>* this_ptr_not_used = new vjDeviceConstructor<MyButtonDevice>;
@@ -81,4 +84,18 @@ void MyButtonDevice::threadedSampleFunction( void* classPointer )
      this_ptr->sample();
      sleep(1); //specify some time here, so you don't waste CPU cycles
    }
+}
+
+//: When the system detects a configuration change for your driver, it will
+//  pass the new vjConfigChunk into this function.  See the documentation
+//  on config chunks, for information on how to access them.
+bool MyButtonDevice::config( vjConfigChunk *c )
+{
+  if (!vjDigital::config(c))
+     return false;
+
+  mPortId = c->getProperty( "port" );
+  mBaud = c->getProperty( "baud" );
+
+  return true;
 }
