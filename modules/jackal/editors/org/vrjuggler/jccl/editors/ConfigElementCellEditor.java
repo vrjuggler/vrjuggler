@@ -137,7 +137,7 @@ public class ConfigElementCellEditor
          return null;
       }
 
-      System.out.println("Using editor "+mEditor.getClass()+" for value of type "+value.getClass());
+//      System.out.println("Using editor "+mEditor.getClass()+" for value of type "+value.getClass());
       mEditor.setValue(value);
 
       // If the property editor supports known tagged values, use a combobox
