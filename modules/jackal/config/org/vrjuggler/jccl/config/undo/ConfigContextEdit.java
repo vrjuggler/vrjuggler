@@ -39,6 +39,8 @@ import org.vrjuggler.jccl.config.ConfigContext;
 import org.vrjuggler.jccl.config.ConfigElement;
 import org.vrjuggler.jccl.config.ConfigBroker;
 import org.vrjuggler.jccl.config.ConfigBrokerProxy;
+import org.vrjuggler.jccl.config.DataSource;
+
 
 public class ConfigContextEdit extends AbstractUndoableEdit
 {
@@ -47,14 +49,16 @@ public class ConfigContextEdit extends AbstractUndoableEdit
     *
     * @param ctx        ConfigContext to add/remove the element from.
     * @param elm        ConfigElement to add/remove.
-    * @param add_remove Whether this edit is for adding or removing an element.
+    * @param addRemove  whether this edit is for adding or removing an element.
     */
-   public ConfigContextEdit(ConfigContext ctx, ConfigElement elm, boolean add_remove)
+   public ConfigContextEdit(ConfigContext ctx, ConfigElement elm,
+                            DataSource source, boolean addRemove)
    {
       super();
       mConfigContext = ctx;
       mConfigElement = elm;
-      mAddRemove = add_remove;
+      mSource        = source;
+      mAddRemove     = addRemove;
    }
 
    public void undo() throws CannotUndoException 
@@ -64,11 +68,11 @@ public class ConfigContextEdit extends AbstractUndoableEdit
       ConfigBroker broker = new ConfigBrokerProxy();
       if (mAddRemove)
       {
-         broker.remove(mConfigContext, mConfigElement);
+         broker.remove(mConfigContext, mConfigElement, mSource);
       }
       else
       {
-         broker.add(mConfigContext, mConfigElement);
+         broker.add(mConfigContext, mConfigElement, mSource);
       }
    }
 
@@ -81,16 +85,17 @@ public class ConfigContextEdit extends AbstractUndoableEdit
       ConfigBroker broker = new ConfigBrokerProxy();
       if (mAddRemove)
       {
-         broker.add(mConfigContext, mConfigElement);
+         broker.add(mConfigContext, mConfigElement, mSource);
       }
       else
       {
-         broker.remove(mConfigContext, mConfigElement);
+         broker.remove(mConfigContext, mConfigElement, mSource);
       }
    }
 
    private ConfigContext   mConfigContext;
    private ConfigElement   mConfigElement;
+   private DataSource      mSource;
 
    /** Whether this edit is for adding or removing an element.*/
    private boolean         mAddRemove;
