@@ -55,7 +55,7 @@ vjConfigChunkDB::vjConfigChunkDB (vjConfigChunkDB& db): chunks() {
 
 
 vjConfigChunkDB& vjConfigChunkDB::operator = (vjConfigChunkDB& db) {
-    int i;
+    unsigned int i;
     //for (i = 0; i < chunks.size(); i++)
     //    delete chunks[i];
     chunks.erase (chunks.begin(), chunks.end());
@@ -70,7 +70,7 @@ vjConfigChunkDB& vjConfigChunkDB::operator = (vjConfigChunkDB& db) {
 vjConfigChunk* vjConfigChunkDB::getChunk (const std::string& name) {
     /* returns a chunk with the given name, if such exists, or NULL.
      */
-    for (int i = 0; i < chunks.size(); i++) {
+    for (unsigned int i = 0; i < chunks.size(); i++) {
         if (!vjstrcasecmp (name, chunks[i]->getProperty("name")))
             return chunks[i];
     }
@@ -90,7 +90,7 @@ std::vector<vjConfigChunk*> vjConfigChunkDB::getChunks() {
 void vjConfigChunkDB::addChunks(std::vector<vjConfigChunk*> new_chunks) {
     // no! must make copies of all chunks. sigh...
     //chunks.insert(chunks.end(), new_chunks.begin(), new_chunks.end());
-    for (int i = 0; i < new_chunks.size(); i++)
+    for (unsigned int i = 0; i < new_chunks.size(); i++)
         chunks.push_back (new vjConfigChunk (*new_chunks[i]));
 }
 
@@ -117,7 +117,7 @@ void vjConfigChunkDB::addChunk(vjConfigChunk* new_chunk) {
 std::vector<vjConfigChunk*>* vjConfigChunkDB::getMatching (const std::string& property, const std::string value) {
     std::vector<vjConfigChunk*>* v = new std::vector<vjConfigChunk*>;
 
-    for (int i = 0; i < chunks.size(); i++) {
+    for (unsigned int i = 0; i < chunks.size(); i++) {
         if (!vjstrcasecmp (value, chunks[i]->getProperty(property)))
             v->push_back(chunks[i]);
     }
@@ -127,7 +127,7 @@ std::vector<vjConfigChunk*>* vjConfigChunkDB::getMatching (const std::string& pr
 std::vector<vjConfigChunk*>* vjConfigChunkDB::getMatching (const std::string& property, int value) {
     int c;
     std::vector<vjConfigChunk*>* v = new std::vector<vjConfigChunk*>;
-    for (int i = 0; i < chunks.size(); i++) {
+    for (unsigned int i = 0; i < chunks.size(); i++) {
         c = chunks[i]->getProperty(property);
         if (c == value)
             v->push_back(chunks[i]);
@@ -139,7 +139,7 @@ std::vector<vjConfigChunk*>* vjConfigChunkDB::getMatching (const std::string& pr
 std::vector<vjConfigChunk*>* vjConfigChunkDB::getMatching (const std::string& property, float value) {
     float c;
     std::vector<vjConfigChunk*>* v = new std::vector<vjConfigChunk*>;
-    for (int i = 0; i < chunks.size(); i++) {
+    for (unsigned int i = 0; i < chunks.size(); i++) {
         c = chunks[i]->getProperty(property);
         if (c == value)
             v->push_back(chunks[i]);
@@ -232,12 +232,12 @@ int vjConfigChunkDB::dependencySort(vjConfigChunkDB* auxChunks)
     // Print out dependancies
 #ifdef VJ_DEBUG
     vjDEBUG_BEGIN(vjDBG_CONFIG,4) << "---- Dependencies -----------\n" << vjDEBUG_FLUSH;
-    for (int i=0;i<chunks.size();i++) {
+    for (unsigned int i=0;i<chunks.size();i++) {
         vjDEBUG(vjDBG_CONFIG,4) << "Chunk:" << chunks[i]->getProperty("name") << endl
                                 << "\tDepends on:\n" << vjDEBUG_FLUSH;
         std::vector<std::string> deps = chunks[i]->getChunkPtrDependencies();
         if (deps.size() > 0) {
-            for (int j=0;j<deps.size();j++)
+            for (unsigned int j=0;j<deps.size();j++)
                 vjDEBUG(vjDBG_CONFIG,4) << "   " << j << ": " << deps[j].c_str() << endl << vjDEBUG_FLUSH;
         } else {
             vjDEBUG(vjDBG_CONFIG,4) << "   Nothing.\n" << vjDEBUG_FLUSH;
@@ -265,7 +265,7 @@ int vjConfigChunkDB::dependencySort(vjConfigChunkDB* auxChunks)
         vjDEBUG(vjDBG_CONFIG,4) << "Checking depencies for: " << (*cur_item)->getProperty("name") << "\n" << vjDEBUG_FLUSH;
         
         deps = (*cur_item)->getChunkPtrDependencies();             // Get src dependencies
-        for (int dep_num=0;dep_num<deps.size();dep_num++) {  // For each dependency
+        for (unsigned int dep_num=0;dep_num<deps.size();dep_num++) {  // For each dependency
             bool dep_not_found = (getChunk(deps[dep_num]) == NULL);
             bool aux_dep_not_found = ((auxChunks == NULL) ||
                                       (auxChunks->getChunk(deps[dep_num]) == NULL));
@@ -292,12 +292,12 @@ int vjConfigChunkDB::dependencySort(vjConfigChunkDB* auxChunks)
 
     if (src_chunks.size() > 0) {     // Items left, so we failed to get all dependencies
         // ouput error
-        for (int i=0;i<src_chunks.size();i++) {
+        for (unsigned int i=0;i<src_chunks.size();i++) {
             vjDEBUG(vjDBG_ERROR,0) << "ERROR: Dependency error:  Chunk:" << src_chunks[i]->getProperty("name")
                                    << "\tDepends on: \n" << vjDEBUG_FLUSH;
             std::vector<std::string> deps = src_chunks[i]->getChunkPtrDependencies();
             if (deps.size() > 0) {
-                for (int j=0;j<deps.size();j++)
+                for (unsigned int j=0;j<deps.size();j++)
                     vjDEBUG(vjDBG_ERROR,0) << "\tdep " << j << ": " << deps[j].c_str() << endl << vjDEBUG_FLUSH;
             } else {
                 vjDEBUG(vjDBG_ERROR,0) << "Nothing.\n" << vjDEBUG_FLUSH;
@@ -312,12 +312,12 @@ int vjConfigChunkDB::dependencySort(vjConfigChunkDB* auxChunks)
 #ifdef VJ_DEBUG
 
         vjDEBUG_BEGIN(vjDBG_CONFIG,4) << "---- After sort ----" << endl << vjDEBUG_FLUSH;
-        for (int i=0;i<chunks.size();i++) {
+        for (unsigned int i=0;i<chunks.size();i++) {
             vjDEBUG(vjDBG_CONFIG,4) << "Chunk:" << chunks[i]->getProperty("name") << endl
                                     << "\tDepends on:\n" << vjDEBUG_FLUSH;
             std::vector<std::string> deps = chunks[i]->getChunkPtrDependencies();
             if (deps.size() > 0) {
-                for (int j=0;j<deps.size();j++)
+                for (unsigned int j=0;j<deps.size();j++)
                     vjDEBUG(vjDBG_CONFIG,4) << "   " << j << ": " << deps[j].c_str() << endl << vjDEBUG_FLUSH;
             } else {
                 vjDEBUG(vjDBG_CONFIG,4) << "   Nothing.\n" << vjDEBUG_FLUSH;
@@ -335,7 +335,7 @@ int vjConfigChunkDB::dependencySort(vjConfigChunkDB* auxChunks)
 /* IO functions: */
 
 ostream& operator << (ostream& out, vjConfigChunkDB& self) {
-    for (int i = 0; i < self.chunks.size(); i++) {
+    for (unsigned int i = 0; i < self.chunks.size(); i++) {
         out << *(self.chunks[i]) << endl;
     }
     out << "End" << endl;
