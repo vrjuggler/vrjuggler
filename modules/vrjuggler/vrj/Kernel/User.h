@@ -36,6 +36,7 @@
 #include <vrj/vrjConfig.h>
 //#include <vrj/Config/ConfigChunkPtr.h>
 #include <gadget/Type/PositionInterface.h>
+#include <jccl/Plugins/PerformanceMonitor/TimeStamp.h>
 
 namespace jccl {
     class ConfigChunk;
