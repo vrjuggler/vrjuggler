@@ -210,18 +210,6 @@ public class ChunkDesc implements Cloneable {
 
 
 
-    public String toString() {
-	String s = "chunk " + token + " \""
-	    + name + "\" \"" + help + "\"\n";
-	for (int i = 0; i < props.size(); i++)
-	    s += "  " + ((PropertyDesc)props.get(i)).toString() + "\n";
-	s += "  end\n";
-	//System.out.println ("string rep is:\n" + s);
-	return s;
-    }
-
-
-
     public PropertyDesc getPropertyDesc (String tok) {
 	PropertyDesc p;
         int n = props.size();
@@ -265,6 +253,11 @@ public class ChunkDesc implements Cloneable {
             System.err.println ("IOException in ChunkDesc read");
             return false;
         }   
+    }
+
+
+    public String toString() {
+        return xmlRep("");
     }
 
 
