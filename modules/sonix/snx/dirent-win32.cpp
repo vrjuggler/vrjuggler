@@ -18,11 +18,11 @@
 
 */
 
-#include <dirent.h>
 #include <errno.h>
 #include <io.h>
 #include <stdlib.h>
 #include <string.h>
+#include "dirent-win32.h"
 
 #ifdef __cplusplus
 extern "C" {
