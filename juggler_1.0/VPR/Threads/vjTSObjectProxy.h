@@ -91,18 +91,40 @@ private:
       // If not, Create the object and add it to the table
       if(!table->containsKey(mObjectKey))
       {
-         vjTSBaseObject* new_object = new vjTSObject<T>;
-         table->setObject(new_object,mObjectKey);
+         table->setObject(NULL, mObjectKey);       // Extend table and set to NULL
       }
 
       // --- GET THE TS OBJECT --- //
       vjTSBaseObject* object = table->getObject(mObjectKey);                  // get the specific object
+
+      // Check if we have not allocated it yet, if not, then allocate
+      if(object == NULL)
+      {
+         vjTSBaseObject* new_object = new vjTSObject<T>;                            // Allocate new object
+         vjASSERT((new_object != NULL) && "Failed to allocate vjTSObject<T>");      // NULL is bad
+         table->setObject(new_object, mObjectKey);                                  // Set the value
+         object = new_object;                                                       // Reference the new one
+      }
+
       vjTSObject<T>* real_object = dynamic_cast< vjTSObject<T>* >(object);    // try dynamic casting it
 
-      vjASSERT(real_object != NULL);      // If fails, it means that "real" object was different type than the proxy
-      if(real_object == NULL)
+      vjASSERT((object != NULL) && "TS Object is NULL!!!");    // We should not have NULL objects
+
+#ifdef VJ_DEBUG
+      if(real_object == NULL)    // Failed cast
+      {
+         std::cout << "Failed dynamic cast\n";
+         std::cout << "Have pointer of type: " << typeid(*object).name() << std::endl;
+         std::cout << "Want type: " << typeid(T).name() << std::endl;
+      }
+#endif
+
+      vjASSERT((real_object != NULL) && "Dynamic_cast of TS object failed");  // If fails, it means that "real" object was different type than the proxy
+      /*
+      if(real_object == NULL)    // Should NEVER return NULL.  If we did, then we can't dereference it.
          return NULL;
       else
+      */
          return real_object->getObject();                                   // return the ptr;
    }
 

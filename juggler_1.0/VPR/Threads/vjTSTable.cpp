@@ -60,7 +60,7 @@ void vjTSTable::setObject(vjTSBaseObject* object, long key)
 {
    vjASSERT(key >= 0);
    while(mTSObjects.size() <= (unsigned)key)
-      mTSObjects.push_back(NULL);
+      mTSObjects.push_back(NULL);               // NOTE: We have to find these later and actually allocate them
    mTSObjects[key] = object;
 }
 

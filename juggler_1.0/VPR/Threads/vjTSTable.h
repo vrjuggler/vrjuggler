@@ -38,6 +38,7 @@
 #include <vjConfig.h>
 #include <VPR/Threads/vjTSObject.h>
 #include <VPR/Sync/vjMutex.h>
+#include <Utils/vjDebug.h>
 
 //-----------------------------------------------------------------
 //: This class is the actual TS Table.
@@ -62,12 +63,13 @@ public:
    // attempting to access the object
    bool containsKey(long key)
    {
+      vjASSERT((key >= 0) && "Called contains key with invalid key");
       return ((key>=0)&&((unsigned)key<mTSObjects.size()));
    }
-   
+
    //: Get the object with the spcified key
    vjTSBaseObject* getObject(unsigned int objectKey);
-   
+
    //-----------------------------------------------------------------
    //: Set an object entry in the table.
    //-----------------------------------------------------------------
