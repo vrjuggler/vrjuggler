@@ -69,8 +69,8 @@ bool EventWindowWin32::config(jccl::ConfigElementPtr e)
    }
 
    // Get size and position
-   mWidth  = e->getProperty<int>("width");
-   mHeight = e->getProperty<int>("height");
+   mWidth  = e->getProperty<int>("size", 0);
+   mHeight = e->getProperty<int>("size", 1);
 
    // default to something "sane" if too small
    if ( mWidth == 0 ) mWidth = 400;
