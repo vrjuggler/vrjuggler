@@ -164,7 +164,7 @@ ifneq (@OS_TYPE@, Win32)
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(AR) $(AR_NAME_FLAG)$@ $(OBJDIR)/*.$(OBJEXT)
 	$(RANLIB) $@
-	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+	cd $(LIBDIR_BASE) && $(RM_LN) $(notdir $@) && $(LN_S) $@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
@@ -180,11 +180,11 @@ $(LIBDIR)/$(VJ_LIB_DYNAMIC) $(LIBDIR)/$(VJ_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJE
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
             $(DYLIB_DEPS_VJ)
-	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+	cd $(LIBDIR_BASE) && $(RM_LN) $(notdir $@) && $(LN_S) $@ ./
 ifeq (@OS_TYPE@, Win32)
-	cd $(LIBDIR_BASE) && rm -f $(VJ_LIB_STATIC) &&			\
+	cd $(LIBDIR_BASE) && $(RM_LN) $(VJ_LIB_STATIC) &&		\
             $(LN_S) $(LIBDIR)/$(VJ_LIB_STATIC) ./
-	cd $(LIBDIR_BASE) && rm -f $(VJ_LIBRARY).exp &&			\
+	cd $(LIBDIR_BASE) && $(RM_LN) $(VJ_LIBRARY).exp &&		\
             $(LN_S) $(LIBDIR)/$(VJ_LIBRARY).exp ./
 endif
 	@echo "------------------------------------------------"
@@ -198,11 +198,11 @@ $(LIBDIR)/$(UTILS_LIB_DYNAMIC) $(LIBDIR)/$(UTILS_PROF_LIB_DYNAMIC): $(OBJDIR)/*.
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
             $(DYLIB_DEPS_UTILS)
-	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+	cd $(LIBDIR_BASE) && $(RM_LN) $(notdir $@) && $(LN_S) $@ ./
 ifeq (@OS_TYPE@, Win32)
-	cd $(LIBDIR_BASE) && rm -f $(UTILS_LIB_STATIC) &&		\
+	cd $(LIBDIR_BASE) && $(RM_LN) $(UTILS_LIB_STATIC) &&		\
             $(LN_S) $(LIBDIR)/$(UTILS_LIB_STATIC) ./
-	cd $(LIBDIR_BASE) && rm -f $(UTILS_LIBRARY).exp &&		\
+	cd $(LIBDIR_BASE) && $(RM_LN) $(UTILS_LIBRARY).exp &&		\
             $(LN_S) $(LIBDIR)/$(UTILS_LIBRARY).exp ./
 endif
 	@echo "------------------------------------------------"
@@ -216,11 +216,11 @@ $(LIBDIR)/$(GL_LIB_DYNAMIC) $(LIBDIR)/$(GL_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJE
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
             $(DYLIB_DEPS_GL)
-	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+	cd $(LIBDIR_BASE) && $(RM_LN) $(notdir $@) && $(LN_S) $@ ./
 ifeq (@OS_TYPE@, Win32)
-	cd $(LIBDIR_BASE) && rm -f $(GL_LIB_STATIC) &&			\
+	cd $(LIBDIR_BASE) && $(RM_LN) $(GL_LIB_STATIC) &&		\
             $(LN_S) $(LIBDIR)/$(GL_LIB_STATIC) ./
-	cd $(LIBDIR_BASE) && rm -f $(GL_LIBRARY).exp &&			\
+	cd $(LIBDIR_BASE) && $(RM_LN) $(GL_LIBRARY).exp &&		\
             $(LN_S) $(LIBDIR)/$(GL_LIBRARY).exp ./
 endif
 	@echo "------------------------------------------------"
@@ -234,7 +234,7 @@ $(LIBDIR)/$(PF_LIB_DYNAMIC) $(LIBDIR)/$(PF_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJE
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
             $(DYLIB_DEPS_PF)
-	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+	cd $(LIBDIR_BASE) && $(RM_LN) $(notdir $@) && $(LN_S) $@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
@@ -245,33 +245,32 @@ $(LIBDIR)/$(PF_LIB_DYNAMIC) $(LIBDIR)/$(PF_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJE
 # should be set to $(instlinks).
 # =============================================================================
 links:
-ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "Setting up developer installation links"
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/vrj
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_NAME)
 	@$(MAKE) -C vrj instlinks=$(instlinks) links
-	cd $(instlinks)/include && rm -f ./deprecated &&		\
+	cd $(instlinks)/include && $(RM_LN) ./deprecated &&		\
           $(LN_S) $(VJROOT_ABS)/deprecated ./
 	for lib in $(LIBS) ; do 					\
-            cd $(instlinks)/$(LIBDIR_NAME) && rm -f $$lib* &&		\
+            cd $(instlinks)/$(LIBDIR_NAME) && $(RM_LN) $$lib* &&	\
               $(LN_S) $(LIBDIR_BASE)/$$lib* ./ ;			\
           done
 	cd $(instlinks) && rm -rf ./$(VJ_SHARE_DIR) &&			\
           $(SHELL) $(MKINSTALLDIRS) ./$(VJ_SHARE_DIR)
-	cd $(instlinks)/$(VJ_SHARE_DIR) && rm -f ./data &&		\
-          ln -s $(VJROOT_ABS)/data ./data
-	cd $(instlinks)/$(VJ_SHARE_DIR) && rm -f ./samples &&		\
-          ln -s $(VJROOT_ABS)/samples ./samples
-	cd $(instlinks)/include/vrj && rm -f ./*.h &&			\
+	cd $(instlinks)/$(VJ_SHARE_DIR) && $(RM_LN) ./data &&		\
+          $(LN_S) $(VJROOT_ABS)/data ./data
+	cd $(instlinks)/$(VJ_SHARE_DIR) && $(RM_LN) ./samples &&	\
+          $(LN_S) $(VJROOT_ABS)/samples ./samples
+	cd $(instlinks)/include/vrj && $(RM_LN) ./*.h &&		\
           $(LN_S) $(VJROOT_ABS)/vrj/*.h ./
-	cd $(instlinks)/include/vrj && rm -f ./vrjDefines.h &&		\
-          $(LN_S) $(topdir)/vrj/vrjDefines.h ./vrjDefines.h
-	cd $(instlinks)/include/vrj && rm -f ./vrjParam.h &&		\
-          $(LN_S) $(topdir)/vrj/vrjParam.h ./vrjParam.h
+	cd $(instlinks)/include/vrj && $(RM_LN) ./vrjDefines.h &&	\
+          $(LN_S) $(topdir)/vrj/vrjDefines.h ./
+	cd $(instlinks)/include/vrj && $(RM_LN) ./vrjParam.h &&		\
+          $(LN_S) $(topdir)/vrj/vrjParam.h ./
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
-	cd $(instlinks)/bin && rm -f ./catadf.pl &&			\
+	cd $(instlinks)/bin && $(RM_LN) ./catadf.pl &&			\
           $(LN_S) $(VJROOT_ABS)/tools/catadf.pl ./catadf.pl
 	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
             -t $(VJROOT_ABS)/vrjuggler-config.in -p 'use_base_dir=yes'	\
@@ -281,12 +280,6 @@ ifneq (@OS_TYPE@, Win32)
 	@echo 'You should now set $$VJ_BASE_DIR to:'
 	@cd $(instlinks) && echo "  `pwd`"
 	@echo "---------------------------------------------------------------"
-else
-	@echo "---------------------------------------------------------------"
-	@echo 'You must now install VR Juggler and set %VJ_BASE_DIR% to:'
-	@echo "  $(prefix)"
-	@echo "---------------------------------------------------------------"
-endif
 
 # Remove the links in $(instlinks).
 clean-links:

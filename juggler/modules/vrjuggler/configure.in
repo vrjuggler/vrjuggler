@@ -469,7 +469,8 @@ if test "x$OS_TYPE" = "xWin32" ; then
     DEPEND_EXTRAS=`unix2dos "$DEPEND_EXTRAS"`
     INCLUDES=`unix2dos "$INCLUDES"`
     LIBS=`unix2dos "$LIBS"`
-    LN_S='cp'
+    LN_S='cp -r'
+    RM_LN='rm -rf'
     MTREE_CMD=`unix2dos "$MTREE_CMD"`
 
     JDK_HOME=`unix2dos -p "$JDK_HOME"`
@@ -479,6 +480,7 @@ if test "x$OS_TYPE" = "xWin32" ; then
     APP_EXTRA_LIBS_PF=`unix2dos "$APP_EXTRA_LIBS_PF"`
     APP_EXTRA_LIBS_OSG=`unix2dos "$APP_EXTRA_LIBS_OSG"`
 else
+    RM_LN='rm -f'
     VJROOT_ABS="$VJROOT_ABS"
     JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 fi
@@ -556,6 +558,7 @@ AC_SUBST(VJROOT_ABS)
 AC_SUBST(JUGGLERROOT_ABS)
 AC_SUBST(VJ_SHARE_DIR)
 
+AC_SUBST(RM_LN)
 AC_SUBST(EXTRA_LINK_FLAGS)
 AC_SUBST(VPR_SUBSYSTEM)
 
