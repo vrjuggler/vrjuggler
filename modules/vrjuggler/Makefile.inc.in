@@ -240,6 +240,8 @@ ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/vrj
 	@$(MAKE) -C vrj instlinks=$(instlinks) links
+	cd $(instlinks)/include && rm -f ./deprecated &&               \
+	ln -s $(VJROOT_ABS)/deprecated ./
 	cd $(instlinks) && rm -f ./$(LIBDIR_NAME) &&			\
           ln -s $(LIBDIR_BASE) ./$(LIBDIR_NAME)
 	cd $(instlinks) && rm -rf ./$(VJ_SHARE_DIR) &&			\
