@@ -79,12 +79,28 @@ public:
    static const Interval HalfPeriod;   /**< Half of the roll over period */
 
 public:
+   /**
+    * default constructor sets mMicroSeconds to 0
+    */
    Interval() : mMicroSeconds(0)
    {;}
 
-   Interval(const vpr::Uint64 num, const Unit timeUnit) : mMicroSeconds(0)
-   { set(num, timeUnit); }
 
+   /**
+    * constructor that takes a Uint64 number and a unit and stores it in
+    * mMicroseconds as the interval
+    */
+   Interval(const vpr::Uint64 num, const Unit timeUnit) 
+   { 
+      set(num, timeUnit); 
+   }
+
+
+   /** 
+    * This method takes a vpr::Uint64 number (num) and a unit type (timeUnit).
+    * It sets mMicroSeconds to be the number of microseconds in num timeUnit.
+    * example:  set(1, Sec) then mMicroseconds is set to 1000000.
+    */
    void set(const vpr::Uint64 num, const Unit timeUnit)
    {
       switch(timeUnit)
@@ -107,6 +123,11 @@ public:
       }
    }
 
+   /** 
+    * This method takes a float number (num) and a unit type (timeUnit).
+    * It sets mMicroSeconds to be the number of microseconds in num timeUnit.
+    * example:  set(1, Sec) then mMicroseconds is set to 1000000.
+    */
    void setf(const float num, const Unit timeUnit)
    {
       switch(timeUnit)
@@ -119,7 +140,6 @@ public:
          break;
       case Interval::Usec:
          mMicroSeconds = vpr::Uint64(num);
-         //mTensOfUsecs = num;
          break;
       case Interval::Base:
          mMicroSeconds = vpr::Uint64(num);
@@ -130,6 +150,11 @@ public:
       }
    }
 
+   /** 
+    * This method takes a double number (num) and a unit type (timeUnit).
+    * It sets mMicroSeconds to be the number of microseconds in num timeUnit.
+    * example:  set(1, Sec) then mMicroseconds is set to 1000000.
+    */
    void setd(const double num, const Unit timeUnit)
    {
       switch(timeUnit)
@@ -154,20 +179,47 @@ public:
    }
 
    /**
-    * Set the interval to the current time.  This can them be used to compute a time
-    * interval by subtracting two intervals from each other.
+    * Set the interval to the current time.  This can then be used to compute 
+    * a time interval by subtracting two intervals from each other.
     */
    void setNow();
 
-   /** Set now that is gauranteed to be "real" time */
+   /** 
+    * Set now that is gauranteed to be the time based on the system clock which
+    * can then be used to compute a time interval by subracting two intervals
+    * from each other.
+    */
    void setNowReal();
 
+   /**
+    * given an amount of time in seconds as a Uint64 store it as the interval in
+    * mMicroseconds.
+    */
    void sec(const vpr::Uint64 num)
-   { set(num, Interval::Sec); }
+   { 
+      set(num, Interval::Sec); 
+   }
+   
+   /**
+    * returns the time in seconds when this interval was taken
+    */
    vpr::Uint64 sec() const
-   { return (mMicroSeconds/1000000); }
+   { 
+      return (mMicroSeconds/1000000); 
+   }
+   
+   /**
+    * this method takes a float representing seconds and sets the interval to
+    * that many Microseconds
+    */
    void secf(const float num)
-   { setf(num, Interval::Sec); }
+   { 
+      setf(num, Interval::Sec); 
+   }
+   
+   /**
+    * returns the time in this interval in seconds as a float.
+    */
    float secf() const
    {
 #ifdef VPR_OS_Win32
@@ -176,8 +228,19 @@ public:
       return (float(mMicroSeconds)/1000000.0f);
 #endif
    }
+   
+   /**
+    * this method takes a float representing seconds and sets the interval to
+    * that many Microseconds.
+    */
    void secd(const double num)
-   { setd(num, Interval::Sec); }
+   { 
+      setd(num, Interval::Sec); 
+   }
+   
+   /**
+    * returns the time in this interval in seconds as a double
+    */
    double secd() const
    {
 #ifdef VPR_OS_Win32
@@ -187,12 +250,36 @@ public:
 #endif
    }
 
+   /**
+    * this method takes a Uint64 representing milliseconds and sets the interval
+    * to that number of Microseconds
+    */
    void msec(const vpr::Uint64 num)
-   { set(num, Interval::Msec); }
+   { 
+      set(num, Interval::Msec); 
+   }
+   
+   /**
+    * returns the time in this interval in milliseconds as a 64 bit unsigned
+    * int.
+    */
    vpr::Uint64 msec() const
-   { return (mMicroSeconds/1000); }
+   { 
+      return (mMicroSeconds/1000); 
+   }
+   
+   /**
+    * this method takes a float representing milliseconds and sets the interval
+    * to be that many Microseconds
+    */
    void msecf(const float num)
-   { setf(num, Interval::Msec); }
+   { 
+      setf(num, Interval::Msec); 
+   }
+   
+   /**
+    * returns the time in this interval in milliseconds as a float.
+    */
    float msecf() const
    {
 #ifdef VPR_OS_Win32
@@ -201,8 +288,19 @@ public:
       return (float(mMicroSeconds)/1000.0f);
 #endif
    }
+
+   /**
+    * this method takes a double representing milliseconds and sets the interval
+    * to be that many Microseconds.
+    */
    void msecd(const double num)
-   { setd(num, Interval::Msec); }
+   { 
+      setd(num, Interval::Msec); 
+   }
+   
+   /** 
+    * return the time in this interval in milliseconds as a double
+    */
    double msecd() const
    {
 #ifdef VPR_OS_Win32
@@ -212,12 +310,35 @@ public:
 #endif
    }
 
+   /**
+    * this method takes a Unit64 representing microseconds and sets the interval
+    * to be that many microseconds.
+    */
    void usec(const vpr::Uint64 num)
-   { set(num, Interval::Usec); }
+   { 
+      set(num, Interval::Usec); 
+   }
+   
+   /**
+    * returns the time in this interval in microseconds as a vpr::Uint64
+    */
    vpr::Uint64 usec() const
-   { return mMicroSeconds; }
+   { 
+      return mMicroSeconds; 
+   }
+   
+   /**
+    * this method takes a float representing microseconds and sets the interval
+    * to be that many microseconds.
+    */
    void usecf(const float num)
-   { setf(num, Interval::Usec); }
+   { 
+      setf(num, Interval::Usec); 
+   }
+   
+   /**
+    * returns the time in this interval in microseconds as a float
+    */
    float usecf() const
    {
 #ifdef VPR_OS_Win32
@@ -226,8 +347,19 @@ public:
       return (mMicroSeconds);
 #endif
    }
+   
+   /**
+    * this method takes a double representing microseconds and sets the interval
+    * to be that many microseconds.
+    */
    void usecd(const double num)
-   { setd(num, Interval::Usec); }
+   { 
+      setd(num, Interval::Usec); 
+   }
+   
+   /**
+    * returns the time in this interval in microseconds as a double.
+    */
    double usecd() const
    {
 #ifdef VPR_OS_Win32
@@ -237,14 +369,33 @@ public:
 #endif
    }
 
+   /** 
+    * returns the time in this interval in microseconds as a vpr:Uint64
+    */
    vpr::Uint64 getBaseVal() const
-   { return mMicroSeconds; }
+   { 
+      return mMicroSeconds; 
+   }
 
+   /**
+    * operator== method tests two intervals for equality by checking the values
+    * of their mMicroseconds variable for equality.  If these are the same we
+    * return true else we return false.
+    */
    bool operator ==(const Interval& r) const
-   { return (mMicroSeconds == r.mMicroSeconds); }
+   { 
+      return (mMicroSeconds == r.mMicroSeconds); 
+   }
 
+   /**
+    * operator!= tests two intervals for inequality by checking their
+    * mMicrosecond variables.  If these values are different we return false
+    * else we return true.
+    */
    bool operator !=(const Interval& r) const
-   { return ! (*this == r); }
+   { 
+      return ! (*this == r); 
+   }
 
    /** Operator <
    * Must handle the roll over condition
@@ -252,30 +403,67 @@ public:
    *  v1          v2 v3
    *
    * v1<v2, v2<v3, v3<v1
+   * less than test for two intervals.  
    */
    bool operator <(const Interval& r) const
    {
       return (mMicroSeconds < r.mMicroSeconds);
    }
 
+   /** Operator <=
+    * Must handle the roll over condition
+    * |--------------|--------------|
+    *  v1          v2 v3
+    *
+    * v1<v2, v2<v3, v3<v1
+    * 
+    * less than  or equal test for two intervals.  
+    */
+
    bool operator<= (const Interval& r) const
    {
       return (mMicroSeconds <= r.mMicroSeconds);
    }
 
+   /** Operator >
+    * Must handle the roll over condition
+    * |--------------|--------------|
+    *  v1          v2 v3
+    *
+    * v2>v1, v3>v2, v3>v1
+    * 
+    * greater than test for two intervals.  
+    */
    bool operator> (const Interval& r) const
    {
       return (mMicroSeconds > r.mMicroSeconds);
    }
 
+   /**
+    * operator+= adds two interval's length together and stores the value in
+    * this interval
+    */
    Interval& operator+=(const Interval& r)
-   { mMicroSeconds += r.mMicroSeconds; return *this; }
+   { 
+      mMicroSeconds += r.mMicroSeconds; return *this; 
+   }
 
+   /**
+    * operator + returns an Interval that is the addition of two interval times.
+    */
    Interval operator +(const Interval& r) const
-   { return (Interval(*this) += r);  }
+   { 
+      return (Interval(*this) += r);  
+   }
 
+   /**
+    * operator-= subtracts two interval's length and stores the value in this
+    * interval
+    */
    Interval& operator-=(const Interval& r)
-   { mMicroSeconds -= r.mMicroSeconds; return *this; }
+   { 
+      mMicroSeconds -= r.mMicroSeconds; return *this; 
+   }
 
    /**
     * Return the difference of two interval values
@@ -286,9 +474,13 @@ public:
     * @return
     */
    Interval operator -(const Interval& r) const
-   { return (Interval(*this) -= r); }
+   { 
+      return (Interval(*this) -= r); 
+   }
 
-   /** Helper function that returns an interval representing the current time */
+   /**
+    * Helper function that returns an interval representing the current time 
+    */
    static vpr::Interval now()
    {
       vpr::Interval ret_val;
@@ -298,7 +490,7 @@ public:
 
 
 private:
-   vpr::Uint64 mMicroSeconds;
+   vpr::Uint64 mMicroSeconds; /** the amount of time in this interval */
 
 #if defined(VPR_OS_IRIX)
    // All of these variables are required to make the cycle counter
