@@ -116,7 +116,7 @@ protected:
    bool mActive;
 
    std::string          mHostname;
-   int                  mTCPport;
+   vpr::Uint16          mTCPport;
    std::string          mSerialPortName;
    int                  mBaudRate;
    bool                 mIsMaster;
