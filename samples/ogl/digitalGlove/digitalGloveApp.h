@@ -55,16 +55,16 @@
 // This application draws a glove and some rays and spheres
 // on the glove
 //----------------------------------------------------
-class simpleGloveApp : public vjGlApp
+class digitalGloveApp : public vjGlApp
 {
 public:
-   simpleGloveApp(vjKernel* kern)
+   digitalGloveApp(vjKernel* kern)
       : vjGlApp(kern)            // Initialize base class
    {
       mQuadObj = NULL;
    }
 
-   virtual ~simpleGloveApp (void) {
+   virtual ~digitalGloveApp (void) {
       if ( mQuadObj != NULL ) {
          gluDeleteQuadric(mQuadObj);
          mQuadObj = NULL;
@@ -75,7 +75,7 @@ public:
    // Initialize interfaces
    virtual void init()
    {
-      //cout<<"simpleGloveApp::init()"<<flush;
+      //cout<<"digitalGloveApp::init()"<<flush;
       
       mGlove.init("VJGlove");
       
@@ -98,7 +98,7 @@ public:
    //  but before the drawManager starts the drawing loops.
    virtual void apiInit()
    {
-      //cout<<"simpleGloveApp::apiInit()\n"<<flush; 
+      //cout<<"digitalGloveApp::apiInit()\n"<<flush; 
    }
 
    //: Function to draw the scene
@@ -106,7 +106,7 @@ public:
    //! POST: The current scene has been drawn
    virtual void draw()
    {
-      //cout<<"simpleGloveApp::draw()\n"<<flush; 
+      //cout<<"digitalGloveApp::draw()\n"<<flush; 
       
       initGLState();    // This should really be in another function
       myDraw();
@@ -135,7 +135,7 @@ public:
    /// Function called after tracker update but before start of drawing
    virtual void preFrame()
    {
-     //cout<<"simpleGloveApp::preFrame()\n"<<flush; 
+     //cout<<"digitalGloveApp::preFrame()\n"<<flush; 
       
        cout<<mLeftThumb->getData()
           <<mLeftIndex->getData()
