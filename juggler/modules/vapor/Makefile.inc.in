@@ -124,7 +124,7 @@ afterbuild:
 # Construct the static version of the libraries.
 # -----------------------------------------------
 $(LIBDIR)/$(VPR_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
-ifeq (@OS_TYPE@, Win32)
+ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
