@@ -1,0 +1,160 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# -----------------------------------------------------------------------------
+# Base configure.in for the Juggler project.
+# -----------------------------------------------------------------------------
+# This file is "compiled" by GNU autoconf to generate the configure script
+# that is actually run.
+# -----------------------------------------------------------------------------
+
+AC_REVISION($Revision$)
+AC_INIT(modules/vrjuggler/vrj/vrjConfig.h)
+AC_CONFIG_AUX_DIR(share/config)
+DPP_PREREQ(1.4)
+DPP_INIT
+
+# List the sub-projects where a local configure script needs to be run.
+# Order is important.
+AC_CONFIG_SUBDIRS(modules/vapor)
+
+DPP_GEN_RECONFIG
+
+# -----------------------------------------------------------------------------
+# Command-line arguments (--enable-option, --with-pkg=package_name).
+# -----------------------------------------------------------------------------
+
+DPP_STD_CPP(yes)
+
+builtin(include, modules/vapor/cfgargs.m4)
+
+DPP_ABI_SETUP
+
+# -----------------------------------------------------------------------------
+# System-dependent stuff.
+# -----------------------------------------------------------------------------
+DPP_WIN32_SETUP
+AC_CANONICAL_SYSTEM
+DPP_SYSTEM_SETUP
+
+# -----------------------------------------------------------------------------
+# Checks for programs.
+# -----------------------------------------------------------------------------
+VJ_COMPILER_SETUP
+DPP_CXX_NAMESPACE(AC_MSG_ERROR(*** The Juggler project requires C++ namesapce support ***))
+DPP_CXX_HAVE_STD
+
+# Now check to see if the compiler accepts the -pthread option.
+if test "x$SUBSYSTEM" != "xSPROC" -a "x$NSPR_THREADS_ENABLED" = "xno" ; then
+   DPP_CC_PTHREAD_ARG
+
+   if test "x$CC_ACCEPTS_PTHREAD" = "xno" ; then
+      DPP_CC_PTHREADS_ARG
+   fi
+fi
+
+DPP_PERL_VER(5.004)
+
+DPP_HAVE_GNU_MAKE(3.78, ,
+   AC_MSG_ERROR(*** The Juggler build system requires GNU make 3.78 or newer ***))
+DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
+
+# -----------------------------------------------------------------------------
+# Checks for libraries.
+# -----------------------------------------------------------------------------
+case $SUBSYSTEM in
+   SPROC)
+      ;;
+   NSPR)
+      if test "x$NSPR_THREADS_ENABLED" = "xno" -a "x$OS_TYPE" = "xUNIX" ; then
+         DPP_GET_PTHREAD_LIB
+         DPP_GET_POSIX_SEMAPHORE_LIB( ,
+            AC_MSG_ERROR(*** POSIX semaphores are required for NSPR subsystem ***))
+         USE_PTHREADS='yes'
+      else
+         USE_PTHREADS='no'
+      fi
+
+      DPP_HAVE_NSPR(4.0, "$USE_PTHREADS",
+         AC_MSG_ERROR(*** NSPR requried for compiling ***))
+      ;;
+   POSIX)
+      DPP_GET_PTHREAD_LIB
+      ;;
+esac
+
+# -----------------------------------------------------------------------------
+# Miscellaneous checks.
+# -----------------------------------------------------------------------------
+DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
+
+# -----------------------------------------------------------------------------
+# Do Makefile substitutions.
+# -----------------------------------------------------------------------------
+DPP_SYSTEM_SUBST
+
+cd "$srcdir"
+JUGGLERROOT_ABS=`pwd`
+cd "$topdir"
+
+UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
+
+# Translate paths from UNIX-style to Win32.
+if test "x$OS_TYPE" = "xWin32" ; then
+    JUGGLERROOT_ABS=`unix2dos -p "$JUGGLERROOT_ABS"`
+else
+    JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
+fi
+
+DPP_SUBST
+
+AC_SUBST(topdir)
+AC_SUBST(UNIX_JUGGLERROOT_ABS)
+AC_SUBST(JUGGLERROOT_ABS)
+
+# -----------------------------------------------------------------------------
+# Final file generation step.
+# -----------------------------------------------------------------------------
+
+if test ! -d "modules" ; then
+   mkdir modules
+fi
+
+AC_OUTPUT(Makefile)
+
+cat <<BUILD_INFO
+
+ Remember that you need to build the Juggler project with GNU make.
+ GNU make is called 'gmake' on most systems.
+ See the file README for more details on compiling the Juggler distribution.
+
+BUILD_INFO
