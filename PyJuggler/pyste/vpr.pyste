@@ -25,6 +25,12 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
+Class('vpr::ObjectReader', 'vpr/IO/ObjectReader.h')
+Class('vpr::ObjectWriter', 'vpr/IO/ObjectWriter.h')
+Class('vpr::ReadableObject', 'vpr/IO/SerializableObject.h')
+Class('vpr::WriteableObject', 'vpr/IO/SerializableObject.h')
+Class('vpr::SerializableObject', 'vpr/IO/SerializableObject.h')
+
 GUID = Class('vpr::GUID', 'vpr/Util/GUID.h')
 exclude(GUID.readObject)
 exclude(GUID.writeObject)
