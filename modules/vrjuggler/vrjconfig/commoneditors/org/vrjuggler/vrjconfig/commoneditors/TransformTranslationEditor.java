@@ -296,7 +296,7 @@ public class TransformTranslationEditor
       return val_in_meters;
    }
 
-   private void setTranslateProperty(Double value, int index)
+   private void setTranslateProperty(Number value, int index)
    {
       int units = mTrackerPosUnitsChooser.getSelectedIndex();
 
@@ -309,7 +309,7 @@ public class TransformTranslationEditor
    {
       if ( propertyChangeEvent.getPropertyName().equals("value") )
       {
-         setTranslateProperty((Double) mTrackerXPosField.getValue(), 0);
+         setTranslateProperty((Number) mTrackerXPosField.getValue(), 0);
       }
    }
 
@@ -317,7 +317,7 @@ public class TransformTranslationEditor
    {
       if ( propertyChangeEvent.getPropertyName().equals("value") )
       {
-         setTranslateProperty((Double) mTrackerYPosField.getValue(), 1);
+         setTranslateProperty((Number) mTrackerYPosField.getValue(), 1);
       }
    }
 
@@ -325,7 +325,7 @@ public class TransformTranslationEditor
    {
       if ( propertyChangeEvent.getPropertyName().equals("value") )
       {
-         setTranslateProperty((Double) mTrackerZPosField.getValue(), 2);
+         setTranslateProperty((Number) mTrackerZPosField.getValue(), 2);
       }
    }
 }
