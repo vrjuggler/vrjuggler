@@ -47,7 +47,8 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(GL_LIBRARY)
 
-SRCS=		GlBasicSimulator.cpp		\
+SRCS=		GlApp.cpp			\
+		GlBasicSimulator.cpp		\
 		GlDrawManager.cpp		\
 		GlPipe.cpp			\
 		GlSimInterfaceFactory.cpp	\
