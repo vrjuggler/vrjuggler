@@ -2,8 +2,8 @@
 
 default: html
 
-docs: html pdf
-install-docs: install-html install-pdf
+docs: html
+install-docs: install-html
 
 DOXYGEN_FILE=		Juggler.doxy
 HTML_DOXYGEN_FILE=	$(DOXYGEN_FILE)
