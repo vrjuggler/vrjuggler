@@ -60,8 +60,6 @@ int main(int argc, char* argv[])
    kernel->loadConfigFile( path + "startup/sim.camerakeyboardproxy.config" );
    kernel->loadConfigFile( path + "startup/sim.digitalsystemcontrols.config" );
    kernel->loadConfigFile( path + "startup/sim.displaysystem.config" );
-   kernel->loadConfigFile( path + "startup/sim.dummy1.config" );
-   kernel->loadConfigFile( path + "startup/sim.dummyposproxy.config" );
    kernel->loadConfigFile( path + "startup/sim.emfileoutput1.config" );
    kernel->loadConfigFile( path + "startup/sim.envmanager1.config" );
    kernel->loadConfigFile( path + "startup/sim.headkeyboard.config" );
