@@ -47,8 +47,8 @@ gmtl::Matrix44f GetVjMatrix( const pfMatrix& perfMat )
    gmtl::Matrix44f mat;
    gmtl::Vec3f x_axis( 1,0,0 );
    mat.set( &(perfMat.mat[0][0]) );
-   gmtl::postMult(mat, gmtl::makeRot<gmtl::Matrix44f>(GMTL_DEG2RAD(90), x_axis ));
-   gmtl::preMult(mat, gmtl::makeRot<gmtl::Matrix44f>(GMTL_DEG2RAD(-90), x_axis ));
+   gmtl::postMult(mat, gmtl::makeRot<gmtl::Matrix44f>(gmtl::deg2Rad(90), x_axis ));
+   gmtl::preMult(mat, gmtl::makeRot<gmtl::Matrix44f>(gmtl::deg2Rad(-90), x_axis ));
 
    return mat;
 }
