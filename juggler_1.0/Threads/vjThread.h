@@ -20,7 +20,7 @@
 
 #ifndef _VJ_THREAD_H_
 #define _VJ_THREAD_H_
-#pragma once
+//#pragma once
 
 #include <vjConfig.h>
 //#include <unistd.h>

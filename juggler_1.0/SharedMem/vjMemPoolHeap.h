@@ -20,7 +20,7 @@
 
 #ifndef _MemPoolHeap_h_
 #define _MemPoolHeap_h_
-#pragma once
+//#pragma once
 
 //----------------------------------------------
 // vjMemPoolHeap
@@ -44,7 +44,7 @@ class vjMemPoolHeap : public vjMemPool {
 public:
    static void init()
    {;}
-   
+
    vjMemPoolHeap(size_t initialSize = 65536,  int numProcs = 8, char* staticTempName = "memPoolHeapXXXXXX")
    {;}
 

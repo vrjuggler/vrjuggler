@@ -20,7 +20,7 @@
 
 #ifndef _VJ_STREAM_LOCK_H_
 #define _VJ_STREAM_LOCK_H_
-#pragma once
+//#pragma once
 
 #include <iostream.h>
 #include <Sync/vjMutex.h>
@@ -35,7 +35,7 @@ class vjStreamLock
 public:
    explicit vjStreamLock(vjMutex& mutex) : mMutex(mutex)
    {;}
-   
+
    friend ostream& operator<<(ostream&, const vjStreamLock&);
 	
 private:
@@ -54,7 +54,7 @@ class vjStreamUnLock
 public:
    explicit vjStreamUnLock(vjMutex& mutex) : mMutex(mutex)
    {;}
-   
+
    friend ostream& operator<<(ostream&, const vjStreamUnLock&);
 	
 private:

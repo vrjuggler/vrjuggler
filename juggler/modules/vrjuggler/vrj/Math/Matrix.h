@@ -20,7 +20,7 @@
 
 #ifndef _VJ_MATRIX_
 #define _VJ_MATRIX_
-#pragma once
+//#pragma once
 
 #include <vjConfig.h>
 #include <math.h>

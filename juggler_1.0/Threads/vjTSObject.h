@@ -20,7 +20,7 @@
 
 #ifndef _VJ_TS_OBJECT_H_
 #define _VJ_TS_OBJECT_H_
-#pragma once
+//#pragma once
 
 #include <vjConfig.h>
 

@@ -20,7 +20,7 @@
 
 #ifndef _VJ_COORD_
 #define _VJ_COORD_
-#pragma once
+//#pragma once
 
 #include <vjConfig.h>
 #include <Math/vjVec3.h>

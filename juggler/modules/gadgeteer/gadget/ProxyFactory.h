@@ -20,7 +20,7 @@
 
 #ifndef _VJ_PROXY_FACTORY_H_
 #define _VJ_PROXY_FACTORY_H_
-#pragma once
+//#pragma once
 
 #include <vjConfig.h>
 #include <Input/InputManager/vjProxy.h>

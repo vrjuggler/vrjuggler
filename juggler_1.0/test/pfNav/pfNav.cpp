@@ -26,14 +26,7 @@
 #include <pfCollidor.h>
 */
 
-int lightPreDraw(pfTraverser *trav, void *userData);
-int lightPostDraw(pfTraverser* trav, void* userData);
-int lightPreCull(pfTraverser *trav, void *userData);
-int lightPostCull(pfTraverser* trav, void* userData);
-int lightPreApp(pfTraverser *trav, void *userData);
-int lightPostApp(pfTraverser* trav, void* userData);
-int light_dcsPreCull(pfTraverser* trav, void* userData);
-int light_dcsPostCull(pfTraverser* trav, void* userData);
+
 
 // Declare my application class
 class myApp : public vjPfApp
@@ -72,26 +65,23 @@ public:
 
       sun1 = new pfLightSource;
       pfDCS* fake_dcs = new pfDCS;
-      sun1->setPos(0.0f, -1.0f, 0.0f, 0.0f);
-      sun1->setColor(PFLT_DIFFUSE,1.0f,0.0f,0.0f);
-      sun1->setColor(PFLT_AMBIENT,0.0f,1.0f,0.0f);
+      sun1->setPos(0.3f, 0.0f, 0.3f, 0.0f);
+      sun1->setColor(PFLT_DIFFUSE,0.3f,0.0f,0.95f);
+      sun1->setColor(PFLT_AMBIENT,0.4f,0.4f,0.4f);
       sun1->setColor(PFLT_SPECULAR, 1.0f, 1.0f, 1.0f);
       //naver->addChild(sun1);
 
       fake_dcs->addChild(sun1);
       //sun1->on();     // By default
 
-      sun1->setTravFuncs(PFTRAV_DRAW, lightPreDraw, lightPostDraw);
-      sun1->setTravFuncs(PFTRAV_CULL, lightPreCull, lightPostCull);
-      sun1->setTravFuncs(PFTRAV_APP, lightPreApp, lightPostApp);
-      fake_dcs->setTravFuncs(PFTRAV_CULL, light_dcsPreCull, light_dcsPostCull);
-
       //rootNode->addChild(new pfLightSource);
 
       /// Load SIMPLE geometry
       ///*
+      pfFilePath("/usr/share/Performer/data");
       //pfNode* obj = pfdLoadFile("/usr/share/Performer/data/chamber.0.lsa");
       pfNode* obj = pfdLoadFile("/usr/share/Performer/data/klingon.flt");
+      //pfNode* obj = pfdLoadFile("/usr/share/Performer/data/geom.sv");
       pfDCS* world_model = new pfDCS;    // The node with the world under it
       //rootNode->addChild(naver);
       rootNode->addChild(world_model);
@@ -167,12 +157,8 @@ public:
          amb = 0.0f;
 
       //sun1->setPos(x,y,z, 1.0f);
-      cerr << "set ambient: " << amb << endl;
-      sun1->setColor(PFLT_AMBIENT, amb, amb, amb);
-
-      pfSphere* bound = new pfSphere;
-      sun1->getBound(bound);
-      cerr << "rad: " << bound->radius << endl;
+      //cerr << "set ambient: " << amb << endl;
+      //sun1->setColor(PFLT_AMBIENT, amb, amb, amb);
    }
 
    /// Function called after pfDraw
@@ -182,9 +168,6 @@ public:
    }
 
 public:
-   int   wandIndex;     // the index of the wand
-   int   button0Index;   // The index of the wand button
-   int   button1Index;  // The index of button1
    pfLightSource* sun1;
 
    //pfNaver*    naver;
@@ -213,61 +196,4 @@ int main(int argc, char* argv[])
      {;}
 }
 
-
-
-
-int lightPreDraw(pfTraverser *trav, void *userData)
-{ cerr << "trav: light preDraw\n"; return PFTRAV_CONT;}
-
-int lightPostDraw(pfTraverser* trav, void* userData)
-{ cerr << "trav: light postDraw\n"; return PFTRAV_CONT;}
-
-int lightPreCull(pfTraverser *trav, void *userData)
-{
-   cerr << "trav: light preCull\n";
-   pfSphere* bound = new pfSphere;
-   trav->getNode()->getBound(bound);
-   cerr << "rad: " << bound->radius << endl;
-   return PFTRAV_CONT;
-}
-
-int lightPostCull(pfTraverser* trav, void* userData)
-{
-   cerr << "trav: light postCull\n";
-   pfSphere* bound = new pfSphere;
-   trav->getNode()->getBound(bound);
-   cerr << "rad: " << bound->radius << endl;
-   return PFTRAV_CONT;
-}
-
-int lightPreApp(pfTraverser *trav, void *userData)
-{
-   cerr << "trav: light preApp\n";
-   pfSphere* bound = new pfSphere;
-   trav->getNode()->getBound(bound);
-   cerr << "rad: " << bound->radius << endl;
-   return PFTRAV_CONT;
-}
-
-int lightPostApp(pfTraverser* trav, void* userData)
-{
-   cerr << "trav: light postApp\n";
-   pfSphere* bound = new pfSphere;
-   trav->getNode()->getBound(bound);
-   cerr << "rad: " << bound->radius << endl;
-   return PFTRAV_CONT;
-}
-
-int light_dcsPreCull(pfTraverser* trav, void* userData)
-{
-   cerr << "trav: light_dcs: preCull\n";
-   pfCullResult(PFIS_MAYBE|PFIS_TRUE|PFIS_ALL_IN);
-   return PFTRAV_CONT;
-}
-
-int light_dcsPostCull(pfTraverser* trav, void* userData)
-{
-   cerr << "trav: light_dcs: postCull\n";
-   return PFTRAV_CONT;
-}
 

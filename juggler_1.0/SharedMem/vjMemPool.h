@@ -20,7 +20,7 @@
 
 #ifndef _MemPool_h_
 #define _MemPool_h_
-#pragma once
+//#pragma once
 
 #include <vjConfig.h>
 #include <stdlib.h>

@@ -20,7 +20,7 @@
 
 #ifndef _VJ_GLX_WIN_H
 #define _VJ_GLX_WIN_H
-#pragma once
+//#pragma once
 
 #include <vjConfig.h>
 #include <X11/Xlib.h>

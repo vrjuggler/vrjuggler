@@ -20,7 +20,7 @@
 
 #ifndef _VJ_THREAD_MANAGER_H_
 #define _VJ_THREAD_MANAGER_H_
-#pragma once
+//#pragma once
 
 #include <vjConfig.h>
 #include <Threads/vjThread.h>

@@ -20,7 +20,7 @@
 
 #ifndef _VJ_BASE_THREAD_H_
 #define _VJ_BASE_THREAD_H_
-#pragma once
+//#pragma once
 
 // --------------------------------------------------------------------------
 // NOTES:

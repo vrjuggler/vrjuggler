@@ -20,7 +20,7 @@
 
 #ifndef _VJ_SIM_DIGITAL_H
 #define _VJ_SIM_DIGITAL_H
-#pragma once
+//#pragma once
 
 #include <vjConfig.h>
 #include <Input/vjInput/vjDigital.h>

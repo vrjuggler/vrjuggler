@@ -20,7 +20,7 @@
 
 #ifndef _VJ_TS_TABLE_H_
 #define _VJ_TS_TABLE_H_
-#pragma once
+//#pragma once
 
 #include <vjConfig.h>
 #include <Threads/vjTSObject.h>

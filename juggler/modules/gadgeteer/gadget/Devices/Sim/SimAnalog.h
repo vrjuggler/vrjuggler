@@ -20,7 +20,7 @@
 
 #ifndef _VJ_SIM_ANALOG_H
 #define _VJ_SIM_ANALOG_H
-#pragma once
+//#pragma once
 
 #include <vjConfig.h>
 #include <Input/vjInput/vjAnalog.h>

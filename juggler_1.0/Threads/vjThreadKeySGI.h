@@ -28,7 +28,7 @@
 
 #ifndef _VJ_THREAD_KEY_SGI_H_
 #define _VJ_THREAD_KEY_SGI_H_
-#pragma once
+//#pragma once
 
 #include <vjConfig.h>
 #include <sys/types.h>

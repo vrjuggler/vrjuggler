@@ -20,7 +20,7 @@
 
 #ifndef _VJ_SIM_POSITION_H
 #define _VJ_SIM_POSITION_H
-#pragma once
+//#pragma once
 
 #include <vjConfig.h>
 #include <Input/vjSim/vjSimInput.h>
