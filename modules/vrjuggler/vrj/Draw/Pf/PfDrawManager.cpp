@@ -303,24 +303,30 @@ void PfDrawManager::addDisplay(Display* disp)
    vprASSERT(disp != NULL);    // Can't add a null display
    vprASSERT((true == mPfHasForked) && "Trying to add display when performer has not been initialized");
 
-
    // Get frame buffer config
    std::vector<int> stereo_fb_config = getStereoFBConfig(disp);
    std::vector<int> mono_fb_config = getMonoFBConfig(disp);
 
    // ouput debug info about the frame buffer config recieved
-   unsigned int i;
-   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL) << "vjPfDrawManager::addDisplay: Got Stereo FB config\n" << vprDEBUG_FLUSH;
-   for(i=0;i<stereo_fb_config.size();i++)
+#ifdef VJ_DEBUG
+   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL)
+      << "vrj::PfDrawManager::addDisplay(): Got Stereo FB config\n"
+      << vprDEBUG_FLUSH;
+   for ( unsigned int i = 0; i < stereo_fb_config.size(); ++i )
    {
-      vprDEBUG_CONT(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL) << "  " << stereo_fb_config[i] << vprDEBUG_FLUSH;
+      vprDEBUG_CONT(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL)
+         << "  " << stereo_fb_config[i] << vprDEBUG_FLUSH;
    }
-   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL) << "\nPfDrawManager::addDisplay: Got Mono FB config\n" << vprDEBUG_FLUSH;
-   for(j=0;j<mono_fb_config.size();j++)
+   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL)
+      << "\nvrj::PfDrawManager::addDisplay(): Got Mono FB config\n"
+      << vprDEBUG_FLUSH;
+   for ( unsigned int j = 0 ; j < mono_fb_config.size(); ++j )
    {
-      vprDEBUG_CONT(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL) << "  " << mono_fb_config[j] << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG_CONT(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL)
+         << "  " << mono_fb_config[j] << std::endl << vprDEBUG_FLUSH;
    }
    vprDEBUG_CONT(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL) << std::endl << vprDEBUG_FLUSH;
+#endif
 
    //  For the display
    //     -Create a pWin for it
