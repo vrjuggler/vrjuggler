@@ -1,6 +1,6 @@
 #python
 
-# PyJuggler is (C) Copyright 2002-2004 by Patrick Hartling
+# PyJuggler is (C) Copyright 2002-2005 by Patrick Hartling
 # Distributed under the GNU Lesser General Public License 2.1.  (See
 # accompanying file COPYING.txt or http://www.gnu.org/copyleft/lesser.txt)
 
