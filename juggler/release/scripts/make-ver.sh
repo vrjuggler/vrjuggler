@@ -127,7 +127,7 @@ fi
 
 # Make sure we can read from $input.
 if [ ! -r "$input" ]; then
-    echo "ERROR: Could not read $input_file"
+    echo "ERROR: Could not read $input"
     exit 1
 fi
 
