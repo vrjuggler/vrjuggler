@@ -224,42 +224,6 @@ Viewers.jar: $(ICONVIEWER_CLASSES) $(TREEVIEWER_CLASSES)
 		$(ICONVIEWER_DIR)/*.gif \
 		LICENSE-java-laf.txt
 
-links:
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin/beans
-	cd $(instlinks)/bin &&						\
-          for jar in $(JARS) ;						\
-          do								\
-              rm -f ./$$jar ;						\
-              $(LN_S) $(topdir)/java/$$jar ./ ;				\
-          done
-	cd $(instlinks)/bin/beans &&					\
-          for bean in $(BEANS) ;					\
-          do								\
-              rm -f ./$$bean.jar ./$$bean.xml ;				\
-              $(LN_S) $(topdir)/java/$$bean.jar ./ ;			\
-              $(LN_S) $(TWEEKROOT_ABS)/java/$$bean.xml ./ ;		\
-          done
-	cd $(instlinks)/bin &&						\
-          for jar in `echo "$(JDOM_JAR)" | sed -e 's/$(JCPS)/ /g'` ;	\
-          do								\
-              rm -f `basename $$jar` ;					\
-              $(LN_S) $$jar ./ ;					\
-          done
-ifneq ($(JAVA_ORB_JAR), none)
-	cd $(instlinks)/bin &&						\
-          for jar in `echo "$(JAVA_ORB_JAR)" | sed -e 's/$(JCPS)/ /g'` ; \
-          do								\
-              rm -f `basename $$jar` ;					\
-              $(LN_S) $$jar ./ ;					\
-          done
-endif
-	cd $(instlinks)/bin && rm -f ./tweek &&				\
-          $(LN_S) $(TWEEKROOT_ABS)/java/tweek.sh ./tweek
-	cd $(instlinks)/bin && rm -f ./tweek-base.sh &&			\
-          $(LN_S) $(topdir)/java/tweek-base.sh ./
-	cd $(instlinks)/bin && rm -f ./java.security.policy.txt &&	\
-          $(LN_S) $(TWEEKROOT_ABS)/java/java.security.policy.txt ./
-
 # This cannot be named 'install' because Doozer++ already defines that.
 tweek-install:
 	@echo "------------------------------------------------"

@@ -62,8 +62,5 @@ else
 endif
 endif	# ifndef NO_JAVA
 
-tweek-gui-links:
-	@$(MAKE) instlinks="$(instlinks)" links
-
 tweek-gui-install:
 	@$(MAKE) tweek-install
