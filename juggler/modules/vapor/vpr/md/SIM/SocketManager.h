@@ -59,6 +59,7 @@
 
 #include <vpr/vprTypes.h>
 #include <vpr/IO/Socket/SocketTypes.h>
+#include <vpr/IO/Socket/InetAddr.h>
 #include <vpr/Sync/Mutex.h>
 
 #include <vpr/md/SIM/IO/Socket/InetAddrSIM.h> /* SIM InetAddr implementation */
@@ -223,12 +224,12 @@ protected:  // -- Internal helpers -- //
    */
    vpr::ReturnStatus ensureNetworkNodeIsRegistered(const vpr::Uint32& ipAddr);
 
-   
+
    //vpr::sim::NetworkGraph::net_vertex_t getLocalhostVertex(void);
 
    /** Get the ip address value for the "localhost" node that we are using */
    //vpr::Uint32 getLocalhostIpAddrValue();
-   
+
 
 protected:
    // These two have to be here because Visual C++ will try to make them
