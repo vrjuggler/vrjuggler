@@ -447,23 +447,36 @@ public class PropertySheetFactory extends PropertyComponent
          }
       }
 
-      // Ask the user to choose a base ConfigDefinition.
-      ConfigDefinitionChooser chooser = new ConfigDefinitionChooser();
-      chooser.setDefinitions(allowed_types);
-      int result = chooser.showDialog(this);
+      ConfigDefinition selected_definition = null;
 
-      // If the user did not cancel their choice, make a new ConfigElement for
-      // the chosen ConfigDefinition.
-      if (result == ConfigDefinitionChooser.APPROVE_OPTION)
+      // Only use ConfigDefinitionChooser when allowed_types has more than one
+      // choice.  When there is only one choice, we can make it for the user.
+      if ( allowed_types.size() > 1 )
       {
-         // Get a list of all known ConfigDefinitions
-         java.util.List defs = def_repos.getAllLatest();
+         // Ask the user to choose a base ConfigDefinition.
+         ConfigDefinitionChooser chooser = new ConfigDefinitionChooser();
+         chooser.setDefinitions(allowed_types);
+         int result = chooser.showDialog(this);
 
-         ConfigElementFactory temp_factory = new ConfigElementFactory(defs);
+         // If the user did not cancel their choice, make a new ConfigElement
+         // for the chosen ConfigDefinition.
+         if (result == ConfigDefinitionChooser.APPROVE_OPTION)
+         {
+            selected_definition = chooser.getSelectedDefinition();
+         }
+      }
+      else
+      {
+         selected_definition = (ConfigDefinition) allowed_types.get(0);
+      }
+
+      if ( selected_definition != null )
+      {
+         ConfigElementFactory temp_factory =
+            new ConfigElementFactory(def_repos.getAllLatest());
 
          // TODO: Compute a unique name
-         new_value = temp_factory.create("CHANGEME",
-                                         chooser.getSelectedDefinition());
+         new_value = temp_factory.create("CHANGEME", selected_definition);
 
          elm.addProperty(propDef.getToken(), new_value, ctx);
       }
