@@ -82,9 +82,13 @@ void SimDigital::updateData()
    {
       digital_data_sample[i].setTime();
       if(checkKeyPair(mSimKeys[i]))             // If keys pressed
+      {
          digital_data_sample[i] = 1;
+      }
       else
+      {
          digital_data_sample[i] = 0;
+      }
    }
 
    // Add a sample
