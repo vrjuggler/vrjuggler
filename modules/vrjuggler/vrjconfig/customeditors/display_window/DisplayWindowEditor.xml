@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.1/beanlist.xsd">
+   <service name="DisplayWindowEditor">
+      <file name="${TWEEK_BASE_DIR}/bin/beans/DisplayWindowEditor.jar"
+            class="org.vrjuggler.vrjconfig.customeditors.display_window.DisplayWindowEditorPanel"/>
+      <dependencies>
+         <bean>ConfigBroker</bean>
+         <jar path="${TWEEK_BASE_DIR}/bin/beans">jccl_editors.jar</jar>
+      </dependencies>
+   </service>
+</beanlist>
