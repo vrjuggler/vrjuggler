@@ -139,9 +139,8 @@ void Controller::processNextEvent (vpr::SocketImplSIM** recvSocket)
          << "]: Processing event scheduled to occur at time "
          << event_time.getBaseVal() << "\n" << vprDEBUG_FLUSH;
 
-      // XXX: The current time is set at the end of the if block and the else
-      // block.  It may be possible to move it to occur before this point or
-      // after the if block.
+      mClock.setCurrentTime(event_time);
+
       if ( (*cur_event).second.type == EventData::MESSAGE )
       {
          NetworkGraph::net_edge_t event_edge = (*cur_event).second.edge;
@@ -163,7 +162,6 @@ void Controller::processNextEvent (vpr::SocketImplSIM** recvSocket)
             << " queue of line " << line.getNetworkAddressString() << "\n"
             << vprDEBUG_FLUSH;
 
-         mClock.setCurrentTime(event_time);
          moveMessage(msg, event_time, recvSocket);
       }
       else if ( (*cur_event).second.type == EventData::CONNECTION_COMPLETE )
@@ -172,8 +170,6 @@ void Controller::processNextEvent (vpr::SocketImplSIM** recvSocket)
             << "Controller::processNextEvent(): Event is a connection completion for "
             << (*cur_event).second.socket->getLocalAddr() << "\n"
             << vprDEBUG_FLUSH;
-
-         mClock.setCurrentTime(event_time);
 
          if ( recvSocket != NULL )
          {
@@ -186,8 +182,6 @@ void Controller::processNextEvent (vpr::SocketImplSIM** recvSocket)
             << "Controller::processNextEvent(): Event is a connection request to "
             << (*cur_event).second.socket->getLocalAddr() << "\n"
             << vprDEBUG_FLUSH;
-
-         mClock.setCurrentTime(event_time);
 
          if ( recvSocket != NULL )
          {
