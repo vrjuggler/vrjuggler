@@ -208,8 +208,10 @@ public class FileControl {
         if (filtertype < 0 || filtertype > 4)
             filtertype = 0;
         filters[0] = chooser.getAcceptAllFileFilter();
-	filters[1] = new SuffixFilter("Config Files (*.config)", ".config");
-	filters[2] = new SuffixFilter("Description Files (*.desc)", ".desc");
+	filters[1] = new SuffixFilter("Config Files (*.config, *.cfg)", ".config");
+        ((SuffixFilter)filters[1]).addSuffix(".cfg");
+	filters[2] = new SuffixFilter("Description Files (*.desc, *.dsc)", ".desc");
+        ((SuffixFilter)filters[2]).addSuffix(".dsc");
         filters[3] = new SuffixFilter("Chunk Org Tree Files (*.org)", ".org");
         filters[4] = new SuffixFilter("Perf Data Files (*.perf)", ".perf");
         for (int i = 1; i < 5; i++)

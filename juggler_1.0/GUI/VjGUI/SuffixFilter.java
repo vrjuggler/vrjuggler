@@ -36,23 +36,33 @@
 package VjGUI;
 
 import javax.swing.filechooser.*;
-import java.io.*;
+import java.io.File;
+import java.util.Vector;
 
 public class SuffixFilter extends javax.swing.filechooser.FileFilter {
 
-    String suffix;
     String name;
+    Vector suffixes;
 
     SuffixFilter (String _name, String _suffix) {
-	suffix = _suffix;
+        suffixes = new Vector();
+        suffixes.addElement(_suffix);
 	name = _name;
     }
 
+    void addSuffix (String _suffix) {
+        suffixes.addElement(_suffix);
+    }
+
     public boolean accept (File f) {
-	if (f.isDirectory() || f.getName().endsWith(suffix))
-	    return true;
-	else 
-	    return false;
+	if (f.isDirectory())
+            return true;
+        for (int i = 0; i < suffixes.size(); i++) {
+            String s = (String)suffixes.elementAt(i);
+            if (f.getName().endsWith(s))
+                return true;
+        }
+        return false;
     }
 
     public String getDescription () {
