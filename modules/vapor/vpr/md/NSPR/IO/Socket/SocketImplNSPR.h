@@ -278,7 +278,7 @@ protected:
     // POST: The member variables are initialized accordingly to reasonable
     //       defaults.
     // ------------------------------------------------------------------------
-    SocketImpNSPR(void);
+    SocketImpNSPR(const SocketTypes::Type sock_type);
 
     // ------------------------------------------------------------------------
     // Standard constructor.  This takes two InetAddr objects, a local address
@@ -292,7 +292,7 @@ protected:
     //     remote_addr - The remote address for the socket.
     // ------------------------------------------------------------------------
     SocketImpNSPR(const InetAddr& local_addr, const InetAddr& remote_addr,
-                 const SocketTypes::Type sock_type);
+                  const SocketTypes::Type sock_type);
 
     // ------------------------------------------------------------------------
     // Copy constructor.

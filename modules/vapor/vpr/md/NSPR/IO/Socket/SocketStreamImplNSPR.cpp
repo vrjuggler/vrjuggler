@@ -53,7 +53,7 @@ namespace vpr {
 // variables of the object.
 // ----------------------------------------------------------------------------
 SocketStreamImpNSPR::SocketStreamImpNSPR (void)
-   : SocketImpNSPR()
+   : SocketImpNSPR(SocketTypes::STREAM)
 {
     /* Do nothing. */ ;
 }
@@ -138,12 +138,10 @@ SocketStreamImpNSPR::accept () {
 // operating system, typically by the accept(2) system call.
 // ----------------------------------------------------------------------------
 SocketStreamImpNSPR::SocketStreamImpNSPR (PRFileDesc* sock,
-                                        const InetAddr& remote_addr)
-    : SocketImpNSPR()
+                                          const InetAddr& remote_addr)
+    : SocketImpNSPR(SocketTypes::STREAM)
 {
    m_handle = sock;
-   m_type = SocketTypes::STREAM;
-   m_type = SocketTypes::STREAM;
 
     // Copy the given vpr::InetAddr to the new object's member variable.
     m_remote_addr = remote_addr;

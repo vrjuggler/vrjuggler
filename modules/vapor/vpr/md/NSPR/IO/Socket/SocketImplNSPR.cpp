@@ -160,8 +160,9 @@ SocketImpNSPR::connect () {
 // Default constructor.  This just initializes member variables to reasonable
 // defaults.
 // ----------------------------------------------------------------------------
-SocketImpNSPR::SocketImpNSPR ()
-    : BlockIO(std::string("INADDR_ANY")), m_handle(NULL), m_bound(false)
+SocketImpNSPR::SocketImpNSPR (const SocketTypes::Type sock_type)
+    : BlockIO(std::string("INADDR_ANY")), m_handle(NULL), m_type(sock_type),
+      m_bound(false)
 {
     /* Do nothing. */ ;
 }
