@@ -77,8 +77,10 @@ def printBasicFlockInfo():
 
 def test_output():
     print "---- Testing output -----"
-    print "Reading 10 OK samples"
     fob = FOB.Flock()    
+    fob.open();
+    
+    print "\nReading 10 OK samples"
     port = fob.port
     
     port.flushInput()
