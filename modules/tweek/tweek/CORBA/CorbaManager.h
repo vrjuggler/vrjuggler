@@ -58,7 +58,7 @@ public:
    /**
     * Default constructor.
     */
-   CorbaManager(void);
+   CorbaManager();
 
    /**
     * This will destroy the Subject Manager associated with this CORBA
@@ -70,7 +70,7 @@ public:
     *       Service, and destroyed.  The ORB is shut down, and its thread
     *       stopped.
     */
-   ~CorbaManager (void)
+   ~CorbaManager()
    {
       // If the Subject Manager exists, we need to deactivate it, remove it
       // from the Naming Service, and free its memory.
@@ -113,7 +113,7 @@ public:
     *                            events are completed.  This parameter is
     *                            optional and defaults to true.
     */
-   void shutdown (bool wait_for_completion = true);
+   void shutdown(bool wait_for_completion = true);
 
    /**
     * Checks the validity of this service object to ensure that initialization
@@ -122,7 +122,7 @@ public:
     * @return true if init() the ORB and POA references were initialized
     *         successfully.
     */
-   bool isValid (void) const
+   bool isValid() const
    {
       return ! (CORBA::is_nil(m_orb) || CORBA::is_nil(m_root_poa));
    }
@@ -130,7 +130,7 @@ public:
    /**
     * Binds the interface object.
     */
-   vpr::ReturnStatus createSubjectManager(void);
+   vpr::ReturnStatus createSubjectManager();
 
    /**
     * Removes the Subject Manager created for use with this CORBA Manager
@@ -142,23 +142,23 @@ public:
     * @return vpr::ReturnStatus::Fail will be returned if the servant could not
     *         be destroyed successfully.
     */
-   vpr::ReturnStatus destroySubjectManager(void);
+   vpr::ReturnStatus destroySubjectManager();
 
    /**
     * Returns this CORBA managaer's SubjectManagerImpl instance to the caller.
     * Users will need this so that they may register subjects.
     */
-   tweek::SubjectManagerImpl* getSubjectManager (void) const
+   tweek::SubjectManagerImpl* getSubjectManager() const
    {
       return m_subj_mgr;
    }
 
-   const PortableServer::POA_var& getRootPOA (void) const
+   const PortableServer::POA_var& getRootPOA() const
    {
       return m_root_poa;
    }
 
-   const PortableServer::POA_var& getChildPOA (void) const
+   const PortableServer::POA_var& getChildPOA() const
    {
       return m_child_poa;
    }
