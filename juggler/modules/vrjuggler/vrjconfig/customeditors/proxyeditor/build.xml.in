@@ -14,9 +14,19 @@
       <pathelement path="@JCCL_JARS@" />
    </path>
 
+   <path id="commoneditors.classpath">
+      <pathelement path="${topdir}/commoneditors/CommonEditors.jar" />
+   </path>
+
+   <path id="jgraph.classpath">
+      <pathelement path="@JUGGLERROOT_ABS@/external/jgraph/lib/jgraph.jar" />
+      <pathelement path="@JUGGLERROOT_ABS@/external/jgraph/lib/jgraphaddons.jar" />
+   </path>
+
    <property name="tweek.classpath" refid="tweek.classpath" />
    <property name="jccl.classpath" refid="jccl.classpath" />
-   <property name="jgraphdir" value="@JUGGLERROOT_ABS@/external/jgraph" />
+   <property name="jgraph.classpath" refid="jgraph.classpath" />
+   <property name="commoneditors.classpath" refid="commoneditors.classpath" />
 
    <!-- Compile all java sources -->
    <target name="compile">
@@ -29,7 +39,8 @@
          <classpath>
             <pathelement path="${tweek.classpath}" />
             <pathelement path="${jccl.classpath}" />
-            <pathelement path="${jgraphdir}/jgraphpad.jar" />
+            <pathelement path="${jgraph.classpath}" />
+            <pathelement path="${commoneditors.classpath}" />
          </classpath>
       </javac>
    </target>
@@ -38,12 +49,8 @@
    <target name="dist" depends="compile">
        <jar destfile="ProxyEditor.jar" basedir=".">
          <include name="org/**" />
-         <fileset dir="${srcdir}">
-            <include name="org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/*" />
-         </fileset>
       </jar>
    </target>
-
 
    <!-- Clean up -->
    <target name="clean">
