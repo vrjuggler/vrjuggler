@@ -10,7 +10,7 @@
 
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
- * VR Juggler is (C) Copyright 1998-2002 by Iowa State University
+ * VR Juggler is (C) Copyright 1998-2003 by Iowa State University
  *
  * Original Authors:
  *   Allen Bierbaum, Christopher Just,
@@ -56,7 +56,21 @@ const std::string SubjectManagerImpl::APPNAME_KEY("Application");
 
 SubjectManagerImpl::~SubjectManagerImpl()
 {
+   subject_map_t::iterator i;
+   std::string name_str;
 
+   for ( i = mSubjects.begin(); i != mSubjects.end(); ++i )
+   {
+      vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
+         << "Deactivating subject named '" << (*i).first
+         << "' in tweek::SubjectManagerImpl destructor\n" << vprDEBUG_FLUSH;
+
+      // Deactivate the object in the POA.
+      name_str = (*i).first;
+      mCorbaMgr.getChildPOA()->deactivate_object(mSubjectIds[name_str]);
+      Subject_ptr subj = mSubjects[name_str];
+      CORBA::release(subj);
+   }
 }
 
 void SubjectManagerImpl::registerSubject(SubjectImpl* subjectServant,
@@ -118,6 +132,10 @@ void SubjectManagerImpl::registerSubject(Subject_ptr subject,
 
 Subject_ptr SubjectManagerImpl::getSubject(const char* name)
 {
+   vprDEBUG_OutputGuard(tweekDBG_CORBA, vprDBG_STATE_LVL,
+                        "tweek::SubjectManagerImpl::getSubject() entered\n",
+                        "tweek::SubjectManagerImpl::getSubject() done\n");
+
    Subject_ptr subject;
    std::string name_str(name);
    vpr::Guard<vpr::Mutex> guard(mSubjectsMutex);
@@ -140,11 +158,19 @@ Subject_ptr SubjectManagerImpl::getSubject(const char* name)
          << vprDEBUG_FLUSH;
    }
 
+   vprDEBUG(tweekDBG_CORBA, vprDBG_WARNING_LVL)
+      << "tweek::SubjectManagerImpl::getSubject() returning ...\n"
+      << vprDEBUG_FLUSH;
+
    return subject;
 }
 
 tweek::SubjectManager::SubjectList* SubjectManagerImpl::getAllSubjects()
 {
+   vprDEBUG_OutputGuard(tweekDBG_CORBA, vprDBG_STATE_LVL,
+                        "tweek::SubjectManagerImpl::getAllSubjects() entered\n",
+                        "tweek::SubjectManagerImpl::getAllSubjects() done\n");
+
    subject_map_t::iterator i;
    CORBA::ULong j;
 
