@@ -1904,11 +1904,11 @@ bool reconfigApp::addStupifiedAnalogProxy_check()
       std::cout << "\tError: Proxy points at a device\n" << std::flush;
       return false;
    }
-   if (proxy->getElementType() != AnalogProxy::getElementType())
+   if (proxy->getElementType() != gadget::AnalogProxy::getElementType())
    {
       std::cout << "\tError: Proxy has the wrong element type: "
                 << proxy->getElementType() << "   It should be "
-                << AnalogProxy::getElementType() << "\n"
+                << gadget::AnalogProxy::getElementType() << "\n"
                 << std::flush;
       return false;
    }
