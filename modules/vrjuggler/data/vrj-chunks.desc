@@ -674,14 +674,6 @@
       <enumeration name="MachineSpecific" value="MachineSpecific" />
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="vjIncludeDescFile" name="Include Descriptions File">
-    <category>Generic</category>
-    <help>Chunk Descriptions File that should be loaded before processing the rest of this file</help>
-  </ChunkDesc>
-  <ChunkDesc token="vjIncludeFile" name="Include File">
-    <category>Generic</category>
-    <help>File that should be loaded along with this one</help>
-  </ChunkDesc>
   <ChunkDesc token="Intersense" name="Intersense">
     <category>Devices</category>
     <help>Intersense Tracking Devices</help>
