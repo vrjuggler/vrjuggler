@@ -72,6 +72,7 @@ public:
          if(-1 == mCurTestIndex)                   // First time through
          {
             mCurTestIndex = 0;
+            std::cout << "TestRunner: Starting test: " << mTests[mCurTestIndex]->getName() << std::endl;
             mTests[mCurTestIndex]->setUp();        // Setup the initial test
          }
          else
@@ -80,10 +81,15 @@ public:
             {
                mTests[mCurTestIndex]->processTest();              // Process the current test
             }
-            catch(vrj::test::TestFailure* tf)
+            catch(vrj::test::TestFailure& tf)
             {
                mTestFailures.push_back(tf);
                test_failed = true;
+            }
+            catch(...)
+            {
+               std::cout << "Recieved unknown exception in TestRunner. rethrowing." << std::endl;
+               throw;
             }
 
             if(test_failed || mTests[mCurTestIndex]->isDone())    // If current test is done or failed
@@ -92,6 +98,7 @@ public:
                mCurTestIndex++;                                // Goto the next test
                if(mCurTestIndex < (int)mTests.size())          // If test is in range
                {
+                  std::cout << "TestRunner: Starting test: " << mTests[mCurTestIndex]->getName() << std::endl;
                   mTests[mCurTestIndex]->setUp();              // - Initialize it
                }
                else
@@ -129,8 +136,8 @@ public:
 
          for(unsigned f=0; f<mTestFailures.size(); ++f)
          {
-            TestFailure* cur_failure = mTestFailures[f];
-            std::cout << "   Failed: " << cur_failure->getFullDescription() << std::endl;
+            TestFailure cur_failure = mTestFailures[f];
+            std::cout << "   Failed: " << cur_failure.getFullDescription() << std::endl;
          }
       }
    }
@@ -140,7 +147,7 @@ protected:
    State                      mCurState;        /**< Store the current state of processing */
    int                        mCurTestIndex;    /**< Index of the current test to run. -1 means that we have to start. */
    std::vector<Test*>         mTests;           /**< List of tests to run */
-   std::vector<TestFailure*>   mTestFailures;    /**< List of test failures */
+   std::vector<TestFailure>   mTestFailures;    /**< List of test failures */
 };
 
 } }
