@@ -72,6 +72,9 @@ INSTALL_FILES=
 JARS=			
 BEANS=			jccl_editors
 
+TABLE_LAYOUT_DIR=    $(JUGGLERROOT_ABS)/external/TableLayout
+TABLE_LAYOUT_JARS=   $(TABLE_LAYOUT_DIR)/TableLayout.jar
+
 # List the packages for which JavaDoc documentation will be generated.
 DOC_PKGS=	$(EDITORS_PKG)
 webroot=	$(HOME)/public_html/jugglerweb
@@ -131,7 +134,13 @@ ifneq ($(BEANS), )
                   $(beandir) || exit 1; \
 	  done
 endif
-
+	
+	for jar in `echo "$(TABLE_LAYOUT_JARS)" | sed -e 's/$(JCPS)/ /g'` ;	\
+          do								\
+              $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+                $(GROUP_OPT_UNIX) $$jar $(bindir) ;			\
+          done
+	  
 install-docs:
 	$(MKINSTALLDIRS) $(doc_prefix)
 	rm -rf $(doc_prefix)/$(DOC_ROOT)
