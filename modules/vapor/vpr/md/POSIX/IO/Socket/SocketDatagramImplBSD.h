@@ -100,37 +100,38 @@ public:
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     virtual Status recvfrom(void* msg, const size_t length, const int flags,
-                            InetAddr& from, ssize_t& bytes_read);
+                            InetAddr& from, ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     virtual Status recvfrom(std::string& msg, const size_t length,
                             const int flags, InetAddr& from,
-                            ssize_t& bytes_read);
+                            ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     virtual Status recvfrom(std::vector<vpr::Uint8>& msg, const size_t length,
                             const int flags, InetAddr& from,
-                            ssize_t& bytes_read);
+                            ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     virtual Status sendto(const void* msg, const size_t length,
                           const int flags, const InetAddr& to,
-                          ssize_t& bytes_sent);
+                          ssize_t& bytes_sent, const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     virtual Status sendto(const std::string& msg, const size_t length,
                           const int flags, const InetAddr& to,
-                          ssize_t& bytes_sent);
+                          ssize_t& bytes_sent, const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     virtual Status sendto(const std::vector<vpr::Uint8>& msg,
                           const size_t length, const int flags,
-                          const InetAddr& to, ssize_t& bytes_sent);
+                          const InetAddr& to, ssize_t& bytes_sent,
+                          const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
 protected:
     // ------------------------------------------------------------------------

@@ -818,8 +818,9 @@ protected:
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
     virtual Status
-    read_i (void* buffer, const size_t length, ssize_t& bytes_read) {
-        return m_handle->read(buffer, length, bytes_read);
+    read_i (void* buffer, const size_t length,
+            ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout) {
+        return m_handle->read(buffer, length, bytes_read, timeout);
     }
 
     // ------------------------------------------------------------------------
@@ -841,8 +842,9 @@ protected:
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
     virtual Status
-    readn_i (void* buffer, const size_t length, ssize_t& bytes_read) {
-        return m_handle->readn(buffer, length, bytes_read);
+    readn_i (void* buffer, const size_t length,
+             ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout) {
+        return m_handle->readn(buffer, length, bytes_read, timeout);
     }
 
     // ------------------------------------------------------------------------
@@ -860,8 +862,9 @@ protected:
     //! RETURNS:  -1 - An error occurred when writing.
     // ------------------------------------------------------------------------
     virtual Status
-    write_i (const void* buffer, const size_t length, ssize_t& bytes_written) {
-        return m_handle->write(buffer, length, bytes_written);
+    write_i (const void* buffer, const size_t length,
+             ssize_t& bytes_written, const vpr::Interval timeout = vpr::Interval::NoTimeout) {
+        return m_handle->write(buffer, length, bytes_written, timeout);
     }
 
     // ------------------------------------------------------------------------

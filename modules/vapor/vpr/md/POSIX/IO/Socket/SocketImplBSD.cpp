@@ -180,9 +180,12 @@ SocketImplBSD::bind () {
 // establishing a connection with the destination.
 // ----------------------------------------------------------------------------
 Status
-SocketImplBSD::connect () {
+SocketImplBSD::connect (vpr::Interval timeout) {
     Status retval;
     int status;
+
+    if(vpr::Interval::NoTimeout != timeout)
+       vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
 
     // Attempt to connect to the address in m_addr.
     status = ::connect(m_handle->m_fdesc,
