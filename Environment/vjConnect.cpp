@@ -43,7 +43,7 @@ vjConnect::vjConnect(vjConfigChunk* c): output() {
     output.attach (fd);
     output << "VR Juggler FileConnect output " << name << endl;
     output << flush;
-    vjDEBUG(0) << "Created vjConnect for " << name << endl << vjDEBUG_FLUSH;
+    //vjDEBUG(0) << "Created vjConnect for " << name << endl << vjDEBUG_FLUSH;
 }
 
 
@@ -59,7 +59,7 @@ bool vjConnect::startProcess() {
     if (connect_thread)
 	return true;
 
-    vjDEBUG(0) << "starting vjConnect process for " << name << endl << vjDEBUG_FLUSH;
+    //vjDEBUG(0) << "starting vjConnect process for " << name << endl << vjDEBUG_FLUSH;
     // Create a new thread to handle the control
     vjThreadMemberFunctor<vjConnect> *memberFunctor =
         new vjThreadMemberFunctor<vjConnect>(this,
@@ -107,17 +107,16 @@ void vjConnect::controlLoop(void* nullParam) {
    pollfdstruct.events = POLLPRI;// | POLLHUP | POLLNVAL;
    pollfdstruct.revents = 0;
 
-   vjDEBUG(0) << "vjConnect " << name << " started control loop.\n"
+   vjDEBUG(2) << "vjConnect " << name << " started control loop.\n"
    << vjDEBUG_FLUSH;
 
    /* attach iostreams to socket */
    ifstream fin(fd);
 
-   while (!shutdown)
-   {
+   while (!shutdown) {
        pollfdstruct.revents = 0;
        poll (&pollfdstruct, 1, 500); // check 2x/sec responsive enough?
-
+       
        //cout << "connect loop " << name << " finished poll, revents = " << pollfdstruct.revents << endl;
 
        if ((pollfdstruct.revents & POLLHUP) || (pollfdstruct.revents & POLLNVAL)) {

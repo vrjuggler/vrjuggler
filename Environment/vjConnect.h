@@ -73,17 +73,17 @@ class vjConnect {
     //! ARGS: _tu - a vjTimedUpdate* 
     //! ARGS: _refresh_time - time between refreshes, in milliseconds
     void addTimedUpdate (vjTimedUpdate* _tu, float _refresh_time) {
-	cout << "vjconnect " << name << " adding timedupdate request" << endl;
 	commands_mutex.acquire();
 	timed_commands.push (new vjCommandTimedUpdate (_tu, _refresh_time));
 	commands_mutex.release();
     }
 
+
     void removeTimedUpdate (vjTimedUpdate* _tu) {
 	// this better not be called often - it's gotta be nlogn or something.
 	// still, there'll probably never be more than a couple dozen
 	// items in the timed_commands queue anyway.
-	std::priority_queue<vjCommand*> newq;
+	std::priority_queue<vjCommand*, std::vector<vjCommand*>, vjCommandPtrCmp> newq;
 	vjCommandTimedUpdate* ctu2;
 	vjCommand* ctu1;
 	commands_mutex.acquire();
@@ -104,15 +104,19 @@ private:
     ofstream                 output;
     std::string                  name;
     std::string                  filename;
-    //vjConfigChunkDB*        cachedChunkdb;
-    //vjChunkDescDB*          cachedDescdb;
     vjThread*               connect_thread;
     int                     fd;
     bool                    readable;
     bool                    writeable;
     bool                    shutdown;        // set to stop procs
 
-    std::priority_queue<vjCommand*>          timed_commands; // used as heap
+    struct vjCommandPtrCmp {
+	bool operator() (const vjCommand* a, const vjCommand* b) {
+	    return (a->next_fire_time > b->next_fire_time);
+	}
+    };
+
+    std::priority_queue<vjCommand*, std::vector<vjCommand*>, vjCommandPtrCmp>          timed_commands; // used as heap
     std::queue<vjCommand*>                   commands;
     vjMutex                 commands_mutex;
 
