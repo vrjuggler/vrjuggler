@@ -112,6 +112,10 @@ DB_SGML_DTD?=	$(DOCBOOK_ROOT)/docbook-sgml-4.1.dtd
 DSSSL_DIR?=	$(DOCBOOK_ROOT)/docbook-dsssl-1.76
 XSL_DIR=	$(DOCBOOK_ROOT)/docbook-xsl-$(DOCBOOK_XSL_VERSION)
 
+HTML_XSL?=		$(XSL_DIR)/html/docbook.xsl
+CHUNK_HTML_XSL?=	$(XSL_DIR)/html/chunk.xsl
+FO_XSL?=		$(XSL_DIR)/fo/docbook.fo
+
 ENV=		DOCBOOK_XSL=$(XSL_DIR) DOCBOOK_ROOT=$(DOCBOOK_ROOT)	\
 		SAXON_DIR=$(SAXON_DIR) XALAN_DIR=$(XALAN_DIR)		\
 		DOCBOOK_XSL_VERSION=$(DOCBOOK_XSL_VERSION)		\
@@ -131,7 +135,7 @@ chunk-html:
             if [ ! -d $$dir ] ; then mkdir $$dir ; fi ; \
             cur_dir=`pwd` ; \
             cd $$dir ; \
-            $(ENV) $(SAXON) -i $$cur_dir/$$file -xsl $(XSL_DIR)/html/chunk.xsl \
+            $(ENV) $(SAXON) -i $$cur_dir/$$file -xsl $(HTML_XSL) \
               $(SAXON_HTML_PARAMS) $(EXTRA_SAXON_HTML_PARAMS) ; \
             cd $$cur_dir ; \
             if [ ! -z "$(INSTALL_FILES)" ]; then \
@@ -220,19 +224,19 @@ install install-all:
 
 .xml.html:
 ifeq ($(XSLT_TOOL), Xalan)
-	$(ENV) $(XALAN) -in $< -xsl $(XSL_DIR)/html/docbook.xsl -out $@	\
+	$(ENV) $(XALAN) -in $< -xsl $(HTML_XSL) -out $@		\
           $(XALAN_HTML_PARAMS) $(EXTRA_XALAN_HTML_PARAMS)
 else
-	$(ENV) $(SAXON) -i $< -xsl $(XSL_DIR)/html/docbook.xsl -o $@	\
+	$(ENV) $(SAXON) -i $< -xsl $(HTML_XSL) -o $@		\
           $(SAXON_HTML_PARAMS) $(EXTRA_SAXON_HTML_PARAMS)
 endif
 
 .xml.fo:
 ifeq ($(XSLT_TOOL), Xalan)
-	$(ENV) $(XALAN) -in $< -xsl $(XSL_DIR)/fo/docbook.xsl -out $@	\
+	$(ENV) $(XALAN) -in $< -xsl $(FO_XSL) -out $@		\
           $(XALAN_FO_PARAMS) $(EXTRA_XALAN_FO_PARAMS)
 else
-	$(ENV) $(SAXON) -i $< -xsl $(XSL_DIR)/fo/docbook.xsl -o $@	\
+	$(ENV) $(SAXON) -i $< -xsl $(FO_XSL) -o $@		\
           $(SAXON_FO_PARAMS) $(EXTRA_SAXON_FO_PARAMS)
 endif
 
@@ -241,10 +245,10 @@ endif
 
 #.xml.txt:
 #ifeq ($(XSLT_TOOL), Xalan)
-#	$(ENV) $(XALAN) -in $< -xsl $(XSL_DIR)/fo/docbook.xsl -out $@	\
+#	$(ENV) $(XALAN) -in $< -xsl $(FO_XSL) -out $@		\
 #          $(XALAN_TXT_PARAMS) $(EXTRA_XALAN_TXT_PARAMS)
 #else
-#	$(ENV) $(SAXON) -i $< -xsl $(XSL_DIR)/fo/docbook.xsl -o $@	\
+#	$(ENV) $(SAXON) -i $< -xsl $(FO_XSL) -o $@		\
 #          $(SAXON_TXT_PARAMS) $(EXTRA_SAXON_TXT_PARAMS)
 #endif
 #	$(FOP) -fo $< -txt $@
@@ -260,7 +264,7 @@ endif
 
 # Generate a PDF file from an XML file using FOP.
 #.xml.pdf:
-#	$(FOP) -xml $< -xsl $(XSL_DIR)/fo/docbook.xsl -pdf $@
+#	$(FOP) -xml $< -xsl $(FO_XSL) -pdf $@
 
 # -----------------------------------------------------------------------------
 
