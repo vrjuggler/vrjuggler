@@ -38,6 +38,7 @@
 #include <Kernel/GL/vjGlApp.h>
 #include <Math/vjMatrix.h>
 #include <Math/vjVec3.h>
+#include <Math/vjQuat.h>
 
 #include <Kernel/GL/vjGlContextData.h>
 #include <Input/InputManager/vjGloveInterface.h>
@@ -46,14 +47,16 @@
 #include <Input/InputManager/vjAnalogInterface.h>
 #include <Input/InputManager/vjDigitalInterface.h>
 
-#include <navigator.h>
-#include <collider.h>
-#include <vjStdCaveNavigator.h>
-
 #include "defines.h"
 #include "Scene.h"
-//#include "navigation.h"
 
+// particle system
+#include "physics/Particle.h"
+#include "physics/ParticleODEsolver.h"
+#include "physics/ParticleOperator.h"
+#include "physics/EulerODEsolver.h"
+#include "physics/ParticleSystem.h"
+        
 
 //: GloveApp - A Demonstration OpenGL application class
 // This application has a table with objects to grab
@@ -80,15 +83,15 @@ protected:
 
 // Application Functions:
 public:
-   gloveApp(vjKernel* kern) : vjGlApp(kern),
+   gloveApp(vjKernel* kern) : vjGlApp( kern ),
                                 mCubeSelected(false),
                                 mSphereSelected(false),
                                 mConeSelected(false),
-            mCubePos(0.0f, 3.5f, -20.0f),
-            mConePos(-2.5f, 3.5f, -20.0f),
-            mSpherePos(2.5f, 3.5f, -20.0f)
+            mCubePos( 0.0f, 3.5f, -20.0f ),
+            mConePos( -2.5f, 3.5f, -20.0f ),
+            mSpherePos( 2.5f, 3.5f, -20.0f )
    {
-      /* Do nothing */ ;
+      // Do nothing
    }
 
    //: Initialize
@@ -96,6 +99,7 @@ public:
    // Initialize VR Juggler device interfaces here.
    virtual void init()
    {
+      vjGlApp::init();
       // for the glove position
       mGlove.init("VJGlove");
       
@@ -119,6 +123,7 @@ public:
    // allocation here.
    virtual void contextInit()
    {
+      vjGlApp::contextInit();
       // Init the scene's displaylists for this context.
       mScene->init();
    }
@@ -142,14 +147,19 @@ public:
    //  but before the drawManager starts the drawing loops.
    virtual void apiInit()
    {
-      /* Do nothing. */ ;
+      vjGlApp::apiInit();
+      // Do nothing
    }
 
    // Function called after tracker update but before start of drawing.  Do
    // calculations and state modifications here.
    // In the glove application, this function does the logic for picking the
    // objects.
-   virtual void preFrame();
+   virtual void preFrame()
+   {
+      vjGlApp::preFrame();
+      // Do nothing
+   }   
 
    // Function to draw the scene.  Put OpenGL draw functions here.
    //
@@ -157,21 +167,20 @@ public:
    // POST: The current scene has been drawn
    virtual void draw()
    {
+      vjGlApp::draw();
       myDraw();
    }
 
    // Function called after drawing has been triggered but BEFORE it completes
    virtual void intraFrame()
    {
-      /* Do nothing. */ ;
+      vjGlApp::intraFrame();
+      // Do nothing
    }
 
    // Function called before updating trackers but after the frame is drawn.
    // Do calculations here.
-   virtual void postFrame()
-   {
-      /* Do nothing. */ ;
-   }
+   virtual void postFrame();
 
 private:
     void initGlState();
@@ -205,8 +214,9 @@ protected:
    vjVec3               mConePos;
    vjVec3               mSpherePos;
 
-   vjStdCaveNavigator    mNavigation;
-
+   // physics system
+   ParticleSystem           mParticleSystem;
+   
    vjGlContextData<Scene> mScene;
 };
 
