@@ -21,7 +21,7 @@
 
 #include "isense.h"
 
-#if VPR_OS_Win32
+#ifdef VPR_OS_Win32
 #include <windows.h>
 #include <winbase.h>
 #endif
