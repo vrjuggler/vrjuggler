@@ -324,10 +324,17 @@ public class RTRCDataSource
          System.out.println("Something is very wrong here...");
       }
    }
+
+   public void propertyValueOrderChanged(ConfigElementEvent evt)
+   {
+      propertyValueChanged(evt);
+   }
+
    public void propertyValueAdded(ConfigElementEvent evt)
    {
       propertyValueChanged(evt);
    }
+
    public void propertyValueRemoved(ConfigElementEvent evt)
    {
       propertyValueChanged(evt);
