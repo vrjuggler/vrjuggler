@@ -50,6 +50,7 @@ vjGlxWindow::vjGlxWindow():vjGlWindow() {
    x_display = NULL;
    visual_info = NULL;
    glx_context = NULL;
+   x_window = 0;
    window_name = std::string("");
    mPipe = -1;
    mXDisplayName = std::string("");

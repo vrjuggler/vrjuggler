@@ -54,7 +54,7 @@
 //
 //-------------------------------------------------------------
 //!PUBLIC_API:
-class VJ_CLASS_API vjOsgApp : public vjGlApp
+class  vjOsgApp : public vjGlApp
 {
 public:
    vjOsgApp(vjKernel* kern) : vjGlApp(kern)
@@ -138,12 +138,12 @@ inline void vjOsgApp::draw()
 	GLint view[4];
 	glGetIntegerv(GL_VIEWPORT, view);      //Get the view port that juggler sets
 	sceneView->setViewport(view[0],view[1],view[2],view[3]);
-   
+
    //Get the view matrix and the frustrum form the draw manager
 	vjGlDrawManager* drawMan = dynamic_cast<vjGlDrawManager*> ( this->getDrawManager() );
    vjASSERT(drawMan != NULL);
 	vjGlUserData* userData = drawMan->currentUserData();
-	   
+	
    // Configure the viewport information
    //vjViewport* cur_vp = userData->getViewport();
    //float xo, yo, xs, ys;
@@ -165,8 +165,8 @@ inline void vjOsgApp::draw()
 
 	//Set the frustrum (this is set with the matrix below)
    float near_val = frustum[vjFrustum::VJ_NEAR];
-	the_cam->setFrustum(frustum[vjFrustum::VJ_LEFT]*near_val,   frustum[vjFrustum::VJ_RIGHT]*near_val, 
-                      frustum[vjFrustum::VJ_BOTTOM]*near_val,  frustum[vjFrustum::VJ_TOP]*near_val, 
+	the_cam->setFrustum(frustum[vjFrustum::VJ_LEFT]*near_val,   frustum[vjFrustum::VJ_RIGHT]*near_val,
+                      frustum[vjFrustum::VJ_BOTTOM]*near_val,  frustum[vjFrustum::VJ_TOP]*near_val,
                       frustum[vjFrustum::VJ_NEAR],             frustum[vjFrustum::VJ_FAR]);
 	
 	//Set the look at
