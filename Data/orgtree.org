@@ -18,11 +18,11 @@ Begin "Zelda"
         End
         Begin "Input Devices"
             "Keyboard"
-            "Flock"
             "IBox"
             "CyberGlove"
             "3D Mouse"
             "Dummy Position"
+            "Flock of Birds"
         End
         Begin "Simulated Devices"
             "Position Simulator"
