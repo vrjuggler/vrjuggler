@@ -145,31 +145,40 @@ vpr::ReturnStatus CorbaRemoteReconfig::init()
 
 vpr::ReturnStatus CorbaRemoteReconfig::enable()
 {
+   vpr::ReturnStatus status;
+
    //Make sure the corba manager has been initialized
-   if ((mInterface == NULL) || (mCorbaManager == NULL))
+   if ( mInterface == NULL || mCorbaManager == NULL )
    {
       vprDEBUG(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
          << "CorbaRemoteReconfig::enable: Cannot enable interface until it has been initialized\n"
          << vprDEBUG_FLUSH;
 
-      return vpr::ReturnStatus::Fail;
+      status.setCode(vpr::ReturnStatus::Fail);
+   }
+   else
+   {
+      // Register the subject with the CORBA Manager.
+      try
+      {
+         // Attempt to register the subject.
+         mCorbaManager->getSubjectManager()->registerSubject(mInterface, mInterfaceName.c_str());
+         mEnabled = true;
+      }
+      catch(...)
+      {
+         vprDEBUG(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrRED, "ERROR:")
+            << " [CorbaRemoteReconfig::enable()]: Caught an exception while "
+            << "trying to register subject.\n" << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
+            << "Disabling CORBA remote run-time reconfiguration.\n"
+            << vprDEBUG_FLUSH;
+         status.setCode(vpr::ReturnStatus::Fail);
+      }
    }
 
-   //Register the subject with the corba manager
-   try
-   {
-      //Attempt to register the subject
-      mCorbaManager->getSubjectManager()->registerSubject(mInterface, mInterfaceName.c_str());
-      mEnabled = true;
-      return vpr::ReturnStatus::Succeed;
-   }
-   catch (...)
-   {
-      vprDEBUG(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
-         << "CorbaRemoteReconfig::enable: Caught an exception while trying to register subject\n"
-         << vprDEBUG_FLUSH;
-      return vpr::ReturnStatus::Fail;
-   }
+   return status;
 }
 
 bool CorbaRemoteReconfig::isEnabled() const
