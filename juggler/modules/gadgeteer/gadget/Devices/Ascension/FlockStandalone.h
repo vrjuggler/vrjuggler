@@ -12,7 +12,9 @@
 #define MAX_SENSORS    128
 
 #ifndef _BOOL
-#include <list.h>
+typedef bool int;
+#define true 1
+#define false 0
 #endif
 
 typedef struct {
@@ -168,12 +170,12 @@ public:
 	inline char getReportRate() {return _reportRate; }
 
 
-	float&	    xPos();
-	float&	    yPos();
-	float&	    zPos();
-	float&	    zRot();
-	float&	    yRot();
-	float&	    xRot();
+	float&	    xPos( const int& i );
+	float&	    yPos( const int& i );
+	float&	    zPos( const int& i );
+	float&	    zRot( const int& i );
+	float&	    yRot( const int& i );
+	float&	    xRot( const int& i );
 
 // Private methods
 private:
@@ -207,11 +209,9 @@ private:
 	bool	    _usingCorrectionTable;
 	
 	//    x,y,z,        r,y,p
-	float _position[3], _orientation[3];
+	float _position[MAX_SENSORS][3], _orientation[MAX_SENSORS][3];
 	
 	bool _active;
-	
-	int _current, _valid, _progress;
 	
 // static bird functions.
 private:	
@@ -237,12 +237,6 @@ private:
 	static void  set_group(const int& port);
 };
 
-inline float& aFlock::xPos()  { return _position[0]; }
-inline float& aFlock::yPos()  { return _position[1]; }
-inline float& aFlock::zPos()  { return _position[2]; }
-inline float& aFlock::zRot()  { return _orientation[0]; }
-inline float& aFlock::yRot()  { return _orientation[1]; }
-inline float& aFlock::xRot()  { return _orientation[2]; }
 
 
 #endif
