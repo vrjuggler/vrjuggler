@@ -14,7 +14,7 @@ LATEX_OUTPUT_DIR=	latex
 
 # Fill these in!!  Together, they form the installation prefix.
 webroot=	$(HOME)/public_html/jugglerweb
-instdir=	vapor/0.16/programmer.reference
+instdir=	vapor/0.17/programmer.reference
 
 prefix=		$(webroot)/$(instdir)
 
