@@ -115,12 +115,12 @@ int vjMotionStar::startSampling()
       mMotionStar.start();
  
       //sanity check.. make sure birds actually started
-      if (this->isActive() == false)
+/*      if (this->isActive() == false)
       {
          vjDEBUG(vjDBG_INPUT_MGR,0)  << "vjMotionStar failed to start.." << endl << vjDEBUG_FLUSH;
          return 0;
       }
- 
+*/
       vjDEBUG(vjDBG_INPUT_MGR,1)  << "vjMotionStar ready to go.." << endl << vjDEBUG_FLUSH;
  
       vjMotionStar* devicePtr = this;
@@ -147,9 +147,9 @@ int vjMotionStar::startSampling()
  
 int vjMotionStar::sample()
 {
-   if (this->isActive() == false)
+/*   if (this->isActive() == false)
       return 0;
- 
+*/ 
    int i;
    if (mMotionStar.getRunMode()==1) {mMotionStar.sample(1);}
  
