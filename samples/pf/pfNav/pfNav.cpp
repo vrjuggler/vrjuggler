@@ -34,7 +34,7 @@ public:
 
    virtual void apiInit()
    {
-      vjDEBUG(vjDBG_ALL, 1) << "app::apiInit\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,1) << "app::apiInit\n" << vjDEBUG_FLUSH;
    }
 
    /// Initialize the scene graph
@@ -69,27 +69,27 @@ public:
    /// Return the current scene graph
    virtual pfScene* getScene()
    {
-      vjDEBUG(vjDEBUG_ALL, 0) << "app::getScene\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL, 0) << "app::getScene\n" << vjDEBUG_FLUSH;
       return rootNode;
    }
 
    /// Function called before pfSync
    virtual void preSync()
    {
-      vjDEBUG(vjDEBUG_ALL, 1) << "app::preSync\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL, 1) << "app::preSync\n" << vjDEBUG_FLUSH;
    }
 
    /// Function called after pfSync and before pfDraw
    virtual void preDraw()
    {
-      vjDEBUG(vjDEBUG_ALL, 1) << "app::preDraw\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL, 1) << "app::preDraw\n" << vjDEBUG_FLUSH;
    }
 
    /// Function called after pfDraw
    virtual void postDraw()
    {
-      vjDEBUG(vjDEBUG_ALL, 1) << "app::postDraw\n" << vjDEBUG_FLUSH;
-   }
+      vjDEBUG(vjDBG_ALL,1) << "app::postDraw\n" << vjDEBUG_FLUSH;
+  }
 
 public:
    int   wandIndex;     // the index of the wand
@@ -114,6 +114,7 @@ int main(int argc, char* argv[])
     }
 
     kernel->start();
+
     kernel->setApplication(application);    // Set up the kernel
 
     //while(!kernel->done())

@@ -55,7 +55,7 @@ vjTSTable* vjThreadManager::getCurrentTSTable()
    vjBaseThread* cur_thread;
    int32_t thread_id;
 
-   cur_thread = vjThread::self();		// Get current thread
+   cur_thread = vjThread::self();		   // Get current thread
    thread_id = cur_thread->getTID();		// Get thread id
 
    vjASSERT((thread_id >= 0) && (thread_id < mTSTables.size()));

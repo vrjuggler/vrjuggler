@@ -225,7 +225,7 @@ void vjKernel::configAdd(vjConfigChunkDB* chunkDB, bool guarded)
          vjASSERT(mChunkDB != NULL);
          mChunkDB->addChunk(chunks[i]);
          int num_chunks = mChunkDB->getChunks().size();
-         vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::configAdd: Added chunk: Now have " << num_chunks << " chunks.\n" << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::configAdd: Added chunk: " << chunks[i]->getProperty("name") << ", Now have " << num_chunks << " chunks.\n" << vjDEBUG_FLUSH;
       }
       else                 // Else: Give unrecognized error
       {

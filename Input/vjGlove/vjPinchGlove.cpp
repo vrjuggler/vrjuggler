@@ -89,6 +89,7 @@ int vjPinchGlove::Sample()
 
     // Update the xform data
     mTheData[progress][0].calcXforms();
+    mTheData[progress][1].calcXforms();
 
     swapValidIndexes();
     return 1;
@@ -96,8 +97,15 @@ int vjPinchGlove::Sample()
 
 void vjPinchGlove::UpdateData()
 {
-    // swap the indicies for the pointers
-    swapCurrentIndexes();
+vjGuard<vjMutex> updateGuard(lock);
+
+   // Copy the valid data to the current data so that both are valid
+   mTheData[0][current] = mTheData[0][valid];   // first hand
+   mTheData[1][current] = mTheData[1][valid];   // other hand
+
+
+   // swap the indicies for the pointers
+   swapCurrentIndexes();
 
     return;
 }
