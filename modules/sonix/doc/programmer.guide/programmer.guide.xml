@@ -25,7 +25,7 @@
    </articleinfo>
    <section>
       <title>Introduction</title>
-      <para>Sonix provides simple audio sound objects on top of several audio APIs. The interface to Sonix is kept very very simple in order to get people up and running with sound as fast as possible. </para>
+      <para>Sonix provides simple audio sound objects on top of several audio APIs. The interface to Sonix is kept very simple in order to get people up and running with sound as fast as possible. </para>
       <para>Here is an overview of Sonix capabilities: <itemizedlist>
             <listitem>
                <para>Provides simple access to spacialized sound triggering.</para>
