@@ -139,7 +139,6 @@ namespace gadget
       mTempWriter->writeUint16(device_id);
 
          // Device Name we are requesting
-      mTempWriter->writeUint16(device_name.size());
       mTempWriter->writeString(device_name);
 
          // Set the size of the data
@@ -192,8 +191,7 @@ namespace gadget
       mSenderId = object_reader->readUint16();
 
       // Device Name
-      vpr::Uint16 temp_name_len = object_reader->readUint16();
-      mDeviceName = object_reader->readString(temp_name_len);
+      mDeviceName = object_reader->readString();
 
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "Name: " << mDeviceName << "\n" << vprDEBUG_FLUSH;
       vprDEBUG_END(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  clrOutBOLD(clrCYAN,"[Parse Packet]RECEIVEING A DEVICE REQUEST\n") << vprDEBUG_FLUSH;
@@ -241,11 +239,9 @@ namespace gadget
       mTempWriter->writeUint16(local_device_id);
 
          // Device Name
-      mTempWriter->writeUint16(device_name.size());
       mTempWriter->writeString(device_name);
 
          // Base Type
-      mTempWriter->writeUint16(base_type.size());
       mTempWriter->writeString(base_type);
 
          // Set the size of the packet
@@ -310,12 +306,10 @@ namespace gadget
       mTempWriter->writeUint16(local_device_id);
 
          // Device Name
-      mTempWriter->writeUint16(device_name.size());
       mTempWriter->writeString(device_name);
 
          // Base Type
       std::string base_type = "I Don't have it!";
-      mTempWriter->writeUint16(base_type.size());
       mTempWriter->writeString(base_type);
 
          // Set the size of the packet
@@ -374,12 +368,10 @@ namespace gadget
       mSenderId = object_reader->readUint16();
 
          // Device Name
-      vpr::Uint16 temp_string_len = object_reader->readUint16();
-      mDeviceName = object_reader->readString(temp_string_len);
+      mDeviceName = object_reader->readString();
 
          // Base Type
-      temp_string_len = object_reader->readUint16();
-      mBaseType = object_reader->readString(temp_string_len);
+      mBaseType = object_reader->readString();
 
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "Name:      " << mDeviceName << "\n" << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "Remote ID: " << mSenderId << "\n" << vprDEBUG_FLUSH;
@@ -660,7 +652,6 @@ namespace gadget
       mTempWriter->writeBool(sync);
 
       // Write hostname
-      mTempWriter->writeUint16(host.size());
       mTempWriter->writeString(host);
 
       // Write port
@@ -668,7 +659,6 @@ namespace gadget
       mTempWriter->writeUint16(port);
 
          // Write Manager ID
-      mTempWriter->writeUint16(manager_id.size());
       mTempWriter->writeString(manager_id);
 
       // Get the length of the data
@@ -760,18 +750,14 @@ namespace gadget
       {
          accept_reject = reader->readBool();
          sync = reader->readBool();
-         vpr::Uint16 temp_string_len = reader->readUint16();
-         receivedHostname = reader->readString(temp_string_len);
+         receivedHostname = reader->readString();
          receivedPort = reader->readUint16();
-         temp_string_len = reader->readUint16();
-         received_manager_id = reader->readString(temp_string_len);
+         received_manager_id = reader->readString();
 
          vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) <<  clrSetBOLD(clrYELLOW) << "======RECEIVE HANDSHAKE INFO===== \n" << clrRESET << vprDEBUG_FLUSH;
          vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) <<  clrSetBOLD(clrYELLOW) << "BOOL:       " << accept_reject << "\n" << clrRESET << vprDEBUG_FLUSH;
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) <<  clrSetBOLD(clrYELLOW) << "str_len:    " << temp_string_len << "\n" << clrRESET << vprDEBUG_FLUSH;
          vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) <<  clrSetBOLD(clrYELLOW) << "host:       " << receivedHostname << "\n" << clrRESET << vprDEBUG_FLUSH;
          vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) <<  clrSetBOLD(clrYELLOW) << "port:       " << receivedPort << "\n" << clrRESET << vprDEBUG_FLUSH;
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) <<  clrSetBOLD(clrYELLOW) << "str_len:    " << temp_string_len << "\n" << clrRESET << vprDEBUG_FLUSH;
          vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) <<  clrSetBOLD(clrYELLOW) << "manager_id: " << received_manager_id << "\n" << clrRESET << vprDEBUG_FLUSH;
 
 
