@@ -11,10 +11,12 @@
 #	[<whitespace>]<filename><whitespace><error message><end-of-line>
 #
 # comment lines begin with '#'
+avail
 cfg.pm
 cfg_local.pm
 commit_prep.pl
 commitcheck
+cvs_acls.pl
 log_accum.pl
 log_verify
 log_verify.pl
