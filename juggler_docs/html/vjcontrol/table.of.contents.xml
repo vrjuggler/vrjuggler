@@ -17,6 +17,7 @@ Builder: JExplorerBuilder V 1. 0. 7
 			info="General information about Configuring Juggler" 
 			image="Leaf.gif" >
 
+				< item title="Config file overview" link="${VJCONTROL}/cfgfiles_intro.html" info="Configuration file overview" target="Body" image="Leaf.gif" >
 				< item title="ConfigChunk Primer" link="${VJCONTROL}/chunkprimer.html" info="Introduction to ConfigChunks" target="Body" image="Leaf.gif" >
 				< item title="Configuring Juggler" link="${VJCONTROL}/configApps.html" info="Specific information about configuring VR Juggler components" target="Body" image="Leaf.gif" >
 
