@@ -14,6 +14,15 @@ void	ProfileManager::startProfile( const char * name )
 	mCurrentNode->call();
 }
 
+void	ProfileManager::startProfile( const char * name , const unsigned int queue_size)
+{
+	if (name != mCurrentNode->getName()) {
+		mCurrentNode = mCurrentNode->getSubNode( name, queue_size);
+	} 
+	
+	mCurrentNode->call();
+}
+
 void	ProfileManager::stopProfile( void )
 {
 	// Return will indicate whether we should back up to our parent (we may
@@ -30,7 +39,6 @@ void	ProfileManager::reset( void )
 	profileGetTicks(mResetTime);
 }
 
-
 void ProfileManager::incrementFrameCounter( void )
 {
 	mFrameCounter++;
@@ -43,7 +51,5 @@ float ProfileManager::getTimeSinceReset( void )
 	time = time - *mResetTime;
 	return (float)(time.secf() / profileGetTickRate().secf());
 }
-
-
 
 } // end namespace vpr

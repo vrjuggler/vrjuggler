@@ -9,6 +9,8 @@
 
 #include <vpr/Util/Interval.h>
 #include <vpr/vprTypes.h>
+#include <deque>
+#include <map>
 
 namespace vpr
 {
@@ -39,6 +41,8 @@ public:
     */
 	ProfileNode( const char * name, ProfileNode * parent );
 
+	ProfileNode( const char * name, ProfileNode * parent, const unsigned int queue_size);
+
    /** 
     * destructor
     */
@@ -50,6 +54,8 @@ public:
     * to this node and returns this new node.
     */
 	ProfileNode*  getSubNode( const char * name );
+
+	ProfileNode*  getSubNode( const char * name, const unsigned int queue_size);
 
    /**
     * return This nodes parent.
@@ -66,6 +72,8 @@ public:
     */
 	ProfileNode*  getChild( void )			{ return mChild; }
 
+   void           printTree(ProfileNode* node);
+
 	void				reset( void );
 	void				call( void );
 	bool				Return( void );
@@ -74,11 +82,22 @@ public:
 	int				getTotalCalls( void )		{ return mTotalCalls; }
 	float				getTotalTime( void )		{ return mTotalTime; }
 
+   typedef std::pair< std::deque<float>::const_iterator, std::deque<float>::const_iterator> NodeHistoryRange;
+
+   const NodeHistoryRange getNodeHistoryRange() { return std::make_pair(mHistory.begin(), mHistory.end()); }
+
+   void           clearHistory() {mHistory.clear(); }
+   
+
 protected:
 
 	const char*	   mName;
 	int				mTotalCalls;
 	float				mTotalTime;
+   
+   std::deque<float> mHistory;
+   unsigned int      mHistorySize;
+
    vpr::Interval	mStartTime;
 	int				mRecursionCounter;
 
@@ -86,7 +105,6 @@ protected:
 	ProfileNode*	mChild;
 	ProfileNode*	mSibling;
 };
-
 
 } // end namespace vpr
 
