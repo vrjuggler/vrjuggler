@@ -337,7 +337,7 @@ protected:
 
 private:
    /// Don't allow copy
-   BaseThread(BaseThread& other)
+   BaseThread(BaseThread&)
    {;}
 
 private:

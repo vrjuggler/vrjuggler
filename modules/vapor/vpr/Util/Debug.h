@@ -225,8 +225,8 @@ namespace vpr
       // These two have to be here because Visual C++ will try to make them
       // exported public symbols.  This causes problems because copying 
       // vpr::Mutex objects is not allowed.
-      Debug(const Debug& d) {;}
-      void operator= (const Debug& d) {;}
+      Debug(const Debug&) {;}
+      void operator= (const Debug&) {;}
 
       /** Initialize the system */
       void init();
