@@ -79,8 +79,22 @@ public:
       mLatencyMeasure.set (jcclPERF_ALL, "tracking latency");
    }
 
-   enum Type { UNDEFINED, SURFACE, SIM};                  // What type of viewport is it
-   enum View { NONE=0, LEFT_EYE=1, RIGHT_EYE=2, STEREO=3 };      // For referring to which eye(s) to draw
+   /** Type of viewport */
+   enum Type
+   {
+      UNDEFINED,  /**< Undefined type */
+      SURFACE,    /**< Surface viewport */
+      SIM         /**< Simulator viewport */
+   };
+
+   /** Used for referencing which eye(s) to draw */
+   enum View
+   {
+      NONE=0,       /**< Neither eye */
+      LEFT_EYE=1,   /**< Left eye only */
+      RIGHT_EYE=2,  /**< Right eye only */
+      STEREO=3      /**< Both left and right eyes */
+   };
 
 public:
    /**
