@@ -167,10 +167,10 @@ inline void OsgApp::contextInit()
    this->configSceneView(new_sv);            // Configure the new viewer
    new_sv->getState()->setContextID(unique_context_id);
    (*sceneViewer) = new_sv;
-	
-	//Setup OpenGL light
-	//This should actualy be done in the simulator code
-	    GLfloat light0_ambient[] = { 0.1f,  0.1f,  0.1f,  1.0f};
+        
+    //Setup OpenGL light
+    //This should actualy be done in the simulator code
+    GLfloat light0_ambient[] = { 0.1f,  0.1f,  0.1f,  1.0f};
     GLfloat light0_diffuse[] = { 0.8f,  0.8f,  0.8f,  1.0f};
     GLfloat light0_specular[] = { 1.0f,  1.0f,  1.0f,  1.0f};
     GLfloat light0_position[] = {0.0f, 0.75f, 0.75f, 0.0f};
@@ -199,8 +199,7 @@ inline void OsgApp::contextInit()
     glEnable(GL_LIGHT0);
     glEnable(GL_COLOR_MATERIAL);
     glShadeModel(GL_SMOOTH);
-	
-	
+
 }
 
 
@@ -227,7 +226,8 @@ inline void OsgApp::draw()
 
    // Add the tree to the scene viewer and set properties
    sv->setSceneData(getScene());
-   sv->setCalcNearFar(false);
+   //sv->setCalcNearFar(false);
+   sv->setComputeNearFarMode(osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR);
    sv->setViewport(ll_x, ll_y, x_size, y_size);
 
    //Get the view matrix and the frustrum form the draw manager
