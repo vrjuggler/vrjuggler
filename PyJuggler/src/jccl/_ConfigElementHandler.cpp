@@ -6,7 +6,7 @@
 // Date modified: $Date$
 // Version:       $Revision$
 
-// Bosot Includes ==============================================================
+// Boost Includes ==============================================================
 #include <boost/python.hpp>
 #include <boost/cstdint.hpp>
 
