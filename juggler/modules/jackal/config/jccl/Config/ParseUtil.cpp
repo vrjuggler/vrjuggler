@@ -42,7 +42,7 @@
 namespace jccl
 {
 
-VarType stringToVarType (const std::string& str)
+VarType stringToVarType(const std::string& str)
 {
    if ( str == int_TOKEN)
    {
@@ -76,7 +76,7 @@ VarType stringToVarType (const std::string& str)
    return VJ_T_INVALID;
 }
 
-std::string typeString (const VarType t)
+std::string typeString(const VarType t)
 {
    switch ( t )
    {
@@ -97,44 +97,8 @@ std::string typeString (const VarType t)
    }
 }
 
-/*
-char *unitString (CfgUnit t)
-{
-   switch ( t )
-   {
-      case U_Feet:
-         return "Feet";
-      case U_Inches:
-         return "Inches";
-      case U_Meters:
-         return "Meters";
-      case U_Centimeters:
-         return "Centimeters";
-      default:
-         return "Invalid Unit Type";
-   }
-}
-
-float toFeet (float val, CfgUnit unit)
-{
-   switch ( unit )
-   {
-      case U_Feet:
-         return val;
-      case U_Inches:
-         return(val/12);
-      case U_Meters:
-         return(val*3.28084);
-      case U_Centimeters:
-         return(val*0.0328084);
-      default:
-         return val;
-   }
-}
-*/
-
-//: is n an absolute path name?
-bool isAbsolutePathName (const std::string& n)
+/** Is n an absolute path name? */
+bool isAbsolutePathName(const std::string& n)
 {
 #ifdef WIN32
    return((n.length() > 0) && (n[0] == '\\'))
