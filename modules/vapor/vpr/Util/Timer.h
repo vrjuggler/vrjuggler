@@ -37,6 +37,8 @@
 #include <sys/time.h>
 #endif
 
+namespace vpr {
+
 //: Simple class to take timings and give averages
 // NOTE: All times are in seconds
 class Timer
