@@ -50,10 +50,15 @@ namespace vpr {
  * @author Allen Bierbaum
  * @author Kevin Meinert
  */
-template<class RealSocketStreamImpl, class RealSocketStreamImplParent, class IO_STATS_STRATEGY = NullIOStatsStrategy>
-class SocketStream_t : public Socket_t<RealSocketStreamImplParent, IO_STATS_STRATEGY>,
-                       public SocketStreamOpt
+//template<class RealSocketStreamImpl, class RealSocketStreamImplParent, class IO_STATS_STRATEGY = NullIOStatsStrategy>
+//class SocketStream_t : public Socket_t<RealSocketStreamImplParent, IO_STATS_STRATEGY>,
+template<class SocketConfig_>
+class SocketStream_t : public Socket_t<SocketConfig_>, public SocketStreamOpt
 {
+public:
+   typedef SocketConfig_ Config;
+   typedef typename Config::SocketStreamImpl SocketStreamImpl;
+
 public:
     /**
      * Default constructor.
@@ -207,8 +212,8 @@ protected:
      *
      * @param sock_imp A pointer to a vpr::SocketStreamImpl object.
      */
-    SocketStream_t (RealSocketStreamImpl* sock_imp)
-        : Socket_t<RealSocketStreamImplParent>(), m_socket_stream_imp(*sock_imp)
+    SocketStream_t (SocketStreamImpl* sock_imp)
+        : Socket_t<Config>(), m_socket_stream_imp(*sock_imp)
     {
         m_socket_imp = &m_socket_stream_imp;
     }
@@ -228,7 +233,7 @@ protected:
     }
 
     /// Platform-specific stream socket implementation
-    RealSocketStreamImpl m_socket_stream_imp;
+    SocketStreamImpl m_socket_stream_imp;
 };
 
 }; // End of vpr namespace

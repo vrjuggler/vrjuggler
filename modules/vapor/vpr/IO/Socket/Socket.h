@@ -35,34 +35,14 @@
 
 #include <vpr/vprConfig.h>
 
-#include <string>
-
-#include <vpr/IO/BlockIO.h>
-#include <vpr/IO/Socket/SocketTypes.h>
-#include <vpr/IO/Socket/InetAddr.h>
-
 // include bridge class
+#include <vpr/IO/Socket/SocketConfiguration.h>
 #include <vpr/IO/Socket/Socket_t.h>
 
-// Incoude the perf monitoring stuff
-//#include <vpr/IO/Stats/BandwidthIOStats.h>
-//#include <vpr/IO/Stats/BandwidthStatAdapter.h>
-
-// make the connection
-#if defined(VPR_USE_NSPR)
-#   include <vpr/md/NSPR/IO/Socket/SocketImplNSPR.h>
-namespace vpr {
-   typedef Socket_t<SocketImplNSPR> Socket;
-  //typedef BandwidthStatAdapter< Socket_t<SocketImplNSPR>, BandwidthIOStats> Socket;
-};
-
-#else
-#   include <vpr/md/POSIX/IO/Socket/SocketImplBSD.h>
-namespace vpr {
-  typedef Socket_t<SocketImplBSD> Socket;
-};
-#endif
-
+namespace vpr
+{
+   typedef Socket_t<SocketConfiguration> Socket;
+}
 
 #endif  /* _VPR_SOCKET_H_ */
 

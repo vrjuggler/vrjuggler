@@ -66,8 +66,15 @@ namespace vpr {
  * @see vpr::SocketStream_t
  * @see vpr::SocketDatagram_t
  */
-template<class RealSocketImpl, class IO_STATS_STRATEGY = NullIOStatsStrategy>
-class Socket_t : public vpr::BlockIO, public vpr::SocketIpOpt {
+//template<class RealSocketImpl, class IO_STATS_STRATEGY = NullIOStatsStrategy>
+template<class SockConfig_>
+class Socket_t : public vpr::BlockIO, public vpr::SocketIpOpt 
+{
+public:
+   typedef SockConfig_                             Config;
+   typedef typename Config::SocketImpl             SocketImpl;
+   typedef typename Config::SocketIOStatsStrategy  DefaultIOStatsStrategy;
+
 public:
     // ========================================================================
     // Block I/O interface.
@@ -705,10 +712,10 @@ protected:
         // Allocate stats stategy object
        // First, use template programming magic.  If the stategy is the null one, then don't allocate one
        // NOTE: Because all the info is static the compiler "should" optimize the following if statement away
-       if( IO_STATS_STRATEGY::IS_NULL == 0)     // If we have a real one
+       if( DefaultIOStatsStrategy::IS_NULL == 0)     // If we have a real one
        {
-          //std::cout << "Allocating strategy: " << typeid(IO_STATS_STRATEGY).name() << std::endl;
-          BaseIOStatsStrategy* new_strategy = new IO_STATS_STRATEGY;
+          //std::cout << "Allocating strategy: " << typeid(DefaultIOStatsStrategy).name() << std::endl;
+          BaseIOStatsStrategy* new_strategy = new DefaultIOStatsStrategy;
           this->setIOStatStrategy(new_strategy);
        }
     }
@@ -829,7 +836,7 @@ protected:
     }
 
     /// Platform-specific socket implementation object
-    RealSocketImpl* m_socket_imp;
+    SocketImpl* m_socket_imp;
 };
 
 }; // End of vpr namespace
