@@ -49,6 +49,7 @@
 package VjComponents.ConfigEditor.ConfigChunkUI;
 
 import java.awt.*;
+import java.util.Vector;
 import java.awt.event.*;
 import javax.swing.*;
 
@@ -81,38 +82,7 @@ public class VarValueStandardPanel extends VarValuePanel implements ActionListen
 	    ConfigChunk ch;
 	    String s;
 
-            ConfigModule config_module = (ConfigModule)Core.getModule ("Config Module");
-            if (config_module == null)
-                Core.consoleErrorMessage ("GUI", "VarValueStandardPanel expected Config Module to exist");
-
-	    choice = new JComboBox();
-	    ListBoxModel bm = new ListBoxModel();
-	    bm.addObject ("<No Selection>");
-	    if (desc.enums.size() == 0) {
-		/* no listed types we use as a wildcard - show all chunks */
-		for (i = 0; i < config_module.chunkdbs.size(); i++) {
-		    db = (ConfigChunkDB)config_module.chunkdbs.elementAt(i);
-		    for (j = 0; j < db.size(); j++) {
-			ch = (ConfigChunk)db.elementAt(j);
-			bm.addObject (db.getName() + ": " + ch.getName());
-		    }
-		}
-	    }
-	    else {
-		for (i = 0; i < config_module.chunkdbs.size(); i++) {
-		    db = (ConfigChunkDB)config_module.chunkdbs.elementAt(i);
-		    for (j = 0; j < db.size(); j++) {
-			ch = (ConfigChunk)db.elementAt(j);
-			for (k = 0; k < desc.enums.size(); k++) {
-			    if (ch.getDescToken().equalsIgnoreCase (((DescEnum)desc.enums.elementAt(k)).str)) {
-				bm.addObject (db.getName() + ": " + ch.getName());
-				break;
-			    }
-			}
-		    }
-		}
-	    }
-	    choice.setModel (bm);
+	    choice = new JComboBox(generateChunkSelectionList(desc.enums ));
 	    choice.setSelectedItem ("<No Selection>");
 	    add (choice, "Center");
 	}
@@ -153,6 +123,61 @@ public class VarValueStandardPanel extends VarValuePanel implements ActionListen
 	    add (removebutton,"East");
 	    removebutton.addActionListener(this);
 	}
+    }
+
+
+    /** Utility for generateChunkSelectionList(). */
+    private void addEmbeddedChunks (Vector bm, ConfigChunk ch, Vector chunktypes) {
+        Vector v = ch.getEmbeddedChunks();
+        ConfigChunk ch2;
+        for (int i = 0; i < v.size(); i++) {
+            ch2 = (ConfigChunk)v.elementAt(i);
+            if (matchesTypes (ch2, chunktypes))
+                bm.addElement (ch2.getName());
+            addEmbeddedChunks (bm, ch2, chunktypes);
+        }
+    }
+
+
+    private Vector generateChunkSelectionList( Vector chunktypes) {
+        int i,j;
+        Vector v;
+        Vector bm = new Vector();
+        ConfigChunkDB db;
+        ConfigChunk ch;
+
+        ConfigModule config_module = (ConfigModule)Core.getModule ("Config Module");
+        if (config_module == null) {
+            Core.consoleErrorMessage ("GUI", "VarValueStandardPanel expected Config Module to exist");
+            return bm;
+        }
+
+        bm.addElement ("<No Selection>");
+        for (i = 0; i < config_module.chunkdbs.size(); i++) {
+            db = (ConfigChunkDB)config_module.chunkdbs.elementAt(i);
+            for (j = 0; j < db.size(); j++) {
+                ch = (ConfigChunk)db.elementAt(j);
+                if (matchesTypes(ch, chunktypes))
+                    bm.addElement (db.getName() + ": " + ch.getName());
+                addEmbeddedChunks (bm, ch, chunktypes);
+            }
+        }
+        return bm;
+    }
+
+
+    /** Utility for generateChunkSelectionList(). */
+    private boolean matchesTypes (ConfigChunk ch, Vector chunktypes) {
+        int k;
+        int max = chunktypes.size();
+        if (max == 0)
+            return true;
+        for (k = 0; k < max; k++) {
+            if (ch.getDescToken().equalsIgnoreCase (((DescEnum)chunktypes.elementAt(k)).str)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

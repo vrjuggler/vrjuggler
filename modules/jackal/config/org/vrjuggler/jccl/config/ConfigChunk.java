@@ -112,6 +112,22 @@ public class ConfigChunk {
     }
 
 
+    /** This is helpful for the GUI. */
+    public Vector getEmbeddedChunks () {
+        Vector v = new Vector();
+        Property p;
+        int i, j;
+        for (i = 0; i < props.size(); i++) {
+            p = (Property)props.elementAt(i);
+            if (p.valtype.equals (ValType.t_embeddedchunk)) {
+                for (j = 0; j < p.getNum(); j++) {
+                    v.addElement (p.getValue(j).getEmbeddedChunk());
+                }
+            }
+        }
+        return v;
+    }
+
 
     public boolean equals (ConfigChunk c) {
 	Property p1, p2;
