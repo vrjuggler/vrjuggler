@@ -415,10 +415,10 @@ if test "x$osg_base_dir" != "xno" ; then
 
       if test "x$OS_TYPE" = "xWin32" ; then
          OSG_LDFLAGS="/libpath:$osg_base_dir/lib"
-         OSG_LIBS='osg.lib osgProducer.lib osgUtil.lib osgDB.lib'
+         OSG_LIBS='osg.lib osgProducer.lib osgUtil.lib osgDB.lib osgText.lib osgGA.lib Producer.lib OpenThreads.lib'
       else
          OSG_LDFLAGS="-L$osg_base_dir/lib"
-         OSG_LIBS='-losg -losgProducer -losgUtil -losgDB'
+         OSG_LIBS='-losg -losgProducer -losgUtil -losgDB -losgText -losgGA -lProducer -lOpenThreads'
       fi
    fi
 
