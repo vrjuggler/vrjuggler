@@ -73,16 +73,16 @@ bool SimGloveGesture::config(jccl::ConfigChunkPtr chunk)
    while(num_gestures < mSimKeys.size())     // If we have to many keys
    {
       mSimKeys.pop_back();
-      vprDEBUG(gadgetDBG_INPUT_MGR,1)
-         << "vjSimGloveGesture: Not enough gestures. Trimming" << std::endl
-         << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+         << "gadget::SimGloveGesture: Not enough gestures. Trimming"
+         << std::endl << vprDEBUG_FLUSH;
    }
 
    // Find pos proxy
    std::string glove_pos_proxy = chunk->getProperty<std::string>("glovePos");    // Get the name of the pos_proxy
    if(glove_pos_proxy == std::string(""))
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR,0)
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
          << clrOutNORM(clrRED, "ERROR:") << " SimGloveGesture has no posProxy."
          << std::endl << vprDEBUG_FLUSH;
       return false;
@@ -188,7 +188,7 @@ void SimGloveGesture::loadTrainedFile(std::string fileName)
    }
    else
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR,0)
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
          << "gadget::SimGloveGesture:: Can't load trained file: "
          << fileName.c_str() << std::endl << vprDEBUG_FLUSH;
    }

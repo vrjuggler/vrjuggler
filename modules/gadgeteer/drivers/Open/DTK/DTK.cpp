@@ -76,8 +76,8 @@ DTK::DTK()
 
 bool DTK::config(jccl::ConfigChunkPtr c)
 {
-    vprDEBUG(gadgetDBG_INPUT_MGR,1) << "  DTK::config(jccl::ConfigChunkPtr)"
-                                    << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+       << "  DTK::config(jccl::ConfigChunkPtr)" << std::endl << vprDEBUG_FLUSH;
 
     if (!Position::config(c) || !Digital::config(c) || !Analog::config(c))
     return false;
@@ -201,25 +201,29 @@ int DTK::startSampling()
 // make sure inertia cubes aren't already started
     if (this->isActive() == true)
     {
-    vprDEBUG(gadgetDBG_INPUT_MGR,2) << "vjDTK was already started."
-                                   << std::endl << vprDEBUG_FLUSH;
+       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+          << "gadget::DTK was already started." << std::endl << vprDEBUG_FLUSH;
     return 0;
     }
 
 // Has the thread actually started already
     if(mThread != NULL)
     {
-    vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
-                        << "vjIsense: startSampling called, when already sampling.\n"
-                        << vprDEBUG_FLUSH;
-    vprASSERT(false);
+       vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
+          << clrOutNORM(clrRED,"ERROR:")
+          << "gadget::DTK: startSampling called, when already sampling.\n"
+          << vprDEBUG_FLUSH;
+       vprASSERT(false);
 
-    } else {
-        if (!this->startDTK()) {
-        vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
-                        << "vjDTK: \n"
-                        << vprDEBUG_FLUSH;
-        return 0;
+    }
+    else
+    {
+        if (!this->startDTK())
+        {
+           vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
+              << clrOutNORM(clrRED,"ERROR:") << "gadget::DTK: \n"
+              << vprDEBUG_FLUSH;
+           return 0;
         }
 
       // Create a new thread to handle the control
@@ -251,7 +255,7 @@ int DTK::sample()
     float *floatData;
     int   *intData;
 
-    jccl::TimeStamp sampletime;        
+    jccl::TimeStamp sampletime;
     sampletime.set();
 
     vpr::Thread::yield()
@@ -261,7 +265,7 @@ int DTK::sample()
     segment = _dtkSegments[i];
     if(segment != NULL)
     {
-        if(segment->SegmentType() <= dtk_pos_QUAT && segment->ItemIndex() < numPositional) 
+        if(segment->SegmentType() <= dtk_pos_QUAT && segment->ItemIndex() < numPositional)
         {
             index = getStationIndex(segment->ItemIndex(),progress);
 
@@ -282,8 +286,8 @@ int DTK::sample()
 
             }
             mDataTimes[index] = sampletime;
-        } 
-        else if(segment->SegmentType() == dtk_digital && segment->ItemIndex() < numDigital) 
+        }
+        else if(segment->SegmentType() == dtk_digital && segment->ItemIndex() < numDigital)
         {
             index = getStationIndex(segment->ItemIndex(),progress);
 
@@ -314,22 +318,24 @@ int DTK::sample()
 int DTK::stopSampling()
 {
     if (this->isActive() == false)
-    return 0;
+    {
+       return 0;
+    }
 
     if (mThread != NULL)
     {
-    vprDEBUG(gadgetDBG_INPUT_MGR,1)
-       << "vjDTK::stopSampling(): Stopping the DTK thread... "
-       << vprDEBUG_FLUSH;
+       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+          << "gadget::DTK::stopSampling(): Stopping the DTK thread... "
+          << vprDEBUG_FLUSH;
 
-    mThread->kill();
-    delete mThread;
-    mThread = NULL;
+       mThread->kill();
+       delete mThread;
+       mThread = NULL;
 
-    this->stopDTK();
+       this->stopDTK();
 
-    vprDEBUG(gadgetDBG_INPUT_MGR,1) << "stopped." << std::endl
-                                    << vprDEBUG_FLUSH;
+       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+          << "stopped." << std::endl << vprDEBUG_FLUSH;
     }
 
     return 1;

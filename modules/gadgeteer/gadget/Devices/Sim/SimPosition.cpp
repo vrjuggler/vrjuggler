@@ -157,8 +157,12 @@ void SimPosition::updateData()
       rotRollCCW( -amt );
 
    // Debug output
-   //vjCoord pos_data(mPos);
-   //vprDEBUG(vprDBG_ALL,1) << "simPos: pos:" << pos_data.pos << "  or:" << pos_data.orient << endl << vprDEBUG_FLUSH;
+/*
+   vjCoord pos_data(mPos);
+   vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "simPos: pos:" << pos_data.pos
+                                           << "  or:" << pos_data.orient
+                                           << std::endl << vprDEBUG_FLUSH;
+*/
 
    // Set the time for the position data to the EventWindow timestamp
    mPos.setTime(mEventWin->getTimeStamp());
