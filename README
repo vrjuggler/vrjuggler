@@ -42,7 +42,7 @@ Table of contents:
         VR Juggler is officially supported on the following platforms:
 
             IRIX 6.5
-            RedHat Linux 6.1 and newer
+            RedHat Linux 6.1, 6.2, 7.1, and newer
             Windows NT 4.0 and 2000
             Windows 98/Me
 
@@ -68,8 +68,8 @@ Table of contents:
             GCC 2.91
             Mesa3D 3.2 or newer
 
-        * RedHat Linux 7.0
-            GCC 2.96.69
+        * RedHat Linux 7.1
+            GCC 2.96 20000731 (Red Hat Linux 7.1 2.96-81)
             Mesa3D 3.2 or newer
              or 
             OpenGL 1.2 drivers
@@ -238,3 +238,5 @@ Table of contents:
            mkdir <JUGGLER_DIR>/juggler/<BUILD_DIR>
            cd <JUGGLER_DIR>/juggler/<BUILD_DIR>
            <JUGGLER_DIR>/juggler/configure
+
+$Id$
