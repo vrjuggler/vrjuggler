@@ -4,40 +4,81 @@
 #define AJOPENALSOUNDIMPLEMENTATION_H
 
 #include <string>
+#include <vector>
+#include <AL/al.h>
+#include <AL/alc.h>
+#include <AL/alext.h>
+#include <AL/alut.h>
+#include <stdio.h> // for FILE
+
+#include "CFileIO.h"
+
 #include "ajSoundImplementation.h"
 #include "ajSoundInfo.h"
 
 class ajOpenALSoundImplementation : public ajSoundImplementation
 {
 public:
+    
+   ajOpenALSoundImplementation() : mContextId( NULL ), mDev( NULL )
+   {
+   }
+   
+   virtual ~ajOpenALSoundImplementation()
+   {
+      
+   }  
+    
    /**
     * @input alias of the sound to trigger, and number of times to play
     * @preconditions alias does not have to be associated with a loaded sound.
     * @postconditions if it is, then the loaded sound is triggered.  if it isn't then nothing happens.
     * @semantics Triggers a sound
     */
-   virtual void trigger(const std::string & alias, const unsigned int & looping = 0)
+   virtual void trigger( const std::string& alias, const unsigned int& looping = 0)
    {
       ajSoundImplementation::trigger( alias, looping );
 
-      int id = this->_allookup( alias );
-      if (id >= 0)
+      if (mAlias2ResourceLookup.count( alias ) > 0)
       {
-         alSourcePlay( id );
+         alSourcePlay( mAlias2ResourceLookup[alias].source );
       }
    }
-
+   
+   bool isPlaying( const std::string& alias )
+   {
+      if (mAlias2ResourceLookup.count( alias ) > 0)
+      {
+         assert( alIsSource( mAlias2ResourceLookup[alias].source ) != AL_FALSE && "weird, shouldn't happen...\n" );
+		 
+         ALint state( AL_INITIAL ); // initialized
+	      alGetSourceiv( mAlias2ResourceLookup[alias].source, AL_SOURCE_STATE, &state );
+         
+         switch(state) 
+         {
+		      case AL_PLAYING:
+		      case AL_PAUSED:
+		        return true;
+		      default:
+              return false;
+		        break;
+	      }
+      }
+      
+	   return false;
+   }
+  
    /**
     * @semantics stop the sound
     * @input alias of the sound to be stopped
     */
-   virtual void stop(const std::string & name)
+   virtual void stop( const std::string& alias )
    {
-      ajSoundImplementation::stop( name );
-      int id = this->_allookup( alias );
-      if (id >= 0)
+      ajSoundImplementation::stop( alias );
+      
+      if (mAlias2ResourceLookup.count( alias ) > 0)
       {
-         alSourceStop( id );
+         alSourceStop( mAlias2ResourceLookup[alias].source );
       }
    }
 
@@ -49,34 +90,6 @@ public:
    virtual void step( const float & timeElapsed )
    {
       ajSoundImplementation::step( timeElapsed );
-      
-      static ALfloat position[] = { 10.0, 0.0, 4.0 };
-           static ALfloat movefactor = 4.5;
-           static time_t then = 0;
-           time_t now;
-           ALint size;
-
-           now = time( NULL );
-
-           /* Switch between left and right stereo sample every two seconds. */
-           if( now - then > 2 ) {
-                   then = now;
-
-                   movefactor *= -1.0;
-           }
-
-           position[0] += movefactor;
-           alSourcefv( moving_source, AL_POSITION, position );
-
-      micro_sleep( 500000 );
-
-           ALint byteloki;
-           alGetSourceiv( moving_source, AL_BYTE_LOKI, &byteloki );
-           alGetBufferi( resourceID,     AL_SIZE,      &size );
-
-           //fprintf(stderr, "byteloki = %d size = %d\n", byteloki, size);
-
-           return;
    }
 
 
@@ -89,16 +102,15 @@ public:
    virtual void associate( const std::string& alias, const ajSoundInfo& description )
    {
       ajSoundImplementation::associate( alias, description );
-      // do nothing
    }
 
+  
    /**
     * remove alias->sounddata association 
     */
    virtual void remove( const std::string alias )
    {
       ajSoundImplementation::remove( alias );
-      // do nothing
    }
 
    /**
@@ -108,13 +120,11 @@ public:
    {
       ajSoundImplementation::setPosition( alias, x, y, z );
 
-      float pos[3];
-      pos[0] = x; pos[1] = y; pos[2] = z;
-
-      int id = this->_allookup( alias );
-      if (id >= 0)
+      if (mAlias2ResourceLookup.count( alias ) > 0)
       {
-         alSourcefv( id, AL_POSITION, pos );
+         float pos[3];
+         pos[0] = x; pos[1] = y; pos[2] = z;
+         alSourcefv( mAlias2ResourceLookup[alias].source, AL_POSITION, pos );
       }
    }
 
@@ -135,13 +145,8 @@ public:
    {
       ajSoundImplementation::setListenerPosition( x, y, z );
 
-//      #define ALMAXDISTANCE 60.0f
-//      clamp( x, -ALMAXDISTANCE, ALMAXDISTANCE );
-//      clamp( y, -ALMAXDISTANCE, ALMAXDISTANCE );
-//      clamp( z, -ALMAXDISTANCE, ALMAXDISTANCE );
-
-      ALfloat lispos[] = { x, y, z };
-      alListenerfv( AL_POSITION, lispos );
+      ALfloat position[] = { x, y, z };
+      alListenerfv( AL_POSITION, position );
    }
 
    /**
@@ -151,7 +156,26 @@ public:
    {
       ajSoundImplementation::getListenerPosition( x, y, z );
    }
-protected:
+   
+   /**
+    * set the orientation of the listener
+    */
+   virtual void setListenerOrientation( const float& rad, const float& x, const float& y, const float&  z )
+   {
+      //ajSoundImplementation::setListenerOrientation( rad, x, y, z );
+   }
+   
+   /**
+    * set the orientation of the listener
+    */
+   virtual void setListenerOrientation( const float& dirx, const float& diry, const float& dirz, const float& upx, const float& upy, const float& upz )
+   {
+      //ajSoundImplementation::setListenerOrientation( dirx, dirx, dirx, upx, upy, upz );
+      ALfloat orientation[]  = { dirx, dirx, dirx, upx, upy, upz };
+	   alListenerfv( AL_ORIENTATION, orientation );
+   }
+   
+public:
    /**
     * start the sound API, creating any contexts or other configurations at startup
     * @postconditions sound API is ready to go.
@@ -159,6 +183,45 @@ protected:
     */
    virtual void startAPI()
    {
+      if (mContextId == NULL && mDev == NULL)
+      {
+         mDev = alcOpenDevice( NULL );
+	      if (mDev == NULL) 
+         {
+		      std::cerr << "Could not open device\n" << std::flush;
+   	      return;
+	      }
+
+         // Initialize ALUT
+         std::vector<int> attrlist;
+         attrlist.push_back( ALC_FREQUENCY );
+         attrlist.push_back( 22050 );
+         attrlist.push_back( ALC_INVALID );
+         
+         // create context
+	      mContextId = alcCreateContext( mDev, &attrlist[0] );
+         if (mContextId == NULL) 
+         {
+            std::string err = (char*)alGetString( alcGetError() );
+		      std::cerr << "Could not open context: " << err.c_str() << "\n" << std::flush;
+		      return;
+	      }
+
+         // make context active...
+	      alcMakeContextCurrent( mContextId );
+      }
+      else
+      {
+         std::cerr << "startAPI called when API is already started\n" << std::flush;
+      }      
+      
+      // init the listener...
+      
+      this->setListenerPosition( 0.0f, 0.0f, 0.0f );
+	   this->setListenerOrientation( 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f );
+	   
+      // ALfloat velocity[] = { 0.0f, 0.0f,  0.0f };
+	   // alListenerfv( AL_VELOCITY, velocity );
    }
 
    /**
@@ -168,14 +231,17 @@ protected:
     */
    virtual void shutdownAPI()
    {
+      alcDestroyContext( mContextId );
+	   alcCloseDevice(  mDev  );
    }   
 
    /**
     * clear all associate()tions.
-    * @semantics any existing aliases will be stubbed. aounds will be unbind()ed
+    * @semantics any existing aliases will be stubbed. sounds will be unbind()ed
     */
    virtual void clear()
    {
+      ajSoundImplementation::clear();
    }   
    
    /**
@@ -184,6 +250,7 @@ protected:
     */
    virtual void _bindAll()
    {
+      this->_unbindAll();
    }   
 
    /**
@@ -194,12 +261,66 @@ protected:
    {
    }
 
+   
+   
    /**
     * load/allocate the sound data this alias refers to the sound API
     * @postconditions the sound API has the sound buffered.
     */
    virtual void _bind( const std::string& alias )
    {
+      ajSoundInfo& bok = this->lookup( alias );
+      
+      switch (bok.datasource)
+      {
+         default:
+         case ajSoundInfo::FILESYSTEM:
+         {
+            ALuint bufferID;
+            ALuint sourceID;
+            
+            FILE *fh;
+	         int filelen;
+
+            
+            // open the file as readonly binary
+	         if (!CFileIO::fileExists( bok.filename.c_str() )) 
+            {
+		         std::cerr<<"file doesn't exist: "<<bok.filename<<"\n" << std::flush;
+               return;
+	         }
+
+            // read the data from the file.
+            std::vector<unsigned char> data;
+            CFileIO::fileLoad( bok.filename.c_str(), data );
+	         
+	         // put the data in an OpenAL buffer
+	         alGenBuffers( 1, &bufferID );
+            alBufferData( bufferID, AL_FORMAT_WAVE_EXT, &data[0], filelen, 0 );
+	         if (alGetError() != AL_NO_ERROR)
+            {
+		         std::cerr << "Could not buffer data\n" << std::flush;
+		         return;
+	         }
+
+            // associate a source with the buffer
+	         alGenSources( 1, &sourceID );
+            if (alGetError() != AL_NO_ERROR)
+            {
+		         std::cerr << "Could not gen a source\n" << std::flush;
+		         return;
+	         }
+            
+	         alSourcei( sourceID, AL_BUFFER, bufferID );
+	         alSourcei( sourceID, AL_LOOPING, AL_FALSE );
+            
+            // store the resource IDs for later use...
+            mAlias2ResourceLookup[alias].source = sourceID;
+            mAlias2ResourceLookup[alias].buffer = bufferID;
+            break;
+         }
+      }
+      
    }   
 
    /**
@@ -208,10 +329,24 @@ protected:
     */
    virtual void _unbind( const std::string& alias )
    {
+      if (mAlias2ResourceLookup.count( alias ) > 0)
+      {
+         alDeleteSources( 1, &mAlias2ResourceLookup[alias].source );
+         alDeleteBuffers( 1, &mAlias2ResourceLookup[alias].buffer );
+         mAlias2ResourceLookup.erase( alias );
+      }      
    }
    
 private:
     /** @link dependency */
     /*#  ajSoundInfo lnkSoundInfo; */
+   
+   struct ajAlSoundInfo
+   {
+      ALuint source, buffer;
+   };
+   std::map< std::string, ajAlSoundInfo > mAlias2ResourceLookup;
+   void*       mContextId;
+   ALCdevice*  mDev;
 };
 #endif //AJOPENALSOUNDIMPLEMENTATION_H

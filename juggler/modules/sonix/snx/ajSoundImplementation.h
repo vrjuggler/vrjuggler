@@ -169,9 +169,12 @@ public:
 
    /**
     * clear all associate()tions.
-    * @semantics any existing aliases will be stubbed. aounds will be unbind()ed
+    * @semantics any existing aliases will be stubbed. sounds will be unbound
     */
-   virtual void clear() = 0;
+   virtual void clear()
+   {
+      this->_unbindAll();
+   }   
 
    /**
     * bind: load (or reload) all associate()d sounds
