@@ -93,7 +93,7 @@ public class PropertyPanel extends JPanel implements ActionListener {
 	//l1.setFont (core.ui.windowfontbold);
 	westpanel.add (l1);
 
-	if (!pr.hasFixedNumberOfValues()) {
+	if (pr.getHasVariableNumberOfValues()) {
             if (pr.getDesc().getValType() == ValType.EMBEDDEDCHUNK)
                 addbutton = new JButton ("Add " + pr.getEmbeddedDesc().getName());
             else
@@ -169,7 +169,7 @@ public class PropertyPanel extends JPanel implements ActionListener {
                     ch.setName (d.getName() + " " + valindex);
             }
 	    if (useMiniPanel (ch))
-		return new VarValueMiniChunkPanel (!pr.hasFixedNumberOfValues(), ch, uihelper_module);
+		return new VarValueMiniChunkPanel (pr.getHasVariableNumberOfValues(), ch, uihelper_module);
 	    else
 		return new VarValueBigChunkPanel (pr, ch, uihelper_module);
 	}
