@@ -48,7 +48,7 @@
 #include <vpr/Sync/Guard.h>
 
 #include <tweek/CORBA/SubjectImpl.h>
-#include <tweek/CORBA/BeanDeliverySubject.h>
+#include <tweek/idl/BeanDeliverySubject.h>
 
 
 namespace tweek
@@ -109,7 +109,7 @@ public:
     * the server side, that code is responsible for freeing the memory
     * allocated herein.
     */
-   virtual BeanNameList* getAllBeanNames();
+   virtual BeanNameList* getAllBeanNames() throw(CORBA::SystemException);
 
    /**
     * Returns all the relevant information for the named JavaBean, including
@@ -125,14 +125,14 @@ public:
     *       memory, and once we have a JAR file loaded, we store it in case
     *       it is requested again.  This is done to reduce disk activity
     */
-   virtual BeanInfo* getBean(const char* beanName);
+   virtual BeanInfo* getBean(const char* beanName) throw(CORBA::SystemException);
 
    /**
     * Determines if we have an "active" JavaBean or not.
     *
     * @return true is returned if a JavaBean is active; false otherwise.
     */
-   virtual CORBA::Boolean hasActiveBean()
+   virtual CORBA::Boolean hasActiveBean() throw(CORBA::SystemException)
    {
       vpr::Guard<vpr::Mutex> lock(mActiveBeanLock);
       return mHasActiveBean;
@@ -145,7 +145,7 @@ public:
     *
     * @see setActiveBean()
     */
-   virtual BeanInfo* getActiveBeanInfo();
+   virtual BeanInfo* getActiveBeanInfo() throw(CORBA::SystemException);
 
    /**
     * Adds the given JavaBean information to the local database.  The JAR

@@ -46,8 +46,8 @@
 #include <vpr/Sync/Guard.h>
 #include <vpr/Util/GUID.h>
 
-#include <tweek/CORBA/Subject.h>
-#include <tweek/CORBA/SubjectManager.h>
+#include <tweek/idl/Subject.h>
+#include <tweek/idl/SubjectManager.h>
 
 
 namespace tweek
@@ -88,7 +88,8 @@ public:
     * @param name    The symbolic name used to request a reference to the
     *                registered subject.
     */
-   void registerSubject(SubjectImpl* subject, const char* name);
+   void registerSubject(SubjectImpl* subject, const char* name)
+      throw(CORBA::SystemException);
 
    /**
     * Attempts to "unregister" the named subject and deactivate it within the
@@ -101,25 +102,29 @@ public:
     * @param name The symbolic name used to request a reference to the
     *             registered subject.
     */
-   vpr::ReturnStatus unregisterSubject(const char* name);
+   vpr::ReturnStatus unregisterSubject(const char* name)
+      throw(CORBA::SystemException);
 
    /**
     * Returns the named Tweek Subject reference to the caller if the Subject
     * is registered.  If not, a reference equal to CORBA::nil() is returned.
     */
-   virtual Subject_ptr getSubject(const char* name);
+   virtual Subject_ptr getSubject(const char* name)
+      throw(CORBA::SystemException);
 
    /**
     * Returns a sequence of all the registered Tweek Subjects packaged in the
     * structure RegisteredSubject.
     */
-   virtual tweek::SubjectManager::SubjectList* getAllSubjects();
+   virtual tweek::SubjectManager::SubjectList* getAllSubjects()
+      throw(CORBA::SystemException);
 
    /**
     * Returns a sequence of key/value pairs that provide site-specific
     * information about a given Subject Manager servant.
     */
-   virtual tweek::SubjectManager::SubjectManagerInfoList* getInfo();
+   virtual tweek::SubjectManager::SubjectManagerInfoList* getInfo()
+      throw(CORBA::SystemException);
 
    /**
     * Returns the name of this Subject Manager reference as it is registered
@@ -129,7 +134,7 @@ public:
     *       way, so this method may not really be needed except as a
     *       convenience.
     */
-   virtual char* getName();
+   virtual char* getName() throw(CORBA::SystemException);
 
    void setName(const std::string& name)
    {

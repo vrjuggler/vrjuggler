@@ -42,8 +42,8 @@
 #include <vector>
 #include <vpr/Sync/Mutex.h>
 
-#include <tweek/CORBA/Subject.h>
-#include <tweek/CORBA/Observer.h>
+#include <tweek/idl/Subject.h>
+#include <tweek/idl/Observer.h>
 
 
 namespace tweek
@@ -66,11 +66,11 @@ public:
    {
    }
 
-   virtual void attach(Observer_ptr o);
+   virtual void attach(Observer_ptr o) throw(CORBA::SystemException);
 
-   virtual void detach(Observer_ptr o);
+   virtual void detach(Observer_ptr o) throw(CORBA::SystemException);
 
-   virtual void notify();
+   virtual void notify() throw(CORBA::SystemException);
 
 protected:
    SubjectImpl(const SubjectImpl& s);

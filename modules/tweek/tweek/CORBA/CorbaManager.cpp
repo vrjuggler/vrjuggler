@@ -44,7 +44,7 @@
 
 #include <tweek/Util/Version.h>
 #include <tweek/Util/Debug.h>
-#include <tweek/CORBA/SubjectManager.h>
+#include <tweek/idl/SubjectManager.h>
 #include <tweek/CORBA/BeanDeliverySubjectImpl.h>
 #include <tweek/CORBA/CorbaHelpers.h>
 #include <tweek/CORBA/CorbaManager.h>

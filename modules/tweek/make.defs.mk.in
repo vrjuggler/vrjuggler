@@ -114,8 +114,8 @@ TWEEK_SHARE_DIR=	@TWEEK_SHARE_DIR@
 EXTRA_CFLAGS=		$(CFLAGS_DYNLIB) @VPR_CFLAGS@
 EXTRA_CXXFLAGS=		$(CXXFLAGS_DYNLIB) @VPR_CXXFLAGS@
 EXTRA_DEFS=		-D_TWEEK_BUILD_ @EXTRA_DEFS@
-EXTRA_DEPEND_FLAGS=	-I$(top_srcdir)
-EXTRA_INCLUDES=		-I$(top_srcdir)
+EXTRA_DEPEND_FLAGS=	-I$(top_srcdir) -I$(topdir)/tweek/idl
+EXTRA_INCLUDES=		-I$(top_srcdir) -I$(topdir)/tweek/idl
 EXTRA_LDFLAGS=		@EXTRA_LDFLAGS@
 
 # -----------------------------------------------------------------------------

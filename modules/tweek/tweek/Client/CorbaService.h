@@ -45,7 +45,7 @@
 
 #include <vpr/vpr.h>
 #include <vpr/Thread/Thread.h>
-#include <tweek/CORBA/SubjectManager.h>
+#include <tweek/idl/SubjectManager.h>
 
 
 namespace tweek

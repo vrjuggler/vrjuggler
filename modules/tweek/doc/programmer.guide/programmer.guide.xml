@@ -4576,7 +4576,7 @@ if ( NULL != string_observer )
 srcdir		= .
 CFLAGS		= $(EXTRA_CFLAGS) $(INCLUDES) $(DEFS)
 CXXFLAGS		= -Wall -Werror-implicit-function-declaration \
-                    -I$(VPR_BASE_DIR/include -I$(TWEEK_BASE_DIR)/include/tweek/CORBA \
+                    -I$(VPR_BASE_DIR/include -I$(TWEEK_BASE_DIR)/include/tweek/idl \
                     $(EXTRA_CFLAGS) $(INCLUDES) $(DEFS)
 CXX_IDL_OPTS	= -bcxx -Wbh=.h,s=.cpp -C$(srcdir)
 CXX_IDL_INCLUDES	= -I$(TWEEK_BASE_DIR)/include

@@ -75,6 +75,7 @@ SubjectManagerImpl::~SubjectManagerImpl()
 
 void SubjectManagerImpl::registerSubject(SubjectImpl* subjectServant,
                                          const char* name)
+   throw(CORBA::SystemException)
 {
    const std::string name_str(name);
 
@@ -106,6 +107,7 @@ void SubjectManagerImpl::registerSubject(SubjectImpl* subjectServant,
 }
 
 vpr::ReturnStatus SubjectManagerImpl::unregisterSubject(const char* name)
+   throw(CORBA::SystemException)
 {
    vpr::ReturnStatus status;
    std::string name_str(name);
@@ -149,6 +151,7 @@ void SubjectManagerImpl::storeSubject(Subject_ptr subject,
 }
 
 Subject_ptr SubjectManagerImpl::getSubject(const char* name)
+   throw(CORBA::SystemException)
 {
    vprDEBUG_OutputGuard(tweekDBG_CORBA, vprDBG_STATE_LVL,
                         "tweek::SubjectManagerImpl::getSubject() entered\n",
@@ -180,6 +183,7 @@ Subject_ptr SubjectManagerImpl::getSubject(const char* name)
 }
 
 tweek::SubjectManager::SubjectList* SubjectManagerImpl::getAllSubjects()
+   throw(CORBA::SystemException)
 {
    vprDEBUG_OutputGuard(tweekDBG_CORBA, vprDBG_STATE_LVL,
                         "tweek::SubjectManagerImpl::getAllSubjects() entered\n",
@@ -221,6 +225,7 @@ tweek::SubjectManager::SubjectList* SubjectManagerImpl::getAllSubjects()
 }
 
 SubjectManager::SubjectManagerInfoList* SubjectManagerImpl::getInfo()
+   throw(CORBA::SystemException)
 {
    std::map<std::string, std::string>::iterator i;
    CORBA::ULong j;
@@ -261,6 +266,7 @@ SubjectManager::SubjectManagerInfoList* SubjectManagerImpl::getInfo()
 }
 
 char* SubjectManagerImpl::getName()
+   throw(CORBA::SystemException)
 {
    return CORBA::string_dup(mGUID.toString().c_str());
 }
@@ -297,9 +303,12 @@ void SubjectManagerImpl::initInfoMap()
 
 SubjectManagerImpl::SubjectManagerImpl(const SubjectManagerImpl& sm)
    :
-#ifdef OMNIORB_VER
+#if defined(TWEEK_USE_OMNIORB)
      omniServant(sm)
    , tweek::_impl_SubjectManager(sm)
+   ,
+#elif defined(TWEEK_USE_TAO)
+     TAO_Abstract_ServantBase(sm)
    ,
 #endif
      PortableServer::ServantBase(sm)
