@@ -90,6 +90,18 @@ public:
       }
    }
 
+   EventWindow::EventQueue getEventQueue()
+   {
+      if ( isStupified() || (mTypedDevice == NULL) )
+      {
+         return EventWindow::EventQueue();
+      }
+      else
+      {
+         return mTypedDevice->getEventQueue();
+      }
+   }
+
    static std::string getChunkType()
    {
       return std::string("EventWindowProxy");

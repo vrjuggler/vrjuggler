@@ -30,87 +30,75 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_KEYS_H_
-#define _GADGET_KEYS_H_
+#ifndef _GADGET_MOUSE_EVENT_H_
+#define _GADGET_MOUSE_EVENT_H_
+
+#include <gadget/gadgetConfig.h>
+
+#include <gadget/Type/EventWindow/Event.h>
+#include <gadget/Type/EventWindow/MouseEventPtr.h>
+#include <gadget/Type/EventWindow/Keys.h>
+
 
 namespace gadget
 {
 
-/// Names of defined keys.
-enum Keys
+class MouseEvent : public gadget::Event
 {
-   KEY_NONE,
-   KEY_UP,
-   KEY_DOWN,
-   KEY_LEFT,
-   KEY_RIGHT,
-   KEY_SHIFT,
-   KEY_CTRL,
-   KEY_ALT,
-   KEY_1,
-   KEY_2,
-   KEY_3,
-   KEY_4,
-   KEY_5,
-   KEY_6,
-   KEY_7,
-   KEY_8,
-   KEY_9,
-   KEY_0,
-   KEY_A,
-   KEY_B,
-   KEY_C,
-   KEY_D,
-   KEY_E,
-   KEY_F,
-   KEY_G,
-   KEY_H,
-   KEY_I,
-   KEY_J,
-   KEY_K,
-   KEY_L,
-   KEY_M,
-   KEY_N,
-   KEY_O,
-   KEY_P,
-   KEY_Q,
-   KEY_R,
-   KEY_S,
-   KEY_T,
-   KEY_U,
-   KEY_V,
-   KEY_W,
-   KEY_X,
-   KEY_Y,
-   KEY_Z,
-   KEY_ESC,
+public:
+   MouseEvent(const int& state, const bool& isButtonPress, const int& x,
+              const int& y, const int& globalX, const int& globalY,
+              const unsigned long& time)
+      : gadget::Event(Event::MouseEvent, time), mState(state), mRelativeX(x),
+        mRelativeY(y),mGlobalX(globalX), mGlobalY(globalY)
+   {
+   }
 
-   // XXX: Mouse information probably shouldn't be here in the long term.
-   MOUSE_POSX,
-   MOUSE_NEGX,
-   MOUSE_POSY,
-   MOUSE_NEGY,
-   MBUTTON1,
-   MBUTTON2,
-   MBUTTON3
-};
+   const bool& isButtonPress() const
+   {
+      return mIsButtonPress;
+   }
 
-enum ModiferMask
-{
-   SHIFT_MASK = (1 << 0),
-   ALT_MASK   = (1 << 1),
-   CTRL_MASK  = (1 << 2)
-};
+   bool isButtonRelease() const
+   {
+      return ! mIsButtonPress;
+   }
 
-enum ButtonMask
-{
-   BUTTON1_MASK = (1 << 3),
-   BUTTON2_MASK = (1 << 4),
-   BUTTON3_MASK = (1 << 5),
-   BUTTON4_MASK = (1 << 6),
-   BUTTON5_MASK = (1 << 7)
+   const int& getX() const
+   {
+      return mRelativeX;
+   }
+
+   const int& getY() const
+   {
+      return mRelativeY;
+   }
+
+   const int& getGlobalX() const
+   {
+      return mGlobalX;
+   }
+
+   const int& getGlobalY() const
+   {
+      return mGlobalY;
+   }
+
+   const int& getState() const
+   {
+      return mState;
+   }
+
+private:
+   int  mState;
+   bool mIsButtonPress;
+   int  mRelativeX;
+   int  mRelativeY;
+   int  mGlobalX;
+   int  mGlobalY;
 };
 
 } // End of gadget namespace
 
-#endif /* _GADGET_KEYS_H_ */
+
+#endif /* _GADGET_MOUSE_EVENT_H_ */
