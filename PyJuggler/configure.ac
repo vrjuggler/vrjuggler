@@ -438,7 +438,7 @@ if test "x$osg_base_dir" != "xno" ; then
 
    AC_CHECK_LIB([osg], [osgGetVersion],
       [AC_CHECK_HEADER([osg/Vec3], [HAVE_OSG='Y'], [HAVE_OSG='N'])],
-      [HAVE_OSG='N'], [$X_LDFLAGS -lX11 -lXext])
+      [HAVE_OSG='N'], [$X_LDFLAGS -lOpenThreads -lX11 -lXext])
 
    DPP_LANG_RESTORE
 
