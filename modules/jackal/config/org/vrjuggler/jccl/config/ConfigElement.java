@@ -48,7 +48,6 @@ import org.vrjuggler.jccl.config.undo.ConfigElementPropertyValueRemoveEdit;
  */
 public class ConfigElement implements ConfigElementPointerListener
 {
-
    /**
     * Create a new configuration element with the given properties.
     */
@@ -67,8 +66,8 @@ public class ConfigElement implements ConfigElementPointerListener
          while(list_itr.hasNext())
          {
             Object prop = list_itr.next();
-            // If the new property is a ConfigElementPointer, add alistener to relay
-            // the change events.
+            // If the new property is a ConfigElementPointer, add alistener to
+            // relay the change events.
             if(prop instanceof ConfigElementPointer)
             {
                ((ConfigElementPointer)prop).addConfigElementPointerListener(this);
@@ -76,33 +75,33 @@ public class ConfigElement implements ConfigElementPointerListener
          }
       }
    }
-  
+
    /**
     * Constucts a ConfigElement that is identical to the given ConfigElement.
     */
-   public ConfigElement(ConfigElement old_elm)
+   public ConfigElement(ConfigElement oldElm)
    {
-      mName = new String(old_elm.mName);
-      mDefinition = old_elm.mDefinition;
+      mName = new String(oldElm.mName);
+      mDefinition = oldElm.mDefinition;
       mReadOnly = false;
 
       mProps = new TreeMap();
-      
-      Set map_set = old_elm.mProps.entrySet();
-      
+
+      Set map_set = oldElm.mProps.entrySet();
+
       for(Iterator itr = map_set.iterator() ; itr.hasNext() ; )
       {
          Map.Entry entry = (Map.Entry)itr.next();
-         
+
          List values = new ArrayList();
-         
+
          String prop_token = (String)entry.getKey();
-         
-         for(Iterator list_iterator = ((List)entry.getValue()).iterator() ;
-               list_iterator.hasNext() ; )
-         {   
+
+         for( Iterator list_iterator = ((List)entry.getValue()).iterator();
+              list_iterator.hasNext(); )
+         {
             Object obj = list_iterator.next();
-            
+
             if(obj instanceof Boolean)
             {
                Boolean temp = new Boolean( ((Boolean)obj).booleanValue() );
@@ -125,8 +124,10 @@ public class ConfigElement implements ConfigElementPointerListener
             }
             else if(obj instanceof ConfigElementPointer)
             {
-               ConfigElementPointer temp = new ConfigElementPointer( 
-                     ( (ConfigElementPointer)obj).getTarget());
+               ConfigElementPointer temp =
+                  new ConfigElementPointer(
+                     ((ConfigElementPointer) obj).getTarget()
+                  );
                values.add(temp);
             }
             else if(obj instanceof ConfigElement)
@@ -175,7 +176,7 @@ public class ConfigElement implements ConfigElementPointerListener
    public synchronized void setName(String name, ConfigContext ctx)
    {
       String old_name = mName;
-      ConfigElementNameEdit new_edit = 
+      ConfigElementNameEdit new_edit =
          new ConfigElementNameEdit(this, old_name, name);
       setName(name);
       ctx.postEdit(new_edit);
@@ -202,9 +203,9 @@ public class ConfigElement implements ConfigElementPointerListener
    /**
     * Specify if ConfigElement is read only.
     */
-   public void setReadOnly(boolean read_only)
+   public void setReadOnly(boolean readOnly)
    {
-      mReadOnly = read_only;
+      mReadOnly = readOnly;
    }
 
    /**
@@ -216,8 +217,8 @@ public class ConfigElement implements ConfigElementPointerListener
    }
 
    /**
-    * Gets the value of the property with the given name. The type of the result
-    * depends on the type of the property as described by this element's
+    * Gets the value of the property with the given name. The type of the
+    * result depends on the type of the property as described by this element's
     * configuration definition object.
     *
     * @param name    the name of the property to retrieve
@@ -232,13 +233,13 @@ public class ConfigElement implements ConfigElementPointerListener
     *             property as defined by this element's definition.
     */
    public synchronized Object getProperty(String name, int index)
-      throws IllegalArgumentException,
-             ArrayIndexOutOfBoundsException
+      throws IllegalArgumentException
+           , ArrayIndexOutOfBoundsException
    {
       // Get the particular property value
       return getPropertyValues(name).get(index);
    }
-   
+
    /**
     * Sets the value for the property with the given name at the given index
     * only after first ensuring that the new value is different from the
@@ -252,12 +253,12 @@ public class ConfigElement implements ConfigElementPointerListener
     * @param ctx     the context
     *
     * @see #setProperty(String, int, Object)
-    */  
+    */
    public synchronized void setProperty(String name, int index, Object value,
                                         ConfigContext ctx)
    {
       Object old_value = getProperty(name, index);
-      
+
       if (old_value instanceof ConfigElementPointer)
       {
          old_value = ((ConfigElementPointer)old_value).getTarget();
@@ -269,9 +270,8 @@ public class ConfigElement implements ConfigElementPointerListener
       // Make sure that the value actually changed.
       if ( !old_value.equals(value) )
       {
-         ConfigElementPropertyEdit new_edit = 
-            new ConfigElementPropertyEdit(this, name, index, 
-                                          old_value, value);
+         ConfigElementPropertyEdit new_edit =
+            new ConfigElementPropertyEdit(this, name, index, old_value, value);
          setProperty(name, index, value);
          System.out.println("Adding: " + new_edit);
          ctx.postEdit(new_edit);
@@ -303,8 +303,8 @@ public class ConfigElement implements ConfigElementPointerListener
     * @param value   the new value for the property index
     */
    public synchronized void setProperty(String name, int index, Object value)
-      throws IllegalArgumentException,
-             ArrayIndexOutOfBoundsException
+      throws IllegalArgumentException
+           , ArrayIndexOutOfBoundsException
    {
       // Get the list of property values
       List values = getPropertyValues(name);
@@ -331,7 +331,7 @@ public class ConfigElement implements ConfigElementPointerListener
          }
       }
       else
-      {      
+      {
          // Set the value in the list
          values.set(index, value);
       }
@@ -354,7 +354,7 @@ public class ConfigElement implements ConfigElementPointerListener
     * @return The index of the newly added property in the property list.
     *
     * @see #addProperty(String, int, Object)
-    */  
+    */
    public synchronized int addProperty(String name, Object value,
                                        ConfigContext ctx)
    {
@@ -379,7 +379,7 @@ public class ConfigElement implements ConfigElementPointerListener
     * @return The index of the newly added property in the property list.
     *
     * @see #addProperty(String, int, Object)
-    */  
+    */
    public synchronized int addProperty(String name, int index, Object value,
                                        ConfigContext ctx)
    {
@@ -459,7 +459,7 @@ public class ConfigElement implements ConfigElementPointerListener
       {
          ((ConfigElementPointer)value).addConfigElementPointerListener(this);
       }
- 
+
       // Notify listeners of the addition
       firePropertyValueAdded(name, index, value);
 
@@ -541,8 +541,8 @@ public class ConfigElement implements ConfigElementPointerListener
     *         property.
     */
    public synchronized int removeProperty(String name, int index)
-      throws IllegalArgumentException,
-             ArrayIndexOutOfBoundsException
+      throws IllegalArgumentException
+           , ArrayIndexOutOfBoundsException
    {
       // Get the list of property values
       List values = getPropertyValues(name);
@@ -551,7 +551,9 @@ public class ConfigElement implements ConfigElementPointerListener
       PropertyDefinition prop_def = mDefinition.getPropertyDefinition(name);
       if (! prop_def.isVariable())
       {
-         throw new IllegalArgumentException(name + " does not support a variable number of values");
+         throw new IllegalArgumentException(
+            name + " does not support a variable number of values"
+         );
       }
 
       // TODO: Validate that value is of the correct type for this property
@@ -581,8 +583,8 @@ public class ConfigElement implements ConfigElementPointerListener
     * @see #removeProperty(String, int)
     */
    public synchronized int removeProperty(String name, Object oldValue)
-      throws IllegalArgumentException,
-             ArrayIndexOutOfBoundsException
+      throws IllegalArgumentException
+           , ArrayIndexOutOfBoundsException
    {
       // Get the list of property values
       List values = getPropertyValues(name);
@@ -677,7 +679,7 @@ public class ConfigElement implements ConfigElementPointerListener
    /**
     * Notifies listeners that this element's name has changed.
     */
-   protected void fireNameChanged(String old_name)
+   protected void fireNameChanged(String oldName)
    {
       ConfigElementEvent evt = null;
       Object[] listeners = listenerList.getListenerList();
@@ -687,7 +689,7 @@ public class ConfigElement implements ConfigElementPointerListener
          {
             if (evt == null)
             {
-               evt = new ConfigElementEvent(this, null, 0, old_name);
+               evt = new ConfigElementEvent(this, null, 0, oldName);
             }
             ((ConfigElementListener)listeners[i+1]).nameChanged(evt);
          }
@@ -697,13 +699,13 @@ public class ConfigElement implements ConfigElementPointerListener
    /**
     * Notifies listeners that this element's property has changed.
     */
-   protected void firePropertyValueChanged(String prop_token, int index,
-                                           Object old_value)
+   protected void firePropertyValueChanged(String propToken, int index,
+                                           Object oldValue)
    {
       // Get the new value of the changed property.
-      List values = getPropertyValues(prop_token);
+      List values = getPropertyValues(propToken);
       Object new_value = values.get(index);
-      
+
       if (new_value instanceof ConfigElementPointer)
       {
          new_value = ((ConfigElementPointer)new_value).getTarget();
@@ -712,7 +714,7 @@ public class ConfigElement implements ConfigElementPointerListener
 
       // If the value did not actually change, then do not fire the change
       // event.
-      if ( ! old_value.equals(new_value) )
+      if ( ! oldValue.equals(new_value) )
       {
          ConfigElementEvent evt = null;
          Object[] listeners = listenerList.getListenerList();
@@ -722,8 +724,8 @@ public class ConfigElement implements ConfigElementPointerListener
             {
                if (evt == null)
                {
-                  evt = new ConfigElementEvent(this, prop_token, index,
-                                               old_value);
+                  evt = new ConfigElementEvent(this, propToken, index,
+                                               oldValue);
                }
                ((ConfigElementListener)listeners[i+1]).propertyValueChanged(evt);
             }
@@ -735,7 +737,7 @@ public class ConfigElement implements ConfigElementPointerListener
     * Notifies listeners that a new property value has been added to this
     * element.
     */
-   protected void firePropertyValueAdded(String prop_token, int index,
+   protected void firePropertyValueAdded(String propToken, int index,
                                          Object value)
    {
       ConfigElementEvent evt = null;
@@ -746,7 +748,7 @@ public class ConfigElement implements ConfigElementPointerListener
          {
             if (evt == null)
             {
-               evt = new ConfigElementEvent(this, prop_token, index, value);
+               evt = new ConfigElementEvent(this, propToken, index, value);
             }
             ((ConfigElementListener)listeners[i+1]).propertyValueAdded(evt);
          }
@@ -757,8 +759,8 @@ public class ConfigElement implements ConfigElementPointerListener
     * Notifies listeners that a new property value has been removed from this
     * element.
     */
-   protected void firePropertyValueRemoved(String prop_token, int index,
-                                         Object old_value)
+   protected void firePropertyValueRemoved(String propToken, int index,
+                                           Object oldValue)
    {
       ConfigElementEvent evt = null;
       Object[] listeners = listenerList.getListenerList();
@@ -768,7 +770,7 @@ public class ConfigElement implements ConfigElementPointerListener
          {
             if (evt == null)
             {
-               evt = new ConfigElementEvent(this, prop_token, index, old_value);
+               evt = new ConfigElementEvent(this, propToken, index, oldValue);
             }
             ((ConfigElementListener)listeners[i+1]).propertyValueRemoved(evt);
          }
