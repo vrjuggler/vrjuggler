@@ -1,0 +1,28 @@
+package idkm0cn3qgnaccn3s9pf0;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#ISoundInterface:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:cpp#Member#ISoundInterface#remove#(##)#:oiref>=29,116,0,0,1:oigroup>
+<oigroup:<oiref:cpp#Class#ISoundInterface:oiref>=10,10,131,176,1:oigroup>
+*/
+class __positions {
+}

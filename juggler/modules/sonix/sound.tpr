@@ -1,0 +1,12 @@
+[Project]
+Language=cpp
+Root.0=$PROJECT_DIR$
+Root.0.access=writable
+Root.0.file_types=;;java_class;diagram;cpp_source;cpp_header
+Root.0.package_prefix=
+Root.0.srcControlEnabled=false
+Root.0.srcControlProject=
+Version=3.0
+[vcs]
+cvscs.pwd=AZ?E'=0''a
+option.cvs.vendorTag=juggler
