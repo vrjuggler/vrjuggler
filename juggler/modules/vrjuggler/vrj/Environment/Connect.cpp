@@ -55,15 +55,15 @@ vjConnect::vjConnect(int s, const std::string& _name,
     // we need to add a chunk describing ourself
     // THIS IS A HUGE UGLY HACK! THERE SHOULD BE A CLEANER WAY FOR
     // MANAGERS TO MANIPULATE THE ACTIVE CONFIG!!
-    vjConfigChunkDB db;
+    vjConfigChunkDB* db = new vjConfigChunkDB;
     vjConfigChunk* ch = vjChunkFactory::createChunk ("FileConnect");
     if (ch) {
 	ch->setProperty ("Name", name);
 	ch->setProperty ("Mode", VJC_INTERACTIVE);
 	ch->setProperty ("filename", filename);
 	ch->setProperty ("Enabled", true);
-	db.addChunk(ch);
-	vjKernel::instance()->configAdd(&db);
+	db->addChunk(ch);
+	vjKernel::instance()->configAdd(db);
     }
 }
 
@@ -220,7 +220,7 @@ void vjConnect::readControlLoop(void* nullParam) {
 	   if (!readCommand (fin))
 	       break;
    }
-   vjDEBUG(vjDBG_ENV_MGR,5) << "vjConnect " << name 
+   vjDEBUG(vjDBG_ENV_MGR,5) << "vjConnect " << name
 			    <<" ending read control loop.\n" << vjDEBUG_FLUSH;
 
    read_connect_thread = NULL;
@@ -346,12 +346,12 @@ bool vjConnect::readCommand(ifstream& fin) {
       //	chunkdb->removeAll()
       vjDEBUG(vjDBG_ENV_MGR,1) << "vjConnect:: Read: chunks: Started\n" << vjDEBUG_FLUSH;
 
-      vjConfigChunkDB newchunkdb;
-      fin >> newchunkdb;
-      vjDEBUG(vjDBG_ENV_MGR,5) << newchunkdb << endl << vjDEBUG_FLUSH;
+      vjConfigChunkDB* newchunkdb = new vjConfigChunkDB;
+      fin >> *newchunkdb;
+      vjDEBUG(vjDBG_ENV_MGR,5) << *newchunkdb << endl << vjDEBUG_FLUSH;
       vjDEBUG(vjDBG_ENV_MGR,3) << "vjConnect:: Read: chunks: Completed\n" << vjDEBUG_FLUSH;
       // ALLEN: PUT A FUNCTION HERE FOR THE KERNEL TO LOOK AT NEWCHUNKDB
-      vjKernel::instance()->configAdd(&newchunkdb);      // Add new chunks
+      vjKernel::instance()->configAdd(newchunkdb);      // Add new chunks
       vjDEBUG(vjDBG_ENV_MGR,3) << "vjConnect: Kernel has added the new chunks\n" << vjDEBUG_FLUSH;
    }
 

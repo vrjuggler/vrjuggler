@@ -108,6 +108,24 @@ void vjKernel::setApplication(vjApp* _app)
    mNewAppSet = true;
 }
 
+//: Add a group of config chunks
+void vjKernel::configAdd(vjConfigChunkDB* chunkDB)
+{
+   vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::configAdd: Adding chunkDB\n" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_KERNEL,4) << chunkDB << ":\n" << *chunkDB << endl << vjDEBUG_FLUSH;
+   mConfigAddQueue.push(chunkDB);
+   vjASSERT(chunkDB != NULL);
+}
+
+//: Remove a group of config chunks
+void vjKernel::configRemove(vjConfigChunkDB* chunkDB)
+{
+   vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::configRemove: Adding chunkDB\n" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_KERNEL,4) << chunkDB << ":\n" << *chunkDB << endl << vjDEBUG_FLUSH;
+   mConfigRemoveQueue.push(chunkDB);
+   vjASSERT(chunkDB != NULL);
+}
+
 
 //: Checks to see if there is reconfiguration to be done
 //! POST: Any reconfiguration needed has been completed
@@ -116,18 +134,20 @@ void vjKernel::checkForReconfig()
 {
    vjASSERT(vjThread::self() == mControlThread);      // ASSERT: We are being called from kernel thread
 
-   // Check for application reconfiguration
+   // ---- RECONFIGURATION --- //
+   if(!mConfigAddQueue.empty())
+      processConfigAddQueue();
+
+   if(!mConfigRemoveQueue.empty())
+      processConfigRemoveQueue();
+
+   // ---- APP SWITCH ---- //
+   // check for a new applications
    if(mNewAppSet)
    {
       mNewAppSet = false;
       changeApplication(mNewApp);
    }
-
-   // Sync should be here for Kernel changes from
-   // the environment manager
-   mRuntimeConfigSema.release();
-      // This is the time that reconfig can happen
-   mRuntimeConfigSema.acquire();
 }
 
 // Changes the application in use
@@ -198,7 +218,7 @@ void vjKernel::initConfig()
    initialSetupDisplayManager();
    setupEnvironmentManager();
 
-   configAdd(mInitialChunkDB, false);       // Setup the configuration, don't guard since we are not running the loop yet
+   configAdd(mInitialChunkDB);       // Add the initial configuration to the config queue
 
 #ifdef VJ_OS_SGI
    mSysFactory = vjSGISystemFactory::instance(); // XXX: Should not be system specific
@@ -222,70 +242,78 @@ void vjKernel::updateFrameData()
 }
 
 //---------------------------------
-// Config routines
+// Config queue processing routines
 //---------------------------------
-void vjKernel::configAdd(vjConfigChunkDB* chunkDB, bool guarded)
+void vjKernel::processConfigAddQueue()
 {
-   if(guarded)
-      mRuntimeConfigSema.acquire();
+   vjDEBUG_BEGIN(vjDBG_KERNEL,1) << "vjKernel: processConfigAddQueue: Processing chunks.\n" << vjDEBUG_FLUSH;
+   vjASSERT(vjThread::self() == mControlThread);      // ASSERT: We are being called from kernel thread
 
-   vjDEBUG_BEGIN(vjDBG_KERNEL,1) << "vjKernel: configAdd: Adding chunks.\n" << vjDEBUG_FLUSH;
+   vjConfigChunkDB* chunkDB;     // Chunk db to add
 
-   // Dependency sort the items
-   int dep_result = chunkDB->dependencySort(getChunkDB());
-
-   // If sort fails, exit with error
-   if(dep_result == -1)
+   while(!mConfigAddQueue.empty())
    {
-      vjDEBUG(vjDBG_ERROR,0) << "vjKernel::configAdd: ERROR: Dependency sort failed. Aborting add.\n" << vjDEBUG_FLUSH;
-      return;
+      // GET CHUNKDB to work with
+      chunkDB = mConfigAddQueue.front();
+      mConfigAddQueue.pop();
+      vjASSERT(chunkDB != NULL);
+
+      vjDEBUG(vjDBG_KERNEL,3) << "Process chunkDB: " << chunkDB << endl << *chunkDB << vjDEBUG_FLUSH;
+
+      // ---- DEPENDENCY SORT  ----
+      int dep_result = chunkDB->dependencySort(getChunkDB());
+
+      // If dependency sort fails, exit with error
+      if(dep_result == -1)
+      {
+         vjDEBUG(vjDBG_ERROR,0) << "vjKernel::processConfigAddQueue: ERROR: Dependency sort failed. Aborting add.\n" << vjDEBUG_FLUSH;
+         return;
+      }
+
+      std::vector<vjConfigChunk*> sorted_chunks = chunkDB->getChunks();  // Get sorted list of chunks to add
+
+      // For each element in chunk list
+      for(int i=0;i<sorted_chunks.size();i++)
+      {
+         bool added_chunk = false;        // Flag: true - chunk was added
+
+         vjDEBUG(vjDBG_KERNEL,3) << "vjKernel::processConfigAddQueue: chunk: " << sorted_chunks[i]->getProperty("name") << endl << vjDEBUG_FLUSH;
+
+         // Find manager to handle them
+         if(this->configKernelHandle(sorted_chunks[i]))                    // Kernel
+            added_chunk = this->configKernelAdd(sorted_chunks[i]);
+         if(getInputManager()->configCanHandle(sorted_chunks[i]))          // inputMgr
+            added_chunk = getInputManager()->configAdd(sorted_chunks[i]);
+         if(mDisplayManager->configCanHandle(sorted_chunks[i]))            // displayMgr
+            added_chunk = mDisplayManager->configAdd(sorted_chunks[i]);
+         if((mDrawManager != NULL) && (mDrawManager->configCanHandle(sorted_chunks[i])))   // drawMgr
+            added_chunk = mDrawManager->configAdd(sorted_chunks[i]);
+         if(environmentManager->configCanHandle(sorted_chunks[i]))         // envMgr
+   	      added_chunk = environmentManager->configAdd(sorted_chunks[i]);
+         if((mApp != NULL) && (mApp->configCanHandle(sorted_chunks[i])))   // App
+            added_chunk = mApp->configAdd(sorted_chunks[i]);
+
+
+         // --- Check for adding to active config --- //
+         if(added_chunk)      // if added => add to config database
+         {
+            vjASSERT(mChunkDB != NULL);
+            mChunkDB->addChunk(sorted_chunks[i]);
+            int num_chunks = mChunkDB->getChunks().size();
+            vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::processConfigAddQueue: Added chunk: " << sorted_chunks[i]->getProperty("name") << ", Now have " << num_chunks << " chunks.\n" << vjDEBUG_FLUSH;
+         }
+         else                 // Else: Give unrecognized error
+         {
+            vjDEBUG(vjDBG_KERNEL,0) << "vjKernel::processConfigAddQueue: Unrecognized chunk.\n"
+                       << "   type: " << sorted_chunks[i]->getType() << endl << vjDEBUG_FLUSH;
+         }
+      }
+
    }
 
-   // Get sorted list of chunks to add
-   std::vector<vjConfigChunk*> chunks = chunkDB->getChunks();
-
-   // For each element in chunk list
-   for(int i=0;i<chunks.size();i++)
-   {
-      bool added_chunk = false;        // Flag: true - chunk was added
-
-      vjDEBUG(vjDBG_KERNEL,3) << "vjKernel::configAdd: chunk: " << chunks[i]->getProperty("name") << endl << vjDEBUG_FLUSH;
-
-      // Find manager to handle them
-      if(this->configKernelHandle(chunks[i]))            // Kernel
-         added_chunk = this->configKernelAdd(chunks[i]);
-      if(getInputManager()->configCanHandle(chunks[i]))  // inputMgr
-         added_chunk = getInputManager()->configAdd(chunks[i]);
-      if(mDisplayManager->configCanHandle(chunks[i]))     // displayMgr
-         added_chunk = mDisplayManager->configAdd(chunks[i]);
-      if((mDrawManager != NULL) && (mDrawManager->configCanHandle(chunks[i])))   // drawMgr
-         added_chunk = mDrawManager->configAdd(chunks[i]);
-      if(environmentManager->configCanHandle(chunks[i]))                   // envMgr
-	  added_chunk = environmentManager->configAdd(chunks[i]);
-      if((mApp != NULL) && (mApp->configCanHandle(chunks[i])))                // App
-         added_chunk = mApp->configAdd(chunks[i]);
-
-
-      // --- Check for adding to active config --- //
-      if(added_chunk)      // if added => add to config database
-      {
-         vjASSERT(mChunkDB != NULL);
-         mChunkDB->addChunk(chunks[i]);
-         int num_chunks = mChunkDB->getChunks().size();
-         vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::configAdd: Added chunk: " << chunks[i]->getProperty("name") << ", Now have " << num_chunks << " chunks.\n" << vjDEBUG_FLUSH;
-      }
-      else                 // Else: Give unrecognized error
-      {
-         vjDEBUG(vjDBG_KERNEL,0) << "vjKernel::configAdd: Unrecognized chunk.\n"
-                    << "   type: " << chunks[i]->getType() << endl << vjDEBUG_FLUSH;
-      }
-   }
 
    // Dump status of the managers after reconfig
    vjDEBUG(vjDBG_KERNEL,1) << (*getInputManager()) << endl << vjDEBUG_FLUSH;
-
-   if(guarded)
-      mRuntimeConfigSema.release();
 
    // Tell the environment manager to refresh
    environmentManager->sendRefresh();
@@ -293,58 +321,66 @@ void vjKernel::configAdd(vjConfigChunkDB* chunkDB, bool guarded)
    vjDEBUG_END(vjDBG_KERNEL,1) << "vjKernel: configAdd: Done adding\n\n" << vjDEBUG_FLUSH;
 }
 
-void vjKernel::configRemove(vjConfigChunkDB* chunkDB)
+void vjKernel::processConfigRemoveQueue()
 {
-vjGuard<vjSemaphore> runtimeSem(mRuntimeConfigSema);
+   vjASSERT(vjThread::self() == mControlThread);      // ASSERT: We are being called from kernel thread
+   vjDEBUG_BEGIN(vjDBG_KERNEL,1) << "vjKernel: processConfigRemoveQueue: Removing chunks.\n" << vjDEBUG_FLUSH;
 
-    vjDEBUG_BEGIN(vjDBG_KERNEL,1) << "vjKernel: configRemove: Removing chunks.\n" << vjDEBUG_FLUSH;
+   vjConfigChunkDB* chunkDB;
 
-   //XXX: Should do some dependency checking
-
-   // Get list of chunks to remove
-   std::vector<vjConfigChunk*> chunks = chunkDB->getChunks();
-
-   // For each element in chunk list
-   for(int i=0;i<chunks.size();i++)
+   while(!mConfigRemoveQueue.empty())
    {
-      bool removed_chunk = false;        // Flag: true - chunk was removed
+      chunkDB = mConfigRemoveQueue.front();
+      mConfigRemoveQueue.pop();
+      vjASSERT(chunkDB != NULL);
 
-      vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::configRemove: chunk: " << chunks[i]->getProperty("name") << endl << vjDEBUG_FLUSH;
+      //XXX: Should do some dependency checking
 
-      // Find manager to handle them
-      if(this->configKernelHandle(chunks[i]))                                 // Kernel
-         removed_chunk = this->configKernelRemove(chunks[i]);
-      if(getInputManager()->configCanHandle(chunks[i]))                          // inputMgr
-         removed_chunk = getInputManager()->configRemove(chunks[i]);
-      if(mDisplayManager->configCanHandle(chunks[i]))                            // displayMgr
-         removed_chunk = mDisplayManager->configRemove(chunks[i]);
-      if((mDrawManager != NULL) && (mDrawManager->configCanHandle(chunks[i])))   // drawMgr
-         removed_chunk = mDrawManager->configRemove(chunks[i]);
-      if(environmentManager->configCanHandle(chunks[i]))                      // envMgr
-	      removed_chunk = environmentManager->configRemove(chunks[i]);
-      if((mApp != NULL) && (mApp->configCanHandle(chunks[i])))                // App
-         removed_chunk = mApp->configRemove(chunks[i]);
+      // Get list of chunks to remove
+      std::vector<vjConfigChunk*> chunks = chunkDB->getChunks();
 
-
-      // --- Check for removal from active config --- //
-      if(removed_chunk)      // if removed => remove from config database
+      // For each element in chunk list
+      for(int i=0;i<chunks.size();i++)
       {
-         vjASSERT(mChunkDB != NULL);
-         mChunkDB->removeNamed(chunks[i]->getProperty("name"));
-         int num_chunks = mChunkDB->getChunks().size();
-         vjDEBUG(vjDBG_KERNEL,3) << "vjKernel::configRemove: Removed chunk: Now have " << num_chunks << " chunks.\n" << vjDEBUG_FLUSH;
-      }
-      else                 // Else: Give unrecognized error
-      {
-         vjDEBUG(vjDBG_KERNEL,0) << "vjKernel::configRemove: Unrecognized chunk.\n"
-                    << "   type: " << chunks[i]->getType() << endl << vjDEBUG_FLUSH;
+         bool removed_chunk = false;        // Flag: true - chunk was removed
+
+         vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::processConfigRemoveQueue: chunk: " << chunks[i]->getProperty("name") << endl << vjDEBUG_FLUSH;
+
+         // Find manager to handle them
+         if(this->configKernelHandle(chunks[i]))                                 // Kernel
+            removed_chunk = this->configKernelRemove(chunks[i]);
+         if(getInputManager()->configCanHandle(chunks[i]))                          // inputMgr
+            removed_chunk = getInputManager()->configRemove(chunks[i]);
+         if(mDisplayManager->configCanHandle(chunks[i]))                            // displayMgr
+            removed_chunk = mDisplayManager->configRemove(chunks[i]);
+         if((mDrawManager != NULL) && (mDrawManager->configCanHandle(chunks[i])))   // drawMgr
+            removed_chunk = mDrawManager->configRemove(chunks[i]);
+         if(environmentManager->configCanHandle(chunks[i]))                      // envMgr
+   	      removed_chunk = environmentManager->configRemove(chunks[i]);
+         if((mApp != NULL) && (mApp->configCanHandle(chunks[i])))                // App
+            removed_chunk = mApp->configRemove(chunks[i]);
+
+
+         // --- Check for removal from active config --- //
+         if(removed_chunk)      // if removed => remove from config database
+         {
+            vjASSERT(mChunkDB != NULL);
+            mChunkDB->removeNamed(chunks[i]->getProperty("name"));
+            int num_chunks = mChunkDB->getChunks().size();
+            vjDEBUG(vjDBG_KERNEL,3) << "vjKernel::processConfigRemoveQueue: Removed chunk: Now have " << num_chunks << " chunks.\n" << vjDEBUG_FLUSH;
+         }
+         else                 // Else: Give unrecognized error
+         {
+            vjDEBUG(vjDBG_KERNEL,0) << "vjKernel::processConfigRemoveQueue: Unrecognized chunk.\n"
+                       << "   type: " << chunks[i]->getType() << endl << vjDEBUG_FLUSH;
+         }
       }
    }
 
-   // Dump status of managers after teh reconfiguration
+   // Dump status of managers after the reconfiguration
    vjDEBUG(vjDBG_ALL,1) << (*getInputManager()) << endl << vjDEBUG_FLUSH;
 
-   vjDEBUG_END(vjDBG_KERNEL,1) << "vjKernel: configRemove: Exiting.\n" << vjDEBUG_FLUSH;
+   vjDEBUG_END(vjDBG_KERNEL,1) << "vjKernel: processConfigRemoveQueue: Exiting.\n" << vjDEBUG_FLUSH;
 
    // Tell the environment manager to refresh
    environmentManager->sendRefresh();
