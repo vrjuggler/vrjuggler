@@ -44,9 +44,6 @@ public:
       vpr::Selector selector;
       vpr::ReturnStatus status;
 
-      status = vpr::sim::Controller::instance()->constructNetwork("test_network.tiers");
-      CPPUNIT_ASSERT(status.success());
-
       status = acceptor.setLocalAddr(vpr::InetAddr(5556));
       CPPUNIT_ASSERT(status.success() && "Acceptor failed to set local address");
 
