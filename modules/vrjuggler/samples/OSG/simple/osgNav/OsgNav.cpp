@@ -45,10 +45,10 @@ void OsgNav::preFrame()
 //vprDEBUG(vprDBG_ALL,0) << "------- preFrame ------\n" << vprDEBUG_FLUSH;
 
    // -- Get wand info -- //
-   gmtl::Matrix44f wandMatrix = mWand->getData();      // Get the wand matrix
+   gmtl::Matrix44f* wandMatrix = mWand->getData();      // Get the wand matrix
 
    osg::Matrix osgWandMat;
-   osgWandMat.set(wandMatrix.getData());
+   osgWandMat.set(wandMatrix->getData());
 
 
    if ( mButton0->getData() == gadget::Digital::ON )
@@ -73,7 +73,7 @@ void OsgNav::preFrame()
    //Navigation
    gmtl::Vec3f direction;
    gmtl::Vec3f Zdir = gmtl::Vec3f(0.0f, 0.0f, speed);
-   gmtl::xform(direction, wandMatrix, Zdir);
+   gmtl::xform(direction, *wandMatrix, Zdir);
    mNavTrans->preMult(osg::Matrix::translate(direction[0], direction[1], direction[2]));
 }
 
