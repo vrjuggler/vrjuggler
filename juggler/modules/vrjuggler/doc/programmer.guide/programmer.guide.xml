@@ -2877,14 +2877,6 @@ vj_mat = vrj::GetVjMatrix(pf_mat);</programlisting>
         begin with high-level descriptions of both and then move on to their
         use in VR Juggler application objects.</para>
 
-        <para><classname>gadget::DeviceInterface&lt;T&gt;</classname><indexterm>
-            <primary>classes</primary>
-
-            <secondary>gadget::DeviceInterface&lt;T&gt;</secondary>
-
-            <seealso>gadget::DeviceInterface&lt;T&gt;</seealso>
-          </indexterm></para>
-
         <section id="section.proxies.description">
           <title>High-Level Description of Device Proxies</title>
 
@@ -3487,8 +3479,8 @@ head.init("VJHead");</programlisting>
             <methodname>gadget::DigitalProxy::getData()</methodname>.</para>
 
             <example id="example.using.gadget.DigitalInterface">
-              <title>Using gadget::DigitalInterface in an Application
-              Object</title>
+              <title>Using <classname>gadget::DigitalInterface</classname> in
+              an Application Object</title>
 
               <programlisting linenumbering="numbered">void MyApp::preFrame()
 {
