@@ -242,7 +242,7 @@ XERCES_INCLUDES="-I$xerces_include"
 if test "x$OS_TYPE" = "xWin32" ; then
     XERCES_LDFLAGS="/libpath:$XERCESROOT/lib"
 else
-    XERCES_LDFLAGS="-L$XERCESROOT/lib$LIBBITSUF"
+    XERCES_LDFLAGS="-L$XERCESROOT/lib"
 fi
 
 CFLAGS="${_vjsave_CFLAGS}"
