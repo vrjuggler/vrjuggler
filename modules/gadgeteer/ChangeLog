@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+May-26-2004 dshipton    Added a standalone driver for USDigital SerialEncoder
 May-21-2004 dshipton    Added in USDigital SerialEncoder driver for Baron table.
 May-08-2004 patrickh    Updated to VPR 0.36.0.
 Apr-26-2004 pallindo    Refactored glove support.
