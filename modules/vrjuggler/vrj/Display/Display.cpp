@@ -53,15 +53,21 @@ void Display::updateProjections(const float positionScale)
 }
 
 
-void Display::setOriginAndSize(int xo, int yo, int xs, int ys, bool updateConfig)
+void Display::setOriginAndSize(const int originX, const int originY,
+                               const int width, const int height,
+                               const bool updateConfig)
 { 
-   _xo = xo; _yo = yo; _xs = xs; _ys = ys;
+   mOriginX = originX;
+   mOriginY = originY;
+   mWidth   = width;
+   mHeight  = height;
+
    if(updateConfig)
    {
-      mDisplayElement->setProperty<int>("origin", 0, xo);
-      mDisplayElement->setProperty<int>("origin", 1, yo);
-      mDisplayElement->setProperty<int>("size", 0, xs);
-      mDisplayElement->setProperty<int>("size", 1, ys);
+      mDisplayElement->setProperty<int>("origin", 0, originX);
+      mDisplayElement->setProperty<int>("origin", 1, originY);
+      mDisplayElement->setProperty<int>("size", 0, width);
+      mDisplayElement->setProperty<int>("size", 1, height);
    }
 }
 
@@ -163,7 +169,7 @@ void Display::configViewports(jccl::ConfigElementPtr element)
    }
 }
 
-jccl::ConfigElementPtr Display::getGlFrameBufferConfig()
+jccl::ConfigElementPtr Display::getGlFrameBufferConfig() const
 {
    jccl::ConfigElementPtr element;
 
@@ -192,9 +198,10 @@ std::ostream& operator<<(std::ostream& out, Display& disp)
    out << indent_text << std::setw(pad_width_dot)
        << "Name " << " " << disp.mName.c_str() << std::endl;
    out << indent_text << std::setw(pad_width_dot)
-       << "Origin " << " " << disp._xo << ", " << disp._yo << std::endl;
+       << "Origin " << " " << disp.mOriginX << ", " << disp.mOriginY
+       << std::endl;
    out << indent_text << std::setw(pad_width_dot)
-       << "Size " << " " << disp._xs << "x" << disp._ys << std::endl;
+       << "Size " << " " << disp.mWidth << "x" << disp.mHeight << std::endl;
    out << indent_text << std::setw(pad_width_dot)
        << "Pipe number " << " " << disp.mPipe << std::endl;
    out << indent_text << std::setw(pad_width_dot)

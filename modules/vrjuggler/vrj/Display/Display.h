@@ -37,6 +37,8 @@
 #include <vector>
 #include <jccl/Config/ConfigElementPtr.h>
 #include <vpr/Util/Assert.h>
+
+
 namespace vrj
 {
    class Viewport;
@@ -50,9 +52,18 @@ namespace vrj
 class VJ_CLASS_API Display
 {
 public:
-   Display() : mBorder(true), mHideMouse(false), mPipe(-1), mActive(true), mStereoRequested(false)
+   Display()
+      : mOriginX(-1)
+      , mOriginY(-1)
+      , mWidth(-1)
+      , mHeight(-1)
+      , mBorder(true)
+      , mHideMouse(false)
+      , mPipe(-1)
+      , mActive(true)
+      , mStereoRequested(false)
    {
-      _xo = _yo = _xs = _ys = -1;
+      ;
    }
 
    virtual ~Display()
@@ -80,20 +91,28 @@ public:
    void updateProjections(const float positionScale);
 
 public:
-   bool isActive()
-   { return mActive; }
+   bool isActive() const
+   {
+      return mActive;
+   }
 
    void setName(std::string name)
-   { mName = name; }
+   {
+      mName = name;
+   }
 
    /** Gets the name of this display. */
-   std::string getName()
-   { return mName;}
+   std::string getName() const
+   {
+      return mName;
+   }
 
-   bool  shouldDrawBorder()
-   { return mBorder;}
+   bool shouldDrawBorder() const
+   {
+      return mBorder;
+   }
 
-   bool shouldHideMouse()
+   bool shouldHideMouse() const
    {
       return mHideMouse;
    }
@@ -101,62 +120,80 @@ public:
    /** Explicitly set the origin and size 
    * @param updateConfig - If true, then the changes will be reflected in the config element for this display.
    */
-   void setOriginAndSize(int xo, int yo, int xs, int ys, bool updateConfig=false);
+   void setOriginAndSize(const int originX, const int originY, const int width,
+                         const int height, const bool updateConfig = false);
    
    /** Return the current origin and size */
-   void getOriginAndSize(int& xo, int& yo, int& xs, int& ys)
+   void getOriginAndSize(int& originX, int& originY, int& width, int& height)
    {
-      vprASSERT(_xo != -1);     // Make sure we have been configured
-      xo = _xo; yo = _yo; xs = _xs; ys = _ys;
+      vprASSERT(mOriginX != -1);     // Make sure we have been configured
+      originX = mOriginX;
+      originY = mOriginY;
+      width   = mWidth;
+      height  = mHeight;
    }
 
-   void setPipe(int pipe)
-   { mPipe = pipe; }
-   int getPipe()
-   { return mPipe; }
+   void setPipe(const int pipe)
+   {
+      mPipe = pipe;
+   }
+
+   int getPipe() const
+   {
+      return mPipe;
+   }
 
    /**
     * Indicates whether stereo rendering has been requested for this display.
     *
     * @note If we are in simulator, we can not be in stereo.
     */
-   bool isStereoRequested()
+   bool isStereoRequested() const
    {
       return mStereoRequested;
    }
 
    /** Gets the config element that configured this display window. */
-   jccl::ConfigElementPtr getConfigElement()
+   jccl::ConfigElementPtr getConfigElement() const
    {
       return mDisplayElement;
    }
 
-   jccl::ConfigElementPtr getGlFrameBufferConfig();
+   jccl::ConfigElementPtr getGlFrameBufferConfig() const;
 
    friend VJ_API(std::ostream&) operator<<(std::ostream& out, vrj::Display& disp);
 
    // --- Viewport handling --- //
-   unsigned getNumViewports()
-   { return mViewports.size(); }
+   std::vector<vrj::Viewport*>::size_type getNumViewports() const
+   {
+      return mViewports.size();
+   }
 
-   vrj::Viewport* getViewport(int vpNum)
-   { return mViewports[vpNum]; }
+   vrj::Viewport* getViewport(const int vpNum)
+   {
+      return mViewports[vpNum];
+   }
 
 protected:
-   std::string    mName;                /**< Name of the window */
-   int            _xo, _yo, _xs, _ys;   /**< X and Y origin and size of the view */
-   bool           mBorder;              /**< Should we have a border */
-   bool           mHideMouse;              /**< Should we hide the mouse pointer */
-   int            mPipe;                /**< Hardware pipe. Index of the rendering hardware */
-   bool           mActive;              /**< Is the display active or not? */
-   bool           mStereoRequested;     /**< Has stereo been requested? */
+   std::string mName;         /**< Name of the window */
+   int  mOriginX;             /**< X coordinate of the window origin. */
+   int  mOriginY;             /**< Y coordinate of the window origin. */
+   int  mWidth;               /**< Window width. */
+   int  mHeight;              /**< Window height. */
+   bool mBorder;              /**< Should we have a border? */
+   bool mHideMouse;           /**< Should we hide the mouse pointer? */
+   int  mPipe;                /**< Hardware pipe. Index of the rendering hardware. */
+   bool mActive;              /**< Is the display active or not? */
+   bool mStereoRequested;     /**< Has stereo been requested? */
+
    jccl::ConfigElementPtr mDisplayElement;  /**< The config data for this display */
 
-   std::vector<vrj::Viewport*>   mViewports;    /**<  Contained viewports */
+   std::vector<vrj::Viewport*> mViewports;  /**<  Contained viewports */
 };
 
 VJ_API(std::ostream&) operator<<(std::ostream& out, vrj::Display& disp);
 
 } // end namespace
+
 
 #endif
