@@ -174,11 +174,14 @@ std::ostream& Debug::getStream(const vpr::GUID& cat, const int level, const bool
 
 void Debug::addCategoryName(std::string name, const vpr::GUID& catId)
 {
+   std::cout << "Adding category named '" << name << "'\n" << std::flush;
    mCategoryNames[name] = catId;
 }
 
 void Debug::addAllowedCategory(const vpr::GUID& catId)
 {
+   std::cout << "Adding allowed category with identifier '" << catId << "'\n"
+             << std::flush;
    mAllowedCategories[catId] = true;
 }
 
