@@ -43,6 +43,8 @@
  * ----------------------------------------------------------------------------
  */
 
+#include <vpr/vprConfig.h>
+
 /* This should always be included first. */
 #include <jccl/jcclDefines.h>
 
@@ -98,7 +100,7 @@
  * JCCL_EXTERN for the prototype and JCCL_IMPLEMENT for the implementation.
  * ----------------------------------------------------------------------------
  */
-#ifdef JCCL_OS_Win32
+#ifdef VPR_OS_Win32
 
 #   if defined(__GNUC__)
 #       undef _declspec
@@ -139,7 +141,7 @@
 #   define JCCL_CALLBACK_DECL
 #   define JCCL_STATIC_CALLBACK(__x) static __x
 
-#endif	/* JCCL_OS_Win32 */
+#endif	/* VPR_OS_Win32 */
 
 #ifdef _JCCL_BUILD_
 #   define JCCL_API(__type)	JCCL_EXPORT(__type)
