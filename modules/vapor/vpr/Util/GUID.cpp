@@ -53,6 +53,15 @@
 namespace vpr
 {
 
+ vpr::GUID::StdGUID null_guid_struct = { 0x00000000, 0x0000, 0x0000, 0x00, 0x00,
+        { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+      };
+
+ const vpr::GUID GUID::NullGUID( null_guid_struct ); 
+
+//
+      
+
 std::string GUID::toString () const
 {
    std::string guid_str;
