@@ -3,9 +3,9 @@
 "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <article>
   <articleinfo>
-    <title>VR Juggler 1.0 Technical Overview</title>
+    <title>VR Juggler 1.0</title>
 
-    <subtitle></subtitle>
+    <subtitle>Technical Overview</subtitle>
 
     <pubdate>$Date$</pubdate>
 
@@ -993,6 +993,526 @@
           tuning, new device support, or any number of other changes.</para>
         </listitem>
       </itemizedlist>
+    </section>
+  </section>
+
+  <section>
+    <title>VR Juggler Clustering Architecture Design</title>
+
+    <para>In this section, we present the design of the clustering support in
+    VR Juggler. This feature architecture allows an application to
+    transparently run on a cluster of comodity PCs. The main goals of the VR
+    Juggler clustering support are to allow the cluster software to adapt to
+    the particular hardware configuration of the virtual reality system, to
+    provide application portability and scalability from high-end to commodity
+    by hiding the clustering from developers, and to allow users to customize
+    the clustering methods being used.</para>
+
+    <para>Based on our past experiences, we have created an infrastructure
+    that combines best practices of graphics clustering into a modular and
+    extensible design. Its key aspects are the following:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>A layered clustering architecture that separates the clustering
+        components into several major subsystems. This allows for a high
+        degree of modularity.</para>
+      </listitem>
+
+      <listitem>
+        <para>A component system that allows extension to the clustering
+        infrastructure through dynamically loaded plug-ins. Plug-ins extend
+        the core clustering system with specialized functionality.</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>As shown in <xref linkend="figure.cluster.layers" />, the VR Juggler
+    clustering infrastructure is comprised of a set of components arranged
+    into several layers. This technique was chosen to make the infrastructure
+    highly modular. Each layer uses only the functionality provided to it by
+    the layers below.</para>
+
+    <figure id="figure.cluster.layers">
+      <title>VR Juggler Cluster Infrastructure Layers</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata align="center" fileref="figures/ClusterLayers.png"
+                     format="PNG" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Each of the layers is described in more detail below.</para>
+
+    <section id="section.cluster.manager">
+      <title>Cluster Manager</title>
+
+      <indexterm zone="section.cluster.manager">
+        <primary>cluster</primary>
+
+        <secondary>architecture layers</secondary>
+
+        <tertiary>Cluster Manager</tertiary>
+      </indexterm>
+
+      <para>The Cluster Manager layer is responsible for the configuration of
+      all layers in the cluster infrastructure and managing the active plugins
+      (see <xref linkend="figure.cluster.classes" />). This includes
+      maintaining a list of all current plug-ins and synchronizing the calls
+      to each plug-in so that they may perform their specialized tasks.
+      Plug-ins register themselves with the Cluster Manager upon being
+      loaded.</para>
+
+      <figure id="figure.cluster.classes">
+        <title>Cluster Classes</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata align="center" fileref="figures/ClusterClasses.png"
+                       scale="" width="" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>The Cluster Manager is one of only two static components of the
+      clustering infrastructure. It acts as a facade for the entire clustering
+      sub-system. It is responsible for maintaining a list of all current
+      plug-ins, configuring all sub layers, calling the plugins to perform
+      their specific tasks, and syncronizing the kernel loop between
+      machines.</para>
+
+      <para>When a plug-in is dynamically loading, it automatically registers
+      itself with the Cluster Manger where it is thrown into a list of
+      plug-ins for later use. This list is the only way that the clustering
+      infrastrucdture knows about the plug-ins. This means that that there is
+      absolutely no way to access these plug-ins unless you go through the
+      Cluster Manager's API and this list.</para>
+
+      <para>VR Juggler's architeture has the amazing ability to reconfigure
+      itself while it is running. This is a complex task of <indexterm>
+          <primary>Run Time Reconfiguration</primary>
+        </indexterm>run-time reconfiguration is difficult when running on one
+      machine, let alone across a cluster. The Cluster Manager is resoponsible
+      for making this all happen behind the sceens.</para>
+
+      <note>
+        <para>Run-time configuration is the process of changing the state of
+        the application while it is running. For example it would be possible
+        for the user to connect to the cluster using a PDA and reconfigure the
+        display system being used. This is a complex task when running on one
+        machine let alone across a cluster.</para>
+      </note>
+
+      <figure id="figure.class.ClusterManager">
+        <title>Class Diagram:
+        <classname>cluster::ClusterManager</classname></title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata align="center" fileref="figures/ClusterManager.gif"
+                       width="" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <note>
+        <para>VR Juggler is continually running through a loop of method calls
+        that receive information from external devices, calculates application
+        data, and draws the users perspective called the kernel loop.</para>
+      </note>
+
+      <para>Within the VR Juggler kernel loop (see <xref
+      linkend="figure.kernel.control.loop" />) there are many different
+      locations that we might need to send information across the network in
+      order to fully synchronize the cluster. For example, application data
+      needs to be shared directly before the draw function because this data
+      needs to be identical across the cluster right before we draw the scene.
+      But, on the other hand input data needs to be shared at the beginning of
+      the loop so that <methodname>preFrame()</methodname> can use this data
+      to calculate the state of the scene such as the navigation matrix. In
+      order to accommodate all possible needs of a plug in, there are calls
+      into the Cluster Manager at numerous locations during the kernel loop.
+      The Cluster Manager is then responsible for calling any plugin that
+      needs to use the network to transfer data.</para>
+
+      <figure id="figure.kernel.control.loop">
+        <title>VR Juggler <indexterm>
+            <primary>Kernel</primary>
+
+            <secondary>ConrolLoop</secondary>
+          </indexterm>Kernel Loop</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="figures/Kernel_Loop_Call_Sequence.png"
+                       format="PNG" width="" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>In order to guarantee that one node does not progress further
+      through the kernel loop than the other nodes the Cluster Manager must
+      provide a level of synchronization on every method call from the kernel
+      loop. This is accomplished by requiring the Cluster Manager to receive
+      all data packets. Each plug-in is only responsible for sending packets
+      to other cluster nodes. Once all plugins have sent their data, the
+      Cluster Manager sends an <literal>END_BLOCK</literal> packet telling the
+      remote nodes that it is done sending information and then reads data
+      from the network until it receives an <literal>END_BLOCK</literal> from
+      all other nodes. The syncronization occurs because each node must
+      indicate to all other nodes that it has completed the current frame (see
+      <xref linkend="figure.frame.sync" />).</para>
+
+      <figure id="figure.frame.sync">
+        <title>Frame Syncronization</title>
+
+        <mediaobject id="y">
+          <imageobject>
+            <imagedata align="center" fileref="figures/EndBlock.png"
+                       format="PNG" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section id="section.cluster.network">
+      <title>Cluster Network</title>
+
+      <indexterm zone="section.cluster.network">
+        <primary>cluster</primary>
+
+        <secondary>architecture layers</secondary>
+
+        <tertiary>Cluster Network</tertiary>
+      </indexterm>
+
+      <para>The Cluster Network layer maintains an abstract representation of
+      the system of interconnected nodes that comprise the cluster (see <xref
+      linkend="figure.cluster.classes" />). This abstraction provides the rest
+      of the clustering infrastructre, including all plug-ins, with a
+      messaging interface for communicating with the entire cluster.
+      Internally, it maintains a list of each node in the cluster along with
+      the network connection used to communicate with it. Because the
+      networking layer is an abstraction, developers can provide different
+      implementations that make use of alternative low-level networking
+      methods. The networking implementation can then be configured by the
+      user.</para>
+
+      <para>The packets are structured in a way to allow the Cluster Network
+      to take a given packet, serialize it to a string of characters and send
+      the string to a remote node. When received this string is de-serialized
+      into a packet object again. This is accomplished by having a packet
+      header, as seen in <xref linkend="figure.cluster.network.packet" />,
+      that begins all packets. This header contains integers representing the
+      packet type and the packet length. In order to allow the objects to be
+      serialized and de-serialized into different formats we took advantage of
+      the <interfacename>vpr::ObjectReader</interfacename> and
+      <interfacename>vpr::ObjectWriter</interfacename> abstractions within
+      VPR, VR Juggler's system abstraction module. This enables us to
+      serialize the packets into many different formats such as a string of
+      characters or even an XML tree.</para>
+
+      <figure id="figure.cluster.network.packet">
+        <title>Packet Structure</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata align="center" fileref="figures/Packet.png" width="" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>The process of reading the header, determining the packet type,
+      creating the packet structure, and de-serializing the data can be a very
+      tedious task. Because of this, we have created a packet factory, seen in
+      <xref linkend="figure.class.PacketFactory" />, that automates this
+      process. This simplifies code and eliminates one location of possible
+      errors.</para>
+
+      <figure id="figure.class.PacketFactory">
+        <title>Class Diagram:
+        <classname>cluster::PacketFactory</classname></title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata align="center" fileref="figures/PacketFactory.png"
+                       format="PNG" scale="0.25" width="" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>As can be seen in <xref linkend="figure.class.ClusterNetwork" />,
+      the Cluster Network has been designed to have a very intuitive API
+      without any reference to any other parts of the VR Juggler clustering
+      infrastructure. The Cluster Network provides everything that a
+      programmer needs to send messages between nodes in a cluster. It is also
+      because of this robust design that it is possible to develop a
+      replacement for the Cluster Network that might use a different low-level
+      networking technique.</para>
+
+      <figure id="figure.class.ClusterNetwork">
+        <title>Class Diagram:
+        <classname>cluster::ClusterNetwork</classname></title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata align="center" fileref="figures/ClusterNetwork.gif"
+                       format="GIF" width="" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section id="section.cluster.plugins">
+      <title>Cluster Plug-ins</title>
+
+      <indexterm zone="section.cluster.plugins">
+        <primary>cluster</primary>
+
+        <secondary>architecture layers</secondary>
+
+        <tertiary>Cluster Plug-ins</tertiary>
+      </indexterm>
+
+      <para>The VR Juggler clustering infrastructure makes use of plug-ins to
+      extend the basic functionality with specialized features. Cluster
+      Plug-ins are loaded on demand at run time. This allows developers to add
+      new plug-ins to support additional cluster-based functionality without
+      modifying the core clustering infrastructure. All Cluster Plug-ins are
+      derived from a common base interface named
+      <interfacename>cluster::ClusterPlugin</interfacename>. To create a new
+      plug-in, a developer must implement a few of the base interface methods.
+      In return, they get a support for network communication,
+      synchronization, and run-time reconfiguration.</para>
+
+      <para>VR Juggler ships with several commonly used plug-ins that provide
+      the basic features required for clustering of VR Juggler applications.
+      The base set of plug-ins can also be used as examples for other
+      developers to extend the system.</para>
+
+      <para>These base plugins are the RIMPlugin, ApplicationDataManager, and
+      SwapLockManager. The RemoteInputManager plugin is responsible for
+      distributing synchronized device data across the cluster. The
+      ApplicationDataManager provides developers with a method for sharing
+      application data within a clustered application. The SwapLockManager
+      implements several methods for synchronizing display updates within a
+      cluster. We plan to add additional plugins in the future to support
+      extended clustering functionality.</para>
+
+      <para>In order to create a modular system, we wanted to allow the user
+      to add any number of additional components to the clustering
+      infrastructure in a simple way. We have provided a Cluster Network layer
+      to handle all low-level communication and the Cluster Manager to take
+      care of all synchronization details. This allows the user to concentrate
+      on their specific clustering needs without worrying about the difficult
+      low-level issues. In order to create a plug-in, a programmer must only
+      implement a few methods. In return they get run-time reconfiguration,
+      synchronization, and a cluster network abstraction to handle all
+      communication.</para>
+
+      <note>
+        <para>As new configuration information is added to the system it is
+        delivered to the correct layer or plug-in by the Cluster Manager. In
+        order to accomplish this we require that all cluster plug-ins and the
+        Cluster Network implement the
+        <classname>jccl::ConfigElementHandler</classname> abstract base
+        class.</para>
+      </note>
+
+      <para>Plug-ins have a very simple interface, shown in <xref
+      linkend="figure.interface.ClusterPlugin" />, that allows the user a high
+      level of specialization. Plug-in programmers only need to implement
+      <methodname>preDraw()</methodname>,
+      <methodname>postPostFrame()</methodname>
+      <methodname>configCanHandle()</methodname>,
+      <methodname>configAdd()</methodname>, and
+      <methodname>configRemove()</methodname>. Since these plug-ins are simply
+      additions to the Cluster Manager, they are loaded dynamically at run
+      time. This allows the sharing of plug-in libraries which do not require
+      the developer to recompile VR Juggler.</para>
+
+      <figure id="figure.interface.ClusterPlugin">
+        <title>Interface
+        <interfacename>cluster::ClusterPlugin</interfacename></title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata align="center" fileref="figures/ClusterPlugin.png"
+                       format="PNG" width="" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <section>
+        <title>Remote Input Manager</title>
+
+        <para>The Remote Input Manager was created to share device input
+        across a cluster. Having the ability to share input data allows us to
+        support two different possible application needs. The first being that
+        a machine can act as a device server and allow remote applications to
+        request device data from a locally attached device such as a tracker.
+        The second is the case when we are clustering multiple machines and we
+        want to have the exact same input data on each machine every frame so
+        that all nodes will be using the same data for computation. The idea
+        being that if each node has the same input it will create the same
+        scene. We can then configure each node to draw a different section of
+        the scene to be displayed.</para>
+
+        <para>Our goal is to design a distributed shared memory system for VR
+        application I/O (input/output) data. As a result of distributed I/O,
+        application development and execution can transparently move between
+        shared memory VR systems and PC cluster VR systems. This means the
+        same VR applications will run on both systems, without any changes
+        needed to the application.</para>
+
+        <para>VR Juggler already has an input manager that handles local input
+        data on a single computer. The clustering infrastructure extends VR
+        Juggler by using the Remote Input Manager plug-in as an extension to
+        the existing Input Manager. The Remote Input Manager provides a few
+        key functions: device location transparency, heterogeneous clusters,
+        support for platform-specific device drivers, and an unlimited number
+        of devices.</para>
+
+        <para>Not only does the remote input manager have useful
+        functionality, but it also intends to avoid forcing the application
+        programmer to worry about the location of devices. Once a cluster is
+        set up, the programmer and application can act as if each input device
+        is connected to every cluster node(<xref
+        linkend="figure.virtual.devices" />). The remote input manager avoids
+        putting extra burden on application developers and hides the
+        complications of the cluster from them.</para>
+
+        <figure id="figure.virtual.devices">
+          <title>Virtual Devices</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata align="center" fileref="figures/VirtualDevices.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>Also by distributing the input to cluster nodes across the
+        network, we can remove the typical cluster computing constraint of
+        having identical computers at each node. We are able to accomplish
+        this very easily since our Cluster Network layer works across multiple
+        platforms. This allows us to construct a cluster from any combination
+        of the platforms supported by VR Juggler (see <xref
+        linkend="figure.heterogeneous.cluster" />).</para>
+
+        <figure id="figure.heterogeneous.cluster">
+          <title>Heterogeneous Cluster</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata align="center"
+                         fileref="figures/HeterogeneousCluster.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>Although VR Juggler supports many platforms, new devices require
+        their own drivers for each platform. This can restrict the use of new
+        devices on VR systems because writing device drivers is time
+        consuming. With the help of the Remote Input Manager, devices whose
+        drivers have been integrated into VR Juggler on one platform can be
+        utilized on other platforms as well. By connecting to another computer
+        through the Remote Input Manager, other platforms can retrieve device
+        data across the network until drivers for the specific platforms are
+        finally integrated.</para>
+
+        <para>Also, if a large number of input devices are to be used, our
+        design allows the devices to be spread across the cluster nodes. This
+        prevents problems such as multiple input devices creating a large
+        workload on a single computer, or all input hardware not being able to
+        attach to a single PC.</para>
+      </section>
+
+      <section>
+        <title>Application Data Manager</title>
+
+        <para>The Application Data Manager was created to allow VR application
+        developers to easily exchange any type of data they want across a
+        cluster of machines. We can accomplish this by letting the developer
+        derive from an interface that we have defined. This will allow us to
+        grab the data structure, serialize it, send it across the cluster,
+        serialize it, and allow all other nodes to access the identical
+        data.</para>
+
+        <para>The Application Data Manager allows the application developer to
+        share any arbitrary type of data. For example we might have a GUI
+        running on a hand held device that interacts with the application to
+        provide data to control the application. Since we can not expect this
+        GUI to connect to all nodes in the cluster, the application data
+        manager allows the hand held device to connect to a single machine
+        which will synchronize this data across the cluster.</para>
+
+        <para>As can be seen in <xref linkend="figure.class.UserData" />, you
+        can create your own data structure and use two templated mixin classes
+        in order to gain the needed interface to allow the Application Data
+        Manager to handle you data.</para>
+
+        <figure id="figure.class.UserData">
+          <title>User Data</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata align="center" fileref="figures/UserData.png"
+                         format="PNG" width="" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </section>
+
+      <section>
+        <title>Swap Lock Plug-ins</title>
+
+        <para>Synchronizing multiple displays is one of the biggest challenges
+        in creating immersive VR on PCs. This is because a single PC does not
+        have enough processing power to generate the graphics for multiple
+        displays in VR systems such as a CAVE. Now that graphics hardware is
+        becoming available to synchronize multiple active stereo PCs or show
+        passive stereo, the design of the VR Juggler clustering infrastructure
+        must provide a way for a running applications that distribute across
+        multiple PCs and graphic hardware. Because we are using different
+        machines that may even have different graphics cards, generating the
+        graphics is going to take a different length of time on each machine.
+        While generating the image the graphics hardware places the data into
+        a buffer that is not being displayed. Once the hardware has generated
+        the image it swaps the buffer containing the new data with the buffer
+        that is being displayed. We encounter a synchronization issue when the
+        cluster nodes swap these buffers at different times. This creates a
+        ripping effect that causes the display to appear out of sync. We can
+        combat this issue by sending a signal between all machines when they
+        should swap their buffers. This communication needs to have a very low
+        level of latency, usually on the order of 10-80 μs.</para>
+
+        <para>The swap lock plug-ins give the application developer a set of
+        methods which they can choose from while configuring the application.
+        The options are shown below:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>TCP/IP: Uses a socket connection to synchronize the cluster.
+            [Latency:100 μs]</para>
+          </listitem>
+
+          <listitem>
+            <para>TCP/IP Serial Hybrid: Uses a socket connection for the
+            slave-to-master communication and a serial connection for the
+            master-to-slave communication. [Latency:80 μs]</para>
+          </listitem>
+
+          <listitem>
+            <para>Wired Parallel Port: Uses a Linux kernel module to directly
+            communicate through the parallel port. You are required to have an
+            external device that acts as a simple AND gate. [Latency:10
+            μs]</para>
+          </listitem>
+        </itemizedlist>
+      </section>
     </section>
   </section>
 
