@@ -86,12 +86,6 @@ public:
    friend class GlPipe;
    friend class GlContextDataBase;
 
-   /**
-    * Function to config API specific stuff.
-    * Takes a jccl::Configuration and extracts API-specific stuff.
-    */
-   //**//virtual void configInitial(jccl::Configuration*  cfg);
-
    /** Starts the control loop. */
    virtual void start();
 
@@ -230,7 +224,6 @@ protected:
     * Protects run-time config.  Only when this semaphore is acquired can
     * run-time config occur.
     */
-   //vpr::Semaphore    mRuntimeConfigSema;
    bool              mRunning;         /**< Used to stop the drawing thread. */
 
    vpr::ThreadMemberFunctor<GlDrawManager>* mMemberFunctor;

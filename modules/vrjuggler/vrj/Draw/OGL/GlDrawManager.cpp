@@ -70,7 +70,6 @@ GlDrawManager::GlDrawManager()
    : mApp(NULL)
    , drawTriggerSema(0)
    , drawDoneSema(0)
-//   , mRuntimeConfigSema(0)
    , mRunning(false)
    , mMemberFunctor(NULL)
    , mControlThread(NULL)
@@ -108,17 +107,6 @@ GlApp* GlDrawManager::getApp()
 {
    return mApp;
 }
-
-/**
- * Do initial configuration for the draw manager.
- * Doesn't do anything right now.
- */
-/*
-void GlDrawManager::configInitial(jccl::Configuration* cfg)
-{
-    // Setup any config data
-}
-*/
 
 /** Starts the control loop. */
 void GlDrawManager::start()
@@ -206,14 +194,14 @@ void GlDrawManager::drawAllPipes()
    unsigned int pipe_num;
 
    // RENDER
-      // Start rendering all the pipes
-   for(pipe_num = 0; pipe_num < pipes.size(); ++pipe_num)
+   // Start rendering all the pipes
+   for (pipe_num = 0; pipe_num < pipes.size(); ++pipe_num)
    {
       pipes[pipe_num]->triggerRender();
    }
 
       // Wait for rendering to finish on all the pipes
-   for(pipe_num = 0; pipe_num < pipes.size(); ++pipe_num)
+   for (pipe_num = 0; pipe_num < pipes.size(); ++pipe_num)
    {
       pipes[pipe_num]->completeRender();
    }
@@ -225,14 +213,14 @@ void GlDrawManager::drawAllPipes()
 
 
    // SWAP
-      // Start swapping all the pipes
-   for(pipe_num = 0; pipe_num < pipes.size(); ++pipe_num)
+   // Start swapping all the pipes
+   for (pipe_num = 0; pipe_num < pipes.size(); ++pipe_num)
    {
       pipes[pipe_num]->triggerSwap();
    }
 
-      // Wait for swapping to finish on all the pipes
-   for(pipe_num = 0; pipe_num < pipes.size(); ++pipe_num)
+   // Wait for swapping to finish on all the pipes
+   for (pipe_num = 0; pipe_num < pipes.size(); ++pipe_num)
    {
       pipes[pipe_num]->completeSwap();
    }
@@ -262,7 +250,7 @@ void GlDrawManager::addDisplay(Display* disp)
    vprASSERT(disp != NULL);    // Can't add a null display
 
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
-      << "vrj::GlDrawManager:addDisplay: " << disp
+      << "vrj::GlDrawManager::addDisplay: " << disp
       << std::endl << vprDEBUG_FLUSH;
 
 
@@ -317,9 +305,9 @@ void GlDrawManager::addDisplay(Display* disp)
    // -- Create any needed Pipes & Start them
    unsigned int pipe_num = new_win->getDisplay()->getPipe();    // Find pipe to add it too
 
-   if(pipes.size() < (pipe_num+1))           // ASSERT: Max index of pipes is < our pipe
+   if (pipes.size() < (pipe_num+1))           // ASSERT: Max index of pipes is < our pipe
    {                                         // +1 because if pipeNum = 0, I still need size() == 1
-      while(pipes.size() < (pipe_num+1))     // While we need more pipes
+      while (pipes.size() < (pipe_num+1))     // While we need more pipes
       {
          GlPipe* new_pipe = new GlPipe(pipes.size(), this);  // Create a new pipe to use
          pipes.push_back(new_pipe);                          // Add the pipe
@@ -347,9 +335,13 @@ void GlDrawManager::removeDisplay(Display* disp)
    GlPipe* pipe;  pipe = NULL;
    GlWindow* win; win = NULL;     // Window to remove
 
-   for(unsigned int i=0;i<mWins.size();i++)
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
+      << "vrj::GlDrawManager::removeDisplay: " << disp
+      << std::endl << vprDEBUG_FLUSH;
+
+   for (unsigned int i=0;i<mWins.size();i++)
    {
-      if(mWins[i]->getDisplay() == disp)      // FOUND it
+      if (mWins[i]->getDisplay() == disp)      // FOUND it
       {
          win = mWins[i];
          pipe = pipes[win->getDisplay()->getPipe()];
@@ -357,7 +349,7 @@ void GlDrawManager::removeDisplay(Display* disp)
    }
 
    // Remove the window from the pipe and our local list
-   if(win != NULL)
+   if (win != NULL)
    {
       vprASSERT(pipe != NULL);
       vprASSERT(isValidWindow(win));
@@ -367,7 +359,9 @@ void GlDrawManager::removeDisplay(Display* disp)
    }
    else
    {
-      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:") << "vrj::GlDrawManager::removeDisplay: Attempted to remove a display that was not found.\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
+         << "vrj::GlDrawManager::removeDisplay: Attempted to remove a display that was not found.\n"
+         << vprDEBUG_FLUSH;
       vprASSERT(false);
    }
 
@@ -381,11 +375,22 @@ void GlDrawManager::closeAPI()
 
    mRunning = false;
 
-   drawTriggerSema.release();
-   drawDoneSema.acquire();
-
-   // TODO: Must shutdown and delete all pipes.
    // Stop and delete all pipes
+   unsigned int pipe_num;
+
+   for (pipe_num = 0; pipe_num < pipes.size(); ++pipe_num)
+   {
+      pipes[pipe_num]->stop();
+      pipes[pipe_num]->triggerRender();
+      pipes[pipe_num]->completeRender();
+      pipes[pipe_num]->triggerSwap();
+      pipes[pipe_num]->completeSwap();
+      
+      vrj::GlPipe* old_pipe = pipes[pipe_num];
+      
+      pipes.erase(std::remove(pipes.begin(), pipes.end(), old_pipe));
+      delete old_pipe;
+   }
 
    // TODO: We must fix the closing of EventWindows and GlWindows before we can do this.
    // Close and delete all glWindows
@@ -445,7 +450,7 @@ void GlDrawManager::setCurrentContext(int val)
 void GlDrawManager::dirtyAllWindows()
 {
     // Create Pipes & Add all windows to the correct pipe
-   for(unsigned int winId=0;winId<mWins.size();winId++)   // For each window we created
+   for (unsigned int winId=0;winId<mWins.size();winId++)   // For each window we created
    {
       mWins[winId]->setDirtyContext(true);
    }
@@ -455,9 +460,13 @@ void GlDrawManager::dirtyAllWindows()
 bool GlDrawManager::isValidWindow(GlWindow* win)
 {
    bool ret_val = false;
-   for(unsigned int i=0;i<mWins.size();i++)
-      if(mWins[i] == win)
+   for (unsigned int i=0;i<mWins.size();i++)
+   {
+      if (mWins[i] == win)
+      {
          ret_val = true;
+      }
+   }
 
    return ret_val;
 }
@@ -473,7 +482,7 @@ void GlDrawManager::outStream(std::ostream& out)
             << clrOutNORM(clrCYAN,"\tWindow count: ") << mWins.size()
             << std::endl << std::flush;
 
-    for(unsigned int i = 0; i < mWins.size(); i++)
+    for (unsigned int i = 0; i < mWins.size(); i++)
     {
        vprASSERT(mWins[i] != NULL);
        out << clrOutNORM(clrCYAN,"\tGlWindow:\n") << *(mWins[i]) << std::endl;
