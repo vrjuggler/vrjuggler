@@ -45,7 +45,7 @@
 #include <Kernel/vjDisplay.h>
 
 
-vjGlxWindow::vjGlxWindow() {
+vjGlxWindow::vjGlxWindow():vjGlWindow() {
    window_is_open = 0;
    window_width = window_height = -1;
    x_display = NULL;
