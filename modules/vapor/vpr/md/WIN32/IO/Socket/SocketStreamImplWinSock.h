@@ -111,7 +111,7 @@ public:
     //     false - The socket could not be put into a listening state.  An
     //             error message is printed explaining what went wrong.
     // ------------------------------------------------------------------------
-    virtual bool listen(const int backlog = 5);
+    virtual Status listen(const int backlog = 5);
 
     // ------------------------------------------------------------------------
     // Accept an incoming connection request.
@@ -132,28 +132,12 @@ public:
     //     This is a blocking call and will block until a connection is
     //     established.
     // ------------------------------------------------------------------------
-    virtual SocketStreamImpWinSock* accept(void);
+    virtual Status accept(SocketStreamImpWinSock& sock);
 
 protected:
     // ------------------------------------------------------------------------
-    // Protected constructor.  This is used when the socket is created by the
-    // operating system, typically by the accept(2) system call.
-    //
-    // PRE: The arguments given are the result of an operating system call
-    //      that returned an open, connected socket.
-    // POST: The given arguments are copied into the member variables
-    //       directly resulting in a ready-to-use socket.
-    //
-    // Arguments:
-    //     sock        - The open socket returned by the operating system.
-    //     remote_addr - The host address structure of the site to which we
-    //                   are connected.
     // ------------------------------------------------------------------------
-    SocketStreamImpWinSock(const SOCKET sock, const InetAddr& remote_addr);
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    virtual bool
+    virtual Status
     getOption (const SocketOptions::Types option,
                struct SocketOptions::Data& data)
     {
@@ -162,7 +146,7 @@ protected:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    virtual bool
+    virtual Status
     setOption (const SocketOptions::Types option,
                const struct SocketOptions::Data& data)
     {

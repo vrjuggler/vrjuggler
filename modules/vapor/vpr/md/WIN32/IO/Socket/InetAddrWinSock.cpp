@@ -56,12 +56,12 @@ const InetAddrWinSock InetAddrWinSock::AnyAddr;      // Default constructor defa
 // form <address>:<port> where <address> can be a hostname or a
 // dotted-decimal IP address.
 // ----------------------------------------------------------------------------
-bool
+Status
 InetAddrWinSock::setAddress (const std::string& address) {
     std::string::size_type pos;
     std::string host_addr, host_port;
     Uint16 port;
-    bool retval;
+    Status retval;
 
     pos       = address.find(":");
     host_addr = address.substr(0, pos);
@@ -182,9 +182,9 @@ InetAddrWinSock::getAddressString (void) const {
 // ----------------------------------------------------------------------------
 // Look up the given address and store the value in m_addr.
 // ----------------------------------------------------------------------------
-bool
+Status
 InetAddrWinSock::lookupAddress (const std::string& address) {
-    bool retval;
+    Status retval;
     struct hostent* host_entry;
 
     // First, try looking the host up by name.
@@ -193,7 +193,6 @@ InetAddrWinSock::lookupAddress (const std::string& address) {
     // If that succeeded, put the result in m_remote_addr.
     if ( host_entry != NULL ) {
         copyAddressValue(host_entry->h_addr);
-        retval = true;
     }
     // If gethostbyname(3) failed, the address string may be an IP address.
     else {
@@ -208,12 +207,11 @@ InetAddrWinSock::lookupAddress (const std::string& address) {
             fprintf(stderr,
                     "[vpr::InetAddrWinSock] Could not find address for '%s': %s\n",
                     address.c_str(), strerror(errno));
-            retval = false;
+            retval.setCode(Status::Failure);
         }
         // Otherwise, we found the integer address successfully.
         else {
             setAddressValue(addr);
-            retval = true;
         }
     }
 
