@@ -69,6 +69,7 @@ namespace vpr
 FileHandleImplUNIX::FileHandleImplUNIX(const std::string& file_name)
    : mName(file_name)
    , mOpen(false)
+   , mOpenBlocking(true)
    , mBlocking(true)
    , mFdesc(-1)
    , mOpenMode(O_RDWR)
@@ -92,7 +93,7 @@ vpr::ReturnStatus FileHandleImplUNIX::open()
 
    int open_flags(mOpenMode);
 
-   if ( ! mBlocking )
+   if ( ! mOpenBlocking )
    {
       open_flags |= O_NONBLOCK;
    }
@@ -104,7 +105,7 @@ vpr::ReturnStatus FileHandleImplUNIX::open()
    if ( mFdesc == -1 )
    {
       // If we are opening in non-blocking mode, we do not want to bomb out.
-      if ( errno == EWOULDBLOCK && ! mBlocking )
+      if ( errno == EWOULDBLOCK && ! mOpenBlocking )
       {
          status.setCode(vpr::ReturnStatus::WouldBlock);
          mOpen = true;
@@ -122,7 +123,8 @@ vpr::ReturnStatus FileHandleImplUNIX::open()
    // Otherwise, set mOpen to true.
    else
    {
-      mOpen = true;
+      mOpen     = true;
+      mBlocking = mOpenBlocking;
    }
 
    return status;
@@ -156,49 +158,57 @@ vpr::ReturnStatus FileHandleImplUNIX::close()
 // Reconfigure the file handle so that it is in blocking mode.
 vpr::ReturnStatus FileHandleImplUNIX::setBlocking(bool blocking)
 {
-   int cur_flags, new_flags;
    vpr::ReturnStatus retval;
 
-   // Get the current flags.
-   cur_flags = getFlags();
-
-   if ( blocking )
+   if ( ! mOpen )
    {
+      mOpenBlocking = blocking;
+   }
+   else
+   {
+      int cur_flags, new_flags;
+
+      // Get the current flags.
+      cur_flags = getFlags();
+
+      if ( blocking )
+      {
 #ifdef _SGI_SOURCE
-      // On IRIX, mask FNONBLK and FNDELAY.  We mask FNDELAY to ensure that it
-      // is not set by the operating system at some level.
-      new_flags = cur_flags & ~(FNONBLK | FNDELAY);
+         // On IRIX, mask FNONBLK and FNDELAY.  We mask FNDELAY to ensure that
+         // it is not set by the operating system at some level.
+         new_flags = cur_flags & ~(FNONBLK | FNDELAY);
 #else
-      // On everything else, mask O_NONBLOCK and O_NDELAY.  We mask O_NDELAY to
-      // ensure that it is not set by the operating system at some level.
-      new_flags = cur_flags & ~(O_NONBLOCK | O_NDELAY);
+         // On everything else, mask O_NONBLOCK and O_NDELAY.  We mask O_NDELAY
+         // to ensure that it is not set by the operating system at some level.
+         new_flags = cur_flags & ~(O_NONBLOCK | O_NDELAY);
 #endif
-   }
-   else
-   {
+      }
+      else
+      {
 #ifdef _SVR4_SOURCE
-      // On SysV, set FNONBLK.  We do not set FNDELAY because it just adds
-      // confusion.  FNONBLK is preferred.
-      new_flags = cur_flags | FNONBLK;
+         // On SysV, set FNONBLK.  We do not set FNDELAY because it just adds
+         // confusion.  FNONBLK is preferred.
+         new_flags = cur_flags | FNONBLK;
 #else
-      // On everything else, set O_NONBLOCK.  We do not set O_NDELAY because
-      // it just adds confusion.  O_NONBLOCK is preferred.
-      new_flags = cur_flags | O_NONBLOCK;
+         // On everything else, set O_NONBLOCK.  We do not set O_NDELAY because
+         // it just adds confusion.  O_NONBLOCK is preferred.
+         new_flags = cur_flags | O_NONBLOCK;
 #endif
-   }
+      }
 
-   // Set the file descriptor to be blocking with the new flags.
-   if ( setFlags(new_flags) == -1 )
-   {
-      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-         << "[vpr::FileHandleImplUNIX] Failed to set "
-         << (blocking ? "blocking" : "non-blocking") << " state on "
-         << mName << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
-      retval.setCode(ReturnStatus::Fail);
-   }
-   else
-   {
-      mBlocking = blocking;
+      // Set the file descriptor to be blocking with the new flags.
+      if ( setFlags(new_flags) == -1 )
+      {
+         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+            << "[vpr::FileHandleImplUNIX] Failed to set "
+            << (blocking ? "blocking" : "non-blocking") << " state on "
+            << mName << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
+         retval.setCode(ReturnStatus::Fail);
+      }
+      else
+      {
+         mBlocking = blocking;
+      }
    }
 
    return retval;

@@ -79,6 +79,7 @@ public:
     */
    FileHandleImplUNIX()
       : mOpen(false)
+      , mOpenBlocking(true)
       , mBlocking(true)
       , mFdesc(-1)
       , mOpenMode(O_RDWR)
@@ -149,7 +150,7 @@ public:
     */
    vpr::ReturnStatus close();
 
-  /**
+   /**
     * Gets the open state of this file handle.
     *
     * @pre None.
@@ -168,7 +169,6 @@ public:
     * mode.  If this file handle has not been opened yet, it will be opened in
     * blocking or non-blocking mode appropriately when open() is called.
     *
-    * @pre The file handle is open.
     * @post Processes may block (or not) when accessing the file.
     *
     * @param blocking A value of true indicates that the file handle will use
@@ -500,6 +500,7 @@ protected:
 
    std::string mName;           /**< The name of this file */
    bool        mOpen;           /**< Open state of this file */
+   bool        mOpenBlocking;
    bool        mBlocking;       /**< Blocking state of this file */
 
    int mFdesc;      /**< File descriptor */
