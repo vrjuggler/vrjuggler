@@ -93,6 +93,7 @@ int GlWindowXWin::open()
     char* foo;
     ::XSizeHints *sizehints;
     ::XClassHint *classhint;
+    unsigned long event_mask(0);    // Event masks to use
 
     vprDEBUG(vrjDBG_DRAW_MGR,3) << "glxWindow: Open window\n" << vprDEBUG_FLUSH;
 
@@ -126,18 +127,15 @@ int GlWindowXWin::open()
         goto OPEN_FAIL;
     }
 
-    w_attrib.event_mask = ExposureMask | StructureNotifyMask
-        | PointerMotionMask | KeyPressMask;
+    event_mask = ExposureMask | StructureNotifyMask | KeyPressMask |
+                 KeyReleaseMask | ButtonPressMask | ButtonReleaseMask |
+                 ButtonMotionMask | PointerMotionMask | StructureNotifyMask;
+    w_attrib.event_mask = event_mask;
     w_attrib.border_pixel = 0x0;
-
-
+        
     // get screen dimensions for translating window origin.
     ::XWindowAttributes winattrs;
     ::XGetWindowAttributes (x_display, RootWindow (x_display, screen), &winattrs);
-//    std::cout << "------------------------------------------------------------------\n"
-//          << "    screen dims: " << winattrs.width << ", " << winattrs.height
-//          << "    win pos: " << origin_x << ", " <<  winattrs.height - origin_y - window_height << std::endl;
-
 
     // create window
     if ((x_window = ::XCreateWindow (x_display, RootWindow(x_display, screen),
@@ -225,7 +223,7 @@ int GlWindowXWin::open()
      * we can actually map the window.  The XIfEvent makes us wait until
      * it's actually on screen.
      */
-
+    ::XSelectInput(x_display, x_window, event_mask );
     ::XMapWindow (x_display, x_window);
     ::XIfEvent (x_display, &fooevent, EventIsMapNotify, (XPointer)x_window);
     ::XSync(x_display,0);
