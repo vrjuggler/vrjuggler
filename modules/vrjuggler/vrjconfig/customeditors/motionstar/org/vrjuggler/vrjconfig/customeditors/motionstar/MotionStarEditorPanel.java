@@ -188,9 +188,9 @@ public class MotionStarEditorPanel
    {
       this.setLayout(mMainLayout);
       mHardwarePanel.setBorder(mHardwarePanelTitle);
-      mHardwarePanel.setLayout(nHardwarePanelLayout);
+      mHardwarePanel.setLayout(mHardwarePanelLayout);
       mHardwarePanelTitle.setTitle("Hardware Settings");
-      mRealHardwarePanel.setLayout(nRealHardwarePanelLayout);
+      mRealHardwarePanel.setLayout(mRealHardwarePanelLayout);
       mAddressLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mAddressLabel.setLabelFor(mAddressField);
       mAddressLabel.setText("Server Address:");
@@ -225,96 +225,114 @@ public class MotionStarEditorPanel
       mDeviceHostLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mDeviceHostLabel.setLabelFor(mDeviceHostEditor);
       mDeviceHostLabel.setText("Device Host:");
-      mRealHardwarePanel.add(mAddressField,
-                         new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0,
-                                                GridBagConstraints.WEST,
-                                                GridBagConstraints.HORIZONTAL,
-                                                new Insets(0, 0, 0, 0), 0, 0));
-      mRealHardwarePanel.add(mServerPortEditor,
-                         new GridBagConstraints(1, 1, 1, 1, 1.0, 1.0,
-                                                GridBagConstraints.WEST,
-                                                GridBagConstraints.BOTH,
-                                                new Insets(0, 0, 0, 0), 0, 0));
-      mRealHardwarePanel.add(mMasterEditor,
-                         new GridBagConstraints(1, 2, 1, 1, 1.0, 1.0,
-                                                GridBagConstraints.WEST,
-                                                GridBagConstraints.BOTH,
-                                                new Insets(0, 0, 0, 0), 0, 0));
-      mRealHardwarePanel.add(mServerPortLabel,
-                         new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
-                                                GridBagConstraints.EAST,
-                                                GridBagConstraints.NONE,
-                                                new Insets(0, 0, 0, 3), 0, 0));
       mRealHardwarePanel.add(mAddressLabel,
-                         new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
-                                                GridBagConstraints.EAST,
-                                                GridBagConstraints.NONE,
-                                                new Insets(0, 0, 0, 3), 0, 0));
+                             new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+                                                    GridBagConstraints.EAST,
+                                                    GridBagConstraints.NONE,
+                                                    new Insets(0, 0, 0, 3),
+                                                    0, 0));
+      mRealHardwarePanel.add(mAddressField,
+                             new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0,
+                                                    GridBagConstraints.WEST,
+                                                    GridBagConstraints.HORIZONTAL,
+                                                    new Insets(0, 0, 0, 0),
+                                                    0, 0));
+      mRealHardwarePanel.add(mServerPortLabel,
+                             new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+                                                    GridBagConstraints.EAST,
+                                                    GridBagConstraints.NONE,
+                                                    new Insets(0, 0, 0, 3),
+                                                    0, 0));
+      mRealHardwarePanel.add(mServerPortEditor,
+                             new GridBagConstraints(1, 1, 1, 1, 1.0, 1.0,
+                                                    GridBagConstraints.WEST,
+                                                    GridBagConstraints.BOTH,
+                                                    new Insets(0, 0, 0, 0),
+                                                    0, 0));
       mRealHardwarePanel.add(mMasterLabel,
-                         new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
-                                                GridBagConstraints.EAST,
-                                                GridBagConstraints.NONE,
-                                                new Insets(0, 0, 0, 3), 0, 0));
+                             new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
+                                                    GridBagConstraints.EAST,
+                                                    GridBagConstraints.NONE,
+                                                    new Insets(0, 0, 0, 3),
+                                                    0, 0));
+      mRealHardwarePanel.add(mMasterEditor,
+                             new GridBagConstraints(1, 2, 1, 1, 1.0, 1.0,
+                                                    GridBagConstraints.WEST,
+                                                    GridBagConstraints.BOTH,
+                                                    new Insets(0, 0, 0, 0),
+                                                    0, 0));
       mRealHardwarePanel.add(mHemisphereLabel,
-                         new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0,
-                                                GridBagConstraints.EAST,
-                                                GridBagConstraints.NONE,
-                                                new Insets(0, 0, 0, 3), 0, 0));
-      mRealHardwarePanel.add(mDataFormatLabel,
-                         new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0,
-                                                GridBagConstraints.EAST,
-                                                GridBagConstraints.NONE,
-                                                new Insets(0, 0, 0, 3), 0, 0));
+                             new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0,
+                                                    GridBagConstraints.EAST,
+                                                    GridBagConstraints.NONE,
+                                                    new Insets(0, 0, 0, 3),
+                                                    0, 0));
       mRealHardwarePanel.add(mHemisphereEditor,
-                         new GridBagConstraints(1, 3, 1, 1, 1.0, 1.0,
-                                                GridBagConstraints.WEST,
-                                                GridBagConstraints.BOTH,
-                                                new Insets(0, 0, 0, 0), 0, 0));
+                             new GridBagConstraints(1, 3, 1, 1, 1.0, 1.0,
+                                                    GridBagConstraints.WEST,
+                                                    GridBagConstraints.BOTH,
+                                                    new Insets(0, 0, 0, 0),
+                                                    0, 0));
+      mRealHardwarePanel.add(mDataFormatLabel,
+                             new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0,
+                                                    GridBagConstraints.EAST,
+                                                    GridBagConstraints.NONE,
+                                                    new Insets(0, 0, 0, 3),
+                                                    0, 0));
       mRealHardwarePanel.add(mDataFormatEditor,
-                         new GridBagConstraints(1, 4, 1, 1, 1.0, 1.0,
-                                                GridBagConstraints.WEST,
-                                                GridBagConstraints.BOTH,
-                                                new Insets(0, 0, 0, 0), 0, 0));
-      mRealHardwarePanel.add(mModeEditor,
-                         new GridBagConstraints(1, 5, 1, 1, 1.0, 1.0,
-                                                GridBagConstraints.WEST,
-                                                GridBagConstraints.BOTH,
-                                                new Insets(0, 0, 0, 0), 0, 0));
+                             new GridBagConstraints(1, 4, 1, 1, 1.0, 1.0,
+                                                    GridBagConstraints.WEST,
+                                                    GridBagConstraints.BOTH,
+                                                    new Insets(0, 0, 0, 0),
+                                                    0, 0));
       mRealHardwarePanel.add(mModeLabel,
-                         new GridBagConstraints(0, 5, 1, 1, 0.0, 0.0,
-                                                GridBagConstraints.EAST,
-                                                GridBagConstraints.NONE,
-                                                new Insets(0, 0, 0, 3), 0, 0));
+                             new GridBagConstraints(0, 5, 1, 1, 0.0, 0.0,
+                                                    GridBagConstraints.EAST,
+                                                    GridBagConstraints.NONE,
+                                                    new Insets(0, 0, 0, 3),
+                                                    0, 0));
+      mRealHardwarePanel.add(mModeEditor,
+                             new GridBagConstraints(1, 5, 1, 1, 1.0, 1.0,
+                                                    GridBagConstraints.WEST,
+                                                    GridBagConstraints.BOTH,
+                                                    new Insets(0, 0, 0, 0),
+                                                    0, 0));
       mRealHardwarePanel.add(mReportRateLabel,
-                         new GridBagConstraints(0, 6, 1, 1, 0.0, 0.0,
-                                                GridBagConstraints.EAST,
-                                                GridBagConstraints.NONE,
-                                                new Insets(0, 0, 0, 3), 0, 0));
-      mRealHardwarePanel.add(mMeasurementRateLabel,
-                         new GridBagConstraints(0, 7, 1, 1, 0.0, 0.0,
-                                                GridBagConstraints.EAST,
-                                                GridBagConstraints.NONE,
-                                                new Insets(0, 3, 0, 3), 0, 0));
+                             new GridBagConstraints(0, 6, 1, 1, 0.0, 0.0,
+                                                    GridBagConstraints.EAST,
+                                                    GridBagConstraints.NONE,
+                                                    new Insets(0, 0, 0, 3),
+                                                    0, 0));
       mRealHardwarePanel.add(mReportRateSpinner,
-                         new GridBagConstraints(1, 6, 1, 1, 1.0, 1.0,
-                                                GridBagConstraints.WEST,
-                                                GridBagConstraints.NONE,
-                                                new Insets(0, 0, 2, 0), 0, 0));
+                             new GridBagConstraints(1, 6, 1, 1, 1.0, 1.0,
+                                                    GridBagConstraints.WEST,
+                                                    GridBagConstraints.NONE,
+                                                    new Insets(0, 0, 2, 0),
+                                                    0, 0));
+      mRealHardwarePanel.add(mMeasurementRateLabel,
+                             new GridBagConstraints(0, 7, 1, 1, 0.0, 0.0,
+                                                    GridBagConstraints.EAST,
+                                                    GridBagConstraints.NONE,
+                                                    new Insets(0, 3, 0, 3),
+                                                    0, 0));
       mRealHardwarePanel.add(mMeasurementRateSpinner,
-                         new GridBagConstraints(1, 7, 1, 1, 1.0, 1.0,
-                                                GridBagConstraints.WEST,
-                                                GridBagConstraints.NONE,
-                                                new Insets(0, 0, 2, 0), 0, 0));
+                             new GridBagConstraints(1, 7, 1, 1, 1.0, 1.0,
+                                                    GridBagConstraints.WEST,
+                                                    GridBagConstraints.NONE,
+                                                    new Insets(0, 0, 2, 0),
+                                                    0, 0));
       mRealHardwarePanel.add(mDeviceHostLabel,
-                         new GridBagConstraints(0, 8, 1, 1, 1.0, 1.0,
-                                                GridBagConstraints.EAST,
-                                                GridBagConstraints.NONE,
-                                                new Insets(0, 3, 2, 3), 0, 0));
+                             new GridBagConstraints(0, 8, 1, 1, 1.0, 1.0,
+                                                    GridBagConstraints.EAST,
+                                                    GridBagConstraints.NONE,
+                                                    new Insets(0, 3, 2, 3),
+                                                    0, 0));
       mRealHardwarePanel.add(mDeviceHostEditor,
-                         new GridBagConstraints(1, 8, 1, 1, 1.0, 1.0,
-                                                GridBagConstraints.WEST,
-                                                GridBagConstraints.BOTH,
-                                                new Insets(0, 0, 2, 0), 0, 0));
+                             new GridBagConstraints(1, 8, 1, 1, 1.0, 1.0,
+                                                    GridBagConstraints.WEST,
+                                                    GridBagConstraints.BOTH,
+                                                    new Insets(0, 0, 2, 0),
+                                                    0, 0));
       mHardwarePanel.add(mRealHardwarePanel,
                          new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0,
                                                 GridBagConstraints.WEST,
@@ -325,9 +343,11 @@ public class MotionStarEditorPanel
                                       GridBagConstraints.CENTER,
                                       GridBagConstraints.BOTH,
                                       new Insets(0, 0, 2, 0), 0, 0));
-      this.add(mTabbedPane, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
-         , GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-         new Insets(0, 0, 0, 0), 0, 0));
+      this.add(mTabbedPane,
+               new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+                                      GridBagConstraints.CENTER,
+                                      GridBagConstraints.BOTH,
+                                      new Insets(0, 0, 0, 0), 0, 0));
       mTabbedPane.add(mPosXformFilterPanel, "Transmitter");
       mTabbedPane.add(mProxyEditorPanel, "Sensors");
    }
@@ -359,8 +379,8 @@ public class MotionStarEditorPanel
    private JSpinner mMeasurementRateSpinner = new JSpinner();
    private JLabel mDeviceHostLabel = new JLabel();
    private PropertyEditorPanel mDeviceHostEditor = null;
-   private GridBagLayout nHardwarePanelLayout = new GridBagLayout();
-   private GridBagLayout nRealHardwarePanelLayout = new GridBagLayout();
+   private GridBagLayout mHardwarePanelLayout = new GridBagLayout();
+   private GridBagLayout mRealHardwarePanelLayout = new GridBagLayout();
    private GridBagLayout mMainLayout = new GridBagLayout();
    private JTabbedPane mTabbedPane = new JTabbedPane();
 
