@@ -43,7 +43,7 @@ namespace vprTest
    };
 
    class TestFactory : public vpr::Factory<ftBase, int>, public vpr::Singleton<TestFactory>
-   {;};
+   {};
 
    namespace
    {
