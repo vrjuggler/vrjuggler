@@ -52,7 +52,7 @@
 
 namespace gadget
 {
-	class EventWindowWin32;
+   class EventWindowWin32;
 }
 
 namespace gadget
@@ -60,7 +60,8 @@ namespace gadget
 class GADGET_CLASS_API InputAreaWin32
 {
 public:  // --- Internal helper class ----- //
-   /** Holds list of registered windows that may be used for X-Input.
+   /**
+    * Holds list of registered windows that may be used for Win32 Input.
     * This is used by EventWindow routines to find any windows
     * opened by other system components but that we still want to get input
     * from.
@@ -70,8 +71,8 @@ public:  // --- Internal helper class ----- //
    public:
       struct InputAreaInfo
       {
-         std::string					mDisplayName;	/**< The X display name the window is on. */
-			gadget::InputAreaWin32*	mInputArea;		/**< The handle to the window. */
+         std::string mDisplayName;            /**< The Win32 display name the window is on. */
+         gadget::InputAreaWin32* mInputArea;  /**< The handle to the window. */
       };
 
    public:
@@ -103,48 +104,59 @@ public:
       Lock_LockKey, /**< The mouse is locked due to lock toggle key press. */
       Lock_KeyDown  /**< The mouse is locked due to a key being held down. */
    };
-	InputAreaWin32();
+
+   InputAreaWin32();
    ~InputAreaWin32();
 
-	/**
+   /**
     * Handles any events in the system.
     * Copies mKeys to mCurKeys.
     */
    void handleEvents();
-	void updKeys(const MSG& message);
-	virtual void setDelegate(gadget::EventWindowWin32* delegate)
-	{
-		mEventDelegate = delegate;
-	}
+   void updKeys(const MSG& message);
+   virtual void setDelegate(gadget::EventWindowWin32* delegate)
+   {
+      mEventDelegate = delegate;
+   }
 
 protected:
    void lockMouse();
    void unlockMouse();
-	void resize(long width, long height);
-	virtual void addKeyEvent(const gadget::Keys& key, const gadget::EventType& type,
-									 const MSG& message);
-   virtual void addMouseButtonEvent(const gadget::Keys& button,
+   void resize(long width, long height);
+   virtual void addKeyEvent(const gadget::Keys& key,
                             const gadget::EventType& type, const MSG& message);
+   virtual void addMouseButtonEvent(const gadget::Keys& button,
+                                    const gadget::EventType& type,
+                                    const MSG& message);
    virtual void addMouseMoveEvent(const MSG& message);
    gadget::Keys VKKeyToKey(int vkKey);
-	static void doInternalError( const std::string& msg );
+   static void doInternalError( const std::string& msg );
 
 protected:
-	EventWindowWin32*	mEventDelegate;
-   HWND			mWinHandle;			/**< Window handle */
+   EventWindowWin32* mEventDelegate;
+   HWND              mWinHandle;       /**< Window handle */
 
    // NOTE: This driver does not use the normal triple buffering mechanism.
    // Instead, it just uses a modified double buffering system.
-	/* Event window state holders */
-	int			mKeys[gadget::LAST_KEY];         /**< (0,*): The num key presses during an UpdateData (ie. How many keypress events). */
-   int			mRealkeys[gadget::LAST_KEY];     /**< (0,1): The real keyboard state, all events processed (ie. what is the key now). */
+   /* Event window state holders */
+   /**
+    * (0,*): The num key presses during an UpdateData (ie. How many keypress
+    * events).
+    */
+   int mKeys[gadget::LAST_KEY];
 
-   lockState   mLockState;       /**< The current state of locking. */
-   int         mLockStoredKey;   /**< The key that was pressed down. */
-   int         mLockToggleKey;   /**< The key that toggles the locking. */
-   unsigned int mWidth,mHeight;  
-	bool			mUseOwnDisplay;	/**< Are we using a display we manage ourselves (true) or a remote one (false). */
-	vpr::Mutex  mKeysLock;        /**< Must hold this lock when accessing mKeys. */
+   /**
+    * (0,1): The real keyboard state, all events processed (ie. what is the
+    * key now).
+    */
+   int mRealkeys[gadget::LAST_KEY];
+
+   lockState    mLockState;       /**< The current state of locking. */
+   int          mLockStoredKey;   /**< The key that was pressed down. */
+   int          mLockToggleKey;   /**< The key that toggles the locking. */
+   unsigned int mWidth,mHeight;
+   bool         mUseOwnDisplay;   /**< Are we using a display we manage ourselves (true) or a remote one (false). */
+   vpr::Mutex   mKeysLock;        /**< Must hold this lock when accessing mKeys. */
    int   mPrevX, mPrevY;         /**< Previous mouse location. */
 };
 
