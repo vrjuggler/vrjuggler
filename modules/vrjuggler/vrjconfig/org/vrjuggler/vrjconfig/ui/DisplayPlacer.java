@@ -164,22 +164,22 @@ public class DisplayPlacer
    }
 
    //--- JBuilder GUI variables ---//
-   BorderLayout baseLayout = new BorderLayout();
-   JPanel placerPanel = new JPanel();
-   BorderLayout placerLayout = new BorderLayout();
-   JToolBar placerToolbar = new JToolBar();
-   JButton addBtn = new JButton();
-   JButton removeBtn = new JButton();
+   private BorderLayout baseLayout = new BorderLayout();
+   private JPanel placerPanel = new JPanel();
+   private BorderLayout placerLayout = new BorderLayout();
+   private JToolBar placerToolbar = new JToolBar();
+   private JButton addBtn = new JButton();
+   private JButton removeBtn = new JButton();
 
    /**
     * Our window placer.
     */
-   Placer wndPlacer = new Placer();
+   private Placer wndPlacer = new Placer();
 
    /**
     * The data model for our window placer.
     */
-   DisplayPlacerModel model = new DisplayPlacerModel();
+   private DisplayPlacerModel model = new DisplayPlacerModel();
 
    /**
     * A specialized renderer for displays in the placer component.
