@@ -762,7 +762,7 @@ gmtl::Matrix44f FlockStandalone::processSensorRecord(vpr::Uint8* buff)
       q1 = rawToFloat(buff[9], buff[8]);
       q2 = rawToFloat(buff[11], buff[10]);
       q3 = rawToFloat(buff[13], buff[12]);
-      gmtl::setRot(ret_mat, gmtl::Quatf(q3, q0,q1,q2));
+      gmtl::setRot(ret_mat, gmtl::Quatf(-q1,-q2,-q3,q0));      // I don't fully understand why I need the sign flip
       gmtl::setTrans(ret_mat, gmtl::Vec3f(x,y,z));
       break;
    case Flock::Output::Quaternion:
@@ -770,7 +770,7 @@ gmtl::Matrix44f FlockStandalone::processSensorRecord(vpr::Uint8* buff)
       q1 = rawToFloat(buff[3], buff[2]);
       q2 = rawToFloat(buff[5], buff[4]);
       q3 = rawToFloat(buff[7], buff[6]);
-      gmtl::setRot(ret_mat, gmtl::Quatf(q3,q0,q1,q2));
+      gmtl::setRot(ret_mat, gmtl::Quatf(-q1,-q2,-q3,q0));         // I don't fully understand why I need the sign flip
       break;
    }
 
