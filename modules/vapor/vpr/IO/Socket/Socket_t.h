@@ -236,6 +236,206 @@ public:
     }
 
     // ------------------------------------------------------------------------
+    //: Receive at most the specified number of bytes from the socket into the
+    //+ given buffer.
+    //
+    //! PRE: The socket is open for reading, and the buffer is at least length
+    //+      bytes long.
+    //! POST: The given buffer has length bytes copied into it from the
+    //+       socket, and the number of bytes read successfully is returned to
+    //+       the caller.
+    //
+    //! ARGS: buffer - A pointer to the buffer where the socket's buffer
+    //+                contents are to be stored.
+    //! ARGS: length - The number of bytes to be read.
+    //
+    //! RETURNS: >-1 - The number of bytes successfully read from the socket.
+    //! RETURNS:  -1 - An error occurred when reading.
+    // ------------------------------------------------------------------------
+    inline ssize_t
+    recv (void* buffer, const size_t length) {
+        return read(buffer, length);
+    }
+
+    // ------------------------------------------------------------------------
+    //: Receive at most the specified number of bytes from the socket into the
+    //+ given buffer.
+    //
+    //! PRE: The socket is open for reading, and the buffer is at least length
+    //+      bytes long.
+    //! POST: The given buffer has length bytes copied into it from the
+    //+       socket, and the number of bytes read successfully is returned to
+    //+       the caller.
+    //
+    //! ARGS: buffer - A reference to the buffer (a std::string object) where
+    //+                the socket's buffer contents are to be stored.
+    //! ARGS: length - The number of bytes to be read.  This is optional and
+    //+                can be determined from the length of the string object
+    //+                if not specified.
+    //
+    //! RETURNS: >-1 - The number of bytes successfully read from the socket.
+    //! RETURNS:  -1 - An error occurred when reading.
+    // ------------------------------------------------------------------------
+    inline ssize_t
+    recv (std::string& buffer, const size_t length = 0) {
+       return read(buffer, length);
+    }
+
+    // ------------------------------------------------------------------------
+    //: Receive at most the specified number of bytes from the socket into the
+    //+ given buffer.
+    //
+    //! PRE: The socket is open for reading, and the buffer is at least length
+    //+      bytes long.
+    //! POST: The given buffer has length bytes copied into it from the
+    //+       socket, and the number of bytes read successfully is returned to
+    //+       the caller.
+    //
+    //! ARGS: buffer - A reference to the buffer (a std::vector<char> object)
+    //+                where the socket's buffer contents are to be stored.
+    //! ARGS: length - The number of bytes to be read.  This is optional and
+    //+                can be determined from the length of the vector object
+    //+                if not specified.
+    //
+    //! RETURNS: >-1 - The number of bytes successfully read from the socket.
+    //! RETURNS:  -1 - An error occurred when reading.
+    // ------------------------------------------------------------------------
+    inline ssize_t
+    recv (std::vector<char>& buffer, const size_t length = 0) {
+       return read(buffer, length);
+    }
+
+    // ------------------------------------------------------------------------
+    //: Read exactly the specified number of bytes from the socket into the
+    //+ given buffer.
+    //
+    //! PRE: The socket is open for reading, and the buffer is at least length
+    //+      bytes long.
+    //! POST: The given buffer has length bytes copied into it from the
+    //+       socket, and the number of bytes read successfully is returned to
+    //+       the caller.
+    //
+    //! ARGS: buffer - A pointer to the buffer where the socket's buffer
+    //+                contents are to be stored.
+    //! ARGS: length - The number of bytes to be read.
+    //
+    //! RETURNS: >-1 - The number of bytes successfully read from the socket.
+    //! RETURNS:  -1 - An error occurred when reading.
+    // ------------------------------------------------------------------------
+    inline ssize_t
+    recvn (void* buffer, const size_t length) {
+        return readn(buffer, length);
+    }
+
+    // ------------------------------------------------------------------------
+    //: Read exactly the specified number of bytes from the socket into the
+    //+ given buffer.
+    //
+    //! PRE: The socket is open for reading, and the buffer is at least length
+    //+      bytes long.
+    //! POST: The given buffer has length bytes copied into it from the
+    //+       socket, and the number of bytes read successfully is returned to
+    //+       the caller.
+    //
+    //! ARGS: buffer - A reference to the buffer (a std::string object) where
+    //+                the socket's buffer contents are to be stored.
+    //! ARGS: length - The number of bytes to be read.  This is optional and
+    //+                can be determined from the length of the string object
+    //+                if not specified.
+    //
+    //! RETURNS: >-1 - The number of bytes successfully read from the socket.
+    //! RETURNS:  -1 - An error occurred when reading.
+    // ------------------------------------------------------------------------
+    inline ssize_t
+    recvn (std::string& buffer, const size_t length = 0) {
+        return readn(buffer, length);
+    }
+
+    // ------------------------------------------------------------------------
+    //: Read exactly the specified number of bytes from the socket into the
+    //+ given buffer.
+    //
+    //! PRE: The socket is open for reading, and the buffer is at least length
+    //+      bytes long.
+    //! POST: The given buffer has length bytes copied into it from the
+    //+       socket, and the number of bytes read successfully is returned to
+    //+       the caller.
+    //
+    //! ARGS: buffer - A reference to the buffer (a std::vector<char> object)
+    //+                where the socket's buffer contents are to be stored.
+    //! ARGS: length - The number of bytes to be read.  This is optional and
+    //+                can be determined from the length of the vector object
+    //+                if not specified.
+    //
+    //! RETURNS: >-1 - The number of bytes successfully read from the socket.
+    //! RETURNS:  -1 - An error occurred when reading.
+    // ------------------------------------------------------------------------
+    inline ssize_t
+    recvn (std::vector<char>& buffer, const size_t length = 0) {
+        return readn(buffer, length);
+    }
+
+    // ------------------------------------------------------------------------
+    //: Send the buffer to the remote side of the socket.
+    //
+    //! PRE: The socket is open for writing.
+    //! POST: The given buffer is written to the socket, and the number of
+    //+       bytes written successfully is returned to the caller.
+    //
+    //! ARGS: buffer - A pointer to the buffer to be written.
+    //! ARGS: length - The length of the buffer.
+    //
+    //! RETURNS: >-1 - The number of bytes successfully written to the socket.
+    //! RETURNS:  -1 - An error occurred when writing.
+    // ------------------------------------------------------------------------
+    inline ssize_t
+    send (const void* buffer, const size_t length) {
+        return write(buffer, length);
+    }
+
+    // ------------------------------------------------------------------------
+    //: Send the buffer to the remote side of the socket.
+    //
+    //! PRE: The socket is open for writing.
+    //! POST: The given buffer is written to the socket, and the number of
+    //+       bytes written successfully is returned to the caller.
+    //
+    //! ARGS: buffer - A reference to the buffer (a std::string object) to be
+    //+                written.
+    //! ARGS: length - The length of the buffer.  This is optional and can be
+    //+                determined from the length of the string object if not
+    //+                specified.
+    //
+    //! RETURNS: >-1 - The number of bytes successfully written to the socket.
+    //! RETURNS:  -1 - An error occurred when writing.
+    // ------------------------------------------------------------------------
+    inline ssize_t
+    send (const std::string& buffer, const size_t length = 0) {
+       return write(buffer, buf_len);
+    }
+
+    // ------------------------------------------------------------------------
+    //: Send the buffer to the remote side of the socket.
+    //
+    //! PRE: The socket is open for writing.
+    //! POST: The given buffer is written to the socket, and the number of
+    //+       bytes written successfully is returned to the caller.
+    //
+    //! ARGS: buffer - A reference to the buffer (a std::vector<char> object)
+    //+                to be written.
+    //! ARGS: length - The length of the buffer.  This is optional and can be
+    //+                determined from the length of the vector object if not
+    //+                specified.
+    //
+    //! RETURNS: >-1 - The number of bytes successfully written to the socket.
+    //! RETURNS:  -1 - An error occurred when writing.
+    // ------------------------------------------------------------------------
+    inline ssize_t
+    send (const std::vector<char>& buffer, const size_t length = 0) {
+       return write(buffer, buf_len);
+    }
+
+    // ------------------------------------------------------------------------
     //: Get the type of this socket (e.g., vpr::SocketTypes::STREAM).
     //
     //! PRE: The socket implementation pointer is valid.
