@@ -56,9 +56,9 @@ AC_DEFUN(VPR_PATH,
                           Exec prefix where VPR is
                           installed (optional)            [No default]],
                 vpr_config_exec_prefix="$withval", vpr_config_exec_prefix="")
-    AC_ARG_ENABLE(vprtest,
-                  [  --disable-vprtest       Do not try to compile and run a
-                          test VPR program], , enable_vprtest=yes)
+dnl    AC_ARG_ENABLE(vprtest,
+dnl                  [  --disable-vprtest       Do not try to compile and run a
+dnl                          test VPR program], , enable_vprtest=yes)
 
     if test "x$vpr_config_exec_prefix" != "x" ; then
         vpr_config_args="$vpr_config_args --exec-prefix=$vpr_config_exec_prefix"
