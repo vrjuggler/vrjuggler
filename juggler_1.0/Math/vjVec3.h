@@ -9,7 +9,11 @@
 class vjMatrix;
 #include <Math/vjVec4.h>
 
+//----------------------------------------------------------------
 //: Vector of length 3
+// The class is a representation of a vector with 3 float values.
+// It defines several operators that can be used on the vectors.
+//-----------------------------------------------------------------
 class vjVec3
 {
 public:
@@ -28,6 +32,7 @@ public:
 
 public:
    //: Are we equal
+   //! RETURNS: true - Values in _v equal our values
    int equal(const vjVec3&  _v) const {
       return (vec[0] == _v[0] &&
               vec[1] == _v[1] &&
@@ -35,6 +40,7 @@ public:
    }
 
    //: Compute dot product
+   //! RETURNS: Dot product of this and _v
    float dot(const vjVec3&  _v) const {
       return (vec[0] * _v[0] +
               vec[1] * _v[1] +
