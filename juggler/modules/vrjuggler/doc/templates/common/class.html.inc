@@ -17,7 +17,7 @@
 	NAME="method_list" SRC="{class}_methods.html" MARGINWIDTH="5"
 	MARGINHEIGHT="5" SCROLLING="Auto">
   </FRAMESET>
-  
+
   <FRAMESET ROWS="*,110">
     <FRAME
 	NAME="class_desc" SRC="{class}_desc.html" MARGINWIDTH="5"
