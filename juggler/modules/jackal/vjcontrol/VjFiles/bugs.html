@@ -13,7 +13,7 @@ mantra until you believe.
 resulting in weird defaults for the org tree save file requester.
 
 <br><li>Double-clicking on chunk names in the org tree panel can occasionally 
-cause a null pointer exception.  This appears to be a bug in JFC mouse
+cause a null pointer exception.  This appears to be a bug in JFC 1.1 mouse
 click handling, and can safely be ignored.
 
 <br><li>Changes made by editing description files (adding, removing, or editing
@@ -23,19 +23,20 @@ quit VjControl, and then restart to modify the chunks.
 
 <br><li>Strings can't contain quotes (parsing bug).
 
-<br><li>Various textfields will currently allow illegal input.
-This should be fixed now.
-
 <br><li>The help panel (ie the window you're looking at now) doesn't respond to
 the font selected in preferences.
 
 <br><li>Additional frames that are open when vjcontrol's look & feel are 
 changed don't adopt the new look and feel. (The help panel never changes look & feel).
 
-<br><li>Some menu items don't respond to font changes.
-Should be fixed.
+<br><li>Run-time performance monitoring with multiple graphing windows open
+can be quite CPU-intensive (Java too slow).
 
-<br><li>No matter what you do, <b>DO NOT</b> click on the word <a href="http://www.public.iastate.edu/~pyre/area.html">crotch</a>.
+<br><li>The "Print" option in the Performance panel actually just writes a
+summary to the standard output stream.
+
+<br><li>The Performance Graph windows occasionally display garbage when
+first opened.  Close & reopen to correct.
 
 </ul>
 

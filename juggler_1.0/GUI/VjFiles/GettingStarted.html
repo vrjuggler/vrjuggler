@@ -17,8 +17,8 @@ using VjControl:
 <li>Set your <tt>VJ_BASE_DIR</tt> environment variable to the directory where VR Juggler is installed.
 <li>Create a directory called <tt>.vjconfig</tt> in your home directory.
 This is where VjControl will store its own configuration information, and is a good general place to store all your Juggler-related configuration files.
-<li>You should add the directory <tt>${VJ_BASE_DIR}/bin</tt> to your <tt>PATH</tt>.
-<li>Make sure that Java v1.1 is installed on your machine.  Make sure that the directory where the <tt>java</tt> executable resides is also in your <tt>PATH</tt>.
+<li>You should add the directory <tt>${VJ_BASE_DIR}/bin</tt> to your <tt>$PATH</tt>.
+<li>Make sure that Java v1.2 is installed on your machine.  Make sure that the directory where the <tt>java</tt> executable resides is also in your <tt>$PATH</tt>.  (see below for instructions on using VjControl with jdk1.1).
 <li>If you have been provided with a <tt>vjcontrol.cfg</tt> file, copy it into
 the <tt>~/.vjconfig</tt> directory.
 </ol>
@@ -54,6 +54,22 @@ For more information, see:
 <li><a href="ChunkDBPanel.html">Working with Config Files</a>
 <li><a href="DescDBPanel.html">Working with ChunkDesc Files</a>
 </ul>
+
+<hr>
+<h3>Using VjControl with java 1.1</h3>
+Version 1.2 of Sun's JDK has been available for several months, but some
+platforms are still laggin on porting and deploying it.  It is possible
+to run VjControl on a system with the older JDK 1.1 installed, with a little
+bit of work.
+
+<p>First, you need to download and install the Java Foundation Classes (Swing 
+classes) for JDK 1.1.  Pay particular attention to the location of the
+file "swingall.jar".
+
+<p>The $VJ_BASE_DIR/bin directory contains script called vjcontrol.jdk11
+which will start up vjcontrol on systems with JDK1.1 and Swing.  You may
+need to edit the script file to make sure the paths used for classes.zip
+and swingall.jar are correct.
 
 </html>
 
