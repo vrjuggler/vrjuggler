@@ -10,8 +10,6 @@ NAME=		programmer.guide
 XSLT_TOOL=	Saxon
 
 XML_FILES=	$(NAME).xml
-HTML_FILES=	$(NAME).html
-PDF_FILES=	$(NAME).pdf
 
 #SVG_IMAGES=	
 #IMAGES=		$(SVG_IMAGES:%.svg=%.png)
@@ -26,10 +24,11 @@ INSTALL_FILES=	$(webroot)/base_style.css
 
 #NEED_DB_IMAGES=	1
 
-$(NAME).html: $(NAME).xml $(IMAGES)
-$(NAME).pdf: $(NAME).xml $(NAME).fo $(IMAGES)
+#$(NAME).html: $(IMAGES)
+#$(NAME)/index.html: $(IMAGES)
+#$(NAME).pdf: $(IMAGES)
 
-CLOBBER_FILES=	$(IMAGES)
+#CLOBBER_FILES=	$(IMAGES)
 
 include ../version.mk
 include ../../../../doc/docbook.mk

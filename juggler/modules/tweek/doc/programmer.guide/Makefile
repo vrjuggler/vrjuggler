@@ -5,9 +5,8 @@ default: html
 docs: html chunk-html pdf
 install-docs: install-html install-chunk-html install-pdf
 
-XML_FILES=	programmer.guide.xml
-HTML_FILES=	programmer.guide.html
-PDF_FILES=	programmer.guide.pdf
+NAME=		programmer.guide
+XML_FILES=	$(NAME).xml
 
 XSLT_TOOL=	Saxon
 
@@ -21,9 +20,7 @@ INSTALL_FILES=	$(webroot)/base_style.css
 
 NEED_DB_IMAGES=	1
 
-programmer.guide.html: programmer.guide.xml
-programmer.guide/index.html: programmer.guide.xml
-programmer.guide.pdf: programmer.guide.xml programmer.guide.fo
+$(NAME).pdf: $(NAME).fo
 
 include ../version.mk
 include ../../../../doc/docbook.mk
