@@ -79,8 +79,9 @@ public:
     *
     * Create a device request to be sent
     */
-   DeviceAck(vpr::GUID& id, std::string& device_name, 
-                std::string& device_base_type, bool ack);
+   DeviceAck(const vpr::GUID& plugin_id, const vpr::GUID& id, 
+             const std::string& device_name, 
+             const std::string& device_base_type, bool ack);
    
    //
    // =============== Packet Specific =================
@@ -107,6 +108,7 @@ public:
    vpr::GUID getId() { return mId; }
    std::string getDeviceName() { return mDeviceName; }
    std::string getDeviceBaseType() { return mDeviceBaseType; }
+   std::string getHostname() { return mHostname; }
    bool getAck() { return mAck; }
    
    //

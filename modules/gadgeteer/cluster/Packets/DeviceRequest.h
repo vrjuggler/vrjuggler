@@ -78,7 +78,7 @@ public:
     *
     * Create a device request to be sent
     */
-   DeviceRequest(std::string& device_name);
+   DeviceRequest(const std::string& device_name, const vpr::GUID& plugin_guid);
    
    /**
     * Helper for the above creation of a device request to be sent

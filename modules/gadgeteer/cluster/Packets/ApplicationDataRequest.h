@@ -78,7 +78,7 @@ public:
     *
     * Create a device request to be sent
     */
-   ApplicationDataRequest(vpr::GUID id);
+   ApplicationDataRequest(const vpr::GUID plugin_guid, const vpr::GUID& id);
    
    /**
     * Helper for the above creation of a device request to be sent

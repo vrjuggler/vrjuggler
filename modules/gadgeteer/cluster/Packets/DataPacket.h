@@ -87,7 +87,7 @@ public:
 
    virtual vpr::ReturnStatus send(vpr::SocketStream* socket);
 
-   void send(vpr::SocketStream* socket, vpr::GUID device_id, std::vector<vpr::Uint8>* device_data);
+   void send(vpr::SocketStream* socket, const vpr::GUID& plugin_id, const vpr::GUID& device_id, std::vector<vpr::Uint8>* device_data);
 
    /**
     * Helper for the above creation of a device request to be sent

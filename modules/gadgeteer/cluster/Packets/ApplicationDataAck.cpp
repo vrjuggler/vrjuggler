@@ -47,7 +47,9 @@ namespace cluster
       recv(packet_head,stream);
       parse();
    }
-   ApplicationDataAck::ApplicationDataAck(vpr::GUID id, bool ack)
+   ApplicationDataAck::ApplicationDataAck(const vpr::GUID& plugin_guid, 
+                                          const vpr::GUID& id, 
+                                          const bool ack)
    {
       // Given the input, create the packet and then serialize the packet(which includes the header)
       // - Set member variables
@@ -58,6 +60,7 @@ namespace cluster
       //
 
       // Device Request Vars
+      mPluginId = plugin_guid;
       mId = id;
       mAck = ack;
       
@@ -72,8 +75,10 @@ namespace cluster
       mHeader = new Header(Header::RIM_PACKET,
                                       Header::RIM_APPDATA_ACK,
                                       Header::RIM_PACKET_HEAD_SIZE 
-                                      + 16/*Size of GUID*/
-                                      + 1 /*mAck*/,0);                      
+                                      + 16/*Plugin GUID*/
+                                      + 16/*Object GUID*/
+                                      + 1 /*mAck*/,
+                                      0);                      
       //
       // =============== Packet Specific =================
 
@@ -94,8 +99,13 @@ namespace cluster
       // =============== Packet Specific =================
       //
       
+      // Serialize plugin GUID
+      mPluginId.writeObject(mPacketWriter);
+
+      // Serialize object GUID
       mId.writeObject(mPacketWriter);
-         // Ack
+
+      // Ack
       mPacketWriter->writeBool(mAck);
 
       //
@@ -106,9 +116,13 @@ namespace cluster
       // =============== Packet Specific =================
       //
       
+      // De-Serialize plugin GUID
+      mPluginId.readObject(mPacketReader);
+      
+      // De-Serialize object GUID
       mId.readObject(mPacketReader);
 
-         // Ack
+      // Ack
       mAck = mPacketReader->readBool();
 
       //
@@ -117,44 +131,29 @@ namespace cluster
 
    bool ApplicationDataAck::action(ClusterNode* node)
    {  
-      if (mAck)
-      {
-         ApplicationDataManager::instance()->removePendingApplicationDataRequest(mId);
-      }
-      return true;
+      return false;
    }
 
 
    void ApplicationDataAck::printData(int debug_level)
    {
       vprDEBUG_BEGIN(gadgetDBG_RIM,debug_level) 
-         <<  clrOutBOLD(clrYELLOW,"==== User Data Ack Packet Data ====\n") << vprDEBUG_FLUSH;
+         <<  clrOutBOLD(clrYELLOW,"==== ApplicationData Ack Packet ====\n") << vprDEBUG_FLUSH;
       
       Packet::printData(debug_level);
 
       vprDEBUG(gadgetDBG_RIM,debug_level) 
-         << clrOutBOLD(clrYELLOW, "Device ID:        ") << mId.toString()
+         << clrOutBOLD(clrYELLOW, "Plugin GUID:        ") << mPluginId.toString()
+         << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,debug_level) 
+         << clrOutBOLD(clrYELLOW, "Object GUID:        ") << mId.toString()
          << std::endl << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,debug_level) 
          << clrOutBOLD(clrYELLOW, "Ack or Nack:      ") << (mAck ? "Ack" : "Nack")  << std::endl
          << std::endl << vprDEBUG_FLUSH;
 
       vprDEBUG_END(gadgetDBG_RIM,debug_level) 
-         <<  clrOutBOLD(clrYELLOW,"================================\n") << vprDEBUG_FLUSH;
-      
-      /*
-      // =============== Packet Specific =================
-      //                                                
-      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
-      << clrOutBOLD(clrCYAN,"\n==== Device Ack Packet Data ====")
-      << "\nDevice ID: " << mDeviceId
-      << "\nDevice Name:      " << mDeviceName
-      << "\nDevice Base Type: " << mDeviceBaseType 
-      << "\nAck or Nack:      " << (mAck ? "Ack" : "Nack")  << std::endl
-      << vprDEBUG_FLUSH;      
-      //
-      // =============== Packet Specific =================
-      */
+         <<  clrOutBOLD(clrYELLOW,"================================\n") << vprDEBUG_FLUSH;      
    }
 
 }   // end namespace gadget

@@ -39,14 +39,31 @@
 #include <jccl/Config/ConfigChunkPtr.h>
 #include <string> 
 
+namespace vpr
+{
+   class GUID;
+}
+
 namespace cluster
 {
+   class Packet;
+   class ClusterNode;
 
 class ClusterPlugin : public jccl::ConfigChunkHandler
 {
 public:
    ClusterPlugin();
    virtual ~ClusterPlugin();
+
+   /**
+    * Get the GUID associated with this plugin.
+    */
+   virtual vpr::GUID getPluginGUID() = 0;
+
+   /**
+    * Handle a incoming packet.
+    */
+   virtual void handlePacket(Packet* packet, ClusterNode* node) = 0;
    
    virtual void load();
    void setActive(bool active);

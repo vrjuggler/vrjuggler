@@ -49,7 +49,7 @@ namespace cluster
       recv(packet_head,stream);
       parse();
    }
-   DeviceRequest::DeviceRequest(std::string& device_name)
+   DeviceRequest::DeviceRequest(const std::string& device_name, const vpr::GUID& plugin_guid)
    {
       // Given the input, create the packet and then serialize the packet(which includes the header)
       // - Set member variables
@@ -58,11 +58,13 @@ namespace cluster
 
       // Device Request Vars
       mDeviceName = device_name;
+      mPluginId = plugin_guid;
       
       // Header vars (Create Header)
       mHeader = new Header(Header::RIM_PACKET,
                                       Header::RIM_DEVICE_REQ,
                                       Header::RIM_PACKET_HEAD_SIZE 
+                                       + 16 /*Plugin GUID*/
                                        + 2 /*Size mDeviceName*/
                                        + mDeviceName.size(),
                                       0);
@@ -80,80 +82,24 @@ namespace cluster
       // Create the header information
       mHeader->serializeHeader();
       
+      // Serialize plugin GUID
+      mPluginId.writeObject(mPacketWriter);
+
       // Device Name
-//      mPacketWriter->writeUint16(mDeviceName.size());      
       mPacketWriter->writeString(mDeviceName);
    }
    void DeviceRequest::parse()
    {   
-      // Device Name
-//      vpr::Uint16 temp_name_len = mPacketReader->readUint16();
-//      mDeviceName = mPacketReader->readString(temp_name_len);
+      // De-Serialize plugin GUID
+      mPluginId.readObject(mPacketReader);
+
+      // De-Serialize Device Name
       mDeviceName = mPacketReader->readString();
    }
    
    bool DeviceRequest::action(ClusterNode* node)
    {
-      // -If the ConfigManager is done configuring all local devices
-      //   -If the InputManager has the device
-      //     -Check for DeviceServer
-      //       -If not create one
-      //     -Add ClusterNode to Device Server's clients
-      //     -Send Device_ACK
-      //   -Else
-      //     -Send Device_NACK
-      // -Else
-      //   -Send Device_NACK
-
-
-      // XXX REORDER SEARCH ORDER
-      if (node == NULL)
-      {
-         return false;
-      }
-      if (jccl::ConfigManager::instance()->isPendingStale())
-      {
-         gadget::Input* temp_input_device = gadget::InputManager::instance()->getDevice(mDeviceName);
-         if (temp_input_device != NULL)
-         {
-            DeviceServer* temp_device_server = RemoteInputManager::instance()->getDeviceServer(mDeviceName);
-            if (NULL == temp_device_server)
-            {
-               RemoteInputManager::instance()->addDeviceServer(mDeviceName, temp_input_device);
-               temp_device_server = RemoteInputManager::instance()->getDeviceServer(mDeviceName);
-            }
-            
-            temp_device_server->addClient(node);
-                        
-            // Create a responce ACK
-            std::string temp_string = temp_input_device->getBaseType();
-            vpr::GUID   temp_guid   = temp_device_server->getId();
-            DeviceAck* temp_ack = new DeviceAck(temp_guid, mDeviceName, temp_string, true);
-//            temp_ack.send(node->getSockStream());
-            node->send(temp_ack);
-         }
-         else
-         {
-            std::string temp_string = "";
-            vpr::GUID empty_id;
-            DeviceAck* temp_ack = new DeviceAck(empty_id, mDeviceName, temp_string/*BaseType*/, false);
-//            temp_ack.send(node->getSockStream());
-            node->send(temp_ack);
-         }
-      }
-      else
-      {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
-            << clrOutBOLD(clrRED,"Pending List is not stale(Config Manager is still configuring the local system) ")
-            << clrOutBOLD(clrRED,"So we can not process this device request right now.") << std::endl << vprDEBUG_FLUSH;            
-         
-         std::string temp_string = "";
-         vpr::GUID empty_id;
-         DeviceAck* temp_ack = new DeviceAck(empty_id, mDeviceName, temp_string/*BaseType*/, false);
-//         temp_ack.send(node->getSockStream());
-         node->send(temp_ack);
-      }
-      return true;
+      return false;
    }
 
    void DeviceRequest::printData(int debug_level)
@@ -163,6 +109,9 @@ namespace cluster
       
       Packet::printData(debug_level);
 
+      vprDEBUG(gadgetDBG_RIM,debug_level) 
+         << clrOutBOLD(clrYELLOW, "Plugin GUID: ") << mPluginId.toString()
+         << std::endl << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,debug_level) 
          << clrOutBOLD(clrYELLOW, "Device Name: ") << mDeviceName
          << std::endl << vprDEBUG_FLUSH;
