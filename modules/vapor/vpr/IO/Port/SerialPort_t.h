@@ -426,42 +426,44 @@ public:
         return m_sio_imp.setCharacterSize(bpb);
     }
 
-    // ------------------------------------------------------------------------
-    //: Get the current read state for the port.
-    //
-    //! PRE: The serial port is open.
-    //! POST: The read state (either enabled or disabled) is returne to the 
-    //+       caller.
-    //
-    //! RETURNS: true  - Bytes can be read from the device.
-    //! RETURNS: false - Bytes cannot be read from the device.
-    // ------------------------------------------------------------------------
+    /**
+     * Gets the current read state for the port.
+     *
+     * @pre The serial port is open.
+     * @post The read state (either enabled or disabled) is returne to the 
+     *       caller.
+     *
+     * @return true is returned if bytes can be read from the device.<br>
+     *         false is returned otherwise.
+     */
     inline bool
     getReadState (void) {
         return m_sio_imp.getReadState();
     }
 
-    // ------------------------------------------------------------------------
-    //: Enable the receiver so that bytes can be read from the port.
-    //
-    //! PRE: The serial port is open.
-    //! POST: An attempt is made to make the device readable.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
+    /**
+     * Enables the receiver so that bytes can be read from the port.
+     *
+     * @pre The serial port is open.
+     * @post An attempt is made to make the device readable.
+     *
+     * @return vpr::Status::Success is returned if reading was enabled.
+     *         vp4::Status::Failure is returned otherwise.
+     */
     inline vpr::Status
     enableRead (void) {
         return m_sio_imp.enableRead();
     }
 
-    // ------------------------------------------------------------------------
-    //: Disable the receiver so that bytes cannot be read from the port.
-    //
-    //! PRE: The serial port is open.
-    //! POST: An attempt is made to make the device unreadable.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
+    /**
+     * Disables the receiver so that bytes cannot be read from the port.
+     *
+     * @pre The serial port is open.
+     * @pots An attempt is made to make the device unreadable.
+     *
+     * @return vpr::Status::Success is returned if reading was disabled.
+     *         vp4::Status::Failure is returned otherwise.
+     */
     inline vpr::Status
     disableRead (void) {
         return m_sio_imp.disableRead();
