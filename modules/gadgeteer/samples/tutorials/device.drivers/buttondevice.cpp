@@ -68,7 +68,9 @@ std::string ButtonDevice::getElementType()
 // on config elements, for information on how to access them.
 bool ButtonDevice::config(jccl::ConfigElementPtr e)
 {
-  if (!Digital::config(e))
+  // Configure all our base classes first.  If any of those fail, we cannot
+  // finish configuring ourself.
+  if ( ! Input::config(e) && ! Digital::config(e) )
   {
      return false;
   }
