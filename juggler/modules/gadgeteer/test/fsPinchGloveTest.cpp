@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
 		bool result = false;
 		while (result == false)
 		{
-			result = pinchGlove.connectToHardware( port.data() );
+			result = pinchGlove.connectToHardware( port.data() , 9600);
 			//usleep( 50000 );
 		}
 		
