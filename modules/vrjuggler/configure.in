@@ -153,7 +153,7 @@ DPP_PROG_INSTALL
 # -----------------------------------------------------------------------------
 VPR_PATH([0.41.0], , [AC_MSG_ERROR(*** VPR required for VR Juggler ***)])
 VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
-JCCL_PATH_CXX([0.91.1], ,
+JCCL_PATH_CXX([0.92.1], ,
               [AC_MSG_ERROR(*** JCCL C++ API required for VR Juggler ***)])
 GADGETEER_PATH([0.22.0], ,
                [AC_MSG_ERROR(*** Gadgeteer required for VR Juggler ***)])

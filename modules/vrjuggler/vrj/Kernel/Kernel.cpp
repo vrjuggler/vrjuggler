@@ -655,16 +655,7 @@ Kernel::Kernel()
       << std::endl << vprDEBUG_FLUSH;
 
    // Load in the configuration definitions
-   std::string def_path;
-   if ( ! vpr::System::getenv("JCCL_DEFINITION_PATH", def_path).success() )
-   {
-      def_path = "${VJ_BASE_DIR}/" VJ_SHARE_DIR "/data/definitions";
-      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << "JCCL_DEFINITION_PATH environment variable not set.\n"
-         << vprDEBUG_FLUSH;
-      vprDEBUG_NEXT(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << "Defaulting to " << def_path << std::endl << vprDEBUG_FLUSH;
-   }
+   std::string def_path("${VJ_BASE_DIR}/" VJ_SHARE_DIR "/data/definitions");
    jccl::ElementFactory::instance()->loadDefs(def_path);
 
    // Set up a default configuration path if the user does not already have
