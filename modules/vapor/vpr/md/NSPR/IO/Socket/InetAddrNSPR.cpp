@@ -53,7 +53,7 @@ namespace vpr
 
 const InetAddrNSPR InetAddrNSPR::AnyAddr;      // Default constructor defaults to ANY addr
 
-vpr::ReturnStatus InetAddrNSPR::getLocalHost (vpr::InetAddrNSPR& host_addr)
+vpr::ReturnStatus InetAddrNSPR::getLocalHost(vpr::InetAddrNSPR& host_addr)
 {
    vpr::ReturnStatus status(vpr::ReturnStatus::Fail);
    char local_host_name[257];
@@ -68,12 +68,10 @@ vpr::ReturnStatus InetAddrNSPR::getLocalHost (vpr::InetAddrNSPR& host_addr)
    return status;
 }
 
-// ----------------------------------------------------------------------------
 // Set the address for this object using the given address.  It must be of the
 // form <address>:<port> where <address> can be a hostname or a dotted-decimal
 // IP address.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus InetAddrNSPR::setAddress (const std::string& address)
+vpr::ReturnStatus InetAddrNSPR::setAddress(const std::string& address)
 {
    std::string::size_type pos;
    std::string host_addr, host_port;
@@ -92,10 +90,8 @@ vpr::ReturnStatus InetAddrNSPR::setAddress (const std::string& address)
    return retval;
 }
 
-// ----------------------------------------------------------------------------
 // Get the protocol family of this address structure.
-// ----------------------------------------------------------------------------
-vpr::SocketTypes::Domain InetAddrNSPR::getFamily (void) const
+vpr::SocketTypes::Domain InetAddrNSPR::getFamily() const
 {
    vpr::SocketTypes::Domain family;
 
@@ -115,10 +111,8 @@ vpr::SocketTypes::Domain InetAddrNSPR::getFamily (void) const
    return family;
 }
 
-// ----------------------------------------------------------------------------
 // Set the protocol family of this address structure.
-// ----------------------------------------------------------------------------
-void InetAddrNSPR::setFamily (const vpr::SocketTypes::Domain family)
+void InetAddrNSPR::setFamily(const vpr::SocketTypes::Domain family)
 {
    switch ( family )
    {
@@ -139,11 +133,9 @@ void InetAddrNSPR::setFamily (const vpr::SocketTypes::Domain family)
    }
 }
 
-// ----------------------------------------------------------------------------
 // Get the IP address associated with this structure as a human-readable
 // string.
-// ----------------------------------------------------------------------------
-std::string InetAddrNSPR::getAddressString (void) const
+std::string InetAddrNSPR::getAddressString() const
 {
    char ip_str[256];
    memset(ip_str, 0, 256);
@@ -175,7 +167,7 @@ std::string InetAddrNSPR::getHostname () const
    return hostname;
 }
 
-std::vector<std::string> InetAddrNSPR::getHostnames () const
+std::vector<std::string> InetAddrNSPR::getHostnames() const
 {
    std::vector<std::string> names;
    char buffer[PR_NETDB_BUF_SIZE];
@@ -197,10 +189,8 @@ std::vector<std::string> InetAddrNSPR::getHostnames () const
    return names;
 }
 
-// ----------------------------------------------------------------------------
 // Look up the address in mName and store the address in mAddr.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus InetAddrNSPR::lookupAddress (const std::string& address)
+vpr::ReturnStatus InetAddrNSPR::lookupAddress(const std::string& address)
 {
    vpr::ReturnStatus retval;
    PRStatus ret_status;
