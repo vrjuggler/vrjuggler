@@ -61,6 +61,9 @@
 #include <vpr/Perf/ProfileIterator.h>
 #include <vpr/Perf/ProfileNode.h>
 
+#include <vpr/Thread/TSObjectProxy.h>
+#include <vpr/Thread/Thread.h>
+
 namespace vpr
 {
 
@@ -72,6 +75,18 @@ namespace vpr
    class VPR_CLASS_API ProfileManager
    {
    public:
+      struct ThreadProfileData
+      {
+         ThreadProfileData()
+            : mRoot("root")
+         {
+            mCurrentNode = &mRoot;
+         }
+
+         ProfileNode    mRoot;         /**< Root of profile information for the thread. */
+         ProfileNode*   mCurrentNode;  /**< Current node for the thread. */
+         vpr::Interval  mResetTime;    /**< Reset time for the thread. */
+      };
 
       ///Convenience typedef for use by the Performance Monitor Plugin
       typedef std::map<std::string, vpr::Interval> ProfileSampleResult;
@@ -97,19 +112,13 @@ namespace vpr
       static void stopProfile();
       //@}
 
-      /** Return the root node of the manager. */
-      static ProfileNode* getRootNode()
-      {
-         return &mRoot;
-      }
+      /** Return the root node of the manager.
+       * @param thread The thread to get the root for. NULL --> current thread
+       */
+      static ProfileNode* getRootNode(vpr::Thread* thread=NULL);
 
-      /** Print the profile tree rooted at the root node. */
-      static void printTree()
-      {
-         mTreeLock.acquire();
-         mRoot.printTree();
-         mTreeLock.release();
-      }
+      /** Print the full profile tree. */
+      static void printTree(bool forAllThreads=false);
 
       // ------------------------
       /// @nameIterator handling.
@@ -118,7 +127,7 @@ namespace vpr
       /** Returns a new Iterator that is set to the root. */
       static ProfileIterator begin()
       {
-         return ProfileIterator(&mRoot);
+         return ProfileIterator(getRootNode());
       }
 
       /** Returns a new Iterator that is set to end (NULL). */
@@ -162,10 +171,8 @@ namespace vpr
        */
       static std::vector<std::string> getNames()
       {
-         mTreeLock.acquire();
-           std::vector<std::string> names_list;
-           getNamesRecursively(names_list, &mRoot);
-         mTreeLock.release();
+         std::vector<std::string> names_list;
+         getNamesRecursively(names_list, getRootNode());
          return names_list;
       }
 
@@ -176,9 +183,7 @@ namespace vpr
       static ProfileSampleResult getSampleResult( )
       {
          ProfileSampleResult sample_time_map;
-         mTreeLock.acquire();
-            getSampleResultRecursively(sample_time_map, &mRoot);
-         mTreeLock.release();
+         getSampleResultRecursively(sample_time_map, getRootNode());
          return sample_time_map;
       }
 
@@ -187,12 +192,10 @@ namespace vpr
        */
        static float getNamedNodeSample( const char * nodeName )
        {
-           mTreeLock.acquire();
-           ProfileNode* node = mRoot.getNamedChild( nodeName );
+           ProfileNode* node = getRootNode()->getNamedChild( nodeName );
 
            if(node == NULL )
            {
-              mTreeLock.release();
               return 0.0;
            }
            else
@@ -203,10 +206,7 @@ namespace vpr
        //@}
 
    private:
-      static   vpr::Mutex           mTreeLock;
-      static   ProfileNode          mRoot;
-      static   ProfileNode*         mCurrentNode;
-      static   vpr::Interval        mResetTime;
+      static TSObjectProxy<ThreadProfileData>  mThreadData;    /**< The profile data for each thread being sampled. */
 
       /** Private Member Functions */
       static void getNamesRecursively( std::vector<std::string>& nameList,

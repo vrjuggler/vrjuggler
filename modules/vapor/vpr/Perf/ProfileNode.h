@@ -64,6 +64,10 @@ namespace vpr
  * The performance profile is built out of a tree of these nodes.  They are
  * connected in a standard parent child relationship.  Each node can have one
  * parent and 0 or more children.
+ *
+ * NOTE: This class is not multi-thread safe.  It relies upon only one thread using it at a
+ *        time.  This really only makes sense since two threads accessing it at the same time
+ *        would lead to invalid data.
  */
    class VPR_CLASS_API ProfileNode
    {
@@ -166,7 +170,7 @@ namespace vpr
       }
 
       /** Return the total number of samples made on this node. */
-      int getTotalCalls()
+      unsigned getTotalCalls()
       {
          return mTotalCalls;
       }
@@ -187,13 +191,7 @@ namespace vpr
       /** Get the average time sample.
        * Returns total time sampled/total calls.
        */
-      vpr::Interval getAverage()
-      {
-         if(getTotalCalls() == 0)
-         { return vpr::Interval(); }
-         else
-         { return vpr::Interval(getTotalTime().getBaseVal()/getTotalCalls(), vpr::Interval::Base); }
-      }
+      vpr::Interval getAverage();
 
       /** Get the short term average.
        * Computed as the average of the history.
@@ -207,7 +205,7 @@ namespace vpr
 
    protected:
       const char*    mName;         /**< Pointer to the name for this node.  Must be a static string. */
-      int            mTotalCalls;   /**< Total number of times called since last reset. */
+      unsigned       mTotalCalls;   /**< Total number of times called since last reset. */
       vpr::Interval  mTotalTime;    /**< Total summed time over mTotalCalls. */
       vpr::Interval  mLastSample;   /**< The last sample taken. */
 
@@ -222,9 +220,6 @@ namespace vpr
       ProfileNode*   mSibling;      /**< Next node in linked list of children. */
 
       // XXX: Do we really need to use linked list.  Why not just child vector?
-
-   private:
-      vpr::Mutex     mNodeLock;     /**< Lock to protect access to node data. */
    };
 
 } // end namespace vpr
