@@ -151,6 +151,10 @@ bool PinchGlove::startSampling()
          // hand will be open.
          std::vector<DigitalData> digital_sample(10, 0);
          addDigitalSample(digital_sample);
+         std::vector<GloveData> gloveData = getGloveDataFromDigitalData(digital_sample);
+         addGloveSample(gloveData);
+         swapDigitalBuffers();
+         swapGloveBuffers();
          
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
             << "[PinchGlove] PinchGlove is active " << std::endl
@@ -198,7 +202,7 @@ bool PinchGlove::sample()
       // Add a new digital sample to the buffer.
       addDigitalSample(digital_sample);
 
-      std::vector<GloveData> gloveData=getGloveDataFromDigitalData(digital_sample);
+      std::vector<GloveData> gloveData = getGloveDataFromDigitalData(digital_sample);
       addGloveSample(gloveData);
       
       // Debug print.
