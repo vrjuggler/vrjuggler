@@ -42,6 +42,8 @@
 #ifndef _VPR_FACTORY_H
 #define _VPR_FACTORY_H
 
+#include <map>
+
 
 namespace vpr
 {
