@@ -69,19 +69,24 @@ SerialPortImpTermios::~SerialPortImpTermios () {
 // ----------------------------------------------------------------------------
 // Open the serial port and initialize its flags.
 // ----------------------------------------------------------------------------
-bool
+Status
 SerialPortImpTermios::open () {
-    m_open = m_handle->open();
+    Status status;
+
+    status = m_handle->open();
 
     // If the serial port could not be opened, print an error message.
-    if ( ! m_open ) {
+    if ( ! status.success() ) {
         fprintf(stderr,
                 "[vpr::SerialPortImpTermios] Could not open serial port %s: %s\n",
                 m_name.c_str(), strerror(errno));
+        m_open = false;
     }
     // Otherwise, initialize the serial port's flags.
     else {
         struct termios term;
+
+        m_open = true;
 
         if ( getAttrs(&term) != -1 ) {
             // Initialize all the flags to 0.
@@ -95,11 +100,12 @@ SerialPortImpTermios::open () {
             // then we are not considered open.
             if ( setAttrs(&term, "Could not initialize flags") == -1 ) {
                 m_open = false;
+                status.setCode(Status::Failure);
             }
         }
     }
 
-    return m_open;
+    return status;
 }
 
 // ----------------------------------------------------------------------------

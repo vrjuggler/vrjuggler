@@ -155,7 +155,7 @@ public:
     //! RETURNS: true  - The serial port was opened successfully.
     //! RETURNS: false - The serial port could not be opened
     // ------------------------------------------------------------------------
-    virtual bool open(void);
+    virtual Status open(void);
 
     // ------------------------------------------------------------------------
     //: Close the serial port.
@@ -168,13 +168,12 @@ public:
     //! RETURNS: true  - The serial port was closed successfully.
     //! RETURNS: false - The serial port could not be closed for some reason.
     // ------------------------------------------------------------------------
-    inline virtual bool
+    inline virtual Status
     close (void) {
-        bool retval;
+        Status retval;
 
-        if ( (retval = m_handle->close()) ) {
-            m_open = false;
-        }
+        retval = m_handle->close();
+        m_open = (retval.success() ? false : true);
 
         return retval;
     }
@@ -189,7 +188,7 @@ public:
     //! RETURNS: false - The blocking mode could not be changed for some
     //+                  reason.
     // ------------------------------------------------------------------------
-    inline virtual bool
+    inline virtual Status
     enableBlocking (void) {
        return m_handle->enableBlocking();
     }
@@ -203,7 +202,7 @@ public:
     //! RETURNS:  0 - The blocking mode was changed successfully.
     //! RETURNS: -1 - The blocking mode could not be changed for some reason.
     // ------------------------------------------------------------------------
-    inline virtual bool
+    inline virtual Status
     enableNonBlocking (void) {
        return m_handle->enableNonBlocking();
     }
@@ -564,9 +563,9 @@ protected:
     //+                port.
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
-    virtual ssize_t
-    read_i (void* buffer, const size_t length) {
-        return m_handle->read(buffer, length);
+    virtual Status
+    read_i (void* buffer, const size_t length, ssize_t& bytes_read) {
+        return m_handle->read(buffer, length, bytes_read);
     }
 
     // ------------------------------------------------------------------------
@@ -587,9 +586,9 @@ protected:
     //+                port.
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
-    virtual ssize_t
-    readn_i (void* buffer, const size_t length) {
-        return m_handle->readn(buffer, length);
+    virtual Status
+    readn_i (void* buffer, const size_t length, ssize_t& bytes_read) {
+        return m_handle->readn(buffer, length, bytes_read);
     }
 
     // ------------------------------------------------------------------------
@@ -606,9 +605,9 @@ protected:
     //+                port.
     //! RETURNS:  -1 - An error occurred when writing.
     // ------------------------------------------------------------------------
-    virtual ssize_t
-    write_i (const void* buffer, const size_t length) {
-        return m_handle->write(buffer, length);
+    virtual Status
+    write_i (const void* buffer, const size_t length, ssize_t& bytes_written) {
+        return m_handle->write(buffer, length, bytes_written);
     }
 
     // ------------------------------------------------------------------------

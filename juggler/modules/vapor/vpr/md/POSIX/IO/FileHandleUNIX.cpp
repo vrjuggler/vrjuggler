@@ -76,9 +76,10 @@ FileHandleUNIX::~FileHandleUNIX () {
 // ----------------------------------------------------------------------------
 // Open the file handle.
 // ----------------------------------------------------------------------------
-bool
+Status
 FileHandleUNIX::open () {
     int open_flags;
+    Status status;
 
     open_flags = 0;
 
@@ -112,35 +113,35 @@ fprintf(stderr, "[vpr::FileHandleUNIX] Opening blocking\n");
     if ( m_fdesc == -1 ) {
         fprintf(stderr, "[vpr::FileHandleUNIX] Could not open %s: %s\n",
                 m_name.c_str(), strerror(errno));
+        status.setCode(Status::Failure);
     }
     // Otherwise, set m_open to true.
     else {
         m_open = true;
     }
 
-    return m_open;
+    return status;
 }
 
 // ----------------------------------------------------------------------------
 // Close the file handle.
 // ----------------------------------------------------------------------------
-bool
+Status
 FileHandleUNIX::close () {
-    int retval;
+    Status status;
 
-    if ( (retval = ::close(m_fdesc)) == -1 ) {
+    if ( ::close(m_fdesc) == -1 ) {
         fprintf(stderr,
                 "[vpr::FileHandleUNIX] Could not close %s: %s\n",
                 m_name.c_str(), strerror(errno));
-        retval = false;
+        status.setCode(Status::Failure);
     }
     else {
         m_fdesc = -1;
         m_open  = false;
-        retval  = true;
     }
 
-    return retval;
+    return status;
 }
 
 /*
@@ -187,10 +188,10 @@ FileHandleUNIX::isReadWrite () {
 // ----------------------------------------------------------------------------
 // Reconfigure the file handle so that it is in blocking mode.
 // ----------------------------------------------------------------------------
-bool
+Status
 FileHandleUNIX::enableBlocking () {
     int cur_flags, new_flags;
-    bool retval;
+    Status retval;
 
     // Get the current flags.
     cur_flags = getFlags();
@@ -210,11 +211,10 @@ FileHandleUNIX::enableBlocking () {
         fprintf(stderr,
                 "[vpr::FileHandleUNIX] Failed to set blocking on %s: %s\n",
                 m_name.c_str(), strerror(errno));
-        retval = false;
+        retval.setCode(Status::Failure);
     }
     else {
         m_blocking = true;
-        retval     = true;
     }
 
     return retval;
@@ -223,10 +223,10 @@ FileHandleUNIX::enableBlocking () {
 // ----------------------------------------------------------------------------
 // Reconfigure the file handle so that it is in non-blocking mode.
 // ----------------------------------------------------------------------------
-bool
+Status
 FileHandleUNIX::enableNonBlocking () {
     int cur_flags, new_flags;
-    bool retval;
+    Status retval;
 
     // Get the current flags.
     cur_flags = getFlags();
@@ -246,11 +246,10 @@ FileHandleUNIX::enableNonBlocking () {
         fprintf(stderr,
                 "[vpr::FileHandleUNIX] Failed to set non-blocking on %s: %s\n",
                 m_name.c_str(), strerror(errno));
-        retval = false;
+        retval.setCode(Status::Failure);
     }
     else {
         m_blocking = false;
-        retval     = true;
     }
 
     return retval;
@@ -259,12 +258,10 @@ FileHandleUNIX::enableNonBlocking () {
 // ----------------------------------------------------------------------------
 // Reconfigure the file handle to be in append mode.
 // ----------------------------------------------------------------------------
-bool
+Status
 FileHandleUNIX::enableAppend () {
     int cur_flags, new_flags, retval;
-    bool status;
-
-    status = true;
+    Status status;
 
     // Get the current flags and set O_APPEND.
     cur_flags = getFlags();
@@ -277,7 +274,7 @@ FileHandleUNIX::enableAppend () {
         fprintf(stderr,
                 "[vpr::FileHandleUNIX] Failed to enable append mode on %s: %s\n",
                 m_name.c_str(), strerror(errno));
-        status = false;
+        status.setCode(Status::Failure);
     }
 
     return status;
@@ -286,12 +283,10 @@ FileHandleUNIX::enableAppend () {
 // ----------------------------------------------------------------------------
 // Reconfigure the file handle so that it is not in append mode.
 // ----------------------------------------------------------------------------
-bool
+Status
 FileHandleUNIX::disableAppend () {
     int cur_flags, new_flags, retval;
-    bool status;
-
-    status = true;
+    Status status;
 
     // Get the current flags and mask O_APPEND.
     cur_flags = getFlags();
@@ -304,7 +299,7 @@ FileHandleUNIX::disableAppend () {
         fprintf(stderr,
                 "[vpr::FileHandleUNIX] Failed to disable append mode on %s: %s\n",
                 m_name.c_str(), strerror(errno));
-        status = false;
+        status.setCode(Status::Failure);
     }
 
     return status;
@@ -313,9 +308,9 @@ FileHandleUNIX::disableAppend () {
 // ----------------------------------------------------------------------------
 // Reconfigure the file handle so that writes are synchronous.
 // ----------------------------------------------------------------------------
-bool
+Status
 FileHandleUNIX::enableSynchronousWrite () {
-    bool status = true;
+    Status status;
 #if ! defined(_POSIX_SOURCE) && defined(O_SYNC)
     int cur_flags, new_flags, retval;
 
@@ -330,12 +325,12 @@ FileHandleUNIX::enableSynchronousWrite () {
         fprintf(stderr,
                 "[vpr::FileHandleUNIX] Failed to enable synchronous writes on %s: %s\n",
                 m_name.c_str(), strerror(errno));
-        status = false;
+        status.setCode(Status::Failure);
     }
 #else
     fprintf(stderr,
             "[vpr::FileHandleUNIX] Cannot enable synchronous writes on this platform!\n");
-    status = false;
+    status.setCode(Status::Failure);
 #endif
 
     return status;
@@ -344,9 +339,9 @@ FileHandleUNIX::enableSynchronousWrite () {
 // ----------------------------------------------------------------------------
 // Reconfigure the file handle so that writes are asynchronous.
 // ----------------------------------------------------------------------------
-bool
+Status
 FileHandleUNIX::enableAsynchronousWrite () {
-    bool status = true;
+    Status status;
 #if ! defined(_POSIX_SOURCE) && defined(O_ASYNC)
     int cur_flags, new_flags, retval;
 
@@ -361,12 +356,12 @@ FileHandleUNIX::enableAsynchronousWrite () {
         fprintf(stderr,
                 "[vpr::FileHandleUNIX] Failed to enable asynchronous writes on %s: %s\n",
                 m_name.c_str(), strerror(errno));
-        status = false;
+        status.setCode(Status::Failure);
     }
 #else
     fprintf(stderr,
             "[vpr::FileHandleUNIX] Cannot enable asynchronous writes on this platform!\n");
-    status = false;
+    status.setCode(Status::Failure);
 #endif
 
     return status;
@@ -380,30 +375,36 @@ FileHandleUNIX::enableAsynchronousWrite () {
 // Read the specified number of bytes from the file handle into the given
 // bufer.
 // ----------------------------------------------------------------------------
-ssize_t
-FileHandleUNIX::read_i (void* buffer, const size_t length) {
-    ssize_t bytes;
+Status
+FileHandleUNIX::read_i (void* buffer, const size_t length, ssize_t& bytes_read)
+{
+    Status status;
 
-    bytes = ::read(m_fdesc, buffer, length);
+    bytes_read = ::read(m_fdesc, buffer, length);
 
     // Something went wrong while attempting to read from the file.
-    if ( bytes < 0 ) {
+    if ( bytes_read < 0 ) {
+        if ( errno == EAGAIN && ! m_blocking ) {
+            status.setCode(Status::WouldBlock);
+        }
         // If the error is EAGAIN and we are in non-blocking mode, we do not
         // bother to print the message.
         if ( ! (errno == EAGAIN && ! m_blocking) ) {
             fprintf(stderr, "[vpr::FileHandleUNIX] Error reading from %s: %s\n",
                     m_name.c_str(), strerror(errno));
+            status.setCode(Status::Failure);
         }
+
     }
     // If 0 bytes were read or an error was returned, we print an error
     // message.
-    else if ( bytes == 0 && errno != 0 ) {
+    else if ( bytes_read == 0 && errno != 0 ) {
 //    errno != ENOENT
         fprintf(stderr, "[vpr::FileHandleUNIX] Nothing read from %s: %s\n",
                 m_name.c_str(), strerror(errno));
     }
 
-    return bytes;
+    return status;
 }
 
 // ----------------------------------------------------------------------------
@@ -411,18 +412,20 @@ FileHandleUNIX::read_i (void* buffer, const size_t length) {
 // given buffer.  This is baesd on the readn() function given on pages 51-2 of
 // _Effective TCP/IP Programming_ by Jon D. Snader.
 // ----------------------------------------------------------------------------
-ssize_t
-FileHandleUNIX::readn_i (void* buffer, const size_t length) {
+Status
+FileHandleUNIX::readn_i (void* buffer, const size_t length,
+                         ssize_t& bytes_read)
+{
     size_t count;
-    ssize_t bytes;
+    Status status;
 
     count = length;
 
     while ( count > 0 ) {
-        bytes = ::read(m_fdesc, buffer, length);
+        bytes_read = ::read(m_fdesc, buffer, length);
 
         // Read error.
-        if ( bytes < 0 ) {
+        if ( bytes_read < 0 ) {
             // Restart the read process if we were interrupted by the OS.
             if ( errno == EINTR ) {
                 continue;
@@ -434,34 +437,42 @@ FileHandleUNIX::readn_i (void* buffer, const size_t length) {
             }
         }
         // May have read EOF, so return bytes read so far.
-        else if ( bytes == 0 ) {
-            bytes = length - count;
+        else if ( bytes_read == 0 ) {
+            bytes_read = length - count;
         }
         else {
-            buffer = (void*) ((char*) buffer + bytes);
-            count  -= bytes;
+            buffer = (void*) ((char*) buffer + bytes_read);
+            count  -= bytes_read;
         }
     }
 
-    return bytes;
+    return status;
 }
 
 // ----------------------------------------------------------------------------
 // Write the buffer to the file handle.
 // ----------------------------------------------------------------------------
-ssize_t
-FileHandleUNIX::write_i (const void* buffer, const size_t length) {
-    ssize_t bytes;
+Status
+FileHandleUNIX::write_i (const void* buffer, const size_t length,
+                         ssize_t& bytes_written)
+{
+    Status status;
 
-    bytes = ::write(m_fdesc, buffer, length);
+    bytes_written = ::write(m_fdesc, buffer, length);
 
-    if ( bytes <= 0 ) {
-        fprintf(stderr,
-                "[vpr::FileHandleUNIX] Error writing to %s: %s\n",
-                m_name.c_str(), strerror(errno));
+    if ( bytes_written <= 0 ) {
+        if ( errno == EAGAIN && ! m_blocking ) {
+            status.setCode(Status::WouldBlock);
+        }
+        else {
+            fprintf(stderr,
+                    "[vpr::FileHandleUNIX] Error writing to %s: %s\n",
+                    m_name.c_str(), strerror(errno));
+            status.setCode(Status::Failure);
+        }
     }
 
-    return bytes;
+    return status;
 }
 
 // ----------------------------------------------------------------------------

@@ -33,15 +33,19 @@
 #ifndef _VPR_SOCKET_IMP_BSD_H_
 #define _VPR_SOCKET_IMP_BSD_H_
 
+#include <vprConfig.h>
+
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <string>
 #include <vector>
 
 #include <IO/BlockIO.h>
+#include <IO/IOSys.h>
 #include <md/POSIX/FileHandleUNIX.h>
 #include <IO/Socket/InetAddr.h>
 #include <IO/Socket/SocketIpOpt.h>
+#include <Utils/Assert.h>
 
 /*
 #if defined(sgi) && defined(host_mips) && !defined(socklen_t)
@@ -73,7 +77,7 @@ public:
     //     false - The socket could not be opened for some reason (an error
     //             message is printed explaining why).
     // ------------------------------------------------------------------------
-    virtual bool open(void);
+    virtual Status open(void);
 
     // ------------------------------------------------------------------------
     //: Close the socket.
@@ -86,13 +90,12 @@ public:
     //! RETURNS: true  - The socket was closed successfully.
     //! RETURNS: false - The socket could not be closed for some reason.
     // ------------------------------------------------------------------------
-    inline virtual bool
+    inline virtual Status
     close (void) {
-        bool retval;
+        Status retval;
 
-        if ( (retval = m_handle->close()) ) {
-            m_open = false;
-        }
+        retval = m_handle->close();
+        m_open = (retval.success() ? false : true);
 
         return retval;
     }
@@ -109,21 +112,29 @@ public:
     //             m_host_addr.  An error message is printed explaining what
     //             went wrong.
     // ------------------------------------------------------------------------
-    virtual bool bind(void);
+    virtual Status bind(void);
+
+    // ------------------------------------------------------------------------
+    //: Return the contained handle
+    // ------------------------------------------------------------------------
+    inline IOSys::Handle
+    getHandle (void) {
+       return m_handle->m_fdesc;
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    inline virtual bool
+    inline virtual Status
     enableBlocking (void) {
-       assert( m_open && "precondition says you must open() the socket first" );
+        vprASSERT(m_open && "precondition says you must open() the socket first");
         return m_handle->enableBlocking();
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    inline virtual bool
+    inline virtual Status
     enableNonBlocking (void) {
-       assert( m_open && "precondition says you must open() the socket first" );
+        vprASSERT(m_open && "precondition says you must open() the socket first");
         return m_handle->enableNonBlocking();
     }
 
@@ -148,7 +159,7 @@ public:
     //     false - The connect could not be made.  An error message is
     //             printed explaining what happened.
     // ------------------------------------------------------------------------
-    virtual bool connect(void);
+    virtual Status connect(void);
 
     // ------------------------------------------------------------------------
     //: Get the type of this socket (e.g., vpr::SocketTypes::STREAM).
@@ -171,15 +182,9 @@ public:
         return m_local_addr;
     }
 
-    bool setLocalAddr(const InetAddr& addr)
-    {
-      if (this->m_connected)
-       { return false; }
-       else
-          m_local_addr = addr;
-
-       return true;
-    }
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    Status setLocalAddr(const InetAddr& addr);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
@@ -188,15 +193,9 @@ public:
         return m_remote_addr;
     }
 
-    bool setRemoteAddr(const InetAddr& addr)
-    {
-       if (this->m_connected)
-       { return false; }
-       else
-          m_remote_addr = addr;
-
-       return true;
-    }
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    Status setRemoteAddr(const InetAddr& addr);
 
 protected:
     // ------------------------------------------------------------------------
@@ -208,8 +207,8 @@ protected:
     //       defaults.
     // ------------------------------------------------------------------------
     SocketImpBSD (const SocketTypes::Type sock_type)
-        : BlockIO(std::string("INADDR_ANY")), m_connected(false),
-          m_handle(NULL), m_type(sock_type)
+        : BlockIO(std::string("INADDR_ANY")), m_bound(false),
+          m_connected(false), m_handle(NULL), m_type(sock_type)
     {
         m_handle = new FileHandleUNIX("INADDR_ANY");
     }
@@ -227,9 +226,9 @@ protected:
     // ------------------------------------------------------------------------
     SocketImpBSD (const InetAddr& local_addr, const InetAddr& remote_addr,
                   const SocketTypes::Type sock_type)
-        : BlockIO(std::string("INADDR_ANY")), m_connected(false),
-          m_handle(NULL), m_local_addr(local_addr), m_remote_addr(remote_addr),
-          m_type(sock_type)
+        : BlockIO(std::string("INADDR_ANY")), m_bound(false),
+          m_connected(false), m_handle(NULL), m_local_addr(local_addr),
+          m_remote_addr(remote_addr), m_type(sock_type)
     {
         m_handle = new FileHandleUNIX(m_name);
     }
@@ -244,37 +243,38 @@ protected:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    virtual ssize_t
-    read_i (void* buffer, const size_t length) {
-        return m_handle->read(buffer, length);
+    virtual Status
+    read_i (void* buffer, const size_t length, ssize_t& bytes_read) {
+        return m_handle->read(buffer, length, bytes_read);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    virtual ssize_t
-    readn_i (void* buffer, const size_t length) {
-        return m_handle->readn(buffer, length);
+    virtual Status
+    readn_i (void* buffer, const size_t length, ssize_t& bytes_read) {
+        return m_handle->readn(buffer, length, bytes_read);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    virtual ssize_t
-    write_i (const void* buffer, const size_t length) {
-        return m_handle->write(buffer, length);
+    virtual Status
+    write_i (const void* buffer, const size_t length, ssize_t& bytes_written) {
+        return m_handle->write(buffer, length, bytes_written);
     }
 
     /**
      *
      */
-    virtual bool getOption(const SocketOptions::Types option,
-                           struct SocketOptions::Data& data);
+    virtual Status getOption(const SocketOptions::Types option,
+                             struct SocketOptions::Data& data);
 
     /**
      *
      */
-    virtual bool setOption(const SocketOptions::Types option,
-                           const struct SocketOptions::Data& data);
+    virtual Status setOption(const SocketOptions::Types option,
+                             const struct SocketOptions::Data& data);
 
+    bool              m_bound;
     bool              m_connected;
     FileHandleUNIX*   m_handle;      //:
     InetAddr          m_local_addr;  //: The local site's address structure

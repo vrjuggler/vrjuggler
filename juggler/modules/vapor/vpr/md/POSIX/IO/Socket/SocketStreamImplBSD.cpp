@@ -55,9 +55,9 @@ namespace vpr {
 // ----------------------------------------------------------------------------
 // Listen on the socket for incoming connection requests.
 // ----------------------------------------------------------------------------
-bool
+Status
 SocketStreamImpBSD::listen (const int backlog) {
-    bool retval;
+    Status retval;
 
     // Put the socket into listning mode.  If that fails, print an error and
     // return error status.
@@ -65,11 +65,7 @@ SocketStreamImpBSD::listen (const int backlog) {
         fprintf(stderr,
                 "[vpr::SocketStreamImpBSD] Cannot listen on socket: %s\n",
                 strerror(errno));
-        retval = false;
-    }
-    // Otherwise, return success.
-    else {
-        retval = true;
+        retval.setCode(Status::Failure);
     }
 
     return retval;
@@ -78,12 +74,12 @@ SocketStreamImpBSD::listen (const int backlog) {
 // ----------------------------------------------------------------------------
 // Accept an incoming connection request.
 // ----------------------------------------------------------------------------
-SocketStreamImpBSD*
-SocketStreamImpBSD::accept () {
+Status
+SocketStreamImpBSD::accept (SocketStreamImpBSD& sock) {
     int accept_sock;
+    Status retval;
     InetAddr addr;
     socklen_t addrlen;
-    SocketStreamImpBSD* new_sock;
 
     // Accept an incoming connection request.
     addrlen = addr.size();
@@ -92,38 +88,27 @@ SocketStreamImpBSD::accept () {
 
     // If accept(2) failed, print an error message and return error stauts.
     if ( accept_sock == -1 ) {
-        fprintf(stderr,
-                "[vpr::SocketStreamImpBSD] Error while accepting incoming connection: %s\n",
-                strerror(errno));
-        new_sock = NULL;
+        if ( errno == EWOULDBLOCK ) {
+            retval.setCode(Status::WouldBlock);
+        }
+        else {
+            fprintf(stderr,
+                    "[vpr::SocketStreamImpBSD] Error while accepting incoming "
+                    "connection: %s\n", strerror(errno));
+            retval.setCode(Status::Failure);
+        }
     }
-    // Otherwise, create a new vpr::SocketStreamImpBSD object using what the
-    // operating system gave us through accept(2).
+    // Otherwise, put the new socket in the passed socket object.
     else {
-        new_sock = new SocketStreamImpBSD(accept_sock, addr);
+        sock.setRemoteAddr(addr);
+        sock.m_handle          = new FileHandleUNIX(addr.getAddressString());
+        sock.m_handle->m_fdesc = accept_sock;
+        sock.m_open            = true;
+        sock.m_bound           = true;
+        sock.m_connected       = true;
     }
 
-    return new_sock;
-}
-
-// ============================================================================
-// Protected methods.
-// ============================================================================
-
-// ----------------------------------------------------------------------------
-// Protected constructor.  This is used when the socket is created by the
-// operating system, typically by the accept(2) system call.
-// ----------------------------------------------------------------------------
-SocketStreamImpBSD::SocketStreamImpBSD (const int sock,
-                                        const InetAddr& remote_addr)
-    : SocketImpBSD(SocketTypes::STREAM)
-{
-    m_handle          = new FileHandleUNIX(remote_addr.getAddressString());
-    m_handle->m_fdesc = sock;
-    m_type            = SocketTypes::STREAM;
-
-    // Copy the given vpr::InetAddr to the new object's member variable.
-    m_remote_addr = remote_addr;
+    return retval;
 }
 
 }; // End of vpr namespace
