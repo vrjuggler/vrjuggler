@@ -25,7 +25,7 @@ VPATH		= @srcdir@
 # use -L/usr/lib64.
 EXTRA_LIBS	= @TEST_EXTRA_LIBS_BASIC@ @TEST_EXTRA_LIBS_GL@
 
-OBJECTS		= cubes.o
+OBJECTS		= cubes.o cubesApp.o
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -37,7 +37,7 @@ all: cubes
 cubes: ${OBJECTS}
 	${COMPILE} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
 
-cubes.o: cubesApp.h
+cubes.o cubesApp.o: cubesApp.h
 
 .cpp.o:
 	${COMPILE} -c $<
