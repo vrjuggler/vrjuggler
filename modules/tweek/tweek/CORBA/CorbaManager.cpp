@@ -74,9 +74,10 @@ vpr::ReturnStatus CorbaManager::init (const std::string& local_id, int& argc,
    try
    {
       // Initialize the ORB.
-      vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL) << "Initializing ORB\n"
-                                                 << vprDEBUG_FLUSH;
-      m_orb = CORBA::ORB_init(argc, argv, "omniORB3");
+      vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL)
+         << "Initializing ORB (using init string '" << TWEEK_ORB_VER_STRING
+         << "')\n" << vprDEBUG_FLUSH;
+      m_orb = CORBA::ORB_init(argc, argv, TWEEK_ORB_VER_STRING);
 
       status = createChildPOA(local_id);
 

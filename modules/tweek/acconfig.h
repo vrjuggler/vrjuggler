@@ -46,7 +46,17 @@
 
 @TOP@
 
+/* If using omniORB, define to the major version number (3, 4, etc.). */
 #undef OMNIORB_VER
+
+/* Define to include the file CORBA.h -- for example: <omniORB/CORBA.h> */
+#undef TWEEK_INCLUDE_CORBA_H
+
+/*
+ * Define to an ORB version string used to initialize the ORB -- for
+ * example: "omniORB3"
+ */
+#undef TWEEK_ORB_VER_STRING
 
 /* ----------------- The following are needed by omniORB. ----------------- */
 
