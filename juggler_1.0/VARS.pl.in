@@ -15,7 +15,7 @@
 $VARS{'CXX'}                   = '@CXX@';
 $VARS{'CPPFLAGS'}              = '@CPPFLAGS@';
 $VARS{'CXXFLAGS'}              = '@CXXFLAGS@';
-$VARS{'DBG_FLAGS'}             = '@DBG_FLAGS';
+$VARS{'DBG_FLAGS'}             = '@DBG_FLAGS@';
 $VARS{'DEFS'}                  = '@DEFS@';
 $VARS{'EXTRA_LINK_FLAGS'}      = '@EXTRA_LINK_FLAGS@';
 $VARS{'INCLUDES'}              = '@INCLUDES@';
