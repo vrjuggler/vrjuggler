@@ -25,41 +25,12 @@ void wandApp::myDraw()
 
       // -- Draw box on wand --- //
    vjMatrix* wandMatrix;
-   wandMatrix = mWand->getData();
+   wandMatrix = mWand->getData();      // Get the wand matrix
 
-
-      // Build a matrix with only rotation around y in local wand system
-   vjMatrix yRotMat;
-   yRotMat = *wandMatrix;        // Set it to the wand matrix
-   yRotMat.setTrans(0,0,0);
-
-   float xRot, yRot, zRot;
-   wandMatrix->getXYZEuler(xRot, yRot, zRot);
-   vjMatrix mx,mxInverse;           // Inverse of the x component
-   mx.makeRot(xRot,vjVec3(1,0,0));
-   mxInverse.invert(mx);
-   vjMatrix mz,mzInverse;           // Inverse of the z component
-   mz.makeRot(zRot,vjVec3(0,0,1));
-   mzInverse.invert(mz);
-
-   yRotMat.preMult(mxInverse);
-
-   yRotMat.getXYZEuler(xRot,yRot,zRot);
-
-   //cerr << "yRot: " << yRot << endl;
-
-   //yRotMat.postMult(mzInverse);
-
-   //glPushMatrix();
-
-   /*** Rotation for tracker coord system testing
-   * glRotatef(-180.0f, 0.0,0.0,1.0);
-   * glRotatef(-90,1.0,0.0,0.0);
-   ****/
    glPushMatrix();
       // cout << "wand:\n" << *wandMatrix << endl;
       glPushMatrix();
-         glMultMatrixf(wandMatrix->getFloatPtr());
+         glMultMatrixf(wandMatrix->getFloatPtr());    // Push the wand matrix on the stack
          glColor3f(1.0f, 0.0f, 1.0f);
          glScalef(0.25f, 0.25f, 0.25f);
          drawCube();
@@ -68,14 +39,6 @@ void wandApp::myDraw()
          // A little laser pointer
       glLineWidth(5.0f);
 
-      glPushMatrix();
-         glMultMatrixf(yRotMat.getFloatPtr());
-         glBegin(GL_LINES);
-            glColor3f(1.0f, 0.0f, 0.0f);
-            glVertex3f(0.0f, 0.0f, 0.0f);
-            glVertex3f(0.0f, 0.0f, -10.0f);
-         glEnd();
-      glPopMatrix();
 
 
       // Draw Axis
@@ -90,16 +53,16 @@ void wandApp::myDraw()
 
          glBegin(GL_LINES);
             glColor3f(1.0f, 0.0f, 0.0f);
-	         glVertex3fv(origin.vec);
-	         glVertex3fv(x_axis.vec);
+            glVertex3fv(origin.vec);
+            glVertex3fv(x_axis.vec);
 
             glColor3f(0.0f, 1.0f, 0.0f);
-	         glVertex3fv(origin.vec);
-	         glVertex3fv(y_axis.vec);
+            glVertex3fv(origin.vec);
+            glVertex3fv(y_axis.vec);
 
             glColor3f(0.0f, 0.0f, 1.0f);
-	         glVertex3fv(origin.vec);
-	         glVertex3fv(z_axis.vec);
+            glVertex3fv(origin.vec);
+            glVertex3fv(z_axis.vec);
          glEnd();
       glPopMatrix();
       glEnable(GL_LIGHTING);
