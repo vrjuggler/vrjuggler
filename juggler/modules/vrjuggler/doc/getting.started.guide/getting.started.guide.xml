@@ -426,14 +426,15 @@ C:\WINDOWS;C:\bin;C:\</screen>
 
             <mediaobject>
               <imageobject>
-                <imagedata fileref="figures/Window.SystemProperties.winxp.png"
+                <imagedata align="center"
+                           fileref="figures/Window.SystemProperties.winxp.png"
                            format="PNG" />
               </imageobject>
             </mediaobject>
           </figure>
 
           <figure id="figure.win2k.envvars">
-            <title>Windows 2000 Environment Variable Editor Dialog</title>
+            <title>Windows Environment Variable Editor Dialog</title>
 
             <mediaobject>
               <imageobject>
