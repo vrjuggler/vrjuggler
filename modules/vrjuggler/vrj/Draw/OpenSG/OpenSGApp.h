@@ -40,34 +40,14 @@
 #include <vrj/Draw/OGL/GlContextData.h>
 
 /*-----------------------------OpenSG includes--------------------------------*/
-/** @todo Clear out the headers that aren't actually needed */
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGWindow.h>
-#include <OpenSG/OSGDrawAction.h>
-#include <OpenSG/OSGRenderAction.h>
-#include <OpenSG/OSGNode.h>
-#include <OpenSG/OSGWindow.h>
-#include <OpenSG/OSGImageForeground.h>
-#include <OpenSG/OSGTransform.h>
-#include <OpenSG/OSGGeometry.h>
-#include <OpenSG/OSGGeoPropPtrs.h>
-#include <OpenSG/OSGSimpleMaterial.h>
-#include <OpenSG/OSGMatrixCamera.h>
-#include <OpenSG/OSGDirectionalLight.h>
-#include <OpenSG/OSGGroup.h>
-#include <OpenSG/OSGPassiveWindow.h>
-
-#include <OpenSG/OSGMatrixUtility.h>
 #include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGBaseFunctions.h>
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGImageFileType.h>
-#include <OpenSG/OSGSolidBackground.h>
-#include <OpenSG/OSGViewport.h>
-#include <OpenSG/OSGLogoData.h>
 #include <OpenSG/OSGThread.h>
-#include <OpenSG/OSGMPBase.h>
-#include <OpenSG/OSGGeometry.h>
+#include <OpenSG/OSGRenderAction.h>
+#include <OpenSG/OSGMatrixCamera.h>
+#include <OpenSG/OSGPassiveWindow.h>
+#include <OpenSG/OSGPassiveViewport.h>
+#include <OpenSG/OSGPassiveBackground.h>
+#include <OpenSG/OSGMatrixUtility.h>
 
 /*----------------------------------------------------------------------------*/
 
@@ -96,9 +76,9 @@ public:
 
       OSG::RenderAction*         mRenderAction;    /**< The render action for the scene */
       OSG::PassiveWindowPtr      mWin;             /**< passive window to render with (the context) */
+      OSG::PassiveViewportPtr    mViewport;        /**< passive viewport to render with (the context) */
+      OSG::PassiveBackgroundPtr  mBackground;      /**< passive background to render with (the context) */
       OSG::MatrixCameraPtr       mCamera;
-      OSG::TransformPtr          mCameraCartTransform;   /**< Do I really need all this cart stuff */
-      OSG::NodePtr               mCameraCartNode;
 
       bool                       mContextThreadInitialized;
       OSG::ExternalThread*       mOsgThread;
@@ -162,6 +142,7 @@ inline void OpenSGApp::init()
    // if(!osgInitAlreadyCalled())
    OSG::osgInit(0,0);                  // Binds to primordial thread
 
+#if 0
    // Work around to disable display list caching
    OSG::FieldContainerPtr pProto = OSG::Geometry::getClassType().getPrototype();
    OSG::GeometryPtr pGeoProto = OSG::GeometryPtr::dcast(pProto);
@@ -170,6 +151,7 @@ inline void OpenSGApp::init()
    {
        pGeoProto->setDlistCache(false);
    }
+#endif
 
    OSG_MAIN_ASPECT_ID = OSG::Thread::getAspect();   // Gets the base aspect id to use
 }
@@ -179,7 +161,7 @@ inline void OpenSGApp::apiInit()
    vprDEBUG(vprDBG_ALL,0) << "OpenSGNav::initAPI: Called.\n" << vprDEBUG_FLUSH;
 
    this->initScene();
-   vprASSERT(getSceneRoot().getCPtr() != NULL);    // I don't know if this is even valid
+   vprASSERT(getSceneRoot() != OSG::NullFC);
 }
 
 /** Called once per context at context creation */
@@ -205,26 +187,39 @@ inline void OpenSGApp::contextInit()
    }
 
    // Allocate OpenSG stuff
-   c_data->mWin = OSG::PassiveWindow::create();
-   c_data->mCameraCartNode = OSG::Node::create();
-   c_data->mCameraCartTransform = OSG::Transform::create();
-   c_data->mCamera = OSG::MatrixCamera::create();
+   c_data->mWin        = OSG::PassiveWindow::create();
+   c_data->mViewport   = OSG::PassiveViewport::create();
+   c_data->mBackground = OSG::PassiveBackground::create();
+   c_data->mCamera     = OSG::MatrixCamera::create();
 
-   // Setup the cart, set internal transform node
-   OSG::beginEditCP(c_data->mCameraCartNode);
-      c_data->mCameraCartNode->setCore(c_data->mCameraCartTransform);
-   OSG::endEditCP(c_data->mCameraCartNode);
+   // Setup the viewport
+   OSG::beginEditCP(c_data->mViewport);
+   	c_data->mViewport->setLeft(0);
+   	c_data->mViewport->setRight(1);
+   	c_data->mViewport->setBottom(0);
+   	c_data->mViewport->setTop(1);
+   	c_data->mViewport->setCamera(c_data->mCamera);
+   	c_data->mViewport->setBackground(c_data->mBackground);
+   OSG::endEditCP  (c_data->mViewport);
+   
+   // Setup the Window
+   OSG::beginEditCP(c_data->mWin);
+   	c_data->mWin->addPort(c_data->mViewport);
+   OSG::endEditCP  (c_data->mWin);
 
    // Setup the camera
    OSG::beginEditCP(c_data->mCamera);
-      c_data->mCamera->setBeacon (c_data->mCameraCartNode);
-      c_data->mCamera->setNear   (0.1);
-      c_data->mCamera->setFar    (10000);
+      c_data->mCamera->setNear(0.1);
+      c_data->mCamera->setFar (10000);
    OSG::endEditCP(c_data->mCamera);
 
    // Could actually make one of these per thread instead of context.
    c_data->mRenderAction = OSG::RenderAction::create();
-   c_data->mRenderAction->setAutoFrustum(false);         // Turn off auto frustum
+   // c_data->mRenderAction->setAutoFrustum(false);         // Turn off auto frustum
+
+   // Initialize OpenSG's OpenGL state
+
+   c_data->mWin->init();
 }
 
 inline void OpenSGApp::contextPreDraw()
@@ -266,20 +261,30 @@ inline void OpenSGApp::draw()
    OSG::beginEditCP(c_data->mCamera);
       c_data->mCamera->setNear(vrj_frustum[vrj::Frustum::VJ_NEAR]);
       c_data->mCamera->setFar(vrj_frustum[vrj::Frustum::VJ_FAR]);
-      c_data->mCamera->setProjectionMatrix( full_view_matrix );         // Set view matrix
-      c_data->mCamera->setModelviewMatrix( OSG::Matrix::identity() );   // Set projection matrix
+      c_data->mCamera->setProjectionMatrix( frustum_matrix );  // Set projection matrix
+      c_data->mCamera->setModelviewMatrix( view_xform_mat );   // Set modelview matrix
    OSG::endEditCP(c_data->mCamera);
 
-   // --- Trigger the draw --- //
-   c_data->mRenderAction->setWindow(c_data->mWin.getCPtr());
-   c_data->mRenderAction->setViewport(NULL);                   // Don't know why a matrix camera needs a viewport
-   c_data->mRenderAction->setCamera(c_data->mCamera.getCPtr());
-   c_data->mRenderAction->setFrustumCulling(false);    // Turn off culling for now because I don't yet trust the frustum setup
+   // Setup the viewport
+   OSG::beginEditCP(c_data->mViewport);
+   	c_data->mViewport->setRoot(getSceneRoot());
+   OSG::endEditCP  (c_data->mViewport);
+
+   // --- Trigger the draw --- //  
 
    // Push the matrix so that drawing after this is not affected by the scene graph
+   glMatrixMode(GL_PROJECTION);
    glPushMatrix();
-      c_data->mRenderAction->apply(getSceneRoot());       // Actually do the rendering
+   glMatrixMode(GL_MODELVIEW);
+   glPushMatrix();   
+	c_data->mWin->render(c_data->mRenderAction);
    glPopMatrix();
+   glMatrixMode(GL_PROJECTION);
+   glPopMatrix();
+   glMatrixMode(GL_MODELVIEW);
+   
+   FINFO(("Frame done on Window %lx. Stat: %s\n", c_data->mWin.getCPtr(),
+   	stat.c_str() ));
 }
 
 };
