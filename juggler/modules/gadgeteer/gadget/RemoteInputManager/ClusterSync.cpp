@@ -122,7 +122,7 @@ namespace gadget
       mErrorTime = mRemoteSendTime - mLocalReceiveTime;
       vprDEBUG(gadgetDBG_RIM,1) << "[SYNC] 	Error of: " << mErrorTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
 
-      if ( mErrorTime.getBaseVal() < 0 )
+      if ( mErrorTime.getBaseVal() == 0 )
       {
          mErrorTime = mLocalReceiveTime - mRemoteSendTime;
       }
