@@ -1,7 +1,7 @@
 
-/****************** <AJ heading BEGIN do not edit this line> *****************
+/****************** <SNX heading BEGIN do not edit this line> *****************
  *
- * Audio Juggler
+ * sonix
  *
  * Original Authors:
  *   Kevin Meinert, Carolina Cruz-Neira
@@ -12,7 +12,7 @@
  * Version:       $Revision$
  * -----------------------------------------------------------------
  *
- ****************** <AJ heading END do not edit this line> ******************/
+ ****************** <SNX heading END do not edit this line> ******************/
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
@@ -49,7 +49,7 @@
 #include <math.h>
 
 //: x-platform standard math routines.
-namespace ajMath
+namespace snxMath
 {
    //: sin returns the trigonometric sin of the radian argument x
    inline static double sin( const double x ) 
@@ -226,13 +226,13 @@ namespace ajMath
    template <class dataType>
    inline static dataType Min( const dataType& x, const dataType& y, const dataType& z ) 
    {
-      return ajMath::Min( ajMath::Min( x, y ), z );
+      return snxMath::Min( snxMath::Min( x, y ), z );
    }
    //: min returns the minimum of 4 values
    template <class dataType>
    inline static dataType Min( const dataType& w, const dataType& x, const dataType& y, const dataType& z ) 
    {
-      return ajMath::Min( ajMath::Min( w, x ), ajMath::Min( y, z ) );
+      return snxMath::Min( snxMath::Min( w, x ), snxMath::Min( y, z ) );
    }
    
    //: max returns the maximum of 2 values
@@ -246,13 +246,13 @@ namespace ajMath
    template <class dataType>
    inline static dataType Max( const dataType& x, const dataType& y, const dataType& z ) 
    {
-      return ajMath::Max( ajMath::Max( x, y ), z );
+      return snxMath::Max( snxMath::Max( x, y ), z );
    }
    //: max returns the maximum of 4 values
    template <class dataType>
    inline static dataType Max( const dataType& w, const dataType& x, const dataType& y, const dataType& z ) 
    {
-      return ajMath::Max( ajMath::Max( w, x ), ajMath::Max( y, z ) );
+      return snxMath::Max( snxMath::Max( w, x ), snxMath::Max( y, z ) );
    }
 
    //: Linear Interpolation between number [a] and [b]
@@ -270,7 +270,7 @@ namespace ajMath
    template <class dataType>
    inline static bool isEqual( const dataType& a, const dataType& b, const dataType& tolerance )
    {
-      return ajMath::abs( a - b ) <= tolerance;
+      return snxMath::abs( a - b ) <= tolerance;
    }
 };
 

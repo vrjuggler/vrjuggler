@@ -1,7 +1,7 @@
 
-/****************** <AJ heading BEGIN do not edit this line> *****************
+/****************** <SNX heading BEGIN do not edit this line> *****************
  *
- * Audio Juggler
+ * sonix
  *
  * Original Authors:
  *   Kevin Meinert, Carolina Cruz-Neira
@@ -12,7 +12,7 @@
  * Version:       $Revision$
  * -----------------------------------------------------------------
  *
- ****************** <AJ heading END do not edit this line> ******************/
+ ****************** <SNX heading END do not edit this line> ******************/
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
@@ -43,13 +43,13 @@
 
 
 #include <string>
-#include "aj/SoundImplementation.h"
+#include "snx/SoundImplementation.h"
 
-#include "aj/StubSoundImplementation.h" // in case lookup fails...
+#include "snx/StubSoundImplementation.h" // in case lookup fails...
 
-#include "aj/SoundFactory.h" // my header.
+#include "snx/SoundFactory.h" // my header.
 
-namespace aj
+namespace snx
 {
 
 /**
@@ -59,7 +59,7 @@ namespace aj
  * @semantics factory function used to create an implementation of a sound API 
  */
 void SoundFactory::createImplementation( const std::string& apiName,
-                           aj::SoundImplementation* &mImplementation )
+                           snx::SoundImplementation* &mImplementation )
 {
    if (mRegisteredImplementations.count( apiName ) > 0)
    {
@@ -68,7 +68,7 @@ void SoundFactory::createImplementation( const std::string& apiName,
 
    else
    {
-      mImplementation = new aj::StubSoundImplementation;
+      mImplementation = new snx::StubSoundImplementation;
    }
    
    mImplementation->setName( apiName );

@@ -1,7 +1,7 @@
 
-/****************** <AJ heading BEGIN do not edit this line> *****************
+/****************** <SNX heading BEGIN do not edit this line> *****************
  *
- * Audio Juggler
+ * sonix
  *
  * Original Authors:
  *   Kevin Meinert, Carolina Cruz-Neira
@@ -12,7 +12,7 @@
  * Version:       $Revision$
  * -----------------------------------------------------------------
  *
- ****************** <AJ heading END do not edit this line> ******************/
+ ****************** <SNX heading END do not edit this line> ******************/
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
@@ -48,9 +48,9 @@
 #define SOUND_INFO_DATA
 #include <string>
 #include <vector>
-#include <aj/Vec3.h>
+#include <snx/Vec3.h>
 
-namespace aj
+namespace snx
 {
 
 /**
@@ -101,7 +101,7 @@ struct SoundInfo
    // this field is used when datasource != FILESYSTEM
    std::vector< std::vector<char> > data; 
 
-   aj::Vec3 position;
+   snx::Vec3 position;
    
    bool ambient;  // is the sound ambient (true) or positional (false)?
    bool retriggerable;  // can the sound be retriggered while playing?

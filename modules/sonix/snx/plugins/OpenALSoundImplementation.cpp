@@ -1,7 +1,7 @@
 
-/****************** <AJ heading BEGIN do not edit this line> *****************
+/****************** <SNX heading BEGIN do not edit this line> *****************
  *
- * Audio Juggler
+ * sonix
  *
  * Original Authors:
  *   Kevin Meinert, Carolina Cruz-Neira
@@ -12,7 +12,7 @@
  * Version:       $Revision$
  * -----------------------------------------------------------------
  *
- ****************** <AJ heading END do not edit this line> ******************/
+ ****************** <SNX heading END do not edit this line> ******************/
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
@@ -53,33 +53,33 @@
 #include <AL/alext.h>
 #include <AL/alut.h>
 
-#include "aj/Matrix44.h"
-#include "aj/Vec3.h"
-#include "aj/MatVec.h"
-#include "aj/FileIO.h"
-#include "aj/SoundImplementation.h"
-#include "aj/SoundInfo.h"
+#include "snx/Matrix44.h"
+#include "snx/Vec3.h"
+#include "snx/MatVec.h"
+#include "snx/FileIO.h"
+#include "snx/SoundImplementation.h"
+#include "snx/SoundInfo.h"
 
-#include "aj/plugins/OpenALSoundImplementation.h"
+#include "snx/plugins/OpenALSoundImplementation.h"
 
-#include "aj/SoundFactory.h"
-namespace aj
+#include "snx/SoundFactory.h"
+namespace snx
 {
-aj::SoundFactoryReg<OpenALSoundImplementation> openAlRegistrator( "OpenAL" );
+snx::SoundFactoryReg<OpenALSoundImplementation> openAlRegistrator( "OpenAL" );
 
 void OpenALSoundImplementation::step( const float & timeElapsed )
 {
    assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
    
-   aj::SoundImplementation::step( timeElapsed );
+   snx::SoundImplementation::step( timeElapsed );
 }
 
 
 void OpenALSoundImplementation::remove( const std::string alias )
 {
-   aj::SoundImplementation::remove( alias );
+   snx::SoundImplementation::remove( alias );
 }
-OpenALSoundImplementation::OpenALSoundImplementation() : aj::SoundImplementation(), mContextId( NULL ), mDev( NULL ), mBindLookup()
+OpenALSoundImplementation::OpenALSoundImplementation() : snx::SoundImplementation(), mContextId( NULL ), mDev( NULL ), mBindLookup()
 {
    // TODO: set up the defaults for openal...
    //mSoundAPIInfo.
@@ -100,7 +100,7 @@ void OpenALSoundImplementation::trigger( const std::string& alias, const unsigne
 {
    assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
    
-   aj::SoundImplementation::trigger( alias, looping );
+   snx::SoundImplementation::trigger( alias, looping );
 
    // if sound data hasn't been loaded into sound API yet, then do so
    if (mBindLookup.count( alias ) == 0)
@@ -148,7 +148,7 @@ void OpenALSoundImplementation::stop( const std::string& alias )
 {
    assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
    
-   aj::SoundImplementation::stop( alias );
+   snx::SoundImplementation::stop( alias );
 
    if (mBindLookup.count( alias ) > 0)
    {
@@ -162,9 +162,9 @@ void OpenALSoundImplementation::stop( const std::string& alias )
  * @postconditions alias will point to loaded sound data
  * @semantics associate an alias to sound data.  later this alias can be used to operate on this sound data.
  */
-void OpenALSoundImplementation::configure( const std::string& alias, const aj::SoundInfo& description )
+void OpenALSoundImplementation::configure( const std::string& alias, const snx::SoundInfo& description )
 {
-   aj::SoundImplementation::configure( alias, description );
+   snx::SoundImplementation::configure( alias, description );
 }
 
 /**
@@ -173,7 +173,7 @@ void OpenALSoundImplementation::configure( const std::string& alias, const aj::S
 void OpenALSoundImplementation::setPosition( const std::string& alias, float x, float y, float z )
 {
    assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
-   aj::SoundImplementation::setPosition( alias, x, y, z );
+   snx::SoundImplementation::setPosition( alias, x, y, z );
 
    if (mBindLookup.count( alias ) > 0)
    {
@@ -189,28 +189,28 @@ void OpenALSoundImplementation::setPosition( const std::string& alias, float x, 
  */
 void OpenALSoundImplementation::getPosition( const std::string& alias, float& x, float& y, float& z )
 {
-   aj::SoundImplementation::getPosition( alias, x, y, z );
+   snx::SoundImplementation::getPosition( alias, x, y, z );
 }
 
 /**
  * set the position of the listener
  */
-void OpenALSoundImplementation::setListenerPosition( const aj::Matrix44& mat )
+void OpenALSoundImplementation::setListenerPosition( const snx::Matrix44& mat )
 {
    assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
    
-   aj::SoundImplementation::setListenerPosition( mat );
+   snx::SoundImplementation::setListenerPosition( mat );
 
    // extract position from the matrix
    ALfloat position[3];
    mat.getTrans( position[0], position[1], position[2] );
 
    // extract orientation from the matrix
-   const aj::Vec3 forward( 0.0f, 0.0f, -1.0f );
-   const aj::Vec3 up( 0.0f, 1.0f, 0.0f );
-   aj::Vec3 forward_modified, up_modified;
-   forward_modified = aj::xformVec( mat, forward );
-   up_modified = aj::xformVec( mat, up );
+   const snx::Vec3 forward( 0.0f, 0.0f, -1.0f );
+   const snx::Vec3 up( 0.0f, 1.0f, 0.0f );
+   snx::Vec3 forward_modified, up_modified;
+   forward_modified = snx::xformVec( mat, forward );
+   up_modified = snx::xformVec( mat, up );
 
    // openal wants a pair of 3 tuples: { forward, up }
    ALfloat orientation[]  = { forward_modified[0], forward_modified[1], forward_modified[2],
@@ -226,9 +226,9 @@ void OpenALSoundImplementation::setListenerPosition( const aj::Matrix44& mat )
 /**
  * get the position of the listener
  */
-void OpenALSoundImplementation::getListenerPosition( aj::Matrix44& mat )
+void OpenALSoundImplementation::getListenerPosition( snx::Matrix44& mat )
 {
-   aj::SoundImplementation::getListenerPosition( mat );
+   snx::SoundImplementation::getListenerPosition( mat );
 }
 
 
@@ -244,7 +244,7 @@ void OpenALSoundImplementation::startAPI()
       mDev = alcOpenDevice( NULL );
 	   if (mDev == NULL) 
       {
-		   std::cerr << "[aj]OpenAL| ERROR: Could not open device\n" << std::flush;
+		   std::cerr << "[snx]OpenAL| ERROR: Could not open device\n" << std::flush;
    	   return;
 	   }
 
@@ -255,19 +255,19 @@ void OpenALSoundImplementation::startAPI()
 	   mContextId = alcCreateContext( mDev, attrlist );
       if (mContextId == NULL) 
       {
-         std::string err = (char*)alGetString( alcGetError() );
-		   std::cerr << "[aj]OpenAL| ERROR: Could not open context: " << err.c_str() << "\n" << std::flush;
+         std::string err = (char*)alGetString( alcGetError( mDev ) );
+		   std::cerr << "[snx]OpenAL| ERROR: Could not open context: " << err.c_str() << "\n" << std::flush;
 		   return;
 	   }
 
       // make context active...
 	   alcMakeContextCurrent( mContextId );
       
-      std::cerr<<"[aj]OpenAL| NOTICE: OpenAL API started: [dev="<<(int)mDev<<",ctx="<<(int)mContextId<<"]\n"<<std::flush;
+      std::cerr<<"[snx]OpenAL| NOTICE: OpenAL API started: [dev="<<(int)mDev<<",ctx="<<(int)mContextId<<"]\n"<<std::flush;
    }
    else
    {
-      std::cerr << "[aj]OpenAL| WARNING: startAPI called when API is already started\n" << std::flush;
+      std::cerr << "[snx]OpenAL| WARNING: startAPI called when API is already started\n" << std::flush;
    }      
 
   
@@ -288,7 +288,7 @@ void OpenALSoundImplementation::shutdownAPI()
 {
    if (this->isStarted() == false)
    {
-      std::cerr << "[aj]OpenAL| WARNING: API not started, nothing to shutdown [dev="<<(int)mDev<<",ctx="<<(int)mContextId<<"]\n" << std::flush;
+      std::cerr << "[snx]OpenAL| WARNING: API not started, nothing to shutdown [dev="<<(int)mDev<<",ctx="<<(int)mContextId<<"]\n" << std::flush;
       return;
    }
    
@@ -307,7 +307,7 @@ void OpenALSoundImplementation::shutdownAPI()
    mContextId = NULL;
    mDev = NULL;
 
-   std::cerr<<"[aj]OpenAL| NOTICE: OpenAL API closed: [dev="<<(int)mDev<<",ctx="<<(int)mContextId<<"]\n"<<std::flush;
+   std::cerr<<"[snx]OpenAL| NOTICE: OpenAL API closed: [dev="<<(int)mDev<<",ctx="<<(int)mContextId<<"]\n"<<std::flush;
 }   
 
 /**
@@ -316,7 +316,7 @@ void OpenALSoundImplementation::shutdownAPI()
  */
 void OpenALSoundImplementation::clear()
 {
-   aj::SoundImplementation::clear();
+   snx::SoundImplementation::clear();
 }   
 
 
@@ -336,11 +336,11 @@ void OpenALSoundImplementation::bind( const std::string& alias )
 
    if (this->isStarted() == false)
    {
-      std::cerr << "[aj]OpenAL| ERROR: API not started, bind() failed\n" << std::flush;
+      std::cerr << "[snx]OpenAL| ERROR: API not started, bind() failed\n" << std::flush;
       return;
    }
    
-   aj::SoundInfo& soundInfo = this->lookup( alias );
+   snx::SoundInfo& soundInfo = this->lookup( alias );
 
    // if alias is already bound, then unbind it...
    // TODO: we want a way to force a rebind, but do we _always_ want to force it?
@@ -353,21 +353,21 @@ void OpenALSoundImplementation::bind( const std::string& alias )
    switch (soundInfo.datasource)
    {
       default:
-      case aj::SoundInfo::FILESYSTEM:
+      case snx::SoundInfo::FILESYSTEM:
       {
          ALuint bufferID( 0 );
          ALuint sourceID( 0 );
 
          // open the file as readonly binary
-	      if (!ajFileIO::fileExists( soundInfo.filename.c_str() )) 
+	      if (!snxFileIO::fileExists( soundInfo.filename.c_str() )) 
          {
-		      std::cerr<<"[aj]OpenAL| file doesn't exist: "<<soundInfo.filename<<"\n" << std::flush;
+		      std::cerr<<"[snx]OpenAL| file doesn't exist: "<<soundInfo.filename<<"\n" << std::flush;
             break;
 	      }
 
          // read the data from the file.
-         std::cout<<"[aj]OpenAL| NOTIFY: loading: "<<soundInfo.filename<<"... " << std::flush;
-         ajFileIO::fileLoad( soundInfo.filename.c_str(), mBindLookup[alias].data );
+         std::cout<<"[snx]OpenAL| NOTIFY: loading: "<<soundInfo.filename<<"... " << std::flush;
+         snxFileIO::fileLoad( soundInfo.filename.c_str(), mBindLookup[alias].data );
          std::cout<<"done("<<mBindLookup[alias].data.size()<<")\n" << std::flush;
 
 	      // create a new buffer to put our loaded data into...
@@ -394,7 +394,7 @@ void OpenALSoundImplementation::bind( const std::string& alias )
          err = alGetError();
          if (err != AL_NO_ERROR)
          {
-            std::cerr << "[aj]OpenAL| ERROR: Could not buffer data [bufferID="<<bufferID<<",err="<<err<<"]\n" << std::flush;
+            std::cerr << "[snx]OpenAL| ERROR: Could not buffer data [bufferID="<<bufferID<<",err="<<err<<"]\n" << std::flush;
             switch (err)
             {
                case AL_ILLEGAL_COMMAND:
@@ -427,7 +427,7 @@ void OpenALSoundImplementation::bind( const std::string& alias )
 	      alGenSources( 1, &sourceID );
          if (alGetError() != AL_NO_ERROR)
          {
-		      std::cerr << "[aj]OpenAL| ERROR: Could not generate a source\n" << std::flush;
+		      std::cerr << "[snx]OpenAL| ERROR: Could not generate a source\n" << std::flush;
             alDeleteBuffers( 1, &bufferID );
             mBindLookup.erase( alias );
 		      break;
@@ -448,7 +448,7 @@ void OpenALSoundImplementation::bind( const std::string& alias )
    if (soundInfo.triggerOnNextBind == true)
    {
       soundInfo.triggerOnNextBind = false; // done...
-      std::cout<<"[aj]OpenAL| NOTIFY: triggering reconfigured sound\n"<<std::flush;
+      std::cout<<"[snx]OpenAL| NOTIFY: triggering reconfigured sound\n"<<std::flush;
       this->trigger( alias );
    }
 }   
@@ -461,7 +461,7 @@ void OpenALSoundImplementation::unbind( const std::string& alias )
 {
    if (this->isStarted() == false)
    {
-      std::cerr << "[aj]OpenAL| ERROR: API not started, unbind() failed\n" << std::flush;
+      std::cerr << "[snx]OpenAL| ERROR: API not started, unbind() failed\n" << std::flush;
       return;
    }
  
@@ -477,7 +477,7 @@ void OpenALSoundImplementation::unbind( const std::string& alias )
       }
       else
       {
-         std::cout<<"[aj]OpenAL| ERROR: can't trigger on next bind. alias not registered when it should be\n"<<std::flush;
+         std::cout<<"[snx]OpenAL| ERROR: can't trigger on next bind. alias not registered when it should be\n"<<std::flush;
       }      
    }
    
@@ -489,13 +489,13 @@ void OpenALSoundImplementation::unbind( const std::string& alias )
       err = alGetError();
       if (err != AL_NO_ERROR)
       {
-         std::cout<<"[aj]OpenAL| ERROR: unbind() deleting source\n"<<std::flush;
+         std::cout<<"[snx]OpenAL| ERROR: unbind() deleting source\n"<<std::flush;
       }
       alDeleteBuffers( 1, &mBindLookup[alias].buffer );
       err = alGetError();
       if (err != AL_NO_ERROR)
       {
-         std::cout<<"[aj]OpenAL| ERROR: unbind() deleting buffer\n"<<std::flush;
+         std::cout<<"[snx]OpenAL| ERROR: unbind() deleting buffer\n"<<std::flush;
       }
       mBindLookup.erase( alias );
    }

@@ -1,7 +1,7 @@
 
-/****************** <AJ heading BEGIN do not edit this line> *****************
+/****************** <SNX heading BEGIN do not edit this line> *****************
  *
- * Audio Juggler
+ * sonix
  *
  * Original Authors:
  *   Kevin Meinert, Carolina Cruz-Neira
@@ -12,7 +12,7 @@
  * Version:       $Revision$
  * -----------------------------------------------------------------
  *
- ****************** <AJ heading END do not edit this line> ******************/
+ ****************** <SNX heading END do not edit this line> ******************/
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
@@ -43,10 +43,10 @@
 
 
 
-#ifndef AJ_SOUND_API_INFO
-#define AJ_SOUND_API_INFO
+#ifndef SNX_SOUND_API_INFO
+#define SNX_SOUND_API_INFO
 
-namespace aj
+namespace snx
 {
 
 class SoundAPIInfo
@@ -73,4 +73,4 @@ public:
 
 }; // end namespace
 
-#endif //AJ_SOUND_API_INFO
+#endif //SNX_SOUND_API_INFO
