@@ -309,13 +309,27 @@ vjFileHandleUNIX::read (char* buffer, const size_t length) {
 ssize_t
 vjFileHandleUNIX::read (std::vector<char>& buffer, const size_t length) {
     ssize_t bytes;
+    char* temp_buf;
+    size_t buf_len;
 
     if ( length == 0 ) {
-        bytes = read((void*) &(buffer[0]), buffer.size());
+        buf_len = buffer.size();
     }
     else {
-        bytes = read((void*) &(buffer[0]), length);
+        buf_len = length;
     }
+
+    temp_buf = (char*) malloc(buf_len);
+    bytes    = read(temp_buf, buf_len);
+
+    // If anything was read into temp_buf, copy it into buffer.
+    if ( bytes > -1 ) {
+        for ( size_t i = 0; i < bytes; i++ ) {
+            buffer[i] = temp_buf[i];
+        }
+    }
+
+    free(temp_buf);
 
     return bytes;
 }
@@ -385,15 +399,27 @@ vjFileHandleUNIX::readn (char* buffer, const size_t length) {
 ssize_t
 vjFileHandleUNIX::readn (std::vector<char>& buffer, const size_t length) {
     ssize_t bytes;
+    char* temp_buf;
+    size_t buf_len;
 
-    // XXX: This may not actually work because readn() will try to modify
-    // the pointer value...
     if ( length == 0 ) {
-        bytes = readn((void*) &(buffer[0]), buffer.size());
+        buf_len = buffer.size();
     }
     else {
-        bytes = readn((void*) &(buffer[0]), length);
+        buf_len = length;
     }
+
+    temp_buf = (char*) malloc(buf_len);
+    bytes    = readn(temp_buf, buf_len);
+
+    // If anything was read into temp_buf, copy it into buffer.
+    if ( bytes > -1 ) {
+        for ( size_t i = 0; i < bytes; i++ ) {
+            buffer[i] = temp_buf[i];
+        }
+    }
+
+    free(temp_buf);
 
     return bytes;
 }
@@ -437,14 +463,28 @@ vjFileHandleUNIX::write (char* buffer, const size_t length) {
 // ----------------------------------------------------------------------------
 ssize_t
 vjFileHandleUNIX::write (std::vector<char>& buffer, const size_t length) {
-    ssize_t bytes;
+    size_t bytes;
+    char* temp_buf;
+    size_t buf_len;
 
     if ( length == 0 ) {
-        bytes = write((void*) &(buffer[0]), buffer.size());
+        buf_len = buffer.size();
     }
     else {
-        bytes = write((void*) &(buffer[0]), length);
+        buf_len = length;
     }
+
+    temp_buf = (char*) malloc(buf_len);
+
+    // Copy the contents of buffer into temp_buf.
+    for ( size_t i = 0; i < buf_len; i++ ) {
+        temp_buf[i] = buffer[i];
+    }
+
+    // Write temp_buf to the file handle.
+    bytes = write(temp_buf, buf_len);
+
+    free(temp_buf);
 
     return bytes;
 }

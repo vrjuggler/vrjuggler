@@ -136,7 +136,7 @@ ssize_t
 vjSocketDatagramImpUNIX::recvfrom (std::vector<char>& msg, const int flags,
                                    vjInetAddr& from)
 {
-    return recvfrom((void*) &msg[0], msg.size(), flags, from);
+    return recvfrom(msg, msg.size(), flags, from);
 }
 
 // ----------------------------------------------------------------------------
@@ -145,7 +145,22 @@ ssize_t
 vjSocketDatagramImpUNIX::recvfrom (std::vector<char>& msg, const size_t len,
                                    const int flags, vjInetAddr& from)
 {
-    return recvfrom((void*) &msg[0], len, flags, from);
+    ssize_t bytes;
+    char* temp_buf;
+
+    temp_buf = (char*) malloc(len);
+    bytes    = recvfrom(temp_buf, len, flags, from);
+
+    // If anything was read into temp_buf, copy it into msg.
+    if ( bytes > -1 ) {
+        for ( size_t i = 0; i < bytes; i++ ) {
+            msg[i] = temp_buf[i];
+        }
+    }
+
+    free(temp_buf);
+
+    return bytes;
 }
 
 // ----------------------------------------------------------------------------
@@ -194,7 +209,7 @@ ssize_t
 vjSocketDatagramImpUNIX::sendto (const std::vector<char>& msg,
                                  const int flags, const vjInetAddr& to)
 {
-    return sendto((void*) &msg[0], msg.size(), flags, to);
+    return sendto(msg, msg.size(), flags, to);
 }
 
 // ----------------------------------------------------------------------------
@@ -204,5 +219,20 @@ vjSocketDatagramImpUNIX::sendto (const std::vector<char>& msg,
                                  const size_t len, const int flags,
                                  const vjInetAddr& to)
 {
-    return sendto((void*) &msg[0], len, flags, to);
+    ssize_t bytes;
+    char* temp_buf;
+
+    temp_buf = (char*) malloc(len);
+
+    // Copy the contents of msg into temp_buf.
+    for ( size_t i = 0; i < len; i++ ) {
+        temp_buf[i] = msg[i];
+    }
+
+    // Write temp_buf to the file handle.
+    bytes = sendto(temp_buf, len, flags, to);
+
+    free(temp_buf);
+
+    return bytes;
 }

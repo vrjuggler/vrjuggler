@@ -241,15 +241,19 @@ vjSocketImpUNIX::recv (std::vector<char>& buffer, const size_t length,
                        const int flags)
 {
     ssize_t bytes;
+    char* temp_buf;
 
-    // If length is 0, determine the size of buffer using the size() method.
-    if ( length == 0 ) {
-        bytes = recv((void*) &(buffer[0]), buffer.size(), flags);
+    temp_buf = (char*) malloc(length);
+    bytes    = recv(temp_buf, length, flags);
+
+    // If anything was read into temp_buf, copy it into buffer.
+    if ( bytes > -1 ) {
+        for ( size_t i = 0; i < bytes; i++ ) {
+            buffer[i] = temp_buf[i];
+        }
     }
-    // Otherwise, just use length.
-    else {
-        bytes = recv((void*) &(buffer[0]), length, flags);
-    }
+
+    free(temp_buf);
 
     return bytes;
 }
@@ -296,15 +300,19 @@ vjSocketImpUNIX::send (const std::vector<char>& buffer, const size_t length,
                        const int flags)
 {
     ssize_t bytes;
+    char* temp_buf;
 
-    // If length is 0, determine the size of buffer using the size() method.
-    if ( length == 0 ) {
-        bytes = send((void*) &(buffer[0]), buffer.size(), flags);
+    temp_buf = (char*) malloc(length);
+
+    // Copy the contents of buffer into temp_buf.
+    for ( size_t i = 0; i < length; i++ ) {
+        temp_buf[i] = buffer[i];
     }
-    // Otherwise, just use length.
-    else {
-        bytes = send((void*) &(buffer[0]), length, flags);
-    }
+
+    // Write temp_buf to the file handle.
+    bytes = send(temp_buf, length, flags);
+
+    free(temp_buf);
 
     return bytes;
 }
