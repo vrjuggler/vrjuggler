@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-28-2003 patrickh    Renamed all keyboard-related classes to reflect that
+                        they are window-based event sources.  For example,
+                        gadget::Keyboard is now gadget::EventWindow.
+                        NEW VERSION: 0.10.0
 Apr-11-2003 allenb      Refactored proxy registration (and API) as part of the 
                         vrj module simulator refactoring.
                         NEW VERSION: 0.9.0

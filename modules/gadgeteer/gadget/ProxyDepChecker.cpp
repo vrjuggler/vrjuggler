@@ -37,7 +37,7 @@
 #include <gadget/Type/PositionProxy.h>
 #include <gadget/Type/GloveProxy.h>
 #include <gadget/Type/GestureProxy.h>
-#include <gadget/Type/KeyboardProxy.h>
+#include <gadget/Type/EventWindowProxy.h>
 #include <gadget/ProxyDepChecker.h>
 
 namespace gadget
@@ -52,7 +52,7 @@ bool ProxyDepChecker::canHandle(jccl::ConfigChunkPtr chunk)
               (chunk_type == DigitalProxy::getChunkType()) ||
               (chunk_type == GestureProxy::getChunkType()) ||
               (chunk_type == GloveProxy::getChunkType()) ||
-              (chunk_type == KeyboardProxy::getChunkType()) ||
+              (chunk_type == EventWindowProxy::getChunkType()) ||
               (chunk_type == PositionProxy::getChunkType()));
 
    return ret_val;

@@ -30,10 +30,30 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_KEYBOARD_INTERFACE_H_
-#define _GADGET_KEYBOARD_INTERFACE_H_
+#include <gadget/gadgetConfig.h>
+#include <jccl/Config/ConfigChunk.h>
+#include <gadget/Util/Debug.h>
+#include <gadget/Type/EventWindowProxy.h>
 
-#include <gadget/Type/KeyboardProxy.h>
-#include <gadget/Type/DeviceInterface.h>
 
-#endif
+namespace gadget
+{
+
+bool EventWindowProxy::config(jccl::ConfigChunkPtr chunk)
+{
+vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
+      std::string("------------------ EventWindow PROXY config() -----------------\n"),
+      std::string("\n"));
+   vprASSERT(chunk->getDescToken() == "EventWindowProxy");
+   bool base_config = Proxy::config(chunk);
+   if(!base_config)
+      return false;
+
+   mDeviceName = chunk->getProperty<std::string>("device");
+
+   refresh();
+
+   return true;
+}
+
+} // End of gadget namespace

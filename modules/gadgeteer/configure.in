@@ -746,6 +746,7 @@ AC_OUTPUT(gadgeteer-config
           gadget/Devices/Ascension/Makefile
           gadget/Devices/Ascension/Flock/Makefile
           gadget/Devices/Ascension/MotionStar/Makefile
+          gadget/Devices/EventWindow/Makefile
           gadget/Devices/Fakespace/Makefile
           gadget/Devices/Fakespace/PinchGlove/Makefile
           gadget/Devices/Immersion/Makefile
@@ -753,7 +754,6 @@ AC_OUTPUT(gadgeteer-config
           gadget/Devices/Intersense/Makefile
           gadget/Devices/Intersense/IS900/Makefile
           gadget/Devices/Intersense/IntersenseAPI/Makefile
-          gadget/Devices/Keyboard/Makefile
           gadget/Devices/Logitech/Makefile
           gadget/Devices/Logitech/ThreeDMouse/Makefile
           gadget/Devices/Open/Makefile

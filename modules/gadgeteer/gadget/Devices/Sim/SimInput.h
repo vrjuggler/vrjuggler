@@ -37,7 +37,7 @@
 #include <gadget/gadgetConfig.h>
 #include <vector>
 #include <jccl/Config/ConfigChunkPtr.h>
-#include <gadget/Type/KeyboardInterface.h>
+#include <gadget/Type/EventWindowInterface.h>
 #include <vpr/IO/ObjectReader.h>
 #include <vpr/IO/ObjectWriter.h>
 #include <vpr/IO/SerializableObject.h>
@@ -62,16 +62,19 @@ public:
       KeyModPair(int key, int modifier) : mKey(key), mModifier(modifier)
       {;}
 
-      KeyModPair (const KeyModPair& in) {
+      KeyModPair(const KeyModPair& in)
+      {
          copy(in);
       }
 
-      inline const KeyModPair& operator= (const KeyModPair& in) {
+      const KeyModPair& operator=(const KeyModPair& in)
+      {
          copy(in);
          return *this;
       }
 
-      inline void copy (const KeyModPair& in) {
+      void copy(const KeyModPair& in)
+      {
          mKey      = in.mKey;
          mModifier = in.mModifier;
       }
@@ -90,7 +93,7 @@ public:
 
    /**
     * Configures the simulated input device.
-    * @post Keyboard proxy is configured.
+    * @post Event window proxy is configured.
     */
    virtual bool config(jccl::ConfigChunkPtr chunk);
    virtual std::string getBaseType()
@@ -130,7 +133,7 @@ protected:
    std::vector<KeyModPair> readKeyList(std::vector<jccl::ConfigChunkPtr>& keyList);
 
 protected:
-   KeyboardInterface     mKeyboard; /**< The keyboard we are getting events from */
+   EventWindowInterface mEventWin; /**< The event window from which we receive events. */
 };
 
 } // End of gadget namespace

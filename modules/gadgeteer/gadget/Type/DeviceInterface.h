@@ -45,7 +45,7 @@ class AnalogProxy;
 class DigitalProxy;
 class GestureProxy;
 class GloveProxy;
-class KeyboardProxy;
+class EventWindowProxy;
 class PositionProxy;
 
 /**
@@ -181,12 +181,12 @@ private:
 
 
 // --- Typedefs to the old types --- //
-typedef DeviceInterface<AnalogProxy>     AnalogInterface;
-typedef DeviceInterface<DigitalProxy>    DigitalInterface;
-typedef DeviceInterface<GestureProxy>    GestureInterface;
-typedef DeviceInterface<GloveProxy>      GloveInterface;
-typedef DeviceInterface<KeyboardProxy>   KeyboardInterface;
-typedef DeviceInterface<PositionProxy>   PositionInterface;
+typedef DeviceInterface<AnalogProxy>      AnalogInterface;
+typedef DeviceInterface<DigitalProxy>     DigitalInterface;
+typedef DeviceInterface<GestureProxy>     GestureInterface;
+typedef DeviceInterface<GloveProxy>       GloveInterface;
+typedef DeviceInterface<EventWindowProxy> EventWindowInterface;
+typedef DeviceInterface<PositionProxy>    PositionInterface;
 
 } // end namespace
 

@@ -30,31 +30,35 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_KEYBOARD_PROXY_H_
-#define _GADGET_KEYBOARD_PROXY_H_
+#ifndef _GADGET_EVENT_WINDOW_PROXY_H_
+#define _GADGET_EVENT_WINDOW_PROXY_H_
 
 #include <gadget/gadgetConfig.h>
 #include <gadget/Type/Proxy.h>
-#include <gadget/Type/Keyboard.h>
+#include <gadget/Type/EventWindow.h>
 
 namespace gadget
 {
 
 /**
- * Proxy class to Keyboard based devices.
+ * Proxy class to event window-based devices.
  */
-class GADGET_CLASS_API KeyboardProxy : public TypedProxy<Keyboard>
+class GADGET_CLASS_API EventWindowProxy : public TypedProxy<EventWindow>
 {
 public:
-   KeyboardProxy()
+   EventWindowProxy()
    { ; }
 
-   Keyboard* getKeyboardPtr()
+   EventWindow* getEventWindowPtr()
    {
       if(isStupified())
+      {
          return NULL;
+      }
       else
+      {
          return mTypedDevice;
+      }
    }
 
    /**
@@ -78,7 +82,10 @@ public:
          return mTypedDevice->keyPressed(keyId);
    }
 
-   static std::string getChunkType() { return "KeyboardProxy"; }
+   static std::string getChunkType()
+   {
+      return std::string("EventWindowProxy");
+   }
 
    bool config(jccl::ConfigChunkPtr chunk);
 
