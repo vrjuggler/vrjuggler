@@ -184,6 +184,12 @@ public:
       condMutex = mutex;
    }
 
+   /** Test the mutex to see if it is held.
+    */
+   int test()
+   { return mCondMutex->test(); }
+
+
    void dump (void) const
    {
       vprDEBUG_BEGIN(vprDBG_ALL,0)
