@@ -41,19 +41,17 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/vrj/Sound
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
-INSTALL		= @INSTALL@
-SUBOBJDIR	= $(VJ_LIBRARY)
+includedir=	@includedir@/vrj/Sound
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+INSTALL=	@INSTALL@
+SUBOBJDIR=	$(VJ_LIBRARY)
 
 # Prefix for recursive stuff.
-DIRPRFX		= vrj/Sound/
+DIRPRFX=	vrj/Sound/
 
-# Subdirectories to compile.
-INCLUDES	+= -I$(SNX_BASE_DIR)/include
-SRCS		+= SoundManagerSonix.cpp
-SRCS		+= SoundManagerFactory.cpp
+SRCS=		SoundManagerFactory.cpp	\
+		SoundManagerSonix.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
 
@@ -62,6 +60,6 @@ include $(MKPATH)/dpp.obj-subdir.mk
 # -----------------------------------------------------------------------------
 ifndef DO_CLEANDEPEND
 ifndef DO_BEFOREBUILD
-    -include $(DEPEND_FILES)
+   -include $(DEPEND_FILES)
 endif
 endif
