@@ -67,7 +67,9 @@ public:
    virtual Input* createNetDevice(std::string baseType)
    {
       boost::ignore_unused_variable_warning(baseType);
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "ERROR: DeviceConstructorBase::createDevice: Should never be called" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "ERROR: DeviceConstructorBase::createDevice: Should never be called"
+         << std::endl << vprDEBUG_FLUSH;
       return NULL;
    }
 
