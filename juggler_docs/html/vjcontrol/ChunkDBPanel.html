@@ -105,16 +105,30 @@ to make a config file that's just a list of other config files to
 be loaded.
 
 <p>
-If a config file with includes is loaded into vjcontrol, the included files are automatically
-loaded, though each file is viewed separately.
+Similarly, there are "Include Description File" chunks which will cause
+Juggler to automatically load a ChunkDesc file.  This is particularly 
+useful for config files which contain application-specific kinds of
+ConfigChunks.
+
 <p>
-To include a file, simply add an "Include File" chunk to the config file.  The name of the 
-"Include File" chunk is the complete path name of the file to load.  You can use the strings
-"<TT>$HOME</TT>" and "<TT>$VJ_BASE_DIR</TT>" at the start of the name to refer to your home directory and the
-Juggler install directory, respectively.
+If a config file with includes is loaded into vjcontrol, the included 
+files are automatically loaded, though each file is viewed separately.
+
 <p>
-Note that path names should be absolute paths (paths starting with "<TT>/</TT>" or "<TT>$HOME</TT>" or "<TT>$VJ_BASE_DIR</TT>").
-Relative path names should be relative to the file including them, but this may not work correctly in the current version of Juggler.
+To include a file, simply add an "Include File" (or "Include Descriptions 
+File") chunk to the config file.  The name of the "Include File" chunk is 
+the path name of the file to load.  You can use the strings
+"<TT>$HOME</TT>" and "<TT>$VJ_BASE_DIR</TT>" at the start of the name to 
+refer to your home directory and the Juggler install directory, 
+respectively.
+
+<p>
+Relative path names in includes (e.g. paths that don't start with "/" or 
+"C:" etc.) are relative to the location of the file containing the "Include
+File" chunk.  For example,
+if the config file "/home/vr/vjconfig/c2.config" includes the file
+"C2/displays.config", Juggler will try to load a file named
+"/home/vr/vjconfig/C2/displays.config".
 
 <br><br>
 
