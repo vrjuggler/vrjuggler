@@ -77,6 +77,16 @@ interface SubjectManager
     * information about a given Subject Manager servant.
     */
    SubjectManagerInfoList getInfo();
+
+   /**
+    * Returns the name of this Subject Manager reference as it is registered
+    * with the CORBA Naming Service.
+    *
+    * @note It might be possible for client code to look this up some other
+    *       way, so this method may not really be needed except as a
+    *       convenience.
+    */
+   string getName();
 };
 
 };
