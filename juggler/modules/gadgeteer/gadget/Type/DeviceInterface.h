@@ -130,7 +130,7 @@ public:
          mTypeSpecificProxy = dynamic_cast<PROXY_TYPE*>(mProxyPtr);
          if(NULL == mTypeSpecificProxy)
          {
-            vjDEBUG(vjDBG_INPUT_MGR, vjDBG_CRITICAL_LVL) << "vjAnalogInterface: Tried to point at proxy of incorrect type named: " << mProxyName << std::endl << vjDEBUG_FLUSH;
+            vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_CRITICAL_LVL) << "vjAnalogInterface: Tried to point at proxy of incorrect type named: " << mProxyName << std::endl << vprDEBUG_FLUSH;
          }
       }
 

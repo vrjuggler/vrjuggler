@@ -40,7 +40,7 @@ namespace vrj
 
 bool DigitalProxy::config(ConfigChunk* chunk)
 {
-   vjDEBUG_BEGIN(vjDBG_INPUT_MGR,3) << "----------- configuring DIGITAL proxy ----\n" << vjDEBUG_FLUSH;
+   vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,3) << "----------- configuring DIGITAL proxy ----\n" << vprDEBUG_FLUSH;
    vprASSERT(((std::string)chunk->getType()) == "DigProxy");
 
    m_unitNum = chunk->getProperty("unit");

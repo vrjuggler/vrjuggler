@@ -58,7 +58,7 @@ std::vector<Display*> DisplayManager::getAllDisplays()
 
 void DisplayManager::setDrawManager(DrawManager* drawMgr)
 {
-   vjDEBUG(vjDBG_DISP_MGR,3) << "vjDisplayManager: Setting draw manager.\n" << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DISP_MGR,3) << "vjDisplayManager: Setting draw manager.\n" << vprDEBUG_FLUSH;
 
    // set the draw manager
    mDrawManager = drawMgr;
@@ -84,7 +84,7 @@ bool DisplayManager::configAdd(ConfigChunk* chunk)
    if(   (chunk_type == std::string("surfaceDisplay"))
       || (chunk_type == std::string("simDisplay")) )
    {
-      vjDEBUG(vjDBG_ALL,0) << "Chunk of type: " << chunk_type << " is no longer supported.  Use displayWindow type instead.\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,0) << "Chunk of type: " << chunk_type << " is no longer supported.  Use displayWindow type instead.\n" << vprDEBUG_FLUSH;
       return false;
    }
    else if( (chunk_type == std::string("displayWindow")))
@@ -113,7 +113,7 @@ bool DisplayManager::configRemove(ConfigChunk* chunk)
    if(  (chunk_type == std::string("surfaceDisplay"))
      || (chunk_type == std::string("simDisplay")) )
    {
-      vjDEBUG(vjDBG_ALL,0) << "Chunk of type: " << chunk_type << " is no longer supported.  Use displayWindow type instead.\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,0) << "Chunk of type: " << chunk_type << " is no longer supported.  Use displayWindow type instead.\n" << vprDEBUG_FLUSH;
       return false;
    }
    else if(chunk_type == std::string("displayWindow"))
@@ -157,7 +157,7 @@ bool DisplayManager::configAddDisplay(ConfigChunk* chunk)
 {
    vprASSERT(configCanHandle(chunk));      // We must be able to handle it first of all
 
-   vjDEBUG_BEGIN(vjDBG_DISP_MGR,vjDBG_STATE_LVL) << "------- DisplayManager::configAddDisplay -------\n" << vjDEBUG_FLUSH;
+   vprDEBUG_BEGIN(vrjDBG_DISP_MGR,vprDBG_STATE_LVL) << "------- DisplayManager::configAddDisplay -------\n" << vprDEBUG_FLUSH;
 
    // Find out if we already have a window of this name
    // If so, then close it before we open a new one of the same name
@@ -165,7 +165,7 @@ bool DisplayManager::configAddDisplay(ConfigChunk* chunk)
    Display* cur_disp = findDisplayNamed(chunk->getProperty("name"));
    if(cur_disp != NULL)                         // We have an old display
    {
-      vjDEBUG(vjDBG_DISP_MGR,vjDBG_CONFIG_LVL) << "Removing old window: " << cur_disp->getName().c_str() << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_DISP_MGR,vprDBG_CONFIG_LVL) << "Removing old window: " << cur_disp->getName().c_str() << vprDEBUG_FLUSH;
       closeDisplay(cur_disp,true);              // Close the display and notify the draw manager to close the window
    }
 
@@ -175,11 +175,11 @@ bool DisplayManager::configAddDisplay(ConfigChunk* chunk)
       Display* newDisp = new Display();        // Create the display
       newDisp->config(chunk);
       addDisplay(newDisp,true);                    // Add it
-      vjDEBUG(vjDBG_DISP_MGR,vjDBG_STATE_LVL) << "Adding display: " << newDisp->getName().c_str() << std::endl << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_DISP_MGR,vjDBG_STATE_LVL) << "Display: "  << newDisp << std::endl << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_DISP_MGR,vprDBG_STATE_LVL) << "Adding display: " << newDisp->getName().c_str() << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_DISP_MGR,vprDBG_STATE_LVL) << "Display: "  << newDisp << std::endl << vprDEBUG_FLUSH;
    }
 
-   vjDEBUG_END(vjDBG_DISP_MGR,vjDBG_STATE_LVL) << "------- DisplayManager::configAddDisplay Done. --------\n" << vjDEBUG_FLUSH;
+   vprDEBUG_END(vrjDBG_DISP_MGR,vprDBG_STATE_LVL) << "------- DisplayManager::configAddDisplay Done. --------\n" << vprDEBUG_FLUSH;
    return true;
 }
 
@@ -190,7 +190,7 @@ bool DisplayManager::configRemoveDisplay(ConfigChunk* chunk)
 {
    vprASSERT(configCanHandle(chunk));      // We must be able to handle it first of all
 
-   vjDEBUG_BEGIN(vjDBG_DISP_MGR,vjDBG_STATE_LVL) << "------- DisplayManager::configRemoveDisplay -------\n" << vjDEBUG_FLUSH;
+   vprDEBUG_BEGIN(vrjDBG_DISP_MGR,vprDBG_STATE_LVL) << "------- DisplayManager::configRemoveDisplay -------\n" << vprDEBUG_FLUSH;
 
    bool success_flag(false);
 
@@ -204,7 +204,7 @@ bool DisplayManager::configRemoveDisplay(ConfigChunk* chunk)
       }
    }
 
-   vjDEBUG_END(vjDBG_DISP_MGR,vjDBG_STATE_LVL) << "------- DisplayManager::configRemoveDisplay done. --------\n" << vjDEBUG_FLUSH;
+   vprDEBUG_END(vrjDBG_DISP_MGR,vprDBG_STATE_LVL) << "------- DisplayManager::configRemoveDisplay done. --------\n" << vprDEBUG_FLUSH;
    return success_flag;
 }
 
@@ -214,7 +214,7 @@ bool DisplayManager::configRemoveDisplay(ConfigChunk* chunk)
 // notifyDrawMgr = 0; Defaults to 0
 int DisplayManager::addDisplay(Display* disp, bool notifyDrawMgr)
 {
-   vjDEBUG(vjDBG_DISP_MGR,4) << "vjDisplayManager::addDisplay \n" << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DISP_MGR,4) << "vjDisplayManager::addDisplay \n" << vprDEBUG_FLUSH;
 
    // Test if active or not, to determine correct list
    // The place it in the list
@@ -240,7 +240,7 @@ int DisplayManager::closeDisplay(Display* disp, bool notifyDrawMgr)
 {
    vprASSERT(isMemberDisplay(disp));       // Make sure that display actually exists
 
-   vjDEBUG_BEGIN(vjDBG_DISP_MGR,vjDBG_STATE_LVL) << "closeDisplay: Closing display named: " << disp->getName() << std::endl<< vjDEBUG_FLUSH;
+   vprDEBUG_BEGIN(vrjDBG_DISP_MGR,vprDBG_STATE_LVL) << "closeDisplay: Closing display named: " << disp->getName() << std::endl<< vprDEBUG_FLUSH;
 
    // Notify the draw manager to get rid of it
    // Note: if it is not active, then the draw manager doesn't know about it

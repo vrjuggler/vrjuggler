@@ -49,19 +49,19 @@ bool IBox::config(ConfigChunk *c)
   if(! (Input::config(c) && Analog::config(c) && Digital::config(c) ))
       return false;
 
-  vjDEBUG(vjDBG_INPUT_MGR,3) << "   IBox::config:" << std::endl
-                             << vjDEBUG_FLUSH;
+  vprDEBUG(vrjDBG_INPUT_MGR,3) << "   IBox::config:" << std::endl
+                             << vprDEBUG_FLUSH;
   port_id = c->getProperty( "portNum" );
 
   // Done in Input
   //active = 0;
   //baudRate = c->getProperty("baud");
 
-  vjDEBUG(vjDBG_INPUT_MGR,1) << "   Creating an IBox.. params: " << std::endl
+  vprDEBUG(vrjDBG_INPUT_MGR,1) << "   Creating an IBox.. params: " << std::endl
              << "    portnum: " << port_id << std::endl
              << "        baud   : " << baudRate << std::endl
              << "   instanceName: " << instName << std::endl << std::endl
-             << vjDEBUG_FLUSH;
+             << vprDEBUG_FLUSH;
 
   return true;
 }
@@ -99,18 +99,18 @@ int IBox::startSampling()
       if (result == SUCCESS)
       {
        active = 1;
-       vjDEBUG(vjDBG_INPUT_MGR,1) << "     Connected to IBox.\n"
-                                  << std::flush << vjDEBUG_FLUSH;
+       vprDEBUG(vrjDBG_INPUT_MGR,1) << "     Connected to IBox.\n"
+                                  << std::flush << vprDEBUG_FLUSH;
       }
       else
       {
        active = 0;
-       vjDEBUG(vjDBG_INPUT_MGR,0)
+       vprDEBUG(vrjDBG_INPUT_MGR,0)
           << "   FAILED TO CONNECT to the Ibox named " << instName
           << std::endl << "     Ibox settings were: " << std::endl
           << "      port : " << port_id << std::endl
           << "   baudRate: " << baudRate << std::endl << std::endl
-          << vjDEBUG_FLUSH;
+          << vprDEBUG_FLUSH;
        return 0;
       }
       hci_std_cmd(&thingie, 0,0,0);

@@ -42,7 +42,7 @@ namespace vrj
 // Set up the transformation information
 bool Position::config(ConfigChunk *c)
 {
-  //vjDEBUG(vjDBG_ALL,0) << "vjPosition::Position(ConfigChunk*)" << vjDEBUG_FLUSH;
+  //vprDEBUG(vprDBG_ALL,0) << "vjPosition::Position(ConfigChunk*)" << vprDEBUG_FLUSH;
   if ((c->getNum("translate") == 3) && (c->getNum("rotate") == 3))
   {
     // These are the transforms from the base tracker coord system
@@ -72,13 +72,13 @@ bool Position::config(ConfigChunk *c)
 
 TimeStamp* Position::getPosUpdateTime (int devNum)
 {
-      vjDEBUG(vjDBG_PERFORMANCE,2) << "vjPosition::getPosUpdateTime: Get update time function not implemented for this class: " << typeid(this).name() << std::endl << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_PERFORMANCE,2) << "vjPosition::getPosUpdateTime: Get update time function not implemented for this class: " << typeid(this).name() << std::endl << vprDEBUG_FLUSH;
    return NULL;
 }
 
 Position::Position()
 {
-  //vjDEBUG(vjDBG_ALL,0) << "vjPosition::Position()" << vjDEBUG_FLUSH;
+  //vprDEBUG(vprDBG_ALL,0) << "vjPosition::Position()" << vprDEBUG_FLUSH;
   theData = NULL;
   mDataTimes = NULL;
   xformMat.makeIdent();

@@ -77,27 +77,27 @@ public:
          return false;
    }
 
-   // Write out the dependencies to the vjDEBUG macro
-   virtual void debugOutDependencies(ConfigChunk* chunk,int dbg_lvl=vjDBG_WARNING_LVL)
+   // Write out the dependencies to the vprDEBUG macro
+   virtual void debugOutDependencies(ConfigChunk* chunk,int dbg_lvl=vprDBG_WARNING_LVL)
    {
       DepChecker::debugOutDependencies(chunk,dbg_lvl);
 
-      vjDEBUG_NEXT_BEGIN(vjDBG_ALL,dbg_lvl) << "Extra Dependency: Dependent upon getting DisplaySystemChunk from displayManager: " << vjDEBUG_FLUSH;
+      vprDEBUG_NEXT_BEGIN(vprDBG_ALL,dbg_lvl) << "Extra Dependency: Dependent upon getting DisplaySystemChunk from displayManager: " << vprDEBUG_FLUSH;
       if(depSatisfied(chunk) == false)
-         vjDEBUG_CONT(vjDBG_ALL,dbg_lvl) << "FAILED!!!\n" << vjDEBUG_FLUSH;
+         vprDEBUG_CONT(vprDBG_ALL,dbg_lvl) << "FAILED!!!\n" << vprDEBUG_FLUSH;
       else
-         vjDEBUG_CONT(vjDBG_ALL,dbg_lvl) << "passed.\n" << vjDEBUG_FLUSH;
+         vprDEBUG_CONT(vprDBG_ALL,dbg_lvl) << "passed.\n" << vprDEBUG_FLUSH;
 
 
-      vjDEBUG_NEXT(vjDBG_ALL,dbg_lvl) << "Extra Dependencies for: item: "
+      vprDEBUG_NEXT(vprDBG_ALL,dbg_lvl) << "Extra Dependencies for: item: "
                                       << chunk->getProperty("name")
                                       << " type: "
                                       << ((std::string)chunk->getType()).c_str()
                                       << std::endl
                                       << "   Dependant upon displaySystemChunk in display Manager. (Needs it to find display strings)"
-                                      << vjDEBUG_FLUSH;
+                                      << vprDEBUG_FLUSH;
 
-      vjDEBUG_NEXT_END(vjDBG_ALL,dbg_lvl) << std::endl << vjDEBUG_FLUSH;
+      vprDEBUG_NEXT_END(vprDBG_ALL,dbg_lvl) << std::endl << vprDEBUG_FLUSH;
    }
 };
 

@@ -55,8 +55,8 @@ namespace vrj
 
 Connect::Connect(Socket* s, const std::string& _name,
            ConnectMode _mode): name(""), filename(""), commands_mutex(), communicators() {
-    vjDEBUG(vjDBG_ENV_MGR,4) << "EM: Creating Connect to file or socket\n"
-          << vjDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_ENV_MGR,4) << "EM: Creating Connect to file or socket\n"
+          << vprDEBUG_FLUSH;
     sock = s;
     mode = _mode;
 
@@ -108,21 +108,21 @@ Connect::Connect(ConfigChunk* c): commands_mutex(), communicators() {
     case VJC_OUTPUT:
         outstream = new std::ofstream (filename.c_str(), std::ios::out);
         if (!outstream)
-            vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrRED, "ERROR:") << " file open failed for \"" << filename.c_str()
-                                 << "\"\n" << vjDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrRED, "ERROR:") << " file open failed for \"" << filename.c_str()
+                                 << "\"\n" << vprDEBUG_FLUSH;
         break;
     case VJC_INPUT:
         instream = new std::ifstream (filename.c_str(), std::ios::in);
         if (!instream)
-            vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrRED, "ERROR:") << " file open failed for \"" << filename.c_str()
-                                 << "\"\n" << vjDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrRED, "ERROR:") << " file open failed for \"" << filename.c_str()
+                                 << "\"\n" << vprDEBUG_FLUSH;
         break;
     case VJC_INTERACTIVE:
         instream = new std::fstream (filename.c_str(),
                                      std::ios::in | std::ios::out);
         if (!instream)
-            vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrRED, "ERROR:") << " file open failed for \"" << filename.c_str()
-                                 << "\"\n" << vjDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrRED, "ERROR:") << " file open failed for \"" << filename.c_str()
+                                 << "\"\n" << vprDEBUG_FLUSH;
         outstream = (std::fstream*)instream;
         break;
     }
@@ -281,17 +281,17 @@ void Connect::removeTimedUpdate (TimedUpdate* _tu) {
 
 
 void Connect::readControlLoop(void* nullParam) {
-   vjDEBUG(vjDBG_ENV_MGR,5) << "vjConnect " << name.c_str()
+   vprDEBUG(vrjDBG_ENV_MGR,5) << "vjConnect " << name.c_str()
              << " started read control loop.\n"
-             << vjDEBUG_FLUSH;
+             << vprDEBUG_FLUSH;
    while (!read_die) {
        if (!(*instream) || instream->eof())
       break;
       if (!readCommand (*instream))
           ; // do some error handling...
    }
-   vjDEBUG(vjDBG_ENV_MGR,5) << "vjConnect " << name.c_str()
-             <<" ending read control loop.\n" << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_ENV_MGR,5) << "vjConnect " << name.c_str()
+             <<" ending read control loop.\n" << vprDEBUG_FLUSH;
 
    read_connect_thread = NULL;
    read_die = write_die = true;
@@ -307,9 +307,9 @@ void Connect::writeControlLoop(void* nullParam) {
 
 //              *outstream << "another test : ( \n" << flush;
 
-    vjDEBUG(vjDBG_ENV_MGR,5) << "vjConnect " << name.c_str()
+    vprDEBUG(vrjDBG_ENV_MGR,5) << "vjConnect " << name.c_str()
                              << " started write control loop.\n"
-                             << vjDEBUG_FLUSH;
+                             << vprDEBUG_FLUSH;
 
     while (!write_die) {
 //          cout << "writing in write loop " << flush;
@@ -325,11 +325,11 @@ void Connect::writeControlLoop(void* nullParam) {
         while (!commands.empty()) {
             cmd = commands.front();
             commands.pop();
-            vjDEBUG (vjDBG_ENV_MGR, 5) << "calling EM command "
+            vprDEBUG (vrjDBG_ENV_MGR, 5) << "calling EM command "
                                        << cmd->getName().c_str()
-                                       <<vjDEBUG_FLUSH;
+                                       <<vprDEBUG_FLUSH;
             cmd->call (*outstream);
-            vjDEBUG (vjDBG_ENV_MGR, 5) << " -- done.\n" << vjDEBUG_FLUSH;
+            vprDEBUG (vrjDBG_ENV_MGR, 5) << " -- done.\n" << vprDEBUG_FLUSH;
             delete cmd;
         }
 
@@ -348,7 +348,7 @@ void Connect::writeControlLoop(void* nullParam) {
         commands_mutex.release();
 
     } // end main loop
-    vjDEBUG (vjDBG_ENV_MGR,5) << "vjConnect " << name.c_str() << " ending write loop.\n" << vjDEBUG_FLUSH;
+    vprDEBUG (vrjDBG_ENV_MGR,5) << "vjConnect " << name.c_str() << " ending write loop.\n" << vprDEBUG_FLUSH;
     //write_connect_thread = NULL;
     write_alive = false;
 }
@@ -366,7 +366,7 @@ bool Connect::readCommand(std::istream& fin) {
     if (!fin.getline (buf, buflen, '\n'))
         return false;
     if (strncmp (buf, protocol_start_string, protocol_start_string_len)) {
-        vjDEBUG (vjDBG_ENV_MGR, 3) << "Connection: Invalid protocol identifier." << std::endl << vjDEBUG_FLUSH;
+        vprDEBUG (vrjDBG_ENV_MGR, 3) << "Connection: Invalid protocol identifier." << std::endl << vprDEBUG_FLUSH;
         do {
             if (!fin.getline (buf, buflen, '\n'))
                 return false;
@@ -381,7 +381,7 @@ bool Connect::readCommand(std::istream& fin) {
         protocol_name[len] = 0;
     }
     else {
-        vjDEBUG (vjDBG_ENV_MGR, 3) << "foo\n" << vjDEBUG_FLUSH;
+        vprDEBUG (vrjDBG_ENV_MGR, 3) << "foo\n" << vprDEBUG_FLUSH;
         return false;
     }
 
@@ -401,7 +401,7 @@ bool Connect::readCommand(std::istream& fin) {
         return communicator->readStream (fin, buf);
     }
     else {
-        vjDEBUG (vjDBG_ENV_MGR, 1) << "Connection: Couldn't find protocol handler for '" << protocol_name << "'\n" << vjDEBUG_FLUSH;
+        vprDEBUG (vrjDBG_ENV_MGR, 1) << "Connection: Couldn't find protocol handler for '" << protocol_name << "'\n" << vprDEBUG_FLUSH;
         // should we scan for </protocol> here?
         return false;
     }
@@ -417,21 +417,21 @@ bool Connect::readCommand(std::istream& fin) {
 //      if (!fin.getline(rbuf,buflen,'\n'))
 //          return false;
 
-//      vjDEBUG(vjDBG_ENV_MGR,4) << "vjConnect:: read: '" << rbuf
-//                               << "'.\n" << vjDEBUG_FLUSH;
+//      vprDEBUG(vrjDBG_ENV_MGR,4) << "vjConnect:: read: '" << rbuf
+//                               << "'.\n" << vprDEBUG_FLUSH;
 
 //      s = strtok (rbuf, " \t\n");
 //      if (!s) {
-//          vjDEBUG(vjDBG_ERROR,1) << "couldn't get a token.  something's really wrong in Connect\n"
-//                                 << vjDEBUG_FLUSH;
+//          vprDEBUG(vprDBG_ERROR,1) << "couldn't get a token.  something's really wrong in Connect\n"
+//                                 << vprDEBUG_FLUSH;
 //      }
 
 //      if (!strcasecmp (s, get_TOKEN)) {
 //          s = strtok (NULL, " \t\n");
 //          if (!strcasecmp (s, descriptions_TOKEN)) {
 //              ChunkDescDB* db = ChunkFactory::instance()->getChunkDescDB();
-//              vjDEBUG(vjDBG_ENV_MGR,4) << "vjConnect: Sending (requested) chunkdesc.\n" << vjDEBUG_FLUSH;
-//              vjDEBUG(vjDBG_ENV_MGR,5) << *db << std::endl << vjDEBUG_FLUSH;
+//              vprDEBUG(vrjDBG_ENV_MGR,4) << "vjConnect: Sending (requested) chunkdesc.\n" << vprDEBUG_FLUSH;
+//              vprDEBUG(vrjDBG_ENV_MGR,5) << *db << std::endl << vprDEBUG_FLUSH;
 //              sendDescDB (db);
 //          }
 //          else if (!strcasecmp (s,chunks_TOKEN)) {
@@ -439,14 +439,14 @@ bool Connect::readCommand(std::istream& fin) {
 //              ConfigChunkDB* db = new ConfigChunkDB((*(ConfigManager::instance()->getActiveConfig())));   // Make a copy
 //              ConfigManager::instance()->unlockActive();
 
-//              vjDEBUG(vjDBG_ENV_MGR,4) << "vjConnect: Sending (requested) chunkdb.\n" << vjDEBUG_FLUSH;
-//              vjDEBUG(vjDBG_ENV_MGR,5) << *db << std::endl << vjDEBUG_FLUSH;
+//              vprDEBUG(vrjDBG_ENV_MGR,4) << "vjConnect: Sending (requested) chunkdb.\n" << vprDEBUG_FLUSH;
+//              vprDEBUG(vrjDBG_ENV_MGR,5) << *db << std::endl << vprDEBUG_FLUSH;
 //              sendChunkDB (db, true);
 //          }
 //          else {
-//              vjDEBUG(vjDBG_ERROR,1)
+//              vprDEBUG(vprDBG_ERROR,1)
 //                 << "Error: Connect:: Received unknown GET: " << s
-//                 << std::endl << vjDEBUG_FLUSH;
+//                 << std::endl << vprDEBUG_FLUSH;
 //          }
 //      }
 
@@ -459,7 +459,7 @@ bool Connect::readCommand(std::istream& fin) {
 //          // XXX: Hack!!! We need to change this. We should not
 //          // change the dbs outside of kernel
 //          //s = strtok (NULL, " \t\n");
-//          vjDEBUG(vjDBG_ERROR,0) << "EM Receive descriptions disabled!!!\n" << vjDEBUG_FLUSH;
+//          vprDEBUG(vprDBG_ERROR,0) << "EM Receive descriptions disabled!!!\n" << vprDEBUG_FLUSH;
 //          //if (!strcasecmp (s, "all") && (cachedChunkdb->isEmpty()))
 //          //    cachedDescdb->removeAll();
 //          //fin >> *cachedDescdb;
@@ -474,18 +474,18 @@ bool Connect::readCommand(std::istream& fin) {
 //          // chunks 'all' option disabled for now...
 //          //if (!strcasecmp (s, "all"))
 //          //   chunkdb->removeAll()
-//          vjDEBUG(vjDBG_ENV_MGR,1) << "vjConnect:: Read: chunks: Started\n" << vjDEBUG_FLUSH;
+//          vprDEBUG(vrjDBG_ENV_MGR,1) << "vjConnect:: Read: chunks: Started\n" << vprDEBUG_FLUSH;
 
 //          ConfigChunkDB* newchunkdb = new ConfigChunkDB;
 //          // new cool xml testing stuff.
 //          XMLConfigIO configio;
 //          configio.readConfigChunkDB (fin, *newchunkdb);
 //          //fin >> *newchunkdb;
-//          vjDEBUG(vjDBG_ENV_MGR,5) << *newchunkdb << std::endl << vjDEBUG_FLUSH;
-//          vjDEBUG(vjDBG_ENV_MGR,3) << "vjConnect:: Read: chunks: Completed\n" << vjDEBUG_FLUSH;
+//          vprDEBUG(vrjDBG_ENV_MGR,5) << *newchunkdb << std::endl << vprDEBUG_FLUSH;
+//          vprDEBUG(vrjDBG_ENV_MGR,3) << "vjConnect:: Read: chunks: Completed\n" << vprDEBUG_FLUSH;
 //          // ALLEN: PUT A FUNCTION HERE FOR THE KERNEL TO LOOK AT NEWCHUNKDB
 //          ConfigManager::instance()->addChunkDB(newchunkdb);    // Adds chunks to the pending list
-//          vjDEBUG(vjDBG_ENV_MGR,3) << "vjConnect: Added chunks to ConfigManager pending list to add\n" << vjDEBUG_FLUSH;
+//          vprDEBUG(vrjDBG_ENV_MGR,3) << "vjConnect: Added chunks to ConfigManager pending list to add\n" << vprDEBUG_FLUSH;
 //      }
 
 //      else if (!strcasecmp (s, remove_TOKEN)) {
@@ -494,30 +494,30 @@ bool Connect::readCommand(std::istream& fin) {
 //              while ( (s = strtok (NULL, " \t\n")) ) {
 //                  // BUG! - what if chunks exist in db using the desc we're removing?
 //                  //cachedDescdb->remove(s);
-//                  vjDEBUG(vjDBG_ENV_MGR,3) << "EM Remove Descriptions disabled!\n" << vjDEBUG_FLUSH;
+//                  vprDEBUG(vrjDBG_ENV_MGR,3) << "EM Remove Descriptions disabled!\n" << vprDEBUG_FLUSH;
 //              }
 //          }
 //          else if (!strcasecmp (s, chunks_TOKEN)) {
 //              ConfigChunkDB* remove_chunk_db = new ConfigChunkDB();
 
-//              vjDEBUG(vjDBG_ENV_MGR,5) << "vjConnect: Remove: chunks: Starting...\n"  << vjDEBUG_FLUSH;
+//              vprDEBUG(vrjDBG_ENV_MGR,5) << "vjConnect: Remove: chunks: Starting...\n"  << vprDEBUG_FLUSH;
 
 //              fin >> *remove_chunk_db;       // Read in the chunks to remove
 
-//              vjDEBUG(vjDBG_ENV_MGR,5) << *remove_chunk_db << std::endl
-//                                       << vjDEBUG_FLUSH;
+//              vprDEBUG(vrjDBG_ENV_MGR,5) << *remove_chunk_db << std::endl
+//                                       << vprDEBUG_FLUSH;
 
 //              // Tell config manager to remove the chunks
 //              ConfigManager::instance()->removeChunkDB(remove_chunk_db);     // Add chunks to pending list as removes
-//              vjDEBUG(vjDBG_ENV_MGR,3) << "vjConnect: Remove chunks added to ConfigManager pending list\n" << vjDEBUG_FLUSH;
+//              vprDEBUG(vrjDBG_ENV_MGR,3) << "vjConnect: Remove chunks added to ConfigManager pending list\n" << vprDEBUG_FLUSH;
 //          }
 //          else
-//              vjDEBUG(vjDBG_ERROR,3) << "Error: Connect: Unknown remove type: "
-//                                     << s << std::endl << vjDEBUG_FLUSH;
+//              vprDEBUG(vprDBG_ERROR,3) << "Error: Connect: Unknown remove type: "
+//                                     << s << std::endl << vprDEBUG_FLUSH;
 //      }
 //      else {
-//          vjDEBUG(vjDBG_ERROR,0) << "Error: Connect:: Unknown command '"
-//                                 << s << "'\n" << vjDEBUG_FLUSH;
+//          vprDEBUG(vprDBG_ERROR,0) << "Error: Connect:: Unknown command '"
+//                                 << s << "'\n" << vprDEBUG_FLUSH;
 //      }
 //      return true;
 //  }

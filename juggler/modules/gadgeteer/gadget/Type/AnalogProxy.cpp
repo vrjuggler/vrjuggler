@@ -40,7 +40,7 @@ namespace vrj
 
 bool AnalogProxy::config(ConfigChunk* chunk)
 {
-   vjDEBUG_BEGIN(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "----------- configuring ANALOG PROXY -----------------\n" << vjDEBUG_FLUSH;
+   vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "----------- configuring ANALOG PROXY -----------------\n" << vprDEBUG_FLUSH;
    vprASSERT(((std::string)chunk->getType()) == "AnaProxy");
 
    m_unitNum = chunk->getProperty("unit");

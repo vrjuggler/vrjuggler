@@ -60,7 +60,7 @@ public:
    // preForkInit() member function.  Your app is likely to crash otherwise!!
    static void preForkInit()
    {
-      vjDEBUG( vjDBG_ALL, 1 )<<"[pfSoundTraverser] pfSoundTraverser::preForkInit(): Initializing sound node class type with performer\n"<<vjDEBUG_FLUSH;
+      vprDEBUG( vprDBG_ALL, 1 )<<"[pfSoundTraverser] pfSoundTraverser::preForkInit(): Initializing sound node class type with performer\n"<<vprDEBUG_FLUSH;
       pfSoundNode::init();
    }
 
@@ -72,7 +72,7 @@ public:
    //
    static void replace( pfNode* node, const std::string& keyName = "_Sound_" )
    {
-      vjDEBUG( vjDBG_ALL, 1 )<<clrOutNORM( clrGREEN,"pfSoundTraverser: " ) <<"Checking graph for soundnodes (nodes with the "<<keyName.c_str()<<" extension...\n"<<vjDEBUG_FLUSH;
+      vprDEBUG( vprDBG_ALL, 1 )<<clrOutNORM( clrGREEN,"pfSoundTraverser: " ) <<"Checking graph for soundnodes (nodes with the "<<keyName.c_str()<<" extension...\n"<<vprDEBUG_FLUSH;
 
       // use the performer traversal mechanism
        pfuTraverser trav;
@@ -87,7 +87,7 @@ public:
    // enable the sound, keeping the state whether it is triggered or stopped.
    static void enable( pfNode* node )
    {
-      vjDEBUG( vjDBG_ALL, 1 )<<clrOutNORM( clrGREEN,"pfSoundTraverser: [enable]" ) << " Enabling sounds in subgraph.\n"<<vjDEBUG_FLUSH;
+      vprDEBUG( vprDBG_ALL, 1 )<<clrOutNORM( clrGREEN,"pfSoundTraverser: [enable]" ) << " Enabling sounds in subgraph.\n"<<vprDEBUG_FLUSH;
 
       // use the performer traversal mechanism
        pfuTraverser trav;
@@ -103,7 +103,7 @@ public:
    // after this, an enable would respect the previous triggered/stopped state.
    static void disable( pfNode* node )
    {
-      vjDEBUG( vjDBG_ALL, 1 ) << clrOutNORM( clrGREEN, "pfSoundTraverser: [disable]" ) <<" Disabling sounds in subgraph.\n"<<vjDEBUG_FLUSH;
+      vprDEBUG( vprDBG_ALL, 1 ) << clrOutNORM( clrGREEN, "pfSoundTraverser: [disable]" ) <<" Disabling sounds in subgraph.\n"<<vprDEBUG_FLUSH;
 
       // use the performer traversal mechanism
        pfuTraverser trav;
@@ -118,7 +118,7 @@ public:
    // trigger the sound
    static void trigger( pfNode* node )
    {
-      vjDEBUG( vjDBG_ALL, 1 ) << clrOutNORM( clrGREEN, "pfSoundTraverser: [soundOn]" ) << " Triggering sounds in subgraph.\n"<<vjDEBUG_FLUSH;
+      vprDEBUG( vprDBG_ALL, 1 ) << clrOutNORM( clrGREEN, "pfSoundTraverser: [soundOn]" ) << " Triggering sounds in subgraph.\n"<<vprDEBUG_FLUSH;
 
       // use the performer traversal mechanism
        pfuTraverser trav;
@@ -133,7 +133,7 @@ public:
    // stop the sound
    static void stop( pfNode* node )
    {
-      vjDEBUG( vjDBG_ALL, 1 ) << clrOutNORM( clrGREEN,"pfSoundTraverser: [soundOff]" ) << " Stopping sounds in subgraph.\n"<<vjDEBUG_FLUSH;
+      vprDEBUG( vprDBG_ALL, 1 ) << clrOutNORM( clrGREEN,"pfSoundTraverser: [soundOff]" ) << " Stopping sounds in subgraph.\n"<<vprDEBUG_FLUSH;
 
       // use the performer traversal mechanism
        pfuTraverser trav;
@@ -167,9 +167,9 @@ protected:
          #ifdef USE_AUDIOJUGGLER
          AudioJuggler::instance().trigger( nodeName );
          #endif
-         vjDEBUG(vjDBG_ALL,0) << clrOutNORM( clrYELLOW, "[SoundTrigger] " )
+         vprDEBUG(vprDBG_ALL,0) << clrOutNORM( clrYELLOW, "[SoundTrigger] " )
             << "Setting the " << nodeName
-            << " sound to <triggered>\n" << vjDEBUG_FLUSH;
+            << " sound to <triggered>\n" << vprDEBUG_FLUSH;
       }
       else
       {
@@ -200,9 +200,9 @@ protected:
          AudioJuggler::instance().stop( nodeName );
          #endif
          
-         vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrYELLOW,"[SoundStop] ")
+         vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrYELLOW,"[SoundStop] ")
             << "Setting the " << nodeName
-            << " sound to <stopped>\n" << vjDEBUG_FLUSH;
+            << " sound to <stopped>\n" << vprDEBUG_FLUSH;
       }
       else
       {
@@ -234,9 +234,9 @@ protected:
          AudioJuggler::instance().unmute( nodeName );
          #endif
             
-         vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrYELLOW,"[SoundEnable] ")
+         vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrYELLOW,"[SoundEnable] ")
             << "Setting the " << nodeName
-            << " sound to <enabled>\n" << vjDEBUG_FLUSH;
+            << " sound to <enabled>\n" << vprDEBUG_FLUSH;
       }
       else
       {
@@ -268,9 +268,9 @@ protected:
          AudioJuggler::instance().mute( nodeName );
          #endif
          
-         vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrYELLOW,"[SoundDisable] ")
+         vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrYELLOW,"[SoundDisable] ")
             << "Setting the " << nodeName
-            << " sound to <disabled>\n" << vjDEBUG_FLUSH;
+            << " sound to <disabled>\n" << vprDEBUG_FLUSH;
       }
       else
       {
@@ -305,22 +305,22 @@ protected:
       }
 
       // for verbose output (outputs every node's name.)
-      vjDEBUG(vjDBG_ALL, vjDBG_STATE_LVL)<<"[SoundReplacer] Examining node in graph named \""<<nodeName.c_str()<<"\":\n"<<vjDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)<<"[SoundReplacer] Examining node in graph named \""<<nodeName.c_str()<<"\":\n"<<vprDEBUG_FLUSH;
 
       int startOfKeyWord = nodeName.size() - keyName.size();
       int endOfKeyWord = nodeName.size() - 1;
       std::string isThisOurKeyWord = nodeName.substr( startOfKeyWord, endOfKeyWord );
       if (isThisOurKeyWord == keyName)   // If node is not a Geode
       {
-         vjDEBUG( vjDBG_ALL, vjDBG_STATE_LVL )<<"[SoundReplacer] Found node in graph named \""<<nodeName.c_str()<<"\":\n"<<vjDEBUG_FLUSH;
-         vjDEBUG( vjDBG_ALL, vjDBG_STATE_LVL )<<"[SoundReplacer]     Substring "<<keyName.c_str()<<" matched, "<<vjDEBUG_FLUSH;
+         vprDEBUG( vprDBG_ALL, vprDBG_STATE_LVL )<<"[SoundReplacer] Found node in graph named \""<<nodeName.c_str()<<"\":\n"<<vprDEBUG_FLUSH;
+         vprDEBUG( vprDBG_ALL, vprDBG_STATE_LVL )<<"[SoundReplacer]     Substring "<<keyName.c_str()<<" matched, "<<vprDEBUG_FLUSH;
          pfGroup* parent = currentNode->getParent( 0 ); // FIXME?? will 0 work for all cases (instanced nodes?)
          if (parent != NULL)
          {
             std::string soundName = nodeName.substr( 0, startOfKeyWord );
-            vjDEBUG_CONT( vjDBG_ALL, vjDBG_STATE_LVL )
+            vprDEBUG_CONT( vprDBG_ALL, vprDBG_STATE_LVL )
                << "extracted sound named \"" << soundName.c_str()
-               << "\"\n" << vjDEBUG_FLUSH;
+               << "\"\n" << vprDEBUG_FLUSH;
             
             // replace the found node with a sound node.
             // note: only replace if the sound is valid.
@@ -342,31 +342,31 @@ protected:
                AudioJuggler::instance().trigger( soundName );
                #endif
                
-               vjDEBUG( vjDBG_ALL, vjDBG_CONFIG_LVL )
+               vprDEBUG( vprDBG_ALL, vprDBG_CONFIG_LVL )
                    << clrOutNORM( clrGREEN,"[SoundReplacer]     " )
                    << "Replaced " << clrOutNORM(clrGREEN, sn->getName())
                    << " node with a pfSoundNode referencing the "
-                   << soundName.c_str() << " sound." << vjDEBUG_FLUSH;
+                   << soundName.c_str() << " sound." << vprDEBUG_FLUSH;
             }
             else
             {
-               vjDEBUG( vjDBG_ALL, vjDBG_CRITICAL_LVL )<<clrOutNORM( clrRED,"[SoundReplacer] !!! WARNING !!! " ) <<"SOUND NOT FOUND: "<<soundName.c_str()<<"\n"<<vjDEBUG_FLUSH;
-               vjDEBUG( vjDBG_ALL, vjDBG_CRITICAL_LVL )<<clrOutNORM( clrRED,"[SoundReplacer] !!!         !!! " ) <<"You need to enter \""<<soundName.c_str()<<"\" into your sound config file(s)\n"<<vjDEBUG_FLUSH;
+               vprDEBUG( vprDBG_ALL, vprDBG_CRITICAL_LVL )<<clrOutNORM( clrRED,"[SoundReplacer] !!! WARNING !!! " ) <<"SOUND NOT FOUND: "<<soundName.c_str()<<"\n"<<vprDEBUG_FLUSH;
+               vprDEBUG( vprDBG_ALL, vprDBG_CRITICAL_LVL )<<clrOutNORM( clrRED,"[SoundReplacer] !!!         !!! " ) <<"You need to enter \""<<soundName.c_str()<<"\" into your sound config file(s)\n"<<vprDEBUG_FLUSH;
                return PFTRAV_CONT;      // Return continue
             }
          }
          else
          {
-            vjDEBUG_CONT( vjDBG_ALL, vjDBG_CRITICAL_LVL )<<"but Parent is NULL (nowhere to hang the pfSoundNode!)\n"<<vjDEBUG_FLUSH;
+            vprDEBUG_CONT( vprDBG_ALL, vprDBG_CRITICAL_LVL )<<"but Parent is NULL (nowhere to hang the pfSoundNode!)\n"<<vprDEBUG_FLUSH;
          }
       }
       // for very verbose output...
       else
       {
-         vjDEBUG( vjDBG_ALL,vjDBG_STATE_LVL )
+         vprDEBUG( vprDBG_ALL,vprDBG_STATE_LVL )
             << "[SoundReplacer]     Substring not matched: \""
             << isThisOurKeyWord.c_str() << "\" != \"" << keyName.c_str()
-            << "\"\n" << vjDEBUG_FLUSH;
+            << "\"\n" << vprDEBUG_FLUSH;
       }
 
       return PFTRAV_CONT;      // Return continue

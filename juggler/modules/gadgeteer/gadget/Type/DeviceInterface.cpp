@@ -71,21 +71,21 @@ void BaseDeviceInterface::refresh()
 
    if (NULL == mProxyPtr)
    {
-      vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL)
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
          << "WARNING: BaseDeviceInterface::refresh: could not find proxy: "
-         << mProxyName.c_str() << std::endl << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL)
+         << mProxyName.c_str() << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
          << "         Make sure the proxy exists in the current configuration."
-         << std::endl << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL)
+         << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
          << "   referencing device interface will be stupified to point at dummy device."
-         << std::endl << vjDEBUG_FLUSH;
+         << std::endl << vprDEBUG_FLUSH;
    }
    else if((NULL != mProxyPtr) && (NULL == prev_proxy_ptr))   // ASSERT: We have just gotten a valid proxy to point to
    {
-      vjDEBUG(vjDBG_ALL,vjDBG_WARNING_LVL)
+      vprDEBUG(vprDBG_ALL,vprDBG_WARNING_LVL)
          << "vjBaseDeviceInterface::refresh: Success: Now able to find proxy: "
-         << mProxyName.c_str() << std::endl << vjDEBUG_FLUSH;
+         << mProxyName.c_str() << std::endl << vprDEBUG_FLUSH;
    }
 }
 

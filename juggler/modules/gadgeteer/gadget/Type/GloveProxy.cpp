@@ -40,7 +40,7 @@ namespace vrj
 
 bool GloveProxy::config(ConfigChunk* chunk)
 {
-   vjDEBUG_BEGIN(vjDBG_INPUT_MGR,3) << "------------------ GLOVE PROXY config() -----------------\n" << vjDEBUG_FLUSH;
+   vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,3) << "------------------ GLOVE PROXY config() -----------------\n" << vprDEBUG_FLUSH;
    vprASSERT(((std::string)chunk->getType()) == "GloveProxy");
 
    mUnitNum = chunk->getProperty("unit");

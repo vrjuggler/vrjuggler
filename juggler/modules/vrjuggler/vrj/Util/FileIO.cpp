@@ -130,7 +130,7 @@ std::string FileIO::replaceEnvVars( const std::string& s )
                 std::string res = getenv( var.c_str() );
                 if (res == "")
                 {
-                   vjDEBUG( vjDBG_ALL, 0 ) << clrOutNORM(clrYELLOW,"!!! WARNING: ENV VARIABLE NOT FOUND !!!:") << var.c_str() <<" does not exist in your environment, please set it... Your application's behaviour is now undefined!\n" << vjDEBUG_FLUSH;
+                   vprDEBUG( vprDBG_ALL, 0 ) << clrOutNORM(clrYELLOW,"!!! WARNING: ENV VARIABLE NOT FOUND !!!:") << var.c_str() <<" does not exist in your environment, please set it... Your application's behaviour is now undefined!\n" << vprDEBUG_FLUSH;
                    result += var; // don't replace the var (or replace var with var...)
                 }
                 else
@@ -149,7 +149,7 @@ std::string FileIO::replaceEnvVars( const std::string& s )
                 std::string res = getenv (var.c_str());
                 if (res == "")
                 {
-                   vjDEBUG( vjDBG_ALL, 0 ) << clrOutNORM(clrYELLOW,"!!! WARNING: ENV VARIABLE NOT FOUND !!!:") << var.c_str() <<" does not exist in your environment, please set it... Your application's behaviour is now undefined!\n" << vjDEBUG_FLUSH;
+                   vprDEBUG( vprDBG_ALL, 0 ) << clrOutNORM(clrYELLOW,"!!! WARNING: ENV VARIABLE NOT FOUND !!!:") << var.c_str() <<" does not exist in your environment, please set it... Your application's behaviour is now undefined!\n" << vprDEBUG_FLUSH;
                    result += var; // don't replace the var (or replace var with var...)
                 }
                 else

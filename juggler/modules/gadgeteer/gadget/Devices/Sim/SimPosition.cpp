@@ -131,7 +131,7 @@ void SimPosition::updateData()
 
    // Debug output
    //vjCoord pos_data(mPos);
-   //vjDEBUG(vjDBG_ALL,1) << "simPos: pos:" << pos_data.pos << "  or:" << pos_data.orient << endl << vjDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL,1) << "simPos: pos:" << pos_data.pos << "  or:" << pos_data.orient << endl << vprDEBUG_FLUSH;
 }
 
 
@@ -150,7 +150,7 @@ void SimPosition::moveFor(const float amt)
          mPos.preTrans(move_forward, mPos);
    }
    else
-      vjDEBUG(vjDBG_INPUT_MGR,4) << "SimPos hit a surface.\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_INPUT_MGR,4) << "SimPos hit a surface.\n" << vprDEBUG_FLUSH;
 }
 
 // Move left the given amount on position data n
@@ -168,7 +168,7 @@ void SimPosition::moveLeft(const float amt)
          mPos.preTrans(move_left, mPos);
    }
    else
-      vjDEBUG(vjDBG_INPUT_MGR,4) << "SimPos hit a surface.\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_INPUT_MGR,4) << "SimPos hit a surface.\n" << vprDEBUG_FLUSH;
 }
 
 // Move up the given amount on position data n
@@ -186,7 +186,7 @@ void SimPosition::moveUp(const float amt)
          mPos.preTrans(move_up, mPos);
    }
    else
-      vjDEBUG(vjDBG_INPUT_MGR,4) << "SimPos hit a surface.\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_INPUT_MGR,4) << "SimPos hit a surface.\n" << vprDEBUG_FLUSH;
 }
 
 // Pitch up - rot +x axis

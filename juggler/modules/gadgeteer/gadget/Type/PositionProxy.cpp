@@ -66,7 +66,7 @@ void PosProxy::setTransform( float xoff, float yoff, float zoff,    // Translate
 
 bool PosProxy::config(ConfigChunk* chunk)
 {
-   vjDEBUG_BEGIN(vjDBG_INPUT_MGR,3) << "------------------ POS PROXY config() -----------------\n" << vjDEBUG_FLUSH;
+   vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,3) << "------------------ POS PROXY config() -----------------\n" << vprDEBUG_FLUSH;
    vprASSERT(((std::string)chunk->getType()) == "PosProxy");
 
    mUnitNum = chunk->getProperty("unit");
@@ -74,8 +74,8 @@ bool PosProxy::config(ConfigChunk* chunk)
 
    if (true == (bool)chunk->getProperty("etrans") )
    {
-      vjDEBUG_NEXT(vjDBG_INPUT_MGR,3) << "Position Transform enabled..."
-                                      << std::endl << vjDEBUG_FLUSH;
+      vprDEBUG_NEXT(vrjDBG_INPUT_MGR,3) << "Position Transform enabled..."
+                                      << std::endl << vprDEBUG_FLUSH;
       setTransform
       ( chunk->getProperty("translate",0) , // xtrans
         chunk->getProperty("translate",1) , // ytrans
@@ -83,9 +83,9 @@ bool PosProxy::config(ConfigChunk* chunk)
         chunk->getProperty("rotate",0) , // xrot
         chunk->getProperty("rotate",1) , // yrot
         chunk->getProperty("rotate",2) );// zrot
-      vjDEBUG_NEXT(vjDBG_INPUT_MGR,4) << "Transform Matrix: " << std::endl
+      vprDEBUG_NEXT(vrjDBG_INPUT_MGR,4) << "Transform Matrix: " << std::endl
                                       << getTransform() << std::endl
-                                      << vjDEBUG_FLUSH;
+                                      << vprDEBUG_FLUSH;
    }
 
    // Setup filter method
@@ -93,14 +93,14 @@ bool PosProxy::config(ConfigChunk* chunk)
    // in future, there should be a filter factory
    if(true == (bool)chunk->getProperty("useFilter"))
    {
-      vjDEBUG_NEXT(vjDBG_INPUT_MGR,3) << "Using filter: Linear sigmoid."
-                                      << std::endl << vjDEBUG_FLUSH;
+      vprDEBUG_NEXT(vrjDBG_INPUT_MGR,3) << "Using filter: Linear sigmoid."
+                                      << std::endl << vprDEBUG_FLUSH;
       LinearSigmoidPosFilter* sig_filter;
       sig_filter = new LinearSigmoidPosFilter();
 
       ConfigChunk* sigmoid_params = (ConfigChunk*)chunk->getProperty("sigmoidParams");
       if(sigmoid_params == NULL)
-      { vjDEBUG(vjDBG_ERROR,0) << clrOutBOLD(clrRED,"ERROR:") << "Got NULL sigmoid Params.\n" << vjDEBUG_FLUSH; }
+      { vprDEBUG(vprDBG_ERROR,0) << clrOutBOLD(clrRED,"ERROR:") << "Got NULL sigmoid Params.\n" << vprDEBUG_FLUSH; }
 
       sig_filter->setMaxDist(sigmoid_params->getProperty("maxDist"));
       sig_filter->setMinDist(sigmoid_params->getProperty("minDist"));
@@ -109,8 +109,8 @@ bool PosProxy::config(ConfigChunk* chunk)
    }
    else
    {
-      vjDEBUG_NEXT(vjDBG_INPUT_MGR,3) << "NOT USING FILTER." << std::endl
-                                      << vjDEBUG_FLUSH;
+      vprDEBUG_NEXT(vrjDBG_INPUT_MGR,3) << "NOT USING FILTER." << std::endl
+                                      << vprDEBUG_FLUSH;
    }
 
    // --- SETUP PROXY with INPUT MGR ---- //

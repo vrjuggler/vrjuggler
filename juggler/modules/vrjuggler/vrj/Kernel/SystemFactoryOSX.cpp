@@ -142,9 +142,9 @@ void SystemFactoryOSX::Initialize()
     myBundle = CFBundleCreate(kCFAllocatorDefault, bundleURL);
 
     if( CreateNibReferenceWithCFBundle(myBundle, CFSTR("mainmenu"), &mainmenu) != 0 )
-        vjDEBUG(vjDBG_INPUT_MGR,0) << "vjSystemFactoryOSX::Initialize():  Error finding mainmenu in the bundle!" << std::endl << vjDEBUG_FLUSH;
+        vprDEBUG(vrjDBG_INPUT_MGR,0) << "vjSystemFactoryOSX::Initialize():  Error finding mainmenu in the bundle!" << std::endl << vprDEBUG_FLUSH;
     else if( SetMenuBarFromNib(mainmenu, CFSTR("MainMenu") ) != 0 )
-        vjDEBUG(vjDBG_INPUT_MGR,0) << "vjSystemFactoryOSX::Initialize():  Error setting the menubar!" << std::endl << vjDEBUG_FLUSH;;
+        vprDEBUG(vrjDBG_INPUT_MGR,0) << "vjSystemFactoryOSX::Initialize():  Error setting the menubar!" << std::endl << vprDEBUG_FLUSH;;
 
     CFRelease(bundleURL);
     CFRelease(bundle_path_cfstr); */
@@ -177,7 +177,7 @@ void SystemFactoryOSX::EventLoop()
     EventRecord event;
 
     gQuitFlag = false;
-    //vjDEBUG(vjDBG_INPUT_MGR,0) << "vjSystemFactoryOSX::EventLoop()" << std::endl << vjDEBUG_FLUSH;
+    //vprDEBUG(vrjDBG_INPUT_MGR,0) << "vjSystemFactoryOSX::EventLoop()" << std::endl << vprDEBUG_FLUSH;
     do
     {
         gotEvent = WaitNextEvent(everyEvent,&event,36000,nil);
@@ -237,7 +237,7 @@ void SystemFactoryOSX::DoMenuCommand(long menuResult)
             switch (menuItem)
             {
                 case iAbout:
-                    vjDEBUG(vjDBG_INPUT_MGR,0) << "vjSystemFactoryOSX::DoMenuCommand()" << "   AboutBox Menu selected" << std::endl << vjDEBUG_FLUSH;
+                    vprDEBUG(vrjDBG_INPUT_MGR,0) << "vjSystemFactoryOSX::DoMenuCommand()" << "   AboutBox Menu selected" << std::endl << vprDEBUG_FLUSH;
                     break;
 
                 case iQuit:

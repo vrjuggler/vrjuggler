@@ -120,8 +120,8 @@ Matrix LinearSigmoidPosFilter::getPos(const Matrix newPos)
    trans_diff = new_trans-last_returned_trans;
    dist = trans_diff.length();
 
-   vjDEBUG(vjDBG_ALL,2) << "sigmoid: dist: " << dist << std::endl
-                        << vjDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,2) << "sigmoid: dist: " << dist << std::endl
+                        << vprDEBUG_FLUSH;
 
    // Check max threshold
    if(dist > mMaxThreshold)
@@ -141,8 +141,8 @@ Matrix LinearSigmoidPosFilter::getPos(const Matrix newPos)
    }
    else
    {
-      vjDEBUG(vjDBG_ALL,2) << "sigmoid: scale_factor: " << scale_factor
-                           << std::endl << vjDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,2) << "sigmoid: scale_factor: " << scale_factor
+                           << std::endl << vprDEBUG_FLUSH;
 
       vprASSERT((scale_factor > eps) && (scale_factor < (1.0f-eps)));
 
@@ -151,9 +151,9 @@ Matrix LinearSigmoidPosFilter::getPos(const Matrix newPos)
 
       ret_trans = last_returned_trans + (trans_diff * scale_factor);
 
-      vjDEBUG(vjDBG_ALL,2) << "\tret_trans = last_returned_trans + (trans_diff * scale_factor) -->"
+      vprDEBUG(vprDBG_ALL,2) << "\tret_trans = last_returned_trans + (trans_diff * scale_factor) -->"
                            << ret_trans << " = " << last_returned_trans << " + (" << trans_diff
-                           << " * " << scale_factor << " )\n" << vjDEBUG_FLUSH;
+                           << " * " << scale_factor << " )\n" << vprDEBUG_FLUSH;
 
       // Compute scaled rotation
       Quat      source_rot, goal_rot, slerp_rot;

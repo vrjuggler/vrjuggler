@@ -123,7 +123,7 @@ public:
    //! POST: Channel should be drawn
    virtual void drawChan(pfChannel* chan, void* chandata)
    {
-      vjDEBUG_BEGIN(vjDBG_DRAW_MGR, 4) << "--- drawChan: Entered ---.\n" << vjDEBUG_FLUSH;
+      vprDEBUG_BEGIN(vrjDBG_DRAW_MGR, 4) << "--- drawChan: Entered ---.\n" << vprDEBUG_FLUSH;
       this->preDrawChan(chan,chandata);
       chan->clear();       // Clear the channel
       pfDraw();            // Draw the channel

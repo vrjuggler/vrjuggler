@@ -47,7 +47,7 @@
 // --- VR Juggler Stuff --- //
 #include <Kernel/vjKernel.h>
 #include <Kernel/Pf/vjPfApp.h>    // the performer application base type
-#include <Utils/vjDebug.h>
+#include <Utils/vprDEBUG.h>
 #include <Kernel/vjProjection.h>  // for setNearFar (for setting clipping planes)
 
 // Declare my application class
@@ -107,7 +107,7 @@ public:
 void simplePfApp::initScene()
 {
    // Load the scene
-   vjDEBUG(vjDBG_ALL, 0) << "simplePfApp::initScene\n" << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_ALL, 0) << "simplePfApp::initScene\n" << vprDEBUG_FLUSH;
 
    // Allocate all the nodes needed
    mRootNode             = new pfGroup;            // Root of our graph

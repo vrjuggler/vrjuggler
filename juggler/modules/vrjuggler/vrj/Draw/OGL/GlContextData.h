@@ -121,9 +121,9 @@ protected:
       while((int)mContextDataVector.size() <= context_id)
       {
          mContextDataVector.push_back(ContextDataType());
-         vjDEBUG(vjDBG_DRAW_MGR,3)
+         vprDEBUG(vrjDBG_DRAW_MGR,3)
             << "Adding ContextDataVector element: size now: "
-            << mContextDataVector.size() << std::endl << vjDEBUG_FLUSH;
+            << mContextDataVector.size() << std::endl << vprDEBUG_FLUSH;
       }
 
       return &(mContextDataVector[context_id]);

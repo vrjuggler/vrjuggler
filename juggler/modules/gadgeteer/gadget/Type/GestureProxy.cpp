@@ -40,7 +40,7 @@ namespace vrj
 
 bool GestureProxy::config(ConfigChunk* chunk)
 {
-   vjDEBUG_BEGIN(vjDBG_INPUT_MGR,3) << "------------------ GESTURE PROXY config() -----------------\n" << vjDEBUG_FLUSH;
+   vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,3) << "------------------ GESTURE PROXY config() -----------------\n" << vprDEBUG_FLUSH;
    vprASSERT(((std::string)chunk->getType()) == "GestureProxy");
 
    mDeviceName = (std::string)chunk->getProperty("device");

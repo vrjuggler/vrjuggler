@@ -50,10 +50,10 @@ int pfSoundNode::app(pfTraverser *trav)
       pfVec3 pf_soundPosition = coord.xyz;
 
       // set my sound's position.
+#ifdef USE_AUDIOJUGGLER
       vrj::Vec3 soundPosition = vrj::GetVjVec( pf_soundPosition );
-      #ifdef USE_AUDIOJUGGLER
       AudioJuggler::instance().setPosition( mSound, soundPosition[0], soundPosition[1], soundPosition[2] );
-      #endif
+#endif
       
       // Engine's update should be called by the app's frame process,
       // or in juggler's manager (not both, of course)...
@@ -65,9 +65,9 @@ int pfSoundNode::app(pfTraverser *trav)
    {
       // redundant (fixme), but make sure it's 0.0f,0.0f,0.0f
       // this makes the sound the same as the observer.
-      #ifdef USE_AUDIOJUGGLER
+#ifdef USE_AUDIOJUGGLER
       AudioJuggler::instance().setPosition( mSound, 0.0f, 0.0f, 0.0f );
-      #endif
+#endif
    }
 
    return pfDCS::app( trav );  // call the parent class's app()
@@ -83,7 +83,7 @@ pfType *pfSoundNode::classType = NULL;
 
 void pfSoundNode::init(void)
 {
-   vjDEBUG(vjDBG_ALL,1)<<"[pfSoundNode] Registering sound node with performer.\n"<<vjDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,1)<<"[pfSoundNode] Registering sound node with performer.\n"<<vprDEBUG_FLUSH;
 
    if (classType == NULL)
    {

@@ -77,7 +77,7 @@ public:
       mMin = static_cast<float>( c->getProperty("min") );
       mMax = static_cast<float>( c->getProperty("max") );
 
-      vjDEBUG(vjDBG_ALL,4)<<"*** SimAnalog::config() min:"<<mMin<<" max:"<<mMax<<"\n"<< vjDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,4)<<"*** SimAnalog::config() min:"<<mMin<<" max:"<<mMax<<"\n"<< vprDEBUG_FLUSH;
 
       return true;
    }

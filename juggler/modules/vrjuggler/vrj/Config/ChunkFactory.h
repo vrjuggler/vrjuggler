@@ -74,7 +74,7 @@ public:
     void loadDescs (const std::string& filename) {
         //vjConfigIO::instance->readChunkDescDB (filename, descdb);
         if (!descdb.load(filename.c_str()))
-            vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) <<  "Failed to load descriptions file.\n" << vjDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) <<  "Failed to load descriptions file.\n" << vprDEBUG_FLUSH;
 
     }
 

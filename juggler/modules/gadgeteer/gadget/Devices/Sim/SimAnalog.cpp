@@ -40,18 +40,18 @@ namespace vrj
 //: Default Constructor
 SimAnalog::SimAnalog() : Analog(), SimInput()
 {
-   //vjDEBUG(vjDBG_ALL,4)<<"*** SimAnalog::SimPinchGlove()\n"<< vjDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL,4)<<"*** SimAnalog::SimPinchGlove()\n"<< vprDEBUG_FLUSH;
 }
 
 //: Destructor
 SimAnalog::~SimAnalog()
 {
-   //vjDEBUG(vjDBG_ALL,4)<<"*** SimAnalog::~SimPinchGlove()\n"<< vjDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL,4)<<"*** SimAnalog::~SimPinchGlove()\n"<< vprDEBUG_FLUSH;
 }
 
 bool SimAnalog::config(ConfigChunk* chunk)
 {
-   //vjDEBUG(vjDBG_ALL,4)<<"*** SimAnalog::config()\n"<< vjDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL,4)<<"*** SimAnalog::config()\n"<< vprDEBUG_FLUSH;
    if(! (Input::config(chunk) && Analog::config(chunk) && SimInput::config(chunk)))
       return false;
 
@@ -71,7 +71,7 @@ bool SimAnalog::config(ConfigChunk* chunk)
 
 void SimAnalog::updateData()
 {
-   //vjDEBUG(vjDBG_ALL,4)<<"*** SimAnalog::updateData()\n"<< vjDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL,4)<<"*** SimAnalog::updateData()\n"<< vprDEBUG_FLUSH;
 
    // -- Update analog data --- //
    for (unsigned int i = 0; i < mSimKeysUp.size(); i++)

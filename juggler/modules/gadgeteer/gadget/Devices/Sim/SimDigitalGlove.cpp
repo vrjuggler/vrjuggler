@@ -41,18 +41,18 @@ namespace vrj
 //: Default Constructor
 SimDigitalGlove::SimDigitalGlove() : Digital(), SimInput(), Glove()
 {
-   //vjDEBUG(vjDBG_ALL,3)<<"*** SimDigitalGlove::SimDigitalGlove()\n"<< vjDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL,3)<<"*** SimDigitalGlove::SimDigitalGlove()\n"<< vprDEBUG_FLUSH;
 }
 
 //: Destructor
 SimDigitalGlove::~SimDigitalGlove()
 {
-  // vjDEBUG(vjDBG_ALL,3)<<"*** SimDigitalGlove::~SimDigitalGlove()\n"<< vjDEBUG_FLUSH;
+  // vprDEBUG(vprDBG_ALL,3)<<"*** SimDigitalGlove::~SimDigitalGlove()\n"<< vprDEBUG_FLUSH;
 }
 
 bool SimDigitalGlove::config( ConfigChunk* chunk )
 {
-   //vjDEBUG(vjDBG_ALL,3)<<"*** SimDigitalGlove::config\n"<< vjDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL,3)<<"*** SimDigitalGlove::config\n"<< vprDEBUG_FLUSH;
    if(! (Input::config(chunk) && Digital::config(chunk) && SimInput::config(chunk) && Glove::config(chunk)))
       return false;
 
@@ -75,9 +75,9 @@ bool SimDigitalGlove::config( ConfigChunk* chunk )
       std::string glove_pos_proxy = chunk->getProperty( "glovePos" );    // Get the name of the pos_proxy
       if (glove_pos_proxy == std::string(""))
       {
-         vjDEBUG( vjDBG_INPUT_MGR, 0 )
+         vprDEBUG( vrjDBG_INPUT_MGR, 0 )
             << "[ERROR]: SimPinchglove has no posProxy, config fails."
-            << std::endl << vjDEBUG_FLUSH;
+            << std::endl << vprDEBUG_FLUSH;
          return false;
       }
 
@@ -87,9 +87,9 @@ bool SimDigitalGlove::config( ConfigChunk* chunk )
       if (proxy_index != -1)
          mGlovePos[LEFT_INDEX] = Kernel::instance()->getInputManager()->getPosProxy( proxy_index );
       else
-         vjDEBUG( vjDBG_INPUT_MGR, 0 )
+         vprDEBUG( vrjDBG_INPUT_MGR, 0 )
             << "[ERROR]: SimPinchglove::config(): Can't find posProxy, config fails."
-            << std::endl << std::endl << vjDEBUG_FLUSH;
+            << std::endl << std::endl << vprDEBUG_FLUSH;
       */
    }
 
@@ -101,9 +101,9 @@ bool SimDigitalGlove::config( ConfigChunk* chunk )
       std::string glove_pos_proxy = chunk->getProperty( "rightGlovePos" );    // Get the name of the pos_proxy
       if (glove_pos_proxy == std::string(""))
       {
-         vjDEBUG( vjDBG_INPUT_MGR, 0 )
+         vprDEBUG( vrjDBG_INPUT_MGR, 0 )
             << "[ERROR]: SimPinchglove has no rightPosProxy, config fails."
-            << std::endl << vjDEBUG_FLUSH;
+            << std::endl << vprDEBUG_FLUSH;
          return false;
       }
 
@@ -113,9 +113,9 @@ bool SimDigitalGlove::config( ConfigChunk* chunk )
       if (proxy_index != -1)
          mGlovePos[RIGHT_INDEX] = Kernel::instance()->getInputManager()->getPosProxy( proxy_index );
       else
-         vjDEBUG( vjDBG_INPUT_MGR, 0 )
+         vprDEBUG( vrjDBG_INPUT_MGR, 0 )
             << "[ERROR]: SimPinchglove::config(): Can't find posProxy, config fails."
-            << std::endl << std::endl << vjDEBUG_FLUSH;
+            << std::endl << std::endl << vprDEBUG_FLUSH;
             */
    }
 
@@ -166,8 +166,8 @@ void SimDigitalGlove::updateData()
    // This swaps the temp and readable buffers (called 'valid' and 'current')
    swapCurrentIndexes();
 
-   //vjDEBUG(vjDBG_ALL,0)<<mTheData[0][current].outputAngles(cout)<<vjDEBUG_FLUSH;
-   //vjDEBUG(vjDBG_ALL,0)<<mTheData[1][current].outputAngles(cout)<<vjDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL,0)<<mTheData[0][current].outputAngles(cout)<<vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL,0)<<mTheData[1][current].outputAngles(cout)<<vprDEBUG_FLUSH;
 
 
    //TODO:  how does the angles get turned into a gesture ID????
@@ -202,7 +202,7 @@ void SimDigitalGlove::updateFingerAngles()
     // if that assert failed, then at least the code will still run...
     if ( LEFT_HAND < VJ_MAX_GLOVE_DEVS )
     {
-       //vjDEBUG(vjDBG_ALL,0)<<"Lpinky:"<<mLeftHand.pinky().mpj()<<","<<mLeftHand.pinky().pij()<<","<<mLeftHand.pinky().dij()<<","<<mLeftHand.pinky().abduct()<<"\n"<<vjDEBUG_FLUSH;
+       //vprDEBUG(vprDBG_ALL,0)<<"Lpinky:"<<mLeftHand.pinky().mpj()<<","<<mLeftHand.pinky().pij()<<","<<mLeftHand.pinky().dij()<<","<<mLeftHand.pinky().abduct()<<"\n"<<vprDEBUG_FLUSH;
        // Left Pinky
        mTheData[LEFT_HAND][progress].angles[GloveData::PINKY][GloveData::MPJ] = mLeftHand.pinky().mpj();
        mTheData[LEFT_HAND][progress].angles[GloveData::PINKY][GloveData::PIJ] = mLeftHand.pinky().pij();
@@ -241,7 +241,7 @@ void SimDigitalGlove::updateFingerAngles()
     // if that assert failed, then at least the code will still run...
     if ( RIGHT_HAND < VJ_MAX_GLOVE_DEVS )
     {
-       //vjDEBUG(vjDBG_ALL,0)<<"Rpinky:"<<mRightHand.pinky().mpj()<<","<<mRightHand.pinky().pij()<<","<<mRightHand.pinky().dij()<<","<<mRightHand.pinky().abduct()<<"   "<<vjDEBUG_FLUSH;
+       //vprDEBUG(vprDBG_ALL,0)<<"Rpinky:"<<mRightHand.pinky().mpj()<<","<<mRightHand.pinky().pij()<<","<<mRightHand.pinky().dij()<<","<<mRightHand.pinky().abduct()<<"   "<<vprDEBUG_FLUSH;
        // Right Pinky
        mTheData[RIGHT_HAND][progress].angles[GloveData::PINKY][GloveData::MPJ] = mRightHand.pinky().mpj();
        mTheData[RIGHT_HAND][progress].angles[GloveData::PINKY][GloveData::PIJ] = mRightHand.pinky().pij();
@@ -277,7 +277,7 @@ void SimDigitalGlove::updateFingerAngles()
        mTheData[RIGHT_HAND][progress].angles[GloveData::WRIST][GloveData::PITCH] = mRightHand.pitch();
     }
 
-    //vjDEBUG(vjDBG_ALL,0)<<"out\n"<<std::flush<<vjDEBUG_FLUSH;
+    //vprDEBUG(vprDBG_ALL,0)<<"out\n"<<std::flush<<vprDEBUG_FLUSH;
 }
 
 /*
@@ -299,9 +299,9 @@ void SimDigitalGlove::loadTrainedFile(std::string fileName)
    }
    else
    {
-      vjDEBUG(vjDBG_INPUT_MGR,0)
+      vprDEBUG(vrjDBG_INPUT_MGR,0)
          << "vjSimGloveGesture:: Can't load trained file: " << fileName.c_str()
-         << std::endl << vjDEBUG_FLUSH;
+         << std::endl << vprDEBUG_FLUSH;
    }
 }
 */

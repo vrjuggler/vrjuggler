@@ -97,8 +97,8 @@ void GlDrawManager::start()
 
    control_thread = new vpr::Thread(memberFunctor);
 
-   vjDEBUG(vjDBG_DRAW_MGR,1) << "vjGlDrawManager started. thread: "
-                             << control_thread << std::endl << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR,1) << "vjGlDrawManager started. thread: "
+                             << control_thread << std::endl << vprDEBUG_FLUSH;
 }
 
 
@@ -148,9 +148,9 @@ void GlDrawManager::main(void* nullParam)
 
 void GlDrawManager::drawAllPipes()
 {
-   vjDEBUG_BEGIN(vjDBG_DRAW_MGR,vjDBG_HVERB_LVL)
+   vprDEBUG_BEGIN(vrjDBG_DRAW_MGR,vprDBG_HVERB_LVL)
       << "vjGLDrawManager::drawAllPipes: " << std::endl << std::flush
-      << vjDEBUG_FLUSH;
+      << vprDEBUG_FLUSH;
    unsigned int pipeNum;
 
    // RENDER
@@ -172,9 +172,9 @@ void GlDrawManager::drawAllPipes()
       pipes[pipeNum]->completeSwap();
 
 
-   vjDEBUG_END(vjDBG_DRAW_MGR,vjDBG_HVERB_LVL)
+   vprDEBUG_END(vrjDBG_DRAW_MGR,vprDBG_HVERB_LVL)
       << "vjGLDrawManager::drawAllPipes: Done" << std::endl << std::flush
-      << vjDEBUG_FLUSH;
+      << vprDEBUG_FLUSH;
 }
 
 //: Initialize the drawing API (if not already running)
@@ -196,8 +196,8 @@ void GlDrawManager::addDisplay(Display* disp)
 {
    vprASSERT(disp != NULL);    // Can't add a null display
 
-   vjDEBUG(vjDBG_DRAW_MGR,3) << "vrj::GlDrawManager:addDisplay: " << disp
-                             << std::endl << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR,3) << "vrj::GlDrawManager:addDisplay: " << disp
+                             << std::endl << vprDEBUG_FLUSH;
 
    // -- Create a window for new display
    // -- Store the window in the wins vector
@@ -228,8 +228,8 @@ void GlDrawManager::addDisplay(Display* disp)
    vprASSERT(isValidWindow(new_win));      // Make sure it was added to draw manager
 
    // Dump the state
-   vjDEBUG(vjDBG_DRAW_MGR, 1) << "Reconfiged the glDrawManager.\n" << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_DRAW_MGR, 1) << (*this) << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, 1) << "Reconfiged the glDrawManager.\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, 1) << (*this) << vprDEBUG_FLUSH;
 }
 
 
@@ -261,7 +261,7 @@ void GlDrawManager::removeDisplay(Display* disp)
    }
    else
    {
-      vjDEBUG(vjDBG_ERROR, 0) << clrOutNORM(clrRED,"ERROR:") << "vrj::GlDrawManager::removeDisplay: Attempted to remove a display that was not found.\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ERROR, 0) << clrOutNORM(clrRED,"ERROR:") << "vrj::GlDrawManager::removeDisplay: Attempted to remove a display that was not found.\n" << vprDEBUG_FLUSH;
       vprASSERT(false);
    }
 
@@ -271,7 +271,7 @@ void GlDrawManager::removeDisplay(Display* disp)
 /// Shutdown the drawing API
 void GlDrawManager::closeAPI()
 {
-   vjDEBUG(vjDBG_DRAW_MGR,0) << "vrj::GlDrawManager::closeAPI: NOT IMPLEMENTED.\n" << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR,0) << "vrj::GlDrawManager::closeAPI: NOT IMPLEMENTED.\n" << vprDEBUG_FLUSH;
     // Stop all pipes
    ;
     // Delete all pipes

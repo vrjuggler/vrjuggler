@@ -72,7 +72,7 @@ int Kernel::start()
 {
    if(mControlThread != NULL) // Have already started
    {
-      vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED,"ERROR:") << "vjKernel::start called when kernel already running\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ERROR,0) << clrOutNORM(clrRED,"ERROR:") << "vjKernel::start called when kernel already running\n" << vprDEBUG_FLUSH;
       vprASSERT(false);
       exit(0);
    }
@@ -85,8 +85,8 @@ int Kernel::start()
    new_thread = new vpr::Thread(memberFunctor);
    //vprASSERT(new_thread->valid());
 
-   vjDEBUG(vjDBG_KERNEL,vjDBG_STATE_LVL) << "vjKernel::start: Just started control loop.  "
-                                         << std::endl << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_KERNEL,vprDBG_STATE_LVL) << "vjKernel::start: Just started control loop.  "
+                                         << std::endl << vprDEBUG_FLUSH;
 
    return 1;
 }
@@ -94,11 +94,11 @@ int Kernel::start()
 /// The Kernel loop
 void Kernel::controlLoop(void* nullParam)
 {
-   vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::controlLoop: Started.\n" << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_KERNEL,1) << "vjKernel::controlLoop: Started.\n" << vprDEBUG_FLUSH;
 
    while (0 == vpr::Thread::self())
    {
-      vjDEBUG(vjDBG_ALL,1) << "vjKernel: Waiting for (thread::self() != NULL)\n" << vjDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,1) << "vjKernel: Waiting for (thread::self() != NULL)\n" << vprDEBUG_FLUSH;
       vpr::System::usleep(50);
    }
    mControlThread = (vpr::Thread*) vpr::Thread::self();
@@ -117,22 +117,22 @@ void Kernel::controlLoop(void* nullParam)
       // Iff we have an app and a draw manager
       if((mApp != NULL) && (mDrawManager != NULL))
       {
-            vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->preFrame()\n" << vjDEBUG_FLUSH;
+            vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->preFrame()\n" << vprDEBUG_FLUSH;
          mApp->preFrame();         // PREFRAME: Do Any application pre-draw stuff
             perfBuffer->set (0);
-            vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: drawManager->draw()\n" << vjDEBUG_FLUSH;
+            vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: drawManager->draw()\n" << vprDEBUG_FLUSH;
          mDrawManager->draw();    // DRAW: Trigger the beginning of frame drawing
          mSoundManager->update();
             perfBuffer->set (1);
-            vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->intraFrame()\n" << vjDEBUG_FLUSH;
+            vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->intraFrame()\n" << vprDEBUG_FLUSH;
          mApp->intraFrame();        // INTRA FRAME: Do computations that can be done while drawing.  This should be for next frame.
          //vjSystem::usleep(15000);              // Generate a wait in critical section
             perfBuffer->set (2);
-            vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: drawManager->sync()\n" << vjDEBUG_FLUSH;
+            vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: drawManager->sync()\n" << vprDEBUG_FLUSH;
          mSoundManager->sync();
          mDrawManager->sync();    // SYNC: Block until drawing is done
             perfBuffer->set (3);
-            vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->postFrame()\n" << vjDEBUG_FLUSH;
+            vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->postFrame()\n" << vprDEBUG_FLUSH;
          mApp->postFrame();        // POST FRAME: Do processing after drawing is complete
             perfBuffer->set (4);
       }
@@ -148,10 +148,10 @@ void Kernel::controlLoop(void* nullParam)
 
       perfBuffer->set(5);
 
-         vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: Update Trackers\n" << vjDEBUG_FLUSH;
+         vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: Update Trackers\n" << vprDEBUG_FLUSH;
       getInputManager()->updateAllData();    // Update the trackers
          perfBuffer->set(6);
-         vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: Update Projections\n" << vjDEBUG_FLUSH;
+         vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: Update Projections\n" << vprDEBUG_FLUSH;
       updateFrameData();         // Update the projections, etc.
          perfBuffer->set(7);
    }
@@ -161,7 +161,7 @@ void Kernel::controlLoop(void* nullParam)
 // XXX: Should have protection here
 void Kernel::setApplication(App* _app)
 {
-   vjDEBUG(vjDBG_KERNEL,vjDBG_CONFIG_LVL) << "vjKernel::setApplication: New application set\n" << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_KERNEL,vprDBG_CONFIG_LVL) << "vjKernel::setApplication: New application set\n" << vprDEBUG_FLUSH;
    mNewApp = _app;
    mNewAppSet = true;
 }
@@ -200,13 +200,13 @@ void Kernel::checkForReconfig()
    {
       if(mNewApp->depSatisfied())
       {
-         vjDEBUG(vjDBG_KERNEL,vjDBG_CONFIG_LVL) << "vjKernel: New application dependencies: Satisfied.\n" << vjDEBUG_FLUSH;
+         vprDEBUG(vrjDBG_KERNEL,vprDBG_CONFIG_LVL) << "vjKernel: New application dependencies: Satisfied.\n" << vprDEBUG_FLUSH;
          mNewAppSet = false;
          changeApplication(mNewApp);
       }
       else
       {
-         vjDEBUG(vjDBG_KERNEL,vjDBG_WARNING_LVL) << "vjKernel: New application dependencies: Not satisfied yet.\n" << vjDEBUG_FLUSH;
+         vprDEBUG(vrjDBG_KERNEL,vprDBG_WARNING_LVL) << "vjKernel: New application dependencies: Not satisfied yet.\n" << vprDEBUG_FLUSH;
       }
    }
 }
@@ -223,8 +223,8 @@ void Kernel::checkForReconfig()
 //             Give it the application
 void Kernel::changeApplication(App* _app)
 {
-   vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::changeApplication: Changing to:"
-                           << _app << std::endl << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_KERNEL,1) << "vjKernel::changeApplication: Changing to:"
+                           << _app << std::endl << vprDEBUG_FLUSH;
 
    vprASSERT(vpr::Thread::self() == mControlThread);      // ASSERT: We are being called from kernel thread
 
@@ -268,7 +268,7 @@ void Kernel::changeApplication(App* _app)
 //----------------------------------------------
 void Kernel::initConfig()
 {
-   vjDEBUG_BEGIN(vjDBG_KERNEL,3) << "vjKernel::initConfig: Setting initial config.\n" << vjDEBUG_FLUSH;
+   vprDEBUG_BEGIN(vrjDBG_KERNEL,3) << "vjKernel::initConfig: Setting initial config.\n" << vprDEBUG_FLUSH;
 
    // ---- ALLOCATE MANAGERS --- //
    //initialSetupInputManager();
@@ -291,11 +291,11 @@ void Kernel::initConfig()
 #elif defined(VJ_OS_Win32)
    mSysFactory = SystemFactoryWin32::instance();
 #else
-   //vjDEBUG(0,0) << "ERROR!: Don't know how to create System Factory!\n" << vjDEBUG_FLUSH;
+   //vprDEBUG(0,0) << "ERROR!: Don't know how to create System Factory!\n" << vprDEBUG_FLUSH;
    vprASSERT(false);
 #endif
 
-   vjDEBUG_END(vjDBG_KERNEL,3) << "vjKernel::initConfig: Done.\n" << vjDEBUG_FLUSH;
+   vprDEBUG_END(vrjDBG_KERNEL,3) << "vjKernel::initConfig: Done.\n" << vprDEBUG_FLUSH;
 }
 
 
@@ -320,7 +320,7 @@ int Kernel::configProcessPending(bool lockIt)
    ConfigManager* cfg_mgr = ConfigManager::instance();
    if(cfg_mgr->pendingNeedsChecked())
    {
-      vjDEBUG_BEGIN(vjDBG_ALL,vjDBG_STATE_LVL) << "vjKernel::configProcessPending: Examining pending list.\n" << vjDEBUG_FLUSH;
+      vprDEBUG_BEGIN(vprDBG_ALL,vprDBG_STATE_LVL) << "vjKernel::configProcessPending: Examining pending list.\n" << vprDEBUG_FLUSH;
 
       chunks_processed += ConfigChunkHandler::configProcessPending(lockIt);      // Process kernels pending chunks
       chunks_processed += getInputManager()->configProcessPending(lockIt);
@@ -334,8 +334,8 @@ int Kernel::configProcessPending(bool lockIt)
       if(NULL != mApp)
          chunks_processed += mApp->configProcessPending(lockIt);
 
-      vjDEBUG_CONT_END(vjDBG_ALL,vjDBG_CONFIG_LVL) << std::endl
-                                                   << vjDEBUG_FLUSH;
+      vprDEBUG_CONT_END(vprDBG_ALL,vprDBG_CONFIG_LVL) << std::endl
+                                                   << vprDEBUG_FLUSH;
    }
    return chunks_processed;
 }
@@ -389,18 +389,18 @@ bool Kernel::addUser(ConfigChunk* chunk)
 
    if(!success)
    {
-      vjDEBUG(vjDBG_CONFIG,vjDBG_CRITICAL_LVL)
+      vprDEBUG(vrjDBG_CONFIG,vprDBG_CRITICAL_LVL)
                      << clrOutNORM(clrRED,"ERROR:") << "Failed to add new User: "
                      << chunk->getProperty("name") << std::endl
-                     << vjDEBUG_FLUSH;
+                     << vprDEBUG_FLUSH;
       delete new_user;
    }
    else
    {
-      vjDEBUG(vjDBG_CONFIG,vjDBG_STATE_LVL)
+      vprDEBUG(vrjDBG_CONFIG,vprDBG_STATE_LVL)
                              << "vjKernel: Added new User: "
                              << new_user->getName().c_str() << std::endl
-                             << vjDEBUG_FLUSH;
+                             << vprDEBUG_FLUSH;
       mUsers.push_back(new_user);
    }
 
@@ -416,8 +416,8 @@ bool Kernel::removeUser(ConfigChunk* chunk)
 // --- STARTUP ROUTINES --- //
 void Kernel::loadConfigFile(std::string filename)
 {
-   vjDEBUG(vjDBG_KERNEL,vjDBG_CONFIG_LVL) << "Loading config file: "
-                           << filename << std::endl << vjDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_KERNEL,vprDBG_CONFIG_LVL) << "Loading config file: "
+                           << filename << std::endl << vprDEBUG_FLUSH;
 
    ConfigChunkDB* chunk_db = new ConfigChunkDB;
 
@@ -428,17 +428,17 @@ void Kernel::loadConfigFile(std::string filename)
    bool chunk_db_load_success = chunk_db->load(filename);
    if (!chunk_db_load_success)
    {
-     vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
+     vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
         << "vjKernel::loadConfigFile: DB Load failed to load file: "
-        << filename.c_str() << std::endl << vjDEBUG_FLUSH;
+        << filename.c_str() << std::endl << vprDEBUG_FLUSH;
      exit(1);
    }
 
    // Put them all in pending
    ConfigManager::instance()->addChunkDB(chunk_db);
 
-   //vjDEBUG(vjDBG_KERNEL,5) << "------------  Loaded Config Chunks ----------" << vjDEBUG_FLUSH;
-   //vjDEBUG(vjDBG_KERNEL,5) << (*mInitialChunkDB) << vjDEBUG_FLUSH;
+   //vprDEBUG(vrjDBG_KERNEL,5) << "------------  Loaded Config Chunks ----------" << vprDEBUG_FLUSH;
+   //vprDEBUG(vrjDBG_KERNEL,5) << (*mInitialChunkDB) << vprDEBUG_FLUSH;
 }
 
 //: Load a chunk description file
@@ -522,13 +522,13 @@ Kernel::Kernel()
    //mChunkDB = NULL;
 
    // Print out the Juggler version number when the kernel is created.
-   vjDEBUG(vjDBG_BASE, 0) << std::string(strlen(VJ_VERSION) + 12, '=')
-                          << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_BASE, 0) << clrOutNORM(clrGREEN, "VR Juggler: ")
+   vprDEBUG(vprDBG_ALL, 0) << std::string(strlen(VJ_VERSION) + 12, '=')
+                          << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, 0) << clrOutNORM(clrGREEN, "VR Juggler: ")
                           << clrOutNORM(clrGREEN, VJ_VERSION) << clrRESET
-                          << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_BASE, 0) << std::string(strlen(VJ_VERSION) + 12, '=')
-                          << std::endl << vjDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, 0) << std::string(strlen(VJ_VERSION) + 12, '=')
+                          << std::endl << vprDEBUG_FLUSH;
 }
 
 };

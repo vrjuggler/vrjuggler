@@ -172,7 +172,7 @@ const unsigned char BN_PROTOCOL = 3;
 
 };
 
-extern int errno;
+//extern int errno;
 
 
 // ============================================================================

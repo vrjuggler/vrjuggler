@@ -69,17 +69,28 @@ void ProxyFactory::loadKnownProxies()
    ProxyConstructor<GestureProxy>* gesture_proxy = new ProxyConstructor<GestureProxy>;
    ProxyConstructor<KeyboardProxy>* keyboard_proxy = new ProxyConstructor<KeyboardProxy>;
 
+   if( (NULL == analog_proxy) ||
+       (NULL == digital_proxy) ||
+       (NULL == pos_proxy) ||
+       (NULL == glove_proxy) ||
+       (NULL == gesture_proxy) ||
+       (NULL == keyboard_proxy) )
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Error allocating proxy constructor.\n" << vprDEBUG_FLUSH;
+   }
+
+
    DependencyManager::instance()->registerChecker(new ProxyDepChecker());
 }
 
 void ProxyFactory::registerProxy(ProxyConstructorBase* constructor)
 {
    mConstructors.push_back(constructor);     // Add the constructor to the list
-   vjDEBUG(vjDBG_INPUT_MGR,1) << "vjProxyFactory: Constructor registered for: "
+   vprDEBUG(vrjDBG_INPUT_MGR,1) << "vjProxyFactory: Constructor registered for: "
               << std::setiosflags(std::ios::right) << std::setw(25) << std::setfill(' ') << constructor->getChunkType().c_str() << std::resetiosflags(std::ios::right)
               //<< "   :" << (void*)constructor
               << " type: " << typeid(*constructor).name() << std::endl
-              << vjDEBUG_FLUSH;
+              << vprDEBUG_FLUSH;
 }
 
 // Simply query all proxy constructors registered looking
@@ -106,9 +117,9 @@ Proxy* ProxyFactory::loadProxy(ConfigChunk* chunk)
    Proxy* new_dev;
    ProxyConstructorBase* constructor = mConstructors[index];
 
-   vjDEBUG(vjDBG_INPUT_MGR,3) << "vjProxyFactory::loadProxy: Loading proxy: "
+   vprDEBUG(vrjDBG_INPUT_MGR,3) << "vjProxyFactory::loadProxy: Loading proxy: "
               << chunk->getType() << "  with: "
-              << typeid(*constructor).name() << std::endl << vjDEBUG_FLUSH;
+              << typeid(*constructor).name() << std::endl << vprDEBUG_FLUSH;
    new_dev = constructor->createProxy(chunk);
    return new_dev;
 }
