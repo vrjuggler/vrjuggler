@@ -64,7 +64,7 @@ void Projection::getFrustumApexAndCorners(gmtl::Vec3f& apex,
 
 
    //float near_dist = mFocusPlaneDist;
-   // User like triangles to get the params for the focus surface
+   // Use like triangles to get the params for the focus surface
    float mult_factor = mFocusPlaneDist/mFrustum[Frustum::VJ_NEAR];
    float bot = mFrustum[Frustum::VJ_BOTTOM]*mult_factor;
    float left = mFrustum[Frustum::VJ_LEFT]*mult_factor;
