@@ -17,9 +17,6 @@
  *                            All Rights Reserved
  */
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-
 #include <vjConfig.h>
 #include <Kernel/GL/vjGlWinWin32.h>
 
