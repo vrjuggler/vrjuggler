@@ -93,6 +93,14 @@ public:
 
    //: Load configuration data for Kernel
    //! POST: Config data has been read into initial buffer
+   void loadConfigFile(const char* filename)
+   {
+      std::string filename_str = std::string(filename);
+      loadConfigFile(filename_str);
+   }
+
+   //: Load configuration data for Kernel
+   //! POST: Config data has been read into initial buffer
    void loadConfigFile(std::string filename);
 
    //: Load a chunk description file
