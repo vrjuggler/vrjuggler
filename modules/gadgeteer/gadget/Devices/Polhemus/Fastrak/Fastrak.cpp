@@ -44,6 +44,9 @@
 #include <vpr/vpr.h>
 #include <vpr/System.h>
 
+#include <jccl/PerfMonitor/PerformanceCategories.h>
+#include <jccl/PerfMonitor/PerformanceMonitor.h>
+
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/Devices/Polhemus/Fastrak/Fastrak.h>
 #include <vector>
@@ -76,7 +79,17 @@ Fastrak::~Fastrak()
 
 bool Fastrak::config(jccl::ConfigChunkPtr fastrakChunk)
 {
+   if ( !gadget::Input::config(fastrakChunk) )
+   {
+      return false;
+   }
+
    if ( !gadget::Digital::config(fastrakChunk) )
+   {
+      return false;
+   }
+
+   if ( !gadget::Position::config(fastrakChunk) )
    {
       return false;
    }
@@ -337,6 +350,7 @@ bool Fastrak::config(jccl::ConfigChunkPtr fastrakChunk)
    conf.perstation[3].arf[8] = fastrakChunk->getProperty<float>("ARF4", 8);
    conf.found |= 1<<ARF3;
 
+
    // TMF
    conf.perstation[0].tmf[0] = fastrakChunk->getProperty<float>("TMF1", 0);
    conf.perstation[0].tmf[1] = fastrakChunk->getProperty<float>("TMF1", 1);
@@ -408,7 +422,8 @@ int Fastrak::startSampling()
 
    if ( mFastrakDev.open().success() )
    {
-      mFastrakDev.trackerInit();
+      if (mFastrakDev.trackerInit().failure())
+	      return status;
 
       mSampleThread = new vpr::Thread(threadedSampleFunction, (void*)this);
 
@@ -442,13 +457,14 @@ int Fastrak::sample()
    // the Fastrak stations.  This also has the side effect of getting the
    // button state.  Weird...
    //NB: 15 = 1111b = the 4 stations
+
    mButtonState = mFastrakDev.getCoords(15, &mTrackersPosition[0][0],
                                          &mTrackersOrientation[0][0]);
    cur_dig_samples[0].setTime(cur_pos_samples[0].getTime());
    cur_dig_samples[0].setDigital(mButtonState);
 
    addDigitalSample(cur_dig_samples);
-      
+
    for ( int i = 0; i < 4; ++i )         // for each station
    {
       cur_pos_samples[i].setTime(cur_pos_samples[i].getTime());
@@ -456,7 +472,7 @@ int Fastrak::sample()
    }
 
    addPositionSample(cur_pos_samples);
-   
+
    return status;
 }
 
@@ -464,6 +480,7 @@ void Fastrak::updateData()
 {
    // swap the buffered sample data
    swapPositionBuffers();
+   swapDigitalBuffers();
 }
 
 // kill sample thread
@@ -508,7 +525,7 @@ gmtl::Matrix44f Fastrak::getPosData( int station )
    }
    else
    {
-      gmtl::EulerAngleXYZf tracker_orient(gmtl::Math::deg2Rad(mTrackersOrientation[station][0]),
+      gmtl::EulerAngleZYXf tracker_orient(gmtl::Math::deg2Rad(mTrackersOrientation[station][0]),
                                           gmtl::Math::deg2Rad(mTrackersOrientation[station][1]),
                                           gmtl::Math::deg2Rad(mTrackersOrientation[station][2]));
       gmtl::Vec3f tracker_pos(mTrackersPosition[station][0],
@@ -529,10 +546,10 @@ void Fastrak::threadedSampleFunction( void* classPointer )
    while ( 1 )
    {
       this_ptr->sample();
-      if ( this_ptr->mFastrakDev.getConfig().cont != 'C' )
-      {
-         vpr::System::sleep(1);
-      }
+
+      jcclTIMESTAMP(jcclPERF_ALL, "gadget/Devices/Polhemus/Fastrak/end sample run");
+      vpr::System::msleep(10);
+      jcclTIMESTAMP(jcclPERF_ALL, "gadget/Devices/Polhemus/Fastrak/start sample run");
    }
 }
 
