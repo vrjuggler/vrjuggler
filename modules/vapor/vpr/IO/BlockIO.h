@@ -76,7 +76,7 @@ public:
     *
     * @return An object containing the name of this device.
     */
-   virtual const std::string& getName (void)
+   virtual const std::string& getName()
    {
       return mName;
    }
@@ -90,7 +90,7 @@ public:
     *       is opened in blocking mode.  If the device is already open,
     *       this has no effect.
     */
-   virtual void setOpenBlocking (void)
+   virtual void setOpenBlocking()
    {
       mOpenBlocking = true;
    }
@@ -104,7 +104,7 @@ public:
     *       is opened in non-blocking mode.  If the device is already open,
     *       this has no effect.
     */
-   virtual void setOpenNonBlocking (void)
+   virtual void setOpenNonBlocking()
    {
       mOpenBlocking = false;
    }
@@ -121,7 +121,7 @@ public:
     *         successfully.<br>
     *         vpr::ReturnStatus::Fail is returned otherwise.
     */
-   virtual ReturnStatus open(void) = 0;
+   virtual ReturnStatus open() = 0;
 
    /**
     * Closes the I/O device.
@@ -135,7 +135,7 @@ public:
     *         successfully.<br>
     *         vpr::ReturnStatus::Fail is returned otherwise.
     */
-   virtual ReturnStatus close(void) = 0;
+   virtual ReturnStatus close() = 0;
 
    /**
     * Gets the open state of this I/O device.
@@ -146,7 +146,7 @@ public:
     * @return <code>true</code> is returned if the device is open;
     *         <code>false</code> otherwise.
     */
-   virtual bool isOpen (void)
+   virtual bool isOpen()
    {
       return mOpen;
    }
@@ -161,7 +161,7 @@ public:
     *         mode is set to blocking.<br>
     *         vpr::ReturnStatus::Fail is returned otherwise.
     */
-   virtual ReturnStatus enableBlocking(void) = 0;
+   virtual ReturnStatus enableBlocking() = 0;
 
    /**
     * Reconfigures the I/O device so that it is in non-blocking mode.
@@ -173,7 +173,7 @@ public:
     *         mode is set to non-blocking.<br>
     *         vpr::ReturnStatus::Fail is returned otherwise.
     */
-   virtual ReturnStatus enableNonBlocking(void) = 0;
+   virtual ReturnStatus enableNonBlocking() = 0;
 
    /**
     * Gets the current blocking state for the I/O device.
@@ -184,7 +184,7 @@ public:
     * @return <code>true</code> is returned if the device is in blocking mode.
     *         Otherwise, <code>false</code> is returned.
     */
-   virtual bool getBlocking (void) const
+   virtual bool getBlocking() const
    {
       return mBlocking;
    }
@@ -198,7 +198,7 @@ public:
     * @return <code>true</code> is returned if the device is in non-blocking
     *         mode.  Otherwise, <code>false</code> is returned.
     */
-   virtual bool getNonBlocking (void) const
+   virtual bool getNonBlocking() const
    {
       return (!mBlocking);
    }
@@ -210,7 +210,7 @@ public:
     *         has no handle or if the handle could not be returned for some
     *         reason.
     */
-   virtual IOSys::Handle getHandle(void) = 0;
+   virtual IOSys::Handle getHandle() = 0;
 
    /**
     * Reads at most the specified number of bytes from the I/O device into
@@ -238,9 +238,9 @@ public:
     *         begin within the timeout interval.<br>
     *         vpr::ReturnStatus::Fail is returned if the read operation failed.
     */
-   vpr::ReturnStatus read (void* buffer, const vpr::Uint32 length,
-                           vpr::Uint32& bytes_read,
-                           const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus read(void* buffer, const vpr::Uint32 length,
+                          vpr::Uint32& bytes_read,
+                          const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       return this->read_s(buffer, length, bytes_read, timeout);
    }
@@ -272,17 +272,17 @@ public:
     *         within the timeout interval.<br>
     *         vpr::ReturnStatus::Fail is returned if the read operation failed.
     */
-   vpr::ReturnStatus read (std::string& buffer, const vpr::Uint32 length,
-                           vpr::Uint32& bytes_read,
-                           const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus read(std::string& buffer, const vpr::Uint32 length,
+                          vpr::Uint32& bytes_read,
+                          const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       vpr::ReturnStatus status;
 
       // Allocate the temporary buffer, zero it, and read in the current
       // buffer from the device.
-      buffer.resize( length );
-      memset( &buffer[0], '\0', buffer.size() );
-      status = this->read( &buffer[0], buffer.size(), bytes_read, timeout);
+      buffer.resize(length);
+      memset(&buffer[0], '\0', buffer.size());
+      status = this->read(&buffer[0], buffer.size(), bytes_read, timeout);
 
       return status;
    }
@@ -314,17 +314,17 @@ public:
     *         within the timeout interval.<br>
     *         vpr::ReturnStatus::Fail is returned if the read operation failed.
     */
-   vpr::ReturnStatus read (std::vector<vpr::Uint8>& buffer,
-                           const vpr::Uint32 length, vpr::Uint32& bytes_read,
-                           const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus read(std::vector<vpr::Uint8>& buffer,
+                          const vpr::Uint32 length, vpr::Uint32& bytes_read,
+                          const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       vpr::ReturnStatus status;
-      buffer.resize( length );
+      buffer.resize(length);
 
       // Allocate the temporary buffer, zero it, and read in the current
       // buffer from the device.
-      memset( &buffer[0], '\0', buffer.size() );
-      status = this->read( &buffer[0], buffer.size(), bytes_read, timeout);
+      memset(&buffer[0], '\0', buffer.size());
+      status = this->read(&buffer[0], buffer.size(), bytes_read, timeout);
 
       // size it down if needed, if (bytes_read==length), then resize does
       // nothing...
@@ -360,9 +360,9 @@ public:
     *         mode, and there is no data to read.<br>
     *         vpr::ReturnStatus::Fail is returned if the read operation failed.
     */
-   vpr::ReturnStatus readn (void* buffer, const vpr::Uint32 length,
-                            vpr::Uint32& bytes_read,
-                            const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus readn(void* buffer, const vpr::Uint32 length,
+                           vpr::Uint32& bytes_read,
+                           const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       return this->readn_s(buffer, length, bytes_read, timeout);
    }
@@ -392,17 +392,17 @@ public:
     *         mode, and there is no data to read.<br>
     *         vpr::ReturnStatus::Fail is returned if the read operation failed.
     */
-   vpr::ReturnStatus readn (std::string& buffer, const vpr::Uint32 length,
-                            vpr::Uint32& bytes_read,
-                            const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus readn(std::string& buffer, const vpr::Uint32 length,
+                           vpr::Uint32& bytes_read,
+                           const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       vpr::ReturnStatus status;
 
       // Allocate the temporary buffer, zero it, and read in the current
       // buffer from the device.
-      buffer.resize( length );
-      memset( &buffer[0], '\0', buffer.size() );
-      status = this->readn( &buffer[0], buffer.size(), bytes_read, timeout);
+      buffer.resize(length);
+      memset(&buffer[0], '\0', buffer.size());
+      status = this->readn(&buffer[0], buffer.size(), bytes_read, timeout);
 
       if ( status.success() )
       {
@@ -439,17 +439,17 @@ public:
     *         within the timeout interval.<br>
     *         vpr::ReturnStatus::Fail is returned if the read operation failed.
     */
-   vpr::ReturnStatus readn (std::vector<vpr::Uint8>& buffer,
-                            const vpr::Uint32 length, vpr::Uint32& bytes_read,
-                            const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus readn(std::vector<vpr::Uint8>& buffer,
+                           const vpr::Uint32 length, vpr::Uint32& bytes_read,
+                           const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       vpr::ReturnStatus status;
 
       // Allocate the temporary buffer, zero it, and read in the current
       // buffer from the device.
-      buffer.resize( length );
-      memset( &buffer[0], '\0', buffer.size() );
-      status = this->readn( &buffer[0], buffer.size(), bytes_read, timeout );
+      buffer.resize(length);
+      memset(&buffer[0], '\0', buffer.size());
+      status = this->readn(&buffer[0], buffer.size(), bytes_read, timeout);
 
       if ( status.success() )
       {
@@ -490,9 +490,9 @@ public:
     *         vpr::ReturnStatus::Fail is returned if the write operation
     *         failed.
     */
-   vpr::ReturnStatus write (const void* buffer, const vpr::Uint32 length,
-                            vpr::Uint32& bytes_written,
-                            const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus write(const void* buffer, const vpr::Uint32 length,
+                           vpr::Uint32& bytes_written,
+                           const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       return this->write_s(buffer, length, bytes_written,timeout);
    }
@@ -522,11 +522,11 @@ public:
     *         begin within the timeout interval.<br>
     *         vpr::ReturnStatus::Fail is returned if the write operation failed.
     */
-   vpr::ReturnStatus write (const std::string& buffer, const vpr::Uint32 length,
-                            vpr::Uint32& bytes_written,
-                            const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus write(const std::string& buffer, const vpr::Uint32 length,
+                           vpr::Uint32& bytes_written,
+                           const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      vprASSERT( length <= buffer.size() && "length was bigger than the data given" );
+      vprASSERT(length <= buffer.size() && "length was bigger than the data given");
       return this->write(buffer.c_str(), length, bytes_written,timeout);
    }
 
@@ -555,12 +555,12 @@ public:
     *         begin within the timeout interval.<br>
     *         vpr::ReturnStatus::Fail is returned if the write operation failed.
     */
-   vpr::ReturnStatus write (const std::vector<vpr::Uint8>& buffer,
-                            const vpr::Uint32 length,
-                            vpr::Uint32& bytes_written,
-                            const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus write(const std::vector<vpr::Uint8>& buffer,
+                           const vpr::Uint32 length,
+                           vpr::Uint32& bytes_written,
+                           const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      vprASSERT( length <= buffer.size() && "length was bigger than the data given" );
+      vprASSERT(length <= buffer.size() && "length was bigger than the data given");
       return this->write(&buffer[0], length, bytes_written,timeout);
    }
 
@@ -578,7 +578,7 @@ public:
     * @return <code>true</code> is returned if reading will block;
     *         <code>false</code> otherwise.
     */
-   bool isReadBlocked (const vpr::Interval& timeout = vpr::Interval::NoWait)
+   bool isReadBlocked(const vpr::Interval& timeout = vpr::Interval::NoWait)
    {
       bool is_blocked;
       vpr::Selector selector;
@@ -671,7 +671,7 @@ protected:
     * @post The open mode is set to blocking; the open state is set to false;
     *       and the blocking mode for reads and writes is set to true.
     */
-   BlockIO (void)
+   BlockIO()
       : mOpenBlocking(true), mOpen(false), mBlocking(true),
         mStatsStrategy(NULL)
    {
@@ -688,7 +688,7 @@ protected:
     *
     * @param name The name for this device.
     */
-   BlockIO (const std::string& name)
+   BlockIO(const std::string& name)
       : mName(name), mOpenBlocking(true), mOpen(false), mBlocking(true),
         mStatsStrategy(NULL)
    {
@@ -701,7 +701,7 @@ protected:
     * @param other A constant reference to another vpr::BlockIO object used
     *              as the source for the copy.
     */
-   BlockIO (const BlockIO& other)
+   BlockIO(const BlockIO& other)
    {
       mName          = other.mName;
       mOpenBlocking  = other.mOpenBlocking;
@@ -716,7 +716,7 @@ protected:
     * @pre None.
     * @post None.
     */
-   virtual ~BlockIO (void)
+   virtual ~BlockIO()
    {
       /* Do nothing. */ ;
    }
@@ -741,9 +741,9 @@ protected:
    /**
     * read strategy
     */
-   virtual vpr::ReturnStatus readn_s (void* buffer, const vpr::Uint32 length,
-                                      vpr::Uint32& bytes_read,
-                                      const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   virtual vpr::ReturnStatus readn_s(void* buffer, const vpr::Uint32 length,
+                                     vpr::Uint32& bytes_read,
+                                     const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       vpr::ReturnStatus status;
 
@@ -758,10 +758,10 @@ protected:
    /**
     * write strategy
     */
-   virtual vpr::ReturnStatus write_s (const void* buffer,
-                                      const vpr::Uint32 length,
-                                      vpr::Uint32& bytes_written,
-                                      const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   virtual vpr::ReturnStatus write_s(const void* buffer,
+                                     const vpr::Uint32 length,
+                                     vpr::Uint32& bytes_written,
+                                     const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       vpr::ReturnStatus status;
 
