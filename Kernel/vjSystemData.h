@@ -13,8 +13,11 @@
  */
 class vjSystemData
 {
-
 public:
+    vjSystemData (void) {
+        inputManager = NULL;
+    }
+
     vjInputManager*	    inputManager;
 };
 
