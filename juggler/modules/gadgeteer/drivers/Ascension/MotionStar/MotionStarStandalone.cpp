@@ -566,10 +566,6 @@ void MotionStarStandalone::sample()
    {
       // First, we need to read the header for the incoming data packet so we
       // know how much data to expect.
-      // XXX: This hangs indefinitely if the backpack is not turned on prior
-      // to this driver making a connection to the MotionStar chassis and
-      // requesting tracker data.  This was not a problem before.
-      //    -PH 11/16/2004
       getRsp(&recv_pkt.header);
 
       if ( recv_pkt.header.error_code != 0 )
@@ -674,7 +670,7 @@ void MotionStarStandalone::sample()
                      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
                         << "Data mismatch detected.  A sensor is available "
                         << "at FBB address " << (unsigned int) fbb_addr
-                        << " where one was not connected before."
+                        << " where one was not connected before." << std::endl
                         << vprDEBUG_FLUSH;
                      break;
                   }
@@ -764,16 +760,13 @@ void MotionStarStandalone::sample()
 
             // Attempt to deal with the case when we have detected that
             // sensors have been added or removed.
-            // XXX: This is not working.  The initial call to getRsp() to
-            // get the header of the sensor readings hangs indefinitely when
-            // the backpack is not turned on prior to this driver connecting
-            // to the server chassis.  This was not a problem before...
-            //    -PH 11/16/2004
             if ( data_mismatch )
             {
                vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
                   << "[MotionStarStandalone::sample()] Data record size "
-                  << "changed.  Querying new system status ..." << std::endl
+                  << "changed." << std::endl << vprDEBUG_FLUSH;
+               vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+                  << "Querying new system status ..." << std::endl
                   << vprDEBUG_FLUSH;
 
                // Temporarily stop the data sampling if we are receiving
@@ -1448,10 +1441,6 @@ unsigned int MotionStarStandalone::configureBirds()
                m_birds[bird]->format      = FLOCK::NO_BIRD_DATA;
                m_birds[bird]->report_rate = 1;
                m_birds[bird]->hemisphere  = m_hemisphere;
-
-               // Fill in the bird_status struct with disabling values.
-               bird_status->status.dataFormat = 0x00;
-               bird_status->status.reportRate = 1;
 
                inactive_bird_count++;
             }
