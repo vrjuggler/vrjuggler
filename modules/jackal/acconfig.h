@@ -42,9 +42,6 @@
 
 @TOP@
 
-/* Define the following if building on HP-UX. */
-#undef _CMA_NOWRAPPERS_
-
 /* Define if performance-gathering code will be used. */
 #undef USE_JCCL_PERF
 
