@@ -742,6 +742,7 @@ AC_OUTPUT(vpr-config
           vpr/md/NSPR/IO/Socket/Makefile
           vpr/md/NSPR/Sync/Makefile
           vpr/md/NSPR/Thread/Makefile
+          vpr/md/NSPR/Util/Makefile
           vpr/md/POSIX/Makefile
           vpr/md/POSIX/IO/Makefile
           vpr/md/POSIX/IO/Port/Makefile
