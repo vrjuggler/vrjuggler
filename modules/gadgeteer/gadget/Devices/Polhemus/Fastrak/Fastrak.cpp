@@ -410,7 +410,9 @@ int Fastrack::startSampling()
       mFastrackDev.trackerInit();
 
       mSampleThread = new vpr::Thread(threadedSampleFunction, (void*)this);
-      if ( mSampleThread->valid() )
+      vpr::ReturnStatus start_status = mSampleThread->start();
+
+      if ( start_status.success() && mSampleThread->valid() )
       {
          status = 1; // thread creation succeded
       }

@@ -801,10 +801,11 @@ namespace gadget
 
                // Start a thread to monitor port
             vpr::ThreadMemberFunctor<RemoteInputManager>* memberFunctor =
-            new vpr::ThreadMemberFunctor<RemoteInputManager>
-            (this, &RemoteInputManager::acceptLoop, NULL);
+               new vpr::ThreadMemberFunctor<RemoteInputManager>
+                  (this, &RemoteInputManager::acceptLoop, NULL);
             
             mAcceptThread = new vpr::Thread(memberFunctor);
+            mAcceptThread->start();
             vprASSERT(mAcceptThread->valid());
             return true;
          }

@@ -222,20 +222,20 @@ int DTK::startSampling()
         return 0;
         }
 
-// Create a new thread to handle the control
-    vpr::ThreadMemberFunctor<DTK>* memberFunctor =
-        new vpr::ThreadMemberFunctor<DTK>(this, &DTK::controlLoop, NULL);
-    vpr::Thread* new_thread;
-    new_thread = new vpr::Thread(memberFunctor);
-    mThread = new_thread;
+      // Create a new thread to handle the control
+       vpr::ThreadMemberFunctor<DTK>* memberFunctor =
+           new vpr::ThreadMemberFunctor<DTK>(this, &DTK::controlLoop, NULL);
+       mThread = new vpr::Thread(memberFunctor);
+       vpr::ReturnStatus start_status = mThread->start();
 
-
-    if ( mThread == NULL )
-    {
-        return 0;  // Fail
-    } else {
-        return 1;   // success
-    }
+       if ( start_status.success() )
+       {
+           return 1;   // success
+       }
+       else
+       {
+           return 0;  // Fail
+       }
     }
 
     return 0;
