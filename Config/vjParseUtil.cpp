@@ -173,3 +173,12 @@ float toFeet (float val, CfgUnit unit) {
   }
 }
 
+
+bool vjstrcasecmp (const std::string& a, const std::string& b) {
+  if (a.size() != b.size())
+    return true;
+  for (int i = 0; i < a.size(); i++)
+    if (toupper(a[i]) != toupper(b[i]))
+      return true;
+  return false;
+}
