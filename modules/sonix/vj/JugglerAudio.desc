@@ -1,0 +1,16 @@
+chunk juggler_audio_manager "Juggler Audio Manager" "VR Juggler Audio Manager"
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
+  api String 1 "API" "What Sound API to use? (Stub is default)"
+  listener_position Float 3 "Start Location" ""
+  file_search_path String 1 "File Search Paths" "Paths to search for files"
+  Sound EmbeddedChunk -1 "Sounds" vj_enumeration { "Sound" } "specify a sound here.  usually used "
+  end
+chunk Sound "Sound" ""
+  Name String 1 "Name" "Sound Alias - name that your application references"
+  filename String 1 "File Name" ""
+  ambient Bool 1 "Positional" "Is it position based sound (vol changes with movement)? Or is it just ambient."
+  loop Float 1 "Loop" "How many times does the sound loop? (-1 infinite)"
+  retriggerable Bool 1 "Retriggerable" "can the sound retrigger during play?"
+  position Float 3 "sound position" ""
+  end
+End
