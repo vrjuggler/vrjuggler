@@ -57,8 +57,11 @@ namespace gadget
 * ASSERTION: The buffers can be empty at the start, but after the first cycle
 *            (first time stable gets values) the Stable buffer must have at least
 *            one sample.
+*
+* @param MAX_BUFFER_SIZE - The maximum allowable size of the buffer.  After it gets this large
+*                          we will start throwing away old data.
 */
-template <class DATA_TYPE>
+template <class DATA_TYPE, unsigned MAX_BUFFER_SIZE=5000>
 class SampleBuffer
 {
 public:
@@ -75,8 +78,13 @@ public:
     */
    void addSample(const std::vector< DATA_TYPE >& dataSample)
    {
-      vprASSERT(mLock.test());      // Verify that it is locked
+      vprASSERT(mLock.test());                  // Verify that it is locked
       mReadyBuffer.push_back(dataSample);
+      if(mReadyBuffer.size() > MAX_BUFFER_SIZE)
+      {
+         while(mReadyBuffer.size() > MAX_BUFFER_SIZE)
+         { mReadyBuffer.erase(mReadyBuffer.begin()); }
+      }
    }
 
    /** Swap the data buffers
