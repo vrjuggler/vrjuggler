@@ -58,7 +58,8 @@
 // ============================================================================
 extern int errno;
 
-namespace vpr {
+namespace vpr
+{
 
 // ============================================================================
 // Public methods.
@@ -66,98 +67,110 @@ namespace vpr {
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-ReturnStatus
-SocketDatagramImplBSD::recvfrom (void* msg, const vpr::Uint32 length,
-                                 const int flags, InetAddr& from,
-                                 vpr::Uint32& bytes_read,
-                                 const vpr::Interval timeout)
+vpr::ReturnStatus SocketDatagramImplBSD::recvfrom (void* msg,
+                                                   const vpr::Uint32 length,
+                                                   const int flags,
+                                                   vpr::InetAddr& from,
+                                                   vpr::Uint32& bytes_read,
+                                                   const vpr::Interval timeout)
 {
-    socklen_t fromlen;
-    ReturnStatus retval;
+   socklen_t fromlen;
+   vpr::ReturnStatus retval;
 
-    retval = m_handle->isReadable(timeout);
+   retval = m_handle->isReadable(timeout);
 
-    if ( retval.success() ) {
-        ssize_t bytes;
+   if ( retval.success() )
+   {
+      ssize_t bytes;
 
-        m_blocking_fixed = true;
+      m_blocking_fixed = true;
 
-        fromlen    = from.size();
-        bytes = ::recvfrom(m_handle->m_fdesc, msg, length, flags,
+      fromlen = from.size();
+      bytes   = ::recvfrom(m_handle->m_fdesc, msg, length, flags,
                            (struct sockaddr*) &from.m_addr, &fromlen);
 
-        if ( bytes == -1 ) {
-            bytes_read = 0;
+      if ( bytes == -1 )
+      {
+         bytes_read = 0;
 
-            if ( errno == EAGAIN && getNonBlocking() ) {
-                retval.setCode(ReturnStatus::WouldBlock);
-            }
-            else {
-                fprintf(stderr,
-                        "[vpr::SocketDatagramImplBSD] ERROR: Could not read from socket (%s:%hu): %s\n",
-                        m_remote_addr.getAddressString().c_str(),
-                        m_remote_addr.getPort(), strerror(errno));
-                retval.setCode(ReturnStatus::Fail);
-            }
-        }
-        else if ( bytes == 0 )
-        {
-            retval.setCode(vpr::ReturnStatus::NotConnected);
-        }
-        else {
-            bytes_read = bytes;
-        }
-    }
+         if ( errno == EAGAIN && getNonBlocking() )
+         {
+            retval.setCode(vpr::ReturnStatus::WouldBlock);
+         }
+         else
+         {
+            fprintf(stderr,
+                    "[vpr::SocketDatagramImplBSD] ERROR: Could not read from socket (%s:%hu): %s\n",
+                    m_remote_addr.getAddressString().c_str(),
+                    m_remote_addr.getPort(), strerror(errno));
+            retval.setCode(vpr::ReturnStatus::Fail);
+         }
+      }
+      else if ( bytes == 0 )
+      {
+         retval.setCode(vpr::ReturnStatus::NotConnected);
+      }
+      else
+      {
+         bytes_read = bytes;
+      }
+   }
 
-    return retval;
+   return retval;
 }
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-ReturnStatus
-SocketDatagramImplBSD::sendto (const void* msg, const vpr::Uint32 length,
-                               const int flags, const InetAddr& to,
-                               vpr::Uint32& bytes_sent,
-                               const vpr::Interval timeout)
+vpr::ReturnStatus SocketDatagramImplBSD::sendto (const void* msg,
+                                                 const vpr::Uint32 length,
+                                                 const int flags,
+                                                 const vpr::InetAddr& to,
+                                                 vpr::Uint32& bytes_sent,
+                                                 const vpr::Interval timeout)
 {
-    ReturnStatus retval;
+   vpr::ReturnStatus retval;
 
-    retval = m_handle->isWriteable(timeout);
+   retval = m_handle->isWriteable(timeout);
 
-    if ( retval.success() ) {
-        ssize_t bytes;
+   if ( retval.success() )
+   {
+      ssize_t bytes;
 
-        m_blocking_fixed = true;
+      m_blocking_fixed = true;
 
-        bytes = ::sendto(m_handle->m_fdesc, msg, length, flags,
-                         (struct sockaddr*) &to.m_addr, to.size());
+      bytes = ::sendto(m_handle->m_fdesc, msg, length, flags,
+                       (struct sockaddr*) &to.m_addr, to.size());
 
-        if ( bytes == -1 ) {
-            bytes_sent = 0;
+      if ( bytes == -1 )
+      {
+         bytes_sent = 0;
 
-            if ( errno == EAGAIN && getNonBlocking() ) {
-                retval.setCode(ReturnStatus::WouldBlock);
-            }
-            else {
-                fprintf(stderr,
-                        "[vpr::SocketDatagramImplBSD] ERROR: Could not send to %s:%hu on socket (%s:%hu): %s\n",
-                        to.getAddressString().c_str(), to.getPort(),
-                        m_remote_addr.getAddressString().c_str(),
-                        m_remote_addr.getPort(), strerror(errno));
-                retval.setCode(ReturnStatus::Fail);
-            }
-        }
-        else if ( errno == EHOSTUNREACH || errno == EHOSTDOWN ||
-                  errno == ENETDOWN )
-        {
-            retval.setCode(vpr::ReturnStatus::NotConnected);
-        }
-        else {
-            bytes_sent = bytes;
-        }
-    }
+         if ( errno == EAGAIN && getNonBlocking() )
+         {
+            retval.setCode(vpr::ReturnStatus::WouldBlock);
+         }
+         else
+         {
+            fprintf(stderr,
+                    "[vpr::SocketDatagramImplBSD] ERROR: Could not send to %s:%hu on socket (%s:%hu): %s\n",
+                    to.getAddressString().c_str(), to.getPort(),
+                    m_remote_addr.getAddressString().c_str(),
+                    m_remote_addr.getPort(), strerror(errno));
+            retval.setCode(vpr::ReturnStatus::Fail);
+         }
+      }
+      else if ( errno == EHOSTUNREACH || errno == EHOSTDOWN ||
+                errno == ENETDOWN )
+      {
+         retval.setCode(vpr::ReturnStatus::NotConnected);
+      }
+      else
+      {
+         bytes_sent = bytes;
+      }
+   }
 
-    return retval;
+   return retval;
 }
 
-}; // End of vpr namespace
+} // End of vpr namespace
