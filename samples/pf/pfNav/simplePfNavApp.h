@@ -57,7 +57,7 @@
 #include <Input/InputManager/vjPosInterface.h>
 #include <Input/InputManager/vjDigitalInterface.h>
 
-#include "fileIO.h"
+#include <Utils/vjFileIO.h>
 
 #include <Sound/vjSoundManager.h>
 #include <Sound/pf/pfSoundNode.h> //performer-juggler sound node.
