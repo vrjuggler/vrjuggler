@@ -40,12 +40,10 @@
 #include <jccl/Config/ChunkDescDB.h>
 #include <jccl/Config/ConfigChunkDB.h>
 #include <jccl/Config/ChunkFactory.h>
-//#include <jccl/JackalServer/EnvironmentManager.h>
 #include <jccl/JackalServer/TimedUpdate.h>
 //#include <Kernel/ConfigManager.h>
 #include <jccl/Config/ConfigTokens.h>
 #include <vpr/System.h>
-//#include <Config/XMLConfigIO.h>
 
 #include <jccl/JackalServer/XMLConfigCommunicator.h>
 
@@ -65,19 +63,19 @@ Connect::Connect(Socket* s, const std::string& _name,
     write_connect_thread = NULL;
     read_die = write_die = false;
 
-    // populate communicators vector here.
-    communicators.push_back (new XMLConfigCommunicator());
+//      // populate communicators vector here.
+//      communicators.push_back (new XMLConfigCommunicator());
 
     outstream = sock->getOutputStream();
     instream = sock->getInputStream();
 
     // we need to add a chunk describing ourself
-    ConfigChunk* ch = ChunkFactory::instance()->createChunk ("FileConnect");
-    if (ch) {
-        ch->setProperty ("Name", name);
-        ch->setProperty ("Mode", VJC_INTERACTIVE);
-        ch->setProperty ("filename", filename);
-        ch->setProperty ("Enabled", true);
+    connect_chunk = ChunkFactory::instance()->createChunk ("FileConnect");
+    if (connect_chunk) {
+        connect_chunk->setProperty ("Name", name);
+        connect_chunk->setProperty ("Mode", VJC_INTERACTIVE);
+        connect_chunk->setProperty ("filename", filename);
+        connect_chunk->setProperty ("Enabled", true);
         //ConfigManager::instance()->addActive(ch);              // Add to active config
     }
 
@@ -93,6 +91,7 @@ Connect::Connect(Socket* s, const std::string& _name,
 
 Connect::Connect(ConfigChunk* c): commands_mutex(), communicators() {
 
+    connect_chunk = c;
     sock = NULL;
     filename = (std::string)c->getProperty ("FileName");
     name = (std::string)c->getProperty ("Name");
@@ -216,10 +215,10 @@ bool Connect::stopProcess() {
 }
 
 
-void Connect::sendDescDB (ChunkDescDB* db) {
-    if (mode != VJC_INPUT)
-        commands.push (new CommandSendDescDB (db));
-}
+//  void Connect::sendDescDB (ChunkDescDB* db) {
+//      if (mode != VJC_INPUT)
+//          commands.push (new CommandSendDescDB (db));
+//  }
 
 
 void Connect::sendDisconnect () {
@@ -229,17 +228,27 @@ void Connect::sendDisconnect () {
 }
 
 
-void Connect::sendChunkDB (ConfigChunkDB* db, bool all) {
-    if (mode != VJC_INPUT)
-        commands.push (new CommandSendChunkDB (db, all));
+//  void Connect::sendChunkDB (ConfigChunkDB* db, bool all) {
+//      if (mode != VJC_INPUT)
+//          commands.push (new CommandSendChunkDB (db, all));
+//  }
+
+
+//  void Connect::sendRefresh () {
+//      if (mode == VJC_INTERACTIVE)
+//          commands.push (new CommandRefresh);
+//  }
+
+
+void Connect::sendCommand (Command* cmd) {
+    vprASSERT (cmd != 0);
+
+    if (mode != VJC_INPUT) {
+        commands_mutex.acquire();
+        commands.push (cmd);
+        commands_mutex.release();
+    }
 }
-
-
-void Connect::sendRefresh () {
-    if (mode == VJC_INTERACTIVE)
-        commands.push (new CommandRefresh);
-}
-
 
 
 //! ARGS: _tu - a TimedUpdate*
@@ -406,119 +415,6 @@ bool Connect::readCommand(std::istream& fin) {
 }
 
 
-//  bool Connect::readCommand(std::istream& fin) {
-//      // reads one command.  called from controlloop
-//      const int   buflen = 512;
-//      char        rbuf[buflen];    // HACK! can't handle lines longer than buflen
-//      char*       s;
-
-//      if (!fin.getline(rbuf,buflen,'\n'))
-//          return false;
-
-//      vprDEBUG(vprDBG_ENV_MGR,4) << "Connect:: read: '" << rbuf
-//                               << "'.\n" << vprDEBUG_FLUSH;
-
-//      s = strtok (rbuf, " \t\n");
-//      if (!s) {
-//          vprDEBUG(vprDBG_ERROR,1) << "couldn't get a token.  something's really wrong in Connect\n"
-//                                 << vprDEBUG_FLUSH;
-//      }
-
-//      if (!strcasecmp (s, get_TOKEN)) {
-//          s = strtok (NULL, " \t\n");
-//          if (!strcasecmp (s, descriptions_TOKEN)) {
-//              ChunkDescDB* db = ChunkFactory::instance()->getChunkDescDB();
-//              vprDEBUG(vprDBG_ENV_MGR,4) << "Connect: Sending (requested) chunkdesc.\n" << vprDEBUG_FLUSH;
-//              vprDEBUG(vprDBG_ENV_MGR,5) << *db << std::endl << vprDEBUG_FLUSH;
-//              sendDescDB (db);
-//          }
-//          else if (!strcasecmp (s,chunks_TOKEN)) {
-//              ConfigManager::instance()->lockActive();
-//              ConfigChunkDB* db = new ConfigChunkDB((*(ConfigManager::instance()->getActiveConfig())));   // Make a copy
-//              ConfigManager::instance()->unlockActive();
-
-//              vprDEBUG(vprDBG_ENV_MGR,4) << "Connect: Sending (requested) chunkdb.\n" << vprDEBUG_FLUSH;
-//              vprDEBUG(vprDBG_ENV_MGR,5) << *db << std::endl << vprDEBUG_FLUSH;
-//              sendChunkDB (db, true);
-//          }
-//          else {
-//              vprDEBUG(vprDBG_ERROR,1)
-//                 << "Error: Connect:: Received unknown GET: " << s
-//                 << std::endl << vprDEBUG_FLUSH;
-//          }
-//      }
-
-//      else if (!strcasecmp (s, descriptions_TOKEN)) {
-//          /* message contains one or more descriptions, to
-//           * be read in just like a ChunkDescDB.  If the
-//           * descriptions line itself contains the word
-//           * "all", then we should clear the db first.
-//           */
-//          // XXX: Hack!!! We need to change this. We should not
-//          // change the dbs outside of kernel
-//          //s = strtok (NULL, " \t\n");
-//          vprDEBUG(vprDBG_ERROR,0) << "EM Receive descriptions disabled!!!\n" << vprDEBUG_FLUSH;
-//          //if (!strcasecmp (s, "all") && (cachedChunkdb->isEmpty()))
-//          //    cachedDescdb->removeAll();
-//          //fin >> *cachedDescdb;
-//      }
-
-//      else if (!strcasecmp (s, chunks_TOKEN)) {
-//          /* message contains one or more chunks.  If the
-//           * descriptions line contains "all", we should
-//           * clear the db first
-//           */
-//          //s = strtok (NULL, " \t\n");
-//          // chunks 'all' option disabled for now...
-//          //if (!strcasecmp (s, "all"))
-//          //   chunkdb->removeAll()
-//          vprDEBUG(vprDBG_ENV_MGR,1) << "Connect:: Read: chunks: Started\n" << vprDEBUG_FLUSH;
-
-//          ConfigChunkDB* newchunkdb = new ConfigChunkDB;
-//          // new cool xml testing stuff.
-//          XMLConfigIO configio;
-//          configio.readConfigChunkDB (fin, *newchunkdb);
-//          //fin >> *newchunkdb;
-//          vprDEBUG(vprDBG_ENV_MGR,5) << *newchunkdb << std::endl << vprDEBUG_FLUSH;
-//          vprDEBUG(vprDBG_ENV_MGR,3) << "Connect:: Read: chunks: Completed\n" << vprDEBUG_FLUSH;
-//          // ALLEN: PUT A FUNCTION HERE FOR THE KERNEL TO LOOK AT NEWCHUNKDB
-//          ConfigManager::instance()->addChunkDB(newchunkdb);    // Adds chunks to the pending list
-//          vprDEBUG(vprDBG_ENV_MGR,3) << "Connect: Added chunks to ConfigManager pending list to add\n" << vprDEBUG_FLUSH;
-//      }
-
-//      else if (!strcasecmp (s, remove_TOKEN)) {
-//          s = strtok (NULL, " \t\n");
-//          if (!strcasecmp (s, descriptions_TOKEN)) {
-//              while ( (s = strtok (NULL, " \t\n")) ) {
-//                  // BUG! - what if chunks exist in db using the desc we're removing?
-//                  //cachedDescdb->remove(s);
-//                  vprDEBUG(vprDBG_ENV_MGR,3) << "EM Remove Descriptions disabled!\n" << vprDEBUG_FLUSH;
-//              }
-//          }
-//          else if (!strcasecmp (s, chunks_TOKEN)) {
-//              ConfigChunkDB* remove_chunk_db = new ConfigChunkDB();
-
-//              vprDEBUG(vprDBG_ENV_MGR,5) << "Connect: Remove: chunks: Starting...\n"  << vprDEBUG_FLUSH;
-
-//              fin >> *remove_chunk_db;       // Read in the chunks to remove
-
-//              vprDEBUG(vprDBG_ENV_MGR,5) << *remove_chunk_db << std::endl
-//                                       << vprDEBUG_FLUSH;
-
-//              // Tell config manager to remove the chunks
-//              ConfigManager::instance()->removeChunkDB(remove_chunk_db);     // Add chunks to pending list as removes
-//              vprDEBUG(vprDBG_ENV_MGR,3) << "Connect: Remove chunks added to ConfigManager pending list\n" << vprDEBUG_FLUSH;
-//          }
-//          else
-//              vprDEBUG(vprDBG_ERROR,3) << "Error: Connect: Unknown remove type: "
-//                                     << s << std::endl << vprDEBUG_FLUSH;
-//      }
-//      else {
-//          vprDEBUG(vprDBG_ERROR,0) << "Error: Connect:: Unknown command '"
-//                                 << s << "'\n" << vprDEBUG_FLUSH;
-//      }
-//      return true;
-//  }
 
 
 };

@@ -241,3 +241,16 @@ void ConfigManager::debugDumpPending(int debug_level)
 }
 
 }; // namespace jccl
+
+
+//------------------ JackalControl Stuff --------------------------------
+
+/*virtual*/ void ConfigManager::setJackalServer (JackalServer* js) {
+    jackal_server = js;
+}
+/*virtual*/ void ConfigManager::addConnect (Connect *c) {
+    c->addCommunicator (config_communicator);
+}
+/*virtual*/ void ConfigManager::removeConnect (Connect* c) {
+    ;
+}

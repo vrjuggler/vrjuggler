@@ -85,6 +85,16 @@ class VJ_CLASS_API Connect {
     }
 
 
+    ConfigChunk* getConfiguration () {
+        return connect_chunk;
+    }
+
+
+    void addCommunicator (NetCommunicator* c) {
+        communicators.push_back (c);
+        c->initConnection (this);
+    }
+
 
     //: Starts the file connection process.
     //! PRE:  None
@@ -106,10 +116,12 @@ class VJ_CLASS_API Connect {
     bool stopProcess();
 
 
-    void sendDescDB (ChunkDescDB* db);
-    void sendChunkDB (ConfigChunkDB* db, bool all);
-    void sendRefresh ();
+//      void sendDescDB (ChunkDescDB* db);
+//      void sendChunkDB (ConfigChunkDB* db, bool all);
+//      void sendRefresh ();
     void sendDisconnect();
+
+    void Connect::sendCommand (Command* cmd);
 
     //: Attaches a timed update object to this connection
     //! ARGS: _tu - a vjTimedUpdate* 
@@ -136,6 +148,7 @@ private:
     bool                    read_die;    // if true, thread suicide
     bool                    write_die;   // if true, thread suicide
     bool                    write_alive; // true when thread running
+    ConfigChunk*          connect_chunk;
 
     //: used for storing Command* in a priority queue
     struct CommandPtrCmp {
