@@ -103,8 +103,8 @@ _OPT_DIR	= opt
 _DEFAULT_DIR	= ${_DEBUG_DIR}
 
 _UMASK		= 002
-_FILE_PERMS	= 644
-_EXEC_PERMS	= 755
+_FILE_PERMS	= 664
+_EXEC_PERMS	= 775
 _GROUP_NAME	= c2dev
 
 # ------------------------------------------------
