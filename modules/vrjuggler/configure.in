@@ -40,7 +40,7 @@
 AC_REVISION($Revision$)
 AC_INIT(vrj/vrjConfig.h)
 AC_CONFIG_HEADER(vrj/vrjDefines.h)
-DPP_PREREQ(1.4)
+DPP_PREREQ(1.4.96)
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again

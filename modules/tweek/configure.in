@@ -38,7 +38,7 @@ AC_REVISION($Revision$)
 AC_INIT(tweek/tweekConfig.h)
 AC_CONFIG_AUX_DIR(../../share/config)
 AC_CONFIG_HEADER(tweek/tweekDefines.h)
-DPP_PREREQ(1.4.95)
+DPP_PREREQ(1.4.96)
 DPP_INIT
 
 DPP_GEN_RECONFIG
