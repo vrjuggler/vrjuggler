@@ -148,6 +148,8 @@ public:
    } m_guid;
 
    friend class vpr::GUIDFactory;
+
+   const static vpr::GUID NullGUID;
 };
 
 } // End of vpr namespace
