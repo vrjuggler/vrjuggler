@@ -79,9 +79,11 @@ public:                                        \
    }
 
 #define vjSingletonImp(TYPE) ;
-// \
-//            TYPE* TYPE::_instance = NULL; \
-//            vjMutex  TYPE::_inst_lock
+/*
+ \
+            TYPE* TYPE::_instance = NULL; \
+            vjMutex  TYPE::_inst_lock
+*/
 //*/
 
 //
