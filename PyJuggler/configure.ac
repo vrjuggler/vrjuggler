@@ -115,7 +115,7 @@ if test "x$CC_ACCEPTS_PTHREAD" = "xno" ; then
 fi
 
 # Ensure that a version of Perl greater than or equal to 5.004 is available.
-dnl DPP_PERL_VER([5.004], , , [AC_MSG_ERROR([*** Perl is required ***])])
+DPP_PERL_VER([5.004], , , [AC_MSG_ERROR([*** Perl is required ***])])
 DPP_HAVE_GNU_MAKE([3.78], ,
     [AC_MSG_ERROR([*** The build system requires GNU make 3.78 or newer ***])])
 DPP_BASIC_PROGS([$PLATFORM], [$OS_TYPE])
