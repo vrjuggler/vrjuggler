@@ -36,8 +36,6 @@
 #include <vrj/vrjConfig.h>
 
 #include <iostream>
-//using namespace std;
-
 #include <iomanip>
 
 #include <vrj/Draw/OGL/GlApp.h>
@@ -72,14 +70,14 @@
 class OsgNav : public vrj::OsgApp
 {
 public:
-   OsgNav(vrj::Kernel* kern)
-   : vrj::OsgApp(kern)         // Initialize base class
+   OsgNav() : vrj::OsgApp()         // Initialize base class
    {
       mFileToLoad = std::string("");
    }
 
-   virtual ~OsgNav (void) {
-      /* Do nothing. */;
+   virtual ~OsgNav()
+   {
+      /* Do nothing. */ ;
    }
 
    // Execute any initialization needed before the API is started<BR><BR>
@@ -89,7 +87,7 @@ public:
    {
       //DeBugOut = Debug::getStream(0, 3, true, true, 1, true);
 
-      //cout << "---------- App:init() ---------------" << endl;
+      //std::cout << "---------- App:init() ---------------" << std::endl;
       // Initialize devices
       std::string wand("VJWand");
       std::string vjhead("VJHead");
@@ -189,8 +187,8 @@ private:
    std::string mFileToLoad;
 
 public:
-   gadget::PositionInterface    mWand;     // the Wand
-   gadget::PositionInterface    mHead;     // the head
+   gadget::PositionInterface  mWand;     // the Wand
+   gadget::PositionInterface  mHead;     // the head
    gadget::DigitalInterface   mButton0;
    gadget::DigitalInterface   mButton1;
    gadget::DigitalInterface   mButton2;

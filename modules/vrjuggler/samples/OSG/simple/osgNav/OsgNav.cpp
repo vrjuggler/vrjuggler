@@ -60,13 +60,13 @@ void OsgNav::preFrame()
              << std::endl;
 */
 
-    float inc = 0.005f;
+   float inc = 0.005f;
 
-    // MOVE the model around
+   // MOVE the model around
 
    //If the model has moved +/- 10 move back
-    //std::cout << posCount << std::endl;
-    if((mPos[0] > 10.0f) || (mPos[0] < -10.0f))
+   //std::cout << posCount << std::endl;
+   if ( (mPos[0] > 10.0f) || (mPos[0] < -10.0f) )
    {
       posInc *= -1.0f;
    }
@@ -74,44 +74,44 @@ void OsgNav::preFrame()
    mPos[0] += posInc;
 
    //Do the actual move
-    osg::Matrix cur_xform = mModelTrans->getMatrix();
-    cur_xform.setTrans(mPos);
-    mModelTrans->setMatrix(cur_xform);
+   osg::Matrix cur_xform = mModelTrans->getMatrix();
+   cur_xform.setTrans(mPos);
+   mModelTrans->setMatrix(cur_xform);
 
    // -- Get wand info -- //
-    gmtl::Matrix44f* wandMatrix;
-    wandMatrix = mWand->getData();      // Get the wand matrix
+   gmtl::Matrix44f* wandMatrix;
+   wandMatrix = mWand->getData();      // Get the wand matrix
 
-    osg::Matrix osgWandMat;
-    //float * fPtr;
-    osgWandMat.set(wandMatrix->getData());
+   osg::Matrix osgWandMat;
+   //float * fPtr;
+   osgWandMat.set(wandMatrix->getData());
 
 
-   if(mButton0->getData() == gadget::Digital::ON)
-    {
+   if ( mButton0->getData() == gadget::Digital::ON )
+   {
       //Move in the direction of the wand
-        speed = speed + inc;
+      speed = speed + inc;
       std::cout << "speed: " << speed << std::endl;
-    }
-    if(mButton1->getData() == gadget::Digital::ON)
-    {
-        //joint->preRotate(5.0f, 0.0f, 0.0f, 1.0f);
+   }
+   if ( mButton1->getData() == gadget::Digital::ON )
+   {
+      //joint->preRotate(5.0f, 0.0f, 0.0f, 1.0f);
       speed = 0;
-    }
-    if(mButton2->getData() == gadget::Digital::ON)
-    {
-        //joint->preRotate(-5.0f, 0.0f, 0.0f, 1.0f);
-        speed = speed - inc;
+   }
+   if ( mButton2->getData() == gadget::Digital::ON )
+   {
+      //joint->preRotate(-5.0f, 0.0f, 0.0f, 1.0f);
+      speed = speed - inc;
       std::cout << "speed: " << speed << std::endl;
-    }
+   }
 
 
-    //Navigation
-    gmtl::Vec3f direction;
-    gmtl::Vec3f Zdir = gmtl::Vec3f(0.0f, 0.0f, speed);
-    gmtl::xform(direction, *wandMatrix, Zdir);
-    //mNavTrans->preTranslate(direction[0], direction[1], direction[2]);
-     mNavTrans->preMult(osg::Matrix::translate(direction[0], direction[1], direction[2]));
+   //Navigation
+   gmtl::Vec3f direction;
+   gmtl::Vec3f Zdir = gmtl::Vec3f(0.0f, 0.0f, speed);
+   gmtl::xform(direction, *wandMatrix, Zdir);
+   //mNavTrans->preTranslate(direction[0], direction[1], direction[2]);
+   mNavTrans->preMult(osg::Matrix::translate(direction[0], direction[1], direction[2]));
 }
 
 void OsgNav::bufferPreDraw()
@@ -122,24 +122,24 @@ void OsgNav::bufferPreDraw()
 
 void OsgNav::myInit()
 {
-    //
+   //
    //          /-- mNoNav
    // mRootNode
-    //         \-- mNavTrans -- mModelTrans -- mModel
+   //         \-- mNavTrans -- mModelTrans -- mModel
 
    //The top level nodes of the tree
-    mRootNode = new osg::Group();
-    mNoNav   = new osg::Group();
-    mNavTrans = new osg::MatrixTransform();
+   mRootNode = new osg::Group();
+   mNoNav   = new osg::Group();
+   mNavTrans = new osg::MatrixTransform();
 
-    mRootNode->addChild( mNoNav );
-    mRootNode->addChild( mNavTrans );
+   mRootNode->addChild( mNoNav );
+   mRootNode->addChild( mNavTrans );
 
    //Load the models and add them to the tree
    mModelTrans  = new osg::MatrixTransform();         // Transform node for the model
 
-    //model = osgDB::readNodeFile("paraglider.osg");
-    //mModel = osgDB::readNodeFile("dumptruck.osg");
+   //model = osgDB::readNodeFile("paraglider.osg");
+   //mModel = osgDB::readNodeFile("dumptruck.osg");
 
    std::cout << "Attempting to load file: " << mFileToLoad << "... ";
    mModel = osgDB::readNodeFile(mFileToLoad);
@@ -154,22 +154,22 @@ void OsgNav::myInit()
    // Add model to the tree
    mModelTrans->addChild(mModel);
    mNavTrans->addChild( mModelTrans );
-   
+
    // run optimization over the scene graph
-    osgUtil::Optimizer optimzer;
-    optimzer.optimize(mRootNode);
+   osgUtil::Optimizer optimzer;
+   optimzer.optimize(mRootNode);
 
    // traverse the scene graph setting up all osg::GeoSet's so they will use
-    // OpenGL display lists.
-    //osgUtil::DisplayListVisitor dlv(osgUtil::DisplayListVisitor::SWITCH_ON_DISPLAY_LISTS);
-    //mRootNode->accept(dlv);
+   // OpenGL display lists.
+   //osgUtil::DisplayListVisitor dlv(osgUtil::DisplayListVisitor::SWITCH_ON_DISPLAY_LISTS);
+   //mRootNode->accept(dlv);
 
-    //The increment to move the model by
-    mPos[0] = 0.0f;
-    mPos[1] = 0.0f;
-    mPos[2] = 0.0f;
-    //posInc = 0.05f;
+   //The increment to move the model by
+   mPos[0] = 0.0f;
+   mPos[1] = 0.0f;
+   mPos[2] = 0.0f;
+   //posInc = 0.05f;
    posInc = 0.0f;
 
-    speed = 0.0f;
+   speed = 0.0f;
 }
