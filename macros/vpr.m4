@@ -56,19 +56,19 @@ AC_DEFUN(VPR_PATH,
     AC_ARG_ENABLE(vprtest, [  --disable-vprtest       Do not try to compile and run a test VPR program],
                     , enable_vprtest=yes)
 
-    if test x$vpr_config_exec_prefix != x ; then
+    if test "x$vpr_config_exec_prefix" != "x" ; then
         vpr_config_args="$vpr_config_args --exec-prefix=$vpr_config_exec_prefix"
 
         if test x${VPR_CONFIG+set} != xset ; then
-            VPR_CONFIG=$vpr_config_exec_prefix/bin/vpr-config
+            VPR_CONFIG="$vpr_config_exec_prefix/bin/vpr-config"
         fi
     fi
 
-    if test x$vpr_config_prefix != x ; then
+    if test "x$vpr_config_prefix" != "x" ; then
         vpr_config_args="$vpr_config_args --prefix=$vpr_config_prefix"
 
         if test x${VPR_CONFIG+set} != xset ; then
-            VPR_CONFIG=$vpr_config_prefix/bin/vpr-config
+            VPR_CONFIG="$vpr_config_prefix/bin/vpr-config"
         fi
     fi
 
@@ -76,7 +76,7 @@ AC_DEFUN(VPR_PATH,
         vpr_config_args="$vpr_config_args --prefix=$VPR_BASE_DIR"
 
         if test x${VPR_CONFIG+set} != xset ; then
-            VPR_CONFIG=$VPR_BASE_DIR/bin/vpr-config
+            VPR_CONFIG="$VPR_BASE_DIR/bin/vpr-config"
         fi
     fi
 
