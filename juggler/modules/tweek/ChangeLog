@@ -1,5 +1,9 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2002-08-17 patrickh    If the IRIX SPROC threading subsystem is used with VPR,
+                       the C++ ABI is disabled because SPROC threads conflict
+                       with omniORB.
+                       NEW VERSION: 0.9.3
 2002-08-16 patrickh    Fixed a bug where the paths to third-party JAR files
                        could have garbage in it when returned by running
                        'tweek-config --jars'.
