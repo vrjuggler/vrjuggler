@@ -40,6 +40,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Vector;
 
 public class BeanRegistry
 {
@@ -49,6 +50,7 @@ public class BeanRegistry
    protected BeanRegistry()
    {
       beans = new HashMap();
+      listeners = new Vector();
    }
 
    /**
@@ -64,6 +66,7 @@ public class BeanRegistry
    public synchronized void registerBean( TweekBean bean )
    {
       beans.put( bean.getName(), bean );
+      fireBeanRegistrationEvent( bean );
    }
 
    /**
@@ -130,6 +133,51 @@ public class BeanRegistry
    }
 
    /**
+    * Adds a new listener for bean registration events.
+    *
+    * @param l    the object that wishes to listen to this registry
+    */
+   public synchronized void addBeanRegistrationListener( BeanRegistrationListener l )
+   {
+      listeners.add( l );
+   }
+
+   /**
+    * Removes the given bean registration listener from this object. If the
+    * object is not already a listener of this object no work is done.
+    *
+    * @param l    the listener to remove from this object
+    */
+   public synchronized void removeBeanRegistrationListener( BeanRegistrationListener l )
+   {
+      listeners.remove( l );
+   }
+
+   /**
+    * Fires off a BeanRegistrationEvent to all bean registration listeners.
+    *
+    * @param bean    the bean that got registered that is the cause of the event
+    */
+   protected void fireBeanRegistrationEvent( TweekBean bean )
+   {
+      BeanRegistrationEvent evt = new BeanRegistrationEvent( this, bean );
+
+      BeanRegistrationListener l = null;
+      Vector listenersCopy;
+
+      synchronized( this )
+      {
+         listenersCopy = (Vector)listeners.clone();
+      }
+
+      for ( Iterator itr = listenersCopy.iterator(); itr.hasNext(); )
+      {
+         l = (BeanRegistrationListener)itr.next();
+         l.beanRegistered( evt );
+      }
+   }
+
+   /**
     * Gets the singleton instance of this class. This implementation is thread
     * safe.
     */
@@ -161,4 +209,9 @@ public class BeanRegistry
     * @associates <{TweekBean}>
     */
    private Map beans;
+
+   /**
+    * The list of listeners of bean registration events for this object.
+    */
+   private Vector listeners;
 }
