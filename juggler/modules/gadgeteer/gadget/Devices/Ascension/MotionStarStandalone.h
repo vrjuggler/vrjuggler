@@ -107,10 +107,6 @@ struct BIRD_STATUS {
 struct HEADER {
     unsigned short int	sequence; //: 16-bit sequence number
 
-//    time_t		time;   SGI formatted as 6 bytes (see time_t) */
-//    unsigned short int	tm1;
-//    unsigned short int	tm2;
-
     unsigned short int	milliseconds; //: Interval time between packets
     unsigned char	time[4];  //: Seconds since 00:00:00 Jan. 1, 1970 (GMT)
 
