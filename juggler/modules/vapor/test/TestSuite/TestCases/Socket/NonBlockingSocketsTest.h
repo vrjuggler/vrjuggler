@@ -13,6 +13,7 @@
 
 #include <vpr/vpr.h>
 #include <vpr/IO/Socket/Socket.h>
+#include <vpr/IO/Socket/SocketDatagram.h>
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/IO/Socket/SocketAcceptor.h>
 #include <vpr/IO/Socket/SocketConnector.h>
@@ -447,6 +448,112 @@ public:
       CPPUNIT_ASSERT( status.failure() != true );
    }
 
+   void testSendUDP (void)
+   {
+      threadAssertReset();
+
+      mState        = NOT_READY;                        // Initialize
+      mReceiverPort = 34567;
+      mSenderPort   = mReceiverPort + 1;
+      mMessage      = "The sixth sheik's sixth sheep's sick";
+      mMessageLen   = mMessage.length();
+
+      // Spawn acceptor thread
+      vpr::ThreadMemberFunctor<NonBlockingSocketTest>* receiver_functor =
+            new vpr::ThreadMemberFunctor<NonBlockingSocketTest>(this, &NonBlockingSocketTest::testSendUDP_receiver);
+      vpr::Thread receiver_thread( receiver_functor);
+
+      // Spawn connector thread
+      vpr::ThreadMemberFunctor<NonBlockingSocketTest>* sender_functor =
+         new vpr::ThreadMemberFunctor<NonBlockingSocketTest>(this, &NonBlockingSocketTest::testSendUDP_sender);
+      vpr::Thread sender_thread(sender_functor);
+
+      // Wait for threads
+      receiver_thread.join();
+      sender_thread.join();
+
+      checkThreadAssertions();
+   }
+
+   void testSendUDP_receiver (void* arg)
+   {
+      vpr::ReturnStatus status;
+      vpr::InetAddr my_addr(mReceiverPort), from_addr;
+      std::string data;
+      vpr::Uint32 bytes_read;
+      vpr::SocketDatagram recv_sock(my_addr, vpr::InetAddr::AnyAddr);
+
+      status = recv_sock.open();
+      assertTestThread(status.success() && "Failed to open receiver socket");
+
+      status = recv_sock.enableNonBlocking();
+      assertTestThread(status.success() &&
+                       "Failed to enable non-blocking for receiver");
+
+      status = recv_sock.bind();
+      assertTestThread(status.success() && "Failed to bind receiver socket");
+
+      mCondVar.acquire();
+      {
+         mState = RECEIVER_READY;
+         mCondVar.signal();
+      }
+      mCondVar.release();
+
+      do
+      {
+         status = recv_sock.recvfrom(data, mMessageLen, 0, from_addr,
+                                     bytes_read);
+         vpr::System::usleep(10);
+      } while ( status == vpr::ReturnStatus::WouldBlock );
+
+      assertTestThread(status.success() && "Failed to receive message");
+
+      mCondVar.acquire();
+      {
+         mState = DATA_RECEIVED;
+         mCondVar.signal();
+      }
+      mCondVar.release();
+
+      assertTestThread(bytes_read == mMessageLen && "Did not receive entire message");
+
+      status = recv_sock.close();
+      assertTestThread(status.success() && "Could not close receiver socket");
+   }
+
+   void testSendUDP_sender (void* arg)
+   {
+      vpr::ReturnStatus status;
+      vpr::InetAddr remote_addr;
+      vpr::SocketDatagram send_sock;
+      vpr::Uint32 bytes;
+
+      remote_addr.setAddress("localhost", mReceiverPort);
+
+      mCondVar.acquire();
+      {
+         while ( mState != RECEIVER_READY )
+         {
+            mCondVar.wait();
+         }
+      }
+      mCondVar.release();
+
+      status = send_sock.open();
+      assertTestThread(status.success() && "Failed to open sender socket");
+
+      status = send_sock.enableNonBlocking();
+      assertTestThread(status.success() &&
+                       "Failed to enable non-blocking for sender");
+
+      status = send_sock.sendto(mMessage, mMessageLen, 0, remote_addr, bytes);
+      assertTestThread(status.success() && "Failed to send to receiver");
+
+      status = send_sock.close();
+      assertTestThread(status.success() && "Could not close sender socket");
+   }
+
    static CppUnit::Test* suite ()
    {
       CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("NonBlockingSocketTest");
@@ -456,6 +563,7 @@ public:
       test_suite->addTest( new CppUnit::TestCaller<NonBlockingSocketTest>("testConnect2NonBlockingSockets", &NonBlockingSocketTest::testConnect2NonBlockingSockets));
       test_suite->addTest(new CppUnit::TestCaller<NonBlockingSocketTest>("testNonBlockingTransfer", &NonBlockingSocketTest::testNonBlockingTransfer));
       test_suite->addTest( new CppUnit::TestCaller<NonBlockingSocketTest>("testConnect2NonBlockingSocketsUsingSelect", &NonBlockingSocketTest::testConnect2NonBlockingSocketsUsingSelect));
+      test_suite->addTest(new CppUnit::TestCaller<NonBlockingSocketTest>("testSendUDP", &NonBlockingSocketTest::testSendUDP));
 
       return test_suite;
    }
@@ -465,6 +573,7 @@ protected:
 
    enum State {
       ACCEPTOR_READY,
+      RECEIVER_READY,
       NOT_READY,
       CONNECTOR_CLOSED,
       DATA_SENT,
@@ -475,6 +584,8 @@ protected:
    State           mState;         // State variable
    vpr::CondVar    mCondVar;       // Condition variable
    vpr::Uint16     mAcceptorPort;
+   vpr::Uint16     mReceiverPort;
+   vpr::Uint16     mSenderPort;
 
    std::string     mMessage;
    vpr::Uint16     mMessageLen;
