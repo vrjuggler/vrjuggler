@@ -25,15 +25,14 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-import string
-__all__     = ["vrj", "gadget", "jccl"]
-__build__   = 1
-__version__ = '0.8.4.%d' % __build__
-__date__    = string.join(string.split('$Date$')[1:3], ' ')
-__author__  = 'Patrick Hartling <patrick@vrjuggler.org>'
-__doc__     = '''This is PyJuggler.  For information regarding PyJuggler see:
-    http://www.vrjuggler.org/pyjuggler/
+# Import everything from __vrj into our namespace.
+from __vrj import *
 
-For information on VR Juggler see:
-    http://www.vrjuggler.org'''
-del string
+# Attempt to import everything from __osgapp into our namespace.  If it fails,
+# then Open Scene Graph is not available for use.  For people who don't want
+# to use vrj.OsgApp, this is fine.  For those who do, they have to have
+# OSG and PyOSG installed.
+try:
+   from __osgapp import *
+except:
+   pass
