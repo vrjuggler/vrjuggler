@@ -83,7 +83,8 @@ public class ConfigDefinitionReader
       try
       {
          // Build a DOM tree from the XML stream
-         SAXBuilder builder = new SAXBuilder(true);
+         // TODO: Reenable Schema check..... :(
+         SAXBuilder builder = new SAXBuilder(false);
          Document doc       = builder.build(this);
 
          // Bring the file up to date with the current file format version
