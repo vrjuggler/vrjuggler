@@ -34,6 +34,8 @@
 #define _VPR_TS_OBJECT_PROXY_H_
 //#pragma once
 
+#include <vpr/vprConfig.h>
+#include <typeinfo>
 #include <vpr/Thread/TSObject.h>
 #include <vpr/Thread/ThreadManager.h>
 #include <vpr/Util/Assert.h>
