@@ -50,6 +50,7 @@ VJROOT		= $(top_srcdir)
 VJ_SRCDIR	= @VJ_SRCDIR@/Math
 
 SRCS		= vjCoord.cpp	\
+                  vjMath.cpp	\
                   vjMatrix.cpp	\
                   vjQuat.cpp	\
                   vjSeg.cpp	\
