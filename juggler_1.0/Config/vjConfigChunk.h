@@ -27,6 +27,7 @@
 #endif
 
 #include <Config/vjVarValue.h>
+#include <Config/vjChunkDescDB.h>
 #include <Config/vjChunkDesc.h>
 
 #include <Config/vjProperty.h>
@@ -61,6 +62,7 @@ class vjConfigChunk {
 
 private:
     vjChunkDesc* desc;
+    vjChunkDescDB *descdb;
     vector<vjProperty*> props;       // Stores the set of properties
 
 
@@ -70,7 +72,7 @@ public:
     //!PRE: desc points to a valid vjChunkDesc
     //!POST: self has been created, and all its vjPropertys
     //+      initialized to their default values.
-    vjConfigChunk (vjChunkDesc *desc);
+    vjConfigChunk (vjChunkDesc *_desc, vjChunkDescDB *_descdb);
 
 
 
@@ -156,6 +158,7 @@ public:
     bool setProperty (char *property, int val, int ind=0);
     bool setProperty (char *property, float val, int ind=0);
     bool setProperty (char *property, char *val,  int ind=0);
+    bool setProperty (char *property, vjConfigChunk *val,  int ind=0);
 
 
 
@@ -172,6 +175,7 @@ public:
     bool addValue (char *property, int val);
     bool addValue (char *property, float val);
     bool addValue (char *property, char* val);
+    bool addValue (char *property, vjConfigChunk* val);
 
 
     //: Return a list of chunk names dependant upon this one

@@ -4,8 +4,8 @@
 
 vjChunkDesc::vjChunkDesc () :plist() {
   name = token = help = NULL;
-  setName("");
-  setToken("");
+  setName("unnamed");
+  setToken("unnamed");
   setHelp("");
   vjPropertyDesc *d = new vjPropertyDesc("name",1,T_STRING," ");
   add (d);

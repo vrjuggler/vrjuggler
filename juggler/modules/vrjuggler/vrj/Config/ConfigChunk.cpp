@@ -9,11 +9,12 @@
 
 
 
-vjConfigChunk::vjConfigChunk (vjChunkDesc *d) :props() {
+vjConfigChunk::vjConfigChunk (vjChunkDesc *d, vjChunkDescDB *_descdb) :props() {
 
   desc = d;
+  descdb = _descdb;
   for (int i = 0; i < desc->plist.size(); i++)
-    props.push_back (new vjProperty(desc->plist[i]));
+    props.push_back (new vjProperty(desc->plist[i], descdb));
 }
 
 
@@ -34,6 +35,7 @@ vjConfigChunk::vjConfigChunk (vjConfigChunk& c):props() {
 vjConfigChunk& vjConfigChunk::operator = (vjConfigChunk& c) {
     int i;
     desc = c.desc;
+    descdb = c.descdb;
     for (i = 0; i < props.size(); i++)
         delete (props[i]);
     props.erase (props.begin(), props.end());
@@ -278,7 +280,12 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
       i = 0;
       self.getToken (in, tok);
       while ((tok.type != TK_CloseBracket) && (tok.type != TK_End)) {
-	if (tok.type == TK_Unit) {
+	  if (p->type == T_EMBEDDEDCHUNK) {
+	      vjConfigChunk *ch = new vjConfigChunk (p->embeddesc, p->descdb);
+	      in >> *ch;
+	      p->setValue (ch, p->getNum());
+	  }
+	  else if (tok.type == TK_Unit) {
 	  p->applyUnits (tok.unitval);
 	}
 	else {
@@ -380,6 +387,14 @@ bool vjConfigChunk::setProperty (char *property, char* val, int ind) {
   return p->setValue (val, ind);
 }
 
+bool vjConfigChunk::setProperty (char *property, vjConfigChunk* val, int ind) {
+  vjProperty *p;
+  p = getPropertyPtr (property);
+  if (!p)
+    return false;
+  return p->setValue (val, ind);
+}
+
 
 bool vjConfigChunk::addValue (char *property, int val) {
   vjProperty *p;
@@ -402,6 +417,16 @@ bool vjConfigChunk::addValue (char *property, float val) {
 }
 
 bool vjConfigChunk::addValue (char *property, char* val) {
+  vjProperty *p;
+  p = getPropertyPtr (property);
+  if (p == NULL)
+    return false;
+  if (p->num != -1)
+    return false;
+  return setProperty (property, val, p->value.size());
+}
+
+bool vjConfigChunk::addValue (char *property, vjConfigChunk* val) {
   vjProperty *p;
   p = getPropertyPtr (property);
   if (p == NULL)
