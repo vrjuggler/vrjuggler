@@ -280,7 +280,7 @@ public class ChunkDescChooser
       for (int i=0; i<browseListModel.getSize(); ++i)
       {
          ChunkDesc desc = (ChunkDesc)browseListModel.getElementAt(i);
-         if (desc.getName().startsWith(search_str))
+         if (desc.getName().toLowerCase().startsWith(search_str.toLowerCase()))
          {
             browseList.setSelectedIndex(i);
             browseList.ensureIndexIsVisible(i);
@@ -308,7 +308,7 @@ public class ChunkDescChooser
       {
          // Yes, I do want to get the desc from the browse list model
          ChunkDesc desc = (ChunkDesc)browseListModel.getElementAt(i);
-         if (desc.getName().indexOf(search_str) != -1)
+         if (desc.getName().toLowerCase().indexOf(search_str.toLowerCase()) != -1)
          {
             results.add(desc);
          }
