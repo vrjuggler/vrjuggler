@@ -30,16 +30,16 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _USER_OPENSG_APP_H_
-#define _USER_OPENSG_APP_H_
+#ifndef _USER_OSG_APP_H_
+#define _USER_OSG_APP_H_
 
 
-class userOpenSGApp : public vrj::OpenSGApp
+class userOsgApp : public vrj::OsgApp
 {
 public:
-    userOpenSGApp();
+    userOsgApp();
 
-    virtual ~userOpensSGApp();
+    virtual ~userOsgApp();
 
     // Handle any initialization needed before API
     virtual void init();
@@ -48,13 +48,7 @@ public:
     virtual void initScene();
 
     /** Return the scene root for this application */
-    virtual OSG::NodePtr getSceneRoot();
-
-    void initRenderer();
-
-    virtual void draw();
-
-    virtual void contextInit();
+    virtual osg::Group* getScene();
 
     virtual void preFrame();
 
