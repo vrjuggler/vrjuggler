@@ -228,6 +228,11 @@ public class ConfigBrokerProxy
    {
       mBroker.removeConfigBrokerListener(listener);
    }
+   
+   public void saveDefinition(String token)
+   {
+      mBroker.saveDefinition(token);
+   }
 
    /**
     * The config broker instance this object is proxy to.
