@@ -51,7 +51,11 @@
 
 /*
  * This is the "human-readable" VPR version _string_.  It is of the form
- * <major>.<minor>.<days since last major release>.
+ * <major>.<minor>.<patch>-<build>.  The major version number is updated when
+ * major architectural changes are made; the minor when there are minor API
+ * changes; and the patch when there are bug fixes.  The build number is
+ * representative of the nightly build process relative to a given version
+ * x.y.z.
  */
 namespace vpr
 {
