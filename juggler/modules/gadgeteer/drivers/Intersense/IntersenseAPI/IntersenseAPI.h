@@ -162,7 +162,7 @@ private:
 
    IntersenseAPIStandalone mTracker;
 
-   std::vector<ISStationConfig> stations;
+   std::vector<ISStationConfig> mStations;
 
    std::vector<DigitalData> mDigitalData;
    std::vector<AnalogData>  mAnalogData;
