@@ -100,6 +100,9 @@ void vjXWinKeyboard::controlLoop(void* nullParam)
 {
    vjDEBUG(vjDBG_INPUT_MGR,vjDBG_CONFIG_LVL) << "vjXWinKeyboard::controlLoop: Thread started.\n" << vjDEBUG_FLUSH;
 
+   while (0 == vjThread::self());
+   myThread = (vjThread*) vjThread::self();
+
    // Open the x-window
    openTheWindow();
 
@@ -141,7 +144,8 @@ int vjXWinKeyboard::startSampling()
    vjThreadMemberFunctor<vjXWinKeyboard>* memberFunctor =
       new vjThreadMemberFunctor<vjXWinKeyboard>(this, &vjXWinKeyboard::controlLoop, NULL);
 
-   myThread = new vjThread(memberFunctor, 0);
+   vjThread* new_thread;
+   new_thread = new vjThread(memberFunctor, 0);
 
    return 1;
 }
@@ -171,10 +175,10 @@ vjGuard<vjMutex> guard(mKeysLock);      // Lock access to the m_keys array
       mUpdKeysHasBeenCalled = false;
 
       // Scale mouse values based on sensitivity
-      m_keys[VJMOUSE_POSX] = int(ftrunc(float(m_keys[VJMOUSE_POSX]) * m_mouse_sensitivity));
-      m_keys[VJMOUSE_NEGX] = int(ftrunc(float(m_keys[VJMOUSE_NEGX]) * m_mouse_sensitivity));
-      m_keys[VJMOUSE_POSY] = int(ftrunc(float(m_keys[VJMOUSE_POSY]) * m_mouse_sensitivity));
-      m_keys[VJMOUSE_NEGY] = int(ftrunc(float(m_keys[VJMOUSE_NEGY]) * m_mouse_sensitivity));
+      m_keys[VJMOUSE_POSX] = int(float(m_keys[VJMOUSE_POSX]) * m_mouse_sensitivity);
+      m_keys[VJMOUSE_NEGX] = int(float(m_keys[VJMOUSE_NEGX]) * m_mouse_sensitivity);
+      m_keys[VJMOUSE_POSY] = int(float(m_keys[VJMOUSE_POSY]) * m_mouse_sensitivity);
+      m_keys[VJMOUSE_NEGY] = int(float(m_keys[VJMOUSE_NEGY]) * m_mouse_sensitivity);
 
       /*
       vjDEBUG(vjDBG_ALL,0)   << "vjXWinKeyboard::updateData:" << instName << " -- "
