@@ -32,6 +32,7 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <boost/filesystem/exception.hpp>
 #include <vpr/DynLoad/LibraryFinder.h>
 #include <vpr/Util/FileUtils.h>
 
@@ -160,14 +161,26 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
             << "Searching for driver DSOs in '" << driver_dir << "'\n"
             << vprDEBUG_FLUSH;
 
-         vpr::LibraryFinder finder(driver_dir, driver_ext);
-         vpr::LibraryFinder::LibraryList libs = finder.getLibraries();
-
-         for ( vpr::LibraryFinder::LibraryList::iterator lib = libs.begin();
-               lib != libs.end();
-               ++lib )
+         // The vpr::LibraryFinder will throw an exception if driver_dir is
+         // (somehow) an invalid path.
+         try
          {
-            this->loadDriverDSO(*lib);
+            vpr::LibraryFinder finder(driver_dir, driver_ext);
+            vpr::LibraryFinder::LibraryList libs = finder.getLibraries();
+
+            for ( vpr::LibraryFinder::LibraryList::iterator lib = libs.begin();
+                  lib != libs.end();
+                  ++lib )
+            {
+               this->loadDriverDSO(*lib);
+            }
+         }
+         catch (boost::filesystem::filesystem_error& fsEx)
+         {
+            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+               << clrOutNORM(clrRED, "ERROR:")
+               << " File system exception caught: " << fsEx.what()
+               << std::endl << vprDEBUG_FLUSH;
          }
       }
 
