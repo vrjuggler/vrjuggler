@@ -393,8 +393,15 @@ public class ChunkDBPanel extends JPanel
 	}
 	else if (source == remove_mi) {
 	    ni = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)treeitem_menu_path.getLastPathComponent()).getUserObject());
-	    if (ni.isChunkNode())
-		current_treemodel.removeNode(ni.ch.getName());
+	    if (ni.isChunkNode()) {
+		if (current_treemodel == Core.active_treemodel) {
+		    ConfigChunkDB db = new ConfigChunkDB (Core.descdb);
+		    db.addElement (ni.ch);
+		    Core.net.removeChunks (db);
+		} 
+		else
+		    current_treemodel.removeNode (ni.ch.getName());
+	    }
 	}
 	else if (source == insert_mi) {
 	    ni = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)treeitem_menu_path.getLastPathComponent()).getUserObject());
