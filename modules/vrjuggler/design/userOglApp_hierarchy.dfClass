@@ -16,7 +16,11 @@ class reference {
 @__modelType reference
 @__imported
 @__hiddenMember <oiref:cpp#Member#vrj::GlApp#$$constructor$$#(#vrj::Kernel*#)#:oiref>
-@__hiddenMember BeanProperty#<oiref:cpp#Member#vrj::GlApp#getDrawManager#(##)#:oiref> */
+@__hiddenMember BeanProperty#<oiref:cpp#Member#vrj::GlApp#getDrawManager#(##)#:oiref> 
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#$$constructor$$#(#Kernel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#pipePreDraw#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#getDrawManager#(##)#:oiref>*/
 class reference1 {
 }/**
 @__ref <oiref:cpp#Class#vrj::App:oiref><oihard>
@@ -32,6 +36,11 @@ class reference1 {
 @__hiddenMember <oiref:cpp#Member#vrj::App#haveFocus#(##)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::App#reset#(##)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(#vrj::Kernel*#)#:oiref> 
+@__hiddenMember <oiref:cpp#Member#vrj::App#getSoundManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#getDrawManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#setFocus#(#bool#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(#Kernel*#)#:oiref>
 */
 class reference2 {
 }}/**
@@ -46,13 +55,13 @@ class __tags {
 class __options {
 }/**
 @__positions 
-<oigroup:<oiref:cpp#Class#userOglApp:oiref>=330,280,153,183,1:oigroup>
-<oigroup:<oiref:cpp#Extends#vrj::GlApp#vrj::App:oiref>=125,280,125,240:oigroup>
-<oigroup:<oiref:cpp#Extends#userOglApp#vrj::GlApp:oiref>=330,371,240,371:oigroup>
+<oigroup:<oiref:cpp#Class#userOglApp:oiref>=240,220,160,183,0:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::GlApp#vrj::App:oiref>=95,220,95,170:oigroup>
+<oigroup:<oiref:cpp#Extends#userOglApp#vrj::GlApp:oiref>=240,295,190,295:oigroup>
 <oigroup:<oiref:cpp#Member#userOglApp#apiInit#(##)#:oiref>=110,130,211,13,1:oigroup>
 <oigroup:<oiref:cpp#Member#userOglApp#preFrame#(##)#:oiref>=110,150,211,13,1:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::GlApp:oiref>=10,280,230,210,0:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::App:oiref>=10,10,240,230,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::GlApp:oiref>=20,220,170,150,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::App:oiref>=10,10,190,160,0:oigroup>
 */
 class __positions {
 }
