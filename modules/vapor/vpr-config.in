@@ -47,15 +47,15 @@ use strict 'vars';
 use vars qw($ECHO_CXXFLAGS $ECHO_EXEC_PREFIX $ECHO_EXTRA_LIBS $ECHO_LIBS
             $ECHO_PREFIX);
 use vars qw($exec_prefix $EXEC_PREFIX_SET $prefix $PREFIX_SET $LIBBITSUF
-            $VPR_ABI_FLAGS $VPR_ISA_FLAGS $Win32 $PATH_SEP);
+            $VPR_ABI_FLAGS $VPR_ISA_FLAGS $Win32);
 
 use File::Basename;
 use Getopt::Long;
 
 sub usage($);
-sub make_CXXFLAGS($;$);
+sub make_CXXFLAGS($);
 sub make_INCLUDES($);
-sub make_LDFLAGS($;$$$);
+sub make_LDFLAGS($;$$);
 sub make_EXTRA_LDFLAGS($;$);
 sub handleOptArg($$);
 
@@ -93,17 +93,26 @@ if ( $use_gcc !~ /^y/i && $vpr_default_isa =~ /^mips[34]/ )
 
 # Set up variables used to determine what the real prefix is.  This is
 # important when this script has been installed.
-$Win32 = (defined($ENV{'OS'}) && "$ENV{'OS'}" =~ /^win/i);
+$Win32 = (defined($ENV{'OS'}) && $ENV{'OS'} =~ /^win/i);
+
+my $base_dir = '';
 
 # Get the directory where this script is located.
-my $base_dir = (fileparse("$0"))[1];
+if ( defined($ENV{'VPR_BASE_DIR'}) )
+{
+   $base_dir = "$ENV{'VPR_BASE_DIR'}";
+}
+else
+{
+   $base_dir = (fileparse("$0"))[1];
 
-# If we are on Windows and $base_dir contains \'s, set $PATH_SEP to \.
-# Otherwise, we use / for the path separator.
-$PATH_SEP = (($Win32 && $base_dir =~ /\\/) ? "\\" : "/");
+   # If we are on Windows and $base_dir contains \'s, set $path_sep to \.
+   # Otherwise, we use / for the path separator.
+   my $path_sep = (($Win32 && $base_dir =~ /\\/) ? "\\" : "/");
 
-$base_dir =~ s|$PATH_SEP$||o;       # Strip off the trailing slash
-$base_dir =~ s|${PATH_SEP}bin$||io; # If the path ends in "/bin", strip it
+   $base_dir =~ s|$path_sep$||o;       # Strip off the trailing slash
+   $base_dir =~ s|${path_sep}bin$||io; # If the path ends in "/bin", strip it
+}
 
 # If we are on Windows, make sure that $base_dir is a full DOS path.
 if ( $Win32  && $base_dir !~ /^[A-Za-z]:/ )
@@ -131,42 +140,25 @@ my $echo_includes  = 0;
 my $echo_subsystem = 0;
 my $echo_version   = 0;
 my $echo_static    = 0;
-my $use_base_dir   = 0;
 my $use_linker     = 0;
 
 my $cxxflags_arg   = '';
 my $libs_arg       = '';
 my $extra_libs_arg = '';
 
-# This is special syntax that will get replaced by the configure script based
-# on whether or not the base directory should be used by default.
-%{
-%}
-
 GetOptions('help|?' => \$script_help, 'all' => \$print_all,
-           'basedir' => \$use_base_dir, 'version' => \$echo_version,
-           'subsystem' => \$echo_subsystem, 'prefix:s' => \&handleOptArg,
-           'exec-prefix:s' => \&handleOptArg, 'cxxflags:s' => \&handleOptArg,
-           'includes' => \$echo_includes, 'libs:s' => \&handleOptArg,
-           'extra-libs:s' => \&handleOptArg, 'linker' => \$use_linker,
-           'static' => \$echo_static);
+           'version' => \$echo_version, 'subsystem' => \$echo_subsystem,
+           'prefix:s' => \&handleOptArg, 'exec-prefix:s' => \&handleOptArg,
+           'cxxflags:s' => \&handleOptArg, 'includes' => \$echo_includes,
+           'libs:s' => \&handleOptArg, 'extra-libs:s' => \&handleOptArg,
+           'linker' => \$use_linker, 'static' => \$echo_static);
 
 usage(0) if $script_help;
 
-# If we are using $VPR_BASE_DIR, overwrite $prefix and $exec_prefix unless
-# they were set explicitly on the command line.
-if ( $use_base_dir )
-{
-   die "ERROR: \$VPR_BASE_DIR not set" unless defined($ENV{'VPR_BASE_DIR'});
-   $prefix      = "$ENV{'VPR_BASE_DIR'}" unless $PREFIX_SET;
-   $exec_prefix = "$ENV{'VPR_BASE_DIR'}" unless $EXEC_PREFIX_SET;
-}
-
 # Construct the (potentially complex) strings that may be printed.
-my $cxxflags      = make_CXXFLAGS("$cxxflags_arg", $use_base_dir);
+my $cxxflags      = make_CXXFLAGS("$cxxflags_arg");
 my $includes      = make_INCLUDES("$cxxflags");
-my $ldflags       = make_LDFLAGS("$libs_arg", $echo_static, $use_base_dir,
-                                 $use_linker);
+my $ldflags       = make_LDFLAGS("$libs_arg", $echo_static, $use_linker);
 my $extra_ldflags = make_EXTRA_LDFLAGS("$extra_libs_arg", $use_linker);
 
 # Finally, print out the requested information.
@@ -190,7 +182,6 @@ sub usage ($)
     print <<EOF;
 Usage: $0 [OPTIONS] [LIBRARIES]
 Options:
-        [--basedir]             Use \$VPR_BASE_DIR when printing paths
         [--prefix[=DIR]]        Print the installation prefix or set an
                                 alternate prefix to use when printing paths
         [--exec-prefix[=DIR]]   Print the executable prefix or set an
@@ -214,10 +205,9 @@ EOF
     exit($_[0]);
 }
 
-sub make_CXXFLAGS ($;$)
+sub make_CXXFLAGS ($)
 {
    my $cxxflags_arg = shift;
-   my $use_base_dir = shift || 0;
 
    my $cxxflags = '';
 
@@ -239,23 +229,18 @@ sub make_CXXFLAGS ($;$)
 
    my $vpr_extra_include_dirs     = qq(@vpr_extra_include_dirs@);
    my $vpr_extra_includes         = '';
-   my $vpr_basedir_extra_includes = '';
 
    if ( "$vpr_extra_include_dirs" ne "" )
    {
       my $dir;
       foreach $dir ( split(/\s+/, "$vpr_extra_include_dirs") )
       {
-         $vpr_extra_includes         .= " -I@includedir@/$dir";
-         $vpr_basedir_extra_includes .= " -I$ENV{'VPR_BASE_DIR'}/include/$dir"
-            if defined($ENV{'VPR_BASE_DIR'});
+         $vpr_extra_includes .= " -I@includedir@/$dir";
       }
    }
 
-   $cxxflags =
-      qq(@vpr_cxxflags@ $vpr_extra_cxxflags @subsystem_cxxflags@ ) .
-      ($use_base_dir ? "-I$ENV{'VPR_BASE_DIR'}/include $vpr_basedir_extra_includes"
-                     : "-I@includedir@ $vpr_extra_includes");
+   $cxxflags = qq(@vpr_cxxflags@ $vpr_extra_cxxflags @subsystem_cxxflags@ ) .
+               qq(-I@includedir@ $vpr_extra_includes);
 
    # Strip out extra whitespace.
    $cxxflags =~ s/\s{2,}/ /g;
@@ -269,11 +254,10 @@ sub make_INCLUDES ($)
    return join(" ", grep(/^-I/, @compiler_flags));
 }
 
-sub make_LDFLAGS ($;$$$)
+sub make_LDFLAGS ($;$$)
 {
    my $libs_arg     = shift;
    my $echo_static  = shift || 0;  # Echo static linking flags
-   my $use_base_dir = shift || 0;  # Use $ENV{'VPR_BASE_DIR'} for the path
    my $use_linker   = shift || 0;  # Use flags for direct use of the linker
 
    my $static_begin = '';
@@ -302,15 +286,8 @@ sub make_LDFLAGS ($;$$$)
       $ldflags = "$VPR_ABI_FLAGS $VPR_ISA_FLAGS";
    }
 
-   if ( $use_base_dir )
-   {
-      $ldflags .= " -L$ENV{'VPR_BASE_DIR'}/lib$LIBBITSUF";
-   }
-   else
-   {
-      $ldflags .= ($use_linker ? " @vpr_ldflags_linker@"
-                               : " @vpr_ldflags_compiler@");
-   }
+   $ldflags .= ($use_linker ? " @vpr_ldflags_linker@"
+                            : " @vpr_ldflags_compiler@");
 
    my $full_ldflags = "$ldflags $static_begin @vpr_libs@ $static_end";
    $full_ldflags    =~ s/\s{2,}/ /g;
