@@ -12,16 +12,20 @@ public class ChunkDescEventTest
    extends TestCase
 {
    public static final int NAME_CHANGED            = 1;
-   public static final int CATEGORY_ADDED          = 2;
-   public static final int CATEGORY_REMOVED        = 4;
-   public static final int PROPERTY_DESC_CHANGED   = 8;
-   public static final int PROPERTY_DESC_ADDED     = 16;
-   public static final int PROPERTY_DESC_REMOVED   = 32;
+   public static final int TOKEN_CHANGED           = 2;
+   public static final int HELP_CHANGED            = 4;
+   public static final int CATEGORY_ADDED          = 8;
+   public static final int CATEGORY_REMOVED        = 16;
+   public static final int PROPERTY_DESC_CHANGED   = 32;
+   public static final int PROPERTY_DESC_ADDED     = 64;
+   public static final int PROPERTY_DESC_REMOVED   = 128;
 
    class ChangeListener
       implements ChunkDescListener
    {
       public void nameChanged(ChunkDescEvent evt)           { fired(NAME_CHANGED, evt); }
+      public void tokenChanged(ChunkDescEvent evt)          { fired(TOKEN_CHANGED, evt); }
+      public void helpChanged(ChunkDescEvent evt)           { fired(HELP_CHANGED, evt); }
       public void categoryAdded(ChunkDescEvent evt)         { fired(CATEGORY_ADDED, evt); }
       public void categoryRemoved(ChunkDescEvent evt)       { fired(CATEGORY_REMOVED, evt); }
       public void propertyDescChanged(ChunkDescEvent evt)   { fired(PROPERTY_DESC_CHANGED, evt); }
@@ -71,7 +75,8 @@ public class ChunkDescEventTest
    {
       // Setup the DOM element for the Chunk Desc
       Element elt = new Element(ConfigTokens.chunk_desc_TOKEN);
-      elt.setAttribute("name", "TestDesc");
+      elt.setAttribute(ConfigTokens.name_TOKEN, "TestDesc");
+      elt.setAttribute(ConfigTokens.token_TOKEN, "test_desc");
 
       Element cat_elt = new Element(ConfigTokens.category_TOKEN);
       cat_elt.setText("TestCategory");
@@ -90,6 +95,24 @@ public class ChunkDescEventTest
    {
       mDesc.setName("NewName");
       assertTrue(mListener.wasFired(NAME_CHANGED));
+   }
+
+   /**
+    * Test token change.
+    */
+   public void testTokenChange()
+   {
+      mDesc.setToken("new_token");
+      assertTrue(mListener.wasFired(TOKEN_CHANGED));
+   }
+
+   /**
+    * Test help change.
+    */
+   public void testHelpChange()
+   {
+      mDesc.setHelp("Yo ... here's some new help.");
+      assertTrue(mListener.wasFired(HELP_CHANGED));
    }
 
    /**

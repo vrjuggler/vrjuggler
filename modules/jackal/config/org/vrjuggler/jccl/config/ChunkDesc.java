@@ -142,6 +142,7 @@ public class ChunkDesc
       String old = getToken();
       mDomElement.setAttribute("token", newToken);
       changeSupport.firePropertyChange("token", old, newToken);
+      fireTokenChanged();
    }
 
    /**
@@ -273,6 +274,7 @@ public class ChunkDesc
       String old = help_child.getText();
       help_child.setText(helpText);
       changeSupport.firePropertyChange("help", null, null);
+      fireHelpChanged();
    }
 
    public void addPropertyDesc(PropertyDesc newPropDesc)
@@ -441,6 +443,8 @@ public class ChunkDesc
     */
    protected void fireNameChanged()
    {
+      String name = getName();
+
       ChunkDescEvent evt = null;
       Object[] listeners = listenerList.getListenerList();
       for (int i=listeners.length-2; i>=0; i-=2)
@@ -449,9 +453,53 @@ public class ChunkDesc
          {
             if (evt == null)
             {
-               evt = new ChunkDescEvent(this, getName());
+               evt = new ChunkDescEvent(this, name);
             }
             ((ChunkDescListener)listeners[i+1]).nameChanged(evt);
+         }
+      }
+   }
+
+   /**
+    * Notifies listeners of this chunk desc that the token has been changed.
+    */
+   protected void fireTokenChanged()
+   {
+      String token = getToken();
+
+      ChunkDescEvent evt = null;
+      Object[] listeners = listenerList.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == ChunkDescListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new ChunkDescEvent(this, token);
+            }
+            ((ChunkDescListener)listeners[i+1]).tokenChanged(evt);
+         }
+      }
+   }
+
+   /**
+    * Notifies listeners of this chunk desc that the help has been changed.
+    */
+   protected void fireHelpChanged()
+   {
+      String help = getHelp();
+
+      ChunkDescEvent evt = null;
+      Object[] listeners = listenerList.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == ChunkDescListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new ChunkDescEvent(this, help);
+            }
+            ((ChunkDescListener)listeners[i+1]).helpChanged(evt);
          }
       }
    }

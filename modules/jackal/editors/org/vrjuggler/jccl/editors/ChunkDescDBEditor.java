@@ -231,6 +231,20 @@ public class ChunkDescDBEditor
    }
 
    /**
+    * Called by a ChunkDesc when its token has been changed.
+    */
+   public void tokenChanged(ChunkDescEvent evt)
+   {
+   }
+
+   /**
+    * Called by a ChunkDesc when its help text has changed.
+    */
+   public void helpChanged(ChunkDescEvent evt)
+   {
+   }
+
+   /**
     * Called by a ChunkDesc when it has added a category that it belongs to.
     */
    public void categoryAdded(ChunkDescEvent evt)
