@@ -205,6 +205,7 @@ void OpenSGNav::initScene(void)
    mSceneRoot = OSG::Node::create();
    mSceneTransform = OSG::Transform::create();
 
+   /*
    float scene_scale = 1.0f/gadget::PositionUnitConversion::ConvertToFeet;    // Scene uses feet as units
 
    osg::Matrix scene_scale_mat;
@@ -214,6 +215,7 @@ void OpenSGNav::initScene(void)
    osg::beginEditCP(mSceneScale);
       mSceneScale->setMatrix(scene_scale_mat);
    osg::endEditCP(mSceneScale);
+   */
 
    // Set the root node
    osg::beginEditCP(mRootNode);
