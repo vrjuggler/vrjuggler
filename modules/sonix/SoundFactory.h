@@ -2,16 +2,42 @@
 
 #ifndef SOUNDFACTORY_H
 #define SOUNDFACTORY_H
-#include "ISoundImplementation.h"
+#include "SoundImplementation.h"
+#include "OpenALSoundImplementation.h"
+#include "AudioWorksSoundImplementation.h"
 class SoundFactory : public vpr::Singleton
 {
 public:
-private:   
+
+   /**
+    * @input name of api to create
+    * @output an implementation is returned for you to use
+    * @postconditions if apiName is not known, then a stub implementation is returned
+    * @semantics factory function used to create an implementation of a sound API 
+    */
+   void createImplementation( const std::string& apiName,
+                              SoundImplementation* &mImplementation )
+   {
+      if (apiName == "OpenAL")
+      {
+         mImplementation = new OpenALSoundImplementation;
+      }
+      else if (apiName == "Audioworks")
+      {
+         mImplementation = new AudioWorksSoundImplementation;
+      }
+      else
+      {
+         mImplementation = new StubSoundImplementation;
+      }
+   }
+
+private:
 
    /**
     * @clientCardinality 1
     * @supplierCardinality 0..*
     */
-   ISoundImplementation lnkISoundImplementation;
+   SoundImplementation lnkSoundImplementation;
 };
 #endif //SOUNDFACTORY_H

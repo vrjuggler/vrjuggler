@@ -3,7 +3,7 @@
 #ifndef ISOUNDINTERFACE_H
 #define ISOUNDINTERFACE_H
 #include "SoundFactory.h"
-#include "ISoundImplementation.h"
+#include "SoundImplementation.h"
 
 /** @interface*/
 class ISoundInterface
@@ -20,7 +20,7 @@ public:
     * @postconditions if it is, then the loaded sound is triggered.  if it isn't then nothing happens.
     * @semantics Triggers a sound
     */
-   virtual void trigger(const std::string & alias, const unsigned int & looping = 0) = 0;
+   virtual void trigger(const std::string & alias, const unsigned int & repeat = -1) = 0;
 
    /**
     * @semantics stop the sound
@@ -32,22 +32,38 @@ public:
     * @semantics call once per sound frame (doesn't have to be same as your graphics frame)
     * @input time elapsed since last frame
     */
-   virtual void step(const float & timeElapsed) = 0;
-
+   virtual void step( const float& timeElapsed ) = 0;
 
    /**
-    * @preconditions provide an alias and a filename
+    * associate a name (alias) to the description
+    * @preconditions provide an alias and a SoundInfo which describes the sound
     * @postconditions alias will point to loaded sound data
     * @semantics associate an alias to sound data.  later this alias can be used to operate on this sound data.
     */
-   virtual void associate(const std::string & alias, const std::string & filename) = 0;
+   virtual void associate( const std::string& alias, const SoundInfo& description ) = 0;
 
-
+   /**
+    * remove alias->sounddata association 
+    */
    virtual void remove(const std::string alias) = 0;
-   virtual void setPosition( const std::string& alias, float x, float y, float z ) = 0;
 
-   virtual void attachAPI( const std::string& apiName, bool& result ) = 0;
-   virtual void detachAPI() = 0;
+   /**
+    * set sound's 3D position 
+    * @input x,y,z are in OpenGL coordinates.  alias is a name that has been associate()d with some sound data
+    */
+   virtual void setPosition( const std::string& alias, const float& x, const float& y, const float& z ) = 0;
+
+   /**
+    * get sound's 3D position
+    * @input alias is a name that has been associate()d with some sound data
+    * @output x,y,z are returned in OpenGL coordinates.
+    */
+   virtual void getPosition( const std::string& alias, float& x, float& y, float& z ) = 0;
+
+   // TODO: do i need observer?
+   //virtual void setObserverPosition( float x, float y, float z ) = 0;
+
+   virtual void changeAPI( const std::string& apiName, bool& result ) = 0;
 private:
 
    /** @link dependency */
@@ -56,6 +72,6 @@ private:
    /** @link aggregation
     * @clientCardinality 1
     * @supplierCardinality 1*/
-   /*#  ISoundImplementation lnkISoundImplementation; */
+   /*#  SoundImplementation lnkSoundImplementation; */
 };
 #endif  //ISOUNDINTERFACE_H

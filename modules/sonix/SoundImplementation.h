@@ -6,36 +6,148 @@
 class SoundImplementation
 {
 public:
-
-
-
    /**
     * @semantics default constructor 
     */
    SoundImplementation() {}
 
    /**
-    * @semantics default constructor 
+    * copies current state of the system from one API to another.
+    * @semantics copy constructor
     */
-   SoundImplementation( const SoundImplementation& copy )
+   SoundImplementation( const SoundImplementation& si )
    {
-      this->copy( cp );
-   }
-
-   virtual void copy( const SoundImplementation& isi )
-   {
-      
+      this->copy( si );
    }
 
    /**
     * @semantics destructor 
     */
-   virtual ~SoundImplementation() {}
-private:
-   struct SoundInfo
+   virtual ~SoundImplementation()
    {
-      
-   };
-   std::list<SoundInfo> mSounds;
+      // make sure the API has gracefully exited.
+      this->killAPI();
+   }
+
+   /**
+    * copies current state of the system from one API to another. 
+    */
+   void copy( const SoundImplementation & si )
+   {
+      mSounds = si.mSounds;
+      this->reload();
+   }
+
+   /**
+    * copies current state of the system from one API to another. 
+    */
+   SoundImplementation& operator=( SoundImplementation& si )
+   {
+      this->copy( si );
+      return *this;
+   }
+
+public:
+
+   /**
+    * @input alias of the sound to trigger, and number of times to play
+    * @preconditions alias does not have to be associated with a loaded sound.
+    * @postconditions if it is, then the loaded sound is triggered.  if it isn't then nothing happens.
+    * @semantics Triggers a sound
+    */
+   virtual void trigger( const std::string & alias, const unsigned int & repeat = -1 )
+   {
+
+   }
+
+   /**
+    * @semantics stop the sound
+    * @input alias of the sound to be stopped
+    */
+   virtual void stop(const std::string & name) = 0;
+
+   /**
+    * @semantics call once per sound frame (doesn't have to be same as your graphics frame)
+    * @input time elapsed since last frame
+    */
+   virtual void step(const float & timeElapsed) = 0;
+
+
+   /**
+    * associate a name (alias) to the description
+    * @preconditions provide an alias and a SoundInfo which describes the sound
+    * @postconditions alias will point to loaded sound data
+    * @semantics associate an alias to sound data.  later this alias can be used to operate on this sound data.
+    */
+   virtual void associate( const std::string& alias, const SoundInfo& description )
+   {
+      mSounds[alias] = description;
+      this->_load( alias );
+   }
+
+   /**
+    * remove alias->sounddata association 
+    */
+   virtual void remove(const std::string alias) = 0;
+
+   /**
+    * set sound's 3D position 
+    */
+   virtual void setPosition( const std::string& alias, float x, float y, float z ) = 0;
+
+   /**
+    * get sound's 3D position
+    * @input alias is a name that has been associate()d with some sound data
+    * @output x,y,z are returned in OpenGL coordinates.
+    */
+   virtual void getPosition( const std::string& alias, float& x, float& y, float& z ) = 0;
+
+protected:
+   /**
+    * start the sound API, creating any contexts or other configurations at startup
+    * @postconditions sound API is ready to go.
+    * @semantics this function should be called before using the other functions in the class.
+    */
+   virtual void initAPI() = 0;
+
+   /**
+    * kill the sound API, deallocating any sounds, etc...
+    * @postconditions sound API is ready to go.
+    * @semantics this function could be called any time, the function could be called multiple times, so it should be smart.
+    */
+   virtual void killAPI() = 0;
+
+   /**
+    * bind: load (or reload) all associate()d sounds
+    * @postconditions all sound associations are buffered by the sound API
+    */
+   virtual void bind() = 0;
+
+   /**
+    * unbind: unload/deallocate all associate()d sounds.
+    * @postconditions all sound associations are unbuffered by the sound API
+    */
+   virtual void unbind() = 0;
+
+   /**
+    * clear all associate()tions.
+    * @semantics any existing aliases will be stubbed. aounds will be unbind()ed
+    */
+   virtual void clear() = 0;
+
+private:
+   /**
+    * load/allocate the sound data this alias refers to the sound API
+    * @postconditions the sound API has the sound buffered.
+    */
+   virtual void _load( const std::string& alias ) = 0;
+
+   /**
+    * unload/deallocate the sound data this alias refers from the sound API
+    * @postconditions the sound API no longer has the sound buffered.
+    */
+   virtual void _unload( const std::string& alias ) = 0;
+
+   std::map<std::string, SoundInfo> mSounds;
 };
 #endif //SOUNDIMPLEMENTATION_H
