@@ -40,7 +40,7 @@ cubes: ${OBJECTS}
 cubes.o: cubes.cpp cubesApp.h
 
 .cpp.o:
-	${COMPILE} -c ${srcdir}/$<
+	${COMPILE} -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
