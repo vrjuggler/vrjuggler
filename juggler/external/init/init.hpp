@@ -8,14 +8,18 @@
 #include <algorithm>
 #include <cassert>
 #include <deque>
-#include <hash_set>
-#include <hash_map>
+//#include <hash_set>
+//#include <hash_map>
+// HACK: Temporary hack by Allen to make this stuff work
+//       This requires that vpr/vpr.h is included before using
+#include VPR_HASH_MAP_INCLUDE
+#include VPR_HASH_SET_INCLUDE
 #include <list>
 #include <map>
 #include <numeric>
 #include <queue>
 #include <set>
-#include <slist>
+//#include <slist>
 #include <stack>
 #include <vector>
 
@@ -173,6 +177,7 @@ namespace init
 
 
 
+/*
         template< typename T >          
         struct Insert_policy< slist<T>, T >
         {
@@ -183,7 +188,7 @@ namespace init
                 to.insert( to.end(), value );
             }
         };
-
+*/
 
 
         template< typename T>
@@ -642,10 +647,12 @@ namespace init
 
 
 
+/*
             operator slist<T>() 
             {
                 return slist<T>( holder_.begin(), holder_.end() );
             }
+*/
 
 
 
