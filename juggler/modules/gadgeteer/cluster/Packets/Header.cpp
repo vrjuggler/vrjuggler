@@ -173,7 +173,6 @@ namespace cluster
 
       // -Send the data in this packet
       vpr::Uint32 bytes_written;
-      vpr::Interval test = vpr::Interval::NoTimeout;
       
       vpr::ReturnStatus status = socket->send(mData,RIM_PACKET_HEAD_SIZE,bytes_written);
       return(status);   
