@@ -56,6 +56,7 @@ namespace cluster
    class DeviceServer;
    class ClusterNode;
    class DeviceRequest;
+   class Packet;
 
 class GADGET_CLASS_API RemoteInputManager  : public cluster::ClusterPlugin
 {
@@ -63,6 +64,19 @@ class GADGET_CLASS_API RemoteInputManager  : public cluster::ClusterPlugin
 public:
    RemoteInputManager();
    virtual ~RemoteInputManager();
+
+   /**
+    * Get the GUID associated with this plugin.
+    */
+   vpr::GUID getPluginGUID()
+   {
+      return mPluginGUID;
+   }
+
+   /**
+    * Handle a incoming packet.
+    */
+   void handlePacket(Packet* packet, ClusterNode* node);
 
    /** Calls any action needed by this plugin before draw()
     *
@@ -246,6 +260,7 @@ private:
 
    vpr::Uint32                                     mFrameNumber;
    bool                          mReconfigurationNeededOnConnection;    /**< We need to try to reconfigure on the next connection made. */
+   vpr::GUID                     mPluginGUID;
 };
 
 } // end namespace gadget

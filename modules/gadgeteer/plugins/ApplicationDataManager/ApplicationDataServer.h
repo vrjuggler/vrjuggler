@@ -55,7 +55,16 @@ namespace cluster
    class GADGET_CLASS_API ApplicationDataServer
    {
    public:
-      ApplicationDataServer(vpr::GUID guid, ApplicationData* user_data);
+      /**
+       * Create a new ApplicationDataServer..
+       *
+       * @param guid -GUID of the given ApplicationData.
+       * @param user_data -Pointer to the ApplicationData that we are sharing.
+       * @param plugin_id -GUID that should be placed at the beginning of 
+       *                   each data packet so that the receiver knows which 
+       *                   plugin the data is coming from.
+       */
+      ApplicationDataServer(vpr::GUID guid, ApplicationData* user_data, vpr::GUID plugin_guid);
       ~ApplicationDataServer();
 
       void send();
@@ -97,6 +106,7 @@ namespace cluster
       DataPacket*                                  mDataPacket;
       vpr::BufferObjectWriter*                     mBufferObjectWriter;
       std::vector<vpr::Uint8>*                     mDeviceData;
+      vpr::GUID                                    mPluginGUID;
    };
 
 } // end namespace gadget

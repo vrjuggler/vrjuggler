@@ -47,20 +47,23 @@ namespace cluster
       recv(packet_head,stream);
       parse();
    }
-   ApplicationDataRequest::ApplicationDataRequest(vpr::GUID id)
+   ApplicationDataRequest::ApplicationDataRequest(const vpr::GUID plugin_guid, const vpr::GUID& id)
    {
       // Given the input, create the packet and then serialize the packet(which includes the header)
       // - Set member variables
       // - Create the correct packet header
       // - Serialize the packet
 
-      // ApplicationData GUID
+      // Set local variables
+      mPluginId = plugin_guid;
       mId = id;
 
       // Header vars (Create Header)
       mHeader = new Header(Header::RIM_PACKET,
                                       Header::RIM_APPDATA_REQ,
-                                      Header::RIM_PACKET_HEAD_SIZE + 16/*Size of GUID*/,
+                                      Header::RIM_PACKET_HEAD_SIZE 
+                                      + 16/*Plugin GUID*/
+                                      + 16/*Object GUID*/,
                                       0);
       serialize();
    }
@@ -76,53 +79,42 @@ namespace cluster
       // Create the header information
       mHeader->serializeHeader();
       
+      // Serialize plugin GUID
+      mPluginId.writeObject(mPacketWriter);
+
+      // Serialize ApplicationData GUID
       mId.writeObject(mPacketWriter);
    }
    void ApplicationDataRequest::parse()
    {
+      // De-Serialize plugin GUID
+      mPluginId.readObject(mPacketReader);
+      
+      // De-Serialize ApplicationData GUID
       mId.readObject(mPacketReader);
    }
    
    bool ApplicationDataRequest::action(ClusterNode* node)
    {
-      ApplicationDataServer* temp_app_data_server = ApplicationDataManager::instance()->getApplicationDataServer(mId);
-      ApplicationDataAck* temp_ack = NULL;
-      if (temp_app_data_server != NULL)
-      {
-         temp_app_data_server->addClient(node);
-         temp_ack = new ApplicationDataAck(mId, true);
-         node->send(temp_ack);
-      }
-      else
-      {
-         temp_ack = new ApplicationDataAck(mId, false);
-         node->send(temp_ack);
-      }
-      delete temp_ack;
-      return true;
+      return false;
    }
 
    void ApplicationDataRequest::printData(int debug_level)
    {
       vprDEBUG_BEGIN(gadgetDBG_RIM,debug_level) 
-         <<  clrOutBOLD(clrYELLOW,"==== User Data Packet Data ====\n") << vprDEBUG_FLUSH;
+         <<  clrOutBOLD(clrYELLOW,"==== ApplicationData Request Packet ====\n") << vprDEBUG_FLUSH;
       
       Packet::printData(debug_level);
 
       vprDEBUG(gadgetDBG_RIM,debug_level) 
-         << clrOutBOLD(clrYELLOW, "GUID:   ") << mId.toString()
+         << clrOutBOLD(clrYELLOW, "Plugin GUID:   ") << mPluginId.toString()
+         << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,debug_level) 
+         << clrOutBOLD(clrYELLOW, "Object GUID:   ") << mId.toString()
          << std::endl << vprDEBUG_FLUSH;
 
       vprDEBUG_END(gadgetDBG_RIM,debug_level) 
          <<  clrOutBOLD(clrYELLOW,"====================================\n") << vprDEBUG_FLUSH;
-
-   /*   Packet::printData();
-      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
-      << clrOutBOLD(clrCYAN,"\n==== Device Request Packet Data ====")
-      << "\nSender ID:    " << mSenderId
-      << "\nDevice Name: " << mDeviceName << std::endl
-      << vprDEBUG_FLUSH;      
-   */
    }
 
 }   // end namespace gadget

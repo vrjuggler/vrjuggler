@@ -54,6 +54,7 @@
 #include <cluster/Plugins/ApplicationDataManager/ApplicationDataManager.h>
 #include <cluster/Plugins/SwapLockPlugin/SwapLockPlugin.h>
 
+#include <cluster/Packets/Packet.h>
 #include <cluster/Packets/PacketFactory.h>
 #include <cluster/Packets/StartBlock.h>
 
@@ -78,6 +79,21 @@ namespace cluster
       ;
    }
 
+   void ClusterManager::handlePacket(Packet* packet, ClusterNode* node)
+   {
+      vpr::GUID plugin_guid = packet->getPluginId();
+      
+      ClusterPlugin* temp_plugin = getPluginByGUID(plugin_guid);
+      if (NULL == temp_plugin)
+      {
+         packet->action(node);
+      }
+      else
+      {
+         temp_plugin->handlePacket(packet, node);
+      }
+   }
+
    /**
     * Adds a new plugin to the ClusterManager.
     */
@@ -87,6 +103,9 @@ namespace cluster
       if (!doesPluginExist(new_plugin))
       {
          mPlugins.push_back(new_plugin);
+         std::pair<vpr::GUID, ClusterPlugin*> p = std::make_pair(new_plugin->getPluginGUID(), new_plugin);
+         mPluginMap.insert(p);
+
          // We should do this here, but since we do not add the manager until its configAdd
          // currently you can see the problem
          jccl::ConfigManager::instance()->addConfigChunkHandler(new_plugin);
@@ -96,12 +115,24 @@ namespace cluster
       }
    }
 
+   ClusterPlugin* ClusterManager::getPluginByGUID(const vpr::GUID& plugin_guid)
+   {
+      std::map<vpr::GUID, ClusterPlugin*>::const_iterator i = mPluginMap.find(plugin_guid);
+      if(i != mPluginMap.end())
+      {
+         return ((*i).second);
+      }
+      return NULL;
+   }
+   
    /**
     * Removes a plugin from the ClusterManager
     */
    void ClusterManager::removePlugin(ClusterPlugin* old_plugin)
    {
       vpr::Guard<vpr::Mutex> guard(mPluginsLock);
+
+      mPluginMap.erase(old_plugin->getPluginGUID());
       
       for (std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
            i != mPlugins.end() ; i++)

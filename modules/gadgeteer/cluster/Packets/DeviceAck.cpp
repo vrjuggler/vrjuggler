@@ -46,8 +46,9 @@ namespace cluster
       recv(packet_head,stream);
       parse();
    }
-   DeviceAck::DeviceAck(vpr::GUID& id, std::string& device_name, 
-                              std::string& device_base_type, bool ack)
+   DeviceAck::DeviceAck(const vpr::GUID& plugin_id, const vpr::GUID& id, 
+                        const std::string& device_name, 
+                        const std::string& device_base_type, bool ack)
    {
       // Given the input, create the packet and then serialize the packet(which includes the header)
       // - Set member variables
@@ -58,6 +59,7 @@ namespace cluster
       //
 
       // Device Request Vars
+      mPluginId = plugin_id;
       mId = id;
       mDeviceName = device_name;
       mDeviceBaseType = device_base_type;
@@ -75,7 +77,8 @@ namespace cluster
       mHeader = new Header(Header::RIM_PACKET,
                                       Header::RIM_DEVICE_ACK,
                                       Header::RIM_PACKET_HEAD_SIZE 
-                                      + 16 /*mID*/
+                                      + 16 /*mPluginId*/
+                                      + 16 /*mId*/
                                       + 2 /*value of size*/+ mDeviceName.size() /*length of mDeviceName*/
                                       + 2 /*value of size*/+ mDeviceBaseType.size() /*length of mDeviceBaseType*/
                                       + 2 /*value of size*/+ mHostname.size() /*length of mDeviceBaseType*/
@@ -100,19 +103,19 @@ namespace cluster
       // =============== Packet Specific =================
       //
       
+      // Serialize plugin GUID
+      mPluginId.writeObject(mPacketWriter);
+      
       // mId
       mId.writeObject(mPacketWriter);
       
          // Device Name
-//      mPacketWriter->writeUint16(mDeviceName.size());
       mPacketWriter->writeString(mDeviceName);
       
          // Base Type
-//      mPacketWriter->writeUint16(mDeviceBaseType.size());
       mPacketWriter->writeString(mDeviceBaseType);
 
          // Hostname of the machine that the device on
-//      mPacketWriter->writeUint16(mHostname.length());
       mPacketWriter->writeString(mHostname);
 
          // Ack
@@ -120,12 +123,6 @@ namespace cluster
 
       
 
-/*      // Remote Device ID
-      mPacketWriter->writeUint16(mSenderId);
-      // Device Name
-//      mPacketWriter->writeUint16(mDeviceName.size());      
-      mPacketWriter->writeString(mDeviceName);
-*/
       //
       // =============== Packet Specific =================
    }
@@ -134,36 +131,23 @@ namespace cluster
       // =============== Packet Specific =================
       //
       
+      // De-Serialize plugin GUID
+      mPluginId.readObject(mPacketReader);
+
       // mId
       mId.readObject(mPacketReader);
          
       // Device Name
-//      vpr::Uint16 temp_string_len = mPacketReader->readUint16();
-//      mDeviceName = mPacketReader->readString(temp_string_len);
       mDeviceName = mPacketReader->readString();
 
          // Base Type
-//      temp_string_len = mPacketReader->readUint16();
-//      mDeviceBaseType = mPacketReader->readString(temp_string_len);
       mDeviceBaseType = mPacketReader->readString();
 
          // Hostname of the machine that the device on
-//      temp_string_len = mPacketReader->readUint16();
-//      mHostname = mPacketReader->readString(temp_string_len);
       mHostname = mPacketReader->readString();
 
          // Ack
       mAck = mPacketReader->readBool();
-
-/*
-      // Remote Device ID
-      mSenderId = mPacketReader->readUint16();
-   
-      // Device Name
-//      vpr::Uint16 temp_name_len = mPacketReader->readUint16();
-//      mDeviceName = mPacketReader->readString(temp_name_len);
-      mDeviceName = mPacketReader->readString();
-*/
 
 
       //
@@ -172,39 +156,7 @@ namespace cluster
 
    bool DeviceAck::action(ClusterNode* node)
    {
-      // -If ACK
-      //   -Create VirtualDevice
-      // -If Nack
-      //   -Do nothing(let the config manager worry about re-trying)
-      if (node == NULL)
-      {
-         return false;
-      }
-      if (mAck)
-      {
-         //vpr::ReturnStatus status =  RemoteInputManager::instance()->addVirtualDevice(mDeviceId, mDeviceName, mDeviceBaseType);
-         RemoteInputManager::instance()->removePendingDeviceRequest(mDeviceName);
-
-         if (RemoteInputManager::instance()->getVirtualDevice(mDeviceName) != NULL)
-         {
-            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrRED, "ERROR:") 
-               << "Somehow we already have a virtual device named: " << mDeviceName << std::endl << vprDEBUG_FLUSH;
-         }                                                                  
-         else
-         {
-            RemoteInputManager::instance()->addVirtualDevice(mId, mDeviceName, mDeviceBaseType, mHostname);
-            // Tell the input Mangager that we may now have the device it was trying to point to
-            gadget::InputManager::instance()->refreshAllProxies();      
-         }
-      }
-      else
-      {  //XXX: FIX
-         // Do Nothing Since we will just re-try later
-         //RemoteInputManager::instance()->createPendingConfigRemoveAndAdd(mDeviceName);
-         //jccl::ConfigManager::instance()->delayStalePendingList();
-      }
-            
-      return true;
+      return false;
    }
 
 
@@ -215,6 +167,9 @@ namespace cluster
       
       Packet::printData(debug_level);
 
+      vprDEBUG(gadgetDBG_RIM,debug_level) 
+         << clrOutBOLD(clrYELLOW, "Plugin GUID:      ") << mPluginId.toString()
+         << std::endl << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,debug_level) 
          << clrOutBOLD(clrYELLOW, "Device ID:        ") << mId.toString()
          << std::endl << vprDEBUG_FLUSH;

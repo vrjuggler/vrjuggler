@@ -40,6 +40,10 @@
 // Must implement the Abstract Base Class in order to be a manager used on the ClusterNetwork
 #include <cluster/ClusterPlugin.h>
 
+// Remove these includes when we move the handlePacket method to the cpp file.
+#include <cluster/Packets/Packet.h>
+#include <cluster/ClusterNetwork/ClusterNode.h>
+
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ConfigChunkPtr.h>
 #include <jccl/RTRC/ConfigChunkHandler.h>
@@ -58,6 +62,23 @@ public:
    SwapLockPlugin();
    virtual ~SwapLockPlugin();
    
+   /**
+    * Get the GUID associated with this plugin.
+    */
+   vpr::GUID getPluginGUID()
+   {
+      return mPluginGUID;
+   }
+
+   /**
+    * Handle a incoming packet.
+    */
+   void handlePacket(Packet* packet, ClusterNode* node)
+   {
+      packet->action(node);
+   }
+
+
    virtual void preDraw();
    virtual void postPostFrame();
    virtual bool isPluginReady();
@@ -102,6 +123,7 @@ private:
 private:
    ClusterBarrier*   mBarrier;
    int               mFrameNumber;
+   vpr::GUID         mPluginGUID;
 };
 
 } // end namespace

@@ -179,7 +179,7 @@ void ClusterDepChecker::debugOutDependencies(jccl::ConfigChunkPtr chunk,int dbg_
       //for (int i = 0 ; i < number_nodes ; i++)
       //{
       //   std::string node_name = chunk->getProperty<std::string>("cluster_nodes",i);
-      //   jccl::ConfigChunkPtr node_chunk = RemoteInputManager::instance()->getConfigChunkPointer(node_name);
+      //   jccl::ConfigChunkPtr node_chunk = RmoteInputManager::instance()->getConfigChunkPointer(node_name);
       //   if (node_chunk == NULL)
       //   {
       //      vprDEBUG(vprDBG_ALL, dbg_lvl) << node_name << " Node not in current configuration."

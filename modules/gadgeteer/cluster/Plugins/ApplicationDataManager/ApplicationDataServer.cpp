@@ -38,9 +38,10 @@
 
 namespace cluster
 {
-   ApplicationDataServer::ApplicationDataServer(vpr::GUID guid,  ApplicationData* user_data) 
+   ApplicationDataServer::ApplicationDataServer(vpr::GUID guid,  ApplicationData* user_data, vpr::GUID plugin_guid) 
    {
       mId = guid;
+      mPluginGUID = plugin_guid;
       
       mApplicationData = user_data;
 
@@ -66,7 +67,7 @@ namespace cluster
          {
             // XXX Might have to change this to use ClusterNode's send
             //     method soon.
-            mDataPacket->send((*i)->getSockStream(), mId, mDeviceData);
+            mDataPacket->send((*i)->getSockStream(), mPluginGUID, mId, mDeviceData);
          }
          catch(cluster::ClusterException cluster_exception)
          {
