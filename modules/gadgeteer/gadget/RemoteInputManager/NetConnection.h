@@ -140,6 +140,9 @@ namespace gadget
       void receiveBarrier();
       void sendNetworkData();
 
+      NetDevice* findNetDeviceByLocalId(VJ_NETID_TYPE local_id);
+      Input* getDevice(const std::string device_name);
+
       void addTransmittingNetDevice(NetDevice* net_device);
 
       void addReceivingNetDevice(NetDevice* net_device);

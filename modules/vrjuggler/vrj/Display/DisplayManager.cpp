@@ -280,7 +280,7 @@ int DisplayManager::closeDisplay(Display* disp, bool notifyDrawMgr)
 {
    vprASSERT(isMemberDisplay(disp));       // Make sure that display actually exists
 
-   vprDEBUG_BEGIN(vrjDBG_DISP_MGR,vprDBG_STATE_LVL) << "closeDisplay: Closing display named: " << disp->getName() << std::endl<< vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DISP_MGR,vprDBG_STATE_LVL) << "closeDisplay: Closing display named: " << disp->getName() << std::endl<< vprDEBUG_FLUSH;
 
    // Notify the draw manager to get rid of it
    // Note: if it is not active, then the draw manager doesn't know about it

@@ -95,7 +95,7 @@ namespace gadget
    void ClusterBarrierTCP::MasterSend()
    {
       //vprASSERT(mSyncClients!=NULL && "Sync Clients Vector is NULL!");
-      vprASSERT(mActive=true && "Barrier is not active!");
+      vprASSERT(mActive==true && "Barrier is not active!");
 
       vpr::Uint32 bytes_read;
 
@@ -110,7 +110,7 @@ namespace gadget
    }
    void ClusterBarrierTCP::MasterReceive()
    {
-      vprASSERT(mActive=true && "Barrier is not active!");
+      vprASSERT(mActive==true && "Barrier is not active!");
 
       vpr::Uint32 bytes_read;
       vpr::Uint8 temp;
@@ -126,7 +126,7 @@ namespace gadget
    void ClusterBarrierTCP::SlaveSend()
    {
       vprASSERT(mSyncServer!=NULL && "mSyncServer is NULL!");
-      vprASSERT(mActive=true && "Barrier is not active!");
+      vprASSERT(mActive==true && "Barrier is not active!");
 
       vpr::Uint32 bytes_read;
       mSyncServer->send(&SYNC_SIGNAL , 1, bytes_read);
@@ -136,7 +136,7 @@ namespace gadget
    void ClusterBarrierTCP::SlaveReceive()
    {
       vprASSERT(mSyncServer!=NULL && "mSyncServer is NULL!");
-      vprASSERT(mActive=true && "Barrier is not active!");
+      vprASSERT(mActive==true && "Barrier is not active!");
       
       vpr::Uint32 bytes_read;
       vpr::Uint8 temp;
