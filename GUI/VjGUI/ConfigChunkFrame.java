@@ -70,8 +70,8 @@ GridBagConstraints pconstraints;
     sp.getVAdjustable().setUnitIncrement(20);
     sp.getHAdjustable().setUnitIncrement(20);
     mainp.add(sp,"Center");
-    properties = new Panel ();
 
+    properties = new Panel ();
     GridBagLayout propertieslayout = new GridBagLayout ();
     properties.setLayout(propertieslayout);
     GridBagConstraints constraints = new GridBagConstraints();
@@ -88,6 +88,7 @@ GridBagConstraints pconstraints;
       properties.add(t);
     }
 
+
     southpanel = new Panel();
     okbutton = new Button ("  OK  ");
     okbutton.addActionListener (this);
@@ -97,11 +98,18 @@ GridBagConstraints pconstraints;
     southpanel.add (cancelbutton);
     mainp.add(southpanel, "South");
 
-    setSize(470,700);
-
-    validate();
     addWindowListener(this);
-    show();
+
+    /* this slightly convoluted process is needed in order to open a window
+     * that is wide enough to show the full PropertyPanels, regardless of
+     * font & label sizes etc.
+     */
+    setSize(500,500);
+    setVisible(true);
+    Dimension d = properties.getPreferredSize();
+    setSize(d.width + 50, 600);
+
+    //System.out.println ("panel size: " + properties.getPreferredSize());
   }
 
   public String chunkName () {
