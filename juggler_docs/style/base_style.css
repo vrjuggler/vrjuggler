@@ -35,6 +35,14 @@ color: rgb(0, 0, 0);
 {
    color: rgb(255, 0, 0);
 }
+.black
+{
+   color: rgb( 0,0,0 );
+}
+.blue
+{
+   color: rgb( 30,30,188 );
+}
 h1, h2, h3, h4, h5, h6, h1style
 {
 font-family: Century Gothic, Arial, Helvetica;
