@@ -139,14 +139,17 @@ public class VjcPrefsModule
         }
         else if (o == saveprefs_mi) {
             try {
-                DataOutputStream out = new DataOutputStream(new FileOutputStream(Core.vjcontrol_chunkdb.file));
-                out.writeBytes(Core.vjcontrol_chunkdb.fileRep());
+                ConfigIO.writeConfigChunkDB (Core.vjcontrol_chunkdb.file,
+                                             Core.vjcontrol_chunkdb,
+                                             ConfigIO.DEFAULT);
+//                 DataOutputStream out = new DataOutputStream(new FileOutputStream(Core.vjcontrol_chunkdb.file));
+//                 out.writeBytes(Core.vjcontrol_chunkdb.fileRep());
                 Core.consoleInfoMessage (component_name, "Saved VjControl preferences: " + Core.vjcontrol_chunkdb.file);
                 Core.vjcontrol_chunkdb.need_to_save = false;
                 /* do some fixing up if the name changed */
             }
             catch (IOException x) {
-                Core.consoleErrorMessage (component_name, "IOerror saving VjControl preferences");
+                Core.consoleErrorMessage (component_name, "Error saving VjControl preferences: " + x.toString());
             }
         }
     }
