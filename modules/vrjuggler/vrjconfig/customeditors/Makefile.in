@@ -56,6 +56,7 @@ ifeq ($(BUILD_JAVA), Y)
 
    SUBDIR+=	display_window	\
 		intersense	\
+		motionstar	\
 		pinchglove
 endif
 
