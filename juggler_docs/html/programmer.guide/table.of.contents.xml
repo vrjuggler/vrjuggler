@@ -12,7 +12,7 @@ Builder: JExplorerBuilder V 1. 0. 7
 
 			< item title="Introduction" 
 				link="${MISC}/mission.statement.html" 
-				info="What is juggler?  What does it solve?  Why do I need it? How does it compare to others?" 
+				info="Introduction to VR Juggler" 
 				image="Leaf.gif" >
 			
 			< folder title="Getting Started" 
@@ -24,11 +24,43 @@ Builder: JExplorerBuilder V 1. 0. 7
 					link="getting.started/introduction.html" 
 					info="Introduction: know this before diving into the juggler library.." 
 					image="Leaf.gif" >
-					
+				
+				< item title="Download Juggler" 
+					link="${DOWNLOAD}/index.html" 
+					info="Download it." 
+					image="Leaf.gif" >
+				< item title="Installing Juggler" 
+					link="getting.started/installing.html" 
+					info="Install Juggler." 
+					image="Leaf.gif" >
 				< item title="Environment Variables" 
 					link="getting.started/environment.variables.html" 
 					info="Environment Variables: You need these to run some things." 
 					image="Leaf.gif" >
+				< item title="Paths" 
+					link="getting.started/paths.html" 
+					info="Paths environment setup" 
+					image="Leaf.gif">
+				< item title="Sample Applications" 
+					link="getting.started/sample.apps.html" 
+					info="Choose a sample application to test your installation." 
+					image="Leaf.gif">
+				< item title="Compiling" 
+					link="getting.started/compiling.html" 
+					info="Compile a sample application.  Make sure you have everything set up." 
+					image="Leaf.gif">
+				< item title="Setup Your Configuration" 
+					link="getting.started/compiling.html" 
+					info="Set up your default Juggler configuration." 
+					image="Leaf.gif">
+				< item title="Run The Application" 
+					link="getting.started/running.html" 
+					info="Run the juggler application, to see if everything worked." 
+					image="Leaf.gif">
+				< item title="Troubleshooting" 
+					link="${MISC}/faq.html" 
+					info="Find your problem in the FAQ, or mail us if not found!" 
+					image="Leaf.gif">
 			</folder>
 			
 			< folder title="Case Studies: Learn by example" 

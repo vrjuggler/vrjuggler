@@ -1,0 +1,18 @@
+<h2><img border=0 src="${IMAGES}/teddy3.gif"> Compiling </h2>
+
+<h3>Linking to Dynamic Shared Objects</h3>
+
+<blockquote>
+  <p>By default Juggler is setup to link to dynamic shared object libraries. (dso's) what
+  this means is that instead of including all the juggler object code into each executable
+  compiled, the Juggler object code is dynamically linked at runtime.&nbsp; This greatly
+  decreases the size of the executable files generated.</p>
+  <p>In order for dynamic linking to work, there are some environment variables that need to
+  be set to tell the dynamic linker where to look for the dso's.</p>
+  <blockquote>
+    <p><strong>For N32:</strong> setenv LD_LIBRARYN32_PATH $VJ_BASE_DIR/lib32<br>
+    <strong>For 64:</strong> setenv LD_LIBRARY64_PATH $VJ_BASE_DIR/lib64</p>
+  </blockquote>
+  <p>Once these variables are set, the dynamic linker will be able to find where the Juggler
+  libraries are located.</p>
+</blockquote>
