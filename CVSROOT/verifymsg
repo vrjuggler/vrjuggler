@@ -20,4 +20,4 @@
 # supported.  There can be only one entry that matches a given
 # repository.
 ^CVSROOT echo
-DEFAULT $CVSROOT/CVSROOT/cmd.verify
+DEFAULT $CVSROOT/CVSROOT/log_verify
