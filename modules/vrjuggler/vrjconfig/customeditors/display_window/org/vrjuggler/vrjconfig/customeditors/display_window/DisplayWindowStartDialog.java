@@ -1,0 +1,703 @@
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VR Juggler is (C) Copyright 1998-2003 by Iowa State University
+ *
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
+
+package org.vrjuggler.vrjconfig.customeditors.display_window;
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import info.clearthought.layout.*;
+import javax.swing.border.*;
+
+
+public class DisplayWindowStartDialog
+   extends JDialog
+{
+   public DisplayWindowStartDialog(Frame owner, Dimension resolution)
+      throws HeadlessException
+   {
+      super(owner, "Basic Display Window Parameters", true);
+      enableEvents(AWTEvent.WINDOW_EVENT_MASK);
+
+      mResolution = resolution;
+
+      try
+      {
+         jbInit();
+         setSpinnerModel(mRedDepthSpinner, 1, 1, 8);
+         setSpinnerModel(mGreenDepthSpinner, 1, 1, 8);
+         setSpinnerModel(mBlueDepthSpinner, 1, 1, 8);
+         setSpinnerModel(mAlphaDepthSpinner, 1, 1, 8);
+         setSpinnerModel(mDepthBufferSpinner, 1, 1, 32);
+
+         // It should be okay for all the text fields to share the same
+         // validator object since no two can be modified simultaneously.
+/*
+         DocumentListener l = new DisplayInfoValidator();
+         mNameField.getDocument().addDocumentListener(l);
+         mWidthField.getDocument().addDocumentListener(l);
+         mHeightField.getDocument().addDocumentListener(l);
+         mPositionXField.getDocument().addDocumentListener(l);
+         mPositionYField.getDocument().addDocumentListener(l);
+*/
+
+         // Validate the default values for the various text fields.
+         validateUserInput();
+      }
+      catch(Exception e)
+      {
+         e.printStackTrace();
+      }
+
+      this.setResizable(false);
+      this.pack();
+   }
+
+   private void setSpinnerModel(JSpinner spinner, int value, int min, int max)
+   {
+      SpinnerNumberModel model =
+         new SpinnerNumberModel(new Integer(value), new Integer(min),
+                                new Integer(max), new Integer(1));
+      spinner.setModel(model);
+   }
+
+   public int getStatus()
+   {
+      return status;
+   }
+
+   public String getDisplayWindowTitle()
+   {
+      return mNameField.getText();
+   }
+
+   public Rectangle getDisplayWindowBounds()
+   {
+      int x = Integer.parseInt(mPositionXField.getText());
+      int y = Integer.parseInt(mPositionYField.getText());
+      int width = Integer.parseInt(mWidthField.getText());
+      int height = Integer.parseInt(mHeightField.getText());
+      return new Rectangle(x, y, width, height);
+   }
+
+   public Integer getRedDepth()
+   {
+      return (Integer) mRedDepthSpinner.getModel().getValue();
+   }
+
+   public Integer getGreenDepth()
+   {
+      return (Integer) mGreenDepthSpinner.getModel().getValue();
+   }
+
+   public Integer getBlueDepth()
+   {
+      return (Integer) mBlueDepthSpinner.getModel().getValue();
+   }
+
+   public Integer getAlphaDepth()
+   {
+      return (Integer) mAlphaDepthSpinner.getModel().getValue();
+   }
+
+   public Integer getDepthBufferSize()
+   {
+      return (Integer) mDepthBufferSpinner.getModel().getValue();
+   }
+
+   public Boolean getFSAAEnable()
+   {
+      return (mFSAACheckbox.isSelected() ? Boolean.TRUE : Boolean.FALSE);
+   }
+
+   public Boolean hasBorder()
+   {
+      return (mBorderCheckbox.isSelected() ? Boolean.TRUE : Boolean.FALSE);
+   }
+
+   public Boolean inStereo()
+   {
+      return (mStereoCheckbox.isSelected() ? Boolean.TRUE : Boolean.FALSE);
+   }
+
+   public Boolean hideMouse()
+   {
+      return (mHideMouseCheckbox.isSelected() ? Boolean.TRUE : Boolean.FALSE);
+   }
+
+   public Boolean isEventSource()
+   {
+      return (mEventSourceCheckbox.isSelected() ? Boolean.TRUE : Boolean.FALSE);
+   }
+
+   public static final int OK_OPTION     = JOptionPane.OK_OPTION;
+   public static final int CANCEL_OPTION = JOptionPane.CANCEL_OPTION;
+   public static final int CLOSED_OPTION = JOptionPane.CLOSED_OPTION;
+
+   protected void processWindowEvent(WindowEvent e)
+   {
+      if (e.getID() == WindowEvent.WINDOW_CLOSING)
+      {
+         status = CLOSED_OPTION;
+         dispose();
+      }
+
+      super.processWindowEvent(e);
+   }
+
+   private void jbInit() throws Exception
+   {
+      double main_size[][] =
+         {{TableLayout.MINIMUM, 5, TableLayout.FILL},
+          {TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED,
+           TableLayout.PREFERRED}};
+      mMainLayout = new TableLayout(main_size);
+
+      double bounds_size[][] =
+         {{TableLayout.MINIMUM, TableLayout.MINIMUM},
+          {TableLayout.PREFERRED, TableLayout.PREFERRED}};
+      mBoundsPanelLayout = new TableLayout(bounds_size);
+
+      double fb_size[][] = {{TableLayout.MINIMUM, TableLayout.FILL, 5},
+                            {TableLayout.PREFERRED}};
+      mFrameBufferPanelLayout = new TableLayout(fb_size);
+
+      double fb_settings_size[][] =
+         {{TableLayout.FILL, TableLayout.MINIMUM},
+          {TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED,
+           TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED}};
+      mFBSettingsLayout = new TableLayout(fb_settings_size);
+
+      double window_props_size[][] =
+         {{TableLayout.FILL},
+          {TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED,
+           TableLayout.PREFERRED}};
+      mWindowPropsPanelLayout = new TableLayout(window_props_size);
+
+      mBoundsPanelBorder =
+         new TitledBorder(BorderFactory.createEtchedBorder(Color.white,
+                                                           new Color(161, 161, 161)),
+                                                           "Window Bounds");
+      mFrameBufferPanelBorder =
+         new TitledBorder(BorderFactory.createEtchedBorder(Color.white,
+                                                           new Color(142, 142, 142)),
+                                                           "Visual Quality Settings");
+      mWindowPropsPanelBorder =
+         new TitledBorder(BorderFactory.createEtchedBorder(Color.white,
+                                                           new Color(142, 142, 142)),
+                                                           "Window Behavior Settings");
+      mFBSettingsPanelBorder =
+         new EtchedBorder(EtchedBorder.RAISED, Color.white,
+                          new Color(142, 142, 142));
+      mMainPanel.setLayout(mMainLayout);
+      mNameLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mNameLabel.setLabelFor(mNameField);
+      mNameLabel.setText("Window Name");
+      mNameField.setMinimumSize(new Dimension(60, 21));
+      mNameField.setPreferredSize(new Dimension(60, 21));
+      mNameField.setText("Display Window");
+/*
+      mNameField.addFocusListener(new FocusAdapter() {
+         public void focusLost(FocusEvent e)
+         {
+            validateUserInput();
+         }
+      });
+*/
+      mSizeLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mSizeLabel.setLabelFor(mSizePanel);
+      mSizeLabel.setText("Size");
+      mPositionLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mPositionLabel.setLabelFor(mPositionPanel);
+      mPositionLabel.setText("Position");
+      mWidthField.setMinimumSize(new Dimension(40, 21));
+      mWidthField.setPreferredSize(new Dimension(40, 21));
+      mWidthField.setText("200");
+      mWidthField.setHorizontalAlignment(SwingConstants.TRAILING);
+/*
+      mWidthField.addFocusListener(new FocusAdapter() {
+         public void focusLost(FocusEvent e)
+         {
+            validateUserInput();
+         }
+      });
+*/
+      mSizeXLabel.setText("\u00D7");
+      mHeightField.setMinimumSize(new Dimension(40, 21));
+      mHeightField.setPreferredSize(new Dimension(40, 21));
+      mHeightField.setText("200");
+/*
+      mHeightField.addFocusListener(new FocusAdapter() {
+         public void focusLost(FocusEvent e)
+         {
+            validateUserInput();
+         }
+      });
+*/
+      mPositionXField.setMinimumSize(new Dimension(40, 21));
+      mPositionXField.setPreferredSize(new Dimension(40, 21));
+      mPositionXField.setText("0");
+      mPositionXField.setHorizontalAlignment(SwingConstants.TRAILING);
+/*
+      mPositionXField.addFocusListener(new FocusAdapter() {
+         public void focusLost(FocusEvent e)
+         {
+            validateUserInput();
+         }
+      });
+*/
+      mPositionXLabel.setText("\u00D7");
+      mPositionYField.setMinimumSize(new Dimension(40, 21));
+      mPositionYField.setPreferredSize(new Dimension(40, 21));
+      mPositionYField.setText("0");
+/*
+      mPositionYField.addFocusListener(new FocusAdapter() {
+         public void focusLost(FocusEvent e)
+         {
+            validateUserInput();
+         }
+      });
+*/
+      mFBSettingsLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mFBSettingsLabel.setLabelFor(mFBSettingsPanel);
+      mFBSettingsLabel.setText("OpenGL Frame Buffer Settings");
+      mFBSettingsPanel.setLayout(mFBSettingsLayout);
+      mRedDepthLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mRedDepthLabel.setLabelFor(mRedDepthSpinner);
+      mRedDepthLabel.setText("Red Depth");
+      mGreenDepthLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mGreenDepthLabel.setLabelFor(mGreenDepthSpinner);
+      mGreenDepthLabel.setText("Green Depth");
+      mBlueDepthLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mBlueDepthLabel.setLabelFor(mBlueDepthSpinner);
+      mBlueDepthLabel.setText("Blue Depth");
+      mAlphaDepthLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mAlphaDepthLabel.setLabelFor(mAlphaDepthSpinner);
+      mAlphaDepthLabel.setText("Alpha Depth");
+      mDepthBufferLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mDepthBufferLabel.setLabelFor(mDepthBufferSpinner);
+      mDepthBufferLabel.setText("Depth Buffer Size");
+//      mMainPanel.setMinimumSize(new Dimension(435, 350));
+//      mMainPanel.setPreferredSize(new Dimension(435, 350));
+      mBorderCheckbox.setSelected(true);
+      mBorderCheckbox.setText("Has border");
+      mStereoCheckbox.setText("Render in stereo");
+      mHideMouseCheckbox.setText("Hide mouse inside window");
+      mEventSourceCheckbox.setText("Act as an event source");
+      mOkButton.setEnabled(false);
+      mOkButton.setMnemonic('0');
+      mOkButton.setSelected(false);
+      mOkButton.setText("OK");
+      mOkButton.addActionListener(new DisplayWindowStartDialog_mOkButton_actionAdapter(this));
+      mCancelButton.setMnemonic('0');
+      mCancelButton.setText("Cancel");
+      mCancelButton.addActionListener(new DisplayWindowStartDialog_mCancelButton_actionAdapter(this));
+      mHelpButton.setEnabled(false);
+      mHelpButton.setMnemonic('0');
+      mHelpButton.setText("Help");
+      mHelpButton.addActionListener(new DisplayWindowStartDialog_mHelpButton_actionAdapter(this));
+      mFSAACheckbox.setText("Enable full-screen anti-aliasing");
+      mBoundsPanel.setLayout(mBoundsPanelLayout);
+      mBoundsPanel.setBorder(mBoundsPanelBorder);
+      mFrameBufferPanel.setLayout(mFrameBufferPanelLayout);
+      mFrameBufferPanel.setBorder(mFrameBufferPanelBorder);
+      mWindowPropsPanel.setLayout(mWindowPropsPanelLayout);
+      mWindowPropsPanel.setBorder(mWindowPropsPanelBorder);
+      mFBSettingsPanel.setBorder(mFBSettingsPanelBorder);
+      mButtonPanel.setLayout(mButtonPanelLayout);
+      mButtonPanelLayout.setAlignment(FlowLayout.RIGHT);
+      this.getContentPane().add(mMainPanel, BorderLayout.CENTER);
+      mMainPanel.add(mNameLabel, new TableLayoutConstraints(0, 0, 0, 0,
+                                                            TableLayout.RIGHT,
+                                                            TableLayout.CENTER));
+      mMainPanel.add(mNameField, new TableLayoutConstraints(2, 0, 2, 0,
+                                                            TableLayout.FULL,
+                                                            TableLayout.CENTER));
+      mMainPanel.add(mBoundsPanel, new TableLayoutConstraints(0, 1, 2, 1,
+                                                              TableLayout.FULL,
+                                                              TableLayout.FULL));
+      mBoundsPanel.add(mSizeLabel, new TableLayoutConstraints(0, 0, 0, 0,
+                                                            TableLayout.RIGHT,
+                                                            TableLayout.CENTER));
+      mBoundsPanel.add(mSizePanel, new TableLayoutConstraints(1, 0, 1, 0,
+                                                            TableLayout.LEFT,
+                                                            TableLayout.CENTER));
+      mBoundsPanel.add(mPositionLabel,
+                       new TableLayoutConstraints(0, 1, 0, 1,
+                                                  TableLayout.RIGHT,
+                                                  TableLayout.CENTER));
+      mBoundsPanel.add(mPositionPanel,
+                       new TableLayoutConstraints(1, 1, 1, 1,
+                                                  TableLayout.LEFT,
+                                                  TableLayout.CENTER));
+      mPositionPanel.add(mPositionXField, null);
+      mPositionPanel.add(mPositionXLabel, null);
+      mPositionPanel.add(mPositionYField, null);
+      mSizePanel.add(mWidthField, null);
+      mSizePanel.add(mSizeXLabel, null);
+      mSizePanel.add(mHeightField, null);
+      mFrameBufferPanel.setMinimumSize(new Dimension(450, 160));
+      mFrameBufferPanel.setPreferredSize(new Dimension(450, 160));
+//      mFBSettingsPanel.setMinimumSize(new Dimension(400, 100));
+//      mFBSettingsPanel.setPreferredSize(new Dimension(400, 100));
+      mMainPanel.add(mFrameBufferPanel,
+                     new TableLayoutConstraints(0, 2, 2, 2,
+                                                TableLayout.FULL,
+                                                TableLayout.FULL));
+      mFrameBufferPanel.add(mFBSettingsLabel,
+                            new TableLayoutConstraints(0, 0, 0, 0,
+                                                       TableLayout.RIGHT,
+                                                       TableLayout.CENTER));
+      mFrameBufferPanel.add(mFBSettingsPanel,
+                            new TableLayoutConstraints(1, 0, 1, 0,
+                                                       TableLayout.RIGHT,
+                                                       TableLayout.FULL));
+      mFBSettingsPanel.add(mRedDepthLabel,
+                           new TableLayoutConstraints(0, 0, 0, 0,
+                                                      TableLayout.FULL,
+                                                      TableLayout.CENTER));
+      mFBSettingsPanel.add(mRedDepthSpinner,
+                           new TableLayoutConstraints(1, 0, 1, 0,
+                                                      TableLayout.FULL,
+                                                      TableLayout.CENTER));
+      mFBSettingsPanel.add(mGreenDepthLabel,
+                           new TableLayoutConstraints(0, 1, 0, 1,
+                                                      TableLayout.FULL,
+                                                      TableLayout.CENTER));
+      mFBSettingsPanel.add(mGreenDepthSpinner,
+                           new TableLayoutConstraints(1, 1, 1, 1,
+                                                      TableLayout.FULL,
+                                                      TableLayout.CENTER));
+      mFBSettingsPanel.add(mBlueDepthLabel,
+                           new TableLayoutConstraints(0, 2, 0, 2,
+                                                      TableLayout.FULL,
+                                                      TableLayout.CENTER));
+      mFBSettingsPanel.add(mBlueDepthSpinner,
+                           new TableLayoutConstraints(1, 2, 1, 2,
+                                                      TableLayout.FULL,
+                                                      TableLayout.CENTER));
+      mFBSettingsPanel.add(mAlphaDepthLabel,
+                           new TableLayoutConstraints(0, 3, 0, 3,
+                                                      TableLayout.FULL,
+                                                      TableLayout.CENTER));
+      mFBSettingsPanel.add(mAlphaDepthSpinner,
+                           new TableLayoutConstraints(1, 3, 1, 3,
+                                                      TableLayout.FULL,
+                                                      TableLayout.CENTER));
+      mFBSettingsPanel.add(mDepthBufferLabel,
+                           new TableLayoutConstraints(0, 4, 0, 4,
+                                                      TableLayout.FULL,
+                                                      TableLayout.CENTER));
+      mFBSettingsPanel.add(mDepthBufferSpinner,
+                           new TableLayoutConstraints(1, 4, 1, 4,
+                                                      TableLayout.FULL,
+                                                      TableLayout.CENTER));
+      mFBSettingsPanel.add(mFSAACheckbox,
+                           new TableLayoutConstraints(0, 5, 1, 5,
+                                                      TableLayout.LEFT,
+                                                      TableLayout.CENTER));
+      mMainPanel.add(mWindowPropsPanel,
+                     new TableLayoutConstraints(0, 3, 2, 3,
+                                                TableLayout.FULL,
+                                                TableLayout.FULL));
+      mWindowPropsPanel.add(mBorderCheckbox,
+                     new TableLayoutConstraints(0, 0, 0, 0,
+                                                TableLayout.LEFT,
+                                                TableLayout.CENTER));
+      mWindowPropsPanel.add(mStereoCheckbox,
+                     new TableLayoutConstraints(0, 1, 0, 1,
+                                                TableLayout.LEFT,
+                                                TableLayout.CENTER));
+      mWindowPropsPanel.add(mHideMouseCheckbox,
+                     new TableLayoutConstraints(0, 2, 0, 2,
+                                                TableLayout.LEFT,
+                                                TableLayout.CENTER));
+      mWindowPropsPanel.add(mEventSourceCheckbox,
+                     new TableLayoutConstraints(0, 3, 0, 3,
+                                                TableLayout.LEFT,
+                                                TableLayout.CENTER));
+      this.getContentPane().add(mButtonPanel, BorderLayout.SOUTH);
+      mButtonPanel.add(mOkButton, null);
+      mButtonPanel.add(mCancelButton, null);
+      mButtonPanel.add(mHelpButton, null);
+   }
+
+   private int status = CANCEL_OPTION;
+   private Dimension mResolution = null;
+
+   private JPanel mMainPanel = new JPanel();
+   private TableLayout mMainLayout = null;
+   private JLabel mNameLabel = new JLabel();
+   private JTextField mNameField = new JTextField();
+   private JPanel mBoundsPanel = new JPanel();
+   private TableLayout mBoundsPanelLayout = null;
+   private TitledBorder mBoundsPanelBorder;
+   private JLabel mSizeLabel = new JLabel();
+   private JPanel mSizePanel = new JPanel();
+   private JLabel mPositionLabel = new JLabel();
+   private JPanel mPositionPanel = new JPanel();
+   private JTextField mWidthField = new JTextField();
+   private JLabel mSizeXLabel = new JLabel();
+   private JTextField mHeightField = new JTextField();
+   private JTextField mPositionXField = new JTextField();
+   private JLabel mPositionXLabel = new JLabel();
+   private JTextField mPositionYField = new JTextField();
+   private JPanel mFrameBufferPanel = new JPanel();
+   private TableLayout mFrameBufferPanelLayout = null;
+   private TitledBorder mFrameBufferPanelBorder;
+   private JLabel mFBSettingsLabel = new JLabel();
+   private JPanel mFBSettingsPanel = new JPanel();
+   private Border mFBSettingsPanelBorder;
+   private TableLayout mFBSettingsLayout = null;
+   private JLabel mRedDepthLabel = new JLabel();
+   private JSpinner mRedDepthSpinner = new JSpinner();
+   private JLabel mGreenDepthLabel = new JLabel();
+   private JSpinner mGreenDepthSpinner = new JSpinner();
+   private JLabel mBlueDepthLabel = new JLabel();
+   private JSpinner mBlueDepthSpinner = new JSpinner();
+   private JLabel mAlphaDepthLabel = new JLabel();
+   private JSpinner mAlphaDepthSpinner = new JSpinner();
+   private JLabel mDepthBufferLabel = new JLabel();
+   private JSpinner mDepthBufferSpinner = new JSpinner();
+   private JCheckBox mFSAACheckbox = new JCheckBox();
+   private JPanel mWindowPropsPanel = new JPanel();
+   private TableLayout mWindowPropsPanelLayout = null;
+   private TitledBorder mWindowPropsPanelBorder;
+   private JCheckBox mBorderCheckbox = new JCheckBox();
+   private JCheckBox mStereoCheckbox = new JCheckBox();
+   private JCheckBox mHideMouseCheckbox = new JCheckBox();
+   private JCheckBox mEventSourceCheckbox = new JCheckBox();
+   private JPanel mButtonPanel = new JPanel();
+   private JButton mOkButton = new JButton();
+   private JButton mCancelButton = new JButton();
+   private JButton mHelpButton = new JButton();
+   private FlowLayout mButtonPanelLayout = new FlowLayout();
+
+   void okPressed(ActionEvent e)
+   {
+      status = OK_OPTION;
+      dispose();
+   }
+
+   void cancelPressed(ActionEvent e)
+   {
+      status = CANCEL_OPTION;
+      dispose();
+   }
+
+   void helpPressed(ActionEvent e)
+   {
+
+   }
+
+   private void validateUserInput()
+   {
+      boolean name_valid, width_valid, height_valid, x_pos_valid, y_pos_valid;
+
+      // The name cannot be an empty string.
+      name_valid   = ! mNameField.getText().equals("");
+      width_valid  = validateInteger(mWidthField.getText());
+      height_valid = validateInteger(mHeightField.getText());
+      x_pos_valid  = validateInteger(mPositionXField.getText());
+      y_pos_valid  = validateInteger(mPositionYField.getText());
+
+      if ( name_valid && width_valid && height_valid && x_pos_valid && y_pos_valid )
+      {
+         mOkButton.setEnabled(true);
+         validateWindowBounds();
+      }
+      else
+      {
+         mOkButton.setEnabled(false);
+      }
+   }
+
+   private boolean validateInteger(String input)
+   {
+      try
+      {
+         Integer.parseInt(input);
+         return true;
+      }
+      catch(NumberFormatException ex)
+      {
+         return false;
+      }
+   }
+
+   /**
+    * Ensures that the bounds of the display window are within the managed
+    * area of the desktop.  If this is not the case, user confirmation is
+    * requested.
+    *
+    * @param e DocumentEvent
+    */
+   private void validateWindowBounds(/*DocumentEvent e*/)
+   {
+      int window_width  = Integer.parseInt(mWidthField.getText());
+      int window_height = Integer.parseInt(mHeightField.getText());
+      int window_pos_x  = Integer.parseInt(mPositionXField.getText());
+      int window_pos_y  = Integer.parseInt(mPositionYField.getText());
+
+      if ( window_pos_x < 0 || window_pos_y < 0 ||
+           window_width + window_pos_x > mResolution.width ||
+           window_height + window_pos_y > mResolution.height )
+      {
+         int answer =
+            JOptionPane.showConfirmDialog(this,
+                                          "Do you want the window to open outside the managed area?",
+                                          "Display Window Outside Managed Area",
+                                          JOptionPane.YES_NO_OPTION,
+                                          JOptionPane.WARNING_MESSAGE);
+
+         if ( answer == JOptionPane.YES_OPTION )
+         {
+         }
+         else
+         {
+         }
+      }
+   }
+
+   private class DisplayInfoValidator implements DocumentListener
+   {
+      public void changedUpdate(DocumentEvent e)
+      {
+         validateUserInput();
+      }
+
+      public void insertUpdate(DocumentEvent e)
+      {
+         validateUserInput();
+      }
+
+      public void removeUpdate(DocumentEvent e)
+      {
+         validateUserInput();
+      }
+   }
+
+   private class WindowNameValidator implements DocumentListener
+   {
+      public void changedUpdate(DocumentEvent e)
+      {
+      }
+
+      public void insertUpdate(DocumentEvent e)
+      {
+      }
+
+      public void removeUpdate(DocumentEvent e)
+      {
+      }
+   }
+
+   private class WindowPositionValidator implements DocumentListener
+   {
+      public void changedUpdate(DocumentEvent e)
+      {
+//         validateWindowBounds(e);
+      }
+
+      public void insertUpdate(DocumentEvent e)
+      {
+//         validateWindowBounds(e);
+      }
+
+      public void removeUpdate(DocumentEvent e)
+      {
+//         validateWindowBounds(e);
+      }
+   }
+
+   private class WindowSizeValidator implements DocumentListener
+   {
+      public void changedUpdate(DocumentEvent e)
+      {
+      }
+
+      public void insertUpdate(DocumentEvent e)
+      {
+      }
+
+      public void removeUpdate(DocumentEvent e)
+      {
+      }
+   }
+}
+
+class DisplayWindowStartDialog_mOkButton_actionAdapter
+   implements ActionListener
+{
+   private DisplayWindowStartDialog adaptee;
+
+   DisplayWindowStartDialog_mOkButton_actionAdapter(DisplayWindowStartDialog adaptee)
+   {
+      this.adaptee = adaptee;
+   }
+   public void actionPerformed(ActionEvent e)
+   {
+      adaptee.okPressed(e);
+   }
+}
+
+class DisplayWindowStartDialog_mCancelButton_actionAdapter
+   implements ActionListener
+{
+   private DisplayWindowStartDialog adaptee;
+
+   DisplayWindowStartDialog_mCancelButton_actionAdapter(DisplayWindowStartDialog adaptee)
+   {
+      this.adaptee = adaptee;
+   }
+   public void actionPerformed(ActionEvent e)
+   {
+      adaptee.cancelPressed(e);
+   }
+}
+
+class DisplayWindowStartDialog_mHelpButton_actionAdapter
+   implements ActionListener
+{
+   private DisplayWindowStartDialog adaptee;
+
+   DisplayWindowStartDialog_mHelpButton_actionAdapter(DisplayWindowStartDialog adaptee)
+   {
+      this.adaptee = adaptee;
+   }
+   public void actionPerformed(ActionEvent e)
+   {
+      adaptee.helpPressed(e);
+   }
+}
