@@ -33,6 +33,8 @@ package org.vrjuggler.jccl.config;
 
 import java.io.*;
 import java.util.*;
+import org.vrjuggler.jccl.config.event.ConfigBrokerListener;
+import org.vrjuggler.jccl.config.event.ConfigListener;
 
 /**
  * The configuration broker acts as an intermediary between the view of a

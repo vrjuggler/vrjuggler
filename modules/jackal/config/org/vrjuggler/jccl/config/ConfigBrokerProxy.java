@@ -35,6 +35,8 @@ import java.io.*;
 import java.util.*;
 import org.vrjuggler.tweek.beans.BeanRegistry;
 import org.vrjuggler.tweek.beans.TweekBean;
+import org.vrjuggler.jccl.config.event.ConfigListener;
+import org.vrjuggler.jccl.config.event.ConfigBrokerListener;
 
 /**
  * Imeplementation of the ConfigBroker interface that marshalls requests off to
