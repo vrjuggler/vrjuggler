@@ -28,8 +28,6 @@
 #                   ${exec_prefix}/libexec).
 # mtreedir        - Base directory containing the mtree directory hierarchy
 #                   specifications.
-# mtreedir_os     - Subdirectory of ${mtreedir} containing platform-specific
-#                   directory hierarchy specification files.
 # prefix          - Base path used for installation and other things.
 # releasedir      - The absolute path to the release directory.
 # sbindir         - Path to sbin directory containing executables (usually
@@ -112,8 +110,7 @@ datadir		= @datadir@
 exec_prefix	= @exec_prefix@
 libdir		= @libdir@
 libexecdir	= @libexecdir@
-mtreedir	= ${releasedir}/mtree
-mtreedir_os	= ${mtreedir}/${PLATFORM}
+mtreedir	= ${topdir}/release/mtree
 prefix		= @prefix@
 releasedir	= @SAFE_VJROOT_ABS@/release
 sbindir		= @sbindir@
