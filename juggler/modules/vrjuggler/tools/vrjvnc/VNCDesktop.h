@@ -71,12 +71,16 @@ public:
              const std::string& rightButtonName,
              const std::string& keyboardName = std::string(""));
 
+   /** Update the internal VNC Desktop state.
+   * @param navMatrix - The current world_M_vworld nav matrix
+   * @return value indicates wether vnc desktop is in mouse/user focus
+   */
    Focus update(const gmtl::Matrix44f& navMatrix);
 
    /**
     * Renders the desktop.
     *
-    * @pre The navigation matrix is on the stack.
+    * @pre The navigation matrix is on the OGL stack.
     */
    void draw();
 
