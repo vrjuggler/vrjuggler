@@ -33,12 +33,12 @@
 #ifndef _VJXERCESXMLPARSERPOOL_H_
 #define _VJXERCESXMLPARSERPOOL_H_
 
-#include <vjConfig.h>
+#include <jccl/jcclConfig.h>
 
-//#include <Config/vjConfigIOHandler.h>
-#include <Utils/vjSingleton.h>
-#include <Utils/vjXercesXMLParser.h>
+#include <vpr/Util/Singleton.h>
+#include <jccl/XMLUtil/vjXercesXMLParser.h>
 
+namespace jccl {
 
 //: Singleton object which can handle multi-format reading and writing of
 //+ ConfigChunkDB and ChunkDescDB files.
@@ -71,7 +71,9 @@ private:
     vjXercesXMLParserPool(const vjXercesXMLParserPool& o) {;}
     void operator=(const vjXercesXMLParserPool& o) {;}
 
-vjSingletonHeader(vjXercesXMLParserPool);
+vprSingletonHeader(vjXercesXMLParserPool);
+
+};
 
 };
 

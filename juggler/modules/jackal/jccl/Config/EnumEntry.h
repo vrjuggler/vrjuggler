@@ -39,22 +39,24 @@
  */
 
 
-#include <vjConfig.h>
-#include <Config/vjVarValue.h>
+#include <jccl/jcclConfig.h>
+#include <jccl/Config/vjVarValue.h>
 
-class vjEnumEntry {
+namespace jccl {
+   
+class EnumEntry {
 private:
     std::string entry;
-    vjVarValue val;
+    VarValue val;
 
 public:
-    vjEnumEntry (const std::string& _entry, vjVarValue _val): val(T_INT) {
+    EnumEntry (const std::string& _entry, VarValue _val): val(T_INT) {
 	entry = _entry;
 	val = _val;
     }
 
 
-    vjEnumEntry (const vjEnumEntry& e):val(e.val) {
+    EnumEntry (const EnumEntry& e):val(e.val) {
 	entry = e.entry;
     }
 
@@ -63,11 +65,11 @@ public:
 	return entry;
     }
 
-    const vjVarValue& getValue () const {
+    const VarValue& getValue () const {
 	return val;
     }
 
-    friend std::ostream& operator << (std::ostream& out, const vjEnumEntry& e) {
+    friend std::ostream& operator << (std::ostream& out, const EnumEntry& e) {
 	switch (e.val.getType()) {
 	case T_INT:
 	case T_FLOAT:
@@ -85,7 +87,7 @@ public:
     }
 };
 
-
+};
 #endif
 
 

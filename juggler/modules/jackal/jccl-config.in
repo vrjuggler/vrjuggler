@@ -1,0 +1,269 @@
+#!/bin/sh
+
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+%{
+%}
+
+subsystem_cxxflags="@subsystem_cxxflags@"
+subsystem_libs="@subsystem_libs@"
+jccl_extra_cxxflags="@jccl_extra_cxxflags@"
+jccl_libs="@jccl_libs@"
+JCCL_lib="@JCCL_lib@"
+
+jccl_extra_include_dirs="@jccl_extra_include_dirs@"
+
+jccl_default_abi="@ABI@"
+jccl_default_isa="@ISA@"
+jccl_n32_flags="@jccl_n32_flags@"
+jccl_64_flags="@jccl_64_flags@"
+LIBBITSUF='@LIBBITSUF@'
+
+if [ "x$jccl_default_abi" = "xN32" ]; then
+    jccl_abi_flags="$jccl_n32_flags"
+elif [ "x$jccl_default_abi" = "x64" ]; then
+    jccl_abi_flags="$jccl_64_flags"
+else
+    jccl_abi_flags=''
+fi
+
+if [ "x$jccl_default_isa" = "xmips3" -o "x$jccl_default_isa" = "xmips4" ]; then
+    jccl_isa_flags="-$jccl_default_isa"
+else
+    jccl_isa_flags=''
+fi
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+exec_prefix_set=no
+
+if [ "x$jccl_extra_include_dirs" != "x" ]; then
+    for dir in $jccl_extra_include_dirs ; do
+        jccl_extra_includes="$jccl_extra_includes -I@includedir@/$dir"
+        jccl_basedir_extra_includes="$jccl_basedir_extra_includes -I$JCCL_BASE_DIR/include/$dir"
+    done
+fi
+
+usage()
+{
+    cat <<EOF
+Usage: jccl-config [OPTIONS] [LIBRARIES]
+Options:
+        [--basedir]             Use \$JCCL_BASE_DIR when printing paths
+        [--prefix[=DIR]]        Print the installation prefix or set an
+                                alternate prefix to use when printing paths
+        [--exec-prefix[=DIR]]   Print the executable prefix or set an
+                                alternate executable prefix to use when
+                                printing paths
+        [--version]             Print the installed JCCL's version number
+        [--libs [N32|64]]       Print the basic JCCL libraries
+        [--extra-libs [N32|64]] Print the extra linker options needed for
+                                making an executable
+        [--cxxflags [N32|64]]   Print the flags for the C++ compiler
+        [--subsystem]           Print the OS abstraction layer being used
+EOF
+
+    exit $1
+}
+
+if test $# -eq 0; then
+    usage 1 1>&2
+fi
+
+while test $# -gt 0; do
+    case "$1" in
+        -*=*) optarg=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
+        *) optarg= ;;
+    esac
+
+    case $1 in
+        --basedir)
+            use_base_dir=yes
+            ;;
+        --prefix=*)
+            prefix=$optarg
+            if test $exec_prefix_set = no ; then
+                exec_prefix=$optarg
+            fi
+            ;;
+        --prefix)
+            echo_prefix=yes
+            ;;
+        --exec-prefix=*)
+            exec_prefix=$optarg
+            exec_prefix_set=yes
+            ;;
+        --exec-prefix)
+            echo_exec_prefix=yes
+            ;;
+        --version)
+            echo @MAJOR_VERSION@.@MINOR_VERSION@.@MICRO_VERSION@
+            ;;
+        --cxxflags)
+            echo_cxxflags=yes
+            case $2 in
+                --*)
+                    # This is another option flag, so leave it alone.
+                    ;;
+                N32)
+                    jccl_extra_cxxflags="$jccl_extra_cxxflags $jccl_n32_flags $jccl_isa_flags"
+                    shift
+                    ;;
+                64)
+                    jccl_extra_cxxflags="$jccl_extra_cxxflags $jccl_64_flags $jccl_isa_flags"
+                    shift
+                    ;;
+                *)
+                    jccl_extra_cxxflags="$jccl_extra_cxxflags $jccl_abi_flags $jccl_isa_flags"
+                    if [ "x$2" != "x" ] ; then
+                        shift
+                    fi
+                    ;;
+            esac
+            ;;
+        --subsystem)
+            echo @SUBSYSTEM@
+            ;;
+        --libs)
+            echo_libs=yes
+            case $2 in
+                --*)
+                    # This is another option flag, so leave it alone.
+                    ;;
+                N32)
+                    ldflags="$jccl_n32_flags $jccl_isa_flags"
+                    LIBBITSUF='32'
+                    shift
+                    ;;
+                64)
+                    ldflags="$jccl_64_flags $jccl_isa_flags"
+                    LIBBITSUF='64'
+                    shift
+                    ;;
+                *)
+                    ldflags="$jccl_abi_flags $jccl_isa_flags"
+                    if [ "x$2" != "x" ] ; then
+                        shift
+                    fi
+                    ;;
+            esac
+            ;;
+        --extra-libs)
+            echo_extra_libs=yes
+            case $2 in
+                --*)
+                    # This is another option flag, so leave it alone.
+                    ;;
+                N32)
+                    LIBBITSUF='32'
+                    shift
+                    ;;
+                64)
+                    LIBBITSUF='64'
+                    shift
+                    ;;
+                *)
+                    if [ "x$2" != "x" ] ; then
+                        shift
+                    fi
+                    ;;
+            esac
+            ;;
+        --static)
+            echo_static=yes
+            ;;
+        *)
+            usage 1 1>&2
+            ;;
+    esac
+    shift
+done
+
+if test "$echo_prefix" = "yes"; then
+    if test "$use_base_dir" = "yes"; then
+        echo $JCCL_BASE_DIR
+    else
+        echo $prefix
+    fi
+fi
+
+if test "$echo_exec_prefix" = "yes"; then
+    if test "$use_base_dir" = "yes"; then
+        echo $JCCL_BASE_DIR
+    else
+        echo $exec_prefix
+    fi
+fi
+
+if test "$echo_cxxflags" = "yes"; then
+    if test "$use_base_dir" = "yes"; then
+        echo @CXXFLAGS@ -I$VJ_BASE_DIR/include $subsystem_cxxflags
+    else
+        echo @CXXFLAGS@ -I@includedir@ $subsystem_cxxflags
+    fi
+fi
+#if test "$echo_cxxflags" = "yes"; then
+#    if test "$use_base_dir" = "yes"; then
+#        echo @jccl_cxxflags@ $jccl_extra_cxxflags $subsystem_cxxflags -I$VJ_BASE_DIR/include $jccl_basedir_extra_includes
+#    else
+#        echo @jccl_cxxflags@ $jccl_extra_cxxflags $subsystem_cxxflags -I@includedir@ $jccl_extra_includes
+#    fi
+#fi
+
+
+if test "$echo_static" = "yes" ; then
+    static_begin='@static_begin@'
+    static_end='@static_end@'
+fi
+
+if test "$echo_libs" = "yes"; then
+    my_subsystem_libs=
+
+    if test "$use_base_dir" = "yes"; then
+        ldflags="$ldflags -L$VJ_BASE_DIR/lib$LIBBITSUF"
+    else
+        ldflags="$ldflags @jccl_ldflags@"
+    fi
+
+    for i in $subsystem_libs ; do
+        if test $i != -L@libdir@ ; then
+            if test -z "$my_subsystem_libs" ; then
+                my_subsystem_libs="$i"
+            else
+                my_subsystem_libs="$my_subsystem_libs $i"
+            fi
+        fi
+    done
+
+    echo $ldflags $static_begin $jccl_libs $static_end $my_subsystem_libs
+fi      
+
+if test "x$echo_extra_libs" = "xyes"; then
+    jccl_extra_ldflags="@jccl_extra_ldflags@"
+    jccl_extra_libs="@jccl_extra_libs@"
+    echo $jccl_extra_ldflags $jccl_extra_libs
+fi

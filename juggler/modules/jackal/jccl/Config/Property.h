@@ -35,23 +35,25 @@
 #ifndef _VJ_PROPERTY_H_
 #define _VJ_PROPERTY_H_
 
-#include <vjConfig.h>
-#include <Config/vjVarValue.h>
-#include <Config/vjPropertyDesc.h>
+#include <jccl/jcclConfig.h>
+#include <jccl/Config/vjVarValue.h>
+#include <jccl/Config/vjPropertyDesc.h>
 
-class vjChunkDesc;
+namespace jccl {
+   
+class ChunkDesc;
 
 
 //------------------------------------------------------------------
 //: Stores a property and all its values
 //
-// Unit of storage inside a vjConfigChunk.  Has a name, type,
-// and 0 or more values.  Some vjPropertys have a fixed number
+// Unit of storage inside a ConfigChunk.  Has a name, type,
+// and 0 or more values.  Some Propertys have a fixed number
 // of values (e.g. to store the three components of a point
 // in 3space), while others have a variable number (e.g. to
 // store a list of active devices)
 // <p>Each instance is associated with
-// a vjPropertyDesc at instantiation; this associated cannot
+// a PropertyDesc at instantiation; this associated cannot
 // be changed.
 // <p>Note that the Property instance maintains a pointer to
 // the PropertyDesc, so be careful.
@@ -60,12 +62,12 @@ class vjChunkDesc;
 //
 //------------------------------------------------------------------
 //!PUBLIC_API:
-class vjProperty {
+class Property {
 
 private:
 
-    //: Pointer to this vjProperty's description.
-    vjPropertyDesc *description;
+    //: Pointer to this Property's description.
+    PropertyDesc *description;
 
     //: Type of value entries.
     VarType type;
@@ -80,23 +82,23 @@ public:
     //: Number of values.  -1 for variable number (use getNum() )
     int num;
 
-    //: Vector containing the actual vjVarValues.
-    std::vector<vjVarValue*> value;
+    //: Vector containing the actual VarValues.
+    std::vector<VarValue*> value;
 
     //: ChunkDesc for embedded chunk (if valtype is T_EMBEDDEDCHUNK)
-    vjChunkDesc *embeddesc;
+    ChunkDesc *embeddesc;
 
 
 
     //: Constructor
     //! PRE: true
     //! POST: Property is created.  If num values is not -1, num
-    //+       vjVarValues are created and placed in value.
+    //+       VarValues are created and placed in value.
     //+       Otherwise, value is left empty.
-    //! ARGS: pd - a pointer to a valid vjPropertyDesc.
+    //! ARGS: pd - a pointer to a valid PropertyDesc.
     //! NOTE: Self stores a pointer to its PropertyDesc pd.  pd
     //+       should not be deleted while self exists.
-    vjProperty (vjPropertyDesc *pd);
+    Property (PropertyDesc *pd);
 
 
 
@@ -104,11 +106,11 @@ public:
     //! PRE: true
     //! POST: self and its stored values are destroyed (but not
     //+       the PropertyDesc!)
-    ~vjProperty ();
+    ~Property ();
 
 
 
-    vjProperty (const vjProperty& p);
+    Property (const Property& p);
 
 
 
@@ -122,12 +124,12 @@ public:
 
 
 
-    vjProperty& operator= (const vjProperty& p);
+    Property& operator= (const Property& p);
 
 
 
-    bool operator== (const vjProperty& p) const;
-    inline bool operator != (const vjProperty& p) const {
+    bool operator== (const Property& p) const;
+    inline bool operator != (const Property& p) const {
         return !(*this == p);
     }
 
@@ -155,7 +157,7 @@ public:
     //! ARGS: ind - integer index of value to return (default 0)
     //! RETURNS: v - indth element of value, or a T_INVALID VarValue
     //+          if ind is out of bounds
-    const vjVarValue& getValue (unsigned int ind = 0) const;
+    const VarValue& getValue (unsigned int ind = 0) const;
 
 
 
@@ -169,7 +171,7 @@ public:
     //+       (with default values).
     //! NOTE: If the argument can't be assigned because of type
     //+       mismatch, the value at ind won't be changed.
-    //+       See vjVarValue::= to see what happens.  Padding
+    //+       See VarValue::= to see what happens.  Padding
     //+       of the value vector may still occur.
     //! ARGS: val - value to assign.  If char*, must be a valid
     //+       non-NULL C string.
@@ -177,26 +179,26 @@ public:
     bool setValue (int val, int ind = 0);
     bool setValue (float val, int ind = 0);
     bool setValue (const std::string&  val, int ind = 0);
-    bool setValue (vjConfigChunk* val, int ind = 0);
-    bool setValue (const vjVarValue& val, int ind = 0);
+    bool setValue (ConfigChunk* val, int ind = 0);
+    bool setValue (const VarValue& val, int ind = 0);
 
-    //: Attempts to assign a value (in tok) to the vjProperty's ith value.
+    //: Attempts to assign a value (in tok) to the Property's ith value.
     //!NOTE:  This function does a certain amount of type-mangling, and also
     //+        handles enumeration lookups.  Return value is success/failure.
     bool tryAssign (int index, const char* val);
 
 
-    inline vjEnumEntry* getEnumEntry (const std::string& n) const {
+    inline EnumEntry* getEnumEntry (const std::string& n) const {
         assertValid();
         return description->getEnumEntry (n);
     }
-    vjEnumEntry* getEnumEntryWithValue (int val) const;
+    EnumEntry* getEnumEntryWithValue (int val) const;
 
 
-    //: creates a vjVarValue of the correct type for this property
+    //: creates a VarValue of the correct type for this property
     //! ARGS: i - position of this value.  Useful for giving
     //+           embedded chunks names based on valuelabels.
-    vjVarValue *createVarValue (int i = -1);
+    VarValue *createVarValue (int i = -1);
 
 
     /** Converts the values in this property from units of u to units of feet.
@@ -209,8 +211,7 @@ public:
 
 
     //: writes p to out
-    friend std::ostream& operator << (std::ostream &out, vjProperty& p);
-
+    friend std::ostream& operator << (std::ostream &out, Property& p);
 
 
 private:
@@ -219,7 +220,7 @@ private:
     //! POST: If self has a variable number of values, and ind
     //+       is greater than the current size of the value
     //+       vector, the vector is padded with new default-valued
-    //+       vjVarValues.
+    //+       VarValues.
     //! RETURNS: true if ind is a valid index to the values vector
     //+          (after padding).
     //! RETURNS: false if ind is out of bounds.
@@ -228,6 +229,7 @@ private:
 
 };
 
+};
 
 #endif
 

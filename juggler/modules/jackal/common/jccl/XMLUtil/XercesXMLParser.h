@@ -33,12 +33,14 @@
 #ifndef _VJXERCESXMLPARSER_H_
 #define _VJXERCESXMLPARSER_H_
 
-#include <vjConfig.h>
+#include <jccl/jcclConfig.h>
 
 #include <dom/DOM.hpp>
 
 class DOMParser;
 class ErrorHandler;
+
+namespace jccl {
 
 //: Wrapper for libxerces-c parsers.
 //  This class should never be instantiated by itself; only thru the
@@ -67,5 +69,6 @@ private:
 
 };
 
+};
 
 #endif

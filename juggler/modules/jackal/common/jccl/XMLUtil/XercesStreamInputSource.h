@@ -33,11 +33,12 @@
 #ifndef _VJXERCESSTREAMINPUTSOURCE_H_
 #define _VJXERCESSTREAMINPUTSOURCE_H_
 
-#include <vjConfig.h>
+#include <jccl/jcclConfig.h>
 
 #include <sax/InputSource.hpp>
 #include <util/BinInputStream.hpp>
 
+namespace jccl {
 
 //: Xerces-XML compatible InputSource wrapper for std::istream.
 //  The stream has some kind of a terminating symbole (e.g. 
@@ -60,6 +61,8 @@ public:
     virtual ~vjXercesStreamInputSource ();
 
     virtual BinInputStream* makeStream() const;
+
+};
 
 };
 

@@ -31,13 +31,15 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-#include <vjConfig.h>
+#include <jccl/jcclConfig.h>
 #include <ctype.h>
-#include <Math/vjMath.h>
-#include <Config/vjParseUtil.h>
-#include <Utils/vjDebug.h>
-#include <Config/vjConfigTokens.h>
+//#include <Math/vjMath.h>
+#include <jccl/Config/vjParseUtil.h>
+#include <vpr/Util/Debug.h>
+#include <jccl/Config/vjConfigTokens.h>
 
+namespace jccl {
+   
 /* a utility function that probably belongs elsewhere */
 bool readString (std::istream &in, char *buffer, int size, bool *quoted) {
     /* reads a string from in.  a string is either " delimited
@@ -118,8 +120,8 @@ bool readString (std::istream &in, char *buffer, int size, bool *quoted) {
             while (in.get(buffer[i]) && (buffer[i] != '"'))
                 ;
             buffer[i] = '\0';
-            vjDEBUG (vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " Truncated string in config file: '"
-                                    << buffer << "'\n" << vjDEBUG_FLUSH;
+            vprDEBUG (vprDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " Truncated string in config file: '"
+                                    << buffer << "'\n" << vprDEBUG_FLUSH;
         }
         retval = true;
     }
@@ -242,10 +244,14 @@ bool vjstrcasecmp (const std::string& a, const std::string& b) {
 
 
 bool vjstrncasecmp (const std::string& a, const std::string& b, int _n) {
-
-    int n = vjMath::Min (a.size(), b.size());
+    int m = a.size();
+    int n = b.size();
+    n = (n < m)?n:m;
     if (_n >= 0)
-        n = vjMath::Min (n, _n);
+        n = (n < _n)?n:_n;
+//      int n = Math::Min (a.size(), b.size());
+//      if (_n >= 0)
+//          n = Math::Min (n, _n);
 
     for (int i = 0; i < n; i++)
         if (toupper(a[i]) != toupper(b[i]))
@@ -256,10 +262,15 @@ bool vjstrncasecmp (const std::string& a, const std::string& b, int _n) {
 
 
 bool vjstrncmp (const std::string& a, const std::string& b, int _n) {
-
-    int n = vjMath::Min (a.size(), b.size());
+    int m = a.size();
+    int n = b.size();
+    n = (n < m)?n:m;
     if (_n >= 0)
-        n = vjMath::Min (n, _n);
+        n = (n < _n)?n:_n;
+
+//      int n = Math::Min (a.size(), b.size());
+//      if (_n >= 0)
+//          n = Math::Min (n, _n);
 
     for (int i = 0; i < n; i++)
         if (a[i] != b[i])
@@ -369,9 +380,9 @@ const std::string findFileUsingPathVar (std::ifstream& in, const std::string& fi
     if ( (path_string_tmp = getenv(env_name.c_str())) != NULL ) {
         path_string = path_string_tmp;
         
-        vjDEBUG(vjDBG_ALL, vjDBG_STATE_LVL)
+        vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
             << "Falling back on " << env_name << ": " << path_string << "\n"
-            << vjDEBUG_FLUSH;
+            << vprDEBUG_FLUSH;
     }
 
     // If the user set a value for $VJ_CFG_PATH, parse it, baby!
@@ -431,9 +442,9 @@ const std::string findFileUsingPathVar (std::ifstream& in, const std::string& fi
             full_path += "/";
             full_path += file_name;
             
-            vjDEBUG(vjDBG_CONFIG, vjDBG_STATE_LVL)
-                << "vjConfigChunkDB::load(): opening file " << full_path
-                << "\n" << vjDEBUG_FLUSH;
+            vprDEBUG(vprDBG_CONFIG, vprDBG_STATE_LVL)
+                << "ConfigChunkDB::load(): opening file " << full_path
+                << "\n" << vprDEBUG_FLUSH;
             
             // Try to open the file name constructed above.
             in.open(full_path.c_str());
@@ -447,3 +458,4 @@ const std::string findFileUsingPathVar (std::ifstream& in, const std::string& fi
     return retval;
 }
 
+};

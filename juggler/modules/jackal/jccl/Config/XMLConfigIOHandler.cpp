@@ -30,9 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vjConfig.h>
+#include <jccl/jcclConfig.h>
 
-//#include <util/PlatformUtils.hpp>
 #include <util/XMLString.hpp>
 #include <util/XMLUniDefs.hpp>
 #include <dom/DOM.hpp>
@@ -40,20 +39,22 @@
 
 #include <stdlib.h>
 
-#include <Config/vjConfigChunkDB.h>
-#include <Config/vjChunkFactory.h>
-#include <Config/vjParseUtil.h>
-#include <Utils/vjXercesXMLParserPool.h>
-#include <Utils/vjDebug.h>
+#include <jccl/Config/vjConfigChunkDB.h>
+#include <jccl/Config/vjChunkFactory.h>
+#include <jccl/Config/vjParseUtil.h>
+#include <jccl/XMLUtil/vjXercesXMLParserPool.h>
+#include <vpr/Util/Debug.h>
 
-#include <Config/vjXMLConfigIOHandler.h>
+#include <jccl/Config/vjXMLConfigIOHandler.h>
 
 
+namespace jccl {
+   
 // Used for doing character conversions when writing out XML.  The idea is
-// that you create a vjXMLFormatTarget wrapping your iostream and create
-// an XMLFormatter wrapping the vjXMLFormatTarget.  then use 
+// that you create a XMLFormatTarget wrapping your iostream and create
+// an XMLFormatter wrapping the XMLFormatTarget.  then use 
 // XMLFormatter::formatBuf() or the convenience functions 
-// vjXMLConfigIOHandler::writeBuf() to write your text output.
+// XMLConfigIOHandler::writeBuf() to write your text output.
 class vjXMLFormatTarget: public XMLFormatTarget {
 private:
     std::ostream* out;
@@ -75,26 +76,26 @@ public:
 
 
 
-vjXMLConfigIOHandler::vjXMLConfigIOHandler (): vjConfigIOHandler () {
+XMLConfigIOHandler::XMLConfigIOHandler (): ConfigIOHandler () {
     ;
 }
 
 
-/*virtual*/ vjXMLConfigIOHandler::~vjXMLConfigIOHandler () {
+/*virtual*/ XMLConfigIOHandler::~XMLConfigIOHandler () {
     ;
 }
 
 
 
-/*virtual*/ bool vjXMLConfigIOHandler::readConfigChunkDB (const std::string& filename, vjConfigChunkDB& db) {
+/*virtual*/ bool XMLConfigIOHandler::readConfigChunkDB (const std::string& filename, ConfigChunkDB& db) {
     bool retval = true;
     DOM_Node doc;
-    vjXercesXMLParser* p = vjXercesXMLParserPool::instance()->getParser();
+    XercesXMLParser* p = XercesXMLParserPool::instance()->getParser();
     if (!p) {
-        vjDEBUG(vjDBG_ERROR, 0) << clrOutNORM(clrRED, "ERROR:") 
+        DEBUG(DBG_ERROR, 0) << clrOutNORM(clrRED, "ERROR:") 
                                 << " Couldn't get XML Parser; loading '"
                                 << filename.c_str() << "' failed.\n" 
-                                << vjDEBUG_FLUSH;
+                                << DEBUG_FLUSH;
         return false;
     }
 
@@ -106,24 +107,24 @@ vjXMLConfigIOHandler::vjXMLConfigIOHandler (): vjConfigIOHandler () {
         retval = buildChunkDB (db, doc);
     }
     else
-        vjDEBUG(vjDBG_ERROR, 0) << clrOutNORM(clrRED, "ERROR:")
+        DEBUG(DBG_ERROR, 0) << clrOutNORM(clrRED, "ERROR:")
                                 << " reading XML file '" 
                                 << filename.c_str() << "' failed.\n" 
-                                << vjDEBUG_FLUSH;
+                                << DEBUG_FLUSH;
 
     return retval;
 }
 
 
-/*virtual*/ bool vjXMLConfigIOHandler::readConfigChunkDB (std::istream& input, vjConfigChunkDB& db) {
+/*virtual*/ bool XMLConfigIOHandler::readConfigChunkDB (std::istream& input, ConfigChunkDB& db) {
 
     bool retval = true;
     DOM_Node doc;
-    vjXercesXMLParser* p = vjXercesXMLParserPool::instance()->getParser();
+    XercesXMLParser* p = XercesXMLParserPool::instance()->getParser();
     if (!p) {
-        vjDEBUG(vjDBG_ERROR, 0) << clrOutNORM(clrRED, "ERROR:")
+        DEBUG(DBG_ERROR, 0) << clrOutNORM(clrRED, "ERROR:")
                                 << " Couldn't get XML Parser; loading "
-            "ConfigChunkDB failed.\n" << vjDEBUG_FLUSH;
+            "ConfigChunkDB failed.\n" << DEBUG_FLUSH;
         return false;
     }
 
@@ -134,22 +135,22 @@ vjXMLConfigIOHandler::vjXMLConfigIOHandler (): vjConfigIOHandler () {
         retval = buildChunkDB (db, doc);
     }
     else
-        vjDEBUG(vjDBG_ERROR, 0) << clrOutNORM(clrRED, "ERROR:")
+        DEBUG(DBG_ERROR, 0) << clrOutNORM(clrRED, "ERROR:")
                                 << " reading XML stream failed.\n" 
-                                << vjDEBUG_FLUSH;
+                                << DEBUG_FLUSH;
     return retval;
 }
 
 
 
-/*virtual*/ bool vjXMLConfigIOHandler::writeConfigChunkDB (std::ostream& out, const vjConfigChunkDB& db) {
+/*virtual*/ bool XMLConfigIOHandler::writeConfigChunkDB (std::ostream& out, const ConfigChunkDB& db) {
     vjXMLFormatTarget target(out);
     XMLFormatter formatter ("USASCII", &target, 
                             XMLFormatter::NoEscapes, 
                             XMLFormatter::UnRep_Replace);
 
     bool retval = true;
-    vjConfigChunkDB::const_iterator it;
+    ConfigChunkDB::const_iterator it;
     writeBuf (&formatter, "<ConfigChunkDB>\n");
     for (it = db.begin(); (it != db.end()) && retval; it++) {
         retval = writeConfigChunk (&formatter, **it, std::string("    "));
@@ -160,7 +161,7 @@ vjXMLConfigIOHandler::vjXMLConfigIOHandler (): vjConfigIOHandler () {
 }
 
 
-/*virtual*/ bool vjXMLConfigIOHandler::writeConfigChunk (std::ostream& out, const vjConfigChunk& ch, const std::string& pad) {
+/*virtual*/ bool XMLConfigIOHandler::writeConfigChunk (std::ostream& out, const ConfigChunk& ch, const std::string& pad) {
     vjXMLFormatTarget target(out);
     XMLFormatter formatter ("USASCII", &target, 
                             XMLFormatter::NoEscapes, 
@@ -169,10 +170,10 @@ vjXMLConfigIOHandler::vjXMLConfigIOHandler (): vjConfigIOHandler () {
 }
 
 
-bool vjXMLConfigIOHandler::writeConfigChunk (XMLFormatter* f, const vjConfigChunk& ch, const std::string& pad) {
+bool XMLConfigIOHandler::writeConfigChunk (XMLFormatter* f, const ConfigChunk& ch, const std::string& pad) {
     bool retval = true;
     std::string newpad = pad + pad;
-    vjConfigChunk::const_iterator it;
+    ConfigChunk::const_iterator it;
     writeBuf (f, pad);
     writeBuf (f, "<");
     writeBuf (f, ch.getDescToken());
@@ -192,7 +193,7 @@ bool vjXMLConfigIOHandler::writeConfigChunk (XMLFormatter* f, const vjConfigChun
 }
 
 
-bool vjXMLConfigIOHandler::writeProperty (XMLFormatter* f, const vjProperty& p, const std::string& pad) {
+bool XMLConfigIOHandler::writeProperty (XMLFormatter* f, const Property& p, const std::string& pad) {
     writeBuf (f, pad);
     writeBuf (f, "<");
     writeBuf (f, p.getToken());
@@ -206,7 +207,7 @@ bool vjXMLConfigIOHandler::writeProperty (XMLFormatter* f, const vjProperty& p, 
         writeBuf (f, "\n");
         for (i = 0; i < n; i++) {
             // ick... wish we weren't copying a chunk here
-            vjConfigChunk *ch = p.getValue(i);
+            ConfigChunk *ch = p.getValue(i);
             writeConfigChunk (f, *ch, newpad);
             delete (ch);
         }
@@ -214,7 +215,7 @@ bool vjXMLConfigIOHandler::writeProperty (XMLFormatter* f, const vjProperty& p, 
     }
     else {
         for (i = 0; i < n; i++) {
-            vjVarValue *v = ((p.value))[i];
+            VarValue *v = ((p.value))[i];
             if ((t == T_STRING) || (t == T_CHUNK)) {
                 writeBuf (f, "\"");
                 writeBuf (f, (std::string)*v, XMLFormatter::CharEscapes);
@@ -235,7 +236,7 @@ bool vjXMLConfigIOHandler::writeProperty (XMLFormatter* f, const vjProperty& p, 
 }
 
 
-bool vjXMLConfigIOHandler::parseTextValues (vjProperty* p, int& startval, char* text) {
+bool XMLConfigIOHandler::parseTextValues (Property* p, int& startval, char* text) {
     // the string could be something like "56 63 22" and we need to
     // get values out of it.  sigh.
     char *ch, *ptr;
@@ -283,24 +284,24 @@ bool vjXMLConfigIOHandler::parseTextValues (vjProperty* p, int& startval, char* 
     }
 
     if (!retval) {
-        vjDEBUG(vjDBG_CONFIG,0) << clrOutNORM(clrRED, "ERROR:") << 
-            "vjXMLConfigIOHandler: failed tryAssign of '" << ch << 
+        DEBUG(DBG_CONFIG,0) << clrOutNORM(clrRED, "ERROR:") << 
+            "XMLConfigIOHandler: failed tryAssign of '" << ch << 
             "' to property '" << p->getToken() << "'.\n" <<
-            vjDEBUG_FLUSH;
+            DEBUG_FLUSH;
     }
     
     return retval;
 }
 
 
-bool vjXMLConfigIOHandler::buildProperty (vjConfigChunk* ch, const DOM_Node& doc, bool use_defaults) {
+bool XMLConfigIOHandler::buildProperty (ConfigChunk* ch, const DOM_Node& doc, bool use_defaults) {
     char* name = doc.getNodeName().transcode();
     char* value = doc.getNodeValue().transcode();
     DOM_Node child;
-    vjProperty* p;
+    Property* p;
     int valindex = 0;
     bool retval = true;
-    vjConfigChunk* ch2;
+    ConfigChunk* ch2;
 
     switch (doc.getNodeType()) {
     case DOM_Node::ELEMENT_NODE:
@@ -315,11 +316,11 @@ bool vjXMLConfigIOHandler::buildProperty (vjConfigChunk* ch, const DOM_Node& doc
                         if (ch2)
                             p->setValue (ch2, valindex++);
                         else {
-                            vjDEBUG(vjDBG_CONFIG,0) << 
+                            DEBUG(DBG_CONFIG,0) << 
                                 clrOutNORM(clrRED, "ERROR:") << 
                                 "Reading embedded chunk failed: " << 
                                 ch->getDescToken() << "->" << name << 
-                                ".\n" << vjDEBUG_FLUSH;
+                                ".\n" << DEBUG_FLUSH;
                             retval = false;
                         }
                         break;
@@ -329,9 +330,9 @@ bool vjXMLConfigIOHandler::buildProperty (vjConfigChunk* ch, const DOM_Node& doc
                     case DOM_Node::COMMENT_NODE:
                         break;
                     default:
-                        vjDEBUG(vjDBG_CONFIG,2) << "vjXMLConfigIOHandler::"
+                        DEBUG(DBG_CONFIG,2) << "XMLConfigIOHandler::"
                             "buildProperty: Unexpected DOM_Node.\n" << 
-                            vjDEBUG_FLUSH;
+                            DEBUG_FLUSH;
                         retval = false;
                     }
 
@@ -342,7 +343,7 @@ bool vjXMLConfigIOHandler::buildProperty (vjConfigChunk* ch, const DOM_Node& doc
                         retval = parseTextValues (p, valindex, child.getNodeValue().transcode());
                         break;
                     default:
-                        vjDEBUG(vjDBG_CONFIG,2) << "Warning: vjXMLConfigIOHandler::buildProperty(): Unexpected XML Node.\n" << vjDEBUG_FLUSH;
+                        DEBUG(DBG_CONFIG,2) << "Warning: XMLConfigIOHandler::buildProperty(): Unexpected XML Node.\n" << DEBUG_FLUSH;
                         break;
                     }
                 }
@@ -351,10 +352,10 @@ bool vjXMLConfigIOHandler::buildProperty (vjConfigChunk* ch, const DOM_Node& doc
         }
         else {
             retval = false;
-            vjDEBUG(vjDBG_CONFIG,0) << clrOutNORM(clrRED, "ERROR:")
+            DEBUG(DBG_CONFIG,0) << clrOutNORM(clrRED, "ERROR:")
                                     << " Property doesn't exist: '" 
                                     << ch->getDescToken() << "->"
-                                    << name << "'.\n" << vjDEBUG_FLUSH;
+                                    << name << "'.\n" << DEBUG_FLUSH;
         }
         break;
     case DOM_Node::ATTRIBUTE_NODE:
@@ -365,10 +366,10 @@ bool vjXMLConfigIOHandler::buildProperty (vjConfigChunk* ch, const DOM_Node& doc
         }
         else {
             retval = false;
-            vjDEBUG(vjDBG_CONFIG,0) << clrOutNORM(clrRED, "ERROR:")
+            DEBUG(DBG_CONFIG,0) << clrOutNORM(clrRED, "ERROR:")
                                     << " Property doesn't exist: '" 
                                     << ch->getDescToken() << "->"
-                                    << name << "'.\n" << vjDEBUG_FLUSH;
+                                    << name << "'.\n" << DEBUG_FLUSH;
         }
         break;
     case DOM_Node::TEXT_NODE:
@@ -377,8 +378,8 @@ bool vjXMLConfigIOHandler::buildProperty (vjConfigChunk* ch, const DOM_Node& doc
     case DOM_Node::COMMENT_NODE:
         break;
     default:
-        vjDEBUG(vjDBG_CONFIG,2) << "vjXMLConfigIOHandler::buildProperty:"
-            " Unexpected DOM_Node.\n" << vjDEBUG_FLUSH;
+        DEBUG(DBG_CONFIG,2) << "XMLConfigIOHandler::buildProperty:"
+            " Unexpected DOM_Node.\n" << DEBUG_FLUSH;
     }
 
     delete[] name;
@@ -388,13 +389,13 @@ bool vjXMLConfigIOHandler::buildProperty (vjConfigChunk* ch, const DOM_Node& doc
 
 
 
-vjConfigChunk* vjXMLConfigIOHandler::buildConfigChunk (const DOM_Node& doc, bool use_defaults) {
+ConfigChunk* XMLConfigIOHandler::buildConfigChunk (const DOM_Node& doc, bool use_defaults) {
     char* name = doc.getNodeName().transcode();
     DOM_Node child;
     DOM_NamedNodeMap attributes;
     int attrCount;
     int i;
-    vjConfigChunk* ch = 0;
+    ConfigChunk* ch = 0;
     bool retval = true;
 
     switch (doc.getNodeType()) {
@@ -403,7 +404,7 @@ vjConfigChunk* vjXMLConfigIOHandler::buildConfigChunk (const DOM_Node& doc, bool
         ch = buildConfigChunk (child);
         break;
     case DOM_Node::ELEMENT_NODE:
-        ch = vjChunkFactory::instance()->createChunk(name, use_defaults);
+        ch = ChunkFactory::instance()->createChunk(name, use_defaults);
         if (ch) {
             // parse attributes
             attributes = doc.getAttributes();
@@ -421,10 +422,10 @@ vjConfigChunk* vjXMLConfigIOHandler::buildConfigChunk (const DOM_Node& doc, bool
             }
         }
         else {
-            vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << 
-                " vjXMLConfigIOHandler::buildConfigChunk: Creating ConfigChunk"
+            DEBUG(DBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << 
+                " XMLConfigIOHandler::buildConfigChunk: Creating ConfigChunk"
                 " failed: Couldn't find ChunkDesc '" << name << 
-                "'.\n" << vjDEBUG_FLUSH;
+                "'.\n" << DEBUG_FLUSH;
             retval = false;
         }
         break;
@@ -434,16 +435,16 @@ vjConfigChunk* vjXMLConfigIOHandler::buildConfigChunk (const DOM_Node& doc, bool
     case DOM_Node::COMMENT_NODE:
         break;
     default:
-        vjDEBUG(vjDBG_CONFIG,2) << "Warning: vjXMLConfigIOHandler::build"
-            "ConfigChunk: Unexpected DOM_Node.\n" << vjDEBUG_FLUSH;
+        DEBUG(DBG_CONFIG,2) << "Warning: XMLConfigIOHandler::build"
+            "ConfigChunk: Unexpected DOM_Node.\n" << DEBUG_FLUSH;
     }
     delete[] name;
     if (!retval) {
         // in the event of a failure, we completely skip the chunk. 
         // don't risk actually sending on some mangled thing.
         if (ch) {
-            vjDEBUG(vjDBG_CONFIG,5) << "Rejecting ConfigChunk due to errors:\n"
-                                    << *ch << vjDEBUG_FLUSH;
+            DEBUG(DBG_CONFIG,5) << "Rejecting ConfigChunk due to errors:\n"
+                                    << *ch << DEBUG_FLUSH;
             // delete ch;
             ch = 0;
         }
@@ -453,10 +454,10 @@ vjConfigChunk* vjXMLConfigIOHandler::buildConfigChunk (const DOM_Node& doc, bool
 
 
 
-bool vjXMLConfigIOHandler::buildChunkDB (vjConfigChunkDB& db, const DOM_Node& doc) {
+bool XMLConfigIOHandler::buildChunkDB (ConfigChunkDB& db, const DOM_Node& doc) {
     char* name = doc.getNodeName().transcode();
     DOM_Node child;
-    vjConfigChunk* ch;
+    ConfigChunk* ch;
     bool retval = true;
 
     switch (doc.getNodeType()) {
@@ -472,7 +473,7 @@ bool vjXMLConfigIOHandler::buildChunkDB (vjConfigChunkDB& db, const DOM_Node& do
                     ch = buildConfigChunk (child);
                     // look for includes...
                     if (ch) {
-                        if (!vjstrcasecmp (ch->getType(), "vjIncludeFile")) {
+                        if (!vjstrcasecmp (ch->getType(), "IncludeFile")) {
                             std::string s = ch->getProperty ("Name");
                             std::string fname = db.getFileName();
                             retval = retval && db.load (s, fname);
@@ -480,13 +481,13 @@ bool vjXMLConfigIOHandler::buildChunkDB (vjConfigChunkDB& db, const DOM_Node& do
                             db.setFileName(fname);
                         }
                         else if (!vjstrcasecmp (ch->getType(), 
-                                                "vjIncludeDescFile")) {
+                                                "IncludeDescFile")) {
                             // the descs could be needed to parse the rest of
                             // the tree so load 'em now.
                             std::string s = ch->getProperty ("Name");
-                            vjChunkDescDB newdb;
+                            ChunkDescDB newdb;
                             retval = retval && newdb.load (s, db.getFileName());
-                            vjChunkFactory::instance()->addDescs (&newdb);
+                            ChunkFactory::instance()->addDescs (&newdb);
                         }
                         else {
                             db.addChunk(ch);
@@ -498,9 +499,9 @@ bool vjXMLConfigIOHandler::buildChunkDB (vjConfigChunkDB& db, const DOM_Node& do
         }
         else {
             retval = false;
-            vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << 
-                " vjXMLConfigIOHandler::buildConfigChunkDB: Couldn't find "
-                "<ConfigChunkDB> tag.\n" << vjDEBUG_FLUSH;
+            DEBUG(DBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << 
+                " XMLConfigIOHandler::buildConfigChunkDB: Couldn't find "
+                "<ConfigChunkDB> tag.\n" << DEBUG_FLUSH;
         }
         break;
     case DOM_Node::TEXT_NODE:
@@ -510,8 +511,8 @@ bool vjXMLConfigIOHandler::buildChunkDB (vjConfigChunkDB& db, const DOM_Node& do
         break;
     default:
         retval = false;
-        vjDEBUG(vjDBG_CONFIG,2) << "Warning: vjXMLConfigIOHandler::build"
-            "ConfigChunkDB: Unexpected DOM_Node.\n" << vjDEBUG_FLUSH;
+        DEBUG(DBG_CONFIG,2) << "Warning: XMLConfigIOHandler::build"
+            "ConfigChunkDB: Unexpected DOM_Node.\n" << DEBUG_FLUSH;
     }
     delete[] name;
     return retval;
@@ -520,10 +521,10 @@ bool vjXMLConfigIOHandler::buildChunkDB (vjConfigChunkDB& db, const DOM_Node& do
 
 //----------------------- ChunkDescDB Methods -----------------------------
 
-/*virtual*/ bool vjXMLConfigIOHandler::readChunkDescDB (const std::string& filename, vjChunkDescDB& db) {
+/*virtual*/ bool XMLConfigIOHandler::readChunkDescDB (const std::string& filename, ChunkDescDB& db) {
     bool retval = true;
     DOM_Node doc;
-    vjXercesXMLParser* p = vjXercesXMLParserPool::instance()->getParser();
+    XercesXMLParser* p = XercesXMLParserPool::instance()->getParser();
     if (!p)
         return false;
 
@@ -536,7 +537,7 @@ bool vjXMLConfigIOHandler::buildChunkDB (vjConfigChunkDB& db, const DOM_Node& do
     // this absolutely positively cannot be permitted.  why?  because
     // this loadChunkDescDB can get called from inside a ChunkFactory
     // method, and it can (becuase of default parsing) try to call a
-    // ChunkFactory method, and the vjSingleton::instance() interface
+    // ChunkFactory method, and the Singleton::instance() interface
     // doesn't seem to be recursive-safe.
 //      std::cout << "Just read the following file:\n";
 //      writeChunkDescDB (std::cout, db);
@@ -546,11 +547,11 @@ bool vjXMLConfigIOHandler::buildChunkDB (vjConfigChunkDB& db, const DOM_Node& do
 }
 
 
-/*virtual*/ bool vjXMLConfigIOHandler::readChunkDescDB (std::istream& input, vjChunkDescDB& db) {
+/*virtual*/ bool XMLConfigIOHandler::readChunkDescDB (std::istream& input, ChunkDescDB& db) {
 
     bool retval = true;
     DOM_Node doc;
-    vjXercesXMLParser* p = vjXercesXMLParserPool::instance()->getParser();
+    XercesXMLParser* p = XercesXMLParserPool::instance()->getParser();
     if (!p)
         return false;
 
@@ -563,13 +564,13 @@ bool vjXMLConfigIOHandler::buildChunkDB (vjConfigChunkDB& db, const DOM_Node& do
 }
 
 
-/*virtual*/ bool vjXMLConfigIOHandler::writeChunkDescDB (std::ostream& output, const vjChunkDescDB& db) {
+/*virtual*/ bool XMLConfigIOHandler::writeChunkDescDB (std::ostream& output, const ChunkDescDB& db) {
     vjXMLFormatTarget target(output);
     XMLFormatter formatter("USASCII", &target, 
                            XMLFormatter::NoEscapes, 
                            XMLFormatter::UnRep_Replace);
     bool retval = true;
-    vjChunkDescDB::const_iterator it;
+    ChunkDescDB::const_iterator it;
     writeBuf (&formatter, "<ChunkDescDB>\n");
     for (it = db.begin(); (it != db.end()) && retval; it++) {
         retval = writeChunkDesc (&formatter, **it, std::string("  "));
@@ -579,7 +580,7 @@ bool vjXMLConfigIOHandler::buildChunkDB (vjConfigChunkDB& db, const DOM_Node& do
 }
 
 
-/*virtual*/ bool vjXMLConfigIOHandler::writeChunkDesc (std::ostream& output, const vjChunkDesc& desc, const std::string& pad) {
+/*virtual*/ bool XMLConfigIOHandler::writeChunkDesc (std::ostream& output, const ChunkDesc& desc, const std::string& pad) {
     vjXMLFormatTarget target(output);
     XMLFormatter f ("USASCII", &target, 
                     XMLFormatter::NoEscapes, 
@@ -588,11 +589,11 @@ bool vjXMLConfigIOHandler::buildChunkDB (vjConfigChunkDB& db, const DOM_Node& do
 }
 
 
-bool vjXMLConfigIOHandler::writeChunkDesc (XMLFormatter* f, const vjChunkDesc& desc, const std::string& pad) {
+bool XMLConfigIOHandler::writeChunkDesc (XMLFormatter* f, const ChunkDesc& desc, const std::string& pad) {
     std::string newpad = pad + "  ";
     bool retval = true;
-    vjConfigChunk* ch;
-    vjChunkDesc::const_iterator it;
+    ConfigChunk* ch;
+    ChunkDesc::const_iterator it;
     writeBuf (f, "<ChunkDesc token=\"");
     writeBuf (f, desc.getToken(), XMLFormatter::AttrEscapes);
     writeBuf (f, "\" name=\"");
@@ -622,11 +623,11 @@ bool vjXMLConfigIOHandler::writeChunkDesc (XMLFormatter* f, const vjChunkDesc& d
 }
 
 
-bool vjXMLConfigIOHandler::writePropertyDesc (XMLFormatter* f, const vjPropertyDesc& p, const std::string& pad) {
+bool XMLConfigIOHandler::writePropertyDesc (XMLFormatter* f, const PropertyDesc& p, const std::string& pad) {
     std::string newpad = pad + "  ";
     bool retval = true;
     int n, i;
-    vjEnumEntry* e;
+    EnumEntry* e;
     VarType t = p.getVarType();
 
     writeBuf (f, pad);
@@ -684,10 +685,10 @@ bool vjXMLConfigIOHandler::writePropertyDesc (XMLFormatter* f, const vjPropertyD
 }
 
 
-bool vjXMLConfigIOHandler::buildChunkDescDB (vjChunkDescDB& db, const DOM_Node& doc) {
+bool XMLConfigIOHandler::buildChunkDescDB (ChunkDescDB& db, const DOM_Node& doc) {
     char* name = doc.getNodeName().transcode();
     DOM_Node child;
-    vjChunkDesc* desc;
+    ChunkDesc* desc;
     bool retval = true;
 
     //std::cout << "ok, we've got a node named '" << name << "'." <<std::endl;
@@ -711,9 +712,9 @@ bool vjXMLConfigIOHandler::buildChunkDescDB (vjChunkDescDB& db, const DOM_Node& 
         }
         else {
             retval = false;
-            vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << 
-                " vjXMLConfigIOHandler::buildChunkDescDB: Couldn't find "
-                "<ChunkDescDB> tag.\n" << vjDEBUG_FLUSH;
+            DEBUG(DBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << 
+                " XMLConfigIOHandler::buildChunkDescDB: Couldn't find "
+                "<ChunkDescDB> tag.\n" << DEBUG_FLUSH;
         }
         break;
     case DOM_Node::COMMENT_NODE:
@@ -724,8 +725,8 @@ bool vjXMLConfigIOHandler::buildChunkDescDB (vjChunkDescDB& db, const DOM_Node& 
         break;
     default:
         retval = false;
-        vjDEBUG(vjDBG_CONFIG,2) << "Warning: vjXMLConfigIOHandler::build"
-            "ChunkDescDB: Unexpected DOM_Node.\n" << vjDEBUG_FLUSH;
+        DEBUG(DBG_CONFIG,2) << "Warning: XMLConfigIOHandler::build"
+            "ChunkDescDB: Unexpected DOM_Node.\n" << DEBUG_FLUSH;
     }
     delete[] name;
     return retval;
@@ -733,7 +734,7 @@ bool vjXMLConfigIOHandler::buildChunkDescDB (vjChunkDescDB& db, const DOM_Node& 
 
 
 
-vjChunkDesc* vjXMLConfigIOHandler::buildChunkDesc (const DOM_Node& doc) {
+ChunkDesc* XMLConfigIOHandler::buildChunkDesc (const DOM_Node& doc) {
     char* name = doc.getNodeName().transcode();
     char* child_name;
     char* child_value;
@@ -741,7 +742,7 @@ vjChunkDesc* vjXMLConfigIOHandler::buildChunkDesc (const DOM_Node& doc) {
     DOM_NamedNodeMap attributes;
     int attr_count;
     int i;
-    vjChunkDesc* desc = NULL;
+    ChunkDesc* desc = NULL;
     bool retval = true;
 
     switch (doc.getNodeType()) {
@@ -751,7 +752,7 @@ vjChunkDesc* vjXMLConfigIOHandler::buildChunkDesc (const DOM_Node& doc) {
         break;
     case DOM_Node::ELEMENT_NODE:
         if (!vjstrcasecmp(name, "ChunkDesc")) {
-            desc = new vjChunkDesc ();
+            desc = new ChunkDesc ();
             // parse attributes
             attributes = doc.getAttributes();
             attr_count = attributes.getLength();
@@ -768,9 +769,9 @@ vjChunkDesc* vjXMLConfigIOHandler::buildChunkDesc (const DOM_Node& doc) {
             }
             if (desc->getToken() == "") {
                 retval = false;
-                vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") <<
-                    " vjXMLConfigIOHandler::buildChunkDesc: ChunkDesc "
-                    "has no Token argument.\n" << vjDEBUG_FLUSH;
+                DEBUG(DBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") <<
+                    " XMLConfigIOHandler::buildChunkDesc: ChunkDesc "
+                    "has no Token argument.\n" << DEBUG_FLUSH;
             }
             if (desc->getName() == "")
                 desc->setName(desc->getToken());
@@ -783,9 +784,9 @@ vjChunkDesc* vjXMLConfigIOHandler::buildChunkDesc (const DOM_Node& doc) {
             }
         }
         else {
-            vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << 
-                " vjXMLConfigIOHandler::buildChunkDesc: Couldn't find "
-                "<ChunkDesc> tag.\n" << vjDEBUG_FLUSH;
+            DEBUG(DBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << 
+                " XMLConfigIOHandler::buildChunkDesc: Couldn't find "
+                "<ChunkDesc> tag.\n" << DEBUG_FLUSH;
         }
         break;
     case DOM_Node::COMMENT_NODE:
@@ -795,16 +796,16 @@ vjChunkDesc* vjXMLConfigIOHandler::buildChunkDesc (const DOM_Node& doc) {
         // it's just white space & crap like that.
         break;
     default:
-        vjDEBUG(vjDBG_CONFIG,2) << "Warning: vjXMLConfigIOHandler::build"
-            "ConfigChunk: Unexpected DOM_Node.\n" << vjDEBUG_FLUSH;
+        DEBUG(DBG_CONFIG,2) << "Warning: XMLConfigIOHandler::build"
+            "ConfigChunk: Unexpected DOM_Node.\n" << DEBUG_FLUSH;
     }
     delete[] name;
     if (!retval) {
         // in the event of a failure, we completely skip the chunk. 
         // don't risk actually sending on some mangled thing.
         if (desc) {
-            vjDEBUG(vjDBG_CONFIG,5) << "Rejecting ChunkDesc due to errors:\n"
-                                    << *desc << vjDEBUG_FLUSH;
+            DEBUG(DBG_CONFIG,5) << "Rejecting ChunkDesc due to errors:\n"
+                                    << *desc << DEBUG_FLUSH;
             // delete desc;
             desc = 0;
         }
@@ -813,14 +814,14 @@ vjChunkDesc* vjXMLConfigIOHandler::buildChunkDesc (const DOM_Node& doc) {
 }
 
 
-bool vjXMLConfigIOHandler::parseChunkDescChildElement (vjChunkDesc& desc, DOM_Node doc) {
+bool XMLConfigIOHandler::parseChunkDescChildElement (ChunkDesc& desc, DOM_Node doc) {
     char* name = doc.getNodeName().transcode();
     char* child_name;
     char* child_value;
     DOM_Node child;
     DOM_NamedNodeMap attributes;
     int attr_count;
-    vjPropertyDesc* p;
+    PropertyDesc* p;
     bool retval = true;
 
     //std::cout << "ok, we've got a node named '" << name << "'." <<std::endl;
@@ -828,7 +829,7 @@ bool vjXMLConfigIOHandler::parseChunkDescChildElement (vjChunkDesc& desc, DOM_No
     switch (doc.getNodeType()) {
     case DOM_Node::ELEMENT_NODE:
         if (!vjstrcasecmp (name, "PropertyDesc")) {
-            p = new vjPropertyDesc();
+            p = new PropertyDesc();
             // parse attributes
             attributes = doc.getAttributes();
             attr_count = attributes.getLength();
@@ -850,19 +851,19 @@ bool vjXMLConfigIOHandler::parseChunkDescChildElement (vjChunkDesc& desc, DOM_No
                         p->setNumAllowed (atoi(child_value));
                 }
                 else {
-                    vjDEBUG(vjDBG_CONFIG,2) << "Warning: vjXMLConfigIOHandler"
+                    DEBUG(DBG_CONFIG,2) << "Warning: XMLConfigIOHandler"
                         "::parseChunkDescChildElement: Unidentified "
                         "attribute '" << child_name << "=\"" << child_value <<
-                        "\"'.\n" << vjDEBUG_FLUSH;
+                        "\"'.\n" << DEBUG_FLUSH;
                 }
                 delete[] child_name;
                 delete[] child_value;
             }
             if (p->getToken() == "") {
                 retval = false;
-                vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") <<
-                    " vjXMLConfigIOHandler::parseChunkDescChildElem: "
-                    "PropertyDesc has no Token argument.\n" << vjDEBUG_FLUSH;
+                DEBUG(DBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") <<
+                    " XMLConfigIOHandler::parseChunkDescChildElem: "
+                    "PropertyDesc has no Token argument.\n" << DEBUG_FLUSH;
             }
             if (p->getName() == "")
                 p->setName (p->getToken());
@@ -876,9 +877,9 @@ bool vjXMLConfigIOHandler::parseChunkDescChildElement (vjChunkDesc& desc, DOM_No
             if (retval)
                 desc.add (p);
             else {
-                vjDEBUG(vjDBG_CONFIG,5) << "Rejecting PropertyDesc in " <<
+                DEBUG(DBG_CONFIG,5) << "Rejecting PropertyDesc in " <<
                     desc.getToken() << " due to errors:" << *p << 
-                    std::endl << vjDEBUG_FLUSH;
+                    std::endl << DEBUG_FLUSH;
                 delete p;
             }
         }
@@ -897,9 +898,9 @@ bool vjXMLConfigIOHandler::parseChunkDescChildElement (vjChunkDesc& desc, DOM_No
                 case DOM_Node::PROCESSING_INSTRUCTION_NODE:
                     break;
                 default:
-                    vjDEBUG(vjDBG_CONFIG,2) << "vjXMLConfigIOHandler::"
+                    DEBUG(DBG_CONFIG,2) << "XMLConfigIOHandler::"
                         "parseChunkDescChildElement: Unexpected DOM_Node.\n"<< 
-                        vjDEBUG_FLUSH;
+                        DEBUG_FLUSH;
                 }
                 delete[] child_value;
                 child = child.getNextSibling();
@@ -923,23 +924,23 @@ bool vjXMLConfigIOHandler::parseChunkDescChildElement (vjChunkDesc& desc, DOM_No
                     // it's just white space & crap like that.
                     break;
                 default:
-                    vjDEBUG(vjDBG_CONFIG,2) << 
-                        "Warning: vjXMLConfigIOHandler:"
+                    DEBUG(DBG_CONFIG,2) << 
+                        "Warning: XMLConfigIOHandler:"
                         "parsing ChunkDesc defaults value: "
-                        "Unexpected DOM Node.\n" << vjDEBUG_FLUSH;
+                        "Unexpected DOM Node.\n" << DEBUG_FLUSH;
                 }
                 child = child.getNextSibling();
             }
-            vjDEBUG(vjDBG_CONFIG,2) << 
-                "Warning: vjXMLConfigIOHandler: parsing ChunkDesc Defaults: "
-                "No argument for <Defaults> tag.\n" << vjDEBUG_FLUSH;
+            DEBUG(DBG_CONFIG,2) << 
+                "Warning: XMLConfigIOHandler: parsing ChunkDesc Defaults: "
+                "No argument for <Defaults> tag.\n" << DEBUG_FLUSH;
         finished:
             ;
         }
         else {
-            vjDEBUG(vjDBG_CONFIG,2) << "Warning: vjXMLConfigIOHandler"
+            DEBUG(DBG_CONFIG,2) << "Warning: XMLConfigIOHandler"
                 "::parsing ChunkDesc: Unidentified Element '" <<
-                name << "'.\n" << vjDEBUG_FLUSH;
+                name << "'.\n" << DEBUG_FLUSH;
             //retval = false;
         }
         break;
@@ -950,9 +951,9 @@ bool vjXMLConfigIOHandler::parseChunkDescChildElement (vjChunkDesc& desc, DOM_No
         // it's just white space & crap like that.
         break;
     default:
-        vjDEBUG(vjDBG_CONFIG,2) << "Warning: vjXMLConfigIOHandler::"
+        DEBUG(DBG_CONFIG,2) << "Warning: XMLConfigIOHandler::"
             "parseChunkDescChildElement: "
-            "Unexpected DOM Node.\n" << vjDEBUG_FLUSH;
+            "Unexpected DOM Node.\n" << DEBUG_FLUSH;
         break;
     }
     delete[] name;
@@ -960,7 +961,7 @@ bool vjXMLConfigIOHandler::parseChunkDescChildElement (vjChunkDesc& desc, DOM_No
 }
 
 
-bool vjXMLConfigIOHandler::parsePropertyDescChildElement (vjPropertyDesc &p, DOM_Node doc) {
+bool XMLConfigIOHandler::parsePropertyDescChildElement (PropertyDesc &p, DOM_Node doc) {
  
     char* name = doc.getNodeName().transcode();
     char* child_name;
@@ -987,10 +988,10 @@ bool vjXMLConfigIOHandler::parsePropertyDescChildElement (vjPropertyDesc &p, DOM
                 if (!vjstrcasecmp (child_name, "name"))
                     p.appendValueLabel (child_value);
                 else {
-                    vjDEBUG(vjDBG_CONFIG,2) << "Warning: vjXMLConfigIOHandler"
+                    DEBUG(DBG_CONFIG,2) << "Warning: XMLConfigIOHandler"
                         ": Parsing ValueLabel: Unidentified "
                         "attribute '" << child_name << "=\"" << child_value <<
-                        "\"'.\n" << vjDEBUG_FLUSH;
+                        "\"'.\n" << DEBUG_FLUSH;
                 }
                 delete[] child_name;
                 delete[] child_value;
@@ -1009,10 +1010,10 @@ bool vjXMLConfigIOHandler::parsePropertyDescChildElement (vjPropertyDesc &p, DOM
                 else if (!vjstrcasecmp (child_name, "value"))
                     enum_value = child.getNodeValue().transcode();
                 else {
-                    vjDEBUG(vjDBG_CONFIG,2) << "Warning: vjXMLConfigIOHandler"
+                    DEBUG(DBG_CONFIG,2) << "Warning: XMLConfigIOHandler"
                         ": Parsing Enumeration: Unidentified "
                         "attribute '" << child_name << "=\"" << child_value <<
-                        "\"'.\n" << vjDEBUG_FLUSH;
+                        "\"'.\n" << DEBUG_FLUSH;
                 }
                 delete[] child_name;
             }
@@ -1040,9 +1041,9 @@ bool vjXMLConfigIOHandler::parsePropertyDescChildElement (vjPropertyDesc &p, DOM
                 case DOM_Node::PROCESSING_INSTRUCTION_NODE:
                     break;
                 default:
-                    vjDEBUG(vjDBG_CONFIG,2) << "vjXMLConfigIOHandler: "
+                    DEBUG(DBG_CONFIG,2) << "XMLConfigIOHandler: "
                         "parsing PropertyDesc Help: Unexpected DOM_Node.\n" << 
-                        vjDEBUG_FLUSH;
+                        DEBUG_FLUSH;
                 }
                 delete[] child_value;
                 child = child.getNextSibling();
@@ -1050,9 +1051,9 @@ bool vjXMLConfigIOHandler::parsePropertyDescChildElement (vjPropertyDesc &p, DOM
             p.setHelp (h);
         }
         else {
-            vjDEBUG(vjDBG_CONFIG,2) << "Warning: vjXMLConfigIOHandler"
+            DEBUG(DBG_CONFIG,2) << "Warning: XMLConfigIOHandler"
                 ": parsing PropertyDesc: Unidentified Element '" <<
-                name << "'.\n" << vjDEBUG_FLUSH;
+                name << "'.\n" << DEBUG_FLUSH;
             //retval = false;
         }
         break;
@@ -1063,9 +1064,9 @@ bool vjXMLConfigIOHandler::parsePropertyDescChildElement (vjPropertyDesc &p, DOM
         // it's just white space & crap like that.
         break;
     default:
-        vjDEBUG(vjDBG_CONFIG,2) << "Warning: vjXMLConfigIOHandler::"
+        DEBUG(DBG_CONFIG,2) << "Warning: XMLConfigIOHandler::"
             "parsePropertyDescChildElement: "
-            "Unexpected DOM Node.\n" << vjDEBUG_FLUSH;
+            "Unexpected DOM Node.\n" << DEBUG_FLUSH;
         break;
     }
     delete[] name;
@@ -1075,7 +1076,7 @@ bool vjXMLConfigIOHandler::parsePropertyDescChildElement (vjPropertyDesc &p, DOM
 
 //------------------ private parser functions ------------------------
 
-char* vjXMLConfigIOHandler::stripQuotes (char* ch) {
+char* XMLConfigIOHandler::stripQuotes (char* ch) {
     if (ch[0] == '"')
         ch++;
     int n = strlen(ch)-1;
@@ -1086,7 +1087,7 @@ char* vjXMLConfigIOHandler::stripQuotes (char* ch) {
 
 
 
-char* vjXMLConfigIOHandler::stringTokenizer (char* newstring, char*& tmp) {
+char* XMLConfigIOHandler::stringTokenizer (char* newstring, char*& tmp) {
     // concept based on strtok_r
     if (newstring) {
         tmp = newstring;
@@ -1103,9 +1104,9 @@ char* vjXMLConfigIOHandler::stringTokenizer (char* newstring, char*& tmp) {
     }
     end = strchr (begin+1, '"');
     if (!end) {
-        vjDEBUG(vjDBG_CONFIG,2) << "Warning: vjXMLConfigIOHandler: " <<
+        DEBUG(DBG_CONFIG,2) << "Warning: XMLConfigIOHandler: " <<
             "Unterminated string '" << begin+1 << "'.\n" <<
-            vjDEBUG_FLUSH;
+            DEBUG_FLUSH;
         return 0;
     }
     *end = 0;
@@ -1114,12 +1115,14 @@ char* vjXMLConfigIOHandler::stringTokenizer (char* newstring, char*& tmp) {
 }
 
 
-void vjXMLConfigIOHandler::writeBuf (XMLFormatter* formatter, const char* s, XMLFormatter::EscapeFlags flags) {
+void XMLConfigIOHandler::writeBuf (XMLFormatter* formatter, const char* s, XMLFormatter::EscapeFlags flags) {
     DOMString st(s);
     formatter->formatBuf (st.rawBuffer(), st.length(), flags);
 }
 
-void vjXMLConfigIOHandler::writeBuf (XMLFormatter* formatter, const std::string& s, XMLFormatter::EscapeFlags flags) {
+void XMLConfigIOHandler::writeBuf (XMLFormatter* formatter, const std::string& s, XMLFormatter::EscapeFlags flags) {
     DOMString st(s.c_str());
     formatter->formatBuf (st.rawBuffer(), st.length(), flags);
 }
+
+};

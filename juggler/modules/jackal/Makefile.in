@@ -222,15 +222,15 @@ endif
 	@$(MAKE) install-libs
 	@$(MAKE) do-post-install
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(JACKALROOT_ABS)/ChangeLog $(prefix)
+          $(JCCLROOT_ABS)/ChangeLog $(prefix)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(JACKALROOT_ABS)/COPYING $(prefix)
+          $(JCCLROOT_ABS)/COPYING $(prefix)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(JACKALROOT_ABS)/README $(prefix)
+          $(JCCLROOT_ABS)/README $(prefix)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(JACKALROOT_ABS)/INSTALL $(prefix)
+          $(JCCLROOT_ABS)/INSTALL $(prefix)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(JACKALROOT_ABS)/RELEASE_NOTES $(prefix)
+          $(JCCLROOT_ABS)/RELEASE_NOTES $(prefix)
 	@echo "Build time: `LTIME=C date`" > $(prefix)/BUILD_TIME
 	@echo "==============================================================="
 	@echo ">>> Jackal make release started on $(STARTTIME)"
@@ -265,7 +265,7 @@ doc-public:
 info:
 	@echo "\nInfo for the make of Jackal"
 	@echo "\nOBJDIR: $(OBJDIR)"
-	@echo "JACKALROOT_ABS: $(JACKALROOT_ABS)"
+	@echo "JCCLROOT_ABS: $(JCCLROOT_ABS)"
 	@echo "Default ABI: $(ABI)"
 	@echo "Default instruction set architecture: $(ISA)"
 	@echo "ABI list: $(ABI_LIST)"

@@ -33,9 +33,10 @@
 #ifndef _VJXERCESSTREAMINPUTSTREAM_H_
 #define _VJXERCESSTREAMINPUTSTREAM_H_
 
-#include <vjConfig.h>
+#include <jccl/jcclConfig.h>
 #include <util/BinInputStream.hpp>
 
+namespace jccl {
 
 //: Xerces-XML compatible BinInputStream wrapper for std::istream.
 class vjXercesStreamInputStream: public BinInputStream {
@@ -62,6 +63,8 @@ public:
 
     virtual unsigned int readBytes (XMLByte* const buf, const unsigned int _buflen);
 
+
+};
 
 };
 

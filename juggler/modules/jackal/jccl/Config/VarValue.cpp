@@ -31,26 +31,30 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-#include <vjConfig.h>
+#include <jccl/jcclConfig.h>
 #include <ctype.h>
-#include <Config/vjVarValue.h>
-#include <Config/vjConfigChunk.h>
-#include <Utils/vjDebug.h>
-#include <Config/vjParseUtil.h>
-#include <Config/vjConfigTokens.h>
+#include <jccl/Config/vjVarValue.h>
+#include <jccl/Config/vjConfigChunk.h>
+#include <vpr/Util/Debug.h>
+#include <vpr/Util/Assert.h>
+#include <jccl/Config/vjParseUtil.h>
+#include <jccl/Config/vjConfigTokens.h>
 
-vjVarValue* vjVarValue::invalid_instance = NULL;
-const std::string vjVarValue::using_invalid_msg = "Casting from VJ_T_INVALID VarValue - this may mean we're confused";
+namespace jccl
+{
+   
+VarValue* VarValue::invalid_instance = NULL;
+const std::string VarValue::using_invalid_msg = "Casting from VJ_T_INVALID VarValue - this may mean we're confused";
 
 
-/*static*/ vjVarValue& vjVarValue::getInvalidInstance () {
+/*static*/ VarValue& VarValue::getInvalidInstance () {
     if (invalid_instance == NULL)
-        invalid_instance = new vjVarValue (VJ_T_INVALID);
+        invalid_instance = new VarValue (VJ_T_INVALID);
     return *invalid_instance;
 }
 
 
-vjVarValue::vjVarValue (const vjVarValue &v)
+VarValue::VarValue (const VarValue &v)
 {
     validation = 1;
 
@@ -63,7 +67,7 @@ vjVarValue::vjVarValue (const vjVarValue &v)
 }
 
 
-vjVarValue::vjVarValue (const vjConfigChunk* ch)
+VarValue::VarValue (const ConfigChunk* ch)
 {
     validation = 1;
 
@@ -74,11 +78,11 @@ vjVarValue::vjVarValue (const vjConfigChunk* ch)
     boolval = false;
     type = T_EMBEDDEDCHUNK;
     if (ch)
-        embeddedchunkval = new vjConfigChunk(*ch);
+        embeddedchunkval = new ConfigChunk(*ch);
 }
 
 
-vjVarValue::vjVarValue ( VarType t )
+VarValue::VarValue ( VarType t )
 {
     validation = 1;
 
@@ -92,7 +96,7 @@ vjVarValue::vjVarValue ( VarType t )
 
 
 
-vjVarValue::~vjVarValue() {
+VarValue::~VarValue() {
     validation = 0;
 
 //     if (embeddedchunkval)
@@ -100,9 +104,9 @@ vjVarValue::~vjVarValue() {
 }
 
 
-#ifdef VJ_DEBUG
-void vjVarValue::assertValid () const {
-    assert (validation == 1 && "Trying to use deleted vjVarValue");
+#ifdef VJ_vprDEBUG
+void VarValue::assertValid () const {
+    vprAssert (validation == 1 && "Trying to use deleted VarValue");
     if ((type == T_EMBEDDEDCHUNK) && embeddedchunkval)
         embeddedchunkval->assertValid();
 }
@@ -110,7 +114,7 @@ void vjVarValue::assertValid () const {
 
 
 
-vjVarValue& vjVarValue::operator= (const vjVarValue &v) {
+VarValue& VarValue::operator= (const VarValue &v) {
     assertValid();
     v.assertValid();
 
@@ -129,7 +133,7 @@ vjVarValue& vjVarValue::operator= (const vjVarValue &v) {
     strval = v.strval;
     if (v.embeddedchunkval) {
 
-        embeddedchunkval = new vjConfigChunk (*v.embeddedchunkval);
+        embeddedchunkval = new ConfigChunk (*v.embeddedchunkval);
     }
     return *this;
 }
@@ -137,7 +141,7 @@ vjVarValue& vjVarValue::operator= (const vjVarValue &v) {
 
 
 //: Equality Operator
-bool vjVarValue::operator == (const vjVarValue& v) const {
+bool VarValue::operator == (const VarValue& v) const {
     assertValid();
     v.assertValid();
 
@@ -170,7 +174,7 @@ bool vjVarValue::operator == (const vjVarValue& v) const {
 
 
 
-vjVarValue::operator int() const {
+VarValue::operator int() const {
     assertValid();
 
     switch (type) {
@@ -181,19 +185,19 @@ vjVarValue::operator int() const {
     case T_FLOAT:
         return (int)floatval;
     case VJ_T_INVALID:
-        vjDEBUG(vjDBG_CONFIG,4) << using_invalid_msg.c_str() << 1
-                                << std::endl << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_CONFIG,4) << using_invalid_msg.c_str() << 1
+                                << std::endl << vprDEBUG_FLUSH;
         return 0;
     default:
-        vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in cast to int.\n"
-                               << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in cast to int.\n"
+                               << vprDEBUG_FLUSH;
         return 0;
     }
 }
 
 
 
-vjVarValue::operator vjConfigChunk*() const {
+VarValue::operator ConfigChunk*() const {
     assertValid();
 
     switch (type) {
@@ -201,23 +205,23 @@ vjVarValue::operator vjConfigChunk*() const {
         // we need to make a copy because if the value is deleted, it deletes
         // its embeddedchunk
         if (embeddedchunkval)
-            return new vjConfigChunk (*embeddedchunkval);
+            return new ConfigChunk (*embeddedchunkval);
         else {
             return NULL;
         }
     case VJ_T_INVALID:
-        vjDEBUG(vjDBG_CONFIG,4) << using_invalid_msg.c_str() << 2
-                 << std::endl << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_CONFIG,4) << using_invalid_msg.c_str() << 2
+                 << std::endl << vprDEBUG_FLUSH;
         return NULL;
     default:
-        vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in cast to vjConfigChunk* - real type is " << typeString(type) << ".\n" << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in cast to ConfigChunk* - real type is " << typeString(type) << ".\n" << vprDEBUG_FLUSH;
         return NULL;
     }
 }
 
 
 
-vjVarValue::operator bool() const {
+VarValue::operator bool() const {
     assertValid();
 
     if ((type == T_BOOL))
@@ -230,19 +234,19 @@ vjVarValue::operator bool() const {
     case T_FLOAT:
         return (bool)floatval;
     case VJ_T_INVALID:
-        vjDEBUG(vjDBG_CONFIG,4) << using_invalid_msg.c_str() << 3
-                                << std::endl << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_CONFIG,4) << using_invalid_msg.c_str() << 3
+                                << std::endl << vprDEBUG_FLUSH;
         return false;
     default:
-        vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in cast to bool.\n"
-                               << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in cast to bool.\n"
+                               << vprDEBUG_FLUSH;
    return false;
     }
 }
 
 
 
-vjVarValue::operator float () const {
+VarValue::operator float () const {
     assertValid();
 
     switch (type) {
@@ -253,18 +257,18 @@ vjVarValue::operator float () const {
     case T_BOOL:
         return (float)boolval;
     case VJ_T_INVALID:
-        vjDEBUG(vjDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 4
-                                << std::endl << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 4
+                                << std::endl << vprDEBUG_FLUSH;
         return 0.0f;
     default:
-        vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in cast to float.\n" << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in cast to float.\n" << vprDEBUG_FLUSH;
         return 0.0f;
     }
 }
 
 
 
-char* vjVarValue::cstring () const {
+char* VarValue::cstring () const {
     assertValid();
     char buf[256];
 
@@ -281,18 +285,18 @@ char* vjVarValue::cstring () const {
     case T_BOOL:
         return strdup (boolval?"true":"false");
     case VJ_T_INVALID:
-        vjDEBUG(vjDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 5
-                                << std::endl << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 5
+                                << std::endl << vprDEBUG_FLUSH;
         return strdup("");
     default:
-        vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in cstring().\n" << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in cstring().\n" << vprDEBUG_FLUSH;
         return strdup("");
     }
 }
 
 
 
-vjVarValue::operator std::string () const {
+VarValue::operator std::string () const {
     assertValid();
     //std::string s;
     //char* c;
@@ -328,18 +332,18 @@ vjVarValue::operator std::string () const {
     case T_BOOL:
         return boolval?"true":"false";
     case VJ_T_INVALID:
-        vjDEBUG(vjDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 6
-                                << std::endl << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 6
+                                << std::endl << vprDEBUG_FLUSH;
         return (std::string)"";
     default:
-        vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in cast to std::string.\n" << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in cast to std::string.\n" << vprDEBUG_FLUSH;
         return (std::string)"";
     }
 }
 
 
 
-vjVarValue &vjVarValue::operator = (int i) {
+VarValue &VarValue::operator = (int i) {
     assertValid();
 
     switch (type) {
@@ -353,14 +357,14 @@ vjVarValue &vjVarValue::operator = (int i) {
         boolval = (bool)i;
         break;
     default:
-        vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in assignment - vjVarValue(" << typeString(type) << ") = int.\n" << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in assignment - VarValue(" << typeString(type) << ") = int.\n" << vprDEBUG_FLUSH;
     }
     return *this;
 }
 
 
 
-vjVarValue& vjVarValue::operator = (bool i) {
+VarValue& VarValue::operator = (bool i) {
     assertValid();
 
     switch (type) {
@@ -371,14 +375,14 @@ vjVarValue& vjVarValue::operator = (bool i) {
         boolval = i;
         break;
     default:
-        vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in assignment - vjVarValue(" << typeString(type) << ") = bool.\n" << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in assignment - VarValue(" << typeString(type) << ") = bool.\n" << vprDEBUG_FLUSH;
     }
     return *this;
 }
 
 
 
-vjVarValue &vjVarValue::operator = (float i) {
+VarValue &VarValue::operator = (float i) {
     assertValid();
 
     switch (type) {
@@ -387,14 +391,14 @@ vjVarValue &vjVarValue::operator = (float i) {
         floatval = i;
         break;
     default:
-        vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in assignment - vjVarValue(" << typeString(type) << ") = float.\n" << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in assignment - VarValue(" << typeString(type) << ") = float.\n" << vprDEBUG_FLUSH;
     }
     return *this;
 }
 
 
 
-vjVarValue &vjVarValue::operator = (const std::string& s) {
+VarValue &VarValue::operator = (const std::string& s) {
     assertValid();
 
     return *this = s.c_str();
@@ -402,7 +406,7 @@ vjVarValue &vjVarValue::operator = (const std::string& s) {
 
 
 
-vjVarValue &vjVarValue::operator = (const char *val) {
+VarValue &VarValue::operator = (const char *val) {
     assertValid();
 
     bool err = false;
@@ -448,17 +452,17 @@ vjVarValue &vjVarValue::operator = (const char *val) {
         }
         break;
     default:
-        vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in assignment - vjVarValue(" << typeString(type) << ") = string/char*.\n" << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in assignment - VarValue(" << typeString(type) << ") = string/char*.\n" << vprDEBUG_FLUSH;
         break;
     }
     if (err)
-        vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: couldn't assign string '"
-                               << val << "'.\n" << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,0) << "VarValue: couldn't assign string '"
+                               << val << "'.\n" << vprDEBUG_FLUSH;
     return *this;
 }
 
 
-vjVarValue &vjVarValue::operator = (const vjConfigChunk *s) {
+VarValue &VarValue::operator = (const ConfigChunk *s) {
    assertValid();
 
    switch (type)
@@ -469,22 +473,22 @@ vjVarValue &vjVarValue::operator = (const vjConfigChunk *s) {
               delete embeddedchunkval;
            */
            if (s)
-               embeddedchunkval = new vjConfigChunk (*s);
+               embeddedchunkval = new ConfigChunk (*s);
            else
                embeddedchunkval = NULL;
            break;
        default:
-           vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in assignment - vjVarValue(" << typeString(type) << ") = vjConfigChunk*.\n" << vjDEBUG_FLUSH;
+           vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in assignment - VarValue(" << typeString(type) << ") = ConfigChunk*.\n" << vprDEBUG_FLUSH;
        }
    return *this;
 }
 
 
 
-std::ostream& operator << (std::ostream& out, const vjVarValue& v) {
+std::ostream& operator << (std::ostream& out, const VarValue& v) {
     v.assertValid();
 
-    //      vjDEBUG(vjDBG_ERROR,0) << "in << func" << vjDEBUG_FLUSH;
+    //      vprDEBUG(vprDBG_ERROR,0) << "in << func" << vprDEBUG_FLUSH;
 
     switch (v.type) {
     case T_INT:
@@ -510,3 +514,5 @@ std::ostream& operator << (std::ostream& out, const vjVarValue& v) {
         return out;
     }
 }
+
+};

@@ -31,40 +31,43 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-#include <vjConfig.h>
-#include <Config/vjConfigChunk.h>
-#include <Config/vjParseUtil.h>
-#include <Utils/vjDebug.h>
-#include <Config/vjChunkFactory.h>
-#include <Config/vjChunkDesc.h>
-#include <Config/vjConfigTokens.h>
+#include <jccl/jcclConfig.h>
+#include <jccl/Config/vjConfigChunk.h>
+#include <jccl/Config/vjParseUtil.h>
+#include <vpr/Util/Debug.h>
+#include <vpr/Util/Assert.h>
+#include <jccl/Config/vjChunkFactory.h>
+#include <jccl/Config/vjChunkDesc.h>
+#include <jccl/Config/vjConfigTokens.h>
 
 #include <stdlib.h>
 #include <ctype.h>
 
 
-/*static*/ const std::string vjConfigChunk::embedded_separator("->");
+namespace jccl {
+   
+/*static*/ const std::string ConfigChunk::embedded_separator("->");
 
-vjConfigChunk::vjConfigChunk (): props(), type_as_varvalue(T_STRING) {
+ConfigChunk::ConfigChunk (): props(), type_as_varvalue(T_STRING) {
     desc = 0;
     validation = 1;
 }
 
 
 
-vjConfigChunk::vjConfigChunk (vjChunkDesc *d, bool use_defaults) :props(), type_as_varvalue(T_STRING) {
+ConfigChunk::ConfigChunk (ChunkDesc *d, bool use_defaults) :props(), type_as_varvalue(T_STRING) {
     validation = 1;
     associateDesc (d, use_defaults);
 }
 
 
-vjConfigChunk::vjConfigChunk (const vjConfigChunk& c):props(), type_as_varvalue(T_STRING) {
+ConfigChunk::ConfigChunk (const ConfigChunk& c):props(), type_as_varvalue(T_STRING) {
     validation = 1;
     *this = c;
 }
 
 
-vjConfigChunk::~vjConfigChunk () {
+ConfigChunk::~ConfigChunk () {
     assertValid();
 
     validation = 0;
@@ -74,11 +77,11 @@ vjConfigChunk::~vjConfigChunk () {
         */
 }
 
-bool vjConfigChunk::hasSeparator (const std::string &path) {
+bool ConfigChunk::hasSeparator (const std::string &path) {
     return (path.find(embedded_separator) != path.npos);
 }
 
-std::string vjConfigChunk::getRemainder (const std::string &path) {
+std::string ConfigChunk::getRemainder (const std::string &path) {
     std::string::size_type i = path.find (embedded_separator);
     if (i == path.npos)
         return path;
@@ -86,7 +89,7 @@ std::string vjConfigChunk::getRemainder (const std::string &path) {
         return path.substr (i + embedded_separator.length());
 }
 
-std::string vjConfigChunk::getFirstNameComponent (const std::string& path) {
+std::string ConfigChunk::getFirstNameComponent (const std::string& path) {
     std::string::size_type i = path.find (embedded_separator);
     if (i == path.npos)
         return path;
@@ -94,9 +97,9 @@ std::string vjConfigChunk::getFirstNameComponent (const std::string& path) {
         return path.substr (0, i);
 }
 
-#ifdef VJ_DEBUG
-void vjConfigChunk::assertValid () const {
-    assert (validation == 1 && "Trying to use deleted config chunk");
+#ifdef VJ_vprDEBUG
+void ConfigChunk::assertValid () const {
+    vprASSERT (validation == 1 && "Trying to use deleted config chunk");
     for (unsigned int i = 0; i < props.size(); i++)
         props[i]->assertValid();
 }
@@ -104,9 +107,9 @@ void vjConfigChunk::assertValid () const {
 
 
 
-void vjConfigChunk::associateDesc (vjChunkDesc* d, bool use_defaults) {
+void ConfigChunk::associateDesc (ChunkDesc* d, bool use_defaults) {
     assertValid();
-    vjConfigChunk* ch = 0;
+    ConfigChunk* ch = 0;
     if (use_defaults)
         ch = d->getDefaultChunk();
     if (ch)
@@ -125,8 +128,8 @@ void vjConfigChunk::associateDesc (vjChunkDesc* d, bool use_defaults) {
         props.clear();
         
         for (i = 0; i < desc->plist.size(); i++) {
-            vjPropertyDesc* pd = desc->plist[i];
-            vjProperty* pr = new vjProperty (pd);
+            PropertyDesc* pd = desc->plist[i];
+            Property* pr = new Property (pd);
             props.push_back (pr);
         }
     }
@@ -134,7 +137,7 @@ void vjConfigChunk::associateDesc (vjChunkDesc* d, bool use_defaults) {
 
 
 
-vjConfigChunk& vjConfigChunk::operator = (const vjConfigChunk& c) {
+ConfigChunk& ConfigChunk::operator = (const ConfigChunk& c) {
     assertValid();
     c.assertValid();
 
@@ -152,15 +155,15 @@ vjConfigChunk& vjConfigChunk::operator = (const vjConfigChunk& c) {
     props.clear();
 
     for (i = 0; i < c.props.size(); i++) {
-        props.push_back (new vjProperty(*(c.props[i])));
+        props.push_back (new Property(*(c.props[i])));
     }
     return *this;
 }
 
 
 
-//: tests for equality of two vjConfigChunks
-bool vjConfigChunk::operator== (const vjConfigChunk& c) const {
+//: tests for equality of two ConfigChunks
+bool ConfigChunk::operator== (const ConfigChunk& c) const {
     assertValid();
     c.assertValid();
 
@@ -182,8 +185,8 @@ bool vjConfigChunk::operator== (const vjConfigChunk& c) const {
 
 
 
-//: Compares two vjConfigChunks based on their instance names
-bool vjConfigChunk::operator< (const vjConfigChunk& c) const {
+//: Compares two ConfigChunks based on their instance names
+bool ConfigChunk::operator< (const ConfigChunk& c) const {
     assertValid();
 
     std::string s1 = getProperty ("name");
@@ -194,12 +197,12 @@ bool vjConfigChunk::operator< (const vjConfigChunk& c) const {
 
 
 // used for dependency resolution
-vjConfigChunk* vjConfigChunk::getEmbeddedChunk (const std::string &path) {
+ConfigChunk* ConfigChunk::getEmbeddedChunk (const std::string &path) {
     std::string propname, chunkname, subpath;
-    vjProperty* prop;
+    Property* prop;
     int i;
-    vjConfigChunk *ch = this;
-    vjConfigChunk *ch2, *ch3;
+    ConfigChunk *ch = this;
+    ConfigChunk *ch2, *ch3;
         
     if (vjstrcasecmp (ch->getName(), path /*getFirstNameComponent (path)*/)) {
         return 0;
@@ -215,7 +218,7 @@ vjConfigChunk* vjConfigChunk::getEmbeddedChunk (const std::string &path) {
             prop = getPropertyPtrFromName(propname);
             if (prop) {
                 for (i = 0; i < prop->getNum(); i++) {
-                    ch2 = (vjConfigChunk*)prop->getValue(i);
+                    ch2 = (ConfigChunk*)prop->getValue(i);
                     if (ch2) {
                         ch3 = ch2->getEmbeddedChunk(path);
                         if (ch3)
@@ -229,7 +232,7 @@ vjConfigChunk* vjConfigChunk::getEmbeddedChunk (const std::string &path) {
                 prop = getPropertyPtrFromToken(propname);
                 if (prop) {
                     for (i = 0; i < prop->getNum(); i++) {
-                        ch2 = (vjConfigChunk*)prop->getValue(i);
+                        ch2 = (ConfigChunk*)prop->getValue(i);
                         if (ch2) {
                             ch3 = ch2->getEmbeddedChunk(path);
                             if (ch3)
@@ -247,7 +250,7 @@ vjConfigChunk* vjConfigChunk::getEmbeddedChunk (const std::string &path) {
 
 //: Return a list of chunk names dependant upon this one
 // This is used to sort a db by dependancy.
-std::vector<std::string> vjConfigChunk::getChunkPtrDependencies() const
+std::vector<std::string> ConfigChunk::getChunkPtrDependencies() const
 {
     assertValid();
 
@@ -263,7 +266,7 @@ std::vector<std::string> vjConfigChunk::getChunkPtrDependencies() const
       {
          for (j=0;j<props[i]->getNum();j++)           // For each property
          {
-            vjVarValue prop_var_val = props[i]->getValue(j);
+            VarValue prop_var_val = props[i]->getValue(j);
             chunkname = static_cast<std::string>(prop_var_val);
             if (!(chunkname == ""))
             {
@@ -277,7 +280,7 @@ std::vector<std::string> vjConfigChunk::getChunkPtrDependencies() const
          for (j = 0; j < props[i]->getNum(); j++)
          {
             // XXX: if we ever have cyclic dependencies, we're in trouble
-            child_deps = ((vjConfigChunk*)props[i]->getValue(j))->getChunkPtrDependencies();
+            child_deps = ((ConfigChunk*)props[i]->getValue(j))->getChunkPtrDependencies();
             dep_list.insert (dep_list.end(), child_deps.begin(), child_deps.end());
          }
       }
@@ -287,7 +290,7 @@ std::vector<std::string> vjConfigChunk::getChunkPtrDependencies() const
 
 
 
-vjProperty* vjConfigChunk::getPropertyPtrFromName (const std::string& property) const {
+Property* ConfigChunk::getPropertyPtrFromName (const std::string& property) const {
     assertValid();
 
     for (unsigned int i = 0; i < props.size(); i++) {
@@ -299,7 +302,7 @@ vjProperty* vjConfigChunk::getPropertyPtrFromName (const std::string& property) 
 
 
 
-vjProperty* vjConfigChunk::getPropertyPtrFromToken (const std::string& token) const {
+Property* ConfigChunk::getPropertyPtrFromToken (const std::string& token) const {
     assertValid();
 
     for (unsigned int i = 0; i < props.size(); i++) {
@@ -315,16 +318,16 @@ vjProperty* vjConfigChunk::getPropertyPtrFromToken (const std::string& token) co
 // This is just a simple helper function
 //! NOTE: The vector has COPIES of the var values.
 // cj - this is bad implementation... bad...
-std::vector<vjVarValue*> vjConfigChunk::getAllProperties(const std::string& prop_name) const
+std::vector<VarValue*> ConfigChunk::getAllProperties(const std::string& prop_name) const
 {
     assertValid();
 
-    std::vector<vjVarValue*> ret_val;
-    vjProperty* p = getPropertyPtrFromToken(prop_name);
+    std::vector<VarValue*> ret_val;
+    Property* p = getPropertyPtrFromToken(prop_name);
     if (p) {
         int num_properties = p->getNum();
         for(int i=0;i<num_properties;i++) {
-            vjVarValue* new_var_val = new vjVarValue(p->getValue(i));
+            VarValue* new_var_val = new VarValue(p->getValue(i));
             ret_val.push_back(new_var_val);
         }
     }
@@ -334,7 +337,7 @@ std::vector<vjVarValue*> vjConfigChunk::getAllProperties(const std::string& prop
 
 
 
-std::ostream& operator << (std::ostream& out, const vjConfigChunk& self) {
+std::ostream& operator << (std::ostream& out, const ConfigChunk& self) {
     self.assertValid();
 
     // outputting an uninitialized chunk would be a mistake...
@@ -350,7 +353,7 @@ std::ostream& operator << (std::ostream& out, const vjConfigChunk& self) {
 
 
 
-std::istream& operator >> (std::istream& in, vjConfigChunk& self) {
+std::istream& operator >> (std::istream& in, ConfigChunk& self) {
     self.assertValid();
 
     /* can't really use property >> because we don't know what
@@ -358,7 +361,7 @@ std::istream& operator >> (std::istream& in, vjConfigChunk& self) {
      */
     const int buflen = 1024;
     char buf[buflen];
-    vjProperty *p;
+    Property *p;
     int i;
     bool quoted;
 
@@ -373,8 +376,8 @@ std::istream& operator >> (std::istream& in, vjConfigChunk& self) {
 
         // We have a string token; assumably a property name.
         if (!(p = self.getPropertyPtrFromToken (buf))) {
-            vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " Property '" << buf << "' is not found in"
-                                   << " Chunk " << self.desc->name.c_str() << std::endl << vjDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " Property '" << buf << "' is not found in"
+                                   << " Chunk " << self.desc->name.c_str() << std::endl << vprDEBUG_FLUSH;
             continue;
         }
 
@@ -392,7 +395,7 @@ std::istream& operator >> (std::istream& in, vjConfigChunk& self) {
                 // this works because the chunk >> expects the typename to have
                 // already been read (which we did when looking for '}')
                 if (p->getType() == T_EMBEDDEDCHUNK) {
-                    vjConfigChunk *ch = vjChunkFactory::instance()->createChunk (p->embeddesc);
+                    ConfigChunk *ch = ChunkFactory::instance()->createChunk (p->embeddesc);
                     in >> *ch;
                     p->setValue (ch, i++);
                 }
@@ -401,28 +404,28 @@ std::istream& operator >> (std::istream& in, vjConfigChunk& self) {
                 //       }
                 else {
                     if (!p->tryAssign (i++, buf))
-                        vjDEBUG(vjDBG_ERROR,2) << clrOutNORM(clrRED, "ERROR:") << " Assigning to property "
-                                               << p->getName().c_str() << std::endl << vjDEBUG_FLUSH;
+                        vprDEBUG(vprDBG_ERROR,2) << clrOutNORM(clrRED, "ERROR:") << " Assigning to property "
+                                               << p->getName().c_str() << std::endl << vprDEBUG_FLUSH;
                 }
             }
 
             if (p->hasFixedNumberOfValues() && (p->num != i))
-                vjDEBUG(vjDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") << " vjProperty " << p->getName().c_str() << " should have "
-                                       << p->num << " values; " << i << " found" << std::endl << vjDEBUG_FLUSH;
+                vprDEBUG(vprDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") << " Property " << p->getName().c_str() << " should have "
+                                       << p->num << " values; " << i << " found" << std::endl << vprDEBUG_FLUSH;
         }
         else {
             // we're just doing one value.
             if (!p->tryAssign (0, buf))
-                vjDEBUG(vjDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") << " Assigning to property "
-                                       << p->getName().c_str() << std::endl << vjDEBUG_FLUSH;
+                vprDEBUG(vprDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") << " Assigning to property "
+                                       << p->getName().c_str() << std::endl << vprDEBUG_FLUSH;
             //        self.getVJCFGToken (in,tok);
             //        if (tok.type == TK_Unit) {
             //       p->applyUnits (tok.unitval);
             //       self.getVJCFGToken (in, tok);
             //        }
             if (p->num > 1) {
-                vjDEBUG(vjDBG_ERROR,3) << clrOutNORM(clrRED, "ERROR:") << " Property " << p->getName().c_str()
-                                       << " expects " << p->num << " values." << std::endl << vjDEBUG_FLUSH;
+                vprDEBUG(vprDBG_ERROR,3) << clrOutNORM(clrRED, "ERROR:") << " Property " << p->getName().c_str()
+                                       << " expects " << p->num << " values." << std::endl << vprDEBUG_FLUSH;
             }
         }
     }
@@ -432,10 +435,10 @@ std::istream& operator >> (std::istream& in, vjConfigChunk& self) {
 
 
 
-int vjConfigChunk::getNum (const std::string& property_token) const {
+int ConfigChunk::getNum (const std::string& property_token) const {
     assertValid();
 
-    vjProperty* p = getPropertyPtrFromToken (property_token);
+    Property* p = getPropertyPtrFromToken (property_token);
     if (p)
         return p->getNum();
     else
@@ -444,7 +447,7 @@ int vjConfigChunk::getNum (const std::string& property_token) const {
 
 
 
-const vjVarValue& vjConfigChunk::getType () const {
+const VarValue& ConfigChunk::getType () const {
     assertValid();
 
     return type_as_varvalue;
@@ -452,75 +455,75 @@ const vjVarValue& vjConfigChunk::getType () const {
 
 
 
-const vjVarValue& vjConfigChunk::getProperty (const std::string& property_token, int ind) const {
+const VarValue& ConfigChunk::getProperty (const std::string& property_token, int ind) const {
     assertValid();
 
     if (!vjstrcasecmp(property_token,type_TOKEN)) {
         return type_as_varvalue;
     }
 
-    vjProperty *p = getPropertyPtrFromToken (property_token);
+    Property *p = getPropertyPtrFromToken (property_token);
     if (!p) {
-        vjDEBUG(vjDBG_CONFIG,2) << "getProperty(\"" << property_token.c_str() << "\") in chunk \""
-                                << getProperty("Name") << "\" - no such property; returning T_INVALID\n" << vjDEBUG_FLUSH;
-        return vjVarValue::getInvalidInstance();
+        vprDEBUG(vprDBG_CONFIG,2) << "getProperty(\"" << property_token.c_str() << "\") in chunk \""
+                                << getProperty("Name") << "\" - no such property; returning T_INVALID\n" << vprDEBUG_FLUSH;
+        return VarValue::getInvalidInstance();
     }
     return p->getValue (ind);
 }
 
 
 /* we're probably gonna need to overload set for each kind of
- * value.  That gets passed on to the vjVarValue assign...
+ * value.  That gets passed on to the VarValue assign...
  */
 
-bool vjConfigChunk::setProperty (const std::string& property, int val, int ind) {
+bool ConfigChunk::setProperty (const std::string& property, int val, int ind) {
     assertValid();
 
-    vjProperty *p;
+    Property *p;
     p = getPropertyPtrFromToken (property);
     if (!p)
         return false;
     return p->setValue (val, ind);
 }
 
-bool vjConfigChunk::setProperty (const std::string& property, float val, int ind) {
+bool ConfigChunk::setProperty (const std::string& property, float val, int ind) {
     assertValid();
 
-    vjProperty *p;
+    Property *p;
     p = getPropertyPtrFromToken (property);
     if (!p)
         return false;
     return p->setValue (val, ind);
 }
 
-bool vjConfigChunk::setProperty (const std::string& property, const std::string& val, int ind) {
+bool ConfigChunk::setProperty (const std::string& property, const std::string& val, int ind) {
     assertValid();
 
-    vjProperty *p;
+    Property *p;
     p = getPropertyPtrFromToken (property);
     if (!p)
         return false;
     return p->setValue (val, ind);
 }
 
-bool vjConfigChunk::setProperty (const std::string& property, vjConfigChunk* val, int ind) {
+bool ConfigChunk::setProperty (const std::string& property, ConfigChunk* val, int ind) {
     assertValid();
 
-    vjProperty *p;
+    Property *p;
     p = getPropertyPtrFromToken (property);
     if (!p) {
-        vjDEBUG (vjDBG_ERROR, 1) << "ConfigChunk.setProperty: no such property " << property.c_str()
-                                 << "\n" << vjDEBUG_FLUSH;
+        vprDEBUG (vprDBG_ERROR, 1) << "ConfigChunk.setProperty: no such property " << property.c_str()
+                                 << "\n" << vprDEBUG_FLUSH;
         return false;
     }
     return p->setValue (val, ind);
 }
 
 
-bool vjConfigChunk::addValue (const std::string& property, int val) {
+bool ConfigChunk::addValue (const std::string& property, int val) {
     assertValid();
 
-    vjProperty *p;
+    Property *p;
     p = getPropertyPtrFromToken (property);
     if (p == NULL)
         return false;
@@ -529,10 +532,10 @@ bool vjConfigChunk::addValue (const std::string& property, int val) {
     return setProperty (property, val, p->value.size());
 }
 
-bool vjConfigChunk::addValue (const std::string& property, float val) {
+bool ConfigChunk::addValue (const std::string& property, float val) {
     assertValid();
 
-    vjProperty *p;
+    Property *p;
     p = getPropertyPtrFromToken (property);
     if (p == NULL)
         return false;
@@ -541,10 +544,10 @@ bool vjConfigChunk::addValue (const std::string& property, float val) {
     return setProperty (property, val, p->value.size());
 }
 
-bool vjConfigChunk::addValue (const std::string& property, const std::string& val) {
+bool ConfigChunk::addValue (const std::string& property, const std::string& val) {
     assertValid();
 
-    vjProperty *p;
+    Property *p;
     p = getPropertyPtrFromToken (property);
     if (p == NULL)
         return false;
@@ -553,10 +556,10 @@ bool vjConfigChunk::addValue (const std::string& property, const std::string& va
     return setProperty (property, val, p->value.size());
 }
 
-bool vjConfigChunk::addValue (const std::string& property, vjConfigChunk* val) {
+bool ConfigChunk::addValue (const std::string& property, ConfigChunk* val) {
     assertValid();
 
-    vjProperty *p;
+    Property *p;
     p = getPropertyPtrFromToken (property);
     if (p == NULL)
         return false;
@@ -566,3 +569,4 @@ bool vjConfigChunk::addValue (const std::string& property, vjConfigChunk* val) {
 }
 
 
+};

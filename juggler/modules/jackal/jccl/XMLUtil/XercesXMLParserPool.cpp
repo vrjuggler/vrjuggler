@@ -31,9 +31,10 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-#include <Utils/vjXercesXMLParserPool.h>
+#include <jccl/XMLUtil/vjXercesXMLParserPool.h>
 #include <util/PlatformUtils.hpp>
 
+namespace jccl {
 
 vjXercesXMLParserPool::vjXercesXMLParserPool () {
     // Initialize the XML4C2 system
@@ -76,4 +77,6 @@ void vjXercesXMLParserPool::releaseParser (vjXercesXMLParser* parser) {
 }
 
 
-vjSingletonImp (vjXercesXMLParserPool);
+vprSingletonImp (vjXercesXMLParserPool);
+
+};
