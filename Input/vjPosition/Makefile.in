@@ -28,6 +28,7 @@ vpath %.o ${OBJDIR}
 
 DEPEND_SRCS	:= vjBird.cpp		\
                    vjDummyPosition.cpp	\
+		   aFlock.cpp           \
                    vjFlock.cpp		\
                    vjPosition.cpp	\
                    logiclass.cpp
