@@ -30,20 +30,20 @@
 // Handle any initialization needed before API
 void OpenSGNav::init()
 {
-   OpenSGApp::init();      // Call base class init
+   vrj::OpenSGApp::init();      // Call base class init
 }
 
 /** Called once per context at context creation */
 void OpenSGNav::contextInit()
 {
-   OpenSGApp::contextInit();
+   vrj::OpenSGApp::contextInit();
    initGLState();
 }
 
 void OpenSGNav::draw()
 {
    // Call parent class first to render the scene graph
-   OpenSGApp::draw();
+   vrj::OpenSGApp::draw();
 
    // --- DEBUGGING CODE ------------- //
    // - Draws a little white triangle on the screen - //
