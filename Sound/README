@@ -1,7 +1,10 @@
-SoundEngine: Abstraction for multiple sound API's
+SoundEngine: Abstraction for multiple sound API's.
+Contact: Kevin Meinert or the VR Juggler team at http://www.vrjuggler.org
 
 Purpose: To get people to use sound more in their VR apps - since it's
 nearly impossible when the license restricts you to one machine.
 
 Caveats: The Aw classes runs on Audioworks machines only... how barfy
+SL is 8 bit mono with 3 sound polyphony..  also barfy.
+OpenAL doesn't work on IRIX yet.
 Read the TODO file for other limitations.
