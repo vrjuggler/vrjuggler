@@ -41,28 +41,28 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/vrj/Draw
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
-INSTALL		= @INSTALL@
-SUBOBJDIR	= $(VJ_LIBRARY)
+includedir=	@includedir@/vrj/Draw
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+INSTALL=	@INSTALL@
+SUBOBJDIR=	$(VJ_LIBRARY)
 
 # Prefix for recursive stuff.
-DIRPRFX		= vrj/Draw/
+DIRPRFX=	vrj/Draw/
 
-SUBDIR		= OSG		\
-                  OpenSG
+SUBDIR=		OSG		\
+		OpenSG
 
 # Subdirectories to compile.
 ifeq ($(GL_API), Y)
-    SUBDIR	+= OGL
+   SUBDIR+=	OGL
 endif
 
 ifeq ($(PF_API), Y)
-    SUBDIR	+= Pf
+   SUBDIR+=	Pf
 endif
 
-SRCS		= DrawManager.cpp
+SRCS=		DrawManager.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
 
@@ -71,6 +71,6 @@ include $(MKPATH)/dpp.obj-subdir.mk
 # -----------------------------------------------------------------------------
 ifndef DO_CLEANDEPEND
 ifndef DO_BEFOREBUILD
-    -include $(DEPEND_FILES)
+   -include $(DEPEND_FILES)
 endif
 endif
