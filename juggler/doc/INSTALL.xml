@@ -213,8 +213,13 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
     </itemizedlist>
 
     <para>In the following subsections, we describe how to get all of the
-    above except JDK, OpenORB, omniORB, and NSPR. These must be downloaded
-    separately from the sites listed above.</para>
+    above except Boost, CppDOM, the JDK, OpenORB, omniORB, and NSPR. These
+    must be downloaded separately from the sites listed above.  You may
+    also have to compile one or more of the packages if binary
+    distributions are not available.  Which packages you download depends on
+    what you already have installed.  Note carefully which packages are
+    needed based on the software you have installed and what versions of
+    tools (such as the JDK) that you download.</para>
 
     <para>This remainder of this section is <emphasis>only</emphasis> for
     those users who want to get the Juggler Project source code from the CVS
@@ -427,9 +432,8 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
         <para>omniORB is a C++ implementation of CORBA 2.3. It is required in
         order to compile the Tweek C++ API. At this time, the Tweek C++ API is
         not required for VR Juggler, but this situation will change in the
-        near future. At this time, we primarily use omniORB 3.0.5, though we
-        have tested beta versions of 4.0 successfully. omniORB can be
-        downloaded from <ulink url="http://omniorb.sourceforge.net/">http://omniorb.sourceforge.net/</ulink>.</para>
+        near future. At this time, we primarily use omniORB 4.0.x.  omniORB
+        can be downloaded from <ulink url="http://omniorb.sourceforge.net/">http://omniorb.sourceforge.net/</ulink>.</para>
 
         <para>omniORB 3.0 has strange conventions for how installations are
         made. Within the <filename>bin</filename> and <filename>lib</filename>
@@ -616,7 +620,7 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
                 <option>--with-cppdom</option> and <option>--with-boost</option>
                 unless they are installed in the default location (<filename>/usr/local</filename>).
                 By default, Boost 1.31 installs its header files in a
-                subdirectory of include called <filename>boost-1_31</filename>.
+                subdirectory of <filename>include</filename> called <filename>boost-1_31</filename>.
                 That is, if Boost is installed in <filename>/home/user1/pkgs/boost</filename>,
                 the header files will be in <filename>/home/user1/pkgs/boost/include/boost-1_31</filename>.
                 In this case, you must also specify the option
