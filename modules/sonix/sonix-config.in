@@ -371,7 +371,7 @@ sub make_EXTRA_LDFLAGS ($;$$$)
 
    my $extra_ldflags = ($use_linker ? qq(@snx_extra_ldflags_linker@)
                                     : qq(@snx_extra_ldflags_compiler@));
-   $extra_ldflags = "-L$deps_dir/lib $extra_ldflags" if $deps_dir;
+   $extra_ldflags = "-L$deps_dir/lib$LIBBITSUF $extra_ldflags" if $deps_dir;
 
    # Add the full set of extra flags if the user specified --min on the
    # command line.

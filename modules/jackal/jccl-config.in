@@ -372,7 +372,7 @@ sub make_EXTRA_LDFLAGS ($;$$)
    }
 
    my $extra_ldflags = qq(@jccl_extra_ldflags@);
-   $extra_ldflags = "-L$deps_dir/lib $extra_ldflags" if $deps_dir;
+   $extra_ldflags = "-L$deps_dir/lib$LIBBITSUF $extra_ldflags" if $deps_dir;
 
    my $full_extra_ldflags = qq($extra_ldflags @jccl_extra_libs@ ) .
                             "$dep_libs $dep_extra_libs";
