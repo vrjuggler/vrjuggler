@@ -49,7 +49,8 @@ sub make_INCLUDES($);
 sub make_LDFLAGS($;$$$);
 sub make_EXTRA_LDFLAGS($;$$$);
 sub handleOptArg($$);
-sub stripDuplicateArgs($);
+sub stripDuplicateCompilerArgs($);
+sub stripDuplicateLibraryArgs($);
 
 # TODO: Do not use @prefix@ if possible.  Make use of @LOCAL_BOOST@.
 
@@ -290,7 +291,7 @@ sub make_CXXFLAGS ($;$)
    # Strip out extra whitespace.
    $cxxflags =~ s/\s{2,}/ /g;
 
-   return stripDuplicateArgs("$cxxflags");
+   return stripDuplicateCompilerArgs("$cxxflags");
 }
 
 sub make_INCLUDES ($)
@@ -366,7 +367,7 @@ sub make_LDFLAGS ($;$$$)
    my $full_ldflags = "$ldflags $static_begin $vrj_libs $static_end";
    $full_ldflags    =~ s/\s{2,}/ /g;
 
-   return "$full_ldflags";
+   return stripDuplicateLibraryArgs("$full_ldflags");
 }
 
 sub make_EXTRA_LDFLAGS ($;$$$)
@@ -458,7 +459,7 @@ sub make_EXTRA_LDFLAGS ($;$$$)
 
    $full_extra_ldflags =~ s/\s{2,}/ /g;
 
-   return "$full_extra_ldflags";
+   return stripDuplicateLibraryArgs("$full_extra_ldflags");
 }
 
 # Subroutine for handling command-line parameters that have an optional
@@ -540,7 +541,7 @@ sub handleOptArg ($$)
 # passed to the linker where functionality can be turned on and off (for
 # example, the repeated use of -Wl,-Bstatic ... -Wl,-Bdynamic for selective
 # static linking).
-sub stripDuplicateArgs ($)
+sub stripDuplicateCompilerArgs($)
 {
    my @arg_list   = split(/\s+/, "$_[0]");
    my %known_args = ();
@@ -551,6 +552,34 @@ sub stripDuplicateArgs ($)
       next if exists($known_args{"$_"});  # Skip previously seen arguments
       $known_args{"$_"} = 1;              # Register this argument
       push(@new_args, "$_");              # Add the argument to the new list
+   }
+
+   return join(" ", @new_args);
+}
+
+# This function processes the given list of linker arguments and removes
+# duplicate references to libraries.  Library dependencies are identified as
+# -l arguments, *.lib file references, or -pthread(s) arguments.  The
+# duplicates are removed in reverse order so that the last appearance of an
+# argument is the version that is retained.
+sub stripDuplicateLibraryArgs($)
+{
+   my @arg_list   = split(/\s+/, "$_[0]");
+   my %known_args = ();
+   my @new_args   = ();
+
+   my $arg;
+   foreach $arg ( reverse(@arg_list) )
+   {
+      # Only look at arguments that name library dependencies.  All others
+      # will be retained no matter what.
+      if ( $arg =~ /^-l/ || $arg =~ /\.lib$/ || $arg =~ /^-pthread/ )
+      {
+         next if exists($known_args{"$arg"});
+         $known_args{"$arg"} = 1;
+      }
+
+      unshift(@new_args, "$arg");
    }
 
    return join(" ", @new_args);
