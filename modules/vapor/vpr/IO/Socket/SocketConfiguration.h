@@ -43,6 +43,7 @@
 
 #if defined(VPR_USE_NSPR)
 #   include <vpr/md/NSPR/IO/Socket/SocketImplNSPR.h>
+#   include <vpr/md/NSPR/IO/Socket/SocketDatagramImplNSPR.h>
 #   include <vpr/md/NSPR/IO/Socket/SocketStreamImplNSPR.h>
 
 namespace vpr
@@ -50,12 +51,14 @@ namespace vpr
    struct SocketConfiguration
    {
       typedef SocketImplNSPR           SocketImpl;
+      typedef SocketDatagramImplNSPR   SocketDatagramImpl;
       typedef SocketStreamImplNSPR     SocketStreamImpl;
       typedef IOStatsStrategyAdapter<BaseIOStatsStrategy, BandwidthIOStatsStrategy>     SocketIOStatsStrategy;
    };
 }
 #else
 #   include <vpr/md/POSIX/IO/Socket/SocketImplBSD.h>
+#   include <vpr/md/POSIX/IO/Socket/SocketDatagramImplBSD.h>
 #   include <vpr/md/POSIX/IO/Socket/SocketStreamImplBSD.h>
    
 namespace vpr
@@ -63,6 +66,7 @@ namespace vpr
    struct SocketConfiguration
    {
       typedef SocketImplBSD           SocketImpl;
+      typedef SocketDatagramImplBSD   SocketDatagramImpl;
       typedef SocketStreamImplBSD     SocketStreamImpl;
       typedef IOStatsStrategyAdapter<BaseIOStatsStrategy, BandwidthIOStatsStrategy>     SocketIOStatsStrategy;
    };

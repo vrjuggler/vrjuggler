@@ -38,22 +38,14 @@
 #include <vpr/IO/Socket/Socket.h>
 #include <vpr/IO/Socket/InetAddr.h>
 
+#include <vpr/IO/Socket/SocketConfiguration.h>
 // include bridge class
 #include <vpr/IO/Socket/SocketDatagram_t.h>
 
-#if defined(VPR_USE_NSPR)
-#   include <vpr/md/NSPR/IO/Socket/SocketDatagramImplNSPR.h>
-
-namespace vpr {
-  typedef SocketDatagram_t<SocketDatagramImplNSPR, SocketImplNSPR> SocketDatagram;
-};
-#else
-#   include <vpr/md/POSIX/IO/Socket/SocketDatagramImplBSD.h>
-
-namespace vpr {
-  typedef SocketDatagram_t<SocketDatagramImplBSD, SocketImplBSD> SocketDatagram;
-};
-#endif
+namespace vpr
+{
+   typedef SocketDatagram_t<SocketConfiguration>  SocketDatagram;
+}
 
 
 #endif	/* _VJ_SOCKET_DATAGRAM_H_ */
