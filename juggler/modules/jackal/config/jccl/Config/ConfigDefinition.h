@@ -43,7 +43,8 @@
 namespace jccl
 {
 
-/**
+/** \class ConfigDefinition ConfigDefinition.h jccl/Config/ConfigDefinition.h
+ *
  * Definition of a single configuration element "type".
  * 
  * @note We do not maintain an explicit list of property definitions,

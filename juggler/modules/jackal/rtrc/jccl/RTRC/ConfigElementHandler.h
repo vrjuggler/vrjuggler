@@ -39,7 +39,8 @@
 namespace jccl
 {
 
-/**
+/** \class ConfigElementHandler ConfigElementHandler.h jccl/RTRC/ConfigElementHandler.h
+ *
  * Abstract base class for all classes that can handle ConfigElement objects.
  * Any class supporting this interface can be dynamically reconfigured by
  * the JCCL Configuration Manager.

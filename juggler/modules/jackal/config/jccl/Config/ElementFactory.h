@@ -46,7 +46,8 @@
 namespace jccl
 {
 
-   /**
+   /** \class ElementFactory ElementFactory.h jccl/Config/ElementFactory.h
+    *
     * Factory for elements and a place holder for some other system-wide
     * factory functions.
     */

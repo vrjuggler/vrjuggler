@@ -46,7 +46,8 @@
 namespace jccl
 {
 
-/**
+/** \class ConfigElement ConfigElement.h jccl/Config/ConfigElement.h
+ *
  * A unit of configuration information.
  * References a config element DOM node and a definition for the given
  * configuration element type.
@@ -214,18 +215,21 @@ public:
    }
 
    template<>
-   ConfigElementPtr getProperty<ConfigElementPtr>(const std::string& prop, int ind) const
+   ConfigElementPtr getProperty<ConfigElementPtr>(const std::string& prop,
+                                                  int ind) const
    {
-      return getProperty_ElementPtr(prop,ind);
+      return getProperty_ElementPtr(prop, ind);
    }
 #endif /* ifdef _MSC_VER */
 
-   /** Get property that defaults to element 0
-   * @note Can't use default param because GCC doesn't
-   *       allow specialization in a declaration.
-   *       In other words we couldn't use a default value for the property
-   *       index within the std::string and ConfigElementPtr specializations.
-   */
+   /**
+    * Gets value that defaults to property 0.
+    *
+    * @note Can't use default param because GCC doesn't
+    *       allow specialization in a declaration.
+    *       In other words we couldn't use a default value for the property
+    *       index within the std::string and ConfigElementPtr specializations.
+    */
 #ifdef _MSC_VER
    template<class T>
    T getProperty(const std::string& prop) const
@@ -264,7 +268,8 @@ public:
    bool setProperty(const std::string& prop, const int ind, bool val);
 
    /** Specialization for ConfigElementPtrs */
-   bool setProperty(const std::string& prop, const int ind, ConfigElementPtr val);
+   bool setProperty(const std::string& prop, const int ind,
+                    ConfigElementPtr val);
 
    /**
     * Returns a list of self's depenencies.
@@ -295,21 +300,27 @@ public:
    cppdom::NodePtr getNode() const;
 
 protected:
-   /** Returns the string value of the given property.
-   * @param prop The token string for the property.
-   * @param ind  The index of the property.
-   * @post  If property is found, then return the contents.  Else return "".
-   */
+   /**
+    * Returns the string value of the given property.
+    *
+    * @post  If property is found, then return the contents.  Else return "".
+    *
+    * @param prop The token string for the property.
+    * @param ind  The index of the property.
+    */
    std::string getPropertyString(const std::string& prop, int ind) const;
 
-   /** Get the property's cdata node.
-   * @param prop  The property token.
-   * @param ind   The index inside the property.
-   * @param autoCreate If true, then autocreate the property node to use.
-   *
-   * @note We always autocreate the cdata node if need be
-   */
-   cppdom::NodePtr getPropertyCdataNode(const std::string& prop, int ind, bool autoCreate) const;
+   /**
+    * Get the property's cdata node.
+    *
+    * @param prop  The property token.
+    * @param ind   The index inside the property.
+    * @param autoCreate If true, then autocreate the property node to use.
+    *
+    * @note We always autocreate the cdata node if need be.
+    */
+   cppdom::NodePtr getPropertyCdataNode(const std::string& prop, int ind,
+                                        bool autoCreate) const;
 
    /**
     * Gets a boolean value from the given property.
@@ -323,7 +334,8 @@ protected:
     * Have to call this way because specialization would use symbols that
     * aren't available.
     */
-   ConfigElementPtr getProperty_ElementPtr(const std::string& prop, int ind) const;
+   ConfigElementPtr getProperty_ElementPtr(const std::string& prop,
+                                           int ind) const;
 
 protected:
    cppdom::NodePtr     mNode;  /**< Node for the config element. */

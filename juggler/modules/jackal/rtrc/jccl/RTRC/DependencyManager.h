@@ -43,18 +43,20 @@
 namespace jccl
 {
 
-/** A dependency checker for dynamically added components.
- *  The DependencyManager works in conjunction with the
- *  ConfigManager, and checks for dependencies for any
- *  configuration add request.
- *  The default behavior is to simply check the ConfigManager's
- *  active list for all jccl::ConfigElement's that the request's
- *  jccl::ConfigElement refers to.  However, additional DepCheckers
- *  can be registered to provide specialized functionality.
+/** \class DependencyManager DependencyManager.h jccl/RTRC/DependencyManager.h
  *
- *  Note that this class is a singleton - primarily so that the
- *  master list of DepCheckers can be appended to by any entity
- *  in the system.
+ * A dependency checker for dynamically added components.  The Dependency
+ * Manager works in conjunction with the Config Manager, and checks for
+ * dependencies for any configuration add request.  The default behavior is to
+ * simply check the Config Manager's active list for all jccl::ConfigElement
+ * objects that the request's jccl::ConfigElement refers to.  However,
+ * additional DepCheckers can be registered to provide specialized
+ * functionality.
+ *
+ * Note that this class is a singleton, primarily so that the master list of
+ * DepCheckers can be appended to by any entity in the system.
+ *
+ * @see jccl::ConfigManager
  */
 class JCCL_CLASS_API DependencyManager
 {
@@ -64,7 +66,7 @@ private:
 
 public:
 
-   /** registers a new dependency checker. */
+   /** Registers a new dependency checker. */
    void registerChecker (DepChecker* checker);
 
    /** Checks if dependencies are satisfied for the given element.
