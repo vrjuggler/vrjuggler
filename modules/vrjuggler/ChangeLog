@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Dec-01-2004 patrickh    Updated to require Gadgeteer 0.21.0.
+                        NEW VERSION: 1.1.164
 Nov-30-2004 patrickh    Updated to take advantage of .jdef file format
                         extensions added in JCCL 0.24.0.
                         NEW VERSION: 1.1.163

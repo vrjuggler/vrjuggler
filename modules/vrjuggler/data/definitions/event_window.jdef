@@ -96,7 +96,7 @@
       <property valuetype="configelementpointer" variable="false" name="device_host">
          <help>Points to the machine that the device is physically connected to.</help>
          <value label="Host Node"/>
-         <allowed_type>machine_specific</allowed_type>
+         <allowed_type>cluster_node</allowed_type>
       </property>
       <upgrade_transform/>
    </definition_version>
@@ -197,7 +197,7 @@
       <property valuetype="configelementpointer" variable="false" name="device_host">
          <help>Points to the machine that the device is physically connected to.</help>
          <value label="Host Node"/>
-         <allowed_type>machine_specific</allowed_type>
+         <allowed_type>cluster_node</allowed_type>
       </property>
       <upgrade_transform>
        <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
