@@ -30,16 +30,16 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _CONES_APP_
-#define _CONES_APP_
+#ifndef _CONES_APP_H_
+#define _CONES_APP_H_
 
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <vector>
 
-#include <Kernel/GL/vjGlApp.h>
-#include <Kernel/GL/vjGlContextData.h>
-#include <Kernel/vjUser.h>
+#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Draw/OGL/GlContextData.h>
+#include <vrj/Kernel/User.h>
 
 #include <UserData.h>
 
@@ -62,7 +62,7 @@ public:
 // Demonstration OpenGL application class.
 // This application simply renders a field of cones.
 // ----------------------------------------------------------------------------
-class ConesApp : public GlApp {
+class ConesApp : public vrj::GlApp {
 public:
     // ------------------------------------------------------------------------
     // Constructor.  This creates the GLU quadric used to render the cones.
@@ -148,15 +148,15 @@ public:
     // ------------------------------------------------------------------------
     virtual bool depSatisfied(void);
 
-    GlContextData<ContextData>  mDlData;      // Data for display lists
-    GlContextData<ContextData>  mDlDebugData; // Data for debugging display lists
-    std::vector<UserData*>        mUserData;    // All the users in the program
+    vrj::GlContextData<ContextData> mDlData;      // Data for display lists
+    vrj::GlContextData<ContextData> mDlDebugData; // Data for debugging display lists
+    std::vector<UserData*> mUserData;    // All the users in the program
 
 private:
     // ------------------------------------------------------------------------
     // Draw the scene.  A bunch of cones of differing color and stuff.
     // ------------------------------------------------------------------------
-    void myDraw(User* user);
+    void myDraw(vrj::User* user);
     void initGLState(void);
 
     // ------------------------------------------------------------------------

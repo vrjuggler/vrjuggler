@@ -35,10 +35,11 @@
 
 #include <string>
 
-#include <Input/InputManager/vjPosInterface.h>
-#include <Input/InputManager/vjDigitalInterface.h>
+#include <vrj/Math/Matrix.h>
+#include <vrj/Input/Type/PosInterface.h>
+#include <vrj/Input/Type/DigitalInterface.h>
 
-#include <Kernel/vjUser.h>
+#include <vrj/Kernel/User.h>
 
 
 // Class to hold all data for a specific user
@@ -51,7 +52,7 @@ public:
     // is loaded.
     //       Ex. The Init function
     // ------------------------------------------------------------------------
-    UserData(User* user, std::string wandName, std::string incButton,
+    UserData(vrj::User* user, std::string wandName, std::string incButton,
              std::string decButton, std::string stopButton);
 
     // ------------------------------------------------------------------------
@@ -61,17 +62,15 @@ public:
     void updateNavigation(void);
 
     // Devices to use for the given user.
-    PosInterface       mWand;                  // the Wand
-    DigitalInterface   mIncVelocityButton;     // Button for velocity
-    DigitalInterface   mDecVelocityButton;
-    DigitalInterface   mStopButton;            // Button to stop
+    vrj::PosInterface       mWand;                  // the Wand
+    vrj::DigitalInterface   mIncVelocityButton;     // Button for velocity
+    vrj::DigitalInterface   mDecVelocityButton;
+    vrj::DigitalInterface   mStopButton;            // Button to stop
 
       // Navigation info for the user
-    float                mCurVelocity; // The current velocity
-    Matrix             mNavMatrix;   // Matrix for navigation in the
-                                       // application
-
-    User*              mUser;        // The user we hold data for
+    float              mCurVelocity; // The current velocity
+    vrj::Matrix        mNavMatrix;   // Matrix for navigation in the app
+    vrj::User*         mUser;        // The user we hold data for
 };
 
 

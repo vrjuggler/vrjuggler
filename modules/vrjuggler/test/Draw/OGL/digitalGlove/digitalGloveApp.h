@@ -33,19 +33,18 @@
 #ifndef _DIGITAL_GLOVE_APP_
 #define _DIGITAL_GLOVE_APP_
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 #include <math.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-#include <Kernel/GL/vjGlApp.h>
-#include <Math/vjMatrix.h>
-#include <Math/vjVec3.h>
+#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Math/Vec3.h>
 
-#include <Input/InputManager/vjPosInterface.h>
-#include <Input/InputManager/vjGloveInterface.h>
-#include <Input/InputManager/vjDigitalInterface.h>
+#include <vrj/Input/Type/PosInterface.h>
+#include <vrj/Input/Type/GloveInterface.h>
+#include <vrj/Input/Type/DigitalInterface.h>
 
 
 //----------------------------------------------------
@@ -54,12 +53,12 @@
 // This application draws a glove and some rays and spheres
 // on the glove
 //----------------------------------------------------
-class digitalGloveApp : public GlApp
+class digitalGloveApp : public vrj::GlApp
 {
 public:
    // Constructor.
-   digitalGloveApp(Kernel* kern)
-      : GlApp(kern)            // Initialize base class
+   digitalGloveApp(vrj::Kernel* kern)
+      : vrj::GlApp(kern)            // Initialize base class
    {
       mQuadObj = NULL;
    }
@@ -133,7 +132,7 @@ private:
    void initGLState();
 
 protected:
-   void drawLine(Vec3& start, Vec3& end)
+   void drawLine(vrj::Vec3& start, vrj::Vec3& end)
    {
       glBegin(GL_LINES);
          glVertex3fv(start.vec);
@@ -154,19 +153,19 @@ protected:
    GLUquadricObj* mQuadObj;
 
 public:
-   GloveInterface    mGlove;      // the glove
+   vrj::GloveInterface    mGlove;      // the glove
 
    // for the glove fingers
-   DigitalInterface  mLeftThumb;
-   DigitalInterface  mLeftIndex;
-   DigitalInterface  mLeftMiddle;
-   DigitalInterface  mLeftRing;
-   DigitalInterface  mLeftPinky;
-   DigitalInterface  mRightThumb;
-   DigitalInterface  mRightIndex;
-   DigitalInterface  mRightMiddle;
-   DigitalInterface  mRightRing;
-   DigitalInterface  mRightPinky;
+   vrj::DigitalInterface  mLeftThumb;
+   vrj::DigitalInterface  mLeftIndex;
+   vrj::DigitalInterface  mLeftMiddle;
+   vrj::DigitalInterface  mLeftRing;
+   vrj::DigitalInterface  mLeftPinky;
+   vrj::DigitalInterface  mRightThumb;
+   vrj::DigitalInterface  mRightIndex;
+   vrj::DigitalInterface  mRightMiddle;
+   vrj::DigitalInterface  mRightRing;
+   vrj::DigitalInterface  mRightPinky;
 };
 
 
