@@ -32,6 +32,7 @@
 
 #include <vrj/vrjConfig.h>
 #include <ctype.h>
+#include <vpr/vpr.h>
 #include <vrj/Math/Math.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Config/ConfigTokens.h>
@@ -383,7 +384,7 @@ const std::string findFileUsingPathVar (std::ifstream& in, const std::string& fi
 
 // Define the separator character for the elements of $VJ_CFG_PATH.  On Win32,
 // we use ";", and on everything else, we use ":".
-#ifdef VJ_OS_Win32
+#ifdef VPR_OS_Win32
         char elem_sep[] = ";";
         char ostype_var[] = "OSTYPE";
         char* ostype;

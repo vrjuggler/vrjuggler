@@ -34,8 +34,9 @@
 #define _VJ_TIMER_H_
 
 #include <vrj/vrjConfig.h>
+#include <vpr/vpr.h>
 
-#ifndef VJ_OS_Win32
+#ifndef VPR_OS_Win32
 #include <sys/time.h>
 #endif
 
@@ -94,7 +95,7 @@ public:
         endTime = 0;
     }
 
-#ifdef VJ_OS_Win32
+#ifdef VPR_OS_Win32
    double wallclock()
    {
     return ((double)GetTickCount())/1000.0f;

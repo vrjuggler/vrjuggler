@@ -98,7 +98,7 @@
  * VJ_EXTERN for the prototype and VJ_IMPLEMENT for the implementation.
  * ----------------------------------------------------------------------------
  */
-#ifdef VJ_OS_Win32
+#ifdef WIN32
 
 #   if defined(__GNUC__)
 #       undef _declspec
@@ -139,7 +139,7 @@
 #   define VJ_CALLBACK_DECL
 #   define VJ_STATIC_CALLBACK(__x) static __x
 
-#endif	/* VJ_OS_Win32 */
+#endif	/* WIN32 */
 
 #ifdef _VRJ_BUILD_
 #   define VJ_API(__type)	VJ_EXPORT(__type)

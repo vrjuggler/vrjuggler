@@ -35,12 +35,13 @@
 
 #include <vrj/vrjConfig.h>
 
+#include <vpr/vpr.h>
 //#include <vpr/Sync/CondVar.h>
 #include <vpr/Sync/Semaphore.h>
 #include <vpr/Util/Singleton.h>
 #include <vpr/Thread/TSObjectProxy.h>
 
-#ifdef VJ_OS_Darwin
+#ifdef VPR_OS_Darwin
 #   include <OpenGL/gl.h>
 #   include <OpenGL/glu.h>
 #else
