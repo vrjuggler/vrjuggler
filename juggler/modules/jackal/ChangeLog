@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Feb-27-2003 nonchocoboy Added a version property to both config chunks and
+                        chunk descs to be used for future work.
+                        Bumped desc file format version to 2.3.
+                        Bumped config file format version to 2.2.
 Feb-21-2003 allenb      Fixed bug where chunks with invalid descs would cause
                         assertions.
                         This fix also introduces a new method for initializaing
