@@ -24,7 +24,7 @@ public:
 	return entry;
     }
 
-    vjVarValue& getVal () {
+    vjVarValue& getValue () {
 	return val;
     }
 };

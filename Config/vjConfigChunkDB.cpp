@@ -172,8 +172,6 @@ int vjConfigChunkDB::removeMatching (const std::string& property, float value) {
 }
 
 int vjConfigChunkDB::removeMatching (const std::string& property, const std::string& value) {
-    cout << "Remove Matching: property: " << property << ", value '"
-	 << value << "'\n" << endl;
 
     int i = 0;
     std::vector<vjConfigChunk*>::iterator begin = chunks.begin();
@@ -186,7 +184,6 @@ int vjConfigChunkDB::removeMatching (const std::string& property, const std::str
 	else
 	    begin++;
     }
-    cout << "resulting db is: \n" << *this << "--------------------" << endl;
 
     return i;
 }
@@ -335,24 +332,25 @@ ostream& operator << (ostream& out, vjConfigChunkDB& self) {
 
 istream& operator >> (istream& in, vjConfigChunkDB& self) {
 
-   char str[512];
-   vjConfigChunk *ch;
+    const int bufsize = 512;
+    char str[bufsize];
+    vjConfigChunk *ch;
 
    do
    {
-      if (0 == readString (in, str, 512))
+       if (!readString (in, str, bufsize))
          break; /* eof */
       if (!strcasecmp (str, "end"))
          break;
       ch = vjChunkFactory::createChunk (str);
       if (ch == NULL)
       {
-         vjDEBUG(vjDBG_ALL,1) << "ERROR!: Unknown Chunk type: " << str << endl
-         << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,0) << "ERROR!: Unknown Chunk type: " << str << endl
+			      << vjDEBUG_FLUSH;
          // skip to end of chunk
          while (strcasecmp (str, "end"))
          {
-            if (0 == readString (in, str, 512))
+            if (0 == readString (in, str, bufsize))
                break;
             //cerr << "read " << str << endl;
          }
@@ -411,8 +409,11 @@ bool vjConfigChunkDB::load (const std::string& filename) {
 		   << fname << "'" << endl << vjDEBUG_FLUSH;
 	return false;
     }
-    vjDEBUG(vjDBG_CONFIG,3) << " succeeded." << endl << vjDEBUG_FLUSH;
+    vjDEBUG(vjDBG_CONFIG,4) << " succeeded.\n" << vjDEBUG_FLUSH;
     in >> *this;
+    vjDEBUG(vjDBG_CONFIG,3) << " finished.. read " << chunks.size() << " chunks\n"
+			    << vjDEBUG_FLUSH;
+    //cout << *this;
     return true;
 }
 
