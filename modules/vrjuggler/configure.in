@@ -7,7 +7,7 @@ dnl # that is actually run.
 dnl # -------------------------------------------------------------------------
 
 AC_REVISION($Revision$)
-AC_INIT(Config/vjChunkDesc.cpp)
+AC_INIT(vjConfig.h)
 AC_CONFIG_HEADER(vjDefines.h)
 
 dnl # -------------------------------------------------------------------------
