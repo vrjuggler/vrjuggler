@@ -391,9 +391,10 @@ int EventWindowOSX::openTheWindow()
    CGRect bounds;
    bounds = CGDisplayBounds(kCGDirectMainDisplay);
 
-   //set the window size and location with the height adjusted
-   SetRect(&w_rect, m_x , bounds.size.height - m_y - m_height,
-           m_x + m_width, bounds.size.height - m_y); /* left, top, right, bottom */
+   // Set the window size and location with the height adjusted.
+   // The order of values is left, top, right, bottom.
+   SetRect(&w_rect, m_x , short(bounds.size.height - m_y - m_height),
+           m_x + m_width, short(bounds.size.height - m_y));
 
    CreateNewWindow(kDocumentWindowClass,
                    kWindowStandardDocumentAttributes | kWindowStandardHandlerAttribute,
@@ -810,7 +811,7 @@ pascal OSStatus EventWindowOSX::gotKeyEvent(EventHandlerCallRef nextHandler,
       }
    }
 
-   if ( eventClass == kEventClassMouse &&
+   if ( event_class == kEventClassMouse &&
         (event_kind == kEventMouseMoved || event_kind == kEventMouseDragged) )
    {
 
