@@ -162,7 +162,7 @@ public:
 
       // Size it down if needed, if (bytes_read==len), then resize does
       // nothing.
-      if ( bytes_read >= 0 )
+      if ( retval.success() )
       {
          msg.resize(bytes_read);
       }
