@@ -44,7 +44,9 @@ void vjKernel::initConfig()
    // --- Read default config file --- //
    loadConfigFile();
 
-   setupInputManager();
+   // Setup initial environments.
+   initialSetupInputManager();
+   initialSetupDisplayManager();
    setupEnvironmentManager();
 
    configAdd(mChunkDB);       // Setup the configuration
@@ -52,8 +54,6 @@ void vjKernel::initConfig()
    //apiFactory = app->api.getAPIFactory();
    sysFactory = vjSGISystemFactory::instance(); // XXX: Should not be system specific
 
-      vjDEBUG(0) << "vjKernel::initConfig: Calling setupDisplayManager.\n" << vjDEBUG_FLUSH;
-   setupDisplayManager();
       vjDEBUG(0) << "vjKernel::initConfig: Calling setupDrawManager.\n" << vjDEBUG_FLUSH;
    setupDrawManager();
    displayManager->setDrawManager(drawManager);
@@ -142,7 +142,8 @@ void vjKernel::configAdd(vjConfigChunkDB* chunkDB)
 
       if(getInputManager()->configCanHandle(chunks[i]))  // inputMgr
          added_chunk = getInputManager()->configAdd(chunks[i]);
-      // displayMgr
+      if(displayManager->configCanHandle(chunks[i]))     // displayMgr
+         added_chunk = displayManager->configAdd(chunks[i]);
       // drawMgr
       // app
 
@@ -222,48 +223,20 @@ void vjKernel::loadConfigFile()
 }
 
 
-void vjKernel::setupInputManager()
+void vjKernel::initialSetupInputManager()
 {
-   vjDEBUG(0) << "   vjKernel::setupInputManager\n" << vjDEBUG_FLUSH;
+   vjDEBUG(0) << "   vjKernel::initialSetupInputManager\n" << vjDEBUG_FLUSH;
    data.inputManager = new (sharedMemPool) vjInputManager;
-   // data.inputManager->FNewInput(mChunkDB);
    data.inputManager->ConfigureInitial(mChunkDB);
-
-   //vjDEBUG(0) << "      Input manager has passed. (Andy did good)" << endl << vjDEBUG_FLUSH;
-
-   //data.inputManager->UpdateAllData();
-
-   //vjDEBUG(0) << "      First Update trackers succeeded..." << endl << vjDEBUG_FLUSH;
 }
 
 
-void vjKernel::setupDisplayManager()
+void vjKernel::initialSetupDisplayManager()
 {
-   vjDEBUG_BEGIN(0) << "------- vjKernel::setupDisplayManager\n -------" << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(0) << "------- vjKernel::initialSetupDisplayManager\n -------" << vjDEBUG_FLUSH;
 
-   // Setup displays
+   // Get display manager
    displayManager = vjDisplayManager::instance();
-
-   // Get the vector of display chunks
-   vector<vjConfigChunk*>* displayChunks;
-   displayChunks = mChunkDB->getMatching("display");
-
-   // For each display in vector,
-   //	   -- Create display
-   //	   -- Have it config itself.
-   //	   -- Add it to the display Manager
-   for (int i = 0; i < displayChunks->size(); i++)
-   {
-      vjConfigChunk* chunk = (*displayChunks)[i];
-      vjDisplay* newDisp = new vjDisplay();
-      newDisp->config(chunk);
-      displayManager->addDisplay(newDisp);
-
-      vjDEBUG(0) << "Display: " << i << endl
-                 << *newDisp << endl << flush << vjDEBUG_FLUSH;
-   }
-
-   vjDEBUG_END(0) << "------- vjKernel::setupDisplayManager --------\n" << vjDEBUG_FLUSH;
 }
 
 void vjKernel::setupDrawManager()

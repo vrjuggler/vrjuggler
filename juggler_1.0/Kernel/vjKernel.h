@@ -87,10 +87,10 @@ protected:      // --- STARTUP ROUTINES --- //
     */
    void loadConfigFile();
 
-      // --- Manager setup functions ---- //
-   void setupInputManager();
-    void setupEnvironmentManager();
-   void setupDisplayManager();
+      // --- Manager Initial setup functions ---- //
+   void initialSetupInputManager();
+   void setupEnvironmentManager();
+   void initialSetupDisplayManager();
    void setupDrawManager();
 
 public:      // Global "get" interface
