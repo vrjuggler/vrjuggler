@@ -191,7 +191,7 @@ public:
 
          for(int j=0;j<mNumItersB;j++)
          {
-            ret_val = con_sock.read(data, mMessageLen, bytes_read);   // Recieve data
+            ret_val = con_sock.readn(data, mMessageLen, bytes_read);   // Recieve data
             assertTestThread((ret_val.success()) && "Read failed");
             assertTestThread((bytes_read == mMessageLen) && "Connector recieved message of wrong size" );
          }
