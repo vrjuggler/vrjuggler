@@ -72,7 +72,7 @@ GlWindowXWin::~GlWindowXWin() {
 
 void GlWindowXWin::swapBuffers()
 {
-//vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
+vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
 
    glXSwapBuffers (x_display,  x_window);
 }
@@ -81,7 +81,7 @@ void GlWindowXWin::swapBuffers()
 
 int GlWindowXWin::open()
 {
-//vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
+vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
 
     /* attempts to open the glxWindow & create the gl context.  Does nothing
      * if the window is already open (& returns true).
@@ -278,7 +278,7 @@ int GlWindowXWin::open()
 //! NOTE: this function mucks with the current rendering context */
 int GlWindowXWin::close()
 {
-//vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
+vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
 
 //     if (!window_is_open)
 //         return true;
@@ -316,7 +316,7 @@ int GlWindowXWin::close()
 
 bool GlWindowXWin::makeCurrent()
 {
-//vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
+vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
 
    /* returns true for success,
     * false for failure (eg window not open or glXMakeCurrent fails)
