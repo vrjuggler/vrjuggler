@@ -39,8 +39,24 @@
 
 /set type=dir mode=@DIR_PERMS@ uname=@OWNER_NAME@ gname=@GROUP_NAME@
 .
-    TestBean
-        testbean
+    test
+        corba
+        ..
+        FileOpenTestBean
+            fileopentestbean
+            ..
+        ..
+        NetworkTestBean
+            networktestbean
+            ..
+        ..
+        PrefsTestBean
+            prefstestbean
+            ..
+        ..
+        TestBean
+            testbean
+            ..
         ..
     ..
 ..
