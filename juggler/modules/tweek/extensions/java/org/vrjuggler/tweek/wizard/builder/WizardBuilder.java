@@ -119,6 +119,41 @@ public class WizardBuilder
          cnfe.printStackTrace();
       }
 
+      // ClusterWizard's Temporary hack to setup the step chooser dialog
+      try
+      {
+        WizardStepFactory.registerWizardStep(
+               Class.forName("org.vrjuggler.vrjconfig.wizard.cluster.NewClusterFileStep",
+                             true,
+                             BeanJarClassLoader.instance()));
+        WizardStepFactory.registerWizardStep(
+               Class.forName("org.vrjuggler.vrjconfig.wizard.cluster.NodeSettingsStep",
+                             true,
+                             BeanJarClassLoader.instance()));
+        WizardStepFactory.registerWizardStep(
+               Class.forName("org.vrjuggler.vrjconfig.wizard.cluster.CreateClusteredSimDevicesStep",
+                             true,
+                             BeanJarClassLoader.instance()));
+      }
+      catch (ClassNotFoundException cnfe)
+      {
+         cnfe.printStackTrace();
+      }
+
+      // ClusterWizard's Temporary hack to setup the step chooser dialog
+      try
+      {
+        WizardStepFactory.registerWizardStep(
+               Class.forName("org.vrjuggler.vrjconfig.wizard.devices.PinchGloveStep",
+                             true,
+                             BeanJarClassLoader.instance()));
+      }
+      catch (ClassNotFoundException cnfe)
+      {
+         cnfe.printStackTrace();
+      }
+
+
       // setup the main toolbar
       ClassLoader loader = this.getClass().getClassLoader();
       newBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/tweek/wizard/builder/images/new24.gif")));
