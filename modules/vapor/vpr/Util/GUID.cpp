@@ -41,14 +41,22 @@
 
 #include <vpr/vprConfig.h>
 
-#ifndef HAVE_UUID_GENERATE
+#include <stdio.h>
+#include <string.h>
+
+#ifdef HAVE_SYS_TYPES_H
+#  include <sys/types.h>
+#endif
+
+#if defined(VPR_USE_LEACH_UUID)
 #  include <uuid/sysdep.h>
 #endif
 
-#include <uuid/uuid.h>
-
-#include <stdio.h>
-#include <string.h>
+#if defined(HAVE_UUID_H)
+#  include <uuid.h>
+#elif defined(HAVE_UUID_UUID_H) || defined(VPR_USE_LEACH_UUID)
+#  include <uuid/uuid.h>
+#endif
 
 #include <vpr/Util/GUID.h>
 
@@ -125,10 +133,16 @@ GUID::GUID (const GUID& ns_guid, const std::string& name)
 
 void GUID::generate()
 {
-#ifdef HAVE_UUID_GENERATE
+// DCE 1.1 UUID.
+#if defined(HAVE_UUID_CREATE)
+   uint32_t status(0);
+   uuid_create((uuid_t*) &mGuid.standard, &status);
+// Linux e2fsprogs libuuid.
+#elif defined(HAVE_UUID_GENERATE)
    uuid_t storage;
    uuid_generate(storage);
    memcpy((void*) &mGuid.standard, storage, sizeof(mGuid));
+// Leach UUID (see juggler/external/leach-uuid).
 #else
    uuid_create( (uuid_t*)(&mGuid.standard));
 #endif
@@ -136,8 +150,14 @@ void GUID::generate()
 
 void GUID::generate(const GUID& ns_guid, const std::string& name)
 {
-#ifdef HAVE_UUID_GENERATE
+// DCE 1.1 UUID.
+#if defined(HAVE_UUID_CREATE)
+   uint32_t status(0);
+   uuid_from_string(name.c_str(), (uuid_t*) &mGuid.standard, &status);
+// Linux e2fsprogs libuuid.
+#elif defined(HAVE_UUID_GENERATE)
    vprASSERT(false && "Unimplemented method!");
+// Leach UUID (see juggler/external/leach-uuid).
 #else
    uuid_t temp_ns_id = *((uuid_t*)(&ns_guid.mGuid.standard));    // nasty, but works
 
