@@ -29,7 +29,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 package org.vrjuggler.jccl.config;
 
 import java.io.*;
@@ -37,7 +36,6 @@ import java.util.*;
 import org.jdom.*;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
-
 
 /** Representation of a VR Juggler-style configuration file.
  *  Essentially, a ConfigChunkDB is a container for ConfigChunks. It
@@ -48,13 +46,15 @@ import org.jdom.output.XMLOutputter;
  *  @see ConfigChunk
  *  @see ChunkDescDB
  *  @see ConfigIO
- *  @version $Revision$
  */
 public class ConfigChunkDB
    implements Cloneable
 {
-   /** Constructor. */
-   public ConfigChunkDB ()
+   /**
+    * Creates a new ConfigChunk database initially empty and the name
+    * "Untitled".
+    */
+   public ConfigChunkDB()
    {
       super();
       chunks = new Vector();
@@ -71,7 +71,7 @@ public class ConfigChunkDB
     *  Use this with caution, as any listeners on self will automatically
     *  become listeners on the clone.
     */
-   public Object clone ()
+   public Object clone()
    {
       try
       {
@@ -93,16 +93,16 @@ public class ConfigChunkDB
       }
    }
 
-   /** Retruns the file used for loading/saving */
+   /** Returns the file used for loading/saving */
    public final File getInputFile()
    {
       return inputFile;
    }
 
    /** Sets the identifier string for this DB */
-   public final void setName(String _name)
+   public final void setName(String name)
    {
-      name = _name;
+      this.name = name;
    }
 
    /** Returns the identifier string for this DB */
@@ -112,12 +112,17 @@ public class ConfigChunkDB
    }
 
    /**
-    * Uses the given file to construct a new chunk database.  The file must
-    * contain a document that can be converted into a DOM tree.
+    * Builds the database using the given file's contents. If the file contains
+    * an XML document with the root type being &lt;ConfigChunkDB&gt;, the
+    * children are examined for ConfigChunks. ConfigChunks found in the node's
+    * tree are added to this ConfigChunkDB.
     *
-    * @throw IOException
+    * @param file    the file in which to look for ConfigChunks
+    *
+    * @throws IOException  if there is an error while building the database
     */
-   public void build (File inputFile) throws IOException
+   public void build(File inputFile)
+      throws IOException
    {
       this.inputFile = inputFile;
 
@@ -140,14 +145,25 @@ public class ConfigChunkDB
       }
    }
 
-   public void build (InputStream inStream) throws IOException
+   /**
+    * Builds the database using the given stream's contents. If the stream
+    * contains an XML document with the root type being &lt;ConfigChunkDB&gt;,
+    * the children are examined for ConfigChunks. ConfigChunks found in the
+    * node's tree are added to this ConfigChunkDB.
+    *
+    * @param stream     the stream in which to look for ConfigChunks
+    *
+    * @throws IOException  if there is an error while building the database
+    */
+   public void build(InputStream stream)
+      throws IOException
    {
       this.inputFile = null;
 
       try
       {
          SAXBuilder builder = new SAXBuilder();
-         mDoc = builder.build(inStream);
+         mDoc = builder.build(stream);
          loadChunks(mDoc.getRootElement());
       }
       catch (JDOMException e)
@@ -156,19 +172,22 @@ public class ConfigChunkDB
       }
    }
 
-   public void build (Element elem) throws IOException
+   public void build(Element elem)
+      throws IOException
    {
       // XXX: Is this right?
       mDoc.getRootElement().addContent(elem);
       loadChunks(elem);
    }
 
-   public void write () throws IOException
+   public void write()
+      throws IOException
    {
       write(inputFile);
    }
 
-   public void write (File file) throws IOException
+   public void write(File file)
+      throws IOException
    {
       if ( inputFile != file )
       {
@@ -190,7 +209,7 @@ public class ConfigChunkDB
       }
    }
 
-   public void write (OutputStream outStream)
+   public void write(OutputStream outStream)
    {
       XMLOutputter outputter = new XMLOutputter("  ", true);
       outputter.setLineSeparator(System.getProperty("line.separator"));
@@ -209,7 +228,8 @@ public class ConfigChunkDB
     * Populates the internal collection of chunks with ConfigChunk objects
     * created from the children of docRoot.
     */
-   private void loadChunks (Element docRoot) throws IOException
+   private void loadChunks(Element docRoot)
+      throws IOException
    {
       if ( docRoot.getName().equals(ConfigTokens.chunk_db_TOKEN) )
       {
@@ -237,7 +257,7 @@ public class ConfigChunkDB
     *  the returned db contains every chunk in db that isn't in self,
     *  or that differs from the same-named chunk in self.
     */
-   public ConfigChunkDB diff (ConfigChunkDB d)
+   public ConfigChunkDB diff(ConfigChunkDB d)
    {
       ConfigChunk c1, c2;
       ConfigChunkDB newdb = new ConfigChunkDB();
@@ -254,17 +274,23 @@ public class ConfigChunkDB
       return newdb;
    }
 
-   /** Returns size of DB. */
+   /**
+    * Gets the number of ConfigChunks in this database.
+    */
    public final int size()
    {
       return chunks.size();
    }
 
-   /** Gets the ith element of self. */
-   public ConfigChunk get(int i)
+   /**
+    * Gets the ith ConfigChunk in this database.
+    *
+    * @param idx     the index of the ConfigChunk to retrieve
+    */
+   public ConfigChunk get(int idx)
       throws IndexOutOfBoundsException
    {
-      return(ConfigChunk)chunks.get(i);
+      return(ConfigChunk)chunks.get(idx);
    }
 
    /** Removed all ConfigChunks from self and notifies ChunkDBListeners. */
@@ -406,12 +432,12 @@ public class ConfigChunkDB
       return v;
    }
 
-   public void setUnsavedChanges (boolean dirty)
+   public void setUnsavedChanges(boolean dirty)
    {
       mNeedToSave = dirty;
    }
 
-   public boolean hasUnsavedChanges ()
+   public boolean hasUnsavedChanges()
    {
       return mNeedToSave;
    }
@@ -421,7 +447,7 @@ public class ConfigChunkDB
     * The DOM tree node associated with the given chunk is added as a child
     * of this DB's tree node.
     */
-   public final void add (ConfigChunk ch)
+   public final void add(ConfigChunk ch)
    {
       ConfigChunk insert_chunk;
 
@@ -534,7 +560,7 @@ public class ConfigChunkDB
       return name;
    }
 
-   public void fireChunkUpdate (String origName, ConfigChunk updatedChunk)
+   public void fireChunkUpdate(String origName, ConfigChunk updatedChunk)
    {
       notifyChunkDBTargets(new ChunkDBEvent(this, ChunkDBEvent.REPLACE,
                                             origName, updatedChunk));

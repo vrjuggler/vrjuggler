@@ -42,20 +42,24 @@ import java.io.OutputStream;
 public class ConfigService
 {
    /**
-    * Reads in a ConfigChunkDB from the given input stream.
+    * Reads in a ConfigChunkDB from the given input stream. They are validated
+    * against the given ChunkDescDB.
     *
     * @param input      an input stream from which to look for a ConfigChunkDB.
+    * @param descDB     the ChunkDescDB with which to validate the chunks
     *
     * @return  the ConfigChunkDB found in the stream.
     * @throw   IOException
     *             there was an error while reading from the stream
     */
-   public ConfigChunkDB loadConfigChunks(InputStream input)
+   public ConfigChunkDB loadConfigChunks(InputStream input, ChunkDescDB descDB)
       throws IOException
    {
       // Read in the config chunks
+      ChunkFactory.setChunkDescDB(descDB);
       ConfigChunkDB chunk_db = new ConfigChunkDB();
       chunk_db.build(input);
+      ChunkFactory.setChunkDescDB(null);
       return chunk_db;
    }
 
@@ -110,4 +114,4 @@ public class ConfigService
       DataOutputStream data_out = new DataOutputStream(output);
       descDB.write(data_out);
    }
-};
+}

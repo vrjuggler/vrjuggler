@@ -157,12 +157,12 @@ public class DefaultConfigChunkPanel extends JPanel
          {
             prop_desc = (PropertyDesc) i.next();
 
-            if ( Core.user_profile.accepts(prop_desc.getUserLevel()) )
-            {
+//            if ( Core.user_profile.accepts(prop_desc.getUserLevel()) )
+//            {
                t = new PropertyPanel(prop_desc, mChunk, mUIHelperModule);
                mPropertyPanels.add(t);
                properties_panel.add(t);
-            }
+//            }
          }
       }
 

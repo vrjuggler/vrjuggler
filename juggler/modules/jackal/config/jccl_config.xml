@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beanlist>
+   <service name="Config">
+      <file name="${TWEEK_BASE_DIR}/bin/beans/jccl_config.jar"
+         class="org.vrjuggler.jccl.config.ConfigService"/>
+   </service>
+</beanlist>

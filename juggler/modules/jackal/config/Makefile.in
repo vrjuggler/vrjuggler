@@ -59,6 +59,7 @@ ifeq ($(BUILD_PROF_CXX), Y)
 endif
 endif
 
+beandir					= $(bindir)/beans
 srcdir					= @srcdir@
 top_srcdir				= @top_srcdir@
 EXTRA_JAVA_SRCS_PATH	= $(srcdir)
@@ -78,7 +79,8 @@ CONFIG_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(CONFIG_DIR)/*.jav
 CONFIG_CLASSES = $(CONFIG_SRCS:.java=.class)
 
 JAVA_SRCS = $(CONFIG_SRCS)
-JARS		 = jccl_config.jar
+JARS		 =
+BEANS		 = jccl_config
 
 # List the packages for which JavaDoc documentation will be generated.
 DOC_PKGS		= $(CONFIG_PKG)
@@ -172,10 +174,10 @@ endif
 # -----------------------------------------------------------------------------
 # Extra targets.
 # -----------------------------------------------------------------------------
-jars: $(JARS)
+jars: $(JARS) $(addsuffix .jar, $(BEANS))
 ifdef GLOBAL_BUILD
 	@$(MKINSTALLDIRS) $(top_srcdir)/bin
-	cp $(JARS) $(top_srcdir)/bin
+	cp $(JARS) $(addsuffix .jar, $(BEANS)) $(top_srcdir)/bin
 endif
 
 jccl_config.jar: $(CONFIG_CLASSES)
@@ -190,10 +192,17 @@ config-install:
 	@echo "------------------------------------------------"
 	@echo "Installing the JCCL config Java code base"
 	@echo "------------------------------------------------"
-	for jar in $(JARS) ; \
+#	for jar in $(JARS) ; \
+#          do \
+#              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
+#                $(topdir)/config/$$jar $(bindir) ; \
+#          done
+	for bean in $(BEANS) ; \
           do \
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-                $(topdir)/config/$$jar $(bindir) ; \
+                $(topdir)/config/$$bean.jar $(beandir) ; \
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
+                $(top_srcdir)/config/$$bean.xml $(beandir) ; \
           done
 	for jar in `echo "$(JDOM_JAR)" | sed -e 's/$(JCPS)/ /g'` ; \
           do \

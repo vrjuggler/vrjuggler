@@ -32,46 +32,21 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-if test -z "$JCCL_BASE_DIR" ; then
+if test "x$JCCL_BASE_DIR" = "x" ; then
    echo "ERROR: \$JCCL_BASE_DIR environment variable required for VjControl"
    exit 1
 fi
 
-# shell script for running vjcontrol under jdk 1.2 using the java command
-VJC_JARS='jccl_config.jar jccl_editorgui.jar jccl_net.jar jccl_perfmonitor.jar jccl_vjcontrol.jar'
-VJC_CP=.
-for jar in ${VJC_JARS}; do
-   VJC_CP=${VJC_CP}:${JCCL_BASE_DIR}/bin/$jar
-done
-
-JDOM_JAR=#JDOM_JAR#
-
-# If the environment variable JDK_HOME is not set, default it to /usr/java.
-if test "x${JDK_HOME}" = "x" ; then
-    echo "WARNING: Setting JDK_HOME environment variable to /usr/java"
-    JDK_HOME='/usr/java' ; export JDK_HOME
+if test "x$VJ_SHARE_DIR" = "x" ; then
+   VJ_SHARE_DIR="$VJ_BASE_DIR/share/vrjuggler"
+fi
+if test "x$JCCL_SHARE_DIR" = "x" ; then
+   JCCL_SHARE_DIR=$JCCL_BASE_DIR/#JCCL_SHARE_DIR#
 fi
 
-# Make sure that $JDK_HOME/bin/java exists and is executable.  If it is not,
-# exit with an error message and status 1.
-if test ! -x "$JDK_HOME/bin/java" ; then
-    echo "ERROR: Could not find java executable $JDK_HOME/bin/java"
-    status=1
-# Otherwise, start up VjControl and exit with status 0.
-else
-    if test "x$VJ_SHARE_DIR" = "x" ; then
-        VJ_SHARE_DIR="$VJ_BASE_DIR/share/vrjuggler"
-    fi
-    if test "x$JCCL_SHARE_DIR" = "x" ; then
-        JCCL_SHARE_DIR=$JCCL_BASE_DIR/#JCCL_SHARE_DIR#
-    fi
+# Make sure java knows about the JCCL_BASE_DIR variable
+EXTRA_JDK_ARGS="-DJCCL_BASE_DIR=$JCCL_BASE_DIR -DVJ_SHARE_DIR=$VJ_SHARE_DIR -DJCCL_SHARE_DIR=$JCCL_SHARE_DIR"
+export EXTRA_JDK_ARGS
 
-#    CLASSPATH=
-    ${JDK_HOME}/bin/java -DVJ_BASE_DIR="${VJ_BASE_DIR}"		\
-      -DVJ_SHARE_DIR="${VJ_SHARE_DIR}"				\
-      -DJCCL_BASE_DIR="${JCCL_BASE_DIR}" -DJCCL_SHARE_DIR="${JCCL_SHARE_DIR}" \
-      -cp ${CLASSPATH}:${VJC_CP}:${JDOM_JAR} org.vrjuggler.jccl.vjcontrol.Init $*
-    status=0
-fi
-
-exit $status
+# Run tweek
+$TWEEK_BASE_DIR/bin/tweek

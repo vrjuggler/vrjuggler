@@ -36,18 +36,24 @@ import java.util.Iterator;
 import java.util.Vector;
 import org.jdom.Element;
 
-
-/** This corresponds to the config ChunkDesc class */
+/**
+ * A ChunkDesc describes what properties a ConfigChunk should have in addition
+ * to other useful metadata. Essentially ChunkDescs are used to validate
+ * existing ConfigChunks and provide a blueprint for creating new ConfigChunks.
+ * <p>
+ * Currently the ChunkDesc is implemented as a DOM element wrapper.
+ */
 public class ChunkDesc
    implements Cloneable
 {
-   public ChunkDesc (Element root)
+   public ChunkDesc(Element root)
    {
       this.mDomElement = root;
    }
 
    /**
-    * Creates an empty chunk description with only a name property.
+    * Creates an empty chunk description with only a name property. The name and
+    * token default to the empty string.
     */
    public ChunkDesc()
    {
@@ -56,12 +62,16 @@ public class ChunkDesc
       this.setToken("");
    }
 
+   /**
+    * Creates a deep copy of this ChunkDesc. The copy has an entirely different
+    * DOM element object.
+    */
    public Object clone()
    {
       try
       {
          ChunkDesc d = (ChunkDesc)super.clone();
-         d.mDomElement = (Element) mDomElement.clone();
+         d.mDomElement = (Element)mDomElement.clone();
          return d;
       }
       catch (CloneNotSupportedException e)
@@ -70,6 +80,10 @@ public class ChunkDesc
       }
    }
 
+   /**
+    * Gets the name of this ChunkDesc. If it has not yet been assigned a name,
+    * it will be lazily initialized to the value of the token property.
+    */
    public final String getName()
    {
       String name;
@@ -91,21 +105,35 @@ public class ChunkDesc
       return name;
    }
 
-   public final void setName (String newName)
+   /**
+    * Sets the name of this ChunkDesc to the given value.
+    */
+   public final void setName(String newName)
    {
       mDomElement.setAttribute("name", newName);
    }
 
+   /**
+    * Gets the unique token for this ChunkDesc.
+    */
    public final String getToken()
    {
       return mDomElement.getAttribute("token").getValue();
    }
 
-   public final void setToken (String newToken)
+   /**
+    * Sets the unique token for this ChunkDesc.
+    */
+   public final void setToken(String newToken)
    {
       mDomElement.setAttribute("token", newToken);
    }
 
+   /**
+    * Gets the help text for this ChunkDesc if such help is defined.
+    *
+    * @return  the help text or empty string if not defined
+    */
    public final String getHelp()
    {
       String help = "";
@@ -119,7 +147,10 @@ public class ChunkDesc
       return help;
    }
 
-   public final void setHelp (String helpText)
+   /**
+    * Sets the help text for this ChunkDesc.
+    */
+   public final void setHelp(String helpText)
    {
       Element help_child = mDomElement.getChild("help");
 
@@ -132,12 +163,12 @@ public class ChunkDesc
       help_child.setText(helpText);
    }
 
-   public void addPropertyDesc (PropertyDesc newPropDesc)
+   public void addPropertyDesc(PropertyDesc newPropDesc)
    {
       mDomElement.addContent(newPropDesc.getNode());
    }
 
-   public void removePropertyDesc (PropertyDesc propDesc)
+   public void removePropertyDesc(PropertyDesc propDesc)
    {
       mDomElement.removeContent(propDesc.getNode());
    }
@@ -150,7 +181,7 @@ public class ChunkDesc
 
       while ( i.hasNext() )
       {
-         prop_descs.add(new PropertyDesc((Element) i.next()));
+         prop_descs.add(new PropertyDesc((Element)i.next()));
       }
 
       return prop_descs;
@@ -169,7 +200,7 @@ public class ChunkDesc
     * Retrives the i'th property description.  If no such property description
     * exists, null is returned.
     */
-   public PropertyDesc getPropertyDesc (int i)
+   public PropertyDesc getPropertyDesc(int i)
    {
       PropertyDesc prop_desc = null;
 
@@ -177,19 +208,23 @@ public class ChunkDesc
       if ( i < this.propertyDescsSize() )
       {
          Element prop_desc_child =
-            (Element) mDomElement.getChildren(ConfigTokens.property_desc_TOKEN).get(i);
+            (Element)mDomElement.getChildren(ConfigTokens.property_desc_TOKEN).get(i);
          prop_desc = new PropertyDesc(prop_desc_child);
       }
 
       return prop_desc;
    }
 
-   public boolean equals (ChunkDesc c)
+   /**
+    * Tests if this ChunkDesc is equal to the given ChunkDesc. They are
+    * considered equal if they use the same DOM element object.
+    */
+   public boolean equals(ChunkDesc c)
    {
       return (mDomElement == c.mDomElement);
    }
 
-   public PropertyDesc getPropertyDesc (String propDescToken)
+   public PropertyDesc getPropertyDesc(String propDescToken)
    {
       Iterator i = mDomElement.getChildren(ConfigTokens.property_desc_TOKEN).iterator();
       PropertyDesc p = null;
@@ -214,11 +249,15 @@ public class ChunkDesc
     * package visible to prevent abuse of this exposure of implementation
     * by outside packages.
     */
-   Element getNode ()
+   Element getNode()
    {
       return mDomElement;
    }
 
+   /**
+    * Gets the XML representation of this ConfigChunk as a String. This is
+    * suitable for a replacement to serialization.
+    */
    public String toString()
    {
       org.jdom.output.XMLOutputter outputter =
@@ -227,5 +266,8 @@ public class ChunkDesc
       return outputter.outputString(mDomElement);
    }
 
+   /**
+    * The XML DOM element that contains this ChunkDesc's properties.
+    */
    private Element mDomElement = null;
 }
