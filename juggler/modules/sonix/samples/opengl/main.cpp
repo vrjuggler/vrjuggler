@@ -16,8 +16,6 @@
 #include <iostream.h>
 #include <stdlib.h>
 
-AudioJuggler audJ;
-
 // a place to store application data...
 class AppWindow
 {
@@ -121,17 +119,17 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
 		break;
    case '1':
 {
-audJ.changeAPI( "OpenAL" );
+AudioJuggler::instance().changeAPI( "OpenAL" );
 }
 break;
    case '2':
 {
-audJ.changeAPI( "AudioWorks" );
+AudioJuggler::instance().changeAPI( "AudioWorks" );
 }
 break;
    case '3':
 {
-audJ.changeAPI( "Stub" );
+AudioJuggler::instance().changeAPI( "Stub" );
 }
 break;
    case 'a':
@@ -139,7 +137,7 @@ break;
 aj::SoundInfo si;
    si.filename = "../../../data/sample.wav";
    si.datasource = aj::SoundInfo::FILESYSTEM;
-audJ.configure( "kevin", si );
+AudioJuggler::instance().configure( "kevin", si );
 }
 break;
    case 'b':
@@ -147,34 +145,34 @@ break;
 aj::SoundInfo si;
    si.filename = "../../../data/sample-drumsolo-2bars.wav";
    si.datasource = aj::SoundInfo::FILESYSTEM;
-audJ.configure( "kevin", si );
+AudioJuggler::instance().configure( "kevin", si );
 }
 break;
       case 't':
 {
-audJ.trigger( "kevin" );
+AudioJuggler::instance().trigger( "kevin" );
 }
 break;
 case 'p':
 {
-audJ.pause( "kevin" );
+AudioJuggler::instance().pause( "kevin" );
 }
 break;
 case 's':
 {
-audJ.stop( "kevin" );
+AudioJuggler::instance().stop( "kevin" );
 }
 break;
 
 case ',':
 {
-audJ.setPosition( "kevin", -60, 0, 0 );
+AudioJuggler::instance().setPosition( "kevin", -60, 0, 0 );
 }
 break;
 
 case '.':
 {
-audJ.setPosition( "kevin", 60, 0, 0 );
+AudioJuggler::instance().setPosition( "kevin", 60, 0, 0 );
 }
 break;
 
