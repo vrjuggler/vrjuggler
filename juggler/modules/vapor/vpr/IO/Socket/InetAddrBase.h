@@ -54,25 +54,42 @@ public:
     //+ address structure.
     //
     //! PRE: None.
-    //! POST: Zero out the address and set everything to ANY
+    //! POST: Zero out the address and set everything to wildcard values.
     // ------------------------------------------------------------------------
     InetAddr (void)
     { vprASSERT(false && "Implement me");}
 
     // ------------------------------------------------------------------------
-    // Set address to a string like "hostname.domain.com:<port_num>"
+    //: Construct an address object using the given address.  It must be of
+    //+ the form <address>:<port> where <address> can be a hostname or a
+    //+ dotted-decimal IP address.
+    //
+    //! PRE: None.
+    //! POST:
+    //
+    //! ARGS: address - A string giving the address and port number separated
+    //+                 by a colon.
     // ------------------------------------------------------------------------
     InetAddr (const std::string& address)
     {vprASSERT(false && "Implement me");}
 
     // ------------------------------------------------------------------------
-    // Initialize to address and port
+    //: Construct an address object using the given address and port number.
+    //+ The address string can be a hostname or a dotted-decimal IP address.
+    //
+    //! PRE: None.
+    //! POST:
+    //
+    //! ARGS: address - A string giving the address (either hostname or IP
+    //+                 address).
+    //! ARGS: port    - The port to associate with the IP address.
     // ------------------------------------------------------------------------
     InetAddr (const std::string& address, const Uint16 port)
     {vprASSERT(false && "Implement me");}
 
     // ------------------------------------------------------------------------
-    // Initialize to an ANY address and a given port
+    //: Construct an address that is associated with the given port number.
+    //+ The address will be set to a wildcard.
     // ------------------------------------------------------------------------
     InetAddr (const Uint16 port)
     {vprASSERT(false && "Implement me");}
@@ -103,7 +120,7 @@ public:
     { vprASSERT(false && "Implement me");  return SocketTypes::LOCAL; }
 
     // ------------------------------------------------------------------------
-    //: Set the protocol family of this address structure.
+    //: Set the protocol family of this address.
     //
     //! PRE: None.
     //! POST: The given protocol family (a vpr::SocketTypes::Domain value) is
@@ -122,7 +139,8 @@ public:
     //! POST: The port associated with this address structure is returned to
     //+       the caller in host byte order.
     //
-    //! RETURNS: A Uint16 giving the port for this address structure in host byte order.
+    //! RETURNS: An integer giving the port for this address structure in host
+    //+          byte order.
     // ------------------------------------------------------------------------
     Uint16
     getPort (void) const
@@ -132,11 +150,9 @@ public:
     //: Set this address' port.  The given port must be in host byte order.
     //
     //! PRE: The given port number is in host byte order.
-    //! POST: The given port number is stored in the address structure in
-    //+       network byte order.
+    //! POST: The given port number is stored in the address.
     //
-    //! ARGS: port - A Uint16 port number for this
-    //+              address structure in host byte order.
+    //! ARGS: port - A port number for this address in host byte order.
     // ------------------------------------------------------------------------
     inline void
     setPort (const Uint16 port)
@@ -150,8 +166,8 @@ public:
     //! POST: The IP address associated with this address structure is
     //+       returned to the caller in host byte order.
     //
-    //! RETURNS: An unsigned int (32-bit value) giving the IP address for this
-    //+          address structure in host byte order.
+    //! RETURNS: An unsigned 32-bit integer giving the IP address for this
+    //+          object in host byte order.
     // ------------------------------------------------------------------------
     inline Uint32
     getAddressValue (void) const
@@ -162,18 +178,17 @@ public:
     //+ byte order.
     //
     //! PRE: The given IP address is in host byte order.
-    //! POST: The given IP address is stored in the address structure in
-    //+       network byte order.
+    //! POST: The given IP address is stored.
     //
-    //! ARGS: port - An unsigned int IP address for this
-    //+              address structure in host byte order.
+    //! ARGS: port - An unsigned 32-bit integer IP address for this object in
+    //+              host byte order.
     // ------------------------------------------------------------------------
     inline void
     setAddressValue (const Uint32 addr_value)
     {vprASSERT(false && "Implement me");}
 
     // ------------------------------------------------------------------------
-    //: Get the IP address associated with this structure as a human-readable
+    //: Get the IP address associated with this object as a human-readable
     //+ string.
     //
     //! PRE: The structure contains a valid IP address.
@@ -187,13 +202,15 @@ public:
     {vprASSERT(false && "Implement me"); return std::string("");}
 
     // ------------------------------------------------------------------------
+    //: Set the IP address for this object using the given string.  The string
+    //+ can be a hostname or a dotted-decimal IP address.
     //
-    // ARGS: addr - an address string in IP format or hostname formant
+    //! ARGS: addr - an address string in IP format or hostname formant
     //
-    // Returns:
-    //     true  - The address lookup was successful.
-    //     false - The address could not be looked up.  An error message is
-    //             printed to stderr explaining what went wrong.
+    //! RETURNS: true  - The address was valid and the set operation
+    //+                  succeeded.
+    //! RETURNS: false - The address could not be looked up.  An error message
+    //+                  is printed to stderr explaining what went wrong.
     // ------------------------------------------------------------------------
     bool setAddress (const std::string& addr)
     {vprASSERT(false && "Implement me"); return false; }
