@@ -54,6 +54,7 @@
 #                  test programs, and sample apps are installed.  This is
 #                  only the name of the directory, not the full path to it.
 #
+# ANT            - Path to ant
 # DPP_SCRIPTDIR  - The directory containing Doozer++ helper scripts.
 # MKDEPS_CC      - Compiler for C dependencies.
 # MKDEPS_CXX     - Compiler for CXX dependencies.
@@ -84,6 +85,8 @@ releasedir=		@JUGGLERROOT_ABS@/release
 scriptdir=		$(releasedir)/scripts
 topdir=			@topdir@
 top_srcdir=		@top_srcdir@
+
+ANT=			@ANT@
 CXX_IDL=		@TWEEK_CXX_IDL@
 JAVA_IDL=		@TWEEK_JAVA_IDL@
 DPP_SCRIPTDIR=		$(JUGGLERROOT_ABS)/Doozer++/scripts
