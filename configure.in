@@ -143,6 +143,11 @@ dnl # it's a clean one.
 _OS_REL_NUM_MAJOR=`echo "${_OS_REL_NUM}" | cut -f1 -d'.'`
 _OS_REL_NUM_MINOR=`echo "${_OS_REL_NUM}" | cut -f2 -d'.'`
 
+dnl # These are used on all platforms.
+AC_DEFINE_UNQUOTED(VJ_OS_RELEASE, "${_OS_REL_STR}")
+AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MAJOR, ${_OS_REL_NUM_MAJOR})
+AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MINOR, ${_OS_REL_NUM_MINOR})
+
 AR=''			dnl # Archive library command (generally ar(1))
 ARFLAGS=''		dnl # Flags for $AR
 LD=''			dnl # Shared library command (usually ld(1))
@@ -194,9 +199,6 @@ case $host in
         PLATFORM='SGI'
 
         AC_DEFINE(VJ_OS_SGI,)
-        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE, "${_OS_REL_STR}")
-        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MAJOR, ${_OS_REL_NUM_MAJOR})
-        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MINOR, ${_OS_REL_NUM_MINOR})
         AC_DEFINE(_BSD_TYPES,)
         AC_DEFINE(_OLD_TERMIOS,)
 
@@ -226,9 +228,6 @@ case $host in
         fi
 
         AC_DEFINE(VJ_OS_HPUX,)
-        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE, "${_OS_REL_STR}")
-        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MAJOR, ${_OS_REL_NUM_MAJOR})
-        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MINOR, ${_OS_REL_NUM_MINOR})
         AC_DEFINE(_HPUX_SOURCE,)
         AC_DEFINE(_INCLUDE_TERMIO,)
         AC_DEFINE(_CMA_NOWRAPPERS_,)
@@ -239,26 +238,17 @@ case $host in
     dnl # DEC Alpha running Digital UNIX 4.0.
     alpha-[a-z]*-osf4.0)
         AC_DEFINE(VJ_OS_DUX,)
-        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE, "${_OS_REL_STR}")
-        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MAJOR, ${_OS_REL_NUM_MAJOR})
-        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MINOR, ${_OS_REL_NUM_MINOR})
         PLATFORM='alpha-DUX'
         ;;
     dnl # i386-class machine running FreeBSD.
     i386-[a-z]*-freebsd*)
         AC_DEFINE(VJ_OS_FreeBSD,)
-        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE, "${_OS_REL_STR}")
-        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MAJOR, ${_OS_REL_NUM_MAJOR})
-        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MINOR, ${_OS_REL_NUM_MINOR})
         ABI_LIST='AOUT ELF'
         PLATFORM='i386-FBSD'
         ;;
     dnl # Unkown operating system (to config.guess).
     *-unknown)
         AC_DEFINE(VJ_OS_GENERIC,)
-        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE, "${_OS_REL_STR}")
-        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MAJOR, ${_OS_REL_NUM_MAJOR})
-        AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MINOR, ${_OS_REL_NUM_MINOR})
         PLATFORM='UNKNOWN'
         ;;
 esac
