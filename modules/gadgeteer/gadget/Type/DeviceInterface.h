@@ -91,10 +91,14 @@ public:
 
    /** Returns the name of the proxy. */
    std::string getProxyName()
-   { return mProxyName; }
+   {
+      return mProxyName;
+   }
 
    bool isConnected()
-   { return (NULL != mProxyPtr); }
+   {
+      return (NULL != mProxyPtr);
+   }
 
 protected:
    Proxy*      mProxyPtr;   /**<  Ptr to the proxy */
@@ -115,14 +119,14 @@ private:    // Static information
 };
 
 
-// ---- Type specific interfaces ----
+// ---- Type-specific interfaces ----
 
 template<class PROXY_TYPE>
 class DeviceInterface : public BaseDeviceInterface
 {
 public:
    DeviceInterface(const DeviceInterface& other)
-    : BaseDeviceInterface(other)
+      : BaseDeviceInterface(other)
    {
       if (other.mTypeSpecificProxy != NULL)
       {
@@ -136,21 +140,27 @@ public:
 
 public:
    DeviceInterface()
-    : BaseDeviceInterface()
+      : BaseDeviceInterface()
    {
       mTypeSpecificProxy = &mDummyProxy;
    }
 
    PROXY_TYPE* operator->()
-   { return mTypeSpecificProxy; }
+   {
+      return mTypeSpecificProxy;
+   }
 
    PROXY_TYPE& operator*()
-   { return *(mTypeSpecificProxy); }
+   {
+      return *(mTypeSpecificProxy);
+   }
 
    PROXY_TYPE* getProxy()
-   { return mTypeSpecificProxy; }
+   {
+      return mTypeSpecificProxy;
+   }
 
-   /** Set the proxy to an explicit proxy */
+   /** Sets the proxy to an explicit proxy. */
    void setProxy(PROXY_TYPE* proxy)
    {
       vprASSERT(NULL != proxy);
