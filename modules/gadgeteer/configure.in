@@ -41,7 +41,7 @@ AC_REVISION($Revision$)
 AC_INIT(gadget/gadgetConfig.h)
 AC_CONFIG_AUX_DIR(../../share/config)
 AC_CONFIG_HEADER(gadget/gadgetDefines.h)
-DPP_PREREQ(1.4)
+DPP_PREREQ(1.4.98)
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -130,6 +130,8 @@ cd "$topdir"
 # Checks for programs.
 # -----------------------------------------------------------------------------
 VJ_COMPILER_SETUP
+VJ_PROG_CC_PROF_FLAG(yes)
+VJ_PROG_CXX_PROF_FLAG(yes)
 
 # Ensure that the C++ compiler we've found is capable of compiling the newer
 # newer C++ features that we need.
