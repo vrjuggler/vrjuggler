@@ -3,6 +3,7 @@ DATE       AUTHOR   CHANGE
 2001-12-13 allenb   Added method to get the value of the "base" type of 
                     vpr::Interval.  This is to assist in serializing the data.
 2001-12-13 allenb   Added availableBytes() to the BlockIO interface.
+                    NEW VERSION: 0.7.0
 2001-12-11 allenb   Added debugOutputGuard to vpr::Debug.  Helps with scoped
                     debug output.
 					NEW VERSION: 0.6.2
