@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="../../../../../../../../../../../home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
+<?xml-stylesheet href="http://www.vrjuggler.org/docbook_ab.css" type="text/css"?>
+<?morphon-document-settings
+  morphon.document.settings.print.fixed.attributes="true"
+  morphon.document.settings.relative.systemids="0"
+  morphon.document.settings.print.defaultvalues.attributes="false"
+  morphon.document.settings.print.empty.tags="true"
+  morphon.document.settings.whitespaces.amount="3"
+  morphon.document.settings.stylesheetpi.autoupdate="true"
+  morphon.document.settings.maxlinelength="0"
+  morphon.document.settings.whitespaces.type="indent"
+  morphon.document.settings.endofline.type="2"
+?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <book>
    <bookinfo>
       <title>VR Juggler</title>
       <subtitle>Configuration Guide</subtitle>
-      <releaseinfo>Version 1.1 DR2</releaseinfo>
+      <releaseinfo>Version 1.1 DR4</releaseinfo>
       <pubdate>$Date$</pubdate>
    </bookinfo>
    <preface>
@@ -19,7 +30,7 @@
       <para>VR Juggler attempts to make the configuration process as simple as possible. It includes a GUI application called VjControl to edit config files. Use of the GUI has many advantages: it can provide an organized view of the configuration information, with help information or suggested values readily available. It can prevent many simple mistakes (such as typos in text-based configuration files) and help resolve others.</para>
       <para>In addition to this, the VR Juggler config files themselves are well-structured, allowing the configurations of various elements of the VR system to be created separately and then combined in various ways.</para>
       <section>
-         <title>An overview of VR Juggler configuration</title>
+         <title>An Overview of VR Juggler Configuration</title>
          <para>VR Juggler's configuration files are composed of units called ConfigChunks. A ConfigChunk contains the configuration information for a single element of VR Juggler. These elements might be display windows, or device drivers, or even applications. Naturally, the ConfigChunk for a display window contains very different information from that of a device driver.</para>
          <para>All ConfigChunks have individual names, so that multiple chunks for the same kind of element can be distinguished. This means, for example, that a VR Juggler configuration can include several display windows with separate screen coordinates and viewing parameters, each with a unique name. It also means that VR Juggler can use an arbitrary number and variety of displays or devices at any time, limited only by the capabilities of the underlying hardware.</para>
          <para>VjControl represents configuration files as a tree of ConfigChunks, as seen in <xref linkend="VjControlMainPanel"/>. The tree structure exists to help organize the contents of the file, and is user-customizable. VjControl also allows users to view multiple configuration files side-by-side, making it easy to copy ConfigChunks from one to another.</para>
@@ -34,11 +45,11 @@
       </section>
    </chapter>
    <chapter>
-      <title>Building a configuration file from scratch</title>
+      <title>Building a Configuration File from Scratch</title>
       <para>VR Juggler includes a number of sample configuration files for common VR systems. These files are based on the systems readily available to the VR Juggler developers and our contributors, but obviously we cannot provide a comprehensive set of example configurations - the field is simply too diverse.</para>
       <para>In this section we will demonstrate how to create a VR Juggler configuration file from scratch, describing each element and suggesting an order of steps to setup a new VR system in the easiest possible way. Our example system will be a four-walled projection system similar to Iowa State University's C4 device. After the step-by-step example, we will also briefly describe major variations, such as the differences necessary to create a configuration for a Head-Mounted Display, and some specific examples of setting up various input devices.</para>
       <section>
-         <title>Before you start: collecting information</title>
+         <title>Before You Start: Collecting Information</title>
          <para>Configuring a VR system is much easier if all the necessary information is readily at hand. Sometimes, though, it can be hard to figure out exactly what is needed. The following non-exhaustive list suggests some of the data that it may be helpful to collect:</para>
          <itemizedlist>
             <listitem>
@@ -56,19 +67,19 @@
          </itemizedlist>
       </section>
       <section>
-         <title>Create a new configuration file</title>
+         <title>Create a New Configuration File</title>
          <para>Many of the sample configuration files included with VR Juggler are modular - that is, different parts of the system are described in different files, and multiple files are loaded to configure the entire VR system. To simplify this example, we'll put all of our configuration information into a single file.</para>
          <para>First, start VjControl and click on the <guibutton>Configuration</guibutton> tab. The configuration panel is split into two side-by-side panels. We will only be using one side for this tutorial. Click on <guibutton>New</guibutton> to create a new file. If you want, click <guibutton>Save</guibutton> to give your file a name.</para>
       </section>
       <section>
-         <title>Decide on the origin</title>
+         <title>Decide on the Origin</title>
          <para>All displays and input data in VR Juggler are specified relative to a single origin point. The origin is some point in the physical space inside or around the VR System. Before we configure anything else, we have to decide where that point will be. </para>
          <para>For a Surround-Screen VR (SSVR) system, we decided that the origin point would be the center of the floor, equidistant from each wall. This is a common convention and is usually very convenient.</para>
          <para>We also need to define the orientation of our origin. Again there is a common convention which we recommend. We use a right-handed coordinate system, with positive X to the right of an observer looking toward the front screen. Positive Y is up and positive Z is toward the rear of the system (away from the front screen).</para>
          <para>Note that in the sample VR Juggler configuration files, all positions related to displays or input devices are given in feet. </para>
       </section>
       <section id="BasicTrackerConfig">
-         <title>Configure trackers</title>
+         <title>Configure Trackers</title>
          <para>The easiest place to start is at the bottom, with out input hardware. Open up the <guilabel>Input</guilabel> folder, and then <guilabel>Input Devices</guilabel>. You will see a list of all the device drivers we can create configurations for. For this example, we will use an Ascension MotionStar for our tracking system. Right-click on the <guilabel>MotionStar</guilabel> label in the tree, and select <guimenu>Insert</guimenu> from the menu. An empty ConfigChunk describing the MotionStar driver is created.</para>
          <para>Now we need to edit the MotionStar configuration to describe the details of our system. Double-clicking on the newly-created MotionStar ConfigChunk will open an editor window. This window shows the complete set of configuration options for VR Juggler's MotionStar driver.</para>
          <figure float="1" id="motionstarchunkfigure">
@@ -87,7 +98,7 @@
          <para>Most of the other configuration options shown for the MotionStar are particular to its specific hardware and low-level software driver, and are described by the device's own documentation. However, we should draw attention to the <property>Number of Birds</property> property. The MotionStar hardware supports multiple positional sensors, called birds. In our example setup, we have two sensors. One is attached to a pair of stereo glasses, and the other is mounted to the wand which enables users to interact with the virtual environment.</para>
          <para>Note that there is nothing limiting us to having a single tracking system, or even a single MotionStar driver. For example, we could create two MotionStar configurations in the same file, each with different network settings, each talking to a different physical MotionStar. The <property>Instance Name</property> at the top of the configuration window can be used to distinguish one from the other.</para>
          <section>
-            <title>Create position proxies</title>
+            <title>Create Position Proxies</title>
             <para>In VR Juggler, we generally do not interact with input devices directly. Instead, we create proxies for them. A Position Proxy represents a single positional input. It is used to provide a simple, generic interface to position data, abstracting away from the actual hardware.</para>
             <figure float="1" id="vjheadchunkfigure">
                <title>The editor window for a Position Proxy called "VJHead". The proxy attaches to a device named "MotionStar", and applies a transformation and rotation to the device data.</title>
@@ -111,7 +122,7 @@
          </section>
       </section>
       <section>
-         <title>Configure other input devices</title>
+         <title>Configure Other Input Devices</title>
          <para>In addition to moving around within an environment, users will also want to interact with the application in some way. There are many sorts of devices that can be used in a VR system. Wands and joysticks of various sorts are very popular. These are simple handheld devices, usually with a position tracking sensor attached to them, and with a number of buttons that the user can press to send commands to an application (such as "fly forward" or "pick up the object I'm touching"). Gloves that sense the user's hand movements are also popular (see <xref linkend="PinchGloveSection"/>, below, for an example). In surround-screen VR systems, it is also possible to bring physical devices - for example, a bicycle or the cab of a truck - into the VR system. In this case, the user can interact with the application by manipulating pedals, handlebars, or steering wheels.</para>
          <para>In VR Juggler, we divide most of these devices into digital or analog inputs. Digital devices are buttons, like on a mouse or joystick, and simply have on and off values. Analog devices return a range of data, and can be used for steering wheels or foot pedals, among other things.</para>
          <para>Several tracking system manufacturers include handheld wand-style devices that can be used as a regular sensor in their hardware. For example, see <xref linkend="ISenseSection"/> at the end of this article for information about using digital inputs supplied by an InterSense tracking system.</para>
@@ -135,7 +146,7 @@
          </section>
       </section>
       <section>
-         <title>Add User configuration</title>
+         <title>Add User Configuration</title>
          <para>We have trackers in our configuration now, but how do we interpret the tracking data? Which sensor is the user's head, and which are his hands?</para>
          <para>We create a <property>User</property> ConfigChunk to store a small amount of information about the person using our VR system. When we create displays later on, we'll tell each one which user to draw the view for.</para>
          <para>Typically, we will only need one <property>User</property> ConfigChunk. It only has a few properties, as shown in the figure below. </para>
@@ -154,7 +165,7 @@
          <title>Add Displays</title>
          <para>Now that we have our input devices and users sorted out, we can finally think about the graphics. We need to create a display window for each of the four screens in our example system. We also need to provide some auxiliary information about the graphics pipes and X Windows displays on our system, as outlined below.</para>
          <section>
-            <title>Create a DisplaySystem chunk</title>
+            <title>Create a DisplaySystem Chunk</title>
             <para>There are two folders beneath <guilabel>Displays</guilabel> in the config file editor window. First, we need to create a new chunk under <guilabel>Display System</guilabel>. </para>
             <para>VR Juggler's display windows use the idea of pipe numbers - integer values associated with a particular X Windows display - to decide where to open. On a single display system like the average desktop computer, this is simple - the default X display is labeled ":0.0".<footnote>
                   <para>The display names are ignored on Windows systems, but the number of pipes is still important.</para>
@@ -172,7 +183,7 @@
             <para>Extra values in <property>XPipes</property> can be useful for defining X displays that are not used for graphics drawing, but which are used for other purposes - e.g. user input windows. See the description on Configuring simulated devices, below, for an example.</para>
          </section>
          <section>
-            <title>Define display windows</title>
+            <title>Define Display Windows</title>
             <para>The next step - and the last needed to provide minimal functionality - is to create ConfigChunks for our display windows. To begin this step, we need some information about how the video is connected to our VR system. For this example there are four screens, each with a stereo display, each powered by a separate X Display on the host computer. We also need to determine where on the screen to position the window so that our graphics show up on the projectors.</para>
             <para>In VR Juggler 2.0, a single display window can contain multiple viewports. A Viewport is a rectangular area of the window that contains a particular graphic image. So, we could configure a window with separate viewports on the top and bottom halves of the window. There are various ways this feature can be used. For example, some HMDs and other stereo display devices will use the top half of the screen for one eye's view and the bottom half of the screen for the other eye. While we could achieve the same results by putting two windows on the same screen, using a single window with two viewports may provide better performance.</para>
             <para>With this information on hand, it is time to create the ConfigChunks for the display windows. Under <guilabel>Displays</guilabel> in the tree view of our configuration file, right-click on <guilabel>Display Window</guilabel> and insert a new chunk. We'll start by editing this chunk and filling in information for the right wall of our surround-screen system, as shown in the figure. Most of the properties will be the same for each window. </para>
@@ -197,24 +208,24 @@
          </section>
       </section>
       <section>
-         <title>Additional features</title>
+         <title>Additional Features</title>
          <para>At this point, our example file has all the information needed to start up a simple, OpenGL-based VR Juggler application. If you've been following along, making a configuration file for your own VR system, you may want to give it a try with one of the sample programs in VR Juggler's samples directory. </para>
          <para>The next sections discuss configuration options for using other graphics APIs (primarily OpenGL Performer) and for enabling some of VR Juggler's advanced features, such as dynamic reconfiguration.</para>
          <section>
-            <title>Configuring Performer API features</title>
+            <title>Configuring OpenGL Performer API Features</title>
             <para>VR Juggler includes a handful of configuration options specifically for applications that use the <trademark>OpenGL Performer</trademark> graphics API. To configure these features, open the <guilabel>API-specific</guilabel> folder and create a <property>Performer API</property> chunk. This chunk lets you choose the model files (e.g. in ".flt" format) that should be used to represent the user's head and wand position in simulator mode. Example model files are provided in <filename>$VJ_BASE_DIR/share/vrjuggler/data/models</filename>.</para>
          </section>
          <section>
-            <title>Configuring audio features</title>
+            <title>Configuring Audio Features</title>
             <para>The <guilabel>API-specific</guilabel> folder also contains two ConfigChunk types for configuring VR Juggler's built-in audio capabilities - one for the AudioWorks driver, and one for the SL sound driver. See <citetitle>Sonix: Juggler Simple Sound Interface</citetitle> for more information.</para>
          </section>
          <section>
-            <title>Enabling dynamic reconfiguration</title>
+            <title>Enabling Dynamic Reconfiguration</title>
             <para>Just below the <guilabel>API-specific</guilabel> folder is the <guilabel>Environment Manager</guilabel> folder. The Environment Manager is part of VR Juggler's dynamic reconfiguration capability. When it is activated, VjControl can connect to the application to monitor its performance or change its configuration.</para>
             <para>To enable this feature, first create an <property>Environment Manager</property> chunk. This ConfigChunk has two important properties. The first is the <property>Port</property> - the network port that the application will use to listen for connections. You also need to supply this number to VjControl when it tries to open a connection. This argument is typically an integer between 1024 and 65535. The second important property is <property>Accept Connections</property>. Obviously, this should be set to True if you want to use VjControl's monitoring and control capabilities.</para>
          </section>
          <section>
-            <title>Logging performance data</title>
+            <title>Logging Performance Data</title>
             <para>Another service provided by the the Environment Manager is performance monitoring of VR Juggler applications. Using VR Juggler's performance monitoring capabilities requires two simple steps.</para>
             <para>First, we need to tell the application which kinds of performance data to gather. There are three basic categories:</para>
             <itemizedlist>
@@ -252,21 +263,21 @@
       </section>
    </chapter>
    <chapter>
-      <title>Configuring other hardware devices</title>
+      <title>Configuring Other Hardware Devices</title>
       <para>Our step-by-step example above concentrated on a particular hardware setup. In the next several sections, we will discuss configuration for a number of other VR devices.</para>
       <section>
-         <title>Desk or wall-based projection displays</title>
+         <title>Desk or Wall-Based Projection Displays</title>
          <para>There are a large number of single-display projection systems with a variety of physical configurations - walls, desktops, angled surfaces, etc. All of these display devices can be configured using the same technique discussed above for configuring an SSVR system. Simply create a <property>Surface Display</property> chunk, and fill in the values for the screen/desk's corners relative to the origin of the VR Juggler coordinate system (the origin should typically be a spot on the floor several feet in front of the screen, or possibly directly below a horizontal desk-type display.</para>
       </section>
       <section>
-         <title>Head-mounted displays</title>
+         <title>Head-Mounted Displays</title>
          <para>There are a large class of head-mounted displays (HMDs), ranging from helmets to glasses to displays mounted on movable arms. These are also configured for use with VR Juggler with the <property>Surface Display</property> ConfigChunk, but there are two important differences.</para>
          <para>The most obvious difference is that these displays do not have a fixed position. Instead, they follow the movements of the user's head. To enable this sort of head tracking, turn on the <property>Tracked</property> property toward the bottom of the <property>Surface Display</property> editor window. Next, select a position proxy for the <property>TrackerProxy</property> property (usually, you'll want to use VJHead for this). Now, the view drawn for this display will change as if it were hooked to a video camera on the user's head.</para>
          <para>The other difference with an HMD display is that the values for the <property>Corners</property> property typically won't be the physical position of the displays (typically a few inches in front of the user's face). Instead, the HMD documentation will give display information, such as "108 inch diagonal at 4' distance, 4x3 aspect ratio". This information can be used to calculate reasonable values for the corners, with the origin at the point between the wearer's eyes. (For the above example, the corners values would be x= +/- 3.6 feet, y= +/- 2.7 feet, and z = -4.0 feet).</para>
          <para>One other aspect of HMD configuration to mention is that some HMDs use two separate video inputs, one channeled to each eye. If this is the case, each eye should be configured as a separate <property>Surface Display</property> window, with its screen coordinates and so forth. Set the <property>View</property> property to "Left Eye" or "Right Eye" in each, instead of "Stereo". Consult your HMD documentation for more details.</para>
       </section>
       <section>
-         <title>Using the <trademark>Trackd</trademark> tracker daemon with VR Juggler</title>
+         <title>Using the <trademark>Trackd</trademark> Tracker Daemon with VR Juggler</title>
          <para>VRCO's <trademark>Trackd</trademark> is a standalone server (or "daemon") which can manage a large variety of VR hardware devices and supply input data to end-user applications. VR Juggler can communicate with Trackd to provide input data for an application.</para>
          <para>Individual devices in Trackd are identified by <firstterm>shared memory keys</firstterm> - integer values that are defined in Trackd's own configuration files. Note that configuring Trackd itself is outside the scope of either VR Juggler or this document.</para>
          <figure float="1" id="TrackdChunks">
@@ -289,7 +300,7 @@
          <para>A VR Juggler configuration can include multiple sensors and controllers, depending only on the number of devices Trackd itself is configured to use.</para>
       </section>
       <section id="ISenseSection">
-         <title>Using InterSense trackers</title>
+         <title>Using InterSense Trackers</title>
          <para>VR Juggler includes a driver for the InterSense IS-900 wireless tracking system. This tracking system supports multiple "stations", each of which provides a positional input. Some stations also include digital and analog inputs - buttons, sliders, etc.</para>
          <figure id="ISenseChunkFigure">
             <title>Configuration for InterSense tracking system.</title>
@@ -314,11 +325,11 @@
       </section>
    </chapter>
    <chapter>
-      <title>Configuring simulated devices</title>
+      <title>Configuring Simulated Devices</title>
       <para>While the focus of VR Juggler development is on fully immersive VR systems, the reality is that many times such a system is not available. Often, this is because many developers have to share a single HMD or other device. Researchers also frequently need to demonstrate their applications in a wide range of settings, where the usual paraphernalia of VR is unavailable.</para>
       <para>For all these reasons, VR Juggler supports a set of simulator objects to replace the usual positional, analog, and digital input devices. By configuring these simulated devices, users can interact with an application using only a keyboard and mouse.</para>
       <section>
-         <title>Creating a keyboard input window</title>
+         <title>Creating a Keyboard Input Window</title>
          <para>VR Juggler uses keyboard input windows as the source for all simulator data. In order to use simulated devices, a configuration file needs to contain at least one <property>Keyboard</property> ConfigChunk (located with all the other input device ConfigChunks in VjControl's tree display). It may be convenient to use multiple keyboard windows if you are trying to simulate a large number of devices - that way each device can be controlled with the same key bindings, but with a different keyboard window being active.</para>
          <para>The <citetitle>VR Juggler Getting Started Guide</citetitle> gives an example of running an application with simulated devices and using the keyboard window to control the user's position and wand buttons.</para>
          <para>The <property>Keyboard</property> ConfigChunk is relatively simple. Its most important properties are simply the size and position of the window to open. It also has a <property>Display Number</property> property which, like the <property>Pipe</property> property in <property>Surface Displays</property> (described above), refers to one of the displays named in the <property>Display System</property> ConfigChunk. Usually, that property is set to "-1".</para>
@@ -338,7 +349,7 @@
          <para>Note that in VR Juggler 2.0, display windows will also be able to serve double duty as keyboard input sources.</para>
       </section>
       <section>
-         <title>Creating simulated devices</title>
+         <title>Creating Simulated Devices</title>
          <para>When editing a configuration file in VjControl, the simulated devices are located in a folder inside the <guilabel>Input</guilabel> folder. There are simulator devices for each kind of input device VR Juggler recognizes.</para>
          <figure id="SimDevChunkFigure">
             <title>Configuration of simulated devices. These are the digital and positional simulators used to provide the user's head control and wand buttons in the simstandalone.config file included in the VR Juggler distribution.</title>
