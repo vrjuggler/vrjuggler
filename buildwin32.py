@@ -48,6 +48,9 @@ EXIT_STATUS_MSVS_START_ERROR  = 3
 EXIT_STATUS_INVALID_PATH      = 4
 EXIT_STATUS_MISSING_REQ_VALUE = 5
 
+gJugglerDir      = os.path.dirname(os.path.abspath(sys.argv[0]))
+gOptionsFileName = "options.cache"
+
 gHaveTk = False
 try:
    import Tkinter
@@ -135,6 +138,9 @@ def noVisualStudioError():
    print "variable on your system."
    sys.exit(EXIT_STATUS_NO_MSVS)
 
+def getCacheFileName():
+   return os.path.join(gJugglerDir, gOptionsFileName)
+
 def processInput(optionDict, envVar, inputDesc, required = False):
    default_value = optionDict[envVar]
    print "  %s [%s]: " % (inputDesc, default_value),
@@ -208,13 +214,13 @@ def getDefaultVars():
       options[opt.envVar] = os.getenv(opt.envVar, opt.default)
 
    # If there are cached options, read them in.
-   cache_file = os.path.join(gJugglerDir, gOptionsFileName)
+   cache_file = getCacheFileName()
    if os.path.exists(cache_file):
       execfile(cache_file)
+
    return required, optional, options
 
 def setVars():
-   cache_file = os.path.join(gJugglerDir, gOptionsFileName)
    required, optional, options = getDefaultVars()
 
    print "+++ Required Settings"
@@ -239,6 +245,12 @@ def setVars():
    for opt in optional:
       processInput(options, opt.envVar, opt.desc, opt.required)
 
+   postProcessOptions()
+   writeCacheFile(options)
+
+   return options
+
+def postProcessOptions():
    # If the %JAVA_HOME% setting is a valid directory, add its bin subdirectory
    # to the path.
    if os.environ['JAVA_HOME'] != '' and os.path.exists(os.environ['JAVA_HOME']):
@@ -279,13 +291,12 @@ def setVars():
             os.environ['OMNIORB_VERSION'] = match.group(1)
             break
 
-   cache_file = open(cache_file, 'w')
-   for k, v in options.iteritems():
+def writeCacheFile(optionDict):
+   cache_file = open(getCacheFileName(), 'w')
+   for k, v in optionDict.iteritems():
       output = "options['%s'] = r'%s'\n" % (k, v)
       cache_file.write(output)
    cache_file.close()
-
-   return options
 
 def generateVersionHeaders():
    class JugglerModule:
@@ -1306,12 +1317,7 @@ class GuiFrontEnd:
       return temp
 
    def cleanup(self):
-      cache_file = os.path.join(gJugglerDir, gOptionsFileName)
-      cache_file = open(cache_file, 'w')
-      for k, v in self.mOptions.iteritems():
-         output = "options['%s'] = r'%s'\n" % (k, v.get())
-         cache_file.write(output)
-      cache_file.close()
+      writeCacheFile(self.mOptions)
       self.mRoot.destroy()
 
    def makeOptionsInterface(self, required, optional):
@@ -1585,53 +1591,8 @@ class GuiFrontEnd:
          os.environ[k] = self.mOptions[k].get()
 
       if True:#self.validateOptions():
-         if os.environ['JAVA_HOME'] != '' and \
-            os.path.exists(os.environ['JAVA_HOME']):
-            jdk_path = os.path.join(os.environ['JAVA_HOME'], 'bin')
-            os.environ['PATH'] = jdk_path + os.pathsep + os.environ['PATH']
-            os.environ['JACORB_PATH'] = os.path.join(gJugglerDir,
-                                                     r'external\JacORB')
-
-         if os.environ['OMNIORB_ROOT'] != '' and \
-            os.path.exists(os.environ['OMNIORB_ROOT']):
-            omni_bin = os.path.join(os.environ['OMNIORB_ROOT'], 'bin')
-
-            if os.path.exists(os.path.join(omni_bin, 'omniidl.exe')):
-               os.environ['OMNIORB_BIN'] = omni_bin
-            else:
-               os.environ['OMNIORB_BIN'] = os.path.join(omni_bin, 'x86_win32')
-
-            # Extend the path to include omniORB's bin directory.
-            os.environ['PATH'] = os.environ['OMNIORB_BIN'] + os.pathsep + os.environ['PATH']
-
-            omni_lib = os.path.join(os.environ['OMNIORB_ROOT'], 'lib')
-
-            if os.getenv('PYTHONPATH', '') != '':
-               os.environ['PYTHONPATH'] = os.path.join(omni_lib, 'python') + os.pathsep + os.environ['PYTHONPATH']
-            else:
-               os.environ['PYTHONPATH'] = os.path.join(omni_lib, 'python')
-
-            if os.path.exists(os.path.join(omni_lib, 'omnithread.lib')):
-               os.environ['OMNIORB_LIB'] = omni_lib
-            else:
-               os.environ['OMNIORB_LIB'] = os.path.join(omni_lib, 'x86_win32')
-
-            omni_glob = os.path.join(os.environ['OMNIORB_LIB'], 'omniORB*_rt.lib')
-            libs = glob.glob(omni_glob)
-            omni_ver_re = re.compile(r'omniORB(\d\d\d)_rt.lib')
-
-            for l in libs:
-               match = omni_ver_re.search(l)
-               if match is not None:
-                  os.environ['OMNIORB_VERSION'] = match.group(1)
-                  break
-
-         cache_file = os.path.join(gJugglerDir, gOptionsFileName)
-         cache_file = open(cache_file, 'w')
-         for k, v in self.mOptions.iteritems():
-            output = "options['%s'] = r'%s'\n" % (k, v.get())
-            cache_file.write(output)
-         cache_file.close()
+         postProcessOptions()
+         writeCacheFile(self.mOptions)
 
          self.BuildThread = threading.Thread(None, self.runVisualStudio,
                                              "BuildThread")
@@ -1736,19 +1697,8 @@ class GuiFrontEnd:
                                                 "a")
       self.mRoot.OutputFrame.MessageText['state'] = 'disabled'
       generateAntBuildFiles()
-      devenv_cmd = None
-      for p in str.split(os.getenv('PATH', ''), os.pathsep):
-#         print "Searching in", p
-         if os.path.exists(os.path.join(p, 'devenv.exe')):
-            devenv_cmd = os.path.join(p, 'devenv.exe')
-            break
 
-      if devenv_cmd is None:
-         # The environment variable %VSINSTALLDIR% is set by vsvars32.bat.
-         print "WARNING: Falling back on the use of %VSINSTALLDIR%"
-         devenv_cmd = r'%s' % os.path.join(os.getenv('VSINSTALLDIR', ''),
-                                           'devenv.exe')
-
+      devenv_cmd = getVSCmd()
       (devenv_cmd_no_exe, ext) = os.path.splitext(devenv_cmd)
       devenv_cmd_no_exe = '"%s"' % (devenv_cmd_no_exe)
 
@@ -1786,6 +1736,22 @@ class GuiFrontEnd:
             sys.exit(EXIT_STATUS_MSVS_START_ERROR)
       self.buildFinished()
 
+def getVSCmd():
+   devenv_cmd = None
+   for p in str.split(os.getenv('PATH', ''), os.pathsep):
+#      print "Searching in", p
+      if os.path.exists(os.path.join(p, 'devenv.exe')):
+         devenv_cmd = os.path.join(p, 'devenv.exe')
+         break
+
+   if devenv_cmd is None:
+      # The environment variable %VSINSTALLDIR% is set by vsvars32.bat.
+      print "WARNING: Falling back on the use of %VSINSTALLDIR%"
+      devenv_cmd = r'%s' % os.path.join(os.getenv('VSINSTALLDIR', ''),
+                                        'devenv.exe')
+
+   return devenv_cmd
+
 def main():
    disable_tk = False
 
@@ -1819,19 +1785,7 @@ def main():
       generateVersionHeaders()
       generateAntBuildFiles()
 
-      devenv_cmd = None
-      for p in str.split(os.getenv('PATH', ''), os.pathsep):
-#         print "Searching in", p
-         if os.path.exists(os.path.join(p, 'devenv.exe')):
-            devenv_cmd = os.path.join(p, 'devenv.exe')
-            break
-
-      if devenv_cmd is None:
-         # The environment variable %VSINSTALLDIR% is set by vsvars32.bat.
-         print "WARNING: Falling back on the use of %VSINSTALLDIR%"
-         devenv_cmd = r'%s' % os.path.join(os.getenv('VSINSTALLDIR', ''),
-                                           'devenv.exe')
-
+      devenv_cmd    = getVSCmd()
       solution_file = r'%s' % os.path.join(gJugglerDir, 'vc7', 'Juggler.sln')
 
       try:
@@ -1864,9 +1818,6 @@ def usage():
    #print "-a, --auto               Does not interactively ask for values of any options.  Uses the Default values, 'options.cache' if it exists, or the file given by the -o option.  Only used in command line mode."
    print "-o, --options-file=FILE  Uses FILE to Load/Save Options."
    print "-h, --help               Print this usage text and quit."
-
-gJugglerDir = os.path.dirname(os.path.abspath(sys.argv[0]))
-gOptionsFileName = "options.cache"
 
 if __name__ == '__main__':
    try:
