@@ -30,11 +30,14 @@
 
 // Includes ====================================================================
 #include <boost/python.hpp>
-#include <vpr/Util/Debug.h>
 #include <vrj/Kernel/User.h>
 #include <vrj/Kernel/App.h>
-#include <vrj/Kernel/Kernel.h>
+#include <vrj/Display/SimViewport.h>
 #include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Display/Projection.h>
+#include <vrj/Display/Viewport.h>
+#include <vrj/Kernel/Kernel.h>
+#include <vrj/Display/Display.h>
 #include <pyjutil/InterpreterGuard.h>
 #include <pyjutil/Debug.h>
 
@@ -44,6 +47,48 @@ using namespace boost::python;
 // Declarations ================================================================
 namespace  {
 
+
+struct vrj_Display_Wrapper: vrj::Display
+{
+    vrj_Display_Wrapper(PyObject* self_, const vrj::Display & p0):
+        vrj::Display(p0), self(self_) {}
+
+    vrj_Display_Wrapper(PyObject* self_):
+        vrj::Display(), self(self_) {}
+
+    void config(boost::shared_ptr<jccl::ConfigChunk> p0) {
+        call_method< void >(self, "config", p0);
+    }
+
+    void default_config(boost::shared_ptr<jccl::ConfigChunk> p0) {
+        vrj::Display::config(p0);
+    }
+
+    PyObject* self;
+};
+
+struct vrj_Projection_Wrapper: vrj::Projection
+{
+    vrj_Projection_Wrapper(PyObject* self_, const vrj::Projection & p0):
+        vrj::Projection(p0), self(self_) {}
+
+    vrj_Projection_Wrapper(PyObject* self_):
+        vrj::Projection(), self(self_) {}
+
+    void config(boost::shared_ptr<jccl::ConfigChunk> p0) {
+        call_method< void >(self, "config", p0);
+    }
+
+    void default_config(boost::shared_ptr<jccl::ConfigChunk> p0) {
+        vrj::Projection::config(p0);
+    }
+
+    void calcViewMatrix(gmtl::Matrix<float,4,4> & p0, const float p1) {
+        call_method< void >(self, "calcViewMatrix", p0, p1);
+    }
+
+    PyObject* self;
+};
 
 struct vrj_User_Wrapper: vrj::User
 {
@@ -56,6 +101,26 @@ struct vrj_User_Wrapper: vrj::User
 
     bool default_config(boost::shared_ptr<jccl::ConfigChunk> p0) {
         return vrj::User::config(p0);
+    }
+
+    PyObject* self;
+};
+
+struct vrj_Viewport_Wrapper: vrj::Viewport
+{
+    vrj_Viewport_Wrapper(PyObject* self_):
+        vrj::Viewport(), self(self_) {}
+
+    void config(boost::shared_ptr<jccl::ConfigChunk> p0) {
+        call_method< void >(self, "config", p0);
+    }
+
+    void default_config(boost::shared_ptr<jccl::ConfigChunk> p0) {
+        vrj::Viewport::config(p0);
+    }
+
+    void updateProjections(const float p0) {
+        call_method< void >(self, "updateProjections", p0);
     }
 
     PyObject* self;
@@ -97,6 +162,30 @@ void vrj_Kernel_waitForKernelStop(vrj::Kernel* kernel)
       kernel->waitForKernelStop();
    Py_END_ALLOW_THREADS;
 }
+
+struct vrj_SimViewport_Wrapper: vrj::SimViewport
+{
+    vrj_SimViewport_Wrapper(PyObject* self_):
+        vrj::SimViewport(), self(self_) {}
+
+    void config(boost::shared_ptr<jccl::ConfigChunk> p0) {
+        call_method< void >(self, "config", p0);
+    }
+
+    void default_config(boost::shared_ptr<jccl::ConfigChunk> p0) {
+        vrj::SimViewport::config(p0);
+    }
+
+    void updateProjections(const float p0) {
+        call_method< void >(self, "updateProjections", p0);
+    }
+
+    void default_updateProjections(const float p0) {
+        vrj::SimViewport::updateProjections(p0);
+    }
+
+    PyObject* self;
+};
 
 struct vrj_App_Wrapper: vrj::App
 {
@@ -553,6 +642,50 @@ BOOST_PYTHON_MODULE(vrj)
     // Create and acquire the global interpreter lock.
     PyEval_InitThreads();
 
+    class_< vrj::Display, vrj_Display_Wrapper >("Display", init<  >())
+        .def(init< const vrj::Display & >())
+        .def("configDisplayWindow", &vrj::Display::configDisplayWindow)
+        .def("configViewports", &vrj::Display::configViewports)
+        .def("updateProjections", &vrj::Display::updateProjections)
+        .def("isActive", &vrj::Display::isActive)
+        .def("setName", &vrj::Display::setName)
+        .def("getName", &vrj::Display::getName)
+        .def("shouldDrawBorder", &vrj::Display::shouldDrawBorder)
+        .def("setOriginAndSize", &vrj::Display::setOriginAndSize)
+        .def("getOriginAndSize", &vrj::Display::getOriginAndSize)
+        .def("setPipe", &vrj::Display::setPipe)
+        .def("getPipe", &vrj::Display::getPipe)
+        .def("inStereo", &vrj::Display::inStereo)
+        .def("getConfigChunk", &vrj::Display::getConfigChunk)
+        .def("getGlFrameBufferConfig", &vrj::Display::getGlFrameBufferConfig)
+        .def("getNumViewports", &vrj::Display::getNumViewports)
+        .def("getViewport", &vrj::Display::getViewport, return_internal_reference< 1 >())
+        .def("config", &vrj::Display::config, &vrj_Display_Wrapper::default_config)
+//        .def(self_ns::str(self))
+    ;
+
+    scope* vrj_Projection_scope = new scope(
+    class_< vrj::Projection, boost::noncopyable, vrj_Projection_Wrapper >("Projection", init<  >())
+        .def("setEye", &vrj::Projection::setEye)
+        .def("getEye", &vrj::Projection::getEye)
+        .def("setViewport", &vrj::Projection::setViewport)
+        .def("getViewport", &vrj::Projection::getViewport, return_internal_reference< 1 >())
+        .def("getFrustumApexAndCorners", &vrj::Projection::getFrustumApexAndCorners)
+        .def("getViewMatrix", &vrj::Projection::getViewMatrix, return_value_policy< copy_const_reference >())
+        .def("getFrustum", &vrj::Projection::getFrustum)
+        .def("setNearFar", &vrj::Projection::setNearFar)
+        .staticmethod("setNearFar")
+        .def("config", &vrj::Projection::config, &vrj_Projection_Wrapper::default_config)
+//        .def(self_ns::str(self))
+    );
+
+    enum_< vrj::Projection::Eye >("Eye")
+        .value("RIGHT", vrj::Projection::RIGHT)
+        .value("LEFT", vrj::Projection::LEFT)
+    ;
+
+    delete vrj_Projection_scope;
+
     class_< vrj::User, boost::noncopyable, vrj_User_Wrapper >("User", init<  >())
         .def("getId", &vrj::User::getId)
         .def("getName", &vrj::User::getName)
@@ -560,6 +693,45 @@ BOOST_PYTHON_MODULE(vrj)
         .def("getInterocularDistance", &vrj::User::getInterocularDistance)
         .def("config", &vrj::User::config, &vrj_User_Wrapper::default_config)
     ;
+
+    scope* vrj_Viewport_scope = new scope(
+    class_< vrj::Viewport, boost::noncopyable, vrj_Viewport_Wrapper >("Viewport", init<  >())
+        .def("recordLatency", &vrj::Viewport::recordLatency)
+        .def("getType", &vrj::Viewport::getType)
+        .def("isSimulator", &vrj::Viewport::isSimulator)
+        .def("isSurface", &vrj::Viewport::isSurface)
+        .def("isActive", &vrj::Viewport::isActive)
+        .def("setName", &vrj::Viewport::setName)
+        .def("getName", &vrj::Viewport::getName)
+        .def("inStereo", &vrj::Viewport::inStereo)
+        .def("getView", &vrj::Viewport::getView)
+        .def("setOriginAndSize", &vrj::Viewport::setOriginAndSize)
+        .def("getOriginAndSize", &vrj::Viewport::getOriginAndSize)
+        .def("getConfigChunk", &vrj::Viewport::getConfigChunk)
+        .def("getUser", &vrj::Viewport::getUser, return_internal_reference< 1 >())
+        .def("setDisplay", &vrj::Viewport::setDisplay)
+        .def("getDisplay", &vrj::Viewport::getDisplay, return_internal_reference< 1 >())
+        .def("getLeftProj", &vrj::Viewport::getLeftProj, return_internal_reference< 1 >())
+        .def("getRightProj", &vrj::Viewport::getRightProj, return_internal_reference< 1 >())
+        .def("config", &vrj::Viewport::config, &vrj_Viewport_Wrapper::default_config)
+//        .def(self_ns::str(self))
+    );
+
+    enum_< vrj::Viewport::Type >("Type")
+        .value("SIM", vrj::Viewport::SIM)
+        .value("UNDEFINED", vrj::Viewport::UNDEFINED)
+        .value("SURFACE", vrj::Viewport::SURFACE)
+    ;
+
+
+    enum_< vrj::Viewport::View >("View")
+        .value("LEFT_EYE", vrj::Viewport::LEFT_EYE)
+        .value("NONE", vrj::Viewport::NONE)
+        .value("STEREO", vrj::Viewport::STEREO)
+        .value("RIGHT_EYE", vrj::Viewport::RIGHT_EYE)
+    ;
+
+    delete vrj_Viewport_scope;
 
     class_< vrj::Kernel, boost::noncopyable, vrj_Kernel_Wrapper >("Kernel", no_init)
         .def("start", &vrj::Kernel::start)
@@ -577,6 +749,12 @@ BOOST_PYTHON_MODULE(vrj)
         .def("instance", &vrj::Kernel::instance, return_value_policy< reference_existing_object >())
         .staticmethod("instance")
         .def("configProcessPending", &vrj::Kernel::configProcessPending, &vrj_Kernel_Wrapper::default_configProcessPending)
+    ;
+
+    class_< vrj::SimViewport, boost::noncopyable, bases< vrj::Viewport > , vrj_SimViewport_Wrapper >("SimViewport", init<  >())
+        .def("getDrawSimInterface", &vrj::SimViewport::getDrawSimInterface, return_internal_reference< 1 >())
+        .def("config", &vrj::SimViewport::config, &vrj_SimViewport_Wrapper::default_config)
+        .def("updateProjections", &vrj::SimViewport::updateProjections, &vrj_SimViewport_Wrapper::default_updateProjections)
     ;
 
     class_< vrj::App, boost::noncopyable, vrj_App_Wrapper >("App", init<  >())

@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-30-2003 patrickh    Added vrj::Viewport, vrj::SimViewport, vrj::Display,
+                        and vrj::Projection.
+                        NEW VERSION: 0.4.9
 Apr-30-2003 patrickh    Updated to Gadgeteer 0.11.1 API.
                         NEW VERSION: 0.4.8
 Apr-30-2003 patrickh    Updated to Gadgeteer 0.11.0 API.

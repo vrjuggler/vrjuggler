@@ -45,3 +45,21 @@ exclude(GlApp.getSoundManager)
 
 User = Class('vrj::User', 'vrj/Kernel/User.h')
 exclude(User.getHeadPosProxy)
+
+Display = Class('vrj::Display', 'vrj/Display/Display.h')
+set_policy(Display.getViewport, return_internal_reference())
+
+Projection = Class('vrj::Projection', 'vrj/Display/Projection.h')
+set_policy(Projection.getViewport, return_internal_reference())
+exclude(Projection.outStream)
+
+Viewport = Class('vrj::Viewport', 'vrj/Display/Viewport.h')
+set_policy(Viewport.getUser, return_internal_reference())
+set_policy(Viewport.getDisplay, return_internal_reference())
+set_policy(Viewport.getLeftProj, return_internal_reference())
+set_policy(Viewport.getRightProj, return_internal_reference())
+exclude(Viewport.outStream)
+
+SimViewport = Class('vrj::SimViewport', 'vrj/Display/SimViewport.h')
+set_policy(SimViewport.getDrawSimInterface, return_internal_reference())
+exclude(SimViewport.outStream)
