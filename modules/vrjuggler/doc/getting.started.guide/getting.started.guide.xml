@@ -221,6 +221,50 @@
       proceed to extract the ZIP file into the directory you named. That is
       all there is to it.</para>
     </section>
+
+    <section>
+      <title>Installing from a Disk Image (Mac OS X only)</title>
+
+      <para>The preferred Internet distribution format for Mac OS X is the
+      disk image (file extension <filename>.dmg</filename>). Double-clicking
+      on the <filename>.dmg</filename> file mounts the disk image which can
+      then be opened. Pre-compiled versions of VR Juggler for Mac OS X are
+      distributed in this manner. Within the mounted disk image, there is an
+      installer program for the VR Juggler release (file extension
+      <filename>.pkg</filename>)<footnote>
+          <para>Unfortunately, the complexity of VR Juggler prevents it from
+          being installed using the preferred drag-and-drop method.</para>
+        </footnote>.</para>
+
+      <important>
+        <para>Before installing, read any HTML files included with the VR
+        Juggler distribution. These will contain relevant information about
+        updating an existing VR Juggler installation or how to use the VR
+        Juggler installer that is not covered here.</para>
+      </important>
+
+      <para>Double-clicking on the VR Juggler installer will install VR
+      Juggler. The VR Juggler libraries will be installed to
+      <filename>/usr/local</filename>, and the dependencies will be installed
+      to <filename>/usr/local/vrjuggler-deps</filename>. The application
+      bundles for the Tweek Java GUI and <application>VRJConfig</application>
+      will be installed to <filename>/Applications</filename>. Finally, the
+      file <filename>~/.MacOSX/environment.plist</filename> will be updated to
+      set the VR Juggler-related environment variables (see <xref
+      linkend="chapter.envvar" />).</para>
+
+      <note>
+        <para>The application bundles for the Tweek Java GUI and
+        <application>VRJConfig</application> are still in the early stages of
+        development. For convenience, the command line versions of these
+        applications are also installed. Running <command>tweek</command> or
+        <command>vrjconfig</command> from a terminal window will start those
+        applications just as would be done on other operating systems. At some
+        point, the command line verrsions of these applications will probably
+        be removed on Mac OS X in favor of exclusive use of the application
+        bundles.</para>
+      </note>
+    </section>
   </chapter>
 
   <chapter id="chapter.envvar">
