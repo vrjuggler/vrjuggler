@@ -34,5 +34,5 @@ links:
 	cd $(instlinks)/include/gadget &&				\
           for dir in $(SUBDIR) ; do					\
               rm -f ./$$dir ;						\
-              ln -s $(GADROOT_ABS)/gadget/$$dir ./$$dir ;		\
+              ln -s $(GADGETROOT_ABS)/gadget/$$dir ./$$dir ;		\
           done
