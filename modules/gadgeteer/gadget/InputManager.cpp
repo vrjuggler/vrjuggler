@@ -96,6 +96,24 @@ InputManager::~InputManager()
    }
 }
 
+struct Callable
+{
+   Callable(gadget::InputManager* inputMgr) : mgr(inputMgr)
+   {
+   }
+
+   bool operator()(void* func)
+   {
+      void (*init_func)(InputManager*);
+      init_func = (void (*)(InputManager*)) func;
+      (*init_func)(mgr);
+
+      return true;
+   }
+
+   gadget::InputManager* mgr;
+};
+
 /** Adds the given config element to the input system. */
 bool InputManager::configAdd(jccl::ConfigElementPtr element)
 {
@@ -157,8 +175,9 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
             // the allocated memory.
             vpr::LibraryPtr driver_library =
                vpr::LibraryPtr(new vpr::Library(driver_dso));
+            Callable functor(this);
             mDriverLoader.loadAndInitDSO(driver_library, driver_init_func,
-                                         this);
+                                         functor);
          }
       }
 
@@ -186,12 +205,13 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 
                vpr::LibraryFinder finder(driver_dir, driver_ext);
                vpr::LibraryFinder::LibraryList libs = finder.getLibraries();
+               Callable functor(this);
 
                for ( vpr::LibraryFinder::LibraryList::iterator lib = libs.begin();
                      lib != libs.end();
                      ++lib )
                {
-                  mDriverLoader.loadAndInitDSO(*lib, driver_init_func, this);
+                  mDriverLoader.loadAndInitDSO(*lib, driver_init_func, functor);
                }
             }
             else

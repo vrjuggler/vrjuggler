@@ -234,7 +234,7 @@ public:
    friend class InputLogger;  /**< Make input logger a friend */
 
 protected:
-   vpr::LibraryLoader<gadget::InputManager> mDriverLoader;
+   vpr::LibraryLoader mDriverLoader;
 
    typedef std::map<std::string,Input*> tDevTableType;
 
@@ -262,7 +262,7 @@ private:
    /** Adds a proxy alias. */
    void addProxyAlias(std::string alias_name, std::string proxy_name);
 
-   /** Configure/create a logger for the system */
+   /** Configure/create a logger for the system. */
    bool configureInputLogger(jccl::ConfigElementPtr element);
 
 };
