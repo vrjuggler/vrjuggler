@@ -98,11 +98,11 @@ private:
     */
    T* getSpecific()
    {
-      TSTable* table(NULL);
+      TSTable* table = NULL;
 
       // Get the correct TS data table
       // - If have self, get mine.  Otherwise use global one
-      vpr::BaseThread* thread_self(NULL);
+      vpr::BaseThread* thread_self = NULL;
       thread_self = Thread::self();
       if(NULL != thread_self)
       {  table = Thread::self()->getTSTable(); }
