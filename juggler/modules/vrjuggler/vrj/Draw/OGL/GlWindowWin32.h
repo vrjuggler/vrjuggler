@@ -66,6 +66,10 @@ namespace vrj
 // TODO: Try to find a way to process PAINT event at the same
 //       time as input events.
 
+/** \class GlWindowWin32 GlWindowWin32.h vrj/Draw/OGL/GlWindowWin32.h
+ *
+ * Win32-specific OpenGL windowing class.
+ */
 class VJ_CLASS_API GlWindowWin32
    : public GlWindow
    , public gadget::InputAreaWin32

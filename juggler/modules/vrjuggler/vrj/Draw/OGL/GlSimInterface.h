@@ -42,14 +42,18 @@
 
 namespace vrj
 {
-   /**
+   /** \class GlSimInterface GlSimInterface.h vrj/Draw/OGL/GlSimInterface.h
+    *
     * Interface for objects that wish to perform simulator function with an
     * OpenGL application.
     */
    class GlSimInterface : public DrawSimInterface
    {
    public:
-      virtual ~GlSimInterface() {}
+      virtual ~GlSimInterface()
+      {
+         /* Do nothing. */ ;
+      }
 
       /**
        * Draws this sim device using the given information about the Window it

@@ -85,8 +85,9 @@ struct structGLWindowInfo {
 namespace vrj
 {
 
-/**
- * A GL specific glWindow for OS X.
+/** \class GlWindowOSX GlWindowOSX.h vrj/Draw/OGL/GlWindowOSX.h
+ *
+ * An OpenGL-specific glWindow for OS X.
  * Has all information specific to dealing with a GL window in OpenGL.
  */
 class GlWindowOSX: public GlWindow, public gadget::EventWindowOSX

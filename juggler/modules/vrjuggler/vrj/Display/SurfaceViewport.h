@@ -47,8 +47,9 @@ namespace vrj
 {
 
 
-/**
- * Defines a display surface an associated projections
+/** \class SurfaceViewport SurfaceViewport.h vrj/Display/SurfaceViewport.h
+ *
+ * Defines a display surface an associated projections.
  */
 class SurfaceViewport : public Viewport
 {
@@ -61,10 +62,12 @@ public:
 public:
    /**
     * Takes a display element and configures the viewport based on it.
+    *
     * @pre element is a valid configuration element.
     * @post display is configured.
     *        If there is an error is the specified config, we output error
     *        and "fix" the error.
+    *
     * @note All derived display classes MUST call this function
     *        after doing local configuration.
     */
@@ -82,11 +85,22 @@ public:
                                    const unsigned int indentLevel = 0);
 
 protected:
-   gmtl::Point3f   mLLCorner, mLRCorner, mURCorner, mULCorner;  /**< The corners in 3Space (for config) */
+   /** @name The corners in 3Space (for config) */
+   //@{
+   gmtl::Point3f mLLCorner;
+   gmtl::Point3f mLRCorner;
+   gmtl::Point3f mURCorner;
+   gmtl::Point3f mULCorner;
+   //@}
 
-   // Deal with tracked surfaces (ie. HMD, movable walls, desks, etc)
+   /**
+    * @name Tracked surface info
+    * Deal with tracked surfaces (HMD, movable walls, desks, etc).
+    */
+   //@{
    bool           mTracked;            /**< Is this surface tracked? */
    std::string    mTrackerProxyName;   /**< If tracked, what is the name of the tracker */
+   //@}
 };
 
 }

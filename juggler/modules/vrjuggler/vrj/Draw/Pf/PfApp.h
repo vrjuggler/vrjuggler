@@ -49,7 +49,8 @@ namespace vrj
    class Kernel;
    class DrawManager;
 
-/**
+/** \class PfApp PfApp.h vrj/Draw/Pf/PfApp.h
+ *
  * Encapulates an actual Performer application.
  *
  * This class defines the class that Performer application classes should be

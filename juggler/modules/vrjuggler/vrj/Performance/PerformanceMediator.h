@@ -49,6 +49,11 @@ namespace vrj
 
    class PerfPlugin;
 
+   /** \class PerformanceMediator PerformanceMediator.h vrj/Performance/PerformanceMediator.h
+    *
+    * Performance mediator used by the kernel to communicate with performance
+    * monitoring plug-ins.
+    */
    class VJ_CLASS_API PerformanceMediator
    {
    public:

@@ -61,12 +61,14 @@ typedef struct
 MotifWmHints;
 
 
-/**
+/** \class GlWindowXWin GlWindowXWin.h vrj/Draw/OGL/GlWindowXWin.h
+ *
  * A GLX-specific window for displaying OpenGL graphics.
  * It holds all the information specific to dealing with a GLX window.
  *
- * This class is responsbile for connecting to the X server, getting a GLX visual,
- * opening a GL window and associated context, and handling all managment of that context.
+ * This class is responsbile for connecting to the X server, getting a GLX
+ * visual, opening a GL window and associated context, and handling all
+ * managment of that context.
  */
 class GlWindowXWin: public vrj::GlWindow, public gadget::InputAreaXWin
 {

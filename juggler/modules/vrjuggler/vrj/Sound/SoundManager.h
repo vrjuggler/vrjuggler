@@ -41,7 +41,8 @@
 
 namespace vrj
 {
-   /**
+   /** \class SoundManager SoundManager.h vrj/Sound/SoundManager.h
+    *
     * VR Juggler sound manager.
     */
    class SoundManager : public jccl::ConfigElementHandler

@@ -38,7 +38,8 @@
 
 namespace vrj
 {
-   /**
+   /** \class SoundManagerSonix SoundManagerSonix.h vrj/Sound/SoundManagerSonix.h
+    *
     * Enables VR Juggler to reconfigure the sonix sound interface.
     */
    class SoundManagerSonix : public SoundManager

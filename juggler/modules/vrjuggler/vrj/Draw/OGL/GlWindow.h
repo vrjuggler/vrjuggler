@@ -59,11 +59,11 @@ namespace vrj
 class Projection;
 class CameraProjection;
 
-/**
- * Represent cross-platform interface to OpenGL windows.
- * This interface is used by the OpenGL draw manager
- * in order to keep all platform specific code in this
- * one class.
+/** \class GlWindow GlWindow.h vrj/Draw/OGL/GlWindow.h
+ *
+ * Represent cross-platform interface to OpenGL windows.  This interface is
+ * used by the OpenGL Draw Manager in order to keep all platform-specific code
+ * in this one class.
  */
 class VJ_CLASS_API GlWindow
 {
@@ -241,9 +241,10 @@ public:
       return mWindowId;
    }
 
-   // Called by event function to update size info
-   // XXX: Should update Display configuration element in some way
-   void updateOriginSize(const int originX, const int originY, const int width, const int height)
+   /** Called by event function to update size info. */
+   // XXX: Should update Display configuration element in some way.
+   void updateOriginSize(const int originX, const int originY, const int width,
+                         const int height)
    {
       mOriginX      = originX;
       mOriginY      = originY;
@@ -276,9 +277,10 @@ public:
    }
 
 protected:
-     // we store a pointer to the display that we're
-     // created from, to config & to get the viewing
-     // transforms from.
+   /**
+    * We store a pointer to the display that we're created from in order to
+    * config and to get the viewing transforms from.
+    */
    vrj::Display* mVrjDisplay;
 
    bool mDirtyContext;  /**< The context is dirty.  We need to (re)initialize it next draw. */

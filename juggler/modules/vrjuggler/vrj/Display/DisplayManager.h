@@ -49,7 +49,8 @@ namespace vrj
 class DrawManager;
 class Display;
 
-/**
+/** \class DisplayManager DisplayManager.h vrj/Display/DisplayManager.h
+ *
  * Singleton Container class for all Displays.
  *
  * PURPOSE:
@@ -103,15 +104,19 @@ public:
     * Returns a list of the current displays.
     * @note DO NOT EDIT THE DISPLAYS
     */
-   std::vector<vrj::Display*> getActiveDisplays()
-   { return mActiveDisplays;}
+   const std::vector<vrj::Display*>& getActiveDisplays()
+   {
+      return mActiveDisplays;
+   }
 
    /**
     * Returns list of inactive displays.
     * @note DO NOT EDIT THE DISPLAYS
     */
-   std::vector<vrj::Display*> getInActiveDisplays()
-   { return mInactiveDisplays;}
+   const std::vector<vrj::Display*>& getInActiveDisplays()
+   {
+      return mInactiveDisplays;
+   }
 
    /**
     * Returns list of all displays (inactive and active).
@@ -126,7 +131,8 @@ private:
     * Adds the element to the configuration.
     *
     * @pre configCanHandle(element) == true
-    * @post (display of same name already loaded) ==> old display closed, new one opened<br>
+    * @post (display of same name already loaded) ==> old display closed, new
+    *       one opened<br>
     *       (display is new) ==> (new display is added)<br>
     *       Draw Manager is notified of the display change.
     */
@@ -177,21 +183,21 @@ protected:
    DrawManager*    mDrawManager;           /**< The current Draw Manager to communicate with */
    jccl::ConfigElementPtr mDisplaySystemElement; /**< Config element for the displaySystem */
 
-
-
 protected:
    DisplayManager() : mDrawManager(NULL)
    {
-       ;
+      /* Do nothing. */ ;
    }
 
    virtual ~DisplayManager()
-   {;}
+   {
+      /* Do nothing. */ ;
+   }
 
    DisplayManager(const DisplayManager& o)
       : jccl::ConfigElementHandler(o)
    {
-      ;
+      /* Do nothing. */ ;
    }
 
    void operator= (const DisplayManager&) {;}
@@ -200,4 +206,6 @@ protected:
 };
 
 } // end namespace vrj
+
+
 #endif

@@ -46,23 +46,30 @@ namespace vrj
 {
    class SimViewport;
 
-   /**
-    * Base class for all simulator interface across all draw manager types
+   /** \class DrawSimInterface DrawSimInterface.h vrj/Draw/DrawSimInterface.h
+    *
+    * Base class for all simulator interface across all Draw Manager types.
     */
    class DrawSimInterface
    {
    public:
-      virtual ~DrawSimInterface() {}
+      virtual ~DrawSimInterface()
+      {
+         /* Do nothing. */ ;
+      }
 
-      /*
-      * Configure the simulator interface.
-      * @pre element is a valid configuration element.
-      * @post It should be configured.
-      */
+      /**
+       * Configures the simulator interface.
+       *
+       * @pre element is a valid configuration element.
+       * @post It should be configured.
+       */
       virtual bool config(jccl::ConfigElementPtr element) = 0;
 
-      /** Called as part of the viewports updateProjection call */
-      virtual void updateProjectionData(const float positionScale, Projection* leftProj, Projection* rightProj)
+      /** Called as part of the viewports updateProjection call. */
+      virtual void updateProjectionData(const float positionScale,
+                                        Projection* leftProj,
+                                        Projection* rightProj)
       {
          boost::ignore_unused_variable_warning(positionScale);
          boost::ignore_unused_variable_warning(leftProj);

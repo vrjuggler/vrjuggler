@@ -48,7 +48,8 @@ namespace vrj
 
    class Viewport;
 
-/**
+/** \class Projection Projection.h vrj/Display/Projection.h
+ *
  * Pure virtual base class for projection definitions.
  *
  * Responsible for storing and computing projection information based upon an

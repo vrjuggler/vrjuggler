@@ -45,7 +45,9 @@
 namespace vrj
 {
    class GlDrawManager;
-/**
+
+/** \class GlPipe GlPipe.h vrj/Draw/OGL/GlPipe.h
+ *
  * Handles the rendering on multiple GLWindows in a single process.
  *
  * This class can be used to group glWindows to render efficiently
@@ -100,7 +102,9 @@ public:
     * @post Flag is set to tell pipe to stop rendering.
     */
    void stop()
-   { controlExit = 1; }     // Set the control loop exit flag
+   {
+      controlExit = 1;     // Set the control loop exit flag
+   }
 
 public:     // --------- Triggering functions ------ //
    /**
@@ -152,7 +156,7 @@ public: // --- Window Management ----- //
    }
 
    /** Return a list of open windows. */
-   std::vector<GlWindow*> getOpenWindows()
+   const std::vector<GlWindow*>& getOpenWindows()
    {
       return mOpenWins;
    }

@@ -41,7 +41,8 @@
 namespace vrj
 {
 
-/**
+/** \class Frustum Frustum.h vrj/Display/Frustum.h
+ *
  * A frustum object.  This is a frustum.
  *
  * @date 10-1-97

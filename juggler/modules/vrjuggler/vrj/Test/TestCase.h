@@ -45,11 +45,10 @@ namespace vrj {
 namespace test
 {
 
-/**
-*
-* Base class for normal single test case.
-* 
-*/
+/** \class TestCase TestCase.h vrj/Test/TestCase.h
+ *
+ * Base class for normal single test case.
+ */
 class TestCase : public Test
 {
 public:
@@ -61,10 +60,14 @@ public:
    {;}
 
    virtual void setApp(vrj::App* app)
-   { mApp = app; }
+   {
+      mApp = app;
+   }
 
    virtual std::string getName()
-   { return mName; }
+   {
+      return mName;
+   }
 
 protected:
    vrj::App*   mApp;          /**< Pointer to the application to be testing */

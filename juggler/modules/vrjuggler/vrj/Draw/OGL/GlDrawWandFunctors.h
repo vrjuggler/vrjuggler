@@ -50,7 +50,10 @@
 namespace vrj
 {
 
-/** Draw a basic cone wand. */ 
+/** \class GlDrawConeWandFunctor GlDrawWandFunctors.h vrj/Draw/OGL/GlDrawWandFunctors.h
+ *
+ * Draw a basic cone wand.
+ */ 
 class GlDrawConeWandFunctor : public GlDrawObjectFunctor
 {
 public:
@@ -71,7 +74,10 @@ protected:
 };
 
 
-/** Draw a wand with a right angle. */ 
+/** \class GlDrawRightAngleWandFunctor GlDrawWandFunctors.h vrj/Draw/OGL/GlDrawWandFunctors.h
+ *
+ * Draw a wand with a right angle.
+ */ 
 class GlDrawRightAngleWandFunctor : public GlDrawObjectFunctor
 {
 public:

@@ -68,8 +68,9 @@ class User;
 class App;
 
 
-/**
- * Main control class for all vj applications.
+/** \class Kernel Kernel.h vrj/Kernel/Kernel.h
+ *
+ * Main control class for all VR Juggler applications.
  *
  * The kernel takes care of all initialization and object creation.  This
  * class is the only class that MUST be instantiated for all application
@@ -154,6 +155,8 @@ public:
    void scanForConfigDefinitions(const std::string& path);
 
 protected:  // -- CONFIG ELEMENT HANDLER
+   /** @name Config element handler interface implementation */
+   //@{
    /**
     * Can the handler handle the given element?
     * @return true if we can handle the element; false otherwise.
@@ -175,8 +178,11 @@ protected:  // -- CONFIG ELEMENT HANDLER
     * @return success.
     */
    virtual bool configRemove(jccl::ConfigElementPtr element);
+   //@}
 
-protected:  // Local config functions
+protected:
+   /** @name Local config functions */
+   //@{
    /** Adds a User to the system. */
    bool addUser(jccl::ConfigElementPtr element);
 
@@ -185,6 +191,7 @@ protected:  // Local config functions
     * @note Currently not implemented.
     */
    bool removeUser(jccl::ConfigElementPtr element);
+   //@}
 
 protected:
    /**
@@ -217,7 +224,9 @@ protected:
    /** Checks the signal buttons to see if anything has been triggered. */
    void checkSignalButtons();
 
-protected:      // --- DRAW MGR ROUTINES --- //
+protected:
+   /** @name Draw Manager routines */
+   //@{
    /**
     * Starts the Draw Manager running.
     * Calls the app callbacks for the Draw Manager.
@@ -237,9 +246,11 @@ protected:      // --- DRAW MGR ROUTINES --- //
     *       instance.
     */
    void stopDrawManager();
+   //@}
 
-public:      // Global "get" interface
-
+public:
+   /** @name Global "get" interface */
+   //@{
    /** Gets the Input Manager. */
    gadget::InputManager* getInputManager();
 
@@ -262,16 +273,17 @@ public:      // Global "get" interface
    {
       return mControlThread;
    }
+   //@}
 
 protected:
-   vrj::App*      mApp;                         /**< The current active app object */
-   vrj::App*      mNewApp;                      /**< New application to set */
-   bool           mNewAppSet;                   /**< Flag to notify that a new application should be set */
+   vrj::App*      mApp;                  /**< The current active app object */
+   vrj::App*      mNewApp;               /**< New application to set */
+   bool           mNewAppSet;            /**< Flag to notify that a new application should be set */
 
-   bool               mIsRunning;               /**< Flag for wether the kernel is currently running */
-   bool               mExitFlag;                /**< Set true when the kernel should exit */
-   vpr::Thread*       mControlThread;           /**< The thread in control of me */
-   vpr::CondVar       mExitWaitCondVar;         /**< Cond var for waiting for exit */
+   bool               mIsRunning;        /**< Flag for wether the kernel is currently running */
+   bool               mExitFlag;         /**< Set true when the kernel should exit */
+   vpr::Thread*       mControlThread;    /**< The thread in control of me */
+   vpr::CondVar       mExitWaitCondVar;  /**< Cond var for waiting for exit */
 
    /** @name Factories and Managers */
    //@{
@@ -295,7 +307,7 @@ protected:
    // --- SINGLETON STUFF --- //
    // ----------------------- //
 protected:
-   /** Constructor: Hidden, so no instantiation is allowed. */
+   /** Constructor: Hidden, so no direct instantiation is allowed. */
    Kernel();
 
    Kernel(const vrj::Kernel& k) : jccl::ConfigElementHandler(k) {;}

@@ -64,21 +64,19 @@ namespace vrj
    class GlApp;
    class SimViewport;
 
-/**
- * Concrete Singleton Class for OpenGL drawing.
+/** \class GlDrawManager GlDrawManager.h vrj/Draw/OGL/GlDrawManager.h
  *
- * Responsible for all OGL based rendering.
+ * Concrete Singleton Class for OpenGL drawing.  Responsible for all
+ * OpenGL-based rendering.
  *
- * GlDrawManager is an active object.  It manages
- * ogl pipes and windows.  In addition, it triggers
- * rendering, swapping, and syncing of the windows
- * under it's control.
+ * vrj::GlDrawManager is an active object.  It manages OpenGL pipes and
+ * windows.  In addition, it triggers rendering, swapping, and syncing of the
+ * windows under its control.
  *
- * All access to the ogl rendering structures has
- * to happen from the control thread or in the case
- * of context sensitive functions, from the control
- * thread of the managed pipes. Because of this,
- * the object uses queues to hold new windows.
+ * All access to the OpenGL rendering structures has to happen from the control
+ * thread or in the case of context sensitive functions, from the control
+ * thread of the managed pipes.  Because of this, the object uses queues to
+ * hold new windows.
  *
  * @date 1-7-98
  */
@@ -114,7 +112,7 @@ public:
    virtual void initAPI();
 
    /**
-    * Callback when display is added to display manager.
+    * Callback when display is added to the Display Manager.
     *
     * @note This function can only be called by the display manager
     *       functioning in the kernel thread to signal a new display added
@@ -123,7 +121,7 @@ public:
     */
    virtual void addDisplay(Display* disp);
 
-   /** Callback when display is removed to display manager. */
+   /** Callback when display is removed from the Display Manager. */
    virtual void removeDisplay(Display* disp);
 
    /** Shutdown the drawing API. */
@@ -143,7 +141,9 @@ public:
 
    //void setDisplayManager(DisplayManager* _dispMgr);
 
-public: // Config element handlers
+public:
+   /** @name Config element handler implementation */
+   //@{
    /**
     * Adds the element to the configuration.
     *
@@ -166,11 +166,12 @@ public: // Config element handlers
     * @return true if we can handle it; false if we can't.
     */
    virtual bool configCanHandle(jccl::ConfigElementPtr element);
-
+   //@}
 
 public:
    /**
-    * Gets ptr to the current user data.  Should be used in the draw function.
+    * Gets pointer to the current user data.  Should be used in the draw
+    * function.
     *
     * @note This user data is valid ONLY in draw().  It is not valid anywhere
     *       else.
@@ -202,27 +203,39 @@ protected:
 
 
 protected:
-   // --- Config Data --- //
+   /** @name Config Data */
+   //@{
    int      numPipes;     /**<  The number of pipes in the system */
+   //@}
 
-   // --- API data --- //
-   GlApp*                 mApp;      /**< The OpenGL application */
-   std::vector<GlWindow*> mWins;     /**< A list of the windows in the system */
-   std::vector<GlPipe*>   pipes;    /**< A list of the pipes in the system */
+   /** @name API data */
+   //@{
+   GlApp*                 mApp;   /**< The OpenGL application */
+   std::vector<GlWindow*> mWins;  /**< A list of the windows in the system */
+   std::vector<GlPipe*>   pipes;  /**< A list of the pipes in the system */
+   //@}
 
-   // --- Helper field data --- //
-   vpr::TSObjectProxy<int>           mContextId;   /**<  TS Data for context id */
-   vpr::TSObjectProxy<GlUserData>    mUserData;    /**  User data for draw func */
+   /** @name Helper field data */
+   //@{
+   vpr::TSObjectProxy<int>           mContextId; /**< TS Data for context id */
+   vpr::TSObjectProxy<GlUserData>    mUserData;  /**< User data for draw func */
+   //@}
 
-   // --- MP Stuff -- //
+   /** @name MP Stuff */
+   //@{
    vpr::Semaphore    drawTriggerSema;  /**< Semaphore for draw trigger */
    vpr::Semaphore    drawDoneSema;     /**< Semaphore for drawing done */
-   //vpr::Semaphore    mRuntimeConfigSema;  /**< Protects run-time config.  Only when this semaphore
-   //                                     *  is acquired can run-time config occur */
+
+   /**
+    * Protects run-time config.  Only when this semaphore is acquired can
+    * run-time config occur.
+    */
+   //vpr::Semaphore    mRuntimeConfigSema;
    bool              mRunning;         /**< Used to stop the drawing thread. */
 
    vpr::ThreadMemberFunctor<GlDrawManager>* mMemberFunctor;
    vpr::Thread* mControlThread;
+   //@}
 
 protected:
    GlDrawManager();

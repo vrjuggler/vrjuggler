@@ -40,6 +40,10 @@
 namespace vrj
 {
 
+/** \class SoundManagerFactory SoundManagerFactory.h vrj/Sound/SoundManagerFactory.h
+ *
+ * Sound Manager factory.
+ */
 class VJ_CLASS_API SoundManagerFactory
 {
 public:

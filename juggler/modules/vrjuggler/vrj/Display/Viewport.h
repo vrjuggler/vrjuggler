@@ -46,7 +46,8 @@ class Display;
 class Projection;
 class User;
 
-/**
+/** \class Viewport Viewport.h vrj/Display/Viewport.h
+ *
  * Base class for window viewports and for all viewport data.
  * Stores projection data, viewport info, and relevant user.
  *
@@ -259,23 +260,28 @@ protected:
 
    jccl::ConfigElementPtr mViewportElement; /**< The config data for this display */
 
-   /** @name Location and size of viewport
-   * ASSERT: all values are >= 0.0 and <= 1.0
-   */
+   /**
+    * @name Location and size of viewport
+    * ASSERT: all values are >= 0.0 and <= 1.0
+    */
    //@{
-   float          mXorigin, mYorigin, mXsize, mYsize;
+   float mXorigin;
+   float mYorigin;
+   float mXsize;
+   float mYsize;
    //@}
 
-   /** @name Projections
-   * Defines the projection for this window
-   */
+   /**
+    * @name Projections
+    * Defines the projection for this window.
+    */
    //@{
-   Projection*   mLeftProj;      /** Left eye projection */
-   Projection*   mRightProj;     /** Right eye projection */
+   Projection* mLeftProj;      /**< Left eye projection */
+   Projection* mRightProj;     /**< Right eye projection */
    //@}
-
 };
 
 }
+
 
 #endif

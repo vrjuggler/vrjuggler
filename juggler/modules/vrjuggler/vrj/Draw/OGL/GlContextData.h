@@ -43,7 +43,8 @@
 namespace vrj
 {
 
-/**
+/** \class GlContextDataBase GlContextData.h vrj/Draw/OGL/GlContextData.h
+ *
  * This class is needed as a base class for GlContextData
  * because of dificulties making friends with a template.
  *
@@ -59,7 +60,8 @@ protected:
 };
 
 
-/**
+/** \class GlContextData GlContextData.h vrj/Draw/OGL/GlContextData.h
+ *
  * OpenGL helper class that has templated user context-specific data.
  *
  * This class allows the user to specify a data type that contains
