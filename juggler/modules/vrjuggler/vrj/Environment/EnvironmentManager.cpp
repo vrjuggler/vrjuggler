@@ -90,7 +90,7 @@ void vjEnvironmentManager::sendRefresh() {
 //! PRE: configCanHandle(chunk) == true
 //! RETURNS: success
 bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
-    bool networkingchanged;
+    bool networkingchanged = false;
     int newport;
 
     //cout << "EM configAdd recv'd chunk:\n" << *chunk << endl;
@@ -101,8 +101,8 @@ bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
 
 	if (newport == 0)
 	    newport = Port;
-	if (newport != Port || configured_to_accept != isAccepting())
-	    networkingchanged = 1;
+	if ((newport != Port) || (configured_to_accept != isAccepting()))
+	    networkingchanged = true;
 	std::string s = chunk->getProperty ("PerformanceTarget");
 	vjConnect* new_perf_target = getConnect(s);
 	if (new_perf_target != perf_target)
@@ -129,9 +129,18 @@ bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
 	return true;
     }
     else if (!vjstrcasecmp (s, "FileConnect")) {
-	vjConnect* vn = new vjConnect (chunk);
-	connections.push_back (vn);
-	vn->startProcess();
+	// I wanted to just look if the fileconnect had been added yet.
+	// however I seem to have a chicken/egg problem.
+	// so the kludge we'll do now is to not directly add a chunk that's
+	// of type VJC_INTERACTIVE. sigh.
+	if ((int)chunk->getProperty("Mode") != VJC_INTERACTIVE) {
+	    vjDEBUG (vjDBG_ENV_MGR, 0) << "adding fileconnect\n"
+				       << vjDEBUG_FLUSH;
+	    // it's new to us
+	    vjConnect* vn = new vjConnect (chunk);
+	    connections.push_back (vn);
+	    vn->startProcess();
+	}
 	return true;
     }
     vjDEBUG(vjDBG_ALL,1) << "EnvironmentManager::configAdd - Unrecognized Chunk " + s << endl
@@ -249,7 +258,9 @@ void vjEnvironmentManager::controlLoop (void* nullParam) {
 	len = sizeof (struct sockaddr_in);
 	servsock = accept (listen_socket,
 			   (sockaddr*)&servaddr, &len);
-	connection = new vjConnect (servsock);
+	char name[128];
+	sprintf (name, "Network Connect %d", servsock);
+	connection = new vjConnect (servsock, (std::string)name);
 	connections.push_back( connection );
 	connection->startProcess();
     }

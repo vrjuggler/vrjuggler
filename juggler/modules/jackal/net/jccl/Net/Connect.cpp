@@ -7,6 +7,7 @@
 #include <Environment/vjConnect.h>
 #include <Config/vjChunkDescDB.h>
 #include <Config/vjConfigChunkDB.h>
+#include <Config/vjChunkFactory.h>
 #include <Environment/vjTimedUpdate.h>
 #include <Kernel/vjKernel.h>
 
@@ -28,6 +29,23 @@ vjConnect::vjConnect(int s, const std::string& _name,
     name = _name;
     connect_thread = NULL;
     output.attach(fd);
+
+    // we need to add a chunk describing ourself
+    // THIS IS A HUGE UGLY HACK! THERE SHOULD BE A CLEANER WAY FOR
+    // MANAGERS TO MANIPULATE THE ACTIVE CONFIG!!
+    vjConfigChunkDB db;
+    vjConfigChunk* ch = vjChunkFactory::createChunk ("FileConnect");
+    if (ch) {
+	ch->setProperty ("Name", name);
+	ch->setProperty ("Mode", VJC_INTERACTIVE);
+	ch->setProperty ("filename", "Socket/Pipe");
+	ch->setProperty ("Enabled", true);
+    cout << "adding socket vjconnect with new chunk " 
+	 << *ch << endl;
+	db.addChunk(ch);
+	vjKernel::instance()->configAdd(&db);
+    }
+
 }
 
 
@@ -41,10 +59,20 @@ vjConnect::vjConnect(vjConfigChunk* c): output() {
     mode = (vjConnectMode)(int)c->getProperty ("Mode");
 
     connect_thread = NULL;
-    fd = open (filename.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0660 );
+    switch (mode) {
+    case VJC_OUTPUT:
+	fd = open (filename.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0660 );
+	break;
+    case VJC_INPUT:
+	fd = open (filename.c_str(), O_RDONLY, 0);
+	break;
+    case VJC_INTERACTIVE:
+	fd = open (filename.c_str(), O_RDWR | O_CREAT, 0660);
+	break;
+    }
     if (fd == -1) {
-	vjDEBUG(vjDBG_ALL,0) << "ERROR: file open failed for " << filename << endl
-		   << vjDEBUG_FLUSH;
+	vjDEBUG(vjDBG_ENV_MGR,0) << "ERROR: file open failed for \"" << filename 
+			     << "\"\n" << vjDEBUG_FLUSH;
     }
     output.attach (fd);
 
@@ -244,7 +272,8 @@ void vjConnect::readCommand(ifstream& fin) {
       s = strtok (NULL, " \t\n");
       if (!strcasecmp (s, "descriptions"))
       {
-         vjChunkDescDB* db = vjKernel::instance()->getInitialChunkDB()->getChunkDescDB();
+	  vjChunkDescDB* db = vjChunkFactory::getChunkDescDB();
+	  //vjKernel::instance()->getInitialChunkDB()->getChunkDescDB();
          //cout << "Sending descDB:\n" << *db << endl << flush;
          sendDescDB (db);
       }
@@ -288,7 +317,7 @@ void vjConnect::readCommand(ifstream& fin) {
       //if (!strcasecmp (s, "all"))
       //	chunkdb->removeAll();
       //fin >> *chunkdb;
-      vjConfigChunkDB newchunkdb (vjKernel::instance()->getInitialChunkDB()->getChunkDescDB());
+      vjConfigChunkDB newchunkdb;
       fin >> newchunkdb;
       vjDEBUG(vjDBG_ALL,0) << "READ CHUNKS:\n" << newchunkdb << vjDEBUG_FLUSH;
       // ALLEN: PUT A FUNCTION HERE FOR THE KERNEL TO LOOK AT NEWCHUNKDB
@@ -310,7 +339,7 @@ void vjConnect::readCommand(ifstream& fin) {
       }
       else if (!strcasecmp (s, "chunks"))
       {
-         vjConfigChunkDB remove_chunk_db (vjKernel::instance()->getInitialChunkDB()->getChunkDescDB());
+         vjConfigChunkDB remove_chunk_db;
          fin >> remove_chunk_db;
          vjDEBUG(vjDBG_ALL,0) << "EM: message to remove chunks:\n" << remove_chunk_db
 			      << vjDEBUG_FLUSH;
