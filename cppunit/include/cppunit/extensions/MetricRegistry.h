@@ -16,6 +16,19 @@ namespace CppUnit
 /**
  * This singleton class is used to register and check the use of numeric "metrics"
  * that can be used to test the performance of code
+ *
+ *
+ * Example:
+ *
+ * CppUnit::MetricRegistry* metric_reg = CppUnit::MetricRegistry::instance();
+ * std::string metric_prefix;    // Prefix for all metric labels (mode/hostname)
+ *
+ * std::string host_name = vpr::System::getHostname();   
+ * metric_prefix = host_name + "/";
+ *  
+ * metric_reg->setPrefix(metric_prefix);
+ * metric_reg->setFilename("vapor_metrics.txt");
+ * metric_reg->setMetric("Main/MetricTest", 1221.75f);
  */
 class MetricRegistry
 {
