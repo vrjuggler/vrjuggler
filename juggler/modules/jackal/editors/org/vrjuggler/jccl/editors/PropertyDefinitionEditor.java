@@ -1093,16 +1093,14 @@ public class PropertyDefinitionEditor
          Component comp = super.getTableCellRendererComponent(table, value,
                                                               selected, focus,
                                                               row, col);
-         setFont(getFont().deriveFont(Font.PLAIN));
-         if (value instanceof ConfigElementPointer)
-         {
-            ConfigElementPointer ptr = (ConfigElementPointer)value;
-            setText(ptr.getTarget());
-         }
-         else if (value == null)
+         if ( value == null )
          {
             setFont(getFont().deriveFont(Font.ITALIC));
-            setText("Embedded Element");
+            setText("Click here to insert default value");
+         }
+         else
+         {
+            setFont(getFont().deriveFont(Font.PLAIN));
          }
 
          return comp;

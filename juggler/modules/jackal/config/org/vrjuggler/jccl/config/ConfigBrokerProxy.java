@@ -244,9 +244,11 @@ public class ConfigBrokerProxy
       mBroker.removeConfigBrokerListener(listener);
    }
    
-   public void saveDefinition(String token)
+   public void saveDefinition(ConfigDefinition def)
+      throws IOException
+           , org.vrjuggler.jccl.config.io.ParseException
    {
-      mBroker.saveDefinition(token);
+      mBroker.saveDefinition(def);
    }
 
    /**
