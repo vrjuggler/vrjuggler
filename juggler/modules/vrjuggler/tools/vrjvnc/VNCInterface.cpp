@@ -347,7 +347,7 @@ void VNCInterface::copyRectToFramebuffer(char *buf, int x, int y, int w, int h)
 
    // Copy the contents of the rectangle buffer
    // - Copy one horizontal line at a time
-   while (h > 0)
+   for(int cur_line=0; cur_line != h; ++cur_line)
    {
       // Copy memory
       memcpy(fbptr, buf, w * bytes_per_pixel);
@@ -355,7 +355,6 @@ void VNCInterface::copyRectToFramebuffer(char *buf, int x, int y, int w, int h)
       // Update buffer positions
       fbptr += mWidth * bytes_per_pixel;     // Add size of fb line to get to next line in rect
       buf   += w * bytes_per_pixel;          // Get to next start line in src
-      h     -= 1;                            // Decrement line (height) count
    }
 }
 
