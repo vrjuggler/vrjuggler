@@ -571,11 +571,6 @@ if test "$OS_TYPE" = "UNIX" ; then
         APP_EXTRA_LIBS_END="$NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
     fi
 
-    # FreeBSD needs to use libcompat for linking.
-    if test "x$PLATFORM" = "xFreeBSD" ; then
-        APP_EXTRA_LIBS_END="$APP_EXTRA_LIBS_END -lcompat"
-    fi
-
     APP_EXTRA_LIBS_BASIC="$LDFLAGS $PTHREAD_ARG $LIBS"
 elif test "$OS_TYPE" = "Win32" ; then
     APP_VPR_LIBS_BEGIN="/link /libpath:\$(VPR_BASE_DIR)/lib/debug $NSPR_LDFLAGS"
