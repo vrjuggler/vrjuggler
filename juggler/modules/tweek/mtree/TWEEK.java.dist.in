@@ -34,37 +34,13 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-# -----------------------------------------------------------------------------
-# Makefile.in for tweek/test/PrefsTestBean.  It requires GNU make.
-# -----------------------------------------------------------------------------
+# This file defines the specification for the java directory tree for the
+# Tweek installation.
 
-all:
-	$(MAKE) java
-	$(MAKE) PrefsTestBean.jar
-	-$(MAKE) install
-
-# Basic options.
-srcdir=		@srcdir@
-NO_DEPEND=	YES
-
-JAVA_SRCS=	prefstestbean/PreferencesEditEvent.java		\
-		prefstestbean/PreferencesEditListener.java	\
-		prefstestbean/PrefsEditor.java			\
-		prefstestbean/PrefsTestBean.java
-ALL_CLASSES=	prefstestbean/*.class
-
-include $(TWEEK_BASE_DIR)/share/tweek/tweek.appdefs.mk
-
-# -----------------------------------------------------------------------------
-# Application build targets.
-# -----------------------------------------------------------------------------
-java: $(CLASSES)
-
-PrefsTestBean.jar: $(JAVA_CLASSES)
-	$(JAR) cvf $@ $(ALL_CLASSES)
-
-install:
-	cp PrefsTestBean.jar $(TWEEK_BASE_DIR)/share/tweek/beans
-	cp $(srcdir)/PrefsTestBean.xml $(TWEEK_BASE_DIR)/share/tweek/beans
-
-CLOBBER_FILES+=	PrefsTestBean.jar
+/set type=dir mode=@DIR_PERMS@ uname=@OWNER_NAME@ gname=@GROUP_NAME@
+.
+    beans
+    ..
+    java
+    ..
+..

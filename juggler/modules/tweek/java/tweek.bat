@@ -42,9 +42,9 @@ ECHO [ERR] The TWEEK_BASE_DIR %TWEEK_BASE_DIR% does not appear to exist.
 ECHO [ERR] Please check the path and try again.
 GOTO ERREXIT
 :RUNJAVA
-set TWEEK_CLASSPATH=%TWEEK_BASE_DIR%/bin/jaxen-core.jar;%TWEEK_BASE_DIR%/bin/jaxen-jdom.jar;%TWEEK_BASE_DIR%/bin/jdom.jar;%TWEEK_BASE_DIR%/bin/saxpath.jar;%TWEEK_BASE_DIR%/bin/xalan.jar;%TWEEK_BASE_DIR%/bin/xerces.jar;%TWEEK_BASE_DIR%/bin/xml-apis.jar;%TWEEK_BASE_DIR%/bin/Tweek.jar;%TWEEK_BASE_DIR%/bin/TweekBeans.jar;%TWEEK_BASE_DIR%/bin/TweekEvents.jar;%TWEEK_BASE_DIR%/bin/TweekNet.jar;%TWEEK_BASE_DIR%/bin/TweekBeanDelivery.jar;%TWEEK_BASE_DIR%/bin/TweekServices.jar;%TWEEK_BASE_DIR%/bin/kunststoff-mod.jar;%TWEEK_BASE_DIR%/bin/liquidlnf.jar;%TWEEK_BASE_DIR%/bin/metouia.jar;%TWEEK_BASE_DIR%/bin/looks.jar
+set TWEEK_CLASSPATH=%TWEEK_BASE_DIR%\share\tweek\java\jaxen-core.jar;%TWEEK_BASE_DIR%\share\tweek\java\jaxen-jdom.jar;%TWEEK_BASE_DIR%\share\tweek\java\jdom.jar;%TWEEK_BASE_DIR%\share\tweek\java\saxpath.jar;%TWEEK_BASE_DIR%\share\tweek\java\xalan.jar;%TWEEK_BASE_DIR%\share\tweek\java\xerces.jar;%TWEEK_BASE_DIR%\share\tweek\java\xml-apis.jar;%TWEEK_BASE_DIR%\share\tweek\java\Tweek.jar;%TWEEK_BASE_DIR%\share\tweek\java\TweekBeans.jar;%TWEEK_BASE_DIR%\share\tweek\java\TweekEvents.jar;%TWEEK_BASE_DIR%\share\tweek\java\TweekNet.jar;%TWEEK_BASE_DIR%\share\tweek\java\TweekBeanDelivery.jar;%TWEEK_BASE_DIR%\share\tweek\java\TweekServices.jar;%TWEEK_BASE_DIR%\share\tweek\java\kunststoff-mod.jar;%TWEEK_BASE_DIR%\share\tweek\java\liquidlnf.jar;%TWEEK_BASE_DIR%\share\tweek\java\metouia.jar;%TWEEK_BASE_DIR%\share\tweek\java\looks.jar
 
-java -DTWEEK_BASE_DIR="%TWEEK_BASE_DIR%" -Djava.security.policy="%TWEEK_BASE_DIR%/bin/java.security.policy.txt" -cp "%TWEEK_CLASSPATH%" org.vrjuggler.tweek.Tweek %*
+java -DTWEEK_BASE_DIR="%TWEEK_BASE_DIR%" -Djava.security.policy="%TWEEK_BASE_DIR%\share\tweekjava\java.security.policy.txt" -cp "%TWEEK_CLASSPATH%" org.vrjuggler.tweek.Tweek %*
 GOTO DONE
 :ERREXIT
 ECHO [ERR] Tweek exiting due to previous errors.
