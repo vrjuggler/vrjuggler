@@ -103,27 +103,12 @@ Subject_idl.py: Subject.idl
 SubjectManager_idl.py: SubjectManager.idl
 	$(PYTHON_IDL) $(PYTHON_IDL_OPTS) $(PYTHON_IDL_INCLUDES) $<
 
-# This cannot be named 'install' because Doozer++ already defines that.
-# Note that tweek-qt.py cannot be installed as a symlink.  Python seems to
-# get confused when a symlink to a script is used.
-tweek-install:
-	@$(MAKE) install-ui
-	@$(MAKE) install-data
-
-install-ui:
+tweek-idl-install:
 	@echo "------------------------------------------------"
-	@echo "Installing the TweekQt code base"
+	@echo "Installing the IDL-generated Python code"
 	@echo "------------------------------------------------"
-	$(MKINSTALLDIRS) $(PY_PKG_DIR)
-	$(MKINSTALLDIRS) $(PY_PKG_DIR)/pytweek
 	$(MKINSTALLDIRS) $(PY_PKG_DIR)/tweek
 	$(MKINSTALLDIRS) $(PY_PKG_DIR)/tweek__POA
-	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-          $(TWEEKROOT_ABS)/python/tweek-qt.py $(bindir)/tweek-qt
-	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
-          $(GROUP_OPT_UNIX) $(srcdir)/pytweek/*.py $(PY_PKG_DIR)/pytweek
-	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
-          $(GROUP_OPT_UNIX) pytweek/*.py $(PY_PKG_DIR)/pytweek
 	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
           $(GROUP_OPT_UNIX) $(IDL_GENDIR)/*_idl.py $(PY_PKG_DIR)
 	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
@@ -131,6 +116,25 @@ install-ui:
 	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
           $(GROUP_OPT_UNIX) $(IDL_GENDIR)/tweek__POA/*			\
           $(PY_PKG_DIR)/tweek__POA
+
+# This cannot be named 'install' because Doozer++ already defines that.
+# Note that tweek-qt.py cannot be installed as a symlink.  Python seems to
+# get confused when a symlink to a script is used.
+tweek-gui-install:
+	@$(MAKE) install-ui
+	@$(MAKE) install-data
+
+install-ui:
+	@echo "------------------------------------------------"
+	@echo "Installing the TweekQt code base"
+	@echo "------------------------------------------------"
+	$(MKINSTALLDIRS) $(PY_PKG_DIR)/pytweek
+	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
+          $(TWEEKROOT_ABS)/python/tweek-qt.py $(bindir)/tweek-qt
+	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+          $(GROUP_OPT_UNIX) $(srcdir)/pytweek/*.py $(PY_PKG_DIR)/pytweek
+	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+          $(GROUP_OPT_UNIX) pytweek/*.py $(PY_PKG_DIR)/pytweek
 	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
 	$(MTREE_CMD) -Ude -f $(mtreedir)/TWEEK.python.dist -p $(projdatadir)
 
