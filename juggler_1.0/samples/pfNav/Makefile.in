@@ -12,21 +12,16 @@ srcdir		= @srcdir@
 EXTRA_FLAGS	= @TEST_EXTRA_FLAGS@ -all 
 COMPILE		= @CXX@ -DUSESOUND @DEFS@ $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@ @DBG_FLAGS@ $(EXTRA_FLAGS)
 LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@ $(EXTRA_FLAGS)
-AW_LIB = 	-L/usr/lib32/PSI -law -lawhwi -lpsi -laudiofile
-AW_INCLUDE = -I/usr/include/PSI
+AW_LIB		= -B dynamic -L/usr/lib32/PSI -law -lawhwi -lpsi -laudiofile
+AW_INCLUDE 	= -I/usr/include/PSI
 VJ_INCLUDES	= @INCLUDES@ $(AW_INCLUDE) -I$(VJ_BASE_DIR)/include			\
                   -I$(VJ_BASE_DIR)/include/Math -I$(srcdir)		\
                   -I$(srcdir)/../nav -I$(srcdir)/../pfTools 		\
-<<<<<<< Makefile.in
-                  -I$(srcdir)/../../Sound/
-VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_VJ_LIBS_PF@ -lJuggler_aw $(AW_LIB) @TEST_LIBS_BASIC@
-=======
-                  -I$(VJ_BASE_DIR)/include/Sound
-VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_VJ_LIBS_PF@ @TEST_LIBS_BASIC@
+
+VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_VJ_LIBS_PF@ -lJuggler_aw $(AW_LIB) @TEST_LIBS_BASIC@ 
 VJ_LIB_DEPS	= $(VJ_BASE_DIR)/lib32/libJuggler.a			\
                   $(VJ_BASE_DIR)/lib32/libJuggler_ogl.a			\
                   $(VJ_BASE_DIR)/lib32/libJuggler_pf.a
->>>>>>> 1.43
 
 vpath %.cpp @srcdir@ @srcdir@/../nav @srcdir@/../pfTools
 
@@ -80,7 +75,7 @@ pfSwitcher: $(PF_SWITCHER_OBJECTS) $(VJ_LIB_DEPS)
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend pfNav pfBasicConfigNav pfNav.exe pfNav.ilk \
+	rm -f Makedepend pfNav pfBasicConfigNav pfSwitcher pfNav.exe pfNav.ilk \
 	$(PFNAV_OBJECTS) $(PF_BASIC_CONFIG_NAV_OBJECTS) $(PF_SWITCHER_OBJECTS) \
 	*core	\
 	so_locations *.?db
@@ -91,7 +86,8 @@ clean:
 # -----------------------------------------------------------------------------
 DEP_GEN_FLAG	= @DEP_GEN_FLAG@
 DEPEND_FILES	= $(PFNAV_OBJECTS:.@OBJ_FILE_SUFFIX@=.d)		\
-                  $(PF_BASIC_CONFIG_NAV_OBJECTS:.@OBJ_FILE_SUFFIX@=.d)
+                  $(PF_BASIC_CONFIG_NAV_OBJECTS:.@OBJ_FILE_SUFFIX@=.d)  \
+		  $(PF_SWITCHER_OBJECTS:.@OBJ_FILE_SUFFIX@=.d)
 
 # This expression reformats the output from the dependency text to be of the
 # form:
