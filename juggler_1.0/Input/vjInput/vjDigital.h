@@ -61,7 +61,8 @@ class vjDigital
 public:
    //: Enum for the state of the digital buttons
    // Used in vjDigitalProxy
-   enum {
+   enum State
+   {
       OFF=0, ON=1, TOGGLE_ON=2, TOGGLE_OFF=3
    };
 
