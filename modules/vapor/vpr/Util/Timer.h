@@ -48,8 +48,12 @@
 
 namespace vpr {
 
-//: Simple class to take timings and give averages
-// NOTE: All times are in seconds
+/**
+ * Simple class to take timings and give averages.
+ * NOTE: All times are in seconds
+ *
+ * @author Allen Bierbaum
+ */
 class Timer
 {
 public:
@@ -61,12 +65,15 @@ public:
       endTime = 0;
    }
 
-   //: Start a timing
+   /// Starts a timing.
    void startTiming()
    { startTime = wallclock(); }
 
-   //: Stop current timing
-   //! PRE: Timing has been started
+   /**
+    * Stops current timing.
+    *
+    * @pre Timing has been started.
+    */
    void stopTiming()
    {
       endTime = wallclock();
@@ -80,14 +87,14 @@ public:
       }
    }
 
-   // Get the average timing
+   /// Gets the average timing.
    double getTiming()
    { return (totalTime/(double)timeCount); }
 
    double getLastTiming()
    { return lastTiming; }
 
-   //: Returns the number of timings collected
+   /// Returns the number of timings collected.
    long getTimeCount()
    { return timeCount; }
 
@@ -118,11 +125,11 @@ public:
 #endif
 
 private:               // Timing stuff
-   double  startTime;       // The times
+   double  startTime;       //! The times
    double  endTime;
-   double  lastTiming;      // The last timing recieved
-   double  totalTime;       // The total time
-   long    timeCount;       // The count on the number of times
+   double  lastTiming;      //! The last timing recieved
+   double  totalTime;       //! The total time
+   long    timeCount;       //! The count on the number of times
 };  // class Timer
 
 };   // namespace vpr
