@@ -134,9 +134,9 @@ namespace vpr
          return mTotalCalls;
       }
 
-      float          getTotalTime( void )
+      vpr::Interval          getTotalTime( void )
       {
-         return mTotalTime.msecf();
+         return mTotalTime;
       }
 
       typedef std::pair< std::deque<vpr::Interval>::const_iterator, std::deque<vpr::Interval>::const_iterator> NodeHistoryRange;

@@ -123,7 +123,7 @@ namespace vpr
       /**
        * @return Current childs total exectuion time is returned.
        */
-      float          getCurrentTotalTime( void )
+      vpr::Interval          getCurrentTotalTime( void )
       {
          return mCurrentChild->getTotalTime();
       }
@@ -163,7 +163,7 @@ namespace vpr
       /**
        * @return Current child's parent total execution time is returned.
        */
-      float          getCurrentParentTotalTime( void )
+      vpr::Interval          getCurrentParentTotalTime( void )
       {
          return mCurrentParent->getTotalTime();
       }
