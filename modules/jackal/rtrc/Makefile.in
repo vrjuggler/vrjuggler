@@ -152,7 +152,9 @@ java:
 	$(ANT)
 
 _clean:
+ifeq ($(BUILD_JAVA), Y)
 	$(ANT) clean
+endif
 
 RTRCInterfaceSubject.java: RTRCInterfaceSubject.idl
 	$(JAVA_IDL) $(JAVA_IDL_OPTS) -noskel $(JAVA_IDL_INCLUDES) $<
