@@ -512,8 +512,22 @@ sub recurseAction ($) {
      # This is equivalent to a C switch block.
     SWITCH: {
       # Match .txt or .TXT.
-      if ( $curfile =~ /\.(txt|pdf)$/i ) {
+      if ( $curfile =~ /\.(txt|pdf|ps)$/i ) {
           installFile("$curfile", $uid, $gid, "$mode", "$full_dest_path", $full_src_path);
+          last SWITCH;
+      }
+      
+      # Match html.placeholder
+      if ( $curfile =~ /\.(html.placeholder)$/i ) {
+	  my $strippedFile = $curfile;
+	  $strippedFile =~ s/\.(placeholder)$//;
+	  if(!(-e $strippedFile))
+	  {
+	  	print "File $strippedFile doesn't exist, using placeholder\n";
+	  	copy("$curfile", "$strippedFile");
+          	htmlFilter("$full_dest_path/$strippedFile");
+		installFile("$strippedFile", $uid, $gid, "$mode", "$full_dest_path", $full_src_path);
+	  }
           last SWITCH;
       }
       
@@ -539,6 +553,12 @@ sub recurseAction ($) {
 
       # Match .gif,.jpg, .png
       if ( $curfile =~ /\.(png|jpg|gif|jpeg)$/ ) {
+          installFile("$curfile", $uid, $gid, "$mode", "$full_dest_path", $full_src_path);
+          last SWITCH;
+      }
+      
+      # Match binary files
+      if ( $curfile =~ /\.(bin|gz|tar|zip|exe|rpm)$/ ) {
           installFile("$curfile", $uid, $gid, "$mode", "$full_dest_path", $full_src_path);
           last SWITCH;
       }
