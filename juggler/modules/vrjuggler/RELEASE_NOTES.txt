@@ -1,0 +1,307 @@
+                           VR Juggler Release Notes
+                           ------------------------
+
+For all versions:
+
+    - See the ChangeLog for more system-level changes that do not directly
+      affect applications.
+    - See the Known Bugs page on the VR Juggler website (www.vrjuggler.org)
+      for the current list of bugs.
+
+===============================================================================
+
+Version: 2.0 Alpha 2 (1.1.143)
+Released: July 1, 2003
+
+    Please refer to the following to get started with VR Juggler 2.0 Alpha 1:
+
+       http://www.vrjuggler.org/vrjuggler/2.0-alpha2/migration.guide/
+   
+    Required application and configuration changes for upgrading from all
+    previous versions (including 1.1.x up through 1.1 DR3):
+        * KeyboardWindows are now referred to as EventWindows. 
+
+            NOTE: DisplayWindows which contain sim_viewports are required to have
+                  the act_as_event_source property enabled.
+                  
+        * The ClusterManager loads ClusterPlugins on demand now. The
+          ClusterManager chunk must contain a lit of plugins which it should
+          load. For example if you wish to load the RemoteInputManager,
+          ApplicationDataManager, StartBarrierPlugin, and the
+          SwapLockTCPPlugin you would have the following:
+
+            <ClusterJuggler name="SouthPark Cluster">
+              <cluser_nodes>cartman</cluster_nodes>
+              <cluser_nodes>kenny</cluster_nodes>
+              <cluser_nodes>stan</cluster_nodes>
+              <cluser_nodes>kyle</cluster_nodes>
+              <cluser_nodes>chef</cluster_nodes>
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libApplicationDataManager.so</clusterPlugin>
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libRemoteInputManager.so</clusterPlugin> 
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libStartBarrierPlugin.so</clusterPlugin> 
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libSwapLockTCPPlugin.so</clusterPlugin> 
+            </ClusterManager>
+
+          On Win32, it would appear as:
+                      
+            <ClusterJuggler name="SouthPark Cluster">
+              <cluser_nodes>cartman</cluster_nodes>
+                  ...
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/ApplicationDataManager.dll</clusterPlugin>
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/RemoteInputManager.dll</clusterPlugin> 
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/StartBarrierPlugin.dll</clusterPlugin> 
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/SwapLockTCPPlugin.dll</clusterPlugin> 
+            </ClusterManager>
+
+          On Win32, it would appear as:
+          
+            <ClusterJuggler name="SouthPark Cluster">
+              <cluser_nodes>cartman</cluster_nodes>
+                  ...
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libApplicationDataManager.lylib</clusterPlugin>
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libRemoteInputManager.lylib</clusterPlugin> 
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libStartBarrierPlugin.lylib</clusterPlugin> 
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libSwapLockTCPPlugin.lylib</clusterPlugin> 
+            </ClusterManager>
+            
+        * ClusterPlugins have the following functionality:
+            * RemoteInputManager 
+               - Synchronize device data across a cluster
+               - Act as a device server for any number of machines.
+            * ApplicationDataManager
+               - Synchronize arbitrary data structures created in the
+                 developers application code across the cluster.
+            * StartBarrierPlugin
+               - Enforce a strict barrier that will force all nodes to begin
+                 calling the vrj::App callback functions at the same time.
+            * SwapLockTCPPlugin
+               - Provide SwapLock to minimize tearing across multiple displays
+                 using TCP/IP socket connection.
+            * SwapLockWiredPlugin
+               - Provide SwapLock to minimize tearing across multiple displays
+                 using a kernel module, a parallel port, and a simple external 
+                 AND gate.
+        * VR Juggler now supports custom simulators which can be created by the
+          user to meet their specific needs. Each DrawManager has also been
+          given its own "default" simulator.
+        * XSLT has been added in:
+            
+            $VJ_BASE_DIR/share/vrjuggler/data/xslt/2.0a1-2.0a2.xsl
+            
+          which will provide an easy method to later convert configuration
+          files from VR Juggler Alpha1 to a new release.
+        
+        * Update to require Boost 1.30
+
+
+ Version: 2.0 Alpha 1 (1.1.135)
+Released: March 15, 2003
+
+    Please refer to the following to get started with VR Juggler 2.0 Alpha 1:
+
+       http://www.vrjuggler.org/vrjuggler/2.0-alpha1/migration.guide/
+
+    Required application and configuration changes for upgrading from all
+    previous versions (including 1.1.x up through 1.1 DR3):
+        * Gadgeteer loads device drivers on demand now.  An InputManager
+          chunk must be added to tell the Input Manager what driver(s) to
+          load at runtime.  For example, to load the Flock of Birds driver
+          and the Immersion IBox driver on a UNIX system, add the following
+          to the appropriate configuration file:
+
+            <InputManager name="Input Manager">
+              <driver>${VJ_BASE_DIR}/lib/gadgeteer/drivers/Flock_drv.so</driver>
+              <driver>${VJ_BASE_DIR}/lib/gadgeteer/drivers/IBox_drv.so</driver>
+            </InputManager>
+
+          On Win32, it would appear as:
+
+            <InputManager name="Input Manager">
+              <driver>${VJ_BASE_DIR}/lib/gadgeteer/drivers/Flock_drv.dll</driver>
+              <driver>${VJ_BASE_DIR}/lib/gadgeteer/drivers/IBox_drv.dll</driver>
+            </InputManager>
+
+          All drivers except simulator devices and keyboards must be loaded
+          this way on all platforms.  For multiple instances of these, be
+          sure to name each <InputManager> block uniquely.
+        * In configuration files, all values representing physical units
+          (corner positions, translation values, etc.) must be specified in
+          meters.
+        * All position devices now use a list of filters to transform the
+          positional data read from the device.  Correct configuration of
+          a device's filter(s) is necessary to inform the Gadgeteer Input
+          Manager of what units (feet, inches, meters) the device driver
+          returns.
+        * gadget::PositionInterface::getData() now returns a copy of a
+          gmtl::Matrix44f instead of a pointer to the object.  The method
+          also takes an optional argument that tells what measurement units
+          the application wants.  The default is feet.
+
+ Version: 1.1 DR3 (1.1.128)
+Released: September 29, 2002
+
+    Please refer to the following to get started with VR Juggler 1.1 DR3:
+
+       http://www.vrjuggler.org/vrjuggler/1.1-DR3/migration.guide/
+
+    Required application and configuration changes for upgrading from all
+    previous versions (including 1.1.x up through 1.1 DR2):
+        * The configuration file format has changed to an XML-based format.
+          There is an upgrade path using the cfgupdater script and various
+          XSLT stylesheets. Please follow the steps in the Migration Guide
+          for further details.
+
+ Version: 1.1 DR2 (1.1.126)
+Released: September 6, 2002
+
+    Please refer to the following to get started with VR Juggler 1.1 DR2:
+
+       http://www.vrjuggler.org/vrjuggler/1.1-DR2/migration.guide/
+
+ Version: 1.1 DR1 (1.1.96)
+Released: June 13, 2002
+
+    Please refer to the following to get started with VR Juggler 1.1 DR1:
+
+       http://www.vrjuggler.org/vrjuggler/1.1-DR1/migration.guide/
+
+ Version: 1.1.92 (dev build)
+Released: April 10, 2002
+
+    Required application and configuration changes for upgrading from all
+    previous versions (including 1.1.x up through 1.1.91):
+        * The directory containing miscellaneous data files has been
+          renamed from "Data" to "data".
+
+ Version: 1.1.91 (dev build)
+Released: October 16, 2001
+
+    Required application and configuration changes for upgrading from all
+    previous versions (including 1.1.x up through 1.1.90):
+        * The script juggler-config is now called vrjuggler-config.
+        * vjDEBUG has been replaced with vprDEBUG.  The levels and
+          categories are now prefixed with "vrj" instead of "vj".  The
+          category formerly called vjDBG_ALL is now vprDBG_ALL.
+
+ Version: 1.1.90 (dev build)
+Released: September 21, 2001
+
+    Required application changes for upgrading from all previous versions
+    (including 1.1.x up through 1.1.89):
+        * The directory structure for the source tree has been completely
+          reorganized.  All source and header files are now rooted in the
+          vrj directory.  The Kernel directory has been separated into
+          "Kernel", "Draw", and "Displays".  The Draw directory now contains
+          the API-specific application headers in the directories OGL (for
+          OpenGL), OSG (for OpenScenegraph), and Pf (for Performer).  In
+          addition, the files and classes no longer have the "vj" prefix
+          because the vrj namespace has been put into use.  Easy upgrading
+          from 1.0 and 1.1.x builds prior to 1.1.90 can be done using the
+          compatibility headers in the "deprecated" tree.  Simply add
+          -I$(VJ_BASE_DIR)/include/deprecated to your application's makefile
+          and recompile.  For a complete upgrade to the new structure and
+          naming convention, consult the following web page:
+
+             http://www.vrjuggler.org/<fill in path>/
+
+ Version: 1.1 (dev build)
+Started: April 13, 2001
+
+    Required application and configuration changes for upgrading from older
+    versions:
+        * Introduced window viewports.  This means all config files from old
+          version are incompatible.  The new chunk type to use is displayWindow.
+          The old chunk types (simDisplay & surfaceDisplay) can not be used.
+        * vjGlApp::bufferPreDraw() - New interface function for OpenGL-based
+          apps.  Must use if going to use multiviewport code.
+
+        * Performer now has some support for run-time reconfiguration.  This 
+          has the following new implications:
+            - numpipes must be set correctly in the display config chunk
+            - Sometimes black windows will appear on unused pipes.
+        * Performer applications running on Linux must use the pfStat library
+          in tools/pfStatLinux otherwise there will be an unresolved symbol
+          when running applications.  This is due to a bug in Linux performer.
+
+===============================================================================
+
+ Version: 1.0.0
+Released: April 13, 2001
+
+    Required application and configuration changes for upgrading from older
+    beta versions:
+        * Interocular distance is now a configurable option.  If not given,
+          the default separation will be 0.0 which results in no stereo
+          viewing.  A recommended value for most cases is 0.229.  This is
+          set in the JugglerUser chunk.
+        * Link Juggler_utils when compiling applications.
+        * The method vjQuat::unit() is now called vjQuat::normalizeFast().
+        * The method vjQuat::makeQuat() is now called vjQuat::makeRot().
+        * Update the descfiles property in ~/.vjconfig/vjcontrol.cfg (if one
+          exists) to point to "$VJ_SHARE_DIR/Data/chunksDesc".  This is
+          necessary because the extra VR Juggler files are now installed in
+          $VJ_BASE_DIR/share by default instead of $VJ_BASE_DIR.  Note that
+          $VJ_SHARE_DIR is a value used internally by VjControl and does
+          not have to be set as an environment variable.
+        * On IRIX with the MIPSpro Compilers, -LANG:std must be added to the
+          compiler and linker options for compiling applications.
+        * On IRIX, the version 7.3.1.1m or newer of the MIPSpro Compilers is
+          required.  Check your version with 'CC -version' on the command
+          line.
+        * The Ascension MotionStar driver has been improved, and configuration
+          files for that device must be updated.  Refer to the examples in
+          $VJ_BASE_DIR/share/Data/configFiles/example.mstar.1pack.config and
+          $VJ_BASE_DIR/share/Data/configFiles/example.mstar.2pack.config for
+          one- and two-pack configurations respectively.
+        * All windows are positioned relative to the lower left corner of
+          the display area.  This allows all graphics APIs on all platforms
+          to use the same display configuration.
+
+    New features:
+        * The field of view (FOV) and aspect ratio can now be configured in
+          simulator windows.
+        * Drivers for trackd and the Intersense IS-900 have been added.
+        * Many memory problems and instability issues have been fixed.
+        * Win32 support has been improved.  All windows are positioned
+          correctly, and borderless surface displays can be opened.
+
+
+===============================================================================
+
+ Version: 0.1.97
+Released: July 18, 2000
+
+    Required application and configuration changes for upgrading from 0.1.95:
+        * Link Juggler_utils
+        * Keyboard chunk in config files should have sleep_time set to a
+          non-zero value.  50 is a reasonable value.  Failing to do so can
+          result in a major performance decrease.
+        * All windows are positioned with a coordinate system based at the
+          lower left corner of the window relative to the lower left corner
+          of the display.  Full screen windows should be placed at 0,0.
+        * vjGetVJMatrix() (in Kernel/Pf/vjPfUtil.h) been renamed to
+          vjGetVjMatrix().
+
+    New features:
+        * Debugging output can be color coded for easier readability.  This
+          is currently only available with the UNIX versions.
+        * Many bug fixes that include fixing some bad memory references.
+        * Pinch glove driver is now supported and has a digital simulator.
+        * MotionStar driver is working but still has some limitations (see
+          the Known Bugs page).
+        * The samples/pf directory has a VR Juggler application to load
+          models into Performer that supports nagivation and collision
+          detection.
+        * The vjMatrix class has three new members for getting rotation
+          values: getXRot(), getYRot() and getZRot().
+        * Applications no longer need to pass a kernel instance to their
+          VR Juggler App super class.  The vjApp class will get a vjKernel
+          instance on its own if none is provided.  If, however, a kernel
+          instance is provided and it is NULL, a fatal error will still
+          occur.
+        * SoundManager is available to abstract sound functionality for 
+          cross platform audio.
+
+    VjControl now requires the Java 2 compiler and runtime environment.
+
+===============================================================================

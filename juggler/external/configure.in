@@ -1,0 +1,196 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998-2002 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# -----------------------------------------------------------------------------
+# Base configure.in for the Juggler Project external software directory.
+# -----------------------------------------------------------------------------
+# This file is "compiled" by GNU autoconf to generate the configure script
+# that is actually run.
+# -----------------------------------------------------------------------------
+
+AC_REVISION($Revision$)
+AC_INIT(boost/boost/version.hpp)
+AC_CONFIG_AUX_DIR(../share/config)
+DPP_PREREQ([1.5.1])
+DPP_INIT
+
+# -----------------------------------------------------------------------------
+# Path setup.
+# -----------------------------------------------------------------------------
+
+# $srcdir is the root directory of the Juggler source tree.  To get a value
+# for $EXTROOT_ABS, we cd there and save the value of running pwd.  Then
+# return to the directory where configure is being run ($topdir).
+cd "$srcdir"
+EXTROOT_ABS=`pwd`
+
+cd "$EXTROOT_ABS/.."
+JUGGLERROOT_ABS=`pwd`
+cd "$topdir"
+
+# Enable/disable installation of Boost from juggler/external.
+AC_ARG_ENABLE([boost-install],
+              [  --disable-boost-install Disable installation of
+                          juggler/external/boost],
+              [install_boost="$enableval"], [install_boost='yes'])
+
+# Enable/disable installation of CppDOM from juggler/external.
+AC_ARG_ENABLE([cppdom-install],
+              [  --disable-cppdom-install
+                          Disable installation of
+                          juggler/external/cppdom],
+              [install_cppdom="$enableval"], [install_cppdom='yes'])
+
+# Enable/disable installation of GMTL from juggler/external.
+AC_ARG_ENABLE([gmtl-install],
+              [  --disable-gmtl-install
+                          Disable installation of
+                          juggler/external/GMTL],
+              [install_gmtl="$enableval"], [install_gmtl='yes'])
+
+# Enable/disable installation of Doozer from juggler/external.
+AC_ARG_ENABLE([doozer-install],
+              [  --disable-doozer-install
+                          Disable installation of
+                          juggler/external/Doozer],
+              [install_doozer="$enableval"], [install_doozer='yes'])
+
+# Name the path to a Boost installation.  This defaults to
+# juggler/external/boost (using an absolute path).
+AC_ARG_WITH([boostroot],
+            [  --with-boostroot=<PATH> Boost installation directory],
+            [BOOST_ROOT="$withval"],
+            [BOOST_ROOT="$JUGGLERROOT_ABS/external/boost"])
+
+# Name the path to a CppDOM installation.  This defaults to
+# juggler/external/cppdom (using an absolute path).
+AC_ARG_WITH([cppdomroot],
+            [  --with-cppdomroot=<PATH>
+                          CppDOM installation directory],
+            [CPPDOM_ROOT="$withval"],
+            [CPPDOM_ROOT="$JUGGLERROOT_ABS/external/cppdom"])
+
+# Name the path to a GMTL installation.  This defaults to juggler/external/GMTL
+# (using an absolute path).
+AC_ARG_WITH([gmtl-prefix],
+            [  --with-gmtl-prefix=<PATH>
+                          GMTL installation directory],
+            [GMTL_ROOT="$withval"],
+            [GMTL_ROOT="$JUGGLERROOT_ABS/external/GMTL"])
+
+# Name the path to a Doozer installation.  This defaults to
+# juggler/external/Doozer (using an absolute path).
+AC_ARG_WITH([doozer-prefix],
+            [  --with-doozer-prefix=<PATH>
+                          Doozer installation directory],
+            [DOOZER_ROOT="$withval"],
+            [DOOZER_ROOT="$JUGGLERROOT_ABS/external/Doozer"])
+
+# -----------------------------------------------------------------------------
+# System-dependent stuff.
+# -----------------------------------------------------------------------------
+DPP_WIN32_SETUP
+DPP_SYSTEM_SETUP
+
+# -----------------------------------------------------------------------------
+# Checks for programs and other stuff.
+# -----------------------------------------------------------------------------
+DPP_PERL_VER(5.004)
+DPP_HAVE_GNU_MAKE([3.78], ,
+    [AC_MSG_ERROR([*** The build system requires GNU make 3.78 or newer ***])])
+AC_PROG_LN_S
+
+DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
+
+# -----------------------------------------------------------------------------
+# Deal with installing our fun external software.
+# -----------------------------------------------------------------------------
+if test "x$BOOST_ROOT" != "x$JUGGLERROOT_ABS/external/boost" ; then
+   install_boost='no'
+fi
+
+if test "x$CPPDOM_ROOT" != "x$JUGGLERROOT_ABS/external/cppdom" ; then
+   install_cppdom='no'
+fi
+
+if test "x$GMTL_ROOT" != "x$JUGGLERROOT_ABS/external/GMTL" ; then
+   install_gmtl='no'
+fi
+
+if test "x$DOOZER_ROOT" != "x$JUGGLERROOT_ABS/external/Doozer" ; then
+   install_doozer='no'
+fi
+
+TARGETS=''
+
+if test "x$install_boost" != "xno" ; then
+   TARGETS="$TARGETS boost"
+fi
+
+if test "x$install_cppdom" != "xno" ; then
+   TARGETS="$TARGETS cppdom"
+fi
+
+if test "x$install_gmtl" != "xno" ; then
+   TARGETS="$TARGETS gmtl"
+fi
+
+if test "x$install_doozer" != "xno" ; then
+   TARGETS="$TARGETS doozer"
+fi
+
+# Always install the init header file
+TARGETS="$TARGETS init"
+
+# -----------------------------------------------------------------------------
+# Do Makefile substitutions.
+# -----------------------------------------------------------------------------
+
+#UNIX_EXTROOT_ABS="$EXTROOT_ABS"
+#UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
+
+if test "x$OS_TYPE" = "xWin32" ; then
+    EXTROOT_ABS=`dospath -p "$EXTROOT_ABS"`
+    JUGGLERROOT_ABS=`dospath -p "$JUGGLERROOT_ABS"`
+    LN_S='cp -pr'
+    RM_LN='rm -rf'
+else
+    RM_LN='rm -f'
+fi
+
+DPP_SUBST
+AC_SUBST(RM_LN)
+AC_SUBST(EXTROOT_ABS)
+AC_SUBST(JUGGLERROOT_ABS)
+AC_SUBST(TARGETS)
+
+AC_OUTPUT(Makefile)

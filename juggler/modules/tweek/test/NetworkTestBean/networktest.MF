@@ -1,0 +1,8 @@
+Name: networktest/NetworkTest.class
+Java-Bean: True
+Specification-Title: Network Test Bean
+Specification-Version: 0.1.0
+Specification-Vendor: vrjuggler.org
+Implementation-Title: networktest.NetworkTest
+Implementation-Version: 1.0 alpha1
+Implementation-Vendor: vrjuggler.org

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ChunkDescDB>
+  <ChunkDesc token="config-chuck-the-beaver" name="chuck">
+    <help>wood chuckin'</help>
+    <PropertyDesc token="test_prop_int" type="int" num="1">
+        <help>discrete beaver</help>
+    </PropertyDesc>
+    <PropertyDesc token="test_prop_float" type="float" num="1">
+        <help>variable beaver</help>
+    </PropertyDesc>
+    <PropertyDesc token="test_prop_string" type="string" num="1">
+        <help>string bikini beaver</help>
+    </PropertyDesc>
+    <PropertyDesc token="test_prop_multi" name="big bad beaver" type="string" num="1">
+        <help>multi beaver</help>
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="chunk_type_1" name="ChunkType1">
+    <help>Chunk Type 1</help>
+    <PropertyDesc token="single_int" name="single_int" type="int" num="1">
+        <help>Single int</help>
+    </PropertyDesc>
+    <PropertyDesc token="single_float" name="single_float" type="float" num="1">
+        <help>single float</help>
+    </PropertyDesc>
+    <PropertyDesc token="var_int" name="var_int" type="int" num="variable">
+        <help>var int</help>
+    </PropertyDesc>
+    <PropertyDesc token="var_float" name="var_float" type="float" num="variable">
+        <help>var float</help>
+    </PropertyDesc>
+    <PropertyDesc token="single_string" name="single_string" type="string" num="1">
+        <help>Single string</help>
+    </PropertyDesc>
+    <PropertyDesc token="single_chunk" name="single_chunk" type="chunk" num="1">
+        <allowedType>chunk_type_2</allowedType>
+    </PropertyDesc>
+    <PropertyDesc token="embedded_chunk" name="embedded_chunk" type="embeddedchunk" num="1">
+        <help>Embedded Chunk</help>
+        <allowedType>chunk_type_2</allowedType>
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="chunk_type_2" name="ChunkType2">
+    <help>Chunk type 2</help>
+    <PropertyDesc token="single_int" name="single_int" type="int" num="1">
+        <help>Single int</help>
+    </PropertyDesc>
+  </ChunkDesc>
+</ChunkDescDB>

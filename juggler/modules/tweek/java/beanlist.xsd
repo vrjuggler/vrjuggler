@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Tweek beanlist schema version 1.1 -->
+<!-- $Id$ -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="beanlist">
+    <xs:complexType>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:choice>
+          <xs:element name="service"  type="basicBean" />
+          <xs:element name="viewer"   type="basicBean" />
+          <xs:element name="guipanel" type="guiBean" />
+          <xs:element name="generic"  type="basicBean" />
+        </xs:choice>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- Base type for all Beans. -->
+  <xs:complexType name="basicBean">
+    <xs:sequence>
+      <xs:element name="file"         type="beanFile" />
+      <xs:element name="dependencies" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence minOccurs="1" maxOccurs="unbounded">
+            <xs:choice>
+              <xs:element name="bean" type="xs:string" />
+              <xs:element name="jar"  type="jarFile" />
+            </xs:choice>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="guiBean">
+    <xs:complexContent>
+      <xs:extension base="basicBean">
+        <xs:sequence>
+          <xs:element name="tree">
+            <xs:complexType>
+              <xs:attribute name="path" type="treePath" use="optional"
+                            default="/" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="icon" minOccurs="0">
+            <xs:complexType>
+              <xs:attribute name="source"  type="xs:anyURI" use="required" />
+              <xs:attribute name="tooltip" type="xs:string" use="optional"
+                            default="" />
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="beanFile">
+    <xs:attribute name="name"  type="xs:string" use="required" />
+    <xs:attribute name="class" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="jarFile">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="path" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:simpleType name="treePath">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="/(|\w[\w\s]*(/\w[\w\s]*)*)" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

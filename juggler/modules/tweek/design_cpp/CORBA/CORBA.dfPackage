@@ -1,0 +1,85 @@
+package id47wwsctylgvb1ctyljbb6;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#tweek::CorbaManager:oiref><oihard>
+@__modelType reference 
+@hideAttributes
+@__hiddenMember <oiref:cpp#Member#tweek::CorbaManager#getRootPOA#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#tweek::CorbaManager#getChildPOA#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#tweek::CorbaManager#getBeanDeliverySubject#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#tweek::CorbaManager#createChildPOA#(#const std::string&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#tweek::CorbaManager#run#(#void*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#tweek::CorbaManager#$$destructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#tweek::CorbaManager#$$constructor$$#(##)#:oiref>
+*/
+class reference8 {
+}/**
+@__ref <oiref:cpp#Class#tweek::SubjectImpl:oiref><oihard>
+@__modelType reference 
+@hideClasses
+@hideAttributes
+@__hiddenMember <oiref:cpp#Member#tweek::SubjectImpl#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#tweek::SubjectImpl#$$destructor$$#(##)#:oiref>
+*/
+class reference11 {
+}/**
+@__ref <oiref:cpp#Class#tweek::SubjectManagerImpl:oiref><oihard>
+@__modelType reference 
+@hideClasses
+@hideAttributes
+@__hiddenMember <oiref:cpp#Member#tweek::SubjectManagerImpl#$$constructor$$#(#const CorbaManager&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#tweek::SubjectManagerImpl#$$constructor$$#(#const SubjectManagerImpl&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#tweek::SubjectManagerImpl#operator=#(#const SubjectManagerImpl&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#tweek::SubjectManagerImpl#registerSubject#(#Subject_ptr#const std::string&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#tweek::SubjectManagerImpl#initInfoMap#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#tweek::SubjectManagerImpl#$$destructor$$#(##)#:oiref>
+*/
+class reference21 {
+}/**
+@__ref <oiref:cpp#Class#tweek::RemovePred:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#tweek::BeanDeliverySubjectImpl:oiref><oihard>
+@__modelType reference
+@hideAttributes
+@hideClasses
+@__hiddenMember <oiref:cpp#Member#tweek::BeanDeliverySubjectImpl#$$destructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#tweek::BeanDeliverySubjectImpl#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#tweek::BeanDeliverySubjectImpl#operator=#(#const BeanDeliverySubjectImpl&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#tweek::BeanDeliverySubjectImpl#$$constructor$$#(#const BeanDeliverySubjectImpl&#)#:oiref> 
+*/
+class reference1 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:MemberLink#<oiref:cpp#Member#tweek::CorbaManager#mSubjectManager:oiref>=340,183,400,183:oigroup>
+<oigroup:<oiref:cpp#Class#tweek::BeanDeliverySubjectImpl:oiref>=60,350,250,280,0:oigroup>
+<oigroup:<oiref:cpp#Extends#FloatSubjectImpl#tweek::SubjectImpl:oiref>=305,492,475,480:oigroup>
+<oigroup:<oiref:cpp#Class#tweek::CorbaManager:oiref>=10,30,330,230,0:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#tweek::CorbaManager#mSubjectManager:oiref>=364,157,32,22,0:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#tweek::CorbaManager#mBeanDeliverySubject:oiref>=149,324,32,22,0:oigroup>
+<oigroup:<oiref:cpp#Class#tweek::SubjectManagerImpl:oiref>=400,20,380,370,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#tweek::CorbaManager#mBeanDeliverySubject:oiref>=185,260,185,350:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#tweek::SubjectManagerImpl#mCorbaMgr:oiref>=344,80,16,22,0:oigroup>
+<oigroup:<oiref:cpp#Class#tweek::RemovePred:oiref>=140,670,157,174,1:oigroup>
+<oigroup:<oiref:cpp#Class#tweek::SubjectImpl:oiref>=410,410,230,200,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#tweek::SubjectManagerImpl#mCorbaMgr:oiref>=400,106,340,106:oigroup>
+<oigroup:<oiref:cpp#Extends#tweek::BeanDeliverySubjectImpl#tweek::SubjectImpl:oiref>=310,510,410,510:oigroup>
+*/
+class __positions {
+}

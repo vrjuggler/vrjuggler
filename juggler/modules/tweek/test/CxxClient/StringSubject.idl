@@ -1,0 +1,15 @@
+#ifndef _CXX_CLIENT_TEST_STRING_SUBJECT_IDL_
+#define _CXX_CLIENT_TEST_STRING_SUBJECT_IDL_
+
+#include <tweek/idl/Subject.idl>
+
+module CxxClientTest
+{
+   interface StringSubject : tweek::Subject
+   {
+      void setValue(in string val);
+      string getValue();
+   };
+};
+
+#endif /* _CXX_CLIENT_TEST_STRING_SUBJECT_IDL_ */

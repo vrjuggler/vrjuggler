@@ -1,0 +1,47 @@
+package id1fxpzcoygvor1coyklb0i;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#vpr::IOStatsStrategyAdapter:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#vpr::NullIOStatsStrategy:oiref><oihard>
+@__modelType reference 
+*/
+class reference3 {
+}/**
+@__ref <oiref:cpp#Class#vpr::BaseIOStatsStrategy:oiref><oihard>
+@__modelType reference 
+*/
+class reference4 {
+}/**
+@__ref <oiref:cpp#Class#vpr::BandwidthIOStatsStrategy:oiref><oihard>
+@__modelType reference 
+*/
+class reference5 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:cpp#Class#vpr::NullIOStatsStrategy:oiref>=450,154,183,79,1:oigroup>
+<oigroup:<oiref:cpp#Extends#BwIOStats#BaseIOStats:oiref>=332,283,332,119:oigroup>
+<oigroup:<oiref:cpp#Class#vpr::BandwidthIOStatsStrategy:oiref>=531,405,200,530,1:oigroup>
+<oigroup:<oiref:cpp#Extends#vpr::NullIOStatsStrategy#vpr::BaseIOStatsStrategy:oiref>=485,233,485,265:oigroup>
+<oigroup:<oiref:cpp#Class#vpr::IOStatsStrategyAdapter:oiref>=531,245,200,144,1:oigroup>
+<oigroup:<oiref:cpp#Class#vpr::BaseIOStatsStrategy:oiref>=321,265,200,166,1:oigroup>
+*/
+class __positions {
+}

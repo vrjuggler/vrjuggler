@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ChunkDescDB>
+  <ChunkDesc token="config-chuck-the-beaver" name="chuck">
+    <help>wood chuckin'</help>
+    <PropertyDesc token="test_prop_int" type="int" num="1" name="test_prop_int">
+      <help>discrete beaver</help>
+      <item label="I'm an int" defaultvalue="1029384756" />
+    </PropertyDesc>
+    <PropertyDesc token="test_prop_float" type="float" num="1" name="test_prop_float">
+      <help>variable beaver</help>
+      <item label="I'm a float" defaultvalue="3.1459" />
+    </PropertyDesc>
+    <PropertyDesc token="test_prop_string" type="string" num="1" name="test_prop_string">
+      <help>string bikini beaver</help>
+      <item label="I'm a string" defaultvalue="upchuck" />
+    </PropertyDesc>
+    <PropertyDesc token="test_prop_multi" type="string" num="1" name="test_prop_multi">
+      <help>multi beaver</help>
+      <item label="I'm a string too" defaultvalue="woodchuck" />
+    </PropertyDesc>
+    <PropertyDesc name="test_prop_bool" token="test_prop_bool" num="1" type="bool">
+      <item label="Am I Chuck?" defaultvalue="true" />
+      <help>boolean beaver</help>
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="chunk_type_1" name="ChunkType1">
+    <help>Chunk Type 1</help>
+    <PropertyDesc token="Name" name="Name" type="string" num="1">
+      <help>Unique name of an instance of this chunk type</help>
+    </PropertyDesc>
+    <PropertyDesc token="single_int" name="single_int" type="int" num="1">
+      <help>Single int</help>
+    </PropertyDesc>
+    <PropertyDesc token="single_float" name="single_float" type="float" num="1">
+      <help>single float</help>
+    </PropertyDesc>
+    <PropertyDesc name="single_bool" token="single_bool" num="1" type="bool">
+      <help>single boolean</help>
+    </PropertyDesc>
+    <PropertyDesc token="var_int" name="var_int" type="int" num="variable">
+      <help>var int</help>
+    </PropertyDesc>
+    <PropertyDesc token="var_float" name="var_float" type="float" num="variable">
+      <help>var float</help>
+    </PropertyDesc>
+    <PropertyDesc token="single_string" name="single_string" type="string" num="1">
+      <help>Single string</help>
+    </PropertyDesc>
+    <PropertyDesc token="single_chunk" name="single_chunk" type="chunk" num="1">
+      <allowedType>chunk_type_2</allowedType>
+    </PropertyDesc>
+    <PropertyDesc token="embedded_chunk" name="embedded_chunk" type="embeddedchunk" num="1">
+      <help>Embedded Chunk</help>
+      <allowedType>chunk_type_2</allowedType>
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="chunk_type_2" name="ChunkType2">
+    <help>Chunk type 2</help>
+    <PropertyDesc token="Name" name="Name" type="string" num="1">
+      <help>Unique name of an instance of this chunk type</help>
+    </PropertyDesc>
+    <PropertyDesc token="single_int" name="single_int" type="int" num="1">
+      <help>Single int</help>
+    </PropertyDesc>
+  </ChunkDesc>
+</ChunkDescDB>
+

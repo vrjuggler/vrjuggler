@@ -1,0 +1,99 @@
+package id2mf3rd6gte1fgd6gxgik7;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#gadget::ProxyConstructor:oiref><oihard>
+@__modelType reference 
+*/
+class reference69 {
+}/**
+@__ref <oiref:cpp#Class#gadget::InputLogger:oiref><oihard>
+@__modelType reference 
+*/
+class reference71 {
+}/**
+@__ref <oiref:cpp#Class#gadget::InputLoggerPtr:oiref><oihard>
+@__modelType reference 
+*/
+class reference72 {
+}/**
+@__ref <oiref:cpp#Class#gadget::ProxyDepChecker:oiref><oihard>
+@__modelType reference 
+*/
+class reference75 {
+}/**
+@__ref <oiref:cpp#Class#gadget::ProxyConstructorBase:oiref><oihard>
+@__modelType reference 
+*/
+class reference76 {
+}/**
+@__ref <oiref:cpp#Class#gadget::ProxyFactory:oiref><oihard>
+@__modelType reference 
+*/
+class reference78 {
+}/**
+@__ref <oiref:design#Class#id3s53ldcexs8m6dcf67r7r.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#Type:oiref> 
+*/
+class reference {
+}/**
+@__ref <oiref:design#Class#id3l4wcdcexs8m6dcf67r2t.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#Filter:oiref> 
+*/
+class reference2 {
+}/**
+@__ref <oiref:design#Class#id4tqbidcexs8m6dcf67ra2.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#Util:oiref> 
+*/
+class reference3 {
+}/**
+@__ref <oiref:design#Class#id10ealdcexs8m6dcf67r4k.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#RemoteInputManager:oiref> 
+*/
+class reference4 {
+}/**
+@__ref <oiref:design#Class#id4y5o4dcexs8m6dcf67pvn.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#Devices:oiref> 
+*/
+class reference5 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:design#Class#id3l4wcdcexs8m6dcf67r2t.diagram:oiref>=348,147,73,90,1:oigroup>
+<oigroup:<oiref:design#Class#id3s53ldcexs8m6dcf67r7r.diagram:oiref>=99,468,190,1029,1:oigroup>
+<oigroup:<oiref:cpp#Class#gadget::ProxyDepChecker:oiref>=646,2,200,211,1:oigroup>
+<oigroup:<oiref:cpp#Class#gadget::InputLoggerPtr:oiref>=378,74,176,62,1:oigroup>
+<oigroup:<oiref:cpp#Class#gadget::InputLogger:oiref>=696,392,200,726,1:oigroup>
+<oigroup:<oiref:cpp#Extends#gadget::ProxyConstructor#gadget::ProxyConstructorBase:oiref>=456,292,456,277:oigroup>
+<oigroup:<oiref:cpp#Class#gadget::ProxyFactory:oiref>=486,292,200,248,1:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#gadget::ProxyFactory#mConstructors:oiref>=527,277,30,22,0:oigroup>
+<oigroup:<oiref:design#Class#id10ealdcexs8m6dcf67r4k.diagram:oiref>=299,468,170,545,1:oigroup>
+<oigroup:<oiref:design#Class#id4tqbidcexs8m6dcf67ra2.diagram:oiref>=568,57,53,65,1:oigroup>
+<oigroup:<oiref:design#Class#id1rnund6gte1fgd6gxgpqq.diagram:oiref>=10,730,170,52,1:oigroup>
+<oigroup:<oiref:cpp#Class#gadget::ProxyConstructorBase:oiref>=436,132,200,145,1:oigroup>
+<oigroup:<oiref:design#Class#id6nn1jd6gte1fgd6gxgphz.diagram:oiref>=182,730,157,202,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#gadget::ProxyFactory#mConstructors:oiref>=561,292,561,277:oigroup>
+<oigroup:<oiref:cpp#Class#gadget::ProxyConstructor:oiref>=276,292,200,159,1:oigroup>
+<oigroup:<oiref:design#Class#id4y5o4dcexs8m6dcf67pvn.diagram:oiref>=106,5,157,354,1:oigroup>
+
+
+*/
+class __positions {
+}

@@ -1,0 +1,36 @@
+package idf32jmd9n7fwo9d9n7jfoa;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#tweek::CorbaService:oiref><oihard>
+@__modelType reference
+@hideAttributes
+@__hiddenMember <oiref:cpp#Member#tweek::CorbaService#initRootPOA#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#tweek::CorbaService#addSubjectManagers#(#const CosNaming::BindingList&#std::list<tweek::SubjectManager_var>&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#tweek::CorbaService#run#(#void*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#tweek::CorbaService#isValid#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#tweek::CorbaService#getLocalContext#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#tweek::CorbaService#getNameServiceURI#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#tweek::CorbaService#$$destructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#tweek::CorbaService#$$constructor$$#(#const std::string&#vpr::Uint16#const std::string&#const std::string&#)#:oiref> 
+*/
+class reference {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:cpp#Class#tweek::CorbaService:oiref>=10,10,410,250,0:oigroup>
+*/
+class __positions {
+}

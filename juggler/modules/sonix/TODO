@@ -1,0 +1,18 @@
+
+Things to do in sonix
+
+Fix Bugs:
+- respect whether a sound is retriggerable
+- fix reconfiguration (startup/shutdown/startup) of AudioWorks
+  - currently fails
+- fix reconfiguration (startup/shutdown/startup) of OpenAL
+  - succeeds, but sounds cannot play after this (mysterious)
+  - NOTE: last i checked this doesn't happen anymore, so maybe openal
+    has been fixed since last I tried this...
+
+
+Add Features:
+- fill in the implementaion that allows the soundAPI state to be configured
+  - make sure this state is transferred when an API is changed to another.
+- support for streaming audio
+- DSP plugins (maybe?) streaming audio might work with this.

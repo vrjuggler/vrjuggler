@@ -1,0 +1,94 @@
+/***************** <Tweek heading BEGIN do not edit this line> ****************
+ * Tweek
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ ***************** <Tweek heading END do not edit this line> *****************/
+
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VR Juggler is (C) Copyright 1998-2003 by Iowa State University
+ *
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
+
+#ifndef _TWEEK_SUBJECT_MANAGER_IDL_
+#define _TWEEK_SUBJECT_MANAGER_IDL_
+
+#include <tweek/idl/Subject.idl>
+
+
+module tweek
+{
+
+interface SubjectManager
+{
+   struct RegisteredSubject
+   {
+      string  subject_name;
+      Subject subject_ref;
+   };
+
+   struct SubjectMgrInfoItem
+   {
+      string key;
+      string value;
+   };
+
+   typedef sequence<RegisteredSubject> SubjectList;
+   typedef sequence<SubjectMgrInfoItem> SubjectManagerInfoList;
+
+   /**
+    * Returns the named Tweek Subject reference to the caller if the Subject
+    * is registered.  If not, a reference equal to CORBA::nil() is returned.
+    */
+   Subject getSubject(in string name);
+
+   /**
+    * Returns a sequence of all the registered Tweek Subjects packaged in the
+    * structure RegisteredSubject.
+    */
+   SubjectList getAllSubjects();
+
+   /**
+    * Returns a sequence of key/value pairs that provide site-specific
+    * information about a given Subject Manager servant.
+    */
+   SubjectManagerInfoList getInfo();
+
+   /**
+    * Returns the name of this Subject Manager reference as it is registered
+    * with the CORBA Naming Service.
+    *
+    * @note It might be possible for client code to look this up some other
+    *       way, so this method may not really be needed except as a
+    *       convenience.
+    */
+   string getName();
+};
+
+};
+
+#endif /* _TWEEK_SUBJECT_MANAGER_IDL_ */

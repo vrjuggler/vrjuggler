@@ -1,0 +1,117 @@
+package idfbvkcoygvor1coyhhd1k;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#vpr::SocketConnector:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#vpr::SocketAcceptor:oiref><oihard>
+@__modelType reference 
+*/
+class reference95 {
+}/**
+@__ref <oiref:cpp#Class#vpr::InetAddrBase:oiref><oihard>
+@__modelType reference 
+*/
+class reference96 {
+}/**
+@__ref <oiref:cpp#Class#vpr::SocketDatagramOpt:oiref><oihard>
+@__modelType reference 
+*/
+class reference97 {
+}/**
+@__ref <oiref:cpp#Class#vpr::SocketIpOpt:oiref><oihard>
+@__modelType reference 
+*/
+class reference98 {
+}/**
+@__ref <oiref:cpp#Class#vpr::McastReq:oiref><oihard>
+@__modelType reference 
+*/
+class reference99 {
+}/**
+@__ref <oiref:cpp#Class#vpr::SocketOptions::Data:oiref><oihard>
+@__modelType reference 
+*/
+class reference100 {
+}/**
+@__ref <oiref:cpp#Class#vpr::SocketDatagram_t:oiref><oihard>
+@__modelType reference 
+*/
+class reference101 {
+}/**
+@__ref <oiref:cpp#Class#vpr::SocketOptions::Linger:oiref><oihard>
+@__modelType reference 
+*/
+class reference102 {
+}/**
+@__ref <oiref:cpp#Class#std::hash:oiref><oihard>
+@__modelType reference 
+*/
+class reference103 {
+}/**
+@__ref <oiref:cpp#Class#vpr::SocketStreamOpt:oiref><oihard>
+@__modelType reference 
+*/
+class reference104 {
+}/**
+@__ref <oiref:cpp#Class#vpr::Socket_t:oiref><oihard>
+@__modelType reference 
+*/
+class reference105 {
+}/**
+@__ref <oiref:cpp#Class#vpr::SocketStream_t:oiref><oihard>
+@__modelType reference 
+*/
+class reference106 {
+}/**
+@__ref <oiref:cpp#Class#vpr::SocketBasicOpt:oiref><oihard>
+@__modelType reference 
+*/
+class reference107 {
+}/**
+@__ref <oiref:cpp#Class#vpr::SocketOptionWrapper:oiref><oihard>
+@__modelType reference 
+*/
+class reference6 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:cpp#Class#vpr::Socket_t:oiref>=519,313,200,735,1:oigroup>
+<oigroup:<oiref:cpp#Class#vpr::SocketStreamOpt:oiref>=439,33,200,118,1:oigroup>
+<oigroup:<oiref:cpp#Extends#vpr::SocketStreamOpt#vpr::SocketIpOpt:oiref>=539,151,539,183:oigroup>
+<oigroup:<oiref:cpp#Class#vpr::SocketConnector:oiref>=879,3,200,144,1:oigroup>
+<oigroup:<oiref:cpp#Class#std::hash:oiref>=99,273,200,79,1:oigroup>
+<oigroup:<oiref:cpp#Class#vpr::SocketOptions::Data:oiref>=229,3,200,254,1:oigroup>
+<oigroup:<oiref:cpp#Class#vpr::SocketDatagramOpt:oiref>=669,3,200,170,1:oigroup>
+<oigroup:<oiref:cpp#Extends#vpr::SocketDatagram_t#vpr::Socket_t:oiref>=349,632,519,632:oigroup>
+<oigroup:<oiref:cpp#Class#vpr::SocketIpOpt:oiref>=439,183,200,118,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vpr::SocketOptions::Data#mcast_drop_member:oiref>=349,257,349,313:oigroup>
+<oigroup:<oiref:cpp#Class#vpr::SocketOptions::Linger:oiref>=100,364,199,98,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vpr::SocketOptions::Data#mcast_add_member:oiref>=389,257,389,313:oigroup>
+<oigroup:<oiref:cpp#Class#vpr::SocketStream_t:oiref>=749,493,200,241,1:oigroup>
+<oigroup:<oiref:cpp#Class#vpr::SocketAcceptor:oiref>=939,163,200,192,1:oigroup>
+<oigroup:<oiref:cpp#Extends#vpr::SocketStream_t#vpr::Socket_t:oiref>=749,613,719,613:oigroup>
+<oigroup:<oiref:cpp#Class#vpr::SocketBasicOpt:oiref>=729,183,200,222,1:oigroup>
+<oigroup:<oiref:cpp#Extends#vpr::SocketIpOpt#vpr::SocketBasicOpt:oiref>=639,253,729,253:oigroup>
+<oigroup:<oiref:cpp#Class#vpr::McastReq:oiref>=309,313,200,150,1:oigroup>
+<oigroup:<oiref:cpp#Extends#vpr::SocketDatagramOpt#vpr::SocketIpOpt:oiref>=669,139,639,206:oigroup>
+<oigroup:<oiref:cpp#Class#vpr::InetAddrBase:oiref>=19,3,200,199,1:oigroup>
+<oigroup:<oiref:cpp#Class#vpr::SocketDatagram_t:oiref>=149,473,200,319,1:oigroup> 
+*/
+class __positions {
+}
