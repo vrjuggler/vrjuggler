@@ -172,6 +172,15 @@ public:
        return m_handle;
     }
 
+    /**
+     * Queries if the blocking state for this socket is fixed and can no
+     * longer be changed.
+     */
+    inline bool
+    isBlockingFixed (void) {
+        return m_blocking_fixed;
+    }
+
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     vpr::Status enableBlocking(void);
