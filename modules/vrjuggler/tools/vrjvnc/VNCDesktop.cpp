@@ -98,7 +98,7 @@ VNCDesktop::VNCDesktop(const std::string& hostname, const vpr::Uint16& port,
    m_world_M_desktop *= gmtl::makeRot<gmtl::Matrix44f>(gmtl::EulerAngleXYZf(-0.4f, -0.05f, 0.0f));
 
    // Request the first update.
-   mVncIf.updateFramebuffer(0, 0, mVncIf.getWidth(), mVncIf.getHeight());
+   mVncIf.sendFramebufferUpdateRequest(0, 0, mVncIf.getWidth(), mVncIf.getHeight());
 
    // Spawn off a thread to keep updating the data vnc connection
    mVncThreadFunctor = new vpr::ThreadRunFunctor<VNCInterface>(&mVncIf);

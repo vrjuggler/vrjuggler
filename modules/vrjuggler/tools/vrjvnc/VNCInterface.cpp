@@ -193,7 +193,7 @@ void VNCInterface::run()
    }
 }
 
-void VNCInterface::updateFramebuffer(int x, int y, int w, int h)
+void VNCInterface::sendFramebufferUpdateRequest(int x, int y, int w, int h)
 {
     rfbFramebufferUpdateRequestMsg fur;
     // Initialize the message
@@ -209,6 +209,8 @@ void VNCInterface::updateFramebuffer(int x, int y, int w, int h)
 
     // This is no longer the first time we update, we want incremental
     // framebuffer updates
+    // I think this means that the first time we are asking for a full update
+    // and from then on we only want incremental (non-full) updates.
     mIncremental = true;
 }
 
@@ -655,7 +657,7 @@ void VNCInterface::handleVNCFramebufferUpdate()
 
    rfbFramebufferUpdateMsg fu;
 
-   // Read the message (bar the initial type byte)
+   // Read the message header (bar the initial type byte)
    readData((char *) &fu + 1, sz_rfbFramebufferUpdateMsg - 1);
    int num_rectangles = Swap16IfLE(fu.nRects);
 
@@ -667,45 +669,45 @@ void VNCInterface::handleVNCFramebufferUpdate()
    // Read the rectangles and update the framebuffer
    for ( int i = 0; i < num_rectangles; ++i )
    {
-      rfbFramebufferUpdateRectHeader rect;
+      rfbFramebufferUpdateRectHeader rect_u;      // The rectangle header info
       size_t lines_per_read, bytes_per_line;
 
       // Read a rectangle header from the server
-      readData(&rect, sz_rfbFramebufferUpdateRectHeader);
+      readData(&rect_u, sz_rfbFramebufferUpdateRectHeader);
 
       // Convert results to something we can use
-      rect.r.x = Swap16IfLE(rect.r.x);
-      rect.r.y = Swap16IfLE(rect.r.y);
-      rect.r.w = Swap16IfLE(rect.r.w);
-      rect.r.h = Swap16IfLE(rect.r.h);
+      rect_u.r.x = Swap16IfLE(rect_u.r.x);
+      rect_u.r.y = Swap16IfLE(rect_u.r.y);
+      rect_u.r.w = Swap16IfLE(rect_u.r.w);
+      rect_u.r.h = Swap16IfLE(rect_u.r.h);
 
-      rect.encoding = Swap32IfLE(rect.encoding);
+      rect_u.encoding = Swap32IfLE(rect_u.encoding);
 
       vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-         << "Read rectangle information: (" << rect.r.x << ", " << rect.r.y
-         << ") " << rect.r.w << "x" << rect.r.h << std::endl << vprDEBUG_FLUSH;
+         << "Read rectangle information: (" << rect_u.r.x << ", " << rect_u.r.y
+         << ") " << rect_u.r.w << "x" << rect_u.r.h << std::endl << vprDEBUG_FLUSH;
 
       // Sanity checking
-      if (rect.r.x + rect.r.w > mWidth || rect.r.y + rect.r.h > mHeight)
+      if (rect_u.r.x + rect_u.r.w > mWidth || rect_u.r.y + rect_u.r.h > mHeight)
       {
          throw VNCException("Rectangle too large.");
       }
 
-      if ((rect.r.h * rect.r.w) == 0)
+      if ((rect_u.r.h * rect_u.r.w) == 0)
       {
          continue;
       }
 
       // Store away the rectangle for later update
-      int x = rect.r.x; int y = rect.r.y;
-      int w = rect.r.w; int h = rect.r.h;
+      int x = rect_u.r.x; int y = rect_u.r.y;
+      int w = rect_u.r.w; int h = rect_u.r.h;
 
       // Now, do different things depending on the encoding
-      switch (rect.encoding)
+      switch (rect_u.encoding)
       {
          case rfbEncodingRaw:
             // How many lines can we copy?
-            bytes_per_line = rect.r.w * (mPf.size / 8);
+            bytes_per_line = rect_u.r.w * (mPf.size / 8);
             lines_per_read = mReadBufferSize / bytes_per_line;
 
             vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
@@ -716,12 +718,12 @@ void VNCInterface::handleVNCFramebufferUpdate()
                << vprDEBUG_FLUSH;
 
             // Read the entire rectangle from the server
-            while (rect.r.h > 0)
+            while (rect_u.r.h > 0)
             {
                // Clamp value if too large
-               if ( lines_per_read > rect.r.h )
+               if ( lines_per_read > rect_u.r.h )
                {
-                  lines_per_read = rect.r.h;
+                  lines_per_read = rect_u.r.h;
                }
 
                vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
@@ -732,12 +734,12 @@ void VNCInterface::handleVNCFramebufferUpdate()
                readData(mReadBuffer, bytes_per_line * lines_per_read);
 
                // Copy the rectangle buffer into the framebuffer
-               copyRectToFramebuffer(mReadBuffer, rect.r.x, rect.r.y, rect.r.w,
+               copyRectToFramebuffer(mReadBuffer, rect_u.r.x, rect_u.r.y, rect_u.r.w,
                                      lines_per_read);
 
                // Update readbuffer and framebuffer positions
-               rect.r.h -= lines_per_read;
-               rect.r.y += lines_per_read;
+               rect_u.r.h -= lines_per_read;
+               rect_u.r.y += lines_per_read;
             }
             break;
 
@@ -750,8 +752,8 @@ void VNCInterface::handleVNCFramebufferUpdate()
    }
 
    // Finally, we send a framebuffer update request (incremental)
-   // @@@ Remove this?
-   updateFramebuffer(0, 0, mWidth, mHeight);
+   // so that the server knows to keep sending them.
+   sendFramebufferUpdateRequest(0, 0, mWidth, mHeight);
 }
 
 void VNCInterface::handleVNCServerCutText()
