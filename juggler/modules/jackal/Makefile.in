@@ -236,9 +236,9 @@ endif
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(JCCLROOT_ABS)/COPYING $(prefix)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(JCCLROOT_ABS)/README $(prefix)
+          $(JCCLROOT_ABS)/README.txt $(prefix)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(JCCLROOT_ABS)/INSTALL $(prefix)
+          $(JCCLROOT_ABS)/INSTALL.txt $(prefix)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(JCCLROOT_ABS)/RELEASE_NOTES $(prefix)
 	@echo "Build time: `LTIME=C date`" > $(prefix)/BUILD_TIME
