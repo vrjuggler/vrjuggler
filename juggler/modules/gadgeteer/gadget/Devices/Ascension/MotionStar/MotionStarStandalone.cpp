@@ -66,6 +66,13 @@ const unsigned char SENSOR_PRESENT      = 0x04;
 const unsigned char TRANSMITTER_PRESENT = 0x02;
 const unsigned char TRANSMITTER_RUNNING = 0x01;
 
+const unsigned char SUDDEN_OUTPUT_CHANGE = 0x20;
+const unsigned char XYZ_REFERENCE        = 0x10;
+const unsigned char APPEND_BUTTON_DATA   = 0x08;
+const unsigned char AC_NARROW_FILTER     = 0x04;
+const unsigned char AC_WIDE_FILTER       = 0x02;
+const unsigned char DC_FILTER            = 0x01;
+
 // ----------------------------------------------------------------------------
 // Convert the given Flock data format into a human-readable string that
 // names the format.
@@ -100,6 +107,9 @@ std::string getFormatName(const data_format format)
          break;
       case POSITION_QUATERNION:
          name = "POSITION/QUATERNION";
+         break;
+      case FEEDTHROUGH_DATA:
+         name = "FEEDTHROUGH_DATA";
          break;
    }
 
@@ -198,6 +208,17 @@ static std::ostream& operator<<(std::ostream& out,
    out << " Data format: " << (unsigned int) device.dataFormat << "\n";
    out << " Hemisphere: " << (unsigned int) device.hemisphere << "\n";
    out << " Report Rate: " << (unsigned int) device.reportRate << "\n";
+   out << " Report rate: " << (unsigned int) device.reportRate << "\n";
+   out << " Sudden change filtering: "
+       << (device.setup & FLOCK::SUDDEN_OUTPUT_CHANGE ? "ON" : "OFF") << "\n";
+   out << " Button data: "
+       << (device.setup & FLOCK::APPEND_BUTTON_DATA ? "ON" : "OFF") << "\n";
+   out << " AC narrow filter: "
+       << (device.setup & FLOCK::AC_NARROW_FILTER ? "ON" : "OFF")
+       << "\n";out << " AC wide filter: "
+       << (device.setup & FLOCK::AC_WIDE_FILTER ? "ON" : "OFF") << "\n";
+   out << " DC filter: "
+       << (device.setup & FLOCK::DC_FILTER ? "ON" : "OFF") << "\n";
 
    return out;
 }
@@ -680,11 +701,14 @@ void MotionStarStandalone::sample()
                               sizeof(rec_ptr->data_info) + rec_data_size;
 
                // If the most significant bit is set in address, then there
-               // is also button data for this record.  We always ignore that
-               // information, but it's important for getting the proper size
-               // of this data block.
+               // is also button data for this record.
                if ( rec_ptr->address & 0x80 )
                {
+                  // Copy the button data into the current bird's info block.
+                  m_birds[bird]->buttons[0] = rec_ptr->button_data[0];
+                  m_birds[bird]->buttons[1] = rec_ptr->button_data[1];
+
+                  // Increment the pointer to account for the button data.
                   base_ptr += sizeof(rec_ptr->button_data);
                }
             }
@@ -828,6 +852,11 @@ void MotionStarStandalone::setRunMode(const BIRDNET::run_mode mode)
             try
             {
                getRsp(&rsp);
+
+               if ( rsp.error_code != 0 )
+               {
+                  printError(rsp.error_code);
+               }
             }
             catch (...)
             {
@@ -861,6 +890,11 @@ void MotionStarStandalone::setRunMode(const BIRDNET::run_mode mode)
             try
             {
                getRsp(&rsp);
+
+               if ( rsp.error_code != 0 )
+               {
+                  printError(rsp.error_code);
+               }
             }
             catch (...)
             {
@@ -1216,12 +1250,10 @@ vpr::ReturnStatus MotionStarStandalone::sendWakeUp()
          {
             BIRDNET::HEADER shutdown_msg(BIRDNET::MSG_SHUT_DOWN);
 
+            printError(rsp.error_code);
             vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
                << "[MotionStarStandalone] Reinitializing server and sending "
                << "wake-up call again" << std::endl << vprDEBUG_FLUSH;
-
-            shutdown_msg.sequence = vpr::System::Htons(m_seq_num);
-            m_seq_num++;
 
             try
             {
@@ -1231,6 +1263,11 @@ vpr::ReturnStatus MotionStarStandalone::sendWakeUp()
                {
                   // This reuses the rsp object declared above.
                   status = getRsp(&rsp);
+
+                  if ( rsp.error_code != 0 )
+                  {
+                     printError(rsp.error_code);
+                  }
                }
                catch (...)
                {
@@ -1396,7 +1433,7 @@ vpr::ReturnStatus MotionStarStandalone::setSystemStatus(BIRDNET::SYSTEM_STATUS* 
 // ----------------------------------------------------------------------------
 unsigned int MotionStarStandalone::configureBirds()
 {
-   BIRDNET::SINGLE_BIRD_STATUS* bird_status;
+   BIRDNET::BIRD_STATUS* bird_status;
    unsigned int bird_count;
    bool values_set;
 
@@ -1492,13 +1529,15 @@ unsigned int MotionStarStandalone::configureBirds()
             // m_report_rate and the hemisphere to the value in
             // m_hemisphere.
             m_birds[bird]->format      = m_bird_format;
-            m_birds[bird]->report_rate = m_report_rate;
             m_birds[bird]->hemisphere  = m_hemisphere;
+            m_birds[bird]->report_rate = bird_status->status.reportRate;
+            m_birds[bird]->setup       = bird_status->status.setup;
 
             // Fill in the bird_status struct.
-            bird_status->dataFormat = format;
-            bird_status->reportRate = m_report_rate;
-            bird_status->hemisphere = m_hemisphere;
+            bird_status->status.setup      |= FLOCK::APPEND_BUTTON_DATA;
+            bird_status->status.dataFormat = format;
+            bird_status->status.reportRate = m_report_rate;
+            bird_status->status.hemisphere = m_hemisphere;
 
             // XXX: The second clause in the conditional is here so that
             // we can use the 0-based m_birds_active in the sample()
@@ -1514,12 +1553,12 @@ unsigned int MotionStarStandalone::configureBirds()
             // Disable the current bird in the m_birds vector.
             m_birds[bird]->data_words  = 0;
             m_birds[bird]->format      = FLOCK::NO_BIRD_DATA;
-            m_birds[bird]->report_rate = 0;
+            m_birds[bird]->report_rate = 1;
             m_birds[bird]->hemisphere  = m_hemisphere;
 
             // Fill in the bird_status struct with disabling values.
-            bird_status->dataFormat = 0x00;
-            bird_status->reportRate = 1;
+            bird_status->status.dataFormat = 0x00;
+            bird_status->status.reportRate = 1;
          }
 
          // Finally, send the new configuration to the current bird.
@@ -1543,9 +1582,9 @@ unsigned int MotionStarStandalone::configureBirds()
 // ----------------------------------------------------------------------------
 // Get the status of an individual bird.
 // ----------------------------------------------------------------------------
-BIRDNET::SINGLE_BIRD_STATUS* MotionStarStandalone::getBirdStatus(const unsigned char bird)
+BIRDNET::BIRD_STATUS* MotionStarStandalone::getBirdStatus(const unsigned char bird)
 {
-   BIRDNET::SINGLE_BIRD_STATUS* bird_status;
+   BIRDNET::BIRD_STATUS* bird_status;
 
    try
    {
@@ -1557,17 +1596,17 @@ BIRDNET::SINGLE_BIRD_STATUS* MotionStarStandalone::getBirdStatus(const unsigned 
 
       // The requested bird's status descrpition begins at the returned
       // packet's data buffer.  This is what will be returned to the caller.
-      bird_status = (BIRDNET::SINGLE_BIRD_STATUS*) &(status->buffer[0]);
+      bird_status = (BIRDNET::BIRD_STATUS*) &(status->buffer[0]);
 
       // The dataFormat field contains the number of words (2 bytes) in
       // this bird's formatted data packet.  It is in the most significant
       // four bits.  See page 127 of the MotionStar Operation Guide.
-      m_birds[bird]->data_words = (bird_status->dataFormat >> 4) & 0x0f;
+      m_birds[bird]->data_words = (bird_status->status.dataFormat >> 4) & 0x0f;
 
       // The least significant four bits of dataFormat contain the format
       // of the data this bird will send by default.  Again, refer to page
       // 127 of the MotionStar Operation Guide.
-      switch (bird_status->dataFormat & 0x0f)
+      switch (bird_status->status.dataFormat & 0x0f)
       {
          case 0:
             m_birds[bird]->format = FLOCK::NO_BIRD_DATA;
@@ -1603,13 +1642,13 @@ BIRDNET::SINGLE_BIRD_STATUS* MotionStarStandalone::getBirdStatus(const unsigned 
          default:
             vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
                << "[MotionStarStandalone] WARNING: Got unknown data format "
-               << (unsigned int) (bird_status->dataFormat & 0x0f)
+               << (unsigned int) (bird_status->status.dataFormat & 0x0f)
                << " for bird " << (unsigned int) bird << std::endl
                << vprDEBUG_FLUSH;
             break;
       }
 
-      switch (bird_status->hemisphere)
+      switch (bird_status->status.hemisphere)
       {
          case 0:
             m_birds[bird]->hemisphere = FLOCK::FRONT_HEMISPHERE;
@@ -1632,13 +1671,13 @@ BIRDNET::SINGLE_BIRD_STATUS* MotionStarStandalone::getBirdStatus(const unsigned 
          default:
             vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
                << "[MotionStarStandalone] WARNING: Got unknown hemisphere "
-               << (unsigned int) bird_status->hemisphere << " for bird "
+               << (unsigned int) bird_status->status.hemisphere << " for bird "
                << (unsigned int) bird << std::endl << vprDEBUG_FLUSH;
             break;
       }
 
-      m_birds[bird]->report_rate = bird_status->reportRate;
-      m_birds[bird]->address     = bird_status->FBBaddress;
+      m_birds[bird]->report_rate = bird_status->status.reportRate;
+      m_birds[bird]->address     = bird_status->status.FBBaddress;
    }
    // If nothing was read, nothing can be returned.
    catch (mstar::NoDeviceStatusException ex)
@@ -1653,12 +1692,12 @@ BIRDNET::SINGLE_BIRD_STATUS* MotionStarStandalone::getBirdStatus(const unsigned 
 // Set the status of an individual bird.
 // ----------------------------------------------------------------------------
 vpr::ReturnStatus MotionStarStandalone::setBirdStatus(const unsigned char bird,
-                                                      BIRDNET::SINGLE_BIRD_STATUS* status)
+                                                      BIRDNET::BIRD_STATUS* status)
 {
    // The value in bird is the index into the m_birds vector.  Using that
    // entry, we get the actual FBB address.
    return setDeviceStatus(m_birds[bird]->addr, (char*) status,
-                          sizeof(BIRDNET::SINGLE_BIRD_STATUS));
+                          sizeof(BIRDNET::BIRD_STATUS));
 }
 
 // ----------------------------------------------------------------------------
@@ -1698,6 +1737,11 @@ BIRDNET::DATA_PACKET* MotionStarStandalone::getDeviceStatus(const unsigned char 
          {
             getRsp((void*) &(rsp->buffer),
                    vpr::System::Ntohs(rsp->header.number_bytes));
+
+            if ( rsp->header.error_code != 0 )
+            {
+               printError(rsp->header.error_code);
+            }
          }
          catch (mstar::NetworkReadException ex)
          {
@@ -1778,6 +1822,11 @@ vpr::ReturnStatus MotionStarStandalone::setDeviceStatus(const unsigned char devi
       {
          BIRDNET::HEADER rsp;
          status = getRsp(&rsp);
+
+         if ( rsp.error_code != 0 )
+         {
+            printError(rsp.error_code);
+         }
       }
       catch (mstar::NetworkReadException ex)
       {
@@ -1962,12 +2011,12 @@ void MotionStarStandalone::convertMeasurementRate(const double rate,
 // the position scaling factor.
 // ----------------------------------------------------------------------------
 void MotionStarStandalone::getUnitInfo(const unsigned int bird,
-                                       const BIRDNET::SINGLE_BIRD_STATUS* birdStatus)
+                                       const BIRDNET::BIRD_STATUS* birdStatus)
 {
    unsigned char high_byte, low_byte, units;
 
-   high_byte = birdStatus->scaling[0];
-   low_byte  = birdStatus->scaling[1];
+   high_byte = birdStatus->status.scaling[0];
+   low_byte  = birdStatus->status.scaling[1];
 
    // The highest four bits of the high byte tell the measurement system
    // being used.
@@ -2173,7 +2222,7 @@ void MotionStarStandalone::printSystemStatus(const BIRDNET::SYSTEM_STATUS* statu
    std::cout << std::setw(pad_width_dot) << std::setfill('.')
              << "* Measurement rate " << " "
              << convertMeasurementRate(status->measurementRate) << "\n";
-   sprintf(rev_str, "%d.%d", status->softwareRevision[0],
+   sprintf(rev_str, "%u.%u", status->softwareRevision[0],
            status->softwareRevision[1]);
    rev_num = atof(rev_str);
    std::cout << std::setw(pad_width_dot) << std::setfill('.')
@@ -2234,8 +2283,31 @@ void MotionStarStandalone::printDeviceStatus()
                 << FLOCK::getHemisphereName(m_birds[i]->hemisphere)
                 << "\n";
       std::cout << std::setw(pad_width_dot) << std::setfill('.')
-                << "*     Report Rate " << " "
+                << "*     Report rate " << " "
                 << (unsigned int) m_birds[i]->report_rate << "\n";
+      std::cout << std::setw(pad_width_dot) << std::setfill('.')
+                << "*     Sudden change filtering " << " "
+                << (m_birds[i]->setup & FLOCK::SUDDEN_OUTPUT_CHANGE ? "ON" :
+                                                                      "OFF")
+                << "\n";
+      std::cout << std::setw(pad_width_dot) << std::setfill('.')
+                << "*     Button data " << " "
+                << (m_birds[i]->setup & FLOCK::APPEND_BUTTON_DATA ? "ON" :
+                                                                    "OFF")
+                << "\n";
+      std::cout << std::setw(pad_width_dot) << std::setfill('.')
+                << "*     AC narrow filter " << " "
+                << (m_birds[i]->setup & FLOCK::AC_NARROW_FILTER ? "ON" :
+                                                                  "OFF")
+                << "\n";
+      std::cout << std::setw(pad_width_dot) << std::setfill('.')
+                << "*     AC wide filter " << " "
+                << (m_birds[i]->setup & FLOCK::AC_WIDE_FILTER ? "ON" : "OFF")
+                << "\n";
+      std::cout << std::setw(pad_width_dot) << std::setfill('.')
+                << "*     DC filter " << " "
+                << (m_birds[i]->setup & FLOCK::DC_FILTER ? "ON" : "OFF")
+                << "\n";
    }
 
    // Finish off with another line of = signs.

@@ -77,7 +77,8 @@ enum data_format
    POSITION_MATRIX     = 5, /**< Position and angle information in a matrix */
    INVALID             = 6, /**< Placeholder */
    QUATERNION          = 7, /**< Angle information as quaternion parameters */
-   POSITION_QUATERNION = 8  /**< Possition information and angle information as quaternion parameters */
+   POSITION_QUATERNION = 8, /**< Possition information and angle information as quaternion parameters */
+   FEEDTHROUGH_DATA    = 14
 };
 
 /**
@@ -106,6 +107,14 @@ extern const unsigned char BUTTONS_PRESENT;
 extern const unsigned char SENSOR_PRESENT;
 extern const unsigned char TRANSMITTER_PRESENT;
 extern const unsigned char TRANSMITTER_RUNNING;
+
+// Constants indicating the bit to set when defining the individual bird setup.
+extern const unsigned char SUDDEN_OUTPUT_CHANGE;
+extern const unsigned char XYZ_REFERENCE;
+extern const unsigned char APPEND_BUTTON_DATA;
+extern const unsigned char AC_NARROW_FILTER;
+extern const unsigned char AC_WIDE_FILTER;
+extern const unsigned char DC_FILTER;
 
 /**
  * Converts the given Flock data format into a human-readable string that
@@ -174,8 +183,10 @@ struct Device
     FLOCK::hemisphere   hemisphere;   /**< Hemisphere in use */
     unsigned char       address;      /**< FBB address of this device */
     FLOCK::data_block   data;         /**< Data read from this device */
+    unsigned char       buttons[2];   /**< Bird button data */
 
     unsigned char       addr;
+    unsigned char       setup;        /**< Device setup parameters */
 };
 
 }  // namespace FBB
@@ -322,6 +333,7 @@ struct SINGLE_BIRD_STATUS
    unsigned char scaling[2];     /**< Full scale output */
    unsigned char hemisphere;     /**< Bird's hemisphere of operation */
    unsigned char FBBaddress;     /**< FBB address */
+   unsigned char transmitterType; /**< Transmitter type */
    unsigned char spare1;         /**< Reserved */
    unsigned char spare2[2];      /**< Reserved */
 };
@@ -1109,12 +1121,12 @@ private:
     * @param bird The bird whose status is being requested.  This is a
     *             zero-based value.
     *
-    * @return Non-NULL - A pointer to a BIRDNET::SINGLE_BIRD_STATUS object
-    *                      describing the requested bird's current status.
-    * @return NULL     - No status information could be read for the
-    *                      requested bird for some reason.
+    * @return A non-NULL pointer to a BIRDNET::BIRD_STATUS object describing
+    *         the requested bird's current status.  NULL is returned if no
+    *         status information could be read for the requested bird for
+    *         some reason.
     */
-   BIRDNET::SINGLE_BIRD_STATUS* getBirdStatus(const unsigned char bird);
+   BIRDNET::BIRD_STATUS* getBirdStatus(const unsigned char bird);
 
    /**
     * Sets the status of an individual bird.
@@ -1127,14 +1139,15 @@ private:
     *
     * @param bird   The bird whose status is being set.  This is a
     *               zero-based value.
-    * @param status A pointer to a BIRDNET::SINGLE_BIRD_STATUS object
-    *               describing the new configuration for the given bird.
+    * @param status A pointer to a BIRDNET::BIRD_STATUS object describing
+    *               the new configuration for the given bird.
     *
-    * @return  0 - The bird was configured successfully.
-    * @return -1 - The bird could not be configured for some reason.
+    * @return vpr::ReturnStatus::Succeed is returned if the bird was
+    *         configured successfully.  vpr::ReturnStatus::Fail is returned
+    *         if the bird could not be configured for some reason.
     */
    vpr::ReturnStatus setBirdStatus(const unsigned char bird,
-                                   BIRDNET::SINGLE_BIRD_STATUS* status);
+                                   BIRDNET::BIRD_STATUS* status);
 
    /**
     * Gets the status of the requested FBB device.  The device number must be
@@ -1459,11 +1472,11 @@ private:
     *
     * @param bird       The bird whose data block is being passsed.  This
     *                   is primarily for debugging use.
-    * @param birdStatus The single bird status block being used to get the
-    *                   unit information.
+    * @param birdStatus The bird status block being used to get the unit
+    *                   information.
     */
    void getUnitInfo(const unsigned int bird,
-                    const BIRDNET::SINGLE_BIRD_STATUS* birdStatus);
+                    const BIRDNET::BIRD_STATUS* birdStatus);
 
    /**
     * Sends the given message to the server.
