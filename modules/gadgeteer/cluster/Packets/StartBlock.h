@@ -142,12 +142,6 @@ public:
    {
        return(Header::RIM_START_BLOCK);
    }
-      
-   virtual bool action(ClusterNode* node)
-   {
-      boost::ignore_unused_variable_warning(node);
-      return true;
-   }
 };
 }
 

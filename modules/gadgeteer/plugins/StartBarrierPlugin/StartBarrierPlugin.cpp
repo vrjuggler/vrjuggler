@@ -219,7 +219,7 @@ namespace cluster
                {
                   //Send packet to server machine
                   StartBlock temp_start_block(getPluginGUID(), 0);
-                  temp_start_block.send(barrier_master->getSockStream());
+                  barrier_master->send(&temp_start_block);
                   vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrOutBOLD(clrCYAN,"[StartBarrierPlugin] ")
                      << "Sending signal to start master: " << mBarrierMasterHostname << std::endl << vprDEBUG_FLUSH;
                }
@@ -251,7 +251,7 @@ namespace cluster
                   {
                      // Dead lock since we are actually in a recursion of ClusterNodes
                      ClusterNode* node = ClusterNetwork::instance()->getClusterNodeByHostname(*i);
-                     temp_start_block.send(node->getSockStream());
+                     node->send(&temp_start_block);
                      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrOutBOLD(clrCYAN,"[StartBarrierPlugin] ")
                         << "Sending start signal to slave: " << (*i) << std::endl << vprDEBUG_FLUSH;              
                   }

@@ -83,9 +83,6 @@ public:
    }
 
    std::string getDeviceName() { return mDeviceName; }
-
-   virtual bool action(ClusterNode* node);
-
 private:
    std::string mDeviceName;
 };

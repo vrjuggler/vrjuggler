@@ -89,9 +89,6 @@ public:
    }
    vpr::GUID getId() { return mId; }
 //   std::string getDeviceName() { return mDeviceName; }
-
-   virtual bool action(ClusterNode* node);
-
 private:
    vpr::GUID mId;
    //std::string mDeviceName;

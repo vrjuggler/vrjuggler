@@ -90,11 +90,6 @@ namespace cluster
       mId.readObject(mPacketReader);
    }
    
-   bool ApplicationDataRequest::action(ClusterNode* node)
-   {
-      return false;
-   }
-
    void ApplicationDataRequest::printData(int debug_level)
    {
       vprDEBUG_BEGIN(gadgetDBG_RIM,debug_level) 

@@ -38,7 +38,6 @@
 #include <vpr/vprTypes.h>
 #include <vpr/IO/BufferObjectReader.h>
 #include <vpr/IO/BufferObjectWriter.h>
-#include <vpr/IO/Socket/SocketStream.h>
 
 #include <cluster/Packets/Header.h>
 #include <cluster/Packets/Packet.h>
@@ -47,7 +46,7 @@
 #include <boost/concept_check.hpp>
 
 //#define RIM_PACKET_HEAD_SIZE 8
-
+         
 namespace cluster
 {
 
@@ -77,7 +76,7 @@ public:
     *
     * Create a device request to be sent
     */
-   EndBlock(vpr::Uint32 frame_number)
+   EndBlock(const vpr::Uint32& frame_number)
    {
       // Given the input, create the packet and then serialize the packet(which includes the header)
       // - Set member variables
@@ -87,8 +86,10 @@ public:
       // Header vars (Create Header)
       mHeader = new Header(Header::RIM_PACKET,
                                        Header::RIM_END_BLOCK,
-                                       Header::RIM_PACKET_HEAD_SIZE
-                                       /*+2 tempVar*/,frame_number);
+                                       Header::RIM_PACKET_HEAD_SIZE,
+                                       // Not needed since the ClusterManager will grab this packet
+                                       //+ 16 /*Plugin GUID*/, 
+                                       frame_number);
       serialize();
    }
 
@@ -136,20 +137,6 @@ public:
    static vpr::Uint16 getBaseType()
    {
        return(Header::RIM_END_BLOCK);
-   }
-
-   virtual bool action(ClusterNode* node)
-   {
-      // -Set New State
-      if (node == NULL)
-      {
-         return false;
-      }
-
-      //node->setState(mNewState);
-      node->setUpdated(true);
-
-      return true;
    }
 private:
    //vpr::Uint16    mTempVar;

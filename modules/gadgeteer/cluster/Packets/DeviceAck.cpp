@@ -153,12 +153,6 @@ namespace cluster
       // =============== Packet Specific =================
    }
 
-   bool DeviceAck::action(ClusterNode* node)
-   {
-      return false;
-   }
-
-
    void DeviceAck::printData(int debug_level)
    {
       vprDEBUG_BEGIN(gadgetDBG_RIM,debug_level) 

@@ -125,13 +125,6 @@ namespace cluster
       // =============== Packet Specific =================
    }
 
-   bool ApplicationDataAck::action(ClusterNode* node)
-   {  
-      boost::ignore_unused_variable_warning(node);
-      return false;
-   }
-
-
    void ApplicationDataAck::printData(int debug_level)
    {
       vprDEBUG_BEGIN(gadgetDBG_RIM,debug_level) 

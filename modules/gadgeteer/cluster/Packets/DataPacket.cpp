@@ -141,12 +141,6 @@ namespace cluster
       //std::cout << "Size after shrink: " << mPacketReader->mData->size() << std::endl;
    }
 
-   bool DataPacket::action(ClusterNode* node)
-   {
-      boost::ignore_unused_variable_warning(node);
-      return false;
-   }
-   
    void DataPacket::printData(int debug_level)
    {
       // NOTE: This should be removed if any of the below code ever puts
