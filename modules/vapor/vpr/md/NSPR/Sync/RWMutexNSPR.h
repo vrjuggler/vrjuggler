@@ -47,6 +47,8 @@
 #include <stdio.h>
 #include <prrwlock.h>
 
+#include <vpr/Util/ReturnStatus.h>
+
 
 namespace vpr
 {
@@ -67,10 +69,10 @@ public:
    /**
     * Locks the mutex.
     *
-    * @return  1 - Acquired
-    * @return -1 - Error
+    * @return vpr::ReturnStatus::Succeed is returned if the mutex is acquired.
+    *         vpr::ReturnStatus::Fail is returned upon error.
     */
-   int acquire (void)
+   vpr::ReturnStatus acquire (void)
    {
       return acquireWrite();
    }
@@ -78,19 +80,19 @@ public:
    /**
     * Acquires a read mutex.
     */
-   int acquireRead (void)
+   vpr::ReturnStatus acquireRead (void)
    {
       PR_RWLock_Rlock(mRwLock);
-      return 1;
+      return vpr::ReturnStatus();
    }
 
    /**
     * Acquires a write mutex.
     */
-   int acquireWrite (void)
+   vpr::ReturnStatus acquireWrite (void)
    {
       PR_RWLock_Wlock(mRwLock);
-      return 1;
+      return vpr::ReturnStatus();
    }
 
    /**
@@ -99,10 +101,11 @@ public:
     * Then decrement by 1 and return.
     * P operation.
     *
-    * @return 1 - Acquired
-    * @return 0 - Not acquired
+    * @return vpr::ReturnStatus::Succeed is returned if the mutex is acquired.
+    *         vpr::ReturnStatus::Fail is returned if the mutex is not
+    *         acquired.
     */
-   int tryAcquire (void)
+   vpr::ReturnStatus tryAcquire (void)
    {
       return tryAcquireWrite();
    }
@@ -110,23 +113,23 @@ public:
    /**
     * Tries to acquire a read mutex.
     */
-   int tryAcquireRead (void);
+   vpr::ReturnStatus tryAcquireRead(void);
 
    /**
     * Tries to acquire a write mutex.
     */
-   int tryAcquireWrite (void);
+   vpr::ReturnStatus tryAcquireWrite(void);
 
    /**
     * Releases the mutex.
     *
-    * @return  0 - Succeed
-    * @return -1 - Error
+    * @return vpr::ReturnStatus::Succeed is returned on success;
+    *         vpr::ReturnStatus::Fail on error.
     */
-   int release (void)
+   vpr::ReturnStatus release (void)
    {
       PR_RWLock_Unlock(mRwLock);
-      return 0;
+      return vpr::ReturnStatus();
    }
 
    /**
