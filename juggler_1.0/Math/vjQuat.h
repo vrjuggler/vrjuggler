@@ -39,7 +39,8 @@
 #include <Math/vjVec4.h>
 #include <Math/vjVec3.h>
 #include <Math/vjMatrix.h>
-#include <VPR/vjSystem.h>
+#include <Math/vjMath.h>
+
 
 #define VJ_QUAT_EPSILON     0.00001f
 
@@ -83,7 +84,10 @@ public:
            const float z );
    
    //: set self to 0 rotation
-   void identity();
+   void makeIdent();
+   
+   //: an initialized (no rotation) quaternion
+   static const vjQuat& identity();
    
    //: copy the quaternion data from scalar: [w]  vec: [x y z]
    //!POST: self = {w,x,y,z}
@@ -103,7 +107,13 @@ public:
 
    //: return the vector component
    const vjVec3 vector() const;
-
+   
+   //: set the scalar component
+   void setScalar( float s );
+   
+   //: set the vector component
+   void setVector( const vjVec3& vec );
+         
    //: returns the quaternion's norm (dot product)
    // defined as sum of squares of all quat components
    float norm() const;
@@ -175,7 +185,7 @@ public:
    //!PRE:  give one quaternion to test for equality, and a tolerance
    //!PRE:  tolerance defaults to VJ_QUAT_EPSILON if none given.
    //!POST: returns true if the two quats are almost equal
-   bool almostEqual( const vjQuat& quat, float tol = VJ_QUAT_EPSILON ) const;
+   bool isEqual( const vjQuat& quat, float tol = VJ_QUAT_EPSILON ) const;
    
    //: Set self to the rotation component contained 
    //:  within the given rotation matrix
@@ -298,6 +308,20 @@ inline const float& vjQuat::scalar() const { return vec[VJ_W]; }
 //: return the vector component
 inline const vjVec3 vjQuat::vector() const { return vjVec3( vec[VJ_X], vec[VJ_Y], vec[VJ_Z] ); }
 
+//: set the scalar component
+inline void vjQuat::setScalar( float s )
+{
+   vec[VJ_W] = s;
+}
+
+//: set the vector component
+inline void vjQuat::setVector( const vjVec3& vector )
+{
+   this->vec[VJ_X] = vector[VJ_X];
+   this->vec[VJ_Y] = vector[VJ_Y];
+   this->vec[VJ_Z] = vector[VJ_Z];
+}
+
 //: quaternion data access for external function use (like quat to matrix)
 // non-const version
 // use VJ_W, VJ_X, VJ_Y, or VJ_Z to access each component
@@ -316,14 +340,7 @@ inline const float& vjQuat::operator[]( int x ) const
    return vec[x];
 }
 
-//: set self to 0 rotation
-inline void vjQuat::identity()
-{
-   vec[VJ_W] = 0.0f;
-   vec[VJ_X] = 1.0f;
-   vec[VJ_Y] = 0.0f;
-   vec[VJ_Z] = 0.0f;
-}
+
 
 
 
@@ -355,13 +372,35 @@ inline void vjQuat::copy( const vjVec3& pure_quat )
    vec[VJ_W] = pure_quat[2];
 }
 
+//: Construct Quat from 4 floats
+inline vjQuat::vjQuat( const float w,
+        const float x,
+        const float y,
+        const float z ) : vec()
+{
+   this->copy( w, x, y, z );
+}
 
+//: an initialized (no rotation) quaternion
+inline const vjQuat& vjQuat::identity()
+{
+   // this is what a conversion from identity matrix to quat gives:
+   // twist == 0, vec == (0, 0, 0)
+   static const vjQuat ____identity___quaternion( 1.0f, 0.0f, 0.0f, 0.0f );
+   return ____identity___quaternion;
+}
+   
+//: set self to 0 rotation
+inline void vjQuat::makeIdent()
+{
+   this->copy( vjQuat::identity() );
+}
 
 //: default constructor
 //!POST: initialize self to identity
 inline vjQuat::vjQuat() : vec()
 {
-   this->identity();
+   this->makeIdent();
 }
 
 //: Construct self from another vjQuat 
@@ -377,14 +416,7 @@ inline vjQuat::vjQuat( const vjVec3& pure_quat ) : vec()
    this->copy( pure_quat );
 }
 
-//: Construct Quat from 4 floats
-inline vjQuat::vjQuat( const float w,
-        const float x,
-        const float y,
-        const float z ) : vec()
-{
-   this->copy( w, x, y, z );
-}
+
 
 //: returns the quaternion's norm (dot product)
 // defined as sum of squares of components
@@ -395,7 +427,7 @@ inline float vjQuat::norm() const
 
 //: returns the quaternion's magnitude (also called absolute)
 // defined as the norm of all four quaternion components
-inline float vjQuat::length() const { return vjSystem::sqrt( this->norm() ); }
+inline float vjQuat::length() const { return vjMath::sqrt( this->norm() ); }
 
 //: set self to the complex conjugate of self.
 inline void vjQuat::conj()
@@ -517,12 +549,12 @@ inline void vjQuat::div( const vjQuat& q1, const vjQuat& q2 )
 
 //: check if two quaternions are equal within some tolerance 'tol'
 // WARNING: not implemented (do not use)
-inline bool vjQuat::almostEqual( const vjQuat& quat, float tol ) const
+inline bool vjQuat::isEqual( const vjQuat& quat, float tol ) const
 {
-   if (VJ_ISEQUAL( vec[0], quat.vec[0], tol ) && 
-       VJ_ISEQUAL( vec[1], quat.vec[1], tol ) &&
-       VJ_ISEQUAL( vec[2], quat.vec[2], tol ) &&
-       VJ_ISEQUAL( vec[3], quat.vec[3], tol ) )
+   if (vjMath::isEqual( vec[0], quat.vec[0], tol ) && 
+       vjMath::isEqual( vec[1], quat.vec[1], tol ) &&
+       vjMath::isEqual( vec[2], quat.vec[2], tol ) &&
+       vjMath::isEqual( vec[3], quat.vec[3], tol ) )
    {
       return true;
    }

@@ -33,6 +33,7 @@
 
 #include <assert.h>
 #include <Math/vjQuat.h>
+#include <Math/vjMath.h>
 
 // set self to the rotation in the given rotation matrix
 void vjQuat::makeRot( const vjMatrix& mat )
@@ -45,7 +46,7 @@ void vjQuat::makeRot( const vjMatrix& mat )
    // Check the diagonal
    if (tr > 0.0)
    {
-      s = vjSystem::sqrt( tr + 1.0 );
+      s = vjMath::sqrt( tr + 1.0 );
       vec[VJ_W] = s/2.0;
       s = 0.5/s;
 
@@ -72,7 +73,7 @@ void vjQuat::makeRot( const vjMatrix& mat )
       j = nxt[i];
       k = nxt[j];
 
-      s = vjSystem::sqrt( (mat.mat[i][i] - (mat.mat[j][j] + mat.mat[k][k])) + 1.0 );
+      s = vjMath::sqrt( (mat.mat[i][i] - (mat.mat[j][j] + mat.mat[k][k])) + 1.0 );
 
       vec[i] = s * 0.5;
 
@@ -92,7 +93,7 @@ void vjQuat::makeRot( const vjMatrix& mat )
 void vjQuat::makeRot( const float& rad, const float& x, const float& y, const float& z )
 {
    float halfRad = rad * 0.5f;
-	float sinHalfRad = vjSystem::sin( halfRad );
+	float sinHalfRad = vjMath::sin( halfRad );
 	vjVec3 vecNormalized;
 
    if (rad == 0.0f || (x == 0.0f && y == 0.0f && z == 0.0f))
@@ -104,7 +105,7 @@ void vjQuat::makeRot( const float& rad, const float& x, const float& y, const fl
       vecNormalized.set( x, y, z );
 	   vecNormalized.normalize();
    }
-	vec[VJ_W] = vjSystem::cos( halfRad );
+	vec[VJ_W] = vjMath::cos( halfRad );
 	vec[VJ_X] = sinHalfRad * vecNormalized[0];
 	vec[VJ_Y] = sinHalfRad * vecNormalized[1];
 	vec[VJ_Z] = sinHalfRad * vecNormalized[2];
@@ -116,14 +117,14 @@ void vjQuat::getRot( float& rad, float& xx, float& yy, float& zz ) const
 {
    // make sure we don't get a NaN result from acos...
    vjQuat quat( *this );
-   if (vjSystem::abs( quat.vec[VJ_W] ) > 1.0f)
+   if (vjMath::abs( quat.vec[VJ_W] ) > 1.0f)
    {
       quat.normalize();
    }
-   assert( vjSystem::abs( quat.vec[VJ_W] ) <= 1.0f && "acos returns NaN when |arg| > 1" );
+   assert( vjMath::abs( quat.vec[VJ_W] ) <= 1.0f && "acos returns NaN when |arg| > 1" );
    
-   float halfrad = vjSystem::acos( quat.vec[VJ_W] );
-   float sin_halfrad = vjSystem::sin( halfrad );
+   float halfrad = vjMath::acos( quat.vec[VJ_W] );
+   float sin_halfrad = vjMath::sin( halfrad );
    
    // compute one/sin_halfrad
    if (sin_halfrad >= VJ_QUAT_EPSILON || sin_halfrad <= -VJ_QUAT_EPSILON)
@@ -204,10 +205,10 @@ void vjQuat::slerp(float t, const vjQuat& p, const vjQuat& q)
    if ((1.0 - cosom) > VJ_QUAT_EPSILON)
    {
       // Standard case (slerp)
-      omega = vjSystem::acos(cosom);
-      sinom = vjSystem::sin(omega);
-      sclp  = vjSystem::sin((1.0 - t)*omega)/sinom;
-      sclq  = vjSystem::sin(t*omega)/sinom;
+      omega = vjMath::acos(cosom);
+      sinom = vjMath::sin(omega);
+      sclp  = vjMath::sin((1.0 - t)*omega)/sinom;
+      sclq  = vjMath::sin(t*omega)/sinom;
    }
    else
    {
@@ -235,18 +236,18 @@ void vjQuat::exp( const vjQuat& quat )
 {
    float len1, len2;
 
-	len1 = vjSystem::sqrt( quat.vec[VJ_X] * quat.vec[VJ_X] + 
+	len1 = vjMath::sqrt( quat.vec[VJ_X] * quat.vec[VJ_X] + 
                           quat.vec[VJ_Y] * quat.vec[VJ_Y] + 
                           quat.vec[VJ_Z] * quat.vec[VJ_Z] );
 	if (len1 > 0.0f)
-		len2 = vjSystem::sin( len1 ) / len1;
+		len2 = vjMath::sin( len1 ) / len1;
 	else
 		len2 = 1.0f;
 
 	vec[VJ_X] = quat.vec[VJ_X] * len2;
 	vec[VJ_Y] = quat.vec[VJ_Y] * len2;
 	vec[VJ_Z] = quat.vec[VJ_Z] * len2;
-	vec[VJ_W] = vjSystem::cos( len1 );
+	vec[VJ_W] = vjMath::cos( len1 );
 }
 
 //: complex logarithm
@@ -255,15 +256,15 @@ void vjQuat::log( const vjQuat& quat )
 {
    float length;
 
-	length = vjSystem::sqrt( quat.vec[VJ_X] * quat.vec[VJ_X] + 
+	length = vjMath::sqrt( quat.vec[VJ_X] * quat.vec[VJ_X] + 
                             quat.vec[VJ_Y] * quat.vec[VJ_Y] + 
                             quat.vec[VJ_Z] * quat.vec[VJ_Z] );
 
 	// avoid divide by 0
 	if (quat.vec[VJ_W] != 0.0)
-		length = vjSystem::atan( length / quat.vec[VJ_W] );
+		length = vjMath::atan( length / quat.vec[VJ_W] );
 	else 
-      length = M_PI / 2.0f; // or M_PI_2...
+      length = VJ_PI / 2.0f; // or VJ_PI_2...
 
 	vec[VJ_W] = 0.0f;
 	vec[VJ_X] = quat.vec[VJ_X] * length;
@@ -285,7 +286,7 @@ std::ostream& vjQuat::outStreamReadable( std::ostream& out ) const
 	float x, y, z;
 	this->getRot( rad, x, y, z );
 
-	out << VJ_RAD2DEG( rad ) << " deg, " << x << ", " << y << ", " << z;
+	out << vjMath::rad2deg( rad ) << " deg, " << x << ", " << y << ", " << z;
 	return out;
 }
 

@@ -33,13 +33,15 @@
 /*
  * --------------------------------------------------------------------------
  * NOTES:
- *    - This file (vjSystemPosix.h) MUST be included by vjSystem.h, not the
- *      other way around.
+ *    - This file (vjSystemPosix.h) MUST be included by vjSystemBase.h, 
+ *      not the other way around.
  * --------------------------------------------------------------------------
  */
 
-#ifndef _VJ_SYSTEM_POSIX_H_
-#define _VJ_SYSTEM_POSIX_H_
+/* this define is the same as the Win32/Posix/NSPR version */
+/* in order to protect against including both */
+#ifndef _VJ_SYSTEM_H_
+#define _VJ_SYSTEM_H_
 
 #include <vjConfig.h>
 
@@ -47,7 +49,7 @@
 #include <sys/time.h>
 
 
-class vjSystemPosix: public vjSystemBase {
+class vjSystem : public vjSystemBase {
 public:
     inline static int
     gettimeofday (struct timeval* tp, struct timezone* tzp = NULL) {
@@ -56,4 +58,4 @@ public:
 };
  
 
-#endif   /* _VJ_SYSTEM_POSIX_H_ */
+#endif   /* _VJ_SYSTEM_H_ */

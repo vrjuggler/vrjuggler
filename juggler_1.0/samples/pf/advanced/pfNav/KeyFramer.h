@@ -6,7 +6,7 @@
 #include "Math/vjVec3.h"
 #include "Math/vjQuat.h"
 #include "Math/vjMatrix.h"
-#include "VPR/vjSystem.h"
+#include "Math/vjMath.h"
 
 namespace kev
 {
@@ -305,7 +305,7 @@ public:
          float time_needed( timeNeeded );
          assert( (time_needed >= keyTwo.time() && time_needed <= keyOne.time()) ||
                  (time_needed >= keyOne.time() && time_needed <= keyTwo.time()) && "time_needed need to be in between the two times" );
-         float size = vjSystem::abs( keyTwo.time() - keyOne.time() );
+         float size = vjMath::abs( keyTwo.time() - keyOne.time() );
 
          // degenerate case where you're interpolating between two keys of the same size..
          if (size <= 0.00001f)
@@ -315,11 +315,11 @@ public:
          }
 
          // find the distance between [keyOneTime, time_needed, keyTwoTime] to  [0, normalize, 1]
-         time_needed -= VJ_MIN2( keyOne.time(), keyTwo.time() );
+         time_needed -= vjMath::Min( keyOne.time(), keyTwo.time() );
          float normalize = time_needed / size;
 
          // interpolate.
-         VJ_LERP( resultingKey.time(), normalize, keyOne.time(), keyTwo.time() );
+         vjMath::lerp( resultingKey.time(), normalize, keyOne.time(), keyTwo.time() );
          resultingKey.position().lerp( normalize, keyOne.position(), keyTwo.position() );
 	      resultingKey.rotation().slerp( normalize, keyOne.rotation(), keyTwo.rotation() );
       }

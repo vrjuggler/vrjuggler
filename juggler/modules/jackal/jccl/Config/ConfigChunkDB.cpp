@@ -309,7 +309,7 @@ int vjConfigChunkDB::dependencySort(vjConfigChunkDB* auxChunks)
     if (src_chunks.size() > 0) {     // Items left, so we failed to get all dependencies
         // ouput error
         for (unsigned int i=0;i<src_chunks.size();i++) {
-            vjDEBUG(vjDBG_ERROR,0) << "ERROR: Dependency error:  Chunk:" << src_chunks[i]->getProperty("name")
+            vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " Dependency error:  Chunk:" << src_chunks[i]->getProperty("name")
                                    << "\tDepends on: \n" << vjDEBUG_FLUSH;
             std::vector<std::string> deps = src_chunks[i]->getChunkPtrDependencies();
             if (deps.size() > 0) {
@@ -534,7 +534,7 @@ bool vjConfigChunkDB::save (const std::string& fname) {
 
     std::ofstream out(fname.c_str());
     if (!out) {
-        vjDEBUG(vjDBG_ERROR,1) << "ERROR: vjConfigChunkDB::save() - Unable to open file '"
+        vjDEBUG(vjDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") << " vjConfigChunkDB::save() - Unable to open file '"
                                << fname.c_str() << "'\n" << vjDEBUG_FLUSH;
         return false;
     }

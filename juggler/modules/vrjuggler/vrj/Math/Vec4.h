@@ -39,6 +39,7 @@
 #include <math.h>
 
 #include <Math/vjMatrix.h>
+#include <Math/vjMath.h>
 class vjMatrix;
 
 // --- Define access reps --- //
@@ -84,7 +85,7 @@ public:
 
    inline float length() const
    {
-      return vjSystem::sqrt((vec[0]*vec[0])+
+      return vjMath::sqrt((vec[0]*vec[0])+
                             (vec[1]*vec[1])+
                             (vec[2]*vec[2])+
                             (vec[3]*vec[3]));

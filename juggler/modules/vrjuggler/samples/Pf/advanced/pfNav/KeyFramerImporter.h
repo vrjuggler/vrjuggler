@@ -2,6 +2,7 @@
 #include <fstream.h>		// for ifstream
 #include "KeyFramer.h"
 #include "Kernel/vjDebug.h"
+#include "Math/vjMath.h"
 
 namespace kev
 {
@@ -16,7 +17,7 @@ namespace kev
       {
          float w, x, y, z;
          key.rotation().getRot( w, x, y, z );
-         vjDEBUG(vjDBG_ALL,1)<<"KEY "<<key.time()<<": "<<key.position()[0]<<", \t"<<key.position()[1]<<", \t"<<key.position()[2]<<", |#| "<<VJ_RAD2DEG( w )<<", "<<x<<", "<<y<<", "<<z<<"\n"<<vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,1)<<"KEY "<<key.time()<<": "<<key.position()[0]<<", \t"<<key.position()[1]<<", \t"<<key.position()[2]<<", |#| "<<vjMath::rad2deg( w )<<", "<<x<<", "<<y<<", "<<z<<"\n"<<vjDEBUG_FLUSH;
       }
    
       void execute( const char* const filename, kev::KeyFramer& kf )
@@ -60,7 +61,7 @@ namespace kev
             
             // convert [TWIST, VEC] to Quat
             vjQuat rot;
-            float rad = VJ_DEG2RAD( deg );
+            float rad = vjMath::deg2rad( deg );
             rot.makeRot( rad, vec[0], vec[1], vec[2] );
          
             kev::KeyFramer::Key key( time, pos, rot );

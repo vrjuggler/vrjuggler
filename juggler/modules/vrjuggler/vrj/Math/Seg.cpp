@@ -34,7 +34,7 @@
 #include <vjConfig.h>
 #include <Math/vjSeg.h>
 #include <Math/vjPlane.h>
-#include <VPR/vjSystem.h>
+#include <Math/vjMath.h>
 
 
 //: Finds the point on the seg nearest to pt.
@@ -80,7 +80,7 @@ bool vjSeg::isectTriangle(const vjVec3 _v1, const vjVec3 _v2, const vjVec3 _v3, 
       // Find max index
       // Note: I added the abs because of bug in code.  NOT IN GGI
       for (int index=0;index<3;index++)
-         if (vjSystem::abs(triPlane.normal.vec[index]) > vjSystem::abs(triPlane.normal.vec[i0]))
+         if (vjMath::abs(triPlane.normal.vec[index]) > vjMath::abs(triPlane.normal.vec[i0]))
             i0 = index;
 
       if (i0 == 0)

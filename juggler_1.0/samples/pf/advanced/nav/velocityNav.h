@@ -262,9 +262,11 @@ void velocityNav::updateInteraction()
 
    // Rotating
    vjMatrix rot_mat = *(mNavWand->getData());
+   //std::cout<<"1: "<<rot_mat<<"\n"<<std::flush;
    rot_mat.setTrans(0,0,0);
-
-   setRotationalAcceleration(rot_mat);
+   //std::cout<<"2: "<<rot_mat<<"\n=======\n\n"<<std::flush;
+   
+   setRotationalAcceleration( rot_mat );
 
    // Output visual feedback
    if(mAcceleratingForward)
@@ -419,9 +421,9 @@ void velocityNav::scaled_rotate(vjMatrix rot_mat)
    transformIdent.makeIdent();
 
    // Create the goal rotation quaternion (the goal is the input matrix)
-   source_rot.makeRot(transformIdent);
+   source_rot.identity();
    goal_rot.makeRot(rot_mat);
-
+   
    // If we don't have two identity matrices, then interpolate between them
    if(transformIdent != rot_mat)
    {

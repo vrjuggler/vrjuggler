@@ -2,6 +2,7 @@
 #include <fstream.h>		// for ifstream
 #include "KeyFramer.h"
 #include "Kernel/vjDebug.h"
+#include <Math/vjMath.h>
 
 namespace kev
 {
@@ -43,7 +44,7 @@ namespace kev
             float deg;
             vjVec3 vec;
             quat.getRot( deg, vec[0], vec[1], vec[2] );
-            deg = VJ_RAD2DEG( deg ); 
+            deg = vjMath::rad2deg( deg ); 
             frames_file<<time<<" "<<pos[0]<<" "<<pos[1]<<" "
                        <<pos[2]<<" "<<deg<<" "<<vec[0]<<" "
                        <<vec[1]<<" "<<vec[2]<<"\n";

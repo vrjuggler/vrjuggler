@@ -9,6 +9,15 @@ PosProxy
   etrans { "True" }
   translate { "0.0" "0.0" "0.0" }
   rotate { "0.0" "0.0" "0.0" }
+  useFilter { "False" }
+  sigmoidParams { 
+      sigmoid_linear_pos_filter
+        Name "sigmoidParams 0"
+        minDist { "0.0" }
+        maxDist { "0.0" }
+        maxThreshold { "0.0" }
+        end
+ }
   end
 PosProxy
   Name "Right GlovePos Proxy"
@@ -17,6 +26,15 @@ PosProxy
   etrans { "True" }
   translate { "0.0" "0.0" "0.0" }
   rotate { "0.0" "0.0" "0.0" }
+  useFilter { "False" }
+  sigmoidParams { 
+      sigmoid_linear_pos_filter
+        Name "sigmoidParams 0"
+        minDist { "0.0" }
+        maxDist { "0.0" }
+        maxThreshold { "0.0" }
+        end
+ }
   end
 SimPosition
   Name "SimGlovePos"
@@ -234,12 +252,21 @@ proxyAlias
   aliasName { "RightPinky" }
   proxyPtr { "DigitalRightPinky" }
   end
+proxyAlias
+  Name "VJGlove"
+  aliasName { "VJGlove" }
+  proxyPtr { "GloveProxy" }
+  end
 Keyboard
   Name "Glove Keyboard"
   width { "200" }
   height { "200" }
   origin { "800" "320" }
   msens { "2.0" }
+  display_number { "0" }
+  lock_key { "KEY_NONE" }
+  start_locked { "False" }
+  sleep_time { "0" }
   end
 DigProxy
   Name "DigitalLeftThumb"

@@ -39,6 +39,7 @@
 #include <Utils/vjDebug.h>
 #include <Math/vjVec3.h>
 #include <Math/vjSeg.h>
+#include <Math/vjMath.h>
 
 
 //: sgPlane: Defines a geometrical plane.
@@ -59,7 +60,7 @@ public:
 	void makePts(const vjVec3& pt1, const vjVec3& pt2, const vjVec3& pt3);
 		
 	//: Create a plane given a normal and a point
-   void makeNormPt(const vjVec3& _pt, const vjVec3& norm);
+   void makeNormPt( const vjVec3& norm, const vjVec3& pt );
 	
 	
 	//: Intersects the plane with a given segment.
@@ -78,11 +79,18 @@ public:
 	bool isectLine(const vjSeg& seg, float* t);
 	
 	//: Find nearest pt on the plane
-	//! RETURN: distance to the point (d)
+	//! RETURN: distance to the point (d), and point on the plane
 	//+ If d is positive, pt lies on same side as normal
 	//+ If d is negative, pt lies on opposite side from normal
 	//+ if d is "near" zero, pt is on the plane
 	float findNearestPt(const vjVec3& pt, vjVec3& nearPt);
+   
+   // Finds the distance between pt and the point on the plane nearest pt
+   //! RETURN: distance to the point (d)
+	//+ If d is positive, pt lies on same side as normal
+	//+ If d is negative, pt lies on opposite side from normal
+	//+ if d is "near" zero, pt is on the plane
+	float getDistance( const vjVec3& pt );
 	
 public:
 	vjVec3  normal;     // N or Just Normal
@@ -115,6 +123,15 @@ void vjPlane::makeNormPt(const vjVec3& norm, const vjVec3& _pt)
 }
 
 
+// Finds the distance between pt and the point on the plane nearest pt
+inline 
+float vjPlane::getDistance( const vjVec3& pt )
+{
+   // GGI: P 297
+	// GGII: Pg 223
+	vjASSERT( normal.isNormalized() );		// Assert: Normalized
+	return offset+normal.dot( pt );		  // Distance to plane
+}
 
 // Finds the point on the plane nearest to pt.
 // Returns the nearest point in nearPt
@@ -123,9 +140,8 @@ float vjPlane::findNearestPt(const vjVec3& pt, vjVec3& nearPt)
 {
         // GGI: P 297
 		// GGII: Pg 223
-	vjASSERT(normal.isNormalized());		// Assert: Normalized
-	float dist_to_plane(0.0);
-	dist_to_plane = offset+normal.dot(pt);		// Distance to plane
+	vjASSERT(normal.isNormalized());		            // Assert: Normalized
+	float dist_to_plane = offset+normal.dot(pt);		// Distance to plane
 	nearPt = pt - (normal*dist_to_plane);
 	return dist_to_plane;
 }
@@ -145,7 +161,7 @@ bool vjPlane::isectLine(const vjSeg& seg, float* t)
 	// Jd = offset;
 	
 	float denom = normal.dot(seg.dir);
-	if(VJ_IS_ZERO(denom))
+	if(vjMath::isZero(denom))
       return false;
 	else
 	{
