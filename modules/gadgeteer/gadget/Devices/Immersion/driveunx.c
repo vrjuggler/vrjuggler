@@ -42,6 +42,8 @@
 #   define LINUX_PLATFORM
 #elif defined(VJ_OS_Solaris)
 #   define SUN_PLATFORM
+#elif defined(VJ_OS_FreeBSD)
+#   define BSD_PLATFORM
 #endif	/* VJ_OS_IRIX */
 
 #if defined(SGI_PLATFORM) || defined(LINUX_PLATFORM)
@@ -85,6 +87,17 @@
 #define IFLAGS	(IGNBRK | BRKINT | IGNPAR | PARMRK | INPCK | INLCR  \
 			| ICRNL | IGNCR | IUCLC | ISTRIP | IXON  \
 			| IXOFF)
+#endif
+
+#if defined(BSD_PLATFORM)
+#define PORT1_DEV	"/dev/ttyd1"
+#define PORT2_DEV	"/dev/ttyd2"
+#define PORT3_DEV	"/dev/ttyd3"
+#define PORT4_DEV	"/dev/ttyd4"
+#define OFLAGS		(OPOST | ONLCR)
+#define LFLAGS		(ICANON | ISIG | ECHO | ECHOE | ECHOK | ECHONL | NOFLSH)
+#define IFLAGS		(IGNBRK | BRKINT | IGNPAR | PARMRK | INPCK |	\
+			 INLCR | ICRNL | IGNCR | ISTRIP | IXON | IXOFF)
 #endif
 
 
