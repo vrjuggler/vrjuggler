@@ -155,12 +155,16 @@ protected:
    vpr::ReturnStatus spawn(BaseThreadFunctor* functorPtr);
 
    /**
-    * Called by the spawn routine to start the user thread function
+    * Called by the spawn routine to start the user thread function.
     *
-    * @pre Called ONLY by a new thread
-    * @post The new thread will have started the user thread function
+    * @pre Called ONLY by a new thread.
+    * @post The new thread will have started the user thread function.
+    *       Any necessary thread registration is performed.  The user thread
+    *       functor is called.
+    *
+    * @param nullParam Unused.
     */
-   void startThread(void* null_param);
+   void startThread(void* nullParam);
 
 private:
    BaseThreadFunctor* mUserThreadFunctor;     /**< The functor to call when
@@ -339,7 +343,7 @@ public:  // ----- Various other thread functions ------
     *       version of kill() is also used for sending signals to threads.
     *       This kill() and cancel() do exactly the same thing.
     */
-   virtual void kill (void)
+   virtual void kill()
    {
       pthread_cancel(mThread);
    }
@@ -353,7 +357,7 @@ public:  // ----- Various other thread functions ------
     */
    static BaseThread* self();
 
-   /// Provides a way of printing the process ID neatly.
+   /** Provides a way of printing the process ID neatly. */
    std::ostream& outStream(std::ostream& out);
 
 // All private member variables and functions.
@@ -365,8 +369,11 @@ private:
    VPRThreadState    mState;
    size_t            mStackSize;
 
-   bool mThreadStartCompleted; /**< Flag for signaling when thread start is completed */
-   vpr::CondVarPosix mThreadStartCondVar;  /**< CondVar for thread starting */
+   /** Flag for signaling when thread start is completed. */
+   bool mThreadStartCompleted;
+
+   /** CondVar for thread starting. */
+   vpr::CondVarPosix mThreadStartCondVar;
 
    /** Converts a VPR thread priority to its Pthread equivalent. */
    int vprThreadPriorityToPOSIX(const VPRThreadPriority priority);
@@ -400,7 +407,9 @@ private:
    };
 
    static ThreadKeyPosix& threadIdKey()
-   {  return statics.mThreadIdKey;  }
+   {
+      return statics.mThreadIdKey;
+   }
 
    static staticWrapper statics;
 };
