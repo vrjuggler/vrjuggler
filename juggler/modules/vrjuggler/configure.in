@@ -346,7 +346,7 @@ if test -z "$JAVAC" ; then
     done
 fi
 
-BUILD_GUI=''
+BUILD_GUI='N'
 
 # If there is still no value in $JAVAC, then warn that the GUI will not be
 # built.
@@ -355,7 +355,7 @@ if test -z "$JAVAC" ; then
 # Otherwise, set $JAR to the path to jar(1) and continue.
 else
     JAR="${JDK_HOME}/bin/jar"
-    BUILD_GUI='yes'
+    BUILD_GUI='Y'
 fi
 
 AC_PROG_INSTALL
