@@ -67,7 +67,7 @@ public class SimDeviceConfig
 
       findProxies(ctx);
 
-      if ( proxies.size() == 0 )
+      if ( proxies.isEmpty() )
       {
          System.out.println("No proxy found for " + device.getName());
       }
@@ -100,7 +100,7 @@ public class SimDeviceConfig
 
       findTypedProxies(ctx, proxyTypeName);
 
-      if ( proxies.size() == 0 )
+      if ( proxies.isEmpty() )
       {
          System.out.println("No proxy found for " + device.getName());
       }
@@ -133,7 +133,7 @@ public class SimDeviceConfig
 
       findTypedProxies(ctx, proxyType);
 
-      if ( proxies.size() == 0 )
+      if ( proxies.isEmpty() )
       {
          System.out.println("No proxy found for " + device.getName());
       }
