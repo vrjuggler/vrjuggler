@@ -39,6 +39,32 @@
 
 
 
+/*****************************************************************************/
+/* static query   definitions                                                */
+/*****************************************************************************/
+
+#define PREV_MPSFRAME   0 /* it could change in the future */
+
+static unsigned int AppQuery[] = {
+    PFFSTATS_BUF_PREV | PFFSTATSVAL_PFTIMES_HIST_LAST_APP,
+    0
+};
+static unsigned int IsectQuery[] = {
+    PFFSTATS_BUF_PREV | PFFSTATSVAL_PFTIMES_HIST_LAST_ISECT,
+    0
+};
+static unsigned int ChanDrawQuery[] = {
+    PFFSTATS_BUF_PREV | PFFSTATSVAL_PFTIMES_HIST_LAST_DRAW,
+    0
+};
+
+static unsigned int ChanCullQuery[] = {
+    PFFSTATS_BUF_PREV | PFFSTATSVAL_PFTIMES_HIST_LAST_CULL,
+    0
+};
+
+
+
 int pfMPStats::manageMPipeStats(int nFrames, int nSampledPipes)
 {
    static int firstMPipeStats=0;
@@ -84,10 +110,8 @@ int pfMPStats::manageMPipeStats(int nFrames, int nSampledPipes)
    return(1);
 }
 
-int
-pfMPStats::pfuCreateMPipeStatsBuffers(void)
+int pfMPStats::pfuCreateMPipeStatsBuffers()
 {
-   int i;
    void *arena;
 
    arena = pfGetSharedArena();
@@ -102,11 +126,10 @@ pfMPStats::pfuCreateMPipeStatsBuffers(void)
 
    /* allocating the data stamps, connecting them */
    /* they are intelazed in order to get cache locality */
-   for (i=0; i<MPS->mpsControl.nFrames; i++)
+   for ( unsigned int i = 0; i < MPS->mpsControl.nFrames; ++i )
    {
-      MPS->mpsFrameStamps[i].channels = (pfuMPSChannelStamp *)
-                                        pfMalloc(MPS->mpsConfig.nChannels * sizeof(pfuMPSChannelStamp),
-                                                 arena);
+      MPS->mpsFrameStamps[i].channels =
+         (pfuMPSChannelStamp*) pfMalloc(MPS->mpsConfig.nChannels * sizeof(pfuMPSChannelStamp), arena);
    }
 
    return 0;
@@ -158,14 +181,13 @@ void pfMPStats::pfuGetMPipeStatsConfig(void)
 }
 
 
-int
-pfMPStats::pfuDestroyMPipeStatsBuffers(void)
+int pfMPStats::pfuDestroyMPipeStatsBuffers()
 {
-   int i;
-
    /* deallocating channel data stamps */
-   for (i=0; i<MPS->mpsControl.nFrames; i++)
+   for ( unsigned int i = 0; i < MPS->mpsControl.nFrames; ++i )
+   {
       pfFree(MPS->mpsFrameStamps[i].channels);
+   }
 
    /* deallocating frame stamp pointers array */
    pfFree(MPS->mpsFrameStamps);
@@ -282,7 +304,7 @@ pfMPStats::pfuDrawMPipeStats(int drawchannel)
 
 void pfMPStats::pfuDumpMPipeStats(const char *filename)
 {
-   int i, j;
+   int j;
    int ii[10];
    double dd[10], ddd[16];
 
@@ -310,7 +332,7 @@ void pfMPStats::pfuDumpMPipeStats(const char *filename)
 
    /* creating the time stamps */
 
-   for (i=0; i<MPS->mpsControl.nFrames; i++)
+   for ( unsigned int i = 0; i < MPS->mpsControl.nFrames; ++i )
    {
       // Get app timings
       const int    app_frame = MPS->mpsFrameStamps[i].app[PREV_MPSFRAME].frame;
@@ -364,8 +386,10 @@ void pfMPStats::pfuDumpMPipeStats(const char *filename)
       fprintf( fid, appCounterFormat, frameString, i);
       fprintf( fid, appFormat,  appString, absoluteString,
                     app_frame, app_start, app_enter_sync, app_after_clean, app_after_sync,app_pfframe_start, app_pfframe_end);
-      fprintf( fid, appDurationFormat, durationString,
-                    app_start_to_sync, app_sync_clean_and_pfApp, app_sync_wait, app_pre_frame, app_frame_clean_and_update, app_frame_to_start);
+      fprintf( fid, appDurationFormat, durationString, i,
+                    app_start_to_sync, app_sync_clean_and_pfApp, app_sync_wait,
+                    app_pre_frame, app_frame_clean_and_update,
+                    app_frame_to_start);
       fprintf( fid, isectFormat, isectString, absoluteString, isect_frame, isect_start, isect_end, relativeString, isect_duration);
 
       for (j=0; j<MPS->mpsConfig.nChannels; j++)
@@ -416,9 +440,10 @@ void pfMPStats::pfuDumpMPipeStats(const char *filename)
    avg_app_frame_clean_and_update /= num_frames;
    avg_app_frame_to_start /= num_frames;
    fprintf( fid, "\n\nApp Averages:\n");
-   fprintf( fid, appDurationFormat, durationString,
-                 avg_app_start_to_sync, avg_app_sync_clean_and_pfApp, avg_app_sync_wait,
-                 avg_app_pre_frame, avg_app_frame_clean_and_update, avg_app_frame_to_start);
+   fprintf( fid, appDurationFormat, durationString, MPS->mpsControl.nFrames - 2,
+                 avg_app_start_to_sync, avg_app_sync_clean_and_pfApp,
+                 avg_app_sync_wait, avg_app_pre_frame,
+                 avg_app_frame_clean_and_update, avg_app_frame_to_start);
 
    fclose(fid);
 }
