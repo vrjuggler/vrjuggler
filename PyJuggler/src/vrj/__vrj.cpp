@@ -21,10 +21,6 @@ void _Export_Frustum();
 void _Export_CameraProjection();
 void _Export_User();
 
-#ifdef PYJUGGLER_HAVE_OSG
-void _Export_OsgApp();
-#endif
-
 // Module ======================================================================
 BOOST_PYTHON_MODULE(__vrj)
 {
@@ -41,7 +37,4 @@ BOOST_PYTHON_MODULE(__vrj)
     _Export_Frustum();
     _Export_CameraProjection();
     _Export_User();
-#ifdef PYJUGGLER_HAVE_OSG
-    _Export_OsgApp();
-#endif
 }

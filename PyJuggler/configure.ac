@@ -387,11 +387,6 @@ if test "x$osg_base_dir" != "xno" ; then
    CPPFLAGS="$pyjsave_CPPFLAGS"
    LDFLAGS="$pyjsave_LDFLAGS"
    LIBS="$pyjsave_LIBS"
-
-   if test "x$HAVE_OSG" = "xY" ; then
-      AC_DEFINE([PYJUGGLER_HAVE_OSG], 1,
-                [Define if the Open Scene Graph is available.])
-   fi
 fi
 
 # -----------------------------------------------------------------------------
