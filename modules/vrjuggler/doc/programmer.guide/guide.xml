@@ -228,7 +228,7 @@ simpleApp* app = new simpleApp();    // Create the app object</programlisting></
             </listitem>
          </itemizedlist>
          <para>As previously descibed, the VR Juggler kernel calls these functions from its control loop to allocate processing time to them.These functions handle initialization and computation. Other member functions that can be used for reconfiguration, focus control, resetting, and exiting will be covered later in this book.</para>
-         <figure id="App_if_diag">
+         <figure float="1" id="App_if_diag">
             <title>Application object interface</title>
             <mediaobject>
                <imageobject>
@@ -1641,7 +1641,7 @@ userApp::draw()
          <section>
             <title>Context-Specific Data Detais</title>
             <para>Within this setion, we provide the details of context-specific data in VR Juggler and justify the rules presented in the previous section.</para>
-            <figure id="vrj_ogl_system_chart">
+            <figure float="1" id="vrj_ogl_system_chart">
                <title>VR Juggler OpenGL system</title>
                <mediaobject>
                   <imageobject>
