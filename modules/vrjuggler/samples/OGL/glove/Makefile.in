@@ -36,7 +36,7 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-.SUFFIXES: .cpp .cxx .@OBJ_FILE_SUFFIX@
+.SUFFIXES: .cpp .cxx .@OBJEXT@
 
 srcdir		= @srcdir@
 
@@ -61,10 +61,10 @@ VPATH		= @srcdir@
 # use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
-OBJECTS		= main.@OBJ_FILE_SUFFIX@		\
-                  gloveApp.@OBJ_FILE_SUFFIX@		\
-                  vjStdCaveNavigator.@OBJ_FILE_SUFFIX@	\
-                  Scene.@OBJ_FILE_SUFFIX@
+OBJECTS		= main.@OBJEXT@			\
+                  gloveApp.@OBJEXT@		\
+                  vjStdCaveNavigator.@OBJEXT@	\
+                  Scene.@OBJEXT@
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -76,13 +76,13 @@ all: glove
 glove: $(OBJECTS)
 	$(LINK) -o $@ $(OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
-main.@OBJ_FILE_SUFFIX@: gloveApp.h
-gloveApp.@OBJ_FILE_SUFFIX@: gloveApp.h vjStdCaveNavigator.h
+main.@OBJEXT@: gloveApp.h
+gloveApp.@OBJEXT@: gloveApp.h vjStdCaveNavigator.h
 
-.cpp.@OBJ_FILE_SUFFIX@:
+.cpp.@OBJEXT@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
-.cxx.@OBJ_FILE_SUFFIX@:
+.cxx.@OBJEXT@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
 # -----------------------------------------------------------------------------

@@ -36,198 +36,22 @@ dnl # -------------------------------------------------------------------------
 dnl # This file is "compiled" by GNU autoconf to generate the configure script
 dnl # that is actually run.
 dnl # -------------------------------------------------------------------------
-dnl # 
 
 AC_REVISION($Revision$)
 AC_INIT(vjConfig.h)
 AC_CONFIG_HEADER(vjDefines.h)
-
-dnl # -------------------------------------------------------------------------
-dnl # Helper subroutines.
-dnl # -------------------------------------------------------------------------
-
-dnl # UNIX path translator.  This converts a UNIX-style path to a DOS/Win32
-dnl # path.  With this routine, we can safely use UNIX paths for all Win32
-dnl # variables while the configure script runs.  Then, immediately before
-dnl # Makefile substitution is done, we can translate all the paths to
-dnl # DOS-style for use in the Makefiles.
-unix2dos ( ) {
-    dnl # The first expression changes a "//C" drive name to "C:".  It has a
-    dnl # pair of surrounding []'s because those symbols have special meaning
-    dnl # to m4(1).  Without them, the first pair of []'s in the regular
-    dnl # expression will be lost.
-    dnl # The second expression ensures that a path beginning with / is
-    dnl # returned as being a directory on the home drive.  The UNIX utilities
-    dnl # treat $HOMEDRIVE as the root directory and will give, for example,
-    dnl # /tmp instead of //D/tmp if D: is the home drive.  The expression
-    dnl # simply prepends "$HOMEDRIVE" (after evaluation) to the path.
-    _drive_exp=['s/^\/\/\([[:alpha:]]\)/\1:/']
-    _drive_exp2=['s/^\/cygdrive\/\([[:alpha:]]\)/\1:/']
-    _add_home_exp=["s/^\//$HOMEDRIVE\//"]
-    _retval=`echo $1 | sed -e "${_drive_exp}" -e "${_drive_exp2}" -e "${_add_home_exp}"`
-
-    echo "${_retval}"
-}
-
-dnl # DOS path translator.  This converts a DOS-style path to a UNIX path.
-dos2unix ( ) {
-    dnl # All expressions hers are enclosed in []'s because those symbols
-    dnl # have special meaning to m4(1).  This is the same situation as
-    dnl # above.
-
-    dnl # This changes \'s to /'s and escapes any whitespace in the path.
-    _slash_exp=['s/\\/\//g']
-    _ws_esc_exp=['s/ /\\ /g']
-    _unix_root=`echo "$1" | sed -e "${_slash_exp}" -e "${_ws_esc_exp}"`
-
-    dnl # This changes the leading "C:" to "//C" (for the appropriate drive
-    dnl # letter).
-    _colon_rem_exp=['s/^\([[:alpha:]]\):/\/\/\1/']
-    _retval=`echo "${_unix_root}" | sed -e "${_colon_rem_exp}"`
-
-    echo "${_retval}"
-}
+DPP_PREREQ(1.0)
+DPP_INIT
 
 dnl # -------------------------------------------------------------------------
 dnl # Command-line arguments (--enable-option, --with-pkg=package_name).
 dnl # -------------------------------------------------------------------------
 
-dnl # -------------------------------------------- #
-dnl # --with-pkg[=arg] and --without-pkg arguments #
-dnl # -------------------------------------------- #
-
-dnl # Override the C compiler that configure would otherwise find itself.
-AC_ARG_WITH(cc, [  --with-cc=<PATH>        Alternate C compiler ],
-            _alt_cc="$withval", _alt_cc='none')
-
-dnl # Override the C++ compiler that configure would otherwise find itself.
-AC_ARG_WITH(cxx, [  --with-cxx=<PATH>       Alternate C++ compiler ],
-            _alt_cxx="$withval", _alt_cxx='none')
-
-dnl # Force the use of GCC as the compiler.
-dnl # NOTE: This is not fully implemented yet for any platform, but it is
-dnl # partially usable on Windows.
-AC_ARG_WITH(gcc,
-            [  --with-gcc              Force the use of GCC as the compiler],
-            _use_gcc="$withval")
-
-dnl # Define the binary format.  Possible values are the following:
-dnl #     N32_M3     - On IRIX, use N32 mips3 binaries
-dnl #     N32_M4     - On IRIX, use N32 mips4 binaries
-dnl #     64_M3      - On IRIX, use 64-bit mips3 binaries
-dnl #     64_M4      - On IRIX, use 64-bit mips4 binaries
-dnl #     HP         - On HP-UX, use HP PA-RISC binaries
-dnl #     ALPHA      - On an Alpha running Digital UNIX, use COFF binaries
-dnl #     ELF_i386   - On an i386 OS (e.g., Linux/i386), use ELF binaries
-dnl #     WIN32_i386 - On an i386 Win32 OS, Linux), use Win32 binaries
-AC_ARG_WITH(abi,
-            [  --with-abi=<N32_M3|N32_M4|64_M3|64_M4|HP|ALPHA|ELF_i386|WIN32_i386>
-                          Define the Application Binary Interface to use],
-            _abi_type="$withval")
-
-dnl # Define which threading model to use.  Possible values are "IRIX_SPROC"
-dnl # or "POSIX".
-dnl # The default is "IRIX_SPROC".
-AC_ARG_WITH(threads,
-            [  --with-threads=<IRIX_SPROC|POSIX|WIN32>
-                          Define threading implementation [default=IRIX_SPROC]],
-            _thread_pkg="$withval", _thread_pkg='IRIX_SPROC')
-
-dnl # Define the root directory for the Java installation.
-dnl # The default is /usr/java or what the user has defined in his or her
-dnl # $JDK_HOME environment variable.  ${_JDK_HOME_ALT_LIST} must be a
-dnl # colon-separated list of bin directories that could contain javac(1)
-dnl # and the other JDK utilities.
-if test "x$JAVA_HOME" = "x" ; then
-    _JDK_HOME_ALT_LIST="/usr/local/java/bin"
-else
-    _JDK_HOME_ALT_LIST="${JAVA_HOME}/bin:/usr/local/java/bin"
-fi
-
-AC_ARG_WITH(jdkhome,
-            [  --with-jdkhome=<PATH>   JDK installation directory      [default=\$JDK_HOME
-                                                           then /usr/java]],
-            JDK_HOME="$withval", JDK_HOME="${JDK_HOME-/usr/java}")
-
-dnl # Define the root directory for the Performer installation.
-dnl # The default is /usr.
-AC_ARG_WITH(pfroot,
-            [  --with-pfroot=<PATH>    Performer installation
-                          directory                       [default=/usr]],
-            PFROOT="$withval", PFROOT='/usr')
-
-dnl # Define the root directory for the OpenGL installation.
-dnl # The default is /usr.
-AC_ARG_WITH(oglroot,
-            [  --with-oglroot=<PATH>   OpenGL installation directory   [default=/usr]],
-            OGLROOT="$withval", OGLROOT='/usr')
-
-dnl # Use the Mesa OpenGL implementation.  That is, link with libMesaGL and
-dnl # libMesaGLU.
-dnl # The default is no.
-AC_ARG_WITH(mesa,
-            [  --with-mesa             Use Mesa OpenGL implementation  [default=no]],
-            _with_mesa="$withval", _with_mesa='no')
-
-dnl # Use AudioWorks (which can be found at the given path) in the sound
-dnl # wrapper.
-dnl # The default is to use it with the path being /usr.
-AC_ARG_WITH(audioworks,
-            [  --with-audioworks=<PATH>
-                          AudioWorks installation         [default=/usr]],
-            _with_aw="$withval", _with_aw='/usr')
-
-dnl # Use SL (which can be found at the given path) in the sound wrapper.
-dnl # The default is to use it with the path being /usr.
-AC_ARG_WITH(sl,
-            [  --with-sl=<PATH>        SL installation                 [default=/usr]],
-            _with_sl="$withval", _with_sl='/usr')
-
-dnl # Specify a directory containing a working Perl 5.004 (or newer) binary.
-dnl # There is no default since standard locations are always available.
-AC_ARG_WITH(perl,
-            [  --with-perl=<PATH>      Directory containing Perl 5.004
-                          or newer binary                 [No default]],
-            _user_perl_path="$withval")
-
-dnl # Name the user who will own installed files.
-AC_ARG_WITH(install-owner,
-            [  --with-install-owner=<USER NAME>
-                          Installed file owner name],
-            _install_owner="$withval")
-
-dnl # Name the group used for setting ownership on installed files.
-AC_ARG_WITH(install-group,
-            [  --with-install-group=<GROUP NAME>
-                          Installed file group name       [default=vrjuggler]],
-            _install_group="$withval", _install_group='vrjuggler')
-
-dnl # Provide permissions for installed (normal) files.
-AC_ARG_WITH(file-perms,
-            [  --with-file-perms=<FILE PERMISSIONS>
-                          Installed file permissions      [default=0644]],
-            FILE_PERMS="$withval", FILE_PERMS='0644')
-
-dnl # Provide permissions for installed executable files.
-AC_ARG_WITH(exec-perms,
-            [  --with-exec-perms=<EXEC PERMISSIONS>
-                          Installed executable permisions [default=0755]],
-            EXEC_PERMS="$withval", EXEC_PERMS='0755')
-
-dnl # Provide permissions for directories in the installation tree.
-AC_ARG_WITH(dir-perms,
-            [  --with-dir-perms=<DIRECTORY PERMISSIONS>
-                          Installed directory permisions  [default=0755]],
-            DIR_PERMS="$withval", DIR_PERMS='0755')
-
-AC_ARG_WITH(version,
-            [  --with-version=<major>.<minor>.<micro>
-                          VR Juggler version number       [default=none]],
-            _vj_version="$withval", _vj_version='none')
-
 dnl # ------------------------------------------------------ #
 dnl # --enable-feature[=arg] and --disable-feature arguments #
 dnl # ------------------------------------------------------ #
+
+DPP_STD_CPP(yes)
 
 dnl # Enable compilation of the OpenGL API.  Possible values are "yes" or
 dnl # "no".  "yes" is set with --enable-gl-api and "no" is set with
@@ -265,166 +89,102 @@ AC_ARG_ENABLE(performance,
                 fi
               ], _enable_perf='SGI')
 
-dnl # Define a macro VJ_ABI_CFG for setting up the configuration parameters
-dnl # for a given ABI.  The usage is:
-dnl #
-dnl #   VJ_ABI_CFG([ ABI [, ISA [, library suffix [, extra compiler flags]]]])
-dnl #
-dnl # All arguments are optional and will default to the empty string if not
-dnl # provided.
-AC_DEFUN(VJ_ABI_CFG, [ ABI=$1 ISA=$2 LIBBITSUF=$3 _EXTRA_FLAGS=$4 ; ])
+dnl # -------------------------------------------- #
+dnl # --with-pkg[=arg] and --without-pkg arguments #
+dnl # -------------------------------------------- #
 
-dnl # Set default values for these before checking ${_abi_type}.  Currently,
-dnl # these are for non-IRIX platforms.
-ABI=''
-LIBBITSUF=''
+dnl # Override the C compiler that configure would otherwise find itself.
+AC_ARG_WITH(cc, [  --with-cc=<PATH>        Alternate C compiler ],
+            _alt_cc="$withval", _alt_cc='none')
 
-dnl # Based on the value of $abi_type, set $ABI for later use and the Makefile
-dnl # substitution variables $LIBBITSUF and $ISA.
-case "x${_abi_type}" in
-    x64_M3)
-        VJ_ABI_CFG('64', 'mips3', '64', '-64 -mips3')
-        ;;
-    x64_M4)
-        VJ_ABI_CFG('64', 'mips4', '64', '-64 -mips4')
-        ;;
-    xN32_M3)
-        VJ_ABI_CFG('N32', 'mips3', '32', '-n32 -mips3')
-        ;;
-    xN32_M4)
-        VJ_ABI_CFG('N32', 'mips4', '32', '-n32 -mips4')
-        ;;
-    xHP)
-        VJ_ABI_CFG(HP, PA-RISC)
-        ;;
-    xALPHA)
-        VJ_ABI_CFG(ALPHA)
-        ;;
-    xELF_i386)
-        VJ_ABI_CFG('ELF', 'i386')
-        ;;
-    xWIN32_i386)
-        VJ_ABI_CFG('WIN32')
-        ;;
-esac
+dnl # Override the C++ compiler that configure would otherwise find itself.
+AC_ARG_WITH(cxx, [  --with-cxx=<PATH>       Alternate C++ compiler ],
+            _alt_cxx="$withval", _alt_cxx='none')
+
+dnl # Force the use of GCC as the compiler.
+dnl # NOTE: This is not fully implemented yet for any platform, but it is
+dnl # partially usable on Windows.
+DPP_WITH_GCC(no)
+
+dnl # Define which threading model to use.  Possible values are "IRIX_SPROC"
+dnl # or "POSIX".
+dnl # The default is "IRIX_SPROC".
+AC_ARG_WITH(threads,
+            [  --with-threads=<IRIX_SPROC|POSIX|WIN32>
+                          Define threading implementation [default=IRIX_SPROC]],
+            _thread_pkg="$withval", _thread_pkg='IRIX_SPROC')
+
+dnl # Define the root directory for the Performer installation.
+dnl # The default is /usr.
+AC_ARG_WITH(pfroot,
+            [  --with-pfroot=<PATH>    Performer installation
+                          directory                       [default=/usr]],
+            PFROOT="$withval", PFROOT='/usr')
+
+dnl # Define the root directory for the OpenGL installation.
+dnl # The default is /usr.
+AC_ARG_WITH(oglroot,
+            [  --with-oglroot=<PATH>   OpenGL installation directory   [default=/usr]],
+            OGLROOT="$withval", OGLROOT='/usr')
+
+dnl # Use the Mesa OpenGL implementation.  That is, link with libMesaGL and
+dnl # libMesaGLU.
+dnl # The default is no.
+AC_ARG_WITH(mesa,
+            [  --with-mesa             Use Mesa OpenGL implementation  [default=no]],
+            _with_mesa="$withval", _with_mesa='no')
+
+dnl # Use AudioWorks (which can be found at the given path) in the sound
+dnl # wrapper.
+dnl # The default is to use it with the path being /usr.
+AC_ARG_WITH(audioworks,
+            [  --with-audioworks=<PATH>
+                          AudioWorks installation         [default=/usr]],
+            _with_aw="$withval", _with_aw='/usr')
+
+dnl # Use SL (which can be found at the given path) in the sound wrapper.
+dnl # The default is to use it with the path being /usr.
+AC_ARG_WITH(sl,
+            [  --with-sl=<PATH>        SL installation                 [default=/usr]],
+            _with_sl="$withval", _with_sl='/usr')
+
+AC_ARG_WITH(version,
+            [  --with-version=<major>.<minor>.<micro>
+                          VR Juggler version number       [default=none]],
+            _vj_version="$withval", _vj_version='none')
+
+dnl # Define the binary format.
+DPP_ABI_SETUP
 
 dnl # -------------------------------------------------------------------------
 dnl # System-dependent stuff.
 dnl # -------------------------------------------------------------------------
+DPP_WIN32_SETUP
 
 dnl # We use AC_CANONICAL SYSTEM so that we can find out information about
 dnl # the build, target and host platforms rather than only the host.
-AC_CANONICAL_SYSTEM
+dnl AC_CANONICAL_SYSTEM
 
-dnl # Operating system release information.  This may contain anything and
-dnl # should be treated as a string.
-_OS_REL_STR=`uname -r`
-
-dnl # Operating system version number only (any miscellaneous text is
-dnl # stripped).  This will only contain a number and can be treated as a
-dnl # float-point value.
-dnl # NOTE: It is currently not used in config.h.
-_OS_REL_NUM=`uname -r | sed -e 's/^[^0-9]*\([0-9][0-9]*\.[0-9][0-9]*\)[^0-9]*$/\1/'`
-
-dnl # Major and minor version numbers from ${_OS_REL_NUM} separated for use
-dnl # with the C preprocessor.  Using cut(1) is kind of a hack, but at least
-dnl # it's a clean one.
-_OS_REL_NUM_MAJOR=`echo "${_OS_REL_NUM}" | cut -f1 -d'.'`
-_OS_REL_NUM_MINOR=`echo "${_OS_REL_NUM}" | cut -f1 -d' ' | cut -f2 -d'.'`
+dnl DPP_SYSTEM_SETUP($target_os, $target_cpu)
+DPP_SYSTEM_SETUP
 
 dnl # These are used on all platforms.
-AC_DEFINE_UNQUOTED(VJ_OS_RELEASE, "${_OS_REL_STR}")
-AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MAJOR, ${_OS_REL_NUM_MAJOR})
-AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MINOR, ${_OS_REL_NUM_MINOR})
-
-AR=''			dnl # Archive library command (generally ar(1))
-ARFLAGS=''		dnl # Flags for $AR
-AR_NAME_FLAG=''		dnl # Extra flag used to allow $AR to name its output
-DEP_GEN_FLAG='-M'	dnl # Flag for the compiler to generate dependencies
-LD=''			dnl # Shared library command (usually ld(1))
-LDOPTS=''		dnl # More options for shared library generator
-LDOPTS_DBG=''		dnl # Debugging options for shared library generator
-LDOPTS_OPT=''		dnl # Optimization options for shared library generator
-OBJ_FILE_SUFFIX='o'	dnl # Suffix for object file names
-OBJ_NAME_FLAG='-o $@'	dnl # Flag used for naming a compiled object file
-
-LIB_PREFIX='lib'	dnl # Prefix for library name
-STATICLIB_EXT='a'	dnl # Extension for shared library names (usually 'a')
-SHAREDLIB_EXT=''	dnl # Extension for shared library names (usually 'so')
-
-DBG_FLAGS=''		dnl # Compiler debugging flags for object files
-OPT_FLAGS=''		dnl # Compiler optimization flags for object files
-
-DSOREGFILE=''
-DSOVERSION=''
-DSOVERSIONOPTS=''
-ABI_LIST=''		dnl # List of supported ABIs on a given platform
-OS_TYPE='UNIX'		dnl # General type of operating system (UNIX, Win32)
-PLATFORM=''		dnl # Platform name
+AC_DEFINE_UNQUOTED(VJ_OS_RELEASE, "$OS_REL_STR")
+AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MAJOR, $OS_REL_NUM_MAJOR)
+AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MINOR, $OS_REL_NUM_MINOR)
 
 dnl # Depending on the target operating system, set various command options and
 dnl # such.
 case $target_os in
     dnl # SGI running IRIX 6.*.
     irix6*)
-        dnl # If no ABI has been set yet, default to N32_M3.
-        if test "$ABI" = "" ; then
-            VJ_ABI_CFG('N32', 'mips3', '32', '-n32 -mips3')
-        fi
-
-        dnl # Set compiler flags and the location of $DSOREGFILE depending on
-        dnl # $ABI.
-        if test "$ABI" = "64" ; then
-            DSOREGFILE='/usr/lib64/so_locations'
-            OPT_FLAGS='-O1 -OPT:Olimit=0'
-        elif test "$ABI" = "N32" ; then
-            DSOREGFILE='/usr/lib32/so_locations'
-            OPT_FLAGS='-O1 -OPT:Olimit=0'
-        fi
-
-        AR='${CXX}'
-        ARFLAGS='-LANG:std -J6 -ar -WR,-v -o'
-        CFLAGS="$CFLAGS -ansi"
-        CXXFLAGS="$CXXFLAGS -ansi -LANG:std"
-        DBG_FLAGS="-g -gslim"
-        LD='${CXX} -shared'
-        _LD_REGOPTS='-check_registry ${DSOREGFILE}'
-        LDOPTS="$LDOPTS -ansi -LANG:std -all ${_LD_REGOPTS} -elf -rdata_shared"
-        SHAREDLIB_EXT='so'
-
-        DSOVERSION='sgi4.0'
-        DSOVERSIONOPTS='-set_version ${DSOVERSION}'
-
-        ABI_LIST='64_M4 64_M3 N32_M4 N32_M3'
-        PLATFORM='IRIX'
+        DBG_FLAGS="$DBG_FLAGS -gslim"
 
         AC_DEFINE(VJ_OS_IRIX,)
         AC_DEFINE(_BSD_TYPES,)
-
-        if test ${_OS_REL_NUM_MAJOR} -lt 6 ; then
-            AC_DEFINE(IRIXREL, "IRIX5")
-        else
-            AC_DEFINE(IRIXREL, "IRIX6")
-        fi
         ;;
     dnl # HP PA-RISC machine running HP-UX 10.20.
     hpux10.20)
-        dnl # If no ABI has been set yet, default to HP PA-RISC.
-        if test "$ABI" = "" ; then
-            VJ_ABI_CFG('HP', 'PA-RISC')
-        fi
-
-        AR='ar'
-        ARFLAGS='ru'
-        CFLAGS="-Aa $CFLAGS"
-        CXXFLAGS="+p $CXXFLAGS"
-        LD='ld'
-        LDFLAGS="$LDFLAGS -L/usr/lib/X11R6"
-        LDOPTS='-b'
-        DBG_FLAGS='-g'
-        OPT_FLAGS='+inline_level 3'
-        SHAREDLIB_EXT='sl'
-
         dnl # We have to use POSIX threads on HP-UX.
         if test "x${_thread_pkg}" != "xPOSIX" ; then
             AC_MSG_WARN(*** Forcing the use of POSIX threads ***)
@@ -432,48 +192,16 @@ case $target_os in
         fi
 
         AC_DEFINE(VJ_OS_HPUX,)
-        AC_DEFINE(_HPUX_SOURCE,)
         AC_DEFINE(_INCLUDE_TERMIO,)
         AC_DEFINE(_CMA_NOWRAPPERS_,)
-        AC_DEFINE(notdef,)
-        ABI_LIST='HP'
-        PLATFORM='HP'
         ;;
     dnl # DEC Alpha running Digital UNIX 4.0.
     osf4.0)
-        dnl # If no ABI has been set yet, default to ALPHA (whatever that
-        dnl # means).
-        if test "$ABI" = "" ; then
-            VJ_ABI_CFG('ALPHA')
-        fi
-
-        AR='ar'
-        ARFLAGS='-ruv'
-        LD='${CXX} -shared'
-        LDOPTS=''
-        OPT_FLAGS='-O2'
-        SHAREDLIB_EXT='so'
-
         AC_DEFINE(VJ_OS_DUX,)
-        ABI_LIST='ALPHA'
-        PLATFORM='alpha-osf'
         ;;
     dnl # A machine running FreeBSD.  Currently only i386 is known to compile.
     freebsd*)
-        dnl # If no ABI has been set yet, default to ELF with whatever the
-        dnl # target CPU architecture is.
-        if test "$ABI" = "" ; then
-            VJ_ABI_CFG('ELF', "$target_cpu")
-        fi
-
-        AR='ar'
-        ARFLAGS='-ruv'
         CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
-        LD='${CXX} -shared'
-        LDOPTS=''
-        DBG_FLAGS='-g'
-        OPT_FLAGS='-O2'
-        SHAREDLIB_EXT='so'
 
         dnl # We have to use POSIX threads on FreeBSD.
         if test "x${_thread_pkg}" != "xPOSIX" ; then
@@ -482,25 +210,10 @@ case $target_os in
         fi
 
         AC_DEFINE(VJ_OS_FreeBSD,)
-        ABI_LIST='ELF'
-        PLATFORM='FreeBSD'
         ;;
     dnl # A machine running Linux.  Currently only i386 is known to work.
     linux*)
-        dnl # If no ABI has been set yet, default to ELF with whatever the
-        dnl # target CPU architecture is.
-        if test "$ABI" = "" ; then
-            VJ_ABI_CFG('ELF', "$target_cpu")
-        fi
-
-        AR='ar'
-        ARFLAGS='-ruv'
         CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
-        LD='${CXX} -shared'
-        LDOPTS=''
-        OPT_FLAGS='-O1'
-        DBG_FLAGS='-g'
-        SHAREDLIB_EXT='so'
 
         dnl # We have to use POSIX threads on Linux.
         if test "x${_thread_pkg}" != "xPOSIX" ; then
@@ -509,26 +222,11 @@ case $target_os in
         fi
 
         AC_DEFINE(VJ_OS_Linux,)
-        ABI_LIST='ELF'
-        PLATFORM='Linux'
         ;;
     dnl # A machine running Solaris (aka SunOS).  Currently only i386 is
     dnl # known to work.
     solaris*)
-        dnl # If no ABI has been set yet, default to ELF with whatever the
-        dnl # target CPU architecture is.
-        if test "$ABI" = "" ; then
-            VJ_ABI_CFG('ELF', "$target_cpu")
-        fi
-
-        AR='ar'
-        ARFLAGS='-ruv'
         CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
-        LD='${CXX} -G'
-        LDOPTS=''
-        DBG_FLAGS='-g'
-        OPT_FLAGS='-O2'
-        SHAREDLIB_EXT='so'
 
         dnl # We have to use POSIX threads on Solaris.
         if test "x${_thread_pkg}" != "xPOSIX" ; then
@@ -537,8 +235,6 @@ case $target_os in
         fi
 
         AC_DEFINE(VJ_OS_Solaris,)
-        ABI_LIST='ELF'
-        PLATFORM='Solaris'
         ;;
     dnl # IBM RS/6000 running AIX.
     aix*)
@@ -549,88 +245,20 @@ case $target_os in
         fi
 
         AC_DEFINE(VJ_OS_AIX)
-        PLATFORM='AIX'
         ;;
     dnl # i386-class machine running Windows {98,NT} with Cygnus GNU-Win32.
     cygwin)
-        dnl # If no ABI has been set yet, default to WIN32 with whatever the
-        dnl # target CPU architecture is.
-        if test "$ABI" = "" ; then
-            VJ_ABI_CFG('WIN32')
-        fi
-
         dnl # We have to use Win32 threads on Win32.
         if test "x${_thread_pkg}" != "xWIN32" ; then
             AC_MSG_WARN(*** WIN32 threads must be used on $host ***)
             _thread_pkg='WIN32'
         fi
 
-        if test "x${_use_gcc}" = "xyes" ; then
-            AR='ar'
-            ARFLAGS='-ruv'
-            CFLAGS="-mno-cygwin"
-            CXXFLAGS="-mno-cygwin"
-            DBG_FLAGS='-g'
-
-            LD='${CXX} -shared'
-        else
-            AR='link -lib'
-            ARFLAGS="$ARFLAGS -nologo"
-            AR_NAME_FLAG='-out:'
-            CFLAGS="-nologo"
-            CXXFLAGS="-nologo"
-            DBG_FLAGS='-Od -GZ -MTd -Z7'
-            DEP_GEN_FLAG='-FD'
-            OPT_FLAGS='-GB -MT'
-            LD='link -dll'
-            LDOPTS="$LDOPTS -nologo -out:\"${OBJDIR}/Juggler.lib\""
-            LDOPTS_DBG='-LDd -MDd -PDB:NONE'
-            LDOPTS_OPT='-LD -MD'
-            OBJ_FILE_SUFFIX='obj'
-            OBJ_NAME_FLAG='-Fo$@'
-        fi
-
-        LIB_PREFIX=''
-        STATICLIB_EXT='lib'
-        SHAREDLIB_EXT='dll'
-
         AC_DEFINE(VJ_OS_Win32,)
-        ABI_LIST='WIN32'
-        OS_TYPE='Win32'
-
-        _sys_name=`uname -s`
-
-        dnl # Determine the value for $PLATFORM based on what uname(1) tells
-        dnl # us.  We define our own values because Cygnus' uname(1) returns
-        dnl # somewhat annoying names.
-        case ${_sys_name} in
-            dnl # Windows NT 4.0.
-            *NT-4.0)
-                PLATFORM='WinNT'
-                ;;
-            dnl # Windows 95 and 98.
-            *WIN_9*-4.*)
-                PLATFORM='Win9x'
-                ;;
-            dnl # Unknown version of Windows that may not yet be supported.
-            *)
-                AC_MSG_ERROR(Unknown Windows type ${_sys_name}!)
-                ;;
-        esac
-
-        AC_DEFINE(WIN32,)
-        AC_DEFINE(_MBCS,)
         ;;
     dnl # Unkown operating system (to config.guess).
     unknown)
-        dnl # If no ABI has been set yet, default to the target OS (which
-        dnl # will be 'unknown') with whatever the target CPU architecture is.
-        if test "$ABI" = "" ; then
-            VJ_ABI_CFG("$target_os", "$target_cpu")
-        fi
-
         AC_DEFINE(VJ_OS_GENERIC,)
-        PLATFORM='UNKNOWN'
         ;;
 esac
 
@@ -664,17 +292,16 @@ fi
 dnl # -------------------------------------------------------------------------
 dnl # Checks for programs.
 dnl # -------------------------------------------------------------------------
-
-_vjsave_CFLAGS="$CFLAGS"
-_vjsave_CXXFLAGS="$CXXFLAGS"
+CC_ERR=''
+CXX_ERR=''
 
 dnl # If no alternate C compiler was specified, check to see if it is
 dnl # necessary to force the use of a specific compiler on a given platform.
 if test "x${_alt_cc}" = "xnone" ; then
     dnl # On IRIX, we have to use cc (not gcc).
     if test "$PLATFORM" = "IRIX" ; then
-        AC_CHECK_PROG(CC, cc, cc,
-            AC_MSG_ERROR(*** The library requires the IRIX cc C compiler ***))
+        CC='cc'
+        CC_ERR='*** The library requires the IRIX MIPSpro C compiler ***'
     fi
 dnl # Otherwise, force the use of the alternate C compiler.
 else
@@ -686,189 +313,68 @@ dnl # necessary to force the use of a specific compiler on a given platform.
 if test "x${_alt_cxx}" = "xnone" ; then
     dnl # On HP-UX, we have to use the aCC C++ compiler.
     if test "$PLATFORM" = "HP" ; then
-        AC_CHECK_PROG(CXX, aCC, aCC,
-            AC_MSG_ERROR(*** The library requires the HP-UX aCC C++ compiler ***))
+        CXX='aCC'
+        CXX_ERR='*** The library requires the HP-UX aCC C++ compiler ***'
     dnl # On Windows, we have to use the Microsoft Visual C++ compiler CL.EXE.
-    elif test "$OS_TYPE" = "Win32" -a "x${_use_gcc}" != "xyes" ; then
-        AC_CHECK_PROG(CXX, cl, cl,
-            AC_MSG_ERROR(*** The library requires the MS Visual C++ compiler ***))
-        CC=$CXX
+    elif test "$OS_TYPE" = "Win32" -a "x$USE_GCC" != "xyes" ; then
+        CXX='cl'
+        CC="$CXX"
+        CXX_ERR='*** The library requires the MS Visual C++ compiler ***'
     dnl # On IRIX, we have to use CC (not g++).
-    elif test "$PLATFORM" = "IRIX" ; then
-        AC_CHECK_PROG(CXX, CC, CC,
-            AC_MSG_ERROR(*** The library requires the IRIX CC C++ compiler ***))
+    elif test "x$PLATFORM" = "xIRIX" ; then
+        CXX='CC'
+        CXX_ERR='*** The library requires the IRIX MIPSpro C++ compiler ***'
     fi
 dnl # Otherwise, force the use of the alternate C++ compiler.
 else
     CXX="${_alt_cxx}"
 fi
 
-CFLAGS="$CFLAGS ${_EXTRA_FLAGS}"
-CXXFLAGS="$CXXFLAGS ${_EXTRA_FLAGS}"
+DPP_PROG_CC($CC, , $CC_ERR)
+DPP_PROG_CXX($CXX, , $CXX_ERR)
 
-AC_PROG_CC
-AC_PROG_CXX
-
-dnl # If we are using GCC as the compiler, we need to be using at least egcs
-dnl # 1.1.2.  A newer version (e.g., 2.95.2) is even better.
 if test "x$GXX" = "xyes" ; then
-    AC_CACHE_CHECK(if $CXX is egcs 1.1.2 or newer,
-        ac_cv_CXX_is_egcs,
-        [ case `$CXX -dumpversion 2>&1` in
-              egcs-2.9*)
-                  ac_cv_CXX_is_egcs='yes'
-                  ;;
-              2.9*)
-                  ac_cv_CXX_is_egcs='yes'
-                  ;;
-              *)
-                  _val=`$CXX -v 2>&1 | grep -e '^gcc version' | cut -f4 -d' '`
-                  if test ${_val} -ge 19990314 ; then
-                      ac_cv_CXX_is_egcs='yes'
-                  else
-                      ac_cv_CXX_is_egcs='no'
-                  fi
-                  ;;
-          esac
-        ])
-
-    dnl # If the $CXX binary is not egcs 1.1.2 or newer, check for egcc and
-    dnl # eg++.  If it exists, we will assume that it is new enough.
-    if test "x$ac_cv_CXX_is_egcs" = "xno" ; then
+    dnl # If we are using GCC as the compiler, we need to be using at least
+    dnl # egcs 1.1.2.  A newer version (e.g., 2.95.2) is even better.  If the
+    dnl # $CXX binary is not egcs 1.1.2 or newer, check for egcc and eg++.  If
+    dnl # it exists, we will assume that it is new enough.
+    DPP_GPLUSPLUS_VER(2.91,
         AC_CHECK_PROG(CC, egcc, egcc,
             AC_MSG_ERROR(*** The library requires the egcc C compiler ***))
         AC_CHECK_PROG(CXX, eg++, eg++,
-            AC_MSG_ERROR(*** The library requires the eg++ C++ compiler ***))
-    fi
+            AC_MSG_ERROR(*** The library requires the eg++ C++ compiler ***)))
 fi
 
 dnl # At this point, we know what threading package we will be using and what
 dnl # C compiler we have available.  Now check to see if the compiler accepts
 dnl # the -pthread option.
 if test "x${_thread_pkg}" = "xPOSIX" ; then
-    AC_CACHE_CHECK(whether $CC accepts -pthread,
-        ac_cv_CC_accepts_pthread,
-        [ echo 'void f(){}' > conftest.c
-          if test -z "`${CC} -pthread -c conftest.c 2>&1`" ; then
-              ac_cv_CC_accepts_pthread='yes'
-          else
-              ac_cv_CC_accepts_pthread='no'
-          fi
-          rm -f conftest*
-        ])
+    DPP_CC_PTHREAD_ARG
 fi
 
 dnl # Ensure that the C++ compiler we've found is capable of compiling the
 dnl # newer C++ features that we need.
-_vjsave_CC="$CC"
-CC="$CXX"
+DPP_CXX_TEMPLATES(AC_MSG_ERROR(*** The library requires C++ template support ***))
 
-dnl # When compiling on Windows, we need to force the compiler to treat the
-dnl # source file as a .cpp file even though it will end in .c.
-if test "$OS_TYPE" = "Win32" -a "x${_use_gcc}" != "xyes" ; then
-    CC="$CC -TP"
-fi
-
-AC_CACHE_CHECK(whether the C++ compiler handles templates properly,
-    ac_cv_CXX_is_current,
-    AC_TRY_COMPILE([#include <map> ],
-                   [ std::map<const char*, int> test_map; ],
-                   [ ac_cv_CXX_is_current='yes' ; rm -rf ./ii_files ],
-                   [ ac_cv_CXX_is_current='no' ;
-                     AC_MSG_ERROR(*** The library requires a current C++ compiler) ]))
-
-CC="${_vjsave_CC}"
-
-AC_PROG_CPP
-AC_PROG_CXXCPP
-
-CFLAGS="${_vjsave_CFLAGS}"
-CXXFLAGS="${_vjsave_CXXFLAGS}"
-
-JAVAC=''
-JAR=''
-
-dnl # Check for the JDK (specifically try to find javac(1) in $JDK_HOME or
-dnl # in ${_JDK_HOME_ALT_LIST}).
-AC_PATH_PROG(JAVAC, javac, no, ${JDK_HOME}/bin:$PATH:${_JDK_HOME_ALT_LIST})
+dnl # Check for the JDK.
+DPP_PATH_JAVA
 
 dnl # If there is still no value in $JAVAC, then warn that the GUI will not be
 dnl # built.
-if test "$JAVAC" = "no" ; then
+if test "x$JAVAC" = "xno" ; then
     AC_MSG_WARN(*** The GUI requires javac -- it will not be built ***)
     BUILD_GUI='N'
-dnl # Otherwise, set $JAR to the path to jar(1) and continue.
 else
-    if test "$OS_TYPE" = "Win32" ; then
-        JAVAC=`unix2dos "$JAVAC"`
-    fi
-
-    JAR=`echo $JAVAC | sed 's/javac$//'`jar
     BUILD_GUI='Y'
-fi
-
-dnl # If we are on a Win32 system, use $ac_install_sh for the install
-dnl # program.  This prevents problems with paths if an install program is
-dnl # found elsewhere on the system.
-dnl # XXX: This may not be a safe value to use since it is internal to the
-dnl # generated configure script.  (patrick 1/10/2000)
-if test "$OS_TYPE" = "Win32" ; then
-    INSTALL="$ac_install_sh"
-dnl # Otherwise, use the safe AC_PROG_INSTALL macro.
-else
-    AC_PROG_INSTALL
 fi
 
 dnl # Ensure that a version of Perl greater than or equal to 5.004 is
 dnl # available.
-chkPerl ( ) {
-    if test -x "$1" ; then
-        retval=`$1 -e "printf("%s\n", (($] >= 5.004) ? 0 : 1))"`
-    else
-        retval=1
-    fi
+DPP_PERL_VER(5.004)
 
-    echo $retval
-}
+AC_CHECK_PROG(MTREE_CMD, mtree, mtree, \$(PERL) \$(scriptdir)/mtree.pl)
 
-_PERL_PATH='/usr/local/bin /usr/bin C:/Perl/bin'
-
-dnl # If ${_user_perl_path} has a value, prepend that on ${_PERL_PATH} so that
-dnl # it will be checked before the standard places.
-if test "x${_user_perl_path}" != "x" ; then
-    _PERL_PATH="${_user_perl_path} ${_PERL_PATH}"
-fi
-
-AC_CACHE_CHECK(for Perl version >= 5.004,
-               ac_cv_perl_version,
-               [ ac_cv_perl_version='no' ;
-                 for _dir in ${_PERL_PATH} ; do
-                     if eval "test \"`chkPerl ${_dir}/perl`\" -eq 0" ; then
-                         ac_cv_perl_version="${_dir}/perl"
-                         break
-                     elif eval "test \"`chkPerl ${_dir}/perl5`\" -eq 0" ; then
-                         ac_cv_perl_version="${_dir}/perl5"
-                         break
-                     fi
-                 done
-               ])
-
-PERL="$ac_cv_perl_version"
-
-AC_CHECK_PROG(MTREE_CMD, mtree, mtree, \${PERL} \${scriptdir}/mtree.pl)
-AC_PROG_MAKE_SET
-
-dnl # While ranlib(1) is not part of the base IRIX installation, the VRAC SGIs
-dnl # have a ranlib(1) installed that does very bad things to ar archives.
-dnl # We also do not want to use the Cygwin ranlib(1) with the Visual C++
-dnl # LINK.EXE command.
-if test "$PLATFORM" = "IRIX" -o "$OS_TYPE" = "Win32" ; then
-    RANLIB=':'
-else
-    AC_PROG_RANLIB
-fi
-
-AC_PROG_LN_S
+DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
 
 dnl # -------------------------------------------------------------------------
 dnl # Checks for libraries.
@@ -881,57 +387,16 @@ dnl # If the library is found, check for pthread_kill().  If it is present,
 dnl # Draft 10 (the "final" draft) of the POSIX threads standard is in place.
 dnl # If not, Draft 4 is available.
 if test "x${_thread_pkg}" = "xPOSIX" ; then
-    _vjsave_LDFLAGS="$LDFLAGS"
+    DPP_GET_PTHREAD_LIB
 
-    if test "$ac_cv_CC_accepts_pthread" = "yes" ; then
-        LDFLAGS="$LDFLAGS -pthread"
-    fi
-
-    AC_CHECK_LIB(pthread, pthread_create,
-        AC_CHECK_HEADER(pthread.h,
-            [ THREADS='POSIX' _pthread_lib='-lpthread'; ],
-            AC_MSG_WARN(*** POSIX threads will not be used (header file not found) ***)))
-
-    dnl # On HP-UX 10.20, the pthreads library is in the cma library rather
-    dnl # than pthreads, so test for that if $THREADS was not set above.
-    if test "x$THREADS" = "x" ; then
-        AC_CHECK_LIB(cma, pthread_create,
-            AC_CHECK_HEADER(pthread.h,
-                [ THREADS='POSIX' _pthread_lib='-lcma'; ],
-                AC_MSG_WARN(*** POSIX threads will not be used (header file not found) ***)))
-    fi
-
-    dnl # On FreeBSD, the pthreads stuff is in libc_r.
-    if test "x$THREADS" = "x" ; then
-        AC_CHECK_LIB(c_r, pthread_create,
-            AC_CHECK_HEADER(pthread.h,
-                [ THREADS='POSIX' _pthread_lib='' ],
-                AC_MSG_WARN(*** POSIX threads will not be used (header file not found) ***)))
-    fi
-
-    dnl # If $THREADS is equal to "POSIX" at this point, then the pthread
+    dnl # If $PTHREAD_LIB has a value at this point, then the pthread
     dnl # libraries needed are in $LIBS, so now we make a check for the draft
     dnl # revision being used.  This is done by determining if pthread_kill()
     dnl # is in the library.  If it is, Draft 10 is in use.  Otherwise, assume
     dnl # it is Draft 4.
-    if test "$THREADS" = "POSIX" ; then
-        _vjsave_LIBS="$LIBS"
-        LIBS="$LIBS ${_pthread_lib}"
-
-        AC_CACHE_CHECK(POSIX threads draft revision,
-            ac_cv_pthread_version,
-            AC_TRY_LINK([#include <pthread.h> ],
-                [ pthread_t t; pthread_kill(t, 1); ],
-                ac_cv_pthread_version='Draft 10',
-                ac_cv_pthread_version='Draft 4'))
-
-        LIBS="${_vjsave_LIBS}"
-
-        if test "$ac_cv_pthread_version" = "Draft 10" ; then
-            AC_DEFINE(_PTHREADS_DRAFT_10,)
-        else
-            AC_DEFINE(_PTHREADS_DRAFT_4,)
-        fi
+    if test "$xPTHREAD_LIB" != "x" ; then
+        THREADS='POSIX'
+        DPP_GET_PTHREAD_VER($PLATFORM, VJ_POSIX_C_SOURCE)
 
         dnl # Define the default thread scope depending on the platform.  On
         dnl # IRIX, only process scope is avaiable without special
@@ -940,14 +405,6 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
             AC_DEFINE(VJ_THREAD_SCOPE, PTHREAD_SCOPE_PROCESS)
         else
             AC_DEFINE(VJ_THREAD_SCOPE, PTHREAD_SCOPE_SYSTEM)
-        fi
-
-        dnl # Define the appropriate value for _POSIX_C_SOURCE on the current
-        dnl # platform.
-        if test "$PLATFORM" = "IRIX" -o "$PLATFORM" = "Linux" -o "$PLATFORM" = "Solaris" ; then
-            AC_DEFINE(VJ_POSIX_C_SOURCE, 199506L)
-        else
-            AC_DEFINE(VJ_POSIX_C_SOURCE, 2)
         fi
     else
         AC_MSG_WARN(*** POSIX threads will not be used (no library found) ***)
@@ -975,7 +432,7 @@ THREAD_SYS=''			# POSIX, IRIX_SPROC, WIN32
 
 dnl # Define various CPP macros depending on which threads implementation will
 dnl # be used.  If no implementation was defined above, exit configure.
-if test "$THREADS" = "POSIX" ; then
+if test "x$THREADS" = "xPOSIX" ; then
     dnl # Do not define _POSIX_C_SOURCE here because it will cause problems
     dnl # when compiling on IRIX.  Instead, define that in the source files
     dnl # where appropriate.
@@ -1005,11 +462,11 @@ if test "$THREADS" = "POSIX" ; then
 
     dnl # This step and the following addition to $LIBS are necessary for
     dnl # properly testing for working POSIX semaphores.
-    if test "x$ac_cv_CC_accepts_pthread" = "xyes" ; then
+    if test "x$CC_ACCEPTS_PTHREAD" = "xyes" ; then
         CFLAGS="$CFLAGS -pthread"
     fi
 
-    LIBS="$LIBS ${_pthread_lib}"
+    LIBS="$LIBS $PTHREAD_LIB"
 
     dnl # If we have sem_init(3), we can use POSIX semaphores.  If not, exit
     dnl # with a fatal error.  If we are using POSIX threads, we need to have
@@ -1024,13 +481,13 @@ if test "$THREADS" = "POSIX" ; then
 
     CFLAGS="${_vjsave_CFLAGS}"
     LIBS="${_vjsave_LIBS}"
-elif test "$THREADS" = "WIN32" ; then
+elif test "x$THREADS" = "xWIN32" ; then
     dnl # Set to Win32 threading, synchronization and shared memory.
     SEMPANORE_SYS='WIN32'
     THREAD_SYS='WIN32'
     MUTEX_SYS='WIN32'
     SHMEM_SYS='WIN32'
-elif test "$THREADS" = "IRIX_SPROC" ; then
+elif test "x$THREADS" = "xIRIX_SPROC" ; then
     AC_DEFINE(VJ_IRIX_SPROC,)
 
     dnl # Set to IRIX_SPROC threading
@@ -1203,7 +660,7 @@ if test "x${_enable_pf_api}" = "xyes" ; then
 
     dnl # On Linux, we have to link all the Performer libraries AND libdl to
     dnl # get the check for pfInit() in libpf to compile.
-    if test "$PLATFORM" = "Linux" ; then
+    if test "x$PLATFORM" = "xLinux" ; then
         _vjsave_LIBS="$LIBS"
         LIBS="$LIBS -lpf_ogl -lpfdu_ogl -lpfui -lpfutil_ogl -ldl"
     fi
@@ -1222,17 +679,17 @@ if test "x${_enable_pf_api}" = "xyes" ; then
     dnl # Restore $LIBS to its original value if we are using Linux (it was
     dnl # modified before the previous check block).  Also append -ldl to
     dnl # $LIBS if the Performer library was found.
-    if test "$PLATFORM" = "Linux" ; then
+    if test "x$PLATFORM" = "xLinux" ; then
         LIBS="${_vjsave_LIBS}"
 
         if test "x$PERFORMER_API" != "x" ; then
             _PFOGLLIB="${_PFOGLLIB} -ldl"
         fi
     fi
-    
-    dnl # Under Irix users will need -limage to load .flt files 
+
+    dnl # Under Irix users will need -limage to load .flt files
     dnl # referencing .sgi images
-    if test "$PLATFORM" = "IRIX" ; then
+    if test "x$PLATFORM" = "xIRIX" ; then
             _PFOGLLIB="${_PFOGLLIB} -limage"
     fi
 
@@ -1276,7 +733,7 @@ if test "x${_with_aw}" != "xno" ; then
     LDFLAGS="${_vjsave_LDFLAGS}"
     LIBS="${_vjsave_LIBS}"
 
-    if test "$AUDIO_WORKS" = "Y" ; then
+    if test "x$AUDIO_WORKS" = "xY" ; then
         AW_INC="-I${_with_aw}/include/PSI"
         AW_LIB="-L${_with_aw}/lib${LIBBITSUF}/PSI"
 
@@ -1303,7 +760,7 @@ if test "x${_with_sl}" != "xno" ; then
     dnl # If we are on IRIX, we need to check for the SGI Audio Library if
     dnl # we want to use SL.  If it is not found, ${_have_audio} is set to
     dnl # 'N', and the check for SL is not performed.
-    if test "$PLATFORM" = "IRIX" ; then
+    if test "x$PLATFORM" = "xIRIX" ; then
         _vjsave_LIBS="$LIBS"
 
         AC_CHECK_LIB(audio, alNewConfig,
@@ -1317,7 +774,7 @@ if test "x${_with_sl}" != "xno" ; then
     fi
 
     dnl # Do not bother to check for SL unless ${_have_audio} is 'Y'.
-    if test "${_have_audio}" = "Y" ; then
+    if test "x${_have_audio}" = "xY" ; then
         AC_LANG_SAVE
         AC_LANG_CPLUSPLUS
 
@@ -1341,7 +798,7 @@ if test "x${_with_sl}" != "xno" ; then
         LDFLAGS="${_vjsave_LDFLAGS}"
         LIBS="${_vjsave_LIBS}"
 
-        if test "$SL" = "Y" ; then
+        if test "x$SL" = "xY" ; then
             SL_INC="-I${_with_sl}/include/sl"
             SL_LIB="-L${_with_sl}/lib"
 
@@ -1349,7 +806,7 @@ if test "x${_with_sl}" != "xno" ; then
             dnl # substitutions.
             _sl_libs="-lsl"
 
-            if test "$PLATFORM" = "IRIX" ; then
+            if test "x$PLATFORM" = "xIRIX" ; then
                 _sl_libs="${_sl_libs} -laudio"
             fi
         else
@@ -1392,15 +849,7 @@ if test "x$ac_cv_has_socklen_t" = "xno" ; then
     AC_DEFINE(socklen_t, int)
 fi
 
-if test "$OS_TYPE" = "Win32" ; then
-    AC_CHECK_TYPE(u_int, UINT)
-    AC_CHECK_TYPE(int32_t, __int32)
-    AC_CHECK_TYPE(int64_t, __int64)
-else
-    AC_CHECK_TYPE(u_int, unsigned int)
-fi
-
-AC_CHECK_TYPE(caddr_t, char*)
+DPP_CHECK_TYPE_POSIX
 
 dnl # -------------------------------------------------------------------------
 dnl # Checks for library functions.
@@ -1418,7 +867,7 @@ LIBS="${_vjsave_LIBS}"
 
 dnl # In a Win32 environment with MS Visual C++ as the compiler, these math
 dnl # functions are not in any special library.  Test for them normally.
-if test "$OS_TYPE" = "Win32" -a "x${_use_gcc}" != "xyes" ; then
+if test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     AC_CHECK_FUNCS(sinf sqrtf asinf acosf atan2f fabsf)
 dnl # Otherwise, they are in libmath if they are anywhere.
 else
@@ -1436,62 +885,7 @@ dnl # -------------------------------------------------------------------------
 dnl # Miscellaneous checks.
 dnl # -------------------------------------------------------------------------
 
-_vjsave_PATH="$PATH"
-PATH="/usr/xpg4/bin:$PATH"
-
-dnl # Set $OWNER_NAME here in case the check for the user-specified owner
-dnl # failed.  This provides a simple fallback in that case.
-OWNER_NAME=`id -un`
-
-dnl # Make sure that the named install owner is actually available and can
-dnl # be set by this user.  This is done by creating a file (conftest.c) and
-dnl # setting the owner name to be what is in ${_install_owner}.  Any output
-dnl # from chown(1) is redirected to chown_out.  If chown_out has non-zero
-dnl # length, chown(1) gave error output, and thus the name is not avaialble.
-if test "x${_install_owner}" != "x" ; then
-    AC_CACHE_CHECK(for user ${_install_owner}, ac_cv_install_owner_available,
-        [ touch conftest.c
-          chown ${_install_owner} conftest.c >chown_out 2>&1
-          if test -s chown_out ; then
-              ac_cv_install_owner_available=no
-          else
-              ac_cv_install_owner_available=yes
-          fi
-          rm -f conftest.c chown_out
-        ])
-
-    if test "$ac_cv_install_owner_available" = "yes" ; then
-        OWNER_NAME="${_install_owner}"
-    fi
-fi
-
-dnl # Set $GROUP_NAME here in case the check for the user-specified group
-dnl # failed.  This provides a simple fallback in that case.
-GROUP_NAME=`id -gn`
-
-dnl # Make sure that the named install group is actually available and can
-dnl # be set by this user.  This is done by creating a file (conftest.c) and
-dnl # setting the group name to be what is in ${_install_group}.  Any output
-dnl # from chgrp(1) is redirected to chgrp_out.  If chgrp_out has non-zero
-dnl # length, chgrp(1) gave error output, and thus the group is not avaialble.
-if test "x${_install_group}" != "x" ; then
-    AC_CACHE_CHECK(for ${_install_group} group, ac_cv_install_group_available,
-        [ touch conftest.c
-          chgrp ${_install_group} conftest.c >chgrp_out 2>&1
-          if test -s chgrp_out ; then
-              ac_cv_install_group_available=no
-          else
-              ac_cv_install_group_available=yes
-          fi
-          rm -f conftest.c chgrp_out
-        ])
-
-    if test "$ac_cv_install_group_available" = "yes" ; then
-        GROUP_NAME="${_install_group}"
-    fi
-fi
-
-PATH="${_vjsave_PATH}"
+DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 
 dnl # Construct the VR Juggler version using the getversion Perl script (if
 dnl # Perl is available).  This is never cached because the version number
@@ -1522,30 +916,31 @@ fi
 dnl # -------------------------------------------------------------------------
 dnl # Do Makefile substitutions.
 dnl # -------------------------------------------------------------------------
-EXTRA_LINK_FLAGS=''		dnl # For use in linking Juggler applications
 
-if test "$PLATFORM" = "IRIX" ; then
+dnl # For use in linking applications.
+EXTRA_LINK_FLAGS=''
+
+if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" = "xno" ; then
     CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
-    CXXFLAGS="$CXXFLAGS -woff 1183,3322 -w2"
-elif test "$OS_TYPE" = "Win32" -a "x${_use_gcc}" != "xyes" ; then
-    CFLAGS="$CFLAGS -W3 -GR -GX -EHc -QIfdiv -QI0f"
-    CXXFLAGS="$CXXFLAGS -W3 -GR -GX -EHc -QIfdiv -QI0f"
+    CXXFLAGS="$CXXFLAGS -woff 3322 -w2"
+elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
+    CFLAGS="$CFLAGS -W3 -Gm -GR -GX -ZI -EHc -QIfdiv -QI0f"
+    CXXFLAGS="$CXXFLAGS -W3 -Gm -GR -GX -ZI -EHc -QIfdiv -QI0f"
     EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -MTd"
 fi
 
-if test "$ac_cv_CC_accepts_pthread" = "yes" ; then
-    LDFLAGS="$LDFLAGS -pthread"
-fi
+DPP_SYSTEM_SUBST($PLATFORM, $OS_TYPE)
+DPP_PTHREAD_FINISH
 
 dnl # If we are using pthreads, add the library containing the pthread calls to
 dnl # $LIBS.  This must be done here because the $APP_VJ_LIBS* stuff below
 dnl # uses $LIBS.
-if test "x$THREADS" = "xPOSIX" -a "x${_pthread_lib}" != "x" ; then
-    LIBS="$LIBS ${_pthread_lib}"
+if test "x$THREADS" = "xPOSIX" ; then
+    LIBS="$LIBS $PTHREAD_LIB"
 fi
 
 dnl # Do the same if we are using POSIX semaphores.
-if test "x$SEMAPHORE_SYS" = "xPOSIX" -a "x${_sem_lib}" != "x" ; then
+if test "x$SEMAPHORE_SYS" = "xPOSIX" ; then
     LIBS="$LIBS ${_sem_lib}"
 fi
 
@@ -1555,29 +950,25 @@ if test "x${_sched_lib}" = "x" -a "x${_sem_lib}" != "x${_sched_lib}" ; then
     LIBS="$LIBS ${_sched_lib}"
 fi
 
-DEPENDFLAGS=""
-DEPEND_EXTRAS=""
-
 dnl # For makedepend(1) to work properly on HP-UX with aCC, we have to
 dnl # include these extra paths.
-if test "$PLATFORM" = "HP" ; then
+if test "x$PLATFORM" = "xHP" ; then
     _aCC_ROOT="/opt/aCC"
-    DEPEND_EXTRAS="-I${_aCC_ROOT} -I${_aCC_ROOT}/include -I${_aCC_ROOT}/include/iostream"
-elif test "$OS_TYPE" = "Win32" ; then
-    DEPEND_EXTRAS='-D_WIN32 -D_M_IX86 -D__cplusplus'
+    DEPEND_EXTRAS="$DEPEND_EXTRAS -I${_aCC_ROOT} -I${_aCC_ROOT}/include -I${_aCC_ROOT}/include/iostream"
+elif test "x$OS_TYPE" = "Win32" ; then
+    DEPEND_EXTRAS="$DEPEND_EXTRAS -D__cplusplus"
 fi
 
 dnl # $srcdir is the root directory of the juggler source tree.  To get a
 dnl # value for $VJROOT_ABS, we cd there and save the value of running pwd.
 dnl # Then return to the directory where configure is being run ($topdir).
-topdir=`pwd`
 cd "$srcdir"
 VJROOT_ABS=`pwd`
 cd "$topdir"
 
 dnl # Define the base path to the source directory using ${VJROOT_ABS} as an
 dnl # alternative to using ${srcdir}.
-VJ_SRCDIR='${VJROOT_ABS}'
+VJ_SRCDIR='$(VJROOT_ABS)'
 UNIX_VJROOT_ABS="$VJROOT_ABS"
 
 dnl # Variables set in Makefiles found in the application trees.  All variables
@@ -1689,8 +1080,7 @@ elif test "$OS_TYPE" = "Win32" ; then
 fi
 
 dnl # Translate paths from UNIX-style to Win32.
-if test "$OS_TYPE" = "Win32" ; then
-    topdir=`unix2dos "$topdir"`
+if test "x$OS_TYPE" = "xWin32" ; then
     SAFE_VJROOT_ABS=`unix2dos "$VJROOT_ABS"`
     VJ_SRCDIR=`unix2dos "$VJ_SRCDIR"`
 
@@ -1710,55 +1100,13 @@ else
     SAFE_VJROOT_ABS="$VJROOT_ABS"
 fi
 
-AC_SUBST(topdir)
+DPP_SUBST
 AC_SUBST(UNIX_VJROOT_ABS)
 AC_SUBST(SAFE_VJROOT_ABS)
 AC_SUBST(VJ_SRCDIR)
 
-AC_SUBST(AR)
-AC_SUBST(ARFLAGS)
-AC_SUBST(AR_NAME_FLAG)
-AC_SUBST(CFLAGS)
-AC_SUBST(CXXFLAGS)
-AC_SUBST(DEP_GEN_FLAG)
-AC_SUBST(DEPENDFLAGS)
-AC_SUBST(DEPEND_EXTRAS)
 AC_SUBST(EXTRA_LINK_FLAGS)
-AC_SUBST(INCLUDES)
-AC_SUBST(LD)
-AC_SUBST(LIBS)
-AC_SUBST(LDOPTS)
-AC_SUBST(LDOPTS_DBG)
-AC_SUBST(LDOPTS_OPT)
-AC_SUBST(OBJ_FILE_SUFFIX)
-AC_SUBST(OBJ_NAME_FLAG)
-AC_SUBST(DBG_FLAGS)
-AC_SUBST(OPT_FLAGS)
-AC_SUBST(PERL)
 
-AC_SUBST(OWNER_NAME)
-AC_SUBST(GROUP_NAME)
-AC_SUBST(FILE_PERMS)
-AC_SUBST(EXEC_PERMS)
-AC_SUBST(DIR_PERMS)
-
-AC_SUBST(LIB_PREFIX)
-AC_SUBST(STATICLIB_EXT)
-AC_SUBST(SHAREDLIB_EXT)
-
-AC_SUBST(ABI)
-AC_SUBST(ISA)
-AC_SUBST(ABI_LIST)
-AC_SUBST(LIBBITSUF)
-AC_SUBST(OS_TYPE)
-AC_SUBST(PLATFORM)
-AC_SUBST(DSOREGFILE)
-AC_SUBST(DSOVERSION)
-AC_SUBST(DSOVERSIONOPTS)
-
-AC_SUBST(JDK_HOME)
-AC_SUBST(JAVAC)
-AC_SUBST(JAR)
 AC_SUBST(BUILD_GUI)
 
 AC_SUBST(OGLROOT)
@@ -1894,7 +1242,9 @@ END_DIST
 fi
 
 AC_OUTPUT(Makefile
-          Makefile.base
+          Makefile.inc
+          common.defs.mk
+          make.defs.mk
           Config/Makefile
           Environment/Makefile
           GUI/Makefile
@@ -1943,19 +1293,19 @@ AC_OUTPUT(Makefile
           samples/tutorials/simplePf/Makefile
           test/Makefile 
           test/TestSuite/Makefile
-          test/CfgTest/Makefile 
+          test/CfgTest/Makefile
           test/GLWindow/Makefile
-          test/Math/Makefile 
-          test/Matrix/Makefile 
+          test/Math/Makefile
+          test/Matrix/Makefile
           test/Performance/Makefile
           test/Performance/analyzer/Makefile
-          test/Performance/perfdatabuffer-test/Makefile 
+          test/Performance/perfdatabuffer-test/Makefile
           test/Quat/Makefile
           test/SerialPort/Makefile 
           test/Socket/Makefile 
           test/Sync/Makefile 
           test/input/Makefile
-          test/testDynamicCastSTL/Makefile 
+          test/testDynamicCastSTL/Makefile
           test/threads/Makefile
           tools/Makefile
           Doc/Makefile

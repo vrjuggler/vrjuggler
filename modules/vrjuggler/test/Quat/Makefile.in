@@ -36,7 +36,7 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-.SUFFIXES: .cpp .@OBJ_FILE_SUFFIX@
+.SUFFIXES: .cpp .@OBJEXT@
 
 srcdir		= @srcdir@
 
@@ -56,7 +56,7 @@ VPATH		= @srcdir@
 # use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
-OBJECTS		= testQuat.@OBJ_FILE_SUFFIX@ glquat.@OBJ_FILE_SUFFIX@
+OBJECTS		= testQuat.@OBJEXT@ glquat.@OBJEXT@
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -68,10 +68,10 @@ all: testQuat
 testQuat: $(OBJECTS)
 	$(LINK) -o $@ $(OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
-.c.@OBJ_FILE_SUFFIX@:
+.c.@OBJEXT@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
-.cpp.@OBJ_FILE_SUFFIX@:
+.cpp.@OBJEXT@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
 # -----------------------------------------------------------------------------

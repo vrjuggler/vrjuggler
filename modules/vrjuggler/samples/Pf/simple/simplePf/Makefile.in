@@ -36,7 +36,7 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-.SUFFIXES: .cpp .@OBJ_FILE_SUFFIX@
+.SUFFIXES: .cpp .@OBJEXT@
 
 srcdir		= @srcdir@
 
@@ -69,7 +69,7 @@ vpath %.cpp $(srcdir)
 # use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ $(AW_LIBS) @APP_EXTRA_LIBS_PF@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
-SIMPLEPF_OBJECTS	= main.@OBJ_FILE_SUFFIX@
+SIMPLEPF_OBJECTS	= main.@OBJEXT@
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -81,7 +81,7 @@ all: simplePf
 simplePf: $(SIMPLEPF_OBJECTS) $(VJ_LIB_DEPS) $(srcdir)/simplePfApp.h
 	$(LINK) -o $@ $(SIMPLEPF_OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
-.cpp.@OBJ_FILE_SUFFIX@:
+.cpp.@OBJEXT@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
 # -----------------------------------------------------------------------------
