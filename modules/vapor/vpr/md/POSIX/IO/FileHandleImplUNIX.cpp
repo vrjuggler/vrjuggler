@@ -147,20 +147,6 @@ FileHandleImplUNIX::close () {
 }
 
 // ----------------------------------------------------------------------------
-// Test if the file is read/write.
-// ----------------------------------------------------------------------------
-bool
-FileHandleImplUNIX::isReadWrite () {
-    int flags, accmode;
-
-    flags   = getFlags();
-    accmode = flags & O_ACCMODE;
-
-    return (accmode == O_RDWR);
-}
-*/
-
-// ----------------------------------------------------------------------------
 // Reconfigure the file handle so that it is in blocking mode.
 // ----------------------------------------------------------------------------
 Status
