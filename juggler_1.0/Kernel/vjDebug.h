@@ -140,8 +140,9 @@ const std::string vjDBG_CONFIGstr("DBG_CONFIGDB");
 // Define the actual macros to use
 // vjDEBUG - Outputs debug info
 // vjDEBUG_BEGIN - Starts some indenting of the thread information
-// vjDEBUG_END - Ends the indengint level of the information
+// vjDEBUG_END - Ends the indenting level of the information
 // vjDEBUG_CONT - Continue on the same line (no thread info, no indent)
+// vjDEBUG_CONT_END - Continue on the same line AND decrease indent one level (no thread info, no indent)
 // vjDEBUG_NEXT - Outputing more info on next line (no thread info)
 // vjDEBUG_NEXT_BEGIN - Output more infor on next line AND indent one level more
 // vjDEBUG_NEXT_END - Ouput more info on the next line AND decrease indent one level
