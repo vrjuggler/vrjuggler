@@ -223,9 +223,6 @@ ifeq (${ABI}, AOUT)
     LIBBITSUF	=
 endif
 ifeq (${ABI}, ELF)
-    CFLAGS	+= -elf
-    CXXFLAGS	+= -elf
-    LDOPTS	+= -elf
     LIBBITSUF	=
 endif
 
