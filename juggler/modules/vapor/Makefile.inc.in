@@ -169,7 +169,8 @@ links:
 	@echo "------------------------------------------------"
 	@echo "Setting up developer installation"
 	@echo "------------------------------------------------"
-	$(MAKE) SYMLINK=-l prefix="$(instlinks)" install-debug
+	@$(MAKE) SYMLINK=-l prefix="$(instlinks)"			\
+          DEFAULT_DIR="$(DBG_DIR)" installworld
 	@echo ""
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$VPR_BASE_DIR to:'
