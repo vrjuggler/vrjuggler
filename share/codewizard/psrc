@@ -51,7 +51,7 @@ CodeWizard.Suppress item * type I class * file *
 CodeWizard.Suppress item * type PV class * file *
 CodeWizard.Suppress item * type V class * file *
 
-CodeWizard.Suppress item user-7006 type * class * file *
+#CodeWizard.Suppress item user-7006 type * class * file *
 
 ## Others that should always make it through
 # Init all vars
