@@ -53,8 +53,9 @@ use File::Path;
 use Getopt::Std;
 
 # Do this to include the path to the script in @INC.
-BEGIN {
-    $path = (fileparse("$0"))[1];
+BEGIN
+{
+   $path = (fileparse("$0"))[1];
 }
 
 use lib("$path");
@@ -67,9 +68,10 @@ $Win32 = 1 if $ENV{'OS'} =~ /Windows/;
 
 # Ensure that there are four command-line arguments.  If not, exit with
 # error status.
-if ( $#ARGV < 3 || $#ARGV > 9 ) {
-    warn "Usage: $0 -i <source directory> -o <destination directory>\n";
-    exit 1;
+if ( $#ARGV < 3 || $#ARGV > 9 )
+{
+   warn "Usage: $0 -i <source directory> -o <destination directory>\n";
+   exit 1;
 }
 
 # Get the -i and -o options and store their values in $opt_i and $opt_o
@@ -81,32 +83,38 @@ my $dest_dir = "$opt_o";
 # Defaults for ownership and permissions (except on Win32).
 my($uid, $gid, $mode) = ($<, (getpwuid($<))[3], "0644") unless $Win32;
 
-if ( $opt_u ) {
-    $uname = "$opt_u" if $opt_u;
-    my(@user_info) = getpwnam("$uname") or die "getpwnam($uname): $!\n";
-    $uid = $user_info[2];
+if ( $opt_u )
+{
+   $uname = "$opt_u" if $opt_u;
+   my(@user_info) = getpwnam("$uname") or die "getpwnam($uname): $!\n";
+   $uid = $user_info[2];
 }
 
-if ( $opt_g && ! $Win32 ) {
-    $gname = "$opt_g" if $opt_g;
-    my(@group_info) = getgrnam("$gname") or die "getgrnam($gname): $!\n";
-    $gid = $group_info[2];
+if ( $opt_g && ! $Win32 )
+{
+   $gname = "$opt_g" if $opt_g;
+   my(@group_info) = getgrnam("$gname") or die "getgrnam($gname): $!\n";
+   $gid = $group_info[2];
 }
 
 $mode = "$opt_m" if $opt_m;
 
 # If the mode does not have at least one bit set for execution, define
 # $script_mode to set the execute bit for all owners.
-if ( $mode !~ /[157]/ ) {
-    if ( $mode =~ /^(\d)(\d)(\d)(\d)$/ ) {
-        $script_mode = sprintf("%d%d%d%d", $1, $2 + 1, $3 + 1, $4 + 1);
-    }
-    elsif ( $mode =~ /^(\d)(\d)(\d)$/ ) {
-        $script_mode = sprintf("0%d%d%d", $1 + 1, $2 + 1, $3 + 1);
-    }
+if ( $mode !~ /[157]/ )
+{
+   if ( $mode =~ /^(\d)(\d)(\d)(\d)$/ )
+   {
+      $script_mode = sprintf("%d%d%d%d", $1, $2 + 1, $3 + 1, $4 + 1);
+   }
+   elsif ( $mode =~ /^(\d)(\d)(\d)$/ )
+   {
+      $script_mode = sprintf("0%d%d%d", $1 + 1, $2 + 1, $3 + 1);
+   }
 }
-else {
-    $script_mode = "$mode";
+else
+{
+   $script_mode = "$mode";
 }
 
 umask(002);
@@ -134,39 +142,46 @@ exit 0;
 # Arguments:
 #     $curfile - The name of the current file in the recursion process.
 # -----------------------------------------------------------------------------
-sub recurseAction {
-    my $curfile = shift;
+sub recurseAction
+{
+   my $curfile = shift;
 
-    # List of installable file extensions.  These are checked with a
-    # case-insensitive regular expression.
-    my (@exts) = qw(.txt .c .h .cxx .cpp .pl .desc .dsc .mk .htm .html .gif
-                    .jpg .dsw .dsp .java .jar .config .cfg .MF .jpx .xml .idl);
+   # List of installable file extensions.  These are checked with a
+   # case-insensitive regular expression.
+   my (@exts) = qw(.txt .c .h .cxx .cpp .pl .desc .dsc .mk .htm .html .gif
+                   .jpg .dsw .dsp .java .jar .config .cfg .MF .jpx .xml .idl);
 
-    my $installed = 0;
+   my $installed = 0;
 
-    my $ext = '';
-    foreach $ext ( @exts ) {
-        if ( $curfile =~ /$ext$/i ) {
+   my $ext = '';
+   foreach $ext ( @exts )
+   {
+      if ( $curfile =~ /$ext$/i )
+      {
+         installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
+         $installed = 1;
+         last;
+      }
+   }
+
+   unless ( $installed )
+   {
+      # This is equivalent to a C switch block.
+      SWITCH:
+      {
+         # Match README.
+         if ( "$curfile" eq "README" )
+         {
             installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
-            $installed = 1;
-            last;
-        }
-    }
+            last SWITCH;
+         }
 
-    unless ( $installed ) {
-        # This is equivalent to a C switch block.
-        SWITCH: {
-            # Match README.
-            if ( "$curfile" eq "README" ) {
-                installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
-                last SWITCH;
-            }
-
-            # Match Makefile.
-            if ( "$curfile" eq "Makefile" ) {
-                installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
-                last SWITCH;
-            }
-        }
-    }
+         # Match Makefile.
+         if ( "$curfile" eq "Makefile" )
+         {
+            installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
+            last SWITCH;
+         }
+      }
+   }
 }
