@@ -35,51 +35,53 @@
 #ifndef _VJ_PROPERTY_DESC_H_
 #define _VJ_PROPERTY_DESC_H_
 
-#include <vjConfig.h>
-#include <Config/vjEnumEntry.h>
+#include <jccl/jcclConfig.h>
+#include <jccl/Config/vjEnumEntry.h>
 
+namespace jccl {
+   
 
 //------------------------------------------------------------
-//: A Description used to instantiate a vjProperty
+//: A Description used to instantiate a vrj::Property
 //
-//       Information stored in a vjPropertyDesc includes vjProperty
+//       Information stored in a vrj::PropertyDesc includes vrj::Property
 //       Name, Type, number of allowed values, and a Help string
 //       describing the purpose of the particular property.
-//       vjPropertyDescs also include information for parsing a
-//       vjProperty, and (optional) enumeration data for T_INT
+//       vrj::PropertyDescs also include information for parsing a
+//       vrj::Property, and (optional) enumeration data for T_INT
 //       type Properties.
 //       Note: Frequently the docs for this class will refer to 'this
-//       vjProperty', which refers to any object of class vjProperty
+//       vrj::Property', which refers to any object of class vrj::Property
 //       instantiated
 //       using this description.
 //
 // @author:  Christopher Just
 //------------------------------------------------------------
 
-class vjPropertyDesc {
+class PropertyDesc {
 
 public:
 
     //: Constructor
     //!POST: name, token, help = NULL, type = T_INVALID, num = 0,
     //+      valuelabels & enumerations are empty.
-    vjPropertyDesc ();
+    PropertyDesc ();
 
 
 
     //:Copy Constructor
-    vjPropertyDesc (const vjPropertyDesc& d);
+    PropertyDesc (const PropertyDesc& d);
 
 
 
     //: Convenience constructor
     //!POST: name = token = n, help = h, num = i, type = t,
     //+      valuelabels & enumerations are empty.
-    vjPropertyDesc (const std::string& n, int i, VarType t, const std::string& h);
+    PropertyDesc (const std::string& n, int i, VarType t, const std::string& h);
 
 
-    //: Destroys a vjPropertyDesc, and frees all allocated memory.
-    ~vjPropertyDesc ();
+    //: Destroys a PropertyDesc, and frees all allocated memory.
+    ~PropertyDesc ();
 
 
 
@@ -161,72 +163,72 @@ public:
     //! ARGS: index - index of EnumEntry to retrieve (0-base)
     //! RETURNS: NULL - if index is < 0 or out of range
     //! RETURNS: enumentry* - otherwise
-    vjEnumEntry* getEnumEntryAtIndex (unsigned int index) const;
+    EnumEntry* getEnumEntryAtIndex (unsigned int index) const;
 
 
     //: Returns an enumentry with val matching val...
-    vjEnumEntry* getEnumEntryWithValue (const vjVarValue& val) const;
+    EnumEntry* getEnumEntryWithValue (const VarValue& val) const;
 
 
     //: Returns the enumentry named _name
     //! RETURNS: NULL - if no match if found
-    //! RETURNS: vjEnumEntry* - otherwise
-    vjEnumEntry* getEnumEntry (const std::string& _name) const;
+    //! RETURNS: EnumEntry* - otherwise
+    EnumEntry* getEnumEntry (const std::string& _name) const;
 
 
-    //: Writes a vjPropertyDesc to the given ostream
+    //: Writes a PropertyDesc to the given ostream
     //!NOTE: output format is:
     //+      name typename num token { enum1 enum2=42 } "help string"
-    friend std::ostream& operator << (std::ostream& out, const vjPropertyDesc& self);
+    friend std::ostream& operator << (std::ostream& out, const PropertyDesc& self);
 
 
 
-    //: Reads a vjPropertyDesc from the named istream
+    //: Reads a PropertyDesc from the named istream
     //!NOTE: format is the same as that written out by <<
-    friend std::istream& operator >> (std::istream& in, vjPropertyDesc& self);
+    friend std::istream& operator >> (std::istream& in, PropertyDesc& self);
 
 
-    vjPropertyDesc& operator= (const vjPropertyDesc& pd);
+    PropertyDesc& operator= (const PropertyDesc& pd);
 
     //: Equality Operator
     // BUG (IPTHACK) - doesn't check equality of enumerations and valuelabels
-    bool operator== (const vjPropertyDesc& pd) const;
+    bool operator== (const PropertyDesc& pd) const;
 
     //: Inequality Operator
-    inline bool operator!= (const vjPropertyDesc& pd) const {
+    inline bool operator!= (const PropertyDesc& pd) const {
         return !(*this == pd);
     }
 
 private:
 
-    //: Descriptive name of the vjProperty this object describes. Used in GUI.
+    //: Descriptive name of the Property this object describes. Used in GUI.
     std::string name;
 
-    //: Short name for this vjPropertyDesc.  Used in app/library code.
+    //: Short name for this PropertyDesc.  Used in app/library code.
     std::string token;
 
-    //: One line of help information for this vjPropertyDesc.
+    //: One line of help information for this PropertyDesc.
     std::string help;
 
-    //: Type of values allowed in this vjProperty.
+    //: Type of values allowed in this Property.
     VarType type;
 
-    //: Number of value entries allowed for this vjProperty. (-1 for variable)
+    //: Number of value entries allowed for this Property. (-1 for variable)
     //  Typically this is an integer > 0.  For example, a tracker
     //  position offset might be described with 3 Float values (xyz).
-    //  A value of -1 indicates that this vjProperty may have a variable
+    //  A value of -1 indicates that this Property may have a variable
     //  number of values (e.g. for a list of active Walls).
     int  num;
 
     //: Labels for individual values of this Property (ie. "width", "height")
-    std::vector<vjEnumEntry*> valuelabels;
+    std::vector<EnumEntry*> valuelabels;
 
     //: A list of labeled values that are allowed.
     //  string/int pairs for T_INTs,
     //  valid string values for T_STRINGS, and names of acceptable chunk
     //  types for T_CHUNK.  Note that in the T_CHUNK case, an empty enumv
     //  means _all_ chunk types are accepted
-    std::vector<vjEnumEntry*> enumv;
+    std::vector<EnumEntry*> enumv;
 
     int enum_val;
 
@@ -234,5 +236,5 @@ private:
 
 };
 
-
+};
 #endif

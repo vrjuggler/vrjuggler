@@ -31,14 +31,15 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-#include <Config/vjChunkFactory.h>
+#include <jccl/Config/vjChunkFactory.h>
 
-
+namespace jccl {
+   
 //: Creates a Chunk using the given description
-vjConfigChunk* vjChunkFactory::createChunk (vjChunkDesc* d, bool use_defaults) {
+ConfigChunk* ChunkFactory::createChunk (ChunkDesc* d, bool use_defaults) {
     if (d) {
         d->assertValid();
-        return new vjConfigChunk (d, use_defaults);
+        return new ConfigChunk (d, use_defaults);
     }
     else
         return 0;
@@ -48,12 +49,12 @@ vjConfigChunk* vjChunkFactory::createChunk (vjChunkDesc* d, bool use_defaults) {
 
 //: Setup the intial environment needed for creating chunks.
 //  This just loads $VJ_BASE_DIR/VJ_SHARE_DIR/Data/chunksDesc
-void vjChunkFactory::setupInitialEnvironment() {
+void ChunkFactory::setupInitialEnvironment() {
     // ------ OPEN chunksDesc file ----- //
     char* vj_base_dir = getenv("VJ_BASE_DIR");
     if(vj_base_dir == NULL) {
-        vjDEBUG(vjDBG_ALL,vjDBG_VERB_LVL) << "vjChunkFactory::setupInitialEnvironment:\n" << vjDEBUG_FLUSH;
-        vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) <<  "Env var VJ_BASE_DIR not defined." << std::endl << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ALL,vprDBG_VERB_LVL) << "ChunkFactory::setupInitialEnvironment:\n" << vprDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) <<  "Env var VJ_BASE_DIR not defined." << std::endl << vprDEBUG_FLUSH;
         exit(1);
     }
     
@@ -61,15 +62,15 @@ void vjChunkFactory::setupInitialEnvironment() {
     chunk_desc_file += "/";
     chunk_desc_file += VJ_SHARE_DIR;
     chunk_desc_file += "/Data/chunksDesc";
-    vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << "Loading chunk desc file: ["
-                                        << chunk_desc_file << "]\n" << vjDEBUG_FLUSH;
+    vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Loading chunk desc file: ["
+                                        << chunk_desc_file << "]\n" << vprDEBUG_FLUSH;
     
     this->loadDescs(chunk_desc_file);
 
-//       vjChunkDescDB* cfg_desc = new vjChunkDescDB;
+//       ChunkDescDB* cfg_desc = new ChunkDescDB;
 //       if (!cfg_desc->load(chunk_desc_file))
 //       {
-//          vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " vjChunkFactory::setupInitialEnvironment: Config Desc failed to load file: " << endl << vjDEBUG_FLUSH;
+//          vprDEBUG(vprDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " ChunkFactory::setupInitialEnvironment: Config Desc failed to load file: " << endl << vprDEBUG_FLUSH;
 //          exit(1);
 //       }
 //       this->addDescs(cfg_desc);
@@ -79,7 +80,9 @@ void vjChunkFactory::setupInitialEnvironment() {
 
 
 /*
-vjChunkFactory* vjChunkFactory::_instance = NULL;
-vpr::Mutex  vjChunkFactory::_inst_lock;
+ChunkFactory* ChunkFactory::_instance = NULL;
+vpr::Mutex  ChunkFactory::_inst_lock;
 */
-vjSingletonImp(vjChunkFactory);
+vprSingletonImp(ChunkFactory);
+
+};

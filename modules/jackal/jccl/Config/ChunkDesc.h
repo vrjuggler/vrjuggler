@@ -34,30 +34,32 @@
 #ifndef _VJ_CHUNKDESC_H_
 #define _VJ_CHUNKDESC_H_
 
-#include <vjConfig.h>
-#include <Config/vjPropertyDesc.h>
+#include <jccl/jcclConfig.h>
+#include <jccl/Config/vjPropertyDesc.h>
 //#include <dom/DOM.hpp>
 
-
-class vjConfigChunk;
 class DOM_Node;
 
+namespace jccl {
+   
+class ConfigChunk;
+
 //-----------------------------------------------------------------
-//:Defines name and properties for a kind of vjConfigChunk
+//:Defines name and properties for a kind of ConfigChunk
 //
-//       Primarily, it is a name and a list of vjPropertyDescs.
-//       vjChunkDescs will probably only need to be used by the
-//       vjChunkDescDB, vjChunkFactory, and the GUI.
+//       Primarily, it is a name and a list of PropertyDescs.
+//       ChunkDescs will probably only need to be used by the
+//       ChunkDescDB, ChunkFactory, and the GUI.
 //
 // @author  Christopher Just
 //
 //!PUBLIC_API:
 //------------------------------------------------------------------------
-class VJ_CLASS_API vjChunkDesc {
+class VJ_CLASS_API ChunkDesc {
 
 public:
 
-    //:Identifer for this vjChunkDesc - no spaces allowed
+    //:Identifer for this ChunkDesc - no spaces allowed
     std::string token;
 
     //:A longer, friendlier name (for use in GUI displays, etc.)
@@ -66,30 +68,30 @@ public:
     //:A help string of help text
     std::string help;
 
-    //:Container for this vjChunkDesc's vjPropertyDescs
-    std::vector<vjPropertyDesc*> plist;
+    //:Container for this ChunkDesc's PropertyDescs
+    std::vector<PropertyDesc*> plist;
 
     unsigned int validation;
 
-    vjConfigChunk* default_chunk;
+    ConfigChunk* default_chunk;
     // be very careful with this
     DOM_Node *default_node;
 
     //:Constructor
     //!POST: Self is created with name and token "Unnamed",
-    //+      and with only a single vjPropertyDesc ("Name")
-    vjChunkDesc ();
+    //+      and with only a single PropertyDesc ("Name")
+    ChunkDesc ();
 
 
 
     //:Copy Constructor
-    vjChunkDesc (const vjChunkDesc& desc);
+    ChunkDesc (const ChunkDesc& desc);
 
 
 
     //:Desctructor
     //!POST: Destroys self and frees all allocated memory.
-    ~vjChunkDesc ();
+    ~ChunkDesc ();
 
 
 
@@ -103,8 +105,8 @@ public:
 
 
 
-    typedef std::vector<vjPropertyDesc*>::iterator iterator;
-    typedef std::vector<vjPropertyDesc*>::const_iterator const_iterator;
+    typedef std::vector<PropertyDesc*>::iterator iterator;
+    typedef std::vector<PropertyDesc*>::const_iterator const_iterator;
 
     inline iterator begin() {
         return plist.begin();
@@ -126,18 +128,18 @@ public:
     //:equality operator
     // a little stricter than it needs to be.. it shouldn't care about the order of
     // propertydescs...
-    bool operator== (const vjChunkDesc& d) const;
+    bool operator== (const ChunkDesc& d) const;
 
-    inline bool operator!= (const vjChunkDesc& d) const {
+    inline bool operator!= (const ChunkDesc& d) const {
         return !(*this == d);
     }
 
 
     //:Assignment operator
     //!POST: self copies the value of other
-    //!ARGS: other - a vjChunkDesc
+    //!ARGS: other - a ChunkDesc
     //!RETURNS: self
-    vjChunkDesc& operator= (const vjChunkDesc& other);
+    ChunkDesc& operator= (const ChunkDesc& other);
 
 
 
@@ -166,44 +168,44 @@ public:
     const std::string& getHelp() const;
 
     void setDefaultChunk (DOM_Node* n);
-    void setDefaultChunk (vjConfigChunk* ch) {
+    void setDefaultChunk (ConfigChunk* ch) {
         default_chunk = ch;
     }
-    vjConfigChunk* getDefaultChunk() const;
+    ConfigChunk* getDefaultChunk() const;
 
-    //:Adds a vjPropertyDesc to self.
-    //!NOTE: Any vjPropertyDesc previously in self with the
+    //:Adds a PropertyDesc to self.
+    //!NOTE: Any PropertyDesc previously in self with the
     //+      same token as pd is removed.
-    void add (vjPropertyDesc *pd);
+    void add (PropertyDesc *pd);
 
 
 
-    //:Removes named vjPropertyDesc from self.
+    //:Removes named PropertyDesc from self.
     //!ARGS: _token - token to search for
-    //!RETURNS: true - a vjPropertyDesc with that token was found
+    //!RETURNS: true - a PropertyDesc with that token was found
     //+         and removed.
-    //!RETURNS: false - no such vjPropertyDesc was found.
+    //!RETURNS: false - no such PropertyDesc was found.
     bool remove (const std::string& _token);
 
 
-    //:Gets a vjPropertyDesc from self with matching token
-    //!ARGS: _token - non-NULL token for the desired vjPropertyDesc
+    //:Gets a PropertyDesc from self with matching token
+    //!ARGS: _token - non-NULL token for the desired PropertyDesc
     //!RETURNS: pdesc - Pointer to propertydesc in self with
     //+         matching token
     //!RETURNS: NULL - if no match is found
-    vjPropertyDesc *getPropertyDesc (const std::string& _token) const;
+    PropertyDesc *getPropertyDesc (const std::string& _token) const;
 
 
  
     //: Writes self to the given output stream
     friend VJ_API(std::ostream&) operator << (std::ostream& out,
-                                              const vjChunkDesc& self);
+                                              const ChunkDesc& self);
 
 
     //: Reads self's value from the given input stream
     friend VJ_API(std::istream&) operator >> (std::istream& in,
-                                              vjChunkDesc& self);
+                                              ChunkDesc& self);
 
 };
-
+};
 #endif

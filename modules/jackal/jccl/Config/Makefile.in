@@ -41,13 +41,12 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/Config
+includedir	= @includedir@/jccl/Config
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
-SUBOBJDIR	= $(VJ_LIBRARY)
-VJROOT		= $(top_srcdir)
-VJ_SRCDIR	= @VJ_SRCDIR@/Config
+SUBOBJDIR	= $(JACKAL_LIBRARY)
+#DIRPRFX         = jccl/Config/
 
 SRCS		= vjChunkDesc.cpp		\
                   vjChunkDescDB.cpp		\
@@ -60,7 +59,7 @@ SRCS		= vjChunkDesc.cpp		\
                   vjPropertyDesc.cpp		\
                   vjStandardConfigIOHandler.cpp	\
                   vjVarValue.cpp		\
-               	  vjXMLConfigIOHandler.cpp
+                  vjXMLConfigIOHandler.cpp
 
 include $(MKPATH)/dpp.obj.mk
 

@@ -31,7 +31,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-#include <Utils/vjXercesStreamInputStream.h>
+#include <jccl/Util/vjXercesStreamInputStream.h>
+
+namespace jccl {
 
 vjXercesStreamInputStream::vjXercesStreamInputStream (std::istream& _in, const char* _terminator): terminator (_terminator) {
     //terminator = strdup (_terminator);
@@ -85,3 +87,5 @@ vjXercesStreamInputStream::vjXercesStreamInputStream (std::istream& _in, const c
     
     return i;
 }
+
+};

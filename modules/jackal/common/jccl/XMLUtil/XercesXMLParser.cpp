@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "vjXercesXMLParser.h"
+#include <jccl/XMLUtil/vjXercesXMLParser.h
 
 #include <util/PlatformUtils.hpp>
 #include <util/XMLString.hpp>
@@ -46,9 +46,11 @@
 //#include <string.h>
 #include <stdlib.h>
 
-#include <Utils/vjXercesStreamInputSource.h>
-#include <Utils/vjXercesXMLError.h>
-#include <Utils/vjDebug.h>
+#include <jccl/XMLUtil/vjXercesStreamInputSource.h>
+#include <jccl/XMLUtil/vjXercesXMLError.h>
+#include <vpr/Util/Debug.h>
+
+namespace jccl {
 
 vjXercesXMLParser::vjXercesXMLParser () {
     // Xerces will have been initialized by the parser pool.
@@ -191,3 +193,4 @@ bool vjXercesXMLParser::writeStream (std::ostream& output, DOM_Node& doc) {
     return false;
 }
 
+};

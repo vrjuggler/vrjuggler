@@ -30,8 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <Utils/vjXercesStreamInputSource.h>
-#include <Utils/vjXercesStreamInputStream.h>
+#include <jccl/XMLUtil/vjXercesStreamInputSource.h>
+#include <jccl/XMLUtil/vjXercesStreamInputStream.h>
+
+namespace jccl {
 
 vjXercesStreamInputSource::vjXercesStreamInputSource (std::istream& _in, char const * _terminator) {
     in = &_in;
@@ -47,3 +49,4 @@ vjXercesStreamInputSource::vjXercesStreamInputSource (std::istream& _in, char co
 }
 
 
+};

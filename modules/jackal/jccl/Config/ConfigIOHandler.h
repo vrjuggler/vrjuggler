@@ -33,51 +33,54 @@
 #ifndef _VJCONFIGIOHANDLER_H_
 #define _VJCONFIGIOHANDLER_H_
 
-#include <vjConfig.h>
+#include <jccl/jcclConfig.h>
 
 #include <string.h>
 #include <stdlib.h>
 
-class vjConfigChunkDB;
-class vjConfigChunk;
-class vjChunkDescDB;
-class vjChunkDesc;
+namespace jccl
+{
+   
+class ConfigChunkDB;
+class ConfigChunk;
+class ChunkDescDB;
+class ChunkDesc;
 
-//: Parent interface for vjXMLConfigIOHandler and vjStandardConfigIOHandler
-class vjConfigIOHandler {
+//: Parent interface for XMLConfigIOHandler and StandardConfigIOHandler
+class ConfigIOHandler {
 
 public:
 
-//     vjConfigIOHandler () { 
+//     ConfigIOHandler () { 
 //         ;
 //     }
 
-//     virtual ~vjConfigIOHandler () {
+//     virtual ~ConfigIOHandler () {
 //         ;
 //     }
 
     // ConfigChunkDB Methods
 
-    virtual bool readConfigChunkDB (const std::string& filename, vjConfigChunkDB& db) = 0;
+    virtual bool readConfigChunkDB (const std::string& filename, ConfigChunkDB& db) = 0;
 
-    virtual bool readConfigChunkDB (std::istream& input, vjConfigChunkDB& db) = 0;
+    virtual bool readConfigChunkDB (std::istream& input, ConfigChunkDB& db) = 0;
 
-    virtual bool writeConfigChunkDB (std::ostream& output, const vjConfigChunkDB& db) = 0;
+    virtual bool writeConfigChunkDB (std::ostream& output, const ConfigChunkDB& db) = 0;
 
-      virtual bool writeConfigChunk (std::ostream& output, const vjConfigChunk& ch, const std::string& pad = "") = 0;
+      virtual bool writeConfigChunk (std::ostream& output, const ConfigChunk& ch, const std::string& pad = "") = 0;
 
     // ChunkDescDB Methods
 
-    virtual bool readChunkDescDB (const std::string& filename, vjChunkDescDB& db) = 0;
+    virtual bool readChunkDescDB (const std::string& filename, ChunkDescDB& db) = 0;
 
-    virtual bool readChunkDescDB (std::istream& input, vjChunkDescDB& db) = 0;
+    virtual bool readChunkDescDB (std::istream& input, ChunkDescDB& db) = 0;
 
-    virtual bool writeChunkDescDB (std::ostream& output, const vjChunkDescDB& db) = 0;
+    virtual bool writeChunkDescDB (std::ostream& output, const ChunkDescDB& db) = 0;
 
-    virtual bool writeChunkDesc (std::ostream& output, const vjChunkDesc& ch, const std::string& pad = "") = 0;
+    virtual bool writeChunkDesc (std::ostream& output, const ChunkDesc& ch, const std::string& pad = "") = 0;
 
 
 };
 
-
+};
 #endif
