@@ -266,6 +266,11 @@ case $target_os in
             AC_DEFINE(__OSVERSION__, 5)
             EXTRA_DEFS="$EXTRA_DEFS -D__OSVERSION__=5"
          ;;
+         # FreeBSD 6.x.
+         freebsd6*)
+            AC_DEFINE(__OSVERSION__, 6)
+            EXTRA_DEFS="$EXTRA_DEFS -D__OSVERSION__=6"
+         ;;
       esac
 
       ;;
