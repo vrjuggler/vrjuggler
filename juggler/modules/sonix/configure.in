@@ -405,7 +405,6 @@ AC_CONFIG_FILES([
    samples/Makefile
    samples/opengl/Makefile
    test/Makefile
-   test/apps/Makefile
    test/TestSuite/Makefile
    mtree/SNX.include.dist
    mtree/SNX.install.dist
