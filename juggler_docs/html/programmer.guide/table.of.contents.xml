@@ -1,0 +1,83 @@
+Builder: JExplorerBuilder V 1. 0. 7   
+< treecontrol linkurl="" imageurl="../../images/Icons/W98_Images/" >
+	< font face="Helvetica" style="Plain" size="${TREE_FONTSIZE}">
+		< idefault title="Item" image="Book_Closed.gif" imagetwo="" info="VR Juggler" target="Body" link="" rlink="">
+
+			< rootfolder title="Programmer Guide" 
+				expand 
+				link="index.html"
+				info="In depth documentation for VR application developers.  Includes introductions, easy explanations, case studies, and lots of hand holding."
+				image="Book_Closed.gif" 
+				imagetwo="Book_Open.gif">
+
+			< item title="Introduction" 
+				link="${MISC}/juggler.mission.html" 
+				info="What is juggler?  What does it solve?  Why do I need it? How does it compare to others?" 
+				image="Leaf.gif" >
+			
+			< folder title="Getting Started" 
+				link="getting.started/index.html" 
+				info="Where do I begin?" 
+				image="Leaf_Script2.gif" >
+				
+				< item title="Introduction" 
+					link="getting.started/introduction.html" 
+					info="Introduction: know this before diving into the juggler library.." 
+					image="Leaf.gif" >
+					
+				< item title="Environment Variables" 
+					link="getting.started/environment.variables.html" 
+					info="Environment Variables: You need these to run some things." 
+					image="Leaf.gif" >
+			</folder>
+			
+			< folder title="Case Studies: Learn by example" 
+				link="examples/index.html" 
+				info="Learn by example"
+				image="Leaf_Script2.gif" >
+				< folder title="Cubes Example - Using OpenGL display lists in VR Juggler" 
+					link="examples/cubes/index.html" 
+					info="Cubes Example - Using OpenGL display lists in VR Juggler" 
+					image="Leaf_Script2.gif" >
+					< item title="Context Specific Data" 
+						link="examples/cubes/context.data.html" 
+						info="Keeping track of display lists with: Context Specific Data" 
+						image="Leaf.gif" >
+						
+					< item title="Input" 
+						link="examples/cubes/cubesInput.html" 
+						info="How input is done in the cubes example" 
+						image="Leaf.gif" >
+						
+				</folder>
+				< folder title="Wand Example - Getting Input" 
+					link="examples/wand/index.html" 
+					info="Wand Example - Getting Input" 
+					image="Leaf_Script2.gif" >
+							
+					< item title="Application" 
+						link="examples/wand/app.class.html" 
+						info="How to create a Juggler application.  (or \"What goes into an application class?\")" 
+						image="Leaf.gif" >
+					
+					< item title="Wand Input" 
+						link="examples/wand/wand.html" 
+						info="Get data from a \"wand\" input device!" 
+						image="Leaf.gif" >
+					 
+					 < item title="Main" 
+						link="examples/wand/main.html" 
+						info="Where's main? (or where's the entrypoint to the executable??)" 
+						image="Leaf.gif" >
+				</folder>
+				< folder title="pfNav Example - Juggler + IRIS Performer + Navigation" 
+					link="examples/pfNav/index.html" 
+					info="pfNav Example - Juggler + IRIS Performer + Navigation" 
+					image="Leaf_Script2.gif" >
+					<!-- TODO: under construction, add more content! -->
+				</folder>
+			</folder>
+		</idefault>
+	</font>
+</treecontrol>
+
