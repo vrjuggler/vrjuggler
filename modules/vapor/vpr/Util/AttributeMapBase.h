@@ -44,9 +44,9 @@
 
 #include <vpr/vprConfig.h>
 #include <map>
-
-
+#include <string>
 #include <boost/any.hpp>
+
 
 namespace vpr
 {
