@@ -46,6 +46,7 @@
 
 subsystem_cxxflags="@subsystem_cxxflags@"
 subsystem_libs="@subsystem_libs@"
+vpr_extra_cxxflags="@vpr_extra_cxxflags@"
 vpr_libs="@vpr_libs@"
 
 prefix=@prefix@
@@ -153,9 +154,9 @@ fi
 
 if test "$echo_cxxflags" = "yes"; then
     if test "$use_base_dir" = "yes"; then
-        echo @CXXFLAGS@ -I$VPR_BASE_DIR/include $subsystem_cxxflags
+        echo @CXXFLAGS@ -I$VPR_BASE_DIR/include $vpr_extra_cxxflags $subsystem_cxxflags
     else
-        echo @CXXFLAGS@ -I@includedir@ $subsystem_cxxflags
+        echo @CXXFLAGS@ -I@includedir@ $vpr_extra_cxxflags $subsystem_cxxflags
     fi
 fi
 
