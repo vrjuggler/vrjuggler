@@ -48,6 +48,10 @@ public class ConfigElementPointerEditor
     */
    public String getAsText()
    {
+      if (mValue.getTarget().equals(""))
+      {
+         return "None";
+      }
       return mValue.getTarget();
    }
 
@@ -71,6 +75,10 @@ public class ConfigElementPointerEditor
       else
       {
          System.out.println("SetTarget: " + text);
+         if (text.equals("None"))
+         {
+            text = "";
+         }
          mValue.setTarget(text);
       }
    }
@@ -91,6 +99,9 @@ public class ConfigElementPointerEditor
       // For each definition token this definition can point to, look for
       // matching config elements we can use.
       mTags.clear();
+
+      mTags.add("None");
+
       for (Iterator at_itr = propDef.getAllowedAndDerivedTypes().iterator(); at_itr.hasNext(); )
       {
          String type = (String)at_itr.next();
