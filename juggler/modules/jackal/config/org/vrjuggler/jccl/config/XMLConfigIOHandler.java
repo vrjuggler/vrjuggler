@@ -458,7 +458,8 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
     //------------------------ ChunkDescDB Methods --------------------------
     
     public void readChunkDescDB (File file, ChunkDescDB db) throws IOException, ConfigParserException {
-        boolean retval = false;
+
+        ConfigIOStatus iostatus = new ConfigIOStatus();
         Document doc;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         
@@ -466,20 +467,27 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
             doc = builder.parse (file);
-            if (!buildChunkDescDB (db, doc))
-                throw new ConfigParserException ("buildChunkDescDB failed.");
+            buildChunkDescDB (db, doc, iostatus);
         }
         catch (javax.xml.parsers.ParserConfigurationException e1) {
-            throw new ConfigParserException (e1.getMessage());
+            iostatus.addFailure (e1);
         }
         catch (org.xml.sax.SAXException e2) {
-            throw new ConfigParserException (e2.getMessage());
+            iostatus.addFailure (e2);
         }
+
+        // temporary
+        System.out.println (iostatus.toString());
+
+        if (iostatus.getStatus() == iostatus.FAILURE)
+            throw new ConfigParserException (iostatus.toString());
     }
 
 
     public void readChunkDescDB (InputStream in, ChunkDescDB db) throws IOException, ConfigParserException {
-        boolean retval = false;
+
+        ConfigIOStatus iostatus = new ConfigIOStatus();
+
         Document doc;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
@@ -487,29 +495,29 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
             doc = builder.parse (in);
-            if (!buildChunkDescDB (db, doc))
-                throw new ConfigParserException ("buildChunkDescDB failed.");
+            buildChunkDescDB (db, doc, iostatus);
         }
         catch (javax.xml.parsers.ParserConfigurationException e1) {
-            throw new ConfigParserException (e1.getMessage());
+            iostatus.addFailure (e1);
         }
         catch (org.xml.sax.SAXException e2) {
-            throw new ConfigParserException (e2.getMessage());
+            iostatus.addFailure (e2);
         }
+
+        // temporary
+        System.out.println (iostatus.toString());
+
+        if (iostatus.getStatus() == iostatus.FAILURE)
+            throw new ConfigParserException (iostatus.toString());
     }
     
 
     public boolean writeChunkDescDB (DataOutputStream out, ChunkDescDB db) {
         try {
-//             long time = System.currentTimeMillis();
-//             db.xmlRep();
-//             time = System.currentTimeMillis()-time;
-//             System.out.println ("ChunkDescDB.xmlRep took " + time + " ms.");
             out.writeBytes (db.xmlRep());
             return true;
         }
         catch (Exception e) {
-            //System.out.println (e);
             e.printStackTrace();
             return false;
         }    
@@ -527,7 +535,13 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
     }
 
     
- 
+    /** temporary hack to avoid breaking apis... */
+    public boolean buildChunkDescDB (ChunkDescDB db, Node doc) {
+        ConfigIOStatus iostatus = new ConfigIOStatus();
+        buildChunkDescDB (db, doc, iostatus);
+        return (iostatus.getStatus() == iostatus.SUCCESS || iostatus.getStatus() == iostatus.WARNINGS);
+    }
+
     /** Converts a DOM tree to a ChunkDescDB.
      *  This method reads the DOM tree rooted at doc, and puts all
      *  ChunkDescs it finds into db.  doc can be a DOCUMENT, 
@@ -537,42 +551,36 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
      *  @returns False if errors were encountered, otherwise true.  If
      *           false, some ChunkDescs may still have been read into db.
      */
-    public boolean buildChunkDescDB (ChunkDescDB db, Node doc) {
+    public void buildChunkDescDB (ChunkDescDB db, Node doc, 
+                                     ConfigIOStatus iostatus) {
         Node child;
         ChunkDesc desc;
-        boolean retval = true;
         String name = doc.getNodeName();
         
-        //System.out.println ("XML handler: buildChunkDescDB nodename '" + name + "'");
         switch (doc.getNodeType()) {
         case Node.DOCUMENT_NODE:
         case Node.DOCUMENT_FRAGMENT_NODE:
             child = doc.getFirstChild();
-            while (/*retval &&*/ (child != null)) {
-                retval = retval && buildChunkDescDB (db, child);
+            while (child != null) {
+                buildChunkDescDB (db, child, iostatus);
                 child = child.getNextSibling();
             }
             break;
         case Node.ELEMENT_NODE:
             if (name.equalsIgnoreCase ("ChunkDescDB")) {
                 child = doc.getFirstChild();
-                while (/*retval &&*/ (child != null)) {
+                while (child != null) {
                     if (child.getNodeType() == Node.ELEMENT_NODE) {
                         //System.out.println ("got a child of ChunkDescDB");
-                        desc = buildChunkDesc (child);
-                        if (desc != null) {
+                        desc = buildChunkDesc (child, iostatus);
+                        if (desc != null)
                             db.add (desc);
-                            //System.out.println ("read desc: " + desc);
-                        }
-                        else
-                            retval = false;
                     }
                     child = child.getNextSibling();
                 }
             }
             else {
-                System.out.println ("Error: buildChunkDB - unrecognized element '" + name + "'\n");
-                retval = false;
+                iostatus.addWarning ("Unrecognized element '" + name + "'.\n");
             }
             break;
         case Node.COMMENT_NODE:
@@ -581,17 +589,15 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         case Node.TEXT_NODE:
             break;
         default:
-            System.out.println ("Unexpected node type...");
+            iostatus.addWarning ("Unrecognized DOM Node type...\n");
         }
-        
-        return retval;
 
     }
 
 
 
     /** Builds a ChunkDesc out of the DOM tree rooted at doc. */
-    public ChunkDesc buildChunkDesc (Node doc) {
+    public ChunkDesc buildChunkDesc (Node doc, ConfigIOStatus iostatus) {
         Node child;
         NamedNodeMap attributes;
         int attrcount;
@@ -603,7 +609,7 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         case Node.DOCUMENT_NODE:
         case Node.DOCUMENT_FRAGMENT_NODE:
             child = doc.getFirstChild();
-            return buildChunkDesc (child);
+            return buildChunkDesc (child, iostatus);
         case Node.ELEMENT_NODE:
             if (name.equalsIgnoreCase ("ChunkDesc")) {
                 desc = new ChunkDesc ();
