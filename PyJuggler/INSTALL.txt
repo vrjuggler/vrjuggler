@@ -138,8 +138,17 @@ Using GNU Make
 
 If the use of Boost.Build is not an option at all, you can use the
 configure- and make-based build system.  It is known to work well on
-Linux, FreeBSD, and IRIX; it does not work correctly on Windows.  On
-all platforms, the usage of the configure script is the same.  The
+Linux, FreeBSD, and IRIX; it does not work correctly on Windows.
+
+The first step is to generate the script named 'configure' from
+configure.ac.  If the 'configure' script is already present in the
+source directory, this can be skipped.  If 'configure' is not present,
+first make sure that the environment variable $VJ_BASE_DIR is set
+correctly.  Then run the following:
+
+   % ./autogen.sh
+
+On all platforms, the usage of the configure script is the same.  The
 difference will be in the path to the natively compiled Boost.Python
 installation.  The Boost.Python installation directory must contain a
 subdirectory named 'include' with the Boost headers and a subdirectory
