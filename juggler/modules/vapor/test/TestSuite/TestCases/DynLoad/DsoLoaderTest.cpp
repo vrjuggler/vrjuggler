@@ -1,6 +1,7 @@
 #include <fstream>
 #include <string>
 
+#include <vpr/vpr.h>
 #include <vpr/DynLoad/DsoLoader.h>
 #include <vpr/System.h>
 #include <TestCases/DynLoad/modules/TestInterface.h>
@@ -13,8 +14,16 @@ namespace vprTest
 
 CPPUNIT_TEST_SUITE_REGISTRATION(DsoLoaderTest);
 
+#if defined(VPR_OS_Win32)
+static const std::string MODULE1("dsomod1.dll");
+static const std::string MODULE2("dsomod2.dll");
+#elif defined(VPR_OS_Darwin)
+static const std::string MODULE1("libdsomod1.dylib");
+static const std::string MODULE2("libdsomod2.dylib");
+#else
 static const std::string MODULE1("libdsomod1.so");
 static const std::string MODULE2("libdsomod2.so");
+#endif
 
 static const std::string INIT_FUNC_NAME("function");
 
