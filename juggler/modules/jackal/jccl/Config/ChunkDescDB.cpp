@@ -52,7 +52,7 @@ ChunkDescDB::ChunkDescDB (): descs() {
 
 
 ChunkDescDB::~ChunkDescDB() {
-    removeAll();
+    //descs.clear ();
 }
 
 
@@ -78,7 +78,6 @@ bool ChunkDescDB::insert (ChunkDescPtr d) {
                 vprASSERT (false);
                 return false;
             }
-            //delete d;  // should be safe to delete, not 100% sure (ipt hack)
             return true;
         }
     descs.push_back(d);
@@ -115,11 +114,6 @@ bool ChunkDescDB::remove (const std::string& tok) {
 
 
 void ChunkDescDB::removeAll () {
-//      std::vector<ChunkDesc*>::iterator i = descs.begin();
-//      while (i != descs.end()) {
-//          // delete (*i);    XXX:
-//          i++;
-//      }
     descs.clear();
 }
 
