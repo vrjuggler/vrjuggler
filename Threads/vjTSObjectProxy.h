@@ -15,6 +15,8 @@
 //+   This class creates each instance of the real objects
 //+   using this default constructor.
 //-----------------------------------------------------------------
+//! PUBLIC_API:
+
 template <class T>
 class vjTSObjectProxy
 {
@@ -50,11 +52,15 @@ private:
    T* getSpecific()
    {
       vjTSTable* table =
-         vjThreadManager::instance()->getCurrentTSTable();      // get table for current thread
-      vjTSBaseObject* object = table->getObject(mObjectKey);// get the specific object
+         vjThreadManager::instance()->getCurrentTSTable();        // get table for current thread
+      vjTSBaseObject* object = table->getObject(mObjectKey);      // get the specific object
       vjTSObject<T>* real_object = dynamic_cast< vjTSObject<T>* >(object); // try dynamic casting it
+
       vjASSERT(real_object != NULL);      // If fails, it means that "real" object was different type than the proxy
-      return real_object->getObject();                                   // return the ptr;
+      if(real_object == NULL)
+         return NULL;
+      else
+         return real_object->getObject();                                   // return the ptr;
    }
 
    // Don't allow copy construction
