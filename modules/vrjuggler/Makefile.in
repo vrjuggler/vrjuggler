@@ -197,42 +197,22 @@ ABI_LIST	= @ABI_LIST@
 # Build all four versions of the libraries.
 all:
 	@${MAKE} beforebuild
-	@${MAKE} _opt
-	@${MAKE} _dso
-	@${MAKE} _dbg
-	@${MAKE} _ddso
+	@${MAKE} _libs
 	@${MAKE} _check_gui
-	@echo "------------------------------------------------"
-	@echo "Creating symlinks in ${_LIBDIR}"
-	@echo "------------------------------------------------"
-	cd ${_LIBDIR} &&						\
-          rm -f ${VJ_LIB_STATIC} && ln -s ${_DEFAULT_DIR}/${VJ_LIB_STATIC} ./
-	cd ${_LIBDIR} &&						\
-          rm -f ${VJ_LIB_DYNAMIC} && ln -s ${_DEFAULT_DIR}/${VJ_LIB_DYNAMIC} ./
-ifeq (${GL_API}, Y)
-	cd ${_LIBDIR} &&						\
-          rm -f ${GL_LIB_STATIC} && ln -s ${_DEFAULT_DIR}/${GL_LIB_STATIC} ./
-	cd ${_LIBDIR} &&						\
-          rm -f ${GL_LIB_DYNAMIC} && ln -s ${_DEFAULT_DIR}/${GL_LIB_DYNAMIC} ./
-endif
-ifeq (${PF_API}, Y)
-	cd ${_LIBDIR} &&						\
-          rm -f ${PF_LIB_STATIC} && ln -s ${_DEFAULT_DIR}/${PF_LIB_STATIC} ./
-	cd ${_LIBDIR} &&						\
-          rm -f ${PF_LIB_DYNAMIC} && ln -s ${_DEFAULT_DIR}/${PF_LIB_DYNAMIC} ./
-endif
 	@${MAKE} afterbuild
 
 # Build all ABIs in ${ABI_LIST}.
 all-abi:
+	@${MAKE} beforebuild
 	@abi_list='${ABI_LIST}' ;					\
           for abi in $$abi_list ; do					\
               echo "------------------------------------------------" ;	\
               echo "Building libraries using $$abi" ;			\
               echo "------------------------------------------------" ;	\
-              echo "${MAKE} vjABI=$$abi all" ;				\
-              ${MAKE} vjABI=$$abi all ;					\
+              ${MAKE} vjABI=$$abi _libs ;				\
           done
+	@${MAKE} _check_gui
+	@${MAKE} afterbuild
 
 # Things to do before the object files and library are built.
 beforebuild:
@@ -245,17 +225,103 @@ afterbuild:
 	@echo "Library build complete"
 	@echo "------------------------------------------------"
 
+# Build the optimized and debugging object files, static libraries and
+# shared libraries.  Once this has been done, make the links in ${_LIBDIR}.
+_libs:
+	@${MAKE} _build_opt_obj
+	@${MAKE} _build_opt_lib_static
+	@${MAKE} _build_opt_lib_shared
+	@${MAKE} _build_dbg_obj
+	@${MAKE} _build_dbg_lib_static
+	@${MAKE} _build_dbg_lib_shared
+	@${MAKE} _LIB_LINK_DIR="${_LIBDIR}" _lib_links
+
+# Make symlinks in ${_LIB_LINK_DIR} pointing to the library binaries in
+# ${_DEFAULT_DIR}.
+_lib_links:
+	@echo "------------------------------------------------"
+	@echo "Creating symlinks in ${_LIB_LINK_DIR}"
+	@echo "------------------------------------------------"
+	cd ${_LIB_LINK_DIR} && ln -sf ${_DEFAULT_DIR}/${VJ_LIB_STATIC} ./
+	cd ${_LIB_LINK_DIR} && ln -sf ${_DEFAULT_DIR}/${VJ_LIB_DYNAMIC} ./
+ifeq (${GL_API}, Y)
+	cd ${_LIB_LINK_DIR} && ln -sf ${_DEFAULT_DIR}/${GL_LIB_STATIC} ./
+	cd ${_LIB_LINK_DIR} && ln -sf ${_DEFAULT_DIR}/${GL_LIB_DYNAMIC} ./
+endif
+ifeq (${PF_API}, Y)
+	cd ${_LIB_LINK_DIR} && ln -sf ${_DEFAULT_DIR}/${PF_LIB_STATIC} ./
+	cd ${_LIB_LINK_DIR} && ln -sf ${_DEFAULT_DIR}/${PF_LIB_DYNAMIC} ./
+endif
+
 # ---------------------------------------------
 # Make the debugging version of the libraries.
 # ---------------------------------------------
 dbg:
 	@${MAKE} beforebuild
-	@${MAKE} _dbg
+	@${MAKE} _build_dbg_obj
+	@${MAKE} _build_dbg_lib_static
 	@${MAKE} _check_gui
 	@${MAKE} afterbuild
 
-_dbg:
-	@${MAKE} _build_dbg
+# ------------------------------------------------------------
+# Make the debugging version of the libraries that uses DSOs.
+# ------------------------------------------------------------
+ddso:
+	@${MAKE} beforebuild
+	@${MAKE} _build_dbg_obj
+	@${MAKE} _build_dbg_lib_shared
+	@${MAKE} _check_gui
+	@${MAKE} afterbuild
+
+# ---------------------------------------------
+# Make the optimized version of the libraries.
+# ---------------------------------------------
+opt:
+	@${MAKE} beforebuild
+	@${MAKE} _build_opt_obj
+	@${MAKE} _build_opt_lib_static
+	@${MAKE} _check_gui
+	@${MAKE} afterbuild
+
+# ------------------------------------------------------------
+# Make the optimized version of the libraries that uses DSOs.
+# ------------------------------------------------------------
+dso:
+	@${MAKE} beforebuild
+	@${MAKE} _build_opt_obj
+	@${MAKE} _build_opt_lib_shared
+	@${MAKE} _check_gui
+	@${MAKE} afterbuild
+
+# Build the object files with the debugging flags enabled.
+_build_dbg_obj:
+	@echo "========================================================"
+	@echo "Making DBG version of libraries"
+	@echo "========================================================"
+	${scriptdir}/mkinstalldirs ${_DBG_BUILDDIR}
+	@echo "------------------------------------------------"
+	@echo "Building object files with debugging symbols"
+	@echo "------------------------------------------------"
+	@${MAKE} RECTARGET="dbg" OPTIMIZER="-g"				\
+          BASE_OBJDIR="${_DBG_BUILDDIR}" recursive
+
+# Build the object files with the optimization flags enabled.
+_build_opt_obj:
+	@echo "========================================================"
+	@echo "Making OPT version of libraries"
+	@echo "========================================================"
+	${scriptdir}/mkinstalldirs ${_OPT_BUILDDIR}
+	@echo "------------------------------------------------"
+	@echo "Building optimized object files"
+	@echo "------------------------------------------------"
+	@${MAKE} RECTARGET="opt" OPTIMIZER="${OPT_FLAGS}"		\
+          BASE_OBJDIR="${_OPT_BUILDDIR}" recursive
+
+# Build the static libraries with the debugging flags enabled.
+_build_dbg_lib_static:
+	@echo "========================================================"
+	@echo "Building static debugging libraries"
+	@echo "========================================================"
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}"	\
           ${VJ_LIB_STATIC}
 ifeq (${GL_API}, Y)
@@ -267,17 +333,11 @@ ifeq (${PF_API}, Y)
           LIBDIR="${_DBG_LIBDIR}" ${PF_LIB_STATIC}
 endif
 
-# ------------------------------------------------------------
-# Make the debugging version of the libraries that uses DSOs.
-# ------------------------------------------------------------
-ddso:
-	@${MAKE} beforebuild
-	@${MAKE} _ddso
-	@${MAKE} _check_gui
-	@${MAKE} afterbuild
-
-_ddso:
-	@${MAKE} _build_dbg
+# Build the shared libraries with the debugging flags enabled.
+_build_dbg_lib_shared:
+	@echo "========================================================"
+	@echo "Building shared debugging libraries"
+	@echo "========================================================"
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}"	\
           ${VJ_LIB_DYNAMIC}
 ifeq (${GL_API}, Y)
@@ -289,17 +349,11 @@ ifeq (${PF_API}, Y)
           LIBDIR="${_DBG_LIBDIR}" ${PF_LIB_DYNAMIC}
 endif
 
-# ---------------------------------------------
-# Make the optimized version of the libraries.
-# ---------------------------------------------
-opt:
-	@${MAKE} beforebuild
-	@${MAKE} _opt
-	@${MAKE} _check_gui
-	@${MAKE} afterbuild
-
-_opt:
-	@${MAKE} _build_opt
+# Build the static libraries with the optimization flags enabled.
+_build_opt_lib_static:
+	@echo "========================================================"
+	@echo "Building static optmized libraries"
+	@echo "========================================================"
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}"	\
           ${VJ_LIB_STATIC}
 ifeq (${GL_API}, Y)
@@ -311,17 +365,11 @@ ifeq (${PF_API}, Y)
           LIBDIR="${_OPT_LIBDIR}" ${PF_LIB_STATIC}
 endif
 
-# ------------------------------------------------------------
-# Make the optimized version of the libraries that uses DSOs.
-# ------------------------------------------------------------
-dso:
-	@${MAKE} beforebuild
-	@${MAKE} _dso
-	@${MAKE} _check_gui
-	@${MAKE} afterbuild
-
-_dso:
-	@${MAKE} _build_opt
+# Build the shared libraries with the optimization flags enabled.
+_build_opt_lib_shared:
+	@echo "========================================================"
+	@echo "Building shared optmized libraries"
+	@echo "========================================================"
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}"	\
           ${VJ_LIB_DYNAMIC}
 ifeq (${GL_API}, Y)
@@ -332,34 +380,6 @@ ifeq (${PF_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/Pf"			\
           LIBDIR="${_OPT_LIBDIR}" ${PF_LIB_DYNAMIC}
 endif
-
-# ---------------------------------------------------------
-# Build the object files with the debugging flags enabled.
-# ---------------------------------------------------------
-_build_dbg:
-	@echo "------------------------------------------------"
-	@echo "Making DBG version of libraries"
-	@echo "------------------------------------------------"
-	${scriptdir}/mkinstalldirs ${_DBG_BUILDDIR}
-	@echo "------------------------------------------------"
-	@echo "Building object files"
-	@echo "------------------------------------------------"
-	@${MAKE} RECTARGET="dbg" OPTIMIZER="-g"				\
-          BASE_OBJDIR="${_DBG_BUILDDIR}" recursive
-
-# ------------------------------------------------------------
-# Build the object files with the optimization flags enabled.
-# ------------------------------------------------------------
-_build_opt:
-	@echo "------------------------------------------------"
-	@echo "Making OPT version of libraries"
-	@echo "------------------------------------------------"
-	${scriptdir}/mkinstalldirs ${_OPT_BUILDDIR}
-	@echo "------------------------------------------------"
-	@echo "Building object files"
-	@echo "------------------------------------------------"
-	@${MAKE} RECTARGET="opt" OPTIMIZER="${OPT_FLAGS}"		\
-          BASE_OBJDIR="${_OPT_BUILDDIR}" recursive
 
 # --------------------------------------------------------------------
 # Build only the object files using the default values for ${OBJDIR}.
