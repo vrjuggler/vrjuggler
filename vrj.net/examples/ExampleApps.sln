@@ -3,7 +3,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Simple Managed C++ App", "M
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simple CSharp App", "CSharp\SimpleApp\Simple CSharp App.csproj", "{47FE8EAF-71A2-4B20-943E-A933EF847C14}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleApp", "CSharp\SimpleApp\SimpleApp.csproj", "{47FE8EAF-71A2-4B20-943E-A933EF847C14}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
