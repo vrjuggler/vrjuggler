@@ -27,7 +27,7 @@
 #include <Threads/vjThread.h>
 
 // Get the system factory we need
-#if defined(VJ_OS_IRIX) || defined(VJ_OS_Linux) ||		\
+#if defined(VJ_OS_IRIX) || defined(VJ_OS_Linux) ||    \
     defined(VJ_OS_Solaris) || defined(VJ_OS_FreeBSD)
 #include <Kernel/vjSGISystemFactory.h>
 #elif defined(VJ_OS_Win32)
@@ -137,7 +137,12 @@ void vjKernel::checkForReconfig()
    vjASSERT(vjThread::self() == mControlThread);      // ASSERT: We are being called from kernel thread
 
    // ---- RECONFIGURATION --- //
-   configProcessPending();             // Process pending config
+   int num_chunks_processed(0);
+   num_chunks_processed = configProcessPending();             // Process pending config
+   if((num_chunks_processed > 0) && (environmentManager != NULL))
+   {
+      environmentManager->sendRefresh();
+   }
 
    // ---- APP SWITCH ---- //
    // check for a new applications
@@ -218,7 +223,7 @@ void vjKernel::initConfig()
 
 #ifdef VJ_OS_IRIX
    mSysFactory = vjSGISystemFactory::instance(); // XXX: Should not be system specific
-#elif defined(VJ_OS_Linux) || defined(VJ_OS_Solaris) ||		\
+#elif defined(VJ_OS_Linux) || defined(VJ_OS_Solaris) ||     \
       defined(VJ_OS_FreeBSD)
    mSysFactory = vjSGISystemFactory::instance(); // HACK - this could be trouble, using SGI factory
 #elif defined(VJ_OS_Win32)
@@ -246,20 +251,22 @@ void vjKernel::updateFrameData()
 //  
 //  For all dependant managers, call process pending.
 //  and call it on our selves
-void vjKernel::configProcessPending(bool lockIt)
+int vjKernel::configProcessPending(bool lockIt)
 {
+   int chunks_processed(0);     // Needs to return this value
    if(vjConfigManager::instance()->pendingNeedsChecked())
    {
-      vjConfigChunkHandler::configProcessPending(lockIt);      // Process kernels pending chunks   
-      getInputManager()->configProcessPending(lockIt);
-      mDisplayManager->configProcessPending(lockIt);
+      chunks_processed += vjConfigChunkHandler::configProcessPending(lockIt);      // Process kernels pending chunks   
+      chunks_processed += getInputManager()->configProcessPending(lockIt);
+      chunks_processed += mDisplayManager->configProcessPending(lockIt);
       if(NULL != mDrawManager)
-         mDrawManager->configProcessPending(lockIt);              // XXX: We should not necessarily do this for all draw mgrs
+         chunks_processed += mDrawManager->configProcessPending(lockIt);              // XXX: We should not necessarily do this for all draw mgrs
       if (NULL != environmentManager)
-          environmentManager->configProcessPending(lockIt);
+         chunks_processed += environmentManager->configProcessPending(lockIt);
       if(NULL != mApp)
-         mApp->configProcessPending(lockIt);
+         chunks_processed += mApp->configProcessPending(lockIt);
    }
+   return chunks_processed;
 }
 
 
