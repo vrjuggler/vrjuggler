@@ -76,8 +76,6 @@ Flock::Flock(const char* const port, const int& baud, const int& sync,
 
 bool Flock::config(jccl::ConfigChunkPtr c)
 {
-   mPortId = -1;
-
    vprDEBUG(gadgetDBG_INPUT_MGR,3) << "   Flock::Flock(jccl::ConfigChunk*)"
                                    << std::endl << vprDEBUG_FLUSH;
 
@@ -88,10 +86,13 @@ bool Flock::config(jccl::ConfigChunkPtr c)
       return false;
    }
 
+   mPortName = c->getProperty<std::string>("port");
+   mBaudRate = c->getProperty<int>("baud");
+
    // keep FlockStandalone's port and baud members in sync with Input's port
    // and baud members.
-   mFlockOfBirds.setPort( Input::getPort() );
-   mFlockOfBirds.setBaudRate( Input::getBaudRate() );
+   mFlockOfBirds.setPort( mPortName );
+   mFlockOfBirds.setBaudRate( mBaudRate );
 
    // set mFlockOfBirds with the config info.
    mFlockOfBirds.setSync( c->getProperty<int>("sync") );
@@ -442,7 +443,7 @@ void Flock::setPort( const char* const serialPort )
 
     // keep Input's port and baud members in sync
     // with FlockStandalone's port and baud members.
-    Input::setPort( serialPort );
+    mPortName = serialPort;
 }
 
 //: set the baud rate
@@ -450,18 +451,18 @@ void Flock::setPort( const char* const serialPort )
 //  NOTE: flock.isActive() must be false to use this function
 void Flock::setBaudRate( const int& baud )
 {
-    if (this->isActive())
-    {
+   // keep Input's port and baud members in sync
+   // with FlockStandalone's port and baud members.
+   mBaudRate = baud;
+ 
+   if (this->isActive())
+   {
       vprDEBUG(gadgetDBG_INPUT_MGR,2)
          << "gadget::Flock: Cannot change baud rate while active\n"
          << vprDEBUG_FLUSH;
       return;
-    }
-    mFlockOfBirds.setBaudRate( baud );
-
-    // keep Input's port and baud members in sync
-    // with FlockStandalone's port and baud members.
-    Input::setBaudRate( baud );
+   }
+   mFlockOfBirds.setBaudRate( mBaudRate );
 }
 
 } // End of gadget namespace

@@ -45,7 +45,6 @@ namespace gadget
 Input::Input()
  : mPort(""),
    mInstName(""),
-   mPortId(0),
    mThread(NULL),
    mActive(0),
    mBaudRate(0)
@@ -58,41 +57,19 @@ Input::~Input()
 
 bool Input::config( jccl::ConfigChunkPtr c)
 {
-  if((!mPort.empty()) && (!mInstName.empty()))
-  {
+  //if((!mPort.empty()) && (!mInstName.empty()))
+  //{
      // ASSERT: We have already been configured
      //         this prevents config from being called multiple times (once for each derived class)
      //         ie. Digital, Analog, etc
-     return true;
-  }
+  //   return true;
+  //}
 
-  mPort     = c->getProperty<std::string>("port");
+  //mPort     = c->getProperty<std::string>("port");
   mInstName = c->getFullName();
-  mBaudRate = c->getProperty<int>("baud");
+  //mBaudRate = c->getProperty<int>("baud");
 
   return true;
-}
-
-
-void Input::setPort(const std::string& serialPort)
-{
-if (mThread != NULL) {
-     std::cerr << "Cannot change the serial Port while active\n";
-     return;
-  }
-  mPort = serialPort;
-}
-
-std::string Input::getPort()
-{
-  if (mPort.empty()) return std::string("No port");
-  return mPort;
-}
-
-void Input::setBaudRate(int baud)
-{
-  if (mThread != NULL)
-     mBaudRate = baud;
 }
 
 

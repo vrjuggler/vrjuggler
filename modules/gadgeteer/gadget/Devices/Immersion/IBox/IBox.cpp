@@ -62,25 +62,22 @@ namespace gadget
  */
 bool IBox::config(jccl::ConfigChunkPtr c)
 {
-  if(! (Input::config(c) && Analog::config(c) && Digital::config(c) ))
+   if(! (Input::config(c) && Analog::config(c) && Digital::config(c) ))
       return false;
 
-  vprDEBUG(gadgetDBG_INPUT_MGR,3) << "   IBox::config:" << std::endl
+   vprDEBUG(gadgetDBG_INPUT_MGR,3) << "   IBox::config:" << std::endl
                                   << vprDEBUG_FLUSH;
-  //mPortStr = static_cast<std::string>(c->getProperty( "port" ));
-  mPortStr = Input::getPort();
-  // Done in Input
-  //active = 0;
-  mBaudRate = c->getProperty<long>("baud");
+   mPortName = c->getProperty<std::string>("port");
+   mBaudRate = c->getProperty<int>("baud");
+   
+   vprDEBUG(gadgetDBG_INPUT_MGR,1)
+      << "   Creating an IBox.. params: " << std::endl
+      << "    portnum: " << mPortName << std::endl
+      << "        baud   : " << mBaudRate << std::endl
+      << "   instanceName: " << mInstName << std::endl << std::endl
+      << vprDEBUG_FLUSH;
 
-  vprDEBUG(gadgetDBG_INPUT_MGR,1)
-     << "   Creating an IBox.. params: " << std::endl
-     << "    portnum: " << mPortStr << std::endl
-     << "        baud   : " << mBaudRate << std::endl
-     << "   instanceName: " << mInstName << std::endl << std::endl
-     << vprDEBUG_FLUSH;
-
-  return true;
+   return true;
 }
 
 /**********************************************************
@@ -110,7 +107,7 @@ int IBox::startSampling()
 
    if (mThread == NULL)
    {
-      result = mPhysicalIbox.connect(mPortStr, mBaudRate);
+      result = mPhysicalIbox.connect(mPortName, mBaudRate);
       if (result == vpr::ReturnStatus::Succeed)
       {
          mActive = true;
@@ -122,7 +119,7 @@ int IBox::startSampling()
          vprDEBUG(gadgetDBG_INPUT_MGR,0)
             << "   FAILED TO CONNECT to the Ibox named " << mInstName
             << std::endl << "     Ibox settings were: " << std::endl
-            << "      port : " << mPortStr << std::endl
+            << "      port : " << mPortName << std::endl
             << "   mBaudRate: " << mBaudRate << std::endl << std::endl
             << vprDEBUG_FLUSH;
          return 0;

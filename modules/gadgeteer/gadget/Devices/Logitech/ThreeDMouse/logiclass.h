@@ -152,6 +152,8 @@ private:
    gmtl::Vec3f      baseVector; // Used to store the base location tooffset from
             // Originally set to 0,0,0
 
+   std::string    mPortName;
+   
    int  logitechOpen (const std::string& port_name);
 
    void eulerToAbsolute (byte record[], gmtl::Matrix44f* data);

@@ -75,7 +75,7 @@ Bird::Bird()
   //theTransmitter = 3;
   hemisphere = LOWER_HEM;
   repRate = 'Q';
-  mBaudRate = 38400;
+  Input::setBaudRate(38400);
   mThread = NULL;
 }
 
@@ -84,7 +84,7 @@ bool Bird::config(jccl::ConfigChunkPtr c)
    if(! (Input::config(c) && Position::config(c)))
       return false;
 
-  mPort = std::string("/dev/ttyd3");
+  Input::setPort("/dev/ttyd3");
   initCorrectionTable();
 
   return true;
@@ -123,7 +123,7 @@ int Bird::startSampling()
       //int processID;
       //int i;
 
-  mPortId = open_port(mPort, mBaudRate);
+  mPortId = open_port(Input::getPort(), Input::getBaudRate());
   set_blocking(mPortId, blocking);
   set_sync(mPortId,syncStyle);
   set_group(mPortId);

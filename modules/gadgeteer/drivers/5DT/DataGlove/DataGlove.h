@@ -86,6 +86,8 @@ protected:
 
    DataGloveStandalone* mGlove;           /**< The actual glove */
 
+   std::string    mPortName;
+   int            mBaudRate;
    // Hand left, right;
    std::vector<AnalogData> mAnalogData;   /**< analogs for each finger */
    //std::vector<DigitalData> mDigitalData; /**< digital for gesture */
