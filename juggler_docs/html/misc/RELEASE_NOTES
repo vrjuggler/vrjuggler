@@ -1,0 +1,49 @@
+                           VR Juggler Release Notes
+                           ------------------------
+
+For all versions:
+
+    - See the ChangeLog for more system-level changes that do not directly
+      affect applications.
+    - See the Known Bugs page on the VR Juggler website (www.vrjuggler.org)
+      for the current list of bugs.
+
+===============================================================================
+
+ Version: 0.1.97
+Released: July 18, 2000
+
+    Required application and configuration changes for upgrading from 0.1.95:
+        * Link Juggler_utils
+        * Keyboard chunk in config files should have sleep_time set to a
+          non-zero value.  50 is a reasonable value.  Failing to do so can
+          result in a major perforamnce decrease.
+        * All windows are positioned with a coordinate system based at the
+          lower left corner of the window relative to the lower left corner
+          of the display.  Full screen windows should be placed at 0,0.
+        * vjGetVJMatrix() (in Kernel/Pf/vjPfUtil.h) been renamed to
+          vjGetVjMatrix().
+
+    New features:
+        * Debugging output can be color coded for easier readbility.  This
+          is currently only availble with the UNIX versions.
+        * Many bug fixes that include fixing some bad memory references.
+        * Pinch glove driver is now supported and has a digital simulator.
+        * MotionStar driver is working but still has some limitations (see
+          the Known Bugs page).
+        * The samples/pf directory has a VR Juggler application to load
+          models into Performer that supports nagivation and collision
+          detection.
+        * The vjMatrix class has three new members for getting rotation
+          values: getXRot(), getYRot() and getZRot().
+        * Applications no longer need to pass a kernel instance to their
+          VR Juggler App super class.  The vjApp class will get a vjKernel
+          instance on its own if none is provided.  If, however, a kernel
+          instance is provided and it is NULL, a fatal error will still
+          occur.
+        * SoundManager is available to abstract sound functionality for 
+          cross platform audio.
+
+    VjControl now requires the Java 2 compiler and runtime environment.
+
+===============================================================================
