@@ -31,34 +31,37 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 //#include <Common.h>
-#include <vrj/Math/Vec3.h>
-#include <vrj/Math/Matrix.h>
+#include <gmtl/Vec.h>
+#include <gmtl/Matrix.h>
+#include <gmtl/Generate.h>
+#include <gmtl/Xforms.h>
 
 #include "navigation.h"
 
-//: a vector pointing forward in our space, 
+//: a vector pointing forward in our space,
 //  useful for getting what direction a device is pointing.
-const vrj::Vec3 TrackedInfo::forwardVec( 0.0f, 0.0f, -1.0f );
+const gmtl::Vec3f TrackedInfo::forwardVec( 0.0f, 0.0f, -1.0f );
 
 //: the origin
-const vrj::Vec3 TrackedInfo::origin( 0.0f, 0.0f, 0.0f );
+const gmtl::Vec3f TrackedInfo::origin( 0.0f, 0.0f, 0.0f );
 
 //: call this once per frame with your tracker's matrix.
-void TrackedInfo::updateWithMatrix( const vrj::Matrix& matrix )
+void TrackedInfo::updateWithMatrix( const gmtl::Matrix44f& matrix )
 {
     // save the old values.
     _rotOld = _rot;
-    
+
     // get the forward direction that the tracker is pointing.
     // (_vec = matrix * forwardVec)
-    vrj::Vec3 wandPos, wandForward;
-    wandForward.xformVec( matrix, forwardVec );
-    wandPos.xformVec( matrix, origin );
+    gmtl::Vec3f wandPos, wandForward;
+    gmtl::xform( wandForward, matrix, forwardVec );
+    gmtl::xform( wandPos, matrix, origin );
     _vec = wandForward - wandPos;
 
     // get the x,y,z rotations of the tracker.
-    matrix.getXYZEuler( _rot.vec[0], _rot.vec[1], _rot.vec[2] );
-    
+    gmtl::getRot( matrix, _rot.mData[0], _rot.mData[1], _rot.mData[2],
+                  gmtl::XYZ );
+
     // calculate the new rotational delta
     _rotDelta = _rot - _rotOld;
 };
@@ -66,19 +69,19 @@ void TrackedInfo::updateWithMatrix( const vrj::Matrix& matrix )
 //: default constructor
 UserInfo::UserInfo() : _walkingMode(true)
 {
-    
+
 }
 
 //: call this once per frame with the tracker's TrackerInfo
 //  this will update user data such as position, velocity
-//  NOTE: if in "weightless" mode, 
+//  NOTE: if in "weightless" mode,
 //        then pass (0,0,0) in for gravity
-void  UserInfo::update( const TrackedInfo& tracker, const vrj::Vec3& gravity )
+void  UserInfo::update( const TrackedInfo& tracker, const gmtl::Vec3f& gravity )
 {
     // save the old values.
     _posOld = _pos;
-    _rotOld = _rot; 
-    
+    _rotOld = _rot;
+
     _updateWithTracker( tracker );
     _updateWithGravity( gravity );
 }
@@ -86,44 +89,44 @@ void  UserInfo::update( const TrackedInfo& tracker, const vrj::Vec3& gravity )
 void UserInfo::_updateWithTracker( const TrackedInfo& tracker )
 {
     //: get the scene's rotation for use in computing tracker vector
-    vrj::Matrix sceneRotation;
-    sceneRotation.makeIdent();
-    sceneRotation.makeXYZEuler( _rot[0], _rot[1], _rot[2] );
-    
+    gmtl::Matrix44f sceneRotation;
+    gmtl::identity(sceneRotation);
+    sceneRotation = gmtl::makeRot<gmtl::Matrix44f>( _rot[0], _rot[1], _rot[2], gmtl::XYZ );
+
     //: transform the tracker vector from cave space to model space.
-    vrj::Vec3 trackerVec;
-    trackerVec.xformFull( sceneRotation, tracker.vector() );
-    
+    gmtl::Vec3f trackerVec;
+    gmtl::xform( trackerVec, sceneRotation, tracker.vector() );
+
     // constrain this vector in XZ plane if in walking mode.
     if (_walkingMode == true)
-	trackerVec[1] = 0.0f;
-    
+    trackerVec[1] = 0.0f;
+
     //: calculate the user's velocity vector (vel = pos/frame)
     //  To get this, you need a unit vector (length 1),
     //    pointing in the direction of the tracker...
-    trackerVec.normalize();
-    
+    gmtl::normalize(trackerVec);
+
     // ...then multiply it by the velocity scalar
     //    to get the velocity vector.
     _velocityVec = trackerVec * _velocity;
-    
+
     //: add the velocity to the user's position.
     //  This will move _pos by _velocity's length, which is the same as _velocityVec length.
     //  NOTE: _velocity is "velocity per frame"
     _pos += _velocityVec;
-    
+
     //: move user's orientation by the tracker's rotation delta.
     // TODO: you may want to scale this down by some value to prevent really large deltas
     _rot += tracker.rotation() * _angularVelocity;
-    
-    // constrain orientation to only yaw. 
+
+    // constrain orientation to only yaw.
     // this keeps people from being sick,
     //  but is a poor choice for flight simulators etc..
     _rot[0] = 0;
     _rot[2] = 0;
 }
 
-void UserInfo::_updateWithGravity( const vrj::Vec3& gravity )
+void UserInfo::_updateWithGravity( const gmtl::Vec3f& gravity )
 {
     // apply gravity to the position
     // NOTE gravity is in (vel = pos/frame)
@@ -134,24 +137,25 @@ void UserInfo::_updateWithGravity( const vrj::Vec3& gravity )
 
 
 //: get the transform to put the scene from the user's point of view
-//  from the user's info, calculate, then return, the  
+//  from the user's info, calculate, then return, the
 //  transform to put the scene into the user's point of view
-void  UserInfo::getSceneTransform( vrj::Matrix& sceneMatrtix ) const
+void  UserInfo::getSceneTransform( gmtl::Matrix44f& sceneMatrix ) const
 {
-    vrj::Matrix sceneTranslation;
-    vrj::Matrix sceneRotation;
-    
+    gmtl::Matrix44f sceneTranslation;
+    gmtl::Matrix44f sceneRotation;
+
     //: set the translation of the scene
     //  if we want to move forward in the scene, then we need to move the scene backwards.
-    sceneTranslation.makeTrans( -_pos[0], -_pos[1], -_pos[2] );
-    
+    sceneTranslation = gmtl::makeTrans<gmtl::Matrix44f>( -_pos );
+
     //: set the rotation of the scene
-    //  if we want to move clockwise in the scene, 
+    //  if we want to move clockwise in the scene,
     //   then we need to move the scene counter-clockwise.
-    sceneRotation.makeXYZEuler( -_rot[0], -_rot[1], -_rot[2] );
-    
+    sceneRotation = gmtl::makeRot<gmtl::Matrix44f>( -_rot[0], -_rot[1],
+                                                    -_rot[2], gmtl::XYZ );
+
     //: translate to your position, then rotate the scene.
-    sceneMatrtix.mult( sceneRotation, sceneTranslation );
+    sceneMatrix = sceneRotation * sceneTranslation;
 }
 
 //: set the "velocity per frame" once each frame.

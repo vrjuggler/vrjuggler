@@ -35,6 +35,8 @@
 #include <math.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <gmtl/Generate.h>
+#include <gmtl/Xforms.h>
 
 #include <gloveApp.h>
 
@@ -86,7 +88,7 @@ void gloveApp::myDraw()
 
    glMatrixMode(GL_MODELVIEW);
    //glLoadIdentity();
-   glLoadMatrixf( mNavigation.getFloatPtr() );
+   glLoadMatrixf( mNavigation.getData() );
 
    // draw the floor
    glPushMatrix();
@@ -219,10 +221,10 @@ void gloveApp::postFrame()
     TrackedInfo wandInfo;
     TrackedInfo headInfo;
 
-    vrj::Vec3 glovePos;
-    vrj::Matrix finger_matrix;
-    vrj::Matrix invNav;
-    invNav.invert(mNavigation);
+    gmtl::Vec3f glovePos;
+    gmtl::Matrix44f finger_matrix;
+    gmtl::Matrix44f invNav;
+    gmtl::invert(invNav, mNavigation);
 
    /////////////////////////////////////////////////////////
    //: Debug stuff
@@ -279,8 +281,8 @@ void gloveApp::postFrame()
 
    //: Get the position of the index finger:
     finger_matrix = mGlove->getPos(gadget::GloveData::INDEX);
-    finger_matrix.getTrans( glovePos[0], glovePos[1], glovePos[2] );
-    glovePos.xformVec( invNav, glovePos );
+    gmtl::getTrans(finger_matrix, glovePos[0], glovePos[1], glovePos[2]);
+    gmtl::xform(glovePos, invNav, glovePos);
 
     ////////////////////////
     // NAVIGATION         //
@@ -297,9 +299,9 @@ void gloveApp::postFrame()
     }
     userInfo.setVelocity( userVelocity );
     userInfo.setAngularVelocity( 0.01f );
-    vrj::Matrix tttt = mGlove->getPos(gadget::GloveData::INDEX);
+    gmtl::Matrix44f tttt = mGlove->getPos(gadget::GloveData::INDEX);
     wandInfo.updateWithMatrix( tttt );
-    userInfo.update( wandInfo, vrj::Vec3(0.0f, 0.0f, 0.0f) );
+    userInfo.update( wandInfo, gmtl::Vec3f(0.0f, 0.0f, 0.0f) );
     userInfo.getSceneTransform( mNavigation );
     ////////////////////////////////////////////////////////
 
@@ -318,9 +320,9 @@ void gloveApp::postFrame()
           mCubePos = glovePos;
    }
 
-   float cubeDistance   = (glovePos - mCubePos).length();
-   float sphereDistance = (glovePos - mSpherePos).length();
-   float coneDistance   = (glovePos - mConePos).length();
+   float cubeDistance   = gmtl::length(glovePos - mCubePos);
+   float sphereDistance = gmtl::length(glovePos - mSpherePos);
+   float coneDistance   = gmtl::length(glovePos - mConePos);
    float min = nMin( cubeDistance, sphereDistance, coneDistance);
 
    //: If the distance between hand and object is too far
