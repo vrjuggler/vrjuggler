@@ -36,6 +36,7 @@
 #include <vjCoord.h>
 #include <collider.h>
 #include <vector>
+#include <Input/InputManager/vjDigitalInterface.h>
 
 
 #ifndef _NAVIGATOR_H_
