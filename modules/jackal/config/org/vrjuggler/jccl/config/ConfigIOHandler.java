@@ -35,22 +35,21 @@
 package VjConfig;
 
 import java.io.*;
-//import java.io.DataOutputStream;
-//import java.io.FileNotFoundException;
-//import java.io.File;
 
 import VjConfig.ConfigChunkDB;
 import VjConfig.ChunkDescDB;
-//import VjConfig.ConfigChunk;
 import VjConfig.ChunkFactory;
+import VjConfig.ConfigIOStatus;
 import VjConfig.ConfigParserException;
 
 public interface ConfigIOHandler {
 
-    public void readConfigChunkDB (File file, ConfigChunkDB db) throws IOException, ConfigParserException;
+    public void readConfigChunkDB (File file, ConfigChunkDB db,
+                                   ConfigIOStatus iostatus);
 
 
-    public void readConfigChunkDB (InputStream in, ConfigChunkDB db) throws IOException, ConfigParserException;
+    public void readConfigChunkDB (InputStream in, ConfigChunkDB db,
+                                   ConfigIOStatus iostatus);
 
 
     public boolean writeConfigChunkDB (DataOutputStream out, ConfigChunkDB db);
@@ -58,10 +57,12 @@ public interface ConfigIOHandler {
     public boolean writeConfigChunkDB (File file, ConfigChunkDB db);
 
 
-    public void readChunkDescDB (File file, ChunkDescDB db) throws IOException, ConfigParserException;
+    public void readChunkDescDB (File file, ChunkDescDB db,
+                                 ConfigIOStatus iostatus);
 
 
-    public void readChunkDescDB (InputStream in, ChunkDescDB db) throws IOException, ConfigParserException;
+    public void readChunkDescDB (InputStream in, ChunkDescDB db,
+                                 ConfigIOStatus iostatus);
 
 
     public boolean writeChunkDescDB (DataOutputStream out, ChunkDescDB db);

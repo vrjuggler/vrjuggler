@@ -134,6 +134,7 @@ public class Init {
 
     public static void loadVjControlConfig() {
 	ConfigStreamTokenizer st;
+        ConfigIOStatus iostatus;
 	File f1 = null;
         File f2 = null;
 	FileReader r;
@@ -143,38 +144,39 @@ public class Init {
 	// 1st - load the chunkdesc into memory...
 
 	URL descurl = ClassLoader.getSystemResource ("VjFiles/vjcontrol.dsc");
-	try {
-            ConfigIO.readChunkDescDB (descurl.openStream(), Core.descdb, ConfigIO.GUESS);
-	}
-	catch (IOException e2) {
-            Core.consoleErrorMessage (e2.toString());
-	    Core.consoleErrorMessage ("Init", "Couldn't load " + descurl
-				      + "- vjcontrol.jar may be corrupt");
-	}
+
+        try {
+            iostatus = ConfigIO.readChunkDescDB (descurl.openStream(), Core.descdb, ConfigIO.GUESS);
+            Core.consoleInfoMessage ("Init", iostatus.toString());
+            if (iostatus.getStatus() == iostatus.FAILURE) {
+                Core.consoleErrorMessage ("Init", "Couldn't load " + descurl
+                                          + "- vjcontrol.jar may be corrupt");
+                System.exit(1);
+            }
+        }
+        catch (IOException e) {
+            // from descurl.openStream()...
+            Core.consoleErrorMessage ("Init", "Couldn't load " + descurl
+                                      + "- vjcontrol.jar may be corrupt");
+            System.exit(1);
+        }
+
 		
         f1 = new File (Core.file.mangleFileName ("$HOME/.vjconfig/vjcontrol.cfg"));
         Core.vjcontrol_chunkdb.setName (f1.getName());
         Core.vjcontrol_chunkdb.setFile (f1);
 
-	try {
-            ConfigIO.readConfigChunkDB (f1, Core.vjcontrol_chunkdb, ConfigIO.GUESS);
-	}
-	catch (FileNotFoundException e2) {
-	    try {
-		f2 = new File (Core.file.mangleFileName ("$VJ_SHARE_DIR/Data/vjcontrol.cfg"));
-                ConfigIO.readConfigChunkDB (f2, Core.vjcontrol_chunkdb, ConfigIO.GUESS);
-	    }
-	    catch (FileNotFoundException e3) {
+        iostatus = ConfigIO.readConfigChunkDB (f1, Core.vjcontrol_chunkdb, ConfigIO.GUESS);
+        if (iostatus.getStatus() == iostatus.FAILURE) {
+            f2 = new File (Core.file.mangleFileName ("$VJ_SHARE_DIR/Data/vjcontrol.cfg"));
+            iostatus = ConfigIO.readConfigChunkDB (f2, Core.vjcontrol_chunkdb, ConfigIO.GUESS);
+            Core.consoleInfoMessage ("Init", iostatus.toString());
+            if (iostatus.getStatus() == iostatus.FAILURE) {
 		Core.consoleErrorMessage ("Init","Couldn't load VjControl prefs '" + f1 + "' or '" + f2 + "'.");
-		return;
-	    }
-            catch (IOException e4) {
-                Core.consoleErrorMessage ("Init", e4.toString());
             }
-	}
-        catch (IOException e5) {
-            Core.consoleErrorMessage ("Init", e5.toString());
         }
+        else
+            Core.consoleInfoMessage ("Init", iostatus.toString());
     }
 
 
