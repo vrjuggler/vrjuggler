@@ -315,7 +315,6 @@ public:
      * Gets the current update action.  This tells when updates to the serial
      * device take effect.
      *
-     * pre None.
      * @post The current update action is returned to the caller.
      *
      * @return A vpr::SerialTypes::UpdateActionOption value stating when
@@ -928,16 +927,15 @@ public:
      * @param bytes_read The number of bytes read into the buffer.
      * @param timeout    The maximum amount of time to wait for data to be
      *                   available for reading.  This argument is optional and
-     *                   defaults to <code>vpr::Interval::NoTimeout</code>
+     *                   defaults to vpr::Interval::NoTimeout.
      *
-     * @return <code>vpr::Status::Success</code> is returned if the read
-     *         operation completed successfully.<br>
-     *         <code>vpr::Status::Failure</code> is returned if the read
-     *         operation failed.<br>
-     *         <code>vpr::Status::WouldBlock</code> if the port is in
-     *         non-blocking mode, and there is no data to read.<br>
-     *         <code>vpr::Status::Timeout</code> is returned if the read
-     *         could not begin within the timeout interval.
+     * @return vpr::Status::Success is returned if the read operation
+     *         completed successfully.<br>
+     *         vpr::Status::WouldBlock if the port is in non-blocking mode,
+     *         and there is no data to read.<br>
+     *         vpr::Status::Timeout is returned if the read could not begin
+     *         within the timeout interval.<br>
+     *         vpr::Status::Failure is returned if the read operation failed.
      */
     inline vpr::Status
     read_i (void* buffer, const vpr::Uint32 length, vpr::Uint32& bytes_read,
@@ -964,7 +962,7 @@ public:
      * @param bytes_read The number of bytes read into the buffer.
      * @param timeout    The maximum amount of time to wait for data to be
      *                   available for reading.  This argument is optional and
-     *                   defaults to <code>vpr::Interval::NoTimeout</code>
+     *                   defaults to vpr::Interval::NoTimeout.
      *
      * @return vpr::Status::Success is returned if the read operation
      *         completed successfully.<br>
