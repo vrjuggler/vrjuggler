@@ -77,7 +77,7 @@ void NetConnection::sendNetworkData(){
    // vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_CRITICAL_LVL) << "sendNetworkData() pre" << std::endl << vprDEBUG_FLUSH;            
       if((*i)->getWasInitialized()){
          (*i)->updateFromLocalSource();
-         sendAtOnce(*mSockStream, (*i)->getDataPtr(), (*i)->getDataByteLength());
+         mSendBuffer.store( (*i)->getDataPtr(), (*i)->getDataByteLength() );
          vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_STATE_LVL) << "sent device data " << (*i)->getDataByteLength() << " bytes to " << mName << std::endl << vprDEBUG_FLUSH;
       }
    }
@@ -195,7 +195,8 @@ void NetConnection::sendEndBlock(){
    sprintf(msg, "%c%c;", code_str[0], code_str[1]);
    // length of message is 2 bytes of instruction code + name length + 1 semicolon
    int msg_length = 3;
-   sendAtOnce(*mSockStream, msg, msg_length);
+   mSendBuffer.store( msg, msg_length );
+   mSendBuffer.sendAllAndClear(*mSockStream);
    // vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_CONFIGURE_LVL) << "!!!!!!!!Request sent for device: " << device_name << std::endl << vprDEBUG_FLUSH;
    vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_VERB_LVL) << "!!!!!!!!EndBlock sent for connection: " << mName << std::endl << vprDEBUG_FLUSH;
 }

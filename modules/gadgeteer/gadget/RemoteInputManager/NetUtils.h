@@ -13,6 +13,7 @@
 
 #include <gadget/gadgetConfig.h>
 #include <vpr/IO/Socket/SocketStream.h>
+#include <vrj/Util/Debug.h>
 #include <list>
 
 
@@ -47,6 +48,52 @@ inline bool sendAtOnce(vpr::SocketStream& sock_stream, const char* buf, unsigned
    }
    return 1;
 }
+
+// Buffer for transmitting network data.  Important for remote input manager performance since the manager
+// needs to send and receive a group of messages once per frame, and the send() function is expensive.
+class SendBuffer{
+   std::vector<char> mBuffer;
+   unsigned int mValidBytes;
+public:
+   SendBuffer(){
+      mValidBytes = 0;
+      this->resizeBuffer(512);  // default is just a guess 
+   }
+
+   void store(const char* buf, unsigned int bytes_to_send_param){ 
+      if (mValidBytes + bytes_to_send_param > mBuffer.size()){
+         this->resizeBuffer(mValidBytes + bytes_to_send_param);
+      }
+
+      char* array = &(mBuffer[0]);
+      for(unsigned int i = 0; i < bytes_to_send_param; i++)
+         array[mValidBytes + i] = buf[i];
+
+      mValidBytes += bytes_to_send_param;
+
+      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HEX_LVL) << "SendBuffer successfully stored " <<  bytes_to_send_param  << " bytes.  Total bytes: " << mValidBytes << std::endl << vprDEBUG_FLUSH;
+
+   }
+
+   void resizeBuffer(unsigned int new_size){
+      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HEX_LVL) << "SendBuffer: Resizing mBuffer to: " <<  new_size  << std::endl << vprDEBUG_FLUSH; 
+      mBuffer.resize(new_size);
+      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HEX_LVL) << "SendBuffer: Successful resize: " <<  new_size  << std::endl << vprDEBUG_FLUSH;
+   }
+
+   bool sendAllAndClear(vpr::SocketStream& sock_stream){
+      sendAtOnce(sock_stream, &(mBuffer[0]), mValidBytes);  // transmit data
+
+      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HEX_LVL) << "SendBuffer sent " <<  mValidBytes  << " bytes. " << std::endl << vprDEBUG_FLUSH;
+
+      this->clearBuffer();
+      return true;
+   }
+  
+   void clearBuffer(){
+      mValidBytes = 0;  // buffer is empty
+   }
+};
 
 // Given a hostname, use gethostbyname to get Ip address
 inline std::string getIpFromHostname(const std::string& hostname){
