@@ -26,7 +26,9 @@ vpath %.c @srcdir@
 vpath %.cpp @srcdir@
 vpath %.o ${OBJDIR}
 
-DEPEND_SRCS	:= vjGlove.cpp \
+DEPEND_SRCS	:= fsPinchGlove.cpp \
+                   vjPinchGlove.cpp	\
+		   vjGlove.cpp \
                    vjCyberGlove.cpp	\
 		   CyberGloveBasic.cpp  \
                    vt_glove.cpp		\
