@@ -131,13 +131,13 @@ public:
 
 
 private:
-    std::string               perf_target_name;
-    std::vector<Connect*>   connections;
-    std::vector<JackalControl*> jackal_controls;
+//      std::string                  perf_target_name;
+    std::vector<Connect*>        connections;
+    std::vector<JackalControl*>  jackal_controls;
     vpr::Thread*                 listen_thread;
-    int                       Port;
-    Socket*                 listen_socket;
-    bool                      configured_to_accept;
+    int                          Port;
+    Socket*                      listen_socket;
+    bool                         configured_to_accept;
     vpr::Mutex                   connections_mutex;
     vpr::Mutex                   jackal_controls_mutex;
 
@@ -145,10 +145,12 @@ private:
 
     void controlLoop (void* nullParam);
 
-    void removeConnect (Connect* con);
+    void removeConnection (Connect* con);
+
+    void addConnection (Connect* con);
 
     //: returns a pointer to a connection with the given name
-    Connect* getConnect (const std::string& _name);
+    Connect* getConnection (const std::string& _name);
 
 
     //: allows the Environment Manager to accept connections.
