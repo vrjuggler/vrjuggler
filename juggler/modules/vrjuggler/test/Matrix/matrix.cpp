@@ -51,6 +51,7 @@ int main(void)
    const vjVec3 z_axis(0.0f,0.0f,1.0f);
 
    bool     tests_pass(false);
+   long x;
 
    // ---- Test Matrix set ---- //
    cout << "\n---- Testing Set Matrix ---" << endl;
@@ -167,7 +168,7 @@ int main(void)
    cout << "Random XYZ Eulers: " << endl;
    tests_pass = false;
 
-   for(long x=0;x<50;x++)
+   for(x=0;x<50;x++)
    {
       int xRot = (rand()%360)-180;
       int yRot = (rand()%360)-180;
