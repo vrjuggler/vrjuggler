@@ -229,7 +229,8 @@ void Controller::processNextEvent (vpr::SocketImplSIM** recvSocket)
          vprASSERT(status.success() && "No arrived message at this time");
 
          vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
-            << "Controller::processNextEvent(): Event is an arrived message on "
+            << "Controller::processNextEvent(): Event is the arrival of a message for "
+            << msg->getDestinationSocket()->getLocalAddr() << " on "
             << ((dir == vpr::sim::NetworkLine::FORWARD) ? "forward" : "reverse")
             << " queue of line " << line.getNetworkAddressString() << "\n"
             << vprDEBUG_FLUSH;
