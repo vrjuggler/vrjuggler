@@ -460,6 +460,7 @@ public class BeanIconViewer
          System.err.println("WARNING: Failed to load icon " + icon_name);
       }
 
+      folder_icon.setToolTipText(childPanel.getName());
       folder_icon.addMouseListener(new FolderMouseListener(childPanel));
       parentPanel.addIcon(folder_icon);
    }
@@ -492,6 +493,10 @@ public class BeanIconViewer
       if ( panel.getToolTip() != null )
       {
          panel_icon.setToolTipText(panel.getToolTip());
+      }
+      else
+      {
+         panel_icon.setToolTipText(panel.toString());
       }
 
       panel_icon.addMouseListener(new IconMouseListener(panel));
