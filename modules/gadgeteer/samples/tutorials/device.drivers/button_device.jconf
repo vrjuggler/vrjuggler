@@ -7,7 +7,7 @@
    <elements>
       <input_manager name="Button Device Input Manager" version="2">
          <driver_path>${HOME}</driver_path>
-         <driver>ButtonDevice_drv</driver>
+         <driver>button_drv</driver>
       </input_manager>
       <button_device name="Button Device" version="1">
          <port>/dev/ttyd4</port>
