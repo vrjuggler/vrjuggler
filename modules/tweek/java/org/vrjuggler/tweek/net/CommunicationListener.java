@@ -39,7 +39,7 @@ package org.vrjuggler.tweek.net;
 
 /**
  * Simpler interface implemented by classes who want to listen for
- * communication events with Plexus.
+ * communication events with a remote peer.
  *
  * @version $Revision$
  *
@@ -47,5 +47,5 @@ package org.vrjuggler.tweek.net;
  */
 public interface CommunicationListener extends java.util.EventListener
 {
-   public void communication(CommunicationEvent e);
+   public void connectionStateChanged(CommunicationEvent e);
 }
