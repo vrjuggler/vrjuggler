@@ -27,6 +27,9 @@
 #         --prefix=<Base directory where Makefile will go>
 #         --startdir=<Directory where search begins>
 #         --SUBDIRS=<Directories containing Makefile.in's>
+#         --uname=<Owner's user name>
+#         --gname=<Group name>
+#         --mode=<Mode bits>
 #
 # NOTE:
 #    In almost every situation, the --srcdir option should be passed the
@@ -70,6 +73,7 @@ Usage:
         --TEST_EXTRA_LIBS_GL=<Extra OpenGL libraries needed for test code>
         --TEST_EXTRA_LIBS_PF=<Extra Performer libraries needed for test code>
         --SUBDIRS=<Directories containing Makefile.in's>
+      [ --uname=<Owner's user name> --gname=<Group name> --mode=<Mode bits> ]
 USAGE_EOF
 }
 
@@ -87,13 +91,27 @@ GetOptions("CXX=s" => \$VARS{'CXX'}, "DEFS:s" => \$VARS{'DEFS'},
 	   "TEST_EXTRA_LIBS_GL:s" => \$VARS{'TEST_EXTRA_LIBS_GL'},
 	   "TEST_EXTRA_LIBS_PF:s" => \$VARS{'TEST_EXTRA_LIBS_PF'},
 	   "srcdir=s" => \$VARS{'srcdir'}, "SUBDIRS=s" => \$VARS{'SUBDIRS'},
-	   "prefix=s" => \$prefix, "startdir=s" => \$startdir);
+	   "prefix=s" => \$prefix, "startdir=s" => \$startdir,
+	   "uname=s" => \$uname, "gname=s" => \$gname, "mode=s" => \$mode);
 
 umask(002);
 chdir("$startdir") or die "ERROR: Cannot chdir to $startdir: $!\n";
 
 my ($basedir, $dir);
 chop($basedir = `pwd`);
+
+# Defaults.
+my($uid, $gid, $mode_bits) = ($<, (getpwuid($<))[3], "0644");
+
+if ( $uname ) {
+    $uid = (getpwnam("$uname"))[2] or die "getpwnam($uname): $!\n";
+}
+
+if ( $gname ) {
+    $gid = (getgrnam("$gname"))[2] or die "getgrnam($gname): $!\n";
+}
+
+$mode_bits = "$mode" if $mode;
 
 # Loop over the directories given with --SUBDIRS and generate the Makefiles
 # from the corresponding Makefile.in's.
@@ -113,6 +131,8 @@ foreach $dir ( split(/\s/, "$VARS{'SUBDIRS'}") ) {
 
     # Move $workfile to its final destination.
     copy("$workfile", "$outfile");
+    chown($uid, $gid, "$outfile") or die "chown: $!\n";
+    chmod(oct($mode_bits), "$outfile") or die "chmod: $!\n";
     unlink("$workfile");
 }
 
