@@ -62,13 +62,13 @@ CorbaManager::CorbaManager()
 
    // Print out the Tweek version information.
    vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
-      << std::string(tweek_ver.length() + 7, '=') << std::endl
+      << std::string(tweek_ver.length() + 14, '=') << std::endl
       << vprDEBUG_FLUSH;
    vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
-      << clrOutNORM(clrGREEN, "Tweek: ") << clrOutNORM(clrGREEN, tweek_ver)
+      << clrOutNORM(clrGREEN, "Tweek Server: ") << clrOutNORM(clrGREEN, tweek_ver)
       << clrRESET << std::endl << vprDEBUG_FLUSH;
    vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
-      << std::string(tweek_ver.length() + 7, '=') << std::endl
+      << std::string(tweek_ver.length() + 14, '=') << std::endl
       << vprDEBUG_FLUSH;
 }
 
