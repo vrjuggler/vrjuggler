@@ -517,22 +517,22 @@ public:
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline bool
-    getParityCheckState (void) {
-        return m_sio_imp.getParityCheckState();
+    getInputParityCheckState (void) {
+        return m_sio_imp.getInputParityCheckState();
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline vpr::Status
-    enableParityCheck (void) {
-        return m_sio_imp.enableParityCheck();
+    enableInputParityCheck (void) {
+        return m_sio_imp.enableInputParityCheck();
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline vpr::Status
-    disableParityCheck (void) {
-        return m_sio_imp.disableParityCheck();
+    disableInputParityCheck (void) {
+        return m_sio_imp.disableInputParityCheck();
     }
 
     // ------------------------------------------------------------------------
