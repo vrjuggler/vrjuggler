@@ -38,7 +38,7 @@ import javax.swing.plaf.metal.*;
 
 import com.incors.plaf.*;
 import com.incors.plaf.kunststoff.GradientTheme;
-import com.incors.plaf.kunststoff.KunststoffGradientTheme;
+import com.incors.plaf.kunststoff.KunststoffFlatTheme;
 import com.incors.plaf.kunststoff.KunststoffTheme;
 import com.incors.plaf.kunststoff.KunststoffUtilities;
 import com.incors.plaf.kunststoff.themes.KunststoffPalmtopTheme;
@@ -160,7 +160,7 @@ public class KunststoffMiniLookAndFeel extends MetalLookAndFeel
       }
       if (gradientTheme==null)
       {
-         gradientTheme = new KunststoffGradientTheme();
+         gradientTheme = new KunststoffFlatTheme();
       }
    }
 
