@@ -145,11 +145,11 @@ public:
    simplePfNavApp() : mStatusMessageEmitCount(0),// mWorldDcsTrans( 0.0f, 0.0f, 0.0f ),
       mInitialNavPos( 0.0f, 0.0f, 0.0f ),
       mBoundingSize(0.0f),
-      mUseDriveMode( true ),
       mConfiguredNoCollideModels( NULL ),
       mSoundNodes( NULL ),
       mUnCollidableModelGroup( NULL ),
-      mLightGroup( NULL )
+      mLightGroup( NULL ),
+      mCurNavIndex(0)
    {
       mSun = NULL;
       mRootNode = NULL;
@@ -157,7 +157,6 @@ public:
       //mWorldDCS = NULL;
       mCollidableModelGroup = NULL;
 
-      mVelNavDrive = NULL;
       mNavigationDCS = NULL;
 
       enableStats();
@@ -169,6 +168,7 @@ public:
       vjProjection::setNearFar( 0.4f, 200000 );
 
       mStats.setToggleButton("VJButton5");
+      mNavCycleButton.init(std::string("VJButton3"));
    }
 
    virtual void apiInit()
@@ -237,8 +237,13 @@ public:
    {
       // Deal with focus based changes
       mNavigationDCS->setActive(haveFocus());
+
+      if(haveFocus() && (mNavCycleButton->getData() == vjDigital::TOGGLE_ON))
+      {cycleNavigator();}
+
       if(haveFocus())
       {
+         // Emit cur position
          if (0 == (mStatusMessageEmitCount++ % 60))
          {
             vjVec3 cur_pos;
@@ -319,23 +324,39 @@ public:  // Configure the application
    {
       mInitialNavPos = initialPos;
 
-      // if the navigator is already created,
-      // then initScene has been called,
-      // so we need to set the home pos in the nav,
-      // not just the member var.
+      // if the navigator is already created then initScene has been called,
+      // so we need to set the home pos in the nav, not just the member var.
       // FIXME: some code duplication here.
-      if (mVelNavDrive != NULL)
+      if (mNavigators[0] != NULL)
       {
          vjDEBUG(vjDBG_ALL,0) << "setting pos\n" <<flush;
 
          vjMatrix initial_nav;              // Initial navigation position
          initial_nav.setTrans( mInitialNavPos );
 
-         mVelNavDrive->setHomePosition(initial_nav);
-         mVelNavDrive->setCurPos(initial_nav);
+         for(int i=0;i<mNavigators.size();i++)
+         {
+            mNavigators[i]->setHomePosition(initial_nav);
+            mNavigators[i]->setCurPos(initial_nav);
+         }
       }
    }
-   void setUseDriveMode(const bool val=true)  { mUseDriveMode = val;}
+
+   // Go to the next navigator
+   void cycleNavigator()
+   {
+      unsigned new_nav_index = mCurNavIndex + 1;
+      if(new_nav_index >= mNavigators.size())
+         new_nav_index = 0;
+
+      // Copy cur position to new navigator
+      mNavigators[new_nav_index]->setCurPos(mNavigators[mCurNavIndex]->getCurPos());
+
+      // Switch em
+      mCurNavIndex = new_nav_index;
+      mNavigationDCS->setNavigator(mNavigators[mCurNavIndex]);
+      vjDEBUG(vjDBG_ALL,0) << "simplePfNavApp: Navigation switched to: " << clrSetNORM(clrGREEN) << mNavigators[mCurNavIndex]->getName() << clrRESET << endl << vjDEBUG_FLUSH;
+   }
 
    void enableStats() { mUseStats = true;}
    void disableStats() {mUseStats = false;}
@@ -350,16 +371,17 @@ public:
    std::string    mFilePath;
    vjVec3         mInitialNavPos;
    float          mBoundingSize;       // XXX: This is a hack and should be refactored
-   bool           mUseDriveMode;
 
-   int mStatusMessageEmitCount;
+   int            mStatusMessageEmitCount;
 
    bool           mUseStats;
    vjPfAppStats   mStats;
 
    // navigation objects.
-   velocityNav*   mVelNavDrive;
-   pfNavDCS*      mNavigationDCS;
+   std::vector<navigator*>    mNavigators;      // A list of the navigators in the system
+   unsigned                   mCurNavIndex;     // Index of the current navigator
+   pfNavDCS*                  mNavigationDCS;
+   vjDigitalInterface         mNavCycleButton;  // Button to cycle the navigation
 
    // SCENE GRAPH NODES
    pfGroup*       mLightGroup;
@@ -537,25 +559,39 @@ void simplePfNavApp::initScene()
    vjMatrix initial_nav;              // Initial navigation position
    initial_nav.setTrans( mInitialNavPos );
 
-   mVelNavDrive = new velocityNav;
-   mVelNavDrive->setHomePosition(initial_nav);
-   mVelNavDrive->setCurPos(initial_nav);
-   if(mUseDriveMode)
-      mVelNavDrive->setMode(velocityNav::DRIVE);
-   else
-      mVelNavDrive->setMode(velocityNav::FLY);
+
+   // --- CREATE VELOCITY navigator --- //
+   velocityNav* vel_nav_drive = new velocityNav;
+   vel_nav_drive->setHomePosition(initial_nav);
+   vel_nav_drive->setCurPos(initial_nav);
+   vel_nav_drive->setMode(velocityNav::DRIVE);
+   vel_nav_drive->setName("VelocityNav: Drive mode");
+
+   // --- CREATE FLY navigator --- //
+   velocityNav* vel_nav_fly = new velocityNav;
+   vel_nav_fly->setHomePosition(initial_nav);
+   vel_nav_fly->setCurPos(initial_nav);
+   vel_nav_fly->setMode(velocityNav::FLY);
+   vel_nav_fly->setName("VelocityNav: Fly mode");
 
    // --- COLLISION DETECTORS --- //
    // Terrain collider
    //planeCollider* collide = new planeCollider;
    pfPogoCollider*  ride_collide = new pfPogoCollider(mCollidableModelGroup);
-   mVelNavDrive->addCollider(ride_collide);
+   vel_nav_drive->addCollider(ride_collide);
 
    // Set the navigator's collider.
    pfBoxCollider* correction_collide = new pfBoxCollider( mCollidableModelGroup );
-   mVelNavDrive->addCollider( correction_collide );
+   vel_nav_drive->addCollider( correction_collide );
+   vel_nav_fly->addCollider( correction_collide );
 
-   mNavigationDCS->setNavigator(mVelNavDrive);
+   // -- ADD NAVERS to list --- //
+   mNavigators.push_back(vel_nav_drive);
+   mNavigators.push_back(vel_nav_fly);
+
+   // Set initial navigator to use
+   mCurNavIndex = 0;
+   mNavigationDCS->setNavigator(mNavigators[mCurNavIndex]);
 
    // make sure config is processed, before doing sound replace traversal.
    this->configProcessPending();
