@@ -56,7 +56,7 @@ SignalSet::emptySet () {
 
 #ifdef HAVE_SIGEMPTYSET
     if ( sigemptyset(&m_sigset) != 0 ) {
-        status.setCode(vpr::ReturnStatus::Failure);
+        status.setCode(vpr::ReturnStatus::Fail);
     }
 #else
     m_sigset = 0;
@@ -71,7 +71,7 @@ SignalSet::fillSet () {
 
 #ifdef HAVE_SIGFILLSET
     if ( sigfillset(&m_sigset) != 0 ) {
-        status.setCode(vpr::ReturnStatus::Failure);
+        status.setCode(vpr::ReturnStatus::Fail);
     }
 #else
     m_sigset = ~(sigset_t) 0;
@@ -88,7 +88,7 @@ SignalSet::addSignal (const int sig_num) {
 
 #ifdef HAVE_SIGADDSET
     if ( sigaddset(&m_sigset, sig_num) != 0 ) {
-        status.setCode(vpr::ReturnStatus::Failure);
+        status.setCode(vpr::ReturnStatus::Fail);
     }
 #else
     m_sigset |= (1 << (sig_num - 1));
@@ -105,7 +105,7 @@ SignalSet::removeSignal (const int sig_num) {
 
 #ifdef HAVE_SIGDELSET
     if ( sigdelset(&m_sigset, sig_num) != 0 ) {
-        status.setCode(vpr::ReturnStatus::Failure);
+        status.setCode(vpr::ReturnStatus::Fail);
     }
 #else
     m_sigset &= ~(1 << (sig_num - 1)) ;
@@ -155,7 +155,7 @@ SigHandler::registerHandler (const int sig_num,
     vpr::ReturnStatus status;
 
     if ( vpr::SigHandler::sigaction(sig_num, &action.m_sa) != 0 ) {
-        status.setCode(vpr::ReturnStatus::Failure);
+        status.setCode(vpr::ReturnStatus::Fail);
     }
 
     return status;

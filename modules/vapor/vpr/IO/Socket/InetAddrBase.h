@@ -178,13 +178,13 @@ public:
      *                 address).
      * @param port    The port to associate with the IP address.
      *
-     * @return <code>vpr::ReturnStatus::Success</code> is returned if the address
+     * @return <code>vpr::ReturnStatus::Succeed</code> is returned if the address
      *         was valid and the set operation succeeded.<br>
-     *         <code>vpr::ReturnStatus::Failure</code> is returned if the address
+     *         <code>vpr::ReturnStatus::Fail</code> is returned if the address
      *         could not be looked up.
      */
     vpr::ReturnStatus setAddress (const std::string& addr)
-    {vprASSERT(false && "Implement me"); return vpr::ReturnStatus(vpr::ReturnStatus::Failure); }
+    {vprASSERT(false && "Implement me"); return vpr::ReturnStatus(vpr::ReturnStatus::Fail); }
 
     /**
      * Set the address for this object using the given address and port
@@ -193,13 +193,13 @@ public:
      *
      * @param addr an address string in IP format or hostname formant
      *
-     * @return <code>vpr::ReturnStatus::Success</code> is returned if the address was
+     * @return <code>vpr::ReturnStatus::Succeed</code> is returned if the address was
      *         valid and the set operation succeeded.<br>
-     *         <code>vpr::ReturnStatus::Failure</code> is returned if the address
+     *         <code>vpr::ReturnStatus::Fail</code> is returned if the address
      *         could not be looked up.
      */
     vpr::ReturnStatus setAddress (const std::string& addr, const Uint16 port)
-    {vprASSERT(false && "Implement me"); return vpr::ReturnStatus(vpr::ReturnStatus::Failure); }
+    {vprASSERT(false && "Implement me"); return vpr::ReturnStatus(vpr::ReturnStatus::Fail); }
 
     /**
      * Set the address for this object using the given address and port
@@ -212,7 +212,7 @@ public:
      * @param port    The port to associate with the IP address.
      */
     vpr::ReturnStatus setAddress (const vpr::Uint32 address, const vpr::Uint16 port)
-    {vprASSERT(false && "Implement me"); return vpr::ReturnStatus(vpr::ReturnStatus::Failure); }
+    {vprASSERT(false && "Implement me"); return vpr::ReturnStatus(vpr::ReturnStatus::Fail); }
 
     /**
      * Overloaded assignment operator to ensure that assignments work
