@@ -32,8 +32,16 @@
 
 #include <cluster/Plugins/PluginConfig.h>
 
-#include <cluster/Plugins/SwapLockWiredPlugin/SwapLockWiredPlugin.h> // my header...
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <boost/concept_check.hpp>
 
+#include <vpr/Thread/Thread.h>
+
+#include <vpr/Util/ReturnStatus.h>
+#include <vpr/IO/Socket/SocketStream.h>
+#include <vpr/IO/Port/SerialPort.h>
 #include <gadget/Util/Debug.h>
 #include <cluster/ClusterDepChecker.h>
 
@@ -47,13 +55,7 @@
 #include <cluster/Packets/SyncRequest.h>
 #include <cluster/Packets/SyncAck.h>
 
-#include <vpr/Thread/Thread.h>
-
-#include <vpr/Util/ReturnStatus.h>
-#include <vpr/IO/Socket/SocketStream.h>
-#include <vpr/IO/Port/SerialPort.h>
-
-#include <boost/concept_check.hpp>
+#include <cluster/Plugins/SwapLockWiredPlugin/SwapLockWiredPlugin.h> // my header...
 
 
 cluster::ClusterPlugin* initPlugin()
