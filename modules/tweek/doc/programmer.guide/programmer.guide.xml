@@ -2539,9 +2539,9 @@ import tweek.*;                                            <co
 
             <para>Now we can begin writing the Bean code. Besides the class
             <classname>SliderObserverImpl</classname>, this Bean has only one
-            class: <classname>NetworkTest</classname>. It will provide the GUI
-            representation of the numeric data. The declaration of the class
-            follows.</para>
+            public class: <classname>NetworkTest</classname>. It will provide
+            the GUI representation of the numeric data. The declaration of the
+            class and its package-visible helper follow.</para>
 
             <programlisting>/**
  * This is an example of a JavaBean that Tweek can load dynamically.  It holds
@@ -2554,9 +2554,16 @@ public class NetworkTest
    extends JPanel                                          <co
                 id="NetworkTest.java.superclass"
                 linkends="NetworkTest.java.superclass.co" />
-   implements CommunicationListener, TweekFrameListener    <co
+   implements CommunicationListener                        <co
                 id="NetworkTest.java.interfaces"
                 linkends="NetworkTest.java.interfaces.co" />
+{
+...
+}
+
+class FrameListener extends TweekFrameAdapter              <co
+                id="NetworkTest.java.helper"
+                linkends="NetworkTest.java.helpers.co" />
 {
 ...
 }</programlisting>
@@ -2577,11 +2584,17 @@ public class NetworkTest
                 By implementing
                 <interfacename>org.vrjuggler.tweek.net.CommunicationListener</interfacename>,
                 the Bean will be informed by the Tweek Java GUI whenever the
-                communication state with a CORBA service changes. This Bean
-                also listens for <classname>TweekFrameEvents</classname> so
-                that it can shut itself down cleanly. To be informed of such
-                events, it must implement
-                <interfacename>org.vrjuggler.tweek.event.TweekFrameListener</interfacename>.</para>
+                communication state with a CORBA service changes.</para>
+              </callout>
+
+              <callout arearefs="NetworkTest.java.helper"
+                       id="NetworkTest.java.helper.co">
+                <para>This Bean also listens for
+                <classname>TweekFrameEvents</classname> so that it can shut
+                itself down cleanly. To be informed of such events, a helper
+                class that extends
+                <classname>org.vrjuggler.tweek.event.TweekFrameAdapter</classname>
+                exists.</para>
               </callout>
             </calloutlist>
           </section>
@@ -2704,8 +2717,8 @@ public void connectionOpened(CommunicationEvent e)                        <co
    {
       // First, we need a Java object that implements the Observer.  That
       // object must be registered with the Java CORBA service.
-      m_slider_observer = new SliderObserverImpl(mDataSlider,
-                                                 slider_subject);         <co
+      mSliderObserver = new SliderObserverImpl(mDataSlider,
+                                               slider_subject);           <co
                 id="NetworkTest.java.observer.create"
                 linkends="NetworkTest.java.observer.create.co" />
       corba_service.registerObject(mSliderObserver, "SliderObserver");    <co
@@ -2855,43 +2868,89 @@ public void connectionClosed(ConnectEvent e)                              <co
             <title>Handling Frame Events</title>
 
             <para>This Bean makes an effort to shut down open CORBA
-            connections when the Tweek GUI is closed. It does this by
-            implementing
-            <interfacename>org.vrjuggler.tweek.event.TweekFrameListener</interfacename>
-            which has a single method,
-            <methodname>frameStateChanged()</methodname>.</para>
+            connections when the Tweek GUI is closed. It does this through a
+            helper class that extends
+            <classname>org.vrjuggler.tweek.event.TweekFrameAdapter</classname>,
+            overriding only one method:
+            <methodname>frameClosing()</methodname>. This method calls back
+            into the NetworkTest class, invoking its own
+            <methodname>frameClosing()</methodname> method. For more
+            information about the other Tweek GUI frame events delivered
+            through the interface
+            <interfacename>org.vrjuggler.tweek.event.TweekFrameListener</interfacename>,
+            refer to the Tweek Java API reference.</para>
 
-            <programlisting>public void frameStateChanged(TweekFrameEvent e)
+            <programlisting>public class NetworkTest
+   extends JPanel
+   implements CommunicationListener
 {
-   if ( e.getType() == TweekFrameEvent.FRAME_CLOSE )            <co
+...
+   public boolean frameClosing()
+   {
+      disconnect();
+      return true;
+   }
+...
+}
+
+class FrameListener extends TweekFrameAdapter
+{
+   public FrameListener(NetworkTest bean)
+   {
+      this.bean = bean;
+   }
+
+   public boolean frameClosing(TweekFrameEvent e)               <co
                 id="NetworkTest.java.frame.close"
                 linkends="NetworkTest.java.frame.close.co" />
    {
-      if ( mSliderObserver != null )
-      {
-         mSliderObserver.detach();                              <co
+      return bean.frameClosing();                               <co
                 id="NetworkTest.java.frame.detach"
                 linkends="NetworkTest.java.frame.detach.co" />
-         mSliderObserver = null;
-      }
    }
+
+   private NetworkTest bean = null;
 }</programlisting>
 
             <calloutlist>
               <callout arearefs="NetworkTest.java.frame.close"
                        id="NetworkTest.java.frame.close.co">
-                <para>If the event is the closing of the Tweek GUI frame, the
-                CORBA reference clean-up steps will be taken.</para>
+                <para>This class overrides only the method invoked when the
+                Tweek GUI frame is closing. If this method returns
+                <constant>false</constant>, then the GUI frame will not
+                close.</para>
               </callout>
 
               <callout arearefs="NetworkTest.java.frame.detach"
                        id="NetworkTest.java.frame.detach.co">
-                <para>If the slider observer is defined, we assume that the
-                observer is attached. The handy
-                <methodname>detach()</methodname> method is invoked to detach
-                this observer from the remote subject.</para>
+                <para>The handling of the frame closing event is delegated to
+                <methodname>NetworkTest.frameClosing()</methodname>, which in
+                turn calls <methodname>NetworkTest.disconnect()</methodname>
+                to shut down the CORBA connection cleanly.</para>
               </callout>
             </calloutlist>
+
+            <para>For the helper class <classname>FrameListener</classname> to
+            be notified of Tweek GUI frame events, it must be registered with
+            the Tweek event listener registry (a singleton). This step is
+            performed in the <classname>NetworkTest</classname> constructor,
+            as shown below.</para>
+
+            <programlisting>public NetworkTest()
+{
+   try
+   {
+      jbInit();
+   }
+   catch(Exception e)
+   {
+      e.printStackTrace();
+   }
+
+   mFrameListener = new FrameListener(this);
+   EventListenerRegistry.instance().registerListener(mFrameListener,
+                                                     TweekFrameListener.class);
+}</programlisting>
           </section>
 
           <section>
