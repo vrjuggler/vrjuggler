@@ -18,6 +18,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Zm800"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;&quot;$(GMTL_ROOT)\include&quot;;..\..\..\modules\vapor;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\..\modules\gadgeteer;..\..\..\modules\vrjuggler;..;..\..\VPR;..\..\JCCL;..\..\Gadgeteer"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_VRJ_BUILD_"
