@@ -54,6 +54,7 @@ public class DisconnectionDialog extends JDialog
    public DisconnectionDialog(Frame owner, String title, java.util.List ORBs)
    {
       super(owner, title);
+      enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 
       try
       {
@@ -77,13 +78,7 @@ public class DisconnectionDialog extends JDialog
       this.mCorbaServiceList.addListSelectionListener(new CorbaServiceListSelectionListener());
 
       this.setModal(true);
-      this.setLocationRelativeTo(owner);
-   }
-
-   public void display ()
-   {
       this.pack();
-      this.setVisible(true);
    }
 
    public int getStatus ()
@@ -100,14 +95,15 @@ public class DisconnectionDialog extends JDialog
    public static final int CANCEL_OPTION     = JOptionPane.CANCEL_OPTION;
    public static final int CLOSED_OPTION     = JOptionPane.CLOSED_OPTION;
 
-   protected void processWindowEvent (WindowEvent e)
+   protected void processWindowEvent(WindowEvent e)
    {
-      super.processWindowEvent(e);
-
       if (e.getID() == WindowEvent.WINDOW_CLOSING)
       {
          status = CLOSED_OPTION;
+         dispose();
       }
+
+      super.processWindowEvent(e);
    }
 
    private void jbInit() throws Exception
@@ -155,7 +151,7 @@ public class DisconnectionDialog extends JDialog
    private void disconnectButtonAction(ActionEvent e)
    {
       status = DISCONNECT_OPTION;
-      setVisible(false);
+      dispose();
    }
 
    /**
@@ -166,7 +162,7 @@ public class DisconnectionDialog extends JDialog
    {
       selectedCorbaService = null;
       status = CANCEL_OPTION;
-      setVisible(false);
+      dispose();
    }
 
    private class CorbaServiceListSelectionListener

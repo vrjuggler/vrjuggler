@@ -804,7 +804,12 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
    {
       DisconnectionDialog dialog =
          new DisconnectionDialog(this, "Disconnect from CORBA Service", mORBs);
-      dialog.display();
+      Dimension dlgSize = dialog.getPreferredSize();
+      Dimension frmSize = getSize();
+      Point loc = getLocation();
+      dialog.setLocation((frmSize.width - dlgSize.width) / 2 + loc.x,
+                         (frmSize.height - dlgSize.height) / 2 + loc.y);
+      dialog.show();
 
       if ( dialog.getStatus() == DisconnectionDialog.DISCONNECT_OPTION )
       {
@@ -858,7 +863,12 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
 
    private void prefsEditBean (ActionEvent e)
    {
-      mBeanPrefsDialog.display();
+      Dimension dlgSize = mBeanPrefsDialog.getPreferredSize();
+      Dimension frmSize = getSize();
+      Point loc = getLocation();
+      mBeanPrefsDialog.setLocation((frmSize.width - dlgSize.width) / 2 + loc.x,
+                                   (frmSize.height - dlgSize.height) / 2 + loc.y);
+      mBeanPrefsDialog.show();
    }
 
    private void beansLoadAction(ActionEvent e)

@@ -54,13 +54,14 @@ import org.vrjuggler.tweek.beans.BeanPreferences;
  */
 public class BeanPrefsDialog extends JDialog
 {
-   public BeanPrefsDialog (java.awt.Frame owner, String title)
+   public BeanPrefsDialog(java.awt.Frame owner, String title)
    {
       super(owner, title);
+      enableEvents(AWTEvent.WINDOW_EVENT_MASK);
       init();
 
       this.setModal(true);
-      this.setLocationRelativeTo(owner);
+      this.pack();
    }
 
    /**
@@ -70,7 +71,11 @@ public class BeanPrefsDialog extends JDialog
     */
    public BeanPrefsDialog ()
    {
+      enableEvents(AWTEvent.WINDOW_EVENT_MASK);
       init();
+
+      this.setModal(true);
+      this.pack();
    }
 
    /**
@@ -97,16 +102,6 @@ public class BeanPrefsDialog extends JDialog
       return mPrefsBeans.size();
    }
 
-   /**
-    * Displays this dialog box.  Call this when the user wants to edit Bean
-    * preferences.
-    */
-   public void display ()
-   {
-      this.pack();
-      this.setVisible(true);
-   }
-
    public int getStatus ()
    {
       return status;
@@ -118,12 +113,13 @@ public class BeanPrefsDialog extends JDialog
 
    protected void processWindowEvent (WindowEvent e)
    {
-      super.processWindowEvent(e);
-
       if ( e.getID() == WindowEvent.WINDOW_CLOSING )
       {
          status = CLOSED_OPTION;
+         dispose();
       }
+
+      super.processWindowEvent(e);
    }
 
    private void init ()
@@ -307,7 +303,7 @@ public class BeanPrefsDialog extends JDialog
       {
          status = OK_OPTION;
          commit();
-         this.setVisible(false);
+         dispose();
       }
    }
 
@@ -322,7 +318,7 @@ public class BeanPrefsDialog extends JDialog
    private void cancelButtonClicked (ActionEvent e)
    {
       status = CANCEL_OPTION;
-      setVisible(false);
+      dispose();
    }
 
    private int status;
