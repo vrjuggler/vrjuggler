@@ -29,6 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
 #include <gadget/Devices/DriverConfig.h>
 
 #include <jccl/Config/ConfigElement.h>
@@ -37,9 +38,7 @@
 
 #include <drivers/Microsoft/SpeechRecognition/MSFTSpeechRecogString.h>
 #include <drivers/Microsoft/SpeechRecognition/MSFTSpeechRecogDigital.h>
-#include <drivers/Microsoft/SpeechRecognition/SpeechRecogDevices.h>
 
-using namespace gadget;
 
 extern "C"
 {
