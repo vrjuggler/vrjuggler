@@ -897,7 +897,7 @@ if test "x$OS_TYPE" = "xWin32" ; then
 
     JDK_HOME=`unix2dos -p "$JDK_HOME"`
 
-    APP_EXTRA_LIBS_BASIC=`unix2dos "$APP_EXTRA_LIBS_BASIC"`
+    APP_EXTRA_LIBS=`unix2dos "$APP_EXTRA_LIBS"`
     APP_EXTRA_LIBS_GL=`unix2dos "$APP_EXTRA_LIBS_GL"`
     APP_EXTRA_LIBS_PF=`unix2dos "$APP_EXTRA_LIBS_PF"`
     APP_EXTRA_LIBS_AW=`unix2dos "$APP_EXTRA_LIBS_AW"`
@@ -999,7 +999,7 @@ case $OS_TYPE in
 esac
 
 vrj_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
-vrj_extra_libs="$APP_EXTRA_LIBS_BASIC $APP_EXTRA_LIBS_GL $APP_EXTRA_LIBS_END"
+vrj_extra_libs="$APP_EXTRA_LIBS $APP_EXTRA_LIBS_GL $APP_EXTRA_LIBS_END"
 
 DPP_SUBST
 
