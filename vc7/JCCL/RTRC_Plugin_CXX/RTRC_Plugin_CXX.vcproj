@@ -38,7 +38,7 @@
 				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rtd.lib omnithread30_rtd.lib omniDynamic$(OMNIORB_VERSION)_rtd.lib jccl_d.lib tweek_d.lib vpr_d.lib cppdom_d.lib libnspr4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/corba_rtrc_d.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\VPR\DebugDLL;..\DebugDLL;..\..\Tweek_CXX\DebugDLL;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(OMNIORB_ROOT)\lib\x86_win32&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
+				AdditionalLibraryDirectories="..\..\VPR\DebugDLL;..\DebugDLL;..\..\Tweek_CXX\DebugDLL;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(OMNIORB_LIB)&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/corba_rtrc_d.pdb"
 				SubSystem="2"
@@ -51,7 +51,7 @@
 			<Tool
 				Name="VCPreBuildEventTool"
 				Description="Generating C++ code from CORBA IDL..."
-				CommandLine="$(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -I..\..\..\modules\tweek -C. -I..\..\..\modules\jackal\plugins ..\..\..\modules\jackal\plugins\corba_rtrc\idl\RemoteReconfigSubject.idl"/>
+				CommandLine="$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -I..\..\..\modules\tweek -C. -I..\..\..\modules\jackal\plugins ..\..\..\modules\jackal\plugins\corba_rtrc\idl\RemoteReconfigSubject.idl"/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
@@ -92,7 +92,7 @@
 				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rt.lib omnithread30_rt.lib omniDynamic$(OMNIORB_VERSION)_rt.lib jccl.lib tweek.lib vpr.lib cppdom.lib libnspr4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/corba_rtrc.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\VPR\ReleaseDLL;..\ReleaseDLL;..\..\Tweek_CXX\ReleaseDLL;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(OMNIORB_ROOT)\lib\x86_win32&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
+				AdditionalLibraryDirectories="..\..\VPR\ReleaseDLL;..\ReleaseDLL;..\..\Tweek_CXX\ReleaseDLL;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(OMNIORB_LIB)&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
 				GenerateDebugInformation="FALSE"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -106,7 +106,7 @@
 			<Tool
 				Name="VCPreBuildEventTool"
 				Description="Generating C++ code from CORBA IDL..."
-				CommandLine="$(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -I..\..\..\modules\tweek -C. -I..\..\..\modules\jackal\plugins ..\..\..\modules\jackal\plugins\corba_rtrc\idl\RemoteReconfigSubject.idl"/>
+				CommandLine="$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -I..\..\..\modules\tweek -C. -I..\..\..\modules\jackal\plugins ..\..\..\modules\jackal\plugins\corba_rtrc\idl\RemoteReconfigSubject.idl"/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
