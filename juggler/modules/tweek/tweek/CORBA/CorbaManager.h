@@ -43,6 +43,7 @@
 #include <omnithread.h>
 #include <omniORB3/CORBA.h>
 #include <vpr/Thread/Thread.h>
+#include <vpr/Util/ReturnStatus.h>
 
 #include <tweek/CORBA/SubjectManagerImpl.h>
 
@@ -65,12 +66,24 @@ public:
     * Gets CORBA ready.
     * Creates a thread and runs the CORBA server.
     */
-   void init(int argc = 0, char** argv = NULL);
+   vpr::ReturnStatus init(int argc = 0, char** argv = NULL);
+
+   /**
+    * Checks the validity of this service object to ensure that initialization
+    * completed successfully.
+    *
+    * @return true if init() the ORB and POA references were initialized
+    *         successfully.
+    */
+   bool isValid (void)
+   {
+      return ! (CORBA::is_nil(m_orb) || CORBA::is_nil(m_poa));
+   }
 
    /**
     * Binds the interface object.
     */
-   void registerSubjectManager(tweek::SubjectManagerImpl* mgr);
+   vpr::ReturnStatus registerSubjectManager(tweek::SubjectManagerImpl* mgr);
 
    const PortableServer::POA_var& getPOA (void)
    {
