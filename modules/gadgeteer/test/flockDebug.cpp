@@ -106,8 +106,8 @@ int main()
 {
    // Flock parameters
    flock.setPort("/dev/ttyS0");  // linux
-   //flock.setBaudRate(38400);
-   flock.setBaudRate(115200);
+   flock.setBaudRate(38400);
+   //flock.setBaudRate(115200);
    //fconfig.numBirds = 1;
    flock.setHemisphere(UPPER_HEM);
    flock.setFilterType(AC_NARROW);
@@ -136,6 +136,7 @@ int main()
          << "9 - Toggle streaming mode.\n"
          << "a - Print samples.\n"
          << "c - Print samples continuously.\n"
+         << "x - Close the bird.\n"
          << "   -- Test modes --.\n"
          << "r - Read in 10 OK's from bird (test mode 1)\n"
          << "Q - Quit\n";
@@ -215,7 +216,10 @@ int main()
       case 'c':
          printContinuousSamples();
          break;
-         
+      case 'x':
+         std::cout << "Closing the flock...\n";
+         flock.close();
+         break;
       case 'r':
          readTest();
          break;
