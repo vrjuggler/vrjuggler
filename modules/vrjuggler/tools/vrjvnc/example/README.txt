@@ -1,6 +1,9 @@
-This example creates a vnc desktop viewer and draws it using OpenGL.
+Overview
+--------
 
-The example allows the user to grab, move, and resize the vnc desktop
+This example creates a VNC desktop viewer and draws it using OpenGL.
+
+The example allows the user to grab, move, and resize the VNC desktop
 interactively.
 
 This is not meant to be a full application but is only meant to show how
@@ -11,3 +14,11 @@ directory.  It is used to create a configuration chunk that is needed to
 configure the application with the correct vnc desktop parameters.  This
 is optional in end-user applications, but is provided with this sample to
 make it easier to customize the applciation.
+
+License
+-------
+
+This example application is distributed under the GNU General Public
+License (GPL).  This is necessary because it uses the VRJ VNC software
+which is also distributed under the GPL.  Refer to COPYING.txt in the
+parent directory (..) for the full GPL text.
