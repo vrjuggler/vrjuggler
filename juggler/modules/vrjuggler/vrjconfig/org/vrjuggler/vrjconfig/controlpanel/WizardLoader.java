@@ -49,19 +49,22 @@ import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 
 public class WizardLoader
 {
-   static Wizard loadWizard(String jar_name)
+   static Wizard loadWizard(String jarName)
       throws IOException
    {
       Document doc = null;
       String wizard_xml_filename = null;
-      
+
       // Expand in the case of enviroment variables
       EnvironmentService env_service = new EnvironmentServiceProxy();
-      jar_name = env_service.expandEnvVars(jar_name);
+      jarName = env_service.expandEnvVars(jarName);
 
       try
       {
-         JarInputStream in = new JarInputStream(new BufferedInputStream(new FileInputStream(jar_name)));
+         JarInputStream in =
+            new JarInputStream(
+               new BufferedInputStream(new FileInputStream(jarName))
+            );
 
          JarEntry entry = in.getNextJarEntry();
          while (entry != null && wizard_xml_filename == null)
@@ -82,22 +85,22 @@ public class WizardLoader
       {
          System.err.println("Reached EOF!");
       }
-      
+
       Wizard wizard = new Wizard();
-      
+
       try
       {
          // Add the .jar file for the wizard to the search path.
          // XXX: Is this the best way to do this?
          BeanJarClassLoader class_loader = BeanJarClassLoader.instance();
-         class_loader.addJarFile(new JarFile(jar_name));
+         class_loader.addJarFile(new JarFile(jarName));
 
          SAXBuilder sb = new SAXBuilder(false);
-         java.net.URL url = new java.net.URL("jar:file:"
-            + jar_name + "!/" + wizard_xml_filename);
+         java.net.URL url = new java.net.URL("jar:file:" + jarName + "!/" +
+                                             wizard_xml_filename);
 
          doc = sb.build(url);
-         
+
          System.out.println(doc);
          System.out.println(doc.getRootElement());
 
@@ -106,8 +109,9 @@ public class WizardLoader
          {
             Element e = (Element)itr.next();
             System.out.println(e.getAttribute("class").getValue());
-            Class test_class = Class.forName(e.getAttribute("class").getValue(),
-                                             true, class_loader);
+            Class test_class =
+               Class.forName(e.getAttribute("class").getValue(), true,
+                             class_loader);
             wizard.add((WizardStep)test_class.newInstance());
          }
       }
