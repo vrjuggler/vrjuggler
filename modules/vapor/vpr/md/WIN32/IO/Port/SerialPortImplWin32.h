@@ -435,6 +435,48 @@ public:
     // ------------------------------------------------------------------------
     vpr::Status setCharacterSize(const vpr::SerialTypes::CharacterSizeOption bpb);
 
+    /**
+     * Gets the current read state for the port.
+     *
+     * @pre The serial port is open.
+     * @post The read state (either enabled or disabled) is returne to the 
+     *       caller.
+     *
+     * @return <code>true</code> is returned if bytes can be read from the
+     *         device.
+     */
+    inline bool
+    getReadState (void) {
+        return true;
+    }
+
+    /**
+     * Enables the receiver so that bytes can be read from the port.
+     *
+     * @pre The serial port is open.
+     * @post An attempt is made to make the device readable.
+     *
+     * @return vpr::Status::Success is returned if reading is enabled
+     *         successfully.
+     */
+    inline vpr::Status
+    enableRead (void) {
+        return vpr::Status();
+    }
+
+    /**
+     * Disables the receiver so that bytes cannot be read from the port.
+     *
+     * @pre The serial port is open.
+     * @post An attempt is made to make the device unreadable.
+     *
+     * @return A vpr::Status object describing the results of the operation.
+     */
+    inline vpr::Status
+    disableRead (void) {
+        return vpr::Status(vpr::Status::Failure);
+    }
+
     // ------------------------------------------------------------------------
     //: Get the number of stop bits in use.  This will be either 1 or 2.
     //
