@@ -3,12 +3,14 @@
 
 #include <iostream>
 
-#include <TestCase.h>
-#include <TestSuite.h>
-#include <TestCaller.h>
+#include <cppunit/TestCase.h>
+#include <cppunit/TestSuite.h>
+#include <cppunit/TestCaller.h>
 
 #include <vrj/Math/Math.h>
 #include <vrj/Math/Quat.h>
+
+#include <JugglerTest.h>
 
 /*****************************************************************
  tests out the functionality expected of vrj::Quat
@@ -17,10 +19,10 @@
 namespace vrjTest
 {
 
-class QuatSelfTest : public TestCase
+class QuatSelfTest : public CppUnit::TestCase, public JugglerTest
 {
 public:
-   QuatSelfTest( std::string name ) : TestCase (name)
+   QuatSelfTest() : CppUnit::TestCase ()
    {
    }
    
@@ -36,9 +38,9 @@ public:
       // consider allowing both kinds of identity to be made in the quat API...
       vrj::Quat quat;
       quat.makeIdent();
-      assertTest( quat == vrj::Quat::identity() );
-      assertTest( quat[VJ_W] == 1.0f && quat[VJ_X] == 0.0f && 
-                  quat[VJ_Y] == 0.0f && quat[VJ_Z] == 0.0f );
+      CPPUNIT_ASSERT( quat == vrj::Quat::identity() );
+      CPPUNIT_ASSERT( quat[VJ_W] == 1.0f && quat[VJ_X] == 0.0f && 
+                      quat[VJ_Y] == 0.0f && quat[VJ_Z] == 0.0f );
    }
       
    void makeRotTest()
@@ -65,8 +67,8 @@ public:
       */
    
             // make sure that normalize doesn't change the rotation...         
-      assertTest( q1.isEqual( q3, VJ_QUAT_EPSILON ) );
-      assertTest( q2.isEqual( q4, VJ_QUAT_EPSILON ) );
+      CPPUNIT_ASSERT( q1.isEqual( q3, VJ_QUAT_EPSILON ) );
+      CPPUNIT_ASSERT( q2.isEqual( q4, VJ_QUAT_EPSILON ) );
    }
 
    void xformVecSweepTest()
@@ -84,11 +86,11 @@ public:
 
          vrj::Vec3 result = q * v;
          if (x == 0)
-            assertTest( result[0] < 0.001 && result[1] < 0.001 && result[2] > 0.999 );
+            CPPUNIT_ASSERT( result[0] < 0.001 && result[1] < 0.001 && result[2] > 0.999 );
          if (x == 90)
-            assertTest( result[0] < 0.001 && result[1] < -0.999 && result[2] < 0.001 );
+            CPPUNIT_ASSERT( result[0] < 0.001 && result[1] < -0.999 && result[2] < 0.001 );
          if (x == 180)
-            assertTest( result[0] < 0.001 && result[1] < 0.001 && result[2] < -0.999 );
+            CPPUNIT_ASSERT( result[0] < 0.001 && result[1] < 0.001 && result[2] < -0.999 );
          //std::cout<<result<<"\n"<<std::flush;
       }
       //std::cout<<"\n"<<std::flush;
@@ -111,7 +113,7 @@ public:
          //std::cout<<q2[VJ_W]<<" "<<q2[VJ_X]<<" "<<q2[VJ_Y]<<" "<<q2[VJ_Z]<<"\n"<<std::flush;
 
          // make i a positive by x*360, store in b.  needed so I can use the % operator with neg values..
-         assertTest( q.isEqual( q2, VJ_QUAT_EPSILON ) );
+         CPPUNIT_ASSERT( q.isEqual( q2, VJ_QUAT_EPSILON ) );
 
          float b = i;
          while ( b < 0.0f)
@@ -128,7 +130,7 @@ public:
             float temp4 = c - 0.5;
             //   std::cout<<temp1<<" "<<temp2<<" "<<temp3<<" "<<temp4<<" "<<vrj::Math::rad2deg(rad)<<" "<<b<<"\n"<<std::flush;
 
-            assertTest( temp1 <= temp2 && temp3 >= temp4 );     
+            CPPUNIT_ASSERT( temp1 <= temp2 && temp3 >= temp4 );     
          }    
       }
       //std::cout<<"\n"<<std::flush;
@@ -155,7 +157,7 @@ public:
           half_original_angle = vrj::Math::abs( half_original_angle );
 
           float tol = 0.1;
-          assertTest( (half_original_angle <= (half_quat_angle + tol)) &&
+          CPPUNIT_ASSERT( (half_original_angle <= (half_quat_angle + tol)) &&
                (half_original_angle >= (half_quat_angle - tol)) );
       }
 
@@ -185,7 +187,7 @@ public:
       //std::cout<<r<<"\n"<<std::flush;
       //std::cout<<"\n"<<std::flush;
 
-      assertTest( r[2] > 0.99f );
+      CPPUNIT_ASSERT( r[2] > 0.99f );
    }
 
    // another quaternion product test
@@ -212,7 +214,7 @@ public:
       //std::cout<<r<<"\n"<<std::flush;
       //std::cout<<"\n"<<std::flush;
 
-      assertTest( r[0] > 0.7 && r[2] > 0.7 );
+      CPPUNIT_ASSERT( r[0] > 0.7 && r[2] > 0.7 );
    }
 
    void xformVecTest()
@@ -228,12 +230,12 @@ public:
       // (should not move)
       r = q1 * v;
       //std::cout<<r<<"\n"<<std::flush;
-      assertTest( r[1] > 0.999 );
+      CPPUNIT_ASSERT( r[1] > 0.999 );
 
       // rotate forward
       r = q2 * v;
       //std::cout<<r<<"\n"<<std::flush;
-      assertTest( r[1] > 0.7 && r[2] > 0.7 );
+      CPPUNIT_ASSERT( r[1] > 0.7 && r[2] > 0.7 );
 
       //std::cout<<"\n"<<std::flush;
    }
@@ -264,7 +266,7 @@ public:
       vrj::Quat qqq;
       qqq.makeRot( vrj::Math::deg2rad( 180.0f ), 0, 1, 0 );
       std::cout<<"qqq: "<<qqq<<" .. "<<qqq[VJ_W]<<" "<<qqq[VJ_X]<<" "<<qqq[VJ_Y]<<" "<<qqq[VJ_Z]<<"\n"<<std::flush;
-      assertTest( qqq[VJ_W] < VJ_QUAT_EPSILON && qqq[VJ_W] > -VJ_QUAT_EPSILON &&
+      CPPUNIT_ASSERT( qqq[VJ_W] < VJ_QUAT_EPSILON && qqq[VJ_W] > -VJ_QUAT_EPSILON &&
               qqq[VJ_X] == 0.0f &&
               qqq[VJ_Y] > (1.0f - VJ_QUAT_EPSILON) && qqq[VJ_Y] < (1.0f + VJ_QUAT_EPSILON) &&
               qqq[VJ_Z] == 0.0f );
@@ -292,7 +294,7 @@ public:
 
          // no longer a valid rotation (non-unit length).  
          // should be normalized to define an actual rotation.
-         assertTest( q2.length() <= (1.0f - VJ_QUAT_EPSILON) ||
+         CPPUNIT_ASSERT( q2.length() <= (1.0f - VJ_QUAT_EPSILON) ||
                  q2.length() >= (1.0f + VJ_QUAT_EPSILON) );
 
          float rad, i,j,k;
@@ -309,7 +311,7 @@ public:
          q2.mult( q, 0.5 );
          q2.normalize();
 
-         assertTest( q2.isEqual( q, VJ_QUAT_EPSILON ) );
+         CPPUNIT_ASSERT( q2.isEqual( q, VJ_QUAT_EPSILON ) );
       }        
 
       std::cout<<"\n"<<std::flush;
@@ -384,26 +386,23 @@ public:
       std::cout<<v1<<" dot "<<v2<<" == "<<v1.dot( v2 )<<"\n"<<std::flush;
    }
 
-   //assertTest( a != b.code() );
+   //CPPUNIT_ASSERT( a != b.code() );
    
    
-   static Test* suite()
+   void registerTests (CppUnit::TestSuite* suite)
    {
-      TestSuite *test_suite = new TestSuite ("QuatSelfTest");
-
-      test_suite->addTest( new TestCaller<QuatSelfTest>("identity test", &QuatSelfTest::identTest));        
-      test_suite->addTest( new TestCaller<QuatSelfTest>("xformVecTest", &QuatSelfTest::xformVecTest));        
-      test_suite->addTest( new TestCaller<QuatSelfTest>("xformVecSweepTest", &QuatSelfTest::xformVecSweepTest));        
-      test_suite->addTest( new TestCaller<QuatSelfTest>("makeRotGetRotSanityTest", &QuatSelfTest::makeRotGetRotSanityTest));        
-      test_suite->addTest( new TestCaller<QuatSelfTest>("scalarMultTest", &QuatSelfTest::scalarMultTest));        
-      test_suite->addTest( new TestCaller<QuatSelfTest>("simpleQuatProductTest", &QuatSelfTest::simpleQuatProductTest));        
-      test_suite->addTest( new TestCaller<QuatSelfTest>("secondQuatProductTest", &QuatSelfTest::secondQuatProductTest));        
-      test_suite->addTest( new TestCaller<QuatSelfTest>("makeRotTest", &QuatSelfTest::makeRotTest));        
-      //test_suite->addTest( new TestCaller<QuatSelfTest>("specialCases", &QuatSelfTest::specialCases));
-      //test_suite->addTest( new TestCaller<QuatSelfTest>("vectorScaleTest", &QuatSelfTest::vectorScaleTest));
-      //test_suite->addTest( new TestCaller<QuatSelfTest>("quatAdd", &QuatSelfTest::quatAdd));
-      //test_suite->addTest( new TestCaller<QuatSelfTest>("pureQuatMultTest", &QuatSelfTest::pureQuatMultTest));
-      return test_suite;
+      suite->addTest( new CppUnit::TestCaller<QuatSelfTest>("identity test", &QuatSelfTest::identTest));        
+      suite->addTest( new CppUnit::TestCaller<QuatSelfTest>("xformVecTest", &QuatSelfTest::xformVecTest));        
+      suite->addTest( new CppUnit::TestCaller<QuatSelfTest>("xformVecSweepTest", &QuatSelfTest::xformVecSweepTest));        
+      suite->addTest( new CppUnit::TestCaller<QuatSelfTest>("makeRotGetRotSanityTest", &QuatSelfTest::makeRotGetRotSanityTest));        
+      suite->addTest( new CppUnit::TestCaller<QuatSelfTest>("scalarMultTest", &QuatSelfTest::scalarMultTest));        
+      suite->addTest( new CppUnit::TestCaller<QuatSelfTest>("simpleQuatProductTest", &QuatSelfTest::simpleQuatProductTest));        
+      suite->addTest( new CppUnit::TestCaller<QuatSelfTest>("secondQuatProductTest", &QuatSelfTest::secondQuatProductTest));        
+      suite->addTest( new CppUnit::TestCaller<QuatSelfTest>("makeRotTest", &QuatSelfTest::makeRotTest));        
+      //suite->addTest( new CppUnit::TestCaller<QuatSelfTest>("specialCases", &QuatSelfTest::specialCases));
+      //suite->addTest( new CppUnit::TestCaller<QuatSelfTest>("vectorScaleTest", &QuatSelfTest::vectorScaleTest));
+      //suite->addTest( new CppUnit::TestCaller<QuatSelfTest>("quatAdd", &QuatSelfTest::quatAdd));
+      //suite->addTest( new CppUnit::TestCaller<QuatSelfTest>("pureQuatMultTest", &QuatSelfTest::pureQuatMultTest));
    }
 };
 
