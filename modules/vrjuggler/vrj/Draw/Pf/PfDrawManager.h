@@ -45,6 +45,8 @@
 
 //#include <vrj/Draw/Pf/PfApp.h>
 #include <vrj/Draw/Pf/PfUtil.h>
+// XXX: MOVE
+#include <vrj/Draw/Pf/PfBasicSimulator.h>
 #include <vpr/Util/Singleton.h>
 
 // namespace jccl {
@@ -121,12 +123,6 @@ protected:
    */
 
 public:
-    /**
-     * Function to config API specific stuff.
-     * Takes a chunkDB and extracts API specific stuff.
-     */
-   //virtual void configInitial(jccl::ConfigChunkDB*  chunkDB);
-
     /** Blocks until the end of the frame
     * @pre none
     * @post The frame has been drawn
@@ -139,6 +135,12 @@ public:
    */
    virtual void draw();
 
+   /**
+    * Returns the Simulator SceneGraph so that PfBasicSimulator can
+    * add/update the Head and Wand
+    */
+   pfScene* getRootWithSim()
+   { return mRootWithSim; }
 
    /** Set the app the draw whould interact with.
    * @pre none
@@ -189,14 +191,21 @@ public: // Chunk handlers
    * @returns true - Can handle it
    *          false - Can't handle it
    */
-   virtual bool configCanHandle(jccl::ConfigChunkPtr chunk);
+   virtual bool configCanHandle(jccl::ConfigChunkPtr chunk)
+   {
+      return false;
+   }
 
 protected:     // --- Config handling functions --- //
    /** Add the chunk to the configuration
    * @pre configCanHandle(chunk) == true
    * @returns success
    */
-   virtual bool configAdd(jccl::ConfigChunkPtr chunk);
+   virtual bool configAdd(jccl::ConfigChunkPtr chunk)
+   {
+      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "vjPfDrawManager::configAdd: configAdd is not supported.\n" << vprDEBUG_FLUSH;
+      return false;
+   }
 
    /** Remove the chunk from the current configuration
    * @pre  configCanHandle(chunk) == true
@@ -216,12 +225,6 @@ protected:     // --- Config handling functions --- //
    */
    bool configDisplaySystem(jccl::ConfigChunkPtr chunk);
 
-   /** Configure pfAPI stuff
-   * @pre chunk.type == "apiPerformer"
-   * @note MUST be called before initDrawing
-   */
-   bool configPerformerAPI(jccl::ConfigChunkPtr chunk);
-
 protected:
    /** Call all the application channel callbacks */
    void callAppChanFuncs();
@@ -232,14 +235,8 @@ protected:
    /** Helper function to create the base scene graph stuff */
    void initPerformerGraph();
 
-   /** Helper to initialize the Performer simulation */
-   void initSimulatorGraph();
-
    /** Helper that (re)loads the application's scene graph into the active scene(s) */
    void initAppGraph();
-
-   void initLoaders();
-   void updateSimulator(SimViewport* simVp);
 
    /**
     * Helper to get the pfDisp given a channel.
@@ -326,48 +323,22 @@ protected:
    pfScene*          mRootWithSim;     /**< The root with the simulator group & the sceneRoot */
    //@}
 
-   /** @name Simulator stuff */
-   //@{
-   pfGroup*          mSimTree;      /**< The simulator scene graph */
-   pfDCS*            mHeadDCS;      /**< The DCS above the head */
-   pfDCS*            mWandDCS;      /**< The DCS above the wand */
-   std::string       mHeadModel;    /**< The head model file path */
-   std::string       mWandModel;    /**< The wand model file path */
-   //@}
-
 protected:
 
-   PfDrawManager() {
-      mSurfMasterChan = NULL;
-      mSimMasterChan = NULL;
-      mRoot         = NULL;
-      mSceneRoot    = NULL;
-      mSceneGroup = NULL;
-      mSimTree     = NULL;
-      mRootWithSim = NULL;
-      mHeadDCS     = NULL;
-      mWandDCS     = NULL;
-      mPfHasForked = false;
-   }
+   PfDrawManager() :
+      mApp(NULL),
+      mSurfMasterChan(NULL),
+      mSimMasterChan(NULL),
+      mPfHasForked(false),
+      mRoot(NULL),
+      mSceneRoot(NULL),
+      mSceneGroup(NULL),
+      mRootWithSim(NULL)
+   {;}
 
    virtual ~PfDrawManager() {}
 
    vprSingletonHeader(PfDrawManager);
-/*
-   // --- Singleton Stuff --- //
-public:
-   static PfDrawManager* instance()
-   {
-      if (_instance == NULL)
-      {
-         _instance = new PfDrawManager();
-      }
-      return _instance;
-   }
-
-private:
-   static PfDrawManager* _instance;
-   */
 };
 
 
