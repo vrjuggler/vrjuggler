@@ -1,4 +1,12 @@
-workspace.diagram.active = <oiref:design#Class#id47wwsctylgvb1ctyljbb6.diagram:oiref>
-workspace.diagram.open.0 = <oiref:design#Class#id47wwsctylgvb1ctyljbb6.diagram:oiref>
-workspace.editor.active = /home/users/patrick/src/Juggler/main/juggler/modules/tweek/tweek/CORBA/Observer.h
-workspace.editor.open.0 = /home/users/patrick/src/Juggler/main/juggler/modules/tweek/tweek/CORBA/Observer.h
+workspace.diagram.active = <oiref:design#Class#id10z6kd9n9j780d9naoitb.diagram:oiref>
+workspace.diagram.open.0 = <oiref:design#Class#id67f1sd9n7fwo9d9n7rehe.diagram:oiref>
+workspace.editor.active = /home/users/patrick/src/Juggler/main/juggler/modules/tweek/tweek/CORBA/SubjectManagerImpl.h
+workspace.editor.open.0 = /home9/users/patrick/src/Juggler/main/juggler/modules/tweek/design.cpp/FloatSubjectImpl.cpp
+workspace.diagram.open.1 = <oiref:design#Class#idf32jmd9n7fwo9d9n7jfoa.diagram:oiref>
+workspace.diagram.open.2 = <oiref:design#Class#id47wwsctylgvb1ctyljbb6.diagram:oiref>
+workspace.diagram.open.3 = <oiref:design#Class#idkfctylgvb1ctyljbch.diagram:oiref>
+workspace.editor.open.1 = /home/users/patrick/src/Juggler/main/juggler/modules/tweek/tweek/Client/CorbaService.h
+workspace.diagram.open.4 = <oiref:design#Class#id2f3qud9n8n6afd9n9679p.diagram:oiref>
+workspace.editor.open.2 = /home/users/patrick/src/Juggler/main/juggler/modules/tweek/tweek/CORBA/SubjectManagerImpl.h
+workspace.editor.open.3 = /home9/users/patrick/src/Juggler/main/juggler/modules/tweek/design.cpp/FloatSubjectImpl.h
+workspace.diagram.open.5 = <oiref:design#Class#id10z6kd9n9j780d9naoitb.diagram:oiref>
