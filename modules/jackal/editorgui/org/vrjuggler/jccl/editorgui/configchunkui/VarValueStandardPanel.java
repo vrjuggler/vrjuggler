@@ -29,10 +29,20 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.editorgui.configchunkui;
 
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+import javax.swing.*;
 
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.editorgui.*;
+import org.vrjuggler.jccl.vjcontrol.Core;
+import org.vrjuggler.jccl.vjcontrol.ui.widgets.*;
 
-/* VarValuePanel is just a little panel that we'll stick several of 
+/**
+ * VarValuePanel is just a little panel that we'll stick several of 
  * in a PropertyPanel.
  *
  *     -----------------------------------------------------
@@ -45,20 +55,6 @@
  * with the acceptable values in it.  removebutton will be there if the
  * associated property has var numbers of values.
  */
-
-package VjComponents.ConfigEditor.ConfigChunkUI;
-
-import java.awt.*;
-import java.util.*;
-import java.awt.event.*;
-import javax.swing.*;
-
-import VjControl.Core;
-import VjConfig.*;
-import VjComponents.ConfigEditor.*;
-import VjComponents.UI.Widgets.*;
-
-
 public class VarValueStandardPanel 
     extends VarValuePanel 
     implements ActionListener {
@@ -286,8 +282,4 @@ public class VarValueStandardPanel
             }
         }
     }
-
-
-
 }
-

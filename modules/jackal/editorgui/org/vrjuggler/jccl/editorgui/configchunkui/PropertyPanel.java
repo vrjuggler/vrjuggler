@@ -29,10 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
-package VjComponents.ConfigEditor.ConfigChunkUI;
+package org.vrjuggler.jccl.editorgui.configchunkui;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -40,14 +37,13 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
-import VjConfig.*;
-import VjComponents.ConfigEditor.*;
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.editorgui.*;
 
 /** Panel for displaying a single Property of a ConfigChunk.
  *  This panel will typical contain 0 or more VarValuePanels for the
  *  individual values of the property.
  *
- * @author Christopher Just
  * @version $Revision$
  */
 public class PropertyPanel extends JPanel implements ActionListener {
@@ -290,12 +286,4 @@ public class PropertyPanel extends JPanel implements ActionListener {
             }
         } 
     } // actionPerformed()
-
-
-
 }
-
-
-
-
-

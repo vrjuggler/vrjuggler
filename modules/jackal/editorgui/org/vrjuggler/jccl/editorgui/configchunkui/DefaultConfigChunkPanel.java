@@ -29,9 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-package VjComponents.ConfigEditor.ConfigChunkUI;
+package org.vrjuggler.jccl.editorgui.configchunkui;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -39,10 +37,10 @@ import java.util.Vector;
 import javax.swing.*;
 import javax.swing.border.*;
 
-import VjConfig.*;
-import VjComponents.ConfigEditor.*;
-import VjComponents.UI.Widgets.*;
-import VjControl.*;
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.editorgui.*;
+import org.vrjuggler.jccl.vjcontrol.*;
+import org.vrjuggler.jccl.vjcontrol.ui.widget.*;
 
 
 /** Default implementation of ConfigChunkPanel.

@@ -29,18 +29,16 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-package VjComponents.ConfigEditor.ConfigChunkUI;
+package org.vrjuggler.jccl.editorgui.configchunkui;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.*;
 
-import VjConfig.*;
-import VjComponents.ConfigEditor.*;
-import VjComponents.UI.Widgets.*;
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.editorgui.*;
+import org.vrjuggler.jccl.vjcontrol.ui.widgets.*;
 
 /** Panel for displaying an embedded chunk varvalue "inline".
  *  This panel tries to display a small embedded ConfigChunk with all its
@@ -49,7 +47,6 @@ import VjComponents.UI.Widgets.*;
  *  properties.  Its algorithms fail completely if the embedded chunk has
  *  any properties with variable numbers of values.
  *
- * @author Christopher Just
  * @version $Revision$
  */
 public class VarValueMiniChunkPanel 
@@ -206,8 +203,4 @@ public class VarValueMiniChunkPanel
             }
         }
     }
-
-
-
 }
-
