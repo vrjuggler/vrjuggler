@@ -47,7 +47,6 @@ SUBDIR		= \
                   Display	\
                   Draw		\
                   Environment	\
-                  Input		\
                   Kernel	\
                   Math		\
                   Sound		\
