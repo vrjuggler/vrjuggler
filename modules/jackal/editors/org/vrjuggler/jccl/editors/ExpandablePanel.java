@@ -6,62 +6,33 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.Color;
-//import java.awt.Graphics;
-//import java.util.ArrayList;
-//import java.util.Iterator;
 import java.util.List;
-//import java.util.HashMap;
-//import java.util.Map;
-//import java.util.Set;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
-//import new_layout.*;
 import info.clearthought.layout.*;
+
 //TODO: Remove these import
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.editors.*;
-//import com.sun.java.swing.plaf.windows.WindowsTreeUI;
 
 import com.sun.java.swing.plaf.windows.WindowsTreeUI;
 
 public class ExpandablePanel extends PropertyComponent
-{       
+{
    private TableLayout tableLayout;
-
-   public ExpandablePanel(PropertyComponent cmp, String token, String title, Color color,
-         boolean variable, boolean embedded)
+// What needs to be here for embedded....
+   
+   public ExpandablePanel(Color color)
    {
       mColor = color;
-      //setBorder(BorderFactory.createLineBorder(Color.black));
-      if(embedded)
-      {
-         ClassLoader loader = getClass().getClassLoader();
-         mTypeIcon = new ImageIcon(loader.getResource("org/vrjuggler/jccl/editors/images/config_element.gif"));
-         mTypeButton.setIcon(mTypeIcon);
-         
-         setBorder(BorderFactory.createEtchedBorder());
 
-         //setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(),
-         //         BorderFactory.createLoweredBevelBorder()));
-
-         //TitledBorder tb = BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), token);
-         //tb.setTitleColor(new Color(80, 80, 80));
-         //setBorder(tb);
-      }
-      else
-      {
-         //setBorder(BorderFactory.createLoweredBevelBorder());
-         setBorder(BorderFactory.createEtchedBorder());
-      }
-
-        // Create a frame
-      setBounds (100, 100, 700, 300);
-
+      // Set the color of this panel
+      setColor(mColor);
       setBackground(mColor);
 
-      //System.out.println("XXXX Setting color for: " + title);
-      //System.out.println("XXXX R: " + mColor.getRed() + " G: " + mColor.getGreen() + " B: " + mColor.getBlue());
+      // Create a frame
+      setBounds (100, 100, 700, 300);
 
       // Create a TableLayout for the frame
       double border = 10;
@@ -79,12 +50,8 @@ public class ExpandablePanel extends PropertyComponent
 
       // Set the layout to use.
       setLayout (tableLayout);
+      
 
-      // Create controls and add them.
-      mComponent = cmp;
-
-      ClassLoader loader = getClass().getClassLoader();
-      mTypeIcon = new ImageIcon(loader.getResource("org/vrjuggler/jccl/editors/images/config_element.gif"));
       //mExpandedIcon = (Icon)UIManager.get( "Tree.expandedIcon" );
       //mCollapsedIcon = (Icon)UIManager.get( "Tree.collapsedIcon" );
       mExpandedIcon = WindowsTreeUI.ExpandedIcon.createExpandedIcon();
@@ -144,11 +111,6 @@ public class ExpandablePanel extends PropertyComponent
       mTypeButton.setFocusPainted(false);
       mTypeButton.setContentAreaFilled(false);
       add(mTypeButton, ct);
-     
-      // Add title for the list.
-      JLabel name = new JLabel(title);
-      TableLayoutConstraints c2 = new TableLayoutConstraints(2, 0, 2, 0, TableLayout.LEFT, TableLayout.TOP);
-      add(name, c2);
    }
    
    public void updateMyRow()
@@ -194,11 +156,10 @@ public class ExpandablePanel extends PropertyComponent
       updateMyRow();
    }
 
-   private PropertyComponent  mComponent     = null;
-   private Icon               mExpandedIcon  = null;
-   private Icon               mTypeIcon      = null;
-   private Icon               mCollapsedIcon = null;   
-   private JButton            mExpandButton  = new JButton();   
-   private JButton            mTypeButton    = new JButton();   
-   private boolean            mExpanded      = false;
+   protected   PropertyComponent mComponent     = null;
+   private     Icon              mExpandedIcon  = null;
+   private     Icon              mCollapsedIcon = null;   
+   private     JButton           mExpandButton  = new JButton();   
+   protected   JButton           mTypeButton    = new JButton();   
+   private     boolean           mExpanded      = false;
 }

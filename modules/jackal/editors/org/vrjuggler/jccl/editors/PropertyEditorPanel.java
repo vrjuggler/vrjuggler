@@ -79,19 +79,35 @@ public abstract class PropertyEditorPanel extends JPanel
    protected Component createTextField()
    {
       // Populate the text field with the object's string value
-      JTextField txtField = new JTextField(mEditor.getAsText());
-      txtField.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+      final JTextField txtField = new JTextField(mEditor.getAsText());
+      //txtField.setBorder(BorderFactory.createEmptyBorder(0,10,0,0));
+      txtField.setBorder(BorderFactory.createLoweredBevelBorder());
+      txtField.setBackground(getParent().getBackground());
       txtField.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
          {
-            stopCellEditing();
+            txtField.setBackground(getParent().getBackground());
+            // Force the focus to be lost.
+            txtField.transferFocusUpCycle();
+            // Force the focus to be transfered to the next component.
+            //txtField.transferFocus();
+
+            // This is no longer needed since the above line will force a
+            // focusLostEvent. But I have choosen to leave this line here in
+            // case it might become useful later.
+            //stopCellEditing();
          }
       });
       txtField.addFocusListener(new FocusAdapter()
       {
+         public void focusGained(FocusEvent evt)
+         {
+            txtField.setBackground(java.awt.Color.white);
+         }
          public void focusLost(FocusEvent evt)
          {
+            txtField.setBackground(getParent().getBackground());
             stopCellEditing();
          }
       });
