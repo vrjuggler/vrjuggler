@@ -30,10 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-//===============================================================
-// Intersense (a Wrapper for IntersenseStandalone)
-//===============================================================
-
 #ifndef _GADGET_INTERSENSE_H_
 #define _GADGET_INTERSENSE_H_
 
@@ -50,15 +46,15 @@
 // maximum number of digital and analog buttons possible on a IS interface
 // box.
 #ifndef MAX_NUM_BUTTONS
-#define MAX_NUM_BUTTONS 8
+   #define MAX_NUM_BUTTONS 8
 #endif
 
 #ifndef MAX_NUM_STATIONS
-#define MAX_NUM_STATIONS 8
+   #define MAX_NUM_STATIONS 8
 #endif
 
 #ifndef MAX_ANALOG_CHANNELS
-#define MAX_ANALOG_CHANNELS 10
+   #define MAX_ANALOG_CHANNELS 10
 #endif
 
 #define IS_BUTTON_NUM MAX_NUM_BUTTONS*MAX_NUM_STATIONS
@@ -74,14 +70,18 @@ extern "C" GADGET_DRIVER_API(void) initDevice(gadget::InputManager* inputMgr);
 namespace gadget
 {
 
-typedef struct {
-    int stationIndex;
-    bool enabled;
+typedef struct 
+{
+   int stationIndex;
+   bool enabled;
 
-    int dig_min, dig_num;
-    int ana_min, ana_num;
+   int dig_min;
+   int dig_num;
+   int ana_min;
+   int ana_num;
 
-    bool useDigital, useAnalog;
+   bool useDigital;
+   bool useAnalog;
 } ISStationConfig;
 
 
@@ -117,33 +117,6 @@ typedef struct {
  */
 class IntersenseAPI : public InputMixer<InputMixer<InputMixer<Input,Digital>,Analog>,Position>
 {
-protected:
-   struct IsenseData
-   {
-      /** Constructor
-       * Init digital with IS_BUTTON_NUM values
-       * Init analog with IS_ANALOG_NUM values
-       */
-      IsenseData()
-         : digital( IS_BUTTON_NUM ), analog(IS_ANALOG_NUM)
-      {;}
-
-      // Helper function to set all the times
-      // @todo Replace this with a for_each function call
-      // XXX
-      void setTime()
-      {
-         digital[0].setTime();
-         for(std::vector<DigitalData>::iterator d=digital.begin(); d != digital.end(); ++d)
-         {  (*d).setTime(digital[0].getTime()); }
-         for(std::vector<AnalogData>::iterator a=analog.begin(); a != analog.end(); ++a)
-         {  (*a).setTime(digital[0].getTime()); }
-      }
-
-      std::vector<DigitalData> digital;
-      std::vector<AnalogData>  analog;
-   };
-
 public:
    IntersenseAPI();
    virtual ~IntersenseAPI();
@@ -245,9 +218,8 @@ private:
 // the digital IO as well. Therefore what is needed with four wands is a digital device that allows
 // access to subsets of digital buttons.
 
-   std::string    mPortName;
-   int            mBaudRate;
    std::string    mISenseDriverLocation;
+   bool           mDone;
 };
 
 } // End of gadget namespace
