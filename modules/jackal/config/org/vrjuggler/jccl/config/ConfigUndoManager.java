@@ -46,6 +46,27 @@ public class ConfigUndoManager extends UndoManager
    
    }
 
+   private boolean mUndoInProgress = false;
+   
+   public synchronized boolean addEdit(UndoableEdit anEdit)
+   {
+      if (mUndoInProgress)
+      {
+         // Can not add edit while undoing.
+         return true;
+      }
+      else
+      {
+         return(super.addEdit(anEdit));
+      }
+   }
+
+   public synchronized void undo() throws CannotUndoException
+   {
+      mUndoInProgress = true;
+      super.undo();
+      mUndoInProgress = false;
+   }
 
    /**
     * Gets the singleton instance of this class. This implementation is thread
