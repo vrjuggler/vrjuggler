@@ -10,8 +10,8 @@ CXXFLAGS		= @APP_CXXFLAGS@ $(EXTRA_CFLAGS) $(INCLUDES) $(DEFS)
 CXX_IDL_OPTS		= -bcxx -Wbh=.h,s=.cpp -C$(srcdir)
 CXX_IDL_INCLUDES	= -I$(TWEEK_BASE_DIR)/include
 JAVAC_FLAGS		= -classpath $(CLASSPATH) -sourcepath $(srcdir) -d .
-JAVA_IDL_OPTS		= -emitAll -td $(srcdir)
-JAVA_IDL_INCLUDES	= -i $(TWEEK_BASE_DIR)/include
+JAVA_IDL_OPTS		= @JAVA_IDL_OPTS@ @JAVA_IDL_GENDIR_OPT@$(srcdir)
+JAVA_IDL_INCLUDES	= @JAVA_IDL_INCFLAG@$(TWEEK_BASE_DIR)/include
 JCPS			= @JCPS@
 
 OPENORB_JAR		= @OPENORB_JAR@
@@ -37,7 +37,7 @@ C_COMPILE		= @APP_CC@ $(CFLAGS)
 CXX_IDL			= @CXX_IDL@
 CXX_COMPILE		= @APP_CXX@ $(CXXFLAGS)
 JAVA_COMPILE		= @JAVAC@ $(JAVAC_FLAGS)
-JAVA_IDL		= @JAVA_IDL@
+JAVA_IDL		= @APP_JAVA_IDL@
 JAR			= @JAR@
 LINK			= @APP_LINK@ $(LINK_FLAGS)
 
@@ -106,8 +106,11 @@ install:
 .idl.h:
 	$(CXX_IDL) $(CXX_IDL_OPTS) $(CXX_IDL_INCLUDES) $<
 
-Observer.java: Observer.idl
-	$(JAVA_IDL) $(JAVA_IDL_OPTS) -fserver $(JAVA_IDL_INCLUDES) $<
+SliderSubject.java: SliderSubject.idl
+	$(JAVA_IDL) $(JAVA_IDL_OPTS) -noskel $(JAVA_IDL_INCLUDES) $<
+
+WhiteboardSubject.java: WhiteboardSubject.idl
+	$(JAVA_IDL) $(JAVA_IDL_OPTS) -noskel $(JAVA_IDL_INCLUDES) $<
 
 .idl.java:
 	$(JAVA_IDL) $(JAVA_IDL_OPTS) $(JAVA_IDL_INCLUDES) $<
