@@ -1781,6 +1781,11 @@ The filters are applied in the order that they are specified in this configurati
       <help>Number of trackers supported by Vrpn server.</help>
       <item label="Number of trackers" defaultvalue="2" />
     </PropertyDesc>
+    <PropertyDesc name="Host Node" token="deviceHost" type="chunk" variable="0">
+      <help>Points to the machine that the device is physically connected to.</help>
+      <item label="Host Node" defaultvalue="" />
+      <allowedtype>MachineSpecific</allowedtype>
+    </PropertyDesc>
     <PropertyDesc token="numButtons" name="NumberButtons" type="int" variable="0">
       <help>Number of buttons supported by Vrpn server.</help>
       <item label="Number of buttons" defaultvalue="1" />
