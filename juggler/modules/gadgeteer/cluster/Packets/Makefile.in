@@ -59,6 +59,7 @@ SRCS= \
 	Header.cpp		       \
 	Packet.cpp		       \
 	PacketFactory.cpp	       \
+	StartBlock.cpp		       \
 	SyncAck.cpp		       \
 	SyncRequest.cpp
 
