@@ -180,6 +180,14 @@ public:
    Interval operator -(const Interval& r) const
    { return Interval(vpr::Uint32(mUsecs-r.mUsecs), Interval::Usec); }
 
+   /** Helper function that returns an interval representing the current time */
+   static vpr::Interval now()
+   { 
+      vpr::Interval ret_val;
+      ret_val.setNow();
+      return ret_val;
+   }
+
 
 private:
    vpr::Uint32 mUsecs;
