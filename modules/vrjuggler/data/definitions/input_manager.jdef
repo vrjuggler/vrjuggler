@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?org-vrjuggler-jccl-settings definition.version="3.0"?>
-<definition name="input_manager"
-            icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg"
-            xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/definition http://www.vrjuggler.org/jccl/xsd/3.0/definition.xsd"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="input_manager" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
    <definition_version version="1" label="Input Manager">
       <help>Configuration of the Gadgeteer Input Manager.</help>
       <parent/>
@@ -18,7 +14,7 @@
          <value label="DSO directory" defaultvalue=""/>
       </property>
       <property valuetype="string" variable="true" name="dso_file_extension">
-         <help>Define the file extension used on dynamically loaded modules.  On most UNIX systems, the value will be &quot;so&quot;.  On Win32, the value will be &quot;dll&quot;.  Note that the value must not contain the &quot;.&quot; that separates the module name from its extension.</help>
+         <help>Define the file extension used on dynamically loaded modules.  On most UNIX systems, the value will be "so".  On Win32, the value will be "dll".  Note that the value must not contain the "." that separates the module name from its extension.</help>
          <value label="DSO file extension" defaultvalue="so"/>
       </property>
       <upgrade_transform/>
@@ -40,17 +36,14 @@
          <value label="DSO directory" defaultvalue=""/>
       </property>
       <upgrade_transform>
-         <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                         xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration">
-           
+         <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
             <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
             <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
-           
+
             <xsl:template match="/">
-                <xsl:apply-templates />
+                <xsl:apply-templates/>
             </xsl:template>
-           
+
             <xsl:template match="jconf:input_manager">
                <xsl:element namespace="{$jconf}" name="input_manager">
                   <xsl:attribute name="name">

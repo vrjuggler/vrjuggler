@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Sep-17-2004 patrickh    Updated to require JCCL 0.18.0.  The only change is
+                        that all the .jdef files are now using version 3.1 of
+                        the config definition file format.
+                        NEW VERSION 1.1.157
 Sep-11-2004 patrickh    Updated for JDOM 1.0.
                         NEW VERSION 1.1.156
 Aug-04-2004 dshipton    Added in PerformanceMediator into Juggler kernel
