@@ -35,7 +35,7 @@ using namespace boost::python;
 // Declarations ================================================================
 
 
-namespace  {
+namespace pyj {
 
 
 struct gadget_Analog_Wrapper: gadget::Analog
@@ -124,12 +124,12 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(gadget_Analog_getAnalogData_overloads_0_1
 // Module ======================================================================
 void _Export_Analog()
 {
-    class_< gadget::Analog, boost::noncopyable, gadget_Analog_Wrapper >("Analog", init<  >())
-        .def("writeObject", &gadget::Analog::writeObject, &gadget_Analog_Wrapper::default_writeObject)
-        .def("readObject", &gadget::Analog::readObject, &gadget_Analog_Wrapper::default_readObject)
-        .def("config", &gadget::Analog::config, &gadget_Analog_Wrapper::default_config)
-        .def("getBaseType", &gadget::Analog::getBaseType, &gadget_Analog_Wrapper::default_getBaseType)
-        .def("getAnalogData", &gadget::Analog::getAnalogData, gadget_Analog_getAnalogData_overloads_0_1())
+    class_< gadget::Analog, boost::noncopyable, pyj::gadget_Analog_Wrapper >("Analog", init<  >())
+        .def("writeObject", &gadget::Analog::writeObject, &pyj::gadget_Analog_Wrapper::default_writeObject)
+        .def("readObject", &gadget::Analog::readObject, &pyj::gadget_Analog_Wrapper::default_readObject)
+        .def("config", &gadget::Analog::config, &pyj::gadget_Analog_Wrapper::default_config)
+        .def("getBaseType", &gadget::Analog::getBaseType, &pyj::gadget_Analog_Wrapper::default_getBaseType)
+        .def("getAnalogData", &gadget::Analog::getAnalogData, pyj::gadget_Analog_getAnalogData_overloads_0_1())
         .def("addAnalogSample", &gadget::Analog::addAnalogSample)
         .def("swapAnalogBuffers", &gadget::Analog::swapAnalogBuffers)
         .def("getAnalogDataBuffer", &gadget::Analog::getAnalogDataBuffer, return_internal_reference< 1 >())

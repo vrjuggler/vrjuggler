@@ -35,7 +35,7 @@ using namespace boost::python;
 // Declarations ================================================================
 
 
-namespace  {
+namespace pyj {
 
 
 struct gadget_Event_Wrapper: gadget::Event
@@ -89,9 +89,9 @@ struct gadget_Event_Wrapper: gadget::Event
 void _Export_Event()
 {
     scope* gadget_Event_scope = new scope(
-    class_< gadget::Event, gadget_Event_Wrapper >("Event", init< const gadget::Event & >())
-        .def("writeObject", &gadget::Event::writeObject, &gadget_Event_Wrapper::default_writeObject)
-        .def("readObject", &gadget::Event::readObject, &gadget_Event_Wrapper::default_readObject)
+    class_< gadget::Event, pyj::gadget_Event_Wrapper >("Event", init< const gadget::Event & >())
+        .def("writeObject", &gadget::Event::writeObject, &pyj::gadget_Event_Wrapper::default_writeObject)
+        .def("readObject", &gadget::Event::readObject, &pyj::gadget_Event_Wrapper::default_readObject)
         .def("type", &gadget::Event::type, return_value_policy< copy_const_reference >())
         .def("setType", &gadget::Event::setType)
         .def("time", &gadget::Event::time, return_value_policy< copy_const_reference >())

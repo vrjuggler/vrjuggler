@@ -35,7 +35,7 @@ using namespace boost::python;
 // Declarations ================================================================
 
 
-namespace  {
+namespace pyj {
 
 
 struct gadget_KeyEvent_Wrapper: gadget::KeyEvent
@@ -98,11 +98,11 @@ struct gadget_KeyEvent_Wrapper: gadget::KeyEvent
 void _Export_KeyEvent()
 {
     scope* gadget_KeyEvent_scope = new scope(
-    class_< gadget::KeyEvent, bases< gadget::Event >, gadget_KeyEvent_Wrapper >("KeyEvent", init<  >())
+    class_< gadget::KeyEvent, bases< gadget::Event >, pyj::gadget_KeyEvent_Wrapper >("KeyEvent", init<  >())
         .def(init< const gadget::KeyEvent & >())
         .def(init< const gadget::EventType &, const gadget::Keys &, const int &, const long unsigned int &, optional< char > >())
-        .def("writeObject", &gadget::KeyEvent::writeObject, &gadget_KeyEvent_Wrapper::default_writeObject)
-        .def("readObject", &gadget::KeyEvent::readObject, &gadget_KeyEvent_Wrapper::default_readObject)
+        .def("writeObject", &gadget::KeyEvent::writeObject, &pyj::gadget_KeyEvent_Wrapper::default_writeObject)
+        .def("readObject", &gadget::KeyEvent::readObject, &pyj::gadget_KeyEvent_Wrapper::default_readObject)
         .def("getKey", &gadget::KeyEvent::getKey, return_value_policy< copy_const_reference >())
         .def("getModifierMask", &gadget::KeyEvent::getModifierMask, return_value_policy< copy_const_reference >())
         .def("getKeyChar", &gadget::KeyEvent::getKeyChar, return_value_policy< copy_const_reference >())

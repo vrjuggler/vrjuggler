@@ -35,7 +35,7 @@ using namespace boost::python;
 // Declarations ================================================================
 
 
-namespace  {
+namespace pyj {
 
 
 struct gadget_DigitalProxy_Wrapper: gadget::DigitalProxy
@@ -157,14 +157,14 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(gadget_Proxy_stupify_overloads_0_1, stupi
 // Module ======================================================================
 void _Export_DigitalProxy()
 {
-    class_< gadget::DigitalProxy, gadget_DigitalProxy_Wrapper >("DigitalProxy", init<  >())
+    class_< gadget::DigitalProxy, pyj::gadget_DigitalProxy_Wrapper >("DigitalProxy", init<  >())
         .def(init< const gadget::DigitalProxy & >())
-        .def("updateData", &gadget::DigitalProxy::updateData, &gadget_DigitalProxy_Wrapper::default_updateData)
-        .def("config", &gadget::DigitalProxy::config, &gadget_DigitalProxy_Wrapper::default_config)
-        .def("set", &gadget::TypedProxy<gadget::Digital>::set, &gadget_DigitalProxy_Wrapper::default_set)
-        .def("refresh", &gadget::TypedProxy<gadget::Digital>::refresh, &gadget_DigitalProxy_Wrapper::default_refresh)
-        .def("getDeviceName", &gadget::TypedProxy<gadget::Digital>::getDeviceName, &gadget_DigitalProxy_Wrapper::default_getDeviceName)
-        .def("isStupified", &gadget::Proxy::isStupified, &gadget_DigitalProxy_Wrapper::default_isStupified)
+        .def("updateData", &gadget::DigitalProxy::updateData, &pyj::gadget_DigitalProxy_Wrapper::default_updateData)
+        .def("config", &gadget::DigitalProxy::config, &pyj::gadget_DigitalProxy_Wrapper::default_config)
+        .def("set", &gadget::TypedProxy<gadget::Digital>::set, &pyj::gadget_DigitalProxy_Wrapper::default_set)
+        .def("refresh", &gadget::TypedProxy<gadget::Digital>::refresh, &pyj::gadget_DigitalProxy_Wrapper::default_refresh)
+        .def("getDeviceName", &gadget::TypedProxy<gadget::Digital>::getDeviceName, &pyj::gadget_DigitalProxy_Wrapper::default_getDeviceName)
+        .def("isStupified", &gadget::Proxy::isStupified, &pyj::gadget_DigitalProxy_Wrapper::default_isStupified)
         .def("getTimeStamp", &gadget::DigitalProxy::getTimeStamp)
         .def("getData", &gadget::DigitalProxy::getData)
         .def("getDigitalData", &gadget::DigitalProxy::getDigitalData, return_internal_reference< 1 >())
@@ -174,7 +174,7 @@ void _Export_DigitalProxy()
         .staticmethod("getElementType")
         .def("getName", &gadget::Proxy::getName)
         .def("setName", &gadget::Proxy::setName)
-        .def("stupify", &gadget::Proxy::stupify, gadget_Proxy_stupify_overloads_0_1())
+        .def("stupify", &gadget::Proxy::stupify, pyj::gadget_Proxy_stupify_overloads_0_1())
     ;
 
 }

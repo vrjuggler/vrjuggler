@@ -35,7 +35,7 @@ using namespace boost::python;
 // Declarations ================================================================
 
 
-namespace  {
+namespace pyj {
 
 
 struct gadget_Digital_Wrapper: gadget::Digital
@@ -125,12 +125,12 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(gadget_Digital_getDigitalData_overloads_0
 void _Export_Digital()
 {
     scope* gadget_Digital_scope = new scope(
-    class_< gadget::Digital, boost::noncopyable, gadget_Digital_Wrapper >("Digital", init<  >())
-        .def("config", &gadget::Digital::config, &gadget_Digital_Wrapper::default_config)
-        .def("getBaseType", &gadget::Digital::getBaseType, &gadget_Digital_Wrapper::default_getBaseType)
-        .def("writeObject", &gadget::Digital::writeObject, &gadget_Digital_Wrapper::default_writeObject)
-        .def("readObject", &gadget::Digital::readObject, &gadget_Digital_Wrapper::default_readObject)
-        .def("getDigitalData", &gadget::Digital::getDigitalData, gadget_Digital_getDigitalData_overloads_0_1())
+    class_< gadget::Digital, boost::noncopyable, pyj::gadget_Digital_Wrapper >("Digital", init<  >())
+        .def("config", &gadget::Digital::config, &pyj::gadget_Digital_Wrapper::default_config)
+        .def("getBaseType", &gadget::Digital::getBaseType, &pyj::gadget_Digital_Wrapper::default_getBaseType)
+        .def("writeObject", &gadget::Digital::writeObject, &pyj::gadget_Digital_Wrapper::default_writeObject)
+        .def("readObject", &gadget::Digital::readObject, &pyj::gadget_Digital_Wrapper::default_readObject)
+        .def("getDigitalData", &gadget::Digital::getDigitalData, pyj::gadget_Digital_getDigitalData_overloads_0_1())
         .def("addDigitalSample", &gadget::Digital::addDigitalSample)
         .def("swapDigitalBuffers", &gadget::Digital::swapDigitalBuffers)
         .def("getDigitalDataBuffer", &gadget::Digital::getDigitalDataBuffer, return_internal_reference< 1 >())

@@ -35,7 +35,7 @@ using namespace boost::python;
 // Declarations ================================================================
 
 
-namespace  {
+namespace pyj {
 
 
 struct gadget_MouseEvent_Wrapper: gadget::MouseEvent
@@ -95,11 +95,11 @@ struct gadget_MouseEvent_Wrapper: gadget::MouseEvent
 void _Export_MouseEvent()
 {
     scope* gadget_MouseEvent_scope = new scope(
-    class_< gadget::MouseEvent, bases< gadget::Event >, gadget_MouseEvent_Wrapper >("MouseEvent", init<  >())
+    class_< gadget::MouseEvent, bases< gadget::Event >, pyj::gadget_MouseEvent_Wrapper >("MouseEvent", init<  >())
         .def(init< const gadget::MouseEvent & >())
         .def(init< const gadget::EventType &, const gadget::Keys &, const int &, const int &, const int &, const int &, const int &, const long unsigned int & >())
-        .def("writeObject", &gadget::MouseEvent::writeObject, &gadget_MouseEvent_Wrapper::default_writeObject)
-        .def("readObject", &gadget::MouseEvent::readObject, &gadget_MouseEvent_Wrapper::default_readObject)
+        .def("writeObject", &gadget::MouseEvent::writeObject, &pyj::gadget_MouseEvent_Wrapper::default_writeObject)
+        .def("readObject", &gadget::MouseEvent::readObject, &pyj::gadget_MouseEvent_Wrapper::default_readObject)
         .def("getButton", &gadget::MouseEvent::getButton, return_value_policy< copy_const_reference >())
         .def("getX", &gadget::MouseEvent::getX, return_value_policy< copy_const_reference >())
         .def("getY", &gadget::MouseEvent::getY, return_value_policy< copy_const_reference >())

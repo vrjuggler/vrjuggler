@@ -35,7 +35,7 @@ using namespace boost::python;
 // Declarations ================================================================
 
 
-namespace  {
+namespace pyj {
 
 
 struct gadget_AnalogProxy_Wrapper: gadget::AnalogProxy
@@ -157,14 +157,14 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(gadget_Proxy_stupify_overloads_0_1, stupi
 // Module ======================================================================
 void _Export_AnalogProxy()
 {
-    class_< gadget::AnalogProxy, gadget_AnalogProxy_Wrapper >("AnalogProxy", init<  >())
+    class_< gadget::AnalogProxy, pyj::gadget_AnalogProxy_Wrapper >("AnalogProxy", init<  >())
         .def(init< const gadget::AnalogProxy & >())
-        .def("updateData", &gadget::AnalogProxy::updateData, &gadget_AnalogProxy_Wrapper::default_updateData)
-        .def("config", &gadget::AnalogProxy::config, &gadget_AnalogProxy_Wrapper::default_config)
-        .def("set", &gadget::TypedProxy<gadget::Analog>::set, &gadget_AnalogProxy_Wrapper::default_set)
-        .def("refresh", &gadget::TypedProxy<gadget::Analog>::refresh, &gadget_AnalogProxy_Wrapper::default_refresh)
-        .def("getDeviceName", &gadget::TypedProxy<gadget::Analog>::getDeviceName, &gadget_AnalogProxy_Wrapper::default_getDeviceName)
-        .def("isStupified", &gadget::Proxy::isStupified, &gadget_AnalogProxy_Wrapper::default_isStupified)
+        .def("updateData", &gadget::AnalogProxy::updateData, &pyj::gadget_AnalogProxy_Wrapper::default_updateData)
+        .def("config", &gadget::AnalogProxy::config, &pyj::gadget_AnalogProxy_Wrapper::default_config)
+        .def("set", &gadget::TypedProxy<gadget::Analog>::set, &pyj::gadget_AnalogProxy_Wrapper::default_set)
+        .def("refresh", &gadget::TypedProxy<gadget::Analog>::refresh, &pyj::gadget_AnalogProxy_Wrapper::default_refresh)
+        .def("getDeviceName", &gadget::TypedProxy<gadget::Analog>::getDeviceName, &pyj::gadget_AnalogProxy_Wrapper::default_getDeviceName)
+        .def("isStupified", &gadget::Proxy::isStupified, &pyj::gadget_AnalogProxy_Wrapper::default_isStupified)
         .def("getTimeStamp", &gadget::AnalogProxy::getTimeStamp)
         .def("getData", &gadget::AnalogProxy::getData)
         .def("getAnalogPtr", &gadget::AnalogProxy::getAnalogPtr, return_internal_reference< 1 >())
@@ -173,7 +173,7 @@ void _Export_AnalogProxy()
         .staticmethod("getElementType")
         .def("getName", &gadget::Proxy::getName)
         .def("setName", &gadget::Proxy::setName)
-        .def("stupify", &gadget::Proxy::stupify, gadget_Proxy_stupify_overloads_0_1())
+        .def("stupify", &gadget::Proxy::stupify, pyj::gadget_Proxy_stupify_overloads_0_1())
     ;
 
 }

@@ -35,7 +35,7 @@ using namespace boost::python;
 // Declarations ================================================================
 
 
-namespace  {
+namespace pyj {
 
 
 struct gadget_PositionProxy_Wrapper: gadget::PositionProxy
@@ -159,16 +159,16 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(gadget_Proxy_stupify_overloads_0_1, stupi
 // Module ======================================================================
 void _Export_PositionProxy()
 {
-    class_< gadget::PositionProxy, gadget_PositionProxy_Wrapper >("PositionProxy", init<  >())
+    class_< gadget::PositionProxy, pyj::gadget_PositionProxy_Wrapper >("PositionProxy", init<  >())
         .def(init< const gadget::PositionProxy & >())
-        .def("updateData", &gadget::PositionProxy::updateData, &gadget_PositionProxy_Wrapper::default_updateData)
-        .def("config", &gadget::PositionProxy::config, &gadget_PositionProxy_Wrapper::default_config)
-        .def("set", &gadget::TypedProxy<gadget::Position>::set, &gadget_PositionProxy_Wrapper::default_set)
-        .def("refresh", &gadget::TypedProxy<gadget::Position>::refresh, &gadget_PositionProxy_Wrapper::default_refresh)
-        .def("getDeviceName", &gadget::TypedProxy<gadget::Position>::getDeviceName, &gadget_PositionProxy_Wrapper::default_getDeviceName)
-        .def("isStupified", &gadget::Proxy::isStupified, &gadget_PositionProxy_Wrapper::default_isStupified)
+        .def("updateData", &gadget::PositionProxy::updateData, &pyj::gadget_PositionProxy_Wrapper::default_updateData)
+        .def("config", &gadget::PositionProxy::config, &pyj::gadget_PositionProxy_Wrapper::default_config)
+        .def("set", &gadget::TypedProxy<gadget::Position>::set, &pyj::gadget_PositionProxy_Wrapper::default_set)
+        .def("refresh", &gadget::TypedProxy<gadget::Position>::refresh, &pyj::gadget_PositionProxy_Wrapper::default_refresh)
+        .def("getDeviceName", &gadget::TypedProxy<gadget::Position>::getDeviceName, &pyj::gadget_PositionProxy_Wrapper::default_getDeviceName)
+        .def("isStupified", &gadget::Proxy::isStupified, &pyj::gadget_PositionProxy_Wrapper::default_isStupified)
         .def("getTimeStamp", &gadget::PositionProxy::getTimeStamp)
-        .def("getData", &gadget::PositionProxy::getData, gadget_PositionProxy_getData_overloads_0_1())
+        .def("getData", &gadget::PositionProxy::getData, pyj::gadget_PositionProxy_getData_overloads_0_1())
         .def("getPositionData", &gadget::PositionProxy::getPositionData, return_internal_reference< 1 >())
         .def("getUnit", &gadget::PositionProxy::getUnit)
         .def("getPositionPtr", &gadget::PositionProxy::getPositionPtr, return_internal_reference< 1 >())
@@ -176,7 +176,7 @@ void _Export_PositionProxy()
         .staticmethod("getElementType")
         .def("getName", &gadget::Proxy::getName)
         .def("setName", &gadget::Proxy::setName)
-        .def("stupify", &gadget::Proxy::stupify, gadget_Proxy_stupify_overloads_0_1())
+        .def("stupify", &gadget::Proxy::stupify, pyj::gadget_Proxy_stupify_overloads_0_1())
     ;
 
 }

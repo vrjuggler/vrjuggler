@@ -35,7 +35,7 @@ using namespace boost::python;
 // Declarations ================================================================
 
 
-namespace  {
+namespace pyj {
 
 
 struct gadget_Position_Wrapper: gadget::Position
@@ -124,12 +124,12 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(gadget_Position_getPositionData_overloads
 // Module ======================================================================
 void _Export_Position()
 {
-    class_< gadget::Position, boost::noncopyable, gadget_Position_Wrapper >("Position", init<  >())
-        .def("config", &gadget::Position::config, &gadget_Position_Wrapper::default_config)
-        .def("getBaseType", &gadget::Position::getBaseType, &gadget_Position_Wrapper::default_getBaseType)
-        .def("writeObject", &gadget::Position::writeObject, &gadget_Position_Wrapper::default_writeObject)
-        .def("readObject", &gadget::Position::readObject, &gadget_Position_Wrapper::default_readObject)
-        .def("getPositionData", &gadget::Position::getPositionData, gadget_Position_getPositionData_overloads_0_1())
+    class_< gadget::Position, boost::noncopyable, pyj::gadget_Position_Wrapper >("Position", init<  >())
+        .def("config", &gadget::Position::config, &pyj::gadget_Position_Wrapper::default_config)
+        .def("getBaseType", &gadget::Position::getBaseType, &pyj::gadget_Position_Wrapper::default_getBaseType)
+        .def("writeObject", &gadget::Position::writeObject, &pyj::gadget_Position_Wrapper::default_writeObject)
+        .def("readObject", &gadget::Position::readObject, &pyj::gadget_Position_Wrapper::default_readObject)
+        .def("getPositionData", &gadget::Position::getPositionData, pyj::gadget_Position_getPositionData_overloads_0_1())
         .def("addPositionSample", &gadget::Position::addPositionSample)
         .def("swapPositionBuffers", &gadget::Position::swapPositionBuffers)
         .def("getPositionDataBuffer", &gadget::Position::getPositionDataBuffer, return_internal_reference< 1 >())
