@@ -195,7 +195,18 @@ operator<< (std::ostream& out, const BIRDNET::SINGLE_BIRD_STATUS& device) {
 //    out << " Running: " << (m_birds[i]->running ? "YES" : "NO") << "\n";
     out << " Data format: " << (unsigned int) device.dataFormat << "\n";
     out << " Hemisphere: " << (unsigned int) device.hemisphere << "\n";
-    out << " Report Rate: " << (unsigned int) device.reportRate << "\n";
+    out << " Report rate: " << (unsigned int) device.reportRate << "\n";
+    out << " Sudden change filtering: "
+        << (device.setup & FLOCK::SUDDEN_OUTPUT_CHANGE ? "ON" : "OFF") << "\n";
+    out << " Button data: "
+        << (device.setup & FLOCK::APPEND_BUTTON_DATA ? "ON" : "OFF") << "\n";
+    out << " AC narrow filter: "
+        << (device.setup & FLOCK::AC_NARROW_NOT_CHFILTER ? "ON" : "OFF")
+        << "\n";
+    out << " AC wide filter: "
+        << (device.setup & FLOCK::AC_WIDE_NOT_CHFILTER ? "ON" : "OFF") << "\n";
+    out << " DC filter: "
+        << (device.setup & FLOCK::DC_FILTER ? "ON" : "OFF") << "\n";
 
     return out;
 }
