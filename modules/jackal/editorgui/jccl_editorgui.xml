@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<beanlist>
-   <service name="ChunkPanelFactory">
-      <file name="${TWEEK_BASE_DIR}/bin/beans/jccl_editorgui.jar"
-            class="org.vrjuggler.jccl.editorgui.ChunkPanelFactoryService"/>
-      <dependency file="jccl_config.jar" path="${TWEEK_BASE_DIR}/bin"/>
-      <dependency file="jccl_vjcontrol.jar" path="${TWEEK_BASE_DIR}/bin"/>
-   </service>
-</beanlist>
