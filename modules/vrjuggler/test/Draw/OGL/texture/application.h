@@ -47,9 +47,9 @@
 #include <GL/glu.h> // GLU functions (extended opengl stuff)
 
 // VR juggler
+#include <vpr/Util/Interval.h>
 #include <vrj/Draw/OGL/GlApp.h>     // base OpenGL application API
 #include <vrj/Draw/OGL/GlContextData.h> // for OpenGL resource IDs
-#include <vrj/Util/Timer.h> // so that the cube always spins the same speed
 
 // texture application objects
 #include "renderGeometry.h"  // render interleaved vertex array data
@@ -70,6 +70,8 @@ public:
 
    //: destructor
    virtual ~TextureDemoApplication();
+
+   virtual void init();
 
    //: Called immediately upon opening a new OpenGL context
    // (called for every window that is opened)
@@ -133,8 +135,10 @@ private:
    Texture                        mFloorTexture;
    vrj::GlContextData<ResourceID> mFloorTextureObj;
 
+   gadget::PositionInterface mWand;
+
    // timer
-   vrj::Timer timer;
+   vpr::Interval mLastFrameTime;
 };
 
 

@@ -47,9 +47,9 @@
 #include <GL/glu.h> // GLU functions (extended opengl stuff)
 
 // VR juggler
+#include <vpr/Util/Interval.h>
 #include <vrj/Draw/OGL/GlApp.h>     // base OpenGL application API
 #include <vrj/Draw/OGL/GlContextData.h> // for OpenGL resource IDs
-#include <vrj/Util/Timer.h> // so that the cube always spins the same speed
 
 // Gadgeteer Input devices:
 #include <gadget/Type/AnalogInterface.h>
@@ -113,11 +113,13 @@ private:
    cubeGeometry                   mCubeGeometry;
    vrj::GlContextData<ResourceID> mCubeDisplayList;
 
+   gadget::PositionInterface mWand;
+
    // interface to analog input.
    gadget::AnalogInterface           mAnalog0;
 
    // timer
-   vrj::Timer timer;
+   vpr::Interval mLastFrameTime;
 };
 
 

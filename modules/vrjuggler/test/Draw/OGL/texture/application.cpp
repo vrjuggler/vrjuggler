@@ -34,7 +34,9 @@
 
 //: Constructor
 TextureDemoApplication::TextureDemoApplication( vrj::Kernel* kern )
-   : vrj::GlApp(kern), x(0.0f), timer()
+   : vrj::GlApp(kern)
+   , x(0.0f)
+   , mLastFrameTime(vpr::Interval::now())
 {
    // associate the textureObj ID with the actual texture.
    TextureDemoApplication::setTexObjID( mCubeTexture, mCubeTextureObj );
@@ -44,6 +46,11 @@ TextureDemoApplication::TextureDemoApplication( vrj::Kernel* kern )
 //: destructor
 TextureDemoApplication::~TextureDemoApplication() 
 {
+}
+
+void TextureDemoApplication::init()
+{
+   mWand.init("VJWand");
 }
 
 //: Called immediately upon opening a new OpenGL context
@@ -174,10 +181,19 @@ void TextureDemoApplication::draw()
 // do calculations here...
 void TextureDemoApplication::postFrame()
 {
-   float revs_per_second = 0.5f;
-   float degs_per_revolution = 360.0f;
-   float degs_per_second = degs_per_revolution * revs_per_second;
-   timer.stopTiming();
-   timer.startTiming();
-   x += timer.getLastTiming() * degs_per_second;
+   const float revs_per_second = 0.5f;
+   const float degs_per_revolution = 360.0f;
+   const float degs_per_second = degs_per_revolution * revs_per_second;
+   vpr::Interval cur_time = mWand->getTimeStamp();
+   vpr::Interval delta(cur_time - mLastFrameTime);
+
+   // Sanity check.
+   if ( cur_time <= mLastFrameTime )
+   {
+      delta.secf(0.0f);
+   }
+
+   mLastFrameTime = cur_time;
+
+   x += delta.secf() * degs_per_second;
 }
