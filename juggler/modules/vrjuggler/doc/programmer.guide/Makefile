@@ -1,6 +1,6 @@
 # $Id$
 
-.SUFFIXES: .html .xml .pdf .tex
+.SUFFIXES: .html .xml .pdf .tex .fo
 
 default: html
 
@@ -9,6 +9,7 @@ JADE		= openjade
 JADETEX		= jadetex
 PDFJADETEX	= pdfjadetex
 RM		= rm -f
+XEP		= sh $(DOCBOOK_ROOT)/XEP/run.sh
 XSLTPROC	= /usr/bin/xsltproc
 
 DOCBOOK_ROOT	= /home/vr/Juggler/docbook
@@ -27,12 +28,15 @@ html: $(HTML_FILES)
 pdf: $(PDF_FILES)
 
 guide.html: guide.xml
-guide.pdf: guide.xml # guide.tex
+guide.pdf: guide.xml # guide.fo guide.tex
 
 # Basic XSL conversions -------------------------------------------------------
 
 .xml.html:
 	$(XSLTPROC) --output $@ $(XSL_DIR)/html/docbook.xsl $<
+
+.xml.fo:
+	$(XSLTPROC) --output $@ $(XSL_DIR)/fo/docbook.xsl $<
 
 # Generate a PDF file from an XML file using FOP.
 .xml.pdf:
@@ -67,6 +71,15 @@ guide.pdf: guide.xml # guide.tex
 #	@echo "Generating $*.tex from $<"
 #	@echo '\def\xmlfile{$*.fo}' >$*.tex
 #	@echo '\input xmltex' >>$*.tex
+
+# -----------------------------------------------------------------------------
+
+# RenderX XEP conversions -----------------------------------------------------
+
+# Generate a PDF file using XEP from RenderX.  This requires that an FO file
+# be generated first.
+#.xml.pdf:
+#	$(XEP) $*.fo
 
 # -----------------------------------------------------------------------------
 
