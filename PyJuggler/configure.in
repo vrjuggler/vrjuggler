@@ -220,6 +220,10 @@ AC_SUBST(PYSTE)
 
 AC_SUBST(BOOST_PYTHON_LDFLAGS)
 
-AC_OUTPUT(Makefile)
-AC_OUTPUT(pyjutil/Makefile)
-AC_OUTPUT(src/Makefile)
+AC_OUTPUT(Makefile
+          pyjutil/Makefile
+          src/Makefile
+          examples/Makefile
+          examples/cxx/Makefile
+          examples/cxx/PyAppLoader/Makefile
+          examples/cxx/PyExtApp/Makefile)
