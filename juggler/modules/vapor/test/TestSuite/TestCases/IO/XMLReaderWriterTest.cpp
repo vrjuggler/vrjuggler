@@ -19,50 +19,9 @@ void XMLReaderWriterTest::testBasicWriteRead()
    const double      data_double(1.2211975);
    const std::string data_string("test string");
    const bool        data_bool(true);
-   const std::string long_string("X", 1500);
-      
-   std::vector<vpr::Uint8> data_buffer;
-   vpr::XMLObjectWriter xml_writer;
-   
-   // Things to test
-   // - strings in cdata
-   // - string in attribute
-   // - multiple non-string in attribute
-   // - non string in cdata
-   // - Multiple cdata areas for a node
-   // - Very long string (> 1024chars)
-   try
-   {
-      xml_writer.beginTag("FirstLevel");
-         xml_writer.beginAttribute("uint8");
-            xml_writer.writeUint8(data_uint8);
-            xml_writer.writeUint16(data_uint16);
-         xml_writer.endAttribute();
-         xml_writer.writeUint32(data_uint32);
-         xml_writer.writeUint64(data_uint64);
-         xml_writer.beginTag("LargeNumberLevel");
-            xml_writer.writeFloat(data_float);
-            xml_writer.beginAttribute("String Attrib");
-               xml_writer.writeString(data_string);
-            xml_writer.endAttribute();
-            xml_writer.writeDouble(data_double);         
-         xml_writer.endTag();
-         xml_writer.writeString(data_string);
-         xml_writer.writeBool(data_bool);
-         xml_writer.beginTag("DataLevel");
-            //xml_writer.writeString(long_string);
-         xml_writer.endTag();
-      xml_writer.endTag();
-   }
-   catch (cppdom::Error e)
-   {
-      std::cerr << "Error [building]: " << e.getString() << std::endl;
-      if (e.getInfo().size())
-      {
-         std::cerr << "Info: " << e.getInfo() << std::endl;
-      }           
-   }
-
+   std::string long_string("X");
+   for(unsigned s=0;s<1500;s++)
+      long_string += "X";
 
    vpr::Uint8 read_uint8;
    vpr::Uint16 read_uint16;
@@ -76,37 +35,58 @@ void XMLReaderWriterTest::testBasicWriteRead()
    std::string read_long_string;
    bool        read_bool;
 
+
    try
    {
+      std::vector<vpr::Uint8> data_buffer;
+      vpr::XMLObjectWriter xml_writer;
+
+      // Things to test
+      // - strings in cdata
+      // - string in attribute
+      // - multiple non-string in attribute
+      // - non string in cdata
+      // - Multiple cdata areas for a node
+      // - Very long string (> 1024chars)
+      xml_writer.beginTag("FirstLevel");
+         xml_writer.beginAttribute("uint8");
+            xml_writer.writeUint8(data_uint8);
+            xml_writer.writeUint16(data_uint16);
+         xml_writer.endAttribute();
+         xml_writer.writeUint32(data_uint32);
+         xml_writer.writeUint64(data_uint64);
+         xml_writer.beginTag("LargeNumberLevel");
+            xml_writer.writeFloat(data_float);
+            xml_writer.beginAttribute("StringAttrib");
+               xml_writer.writeString(data_string);
+            xml_writer.endAttribute();
+            xml_writer.writeDouble(data_double);
+         xml_writer.endTag();
+         xml_writer.writeString(data_string);
+         xml_writer.writeBool(data_bool);
+         xml_writer.beginTag("DataLevel");
+            xml_writer.writeString(long_string);
+         xml_writer.endTag();
+      xml_writer.endTag();
+
       std::cout << "------ Current data -----\n";
       xml_writer.getRootNode()->save(std::cout);
       std::cout << "------ End data -----\n";
 
       data_buffer = xml_writer.getData();
-   }
-   catch (cppdom::Error e)
-   {
-      std::cerr << "Error [output]: " << e.getString() << std::endl;
-      if (e.getInfo().size())
-      {
-         std::cerr << "Info: " << e.getInfo() << std::endl;
-      }           
-   }
-      
-   vpr::XMLObjectReader xml_reader(data_buffer);
-   
-   try
-   {
+
+      vpr::XMLObjectReader xml_reader(data_buffer);
+
       xml_reader.beginTag("FirstLevel");
-         xml_writer.beginAttribute("uint8");
+         xml_reader.beginAttribute("uint8");
             xml_reader.readUint8(read_uint8);
             xml_reader.readUint16(read_uint16);
          xml_reader.endAttribute();
          xml_reader.readUint32(read_uint32);
          xml_reader.readUint64(read_uint64);
-         xml_writer.beginTag("LargeNumberLevel");
+         xml_reader.beginTag("LargeNumberLevel");
             xml_reader.readFloat(read_float);
-            xml_reader.beginAttribute("String Attrib");
+            xml_reader.beginAttribute("StringAttrib");
                xml_reader.readString(read_string_attrib, read_str_len);
             xml_reader.endAttribute();
             xml_reader.readDouble(read_double);
@@ -114,19 +94,32 @@ void XMLReaderWriterTest::testBasicWriteRead()
          xml_reader.readString(read_string, read_str_len);
          xml_reader.readBool(read_bool);
          xml_reader.beginTag("DataLevel");
-            //xml_reader.readString(read_long_string, 0);
+            xml_reader.readString(read_long_string, 0);
          xml_reader.endTag();
       xml_reader.endTag();
    }
-   catch (cppdom::Error e)
+   catch (cppdom::Error& ce)
    {
-     std::cerr << "Error [reading]: " << e.getString() << std::endl;
-     if (e.getInfo().size())
-     {
-        std::cerr << "Info: " << e.getInfo() << std::endl;
-     }           
+      std::cerr << "Cppdom Error [building]: " << ce.getString() << std::endl;
+      if (ce.getInfo().size())
+      {
+         std::cerr << "Info: " << ce.getInfo() << std::endl;
+      }
+   }
+   catch (std::exception& std_error)
+   {
+      std::cerr << "Std::Error: type:[" << typeid(std_error).name() << "]"
+                << "  what:" << std_error.what() << std::endl;
+      throw;   // Rethrow it since we don't know what to do
+   }
+   catch(...)
+   {
+      std::cerr << "Unrecognized error: rethrowing..." << std::endl;
+      throw;
    }
 
+   std::cout << "float: " << data_float << ":" << read_float << std::endl;
+   std::cout << "double: " << data_double << ":" << read_double << std::endl;
 
    CPPUNIT_ASSERT(data_uint8 == read_uint8);
    CPPUNIT_ASSERT(data_uint16 == read_uint16);
