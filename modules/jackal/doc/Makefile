@@ -13,7 +13,7 @@ HTML_OUTPUT_DIR=	html
 LATEX_OUTPUT_DIR=	latex
 
 # Fill these in!!  Together, they form the installation prefix.
-webroot=	$(HOME)/public_html/phpjug
+webroot=	$(HOME)/public_html/jugglerweb
 instdir=	jccl/0.0.6/programmer.reference
 
 prefix=		$(webroot)/$(instdir)

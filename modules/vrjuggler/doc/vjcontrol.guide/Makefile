@@ -12,7 +12,7 @@ HTML_FILES=	$(NAME).html
 PDF_FILES=	$(NAME).pdf
 
 # Fill these in!!  Together, they make up the installation prefix.
-webroot=	$(HOME)/public_html/phpjug
+webroot=	$(HOME)/public_html/jugglerweb
 instdir=	vrjuggler/$(PROJECT_NUMBER)/vjcontrol.guide
 
 prefix=		$(webroot)/$(instdir)
