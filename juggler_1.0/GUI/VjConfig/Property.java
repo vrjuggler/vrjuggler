@@ -108,11 +108,11 @@ public class Property {
     }
 
 
-    public String getName () {
+    public final String getName () {
 	return desc.name;
     }
 
-    public String getToken () {
+    public final String getToken () {
 	return desc.token;
     }
 
@@ -141,7 +141,7 @@ public class Property {
 
 
 
-    public int getNum () {
+    public final int getNum () {
 	return vals.size();
     }
 
@@ -154,6 +154,8 @@ public class Property {
 	 */
 	VarValue v1,v2;
 
+        if (p == null)
+            return false;
 	if (!name.equals(p.name))
 	    return false;
 	if (num != p.num)

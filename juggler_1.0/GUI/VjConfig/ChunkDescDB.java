@@ -49,35 +49,43 @@ public class ChunkDescDB {
     private Vector targets;
     private Vector descs;
 
+    public boolean need_to_save;
+
     public ChunkDescDB () {
 	name = "Unnamed";
 	file = new File ("");
 	targets = new Vector();
 	descs = new Vector();
+        need_to_save = false;
     }
 
 
-    public void setName(String _name) {
+    public final void setName(String _name) {
 	name = _name;
     }
 
 
-    public String getName () {
+    public final String getName () {
 	return name;
     }
 
 
-    public void setFile (File _file) {
+    public final void setFile (File _file) {
 	file = _file;
     }
 
 
-    public int size () {
+    public final File getFile () {
+        return file;
+    }
+
+
+    public final int size () {
 	return descs.size();
     }
 
 
-    public ChunkDesc elementAt (int i) {
+    public final ChunkDesc elementAt (int i) {
 	return (ChunkDesc)descs.elementAt(i);
     }
 
@@ -100,6 +108,7 @@ public class ChunkDescDB {
     }
 
 
+
     public void replace (ChunkDesc oldc, ChunkDesc newc) {
 	int i = descs.indexOf (oldc);
 	if (i >= 0) {
@@ -108,16 +117,26 @@ public class ChunkDescDB {
 	    notifyDescDBTargets (e);
 	}
 	else
-	    addElement (newc);
+	    add (newc);
     }
     
+
+
     public void removeAll () {
 	descs.removeAllElements();
 	notifyDescDBTargets (new DescDBEvent (this, DescDBEvent.REMOVEALL, null, null));
     }
 
-    public boolean remove(String tok) {
-	for (int i = 0; i < descs.size(); i++) {
+
+
+    public boolean remove (ChunkDesc d) {
+        return removeByToken (d.getToken());
+    }
+
+
+    public boolean removeByToken (String tok) {
+        int n = descs.size();
+	for (int i = 0; i < n; i++) {
 	    ChunkDesc d = (ChunkDesc)descs.elementAt(i);
 	    if (d.token.equals(tok)) {
 		DescDBEvent e = new DescDBEvent (this, DescDBEvent.REMOVE, d, null);
@@ -130,8 +149,10 @@ public class ChunkDescDB {
     }
 
 
+
     public boolean removeByName(String tok) {
-	for (int i = 0; i < descs.size(); i++) {
+        int n = descs.size();
+	for (int i = 0; i < n; i++) {
 	    ChunkDesc d = (ChunkDesc)descs.elementAt(i);
 	    if (d.name.equalsIgnoreCase(tok)) {
 		DescDBEvent e = new DescDBEvent (this, DescDBEvent.REMOVE, d, null);
@@ -143,10 +164,13 @@ public class ChunkDescDB {
 	return false;
     }
     
+
+
     public Vector getTokenBegins (String tok) {
 	ChunkDesc d;
 	Vector v = new Vector();
-	for (int i = 0; i < descs.size(); i++) {
+        int n = descs.size();
+	for (int i = 0; i < n; i++) {
 	    d = (ChunkDesc)descs.elementAt(i);
 	    if (d.token.startsWith (tok))
 		v.addElement(d);
@@ -156,10 +180,9 @@ public class ChunkDescDB {
 
 
 
-
-
-    public ChunkDesc getByToken (String tok) {
-	for (int i = 0; i < descs.size(); i++) {
+    public final ChunkDesc getByToken (String tok) {
+        int n = descs.size();
+	for (int i = 0; i < n; i++) {
 	    if (((ChunkDesc)descs.elementAt(i)).token.equalsIgnoreCase(tok)) {
 		return (ChunkDesc)descs.elementAt(i);
 	    }
@@ -169,8 +192,9 @@ public class ChunkDescDB {
     
 
 
-    public ChunkDesc getByName (String tok) {
-	for (int i = 0; i < descs.size(); i++)
+    public final ChunkDesc getByName (String tok) {
+        int n = descs.size();
+	for (int i = 0; i < n; i++)
 	    if (((ChunkDesc)descs.elementAt(i)).name.equalsIgnoreCase(tok))
 		return (ChunkDesc)descs.elementAt(i);
 	return null;
@@ -178,41 +202,78 @@ public class ChunkDescDB {
 
 
 
-    public String getTokenFromName (String n) {
-	for (int i = 0; i < descs.size(); i++)
-	    if (((ChunkDesc)descs.elementAt(i)).name.equalsIgnoreCase(n))
+    public final String getTokenFromName (String _name) {
+        int n = descs.size();
+	for (int i = 0; i < n; i++)
+	    if (((ChunkDesc)descs.elementAt(i)).name.equalsIgnoreCase(_name))
 		return ((ChunkDesc)descs.elementAt(i)).token;
 	return null;
     }
 
 
 
-    public String getNameFromToken (String n) {
-	for (int i = 0; i < descs.size(); i++)
-	    if (((ChunkDesc)descs.elementAt(i)).token.equalsIgnoreCase(n))
+    public final String getNameFromToken (String tok) {
+        int n = descs.size();
+	for (int i = 0; i < n; i++)
+	    if (((ChunkDesc)descs.elementAt(i)).token.equalsIgnoreCase(tok))
 		return ((ChunkDesc)descs.elementAt(i)).name;
 	return null;
     }
 
 
 
-    public void addElement (ChunkDesc d) {
-	remove (d.token);
+    /** Adds d to self.
+     *  Note: addElement may alter the name of d in order to avoid 
+     *  conflicts with ChunkDescs already in self.
+     */
+    public void add (ChunkDesc d) {
+        // remove any desc with the same token
+	removeByToken (d.token);
+
+        // make sure the name will be unique
+        if (getByName (d.getName()) != null) {
+            // this is ugly & clunky, but it's a rarely occurring case,
+            // and java (yay!) will handle the memory for us.  If we're
+            // changing the name on insert, we need to allocate a new
+            // chunkdesc with the new name, so that other chunkdescdbs
+            // using this same chunk keep the original name.  since
+            // we always replace instead of modifying chunkdescs, this
+            // lets the same desc appear in 2 descdbs simultaneously.
+            d = new ChunkDesc (d);
+            d.setName (generateUniqueName (d.getName()));
+        }
+
+        // do the deed
 	descs.addElement(d);
 	DescDBEvent e = new DescDBEvent (this, DescDBEvent.INSERT, null, d);
 	notifyDescDBTargets (e);
     }
 
 
-    public void addElements (Vector v) {
+
+    protected String generateUniqueName (String name) {
+        String n;
+        int i = 1;
+        do {
+            n = name + " <" + (i++) + ">";
+        } while (getByName (n) != null);
+        return n;
+    }
+
+
+
+    public void addAll (Vector v) {
 	for (int i = 0; i < v.size(); i++)
-	    addElement ((ChunkDesc)v.elementAt(i));
+	    add ((ChunkDesc)v.elementAt(i));
     }
 
 
-    public void addElements (ChunkDescDB db) {
-	addElements (db.descs);
+
+    public final void addAll (ChunkDescDB db) {
+	addAll (db.descs);
     }
+
+
 
     public boolean read (ConfigStreamTokenizer st) {
 	String name;
@@ -230,7 +291,7 @@ public class ChunkDescDB {
 		//System.err.println ("Reading chunkDesc: " + name);
 		c = new ChunkDesc (name);
 		c.read(st);
-		addElement(c);
+		add(c);
 	    }
 
 	}
@@ -239,6 +300,8 @@ public class ChunkDescDB {
 	    return false;
 	}
     }
+
+
 
     public String fileRep () {
 	String s = "";
@@ -261,14 +324,17 @@ public class ChunkDescDB {
 	}
     }
 
+
     public void removeDescDBListener (DescDBListener l) {
 	synchronized (targets) {
 	    targets.removeElement (l);
 	}
     }
 
+
     protected void notifyDescDBTargets (DescDBEvent e) {
 	Vector l;
+        need_to_save = true;
 	synchronized (targets) {
 	    l = (Vector) targets.clone();
 	}

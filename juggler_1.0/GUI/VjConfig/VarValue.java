@@ -37,7 +37,7 @@ package VjConfig;
 import VjConfig.*;
 import java.lang.Cloneable;
 
-public class VarValue {
+public final class VarValue {
   /* of course, this can't do any of the leet things the C++ varvalue
    * class does, because Sun would track us down and kill us for doing
    * things like that in Java ;)
@@ -101,6 +101,8 @@ public class VarValue {
 
 
     public boolean equals(VarValue v) {
+        if (v == null)
+            return false;
 	if (!valtype.equals(v.valtype))
 	    return false;
 	else if (valtype.equals (ValType.t_int))

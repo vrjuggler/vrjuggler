@@ -38,48 +38,72 @@ import java.util.Vector;
 import java.io.*;
 import VjConfig.*;
 
+/** Representation of a VR Juggler style configuration file.
+ */
 public class ConfigChunkDB {
 
+    /** Vector of ConfigChunks. */
     private Vector chunks;
+
+    /** Targets for ChunkDBEvents. */
     private Vector targets;
+
+    /** Identifier for the ConfigChunkDB.
+     *  Note: It's generally the case that name will be the last component
+     *  of file, but this isn't always true.  VjControl will append tags
+     *  to the name in order to distinguish files with the same name
+     *  (e.g. "config [1]" and "config [2]").
+     */
     public String name;
+
+    /** File that the ChunkDB was loaded from.
+     *  This is used for loading & saving the ChunkDB, and is guaranteed
+     *  not to be mangled like name could be.
+     *  <p>
+     *  Note: file defaults to "Untitled", but is never null unless 
+     *  explicitly set.
+     */
     public File file;
 
-    /* note: it's generally assumed that name will be the last component of file,
-     * but that won't always be the case - e.g. 2 dbs named "config" in different
-     * directories might get their names set to "config <1>" and "config <2>"
-     * by the GUI.
-     */
 
+    /** Flag to determine if file has been modified since last saved.
+     */
+    public boolean need_to_save;
+
+
+    /** Constructor. */
     public ConfigChunkDB () {
 	super();
 	chunks = new Vector();
 	targets = new Vector();
 	name = "Untitled";
 	file = new File("Untitled");
+        need_to_save = false;
     }
 
 
-
-    public void setFile (File f) {
-	file = f;
+    /** Sets the file to use for loading/saving */
+    public final void setFile (File f) {
+        file = f;
     }
 
-    public void setName (String _name) {
+    /** Sets the identifier string for this DB */
+    public final void setName (String _name) {
 	name = _name;
     }
 
-    public String getName () {
+    /** Returns the identifier string for this DB */
+    public final String getName () {
 	return name;
     }
 
 
+    /** Returns the difference between self and db.
+     *  Build a new ConfigChunkDB that's a "difference" of its arguments -
+     *  the returned db contains every chunk in db that isn't in self,
+     *  or that differs from the same-named chunk in self.
+     */
     public ConfigChunkDB diff (ConfigChunkDB d) {
-	/* builds a new ConfigChunkDB that's sort of the 
-	 * "difference" of its arguments - the returned 
-	 * db contains every chunk in d that isn't
-	 * in self or differs from the same-named chunk in self 
-	 */
 	ConfigChunk c1, c2;
 	ConfigChunkDB newdb = new ConfigChunkDB();
 	
@@ -93,34 +117,42 @@ public class ConfigChunkDB {
     }
 
 
-
-    public int size() {
+    /** Returns size of DB. */
+    public final int size() {
 	return chunks.size();
     }
 
 
+    /** Gets the ith element of self. */
     public ConfigChunk elementAt (int i) throws ArrayIndexOutOfBoundsException {
 	return (ConfigChunk)chunks.elementAt(i);
     }
 
+
+    /** Removed all ConfigChunks from self and notifies ChunkDBListeners. */
     public void removeAll () {
 	chunks.removeAllElements();
 	notifyChunkDBTargets (new ChunkDBEvent (this, ChunkDBEvent.REMOVEALL, null, null));
     }
 
-    public void removeElementAt (int i) {
+
+    /** Removes the ConfigChunk at index i and notifies ChunkDBListeners. */
+    public void removeChunkAt (int i) {
 	ChunkDBEvent e = new ChunkDBEvent (this, ChunkDBEvent.REMOVE, (ConfigChunk)chunks.elementAt(i), null);
 	chunks.removeElementAt(i);
 	notifyChunkDBTargets (e);
     }
 
 
-
-    public boolean remove(String name) {
+    /** Removes the ConfigChunk in self whose name == name. 
+     *  @return True if a matching ConfigChunk was found and removed, 
+     *          else false.
+     */
+    public boolean remove (String name) {
 	for (int i = 0; i < size(); i++) {
 	    if (elementAt(i).getName().equalsIgnoreCase(name)) {
 		ChunkDBEvent e = new ChunkDBEvent (this, ChunkDBEvent.REMOVE, (ConfigChunk)chunks.elementAt(i), null);
-		removeElementAt(i);
+		removeChunkAt(i);
 		notifyChunkDBTargets (e);
 		return true;
 	    }
@@ -130,6 +162,36 @@ public class ConfigChunkDB {
 
 
 
+    /** Removes a ConfigChunk with the same name as ch.
+     *  @return True if a matching ConfigChunk was found and removed,
+     *          else false.
+     */
+    public final boolean remove (ConfigChunk ch) {
+        return remove (ch.getName());
+    }
+
+
+
+    /** Removes any ConfigChunks in self with the same name as any Chunk
+     *  in db.
+     *  @return True if any ConfigChunks were removed, else false.
+     */
+    public boolean removeAll (ConfigChunkDB db) {
+        boolean retval = false;
+        ConfigChunk ch;
+        for (int i = 0; i < db.size(); i++) {
+            ch = db.elementAt (i);
+            retval |= remove (ch);
+        }
+        return retval;
+    }
+
+
+
+    /** Find the named ConfigChunk.
+     * @return A ConfigChunk in self whose name matches the parameter, or
+     *         null if none is found.
+     */
     public ConfigChunk get (String name) {
 	ConfigChunk ch;
 	for (int i = 0; i < size(); i++) {
@@ -143,6 +205,11 @@ public class ConfigChunkDB {
 
 
 
+    /** Gets all ConfigChunks using a particular ChunkDesc.
+     *  @param typename A ChunkDesc name.
+     *  @return A vector of all ConfigChunks in self using the named ChunkDesc.
+     *          This may be an empty Vector, but is never null.
+     */
     public Vector getOfDescName (String typename) {
 	Vector v = new Vector();
 	for (int i = 0; i < size(); i++) {
@@ -154,6 +221,11 @@ public class ConfigChunkDB {
     
 
 
+    /** Gets all ConfigChunks using a particular ChunkDesc.
+     *  @param typename A ChunkDesc name.
+     *  @return A vector of all ConfigChunks in self using the named ChunkDesc.
+     *          This may be an empty Vector, but is never null.
+     */
     public Vector getOfDescToken (String typename) {
 	Vector v = new Vector();
 	for (int i = 0; i < size(); i++) {
@@ -164,24 +236,37 @@ public class ConfigChunkDB {
     }
 
 
-    public void addElement (Object o) {
-	if (o instanceof ConfigChunk)
-	    insertOrdered ((ConfigChunk)o);
-	else
-	    System.err.println ("Error: tried to add non-configchunk to chunkdb");
+
+    /** Inserts ch into self.
+     *  Any same-named Chunk already in self is removed.
+     */
+    public final void add (ConfigChunk ch) {
+        insertOrdered (ch);
     }
 
 
+
+    /** Inserts all Chunks in db into self.
+     *  Any same-named Chunks already in self are removed.
+     */
+    public void addAll (ConfigChunkDB db) {
+        int i;
+        int n = db.size();
+        for (i = 0; i < n; i++)
+            insertOrdered (db.elementAt(i));
+    }
+
+
+
+    /** Inserts c into self.
+     *  Adds a Chunk into self, with the constraint that it's stored with
+     *  adjacent to all other Chunks using the same ChunkDesc.
+     */
     public void insertOrdered (ConfigChunk c) {
-	/* adds a chunk into self, with the constraint 
-	 * that it's stored with all the other chunks of its type.
-	 * For the moment, we won't put any real order on that.
-	 *
-	 */
 	ConfigChunk t;
 	int i = 0;
 
-	remove(c.name);
+	remove (c.name);
 
         if (c.getDescToken().equalsIgnoreCase("vjIncludeDescFile")) {
             chunks.insertElementAt(c, 0);
@@ -195,24 +280,8 @@ public class ConfigChunkDB {
 	    }
             chunks.insertElementAt(c,i);
         }
-        else {
-            // all other chunks...
-	    for (i = 0; i < chunks.size(); i++) {
-		t = (ConfigChunk)chunks.elementAt(i);
-		if (t.getDescToken().equalsIgnoreCase(c.getDescToken())) 
-		    break;
-	    }
-            if (i == size())
-                chunks.addElement(c);
-            else {
-                for ( ; i < size(); i++) {
-                    t = (ConfigChunk)chunks.elementAt(i);
-                    if (!t.getDescToken().equalsIgnoreCase(c.getDescToken()))
-                        break;
-                }
-                chunks.insertElementAt(c, i);
-            }
-        }
+        else
+            chunks.addElement (c);
 
 	ChunkDBEvent e = new ChunkDBEvent (this, ChunkDBEvent.INSERT, null, c);
 	notifyChunkDBTargets (e);
@@ -221,10 +290,12 @@ public class ConfigChunkDB {
 
 
 
+    /** Generates a name that won't conflict with anything in self.
+     *  This generates a new ConfigChunk name, prefixed with root,
+     *  that won't conflict with the names of any Chunks already in self.
+     *  It does this by appending an integer to the end of the name.
+     */
     public String getNewName (String root) {
-	/* generates a name for a chunk, prefixed with root, that
-	 * won't conflict with any names of chunks currently in self
-	 */
 	String name;
 	int num = 1;
 	do {
@@ -235,6 +306,10 @@ public class ConfigChunkDB {
 
 
 
+    /** Reads a series of ConfigChunks from st.
+     *  Terminates when it encounters the end of the stream or the token
+     *  "End".
+     */
     public boolean read (ConfigStreamTokenizer st) {
 	ConfigChunk c;
 
@@ -250,6 +325,7 @@ public class ConfigChunkDB {
 
 
 
+    /** Auxiliary for read. */
     public ConfigChunk readAChunk (ConfigStreamTokenizer st) {
 	String s;
 	ConfigChunk c = null;
@@ -290,6 +366,7 @@ public class ConfigChunkDB {
 
 
 
+    /** Removes o and inserts n. */
     public void replace(ConfigChunk o, ConfigChunk n) {
 	/* removes old from the db and inserts new in old's place */
 	ConfigChunk t;
@@ -306,7 +383,9 @@ public class ConfigChunkDB {
     }
 
 
-    private Vector addDependsForChunk (ConfigChunk ch, Vector v, String nameprefix) {
+    
+    /** Utility for getDependencies. */
+    protected Vector addDependsForChunk (ConfigChunk ch, Vector v, String nameprefix) {
 	// returns vector of pde's
 	// finds dependencies in ch and adds 'em to v.
 	int i, j, k;
@@ -351,6 +430,11 @@ public class ConfigChunkDB {
     }
 
 
+
+    /** Gets dependencies of all ConfigChunks in self.
+     *  Includes only dependencies that aren't satisfied by self.
+     *  @return a Vector of ChunkDependEntries.
+     */
     public Vector getDependencies () {
 	// gets the dependencies of _this_chunkdb_only_
 	int i;
@@ -372,10 +456,13 @@ public class ConfigChunkDB {
     }
 
 
+
+    /** Searches self for Chunks that satisfy dependencies.
+     *  @param v A vector of ChunkDependEntries, assumably generated by
+     *           getDependencies called on another ChunkDB.  searchDependencies
+     *           modifies the DependEntries with new information.
+     */
     public void searchDependencies (Vector v) {
-	// searches self for any chunks that satisfy dependencies in v,
-	// which is a vector of DependEntry.  DependEntries in v are
-	// updated with that information
 	ChunkDependEntry cde;
 	PropDependEntry pde;
 	ConfigChunk ch;
@@ -394,12 +481,12 @@ public class ConfigChunkDB {
 
 
 
+    /** Builds a string representation of self.
+     *  This is a holdover from the times when ConfigChunkDB was a child
+     *  of Vector, and Vector.toString() was final.
+     */
     public String fileRep() {
-	/* returns a string representation (actually a config file representation)
-	 * of the db.
-	 * Can't just overload toString cuz that's final for vector.
-	 */
-	String s = "";
+        String s = "";
 	for (int i = 0; i < size(); i++)
 	    s = s + ((ConfigChunk)elementAt(i)).toString();
 	s = s + "End\n";
@@ -424,6 +511,7 @@ public class ConfigChunkDB {
 
     protected void notifyChunkDBTargets (ChunkDBEvent e) {
 	Vector l;
+        need_to_save = true;
 	synchronized (targets) {
 	    l = (Vector) targets.clone();
 	}

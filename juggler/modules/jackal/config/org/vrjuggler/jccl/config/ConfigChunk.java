@@ -83,19 +83,19 @@ public class ConfigChunk {
 
 
 
-    public String getName() {
+    public final String getName() {
 	return name;
     }
 
-    public void setName (String s) {
+    public final void setName (String s) {
 	name = s;
     }
 
-    public String getDescName() {
+    public final String getDescName() {
 	return desc.name;
     }
 
-    public String getDescToken() {
+    public final String getDescToken() {
 	return desc.token;
     }
 
@@ -103,6 +103,8 @@ public class ConfigChunk {
 
     public boolean equals (ConfigChunk c) {
 	Property p1, p2;
+        if (c == null)
+            return false;
 	if (!name.equals(c.name))
 	    return false;
 	if (!desc.token.equals(c.desc.token))
@@ -152,6 +154,45 @@ public class ConfigChunk {
     }
 
 
+    public VarValue getValueFromToken (String n, int i) {
+        Property p = getPropertyFromToken (n);
+        if (p != null)
+            return p.getValue(i);
+        else
+            return null;
+    }
+
+
+    /** Returns a vector of ConfigChunk names this chunk depends on */
+    public Vector getDependencyNames() {
+	int j, k;
+	ConfigChunk ch2;
+	Property p;
+	String s;
+	VarValue val;
+        Vector results = new Vector();
+
+	for (j = 0; j < props.size(); j++) {
+	    p = (Property)props.elementAt(j);
+	    if (p.valtype.equals (ValType.t_chunk)) {
+		for (k = 0; k < p.vals.size(); k++) {
+		    s = ((VarValue)p.vals.elementAt(k)).getString();
+                    if (!s.equals(""))
+                        results.addElement (s);
+                }
+	    }
+	    else if (p.valtype.equals (ValType.t_embeddedchunk)) {
+		for (k = 0; k < p.vals.size(); k++) {
+		    ch2 = ((VarValue)p.vals.elementAt(k)).getEmbeddedChunk();
+                    Vector results2 = ch2.getDependencyNames();
+                    results.addAll (results2);
+		}
+	    }
+	}
+	return results;
+    }
+
+
 
     public boolean read (ConfigStreamTokenizer st) {
 	try {
@@ -198,7 +239,7 @@ public class ConfigChunk {
 
 
 
-    public String toString () {
+    public final String toString () {
 	return toString ("");
     }
 

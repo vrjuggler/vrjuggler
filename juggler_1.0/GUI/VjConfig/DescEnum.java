@@ -80,6 +80,8 @@ public class DescEnum {
 
 
     public boolean equals (DescEnum d) {
+        if (d == null)
+            return false;
 	if (!str.equalsIgnoreCase(d.str))
 	    return false;
 	if (!val.equals(d.val))

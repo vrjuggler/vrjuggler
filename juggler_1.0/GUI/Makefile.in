@@ -67,27 +67,21 @@ MAKEFLAGS	+= -j 1
 
 # Include the .mk files for VjConfig and VjGUI so that the Java code in those
 # directories can be built using this Makefile.
-include $(srcdir)/VjConfig/VjConfig.mk
-include $(srcdir)/VjPerf/VjPerf.mk
-include $(srcdir)/VjGUI/VjGUI.mk
-include $(srcdir)/VjGUI/chunkdesc/chunkdesc.mk
-include $(srcdir)/VjGUI/configchunk/configchunk.mk
-include $(srcdir)/VjGUI/util/util.mk
-
-JAVA_SRCS	= $(VJCONFIG_SOURCES)		\
-                  $(VJPERF_SOURCES)		\
-                  $(VJGUI_SOURCES)		\
-                  $(VJGUICHUNKDESC_SOURCES)	\
-                  $(VJGUICONFIGCHUNK_SOURCES)	\
-                  $(VJGUIUTIL_SOURCES)
+include ${srcdir}/VjConfig/VjConfig.mk
+include ${srcdir}/VjControl/VjControl.mk
+include ${srcdir}/VjComponents/UI/UI.mk
+include ${srcdir}/VjComponents/UI/Widgets/Widgets.mk
+include ${srcdir}/VjComponents/Network/Network.mk
+include ${srcdir}/VjComponents/ConfigEditor/ConfigEditor.mk
+include ${srcdir}/VjComponents/ConfigEditor/ChunkDescUI/ChunkDescUI.mk
+include ${srcdir}/VjComponents/ConfigEditor/ConfigChunkUI/ConfigChunkUI.mk
+include ${srcdir}/VjComponents/PerfMonitor/PerfMonitor.mk
 
 # Search path information.
 vpath
-vpath %.java $(srcdir) $(srcdir)/VjConfig $(srcdir)/VjPerf		\
-             $(srcdir)/VjGUI $(srcdir)/VjGUI/chunkdesc			\
-             $(srcdir)/VjGUI/configchunk $(srcdir)/VjGUI/util
-vpath %.class VjConfig VjPerf VjGUI VjGUI/chunkdesc VjGUI/configchunk	\
-              VjGUI/util
+
+vpath %.java @srcdir@
+vpath %.class .
 
 include $(MKPATH)/dpp.obj.mk
 
@@ -98,25 +92,45 @@ JAVA_TARGETS	= VjControl.jar
 
 # there's no way to append to a jar file, so this must all be done in one
 # step.  This is incredibly stupid...
-VjControl.jar: $(JAVA_SRCS) VjFiles
-	$(JAVAC_CMD) $(srcdir)/*/*.java $(srcdir)/*/*/*.java
-	$(JAR) cvf VjControl.jar */*.class */*/*.class VjFiles
+VjControl.jar: 	${VJCONFIG_SOURCES} \
+		${VJCONTROL_SOURCES} \
+		${UI_SOURCES}		\
+		${VJCUIUTIL_SOURCES}	\
+		${VJCNETWORK_SOURCES}	\
+		${VJCCONF_SOURCES}	\
+		${CHUNKDESCUI_SOURCES}	\
+		${CONFIGCHUNKUI_SOURCES}	\
+		${VJCPERF_SOURCES}	\
+		${srcdir}/contents.config
+	${JAVAC_CMD} ${srcdir}/VjConfig/*.java \
+		     ${srcdir}/VjControl/*.java \
+		     ${srcdir}/VjComponents/UI/*.java \
+		     ${srcdir}/VjComponents/UI/*/*.java \
+		     ${srcdir}/VjComponents/Network/*.java \
+		     ${srcdir}/VjComponents/ConfigEditor/*.java \
+		     ${srcdir}/VjComponents/ConfigEditor/*/*.java \
+		     ${srcdir}/VjComponents/PerfMonitor/*.java 
+	${JAR} cvf VjControl.jar VjConfig/*.class VjControl/*.class \
+		VjComponents/*/*.class VjComponents/*/*/*.class \
+		-C ${srcdir} VjFiles -C ${srcdir} contents.config
 
-VjFiles:
-	$(PERL) $(scriptdir)/install-dir.pl -i $(srcdir)/VjFiles	\
-            -o $(topdir)/GUI/VjFiles
+
+
+#
+# Documentation <just for show>
+#
+doc:
+	/usr/java/bin/javadoc -d ~/public_html/vjcontrol -private VjControl \
+	VjConfig VjComponents VjComponents.ConfigEditor VjComponents.ConfigEditor.ConfigChunkUI VjComponents.ConfigEditor.ChunkDescUI VjComponents.UI VjComponents.UI.Widgets VjComponents.PerfMonitor VjComponents.Network
+
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
-CLEAN_FILES	+= VjConfig/*~ VjPerf/*~ VjGUI/*~ VjGUI/chunkdesc/*~	\
-                   VjGUI/configchunk/*~ VjGUI/util/*~
+CLEAN_FILES	+= VjConfig/*.class VjConfig/*~                         \
+                   VjControl/*.class VjControl/*~                       \
+		   VjComponents/*/*.class VjComponents/*/*~		\
+		   VjComponents/*/*/*.class VjComponents/*/*/*~	
 
-# Append VjFiles to $(CLEAN_DIRS) only if $(srcdir) is not the current
-# directory.  If $(srcdir) is the current directory, removing VjFiles would
-# blow away the VjFiles directory in the source tree.
-ifneq ($(srcdir), .)
-    CLEAN_DIRS	+= VjFiles
-endif
 
 CLOBBER_FILES	+= VjControl.jar
