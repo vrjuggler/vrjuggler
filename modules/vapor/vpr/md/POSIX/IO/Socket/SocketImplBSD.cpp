@@ -358,6 +358,58 @@ SocketImplBSD::setRemoteAddr (const InetAddr& addr) {
     return status;
 }
 
+vpr::ReturnStatus SocketImplBSD::read_i (void* buffer, const vpr::Uint32 length,
+                                         vpr::Uint32& bytes_read,
+                                         const vpr::Interval timeout = vpr::Interval::NoTimeout)
+{
+   vpr::ReturnStatus status;
+   m_blocking_fixed = true;
+   status = m_handle->read_i(buffer, length, bytes_read, timeout);
+
+   if ( bytes_read == 0 )
+   {
+      status.setCode(vpr::ReturnStatus::NotConnected);
+   }
+
+   return status;
+}
+
+vpr::ReturnStatus SocketImplBSD::readn_i (void* buffer, const vpr::Uint32 length,
+                                          vpr::Uint32& bytes_read,
+                                          const vpr::Interval timeout = vpr::Interval::NoTimeout)
+{
+   vpr::ReturnStatus status;
+   m_blocking_fixed = true;
+   status = m_handle->readn_i(buffer, length, bytes_read, timeout);
+
+   if ( bytes_read == 0 )
+   {
+      status.setCode(vpr::ReturnStatus::NotConnected);
+   }
+
+   return status;
+}
+
+vpr::ReturnStatus SocketImplBSD::write_i (const void* buffer,
+                                          const vpr::Uint32 length,
+                                          vpr::Uint32& bytes_written,
+                                          const vpr::Interval timeout = vpr::Interval::NoTimeout)
+{
+   vpr::ReturnStatus status;
+   m_blocking_fixed = true;
+   status = m_handle->write_i(buffer, length, bytes_written, timeout);
+
+   if ( status.failure() )
+   {
+      if ( ECONNRESET == errno || EHOSTUNREACH || EHOSTDOWN || ENETDOWN )
+      {
+         status.setCode(vpr::ReturnStatus::NotConnected);
+      }
+   }
+
+   return status;
+}
+
 /**
  * Define a simple union used as the optval argument to [gs]etsockopt(2).
  */

@@ -100,6 +100,10 @@ SocketDatagramImplBSD::recvfrom (void* msg, const vpr::Uint32 length,
                 retval.setCode(ReturnStatus::Fail);
             }
         }
+        else if ( bytes == 0 )
+        {
+            retval.setCode(vpr::ReturnStatus::NotConnected);
+        }
         else {
             bytes_read = bytes;
         }
@@ -142,6 +146,11 @@ SocketDatagramImplBSD::sendto (const void* msg, const vpr::Uint32 length,
                         m_remote_addr.getPort(), strerror(errno));
                 retval.setCode(ReturnStatus::Fail);
             }
+        }
+        else if ( errno == EHOSTUNREACH || errno == EHOSTDOWN ||
+                  errno == ENETDOWN )
+        {
+            retval.setCode(vpr::ReturnStatus::NotConnected);
         }
         else {
             bytes_sent = bytes;
