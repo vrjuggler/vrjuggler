@@ -52,30 +52,29 @@ namespace vpr
 // This is the actual function that is called.
 //--------------------------------------------
 #if defined(VPR_USE_IRIX_SPROC) /* ---- Using IRIX Sproc ------ */
-   void vprThreadFunctorFunction (void* args)
+   void vprThreadFunctorFunction(void* args)
    {
       BaseThreadFunctor& func = *(BaseThreadFunctor*)args;
       vprASSERT( func.isValid() );
       func(); // Call the functor's operator ()
    }
 #elif defined(VPR_USE_PTHREADS)
-      void* vprThreadFunctorFunction(void* args)
-      {
-         ThreadManager* vpr_tm_inst;
-         BaseThreadFunctor& func = *((BaseThreadFunctor*) args);
+   void* vprThreadFunctorFunction(void* args)
+   {
+      ThreadManager* vpr_tm_inst;
+      BaseThreadFunctor& func = *((BaseThreadFunctor*) args);
 
-         // Wait until this thread has been registered with the thread
-         // manager before continuing execution.
-         vpr_tm_inst = ThreadManager::instance();
-         vpr_tm_inst->lock();
-         vpr_tm_inst->unlock();
+      // Wait until this thread has been registered with the thread
+      // manager before continuing execution.
+      vpr_tm_inst = ThreadManager::instance();
+      vpr_tm_inst->lock();
+      vpr_tm_inst->unlock();
 
-         vprASSERT( func.isValid() );
-         func();
+      vprASSERT(func.isValid());
+      func();
 
-         return (void*) NULL;
-      }
-
+      return (void*) NULL;
+   }
 #elif defined(VPR_USE_NSPR)
    void vprThreadFunctorFunction (void* args)
    {
@@ -84,7 +83,7 @@ namespace vpr
       func();
    }
 #else
-   void vprThreadFunctorFunction (void* args)
+   void vprThreadFunctorFunction(void* args)
    {
       BaseThreadFunctor& func = *(BaseThreadFunctor*)args;
       vprASSERT( func.isValid() );
