@@ -107,7 +107,7 @@
 #   define VPR_CALLBACK_DECL
 #   define VPR_STATIC_CALLBACK(__x) static __x
 
-#elif defined(VPR_OS_MacOSX)
+#elif defined(VPR_OS_Mac)
 
 #   define VPR_EXPORT(__type)		__declspec(export) __type
 #   define VPR_EXPORT_CLASS		__declspec(export)
