@@ -62,8 +62,6 @@ void wandApp::init()
    mButton3.init("VJButton3");
    mButton4.init("VJButton4");
    mButton5.init("VJButton5");
-
-   mLoggerPlayButton.init("LoggerPlayButton");
 }
 
 void wandApp::contextInit()
@@ -83,18 +81,6 @@ void wandApp::preFrame()
            << " 5:" << mButton5->getData() << std::endl;
 
    mHeadHistory.push_back(gmtl::makeTrans<gmtl::Vec3f>(mHead->getData()));
-
-   // Check logger play button
-   if(mLoggerPlayButton->getData() == gadget::Digital::TOGGLE_ON)
-   {
-      std::cout << "\n\n------ Log Play Button hit ----\n" << std::flush;
-      gadget::InputManager* input_mgr = gadget::InputManager::instance();
-      gadget::InputLoggerPtr logger = input_mgr->getInputLogger();
-
-      vprASSERT(logger.get() != NULL);
-      logger->load("test_logging.xml");
-      logger->play();
-   }
 }
 
 void wandApp::bufferPreDraw()
