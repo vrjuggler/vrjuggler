@@ -478,7 +478,6 @@ elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     CXXFLAGS="$CXXFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
     DBG_FLAGS="$DBG_FLAGS /MTd"
     OPT_FLAGS="$OPT_FLAGS /MT"
-    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /MTd"
     UUID_DEFS="$UUID_DEFS -DWININC"
     vpr_cxxflags="$CXXFLAGS"
 fi
