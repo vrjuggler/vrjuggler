@@ -49,8 +49,7 @@
 package VjComponents.ConfigEditor.ConfigChunkUI;
 
 import java.awt.*;
-import java.util.Vector;
-import java.util.List;
+import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
 
@@ -64,7 +63,7 @@ public class VarValueStandardPanel
     extends VarValuePanel 
     implements ActionListener {
 
-    VarValuePanelParent     parent; // the parent is a listener on the remove button
+    java.util.List              action_listeners;
     PropertyDesc      desc;
     JTextField        text;
     JComboBox         choice;   // note that only one of text,choice will be used.
@@ -72,13 +71,12 @@ public class VarValueStandardPanel
 
     ConfigUIHelper    uihelper_module;
 
-    public VarValueStandardPanel(VarValuePanelParent par, 
-                                 PropertyDesc d,
+    public VarValueStandardPanel(PropertyDesc d,
                                  ConfigUIHelper _uihelper_module) {
 	super();
-	parent = par;
 	desc = d;
         uihelper_module = _uihelper_module;
+        action_listeners = new ArrayList();
 	int i, j, k;
 
 	setLayout(new BorderLayout (1,1));
@@ -136,7 +134,7 @@ public class VarValueStandardPanel
 
     /** Utility for generateChunkSelectionList(). */
     private void addEmbeddedChunks (ListBoxModel bm, ConfigChunk ch, DescEnum[] chunktypes) {
-        List v = ch.getEmbeddedChunks();
+        java.util.List v = ch.getEmbeddedChunks();
         ConfigChunk ch2;
         for (int i = 0; i < v.size(); i++) {
             ch2 = (ConfigChunk)v.get(i);
@@ -224,8 +222,38 @@ public class VarValueStandardPanel
 
     public void actionPerformed (ActionEvent e) {
 	if (e.getSource() == removebutton)
-	    parent.removePanel(this);
+	    notifyActionListenersRemove();
     }
+
+
+    //--------------------- ActionEvent Stuff ------------------------
+
+    public void addActionListener (ActionListener l) {
+	synchronized (action_listeners) {
+	    action_listeners.add (l);
+	}
+    }
+
+    public void removeActionListener (ActionListener l) {
+	synchronized (action_listeners) {
+	    action_listeners.remove (l);
+	}
+    }
+
+    private void notifyActionListenersRemove () {
+        ActionEvent e = new ActionEvent (this, ActionEvent.ACTION_PERFORMED,
+                                         "Remove");
+        ActionListener l;
+        int i, n;
+        synchronized (action_listeners) {
+            n = action_listeners.size();
+            for (i = 0; i < n; i++) {
+                l = (ActionListener)action_listeners.get(i);
+                l.actionPerformed (e);
+            }
+        }
+    }
+
 
 
 }

@@ -50,7 +50,7 @@ import VjComponents.ConfigEditor.*;
  * @author Christopher Just
  * @version $Revision$
  */
-public class PropertyPanel extends JPanel implements ActionListener, VarValuePanel.VarValuePanelParent {
+public class PropertyPanel extends JPanel implements ActionListener {
 
     ConfigUIHelper uihelper_module;
     
@@ -146,6 +146,7 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
 	    valuepanels.add(p);
 	    eastpanellayout.setConstraints(p, c);
 	    eastpanel.add (p);
+            p.addActionListener (this);
 	}
 	add(eastpanel,"Center");
 	validate();
@@ -168,12 +169,12 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
                     ch.setName (d.getName() + " " + valindex);
             }
 	    if (useMiniPanel (ch))
-		return new VarValueMiniChunkPanel (this, !pr.hasFixedNumberOfValues(), ch, uihelper_module);
+		return new VarValueMiniChunkPanel (!pr.hasFixedNumberOfValues(), ch, uihelper_module);
 	    else
-		return new VarValueBigChunkPanel (this, pr, ch, uihelper_module);
+		return new VarValueBigChunkPanel (pr, ch, uihelper_module);
 	}
 	else
-	    return new VarValueStandardPanel(this, pr.getDesc(), uihelper_module);
+	    return new VarValueStandardPanel(pr.getDesc(), uihelper_module);
     }
 
 
@@ -202,23 +203,23 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
 
 
 
-    public void removePanel (VarValuePanel p) {
-	valuepanels.remove(p);
-	// annoying but true: we need to remove p and the label component left of it
-	Component comps[] = eastpanel.getComponents();
-	for (int i = 0; i < comps.length; i++) {
-	    if (comps[i] == p) {
-		eastpanel.remove (comps[i-1]);
-		eastpanel.remove(p);
-		Box pr = (Box)getParent();
-		pr.validate();
-		//pr.repaint (pr.getBounds());
-                pr.repaint();  // in jdk < 1.4, box isn't a JComponent.
-                               // what in cthulhu's name were they thinking?
-		return;
-	    }
-	}
-    }
+//     public void removePanel (VarValuePanel p) {
+// 	valuepanels.remove(p);
+// 	// annoying but true: we need to remove p and the label component left of it
+// 	Component comps[] = eastpanel.getComponents();
+// 	for (int i = 0; i < comps.length; i++) {
+// 	    if (comps[i] == p) {
+// 		eastpanel.remove (comps[i-1]);
+// 		eastpanel.remove(p);
+// 		Box pr = (Box)getParent();
+// 		pr.validate();
+// 		//pr.repaint (pr.getBounds());
+//                 pr.repaint();  // in jdk < 1.4, box isn't a JComponent.
+//                                // what in cthulhu's name were they thinking?
+// 		return;
+// 	    }
+// 	}
+//     }
 
 
 
@@ -242,6 +243,7 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
 
 	    i = valuepanels.size();
 	    VarValuePanel p = makeVarValuePanel(prop, i);
+            p.addActionListener (this);
 
 	    if (i < prop.getDesc().getValueLabelsSize())
 		lj = new JLabel (valuelabelpad + prop.getDesc().getValueLabel(i));
@@ -264,7 +266,30 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
 	    validate();
 	    parent.validate();
 	}
-    }
+        else if (e.getSource() instanceof VarValuePanel) {
+            if (e.getActionCommand().equals ("Remove")) {
+                VarValuePanel p = (VarValuePanel)e.getSource();
+
+                valuepanels.remove(p);
+                // annoying but true: we need to remove p and the label component left of it
+                Component comps[] = eastpanel.getComponents();
+                for (int i = 0; i < comps.length; i++) {
+                    if (comps[i] == p) {
+                        eastpanel.remove (comps[i-1]);
+                        eastpanel.remove(p);
+                        Box pr = (Box)getParent();
+                        pr.validate();
+                        //pr.repaint (pr.getBounds());
+                        pr.repaint();  // in jdk < 1.4, box isn't a JComponent.
+                        // what in cthulhu's name were they thinking?
+                        break;
+                    }
+                }
+            }    
+        } 
+    } // actionPerformed()
+
+
 
 }
 
