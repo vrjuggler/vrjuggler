@@ -97,7 +97,7 @@ namespace Flock
 {
    /** Get string description of the given error */
    std::string getErrorDescription(vpr::Uint8 errCode, vpr::Uint8 expandedErr );
-   
+
    // ------ Flock exceptions ------ //
    /** Base exception for flock errors */
    class FlockException : public std::exception
@@ -163,7 +163,7 @@ namespace Flock
    class BirdErrorException : public FlockException
    {
    public:
-      BirdErrorException(vpr::Uint8 err, vpr::Uint8 expandedErr) 
+      BirdErrorException(vpr::Uint8 err, vpr::Uint8 expandedErr)
       : FlockException("Bird error")
       {
          std::string err_desc = Flock::getErrorDescription(err,expandedErr);
@@ -175,7 +175,7 @@ namespace Flock
       }
       virtual ~BirdErrorException() throw()
       {;}
-      
+
       vpr::Uint8 mErr;
       vpr::Uint8 mExpandedErr;
    };
@@ -503,7 +503,7 @@ public:
    * @pre Flock must be currently streaming.
    */
    vpr::ReturnStatus stopStreaming();
-   
+
    /**
     * Sets the port to use.
     * This will be a string in the form of the native OS descriptor.<BR>
@@ -548,7 +548,7 @@ public:
     * Sets the number of birds to use in the Flock.
     *
     * @param n An integer number not more than the number of
-    *          birds attached to the system.    
+    *          birds attached to the system.
     */
    void setNumSensors( const unsigned& n );
 
@@ -575,7 +575,7 @@ public:
    void setExtendedRange( const bool& blVal );
 
    /**
-    * Sets the type of filtering that the Flock uses.    
+    * Sets the type of filtering that the Flock uses.
     */
    void setFilterType( const BIRD_FILT& f );
 
@@ -658,7 +658,7 @@ public:  // ---- Query methods for flock state ---- //
    /** Get the current expanded error code */
    std::pair<vpr::Uint8,vpr::Uint8> queryExpandedErrorCode();
 
-   /* Check for error, if there is, print out error message and throw exception 
+   /* Check for error, if there is, print out error message and throw exception
    * @throws: BirdErrorException
    */
    void checkError();
@@ -666,7 +666,7 @@ public:  // ---- Query methods for flock state ---- //
    // ---- Helpers for printing information of interest to users --- //
    /** Print the information we have about the status of all units in the flock. */
    void printFlockStatus();
-   
+
    // ---- Attribute getters ------ //
    // These methods are only valid after the initial open command completes
    Flock::AddressingMode getAddressingMode()
@@ -703,7 +703,7 @@ protected: // -- Helpers --- //
 
    /** Get a matrix position from bird input data in the buffer. */
    gmtl::Matrix44f processSensorRecord(vpr::Uint8* buff);
-   
+
    /** Helper to convert raw binary data read to float value */
    float rawToFloat(const vpr::Uint8& r1, const vpr::Uint8& r2);
 
@@ -722,8 +722,19 @@ protected: // -- Helpers --- //
    /** Get the maximum bird address for the current mode */
    unsigned getMaxBirdAddr();
 
+   std::string getStatusString()
+   {
+      std::string status_string;
+      if (FlockStandalone::CLOSED == getStatus()) status_string = "Closed";
+      else if (FlockStandalone::OPEN == getStatus()) status_string = "Open";
+      else if (FlockStandalone::RUNNING == getStatus()) status_string = "Running";
+      else if (FlockStandalone::STREAMING == getStatus()) status_string=  "Streaming";
+      else status_string = "Unknown";
 
-public:   
+      return status_string;
+   }
+
+public:
    // Struct for holding sys information about a single unit in the flock
    struct FlockUnit
    {
@@ -773,7 +784,9 @@ private:  // --- Data members --- //
    flock_units_t           mFlockUnits;              /**< List of all the flock units we have */
    unsigned                mActiveUnitEndIndex;      /**< Index of end of active units (one past last active) */
    std::vector<vpr::Uint8> mXmitterIndices;          /**< Indices into mFlockUnits of the transmitters */
-   std::vector<vpr::Uint8> mAddrToSensorIdMap;       /**< Maps the addr of a unit to the index of the associated sensor in mSensorData */
+
+   /** Maps the addr of a unit to the index of the associated sensor in mSensorData. -1 means no sensor at that addr */
+   std::vector<int>        mAddrToSensorIdMap;
 
    /** Current sensor data for all sensors in flock.
    * Note: This vector is NOT indexed by bird address (like mFlockUnits).
@@ -783,7 +796,7 @@ private:  // --- Data members --- //
    * Values stored in feet.
    */
    std::vector<gmtl::Matrix44f>  mSensorData;
-   
+
    // --- Default params --- //
    vpr::Interval        mReadTimeout;  /**< Standard timeout for all reads */
 };
