@@ -35,12 +35,13 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <Carbon/Carbon.h>
-
 #include <gadget/Type/Input.h>
 #include <gadget/Type/EventWindow.h>
 #include <gadget/Type/InputMixer.h>
 #include <jccl/Config/ConfigChunkPtr.h>
+
+
+#include <Carbon/Carbon.h>
 
 namespace gadget
 {
