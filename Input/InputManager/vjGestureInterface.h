@@ -46,6 +46,9 @@
 //!PUBLIC_API:
 class vjGestureInterface : public vjDeviceInterface
 {
+protected:
+   vjGestureInterface(vjGestureInterface& other) {;}
+
 public:
    vjGestureInterface() : mGestProxy(NULL)
    {;}
