@@ -108,7 +108,7 @@ public class ConfigureDeviceStep
                
                JScrollPane scroll_pane = new JScrollPane();
                PropertySheet element_prop_sheet =
-                  PropertySheetFactory.instance().makeSheet(element, start_color);
+                  PropertySheetFactory.instance().makeSheet(context, element, start_color);
                
                scroll_pane.getViewport().removeAll();
                scroll_pane.getViewport().add(element_prop_sheet, null);
