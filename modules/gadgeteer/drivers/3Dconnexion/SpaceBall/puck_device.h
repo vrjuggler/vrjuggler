@@ -135,12 +135,12 @@ class basePuck
     *** @param handle The file handle
     *** @return True if success, else false
     */
-    virtual bool portOpen(const char *name, int opts, HandleType &handle);
+    virtual bool portOpen(const char *name, int opts, HandleType &handle) = 0;
     /** Closes the port
     *** @param handle The file handle
     *** @return True if success, else false
     */
-    virtual bool portClose(HandleType handle);
+    virtual bool portClose(HandleType handle) = 0;
 
 
 
@@ -209,6 +209,18 @@ class basePuckSerial : public basePuck
     /** Direct port manipulation.
      */
     //@{
+    /** Opens the port
+    *** @param name The serial port's name
+    *** @param opts Specific options used when opening
+    *** @param handle The file handle
+    *** @return True if success, else false
+    */
+    virtual bool portOpen(const char *name, int opts, HandleType &handle);
+    /** Closes the port
+    *** @param handle The file handle
+    *** @return True if success, else false
+    */
+    virtual bool portClose(HandleType handle);
     /** Reads the serial port
     *** @param handle The file handle
     *** @param buffer The buffer to put data into
@@ -265,6 +277,23 @@ class basePuckUSB : public basePuck
     virtual int portRead(HandleType handle, int buffer[], int bufferSize);
     ///
     
+    /** Direct port manipulation.
+     */
+    //@{
+    /** Opens the port
+    *** @param name The serial port's name
+    *** @param opts Specific options used when opening
+    *** @param handle The file handle
+    *** @return True if success, else false
+    */
+    virtual bool portOpen(const char *name, int opts, HandleType &handle);
+    /** Closes the port
+    *** @param handle The file handle
+    *** @return True if success, else false
+    */
+    virtual bool portClose(HandleType handle);
+    //@}
+
     //----------------------------------------
     /** @name Local Defines
      */
