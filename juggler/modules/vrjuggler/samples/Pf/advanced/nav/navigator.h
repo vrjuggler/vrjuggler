@@ -38,7 +38,7 @@
 #include <vrj/Math/Coord.h>
 #include <collider.h>
 #include <vector>
-#include <vrj/Input/Type/DigitalInterface.h>
+#include <gadget/Type/DigitalInterface.h>
 
 
 //: Base class for navigation
@@ -126,7 +126,7 @@ protected:
 
    // HELPER
    // returns true if the action state is true
-   bool checkForAction(std::vector<vrj::DigitalInterface*> btns, std::vector<ActionState> state_combo);
+   bool checkForAction(std::vector<gadget::DigitalInterface*> btns, std::vector<ActionState> state_combo);
 
 protected:
    std::string       mName;         // Name of the collidor
@@ -253,7 +253,7 @@ void navigator::setRotAxis(bool allowX, bool allowY, bool allowZ)
 
 // HELPER
 // returns true if the action state is true
-bool navigator::checkForAction( std::vector<vrj::DigitalInterface*> btns, std::vector<navigator::ActionState> state_combo)
+bool navigator::checkForAction( std::vector<gadget::DigitalInterface*> btns, std::vector<navigator::ActionState> state_combo)
 {
    bool ret_val( true );
 

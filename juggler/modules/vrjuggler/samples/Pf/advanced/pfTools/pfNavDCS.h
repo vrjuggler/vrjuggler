@@ -83,10 +83,10 @@ private:
    bool                 mActive;     // Are we active
    navigator*           mNaver;      // My navigator
 
-   vrj::PosInterface       mWand;
-   vrj::DigitalInterface   mButton0;
-   vrj::DigitalInterface   mButton1;
-   vrj::DigitalInterface   mButton2;
+   gadget::PositionInterface  mWand;
+   gadget::DigitalInterface   mButton0;
+   gadget::DigitalInterface   mButton1;
+   gadget::DigitalInterface   mButton2;
 
 public:  // APP traversal
    virtual int app(pfTraverser*);

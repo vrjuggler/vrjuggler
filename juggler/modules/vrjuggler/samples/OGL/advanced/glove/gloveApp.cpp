@@ -278,7 +278,7 @@ void gloveApp::postFrame()
 
 
    //: Get the position of the index finger:
-    finger_matrix = mGlove->getPos(vrj::GloveData::INDEX);
+    finger_matrix = mGlove->getPos(gadget::GloveData::INDEX);
     finger_matrix.getTrans( glovePos[0], glovePos[1], glovePos[2] );
     glovePos.xformVec( invNav, glovePos );
 
@@ -297,7 +297,7 @@ void gloveApp::postFrame()
     }
     userInfo.setVelocity( userVelocity );
     userInfo.setAngularVelocity( 0.01f );
-    vrj::Matrix tttt = mGlove->getPos(vrj::GloveData::INDEX);
+    vrj::Matrix tttt = mGlove->getPos(gadget::GloveData::INDEX);
     wandInfo.updateWithMatrix( tttt );
     userInfo.update( wandInfo, vrj::Vec3(0.0f, 0.0f, 0.0f) );
     userInfo.getSceneTransform( mNavigation );
