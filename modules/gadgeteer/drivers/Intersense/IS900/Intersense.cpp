@@ -56,6 +56,7 @@
 #include <gmtl/Vec.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Generate.h>
+#include <gmtl/EulerAngle.h>
 
 
 namespace gadget
@@ -250,12 +251,10 @@ int Intersense::sample()
       if ( mTracker.rAngleFormat(stationIndex) == ISD_EULER )
       {
          gmtl::identity(*(cur_pos_samples[i].getPosition()));
-         gmtl::setRot( *(cur_pos_samples[i].getPosition()),
-                         gmtl::Math::deg2Rad(mTracker.zRot( stationIndex )),
-                         gmtl::Math::deg2Rad(mTracker.yRot( stationIndex )),
-                         gmtl::Math::deg2Rad(mTracker.xRot( stationIndex )),
-                        gmtl::ZYX );
-
+         gmtl::EulerAngleZYXf euler( gmtl::Math::deg2Rad( mTracker.zRot( stationIndex ) ),
+                                     gmtl::Math::deg2Rad( mTracker.yRot( stationIndex ) ),
+                                     gmtl::Math::deg2Rad( mTracker.xRot( stationIndex ) ) );
+         gmtl::setRot( *(cur_pos_samples[i].getPosition()), euler );
          gmtl::setTrans( *(cur_pos_samples[i].getPosition()),
                             gmtl::Vec3f(mTracker.xPos( stationIndex ),
                                         mTracker.yPos( stationIndex ),

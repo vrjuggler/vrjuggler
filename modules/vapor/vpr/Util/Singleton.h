@@ -108,9 +108,6 @@ namespace vpr
    {
    public:
       /**
-       * Use the macro from above... kludgy yeah, but...
-       * NOTE: it might not be good to have the imp inline 
-       *       in the header???<br>
        * NOTE: currently, func is thread safe after first call to instance().
        * if first call to instance happens multiple times simultaneously
        * then don't be surprised when something dies because of a mutex..

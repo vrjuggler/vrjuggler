@@ -122,10 +122,10 @@ public:
 
       // Compute location of left and right eyes
       float interocularDist = mUser->getInterocularDistance();
-      float eye_offset = interocularDist/2.0f;      // Distance to move eye
+      float eye_offset = interocularDist / 2.0f;      // Distance to move eye
 
-      left_eye_pos = camera_pos * gmtl::makeTrans<gmtl::Matrix44f, 3>( gmtl::Vec3f(-eye_offset, 0.0f, 0.0f));
-      right_eye_pos = camera_pos * gmtl::makeTrans<gmtl::Matrix44f, 3>( gmtl::Vec3f(eye_offset, 0.0f, 0.0f));
+      left_eye_pos = camera_pos * gmtl::makeTrans<gmtl::Matrix44f>( gmtl::Vec3f(-eye_offset, 0.0f, 0.0f) );
+      right_eye_pos = camera_pos * gmtl::makeTrans<gmtl::Matrix44f>( gmtl::Vec3f(eye_offset, 0.0f, 0.0f) );
 
       mLeftProj->calcViewMatrix(left_eye_pos);
       mRightProj->calcViewMatrix(right_eye_pos);
