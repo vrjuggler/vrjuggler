@@ -283,9 +283,12 @@ public class BeanPrefsDialog extends JDialog
          }
          catch (java.io.IOException io_ex)
          {
-            MessagePanel.instance().printWarning("Could not save preferences for " +
-                                                 bean.getEditorName() + ": " +
-                                                 io_ex.getMessage());
+            JOptionPane.showMessageDialog(null,
+                                          "Could not save preferences for " +
+                                             bean.getEditorName() + ": " +
+                                             io_ex.getMessage(),
+                                          "I/O Exception on Save",
+                                          JOptionPane.ERROR_MESSAGE);
          }
       }
    }
