@@ -455,8 +455,6 @@ public class ConnectionDialog extends JDialog
          // New selection.
          else
          {
-            mOkayButton.setEnabled(true);
-
             SubjectManagerWrapper mgr_wrapper =
                (SubjectManagerWrapper) mSubjectMgrList.getModel().getElementAt(index);
             mSubjectManager = mgr_wrapper.getSubjectManager();
@@ -476,9 +474,11 @@ public class ConnectionDialog extends JDialog
                                                mSubjectManager.getUserName()});
 
                mSubjectMgrInfo.setModel(table_model);
+               mOkayButton.setEnabled(true);
             }
             catch (org.omg.CORBA.COMM_FAILURE commEx)
             {
+               mOkayButton.setEnabled(false);
                String msg = "Invalid Subject Manager Selected";
 
                // If the exception has an error message, append it.
