@@ -10,7 +10,7 @@
 /*  --    Further modified by Larry Edwards                       --  */
 /*  ================================================================  */
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>

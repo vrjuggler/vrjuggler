@@ -50,7 +50,7 @@
 #ifndef _LOGICLASS_H_
 #define _LOGICLASS_H_
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Position.h>
 #include <gadget/Type/InputMixer.h>
@@ -83,7 +83,7 @@ namespace gadget
    class InputManager;
 }
 
-extern "C" GADGET_API(void) initDevice(gadget::InputManager* inputMgr);
+extern "C" GADGET_DRIVER_API(void) initDevice(gadget::InputManager* inputMgr);
 
 namespace gadget
 {

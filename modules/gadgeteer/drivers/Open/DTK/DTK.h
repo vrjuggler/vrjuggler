@@ -33,7 +33,7 @@
 #ifndef _GADGET_DIVERSE_TOOLKIT_H_
 #define _GADGET_DIVERSE_TOOLKIT_H_
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/Analog.h>
 #include <gadget/Type/Position.h>
@@ -46,7 +46,7 @@ namespace gadget
    class InputManager;
 }
 
-extern "C" GADGET_API(void) initDevice(gadget::InputManager* inputMgr);
+extern "C" GADGET_DRIVER_API(void) initDevice(gadget::InputManager* inputMgr);
 
 namespace gadget
 {

@@ -33,7 +33,7 @@
 #ifndef _GADGET_CYBER_GLOVE_H_
 #define _GADGET_CYBER_GLOVE_H_
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Glove.h>
 #include <gadget/Devices/VirtualTechnologies/CyberGlove/CyberGloveBasic.h>
@@ -44,7 +44,7 @@ namespace gadget
    class InputManager;
 }
 
-extern "C" GADGET_API(void) initDevice(gadget::InputManager* inputMgr);
+extern "C" GADGET_DRIVER_API(void) initDevice(gadget::InputManager* inputMgr);
 
 namespace gadget
 {

@@ -8,7 +8,7 @@
 /*  --       Copyright (C) 1993 Virtual Technologies        --  */
 /*  ==========================================================  */
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 #include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_init.h>
 
 extern char version_string[];

@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 #include <vpr/Util/Debug.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <gadget/Type/DeviceConstructor.h>

@@ -33,7 +33,7 @@
 #ifndef _CYBER_GLOVE_BASIC_H_
 #define _CYBER_GLOVE_BASIC_H_
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 
 #include <stdio.h>
 #include <vpr/vpr.h>

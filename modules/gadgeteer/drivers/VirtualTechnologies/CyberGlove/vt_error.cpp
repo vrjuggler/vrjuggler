@@ -8,7 +8,7 @@
 /*  --    Author: Larry Edwards                             --  */
 /*  ==========================================================  */
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
