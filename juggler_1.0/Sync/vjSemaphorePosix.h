@@ -21,7 +21,7 @@
 #include <limits.h>
 #include <semaphore.h>
 #include <errno.h>
-
+#include <stdio.h>
 
 //: Semaphore wrapper for POSIX.4-compliant systems.
 
