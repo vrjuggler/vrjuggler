@@ -36,6 +36,7 @@
 #include <ctype.h>
 #include <Config/vjParseUtil.h>
 #include <Kernel/vjDebug.h>
+#include <Config/vjConfigTokens.h>
 
 /* a utility function that probably belongs elsewhere */
 bool readString (std::istream &in, char *buffer, int size, bool *quoted) {
@@ -90,13 +91,13 @@ bool readString (std::istream &in, char *buffer, int size, bool *quoted) {
                 }
                 continue;
             }
-            else 
+            else
                 in.putback(vj);
         }
         break; // we read the / character and it wasn't part of a comment
     }
     buffer[0] = c;
-    
+
     if ((buffer[0] == '{') || (buffer[0] == '}')) {
         buffer[1] = '\0';
         retval = true;
@@ -150,26 +151,26 @@ VarType readType (std::istream &in) {
 
     if (!readString (in, str, 256))
         return T_INVALID;
-    
-    if (!strcasecmp (str, "int"))
+
+    if (!strcasecmp (str, int_TOKEN))
         return T_INT;
-    if (!strcasecmp (str, "integer"))
+    if (!strcasecmp (str, integer_TOKEN))
         return T_INT;
-    if (!strcasecmp (str, "float"))
+    if (!strcasecmp (str, float_TOKEN))
         return T_FLOAT;
-    if (!strcasecmp (str, "bool"))
+    if (!strcasecmp (str, bool_TOKEN))
         return T_BOOL;
-    if (!strcasecmp (str, "boolean"))
+    if (!strcasecmp (str, boolean_TOKEN))
         return T_BOOL;
-    if (!strcasecmp (str, "string"))
+    if (!strcasecmp (str, string_TOKEN))
         return T_STRING;
-    if (!strcasecmp (str, "distance"))
+    if (!strcasecmp (str, distance_TOKEN))
         return T_DISTANCE;
-    if (!strcasecmp (str, "chunk"))
+    if (!strcasecmp (str, chunk_TOKEN))
         return T_CHUNK;
-    if (!strcasecmp (str, "embeddedchunk"))
+    if (!strcasecmp (str, embeddedchunk_TOKEN))
         return T_EMBEDDEDCHUNK;
-    
+
     return T_INVALID;
 }
 
@@ -242,7 +243,7 @@ bool vjstrncasecmp (const std::string& a, const std::string& b, int _n) {
     int n = VJ_MIN2 (a.size(), b.size());
     if (_n >= 0)
         n = VJ_MIN2 (n, _n);
-    
+
     for (int i = 0; i < n; i++)
         if (toupper(a[i]) != toupper(b[i]))
             return true;
@@ -256,7 +257,7 @@ bool vjstrncmp (const std::string& a, const std::string& b, int _n) {
     int n = VJ_MIN2 (a.size(), b.size());
     if (_n >= 0)
         n = VJ_MIN2 (n, _n);
-    
+
     for (int i = 0; i < n; i++)
         if (a[i] != b[i])
             return true;
@@ -336,7 +337,7 @@ std::string demangleFileName (const std::string& n, std::string parentfile) {
             if (parentfile[i] == '\\')
                 lastslash = i;
 #endif
-		}
+      }
         if (lastslash) {
             std::string s(parentfile, 0, lastslash+1);
             fname = s + n;

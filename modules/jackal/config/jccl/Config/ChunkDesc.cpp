@@ -67,18 +67,18 @@ vjChunkDesc& vjChunkDesc::operator= (const vjChunkDesc& other) {
     for (i = 0; i < plist.size(); i++)
    delete plist[i];
     plist.erase (plist.begin(), plist.end());
-    
+
     name = other.name;
     token = other.token;
     help = other.help;
-    
+
     plist.reserve (other.plist.size());
     for (i = 0; i < other.plist.size(); i++)
-    {  
+    {
        //plist.push_back ( other.plist[i]);
        plist.push_back ( new vjPropertyDesc(*(other.plist[i])));
     }
-    
+
     return *this;
 }
 
@@ -150,7 +150,7 @@ bool vjChunkDesc::remove (const std::string& _token) {
 
 
 std::ostream& operator << (std::ostream& out, vjChunkDesc& self) {
-    out << self.token.c_str() << " \"" << self.name.c_str() << "\" \"" 
+    out << self.token.c_str() << " \"" << self.name.c_str() << "\" \""
    << self.help.c_str() << '"' << std::endl;
     for (unsigned int i = 0; i < self.plist.size(); i++)
    out << "  " << *(self.plist[i]) << std::endl;
@@ -182,14 +182,14 @@ std::istream& operator >> (std::istream& in, vjChunkDesc& self) {
     do {
    p = new vjPropertyDesc();
    in >> *p;
-   if (!vjstrcasecmp (p->getToken(),"end")) {
+   if (!vjstrcasecmp (p->getToken(),std::string("end"))) {
        delete p;
        break;
    }
    self.add(p);
     } while (!in.eof());
 
-    if (!self.getPropertyDesc ("name")) 
+    if (!self.getPropertyDesc ("name"))
    self.plist.insert (self.plist.begin(), new vjPropertyDesc("name",1,T_STRING," "));
     return in;
 }
