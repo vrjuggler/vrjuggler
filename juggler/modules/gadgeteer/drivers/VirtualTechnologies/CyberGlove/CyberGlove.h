@@ -46,12 +46,11 @@ class vjCyberGlove : virtual public vjGlove
 public:
    //: Construct using chunk
    vjCyberGlove() : mGlove( NULL ), mCalDir( NULL )
-   {
-      
+   {   
    }
 
    //: Destroy the glove
-   ~vjCyberGlove ();
+   virtual ~vjCyberGlove();
 
    virtual bool config(vjConfigChunk* c);
 
