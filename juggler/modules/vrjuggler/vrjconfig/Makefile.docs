@@ -46,12 +46,12 @@ DOC_PKGS=	$(BASE_PKG)				\
 		$(BASE_PKG).commoneditors.event		\
 		$(BASE_PKG).commoneditors.placer	\
 		$(BASE_PKG).ui
-SRC_PATH=	$(srcdir)/vrjconfig:$(srcdir)/vrjconfig/commoneditors
-JDOM_DIR=	../../external/jdom
-TL_DIR=		../../external/TableLayout
+SRC_PATH=	$(srcdir):$(srcdir)/commoneditors
+JDOM_DIR=	../../../external/jdom
+TL_DIR=		../../../external/TableLayout
 CLASSPATH=	$(TL_DIR)/TableLayout.jar:$(JDOM_DIR)/build/jdom.jar
 
-include doc/version.mk
+include ../doc/version.mk
 
 webroot=	$(HOME)/public_html/jugglerweb
 instdir=	vrjuggler/$(PROJECT_NUMBER)
