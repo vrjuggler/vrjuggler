@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _OSG_NAV_
-#define _OSG_NAV_
+#ifndef _VRJ_OPENSG_NAV_H_
+#define _VRJ_OPENSG_NAV_H_
 
 #include <iostream>
 #include <iomanip>
