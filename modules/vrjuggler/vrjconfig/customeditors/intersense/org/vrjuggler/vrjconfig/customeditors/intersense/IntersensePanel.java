@@ -32,7 +32,11 @@
 package org.vrjuggler.vrjconfig.customeditors.intersense;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Frame;
+import java.awt.GridLayout;
+import java.awt.Dimension;
+import java.awt.Container;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.*;
@@ -50,14 +54,15 @@ public class IntersensePanel extends JPanel implements CustomEditor
    private JPanel mDeviceInfoPanel = new JPanel();
    private JPanel mTopSectionPanel = new JPanel();
    private GridLayout mInfoPanelLayout = new GridLayout();
-   private JLabel mBaudLbl = new JLabel();
-   private JTextField mBaudText = new JTextField();
-   private JLabel mPortLbl = new JLabel();
-   private JTextField mDriverText = new JTextField();
-   private JTextField mPortText = new JTextField();
-   private JLabel mDriverLbl = new JLabel();
    
-   private JLabel mISenseIconLbl = new JLabel();
+   private JLabel               mBaudLbl        = new JLabel();
+   private PropertyEditorPanel  mBaudEditor     = null;
+   private JLabel               mPortLbl        = new JLabel();
+   private PropertyEditorPanel  mPortEditor     = null;
+   private JLabel               mDriverLbl      = new JLabel();
+   private PropertyEditorPanel  mDriverEditor   = null;
+   
+   private JLabel               mISenseIconLbl  = new JLabel();
    
    /** ConfigElement for this Intersense device. */
    private ConfigElement mConfigElement = null;
@@ -169,6 +174,7 @@ public class IntersensePanel extends JPanel implements CustomEditor
       }
       IntersenseModel isense_model = new IntersenseModel(mConfigElement, mConfigContext);
       setModel(isense_model);
+      init();
    }
 
    /**
@@ -178,18 +184,19 @@ public class IntersensePanel extends JPanel implements CustomEditor
    {
       mModel = model;
 
-      mPortText.setText(mModel.getPortName());
-      mDriverText.setText(mModel.getDriverLocation());
-     
       // Create a model to use in the station table.
       StationTableModelAdaptor stations_model = new StationTableModelAdaptor(mModel);
       mStationsTable.setModel(stations_model);
      
       // Force the ProxyTree to display information about the first station by default.
       // TODO: Make it display nothing by default.
-      StationModel station_model = (StationModel)mModel.getStationModels().get(0);
-      mProxyTree.setModel((DefaultTreeModel)station_model.getProxyModel());
-      mProxyTree.expandAll(true);
+      List station_models = mModel.getStationModels();
+      if (station_models.size() > 0)
+      {
+         StationModel station_model = (StationModel)station_models.get(0);
+         mProxyTree.setModel((DefaultTreeModel)station_model.getProxyModel());
+         mProxyTree.expandAll(true);
+      }
    }
 
    /**
@@ -248,23 +255,12 @@ public class IntersensePanel extends JPanel implements CustomEditor
       ImageIcon wand = new ImageIcon("/home/users/aronb/JavaTesting/Intersense/wand1.jpg");
       this.setLayout(new BorderLayout());
       mBaudLbl.setText("Baud:");
-      mBaudText.setText("jTextField2");
       mPortLbl.setText("Port:");
-      mDriverText.setText("jTextField3");
-      mPortText.setText("jTextField4");
       mDriverLbl.setText("Driver:");
       mStationsTable.setBackground(UIManager.getColor("Menu"));
       mInfoPanelLayout.setColumns(2);
       mInfoPanelLayout.setRows(3);
-      
-      
-      mDeviceInfoPanel.setLayout(mInfoPanelLayout);
-      mDeviceInfoPanel.add(mDriverLbl, null);
-      mDeviceInfoPanel.add(mDriverText, null);
-      mDeviceInfoPanel.add(mPortLbl, null);
-      mDeviceInfoPanel.add(mPortText, null);
-      mDeviceInfoPanel.add(mBaudLbl, null);
-      mDeviceInfoPanel.add(mBaudText, null);
+
 
       mTopSectionPanel.setLayout(new BoxLayout(mTopSectionPanel, BoxLayout.X_AXIS));
       mTopSectionPanel.add(mISenseIconLbl);
@@ -347,6 +343,32 @@ public class IntersensePanel extends JPanel implements CustomEditor
       dumb.add(mProxyPanel, BorderLayout.EAST);
       mProxyTreeScrollPane.getViewport().add(mProxyTree, null);
       mProxyTreeScrollPane.setBorder(BorderFactory.createLoweredBevelBorder());
+   }
+
+   public void init()
+   {
+      // Get handle to broker
+      mBroker = new ConfigBrokerProxy();
+
+      ConfigDefinition cfg_def = mConfigElement.getDefinition();
+
+      mBaudEditor = new PropertyEditorPanel(mConfigElement.getProperty("baud", 0),
+                                      cfg_def.getPropertyDefinition("baud"),
+                                      mConfigElement, 0, getBackground());
+      mPortEditor = new PropertyEditorPanel(mConfigElement.getProperty("port", 0),
+                                               cfg_def.getPropertyDefinition("port"),
+                                               mConfigElement, 0, getBackground());
+      mDriverEditor = new PropertyEditorPanel(mConfigElement.getProperty("driver", 0),
+                                            cfg_def.getPropertyDefinition("driver"),
+                                            mConfigElement, 0, getBackground());
+      
+      mDeviceInfoPanel.setLayout(mInfoPanelLayout);
+      mDeviceInfoPanel.add(mDriverLbl, null);
+      mDeviceInfoPanel.add(mDriverEditor, null);
+      mDeviceInfoPanel.add(mPortLbl, null);
+      mDeviceInfoPanel.add(mPortEditor, null);
+      mDeviceInfoPanel.add(mBaudLbl, null);
+      mDeviceInfoPanel.add(mBaudEditor, null);
    }
 
    /** Reference to the ConfigBroker used in this object. */
