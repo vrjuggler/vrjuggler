@@ -62,10 +62,33 @@
 #ifdef NO_SELF_REGISTER
 extern "C"
 {
-XDL_EXPORT const char* getVersion() { return "sonix xx.xx.xx"; }
-XDL_EXPORT const char* getName() { return "AudioWorks"; }
-XDL_EXPORT snx::ISoundImplementation* newPlugin() { return new snx::AudioWorksSoundImplementation; }
-XDL_EXPORT void deletePlugin( snx::ISoundImplementation* &p ) { if (NULL == p) return; delete p; p = NULL; }
+
+SNX_PLUGIN_EXPORT(const char*) getVersion()
+{
+   return "sonix xx.xx.xx";
+}
+
+SNX_PLUGIN_EXPORT(const char*) getName()
+{
+   return "AudioWorks";
+}
+
+SNX_PLUGIN_EXPORT(snx::ISoundImplementation*) newPlugin()
+{
+   return new snx::AudioWorksSoundImplementation;
+}
+
+SNX_PLUGIN_EXPORT(void) deletePlugin(snx::ISoundImplementation* &p)
+{
+   if (NULL == p)
+   {
+      return;
+   }
+
+   delete p;
+   p = NULL;
+}
+
 }
 #endif
 /////////////////////////
