@@ -41,10 +41,12 @@
 #include <jccl/Config/ConfigChunkPtr.h>
 #include <vrj/Kernel/Kernel.h>
 #include <jccl/Plugins/PerformanceMonitor/PerformanceMonitor.h>
+#include <vrj/Display/Display.h>
 
 namespace vrj
 {
 
+class Display;
 
 //---------------------------------------------------------------------
 //: Base class for window viewports
@@ -59,7 +61,7 @@ namespace vrj
 class Viewport
 {
 public:
-   Viewport() : mUser(NULL), mViewportChunk(NULL)
+   Viewport() : mUser(NULL), mDisplay(NULL), mViewportChunk(NULL)
    {
       mXorigin = mYorigin = mXsize = mYsize = -1.0f;
       mType = Viewport::UNDEFINED;
@@ -141,22 +143,32 @@ public:
    User*  getUser()
    { return mUser;}
 
+   void setDisplay(Display* disp)
+   { mDisplay = disp; }
+   Display* getDisplay()
+   { return mDisplay; }
+
    virtual std::ostream& outStream(std::ostream& out);
    friend std::ostream& operator<<(std::ostream& out, Viewport& viewport);
 
 protected:
-   std::string       mName;               //: The name of the viewport being displayed
-   User*           mUser;               //: The user being rendered by this window
-   Viewport::Type  mType;               //: The type of display
-   Viewport::View  mView;               //: Which buffer(s) to display (left, right, stereo)
-   bool              mActive;             //: Is this viewport active
+   std::string       mName;               /**< The name of the viewport being displayed */
+   User*             mUser;               /**< The user being rendered by this window */
+   Viewport::Type    mType;               /**< The type of display */
+   Viewport::View    mView;               /**< Which buffer(s) to display (left, right, stereo) */
+   bool              mActive;             /**< Is this viewport active */
 
-   jccl::ConfigChunkPtr mViewportChunk;        //: The chunk data for this display
-    jccl::PerfDataBuffer* mLatencyMeasure;
+   Display*          mDisplay;            /**< The parent display */
 
+   jccl::ConfigChunkPtr mViewportChunk;        /**< The chunk data for this display */
+   jccl::PerfDataBuffer* mLatencyMeasure;
 
-   float          mXorigin, mYorigin, mXsize, mYsize;    // Location and size of viewport
-                                                         // ASSERT: all values are >= 0.0 and <= 1.0
+   /** @nameLocation and size of viewport
+   * ASSERT: all values are >= 0.0 and <= 1.0
+   */
+   //@{
+   float          mXorigin, mYorigin, mXsize, mYsize;
+   //@}
 };
 
 

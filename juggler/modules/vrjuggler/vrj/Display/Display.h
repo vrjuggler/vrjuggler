@@ -42,6 +42,8 @@
 namespace vrj
 {
 
+   class Viewport;
+
 
 //---------------------------------------------------------------------
 //: Container class for viewports and window information.

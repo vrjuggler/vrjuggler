@@ -166,8 +166,10 @@ void GlWindow::setCameraProjection(vrj::CameraProjection* camProj)
                  frust[Frustum::NEAR],frust[Frustum::FAR]);
       */
 
+      /*
       gluPerspective(camProj->mVertFOV, camProj->mAspectRatio*((window_width)/float(window_height)),
                      frust[Frustum::VJ_NEAR], frust[Frustum::VJ_FAR]);
+                     */
 #ifdef USE_PROJECTION_MATRIX
        // Set camera rotation and position
    glMultMatrixf(camProj->mViewMat.getFloatPtr());

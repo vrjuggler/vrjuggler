@@ -67,6 +67,7 @@ public:
       mType = SIM;
       mCameraProj = new CameraProjection;
       mCameraProj->config(chunk);
+      mCameraProj->setViewport(this);
 
       std::string camera_proxy_str = chunk->getProperty("cameraPos");
       std::string wand_proxy_str = chunk->getProperty("wandPos");

@@ -63,16 +63,36 @@ public:
       mVertFOV = chunk->getProperty("vert_fov");
       if(mVertFOV == 0.0f)
          mVertFOV = 60.0f;
-      mAspectRatio = chunk->getProperty("aspect_ratio");
-      if(mAspectRatio == 0.0f)
-         mAspectRatio = 1.0f;
    }
 
+   /** Calculate the viewmatrix and frustum for the camera
+   * Calculates a perspective transform for the given settings.
+   * Auto-calculates aspect ratio from the current size of the window and viewport
+   */
    virtual void calcViewMatrix(Matrix& cameraPos)
    {
       mViewMat = cameraPos;
+
+      int win_xo, win_yo, win_xs, win_ys;  // origin and size of display window
+      float vp_xo, vp_yo, vp_xs, vp_ys;  // origin and size of viewport
+      float width, height;
+      float aspect_ratio;
+
+      getViewport()->getDisplay()->getOriginAndSize(win_xo,win_yo, win_xs, win_ys);
+      getViewport()->getOriginAndSize( vp_xo, vp_yo, vp_xs, vp_ys );
+      width = float(win_xs) * vp_xs;
+      height = float(win_ys) * vp_ys;
+
+      aspect_ratio = (width/height);
+
+      // Calculate frustum
+      float top, right;
+
+      top = Math::tan( Math::deg2rad(mVertFOV/2.0f) ) * mNearDist;     // Calculate the top based on fovy
+      right = aspect_ratio * top;
+
       // XXX: The frustum is not used
-      mFrustum.set(-0.6f, 0.6f, -0.6f, 0.6f, mNearDist, mFarDist);
+      mFrustum.set(-right, right, -top, top, mNearDist, mFarDist);
    }
 
    virtual std::ostream& outStream(std::ostream& out)
@@ -82,7 +102,7 @@ public:
    }
 
 public:
-   float mAspectRatio;     // w/h
+   //float mAspectRatio;     // w/h
    float mVertFOV;         // The vertical field of view
 };
 
