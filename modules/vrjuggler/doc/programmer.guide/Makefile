@@ -42,7 +42,7 @@ $(NAME).html: $(IMAGES)
 $(NAME)/index.html: $(IMAGES)
 $(NAME).pdf: $(IMAGES)
 
-CLOBBER_FILES=	$(IMAGES)
+CLOBBER_FILES=	$(SVG_IMAGES:%.svg=%.png)
 
 include ../version.mk
 include ../../../../doc/docbook.mk
