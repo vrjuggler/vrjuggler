@@ -9,6 +9,7 @@ srcdir	= @srcdir@
 
 # JDK-related variables.  ${JAVAC_CMD} is the compile line for javac when
 # building .java files.
+GUI_CLASSPATH	= ${srcdir}:${JDK_HOME}/lib/classes.zip:${VJ_BASE_DIR}/bin/swingall.jar
 JAR		= @JAR@
 JAVAC		= @JAVAC@
 JAVAC_CMD	= ${JAVAC} -d . -classpath ${GUI_CLASSPATH}
@@ -18,9 +19,7 @@ JDK_HOME	= @JDK_HOME@
 # command-line argument), put it in ${GUI_CLASSPATH}.  Otherwise, leave it
 # out.
 ifdef CLASSPATH
-    GUI_CLASSPATH	= ${CLASSPATH}:${srcdir}:${JDK_HOME}/lib/classes.zip:${VJ_BASE_DIR}/bin/swingall.jar
-else
-    GUI_CLASSPATH	= ${srcdir}:${JDK_HOME}/lib/classes.zip:${VJ_BASE_DIR}/bin/swingall.jar
+    GUI_CLASSPATH	:= ${CLASSPATH}:${GUI_CLASSPATH}
 endif
 
 # Include common definitions.
