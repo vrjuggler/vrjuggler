@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2001-12-27 allenb   Added setNowReal() method to vpr::Interval.
+					NEW VERSION: 0.8.4
 2001-12-20 patrickh vpr::InetAddr now has getHostname() and getHostnames() that
                     return the hostname(s) for a given address.
                     NEW VERSION: 0.8.3
