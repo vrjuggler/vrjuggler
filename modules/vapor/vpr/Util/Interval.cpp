@@ -74,32 +74,26 @@ void Interval::setNow()
 void Interval::setNowReal()
 {
 #if defined(VPR_OS_Win32)
-   LARGE_INTEGER count;
-   LARGE_INTEGER counts_per_sec;
+   LARGE_INTEGER count, counts_per_sec;
 
    QueryPerformanceFrequency(&counts_per_sec);
 
+   // XXX: Optimize this!!
    vpr::Uint64 counts_per_sec64;
    vpr::Uint64 counts_per_sec_high64;
-
    counts_per_sec_high64 = counts_per_sec.HighPart;
    counts_per_sec64 = counts_per_sec.LowPart;
    counts_per_sec64 += (counts_per_sec_high64 << 32);
+   double usecs_per_count =
+      (1.0f / (double) ((vpr::Int64) counts_per_sec64)) * 1000000.0f;
 
-   // XXX: Implement this
-   /* Sadly; nspr requires the interval to range from 1000 ticks per second
-    * to only 100000 ticks per second; QueryPerformanceCounter is too high
-    * resolution...
-    */
    if (QueryPerformanceCounter(&count))
    {
-      const vpr::Uint64 microseconds_per_sec = 1000000u;
-
       vpr::Uint64 low  = count.LowPart;
       vpr::Uint64 high = count.HighPart;
       mMicroSeconds = low + (high << 32);
-      mMicroSeconds /= counts_per_sec64;
-      mMicroSeconds *= microseconds_per_sec;
+      mMicroSeconds =
+         (vpr::Uint64) (((double) (vpr::Int64) mMicroSeconds) * usecs_per_count);
    }
 /*
    else
