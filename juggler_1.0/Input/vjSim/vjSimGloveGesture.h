@@ -44,3 +44,5 @@ private:
    int                     mCurGesture;   //: The current gesture id
 };
 
+
+#endif	/* _VJ_SIM_GLOVE_GESTURE_H_ */
