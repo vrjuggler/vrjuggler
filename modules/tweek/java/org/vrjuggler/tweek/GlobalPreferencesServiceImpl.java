@@ -72,23 +72,21 @@ class GlobalPreferencesServiceImpl
       super(attr);
 
       String data_dir_name = getAppDataDir();
-      String prefs_file;
 
       // Mac OS X and Windows preferences location.
       if ( System.getProperty("mrj.version") != null ||
            System.getProperty("os.name").indexOf("Windows") != -1 )
       {
          data_dir_name = data_dir_name + File.separator + "Tweek";
-         verifyPrefsDirExistence(data_dir_name);
-         prefs_file = data_dir_name + File.separator + "tweekrc";
       }
       // UNIX.
       else
       {
-         prefs_file = data_dir_name + File.separator + ".tweekrc";
+         data_dir_name = data_dir_name + File.separator + ".tweek";
       }
 
-      mPrefsFile = new File(prefs_file);
+      verifyPrefsDirExistence(data_dir_name);
+      mPrefsFile = new File(data_dir_name + File.separator + "tweekrc");
       BeanRegistry.instance().addBeanRegistrationListener(this);
    }
 
