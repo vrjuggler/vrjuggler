@@ -64,6 +64,7 @@ PROGS		= go			\
                   go-ibox		\
                   aFlockTest		\
                   vjFlockTest		\
+                  aMotionStarTest	\
                   dummyTrackd		\
                   fsPinchGloveTest
 
@@ -98,7 +99,7 @@ dummyTrackd: dummyTrackd.@OBJ_FILE_SUFFIX@
 aMotionStarTest: aMotionStarTest.@OBJ_FILE_SUFFIX@			\
                  aMotionStar.@OBJ_FILE_SUFFIX@
 	$(LINK) -o $@ aMotionStarTest.@OBJ_FILE_SUFFIX@			\
-          aMotionStar.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
+          aMotionStar.@OBJ_FILE_SUFFIX@ -lm
 
 # ----------------
 # new

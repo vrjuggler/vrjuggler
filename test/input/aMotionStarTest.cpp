@@ -32,55 +32,38 @@
 
 #include <iostream>
 #include <iomanip>
-#include <SharedMem/vjMemPool.h>
-//#include <SharedMem/vjSharedType.h>
 #include <Input/vjPosition/aMotionStar.h>
 
 
 int
 main () {
-  vjMemPool* aMemPool = new vjSharedPool(1024*1024);
+  std::string addr;
+  unsigned short port;
+  unsigned int birdsRequired;
 
-  // Get configuration information \
-
-  std::cerr << "-------- MotionStar Test program -------\n";
-/*            << "First we need some config info:\n"
+  // Get configuration information
+  std::cerr << "-------- MotionStar Test program -------\n"
+            << "First we need some config info:\n"
             << "NOTE: Sample values are in ()'s\n" << std::flush;
 
-  std::cout << "\nEnter port (/dev/ttyd3): " << std::flush;
+  std::cout << "\nEnter address: " << std::flush;
+  std::cin >> addr;
+  std::cout << "Enter port number (5000, 6000): " << std::flush;
   std::cin >> port;
-  std::cout << "\nEnter baud rate (38400): " << std::flush;
-  std::cin >> baud;
-*/
-//  std::cout << "\nHow many birds (3): " << std::flush;
-//  std::cin >> birdsRequired;
-/*
-  std::cout << "\nNot using calibration file." << std::flush;
-  std::cout << "\nUsing LOWER_HEM" << std::flush;
-  std::cout << "\nUsing AC_NARROW filter" << std::flush;
-  std::cout << "\nEnter Sync (0 or 1): " << std::flush;
-  std::cin >> sync;
-  std::cout << "\nBlocking port? (0 or 1): " << std::flush;
-  std::cin >> blocking;
-  std::cout << "\nWhat report rate (Q-every cycle, R-every other, S-every 8, T-every 32): " << std::flush;
-  std::cin >> report;
-  std::cout << "\nWhat is the transmitter id (1-based numbering): " << std::flush;
-  std::cin >> transmitter;
-*/
-  unsigned int birdsRequired = 2;
+  std::cout << "How many birds: " << std::flush;
+  std::cin >> birdsRequired;
+  std::cout << "\nUsing FRONT_HEMISPHERE" << std::flush;
+  std::cout << "\nRequesting POSITION_ANGLES data" << std::flush;
+  std::cout << "\nReading continuous data" << std::flush;
 
-  unsigned short port = 6000;
+  aMotionStar* motionstar = new aMotionStar(addr.c_str(), port, BIRDNET::TCP,
+                                            true, FLOCK::FRONT_HEMISPHERE,
+                                            FLOCK::POSITION_ANGLES,
+                                            BIRDNET::CONTINUOUS, 1,
+                                            birdsRequired);
 
-
-  aMotionStar* motionstar = new(aMemPool) aMotionStar("mstar.vrac.iastate.edu",
-                                                      port, BIRDNET::TCP, true,
-						      FLOCK::FRONT_HEMISPHERE,
-						      FLOCK::POSITION_QUATERNION,
-						      BIRDNET::CONTINUOUS, 1,
-						      birdsRequired);
-
-  char achar;
-  bool birds_running(false);      // Are the birds currently running
+   char achar;
+   bool birds_running(false);      // Are the birds currently running
 
    do
    {
@@ -94,7 +77,7 @@ main () {
                 << "   X - Stop\n"
                 << "   Q - Quit\n"
                 << "   O - Output\n"
-                << "\nCommand:" << std::flush;
+                << "\nCommand: " << std::flush;
       std::cin >> achar;        // Get next command
 
       std::cerr << "\nGot command: " << achar << std::endl << std::flush;
@@ -119,7 +102,7 @@ main () {
       case 'o':
       case 'O':
          long num_samples;
-         std::cerr << "Number of samples?";
+         std::cerr << "Number of samples? ";
          std::cin >> num_samples;
 
          for (long z = 0; z < num_samples; z++)
@@ -127,7 +110,7 @@ main () {
             motionstar->sample();
             //std::cout << "-------- aMotionStar: Sampling (" << z << " of " << num_samples << ") -------" << std::endl;
             std::cout << z << ":\n";
-	    std::cout << "\t      X\t\t  Y\t     Z\t\tA\t    E\t\tR\n";
+            std::cout << "\t      X\t\t  Y\t     Z\t\tA\t    E\t\tR\n";
             for ( int bird=0; bird < motionstar->getNumBirds(); bird++ ) {
             //   vjVec3 pos0 = vjCoord( *motionstar->getPosData(bird) ).pos;
             //   vjVec3 ori0 = vjCoord( *motionstar->getPosData(bird) ).orient;
@@ -148,7 +131,7 @@ main () {
                             << "  " << std::setprecision(8) << motionstar->getZRot(bird)
                             << "  " << std::setprecision(8) << motionstar->getYRot(bird)
                             << "  " << std::setprecision(8) << motionstar->getXRot(bird)
-		            << std::endl;
+                            << std::endl;
             }
             std::cout << std::endl;
             //sleep(2);
@@ -166,6 +149,5 @@ main () {
    }
 
    delete motionstar;
-//   delete aMemPool;
    return 0;
 }
