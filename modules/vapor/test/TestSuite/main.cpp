@@ -65,14 +65,26 @@ int main (int ac, char **av)
    // Add the test suite to the runner
    runner.addTest( "noninteractive", noninteractive_suite );
 
-   // create test suite #2
-   TestSuite* suite_2 = new TestSuite("Interactive");
+   // ------------------------------
+   // METRICS
+   // ------------------------------
+   TestSuite* metrics_suite = new TestSuite("metrics");
 
-   // add tests to the suite
-   suite_2->addTest(ThreadTest::suite());
+   metrics_suite->addTest(vprTest::IntervalTest::metric_suite());
 
-   // Add the test suite to the runner
-   runner.addTest("interactive", suite_2);
+   runner.addTest("metrics", metrics_suite);
+
+   //noninteractive_suite->addTest(metrics_suite);
+
+
+   // -------------------------------
+   // INTERACTIVE
+   // -------------------------------
+   TestSuite* interactive_suite = new TestSuite("interactive");
+
+   interactive_suite->addTest(ThreadTest::suite());
+
+   runner.addTest("interactive", interactive_suite);
 
    // run all test suites
    runner.run( ac, av );
