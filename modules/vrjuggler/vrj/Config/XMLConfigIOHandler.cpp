@@ -468,7 +468,7 @@ bool XMLConfigIOHandler::buildChunkDB (ConfigChunkDB& db, const DOM_Node& doc) {
         retval = buildChunkDB (db, child);
         break;
     case DOM_Node::ELEMENT_NODE:
-        if (!vjstrcasecmp (name, "vjConfigChunkDB")) {
+        if (!vjstrcasecmp (name, "ConfigChunkDB")) {
             child = doc.getFirstChild();
             while (child != 0) {
                 if (child.getNodeType() == DOM_Node::ELEMENT_NODE) {
