@@ -55,6 +55,8 @@
 #include <vrj/Draw/OGL/GlPipe.h>
 #include <vrj/Draw/OGL/GlUserData.h>
 
+#include <vrj/Draw/OGL/GlDrawObjectFunctor.h>
+
 namespace jccl {
     class ConfigChunkDB;
 };
@@ -191,6 +193,10 @@ public:  // Drawing functions used by library
     */
    void drawSimulator(SimViewport* sim);
 
+   /** Set the functor used to draw the wand */
+   void setDrawWandFunctor(GlDrawObjectFunctor* functor)
+   { mDrawWandFunctor = functor; }
+
 public:
    /**
     * Gets ptr to the current user data.  Should be used in the draw function.
@@ -259,10 +265,10 @@ protected:
                                         *  is acquired can run-time config occur */
 
 protected:
-   GlDrawManager() : drawTriggerSema(0), drawDoneSema(0), mRuntimeConfigSema(0)
-   {
-      mQuadObj = NULL;
-   }
+   GlDrawObjectFunctor* mDrawWandFunctor;    /**< The functor to draw the wand */
+
+protected:
+   GlDrawManager();
 
    virtual ~GlDrawManager() {}
 

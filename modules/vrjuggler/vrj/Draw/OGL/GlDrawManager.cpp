@@ -48,6 +48,7 @@
 
 #include <vrj/Draw/OGL/GlPipe.h>
 #include <vrj/Draw/OGL/GlWindow.h>
+#include <vrj/Draw/OGL/GlDrawWandFunctors.h>
 
 #include <gmtl/Vec.h>
 #include <gmtl/Vec.h>
@@ -61,6 +62,15 @@ namespace vrj
 
 //vjGlDrawManager* GlDrawManager::_instance = NULL;
 vprSingletonImp(GlDrawManager);
+
+
+GlDrawManager::GlDrawManager() : drawTriggerSema(0), drawDoneSema(0), mRuntimeConfigSema(0)
+{
+   mQuadObj = NULL;
+
+   //setDrawWandFunctor(new GlDrawConeWandFunctor());
+   setDrawWandFunctor(new GlDrawRightAngleWandFunctor());
+}
 
 
 /** Sets the app the draw should interact with. */
@@ -540,8 +550,7 @@ void GlDrawManager::drawSimulator(SimViewport* sim_vp)
       // Draw the wand
       glPushMatrix();
          glMultMatrixf(sim_vp->getWandPos().mData);
-         glColor3f(0.0f, 1.0f, 0.0f);
-         drawCone(0.2f, 0.6f, 6, 1);
+         mDrawWandFunctor->draw();         
       glPopMatrix();
 
        // Draw a The display surfaces
