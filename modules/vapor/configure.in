@@ -346,15 +346,10 @@ else
 fi
 
 if test "x$USE_PTHREADS" = "xyes" ; then
+    AC_DEFINE(_REENTRANT,)
+    AC_DEFINE(_THREAD_SAFE,)
     AC_DEFINE(RWSTD_MULTI_THREAD,)
     AC_DEFINE(RW_MULTI_THREAD,)
-    AC_DEFINE(_THREAD_SAFE,)
-
-    # On Linux, defining _THREAD_SAFE is the same as defining _REENTRANT, so
-    # we will not define both.
-    if test "x$PLATFORM" != "xLinux" ; then
-        AC_DEFINE(_REENTRANT,)
-    fi
 fi
 
 # -----------------------------------------------------------------------------
