@@ -41,7 +41,7 @@
 
 bool vjSimPosition::config(vjConfigChunk* chunk)
 {
-    if(!vjPosition::config(chunk) || !vjSimInput::config(chunk))
+   if(! (vjInput::config(chunk) && vjPosition::config(chunk) && vjSimInput::config(chunk) ))
       return false;
 
    mDTrans = chunk->getProperty("dtrans");

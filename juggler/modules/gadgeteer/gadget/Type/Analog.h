@@ -40,7 +40,6 @@
 #define _VJ_ANALOG_H_
 
 #include <vjConfig.h>
-#include <Input/vjInput/vjInput.h>
 
 //-----------------------------------------------------------------------------
 //: vjAnalog is the abstract base class that devices with digital data derive
@@ -55,57 +54,47 @@
 //  the digital data, similar to the addition for vjPosition and vjDigital.
 //!PUBLIC_API:
 //-----------------------------------------------------------------------------
-class vjAnalog : virtual public vjInput
+class vjAnalog
 {
 public:
 
-	//: Constructor
+   //: Constructor
    //! POST: Set device abilities
    //! NOTE: Must be called from all derived classes
-   vjAnalog() : mMin( 0.0f ), mMax( 1.0f ) 
-   {
-      deviceAbilities = deviceAbilities | DEVICE_ANALOG;
-   }
-   ~vjAnalog() {}
-	
+   vjAnalog() : mMin( 0.0f ), mMax( 1.0f )
+   {;}
+
+   virtual ~vjAnalog() {}
+
    // Just call base class config
    //! NOTE: Let constructor set device abilities
    virtual bool config(vjConfigChunk* c)
-   { 
+   {
       mMin = static_cast<float>( c->getProperty("min") );
       float max = static_cast<float>( c->getProperty("max") );
       if (max > 0.0f)
          mMax = max;
-      return vjInput::config( c ); 
+      return true;
    }
 
-	/* vjInput pure virtual functions */
-	virtual int startSampling() = 0;
-	virtual int stopSampling() = 0;
-	virtual int sample() = 0;
-	virtual void updateData() = 0;
-	
-	//: Get the device name
-	char* getDeviceName() { return "vjAnalog"; }
-	
    /* new pure virtual functions */
-   //: Return "analog data".. 
+   //: Return "analog data"..
    //  Gee, that's ambiguous especially on a discrete system such as a digital computer....
-   //  
+   //
    //! PRE: give the device number you wish to access.
    //! POST: returns a value that ranges from 0.0f to 1.0f
-   //! NOTE: for example, if you are sampling a potentiometer, and it returns reading from 
+   //! NOTE: for example, if you are sampling a potentiometer, and it returns reading from
    //        0, 255 - this function will normalize those values (using vjAnalog::normalizeMinToMax())
    //        for another example, if your potentiometer's turn radius is limited mechanically to return
    //        say, the values 176 to 200 (yes this is really low res), this function will still return
-   //        0.0f to 1.0f. 
+   //        0.0f to 1.0f.
    //! NOTE: to specify these min/max values, you must set in your vjAnalog (or analog device) config
-   //        file the field "min" and "max".  By default (if these values do not appear), 
+   //        file the field "min" and "max".  By default (if these values do not appear),
    //        "min" and "max" are set to 0.0f and 1.0f respectivly.
-   //! NOTE: TO ALL ANALOG DEVICE DRIVER WRITERS, you *must* normalize your data using 
+   //! NOTE: TO ALL ANALOG DEVICE DRIVER WRITERS, you *must* normalize your data using
    //        vjAnalog::normalizeMinToMax()
-	virtual float getAnalogData(int devNum = 0) = 0;
-   
+   virtual float getAnalogData(int devNum = 0) = 0;
+
 protected:
    // give a value that will range from [min() <= n <= max()]
    // return a value that is normalized to the range of 0.0f <= n <= 1.0f
@@ -119,8 +108,8 @@ protected:
       if (value > mMax) value = mMax;
 
       // slide everything to 0.0 (subtract all by mMin)
-      float //tmin( 0.0f ), 
-            tmax( mMax - mMin), 
+      float //tmin( 0.0f ),
+            tmax( mMax - mMin),
             tvalue = value - mMin;
 
       // since [tmin/tmax...tmax/tmax] == [0.0f...1.0f], the normalized value will be value/tmax
@@ -137,4 +126,4 @@ protected:
 };
 
 
-#endif	/* _VJ_ANALOG_H_ */
+#endif   /* _VJ_ANALOG_H_ */

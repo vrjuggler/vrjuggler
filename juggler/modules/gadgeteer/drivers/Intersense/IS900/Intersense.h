@@ -47,6 +47,7 @@
 #define vjIsense_h
 
 #include <vjConfig.h>
+#include <Input/vjInput/vjInput.h>
 #include <Input/vjPosition/vjPosition.h>
 #include <Input/vjInput/vjDigital.h>
 #include <Input/vjInput/vjAnalog.h>
@@ -79,10 +80,10 @@ struct vjIsense_Data {
 typedef struct {
     int stationIndex;
     bool enabled;
-    
+
     int dig_min, dig_num;
     int ana_min, ana_num;
-    
+
     bool useDigital, useAnalog;
 } vjISStationConfig;
 
@@ -117,7 +118,7 @@ typedef struct {
 // See also: vjPosition
 //---------------------------------------------------------------------------
 //!PUBLIC_API:
-class vjIsense : public vjPosition, public vjDigital,  public vjAnalog
+class vjIsense :  public vjInput, public vjPosition,  public vjDigital,  public vjAnalog
 {
     public:
    vjIsense();
@@ -141,9 +142,6 @@ class vjIsense : public vjPosition, public vjDigital,  public vjAnalog
 
 //: update to the sampled data.
     void updateData();
-
-//: get the device name
-    char* getDeviceName() { return "vjIsense"; }
 
 //: return what chunk type is associated with this class.
     static std::string getChunkType() { return std::string("Isense");}
@@ -188,9 +186,9 @@ private:
     isIntersense mTracker;
 
     vjIsense_Data mInput[3];
-    
+
     vjISStationConfig* stations;
-    
+
     std::vector<int> mDigitalData;
     std::vector<int> mAnalogData;
 

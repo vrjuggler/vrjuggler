@@ -35,13 +35,13 @@
 #include <Input/vjSim/vjSimDigitalGlove.h>
 
 //: Default Constructor
-vjSimDigitalGlove::vjSimDigitalGlove() : vjDigital(), vjGlove(), vjSimInput()
+vjSimDigitalGlove::vjSimDigitalGlove() : vjDigital(), vjSimInput(), vjGlove()
 {
    //vjDEBUG(vjDBG_ALL,3)<<"*** vjSimDigitalGlove::vjSimDigitalGlove()\n"<< vjDEBUG_FLUSH;
 }
 
 //: Destructor
-vjSimDigitalGlove::~vjSimDigitalGlove() 
+vjSimDigitalGlove::~vjSimDigitalGlove()
 {
   // vjDEBUG(vjDBG_ALL,3)<<"*** vjSimDigitalGlove::~vjSimDigitalGlove()\n"<< vjDEBUG_FLUSH;
 }
@@ -49,13 +49,11 @@ vjSimDigitalGlove::~vjSimDigitalGlove()
 bool vjSimDigitalGlove::config( vjConfigChunk* chunk )
 {
    //vjDEBUG(vjDBG_ALL,3)<<"*** vjSimDigitalGlove::config\n"<< vjDEBUG_FLUSH;
-   
-   vjDigital::config( chunk );
-   vjSimInput::config( chunk );
-   vjGlove::config( chunk );
-   
+   if(! (vjInput::config(chunk) && vjDigital::config(chunk) && vjSimInput::config(chunk) && vjGlove::config(chunk)))
+      return false;
+
    //mCurGesture = 0;     // We are in no gesture yet
-   
+
    //if ((!vjDigital::config( chunk )) || (!vjSimInput::config( chunk )))
    //   return false;
 
@@ -66,7 +64,7 @@ bool vjSimDigitalGlove::config( vjConfigChunk* chunk )
    mDigitalData = std::vector< int >( num_pairs, 0 );      // Initialize to all zeros
 
    ////////////////  left posProxy
-   vjASSERT( VJ_MAX_GLOVE_DEVS >= 2 ); 
+   vjASSERT( VJ_MAX_GLOVE_DEVS >= 2 );
    const int LEFT_INDEX = 0, RIGHT_INDEX = 1;
    if (LEFT_INDEX < VJ_MAX_GLOVE_DEVS)
    {
@@ -80,6 +78,7 @@ bool vjSimDigitalGlove::config( vjConfigChunk* chunk )
       }
 
       // init glove pos proxy interface
+      /*
       int proxy_index = vjKernel::instance()->getInputManager()->getProxyIndex( glove_pos_proxy );
       if (proxy_index != -1)
          mGlovePos[LEFT_INDEX] = vjKernel::instance()->getInputManager()->getPosProxy( proxy_index );
@@ -87,11 +86,12 @@ bool vjSimDigitalGlove::config( vjConfigChunk* chunk )
          vjDEBUG( vjDBG_INPUT_MGR, 0 )
             << "[ERROR]: vjSimPinchglove::config(): Can't find posProxy, config fails."
             << std::endl << std::endl << vjDEBUG_FLUSH;
+      */
    }
-      
-    
+
+
    ////////////////  right posProxy
-  
+
    if (RIGHT_INDEX < VJ_MAX_GLOVE_DEVS)
    {
       std::string glove_pos_proxy = chunk->getProperty( "rightGlovePos" );    // Get the name of the pos_proxy
@@ -104,6 +104,7 @@ bool vjSimDigitalGlove::config( vjConfigChunk* chunk )
       }
 
       // init right glove pos proxy interface
+      /*
       int proxy_index = vjKernel::instance()->getInputManager()->getProxyIndex( glove_pos_proxy );
       if (proxy_index != -1)
          mGlovePos[RIGHT_INDEX] = vjKernel::instance()->getInputManager()->getPosProxy( proxy_index );
@@ -111,9 +112,10 @@ bool vjSimDigitalGlove::config( vjConfigChunk* chunk )
          vjDEBUG( vjDBG_INPUT_MGR, 0 )
             << "[ERROR]: vjSimPinchglove::config(): Can't find posProxy, config fails."
             << std::endl << std::endl << vjDEBUG_FLUSH;
+            */
    }
-   
-         
+
+
    return true;
 }
 
@@ -138,32 +140,32 @@ void vjSimDigitalGlove::updateData()
       else
          mDigitalData[i] = 0;
    }
-   
+
    // The data is triple buffered in mTheData
    //  The data slots are as follows:
    //
    // [writable], [temp/valid], [readable]    <-- what they mean
    //  progress,   valid,        current      <-- what you type
    //
-   // You write to progress, whenever you swap, the data moves to valid, 
+   // You write to progress, whenever you swap, the data moves to valid,
    //  then current.
-   
-   // this function looks at mDigitalData, and sets angles in mTheData.  
+
+   // this function looks at mDigitalData, and sets angles in mTheData.
    // This updates the writable buffer of mTheData (called progress)
    this->updateFingerAngles();
 
    // Update the xform data for the writable buffer (called progress)
    mTheData[0][progress].calcXforms();
    mTheData[1][progress].calcXforms();
-   
-   // swap the indicies for the pointers. 
+
+   // swap the indicies for the pointers.
    // This swaps the temp and readable buffers (called 'valid' and 'current')
    swapCurrentIndexes();
-  
+
    //vjDEBUG(vjDBG_ALL,0)<<mTheData[0][current].outputAngles(cout)<<vjDEBUG_FLUSH;
    //vjDEBUG(vjDBG_ALL,0)<<mTheData[1][current].outputAngles(cout)<<vjDEBUG_FLUSH;
 
-   
+
    //TODO:  how does the angles get turned into a gesture ID????
    return;
 }
@@ -178,7 +180,7 @@ void vjSimDigitalGlove::updateFingerAngles()
     assert( progress < 3 && progress >= 0 );
     assert( LEFT_HAND < VJ_MAX_GLOVE_DEVS );
     assert( RIGHT_HAND < VJ_MAX_GLOVE_DEVS );
-    
+
     // use the digital data set the angles for each joint.
     mLeftHand.setFingers( mDigitalData[LPINKY] == 1,
                      mDigitalData[LRING] == 1,
@@ -190,9 +192,9 @@ void vjSimDigitalGlove::updateFingerAngles()
                      mDigitalData[RMIDDLE] == 1,
                      mDigitalData[RINDEX] == 1,
                      mDigitalData[RTHUMB] == 1 );
-   
+
     //Now, set the ugly ambiguously named array, mTheData:
-        
+
     // if that assert failed, then at least the code will still run...
     if ( LEFT_HAND < VJ_MAX_GLOVE_DEVS )
     {
@@ -231,7 +233,7 @@ void vjSimDigitalGlove::updateFingerAngles()
        mTheData[LEFT_HAND][progress].angles[vjGloveData::WRIST][vjGloveData::YAW] = mLeftHand.yaw();
        mTheData[LEFT_HAND][progress].angles[vjGloveData::WRIST][vjGloveData::PITCH] = mLeftHand.pitch();
     }
-    
+
     // if that assert failed, then at least the code will still run...
     if ( RIGHT_HAND < VJ_MAX_GLOVE_DEVS )
     {
@@ -270,7 +272,7 @@ void vjSimDigitalGlove::updateFingerAngles()
        mTheData[RIGHT_HAND][progress].angles[vjGloveData::WRIST][vjGloveData::YAW] = mRightHand.yaw();
        mTheData[RIGHT_HAND][progress].angles[vjGloveData::WRIST][vjGloveData::PITCH] = mRightHand.pitch();
     }
-    
+
     //vjDEBUG(vjDBG_ALL,0)<<"out\n"<<std::flush<<vjDEBUG_FLUSH;
 }
 

@@ -68,17 +68,18 @@ public:
 
    void set(vjDigital* digPtr, int subNum)
    {
-      vjASSERT( digPtr->fDeviceSupport(DEVICE_DIGITAL) );
+      //vjASSERT( digPtr->fDeviceSupport(DEVICE_DIGITAL) );
       m_digPtr = digPtr;
       m_unitNum = subNum;
       m_data = m_digPtr->getDigitalData(m_unitNum);
+      stupify(false);
 
       vjDEBUG(vjDBG_INPUT_MGR, vjDBG_VERB_LVL) << "digPtr: " << digPtr << std::endl
               << "subNum: " << subNum << std::endl << std::endl
               << vjDEBUG_FLUSH;
    }
 
-   void updateData();
+   virtual void updateData();
 
 
    //: Get the digital data
@@ -92,7 +93,12 @@ public:
    // will result in a one update lag in detecting the button not being pressed
    int getData()
    {
-      return m_data;
+      const int defaultDigital(vjDigital::OFF);
+
+      if(mStupified)
+         return defaultDigital;
+      else
+         return m_data;
    }
 
    vjDigital* getDigitalPtr()

@@ -36,6 +36,7 @@
 //#pragma once
 
 #include <vjConfig.h>
+#include <Input/vjInput/vjInput.h>
 #include <Input/vjGesture/vjGesture.h>
 #include <Input/vjGlove/vjGlove.h>
 #include <Input/InputManager/vjGloveProxy.h>
@@ -45,7 +46,7 @@
 //
 //
 //!PUBLIC_API:
-class vjGloveGesture : virtual public vjGesture
+class vjGloveGesture : public vjGesture
 {
 public:
    vjGloveGesture() {

@@ -36,10 +36,10 @@
 // File:     logiclass.cpp
 //
 // Contains: Driver for the Logitech 3D mouse. This driver is based on
-//	    Logitech's "logidrvr.c" (from Jim Barnes), but does not have
-//	    full functionality. In particular, only 6D mouse functions in
-//	    Euler mode not supported (i.e,. no quaternions or 2D mouse
-//	    modes).
+//     Logitech's "logidrvr.c" (from Jim Barnes), but does not have
+//     full functionality. In particular, only 6D mouse functions in
+//     Euler mode not supported (i.e,. no quaternions or 2D mouse
+//     modes).
 //
 // Author:   Terry Fong <terry@ptolemy.arc.nasa.gov>
 // History:  27-Mar-92  original version
@@ -47,15 +47,15 @@
 
 
 #include <vjConfig.h>
-#include <stdio.h>	 // for perror(3C)
-#include <sys/types.h>	 // for open(2)
-#include <sys/stat.h>	 // for open(2)
-#include <fcntl.h>	 // for open(2)
-#include <termios.h>	 // for tcsetattr(3T)
-#include <unistd.h>	 // for close()
+#include <stdio.h>    // for perror(3C)
+#include <sys/types.h>   // for open(2)
+#include <sys/stat.h>    // for open(2)
+#include <fcntl.h>    // for open(2)
+#include <termios.h>  // for tcsetattr(3T)
+#include <unistd.h>   // for close()
 #include <sys/time.h>
 
-#include <Input/vjPosition/logiclass.h>	// classprototypes and data types
+#include <Input/vjPosition/logiclass.h>   // classprototypes and data types
 
 // uncommenting the following will produce debug print statements */
 //
@@ -93,7 +93,7 @@ void sampleMouse(void* pointer) {
      start_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
 
     for(int i = 0; i < 60; i++)
-	devPointer->sample();
+   devPointer->sample();
 
      gettimeofday(&tv,0);
      stop_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
@@ -137,7 +137,7 @@ bool vjThreeDMouse::config(vjConfigChunk *c)
 {
 //   strncpy(sPort,"/dev/ttyd2",11);
 //    baseVector.setValue(0, 0, 0);   // Setup base offest as origin
-   if(!vjPosition::config(c))
+   if(! (vjInput::config(c) && vjPosition::config(c)))
       return false;
 
    baseVector[0] = baseVector[1] = baseVector[2] = 0;
@@ -157,10 +157,10 @@ int vjThreeDMouse::openMouse(char* portName)
     int fd;
     fd = vjThreeDMouse::logitechOpen(portName);
     if (fd==-1)
-	return -1;  // error
+   return -1;  // error
     else {
-	mouseFD = fd;	// assign the fd
-	return 0;
+   mouseFD = fd;  // assign the fd
+   return 0;
     }
 }
 
@@ -175,7 +175,7 @@ int vjThreeDMouse::logitechOpen (char* port_name)
 {
   int fd;
   struct termios t;
-  char data[DIAGNOSTIC_SIZE];	/* for diagnostics info */
+  char data[DIAGNOSTIC_SIZE]; /* for diagnostics info */
 
   /* open a serial port, read/write */
   if ((fd = open (port_name, O_RDWR)) < 0) {
@@ -364,8 +364,8 @@ void vjThreeDMouse::cuResetControlUnit ()
 ///////////////////////////////////////////////////////////////////////////////
 void vjThreeDMouse::getDiagnostics ( char data[])
 {
-  vjThreeDMouse::cuRequestDiagnostics ();	/* command diagnostics */
-  //sginap (100);			/* wait 1 second */
+  vjThreeDMouse::cuRequestDiagnostics (); /* command diagnostics */
+  //sginap (100);       /* wait 1 second */
   sleep(1);
   read (mouseFD, data, DIAGNOSTIC_SIZE);
 }
@@ -388,7 +388,7 @@ int vjThreeDMouse::getRecord ( vjPOS_DATA* data)
   while ((num_read < EULER_RECORD_SIZE) || !(record[0] & logitech_FLAGBIT)) {
 
     #ifdef DEBUG
-	printf ("get_record: only got %d bytes\n", num_read);
+   printf ("get_record: only got %d bytes\n", num_read);
     #endif
 
     /* flush the input buffer */
@@ -414,11 +414,11 @@ int vjThreeDMouse::getRecord ( vjPOS_DATA* data)
 //////////////////////////////////////////////////////////////////////////////
 void vjThreeDMouse::resetControlUnit ()
 {
-  vjThreeDMouse::cuDemandReporting ();	/* make sure control unit is processing */
-  usleep ((long) 100000);		/* wait 10 clock ticks = 100 ms */
-  vjThreeDMouse::cuResetControlUnit ();	/* command a reset */
+  vjThreeDMouse::cuDemandReporting (); /* make sure control unit is processing */
+  usleep ((long) 100000);     /* wait 10 clock ticks = 100 ms */
+  vjThreeDMouse::cuResetControlUnit ();   /* command a reset */
   sleep(1);
-  //sginap ((long) 100);		/* wait 1 second */
+  //sginap ((long) 100);      /* wait 1 second */
 }
 
 

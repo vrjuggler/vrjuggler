@@ -36,6 +36,7 @@
 
 // Dependency checker includes
 #include <Kernel/vjDependencyManager.h>
+#include <Kernel/vjDisplayManager.h>
 #include <Kernel/vjDepChecker.h>
 
 //: Dependency checker for XWin keyboard

@@ -40,7 +40,6 @@
 #define _VJ_DIGITAL_H_
 
 #include <vjConfig.h>
-#include <Input/vjInput/vjInput.h>
 
 //-----------------------------------------------------------------------------
 //: vjDigital is the abstract base class that devices with digital data derive
@@ -57,7 +56,7 @@
 // See also: vjInput
 //!PUBLIC_API:
 //-----------------------------------------------------------------------------
-class vjDigital : virtual public vjInput
+class vjDigital
 {
 public:
    //: Enum for the state of the digital buttons
@@ -68,37 +67,27 @@ public:
 
 public:
    /* Constructor/Destructors */
-   vjDigital() 
-   { 
-      //vjDEBUG(vjDBG_ALL,4)<<"*** vjDigital::vjDigital()\n"<< vjDEBUG_FLUSH; 
-      deviceAbilities = deviceAbilities | DEVICE_DIGITAL;
+   vjDigital()
+   {
+      //vjDEBUG(vjDBG_ALL,4)<<"*** vjDigital::vjDigital()\n"<< vjDEBUG_FLUSH;
    }
-   
+
    virtual ~vjDigital()
    {
    }
 
    virtual bool config(vjConfigChunk* c)
-   { 
-      //vjDEBUG(vjDBG_ALL,4)<<"*** vjDigital::config()\n"<< vjDEBUG_FLUSH; 
-      return vjInput::config(c); 
+   {
+      //vjDEBUG(vjDBG_ALL,4)<<"*** vjDigital::config()\n"<< vjDEBUG_FLUSH;
+      return true;;
    }
-
-   /* Pure virtual functions required from vjInput */
-   virtual int startSampling() = 0;
-   virtual int stopSampling() = 0;
-   virtual int sample() = 0;
-   virtual void updateData() = 0;
-
-   //: Get the name of the digital device
-   virtual char* getDeviceName() { return "vjDigital";}
 
    //: Get the digital data for the given devNum
    //  Returns digital 0 or 1, if devNum makes sense.<BR>
    //  Returns -1 if function fails or if devNum is out of range.<BR>
-   //  NOTE: If devNum is out of range, function will fail, possibly issueing 
+   //  NOTE: If devNum is out of range, function will fail, possibly issueing
    //  an error to a log or console - but will not ASSERT.<BR>
    virtual int getDigitalData(int devNum = 0) = 0;
 };
 
-#endif	/* _VJ_DIGITAL_H_ */
+#endif   /* _VJ_DIGITAL_H_ */

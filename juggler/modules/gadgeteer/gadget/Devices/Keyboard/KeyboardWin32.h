@@ -51,20 +51,21 @@
 #include <windows.h>
 #include <commctrl.h>
 
+#include <Input/vjInput/vjInput.h>
 #include <Input/vjInput/vjKeyboard.h>
 #include <Threads/vjThread.h>
 
 
-class vjKeyboardWin32 : public vjKeyboard
+class vjKeyboardWin32 : public vjInput, public vjKeyboard
 {
 public:
-	
+
    vjKeyboardWin32()
    {
       for (int i =0; i < 256; i++)
          m_realkeys[i] = m_keys[i] = m_framekeys[i] = 0;
-      
-      m_realkeys[0] = m_keys[0] = m_framekeys[0] = 1;      
+
+      m_realkeys[0] = m_keys[0] = m_framekeys[0] = 1;
    }
    ~vjKeyboardWin32() { stopSampling();}
 
@@ -77,14 +78,7 @@ public:
    int sample() { return 1;}
    void updateData();
 
-   /* vjInput virtual functions
-    *
-    *  virtual functions that inherited members should
-    *  override but are not required to
-    */
-   char* getDeviceName() { return "vjKeyboardWin32";}
    static std::string getChunkType() { return std::string("Keyboard");}
-
 
    // returns the number of times the key was pressed during the
    // last frame, so you can put this in an if to check if was
@@ -100,16 +94,16 @@ public:
    { return onlyModifier(modKey); }
 
    void createWindowWin32 ();
-	void updKeys(	UINT message,	UINT wParam, LONG lParam);
+   void updKeys(  UINT message,  UINT wParam, LONG lParam);
 
 public:
-   HINSTANCE	m_hInst;
-	HWND		   m_hWnd;
+   HINSTANCE   m_hInst;
+   HWND        m_hWnd;
 
 private:
    /** @name Private functions for processing input data */
    /* Private functions for processing input data */
- 	  //@{
+     //@{
    int onlyModifier(int);
 
 
@@ -118,13 +112,13 @@ private:
    int VKKeyTovjKey(int vkKey);
    char* checkArgs(char* look_for);
 
-	BOOL MenuInit (HINSTANCE hInstance);
+   BOOL MenuInit (HINSTANCE hInstance);
    //@}
 
 
-   int		m_screen, m_x, m_y;
+   int      m_screen, m_x, m_y;
    unsigned int m_width,m_height;
-   
+
    // Use m_keys to know how many times each key was KEYDOWN during the loop
    // m_realkeys is the current up/down state of each key
    // m_framekeys is a buffer of the keys that have been pressed
@@ -134,8 +128,8 @@ private:
    int m_realkeys[256];    //: The real keyboard state, all events processed
 
    float m_mouse_sensitivity;
-   
-	int oldx,oldy,newx,newy;  // Mousemove variables
+
+   int oldx,oldy,newx,newy;  // Mousemove variables
 };
 
 #endif

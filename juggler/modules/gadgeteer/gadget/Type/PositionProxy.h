@@ -66,10 +66,9 @@ public:
 
    virtual ~vjPosProxy() {}
 
-
    //: Update the proxy's copy of the data
    // Copy the device data to local storage, and transform it if necessary
-   void updateData() {
+   virtual void updateData() {
       mPosData = *(mPosPtr->getPosData(mUnitNum));
       mPosUpdateTime = *(mPosPtr->getPosUpdateTime(mUnitNum));
 
@@ -103,7 +102,12 @@ public:
 
    //: Get the data
    vjMatrix* getData()
-   { return &mPosData; }
+   {
+      if(mStupified)
+         mPosData.makeIdent();
+
+      return &mPosData;
+   }
 
    //: Return this device's subunit number
    int getUnit()
@@ -116,7 +120,6 @@ public:
    //: Get the transform being using by this proxy
    vjMatrix& getTransform()
    { return mMatrixTransform; }
-
 
    //: Transform the data in mPosData
    //! PRE: mPosData needs to have most recent data

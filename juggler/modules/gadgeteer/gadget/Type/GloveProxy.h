@@ -67,9 +67,10 @@ public:
   //: Set the gloveProxy to point to another device and subUnit number.
   void set(vjGlove* glovePtr, int unitNum)
   {
-     vjASSERT( glovePtr->fDeviceSupport(DEVICE_GLOVE) );
+     //vjASSERT( glovePtr->fDeviceSupport(DEVICE_GLOVE) );
      mGlovePtr = glovePtr;
      mUnitNum = unitNum;
+     stupify(false);
 
      vjDEBUG(vjDBG_INPUT_MGR, vjDBG_VERB_LVL) << "glovePtr: " << glovePtr << std::endl
               << "unitNum: " << unitNum << std::endl << vjDEBUG_FLUSH;
@@ -78,24 +79,36 @@ public:
   float getAngle(vjGloveData::vjGloveComponent component,
                  vjGloveData::vjGloveJoint joint)
   {
-    return mGlovePtr->getGloveAngle(component, joint, mUnitNum);
+    if(mStupified)
+       return 0.0f;
+    else
+       return mGlovePtr->getGloveAngle(component, joint, mUnitNum);
   }
 
 
   vjVec3 getVector(vjGloveData::vjGloveComponent component)
   {
-     return mGlovePtr->getGloveVector(component, mUnitNum);
+     if(mStupified)
+        return vjVec3(0,0,0);
+     else
+        return mGlovePtr->getGloveVector(component, mUnitNum);
   }
 
   vjMatrix getPos( vjGloveData::vjGloveComponent component = vjGloveData::WRIST)
   {
-     return mGlovePtr->getGlovePos(component, mUnitNum);
+     if(mStupified)
+        return vjMatrix();
+     else
+      return mGlovePtr->getGlovePos(component, mUnitNum);
   }
 
 
   vjGloveData getData()
   {
-     return mGlovePtr->getGloveData(mUnitNum);
+     if(mStupified)
+        return vjGloveData();
+     else
+        return mGlovePtr->getGloveData(mUnitNum);
   }
 
 

@@ -146,9 +146,10 @@ public: // Model and sound member classes
    };
 
 public:
-   simplePfNavApp() : mStatusMessageEmitCount(0),// mWorldDcsTrans( 0.0f, 0.0f, 0.0f ),
-      mInitialNavPos( 0.0f, 0.0f, 0.0f ),
+   simplePfNavApp()
+      : mInitialNavPos( 0.0f, 0.0f, 0.0f ),
       mBoundingSize(0.0f),
+	  mStatusMessageEmitCount(0),     
       mCurNavIndex(0),
       mLightGroup( NULL ),
       mConfiguredNoCollideModels( NULL ),
@@ -460,7 +461,7 @@ void simplePfNavApp::initializeModels()
       mModelList[x].modelDCS = new pfDCS();
 
       // set trans
-      pfVec3 pf_nextModelDcsTrans;
+      //pfVec3 pf_nextModelDcsTrans;
       pfVec3 pf_model_trans = vjGetPfVec( mModelList[x].pos );
       mModelList[x].modelDCS->setTrans( pf_model_trans[0],
                                           pf_model_trans[1],

@@ -35,17 +35,18 @@
 #define _VJ_CYBER_GLOVE_H_
 
 #include <vjConfig.h>
+#include <Input/vjInput/vjInput.h>
 #include <Input/vjGlove/vjGlove.h>
 #include <Input/vjGlove/CyberGloveBasic.h>
 
 //: Cyberglove device
 //!PUBLIC_API:
-class vjCyberGlove : virtual public vjGlove
+class vjCyberGlove : virtual public vjInput, public vjGlove
 {
 public:
    //: Construct using chunk
    vjCyberGlove() : mGlove( NULL ), mCalDir( NULL )
-   {   
+   {
    }
 
    //: Destroy the glove
@@ -53,17 +54,16 @@ public:
 
    virtual bool config(vjConfigChunk* c);
 
-   virtual char* getDeviceName() { return "vjCyberGlove";}
    static std::string getChunkType() { return std::string("CyberGlove");}
-	
+
    virtual int startSampling();
    virtual int stopSampling();
    virtual int sample();
    virtual void updateData ();
 
-   
+
 protected:
-	//: The main control loop for the object
+   //: The main control loop for the object
    void controlLoop(void* nullParam);
 
    void copyDataFromGlove();
@@ -73,4 +73,4 @@ protected:
    char*             mCalDir;             // Calibration file directory
 };
 
-#endif	/* _VJ_CYBER_GLOVE_H_ */
+#endif   /* _VJ_CYBER_GLOVE_H_ */

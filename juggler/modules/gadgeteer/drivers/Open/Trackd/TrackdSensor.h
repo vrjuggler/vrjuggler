@@ -34,6 +34,7 @@
 #define _VJ_TRACKD_SENSOR_H_
 
 #include <vjConfig.h>
+#include <Input/vjInput/vjInput.h>
 #include <Input/vjPosition/vjPosition.h>
 #include <Input/Multi/aTrackdSensor.h>
 #include <vector>
@@ -51,7 +52,8 @@
 // See also: vjPosition
 //-----------------------------------------------------------------------------
 //!PUBLIC_API:
-class vjTrackdSensor : public vjPosition {
+class vjTrackdSensor : public vjInput, public vjPosition
+{
 public:
 
     // ------------------------------------------------------------------------
@@ -98,12 +100,6 @@ public:
     //! POST: Most recent value is copied over to temp area
     // ------------------------------------------------------------------------
     void updateData();
-
-    //: Get the device name.
-    inline char*
-    getDeviceName () {
-        return "vjTrackdSensor";
-    }
 
     //: Return what chunk type is associated with this class.
     static std::string

@@ -35,6 +35,7 @@
 #define _VJ_SIM_RELATIVE_POSITION_H
 
 #include <vjConfig.h>
+#include <Input/vjInput/vjInput.h>
 #include <Input/vjPosition/vjPosition.h>
 #include <Input/InputManager/vjPosInterface.h>
 class vjConfigChunk;
@@ -49,7 +50,7 @@ class vjConfigChunk;
 //
 // This class should not be used directly by the user.
 //!PUBLIC_API:
-class vjSimRelativePosition : virtual public vjPosition
+class vjSimRelativePosition : public vjInput, public vjPosition
 {
 public:
    vjSimRelativePosition() {;}
@@ -65,7 +66,7 @@ public:
    }
 
    vjTimeStamp* getPosUpdateTime (int devNum = 0) {
-	   return &mUpdateTime;
+      return &mUpdateTime;
     }
 
    /* These functions don't do anything */
@@ -75,9 +76,6 @@ public:
 
    //: Update the data
    virtual void updateData();
-
-   //: Get the name of the digital device
-   char* getDeviceName() { return "SimRelativePosition";}
 
    static std::string getChunkType() { return std::string("SimRelativePosition"); }
 

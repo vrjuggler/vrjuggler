@@ -94,7 +94,6 @@ bool vjProxyFactory::recognizeProxy(vjConfigChunk* chunk)
 //+         other - Pointer to the loaded proxy
 vjProxy* vjProxyFactory::loadProxy(vjConfigChunk* chunk)
 {
-
    vjASSERT(recognizeProxy(chunk));
 
    int index = findConstructor(chunk);

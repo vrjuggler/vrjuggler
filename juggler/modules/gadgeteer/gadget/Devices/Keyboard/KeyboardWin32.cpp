@@ -54,8 +54,8 @@ bool vjKeyboardWin32::config(vjConfigChunk *c)
                      << vjDEBUG_FLUSH;
 
     // Call base class config function first
-    if(!vjKeyboard::config(c))
-       return false;
+    if(! (vjInput::config(c) && vjKeyboard::config(c)))
+      return false;
 
     int i;
     for(i =0; i < 256; i++)
@@ -233,7 +233,7 @@ void vjKeyboardWin32::updKeys(UINT message, UINT wParam, LONG lParam)
                 m_realkeys[key] = 0;
                 vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << instName
                            << ": WM_KEYUP: " << key << std::endl
-                	   << vjDEBUG_FLUSH;
+                     << vjDEBUG_FLUSH;
                 break;
 
       // mouse buttons

@@ -39,6 +39,7 @@
 #include <GL/glu.h>
 #include <vector>
 
+#include <Kernel/vjKernel.h>
 #include <Kernel/GL/vjGlApp.h>
 #include <Kernel/GL/vjGlContextData.h>
 #include <Kernel/vjDebug.h>

@@ -114,7 +114,7 @@ bool vjFlock::config(vjConfigChunk *c)
 
    // read in vjPosition's config stuff,
    // --> this will be the port and baud fields
-   if (!vjPosition::config(c))
+   if(! (vjInput::config(c) && vjPosition::config(c)))
       return false;
 
    // keep aFlock's port and baud members in sync with vjInput's port and baud members.
@@ -147,7 +147,6 @@ bool vjFlock::config(vjConfigChunk *c)
       << "          aFlock::getTransmitter(): " << mFlockOfBirds.getTransmitter() << std::endl
       << "             aFlock::getNumBirds()      : " << mFlockOfBirds.getNumBirds() << std::endl
       << "          aFlock::getBaudRate()      : " << mFlockOfBirds.getBaudRate() << std::endl
-      << "          deviceAbilities:" << deviceAbilities << std::endl
       << "          aFlock::getPort()         : " << mFlockOfBirds.getPort() << std::endl
       << "     instance name : " << instName << std::endl
       << std::endl << vjDEBUG_FLUSH;

@@ -725,7 +725,7 @@ void vjPfDrawManager::debugDumpPfDisp(pfDisp* pf_disp, int debugLevel)
 
    pfChannel* l_chan = (pf_disp->chans[pfDisp::PRIMARY]);
    pfChannel* r_chan = (pf_disp->chans[pfDisp::SECONDARY]);
-   unsigned lc_mask,rc_mask;
+   unsigned lc_mask(0),rc_mask(0);
    if (l_chan != NULL)
       lc_mask = l_chan->getShare();
    if (r_chan != NULL)

@@ -64,12 +64,13 @@ void vjPosProxy::setTransform( float xoff, float yoff, float zoff,    // Transla
 //: Set the vjPosProxy to now point to another device and subDevicenumber
 void vjPosProxy::set(vjPosition* posPtr, int unitNum)
 {
-   vjASSERT( posPtr->fDeviceSupport(DEVICE_POSITION) );
+   //vjASSERT( posPtr->fDeviceSupport(DEVICE_POSITION) );
    vjDEBUG(vjDBG_INPUT_MGR, vjDBG_VERB_LVL) << "posPtr: " << posPtr << std::endl
               << "unit  : " << unitNum << std::endl << std::endl
               << vjDEBUG_FLUSH;
    mPosPtr = posPtr;
    mUnitNum = unitNum;
+   stupify(false);
 }
 
 
@@ -124,20 +125,26 @@ bool vjPosProxy::config(vjConfigChunk* chunk)
    }
 
    // --- SETUP PROXY with INPUT MGR ---- //
-   // This function internally calls this->set()
-   int proxy_num = vjKernel::instance()->getInputManager()->addPosProxy(dev_name,unit_num,proxy_name,this);
-
-   if ( proxy_num != -1)
+   vjInput* input_dev = vjKernel::instance()->getInputManager()->getDevice(dev_name);
+   if(NULL == input_dev)       // Not found, ERROR
    {
-      vjDEBUG_END(vjDBG_INPUT_MGR,3) << "   PosProxy config()'ed" << std::endl
-                                     << vjDEBUG_FLUSH;
-      return true;
-   }
-   else
-   {
-      vjDEBUG_END(vjDBG_INPUT_MGR,0) << "   PosProxy config() failed"
-                                     << std::endl << vjDEBUG_FLUSH;
-      vjDEBUG_END(vjDBG_INPUT_MGR,3) << std::endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_INPUT_MGR, vjDBG_CONFIG_LVL) << "vjPosProxy::config: Could not find device: " << dev_name << std::endl << vjDEBUG_FLUSH;
       return false;
    }
+
+   vjPosition* pos_dev = dynamic_cast<vjPosition*>(input_dev);
+   if(NULL == pos_dev)
+   {
+      vjDEBUG(vjDBG_INPUT_MGR, vjDBG_CRITICAL_LVL) << "vjPosProxy::config: Device was of wrong type: " << dev_name
+                                               << " type:" << typeid(input_dev).name() << std::endl << vjDEBUG_FLUSH;
+      return false;
+   }
+
+   vjDEBUG_CONT(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "   attaching to device named: " << dev_name.c_str() << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG_CONT(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "   at unit number: " << unit_num << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG_END(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << "   PosProxy config()'ed" << std::endl << vjDEBUG_FLUSH;
+
+   set(pos_dev,unit_num);    // Set the proxy
+
+   return true;
 }

@@ -111,7 +111,6 @@ void vjDeviceFactory::hackLoadKnownDevices()
 
    vjDeviceConstructor<vjKeyboardWin32>* key_win32 = new vjDeviceConstructor<vjKeyboardWin32>;
 #endif
-
 #ifdef VJ_HAVE_DTK
    vjDeviceConstructor<vjDTK>* dtk_wrapper = new vjDeviceConstructor<vjDTK>;
 #endif

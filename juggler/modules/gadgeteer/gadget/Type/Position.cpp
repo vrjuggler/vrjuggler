@@ -40,9 +40,6 @@
 bool vjPosition::config(vjConfigChunk *c)
 {
   //vjDEBUG(vjDBG_ALL,0) << "vjPosition::vjPosition(vjConfigChunk*)" << vjDEBUG_FLUSH;
-  if(!vjInput::config(c))
-     return false;
-
   if ((c->getNum("translate") == 3) && (c->getNum("rotate") == 3))
   {
     // These are the transforms from the base tracker coord system
@@ -73,7 +70,6 @@ bool vjPosition::config(vjConfigChunk *c)
 vjPosition::vjPosition()
 {
   //vjDEBUG(vjDBG_ALL,0) << "vjPosition::vjPosition()" << vjDEBUG_FLUSH;
-  deviceAbilities = deviceAbilities | DEVICE_POSITION;
   theData = NULL;
   mDataTimes = NULL;
   xformMat.makeIdent();

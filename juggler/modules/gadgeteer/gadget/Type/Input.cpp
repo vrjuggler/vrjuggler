@@ -45,12 +45,10 @@ vjInput::vjInput()
    valid(1),
    progress(2),
    lock(),
-   baudRate(0),
-   deviceAbilities(0)
+   baudRate(0)
 {
    //vjDEBUG(vjDBG_ALL,4)<<"*** vjInput::vjInput()\n"<< vjDEBUG_FLUSH;
    /*
-   deviceAbilities = 0;
    instName = NULL;
    sPort = NULL;
    myThread = NULL;
@@ -118,10 +116,12 @@ void vjInput::setBaudRate(int baud)
      baudRate = baud;
 }
 
+/*
 int vjInput::fDeviceSupport(int devAbility)
 {
     return (deviceAbilities & devAbility);
 }
+*/
 
 //: Reset the Index Holders
 // Sets to (0,1,2) in that order

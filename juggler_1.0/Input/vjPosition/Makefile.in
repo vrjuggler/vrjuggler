@@ -50,9 +50,8 @@ VJROOT		= $(top_srcdir)
 VJ_SRCDIR	= @VJ_SRCDIR@/Input/vjPosition
 
 SRCS		= isIntersense.cpp	\
-                  vjDummyPosition.cpp	\
-                  vjIsense.cpp		\
-                  vjPosition.cpp
+					vjIsense.cpp		\
+					vjPosition.cpp
 
 ifneq (@OS_TYPE@, Win32)
 SRCS		+= aFlock.cpp		\

@@ -63,13 +63,11 @@ vjBird::vjBird()
   repRate = 'Q';
   baudRate = 38400;
   myThread = NULL;
-
-  deviceAbilities = deviceAbilities | DEVICE_POSITION;
 }
 
 bool vjBird::config(vjConfigChunk *c)
 {
-   if(!vjPosition::config(c))
+   if(! (vjInput::config(c) && vjPosition::config(c)))
       return false;
 
   strncpy(sPort,"/dev/ttyd3", 30);

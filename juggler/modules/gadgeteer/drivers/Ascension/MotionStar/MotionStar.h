@@ -37,6 +37,7 @@
 
 #include <string>
 
+#include <Input/vjInput/vjInput.h>
 #include <Input/vjPosition/vjPosition.h>
 #include <Threads/vjThread.h>
 #include <Input/vjPosition/aMotionStar.h>
@@ -66,7 +67,7 @@
 // See also: vjPosition
 //-----------------------------------------------------------------------------
 //!PUBLIC_API:
-class vjMotionStar : public vjPosition {
+class vjMotionStar : public vjInput, public vjPosition {
 public:
 
     // ------------------------------------------------------------------------
@@ -98,12 +99,12 @@ public:
     //+                        10.
     // ------------------------------------------------------------------------
     vjMotionStar(const char* address = NULL, const unsigned short port = 6000,
-		 const enum BIRDNET::protocol proto = BIRDNET::TCP,
+       const enum BIRDNET::protocol proto = BIRDNET::TCP,
                  const bool master = false,
-		 const FLOCK::hemisphere hemisphere = FLOCK::FRONT_HEMISPHERE,
-		 const FLOCK::data_format bird_format = FLOCK::POSITION_ANGLES,
-		 const BIRDNET::run_mode run_mode = BIRDNET::CONTINUOUS,
-		 const unsigned char report_rate = 1,
+       const FLOCK::hemisphere hemisphere = FLOCK::FRONT_HEMISPHERE,
+       const FLOCK::data_format bird_format = FLOCK::POSITION_ANGLES,
+       const BIRDNET::run_mode run_mode = BIRDNET::CONTINUOUS,
+       const unsigned char report_rate = 1,
                  const unsigned int birds_required = 10);
 
     // ------------------------------------------------------------------------
@@ -221,19 +222,6 @@ public:
     virtual void updateData(void);
 
     // ------------------------------------------------------------------------
-    //: Get the device name.
-    //
-    //! PRE: None.
-    //! POST: The static string "vjMotionStar" is returned to the caller.
-    //
-    //! RETURNS: A constant static string.
-    // ------------------------------------------------------------------------
-    inline char*
-    getDeviceName (void) {
-        return "vjMotionStar";
-    }
-
-    // ------------------------------------------------------------------------
     //: Get the reciever transform for the given bird number.  The birds are
     //+ zero-based.
     //
@@ -284,7 +272,7 @@ public:
     getAddress (void) const {
         return m_motion_star.getAddress();
     }
- 
+
     // ------------------------------------------------------------------------
     //: Set the port on the server to which we connect.
     //
@@ -309,7 +297,7 @@ public:
     }
 
     // ------------------------------------------------------------------------
-    //: 
+    //:
     //
     //! PRE: m_motion_star has been initialized.
     //! POST: If the device is not active, the transmission protocol is set to
@@ -325,7 +313,7 @@ public:
     //! PRE: m_motion_star has been initialized.
     //! POST: The current transmission protocol is returned to the caller.
     //
-    //! RETURNS: 
+    //! RETURNS:
     // ------------------------------------------------------------------------
     inline enum BIRDNET::protocol
     getProtocol (void) const {
@@ -615,4 +603,4 @@ private:
 };
 
 
-#endif	/* _VJ_ASCENSION_MOTION_STAR_H_ */
+#endif   /* _VJ_ASCENSION_MOTION_STAR_H_ */

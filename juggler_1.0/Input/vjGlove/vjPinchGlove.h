@@ -35,6 +35,7 @@
 #define _VJ_PINCH_GLOVE_H_
 
 #include <vjConfig.h>
+#include <Input/vjInput/vjInput.h>
 #include <Input/vjGlove/vjGlove.h>
 #include <Input/vjInput/vjDigital.h>
 #include <Input/vjGlove/fsPinchGlove.h>
@@ -46,7 +47,7 @@
 
 //: Fakespace Pinchglove Device
 //!PUBLIC_API:
-class vjPinchGlove : public vjGlove, public vjDigital
+class vjPinchGlove : virtual public vjInput, public vjGlove, public vjDigital
 {
 public:
    //: Construct
@@ -58,7 +59,6 @@ public:
 
    virtual bool config( vjConfigChunk* c );
 
-   virtual char* getDeviceName() { return "vjPinchGlove";}
    static std::string getChunkType() { return std::string("PinchGlove");}
 
    virtual int startSampling();
@@ -69,21 +69,21 @@ public:
    //: Get the digital data for the given devNum
    //  Returns digital 0 or 1, if devNum makes sense.<BR>
    //  Returns -1 if function fails or if devNum is out of range.<BR>
-   //  NOTE: If devNum is out of range, function will fail, possibly issueing 
+   //  NOTE: If devNum is out of range, function will fail, possibly issueing
    //  an error to a log or console - but will not ASSERT.<BR><BR>
    //  0 == open, 1 == contact.
    //
    //  Use one of these indices to get the glove's digital data<BR>
    //  EX: int result = mGlove.getDigitalData( vjPinchGlove::LTHUMB );
-   enum vjFinger 
+   enum vjFinger
    {
-	   LTHUMB = 0, LINDEX = 1, LMIDDLE = 2, LRING = 3, LPINKY = 4, 
-	   RTHUMB = 6, RINDEX = 7, RMIDDLE = 8, RRING = 9, RPINKY = 10
+      LTHUMB = 0, LINDEX = 1, LMIDDLE = 2, LRING = 3, LPINKY = 4,
+      RTHUMB = 6, RINDEX = 7, RMIDDLE = 8, RRING = 9, RPINKY = 10
    };
    virtual int getDigitalData(int devNum = 0);
-   
+
 protected:
-	//: The main control loop for the object
+   //: The main control loop for the object
    void controlLoop( void* nullParam );
 
    void copyDataFromGlove();
@@ -92,9 +92,9 @@ protected:
 protected:
    //vjThread*         mControlThread;      // The thread of control for the object
    fsPinchGlove*      mGlove;              // The actual glove
-   
+
    vjHand left, right;
 };
 
 
-#endif	/* _VJ_PINCH_GLOVE_H_ */
+#endif   /* _VJ_PINCH_GLOVE_H_ */

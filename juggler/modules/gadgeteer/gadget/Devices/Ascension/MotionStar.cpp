@@ -107,7 +107,7 @@ vjMotionStar::config (vjConfigChunk* c) {
 
    retval = false;
 
-   if ( vjPosition::config(c) ) {
+   if ( vjInput::config(c) &&  vjPosition::config(c) ) {
       vjDEBUG(vjDBG_INPUT_MGR, 3)
          << "       vjMotionStar::config(vjConfigChunk*)\n" << vjDEBUG_FLUSH;
 
@@ -122,7 +122,7 @@ vjMotionStar::config (vjConfigChunk* c) {
       setReportRate((unsigned char) static_cast<int>(c->getProperty("reportRate")));
       retval = true;
    }
- 
+
    return retval;
 }
 
@@ -158,7 +158,7 @@ vjMotionStar::startSampling () {
          vjDEBUG(vjDBG_INPUT_MGR, 1) << "    Getting MotionStar ready ...\n"
                                      << vjDEBUG_FLUSH;
 
-         start_status = m_motion_star.start(); 
+         start_status = m_motion_star.start();
 
          switch (start_status) {
             // Proper startup.
@@ -471,7 +471,7 @@ vjMotionStar::setServerPort (const unsigned short port) {
 }
 
 // ----------------------------------------------------------------------------
-// 
+//
 // ----------------------------------------------------------------------------
 void
 vjMotionStar::setProtocol (const enum BIRDNET::protocol proto) {
@@ -487,7 +487,7 @@ vjMotionStar::setProtocol (const enum BIRDNET::protocol proto) {
 }
 
 // ----------------------------------------------------------------------------
-// 
+//
 // ----------------------------------------------------------------------------
 void
 vjMotionStar::setMasterStatus (const bool master) {

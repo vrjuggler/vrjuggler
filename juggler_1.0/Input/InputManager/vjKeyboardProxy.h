@@ -48,8 +48,9 @@ public:
 
    void set(vjKeyboard* keyboard)
    {
-      vjASSERT(keyboard->fDeviceSupport(DEVICE_KEYBOARD));
+      //vjASSERT(keyboard->fDeviceSupport(DEVICE_KEYBOARD));
       mKeyboard = keyboard;
+      stupify(false);
    }
 
    vjKeyboard* getKeyboardPtr()
@@ -59,10 +60,20 @@ public:
    //! PRE: modKey is a valid modifier identifier
    //! RETURNS: true - modKey is the only modifier pressed
    bool modifierOnly(int modKey)
-   { return mKeyboard->modifierOnly(modKey); }
+   {
+      if(mStupified)
+         return false;
+      else
+         return mKeyboard->modifierOnly(modKey);
+   }
 
    int keyPressed(int keyId)
-   { return mKeyboard->keyPressed(keyId); }
+   {
+      if(mStupified)
+         return 0;
+      else
+         return mKeyboard->keyPressed(keyId);
+   }
 
    static std::string getChunkType() { return "KeyboardProxy"; }
 

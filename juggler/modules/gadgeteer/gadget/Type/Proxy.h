@@ -35,6 +35,7 @@
 #define _VJ_PROXY_H_
 
 #include <vjConfig.h>
+#include <Input/vjInput/vjInput.h>
 #include <Config/vjConfigChunk.h>
 class vjInput;
 
@@ -45,15 +46,23 @@ class vjInput;
 class vjProxy
 {
 public:
-   vjProxy() {;}
+   vjProxy()
+   { mStupified = true;}
+
+   virtual ~vjProxy() {;}
 
    //: Configure the proxy
    //! POST:
-   //+  Proxy is configured
-   //+  Proxy is registered with input manager
+   //+  Proxy is configured (it is not registered yet though)
    //! RETURNS: success
-   virtual bool config(vjConfigChunk* chunk) = 0;
+   virtual bool config(vjConfigChunk* chunk)
+   {
+      mName = (std::string)chunk->getProperty("name");
+      return true;
+   }
 
+   virtual void updateData()
+   {;}
 
    //: Return a pointer to the base class of the devices being proxied
    virtual vjInput* getProxiedInputDevice() = 0;
@@ -61,6 +70,16 @@ public:
    //: Returns the string rep of the chunk type used to config this device
    // Used by input manager to find chunks that construct devices
    static std::string getChunkType() { return "Undefined"; }
+
+   std::string getName()
+   { return mName; }
+
+   void stupify(bool newState = true)
+   { mStupified = newState; }
+
+protected:
+   std::string mName;         // The name of the proxy
+   bool        mStupified;    // Is the proxy current stupified (returns default data)
 };
 
 #endif

@@ -30,45 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 #ifndef _VJ_ANA_INTERFACE_H_
 #define _VJ_ANA_INTERFACE_H_
 
-#include <Kernel/vjKernel.h>
-#include <Input/InputManager/vjInputManager.h>
 #include <Input/InputManager/vjAnalogProxy.h>
 #include <Input/InputManager/vjDeviceInterface.h>
-
-//: Provides a simplified user interface to an analog device
-//
-// See also: vjDeviceInterface
-//!PUBLIC_API:
-class vjAnalogInterface : public vjDeviceInterface
-{
-protected:
-   vjAnalogInterface(vjAnalogInterface& other) {;}
-
-public:
-   vjAnalogInterface() : mAnaProxy(NULL)
-   {;}
-
-   vjAnalogProxy* operator->()
-   { return mAnaProxy; }
-
-   vjAnalogProxy& operator*()
-   { return *(mAnaProxy); }
-
-   virtual void refresh()
-   {
-      vjDeviceInterface::refresh();
-      if(mProxyIndex != -1)
-         mAnaProxy = vjKernel::instance()->getInputManager()->getAnaProxy(mProxyIndex);
-      else
-         mAnaProxy = vjKernel::instance()->getInputManager()->getDummyAnaProxy();
-   }
-
-private:
-   vjAnalogProxy* mAnaProxy;     // The proxy that is being wrapped
-};
 
 #endif

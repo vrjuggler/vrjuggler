@@ -67,7 +67,7 @@ public:
       mCamera.init(camera_proxy_str);
       mWand.init(wand_proxy_str);      // Configure the wand to use
 
-      if(mCamera.getProxyIndex() == -1)
+      if(!mCamera.isConnected())
       {
          vjDEBUG(vjDBG_ERROR,0)
             << clrOutNORM(clrRED,"ERROR:")

@@ -41,7 +41,7 @@ vjSimAnalog::vjSimAnalog() : vjAnalog(), vjSimInput()
 }
 
 //: Destructor
-vjSimAnalog::~vjSimAnalog() 
+vjSimAnalog::~vjSimAnalog()
 {
    //vjDEBUG(vjDBG_ALL,4)<<"*** vjSimAnalog::~vjSimPinchGlove()\n"<< vjDEBUG_FLUSH;
 }
@@ -49,9 +49,7 @@ vjSimAnalog::~vjSimAnalog()
 bool vjSimAnalog::config(vjConfigChunk* chunk)
 {
    //vjDEBUG(vjDBG_ALL,4)<<"*** vjSimAnalog::config()\n"<< vjDEBUG_FLUSH;
-   
-   
-   if((!vjAnalog::config(chunk)) || (!vjSimInput::config(chunk)))
+   if(! (vjInput::config(chunk) && vjAnalog::config(chunk) && vjSimInput::config(chunk)))
       return false;
 
    std::vector<vjVarValue*> key_inc_list = chunk->getAllProperties("keyPairsInc");
@@ -71,7 +69,7 @@ bool vjSimAnalog::config(vjConfigChunk* chunk)
 void vjSimAnalog::updateData()
 {
    //vjDEBUG(vjDBG_ALL,4)<<"*** vjSimAnalog::updateData()\n"<< vjDEBUG_FLUSH;
-   
+
    // -- Update analog data --- //
    for (unsigned int i = 0; i < mSimKeysUp.size(); i++)
    {

@@ -76,9 +76,9 @@ public:
       //     It shoulbe be though from dependency checking
       mTracker.init(tracker_name);              // Intialize the tracker
    }
-   
+
    virtual ~vjTrackedWallProjection() {}
-   
+
    virtual void config(vjConfigChunk* chunk)
    {
       vjProjection::config(chunk);        // Call base class config first
@@ -89,12 +89,12 @@ public:
    virtual void calcViewMatrix(vjMatrix& eyePos)
    {
       updateWallParams();
-      
+
       calcViewFrustum(eyePos);
-      
+
       // We don't need to postTrans like in non-tracked projection
       // because the wall position is already in mWallRotationMatrix
-      mViewMat = mWallRotationMatrix;   
+      mViewMat = mWallRotationMatrix;
    }
 
    void updateWallParams();

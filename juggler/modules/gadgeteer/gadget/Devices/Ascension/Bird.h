@@ -40,6 +40,7 @@
 #define _VJ_BIRD_H_
 
 #include <vjConfig.h>
+#include <Input/vjInput/vjInput.h>
 #include <Input/vjPosition/vjPosition.h>
 #include <Threads/vjThread.h>
 #include <Input/vjPosition/vjFlock.h>
@@ -50,7 +51,7 @@
 //  group mode things have been stripped, and should be close to
 //  a working implementation, but has not been tested a standalone
 //  bird.
-class vjBird : public vjPosition
+class vjBird : public vjInput, public vjPosition
 {
 public:
    /** @name Construction/Destruction */
@@ -72,14 +73,6 @@ public:
    void updateData();
    //@}
 
-   /** @name vjInput virtual functions
-    *
-    *  virtual functions that inherited members should
-    *  override but are not required to
-    */
-   //@{
-   char* getDeviceName() { return "vjBird";}
-   //@}
 
    /** @name vjPosition pure virtual functions
     *

@@ -66,27 +66,17 @@ typedef struct {
 //  the positional data, similar to the addition for vjAnalog and vjDigital.
 //-----------------------------------------------------------------------------------
 //!PUBLIC_API:
-class vjPosition : virtual public vjInput {
-    public:
+class vjPosition
+{
+public:
 
     //: Constructor
     vjPosition();
 
     //: Destructor
-    ~vjPosition();
+    virtual ~vjPosition();
 
     virtual bool config(vjConfigChunk *c);
-
-
-    //:vjInput pure virtual functions
-    virtual int startSampling() = 0;
-    virtual int stopSampling() = 0;
-    virtual int sample() = 0;
-    virtual void updateData() = 0;
-
-
-    //: Get the device name
-    char* getDeviceName() { return "vjPosition"; }
 
     /* New pure virtual functions */
     //: Get Position data

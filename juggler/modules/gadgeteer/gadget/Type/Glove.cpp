@@ -161,7 +161,7 @@ std::istream& vjGloveData::inputAngles(std::istream& in)
 vjGlove::vjGlove()
 {
    //vjDEBUG(vjDBG_INPUT_MGR,3)<<"*** vjGlove::vjGlove()\n"<< vjDEBUG_FLUSH;
-   deviceAbilities = deviceAbilities | DEVICE_GLOVE;
+
    for(int i=0;i<VJ_MAX_GLOVE_DEVS;i++)
       mGlovePos[i] = NULL;
 }

@@ -39,9 +39,9 @@
 #include <Input/vjGlove/vjPinchGlove.h> //vrjuggler pinch driver
 #include <Kernel/vjKernel.h>
 
-bool vjPinchGlove::config(vjConfigChunk *c)           
+bool vjPinchGlove::config(vjConfigChunk *c)
 {
-   if(!vjGlove::config(c))
+   if(! (vjInput::config(c) && vjGlove::config(c) ))
       return false;
 
     vjASSERT(myThread == NULL);      // This should have been set by vjInput(c)
@@ -54,7 +54,7 @@ bool vjPinchGlove::config(vjConfigChunk *c)
         strcpy(mCalDir,home_dir);
     }
     */
-      
+
     // already set in base interface.
     //std::string sPort = c->getProperty("port");
     std::string glove_pos_proxy = c->getProperty("glovePos");    // Get the name of the pos_proxy
@@ -67,6 +67,7 @@ bool vjPinchGlove::config(vjConfigChunk *c)
     }
 
     // init glove proxy interface
+    /*
     int proxy_index = vjKernel::instance()->getInputManager()->getProxyIndex(glove_pos_proxy);
     if(proxy_index != -1)
        mGlovePos[0] = vjKernel::instance()->getInputManager()->getPosProxy(proxy_index);
@@ -74,6 +75,7 @@ bool vjPinchGlove::config(vjConfigChunk *c)
        vjDEBUG(vjDBG_INPUT_MGR,0)
           << "[vjPinch] ERROR: fsPinchGlove::fsPinchGlove: Can't find posProxy."
           << std::endl << std::endl << vjDEBUG_FLUSH;
+          */
 
     mGlove = new fsPinchGlove();
 
@@ -90,7 +92,7 @@ int vjPinchGlove::startSampling()
 {
    vjDEBUG(vjDBG_INPUT_MGR, 0) << "[vjPinch] Begin sampling\n"
                                << vjDEBUG_FLUSH;
-   
+
    if (myThread == NULL)
    {
       resetIndexes();
@@ -123,40 +125,40 @@ void vjPinchGlove::controlLoop(void* nullParam)
 {
    vjDEBUG(vjDBG_INPUT_MGR, 0) << "[vjPinch] Entered control thread\n"
                                << vjDEBUG_FLUSH;
-   
+
    bool result = false;
    while (result == false)
-	{
-		vjDEBUG(vjDBG_INPUT_MGR, 0) << "[vjPinch] Connecting to "
+   {
+      vjDEBUG(vjDBG_INPUT_MGR, 0) << "[vjPinch] Connecting to "
                                             << sPort << "...\n"
                                             << vjDEBUG_FLUSH;
       result = mGlove->connectToHardware( sPort );
       if (result == false)
       {
          vjDEBUG(vjDBG_INPUT_MGR,0) << "[vjPinch] ERROR: Can't open or it is already opened." << vjDEBUG_FLUSH;
-	      usleep(14500);
+         usleep(14500);
       }
    }
 
    vjDEBUG(vjDBG_INPUT_MGR,0) << "[vjPinch] Successfully connected, Now sampling pinch data." << vjDEBUG_FLUSH;
-	      
-	while(1)
-	{
-		sample();
-	}
+
+   while(1)
+   {
+      sample();
+   }
 }
 
 //: Get the digital data for the given devNum
 //  Returns digital 0 or 1, if devNum makes sense.<BR>
 //  Returns -1 if function fails or if devNum is out of range.<BR>
-//  NOTE: If devNum is out of range, function will fail, possibly issueing 
-//  an error to a log or console - but will not ASSERT.<BR>   
+//  NOTE: If devNum is out of range, function will fail, possibly issueing
+//  an error to a log or console - but will not ASSERT.<BR>
 int vjPinchGlove::getDigitalData(int devNum)
 {
    // get the fakespace "gesture", it's a string like this "00000.00000"
    std::string gesture;
    mGlove->getSampledString( gesture );
-      
+
    // make sure the passed value is within range.
    if ((devNum >= 0) && ((unsigned)devNum <= gesture.size()))
    {
@@ -164,39 +166,39 @@ int vjPinchGlove::getDigitalData(int devNum)
       char character[2];
       character[0] = gesture[devNum];
       character[1] = '\0';
-      
+
       // convert the character to a number.
-      // TODO: what to do if the fsPinchGlove ever gives us something 
+      // TODO: what to do if the fsPinchGlove ever gives us something
       //       other than 0,1?
       int number = atoi( character ); //probably a better way to do this...
       return number;
-   } 
-   
+   }
+
    else
    {
       // DONT assert!  just notify system that there was a user error.
       // asserting could bring the system down, and that's bad.
       vjDEBUG(vjDBG_INPUT_MGR,0) << "[vjPinch] Assertion: application requested a digital ID out of range.  Valid range is [0.."<<gesture.size() <<"]\n"<< vjDEBUG_FLUSH;
    }
-   
+
    // function failed
    return -1;
 }
-   
+
 int vjPinchGlove::sample()
 {
     // Tell the glove to resample
     mGlove->updateStringFromHardware();
-    
+
     updateFingerAngles();
-	
+
     // Update the xform data
     mTheData[0][progress].calcXforms();
     mTheData[1][progress].calcXforms();
-	
+
     swapValidIndexes();
-    
-	 return 1;
+
+    return 1;
 }
 
 void vjPinchGlove::updateData()
@@ -245,7 +247,7 @@ void vjPinchGlove::updateFingerAngles()
     assert( progress < 3 && progress >= 0 );
     assert( LEFT_HAND < VJ_MAX_GLOVE_DEVS );
     assert( RIGHT_HAND < VJ_MAX_GLOVE_DEVS );
-    
+
     // use the digital data set the angles for each joint.
     right.setFingers( gesture[fsPinchGlove::RPINKY] == '1',
                      gesture[fsPinchGlove::RRING] == '1',
@@ -257,9 +259,9 @@ void vjPinchGlove::updateFingerAngles()
                      gesture[fsPinchGlove::LMIDDLE] == '1',
                      gesture[fsPinchGlove::LINDEX] == '1',
                      gesture[fsPinchGlove::LTHUMB] == '1' );
-              
+
     //Now, set the ugly ambiguously named array, mTheData:
-    
+
     // if that assert failed, then at least the code will still run...
     if ( RIGHT_HAND >= VJ_MAX_GLOVE_DEVS )
     {
@@ -297,7 +299,7 @@ void vjPinchGlove::updateFingerAngles()
        mTheData[RIGHT_HAND][progress].angles[vjGloveData::WRIST][vjGloveData::YAW] = right.yaw();
        mTheData[RIGHT_HAND][progress].angles[vjGloveData::WRIST][vjGloveData::PITCH] = right.pitch();
     }
-            
+
     // if that assert failed, then at least the code will still run...
     if ( LEFT_HAND >= VJ_MAX_GLOVE_DEVS )
     {

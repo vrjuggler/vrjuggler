@@ -38,51 +38,49 @@
 class vjDragon : public vjSpeech
 {
 public:
-	//: Construct using chunk
-	vjDragon();
+   //: Construct using chunk
+   vjDragon();
 
-	//: Destructor
-	~vjDragon();
-	
-	virtual std::string		getWord();
-	virtual int			getId();
-	virtual void			setMode( Mode mode );
-	virtual std::list<asdfjlk>&	getList();
-	virtual void			config();
+   //: Destructor
+   ~vjDragon();
 
-	enum Mode
-	{
-		DICTATE,COMMAND,ON,OFF
-	};
+   virtual std::string     getWord();
+   virtual int       getId();
+   virtual void         setMode( Mode mode );
+   virtual std::list<asdfjlk>&   getList();
+   virtual void         config();
+
+   enum Mode
+   {
+      DICTATE,COMMAND,ON,OFF
+   };
 
 
-	
-	class asdfjlk
-	{
-		std::string word;
-		int id;
-	};
-	
-	virtual char* getDeviceName() { return "vjDragon";}
 
-       virtual int startSampling();
-       virtual int stopSampling();
-       virtual int sample();
-       virtual void updateData();
+   class asdfjlk
+   {
+      std::string word;
+      int id;
+   };
+
+   virtual int startSampling();
+   virtual int stopSampling();
+   virtual int sample();
+   virtual void updateData();
 
 protected:
-	std::list<asdfjlk>	_wordQueue;
-	Mode				_currentMode;
+   std::list<asdfjlk>   _wordQueue;
+   Mode           _currentMode;
 
-	// Config chunck sets these.
-	std::string			_filename;
-	std::string			_dragonIP;
-	int					_dragonPort;
-	std::string			_user;
+   // Config chunck sets these.
+   std::string       _filename;
+   std::string       _dragonIP;
+   int               _dragonPort;
+   std::string       _user;
 
 protected:
-	void				startThread();
-	static void			controlLoop(vjDragon& currentInstance);
+   void           startThread();
+   static void       controlLoop(vjDragon& currentInstance);
 };
 
 inline int vjDragon::startSampling()
@@ -107,19 +105,19 @@ inline void vjDragon::updateData()
 
 inline void vjDragon::setMode( Mode mode )
 {
-	vjSpeech::setMode( mode );
-	
-	// TODO: tell dragon about the mode change.
+   vjSpeech::setMode( mode );
+
+   // TODO: tell dragon about the mode change.
 }
 
 //TODO: take a config chunck here.
 inline void vjDragon::config()
 {
-	_filename = "somefile.vjs";
-	_dragonIP = "129.186.232.70";
-	_dragonPort = 5600;
-	_user = "groucho";
+   _filename = "somefile.vjs";
+   _dragonIP = "129.186.232.70";
+   _dragonPort = 5600;
+   _user = "groucho";
 }
 
 
-#endif	/* _VJ_DRAGON_H_ */
+#endif   /* _VJ_DRAGON_H_ */

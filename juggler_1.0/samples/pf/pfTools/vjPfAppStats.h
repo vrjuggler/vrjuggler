@@ -253,7 +253,8 @@ void vjPfAppStats::setChanStatsState(pfChannel* chan)
    {
       mSharedData->mDrawStatsMode = mStatsMode;        // We want to draw stats now
 
-      int stats_enable;
+      int stats_enable(0);
+	  
       // Perfly stat modes
       if(mStatsMode == vjPfAppStats::FrameTime)
          stats_enable = PFFSTATS_ENPFTIMES;

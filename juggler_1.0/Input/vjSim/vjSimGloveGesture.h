@@ -35,7 +35,10 @@
 #define _VJ_SIM_GLOVE_GESTURE_H_
 
 #include <vjConfig.h>
+#include <Input/vjInput/vjInput.h>
+#include <Input/vjInput/vjDigital.h>
 #include <Input/vjGesture/vjGloveGesture.h>
+#include <Input/vjGlove/vjGlove.h>
 #include <Input/vjGesture/vjGesture.h>
 #include <Input/vjSim/vjSimInput.h>
 
@@ -47,7 +50,7 @@
 // By default the glove is in gesture 0
 //!PUBLIC_API:
 class vjSimGloveGesture
-   : virtual public vjGloveGesture, virtual public vjGlove, virtual public vjDigital, public vjSimInput
+   :  virtual public vjInput, public vjGloveGesture,  public vjGlove,  public vjDigital, public vjSimInput
 {
 public:
    //: Construct a vjSimGloveGesture
@@ -60,7 +63,7 @@ public:
    virtual int getGesture();
 
    virtual int getDigitalData(int devNum = 0);
-   
+
    //: Load trained data for the gesture object
    // Loads the file for trained data
    void loadTrainedFile(std::string fileName);
@@ -71,9 +74,7 @@ public:
 
    //: Update the device data
    void updateData ();
-   
-   //: Return our name
-   char* getDeviceName() { return "vjSimGloveGesture"; }
+
    static std::string getChunkType() { return std::string("SimGloveGesture");}
 
    /*** These are not supported in sim ***/

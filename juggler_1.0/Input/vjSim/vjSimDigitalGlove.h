@@ -36,6 +36,7 @@
 //#pragma once
 
 #include <vjConfig.h>
+#include <Input/vjInput/vjInput.h>
 #include <Input/vjGlove/vjPinchGlove.h>
 #include <Input/vjSim/vjSimInput.h>
 
@@ -51,12 +52,12 @@
 //
 // This class should not be used directly by the user.
 //!PUBLIC_API:
-class vjSimDigitalGlove : virtual public vjDigital, virtual public vjSimInput, virtual public vjGlove
+class vjSimDigitalGlove : virtual public vjInput, public vjDigital, public vjSimInput, public vjGlove
 {
 public:
    //: Default Constructor
    vjSimDigitalGlove();
-   
+
    //: Destructor
    virtual ~vjSimDigitalGlove();
 
@@ -67,17 +68,17 @@ public:
    //: Get the digital data for the given "finger"
    //  Returns digital 0 or 1, if "finger" makes sense.<BR>
    //  Returns -1 if function fails or if devNum is out of range.<BR>
-   //  NOTE: If devNum is out of range, function will fail, possibly issueing 
+   //  NOTE: If devNum is out of range, function will fail, possibly issueing
    //  an error to a log or console - but will not ASSERT.<BR><BR>
    //  Return Value: 0 == open, 1 == contact.
    //
    //  Use one of these indices to get the glove's digital data<BR>
    //  EX: int result = mGlove.getDigitalData( vjSimDigitalGlove::LTHUMB );
    //  NOTE: These should be the same integers as vjPinchGlove's
-   enum finger 
+   enum finger
    {
-	   LTHUMB = 0, LINDEX = 1, LMIDDLE = 2, LRING = 3, LPINKY = 4, 
-	   RTHUMB = 6, RINDEX = 7, RMIDDLE = 8, RRING = 9, RPINKY = 10
+      LTHUMB = 0, LINDEX = 1, LMIDDLE = 2, LRING = 3, LPINKY = 4,
+      RTHUMB = 6, RINDEX = 7, RMIDDLE = 8, RRING = 9, RPINKY = 10
    };
    // dev = finger (see finger enum above)
    virtual int getDigitalData( int dev = 0 )
@@ -88,20 +89,20 @@ public:
    }
 
    /* These functions don't do anything */
-   virtual int startSampling() 
-   { 
-     //vjDEBUG(vjDBG_ALL,3)<<"start\n"<<vjDEBUG_FLUSH; 
-     return 1; 
+   virtual int startSampling()
+   {
+     //vjDEBUG(vjDBG_ALL,3)<<"start\n"<<vjDEBUG_FLUSH;
+     return 1;
    }
-   virtual int stopSampling() 
-   { 
-     //vjDEBUG(vjDBG_ALL,3)<<"stop\n"<<vjDEBUG_FLUSH; 
-     return 1; 
+   virtual int stopSampling()
+   {
+     //vjDEBUG(vjDBG_ALL,3)<<"stop\n"<<vjDEBUG_FLUSH;
+     return 1;
    }
-   virtual int sample() 
-   { 
-     //vjDEBUG(vjDBG_ALL,3)<<"sample\n"<<vjDEBUG_FLUSH; 
-     return 1; 
+   virtual int sample()
+   {
+     //vjDEBUG(vjDBG_ALL,3)<<"sample\n"<<vjDEBUG_FLUSH;
+     return 1;
    }
 
    //: Update the data
@@ -109,25 +110,23 @@ public:
 
    void updateFingerAngles();
 
-   //: Get the name of the digital device
-   virtual char* getDeviceName() { return "vjSimDigitalGlove";}
    static std::string getChunkType() { return std::string("SimDigitalGlove");}
 
 // vjGesture stuff:
    //: Load trained data for the gesture object
    // Loads the file for trained data
    //void loadTrainedFile(std::string fileName);
-   
+
    //: Get the current gesture.
    //! RETURNS: id of current gesture
    //virtual int getGesture();
-   
+
 private:
    std::vector<int>          mDigitalData;   //: The digital data that we have
    std::vector<vjKeyModPair> mSimKeys;       //: The keys to press for digital simulation
 
-   vjHand                     mLeftHand, mRightHand;   
-   
+   vjHand                     mLeftHand, mRightHand;
+
    //int                     mCurGesture;   //: The current gesture id
 };
 

@@ -35,7 +35,7 @@
 
 bool vjSimRelativePosition::config(vjConfigChunk* chunk)
 {
-    if(!vjPosition::config(chunk))
+    if(! (vjInput::config(chunk) && vjPosition::config(chunk)))
       return false;
 
    // Initialize the positional devices

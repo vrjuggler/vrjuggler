@@ -37,7 +37,9 @@
 
 #include <vjConfig.h>
 #include <Input/vjInput/vjInput.h>
-#include <Input/InputManager/vjPosInterface.h>
+//#include <Input/InputManager/vjDeviceInterface.h>
+#include <Input/InputManager/vjPosProxy.h>
+#include <Math/vjVec3.h>
 #include <Math/vjMatrix.h>
 
 // TODO: 2 devs here is a hack until we make
@@ -118,9 +120,7 @@ public:
 
    // Let constructor take care of device abilities and init
    virtual bool config(vjConfigChunk* chunk)
-   {return vjInput::config(chunk);}
-
-   virtual char* getDeviceName() { return "vjGlove"; }
+   {return true;}
 
 public:  // ---- GLOVE INTERFACE ---- //
    //: Return the angle of the given joint.

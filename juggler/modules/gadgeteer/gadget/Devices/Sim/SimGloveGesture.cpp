@@ -74,6 +74,7 @@ bool vjSimGloveGesture::config(vjConfigChunk* chunk)
       return false;
    }
    // init glove proxy interface
+   /*
    int proxy_index = vjKernel::instance()->getInputManager()->getProxyIndex(glove_pos_proxy);
    if(proxy_index != -1)
       mGlovePos[0] = vjKernel::instance()->getInputManager()->getPosProxy(proxy_index);
@@ -81,6 +82,7 @@ bool vjSimGloveGesture::config(vjConfigChunk* chunk)
       vjDEBUG(vjDBG_INPUT_MGR,0)
          << "ERROR: vjSimGloveGesture::vjCyberGlove: Can't find posProxy."
          << std::endl << std::endl << vjDEBUG_FLUSH;
+   */
 
    // Set the indexes to defaults
    resetIndexes();
@@ -91,8 +93,8 @@ bool vjSimGloveGesture::config(vjConfigChunk* chunk)
 //: Get the digital data for the given devNum
 //  Returns digital 0 or 1, if devNum makes sense.<BR>
 //  Returns -1 if function fails or if devNum is out of range.<BR>
-//  NOTE: If devNum is out of range, function will fail, possibly issueing 
-//  an error to a log or console - but will not ASSERT.<BR>   
+//  NOTE: If devNum is out of range, function will fail, possibly issueing
+//  an error to a log or console - but will not ASSERT.<BR>
 int vjSimGloveGesture::getDigitalData(int devNum)
 {
    int openLookupTable[] = { 0,0,0,0,0,-1,0,0,0,0,0 };

@@ -42,10 +42,10 @@
 // Configures the ibox
 bool vjIBox::config(vjConfigChunk *c)
 {
-  if( (!vjAnalog::config(c)) || (!vjDigital::config(c)))
-     return false;
+  if(! (vjInput::config(c) && vjAnalog::config(c) && vjDigital::config(c) ))
+      return false;
 
-  vjDEBUG(vjDBG_INPUT_MGR,3) << "	vjIBox::config:" << std::endl
+  vjDEBUG(vjDBG_INPUT_MGR,3) << "   vjIBox::config:" << std::endl
                              << vjDEBUG_FLUSH;
   port_id = c->getProperty("portNum");
 
@@ -54,7 +54,7 @@ bool vjIBox::config(vjConfigChunk *c)
   //baudRate = c->getProperty("baud");
 
   vjDEBUG(vjDBG_INPUT_MGR,1) << "   Creating an IBox.. params: " << std::endl
-             << "	   portnum: " << port_id << std::endl
+             << "    portnum: " << port_id << std::endl
              << "        baud   : " << baudRate << std::endl
              << "   instanceName: " << instName << std::endl << std::endl
              << vjDEBUG_FLUSH;
@@ -94,20 +94,20 @@ int vjIBox::startSampling()
       result = ibox_connect(&thingie, port_id, baudRate);
       if (result == SUCCESS)
       {
-  	    active = 1;
-	    vjDEBUG(vjDBG_INPUT_MGR,1) << "     Connected to IBox.\n"
-	                               << std::flush << vjDEBUG_FLUSH;
+       active = 1;
+       vjDEBUG(vjDBG_INPUT_MGR,1) << "     Connected to IBox.\n"
+                                  << std::flush << vjDEBUG_FLUSH;
       }
       else
       {
-	    active = 0;
-	    vjDEBUG(vjDBG_INPUT_MGR,0)
-	       << "   FAILED TO CONNECT to the Ibox named " << instName
-	       << std::endl << "     Ibox settings were: " << std::endl
-	       << "	     port : " << port_id << std::endl
-	       << "	  baudRate: " << baudRate << std::endl << std::endl
-	       << vjDEBUG_FLUSH;
-	    return 0;
+       active = 0;
+       vjDEBUG(vjDBG_INPUT_MGR,0)
+          << "   FAILED TO CONNECT to the Ibox named " << instName
+          << std::endl << "     Ibox settings were: " << std::endl
+          << "      port : " << port_id << std::endl
+          << "   baudRate: " << baudRate << std::endl << std::endl
+          << vjDEBUG_FLUSH;
+       return 0;
       }
       hci_std_cmd(&thingie, 0,0,0);
 
@@ -117,9 +117,9 @@ int vjIBox::startSampling()
       myThread = new vjThread(sampleBox, (void*)devicePtr, 0);
       if (!myThread->valid())
          return 0; //fail
-      else 
+      else
       {
-	      return 1;
+         return 1;
       }
   }
   else return 0; // already sampling
@@ -161,33 +161,33 @@ int vjIBox::sample()
 
      result = hci_check_packet(&thingie);
      if (result == NO_PACKET_YET)
-	     ;
+        ;
      else if (result == SUCCESS)
      {
         hci_std_cmd(&thingie, 0,0,0);
-// 	if (c == 0) {
-// 	  gettimeofday(&tv,0);
-// 	  start_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
-// 	}
-// 	c++;
-// 	if (c == 60) {
-// 	  gettimeofday(&tv,0);
-// 	  stop_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
-// 	  std::cout << 1/((stop_time-start_time) / 60)
-// 	            << "  " << std::endl;
-// 	  c = 0;
-// 	}
+//    if (c == 0) {
+//      gettimeofday(&tv,0);
+//      start_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
+//    }
+//    c++;
+//    if (c == 60) {
+//      gettimeofday(&tv,0);
+//      stop_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
+//      std::cout << 1/((stop_time-start_time) / 60)
+//                << "  " << std::endl;
+//      c = 0;
+//    }
 
-	theData[progress].button[0] = thingie.button[0];
-	theData[progress].button[1] = thingie.button[1];
-	theData[progress].button[2] = thingie.button[2];
-	theData[progress].button[3] = thingie.button[3];
-	theData[progress].analog[0] = thingie.analog[0];
-	theData[progress].analog[1] = thingie.analog[1];
-	theData[progress].analog[2] = thingie.analog[2];
-	theData[progress].analog[3] = thingie.analog[3];
+   theData[progress].button[0] = thingie.button[0];
+   theData[progress].button[1] = thingie.button[1];
+   theData[progress].button[2] = thingie.button[2];
+   theData[progress].button[3] = thingie.button[3];
+   theData[progress].analog[0] = thingie.analog[0];
+   theData[progress].analog[1] = thingie.analog[1];
+   theData[progress].analog[2] = thingie.analog[2];
+   theData[progress].analog[3] = thingie.analog[3];
 
-	swapValidIndexes();     // Swap the buffers since we just read in a complete value
+   swapValidIndexes();     // Swap the buffers since we just read in a complete value
      }
      return 1;
 }
@@ -221,20 +221,20 @@ int vjIBox::stopSampling()
   float vjIBox::getAnalogData(int)
 
 *********************************************** bokbok? */
-//: Return "analog data".. 
+//: Return "analog data"..
 //  Gee, that's ambiguous especially on a discrete system such as a digital computer....
-//  
+//
 //! PRE: give the device number you wish to access.
 //! POST: returns a value that ranges from 0.0f to 1.0f
-//! NOTE: for example, if you are sampling a potentiometer, and it returns reading from 
+//! NOTE: for example, if you are sampling a potentiometer, and it returns reading from
 //        0, 255 - this function will normalize those values (using vjAnalog::normalizeMinToMax())
 //        for another example, if your potentiometer's turn radius is limited mechanically to return
 //        say, the values 176 to 200 (yes this is really low res), this function will still return
-//        0.0f to 1.0f. 
+//        0.0f to 1.0f.
 //! NOTE: to specify these min/max values, you must set in your vjAnalog (or analog device) config
-//        file the field "min" and "max".  By default (if these values do not appear), 
+//        file the field "min" and "max".  By default (if these values do not appear),
 //        "min" and "max" are set to 0.0f and 1.0f respectivly.
-//! NOTE: TO ALL ANALOG DEVICE DRIVER WRITERS, you *must* normalize your data using 
+//! NOTE: TO ALL ANALOG DEVICE DRIVER WRITERS, you *must* normalize your data using
 //        vjAnalog::normalizeMinToMax()
 float vjIBox::getAnalogData( int d )
 {

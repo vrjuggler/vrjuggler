@@ -40,23 +40,27 @@ bool vjGestureProxy::config(vjConfigChunk* chunk)
    vjDEBUG_BEGIN(vjDBG_INPUT_MGR,3) << "------------------ GESTURE PROXY config() -----------------\n" << vjDEBUG_FLUSH;
    vjASSERT(((std::string)chunk->getType()) == "GestureProxy");
 
-   int unitNum = chunk->getProperty("unit");
    std::string proxy_name = chunk->getProperty("name");
    std::string dev_name = chunk->getProperty("device");
 
-   int proxy_num = vjKernel::instance()->getInputManager()->addGestureProxy(dev_name,unitNum,proxy_name,this);
-
-   if ( proxy_num != -1)
+   vjInput* input_dev = vjKernel::instance()->getInputManager()->getDevice(dev_name);
+   if(NULL == input_dev)       // Not found, ERROR
    {
-      vjDEBUG_END(vjDBG_INPUT_MGR,3) << "   GestureProxy config()'ed"
-                                     << std::endl << vjDEBUG_FLUSH;
-      return true;
-   }
-   else
-   {
-      vjDEBUG(vjDBG_INPUT_MGR,3) << "   GestureProxy config() failed"
-                                 << std::endl << vjDEBUG_FLUSH;
-      vjDEBUG_END(vjDBG_INPUT_MGR,3) << std::endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_INPUT_MGR, vjDBG_CONFIG_LVL) << "vjGestureProxy::config: Could not find device: " << dev_name << std::endl << vjDEBUG_FLUSH;
       return false;
    }
+
+   vjGesture* gest_dev = dynamic_cast<vjGesture*>(input_dev);
+   if(NULL == gest_dev)
+   {
+      vjDEBUG(vjDBG_INPUT_MGR, vjDBG_CRITICAL_LVL) << "vjGestureProxy::config: Device was of wrong type: " << dev_name
+                                               << " type:" << typeid(input_dev).name() << std::endl << vjDEBUG_FLUSH;
+      return false;
+   }
+
+   vjDEBUG_CONT(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "   attaching to device named: " << dev_name.c_str() << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG_END(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << "   GestureProxy config()'ed" << std::endl << vjDEBUG_FLUSH;
+
+   set(gest_dev);    // Set the proxy
+   return true;
 }
