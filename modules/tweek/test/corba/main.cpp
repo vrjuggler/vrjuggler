@@ -31,10 +31,21 @@ int main (int argc, char* argv[])
                << vprDEBUG_FLUSH;
          }
 
+         std::cout << "Press 'x' to exit" << std::endl;
+         char input;
+
          // Loop forever so that we can act sort of like a server.
          while ( 1 )
          {
-            vpr::Thread::msleep(100);
+            std::cin >> input;
+            if ( input == 'x' )
+            {
+               break;
+            }
+            else
+            {
+               vpr::Thread::msleep(100);
+            }
          }
       }
       else
