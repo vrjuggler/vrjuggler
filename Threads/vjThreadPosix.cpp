@@ -78,7 +78,7 @@ vjThreadPosix::vjThreadPosix (vj_thread_func_t func, void* arg, long flags,
    int ret_val = spawn(start_functor, flags, priority, stack_addr,
                         stack_size);
 
-   if(!ret_val)
+   if(ret_val)
    {
       vj_tm_inst->lock();  // Need to lock thread manager before I register the thread with them
       {
@@ -111,7 +111,7 @@ vjThreadPosix::vjThreadPosix (vjBaseThreadFunctor* functorPtr, long flags,
     // NOTE: Automagically registers thread UNLESS failure
     int ret_val = spawn(start_functor, flags, priority, stack_addr, stack_size);
 
-    if(!ret_val)
+    if(ret_val)
     {
        vj_tm_inst->lock();  // Need to lock thread manager before I register the thread with them
        {
