@@ -624,7 +624,7 @@ case $SUBSYSTEM in
         subsystem_libs="$SEM_LIB $SOCKET_LIB"
         static_begin="-B static"
         static_end="-B dynamic"
-        vpr_ldflags="-L\$prefix/lib$LIBBITSUF"
+        vpr_ldflags="-L\$prefix/lib\$LIBBITSUF"
         vpr_libs='-lvpr'
         ;;
     POSIX)
@@ -641,7 +641,7 @@ case $SUBSYSTEM in
             fi
         fi
 
-        vpr_ldflags="-L\$prefix/lib$LIBBITSUF"
+        vpr_ldflags="-L\$prefix/lib\$LIBBITSUF"
         vpr_libs='-lvpr'
         ;;
     NSPR)
@@ -653,7 +653,7 @@ case $SUBSYSTEM in
         else
             subsystem_cxxflags="$INCLUDES"
             subsystem_libs="$NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
-            vpr_ldflags="-L\$prefix/lib$LIBBITSUF"
+            vpr_ldflags="-L\$prefix/lib\$LIBBITSUF"
             vpr_libs='-lvpr'
 
             if test "x$PLATFORM" != "xDarwin" ; then
@@ -673,6 +673,8 @@ vpr_extra_cxxflags=''
 vpr_extra_include_dirs=''
 
 if test "x$PLATFORM" = "xIRIX" ; then
+    vpr_n32_flags='-n32'
+    vpr_64_flags='-64'
     vpr_extra_include_dirs='boost/compatibility/cpp_c_headers'
 fi
 
@@ -724,6 +726,8 @@ AC_SUBST(vpr_extra_cxxflags)
 AC_SUBST(vpr_extra_include_dirs)
 AC_SUBST(vpr_extra_ldflags)
 AC_SUBST(vpr_extra_libs)
+AC_SUBST(vpr_n32_flags)
+AC_SUBST(vpr_64_flags)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.

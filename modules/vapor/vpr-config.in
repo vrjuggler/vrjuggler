@@ -51,6 +51,26 @@ vpr_libs="@vpr_libs@"
 
 vpr_extra_include_dirs="@vpr_extra_include_dirs@"
 
+vpr_default_abi="@ABI@"
+vpr_default_isa="@ISA@"
+vpr_n32_flags="@vpr_n32_flags@"
+vpr_64_flags="@vpr_64_flags@"
+LIBBITSUF='@LIBBITSUF@'
+
+if [ "x$vpr_default_abi" = "xN32" ]; then
+    vpr_abi_flags="$vpr_n32_flags"
+elif [ "x$vpr_default_abi" = "x64" ]; then
+    vpr_abi_flags="$vpr_64_flags"
+else
+    vpr_abi_flags=''
+fi
+
+if [ "x$vpr_default_isa" = "xmips3" -o "x$vpr_default_isa" = "xmips4" ]; then
+    vpr_isa_flags="-$vpr_default_isa"
+else
+    vpr_isa_flags=''
+fi
+
 prefix=@prefix@
 exec_prefix=@exec_prefix@
 exec_prefix_set=no
@@ -67,17 +87,18 @@ usage()
     cat <<EOF
 Usage: vpr-config [OPTIONS] [LIBRARIES]
 Options:
-        [--basedir]           Use \$VPR_BASE_DIR when printing paths
-        [--prefix[=DIR]]      Print the installation prefix or set an
-                              alternate prefix to use when printing paths
-        [--exec-prefix[=DIR]] Print the executable prefix or set an alternate
-                              executable prefix to use when printing paths
-        [--version]           Print the installed VPR's version number
-        [--libs]              Print the basic VPR libraries
-        [--extra-libs]        Print the extra linker options needed for
-                              making an executable
-        [--cxxflags]          Print the flags for the C++ compiler
-        [--subsystem]         Print the OS abstraction layer being used
+        [--basedir]             Use \$VPR_BASE_DIR when printing paths
+        [--prefix[=DIR]]        Print the installation prefix or set an
+                                alternate prefix to use when printing paths
+        [--exec-prefix[=DIR]]   Print the executable prefix or set an
+                                alternate executable prefix to use when
+                                printing paths
+        [--version]             Print the installed VPR's version number
+        [--libs [n32|64]]       Print the basic VPR libraries
+        [--extra-libs [n32|64]] Print the extra linker options needed for
+                                making an executable
+        [--cxxflags [n32|64]]   Print the flags for the C++ compiler
+        [--subsystem]           Print the OS abstraction layer being used
 Libraries:
         vpr
 EOF
@@ -122,15 +143,56 @@ while test $# -gt 0; do
             ;;
         --cxxflags)
             echo_cxxflags=yes
+            case $2 in
+                n32)
+                    vpr_extra_cxxflags="$vpr_extra_cxxflags $vpr_n32_flags $vpr_isa_flags"
+                    shift
+                    ;;
+                64)
+                    vpr_extra_cxxflags="$vpr_extra_cxxflags $vpr_64_flags $vpr_isa_flags"
+                    shift
+                    ;;
+                *)
+                    vpr_extra_cxxflags="$vpr_extra_cxxflags $vpr_abi_flags $vpr_isa_flags"
+                    ;;
+            esac
             ;;
         --subsystem)
             echo @SUBSYSTEM@
             ;;
         --libs)
             echo_libs=yes
+            case $2 in
+                n32)
+                    ldflags="$vpr_n32_flags $vpr_isa_flags"
+                    LIBBITSUF='32'
+                    shift
+                    ;;
+                64)
+                    ldflags="$vpr_64_flags $vpr_isa_flags"
+                    LIBBITSUF='64'
+                    shift
+                    ;;
+                *)
+                    ldflags="$vpr_abi_flags $vpr_isa_flags"
+                    ;;
+            esac
             ;;
         --extra-libs)
             echo_extra_libs=yes
+            case $2 in
+                --*)
+                    # This is another option flag, so leave it alone.
+                    ;;
+                n32)
+                    LIBBITSUF='32'
+                    shift
+                    ;;
+                64)
+                    LIBBITSUF='64'
+                    shift
+                    ;;
+            esac
             ;;
         --static)
             echo_static=yes
@@ -178,9 +240,9 @@ if test "$echo_libs" = "yes"; then
     my_subsystem_libs=
 
     if test "$use_base_dir" = "yes"; then
-        ldflags="-L$VPR_BASE_DIR/lib@LIBBITSUF@"
+        ldflags="$ldflags -L$VPR_BASE_DIR/lib$LIBBITSUF"
     else
-        ldflags="@vpr_ldflags@"
+        ldflags="$ldflags @vpr_ldflags@"
     fi
 
     for i in $subsystem_libs ; do
