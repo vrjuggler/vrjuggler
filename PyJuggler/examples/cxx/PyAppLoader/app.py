@@ -159,5 +159,5 @@ class SimpleGlApp(vrj.GlApp):
 #      glEnable(GL_COLOR_MATERIAL)
       glShadeModel(GL_SMOOTH)
 
-def vrjInit():
-   return SimpleGlApp()
+#def vrjInit():
+#   return SimpleGlApp()

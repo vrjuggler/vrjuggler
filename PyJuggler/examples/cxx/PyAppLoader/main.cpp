@@ -46,8 +46,8 @@ class AppHolder
 {
 public:
    AppHolder(vrj::App* app, python::object srcObj, python::handle<> module,
-             python::handle<> initFunc)
-      : mApp(app), mSrcObj(srcObj), mModule(module), mInitFunc(initFunc)
+             python::object appClassk)
+      : mApp(app), mSrcObj(srcObj), mModule(module), mAppClass(appClassk)
    {
    }
 
@@ -64,7 +64,7 @@ private:
    vrj::App*        mApp;
    python::object   mSrcObj;
    python::handle<> mModule;
-   python::handle<> mInitFunc;
+   python::object   mAppClass;
 };
 
 
@@ -125,54 +125,42 @@ int main(int argc, char* argv[])
          i != module_names.end();
          ++i )
    {
-      std::cout << "Working on module named '" << *i << "'" << std::endl;
+      std::string::size_type sep((*i).rfind("."));
+      const std::string mod_name((*i).substr(0, sep));
+      const std::string class_name((*i).substr(sep + 1, (*i).length()));
+      
+      std::cout << "Working on module named '" << mod_name << "'" << std::endl;
 
       try
       {
-         python::handle<> cur_name(PyString_FromString((*i).c_str()));
+         python::handle<> cur_name(PyString_FromString(mod_name.c_str()));
 
          std::cout << "--- Attempting to import module" << std::endl;
          python::handle<> cur_module(PyImport_Import(cur_name.get()));
 
          std::cout << "--- Getting dictionary" << std::endl;
-         python::handle<> dict(python::borrowed(PyModule_GetDict(cur_module.get())));
+         python::object dict(python::borrowed(PyModule_GetDict(cur_module.get())));
 
-         std::cout << "--- Looking up vrjInit in dictionary" << std::endl;
-         python::handle<> init_func(python::borrowed(PyDict_GetItemString(dict.get(), "vrjInit")));
+         std::cout << "--- Looking up '" << class_name << "' in dictionary"
+                   << std::endl;
 
-         if ( PyCallable_Check(init_func.get()) )
+         // Look up the class name in the dictionary, get an instance of the
+         // class, and convert it to a vrj::App*.
+         // Isn't this cool?!?  The answer is: yes.  :)
+         python::object app_class = dict[class_name];
+         python::object app_obj = app_class();
+         vrj::App* cur_app = python::extract<vrj::App*>(app_obj);
+
+         if ( NULL != cur_app )
          {
-            std::cout << "--- Calling vrjInit" << std::endl;
-
-            try
-            {
-               python::object app_obj =
-                  python::call<python::object>(init_func.get());
-               vrj::App* cur_app = python::extract<vrj::App*>(app_obj);
-
-               if ( NULL != cur_app )
-               {
-                  std::cout << "--- Storing object reference" << std::endl;
-
-                  apps.push_back(AppHolder(cur_app, app_obj, cur_module,
-                                           init_func));
-               }
-               else
-               {
-                  PyErr_Print();
-                  std::cerr << "ERROR: Could not get application reference\n";
-               }
-            }
-            catch (...)
-            {
-               PyErr_Print();
-               std::cerr << "ERROR: Caught exception trying to execute vrjInit()\n";
-            }
+            std::cout << "--- Storing object reference" << std::endl;
+            apps.push_back(AppHolder(cur_app, app_obj, cur_module,
+                                     app_class));
          }
          else
          {
             PyErr_Print();
-            std::cerr << "ERROR: Did not find function vrjInit\n";
+            std::cerr << "ERROR: Could not get application reference\n";
          }
       }
       catch(python::error_already_set)
