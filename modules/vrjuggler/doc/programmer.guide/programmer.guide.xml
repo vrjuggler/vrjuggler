@@ -15,7 +15,7 @@
   <part id="part.intro">
     <title>Introduction</title>
 
-    <chapter id="chatper.getting.started">
+    <chapter id="chapter.getting.started">
       <title>Getting Started</title>
 
       <para>In this book, we present a <quote>how-to</quote> for writing VR
@@ -636,9 +636,12 @@ int main(int argc, char* argv[])
             <para>This member function is for any graphics API-specific
             initialization required by the application. Data members that
             cannot be initialized until after the graphics API is started
-            should be initialized here.<note><para>In OpenGL, there is no
-            concept of initializing the API, so this method is normally empty
-            in such applications.</para></note></para>
+            should be initialized here.</para>
+
+            <note>
+              <para>In OpenGL, there is no concept of initializing the API, so
+              this method is normally empty in such applications.</para>
+            </note>
 
             <section>
               <title>Timing</title>
@@ -796,7 +799,7 @@ int main(int argc, char* argv[])
           the most important element of the interface. More details about the
           <classname>vrj::GlApp</classname><indexterm><primary>classes</primary><secondary>vrj::GlApp</secondary></indexterm>
           class are provided in <xref linkend="section.opengl.apps" />, found
-          in <xref linkend="chatper.writing.apps" />.</para>
+          in <xref linkend="chapter.writing.apps" />.</para>
 
           <figure id="figure.vrj.GlApp">
             <title><classname>vrj::GlApp</classname> interface extensions to
@@ -885,7 +888,7 @@ int main(int argc, char* argv[])
           only two methods in the <classname>vrj::PfApp</classname><indexterm><primary>classes</primary><secondary>vrj::PfApp</secondary></indexterm>
           interface. More detailed discussion on this class is provided in
           <xref linkend="section.pf.apps" />, found in <xref
-          linkend="chatper.writing.apps" />.</para>
+          linkend="chapter.writing.apps" />.</para>
 
           <figure id="figure.vrj.PfApp">
             <title><classname>vrj::PfApp</classname> interface extensions to
@@ -2949,7 +2952,7 @@ head_mat = head-&#62;getData();</programlisting>
   <part id="app.programming.part">
     <title>Application Programming</title>
 
-    <chapter id="chatper.writing.apps">
+    <chapter id="chapter.writing.apps">
       <title>Writing Applications</title>
 
       <indexterm>
@@ -2978,7 +2981,7 @@ head_mat = head-&#62;getData();</programlisting>
           <title>Basic Application Information</title>
 
           <para>As described in previous chapters (see <xref
-          linkend="chatper.getting.started" />, for example), all VR Juggler
+          linkend="chapter.getting.started" />, for example), all VR Juggler
           applications derive from a base application object class (<classname>vrj::App</classname><indexterm><primary>classes</primary><secondary>vrj::App</secondary></indexterm>).
           This class defines the basic interface that VR Juggler expects from
           all application objects. This means that when constructing an
@@ -3770,11 +3773,14 @@ userApp::draw()
             member, use the <classname>vrj::GlContextData&#60;T&#62;</classname><indexterm><primary>classes</primary><secondary>vrj::GlContextData&#60;T&#62;</secondary></indexterm>
             template class and pass the <quote>true</quote> type of the
             variable to the template definition. From then on, it can be
-            treated as a normal pointer.<note><para>The types that are used
-            for context-specific data must provide default constructors. The
-            user cannot directly call the constructor for the data item
-            because VR Juggler has to allocate new items on the fly as new
-            contexts are created.</para></note></para>
+            treated as a normal pointer.</para>
+
+            <note>
+              <para>The types that are used for context-specific data must
+              provide default constructors. The user cannot directly call the
+              constructor for the data item because VR Juggler has to allocate
+              new items on the fly as new contexts are created.</para>
+            </note>
           </section>
 
           <section>
@@ -3955,8 +3961,9 @@ userApp::draw()
 
             <mediaobject>
               <imageobject>
-                <imagedata align="center" fileref="JugglerOGLSystemChart.png"
-                format="PNG" scalefit="1" />
+                <imagedata align="center"
+                fileref="figures/JugglerOGLSystemChart.png" format="PNG"
+                scalefit="1" />
               </imageobject>
             </mediaobject>
           </figure>
@@ -4219,9 +4226,13 @@ void contextApp::draw()
           is straightforward, its implementation can be very simple. A typical
           implementation will have a single statement that returns a member
           variable that holds a pointer to the application scene graph root
-          node.<note><para>Make sure that the node returned is
-          <emphasis>not</emphasis> a <classname>pfScene</classname> object. If
-          it is, then lighting will not work.</para></note></para>
+          node.</para>
+
+          <note>
+            <para>Make sure that the node returned is <emphasis>not</emphasis>
+            a <classname>pfScene</classname> object. If it is, then lighting
+            will not work.</para>
+          </note>
 
           <section>
             <title>Possible Misuses</title>
@@ -4942,7 +4953,7 @@ id="OpenSGNav.add.light.co" linkends="OpenSGNav.add.light.desc" />
       </section>
     </chapter>
 
-    <chapter id="chatper.porting.CAVElib">
+    <chapter id="chapter.porting.CAVElib">
       <title>Porting to VR Juggler from the <trademark>CAVElib</trademark></title>
 
       <indexterm>
@@ -5733,7 +5744,7 @@ int main(int argc, char* argv[])
       understand.</para>
     </chapter>
 
-    <chapter id="chatper.multi-threading">
+    <chapter id="chapter.multi-threading">
       <title>Multi-threading</title>
 
       <indexterm>
