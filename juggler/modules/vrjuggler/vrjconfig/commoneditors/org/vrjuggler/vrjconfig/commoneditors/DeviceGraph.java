@@ -55,6 +55,7 @@ import org.jgraph.util.JGraphUtilities;
 import org.vrjuggler.jccl.config.*;
 
 import org.vrjuggler.vrjconfig.commoneditors.devicegraph.*;
+import org.vrjuggler.vrjconfig.commoneditors.devicegraph.extras.*;
 
 
 /**
@@ -112,6 +113,10 @@ public class DeviceGraph
       // Override the creators for specific device types.
       factory.registerCreator(repos.get(SIM_POS_DEVICE_TYPE),
                               JGraphRoundRectView.class);
+      factory.registerCreator(repos.get(INTERSENSE_TYPE),
+                              IntersenseVertexView.class);
+      factory.registerCreator(repos.get(INTERSENSE_API_TYPE),
+                              IntersenseVertexView.class);
 
       // Proxy types.
       List proxy_types = ConfigUtilities.getDefinitionsOfType(all_defs,
