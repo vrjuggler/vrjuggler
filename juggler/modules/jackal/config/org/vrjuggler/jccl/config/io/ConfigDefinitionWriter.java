@@ -135,7 +135,7 @@ public class ConfigDefinitionWriter
       Element root = new Element(DEFINITION, DEF_NS);
       root.setAttribute(NAME, name);
       root.setAttribute(ICON_PATH, icon_path);
-      root.setAttribute(SCHEMA_LOCATION, DEF_NS_str, XSI_NS);
+      root.setAttribute(SCHEMA_LOCATION, DEF_NS_str + " " + DEF_SCHEMA, XSI_NS);
       doc.setRootElement(root);
 
       return doc;
