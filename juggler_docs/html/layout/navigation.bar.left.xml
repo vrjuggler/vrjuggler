@@ -25,21 +25,21 @@ Builder: JExplorerBuilder V 1. 0. 7
     </folder>
 
     < item title="User Community" link="contact.info/usercommunity.html"  info="Can't find it in the Books?  Reach out and ask someone." image="Chat.gif" >
-    < item title="SourceForge" link="${JUGGLER_SOURCEFORGE}" target="NewWindow" rtarget="Body" info="Check out the Juggler page at sourceforge" image="sourceforge.icon.gif" >
     < item title="Download" link="download/index.html" info="Download VR Juggler library in source or binary form." image="Inbox.gif" >
 
     < item title="Features" link="${MISC}/features.html"  info="List of Juggler features: present and future" image="Leaf_Script.gif" >
     < item title="History" link="${MISC}/history.html"  info="Project History" image="Leaf.gif" >
     < folder title="Bugs" link="${BUGS}/bugs.html"  info="Find something wrong with Juggler?  Let us know, submit a bug report." image="Bug.gif" >
-                < item title="Juggler" link="${BUGS}/known.bugs.juggler.html"  info="A list of known Check this list of known bugs." image="Leaf.gif" >
-                < item title="VJControl" link="${BUGS}/known.bugs.vjcontrol.html"  info="Check this list of known bugs." image="Leaf.gif" >
-                < item title="Report Bugs" link="${JUGGLERBUGS}"  info="Let us know, submit a bug report." image="Inbox.gif" >
+                < item title="Juggler" link="${JUGGLERBUGS}"  target="_top" info="A list of known Check this list of known bugs." image="Leaf.gif" >
+                < item title="VJControl" link="${VJCONTROLBUGS}"  target="_top" info="Check this list of known bugs." image="Leaf.gif" >
+                < item title="Submit Bugs" link="${SUBMITBUGS}"  target="_top" info="Let us know, submit a bug report." image="Inbox.gif" >
     </folder>
 
     < folder title="Legal" link="${LEGAL}/index.html"  info="Your Rights" image="Leaf_Script2.gif" >
                 < item title="Juggler License (LGPL)" link="${LEGAL}/LGPL.html"  info="The LGPL license used for VR Juggler." image="Leaf.gif" >
                 < item title="Documentation License (GPL)" link="${LEGAL}/GPL.html" info="The GPL license used for VR Juggler documentation." image ="Leaf.gif" >
     </folder>
+    < item title="--SourceForge" link="${JUGGLER_SOURCEFORGE}" target="NewWindow" rtarget="Body" info="Check out the Juggler page at sourceforge" image="sourceforge.icon.gif" >
     </font>
     
     <!--

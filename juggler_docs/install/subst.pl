@@ -72,7 +72,9 @@ $alias_subst{"JUGGLER_SOURCEFORGE_IMAGE"} = 'http://sourceforge.net/sflogo.php?g
 $alias_subst{"NEW_WINDOW"} = 'NewWindow';
 
 # Juggler bug submission program
-$alias_subst{"JUGGLERBUGS"} = 'http://www.icemt.iastate.edu/juggler-bugs/';
+$alias_subst{"JUGGLERBUGS"} = 'https://sourceforge.net/bugs/?group_id=8041';
+$alias_subst{"VJCONTROLBUGS"} = 'https://sourceforge.net/bugs/index.php?group_id=8041&set=custom&_assigned_to=100&_status=1&_category=2959&_bug_group=100&SUBMIT=Browse';
+$alias_subst{"SUBMITBUGS"} = 'https://sourceforge.net/bugs/?func=addbug&group_id=8041';
 
 # Contact information
 $alias_subst{"ALLENB"} = 'http://www.vrac.iastate.edu/~allenb';
@@ -121,6 +123,7 @@ $alias_subst{"PERFORMERBOOK"} = 'http://techpubs.sgi.com';
 # Miscellaneous
 $alias_subst{'CONFIGURE_REV'} = '1.182';
 $alias_subst{'CURRENT_JUGGLER_VERSION'} = '0.1.95';
+$alias_subst{"SIGGRAPH"} = 'http://www.siggraph.org';
 
 # Time of posting
 require "ctime.pl";
