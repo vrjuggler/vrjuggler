@@ -42,7 +42,7 @@ public:
    //: Start the Kernel running
    int start();
 
-   //: Setup all the managers and load the config information
+   //: Load initial configuration data
    void initConfig();
 
    //: The Kernel loop
@@ -64,17 +64,23 @@ public:
       return 1;
    }
 
+public:  // --- Config interface --- //
+   void config(vjConfigChunkDB* chunkDB);
+   void configRemove(vjConfigChunkDB* chunkDB);
+   vjConfigChunkDB* getChunkDB()
+   { return chunkDB; }
+
 protected:
    //: Updates any data that needs updated once a frame (Trackers, etc.)
    //! POST: All tracker data is ready for next frame
    void updateFrameData();
 
 protected:      // --- STARTUP ROUTINES --- //
-   /* Load configuration d;ata for Kernel
+   /* Load configuration data for Kernel
     * POST: Config data has been read in
     *       All Managers are configured
     */
-   void loadConfig();
+   void loadConfigFile();
 
       // --- Manager setup functions ---- //
    void setupInputManager();
@@ -109,7 +115,7 @@ protected:
 
    /// Config Stuff
    vjChunkDescDB*    configDesc;
-   vjConfigChunkDB*  chunkDB;
+   vjConfigChunkDB*  mChunkDB;            //: The current chunk db for the system
    string            mProgramConfigFile;  //: Config file specified by program
 
    /// Shared Memory stuff

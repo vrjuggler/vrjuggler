@@ -8,7 +8,7 @@ class vjDisplayManager;		    // Because prev include includes us
 
 #include <Math/vjVec3.h>
 #include <Input/vjPosition/vjPosition.h>
-//#include <Kernel/vjSimulator.h>
+#include <Input/InputManager/vjPosInterface.h>
 class vjSimulator;
 
     // Config stuff
@@ -16,9 +16,9 @@ class vjSimulator;
 
 //---------------------------------------------------------------------
 //: Base class for Display windows.
-// 
+//
 //	Responsible for encapsulating all display window information.
-//  Since this captures all machine/OS/Window System specific stuff, 
+//  Since this captures all machine/OS/Window System specific stuff,
 //  no API specific details should be added to this area.  API specific
 //  window information should stay in the DrawManager which is API
 //  specific.
@@ -31,7 +31,6 @@ class vjSimulator;
 class vjDisplay
 {
 public:
-      // Clients can't create directly.  Must go through System Factory.
    vjDisplay();
 
    enum DisplayType { PROJ, SIM};      // What type of display is it
@@ -72,21 +71,20 @@ public:
    void setOriginAndSize(int xo, int yo, int xs, int ys)
    { _xo = xo; _yo = yo; _xs = xs; _ys = ys;}
    void originAndSize(int& xo, int& yo, int& xs, int& ys)
-   { xo = _xo; yo = _yo; xs = _xs; ys = _ys;} 
+   { xo = _xo; yo = _yo; xs = _xs; ys = _ys;}
 
    void setPipe(int pipe)
    { mPipe = pipe; }
    int pipe()
-   { return mPipe; } 
+   { return mPipe; }
 
    vjConfigChunk* configChunk()
    { return displayChunk; }
 
       //: Updates the projection data for this display
-      //    Normally just calls the projection class, 
-      // But in some API's there may be more involved.
-      // Ex. Performer updates the channels attributes
-   void updateProjections(vjMatrix& leftEyePos, vjMatrix& rightEyePos);
+      //    Normally just calls the projection class
+      // Uses the data for the head position for this window
+   void updateProjections();
 
 
    friend ostream& operator<<(ostream& out, vjDisplay& disp);
@@ -97,18 +95,20 @@ public:
    vjProjection*   rightProj;             // Right eye
    vjProjection*   cameraProj;            // Camera projection. (For sim, etc.)
 
-   vjSimulator*   mSim;                   // Simulator. if we are one.
+   vjSimulator*      mSim;                // Simulator. if we are one.
+   vjPosInterface    mHeadInterface;      //: The proxy interface for the head
+
 
 protected:
    DisplayType mType;                  //: The type of display
-   char        mName[100];             //: Name of the display  
+   char        mName[100];             //: Name of the display
    int         _xo, _yo, _xs, _ys;     //: X and Y origin and size of the view
    bool        mBorder;                //: Should we have a border
    int         mPipe;                  //: Hardware pipe. Index of the rendering hardware
    bool        mStereo;                //: Do we want stereo
 
    vjConfigChunk* displayChunk;        //: The chunk data for this display
-      
+
    //vjDisplayManager* dispMgr;       //: My parent DisplayManager.  Needed to get headPostion on update.
 };
 

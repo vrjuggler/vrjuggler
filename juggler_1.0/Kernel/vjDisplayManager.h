@@ -25,13 +25,13 @@ class vjDisplay;
 
 //-----------------------------------------------------------------------------
 //: Singleton Container class for all vjDisplays.
-// 
+//
 // PURPOSE:
 //	This class is responsible for holding the data about display aspects
 //  of the application.  The displays themselves may be machine/OS specific,
 //  but this class should be able to run for all configurations.  This
 //  includes all machine/OS specific aspects.  For now that basically means
-//  simply tracking window data. 
+//  simply tracking window data.
 //
 // @author Allen Bierbaum
 //  Date: 9-7-97
@@ -39,7 +39,7 @@ class vjDisplay;
 class vjDisplayManager
 {
 public:
-   // 
+   //
    virtual int addDisplay(vjDisplay* disp, int notifyDrawMgr = 0);
 
    virtual int closeDisplay(int dispId);
@@ -51,19 +51,11 @@ public:
 
    void setDrawManager(vjDrawManager* drawMgr);
 
-   //: Setup the head index data
-   //!NOTE: should be called by Kernel when head should be setup
-   void setupHeadIndices();
-   
 public:
-   vector<vjDisplay*>  displays;    //: List of displays currently operating    
+   vector<vjDisplay*>  displays;    //: List of displays currently operating
 
 protected:
    vjDrawManager*  drawManager;     //: The current drawManager to communicate with
-
-   // --- Information about the head --- //
-   vjPosInterface    mHeadInterface;   //: The proxy index for the head
-   vjMatrix          curHeadPos;       //: Keep cached pos here
 
 
    // ---- Singleton stuff ---- //

@@ -39,8 +39,8 @@ void vjKernel::initConfig()
    vjSharedPool::init();         // Try to init the pool stuff
    sharedMemPool = new vjSharedPool(1024*1024);      // XXX: should not be system specific
 
-   // --- Read config stuff --- //
-   loadConfig();
+   // --- Read default config file --- //
+   loadConfigFile();
 
    setupInputManager();
 
@@ -92,8 +92,19 @@ void vjKernel::updateFrameData()
    drawManager->updateProjections();
 }
 
+//---------------------------------
+// Config routines
+//---------------------------------
+void vjKernel::config(vjConfigChunkDB* chunkDB)
+{
+   // Config input manager
+   // Config display manager
+   // Config draw manager
+   // Update config database
+}
+
 // --- STARTUP ROUTINES --- //
-void vjKernel::loadConfig()
+void vjKernel::loadConfigFile()
 {
    vjDEBUG(5) << "   vjKernel::loadConfig:\n" << vjDEBUG_FLUSH;
 
@@ -184,9 +195,6 @@ void vjKernel::setupDisplayManager()
       vjDEBUG(0) << "Display: " << i << endl
                  << *newDisp << endl << flush << vjDEBUG_FLUSH;
    }
-
-      // Tell Display manager to look for head
-   displayManager->setupHeadIndices();
 
    vjDEBUG_END(0) << "------- vjKernel::setupDisplayManager --------\n" << vjDEBUG_FLUSH;
 }
