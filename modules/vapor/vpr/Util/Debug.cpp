@@ -111,7 +111,7 @@ Debug::Debug()
                 << std::flush;
       std::cout << "VPR_DEBUG_ENABLE: Defaults to " << mDebugEnabled
                 << std::endl << std::flush;
-   }   
+   }
 }
 
 void Debug::init()
@@ -129,11 +129,6 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level, c
                                const bool use_indent, const int indentChange,
                                const bool lockStream)
 {
-   if(indentChange < 0)                // If decreasing indent
-      indentLevel += indentChange;
-
-   vprASSERT(indentLevel >= 0 && "Decreased indent below 0, look for bad code");   
-
    // Lock the stream
 #ifdef LOCK_DEBUG_STREAM
    if(lockStream)
@@ -141,6 +136,11 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level, c
       debugLock().acquire();     // Get the lock
    }
 #endif
+
+   if(indentChange < 0)                // If decreasing indent
+      indentLevel += indentChange;
+
+   vprASSERT(indentLevel >= 0 && "Decreased indent below 0, look for bad code");
 
    // --- Create stream header --- //
    // If we have thread local stuff to do
@@ -228,7 +228,7 @@ void Debug::addCategory(const vpr::DebugCategory& catId)
       std::cout << "\nAdding category named [" << catId.mName << "]  -- prefix: " << catId.mPrefix <<  " -- guid: " << catId.mGuid
                << " to debug categories:" << &mCategories << " size: " << mCategories.size() << std::endl;
    }
-   mCategories.insert( std::pair<vpr::GUID,CategoryInfo>(catId.mGuid, 
+   mCategories.insert( std::pair<vpr::GUID,CategoryInfo>(catId.mGuid,
                                                          CategoryInfo(catId.mName, catId.mPrefix, false, false)));
    if(getLevel() > 4)
    {
@@ -245,7 +245,7 @@ void Debug::addCategory(const vpr::DebugCategory& catId)
 bool Debug::isCategoryAllowed(const vpr::DebugCategory& catId)
 {
    bool allow_category(false);
-   
+
    // Make sure category is in the vector
    Debug::category_map_t::iterator cat = mCategories.find(catId.mGuid);
 
@@ -256,11 +256,11 @@ bool Debug::isCategoryAllowed(const vpr::DebugCategory& catId)
       cat = mCategories.find(catId.mGuid);
    }
 
-   vprASSERT(cat != mCategories.end() && "Auto-register failed");    // ASSERT: We have a valid category 
+   vprASSERT(cat != mCategories.end() && "Auto-register failed");    // ASSERT: We have a valid category
 
    Debug::category_map_t::iterator cat_all = mCategories.find(vprDBG_ALL.mGuid);
-   vprASSERT(cat_all != mCategories.end());    // ASSERT: We have a valid category 
-      
+   vprASSERT(cat_all != mCategories.end());    // ASSERT: We have a valid category
+
    // If I specified to listen to all OR
    // If it has category of ALL
    bool cat_is_all = (catId.mGuid == vprDBG_ALL.mGuid);
@@ -306,19 +306,19 @@ void Debug::updateAllowedCategories()
    Debug::category_map_t::iterator cat_all = mCategories.find(vprDBG_ALL.mGuid);
 
    if(cat_all == mCategories.end())
-   { 
+   {
       addCategory(vprDBG_ALL);
       cat_all = mCategories.find(vprDBG_ALL.mGuid);
    }
    vprASSERT(!mCategories.empty() && "Empty category list");
-   vprASSERT((cat_all != mCategories.end()) && "Could not find vprDBG_ALL in category list");    // ASSERT: We have a valid category 
+   vprASSERT((cat_all != mCategories.end()) && "Could not find vprDBG_ALL in category list");    // ASSERT: We have a valid category
 
    // --- Setup allowed categories --- //
    // - If we have categories env var
    //    - Disable auto-showing of all
    //    - For each current category
    //       - Check if it should be enabled
-   if(dbg_allow_cats_env != NULL)               
+   if(dbg_allow_cats_env != NULL)
    {
      (*cat_all).second.mAllowed = false;       // Disable the showing of all for now
 
@@ -360,15 +360,15 @@ void Debug::updateAllowedCategories()
          std::cout << "   vprDEBUG::VPR_DEBUG_ALLOW_CATEGORIES not found:\n"
                   << " Setting to: vprDBG_ALL!" << std::endl << std::flush;
       }
-      (*cat_all).second.mAllowed = true;       // Enable the showing of all for now      
-   }   
+      (*cat_all).second.mAllowed = true;       // Enable the showing of all for now
+   }
 
    // --- Setup dis-allowed categories --- //
    if(dbg_disallow_cats_env != NULL)
    {
       if(getLevel() > 2)
       {
-         std::cout << "   vprDEBUG::Found VPR_DEBUG_DISALLOW_CATEGORIES: Updating dis-allowed categories. (If blank, then none dis-allowed.)\n" << std::flush;         
+         std::cout << "   vprDEBUG::Found VPR_DEBUG_DISALLOW_CATEGORIES: Updating dis-allowed categories. (If blank, then none dis-allowed.)\n" << std::flush;
       }
 
       std::string dbg_disallow_cats(dbg_disallow_cats_env);
@@ -403,10 +403,10 @@ void Debug::updateAllowedCategories()
    {
       if(getLevel() > 2)
       {
-         std::cout << "   vprDEBUG::VPR_DEBUG_DISALLOW_CATEGORIES not found." << std::flush;      
+         std::cout << "   vprDEBUG::VPR_DEBUG_DISALLOW_CATEGORIES not found." << std::flush;
       }
-   } 
-   
+   }
+
 }
 
 
@@ -445,7 +445,7 @@ void Debug::debugDump()
       std::cout << "    cat [" << (*i).first << "]  "
                 << " name [" << cat_info.mName << "]  "
                 << " prefix [" << cat_info.mPrefix << "]  "
-                << " allowed [" << cat_info.mAllowed << "] " 
+                << " allowed [" << cat_info.mAllowed << "] "
                 << " disallowed [" << cat_info.mDisallowed << "] " << std::endl;
    }
 
