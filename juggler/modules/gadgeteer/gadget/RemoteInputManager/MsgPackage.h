@@ -132,7 +132,7 @@ namespace gadget
       * @param manager_id  local manager ID
       *
       */
-      bool  createHandshake(bool send_reject, const std::string& host, const vpr::Uint16& port, std::string manager_id);
+      bool  createHandshake(bool send_reject, const std::string& host, const vpr::Uint16& port, std::string manager_id, bool sync);
 
      /**
       * Receives that data from a hanshake packet.
@@ -143,7 +143,7 @@ namespace gadget
       * @param newStream            socket stream to listen on
       * 
       */
-      bool  receiveHandshake(std::string& receivedHostname, vpr::Uint16& receivedPort,std::string& received_manager_id, vpr::SocketStream* newStream);
+      bool  receiveHandshake(std::string& receivedHostname, vpr::Uint16& receivedPort,std::string& received_manager_id, vpr::SocketStream* newStream,bool& sync);
 
      /**
       * Creates a device request packet
