@@ -41,8 +41,8 @@
 #include <gadget/Type/GloveProxy.h>
 #include <gadget/Type/GestureProxy.h>
 #include <gadget/Type/EventWindowProxy.h>
-#include <gadget/Type/SpeechRecogDigitalProxy.h>
-#include <gadget/Type/SpeechRecogStringProxy.h>
+#include <gadget/Type/CommandProxy.h>
+#include <gadget/Type/StringProxy.h>
 #include <gadget/ProxyDepChecker.h>
 #include <gadget/ProxyFactory.h>
 #include <gadget/Util/Debug.h>
@@ -71,8 +71,8 @@ void ProxyFactory::loadKnownProxies()
    ProxyConstructor<GloveProxy>* glove_proxy = new ProxyConstructor<GloveProxy>;
 //   ProxyConstructor<GestureProxy>* gesture_proxy = new ProxyConstructor<GestureProxy>;
    ProxyConstructor<EventWindowProxy>* event_win_proxy = new ProxyConstructor<EventWindowProxy>;
-   ProxyConstructor<SpeechRecogDigitalProxy>* speech_digital_proxy = new ProxyConstructor<SpeechRecogDigitalProxy>;
-   ProxyConstructor<SpeechRecogStringProxy>* speech_string_proxy = new ProxyConstructor<SpeechRecogStringProxy>;
+   ProxyConstructor<CommandProxy>* command_proxy = new ProxyConstructor<CommandProxy>;
+   ProxyConstructor<StringProxy>* string_proxy = new ProxyConstructor<StringProxy>;
 
    if( (NULL == analog_proxy) ||
        (NULL == digital_proxy) ||
@@ -80,8 +80,8 @@ void ProxyFactory::loadKnownProxies()
        (NULL == glove_proxy) ||
 //       (NULL == gesture_proxy) ||
        (NULL == event_win_proxy) ||
-       (NULL == speech_digital_proxy) ||
-       (NULL == speech_string_proxy)  )
+       (NULL == command_proxy) ||
+       (NULL == string_proxy)  )
    {
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Error allocating proxy constructor.\n" << vprDEBUG_FLUSH;
    }

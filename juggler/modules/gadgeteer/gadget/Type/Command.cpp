@@ -32,109 +32,140 @@
 
 #include <gadget/gadgetConfig.h>
 #include <boost/concept_check.hpp>
+#include <vpr/Util/Debug.h>
 #include <vpr/IO/ObjectWriter.h>
 #include <vpr/IO/ObjectReader.h>
-#include <gadget/Type/SpeechRecogDigital.h>
+#include <gadget/Type/Command.h>
 
 namespace gadget
 {
 
-vpr::ReturnStatus SpeechRecogDigital::writeObject(vpr::ObjectWriter* writer)
+const CommandData Command::getCommandData(int devNum)
 {
-   writer->beginTag(SpeechRecogDigital::getInputTypeName());
-   //std::cout << "[Remote Input Manager] In Digital write" << std::endl;
-   SampleBuffer_t::buffer_t& stable_buffer = mDigitalSamples.stableBuffer();
+   SampleBuffer_t::buffer_t& stable_buffer = mCommandSamples.stableBuffer();
+
+   if ( (!stable_buffer.empty()) &&
+        (stable_buffer.back().size() > (unsigned)devNum) )  // If Have entry && devNum in range
+   {
+      return stable_buffer.back()[devNum];
+   }
+   else        // No data or request out of range, return default value
+   {
+      if ( stable_buffer.empty() )
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "WARNING: [gadget::Command::getCommandData()] "
+            << "Stable buffer is empty.  If this is not the first "
+            << "read, then this is a problem.\n" << vprDEBUG_FLUSH;
+      }
+      else
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+            << "WARNING: [gadget::Command::getCommandData()] "
+            << "Requested devNum (" << devNum
+            << ") is not in the range available.  "
+            << "This is probably a configuration error.\n" << vprDEBUG_FLUSH;
+      }
+      return mDefaultValue;
+   }
+}
+
+vpr::ReturnStatus Command::writeObject(vpr::ObjectWriter* writer)
+{
+   writer->beginTag(Command::getInputTypeName());
+   SampleBuffer_t::buffer_t& stable_buffer = mCommandSamples.stableBuffer();
    writer->beginAttribute(gadget::tokens::DataTypeAttrib);
-      writer->writeUint16(MSG_DATA_SPEECH_RECOG_DIGITAL);                               // Write out the data type so that we can assert if reading in wrong place
+      // Write out the data type so that we can assert if reading in wrong
+      // place.
+      writer->writeUint16(MSG_DATA_COMMAND);
    writer->endAttribute();
 
    writer->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
-      writer->writeUint16(stable_buffer.size());                           // Write the # of vectors in the stable buffer
+      // Write the # of vectors in the stable buffer.
+      writer->writeUint16(stable_buffer.size());
    writer->endAttribute();
 
    if ( !stable_buffer.empty() )
    {
-      mDigitalSamples.lock();
-      for ( unsigned j=0;j<stable_buffer.size();j++ )                               // For each vector in the stable buffer
+      mCommandSamples.lock();
+      for ( unsigned j = 0; j < stable_buffer.size(); ++j )                               // For each vector in the stable buffer
       {
          writer->beginTag(gadget::tokens::BufferSampleTag);
          writer->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
-            writer->writeUint16(stable_buffer[j].size());                           // Write the # of DigitalDatas in the vector
+            writer->writeUint16(stable_buffer[j].size());                           // Write the # of CommandDatas in the vector
          writer->endAttribute();
-         for ( unsigned i=0;i<stable_buffer[j].size();i++ )                         // For each DigitalData in the vector
+         for ( unsigned i = 0; i < stable_buffer[j].size(); ++i )                         // For each CommandData in the vector
          {
             writer->beginTag(gadget::tokens::DigitalValue);
             writer->beginAttribute(gadget::tokens::TimeStamp);
                writer->writeUint64(stable_buffer[j][i].getTime().usec());           // Write Time Stamp vpr::Uint64
             writer->endAttribute();
-            writer->writeUint32((vpr::Uint32)stable_buffer[j][i].getDigital());  // Write Digital Data(int)
+            writer->writeUint32((vpr::Uint32)stable_buffer[j][i].getDigital());  // Write Command Data(int)
             writer->endTag();
          }
          writer->endTag();
       }
-      mDigitalSamples.unlock();
+      mCommandSamples.unlock();
    }
    writer->endTag();
 
    return vpr::ReturnStatus::Succeed;
 }
 
-vpr::ReturnStatus SpeechRecogDigital::readObject(vpr::ObjectReader* reader)
+vpr::ReturnStatus Command::readObject(vpr::ObjectReader* reader)
 {
-      //std::cout << "[Remote Input Manager] In Digital read" << std::endl;
    vprASSERT(reader->attribExists("rim.timestamp.delta"));
    vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");
 
-      // ASSERT if this data is really not Digital Data
-   reader->beginTag(SpeechRecogDigital::getInputTypeName());
+      // ASSERT if this data is really not Command Data
+   reader->beginTag(Command::getInputTypeName());
    reader->beginAttribute(gadget::tokens::DataTypeAttrib);
       vpr::Uint16 temp = reader->readUint16();
    reader->endAttribute();
 
    // XXX: Should there be error checking for the case when vprASSERT()
    // is compiled out?  -PH 8/21/2003
-   vprASSERT(temp==MSG_DATA_SPEECH_RECOG_DIGITAL && "[Remote Input Manager]Not Digital Data");
+   vprASSERT(temp==MSG_DATA_COMMAND && "[Remote Input Manager]Not Command Data");
    boost::ignore_unused_variable_warning(temp);
 
-   std::vector<DigitalData> dataSample;
+   std::vector<CommandData> dataSample;
 
-   unsigned numDigitalDatas;
+   unsigned numCommandDatas;
    vpr::Uint32 value;
    vpr::Uint64 timeStamp;
-   DigitalData temp_digital_data;
+   CommandData temp_command_data;
 
    reader->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
       unsigned numVectors = reader->readUint16();
    reader->endAttribute();
 
-   //std::cout << "Stable Digital Buffer Size: "  << numVectors << std::endl;
-   mDigitalSamples.lock();
-   for ( unsigned i=0;i<numVectors;i++ )
+   mCommandSamples.lock();
+   for ( unsigned i = 0; i < numVectors; ++i )
    {
       reader->beginTag(gadget::tokens::BufferSampleTag);
       reader->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
-         numDigitalDatas = reader->readUint16();
+         numCommandDatas = reader->readUint16();
       reader->endAttribute();
 
       dataSample.clear();
-      for ( unsigned j=0;j<numDigitalDatas;j++ )
+      for ( unsigned j = 0; j < numCommandDatas; ++j )
       {
          reader->beginTag(gadget::tokens::DigitalValue);
          reader->beginAttribute(gadget::tokens::TimeStamp);
             timeStamp = reader->readUint64();    // read Time Stamp vpr::Uint64
          reader->endAttribute();
-         value = reader->readUint32();           // read Digital Data(int)
+         value = reader->readUint32();           // read Command Data(int)
          reader->endTag();
 
-         temp_digital_data.setDigital(value);
-         temp_digital_data.setTime(vpr::Interval(timeStamp + delta,vpr::Interval::Usec));
-         dataSample.push_back(temp_digital_data);
+         temp_command_data.setDigital(value);
+         temp_command_data.setTime(vpr::Interval(timeStamp + delta,vpr::Interval::Usec));
+         dataSample.push_back(temp_command_data);
       }
-      mDigitalSamples.addSample(dataSample);
+      mCommandSamples.addSample(dataSample);
       reader->endTag();
    }
-   mDigitalSamples.unlock();
-   mDigitalSamples.swapBuffers();
+   mCommandSamples.unlock();
+   mCommandSamples.swapBuffers();
 
    reader->endTag();
 

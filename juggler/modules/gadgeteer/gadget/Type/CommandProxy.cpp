@@ -30,12 +30,45 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_SPEECH_RECOG_DIGITAL_INTERFACE_H_
-#define _GADGET_SPEECH_RECOG_DIGITAL_INTERFACE_H_
-
 #include <gadget/gadgetConfig.h>
+#include <jccl/Config/ConfigElement.h>
+#include <gadget/Util/Debug.h>
+#include <gadget/Type/CommandProxy.h>
 
-#include <gadget/Type/SpeechRecogDigitalProxy.h>
-#include <gadget/Type/DeviceInterface.h>
+namespace gadget
+{
 
-#endif
+std::string CommandProxy::getElementType()
+{
+   return "command_proxy";
+}
+
+bool CommandProxy::config(jccl::ConfigElementPtr element)
+{
+vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
+                              std::string("----------- configuring COMMAND PROXY -----------------\n"),
+                              std::string("----------- exit: configuring command proxy -----------\n"));
+
+   vprASSERT(element->getID() == getElementType());
+
+   if( ! Proxy::config(element) )
+   {
+      return false;
+   }
+
+   mUnitNum = element->getProperty<int>("unit");
+   mDeviceName = element->getProperty<std::string>("device");
+
+   refresh();
+   return true;
+}
+
+void CommandProxy::updateData()
+{
+   if (!isStupified())
+   {
+      mData = mTypedDevice->getCommandData(mUnitNum);
+   }
+}
+
+} // End of gadget namespace

@@ -30,11 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_SPEECH_RECOG_STRING_PROXY_H_
-#define _GADGET_SPEECH_RECOG_STRING_PROXY_H_
+#ifndef _GADGET_STRING_PROXY_H_
+#define _GADGET_STRING_PROXY_H_
 
 #include <gadget/gadgetConfig.h>
-#include <gadget/Type/SpeechRecogString.h>
+#include <gadget/Type/String.h>
 #include <gadget/Type/Proxy.h>
 #include <vpr/Util/Assert.h>
 
@@ -51,20 +51,19 @@ namespace gadget
  * devices that only return a single sub-device's amount of data (one
  * std::string).
  *
- * @see gagdet::SpeechRecogString
+ * @see gagdet::String
  */
-class GADGET_CLASS_API SpeechRecogStringProxy
-   : public TypedProxy<SpeechRecogString>
+class GADGET_CLASS_API StringProxy : public TypedProxy<String>
 {
 
 public:
    /** @name Construction/Destruction */
    //@{
-   SpeechRecogStringProxy()
+   StringProxy()
       : mUnitNum(-1), mData("")
    {;}
 
-   virtual ~SpeechRecogStringProxy()
+   virtual ~StringProxy()
    {;}
    //@}
 
@@ -93,10 +92,9 @@ public:
    }
 
    /**
-    * Returns a pointer to the gadget::SpeechRecogString object that we are
-    * proxying.
+    * Returns a pointer to the gadget::String object that we are proxying.
     */
-   SpeechRecogString* getSpeechRecogStringPtr()
+   String* getStringPtr()
    {
       // If we're stupified, return NULL.  Otherwise, return mTypedDevice.
       return (isStupified() ? NULL : mTypedDevice);
@@ -123,7 +121,7 @@ public:
       }
 
       Input* ret_val = dynamic_cast<Input*>(mTypedDevice);
-      vprASSERT((ret_val != NULL) && "Cross-cast in SpeechRecogStringProxy failed");
+      vprASSERT((ret_val != NULL) && "Cross-cast in StringProxy failed");
       return ret_val;
    }
 

@@ -43,8 +43,8 @@
 #include <gadget/Type/Glove.h>
 #include <gadget/Type/Position.h>
 #include <gadget/Type/EventWindow.h>
-#include <gadget/Type/SpeechRecogDigital.h>
-#include <gadget/Type/SpeechRecogString.h>
+#include <gadget/Type/Command.h>
+#include <gadget/Type/String.h>
 #include <gadget/Type/InputMixer.h>
 //#include <gadget/Type/BaseTypes.h>
 #include <gadget/Util/Debug.h>
@@ -115,13 +115,13 @@ void BaseTypeFactory::hackLoadKnownDevices()
    BaseTypeConstructor< InputMixer<Input,EventWindow>::MixedPlaceholderType >* input_keyboard
          = new BaseTypeConstructor< InputMixer<Input,EventWindow>::MixedPlaceholderType >;
 
-   // Input SpeechRecogString
-   BaseTypeConstructor< InputMixer<Input, SpeechRecogString>::MixedPlaceholderType >* input_speech_string
-         = new BaseTypeConstructor< InputMixer<Input, SpeechRecogString>::MixedPlaceholderType >;
+   // Input String
+   BaseTypeConstructor< InputMixer<Input, String>::MixedPlaceholderType >* input_string
+         = new BaseTypeConstructor< InputMixer<Input, String>::MixedPlaceholderType >;
 
-   // Input SpeechRecogDigital
-   BaseTypeConstructor< InputMixer<Input, SpeechRecogDigital>::MixedPlaceholderType >* input_speech_digital
-         = new BaseTypeConstructor< InputMixer<Input, SpeechRecogDigital>::MixedPlaceholderType >;
+   // Input Command
+   BaseTypeConstructor< InputMixer<Input, Command>::MixedPlaceholderType >* input_command
+         = new BaseTypeConstructor< InputMixer<Input, Command>::MixedPlaceholderType >;
 
    // Input Glove
    BaseTypeConstructor< InputMixer<Input,Glove>::MixedPlaceholderType >* input_glove
@@ -142,8 +142,8 @@ void BaseTypeFactory::hackLoadKnownDevices()
        (NULL == siminput_input_digital) ||
        (NULL == siminput_input_analog) ||
        (NULL == input_keyboard) ||
-       (NULL == input_speech_string) ||
-       (NULL == input_speech_digital) ||
+       (NULL == input_string) ||
+       (NULL == input_command) ||
        (NULL == input_glove) ||
        (NULL == input_glove_digital) )
    {
