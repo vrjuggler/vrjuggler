@@ -292,20 +292,6 @@ public:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    inline void
-    setControlCharacter (const vpr::Uint32 index, const vpr::Uint8 value) {
-        m_sio_imp.setControlCharacter(index, value);
-    }
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    inline vpr::Uint8
-    getControlCharacter (const vpr::Uint32 index) {
-        return m_sio_imp.getControlCharacter(index);
-    }
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
     inline vpr::Status
     getStopBits (vpr::Uint8& num_bits) {
         return m_sio_imp.getStopBits(num_bits);
