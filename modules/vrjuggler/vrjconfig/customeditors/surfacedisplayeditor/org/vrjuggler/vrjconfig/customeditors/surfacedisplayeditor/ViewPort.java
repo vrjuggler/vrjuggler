@@ -421,6 +421,12 @@ class ViewPort extends Object implements ConfigElementListener
       mGeomotry.setCoordinates(0, mCorners);
    }
 
+   public void propertyValueOrderChanged(ConfigElementEvent arg0)
+   {
+      // TODO Auto-generated method stub
+      System.out.println("Value Order Changed...");
+   }
+
    /* (non-Javadoc)
    * @see org.vrjuggler.jccl.config.ConfigElementListener#propertyValueAdded(org.vrjuggler.jccl.config.ConfigElementEvent)
    */
