@@ -157,7 +157,7 @@ links:
           ln -s $(topdir)/samples ./src
 	cd $(instlinks)/share/sonix &&                          \
           ln -s $(topdir)/README.txt ./
-	cd $(instlinks)/bin && cp $(topdir)/sonix-config .
+	cd $(instlinks)/bin && cp -p $(topdir)/sonix-config .
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$SNX_BASE_DIR to:'
