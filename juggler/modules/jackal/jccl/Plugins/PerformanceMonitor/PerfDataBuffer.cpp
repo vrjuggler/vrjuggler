@@ -44,7 +44,7 @@ PerfDataBuffer::PerfDataBuffer (const std::string& _name, int _numbufs,
     read_begin = 0;
     write_pos = 1;
     lost = 0;
-    active = 0;
+    active = false;
     nindex = _nindex;
 }
 
@@ -53,7 +53,7 @@ PerfDataBuffer::PerfDataBuffer (const std::string& _name, int _numbufs,
 //: destructor
 //: POST: all memory & buffers have been freed.
 PerfDataBuffer::~PerfDataBuffer () {
-    active = 0;
+    active = false;
     delete buffer;
 }
 
@@ -64,7 +64,7 @@ PerfDataBuffer::~PerfDataBuffer () {
 //+       storing data whenever a set() is made and
 //+       writing available data when requested.
 void PerfDataBuffer::activate() {
-    active = 1;
+    active = true;
     vprDEBUG(jcclDBG_PERFORMANCE,1) << "Performance Buffer " << name << 
 	" activated.\n" << vprDEBUG_FLUSH;
 }
@@ -77,7 +77,7 @@ void PerfDataBuffer::activate() {
 //+       any information and the write calls won't
 //+       write anything.
 void PerfDataBuffer::deactivate() {
-    active = 0;
+    active = false;
     /* deactivate maybe should reset the buffer so it's reactivated
      * with a clean slate, thusly:
      */
