@@ -89,7 +89,7 @@ void vjDisplay::config(vjConfigChunk* chunk)
     mDisplayChunk = chunk;        // Save the chunk for later use
 }
 
-	
+
     // ---- FRIEND FUNCTIONS ---- //
 //! PRE: disp != NULL
 //+      disp->mUser != NULL
@@ -97,7 +97,7 @@ ostream& vjDisplay::outStream(ostream& out)
 {
    vjASSERT(mUser != NULL);
 
-    out << setw(15) << mName.c_str()
+    out << setw(15) << mName.c_str() << endl
         << "  org:" << _xo << ", " << _yo
         << "  sz:" << _xs << ", " << _ys
         << "  p:" << mPipe
@@ -105,7 +105,7 @@ ostream& vjDisplay::outStream(ostream& out)
         << "  act:" << (mActive ? "Y" : "N")
         << "  usr:" << mUser->getName().c_str();
 
-    return out;	
+    return out;
 }
 
 
