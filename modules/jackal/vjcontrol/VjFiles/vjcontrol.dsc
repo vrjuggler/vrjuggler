@@ -7,5 +7,6 @@ chunk vjcontrol "VjControl Configuration" "Configuration information for the VjC
   chunkfiles String -1 "Preload ConfigChunk Files" "The names of ConfigChunk files that VjControl should load at startup"
   fontname String 1 "Font Name" vj_enumeration { "Courier" "Dialog" "DialogInput" "Helvetica" "TimesRoman" } "Name of the font to use for the GUI"
   fontsize Int 1 "Font Size" "Font size to use for GUI"
+  windowsize Int 2 "Max Window Size" vj_valuelabels { "Width" "Height" } "Maximum size to open vjcontrol windows"
   end
 End
