@@ -485,7 +485,7 @@ public:
    {
       return mSioImpl.disableRead();
    }
-   
+
    /**
     * Gets the current CLOCAL state for the port.
     *
@@ -669,10 +669,10 @@ public:
    {
       return mSioImpl.disableBadByteIgnore();
    }
-   
+
    /**
     * Gets the current state of ignoring BREAK bytes
-    * 
+    *
     *
     * @pre The serial port is open.
     * @post The BREAK byte ignore state is returned to the caller.
@@ -1222,6 +1222,59 @@ public:
    {
       return mSioImpl.sendBreak(duration);
    }
+
+   /**
+   * Return the status of the carrier detect signal.
+   * @return - May be platform dependent, but will at least be as follows.
+   *           0 - not high, 1 - high, -1 - Not supported
+   */
+   int getCarrierDetect()
+   {
+      return mSioImpl.getCarrierDetect();
+   }
+
+   /**
+   * Return the status of the data set ready line.
+   * @return - May be platform dependent, but will at least be as follows.
+   *           0 - not high, 1 - high, -1 - Not supported
+   */
+   int getDataSetReady()
+   {
+      return mSioImpl.getDataSetReady();
+   }
+
+   /**
+   * Return the status of the clear to send.
+   * @return - May be platform dependent, but will at least be as follows.
+   *           0 - not high, 1 - high, -1 - Not supported
+   */
+   int getClearToSend()
+   {
+      return mSioImpl.getRequestToSend();
+   }
+
+   /**
+   * Return the status of the ring indicator line.
+   * @return - May be platform dependent, but will at least be as follows.
+   *           0 - not high, 1 - high, -1 - Not supported
+   */
+   int getRingIndicator()
+   {
+      return mSioImpl.getRingIndicator();
+   }
+
+   /** Set the data terminal ready line. */
+   vpr::ReturnStatus setDataTerminalReady(bool val)
+   {
+      return mSioImpl.setDataTerminalReady(val);
+   }
+
+   /** Set the ready to send line */
+   vpr::ReturnStatus setRequestToSend(bool val)
+   {
+      return mSioImpl.setRequestToSend(val);
+   }
+
 
 protected:
    /**

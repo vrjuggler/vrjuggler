@@ -440,7 +440,7 @@ vpr::ReturnStatus SerialPortImplWin32::disableLocalAttach ()
 
 // ----------------------------------------------------------------------------
 // Get the current state of ignoring BREAK bytes
-// 
+//
 // ----------------------------------------------------------------------------
 bool SerialPortImplWin32::getBreakByteIgnoreState ()
 {
@@ -458,7 +458,7 @@ vpr::ReturnStatus SerialPortImplWin32::enableBreakByteIgnore ()
 }
 
 // ----------------------------------------------------------------------------
-// Disable ignoring of received BREAK bytes 
+// Disable ignoring of received BREAK bytes
 // ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplWin32::disableBreakByteIgnore ()
 {
@@ -817,7 +817,7 @@ vpr::ReturnStatus SerialPortImplWin32::sendBreak (const vpr::Int32 duration)
 {
    vpr::ReturnStatus s;
    DWORD flags;
-   
+
    //Send a break for .5 seconds
    SetCommBreak(mHandle); 
    Sleep(500);
@@ -827,6 +827,41 @@ vpr::ReturnStatus SerialPortImplWin32::sendBreak (const vpr::Int32 duration)
 
    return s;
 }
+
+ /**
+   * Return the status of the carrier detect signal.
+   * @return - May be platform dependent, but will at least be as follows.
+   *           0 - not high, 1 - high, -1 - Not supported
+   */
+   int getCarrierDetect();
+
+   /**
+   * Return the status of the data set ready line.
+   * @return - May be platform dependent, but will at least be as follows.
+   *           0 - not high, 1 - high, -1 - Not supported
+   */
+   int getDataSetReady();
+
+   /**
+   * Return the status of the clear to send.
+   * @return - May be platform dependent, but will at least be as follows.
+   *           0 - not high, 1 - high, -1 - Not supported
+   */
+   int getClearToSend();
+
+   /**
+   * Return the status of the ring indicator line.
+   * @return - May be platform dependent, but will at least be as follows.
+   *           0 - not high, 1 - high, -1 - Not supported
+   */
+   int getRingIndicator();
+
+   /** Set the data terminal ready line. */
+   vpr::ReturnStatus setDataTerminalReady(bool val);
+
+   /** Set the request to send line */
+   vpr::ReturnStatus setRequestToSend(bool val);
+
 
 vpr::ReturnStatus SerialPortImplWin32::drainOutput(void)
 {

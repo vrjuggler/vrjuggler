@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2003-10-27 allenb   [FROM HEAD] Extended serial port interface.  There is now 
+                    support for getting/setting various terminal lines.
 2003-06-30 aronb    Added new debug output level vprDBG_CONFIG_STATUS_LVL.
                     Changed the ordering of the levels so vprDBG_WARNING_LVL
                     comes after vprDBG_CRITICAL_LVL and vprDBG_CONFIG_LVL
