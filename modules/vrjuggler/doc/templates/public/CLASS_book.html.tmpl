@@ -67,7 +67,7 @@
 
       <DL>
 	{foreach member}
-	  {if !mprivate}
+	  {if mpublic}
 	    {if mconstructor}
 	      <DT><TT><A HREF="#{memberef}"><B>{mname}</B></A>({args})
 		  {if const} const {endif}
@@ -87,7 +87,7 @@
 
       <DL>
 	{foreach member all}
-	  {if !mprivate}
+	  {if mpublic}
 	    {if func}
 	      {if !mconstructor}
 		{if !inherited}
@@ -129,7 +129,7 @@
 
       <DL>
 	{foreach member all}
-	  {if public}
+	  {if mpublic}
 	    {if !func}
 	      <DT>{include ../common/member_type.html.inc}
 		  <TT><B>{name}</B></TT>
@@ -155,7 +155,7 @@
     <FONT SIZE="+1"><B>Constructor Detail</B></FONT>
 
       {foreach member}
-	{if !mprivate}
+	{if mpublic}
 	  {if mconstructor}
 	    {nolink true}
 	    <H3><A NAME="{memberef}">{mname}</A></H3>
@@ -173,7 +173,7 @@
     <FONT SIZE="+1"><B>Method Detail</B></FONT>
 
     {foreach member}
-      {if !mprivate}
+      {if mpublic}
 	{if func}
 	  {if !mconstructor}
 	    <H3><A NAME="{memberef}">{mname}</A></H3>
