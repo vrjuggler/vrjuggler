@@ -27,6 +27,7 @@ package org.vrjuggler.vrjconfig;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.PropertyVetoException;
 import java.io.*;
 import javax.swing.*;
 
@@ -152,6 +153,11 @@ public class VrjConfig
                frame.pack();
                frame.setVisible(true);
                desktop.add(frame);
+               try
+               {
+                  frame.setSelected(true);
+               }
+               catch (PropertyVetoException pve) { /* ignore */ }
             }
             else if (file.getName().endsWith(".config"))
             {
@@ -163,6 +169,11 @@ public class VrjConfig
                frame.pack();
                frame.setVisible(true);
                desktop.add(frame);
+               try
+               {
+                  frame.setSelected(true);
+               }
+               catch (PropertyVetoException pve) { /* ignore */ }
             }
             else
             {
