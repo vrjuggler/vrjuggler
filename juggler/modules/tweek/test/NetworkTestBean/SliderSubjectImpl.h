@@ -52,7 +52,7 @@ public:
     */
    networktest::SliderSubject_ptr _this (void)
    {
-      return SliderSubject::_this();
+      return POA_networktest::SliderSubject::_this();
    }
 
 private:

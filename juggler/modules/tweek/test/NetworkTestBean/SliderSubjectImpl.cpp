@@ -13,7 +13,7 @@ void SliderSubjectImpl::setValue (long value)
 
    // Notify any observers that our value has changed.  This is very
    // important.
-   SubjectImpl::notify();
+   tweek::SubjectImpl::notify();
 }
 
 long SliderSubjectImpl::getValue ()

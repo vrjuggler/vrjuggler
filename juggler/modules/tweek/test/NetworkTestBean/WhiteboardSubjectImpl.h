@@ -42,7 +42,7 @@ public:
 
    WhiteboardSubject_ptr _this (void)
    {
-      return WhiteboardSubject::_this();
+      return POA_networktest::WhiteboardSubject::_this();
    }
 
 private:
