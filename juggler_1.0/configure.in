@@ -1927,19 +1927,18 @@ AC_OUTPUT(Makefile
           samples/pf/pfNav/Makefile
           test/Makefile 
           test/TestSuite/Makefile
-          test/old/Makefile 
-          test/old/CfgTest/Makefile 
-          test/old/GLWindow/Makefile
-          test/old/Math/Makefile 
-          test/old/Matrix/Makefile 
-          test/old/Performance/Makefile
-          test/old/Performance/analyzer/Makefile
-          test/old/Performance/perfdatabuffer-test/Makefile 
-          test/old/Quat/Makefile
-          test/old/Sync/Makefile 
-          test/old/input/Makefile
-          test/old/testDynamicCastSTL/Makefile 
-          test/old/threads/Makefile
+          test/CfgTest/Makefile 
+          test/GLWindow/Makefile
+          test/Math/Makefile 
+          test/Matrix/Makefile 
+          test/Performance/Makefile
+          test/Performance/analyzer/Makefile
+          test/Performance/perfdatabuffer-test/Makefile 
+          test/Quat/Makefile
+          test/Sync/Makefile 
+          test/input/Makefile
+          test/testDynamicCastSTL/Makefile 
+          test/threads/Makefile
           tools/Makefile
           Doc/Makefile
           release/mtree/VJ.data.dist
