@@ -1460,11 +1460,11 @@ JAVAC_FLAGS	= -classpath $(CLASSPATH) -sourcepath $(srcdir) -d .
 JAVA_IDL_OPTS	=  -d $(srcdir)
 JAVA_IDL_INCLUDES	= -I$(TWEEK_BASE_DIR)/include
 
-OPENORB_JAR	= $(HOME)/OpenORB-1.2.0/lib/openorb-1.2.0.jar
+JAVA_ORB_JAR	= $(HOME)/OpenORB-1.2.0/lib/openorb-1.2.0.jar
 
 TWEEK_EVENT_LIB	= $(TWEEK_BASE_DIR)/bin/TweekEvents.jar
 TWEEK_NET_LIB	= $(TWEEK_BASE_DIR)/bin/TweekNet.jar
-CLASSPATH	= $(TWEEK_EVENT_LIB):$(TWEEK_NET_LIB):$(OPENORB_JAR)
+CLASSPATH	= $(TWEEK_EVENT_LIB):$(TWEEK_NET_LIB):$(JAVA_ORB_JAR)
 DEFS		= -D__linux__ -D__OSVERSION__=2 -D__x86__
 EXTRA_CFLAGS	= $(DEBUG_CFLAGS)
 DEBUG_CFLAGS	= -g -D_DEBUG
