@@ -87,16 +87,24 @@ bool vjTuPerfBufReader::stopProcess() {
 
 void vjTuPerfBufReader::controlLoop(void* nullParam) {
     std::vector<vjPerfDataBuffer*>::iterator p;
+    bool target_was_null = true;
     for (;;) {
 	sginap (50);
-	if (target == NULL)
+	if (target == NULL) {
+	    target_was_null = true;
+	    //cout << "perf buf reader: target is null" << endl;
 	    continue;
+	}
+	if (target_was_null) {
+	    target_was_null = false;
+	    //target->reopenFile();
+	}
+	//cout << "emoutput is fnamed '" << target->filename << "'" << endl;
 	bufferslock.acquire();
 	target->output.lock();
 	for (p = buffers.begin(); p != buffers.end(); p++) {
-	    //cout << "writing a buffer whose obj. location is " << (*p) << endl;
+	    //cout << "writing a buffer named " << (*p)->getName() << endl;
 	    (*p)->write (target->output);
-	    //cout << "done writing buffer" << endl;
 	}
 	target->output << flush;
 	target->output.unlock();

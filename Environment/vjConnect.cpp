@@ -14,7 +14,7 @@
 
 char* vjConnect::default_name = "unnamed";
 
-vjConnect::vjConnect(int s, char* _name) {
+vjConnect::vjConnect(int s, char* _name): output() {
     vjDEBUG(2) << "EM: Creating vjConnect to file or socket\n"
 	       << vjDEBUG_FLUSH;
     fd = s;
@@ -24,6 +24,7 @@ vjConnect::vjConnect(int s, char* _name) {
 	   name = strdup (_name);
     else
 	   name = strdup (default_name);
+    i_opened_this = false;
     cachedChunkdb = vjKernel::instance()->getChunkDB();
     cachedDescdb = cachedChunkdb->getChunkDescDB();
     connect_thread = NULL;
@@ -32,7 +33,7 @@ vjConnect::vjConnect(int s, char* _name) {
 
 
 
-vjConnect::vjConnect(vjConfigChunk* c) {
+vjConnect::vjConnect(vjConfigChunk* c): output() {
 
     vjDEBUG(7) << "Creating vjConnect with chunk:\n"
 	       << *c << vjDEBUG_FLUSH;
@@ -40,6 +41,7 @@ vjConnect::vjConnect(vjConfigChunk* c) {
     filename = c->getProperty ("FileName");
     name = c->getProperty ("Name");
     readable = c->getProperty ("Readable");
+    i_opened_this = true;
 
     cachedChunkdb = vjKernel::instance()->getChunkDB();
     cachedDescdb = cachedChunkdb->getChunkDescDB();
@@ -47,9 +49,24 @@ vjConnect::vjConnect(vjConfigChunk* c) {
     fd = open (filename, O_WRONLY | O_CREAT | O_TRUNC, 0660 );
     output.attach (fd);
     output << "VR Juggler FileConnect output " << name << endl;
+    output << flush;
 }
 
+void vjConnect::reopenFile() {
+    if (!i_opened_this)
+	return;
 
+    output.close();
+    close(fd);
+    fd = open (filename, O_WRONLY | O_CREAT | O_TRUNC, 0660 );
+//     if (fd == -1)
+// 	cout << "file didn't reopen properly" << endl;
+//     else
+// 	cout << "file did reopen succesfully" << endl;
+    output.attach (fd);
+    output << "VR Juggler FileConnect output " << name << endl;
+    output << flush;
+}
 
 vjConnect::~vjConnect() {
     stopProcess();
@@ -105,6 +122,7 @@ void vjConnect::sendChunkDB (vjConfigChunkDB* db, bool all) {
 
 void vjConnect::sendRefresh () {
     output.lock();
+    //cout << "sent refresh to " << name << endl;
     output << "refresh\n";
     output.unlock();
 }
@@ -154,10 +172,6 @@ void vjConnect::controlLoop(void* nullParam) {
             cachedDescdb = cachedChunkdb->getChunkDescDB();
             cout << "Sending descDB:\n" << cachedDescdb << endl << flush;
             sendDescDB (cachedDescdb);
-            // send out descriptions;
-            //output.lock();
-            //output << "descriptions all\n" << *descdb << flush;
-            //output.unlock();
          }
          else if (!strcasecmp (s,"chunks"))
          {
@@ -165,11 +179,7 @@ void vjConnect::controlLoop(void* nullParam) {
             cachedDescdb = cachedChunkdb->getChunkDescDB();
             cout << "Sending chunkdb:\n" << cachedChunkdb << endl << flush;
             sendChunkDB (cachedChunkdb, true);
-            // send out chunks;
-            //output.lock();
-            //output << "chunks all\n" << *chunkdb << flush;
-            //output.unlock();
-         }
+	 }
          else
          {
             vjDEBUG(1) << "Error: vjConnect:: Received "

@@ -51,6 +51,7 @@ public:
     void setTarget (vjConnect* _target) {
 	// this maybe ought to stop/restart process if running...
 	target = _target;
+
     }
 
 
