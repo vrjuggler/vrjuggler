@@ -41,7 +41,8 @@
 #include <vpr/IO/Port/SerialPort.h>
 
 #define NSTATION 4
-#define XYZ 3
+//#define XYZ 3
+const vpr::Uint8 XYZ = 3;
 // 3 first letters forced in lower case
 #define LC3(x) (0x202020|(((x)[0]<<16)|((x)[1]<<8)|(x)[2]))
 // 2 first letters forced in lower case
