@@ -84,7 +84,6 @@ namespace sim
    //   Datagram sockets may dissolve the association by connecting to an
    //   invalid address, such as a zero-filled address.
    vpr::ReturnStatus SocketManager::connect( vpr::SocketImplSIM* localSock,
-                                             vpr::SocketImplSIM** remoteSock,
                                              const vpr::InetAddrSIM& remoteName,
                                              NetworkGraph::VertexListPtr& path,
                                              vpr::Interval timeout )
@@ -121,10 +120,10 @@ namespace sim
             vprASSERT(NULL != remote_stream_socket && "We should have a stream socket, but don't");
 
             // Queue us up in the listening socket's connection queue.
-            status = remote_stream_socket->addConnector(localSock, remoteSock);
+            status = remote_stream_socket->addConnector(local_stream_socket);
             vprASSERT(! status.failure() && "Failed to add connector");
          }
-         else
+                 else
          {
             vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
                << "vpr::sim::SocketManager: Cannot connect, no one listening on "
@@ -151,14 +150,11 @@ namespace sim
          // only reason dgram_socket exists is for this conditional.
          vprASSERT( remote_dgram_socket != NULL );
 
-         // We have to cast away the const-ness so that we can add the
-         // connector information.
          localSock->mPeer = remote_sock;
-         *remoteSock        = remote_sock;
 
          // Now find the shortest path between u and v.
          const NetworkGraph::net_vertex_t& u = localSock->getNetworkNode();
-         const NetworkGraph::net_vertex_t& v = (*remoteSock)->getNetworkNode();
+         const NetworkGraph::net_vertex_t& v = remote_sock->getNetworkNode();
          path = vpr::sim::Controller::instance()->getNetworkGraph().getShortestPath(u, v);
       }
 

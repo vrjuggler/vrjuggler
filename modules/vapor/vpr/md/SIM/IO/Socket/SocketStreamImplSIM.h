@@ -165,13 +165,9 @@ public:
    }
 
    /**
-    * @param The socket making the connection.
-    * @param A pointer to a socket object that will be used to store a
-    *        pointer to this socket once the connection is complete.  In
-    *        this way, the local socket is told who its peer is.
+    * @param connector The socket making the connection.
     */
-   virtual vpr::ReturnStatus addConnector(vpr::SocketImplSIM* local,
-                                          vpr::SocketImplSIM** remote);
+   vpr::ReturnStatus addConnector(vpr::SocketStreamImplSIM* connector);
 
    /**
     * Gets the current number of connectors waiting to connect to this
@@ -187,11 +183,8 @@ public:
    virtual vpr::ReturnStatus isWriteReady() const;
 
 protected:
-   // XXX: Look into removing the first part of this parameter
-   typedef std::pair<SocketStreamImplSIM*, SocketStreamImplSIM**> queue_obj_t;
-
-   std::queue<queue_obj_t> mConnectorQueue;      /**< Queue of pending
-                                                      connection requests */
+   std::queue<SocketStreamImplSIM*> mConnectorQueue; /**< Queue of pending
+                                                          connection requests */
    vpr::Mutex              mConnectorQueueMutex; /**< Mutex for connector queue */
 
    bool mNoDelay;
