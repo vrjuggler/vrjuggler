@@ -31,10 +31,6 @@ void main()
 		    report, 
 		    calfile );
     
-    // these are in the vjInput base class...
-    flock.setBaudRate( baud );
-    flock.setPort( port );
-    
     char achar;
     
     do 
