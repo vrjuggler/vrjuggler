@@ -319,7 +319,7 @@ SerialPortImpTermios::disableRead () {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::getStopBits (Uint16& num_bits) {
+SerialPortImpTermios::getStopBits (Uint8& num_bits) {
     struct termios term;
     Status retval;
 
@@ -340,7 +340,7 @@ SerialPortImpTermios::getStopBits (Uint16& num_bits) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::setStopBits (const Uint16 num_bits) {
+SerialPortImpTermios::setStopBits (const Uint8 num_bits) {
     struct termios term;
     Status retval;
 

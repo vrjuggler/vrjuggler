@@ -307,14 +307,14 @@ public:
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline vpr::Status
-    getStopBits (vpr::Uint16& num_bits) {
+    getStopBits (vpr::Uint8& num_bits) {
         return m_sio_imp.getStopBits(num_bits);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline vpr::Status
-    setStopBits (const vpr::Uint16 num_bits) {
+    setStopBits (const vpr::Uint8 num_bits) {
         return m_sio_imp.setStopBits(num_bits);
     }
 
