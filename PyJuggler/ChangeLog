@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Sep-24-2004 patrickh    Sync up with Gadgeteer 0.19.0.
+                        NEW VERSION: 0.10.2
 Oct-19-2004 patrickh    Added support for Darwin/Mac OS X.
                         NEW VERSION: 0.10.1
 Sep-24-2004 patrickh    Sync up with Gadgeteer 0.17.0.

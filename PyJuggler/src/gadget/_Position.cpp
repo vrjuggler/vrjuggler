@@ -43,10 +43,10 @@ struct gadget_Position_Wrapper: gadget::Position
         return gadget::Position::config(p0);
     }
 
-    std::string getBaseType() {
+    std::string getInputTypeName() {
         try
         {
-            return call_method< std::string >(self, "getBaseType");
+            return call_method< std::string >(self, "getInputTypeName");
         }
         catch(error_already_set)
         {
@@ -56,8 +56,8 @@ struct gadget_Position_Wrapper: gadget::Position
         return std::string("UNKNOWN");
     }
 
-    std::string default_getBaseType() {
-        return gadget::Position::getBaseType();
+    std::string default_getInputTypeName() {
+        return gadget::Position::getInputTypeName();
     }
 
     vpr::ReturnStatus writeObject(vpr::ObjectWriter* p0) {
@@ -107,7 +107,7 @@ void _Export_Position()
 {
     class_< gadget::Position, boost::noncopyable, pyj::gadget_Position_Wrapper >("Position", init<  >())
         .def("config", &gadget::Position::config, &pyj::gadget_Position_Wrapper::default_config)
-        .def("getBaseType", &gadget::Position::getBaseType, &pyj::gadget_Position_Wrapper::default_getBaseType)
+        .def("getInputTypeName", &gadget::Position::getInputTypeName, &pyj::gadget_Position_Wrapper::default_getInputTypeName)
         .def("writeObject", (vpr::ReturnStatus (gadget::Position::*)(vpr::ObjectWriter*) )&gadget::Position::writeObject, (vpr::ReturnStatus (pyj::gadget_Position_Wrapper::*)(vpr::ObjectWriter*))&pyj::gadget_Position_Wrapper::default_writeObject)
         .def("readObject", (vpr::ReturnStatus (gadget::Position::*)(vpr::ObjectReader*) )&gadget::Position::readObject, (vpr::ReturnStatus (pyj::gadget_Position_Wrapper::*)(vpr::ObjectReader*))&pyj::gadget_Position_Wrapper::default_readObject)
         .def("getPositionData", &gadget::Position::getPositionData, pyj::gadget_Position_getPositionData_overloads_0_1())

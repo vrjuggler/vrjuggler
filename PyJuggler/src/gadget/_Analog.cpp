@@ -77,10 +77,10 @@ struct gadget_Analog_Wrapper: gadget::Analog
         return gadget::Analog::config(p0);
     }
 
-    std::string getBaseType() {
+    std::string getInputTypeName() {
         try
         {
-            return call_method< std::string >(self, "getBaseType");
+            return call_method< std::string >(self, "getInputTypeName");
         }
         catch(error_already_set)
         {
@@ -90,8 +90,8 @@ struct gadget_Analog_Wrapper: gadget::Analog
         return std::string("UNKONWN");
     }
 
-    std::string default_getBaseType() {
-        return gadget::Analog::getBaseType();
+    std::string default_getInputTypeName() {
+        return gadget::Analog::getInputTypeName();
     }
 
     PyObject* self;
@@ -109,7 +109,7 @@ void _Export_Analog()
         .def("writeObject", (vpr::ReturnStatus (gadget::Analog::*)(vpr::ObjectWriter*) )&gadget::Analog::writeObject, (vpr::ReturnStatus (pyj::gadget_Analog_Wrapper::*)(vpr::ObjectWriter*))&pyj::gadget_Analog_Wrapper::default_writeObject)
         .def("readObject", (vpr::ReturnStatus (gadget::Analog::*)(vpr::ObjectReader*) )&gadget::Analog::readObject, (vpr::ReturnStatus (pyj::gadget_Analog_Wrapper::*)(vpr::ObjectReader*))&pyj::gadget_Analog_Wrapper::default_readObject)
         .def("config", &gadget::Analog::config, &pyj::gadget_Analog_Wrapper::default_config)
-        .def("getBaseType", &gadget::Analog::getBaseType, &pyj::gadget_Analog_Wrapper::default_getBaseType)
+        .def("getInputTypeName", &gadget::Analog::getInputTypeName, &pyj::gadget_Analog_Wrapper::default_getInputTypeName)
         .def("getAnalogData", &gadget::Analog::getAnalogData, pyj::gadget_Analog_getAnalogData_overloads_0_1())
         .def("addAnalogSample", &gadget::Analog::addAnalogSample)
         .def("swapAnalogBuffers", &gadget::Analog::swapAnalogBuffers)

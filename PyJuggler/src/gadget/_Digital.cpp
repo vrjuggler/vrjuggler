@@ -43,10 +43,10 @@ struct gadget_Digital_Wrapper: gadget::Digital
         return gadget::Digital::config(p0);
     }
 
-    std::string getBaseType() {
+    std::string getInputTypeName() {
         try
         {
-            return call_method< std::string >(self, "getBaseType");
+            return call_method< std::string >(self, "getInputTypeName");
         }
         catch(error_already_set)
         {
@@ -56,8 +56,8 @@ struct gadget_Digital_Wrapper: gadget::Digital
         return std::string("UNKONWN");
     }
 
-    std::string default_getBaseType() {
-        return gadget::Digital::getBaseType();
+    std::string default_getInputTypeName() {
+        return gadget::Digital::getInputTypeName();
     }
 
     vpr::ReturnStatus writeObject(vpr::ObjectWriter* p0) {
@@ -108,7 +108,7 @@ void _Export_Digital()
     scope* gadget_Digital_scope = new scope(
     class_< gadget::Digital, boost::noncopyable, pyj::gadget_Digital_Wrapper >("Digital", init<  >())
         .def("config", &gadget::Digital::config, &pyj::gadget_Digital_Wrapper::default_config)
-        .def("getBaseType", &gadget::Digital::getBaseType, &pyj::gadget_Digital_Wrapper::default_getBaseType)
+        .def("getInputTypeName", &gadget::Digital::getInputTypeName, &pyj::gadget_Digital_Wrapper::default_getInputTypeName)
         .def("writeObject", (vpr::ReturnStatus (gadget::Digital::*)(vpr::ObjectWriter*) )&gadget::Digital::writeObject, (vpr::ReturnStatus (pyj::gadget_Digital_Wrapper::*)(vpr::ObjectWriter*))&pyj::gadget_Digital_Wrapper::default_writeObject)
         .def("readObject", (vpr::ReturnStatus (gadget::Digital::*)(vpr::ObjectReader*) )&gadget::Digital::readObject, (vpr::ReturnStatus (pyj::gadget_Digital_Wrapper::*)(vpr::ObjectReader*))&pyj::gadget_Digital_Wrapper::default_readObject)
         .def("getDigitalData", &gadget::Digital::getDigitalData, pyj::gadget_Digital_getDigitalData_overloads_0_1())
