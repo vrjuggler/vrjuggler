@@ -32,20 +32,23 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <gadget/InputManager.h> // my header...
 #include <gadget/Type/Proxy.h>
-#include <vrj/Util/Debug.h>
-
 #include <gadget/Type/DeviceFactory.h>
 #include <gadget/ProxyFactory.h>
 #include <gadget/Type/DeviceInterface.h>
+
+#include <vrj/Util/Debug.h>
+
 #include <jccl/Config/ConfigChunk.h>
 
-#include <gadget/InputManager.h> // my header...
 
 
 
 namespace gadget
 {
+
+   vprSingletonImp( InputManager );    // Implementation of singleton
 
 // Local helpers
 bool recognizeProxyAlias( jccl::ConfigChunk* chunk );

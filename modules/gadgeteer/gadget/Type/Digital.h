@@ -40,6 +40,7 @@
 #define _GADGET_DIGITAL_H_
 
 #include <gadget/gadgetConfig.h>
+#include <jccl/Config/ConfigChunk.h>
 
 namespace gadget
 {
