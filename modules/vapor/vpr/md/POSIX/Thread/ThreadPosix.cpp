@@ -144,25 +144,25 @@ vpr::ReturnStatus ThreadPosix::start()
                                               NULL);
 
       // Spawn the thread.
-      // NOTE: Automagically registers thread (inside ThreadPosix::startThread)
-      // UNLESS failure.
       status = spawn(start_functor);
 
       if ( status.success() )
       {
          mRunning = true;
+
+         ThreadManager::instance()->lock();
+         {
+            registerThread(true);
+         }
+         ThreadManager::instance()->unlock();
       }
       else
       {
-         ThreadManager* vpr_tm_inst = ThreadManager::instance();
-
-         // Need to lock thread manager before I register the thread with them.
-         // XXX: Is this still needed?
-         vpr_tm_inst->lock();
+         ThreadManager::instance()->lock();
          {
             registerThread(false);
          }
-         vpr_tm_inst->unlock();
+         ThreadManager::instance()->unlock();
       }
    }
 
@@ -274,7 +274,6 @@ void ThreadPosix::startThread(void* null_param)
    ThreadManager::instance()->lock();      // Lock manager
    {
       threadIdKey().setspecific((void*)this);     // Store the pointer to me
-      registerThread(true);
    }
    ThreadManager::instance()->unlock();
 

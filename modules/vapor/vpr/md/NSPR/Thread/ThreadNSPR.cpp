@@ -100,7 +100,7 @@ void ThreadNSPR::setFunctor(BaseThreadFunctor* functorPtr)
    mUserThreadFunctor = functorPtr;
 }
 
-// Creates a new thread that will execute functorPtr.
+// Creates a new thread that will execute mUserFunctorPtr.
 vpr::ReturnStatus ThreadNSPR::start()
 {
    vpr::ReturnStatus status;
@@ -151,6 +151,14 @@ vpr::ReturnStatus ThreadNSPR::start()
          NSPR_PrintError("vpr::ThreadNSPR::spawn() - Cannot create thread");
          status.setCode(vpr::ReturnStatus::Fail);
       }
+      else
+      {
+         ThreadManager::instance()->lock();      // Lock manager
+         {
+            registerThread(true);                     // Register success
+         }
+         ThreadManager::instance()->unlock();
+      }
    }
 
    return status;
@@ -172,7 +180,6 @@ void ThreadNSPR::startThread(void* null_param)
    ThreadManager::instance()->lock();      // Lock manager
    {
       mThreadTable.addThread(this, mThread);    // Store local lookup
-      registerThread(true);                     // Register success
    }
    ThreadManager::instance()->unlock();
 
