@@ -181,6 +181,14 @@ PF_API		= @PERFORMER_API@
 PF_LIB_STATIC	= ${PF_LIBRARY}.@STATICLIB_EXT@
 PF_LIB_DYNAMIC	= ${PF_LIBRARY}.@SHAREDLIB_EXT@
 
+AUDIO_WORKS	= @AUDIO_WORKS@
+AW_LIB_STATIC	= ${AW_LIBRARY}.@STATICLIB_EXT@
+AW_LIB_DYNAMIC	= ${AW_LIBRARY}.@SHAREDLIB_EXT@
+
+SL		= @SL@
+SL_LIB_STATIC	= ${SL_LIBRARY}.@STATICLIB_EXT@
+SL_LIB_DYNAMIC	= ${SL_LIBRARY}.@SHAREDLIB_EXT@
+
 # On Linux, we have to compile the Performer library with -O for things to
 # link properly.
 ifeq (${PLATFORM}, Linux)
@@ -193,7 +201,7 @@ endif
 
 # Subdirectories used for recursion through the source tree.
 SUBDIRS		= Math Config Kernel Environment Performance Input	\
-                  SharedMem Sync Threads
+                  SharedMem Sound Sync Threads
 
 # Subdirectories used for recursion through the application source trees when
 # installing.
@@ -352,6 +360,18 @@ ifeq (${PF_API}, Y)
 	cd ${_LIB_LINK_DIR} && rm -f ./${PF_LIB_DYNAMIC} &&	\
           ${LN_S} ${_DEFAULT_DIR}/${PF_LIB_DYNAMIC} ./
 endif
+ifeq (${AUDIO_WORKS}, Y)
+	cd ${_LIB_LINK_DIR} && rm -f ./${AW_LIB_STATIC} &&	\
+          ${LN_S} ${_DEFAULT_DIR}/${AW_LIB_STATIC} ./
+	cd ${_LIB_LINK_DIR} && rm -f ./${AW_LIB_DYNAMIC} &&	\
+          ${LN_S} ${_DEFAULT_DIR}/${AW_LIB_DYNAMIC} ./
+endif
+ifeq (${SL}, Y)
+	cd ${_LIB_LINK_DIR} && rm -f ./${SL_LIB_STATIC} &&	\
+          ${LN_S} ${_DEFAULT_DIR}/${SL_LIB_STATIC} ./
+	cd ${_LIB_LINK_DIR} && rm -f ./${SL_LIB_DYNAMIC} &&	\
+          ${LN_S} ${_DEFAULT_DIR}/${SL_LIB_DYNAMIC} ./
+endif
 
 # ----------------------------------------------------------------------------
 # Make the debugging version of the libraries building both static and shared
@@ -486,6 +506,14 @@ ifeq (${PF_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/Pf"			\
           LIBDIR="${_DBG_LIBDIR}" ${_DBG_LIBDIR}/${PF_LIB_STATIC}
 endif
+ifeq (${AUDIO_WORKS}, Y)
+	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/aw"			\
+          LIBDIR="${_DBG_LIBDIR}" ${_DBG_LIBDIR}/${AW_LIB_STATIC}
+endif
+ifeq (${SL}, Y)
+	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/sl"			\
+          LIBDIR="${_DBG_LIBDIR}" ${_DBG_LIBDIR}/${SL_LIB_STATIC}
+endif
 
 # Build the shared libraries with the debugging flags enabled.
 _build_dbg_lib_shared:
@@ -503,6 +531,14 @@ ifeq (${PF_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/Pf"			\
           EXTRA_LDOPTS="${_PF_EXTRA_LDOPTS}" LIBDIR="${_DBG_LIBDIR}"	\
           ${_DBG_LIBDIR}/${PF_LIB_DYNAMIC}
+endif
+ifeq (${AUDIO_WORKS}, Y)
+	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/aw"			\
+          LIBDIR="${_DBG_LIBDIR}" ${_DBG_LIBDIR}/${AW_LIB_DYNAMIC}
+endif
+ifeq (${SL}, Y)
+	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/sl"			\
+          LIBDIR="${_DBG_LIBDIR}" ${_DBG_LIBDIR}/${SL_LIB_DYNAMIC}
 endif
 else
 	@echo "================================================"
@@ -525,6 +561,14 @@ ifeq (${PF_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/Pf"			\
           LIBDIR=${_OPT_LIBDIR} ${_OPT_LIBDIR}/${PF_LIB_STATIC}
 endif
+ifeq (${AUDIO_WORKS}, Y)
+	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/aw"			\
+          LIBDIR=${_OPT_LIBDIR} ${_OPT_LIBDIR}/${AW_LIB_STATIC}
+endif
+ifeq (${SL}, Y)
+	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/sl"			\
+          LIBDIR=${_OPT_LIBDIR} ${_OPT_LIBDIR}/${SL_LIB_STATIC}
+endif
 
 # Build the shared libraries with the optimization flags enabled.
 _build_opt_lib_shared:
@@ -541,6 +585,14 @@ endif
 ifeq (${PF_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/Pf"			\
           LIBDIR="${_OPT_LIBDIR}" ${_OPT_LIBDIR}/${PF_LIB_DYNAMIC}
+endif
+ifeq (${AUDIO_WORKS}, Y)
+	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/aw"			\
+          LIBDIR="${_OPT_LIBDIR}" ${_OPT_LIBDIR}/${AW_LIB_DYNAMIC}
+endif
+ifeq (${SL}, Y)
+	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/sl"			\
+          LIBDIR="${_OPT_LIBDIR}" ${_OPT_LIBDIR}/${SL_LIB_DYNAMIC}
 endif
 else
 	@echo "================================================"
@@ -564,10 +616,12 @@ obj:
 # -----------------------------------------------
 # Construct the static version of the libraries.
 # -----------------------------------------------
-static-libs: ${VJ_LIB_STATIC} ${PF_LIB_STATIC} ${GL_LIB_STATIC}
+static-libs: ${VJ_LIB_STATIC} ${GL_LIB_STATIC} ${PF_LIB_STATIC}		\
+             ${AW_LIB_STATIC} ${SL_LIB_STATIC}
 
-${LIBDIR}/${VJ_LIB_STATIC} ${LIBDIR}/${PF_LIB_STATIC}			\
-${LIBDIR}/${GL_LIB_STATIC}: ${OBJDIR}/*.${OBJ_FILE_SUFFIX}
+${LIBDIR}/${VJ_LIB_STATIC} ${LIBDIR}/${GL_LIB_STATIC}			\
+${LIBDIR}/${PF_LIB_STATIC} ${LIBDIR}/${AW_LIB_STATIC}			\
+${LIBDIR}/${SL_LIB_STATIC}: ${OBJDIR}/*.${OBJ_FILE_SUFFIX}
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -582,10 +636,12 @@ ${LIBDIR}/${GL_LIB_STATIC}: ${OBJDIR}/*.${OBJ_FILE_SUFFIX}
 # -------------------------------------------------------
 # Construct the dynamic shared version of the libraries.
 # -------------------------------------------------------
-shared-libs: ${VJ_LIB_DYNAMIC} ${PF_LIB_DYNAMIC} ${GL_LIB_DYNAMIC}
+shared-libs: ${VJ_LIB_DYNAMIC} ${GL_LIB_DYNAMIC} ${PF_LIB_DYNAMIC}	\
+             ${AW_LIB_DYNAMIC} ${SL_LIB_DYNAMIC}
 
-${LIBDIR}/${VJ_LIB_DYNAMIC} ${LIBDIR}/${PF_LIB_DYNAMIC}			\
-${LIBDIR}/${GL_LIB_DYNAMIC}: ${OBJDIR}/*.${OBJ_FILE_SUFFIX}
+${LIBDIR}/${VJ_LIB_DYNAMIC} ${LIBDIR}/${GL_LIB_DYNAMIC}			\
+${LIBDIR}/${PF_LIB_DYNAMIC} ${LIBDIR}/${AW_LIB_DYNAMIC}			\
+${LIBDIR}/${SL_LIB_DYNAMIC}: ${OBJDIR}/*.${OBJ_FILE_SUFFIX}
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -790,6 +846,14 @@ ifeq (${PF_API}, Y)
 	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
           ${_DBG_LIBDIR}/${PF_LIB_STATIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
 endif
+ifeq (${AUDIO_WORKS}, Y)
+	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
+          ${_DBG_LIBDIR}/${AW_LIB_STATIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
+endif
+ifeq (${SL}, Y)
+	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
+          ${_DBG_LIBDIR}/${SL_LIB_STATIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
+endif
 	@${MAKE} _DEFAULT_DIR="${_DEBUG_DIR}" _install_lib_links
 
 # -------------------------------------------------------------
@@ -810,6 +874,14 @@ endif
 ifeq (${PF_API}, Y)
 	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
           ${_DBG_LIBDIR}/${PF_LIB_DYNAMIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
+endif
+ifeq (${AUDIO_WORKS}, Y)
+	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
+          ${_DBG_LIBDIR}/${AW_LIB_DYNAMIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
+endif
+ifeq (${SL}, Y)
+	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
+          ${_DBG_LIBDIR}/${SL_LIB_DYNAMIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
 endif
 	@${MAKE} _DEFAULT_DIR="${_DEBUG_DIR}" _install_lib_links
 endif
@@ -845,6 +917,14 @@ ifeq (${PF_API}, Y)
 	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
           ${_OPT_LIBDIR}/${PF_LIB_STATIC} ${_install_libdir_abs}/${_OPT_DIR}/
 endif
+ifeq (${AUDIO_WORKS}, Y)
+	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
+          ${_OPT_LIBDIR}/${AW_LIB_STATIC} ${_install_libdir_abs}/${_OPT_DIR}/
+endif
+ifeq (${SL}, Y)
+	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
+          ${_OPT_LIBDIR}/${SL_LIB_STATIC} ${_install_libdir_abs}/${_OPT_DIR}/
+endif
 	@${MAKE} _DEFAULT_DIR="${_OPT_DIR}" _install_lib_links
 
 # -------------------------------------------------------------
@@ -865,6 +945,14 @@ endif
 ifeq (${PF_API}, Y)
 	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
           ${_OPT_LIBDIR}/${PF_LIB_DYNAMIC} ${_install_libdir_abs}/${_OPT_DIR}/
+endif
+ifeq (${AUDIO_WORKS}, Y)
+	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
+          ${_OPT_LIBDIR}/${AW_LIB_DYNAMIC} ${_install_libdir_abs}/${_OPT_DIR}/
+endif
+ifeq (${SL}, Y)
+	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
+          ${_OPT_LIBDIR}/${SL_LIB_DYNAMIC} ${_install_libdir_abs}/${_OPT_DIR}/
 endif
 	@${MAKE} _DEFAULT_DIR="${_OPT_DIR}" _install_lib_links
 endif
@@ -898,6 +986,22 @@ ifeq (${PF_API}, Y)
           rm -f ./${PF_LIB_DYNAMIC} &&					\
           ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${PF_LIB_DYNAMIC} ./
 endif
+ifeq (${AUDIO_WORKS}, Y)
+	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
+          rm -f ./${AW_LIB_STATIC} &&					\
+          ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${AW_LIB_STATIC} ./
+	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
+          rm -f ./${AW_LIB_DYNAMIC} &&					\
+          ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${AW_LIB_DYNAMIC} ./
+endif
+ifeq (${SL}, Y)
+	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
+          rm -f ./${SL_LIB_STATIC} &&					\
+          ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${SL_LIB_STATIC} ./
+	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
+          rm -f ./${SL_LIB_DYNAMIC} &&					\
+          ${LN_S} ${_install_libdir_rel}/${_DEFAULT_DIR}/${SL_LIB_DYNAMIC} ./
+endif
 	@echo "------------------------------------------------"
 	@echo "Creating symlinks in ${_install_libdir_abs}"
 	@echo "------------------------------------------------"
@@ -922,6 +1026,22 @@ ifeq (${PF_API}, Y)
 	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
           rm -f ${PF_LIB_DYNAMIC} &&					\
           ${LN_S} ${_DEFAULT_DIR}/${PF_LIB_DYNAMIC} ./
+endif
+ifeq (${AUDIO_WORKS}, Y)
+	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
+          rm -f ${AW_LIB_STATIC} &&					\
+          ${LN_S} ${_DEFAULT_DIR}/${AW_LIB_STATIC} ./
+	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
+          rm -f ${AW_LIB_DYNAMIC} &&					\
+          ${LN_S} ${_DEFAULT_DIR}/${AW_LIB_DYNAMIC} ./
+endif
+ifeq (${SL}, Y)
+	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
+          rm -f ${SL_LIB_STATIC} &&					\
+          ${LN_S} ${_DEFAULT_DIR}/${SL_LIB_STATIC} ./
+	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
+          rm -f ${SL_LIB_DYNAMIC} &&					\
+          ${LN_S} ${_DEFAULT_DIR}/${SL_LIB_DYNAMIC} ./
 endif
 endif	# ifndef NOLINK
 

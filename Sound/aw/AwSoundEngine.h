@@ -1,8 +1,13 @@
+#ifndef _AW_SOUNDENGINE_H_
+#define _AW_SOUNDENGINE_H_
+
+#include <vjConfig.h>
+
 #include <assert.h>
 #include <unistd.h>
 #include <iostream.h>
 #include <aw.h> //audio works
-#include "SoundEngine.h"
+#include <Sound/SoundEngine.h>
 
 // you need an Observer node in your .adf file named you
 // usually set it's position to 0,0,0
@@ -51,3 +56,6 @@ public:
    awPlayer*   mPlayer;
    awObserver* mObserver;
 };
+
+
+#endif

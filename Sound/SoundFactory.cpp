@@ -1,4 +1,6 @@
-#include "SoundFactory.h"
+#include <vjConfig.h>
+
+#include <Sound/SoundFactory.h>
 
 // regged soundengines...
 std::vector< SoundEngineCreator* > SoundFactory::mEngineCreators;

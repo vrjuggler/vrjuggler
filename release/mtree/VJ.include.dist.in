@@ -40,6 +40,12 @@
 	..
 	SharedMem
 	..
+	Sound
+	    aw
+	    ..
+	    sl
+	    ..
+	..
 	Sync
 	..
 	Threads

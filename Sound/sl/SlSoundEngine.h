@@ -1,17 +1,19 @@
 #ifndef SLSOUNDENGINE
 #define SLSOUNDENGINE
 
+#include <vjConfig.h>
+
 #include <string>
 #include <assert.h>
 #include <unistd.h>
 #include <iostream.h>
-#include "AliasMapper.h" // used to map names to audio files.
-#include "sl.h"
-#include "SoundEngine.h" // base class..
+#include <Sound/AliasMapper.h> // used to map names to audio files.
+#include <sl.h>
+#include <Sound/SoundEngine.h> // base class..
 
 
-#include <vjThread.h> // for when update is called.
-#include <vjThreadFunctor.h> // for when update is called.
+#include <Threads/vjThread.h> // for when update is called.
+#include <Threads/vjThreadFunctor.h> // for when update is called.
 
 class SlSoundEngine : public SoundEngine
 {

@@ -1,11 +1,13 @@
 #ifndef AWSOUND_H
 #define AWSOUND_H
 
+#include <vjConfig.h>
+
 #include <assert.h>
 #include <stdio.h>
 #include <string>
 #include <aw.h> //audio works
-#include "Sound.h"
+#include <Sound/Sound.h>
 
 // you need an Observer node in your .adf file named you
 // usually set it's position to 0,0,0

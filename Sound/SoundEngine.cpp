@@ -1,6 +1,8 @@
+#include <vjConfig.h>
+
 #include <string>
-#include "Sound.h"
-#include "SoundEngine.h"
+#include <Sound/Sound.h>
+#include <Sound/SoundEngine.h>
 
 // lookup a filename, given the sound's alias.
 // the "filename" returned can be used in a call to Sound::load()

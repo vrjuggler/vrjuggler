@@ -1,6 +1,8 @@
-#include "SoundEngine.h" // my sound engine to create
-#include "SoundFactory.h"
-#include "SoundEngineCreator.h" // abstract mini factory
+#include <vjConfig.h>
+
+#include <Sound/SoundEngine.h> // my sound engine to create
+#include <Sound/SoundFactory.h>
+#include <Sound/SoundEngineCreator.h> // abstract mini factory
 
 
 // mini factory
