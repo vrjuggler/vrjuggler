@@ -607,6 +607,6 @@ public class ConfigElementPropertySheet
       frame.getContentPane().add(sheet, BorderLayout.CENTER);
 
       frame.pack();
-      frame.show();
+      frame.setVisible(true);
    }
 }
