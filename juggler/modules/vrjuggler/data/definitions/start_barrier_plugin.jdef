@@ -4,7 +4,7 @@
    <definition_version version="1" label="Start Barrier Plugin">
       <help/>
       <parent/>
-      <category>/Cluster Juggler</category>
+      <category>/Cluster</category>
       <property valuetype="configelementpointer" variable="false" name="start_master">
          <help>Cluster Node that is responsible for starting the cluster at the right time.</help>
          <value label="Start Master Machine"/>
