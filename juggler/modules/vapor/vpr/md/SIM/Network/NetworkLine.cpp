@@ -41,6 +41,7 @@
 
 #include <vpr/vprConfig.h>
 
+#include <vpr/Util/Debug.h>
 #include <vpr/md/SIM/Network/Message.h>
 #include <vpr/md/SIM/Network/MessagePtr.h>
 #include <vpr/md/SIM/Network/NetworkLine.h>
@@ -207,7 +208,9 @@ void NetworkLine::calculateMessageEventTimes (vpr::sim::MessagePtr msg,
 
 void NetworkLine::addMessage (vpr::sim::MessagePtr msg, msg_queue_t& queue)
 {
-//   vprASSERT(msg != NULL && "Tried to queue invalid message");
+   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+      << "NetworkLine::addMessage(): Adding new message to queue for "
+      << mNetworkIPStr << "\n" << vprDEBUG_FLUSH;
    queue.push(msg);
 }
 
