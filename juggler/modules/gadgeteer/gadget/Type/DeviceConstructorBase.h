@@ -60,7 +60,11 @@ public:
     * Constructor.
     * @post Device is registered.
     */
-   DeviceConstructorBase() {;}
+   DeviceConstructorBase()
+   {;}
+
+   virtual ~DeviceConstructorBase()
+   {;}
 
    /** Creates the device. */
    virtual Input* createDevice(jccl::ConfigElementPtr element)

@@ -61,7 +61,11 @@ public:
     * Constructor.
     * @post Device is registered.
     */
-   BaseTypeConstructorBase() {;}
+   BaseTypeConstructorBase()
+   {;}
+
+   virtual ~BaseTypeConstructorBase()
+   {;}
 
    /** Creates the device. */
    virtual Input* createNetDevice(std::string baseType)
