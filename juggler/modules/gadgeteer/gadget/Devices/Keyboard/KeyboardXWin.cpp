@@ -87,9 +87,29 @@ bool vjXWinKeyboard::config(vjConfigChunk *c)
                << m_mouse_sensitivity << endl << vjDEBUG_FLUSH;
     vjDEBUG_END(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << endl << vjDEBUG_FLUSH;
 
+    // KEVIN: 
+    // Note:      that this function returns 0 if the property is not found.
+    // Also Note: that in IRIX, usleep of 0 does not yield.
     mSleepTimeMS = c->getProperty("sleep_time");
-    if(mSleepTimeMS <  0)
-       mSleepTimeMS = 0;
+    
+    // KEVIN: 
+    // If sleep_time property is 0, then set it to some "reasonable" sample rate.
+    // Default value for a "reasonable" sample rate is 62.5ms (16hz)
+    //
+    // NOTES:
+    // 0ms is an excessive default for keyboard sampling.  
+    //      Never allow 0 since:
+    //      a.) 0 could be a default or user entered, and  
+    //      b.) usleep of 0 within a while(1) thread could starve all other processes
+    // 1ms is also excessive, (1000hz sample rate for a lowly keyboard input device?!?!)
+    //      But we'll allow 1ms since:
+    //      a.) 1+ is definately user entered, and
+    //      b.) at least the IRIX usleep will yield
+    // We really only need about 8-16hz (in my opinion)...
+    //      note that:  8hz == 125ms  and  16hz == 62.5ms  
+    //
+    if(mSleepTimeMS <=  0)
+       mSleepTimeMS = 62.5f; 
 
     return true;
 }
