@@ -100,6 +100,11 @@ public:
     */
    std::string getHelp() const;
 
+   /**
+    * Test to see if we derive from the given ConfigDefinition.
+    */
+   bool isParent(const std::string& token) const;
+   
    /** Gets a PropertyDefinitoin from self with matching token.
     * @param   token Non-NULL token for the desired jccl::PropertyDefinition.
     * @returns pdesc Pointer to propertydesc in self with matching token.
