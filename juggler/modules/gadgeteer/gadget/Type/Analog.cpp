@@ -149,8 +149,8 @@ vpr::ReturnStatus Analog::readObject(vpr::ObjectReader* reader)
 
 bool Analog::config(jccl::ConfigChunkPtr c)
 {
-   mMin = c->template getProperty<float>("min");
-   mMax = c->template getProperty<float>("max");
+   mMin = c->getProperty<float>("min");
+   mMax = c->getProperty<float>("max");
 
    vprDEBUG(vprDBG_ALL,4) << " Analog::config() min:" << mMin
                           << " max:" << mMax << "\n" << vprDEBUG_FLUSH;
