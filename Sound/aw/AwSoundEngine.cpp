@@ -67,10 +67,7 @@ void AwSoundEngine::init()
    commandRm += tmpFile;
 
    vjDEBUG(vjDBG_ALL,vjDBG_STATE_LVL) << clrOutNORM(clrYELLOW,"Attempting to delete: ") << commandRm.c_str() << "\n" << vjDEBUG_FLUSH;
-   system( commandRm.c_str() );
-   vjDEBUG(vjDBG_ALL,vjDBG_STATE_LVL) << clrOutNORM(clrYELLOW,"Issuing system() command:")  << command.c_str() << "\n" << vjDEBUG_FLUSH;
-   system( command.c_str() );
-   vjDEBUG(vjDBG_ALL,vjDBG_STATE_LVL) << clrOutNORM(clrYELLOW,"Done with command\n") << vjDEBUG_FLUSH;
+   unlink(tmpFile.c_str());
 
    mInitialized = false;  //set it to true at the end of this func...
 
