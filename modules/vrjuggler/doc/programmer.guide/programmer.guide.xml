@@ -5184,7 +5184,7 @@ pfDraw();</programlisting>
         <para>The two main application methods for
         <classname>vrj::OpenSGApp</classname> VR Juggler applications are
         <methodname>initScene()</methodname> and
-        <methodname>getSceneRoot()</methodname><indexterm>
+        <methodname>getScene()</methodname><indexterm>
             <primary>vrj::OpenSGApp</primary>
 
             <secondary>extensions to vrj::GlApp</secondary>
@@ -5232,12 +5232,12 @@ pfDraw();</programlisting>
 
         <section>
           <title>Scene Graph Access:
-          <methodname>vrj::OpenSGApp::getSceneRoot()</methodname></title>
+          <methodname>vrj::OpenSGApp::getScene()</methodname></title>
 
           <indexterm>
             <primary>vrj::OpenSGApp</primary>
 
-            <secondary>getSceneRoot() method</secondary>
+            <secondary>getScene() method</secondary>
           </indexterm>
 
           <indexterm>
@@ -5250,11 +5250,11 @@ pfDraw();</programlisting>
 
           <para>In order for OpenSG to render the application scene graph, it
           must get access to the scene graph root. The method
-          <methodname>vrj::OpenSGApp::getSceneRoot()</methodname> will be
-          called by the OpenSG application class wrapper so that it can get
-          access to the currently active scene graph whenever the wrapper
-          needs to use it (ex. rendering, updating). Since the job of
-          <methodname>getSceneRoot()</methodname> is straightforward, its
+          <methodname>vrj::OpenSGApp::getScene()</methodname> will be called
+          by the OpenSG application class wrapper so that it can get access to
+          the currently active scene graph whenever the wrapper needs to use
+          it (ex. rendering, updating). Since the job of
+          <methodname>getScene()</methodname> is straightforward, its
           implementation can be very simple. A typical implementation will
           have a single statement that returns a member variable that holds a
           pointer to the current scene graph root node.</para>
@@ -5268,7 +5268,7 @@ pfDraw();</programlisting>
             node. In most cases this method should only be one line of code.
             See the following code for an example.</para>
 
-            <programlisting>virtual OSG::NodePtr getSceneRoot()
+            <programlisting>virtual OSG::NodePtr getScene()
 {
    return mSceneRoot;  // Return the root of the graph
 }</programlisting>
@@ -5351,7 +5351,7 @@ pfDraw();</programlisting>
             <classname>OpenSGNav</classname>. It is derived from
             <classname>vrj::OpenSGApp</classname> and has custom
             <methodname>initScene()</methodname>,
-            <methodname>getSceneRoot()</methodname>,
+            <methodname>getScene()</methodname>,
             <methodname>init()</methodname>,
             <methodname>contextInit()</methodname>, and
             <methodname>preFrame()</methodname> methods declared. Refer to
@@ -5369,7 +5369,7 @@ public:
    virtual void preFrame();
 
    virtual void initScene();
-   virtual OSG::NodePtr getSceneRoot();
+   virtual OSG::NodePtr getScene();
 
    void setModelFileName(std::string filename);
 
@@ -5519,7 +5519,7 @@ public:
                        id="OpenSGNav.root.create.desc">
                 <para>Then, the root note for the scene graph is created. This
                 is what will be returned to OpenSG for rendering by
-                <methodname>OpenSGNav::getSceneRoot()</methodname>.</para>
+                <methodname>OpenSGNav::getScene()</methodname>.</para>
               </callout>
 
               <callout arearefs="OpenSGNav.scene.root.create.co"
@@ -5545,15 +5545,15 @@ public:
           </section>
 
           <section>
-            <title>The <methodname>getSceneRoot()</methodname> Member
+            <title>The <methodname>getScene()</methodname> Member
             Function</title>
 
             <para>The Performer Draw Manager will call the application's
-            <methodname>getSceneRoot()</methodname> method to get the root of
-            the scene graph. The implementation of this method can be found in
+            <methodname>getScene()</methodname> method to get the root of the
+            scene graph. The implementation of this method can be found in
             <filename>OpenSGNav.h</filename>. The code is as follows:</para>
 
-            <programlisting>OSG::NodePtr OpenSGNav::getSceneRoot()
+            <programlisting>OSG::NodePtr OpenSGNav::getScene()
 {
    return mRootNode;
 }</programlisting>
@@ -5562,7 +5562,7 @@ public:
             to the simple tutorial from which it is taken. All OpenSG-based VR
             Juggler applications can take advantage of this idiom where the
             root node is a member variable returned in
-            <methodname>getSceneRoot()</methodname>.</para>
+            <methodname>getScene()</methodname>.</para>
           </section>
         </section>
       </section>
