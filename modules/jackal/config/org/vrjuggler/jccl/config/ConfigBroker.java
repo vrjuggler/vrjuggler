@@ -123,6 +123,16 @@ public interface ConfigBroker
    public List getElements(ConfigContext context);
 
    /**
+    * Gets a list of all the configuration elements within the given context
+    * includeing embedded elements.
+    *
+    * @param context    the context from which to retrieve elements
+    *
+    * @return  a list of the configuration elements
+    */
+   public List getElementsIncludingEmbedded(ConfigContext context);
+   
+   /**
     * Gets a list of all the configuration elements within the given
     * resource.
     *
