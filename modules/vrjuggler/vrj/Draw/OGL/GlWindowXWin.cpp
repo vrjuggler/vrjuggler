@@ -172,12 +172,7 @@ int GlWindowXWin::open()
     foo = (char*)window_name.c_str();
     ::XStringListToTextProperty(&foo, 1, &w_name);
 
-    /* The next few lines of crud are needed to get it through the window
-     * manager's skull that yes, we DO have a REASON for wanting the window
-     * to be positioned WHERE WE TOLD YOU TO, and not where YOU think it should
-     * go, thank you very much, I'M the APPLICATION so stop $%^*&%#@! SECOND
-     * GUESSING ME!
-     */
+    /* guarantee window position */
     sizehints = XAllocSizeHints();
     sizehints->flags = USPosition;
 
@@ -219,10 +214,7 @@ int GlWindowXWin::open()
 
     /********************* Mapping Window **************************/
 
-    /* Now that we've straightened that out with a minimum of bloodshed,
-     * we can actually map the window.  The XIfEvent makes us wait until
-     * it's actually on screen.
-     */
+    /* Open the window, select the input events, and wait until mapped (XIfEvent) */
     ::XSelectInput(x_display, x_window, event_mask );
     ::XMapWindow (x_display, x_window);
     ::XIfEvent (x_display, &fooevent, EventIsMapNotify, (XPointer)x_window);
@@ -505,8 +497,7 @@ void GlWindowXWin::checkEvents()
    if( (vi = glXChooseVisual (display, screen, viattrib)) )
       return vi;
 
-   // But they told me to please just go f___ myself
-   // You know you just can't win.  -d. gilmour
+   // Failed, so return NULL
    return NULL;
 }
 
