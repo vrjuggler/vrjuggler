@@ -181,8 +181,6 @@ case $host in
             OPT_FLAGS='-Olimit 2000'
         fi
 
-echo "LDOPTS: $LDOPTS"
-
         AR='${CXX} -ar -WR,-v -o'
         CFLAGS="-ptv $CFLAGS"
         CXXFLAGS="-ptv $CXXFLAGS"
