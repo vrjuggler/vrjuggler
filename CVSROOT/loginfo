@@ -22,5 +22,5 @@
 # The problem seems to be that pserver is run as root
 # and root does not have a path set on the machine
 # NOTE: BIG security hole lives here as well.  We should find a way to fix.
-ALL	/usr/sbin/Mail -s "[CVS Log: JugglerRepos] %s" allenb@vrac.iastate.edu
+ALL	/usr/sbin/Mail -s "[CVS Log: JugglerRepos] %s" allenb@vrac.iastate.edu kevn@vrjuggler.org
 ALL	/home/selab/Juggler/CVSRepos/CVSROOT/log_accum.pl %s
