@@ -41,4 +41,9 @@
 #include <gmtl-TriOps.h>
 #include <gmtl-VecOps.h>
 
+#include <gmtl-Containment.h>
+#include <gmtl-Generate.h>
+#include <gmtl-Intersection.h>
+#include <gmtl-wrappers.h>
+
 #endif /* _VRJ_NET_GMTL_FUNCTIONS_H_ */
