@@ -40,8 +40,6 @@
 namespace gadget
 {
    
-   bool doneConfig();
-   
    MsgPackage::MsgPackage()
    {
       mObjectWriter = new vpr::ObjectWriter;
@@ -441,23 +439,7 @@ namespace gadget
       vprDEBUG_END(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "[PACKET]RECEIVEING A DEVICE DATA PACKET\n" << vprDEBUG_FLUSH;
       return true;
    }
-//////////////////////////////////////////////////////////////////////
-   bool doneConfig()
-   {
-      /*jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
-      
-      std::list<jccl::ConfigManager::PendingChunk>::iterator pendingItr;
-      cfg_mgr->lockPending();
-      for (pendingItr=cfg_mgr->getPendingBegin();pendingItr!=cfg_mgr->getPendingEnd();pendingItr++)
-      {
-         if (DeviceFactory::instance()->recognizeDevice( (*pendingItr.mChunk ))
-         { 
-            return false;
-         }
-      }
-      return true;*/
-   }
-/////////////////////////////////////////////////////////////////////////////////
+
    void MsgPackage::createEndBlock()
    {
       /////////////////////////////////////////////////////
