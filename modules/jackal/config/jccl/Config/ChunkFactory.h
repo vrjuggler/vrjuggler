@@ -37,8 +37,6 @@
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ChunkDesc.h>
 #include <jccl/Config/ChunkDescDB.h>
-#include <jccl/Util/Debug.h>
-#include <vpr/Sync/Mutex.h>
 #include <vpr/Util/Singleton.h>
 
 #include <cppdom/cppdom.h>
@@ -48,8 +46,9 @@ namespace jccl
 
 /** Factory for chunks and place holder for some other system wide factory functions
 */
-class JCCL_CLASS_API ChunkFactory
+class JCCL_CLASS_API ChunkFactory : public vpr::Singleton<ChunkFactory>
 {
+   friend class vpr::Singleton<ChunkFactory>;
 public:
    //: Adds descriptions in _descdb to the factory
    /*
@@ -60,27 +59,27 @@ public:
    */
 
    /** Adds descriptions in file 'filename' to the factory */
-   bool loadDescs (const std::string& filename, const std::string& parentFile = "");
+   bool loadDescs(const std::string& filename, const std::string& parentFile = "");
 
    // we actually do need this so that the EM can send the descdb to the gui...
-   ChunkDescDB* getChunkDescDB ()
+   ChunkDescDB* getChunkDescDB()
    {
       return &mDescDB;
    }
 
-   ChunkDescPtr getChunkDesc (const std::string& token)
+   ChunkDescPtr getChunkDesc(const std::string& token)
    {
       return mDescDB.get(token);
    }
 
    /** Creates a Chunk using the named description */
-   ConfigChunkPtr createChunk (const std::string& desctoken)
+   ConfigChunkPtr createChunk(const std::string& desctoken)
    {
-      return createChunk (mDescDB.get(desctoken) );
+      return createChunk(mDescDB.get(desctoken) );
    }
 
    //: Creates a Chunk using the given description
-   ConfigChunkPtr createChunk (ChunkDescPtr d);
+   ConfigChunkPtr createChunk(ChunkDescPtr d);
 
    /** Get the global XML context that we are using system-wide */
    cppdom::ContextPtr getXMLContext()
@@ -101,19 +100,12 @@ public:
       return cppdom::DocumentPtr(new cppdom::Document(getXMLContext()));
    }
 
-protected:
-   /** Loads the default descs */
-   void loadDefaultDescs();
-
 private:
-   ChunkFactory ();
+   ChunkFactory();
 
    ChunkDescDB             mDescDB;
-   cppdom::ContextPtr    mGlobalContext;      /**< The global context to use for jccl */
-   bool                    mLoadedDefaultDescs; /**< Flag to signal if default descs have been loaded */
-
-   vprSingletonHeader(ChunkFactory);
-}; // class ChunkFactory
+   cppdom::ContextPtr      mGlobalContext;      /**< The global context to use for jccl */
+};
 
 } // namespace jccl
 
