@@ -45,6 +45,7 @@
 #include <vpr/vprConfig.h>
 
 #include <iostream>
+#include <fstream>
 #include <stdlib.h>
 #include <vector>
 #include <string>
@@ -227,10 +228,10 @@ namespace vpr
       Debug(const Debug& d) {;}
       void operator= (const Debug& d) {;}
 
-      /** Initialize the system */
-      void init();
-
    public:
+      /** Initialize the system */
+      void init(const std::string filename = std::string(""));
+
       // Get the debug stream to use
       std::ostream& getStream(const vpr::DebugCategory& cat, const int level, const bool show_thread_info = true,
                               const bool use_indent = true, const int indentChange = 0,
@@ -298,6 +299,8 @@ namespace vpr
       bool mDebugEnabled;  // Is debug output enabled
       int debugLevel;      //! Debug level to use
       int indentLevel;     //! Amount to indent
+
+      std::fstream* mFile;       /** file we are using to output all vprDebug output to - NULL if to console */
 
       bool  mUseThreadLocal;  //! Whether to use thread local info or not
 
