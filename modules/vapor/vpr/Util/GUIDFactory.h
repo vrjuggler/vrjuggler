@@ -62,12 +62,20 @@ public:
       return new vpr::GUID();
    }
 
-/*
-   static vpr::GUID* createNamespaceGUID (const char* name)
+   static vpr::GUID* createGUID (const struct vpr::GUID::StdGUID& guid)
    {
-      return createNameGUID(std::string(name));
+      return new vpr::GUID(guid);
    }
-*/
+
+   static vpr::GUID* createGUID (const char* name)
+   {
+      return createGUID(std::string(name));
+   }
+
+   static vpr::GUID* createGUID (const std::string& name)
+   {
+      return new vpr::GUID(name);
+   }
 
    static vpr::GUID* createNameGUID (const vpr::GUID& namespace_guid,
                                      const std::string& name)

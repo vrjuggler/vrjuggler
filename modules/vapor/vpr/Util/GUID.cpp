@@ -41,11 +41,31 @@
 
 #include <vpr/vprConfig.h>
 
+#include <stdio.h>
+#include <string.h>
+
 #include <vpr/Util/GUID.h>
 
 
 namespace vpr
 {
+
+std::string GUID::toString () const
+{
+   std::string guid_str;
+   char guid_c_str[39];
+
+   snprintf(guid_c_str, 39,
+            "%08X-%04hX-%04hX-%02X%02X-%02X%02X%02X%02X%02X%02X",
+            m_guid.moz.m0, m_guid.moz.m1, m_guid.moz.m2, m_guid.moz.m3[0],
+            (vpr::Uint32) m_guid.moz.m3[1], (vpr::Uint32) m_guid.moz.m3[2],
+            (vpr::Uint32) m_guid.moz.m3[3], (vpr::Uint32) m_guid.moz.m3[4],
+            (vpr::Uint32) m_guid.moz.m3[5], (vpr::Uint32) m_guid.moz.m3[6],
+            (vpr::Uint32) m_guid.moz.m3[7]);
+   guid_str = guid_c_str;
+
+   return guid_str;
+}
 
 bool GUID::operator== (const GUID& guid) const
 {
@@ -60,6 +80,21 @@ bool GUID::operator== (const GUID& guid) const
 GUID::GUID ()
 {
    uuid_create(&m_guid.leach);
+}
+
+GUID::GUID (const struct vpr::GUID::StdGUID& guid)
+{
+   memcpy(&m_guid, &guid, sizeof(vpr::GUID::StdGUID));
+}
+
+GUID::GUID (const std::string& guid_string)
+{
+   sscanf(guid_string.c_str(),
+          "%08X-%04hX-%04hX-%02X%02X-%02X%02X%02X%02X%02X%02X",
+          &m_guid.moz.m0, &m_guid.moz.m1, &m_guid.moz.m2,
+          &m_guid.moz.m3[0], &m_guid.moz.m3[1], &m_guid.moz.m3[2],
+          &m_guid.moz.m3[3], &m_guid.moz.m3[4], &m_guid.moz.m3[5],
+          &m_guid.moz.m3[6], &m_guid.moz.m3[7]);
 }
 
 GUID::GUID (const GUID& ns_guid, const std::string& name)
