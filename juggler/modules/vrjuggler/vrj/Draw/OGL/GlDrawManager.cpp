@@ -214,7 +214,7 @@ void vjGlDrawManager::addDisplay(vjDisplay* disp)
 
    // -- Create any needed Pipes & Start them
    unsigned int pipe_num = new_win->getDisplay()->getPipe();    // Find pipe to add it too
-   vjASSERT(pipe_num >= 0);                            // ASSERT: pipeNum := [0...n]
+
    if(pipes.size() < (pipe_num+1))           // ASSERT: Max index of pipes is < our pipe
    {                                         // +1 because if pipeNum = 0, I still need size() == 1
       while(pipes.size() < (pipe_num+1))     // While we need more pipes
