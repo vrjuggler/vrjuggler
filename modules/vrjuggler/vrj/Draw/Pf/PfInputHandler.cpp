@@ -57,7 +57,7 @@ void PfInputHandler::handlePerformerEvent(MSG message)
    {
       // Forward events on to subclass. The magic of inheritance :)
       InputAreaWin32::updKeys( message );
-	}
+   }
 }
 #else
 void PfInputHandler::handlePerformerEvent(::XEvent& event)
@@ -68,7 +68,7 @@ void PfInputHandler::handlePerformerEvent(::XEvent& event)
    {
       // Forward events on to subclass. The magic of inheritance :)
       InputAreaXWin::handleEvent( event );
-	}
+   }
 }
 #endif
 
