@@ -962,9 +962,11 @@ ifeq (${BUILD_GUI}, Y)
 	@echo "------------------------------------------------"
 	@echo "Installing vjcontrol"
 	@echo "------------------------------------------------"
+ifneq (@OS_TYPE@, Win32)
 	swingpath=`${PERL} ${scriptdir}/find-swing.pl` ;		\
           ${INSTALL} -m ${_FILE_PERMS} ${_GROUP_OPT_UNIX}			\
           $$swingpath ${bindir}
+endif
 	${INSTALL} -m ${_FILE_PERMS} ${_GROUP_OPT_UNIX}			\
           ${topdir}/GUI/VjControl.jar ${bindir}
 	${INSTALL} -m ${_EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
