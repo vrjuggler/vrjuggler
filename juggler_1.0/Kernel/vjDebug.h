@@ -108,8 +108,8 @@ const std::string vjDBG_CONFIGstr("DBG_CONFIGDB");
 #  define clrSetNORM(color) ""
 #  define clrSetBOLD(color) ""
 #  define clrRESET ""
-#  define clrOutBOLD(color,text) ""
-#  define clrOutNORM(color,text) ""
+#  define clrOutBOLD(color,text) text
+#  define clrOutNORM(color,text) text
 #else
 #  define clrESC char(27)
 #  define clrCONTROL_CHARS(font, color) clrESC << "[" << font << ";" << color << "m"
