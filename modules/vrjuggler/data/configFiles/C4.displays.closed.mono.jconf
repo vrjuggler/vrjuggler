@@ -17,13 +17,19 @@
          <size>1024</size>
          <pipe>1</pipe>
          <frame_buffer_config>
-            <opengl_frame_buffer_config name="GL Frame Buffer" version="1">
+            <opengl_frame_buffer_config name="GL Frame Buffer" version="2">
                <visual_id>-1</visual_id>
                <red_size>8</red_size>
                <green_size>8</green_size>
                <blue_size>8</blue_size>
                <alpha_size>8</alpha_size>
+               <auxiliary_buffer_count>0</auxiliary_buffer_count>
                <depth_buffer_size>16</depth_buffer_size>
+               <stencil_buffer_size>1</stencil_buffer_size>
+               <accum_red_size>1</accum_red_size>
+               <accum_green_size>1</accum_green_size>
+               <accum_blue_size>1</accum_blue_size>
+               <accum_alpha_size>1</accum_alpha_size>
                <fsaa_enable>false</fsaa_enable>
             </opengl_frame_buffer_config>
          </frame_buffer_config>
@@ -68,13 +74,19 @@
          <size>1024</size>
          <pipe>2</pipe>
          <frame_buffer_config>
-            <opengl_frame_buffer_config name="GL Frame Buffer" version="1">
+            <opengl_frame_buffer_config name="GL Frame Buffer" version="2">
                <visual_id>-1</visual_id>
                <red_size>8</red_size>
                <green_size>8</green_size>
                <blue_size>8</blue_size>
                <alpha_size>8</alpha_size>
+               <auxiliary_buffer_count>0</auxiliary_buffer_count>
                <depth_buffer_size>16</depth_buffer_size>
+               <stencil_buffer_size>1</stencil_buffer_size>
+               <accum_red_size>1</accum_red_size>
+               <accum_green_size>1</accum_green_size>
+               <accum_blue_size>1</accum_blue_size>
+               <accum_alpha_size>1</accum_alpha_size>
                <fsaa_enable>false</fsaa_enable>
             </opengl_frame_buffer_config>
          </frame_buffer_config>
@@ -119,13 +131,19 @@
          <size>1024</size>
          <pipe>0</pipe>
          <frame_buffer_config>
-            <opengl_frame_buffer_config name="GL Frame Buffer" version="1">
+            <opengl_frame_buffer_config name="GL Frame Buffer" version="2">
                <visual_id>-1</visual_id>
                <red_size>8</red_size>
                <green_size>8</green_size>
                <blue_size>8</blue_size>
                <alpha_size>8</alpha_size>
+               <auxiliary_buffer_count>0</auxiliary_buffer_count>
                <depth_buffer_size>16</depth_buffer_size>
+               <stencil_buffer_size>1</stencil_buffer_size>
+               <accum_red_size>1</accum_red_size>
+               <accum_green_size>1</accum_green_size>
+               <accum_blue_size>1</accum_blue_size>
+               <accum_alpha_size>1</accum_alpha_size>
                <fsaa_enable>false</fsaa_enable>
             </opengl_frame_buffer_config>
          </frame_buffer_config>
@@ -170,13 +188,19 @@
          <size>1024</size>
          <pipe>1</pipe>
          <frame_buffer_config>
-            <opengl_frame_buffer_config name="GL Frame Buffer" version="1">
+            <opengl_frame_buffer_config name="GL Frame Buffer" version="2">
                <visual_id>-1</visual_id>
                <red_size>8</red_size>
                <green_size>8</green_size>
                <blue_size>8</blue_size>
                <alpha_size>8</alpha_size>
+               <auxiliary_buffer_count>0</auxiliary_buffer_count>
                <depth_buffer_size>16</depth_buffer_size>
+               <stencil_buffer_size>1</stencil_buffer_size>
+               <accum_red_size>1</accum_red_size>
+               <accum_green_size>1</accum_green_size>
+               <accum_blue_size>1</accum_blue_size>
+               <accum_alpha_size>1</accum_alpha_size>
                <fsaa_enable>false</fsaa_enable>
             </opengl_frame_buffer_config>
          </frame_buffer_config>
