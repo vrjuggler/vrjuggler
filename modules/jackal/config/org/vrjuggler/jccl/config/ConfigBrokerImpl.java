@@ -33,6 +33,7 @@ package org.vrjuggler.jccl.config;
 
 import java.io.*;
 import java.util.*;
+import javax.swing.event.EventListenerList;
 import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
@@ -122,6 +123,9 @@ public class ConfigBrokerImpl
       {
          throw new IOException("Invalid file");
       }
+
+      // Let listeners know the resource was opened
+      fireResourceOpened(name);
    }
 
    /**
@@ -162,6 +166,7 @@ public class ConfigBrokerImpl
      throws IOException
    {
       throw new IOException("not implemented");
+      //fireResourceClosed(name);
    }
 
    /**
@@ -175,6 +180,7 @@ public class ConfigBrokerImpl
      throws IOException
    {
       throw new IOException("not implemented");
+      //fireResourceSaved(name);
    }
 
    /**
@@ -213,6 +219,7 @@ public class ConfigBrokerImpl
       }
 
       target.add(chunk);
+      fireConfigChunkAdded(getNameFor(target), chunk);
       return true;
    }
 
@@ -240,6 +247,7 @@ public class ConfigBrokerImpl
          if (db.contains(chunk))
          {
             db.remove(chunk);
+            fireConfigChunkRemoved(getNameFor(db), chunk);
             return true;
          }
       }
@@ -282,6 +290,7 @@ public class ConfigBrokerImpl
       }
 
       target.add(desc);
+      fireChunkDescAdded(getNameFor(target), desc);
       return true;
    }
 
@@ -309,6 +318,7 @@ public class ConfigBrokerImpl
          if (db.contains(desc))
          {
             db.remove(desc);
+            fireChunkDescRemoved(getNameFor(db), desc);
             return true;
          }
       }
@@ -376,6 +386,183 @@ public class ConfigBrokerImpl
    }
 
    /**
+    * Adds the given listener to receive config events from this broker.
+    */
+   public void addConfigListener(ConfigListener listener)
+   {
+      listeners.add(ConfigListener.class, listener);
+   }
+
+   /**
+    * Removes the given listener from receiving config events from this broker.
+    */
+   public void removeConfigListener(ConfigListener listener)
+   {
+      listeners.remove(ConfigListener.class, listener);
+   }
+
+   /**
+    * Adds the given listener to receive config broker events from this broker.
+    */
+   public void addConfigBrokerListener(ConfigBrokerListener listener)
+   {
+      listeners.add(ConfigBrokerListener.class, listener);
+   }
+
+   /**
+    * Removes the given resource listener from receiving confi broker events
+    * from this broker.
+    */
+   public void removeConfigBrokerListener(ConfigBrokerListener listener)
+   {
+      listeners.remove(ConfigBrokerListener.class, listener);
+   }
+
+   /**
+    * Notifies all listeners that the given resource has been opened.
+    */
+   protected void fireResourceOpened(String resource)
+   {
+      ConfigBrokerEvent evt = null;
+      Object[] listener_list = listeners.getListenerList();
+      for (int i=listener_list.length-2; i>=0; i-=2)
+      {
+         if (listener_list[i] == ConfigBrokerListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new ConfigBrokerEvent(this, resource);
+            }
+            ((ConfigBrokerListener)listener_list[i+1]).resourceOpened(evt);
+         }
+      }
+   }
+
+   /**
+    * Notifies all listeners that the given resource has been closed.
+    */
+   protected void fireResourceClosed(String resource)
+   {
+      ConfigBrokerEvent evt = null;
+      Object[] listener_list = listeners.getListenerList();
+      for (int i=listener_list.length-2; i>=0; i-=2)
+      {
+         if (listener_list[i] == ConfigBrokerListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new ConfigBrokerEvent(this, resource);
+            }
+            ((ConfigBrokerListener)listener_list[i+1]).resourceClosed(evt);
+         }
+      }
+   }
+
+   /**
+    * Notifies all listeners that the given resource has been saved.
+    */
+   protected void fireResourceSaved(String resource)
+   {
+      ConfigBrokerEvent evt = null;
+      Object[] listener_list = listeners.getListenerList();
+      for (int i=listener_list.length-2; i>=0; i-=2)
+      {
+         if (listener_list[i] == ConfigBrokerListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new ConfigBrokerEvent(this, resource);
+            }
+            ((ConfigBrokerListener)listener_list[i+1]).resourceSaved(evt);
+         }
+      }
+   }
+
+   /**
+    * Notifies all listeners that the given chunk desc has been added to the
+    * given resource.
+    */
+   protected void fireChunkDescAdded(String resource, ChunkDesc desc)
+   {
+      ConfigEvent evt = null;
+      Object[] listener_list = listeners.getListenerList();
+      for (int i=listener_list.length-2; i>=0; i-=2)
+      {
+         if (listener_list[i] == ConfigListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new ConfigEvent(this, resource, desc);
+            }
+            ((ConfigListener)listener_list[i+1]).chunkDescAdded(evt);
+         }
+      }
+   }
+
+   /**
+    * Notifies all listeners that the given chunk desc has been removed from the
+    * given resource.
+    */
+   protected void fireChunkDescRemoved(String resource, ChunkDesc desc)
+   {
+      ConfigEvent evt = null;
+      Object[] listener_list = listeners.getListenerList();
+      for (int i=listener_list.length-2; i>=0; i-=2)
+      {
+         if (listener_list[i] == ConfigListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new ConfigEvent(this, resource, desc);
+            }
+            ((ConfigListener)listener_list[i+1]).chunkDescRemoved(evt);
+         }
+      }
+   }
+
+   /**
+    * Notifies all listeners that the given config chunk has been added to the
+    * given resource.
+    */
+   protected void fireConfigChunkAdded(String resource, ConfigChunk chunk)
+   {
+      ConfigEvent evt = null;
+      Object[] listener_list = listeners.getListenerList();
+      for (int i=listener_list.length-2; i>=0; i-=2)
+      {
+         if (listener_list[i] == ConfigListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new ConfigEvent(this, resource, chunk);
+            }
+            ((ConfigListener)listener_list[i+1]).configChunkAdded(evt);
+         }
+      }
+   }
+
+   /**
+    * Notifies all listeners that the given config chunk has been removed from
+    * the given resource.
+    */
+   protected void fireConfigChunkRemoved(String resource, ConfigChunk chunk)
+   {
+      ConfigEvent evt = null;
+      Object[] listener_list = listeners.getListenerList();
+      for (int i=listener_list.length-2; i>=0; i-=2)
+      {
+         if (listener_list[i] == ConfigListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new ConfigEvent(this, resource, chunk);
+            }
+            ((ConfigListener)listener_list[i+1]).configChunkRemoved(evt);
+         }
+      }
+   }
+
+   /**
     * Gets a list of all the resources managed by this broker that are of the
     * given class.
     *
@@ -405,7 +592,35 @@ public class ConfigBrokerImpl
    }
 
    /**
+    * Does a reverse lookup to get the name mapped to the given resource.
+    *
+    * @return  the name of the resource or null if the resource could not be
+    *          found
+    */
+   private String getNameFor(Object resource)
+   {
+      for (Iterator itr = resources.keySet().iterator(); itr.hasNext(); )
+      {
+         String name = (String)itr.next();
+         Object res = resources.get(name);
+         if (res != null)
+         {
+            if (res == resource)
+            {
+               return name;
+            }
+         }
+      }
+      return null;
+   }
+
+   /**
     * The mapping of resources names to the resources it refers to.
     */
    private Map resources = new HashMap();
+
+   /**
+    * All listeners interested in this broker.
+    */
+   private EventListenerList listeners = new EventListenerList();
 }
