@@ -110,7 +110,7 @@ public class WizardBuilder
       try
       {
          WizardStepFactory.registerWizardStep(
-               Class.forName("org.vrjuggler.vrjconfig.wizard.SimDisplayPane",
+               Class.forName("org.vrjuggler.vrjconfig.wizard.simulator.displays.SimDisplayPane",
                              true,
                              this.getClass().getClassLoader()));
       }
