@@ -43,6 +43,9 @@
 #define _VPR_SIM_MESSAGE_H_
 
 #include <vpr/vprConfig.h>
+#include <vpr/vprTypes.h>
+#include <vector>
+#include <boost/smart_ptr.hpp>
 
 #include <stdlib.h>
 #include <string.h>
@@ -69,15 +72,20 @@ class vpr::SocketImplSIM;
 class VPR_CLASS_API Message
 {
 public:
+   typedef std::vector<vpr::Uint8> MessageDataType;
+   typedef boost::shared_ptr<std::vector<vpr::Uint8> > MessageDataPtr;
+
    /**
     * Creates a new message by copying the given buffer into freshly allocated
     * memory.
     */
    Message (const void* msg, const vpr::Uint32 msg_size)
-      : mMsg(NULL), mMsgSize(msg_size), mSrcSock(NULL), mDestSock(NULL)
+      : mSrcSock(NULL), mDestSock(NULL)
    {
-      mMsg = malloc(msg_size);
-      memcpy(mMsg, msg, msg_size);
+      vpr::Uint8* start = (vpr::Uint8*)msg;
+      mMsg = MessageDataPtr( new MessageDataType(start, start+msg_size));
+      //mMsg = malloc(msg_size);
+      //memcpy(mMsg, msg, msg_size);
    }
 
    /**
@@ -87,16 +95,19 @@ public:
     * a very expensive operation in terms of time and space.
     */
    Message (const Message& msg)
-      : mMsg(NULL), mMsgSize(msg.mMsgSize), mStartOnWire(msg.mStartOnWire),
+      : mStartOnWire(msg.mStartOnWire),
         mFullyOnWire(msg.mFullyOnWire), mArrivesFully(msg.mArrivesFully),
         mMsgPath(msg.mMsgPath), mNextHop(msg.mNextHop), mSrcSock(msg.mSrcSock),
         mDestSock(msg.mDestSock)
    {
-      if ( msg.mMsg != NULL && msg.mMsgSize > 0 )
+      mMsg.reset();
+      if ( (msg.mMsg.get() != NULL) && (!msg.mMsg->empty()) )
       {
          // Yikes, this could get expensive!
-         mMsg = malloc(msg.mMsgSize);
-         memcpy(mMsg, msg.mMsg, msg.mMsgSize);
+         // XXX: Find out if this is REALLY needed
+         mMsg = MessageDataPtr( new MessageDataType(msg.mMsg->begin(), msg.mMsg->end()));
+         //mMsg = malloc(msg.mMsgSize);
+         //memcpy(mMsg, msg.mMsg, msg.mMsgSize);
       }
    }
 
@@ -105,10 +116,7 @@ public:
     */
    ~Message (void)
    {
-      if ( mMsg != NULL )
-      {
-         free(mMsg);
-      }
+      // Releases automatically based on shared_ptr semantics
    }
 
    void setStartOnWireTime (const vpr::Interval& time)
@@ -143,12 +151,12 @@ public:
 
    void* getBody (void) const
    {
-      return mMsg;
+      return (void*)&((*mMsg)[0]);
    }
 
    vpr::Uint32 getSize (void) const
    {
-      return mMsgSize;
+      return mMsg->size();
    }
 
    /**
@@ -224,8 +232,10 @@ public:
                                 const bool increment_next_hop = true);
 
 private:
-   void*       mMsg;      /**< The body of the message */
-   vpr::Uint32 mMsgSize;  /**< The size of the message body */
+   MessageDataPtr   mMsg;    /**< The body of the message */
+   //void*       mMsg;      /**< The body of the message */
+   //vpr::Uint32 mMsgSize;  /**< The size of the message body */
+
 
    vpr::Interval mStartOnWire;   /**< The time at which the transmission of
                                       the first bit of this message can begin */
@@ -234,10 +244,10 @@ private:
    vpr::Interval mArrivesFully;  /**< The time at which the full message
                                       arrives at the destination */
 
-   NetworkGraph::VertexListPtr mMsgPath;
-   NetworkGraph::VertexList::iterator mNextHop;
-   const vpr::SocketImplSIM* mSrcSock;
-   vpr::SocketImplSIM* mDestSock;
+   NetworkGraph::VertexListPtr         mMsgPath;
+   NetworkGraph::VertexList::iterator  mNextHop;
+   const vpr::SocketImplSIM*           mSrcSock;
+   vpr::SocketImplSIM*                 mDestSock;
 };
 
 } // End of sim namespace
