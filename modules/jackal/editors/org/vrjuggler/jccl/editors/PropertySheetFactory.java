@@ -153,6 +153,12 @@ public class PropertySheetFactory extends PropertyComponent
 
          JButton add_button = new JButton();
 
+         PropertyValueDefinition value_def =
+            propDef.getPropertyValueDefinition(0);
+         String label = value_def.getLabel();
+         String text = (label == null || label.equals("")) ? "Value" : label;
+         add_button.setText("New " + text);
+
          try
          {
             Icon add_icon =
@@ -163,7 +169,6 @@ public class PropertySheetFactory extends PropertyComponent
          }
          catch(Exception ex)
          {
-            add_button.setText("New Value");
          }
 
          add_button.setMargin(new Insets(0,0,0,0));
