@@ -490,7 +490,7 @@ case $target_os in
         CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
         LD='${CXX} -shared'
         LDOPTS=''
-        OPT_FLAGS='-O2'
+        OPT_FLAGS='-O1'
         DBG_FLAGS='-g'
         SHAREDLIB_EXT='so'
 
