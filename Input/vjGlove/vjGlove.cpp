@@ -57,19 +57,27 @@ vjGloveData::vjGloveData()
    // Matrices are already identities
 }
 
-vjGloveData::vjGloveData(const vjGloveData&data)
+vjGloveData::vjGloveData(const vjGloveData& data)
 {
-   for(int i=0;i<NUM_COMPONENTS;i++)
-      for(int j=0;j<NUM_JOINTS;j++)
+   int i;
+
+   for (i=0;i<NUM_COMPONENTS;i++) {
+      for(int j=0;j<NUM_JOINTS;j++) {
           angles[i][j] = data.angles[i][j];
+      }
+   }
 
-   for(int i=0;i<NUM_COMPONENTS;i++)
-      for(int j=0;j<NUM_JOINTS-1;j++)
+   for (i=0;i<NUM_COMPONENTS;i++) {
+      for(int j=0;j<NUM_JOINTS-1;j++) {
           xforms[i][j] = data.xforms[i][j];
+      }
+   }
 
-   for(int i=0;i<NUM_COMPONENTS;i++)
-      for(int j=0;j<NUM_JOINTS;j++)
+   for (i=0;i<NUM_COMPONENTS;i++) {
+      for(int j=0;j<NUM_JOINTS;j++) {
           dims[i][j] = data.dims[i][j];
+      }
+   }
 }
 
 //: Calulate all the xform matrices
