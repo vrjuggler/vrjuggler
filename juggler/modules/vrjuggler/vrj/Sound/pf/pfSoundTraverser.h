@@ -175,7 +175,7 @@ protected:
 
          // unpause the sound, unmute it too
          #ifdef USE_SONIX
-         sonix::instance().trigger( nodeName );
+         sonix::instance()->trigger( nodeName );
          #endif
          vprDEBUG(vprDBG_ALL,0) << clrOutNORM( clrYELLOW, "[SoundTrigger] " )
             << "Setting the " << nodeName
@@ -207,7 +207,7 @@ protected:
 
          // unpause the sound, unmute it too
          #ifdef USE_SONIX
-         sonix::instance().stop( nodeName );
+         sonix::instance()->stop( nodeName );
          #endif
 
          vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrYELLOW,"[SoundStop] ")
@@ -240,8 +240,7 @@ protected:
 
          // unpause the sound, unmute it too
          #ifdef USE_SONIX
-         sonix::instance().unpause( nodeName );
-         sonix::instance().unmute( nodeName );
+         sonix::instance()->unpause( nodeName );
          #endif
 
          vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrYELLOW,"[SoundEnable] ")
@@ -274,8 +273,7 @@ protected:
 
          // pause the sound, mute it too in case it is triggered again
          #ifdef USE_SONIX
-         sonix::instance().pause( nodeName );
-         sonix::instance().mute( nodeName );
+         sonix::instance()->pause( nodeName );
          #endif
 
          vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrYELLOW,"[SoundDisable] ")
@@ -349,7 +347,7 @@ protected:
                }
                parent->addChild( sn );
                #ifdef USE_SONIX
-               sonix::instance().trigger( soundName );
+               sonix::instance()->trigger( soundName );
                #endif
 
                vprDEBUG( vprDBG_ALL, vprDBG_CONFIG_LVL )
