@@ -1176,7 +1176,7 @@ static void processIntrackPseRecord(InterSenseTrackerType *tracker, char *buf, i
 
             if(numConverted == 1)
             {
-                if(validStation(stationNum) && num >= -1 && num <= MAX_NUM_IMUS)
+                if(validStation((signed long)stationNum) && num >= -1 && num <= MAX_NUM_IMUS)
                 {
                     tracker->station[stationNum].InertiaCube = num;
                     tracker->ItComImuFlag[stationNum] = TRUE;
@@ -1212,7 +1212,7 @@ static BOOL processSystemOutputListRecord(InterSenseTrackerType *tracker, char *
 
     sNum = charToNum(cmdbuf[1])-1;
 
-    if(!validStation(sNum)) return FAIL;
+    if(!validStation((signed long)sNum)) return FAIL;
 
     if(tracker->state.firmwareVersion < 3.0f)
     {
@@ -1343,7 +1343,7 @@ static void processIntrackSensorRecord(InterSenseTrackerType *tracker, char *cmd
 
     sNum = charToNum(cmdbuf[1])-1;
 
-    if(!validStation(sNum)) return;
+    if(!validStation((signed long)sNum)) return;
 
     statMess[1] = 0x00;
 
@@ -1436,7 +1436,7 @@ static void processIntrackPredictionRecord(InterSenseTrackerType *tracker, char 
 
     sNum = charToNum(cmdbuf[1])-1;
 
-    if(!validStation(sNum)) return;
+    if(!validStation((signed long)sNum)) return;
 
     tracker->station[sNum].prediction = (WORD)atoi((const char *) &cmdbuf[3]);
 

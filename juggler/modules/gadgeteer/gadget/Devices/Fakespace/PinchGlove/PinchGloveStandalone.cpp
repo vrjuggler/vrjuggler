@@ -373,7 +373,7 @@ std::string PinchGloveStandalone::mGetStringFromHardware()
    return(ret_val);
 }
 
-/*std::vector<vpr::Uint8> PinchGloveStandalone::getDataFromHardware()
+std::vector<vpr::Uint8> PinchGloveStandalone::mGetDataFromHardware()
 {
    // Read the serial device until we get to a START_BYTE_DATA
    // Read 1 char while it is not equal to END_BYTE
@@ -385,32 +385,25 @@ std::string PinchGloveStandalone::mGetStringFromHardware()
    unsigned char temp_char;
    vpr::Uint32 bytes_read;
    vpr::Interval     read_timeout(500,vpr::Interval::Msec);
-   int num=0;
-
+   
    mPort->read(&temp_char,1,bytes_read,read_timeout);
    std::cout << "CHAR: " << temp_char << " = " << (int)temp_char << std::endl;
    while (temp_char != START_BYTE_DATA)
    {
       if (temp_char==START_BYTE_DATA_TS)
       {
-         std::cout << "ERROR" << std::endl;
+         std::cout << "ERROR, START_BYTE_DATA_TS received while we are not receiving timestamps." << std::endl;
       }
       mPort->read(&temp_char,1,bytes_read,read_timeout);
       std::cout << "CHAR: " << temp_char << " = " << (int)temp_char << std::endl;
    }
-   std::cout << "We have a START_BYTE" << std::endl;
    mPort->read(&temp_char,1,bytes_read,read_timeout);
-   std::cout << "CHAR: " << temp_char << " = " << (int)temp_char << std::endl;
    while (temp_char != END_BYTE)
    {
       ret_val.push_back(temp_char);
       mPort->read(&temp_char,1,bytes_read,read_timeout);
-      std::cout << "CHAR: " << temp_char << " = " << (int)temp_char << std::endl;
    }
-   std::cout << "We have a END_BYTE" << std::endl;
-
    return(ret_val);
 }
-*/
 
 
