@@ -24,7 +24,7 @@
 class vjDisplay
 {
 public:
-   vjDisplay() : mUser(NULL)
+   vjDisplay() : mUser(NULL), mDisplayChunk(NULL)
    {
       _xo = _yo = _xs = _ys = -1;
    }
