@@ -102,6 +102,8 @@ VJROOT		= ${top_srcdir}
 VJ_SRCDIR	= @VJ_SRCDIR@
 WORKDIR		= ${topdir}
 
+BUILD_START	= $(shell date)
+
 # Extra compiler and linker options needed only by this file.
 DBG_FLAGS	= -D_DEBUG @DBG_FLAGS@
 OPT_FLAGS	= -D_OPT @OPT_FLAGS@
@@ -242,7 +244,7 @@ include ${MKPATH}/vj.rec.mk
 # ------------------------------------------------
 world:
 	@echo "==============================================================="
-	@echo ">>> VR Juggler make world started on `LTIME=C date`"
+	@echo ">>> VR Juggler make world started $(BUILD_START)"
 	@echo "==============================================================="
 ifndef NO_CLEAN
 	@${MAKE} clobber
@@ -256,7 +258,8 @@ endif
 	@${MAKE} _install_libs
 	@${MAKE} _install_post_libs
 	@echo "==============================================================="
-	@echo ">>> VR Juggler make world completed on `LTIME=C date`"
+	@echo ">>> VR Juggler make world started $(BUILD_START)"
+	@echo ">>> VR Juggler make world completed `LTIME=C date`"
 	@echo "==============================================================="
 
 # ------------------------------------------------------------------------
