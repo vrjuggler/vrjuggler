@@ -269,6 +269,31 @@ SocketImplBSD::connect (vpr::Interval timeout) {
     return retval;
 }
 
+bool
+SocketImplBSD::isConnected () {
+    bool retval;
+
+    retval = false;
+
+    if ( m_open && m_connected ) {
+        vpr::Status status;
+        vpr::Int32 bytes;
+
+        status = m_handle->getReadBufferSize(bytes);
+
+        if ( status.success() ) {
+            if ( bytes == 0 ) {
+                retval = m_handle->isReadable(vpr::Interval::NoWait).success();
+            }
+            else {
+                retval = true;
+            }
+        }
+    }
+
+    return retval;
+}
+
 vpr::Status
 SocketImplBSD::setLocalAddr (const InetAddr& addr) {
     vpr::Status status;
