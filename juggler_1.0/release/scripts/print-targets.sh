@@ -112,7 +112,7 @@ Clean-up targets are:
     clobber         - Clean up everything and remove the directories containing
                       the compiled libraries and its object files.
 
-The default target is 'dbg'.  'install' will install the debugging, static
+The default target is 'debug'.  'install' will install the debugging, static
 version of the libraries.
 
 EOF
