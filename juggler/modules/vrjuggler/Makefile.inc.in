@@ -98,18 +98,26 @@ DYLIB_DEPS_PF		= @DYLIB_DEPS_PF@
 
 VJ_LIB_STATIC		= $(VJ_LIBRARY).$(STATICLIB_EXT)
 VJ_LIB_DYNAMIC		= $(VJ_LIBRARY).$(DYNAMICLIB_EXT)
+VJ_PROF_LIB_STATIC	= $(VJ_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
+VJ_PROF_LIB_DYNAMIC	= $(VJ_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
 UTILS_LIB_STATIC	= $(UTILS_LIBRARY).$(STATICLIB_EXT)
 UTILS_LIB_DYNAMIC	= $(UTILS_LIBRARY).$(DYNAMICLIB_EXT)
+UTILS_PROF_LIB_STATIC	= $(UTILS_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
+UTILS_PROF_LIB_DYNAMIC	= $(UTILS_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
 GL_LIB_STATIC		= $(GL_LIBRARY).$(STATICLIB_EXT)
 GL_LIB_DYNAMIC		= $(GL_LIBRARY).$(DYNAMICLIB_EXT)
+GL_PROF_LIB_STATIC	= $(GL_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
+GL_PROF_LIB_DYNAMIC	= $(GL_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
 PF_LIB_STATIC		= $(PF_LIBRARY).$(STATICLIB_EXT)
 PF_LIB_DYNAMIC		= $(PF_LIBRARY).$(DYNAMICLIB_EXT)
+PF_PROF_LIB_STATIC	= $(PF_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
+PF_PROF_LIB_DYNAMIC	= $(PF_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
 
 # On Linux, we have to compile the Performer library with -O for things to
 # link properly.
-ifeq ($(PLATFORM), Linux)
-    EXTRA_LDOPTS = -O
-endif
+#ifeq ($(PLATFORM), Linux)
+#    EXTRA_LDOPTS = -O
+#endif
 
 # Version information.
 BRANCH		= HEAD
@@ -145,8 +153,10 @@ afterbuild:
 # -----------------------------------------------
 # Construct the static version of the libraries.
 # -----------------------------------------------
-$(LIBDIR)/$(VJ_LIB_STATIC) $(LIBDIR)/$(UTILS_LIB_STATIC)		\
-$(LIBDIR)/$(GL_LIB_STATIC) $(LIBDIR)/$(PF_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(VJ_LIB_STATIC) $(LIBDIR)/$(VJ_PROF_LIB_STATIC)		\
+$(LIBDIR)/$(UTILS_LIB_STATIC) $(LIBDIR)/$(UTILS_PROF_LIB_STATIC)	\
+$(LIBDIR)/$(GL_LIB_STATIC) $(LIBDIR)/$(GL_PROF_LIB_STATIC)		\
+$(LIBDIR)/$(PF_LIB_STATIC) $(LIBDIR)/$(PF_PROF_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
 ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
@@ -163,7 +173,7 @@ endif
 # ------------------------------------------------
 # Construct the dynamic version of the libraries.
 # ------------------------------------------------
-$(LIBDIR)/$(VJ_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(VJ_LIB_DYNAMIC) $(LIBDIR)/$(VJ_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -181,7 +191,7 @@ endif
 	@echo "$@ done"
 	@echo "------------------------------------------------"
 
-$(LIBDIR)/$(UTILS_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(UTILS_LIB_DYNAMIC) $(LIBDIR)/$(UTILS_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -199,7 +209,7 @@ endif
 	@echo "$@ done"
 	@echo "------------------------------------------------"
 
-$(LIBDIR)/$(GL_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(GL_LIB_DYNAMIC) $(LIBDIR)/$(GL_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -217,7 +227,7 @@ endif
 	@echo "$@ done"
 	@echo "------------------------------------------------"
 
-$(LIBDIR)/$(PF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(PF_LIB_DYNAMIC) $(LIBDIR)/$(PF_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"

@@ -40,7 +40,7 @@
 AC_REVISION($Revision$)
 AC_INIT(vrj/vrjConfig.h)
 AC_CONFIG_HEADER(vrj/vrjDefines.h)
-DPP_PREREQ(1.4.96)
+DPP_PREREQ(1.4.98)
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -140,6 +140,8 @@ esac
 # Checks for programs.
 # -----------------------------------------------------------------------------
 VJ_COMPILER_SETUP
+VJ_PROG_CC_PROF_FLAG(yes)
+VJ_PROG_CXX_PROF_FLAG(yes)
 
 # Ensure that the C++ compiler we've found is capable of compiling the newer
 # newer C++ features that we need.
@@ -148,6 +150,7 @@ DPP_CXX_HAVE_STD
 DPP_CXX_INLINE(AC_MSG_ERROR(*** The library requires C++ inline support ***))
 DPP_CXX_RTTI(AC_MSG_ERROR(*** The library requires C++ RTTI support ***))
 DPP_CXX_STATIC_CAST(AC_MSG_ERROR(*** The library requires C++ static_cast<> ***))
+DPP_CXX_DYNAMIC_CAST(AC_MSG_ERROR(*** The library requires C++ dynamic_cast<> ***))
 
 # Ensure that a version of Perl greater than or equal to 5.004 is available.
 DPP_PERL_VER(5.004)
@@ -642,8 +645,8 @@ AC_OUTPUT(Makefile
           test/Draw/OGL/texture/Makefile
           test/Draw/OGL/torus/Makefile
           test/Draw/OGL/wand/Makefile
-		  test/Draw/OpenSG/Makefile
-		  test/Draw/OpenSG/OpenSGNav/Makefile
+          test/Draw/OpenSG/Makefile
+          test/Draw/OpenSG/OpenSGNav/Makefile
           test/Math/Makefile
           test/Matrix/Makefile
           test/Quat/Makefile
