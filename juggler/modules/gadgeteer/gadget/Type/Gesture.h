@@ -35,6 +35,7 @@
 //#pragma once
 
 #include <gadget/gadgetConfig.h>
+#include <jccl/Config/ConfigChunk.h>
 
 
 namespace gadget
