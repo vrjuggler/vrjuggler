@@ -59,10 +59,8 @@ namespace vpr
 // Public methods.
 // ============================================================================
 
-// ----------------------------------------------------------------------------
 // Listen on the socket for incoming connection requests.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SocketStreamImplBSD::listen (const int backlog)
+vpr::ReturnStatus SocketStreamImplBSD::listen(const int backlog)
 {
    vpr::ReturnStatus retval;
 
@@ -79,10 +77,8 @@ vpr::ReturnStatus SocketStreamImplBSD::listen (const int backlog)
    return retval;
 }
 
-// ----------------------------------------------------------------------------
 // Accept an incoming connection request.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SocketStreamImplBSD::accept (SocketStreamImplBSD& sock,vpr::Interval timeout)
+vpr::ReturnStatus SocketStreamImplBSD::accept(SocketStreamImplBSD& sock,vpr::Interval timeout)
 {
    int accept_sock;
    vpr::ReturnStatus retval;
@@ -107,7 +103,7 @@ vpr::ReturnStatus SocketStreamImplBSD::accept (SocketStreamImplBSD& sock,vpr::In
       // If accept(2) failed, print an error message and return error stauts.
       if ( accept_sock == -1 )
       {
-         if ( errno == EWOULDBLOCK && getNonBlocking() )
+         if ( errno == EWOULDBLOCK && ! isBlocking() )
          {
             retval.setCode(ReturnStatus::WouldBlock);
          }
@@ -123,20 +119,17 @@ vpr::ReturnStatus SocketStreamImplBSD::accept (SocketStreamImplBSD& sock,vpr::In
       else
       {
          sock.setRemoteAddr(addr);
-         sock.mHandle          = new FileHandleImplUNIX(addr.getAddressString());
+         sock.mHandle         = new FileHandleImplUNIX(addr.getAddressString());
          sock.mHandle->mFdesc = accept_sock;
-         sock.mOpen            = true;
+         sock.mOpen           = true;
 
          // Inherit the blocking state from the accepting socket.  This
          // must be done after mOpen is set to true to satisfy the
          // pre-condition.
-         if ( getNonBlocking() )
-         {
-            sock.enableNonBlocking();
-         }
+         sock.setBlocking(isBlocking());
 
-         sock.mBound          = true;
-         sock.mConnected      = true;
+         sock.mBound         = true;
+         sock.mConnected     = true;
          sock.mBlockingFixed = true;
       }
    }

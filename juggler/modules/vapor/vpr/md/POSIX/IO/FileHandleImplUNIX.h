@@ -189,26 +189,20 @@ public:
    }
 
    /**
-    * Reconfigures the file handle so that it is in blocking mode.
+    * Reconfigures the file handle so that it is in blocking or non-blocking
+    * mode.
     *
     * @pre The file handle is open.
-    * @post Processes may block when accessing the file.
+    * @post Processes may block (or not) when accessing the file.
+    *
+    * @param blocking A value of true indicates that the file handle will use
+    *                 blocking I/O.  A value of false indicates that it will
+    *                 use non-blocking I/O.
     *
     * @return vpr::ReturnStatus;:Succeed is returned if the blocking mode was
     *         changed successfully; vpr::ReturnStatus::Fail otherwise.
     */
-   ReturnStatus enableBlocking();
-
-   /**
-    * Reconfigures the file handle so that it is in non-blocking mode.
-    *
-    * @pre The file handle is open.
-    * @post Processes will not block when accessing the file.
-    *
-    * @return vpr::ReturnStatus;:Succeed is returned if the blocking mode was
-    *         changed successfully; vpr::ReturnStatus::Fail otherwise.
-    */
-   ReturnStatus enableNonBlocking();
+   vpr::ReturnStatus setBlocking(const bool& blocking);
 
    /**
     * Returns the contained handle.
@@ -228,28 +222,13 @@ public:
     * Gets the current blocking state for the file handle.
     *
     * @pre mBlocking is set correctly.
-    * @post
     *
     * @return true is returned if the file handle is in blocking mode.
     *         Otherwise, false is returned.
     */
-   bool getBlocking() const
+   bool isBlocking() const
    {
       return mBlocking;
-   }
-
-   /**
-    * Gets the current non-blocking state for the file handle.
-    *
-    * @pre mBlocking is set correctly.
-    * @post
-    *
-    * @return true is returned if the file handle is in non-blocking mode.
-    *         Otherwise, false is returned.
-    */
-   bool getNonBlocking() const
-   {
-      return ! mBlocking;
    }
 
    // ========================================================================
@@ -296,56 +275,37 @@ public:
    }
 
    /**
-    * Reconfigures the file handle to be in append mode.
+    * Reconfigures the file handle to be in append mode or not.
     *
     * @pre The file handle is open.
-    * @post The file handle's write mode is set to append.
+    * @post The file handle's write mode is set to append or not.
+    *
+    * @param flag A value of true indicates that this file handle will use
+    *             append mode for writing.  A value of false indicates that
+    *             it will not.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the write mode was
-    *         changed successfully.<br>
-    *         vpr::ReturnStatus::Fail is returned if the write mode could not
-    *         be changed for some reason.
+    *         changed successfully.  vpr::ReturnStatus::Fail is returned if
+    *         the write mode could not be changed for some reason.
     */
-   vpr::ReturnStatus enableAppend();
+   vpr::ReturnStatus setAppend(const bool& flag);
 
    /**
-    * Reconfigures the file handle so that it is not in append mode.
-    *
-    * @pre The file handle is open.
-    * @post The file handle's write mode is set so that writes are appended.
-    *
-    * @return vpr::ReturnStatus::Succeed is returned if the write mode was
-    *         changed successfully.<br>
-    *         vpr::ReturnStatus::Fail is returned if the write mode could not
-    *         be changed for some reason.
-    */
-   vpr::ReturnStatus disableAppend();
-
-   /**
-    * Reconfigures the file handle so that writes are synchronous.
+    * Reconfigures the file handle so that writes are synchronous or
+    * asynchronous depending on the value of the parameter.
     *
     * @pre The file handle is open.
     * @post Writes are performed synchronously.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the write mode was
-    *         changed successfully.<br>
-    *         vpr::ReturnStatus::Fail is returned if the write mode could not
-    *         be changed for some reason.
-    */
-   vpr::ReturnStatus enableSynchronousWrite();
-
-   /**
-    * Reconfigure the file handle so that writes are asynchronous.
-    *
-    * @pre The file handle is open.
-    * @post Writes are performed asynchronously.
+    * @param flag A value of true indicates that synchronous writes will be
+    *             used.  A value of false indicates that asynchronous writes
+    *             will be used.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the write mode was
-    *         changed successfully.<br>
-    *         vpr::ReturnStatus::Fail is returned if the write mode could not
-    *         be changed for some reason.
+    *         changed successfully.  vpr::ReturnStatus::Fail is returned if
+    *         the write mode could not be changed for some reason.
     */
-   vpr::ReturnStatus enableAsynchronousWrite();
+   vpr::ReturnStatus setSynchronousWrite(const bool& flag);
 
    /**
     * Tests if the I/O device is read-only.

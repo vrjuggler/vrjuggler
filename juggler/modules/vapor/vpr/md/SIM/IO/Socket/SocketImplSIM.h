@@ -215,7 +215,7 @@ public:
    vpr::ReturnStatus bind();
 
    /**
-    * Reconfigures the socket so that it is in blocking mode.
+    * Reconfigures the socket so that it is in blocking or non-blocking mode.
     *
     * @pre The socket is open.
     * @post Processes will block when accessing the socket.
@@ -224,25 +224,9 @@ public:
     *         blocking mode is set to blocking.<br>
     *         vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus enableBlocking()
+   vpr::ReturnStatus setBlocking(const bool& blocking)
    {
-      mBlocking = true;
-      return vpr::ReturnStatus(); // success
-   }
-
-   /**
-    * Reconfigures the socket so that it is in non-blocking mode.
-    *
-    * @pre The socket is open.
-    * @post Processes will not block when accessing the socket.
-    *
-    * @return vpr::ReturnStatus::Succeed is returned if the socket's
-    *         blocking mode is set to non-blocking.<br>
-    *         vpr::ReturnStatus::Fail is returned otherwise.
-    */
-   vpr::ReturnStatus enableNonBlocking()
-   {
-      mBlocking = false;
+      mBlocking = blocking;
       return vpr::ReturnStatus(); // success
    }
 
@@ -252,20 +236,9 @@ public:
     * @return true is returned if the socket is in blocking
     *         mode.  Otherwise, false is returned.
     */
-   bool getBlocking() const
+   bool isBlocking() const
    {
       return mBlocking;
-   }
-
-   /**
-    * Gets the current non-blocking state for the socket.
-    *
-    * @return true is returned if the socket is in non-blocking
-    *         mode.  Otherwise, false is returned.
-    */
-   bool getNonBlocking() const
-   {
-      return ! mBlocking;
    }
 
    // =========================================================================

@@ -599,17 +599,18 @@ void SocketTest::testBlocking_connector(void* arg)
       }
 
       //set socket to blocking/nonblocking mode as required
-      if (mBlockingFlag == true)
-         connector_socket.enableBlocking();
-      else
-         connector_socket.enableNonBlocking();
+      connector_socket.setBlocking(mBlockingFlag);
 
       //if the the flag of readn is true, use readn(), otherwise use read().
       // Try to read 20 bytes
       if (mReadnFlag == true)
+      {
          connector_socket.readn(buffer, 20, amount_read);
+      }
       else
+      {
          connector_socket.read(buffer, 20, amount_read);
+      }
 
       if (amount_read>0)
       {
@@ -700,9 +701,9 @@ void SocketTest::testBlocking_acceptor(void* arg)
 
       child_socket.write(buffer2, sizeof(buffer2), amount_written);
 
-      child_socket.enableNonBlocking();
+      child_socket.setBlocking(false);
       child_socket.read(buffer, 40, amount_read);
-      child_socket.enableBlocking();
+      child_socket.setBlocking(true);
 
       switch (yy)
       {

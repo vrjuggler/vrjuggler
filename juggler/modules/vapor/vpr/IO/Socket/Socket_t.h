@@ -97,7 +97,7 @@ public:
     *
     * @return An object containing the "name" of this socket.
     */
-   virtual const std::string& getName (void)
+   virtual const std::string& getName()
    {
       return mSocketImpl->getName();
    }
@@ -110,7 +110,7 @@ public:
     *       is opened in blocking mode.  If the socket is already open, this
     *       has no effect.
     */
-   void setOpenBlocking (void)
+   void setOpenBlocking()
    {
       mSocketImpl->setOpenBlocking();
    }
@@ -124,7 +124,7 @@ public:
     *       is opened in non-blocking mode.  If the socket is already open,
     *       this has no effect.
     */
-   void setOpenNonBlocking (void)
+   void setOpenNonBlocking()
    {
       mSocketImpl->setOpenNonBlocking();
    }
@@ -141,7 +141,7 @@ public:
     *         opened successfully.<br>
     *         vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus open (void)
+   vpr::ReturnStatus open()
    {
       return mSocketImpl->open();
    }
@@ -158,7 +158,7 @@ public:
     *         closed successfully.<br>
     *         vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus close (void)
+   vpr::ReturnStatus close()
    {
       return mSocketImpl->close();
    }
@@ -173,7 +173,7 @@ public:
     * @return true is returned if this socket is open;
     *         false otherwise.
     */
-   bool isOpen (void)
+   bool isOpen()
    {
       return mSocketImpl->isOpen();
    }
@@ -187,7 +187,7 @@ public:
     * @return true is returned if this socket is bound;
     *         false otherwise.
     */
-   bool isBound (void)
+   bool isBound()
    {
       return mSocketImpl->isBound();
    }
@@ -217,67 +217,43 @@ public:
     * Queries if the blocking state for this socket is fixed and can no
     * longer be changed.
     */
-   bool isBlockingFixed (void)
+   bool isBlockingFixed()
    {
       return mSocketImpl->isBlockingFixed();
    }
 
    /**
-    * Reconfigures the socket so that it is in blocking mode.
+    * Reconfigures the socket so that it is in blocking or non-blocking mode
+    * depending on the value of the parameter.
     *
     * @pre The socket is open.
     * @post Processes will block when accessing the socket.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the socket's
-    *         blocking mode is set to blocking.<br>
-    *         vpr::ReturnStatus::Fail is returned otherwise.
-    */
-   vpr::ReturnStatus enableBlocking (void)
-   {
-      return mSocketImpl->enableBlocking();
-   }
-
-   /**
-    * Reconfigures the socket so that it is in non-blocking mode.
-    *
-    * @pre The socket is open.
-    * @post Processes will not block when accessing the socket.
+    * @param blocking A value of true indicates that the socket should be
+    *                 configure to use blocking I/O.  A value of false
+    *                 indicates that it should use non-blocking I/O.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the socket's
-    *         blocking mode is set to non-blocking.<br>
-    *         vpr::ReturnStatus::Fail is returned otherwise.
+    *         blocking mode is set to blocking.  vpr::ReturnStatus::Fail is
+    *         returned otherwise.
     */
-   vpr::ReturnStatus enableNonBlocking (void)
+   vpr::ReturnStatus setBlocking(const bool& blocking)
    {
-      return mSocketImpl->enableNonBlocking();
+      return mSocketImpl->setBlocking(blocking);
    }
 
    /**
     * Gets the current blocking state for the socket.
     *
-    * @pre mBlocking is set correctly
-    * @post
+    * @pre The blocking mode on the internal socket implementation is set
+    *      correctly.
     *
-    * @return true is returned if the socket is in blocking
-    *         mode.  Otherwise, false is returned.
+    * @return true is returned if the socket is in blocking mode.  Otherwise,
+    *         false is returned.
     */
-   bool getBlocking (void) const
+   bool isBlocking() const
    {
-      return mSocketImpl->getBlocking();
-   }
-
-   /**
-    * Gets the current non-blocking state for the socket.
-    *
-    * @pre mBlocking is set correctly
-    * @post
-    *
-    * @return true is returned if the socket is in non-blocking
-    *         mode.  Otherwise, false is returned.
-    */
-   bool getNonBlocking (void) const
-   {
-      return mSocketImpl->getNonBlocking();
+      return mSocketImpl->isBlocking();
    }
 
    /**
@@ -290,7 +266,7 @@ public:
     *         bound to its designated local address successfully.<br>
     *         vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus bind (void)
+   vpr::ReturnStatus bind()
    {
       return mSocketImpl->bind();
    }
@@ -321,7 +297,7 @@ public:
     *         vpr::ReturnStatus::Fail is returned if the connection
     *         could not be made.
     */
-   vpr::ReturnStatus connect (const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus connect(const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       return mSocketImpl->connect(timeout);
    }
@@ -353,9 +329,9 @@ public:
     * available for reading.  This argument is optional and defaults to
     * vpr::Interval::NoTimeout.
     */
-   vpr::ReturnStatus recv (void* buffer, const vpr::Uint32 length,
-                           vpr::Uint32& bytes_read,
-                           const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus recv(void* buffer, const vpr::Uint32 length,
+                          vpr::Uint32& bytes_read,
+                          const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       return read(buffer, length, bytes_read, timeout);
    }
@@ -388,9 +364,9 @@ public:
     *         vpr::ReturnStatus::Timeout is returned if the read
     *         could not begin within the timeout interval.
     */
-   vpr::ReturnStatus recv (std::string& buffer, const vpr::Uint32 length,
-                           vpr::Uint32& bytes_read,
-                           const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus recv(std::string& buffer, const vpr::Uint32 length,
+                          vpr::Uint32& bytes_read,
+                          const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       return read(buffer, length, bytes_read, timeout);
    }
@@ -423,10 +399,10 @@ public:
     *         vpr::ReturnStatus::Timeout is returned if the read
     *         could not begin within the timeout interval.
     */
-   vpr::ReturnStatus recv (std::vector<vpr::Uint8>& buffer,
-                           const vpr::Uint32 length,
-                           vpr::Uint32& bytes_read,
-                           const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus recv(std::vector<vpr::Uint8>& buffer,
+                          const vpr::Uint32 length,
+                          vpr::Uint32& bytes_read,
+                          const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       return read(buffer, length, bytes_read, timeout);
    }
@@ -456,9 +432,9 @@ public:
     *         vpr::ReturnStatus::WouldBlock if the device is in
     *         non-blocking mode, and there is no data to receive.
     */
-   vpr::ReturnStatus recvn (void* buffer, const vpr::Uint32 length,
-                            vpr::Uint32& bytes_read,
-                            const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus recvn(void* buffer, const vpr::Uint32 length,
+                           vpr::Uint32& bytes_read,
+                           const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       return readn(buffer, length, bytes_read, timeout);
    }
@@ -489,9 +465,9 @@ public:
     *         device is in non-blocking mode, and there is no data to
     *         receive.
     */
-   vpr::ReturnStatus recvn (std::string& buffer, const vpr::Uint32 length,
-                            vpr::Uint32& bytes_read,
-                            const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus recvn(std::string& buffer, const vpr::Uint32 length,
+                           vpr::Uint32& bytes_read,
+                           const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       return readn(buffer, length, bytes_read, timeout);
    }
@@ -524,10 +500,10 @@ public:
     *         vpr::ReturnStatus::Timeout is returned if the read
     *         could not begin within the timeout interval.
     */
-   vpr::ReturnStatus recvn (std::vector<vpr::Uint8>& buffer,
-                            const vpr::Uint32 length,
-                            vpr::Uint32& bytes_read,
-                            const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus recvn(std::vector<vpr::Uint8>& buffer,
+                           const vpr::Uint32 length,
+                           vpr::Uint32& bytes_read,
+                           const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       return readn(buffer, length, bytes_read, timeout);
    }
@@ -564,9 +540,9 @@ public:
     *         vpr::ReturnStatus::Timeout is returned if the write
     *         could not begin within the timeout interval.
     */
-   vpr::ReturnStatus send (const void* buffer, const vpr::Uint32 length,
-                           vpr::Uint32& bytes_written,
-                           const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus send(const void* buffer, const vpr::Uint32 length,
+                          vpr::Uint32& bytes_written,
+                          const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       return write(buffer, length, bytes_written, timeout);
    }
@@ -598,11 +574,11 @@ public:
     *         vpr::ReturnStatus::Timeout is returned if the write
     *         could not begin within the timeout interval.
     */
-   vpr::ReturnStatus send (const std::string& buffer, const vpr::Uint32 length,
-                           vpr::Uint32& bytes_written,
-                           const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus send(const std::string& buffer, const vpr::Uint32 length,
+                          vpr::Uint32& bytes_written,
+                          const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      vprASSERT( length <= buffer.size() && "length was bigger than the data given" );
+      vprASSERT(length <= buffer.size() && "length was bigger than the data given");
       return write(buffer, length, bytes_written, timeout);
    }
 
@@ -633,12 +609,12 @@ public:
     *         vpr::ReturnStatus::Timeout is returned if the write
     *         could not begin within the timeout interval.
     */
-   vpr::ReturnStatus send (const std::vector<vpr::Uint8>& buffer,
-                           const vpr::Uint32 length,
-                           vpr::Uint32& bytes_written,
-                           const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus send(const std::vector<vpr::Uint8>& buffer,
+                          const vpr::Uint32 length,
+                          vpr::Uint32& bytes_written,
+                          const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      vprASSERT( length <= buffer.size() && "length was bigger than the data given" );
+      vprASSERT(length <= buffer.size() && "length was bigger than the data given");
       return write(buffer, length, bytes_written,timeout);
    }
 
@@ -651,27 +627,27 @@ public:
     * @return A vpr::SocketTypes::Type value giving the socket type for
     *         this socket.
     */
-   const vpr::SocketTypes::Type& getType (void) const
+   const vpr::SocketTypes::Type& getType() const
    {
       return mSocketImpl->getType();
    }
 
-   const InetAddr& getLocalAddr (void) const
+   const InetAddr& getLocalAddr() const
    {
       return mSocketImpl->getLocalAddr();
    }
 
-   vpr::ReturnStatus setLocalAddr (const InetAddr& addr)
+   vpr::ReturnStatus setLocalAddr(const InetAddr& addr)
    {
       return mSocketImpl->setLocalAddr(addr);
    }
 
-   const InetAddr& getRemoteAddr (void) const
+   const InetAddr& getRemoteAddr() const
    {
       return mSocketImpl->getRemoteAddr();
    }
 
-   vpr::ReturnStatus setRemoteAddr (const InetAddr& addr)
+   vpr::ReturnStatus setRemoteAddr(const InetAddr& addr)
    {
       return mSocketImpl->setRemoteAddr(addr);
    }
@@ -685,7 +661,7 @@ protected:
     * @post "INADDR_ANY" is passed on to the vpr::BlockIO constructor, and
     *       mSocketImpl is set to NULL.
     */
-   Socket_t (void)
+   Socket_t()
       : vpr::BlockIO()
    {
       initSocket_t();
@@ -701,7 +677,7 @@ protected:
     *
     * @param address The address string for this socket object.
     */
-   Socket_t (const std::string& address)
+   Socket_t(const std::string& address)
        : vpr::BlockIO(address)
    {
       initSocket_t();
@@ -714,7 +690,7 @@ protected:
     * @pre None.
     * @post internal socket_impl* == NULL
     */
-   virtual ~Socket_t (void)
+   virtual ~Socket_t()
    {
 /*
       if(mSocketImpl != NULL)
@@ -770,9 +746,9 @@ protected:
     *         begin within the timeout interval.<br>
     *         vpr::ReturnStatus::Fail is returned if the read operation failed.
     */
-   virtual vpr::ReturnStatus read_i (void* buffer, const vpr::Uint32 length,
-                                     vpr::Uint32& bytes_read,
-                                     const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   virtual vpr::ReturnStatus read_i(void* buffer, const vpr::Uint32 length,
+                                    vpr::Uint32& bytes_read,
+                                    const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       return mSocketImpl->read_i(buffer, length, bytes_read, timeout);
    }
@@ -805,9 +781,9 @@ protected:
     *         begin within the timeout interval.<br>
     *         vpr::ReturnStatus::Fail is returned if the read operation failed.
     */
-   virtual vpr::ReturnStatus readn_i (void* buffer, const vpr::Uint32 length,
-                                      vpr::Uint32& bytes_read,
-                                      const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   virtual vpr::ReturnStatus readn_i(void* buffer, const vpr::Uint32 length,
+                                     vpr::Uint32& bytes_read,
+                                     const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       return mSocketImpl->readn_i(buffer, length, bytes_read, timeout);
    }
@@ -838,22 +814,22 @@ protected:
     *         vpr::ReturnStatus::Fail is returned if the write operation
     *         failed.
     */
-   virtual vpr::ReturnStatus write_i (const void* buffer,
-                                      const vpr::Uint32 length,
-                                      vpr::Uint32& bytes_written,
-                                      const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   virtual vpr::ReturnStatus write_i(const void* buffer,
+                                     const vpr::Uint32 length,
+                                     vpr::Uint32& bytes_written,
+                                     const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       return mSocketImpl->write_i(buffer, length, bytes_written, timeout);
    }
 
-   virtual vpr::ReturnStatus getOption (const vpr::SocketOptions::Types option,
-                                        struct vpr::SocketOptions::Data& data)
+   virtual vpr::ReturnStatus getOption(const vpr::SocketOptions::Types option,
+                                       struct vpr::SocketOptions::Data& data)
    {
       return mSocketImpl->getOption(option, data);
    }
 
-   virtual vpr::ReturnStatus setOption (const vpr::SocketOptions::Types option,
-                                        const struct vpr::SocketOptions::Data& data)
+   virtual vpr::ReturnStatus setOption(const vpr::SocketOptions::Types option,
+                                       const struct vpr::SocketOptions::Data& data)
    {
       return mSocketImpl->setOption(option, data);
    }

@@ -91,13 +91,13 @@ public:
    * Complete a non-blocking connection
    * Try to complete a non-blocking connection.
    */
-  inline vpr::ReturnStatus complete (vpr::SocketStream &newStream,
-                                     const vpr::Interval timeout = vpr::Interval::NoTimeout);
+  inline vpr::ReturnStatus complete(vpr::SocketStream &newStream,
+                                    const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
 protected:
    // Make sure we have opened the socket
    // If not, then open it with the given params
-   bool checkOpen (SocketStream& newStream)
+   bool checkOpen(SocketStream& newStream)
    {
       vpr::ReturnStatus status;
 
@@ -117,9 +117,9 @@ protected:
    // Do preconnection rituals
    // - If not bound, then bind to local addr
    // - If timeout == NoWait, then try to set nonblocking
-   inline bool connectStart (vpr::SocketStream& newStream,
-                             vpr::Interval timeout = vpr::Interval::NoTimeout,
-                             const vpr::InetAddr& localAddr = vpr::InetAddr::AnyAddr);
+   inline bool connectStart(vpr::SocketStream& newStream,
+                            vpr::Interval timeout = vpr::Interval::NoTimeout,
+                            const vpr::InetAddr& localAddr = vpr::InetAddr::AnyAddr);
 };
 
 inline vpr::ReturnStatus SocketConnector::connect(SocketStream& newStream,
@@ -132,7 +132,9 @@ inline vpr::ReturnStatus SocketConnector::connect(SocketStream& newStream,
 
     // Open the socket
     if(!checkOpen(newStream))
+    {
         return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
+    }
 
     /*  This actually happens in connect start
     if ( localAddr != vpr::InetAddr::AnyAddr )
@@ -146,7 +148,9 @@ inline vpr::ReturnStatus SocketConnector::connect(SocketStream& newStream,
 
     // Start the connection
     if(!connectStart(newStream, timeout, localAddr))
-    { return vpr::ReturnStatus(vpr::ReturnStatus::Fail); }
+    {
+       return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
+    }
 
     newStream.setRemoteAddr(remoteAddr);
 
@@ -190,12 +194,11 @@ inline vpr::ReturnStatus SocketConnector::connect(SocketStream& newStream,
  * Complete a non-blocking connection
  * Try to complete a non-blocking connection.
  *
- * @pre
  * @param newStream  The connected stream.
  * @param remoteAddr returns the address of the remote connection.
  */
-inline vpr::ReturnStatus SocketConnector::complete (SocketStream &newStream,
-                                                    const vpr::Interval timeout)
+inline vpr::ReturnStatus SocketConnector::complete(SocketStream &newStream,
+                                                   const vpr::Interval timeout)
 {
    vpr::ReturnStatus status;
 
@@ -206,7 +209,7 @@ inline vpr::ReturnStatus SocketConnector::complete (SocketStream &newStream,
    }
 
    // If non-blocking, then we can only wait as long as the timeout
-   if ( newStream.getNonBlocking() )
+   if ( ! newStream.isBlocking() )
    {
       vpr::IOSys::Handle handle;
       vpr::Selector selector;
@@ -249,9 +252,9 @@ inline vpr::ReturnStatus SocketConnector::complete (SocketStream &newStream,
 // Do preconnection rituals
 // - If not bound, then bind to local addr
 // - If timeout == 0, then set nonblocking
-inline bool SocketConnector::connectStart (SocketStream& newStream,
-                                           vpr::Interval timeout,
-                                           const vpr::InetAddr& localAddr)
+inline bool SocketConnector::connectStart(SocketStream& newStream,
+                                          vpr::Interval timeout,
+                                          const vpr::InetAddr& localAddr)
 {
    vprASSERT(newStream.isOpen());
 
@@ -260,15 +263,19 @@ inline bool SocketConnector::connectStart (SocketStream& newStream,
       // If timeout is 0, then we are non-blocking
       if(vpr::Interval::NoWait == timeout)
       {
-         newStream.enableNonBlocking();
+         newStream.setBlocking(false);
       }
 
-     // Set addr and bind
+      // Set addr and bind
       if(!newStream.setLocalAddr(localAddr).success())
+      {
          return false;
+      }
 
       if(!newStream.bind().success())
+      {
          return false;
+      }
    }
 
    return true;
