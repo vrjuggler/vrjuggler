@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for gadgeteer/gadget/Input.  It requires GNU make.
+# Makefile.in for gadgeteer/gadget.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -41,25 +41,25 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/gadget
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
-INSTALL		= @INSTALL@
-SUBOBJDIR	= $(GADGET_LIBRARY)
+includedir=	@includedir@/gadget
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+INSTALL=	@INSTALL@
+SUBOBJDIR=	$(GADGET_LIBRARY)
 
 # Prefix for recursive stuff.
-DIRPRFX	= gadget/
+DIRPRFX=	gadget/
 
 # Subdirectories to compile.
-SUBDIR	= Devices/Keyboard	\
-          Devices/Sim		\
-          RemoteInputManager	\
-          Type			\
-          Util
+SUBDIR=		Devices/Keyboard	\
+		Devices/Sim		\
+		RemoteInputManager	\
+		Type			\
+		Util
 
-SRCS	= InputManager.cpp	\
-          ProxyDepChecker.cpp	\
-          ProxyFactory.cpp
+SRCS=		InputManager.cpp	\
+		ProxyDepChecker.cpp	\
+		ProxyFactory.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
 
@@ -68,6 +68,6 @@ include $(MKPATH)/dpp.obj-subdir.mk
 # -----------------------------------------------------------------------------
 ifndef DO_CLEANDEPEND
 ifndef DO_BEFOREBUILD
-    -include $(DEPEND_FILES)
+   -include $(DEPEND_FILES)
 endif
 endif
