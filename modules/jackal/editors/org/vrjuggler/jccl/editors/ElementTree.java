@@ -243,8 +243,7 @@ class ElementNameEditor implements TreeCellEditor
 class ElementTree extends JTree implements DragGestureListener, 
          DragSourceListener, DropTargetListener, ActionListener
 {
-   JPopupMenu popup;
-   JMenuItem mi;
+   JPopupMenu mPopup;
    
    Clipboard clipboard = getToolkit().getSystemClipboard(); 
    
@@ -298,42 +297,42 @@ class ElementTree extends JTree implements DragGestureListener,
       }
       
       // Set up the pop up menu
-      popup = new JPopupMenu();
-      mi = new JMenuItem("Delete", remove_icon);
-      mi.addActionListener(this);
-      mi.setActionCommand("delete");
-      mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
-      popup.add(mi);
+      mPopup = new JPopupMenu();
+      mDeleteMenuItem = new JMenuItem("Delete", remove_icon);
+      mDeleteMenuItem.addActionListener(this);
+      mDeleteMenuItem.setActionCommand("delete");
+      mDeleteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+      mPopup.add(mDeleteMenuItem);
       
-      mi = new JMenuItem("Rename");
-      mi.addActionListener(this);
-      mi.setActionCommand("rename");
-      popup.add(mi);
+      mRenameMenuItem = new JMenuItem("Rename");
+      mRenameMenuItem.addActionListener(this);
+      mRenameMenuItem.setActionCommand("rename");
+      mPopup.add(mRenameMenuItem);
 
-      popup.addSeparator();
+      mPopup.addSeparator();
 
       int shortcut_mask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 
-      mi = new JMenuItem("Cut", cut_icon);
-      mi.addActionListener(this);
-      mi.setActionCommand("cut");
-      mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, shortcut_mask));
-      popup.add(mi);
+      mCutMenuItem = new JMenuItem("Cut", cut_icon);
+      mCutMenuItem.addActionListener(this);
+      mCutMenuItem.setActionCommand("cut");
+      mCutMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, shortcut_mask));
+      mPopup.add(mCutMenuItem);
       
-      mi = new JMenuItem("Copy", copy_icon);
-      mi.addActionListener(this);
-      mi.setActionCommand("copy");
-      mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, shortcut_mask));
-      popup.add(mi);
+      mCopyMenuItem = new JMenuItem("Copy", copy_icon);
+      mCopyMenuItem.addActionListener(this);
+      mCopyMenuItem.setActionCommand("copy");
+      mCopyMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, shortcut_mask));
+      mPopup.add(mCopyMenuItem);
 
-      mi = new JMenuItem("Paste", paste_icon);
-      mi.addActionListener(this);
-      mi.setActionCommand("paste");
-      mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, shortcut_mask));
-      popup.add(mi);
+      mPasteMenuItem = new JMenuItem("Paste", paste_icon);
+      mPasteMenuItem.addActionListener(this);
+      mPasteMenuItem.setActionCommand("paste");
+      mPasteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, shortcut_mask));
+      mPopup.add(mPasteMenuItem);
 
-      popup.setOpaque(true);
-      popup.setLightWeightPopupEnabled(true);
+      mPopup.setOpaque(true);
+      mPopup.setLightWeightPopupEnabled(true);
 
       // Add mouse listener to get the popup menu events.
       addMouseListener(
@@ -344,21 +343,44 @@ class ElementTree extends JTree implements DragGestureListener,
             //       released, while on XWindows is occurs when the mouse button
             //       is pressed.
          
-            // Check for a popup trigger on XWindows.
-            public void mousePressed( MouseEvent e )
-            {
-               if ( e.isPopupTrigger()) 
-               {
-                  popup.show( (JComponent)e.getSource(), e.getX(), e.getY() );
-               }         
-            }
             // Check for a popup trigger on Windows.
-            public void mouseReleased( MouseEvent e ) 
+            public void mouseReleased( MouseEvent e )
             {
-               if ( e.isPopupTrigger()) 
+               // Get the currently selected ConfigElement.
+               TreePath path = getLeadSelectionPath();
+               if (path != null)
                {
-                  popup.show( (JComponent)e.getSource(), e.getX(), e.getY() );
+                  DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
+                  Object temp = node.getUserObject();
+   
+                  if (temp instanceof ConfigElement)
+                  {
+                     mDeleteMenuItem.setEnabled(true);
+                     mRenameMenuItem.setEnabled(true);
+                     mCutMenuItem.setEnabled(true);
+                     mCopyMenuItem.setEnabled(true);
+                     mPasteMenuItem.setEnabled(true);
+           
+                     // Ensure that the ConfigElement is writable.
+                     if ( ((ConfigElement)temp).isReadOnly() )
+                     {
+                        mDeleteMenuItem.setEnabled(false);
+                        mRenameMenuItem.setEnabled(false);
+                        mCutMenuItem.setEnabled(false);
+                        mPasteMenuItem.setEnabled(false);
+                     }
+
+                     if ( e.isPopupTrigger()) 
+                     {
+                        mPopup.show( (JComponent)e.getSource(), e.getX(), e.getY() );
+                     }
+                  }
                }
+            }
+            // Check for a popup trigger on XWindows.
+            public void mousePressed( MouseEvent e ) 
+            {
+               mouseReleased(e);
             } 
          });
       
@@ -396,71 +418,77 @@ class ElementTree extends JTree implements DragGestureListener,
                }
             });
    }
+   
+   public void setContextEditable(boolean val)
+   {
+      mContextEditable = val;
+   }
 
    /**
     * Catch all events for the pop-up menu events.
     */
    public void actionPerformed(ActionEvent ae) 
    {
-      // If the user selcted the remove menu item.
-      if(ae.getActionCommand().equals("delete")) 
+      // Get the currently selected ConfigElement.
+      TreePath path = this.getLeadSelectionPath();
+      DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
+      Object temp = node.getUserObject();
+
+      //System.out.println("Action performed on a non ConfigElement node.");
+      if ( (temp instanceof ConfigElement) )
       {
-         // Get the currently selected ConfigElement.
-         TreePath path = this.getLeadSelectionPath();
-         DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
-         Object temp = node.getUserObject();
-         TreeModel model = this.getModel();
-         
-         // Remove the ConfigElement from the context.
-         if(temp instanceof ConfigElement && model instanceof ConfigContextModel)
+         ConfigElement elm = (ConfigElement)temp;
+
+         // If the user selected the copy action.
+         if( ae.getActionCommand().equals("copy") )
          {
-            // Try to remove the element.
-            ConfigBroker broker = new ConfigBrokerProxy();
-            if(!broker.remove( ((ConfigContextModel)model).getContext(), (ConfigElement)temp))
+            // Place ConfigElement in the system clipboard.
+            ConfigElementSelection selection = new ConfigElementSelection(elm);
+            // TODO: Change owner of clipboard.
+            clipboard.setContents(selection, selection);
+         }      
+         
+         if ( !elm.isReadOnly() ) // Ensure that the ConfigElement is writable.
+         {
+            // If the user selcted the remove menu item.
+            if( ae.getActionCommand().equals("delete") ) 
             {
-               System.out.println("Failed...");
+               TreeModel model = this.getModel();
+               
+               // Remove the ConfigElement from the context.
+               if( model instanceof ConfigContextModel )
+               {
+                  // Try to remove the element.
+                  ConfigBroker broker = new ConfigBrokerProxy();
+                  if(!broker.remove( ((ConfigContextModel)model).getContext(), elm))
+                  {
+                     System.out.println("Failed...");
+                  }
+               }
+            }
+
+            // Start editing the currently selected ConfigElement if we want to rename it.
+            if(ae.getActionCommand().equals("rename"))
+            {
+               // Get the currently selected ConfigElement.
+               startEditingAtPath(path);
+            }
+
+            // If the user selects the cut operation we should first copy it into the
+            // clipboard and then delete it from the active context.
+            if(ae.getActionCommand().equals("cut"))
+            {
+               ActionEvent evt;
+               evt = new ActionEvent(this, -1, "copy");
+               actionPerformed(evt);
+               evt = new ActionEvent(this, -1, "delete");
+               actionPerformed(evt);
             }
          }
       }
 
-      // Start editing the currently selected ConfigElement if we want to rename it.
-      if(ae.getActionCommand().equals("rename"))
-      {
-         // Get the currently selected ConfigElement.
-         TreePath path = this.getLeadSelectionPath();
-         startEditingAtPath(path);
-      }
-
-      // If the user selected the copy action.
-      if(ae.getActionCommand().equals("copy")) 
-      {
-         // Get the currently selected ConfigElement.
-         TreePath path = this.getLeadSelectionPath();
-         DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
-         Object temp = node.getUserObject();
-     
-         // Place ConfigElement in the system clipboard.
-         if(temp instanceof ConfigElement)
-         {
-            ConfigElementSelection selection = new ConfigElementSelection((ConfigElement)temp);
-            // TODO: Change owner of clipboard.
-            clipboard.setContents(selection, selection);
-         }
-      }
-
-      // If the user selects the cut operation we should first copy it into the
-      // clipboard and then delete it from the active context.
-      if(ae.getActionCommand().equals("cut"))
-      {
-         ActionEvent evt;
-         evt = new ActionEvent(this, -1, "copy");
-         actionPerformed(evt);
-         evt = new ActionEvent(this, -1, "delete");
-         actionPerformed(evt);
-      }
-
       // If the user selected the paste action.
-      if(ae.getActionCommand().equals("paste")) 
+      if(ae.getActionCommand().equals("paste") && mContextEditable) 
       {
          try
          {
@@ -480,16 +508,16 @@ class ElementTree extends JTree implements DragGestureListener,
                // Get the ConfigElement that we are transfering and make a deep
                // copy of it.
                ConfigElement old_elm = (ConfigElement)tr.getTransferData(my_flavor);
-               ConfigElement elm = new ConfigElement(old_elm);
+               ConfigElement new_elm = new ConfigElement(old_elm);
 
                // Make sure that we have a meaningful unique name.
                ConfigContext ctx = config_model.getContext();
-               String base_name = elm.getName();
+               String base_name = new_elm.getName();
                int num = 1;
-               while(ctx.containsElement(elm))
+               while(ctx.containsElement(new_elm))
                {
                   String new_name = base_name + "Copy" + Integer.toString(num);
-                  elm.setName(new_name);
+                  new_elm.setName(new_name);
                   ++num;
                }
                
@@ -497,7 +525,7 @@ class ElementTree extends JTree implements DragGestureListener,
                ConfigBroker broker = new ConfigBrokerProxy();
                 
                // Make sure this add goes through successfully
-               if (!broker.add(config_model.getContext(), elm))
+               if (!broker.add(config_model.getContext(), new_elm))
                {
                   throw new Exception("Could not paste ConfigElement into context.");
                }
@@ -517,7 +545,7 @@ class ElementTree extends JTree implements DragGestureListener,
     * prepare the associated transfer object.
     */
    public void dragGestureRecognized(DragGestureEvent e) 
-   {     
+   {
       if(e.getDragAction() == DnDConstants.ACTION_COPY)
       {
          System.out.println("Copy...");
@@ -688,4 +716,11 @@ class ElementTree extends JTree implements DragGestureListener,
    {;}
    public void dropActionChanged(DropTargetDragEvent e) 
    {;}
+  
+   private JMenuItem mDeleteMenuItem = null;
+   private JMenuItem mRenameMenuItem = null;
+   private JMenuItem mCutMenuItem = null;
+   private JMenuItem mCopyMenuItem = null;
+   private JMenuItem mPasteMenuItem = null;
+   private boolean mContextEditable = false;
 }
