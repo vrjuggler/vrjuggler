@@ -137,13 +137,13 @@ Getting the Source Code
    as follows:
 
      o GMTL (http://ggt.sf.net/): A generic math library that makes use of
-       C++ templates and STL paradigms
+       C++ templates and STL paradigms.
 
      o CppDOM (http://www.sf.net/projects/xml-cppdom/): A lightweight,
-       easy-to-use XML parser written in C++
+       easy-to-use XML parser written in C++.
 
      o Boost (http://www.boost.org/): A C++ library providing many powerful
-       tools
+       tools.
 
      o Doozer++ (http://www.sf.net/projects/doozer/): A foundation the
        development of complex build systems using Autoconf and GNU make. This
@@ -157,19 +157,24 @@ Getting the Source Code
 
      o NSPR (http://www.mozilla.org/projects/nspr/): The Netscape Portable
        Runtime, which can be used by VPR for threading and sockets (required
-       on Win32)
+       on Win32, Solaris, and Mac OS X).
+
+     o Java Developer Kit (http://java.sun.com/): The JDK is used to compile
+       all the Java code used in the Juggler Project. Without it, none of the
+       Java code can be built. We require version 1.3 or newer. The Java
+       Standard Edition can be downloaded from http://java.sun.com/j2se/.
 
      o JDOM (http://www.jdom.org/): An XML parser for Java, needed for the
-       Tweek Java GUI and for the VR Juggler configuration editor VRJConfig
+       Tweek Java GUI and for the VR Juggler configuration editor VRJConfig.
 
      o OpenORB (http://openorb.sourceforge.net/): A pure Java implementation
-       of CORBA 2.3, required for the Tweek Java GUI
+       of CORBA 2.3, required for the Tweek Java GUI.
 
      o omniORB (http://omniorb.sourceforge.net/): A C++ implementation of
-       CORBA 2.3, required for the Tweek C++ API
+       CORBA 2.3, required for the Tweek C++ API.
 
-   The following describes how to get all of the above except JDOM, OpenORB,
-   omniORB, and NSPR. These must be downloaded separately.
+   The following describes how to get all of the above except JDK, JDOM,
+   OpenORB, omniORB, and NSPR. These must be downloaded separately.
 
   How to get the Juggler Suite and external package dependencies from CVS
 
@@ -300,6 +305,15 @@ Getting the Source Code
    NSPR. Binary versions of NSPR can be downloaded from
    ftp://ftp.mozilla.org/pub/nspr/releases/. At this time, we recommend the
    use of version 4.2 or newer.
+
+    Java Developer Kit (JDK)
+
+   We make use of the Java programming language in addition to C++. Java is
+   used exclusively for GUIs such as Tweek and VRJConfig (which is a JavaBean
+   that is loaded into Tweek). To compile the Java code, a JDK is necessary.
+   We currently require version 1.3 or newer. The Java Standard Edition can
+   be downloaded from http://java.sun.com/j2se/. More information can be
+   found at http://java.sun.com/.
 
     JDOM
 
