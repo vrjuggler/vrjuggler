@@ -267,7 +267,7 @@ namespace snx
       snx::SoundImplementation::setVolume( alias, amount );
       if (mBindTable.count( alias ) > 0 && mSounds.count( alias ) > 0)
       {
-         float real_amount = amount * 160.0f;
+         float real_amount = amount * 60.0f;
          
          //if (this->isAmbient( alias ) == true)
          awProp( mBindTable[alias].mSound, AWSND_SPL, real_amount );
