@@ -263,6 +263,30 @@ else
 fi
 
 
+dnl does the user want to disable subsynth?
+AC_ARG_ENABLE(subsynth,
+              [  --enable-subsynth   Compile in Subsynth support [default=yes]],
+              SUBSYNTH_ENABLED="$enableval", SUBSYNTH_ENABLED=$1)
+dnl append the subsynth stuff...
+SUBSYNTH_API='N'
+if test "x$SUBSYNTH_ENABLED" = "xno" ; then
+# do nothing...
+   true
+else
+   DPP_HAVE_SUBSYNTH( /usr/local, AC_MSG_RESULT(+ Found Subsynth),  )
+   if test "x$SUBSYNTH" = "xyes" ; then
+      INCLUDES="$INCLUDES $SYN_INCLUDES"
+      LDFLAGS="$LDFLAGS $SYN_LDFLAGS"
+      LIBS="$LIBS $LIBSUBSYNTH"
+      SUBSYNTH_API='Y'
+      echo "+ added Subsynth to the compile and link paths"
+   else
+      if test "x$SUBSYNTH_ENABLED" = "xyes" ; then
+         AC_MSG_ERROR(*** you requested to use Subsynth as one of your audio subsystems, but it was not found.  Aborting... ***)
+      fi
+   fi
+fi
+
 dnl does the user want AW?
 AC_ARG_ENABLE(audioworks,
               [  --enable-audioworks   Compile in AudioWorks support [default=yes]],
@@ -378,6 +402,7 @@ AC_SUBST(sample_application_ldflags)
 AC_SUBST(sample_application_libs)
 AC_SUBST(AUDIOWORKS_API)
 AC_SUBST(OPENAL_API)
+AC_SUBST(SUBSYNTH_API)
 AC_SUBST(SAFE_SNXROOT_ABS)
 AC_SUBST(SAFE_JUGGLERROOT_ABS)
 
