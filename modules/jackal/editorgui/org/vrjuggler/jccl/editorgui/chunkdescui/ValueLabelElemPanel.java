@@ -29,25 +29,20 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
-package VjComponents.ConfigEditor.ChunkDescUI;
+package org.vrjuggler.jccl.editorgui.chunkdescui;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
-import VjControl.Core;
-import VjConfig.*;
-import VjComponents.ConfigEditor.*;
-import VjComponents.UI.Widgets.*;
-
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.editorgui.*;
+import org.vrjuggler.jccl.vjcontrol.Core;
+import org.vrjuggler.jccl.vjcontrol.ui.widgets.*;
 
 /** A small bordered panel for editing a single PropertyDesc ValueLabel.
  *
- *  @author Christopher Just
  *  @version $Revision$
  */
 public class ValueLabelElemPanel extends JPanel implements MouseListener {
@@ -123,6 +118,4 @@ public class ValueLabelElemPanel extends JPanel implements MouseListener {
     }
     public void mouseReleased (MouseEvent e) {
     }
-
-
 }

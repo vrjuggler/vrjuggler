@@ -29,26 +29,22 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.editorgui.chunkdescui;
 
-
-
-package VjComponents.ConfigEditor.ChunkDescUI;
-
-import javax.swing.*;
-import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import javax.swing.*;
+import javax.swing.border.*;
 
-import VjControl.Core;
-import VjComponents.ConfigEditor.*;
-import VjConfig.*;
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.editorgui.*;
+import org.vrjuggler.jccl.vjcontrol.Core;
 
 /** Frame for editing Enumerations or ValueLabels.
  *  DescEnumFrame uses the List _data which is passed to it from the parent;
  *  when the frame's OK button is pressed it modifies the List object.
  *
- *  @author Christopher Just
  *  @version $Revision$
  */
 public class DescEnumFrame extends JFrame 
