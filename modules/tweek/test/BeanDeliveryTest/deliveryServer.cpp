@@ -1,9 +1,12 @@
 #include <stdlib.h>
 
-#include <tweek/CORBA/CorbaManager.h>
-#include <tweek/CORBA/BeanDeliverySubjectImpl.h>
+#include <vpr/vpr.h>
+#include <vpr/System.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/Util/Debug.h>
+
+#include <tweek/CORBA/CorbaManager.h>
+#include <tweek/CORBA/BeanDeliverySubjectImpl.h>
 
 
 /**
