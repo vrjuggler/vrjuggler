@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for common/jccl/RTRC.  It requires GNU make.
+# Makefile.in for jackal/rtrc/jccl/RTRC.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -46,6 +46,8 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(JCCL_RTRC_LIBRARY)
 
+HAVE_TWEEK_CXX=	@HAVE_TWEEK_CXX@
+
 SRCS= \
 	ConfigChunkHandler.cpp \
 	ConfigCommand.cpp \
@@ -53,6 +55,17 @@ SRCS= \
 	DepChecker.cpp \
 	DependencyManager.cpp \
 	XMLConfigCommunicator.cpp
+
+ifeq ($(HAVE_TWEEK_CXX), Y)
+   CXX_IDL_OPTS=	@TWEEK_CXX_IDL_OPTS@ @TWEEK_CXX_IDL_GENDIR_OPT@$(srcdir)
+   CXX_IDL_INCLUDES=	@TWEEK_CXX_IDL_INCFLAG@$(top_srcdir)
+   IDL_CXX_FILES=	RTRCInterfaceSubject.cpp RTRCInterfaceSubject.h
+   INSTALL_FILES+=	$(srcdir)/*.idl
+
+   SRCS+=		RTRCInterfaceSubjectImpl.cpp	\
+			RTRCInterfaceSubject.cpp	\
+			RTRCInterface.cpp
+endif
 
 EXTRA_INCLUDES= \
 	-I$(top_srcdir)/common \
@@ -63,9 +76,15 @@ EXTRA_INCLUDES= \
 
 include $(MKPATH)/dpp.obj.mk
 
+ifeq ($(HAVE_TWEEK_CXX), Y)
+   CLEAN_FILES+=	$(addprefix $(srcdir)/, $(IDL_CXX_FILES))
+endif
+
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.
 # -----------------------------------------------------------------------------
 ifndef DO_CLEANDEPEND
+ifndef DO_IDL
     -include $(DEPEND_FILES)
+endif
 endif
