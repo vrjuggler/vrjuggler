@@ -16,10 +16,12 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import java.util.Vector;
 import VjPerf.*;
 import VjGUI.FileControl;
+import VjGUI.util.*;
 
-public class PerfAnalyzerPanel extends JPanel implements ActionListener {
+public class PerfAnalyzerPanel extends JPanel implements ActionListener, JFrameParent {
 
 
     private class CollectorSummaryButton extends JButton {
@@ -59,9 +61,11 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener {
     private String padFloat (double f) {
 	// reformats f to a string w/ 3 places after decimal
 	String s = Double.toString(f);
+	if (s.indexOf('E') != -1)
+	    return s;
 	int i = s.lastIndexOf('.');
-	if ((i >= 0) && (i+3 < s.length()))
-	    s = s.substring (0, i + 3);
+	if ((i >= 0) && (i+5 < s.length()))
+	    s = s.substring (0, i + 5);
 	return s;
     }
 
@@ -81,13 +85,22 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener {
 	    l = new JLabel ("----------------------------------------------");
 	    gblayout.setConstraints (l, gbc);
 	    data_panel.add (l);
-	    l = new JLabel ("Averages report for " + col.getName());
-	    b = new CollectorSummaryButton (col);
-	    b.addActionListener (this);
-	    gblayout.setConstraints (b, gbc);
-	    data_panel.add (b);
+
+	    l = new JLabel (col.getName());
+	    gbc.gridwidth = 1;
 	    gblayout.setConstraints (l, gbc);
 	    data_panel.add (l);
+
+	    b = new CollectorSummaryButton (col);
+	    b.addActionListener (this);
+	    gbc.gridwidth = gbc.REMAINDER;
+	    gblayout.setConstraints (b, gbc);
+	    data_panel.add (b);
+
+	    l = new JLabel ("Average times in milliseconds:");
+	    gblayout.setConstraints(l, gbc);
+	    data_panel.add (l);
+
 	    for (j = 0; j < col.getNumPhases(); j++) {
 		avg = col.getAverageForPhase(j);
 		if (avg == 0.0)
@@ -96,7 +109,7 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener {
 		l = new JLabel (j + ": " + col.getLabelForPhase(j));
 		gblayout.setConstraints (l, gbc);
 		data_panel.add(l);
-		l = new JLabel (padFloat(avg), JLabel.RIGHT);
+		l = new JLabel (padFloat(avg/1000.0), JLabel.RIGHT);
 		gblayout.setConstraints (l, gbc);
 		data_panel.add(l);
 		b = new GraphButton (col, j);
@@ -117,6 +130,7 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener {
 
     JComboBox  collection_choice;
     JComboBox  display_choice;
+    JComboBox  max_samples_box;
     JTextField preskip_box;
     JTextField postskip_box;
     JButton savecontents_button;
@@ -133,6 +147,8 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener {
     PerfDataCollector current_collector;
     PerfDataCollection collection;
 
+    Vector child_frames;  // vector of GenericGraphFrames...
+
     int preskip, postskip;
     float anomalycutoff;
     boolean doanomaly;
@@ -140,9 +156,12 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener {
     public PerfAnalyzerPanel (VjPerf.PerfDataCollection _data_collection) {
 	super();
 
+	child_frames = new Vector();
 	collection = _data_collection;
 	current_collector = null;
 	text_area = null;
+
+	collection.addActionListener (this);
 
 	preskip = 20;
 	postskip = 20;
@@ -170,11 +189,11 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener {
 	epanel.add (savecontents_button = new JButton ("Save Contents"));
 	savecontents_button.addActionListener (this);
 
-	print_button = new JButton ("Print");
-	print_button.addActionListener (this);
-	epanel.add (print_button);
+//  	print_button = new JButton ("Print");
+//  	print_button.addActionListener (this);
+//  	epanel.add (print_button);
 
-	print_all_button = new JButton ("Print All");
+	print_all_button = new JButton ("Print");
 	print_all_button.addActionListener (this);
 	epanel.add (print_all_button);
        
@@ -186,29 +205,39 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener {
 	ntoppanel.setLayout (new BoxLayout (ntoppanel, BoxLayout.X_AXIS));
 	npanel.add (ntoppanel);
 
-	collection_choice = new JComboBox();
-	display_choice = new JComboBox();
+	ntoppanel.add (new JLabel ("Maximum stored samples"));
+	ntoppanel.add (max_samples_box = new JComboBox());
+	max_samples_box.addItem ("100");
+	max_samples_box.addItem ("500");
+	max_samples_box.addItem ("1000");
+	max_samples_box.addItem ("5000");
+	max_samples_box.addItem ("<Infinite>");
+	max_samples_box.setSelectedIndex(1);
+	max_samples_box.addActionListener (this);
 
-	display_choice.addItem ("Averages");
-	display_choice.addItem ("Averages with discrepencies");
+//  	collection_choice = new JComboBox();
+//  	display_choice = new JComboBox();
 
-	collection_choice.addActionListener (this);
-	display_choice.addActionListener (this);
-	ntoppanel.add (collection_choice);
-	ntoppanel.add (display_choice);
+//  	display_choice.addItem ("Averages");
+//  	display_choice.addItem ("Averages with discrepencies");
 
+//  	collection_choice.addActionListener (this);
+//  	display_choice.addActionListener (this);
+//  	ntoppanel.add (collection_choice);
+//  	ntoppanel.add (display_choice);
+	
 
-	JPanel nargpanel = new JPanel();
-	nargpanel.setLayout (new GridLayout (4,6,5,5));
-	npanel.add (nargpanel);
+//  	JPanel nargpanel = new JPanel();
+//  	nargpanel.setLayout (new GridLayout (4,6,5,5));
+//  	npanel.add (nargpanel);
 
-	nargpanel.add (new JLabel ("Preskip"));
-	nargpanel.add (preskip_box = new JTextField ("   " + preskip));
-	preskip_box.addActionListener (this);
+//  	nargpanel.add (new JLabel ("Preskip"));
+//  	nargpanel.add (preskip_box = new JTextField ("   " + preskip));
+//  	preskip_box.addActionListener (this);
 
-	nargpanel.add (new JLabel ("Postskip"));
-	nargpanel.add (postskip_box = new JTextField ("   " + postskip));
-	postskip_box.addActionListener (this);
+//  	nargpanel.add (new JLabel ("Postskip"));
+//  	nargpanel.add (postskip_box = new JTextField ("   " + postskip));
+//  	postskip_box.addActionListener (this);
 
 	display_pane = new JScrollPane (data_panel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
@@ -220,20 +249,23 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener {
     }
 
 
+
     public void setCurrentCollector (PerfDataCollector c) {
 	if (c == null) {
 	    current_collector = null;
 	    savecontents_button.setEnabled (false);
-	    print_button.setEnabled (false);
-	    print_all_button.setEnabled (false);
+	    //print_button.setEnabled (false);
+	    //print_all_button.setEnabled (false);
 	}
 	else {
 	    current_collector = c;
 	    savecontents_button.setEnabled (true);
-	    print_button.setEnabled (true);
+	    //print_button.setEnabled (true);
 	    print_all_button.setEnabled (true);
 	}
     }
+
+
 
     public void actionPerformed (ActionEvent e) {
 	if (e.getSource() instanceof AnomaliesButton) {
@@ -241,16 +273,30 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener {
 	}
 	else if (e.getSource() instanceof GraphButton) {
 	    GraphButton b = (GraphButton)e.getSource();
-	    GraphFrame gf = new GraphFrame (b.collector, b.phase, preskip, postskip);
+	    GenericGraphPanel gp = new SummaryGraphPanel (b.collector, b.phase);
+	    GenericGraphFrame gf = new GenericGraphFrame (gp, "Graph of " + b.collector.getName() + " phase " + b.phase, this);
+	    child_frames.addElement(gf);
 	    gf.show();
+
 	}
 	else if (e.getSource() instanceof CollectorSummaryButton) {
-	    JFrame jf = new JFrame ("foo");
-	    jf.getContentPane().add (new SummaryGraphPanel (((CollectorSummaryButton)e.getSource()).collector));
-	    jf.setSize (500,300);
-	    jf.show();
+	    PerfDataCollector col = ((CollectorSummaryButton)e.getSource()).collector;
+	    GenericGraphPanel gp = new SummaryGraphPanel (col);
+	    GenericGraphFrame gf = new GenericGraphFrame (gp, "Summary Graph of " + col.getName() , this);
+	    child_frames.addElement(gf);
+	    gf.show();
 	}
-	if (e.getSource() == display_choice)
+	else if (e.getSource() == max_samples_box) {
+	    int numsamps;
+	    String s = (String)max_samples_box.getSelectedItem();
+	    if (s.equalsIgnoreCase("<Infinite>"))
+		numsamps = -1;
+	    else
+		numsamps = Integer.parseInt(s);
+	    //System.out.println ("setting max samples to " + numsamps);
+	    collection.setMaxSamples(numsamps);
+	}
+	else if (e.getSource() == display_choice)
 	    refreshDisplay();
 	else if (e.getSource() == collection_choice) {
 	    Object o = collection_choice.getSelectedItem();
@@ -277,6 +323,7 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener {
 	else if (e.getSource() == load_button) {
 	    String name = FileControl.loadNewPerfDataFile ("", true);
 	    setCollectionList();
+	    refreshDisplay();
 	}
 	else if (e.getSource() == print_button) {
 	     String s = current_collector.dumpAverages (preskip, postskip, true, anomalycutoff);
@@ -291,21 +338,37 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener {
 	    }
 	    System.out.println (s);
 	}
+	else if (e.getSource() == collection) {
+	    String s = e.getActionCommand();
+	    if (s.equalsIgnoreCase ("refresh"))
+		refreshDisplay();
+	    else if (s.equalsIgnoreCase ("removealldata"))
+		removeAllData();
+	}
     }
 
 
     public void refreshDisplay() {
+	for (int i = 0; i < child_frames.size(); i++)
+	    ((GenericGraphFrame)child_frames.elementAt(i)).refresh();
+	buildDataPanel();
+    }
+
+    public void removeAllData() {
+	for (int i = 0; i < child_frames.size(); i++)
+	    ((GenericGraphFrame)child_frames.elementAt(i)).dispose();
+	child_frames.removeAllElements();
 	buildDataPanel();
     }
 
     public void setCollectionList() {
-	while (collection_choice.getItemCount() != 0) 
-	    collection_choice.removeItemAt(0);
-	//collection_choice.removeAllItems();
-	collection_choice.addItem ("None Selected");
-	for (int i = 0; i < collection.collectors.size(); i++) {
-	    collection_choice.addItem (collection.collectors.elementAt(i));
-	}
+//  	while (collection_choice.getItemCount() != 0) 
+//  	    collection_choice.removeItemAt(0);
+//  	//collection_choice.removeAllItems();
+//  	collection_choice.addItem ("None Selected");
+//  	for (int i = 0; i < collection.collectors.size(); i++) {
+//  	    collection_choice.addItem (collection.collectors.elementAt(i));
+//  	}
     }
 
     public void refresh() {
@@ -313,6 +376,11 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener {
 	refreshDisplay();
     }
 
+
+    public void closedChild (JFrame f, boolean ok) {
+	child_frames.removeElement(f);
+	f.dispose();
+    }
 }
 
 
