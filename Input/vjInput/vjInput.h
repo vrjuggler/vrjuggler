@@ -36,7 +36,9 @@
 
 #ifndef WIN32
 #include <unistd.h>
-#include <termio.h>
+
+#include <termios.h>
+
 #ifdef HAVE_SYS_PRCTL_H
 #   include <sys/prctl.h>
 #endif		/* ifdef HAVE_SYS_PRCTL_H */
