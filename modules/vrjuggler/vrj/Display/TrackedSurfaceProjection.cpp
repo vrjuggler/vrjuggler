@@ -54,7 +54,7 @@ void TrackedSurfaceProjection::calcViewMatrix(gmtl::Matrix44f& eyePos, const flo
    calcViewFrustum(eyePos, scaleFactor);
 
    //Coord eye_coord(eyePos);
-   gmtl::Vec3f   eye_pos( gmtl::makeTrans<gmtl::Vec3f>(eyePos) );             // Non-xformed pos
+   //gmtl::Vec3f   eye_pos( gmtl::makeTrans<gmtl::Vec3f>(eyePos) );             // Non-xformed pos
 
    // Need to post translate to get the view matrix at the position of the eye
    // Don't take into account the surface transform since the eyepos already accounts for that
