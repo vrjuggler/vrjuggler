@@ -189,13 +189,19 @@ namespace vpr {
 //
 //!PUBLIC_API:
 //-----------------------------------------
-class Debug
+class VPR_CLASS_API Debug
 {
 private:
    // Set default values
    // Set up default categories
    // Get debug config from environment
    Debug();
+
+   // These two have to be here because Visual C++ will try to make them
+   // exported public symbols.  This causes problems because copying vpr::Mutex
+   // objects is not allowed.
+   Debug(const Debug& d) {;}
+   void operator= (const Debug& d) {;}
 
 public:
    // Get the debug stream to use
