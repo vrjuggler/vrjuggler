@@ -611,6 +611,8 @@ case $SUBSYSTEM in
         static_end="-B dynamic"
         vpr_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
         vpr_ldflags_linker="$vpr_ldflags_compiler"
+        vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS"
+        vpr_extra_ldflags_linker="$vpr_extra_ldflags_compiler"
         vpr_libs='-lvpr'
         ;;
     POSIX)
@@ -629,20 +631,26 @@ case $SUBSYSTEM in
 
         vpr_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
         vpr_ldflags_linker="$vpr_ldflags_compiler"
+        vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS"
+        vpr_extra_ldflags_linker="$vpr_extra_ldflags_compiler"
         vpr_libs='-lvpr'
         ;;
     NSPR)
         if test "x$OS_TYPE" = "xWin32" ; then
             subsystem_cxxflags="$INCLUDES"
             subsystem_libs="$NSPR_LIB_LINK_EXE comctl32.lib user32.lib gdi32.lib ws2_32.lib"
-            vpr_ldflags_compiler="/link /libpath:\$prefix/lib/debug $NSPR_LDFLAGS"
-            vpr_ldflags_linker="/libpath:\$prefix/lib/debug $NSPR_LDFLAGS_LINK_EXE"
+            vpr_ldflags_compiler="/link /libpath:\$prefix/lib/debug"
+            vpr_ldflags_linker="/libpath:\$prefix/lib/debug"
+            vpr_extra_ldflags_compiler="/link $NSPR_LDFLAGS"
+            vpr_extra_ldflags_linker="$NSPR_LDFLAGS_LINK_EXE"
             vpr_libs='vpr.lib'
         else
             subsystem_cxxflags="$INCLUDES"
             subsystem_libs="$NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
             vpr_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
             vpr_ldflags_linker="$vpr_ldflags_compiler"
+            vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS"
+            vpr_extra_ldflags_linker="$vpr_extra_ldflags_compiler"
             vpr_libs='-lvpr'
 
             if test "x$PLATFORM" != "xDarwin" ; then
@@ -666,8 +674,6 @@ if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
     vpr_64_flags='-64'
     vpr_extra_include_dirs='boost/compatibility/cpp_c_headers'
 fi
-
-vpr_extra_ldflags="$EXTRA_LDFLAGS"
 
 VJ_VERSION_GROK(VERSION)
 
@@ -712,7 +718,8 @@ AC_SUBST(vpr_ldflags_linker)
 AC_SUBST(vpr_libs)
 AC_SUBST(vpr_extra_cxxflags)
 AC_SUBST(vpr_extra_include_dirs)
-AC_SUBST(vpr_extra_ldflags)
+AC_SUBST(vpr_extra_ldflags_compiler)
+AC_SUBST(vpr_extra_ldflags_linker)
 AC_SUBST(vpr_extra_libs)
 AC_SUBST(vpr_n32_flags)
 AC_SUBST(vpr_64_flags)
