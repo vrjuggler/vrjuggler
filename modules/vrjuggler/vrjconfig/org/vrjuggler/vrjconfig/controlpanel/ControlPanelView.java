@@ -325,6 +325,10 @@ public class ControlPanelView
                }
                else if(null != list && list.size() > 0)
                {
+                  ConfigUndoManager mgr = mContext.getConfigUndoManager();
+                  int save_point = mgr.getEditOffsetFromSave();
+                  mToolbar.addSavePoint(save_point);
+
                   CustomEditor editor = (CustomEditor)list.get(0);
                   editor.setConfig(mContext, element);
 
@@ -337,14 +341,7 @@ public class ControlPanelView
 
                   if ( status == CustomEditorDialog.CANCEL_OPTION )
                   {
-                     // XXX: How do we undo all of the changes that the user
-                     // made?
-                  }
-                  else
-                  {
-                     // This handles informing the ConfigUndoManager of a
-                     // successful save operation.
-                     mToolbar.doSave();
+                     mToolbar.doUndoUntil(save_point);
                   }
                }
             }
@@ -382,6 +379,10 @@ public class ControlPanelView
          // the user.
          try
          {
+            ConfigUndoManager mgr = mContext.getConfigUndoManager();
+            int save_point = mgr.getEditOffsetFromSave();
+            mToolbar.addSavePoint(save_point);
+
             CustomEditor editor = (CustomEditor) editor_class.newInstance();
 
             // This editor actually edits a context, so pass null for the
@@ -393,14 +394,7 @@ public class ControlPanelView
 
             if ( status == CustomEditorDialog.CANCEL_OPTION )
             {
-               // XXX: How do we undo all of the changes that the user
-               // made?
-            }
-            else
-            {
-               // This handles informing the ConfigUndoManager of a
-               // successful save operation.
-               mToolbar.doSave();
+               mToolbar.doUndoUntil(save_point);
             }
          }
          // This is here not because Class.newInstance() throws it but because

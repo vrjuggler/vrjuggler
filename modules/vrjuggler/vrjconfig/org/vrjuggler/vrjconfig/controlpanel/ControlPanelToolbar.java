@@ -39,6 +39,7 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Stack;
 import javax.swing.*;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
@@ -76,6 +77,8 @@ public class ControlPanelToolbar
                               UndoHandler undoHandler)
    {
       super(ctx, fileLoader, undoHandler);
+
+      saveCurrentEditPoint();
 
       try
       {
@@ -130,6 +133,12 @@ public class ControlPanelToolbar
       toolbar.add(expandBtn, null);
    }
 
+   public void undoableEditHappened(UndoableEditEvent e)
+   {
+      super.undoableEditHappened(e);
+      mRedoSavePoints.clear();
+   }
+
    public void setRemoteReconfigEnabled(boolean enabled)
    {
       rtrcBtn.setEnabled(enabled);
@@ -139,6 +148,12 @@ public class ControlPanelToolbar
    {
       boolean saved = super.doSave();
       stateLabel.setText(saved ? SAVED_STATE_TEXT : UNSAVED_STATE_TEXT);
+
+      if ( saved )
+      {
+         resetUndoRedoStacks();
+      }
+
       return saved;
    }
 
@@ -146,6 +161,12 @@ public class ControlPanelToolbar
    {
       boolean saved = super.doSaveAs();
       stateLabel.setText(saved ? SAVED_STATE_TEXT : UNSAVED_STATE_TEXT);
+
+      if ( saved )
+      {
+         resetUndoRedoStacks();
+      }
+
       return saved;
    }
 
@@ -180,6 +201,104 @@ public class ControlPanelToolbar
       }
 
       return false;
+   }
+
+   /**
+    * Performs a multiple undo operation that stops at the current value on
+    * top of the undo save point stack.
+    *
+    * @see #addSavePoint(int)
+    * @see #saveCurrentEditPoint()
+    */
+   public void doUndo()
+   {
+      Integer next_save_point = (Integer) mUndoSavePoints.pop();
+      doUndoUntil(next_save_point.intValue());
+   }
+
+   /**
+    * Performs a multiple undo operation until the ConfigUndoManager for our
+    * config context reaches the given save point.  The given save point is
+    * pushed onto the redo save point stack for later use.
+    *
+    * @param savePoint  the edit offset point in the ConfigUndoManager at
+    *                   which the undo operations will stop
+    */
+   public void doUndoUntil(int savePoint)
+   {
+      System.out.println("[ControlPanelToolbar.doUndoUntil()] " +
+                         "Undoing until " + savePoint);
+      ConfigUndoManager mgr = context.getConfigUndoManager();
+      mgr.undoUntil(savePoint);
+      mRedoSavePoints.push(new Integer(savePoint));
+      undoBtn.setEnabled(mgr.canUndo());
+      redoBtn.setEnabled(true);
+      saveBtn.setEnabled(context.getConfigUndoManager().getUnsavedChanges());
+   }
+
+   /**
+    * Performs a multiple redo operation that stops at the current value on
+    * top of the redo save point stack.
+    */
+   public void doRedo()
+   {
+      Integer next_save_point = (Integer) mRedoSavePoints.pop();
+      doRedoUntil(next_save_point.intValue());
+   }
+
+   /**
+    * Performs a multiple redo operation until the ConfigUndoManager for our
+    * config context reaches the given save point.  The given save point is
+    * pushed onto the undo save point stack for later use.
+    *
+    * @param savePoint  the edit offset point in the ConfigUndoManager at
+    *                   which the redo operations will stop
+    */
+   public void doRedoUntil(int savePoint)
+   {
+      System.out.println("[ControlPanelToolbar.doRedoUntil()] " +
+                         "Re-doing until " + savePoint);
+      ConfigUndoManager mgr = context.getConfigUndoManager();
+      mgr.redoUntil(savePoint);
+      mUndoSavePoints.push(new Integer(savePoint));
+      undoBtn.setEnabled(true);
+      redoBtn.setEnabled(mgr.canRedo());
+   }
+
+   /**
+    * Adds the given save point to the undo save point stack.  After this
+    * operation, any undoable edit events that occur can be undone with a
+    * single click to the given save point.
+    *
+    * @param savePoint  the marker for the current state of the
+    *                   ConfigUndoManager for this context
+    *
+    * @see #saveCurrentEditPoint()
+    */
+   public void addSavePoint(int savePoint)
+   {
+      System.out.println("[ControlPanelToolbar.addSavePoint()] " +
+                         "Adding save point at " + savePoint);
+      mUndoSavePoints.push(new Integer(savePoint));
+   }
+
+   /**
+    * Adds the current edit-offset-from-save value in the ConfigUndoManager
+    * for our context to the undo stack.  This is a helper function that
+    * wraps addSavePoint().
+    *
+    * @see #addSavePoint(int)
+    */
+   public void saveCurrentEditPoint()
+   {
+      addSavePoint(context.getConfigUndoManager().getEditOffsetFromSave());
+   }
+
+   private void resetUndoRedoStacks()
+   {
+      mUndoSavePoints.clear();
+      mUndoSavePoints.push(new Integer(0));
+      mRedoSavePoints.clear();
    }
 
    /**
@@ -218,6 +337,9 @@ public class ControlPanelToolbar
          }
       });
    }
+
+   private Stack mUndoSavePoints = new Stack();
+   private Stack mRedoSavePoints = new Stack();
 
    // JBuilder GUI variables
    private JPanel titlePanel = new JPanel();
