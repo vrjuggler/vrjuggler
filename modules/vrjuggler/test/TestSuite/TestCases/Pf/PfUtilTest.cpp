@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include <vrj/Math/Math.h>
+#include <vrj/Math/Vec3.h>
 #include <vrj/Draw/Pf/PfUtil.h>
 
 #include <PfUtilTest.h>
@@ -31,7 +32,7 @@ void PfUtilTest::testMatrixConversion()
       std::cout << "GOOD!!!\n" << std::flush;
    }                
    */
-   assertTest( vj_mat.isEqual( mat ) && "test pf --> vj matrix conversion failed" );
+   CPPUNIT_ASSERT( vj_mat.isEqual( mat ) && "test pf --> vj matrix conversion failed" );
 }     
 
 } // End of vrjTest namespace
