@@ -188,7 +188,7 @@ public:
     */
    vpr::ReturnStatus clearAll (void)
    {
-      mSioImpl.clearAll();
+      return mSioImpl.clearAll();
    }
 
    /**
@@ -496,9 +496,9 @@ public:
     * @return true is returned if CLOCAL is set.
     *         false is returned otherwise.
     */
-   bool getLocalState (void)
+   bool getLocalAttachState (void)
    {
-      return mSioImpl.getLocalState();
+      return mSioImpl.getLocalAttachState();
    }
 
    /**
@@ -510,9 +510,9 @@ public:
     * @return vpr::ReturnStatus::Succeed is returned if CLOCAL was enabled.
     *         vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus enableLocal (void)
+   vpr::ReturnStatus enableLocalAttach (void)
    {
-      return mSioImpl.enableLocal();
+      return mSioImpl.enableLocalAttach();
    }
 
    /**
@@ -524,9 +524,9 @@ public:
     * @return vpr::ReturnStatus::Succeed is returned if CLOCAL was disabled.
     *         vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus disableLocal (void)
+   vpr::ReturnStatus disableLocalAttach (void)
    {
-      return mSioImpl.disableLocal();
+      return mSioImpl.disableLocalAttach();
    }
 
    /**
