@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <cluster/Plugins/PluginConfig.h>
+#include <cluster/PluginConfig.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -55,7 +55,7 @@
 #include <cluster/Packets/SyncRequest.h>
 #include <cluster/Packets/SyncAck.h>
 
-#include <cluster/Plugins/SwapLockWiredPlugin/SwapLockWiredPlugin.h> // my header...
+#include <plugins/SwapLockWiredPlugin/SwapLockWiredPlugin.h> // my header...
 
 
 cluster::ClusterPlugin* initPlugin()
