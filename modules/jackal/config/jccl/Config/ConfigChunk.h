@@ -69,6 +69,30 @@ private:
     vjVarValue type_as_varvalue;
     unsigned int validation;  // flag for testing validity of self
 
+    static const std::string embedded_separator;
+
+    static bool hasSeparator (const std::string &path) {
+        return (path.find(embedded_separator) != path.npos);
+    }
+
+    static std::string getRemainder (const std::string &path) {
+        std::string::size_type i = path.find (embedded_separator);
+        if (i == path.npos)
+            return path;
+        else 
+            return path.substr (i + embedded_separator.length());
+    }
+
+    static std::string getFirstNameComponent (const std::string& path) {
+        std::string::size_type i = path.find (embedded_separator);
+        if (i == path.npos)
+            return path;
+        else 
+            return path.substr (0, i);
+    }
+
+
+
 public:
 
     //: Constructs a vjConfigChunk with no given description.
@@ -131,6 +155,10 @@ public:
 
 
 
+    // used for dependency resolution
+    vjConfigChunk* vjConfigChunk::getEmbeddedChunk (const std::string &path);
+
+
     //: writes self to out
     //!POST: self is written to out.  Format is as defined
     //+      in the ConfigFileFormats document.
@@ -169,6 +197,12 @@ public:
     //+      vjProperty that can have a variable number of values.
     int getNum (const std::string& property) const;
 
+
+
+    //: Returns the name of this ConfigChunk.
+    std::string getName () const {
+        return getProperty("Name");
+    }
 
 
     //: Returns one of the values for a given property.
