@@ -44,6 +44,14 @@
 
 #include <vpr/vprConfig.h>
 
+// XXX: I don't know why this is necessary, but I think something is being
+// defined incorrectly somewhere.  This must be included before netinet/in.h
+// or else _BIG_ENDIAN and _LITTLE_ENDIAN end up being defined to the same
+// value.  This causes tons of warnings from the MIPSpro Compilers.
+#ifdef VPR_OS_IRIX
+#  include <sys/endian.h>
+#endif
+
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <string>
