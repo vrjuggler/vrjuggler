@@ -107,21 +107,68 @@ bool NetworkNode::hasSocket (const vpr::Uint32 port,
 
 void NetworkNode::addSocket (vpr::SocketImplSIM* sock)
 {
-   vprASSERT(! hasSocket(sock->getLocalAddr().getPort(), sock->getType()) && "Tried to overwrite an existing socket");
+   vpr::Uint32 port = sock->getLocalAddr().getPort();
+   vprASSERT(! hasSocket(port, sock->getType()) && "Tried to overwrite an existing socket");
    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-      << "NetworkNode::addSocket(): Adding socket (" << sock
+      << "NetworkNode::addSocket() [" << mIpStr << "]: Adding socket (" << sock
       << ") with local address " << sock->getLocalAddr() << " to node "
       << mIpStr << "\n" << vprDEBUG_FLUSH;
 
    switch (sock->getType())
    {
       case vpr::SocketTypes::DATAGRAM:
-         mDgramSocketMap[sock->getLocalAddr().getPort()] = sock;
+         mDgramSocketMap[port] = sock;
          break;
       case vpr::SocketTypes::STREAM:
-         mStreamSocketMap[sock->getLocalAddr().getPort()] = sock;
+         mStreamSocketMap[port] = sock;
          break;
    }
+}
+
+vpr::ReturnStatus NetworkNode::removeSocket (const vpr::SocketImplSIM* sock)
+{
+   vpr::ReturnStatus status(vpr::ReturnStatus::Fail);
+   std::map<vpr::Uint32, vpr::SocketImplSIM*>::iterator i;
+   vpr::Uint32 port;
+
+   port = sock->getLocalAddr().getPort();
+
+   vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+      << "NetworkNode::removeSocket() [" << mIpStr
+      << "]: Removing socket bound to " << sock->getLocalAddr() << "\n"
+      << vprDEBUG_FLUSH;
+
+   switch (sock->getType())
+   {
+      case vpr::SocketTypes::DATAGRAM:
+         i = mDgramSocketMap.find(port);
+
+         if ( i != mDgramSocketMap.end() )
+         {
+            mDgramSocketMap.erase(i);
+            status.setCode(vpr::ReturnStatus::Succeed);
+            vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+               << "NetworkNode::removeSocket() [" << mIpStr
+               << "]: Removed datagram socket\n" << vprDEBUG_FLUSH;
+            vprASSERT(mDgramSocketMap.count(port) == 0 && "Erasing did nothing");
+         }
+         break;
+      case vpr::SocketTypes::STREAM:
+         i = mStreamSocketMap.find(port);
+
+         if ( i != mStreamSocketMap.end() )
+         {
+            mStreamSocketMap.erase(i);
+            status.setCode(vpr::ReturnStatus::Succeed);
+            vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+               << "NetworkNode::removeSocket() [" << mIpStr
+               << "]: Removed stream socket\n" << vprDEBUG_FLUSH;
+            vprASSERT(mStreamSocketMap.count(port) == 0 && "Erasing did nothing");
+         }
+         break;
+   }
+
+   return status;
 }
 
 void NetworkNode::deliverMessage (vpr::sim::MessagePtr msg)
