@@ -57,7 +57,7 @@ main (int argc, char* argv[]) {
         std::cerr << "Port opened\n";
 
         port->setUpdateAction(vpr::SerialTypes::NOW);
-        port->setCharacterSize(8);
+        port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
         port->enableRead();
 
         for ( int i = 0; i < 10; i++ ) {
