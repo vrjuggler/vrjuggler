@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2004-01-15 allenb   Refactored MutexPosix to use an error checking mutex on
+                    Linux when compiled debug.
+                    NEW VERSION: 0.32.5
 2004-01-15 allenb   Fixed bug in CondVarPosix::wait() where wait time was not
                     being taken into account correctly.  This method also now
                     returns timeouts correctly.
