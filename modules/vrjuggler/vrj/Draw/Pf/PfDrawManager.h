@@ -45,8 +45,6 @@
 
 //#include <vrj/Draw/Pf/PfApp.h>
 #include <vrj/Draw/Pf/PfUtil.h>
-// XXX: MOVE
-#include <vrj/Draw/Pf/PfBasicSimulator.h>
 #include <vpr/Util/Singleton.h>
 
 // namespace jccl {
