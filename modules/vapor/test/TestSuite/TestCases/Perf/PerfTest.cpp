@@ -7,6 +7,7 @@
 
 #include <TestCases/Perf/PerfTest.h>
 #include <vpr/Perf/ProfileManager.h>      // Get all the profile stuff
+#include <vpr/System.h>
 
 
 namespace vprTest
@@ -18,8 +19,18 @@ CPPUNIT_TEST_SUITE_NAMED_REGISTRATION( PerfMetricTest, MySuites::metric() );
 void PerfTest::testConstructTree()
 {
    vpr::ProfileManager::startProfile("First");
-   vpr::ProfileManager::startProfile("First-one");
+      vpr::ProfileManager::startProfile("First-one");
+      vpr::ProfileManager::stopProfile();
+      vpr::ProfileManager::startProfile("First-two");
+      vpr::ProfileManager::stopProfile();
+      vpr::ProfileManager::startProfile("First-three");
+         vpr::ProfileManager::startProfile("First-three-one");
+         vpr::ProfileManager::stopProfile();
+      vpr::ProfileManager::stopProfile();
+      vpr::ProfileManager::startProfile("First-four");
+      vpr::ProfileManager::stopProfile();
    vpr::ProfileManager::stopProfile();
+   vpr::ProfileManager::startProfile("Second");
    vpr::ProfileManager::stopProfile();
 
    vpr::ProfileNode* root_node = vpr::ProfileManager::getRootNode();
@@ -28,23 +39,15 @@ void PerfTest::testConstructTree()
 
    CPPUNIT_ASSERT(first_node->getParent() == root_node);
    CPPUNIT_ASSERT(first_one_node->getParent() == first_node);
+
+   std::cout << "Printing tree:\n" << std::flush;
+   root_node->printTree();
 }
 
 void PerfTest::testNamedLookupSample()
 {
    vpr::ProfileManager::startProfile("myNamedProfile");
-
-   //do something so there is a little time in the profile
-   int i(0), j(1);
-
-   for ( ; i < 10000; ++i, ++j )
-   {
-      ;
-   }
-   for ( ; j > 0; --j, --i )
-   {
-      ;
-   }
+   vpr::System::usleep(25);
    vpr::ProfileManager::stopProfile();
 
    float f = vpr::ProfileManager::getNamedNodeSample("myNamedProfile");
