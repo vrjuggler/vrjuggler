@@ -1,14 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
 
-public class MyGuid : vpr.GUID
-{
-   public override vpr.ReturnStatus writeObject(vpr.ObjectWriter w)
-   {
-      Console.WriteLine("[C#] MyGuid.writeObject(): Success!");
-      return base.writeObject(w);
-   }
-}
 
 public class Tester
 {
