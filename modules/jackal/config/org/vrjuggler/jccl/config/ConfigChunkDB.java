@@ -455,7 +455,7 @@ public class ConfigChunkDB implements Cloneable {
 
 	for (j = 0; j < ch.props.size(); j++) {
 	    p = (Property)ch.props.get(j);
-	    if (p.valtype.equals (ValType.t_chunk)) {
+	    if (p.getValType() == ValType.CHUNK) {
 		for (k = 0; k < p.getNum(); k++) {
 		    s = p.getValue(k).getString();
 		    if (s.equals (""))
@@ -471,7 +471,7 @@ public class ConfigChunkDB implements Cloneable {
 		    }
 		}
 	    }
-	    else if (p.valtype.equals (ValType.t_embeddedchunk)) {
+	    else if (p.getValType() == ValType.EMBEDDEDCHUNK) {
 		for (k = 0; k < p.getNum(); k++) {
 		    ch2 = p.getValue(k).getEmbeddedChunk();
 		    String prefix = nameprefix + p.getName();

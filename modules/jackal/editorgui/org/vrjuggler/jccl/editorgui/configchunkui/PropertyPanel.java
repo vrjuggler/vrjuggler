@@ -94,7 +94,7 @@ public class PropertyPanel extends JPanel implements ActionListener {
 	westpanel.add (l1);
 
 	if (!pr.hasFixedNumberOfValues()) {
-            if (pr.getDesc().getValType().equals (ValType.t_embeddedchunk))
+            if (pr.getDesc().getValType() == ValType.EMBEDDEDCHUNK)
                 addbutton = new JButton ("Add " + pr.getEmbeddedDesc().getName());
             else
                 addbutton = new JButton ("Add Value");
@@ -129,7 +129,7 @@ public class PropertyPanel extends JPanel implements ActionListener {
         for (i = 0; i < n; i++) {
 	    if (pr.getDesc().getValueLabelsSize() > i)
 		lj = new JLabel (valuelabelpad + pr.getDesc().getValueLabel(i));
-            else if (pr.getDesc().getValType().equals(ValType.t_embeddedchunk))
+            else if (pr.getDesc().getValType() == ValType.EMBEDDEDCHUNK)
                 lj = new JLabel (valuelabelpad + pr.getValue(i).getEmbeddedChunk().getLastNameComponent());
 	    else
 		lj = new JLabel (valuelabelpad);
@@ -156,7 +156,7 @@ public class PropertyPanel extends JPanel implements ActionListener {
 
 
     private VarValuePanel makeVarValuePanel (Property pr, int valindex) {
-	if (pr.getDesc().getValType().equals (ValType.t_embeddedchunk)) {
+	if (pr.getDesc().getValType() == ValType.EMBEDDEDCHUNK) {
 	    ConfigChunk ch;
             PropertyDesc d = pr.getDesc();
 	    if (valindex < pr.getNum())
@@ -194,7 +194,7 @@ public class PropertyPanel extends JPanel implements ActionListener {
         for (int i = 0; i < props.length; i++) {
             if (props[i].getHasVariableNumberOfValues())
                 return false;
-            if (props[i].getValType().equals(ValType.t_embeddedchunk))
+            if (props[i].getValType() == ValType.EMBEDDEDCHUNK)
                 return false;
             nvals += props[i].getNumValues();
         }
@@ -227,7 +227,7 @@ public class PropertyPanel extends JPanel implements ActionListener {
 
 	    if (i < prop.getDesc().getValueLabelsSize())
 		lj = new JLabel (valuelabelpad + prop.getDesc().getValueLabel(i));
-            else if (prop.getDesc().getValType().equals(ValType.t_embeddedchunk))
+            else if (prop.getDesc().getValType() == ValType.EMBEDDEDCHUNK)
                 lj = new JLabel (valuelabelpad + p.getValue().getEmbeddedChunk().getLastNameComponent());
 	    else
 		lj = new JLabel (valuelabelpad);

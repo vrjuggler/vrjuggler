@@ -81,13 +81,13 @@ public class DescEnumElemPanel extends JPanel implements MouseListener {
 	if (namef != null)
 	    namef.setText (e.str);
 	if (namechoice != null) {
-	    if (t.equals(ValType.t_chunk) || t.equals (ValType.t_embeddedchunk)) {
+	    if (t == ValType.CHUNK || t == ValType.EMBEDDEDCHUNK) {
                 String s = ChunkFactory.getNameFromToken (e.str);
 		if (s == null) 
 		    s = "";
 		namechoice.setSelectedItem (s);
 	    }
-	    else if (t.equals(ValType.t_bool)) 
+	    else if (t == ValType.BOOL) 
 		namechoice.setSelectedItem (e.val.getBoolean()?"True":"False");
 	    else
 		namechoice.setSelectedItem(e.str);
@@ -121,17 +121,17 @@ public class DescEnumElemPanel extends JPanel implements MouseListener {
 	namef = null;
 
 	/* next bit is specific on valtype of the propertydesc */
-	if (t.equals(ValType.t_chunk)) {
+	if (t == ValType.CHUNK) {
 	    addLabel ("Accept chunks of type: ");
 	    namechoice = new JComboBox (ChunkFactory.getDescNames());
             add (namechoice);
 	}
-	else if (t.equals(ValType.t_embeddedchunk)) {
+	else if (t == ValType.EMBEDDEDCHUNK) {
 	    addLabel ("Embedded chunk type: ");
 	    namechoice = new JComboBox (ChunkFactory.getDescNames());
 	    add (namechoice);
 	}
-	else if (t.equals(ValType.t_bool)) {
+	else if (t == ValType.BOOL) {
 	    addLabel ("Name: ");
 	    namef = new JTextField (20);
 	    add (namef);
@@ -146,9 +146,9 @@ public class DescEnumElemPanel extends JPanel implements MouseListener {
 	    namef = new JTextField (20);
 	    add (namef);
 	    addLabel ("Value: ");
-	    if (t.equals(ValType.t_int))
+	    if (t == ValType.INT)
 		valf = new IntegerTextField (10);
-	    else if (t.equals(ValType.t_float))
+	    else if (t == ValType.FLOAT)
 		valf = new FloatTextField (10);
 	    else
 		valf = new StringTextField (10);

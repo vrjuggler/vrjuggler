@@ -37,43 +37,47 @@ package VjConfig;
 
 public class ValType {
 
-    public final static int t_string        = 1;
-    public final static int t_float         = 2;
-    public final static int t_int           = 3;
-    public final static int t_bool          = 4;
-    public final static int t_chunk         = 5;
-    public final static int t_embeddedchunk = 6;
+    private final static int t_string        = 1;
+    private final static int t_float         = 2;
+    private final static int t_int           = 3;
+    private final static int t_bool          = 4;
+    private final static int t_chunk         = 5;
+    private final static int t_embeddedchunk = 6;
+    private final static int t_invalid       = 7;
+
+    public final static ValType STRING = new ValType (t_string);
+    public final static ValType FLOAT = new ValType (t_float);
+    public final static ValType INT = new ValType (t_int);
+    public final static ValType BOOL = new ValType (t_bool);
+    public final static ValType CHUNK = new ValType (t_chunk);
+    public final static ValType EMBEDDEDCHUNK = new ValType (t_embeddedchunk);
+    public final static ValType INVALID = new ValType (t_invalid);
 
     int val;
 
 
-
-    public ValType (ValType t) {
-	val = t.val;
+    private ValType (int i) {
+	val = i;
     }
 
 
-    public ValType (String s) {
+
+    public static ValType getValType (String s) {
 	String s2 = s.toLowerCase().trim();
 	if (s2.equalsIgnoreCase ("string"))
-	    val = t_string;
+	    return STRING;
 	else if (s2.equalsIgnoreCase ("float"))
-	    val = t_float;
+	    return FLOAT;
 	else if (s2.equalsIgnoreCase ("int"))
-	    val = t_int;
+	    return INT;
 	else if (s2.equalsIgnoreCase ("bool"))
-	    val = t_bool;
+	    return BOOL;
 	else if (s2.equalsIgnoreCase ("chunk"))
-	    val = t_chunk;
+	    return CHUNK;
 	else if (s2.equalsIgnoreCase ("embeddedchunk"))
-	    val = t_embeddedchunk;
+	    return EMBEDDEDCHUNK;
 	else 
-	    val = 0;
-    }
-
-
-    public ValType (int i) {
-	val = i;
+	    return INVALID;
     }
 
 
@@ -93,15 +97,15 @@ public class ValType {
 	case t_embeddedchunk:
 	    return "EmbeddedChunk";
 	default:
-	    return "Undefined Type";
+	    return "Invalid";
 	}
     }
 
 
 
-    public boolean equals (int t) {
-	return (val == t);
-    }
+//     public boolean equals (int t) {
+// 	return (val == t);
+//     }
 
 
 
@@ -112,11 +116,11 @@ public class ValType {
     }
 
 
-    // returns the int representation of type.  need this to do
-    // switch() on ValType
-    public int getInt() {
-	return val;
-    }
+//     // returns the int representation of type.  need this to do
+//     // switch() on ValType
+//     public int getInt() {
+// 	return val;
+//     }
 	
 
 }

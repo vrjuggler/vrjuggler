@@ -81,7 +81,7 @@ public class VarValueStandardPanel
 
 	setLayout(new BorderLayout (1,1));
 
-	if (desc.getValType().equals(ValType.t_chunk)) {
+	if (desc.getValType() == ValType.CHUNK) {
 	    /* we build up a choice of all chunks in the db of allowed types */
 	    ConfigChunkDB db;
 	    ConfigChunk ch;
@@ -103,7 +103,7 @@ public class VarValueStandardPanel
 	    choice.setSelectedItem ("<No Selection>");
 	    add(choice, "Center");
 	}
-	else if (desc.getValType().equals(ValType.t_bool)) {
+	else if (desc.getValType() == ValType.BOOL) {
 	    choice = new JComboBox();
 	    choice.addItem("True");
 	    choice.addItem("False");
@@ -112,9 +112,9 @@ public class VarValueStandardPanel
 	else {
 	    /* just add a type label & the text string */
 	    add (new JLabel ("(" + desc.getValType().toString() + ")"), "West");
-	    if (desc.getValType().equals(ValType.t_int))
+	    if (desc.getValType() == ValType.INT)
 		text = new IntegerTextField (5);
-	    else if (desc.getValType().equals(ValType.t_float))
+	    else if (desc.getValType() == ValType.FLOAT)
 		text = new FloatTextField (5);
 	    else
 		text = new StringTextField (10);
@@ -203,7 +203,7 @@ public class VarValueStandardPanel
 	    if ((s == null) || (s.equals("<No Selection>")))
 		s = "";
 
-	    if (desc.getValType().equals (ValType.t_chunk)) {
+	    if (desc.getValType() == ValType.CHUNK) {
 		// remove the "filename: " prefix if it's there...
 		int i = s.indexOf(": ");
 		if (i != -1)

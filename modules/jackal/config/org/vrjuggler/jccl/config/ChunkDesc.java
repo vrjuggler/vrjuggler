@@ -198,7 +198,7 @@ public class ChunkDesc implements Cloneable {
             named.setName ("Name");
             named.setToken ("Name");
 	    named.setHelp ("Unique name of an instance of this chunk type");
-	    named.setValType (new ValType("string"));
+	    named.setValType (ValType.STRING);
 	    props.add(0, named);
 	}
     }

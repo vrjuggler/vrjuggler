@@ -82,7 +82,7 @@ public class PropertyDescPanel extends JPanel
 	    return null;
 	pd.setName (name_field.getText());
 	pd.setHelp (help_field.getText());
-	pd.setValType (new ValType((String)typechoice.getSelectedItem()));
+	pd.setValType (ValType.getValType((String)typechoice.getSelectedItem()));
 	if (varbox.isSelected())
 	    pd.setHasVariableNumberOfValues (true);
 	else
@@ -308,13 +308,13 @@ public class PropertyDescPanel extends JPanel
 		    ("EmbeddedChunk")) {
 		    enumsframe = new DescEnumFrame (this, newenum,
 						    name_field.getText(),
-						    new ValType((String)typechoice.getSelectedItem()),
+						    ValType.getValType((String)typechoice.getSelectedItem()),
 						    false, 1);
 		}
 		else {
 		    enumsframe = new DescEnumFrame (this, newenum,
 						    name_field.getText(),
-						    new ValType((String)typechoice.getSelectedItem()),
+						    ValType.getValType((String)typechoice.getSelectedItem()),
 						    true, 0);
 		}
 	    }
