@@ -45,6 +45,11 @@
 #include <VPR/vjSystem.h>
 
 
+void
+handler (int arg) {
+   std::cerr << "Caught a signal!\n";
+}
+
 int main(int argc, char* argv[])
 {
    vjProjection::setNearFar(0.01f, 10000.0f);
@@ -77,6 +82,10 @@ int main(int argc, char* argv[])
       //- Load user local config
 
    kernel->setApplication(application);         // Set application
+
+   struct sigaction sa;
+   sa.sa_handler = handler;
+   vjSystem::sigaction(SIGINT, &sa);
 
    while(1)
    {   

@@ -35,11 +35,12 @@
 //
 //  Test switching GL applications.
 //
-// torus.cpp
+// combo.cpp
 //----------------------------------------
 #include <torusApp.h>
 #include <wandApp.h>
 #include <cubesApp.h>
+#include <application.h>  /* Texture app */
 
       // --- Lib Stuff --- //
 #include <Kernel/vjKernel.h>
@@ -54,6 +55,7 @@ int main(int argc, char* argv[])
    torusApp* torus_app = new torusApp(kernel);   // Declare an instance of the app
    wandApp*  wand_app = new wandApp(kernel);
    cubesApp* cubes_app = new cubesApp(kernel);
+   TextureDemoApplication* tex_app = new TextureDemoApplication(kernel);
 
    if (argc <= 1)
    {
@@ -87,6 +89,8 @@ int main(int argc, char* argv[])
       kernel->setApplication(wand_app);
       vjSystem::sleep(5);
       kernel->setApplication(cubes_app);
+      vjSystem::sleep(5);
+      kernel->setApplication(tex_app);
       vjSystem::sleep(5);
       kernel->setApplication(torus_app);
 

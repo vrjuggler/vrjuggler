@@ -126,7 +126,8 @@ public:
 
    virtual ~cubesApp() {}
 
-   // Execute any initialization needed before the API is started
+   // Execute any initialization needed before the API is started.  Put device
+   // initialization here.
    virtual void init();
 
    // Execute any initialization needed <b>after</b> API is started
@@ -136,19 +137,10 @@ public:
       vjDEBUG(vjDBG_ALL,0) << "---- cubesApp::apiInit() ----\n" << vjDEBUG_FLUSH;
    }
 
-   // Called immediately upon opening a new OpenGL context
+   // Called immediately upon opening a new OpenGL context.  This is called
+   // once for every display window that is opened.  Put OpenGL resource
+   // allocation here.
    virtual void contextInit();
-
-   /** Function to draw the scene
-    * PRE: OpenGL state has correct transformation and buffer selected
-    * POST: The current scene has been drawn
-    */
-   virtual void draw()
-   {
-      initGLState();    // This should really be in another function
-
-      myDraw(vjGlDrawManager::instance()->currentUserData()->getUser());
-   }
 
    /**   name Drawing Loop Functions
     *
@@ -167,7 +159,8 @@ public:
     *
     */
 
-   /// Function called after tracker update but before start of drawing
+   // Function called after tracker update but before start of drawing.  Do
+   // calculations and state modifications here.
    virtual void preFrame()
    {
        vjDEBUG(vjDBG_ALL,5) << "cubesApp::preFrame()" << std::endl
@@ -177,6 +170,17 @@ public:
           mUserData[i]->updateNavigation();       // Update the navigation matrix
    }
 
+   // Function to draw the scene.  Put OpenGL draw functions here.
+   //
+   // PRE: OpenGL state has correct transformation and buffer selected
+   // POST: The current scene has been drawn
+   virtual void draw()
+   {
+      initGLState();    // This should really be in another function
+
+      myDraw(vjGlDrawManager::instance()->currentUserData()->getUser());
+   }
+
    /// Function called after drawing has been triggered but BEFORE it completes
    virtual void intraFrame()
    {
@@ -184,7 +188,8 @@ public:
                            << vjDEBUG_FLUSH;
    }
 
-   /// Function called before updating trackers but after the frame is drawn
+   // Function called before updating trackers but after the frame is drawn.
+   // Do calculations here.
    virtual void postFrame()
    {
       vjDEBUG(vjDBG_ALL,5) << "cubesApp::postFrame" << std::endl

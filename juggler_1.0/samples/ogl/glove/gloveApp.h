@@ -92,7 +92,8 @@ public:
    }
 
    //: Initialize
-   // Executes any initialization needed before the API is started
+   // Executes any initialization needed before the API is started.
+   // Initialize VR Juggler device interfaces here.
    virtual void init()
    {
       // for the glove position
@@ -112,7 +113,16 @@ public:
 
       //mGloveTracker.init("GlovePos Proxy");
    }
-  
+
+   // Called immediately upon opening a new OpenGL context.  This is called
+   // for every display window that is opened.  Put your OpenGL resource
+   // allocation here.
+   virtual void contextInit()
+   {
+      // Init the scene's displaylists for this context.
+      mScene->init();
+   }
+
    //: is the glove pointing?
    bool LeftPointing();
 
@@ -135,34 +145,32 @@ public:
       /* Do nothing. */ ;
    }
 
-   //: Function to draw the scene
-   //! PRE: OpenGL state has correct transformation and buffer selected
-   //! POST: The current scene has been drawn
+   // Function called after tracker update but before start of drawing.  Do
+   // calculations and state modifications here.
+   // In the glove application, this function does the logic for picking the
+   // objects.
+   virtual void preFrame();
+
+   // Function to draw the scene.  Put OpenGL draw functions here.
+   //
+   // PRE: OpenGL state has correct transformation and buffer selected
+   // POST: The current scene has been drawn
    virtual void draw()
    {
       myDraw();
    }
 
-   /// Function called before updating trackers but after the frame is drawn
-   virtual void postFrame()
+   // Function called after drawing has been triggered but BEFORE it completes
+   virtual void intraFrame()
    {
       /* Do nothing. */ ;
    }
 
-   //: Function called after tracker update but before start of drawing
-   //  In the glove application, this function does the logic for picking the objects.
-   virtual void preFrame();
-
-   /// Function called after drawing has been triggered but BEFORE it completes
-   virtual void intraFrame()
+   // Function called before updating trackers but after the frame is drawn.
+   // Do calculations here.
+   virtual void postFrame()
    {
-      /* Do nothing. */
-   }
-
-   virtual void contextInit()
-   {
-      // Init the scene's displaylists for this context.
-      mScene->init();
+      /* Do nothing. */ ;
    }
 
 private:

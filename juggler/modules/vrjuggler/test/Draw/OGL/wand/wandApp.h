@@ -57,15 +57,18 @@ void drawbox( GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
 class wandApp : public vjGlApp
 {
 public:
+   // Constructor.
    wandApp(vjKernel* kern)
       : vjGlApp(kern)         // Initialize base class
    {;}
 
+   // Destructor.
    virtual ~wandApp (void) {
       /* Do nothing. */ ;
    }
 
    // Execute any initialization needed before the API is started<BR><BR>
+   // Initialize VR Juggler device interfaces here.
    //
    // This is called once before OGL is initialized
    virtual void init()
@@ -89,24 +92,15 @@ public:
    virtual void apiInit()
    {;}
 
-   //: Function that is called immediately after a new OGL context is created
-   // Initialize GL state here. Also used to create context specific information<BR>
+   // Function that is called immediately after a new OGL context is created.
+   // This is called for every display window that is opened.  Initialize GL
+   // state here. Also used to create context specific information<BR>
    //
    // This is called once for each display (twice for each stereo display)
    virtual void contextInit()
    {
-      initGLState();       // Initialize the GL state information. (lights, shading, etc)
-   }
-
-   //: Function to draw the scene
-   //! PRE: OpenGL state has correct transformation and buffer selected
-   //! POST: The current scene has been drawn<BR><BR>
-   //
-   // called [once * number of displays] per frame
-   virtual void draw()
-   {
-      //call your openGL drawing code here.
-      myDraw();
+      // Initialize the GL state information. (lights, shading, etc)
+      initGLState();
    }
 
    // ----- Drawing Loop Functions ------
@@ -125,10 +119,9 @@ public:
    //  }
    //------------------------------------
 
-
-   //: Function called after tracker update but before start of drawing<BR><BR>
-   //
-   // called once before every frame.
+   // Function called after tracker update but before start of drawing<BR><BR>
+   // Called once before every frame.  Do calculations and state modifications
+   // here.
    virtual void preFrame()
    {
       // Put your pre frame computations here.
@@ -142,7 +135,20 @@ public:
                  << " 5:" << mButton5->getData() << std::endl;
    }
 
-   //: Function called after drawing has been triggered but BEFORE it completes<BR><BR>
+   // Function to draw the scene.  Put OpenGL draw functions here.
+   //
+   // PRE: OpenGL state has correct transformation and buffer selected
+   // POST: The current scene has been drawn<BR><BR>
+   //
+   // called [once * number of displays] per frame
+   virtual void draw()
+   {
+      //call your openGL drawing code here.
+      myDraw();
+   }
+
+   // Function called after drawing has been triggered but BEFORE it
+   // completes<BR><BR>
    //
    // called once during each frame
    virtual void intraFrame()
@@ -150,9 +156,10 @@ public:
       // Put your intra frame computations here.
    }
 
-   //: Function called before updating trackers but after the frame is drawn<BR><BR>
+   // Function called before updating trackers but after the frame is
+   // drawn<BR><BR>
    //
-   // called once after every frame
+   // Called once after every frame.  Do calculations here.
    virtual void postFrame()
    {
       // Put your post frame computations here.

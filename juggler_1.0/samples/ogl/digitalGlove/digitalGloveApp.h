@@ -57,12 +57,14 @@
 class digitalGloveApp : public vjGlApp
 {
 public:
+   // Constructor.
    digitalGloveApp(vjKernel* kern)
       : vjGlApp(kern)            // Initialize base class
    {
       mQuadObj = NULL;
    }
 
+   // Destructor.
    virtual ~digitalGloveApp (void) {
       if ( mQuadObj != NULL ) {
          gluDeleteQuadric(mQuadObj);
@@ -70,8 +72,8 @@ public:
       }
    }
 
-   // Execute any initialization needed before the API is started
-   // Initialize interfaces
+   // Execute any initialization needed before the API is started.
+   // Initialize VR Juggler devices here.
    virtual void init()
    {
       //std::cout<<"digitalGloveApp::init()"<<std::flush;
@@ -100,15 +102,22 @@ public:
       //std::cout<<"digitalGloveApp::apiInit()\n"<<std::flush; 
    }
 
-   //: Function to draw the scene
-   //! PRE: OpenGL state has correct transformation and buffer selected
-   //! POST: The current scene has been drawn
-   virtual void draw()
+   // Function called after tracker update but before start of drawing.  Do
+   // calculations and state modifications here.
+   virtual void preFrame()
    {
-      //std::cout<<"digitalGloveApp::draw()\n"<<std::flush; 
+     //std::cout<<"digitalGloveApp::preFrame()\n"<<std::flush; 
       
-      initGLState();    // This should really be in another function
-      myDraw();
+       std::cout<<mLeftThumb->getData()
+                <<mLeftIndex->getData()
+                <<mLeftMiddle->getData()
+                <<mLeftRing->getData()
+                <<mLeftPinky->getData()<<"."
+                <<mRightThumb->getData()
+                <<mRightIndex->getData()
+                <<mRightMiddle->getData()
+                <<mRightRing->getData()
+                <<mRightPinky->getData()<<"\n"<<std::flush;
    }
 
    // ----- Drawing Loop Functions ------
@@ -127,29 +136,25 @@ public:
    //  }
    //------------------------------------
 
-   /// Function called before updating trackers but after the frame is drawn
-   virtual void postFrame()
-   {;}
-
-   /// Function called after tracker update but before start of drawing
-   virtual void preFrame()
+   //: Function to draw the scene.  Put OpenGL draw functions here.
+   //
+   //! PRE: OpenGL state has correct transformation and buffer selected
+   //! POST: The current scene has been drawn
+   virtual void draw()
    {
-     //std::cout<<"digitalGloveApp::preFrame()\n"<<std::flush; 
+      //std::cout<<"digitalGloveApp::draw()\n"<<std::flush; 
       
-       std::cout<<mLeftThumb->getData()
-                <<mLeftIndex->getData()
-                <<mLeftMiddle->getData()
-                <<mLeftRing->getData()
-                <<mLeftPinky->getData()<<"."
-                <<mRightThumb->getData()
-                <<mRightIndex->getData()
-                <<mRightMiddle->getData()
-                <<mRightRing->getData()
-                <<mRightPinky->getData()<<"\n"<<std::flush;
+      initGLState();    // This should really be in another function
+      myDraw();
    }
 
    /// Function called after drawing has been triggered but BEFORE it completes
    virtual void intraFrame()
+   {;}
+
+   // Function called before updating trackers but after the frame is drawn.
+   // Do calculations here.
+   virtual void postFrame()
    {;}
 
 private:
