@@ -37,7 +37,6 @@
 
 vrj_extra_cxxflags="@vrj_extra_cxxflags@"
 Juggler_lib="@Juggler_lib@"
-Juggler_utils_lib="@Juggler_utils_lib@"
 Juggler_ogl_lib="@Juggler_ogl_lib@"
 Juggler_pf_lib="@Juggler_pf_lib@"
 
@@ -106,7 +105,6 @@ Options:
 Libraries (prints the linker options for one or more of these libraries):
         vrj (all basic libraries)
         Juggler
-        Juggler_utils
         Juggler_ogl
         Juggler_pf
 EOF
@@ -121,7 +119,6 @@ fi
 lib_Juggler=no
 lib_Juggler_ogl=no
 lib_Juggler_pf=no
-lib_Juggler_utils=no
 
 while test $# -gt 0; do
     case "$1" in
@@ -240,10 +237,6 @@ while test $# -gt 0; do
             lib_Juggler=yes
             lib_Juggler_all=no
             ;;
-        Juggler_utils)
-            lib_Juggler_utils=yes
-            lib_Juggler_all=no
-            ;;
         Juggler_ogl)
             lib_Juggler_ogl=yes
             lib_Juggler_all=no
@@ -314,10 +307,6 @@ if test "$echo_libs" = "yes"; then
     else
         if test "x$lib_Juggler" = "xyes" ; then
             vrj_libs="$Juggler_lib"
-        fi
-
-        if test "x$lib_Juggler_utils" = "xyes" ; then
-            vrj_libs="$vrj_libs $Juggler_utils_lib"
         fi
 
         if test "x$lib_Juggler_ogl" = "xyes" ; then

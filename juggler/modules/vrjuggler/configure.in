@@ -396,7 +396,6 @@ fi
 #       building Performer applications.
 #     * APP_VJ_LIBS_GL: The VR Juggler OpenGL API library.
 #     * APP_VJ_LIBS_PF: The VR Juggler Performer API library.
-#     * APP_VJ_LIBS_UTILS: The VR Juggler general utilities library.
 #     * APP_EXTRA_LIBS_GL: The OpenGL libraries needed for compiling with the
 #       OpenGL API.
 #     * APP_EXTRA_LIBS_PF: The Performer libraries needed for compiling with
@@ -408,7 +407,7 @@ fi
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
                 VJ_BASE_DIR, $DEFS, $INCLUDES, ${_EXTRA_FLAGS})
 VJ_APP_LINKER($CXX, $EXTRA_LINK_FLAGS, $LDOPTS_DBG, $LDOPTS_OPT, VJ_BASE_DIR,
-              Juggler Juggler_utils, $APP_EXTRA_LIBS)
+              Juggler, $APP_EXTRA_LIBS)
 
 APP_BASE_DIR='$(topdir)/instlinks'
 APP_BASE_DIR_INST='$(VJ_BASE_DIR)'
@@ -420,7 +419,6 @@ if test "$OS_TYPE" = "UNIX" ; then
 
     APP_VJ_LIBS_GL="-lJuggler_ogl"
     APP_VJ_LIBS_PF="-lJuggler_pf"
-    APP_VJ_LIBS_UTILS="-lJuggler_utils"
 
     APP_EXTRA_LIBS_X11="$X_LDFLAGS -lX11 -lXext"
 
@@ -451,14 +449,12 @@ if test "$OS_TYPE" = "UNIX" ; then
     fi
 elif test "$OS_TYPE" = "Win32" ; then
 echo "GADGET_LIBS_LD: $GADGET_LIBS_LD"
-    DYLIB_DEPS_BASIC="$LDFLAGS $SNX_LIBS_LD $JCCL_LIBS_LD $JCCL_LIBS_LD $VPR_LIBS_LD $LIBS comctl32.lib user32.lib gdi32.lib ws2_32.lib"
-    DYLIB_DEPS_VJ="/libpath:\$(LIBDIR) Juggler_utils.lib $GADGET_LIBS_LD $DYLIB_DEPS_BASIC"
-    DYLIB_DEPS_UTILS="$DYLIB_DEPS_BASIC"
-    DYLIB_DEPS_GL="/libpath:\$(LIBDIR) Juggler.lib Juggler_utils.lib $GADGET_LIBS_LD $DYLIB_DEPS_BASIC $OGL_LDFLAGS $LIBOPENGL"
+    DYLIB_DEPS_BASIC="$LDFLAGS $GADGET_LIBS_LD $SNX_LIBS_LD $JCCL_LIBS_LD $JCCL_LIBS_LD $VPR_LIBS_LD $LIBS comctl32.lib user32.lib gdi32.lib ws2_32.lib"
+    DYLIB_DEPS_VJ="/libpath:\$(LIBDIR) $DYLIB_DEPS_BASIC"
+    DYLIB_DEPS_GL="/libpath:\$(LIBDIR) Juggler.lib $DYLIB_DEPS_BASIC $OGL_LDFLAGS $LIBOPENGL"
 
     APP_VJ_LIBS_GL='Juggler_ogl.lib'
     APP_VJ_LIBS_PF='Juggler_pf.lib'
-    APP_VJ_LIBS_UTILS='Juggler_utils.lib'
     APP_EXTRA_LIBS_GL="$OGL_LDFLAGS $LIBOPENGL"
     APP_EXTRA_LIBS_PF="$PF_LDFLAGS $LIBPERFORMER"
     APP_EXTRA_LIBS_OSG="$OSG_LDFLAGS $LIBOSG"
@@ -520,11 +516,10 @@ case $OS_TYPE in
 
         vrj_ldflags_compiler="-L\$prefix/lib$LIBBITSUF"
         vrj_ldflags_linker="$vrj_ldflags_compiler"
-        vrj_libs='-lJuggler -lJuggler_utils -lJuggler_ogl'
+        vrj_libs='-lJuggler -lJuggler_ogl'
         vrj_extra_libs="$LDFLAGS $APP_EXTRA_LIBS_GL $LIBS"
         vrj_extra_libs_juggler="$GADGET_LIBS_CC $SNX_LIBS_CC $JCCL_LIBS_CC $JCCL_EXTRA_LIBS_CC $VPR_LIBS_CC $VPR_EXTRA_LIBS_CC"
         Juggler_lib='-lJuggler'
-        Juggler_utils_lib='-lJuggler_utils'
         Juggler_ogl_lib='-lJuggler_ogl'
 
         if test "x$PERFORMER_API" = "xY" ; then
@@ -535,12 +530,11 @@ case $OS_TYPE in
     WIN32)
         vrj_ldflags_compiler="/link /libpath:\$prefix/lib/debug "
         vrj_ldflags_linker="/libpath:\$prefix/lib/debug "
-        vrj_libs='Juggler.lib Juggler_utils.lib Juggler_ogl.lib'
+        vrj_libs='Juggler.lib Juggler_ogl.lib'
         vrj_extra_libs="$LDFLAGS $APP_EXTRA_LIBS_GL $LIBS"
         vrj_extra_libs_juggler="$GADGET_LIBS_LD $SNX_LIBS_LD $JCCL_LIBS_LD $JCCL_EXTRA_LIBS_LD $VPR_LIBS_LD $VPR_EXTRA_LIBS_LD"
 
         Juggler_lib='Juggler.lib'
-        Juggler_utils_lib='Juggler_utils.lib'
         Juggler_ogl_lib='Juggler_ogl.lib'
         ;;
 esac
@@ -577,14 +571,12 @@ AC_SUBST(APP_BASE_DIR)
 AC_SUBST(APP_BASE_DIR_INST)
 
 AC_SUBST(DYLIB_DEPS_VJ)
-AC_SUBST(DYLIB_DEPS_UTILS)
 AC_SUBST(DYLIB_DEPS_GL)
 AC_SUBST(DYLIB_DEPS_PF)
 
 AC_SUBST(APP_EXTRA_FLAGS_PF)
 AC_SUBST(APP_VJ_LIBS_GL)
 AC_SUBST(APP_VJ_LIBS_PF)
-AC_SUBST(APP_VJ_LIBS_UTILS)
 AC_SUBST(APP_EXTRA_LIBS_X11)
 AC_SUBST(APP_EXTRA_LIBS_GL)
 AC_SUBST(APP_EXTRA_LIBS_PF)
@@ -599,7 +591,6 @@ AC_SUBST(vrj_ldflags_compiler)
 AC_SUBST(vrj_ldflags_linker)
 AC_SUBST(vrj_libs)
 AC_SUBST(Juggler_lib)
-AC_SUBST(Juggler_utils_lib)
 AC_SUBST(Juggler_ogl_lib)
 AC_SUBST(Juggler_pf_lib)
 AC_SUBST(vrj_extra_ldflags)
