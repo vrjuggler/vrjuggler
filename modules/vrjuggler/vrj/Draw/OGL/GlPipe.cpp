@@ -149,7 +149,7 @@ void GlPipe::controlLoop(void* nullParam)
 
    char namebuf[42];  // careful with that buffer, eugene
    sprintf( namebuf, "vjGlPipe %d", mPipeNum );
-   mPerfBuffer = Kernel::instance()->getEnvironmentManager()->getPerformanceMonitor()->getPerfDataBuffer (namebuf, 500, 40);
+   mPerfBuffer = Kernel::instance()->getEnvironmentManager()->getPerformanceMonitor()->getPerfDataBuffer (namebuf, 500, 50);
 
    while (!controlExit)
    {
@@ -176,11 +176,13 @@ void GlPipe::controlLoop(void* nullParam)
             mPerfBuffer->set(++mPerfPhase);
 
          // Render the windows
-         for (unsigned int winId=0;winId < openWins.size();winId++)
+         ++ mPerfPhase;
+         for (unsigned int winId=0;winId < openWins.size();winId++) {
             renderWindow(openWins[winId]);
-
+            mPerfPhase += 10;
+         }
          renderCompleteSema.release();
-            mPerfBuffer->set(35);
+         mPerfBuffer->set(mPerfPhase = 45);
       }
 
       // ----- SWAP the windows ------ //
@@ -193,6 +195,8 @@ void GlPipe::controlLoop(void* nullParam)
 
          swapCompleteSema.release();
       }
+
+      mPerfBuffer->set(mPerfPhase = 46);
    }
 
    mThreadRunning = false;     // We are not running
@@ -285,6 +289,7 @@ void GlPipe::renderWindow(GlWindow* win)
 {
    float vp_ox, vp_oy, vp_sx, vp_sy;            // Viewport origin and size
    Viewport::View  view;                      // The view for the active viewport
+   int perf_phase = mPerfPhase;
 
    GlApp* theApp = glManager->getApp();       // Get application for easy access
    Display* theDisplay = win->getDisplay();   // Get the display for easy access
@@ -294,7 +299,6 @@ void GlPipe::renderWindow(GlWindow* win)
    vprDEBUG(vrjDBG_DRAW_MGR,5) << "vjGlPipe::renderWindow: Set context to: "
                              << GlDrawManager::instance()->getCurrentContext()
                              << std::endl << vprDEBUG_FLUSH;
-      mPerfBuffer->set(++mPerfPhase);
 
    // --- SET CONTEXT --- //
    win->makeCurrent();
@@ -302,6 +306,8 @@ void GlPipe::renderWindow(GlWindow* win)
    // VIEWPORT cleaning
    if(win->hasDirtyViewport())
       win->updateViewport();
+
+   mPerfBuffer->set(perf_phase++);
 
    // BUFFER PRE DRAW: Check if we need to clear stereo buffers
    if(win->isStereo())
@@ -313,6 +319,8 @@ void GlPipe::renderWindow(GlWindow* win)
    }
    else
       theApp->bufferPreDraw();
+
+   mPerfBuffer->set(perf_phase++);
 
    // CONTEXT INIT(): Check if we need to call contextInit()
    // - Must call when context is new OR application is new
@@ -327,9 +335,9 @@ void GlPipe::renderWindow(GlWindow* win)
       win->setDirtyContext(false);        // All clean now
    }
 
-      mPerfBuffer->set(++mPerfPhase);
    theApp->contextPreDraw();                 // Do any context pre-drawing
-      mPerfBuffer->set(++mPerfPhase);
+
+   mPerfBuffer->set(perf_phase++);
 
    // --- FOR EACH VIEWPORT -- //
    Viewport* viewport = NULL;
@@ -351,6 +359,8 @@ void GlPipe::renderWindow(GlWindow* win)
          glManager->currentUserData()->setUser(viewport->getUser());         // Set user data
          glManager->currentUserData()->setViewport(viewport);                // Set the viewport
 
+         mPerfBuffer->set(perf_phase++);
+
          // ---- SURFACE --- //
          if (viewport->isSurface())
          {
@@ -362,12 +372,16 @@ void GlPipe::renderWindow(GlWindow* win)
                win->setProjection(surface_vp->getLeftProj());
                glManager->currentUserData()->setProjection(surface_vp->getLeftProj());
 
-                  mPerfBuffer->set(++mPerfPhase);
+               mPerfBuffer->set(perf_phase++);
 
                theApp->draw();
-                  mPerfBuffer->set(++mPerfPhase);
+
+               mPerfBuffer->set(perf_phase++);
+
                glManager->drawObjects();
-                  mPerfBuffer->set(++mPerfPhase);
+
+               mPerfBuffer->set(perf_phase++);
+
             }
             if ((Viewport::STEREO == view) || (Viewport::RIGHT_EYE == view))    // RIGHT EYE
             {
@@ -375,15 +389,19 @@ void GlPipe::renderWindow(GlWindow* win)
                win->setProjection(surface_vp->getRightProj());
                glManager->currentUserData()->setProjection(surface_vp->getRightProj());
 
-                  mPerfBuffer->set(++mPerfPhase);
+               mPerfBuffer->set(perf_phase++);
+
                theApp->draw();
-                  mPerfBuffer->set(++mPerfPhase);
+
+               mPerfBuffer->set(perf_phase++);
 
                glManager->drawObjects();
-                  mPerfBuffer->set(++mPerfPhase);
+
+               mPerfBuffer->set(perf_phase++);
+
             }
             else
-               mPerfPhase += 2;
+               perf_phase += 3;
          }
          // ---- SIMULATOR ---------- //
          else if(viewport->isSimulator())
@@ -393,14 +411,17 @@ void GlPipe::renderWindow(GlWindow* win)
             win->setCameraProjection(sim_vp->getCameraProj());
             glManager->currentUserData()->setProjection(sim_vp->getCameraProj());
 
-               mPerfBuffer->set(++mPerfPhase);
+            mPerfBuffer->set(perf_phase++);
+
             theApp->draw();
-               mPerfBuffer->set(++mPerfPhase);
+
+            mPerfBuffer->set(perf_phase++);
 
             glManager->drawObjects();
             glManager->drawSimulator(sim_vp);
-            mPerfBuffer->set (++mPerfPhase);
-            mPerfPhase += 3;
+
+            mPerfBuffer->set(perf_phase++);
+
          }
 
       }  // should viewport be rendered

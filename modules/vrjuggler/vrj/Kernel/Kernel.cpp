@@ -110,8 +110,6 @@ void Kernel::controlLoop(void* nullParam)
 
    // setup performance buffer
    perfBuffer = environmentManager->getPerformanceMonitor()->getPerfDataBuffer ("Kernel Loop", 500, 8);
-   //perfBuffer = new jccl::PerfDataBuffer ("Kernel loop", 500, 8);
-   //environmentManager->addPerfDataBuffer (perfBuffer);
 
    //while(!Exit)
    while (1)
