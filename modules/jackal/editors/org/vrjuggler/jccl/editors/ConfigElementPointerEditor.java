@@ -246,9 +246,15 @@ public class ConfigElementPointerEditor
    private String mValue = null;
 
    /**
-    * The list of tags supported by this value.
+    * The set of tags supported by this value.  A java.util.Set is used here
+    * instead of a java.util.List to protect against entries showing up
+    * multiple times.  A valid configuration context should haev a unique
+    * name for each config element, but the implementation of generateTags()
+    * does not take steps to guarantee that it does not add the same item more
+    * than once.  Using a set provides an inherent guarantee that each entry
+    * will be unique and that duplicates will be filtered out.
     */
-   private List mTags = new ArrayList();
+   private Set mTags = new LinkedHashSet();
    private ConfigContext mConfigContext = null;
    private PropertyDefinition mPropertyDefinition = null;
 }
