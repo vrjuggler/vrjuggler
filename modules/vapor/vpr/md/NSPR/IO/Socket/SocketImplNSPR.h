@@ -243,7 +243,7 @@ public:
     // -----------------------------------------------------------------
     bool isConnected()
     {
-        if(m_open && m_bound )        // If it is not open, then it can't be connected
+        if(m_connected)        // If it is not open, then it can't be connected
         {
             int num_avail = PR_Available(m_handle);
             if(num_avail == 0)
@@ -310,7 +310,7 @@ public:
     {
        ReturnStatus status;
 
-       if (m_bound)
+       if (m_connected)
        {
            vprDEBUG(0,0) << "SocketImplNSPR::setRemoteAddr: Cant' set address of bound socket.\n" << vprDEBUG_FLUSH;
            status.setCode(ReturnStatus::Failure);
@@ -402,6 +402,7 @@ protected:
         m_open            = sock.m_open;
         m_open_blocking   = sock.m_open_blocking;
         m_bound           = sock.m_bound;
+        m_connected       = sock.m_connected;
         m_blocking        = sock.m_blocking;
         m_blocking_fixed  = sock.m_blocking_fixed;
     }
@@ -425,6 +426,7 @@ protected:
     bool m_open_blocking;
     bool m_bound;          /**< Is the socket bound to a port yet (connect
                                 and bind do this */
+    bool m_connected;
     bool m_blocking;
     bool m_blocking_fixed;
 };
