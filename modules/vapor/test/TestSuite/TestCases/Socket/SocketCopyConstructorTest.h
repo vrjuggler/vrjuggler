@@ -2,7 +2,7 @@
 #define _VPRTEST_SOCKET_COPYCONSTRUCTOR_TEST_H
 
 #include <cppunit/TestCase.h>
-#include <cppunit/ThreadTestCase.h>
+#include <cppunit/extensions/ThreadTestCase.h>
 #include <cppunit/TestSuite.h>
 #include <cppunit/TestCaller.h>
 
