@@ -192,9 +192,7 @@ endif
 	cd $(instlinks)/include/vpr && $(RM_LN) ./vprParam.h &&		\
           $(LN_S) $(topdir)/vpr/vprParam.h ./vprParam.h
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
-	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
-            -t $(VPRROOT_ABS)/vpr-config.in -p 'use_base_dir=yes'	\
-            -v $(VPRROOT_ABS)/VERSION -o $(instlinks)/bin/vpr-config -x
+	cd $(instlinks)/bin && cp -p $(topdir)/vpr-config .
 	@echo ""
 	@echo ""
 	@echo "---------------------------------------------------------------"
