@@ -373,6 +373,27 @@
               10.20).  As of Revision ${CONFIGURE_REV} of
               <TT>configure.in</TT>, this option is not yet supported in a
               Win32 environment.  <I>The default path is <TT>/usr</TT>.</I>
+        <DT><TT>--with-mesa</TT>
+          <DD>Tell the Juggler build system that the target system is using
+              the Mesa OpenGL implementation.  This will look for libMesaGL
+              and friends rather than libGL, and it will use the libMesa*
+              libraries when linking sample applications.
+        <DT><TT>--with-audioworks=&lt;PATH&gt;</TT>
+          <DD>Give the AudioWorks installation directory.  This is the base
+              directory containing an <TT>include/PSI</TT> subdirectory and
+              at least a <TT>lib/PSI</TT> subdirectory with the AudioWorks
+              libraries.  If AudioWorks is found, the Juggler AudioWorks
+              sound wrapper will be compiled and installed.  <I>The default
+              path is <TT>/usr</TT>.</I>
+        <DT><TT>--with-sl=&lt;PATH&gt;</TT>
+          <DD>Give the SL installation directory.  This is the base directory
+              containing an <TT>include/sl</TT> subdirectory and at least a
+              <TT>lib</TT> subdirectory with the SL libraries.  Before
+              testing for SL, a test will be performed checking for the SGI
+              Audio library if compiling on IRIX.  If it is found, then the
+              test for SL is performed.  If SL is found, the Juggler SL sound
+              wrapper will be compiled and installed.  <I>The default path is
+              <TT>/usr</TT>.</I>
         <DT><TT>--with-perl=&lt;PATH&gt;</TT>
           <DD>Name the directory containing a Perl 5.004 or newer binary.
               A working Perl 5.004 or newer binary is necessary for a
