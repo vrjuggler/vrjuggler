@@ -260,6 +260,21 @@ public class CorbaService
                                         "validity: " + ex.getMessage());
 //                     ex.printStackTrace();
                   }
+                  // This exception pops up on Windows, and it seems to be
+                  // the result of invalid references.  Catching the exception
+                  // and doing nothing seems to be a valid way of handling
+                  // things.
+                  catch (org.omg.CORBA.COMM_FAILURE ex)
+                  {
+/*
+                     System.err.println("Caught CORBA.COMM_FAILURE " +
+                                        "exception when trying to verify " +
+                                        "reference validity: " +
+                                        ex.getMessage());
+                     System.out.println(ex);
+//                     ex.printStackTrace();
+*/
+                  }
                }
                catch (InvalidName e)
                {
