@@ -1,7 +1,5 @@
 
-
-#include <Environment/vjEnvironmentManager.h>
-#include <Kernel/vjKernel.h>
+#include <config.h>
 #include <iostream.h>
 #include <fstream.h>
 #include <strings.h>    // For bzero()
@@ -12,6 +10,8 @@
 #include <Config/vjChunkDescDB.h>
 #include <Config/vjConfigChunkDB.h>
 #include <Environment/vjTimedUpdate.h>
+#include <Environment/vjEnvironmentManager.h>
+#include <Kernel/vjKernel.h>
 
 
 vjEnvironmentManager::vjEnvironmentManager(): connections() {
