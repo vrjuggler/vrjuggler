@@ -126,12 +126,7 @@ BUILD_VJCONTROL	= @BUILD_VJCONTROL@
 # =============================================================================
 
 # Subdirectories used for recursion through the source tree.
-SUBDIR		= jccl/Config        \
-		  jccl/JackalServer  \
-		  jccl/ConfigManager \
-		  jccl/Performance   \
-		  jccl/XMLUtil	     \
-		  jccl/Util
+SUBDIR		= jccl
 
 # =============================================================================
 # Library targets.  The default is 'debug' as defined above.  The steps for 
@@ -204,7 +199,6 @@ endif
 # -------------------------------------------------------------
 # Build and install everything (i.e., the world) for a release.
 # -------------------------------------------------------------
-.PHONY: release
 
 release:
 	@echo "==============================================================="

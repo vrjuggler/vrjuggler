@@ -271,7 +271,7 @@ fi
 
 CFLAGS="$CFLAGS $INCLUDES ${_EXTRA_FLAGS}"
 LDFLAGS="$LDFLAGS $X_LDFLAGS"
-LIBS="$LIBS -l$XERCES_LIB"
+LIBS="$LIBS -l$XERCES_LIB `$VPR_CONFIG --extra-libs`"
 
 DPP_LANG_SAVE
 DPP_LANG_CPLUSPLUS
@@ -394,9 +394,6 @@ fi
 CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS"
 EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
 
-# For use in linking applications.
-#EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
-
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" = "xno" ; then
     CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
     CXXFLAGS="$CXXFLAGS -woff 3322 -w2"
@@ -455,6 +452,56 @@ VJ_APP_LINKER($CXX, $EXTRA_LINK_FLAGS, $LDOPTS_DBG, $LDOPTS_OPT, JCCL_BASE_DIR,
 APP_BASE_DIR='$(topdir)/instlinks'
 APP_BASE_DIR_INST='$(JCCL_BASE_DIR)'
 
+if test "$OS_TYPE" = "UNIX" ; then
+    DYLIB_DEPS_JCCL="$APP_EXTRA_LIBS"
+#    DYLIB_DEPS_GL="$OGL_LDFLAGS $LIBOPENGL -lm"
+#    DYLIB_DEPS_PF="$PF_LDFLAGS $LIBPERFORMER -lm"
+
+#    APP_VJ_LIBS_GL="-lJuggler_ogl"
+#    APP_VJ_LIBS_PF="-lJuggler_pf"
+#    APP_VJ_LIBS_UTILS="-lJuggler_utils"
+
+#    APP_EXTRA_LIBS_X11="$X_LDFLAGS -lX11 -lXext"
+
+#    if test "x$OGL_LDFLAGS" != "x" ; then
+#        if test "x$PLATFORM" = "xDarwin" ; then
+#            APP_EXTRA_LIBS_GL="$OGL_LDFLAGS -framework AGL -framework DrawSprocket -framework Carbon -framework ApplicationServices"
+#        else
+#            APP_EXTRA_LIBS_GL="-L$OGLROOT/lib$LIBBITSUF $LIBOPENGL"
+#        fi
+#    else
+#        APP_EXTRA_LIBS_GL="$LIBOPENGL"
+#    fi
+
+#    if test "x$PF_LDFLAGS" != "x" ; then
+#        APP_EXTRA_LIBS_PF="-L$PFROOT/lib$LIBBITSUF $LIBPERFORMER"
+#    else
+#        APP_EXTRA_LIBS_PF="$LIBPERFORMER"
+#    fi
+
+#    if test "x$PLATFORM" = "xLinux" ; then
+#        APP_EXTRA_FLAGS_PF="-O $APP_EXTRA_FLAGS_PF"
+#    fi
+
+#    if test "x$OSG_LDFLAGS" != "x" ; then
+#        APP_EXTRA_LIBS_OSG="-L$OSGROOT/lib $LIBOSG"
+#    else
+#        APP_EXTRA_LIBS_OSG="$LIBOSG"
+#    fi
+elif test "$OS_TYPE" = "Win32" ; then
+    DYLIB_DEPS_BASIC="$APP_EXTRA_LIBS"
+    DYLIB_DEPS_JCCL="-libpath:\$(LIBDIR) jccl.lib $DYLIB_DEPS_BASIC"
+#    DYLIB_DEPS_UTILS="$DYLIB_DEPS_BASIC"
+#    DYLIB_DEPS_GL="-libpath:\$(LIBDIR) Juggler.lib Juggler_utils.lib $DYLIB_DEPS_BASIC $OGL_LDFLAGS $LIBOPENGL"
+
+#    APP_VJ_LIBS_GL='Juggler_ogl.lib'
+#    APP_VJ_LIBS_PF='Juggler_pf.lib'
+#    APP_VJ_LIBS_UTILS='Juggler_utils.lib'
+#    APP_EXTRA_LIBS_GL="$OGL_LDFLAGS $LIBOPENGL"
+#    APP_EXTRA_LIBS_PF="$PF_LDFLAGS $LIBPERFORMER"
+#    APP_EXTRA_LIBS_OSG="$OSG_LDFLAGS $LIBOSG"
+fi
+
 
 # Translate paths from UNIX-style to Win32.
 if test "x$OS_TYPE" = "xWin32" ; then
@@ -466,7 +513,6 @@ if test "x$OS_TYPE" = "xWin32" ; then
     LIBS=`unix2dos "$LIBS"`
     LN_S='cp'
     MTREE_CMD=`unix2dos "$MTREE_CMD"`
-
     JDK_HOME=`unix2dos -p "$JDK_HOME"`
 
     APP_EXTRA_LIBS=`unix2dos "$APP_EXTRA_LIBS"`
@@ -503,11 +549,13 @@ case $OS_TYPE in
 
         jccl_ldflags="-L\$prefix/lib$LIBBITSUF"
         jccl_libs='-ljccl'
+        jccl_lib='-ljccl'
 
         ;;
     WIN32)
         jccl_ldflags="/link /libpath:\$prefix/lib/debug "
         jccl_libs='jccl.lib'
+        jccl_lib='jccl.lib'
 
         ;;
 esac
@@ -531,6 +579,10 @@ AC_SUBST(BUILD_VJCONTROL)
 
 AC_SUBST(XERCESROOT)
 
+AC_SUBST(APP_BASE_DIR)
+AC_SUBST(APP_BASE_DIR_INST)
+
+AC_SUBST(DYLIB_DEPS_JCCL)
 AC_SUBST(DYLIB_DEPS)
 
 AC_SUBST(APP_BASIC_LIBS)
@@ -542,6 +594,7 @@ AC_SUBST(static_begin)
 AC_SUBST(static_end)
 AC_SUBST(jccl_ldflags)
 AC_SUBST(jccl_libs)
+AC_SUBST(jccl_lib)
 AC_SUBST(jccl_extra_ldflags)
 AC_SUBST(jccl_extra_libs)
 

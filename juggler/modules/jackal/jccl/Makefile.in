@@ -46,3 +46,10 @@ SUBDIR		= Config		\
 $(RECTARGET): recursive
 
 include $(MKPATH)/dpp.subdir.mk
+
+links:
+	cd $(instlinks)/include/jccl &&					\
+          for dir in $(SUBDIR) ; do					\
+              rm -f ./$$dir ;						\
+              ln -s $(JCCLROOT_ABS)/jccl/$$dir ./$$dir ;		\
+          done
