@@ -194,8 +194,8 @@ namespace gadget
          if ( NULL == input_dev )       // Not found, so stupify
          {
             vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-               << "gadget::TypedProxy::refresh: Could not find device '"
-               << mDeviceName << "' pointed to by '" << mName << "'\n"
+               << "[gadget::TypedProxy::refresh()] Could not find device '"
+               << mDeviceName << "' pointed to by '" << mName << "'"
                << std::endl << vprDEBUG_FLUSH;
             stupify(true);
          }
@@ -205,7 +205,7 @@ namespace gadget
             if ( NULL == typed_dev )
             {
                vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-                  << "gadget::TypedProxy::config: Device was of wrong type: "
+                  << "[gadget::TypedProxy::config()] Device was of wrong type: "
                   << mDeviceName << " it was type:" << typeid(input_dev).name()
                   << std::endl << vprDEBUG_FLUSH;
                stupify(true);
