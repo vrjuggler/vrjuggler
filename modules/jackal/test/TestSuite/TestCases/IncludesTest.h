@@ -4,8 +4,6 @@
 #include <iostream>
 
 #include <cppunit/TestCase.h>
-#include <cppunit/TestSuite.h>
-#include <cppunit/TestCaller.h>
 
 /*****************************************************************
  tests out the functionality expected of desc & config file
