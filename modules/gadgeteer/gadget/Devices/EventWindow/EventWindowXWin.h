@@ -180,7 +180,7 @@ private:
     * @param time  The time (in milliseconds) at which the event occurred.
     */
    void addKeyEvent(const gadget::Keys& key, const gadget::EventType& type,
-                    const int& state, const Time& time);
+                    XKeyEvent* event);
 
    /**
     * Adds a new mouse motion event to the event queue for this window.
@@ -255,9 +255,9 @@ protected:
     * Instead, it just uses a modified double buffering system.
     */
    //@{
-   int        mKeys[256];        /**< (0,*): The num key presses during an UpdateData (ie. How many keypress events). */
+   int        mKeys[gadget::LAST_KEY];     /**< (0,*): The num key presses during an UpdateData (ie. How many keypress events). */
 
-   int        mRealkeys[256];    /**< (0,1): The real keyboard state, all events processed (ie. what is the key now). */
+   int        mRealkeys[gadget::LAST_KEY]; /**< (0,1): The real keyboard state, all events processed (ie. what is the key now). */
    vpr::Mutex mKeysLock;         /**< Must hold this lock when accessing m_keys. */
    bool       mExitFlag;         /**< Should we exit? */
    bool       mControlLoopDone;

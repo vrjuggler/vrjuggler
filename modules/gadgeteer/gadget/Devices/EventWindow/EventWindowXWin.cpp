@@ -58,7 +58,7 @@ bool EventWindowXWin::config(jccl::ConfigChunkPtr c)
    const char neg_one_STRING[] = "-1";
 
    // Done in Input --- mThread = NULL;
-   for ( int i = 0; i < 256; ++i )
+   for ( int i = 0; i < gadget::LAST_KEY; ++i )
    {
       mCurKeys[i] = mRealkeys[i] = mKeys[i] = 0;
    }
@@ -248,7 +248,7 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the mKeys array
    */
 
    // Copy over values
-   for ( unsigned int i = 0; i < 256; ++i )
+   for ( unsigned int i = 0; i < gadget::LAST_KEY; ++i )
    {
       mCurKeys[i] = mKeys[i];
    }
@@ -257,7 +257,7 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the mKeys array
    // Set the initial state of the mKey key counts based on the current state
    // of the system this is to ensure that if a key is still down, we get at
    // least one event for it.
-   for ( unsigned int j = 0; j < 256; ++j )
+   for ( unsigned int j = 0; j < gadget::LAST_KEY; ++j )
    {
       mKeys[j] = mRealkeys[j];
    }
@@ -315,8 +315,10 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the mKeys array 
          mRealkeys[vj_key] = 1;
          mKeys[vj_key] += 1;
 
-         addKeyEvent(vj_key, gadget::KeyPressEvent, event.xkey.state,
-                     event.xkey.time);
+         vprDEBUG(gadgetDBG_INPUT_MGR, 0)
+            << "vj_key press value: " << vj_key << std::endl
+            << vprDEBUG_FLUSH;
+         addKeyEvent(vj_key, gadget::KeyPressEvent, &event.xkey);
 
          // -- Update lock state -- //
          // Any[key == ESC]/unlock(ifneeded) -> Unlocked
@@ -397,8 +399,7 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the mKeys array 
          vj_key = xKeyToKey(key);
          mRealkeys[vj_key] = 0;
 
-         addKeyEvent(vj_key, gadget::KeyReleaseEvent, event.xkey.state,
-                     event.xkey.time);
+         addKeyEvent(vj_key, gadget::KeyReleaseEvent, &event.xkey);
 
          // -- Update lock state -- //
          // lock_keyDown[key==storedKey]/unlockMouse -> unlocked
@@ -541,10 +542,26 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the mKeys array 
 
 void EventWindowXWin::addKeyEvent(const gadget::Keys& key,
                                   const gadget::EventType& type,
-                                  const int& state, const Time& time)
+                                  XKeyEvent* event)
 {
-   gadget::EventPtr key_event(new gadget::KeyEvent(type, key, getMask(state),
-                                                   time));
+   const int buffer_size(20);
+   char buffer[buffer_size];
+   KeySym key_sym;
+   XComposeStatus cs;
+
+   XLookupString(event, buffer, buffer_size, &key_sym, &cs);
+
+#ifdef GADGET_DEBUG
+   buffer[buffer_size] = '\0';
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
+      << "EventWindowXWin::addKeyEvent(): Key string from event '"
+      << buffer << "'\n" << vprDEBUG_FLUSH;
+#endif
+
+   // Get ASCII representation of key.
+   gadget::EventPtr key_event(new gadget::KeyEvent(type, key,
+                                                   getMask(event->state),
+                                                   event->time, buffer[0]));
    addEvent(key_event);
 }
 
@@ -766,8 +783,104 @@ gadget::Keys EventWindowXWin::xKeyToKey(KeySym xKey)
    case XK_x         : return gadget::KEY_X;
    case XK_y         : return gadget::KEY_Y;
    case XK_z         : return gadget::KEY_Z;
-   case XK_Escape    : return gadget::KEY_ESC;
-   default           : return gadget::KEY_NONE;  // XXX: Is this right?
+
+   case XK_Escape       : return gadget::KEY_ESC;
+   case XK_Tab          : return gadget::KEY_TAB;
+#ifdef XK_3270
+   case XK_BackTab      : return gadget::KEY_BACKTAB;
+#endif
+   case XK_BackSpace    : return gadget::KEY_BACKSPACE;
+   case XK_Return       : return gadget::KEY_RETURN;
+   case XK_Insert       : return gadget::KEY_INSERT;
+   case XK_Delete       : return gadget::KEY_DELETE;
+   case XK_Pause        : return gadget::KEY_PAUSE;
+   case XK_Print        : return gadget::KEY_PRINT;
+   case XK_Sys_Req      : return gadget::KEY_SYSREQ;
+   case XK_Home         : return gadget::KEY_HOME;
+   case XK_End          : return gadget::KEY_END;
+   case XK_Prior        : return gadget::KEY_PRIOR; // XXX: There is also XK_KP_Prior
+   case XK_Next         : return gadget::KEY_NEXT;  // XXX: There is also XK_KP_Next
+   case XK_Caps_Lock    : return gadget::KEY_CAPS_LOCK;
+   case XK_Num_Lock     : return gadget::KEY_NUM_LOCK;
+   case XK_Scroll_Lock  : return gadget::KEY_SCROLL_LOCK;
+
+   case XK_F1  : return gadget::KEY_F1;
+   case XK_F2  : return gadget::KEY_F2;
+   case XK_F3  : return gadget::KEY_F3;
+   case XK_F4  : return gadget::KEY_F4;
+   case XK_F5  : return gadget::KEY_F5;
+   case XK_F6  : return gadget::KEY_F6;
+   case XK_F7  : return gadget::KEY_F7;
+   case XK_F8  : return gadget::KEY_F8;
+   case XK_F9  : return gadget::KEY_F9;
+   case XK_F10 : return gadget::KEY_F10;
+   case XK_F11 : return gadget::KEY_F11;
+   case XK_F12 : return gadget::KEY_F12;
+   case XK_F13 : return gadget::KEY_F13;
+   case XK_F14 : return gadget::KEY_F14;
+   case XK_F15 : return gadget::KEY_F15;
+   case XK_F16 : return gadget::KEY_F16;
+   case XK_F17 : return gadget::KEY_F17;
+   case XK_F18 : return gadget::KEY_F18;
+   case XK_F19 : return gadget::KEY_F19;
+   case XK_F20 : return gadget::KEY_F20;
+   case XK_F21 : return gadget::KEY_F21;
+   case XK_F22 : return gadget::KEY_F22;
+   case XK_F23 : return gadget::KEY_F23;
+   case XK_F24 : return gadget::KEY_F24;
+   case XK_F25 : return gadget::KEY_F25;
+   case XK_F26 : return gadget::KEY_F26;
+   case XK_F27 : return gadget::KEY_F27;
+   case XK_F28 : return gadget::KEY_F28;
+   case XK_F29 : return gadget::KEY_F29;
+   case XK_F30 : return gadget::KEY_F30;
+   case XK_F31 : return gadget::KEY_F31;
+   case XK_F32 : return gadget::KEY_F32;
+   case XK_F33 : return gadget::KEY_F33;
+   case XK_F34 : return gadget::KEY_F34;
+   case XK_F35 : return gadget::KEY_F35;
+
+   case XK_Super_L : return gadget::KEY_SUPER_L;
+   case XK_Super_R : return gadget::KEY_SUPER_R;
+   case XK_Menu    : return gadget::KEY_MENU;
+   case XK_Hyper_L : return gadget::KEY_HYPER_L;
+   case XK_Hyper_R : return gadget::KEY_HYPER_R;
+   case XK_Help    : return gadget::KEY_HELP;
+
+   case XK_KP_Space     : return gadget::KEY_SPACE;
+   case XK_space        : return gadget::KEY_SPACE;
+//   case XK_Any          : return gadget::KEY_ANY;
+   case XK_exclam       : return gadget::KEY_EXCLAM;
+   case XK_quotedbl     : return gadget::KEY_QUOTE_DBL;
+   case XK_numbersign   : return gadget::KEY_NUMBER_SIGN;
+   case XK_dollar       : return gadget::KEY_DOLLAR;
+   case XK_percent      : return gadget::KEY_PERCENT;
+   case XK_ampersand    : return gadget::KEY_AMPERSAND;
+   case XK_parenleft    : return gadget::KEY_PAREN_LEFT;
+   case XK_parenright   : return gadget::KEY_PAREN_RIGHT;
+   case XK_asterisk     : return gadget::KEY_ASTERISK;
+   case XK_plus         : return gadget::KEY_PLUS;
+   case XK_comma        : return gadget::KEY_COMMA;
+   case XK_minus        : return gadget::KEY_MINUS;
+   case XK_period       : return gadget::KEY_PERIOD;
+   case XK_slash        : return gadget::KEY_SLASH;
+   case XK_colon        : return gadget::KEY_COLON;
+   case XK_semicolon    : return gadget::KEY_SEMICOLON;
+   case XK_less         : return gadget::KEY_LESS;
+   case XK_equal        : return gadget::KEY_EQUAL;
+   case XK_greater      : return gadget::KEY_GREATER;
+   case XK_question     : return gadget::KEY_QUESTION;
+   case XK_bracketleft  : return gadget::KEY_BRACKET_LEFT;
+   case XK_bracketright : return gadget::KEY_BRACKET_RIGHT;
+   case XK_asciicircum  : return gadget::KEY_ASCII_CIRCUM;
+   case XK_underscore   : return gadget::KEY_UNDERSCORE;
+   case XK_quoteleft    : return gadget::KEY_QUOTE_LEFT;
+   case XK_braceleft    : return gadget::KEY_BRACE_LEFT;
+   case XK_bar          : return gadget::KEY_BAR;
+   case XK_braceright   : return gadget::KEY_BRACE_RIGHT;
+   case XK_asciitilde   : return gadget::KEY_ASCII_TILDE;
+
+   default: return gadget::KEY_UNKNOWN;
    }
 }
 
