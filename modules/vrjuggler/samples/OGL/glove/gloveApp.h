@@ -40,9 +40,9 @@
 #include <vrj/Math/Vec3.h>
 
 #include <vrj/Draw/OGL/GlContextData.h>
-#include <vrj/Input/Type/GloveInterface.h>
-#include <vrj/Input/Type/PosInterface.h>
-#include <vrj/Input/Type/DigitalInterface.h>
+#include <gadget/Type/GloveInterface.h>
+#include <gadget/Type/PositionInterface.h>
+#include <gadget/Type/DigitalInterface.h>
 
 #include "defines.h"
 #include "Scene.h"
@@ -176,19 +176,19 @@ private:
 
 protected:
    // for the glove position
-   vrj::GloveInterface    mGlove;
+   gadget::GloveInterface    mGlove;
 
    // for the glove fingers
-   vrj::DigitalInterface  mPinchLeftThumb;
-   vrj::DigitalInterface  mPinchLeftIndex;
-   vrj::DigitalInterface  mPinchLeftMiddle;
-   vrj::DigitalInterface  mPinchLeftRing;
-   vrj::DigitalInterface  mPinchLeftPinky;
-   vrj::DigitalInterface  mPinchRightThumb;
-   vrj::DigitalInterface  mPinchRightIndex;
-   vrj::DigitalInterface  mPinchRightMiddle;
-   vrj::DigitalInterface  mPinchRightRing;
-   vrj::DigitalInterface  mPinchRightPinky;
+   gadget::DigitalInterface  mPinchLeftThumb;
+   gadget::DigitalInterface  mPinchLeftIndex;
+   gadget::DigitalInterface  mPinchLeftMiddle;
+   gadget::DigitalInterface  mPinchLeftRing;
+   gadget::DigitalInterface  mPinchLeftPinky;
+   gadget::DigitalInterface  mPinchRightThumb;
+   gadget::DigitalInterface  mPinchRightIndex;
+   gadget::DigitalInterface  mPinchRightMiddle;
+   gadget::DigitalInterface  mPinchRightRing;
+   gadget::DigitalInterface  mPinchRightPinky;
 
 
    //: Object selection

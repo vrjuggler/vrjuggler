@@ -41,8 +41,8 @@
 #include <vrj/Draw/OGL/GlApp.h>
 #include <vrj/Math/Matrix.h>
 
-#include <vrj/Input/Type/PosInterface.h>
-#include <vrj/Input/Type/DigitalInterface.h>
+#include <gadget/Type/PositionInterface.h>
+#include <gadget/Type/DigitalInterface.h>
 
 using namespace vrj;
 
@@ -151,10 +151,10 @@ private:
    }
 
 public:
-   PosInterface    mWand;         // Positional interface for Wand position
-   PosInterface    mHead;         // Positional interface for Head position
-   DigitalInterface   mButton0;   // Digital interface for button 0
-   DigitalInterface   mButton1;   // Digital interface for button 1
+   gadget::PositionInterface  mWand;         // Positional interface for Wand position
+   gadget::PositionInterface  mHead;         // Positional interface for Head position
+   gadget::DigitalInterface   mButton0;   // Digital interface for button 0
+   gadget::DigitalInterface   mButton1;   // Digital interface for button 1
 };
 
 

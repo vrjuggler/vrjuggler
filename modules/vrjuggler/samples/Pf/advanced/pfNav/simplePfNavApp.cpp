@@ -50,8 +50,8 @@
 #include <vrj/Draw/Pf/PfApp.h>    // the performer application base type
 #include <vrj/Util/Debug.h>
 #include <vrj/Display/Projection.h>  // for setNearFar (for setting clipping planes)
-#include <vrj/Input/Type/PosInterface.h>
-#include <vrj/Input/Type/DigitalInterface.h>
+#include <gadget/Type/PositionInterface.h>
+#include <gadget/Type/DigitalInterface.h>
 
 #include <vrj/Util/FileIO.h>
 
@@ -258,7 +258,7 @@ void simplePfNavApp::preFrame()
       // Deal with focus based changes
       mNavigationDCS->setActive(haveFocus());
 
-      if (haveFocus() && (mNavCycleButton->getData() == vrj::Digital::TOGGLE_ON))
+      if (haveFocus() && (mNavCycleButton->getData() == gadget::Digital::TOGGLE_ON))
       {
          cycleNavigator();
       }
