@@ -180,10 +180,6 @@ links:
 	for dir in $(SUBDIR); do \
 		$(MAKE) -C $$dir instlinks=$(instlinks) links; \
 	done
-ifneq (@LOCAL_CPPDOM@, Y)
-	cd $(instlinks)/include && $(RM_LN) ./cppdom &&			\
-          $(LN_S) $(JUGGLERROOT_ABS)/external/cppdom/cppdom ./
-endif
 ifeq (@OS_TYPE@, Win32)
 	cd $(instlinks)/$(LIBDIR_NAME) && cp -r $(LIBDIR_BASE)/* .
 else
