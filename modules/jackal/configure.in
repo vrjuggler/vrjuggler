@@ -209,7 +209,7 @@ DPP_PROG_LINKER
 VPR_PATH([0.27.5], , [AC_MSG_ERROR([*** VPR required for JCCL ***])])
 
 if test "x$enable_corba_rtrc" = "xyes" ; then
-   TWEEK_PATH_CXX([0.10.1],
+   TWEEK_PATH_CXX([0.15.0],
                   [AC_DEFINE([HAVE_TWEEK_CXX], ,
                      [Define if the Tweek C++ API (the C++ CORBA stuff) is available.])
                    HAVE_TWEEK_CXX='Y'
@@ -219,7 +219,7 @@ if test "x$enable_corba_rtrc" = "xyes" ; then
                   ])
 fi
 
-TWEEK_PATH_JAVA([0.10.1], ,
+TWEEK_PATH_JAVA([0.15.0], ,
                 [AC_MSG_WARN([*** Tweek Java required for editor JavaBeans ***])
                  BUILD_JAVA='N'
                 ])
