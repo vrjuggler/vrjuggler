@@ -76,8 +76,8 @@ class __tags {
 class __options {
 }/**
 @__positions <oigroup:<oiref:design#Class#idz71ecyd7c8e2cyd82fm1.node25:oiref>=230,580,246,75,0:oigroup>
-<oigroup:MemberLink#<oiref:cpp#Member#snx::OpenALSoundImplementation#lnkSoundInfo:oiref>=390,515,270,515:oigroup>
 <oigroup:<oiref:cpp#Extends#snx::AudioWorksSoundImplementation#snx::SoundImplementation:oiref>=700,490,640,490,640,430:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#snx::OpenALSoundImplementation#lnkSoundInfo:oiref>=390,515,270,515:oigroup>
 <oigroup:<oiref:design#Class#idz71ecyd7c8e2cyd82fm1.node23:oiref>=930,460,106,40,1:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#snx::SoundFactory#lnkSoundImplementation:oiref>=590,530,590,430:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#sonix#lnkSoundInfo:oiref>=490,288,270,372:oigroup>
