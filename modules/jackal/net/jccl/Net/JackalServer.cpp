@@ -5,11 +5,6 @@
 
 
 #include <vjConfig.h>
-#include <Environment/vjEnvironmentManager.h>
-#include <Kernel/vjKernel.h>
-#include <Config/vjChunkDescDB.h>
-#include <Config/vjConfigChunkDB.h>
-#include <Environment/vjTimedUpdate.h>
 #include <iostream.h>
 #include <fstream.h>
 #include <strings.h>    // For bzero()
@@ -18,6 +13,11 @@
 #include <netinet/in.h>
 #include <netdb.h>
 
+#include <Environment/vjEnvironmentManager.h>
+#include <Kernel/vjKernel.h>
+#include <Config/vjChunkDescDB.h>
+#include <Config/vjConfigChunkDB.h>
+#include <Environment/vjTimedUpdate.h>
 
 
 vjEnvironmentManager::vjEnvironmentManager(): 
