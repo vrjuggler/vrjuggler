@@ -181,12 +181,13 @@ namespace cluster
       if ( mAck )
       {
          //node->setConnected(ClusterNode::CONNECTED);
+         node->setConnected(ClusterNode::NEWCONNECTION);
          node->setHostname(mHostname);
          node->setRemoteManagerId(mManagerId);
       }
       else
       {
-         node->setConnected(ClusterNode::DISCONNECTED);
+         //node->setConnected(ClusterNode::DISCONNECTED);
       }
       
       return true;

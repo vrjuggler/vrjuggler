@@ -216,13 +216,14 @@ namespace cluster
       temp_packet->printData(vprDBG_CONFIG_LVL);
       temp_packet->action(this);
       delete temp_packet;
-
-      ClusterDelta cluster_delta;
-      vpr::Interval temp;
-      temp = cluster_delta.getClusterDelta(getSockStream());
-      mDelta = temp.getBaseVal();
-
-      setConnected(NEWCONNECTION);
+      if (getConnected() == NEWCONNECTION)
+      {
+         ClusterDelta cluster_delta;
+         vpr::Interval temp;
+         temp = cluster_delta.getClusterDelta(getSockStream());
+         mDelta = temp.getBaseVal();
+      }
+      
       return(vpr::ReturnStatus::Succeed);
    }
    
