@@ -14,7 +14,7 @@ LATEX_OUTPUT_DIR=	latex
 
 # Fill these in!!  Together, they form the installation prefix.
 webroot=	$(HOME)/public_html/jugglerweb
-instdir=	sonix/0.0.3/programmer.reference
+instdir=	sonix/0.1/programmer.reference
 
 prefix=		$(webroot)/$(instdir)
 
