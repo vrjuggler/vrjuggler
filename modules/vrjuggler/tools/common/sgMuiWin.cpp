@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <glut/sgMuiWin.h>
+#include <sgMuiWin.h>
 
 
 sgMuiWin* sgMuiWin::_instance = NULL;

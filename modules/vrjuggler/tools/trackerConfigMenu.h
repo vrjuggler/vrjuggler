@@ -78,7 +78,7 @@ public:
    void processSpinnerEvent()
    {
       // Make a matrix T*R
-      vjMatrix rot_mat;
+      vrj::Matrix rot_mat;
       rot_mat.makeXYZEuler(mXRotSpinner->get_float_val(), mYRotSpinner->get_float_val(), mZRotSpinner->get_float_val());
 
       mMatrix.makeTrans(mXPosSpinner->get_float_val(), mYPosSpinner->get_float_val(), mZPosSpinner->get_float_val());
@@ -95,7 +95,7 @@ public:
    {
       // Set mMatrix to new value
       float m[16];
-      vjMatrix rot_mat;
+      vrj::Matrix rot_mat;
       mTbRotation->get_float_array_val(m);
       rot_mat.set(m);
 
@@ -112,7 +112,7 @@ public:
       mMatrix.postMult(rot_mat);         // xformMat = T*R
    }
 
-   vjMatrix getMatrix()
+   vrj::Matrix getMatrix()
    { return mMatrix; }
 
 protected:
@@ -165,7 +165,7 @@ public:
    GLUI_Panel     *mTbPanel;
    GLUI_Rotation  *mTbRotation, *mTbRotation2;
 
-   vjMatrix    mMatrix;       // Matrix of the T*R
+   vrj::Matrix    mMatrix;       // Matrix of the T*R
 };
 
 
@@ -218,7 +218,7 @@ public:
    void updateModelMatrix()
    {
       float m[16];
-      vjMatrix rot_mat;
+      vrj::Matrix rot_mat;
       mModelRotation->get_float_array_val(m);
       rot_mat.set(m);
 
@@ -228,7 +228,7 @@ public:
 	//: This function is called by the callback to interact with widgets
 	virtual void interact(int wId)
 	{
-		//vjASSERT(mApp != NULL);
+		//vprASSERT(mApp != NULL);
 		cout << "Glui:interact: wId: " << wId << endl;
 
 		switch(wId)
