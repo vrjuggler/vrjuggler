@@ -626,7 +626,7 @@ AC_OUTPUT(gadgeteer-config
           gadget/Devices/Open/DTK/Makefile
           gadget/Devices/Open/Trackd/Makefile
           gadget/Devices/Polhemus/Makefile
-          gadget/Devices/Polhemus/Fastrack/Makefile
+          gadget/Devices/Polhemus/Fastrak/Makefile
           gadget/Devices/Sim/Makefile
           gadget/Devices/Tweek/Makefile
           gadget/Devices/Tweek/Makefile.inc

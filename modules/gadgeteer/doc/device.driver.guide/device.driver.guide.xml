@@ -460,7 +460,7 @@ by the Input Manager:</para>
                   <secondary>position</secondary>
                </indexterm>
                <para>Positional input is usually collected from a
-six-degree-of-freedom (6DOF) tracker such as a Polhemus Fastrack or an
+six-degree-of-freedom (6DOF) tracker such as a Polhemus Fastrak or an
 Ascension MotionStar. Thus, position devices in Gadgeteer return samples as
 standard 4&times;4 transformation matrices representing the position and
 orientation of a specific tracker. A tracker may not be able to track all six

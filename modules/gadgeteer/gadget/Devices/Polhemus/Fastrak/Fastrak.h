@@ -38,8 +38,8 @@
 
 // 4 stations: from 0 to 3
 
-#ifndef _GADGET_FASTRACK_
-#define _GADGET_FASTRACK_
+#ifndef _GADGET_FASTRAK_
+#define _GADGET_FASTRAK_
 
 #include <gadget/Devices/DriverConfig.h>
 
@@ -56,7 +56,7 @@
 #include <gadget/Type/Position.h>
 #include <gadget/Type/InputMixer.h>
 
-#include <gadget/Devices/Polhemus/Fastrack/FastrackStandalone.h>
+#include <gadget/Devices/Polhemus/Fastrak/FastrakStandalone.h>
 
 
 namespace gadget
@@ -69,23 +69,23 @@ extern "C" GADGET_DRIVER_API(void) initDevice(gadget::InputManager* inputMgr);
 namespace gadget
 {
 
-class Fastrack : public InputMixer<InputMixer<Input,Digital>, Position>
+class Fastrak : public InputMixer<InputMixer<Input,Digital>, Position>
 {
 public:
-   Fastrack();                                  // must call vjAnalog()? see vjAnalog.h
-   virtual ~Fastrack();
+   Fastrak();                                  // must call vjAnalog()? see vjAnalog.h
+   virtual ~Fastrak();
    static std::string getChunkType()
    {
-      return std::string("Fastrack");
+      return std::string("Fastrak");
    }// return what chunk type is associated with this class.
 public:
    /// gadget::Input pure virtual functions
-   virtual bool config( jccl::ConfigChunkPtr fastrackChunk);
+   virtual bool config(jccl::ConfigChunkPtr fastrakChunk);
 
    /** Starts a new thread. */
    virtual int startSampling();
 
-   /** Reads data from the Fastrack. */
+   /** Reads data from the Fastrak. */
    virtual int sample();
 
    /** Swaps the data and gadget::Input tri-buffered indicies. */
@@ -97,7 +97,7 @@ public:
    /** Device's configchunk name (match .desc file). */
    virtual char* getDeviceName()
    {
-      return "vjFastrack";
+      return "vjFastrak";
    };
 
 public:
@@ -135,10 +135,10 @@ private:
 
    char* mConfigFile;
 
-   FastrackStandalone mFastrackDev;
+   FastrakStandalone mFastrakDev;
 };
 
 } // End of gadget namespace
 
 
-#endif // _GADGET_FASTRACK_
+#endif // _GADGET_FASTRAK_

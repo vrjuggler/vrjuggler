@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_FASTRACK_STANDALONE_H_
-#define _GADGET_FASTRACK_STANDALONE_H_
+#ifndef _GADGET_FASTRAK_STANDALONE_H_
+#define _GADGET_FASTRAK_STANDALONE_H_
 
 // driver R.E.
 
@@ -65,7 +65,7 @@ struct perstation
    float tmf[XYZ];
 };
 
-struct FastrackConfig
+struct FastrakConfig
 {
    int found;         // flags: one bit for each feature found in the chunk
    int len;           // total length of a message sent by the tracker
@@ -76,21 +76,21 @@ struct FastrackConfig
    struct perstation perstation[NSTATION];
 };
 
-class FastrackStandalone
+class FastrakStandalone
 {
 public:
-   FastrackStandalone()
+   FastrakStandalone()
       : mSerialPort(NULL), mReadThread(NULL), mDoFlush(false)
    {
       ;
    }
 
-   void setConfig(const FastrackConfig& conf)
+   void setConfig(const FastrakConfig& conf)
    {
       mConf = conf;
    }
 
-   const FastrackConfig& getConfig() const
+   const FastrakConfig& getConfig() const
    {
       return mConf;
    }
@@ -122,7 +122,7 @@ private:
    unsigned char mTrackerBuf[256];
    bool mDoFlush;
 
-   FastrackConfig mConf;
+   FastrakConfig mConf;
 };
 
 // bits positions of bits in flag word "config.found"
@@ -147,4 +147,4 @@ enum rec
 // end driver R.E.
 
 
-#endif /* _GADGET_FASTRACK_STANDALONE_H_ */
+#endif /* _GADGET_ASTRACK_STANDALONE_H_ */

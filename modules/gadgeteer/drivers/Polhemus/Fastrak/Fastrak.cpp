@@ -45,16 +45,16 @@
 #include <vpr/System.h>
 
 #include <gadget/Type/DeviceConstructor.h>
-#include <gadget/Devices/Polhemus/Fastrack/Fastrack.h>
+#include <gadget/Devices/Polhemus/Fastrak/Fastrak.h>
 
 void initDevice(gadget::InputManager* inputMgr)
 {
-   new gadget::DeviceConstructor<gadget::Fastrack>(inputMgr);
+   new gadget::DeviceConstructor<gadget::Fastrak>(inputMgr);
 }
 
 static void printError(std::string errorMsg)
 {
-#ifdef _FASTRACK_DEBUG_
+#ifdef _FASTRAK_DEBUG_
    std::cout << errorMsg << std:endl;
 #endif
 }
@@ -62,20 +62,20 @@ static void printError(std::string errorMsg)
 namespace gadget
 {
 
-Fastrack::Fastrack() : mSampleThread(NULL)
+Fastrak::Fastrak() : mSampleThread(NULL)
 {
    ;
 }
 
-Fastrack::~Fastrack()
+Fastrak::~Fastrak()
 {
    this->stopSampling();
-   mFastrackDev.trackerFinish();
+   mFastrakDev.trackerFinish();
 }
 
-bool Fastrack::config( jccl::ConfigChunkPtr fastrackChunk )
+bool Fastrak::config(jccl::ConfigChunkPtr fastrakChunk)
 {
-   if ( !gadget::Digital::config(fastrackChunk) )
+   if ( !gadget::Digital::config(fastrakChunk) )
    {
       return false;
    }
@@ -83,9 +83,9 @@ bool Fastrack::config( jccl::ConfigChunkPtr fastrackChunk )
    // configFile = "/home/kruger/VRjuggler/juggler/Input/vjPosition/ft_config.dat";
 
    // *************************************************************************
-   // mFastrackDev.trackerInit(configFile);
+   // mFastrakDev.trackerInit(configFile);
 
-   FastrackConfig conf;
+   FastrakConfig conf;
 
    // *************************************************************************
    // readconfig(configfile);
@@ -96,26 +96,26 @@ bool Fastrack::config( jccl::ConfigChunkPtr fastrackChunk )
    struct perstation *psp;
 
    // port
-   strcpy(conf.port, (fastrackChunk->getProperty<std::string>("port")).c_str());
+   strcpy(conf.port, (fastrakChunk->getProperty<std::string>("port")).c_str());
    conf.found |= 1<<DEV;
 
    // baud
-   conf.baud = fastrackChunk->getProperty<int>("baud");
+   conf.baud = fastrakChunk->getProperty<int>("baud");
    conf.found |= 1<<BAUD;
 
    // button
-   switch ( fastrackChunk->getProperty<int>("button") )
+   switch ( fastrakChunk->getProperty<int>("button") )
    {
       case 0: conf.button = '1'; conf.cont='C'; break;
       case 1: conf.button = '1'; conf.cont='c'; break;
       case 2: conf.button = '0'; conf.cont='C'; break;
       case 3: conf.button = '0'; conf.cont='c'; break;
-      default: printError( "ERROR: vjFastrack::config : not a valid configuration"); break;
+      default: printError( "ERROR: vjFastrak::config : not a valid configuration"); break;
    }
    conf.found |= 1<<BUTTON;
 
    // Rec Pos
-   if ( fastrackChunk->getProperty<bool>("Rec1", 0) )
+   if ( fastrakChunk->getProperty<bool>("Rec1", 0) )
    {
       conf.perstation[0].rec |= 1<<Pos;
    }
@@ -125,7 +125,7 @@ bool Fastrack::config( jccl::ConfigChunkPtr fastrackChunk )
    }
    conf.found |= 1<<REC;
 
-   if ( fastrackChunk->getProperty<bool>("Rec2", 0) )
+   if ( fastrakChunk->getProperty<bool>("Rec2", 0) )
    {
       conf.perstation[1].rec |= 1<<Pos;
    }
@@ -135,7 +135,7 @@ bool Fastrack::config( jccl::ConfigChunkPtr fastrackChunk )
    }
    conf.found |= 1<<REC1;
 
-   if ( fastrackChunk->getProperty<bool>("Rec3", 0) )
+   if ( fastrakChunk->getProperty<bool>("Rec3", 0) )
    {
       conf.perstation[2].rec |= 1<<Pos;
    }
@@ -145,7 +145,7 @@ bool Fastrack::config( jccl::ConfigChunkPtr fastrackChunk )
    }
    conf.found |= 1<<REC2;
 
-   if ( fastrackChunk->getProperty<bool>("Rec4", 0) )
+   if ( fastrakChunk->getProperty<bool>("Rec4", 0) )
    {
       conf.perstation[3].rec |= 1<<Pos;
    }
@@ -156,7 +156,7 @@ bool Fastrack::config( jccl::ConfigChunkPtr fastrackChunk )
    conf.found |= 1<<REC3;
 
    // Rec Ang
-   if ( fastrackChunk->getProperty<bool>("Rec1", 1) )
+   if ( fastrakChunk->getProperty<bool>("Rec1", 1) )
    {
       conf.perstation[0].rec |= 1<<Ang;
    }
@@ -165,7 +165,7 @@ bool Fastrack::config( jccl::ConfigChunkPtr fastrackChunk )
       conf.perstation[0].rec &= ~(1<<Ang);
    }
 
-   if ( fastrackChunk->getProperty<bool>("Rec2", 1) )
+   if ( fastrakChunk->getProperty<bool>("Rec2", 1) )
    {
       conf.perstation[1].rec |= 1<<Ang;
    }
@@ -174,7 +174,7 @@ bool Fastrack::config( jccl::ConfigChunkPtr fastrackChunk )
       conf.perstation[1].rec &= ~(1<<Ang);
    }
 
-   if ( fastrackChunk->getProperty<bool>("Rec3", 1) )
+   if ( fastrakChunk->getProperty<bool>("Rec3", 1) )
    {
       conf.perstation[2].rec |= 1<<Ang;
    }
@@ -183,7 +183,7 @@ bool Fastrack::config( jccl::ConfigChunkPtr fastrackChunk )
       conf.perstation[2].rec &= ~(1<<Ang);
    }
 
-   if ( fastrackChunk->getProperty<bool>("Rec4", 1) )
+   if ( fastrakChunk->getProperty<bool>("Rec4", 1) )
    {
       conf.perstation[3].rec |= 1<<Ang;
    }
@@ -193,7 +193,7 @@ bool Fastrack::config( jccl::ConfigChunkPtr fastrackChunk )
    }
 
    // Rec Quat
-   if ( fastrackChunk->getProperty<bool>("Rec1", 2) )
+   if ( fastrakChunk->getProperty<bool>("Rec1", 2) )
    {
       conf.perstation[0].rec |= 1<<Quat;
    }
@@ -202,7 +202,7 @@ bool Fastrack::config( jccl::ConfigChunkPtr fastrackChunk )
       conf.perstation[0].rec &= ~(1<<Quat);
    }
 
-   if ( fastrackChunk->getProperty<bool>("Rec2", 2) )
+   if ( fastrakChunk->getProperty<bool>("Rec2", 2) )
    {
       conf.perstation[1].rec |= 1<<Quat;
    }
@@ -211,7 +211,7 @@ bool Fastrack::config( jccl::ConfigChunkPtr fastrackChunk )
       conf.perstation[1].rec &= ~(1<<Quat);
    }
 
-   if ( fastrackChunk->getProperty<bool>("Rec3", 2) )
+   if ( fastrakChunk->getProperty<bool>("Rec3", 2) )
    {
       conf.perstation[2].rec |= 1<<Quat;
    }
@@ -220,7 +220,7 @@ bool Fastrack::config( jccl::ConfigChunkPtr fastrackChunk )
       conf.perstation[2].rec &= ~(1<<Quat);
    }
 
-   if ( fastrackChunk->getProperty<bool>("Rec4", 2) )
+   if ( fastrakChunk->getProperty<bool>("Rec4", 2) )
    {
       conf.perstation[3].rec |= 1<<Quat;
    }
@@ -230,7 +230,7 @@ bool Fastrack::config( jccl::ConfigChunkPtr fastrackChunk )
    }
 
    // Rec But
-   if ( fastrackChunk->getProperty<bool>("Rec1", 3) )
+   if ( fastrakChunk->getProperty<bool>("Rec1", 3) )
    {
       conf.perstation[0].rec |= 1<<But;
    }
@@ -240,121 +240,121 @@ bool Fastrack::config( jccl::ConfigChunkPtr fastrackChunk )
    }
 
    // TIP
-   conf.perstation[0].tip[0] = fastrackChunk->getProperty<float>("Tip1", 0);
-   conf.perstation[0].tip[1] = fastrackChunk->getProperty<float>("Tip1", 1);
-   conf.perstation[0].tip[2] = fastrackChunk->getProperty<float>("Tip1", 2);
+   conf.perstation[0].tip[0] = fastrakChunk->getProperty<float>("Tip1", 0);
+   conf.perstation[0].tip[1] = fastrakChunk->getProperty<float>("Tip1", 1);
+   conf.perstation[0].tip[2] = fastrakChunk->getProperty<float>("Tip1", 2);
    conf.found |= 1<<TIP;
 
-   conf.perstation[1].tip[0] = fastrackChunk->getProperty<float>("Tip2", 0);
-   conf.perstation[1].tip[1] = fastrackChunk->getProperty<float>("Tip2", 1);
-   conf.perstation[1].tip[2] = fastrackChunk->getProperty<float>("Tip2", 2);
+   conf.perstation[1].tip[0] = fastrakChunk->getProperty<float>("Tip2", 0);
+   conf.perstation[1].tip[1] = fastrakChunk->getProperty<float>("Tip2", 1);
+   conf.perstation[1].tip[2] = fastrakChunk->getProperty<float>("Tip2", 2);
    conf.found |= 1<<TIP1;
 
-   conf.perstation[2].tip[0] = fastrackChunk->getProperty<float>("Tip3", 0);
-   conf.perstation[2].tip[1] = fastrackChunk->getProperty<float>("Tip3", 1);
-   conf.perstation[2].tip[2] = fastrackChunk->getProperty<float>("Tip3", 2);
+   conf.perstation[2].tip[0] = fastrakChunk->getProperty<float>("Tip3", 0);
+   conf.perstation[2].tip[1] = fastrakChunk->getProperty<float>("Tip3", 1);
+   conf.perstation[2].tip[2] = fastrakChunk->getProperty<float>("Tip3", 2);
    conf.found |= 1<<TIP2;
 
-   conf.perstation[3].tip[0] = fastrackChunk->getProperty<float>("Tip4", 0);
-   conf.perstation[3].tip[1] = fastrackChunk->getProperty<float>("Tip4", 1);
-   conf.perstation[3].tip[2] = fastrackChunk->getProperty<float>("Tip4", 2);
+   conf.perstation[3].tip[0] = fastrakChunk->getProperty<float>("Tip4", 0);
+   conf.perstation[3].tip[1] = fastrakChunk->getProperty<float>("Tip4", 1);
+   conf.perstation[3].tip[2] = fastrakChunk->getProperty<float>("Tip4", 2);
    conf.found |= 1<<TIP3;
 
    // INC
-   conf.perstation[0].inc = fastrackChunk->getProperty<float>("Inc1");
+   conf.perstation[0].inc = fastrakChunk->getProperty<float>("Inc1");
    conf.found |= 1<<INC;
-   conf.perstation[1].inc = fastrackChunk->getProperty<float>("Inc2");
+   conf.perstation[1].inc = fastrakChunk->getProperty<float>("Inc2");
    conf.found |= 1<<INC1;
-   conf.perstation[2].inc = fastrackChunk->getProperty<float>("Inc3");
+   conf.perstation[2].inc = fastrakChunk->getProperty<float>("Inc3");
    conf.found |= 1<<INC2;
-   conf.perstation[3].inc = fastrackChunk->getProperty<float>("Inc4");
+   conf.perstation[3].inc = fastrakChunk->getProperty<float>("Inc4");
    conf.found |= 1<<INC3;
 
    // HEM
-   conf.perstation[0].hem[0] = fastrackChunk->getProperty<float>("Hem1", 0);
-   conf.perstation[0].hem[1] = fastrackChunk->getProperty<float>("Hem1", 1);
-   conf.perstation[0].hem[2] = fastrackChunk->getProperty<float>("Hem1", 2);
+   conf.perstation[0].hem[0] = fastrakChunk->getProperty<float>("Hem1", 0);
+   conf.perstation[0].hem[1] = fastrakChunk->getProperty<float>("Hem1", 1);
+   conf.perstation[0].hem[2] = fastrakChunk->getProperty<float>("Hem1", 2);
    conf.found |= 1<<HEM;
 
-   conf.perstation[1].hem[0] = fastrackChunk->getProperty<float>("Hem2", 0);
-   conf.perstation[1].hem[1] = fastrackChunk->getProperty<float>("Hem2", 1);
-   conf.perstation[1].hem[2] = fastrackChunk->getProperty<float>("Hem2", 2);
+   conf.perstation[1].hem[0] = fastrakChunk->getProperty<float>("Hem2", 0);
+   conf.perstation[1].hem[1] = fastrakChunk->getProperty<float>("Hem2", 1);
+   conf.perstation[1].hem[2] = fastrakChunk->getProperty<float>("Hem2", 2);
    conf.found |= 1<<HEM1;
 
-   conf.perstation[2].hem[0] = fastrackChunk->getProperty<float>("Hem3", 0);
-   conf.perstation[2].hem[1] = fastrackChunk->getProperty<float>("Hem3", 1);
-   conf.perstation[2].hem[2] = fastrackChunk->getProperty<float>("Hem3", 2);
+   conf.perstation[2].hem[0] = fastrakChunk->getProperty<float>("Hem3", 0);
+   conf.perstation[2].hem[1] = fastrakChunk->getProperty<float>("Hem3", 1);
+   conf.perstation[2].hem[2] = fastrakChunk->getProperty<float>("Hem3", 2);
    conf.found |= 1<<HEM2;
 
-   conf.perstation[3].hem[0] = fastrackChunk->getProperty<float>("Hem4", 0);
-   conf.perstation[3].hem[1] = fastrackChunk->getProperty<float>("Hem4", 1);
-   conf.perstation[3].hem[2] = fastrackChunk->getProperty<float>("Hem4", 2);
+   conf.perstation[3].hem[0] = fastrakChunk->getProperty<float>("Hem4", 0);
+   conf.perstation[3].hem[1] = fastrakChunk->getProperty<float>("Hem4", 1);
+   conf.perstation[3].hem[2] = fastrakChunk->getProperty<float>("Hem4", 2);
    conf.found |= 1<<HEM3;
 
    // ARF
-   conf.perstation[0].arf[0] = fastrackChunk->getProperty<float>("ARF1", 0);
-   conf.perstation[0].arf[1] = fastrackChunk->getProperty<float>("ARF1", 1);
-   conf.perstation[0].arf[2] = fastrackChunk->getProperty<float>("ARF1", 2);
-   conf.perstation[0].arf[3] = fastrackChunk->getProperty<float>("ARF1", 3);
-   conf.perstation[0].arf[4] = fastrackChunk->getProperty<float>("ARF1", 4);
-   conf.perstation[0].arf[5] = fastrackChunk->getProperty<float>("ARF1", 5);
-   conf.perstation[0].arf[6] = fastrackChunk->getProperty<float>("ARF1", 6);
-   conf.perstation[0].arf[7] = fastrackChunk->getProperty<float>("ARF1", 7);
-   conf.perstation[0].arf[8] = fastrackChunk->getProperty<float>("ARF1", 8);
+   conf.perstation[0].arf[0] = fastrakChunk->getProperty<float>("ARF1", 0);
+   conf.perstation[0].arf[1] = fastrakChunk->getProperty<float>("ARF1", 1);
+   conf.perstation[0].arf[2] = fastrakChunk->getProperty<float>("ARF1", 2);
+   conf.perstation[0].arf[3] = fastrakChunk->getProperty<float>("ARF1", 3);
+   conf.perstation[0].arf[4] = fastrakChunk->getProperty<float>("ARF1", 4);
+   conf.perstation[0].arf[5] = fastrakChunk->getProperty<float>("ARF1", 5);
+   conf.perstation[0].arf[6] = fastrakChunk->getProperty<float>("ARF1", 6);
+   conf.perstation[0].arf[7] = fastrakChunk->getProperty<float>("ARF1", 7);
+   conf.perstation[0].arf[8] = fastrakChunk->getProperty<float>("ARF1", 8);
    conf.found |= 1<<ARF;
 
-   conf.perstation[1].arf[0] = fastrackChunk->getProperty<float>("ARF2", 0);
-   conf.perstation[1].arf[1] = fastrackChunk->getProperty<float>("ARF2", 1);
-   conf.perstation[1].arf[2] = fastrackChunk->getProperty<float>("ARF2", 2);
-   conf.perstation[1].arf[3] = fastrackChunk->getProperty<float>("ARF2", 3);
-   conf.perstation[1].arf[4] = fastrackChunk->getProperty<float>("ARF2", 4);
-   conf.perstation[1].arf[5] = fastrackChunk->getProperty<float>("ARF2", 5);
-   conf.perstation[1].arf[6] = fastrackChunk->getProperty<float>("ARF2", 6);
-   conf.perstation[1].arf[7] = fastrackChunk->getProperty<float>("ARF2", 7);
-   conf.perstation[1].arf[8] = fastrackChunk->getProperty<float>("ARF2", 8);
+   conf.perstation[1].arf[0] = fastrakChunk->getProperty<float>("ARF2", 0);
+   conf.perstation[1].arf[1] = fastrakChunk->getProperty<float>("ARF2", 1);
+   conf.perstation[1].arf[2] = fastrakChunk->getProperty<float>("ARF2", 2);
+   conf.perstation[1].arf[3] = fastrakChunk->getProperty<float>("ARF2", 3);
+   conf.perstation[1].arf[4] = fastrakChunk->getProperty<float>("ARF2", 4);
+   conf.perstation[1].arf[5] = fastrakChunk->getProperty<float>("ARF2", 5);
+   conf.perstation[1].arf[6] = fastrakChunk->getProperty<float>("ARF2", 6);
+   conf.perstation[1].arf[7] = fastrakChunk->getProperty<float>("ARF2", 7);
+   conf.perstation[1].arf[8] = fastrakChunk->getProperty<float>("ARF2", 8);
    conf.found |= 1<<ARF1;
 
-   conf.perstation[2].arf[0] = fastrackChunk->getProperty<float>("ARF3", 0);
-   conf.perstation[2].arf[1] = fastrackChunk->getProperty<float>("ARF3", 1);
-   conf.perstation[2].arf[2] = fastrackChunk->getProperty<float>("ARF3", 2);
-   conf.perstation[2].arf[3] = fastrackChunk->getProperty<float>("ARF3", 3);
-   conf.perstation[2].arf[4] = fastrackChunk->getProperty<float>("ARF3", 4);
-   conf.perstation[2].arf[5] = fastrackChunk->getProperty<float>("ARF3", 5);
-   conf.perstation[2].arf[6] = fastrackChunk->getProperty<float>("ARF3", 6);
-   conf.perstation[2].arf[7] = fastrackChunk->getProperty<float>("ARF3", 7);
-   conf.perstation[2].arf[8] = fastrackChunk->getProperty<float>("ARF3", 8);
+   conf.perstation[2].arf[0] = fastrakChunk->getProperty<float>("ARF3", 0);
+   conf.perstation[2].arf[1] = fastrakChunk->getProperty<float>("ARF3", 1);
+   conf.perstation[2].arf[2] = fastrakChunk->getProperty<float>("ARF3", 2);
+   conf.perstation[2].arf[3] = fastrakChunk->getProperty<float>("ARF3", 3);
+   conf.perstation[2].arf[4] = fastrakChunk->getProperty<float>("ARF3", 4);
+   conf.perstation[2].arf[5] = fastrakChunk->getProperty<float>("ARF3", 5);
+   conf.perstation[2].arf[6] = fastrakChunk->getProperty<float>("ARF3", 6);
+   conf.perstation[2].arf[7] = fastrakChunk->getProperty<float>("ARF3", 7);
+   conf.perstation[2].arf[8] = fastrakChunk->getProperty<float>("ARF3", 8);
    conf.found |= 1<<ARF2;
 
-   conf.perstation[3].arf[0] = fastrackChunk->getProperty<float>("ARF4", 0);
-   conf.perstation[3].arf[1] = fastrackChunk->getProperty<float>("ARF4", 1);
-   conf.perstation[3].arf[2] = fastrackChunk->getProperty<float>("ARF4", 2);
-   conf.perstation[3].arf[3] = fastrackChunk->getProperty<float>("ARF4", 3);
-   conf.perstation[3].arf[4] = fastrackChunk->getProperty<float>("ARF4", 4);
-   conf.perstation[3].arf[5] = fastrackChunk->getProperty<float>("ARF4", 5);
-   conf.perstation[3].arf[6] = fastrackChunk->getProperty<float>("ARF4", 6);
-   conf.perstation[3].arf[7] = fastrackChunk->getProperty<float>("ARF4", 7);
-   conf.perstation[3].arf[8] = fastrackChunk->getProperty<float>("ARF4", 8);
+   conf.perstation[3].arf[0] = fastrakChunk->getProperty<float>("ARF4", 0);
+   conf.perstation[3].arf[1] = fastrakChunk->getProperty<float>("ARF4", 1);
+   conf.perstation[3].arf[2] = fastrakChunk->getProperty<float>("ARF4", 2);
+   conf.perstation[3].arf[3] = fastrakChunk->getProperty<float>("ARF4", 3);
+   conf.perstation[3].arf[4] = fastrakChunk->getProperty<float>("ARF4", 4);
+   conf.perstation[3].arf[5] = fastrakChunk->getProperty<float>("ARF4", 5);
+   conf.perstation[3].arf[6] = fastrakChunk->getProperty<float>("ARF4", 6);
+   conf.perstation[3].arf[7] = fastrakChunk->getProperty<float>("ARF4", 7);
+   conf.perstation[3].arf[8] = fastrakChunk->getProperty<float>("ARF4", 8);
    conf.found |= 1<<ARF3;
 
    // TMF
-   conf.perstation[0].tmf[0] = fastrackChunk->getProperty<float>("TMF1", 0);
-   conf.perstation[0].tmf[1] = fastrackChunk->getProperty<float>("TMF1", 1);
-   conf.perstation[0].tmf[2] = fastrackChunk->getProperty<float>("TMF1", 2);
+   conf.perstation[0].tmf[0] = fastrakChunk->getProperty<float>("TMF1", 0);
+   conf.perstation[0].tmf[1] = fastrakChunk->getProperty<float>("TMF1", 1);
+   conf.perstation[0].tmf[2] = fastrakChunk->getProperty<float>("TMF1", 2);
    conf.found |= 1<<TMF;
 
-   conf.perstation[1].tmf[0] = fastrackChunk->getProperty<float>("TMF2", 0);
-   conf.perstation[1].tmf[1] = fastrackChunk->getProperty<float>("TMF2", 1);
-   conf.perstation[1].tmf[2] = fastrackChunk->getProperty<float>("TMF2", 2);
+   conf.perstation[1].tmf[0] = fastrakChunk->getProperty<float>("TMF2", 0);
+   conf.perstation[1].tmf[1] = fastrakChunk->getProperty<float>("TMF2", 1);
+   conf.perstation[1].tmf[2] = fastrakChunk->getProperty<float>("TMF2", 2);
    conf.found |= 1<<TMF1;
 
-   conf.perstation[2].tmf[0] = fastrackChunk->getProperty<float>("TMF3", 0);
-   conf.perstation[2].tmf[1] = fastrackChunk->getProperty<float>("TMF3", 1);
-   conf.perstation[2].tmf[2] = fastrackChunk->getProperty<float>("TMF3", 2);
+   conf.perstation[2].tmf[0] = fastrakChunk->getProperty<float>("TMF3", 0);
+   conf.perstation[2].tmf[1] = fastrakChunk->getProperty<float>("TMF3", 1);
+   conf.perstation[2].tmf[2] = fastrakChunk->getProperty<float>("TMF3", 2);
    conf.found |= 1<<TMF2;
 
-   conf.perstation[3].tmf[0] = fastrackChunk->getProperty<float>("TMF4", 0);
-   conf.perstation[3].tmf[1] = fastrackChunk->getProperty<float>("TMF4", 1);
-   conf.perstation[3].tmf[2] = fastrackChunk->getProperty<float>("TMF4", 2);
+   conf.perstation[3].tmf[0] = fastrakChunk->getProperty<float>("TMF4", 0);
+   conf.perstation[3].tmf[1] = fastrakChunk->getProperty<float>("TMF4", 1);
+   conf.perstation[3].tmf[2] = fastrakChunk->getProperty<float>("TMF4", 2);
    conf.found |= 1<<TMF3;
 
    conf.len = 3;
@@ -396,18 +396,18 @@ bool Fastrack::config( jccl::ConfigChunkPtr fastrackChunk )
    // end readconfig(configfile);
    // *************************************************************************
 
-   mFastrackDev.setConfig(conf);
+   mFastrakDev.setConfig(conf);
 
    return true;
 }
 
-int Fastrack::startSampling()
+int Fastrak::startSampling()
 {
    int status(0);
 
-   if ( mFastrackDev.open().success() )
+   if ( mFastrakDev.open().success() )
    {
-      mFastrackDev.trackerInit();
+      mFastrakDev.trackerInit();
 
       mSampleThread = new vpr::Thread(threadedSampleFunction, (void*)this);
 
@@ -422,7 +422,7 @@ int Fastrack::startSampling()
 
 // Record (or sample) the current data
 // this is called repeatedly by the sample thread created by startSampling()
-int Fastrack::sample()
+int Fastrak::sample()
 {
    int status(1);
 
@@ -438,10 +438,10 @@ int Fastrack::sample()
    }
 
    // Fill the position and orientation arrays using the current values from
-   // the Fastrack stations.  This also has the side effect of getting the
+   // the Fastrak stations.  This also has the side effect of getting the
    // button state.  Weird...
    //NB: 15 = 1111b = the 4 stations
-   mButtonState = mFastrackDev.getCoords(15, &mTrackersPosition[0][0],
+   mButtonState = mFastrakDev.getCoords(15, &mTrackersPosition[0][0],
                                          &mTrackersOrientation[0][0]);
    cur_dig_samples[0].setTime(cur_pos_samples[0].getTime());
    cur_dig_samples[0].setDigital(mButtonState);
@@ -459,14 +459,14 @@ int Fastrack::sample()
    return status;
 }
 
-void Fastrack::updateData()
+void Fastrak::updateData()
 {
    // swap the buffered sample data
    swapPositionBuffers();
 }
 
 // kill sample thread
-int Fastrack::stopSampling()
+int Fastrak::stopSampling()
 {
    if ( mSampleThread != NULL )
    {
@@ -480,11 +480,11 @@ int Fastrack::stopSampling()
 // function for users to get the digital data.
 // overload gadget::Digital::getDigitalData
 // digital data only on the first station
-int Fastrack::getDigitalData( int station )
+int Fastrak::getDigitalData( int station )
 {
    if ( station != 0 )
    {
-      std::cout << "error in vjFastrack::getDigitalData: invalid station:" << station << std::endl;
+      std::cout << "error in vjFastrak::getDigitalData: invalid station:" << station << std::endl;
       return 0;
    }
    else
@@ -495,7 +495,7 @@ int Fastrack::getDigitalData( int station )
 
 // function for users to get the position data
 // overload gadget::Position::getPosData
-gmtl::Matrix44f Fastrack::getPosData( int station )
+gmtl::Matrix44f Fastrak::getPosData( int station )
 {
    gmtl::Matrix44f position_matrix;
 
@@ -503,7 +503,7 @@ gmtl::Matrix44f Fastrack::getPosData( int station )
 
    if ( !( (0<=station) && (station<=3) ) )
    {
-      std::cout << "error in vjFastrack::getPosData: invalid station:" << station << std::endl;
+      std::cout << "error in vjFastrak::getPosData: invalid station:" << station << std::endl;
    }
    else
    {
@@ -521,14 +521,14 @@ gmtl::Matrix44f Fastrack::getPosData( int station )
    return position_matrix;
 }
 
-void Fastrack::threadedSampleFunction( void* classPointer )
+void Fastrak::threadedSampleFunction( void* classPointer )
 {
-   Fastrack* this_ptr = static_cast<Fastrack*>( classPointer );
+   Fastrak* this_ptr = static_cast<Fastrak*>( classPointer );
 
    while ( 1 )
    {
       this_ptr->sample();
-      if ( this_ptr->mFastrackDev.getConfig().cont != 'C' )
+      if ( this_ptr->mFastrakDev.getConfig().cont != 'C' )
       {
          vpr::System::sleep(1);
       }

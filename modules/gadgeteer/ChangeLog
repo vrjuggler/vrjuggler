@@ -1,5 +1,8 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jan-26-2003 patrickh  Renamed the Polhemus Fastrak driver to use the correct
+                      spelling of "Fastrak."
+                      NEW VERSION: 0.7.1
 Jan-21-2003 allenb    Refactored positionProxy to allow user to request
                       the desired units when calling getData().
                       Also removed the old API that returned a reference to the
