@@ -277,9 +277,12 @@ void vjMatrix::constrainRotAxis( const bool& allowXRot, const bool& allowYRot, c
    constrainedMatrix.makeTrans( trans[0],trans[1],trans[2] );
    */
 
+   //_kevn_constrainRotAxis(allowXRot,allowYRot,allowZRot,constrainedMatrix);
 
+   ///*
    this->getXYZEuler(xRot,yRot,zRot);
    constrainedMatrix.makeXYZEuler(((allowXRot)?xRot:0.0f),((allowYRot)?yRot:0.0f),((allowZRot)?zRot:0.0f));
+   //*/
 
 
    // Add back pure pitch
@@ -484,6 +487,9 @@ void  vjMatrix::makeTrans(float _x, float _y, float _z)
    mat[3][2] = _z;
 }
 
+void vjMatrix::makeTrans(const vjVec3& trans)
+{ makeTrans(trans[0],trans[1],trans[2]); }
+
 void vjMatrix::setTrans(float _x, float _y, float _z)
 {
    mat[3][0] = _x;
@@ -491,11 +497,22 @@ void vjMatrix::setTrans(float _x, float _y, float _z)
    mat[3][2] = _z;
 }
 
+void vjMatrix::setTrans(const vjVec3& trans)
+{ setTrans(trans[0],trans[1],trans[2]); }
+
+
 void vjMatrix::getTrans(float& _x, float& _y, float& _z)
 {
    _x = mat[3][0];
    _y = mat[3][1];
    _z = mat[3][2];
+}
+
+vjVec3 vjMatrix::getTrans()
+{
+   vjVec3 trans;;
+   getTrans(trans[0],trans[1],trans[2]);
+   return trans;
 }
 
 void  vjMatrix::makeScale(float _x, float _y, float _z)
