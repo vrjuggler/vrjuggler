@@ -39,6 +39,28 @@
 .
     include
         deprecated
+            Input
+                InputManager
+                ..
+                vjGesture
+                ..
+                vjGlove
+                ..
+                vjInput
+                ..
+                vjPosition
+                ..
+            ..
+            Kernel
+                GL
+                ..
+                Pf
+                ..
+            ..
+            Math
+            ..
+            Utils
+            ..
         ..
         vrj
             Config
