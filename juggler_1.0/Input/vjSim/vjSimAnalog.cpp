@@ -6,28 +6,13 @@ bool vjSimAnalog::config(vjConfigChunk* chunk)
    if((!vjAnalog::config(chunk)) || (!vjSimInput::config(chunk)))
       return false;
 
-   // Get keyboard pairs
-   int num_keys_up = chunk->getNum("keysUp");
-   int num_mods_up = chunk->getNum("modKeysUp");
-   int num_keys_down = chunk->getNum("keysDown");
-   int num_mods_down = chunk->getNum("modKeysDown");
-   int num_pairs = VJ_MIN4(num_keys_up, num_mods_up, num_keys_down, num_mods_down);   // Trim to smaller value
+   std::vector<vjVarValue*> key_inc_list = chunk->getAllProperties("keyPairsInc");
+   std::vector<vjVarValue*> key_dec_list = chunk->getAllProperties("keyPairsDec");
 
-   // Fill the key pairs
-   for(int i=0;i<num_pairs;i++)
-   {
-      vjKeyModPair key_pair;
-      // Up pair
-      key_pair.mKey      = (int)chunk->getProperty("keysUp",i);
-      key_pair.mModifier = (int)chunk->getProperty("modKeysUp",i);
-      mSimKeysUp.push_back(key_pair);
-      // Down pair
-      key_pair.mKey      = (int)chunk->getProperty("keysDown",i);
-      key_pair.mModifier = (int)chunk->getProperty("modKeysDown",i);
-      mSimKeysDown.push_back(key_pair);
-   }
+   mSimKeysUp = readKeyList(key_inc_list);
+   mSimKeysDown = readKeyList(key_dec_list);
 
-   vjASSERT(mSimKeysUp.size() == mSimKeysDown.size());   // If trimming worked, then they should be same size
+   int num_pairs = mSimKeysUp.size();
 
    mAnaData = std::vector<int>(num_pairs,0); // Initialize to all zeros
    mAnaStep = chunk->getProperty("anastep");

@@ -2,8 +2,8 @@
 #include <Math/vjCoord.h>
 
 bool vjSimPosition::config(vjConfigChunk* chunk)
- {
-   if(!vjPosition::config(chunk) || !vjSimInput::config(chunk))
+{
+    if(!vjPosition::config(chunk) || !vjSimInput::config(chunk))
       return false;
 
    mDTrans = chunk->getProperty("dtrans");
@@ -12,14 +12,17 @@ bool vjSimPosition::config(vjConfigChunk* chunk)
    mTransCoordSystem = chunk->getProperty("transCoordSystem");
    mRotCoordSystem = chunk->getProperty("rotCoordSystem");
 
+   std::vector<vjVarValue*> key_list = chunk->getAllProperties("keyPairs");
+   std::vector<vjKeyModPair> key_pairs = readKeyList(key_list);
+
+
    // Create keypairs
+   vjASSERT(key_pairs.size() == NUM_POS_CONTROLS);
    for(int i=0;i<NUM_POS_CONTROLS;i++)
    {
-      vjKeyModPair key_pair;
-      key_pair.mKey = (int)chunk->getProperty("keys",i);
-      key_pair.mModifier = (int)chunk->getProperty("modKeys",i);
-      mSimKeys[i] = key_pair;
+      mSimKeys[i] = key_pairs[i];
    }
+
 
       // Set initial position
    float x_pos = chunk->getProperty("initialPos",0);
