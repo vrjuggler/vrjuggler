@@ -21,10 +21,10 @@ std::string pfFileIO::filePath = ".";
 // uses pfdLoadFile to load the given filename
 // exits application on failure
 // outputs useful stuff, to let you know current status.
-pfNode* loadFile( const std::string& filename )
+pfNode* pfFileIO::loadFile( const std::string& filename )
 {
    pfdInitConverter( filename.data() );
-   pfFilePath( pfFileIO::filePath.data() );
+   pfFilePath( filePath.data() );
    pfNode* node = pfdLoadFile( filename.data() );
 
    if (node == NULL)
@@ -32,12 +32,12 @@ pfNode* loadFile( const std::string& filename )
       cout<<"COULDN'T FIND "<<filename.data()<<"\n"<<flush;
       exit(0);
    }
-   
+
    return node;
 }
 
 // get the name of the optimized file given the original name
-std::string optimizedName( std::string originalFltName )
+std::string pfFileIO::optimizedName( std::string originalFltName )
 {
    std::string cachedPreFix = ".cached";
    std::string cachedPostFix = ".pfb";
@@ -46,7 +46,7 @@ std::string optimizedName( std::string originalFltName )
 
 // stores the geometry under node, in file "optimizedName"
 // NOTE: usually pass in the name returned by optimizedName() function
-void writeOptimizedFile( pfNode* node, std::string optimizedName )
+void pfFileIO::writeOptimizedFile( pfNode* node, std::string optimizedName )
 {
    pfdStoreFile( node, optimizedName.data() );
 }
@@ -57,28 +57,28 @@ void writeOptimizedFile( pfNode* node, std::string optimizedName )
 // function generates a new pfb file.
 // if there is a current pfb file, then functino uses it instead.
 // TODO: add time stamp check - not implemented yet.
-pfNode* autoloadFltData( std::string fltFile )
+pfNode* pfFileIO::autoloadFile( std::string fileName )
 {
    pfNode* node = NULL;
-   
-   std::string optimizedFltFile = optimizedName( fltFile );
-   if (fileExists(optimizedFltFile))
+
+   std::string optimizedFileName = optimizedName( fileName );
+   if (fileExists(optimizedFileName))
    {
-      cout<<"Loading "<<optimizedFltFile.data()<<"\n"<<flush;
-      node = loadFile( optimizedFltFile );
+      cout<<"Loading "<<optimizedFileName.data()<<"\n"<<flush;
+      node = loadFile( optimizedFileName );
    }
 
    else
    {
-      cout<<"Loading "<<fltFile.data()<<"... "<<flush;
-      node = loadFile( fltFile );
-      cout<<"Caching to "<<optimizedFltFile.data()<<"...\n"<<flush;
-      writeOptimizedFile( node, optimizedFltFile );
-      // TODO: consider if the user has write access, 
+      cout<<"Loading "<<fileName.data()<<"... "<<flush;
+      node = loadFile( fileName );
+      cout<<"Caching to "<<optimizedFileName.data()<<"...\n"<<flush;
+      writeOptimizedFile( node, optimizedFileName );
+      // TODO: consider if the user has write access,
       //       for demos, they may not.
       // one workaround is to always distribute this app with the pfb's.
    }
-   
+
    assert( node != NULL );
    return node;
 }
