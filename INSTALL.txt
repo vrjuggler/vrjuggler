@@ -29,7 +29,7 @@
 
                 Compiling the Juggler Suite of Tools
 
-                Compiling Individual Tools in the Juggler Suite
+                Tips for Compiling Individual Tools in the Juggler Suite
 
 Introduction
 
@@ -151,10 +151,12 @@ Getting the Source Code and the Dependencies
        C++ templates and STL paradigms.
 
      o CppDOM (http://www.sf.net/projects/xml-cppdom/): A lightweight,
-       easy-to-use XML parser written in C++.
+       easy-to-use XML parser written in C++. CppDOM must be compiled and
+       installed for use with VR Juggler.
 
      o Boost (http://www.boost.org/): A C++ library providing many powerful
-       utility classes and libraries.
+       utility classes and libraries. Boost must be compiled and installed
+       for use with VR Juggler.
 
      o Doozer++ (http://www.sf.net/projects/doozer/): A foundation for the
        development of complex build systems using Autoconf and GNU make. This
@@ -183,8 +185,13 @@ Getting the Source Code and the Dependencies
        CORBA 2.3, required for the Tweek C++ API.
 
    In the following subsections, we describe how to get all of the above
-   except JDK, OpenORB, omniORB, and NSPR. These must be downloaded
-   separately from the sites listed above.
+   except Boost, CppDOM, the JDK, OpenORB, omniORB, and NSPR. These must be
+   downloaded separately from the sites listed above. You may also have to
+   compile one or more of the packages if binary distributions are not
+   available. Which packages you download depends on what you already have
+   installed. Note carefully which packages are needed based on the software
+   you have installed and what versions of tools (such as the JDK) that you
+   download.
 
    This remainder of this section is only for those users who want to get the
    Juggler Project source code from the CVS repository on SourceForge. Those
@@ -305,12 +312,24 @@ Getting the Source Code and the Dependencies
   Downloading Binary Dependencies
 
    In addition to source the dependencies acquired through CVS, there are
-   some third-party dependencies that must be installed separately. As of
-   this writing, these dependencies are semi-optional. That is, VR Juggler
-   can be used on most platforms without these dependencies, but it is
-   recommended that you get them anyway. In particular, no Java code in VR
-   Juggler can be used without the JDK and a working Java version of CORBA
-   (either from OpenORB, JacORB, or the JDK itself).
+   some third-party dependencies that must be installed separately. Remember
+   that no Java code in VR Juggler can be used without the JDK and a working
+   Java version of CORBA (either from OpenORB, JacORB, or the JDK itself).
+
+    Boost
+
+   The minimum required version of Boost, as of this writing, is 1.31.0. The
+   Boost source can be downloaded from http://www.sf.net/projects/boost/. To
+   compile and install Boost, refer to its installation documentation
+   (http://www.boost.org/more/getting_started.html#Build_Install).
+
+    CppDOM
+
+   For XML processing, we use CppDOM 0.3.0 or newer. The source and binary
+   distributions for some platforms can be downloaded from
+   http://www.sf.net/projects/xml-cppdom/. If a binary version is not
+   available for your operating system you must compile and install CppDOM
+   yourself.
 
     Netscape Portable Runtime (NSPR)
 
@@ -319,8 +338,8 @@ Getting the Source Code and the Dependencies
    NSPR is strictly optional. On others (Win32, Mac OS X, and Solaris), it is
    required. Based on your local system you should decide whether you need
    NSPR. Binary versions of NSPR can be downloaded from
-   ftp://ftp.mozilla.org/pub/nspr/releases/. At this time, we recommend the
-   use of version 4.2 or newer.
+   ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases. At this time, we
+   recommend the use of version 4.2 or newer.
 
     Java Developer Kit (JDK)
 
@@ -348,8 +367,7 @@ Getting the Source Code and the Dependencies
    omniORB is a C++ implementation of CORBA 2.3. It is required in order to
    compile the Tweek C++ API. At this time, the Tweek C++ API is not required
    for VR Juggler, but this situation will change in the near future. At this
-   time, we primarily use omniORB 3.0.5, though we have tested beta versions
-   of 4.0 successfully. omniORB can be downloaded from
+   time, we primarily use omniORB 4.0.x. omniORB can be downloaded from
    http://omniorb.sourceforge.net/.
 
    omniORB 3.0 has strange conventions for how installations are made. Within
@@ -357,8 +375,8 @@ Getting the Source Code and the Dependencies
    that contain the actual binaries (except when installed on FreeBSD via the
    Ports Collection). Because of this, several extra options must be
    specified in order to tell the Tweek configure script where to find
-   everything. Please refer to the section called "Tweek (Individual)" for
-   more details on this.
+   everything. Please refer to the section called "Tweek" for more details on
+   this.
 
 Compiling
 
@@ -510,8 +528,8 @@ Compiling
    sound in VR Juggler applications. If neither of those packages is found,
    Sonix will "stub out" its sound APIs. This means that Sonix and the VR
    Juggler Sound Manager can still be used in applications, but no audio will
-   be heard at run time. See the section called "Sonix (Individual)" for more
-   information about how to configure Sonix to use OpenAL or AudioWorks.
+   be heard at run time. See the section called "Sonix" for more information
+   about how to configure Sonix to use OpenAL or AudioWorks.
 
    For example uses of configure.pl, take a look at the Wiki page relating to
    building from CVS
@@ -557,82 +575,48 @@ Compiling
 
  gmake install
 
-  Compiling Individual Tools in the Juggler Suite
+  Tips for Compiling Individual Tools in the Juggler Suite
 
-   Sometimes you do not want to build everything in the Juggler Suite. Here
-   are steps for configuring/building each package individually.
+   In this section, we provide tips for ensuring that individual tools in the
+   Juggler Suite are compiled correctly. For the most part, this duplicates
+   information that can be found on the Wiki page relating to building from
+   CVS
+   (http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs).
 
-    VPR (Individual)
+    Sonix
 
-   VPR can be configured a number of ways. Except when building on Win32, no
-   external packages are required. For Win32, NSPR (www.mozilla.org) is
-   required. For this description, we will use the terms <CPPDOM_PATH> and
-   <BOOST_PATH> to refer to the installation directories containing compiled
-   versions of CppDOM and Boost respectively. Assume that this is an absolute
-   path (e.g., <CPPDOM_PATH> = /home/user1/pkgs/cppdom). To build VPR, do the
-   following from the top-level juggler directory:
+   Sonix wraps other audio subsystems such as OpenAL (www.openal.org),
+   Audiere (audiere.sf.net), or AudioWorks (multigen.com). At least one of
+   these packages must be installed for use by Sonix in order to hear sounds
+   in VR Juggler applications. Once you have all the necessary source code
+   and third-party package installations, add one or more of the following
+   options to your configure.pl command line to enable the appropriate audio
+   subsystem:
 
- mkdir build.vpr
- cd build.vpr
- ../configure.pl --module=VPR --prefix=$HOME/vpr-inst --with-cppdom=<CPPDOM_PATH> --with-boost=<BOOST_PATH> --with-boost-includes=<BOOST_PATH>/include/boost-1_31
- gmake debug install-debug
- setenv VPR_BASE_DIR $HOME/vpr-inst
+     o --enable-openal --with-openal=<OPENAL_PATH>: Enable the use of OpenAL
+       and tell the build where OpenAL is installed. The default search path
+       is /usr/local.
 
-   If you want to use NSPR, make sure a binary version is installed. In step
-   2, add the arguments --enable-subsystem=NSPR and --with-nspr=<path to
-   NSPR>. Once that is done, proceed with steps 3 and 4 as normal.
+     o --enable-audiere --with-audiere=<AUDIERE_PATH>: Enable the use of
+       Audiere and tell the build where Audiere is installed. The default
+       search path is /usr/local.
 
-    Sonix (Individual)
+     o --enable-audioworks --with-audioworks=<AUDIOWORKS_PATH>: Enable the
+       use of AudioWorks and tell the build where AudioWorks is installed.
+       The default search path is /usr.
 
-   Sonix requires a third-party software package called GMTL (ggt.sf.net).
-   Sonix wraps other audio subsystems such as OpenAL (www.openal.org) or
-   AudioWorks (multigen.com). One of these subsystems are required in order
-   to hear sound. Once you have all the necessary source code and third-party
-   package installations, to the following from the top-level juggler
-   directory:
+  Note
 
-    1. mkdir build.sonix
- cd build.sonix
+   AudioWorks and OpenAL cannot be compiled together. They depend on mutually
+   exclusive VPR threading subsystems. Warnings will be printed by the Sonix
+   configure script indicating this fact. OpenAL and Audiere can be compiled
+   together, however.
 
-    2. Choose one of the following depending on which subsystem (or both) you
-       want to enable in Sonix:
+    Tweek
 
- ../configure.pl --module=Sonix --prefix=$HOME/sonix-inst --enable-openal --with-openal=/usr/local
- ../configure.pl --module=Sonix --prefix=$HOME/sonix-inst --enable-audioworks
-
-    3. gmake debug install-debug
-
-    4. setenv SNX_BASE_DIR $HOME/sonix-inst
-
-    JCCL (Individual)
-
-   The JCCL C++ code requires VPR. The JCCL Java code requires Tweek. To
-   build JCCL, do the following from the top-level juggler directory:
-
- mkdir build.jccl
- cd build.jccl
- ../configure.pl --module=JCCL --prefix=$HOME/jccl-inst
- gmake debug install-debug
- setenv JCCL_BASE_DIR $HOME/jccl-inst
-
-    Gadgeteer (Individual)
-
-   Gadgeteer depends on JCCL and on VPR. It also needs the third-party math
-   library GMTL (http://ggt.sf.net/). Assuming you have all the source code,
-   do the following from the top-level juggler directory:
-
- mkdir build.gadgeteer
- cd build.gadgeteer
- ../configure.pl --module=Gadgeteer --prefix=$HOME/gadgeteer-inst
- gmake debug install-debug
- setenv GADGET_BASE_DIR $HOME/gadgeteer-inst
-
-    Tweek (Individual)
-
-   Tweek depends on VPR. It needs JDK 1.3.1 or newer and the third-party
-   CORBA implementations omniORB 3.0.4 or newer (C++) and OpenORB 1.2.0 or
-   newer (Java). These packages can be downloaded from the following
-   websites:
+   Tweek needs JDK 1.3.1 or newer and the third-party CORBA implementations
+   omniORB 3.0.4 or newer (C++) and OpenORB 1.2.0 or newer (Java). These
+   packages can be downloaded from the following websites:
 
      o omniORB: http://www.omniorb.org/ or http://omniorb.sourceforge.net/
 
@@ -647,22 +631,22 @@ Compiling
    IRIX users must configure Tweek (and its VPR dependency) to use the POSIX
    subsystem or the NSPR subsystem. omniORB will not work with SPROC threads.
    To configure VPR to use either POSIX threads or NSPR threads, pass either
-   --enable-subsystem=POSIX or --enable-subsystem=NSPR to configure.pl
-   respectively.
+   --enable-subsystem=POSIX or --enable-subsystem=NSPR respectively to
+   configure.pl.
 
    Assuming you have the external packages installed, do the following from
    the top-level juggler directory:
 
- mkdir build.tweek
- cd build.tweek
- ../configure.pl --module=Tweek --prefix=$HOME/tweek-inst --with-cxx-orb=omniORB4 --with-cxx-orb-root=<OMNIORB_PATH> --with-java-orb=OpenORB --with-java-orb-jar=<OPENORB_PATH>/lib/openorb-1.2.0.jar
- gmake debug install-debug
- setenv TWEEK_BASE_DIR $HOME/tweek-inst
+ mkdir build
+ cd build
+ ../configure.pl --with-cxx-orb=omniORB4 --with-cxx-orb-root=<OMNIORB_PATH> --with-java-orb=OpenORB --with-java-orb-jar=<OPENORB_PATH>/lib/openorb-1.2.0.jar
+ gmake build install
 
    If JDK 1.4.0 or newer is used, you do not need OpenORB (or any other
    third-party CORBA implementation for Java). In that case, pass
-   --with-java-orb=JDK to configure.pl. If you are using omniORB 3.x, pass
-   --with-cxx-orb=omniORB3 instead.
+   --with-java-orb=JDK to configure.pl and remove the --with-java-orb-jar
+   option. If you are using omniORB 3.x, pass --with-cxx-orb=omniORB3
+   instead.
 
    Depending on your omniORB installation, you may have to pass extra
    arguments to configure.pl so that the configuration process can find the
