@@ -49,9 +49,15 @@
 #include <gadget/Devices/Intersense/IS900/Intersense.h>
 #include <boost/concept_check.hpp>
 
-void initDevice(gadget::InputManager* inputMgr)
+
+extern "C"
+{
+
+GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 {
    new gadget::DeviceConstructor<gadget::Intersense>(inputMgr);
+}
+
 }
 
 namespace gadget

@@ -41,13 +41,6 @@
 
 namespace gadget
 {
-   class InputManager;
-}
-
-extern "C" GADGET_DRIVER_API(void) initDevice(gadget::InputManager* inputMgr);
-
-namespace gadget
-{
 
 /** Cyberglove device. */
 class CyberGlove : virtual public Input, public Glove

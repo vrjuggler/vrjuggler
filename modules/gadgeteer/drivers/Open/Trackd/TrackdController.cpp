@@ -39,10 +39,15 @@
 #include <drivers/Open/Trackd/TrackdSensor.h>
 
 
-void initDevice(gadget::InputManager* inputMgr)
+extern "C"
+{
+
+GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 {
    new gadget::DeviceConstructor<gadget::TrackdController>(inputMgr);
    new gadget::DeviceConstructor<gadget::TrackdSensor>(inputMgr);
+}
+
 }
 
 namespace gadget

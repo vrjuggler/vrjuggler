@@ -46,9 +46,14 @@
 #include <drivers/Ascension/MotionStar/MotionStar.h>
 
 
-void initDevice(gadget::InputManager* inputMgr)
+extern "C"
+{
+
+GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 {
    new gadget::DeviceConstructor<gadget::MotionStar>(inputMgr);
+}
+
 }
 
 namespace gadget

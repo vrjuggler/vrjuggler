@@ -67,9 +67,14 @@
 #include <drivers/Logitech/ThreeDMouse/logiclass.h>   /* classprototypes and data types */
 
 
-void initDevice(gadget::InputManager* inputMgr)
+extern "C"
+{
+
+GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 {
    new gadget::DeviceConstructor<gadget::ThreeDMouse>(inputMgr);
+}
+
 }
 
 // uncommenting the following will produce debug print statements */

@@ -62,12 +62,6 @@
 #include <vrpn_Tracker.h>
 #include <vrpn_Button.h>
 
-namespace gadget
-{
-   class InputManager;
-}
-
-extern "C" GADGET_DRIVER_API(void) initDevice(gadget::InputManager* inputMgr);
 
 namespace gadget
 {
