@@ -34,7 +34,10 @@ public:
 
    vjXWinKeyboard()
    {
+      m_visual = NULL;
+      m_display = NULL;
       //myThread = NULL; -- Should be done in base constructore
+
       oldMouseX = 0; oldMouseY = 0;
 
       // -1 is used to indicate that these are not grabbed.  A value of
