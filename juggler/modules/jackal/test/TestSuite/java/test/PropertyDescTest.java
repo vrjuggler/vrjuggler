@@ -107,21 +107,21 @@ public class PropertyDescTest
       PropertyDesc d = new PropertyDesc();
       
       // should initially be empty
-      assertEquals( d.getValueLabelsSize(), 0 );
+      assertEquals( d.getValueLabelsSize(), 1 );
 
       // request a label outside our range
-      assertEquals( d.getValueLabel(0), "" );
+      assertEquals( d.getValueLabel(1), "" );
 
       // add a label
       d.appendValueLabel( "SomeLabel" );
-      assertEquals( d.getValueLabelsSize(), 1 );
-      assertEquals( d.getValueLabel(0), "SomeLabel" );
+      assertEquals( d.getValueLabelsSize(), 2 );
+      assertEquals( d.getValueLabel(1), "SomeLabel" );
 
       // add another label
       d.appendValueLabel( "AnotherLabel" );
-      assertEquals( d.getValueLabelsSize(), 2 );
-      assertEquals( d.getValueLabel(0), "SomeLabel" );
-      assertEquals( d.getValueLabel(1), "AnotherLabel" );
+      assertEquals( d.getValueLabelsSize(), 3 );
+      assertEquals( d.getValueLabel(1), "SomeLabel" );
+      assertEquals( d.getValueLabel(2), "AnotherLabel" );
 
       // replace the labels
       ArrayList list = new ArrayList();
