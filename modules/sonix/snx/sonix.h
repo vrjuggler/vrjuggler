@@ -205,7 +205,7 @@ public:
       snx::SoundImplementation& oldImpl = this->impl();
       assert( &oldImpl != NULL && "this->impl() should ensure that oldImpl is non-NULL" );
       
-      std::cout<<"NOTIFY: Changing API from "<<oldImpl.name();
+      std::cout<<"[snx] NOTIFY: Changing API from "<<oldImpl.name();
       
       // change the current api to the newly requested one.
       snx::SoundFactory::instance()->createImplementation( apiName, mImplementation );

@@ -73,14 +73,14 @@ public:
    {
       if (impl != NULL)
       {
+         std::cout<<"[snx]SoundFactory| NOTICE: Registering sound API: "<<apiName<<" ["<<(int)impl<<"]\n"<<std::flush;
          impl->setName( apiName );
          mRegisteredImplementations[apiName] = impl;
-         std::cout<<"[snx]SoundFactory| NOTICE: Loading sound API: "<<apiName<<" ["<<(int)impl<<"]\n"<<std::flush;
       }
       else
       {
-         std::cout<<"[snx]SoundFactory| NOTICE: Removed sound API: "<<apiName<<" ["<<(int)impl<<"]\n"<<std::flush;
          mRegisteredImplementations.erase( apiName );
+         std::cout<<"[snx]SoundFactory| NOTICE: UnRegistered sound API: "<<apiName<<" ["<<(int)impl<<"]\n"<<std::flush;
       }      
       
    }
