@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/test
+# Makefile.in for vrjuggler/test
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -43,6 +43,7 @@ default: TestSuite
 
 SUBDIRS	= TestSuite	\
           CfgTest	\
+          Input		\
           Math		\
           Matrix	\
           Performance	\
@@ -50,7 +51,6 @@ SUBDIRS	= TestSuite	\
           SerialPort	\
           Socket	\
           Sync		\
-          input		\
           threads
 
 all: $(SUBDIRS)
