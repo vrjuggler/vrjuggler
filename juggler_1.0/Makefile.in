@@ -61,6 +61,12 @@
 
 default: dbg
 
+# Define ${_LOCAL_CLEAN} to inform the shared clean target that there is a
+# '_clean' target to be run besides the standard 'clean' target.  This must
+# be done before Makefile.base is inlcuded (which in turn includes vj.clean.mk)
+# so that the variable will be defined when parsing reaches the test for it.
+_LOCAL_CLEAN	= 1
+
 # Include common definitions.
 include @topdir@/Makefile.base
 
@@ -72,10 +78,6 @@ top_srcdir	= @top_srcdir@
 VJROOT		= ${top_srcdir}
 VJ_SRCDIR	= @VJ_SRCDIR@
 WORKDIR		= ${topdir}
-
-# Define ${_LOCAL_CLEAN} to inform the shared clean target that there is a
-# '_clean' target to be run besides the standard 'clean' target.
-_LOCAL_CLEAN	= 1
 
 # Include recursive target code.
 include ${MKPATH}/vj.rec.mk
