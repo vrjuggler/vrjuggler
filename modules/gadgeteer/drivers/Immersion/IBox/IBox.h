@@ -45,7 +45,7 @@
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/Analog.h>
 #include <gadget/Type/InputMixer.h>
-#include <gadget/Devices/Immersion/IBox/IBoxStandalone.h>
+#include <drivers/Immersion/IBox/IBoxStandalone.h>
 
 namespace gadget
 {

@@ -38,7 +38,7 @@
 #include <gadget/Util/Debug.h>
 #include <gadget/Type/DeviceConstructor.h>
 
-#include <gadget/Devices/Immersion/IBox/IBox.h>
+#include <drivers/Immersion/IBox/IBox.h>
 
 void initDevice(gadget::InputManager* inputMgr)
 {

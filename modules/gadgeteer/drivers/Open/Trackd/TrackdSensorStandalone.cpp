@@ -1,4 +1,4 @@
-#include <gadget/Devices/Open/Trackd/TrackdSensorStandalone.h>
+#include <drivers/Open/Trackd/TrackdSensorStandalone.h>
 #include <assert.h>
 
 #include <gmtl/Matrix.h>

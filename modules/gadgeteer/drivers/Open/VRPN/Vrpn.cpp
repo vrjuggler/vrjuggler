@@ -73,7 +73,7 @@
 #include <gadget/InputManager.h>
 #include <gadget/Type/DeviceConstructor.h>
 
-#include <gadget/Devices/Open/VRPN/Vrpn.h>
+#include <drivers/Open/VRPN/Vrpn.h>
 
 #define VRPN_DEBUG 0
 // 1 == reporting

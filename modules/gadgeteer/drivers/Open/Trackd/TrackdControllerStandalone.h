@@ -2,7 +2,7 @@
 #define _GADGET_TRACKD_CONTROLLER_STANDALONE_H_
 
 #include <stdlib.h>
-#include <gadget/Devices/Open/Trackd/trackdmem.h>
+#include <drivers/Open/Trackd/trackdmem.h>
 
 class TrackdControllerStandalone
 {

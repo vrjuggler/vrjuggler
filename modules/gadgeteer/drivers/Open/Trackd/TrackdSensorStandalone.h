@@ -1,7 +1,7 @@
 #ifndef _GADGET_TRACKD_SENSOR_STANDALONE_H_
 #define _GADGET_TRACKD_SENSOR_STANDALONE_H_
 
-#include <gadget/Devices/Open/Trackd/trackdmem.h>
+#include <drivers/Open/Trackd/trackdmem.h>
 #include <gmtl/Matrix.h>
 
 class TrackdSensorStandalone

@@ -34,7 +34,7 @@
 #define _GADGET_DTK_MEMORY_SEGMENT_H_
 
 #include <gadget/Devices/DriverConfig.h>
-#include <gadget/Devices/Open/DTK/DTK.h>
+#include <drivers/Open/DTK/DTK.h>
 
 namespace gadget
 {

@@ -36,7 +36,7 @@
 #include <gadget/Devices/DriverConfig.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Glove.h>
-#include <gadget/Devices/VirtualTechnologies/CyberGlove/CyberGloveBasic.h>
+#include <drivers/VirtualTechnologies/CyberGlove/CyberGloveBasic.h>
 
 
 namespace gadget

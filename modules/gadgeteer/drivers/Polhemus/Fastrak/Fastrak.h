@@ -56,7 +56,7 @@
 #include <gadget/Type/Position.h>
 #include <gadget/Type/InputMixer.h>
 
-#include <gadget/Devices/Polhemus/Fastrak/FastrakStandalone.h>
+#include <drivers/Polhemus/Fastrak/FastrakStandalone.h>
 
 
 namespace gadget

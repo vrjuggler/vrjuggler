@@ -34,10 +34,10 @@
 
 #include <gadget/Devices/DriverConfig.h>
 #include <stdio.h>
-#include <vpr/System.h>
-#include <gadget/Devices/Immersion/IBox/IBoxStandalone.h>
-
 #include <boost/concept_check.hpp>
+#include <vpr/System.h>
+#include <drivers/Immersion/IBox/IBoxStandalone.h>
+
 
 // ----------------------------------------------------------------------------
 // Constructor:  This sets all the default values for the ibox.

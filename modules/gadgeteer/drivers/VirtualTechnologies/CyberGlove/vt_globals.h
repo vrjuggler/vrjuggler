@@ -9,7 +9,7 @@
 /*  ==========================================================  */
 
 #include <gadget/Devices/DriverConfig.h>
-#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_init.h>
+#include <drivers/VirtualTechnologies/CyberGlove/vt_init.h>
 
 extern char version_string[];
 extern int vt_error_code;

@@ -41,11 +41,11 @@
 #include <jccl/Config/ConfigElement.h>
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/Util/Debug.h>
-#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_types.h>
-#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_globals.h>
-#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_types.h>
-#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_error.h>
-#include <gadget/Devices/VirtualTechnologies/CyberGlove/CyberGlove.h>
+#include <drivers/VirtualTechnologies/CyberGlove/vt_types.h>
+#include <drivers/VirtualTechnologies/CyberGlove/vt_globals.h>
+#include <drivers/VirtualTechnologies/CyberGlove/vt_types.h>
+#include <drivers/VirtualTechnologies/CyberGlove/vt_error.h>
+#include <drivers/VirtualTechnologies/CyberGlove/CyberGlove.h>
 
 
 void initDevice(gadget::InputManager* inputMgr)

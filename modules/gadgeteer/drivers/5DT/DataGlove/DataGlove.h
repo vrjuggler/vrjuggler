@@ -42,7 +42,7 @@
 #include <gadget/Type/Analog.h>
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/InputMixer.h>
-#include <gadget/Devices/5DT/DataGlove/DataGloveStandalone.h>
+#include <drivers/5DT/DataGlove/DataGloveStandalone.h>
 
 namespace gadget
 {

@@ -32,13 +32,12 @@
 
 #include <string>
 #include <string.h>
+#include <boost/concept_check.hpp>
 #include <vpr/vpr.h>
 #include <vpr/System.h>
 #include <vpr/Util/Assert.h>
 
-#include <gadget/Devices/Polhemus/Fastrak/FastrakStandalone.h>
-
-#include <boost/concept_check.hpp>
+#include <drivers/Polhemus/Fastrak/FastrakStandalone.h>
 
 vpr::ReturnStatus FastrakStandalone::open()
 {
