@@ -11,6 +11,7 @@ import org.jdom.*;
 import org.jdom.output.XMLOutputter;
 import org.vrjuggler.tweek.beans.*;
 import org.vrjuggler.tweek.services.EnvironmentService;
+import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 
 
 /**
@@ -240,22 +241,18 @@ public class PrefsEditor extends JPanel
     * Uses the Tweek Environment Service to look up the user's home directory.
     * If the lookup fails, the current working directory is returned.
     */
-   private String getUserHome ()
+   private String getUserHome()
    {
-      TweekBean bean = BeanRegistry.instance().getBean("Environment");
-      String path = "."; // Fallback in case Environment Service fails.
+      String path = null;
 
-      if ( bean != null )
+      try
       {
-         try
-         {
-            EnvironmentService env_service = (EnvironmentService) bean;
-            path = env_service.getUserHome();
-         }
-         catch (ClassCastException e)
-         {
-            /* Oh well... */ ;
-         }
+         EnvironmentService env_service = new EnvironmentServiceProxy();
+         path = env_service.getUserHome();
+      }
+      catch(RuntimeException e)
+      {
+         /* Oh well... */ ;
       }
 
       return path;
