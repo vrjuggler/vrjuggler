@@ -54,15 +54,13 @@ namespace jccl
 class JCCL_CLASS_API ConfigChunk
 {
 public:
+   /** Constructor. */
+   ConfigChunk();
+
    /** Constructs a ConfigChunk matching the given description.
     *  @param desc points to a valid ChunkDesc
     */
    ConfigChunk(ChunkDescPtr desc);
-
-   /** Constructor
-   * Constructs the chunk to reference the given chunk node
-   */
-   ConfigChunk(cppdom::NodePtr chunkNode);
 
    /** Copy constructor. */
    ConfigChunk(const ConfigChunk& c);
@@ -74,15 +72,25 @@ public:
     */
    ~ConfigChunk();
 
+   bool isValid()
+   { return mValid; }
+
 #ifdef JCCL_DEBUG
    void assertValid() const
    {
-      vprASSERT(mValidation == true && "Trying to use deleted config chunk");
+      vprASSERT(mValid == true && "Trying to use deleted config chunk");
    }
 #else
    inline void assertValid() const
    {;}
 #endif
+
+   /** Initialize from cppdom::Node.
+   * Constructs the chunk to reference the given chunk node
+   * @post: Chunk setup and initialized.
+   * @returns: false if failed to initialize
+   */
+   bool initFromNode(cppdom::NodePtr chunkNode);
 
    /** Assignment operator. */
    ConfigChunk& operator=(const ConfigChunk& c);
@@ -318,9 +326,9 @@ protected:
    ConfigChunkPtr getProperty_ChunkPtr(const std::string& prop, int ind) const;
 
 protected:
-   cppdom::NodePtr mNode;         /**< Node for the Config chunk element */
-   ChunkDescPtr      mDesc;         /**< Description for this Chunk. */
-   bool              mValidation;   /**< Flag for testing memory use.*/
+   cppdom::NodePtr mNode;        /**< Node for the Config chunk element */
+   ChunkDescPtr      mDesc;      /**< Description for this Chunk. */
+   bool              mValid;     /**< Flag to signal wether chunk is valid. */
 };
 
 #ifndef _MSC_VER
