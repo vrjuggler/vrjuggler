@@ -41,10 +41,10 @@ namespace gadget
 class Speech
 {
 public:
-   //: Construct using chunk
+   /** Constructs using chunk. */
    Speech();
 
-   //: Destructor
+   /** Destructor. */
    ~Speech();
 
    virtual std::string     getWord();

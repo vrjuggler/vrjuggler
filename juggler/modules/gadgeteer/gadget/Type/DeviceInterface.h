@@ -47,18 +47,18 @@ class GloveProxy;
 class KeyboardProxy;
 class PositionProxy;
 
-//: Base class for simplified proxy interfaces
-//
-// Wrapper to provide an easier way to access proxy objects from
-// within user applications. <br> <br>
-//
-// Users can simply declare a local interface variable and use it
-// as a smart_ptr for the proxy
-//
-//! NOTE: The init function should be called in the init function of the user
-//+         application
-//!PUBLIC_API:
-//------------------------------------------------------------------------------
+/**
+ * Base class for simplified proxy interfaces.
+ *
+ * Wrapper to provide an easier way to access proxy objects from
+ * within user applications.
+ *
+ * Users can simply declare a local interface variable and use it
+ * as a smart_ptr for the proxy.
+ *
+ * @note The init function should be called in the init function of the user
+ *       application.
+ */
 class GADGET_CLASS_API BaseDeviceInterface
 {
 protected:
@@ -69,16 +69,20 @@ public:
 
    virtual ~BaseDeviceInterface();
 
-   //: Initialize the object
-   //! ARGS: proxyName - String name of the proxy to connect to
+   /**
+    * Initializes the object.
+    * @param proxyName  String name of the proxy to connect to.
+    */
    void init(const std::string proxyName);
 
-   //: Refreshes the interface based on the current configuration
-   //! POST: (mProxyIndex == -1) ==> Proxy not initi.ized yet
-   //+       (mProxyIndex != -1) ==> mProxyName has name of device && local proxy ptr is set to the device
+   /**
+    * Refreshes the interface based on the current configuration.
+    * @post (mProxyIndex == -1) ==> Proxy not initi.ized yet<br>
+    *       (mProxyIndex != -1) ==> mProxyName has name of device && local proxy ptr is set to the device
+    */
    virtual void refresh();
 
-   //: Return the name of the proxy
+   /** Returns the name of the proxy. */
    std::string getProxyName()
    { return mProxyName; }
 
@@ -86,9 +90,9 @@ public:
    { return (NULL != mProxyPtr); }
 
 protected:
-   Proxy*    mProxyPtr;     //: Ptr to the proxy
-   std::string mProxyName;    //: The name of the proxy (or alias) we are looking at
-   bool        mNameSet;      //: Has the user set a name??
+   Proxy*      mProxyPtr;   /**<  Ptr to the proxy */
+   std::string mProxyName;  /**< The name of the proxy (or alias) we are looking at */
+   bool        mNameSet;    /**< Has the user set a name?? */
 
 public:
    static void refreshAllDevices();
@@ -143,7 +147,7 @@ public:
    }
 
 private:
-   PROXY_TYPE*    mTypeSpecificProxy;    // The proxy that is being wrapped
+   PROXY_TYPE*    mTypeSpecificProxy;   /**< The proxy that is being wrapped */
    PROXY_TYPE     mDummyProxy;
 };
 

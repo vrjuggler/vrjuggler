@@ -43,33 +43,39 @@
 namespace gadget
 {
 
-//: Dependency checker for Proxies
+/** Dependency checker for Proxies. */
 class ProxyDepChecker : public jccl::DepChecker
 {
 public:
    ProxyDepChecker()
    {;}
 
-   //: Return a string name of the checker
-   // Used to output messages in checker listings
+   /**
+    * Returns a string name of the checker.
+    * This is used to output messages in checker listings.
+    */
    virtual std::string getCheckerName()
    { return std::string("gadget::ProxyChecker Checker"); }
 
-   // We can handle only keyboard configuration information
+   // We can handle only keyboard configuration information.
    virtual bool canHandle(jccl::ConfigChunkPtr chunk);
 
-   //: Are the dependencies satisfied?
-   // Defaults to all being handled for it
+   /**
+    * Are the dependencies satisfied?
+    * Defaults to all being handled for it.
+    */
    virtual bool depSatisfied(jccl::ConfigChunkPtr chunk)
    {
       return true;
    }
 
-   // Write out the dependencies to the vprDEBUG macro
-   virtual void debugOutDependencies(jccl::ConfigChunkPtr chunk,int dbg_lvl=vprDBG_WARNING_LVL)
+   /** Writes out the dependencies to the vprDEBUG macro. */
+   virtual void debugOutDependencies (jccl::ConfigChunkPtr chunk,
+                                      int dbg_lvl = vprDBG_WARNING_LVL)
    {
-      jccl::DepChecker::debugOutDependencies(chunk,dbg_lvl); ;
-      vprDEBUG_NEXT_BEGIN(vprDBG_ALL,dbg_lvl) << "Proxies should never have dependencies!!!" << vprDEBUG_FLUSH;
+      jccl::DepChecker::debugOutDependencies(chunk,dbg_lvl);
+      vprDEBUG_NEXT_BEGIN(vprDBG_ALL,dbg_lvl)
+         << "Proxies should never have dependencies!!!" << vprDEBUG_FLUSH;
    }
 };
 

@@ -54,19 +54,19 @@ class Proxy;
 class Input;
 class RemoteInputManager;
 
-//: The InputManager holds an manages all vj Input devices.
-//
-//  The InputManager, handles all the
-//  details behind organizing the input devices in the library.  It
-//  provides an API for adding devices by their configChunk and deleting
-//  them by their chunk (or just their string name).
-//
-//  Proxies are used to abstract away from the devices so any type and number
-//  of devices may be accessed in the same way.  These proxies are also
-//  set up by configChunks and should be accessed by number, rather than name.
-//  (for speed)
-//-------------------------------------------------------------------------------
-//!PUBLIC_API:
+/**
+ * The Input Manager holds an manages all Gadgeteer Input devices.
+ *
+ * The Input Manager, handles all the details behind organizing the input
+ * devices in the library.  It provides an API for adding devices by their
+ * JCCL config chunk and deleting them by their chunk (or just their string
+ * name).
+ *
+ * Proxies are used to abstract away from the devices so any type and number
+ * of devices may be accessed in the same way.  These proxies are also
+ * set up by configChunks and should be accessed by number, rather than name
+ * (for speed).
+ */
 class GADGET_CLASS_API InputManager : public jccl::ConfigChunkHandler
 {
    vprSingletonHeader( InputManager );    // Make it a singleton
@@ -80,37 +80,49 @@ public:
  //---------------------------//
  //      CONFIG               //
  //---------------------------//
-   //: Add the chunk to the configuration
-   //! PRE: configCanHandle(chunk) == true
-   //! RETURNS: success
+   /**
+    * Adds the chunk to the configuration.
+    * @pre configCanHandle(chunk) == true
+    * @return success
+    */
    bool configAdd(jccl::ConfigChunkPtr chunk);
 
-   //: Remove the chunk from the current configuration
-   //! PRE: configCanHandle(chunk) == true
-   //! POST: (chunk is proxy) ==> (returns == false)
-   //+       (chunk is device) ==> (devices is removed && proxies are stupified)
-   //+       (chunk is proxyAlias) ==> (proxyAlias is removed && devInterfaces.refreshAll())
-   //!RETURNS: success
+   /**
+    * Removes the chunk from the current configuration.
+    * @pre configCanHandle(chunk) == true
+    * @post (chunk is proxy) ==> (returns == false)<br>
+    *       (chunk is device) ==> (devices is removed && proxies are stupified)<br>
+    *       (chunk is proxyAlias) ==> (proxyAlias is removed && devInterfaces.refreshAll())
+    * @return success
+    */
    bool configRemove(jccl::ConfigChunkPtr chunk);
 
-   //: Can the handler handle the given chunk?
-   //! RETURNS: true - Can handle it
-   //+          false - Can't handle it
+   /**
+    * Can the handler handle the given chunk?
+    *
+    * @return true if the handler can handle it, false otherwise.
+    */
    bool configCanHandle(jccl::ConfigChunkPtr chunk);
 
    jccl::ConfigChunkPtr getDisplaySystemChunk();
 
 private:
-   //: Load the device for the given chunk
-   //!RETURNS: true - Device was configured and added
+   /**
+    * Loads the device for the given chunk.
+    * @return true if the device was configured and added
+    */
    bool configureDevice(jccl::ConfigChunkPtr chunk);
 
-   //: Load the Proxy for the given chunk
-   //!RETURNS: true - Proxy was configured and added
+   /**
+    * Loads the Proxy for the given chunk.
+    * @return true if the proxy was configured and added.
+    */
    bool configureProxy(jccl::ConfigChunkPtr chunk);
 
-   //: Remove the device associated with the given chunk
-   //!RETURNS: true - Device was removed
+   /**
+    * Removes the device associated with the given chunk.
+    * @return true if the device was removed.
+    */
    bool removeDevice(jccl::ConfigChunkPtr chunk);
 
 
@@ -118,37 +130,45 @@ private:
    //        DEVICE API               //
    // ------------------------------- //
 public:
-   //: Update the Data in all the devices.
-   //
-   // Call UpdateData() on all the devices in the devArray
-   // Also updates all proxies.
-   //
-   //! MODIFIES: instances pointed to by devArray
+   /**
+    * Updates the data in all the devices.
+    * This calls updateData() on all the devices in the device table.
+    * It also updates all proxies.
+    *
+    * @modifies Instances pointed to by device table.
+    */
    void updateAllData();
 
 public:
-   // Return a Input ptr to a deviced named
-   //!RETURN: NULL - Not found
+   /**
+    * Returns an Input pointer to a named device.
+    *
+    * @return NULL if the device is not found.
+    */
    Input* getDevice(std::string deviceName);
 
-   //: Add a device to InputManager.
-   //
-   // Add the devPtr to the device Array, devPtr should
-   // not already be in the array.  Returns -1 on failure
-   //
-   //! MODIFIES: self
-   //! POST: mDevTable' = mDevTable \/ devPtr
-   //+       return = devNum (position in the array)
-   //                or -1 for fail
+   /**
+    * Adds a device to InputManager.
+    * Adds the devPtr to the device table.  devPtr should not already be in
+    * the array.
+    *
+    * @modifies self
+    * @post mDevTable' = mDevTable \/ devPtr
+    *
+    * @return false if device addition fails.
+    */
    bool addDevice(Input* devPtr);
 
 private:
-   //: Remove a device from the InputManager.
-   // Remove the device at position devNum from the
-   // device Array.  Returns true on success.
-   //
-   //! MODIFIES: self
-   //! POST: mDevTable[devNum]' = NULL
+   /**
+    * Removes a device from the InputManager.
+    * Remove the named device from the device table.
+    *
+    * @modifies self
+    * @post mDevTable[devNum]' = NULL
+    *
+    * @return true on success.
+    */
    bool removeDevice(std::string mInstName);
    bool removeDevice(const Input* devPtr);
 
@@ -157,15 +177,24 @@ private:
     *********************************************************/
 public:
 
-   //: Add a proxy to the proxy table
-   //! RETURN: true - added correctly
+   /**
+    * Adds a proxy to the proxy table.
+    *
+    * @return true if the proxy was added correctly.
+    */
    bool addProxy(std::string proxyName, Proxy* proxy);
 
-   //: Get a proxy for the given proxy name (or alias)
-   //! RETURNS: NULL - Not found
+   /**
+    * Gets a proxy for the given proxy name (or alias).
+    *
+    * @return NULL if the proxy was not found.
+    */
    Proxy* getProxy(std::string proxyName);
 
-   // Refresh all the proxies to have then update what device they are pointing at
+   /**
+    * Refreshes all the proxies to have them update the device at which they
+    * point.
+    */
    void refreshAllProxies();
 
 protected:
@@ -175,23 +204,24 @@ protected:
 protected:
    typedef std::map<std::string,Input*> tDevTableType;
 
-   tDevTableType                          mDevTable;
-   std::map<std::string, Proxy*>        mProxyTable;      // list of proxies in the system
-   std::map<std::string, std::string>     mProxyAliases;    // List of alias names for proxies
+   tDevTableType                        mDevTable;
+   std::map<std::string, Proxy*>        mProxyTable;    /**< list of proxies in the system */
+   std::map<std::string, std::string>   mProxyAliases;  /**< List of alias names for proxies */
 
-   // The mProxyAlias table serves as a secondary lookup for proxies.  ie. if the proxy name is not
-   // found in mProxyTable, then search mProxyAliases for it.
+   // The mProxyAlias table serves as a secondary lookup for proxies.  ie. if
+   // the proxy name is not found in mProxyTable, then search mProxyAliases
+   // for it.
 
    jccl::ConfigChunkPtr    mDisplaySystemChunk;    /**< Config chunk for the displaySystem */
 
 private:
-   //: Function to configure the proxy Alias array
+   /** Function to configure the proxy Alias array. */
    bool configureProxyAlias(jccl::ConfigChunkPtr chunk);
 
-   //: Remove a proxy alias
+   /** Removes a proxy alias. */
    bool removeProxyAlias(jccl::ConfigChunkPtr chunk);
 
-   //: Add a proxy alias
+   /** Adds a proxy alias. */
    void addProxyAlias(std::string alias_name, std::string proxy_name);
 
    /*********************************************************
@@ -209,7 +239,7 @@ private:
    RemoteInputManager* mRemoteInputManager;
 };
 
-// Write out the status of the input manager
+/** Writes out the status of the Input Manager. */
 GADGET_API(std::ostream&) operator<<(std::ostream& out, InputManager& iMgr);
 
 } // end namespace

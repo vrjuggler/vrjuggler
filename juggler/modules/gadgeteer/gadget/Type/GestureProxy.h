@@ -49,28 +49,31 @@
 namespace gadget
 {
 
-//: Proxy to Gesture object
-//
-// A proxy is used by the user to actually acces the gesture data.
-// The proxy allows the user to query the current gesture information.
-// Clients call the get* routines to get the current gesture (id or string)
-// Once the client has the current gesture, they should test it
-// against the gestures they want to respond to.
-//
-// See also: Gesture
-//!PUBLIC_API:
+/**
+ *  Proxy to Gesture object
+ *
+ * A proxy is used by the user to actually acces the gesture data.
+ * The proxy allows the user to query the current gesture information.
+ * Clients call the get* routines to get the current gesture (id or string)
+ * Once the client has the current gesture, they should test it
+ * against the gestures they want to respond to.
+ *
+ * @see gadget::Gesture
+ */
 class GADGET_CLASS_API GestureProxy : public TypedProxy<Gesture>
 {
 public:
-   //: Construct the proxy to point to the given gesture device.
+   /** Constructs the proxy to point to the given gesture device. */
    GestureProxy()
    { ;}
 
    virtual ~GestureProxy()
    {}
 
-   //: Get the current gesture.
-   //! RETURNS: id of current gesture
+   /**
+    * Gets the current gesture.
+    * @return id of current gesture.
+    */
    int getGesture()
    {
       const int defaultGesture(-1);
@@ -81,9 +84,11 @@ public:
          return mTypedDevice->getGesture();
    }
 
-   //: Return the identifier of the string gesture.
-   //! ARGS: name - string name of a gesture
-   //! RETURNS: -1 if not found
+   /**
+    * Returns the identifier of the string gesture.
+    * @param name The string name of a gesture.
+    * @return -1 if not found
+    */
    int getGestureIndex(std::string name)
    {
       const int defaultGestureIndex(-1);
@@ -93,9 +98,11 @@ public:
          return mTypedDevice->getGestureIndex(name);
    }
 
-   //: Get a gesture name
-   //! RETURNS: Name of gesture with the given id (gestureId)
-   //! NOTE: if gestureId = -1, returns name of current gesture
+   /**
+    * Gets a gesture name.
+    * @return Name of gesture with the given id (gestureId).
+    * @note if gestureId = -1, returns name of current gesture.
+    */
    std::string getGestureString(int gestureId = -1)
    {
       if(mStupified)
@@ -104,7 +111,7 @@ public:
          return mTypedDevice->getGestureString(gestureId);
    }
 
-   //: Returns a pointer to the device held by this proxy.
+   /** Returns a pointer to the device held by this proxy. */
    Gesture* getGesturePtr()
    {
       if(mStupified)

@@ -70,10 +70,10 @@ public:
    typedef gadget::SampleBuffer<PositionData> SampleBuffer_t;
 
 public:
-   //: Constructor
+   /** Constructor */
    Position();
 
-   //: Destructor
+   /** Destructor */
    virtual ~Position();
 
    virtual bool config(jccl::ConfigChunkPtr c);

@@ -41,19 +41,18 @@
 namespace gadget
 {
 
-//-------------------------------------------------------------------------
-//: Base Juggler Gesture interface class
-// This class is the base interface for all gesture recognition objects
-//
-// All gesture objects have two parts to their interfaces. <br>
-// Getting gestures and Trainging new gestures
-//
-// In order to retrieve gesture information from the device,
-// the user call the get functions to get the index, or
-// string representation of the current gesture.
-//
-//-------------------------------------------------------------------------
-//!PUBLIC_API:
+/**
+ * Base Gadgeteer Gesture interface class.
+ * This class is the base interface for all gesture recognition objects.
+ *
+ * All gesture objects have two parts to their interfaces.
+ * Getting gestures and Trainging new gestures.
+ *
+ * In order to retrieve gesture information from the device,
+ * the user call the get functions to get the index, or
+ * string representation of the current gesture.
+ *
+ */
 class Gesture
 {
 public:
@@ -68,48 +67,63 @@ public:
 
 
 public:  // **** GET GESTURES **** //
-   //: Retuns the id of the named gesture.
-   //! RETURNS: -1 - Gesture name Not found.
+   /**
+    * Retuns the id of the named gesture.
+    * @return -1 if the gesture name not found.
+    */
    virtual int getGestureIndex(std::string name) = 0;
 
-   //: Get the string name of the gesture.
-   // If id is -1, then it returns the string name of the current gesture.
+   /**
+    * Gets the string name of the gesture.
+    * If id is -1, then it returns the string name of the current gesture.
+    */
    virtual std::string getGestureString(int id) = 0;
 
-   //: Get the current gesture.
-   //! RETURNS: id of current gesture
+   /**
+    * Gets the current gesture.
+    * @return id of current gesture.
+    */
    virtual int getGesture() = 0;
 
 
 public:  // **** TRAINING **** //
 
-   //: This creates a new gesture with the given name.
-   // Returns the identifier of the new gesture.
+   /**
+    * This creates a new gesture with the given name.
+    * Returns the identifier of the new gesture.
+    */
    virtual int createGesture(std::string gestureName) = 0;
 
-   //: Adds a new sample of the given gesture to the training data.
+   /** Adds a new sample of the given gesture to the training data. */
    virtual void addSample(int gestureId) = 0;
 
-   //: This actually starts the training on the given data.
+   /** This actually starts the training on the given data. */
    virtual void train() = 0;
 
-   //: Clear the samples that we have taken so far.
-   //! ARGS: gestureId = -1 (default) then we clear all gestures else we clear only
-   // the gesture that is specified.
+   /**
+    * Clears the samples that we have taken so far.
+    * @param gestureId = -1 (default) then we clear all gestures else we clear
+    *        only the gesture that is specified.
+    */
    virtual void clearSamples(int gestureId = -1) = 0;
 
-   //: Load trained data for the gesture object
+   /** Loads trained data for the gesture object. */
    virtual void loadTrainedFile(std::string fileName) = 0;
 
-   //: Save a trained data file for the gesture object
+   /** Saves a trained data file for the gesture object. */
    virtual void saveTrainedFile(std::string fileName) = 0;
 
-   //: Loads the sample training data specified.
-   // This file contains previous samples for the gesture recognizer to train from.
+   /**
+    * Loads the sample training data specified.
+    * This file contains previous samples for the gesture recognizer to train
+    * from.
+    */
    virtual void loadSamplesFile(std::string filename) = 0;
 
-   //: Saves the sample training data specified.
-   // This data can be loaded at a later time to do more sample training.
+   /**
+    * Saves the sample training data specified.
+    * This data can be loaded at a later time to do more sample training.
+    */
    virtual void saveSamplesFile(std::string filename) = 0;
 
 };

@@ -98,17 +98,16 @@ const int VJMBUTTON3   = LAST_KEY + 7;
 namespace gadget
 {
 
-//----------------------------------------------------------------------------
-//: Keyboard is an abstract class for interfacing with keyboard (and other
-//+ keybased) devices.
-//
-// Informally, a keyboard can be thought of as map of keys to number of times
-// prseed since last update.
-//
-// That is to say, that Keyboard counts the number of keypresses between
-// updates.  Updates in Juggler occur once per frame.
-//-----------------------------------------------------------------------------
-//!PUBLIC_API:
+/**
+ * Keyboard is an abstract class for interfacing with keyboard (and other
+ * keybased) devices.
+ *
+ * Informally, a keyboard can be thought of as map of keys to number of times
+ * prseed since last update.
+ *
+ * That is to say, that Keyboard counts the number of keypresses between
+ * updates.  Updates in Juggler occur once per frame.
+ */
 class Keyboard
 {
 public:
@@ -120,12 +119,16 @@ public:
    virtual bool config(jccl::ConfigChunkPtr chunk)
    { return true; }
 
-      //: Is the given key pressed.
-   //! RETURNS: The number of times the key was pressed since last update.
+   /**
+    * Is the given key pressed?
+    * @return The number of times the key was pressed since last update.
+    */
    virtual int keyPressed(int keyId) =0;
 
-   //:Check for the given modifier key pressed only.
-   //! RETURNS: true - key pressed exclusively
+   /**
+    * Checks for the given modifier key pressed only.
+    * @return true if key pressed exclusively.
+    */
    virtual bool modifierOnly(int modKey) =0;
 
    std::string getKeyName(int keyId)
