@@ -261,6 +261,10 @@ SocketImplNSPR::connect (vpr::Interval timeout) {
                   retval.setCode(vpr::ReturnStatus::InProgress);
                }
             }
+
+            m_bound          = true;
+            m_connected      = true;
+            m_blocking_fixed = true;
          }
          else if ( err == PR_IO_TIMEOUT_ERROR ) {
             retval.setCode(vpr::ReturnStatus::Timeout);
