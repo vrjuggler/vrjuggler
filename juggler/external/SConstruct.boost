@@ -17,7 +17,7 @@ import sys;
 import os;
 import re;
 import string;
-import wing.wingdbstub;       # stuff for debugging
+#import wing.wingdbstub;       # stuff for debugging
 
 pj = os.path.join;
 
