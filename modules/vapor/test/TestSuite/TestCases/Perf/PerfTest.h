@@ -7,7 +7,7 @@
 #include <cppunit/extensions/MetricRegistry.h>
 
 /*****************************************************************
- tests out the functionality expected of vpr::GUID
+ tests out the functionality expected of vapor's PerfMon lib
 *******************************************************************/
 namespace vprTest
 {
@@ -16,10 +16,12 @@ class PerfTest : public CppUnit::TestFixture
 {
 CPPUNIT_TEST_SUITE(PerfTest);
 CPPUNIT_TEST( testConstructTree );
+CPPUNIT_TEST( testNamedLookupSample );
 CPPUNIT_TEST( testReset );
 CPPUNIT_TEST_SUITE_END();
 
 public:
+   void testNamedLookupSample();
    void testConstructTree ();
    void testReset ();
 };
