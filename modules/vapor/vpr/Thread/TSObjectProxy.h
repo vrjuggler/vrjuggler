@@ -71,10 +71,6 @@ protected:
     * This value will be used locally by each thread in the system.
     */
    static long generateNewTSKey();
-
-   static Mutex     mTSKeyMutex;       /**< Mutex to protect allocate of TS keys */
-   static long      mNextTSObjectKey;  /**< The next available object key */
-
 };
 
 /**

@@ -40,11 +40,11 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <vpr/vprConfig.h>
+#include <vpr/Sync/Guard.h>
 #include <vpr/Thread/TSObjectProxy.h>
 
 namespace vpr
 {
-
 
    /**
     * Generates a unique key for Thread Specific data.
@@ -52,13 +52,11 @@ namespace vpr
     */
    long TSObjectProxyBase::generateNewTSKey()
    {
+      static vpr::Mutex mTSKeyMutex;
+      static long       mNextTSObjectKey(0);
+
       Guard<Mutex> guard(mTSKeyMutex);
       return mNextTSObjectKey++;
    }
 
-   // Static data
-   Mutex     TSObjectProxyBase::mTSKeyMutex;
-   long      TSObjectProxyBase::mNextTSObjectKey = 0;
-
 }
-
