@@ -47,6 +47,8 @@ require Exporter;
 
 my $caller = caller();
 
+my $Win32 = 1 if $ENV{'OS'} =~ /Windows/;
+
 # -----------------------------------------------------------------------------
 # Recurse through the given directory tree starting at $start_dir.  If a file
 # is encountered, run &main::recurseAction() on that file.  The new directory
@@ -197,7 +199,13 @@ sub replaceTags ($%) {
     my $tag;
 
     my $progname = (fileparse("$0"))[0];
-    my $outfile = "/tmp/$progname.$$";
+    my $outfile;
+
+    if ( $Win32 ) {
+	$outfile = "C:/temp/$progname.$$";
+    } else {
+	$outfile = "/tmp/$progname.$$";
+    }
 
     foreach $tag ( keys(%VARS) ) {
 	if ( ! open(INPUT, "$infile") ) {
