@@ -5842,25 +5842,25 @@ extern "C"
 */
 
    // Wrapper for free function gmtl::xform()
-   SHARPPY_API gmtl::Point<double,4>* gmtl_xform__gmtl_Point_double_4_gmtl_Matrix44d_gmtl_Point_double_43(gmtl::Point<double,4>* p0, const gmtl::Matrix44d* p1, const gmtl::Point<double,4>* p2)
+   SHARPPY_API gmtl::Point4d* gmtl_xform__gmtl_Point4d_gmtl_Matrix44d_gmtl_Point4d3(gmtl::Point4d* p0, const gmtl::Matrix44d* p1, const gmtl::Point4d* p2)
    {
-      gmtl::Point<double,4>& marshal_p0 = *p0;
+      gmtl::Point4d& marshal_p0 = *p0;
       const gmtl::Matrix44d& marshal_p1 = *p1;
-      const gmtl::Point<double,4>& marshal_p2 = *p2;
-      gmtl::Point<double,4>* result;
-      result = new gmtl::Point<double,4>(gmtl::xform(marshal_p0, marshal_p1, marshal_p2));
+      const gmtl::Point4d& marshal_p2 = *p2;
+      gmtl::Point4d* result;
+      result = new gmtl::Point4d(gmtl::xform(marshal_p0, marshal_p1, marshal_p2));
       return result;
    }
 
 
    // Wrapper for free function gmtl::xform()
-   SHARPPY_API gmtl::Point<float,4>* gmtl_xform__gmtl_Point_float_4_gmtl_Matrix44f_gmtl_Point_float_43(gmtl::Point<float,4>* p0, const gmtl::Matrix44f* p1, const gmtl::Point<float,4>* p2)
+   SHARPPY_API gmtl::Point4f* gmtl_xform__gmtl_Point4f_gmtl_Matrix44f_gmtl_Point4f3(gmtl::Point4f* p0, const gmtl::Matrix44f* p1, const gmtl::Point4f* p2)
    {
-      gmtl::Point<float,4>& marshal_p0 = *p0;
+      gmtl::Point4f& marshal_p0 = *p0;
       const gmtl::Matrix44f& marshal_p1 = *p1;
-      const gmtl::Point<float,4>& marshal_p2 = *p2;
-      gmtl::Point<float,4>* result;
-      result = new gmtl::Point<float,4>(gmtl::xform(marshal_p0, marshal_p1, marshal_p2));
+      const gmtl::Point4f& marshal_p2 = *p2;
+      gmtl::Point4f* result;
+      result = new gmtl::Point4f(gmtl::xform(marshal_p0, marshal_p1, marshal_p2));
       return result;
    }
 
