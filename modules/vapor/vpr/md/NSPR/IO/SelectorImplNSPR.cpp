@@ -1,5 +1,3 @@
-
-
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
@@ -175,7 +173,7 @@ PRUint16 SelectorImpNSPR::convertMaskVprToNspr(vpr::Uint16 mask)
       ret_mask |= PR_POLL_WRITE;
    if(mask & EXCEPT)
       ret_mask |= PR_POLL_EXCEPT;
-   if(mask & ERR)
+   if(mask & ERROR)
       ret_mask |= PR_POLL_ERR;
    if(mask & INVALID)
       ret_mask |= PR_POLL_NVAL;
@@ -193,7 +191,7 @@ vpr::Uint16 SelectorImpNSPR::convertMaskNsprToVpr(PRUint16 mask)
    if(mask & PR_POLL_EXCEPT)
       ret_mask |= EXCEPT;
    if(mask & PR_POLL_ERR)
-      ret_mask |= ERR;
+      ret_mask |= ERROR;
    if(mask & PR_POLL_NVAL)
       ret_mask |= INVALID;
 
