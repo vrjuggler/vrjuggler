@@ -327,10 +327,21 @@ public class DeviceProxyGraphEditor
     * to the given reference (which may be null).  If the given algorithm
     * reference is null, then subsequent invocations of
     * <code>applyGraphLayoutAlgorithm()</code> will have no effect.
+    *
+    * @param algorithm  the new layout algorithm to use
     */
    public void setGraphLayoutAlgorithm(JGraphLayoutAlgorithm algorithm)
    {
       this.graphLayoutAlgorithm = algorithm;
+   }
+
+   /**
+    * Returns the current graph layout algorithm to be used by this editor
+    * instance.  The returned reference may be null.
+    */
+   public JGraphLayoutAlgorithm getGraphLayoutAlgorithm()
+   {
+      return this.graphLayoutAlgorithm;
    }
 
    /**
@@ -365,6 +376,123 @@ public class DeviceProxyGraphEditor
          JGraphLayoutAlgorithm.applyLayout(this.graph,
                                            this.graphLayoutAlgorithm, cells);
       }
+   }
+
+   /**
+    * Determines if the two given cells can be connected.
+    */
+   public boolean canConnect(Object cell0, Object cell1)
+   {
+      boolean result = false;
+
+      if ( cell0 instanceof DefaultGraphCell &&
+           cell1 instanceof DefaultGraphCell )
+      {
+         Object cell0_obj = ((DefaultGraphCell) cell0).getUserObject();
+         Object cell1_obj = ((DefaultGraphCell) cell1).getUserObject();
+
+         result =
+            (cell0_obj instanceof DeviceInfo && cell1_obj instanceof ProxyInfo ||
+             cell0_obj instanceof ProxyInfo && cell1_obj instanceof DeviceInfo);
+      }
+
+      return result;
+   }
+
+   /**
+    * Determines if the two given cells are connected.
+    *
+    * @see org.jgraph.graph.DefaultGraphModel#containsEdgeBetween(org.jgraph.graph.GraphModel,Object,Object)
+    */
+   public boolean isConnected(Object cell0, Object cell1)
+   {
+      return DefaultGraphModel.containsEdgeBetween(this.graph.getModel(),
+                                                   cell0, cell1);
+   }
+
+   /**
+    * Connects the two given cells if they can be connected.  For the
+    * connection to succeed, both cells must be instances of
+    * <code>org.jgraph.graph.DefaultGraphCell</code>, and one must be a graph
+    * cell for a proxy and the other a graph cell for a device.  The
+    * determination about which cell is which is made by this method.
+    *
+    * @param cell0      the first cell
+    * @param cell1      the second cell
+    *
+    * @return true is returned if the connection succeeded; false otherwise
+    *
+    * @see GraphHelpers#connectProxyToDevice(org.jgraph.graph.DefaultGraphCell,org.jgraph.graph.DefaultGraphCell,org.jgraph.graph.ConnectionSet,java.util.Map)
+    */
+   public boolean connect(Object cell0, Object cell1)
+   {
+      boolean result = false;
+      ConnectionSet cs = new ConnectionSet();
+
+      try
+      {
+         DefaultGraphCell proxy_cell = null, device_cell = null;
+
+         if ( ((DefaultGraphCell) cell0).getUserObject() instanceof ProxyInfo )
+         {
+            proxy_cell  = (DefaultGraphCell) cell0;
+            device_cell = (DefaultGraphCell) cell1;
+         }
+         else
+         {
+            device_cell = (DefaultGraphCell) cell0;
+            proxy_cell  = (DefaultGraphCell) cell1;
+         }
+
+         try
+         {
+            Map attributes = new HashMap();
+            Object[] cells = new Object[1];
+            cells[0] = GraphHelpers.connectProxyToDevice(proxy_cell,
+                                                         device_cell, cs,
+                                                         attributes);
+            this.graph.getModel().insert(cells, attributes, cs, null, null);
+         }
+         catch (NoSuchPortException ex)
+         {
+            System.err.println("ERROR: " + ex.getMessage());
+         }
+      }
+      catch (Exception ex)
+      {
+         ex.printStackTrace();
+      }
+
+      return result;
+   }
+
+   /**
+    * Disconnects the two given cells.
+    *
+    * @param cell0      the first cell
+    * @param cell1      the second cell
+    *
+    * @return true is returned if the disconnection succeeded; false otherwise
+    */
+   public boolean disconnect(Object cell0, Object cell1)
+   {
+      boolean result = false;
+      Object[] edges = DefaultGraphModel.getEdgesBetween(this.graph.getModel(),
+                                                         cell0, cell1, true);
+
+      if ( edges.length == 1 )
+      {
+         this.graph.getModel().remove(edges);
+         result = true;
+      }
+      else
+      {
+         System.err.println("WARNING: Got unexpected number of edges (" +
+                            edges.length + ") when trying to disconnect " +
+                            cell0 + " and " + cell1);
+      }
+
+      return result;
    }
 
    private void jbInit()
