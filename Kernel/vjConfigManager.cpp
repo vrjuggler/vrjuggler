@@ -2,6 +2,7 @@
 #include <Kernel/vjConfigManager.h>
 #include <Config/vjConfigChunk.h>
 #include <Config/vjChunkFactory.h>
+#include <Kernel/vjDependencyManager.h>
 #include <Kernel/vjDebug.h>
 #include <stdlib.h>
 
@@ -23,6 +24,12 @@ void vjConfigManager::addChunkDB(vjConfigChunkDB* db)
       }
    }
    unlockPending();
+
+   // Reset pending count
+   mPendingCountMutex.acquire();
+   mPendingCheckCount = 0;
+   mPendingCountMutex.release();
+
 }
 
 void vjConfigManager::removeChunkDB(vjConfigChunkDB* db)
@@ -40,6 +47,19 @@ void vjConfigManager::removeChunkDB(vjConfigChunkDB* db)
       }
    }
    unlockPending();
+
+   // Reset pending count
+   mPendingCountMutex.acquire();
+   mPendingCheckCount = 0;
+   mPendingCountMutex.release();
+
+}
+
+// Look for items in the active list that don't have their dependencies filled anymore
+//
+void scanForLostDependencies()
+{
+
 }
 
 
