@@ -523,337 +523,337 @@ int main (int argc, char* argv[])
                   <secondary>vjVec4</secondary>
                </indexterm>
                <para>With an understanding of these classes as standard mathematical vectors, it is time to learn how to deal with them at the C++ level. In some cases, the mathematical operators are overloaded to simplify user code; in other cases, a named method must be invoked on an object. Before any of that, however, make sure that the source file includes either <filename>Math/vjVec3.h</filename>, <filename>Math/vjVec4.h</filename>, or both as necessary. From here on, the available operations are presented in the order they were listed in the previous section. We begin with creating the objects and setting their values.</para>
-               <section id="vjVec-creation-sect">
-                  <title>Creating Vectors and Setting Their Values</title>
-                  <indexterm>
-                     <primary>vjVec3</primary>
-                     <secondary>creating</secondary>
-                  </indexterm>
-                  <indexterm>
-                     <primary>vjVec4</primary>
-                     <secondary>creating</secondary>
-                  </indexterm>
-                  <para>Before doing anything with vectors, some must be created. The examples here use <classname>vjVec3</classname>s, but the example is equally applicable to <classname>vjVec4</classname>. To create a <classname>vjVec3</classname>, the default constructor which initializes the vector to &lt;0.0, 0.0, 0.0&gt;:</para>
-                  <programlisting>vjVec3 vec1;</programlisting>
-                  <para>After creating the vector <varname>vec1</varname>, its elements can be assigned values all at once as follows:</para>
-                  <programlisting>vec1.set(1.0, 1.5, -1.0);</programlisting>
-                  <para>or individually::</para>
-                  <programlisting>vec1[0] = 1.0;
+            </section>
+            <section id="vjVec-creation-sect">
+               <title>Creating Vectors and Setting Their Values</title>
+               <indexterm>
+                  <primary>vjVec3</primary>
+                  <secondary>creating</secondary>
+               </indexterm>
+               <indexterm>
+                  <primary>vjVec4</primary>
+                  <secondary>creating</secondary>
+               </indexterm>
+               <para>Before doing anything with vectors, some must be created. The examples here use <classname>vjVec3</classname>s, but the example is equally applicable to <classname>vjVec4</classname>. To create a <classname>vjVec3</classname>, the default constructor which initializes the vector to &lt;0.0, 0.0, 0.0&gt;:</para>
+               <programlisting>vjVec3 vec1;</programlisting>
+               <para>After creating the vector <varname>vec1</varname>, its elements can be assigned values all at once as follows:</para>
+               <programlisting>vec1.set(1.0, 1.5, -1.0);</programlisting>
+               <para>or individually::</para>
+               <programlisting>vec1[0] = 1.0;
 vec1[1] = 1.5;
 vec1[2] = -1.0;</programlisting>
-                  <para>Note that in the last example, the individual elements of the vector can be accessed exactly as with a normal array. To do the above steps all at once when the vector is created, give the element values when declaring the vector:</para>
-                  <programlisting>vjVec3 vec1(1.0, 1.5, -1.0);</programlisting>
-                  <para>All of the above code has exactly the same results but accomplishes them in different ways. This flexibility is just one of the ways that VR Juggler vectors are more powerful than C++ arrays (of the same size, of course).</para>
-               </section>
-               <section id="vjVec-inversion-sect">
-                  <title>Inversion (Finding the Negative of a Vector)</title>
-                  <indexterm>
-                     <primary>vjVec3</primary>
-                     <secondary>inverting</secondary>
-                  </indexterm>
-                  <indexterm>
-                     <primary>vjVec4</primary>
-                     <secondary>inverting</secondary>
-                  </indexterm>
-                  <para>Once a vector is created, the simplest operation that can be performed on it is finding its inverse. The following code demonstrates just that:</para>
-                  <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2;
+               <para>Note that in the last example, the individual elements of the vector can be accessed exactly as with a normal array. To do the above steps all at once when the vector is created, give the element values when declaring the vector:</para>
+               <programlisting>vjVec3 vec1(1.0, 1.5, -1.0);</programlisting>
+               <para>All of the above code has exactly the same results but accomplishes them in different ways. This flexibility is just one of the ways that VR Juggler vectors are more powerful than C++ arrays (of the same size, of course).</para>
+            </section>
+            <section id="vjVec-inversion-sect">
+               <title>Inversion (Finding the Negative of a Vector)</title>
+               <indexterm>
+                  <primary>vjVec3</primary>
+                  <secondary>inverting</secondary>
+               </indexterm>
+               <indexterm>
+                  <primary>vjVec4</primary>
+                  <secondary>inverting</secondary>
+               </indexterm>
+               <para>Once a vector is created, the simplest operation that can be performed on it is finding its inverse. The following code demonstrates just that:</para>
+               <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2;
 
 vec2 = -vec1;</programlisting>
-                  <para>The vector <varname>vec2</varname> now has the value &lt;-1.0, -1.5, 1.0&gt;. That is all there is to it. (Readers interested in details should node that the above does a copy operation to return the negative values.)</para>
-               </section>
-               <section>
-                  <title>Normalization</title>
-                  <indexterm>
-                     <primary>vjVec3</primary>
-                     <secondary>normalizing</secondary>
-                  </indexterm>
-                  <indexterm>
-                     <primary>vjVec4</primary>
-                     <secondary>normalizing</secondary>
-                  </indexterm>
-                  <para>Normalizing a vector is another simple operation (at the interface level anyway). The following code normalizes a vector:</para>
-                  <programlisting>vjVec3 vec1(1.0, 1.5, -1.0);
+               <para>The vector <varname>vec2</varname> now has the value &lt;-1.0, -1.5, 1.0&gt;. That is all there is to it. (Readers interested in details should node that the above does a copy operation to return the negative values.)</para>
+            </section>
+            <section>
+               <title>Normalization</title>
+               <indexterm>
+                  <primary>vjVec3</primary>
+                  <secondary>normalizing</secondary>
+               </indexterm>
+               <indexterm>
+                  <primary>vjVec4</primary>
+                  <secondary>normalizing</secondary>
+               </indexterm>
+               <para>Normalizing a vector is another simple operation (at the interface level anyway). The following code normalizes a vector:</para>
+               <programlisting>vjVec3 vec1(1.0, 1.5, -1.0);
 
 vec1.normalize();</programlisting>
-                  <para>The vector <varname>vec1</varname> is now normalized. Clean and simple.</para>
-                  <para>Besides normalizing a given vector, a vector can be tested to determine if it has already been normalized. This is done as follows (assuming the vector <varname>vec</varname> has already been declared before this point):</para>
-                  <programlisting>if ( vec.isNormalized() )
+               <para>The vector <varname>vec1</varname> is now normalized. Clean and simple.</para>
+               <para>Besides normalizing a given vector, a vector can be tested to determine if it has already been normalized. This is done as follows (assuming the vector <varname>vec</varname> has already been declared before this point):</para>
+               <programlisting>if ( vec.isNormalized() )
 {
    // Go here if vec is normalized
 }</programlisting>
-                  <para>This only works with <classname>vjVec3</classname>s, however.</para>
-               </section>
-               <section>
-                  <title>Length Calculation</title>
-                  <indexterm>
-                     <primary>vjVec3</primary>
-                     <secondary>length of</secondary>
-                  </indexterm>
-                  <indexterm>
-                     <primary>vjVec4</primary>
-                     <secondary>length of</secondary>
-                  </indexterm>
-                  <para>Part of normalizing a vector requires finding its length first. To get a vector's length, do the following:</para>
-                  <programlisting>vjVec3 vec1(1.0, 1.5, -1.0);
+               <para>This only works with <classname>vjVec3</classname>s, however.</para>
+            </section>
+            <section>
+               <title>Length Calculation</title>
+               <indexterm>
+                  <primary>vjVec3</primary>
+                  <secondary>length of</secondary>
+               </indexterm>
+               <indexterm>
+                  <primary>vjVec4</primary>
+                  <secondary>length of</secondary>
+               </indexterm>
+               <para>Part of normalizing a vector requires finding its length first. To get a vector's length, do the following:</para>
+               <programlisting>vjVec3 vec1(1.0, 1.5, -1.0);
 float length;
 
 length = vec1.length();</programlisting>
-                  <para>In this case, <varname>length</varname> is assigned the value 2.061553 (or more accurately, the square root of 4.25). Finding the length of a vector appears simple from the programmer's perspective, but it has some hidden costs. Namely, it requires a square root calculation. For optimization purposes, the <classname>vjVec3</classname> class (but not <classname>vjVec4</classname>) provides a method called <methodname>lengthSquared()</methodname> that returns the length of the vector without calculating the square root.</para>
-               </section>
-               <section>
-                  <title>Multiplication by a Scalar</title>
-                  <indexterm>
-                     <primary>vjVec3</primary>
-                     <secondary>multiplying by a scalar</secondary>
-                  </indexterm>
-                  <indexterm>
-                     <primary>vjVec4</primary>
-                     <secondary>multiplying by a scalar</secondary>
-                  </indexterm>
-                  <para>The VR Juggler vector classes provide an easy way to multiply a vector by a scalar. There are several ways to do it depending on what is required. Examples of each method follow.</para>
-                  <para>To multiply a vector by a scalar and store the result in another vector, do the following:</para>
-                  <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2;
+               <para>In this case, <varname>length</varname> is assigned the value 2.061553 (or more accurately, the square root of 4.25). Finding the length of a vector appears simple from the programmer's perspective, but it has some hidden costs. Namely, it requires a square root calculation. For optimization purposes, the <classname>vjVec3</classname> class (but not <classname>vjVec4</classname>) provides a method called <methodname>lengthSquared()</methodname> that returns the length of the vector without calculating the square root.</para>
+            </section>
+            <section>
+               <title>Multiplication by a Scalar</title>
+               <indexterm>
+                  <primary>vjVec3</primary>
+                  <secondary>multiplying by a scalar</secondary>
+               </indexterm>
+               <indexterm>
+                  <primary>vjVec4</primary>
+                  <secondary>multiplying by a scalar</secondary>
+               </indexterm>
+               <para>The VR Juggler vector classes provide an easy way to multiply a vector by a scalar. There are several ways to do it depending on what is required. Examples of each method follow.</para>
+               <para>To multiply a vector by a scalar and store the result in another vector, do the following:</para>
+               <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2;
 
 vec2 = 3 * vec1;</programlisting>
-                  <para>(The order of the factors in the multiplication can be swapped depending on preference or need.) Here, <varname>vec2</varname> gets the value &lt;3.0, 4.5, -3.0&gt;.</para>
-                  <para>To multiply a vector by a scalar and store the result in the same vector, do the following:</para>
-                  <programlisting>vjVec3 vec1(1.0, 1.5, -1.0);
+               <para>(The order of the factors in the multiplication can be swapped depending on preference or need.) Here, <varname>vec2</varname> gets the value &lt;3.0, 4.5, -3.0&gt;.</para>
+               <para>To multiply a vector by a scalar and store the result in the same vector, do the following:</para>
+               <programlisting>vjVec3 vec1(1.0, 1.5, -1.0);
 
 vec1 *= 3;</programlisting>
-                  <para>After this, <varname>vec1</varname> has the value &lt;3.0, 4.5, -3.0&gt;.</para>
-               </section>
-               <section>
-                  <title>Division by a Scalar</title>
-                  <indexterm>
-                     <primary>vjVec3</primary>
-                     <secondary>dividing by a scalar</secondary>
-                  </indexterm>
-                  <indexterm>
-                     <primary>vjVec4</primary>
-                     <secondary>dividing by a scalar</secondary>
-                  </indexterm>
-                  <para>Very similar to multiplying by a scalar, division by scalars is also possible. While the examples are almost identical, they are provided here for clarity.</para>
-                  <para>To divide a vector by a scalar and store the result in another vector, do the following:</para>
-                  <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2;
+               <para>After this, <varname>vec1</varname> has the value &lt;3.0, 4.5, -3.0&gt;.</para>
+            </section>
+            <section>
+               <title>Division by a Scalar</title>
+               <indexterm>
+                  <primary>vjVec3</primary>
+                  <secondary>dividing by a scalar</secondary>
+               </indexterm>
+               <indexterm>
+                  <primary>vjVec4</primary>
+                  <secondary>dividing by a scalar</secondary>
+               </indexterm>
+               <para>Very similar to multiplying by a scalar, division by scalars is also possible. While the examples are almost identical, they are provided here for clarity.</para>
+               <para>To divide a vector by a scalar and store the result in another vector, do the following:</para>
+               <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2;
 
 vec2 = vec1 / 3;</programlisting>
-                  <para>Here, <varname>vec2</varname> gets the value &lt;0.333333, 0.5, -0.333333&gt;. Note that the scalar must come after the vector because the operation would not make sense otherwise.</para>
-                  <para>To divide a victory by a scalar and store the result in the same vector, do the following:</para>
-                  <programlisting>vjVec3 vec1(1.0, 1.5, -1.0);
+               <para>Here, <varname>vec2</varname> gets the value &lt;0.333333, 0.5, -0.333333&gt;. Note that the scalar must come after the vector because the operation would not make sense otherwise.</para>
+               <para>To divide a victory by a scalar and store the result in the same vector, do the following:</para>
+               <programlisting>vjVec3 vec1(1.0, 1.5, -1.0);
 
 vec1 /= 3;</programlisting>
-                  <para>After this, <varname>vec1</varname> has the value &lt;0.333333, 0.5, -0.333333&gt;.</para>
-               </section>
-               <section id="pfVec-to-vjVec-sect">
-                  <title>Converting to an OpenGL Performer Vector</title>
-                  <indexterm zone="pfVec-to-vjVec-sect">
-                     <primary>vjVec3</primary>
-                     <secondary>conversion to pfVec3</secondary>
-                  </indexterm>
-                  <indexterm zone="pfVec-to-vjVec-sect">
-                     <primary>pfVec3</primary>
-                     <secondary>conversion from vjVec3</secondary>
-                     <seealso>vjVec3</seealso>
-                  </indexterm>
-                  <para>SGI's OpenGL Performer likes to work with its own <classname>pfVec3</classname> class, and to facilitate the use of it with <classname>vjVec3</classname>, two conversion functions are provided for converting a <classname>vjVec3</classname> to a <classname>pfVec3</classname> and vice versa. The first works as follows:</para>
-                  <programlisting>vjVec3 vj_vec;
+               <para>After this, <varname>vec1</varname> has the value &lt;0.333333, 0.5, -0.333333&gt;.</para>
+            </section>
+            <section id="pfVec-to-vjVec-sect">
+               <title>Converting to an OpenGL Performer Vector</title>
+               <indexterm zone="pfVec-to-vjVec-sect">
+                  <primary>vjVec3</primary>
+                  <secondary>conversion to pfVec3</secondary>
+               </indexterm>
+               <indexterm zone="pfVec-to-vjVec-sect">
+                  <primary>pfVec3</primary>
+                  <secondary>conversion from vjVec3</secondary>
+                  <seealso>vjVec3</seealso>
+               </indexterm>
+               <para>SGI's OpenGL Performer likes to work with its own <classname>pfVec3</classname> class, and to facilitate the use of it with <classname>vjVec3</classname>, two conversion functions are provided for converting a <classname>vjVec3</classname> to a <classname>pfVec3</classname> and vice versa. The first works as follows:</para>
+               <programlisting>vjVec3 vj_vec;
 pfVec3 pf_vec;
 
 // Do stuff to vj_vec...
 
 pf_vec = vjGetPfVec(vj_vec);</programlisting>
-                  <para> where <varname>vj_vec</varname> is passed by reference for efficiency. (<varname>pf_vec</varname> gets a copy of a <classname>pfVec3</classname>.) To convert a <classname>pfVec3</classname> to a <classname>vjVec3</classname>, do the following:</para>
-                  <programlisting>pfVec3 pf_vec;
+               <para> where <varname>vj_vec</varname> is passed by reference for efficiency. (<varname>pf_vec</varname> gets a copy of a <classname>pfVec3</classname>.) To convert a <classname>pfVec3</classname> to a <classname>vjVec3</classname>, do the following:</para>
+               <programlisting>pfVec3 pf_vec;
 vjVec3 vj_vec;
 
 // Do stuff to pf_vec...
 
 vj_vec = vjGetVjVec(pf_vec);</programlisting>
-                  <para>Here again, <varname>pf_vec</varname> is passed by reference for efficiency and <varname>vj_vec</varname> gets a copy of a <classname>vjVec3</classname>. Both of these functions are found in the header <filename>Kernel/Pf/vjPfUtil.h</filename>.</para>
-               </section>
-               <section>
-                  <title>Assignment</title>
-                  <indexterm>
-                     <primary>vjVec3</primary>
-                     <secondary>assigning</secondary>
-                  </indexterm>
-                  <indexterm>
-                     <primary>vjVec4</primary>
-                     <secondary>assigning</secondary>
-                  </indexterm>
-                  <para>We have already demonstrated vector assignment, though it was not pointed out explicitly. It works just as vector assignment in mathematics. The C++ code that does assignment is as follows:</para>
-                  <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2;
+               <para>Here again, <varname>pf_vec</varname> is passed by reference for efficiency and <varname>vj_vec</varname> gets a copy of a <classname>vjVec3</classname>. Both of these functions are found in the header <filename>Kernel/Pf/vjPfUtil.h</filename>.</para>
+            </section>
+            <section>
+               <title>Assignment</title>
+               <indexterm>
+                  <primary>vjVec3</primary>
+                  <secondary>assigning</secondary>
+               </indexterm>
+               <indexterm>
+                  <primary>vjVec4</primary>
+                  <secondary>assigning</secondary>
+               </indexterm>
+               <para>We have already demonstrated vector assignment, though it was not pointed out explicitly. It works just as vector assignment in mathematics. The C++ code that does assignment is as follows:</para>
+               <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2;
 
 vec2 = vec1;</programlisting>
-                  <para>After the assignment, <varname>vec2</varname> has the value &lt;-1.0, -1.5, 1.0&gt;. Ta da! Note that this is a copy operation which is the case for all types of assignments of VR Juggler vectors.</para>
-               </section>
-               <section>
-                  <title>Equality/Inequality Comparison</title>
-                  <indexterm>
-                     <primary>vjVec3</primary>
-                     <secondary>equality comparison</secondary>
-                  </indexterm>
-                  <indexterm>
-                     <primary>vjVec4</primary>
-                     <secondary>equality comparison</secondary>
-                  </indexterm>
-                  <para>To compare the equality of two vectors, there are three available methods (one is just the complement of the other, though):</para>
-                  <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2(1.5, 1.0, -1.0);
+               <para>After the assignment, <varname>vec2</varname> has the value &lt;-1.0, -1.5, 1.0&gt;. Ta da! Note that this is a copy operation which is the case for all types of assignments of VR Juggler vectors.</para>
+            </section>
+            <section>
+               <title>Equality/Inequality Comparison</title>
+               <indexterm>
+                  <primary>vjVec3</primary>
+                  <secondary>equality comparison</secondary>
+               </indexterm>
+               <indexterm>
+                  <primary>vjVec4</primary>
+                  <secondary>equality comparison</secondary>
+               </indexterm>
+               <para>To compare the equality of two vectors, there are three available methods (one is just the complement of the other, though):</para>
+               <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2(1.5, 1.0, -1.0);
 
 if ( vec1.equal(vec2) )
 {
    // Go here if vec1 and vec2 are equal.
 }</programlisting>
-                  <para>or</para>
-                  <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2(1.5, 1.0, -1.0);
+               <para>or</para>
+               <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2(1.5, 1.0, -1.0);
 
 if ( vec1 == vec2 )
 {
    // Go here if vec1 and vec2 are equal.
 }</programlisting>
-                  <para>or</para>
-                  <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2(1.5, 1.0, -1.0);
+               <para>or</para>
+               <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2(1.5, 1.0, -1.0);
 
 if ( vec1 != vec2 )
 {
    // Go here if vec1 and vec2 are not equal.
 }</programlisting>
-                  <para>Choose whichever method is most convenient.</para>
-               </section>
-               <section>
-                  <title>Dot Product</title>
-                  <indexterm>
-                     <primary>vjVec3</primary>
-                     <secondary>dot product</secondary>
-                  </indexterm>
-                  <indexterm>
-                     <primary>vjVec4</primary>
-                     <secondary>dot product</secondary>
-                  </indexterm>
-                  <para>Given two vectors, finding the dot product is often needed. VR Juggler's vectors provide a way to do this quickly so that programmers can save themselves the time of typing in the formula over and over. It works as follows:</para>
-                  <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2(1.5, 1.0, -1.0);
+               <para>Choose whichever method is most convenient.</para>
+            </section>
+            <section>
+               <title>Dot Product</title>
+               <indexterm>
+                  <primary>vjVec3</primary>
+                  <secondary>dot product</secondary>
+               </indexterm>
+               <indexterm>
+                  <primary>vjVec4</primary>
+                  <secondary>dot product</secondary>
+               </indexterm>
+               <para>Given two vectors, finding the dot product is often needed. VR Juggler's vectors provide a way to do this quickly so that programmers can save themselves the time of typing in the formula over and over. It works as follows:</para>
+               <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2(1.5, 1.0, -1.0);
 float dot_product;
 
 dot_product = vec1.dot(vec2);</programlisting>
-                  <para>Now, <varname>dot_prodcut</varname> has the value 4.0.</para>
-               </section>
-               <section>
-                  <title>Cross Product (<classname>vjVec3</classname> only)</title>
-                  <indexterm>
-                     <primary>vjVec3</primary>
-                     <secondary>cross product</secondary>
-                  </indexterm>
-                  <para>Besides the dot product of two vectors, the cross product is another commonly needed result. It is calculated thusly:</para>
-                  <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2(1.5, 1.0, -1.0), vec3;
+               <para>Now, <varname>dot_prodcut</varname> has the value 4.0.</para>
+            </section>
+            <section>
+               <title>Cross Product (<classname>vjVec3</classname> only)</title>
+               <indexterm>
+                  <primary>vjVec3</primary>
+                  <secondary>cross product</secondary>
+               </indexterm>
+               <para>Besides the dot product of two vectors, the cross product is another commonly needed result. It is calculated thusly:</para>
+               <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2(1.5, 1.0, -1.0), vec3;
 
 vec3 = vec1.cross(vec2);</programlisting>
-                  <para>The result is that <varname>vec3</varname> gets a copy of <varname>vec1</varname> cross <varname>vec2</varname>.</para>
-               </section>
-               <section>
-                  <title>Addition</title>
-                  <indexterm>
-                     <primary>vjVec3</primary>
-                     <secondary>adding</secondary>
-                  </indexterm>
-                  <indexterm>
-                     <primary>vjVec4</primary>
-                     <secondary>adding</secondary>
-                  </indexterm>
-                  <para>Adding two vectors can be done one of two ways. The first method returns a resulting vector, and the second method performs the addition and stores the result in the first vector.</para>
-                  <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2(1.5, 1.0, -1.0), vec3;
+               <para>The result is that <varname>vec3</varname> gets a copy of <varname>vec1</varname> cross <varname>vec2</varname>.</para>
+            </section>
+            <section>
+               <title>Addition</title>
+               <indexterm>
+                  <primary>vjVec3</primary>
+                  <secondary>adding</secondary>
+               </indexterm>
+               <indexterm>
+                  <primary>vjVec4</primary>
+                  <secondary>adding</secondary>
+               </indexterm>
+               <para>Adding two vectors can be done one of two ways. The first method returns a resulting vector, and the second method performs the addition and stores the result in the first vector.</para>
+               <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2(1.5, 1.0, -1.0), vec3;
 
 vec3 = vec1 + vec2;</programlisting>
-                  <para>Now, <varname>vec3</varname> has the value &lt;2.5, 2.5, -2.0&gt;.</para>
-                  <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2(1.5, 1.0, -1.0);
+               <para>Now, <varname>vec3</varname> has the value &lt;2.5, 2.5, -2.0&gt;.</para>
+               <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2(1.5, 1.0, -1.0);
 
 vec1 += vec2;</programlisting>
-                  <para>This time, <varname>vec1</varname> has the value &lt;2.5, 2.5, -2.0&gt;.</para>
-               </section>
-               <section>
-                  <title>Subtraction</title>
-                  <indexterm>
-                     <primary>vjVec3</primary>
-                     <secondary>subtracting</secondary>
-                  </indexterm>
-                  <indexterm>
-                     <primary>vjVec4</primary>
-                     <secondary>subtracting</secondary>
-                  </indexterm>
-                  <para>Subtracting two vectors gives the same options as addition, and while the code is nearly identical, it is provided for the sake of clarity.</para>
-                  <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2(1.5, 1.0, -1.0), vec3;
+               <para>This time, <varname>vec1</varname> has the value &lt;2.5, 2.5, -2.0&gt;.</para>
+            </section>
+            <section>
+               <title>Subtraction</title>
+               <indexterm>
+                  <primary>vjVec3</primary>
+                  <secondary>subtracting</secondary>
+               </indexterm>
+               <indexterm>
+                  <primary>vjVec4</primary>
+                  <secondary>subtracting</secondary>
+               </indexterm>
+               <para>Subtracting two vectors gives the same options as addition, and while the code is nearly identical, it is provided for the sake of clarity.</para>
+               <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2(1.5, 1.0, -1.0), vec3;
 
 vec3 = vec1 - vec2;</programlisting>
-                  <para>Now, <varname>vec3</varname> has the value &lt;-0.5, 0.5, 0.0&gt;.</para>
-                  <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2(1.5, 1.0, -1.0);
+               <para>Now, <varname>vec3</varname> has the value &lt;-0.5, 0.5, 0.0&gt;.</para>
+               <programlisting>vjVec3 vec1(1.0, 1.5, -1.0), vec2(1.5, 1.0, -1.0);
 
 vec1 -= vec2;</programlisting>
-                  <para>In this case, <varname>vec1</varname> has the value &lt;-0.5, 0.5, 0.0&gt;.</para>
-               </section>
-               <section>
-                  <title>Full Transformation by a Matrix</title>
-                  <indexterm>
-                     <primary>vjVec3</primary>
-                     <secondary>transforming by a matrix</secondary>
-                     <tertiary>full</tertiary>
-                  </indexterm>
-                  <indexterm>
-                     <primary>vjVec4</primary>
-                     <secondary>transforming by a matrix</secondary>
-                     <tertiary>full</tertiary>
-                  </indexterm>
-                  <para>It is often helpful to apply a transformation to a vector. Transformations are represented by a matrix, so it is necessary to multiply a matrix and a vector. The method <methodname>xformFull()</methodname> does this job. For the following example, assume that there is a<classname>vjMatrix</classname> transformation matrix <varname>xform_mat</varname>:</para>
-                  <programlisting>vjVec3 vec(1.0, 1.0, 1.0);
+               <para>In this case, <varname>vec1</varname> has the value &lt;-0.5, 0.5, 0.0&gt;.</para>
+            </section>
+            <section>
+               <title>Full Transformation by a Matrix</title>
+               <indexterm>
+                  <primary>vjVec3</primary>
+                  <secondary>transforming by a matrix</secondary>
+                  <tertiary>full</tertiary>
+               </indexterm>
+               <indexterm>
+                  <primary>vjVec4</primary>
+                  <secondary>transforming by a matrix</secondary>
+                  <tertiary>full</tertiary>
+               </indexterm>
+               <para>It is often helpful to apply a transformation to a vector. Transformations are represented by a matrix, so it is necessary to multiply a matrix and a vector. The method <methodname>xformFull()</methodname> does this job. For the following example, assume that there is a<classname>vjMatrix</classname> transformation matrix <varname>xform_mat</varname>:</para>
+               <programlisting>vjVec3 vec(1.0, 1.0, 1.0);
 
 vec.xformFull(xform_mat);</programlisting>
-                  <para>Depending on the transformations contained within <varname>xform_mat</varname>, <varname>vec</varname> will be transformed fully. The operation as a mathematical equation would be :</para>
-                  <informalequation>
-                     <alt>$V^{\prime }=M*V$</alt>
-                     <graphic fileref="eq_v_eq_m_v.gif" format="GIF"/>
-                  </informalequation>
-                  <para>where <varname>V</varname> and <varname>V'</varname> are vectors and <varname>M</varname> is a 4x4 transformation matrix.</para>
-               </section>
-               <section>
-                  <title>Partial Transformation by a Matrix</title>
-                  <indexterm>
-                     <primary>vjVec3</primary>
-                     <secondary>transforming by a matrix</secondary>
-                     <tertiary>partial</tertiary>
-                  </indexterm>
-                  <indexterm>
-                     <primary>vjVec4</primary>
-                     <secondary>transforming by a matrix</secondary>
-                     <tertiary>partial</tertiary>
-                  </indexterm>
-                  <para>Besides full transformations, it is possible to apply all transformations in a matrix except translation. (The usefulness of this is left as an exercise for the reader.) Again assume that there is a <classname>vjMatrix</classname> transformation matrix <varname>xform_mat</varname>:</para>
-                  <programlisting>vjVec3 vec(1.0, 1.0, 1.0);
+               <para>Depending on the transformations contained within <varname>xform_mat</varname>, <varname>vec</varname> will be transformed fully. The operation as a mathematical equation would be :</para>
+               <informalequation>
+                  <alt>$V^{\prime }=M*V$</alt>
+                  <graphic fileref="eq_v_eq_m_v.gif" format="GIF"/>
+               </informalequation>
+               <para>where <varname>V</varname> and <varname>V'</varname> are vectors and <varname>M</varname> is a 4x4 transformation matrix.</para>
+            </section>
+            <section>
+               <title>Partial Transformation by a Matrix</title>
+               <indexterm>
+                  <primary>vjVec3</primary>
+                  <secondary>transforming by a matrix</secondary>
+                  <tertiary>partial</tertiary>
+               </indexterm>
+               <indexterm>
+                  <primary>vjVec4</primary>
+                  <secondary>transforming by a matrix</secondary>
+                  <tertiary>partial</tertiary>
+               </indexterm>
+               <para>Besides full transformations, it is possible to apply all transformations in a matrix except translation. (The usefulness of this is left as an exercise for the reader.) Again assume that there is a <classname>vjMatrix</classname> transformation matrix <varname>xform_mat</varname>:</para>
+               <programlisting>vjVec3 vec(1.0, 1.0, 1.0);
 
 vec.xformVec(xform_mat);</programlisting>
-                  <para>In this case, all transformations in <varname>xform_mat</varname> except translation will be applied to <varname>vec</varname>. The naming convention here is not terribly helpful, but this documentation is intended to get around that.</para>
-               </section>
-               <section>
-                  <title>The Gory Details</title>
-                  <indexterm>
-                     <primary>vjVec3</primary>
-                     <secondary>details</secondary>
-                  </indexterm>
-                  <indexterm>
-                     <primary>vjVec4</primary>
-                     <secondary>details</secondary>
-                  </indexterm>
-                  <para>The details behind <classname>vjVec3</classname> and <classname>vjVec4</classname> really are not all that gory. Internally, they are represented as three- and four-element arrays of <type>float</type>s respectively. Access to these arrays is provided through the public member variable <varname>vec</varname>. For example, this access can be used in the following way:</para>
-                  <programlisting>vjVec3 pos(4.0, 1.0982, 10.1241);
+               <para>In this case, all transformations in <varname>xform_mat</varname> except translation will be applied to <varname>vec</varname>. The naming convention here is not terribly helpful, but this documentation is intended to get around that.</para>
+            </section>
+            <section>
+               <title>The Gory Details</title>
+               <indexterm>
+                  <primary>vjVec3</primary>
+                  <secondary>details</secondary>
+               </indexterm>
+               <indexterm>
+                  <primary>vjVec4</primary>
+                  <secondary>details</secondary>
+               </indexterm>
+               <para>The details behind <classname>vjVec3</classname> and <classname>vjVec4</classname> really are not all that gory. Internally, they are represented as three- and four-element arrays of <type>float</type>s respectively. Access to these arrays is provided through the public member variable <varname>vec</varname>. For example, this access can be used in the following way:</para>
+               <programlisting>vjVec3 pos(4.0, 1.0982, 10.1241);
 
 glVertex3fv(pos.vec);</programlisting>
-                  <para>Granted, this particular example is rather silly and much slower than just listing the values as the individual arguments to <function>glVertex3f()</function>, but it should get the point across.</para>
-                  <para>In general, the <varname>vec</varname> member variable should be treated very carefully. Access to it is provided mainly so that operations similar to this example can be performed quickly. An example of abusing access to <varname>vec</varname> follows:</para>
-                  <programlisting>vjVec4 my_vec;
+               <para>Granted, this particular example is rather silly and much slower than just listing the values as the individual arguments to <function>glVertex3f()</function>, but it should get the point across.</para>
+               <para>In general, the <varname>vec</varname> member variable should be treated very carefully. Access to it is provided mainly so that operations similar to this example can be performed quickly. An example of abusing access to <varname>vec</varname> follows:</para>
+               <programlisting>vjVec4 my_vec;
 
 my_vec.vec[0] = 4.0;
 my_vec.vec[1] = 1.0982;
 my_vec.vec[2] = 10.1241;
 my_vec.vec[3] = 1.0;</programlisting>
-                  <para>Do not do this. It can be confusing to readers of the code who do not necessarily need to know the details of the internal representation. Instead, use one of the methods described above for creating vectors and assigning the elements values.</para>
-               </section>
+               <para>Do not do this. It can be confusing to readers of the code who do not necessarily need to know the details of the internal representation. Instead, use one of the methods described above for creating vectors and assigning the elements values.</para>
             </section>
          </section>
          <section>
