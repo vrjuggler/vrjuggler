@@ -75,13 +75,6 @@ ConfigDefinition::~ConfigDefinition()
    mIsValid = false;
 }
 
-#ifdef JCCL_DEBUG
-void ConfigDefinition::assertValid() const
-{
-   vprASSERT(mIsValid == true && "Trying to use deleted ConfigDefinition");
-}
-#endif
-
 std::string ConfigDefinition::getName() const
 {
    assertValid();
