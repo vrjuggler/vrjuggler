@@ -360,7 +360,7 @@ public class MultiUnitDeviceVertexView
                      // undo operation.
                      mAddedUnitRows.push( 
                         new UnitRow(new_unit_info,
-                                    (List) mUnitRowMap.get(port_obj))
+                                    (List) mUnitRowMap.get(new_unit_info))
                      );
                   }
                   // Unit removal.
