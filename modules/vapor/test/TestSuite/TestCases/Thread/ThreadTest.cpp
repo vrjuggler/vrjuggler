@@ -14,6 +14,8 @@
 
 #include <TestCases/Thread/ThreadTest.h>
 
+#include <math.h>
+
 
 namespace vprTest
 {
