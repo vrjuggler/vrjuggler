@@ -48,7 +48,8 @@ INSTALL		= @INSTALL@
 SUBOBJDIR	= $(UTILS_LIBRARY)
 
 SRCS 		= Debug.cpp			\
-                  FileIO.cpp
+                  FileIO.cpp \
+                  Vec3.cpp 
 
 include $(MKPATH)/dpp.obj-subdir.mk
 
