@@ -59,9 +59,11 @@ namespace jccl {
     class ConfigChunkDB;
 };
 
+/*
 namespace gadget {
    class GloveProxy;
 }
+*/
 
 namespace vrj
 {
@@ -192,7 +194,7 @@ protected:     // --- Geom helpers --- //
    void drawBox(float size, GLenum type);
    void drawWireCube(float size);
    void drawSolidCube(float size);
-   void drawGlove(gadget::GloveProxy* gloveProxy);
+   //void drawGlove(gadget::GloveProxy* gloveProxy);
 
    GLUquadricObj* mQuadObj;
 

@@ -52,8 +52,8 @@
 #include <vrj/Math/Vec3.h>
 #include <vrj/Math/Vec4.h>
 
-#include <gadget/Type/Glove.h>
-#include <gadget/Type/GloveProxy.h>
+//#include <gadget/Type/Glove.h>
+//#include <gadget/Type/GloveProxy.h>
 
 
 namespace vrj
@@ -632,6 +632,7 @@ void GlDrawManager::drawSolidCube(float size)
   drawBox(size, GL_QUADS);
 }
 
+/*
 // Draw a glove outline for the user
 // This may be ugly for now.
 // For each finger, step down it's xforms drawing the finger
@@ -660,23 +661,19 @@ void GlDrawManager::drawGlove(gadget::GloveProxy* gloveProxy)
       glDisable(GL_COLOR_MATERIAL);
 
       //-----------------set up a light....
-      /*
-      GLfloat light_ambient[] = { 0.1f,  0.1f,  0.1f,  1.0f};
-      GLfloat light_diffuse[] = { 0.8f,  0.8f,  0.8f,  1.0f};
-      GLfloat light_specular[] = { 1.0f,  1.0f,  1.0f,  1.0f};
-      GLfloat light_position[] = {0.0f, 0.75f, 0.75f, 0.0f};
-      */
+      //GLfloat light_ambient[] = { 0.1f,  0.1f,  0.1f,  1.0f};
+      //GLfloat light_diffuse[] = { 0.8f,  0.8f,  0.8f,  1.0f};
+      //GLfloat light_specular[] = { 1.0f,  1.0f,  1.0f,  1.0f};
+      //GLfloat light_position[] = {0.0f, 0.75f, 0.75f, 0.0f};
       //-----------------Call the light....
-      /*
-      glLightfv(GL_LIGHT7, GL_AMBIENT,  light_ambient);
-      glLightfv(GL_LIGHT7, GL_DIFFUSE,  light_diffuse);
-      glLightfv(GL_LIGHT7, GL_SPECULAR,  light_specular);
-      glLightfv(GL_LIGHT7, GL_POSITION,  light_position);
+      //glLightfv(GL_LIGHT7, GL_AMBIENT,  light_ambient);
+      //glLightfv(GL_LIGHT7, GL_DIFFUSE,  light_diffuse);
+      //glLightfv(GL_LIGHT7, GL_SPECULAR,  light_specular);
+      //glLightfv(GL_LIGHT7, GL_POSITION,  light_position);
 
-      glEnable(GL_LIGHTING);
-      glEnable(GL_LIGHT7);
-      */
-
+      //glEnable(GL_LIGHTING);
+      //glEnable(GL_LIGHT7);
+      
       glPushMatrix();
       {
          glColor3f(0.76f, 0.80f, 0.95f);
@@ -773,6 +770,7 @@ void GlDrawManager::drawGlove(gadget::GloveProxy* gloveProxy)
    }
    //glPopAttrib();
 }
+*/
 
 } // end namespace
 
