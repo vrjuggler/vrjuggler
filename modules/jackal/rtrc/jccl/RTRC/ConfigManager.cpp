@@ -1,4 +1,4 @@
-/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+h/*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998-2002 by Iowa State University
  *
@@ -104,6 +104,16 @@ void ConfigManager::addPendingAdds(ConfigChunkDB* db)
             pending.mType = PendingChunk::ADD;
             pending.mChunk = (*i)->getProperty<jccl::ConfigChunkPtr>("display_system");
             mPendingConfig.push_back(pending);
+            
+
+            for( int j = 0; j < (*i)->getNum("display_windows"); j++)
+    	    {
+	            PendingChunk pending;
+	            pending.mType = PendingChunk::ADD;
+	                // NEED getEmbedded since the name differs.
+	            pending.mChunk = (*i)->getProperty<jccl::ConfigChunkPtr>("display_windows", j);
+	            mPendingConfig.push_back(pending);
+            }
          }
       } // End Add Specific Cluster Info
    }
