@@ -76,6 +76,12 @@ AC_ARG_ENABLE(audioworks,
               [  --enable-audioworks     Compile in AudioWorks support   [default=yes]],
               [AUDIOWORKS_ENABLED="$enableval"], [AUDIOWORKS_ENABLED='yes'])
 
+# does the user want Audiere?
+AC_ARG_ENABLE(audiere,
+              [  --enable-audiere        Compile in Audiere support
+              [default=yes]],
+              [AUDIERE_ENABLED="$enableval"], [AUDIERE_ENABLED='yes'])
+
 # -------------------------------------------- #
 # --with-pkg[=arg] and --without-pkg arguments #
 # -------------------------------------------- #
@@ -298,6 +304,13 @@ if test "x$AUDIOWORKS_ENABLED" = "xyes" ; then
    fi
 fi
 
+# Append the Audiere stuff...
+AUDIERE_API='N'
+if test "x$AUDIERE_ENABLED" = "xyes" ; then
+   DPP_HAVE_AUDIERE([/usr], AUDIERE_API='Y',
+      [AC_MSG_WARN([*** Audiere plug-in cannot be built. ***])])
+fi
+
 dnl -------------------------------------------------------------
 dnl external stuff (like sample apps, also for those who use sonix-config)....
 dnl -------------------------------------------------------------
@@ -384,6 +397,7 @@ AC_SUBST(sample_application_includes)
 AC_SUBST(sample_application_ldflags)
 AC_SUBST(sample_application_libs)
 AC_SUBST(snx_dep_scripts)
+AC_SUBST(AUDIERE_API)
 AC_SUBST(AUDIOWORKS_API)
 AC_SUBST(OPENAL_API)
 AC_SUBST(SUBSYNTH_API)
@@ -408,6 +422,7 @@ AC_CONFIG_FILES([
    snx/Makefile
    snx/plugins/Makefile
    snx/plugins/AudioWorks/Makefile
+   snx/plugins/Audiere/Makefile
    snx/plugins/OpenAL/Makefile
    snx/plugins/Subsynth/Makefile
    snx/Util/Makefile

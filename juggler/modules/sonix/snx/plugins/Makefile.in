@@ -56,6 +56,9 @@ endif
 ifeq (@AUDIOWORKS_API@, Y)
 	SUBDIR	+= AudioWorks
 endif
+ifeq (@AUDIERE_API@, Y)
+	SUBDIR 	+= Audiere
+endif
 
 include @topdir@/make.defs.mk
 
@@ -81,9 +84,10 @@ OPT_FLAGS	= -D_OPT @OPT_FLAGS@
 STATICLIB_EXT	= @STATICLIB_EXT@
 DYNAMICLIB_EXT	= @DYNAMICLIB_EXT@
 
-AUDIOWORKS_LIB_DYNAMIC	= $(AUDIOWORKS_LIBRARY).$(DYNAMICLIB_EXT)
-OPENAL_LIB_DYNAMIC	= $(OPENAL_LIBRARY).$(DYNAMICLIB_EXT)
-SUBSYNTH_LIB_DYNAMIC	= $(SUBSYNTH_LIBRARY).$(DYNAMICLIB_EXT)
+AUDIOWORKS_LIB_DYNAMIC	= 	$(AUDIOWORKS_LIBRARY).$(DYNAMICLIB_EXT)
+OPENAL_LIB_DYNAMIC	= 		$(OPENAL_LIBRARY).$(DYNAMICLIB_EXT)
+SUBSYNTH_LIB_DYNAMIC	= 		$(SUBSYNTH_LIBRARY).$(DYNAMICLIB_EXT)
+AUDIERE_LIB_DYNAMIC = 		$(AUDIERE_LIBRARY).$(DYNAMICLIB_EXT)
 DYLIB_DEPS_SNX		= @DYLIB_DEPS@
 DYLIB_PROF_DEPS_SNX	= @DYLIB_PROF_DEPS@
 
@@ -94,6 +98,8 @@ OPENAL_LDFLAGS		= @AL_LDFLAGS@
 OPENAL_LIBS		= @LIBOPENAL@ @EXTRA_LDFLAGS@
 SUBSYNTH_LDFLAGS	= @SYN_LDFLAGS@
 SUBSYNTH_LIBS		= @LIBSUBSYNTH@
+AUDIERE_LDFLAGS	= @AUDIERE_LDFLAGS@
+AUDIERE_LIBS 		= @LIBAUDIERE@
 
 # setup the list of libs to be built...
 LIBS=
@@ -105,6 +111,9 @@ ifeq (@OPENAL_API@, Y)
 endif
 ifeq (@SUBSYNTH_API@, Y)
 	LIBS	+= $(SUBSYNTH_LIBRARY)
+endif
+ifeq (@AUDIERE_API@, Y)
+	LIBS	+= $(AUDIERE_LIBRARY)
 endif
 
 DYNAMIC_LIBS	= $(LIBS)
@@ -196,6 +205,17 @@ $(LIBDIR)/$(SUBSYNTH_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "$@ done"
 	@echo "------------------------------------------------"
 
+$(LIBDIR)/$(AUDIERE_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) \
+		$(AUDIERE_LDFLAGS) $(AUDIERE_LIBS) $(DYLIB_DEPS_SNX)
+	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
 
 # =============================================================================
 # Library targets.

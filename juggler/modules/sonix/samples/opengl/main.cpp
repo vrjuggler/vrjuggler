@@ -193,7 +193,7 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
       si.datasource = snx::SoundInfo::FILESYSTEM;
       kevinSound.configure( si );
 
-      sonix::instance()->changeAPI( "OpenAL" );
+      sonix::instance()->changeAPI( "Audiere" );
    }
    break;
    case '2':
@@ -205,7 +205,7 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
       si.datasource = snx::SoundInfo::FILESYSTEM;
       kevinSound.configure( si );
 
-      sonix::instance()->changeAPI( "AudioWorks" );
+      sonix::instance()->changeAPI( "Audiere" );
    }
    break;
    case '3':

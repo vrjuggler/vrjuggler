@@ -367,20 +367,6 @@ protected:
     * position of the observer/listener
     */
    gmtl::Matrix44f mListenerPos;
-private:
-
-   /** @link aggregation 
-    * @supplierCardinality 0..*
-    * @clientCardinality 1
-    * @directed*/
-   /*#  SoundInfo lnkSoundInfo; */
-protected:
-   
-   /** This class uses a std::map of sound infos for alias lookup
-    * @link aggregation
-    * @supplierCardinality 0..*
-    * @clientCardinality 1*/
-   //snx::SoundInfo lnkSoundInfo_not_used_see_one_above;
 };
 
 } // end namespace

@@ -76,7 +76,8 @@ struct SoundInfo
                  cutoff( 1.0f ),
                  volume( 1.0f ),
                  triggerOnNextBind( false ), 
-                 repeatCountdown( 0 )
+                 repeatCountdown( 0 ),
+                 streaming( true )
    {
       //position.makeIdent();
       position[0] = 0.0f;
@@ -84,22 +85,6 @@ struct SoundInfo
       position[2] = 0.0f;
    }
    
-   /*
-   void allocBuffers( int number, int size, unsigned int sampSize )
-   {
-      // only suport 8 or 16 bit sound right now.
-      assert( sampSize == 1 || sampSize == 2 );
-      data.resize( number );
-      for (int x = 0; x < number; ++x)
-      {
-         data[x].resize( size * sampSize );
-      }      
-   }   
-   */
-   /** this field is used when datasource != FILESYSTEM
-    * @todo not implemented
-    */
-   //std::vector< std::vector<char> > data;
          
    /// name of the sound.  this is the "handle", or how you refer to the sound.         
    std::string alias;
@@ -139,6 +124,9 @@ struct SoundInfo
    /// from 0 to 1.
    float volume;
 
+   /// should we stream the sound from disk?
+   bool streaming;
+
 public:
    /// do not use. internal use only
    bool triggerOnNextBind;
@@ -146,6 +134,6 @@ public:
    int repeatCountdown; // number of times left to repeat (changes during play)
 };
 
-}; // end namespace
+} // end namespace
 
 #endif //SOUND_INFO_DATA
