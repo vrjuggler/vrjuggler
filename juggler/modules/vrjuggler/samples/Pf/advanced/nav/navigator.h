@@ -56,10 +56,8 @@ public:
       allowAxis[0] = allowAxis[1] = allowAxis[2] = true;    // Initialize to rot in all axes
    }
 
-   // Empty virtual destructor to make GCC happy.
-   virtual ~navigator (void) {
-      /* Do nothing. */ ;
-   }
+   /// virtual destructor is required since subclasses are polymorphic
+   virtual ~navigator() {}
 
    // Updates the state of the navigator that influences the nav update
    virtual void updateInteraction() = 0;
