@@ -1,0 +1,117 @@
+###############################################################################$
+# builder for test suite.  uses kevin's build system in @srcdir@/mk
+###############################################################################$
+
+# project name...
+PROJECT_NAME = runner
+
+APP_INCLUDES	= @sample_application_includes@
+APP_LIBS		= @snx_extra_ldflags@ @snx_extra_libs@ @sample_application_libs@
+APP_LDFLAGS       = @sample_application_ldflags@
+
+
+default: echo_info $(PROJECT_NAME)
+
+srcdir		= @srcdir@
+topdir		= @topdir@
+CPP_UNIT	?=  $(srcdir)/../../../../external/cppunit
+
+CXX		= @CXX@
+CFLAGS		= @CFLAGS@ $(OPTIMIZER) $(EXTRA_FLAGS)
+CPPFLAGS	= @CPPFLAGS@
+CXXFLAGS	= @CXXFLAGS@ $(OPTIMIZER) $(EXTRA_FLAGS)
+DEFS		= @DEFS@
+DEP_GEN_FLAG	= @DEP_GEN_FLAG@
+DEPEND_FLAGS	= @DEPEND_FLAGS@ $(INCLUDES)
+DEPEND_EXTRAS	= @DEPEND_EXTRAS@ $(DEFS)
+EXTRA_FLAGS	= $(APP_LDFLAGS)
+INCLUDES	= @INCLUDES@ -I$(topdir) \
+                 -I$(srcdir) -I$(srcdir)/TestCases			\
+                 -I$(CPP_UNIT)/include \
+                 -I$(SNX_BASE_DIR)/include -I$(VPR_BASE_DIR)/include \
+                 -I/usr/local/include $(APP_INCLUDES) 
+
+OPTIMIZER	= @DBG_FLAGS@ -D_DEBUG
+LD		= @LD@
+LDFLAGS		= @LDFLAGS@ -L/usr/lib$(LIBBITSUF) -L/usr/local/lib$(LIBBITSUF)
+LIBBITSUF	= @LIBBITSUF@
+LIBS		= @LIBS@ -L$(SNX_BASE_DIR)/lib$(LIBBITSUF) -lsonix
+
+MAKEDEPEND	= @MAKEDEPEND@
+OBJEXT		= @OBJEXT@
+OBJ_NAME_FLAG	= @OBJ_NAME_FLAG@
+OS_TYPE		= @OS_TYPE@
+
+USE_MAKEDEPEND	= @USE_MAKEDEPEND@
+
+LINK		= $(CXX) $(CPPFLAGS) $(CXXFLAGS) @EXTRA_LINK_FLAGS@	\
+                  $(EXTRA_FLAGS) 
+
+EXTRA_LIBS	= $(APP_LDFLAGS) $(APP_LIBS)
+
+# -----------------------------------------------------------------------------
+# Compiler command lines.
+# -----------------------------------------------------------------------------
+C_COMPILE	= $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
+CXX_COMPILE	= $(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
+
+# objects to be included in the project....
+# SRC Files
+TEST_SRCS = 
+CPPUNIT_TEXTUI_SRCS = TextTestRunner.cpp TextTestResult.cpp
+CPPUNIT_SRCS	= Exception.cpp		\
+                  NotEqualException.cpp	\
+                  TestAssert.cpp	\
+                  TestCase.cpp		\
+                  TestResult.cpp	\
+                  TestFailure.cpp	\
+                  TestSuite.cpp
+
+RUNNER_SRCS	= main.cpp
+SRCS		= $(TEST_SRCS)			\
+                  $(CPPUNIT_TEXTUI_SRCS)	\
+                  $(CPPUNIT_SRCS)		\
+                  $(RUNNER_SRCS)
+
+OBJDIR = .
+DEPDIR = 
+
+INCLUDE_PATHS = 
+PATH_TO_SRCS = $(srcdir) $(srcdir)/TestCases 				\
+               $(CPP_UNIT)/src/cppunit
+MK_DIR = $(srcdir)/mk
+
+include ${MK_DIR}/mk.objs
+
+# Compile then Link
+$(PROJECT_NAME): $(OBJS)
+	@echo ""
+	@echo "-------------------------------------------"
+	@echo "Linking... (.$(OBJEXT)'s --> executable)"
+	@echo "-------------------------------------------"
+	$(LINK) -o $@ $(OBJS) $(LDFLAGS) $(LIBS) $(EXTRA_LIBS)
+	@echo ""
+	@echo "-------------------------------------------"
+	@echo "$(PROJECT_NAME) done"
+	@echo "-------------------------------------------"
+
+echo_info:
+	@echo ""
+	@echo "Building $(PROJECT_NAME)"
+	@echo "Using SNX_BASE_DIR: $(SNX_BASE_DIR)"
+	@echo ""
+
+# Remove the compiled stuff from the system
+clean:
+	@echo ""
+	@echo "-------------------------------------------"
+	@echo "Removing compiled stuff from the system	 "
+	@echo "-------------------------------------------"
+	rm -fr $(OBJS) $(PROJECT_NAME) *.ncb *.opt *.plg *.ilk *.idb	\
+          *.pdb *.pch Debug/ Release/ ii_files/ *core
+
+clobber: clean
+	rm -f *.d
+
+include ${MK_DIR}/mk.depend
+
