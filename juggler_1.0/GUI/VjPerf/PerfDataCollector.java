@@ -6,15 +6,16 @@ import java.util.Vector;
 import VjPerf.DataLine;
 import VjConfig.*;
 import VjGUI.Core;
-
-// read for a PerfDataCollector
+import VjGUI.util.*;
 
 public class PerfDataCollector {
     // stores all performance data coming from a particular buffer
     public String name;
-    public Vector datalines; // vector of DataLines & MissingCounts
+    public LinkedList datalines; // vector of DataLines & MissingCounts
     public int num; // # of different indices used for datapoints.
     public int numsamps[];
+    public double totalsum;
+    public int totalsamps;
     public double maxvals[];
     public double sums[];
     int prevplace = -1;
@@ -22,14 +23,53 @@ public class PerfDataCollector {
     DataLine dl;
     int place;
     ConfigChunk infochunk;
+    int maxdatalines = 500;
+
+    private void addDataLine (DataLine dl) {
+	int i;
+
+	dl.linetotal = 0.0;
+	for (i = 0; i < num; i++)
+	    dl.linetotal += dl.diffs[i];
+
+	if (datalines.size() == maxdatalines) {
+	    DataLine tmp = (DataLine)datalines.removeFirst();
+	    for (i = 0; i < num; i++) {
+		if (!Double.isNaN (tmp.diffs[i])) {
+		    sums[i] -= tmp.diffs[i];
+		    numsamps[i]--;
+		}
+	    }
+	    if (!Double.isNaN(tmp.linetotal)) {
+		totalsum -= tmp.linetotal;
+		totalsamps--;
+	    }
+	}
+	for (i = 0; i < num; i++) {
+	    if (!Double.isNaN (dl.diffs[i])) {
+		sums[i] += dl.diffs[i];
+		numsamps[i]++;
+	    }
+	}
+	if (!Double.isNaN(dl.linetotal)) {
+	    totalsum += dl.linetotal;
+	    totalsamps++;
+	}
+	datalines.add(dl);
+    }
+
+
+
 
     public PerfDataCollector(String _name, int _num) {
-        datalines = new Vector();
+        datalines = new LinkedList();
 	name = _name;
 	num = _num;
 	numsamps = new int[num];
 	maxvals = new double[num];
 	sums = new double[num];
+	totalsum = 0.0;
+	totalsamps = 0;
 	for (int i = 0; i < num; i++) {
 	    numsamps[i] = 0;
 	    maxvals[i] = 0.0;
@@ -87,12 +127,16 @@ public class PerfDataCollector {
     public String dumpData() {
 	String s = name + "\n";
 	DataLine d;
+	ListIterator li;
 	int i,j;
 	for (j = 0; j < num; j++)
 	    s = s + prebuff (j, (j==0)?9:18);
 	s += "               Total\n";
-	for (i = 0; i < datalines.size(); i++) {
-	    d = (DataLine)datalines.elementAt(i);
+	//for (i = 0; i < datalines.size(); i++) {
+	li = datalines.listIterator(0);
+	while (li.hasNext()) {
+	    d = (DataLine)li.next();
+	    //d = (DataLine)datalines.elementAt(i);
 	    for (j = 0; j < num; j++) {
 		s = s + prebuff(d.diffs[j],(j==0)?9:18);
 	    }
@@ -121,55 +165,60 @@ public class PerfDataCollector {
 
     public void generateAverages (int preskip, int postskip) {
 
-	DataLine dl,dl2;
-	double total = 0.0;
-	int totalsamps = 0;
-	int i,j;
-	Property labelsprop = null;
-	String label;
+//  	DataLine dl,dl2;
+//  	double total = 0.0;
+//  	int totalsamps = 0;
+//  	int i,j;
+//  	Property labelsprop = null;
+//  	String label;
+//  	ListIterator li;
 
-	if (preskip < 1)
-	    preskip = 1;
+//  	if (preskip < 1)
+//  	    preskip = 1;
 
-	for (i = 0; i < num; i++) {
-	    sums[i] = 0.0;
-	    maxvals[i] = 0.0;
-	    numsamps[i] = 0;
-	}
-	for (j = preskip; j < datalines.size()-postskip; j++) {
-	    dl = (DataLine)datalines.elementAt(j);
-	    if (j < datalines.size()-1) {
-		dl2 = (DataLine)datalines.elementAt(j+1);
-		if (dl.numlost == 0) {
-		    double t = dl2.vals[0] - dl.vals[0];
-		    if (!Double.isNaN (t)) {
-			totalsamps++;
-			total += t;
-		    }
-		}
-	    }
-	    for (i = 0; i < num; i++) {
-		if (!Double.isNaN(dl.diffs[i])) {
-		    numsamps[i]++;
-		    if (dl.diffs[i] > maxvals[i])
-			maxvals[i] = dl.diffs[i];
-		    sums[i] += dl.diffs[i];
-		    //totalsamps++;
-		    //total += dl.diffs[i];
-		}
-	    }
-	}
+//  	for (i = 0; i < num; i++) {
+//  	    sums[i] = 0.0;
+//  	    maxvals[i] = 0.0;
+//  	    numsamps[i] = 0;
+//  	}
+
+//  	// this is a sucky way of taking care of pre/postskip
+//  	li = datalines.listIterator();
+//  	int limit = Math.min (preskip, datalines.size());
+//  	for (i = 0; i < limit; i++)
+//  	    li.next();
+	
+//  	while (li.hasNext()) {
+//  	    dl = (DataLine)li.next();
+//  	    if (j < datalines.size()-1) {
+//  		dl2 = (DataLine)li.next();
+//  		if (dl.numlost == 0) {
+//  		    double t = dl2.vals[0] - dl.vals[0];
+//  		    if (!Double.isNaN (t)) {
+//  			totalsamps++;
+//  			total += t;
+//  		    }
+//  		}
+//  		li.getPrev(); // undo extra getnext
+//  	    }
+//  	    for (i = 0; i < num; i++) {
+//  		if (!Double.isNaN(dl.diffs[i])) {
+//  		    numsamps[i]++;
+//  		    if (dl.diffs[i] > maxvals[i])
+//  			maxvals[i] = dl.diffs[i];
+//  		    sums[i] += dl.diffs[i];
+//  		    //totalsamps++;
+//  		    //total += dl.diffs[i];
+//  		}
+//  	    }
+//  	}
 
     }
 
-    public String dumpAverages (int preskip, int postskip, boolean doanomoly, double cutoff) {
-	DataLine dl,dl2;
-	double total = 0.0;
-	int totalsamps = 0;
-	int i,j;
-	Property labelsprop = null;
-	String label;
-
+    public String dumpAverages (int preskip, int postskip, boolean doanomaly, double cutoff) {
+	int i;
+  	Property labelsprop = null;
+  	String label;
 
 	ConfigChunk ch = Core.findPrefixMatchChunk (name);
 	if (ch != null) {
@@ -180,37 +229,6 @@ public class PerfDataCollector {
 	    System.out.println ("foo. no chunk");
 
 
-	if (preskip < 1)
-	    preskip = 1;
-
-	for (i = 0; i < num; i++) {
-	    sums[i] = 0.0;
-	    maxvals[i] = 0.0;
-	    numsamps[i] = 0;
-	}
-	for (j = preskip; j < datalines.size()-postskip; j++) {
-	    dl = (DataLine)datalines.elementAt(j);
-	    if (j < datalines.size()-1) {
-		dl2 = (DataLine)datalines.elementAt(j+1);
-		if (dl.numlost == 0) {
-		    double t = dl2.vals[0] - dl.vals[0];
-		    if (!Double.isNaN (t)) {
-			totalsamps++;
-			total += t;
-		    }
-		}
-	    }
-	    for (i = 0; i < num; i++) {
-		if (!Double.isNaN(dl.diffs[i])) {
-		    numsamps[i]++;
-		    if (dl.diffs[i] > maxvals[i])
-			maxvals[i] = dl.diffs[i];
-		    sums[i] += dl.diffs[i];
-		    //totalsamps++;
-		    //total += dl.diffs[i];
-		}
-	    }
-	}
 	String s = name + ":  averages Report per Cycle\n";
 	double avg;
 	for (i = 0; i < num; i++) {
@@ -226,36 +244,111 @@ public class PerfDataCollector {
 		+ label + "\n";
 	}
 
-	s += "  Total: " + (total/totalsamps) + " us\n";
+	s += "  Total: " + (totalsum/totalsamps) + " us\n";
 
-	double sum, diff;
-	int numpoints;
-	
-	/* we'll handle each index reading separately */
-	if (doanomoly) {
-	s += "Anomolies report for " + name + "\n";
-	for ( i = 0; i < num; i++) {
-	    
-	    avg = sums[i]/numsamps[i];
-	    s += "index " + i + ": avg value is " + avg + "\n";
-	    
-	    for (j = preskip; j < datalines.size() - postskip; j++) {
-		dl = (DataLine)datalines.elementAt(j);
-		if (Double.isNaN(dl.diffs[i]))
-		    continue;
-		// what's the best diff function?
-		diff = Math.abs(dl.diffs[i]-avg);
-		if (diff > (avg*cutoff)) {
-		    s += prebuff(dl.diffs[i], 10) + "       at time " + 
-			dl.vals[i]/1000000.0 + " seconds\n";
-		}
-	    }
-	    s += "-------------------------------------------\n";
-	}
-	}
 	return s;
     }
 
+
+//      public String dumpAverages (int preskip, int postskip, boolean doanomoly, double cutoff) {
+//  	DataLine dl,dl2;
+//  	double total = 0.0;
+//  	int totalsamps = 0;
+//  	int i,j;
+//  	Property labelsprop = null;
+//  	String label;
+//  	ListIterator li;
+
+//  	ConfigChunk ch = Core.findPrefixMatchChunk (name);
+//  	if (ch != null) {
+//  	    System.out.println ("woo-hoo I found a chunk");
+//  	    labelsprop = ch.getProperty ("labels");
+//  	}
+//  	else
+//  	    System.out.println ("foo. no chunk");
+
+
+//  	if (preskip < 1)
+//  	    preskip = 1;
+
+//  	for (i = 0; i < num; i++) {
+//  	    sums[i] = 0.0;
+//  	    maxvals[i] = 0.0;
+//  	    numsamps[i] = 0;
+//  	}
+
+//  	// bug - i'm not handling pre/postskip correctly
+//  	li = datalines.listIterator();
+//  	int numskip = Math.min (preskip, datalines.size());
+//  	for (i = 0; i < numskip; i++)
+//  	    li.next();
+//  	dl = (DataLine)li.next();
+//  	while (li.hasNext()) {
+//  	    dl2 = li.next();
+//  	    if (dl.numlost == 0) {
+//  		double t = dl2.vals[0] - dl.vals[0];
+//  		if (!Double.isNaN (t)) {
+//  		    totalsamps++;
+//  		    total += t;
+//  		}
+//  	    }
+//  	    for (i = 0; i < num; i++) {
+//  		if (!Double.isNaN(dl.diffs[i])) {
+//  		    numsamps[i]++;
+//  		    if (dl.diffs[i] > maxvals[i])
+//  			maxvals[i] = dl.diffs[i];
+//  		    sums[i] += dl.diffs[i];
+//  		    //totalsamps++;
+//  		    //total += dl.diffs[i];
+//  		}
+//  	    }
+//  	    dl = dl2;
+//  	}
+//  	String s = name + ":  averages Report per Cycle\n";
+//  	double avg;
+//  	for (i = 0; i < num; i++) {
+//  	    avg = (sums[i]/numsamps[i]);
+//  	    if (avg == 0.0)
+//  		continue;
+//  	    label = "";
+//  	    if (labelsprop != null) {
+//  		if ( i < labelsprop.getNum())
+//  		    label = labelsprop.getValue(i).getString();
+//  	    }
+//  	    s += "  part " + i + ":  " + padFloat(avg) + " us\t"
+//  		+ label + "\n";
+//  	}
+
+//  	s += "  Total: " + (total/totalsamps) + " us\n";
+
+//  	double sum, diff;
+//  	int numpoints;
+	
+//  	/* we'll handle each index reading separately */
+
+//  //  	if (doanomoly) {
+//  //  	s += "Anomolies report for " + name + "\n";
+//  //  	for ( i = 0; i < num; i++) {
+	    
+//  //  	    avg = sums[i]/numsamps[i];
+//  //  	    s += "index " + i + ": avg value is " + avg + "\n";
+	    
+//  //  	    for (j = preskip; j < datalines.size() - postskip; j++) {
+//  //  		dl = (DataLine)datalines.elementAt(j);
+//  //  		if (Double.isNaN(dl.diffs[i]))
+//  //  		    continue;
+//  //  		// what's the best diff function?
+//  //  		diff = Math.abs(dl.diffs[i]-avg);
+//  //  		if (diff > (avg*cutoff)) {
+//  //  		    s += prebuff(dl.diffs[i], 10) + "       at time " + 
+//  //  			dl.vals[i]/1000000.0 + " seconds\n";
+//  //  		}
+//  //  	    }
+//  //  	    s += "-------------------------------------------\n";
+//  //  	}
+//  //  	}
+//  	return s;
+//      }
 
 
   public void read (StreamTokenizer st) {
@@ -273,7 +366,6 @@ public class PerfDataCollector {
       for (;;) {
 	  st.nextToken();
 	  index = (int)st.nval;
-	  //System.out.println ("index  is " + index);
 	  st.nextToken();
 	  //System.out.println ("index is " + index + "\nval is " + st.nval);
 	  if (index == -1) {
@@ -283,7 +375,8 @@ public class PerfDataCollector {
 		  dl.vals[place] = Double.NaN;
 	      dl.numlost = (int)st.nval;
 	      prevplace = -1;
-	      datalines.addElement(dl);
+	      addDataLine (dl);
+	      //datalines.addElement(dl);
 	      dl = new DataLine(num);
 	      place = 0;
 	      break;
@@ -293,7 +386,8 @@ public class PerfDataCollector {
 	  for (; place != index; place++) {
 	      //System.out.println ("place1 is " + place);
 	      if (place >= num) {
-		  datalines.addElement(dl);
+		  addDataLine (dl);
+		  //datalines.addElement(dl);
 		  dl = new DataLine (num);
 		  place = 0;
 	      }
@@ -314,7 +408,8 @@ public class PerfDataCollector {
 	  prevval = val;
 	  place = (place+1);
 	  if (place >= num) {
-	      datalines.addElement(dl);
+	      addDataLine(dl);
+	      //datalines.addElement(dl);
 	      dl = new DataLine(num);
 	      place = 0;
 	  }
@@ -352,14 +447,14 @@ public class PerfDataCollector {
 //       }
 //     }
 
-    // calculate linetotals
-    for (i = 0; i < datalines.size(); i++) {
-      dl = (DataLine)datalines.elementAt(i);
-      dl.linetotal = 0;
-      for (j = 0; j < num; j++)
-	if (!Double.isNaN(dl.diffs[j]))
-	  dl.linetotal += dl.diffs[j];
-    }
+//      // calculate linetotals
+//      for (i = 0; i < datalines.size(); i++) {
+//        dl = (DataLine)datalines.elementAt(i);
+//        dl.linetotal = 0;
+//        for (j = 0; j < num; j++)
+//  	if (!Double.isNaN(dl.diffs[j]))
+//  	  dl.linetotal += dl.diffs[j];
+//      }
 
   }
 

@@ -7,6 +7,7 @@ import java.util.Vector;
 import VjPerf.DataLine;
 import VjPerf.PerfDataCollector;
 import VjGUI.Core;
+import VjGUI.util.*;
 
 public class GraphFrame extends JFrame {
 
@@ -40,11 +41,15 @@ public class GraphFrame extends JFrame {
 	    g.fillRect (0, 0, width, height);
 	    g.setColor (Color.black);
 	    int i = preskip, j = 0;
-	    for (; i < width + preskip; i++) {
-		double f = ((DataLine)gf.dc.datalines.elementAt(i)).diffs[gf.numtouse];
+
+	    // bug - not handling pre/postskip
+	    ListIterator li = gf.dc.datalines.listIterator(0);
+	    while (li.hasNext()) {
+		DataLine dl = (DataLine)li.next();
+		double f = dl.diffs[gf.numtouse];
 		if (!Double.isNaN(f)) {
 		    g.setColor (Color.black);
-		    g.drawLine (j, height, j, height - (int)(gf.heightscale * ((DataLine)gf.dc.datalines.elementAt(i)).diffs[gf.numtouse]));
+		    g.drawLine (j, height, j, height - (int)(gf.heightscale * (dl.diffs[gf.numtouse])));
 		    j++;
 		}
 		else {
@@ -103,8 +108,8 @@ public class GraphFrame extends JFrame {
 	horizbarcanvas = new HorizBarCanvas (this);
 
 	getContentPane().add(display_pane = new JScrollPane (JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS));
+	//display_pane.setRowHeaderView (horizbarcanvas);
 	display_pane.setViewportView (canvas);
-	display_pane.setRowHeaderView (horizbarcanvas);
     }
 
 }

@@ -16,4 +16,19 @@ public class DataLine {
         //valid = new boolean[num];
 	numlost = 0;
     }
+
+    public int getNum () {
+	return vals.length;
+    }
+
+    public String toString () {
+	String s = "DataLine:\n  diffs: ";
+	for (int i = 0; i < diffs.length; i++)
+	    s += diffs[i] + ", ";
+	s += "\n  vals: ";
+	for (int i = 0; i < vals.length; i++)
+	    s += vals[i] + ", ";
+	s += "\n";
+	return s;
+    }
 };

@@ -22,6 +22,16 @@ import VjGUI.FileControl;
 public class PerfAnalyzerPanel extends JPanel implements ActionListener {
 
 
+    private class CollectorSummaryButton extends JButton {
+	public PerfDataCollector collector;
+
+	public CollectorSummaryButton (PerfDataCollector _collector) {
+	    super ("Summary");
+	    collector = _collector;
+	}
+    }
+
+
     private class AnomaliesButton extends JButton {
 	public PerfDataCollector collector;
 	public int phase;
@@ -72,6 +82,10 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener {
 	    gblayout.setConstraints (l, gbc);
 	    data_panel.add (l);
 	    l = new JLabel ("Averages report for " + col.getName());
+	    b = new CollectorSummaryButton (col);
+	    b.addActionListener (this);
+	    gblayout.setConstraints (b, gbc);
+	    data_panel.add (b);
 	    gblayout.setConstraints (l, gbc);
 	    data_panel.add (l);
 	    for (j = 0; j < col.getNumPhases(); j++) {
@@ -229,6 +243,12 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener {
 	    GraphButton b = (GraphButton)e.getSource();
 	    GraphFrame gf = new GraphFrame (b.collector, b.phase, preskip, postskip);
 	    gf.show();
+	}
+	else if (e.getSource() instanceof CollectorSummaryButton) {
+	    JFrame jf = new JFrame ("foo");
+	    jf.getContentPane().add (new SummaryGraphPanel (((CollectorSummaryButton)e.getSource()).collector));
+	    jf.setSize (500,300);
+	    jf.show();
 	}
 	if (e.getSource() == display_choice)
 	    refreshDisplay();
