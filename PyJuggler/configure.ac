@@ -29,7 +29,7 @@ AC_INIT([PyJuggler], [0.4], [vrjuggler-devel@lists.sourceforge.net])
 AC_PREREQ([2.53])
 AC_COPYRIGHT([PyJuggler is (C) Copyright 2002, 2003 by Patrick Hartling])
 AC_REVISION([$Revision$])
-AC_CONFIG_SRCDIR([src/gmtl-functions.h])
+AC_CONFIG_SRCDIR([src/gadgeteer-wrappers.h])
 AC_CONFIG_AUX_DIR([Doozer++/scripts])
 DPP_PREREQ([1.5.1])
 DPP_INIT

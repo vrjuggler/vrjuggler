@@ -72,7 +72,6 @@ VJ_AVATAR_LIBS=	-L$(VJ_AVATAR_ROOT)/lib -lavatar -lcal3d $(VJ_LIBS)	\
 
 # Build the vjAvatar bindings conditionally.
 ifeq (@HAVE_VJ_AVATAR@, Y)
-
 PYSTE_FILES+=	vjAvatar.pyste
 CXXFLAGS+=	$(VJ_AVATAR_INC)
 INCLUDES+=	$(VJ_AVATAR_INC)
@@ -80,77 +79,8 @@ endif
 
 SRCS=		$(PYSTE_FILES:.pyste=.cpp)
 OBJS=		$(SRCS:.cpp=.$(OBJEXT))
-MODS=		$(PYSTE_FILES:.pyste=.$(DLLEXT)) gmtl.$(DLLEXT)
+MODS=		$(PYSTE_FILES:.pyste=.$(DLLEXT))
 
-GMTL_SRCS=	\
-	gmtl/gmtl.cpp							\
-	gmtl/_AABox_double.cpp						\
-	gmtl/_AABox_float.cpp						\
-	gmtl/_AxisAngle_double.cpp					\
-	gmtl/_AxisAngle_float.cpp					\
-	gmtl/_Coord_gmtl_Vec_double_3_gmtl_AxisAngle_double.cpp		\
-	gmtl/_Coord_gmtl_Vec_double_3_gmtl_EulerAngle_double_gmtl_XYZ.cpp \
-	gmtl/_Coord_gmtl_Vec_double_3_gmtl_EulerAngle_double_gmtl_ZXY.cpp \
-	gmtl/_Coord_gmtl_Vec_double_3_gmtl_EulerAngle_double_gmtl_ZYX.cpp \
-	gmtl/_Coord_gmtl_Vec_double_3_gmtl_Quat_double.cpp		\
-	gmtl/_Coord_gmtl_Vec_double_4_gmtl_AxisAngle_double.cpp		\
-	gmtl/_Coord_gmtl_Vec_double_4_gmtl_EulerAngle_double_gmtl_XYZ.cpp \
-	gmtl/_Coord_gmtl_Vec_double_4_gmtl_EulerAngle_double_gmtl_ZXY.cpp \
-	gmtl/_Coord_gmtl_Vec_double_4_gmtl_EulerAngle_double_gmtl_ZYX.cpp \
-	gmtl/_Coord_gmtl_Vec_double_4_gmtl_Quat_double.cpp		\
-	gmtl/_Coord_gmtl_Vec_float_3_gmtl_AxisAngle_float.cpp		\
-	gmtl/_Coord_gmtl_Vec_float_3_gmtl_EulerAngle_float_gmtl_XYZ.cpp	\
-	gmtl/_Coord_gmtl_Vec_float_3_gmtl_EulerAngle_float_gmtl_ZXY.cpp	\
-	gmtl/_Coord_gmtl_Vec_float_3_gmtl_EulerAngle_float_gmtl_ZYX.cpp	\
-	gmtl/_Coord_gmtl_Vec_float_3_gmtl_Quat_float.cpp		\
-	gmtl/_Coord_gmtl_Vec_float_4_gmtl_AxisAngle_float.cpp		\
-	gmtl/_Coord_gmtl_Vec_float_4_gmtl_EulerAngle_float_gmtl_XYZ.cpp	\
-	gmtl/_Coord_gmtl_Vec_float_4_gmtl_EulerAngle_float_gmtl_ZXY.cpp	\
-	gmtl/_Coord_gmtl_Vec_float_4_gmtl_EulerAngle_float_gmtl_ZYX.cpp	\
-	gmtl/_Coord_gmtl_Vec_float_4_gmtl_Quat_float.cpp		\
-	gmtl/_EulerAngle_float_gmtl_XYZ.cpp				\
-	gmtl/_EulerAngle_float_gmtl_ZXY.cpp				\
-	gmtl/_EulerAngle_float_gmtl_ZYX.cpp				\
-	gmtl/_gmtl_Defines_h.cpp					\
-	gmtl/_gmtl_Math_h.cpp		        			\
-	gmtl/_gmtl_functions_h.cpp					\
-	gmtl/_gmtl_intersect_wrappers_h.cpp				\
-	gmtl/_gmtl_wrappers_h.cpp					\
-	gmtl/_LineSeg_double.cpp					\
-	gmtl/_LineSeg_float.cpp						\
-	gmtl/_Matrix_float_3_3.cpp					\
-	gmtl/_Matrix_float_4_4.cpp					\
-	gmtl/_Plane_double.cpp						\
-	gmtl/_Plane_float.cpp						\
-	gmtl/_Point_float_2.cpp						\
-	gmtl/_Point_float_3.cpp						\
-	gmtl/_Point_int_2.cpp						\
-	gmtl/_Point_int_3.cpp						\
-	gmtl/_Quat_double.cpp						\
-	gmtl/_Quat_float.cpp						\
-	gmtl/_Ray_double.cpp						\
-	gmtl/_Ray_float.cpp						\
-	gmtl/_Sphere_double.cpp						\
-	gmtl/_Sphere_float.cpp						\
-	gmtl/_Tri_double.cpp						\
-	gmtl/_Tri_float.cpp						\
-	gmtl/_Tri_int.cpp						\
-	gmtl/_VecBase_int_2.cpp						\
-	gmtl/_VecBase_double_2.cpp					\
-	gmtl/_VecBase_float_2.cpp					\
-	gmtl/_VecBase_double_3.cpp					\
-	gmtl/_VecBase_float_3.cpp					\
-	gmtl/_VecBase_int_3.cpp						\
-	gmtl/_VecBase_double_4.cpp					\
-	gmtl/_VecBase_float_4.cpp					\
-	gmtl/_VecBase_int_4.cpp						\
-	gmtl/_Vec_double_3.cpp						\
-	gmtl/_Vec_double_4.cpp						\
-	gmtl/_Vec_float_3.cpp						\
-	gmtl/_Vec_float_4.cpp						\
-	gmtl/_Vec_int_3.cpp
-
-GMTL_OBJS=	$(GMTL_SRCS:.cpp=.$(OBJEXT))
 VPR_OBJS=	vpr.$(OBJEXT)
 JCCL_OBJS=	jccl.$(OBJEXT)
 GADGET_OBJS=	gadget.$(OBJEXT)
@@ -172,7 +102,6 @@ vpath %.pyste $(srcdir)/../pyste
 # distribution issues.
 
 all:
-	-[ ! -d gmtl ] && mkdir gmtl
 	$(MAKE) modules
 	$(MAKE) prefix="$(topdir)" install
 
@@ -215,11 +144,8 @@ vjAvatar.$(DLLEXT): $(VJ_AVATAR_OBJS)
 	$(CXX) -shared -o $@ $(VJ_AVATAR_OBJS) $(PYJUTIL_LIB)		\
           $(LDFLAGS) $(VJ_AVATAR_LIBS)
 
-gmtl.$(DLLEXT): $(GMTL_OBJS)
-	$(CXX) -shared -o $@ $(GMTL_OBJS) $(LDFLAGS)
-
 clean:
-	rm -f $(OBJS) $(GMTL_OBJS)
+	rm -f $(OBJS)
 
 clobber:
 	$(MAKE) clean

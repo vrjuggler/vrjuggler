@@ -29,6 +29,7 @@
 
 import sys
 from OpenGL.GL import *
+import gmtl
 
 # NOTE: If you import the individual modules from PyJuggler, make sure to
 # import PyJuggler.vrj first.

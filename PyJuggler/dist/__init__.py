@@ -26,9 +26,9 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 import string
-__all__     = ["vrj", "gadget", "jccl", "gmtl"]
+__all__     = ["vrj", "gadget", "jccl"]
 __build__   = 1
-__version__ = '0.4.13.%d' % __build__
+__version__ = '0.5.0.%d' % __build__
 __date__    = string.join(string.split('$Date$')[1:3], ' ')
 __author__  = 'Patrick Hartling <patrick@vrjuggler.org'
 __doc__     = '''This is PyJuggler.  For information regarding PyJuggler see:

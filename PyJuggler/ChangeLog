@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+May-21-2003 patrickh    Removed the GMTL bindings.  They now live in the PyGMTL
+                        project.
+                        NEW VERSION: 0.5.0
 May-02-2003 patrickh    Exposed vrj::Frustum().
                         NEW VERSION: 0.4.13
 May-02-2003 patrickh    Exposed gmtl::setFrustum() and gmtl::setPerspective().
