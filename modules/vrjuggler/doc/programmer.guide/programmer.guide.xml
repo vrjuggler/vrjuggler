@@ -477,10 +477,10 @@ int main(int argc, char* argv[])
         a <glossterm linkend="gloss.frame">frame</glossterm><indexterm><primary>frame</primary></indexterm>
         is. In the code above, the statement on line 9 tells the kernel thread
         to start running. When the kernel begins its execution, it follows the
-        sequence shown in <xref linkend="figure.kernel.loop.sequence" />. The specific
-        methods called are described in more detail in the following section.
-        This diagram will be useful in understanding the order in which the
-        application object methods are invoked.</para>
+        sequence shown in <xref linkend="figure.kernel.loop.sequence" />. The
+        specific methods called are described in more detail in the following
+        section. This diagram will be useful in understanding the order in
+        which the application object methods are invoked.</para>
 
         <figure id="figure.kernel.loop.sequence">
           <title>Kernel loop sequence</title>
@@ -507,8 +507,8 @@ int main(int argc, char* argv[])
           application object based on a strictly scheduled
           <firstterm>frame of execution</firstterm><indexterm><primary>frame
           of execution</primary></indexterm>. The frame of execution is shown
-          in <xref linkend="figure.kernel.loop.sequence" />; it makes up all the lines
-          within the <quote>while(!quit)</quote> clause.</para>
+          in <xref linkend="figure.kernel.loop.sequence" />; it makes up all
+          the lines within the <quote>while(!quit)</quote> clause.</para>
 
           <para>During the frame of execution, the kernel calls the
           application methods and performs internal updates (the
@@ -540,9 +540,10 @@ int main(int argc, char* argv[])
         <para>Within this section, we provide a brief overview of the member
         functions from the base VR Juggler application interface. This
         interface is defined by <classname>vrj::App</classname><indexterm><primary>classes</primary><secondary>vrj::App</secondary></indexterm>,
-        and the member functions are shown in <xref linkend="figure.app.obj.interface" />.
-        Refer to <xref linkend="figure.kernel.loop.sequence" /> for a visual presentation
-        of the order in which the methods are invoked.</para>
+        and the member functions are shown in <xref
+        linkend="figure.app.obj.interface" />. Refer to <xref
+        linkend="figure.kernel.loop.sequence" /> for a visual presentation of
+        the order in which the methods are invoked.</para>
 
         <para>The base interface of the application object defines the
         following functions:</para>
@@ -794,8 +795,8 @@ int main(int argc, char* argv[])
           following, we describe the method <methodname>vrj::GlApp::draw()</methodname>,
           the most important element of the interface. More details about the
           <classname>vrj::GlApp</classname><indexterm><primary>classes</primary><secondary>vrj::GlApp</secondary></indexterm>
-          class are provided in <xref linkend="section.opengl.apps" />, found in
-          <xref linkend="chatper.writing.apps" />.</para>
+          class are provided in <xref linkend="section.opengl.apps" />, found
+          in <xref linkend="chatper.writing.apps" />.</para>
 
           <figure id="figure.vrj.GlApp">
             <title><classname>vrj::GlApp</classname> interface extensions to
@@ -883,7 +884,8 @@ int main(int argc, char* argv[])
           linkend="figure.vrj.PfApp" />. The following is a description of
           only two methods in the <classname>vrj::PfApp</classname><indexterm><primary>classes</primary><secondary>vrj::PfApp</secondary></indexterm>
           interface. More detailed discussion on this class is provided in
-          <xref linkend="section.pf.apps" />, found in <xref linkend="chatper.writing.apps" />.</para>
+          <xref linkend="section.pf.apps" />, found in <xref
+          linkend="chatper.writing.apps" />.</para>
 
           <figure id="figure.vrj.PfApp">
             <title><classname>vrj::PfApp</classname> interface extensions to
@@ -2507,7 +2509,8 @@ vj_mat = vrj::GetVjMatrix(pf_mat);</programlisting>
           class maintains its internal matrix in column-major order. Note that
           in the following table, the given indices are what the cells have to
           be called in C/C++ notation because we are putting them
-          back-to-back. This is illustrated in <xref linkend="table.column-major.access" />.</para>
+          back-to-back. This is illustrated in <xref
+          linkend="table.column-major.access" />.</para>
 
           <table id="table.column-major.access">
             <title>Column-major access indices</title>
@@ -2975,9 +2978,9 @@ head_mat = head-&#62;getData();</programlisting>
         <section>
           <title>Basic Application Information</title>
 
-          <para>As described in previous chapters (see <xref linkend="chatper.getting.started" />,
-          for example), all VR Juggler applications derive from a base
-          application object class (<classname>vrj::App</classname><indexterm><primary>classes</primary><secondary>vrj::App</secondary></indexterm>).
+          <para>As described in previous chapters (see <xref
+          linkend="chatper.getting.started" />, for example), all VR Juggler
+          applications derive from a base application object class (<classname>vrj::App</classname><indexterm><primary>classes</primary><secondary>vrj::App</secondary></indexterm>).
           This class defines the basic interface that VR Juggler expects from
           all application objects. This means that when constructing an
           application, the user-defined application object must inherit from
@@ -3090,8 +3093,8 @@ gmtl::Matrix44f wand_pos(mWand-&#62;getData());
           application copies the positional information from a device
           interface. When it is dereferenced, the device interface figures out
           what device it points to and returns the data from that device.
-          Again, refer to <xref linkend="section.gadget.DeviceInterface" /> for
-          more information about using <classname>gadget::DeviceInterface&#60;T&#62;</classname>.</para>
+          Again, refer to <xref linkend="section.gadget.DeviceInterface" />
+          for more information about using <classname>gadget::DeviceInterface&#60;T&#62;</classname>.</para>
         </section>
 
         <section>
@@ -3108,7 +3111,8 @@ gmtl::Matrix44f wand_pos(mWand-&#62;getData());
           surprisingly, is application dependent. There are some very good
           guidelines regarding where applications should process input. Before
           explaining them, however, we should review the VR Juggler kernel
-          control loop, presented again in <xref linkend="figure.kernel.loop.sequence2" />.</para>
+          control loop, presented again in <xref
+          linkend="figure.kernel.loop.sequence2" />.</para>
 
           <figure id="figure.kernel.loop.sequence2">
             <title>VR Juggler kernel control loop</title>
@@ -4056,8 +4060,8 @@ public:
             <para>We now show the implementation of <methodname>contextApp::contextInit()</methodname>.
             Here the display list is created and stored using context-specific
             data. Recall <xref linkend="context.data.init.example" />,
-            presented in <xref linkend="section.using.csdata" />. That example was
-            based on this tutorial application.</para>
+            presented in <xref linkend="section.using.csdata" />. That example
+            was based on this tutorial application.</para>
 
             <programlisting linenumbering="numbered">void contextApp::contextInit()
 {
@@ -4881,9 +4885,9 @@ public:
           kernel. As described in earlier sections of this chapter, the first
           step is to derive a new application class from
           <classname>vrj::GlApp</classname>. For more information on
-          application objects, it may be helpful to review <xref linkend="chapter.app.basics" />.
-          Briefly, the application class definition would appear similar to
-          the following:</para>
+          application objects, it may be helpful to review <xref
+          linkend="chapter.app.basics" />. Briefly, the application class
+          definition would appear similar to the following:</para>
 
           <programlisting>class MyApplication : public vrj::GlApp
 {
@@ -4948,8 +4952,8 @@ public:
           </itemizedlist>
 
           <para>Readers who find some of these concepts unfamiliar are
-          encouraged to read <xref linkend="section.opengl.apps" />. For information
-          about context-specific data, refer to <xref
+          encouraged to read <xref linkend="section.opengl.apps" />. For
+          information about context-specific data, refer to <xref
           linkend="section.csdata.intro" />.</para>
         </section>
       </section>
@@ -5032,9 +5036,9 @@ public:
           </itemizedlist>
 
           <para>For more information about the VR Juggler device interfaces,
-          refer to <xref linkend="chapter.helper.classes" />. A tutorial on getting device input
-          in VR Juggler applications can be found in <xref
-          linkend="section.get.input" />.</para>
+          refer to <xref linkend="chapter.helper.classes" />. A tutorial on
+          getting device input in VR Juggler applications can be found in
+          <xref linkend="section.get.input" />.</para>
         </section>
       </section>
 
@@ -5268,9 +5272,9 @@ int main(int argc, char* argv[])
           kernel. As described in earlier sections of this chapter, the first
           step is to derive a new application class from
           <classname>vrj::GlApp</classname>. For more information on
-          application objects, it may be helpful to review <xref linkend="chapter.app.basics" />.
-          Briefly, the application class definition would appear similar to
-          the following:</para>
+          application objects, it may be helpful to review <xref
+          linkend="chapter.app.basics" />. Briefly, the application class
+          definition would appear similar to the following:</para>
 
           <programlisting>class MyApplication : public vrj::GlApp
 {
@@ -5335,8 +5339,8 @@ int main(int argc, char* argv[])
           </itemizedlist>
 
           <para>Readers who find some of these concepts unfamiliar are
-          encouraged to read <xref linkend="section.opengl.apps" />. For information
-          about context-specific data, refer to <xref
+          encouraged to read <xref linkend="section.opengl.apps" />. For
+          information about context-specific data, refer to <xref
           linkend="section.csdata.intro" />.</para>
         </section>
       </section>
@@ -5409,9 +5413,9 @@ int main(int argc, char* argv[])
           </itemizedlist>
 
           <para>For more information about the VR Juggler device interfaces,
-          refer to <xref linkend="chapter.helper.classes" />. A tutorial on getting device input
-          in VR Juggler applications can be found in <xref
-          linkend="section.get.input" />.</para>
+          refer to <xref linkend="chapter.helper.classes" />. A tutorial on
+          getting device input in VR Juggler applications can be found in
+          <xref linkend="section.get.input" />.</para>
         </section>
       </section>
 
