@@ -77,6 +77,9 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       // Install extra look and feels.
       UIManager.installLookAndFeel("Kunststoff",
                                    com.incors.plaf.kunststoff.KunststoffLookAndFeel.class.getName());
+      UIManager.installLookAndFeel("Kunststoff Mini",
+                                   com.incors.plaf.kunststoff.mini.KunststoffMiniLookAndFeel.class.getName());
+      com.incors.plaf.kunststoff.mini.KunststoffMiniLookAndFeel.setIsInstalled(true);
 
       // This needs to be done as early as possible so that we receive events
       // that happen during initialization.
