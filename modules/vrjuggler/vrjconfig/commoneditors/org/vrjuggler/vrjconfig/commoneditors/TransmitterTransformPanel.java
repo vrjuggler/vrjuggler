@@ -408,12 +408,15 @@ public class TransmitterTransformPanel
       mTrackerXRotLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mTrackerXRotLabel.setLabelFor(mTrackerXRotSpinner);
       mTrackerXRotLabel.setText("X Rotation:");
+      mTrackerXRotLabel.setForeground(Color.red);
       mTrackerYRotLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mTrackerYRotLabel.setLabelFor(mTrackerYRotSpinner);
       mTrackerYRotLabel.setText("Y Rotation:");
+      mTrackerYRotLabel.setForeground(Color.green);
       mTrackerZRotLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mTrackerZRotLabel.setLabelFor(mTrackerZRotSpinner);
       mTrackerZRotLabel.setText("Z Rotation:");
+      mTrackerZRotLabel.setForeground(Color.blue);
       mTrackerManualRotButton.setText("Manual Entry");
       mTrackerManualRotButton.addActionListener(new
          TransmitterTransformPanel_mTrackerManualRotButton_actionAdapter(this));
@@ -519,9 +522,11 @@ public class TransmitterTransformPanel
                                                   GridBagConstraints.HORIZONTAL,
                                                   new Insets(3, 0, 0, 0), 0, 0));
       mTransltationPanel.add(mTrackerPosLabel,
-                             new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
-         , GridBagConstraints.WEST, GridBagConstraints.BOTH,
-         new Insets(0, 0, 0, 0), 0, 0));
+                             new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+                                                    GridBagConstraints.WEST,
+                                                    GridBagConstraints.BOTH,
+                                                    new Insets(0, 3, 0, 0),
+                                                    0, 0));
       mTrackerPosPanel.add(mTrackerYPosLabel,
                            new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
                                                   , GridBagConstraints.EAST,
@@ -543,14 +548,16 @@ public class TransmitterTransformPanel
                                                   GridBagConstraints.NONE,
                                                   new Insets(0, 0, 0, 3), 0, 0));
       mTransltationPanel.add(mTrackerPosPanel,
-                             new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0
-         , GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-         new Insets(0, 0, 0, 0), 0, 0));
+                             new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0,
+                                                    GridBagConstraints.CENTER,
+                                                    GridBagConstraints.BOTH,
+                                                    new Insets(0, 3, 0, 0),
+                                                    0, 0));
       mRotationPanel.add(mVrjCoordPanel,
                          new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0
                                                 , GridBagConstraints.NORTH,
                                                 GridBagConstraints.HORIZONTAL,
-                                                new Insets(0, 0, 0, 5), 0, 0));
+                                                new Insets(0, 3, 0, 5), 0, 0));
       mRotationPanel.add(mTrackerCoordPanel,
                          new GridBagConstraints(1, 0, 1, 1, 1.0, 1.0
                                                 , GridBagConstraints.NORTH,
@@ -583,36 +590,52 @@ public class TransmitterTransformPanel
                             new GridBagConstraints(2, 0, 1, 1, 1.0, 0.0
          , GridBagConstraints.WEST, GridBagConstraints.NONE,
          new Insets(0, 3, 0, 2), 50, 0));
-      mTrackerAnglesPanel.add(mTrackerYRotSpinner,
-                              new GridBagConstraints(1, 1, 1, 1, 1.0, 1.0
-         , GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-         new Insets(0, 0, 3, 0), 54, 10));
-      mTrackerAnglesPanel.add(mTrackerZRotSpinner,
-                              new GridBagConstraints(1, 2, 1, 1, 1.0, 1.0
-         , GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-         new Insets(0, 0, 0, 0), 54, 10));
-      this.add(mRotationPanel, new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0
-         , GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-         new Insets(0, 0, 0, 0), 0, 30));
-      mSensorUnitsEditorPanel.add(mSensorUnitsLabel,
-                            new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
-         , GridBagConstraints.EAST, GridBagConstraints.NONE,
-         new Insets(0, 0, 0, 3), 0, 0));
-      this.add(mSensorUnitsPanel, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0
-         , GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-         new Insets(0, 0, 0, 0), 0, 0));
       mTrackerAnglesPanel.add(mTrackerXRotSpinner,
-                              new GridBagConstraints(1, 0, 1, 1, 1.0, 1.0
-         , GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-         new Insets(0, 0, 3, 0), 54, 10));
+                              new GridBagConstraints(1, 0, 1, 1, 1.0, 1.0,
+                                                     GridBagConstraints.CENTER,
+                                                     GridBagConstraints.HORIZONTAL,
+                                                     new Insets(0, 0, 3, 0),
+                                                     0, 0));
+      mTrackerAnglesPanel.add(mTrackerYRotSpinner,
+                              new GridBagConstraints(1, 1, 1, 1, 1.0, 1.0,
+                                                     GridBagConstraints.CENTER,
+                                                     GridBagConstraints.HORIZONTAL,
+                                                     new Insets(0, 0, 3, 0),
+                                                     0, 0));
+      mTrackerAnglesPanel.add(mTrackerZRotSpinner,
+                              new GridBagConstraints(1, 2, 1, 1, 1.0, 1.0,
+                                                     GridBagConstraints.CENTER,
+                                                     GridBagConstraints.HORIZONTAL,
+                                                     new Insets(0, 0, 0, 0),
+                                                     0, 0));
+      this.add(mRotationPanel,
+               new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0,
+                                      GridBagConstraints.CENTER,
+                                      GridBagConstraints.BOTH,
+                                      new Insets(0, 0, 0, 0), 0, 30));
+      mSensorUnitsEditorPanel.add(mSensorUnitsLabel,
+                                  new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+                                                         GridBagConstraints.EAST,
+                                                         GridBagConstraints.NONE,
+                                                         new Insets(0, 0, 0, 3),
+                                                         0, 0));
+      this.add(mSensorUnitsPanel,
+               new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0,
+                                      GridBagConstraints.CENTER,
+                                      GridBagConstraints.HORIZONTAL,
+                                      new Insets(0, 0, 0, 0), 0, 0));
       mSensorUnitsEditorPanel.add(mSensorUnitsEditor,
-                            new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
-         , GridBagConstraints.WEST, GridBagConstraints.NONE,
-         new Insets(0, 0, 0, 0), 0, 0));
+                                  new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0,
+                                                         GridBagConstraints.WEST,
+                                                         GridBagConstraints.NONE,
+                                                         new Insets(0, 0, 0, 0),
+                                                         0, 0));
       mSensorUnitsPanel.add(mSensorUnitsEditorPanel,
-                            new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0
-         , GridBagConstraints.WEST, GridBagConstraints.NONE,
-         new Insets(0, 0, 0, 0), 0, 0));
+                            new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0,
+                                                   GridBagConstraints.WEST,
+                                                   GridBagConstraints.NONE,
+                                                   new Insets(0, 3, 0, 0),
+                                                   0, 0));
    }
 
    private ConfigContext mContext = null;
