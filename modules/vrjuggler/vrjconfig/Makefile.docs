@@ -61,12 +61,15 @@ webroot=	$(HOME)/public_html/jugglerweb
 instdir=	vrjuggler/$(PROJECT_NUMBER)
 doc_prefix=	$(webroot)/$(instdir)
 DOC_ROOT=	programmer.reference.java
+APP_NAME=	VRJConfig UI API
 
 docs:
 	$(JDK_HOME)/bin/javadoc -d $(DOC_ROOT)				\
           -sourcepath $(SRC_PATH) -classpath "$(CLASSPATH)"		\
-          -windowtitle "VRJConfig UI API v$(PROJECT_NUMBER)"		\
-          -doctitle "VRJConfig UI API v$(PROJECT_NUMBER)"		\
+          -windowtitle "$(APP_NAME) v$(PROJECT_NUMBER)"			\
+          -doctitle "$(APP_NAME) v$(PROJECT_NUMBER)"			\
+          -header "<p><b>$(APP_NAME)</b><br>v$(PROJECT_NUMBER)</p>"	\
+          -bottom "<font size=1>Copyright &copy; 1998-2005 Iowa State University. All rights reserved.</font>" \
           -link "http://java.sun.com/j2se/1.4.2/docs/api/"		\
           -link "http://www.vrjuggler.org/tweek/1.0-beta2/programmer.reference.java" \
           -link "http://www.vrjuggler.org/jccl/1.0-beta2/programmer.reference.java" \
