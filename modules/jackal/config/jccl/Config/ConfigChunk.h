@@ -60,7 +60,7 @@ protected:
 
    unsigned int mValidation;          /**< Flag for testing memory use.*/
 
-   static const std::string embedded_separator;
+   static const std::string embedded_separator;    /**< The separator to use for config chunk pointers */
 
 public:
 
