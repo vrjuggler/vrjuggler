@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          java.m4,v
-dnl Date modified: 2004/07/02 11:35:54
-dnl Version:       1.50
+dnl Date modified: 2004/11/05 18:01:20
+dnl Version:       1.51
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -58,7 +58,7 @@ dnl     JNI_LIB  - The library which needs to be statically linked for JNI.
 dnl     JCPS     - Java classpath separator character (: on UNIX, ; on Win32).
 dnl ===========================================================================
 
-dnl java.m4,v 1.50 2004/07/02 11:35:54 patrickh Exp
+dnl java.m4,v 1.51 2004/11/05 18:01:20 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Find the path to the Java installation.  Substition is performed on the
@@ -110,7 +110,7 @@ AC_DEFUN([DPP_PATH_JAVA],
    fi
 
    AC_ARG_WITH(jdkhome,
-               [  --with-jdkhome=<PATH>   JDK installation directory      [default=\$JDK_HOME
+               [  --with-jdkhome=<PATH>   JDK installation directory      [default=$JDK_HOME
                                                            then /usr/java]],
                jdkhome="$withval")
 
@@ -233,11 +233,15 @@ dnl                           the JNI code.
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([DPP_CHECK_JNI],
 [
-   AC_ARG_WITH(jni-inc, [  --with-jni-inc=<val>    JNI include path(s)],
+   AC_ARG_WITH(jni-incdir, [  --with-jni-incdir=<val> JNI include path(s)],
                JNI_INC="$withval")
 
-   AC_ARG_WITH(jni-lib, [  --with-jni-lib=<val>    JNI libraries and path(s)],
-               JNI_LIB="$withval")
+   AC_ARG_WITH(jni-libdir,
+               [  --with-jni-libdir=<val> JNI libraries and path(s)],
+               JNI_LDFLAGS="$withval")
+
+   AC_ARG_WITH(jvm-lib, [  --with-jvm-lib=<val>    JVM shared library name],
+               JVM_LIB="$withval")
 
    AC_ARG_WITH(java-threads,
                [  --with-java-threads=<green|native>
@@ -274,39 +278,47 @@ AC_DEFUN([DPP_CHECK_JNI],
    dnl -----------------------------------------------------------------------
    : ${JNI_INC_PATH=$JDK_HOME/include}
 
+   JNI_EXTRA_LIBS=$4
+
    case "$PLATFORM" in
       AIX)
          : ${JNI_INC=-I$JNI_INC_PATH -I$JNI_INC_PATH/aix}
          ;;
       Darwin)
-         : ${JNI_INC=-F/System/Library/Frameworks/JavaVM.framework}
-         : ${JNI_LIB=-framework JavaVM}
+         : ${JNI_INC=-I/System/Library/Frameworks/JavaVM.framework/Headers}
+         : ${JVM_LIB=-framework JavaVM}
          ;;
       FreeBSD)
          : ${JNI_INC=-I$JNI_INC_PATH -I$JNI_INC_PATH/freebsd}
-         : ${JNI_LIB=-L$JDK_HOME/jre/lib/i386/${dpp_java_threads}_threads -L$JDK_HOME/jre/lib/i386/classic -L$JDK_HOME/jre/lib/i386 -L$JDK_HOME/jre/lib/i386/client -ljvm}
+         : ${JNI_LDFLAGS=-L$JDK_HOME/jre/lib/i386/${dpp_java_threads}_threads -L$JDK_HOME/jre/lib/i386/classic -L$JDK_HOME/jre/lib/i386 -L$JDK_HOME/jre/lib/i386/client}
+         : ${JVM_LIB=jvm}
+         JNI_EXTRA_LIBS="$JNI_EXTRA_LIBS -pthread"
          ;;
       HP)
          : ${JNI_INC=-I$JNI_INC_PATH -I$JNI_INC_PATH/hp-ux}
-         : ${JNI_LIB=-L$JDK_HOME/lib/PA_RISC/${dpp_java_threads}_threads -L$JDK_HOME/lib/PA_RISC/classic -L$JDK_HOME/lib/PA_RISC -L$JDK_HOME/lib/PA_RISC/client -ljvm}
+         : ${JNI_LDFLAGS=-L$JDK_HOME/lib/PA_RISC/${dpp_java_threads}_threads -L$JDK_HOME/lib/PA_RISC/classic -L$JDK_HOME/lib/PA_RISC -L$JDK_HOME/lib/PA_RISC/client}
+         : ${JVM_LIB=jvm}
          ;;
       IRIX)
          : ${JNI_INC=-I$JNI_INC_PATH -I$JNI_INC_PATH/irix}
-         : ${JNI_LIB=-L$JDK_HOME/lib32/sgi/${dpp_java_threads}_threads -L$JDK_HOME/lib32/sgi/classic -L$JDK_HOME/lib32/sgi -L$JDK_HOME/lib32/sgi/client -ljvm}
+         : ${JNI_LDFLAGS=-L$JDK_HOME/lib32/sgi/${dpp_java_threads}_threads -L$JDK_HOME/lib32/sgi/classic -L$JDK_HOME/lib32/sgi -L$JDK_HOME/lib32/sgi/client}
+         : ${JVM_LIB=jvm}
          ;;
       Linux)
          : ${JNI_INC=-I$JNI_INC_PATH -I$JNI_INC_PATH/linux}
-         : ${JNI_LIB=-L$JDK_HOME/jre/lib/i386/${dpp_java_threads}_threads -L$JDK_HOME/jre/lib/i386/classic -L$JDK_HOME/jre/lib/i386 -L$JDK_HOME/jre/lib/i386/client -ljvm -lhpi}
+         : ${JNI_LDFLAGS=-L$JDK_HOME/jre/lib/i386/${dpp_java_threads}_threads -L$JDK_HOME/jre/lib/i386/classic -L$JDK_HOME/jre/lib/i386 -L$JDK_HOME/jre/lib/i386/client}
+         : ${JVM_LIB=jvm}
          ;;
       alpha-osf)
          ;;
       Solaris)
          : ${JNI_INC=-I$JNI_INC_PATH -I$JNI_INC_PATH/solaris}
-         : ${JNI_LIB=-L$JDK_HOME/jre/lib/i386/${dpp_java_threads}_threads -L$JDK_HOME/jre/lib/i386 -ljvm}
+         : ${JNI_LDFLAGS=-L$JDK_HOME/jre/lib/i386/${dpp_java_threads}_threads -L$JDK_HOME/jre/lib/i386}
+         : ${JVM_LIB=jvm}
          ;;
       Win*)
          : ${JNI_INC=-I`dospath -p "$JNI_INC_PATH"` -I`dospath -p "$JNI_INC_PATH"/win32`}
-         : ${JNI_LIB=`dospath -p "$JDK_HOME/lib/jvm.lib"`}
+         : ${JVM_LIB=`dospath -p "$JDK_HOME/lib/jvm.lib"`}
          ;;
       UNKNOWN)
          ;;
@@ -325,19 +337,40 @@ AC_DEFUN([DPP_CHECK_JNI],
    DPP_LANG_C
 
    dpp_save_CPPFLAGS="$CPPFLAGS"
+   dpp_save_LDFLAGS="$LDFLAGS"
    dpp_save_LIBS="$LIBS"
-   CPPFLAGS="$CPPFLAGS $JNI_INC"
 
-   AC_CHECK_LIB([jvm], [JNI_CreateJavaVM],
-      [AC_CHECK_HEADER([jni.h], [dpp_jni_libs='yes'], [dpp_jni_libs='no'])],
-      [dpp_jni_libs='no'], [$4 $JNI_LIB])
+   CPPFLAGS="$CPPFLAGS $JNI_INC"
+   LDFLAGS="$LDFLAGS $JNI_LDFLAGS"
+
+   if test "x$PLATFORM" = "xDarwin" ; then
+      LIBS="$LIBS $JVM_LIB"
+      AC_CACHE_CHECK([for JNI_CreateJavaVM in JavaVM framework],
+                     [dpp_cv_JNI_CreateJavaVM_javavm_fw],
+                     [AC_TRY_LINK([#include <jni.h>],
+                        [JNI_CreateJavaVM(0, 0, 0);],
+                        [dpp_cv_JNI_CreateJavaVM_javavm_fw='yes'],
+                        [dpp_cv_JNI_CreateJavaVM_javavm_fw='no'])])
+      dpp_jni_libs="$dpp_cv_JNI_CreateJavaVM_javavm_fw"
+   elif test "x$OS_TYPE" = "xUNIX" ; then
+      AC_CHECK_LIB([$JVM_LIB], [JNI_CreateJavaVM],
+         [AC_CHECK_HEADER([jni.h], [dpp_jni_libs='yes'], [dpp_jni_libs='no'])],
+         [dpp_jni_libs='no'], [$JNI_EXTRA_LIBS])
+   fi
 
    CPPFLAGS="$dpp_save_CPPFLAGS"
+   LDFLAGS="$dpp_save_LDFLAGS"
    LIBS="$dpp_save_LIBS"
 
    DPP_LANG_RESTORE
 
    if test "x$dpp_jni_libs" = "xyes" ; then
+      if test "x$PLATFORM" = "xDarwin" ; then
+         JNI_LIB="$JVM_LIB"
+      else
+         JNI_LIB="-l$JVM_LIB $JNI_EXTRA_LIBS"
+      fi
+
       ifelse([$2], , :, [$2])
    else
       ifelse([$3], , :, [$3])
@@ -346,6 +379,7 @@ AC_DEFUN([DPP_CHECK_JNI],
    AC_SUBST(JAVAH)
    AC_SUBST(JAVAP)
    AC_SUBST(JNI_INC)
+   AC_SUBST(JNI_LDFLAGS)
    AC_SUBST(JNI_LIB)
 ])
 
