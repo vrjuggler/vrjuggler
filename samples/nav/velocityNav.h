@@ -30,6 +30,8 @@
  * Version:       $Revision$
  * -----------------------------------------------------------------
  */
+#ifndef _VELOCITY_NAV_H
+#define _VELOCITY_NAV_H
 
 #include <vjQuat.h>
 #include <navigator.h>
@@ -388,3 +390,5 @@ void velocityNav::reset()
    navigator::reset();
 }
 
+
+#endif
