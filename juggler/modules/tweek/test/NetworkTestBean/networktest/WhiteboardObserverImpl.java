@@ -6,19 +6,11 @@ import tweek.*;
 
 public class WhiteboardObserverImpl extends ObserverPOA
 {
-   public WhiteboardObserverImpl ()
+   public WhiteboardObserverImpl (JTextArea _whiteboard,
+                                  WhiteboardSubject _subject)
    {
-   }
-
-   public void setWhiteboardSubject (WhiteboardSubject _subject)
-   {
+      whiteboard         = _whiteboard;
       whiteboard_subject = _subject;
-      update();
-   }
-
-   public void setWhiteboard (JTextArea _whiteboard)
-   {
-      whiteboard = _whiteboard;
    }
 
    public void update ()
