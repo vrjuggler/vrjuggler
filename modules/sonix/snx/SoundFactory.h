@@ -74,40 +74,71 @@ public:
       {
          search_paths[x] = snx::replaceEnvVars( search_paths[x] );
          std::cout << "[snx]SoundFactory| Finding plugins in: \n"
-                   << " + " << search_paths[x] << std::endl;
-         std::string test_file = search_paths[x] + "/.testjunk";
-         if (std::ofstream(test_file.c_str()).good())
+                   << " + " << search_paths[x].c_str() << std::endl;
+      //   std::string test_file = search_paths[x] + "/.testjunk";
+         if (xdl::isDir(search_paths[x].c_str()))
          {
             xdl::dirlist( search_paths[x].c_str(), filelist );
-            this->filterOutPluginFileNames( filelist, filelist );
+            this->filterOutPluginFileNames( search_paths[x].c_str(), filelist, filelist );
             this->loadPlugins( search_paths[x], filelist );
+            for(unsigned int i=0;i<filelist.size();i++){
+               std::cout << "filelist: " << filelist[i] << ", " << std::endl;
+            }
          }
       }
    }
 
-   bool isPlugin( std::string filename )
+   void errorOutput(std::string filename, const char* test)
    {
+      std::cout << "[snx]Plugin: " << filename << " does not export symbol: " << test << std::endl;
+   }
+   
+   
+   bool isPlugin( std::string filename )
+   {  
       xdl::Library lib;
-      if (lib.open( filename.c_str(), xdl::NOW ) == false) return false;
-      if (lib.lookup( "newPlugin" ) == NULL) return false;
-      if (lib.lookup( "deletePlugin" ) == NULL) return false;
-      if (lib.lookup( "getVersion" ) == NULL) return false;
-      if (lib.lookup( "getName" ) == NULL) return false;
+      if (lib.open( filename.c_str(), xdl::NOW ) == false){
+         std::cout << "Plugin: " << filename << " has invalid name." << std::endl;
+         return false;
+      }
+      if (lib.lookup( "newPlugin" ) == NULL){
+         errorOutput(filename, "newPlugin");
+         return false;
+      }  
+      if (lib.lookup( "deletePlugin" ) == NULL){
+         errorOutput(filename, "deletePlugin");
+         return false;
+      }
+      if (lib.lookup( "getVersion" ) == NULL){
+         errorOutput(filename, "getVersion");
+         return false;
+      }
+      if (lib.lookup( "getName" ) == NULL){
+         errorOutput(filename, "getName");
+         return false;
+      }
 
       // @todo give sonix an internal version number string!
       //getVersionFunc getVersion = (getVersionFunc)lib.lookup( "getVersion" );
       //if (getVersion != NULL && getVersion() != snx::version) return false;
 
       lib.close();
+      std::cout << "Plugin: " << filename << " is a valid sonix plugin." << std::endl;
       return true;
    }
 
-   void filterOutPluginFileNames( std::vector<std::string> srclist,
+   void filterOutPluginFileNames( const char* dir,
+                                  std::vector<std::string> srclist,
                                   std::vector<std::string>& destlist )
    {
+      destlist.clear();
+      std::string temp;
+      
+      std::cout << "[snx]Checking Plugins validity..." << std::endl;
       for (unsigned int x = 0; x < srclist.size(); ++x)
       {
-         if (this->isPlugin( srclist[x] ))
+         temp = dir + std::string("/") + srclist[x];
+         if (this->isPlugin( temp/*srclist[x]*/ ))
          {
             destlist.push_back( srclist[x] );
          }

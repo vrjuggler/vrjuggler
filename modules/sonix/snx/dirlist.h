@@ -32,6 +32,8 @@
 #include <string>    // std::string
 #include <vector>    // std::vector
 
+#include <iostream>
+
 #ifndef WIN32
 #include <dirent.h>
 #else
@@ -40,6 +42,23 @@
 
 namespace xdl
 {
+
+   inline bool
+   isDir(const char* dir)
+   {
+      DIR* dirh = NULL;
+      
+      // try to open the directory to see if it's there
+      dirh = ::opendir( dir );
+      if ( dirh == NULL ) {
+         return false;
+      }
+
+      
+      ::closedir(dirh);
+      return true;
+   }
+   
    /**
     * Gets a list of the names of the files in the directory located using
     * the given path. The files vector is filled with the filenames.
@@ -58,7 +77,7 @@ namespace xdl
       
       // try to open the directory to see if it's there
       dirh = ::opendir( dir );
-      if ( dir == NULL ) {
+      if ( dirh == NULL ) {
          return false;
       }
 
