@@ -19,7 +19,7 @@
 #include <gadget/Devices/Immersion/ibox2.h>
 
 
-char SIGNON_STR[5] = "IMMC"; 
+char SIGNON_STR[5] = "IMMC";
 char BEGIN_STR[6] = "BEGIN";
 
 
@@ -31,7 +31,7 @@ ibox2::ibox2() {
         slow_timeout = 30; // Set to 3 seconds
         fast_timeout = 1;  // Set to 1 tenth of a second
         overlap = 0;
-        
+
         /* Set all descr. strings to null strings */
         serial_number[0] = 0;
         product_name[0] = 0;
@@ -68,18 +68,18 @@ ibox2_result ibox2::connect(const std::string& port_name,  long int baud){
         if(port->open().success()){
                 port->setTimeout((int)slow_timeout*10);
                 port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
-                      port->enableRead(); 
+                      port->enableRead();
                 port->setBufferSize(0);
                 port->setOutputBaudRate(baud); // Put me before input to be safe
                 port->setInputBaudRate(baud);
                 if(autosynch()){
                         if(!begin()){
                                 result = CANT_BEGIN;
-                        }        
+                        }
                 }else{
                         result = NO_HCI;
-                } 
-        
+                }
+
         }else{
                 result = CANT_OPEN_PORT;
         }
@@ -104,12 +104,12 @@ ibox2_result ibox2::fancy_connect(const std::string& port_name, long int baud , 
                 result = CANT_OPEN_PORT;
         }
         return result;
-}        
+}
 
 ibox2_result ibox2::wait_update(int timer_flag, int num_analogs ,int num_encoders){
-        std_cmd(timer_flag, num_analogs, num_encoders);        
+        std_cmd(timer_flag, num_analogs, num_encoders);
         return wait_packet();
-        
+
 }
 
 void ibox2::disconnect(){
@@ -130,15 +130,15 @@ void ibox2::std_cmd(int timer_flag, int analog_reports, int encoder_reports){
 
 
 void ibox2::simple_cfg_cmd(byte cmnd){
-        vpr::Uint32 written;        
-        char temp = cmnd;        
+        vpr::Uint32 written;
+        char temp = cmnd;
         char* buffer = &temp;
         port->write(buffer, sizeof(buffer), written);
         if(!overlap){
                 port->setTimeout(fast_timeout);
         }
 
-}        
+}
 
 ibox2_result ibox2::string_cmd(byte cmnd){
         vpr::Uint16 size;
@@ -152,7 +152,7 @@ ibox2_result ibox2::string_cmd(byte cmnd){
         port->read(ch, 1, written);
         while(ch[0]!=cmnd){
                 if(ch!=0) port->setTimeout(fast_timeout);
-                if(port->getBufferSize(size).failure()) break; 
+                if(port->getBufferSize(size).failure()) break;
                 port->read(ch, 1, written);
         }
         if(ch[0]!=cmnd) return error(TIMED_OUT);
@@ -186,18 +186,18 @@ ibox2_result ibox2::string_cmd(byte cmnd){
         }
 
         return result;
-} 
+}
 
 ibox2_result ibox2::passwd_cmd(byte cmnd){
         char temp = cmnd;
         char* buffer = &temp;
-        vpr::Uint16 size;        
+        vpr::Uint16 size;
         vpr::Uint32 written;
-        char ch[2];        
-        char reader[2];//was MAX_STRING_SIZE        
+        char ch[2];
+        char reader[2];//was MAX_STRING_SIZE
         port->write(buffer, 1, written);
         port->setTimeout(fast_timeout);
-        
+
         port->read(ch, 1, written);
         while(ch[0]!=cmnd){
                 if(ch!=0) port->setTimeout(fast_timeout);
@@ -221,18 +221,18 @@ ibox2_result ibox2::passwd_cmd(byte cmnd){
 
 void ibox2::insert_marker(byte marker){
         simple_cfg_cmd(INSERT_MARKER);
-        char temp = marker;        
-        char* buffer = &temp;        
+        char temp = marker;
+        char* buffer = &temp;
         vpr::Uint32 written;
         port->write( buffer, 1, written);
 }
 
 ibox2_result ibox2::get_params(byte *block, int *block_size){
         char ch[2];
-        vpr::Uint16 size;        
+        vpr::Uint16 size;
         vpr::Uint32 written;
-        char temp = GET_PARAMS;        
-        char* send = &temp;        
+        char temp = GET_PARAMS;
+        char* send = &temp;
         port->write(send, sizeof(GET_PARAMS), written);
         port->setTimeout(fast_timeout);
         port->read(ch, 1, written);
@@ -240,10 +240,10 @@ ibox2_result ibox2::get_params(byte *block, int *block_size){
                 if(ch!=0) port->setTimeout(fast_timeout);
                 if(port->getBufferSize(size).failure()) break;
                 port->read(ch, 1, written);
-        }        
+        }
         if(ch[0]!= GET_PARAMS) return error(TIMED_OUT);
         *block_size = -1;
-        return read_block(block, block_size);        
+        return read_block(block, block_size);
 
 }
 
@@ -252,7 +252,7 @@ ibox2_result ibox2::set_params(byte *block, int block_size){
         num_cfg_args = block_size;
         for(i=0;i<block_size; i++) cfg_args[i] = block[i];
         return passwd_cmd(SET_PARAMS);
-}        
+}
 
 ibox2_result ibox2::get_home_ref(){
         simple_cfg_cmd(GET_HOME_REF);
@@ -313,12 +313,12 @@ ibox2_result    ibox2::factory_settings(){
 void            ibox2::report_motion(int timer_flag, int analog_reports, int encoder_reports, int delay, byte active_btns, int *analog_deltas, int *encoder_deltas){
 
         int i;
-        vpr::Uint32 written;        
+        vpr::Uint32 written;
         char temp;
-        char* buffer;        
+        char* buffer;
         char         cmnd = CMD_BYTE(timer_flag, analog_reports, encoder_reports);
         temp = REPORT_MOTION;
-        buffer = &temp;        
+        buffer = &temp;
         port->write(buffer, 1, written);
         temp = delay >> 8;
         buffer = &temp;
@@ -328,14 +328,14 @@ void            ibox2::report_motion(int timer_flag, int analog_reports, int enc
         port->write(buffer, 1, written);
         buffer = &cmnd;
         port->write(buffer, 1, written);
-        
+
         port->write(analog_deltas, sizeof(analog_deltas), written);
 
         for(i=0;i<NUM_ENCODERS;i++){
                 temp = encoder_deltas[i];
                 buffer = &temp;
                 port->write(buffer, sizeof(buffer), written);
-        }        
+        }
 }
 
 void   ibox2::end_motion(){
@@ -350,7 +350,7 @@ ibox2_result    ibox2::wait_packet(){
         while( (result = check_packet()) == NO_PACKET_YET);
         return result;
 }
-        
+
 ibox2_result    ibox2::check_packet(){
         ibox2_result result;
         vpr::Uint16 size;
@@ -365,7 +365,7 @@ ibox2_result    ibox2::check_packet(){
                         return NO_PACKET_YET;
         }
 }
-        
+
 ibox2_result    ibox2::check_motion(){
         ibox2_result result;
         if(build_packet()){
@@ -377,7 +377,7 @@ ibox2_result    ibox2::check_motion(){
 }
 
 int  ibox2::build_packet(){
-        char ch;        
+        char ch;
         int temp;
         vpr::Uint32 written;
         if(packet.parsed){
@@ -397,7 +397,7 @@ int  ibox2::build_packet(){
                                 port->setTimeout(fast_timeout);
                         }
                 }
-        }        
+        }
         else if (packet.num_bytes_needed > 0){
                 while(port->read(&ch, 1, written).success()){
                         *(packet.data_ptr)++ = (byte) ch;
@@ -405,21 +405,21 @@ int  ibox2::build_packet(){
                 }
         }
         return (packet.num_bytes_needed <= 0);
-}        
+}
 
 ibox2_result    ibox2::parse_packet(){
         char cmnd = packet.cmd_byte, bits, temp;
         ibox2_result result = SUCCESS;
         byte *dp;
         int *p, *q;
-        
+
         if(packet.num_bytes_needed){
                 if(packet.num_bytes_needed < 0)
                         result = BAD_PACKET;
                 else return NO_PACKET_YET;
         }
         if(packet.error) result = error(BAD_PACKET);
-        
+
         if(result == SUCCESS){
                 invalidate_fields();
                 dp = packet.data;
@@ -560,12 +560,12 @@ ibox2_result    ibox2::parse_cfg_packet(){
         }
 
         return result;
-}        
+}
 
 int    ibox2::packet_size(int cmd){
         int size = 1;   /* Regular cmds always include buttons byte */
         int bits;
-        
+
         if (cmd < CONFIG_MIN)
         {
                 if (cmd & TIMER_BIT) size += 2;
@@ -637,11 +637,11 @@ ibox2_result ibox2::read_block(byte *block, int *num_bytes){
                                 (*num_bytes)++;
                                 if(--count == 0) return SUCCESS;
                         }
-                        port->read(ch, 1, written);        
+                        port->read(ch, 1, written);
                 }
                 return TIMED_OUT;
         }
-}        
+}
 
 void   ibox2::invalidate_fields(){
         timer_updated = 0;
@@ -665,7 +665,7 @@ void   ibox2::invalidate_fields(){
 
 ibox2_result    ibox2::error(ibox2_result condition){
         ibox2_result (*handler) ();
-        
+
         /* These two are not really errors */
         if (condition == SUCCESS) return SUCCESS;
         if (condition == NO_PACKET_YET) return NO_PACKET_YET;
@@ -699,10 +699,10 @@ ibox2_result    ibox2::error(ibox2_result condition){
 
 int ibox2::autosynch(){
         vpr::Uint16 size;
-        ssize_t ch=0;
+        //ssize_t ch=0;
         vpr::Uint32 written;
         int signed_on=0;
-        int timed_out=0;
+        //int timed_out=0;
         char *sign_ch = SIGNON_STR;
 //        char temp[sizeof(SIGNON_STR) - 1];
         char temp;
@@ -734,7 +734,7 @@ int ibox2::autosynch(){
 }
 
 int ibox2::begin(){
-        int ch;
+//        int ch;
         vpr::Uint32 written;
 //        char* temp;
         port->write(BEGIN_STR,sizeof(BEGIN_STR) - 1, written);
@@ -751,7 +751,7 @@ int ibox2::end(){
         vpr::Uint32 written;
 
         char temp = END_SESSION;
-        char* buffer = &temp; 
+        char* buffer = &temp;
         if(port->write(buffer, sizeof(buffer), written).success()){
                 return true;
         }else{

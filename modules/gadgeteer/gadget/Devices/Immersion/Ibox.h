@@ -44,14 +44,10 @@
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/Analog.h>
 #include <gadget/Devices/Immersion/ibox2.h>
+#include <vector>
 
 namespace gadget
 {
-
-struct IBOX_DATA {
-   DigitalData button[4];
-   AnalogData analog[4];
-};
 
 //----------------------------------------------------------------------------
 //: The Immersion Box input class.
@@ -64,6 +60,33 @@ struct IBOX_DATA {
 //!PUBLIC_API:
 class IBox : public Input, public Digital, public Analog
 {
+protected:
+   struct IboxData
+   {
+      /** Constructor
+      * Init both vectors to the default size of 4
+      */
+      IboxData()
+         : button(4), analog(4)
+      {;}
+
+      /** Helper to set all the times */
+      void setTime()
+      {
+         button[0].setTime();
+         button[1].setTime( button[0].getTime() );
+         button[2].setTime( button[0].getTime() );
+         button[3].setTime( button[0].getTime() );
+         analog[0].setTime( button[0].getTime() );
+         analog[1].setTime( button[0].getTime() );
+         analog[2].setTime( button[0].getTime() );
+         analog[3].setTime( button[0].getTime() );
+      }
+
+      std::vector<DigitalData> button;    // size of 4
+      std::vector<AnalogData>  analog;    // size of 4
+   };
+
 public:
    //: Construction/Destruction
    IBox() : Input(), Digital(), Analog()
@@ -84,32 +107,14 @@ public:
 
    static std::string getChunkType() { return std::string( "IBox" ); }
 
-   DigitalData* getDigitalData( int d = 0 );
-
-   //: Return "analog data"..
-   //  Gee, that's ambiguous especially on a discrete system such as a digital computer....
-   //
-   //! PRE: give the device number you wish to access.
-   //! POST: returns a value that ranges from 0.0f to 1.0f
-   //! NOTE: for example, if you are sampling a potentiometer, and it returns reading from
-   //        0, 255 - this function will normalize those values (using Analog::normalizeMinToMax())
-   //        for another example, if your potentiometer's turn radius is limited mechanically to return
-   //        say, the values 176 to 200 (yes this is really low res), this function will still return
-   //        0.0f to 1.0f.
-   //! NOTE: to specify these min/max values, you must set in your Analog (or analog device) config
-   //        file the field "min" and "max".  By default (if these values do not appear),
-   //        "min" and "max" are set to 0.0f and 1.0f respectivly.
-   //! NOTE: TO ALL ANALOG DEVICE DRIVER WRITERS, you *must* normalize your data using
-   //        Analog::normalizeMinToMax()
-   AnalogData* getAnalogData( int d = 0 );
-
 private:
    // juggler ibox data in the range of [0..255]
-   IBOX_DATA theData[3];
+   //IBOX_DATA   theData[3];
+
    // ibox native data in the range of [0..255]
-   ibox2 thingie;
+   ibox2       mPhysicalIbox;
    std::string mPortStr;
-   long mBaudRate;
+   long        mBaudRate;
 };
 
 };
