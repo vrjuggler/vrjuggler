@@ -47,21 +47,17 @@ namespace vrj
 {
    class Kernel;
 
-//-----------------------------------------------------------
-//: GlApp: Encapulates an actual OpenGL application.
-//
-// PURPOSE:
-// This class defines the class that OpenGL
-//  application classes should be derived from.  The interface
-//  given is the interface that the System expects in order to
-//  interface with the application.
-//
-// See also: App
-//
-// @author Allen Bierbaum
-//  Date: 1-12-98
-//-------------------------------------------------------------
-//!PUBLIC_API:
+/** GlApp: Encapulates an actual OpenGL application.
+*
+* PURPOSE:
+* This class defines the class that OpenGL
+* application classes should be derived from.  The interface
+* given is the interface that the System expects in order to
+* interface with the application.
+*
+* See also: App
+*
+*/
 class VJ_CLASS_API GlApp : public App
 {
 public:
@@ -72,56 +68,69 @@ public:
 
    GlApp() {;}
 
-   //: Function to draw the scene
-   // Override this function with the user draw routine
-   //!PRE: OpenGL state has correct transformation and buffer selected
-   //!POST: The current scene has been drawn
+   /** Function to draw the scene
+   * Override this function with the user draw routine
+   * @pre OpenGL state has correct transformation and buffer selected
+   * @post The current scene has been drawn
+   */
    virtual void draw() = 0;
 
-   //: Function that is called immediately after a new context is created
-   //  Use this function to create context specific data structures.
-   //  i.e. Display lists, Texture objects, etc.
-   //! PRE: The ogl context has been set to the new context
-   //! POST: Application has completed in initialization the user wishes
+   /** Function that is called immediately after a new context is created
+   *  Use this function to create context specific data structures.
+   *  i.e. Display lists, Texture objects, etc.
+   * @pre The ogl context has been set to the new context
+   * @post Application has completed in initialization the user wishes
+   */
    virtual void contextInit()
    {;}
 
-   //: Function that is called immediately before a context is closed
-   // Use the function to clean up any context data structures
+   /** Function that is called immediately before a context is closed
+   * Use the function to clean up any context data structures
+   */
    virtual void contextClose()
    {;}
 
-   //: Function that is called upon entry into the context for a draw
-   //! PRE: The ogl context has been set to the context for drawing
-   //! POST: User application has executed any commands that need
-   //+   to only be executed once per context, per frame
-   //! NOTE: This function can be used for things that need to happen
-   //+       every frame, but only once per context
-   //+  <br> Ex: Dynamically Create display lists
+   /** Function that is called upon entry into the context for a draw
+   * @pre The ogl context has been set to the context for drawing
+   * @post User application has executed any commands that need
+   *   to only be executed once per context, per frame
+   * @note This function can be used for things that need to happen
+   *       every frame, but only once per context
+   *  <br> Ex: Dynamically Create display lists
+   */
    virtual void contextPreDraw()
    {;}
 
-   //: Function that is called upon entry into a buffer of a gl context
-   //! PRE: The ogl context has been set to the context for drawing
-   //! POST: User application has executed any commands that need
-   //+   to only be executed once per context, per buffer, per frame
-   //! NOTE: This function is designed to be used when you want to do something
-   //+       only once per buffer (ie.once for left buffer, once for right buffer)
-   //+  <br> Ex: glClear's need to be done in this method
+   /** Function that is called upon exit of the context for a draw
+   * @pre The ogl context has been set to the context for drawing
+   */
+   virtual void contextPostDraw()
+   {;}
+
+   /** Function that is called upon entry into a buffer of a gl context
+   * @pre The ogl context has been set to the context for drawing
+   * @post User application has executed any commands that need
+   *   to only be executed once per context, per buffer, per frame
+   * @note This function is designed to be used when you want to do something
+   *       only once per buffer (ie.once for left buffer, once for right buffer)
+   *  <br> Ex: glClear's need to be done in this method
+   */
    virtual void bufferPreDraw()
    {;}
 
-   //: Function that is called at the beginning of the drawing of each pipe
-   //!PRE: The library is preparing to render all windows on a given pipe
-   //!POST: Any pre-pipe user calls have been done
-   //!NOTE: Currently the OGL context is not set when this function is called <br>
-   //+      This is a TEST function.  USE AT YOUR OWN RISK!!!
+   /** Function that is called at the beginning of the drawing of each pipe
+   * @pre The library is preparing to render all windows on a given pipe
+   * @post Any pre-pipe user calls have been done
+   * @note Currently the OGL context is not set when this function is called <br>
+   *      This is a TEST function.  USE AT YOUR OWN RISK!!!
+   */
    virtual void pipePreDraw()
    {;}
 
 public:  // --- Factory functions --- //
-   //: Get the DrawManager to use
-   // Returns the ogl draw manager
+   /** Get the DrawManager to use
+   * Returns the ogl draw manager
+   */
    virtual DrawManager*    getDrawManager()
    { return GlDrawManager::instance(); }
 };
