@@ -166,8 +166,8 @@ class PyOsgNav(vrj.OsgApp):
    # XXX: Not currently working because Boost.Python does not seem to know
    # about PyOSG.osgUtil.SceneView.
    def configSceneView(self, newSceneViewer):
-      newSceneVeiwer.setDefaults()
-      newSceneViewer.setBackgroundColor(osg.Vec4(0.0, 0.0, 0.0, 0.0))
+      vrj.OsgApp.configSceneView(self, newSceneViewer)
+
       newSceneViewer.getLight().setAmbient(osgVec4(0.3, 0.3, 0.3, 1.0))
       newSceneViewer.getLight().setDiffuse(osgVec4(0.9, 0.9, 0.9, 1.0))
       newSceneViewer.getLight().setSpecular(osgVec4(1.0, 1.0, 1.0, 1.0))
@@ -222,11 +222,6 @@ class PyOsgNav(vrj.OsgApp):
    def bufferPreDraw(self):
       glClearColor(0.0, 0.0, 0.0, 0.0)
       glClear(GL_COLOR_BUFFER_BIT)
-
-   def draw(self):
-      # XXX: Move this call up to the C++ method vrj::OsgApp::draw().
-      glClear(GL_DEPTH_BUFFER_BIT)
-      vrj.OsgApp.draw(self)
 
    def __myInit(self):
       #           /-- mNoNav
