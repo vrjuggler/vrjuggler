@@ -227,7 +227,7 @@ public class TweekCore
     * Registers the beans that are internal to Tweek that are required to exist
     * before the bean loading can begin.
     */
-   protected void registerStaticBeans()
+   public static void registerStaticBeans()
    {
       BeanRegistry registry = BeanRegistry.instance();
 
