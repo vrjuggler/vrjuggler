@@ -57,19 +57,6 @@ class SemaphoreWin32
 public:
    SemaphoreWin32 (int initialValue = 1)
    {
-//      // BUG:	
-//      if (semaphorePool == NULL)
-//      {
-//         semaphorePool = new MemPoolWin32(65536, 32, "memSemaphorePoolWin32XXXXXX");
-//         attachedCounter = static_cast<int*>(semaphorePool->allocate(sizeof(int)));
-//         *attachedCounter = 0;
-//      }
-//      *attachedCounter = *attachedCounter + 1;      // Track how many semaphores are allocated
-
-      //DebugLock.acquire();
-      //std::cerr << Thread::self() << " vpr::SemaphoreWin32::SemaphoreWin32: attachedCounter: " << *attachedCounter << std::endl;
-      //DebugLock.release();
-
       // ----- Allocate the semaphore ----- //
       sema = CreateSemaphore(NULL,initialValue,99,NULL);
    }
@@ -78,22 +65,6 @@ public:
    {
       // ---- Delete the semaphore --- //
       CloseHandle(sema);
-
-      // ---- Deal with the pool --- //
-//      *attachedCounter = *attachedCounter - 1;     // Track how many Semaphore are allocated
-
-      //DebugLock.acquire();
-      //std::cerr << Thread::self() << " vpr::SemaphoreWin32::~SemaphoreWin32: attachedCounter: " << *attachedCounter << std::endl;
-      //DebugLock.release();
-
-//      if (*attachedCounter == 0)
-//      {
-//         semaphorePool->deallocate(attachedCounter);
-//         attachedCounter = NULL;
-//         delete semaphorePool;
-//         semaphorePool = NULL;
-//      }
-
    }
 
    //---------------------------------------------------------
@@ -205,16 +176,9 @@ protected:
    // = Prevent assignment and initialization.
    void operator= (const SemaphoreWin32 &) {}
    SemaphoreWin32 (const SemaphoreWin32 &) {}
-
-//   // Problem here.  Fork will not like these.
-//   static MemPoolWin32* semaphorePool;
-//   static int* attachedCounter;
 };
 
 }; // End of vpr namespace
-
-//vpr::MemPoolWin32* vpr::SemaphoreWin32::semaphorePool = NULL;
-//int* vpr::SemaphoreWin32::attachedCounter = NULL;
 
 
 #endif
