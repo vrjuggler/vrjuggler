@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          sys.m4,v
-dnl Date modified: 2004/01/29 04:28:37
-dnl Version:       1.59
+dnl Date modified: 2004/07/02 11:35:54
+dnl Version:       1.60
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -58,7 +58,7 @@ dnl     IRIXREL      - Defined to the string "IRIX5" or "IRIX6" based on the
 dnl                    determined version of IRIX.
 dnl ===========================================================================
 
-dnl sys.m4,v 1.59 2004/01/29 04:28:37 patrickh Exp
+dnl sys.m4,v 1.60 2004/07/02 11:35:54 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Based on the given detected host and CPU, set up the system-specific
@@ -67,7 +67,7 @@ dnl
 dnl Usage:
 dnl     DPP_SYSTEM_SETUP
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_SYSTEM_SETUP,
+AC_DEFUN([DPP_SYSTEM_SETUP],
 [
    dnl We use AC_CANONICAL TARGET so that we can find out information about
    dnl the build, target, and host platforms rather than only the host.

@@ -50,7 +50,7 @@ dnl     GADGET_EXTRA_LIBS_CC
 dnl     GADGET_EXTRA_LIBS_LD
 dnl     GADGET_USE_X11
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(GADGETEER_PATH,
+AC_DEFUN([GADGETEER_PATH],
 [
     dnl Get the cflags and libraries from the gadgeteer-config script
     AC_ARG_WITH(gadget-prefix,

@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          abi.m4,v
-dnl Date modified: 2004/03/01 22:22:11
-dnl Version:       1.15
+dnl Date modified: 2004/07/02 11:35:54
+dnl Version:       1.16
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -74,7 +74,7 @@ dnl                    that Autconf performs.
 dnl     DPP_ABI_TYPE - The argument given to --with-abi.
 dnl ===========================================================================
 
-dnl abi.m4,v 1.15 2004/03/01 22:22:11 patrickh Exp
+dnl abi.m4,v 1.16 2004/07/02 11:35:54 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Define a macro DPP_ABI_CFG for setting up the configuration parameters
@@ -94,7 +94,7 @@ dnl                      This argument is optional.
 dnl     extra-flags    - Extra compiler flags related to the ABI and ISA.
 dnl                      This argument is optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_ABI_CFG, [ ABI=$1 ISA=$2 LIBBITSUF=$3 ABI_FLAGS=$4 _EXTRA_FLAGS=$4 ; ])
+AC_DEFUN([DPP_ABI_CFG], [ ABI=$1 ISA=$2 LIBBITSUF=$3 ABI_FLAGS=$4 _EXTRA_FLAGS=$4 ; ])
 
 dnl ---------------------------------------------------------------------------
 dnl Adds the --with-abi option and configure the ABI/ISA settings based on the
@@ -104,7 +104,7 @@ dnl
 dnl Usage:
 dnl     DPP_ABI_SETUP
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_ABI_SETUP,
+AC_DEFUN([DPP_ABI_SETUP],
 [
    AC_BEFORE([$0], [DPP_SYSTEM_SETUP])
 

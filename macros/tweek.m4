@@ -33,7 +33,7 @@ dnl ************** <auto-copyright.pl END do not edit this line> **************
 dnl ---------------------------------------------------------------------------
 dnl NOTE: This should not be called by external code.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(_TWEEK_PATH_SETUP,
+AC_DEFUN([_TWEEK_PATH_SETUP],
 [
     dnl Get the cflags and libraries from the tweek-config script
     AC_ARG_WITH(tweek-prefix,
@@ -91,7 +91,7 @@ dnl ---------------------------------------------------------------------------
 dnl _TWEEK_VERSION_CHECK(MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]])
 dnl NOTE: This should not be called by external code.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(_TWEEK_VERSION_CHECK,
+AC_DEFUN([_TWEEK_VERSION_CHECK],
 [
    AC_REQUIRE([_TWEEK_PATH_SETUP])
 
@@ -135,7 +135,7 @@ dnl     TWEEK_CXX_IDL
 dnl     TWEEK_CXX_IDL_OPTS
 dnl     TWEEK_CXX_IDL_GENDIR_OPT
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(TWEEK_PATH_CXX,
+AC_DEFUN([TWEEK_PATH_CXX],
 [
    AC_REQUIRE([_TWEEK_PATH_SETUP])
 
@@ -255,7 +255,7 @@ dnl     TWEEK_JAVA_IDL_GENDIR_OPT
 dnl     TWEEK_JAVA_IDL_INCFLAG
 dnl     TWEEK_EXT_JARS
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(TWEEK_PATH_JAVA,
+AC_DEFUN([TWEEK_PATH_JAVA],
 [
    AC_REQUIRE([_TWEEK_PATH_SETUP])
 
@@ -313,7 +313,7 @@ dnl     TWEEK_PYTHON_IDL_OPTS
 dnl     TWEEK_PYTHON_IDL_GENDIR_OPT
 dnl     TWEEK_PYTHON_IDL_INCFLAG
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(TWEEK_PATH_PYTHON,
+AC_DEFUN([TWEEK_PATH_PYTHON],
 [
    AC_REQUIRE([_TWEEK_PATH_SETUP])
 
@@ -387,7 +387,7 @@ dnl     TWEEK_PYTHON_IDL_OPTS
 dnl     TWEEK_PYTHON_IDL_GENDIR_OPT
 dnl     TWEEK_PYTHON_IDL_INCFLAG
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(TWEEK_PATH,
+AC_DEFUN([TWEEK_PATH],
 [
    TWEEK_PATH_CXX($1, [tweek_have_cxx='yes'], $3, $4)
 

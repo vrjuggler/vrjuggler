@@ -44,7 +44,7 @@ dnl SNX_PATH([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULE
 dnl
 dnl Test for SNX and then define SNX_CXXFLAGS, SNX_LIBS, and SNX_LIBS_STATIC.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(SNX_PATH,
+AC_DEFUN([SNX_PATH],
 [
     dnl Get the cflags and libraries from the sonix-config script
     AC_ARG_WITH(sonix-prefix,
