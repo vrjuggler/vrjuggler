@@ -279,10 +279,10 @@ bool PerformanceMonitor::configCanHandle(ConfigChunkPtr chunk) {
         for (val = v.begin(); val != v.end(); val++) {
             ch = (ConfigChunkPtr)*(*val); // this line demonstrates a subtle danger
             if ((bool)ch->getProperty ("Enabled")) {
-                PerformanceCategories::instance()->activateCategory ((std::string)ch->getProperty ("Name"));
+                PerformanceCategories::instance()->activateCategory ((std::string)ch->getProperty ("Prefix"));
             }
             else {
-                PerformanceCategories::instance()->activateCategory ((std::string)ch->getProperty ("Name"));
+                PerformanceCategories::instance()->activateCategory ((std::string)ch->getProperty ("Prefix"));
             }
 
             delete (*val); // delete the varvalue (copy) from getallprops
