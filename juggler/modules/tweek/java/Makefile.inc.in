@@ -34,10 +34,13 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-BUILD_JAVA	= @BUILD_JAVA@
+ifndef NO_JAVA
+   BUILD_JAVA=	@BUILD_JAVA@
+else
+   BUILD_JAVA=	N
+endif
 
 tweek-java:
-ifndef NO_JAVA
 ifeq ($(BUILD_JAVA), Y)
 	@echo "------------------------------------------------"
 	@echo "Building Java code for the Tweek GUI"
@@ -48,11 +51,9 @@ else
 	@echo "Tweek GUI build skipped"
 	@echo "------------------------------------------------"
 endif
-endif	# ifndef NO_JAVA
 
 # Build the JAR files for the Tweek GUI.
 tweek-jar:
-ifndef NO_JAVA
 ifeq ($(BUILD_JAVA), Y)
 	@$(MAKE) jars
 else
@@ -60,7 +61,6 @@ else
 	@echo "Tweek GUI JAR file creation skipped"
 	@echo "------------------------------------------------"
 endif
-endif	# ifndef NO_JAVA
 
 tweek-gui-install:
 	@$(MAKE) tweek-install
