@@ -29,3 +29,5 @@ default.InitialDiagram=UseCaseDiagram
 alphaSort=true
 showDiagramContents=false
 showPackagesFirst=true
+[newDiagramExpert]
+includeInCurrentDiagram=true
