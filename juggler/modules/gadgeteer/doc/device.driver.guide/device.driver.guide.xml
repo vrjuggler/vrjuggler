@@ -1186,7 +1186,7 @@
 
           <para>In this section, we will examine the first four of these. The
           remaining two will be addressed in <xref
-          linkend="section.driver.config" />.</para>
+          linkend="section.driver.config.methods" />.</para>
 
           <section>
             <title><methodname>startSampling()</methodname></title>
@@ -2059,7 +2059,7 @@ include $(GADGET_BASE_DIR)/share/gadgeteer/gadget.driver.mk</programlisting>
         </calloutlist>
       </section>
 
-      <section>
+      <section id="section.driver.config.methods">
         <title>Writing Code that Accepts the Configuration</title>
 
         <para>In the driver, recall that there are two methods that must be
