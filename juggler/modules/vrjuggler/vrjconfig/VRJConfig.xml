@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/beanlist.xsd">
+          xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.1/beanlist.xsd">
    <guipanel name="VRJConfig">
       <file name="${TWEEK_BASE_DIR}/bin/beans/VRJConfig.jar"
             class="org.vrjuggler.vrjconfig.VrjConfig" />
-      <dependency file="jccl_config.jar" path="${TWEEK_BASE_DIR}/bin/beans" />
-      <dependency file="jccl_editors.jar" path="${TWEEK_BASE_DIR}/bin/beans" />
+      <dependencies>
+         <bean>ConfigBroker</bean>
+         <jar path="${TWEEK_BASE_DIR}/bin/beans">jccl_editors.jar</jar>
+      </dependencies>
       <tree path="/" />
    </guipanel>
 
    <guipanel name="ControlPanel">
       <file name="${TWEEK_BASE_DIR}/bin/beans/VRJConfig.jar"
             class="org.vrjuggler.vrjconfig.ControlPanelView" />
-      <dependency file="jccl_config.jar" path="${TWEEK_BASE_DIR}/bin/beans" />
-      <dependency file="jccl_editors.jar" path="${TWEEK_BASE_DIR}/bin/beans" />
-      <dependency file="ui.jar" path="${TWEEK_BASE_DIR}/bin" />
+      <dependencies>
+         <bean>ConfigBroker</bean>
+         <jar path="${TWEEK_BASE_DIR}/bin">ui.jar</jar>
+      </dependencies>
       <tree path="/" />
    </guipanel>
 </beanlist>
