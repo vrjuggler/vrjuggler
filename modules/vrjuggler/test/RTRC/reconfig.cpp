@@ -98,7 +98,6 @@ int main(int argc, char* argv[])
    kernel->loadConfigFile( path + "startup/sim.headproxy.config" );
    kernel->loadConfigFile( path + "startup/sim.mainsimkeyboardproxy.config" );
    kernel->loadConfigFile( path + "startup/sim.perfmeasure1.config" );
-   kernel->loadConfigFile( path + "startup/sim.performer.config" );
    kernel->loadConfigFile( path + "startup/sim.simcam1proxy.config" );
    kernel->loadConfigFile( path + "startup/sim.simcam2proxy.config" );
    kernel->loadConfigFile( path + "startup/sim.simcamera1pos.config" );
