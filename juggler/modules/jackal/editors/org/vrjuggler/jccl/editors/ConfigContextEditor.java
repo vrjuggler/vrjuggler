@@ -95,6 +95,9 @@ public class ConfigContextEditor
                   PropertySheetFactory.instance().makeSheet(elt, start_color);
                mElementPropSheetScrollPane.getViewport().removeAll();
                mElementPropSheetScrollPane.getViewport().add(mElementPropSheet, null);
+               
+               // Display the help information about the selected configuration element.
+               getHelpPane().setText(elt.getDefinition().getHelp());
             }
          });
    }
