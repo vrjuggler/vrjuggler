@@ -143,7 +143,8 @@ public: // Model and sound member classes
 
 public:
    simplePfNavApp() : mStatusMessageEmitCount(0),// mWorldDcsTrans( 0.0f, 0.0f, 0.0f ),
-      mInitialNavPos( 0.0f, 12.0f, 0.0f ),
+      mInitialNavPos( 0.0f, 0.0f, 0.0f ),
+      mBoundingSize(0.0f),
       mUseDriveMode( true ),
       mConfiguredNoCollideModels( NULL ),
       mSoundNodes( NULL ),
@@ -347,6 +348,7 @@ public:
    // CONFIG PARAMS
    std::string    mFilePath;
    vjVec3         mInitialNavPos;
+   float          mBoundingSize;       // XXX: This is a hack and should be refactored
    bool           mUseDriveMode;
 
    int mStatusMessageEmitCount;
@@ -563,6 +565,9 @@ void simplePfNavApp::initScene()
    mVelNavDrive->addCollider( correction_collide );
 
    mNavigationDCS->setNavigator(mVelNavDrive);
+
+   // make sure config is processed, before doing sound replace traversal.
+   this->configProcessPending();
 
    // replace all nodes with _Sound_ with pjSoundNodes...
    std::string extension = "_Sound_";
