@@ -86,6 +86,8 @@ bool wandApp::configAdd(jccl::ConfigChunkPtr element)
 
 void wandApp::preFrame()
 {
+   bool we_have_focus(true);
+
    mFrameCount++;
 
    vpr::Interval frame_time = vpr::Interval::now() - mPrevFrameStartTime;
@@ -101,6 +103,15 @@ void wandApp::preFrame()
       std::cout << "fps: " << fps << std::endl;
    }
 
+   // Update embedded VNC desktop
+   if ( mEmbeddedGUI )
+   {
+      gmtl::Matrix44f nav_matrix;
+      VNCDesktop::Focus focus = mDesktop->update(nav_matrix);
+      we_have_focus = (focus == VNCDesktop::NOT_IN_FOCUS);
+   }
+
+
    // Put your pre frame computations here.
 
    /*
@@ -112,41 +123,37 @@ void wandApp::preFrame()
               << " 4:" << mButton4->getData()
               << " 5:" << mButton5->getData() << std::endl;
              */
-   // Update navigation
-   // - Find forward direction of wand
-   // - Translate along that direction
-   /*
-   float velocity(0.0f);
-   if(mButton0->getData())
-      velocity = 0.05f;
-
-   if(velocity > 0.0f)
+   if(we_have_focus)
    {
-      gmtl::Matrix44f wandMatrix;
-      wandMatrix = (*mWand->getData());      // Get the wand matrix
-      gmtl::Vec3f Zdir = gmtl::Vec3f(0.0f, 0.0f, velocity);
-      gmtl::Vec3f direction(wandMatrix * Zdir);
-      gmtl::preMult(mNavMat, gmtl::makeTrans<gmtl::Matrix44f>(direction));
-   }
-   */
+      // Update navigation
+      // - Find forward direction of wand
+      // - Translate along that direction
+      float velocity(0.0f);
+      if(mButton0->getData())
+         velocity = 0.05f;
 
-   // Check logger play button
-   if(mLoggerPlayButton->getData() == gadget::Digital::TOGGLE_ON)
-   {
-      std::cout << "\n\n------ Log Play Button hit ----\n" << std::flush;
-      gadget::InputManager* input_mgr = gadget::InputManager::instance();
-      gadget::InputLoggerPtr logger = input_mgr->getInputLogger();
+      if(velocity > 0.0f)
+      {
+         gmtl::Matrix44f wandMatrix;
+         wandMatrix = (*mWand->getData());      // Get the wand matrix
+         gmtl::Vec3f Zdir = gmtl::Vec3f(0.0f, 0.0f, velocity);
+         gmtl::Vec3f direction(wandMatrix * Zdir);
+         gmtl::preMult(mNavMat, gmtl::makeTrans<gmtl::Matrix44f>(direction));
+      }
 
-      vprASSERT(logger.get() != NULL);
-      logger->load("test_logging.xml");
-      logger->play();
+      // Check logger play button
+      if(mLoggerPlayButton->getData() == gadget::Digital::TOGGLE_ON)
+      {
+         std::cout << "\n\n------ Log Play Button hit ----\n" << std::flush;
+         gadget::InputManager* input_mgr = gadget::InputManager::instance();
+         gadget::InputLoggerPtr logger = input_mgr->getInputLogger();
+
+         vprASSERT(logger.get() != NULL);
+         logger->load("test_logging.xml");
+         logger->play();
+      }
    }
 
-   if ( mEmbeddedGUI )
-   {
-      gmtl::Matrix44f nav_matrix;
-      mDesktop->update(nav_matrix);
-   }
 }
 
 void wandApp::bufferPreDraw()
