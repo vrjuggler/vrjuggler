@@ -287,7 +287,7 @@ int IntersenseAPI::sample()
       if (stations[i].useAnalog)
       {
          float f;
-         for ( j = 0, k = min; (j < MAX_ANALOG_CHANNELS) && (k < IS_ANALOG_NUM) && (k < num); j++)
+         for ( j = 0, k = min; (j < MAX_ANALOG_CHANNELS) && (k < IS_ANALOG_NUM) && (k < num); j++, k++)
          {
             Analog::normalizeMinToMax(mTracker.analogData(stationIndex, j), f);
             //mInput[progress].analog[k] = f;
@@ -295,31 +295,12 @@ int IntersenseAPI::sample()
          }
       }
 
-   // Transforms between the cord frames
-   // See transform documentation and VR System pg 146
-   // Since we want the reciver in the world system, Rw
-   // wTr = wTt*tTr
-
-      gmtl::Matrix44f world_T_transmitter, transmitter_T_reciever, world_T_reciever;
-
-      world_T_transmitter = xformMat;                                       // Set transmitter offset from local info
-      transmitter_T_reciever = *(cur_pos_samples[i].getPosition());           // Get reciever data from sampled data
-      gmtl::mult( world_T_reciever, world_T_transmitter, transmitter_T_reciever);   // compute total transform
-      *(cur_pos_samples[i].getPosition()) = world_T_reciever;                                     // Store corrected xform back into data
    }
 
-    // Locks and then swaps the indices
-    mAnalogSamples.lock();
-    mDigitalSamples.lock();
-    mPosSamples.lock();
-
-    mAnalogSamples.addSample(cur_sample.analog);
-    mDigitalSamples.addSample(cur_sample.digital);
-    mPosSamples.addSample(cur_pos_samples);
-
-    mPosSamples.unlock();
-    mDigitalSamples.unlock();
-    mAnalogSamples.unlock();
+   // Locks and then swaps the indices.
+   addAnalogSample(cur_sample.analog);
+   addDigitalSample(cur_sample.digital);
+   addPositionSample(cur_pos_samples);
 
     return 1;
 }
@@ -363,9 +344,9 @@ void IntersenseAPI::updateData()
    if (!isActive())
       return;
 
-   mDigitalSamples.swapBuffers();
-   mAnalogSamples.swapBuffers();
-   mPosSamples.swapBuffers();
+   swapDigitalBuffers();
+   swapAnalogBuffers();
+   swapPositionBuffers();
 }
 
 } // End of gadget namespace
