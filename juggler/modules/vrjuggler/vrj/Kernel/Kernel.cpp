@@ -82,6 +82,7 @@ int vjKernel::start()
 
    vjThread* new_thread;   // I set mControlThread in vjKernel::controlLoop
    new_thread = new vjThread(memberFunctor);
+   vjASSERT(new_thread->valid());
 
    vjDEBUG(vjDBG_KERNEL,vjDBG_STATE_LVL) << "vjKernel::start: Just started control loop.  "
                                          << std::endl << vjDEBUG_FLUSH;

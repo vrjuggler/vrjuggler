@@ -39,8 +39,8 @@
 #include <VPR/Sync/vjGuard.h>
 #include <Utils/vjDebug.h>
 
-#include <Kernel/vjSurfaceDisplay.h>
-#include <Kernel/vjSimDisplay.h>
+#include <Kernel/vjSurfaceViewport.h>
+#include <Kernel/vjSimViewport.h>
 #include <Environment/vjEnvironmentManager.h>
 
 #include <GL/gl.h>
@@ -205,10 +205,10 @@ void vjGlPipe::checkForWindowsToClose()
          // Call contextClose
          vjGlApp* theApp = glManager->getApp();       // Get application for easy access
          vjDisplay* theDisplay = win->getDisplay();   // Get the display for easy access
-         theDisplay->recordLatency (0, 1);
+         //theDisplay->recordLatency (0, 1);
 
          glManager->setCurrentContext(win->getId());     // Set TS data of context id
-         glManager->currentUserData()->setUser(theDisplay->getUser());         // Set user data
+         glManager->currentUserData()->setUser(NULL);         // Set user data
          glManager->currentUserData()->setProjection(NULL);
 
          win->makeCurrent();              // Make the context current
@@ -289,7 +289,7 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
    if(win->hasDirtyContext())
    {
          // Have dirty context
-      glManager->currentUserData()->setUser(theDisplay->getUser());         // Set user data
+      glManager->currentUserData()->setUser(NULL);         // Set user data
       glManager->currentUserData()->setProjection(NULL);
 
       theApp->contextInit();              // Call context init function
@@ -300,61 +300,71 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
    theApp->contextPreDraw();                 // Do any context pre-drawing
       mPerfBuffer->set(++mPerfPhase);
 
-   // ---- SURFACE --- //
-   if (theDisplay->isSurface())
+   // --- FOR EACH VIEWPORT -- //
+   vjViewport* viewport(NULL);
+
+   for(unsigned vp_num=0; vp_num < theDisplay->getNumViewports(); vp_num++)
    {
-      vjSurfaceDisplay* surface_disp = dynamic_cast<vjSurfaceDisplay*>(theDisplay);
-      vjDisplay::DisplayView view = theDisplay->getView();        // Get the view we are rendering
-      glManager->currentUserData()->setUser(surface_disp->getUser());         // Set user data
+      viewport = theDisplay->getViewport(vp_num);
 
-      if((vjDisplay::STEREO == view) || (vjDisplay::LEFT_EYE == view))
+      // ---- SURFACE --- //
+      if (viewport->isSurface())
       {
-         win->setViewBuffer(vjDisplay::LEFT_EYE);
-         win->setProjection(surface_disp->getLeftProj());
+         vjSurfaceViewport* surface_vp = dynamic_cast<vjSurfaceViewport*>(viewport);
+         vjViewport::View view = surface_vp->getView();        // Get the view we are rendering
+         glManager->currentUserData()->setUser(surface_vp->getUser());         // Set user data
 
-         glManager->currentUserData()->setProjection(surface_disp->getLeftProj());
+         if((vjViewport::STEREO == view) || (vjViewport::LEFT_EYE == view))      // LEFT EYE
+         {
+            win->setViewBuffer(vjViewport::LEFT_EYE);
+            win->setProjection(surface_vp->getLeftProj());
+
+            glManager->currentUserData()->setProjection(surface_vp->getLeftProj());
+
+               mPerfBuffer->set(++mPerfPhase);
+
+            theApp->draw();
+               mPerfBuffer->set(++mPerfPhase);
+            glManager->drawObjects();
+               mPerfBuffer->set(++mPerfPhase);
+         }
+         if ((vjViewport::STEREO == view) || (vjViewport::RIGHT_EYE == view))    // RIGHT EYE
+         {
+            win->setViewBuffer(vjViewport::RIGHT_EYE);
+            win->setProjection(surface_vp->getRightProj());
+            glManager->currentUserData()->setProjection(surface_vp->getRightProj());
+
+               mPerfBuffer->set(++mPerfPhase);
+            theApp->draw();
+               mPerfBuffer->set(++mPerfPhase);
+
+            glManager->drawObjects();
+               mPerfBuffer->set(++mPerfPhase);
+         }
+         else
+            mPerfPhase += 2;
+      }
+      // ---- SIMULATOR ---------- //
+      else if(viewport->isSimulator())
+      {
+         vjSimViewport* sim_vp = dynamic_cast<vjSimViewport*>(viewport);
+
+         win->setCameraProjection(sim_vp->getCameraProj());
+         glManager->currentUserData()->setUser(sim_vp->getUser());         // Set user data
+         glManager->currentUserData()->setProjection(sim_vp->getCameraProj());
 
             mPerfBuffer->set(++mPerfPhase);
-
          theApp->draw();
             mPerfBuffer->set(++mPerfPhase);
-         glManager->drawObjects();
-            mPerfBuffer->set(++mPerfPhase);
-      }
-      if ((vjDisplay::STEREO == view) || (vjDisplay::RIGHT_EYE == theDisplay->getView()))
-      {
-         win->setViewBuffer(vjDisplay::RIGHT_EYE);
-         win->setProjection(surface_disp->getRightProj());
-         glManager->currentUserData()->setProjection(surface_disp->getRightProj());
-
-            mPerfBuffer->set(++mPerfPhase);
-         theApp->draw();
-            mPerfBuffer->set(++mPerfPhase);
 
          glManager->drawObjects();
-            mPerfBuffer->set(++mPerfPhase);
+         glManager->drawSimulator(sim_vp);
+         mPerfBuffer->set (++mPerfPhase);
+         mPerfPhase += 3;
       }
-      else
-         mPerfPhase += 2;
-   }
-   // ---- SIMULATOR ---------- //
-   else if(theDisplay->isSimulator())
-   {
-      vjSimDisplay* sim_disp = dynamic_cast<vjSimDisplay*>(theDisplay);
 
-      win->setCameraProjection();
-      glManager->currentUserData()->setUser(sim_disp->getUser());         // Set user data
-      glManager->currentUserData()->setProjection(sim_disp->getCameraProj());
+   }     // for each viewport
 
-         mPerfBuffer->set(++mPerfPhase);
-      theApp->draw();
-         mPerfBuffer->set(++mPerfPhase);
-
-      glManager->drawObjects();
-      glManager->drawSimulator(sim_disp);
-      mPerfBuffer->set (++mPerfPhase);
-      mPerfPhase += 3;
-   }
 }
 
 //: Swaps the buffers of the given window
@@ -363,6 +373,6 @@ void vjGlPipe::swapWindowBuffers(vjGlWindow* win)
 {
    win->makeCurrent();           // Set correct context
    win->swapBuffers();           // Implicitly calls a glFlush
-   vjDisplay* theDisplay = win->getDisplay();   // Get the display for easy access
-   theDisplay->recordLatency (2, 3);
+   //vjDisplayWindow* theDisplay = win->getDisplay();   // Get the display for easy access
+   //theDisplay->recordLatency (2, 3);
 }

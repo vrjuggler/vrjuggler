@@ -312,21 +312,21 @@ bool vjGlxWindow::makeCurrent() {
    return glXMakeCurrent ( x_display, x_window, glx_context  );
 }
 
-void vjGlxWindow::config(vjDisplay* _display)
+void vjGlxWindow::config(vjDisplay* disp)
 {
-   vjDEBUG(vjDBG_INPUT_MGR,0) << "vjGlxWindow::config: _display: " << (*_display)
-                              << "\nConfig chunk:\n" << (*(_display->getConfigChunk()))
+   vjDEBUG(vjDBG_INPUT_MGR,0) << "vjGlxWindow::config: _display: " << (*disp)
+                              << "\nConfig chunk:\n" << (*(disp->getConfigChunk()))
                               << std::endl << vjDEBUG_FLUSH;
 
    const char neg_one_STRING[] = "-1";
-   vjGlWindow::config(_display);
+   vjGlWindow::config(disp);
 
     // Get the vector of display chunks
    vjConfigChunk* dispSysChunk = vjDisplayManager::instance()->getDisplaySystemChunk();
-   vjConfigChunk* displayChunk = _display->getConfigChunk();
+   vjConfigChunk* displayChunk = disp->getConfigChunk();
 
-   window_name = _display->getName();
-   mPipe = _display->getPipe();
+   window_name = disp->getName();
+   mPipe = disp->getPipe();
    vjASSERT(mPipe >= 0);
 
    mXDisplayName = (std::string)dispSysChunk->getProperty("xpipes", mPipe);

@@ -30,13 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#include <vjConfig.h>
-#include <Utils/vjDebug.h>
-
 #include <Kernel/vjDisplay.h>
-#include <Kernel/vjKernel.h>
-#include <Config/vjConfigChunk.h>
+
+void vjDisplay::updateProjections()
+{
+   for(int i=0;i<mViewports.size();i++)
+   {
+      mViewports[i]->updateProjections();
+   }
+}
 
 
 void vjDisplay::config(vjConfigChunk* chunk)
@@ -51,14 +53,10 @@ void vjDisplay::config(vjConfigChunk* chunk)
     std::string name  = chunk->getProperty("name");
     mBorder     = chunk->getProperty("border");
     int pipe    = chunk->getProperty("pipe");
-    mView    = (vjDisplay::DisplayView)(int)chunk->getProperty("view");
     mActive  = chunk->getProperty("active");
 
-    mLatencyMeasure = new vjPerfDataBuffer ("Head Latency " + name, 500, 4);
-    vjKernel::instance()->getEnvironmentManager()->addPerfDataBuffer (mLatencyMeasure);
-
-    // -- Check for error in configuration -- //
-    // NOTE: If there are errors, set them to some default value
+   // -- Check for error in configuration -- //
+   // NOTE: If there are errors, set them to some default value
    if(sizeX <= 0)
    {
       vjDEBUG(vjDBG_DISP_MGR,2) << "WARNING: window sizeX set to: " << sizeX
@@ -84,18 +82,6 @@ void vjDisplay::config(vjConfigChunk* chunk)
       // -- Set local window attributes --- //
     setOriginAndSize(originX, originY, sizeX, sizeY);
 
-    // Get the user for this display
-    std::string user_name = chunk->getProperty("user");
-    mUser = vjKernel::instance()->getUser(user_name);
-
-    if(NULL == mUser)
-    {
-       vjDEBUG(vjDBG_ERROR,0) << "ERROR: User not found named: "
-                              << user_name.c_str() << std::endl
-                              << vjDEBUG_FLUSH;
-      vjASSERT(false);
-    }
-
     setName(name);
     setPipe(pipe);
 
@@ -103,26 +89,15 @@ void vjDisplay::config(vjConfigChunk* chunk)
 }
 
 
-    // ---- FRIEND FUNCTIONS ---- //
-//! PRE: disp != NULL
-//+      disp->mUser != NULL
-std::ostream& vjDisplay::outStream(std::ostream& out)
+std::ostream& operator<<(std::ostream& out, vjDisplay& disp)
 {
-   vjASSERT(mUser != NULL);
-
-    out << std::setw(15) << mName.c_str() << std::endl
-        << "  org:" << _xo << ", " << _yo
-        << "  sz:" << _xs << ", " << _ys
-        << "  p:" << mPipe
-        << "  view:" << ((mView == vjDisplay::LEFT_EYE) ? "Left" : ((mView==vjDisplay::RIGHT_EYE)?"Right" : "Stereo") )
-        << "  act:" << (mActive ? "Y" : "N")
-        << "  usr:" << mUser->getName().c_str();
-
-    return out;
-}
-
-
-std::ostream& operator<<(std::ostream& out,  vjDisplay& disp)
-{
-   return disp.outStream(out);
+   out << std::setw(15) << disp.mName.c_str() << std::endl
+        << "  org:" << disp._xo << ", " << disp._yo
+        << "  sz:" << disp._xs << ", " << disp._ys
+        << "  p:" << disp.mPipe
+        << "  act:" << (disp.mActive ? "Y" : "N");
+   for(unsigned i=0;i<disp.mViewports.size();i++)
+   {
+      out << "vp: " << i << " " << *(disp.mViewports[i]) << std::endl;
+   }
 }

@@ -34,8 +34,8 @@
 #include <vjConfig.h>
 #include <Kernel/vjDisplayManager.h>
 #include <Kernel/vjDisplay.h>
-#include <Kernel/vjSurfaceDisplay.h>
-#include <Kernel/vjSimDisplay.h>
+#include <Kernel/vjSurfaceViewport.h>
+#include <Kernel/vjSimViewport.h>
 #include <Kernel/vjDrawManager.h>
 #include <Kernel/vjKernel.h>
 #include <Math/vjCoord.h>
@@ -156,6 +156,8 @@ bool vjDisplayManager::configAddDisplay(vjConfigChunk* chunk)
    }
 
    // --- Add a display (of the correct type) ---- //
+
+   /* XXX: Display code
    if((std::string)chunk->getType() == std::string("surfaceDisplay"))      // Surface DISPLAY
    {
       vjDisplay* newDisp = new vjSurfaceDisplay();    // Create display
@@ -180,6 +182,7 @@ bool vjDisplayManager::configAddDisplay(vjConfigChunk* chunk)
                                              << std::endl << std::flush
                                              << vjDEBUG_FLUSH;
    }
+   */
 
    vjDEBUG_END(vjDBG_DISP_MGR,vjDBG_STATE_LVL) << "------- vjDisplayManager::configAddDisplay Done. --------\n" << vjDEBUG_FLUSH;
    return true;

@@ -39,15 +39,15 @@
 #include <Math/vjMatrix.h>
 #include <Utils/vjDebug.h>
 #include <Input/InputManager/vjPosInterface.h>
-#include <Kernel/vjDisplay.h>
+#include <Kernel/vjViewport.h>
 #include <Kernel/vjCameraProjection.h>
 
 #include <Config/vjConfigChunk.h>
 
-class vjSimDisplay : public vjDisplay
+class vjSimViewport : public vjViewport
 {
 public:
-   vjSimDisplay() {
+   vjSimViewport() {
       mCameraProj = NULL;
    }
 
@@ -57,7 +57,7 @@ public:
    {
       vjASSERT((std::string)chunk->getType() == std::string("simDisplay"));
 
-      vjDisplay::config(chunk);
+      vjViewport::config(chunk);
 
       mType = SIM;
       mCameraProj = new vjCameraProjection;
@@ -73,7 +73,7 @@ public:
       {
          vjDEBUG(vjDBG_ERROR,0)
             << clrOutNORM(clrRED,"ERROR:")
-            << "vjSimDisplay:: Fatal Error: Camera not found named: "
+            << "vjSimViewport:: Fatal Error: Camera not found named: "
             << camera_proxy_str.c_str() << vjDEBUG_FLUSH;
          exit(1);
       }
@@ -101,7 +101,7 @@ public:
    vjMatrix getWandPos()
    { return mWandPos; }
 
-   vjProjection* getCameraProj()
+   vjCameraProjection* getCameraProj()
    { return mCameraProj; }
 
 public:  // Sim Drawing parameters
@@ -128,7 +128,7 @@ private:
    vjVec3   mSurfaceColor;       //: Color to draw surfaces
 
    /// Defines the projection for this window. Ex. RIGHT, LEFT, FRONT
-   vjProjection*   mCameraProj;            // Camera projection. (For sim, etc.)
+   vjCameraProjection*   mCameraProj;            // Camera projection. (For sim, etc.)
 
    vjPosInterface mCamera;     // Prosy interfaces to devices needed
    vjPosInterface mWand;

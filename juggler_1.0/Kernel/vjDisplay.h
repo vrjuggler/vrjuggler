@@ -31,62 +31,37 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-#ifndef _VJ_DISPLAY_H_
-#define _VJ_DISPLAY_H_
+#ifndef _VJ_DISPLAY_WINDOW_H_
+#define _VJ_DISPLAY_WINDOW_H_
 
 #include <vjConfig.h>
 
-#include <Math/vjVec3.h>
-#include <Input/vjPosition/vjPosition.h>
-//#include <Input/InputManager/vjDeviceInterface.h>
-#include <Kernel/vjUser.h>
-#include <Environment/vjEnvironmentManager.h>
-#include <Performance/vjPerfDataBuffer.h>
+#include <Kernel/vjViewport.h>
+#include <vector>
 
     // Config stuff
 class vjConfigChunk;
 
 
 //---------------------------------------------------------------------
-//: Base class for Display windows.
+//: Container class for viewports and window information.
 //
-// Base class for all window system independant data about a display.
-//
-// Stores location of window and projection data used.
+// Stores location of window and viewports within the window.
 //
 // @author Allen Bierbaum
-//  Date: 9-8-97
+//  Date: 3-5-2001
 //-----------------------------------------------------------------------
 class vjDisplay
 {
 public:
-   vjDisplay() : mUser(NULL), mDisplayChunk(NULL)
+   vjDisplay() : mDisplayChunk(NULL)
    {
       _xo = _yo = _xs = _ys = -1;
-      mType = vjDisplay::UNDEFINED;
-      mDisplayChunk = NULL;
-      mPipe = vjDisplay::NONE;
-      mLatencyMeasure = NULL;
+      mPipe = -1;
    }
 
    virtual ~vjDisplay()
-   {
-       if (mLatencyMeasure) {
-           vjKernel::instance()->getEnvironmentManager()->removePerfDataBuffer (mLatencyMeasure);
-
-       }
-   }
-
-
-    // i'm probably gonna regret this
-    void recordLatency (int trackertimeindex, int currenttimeindex) {
-        mLatencyMeasure->set (trackertimeindex, *(mUser->getHeadUpdateTime()));
-        mLatencyMeasure->set (currenttimeindex);
-    }
-
-
-   enum DisplayType { UNDEFINED, SURFACE, SIM};             // What type of display is it
-   enum DisplayView { NONE=0, LEFT_EYE=1, RIGHT_EYE=2, STEREO=3 };      // For referring to which eye(s) to draw
+   {;}
 
 public:
       //: Takes a display chunk and configures the display based one it.
@@ -98,20 +73,10 @@ public:
       //+       after doing local configuration.
    virtual void config(vjConfigChunk* chunk);
 
-   //: Updates the projection data for this display
-   // Uses the data for the head position for this window
-   virtual void updateProjections() = 0;
+   //: Updates the projection data for each contained viewport
+   void updateProjections();
 
 public:
-   DisplayType getType()
-   { return mType;}
-
-   bool isSimulator()
-   { return (mType == SIM); }
-
-   bool isSurface()
-   { return (mType == SURFACE); }
-
    bool isActive()
    { return mActive; }
 
@@ -124,14 +89,6 @@ public:
 
    bool  shouldDrawBorder()
    { return mBorder;}
-
-   //!NOTE: If we are in simulator, we can not be in stereo
-   bool inStereo()
-   { return (mView == STEREO); }
-
-   // Which view are we supposed to render
-   DisplayView getView()
-   { return mView; }
 
    void setOriginAndSize(int xo, int yo, int xs, int ys)
    { _xo = xo; _yo = yo; _xs = xs; _ys = ys;}
@@ -146,36 +103,35 @@ public:
    int getPipe()
    { return mPipe; }
 
-   //: Get the config chunk that configured this display
+   //!NOTE: If we are in simulator, we can not be in stereo
+   bool inStereo()
+   { return mInStereo; }
+
+   //: Get the config chunk that configured this display window
    vjConfigChunk* getConfigChunk()
    { return mDisplayChunk; }
 
-   //: Get the user associated with this display
-   vjUser*  getUser()
-   { return mUser;}
-
-   virtual std::ostream& outStream(std::ostream& out);
    friend std::ostream& operator<<(std::ostream& out, vjDisplay& disp);
 
-protected:
-   vjUser*           mUser;         //: The user being rendered by this window
+   // --- Viewport handling --- //
+   int getNumViewports()
+   { return mViewports.size(); }
+
+   vjViewport* getViewport(int vpNum)
+   { return mViewports[vpNum]; }
 
 protected:
-   DisplayType mType;                  //: The type of display
-   std::string mName;                  //: Name of the display
-   int         _xo, _yo, _xs, _ys;     //: X and Y origin and size of the view
-   bool        mBorder;                //: Should we have a border
-   int         mPipe;                  //: Hardware pipe. Index of the rendering hardware
-   bool        mActive;                //: Is the display active or not
-   DisplayView  mView;                 //: Which buffer(s) to display (left, right, stereo)
+   std::string    mName;                  //: Name of the window
+   int            _xo, _yo, _xs, _ys;     //: X and Y origin and size of the view
+   bool           mBorder;                //: Should we have a border
+   int            mPipe;                  //: Hardware pipe. Index of the rendering hardware
+   bool           mActive;                //: Is the display active or not
+   bool           mInStereo;              //: Is the window in stereo mode?
+   vjConfigChunk* mDisplayChunk;          //: The chunk data for this display
 
-   vjConfigChunk* mDisplayChunk;        //: The chunk data for this display
-
-    vjPerfDataBuffer *mLatencyMeasure;   //: measures of user tracking latency
-
-
+   std::vector<vjViewport*>   mViewports;    //: Contained viewports
 };
 
-//std::ostream& operator<<(std::ostream& out, vjDisplay* disp);
+std::ostream& operator<<(std::ostream& out, vjDisplay& disp);
 
 #endif

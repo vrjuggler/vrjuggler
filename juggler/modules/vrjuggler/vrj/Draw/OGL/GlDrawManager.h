@@ -47,8 +47,8 @@ class vjGlApp;
 #include <Kernel/GL/vjGlUserData.h>
 
 class vjConfigChunkDB;
-class vjSimDisplay;
 class vjGloveProxy;
+class vjSimViewport;
 
 //#include <VPR/Sync/vjCond.h>
 #include <VPR/Sync/vjSemaphore.h>
@@ -160,11 +160,11 @@ public:  // Drawing functions used by library
    void drawObjects();
 
    //: Draw projections in Opengl
-   void drawProjections(vjSimDisplay* sim);
+   void drawProjections(bool drawFrustum, vjVec3 surfColor);
 
    //: Draw a simulator using OpenGL commands
    //! NOTE: This is called internally by the library
-   void drawSimulator(vjSimDisplay* sim);
+   void drawSimulator(vjSimViewport* sim);
 
 protected:     // --- Geom helpers --- //
    void initQuadObj();
@@ -182,7 +182,7 @@ public:
    //: Get ptr to the current user data
    // Should be used in the draw function
    //! NOTE: This user data is valid ONLY
-   //+ in contextInit() and draw()
+   //+ in draw().  It is not valid anywhere else.
    vjGlUserData* currentUserData()
    { return &(*mUserData); }
 
