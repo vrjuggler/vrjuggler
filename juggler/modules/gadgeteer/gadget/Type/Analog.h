@@ -39,9 +39,13 @@
 #define _GADGET_ANALOG_H_
 
 #include <gadget/gadgetConfig.h>
+
+#include <gadget/Type/AnalogData.h>
+#include <gadget/Type/SampleBuffer.h>
+
 #include <jccl/Config/ConfigChunk.h>
 #include <vrj/Util/Debug.h>
-#include <gadget/Type/AnalogData.h>
+
 
 namespace gadget
 {
@@ -78,7 +82,8 @@ public:
       mMin = static_cast<float>( c->getProperty("min") );
       mMax = static_cast<float>( c->getProperty("max") );
 
-      vprDEBUG(vprDBG_ALL,4)<<"*** SimAnalog::config() min:"<<mMin<<" max:"<<mMax<<"\n"<< vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,4) << " SimAnalog::config() min:" << mMin
+                                                 << " max:" << mMax << "\n" << vprDEBUG_FLUSH;
 
       return true;
    }
@@ -99,7 +104,12 @@ public:
    //        "min" and "max" are set to 0.0f and 1.0f respectivly.
    //! NOTE: TO ALL ANALOG DEVICE DRIVER WRITERS, you *must* normalize your data using
    //        Analog::normalizeMinToMax()
-   virtual AnalogData* getAnalogData(int devNum = 0) = 0;
+
+   // XXX: Add a "sample" filter that does the normalization in here instead of in the driver
+   AnalogData* getAnalogData(int devNum = 0)
+   {
+      // XXX: Fill in;
+   }
 
 protected:
    // give a value that will range from [min() <= n <= max()]
@@ -134,6 +144,9 @@ protected:
 
 private:
    float mMin, mMax;
+
+protected:
+   gadget::SampleBuffer<AnalogData>  mAnalogSamples;   /**< Position samples */
 };
 
 
