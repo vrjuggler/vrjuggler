@@ -193,11 +193,11 @@ const std::string vprDBG_CONFIGstr("DBG_CONFIGDB");
 
 namespace vpr {
 
-//------------------------------------------
-//: Class to support debug output
-//
-//!PUBLIC_API:
-//-----------------------------------------
+/**
+ * Class to support debug output
+ *
+ * @author Allen Bierbaum
+ */
 class VPR_CLASS_API Debug
 {
 protected:

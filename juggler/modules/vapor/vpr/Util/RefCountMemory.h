@@ -46,25 +46,29 @@
 
 namespace vpr
 {
-   //: reference countable memory. (no, not radio controlled, sorry)
-   //
-   // To use reference counting on your objects, inherit from this class.
-   //
-   // NOTES:
-   // - you MUST call unrefDelete or checkDelete to delete, do not call 
-   //   operator::delete() yourself!!!!!
-   // - on creation, refcount == 0, so if you intend to own the memory 
-   //   created, you should call ref() on the object
-   //
-   // EXAMPLE USAGE:
-   //   Object obj;
-   //   obj.ref();  // count == 1;
-   //   obj.ref();  // count == 2;
-   //   int count = obj.getRef();
-   //   obj.unrefDelete(); // count == 1, memory is not deleted
-   //   obj.unrefDelete(); // count == 0, memory is deleted
-   // 
-   // class Object : public vpr::RefCountMemory
+   /**
+    * reference countable memory. (no, not radio controlled, sorry)
+    *
+    * To use reference counting on your objects, inherit from this class.
+    *
+    * NOTES:
+    * - you MUST call unrefDelete or checkDelete to delete, do not call 
+    *   operator::delete() yourself!!!!!
+    * - on creation, refcount == 0, so if you intend to own the memory 
+    *   created, you should call ref() on the object
+    *
+    * EXAMPLE USAGE:
+    *   Object obj;
+    *   obj.ref();  // count == 1;
+    *   obj.ref();  // count == 2;
+    *   int count = obj.getRef();
+    *   obj.unrefDelete(); // count == 1, memory is not deleted
+    *   obj.unrefDelete(); // count == 0, memory is deleted
+    * 
+    * class Object : public vpr::RefCountMemory
+    *
+    * @author Kevin Meinert
+    */
    class RefCountMemory
    {
    public:
@@ -72,21 +76,27 @@ namespace vpr
       {
          BAD = -69,
       };
-       //: default constructor
-       // on creation, refcount == 0, so if you intend to own the memory 
-       // created, you should ref it
+      /**
+       * Default constructor.
+       * On creation, refcount == 0, so if you intend to own the memory 
+       * created, you should ref it
+       */
       RefCountMemory();
 
-       // on creation, refcount == 0, so if you intend to own the memory 
-       // created, you should ref it
+      /**
+       * On creation, refcount == 0, so if you intend to own the memory 
+       * created, you should ref it
+       */
       RefCountMemory( const RefCountMemory& r ) : ___mNumTimesReferenced( 0 )
        {
           //dont copy ref number.
        }
 
    protected:
-       //: destructor
-       // you MUST call checkDelete to delete, do not call delete!!!!!
+       /**
+        * Destructor.
+        * You MUST call checkDelete to delete, do not call delete!!!!!
+        */
        virtual ~RefCountMemory()
        {
           assert( ___mNumTimesReferenced != BAD && ___mNumTimesReferenced >= 0 && "this data has been dereferenced more times than referenced, someone is probably holding on to the data after they called deref(), or someone called deref too many times. also, make sure you use checkDelete, or unrefDelete." );
@@ -100,12 +110,18 @@ namespace vpr
           return *this;
        }
 
-      //: increase the reference count by 1, return the new refcount
+      /**
+       * Increases the reference count by 1, returns the new refcount
+       */
       const int& ref();
 
-      //: decrease the reference count by 1, then call checkDelete
-      // equivalent to calling RefCountMemory::unref followed by RefCountMemory::checkDelete
-      // return true if deleted, false if not
+      /**
+       * Decreases the reference count by 1, then calls checkDelete.  This is
+       * equivalent to calling RefCountMemory::unref followed by
+       * RefCountMemory::checkDelete
+       *
+       * @return <code>true</code> if deleted; <code>false</code> if not.
+       */
       bool unrefDelete();
 
    public:
