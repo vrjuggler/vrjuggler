@@ -20,6 +20,10 @@
 #define vjDBG_DRAW_MGRstr std::string("DBG_DRAW_MGR")
 #define vjDBG_DISP_MGR (vjDBG_BASE+5)
 #define vjDBG_DISP_MGRstr std::string("DBG_DISP_MGR")
+#define vjDBG_ENV_MGR (vjDBG_BASE+6)
+#define vjDBG_ENV_MGRstr std::string("DBG_ENV_MGR")
+#define vjDBG_PERFORMANCE (vjDBG_BASE+7)
+#define vjDBG_PERFORMANCEstr std::string("DBG_PERFORMANCE")
 
 #define vjDBG_USER 100
 
@@ -174,6 +178,8 @@ public:
       addCategoryName(vjDBG_INPUT_MGRstr,vjDBG_INPUT_MGR);
       addCategoryName(vjDBG_DRAW_MGRstr,vjDBG_DRAW_MGR);
       addCategoryName(vjDBG_DISP_MGRstr,vjDBG_DISP_MGR);
+      addCategoryName(vjDBG_ENV_MGRstr, vjDBG_ENV_MGR);
+      addCategoryName(vjDBG_PERFORMANCEstr, vjDBG_PERFORMANCE);
    }
 
    void getAllowedCatsFromEnv()
