@@ -30,28 +30,23 @@
  * Version:       $Revision$
  * -----------------------------------------------------------------
  */
-
-
 #ifndef _VJ_BASE_THREAD_H_
 #define _VJ_BASE_THREAD_H_
-//#pragma once
-
-// --------------------------------------------------------------------------
-// NOTES:
-//    - This is used as the base class for all thread classes.
-// --------------------------------------------------------------------------
 
 #include <vjConfig.h>
-//#include <hash_map>
 #include <map>
 #include <Threads/vjThreadFunctor.h>
 #include <Threads/vjTSTable.h>            // Needed to cache a copy here
 
+// --------------------------------------------------------------------------
+// NOTES:
+//    - This is used as the base class for all thread classes.
+// -------------------------------------------------------------------------- 
 class vjBaseThread
 {
 public:
    vjBaseThread()
-      :  mTSTable(NULL), mThreadId(0)
+      :  mThreadId(0)
    {;}
 
    virtual ~vjBaseThread()
@@ -61,16 +56,13 @@ public:
 
 public:     // Thread specific data caching
    //: Get the Thread specific data table
-   //! NOTE: Internal use ONLY
+   // NOTE: Users should NOT access the table directly
+   // instead, use vjTSObjectProxies
    vjTSTable* getTSTable()
-   { return mTSTable; }
+   { return &mTSTable; }
 
-   //: Set the ts table
-   //! NOTE: Internal use ONLY
-   void setTSTable(vjTSTable* table)
-   { mTSTable = table; }
 private:
-   vjTSTable*  mTSTable;      // cached copy of the thread specific data
+   vjTSTable  mTSTable;      // Thread specific data for the thread
 
 protected:
    //: After the object has been created, call this routine to complete
