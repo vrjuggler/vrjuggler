@@ -185,8 +185,9 @@ public class JugglerWindowFrame
             // saying so.
             if ( ! kbd_dev_elt.getDefinition().getToken().equals(KEYBOARD_MOUSE_TYPE) )
             {
-               Frame parent =
-                  (Frame) SwingUtilities.getAncestorOfClass(Frame.class, this);
+               Container parent =
+                  (Container) SwingUtilities.getAncestorOfClass(Container.class,
+                                                                getDesktopPane());
                JOptionPane.showMessageDialog(parent,
                                              "Conifg elements named '" +
                                                 kbd_dev_name + "'\n" +
@@ -201,7 +202,8 @@ public class JugglerWindowFrame
 
       // At this point, kbd_dev_elt may be null, and that is fine.
       Container parent =
-         (Container) SwingUtilities.getAncestorOfClass(Container.class, this);
+         (Container) SwingUtilities.getAncestorOfClass(Container.class,
+                                                       getDesktopPane());
       SimKeyboardEditorDialog dlg = new SimKeyboardEditorDialog(parent,
                                                                 mContext,
                                                                 kbd_dev_elt);
