@@ -1067,6 +1067,7 @@ public sealed class Gmtl
       return result;
    }
 
+#if UNIX
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_Coord3dZXY_gmtl_Coord3dZXY_double2([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Coord3dZXYMarshaler))] gmtl.Coord3dZXY p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Coord3dZXYMarshaler))] gmtl.Coord3dZXY p1);
@@ -1273,6 +1274,7 @@ public sealed class Gmtl
       result = gmtl_isEqual__gmtl_Coord4fZXY_gmtl_Coord4fZXY_float3(p0, p1, p2);
       return result;
    }
+#endif
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_Quatf_gmtl_Quatf_float2([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.QuatfMarshaler))] gmtl.Quatf p0,
@@ -1297,6 +1299,7 @@ public sealed class Gmtl
       return result;
    }
 
+#if UNIX
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_Coord3fZXY_gmtl_Coord3fZXY_float2([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Coord3fZXYMarshaler))] gmtl.Coord3fZXY p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Coord3fZXYMarshaler))] gmtl.Coord3fZXY p1);
@@ -1388,6 +1391,7 @@ public sealed class Gmtl
       result = gmtl_isEqual__gmtl_Coord3dXYZ_gmtl_Coord3dXYZ_double3(p0, p1, p2);
       return result;
    }
+#endif
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_Quatd_gmtl_Quatd_double2([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.QuatdMarshaler))] gmtl.Quatd p0,
@@ -1412,6 +1416,7 @@ public sealed class Gmtl
       return result;
    }
 
+#if UNIX
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_Coord3fXYZ_gmtl_Coord3fXYZ_float2([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Coord3fXYZMarshaler))] gmtl.Coord3fXYZ p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Coord3fXYZMarshaler))] gmtl.Coord3fXYZ p1);
@@ -1457,6 +1462,7 @@ public sealed class Gmtl
       result = gmtl_isEqual__gmtl_Coord4dZYX_gmtl_Coord4dZYX_double3(p0, p1, p2);
       return result;
    }
+#endif
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_Trif_gmtl_Trif_float3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.TrifMarshaler))] gmtl.Trif p0,
@@ -1470,6 +1476,7 @@ public sealed class Gmtl
       return result;
    }
 
+#if UNIX
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_Coord4dAxisAngle_gmtl_Coord4dAxisAngle_double2([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Coord4dAxisAngleMarshaler))] gmtl.Coord4dAxisAngle p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Coord4dAxisAngleMarshaler))] gmtl.Coord4dAxisAngle p1);
@@ -1561,6 +1568,7 @@ public sealed class Gmtl
       result = gmtl_isEqual__gmtl_Coord4dQuat_gmtl_Coord4dQuat_double3(p0, p1, p2);
       return result;
    }
+#endif
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_Trid_gmtl_Trid_double3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.TridMarshaler))] gmtl.Trid p0,
@@ -1620,6 +1628,7 @@ public sealed class Gmtl
       return result;
    }
 
+#if UNIX
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_Coord3dAxisAngle_gmtl_Coord3dAxisAngle_double2([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Coord3dAxisAngleMarshaler))] gmtl.Coord3dAxisAngle p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Coord3dAxisAngleMarshaler))] gmtl.Coord3dAxisAngle p1);
@@ -1642,6 +1651,7 @@ public sealed class Gmtl
       result = gmtl_isEqual__gmtl_Coord3dAxisAngle_gmtl_Coord3dAxisAngle_double3(p0, p1, p2);
       return result;
    }
+#endif
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static bool gmtl_isEqual__gmtl_AABoxf_gmtl_AABoxf_float3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.AABoxfMarshaler))] gmtl.AABoxf p0,
@@ -3224,6 +3234,7 @@ public sealed class Gmtl
       return result;
    }
 
+#if UNIX
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gmtl.Matrix33fMarshaler))]
@@ -3471,6 +3482,7 @@ public sealed class Gmtl
       result = gmtlWrappers_makeDirCosMatrix44__gmtl_Vec3f_gmtl_Vec3f_gmtl_Vec3f_gmtl_Vec3f_gmtl_Vec3f_gmtl_Vec3f6(p0, p1, p2, p3, p4, p5);
       return result;
    }
+#endif
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
