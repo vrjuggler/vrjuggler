@@ -314,8 +314,8 @@ class ViewportPlacerModel
    public void setSizeOf(int idx, Dimension size)
    {
       ConfigElement vp_elt = (ConfigElement) getElement(idx);
-      double vp_width  = (double) size.width / mDesktopSize.getWidth();
-      double vp_height = (double) size.height / mDesktopSize.getHeight();
+      double vp_width  = (float) size.width / mDesktopSize.getWidth();
+      double vp_height = (float) size.height / mDesktopSize.getHeight();
 
       if ( vp_width > 1.0 )
       {
@@ -327,19 +327,19 @@ class ViewportPlacerModel
          vp_height = 1.0;
       }
 
-      vp_elt.setProperty("size", 0, new Double(vp_width));
-      vp_elt.setProperty("size", 1, new Double(vp_height));
+      vp_elt.setProperty("size", 0, new Float(vp_width));
+      vp_elt.setProperty("size", 1, new Float(vp_height));
    }
 
    public Point getLocationOf(int idx)
    {
       ConfigElement vp_elt = (ConfigElement) getElement(idx);
-      double x = ((Number) vp_elt.getProperty("origin", 0)).doubleValue() * mDesktopSize.getWidth();
-      double y = ((Number) vp_elt.getProperty("origin", 1)).doubleValue() * mDesktopSize.getHeight();
+      double x = ((Number) vp_elt.getProperty("origin", 0)).floatValue() * mDesktopSize.getWidth();
+      double y = ((Number) vp_elt.getProperty("origin", 1)).floatValue() * mDesktopSize.getHeight();
 
       // Convert y from Juggler coords (bottom left is origin)
       double height =
-         ((Number) vp_elt.getProperty("size", 1)).doubleValue() * mDesktopSize.getHeight();
+         ((Number) vp_elt.getProperty("size", 1)).floatValue() * mDesktopSize.getHeight();
       y = mDesktopSize.getHeight() - y - height;
       return new Point((int) x, (int) y);
    }
@@ -350,10 +350,10 @@ class ViewportPlacerModel
 
       // Convert y to Juggler coords (bottom left is origin)
       double height =
-         ((Number) vp_elt.getProperty("size", 1)).doubleValue() * mDesktopSize.getHeight();
+         ((Number) vp_elt.getProperty("size", 1)).floatValue() * mDesktopSize.getHeight();
       double y = mDesktopSize.height - pt.y - height;
 
-      double vp_origin_x = (double) pt.x / mDesktopSize.getWidth();
+      double vp_origin_x = (float) pt.x / mDesktopSize.getWidth();
       double vp_origin_y = y / mDesktopSize.getHeight();
 
       if ( vp_origin_x < 0.0 )
@@ -366,8 +366,8 @@ class ViewportPlacerModel
          vp_origin_y = 0.0;
       }
 
-      vp_elt.setProperty("origin", 0, new Double(vp_origin_x));
-      vp_elt.setProperty("origin", 1, new Double(vp_origin_y));
+      vp_elt.setProperty("origin", 0, new Float(vp_origin_x));
+      vp_elt.setProperty("origin", 1, new Float(vp_origin_y));
    }
 
    public void moveToFront(int idx)
