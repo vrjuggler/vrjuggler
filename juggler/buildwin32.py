@@ -499,8 +499,12 @@ def generateAntBuildFiles():
                          r'JCCL_Java\RTRC_Plugin_Java', 'build.xml'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig', 'VRJConfig',
                          'build.xml'))
+   mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\display_window',
+                         'VRJConfig', 'build-display_window.xml'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\intersense',
                          'VRJConfig', 'build-intersense.xml'))
+   mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\pinchglove',
+                         'VRJConfig', 'build-pinchglove.xml'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\proxyeditor',
                          'VRJConfig', 'build-proxyeditor.xml'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\surfacedisplayeditor',
@@ -1164,7 +1168,16 @@ def installOmniORB(prefix):
    srcdir = os.path.join(root, 'lib', 'python')
 
    if os.path.exists(srcdir):
-      destdir = os.path.join(prefix, 'lib', 'python')
+      # Install the omniidl Python bits into the bin directory so that users
+      # do not have to set %PYTHONPATH%.
+      destdir = os.path.join(prefix, 'bin')
+      installDir(srcdir, destdir)
+
+   # If omnipython is installed along with omniORB, we need to install it, too.
+   srcdir = os.path.join(root, 'lib', 'python1.5')
+
+   if os.path.exists(srcdir):
+      destdir = os.path.join(prefix, 'lib', 'python1.5')
       installDir(srcdir, destdir)
 
    # Install all executables and DLLs.
