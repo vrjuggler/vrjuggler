@@ -135,6 +135,14 @@ inline vpr::ReturnStatus SocketConnector::connect(SocketStream& newStream,
     if(!checkOpen(newStream))
         return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
 
+    if ( localAddr != vpr::InetAddr::AnyAddr )
+    {
+       vpr::ReturnStatus status;
+       newStream.setLocalAddr(localAddr);
+       status = newStream.bind();
+       vprASSERT(status.success() && "Failed to bind local address");
+    }
+
     // Start the connection
     if(!connectStart(newStream, timeout, localAddr))
         return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
