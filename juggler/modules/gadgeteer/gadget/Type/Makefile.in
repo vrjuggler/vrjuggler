@@ -61,14 +61,14 @@ SRCS=		Analog.cpp			\
 		DigitalProxy.cpp		\
 		EventWindow.cpp			\
 		EventWindowProxy.cpp		\
-		Input.cpp			\
-		Position.cpp			\
-		PositionProxy.cpp		\
+		GestureProxy.cpp		\
 		Glove.cpp			\
 		GloveData.cpp			\
+		GloveGesture.cpp		\
 		GloveProxy.cpp			\
-		GestureProxy.cpp		\
-		GloveGesture.cpp		
+		Input.cpp			\
+		Position.cpp			\
+		PositionProxy.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
 
