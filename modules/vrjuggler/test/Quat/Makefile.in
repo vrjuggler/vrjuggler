@@ -44,5 +44,5 @@ testQuat: ${OBJECTS}
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend testQuat ${OBJECTS} core so_locations
+	rm -f Makedepend testQuat ${OBJECTS} *core so_locations
 	rm -rf ./ii_files
