@@ -34,6 +34,7 @@
 
 #include <cstdlib>
 #include <string>
+#include <boost/concept_check.hpp>
 #include <vpr/vpr.h>
 #include <vpr/Util/Debug.h>
 #include <jccl/Config/ConfigChunk.h>
@@ -380,6 +381,8 @@ void TweekGadget::unregisterDevices()
 
 void TweekGadget::controlLoop(void* arg)
 {
+   boost::ignore_unused_variable_warning(arg);
+
    mThreadRunning = true;
 
    while ( mThreadRunning )
