@@ -1,0 +1,101 @@
+<html><head><TITLE>Description of {classname}</TITLE><BASE TARGET="_parent" ></head>
+<body BGCOLOR=#FFFFFF>
+<FONT FACE="Helvetica">
+<DL><DT>
+<FONT SIZE=4>{ if templ} template { endif} {if struct} struct {endif}
+{else} {if union} union {endif}{else} class {endelse} {endelse}
+</FONT>
+<FONT SIZE=5><B>{classlinked}{templ}</B></FONT>
+{if parents}
+  <FONT SIZE=4> : {parents} </FONT>
+{endif}
+<br><br>
+
+<DD><FONT FACE="Times" SIZE=4>
+{if brief}  <B>{brief}</B> {if detail} <p> {endif} {else}  <br><br> {endelse} {endif}
+{if detail} <FONT SIZE=3>{detail}</FONT>  <br><br>{endif}
+{if italic} <I> {italic} </I> <br><br> {endif}
+
+</DL></FONT>
+
+<FONT SIZE=3>Members:</FONT><br><br>
+<UL>
+{if public}
+
+<LI><FONT SIZE=2><B>Public:</B></FONT><br><br>
+<DL>
+
+{foreach public}
+
+    <DT>{type}<B>{mname}</B>{if func}({args}) {if const}const{endif} {if throws} <FONT COLOR="red"> throws {throwclass}({throwargs}) </FONT>{endif}{endif}
+    {if enum} {lb}{args}{rb} {endif};
+    <DD><FONT FACE="Times" SIZE=3>
+      {private false}
+        {if brief}  <B>{brief}</B> <br> {endif}
+        {if detail} {detail} <br> {endif}
+        <TABLE BORDER="1">
+        {if MODIFIES} <TR><TD><B>Modifies</B></TD>  <TD><P>{MODIFIES}</TD>  </TR> {endif}
+        {if PRE} <TR><TD><B>Pre</B></TD>  <TD><P>{PRE}</TD>  </TR> {endif}
+        {if POST} <TR><TD><B>Post</B></TD>  <TD><P>{POST}</TD>  </TR> {endif}
+        {if NOTE} <TR><TD><B>Note</B></TD>  <TD><P>{NOTE}</TD>  </TR>  {endif}
+        </TABLE>
+      {endprivate}
+
+      {if ARGS} <BR> {ARGS} {endif}
+      {if RETURNS} <BR> {RETURNS} {endif}
+      </FONT>
+<br>
+{next public}
+
+</DL>
+<br><br>
+{endif public}
+{if protected}
+
+<LI><FONT SIZE=2><B>Protected:</B></FONT><br><br>
+
+{foreach protected}
+
+    <DT>{type}<B>{mname}</B>{if func}({args}) {if const}const{endif} {if throws} <FONT COLOR="red"> throws {throwclass}({throwargs}) </FONT>{endif}{endif}
+    {if enum} {lb}{args}{rb} {endif};
+    <DD><FONT FACE="Times" SIZE=3>
+      {private false}
+        {if brief}  <B>{brief}</B> <br> {endif}
+        {if detail} {detail} <br> {endif}
+        <TABLE BORDER="1">
+        {if MODIFIES} <TR><TD><B>Modifies</B></TD>  <TD><P>{MODIFIES}</TD>  </TR> {endif}
+        {if PRE} <TR><TD><B>Pre</B></TD>  <TD><P>{PRE}</TD>  </TR> {endif}
+        {if POST} <TR><TD><B>Post</B></TD>  <TD><P>{POST}</TD>  </TR> {endif}
+        {if NOTE} <TR><TD><B>Note</B></TD>  <TD><P>{NOTE}</TD>  </TR>  {endif}
+        </TABLE>
+      {endprivate}
+
+      {if ARGS} <BR> {ARGS} {endif}
+      {if RETURNS} <BR> {RETURNS} {endif}
+      </FONT>
+
+<br>
+{next protected}
+<br><br>
+{endif protected}
+{if friend}
+
+<LI><FONT SIZE=2><B>Friends:</B></FONT><br><br>
+
+{foreach friend}
+
+    <DT>{type}<B>{mname}</B>{if func}({args}) {if const}const{endif} {if throws} <FONT COLOR="red"> throws {throwclass}({throwargs}) </FONT>{endif}{endif}
+    {if enum} {lb}{args}{rb} {endif};
+    <DD><FONT FACE="Times" SIZE=3>
+      {if ARGS} <BR> {ARGS} {endif}
+      </FONT>
+
+<br>
+{next friend}
+<br><br>
+{endif friend}
+</UL>
+{if author} Programmer: { author } {endif}
+</FONT>
+</body>
+</html>
