@@ -60,7 +60,7 @@ public class SimpleApp : vrj.GlApp
 
    public override void init()
    {
-      Console.WriteLine("SimpleApp.init()");
+//      Console.WriteLine("SimpleApp.init()");
       mButton0.init("VJButton0");
       mButton1.init("VJButton1");
       mWand.init("VJWand");
@@ -74,11 +74,15 @@ public class SimpleApp : vrj.GlApp
 
    public override void preFrame()
    {
-      Console.WriteLine("SimpleApp.preFrame()");
+//      Console.WriteLine("SimpleApp.preFrame()");
 
       if ( mButton0.getProxy().getData() != gadget.Digital.State.OFF )
       {
-         Console.WriteLine("Button 0 pressed");
+         mBoxGrabbed = true;
+      }
+      else
+      {
+         mBoxGrabbed = false;
       }
 
       if ( mButton1.getProxy().getData() != gadget.Digital.State.OFF )
@@ -89,50 +93,59 @@ public class SimpleApp : vrj.GlApp
 
    public override void bufferPreDraw()
    {
-      Console.WriteLine("SimpleApp.bufferPreDraw()");
+//      Console.WriteLine("SimpleApp.bufferPreDraw()");
       Gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
       Gl.glClear(Gl.GL_COLOR_BUFFER_BIT);
    }
 
    public override void draw()
    {
-      Console.WriteLine("SimpleApp.draw()");
+//      Console.WriteLine("SimpleApp.draw()");
       Gl.glClear(Gl.GL_DEPTH_BUFFER_BIT);
 
       // --- Setup for drawing --- //
       Gl.glMatrixMode(Gl.GL_MODELVIEW);
 
-      // -- Get Wand matrix --- //
-      gmtl.Matrix44f wand_matrix = mWand.getProxy().getData();
+      gmtl.Matrix44f box_offset;
 
-      // -- Create box offset matrix -- //
-      gmtl.EulerAngleXYZf euler_ang =
-         new gmtl.EulerAngleXYZf(gmtl.Math.deg2Rad(-90.0f),
-                                 gmtl.Math.deg2Rad(0.0f),
-                                 gmtl.Math.deg2Rad(0.0f));
+      // If the box is grabbed, position it in the same place as the wand.
+      if ( mBoxGrabbed )
+      {
+         // -- Get Wand matrix --- //
+         box_offset = mWand.getProxy().getData();
+      }
+      // Otherwise, use a fixed position.
+      else
+      {
+         // -- Create box offset matrix -- //
+         gmtl.EulerAngleXYZf euler_ang =
+            new gmtl.EulerAngleXYZf(gmtl.Math.deg2Rad(-90.0f),
+                                    gmtl.Math.deg2Rad(0.0f),
+                                    gmtl.Math.deg2Rad(0.0f));
 
-      gmtl.Matrix44f box_offset = Gmtl.makeRotMatrix44(euler_ang);
-      Gmtl.setTrans(box_offset, new gmtl.Vec3f(0.0f, 1.0f, 0.0f));
+         box_offset = Gmtl.makeRotMatrix44(euler_ang);
+         Gmtl.setTrans(box_offset, new gmtl.Vec3f(0.0f, 1.0f, 0.0f));
+      }
 
-      // --- Create a color for the wand --- //
-      float[] wand_color = { 0.7f, 0.7f, 0.7f };
+      // --- Create a color for the box. --- //
+      float[] box_color = { 0.7f, 0.7f, 0.7f };
 
       Gl.glPushMatrix();
 
       // --- Draw the box --- //
       Gl.glPushMatrix();
-         // Push the wand offset matrix on the stack
+         // Push the box offset matrix on the stack.
          Gl.glMultMatrixf(box_offset.getData());
-         Gl.glColor3fv(wand_color);
+         Gl.glColor3fv(box_color);
          Gl.glScalef(0.5f, 0.5f, 0.5f);
          drawCube();
       Gl.glPopMatrix();
 
-      // Draw a coordinate axis "on" the box
-      Gl.glLineWidth(5.0f);
+      // Draw a coordinate axis "on" the box.
+      Gl.glLineWidth(2.0f);
       Gl.glDisable(Gl.GL_LIGHTING);
       Gl.glPushMatrix();
-         Gl.glMultMatrixf(box_offset.getData());    // Goto wand position
+         Gl.glMultMatrixf(box_offset.getData());  // Go to box_offset position
          gmtl.Vec3f x_axis = new gmtl.Vec3f(7.0f,0.0f,0.0f);
          gmtl.Vec3f y_axis = new gmtl.Vec3f(0.0f, 7.0f, 0.0f);
          gmtl.Vec3f z_axis = new gmtl.Vec3f(0.0f, 0.0f, 7.0f);
@@ -248,4 +261,6 @@ public class SimpleApp : vrj.GlApp
    private gadget.DigitalInterface mButton0 = new gadget.DigitalInterface();
    private gadget.DigitalInterface mButton1 = new gadget.DigitalInterface();
    private gadget.PositionInterface mWand = new gadget.PositionInterface();
+
+   private bool mBoxGrabbed = false;
 }
