@@ -278,7 +278,7 @@ BOOL ISD_GetTrackerData( ISD_TRACKER_HANDLE handle, ISD_DATA_TYPE *Data )
             Data->Station[i].Position[1] = tracker->station[i].Position[1];
             Data->Station[i].Position[2] = tracker->station[i].Position[2];
 
-            Data->Station[i].TimeStaMp = tracker->station[i].TimeStaMp;
+            Data->Station[i].TimeStamp = tracker->station[i].TimeStamp;
 
             memcpy((void *)Data->Station[i].ButtonState, (void *)tracker->station[i].ButtonState, 
                 sizeof(Data->Station[i].ButtonState));

@@ -148,7 +148,7 @@ void Isense::controlLoop(void* nullParam)
 
     int numbuffs = (mTracker.NumStations())*3;
     theData = (Matrix*) new Matrix[numbuffs];
-    mDataTimes = new TimeStaMp[numbuffs];
+    mDataTimes = new TimeStamp[numbuffs];
 
 // Configure the stations used by the configuration
     int j = 0;
@@ -227,7 +227,7 @@ int Isense::sample()
         return 0;
 
     int i,  j;
-    TimeStaMp sampletime;
+    TimeStamp sampletime;
 
 
     sampletime.set();
@@ -356,7 +356,7 @@ float Isense::getAnalogData( int d )
     return newValue;
 }
 
-TimeStaMp* Isense::getPosUpdateTime (int d)
+TimeStamp* Isense::getPosUpdateTime (int d)
 {
     if (this->isActive() == false)
         return NULL;

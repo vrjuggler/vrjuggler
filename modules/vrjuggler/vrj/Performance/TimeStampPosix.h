@@ -42,20 +42,20 @@ namespace vrj
 //-----------------------------------------
 //:Portable time recorder for Unix/Linux systems
 //
-//     This version of TimeStaMp uses the gettimeofday()
+//     This version of TimeStamp uses the gettimeofday()
 //     system call to collect timing information.  While
 //     it is probably not as high resolution as 
-//     TimeStaMpSGI, it should be portable accross all
+//     TimeStampSGI, it should be portable accross all
 //     Unix and Unix-like OSes
 //
-//     TimeStaMpPosix should never be instantiated directly.
-//     Instead, use TimeStaMp, which will be typedefed to
+//     TimeStampPosix should never be instantiated directly.
+//     Instead, use TimeStamp, which will be typedefed to
 //     the correct implementation.
 //
 // @author  Christopher Just
 //-----------------------------------------
 
-class TimeStaMpPosix {
+class TimeStampPosix {
 
 public:
 
@@ -67,13 +67,13 @@ public:
 
 
 
-    TimeStaMpPosix() {
+    TimeStampPosix() {
 	set();
     }
 
 
 
-    TimeStaMpPosix& operator= (const TimeStaMpPosix& t2);
+    TimeStampPosix& operator= (const TimeStampPosix& t2);
 
 
 
@@ -94,18 +94,18 @@ public:
     //: returns number of microseconds between self and t2
     //! PRE: t2 is stamped with an earlier time than self
     //! 
-    float operator - (const TimeStaMpPosix& t2) const {
+    float operator - (const TimeStampPosix& t2) const {
 	return (usecs() - t2.usecs());
     }
 
 
-    float diff (TimeStaMpPosix& ts) {
+    float diff (TimeStampPosix& ts) {
 	return ts.val - val;
     }
 
 
 
-    friend std::ostream& operator << (std::ostream& out, TimeStaMpPosix& ts) {
+    friend std::ostream& operator << (std::ostream& out, TimeStampPosix& ts) {
 	out << ts.usecs();
 	return out;
     }

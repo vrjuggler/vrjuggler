@@ -60,7 +60,7 @@
 namespace vrj
 {
    
-void TimeStaMpSGI::initialize() {
+void TimeStampSGI::initialize() {
     int cyclevalue;
     static unsigned long long enodev_dummy_address = 0;
 
@@ -70,7 +70,7 @@ void TimeStaMpSGI::initialize() {
     poffmask = getpagesize() - 1;
     phys_addr = syssgi(SGI_QUERY_CYCLECNTR, &cyclevalue);
     if (phys_addr == ENODEV) {
-	vjDEBUG (vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " TimeStaMp: Cycle Counter not "
+	vjDEBUG (vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " TimeStamp: Cycle Counter not "
 	    "supported by this machine.\n" << vjDEBUG_FLUSH;
 	iotimer_addr = &enodev_dummy_address;
     }
@@ -98,31 +98,31 @@ void TimeStaMpSGI::initialize() {
 
 
 
-float TimeStaMpSGI::usecs () {
+float TimeStampSGI::usecs () {
     /* returns timestamp value in usecs from intialize() */
     return val*resolution;
 }
 
 
-TimeStaMpSGI::TimeStaMpSGI() {
+TimeStampSGI::TimeStampSGI() {
     set();
 }
 
 
-float TimeStaMpSGI::operator - (const TimeStaMpSGI& t2) const {
+float TimeStampSGI::operator - (const TimeStampSGI& t2) const {
     /* returns self - t2, in usecs */
     return (val - t2.val)*resolution;
 }
 
 
-std::ostream& operator << (std::ostream& out, TimeStaMpSGI& ts) {
+std::ostream& operator << (std::ostream& out, TimeStampSGI& ts) {
     out << ts.usecs();
     return out;
 }
 
 
 
-float TimeStaMpSGI::getResolution() {
+float TimeStampSGI::getResolution() {
     return resolution;
 }
 
@@ -130,16 +130,16 @@ float TimeStaMpSGI::getResolution() {
 /* these need to be here to avoid "Unresolved data symbols"
  * problem w/ linker.
  */
-__psunsigned_t TimeStaMpSGI::phys_addr = 0;
-__psunsigned_t TimeStaMpSGI::raddr = 0;
-volatile void* TimeStaMpSGI::iotimer_addr;
-volatile unsigned long long TimeStaMpSGI::longcount;
-int TimeStaMpSGI::fd,
-    TimeStaMpSGI::poffmask;
-float TimeStaMpSGI::resolution; // in usecs.
-int TimeStaMpSGI::cyclecntrsize;  // either 32 or 64 bits. depends on hardware
-long long TimeStaMpSGI::initval;
-long long TimeStaMpSGI::maxval;
+__psunsigned_t TimeStampSGI::phys_addr = 0;
+__psunsigned_t TimeStampSGI::raddr = 0;
+volatile void* TimeStampSGI::iotimer_addr;
+volatile unsigned long long TimeStampSGI::longcount;
+int TimeStampSGI::fd,
+    TimeStampSGI::poffmask;
+float TimeStampSGI::resolution; // in usecs.
+int TimeStampSGI::cyclecntrsize;  // either 32 or 64 bits. depends on hardware
+long long TimeStampSGI::initval;
+long long TimeStampSGI::maxval;
 
 };
 #elif VJ_PERFORMANCE == VJ_PERF_POSIX
@@ -151,13 +151,13 @@ long long TimeStaMpSGI::maxval;
 namespace vrj
 {
 
-TimeStaMpPosix& TimeStaMpPosix::operator= (const TimeStaMpPosix& t2) {
+TimeStampPosix& TimeStampPosix::operator= (const TimeStampPosix& t2) {
     val = t2.val;
     return *this;
 }
 
 
-float TimeStaMpPosix::initval = 0.0;
+float TimeStampPosix::initval = 0.0;
 
 };
 

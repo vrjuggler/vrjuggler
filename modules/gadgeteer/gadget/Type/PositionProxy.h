@@ -90,7 +90,7 @@ public:
    }
 
     //: returns time of last update...
-    TimeStaMp* getUpdateTime () {
+    TimeStamp* getUpdateTime () {
    return &mPosUpdateTime;
     }
 
@@ -155,7 +155,7 @@ public:
 
 private:
    Matrix       mPosData;
-   TimeStaMp    mPosUpdateTime;
+   TimeStamp    mPosUpdateTime;
    Matrix       mMatrixTransform;        // reciever_t_modifiedReciever
    int            mUnitNum;
    bool           mETrans;                // Are transformation enabled;

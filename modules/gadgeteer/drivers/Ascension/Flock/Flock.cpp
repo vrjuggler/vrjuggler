@@ -206,7 +206,7 @@ int Flock::startSampling()
       // Allocate buffer space for birds
       int numbuffs = (mFlockOfBirds.getNumBirds()+1)*3;
       theData = new Matrix[numbuffs];
-      mDataTimes = new TimeStaMp[numbuffs];
+      mDataTimes = new TimeStamp[numbuffs];
 
       // Reset current, progress, and valid indices
       resetIndexes();
@@ -253,7 +253,7 @@ int Flock::sample()
       return 0;
 
    int i;
-      TimeStaMp sampletime;
+      TimeStamp sampletime;
    sampletime.set();
    mFlockOfBirds.sample();
 
@@ -342,7 +342,7 @@ Matrix* Flock::getPosData( int d ) // d is 0 based
     return (&theData[getBirdIndex(d,current)]);
 }
 
-TimeStaMp* Flock::getPosUpdateTime (int d) {
+TimeStamp* Flock::getPosUpdateTime (int d) {
     if (this->isActive() == false)
       return NULL;
 

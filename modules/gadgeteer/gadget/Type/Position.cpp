@@ -70,7 +70,7 @@ bool Position::config(ConfigChunk *c)
   return true;
 }
 
-TimeStaMp* Position::getPosUpdateTime (int devNum)
+TimeStamp* Position::getPosUpdateTime (int devNum)
 {
       vjDEBUG(vjDBG_PERFORMANCE,2) << "vjPosition::getPosUpdateTime: Get update time function not implemented for this class: " << typeid(this).name() << std::endl << vjDEBUG_FLUSH;
    return NULL;
