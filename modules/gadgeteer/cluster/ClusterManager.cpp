@@ -181,13 +181,17 @@ namespace cluster
       {
          if ( !jccl::ConfigManager::instance()->hasElementType( "start_barrier_plugin" ) )
          {
-            vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
-               << clrOutBOLD( clrRED, "StartBarrier config element does not exist. " )
-               << clrOutBOLD( clrRED, "If your application depends on each node starting at the same " )
-               << clrOutBOLD( clrRED, "time you should add a StartBarrierPlugin configuration element." )
-               << std::endl << vprDEBUG_FLUSH;
-
-            std::cout << "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX DONE - ERROR XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" << std::endl;
+            vprDEBUG(gadgetDBG_RIM, vprDBG_WARNING_LVL)
+               << clrOutBOLD(clrCYAN, "NOTE:") << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG_NEXT(gadgetDBG_RIM, vprDBG_WARNING_LVL)
+               << "The start_barrier_plugin config element does not exist.\n"
+               << vprDEBUG_FLUSH;
+            vprDEBUG_NEXT(gadgetDBG_RIM, vprDBG_WARNING_LVL)
+               << "If your application depends on each node starting at the "
+               << "same time,\n" << vprDEBUG_FLUSH;
+            vprDEBUG_NEXT(gadgetDBG_RIM, vprDBG_WARNING_LVL)
+               << "then you should load and configure the Start Barrier "
+               << "Plug-in.\n" << vprDEBUG_FLUSH;
 
             mClusterReady = true;
          }
