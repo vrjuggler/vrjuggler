@@ -80,6 +80,7 @@ public class ControlPanelView
    public ControlPanelView()
    {
       mToolbar = new ControlPanelToolbar(mContext, this, this);
+      mToolbar.setRemoteReconfigEnabled(false);
 
       // Make sure all editors are registered.
       PropertyEditorManager.registerEditor(Boolean.class, BooleanEditor.class);
@@ -129,10 +130,28 @@ public class ControlPanelView
       mHelpBrowserFrame.setTitle("VR Juggler Configuration Help Browser");
       mHelpBrowserFrame.validate();
 
+      try
+      {
+         ClassLoader loader = getClass().getClassLoader();
+         String img_root = "org/vrjuggler/vrjconfig/images";
+         mBackBtn.setIcon(new ImageIcon(loader.getResource(
+            img_root + "/Back16.gif"
+         )));
+         mForwardBtn.setIcon(new ImageIcon(loader.getResource(
+            img_root + "/Forward16.gif"
+         )));
+      }
+      catch(Exception ex)
+      {
+         mBackBtn.setIcon(null);
+         mForwardBtn.setIcon(null);
+      }
+
       // Add forward and back buttons to the toolbar
       mToolbar.addToToolbar(Box.createHorizontalStrut(8));
       mBackBtn.setText("Back");
       mBackBtn.setEnabled(false);
+      mBackBtn.setHorizontalAlignment(SwingConstants.LEFT);
       mBackBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
@@ -142,6 +161,8 @@ public class ControlPanelView
       });
       mForwardBtn.setText("Forward");
       mForwardBtn.setEnabled(false);
+      mForwardBtn.setHorizontalAlignment(SwingConstants.LEFT);
+      mForwardBtn.setHorizontalTextPosition(SwingConstants.TRAILING);
       mForwardBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
