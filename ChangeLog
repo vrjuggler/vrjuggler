@@ -1,5 +1,8 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jun-06-2002 patrickh  Fixed an addressing problem in the Flock of Birds driver
+                      that arose when the transmitter was not the last device
+                      on the bus.
 May-04-2002 patrickh  Implemented vjThreadSGI::join() based on VPR's version.
 Apr-29-2002 aronb     Fixed analog data collection in IBox driver.
 
