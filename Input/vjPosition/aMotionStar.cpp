@@ -1888,7 +1888,7 @@ aMotionStar::printSystemStatus (const BIRDNET::SYSTEM_STATUS* status) {
     std::cout << std::setw(pad_width_dot) << std::setfill('.')
               << "* Measurement rate " << " "
               << convertMeasurementRate(status->measurementRate) << "\n";
-    sprintf(rev_str, "%d.%d", status->softwareRevision[0],
+    sprintf(rev_str, "%u.%u", status->softwareRevision[0],
             status->softwareRevision[1]);
     rev_num = atof(rev_str);
     std::cout << std::setw(pad_width_dot) << std::setfill('.')
