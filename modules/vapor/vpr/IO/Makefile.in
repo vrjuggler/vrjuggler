@@ -53,8 +53,8 @@ VPR_SRCDIR	= @VPR_SRCDIR@/vpr/IO
 DIRPRFX		= vpr/IO/
 
 SUBDIR		= Port		\
-      			Socket  \
-						Stats
+                  Socket	\
+                  Stats
 
 SRCS 		= BlockIO.cpp
 
