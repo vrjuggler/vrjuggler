@@ -30,6 +30,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
+# Paths to XSLT processing tools.
 XSLTPROC=	xsltproc
 XALAN=		xalan.sh
 
@@ -46,9 +47,17 @@ desc-update-2.0-2.1:
 desc-update-2.1-2.2:
 	$(MAKE) XSL_FILE=desc_2.1-2.2.xsl $(XSLT_TARGET)
 
+desc-update-2.2-2.3:
+	$(MAKE) XSL_FILE=desc_2.2-2.3.xsl $(XSLT_TARGET)
+
 desc-update-2.0-2.2:
 	$(MAKE) desc-update-2.0-2.1
 	$(MAKE) desc-update-2.1-2.2
+
+desc-update-2.0-2.3:
+	$(MAKE) desc-update-2.0-2.1
+	$(MAKE) desc-update-2.1-2.2
+	$(MAKE) desc-update-2.2-2.3
 
 # Generate $(OUTPUT_FILE) from $(INPUT_FILE) using xsltproc and $(XSL_FILE) for
 # the stylesheet.

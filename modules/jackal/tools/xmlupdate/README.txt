@@ -1,5 +1,12 @@
-This directory contains a script for updating XML-based VR Juggler/JCCL
-configuration files.  Information about the script follows:
+This directory contains a collection of tools for updating XML-based
+VR Juggler/JCCL configuration files.  The update process is iterative
+with each step corresponding to one version of the XML file format.
+
+At some point, we intend to automate the update process inside VRJConfig
+using XSLT.  VRJConfig will detect the format of the loaded file and
+perform an update to the format if necessary.  This will only be possible
+for file format versions where XSLT stylesheets are provided for
+performing the update.
 
 xmlupdate.py
 ------------
@@ -116,6 +123,53 @@ desc_2.1-2.2.xsl
    follows:
 
      make INPUT_FILE=<input.desc> OUTPUT_FILE=<output.desc> desc-update-2.1-2.2
+
+   This makefile will work with any implementation of make (including
+   Microsoft's nmake utility).  You may need to edit the makefile to
+   provide a path to the 'xsltproc' or 'xalan' executables.
+
+   Once you have updated the file, you should load the generated
+   description file using VRJConfig and review your configuration
+   descriptions.  Some additions to the XML content will be made, and
+   generic identifiers are often used for these additions.  Using
+   VRJConfig, you can make customizations for your specific
+   configuration types.
+
+desc_2.2-2.3.xsl
+----------------
+   An XSLT stylesheet that provides the upgrade path from version 2.2 of
+   the configuration description file format to version 2.3.  Simply use
+   this stylesheet with an XSLT processor to update old configuration
+   description files.
+   
+   The old files must have the following processing instruction:
+
+      <?org-vrjuggler-jccl-settings desc.db.version="2.2" ?>
+
+   The stylesheet uses this instruction to be sure that its input is
+   the correct version.  Version 2.2 was in use between January 15, 2003,
+   and February 27, 2003.  Any description files created using VRJConfig
+   between that time qualify as using version 2.2 of the file format,
+   though they may not include the above processing instruction.  In
+   that case, the processing instruction should be added as the second
+   line of the source input description file(s).
+
+   To use this stylesheet with the xsltproc command, run xsltproc as
+   follows:
+
+      xsltproc -o <output.desc> desc_2.2-2.3.xsl <input.desc>
+
+   To use it with Xalan, run the xalan wrapper (shell script or batch
+   file) as follows:
+
+      xalan -in <input.desc> -out <output.desc> -xsl desc_2.2-2.3.xsl
+
+   Fill in your input filename and output filename for appropriately.
+
+   Alternatively, you may use the makefile found in this directory as
+   follows:
+
+     make INPUT_FILE=<input.desc> OUTPUT_FILE=<output.desc> desc-update-2.2-2.3
 
    This makefile will work with any implementation of make (including
    Microsoft's nmake utility).  You may need to edit the makefile to
