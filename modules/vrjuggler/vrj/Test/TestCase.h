@@ -57,6 +57,9 @@ public:
       : mName(name)
    {;}
 
+   virtual ~TestCase()
+   {;}
+
    virtual void setApp(vrj::App* app)
    { mApp = app; }
 
