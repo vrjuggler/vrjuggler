@@ -82,13 +82,13 @@ public:
         return 0;
     }
 
-    static vpr::Int16 ntohs(vpr::Int32 conversion)
+    static vpr::Uint16 Ntohs(vpr::Uint16 conversion)
     { return PR_ntohs(conversion); }
-    static vpr::Int32 ntohl(vpr::Int32 conversion)
+    static vpr::Uint32 Ntohl(vpr::Uint32 conversion)
     { return PR_ntohl(conversion); }
-    static vpr::Int16 htons(vpr::Int32 conversion)
+    static vpr::Uint16 Htons(vpr::Uint16 conversion)
     { return PR_htons(conversion); }
-    static vpr::Int32 htonl(vpr::Int32 conversion)
+    static vpr::Uint32 Htonl(vpr::Uint32 conversion)
     { return PR_htonl(conversion); }
 
 };
