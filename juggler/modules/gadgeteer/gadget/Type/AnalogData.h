@@ -49,11 +49,11 @@ public:
     { mAnalogData = 0.0f; }
 
 
-    float getAnalogData ()
+    float getAnalogData () const
     { return mAnalogData; }
 
 
-    void setAnalogData (float f)
+    void setAnalogData (const float f)
     { mAnalogData = f; }
 
 
@@ -65,7 +65,7 @@ public:
     }
 
 
-    AnalogData& operator= (float f)
+    AnalogData& operator= (const float f)
     {
         mAnalogData = f;
         return *this;
