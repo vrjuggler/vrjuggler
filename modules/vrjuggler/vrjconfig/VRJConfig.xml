@@ -14,6 +14,7 @@
             class="org.vrjuggler.vrjconfig.ControlPanelView" />
       <dependency file="jccl_config.jar" path="${TWEEK_BASE_DIR}/bin/beans" />
       <dependency file="jccl_editors.jar" path="${TWEEK_BASE_DIR}/bin/beans" />
+      <dependency file="ui.jar" path="${TWEEK_BASE_DIR}/bin" />
       <tree path="/" />
    </guipanel>
 </beanlist>
