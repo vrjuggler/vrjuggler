@@ -58,9 +58,6 @@ DPP_GEN_RECONFIG
 
 DPP_STD_CPP(yes)
 
-SNX_PATH(0.0.3, , AC_MSG_ERROR(*** Can't find sonix ***))
-vrj_sonix_config='sonix-config'
-
 # Enable compilation of the OpenGL API.  Possible values are "yes" or "no".
 # "yes" is set with --enable-gl-api and "no" is set with --disable-gl-api.
 # The default is "yes".
@@ -190,6 +187,8 @@ VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
 JCCL_PATH([0.5.0], , [AC_MSG_ERROR(*** Jackal required for VR Juggler ***)])
 GADGETEER_PATH([0.2.3], ,
                [AC_MSG_ERROR(*** Gadgeteer required for VR Juggler ***)])
+SNX_PATH([0.0.3], [vrj_sonix_config='sonix-config'],
+         [AC_MSG_ERROR(*** Sonix required for VR Juggler ***)])
 
 if test "x$BUILD_JAVA" = "xY" ; then
    TWEEK_PATH_JAVA([0.6.0], ,
