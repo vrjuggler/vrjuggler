@@ -37,5 +37,5 @@
   <node name="gadget" type="Package"/>
   <file path="org/vrjuggler/gadget/tweekgadget/TweekDigitalButton.java"/>
   <file path="org/vrjuggler/gadget/tweekgadget/TweekDigitalObserverImpl.java"/>
-  <file path="org/vrjuggler/gadget/tweekgadget/TweekGadget.java"/>
+  <file path="org/vrjuggler/gadget/tweekgadget/TweekGadgetGUI.java"/>
 </project>
