@@ -229,10 +229,6 @@ private:
 
     void set_status_fbb(unsigned char);
 
-  // converts the raw hex data to a floating point
-
-    float rawToFloat(char r1, char r2);
-
     // ------------------------------------------------------------------------
     //: Combine the two given bytes (passed as high byte and low byte
     //+ respectively) into a single word.  This is used for reading bytes from
