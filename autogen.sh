@@ -46,7 +46,7 @@ if test "$DIE" -eq 1; then
   exit 1
 fi
 
-for coin in `find ${srcdir-.} -name configure.in -print`
+for coin in `find ${srcdir-.}/modules -name configure.in -print`
 do 
   dr=`dirname $coin`
   if test -f $dr/NO-AUTO-GEN; then
