@@ -183,8 +183,8 @@ void OsgNav::myInit()
 
    // traverse the scene graph setting up all osg::GeoSet's so they will use
     // OpenGL display lists.
-    osgUtil::DisplayListVisitor dlv(osgUtil::DisplayListVisitor::SWITCH_ON_DISPLAY_LISTS);
-    mRootNode->accept(dlv);
+    //osgUtil::DisplayListVisitor dlv(osgUtil::DisplayListVisitor::SWITCH_ON_DISPLAY_LISTS);
+    //mRootNode->accept(dlv);
 
     //The increment to move the model by
     mPos[0] = 0.0f;

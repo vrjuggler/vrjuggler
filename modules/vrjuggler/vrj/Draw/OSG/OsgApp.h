@@ -36,6 +36,7 @@
 #include <vrj/vrjConfig.h>
 
 #include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Draw/OGL/GlContextData.h>
 
 #include <osg/Vec3>
 #include <osg/Matrix>
@@ -78,10 +79,10 @@ public:
    // Make sure to call initScene if you override this function
    virtual void init()
    {
-      //Create the scene
-    sceneView = new osgUtil::SceneView;
-       sceneView->setDefaults();
-
+      sceneView = new  osgUtil::SceneView;
+      sceneView->setDefaults();
+      
+      //Create the scene      
       initScene();
    }
 
@@ -90,8 +91,7 @@ public:
    //  i.e. Display lists, Texture objects, etc.
    //! PRE: The ogl context has been set to the new context
    //! POST: Application has completed in initialization the user wishes
-   virtual void contextInit()
-   {;}
+   virtual void contextInit();
 
    //: Function that is called immediately before a context is closed
    // Use the function to clean up any context data structures
@@ -127,20 +127,36 @@ public:
    {;}
 
 protected:
-   osg::ref_ptr<osgUtil::SceneView> sceneView;        // Renderer.  XXX: Probably need multiple of them
+   osgUtil::SceneView* sceneView;        // Renderer.  XXX: Probably need multiple of them
+   vrj::GlContextData< osgUtil::SceneView* > sceneViewer;
 };
+
+inline void OsgApp::contextInit()
+{
+   //if ( (*sceneViewer).valid() == false )    // Not allocated yet
+   //{
+   unsigned int unique_context_id = GlDrawManager::instance()->getCurrentContext();
+
+   (*sceneViewer) = new osgUtil::SceneView;
+   (*sceneViewer)->setDefaults();
+   (*sceneViewer)->getState()->setContextID(unique_context_id);
+}
+   
 
 
 inline void OsgApp::draw()
-{
+{  
+   osg::ref_ptr< osgUtil::SceneView> scene_view = (*sceneViewer);
+   vprASSERT( scene_view.valid() );
+
    // Add the tree to the scene viewer
-    sceneView->setSceneData(getScene());
-    sceneView->setCalcNearFar(false);
+    (*sceneViewer)->setSceneData(getScene());
+    (*sceneViewer)->setCalcNearFar(false);
 
    //Take care of the view port (this does not work)
     GLint view[4];
     glGetIntegerv(GL_VIEWPORT, view);      //Get the view port that juggler sets
-    sceneView->setViewport(view[0],view[1],view[2],view[3]);
+    (*sceneViewer)->setViewport(view[0],view[1],view[2],view[3]);
 
    //Get the view matrix and the frustrum form the draw manager
     GlDrawManager* drawMan = dynamic_cast<GlDrawManager*> ( this->getDrawManager() );
@@ -151,7 +167,7 @@ inline void OsgApp::draw()
    //vjViewport* cur_vp = userData->getViewport();
    //float xo, yo, xs, ys;
    //cur_vp->getOriginAndSize(xo,yo,xs,ys);
-   //sceneView->setViewport(xo, yo, xs, ys);
+   //(*sceneViewer)->setViewport(xo, yo, xs, ys);
 
    // Copy the matrix
     Projection* project = userData->getProjection();
@@ -163,7 +179,7 @@ inline void OsgApp::draw()
     Frustum frustum = project->mFrustum;
 
     //Reset the camera
-   osg::Camera* the_cam = sceneView->getCamera();
+   osg::Camera* the_cam = (*sceneViewer)->getCamera();
     the_cam->home();
 
     //Set the frustrum (this is set with the matrix below)
@@ -176,9 +192,9 @@ inline void OsgApp::draw()
     the_cam->attachTransform(osg::Camera::MODEL_TO_EYE, &osgMat);
 
    //Draw the scene
-    sceneView->app();
-    sceneView->cull();
-    sceneView->draw();
+    (*sceneViewer)->app();
+    (*sceneViewer)->cull();
+    (*sceneViewer)->draw();
 }
 
 
