@@ -24,13 +24,15 @@
 #include <Input/InputManager/vjPosInterface.h>
 #include <Input/InputManager/vjDigitalInterface.h>
 
-#include "SoundFactory.h"
 #include "fileIO.h"
+
+/*
+#include "SoundFactory.h"
 #include "pjSoundNode.h" //performer-juggler sound node.
 #include "pjSoundReplaceTrav.h"
 
 SoundEngine* gSoundEngine = NULL;
-
+*/
 
 // nav includes
 #include <pfNavDCS.h>
@@ -217,9 +219,10 @@ void simplePfNavApp::initScene()
    mNavigationDCS->setNavigator(mVelNavDrive);
 
    // replace all nodes with _Sound_ with pjSoundNodes...
-   //pjSoundReplaceTrav::traverse( collidable_modelGroup, gSoundEngine, "_Sound_" );
-   ///assert( NULL);
-
+/*
+   pjSoundReplaceTrav::traverse( collidable_modelGroup, gSoundEngine, "_Sound_" );
+   assert( NULL);
+*/
    // load these files into perfly to see just what your scenegraph
    // looked like. . . . .useful for debugging.
    cout<<"Saving entire scene into lastscene.pfb, COULD TAKE A WHILE!\n"<<flush;

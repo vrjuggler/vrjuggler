@@ -44,13 +44,13 @@ void usage(char** argv)
 {
    cout<<"_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/\n"<<flush;
    cout<<"\n"<<flush;
-   cout<<"Usage: (where cf is some juggler config file)\n";
-      cout<<"      "<<argv[0]<<" sl modelfile.flt vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n] (for plib's SL library)\n";
-      cout<<"      "<<argv[0]<<" aw modelfile.flt vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n] (for audioworks library)\n"<<flush;
-      cout<<"      "<<argv[0]<<" nosound modelfile.flt vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n] (to stub out the sound)\n"<<flush;
+   cout<<"Usage:\n";
+      cout<<"      "<<argv[0]<<" modelfile.flt vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n] (for plib's SL library)\n";
+      cout<<"      "<<argv[0]<<" modelfile.flt vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n] (for audioworks library)\n"<<flush;
+      cout<<"      "<<argv[0]<<" modelfile.flt vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n] (to stub out the sound)\n"<<flush;
    cout<<"_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/\n"<<flush;
 }
-
+/*
 bool initSoundEngine( const std::string& arg, SoundEngine* engine )
 {
    if (arg == "sl")
@@ -97,7 +97,7 @@ bool initSoundEngine( const std::string& arg, SoundEngine* engine )
    
    return true; //user specified an option
 }
-
+*/
 void main(int argc, char* argv[])
 {
    vjKernel* kernel = vjKernel::instance(); // Declare a new Kernel
@@ -115,12 +115,15 @@ void main(int argc, char* argv[])
       return;
    }
    
-   int a = 1;
+   int a = 1; // it's here so i can add in the sound 
+              // stuff until we have a complex pfNav :)
+   
+   /*
    if (initSoundEngine( argv[a], gSoundEngine ))
    {
       ++a;
    }
-   
+   */
    
    if (argc < a)
    {
