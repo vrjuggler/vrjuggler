@@ -11,6 +11,8 @@
 //----------------------------------------------
 //: Semaphore wrapper for the SGI systems
 //
+// This class encapsulates the behavior of a semaphore variable.
+//
 // Author:
 //	Allen Bierbaum
 //
@@ -19,6 +21,9 @@
 class vjSemaphoreSGI
 {
 public:
+   //: Constructor
+   // Default to initial Value = 1
+   // That means taht semaphore initialy is available.
    vjSemaphoreSGI (int initialValue = 1)
    {
       // BUG:
@@ -71,7 +76,11 @@ public:
    //---------------------------------------------------------
    int acquire() const
    {
-      return uspsema(sema);     
+      int ret_val = uspsema(sema);
+      if(ret_val < 0)
+         cerr << "vjSemphoreSGI::ERROR:" << endl;
+
+      return ret_val;
    }
 
 //----------------------------------------------------------
@@ -131,7 +140,11 @@ public:
 //---------------------------------------------------------
    int release() const
    {
-      return usvsema(sema);   
+      int ret_val = usvsema(sema);
+      if(ret_val < 0)
+         cerr << "vjSemaphoreSGI::ERROR:" << endl;
+
+      return ret_val;
    }
 
 //---------------------------------------------------------
@@ -145,7 +158,7 @@ public:
 // NOTE:
 //   If processes are waiting on the semaphore, the results are undefined
 //---------------------------------------------------------
-   int release(int val)
+   int reset(int val)
    {
       return usinitsema(sema, val);   
    }
