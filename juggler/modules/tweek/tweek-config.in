@@ -255,6 +255,12 @@ while test $# -gt 0; do
         --jars)
             echo_jars='yes'
             ;;
+        --too-much-pressure)
+            echo @BUILD_CXX@
+            ;;
+        --is-jittery)
+            echo @BUILD_JAVA@
+            ;;
         *)
             usage 1 $1 1>&2
             ;;
