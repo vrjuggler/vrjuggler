@@ -47,33 +47,34 @@ namespace vrj
 
    class Viewport;
 
-//------------------------------------------------------------------
-//: Pure virtual base class for viewport definitions.
-//
-// Responsible for storing and computing projection
-//  information based upon an eye positions
-// This class is an abstract base class for other classes
-//  that actually compute the projections.
-//
-// @author Allen Bierbaum
-//  Date: 9-8-97
-//------------------------------------------------------------------
+/** Pure virtual base class for viewport definitions.
+*
+* Responsible for storing and computing projection
+*  information based upon an eye positions
+* This class is an abstract base class for other classes
+*  that actually compute the projections.
+*/
 class VJ_CLASS_API Projection
 {
 public:
-   // Eye and type
+   /** Eye and type */
    enum Eye
-   {LEFT = 1, RIGHT = 2,};
+   {
+      LEFT = 1,   /**< Left eye */
+      RIGHT = 2   /**< Right eye */
+   };
 
 public:
    Projection()
    {
-      //mType = -1;
       mEye = LEFT;
       mFocusPlaneDist = 1.0f;
       mViewport = NULL;
    }
 
+   /** Configure the projection
+   * Default implementation does nothing.
+   */
    virtual void config(jccl::ConfigChunkPtr chunk)
    {;}
 
@@ -90,36 +91,41 @@ public:
 
    virtual void calcViewMatrix(Matrix& eyePos) = 0;
 
-   //: Helper to the frustum apex and corners in model coordinates
-   //!NOTE: This function is meant for debugging purposes
-   //!POST: The given vars contain the values of the frustums
-   //+ corners in model space.
+   /** Helper to the frustum apex and corners in model coordinates
+   * @note This function is meant for debugging purposes
+   * @post The given vars contain the values of the frustums
+   * corners in model space.
+   */
    void getFrustumApexAndCorners(Vec3& apex, Vec3& ur, Vec3& lr, Vec3& ul, Vec3& ll);
 
-   //: Virtual output oporators.
-   // Every class derived from us shoudl just define this, and
-   // the opertetor<< will "just work"
+   /** Virtual output oporators.
+   * Every class derived from us shoudl just define this, and
+   * the opertetor<< will "just work"
+   */
    virtual std::ostream& outStream(std::ostream& out);
 
    friend VJ_API(std::ostream&) operator<<(std::ostream& out, Projection& proj);
 
 
 public:
-   Matrix    mViewMat;
-   Frustum   mFrustum;
+   Matrix    mViewMat;     /**< The view transformation matrix for this projection */
+   Frustum   mFrustum;     /**< The calculated view frustum for this projection */
 
 protected:
-   Eye         mEye;
-   //int mType;
+   Eye         mEye;          /**< The eye that this projection is rendering */
    Viewport*   mViewport;     /**< The containing viewport for the projection. Used in some projections to get size */
 
    float       mFocusPlaneDist;     // Basically the distance to the surface.  Needed for drawing surface in simulator.
 
-protected:     // Statics
-   static float mNearDist;
-   static float mFarDist;    // Near far distances
+protected:
+   /** @name Static near/far values */
+   //@{
+   static float mNearDist;    /**< The near distance */
+   static float mFarDist;     /**< The far distance */
+   //@}
 
 public:
+   /** Set the system wide near and far values */
    static void setNearFar(float near_val, float far_val);
 };
 
