@@ -409,7 +409,7 @@ void ThreeDMouse::getDiagnostics ( unsigned char data[])
 int ThreeDMouse::getRecord ( gadget::PositionData* data)
 {
   int num_read;
-  byte record[EULER_RECORD_SIZE];
+  vpr::Uint8 record[EULER_RECORD_SIZE];
 
   ThreeDMouse::cuRequestReport ();
   num_read = read (mouseFD, record, EULER_RECORD_SIZE);
@@ -471,7 +471,7 @@ void ThreeDMouse::setBaseOrigin()
 /////////////////////////////////////////////////////////////////////////
 // convert from raw Euler data record to absolute data
 ////////////////////////////////////////////////////////////////////////
-void ThreeDMouse::eulerToAbsolute (byte record[], gmtl::Matrix44f& data)
+void ThreeDMouse::eulerToAbsolute (vpr::Uint8 record[], gmtl::Matrix44f& data)
 {
   long ax, ay, az, arx, ary, arz;
 
