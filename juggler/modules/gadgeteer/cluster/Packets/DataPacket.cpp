@@ -53,8 +53,8 @@ namespace cluster
    DataPacket::DataPacket() : mDeviceData(NULL)
    {;}
 
-   DataPacket::DataPacket(const vpr::GUID& plugin_id, const vpr::GUID& device_id, std::vector<vpr::Uint8>* data)
-         : mDeviceId(device_id), mDeviceData(data)
+   DataPacket::DataPacket(const vpr::GUID& plugin_id, const vpr::GUID& object_id, std::vector<vpr::Uint8>* data)
+         : mObjectId(object_id), mDeviceData(data)
    {      
       mPluginId = plugin_id;
 
@@ -83,7 +83,7 @@ namespace cluster
       mPluginId.writeObject(mPacketWriter);
       
       // Serialize device GUID.
-      mDeviceId.writeObject(mPacketWriter);
+      mObjectId.writeObject(mPacketWriter);
       
       // mDeviceData is a pointer that points at the DeviceData located in the DeviceServer
       // this data will be updated every frame before sent.
@@ -95,7 +95,7 @@ namespace cluster
       mPluginId.readObject(reader);
 
       // De-Serialize plugin GUID
-      mDeviceId.readObject(reader);
+      mObjectId.readObject(reader);
             
       mDeviceData = new std::vector<vpr::Uint8>();
 
@@ -123,12 +123,11 @@ namespace cluster
          << clrOutBOLD(clrYELLOW, "Plugin ID: ") << mPluginId.toString()
          << std::endl << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,debug_level) 
-         << clrOutBOLD(clrYELLOW, "Object ID: ") << mDeviceId.toString()
+         << clrOutBOLD(clrYELLOW, "Object ID: ") << mObjectId.toString()
          << std::endl << vprDEBUG_FLUSH;
 
       vprDEBUG_END(gadgetDBG_RIM,debug_level) 
          <<  clrOutBOLD(clrYELLOW,"============================\n") << vprDEBUG_FLUSH;
       */
-   }
-
-}   // end namespace gadget
+   }  
+}// end namespace cluster

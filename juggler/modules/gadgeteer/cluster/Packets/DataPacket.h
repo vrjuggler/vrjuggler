@@ -40,49 +40,74 @@
 #include <cluster/Packets/Header.h>                                                       
 #include <cluster/Packets/Packet.h>
 
-//#define RIM_PACKET_HEAD_SIZE 8
-
 namespace cluster
 {
 
 class GADGET_CLASS_API DataPacket : public Packet
 {
 public:
+   /**
+    * Default constructor used by the PacketFactory.
+    */
    DataPacket();
 
-   DataPacket(const vpr::GUID& plugin_id, const vpr::GUID& device_id, std::vector<vpr::Uint8>* data);
+   /**
+    * Create a DataPacket to send raw data accross the network.
+    *
+    * @param plugin_guid -GUID of the ClusterPlugin that should handle this packet.
+    * @param id -GUID of the object that we are acknowledging.
+    * @param data -Pointer to the raw data that we want to send across the network
+    */
+   DataPacket(const vpr::GUID& plugin_id, const vpr::GUID& object_id, std::vector<vpr::Uint8>* data);
    
+   /**
+    * Clean up all unused memory.
+    */
    virtual ~DataPacket()
    {
-      ;
+      delete mDeviceData;
    }
 
    /**
-    * Helper for the above creation of a device request to be sent
+    * Serializes member variables into a data stream.
     */
    void serialize();
 
    /**
-    * After reading in the remaining bytes from the socket, create a new parse the data
+    * Parses the data stream into the local member variables.
     */
    virtual void parse(vpr::BufferObjectReader* reader);
    
+   /**
+    * Print the data to the screen in a readable form.
+    */
    virtual void printData(int debug_level);
    
+   /**
+    * Return the type of this packet.
+    */
    static vpr::Uint16 getPacketFactoryType()
    {
        return(Header::RIM_DATA_PACKET);
    }
-   vpr::GUID getObjectId() { return mDeviceId; }
+
+   /**
+    * Return the GUID of the object that we are sending raw data for.
+    */
+   vpr::GUID getObjectId()
+   { return mObjectId; }
    
-   std::vector<vpr::Uint8>* getDeviceData() { return mDeviceData; }
+   /**
+    * Return a pointer to the raw data that we are sending across the network
+    */
+   std::vector<vpr::Uint8>* getDeviceData()
+   { return mDeviceData; }
    
-   void setDeviceData(std::vector<vpr::Uint8>* data){ mDeviceData = data; }
 private:
-   vpr::GUID mDeviceId;
-   std::vector<vpr::Uint8>*   mDeviceData;
+   vpr::GUID                  mObjectId;     /**< GUID of the object that we are sending raw data for. */
+   std::vector<vpr::Uint8>*   mDeviceData;   /**< Raw data that we are sending across the network. */
 };
-}
+}// end namespace cluster
 
 #endif
 

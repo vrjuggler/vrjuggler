@@ -147,6 +147,12 @@ namespace cluster
          }
    
          //node->setState(mNewState);
+         EndBlock* temp_end_block = dynamic_cast<EndBlock*>(packet);
+         vprASSERT(NULL != temp_end_block && "Dynamic cast failed!");
+         
+//	     vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[ClusterManager] ")
+//            << "Recv EndBlock: " << temp_end_block->getTempVar() << std::endl << vprDEBUG_FLUSH;           
+         
          node->setUpdated(true);
          return;
       }
@@ -189,7 +195,7 @@ namespace cluster
          jccl::ConfigManager::instance()->addConfigChunkHandler(new_plugin);
          //We can still unregister it when removed below though
 	     vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[ClusterManager] ")
-            << "Adding Plugin: " << new_plugin->getManagerName() <<std::endl << vprDEBUG_FLUSH;
+            << "Adding Plugin: " << new_plugin->getPluginName() <<std::endl << vprDEBUG_FLUSH;
       }
    }
 
@@ -218,7 +224,7 @@ namespace cluster
          if ((*i) == old_plugin)
          {
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[ClusterManager] ")
-            << "Removing Plugin: " << old_plugin->getManagerName() <<std::endl << vprDEBUG_FLUSH;
+            << "Removing Plugin: " << old_plugin->getPluginName() <<std::endl << vprDEBUG_FLUSH;
             mPlugins.erase(i);
             jccl::ConfigManager::instance()->removeConfigChunkHandler(*i);
             return;
@@ -250,6 +256,9 @@ namespace cluster
       bool updateNeeded = false;
       vpr::Guard<vpr::Mutex> guard(mPluginsLock);
       
+//      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[ClusterManager] ")
+//         << "Send Requests\n" << vprDEBUG_FLUSH;         
+
       for (std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
            i != mPlugins.end() ; i++)
       {
@@ -258,7 +267,7 @@ namespace cluster
       }
       if (updateNeeded)
       {
-         sendEndBlocksAndSignalUpdate();
+         sendEndBlocksAndSignalUpdate(1);
       }
    }
 
@@ -268,6 +277,9 @@ namespace cluster
       bool updateNeeded = false;
       vpr::Guard<vpr::Mutex> guard(mPluginsLock);
       
+//      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[ClusterManager] ")
+//         << "PreDraw\n" << vprDEBUG_FLUSH;         
+      
       for (std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
            i != mPlugins.end() ; i++)
       {
@@ -276,7 +288,7 @@ namespace cluster
       }
       if (updateNeeded)
       {
-         sendEndBlocksAndSignalUpdate();
+         sendEndBlocksAndSignalUpdate(2);
       }
    }
 
@@ -291,6 +303,9 @@ namespace cluster
       bool updateNeeded = false;
       vpr::Guard<vpr::Mutex> guard(mPluginsLock);
       
+//      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[ClusterManager] ")
+//         << "postPostFrame\n" << vprDEBUG_FLUSH;         
+
       for (std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
            i != mPlugins.end() ; i++)
       {
@@ -299,7 +314,11 @@ namespace cluster
       }  
       if (updateNeeded)
       {
-         sendEndBlocksAndSignalUpdate();
+//         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[ClusterManager] ")
+//            << "Before End\n" << vprDEBUG_FLUSH;         
+         sendEndBlocksAndSignalUpdate(3);
+//         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[ClusterManager] ")
+//            << "After End\n" << vprDEBUG_FLUSH;         
       }
    }
    void ClusterManager::createBarrier()
@@ -321,23 +340,31 @@ namespace cluster
       }
    }
 
-   void ClusterManager::sendEndBlocksAndSignalUpdate()
+   void ClusterManager::sendEndBlocksAndSignalUpdate(int temp)
    {
       ClusterNetwork::instance()->lockClusterNodes();
 
       std::vector<cluster::ClusterNode*>::iterator begin_cluster_nodes = ClusterNetwork::instance()->getClusterNodesBegin();
       std::vector<cluster::ClusterNode*>::iterator end_cluster_nodes = ClusterNetwork::instance()->getClusterNodesEnd();
    
-      cluster::EndBlock* temp_end_block = new EndBlock(0);
+      cluster::EndBlock* temp_end_block = new EndBlock(temp);
       
+//      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[ClusterManager] ")
+//         << "Send EndBlock: " << temp << std::endl << vprDEBUG_FLUSH;           
+
 
       for(std::vector<cluster::ClusterNode*>::iterator i=begin_cluster_nodes;i!=end_cluster_nodes;i++)
       {
          if ((*i)->isConnected())
          {
+//            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[ClusterManager] ")
+//               << "Send: " << (*i)->getName() << "\n" << vprDEBUG_FLUSH;         
+
                // Send End Blocks to all connected ClusterNodes
             (*i)->send(temp_end_block);
 
+//            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[ClusterManager] ")
+//               << "signal: " << (*i)->getName() << "\n" << vprDEBUG_FLUSH;         
                // Signal Update thread to read Network Packets
             (*i)->signalUpdate();
          }                         
@@ -346,6 +373,8 @@ namespace cluster
       {
          if ((*i)->isConnected())
          {
+//            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[ClusterManager] ")
+//               << "Sync: " << (*i)->getName() << "\n" << vprDEBUG_FLUSH;         
             //Block waiting for all packets to be received
             (*i)->sync();
          }               

@@ -429,6 +429,8 @@ namespace cluster
                
                // Create a new ClusterNode and pass it the new SocketStream
                requesting_node = new ClusterNode(std::string("Unknown"), std::string("Unknown"), vpr::Uint16(0), client_sock);                              
+               // Add the new node to the cluster
+               ClusterNetwork::instance()->addClusterNode(requesting_node);
             }
             else
             {

@@ -64,7 +64,7 @@ CLUSTER_REGISTER_CLUSTER_PACKET_CREATOR(EndBlock);
     */
    void EndBlock::serialize()
    {
-      mTempVar = Header::RIM_END_BLOCK;
+      //mTempVar = Header::RIM_END_BLOCK;
       // Clear the data stream.
       mPacketWriter->getData()->clear();
       mPacketWriter->setCurPos(0);

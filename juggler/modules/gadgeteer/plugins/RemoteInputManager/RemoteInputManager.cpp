@@ -455,12 +455,8 @@ namespace cluster
    {
       ;
    }
-   void RemoteInputManager::postPostFrame()
-   {
-      updateAll();
-   }
 
-   void RemoteInputManager::updateAll()
+   void RemoteInputManager::postPostFrame()
    {
       mFrameNumber++;
       //      vpr::Interval first;

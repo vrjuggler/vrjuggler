@@ -89,7 +89,7 @@ public:
 private:
    vpr::GUID mId;    /**< GUID for the ApplicationData object being requested. */
 };
-}
+}// end namespace cluster
 
 #endif
 
