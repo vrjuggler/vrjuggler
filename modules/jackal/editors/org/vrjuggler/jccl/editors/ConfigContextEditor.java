@@ -101,19 +101,15 @@ public class ConfigContextEditor
                   return;
                }
 
-               
-               Color start_color = new Color(160, 160, 180);
-      
-               Object color = UIManager.get( "desktop" );
-               if(null != color && color instanceof Color)
+               Color start_color = UIManager.getColor("desktop");
+
+               if ( null == start_color )
                {
-                  start_color = (Color)color;
+                  start_color = new Color(160, 160, 180);
+                  System.out.println("Could not get the color 'desktop' " +
+                                     "from the UIManager.");
                }
-               else
-               {
-                  System.out.println("Could not get the desktop color from the  UIManager.");
-               }
-               
+
                // Create a new PropertySheet for the given ConfigElement.
                ConfigElement elt = (ConfigElement)value;
                
@@ -150,18 +146,15 @@ public class ConfigContextEditor
          ConfigElement elt = (ConfigElement)elts.get(0);
 
          // Create a PropertySheet for the default selected ConfigElement.
-         Color start_color = new Color(160, 160, 180);
+         Color start_color = UIManager.getColor("desktop");
 
-         Object color = UIManager.get( "desktop" );
-         if(null != color && color instanceof Color)
+         if ( null == start_color )
          {
-            start_color = (Color)color;
+            start_color = new Color(160, 160, 180);
+            System.out.println("Could not get the color 'desktop' from the " +
+                               "UIManager.");
          }
-         else
-         {
-            System.out.println("Could not get the desktop color from the  UIManager.");
-         }
-         
+
          // Create a new PropertySheet for the given ConfigElement.
          if (null != mElementPropSheet)
          {
