@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+[2.0 Alpha 1 released - 3.15.2003]=============================================
+Sep-29-2002 nonchocoboy NEW VERSION: 1.1.128
 Mar-03-2003 allenb      Fixed tracked projections.
 Feb-21-2003 patrickh    Removed vrj::SystemFactory and all platform-specific
                         versions of it.  Removed the classes vrj::System and
