@@ -45,14 +45,8 @@
 /* Define all of the following if building on IRIX or darwin. */
 #undef _BSD_TYPES
 
-/* Define all of the following if building on HP-UX. */
-#undef JCCL_HPUX_VERSION
-#undef _INCLUDE_TERMIO
+/* Define the following if building on HP-UX. */
 #undef _CMA_NOWRAPPERS_
-
-/* Define if building on a Win32 platform. */
-#undef WIN32
-#undef _MBCS
 
 /* Define to unique values used for defining JCCL_PERFORMANCE. */
 #undef JCCL_PERF_NONE
