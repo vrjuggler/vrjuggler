@@ -63,10 +63,8 @@ class GADGET_CLASS_API AnalogProxy : public TypedProxy<Analog>
 
 public:
    /** Constructor. */
-   AnalogProxy() : m_unitNum(-1)
-   {
-       m_data = -1.0f;
-   }
+   AnalogProxy() : mUnitNum(-1), mData(-1.0f)
+   {;}
 
    virtual ~AnalogProxy() {}
 
@@ -75,9 +73,14 @@ public:
    {
       if(!isStupified())
       {
-         m_data = mTypedDevice->getAnalogData(m_unitNum);
+         mData = mTypedDevice->getAnalogData(mUnitNum);
       }
    }
+
+   /** Returns time of last update. */
+   vpr::Interval getTimeStamp() const
+   {  return mData.getTime(); }
+
 
    /**
     * Gets the current analog data value.
@@ -89,7 +92,7 @@ public:
       if(isStupified())
          return analogDefault;
       else
-         return m_data.getAnalog();
+         return mData.getAnalog();
    }
 
    Analog* getAnalogPtr()
@@ -101,7 +104,7 @@ public:
    }
 
    int getUnit() const
-   { return m_unitNum;}
+   { return mUnitNum;}
 
    static std::string getChunkType() { return "AnaProxy";}
 
@@ -120,8 +123,8 @@ public:
    }
 
 private:
-   int         m_unitNum;
-   AnalogData  m_data;
+   int         mUnitNum;
+   AnalogData  mData;
 };
 
 } // End of gadget namespace

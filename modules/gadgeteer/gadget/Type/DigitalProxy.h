@@ -60,13 +60,16 @@ class GADGET_CLASS_API DigitalProxy : public TypedProxy<Digital>
 
 public:
    /** @name Construction/Destruction */
-   DigitalProxy() {
-      m_unitNum = -1;
-      m_data = 0;
-   }
+   DigitalProxy() 
+      : mUnitNum(-1), mData(0)
+   {;}
 
    virtual ~DigitalProxy() {}
    virtual void updateData();
+
+   /** Returns time of last update. */
+   vpr::Interval getTimeStamp() const
+   {  return mData.getTime(); }
 
 
    /**
@@ -83,20 +86,20 @@ public:
     *       will result in a one update lag in detecting the button not being
     *       pressed.
     */
-   int getData()
+   int getData() const
    {
       const int defaultDigital(Digital::OFF);
 
       if(isStupified())
          return defaultDigital;
       else
-         return m_data.getDigital();
+         return mData.getDigital();
    }
 
 
     DigitalData* getDigitalData ()
     {
-        return &m_data;
+        return &mData;
     }
 
 
@@ -108,9 +111,9 @@ public:
          return mTypedDevice;
    }
 
-   int getUnit()
+   int getUnit() const
    {
-      return m_unitNum;
+      return mUnitNum;
    }
 
    static std::string getChunkType() { return "DigProxy"; }
@@ -128,13 +131,13 @@ public:
    }
 
 private:
-   int         m_unitNum;     /**<  The sub-unit of the device we are working with */
+   int         mUnitNum;     /**<  The sub-unit of the device we are working with */
 
    /**
     * Copy of the digital data we are dealing with.
     * @see GetData - for definition of values for the data item
     */
-   DigitalData         m_data;
+   DigitalData         mData;
 
 };
 
