@@ -8,6 +8,7 @@
 srcdir		= @srcdir@
 
 COMPILE		= @CXX@ @DEFS@ ${VJ_INCLUDES} @CPPFLAGS@ @CXXFLAGS@ -g
+LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ -g
 VJ_INCLUDES	= @INCLUDES@ -I${VJ_BASE_DIR}/include -I${srcdir}
 VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_LIBS_BASIC@
 VPATH		= @srcdir@:@srcdir@/../../Input/vjPosition
@@ -38,43 +39,43 @@ all: ${PROGS}
 # aFlock test driver
 # ----------------
 aFlockTest: aFlockTest.o aFlock.o
-	${COMPILE} -o $@ aFlockTest.o aFlock.o 
+	${LINK} -o $@ aFlockTest.o aFlock.o 
 
 # ----------------
 # vjFlock test driver
 # ----------------
 vjFlockTest: vjFlockTest.o
-	${COMPILE} -o $@ vjFlockTest.o ${VJ_LIBS} ${EXTRA_LIBS}
+	${LINK} -o $@ vjFlockTest.o ${VJ_LIBS} ${EXTRA_LIBS}
 
 # ----------------
 # new
 # ----------------
 new: new.o
-	${COMPILE} -o $@ new.o ${VJ_LIBS} ${EXTRA_LIBS}
+	${LINK} -o $@ new.o ${VJ_LIBS} ${EXTRA_LIBS}
 
 # ----------------
 # go
 # ----------------
 go: main.o
-	${COMPILE} -o $@ main.o ${VJ_LIBS} ${EXTRA_LIBS}
+	${LINK} -o $@ main.o ${VJ_LIBS} ${EXTRA_LIBS}
 
 # ----------------
 # go-ibox
 # ----------------
 go-ibox: main-ibox.o
-	${COMPILE} -o $@ main-ibox.o ${VJ_LIBS} ${EXTRA_LIBS}
+	${LINK} -o $@ main-ibox.o ${VJ_LIBS} ${EXTRA_LIBS}
 
 # ----------------
 # go-inputgroup
 # ----------------
 go-inputgroup: main-inputgroup.o
-	${COMPILE} -o $@ main-inputgroup.o ${VJ_LIBS} ${EXTRA_LIBS}
+	${LINK} -o $@ main-inputgroup.o ${VJ_LIBS} ${EXTRA_LIBS}
 
 # ----------------
 # go-logiclass
 # ----------------
 go-logiclass: main-logiclass.o
-	${COMPILE} -o $@ main-logiclass.o ${VJ_LIBS} ${EXTRA_LIBS}
+	${LINK} -o $@ main-logiclass.o ${VJ_LIBS} ${EXTRA_LIBS}
 
 .cpp.o:
 	${COMPILE} -c $<
