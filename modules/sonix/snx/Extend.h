@@ -48,42 +48,28 @@
 #include "vrj/Math/Math.h"
 #include "vrj/Math/Matrix.h"
 #include "vrj/Math/Vec3.h"
+#include "vrj/Math/Vec4.h"
 
 namespace snx
 {
    // result[4] = mat * vec[4]
-   inline void xform( float* result, const vrj::Matrix& mat, const float* vec )
+   inline void xform( vrj::Vec4& result, const vrj::Matrix& mat, const vrj::Vec4& vec )
    {
-      for (int j = 0; j < 4; ++j)
-         for (int k = 0; k < 4; ++k)
-            result[j] += vec[k] * mat( k, j );
+      result.xform( mat, vec );
    }
 
    inline vrj::Vec3 xformFull( const vrj::Matrix& mat, const vrj::Vec3& vec )
    {
-      float vec4[4] = { vec[0], vec[1], vec[2], 1.0f };
-      float result[4];
-      xform( result, mat, vec4 );
-      float w_inv = 1.0f / result[3];
-      return vrj::Vec3( result[0] * w_inv, result[1] * w_inv, result[2] * w_inv );
+      vrj::Vec3 result;
+      result.xformFull( mat, vec );
+      return result;
    }
 
    inline vrj::Vec3 xformVec( const vrj::Matrix& mat, const vrj::Vec3& vec )
    {
-      float vec4[4] = { vec[0], vec[1], vec[2], 0.0f };
-      float result[4];
-      xform( result, mat, vec4 );
-      return vrj::Vec3( result[0], result[1], result[2] );
-   }
-
-   // Linear Interpolation between two vectors.
-   inline void Lerp(const vrj::Vec3& from, 
-         const vrj::Vec3& to, 
-         const float &lerp, 
-         vrj::Vec3& lerpedValue )
-   {
-       vrj::Vec3 offset = to - from;
-       lerpedValue = from + offset*lerp;
+      vrj::Vec3 result;
+      result.xformVec( mat, vec );
+      return result;
    }
 };
 
