@@ -75,7 +75,8 @@
 //  (for speed)
 //-------------------------------------------------------------------------------
 //!PUBLIC_API:
-class vjInputManager : public vjConfigChunkHandler
+class vjInputManager : public vjMemory, public vjConfigChunkHandler
+//class vjInputManager : public vjConfigChunkHandler
 {
 public:
    vjInputManager();
