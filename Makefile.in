@@ -484,34 +484,34 @@ _lib_links:
 	@echo "------------------------------------------------"
 	cd ${_LIB_LINK_DIR} && rm -f ./${VJ_LIB_STATIC} &&	\
           ${LN_S} ${_DEFAULT_DIR}/${VJ_LIB_STATIC} ./
-	cd ${_LIB_LINK_DIR} && rm -f ./${VJ_LIB_DYNAMIC} &&	\
+	-cd ${_LIB_LINK_DIR} && rm -f ./${VJ_LIB_DYNAMIC} &&	\
           ${LN_S} ${_DEFAULT_DIR}/${VJ_LIB_DYNAMIC} ./
 	cd ${_LIB_LINK_DIR} && rm -f ./${UTILS_LIB_STATIC} &&	\
           ${LN_S} ${_DEFAULT_DIR}/${UTILS_LIB_STATIC} ./
-	cd ${_LIB_LINK_DIR} && rm -f ./${UTILS_LIB_DYNAMIC} &&	\
+	-cd ${_LIB_LINK_DIR} && rm -f ./${UTILS_LIB_DYNAMIC} &&	\
           ${LN_S} ${_DEFAULT_DIR}/${UTILS_LIB_DYNAMIC} ./
 ifeq (${GL_API}, Y)
 	cd ${_LIB_LINK_DIR} && rm -f ./${GL_LIB_STATIC} &&	\
           ${LN_S} ${_DEFAULT_DIR}/${GL_LIB_STATIC} ./
-	cd ${_LIB_LINK_DIR} && rm -f ./${GL_LIB_DYNAMIC} &&	\
+	-cd ${_LIB_LINK_DIR} && rm -f ./${GL_LIB_DYNAMIC} &&	\
           ${LN_S} ${_DEFAULT_DIR}/${GL_LIB_DYNAMIC} ./
 endif
 ifeq (${PF_API}, Y)
 	cd ${_LIB_LINK_DIR} && rm -f ./${PF_LIB_STATIC} &&	\
           ${LN_S} ${_DEFAULT_DIR}/${PF_LIB_STATIC} ./
-	cd ${_LIB_LINK_DIR} && rm -f ./${PF_LIB_DYNAMIC} &&	\
+	-cd ${_LIB_LINK_DIR} && rm -f ./${PF_LIB_DYNAMIC} &&	\
           ${LN_S} ${_DEFAULT_DIR}/${PF_LIB_DYNAMIC} ./
 endif
 ifeq (${AUDIO_WORKS}, Y)
 	cd ${_LIB_LINK_DIR} && rm -f ./${AW_LIB_STATIC} &&	\
           ${LN_S} ${_DEFAULT_DIR}/${AW_LIB_STATIC} ./
-	cd ${_LIB_LINK_DIR} && rm -f ./${AW_LIB_DYNAMIC} &&	\
+	-cd ${_LIB_LINK_DIR} && rm -f ./${AW_LIB_DYNAMIC} &&	\
           ${LN_S} ${_DEFAULT_DIR}/${AW_LIB_DYNAMIC} ./
 endif
 ifeq (${SL}, Y)
 	cd ${_LIB_LINK_DIR} && rm -f ./${SL_LIB_STATIC} &&	\
           ${LN_S} ${_DEFAULT_DIR}/${SL_LIB_STATIC} ./
-	cd ${_LIB_LINK_DIR} && rm -f ./${SL_LIB_DYNAMIC} &&	\
+	-cd ${_LIB_LINK_DIR} && rm -f ./${SL_LIB_DYNAMIC} &&	\
           ${LN_S} ${_DEFAULT_DIR}/${SL_LIB_DYNAMIC} ./
 endif
 
