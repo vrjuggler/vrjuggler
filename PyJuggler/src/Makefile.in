@@ -8,7 +8,7 @@
 
 include @topdir@/src/common.mk
 
-DIRS=	vpr jccl gadget cluster vrj
+DIRS=	vpr jccl snx gadget cluster vrj
 
 ifeq (@HAVE_OSG@, Y)
 DIRS+=	osgapp

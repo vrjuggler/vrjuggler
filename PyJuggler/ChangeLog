@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Nov-17-2004 patrickh    Added PyJuggler.snx, a module that makes Sonix C++
+                        classes for use with Python.
+                        NEW VERSION: 0.16.0
 Nov-15-2004 patrickh    Fixed problems with std::vector<T> instances being
                         passed back and forth between C++ and Python.
                         NEW VERSION: 0.15.1
