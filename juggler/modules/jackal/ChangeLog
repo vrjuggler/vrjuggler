@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Nov-04-2004 aronb       Java API changes.
+                        NEW VERSION: 0.21.0
 Oct-29-2004 patrickh    Relocated the JCCL Java libraries to the directory
                         $JCCL_BASE_DIR/share/jccl/java and the JCCL Beans to
                         $JCCL_BASE_DIR/share/jccl/beans.
