@@ -93,28 +93,23 @@ class CorbaService:
       subj_mgrs = []
 
       if self.localContext != None:
-         data_size = 100
-
+         data_size  = 100
          list, iter = self.localContext.list(data_size)
 
-         self.addSubjectManagers(list, subj_mgrs)
+         while list != None:
+            # Add the relevant items from list (CosNaming.Binding objects) to
+            # subj_mgrs.
+            self.addSubjectManagers(list, subj_mgrs)
 
-         # XXX: The following is a mess...  I need to figure out exactly how
-         # these NamingContext and BindingList classes work in Python...
-         if iter != None:
-            have_more = True
-            while have_more:
-               list, next_iter = iter.next_n(data_size)
+            if iter != None:
+               count, list = iter.next_n(data_size)
 
-               # XXX: What the hell is this?
-               if list != 0:
-                  self.addSubjectManagers(list, subj_mgrs)
+               # If count is greater than 0, then we can continue iterating.
+               # Otherwise, we have run out of CosNaming.Binding objects to
+               # test.
+               if count <= 0:
                   iter.destroy()
-                  iter = next_iter
-               else:
-                  have_more = False
-
-            iter.destroy()
+                  break
 
       return subj_mgrs
 
