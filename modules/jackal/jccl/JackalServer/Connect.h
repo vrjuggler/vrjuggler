@@ -11,6 +11,8 @@
 class vjTimedUpdate;
 class vjConfigChunk;
 
+enum vjConnectMode { VJC_INTERACTIVE, VJC_INPUT, VJC_OUTPUT };
+
 //--------------------------------------------------
 //: vjConnect reads/writes to a file, pipe, or socket.
 //
@@ -20,7 +22,8 @@ class vjConfigChunk;
 class vjConnect {
  public:
 
-    vjConnect (int fd, const std::string& _name="unnamed");
+    vjConnect (int fd, const std::string& _name="unnamed", 
+	       vjConnectMode _mode = VJC_INTERACTIVE);
 
 
     //: default constructor
@@ -86,13 +89,15 @@ class vjConnect {
 
 private:
 
+
     ofstream                output;
     std::string             name;
     std::string             filename;
     vjThread*               connect_thread;
     int                     fd;
-    bool                    readable;
-    bool                    writeable;
+    vjConnectMode           mode;
+    //bool                    readable;
+    //bool                    writeable;
     bool                    shutdown;        // set to stop procs
 
     struct vjCommandPtrCmp {

@@ -150,7 +150,7 @@ chunk FileConnect "EM File Output" "A file for outputing Environment Manager dat
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   FileName String 1 "File Name" ""
   Enabled Bool 1 "Enabled" "Should file be opened & used?"
-  Readable Bool 1 "Readable" "Should the file be open for reading?"
+  Mode Int 1 "File Mode" vj_enumeration { "Interactive=0" "Input=1" "Output=2" } "Is the file readable, writeable, or interactive (e.g. socket or pipe)"
   end
 chunk PerfMeasure "Performance Measurements" "Controls performance monitoring of Juggler library"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
