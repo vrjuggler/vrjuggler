@@ -47,9 +47,6 @@
 #include <vpr/vpr.h>
 #include <vpr/System.h>
 
-#include <jccl/PerfMonitor/PerformanceCategories.h>
-#include <jccl/PerfMonitor/PerformanceMonitor.h>
-
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/Devices/Polhemus/Fastrak/Fastrak.h>
 
@@ -547,13 +544,11 @@ void Fastrak::threadedSampleFunction( void* classPointer )
 {
    Fastrak* this_ptr = static_cast<Fastrak*>( classPointer );
 
+   // XXX: I can never exit!
    while ( 1 )
    {
       this_ptr->sample();
-
-      jcclTIMESTAMP(jcclPERF_ALL, "gadget/Devices/Polhemus/Fastrak/end sample run");
       vpr::System::msleep(10);
-      jcclTIMESTAMP(jcclPERF_ALL, "gadget/Devices/Polhemus/Fastrak/start sample run");
    }
 }
 
