@@ -6,12 +6,12 @@
 *    Author:       Yury Altshuler
 *
 *    Copyright:    InterSense 1999 - All rights Reserved.
-* 
+*
 *    Comments:     Win32 and UNIX rs232 driver
 *
-*    
+*
 ************************************************************************/
-/* Header files */  
+/* Header files */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -98,12 +98,12 @@ int rs232InitCommunications(COMM_PORT *port, std::string comPort, int baud_rate)
         port->portHandle = NULL;
         return FALSE;
     }
-    
+
     dcb.Parity = NOPARITY;
     dcb.StopBits = ONESTOPBIT;
-    dcb.ByteSize = 8;  
+    dcb.ByteSize = 8;
     dcb.DCBlength = sizeof(dcb);
-    
+
 
     DWORD  baudRate;
     switch (baud_rate)
@@ -134,14 +134,14 @@ int rs232InitCommunications(COMM_PORT *port, std::string comPort, int baud_rate)
     dcb.fNull = FALSE;
     dcb.fBinary = TRUE;
     dcb.fAbortOnError = FALSE;
-    
+
     dcb.fOutX = FALSE;
     dcb.fInX = FALSE;
     dcb.fRtsControl = RTS_CONTROL_DISABLE;
     dcb.fDtrControl = DTR_CONTROL_DISABLE;
     dcb.fOutxCtsFlow = FALSE;
     dcb.fOutxDsrFlow = FALSE;
-    
+
     if (!SetCommState(port->portHandle, &dcb))
     {
         errorMessage( "Failed to set communications state");
@@ -217,24 +217,24 @@ int rs232InitCommunicationsOld(COMM_PORT *port, DWORD comPort, DWORD baudRate)
         port->portHandle = NULL;
         return FALSE;
     }
-    
+
     dcb.Parity = NOPARITY;
     dcb.StopBits = ONESTOPBIT;
-    dcb.ByteSize = 8;  
+    dcb.ByteSize = 8;
     dcb.DCBlength = sizeof(dcb);
-    
+
     dcb.BaudRate = baudRate;
     dcb.fNull = FALSE;
     dcb.fBinary = TRUE;
     dcb.fAbortOnError = FALSE;
-    
+
     dcb.fOutX = FALSE;
     dcb.fInX = FALSE;
     dcb.fRtsControl = RTS_CONTROL_DISABLE;
     dcb.fDtrControl = DTR_CONTROL_DISABLE;
     dcb.fOutxCtsFlow = FALSE;
     dcb.fOutxDsrFlow = FALSE;
-    
+
     if (!SetCommState(port->portHandle, &dcb))
     {
         errorMessage( "Failed to set communications state");
@@ -363,7 +363,7 @@ int rs232PutChar(COMM_PORT *port, char c)
     BOOL fSuccess;
     DWORD numWritten;
 
-    fSuccess = WriteFile(port->portHandle, (LPCVOID)&c, 1, &numWritten, 
+    fSuccess = WriteFile(port->portHandle, (LPCVOID)&c, 1, &numWritten,
                          &(port->osWrite));
 
     if (!fSuccess || numWritten == 0) return 1;
@@ -376,7 +376,7 @@ int rs232InChar(COMM_PORT *port, char *c, int flush)
 {
     DWORD dwRes;
 
-    /* flush the input buffer. All characters already in the buffer are 
+    /* flush the input buffer. All characters already in the buffer are
        discarded. Overlaped read process is terminated */
 
     if(flush || port->dwReturned >= port->rx_bufsize-1)
@@ -543,7 +543,7 @@ BOOL rs232SetRTSState(COMM_PORT *port, DWORD value)
 #endif
 
 #ifdef VPR_OS_Solaris
-#include <termio.h> 
+#include <termio.h>
 #endif
 
 #include "serial.h"
@@ -554,7 +554,7 @@ BOOL rs232SetRTSState(COMM_PORT *port, DWORD value)
 int rs232InitCommunicationsOld(COMM_PORT *port, DWORD comPort, DWORD baudRate)
 {
     char *portNames[4] =
-#if defined VPR_OS_IRIX 
+#if defined VPR_OS_IRIX
     {"/dev/ttyd11", "/dev/ttyd11", "/dev/ttyd11", "/dev/ttyd11"};
 #elif defined VPR_OS_Linux
     {"/dev/ttyS0", "/dev/ttyS1", "/dev/ttyS2", "/dev/ttyS3"};
@@ -562,7 +562,7 @@ int rs232InitCommunicationsOld(COMM_PORT *port, DWORD comPort, DWORD baudRate)
     {"/dev/ttya", "/dev/ttyb", "/dev/ttyc", "/dev/ttyd"};
 #else
     {"/dev/tty1", "/dev/tty2", "/dev/tty3", "/dev/tty4"};
-#endif 
+#endif
 
     /* close port if one is open */
     rs232DeinitCommunications(port);
@@ -608,8 +608,8 @@ int rs232InitCommunicationsOld(COMM_PORT *port, DWORD comPort, DWORD baudRate)
         perror( "Tracker-Port Setup");
         return FALSE;
     }
-#endif     
-    
+#endif
+
     if( tcflush(port->desc, TCIOFLUSH ) == -1 )
     {
         perror( "Flushing Port for InterSense Tracker" );
@@ -621,7 +621,7 @@ int rs232InitCommunicationsOld(COMM_PORT *port, DWORD comPort, DWORD baudRate)
 
 int rs232InitCommunications(COMM_PORT *port, std::string comPort, int baud_rate)
 {
-#if defined VPR_OS_IRIX 
+#if defined VPR_OS_IRIX
    printf("Driver is compiled for IRIX\n");
 #elif defined VPR_OS_Linux
    printf("Driver is compiled for Linux\n");
@@ -629,7 +629,7 @@ int rs232InitCommunications(COMM_PORT *port, std::string comPort, int baud_rate)
    printf("Driver is compiled for Solaris\n");
 #else
    printf("Driver is compiled for UNKNOWN\n");
-#endif 
+#endif
 
     /* close port if one is open */
     rs232DeinitCommunications(port);
@@ -669,9 +669,9 @@ int rs232InitCommunications(COMM_PORT *port, std::string comPort, int baud_rate)
        baudRate = 9600L;
        break;
     }
-    
+
     rs232SetSpeed(port, baudRate);
-    
+
 #ifdef VPR_OS_IRIX
     /* This removes the 50 Hz limit on the serial port
        access on some SGI computers. */
@@ -695,8 +695,8 @@ int rs232InitCommunications(COMM_PORT *port, std::string comPort, int baud_rate)
         perror( "Tracker-Port Setup");
         return FALSE;
     }
-#endif     
-    
+#endif
+
     if( tcflush(port->desc, TCIOFLUSH ) == -1 )
     {
         perror( "Flushing Port for InterSense Tracker" );
@@ -727,21 +727,21 @@ int rs232SetSpeed(COMM_PORT *port, DWORD baudRate)
 #if defined VPR_OS_IRIX
 
    #if defined LEGACY_SGI
-   
+
        terminfo.c_cflag = (baudRate == 1200  ?  B1200 :
                            baudRate == 9600  ?  B9600 :
                            baudRate == 19200 ?  B19200 :
-                           baudRate == 38400 ?  B38400 : B115200) |CS8|CREAD|CLOCAL|CNEW_RTSCTS;                        
-   
+                           baudRate == 38400 ?  B38400 : B115200) |CS8|CREAD|CLOCAL|CNEW_RTSCTS;
+
    #else
-   
+
        terminfo.c_cflag = CS8|CREAD|CLOCAL|CNEW_RTSCTS;
        terminfo.c_ospeed = (baudRate == 1200  ?  B1200 :
                             baudRate == 9600  ?  B9600 :
                             baudRate == 19200 ?  B19200 :
-                            baudRate == 38400 ?  B38400 : B115200);                        
+                            baudRate == 38400 ?  B38400 : B115200);
        terminfo.c_ispeed = terminfo.c_ospeed;
-   
+
    #endif
 
 #else /* other flavors of UNIX, including Linux */
@@ -749,7 +749,7 @@ int rs232SetSpeed(COMM_PORT *port, DWORD baudRate)
     terminfo.c_cflag  = (baudRate == 1200  ?  B1200 :
                          baudRate == 9600  ?  B9600 :
                          baudRate == 19200 ?  B19200 :
-                         baudRate == 38400 ?  B38400 : B115200)|CS8|CREAD|CLOCAL;                       
+                         baudRate == 38400 ?  B38400 : B115200)|CS8|CREAD|CLOCAL;
 #endif
 
     if( ioctl(port->desc, TCSETA, &terminfo ) == -1 )
@@ -848,10 +848,10 @@ int rs232PutChar(COMM_PORT *port, char c)
 /* return one byte */
 int rs232InChar(COMM_PORT *port, char *c, int flush)
 {
-    /* flush the input buffer. All characters already in the buffer are 
+    /* flush the input buffer. All characters already in the buffer are
        discarded. Also, flush if overflow is detected */
 
-    if(flush || port->dwReturned >= port->rx_bufsize-1)
+    if(flush || port->dwReturned >= LONG(port->rx_bufsize-1))
     {
         port->dwRead = 0;
         port->dwReturned = 0;

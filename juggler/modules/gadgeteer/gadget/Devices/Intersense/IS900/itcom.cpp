@@ -65,14 +65,14 @@ int itSendCommand(InterSenseTrackerType *tracker, char *fs,...)
     va_end(argptr);
 
     /* clear the applyPSEConfigPending flag if MCe or MCx commands are sent out */
-    if(strncmp(sbuf, PSE_APPLY_COMMAND,  strlen(PSE_APPLY_COMMAND))  == 0 || 
+    if(strncmp(sbuf, PSE_APPLY_COMMAND,  strlen(PSE_APPLY_COMMAND))  == 0 ||
        strncmp(sbuf, PSE_CANCEL_COMMAND, strlen(PSE_CANCEL_COMMAND)) == 0)
     {
         tracker->applyPSEConfigPending = FALSE;
     }
 
     /* set applyPSEConfigPending flag if a constellation type command is being sent out */
-    else if(sbuf[0] == 'M' && sbuf[1] == 'C') 
+    else if(sbuf[0] == 'M' && sbuf[1] == 'C')
     {
         switch(sbuf[2])
         {
@@ -96,7 +96,7 @@ int itSendCommand(InterSenseTrackerType *tracker, char *fs,...)
     }
     return (rs232SendString(&(tracker->CommPort), sbuf));
 }
- 
+
 /****************************************************************************/
 
 /* used to provide for the future expansion of the protocol to support more
@@ -206,11 +206,11 @@ static void ISD_INTERTRAX_serviceSerialPortPolled(InterSenseTrackerType *tracker
             }
             tracker->nchars = 0;
 
-            /* First flush any characters in the serial buffer to prepare 
-               for the next record. For some reason, records can go out of 
+            /* First flush any characters in the serial buffer to prepare
+               for the next record. For some reason, records can go out of
                allignment is this is not done. */
 
-            rs232RxFlush(&tracker->CommPort, 0); 
+            rs232RxFlush(&tracker->CommPort, 0);
         }
     }
 }
@@ -218,14 +218,14 @@ static void ISD_INTERTRAX_serviceSerialPortPolled(InterSenseTrackerType *tracker
 /*********************** ISD_INTERTRAX_serviceSerialPortContinuous ***********************/
 /*
     Unlike Fastrak version this procedure is limited to a very specific
-    record format. 
+    record format.
 */
 
 static void ISD_INTERTRAX_serviceSerialPortContinuous(InterSenseTrackerType *tracker)
 {
     int i, j;
     unsigned char checkSum;
-    
+
 
     /* read all available data from the serial port */
     while(rs232InChar(&tracker->CommPort, &tracker->cmdbuf[tracker->nchars], FALSE) != EOF)
@@ -233,7 +233,7 @@ static void ISD_INTERTRAX_serviceSerialPortContinuous(InterSenseTrackerType *tra
         tracker->nchars++;
         tracker->numBytesReceived++;
     }
-    
+
     /* get the latest available record */
     if(tracker->nchars >= 8)
     {
@@ -255,7 +255,7 @@ static void ISD_INTERTRAX_serviceSerialPortContinuous(InterSenseTrackerType *tra
                     {
                         tracker->numSamplesReceived++;
                     }
-                    
+
                     /* preserve the beginning of the next record */
                     memcpy((void *)&(tracker->cmdbuf[0]), (void *)&(tracker->cmdbuf[i+8]), 9);
 
@@ -276,7 +276,7 @@ static void ISD_INTERTRAX_serviceSerialPortContinuous(InterSenseTrackerType *tra
 static void ISD_PRECISION_serviceSerialPort(InterSenseTrackerType *tracker)
 {
     char c;
-    
+
     while(rs232InChar(&(tracker->CommPort), &c, FALSE) == 1)
     {
         tracker->numBytesReceived++;
@@ -326,14 +326,14 @@ static void ISD_PRECISION_serviceSerialPort(InterSenseTrackerType *tracker)
             if(c=='\n')
             {
                 tracker->cmdbuf[tracker->nchars++] = c;
-                
+
                 if(tracker->cprev1 == '\r')
                 {
                     processFastrackData(tracker, tracker->cmdbuf, tracker->nchars);
                     tracker->nchars=0;
                 }
             }
-            else if((tracker->nchars >= 125 && tracker->cmdbuf[0] !='0') || 
+            else if((tracker->nchars >= 125 && tracker->cmdbuf[0] !='0') ||
                 tracker->nchars >= 199)    /* run-on command, flush it */
             {
                 tracker->nchars = 0;
@@ -365,7 +365,7 @@ static void ISD_PRECISION_serviceSerialPort(InterSenseTrackerType *tracker)
 
 /******************* processInterTraxDataRecord *******************/
 BOOL processInterTraxDataRecord(InterSenseTrackerType *tracker, char *cmdbuf, int numChars)
-{    
+{
     struct INT_ANGLES_3DOF {
         short azIntAngle, elIntAngle, twIntAngle;
     };
@@ -405,7 +405,7 @@ BOOL processInterTraxDataRecord(InterSenseTrackerType *tracker, char *cmdbuf, in
 
 
 /********************* computeRecordSize ***********************/
-/* Compute expected record size 
+/* Compute expected record size
  */
 static int computeRecordSize(InterSenseTrackerType *tracker, int sNum)
 {
@@ -441,7 +441,7 @@ static int computeRecordSize(InterSenseTrackerType *tracker, int sNum)
                 else
                     pos+=21;
                 break;
- 
+
             case 11:
                 if(tracker->state.outputFormat == IT_COM_SYS_BINARY)
                     pos+=16;
@@ -539,8 +539,8 @@ float byteOrderFloat(char *value)
     buf[0] = value[3];
     buf[1] = value[2];
     buf[2] = value[1];
-    buf[3] = value[0]; 
-    
+    buf[3] = value[0];
+
     memcpy((void *)&num, (void *)buf, 4);
 #else
     memcpy((void *)&num, (void *)value, 4);
@@ -559,7 +559,7 @@ short byteOrderShort(char *value)
 
     buf[0] = value[1];
     buf[1] = value[0];
-    
+
     memcpy((void *)&num, (void *)buf, 2);
 #else
     memcpy((void *)&num, (void *)value, 2);
@@ -578,8 +578,8 @@ long byteOrderLong(char *value)
     buf[0] = value[3];
     buf[1] = value[2];
     buf[2] = value[1];
-    buf[3] = value[0]; 
-    
+    buf[3] = value[0];
+
     memcpy((void *)&num, (void *)buf, 4);
 #else
     memcpy((void *)&num, (void *)value, 4);
@@ -598,8 +598,8 @@ unsigned long byteOrderULong(char *value)
     buf[0] = value[3];
     buf[1] = value[2];
     buf[2] = value[1];
-    buf[3] = value[0]; 
-    
+    buf[3] = value[0];
+
     memcpy((void *)&num, (void *)buf, 4);
 #else
     memcpy((void *)&num, (void *)value, 4);
@@ -609,7 +609,7 @@ unsigned long byteOrderULong(char *value)
 
 
 /******************* processSystemDataRecord *******************/
-static void processSystemDataRecord(InterSenseTrackerType *tracker, 
+static void processSystemDataRecord(InterSenseTrackerType *tracker,
                                     char *cmdbuf, int numChars)
 {
     float           values[6], linMult;
@@ -620,19 +620,19 @@ static void processSystemDataRecord(InterSenseTrackerType *tracker,
     BYTE            lo, hi;
     unsigned char   joystickByte1, joystickByte2;
     int             joystickInt1, joystickInt2;
-    long            longInt; 
+    long            longInt;
     unsigned long   uLongInt;
-    
+
     sNum = cmdbuf[1] - 0x30-1;
     buffer = &cmdbuf[3];
-    
+
     done = FALSE;
     pos = 3;
-    
+
     tracker->RecvUpdateFlag++;
-    
+
     if(!validStation(sNum)) return;
-    
+
     /* only process a record if size is correct */
     if(computeRecordSize(tracker, sNum) == numChars)
     {
@@ -643,16 +643,16 @@ static void processSystemDataRecord(InterSenseTrackerType *tracker,
             case 0:
                 buffer = &cmdbuf[++pos];
                 break;
-                
+
             case 1:
                 done = TRUE;
                 break;
-                
+
             case 2:     /* position in meters */
             case 38:    /* SCT: x, y, z position in SCT coordinate frame */
-                
+
                 linMult = (tracker->state.units==IT_COM_SYS_INCHES ? 0.0254f : 0.01f);
-                
+
                 if(tracker->state.outputFormat == IT_COM_SYS_BINARY)
                 {
                     if(numChars-pos >= 12)
@@ -668,7 +668,7 @@ static void processSystemDataRecord(InterSenseTrackerType *tracker,
                 {
                     numConverted = sscanf((const char *) buffer, "%f %f %f",
                         &values[0], &values[1], &values[2]);
-                    
+
                     if(numConverted == 3)
                     {
                         tracker->station[sNum].Position[0] = linMult * values[0];
@@ -680,7 +680,7 @@ static void processSystemDataRecord(InterSenseTrackerType *tracker,
                 }
                 tracker->station[sNum].NewData = TRUE;
                 break;
-                
+
             case 4:     /* euler orientation angles in degrees */
             case 39:    /* SCT: Euler orientation angles in SCT coordinate frame */
                 if(tracker->state.outputFormat == IT_COM_SYS_BINARY)
@@ -698,7 +698,7 @@ static void processSystemDataRecord(InterSenseTrackerType *tracker,
                 {
                     numConverted = sscanf((const char *) buffer, "%f %f %f",
                         &values[0], &values[1], &values[2]);
-                    
+
                     if(numConverted == 3)
                     {
                         tracker->station[sNum].Orientation[YAW]   = (float)values[0];
@@ -710,14 +710,14 @@ static void processSystemDataRecord(InterSenseTrackerType *tracker,
                 }
                 tracker->station[sNum].NewData = TRUE;
                 break;
-                
+
             case 5:
                 break;
             case 6:
                 break;
             case 7:
                 break;
-                
+
             case 11:  /* orientation quaternion format */
                 if(tracker->state.outputFormat == IT_COM_SYS_BINARY)
                 {
@@ -735,7 +735,7 @@ static void processSystemDataRecord(InterSenseTrackerType *tracker,
                 {
                     numConverted = sscanf((const char *) buffer, "%f %f %f %f", &values[0],
                         &values[1], &values[2], &values[3]);
-                    
+
                     if(numConverted == 4)
                     {
                         tracker->station[sNum].Orientation[0] = (float) values[0];
@@ -748,7 +748,7 @@ static void processSystemDataRecord(InterSenseTrackerType *tracker,
                 }
                 tracker->station[sNum].NewData = TRUE;
                 break;
-                
+
             case 18:    /* position in binary16 format (meters) */
                 if(numChars-pos >= 6)
                 {
@@ -756,12 +756,12 @@ static void processSystemDataRecord(InterSenseTrackerType *tracker,
                     hi = (buffer[1] & 0x007F);
                     int14bit = (lo<<2) | (hi<<9);
                     tracker->station[sNum].Position[X_INDEX] = (float)int14bit * 3.0f / 32768.0f;
-                    
+
                     lo = (buffer[2] & 0x007F);
                     hi = (buffer[3] & 0x007F);
                     int14bit = (lo<<2) | (hi<<9);
                     tracker->station[sNum].Position[Y_INDEX] = (float)int14bit * 3.0f / 32768.0f;
-                    
+
                     lo = (buffer[4] & 0x007F);
                     hi = (buffer[5] & 0x007F);
                     int14bit = (lo<<2) | (hi<<9);
@@ -771,7 +771,7 @@ static void processSystemDataRecord(InterSenseTrackerType *tracker,
                 buffer = &cmdbuf[pos];
                 tracker->station[sNum].NewData = TRUE;
                 break;
-                
+
             case 19:    /* orientation in binary16 format */
                 if(numChars-pos >= 6)
                 {
@@ -779,12 +779,12 @@ static void processSystemDataRecord(InterSenseTrackerType *tracker,
                     hi = (buffer[1] & 0x007F);
                     int14bit = (lo<<2) | (hi<<9);
                     tracker->station[sNum].Orientation[YAW] = (float)int14bit * 180.0f / 32768.0f;
-                    
+
                     lo = (buffer[2] & 0x007F);
                     hi = (buffer[3] & 0x007F);
                     int14bit = (lo<<2) | (hi<<9);
                     tracker->station[sNum].Orientation[PITCH] = (float)int14bit * 180.0f / 32768.0f;
-                    
+
                     lo = (buffer[4] & 0x007F);
                     hi = (buffer[5] & 0x007F);
                     int14bit = (lo<<2) | (hi<<9);
@@ -794,14 +794,14 @@ static void processSystemDataRecord(InterSenseTrackerType *tracker,
                 buffer = &cmdbuf[pos];
                 tracker->station[sNum].NewData = TRUE;
                 break;
-                
+
             case 21:    /* time stamp */
                 if(tracker->state.outputFormat == IT_COM_SYS_BINARY)
                 {
                     if(numChars-pos >= 4)
                     {
                         tracker->station[sNum].TimeStamp = byteOrderFloat(buffer);
-                        
+
                         if(tracker->state.timeUnits == MICROSECONDS)
                         {
                             tracker->station[sNum].TimeStamp /= 1000000.0f;
@@ -819,7 +819,7 @@ static void processSystemDataRecord(InterSenseTrackerType *tracker,
                     if(sscanf((const char *) buffer, "%f", &values[0]) == 1)
                     {
                         tracker->station[sNum].TimeStamp = values[0];
-                        
+
                         if(tracker->state.timeUnits == MICROSECONDS)
                         {
                             tracker->station[sNum].TimeStamp /= 1000000.0f;
@@ -833,7 +833,7 @@ static void processSystemDataRecord(InterSenseTrackerType *tracker,
                     buffer = &cmdbuf[pos];
                 }
                 break;
-                
+
             case 22:
                 if(tracker->state.outputFormat == IT_COM_SYS_BINARY)
                 {
@@ -851,11 +851,11 @@ static void processSystemDataRecord(InterSenseTrackerType *tracker,
                         joystickInt1 = 0;
                     }
                     joystickByte1 = (unsigned char) joystickInt1;
-                    
+
                     pos = MIN(numChars-1, pos+5);
                     buffer = &cmdbuf[pos];
                 }
-                
+
                 tracker->station[sNum].ButtonState[0] = (BOOL)((joystickByte1 & 0x01) ? 1 : 0);
                 tracker->station[sNum].ButtonState[1] = (BOOL)((joystickByte1 & 0x02) ? 1 : 0);
                 tracker->station[sNum].ButtonState[2] = (BOOL)((joystickByte1 & 0x04) ? 1 : 0);
@@ -865,7 +865,7 @@ static void processSystemDataRecord(InterSenseTrackerType *tracker,
                 tracker->station[sNum].ButtonState[6] = (BOOL)((joystickByte1 & 0x40) ? 1 : 0);
                 tracker->station[sNum].ButtonState[7] = (BOOL)((joystickByte1 & 0x80) ? 1 : 0);
                 break;
-                
+
             case 23:
                 if(tracker->state.outputFormat == IT_COM_SYS_BINARY)
                 {
@@ -886,127 +886,127 @@ static void processSystemDataRecord(InterSenseTrackerType *tracker,
                     }
                     joystickByte1 = (unsigned char) joystickInt1;
                     joystickByte2 = (unsigned char) joystickInt2;
-                    
+
                     pos = MIN(numChars-1, pos+8);
                     buffer = &cmdbuf[pos];
                 }
                 tracker->station[sNum].AnalogData[0] = joystickByte1;
                 tracker->station[sNum].AnalogData[1] = joystickByte2;
                 break;
-                
+
             case 40:    /* Status */
                 if(tracker->state.outputFormat == IT_COM_SYS_BINARY)
                 {
                     if(numChars-pos >= 1)
                         memcpy((BYTE *)&(tracker->station[sNum].Status), buffer, 1);
-                    
+
                     buffer = &cmdbuf[pos = MIN(numChars-1, pos+1)];
                 }
                 else
                 {
                     if(sscanf((const char *) buffer, "%d", &num) == 1)
                         tracker->station[sNum].Status = num;
-                    
+
                     buffer = &cmdbuf[pos = MIN(numChars-1, pos+4)];
                 }
                 break;
-                
+
             case 41:    /* SCT: timecode, when available */
                 if(tracker->state.outputFormat == IT_COM_SYS_BINARY)
                 {
                     if(numChars-pos >= 4)
                         tracker->station[sNum].Timecode = byteOrderULong(buffer);
-                    
+
                     buffer = &cmdbuf[pos = MIN(numChars-1, pos+4)];
                 }
                 else
                 {
                     if(sscanf((const char *) buffer, "%ld", &uLongInt) == 1)
                         tracker->station[sNum].Timecode = uLongInt;
-                    
+
                     buffer = &cmdbuf[pos = MIN(numChars-1, pos+10)];
                 }
                 tracker->station[sNum].NewCameraData = TRUE;
                 break;
-                
+
             case 42:    /* Timecode */
                 if(tracker->state.outputFormat == IT_COM_SYS_BINARY)
                 {
                     if(numChars-pos >= 4)
                         tracker->station[sNum].TimeCodeUserBits = byteOrderULong(buffer);
-                    
+
                     buffer = &cmdbuf[pos = MIN(numChars-1, pos+4)];
                 }
                 else
                 {
                     if(sscanf((const char *) buffer, "%ld", &uLongInt) == 1)
                         tracker->station[sNum].TimeCodeUserBits = uLongInt;
-                    
+
                     buffer = &cmdbuf[pos = MIN(numChars-1, pos+10)];
                 }
                 tracker->station[sNum].NewCameraData = TRUE;
                 break;
-                
+
             case 43:    /* ApetureEncoder */
                 if(tracker->state.outputFormat == IT_COM_SYS_BINARY)
                 {
                     if(numChars-pos >= 4)
                         tracker->station[sNum].ApetureEncoder = byteOrderLong(buffer);
-                    
+
                     buffer = &cmdbuf[pos = MIN(numChars-1, pos+4)];
                 }
                 else
                 {
                     if(sscanf((const char *) buffer, "%ld", &longInt) == 1)
                         tracker->station[sNum].ApetureEncoder = longInt;
-                    
+
                     buffer = &cmdbuf[pos = MIN(numChars-1, pos+8)];
                 }
                 tracker->station[sNum].NewCameraData = TRUE;
                 break;
-                
+
             case 44:    /* FocusEncoder */
                 if(tracker->state.outputFormat == IT_COM_SYS_BINARY)
                 {
                     if(numChars-pos >= 4)
                         tracker->station[sNum].FocusEncoder = byteOrderLong(buffer);
-                    
+
                     buffer = &cmdbuf[pos = MIN(numChars-1, pos+4)];
                 }
                 else
                 {
                     if(sscanf((const char *) buffer, "%ld", &longInt) == 1)
                         tracker->station[sNum].FocusEncoder = longInt;
-                    
+
                     buffer = &cmdbuf[pos = MIN(numChars-1, pos+8)];
                 }
                 tracker->station[sNum].NewCameraData = TRUE;
                 break;
-                
+
             case 45:    /* ZoomEncoder */
                 if(tracker->state.outputFormat == IT_COM_SYS_BINARY)
                 {
                     if(numChars-pos >= 4)
                         tracker->station[sNum].ZoomEncoder = byteOrderLong(buffer);
-                    
+
                     buffer = &cmdbuf[pos = MIN(numChars-1, pos+4)];
                 }
                 else
                 {
                     if(sscanf((const char *) buffer, "%ld", &longInt) == 1)
                         tracker->station[sNum].ZoomEncoder = longInt;
-                    
+
                     buffer = &cmdbuf[pos = MIN(numChars-1, pos+8)];
                 }
                 tracker->station[sNum].NewCameraData = TRUE;
                 break;
-                
+
             case 46: /* SCT: Computed aperature <not yet implemented> */
                 if(tracker->state.outputFormat == IT_COM_SYS_BINARY)
                 {
                     if(numChars-pos >= 4)
                         tracker->station[sNum].Apeture = byteOrderFloat(buffer);
-                    
+
                     buffer = &cmdbuf[pos = MIN(numChars-1, pos+4)];
                 }
                 else
@@ -1020,13 +1020,13 @@ static void processSystemDataRecord(InterSenseTrackerType *tracker,
                 }
                 tracker->station[sNum].NewCameraData = TRUE;
                 break;
-                
+
             case 47: /* SCT: Computed focus <not yet implemented> */
                 if(tracker->state.outputFormat == IT_COM_SYS_BINARY)
                 {
                     if(numChars-pos >= 4)
                         tracker->station[sNum].Focus = byteOrderFloat(buffer);
-                    
+
                     buffer = &cmdbuf[pos = MIN(numChars-1, pos+4)];
                 }
                 else
@@ -1040,13 +1040,13 @@ static void processSystemDataRecord(InterSenseTrackerType *tracker,
                 }
                 tracker->station[sNum].NewCameraData = TRUE;
                 break;
-                
+
             case 48: /* SCT: Computed FOV (degrees) */
                 if(tracker->state.outputFormat == IT_COM_SYS_BINARY)
                 {
                     if(numChars-pos >= 4)
                         tracker->station[sNum].FOV = byteOrderFloat(buffer);
-                    
+
                     buffer = &cmdbuf[pos = MIN(numChars-1, pos+4)];
                 }
                 else
@@ -1060,13 +1060,13 @@ static void processSystemDataRecord(InterSenseTrackerType *tracker,
                 }
                 tracker->station[sNum].NewCameraData = TRUE;
                 break;
-                
+
             case 49: /* SCT: Computed lens offset (mm) */
                 if(tracker->state.outputFormat == IT_COM_SYS_BINARY)
                 {
                     if(numChars-pos >= 4)
                         tracker->station[sNum].NodalPoint = byteOrderFloat(buffer);
-                    
+
                     buffer = &cmdbuf[pos = MIN(numChars-1, pos+4)];
                 }
                 else
@@ -1080,9 +1080,9 @@ static void processSystemDataRecord(InterSenseTrackerType *tracker,
                 }
                 tracker->station[sNum].NewCameraData = TRUE;
                 break;
-                
+
             default:
-                break;                
+                break;
                 }
             }
     }
@@ -1348,11 +1348,11 @@ static void processIntrackSensorRecord(InterSenseTrackerType *tracker, char *cmd
     statMess[1] = 0x00;
 
     statMess[0] = cmdbuf[3];
-    sscanf((const char *) statMess, "%hx", &statHigh);
+    sscanf((const char *) statMess, "%x", &statHigh);
     statMess[0] = cmdbuf[4];
-    sscanf((const char *) statMess, "%hx", &statMed);
+    sscanf((const char *) statMess, "%x", &statMed);
     statMess[0] = cmdbuf[5];
-    sscanf((const char *) statMess, "%hx", &statLow);
+    sscanf((const char *) statMess, "%x", &statLow);
 
     if((statMed&IT_COM_SENSOR_JUMP_MODE_BIT) == IT_COM_SENSOR_JUMP_MODE_BIT)
     {
@@ -1366,7 +1366,7 @@ static void processIntrackSensorRecord(InterSenseTrackerType *tracker, char *cmd
     }
 
     if(tracker->state.firmwareVersion < 3.0157f)
-    {    
+    {
         if((statLow&IT_COM_SENSOR_YAW_COMP_MODE_BIT) == IT_COM_SENSOR_YAW_COMP_MODE_BIT)
         {
             tracker->station[sNum].compass = ON;
@@ -1378,8 +1378,8 @@ static void processIntrackSensorRecord(InterSenseTrackerType *tracker, char *cmd
     }
     else
     {
-        tracker->station[sNum].compass = 
-            (((statLow & 0x02) == 0x02) ? 2 : 0) + 
+        tracker->station[sNum].compass =
+            (((statLow & 0x02) == 0x02) ? 2 : 0) +
             (((statLow & 0x04) == 0x04) ? 1 : 0);
     }
 
@@ -1486,7 +1486,8 @@ static void processSystemStationRecord(InterSenseTrackerType *tracker, char *cmd
 /*************************** processSensitivityRecord ******************************/
 static void processSensitivityRecord(InterSenseTrackerType *tracker, char *cmdbuf, int numChars)
 {
-    int numConverted, num;
+    int numConverted;
+    unsigned long num;
     int stationNum;
 
     stationNum = charToNum(cmdbuf[1])-1;
@@ -1536,9 +1537,9 @@ static void processSyncRecord(InterSenseTrackerType *tracker, char *cmdbuf, int 
 
 
 /************************************************************************/
-/*                                                                      */ 
+/*                                                                      */
 /*              itComUpdate functions                                   */
-/*                                                                      */ 
+/*                                                                      */
 /************************************************************************/
 
 
@@ -1850,13 +1851,13 @@ void itComLogAdd( InterSenseTrackerType *tracker, char *record )
 {
     int head;
     char *buf;
-    
+
     buf = record;
     while(*buf != '\0' && *buf != '\n' && *buf != '\r') buf++;
     *buf = '\0';
-    
+
     strcpy(&tracker->log.records[tracker->log.head][0], record);
-    
+
     head = tracker->log.head + 1;
     if( head >= MAX_LOG ) head = 0;
     if( head == tracker->log.tail ) tracker->log.tail++;
