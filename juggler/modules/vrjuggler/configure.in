@@ -39,7 +39,7 @@
 
 AC_REVISION($Revision$)
 AC_INIT(vrj/vjConfig.h)
-AC_CONFIG_HEADER(vrj/vjDefines.h)
+AC_CONFIG_HEADER(vrj/vrjDefines.h)
 DPP_PREREQ(1.4)
 DPP_INIT
 

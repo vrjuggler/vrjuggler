@@ -5,7 +5,7 @@
 #ifndef _TRACKD_MEM_H_
 #define _TRACKD_MEM_H_
 
-#include <vrj/vjDefines.h>
+#include <vrj/vrjDefines.h>
 #include <sys/types.h>
 
 #if defined(VJ_OS_Linux)

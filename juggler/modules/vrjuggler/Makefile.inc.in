@@ -249,8 +249,8 @@ ifneq (@OS_TYPE@, Win32)
           ln -s $(VJROOT_ABS)/samples ./samples
 	cd $(instlinks)/include/vrj && rm -f ./*.h &&			\
           $(LN_S) $(VJROOT_ABS)/vrj/*.h ./
-	cd $(instlinks)/include/vrj && rm -f ./vjDefines.h &&		\
-	  $(LN_S) $(topdir)/vrj/vjDefines.h ./vjDefines.h
+	cd $(instlinks)/include/vrj && rm -f ./vrjDefines.h &&		\
+	  $(LN_S) $(topdir)/vrj/vrjDefines.h ./vrjDefines.h
 	cd $(instlinks)/include/vrj && rm -f ./vrjParam.h &&		\
 	  $(LN_S) $(topdir)/vrj/vrjParam.h ./vrjParam.h
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
@@ -347,7 +347,7 @@ post-install-headers:
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(VJROOT_ABS)/vrj/vjConfig.h $(includedir)/vrj/vjConfig.h
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/vrj/vjDefines.h $(includedir)/vrj
+          $(topdir)/vrj/vrjDefines.h $(includedir)/vrj
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/vrj/vrjParam.h $(includedir)/vrj
 
