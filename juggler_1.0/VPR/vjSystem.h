@@ -188,6 +188,51 @@ public:
     sleep (u_int32_t seconds) {
         return vjThread::sleep(seconds);
     }
+
+    // -----------------------------------------------------------------------
+    //: Determine the endianness of the host platform.  A return nvalue of 0
+    //+ means that the host uses little-endian byte order.  A return value of
+    //+ 1 means that the host uses big-endian byte order.
+    //
+    //! RETURNS: 0 - Little endian
+    //! RETURNS: 1 - Big endian
+    // -----------------------------------------------------------------------
+    inline static int
+    getEndian (void) {
+        union {
+            char   c[sizeof(short)];
+            short  value;
+        } endian;
+
+        // The way this works is that we access the first byte of endian.value
+        // directly.  If it is 1, the host treats that as the high-order byte.
+        // Otherwise, it is the low-order byte.
+        endian.value = 256;
+
+        return endian.c[0];
+    }
+
+    // -----------------------------------------------------------------------
+    //: Tells if the host uses little-endian byte order or not.
+    //
+    //! RETURNS: true  - Little-endian host.
+    //! RETURNS: false - Big-endian host.
+    // -----------------------------------------------------------------------
+    inline static bool
+    isLittleEndian (void) {
+        return (getEndian() == 0);
+    }
+
+    // -----------------------------------------------------------------------
+    //: Tells if the host uses big-endian byte order or not.
+    //
+    //! RETURNS: true  - Big-endian host.
+    //! RETURNS: false - Little-endian host.
+    // -----------------------------------------------------------------------
+    inline static bool
+    isBigEndian (void) {
+        return (getEndian() == 1);
+    }
 };
 
 
