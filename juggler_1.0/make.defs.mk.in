@@ -58,25 +58,28 @@
 # MKPATH        - Path to shared dpp.*.mk file directory.
 # MTREE_CMD     - Path to a BSD-compatible mtree.
 #
-# MKDEPS_C_COMPILE   - Command for compiling C dependencies
-# MKDEPS_CXX_COMPILE - Command for compiling C++ dependencies
+# ABI           - Application Binary Interface type.  This may be used for
+#                 other binary types when supported by the operating system
+#                 (e.g., "ELF", "N32" or "64").
+# ISA           - Instruction Set Architecture.  This may be used for other
+#                 binary types when supported by the operating system (e.g.,
+#                 "mips3" or "i386").
+# LIBBITSUF     - Suffix for the library path used by the linker on IRIX only.
+#                 For n32 binaries, it will be 32.  For 64-bit binaries, it
+#                 will be 64.
 #
-# ABI        - Application Binary Interface type.  This may be used for other
-#              binary types when supported by the operating system (e.g.,
-#              "ELF", "N32" or "64").
-# ISA         - Instruction Set Architecture.  This may be used for other
-#               binary types when supported by the operating system (e.g.,
-#               "mips3" or "i386").
-# LIBBITSUF  - Suffix for the library path used by the linker on IRIX only.
-#              For n32 binaries, it will be 32.  For 64-bit binaries, it will
-#              be 64.
-#
-# VJ_LIBRARY - The base name of the core Juggler library that will be built
-#              with no file extension.
-# GL_LIBRARY - The base name of the OpenGL Juggler API library with no file
-#              extension.
-# PF_LIBRARY - The base name of the Performer Juggler API library with no file
-#              extension.
+# VJ_LIBRARY    - The base name of the core Juggler library that will be built
+#                 with no file extension.
+# UTILS_LIBRARY - The base name of the Juggler utility library with no file
+#                 extension.
+# GL_LIBRARY    - The base name of the OpenGL Juggler API library with no file
+#                 extension.
+# PF_LIBRARY    - The base name of the Performer Juggler API library with no
+#                 file extension.
+# AW_LIBRARY    - The base name of the Juggler AudioWorks sound engine
+#                 library with no file extension.
+# SL_LIBRARY    - The base name of the Juggler SL sound engine library with no
+#                 file extension.
 # =============================================================================
 
 # -----------------------------------------------------------------------------
