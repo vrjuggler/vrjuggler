@@ -179,9 +179,9 @@ std::string demangleFileName (const std::string& n, std::string parentfile)
    return fname;
 }
 
-const std::string findFileUsingPathVar (std::ifstream& in,
-                                        const std::string& file_name,
-                                        const std::string& env_name)
+JCCL_IMPLEMENT(vpr::ReturnStatus) findFileUsingPathVar (const std::string& file_name,
+                                                        const std::string& env_name,
+                                                        std::string& absolute_file)
 {
    // based on patrick's code to support VJ_CFG_PATH
    // if we find file_name on any path in the variable env_var, we'll
@@ -190,13 +190,13 @@ const std::string findFileUsingPathVar (std::ifstream& in,
 
    bool found = false;
    std::string path_string;
-   std::string retval;
+   vpr::ReturnStatus status(vpr::ReturnStatus::Fail);
 
    // Read the value in the config path environment variable.
-   if ( vpr::System::getenv (env_name, path_string).success() )
+   if ( vpr::System::getenv(env_name, path_string).success() )
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-         << "Falling back on " << env_name << ": " << path_string << "\n"
+      vprDEBUG(jcclDBG_CONFIG, vprDBG_STATE_LVL)
+         << "Falling back on " << env_name << ": '" << path_string << "'\n"
          << vprDEBUG_FLUSH;
    }
 
@@ -224,6 +224,7 @@ const std::string findFileUsingPathVar (std::ifstream& in,
 #else
       char elem_sep = ':';
 #endif
+      std::ifstream in;
 
       while ( ! found )
       {
@@ -272,13 +273,15 @@ const std::string findFileUsingPathVar (std::ifstream& in,
 
          if ( in )
          {
-            found = true;
-            retval = full_path;
+            found         = true;
+            absolute_file = full_path;
+            status.setCode(vpr::ReturnStatus::Succeed);
+            in.close();
          }
       }
    }
 
-   return retval;
+   return status;
 }
 
 bool hasSeparator (const std::string &path)
