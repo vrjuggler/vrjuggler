@@ -56,10 +56,10 @@ vpr::ReturnStatus FastrakStandalone::open()
 
       mSerialPort->clearAll();
 
-      mSerialPort->enableBreakByteIgnore();
-      mSerialPort->enableBadByteIgnore();
-      mSerialPort->enableRead();
-      mSerialPort->enableLocalAttach();
+      mSerialPort->setBreakByteIgnore(true);
+      mSerialPort->setBadByteIgnore(true);
+      mSerialPort->setRead(true);
+      mSerialPort->setLocalAttach(true);
       mSerialPort->setUpdateAction(vpr::SerialTypes::NOW);
       mSerialPort->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
 
