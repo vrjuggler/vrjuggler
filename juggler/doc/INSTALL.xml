@@ -3,7 +3,7 @@
 "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <article>
   <articleinfo>
-    <title>Building and Installing the Juggler Project</title>
+    <title>Building and Installing the Juggler Project (Version 1.1/2.0)</title>
 
     <authorgroup>
       <author>
@@ -16,6 +16,13 @@
 
   <section>
     <title>Introduction</title>
+
+    <para>You have downloaded the source code for Version 1.1 of the Juggler
+    Project. This is the code that will become VR Juggler 2.0, and it is the
+    code that is used to create the VR juggler 2.0 pre-releases. Please be
+    aware that this code represents a work in progress, and if you acquired it
+    directly from CVS rather than using a pre-packaged source code snapshot,
+    the code may have bugs affecting compilation and execution.</para>
 
     <para>This document explains how to build the modules of the Juggler
     Project from the source code. We begin by explaining some issues related
@@ -153,12 +160,6 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
 
     <itemizedlist>
       <listitem>
-        <para>GMTL (<ulink url="http://ggt.sourceforge.net/">http://ggt.sf.net/</ulink>):
-        A generic math library that makes use of C++ templates and STL
-        paradigms.</para>
-      </listitem>
-
-      <listitem>
         <para>CppDOM (<ulink
         url="http://www.sourceforge.net/projects/xml-cppdom/">http://www.sf.net/projects/xml-cppdom/</ulink>):
         A lightweight, easy-to-use XML parser written in C++. CppDOM must be
@@ -169,6 +170,12 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
         <para>Boost (<ulink url="http://www.boost.org/">http://www.boost.org/</ulink>):
         A C++ library providing many powerful utility classes and libraries.
         Boost must be compiled and installed for use with VR Juggler.</para>
+      </listitem>
+
+      <listitem>
+        <para>GMTL (<ulink url="http://ggt.sourceforge.net/">http://ggt.sf.net/</ulink>):
+        A generic math library that makes use of C++ templates and STL
+        paradigms.</para>
       </listitem>
 
       <listitem>
@@ -395,7 +402,9 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
         url="http://www.sf.net/projects/boost/">http://www.sf.net/projects/boost/</ulink>.
         To compile and install Boost, refer to its installation documentation
         (<ulink
-        url="http://www.boost.org/more/getting_started.html#Build_Install">http://www.boost.org/more/getting_started.html#Build_Install</ulink>).</para>
+        url="http://www.boost.org/more/getting_started.html#Build_Install">http://www.boost.org/more/getting_started.html#Build_Install</ulink>).
+        Note that you need the command <command>bjam</command> (referred to as
+        <quote>boost-jam</quote> on the Boost download page) to build Boost.</para>
       </section>
 
       <section>
@@ -405,7 +414,9 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
         binary distributions for some platforms can be downloaded from <ulink
         url="http://www.sf.net/projects/xml-cppdom">http://www.sf.net/projects/xml-cppdom/</ulink>.
         If a binary version is not available for your operating system you
-        must compile and install CppDOM yourself.</para>
+        must compile and install CppDOM yourself. Note that you need SCons (<ulink
+        url="http://scons.sourceforge.net/">http://scons.sourceforge.net/</ulink>)
+        to build and install CppDOM.</para>
       </section>
 
       <section>
