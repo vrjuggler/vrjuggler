@@ -135,6 +135,10 @@ public:
     */
    int SetPosProxy(int ProxyNum, int DevNum, int subNum);
 
+   //: Get the proxy at the given index
+   vjPosProxy* GetPosProxy(int posProxyIndex)
+   { return m_posProxyVector[posProxyIndex]; }
+
    /** Add a pos proxy.
     * A pos proxy to the dev and subNum is created
     * retVal = index of new proxy
@@ -170,6 +174,11 @@ public:
    *       return = 0 for fail, other for success
    */
    int SetDigProxy(int ProxyNum, int DevNum, int subNum); 
+
+   //: Get the proxy at the given index
+   vjDigitalProxy* GetDigProxy(int digProxyIndex)
+   { return m_digProxyVector[digProxyIndex]; }
+
 
    /** Adds a new digital proxy to the proxy vector
    * device at devNum in the device array, with subNumber <br>
@@ -210,6 +219,11 @@ public:
    */
    int SetAnaProxy(int ProxyNum, int DevNum, int subNum); 
 
+   //: Get the proxy at the given index
+   vjAnalogProxy* GetAnaProxy(int anaProxyIndex)
+   { return m_anaProxyVector[anaProxyIndex]; }
+
+
    /** Adds a new analog proxy to the proxy vector
    * device at devNum in the device array, with subNumber<br>
    * <br>
@@ -242,7 +256,6 @@ public:
 
 
    //@}
-
 
    vjDummyPosition* GetDummyPos()
    {
