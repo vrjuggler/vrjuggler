@@ -544,6 +544,7 @@ int KeyboardWin32::stopSampling()
          vpr::System::usleep( 10 ); 
       }
       delete mThread;
+      mThread = NULL;
       //std::cout << "Stopping Keyboard.." << std::endl;
    }
    return 1;

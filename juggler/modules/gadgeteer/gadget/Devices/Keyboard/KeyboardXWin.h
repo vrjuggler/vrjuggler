@@ -85,6 +85,7 @@ public:
       mPrevX = 0; mPrevY = 0;
       mLockState = Unlocked;                    // Initialize to unlocked.
       mExitFlag = false;
+      mControlLoopDone = false;
       mWeOwnTheWindow = true;
    }
    ~KeyboardXWin() { stopSampling();}
@@ -166,6 +167,7 @@ protected:
    int      m_realkeys[256];     // (0,1): The real keyboard state, all events processed (ie. what is the key now)
    vpr::Mutex  mKeysLock;           // Must hold this lock when accessing m_keys
    bool     mExitFlag;           // Should we exit
+   bool     mControlLoopDone;
 
    lockState   mLockState;       // The current state of locking
    int         mLockStoredKey;   // The key that was pressed down
