@@ -32,6 +32,7 @@
 
 
 #include <vjConfig.h>
+#include <Kernel/vjAssert.h>
 #include <Input/vjSim/vjSimDigitalGlove.h>
 #include <Config/vjConfigChunk.h>
 
@@ -178,9 +179,9 @@ void vjSimDigitalGlove::updateFingerAngles()
     const int LEFT_HAND = 0;
     const int RIGHT_HAND = 1;
 
-    assert( progress < 3 && progress >= 0 );
-    assert( LEFT_HAND < VJ_MAX_GLOVE_DEVS );
-    assert( RIGHT_HAND < VJ_MAX_GLOVE_DEVS );
+    vjASSERT( progress < 3 && progress >= 0 );
+    vjASSERT( LEFT_HAND < VJ_MAX_GLOVE_DEVS );
+    vjASSERT( RIGHT_HAND < VJ_MAX_GLOVE_DEVS );
 
     // use the digital data set the angles for each joint.
     mLeftHand.setFingers( mDigitalData[LPINKY] == 1,
