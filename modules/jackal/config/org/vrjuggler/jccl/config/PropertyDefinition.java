@@ -230,6 +230,40 @@ public class PropertyDefinition
    }
 
    /**
+    * Performs a reverse lookup on the enumeration map to get the symbol
+    * corresponding to the given value.  If no symbol is found (if, for
+    * example, this property definition does not have enumerations), then
+    * the original value is returned as a String object.
+    */
+   public synchronized String getValueString(Object value)
+   {
+      // Initial value which serves as the fallback result if nothing is
+      // found in the enumeration map.
+      String value_str = value.toString();
+
+      // Don't bother looking unless value actually exists in mEnums.
+      if ( null != mEnums && mEnums.containsValue(value) )
+      {
+         // Iterate over all the keys searching for the one that corresponds
+         // to value.  This has to be really slow.
+         for ( Iterator itr = mEnums.keySet().iterator(); itr.hasNext(); )
+         {
+            Object key = itr.next();
+
+            // Check to see if we found the key corresponding to value.  If
+            // so, we are done looking.
+            if ( mEnums.get(key) == value )
+            {
+               value_str = key.toString();
+               break;
+            }
+         }
+      }
+
+      return value_str;
+   }
+
+   /**
     * Gets the allowed type at the given index.
     */
    public synchronized String getAllowedType(int index)
