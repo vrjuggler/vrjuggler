@@ -550,7 +550,7 @@ vec1 -= vec2;</programlisting>
 vec.xformFull(xform_mat);</programlisting>
                <para>Depending on the transformations contained within <varname>xform_mat</varname>, <varname>vec</varname> will be transformed fully. The operation as a mathematical equation would be :</para>
                <informalequation>
-                  <alt>V' = M * V</alt>
+                  <alt>$V^{\prime }=M*V$</alt>
                   <graphic fileref="eq_v_eq_m_v.gif" format="GIF"/>
                </informalequation>
                <para>where <varname>V</varname> and <varname>V'</varname> are vectors and <varname>M</varname> is a 4x4 transformation matrix.</para>
@@ -743,7 +743,7 @@ if ( mat1 != mat2 )
          <section>
             <title>Transposing</title>
             <para>The transpose operation works conceptually as <inlineequation>
-                  <alt>matrix1 = transpose(matrix2)</alt>
+                  <alt>$matrix_{1}=transpose\left( matrix_{2}\right)$</alt>
                   <graphic fileref="eq_m1_eq_tr_m2.gif" format="GIF"/>
                </inlineequation>. The code is then:</para>
             <programlisting>vjMatrix mat1;
@@ -756,7 +756,7 @@ mat1.transpose(mat2);</programlisting>
          <section>
             <title>Finding the Inverse</title>
             <para>The transpose operation works conceptually as <inlineequation>
-                  <alt>matrix1 = inverse(matrix2)</alt>
+                  <alt>$matrix_{1}=inverse\left( matrix_{2}\right)$</alt>
                   <graphic fileref="eq_m1_eq_inv_m2.gif" format="GIF"/>
                </inlineequation>. The code is then:</para>
             <programlisting>vjMatrix mat1;
@@ -815,7 +815,7 @@ vjMatrix mat2(0.0, 1.0, 2.3, 4.1, 8.3, 9.0, 2.2, 1.0, 5.6, 9.9, 9.7, 8.2,
 
 mat1.postMult(mat2);</programlisting>
             <para>Conceptually, the operation is <inlineequation>
-                  <alt>mat1 = mat1 * mat2</alt>
+                  <alt>$mat_{1}=mat_{1}*mat_{2}$</alt>
                   <graphic fileref="eq_m1_eq_m1_m2.gif" format="GIF"/>
                </inlineequation> so that the second matrix (<varname>mat2</varname>) comes as the second factor. The same result can be achieved using the overloaded *= operator:</para>
             <programlisting>vjMatrix mat1(0.0, 1.0, 2.3, 4.1, 8.3, 9.0, 2.2, 1.0, 5.6, 9.9, 9.7, 8.2,
@@ -832,7 +832,7 @@ vjMatrix mat2(0.0, 1.0, 2.3, 4.1, 8.3, 9.0, 2.2, 1.0, 5.6, 9.9, 9.7, 8.2,
 
 mat1.preMult(mat2);</programlisting>
             <para>Here, the conceptual operation is <inlineequation>
-                  <alt>mat1 = mat2 * mat1</alt>
+                  <alt>$mat_{1}=mat_{2}*mat_{1}$</alt>
                   <graphic fileref="eq_m1_eq_m2_m1.gif" format="GIF"/>
                </inlineequation> so that the second matrix (<varname>mat2</varname>) comes as the first factor. In both cases, the result of the multiplication is stored in <varname>mat1</varname>.</para>
          </section>
