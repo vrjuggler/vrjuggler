@@ -33,6 +33,10 @@
 #ifndef _JCCL_CONFIG_TOKENS_H_
 #define _JCCL_CONFIG_TOKENS_H_
 
+#include <jccl/jcclConfig.h>
+
+#include <string>
+
 namespace jccl
 {
 
