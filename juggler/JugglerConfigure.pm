@@ -66,6 +66,7 @@ sub parseConfigFile ($)
 
          while ( $deps !~ /^\s*$/ )
          {
+            # Match a dependency on another module.
             if ( $deps =~ /^\s*depend\s+(\S+);/ )
             {
                $deps = $';
@@ -76,6 +77,8 @@ sub parseConfigFile ($)
 
                $MODULES{"$mod"}->addDependencies($MODULES{"$module_name"}->getDependencies());
             }
+            # Match a dependency on a package.  This may have environment
+            # variable settings, or it may just be a path.
             elsif ( $deps =~ /\s*(\S.+?)(:\s+(.+?)|\s*);/ )
             {
                $deps = $';
@@ -147,7 +150,7 @@ sub addDependency ($$)
 {
    my $this = shift;
    my $dep  = shift;
-   push(@{$this->{'deps'}}, $dep);
+   push(@{$this->{'deps'}}, $dep) unless $this->hasDependency($dep);
 }
 
 sub addDependencies ($@)
