@@ -335,6 +335,7 @@ void vjFlock::updateData()
    if (this->isActive() == false)
       return;
 
+   // this unlocks when this object is destructed (upon return of the function)
    vjGuard<vjMutex> updateGuard(lock);
 
    // Copy the valid data to the current data so that both are valid

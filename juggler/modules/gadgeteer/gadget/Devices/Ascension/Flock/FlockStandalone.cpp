@@ -66,10 +66,12 @@
 #include <sys/file.h>
 #endif
 
-#include <Input/vjPosition/aFlock.h>
+#include "aFlock.h"
 
 
 const int aFlock::MAXCHARSTRINGSIZE = 256;
+const int aFlock::mSleepFactor = 3;
+
 
 //: Configure Constructor
 // Give:                                                 <BR>
@@ -183,52 +185,54 @@ int aFlock::start()
 {
     if (!_active)
     {
-	cout << "aFlock: Getting ready....\n\n" << flush;
-	
-	cout<<"aFlock: Opening port\n"<<flush;
-	aFlock::open_port( _port, _baud, _portId );
-	if (_portId == -1)
-	    return 0;
-	
-	cout<<"aFlock: Setting blocking\n"<<flush;
-	aFlock::set_blocking( _portId, _blocking );
-	
-	cout<<"aFlock: Setting sync\n"<<flush;
-	aFlock::set_sync( _portId, _syncStyle );
-	
-	cout<<"aFlock: Setting group\n"<<flush;
-	aFlock::set_group( _portId );
-	
-	cout<<"aFlock: Setting autoconfig\n"<<flush;
-	aFlock::set_autoconfig( _portId, _numBirds );
-	
-	cout<<"aFlock: Setting transmitter\n"<<flush;
-	aFlock::set_transmitter( _portId, _xmitterUnitNumber );
-	
-	cout<<"aFlock: Setting filter\n"<<flush;
-	aFlock::set_filter( _portId, _filter );
-	
-	cout<<"aFlock: Setting hemisphere\n"<<flush;
-	aFlock::set_hemisphere( _portId, _hemisphere, _xmitterUnitNumber, _numBirds );
-	
-	cout<<"aFlock: Setting pos_angles\n"<<flush;
-	aFlock::set_pos_angles( _portId, _xmitterUnitNumber, _numBirds );
-	
-	cout<<"aFlock: Setting pickBird\n"<<flush;
-	aFlock::pickBird( _xmitterUnitNumber,_portId );
-	
-	cout<<"aFlock: Setting rep_and_stream\n"<<flush;
-	aFlock::set_rep_and_stream( _portId, _reportRate );
-	
-	cout  << "aFlock: ready to go.." << endl << flush;
-	
-	// flock is active.
-	_active = true;
-	
-	// return success
-	return 1;
-    } else
-	return 0; // already sampling
+      cout << "aFlock: Getting ready....\n\n" << flush;
+
+      cout<<"aFlock: Opening port\n"<<flush;
+      aFlock::open_port( _port, _baud, _portId );
+      if (_portId == -1)
+	       return 0;
+
+      cout<<"aFlock: Setting blocking\n"<<flush;
+      aFlock::set_blocking( _portId, _blocking );
+
+      cout<<"aFlock: Setting sync\n"<<flush;
+      aFlock::set_sync( _portId, _syncStyle );
+
+      cout<<"aFlock: Setting group\n"<<flush;
+      aFlock::set_group( _portId );
+
+      cout<<"aFlock: Setting autoconfig\n"<<flush;
+      aFlock::set_autoconfig( _portId, _numBirds );
+
+      cout<<"aFlock: Setting transmitter\n"<<flush;
+      aFlock::set_transmitter( _portId, _xmitterUnitNumber );
+
+      cout<<"aFlock: Setting filter\n"<<flush;
+      aFlock::set_filter( _portId, _filter );
+
+      cout<<"aFlock: Setting hemisphere\n"<<flush;
+      aFlock::set_hemisphere( _portId, _hemisphere, _xmitterUnitNumber, _numBirds );
+
+      cout<<"aFlock: Setting pos_angles\n"<<flush;
+      aFlock::set_pos_angles( _portId, _xmitterUnitNumber, _numBirds );
+
+      cout<<"aFlock: Setting pickBird\n"<<flush;
+      aFlock::pickBird( _xmitterUnitNumber,_portId );
+
+      cout<<"aFlock: Setting rep_and_stream\n"<<flush;
+      aFlock::set_rep_and_stream( _portId, _reportRate );
+
+      cout  << "aFlock: ready to go.." << endl << flush;
+
+      // flock is active.
+      _active = true;
+
+      // return success
+      return 1;
+    } 
+    
+    else
+	   return 0; // already sampling
 }
 
 
@@ -292,13 +296,13 @@ int aFlock::stop()
 
     tcflush(_portId, TCIOFLUSH);
 
-    usleep( 500 );
+    usleep( 500 * aFlock::mSleepFactor );
     bird_command[0] = 'G';
     write( _portId, bird_command, 1 );
 
     tcflush(_portId, TCIOFLUSH);
 
-    usleep( 200 );
+    usleep( 200 * aFlock::mSleepFactor );
     close( _portId );
     _portId = -1;
 
@@ -544,7 +548,7 @@ int aFlock::getReading( const int& n, const int& port,
 	
 	while ((read( port,&group,1 ) == 0) && c < 99999)
 	{
-	    usleep(100);
+	    usleep(100 * aFlock::mSleepFactor);
 	    c++;
 	}
 	
@@ -587,7 +591,7 @@ void  aFlock::pickBird( const int& birdID, const int& port )
 
     tcflush(port, TCIOFLUSH);
 
-    usleep ( 100 );
+    usleep ( 100 * aFlock::mSleepFactor );
 }
 
 //: Open the port.
@@ -737,7 +741,7 @@ void aFlock::set_blocking( const int& port, const int& blocking )
 
     tcflush(port, TCIOFLUSH);
 
-    usleep( 1000 );
+    usleep( 1000 * aFlock::mSleepFactor );
 
     // read 1kb of junk
     char junk[1024];
@@ -817,7 +821,7 @@ void aFlock::set_hemisphere( const int& port,
 
         tcflush(port, TCIOFLUSH);
 
-	usleep( 500 );
+	usleep( 500 * aFlock::mSleepFactor );
     }
 }
 
@@ -836,7 +840,7 @@ void aFlock::set_rep_and_stream(const int& port, const char& reportRate)
 
     tcflush(port, TCIOFLUSH);
 
-    usleep( 2000 );
+    usleep( 2000 * aFlock::mSleepFactor );
 
     ////////////////////////////////////////////////////////////////
     // set stream mode
@@ -846,7 +850,7 @@ void aFlock::set_rep_and_stream(const int& port, const char& reportRate)
 
     tcflush(port, TCIOFLUSH);
 
-    usleep( 500 );
+    usleep( 500 * aFlock::mSleepFactor );
 }
 
 void aFlock::set_pos_angles(const int& port, const int& transmitter, const int& numbirds)
@@ -865,7 +869,7 @@ void aFlock::set_pos_angles(const int& port, const int& transmitter, const int& 
 
         tcflush(port, TCIOFLUSH);
 
-	usleep( 500 );
+	usleep( 500 * aFlock::mSleepFactor );
     }
 }
 
@@ -887,7 +891,7 @@ void aFlock::set_filter(const int& port, const BIRD_FILT& filter)
     tcflush(port, TCIOFLUSH);
 
     //TODO: Do I need to sleep here?
-    usleep(12000);
+    usleep(12000 * aFlock::mSleepFactor);
 }
 
 void aFlock::set_transmitter(const int& port, const int& transmitter)
@@ -903,7 +907,7 @@ void aFlock::set_transmitter(const int& port, const int& transmitter)
 
     tcflush(port, TCIOFLUSH);
 
-    usleep(12000);
+    usleep(12000 * aFlock::mSleepFactor);
 }
 
 

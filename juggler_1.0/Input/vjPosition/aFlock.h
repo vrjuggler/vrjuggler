@@ -259,6 +259,7 @@ private:
 	int	    _numBirds;
 	int	    _xmitterUnitNumber;
 	bool	    _usingCorrectionTable;
+   
 	
 	//    x,y,z,        r,y,p
 	float _position[MAX_SENSORS][3], _orientation[MAX_SENSORS][3];
@@ -287,6 +288,7 @@ private:
 	static void  set_transmitter(const int& port, const int& transmitter);
 	static void  set_autoconfig(const int& port, const int& numbirds);
 	static void  set_group(const int& port);
+   static const int   mSleepFactor;
 };
 
 
