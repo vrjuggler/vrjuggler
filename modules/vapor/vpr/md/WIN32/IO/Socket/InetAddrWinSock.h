@@ -62,7 +62,7 @@ public:
     //
     //! PRE: None.
     //! POST: The m_addr structure has its memory zeroed, and the port and
-    //+       internet address are set to INADDR_ANY.
+    //+       internet address are set to wildcard values.
     // ------------------------------------------------------------------------
     InetAddrWinSock (void) {
         memset(&m_addr, 0, sizeof(m_addr));
@@ -72,6 +72,15 @@ public:
     }
 
     // ------------------------------------------------------------------------
+    //: Construct an address object using the given address.  It must be of
+    //+ the form <address>:<port> where <address> can be a hostname or a
+    //+ dotted-decimal IP address.
+    //
+    //! PRE: None.
+    //! POST:
+    //
+    //! ARGS: address - A string giving the address and port number separated
+    //+                 by a colon.
     // ------------------------------------------------------------------------
     InetAddrWinSock (const std::string& address) {
         std::string::size_type pos;
@@ -89,6 +98,15 @@ public:
     }
 
     // ------------------------------------------------------------------------
+    //: Construct an address object using the given address and port number.
+    //+ The address string can be a hostname or a dotted-decimal IP address.
+    //
+    //! PRE: None.
+    //! POST:
+    //
+    //! ARGS: address - A string giving the address (either hostname or IP
+    //+                 address).
+    //! ARGS: port    - The port to associate with the IP address.
     // ------------------------------------------------------------------------
     InetAddrWinSock (const std::string& address, const Uint16 port) {
         setAddress(address);
@@ -97,6 +115,8 @@ public:
     }
 
     // ------------------------------------------------------------------------
+    //: Construct an address that is associated with the given port number.
+    //+ The address will be set to a wildcard.
     // ------------------------------------------------------------------------
     InetAddrWinSock (const Uint16 port) {
         setAddressValue(INADDR_ANY);
@@ -105,6 +125,14 @@ public:
     }
 
     // ------------------------------------------------------------------------
+    //: Construct an address object using the given address and port number.
+    //+ The address must be the actual 32-bit integer value.
+    //
+    //! PRE: None.
+    //! POST:
+    //
+    //! ARGS: address - A 32-bit integer IP address.
+    //! ARGS: port    - The port to associate with the IP address.
     // ------------------------------------------------------------------------
     InetAddrWinSock (const Uint32 address, const Uint16 port) {
         setAddressValue(address);
@@ -176,7 +204,7 @@ public:
     }
 
     // ------------------------------------------------------------------------
-    //: Get the protocol family of this address structure.
+    //: Get the protocol family of this address.
     //
     //! PRE: The protocol family has been properly initialized.
     //! POST: The protocol family is returned as a vpr::SocketTypes::Domain
@@ -188,7 +216,7 @@ public:
     SocketTypes::Domain getFamily(void) const;
 
     // ------------------------------------------------------------------------
-    //: Set the protocol family of this address structure.
+    //: Set the protocol family of this address.
     //
     //! PRE: None.
     //! POST: The given protocol family (a vpr::SocketTypes::Domain value) is
@@ -203,8 +231,8 @@ public:
     //: Get this address' port in host byte order.
     //
     //! PRE: The port has been initialized properly in network byte order.
-    //! POST: The port associated with this address structure is returned to
-    //+       the caller in host byte order.
+    //! POST: The port associated with this address is returned to the caller
+    //+       in host byte order.
     //
     //! RETURNS: A Uint16 (unsigned 16-bit value) giving the port for this
     //+          address structure in host byte order.
@@ -218,11 +246,10 @@ public:
     //: Set this address' port.  The given port must be in host byte order.
     //
     //! PRE: The given port number is in host byte order.
-    //! POST: The given port number is stored in the address structure in
-    //+       network byte order.
+    //! POST: The given port number is stored in the address structure.
     //
-    //! ARGS: port - A Uint16 (unsigned 16-bit value) port number for this
-    //+              address structure in host byte order.
+    //! ARGS: port - An unsigned 16-bit integer port number for this address
+    //+              in host byte order.
     // ------------------------------------------------------------------------
     inline void
     setPort (const Uint16 port) {
@@ -230,34 +257,33 @@ public:
     }
 
     // ------------------------------------------------------------------------
-    //: Get this address structure's Internet address in host byte order.
+    //: Get this address's Internet address in host byte order.
     //
     //! PRE: The IP address has been initialized properly in network byte
     //+      order.
     //! POST: The IP address associated with this address structure is
     //+       returned to the caller in host byte order.
     //
-    //! RETURNS: An unsigned int (32-bit value) giving the IP address for this
+    //! RETURNS: An unsigned 32-bit integer giving the IP address for this
     //+          address structure in host byte order.
     // ------------------------------------------------------------------------
-    inline unsigned int
+    inline Uint32
     getAddressValue (void) const {
         return ntohl(m_addr.sin_addr.s_addr);
     }
 
     // ------------------------------------------------------------------------
-    //: Set this structure's IP address.  The given address must be in host
-    //+ byte order.
+    //: Set this object's IP address.  The given address must be in host byte
+    //+ order.
     //
     //! PRE: The given IP address is in host byte order.
-    //! POST: The given IP address is stored in the address structure in
-    //+       network byte order.
+    //! POST: The given IP address is stored.
     //
-    //! ARGS: port - An unsigned int (32-bit value) IP address for this
-    //+              address structure in host byte order.
+    //! ARGS: port - An unsigned 32-bit integer IP address for this object in
+    //+              host byte order.
     // ------------------------------------------------------------------------
     inline void
-    setAddressValue (const unsigned int addr_value) {
+    setAddressValue (const Uint32 addr_value) {
         m_addr.sin_addr.s_addr = htonl(addr_value);
     }
 
@@ -293,11 +319,20 @@ public:
     std::string getAddressString(void) const;
 
     // ------------------------------------------------------------------------
+    //: Set the IP address for this object using the given string.  The string
+    //+ can be a hostname or a dotted-decimal IP address.
     //
-    // Returns:
-    //     true  - The address lookup was successful.
-    //     false - The address could not be looked up.  An error message is
-    //             printed to stderr explaining what went wrong.
+    //! PRE: None.
+    //! POST: If the address is valid, the object's IP address is updated
+    //+       appropriately.
+    //
+    //! ARGS: addr - An address string in dotted-decimal address notation or
+    //+              as a hostname.
+    //
+    //! RETURNS: true  - The address was valid and the set operation
+    //+                  succeeded.
+    //! RETURNS: false - The address could not be looked up.  An error message
+    //+                  is printed to stderr explaining what went wrong.
     // ------------------------------------------------------------------------
     inline bool
     setAddress (const std::string& addr) {
@@ -363,6 +398,24 @@ public:
         return *this;
     }
 
+    // ------------------------------------------------------------------------
+    //: Overloaded equality operator.
+    // ------------------------------------------------------------------------
+    bool
+    operator== (const InetAddrBSD& addr) {
+        return ((m_addr.sin_addr.s_addr == addr.m_addr.sin_addr.s_addr) &&
+                (m_addr.sin_port == addr.m_addr.sin_port) &&
+                (m_addr.sin_family == addr.m_addr.sin_family));
+    }
+
+    // ------------------------------------------------------------------------
+    //: Overloaded inequality operator.
+    // ------------------------------------------------------------------------
+    bool
+    operator!= (const InetAddrBSD& addr) {
+        return ! (*this == addr);
+    }
+
 //protected:
     struct sockaddr_in m_addr;    //: The Ineternet address structure
 
@@ -383,17 +436,15 @@ protected:
     }
 
     // ------------------------------------------------------------------------
-    // Look up the given address string and store the resulting address value
-    // in the m_addr structure's address field.
+    //: Look up the given address and store the value in m_addr.
     //
-    // PRE: None.
-    // POST: The given address string is converted into a 32-bit INET address.
-    //       the m_addr structure is populated accordingly.
+    //! PRE: None.
+    //! POST: The given address string is converted into a 32-bit INET
+    //+       address.  The m_addr member variable is populated accordingly.
     //
-    // Returns:
-    //     true  - The address lookup was successful.
-    //     false - The address could not be looked up.  An error message is
-    //             printed to stderr explaining what went wrong.
+    //! RETURNS: true  - The address lookup was successful.
+    //! RETURNS: false - The address could not be looked up.  An error message
+    //+                  is printed to stderr explaining what went wrong.
     // ------------------------------------------------------------------------
     bool lookupAddress(const std::string& addr);
 };
