@@ -57,7 +57,7 @@ class GADGET_CLUSTER_PLUGIN_CLASS_API SwapLockTCPPlugin
 {
 public:
    SwapLockTCPPlugin()
-      : mHandlerGUID(std::string("5edfc033-1b3e-4741-b0e0-6ebb47967644"))
+      : mHandlerGUID("5edfc033-1b3e-4741-b0e0-6ebb47967644")
       , SYNC_SIGNAL('G')
       , read_timeout(1000, vpr::Interval::Msec)
       , mIsMaster(false)
