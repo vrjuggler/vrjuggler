@@ -62,6 +62,10 @@
 # install-data    - Install only the Data directory.
 # install-gui     - Install only the configuration GUI.
 #
+# docs            - Build the internal and the public documentation.
+# doc-internal    - Build only the internal documentation.
+# doc-public      - Build only the public documentation.
+#
 # clean           - Clean up everything (uses common 'clean' target).
 # cleandepend     - Clean up the dependency files (uses common 'cleandepend'
 #                   target).
@@ -1179,6 +1183,17 @@ endif	# if OS_TYPE == UNIX
           ${topdir}/GUI/VjControl.jar ${bindir}
 endif	# if ${BUILD_GUI} == Y
 endif	# ifdef NO_JAVA_GUI
+
+# =============================================================================
+# Automatically generated documentation.
+# =============================================================================
+docs: doc-internal doc-public
+
+doc-internal:
+	${MAKE} -C Doc SUBDIRS="${SUBDIRS}" $@
+
+doc-public:
+	${MAKE} -C Doc SUBDIRS="${SUBDIRS}" $@
 
 # =============================================================================
 # Clean-up targets.  '_clean' removes all the files in the build directories.  

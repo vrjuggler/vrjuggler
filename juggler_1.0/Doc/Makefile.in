@@ -1,0 +1,45 @@
+# -----------------------------------------------------------------------------
+# Makefile.in for juggler/Doc.  It requires GNU make.
+# $Id$
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+
+default: docs
+
+# Include common definitions.
+include @topdir@/Makefile.base
+
+srcdir		= @srcdir@
+top_srcdir	= @top_srcdir@
+
+PERCEPS_DIR	= ${srcdir}
+PERCEPS		= ${PERCEPS_DIR}/bin/perceps
+
+DIRS		= ${addprefix ${top_srcdir}/, ${SUBDIRS}}
+FILTERS		= ${PERCEPS_DIR}/filters
+JAVA_CLASS	= ${PERCEPS_DIR}/classes
+OUT_INT		= ./internal_doc
+OUT_PUB		= ./public_doc
+TEMPLATES_INT	= ${PERCEPS_DIR}/templates/internal
+TEMPLATES_PUB	= ${PERCEPS_DIR}/templates/public
+
+# -----------------------------------------------------------------------------
+# Documentation generation targets.
+# -----------------------------------------------------------------------------
+all docs: doc-internal doc-public
+
+doc-internal:
+	${PERL} ${PERCEPS} -a -b -c -h -f -d ${OUT_INT} -F ${FILTERS}	\
+          -t ${TEMPLATES_INT} ${DIRS}
+	cp ${JAVA_CLASS}/*.class ${OUT_INT}
+
+doc-public:
+	${PERL} ${PERCEPS} -a -b -c -h -f -d ${OUT_PUB} -F ${FILTERS}	\
+          -t ${TEMPLATES_PUB} ${DIRS}
+	cp ${JAVA_CLASS}/*.class ${OUT_PUB}
+
+# -----------------------------------------------------------------------------
+# Clean-up.
+# -----------------------------------------------------------------------------
+CLEAN_DIRS	+= ${OUT_INT} ${OUT_PUB}
