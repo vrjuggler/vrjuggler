@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/beanlist.xsd">
-   <service name="Config">
-      <file name="${TWEEK_BASE_DIR}/bin/beans/jccl_config.jar"
-         class="org.vrjuggler.jccl.config.ConfigService"/>
-   </service>
-   <service name="ConfigManager">
-      <file name="${TWEEK_BASE_DIR}/bin/beans/jccl_config.jar"
-         class="org.vrjuggler.jccl.config.ConfigManagerService"/>
-   </service>
    <service name="ConfigBroker">
       <file name="${TWEEK_BASE_DIR}/bin/beans/jccl_config.jar"
             class="org.vrjuggler.jccl.config.ConfigBrokerImpl" />
