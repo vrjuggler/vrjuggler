@@ -54,7 +54,7 @@ PerfDataBuffer::PerfDataBuffer (const std::string& _name, int _numbufs,
 //: POST: all memory & buffers have been freed.
 PerfDataBuffer::~PerfDataBuffer () {
     active = false;
-    delete buffer;
+    delete[] buffer;
 }
 
 
