@@ -188,7 +188,6 @@ protected:
 
    /**
     * Removes a User from the system.
-    * @note Currently not implemented.
     */
    bool removeUser(jccl::ConfigElementPtr element);
    //@}
