@@ -59,12 +59,10 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
 
     protected class DataElem {
 	public double stamp;
-	public String category;
-	public String index;
+	public IndexInfo index_info;
     
-	public DataElem (String _category, String _index, double _stamp) {
-	    category = _category;
-	    index = _index;
+	public DataElem (IndexInfo _index_info, double _stamp) {
+	    index_info = _index_info;
 	    stamp = _stamp;
 	}
     }
@@ -78,8 +76,8 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
 	    samples = new ArrayList();
 	}
 
-	public void addSample (String category, String index, double stamp) {
-	    samples.add (new DataElem (category, index, stamp));
+	public void addSample (IndexInfo index_info, double stamp) {
+	    samples.add (new DataElem (index_info, stamp));
 	}
 
 	public void setCutoff (boolean _cutoff) {
@@ -95,8 +93,12 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
 	// summary of info for a given index string
 	int num_samples;
 	double total_times;
+	public String category;
+	public String index;
 
-	public IndexInfo () {
+	public IndexInfo (String _category, String _index) {
+	    category = _category;
+	    index = _index;
 	    num_samples = 0;
 	    total_times = 0.0;
 	}
@@ -171,35 +173,6 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
       }
 
 
-    private void addDataLine (DataLine new_dl) {
-	Iterator i;
-
-	while (datalines.size() > maxdatalines) {
-	    DataLine dl = (DataLine)datalines.remove(0);
-	    i = dl.iterator();
-	    while (i.hasNext()) {
-		DataElem de = (DataElem)i.next();
-		IndexInfo ii = (IndexInfo)index_info.get(de.index);
-		ii.removeSample (de.stamp);
-	    }
-	}
-
-	datalines.add(new_dl);
-	i = new_dl.iterator();
-	while (i.hasNext()) {
-	    DataElem de = (DataElem)i.next();
-// 	    IndexInfo ii = (IndexInfo)index_info.get(de.index);
-// 	    if (ii == null) {
-// 		ii = new IndexInfo();
-// 		index_info.put (de.index, ii);
-// 		num++;
-// 	    }
-// 	    ii.addSample (de.stamp);
-	}
-    }
-
-
-
     public void setMaxSamples (int n) {
 	maxdatalines = n;
 	System.out.println ("collector: max lines set to " + maxdatalines);
@@ -214,13 +187,41 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
 	return name;
     }
 
-    protected void addDataElem (String label, String category, double time) {
-	if (label.endsWith ("startframe")) {
+
+    private void addDataLine (DataLine new_dl) {
+	Iterator i;
+	DataLine dl;
+
+	while (datalines.size() > maxdatalines) {
+	    dl = (DataLine)datalines.remove(0);
+	    i = dl.iterator();
+	    while (i.hasNext()) {
+		DataElem de = (DataElem)i.next();
+		//IndexInfo ii = (IndexInfo)index_info.get(de.index);
+		de.index_info.removeSample (de.stamp);
+	    }
+	}
+
+	datalines.add(new_dl);
+    }
+
+
+
+    /** Utility method for interpretXMLData. */
+    protected void addDataElem (String index, String category, double stamp) {
+	if (index.endsWith ("startframe")) {
 	    // start a new data line...
 	    addDataLine (current_dl);
 	    current_dl = new DataLine ();
 	}
-	current_dl.addSample (category, label, time);
+	IndexInfo ii = (IndexInfo)index_info.get(index);
+	if (ii == null) {
+	    ii = new IndexInfo(category, index);
+	    index_info.put (index, ii);
+	    num++;
+	}
+	ii.addSample (stamp);
+	current_dl.addSample (ii, stamp);
     }
 
 
