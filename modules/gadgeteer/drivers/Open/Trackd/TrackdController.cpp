@@ -104,6 +104,7 @@ void TrackdController::updateData()
    for (int i=0;i<mTrackdController->numButtons();i++)
    {
       mCurButtons[i] = mTrackdController->getButton(i);
+      mCurButtons[i].setTime();
    }
 
    for (int j=0;j<mTrackdController->numValuators();j++)
@@ -113,9 +114,20 @@ void TrackdController::updateData()
        float f;
        this->normalizeMinToMax (mTrackdController->getValuator(j), f);
        mCurValuators[j] = f;
-
-       //mCurValuators[j] = mTrackdController->getValuator(j);
+       mCurValuators[j].setTime();
    }
+   
+   mDigitalSamples.lock();
+   mDigitalSamples.addSample(mCurButtons);
+   mDigitalSamples.unlock();
+   mDigitalSamples.swapBuffers();
+
+
+   mAnalogSamples.lock();
+   mAnalogSamples.addSample(mCurValuators);
+   mAnalogSamples.unlock();
+   mAnalogSamples.swapBuffers();
+  
 }
 
 
