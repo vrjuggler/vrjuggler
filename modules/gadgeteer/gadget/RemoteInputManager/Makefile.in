@@ -41,21 +41,21 @@ default: all
 # Include common definitions
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/gadget/RemoteInputManager
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
-INSTALL		= @INSTALL@
-SUBOBJDIR	= $(GADGET_LIBRARY)
+includedir=	@includedir@/gadget/RemoteInputManager
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+INSTALL=	@INSTALL@
+SUBOBJDIR=	$(GADGET_LIBRARY)
 
-SRCS		= MsgPackage.cpp \
-                  NetConnection.cpp \
-                  RecvBuffer.cpp \
-                  RemoteInputManager.cpp \
-                  RmtMgrDepChecker.cpp \
-                  ClusterSync.cpp \
-                  ClusterBarrierSerial.cpp \
-                  ClusterBarrierTCP.cpp \
-		  ClusterBarrierWired.cpp
+SRCS=		ClusterBarrierSerial.cpp	\
+		ClusterBarrierTCP.cpp		\
+		ClusterBarrierWired.cpp		\
+		ClusterSync.cpp			\
+		MsgPackage.cpp			\
+		NetConnection.cpp		\
+		RecvBuffer.cpp			\
+		RemoteInputManager.cpp		\
+		RmtMgrDepChecker.cpp
 
 include $(MKPATH)/dpp.obj.mk
 
@@ -64,6 +64,6 @@ include $(MKPATH)/dpp.obj.mk
 # -----------------------------------------------------------------------------
 ifndef DO_CLEANDEPEND
 ifndef DO_BEFOREBUILD
-    -include $(DEPEND_FILES)
+   -include $(DEPEND_FILES)
 endif
 endif
