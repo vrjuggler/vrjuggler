@@ -142,6 +142,7 @@ public class Init {
             ConfigIO.readChunkDescDB (descurl.openStream(), Core.descdb, ConfigIO.GUESS);
 	}
 	catch (IOException e2) {
+            Core.consoleErrorMessage (e2.toString());
 	    Core.consoleErrorMessage ("Init", "Couldn't load " + descurl
 				      + "- vjcontrol.jar may be corrupt");
 	}
@@ -159,10 +160,16 @@ public class Init {
                 ConfigIO.readConfigChunkDB (f2, Core.vjcontrol_chunkdb, ConfigIO.GUESS);
 	    }
 	    catch (FileNotFoundException e3) {
-		Core.consoleErrorMessage ("Init","Couldn't load " + f1);
+		Core.consoleErrorMessage ("Init","Couldn't load VjControl prefs '" + f1 + "' or '" + f2 + "'.");
 		return;
 	    }
+            catch (IOException e4) {
+                Core.consoleErrorMessage ("Init", e4.toString());
+            }
 	}
+        catch (IOException e5) {
+            Core.consoleErrorMessage ("Init", e5.toString());
+        }
     }
 
 

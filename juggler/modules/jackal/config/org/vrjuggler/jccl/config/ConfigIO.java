@@ -155,27 +155,28 @@ public class ConfigIO {
      *  @returns true - success
      *  @returns false - on any parsing error.
      */
-    public static boolean readConfigChunkDB (File file, ConfigChunkDB db, int handler_type) throws FileNotFoundException {
+    public static void readConfigChunkDB (File file, ConfigChunkDB db, int handler_type) throws IOException /*FileNotFoundException*/ {
         ConfigIOHandler handler = null;
         if (handler_type == DEFAULT || handler_type == GUESS) {
-            try {
+//             try {
                 FileInputStream f = new FileInputStream (file);
                 int ch = f.read();
                 if (ch == '<')
                     handler = getHandler (XML);
                 else
                     handler = getHandler (STANDARD);
-            }
-            catch (IOException e) {
-                return false;
-            }
+//             }
+//             catch (IOException e) {
+//                 return false;
+//             }
         }
         else
             handler = getHandler (handler_type);
         if (handler == null)
-            return false;
+            throw new IOException ("Can't get protocol handler.");
 
-        return handler.readConfigChunkDB (file, db);
+        if (!handler.readConfigChunkDB (file, db))
+            throw new IOException ("Protocol-specific parser failed.");
     }
 
 
@@ -183,12 +184,12 @@ public class ConfigIO {
     /** Reads a ConfigChunkDB from input into db.
      *  @return true if succesful, false on error.
      */
-    public static boolean readConfigChunkDB (InputStream input, ConfigChunkDB db, int handler_type) {
+    public static void readConfigChunkDB (InputStream input, ConfigChunkDB db, int handler_type) throws IOException {
         ConfigIOHandler handler = null;
         if (handler_type == GUESS) {
             if (!input.markSupported())
                 input = new BufferedInputStream (input, 20);
-            try {
+//             try {
                 input.mark(10);
                 int ch = input.read();
                 if (ch == '<')
@@ -196,17 +197,18 @@ public class ConfigIO {
                 else
                     handler = getHandler (STANDARD);
                 input.reset();
-            }
-            catch (IOException e) {
-                return false;
-            }
+//             }
+//             catch (IOException e) {
+//                 return false;
+//             }
         }
         else
             handler = getHandler (handler_type);
         if (handler == null)
-            return false;
+            throw new IOException ("Can't get protocol handler.");
 
-        return handler.readConfigChunkDB (input, db);
+        if (!handler.readConfigChunkDB (input, db))
+            throw new IOException ("Protocol-specific parser failed.");
     }
 
 
@@ -240,7 +242,7 @@ public class ConfigIO {
      *  @returns true - success
      *  @returns false - on any parsing error.
      */
-    public static boolean readChunkDescDB (File file, ChunkDescDB db, int handler_type) throws FileNotFoundException {
+    public static void readChunkDescDB (File file, ChunkDescDB db, int handler_type) throws IOException {
         ConfigIOHandler handler = null;
         if (handler_type == DEFAULT || handler_type == GUESS) {
             try {
@@ -251,16 +253,20 @@ public class ConfigIO {
                 else
                     handler = getHandler (STANDARD);
             }
+            catch (FileNotFoundException e) {
+                throw e;
+            }
             catch (IOException e) {
-                return false;
+                throw new IOException ("Couldn't determine file format.");
             }
         }
         else
             handler = getHandler (handler_type);
         if (handler == null)
-            return false;
+            throw new IOException ("Can't get protocol handler.");
 
-        return handler.readChunkDescDB (file, db);
+        if (!handler.readChunkDescDB (file, db))
+            throw new IOException ("Protocol-specific parser failed.");
     }
 
 
@@ -268,7 +274,7 @@ public class ConfigIO {
     /** Reads a ChunkDescDB from input into db.
      *  @return true if succesful, false on error.
      */
-    public static boolean readChunkDescDB (InputStream input, ChunkDescDB db, int handler_type) {
+    public static void readChunkDescDB (InputStream input, ChunkDescDB db, int handler_type) throws IOException {
         ConfigIOHandler handler = null;
         if (handler_type == GUESS) {
             if (!input.markSupported())
@@ -282,16 +288,20 @@ public class ConfigIO {
                     handler = getHandler (STANDARD);
                 input.reset();
             }
+            catch (FileNotFoundException e) {
+                throw e;
+            }
             catch (IOException e) {
-                return false;
+                throw new IOException ("Couldn't determine file format.");
             }
         }
         else
             handler = getHandler (handler_type);
         if (handler == null)
-            return false;
+            throw new IOException ("Can't get protocol handler.");
 
-        return handler.readChunkDescDB (input, db);
+        if (!handler.readChunkDescDB (input, db))
+            throw new IOException ("Protocol-specific parser failed.");
     }
 
 
