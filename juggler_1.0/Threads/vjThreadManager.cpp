@@ -51,9 +51,13 @@ void vjThreadManager::removeTSObject(long key)
 // Looks up the element in the local TS Table based on this id
 vjTSTable* vjThreadManager::getCurrentTSTable()
 {
-   vjGuard<vjMutex> guard(mTSMutex);                             // MUTEX Protection
-   vjBaseThread* cur_thread = vjThread::self();    // Get current thread
-   int32_t thread_id = cur_thread->getTID();      // Get thread id
+   vjGuard<vjMutex> guard(mTSMutex);		// MUTEX Protection
+   vjBaseThread* cur_thread;
+   int32_t thread_id;
+
+   cur_thread = vjThread::self();		// Get current thread
+   thread_id = cur_thread->getTID();		// Get thread id
+
    vjASSERT((thread_id >= 0) && (thread_id < mTSTables.size()));
    return mTSTables[thread_id];                    // Get the table for that id
 }
