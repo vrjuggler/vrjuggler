@@ -67,6 +67,9 @@ public:
    bool config(jccl::ConfigElementPtr e);
 
 protected:
+   /** Shortened form of the keyboard/mouse device registry type name. */
+   typedef KeyboardMouseDevice::KeyboardMouseDeviceRegistry km_registry_t;
+
    lockState    mLockState;       /**< The current state of locking. */
    int          mLockStoredKey;   /**< The key that was pressed down. */
    int          mLockToggleKey;   /**< The key that toggles the locking. */
@@ -74,9 +77,12 @@ protected:
    int          mSleepTimeMS;
    
    KeyboardMouseDevice* mKeyboardMouseDevice;
-   
-   std::string                mKeyboardMouseDeviceName; /**< Name of the remote display window (index in registry). */
-   KeyboardMouseDevice::KeyboardMouseDeviceRegistry::KeyboardMouseDeviceInfo mKeyboardMouseDeviceInfo;     /**< Info structure for remote window. */
+
+   /** Name of the remote display window (index in registry). */
+   std::string mKeyboardMouseDeviceName;
+
+   /** Info structure for remote window. */
+   km_registry_t::KeyboardMouseDeviceInfo mKeyboardMouseDeviceInfo;
 };
 
 } // end namespace gadget
