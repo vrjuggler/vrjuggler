@@ -106,7 +106,7 @@ sub handle {
         doexec(0, 'rmdir', '{}');
     }
     else {
-        unlink($_) || warn "$name: $!\n";
+        unlink("$name") || warn "$name: $!\n";
     }
 }
 
