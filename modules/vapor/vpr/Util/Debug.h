@@ -43,6 +43,8 @@
 #define _VPR_Debug_h_
 
 #include <vpr/vprConfig.h>
+
+#include <iostream>
 #include <stdlib.h>
 #include <vector>
 #include <string>
