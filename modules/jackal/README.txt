@@ -1,5 +1,4 @@
-# What is this: Jackal (Juggler Application Control and
-#                       Configuration Language)
+# What is this: JCCL (Juggler Control and Configuration Language)
 #
 # Organization Credits: Iowa State University
 #                       Virtual Reality Applications Center (VRAC)
@@ -18,7 +17,7 @@ Table of contents:
     1. Getting started
         A. Supported platforms
         B. Minimum requirements (compiler, libraries, etc.)
-    2. Questions about VR Juggler
+    2. Questions about JCCL
         A. FAQ
         B. Documentation
               i. Getting Started Guide
@@ -29,7 +28,7 @@ Table of contents:
         C. Mailing lists
               i. vrjuggler-info@lists.sourceforge.net
              ii. vrjuggler-devel@lists.sourceforge.net
-    3. Compiling VR Juggler from source
+    3. Compiling JCCL from source
 
 ==============================================================================
 1. Getting started
@@ -37,15 +36,15 @@ Table of contents:
 
     A. Supported platforms
 
-        VR Juggler is officially supported on the following platforms:
+        JCCL is officially supported on the following platforms:
 
             IRIX 6.5
             RedHat Linux 6.1, 6.2, 7.1, and newer
             Windows NT 4.0 and 2000
             Windows 98/Me
 
-        VR Juggler is known to work on the following platforms (but is
-        not officially supported):
+        JCCL is known to work on the following platforms (but is not
+        officially supported):
 
             HP-UX 11.00
             FreeBSD 4.2 and 5.0-CURRENT (x86)
@@ -95,7 +94,7 @@ Table of contents:
             Juggler Tools (http://www.vrjuggler.org/pub/juggler-tools-1.1.zip)
 
 ==============================================================================
-2. Questions about VR Juggler
+2. Questions about JCCL
 ==============================================================================
 
     As with most open source projects, there is a common path to follow
@@ -110,32 +109,6 @@ Table of contents:
         http://www.vrjuggler.org/html/misc/faq.html
 
     B. Documentation
-
-          i. Getting Started Guide (for everyone)
-
-            http://www.vrjuggler.org/html/programmer.guide/index.html
-            http://www.vrjuggler.org/html/books/getting.started.guide.pdf
-
-         ii. Programmer's Guide (for VR Juggler application programmers)
-
-            http://www.vrjuggler.org/html/programmer.guide/index.html
-            http://www.vrjuggler.org/html/books/programmer.guide.pdf
-
-        iii. Programmer's Class Reference (for application programmers and VR
-             Juggler developers)
-
-            http://www.vrjuggler.org/html/programmer.reference/index.html
-            http://www.vrjuggler.org/html/books/programmer.reference.pdf
-
-         iv. VjControl (configuration of VR Juggler)
-
-            http://www.vrjuggler.org/html/vjcontrol/index.html
-            http://www.vrjuggler.org/html/books/vjcontrol.guide.pdf
-
-          v. VR Juggler Team Guide (for VR Juggler developers only)
-
-            http://www.vrjuggler.org/html/juggler.team.guide/index.html
-            http://www.vrjuggler.org/html/books/juggler.team.guide.pdf
 
     C. Mailing lists
 
@@ -153,14 +126,14 @@ Table of contents:
             vrjuggler-devel@lists.sourceforge.net mailing list.
 
 ==============================================================================
-3. Compiling VR Juggler from source
+3. Compiling JCCL from source
 ==============================================================================
 
     For a detailed description of this process, please refer to
     http://www.vrjuggler.org/html/juggler.team.guide/build/juggler/index.html
     before sending email to the mailing lists.
 
-    The documentation for compiling VR Juggler from source is now in the
-    INSTALL file.
+    The documentation for compiling JCCL from source is in the INSTALL.txt
+    file.
 
 $Id$
