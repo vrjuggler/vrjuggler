@@ -252,7 +252,7 @@ public:
                 poll_desc.fd = m_handle;
                 poll_desc.in_flags = PR_POLL_READ;
 
-                PR_Poll(&poll_desc, 1, 0);
+                PR_Poll(&poll_desc, 1, PR_INTERVAL_NO_WAIT);
                 if(poll_desc.out_flags & PR_POLL_READ)
                     return false;                           // Opened, but not connected
             }
