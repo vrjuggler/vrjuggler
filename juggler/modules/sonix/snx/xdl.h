@@ -207,7 +207,7 @@ namespace xdl
        */
       virtual void* lookup( const char* symbol )
       {
-         assert( mLibHandle != NULL );
+         if ( mLibHandle == NULL ) return NULL;
          return (void*)::GetProcAddress( mLibHandle, symbol );
       }
 
@@ -270,7 +270,7 @@ namespace xdl
             return true;
          else
          {
-            std::cout<<::dlerror()<<"\n"<<std::flush;
+            std::cout<< "[xdl] " << ::dlerror()<<"\n"<<std::flush;
             return false;
          }
       }
@@ -285,7 +285,7 @@ namespace xdl
        */
       virtual void* lookup( const char* symbol )
       {
-         assert( mLibHandle != NULL );
+         if ( mLibHandle == NULL ) return NULL;
          return ::dlsym( mLibHandle, symbol );
       }
 
