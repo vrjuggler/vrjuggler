@@ -47,7 +47,7 @@
 
 namespace gadget
 {
-   
+
 /** Digital is the abstract base class that devices with digital data derive from.
 *
 *  Digital is the base class that digital devices must derive from.
@@ -62,6 +62,9 @@ namespace gadget
 */
 class Digital
 {
+public:
+   typedef gadget::SampleBuffer<DigitalData> SampleBuffer_t;
+
 public:
    //: Enum for the state of the digital buttons
    // Used in DigitalProxy
@@ -92,15 +95,15 @@ public:
    //  Returns -1 if function fails or if devNum is out of range.<BR>
    //  NOTE: If devNum is out of range, function will fail, possibly issueing
    //  an error to a log or console - but will not ASSERT.<BR>
-   virtual const DigitalData getDigitalData(int devNum = 0)
+   const DigitalData getDigitalData(int devNum = 0)
    {
-      gadget::SampleBuffer<DigitalData>::buffer_t& stable_buffer = mDigitalSamples.stableBuffer();
+      SampleBuffer_t::buffer_t& stable_buffer = mDigitalSamples.stableBuffer();
 
       if ((!stable_buffer.empty()) &&
           (stable_buffer.back().size() > (unsigned)devNum))  // If Have entry && devNum in range
       {
          return stable_buffer.back()[devNum];
-      } 
+      }
       else        // No data or request out of range, return default value
       {
          if(stable_buffer.empty())
@@ -115,9 +118,15 @@ public:
       }
    }
 
+   const SampleBuffer_t::buffer_t& getDigitalDataBuffer()
+   {
+      return mDigitalSamples.stableBuffer();
+   }
+
+
 protected:
-   gadget::SampleBuffer<DigitalData>  mDigitalSamples;   /**< Position samples */
-   DigitalData                        mDefaultValue;   /**< Default analog value to return */
+   SampleBuffer_t    mDigitalSamples;   /**< Position samples */
+   DigitalData       mDefaultValue;   /**< Default analog value to return */
 };
 
 };

@@ -67,6 +67,9 @@ namespace gadget
 class Position
 {
 public:
+   typedef gadget::SampleBuffer<PositionData> SampleBuffer_t;
+
+public:
    //: Constructor
    Position();
 
@@ -76,15 +79,15 @@ public:
    virtual bool config(jccl::ConfigChunkPtr c);
 
    /** Get Positional data. */
-   virtual PositionData getPositionData (int devNum = 0)
+   PositionData getPositionData (int devNum = 0)
    {
-      gadget::SampleBuffer<PositionData>::buffer_t& stable_buffer = mPosSamples.stableBuffer();
+      SampleBuffer_t::buffer_t& stable_buffer = mPosSamples.stableBuffer();
 
       if ((!stable_buffer.empty()) &&
           (stable_buffer.back().size() > (unsigned)devNum))  // If Have entry && devNum in range
       {
          return stable_buffer.back()[devNum];
-      } 
+      }
       else        // No data or request out of range, return default value
       {
          if(stable_buffer.empty())
@@ -100,9 +103,14 @@ public:
       }
    }
 
+   const SampleBuffer_t::buffer_t& getPositionDataBuffer()
+   {
+      return mPosSamples.stableBuffer();
+   }
+
 public:
-   gadget::SampleBuffer<PositionData>  mPosSamples;   /**< Position samples */
-   PositionData                        mDefaultValue;   /**< Default analog value to return */
+   SampleBuffer_t    mPosSamples;   /**< Position samples */
+   PositionData      mDefaultValue;   /**< Default analog value to return */
 
    vrj::Matrix xformMat;   /**< The total xform matrix.  T*R  NOTE: Used to move from trk coord system to Juggler coord system */
    vrj::Matrix rotMat;     /**< Only the rotation matrix */
