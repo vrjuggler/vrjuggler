@@ -45,79 +45,80 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-beandir			= $(bindir)/beans
-srcdir			= @srcdir@
-top_srcdir		= @top_srcdir@
-EXTRA_SRCS_PATH		= $(srcdir)/../tweek/idl
-EXTRA_JAVA_SRCS_PATH	= $(srcdir)/tweek
-INSTALL			= @INSTALL@
-INSTALL_FILES		=
-JAVA_IDL_OPTS		= @JAVA_IDL_OPTS@ @JAVA_IDL_GENDIR_OPT@$(srcdir)
-JAVA_IDL_INCLUDES	= @JAVA_IDL_INCFLAG@$(top_srcdir)
+beandir=		$(bindir)/beans
+srcdir=			@srcdir@
+top_srcdir=		@top_srcdir@
+EXTRA_SRCS_PATH=	$(srcdir)/../tweek/idl
+EXTRA_JAVA_SRCS_PATH=	$(srcdir)/tweek
+INSTALL=		@INSTALL@
+INSTALL_FILES=		
+JAVA_IDL_OPTS=		@JAVA_IDL_OPTS@ @JAVA_IDL_GENDIR_OPT@$(srcdir)
+JAVA_IDL_INCLUDES=	@JAVA_IDL_INCFLAG@$(top_srcdir)
 
-JDOM_JAR	= @JDOM_JAR@
-JAVA_ORB_JAR	= @JAVA_ORB_JAR@
+JDOM_JAR=	@JDOM_JAR@
+JAVA_ORB_JAR=	@JAVA_ORB_JAR@
 
 # The following check is done this way to prevent unwanted spaces from
 # appearing in $(CLASSPATH)
 ifneq ($(JAVA_ORB_JAR), none)
-CLASSPATH	= $(JDOM_JAR)$(JCPS)$(JAVA_ORB_JAR)
+CLASSPATH=	$(JDOM_JAR)$(JCPS)$(JAVA_ORB_JAR)
 else
-CLASSPATH	= $(JDOM_JAR)
+CLASSPATH=	$(JDOM_JAR)
 endif
 
-IDL_JAVA_FILES	= SubjectManager.java	\
-                  Subject.java		\
-                  Observer.java
+IDL_JAVA_FILES=	SubjectManager.java	\
+		Subject.java		\
+		Observer.java
 
 #JAVA_SRCS   = $(shell find $(srcdir) -name '*.java')
 
-JAVA_SRCS	= org/vrjuggler/tweek/Tweek.java			\
-                  org/vrjuggler/tweek/net/CommException.java    	\
-                  org/vrjuggler/tweek/beans/BeanRegistry.java \
-                  org/vrjuggler/tweek/beans/XMLBeanFinder.java \
-                  org/vrjuggler/tweek/services/EnvironmentService.java	\
-                  org/vrjuggler/tweek/iconviewer/BeanIconViewer.java	\
-                  org/vrjuggler/tweek/treeviewer/BeanTreeViewer.java	\
-                  tweek/SubjectManagerHolder.java			\
-                  tweek/SubjectHolder.java				\
-                  tweek/ObserverHolder.java				\
-                  tweek/ObserverPOA.java				\
-                  tweek/SubjectManagerPackage/RegisteredSubjectHolder.java \
-                  tweek/SubjectManagerPackage/SubjectListHolder.java
+JAVA_SRCS=	org/vrjuggler/tweek/Tweek.java				\
+		org/vrjuggler/tweek/net/CommException.java    		\
+		org/vrjuggler/tweek/beans/BeanRegistry.java		\
+		org/vrjuggler/tweek/beans/XMLBeanFinder.java		\
+		org/vrjuggler/tweek/services/EnvironmentService.java	\
+		org/vrjuggler/tweek/iconviewer/BeanIconViewer.java	\
+		org/vrjuggler/tweek/treeviewer/BeanTreeViewer.java	\
+       		tweek/SubjectManagerHolder.java				\
+		tweek/SubjectHolder.java				\
+		tweek/ObserverHolder.java				\
+		tweek/ObserverPOA.java					\
+		tweek/SubjectManagerPackage/RegisteredSubjectHolder.java \
+		tweek/SubjectManagerPackage/SubjectListHolder.java
 
-JARS		= Tweek.jar		\
-                  TweekBeans.jar	\
-                  TweekEvents.jar	\
-                  TweekNet.jar		\
-                  TweekServices.jar
-BEANS		= Viewers
+JARS=		Tweek.jar		\
+		TweekBeans.jar		\
+		TweekEvents.jar		\
+		TweekNet.jar		\
+		TweekServices.jar
+BEANS=		Viewers
 
 # For the following, *.class is used so that these variables may be used as
 # dependencies of .jar targets.
 
-TWEEK_CLASSES	= org/vrjuggler/tweek/*.class			\
-                  org/vrjuggler/tweek/gui/*.class
-TWEEK_EXTRAS	= org/vrjuggler/tweek/gui/*.gif LICENSE-java-laf.txt
+TWEEK_CLASSES=	org/vrjuggler/tweek/*.class			\
+		org/vrjuggler/tweek/gui/*.class
+TWEEK_EXTRAS=	org/vrjuggler/tweek/gui/*.gif LICENSE-java-laf.txt
 
-BEANS_MF	= $(srcdir)/beans.MF
-BEANS_CLASSES	= org/vrjuggler/tweek/beans/*.class		\
-                  org/vrjuggler/tweek/beans/loader/*.class
+BEANS_MF=	$(srcdir)/beans.MF
+BEANS_CLASSES=	org/vrjuggler/tweek/beans/*.class		\
+		org/vrjuggler/tweek/beans/loader/*.class
 
-NET_CLASSES	= org/vrjuggler/tweek/net/*.class		\
-                  org/vrjuggler/tweek/net/corba/*.class		\
-                  tweek/*.class					\
-                  tweek/SubjectManagerPackage/*.class
+NET_CLASSES=	org/vrjuggler/tweek/net/*.class			\
+		org/vrjuggler/tweek/net/corba/*.class		\
+		tweek/*.class					\
+		tweek/SubjectManagerPackage/*.class
 
-EVENT_CLASSES	= org/vrjuggler/tweek/event/*.class
+EVENT_CLASSES=	org/vrjuggler/tweek/event/*.class
 
-SERVICE_MF	= $(srcdir)/services.MF
-SERVICE_CLASSES	= org/vrjuggler/tweek/services/*.class
+SERVICE_MF=		$(srcdir)/services.MF
+SERVICE_CLASSES=	org/vrjuggler/tweek/services/*.class
 
-VIEWERS_MF	= $(srcdir)/viewers.MF
-VIEWERS_CLASSES	= org/vrjuggler/tweek/iconviewer/*.class	\
-                  org/vrjuggler/tweek/treeviewer/*.class
-VIEWERS_EXTRAS	= org/vrjuggler/tweek/iconviewer/*.gif LICENSE-java-laf.txt
+VIEWERS_MF=		$(srcdir)/viewers.MF
+VIEWERS_CLASSES=	org/vrjuggler/tweek/iconviewer/*.class	\
+			org/vrjuggler/tweek/treeviewer/*.class
+VIEWERS_EXTRAS=		org/vrjuggler/tweek/iconviewer/*.gif	\
+			LICENSE-java-laf.txt
 
 include $(MKPATH)/dpp.obj.mk
 
@@ -233,13 +234,13 @@ ifneq ($(JAVA_ORB_JAR), none)
           done
 endif
 
-CLEAN_FILES	+= $(JARS) $(TWEEK_CLASSES) $(BEANS_CLASSES)		\
-                   $(NET_CLASSES) $(EVENT_CLASSES) $(SERVICE_CLASSES)	\
-                   $(VIEWERS_CLASSES)
-CLEAN_DIRS	+= tweek $(srcdir)/tweek
+CLEAN_FILES+=	$(JARS) $(TWEEK_CLASSES) $(BEANS_CLASSES)		\
+		$(NET_CLASSES) $(EVENT_CLASSES) $(SERVICE_CLASSES)	\
+		$(VIEWERS_CLASSES)
+CLEAN_DIRS+=	tweek $(srcdir)/tweek
 
 ifdef GLOBAL_BUILD
-    CLEAN_DIRS	+= $(top_srcdir)/bin
+   CLEAN_DIRS+=	$(top_srcdir)/bin
 endif
 
 include Makefile.inc
