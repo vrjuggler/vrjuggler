@@ -44,9 +44,12 @@
 #include <vpr/Sync/CondVarGeneric.h>
 
 
-// Wait for possible condition change
-// POST: The condition has been modifed, but may not be satisfied.
-// NOTE: The call blocks until a condition has been signaled
+/**
+ * Waits for possible condition change.
+ *
+ * @post The condition has been modifed, but may not be satisfied.
+ * @note The call blocks until a condition has been signaled
+ */
 int
 vpr::CondVarGeneric::wait () {
    std::cerr << std::setw(5) << getpid() << "  Wait: Begin:" << std::endl;

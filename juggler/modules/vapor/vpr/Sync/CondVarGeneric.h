@@ -61,32 +61,29 @@
 
 namespace vpr {
 
-//----------------------------------------------
-//  vpr::CondVarGeneric
-//
-// Purpose:
-//:   Condition Variable wrapper for the any system
-//
-//    Condition variables allow a locked test waiting
-//  for specific conditions to be satisfied.  For
-//  example waiting for a flag to be set or for a
-//  counter to fall below a certain value.
-//
-// Example:
-//    (Insert Example here)
-//
-// Author:
-//	Allen Bierbaum
-//
-// Date: 1-29-97
-//!PUBLIC_API:
-//-----------------------------------------------
+/**
+ * Condition Variable wrapper for the any system.
+ *
+ *    Condition variables allow a locked test waiting
+ *  for specific conditions to be satisfied.  For
+ *  example waiting for a flag to be set or for a
+ *  counter to fall below a certain value.
+ *
+ * Example:
+ *    (Insert Example here)
+ *
+ * @authorAllen Bierbaum
+ * @date 1-29-97
+ */
 class VPR_CLASS_API CondVarGeneric
 {
 public:
-   //: Constructor
-   //! ARGS: mutex - a pointer to a user specified mutex
-   //+               if not specified, uses internal mutex
+   /**
+    * Constructor.
+    *
+    * @param mutex A pointer to a user specified mutex
+    *             if not specified, uses internal mutex.
+    */
    CondVarGeneric(Mutex* mutex = NULL)
    {
       if (mutex == NULL)
@@ -100,14 +97,19 @@ public:
                 << "------------------------------------\n";
    }
 
-   //: Wait for possible condition change
-   //! POST: The condition has been modifed, but may not be satisfied.
-   //! NOTE: The call blocks until a condition has been signaled
+   /**
+    * Waits for possible condition change.
+    *
+    * @post The condition has been modifed, but may not be satisfied.
+    * @note The call blocks until a condition has been signaled
+    */
    int wait(void);
 
-   //: Signal a condition change
-   // This call tells all waiters that the condition has changed.
-   // They can then check to see if it now sarisfies the condition
+   /**
+    * Signals a condition change.
+    * This call tells all waiters that the condition has changed.
+    * They can then check to see if it now sarisfies the condition
+    */
    int signal ()
    {
       std::cerr << std::setw(5) << getpid() << "  Signal" << std::endl;
@@ -124,8 +126,10 @@ public:
          return 0;
    }
 
-   //: Signal all waiting threads
-   // This releases all waiting threads.
+   /**
+    * Signals all waiting threads.
+    * This releases all waiting threads.
+    */
    int broadcast ()
    {
       // ASSERT:  We have been locked
@@ -138,26 +142,29 @@ public:
       return 0;
    }
 
-   //: Acquire the condition lock.
+   /// Acquires the condition lock.
    int acquire()
    {
       return condMutex->acquire();
    }
 
-   //: Try to acquire the condition lock.
+   /// Tries to acquire the condition lock.
    int tryAcquire()
    {
       return condMutex->tryAcquire();
    }
 
-   //: Release the condition lock.
+   /// Releases the condition lock.
    int release()
    {
       return condMutex->release();
    }
 
-   //: Explicitly set the mutex to use.
-   //! NOTE: NEVER call except to initialize explicitly.
+   /**
+    * Explicitly set the mutex to use.
+    *
+    * @note NEVER call except to initialize explicitly.
+    */
    void setMutex(Mutex* mutex)
    {
       mutex->release();       // NOT exactly correct, but just make sure not to leave it locked
@@ -179,11 +186,11 @@ public:
 
 private:
    // --- These make up the "condition variable" ---- ///
-   Semaphore sema;     // Condition variable.
-   long waiters;       //: The number of processes waiting
+   Semaphore sema;     //! Condition variable.
+   long waiters;       //! The number of processes waiting
 
-   Mutex* condMutex;   //: Mutex for the condition variable - User specified
-   Mutex defaultMutex; //: Mutex to use if user does not specify one
+   Mutex* condMutex;   //! Mutex for the condition variable - User specified
+   Mutex defaultMutex; //! Mutex to use if user does not specify one
 
    // = Prevent assignment and initialization.
    void operator= (const CondVarGeneric&) {;}

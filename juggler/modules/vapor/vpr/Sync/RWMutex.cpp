@@ -46,9 +46,7 @@
 
 namespace vpr {
 
-//----------------------------------------------------------
-// Acquire a read mutex.
-//----------------------------------------------------------
+/// Acquires a read mutex.
 int
 RWMutex::acquireRead () {
     int retVal = 0;
@@ -74,9 +72,7 @@ RWMutex::acquireRead () {
     return retVal;
 }
 
-//----------------------------------------------------------
-// Acquire a write mutex.
-//----------------------------------------------------------
+/// Acquire a write mutex.
 int
 RWMutex::acquireWrite() {
     int retVal = 0;
@@ -102,9 +98,7 @@ RWMutex::acquireWrite() {
     return retVal;
 }
 
-//----------------------------------------------------------
-// Try to acquire a read mutex.
-//----------------------------------------------------------
+/// Tries to acquire a read mutex.
 int
 RWMutex::tryAcquireRead () {
     int retVal = -1;
@@ -123,9 +117,7 @@ RWMutex::tryAcquireRead () {
     return retVal;
 }
 
-//----------------------------------------------------------
-// Try to acquire a write mutex.
-//----------------------------------------------------------
+/// Tries to acquire a write mutex.
 int
 RWMutex::tryAcquireWrite () {
     int retVal = -1;
@@ -145,12 +137,7 @@ RWMutex::tryAcquireWrite () {
     return retVal;
 }
 
-//---------------------------------------------------------
-// Release the mutex.
-//
-// RETURNS:  0 - Success
-// RETURNS: -1 - Error
-//---------------------------------------------------------
+/// Releases the mutex.
 int
 RWMutex::release () {
     int retVal = 0;
