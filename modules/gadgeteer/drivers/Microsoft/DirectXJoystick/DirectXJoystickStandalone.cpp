@@ -213,19 +213,6 @@ void DirectXJoystickStandalone::close()
    }
 }
 
-/*
- DIJOYSTATE Datastructure
-   X Axis =  js.lX, Y Axis =  js.lY,  Z Axis =  js.lZ
-   X Axis Rotation js.lRx, Y Axis Rotation js.lRy, Z Axis Rotation js.lRz
-   // hat-switches or Point-of-View buttons
-   POV 1 = js.rgdwPOV[0], POV 2 = js.rgdwPOV[1]
-   POV 3 = js.rgdwPOV[2], POV 4 = js.rgdwPOV[3]
-   Slider 1 = js.rglSlider[0], Slider 2 = js.rglSlider[1]
-   Button 1 = js.rgbButtons[0], Button 2 = js.rgbButtons[1]
-   Button 3 = js.rgbButtons[2], Button 4 = js.rgbButtons[3]
-   Button 5 = js.rgbButtons[4], Button 6 = js.rgbButtons[5]
-   Button 7 = js.rgbButtons[6], Button 8 = js.rgbButtons[7]
-*/
 bool DirectXJoystickStandalone::poll()
 {
    bool sample_taken(false);
@@ -254,25 +241,6 @@ bool DirectXJoystickStandalone::poll()
 
    return sample_taken;
 }
-
-/*
-DIJOYSTATE:  regular joystick
-DIJOYSTATE2:  joystick with extended capabilities
-lX: X-axis, usually the left-right movement of a stick.
-lY: Y-axis, usually the forward-backward movement of a stick.
-lZ: Z-axis, often the throttle control. If the joystick does not have this axis, the value is 0.
-lRx: X-axis rotation. If the joystick does not have this axis, the value is 0.
-lRy: Y-axis rotation. If the joystick does not have this axis, the value is 0.
-lRz: Z-axis rotation (often called the rudder). If the joystick does not have this axis, the value is 0.
-rglSlider: Two additional axes, formerly called the u-axis and v-axis, whose semantics depend on the joystick. Use the IDirectInputDevice8::GetObjectInfo method to obtain semantic information about these values.
-rgdwPOV: Direction controllers, such as point-of-view hats. The position is indicated in hundredths of a degree clockwise from north (away from the user). The center position is normally reported as 1; but see Remarks.
-
-For indicators that have only five positions,
-the value for a controller is 1, 0, 9,000, 18,000, or 27,000.
-rgbButtons: Array of buttons. The high-order bit of the byte is set if the
-corresponding button is down, and clear if the
-button is up or does not exist.
-*/
 
 const DIJOYSTATE& DirectXJoystickStandalone::getData() const
 {
