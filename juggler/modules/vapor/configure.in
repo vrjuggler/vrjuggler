@@ -137,6 +137,14 @@ case $target_os in
         fi
 
         AC_DEFINE(VPR_OS_HPUX,)
+        AC_DEFINE(VPR_HPUX_VERSION, 10)
+        AC_DEFINE(_INCLUDE_TERMIO,)
+        AC_DEFINE(_CMA_NOWRAPPERS_,)
+        ;;
+    # HP PA-RISC machine running HP-UX 11.x.
+    hpux11*)
+        AC_DEFINE(VPR_OS_HPUX,)
+        AC_DEFINE(VPR_HPUX_VERSION, 11)
         AC_DEFINE(_INCLUDE_TERMIO,)
         AC_DEFINE(_CMA_NOWRAPPERS_,)
         ;;

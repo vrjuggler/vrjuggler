@@ -80,6 +80,7 @@
 
 /* Define all of the following if building on HP-UX. */
 #undef VPR_OS_HPUX
+#undef VPR_HPUX_VERSION
 #undef _INCLUDE_TERMIO
 #undef _CMA_NOWRAPPERS_
 
