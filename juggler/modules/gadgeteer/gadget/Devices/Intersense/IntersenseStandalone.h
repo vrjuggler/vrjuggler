@@ -62,6 +62,7 @@ extern "C" {
 #include <string.h>
 
 struct isConfig {
+    bool State;
     int InertiaCube;
     int Enhancement;
     int Sensitivity;
@@ -111,6 +112,10 @@ public:
 
     bool& rVerbose() { return mVerbose; }
     bool Verbose() { return mVerbose; }
+
+// Station is ON or OFF
+    bool& rState(int currentStation) { return mLocalConfigData[currentStation].State; }
+    bool State(int currentStation) { return mLocalConfigData[currentStation].State; }
   
 // Inertia cubes numbered 1-4.  If none is assigned the number is -1
     int& rInertiaCube(int currentStation)  { return mLocalConfigData[currentStation].InertiaCube; }
@@ -158,12 +163,14 @@ public:
 	mLocalConfigData[d].TimeStamped = mConfigData[d].TimeStamped;
 	mLocalConfigData[d].GetButtons = mConfigData[d].GetButtons; 
 	mLocalConfigData[d].GetAnalogData = mConfigData[d].GetAnalogData;
-      
+        mLocalConfigData[d].State = mConfigData[d].State;
+	
 	return d; 
     }
 
     int setConfigState(int d) 
     { 
+	mConfigData[d].State = mLocalConfigData[d].State; 
 	mConfigData[d].InertiaCube = mLocalConfigData[d].InertiaCube;
 	mConfigData[d].Enhancement = mLocalConfigData[d].Enhancement;
 	mConfigData[d].Sensitivity = mLocalConfigData[d].Sensitivity; 
@@ -221,7 +228,7 @@ public:
 //: get the w quaternion value of the i'th receiver
     float& wQuat ( const int& i );
 
-    int& buttonState(const int& i, const int &f);
+    int buttonState(const int& i, const int &f);
   
     int analogData(const int& i, const int& j);
 
