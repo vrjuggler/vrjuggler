@@ -84,7 +84,7 @@ void vjSimGloveGesture::updateData()
       if(checkKeyPair(mSimKeys[i]) > 0)
       {
          mCurGesture = i;
-         vjDEBUG(vjDBG_INPUT_MGR,3) << "vjSimGloveGesture: Got gesture: " << getGestureString(mCurGesture) << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_INPUT_MGR,3) << "vjSimGloveGesture: Got gesture: " << getGestureString(mCurGesture).c_str() << endl << vjDEBUG_FLUSH;
 
          // Set the glove to the sample
          mTheData[0][current] = mGestureExamples[mCurGesture];    // Copy over the example
@@ -108,7 +108,7 @@ void vjSimGloveGesture::loadTrainedFile(std::string fileName)
    }
    else
    {
-      vjDEBUG(vjDBG_INPUT_MGR,0) << "vjSimGloveGesture:: Can't load trained file: " << fileName << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_INPUT_MGR,0) << "vjSimGloveGesture:: Can't load trained file: " << fileName.c_str() << endl << vjDEBUG_FLUSH;
    }
 }
 

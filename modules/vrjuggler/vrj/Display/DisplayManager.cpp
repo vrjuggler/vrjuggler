@@ -72,7 +72,7 @@ bool vjDisplayManager::configAdd(vjConfigChunk* chunk)
    vjDisplay* cur_disp = findDisplayNamed(chunk->getProperty("name"));
    if(cur_disp != NULL)                         // We have an old display
    {
-      vjDEBUG(vjDBG_DISP_MGR,1) << "Removing old window: " << cur_disp->getName() << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DISP_MGR,1) << "Removing old window: " << cur_disp->getName().c_str() << vjDEBUG_FLUSH;
       closeDisplay(cur_disp,true);              // Close the display and notify the draw manager to close the window
    }
 
@@ -82,7 +82,7 @@ bool vjDisplayManager::configAdd(vjConfigChunk* chunk)
       vjDisplay* newDisp = new vjSurfaceDisplay();    // Create display
       newDisp->config(chunk);                         // Config it
       addDisplay(newDisp, true);                            // Add it
-      vjDEBUG(vjDBG_DISP_MGR,1) << "Adding display: " << newDisp->getName() << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DISP_MGR,1) << "Adding display: " << newDisp->getName().c_str() << endl << vjDEBUG_FLUSH;
       vjDEBUG(vjDBG_DISP_MGR,4) << "Display: "  << newDisp << endl << vjDEBUG_FLUSH;
    }
 
@@ -91,7 +91,7 @@ bool vjDisplayManager::configAdd(vjConfigChunk* chunk)
       vjDisplay* newDisp = new vjSimDisplay();     // Create display
       newDisp->config(chunk);                      // Config it
       addDisplay(newDisp, true);                         // Add it
-      vjDEBUG(vjDBG_DISP_MGR,1) << "Adding Display: " << newDisp->getName() << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DISP_MGR,1) << "Adding Display: " << newDisp->getName().c_str() << endl << vjDEBUG_FLUSH;
       vjDEBUG(vjDBG_DISP_MGR,4) << "Display: "  << newDisp << endl << flush << vjDEBUG_FLUSH;
    }
 

@@ -382,19 +382,19 @@ void vjPfDrawManager::updatePfProjection(pfChannel* chan, vjProjection* proj, bo
    if(!simulator)
    {
       chan->setAutoAspect(PFFRUST_CALC_NONE);         // No auto aspect
-      chan->setNearFar(proj->frustum[vjFrustum::NEAR], proj->frustum[vjFrustum::FAR]);
-      chan->makePersp(proj->frustum[vjFrustum::LEFT], proj->frustum[vjFrustum::RIGHT],
-                      proj->frustum[vjFrustum::BOTTOM], proj->frustum[vjFrustum::TOP]);
+      chan->setNearFar(proj->frustum[vjFrustum::VJ_NEAR], proj->frustum[vjFrustum::VJ_FAR]);
+      chan->makePersp(proj->frustum[vjFrustum::VJ_LEFT], proj->frustum[vjFrustum::VJ_RIGHT],
+                      proj->frustum[vjFrustum::VJ_BOTTOM], proj->frustum[vjFrustum::VJ_TOP]);
    } else {
       chan->setAutoAspect(PFFRUST_CALC_VERT);
       chan->setNearFar(0.1, 1000);
       chan->setFOV(80.0f, 0.0f);
    }
 
-   vjDEBUG(vjDBG_DRAW_MGR,7) << "Frustum: l:" << proj->frustum[vjFrustum::LEFT]
-              << "   r: " << proj->frustum[vjFrustum::RIGHT]
-              << "   b: " << proj->frustum[vjFrustum::BOTTOM]
-              << "   t: " << proj->frustum[vjFrustum::TOP] << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,7) << "Frustum: l:" << proj->frustum[vjFrustum::VJ_LEFT]
+              << "   r: " << proj->frustum[vjFrustum::VJ_RIGHT]
+              << "   b: " << proj->frustum[vjFrustum::VJ_BOTTOM]
+              << "   t: " << proj->frustum[vjFrustum::VJ_TOP] << endl << vjDEBUG_FLUSH;
 
    vjDEBUG_END(vjDBG_DRAW_MGR,6) << "vjPfDrawManager::updatePfProjection: Exiting.\n" << vjDEBUG_FLUSH;
 }

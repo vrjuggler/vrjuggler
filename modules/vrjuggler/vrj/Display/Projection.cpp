@@ -35,11 +35,11 @@ void vjProjection::getFrustumApexAndCorners(vjVec3& apex, vjVec3& ur, vjVec3& lr
 
    //float near_dist = mFocusPlaneDist;
    // User like triangles to get the params for the focus surface
-   float mult_factor = mFocusPlaneDist/frustum[vjFrustum::NEAR];
-   float bot = frustum[vjFrustum::BOTTOM]*mult_factor;
-   float left = frustum[vjFrustum::LEFT]*mult_factor;
-   float top = frustum[vjFrustum::TOP]*mult_factor;
-   float right = frustum[vjFrustum::RIGHT]*mult_factor;
+   float mult_factor = mFocusPlaneDist/frustum[vjFrustum::VJ_NEAR];
+   float bot = frustum[vjFrustum::VJ_BOTTOM]*mult_factor;
+   float left = frustum[vjFrustum::VJ_LEFT]*mult_factor;
+   float top = frustum[vjFrustum::VJ_TOP]*mult_factor;
+   float right = frustum[vjFrustum::VJ_RIGHT]*mult_factor;
 
    // Create points in clip space
    vjVec3 apexClip(0.0f, 0.0f, 0.0f);

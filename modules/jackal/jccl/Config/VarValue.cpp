@@ -134,7 +134,7 @@ vjVarValue::operator int() {
     case T_FLOAT:
 	return (int)floatval;
     case T_INVALID:
-	vjDEBUG(vjDBG_CONFIG,1) << using_invalid_msg << 1 
+	vjDEBUG(vjDBG_CONFIG,1) << using_invalid_msg.c_str() << 1 
 			       << endl << vjDEBUG_FLUSH;
 	return 0;
     default:
@@ -153,7 +153,7 @@ vjVarValue::operator vjConfigChunk*() {
 	// its embeddedchunk
 	return new vjConfigChunk (*embeddedchunkval);
     case T_INVALID:
-	vjDEBUG(vjDBG_CONFIG,1) << using_invalid_msg << 2 
+	vjDEBUG(vjDBG_CONFIG,1) << using_invalid_msg.c_str() << 2 
 			       << endl << vjDEBUG_FLUSH;
 	return NULL;
     default:
@@ -175,7 +175,7 @@ vjVarValue::operator bool() {
     case T_FLOAT:
 	return (bool)floatval;
     case T_INVALID:
-	vjDEBUG(vjDBG_CONFIG,1) << using_invalid_msg << 3 
+	vjDEBUG(vjDBG_CONFIG,1) << using_invalid_msg.c_str() << 3 
 			       << endl << vjDEBUG_FLUSH;
 	return false;
     default:
@@ -196,7 +196,7 @@ vjVarValue::operator float () {
     case T_BOOL:
 	return (float)boolval;
     case T_INVALID:
-	vjDEBUG(vjDBG_CONFIG,1) << using_invalid_msg << 4 
+	vjDEBUG(vjDBG_CONFIG,1) <<  using_invalid_msg.c_str() << 4 
 			       << endl << vjDEBUG_FLUSH;
 	return 0.0f;
     default:
@@ -213,7 +213,7 @@ char* vjVarValue::cstring () {
     case T_CHUNK:
 	return strdup (strval.c_str());
     case T_INVALID:
-	vjDEBUG(vjDBG_CONFIG,1) << using_invalid_msg << 5 
+	vjDEBUG(vjDBG_CONFIG,1) <<  using_invalid_msg.c_str() << 5 
 			       << endl << vjDEBUG_FLUSH;
 	return strdup("");
     default:
@@ -230,7 +230,7 @@ vjVarValue::operator std::string () {
     case T_CHUNK:
 	return strval;
     case T_INVALID:
-	vjDEBUG(vjDBG_CONFIG,1) << using_invalid_msg << 6 
+	vjDEBUG(vjDBG_CONFIG,1) <<  using_invalid_msg.c_str() << 6 
 			       << endl << vjDEBUG_FLUSH;
 	return (std::string)"";
     default:
@@ -388,7 +388,7 @@ ostream& operator << (ostream& out, const vjVarValue& v) {
 	return out;
     case T_STRING:
     case T_CHUNK:
-	out << v.strval;
+	out << v.strval.c_str();
 	return out;
     case T_EMBEDDEDCHUNK:
 	if (v.embeddedchunkval)

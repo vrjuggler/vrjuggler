@@ -53,13 +53,13 @@ public:
 	case T_INT:
 	case T_FLOAT:
 	case T_BOOL:
-	    out << '"' << e.entry << '=' << e.val << '"';
+	    out << '"' << e.entry.c_str() << '=' << e.val << '"';
 	    break;
 	default:
 	    if ((std::string)e.val == "" || (std::string)e.val == e.entry)
-		out << '"' << e.entry << '"';
+		out << '"' << e.entry.c_str() << '"';
 	    else
-		out << '"' << e.entry << '=' << e.val << '"';
+		out << '"' << e.entry.c_str() << '=' << e.val << '"';
 	    break;
 	}
 	return out;

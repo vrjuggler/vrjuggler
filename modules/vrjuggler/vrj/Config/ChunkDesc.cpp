@@ -126,8 +126,8 @@ bool vjChunkDesc::remove (const std::string& _token) {
 
 
 ostream& operator << (ostream& out, vjChunkDesc& self) {
-    out << self.token << " \"" << self.name << "\" \"" 
-	<< self.help << '"' << endl;
+    out << self.token.c_str() << " \"" << self.name.c_str() << "\" \"" 
+	<< self.help.c_str() << '"' << endl;
     for (int i = 0; i < self.plist.size(); i++)
 	out << "  " << *(self.plist[i]) << endl;
     out << "  end" <<endl;

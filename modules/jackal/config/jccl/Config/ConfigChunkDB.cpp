@@ -234,7 +234,7 @@ int vjConfigChunkDB::dependencySort(vjConfigChunkDB* auxChunks)
 	    if(deps.size() > 0)
 		{
 		    for(int j=0;j<deps.size();j++)
-			vjDEBUG(vjDBG_CONFIG,4) << "   " << j << ": " << deps[j] << endl << vjDEBUG_FLUSH;
+			vjDEBUG(vjDBG_CONFIG,4) << "   " << j << ": " << deps[j].c_str() << endl << vjDEBUG_FLUSH;
 		} else {
 		    vjDEBUG(vjDBG_CONFIG,4) << "   Nothing.\n" << vjDEBUG_FLUSH;
 		}
@@ -298,7 +298,7 @@ int vjConfigChunkDB::dependencySort(vjConfigChunkDB* auxChunks)
 		    if(deps.size() > 0)
 			{
 			    for(int j=0;j<deps.size();j++)
-				vjDEBUG(vjDBG_ERROR,0) << "\tdep " << j << ": " << deps[j] << endl << vjDEBUG_FLUSH;
+				vjDEBUG(vjDBG_ERROR,0) << "\tdep " << j << ": " << deps[j].c_str() << endl << vjDEBUG_FLUSH;
 			} else {
 			    vjDEBUG(vjDBG_ERROR,0) << "Nothing.\n" << vjDEBUG_FLUSH;
 			}
@@ -323,7 +323,7 @@ int vjConfigChunkDB::dependencySort(vjConfigChunkDB* auxChunks)
 		    if(deps.size() > 0)
 			{
 			    for(int j=0;j<deps.size();j++)
-				vjDEBUG(vjDBG_CONFIG,4) << "   " << j << ": " << deps[j] << endl << vjDEBUG_FLUSH;
+				vjDEBUG(vjDBG_CONFIG,4) << "   " << j << ": " << deps[j].c_str() << endl << vjDEBUG_FLUSH;
 			} else {
 			    vjDEBUG(vjDBG_CONFIG,4) << "   Nothing.\n" << vjDEBUG_FLUSH;
 			}
@@ -426,12 +426,12 @@ bool vjConfigChunkDB::load (const std::string& filename) {
 
     ifstream in(fname.c_str());
 
-    vjDEBUG(vjDBG_CONFIG,3) << "vjConfigChunkDB::load(): opening file " << fname << " -- " << vjDEBUG_FLUSH;
+    vjDEBUG(vjDBG_CONFIG,3) << "vjConfigChunkDB::load(): opening file " << fname.c_str() << " -- " << vjDEBUG_FLUSH;
 
 
     if (!in) {
 	vjDEBUG(vjDBG_ALL,0) << "\nvjConfigChunkDB::load(): Unable to open file '"
-		   << fname << "'" << endl << vjDEBUG_FLUSH;
+		   << fname.c_str() << "'" << endl << vjDEBUG_FLUSH;
 	return false;
     }
     vjDEBUG(vjDBG_CONFIG,3) << " succeeded.\n" << vjDEBUG_FLUSH;
@@ -450,7 +450,7 @@ bool vjConfigChunkDB::save (const std::string& fname) {
    if (!out)
    {
       vjDEBUG(vjDBG_ERROR,1) << "ERROR: vjConfigChunkDB::save() - Unable to open file '"
-      << fname << "'\n" << vjDEBUG_FLUSH;
+      << fname.c_str() << "'\n" << vjDEBUG_FLUSH;
       return false;
    }
    out << *this;
