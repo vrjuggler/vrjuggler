@@ -15,15 +15,26 @@ XALAN=		$(DOCBOOK_ROOT)/xalan-j_20020214/bin/xalan.sh
 XEP=		sh $(DOCBOOK_ROOT)/XEP/run.sh
 XSLTPROC=	/usr/bin/xsltproc
 
-SAXON_PARAMS=	fop.extensions=1
+FO_VERSION?=	FOP
 
 # Use one of the following depending on what will be processing the generated
-# FO.  The first is for FOP; the second is for XEP; and the third is for
-# PassiveTeX.
-XALAN_FO_PARAMS=	-PARAM fop.extensions "1" # -PARAM column.count "2"
-#XALAN_FO_PARAMS=	-PARAM xep.extensions "1" # -PARAM column.count "2"
-#XALAN_FO_PARAMS=	-PARAM passivetex.extensions "1"	\
+# FO.  The default is to use FOP.  XEP or Passive TeX can be used instead by
+# defining $(USE_XEP) or $(USE_PASSIVE_TEX) respectively.
+ifeq ($(FO_VERSION), FOP)
+   XALAN_FO_PARAMS=	-PARAM fop.extensions "1" # -PARAM column.count "2"
+   SAXON_FO_PARAMS=	fop.extensions=1
+else
+ifeq ($(FO_VERSION), XEP)
+   XALAN_FO_PARAMS=	-PARAM xep.extensions "1" # -PARAM column.count "2"
+   SAXON_FO_PARAMS=	xep.extensions=1
+else
+ifeq ($(FO_VERSION), PASSIVE_TEX)
+   XALAN_FO_PARAMS=	-PARAM passivetex.extensions "1"	\
 			-PARAM tex.math.in.alt "latex"
+   SAXON_FO_PARAMS=	passivetex.extensions=1 tex.math.in.alt=latex
+endif # PASSIVE_TEX
+endif # XEP
+endif # FOP
 
 XALAN_HTML_PARAMS=	
 
@@ -80,11 +91,13 @@ images:
 	$(FOP) -fo $< -txt $@
 
 # Generate a PDF file from an FO file using FOP.
+ifeq ($(FO_VERSION), FOP)
 .fo.pdf:
 	$(FOP) $< $@
 
 .fo.txt:
 	$(FOP) -fo $< -txt $@
+endif
 
 # Generate a PDF file from an XML file using FOP.
 #.xml.pdf:
@@ -115,10 +128,10 @@ images:
 #	TEXINPUTS="$(TEXINPUTS)" TEXMF="{\$$TEXMFMAIN,!!$(TEXMF)}" pdflatex $*.tex
 
 # Generate a TeX file for use with PassiveTeX.
-#.xml.tex:
-#	@echo "Generating $*.tex from $<"
-#	@echo '\def\xmlfile{$*.fo}' >$*.tex
-#	@echo '\input xmltex' >>$*.tex
+.xml.tex:
+	@echo "Generating $*.tex from $<"
+	@echo '\def\xmlfile{$*.fo}' >$*.tex
+	@echo '\input xmltex' >>$*.tex
 
 # -----------------------------------------------------------------------------
 
@@ -126,8 +139,10 @@ images:
 
 # Generate a PDF file using XEP from RenderX.  This requires that an FO file
 # be generated first.
-#.fo.pdf:
-#	$(XEP) $*.fo
+ifeq ($(FO_VERSION), XEP)
+.fo.pdf:
+	$(XEP) $*.fo
+endif
 
 # -----------------------------------------------------------------------------
 
