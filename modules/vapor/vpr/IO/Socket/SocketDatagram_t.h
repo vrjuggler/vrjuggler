@@ -120,10 +120,10 @@ public:
     */
    vpr::ReturnStatus recvfrom(void* msg, const vpr::Uint32 len,
                               const int flags, vpr::InetAddr& from,
-                              vpr::Uint32& bytes_read,
+                              vpr::Uint32& bytesRead,
                               const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      return mSocketDgramImpl->recvfrom(msg, len, flags, from, bytes_read,
+      return mSocketDgramImpl->recvfrom(msg, len, flags, from, bytesRead,
                                         timeout);
    }
 
@@ -133,13 +133,13 @@ public:
     */
    vpr::ReturnStatus recvfrom(std::string& msg, const vpr::Uint32 len,
                               const int flags, vpr::InetAddr& from,
-                              vpr::Uint32& bytes_read,
+                              vpr::Uint32& bytesRead,
                               const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       msg.resize(len);
       memset(&msg[0], '\0', msg.size());
 
-      return recvfrom((void*) &msg[0], msg.size(), flags, from, bytes_read,
+      return recvfrom((void*) &msg[0], msg.size(), flags, from, bytesRead,
                       timeout);
    }
 
@@ -149,7 +149,7 @@ public:
     */
    vpr::ReturnStatus recvfrom(std::vector<vpr::Uint8>& msg,
                               const vpr::Uint32 len, const int flags,
-                              vpr::InetAddr& from, vpr::Uint32& bytes_read,
+                              vpr::InetAddr& from, vpr::Uint32& bytesRead,
                               const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       vpr::ReturnStatus retval;
@@ -157,14 +157,14 @@ public:
       msg.resize(len);
 
       memset(&msg[0], '\0', msg.size());
-      retval = recvfrom((void*) &msg[0], msg.size(), flags, from, bytes_read,
+      retval = recvfrom((void*) &msg[0], msg.size(), flags, from, bytesRead,
                         timeout);
 
-      // Size it down if needed, if (bytes_read==len), then resize does
+      // Size it down if needed, if (bytesRead==len), then resize does
       // nothing.
       if ( retval.success() )
       {
-         msg.resize(bytes_read);
+         msg.resize(bytesRead);
       }
 
       return retval;
@@ -175,11 +175,10 @@ public:
     */
    vpr::ReturnStatus sendto(const void* msg, const vpr::Uint32 len,
                             const int flags, const vpr::InetAddr& to,
-                            vpr::Uint32& bytes_sent,
+                            vpr::Uint32& bytesSent,
                             const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      return mSocketDgramImpl->sendto(msg, len, flags, to, bytes_sent,
-                                      timeout);
+      return mSocketDgramImpl->sendto(msg, len, flags, to, bytesSent, timeout);
    }
 
    /**
@@ -187,11 +186,11 @@ public:
     */
    vpr::ReturnStatus sendto(const std::string& msg, const vpr::Uint32 len,
                             const int flags, const vpr::InetAddr& to,
-                            vpr::Uint32& bytes_sent,
+                            vpr::Uint32& bytesSent,
                             const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       vprASSERT(len <= msg.size() && "Length is bigger than data given");
-      return sendto(msg.c_str(), len, flags, to, bytes_sent, timeout);
+      return sendto(msg.c_str(), len, flags, to, bytesSent, timeout);
    }
 
    /**
@@ -199,12 +198,11 @@ public:
     */
    vpr::ReturnStatus sendto(const std::vector<vpr::Uint8>& msg,
                             const vpr::Uint32 len, const int flags,
-                            const vpr::InetAddr& to, vpr::Uint32& bytes_sent,
+                            const vpr::InetAddr& to, vpr::Uint32& bytesSent,
                             const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       vprASSERT(len <= msg.size() && "Length is bigger than data given");
-      return sendto((const void*) &msg[0], len, flags, to, bytes_sent,
-                    timeout);
+      return sendto((const void*) &msg[0], len, flags, to, bytesSent, timeout);
    }
 
 protected:

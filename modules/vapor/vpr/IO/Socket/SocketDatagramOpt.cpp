@@ -47,12 +47,12 @@
 namespace vpr
 {
 
-SocketDatagramOpt::SocketDatagramOpt ()
+SocketDatagramOpt::SocketDatagramOpt()
 {
    /* Do nothing. */ ;
 }
 
-SocketDatagramOpt::~SocketDatagramOpt ()
+SocketDatagramOpt::~SocketDatagramOpt()
 {
    /* Do nothing. */ ;
 }

@@ -58,7 +58,9 @@ public:
    /**
     * Default constructor.
     */
-   McastReq (void) : mMcastAddr(), mIfAddr()
+   McastReq()
+      : mMcastAddr()
+      , mIfAddr()
    {
       /* Do nothing. */ ;
    }
@@ -66,8 +68,9 @@ public:
    /**
     *
     */
-   McastReq (const InetAddr& mcast_addr, const InetAddr& if_addr)
-      : mMcastAddr(mcast_addr), mIfAddr(if_addr)
+   McastReq(const InetAddr& mcastAddr, const InetAddr& ifAddr)
+      : mMcastAddr(mcastAddr)
+      , mIfAddr(ifAddr)
    {
       /* Do nothing. */ ;
    }
@@ -75,16 +78,16 @@ public:
    /**
     * Copy constructor.
     */
-   McastReq (const McastReq& mcast_addr)
+   McastReq(const McastReq& mcastAddr)
    {
-      mMcastAddr = mcast_addr.mMcastAddr;
-      mIfAddr    = mcast_addr.mIfAddr;
+      mMcastAddr = mcastAddr.mMcastAddr;
+      mIfAddr    = mcastAddr.mIfAddr;
    }
 
    /**
     *
     */
-   const InetAddr& getMulticastAddr (void) const
+   const InetAddr& getMulticastAddr() const
    {
       return mMcastAddr;
    }
@@ -92,7 +95,7 @@ public:
    /**
     *
     */
-   const InetAddr& getInterfaceAddr (void) const
+   const InetAddr& getInterfaceAddr() const
    {
       return mIfAddr;
    }
