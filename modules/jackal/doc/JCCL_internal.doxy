@@ -10,7 +10,7 @@
 # Values that contain spaces should be placed between quotes (" ")
 
 # Include default values
-@INCLUDE = VPR.doxy
+@INCLUDE = JCCL.doxy
 
 #---------------------------------------------------------------------------
 # General configuration options
@@ -19,7 +19,7 @@
 # The PROJECT_NAME tag is a single word (or a sequence of words surrounded 
 # by quotes) that should identify the project. 
 
-PROJECT_NAME           = "VR Juggler Portable Runtime [Internal Docs]"
+PROJECT_NAME           = "JCCL: Juggler Configuration and Control Library [Internal Docs]"
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) 
 # base path where the generated documentation will be put. 
