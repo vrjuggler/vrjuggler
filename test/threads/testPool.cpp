@@ -61,7 +61,7 @@ vjMutex counterMutex;
 const int NUMTHREADS = 16;
 
 	///---//  Beginning of main
-void main()
+int main(void )
 {
     vjSharedPool myPool(65536, 16);    // size, num threads
     vjThreadPool* thePool = new(&myPool) vjThreadPool(NUMTHREADS);

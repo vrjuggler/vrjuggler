@@ -35,7 +35,11 @@
 //#include </home/usr1/allenb/STL/vector.h>
 #include <iostream.h>
 #include <stdio.h>
-#include <ulocks.h>
+
+#ifdef VJ_OS_IRIX
+#   include <ulocks.h>
+#endif
+
 #include <math.h>
 #include <time.h>
 #include <sys/time.h>
@@ -54,7 +58,7 @@ const int NUMTHREADS = 2;
 
 std::vector<int> intVector;
     
-void main(void)
+int main(void)
 {
     vjSharedPool myPool(65536, 16);    // size, num threads
     vjThreadPool* thePool = new(&myPool) vjThreadPool(NUMTHREADS);
@@ -95,11 +99,13 @@ void main(void)
 ///    cout << "\nDone: It took... " << totalSeconds << " seconds" << flush;
 //---------------------------------------------------------
 
-    sginap(100);
+    usleep(100);
     
     DebugLock.acquire();
 	dumpVector(intVector);
     DebugLock.release();    
+
+return 1;
 }
 
 void doIt(void* param)
