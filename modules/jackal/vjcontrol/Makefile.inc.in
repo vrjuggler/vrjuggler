@@ -59,6 +59,8 @@ java-install:
 	@$(MAKE) vjcontrol-install
 
 links:
+ifndef NO_JAVA
+ifeq ($(BUILD_JAVA), Y)
 	cd $(instlinks)/bin && \
 		for jar in $(JARS); do \
 			$(RM_LN) ./$$jar && $(LN_S) $(topdir)/vjcontrol/$$jar ./$$jar; \
@@ -68,3 +70,5 @@ links:
 			 -e 's,#JDOM_JAR#,${JDOM_JAR},g' \
 			$(JCCLROOT_ABS)/vjcontrol/vjcontrol.sh > vjcontrol && \
 		chmod $(EXEC_PERMS) vjcontrol
+endif
+endif
