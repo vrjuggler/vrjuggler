@@ -43,12 +43,12 @@ include @topdir@/make.defs.mk
 
 DRIVER_NAME=		TweekGadget
 
+includedir=		@includedir@/gadget/Devices/Tweek
 srcdir=			@srcdir@
 top_srcdir=		@top_srcdir@
 EXTRA_INCLUDES+=	-I$(srcdir)
 EXTRA_SRCS_PATH=	$(srcdir)/idl gadget
 INSTALL=		@INSTALL@
-INSTALL_FILES=
 
 HAVE_TWEEK_CXX=		@HAVE_TWEEK_CXX@
 HAVE_TWEEK_JAVA=	@HAVE_TWEEK_JAVA@
@@ -79,8 +79,9 @@ ifeq ($(HAVE_TWEEK_JAVA), Y)
 			TweekPositionSubject.java
 
    JARS=		TweekGadget.jar
-   INSTALL_FILES=	$(JARS) $(addprefix $(srcdir)/, $(JARS:.jar=.xml))
-   INSTALL_PATH=	$(bindir)/beans
+   POST_INSTALL=	install-bean
+   BEAN_INSTALL_FILES=	$(JARS) $(addprefix $(srcdir)/, $(JARS:.jar=.xml))
+   BEAN_INSTALL_PATH=	$(bindir)/beans
 
    AFTERBUILD=		java-build
 endif
@@ -98,6 +99,10 @@ endif
 java-build:
 	$(ANT)
 
+install-bean:
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT) $(EXTRA_INSTALL_ARGS)	\
+          $(BEAN_INSTALL_FILES) $(BEAN_INSTALL_PATH)
+
 _LOCAL_CLEAN=	_clean
 
 include Makefile.inc
@@ -107,6 +112,10 @@ include @topdir@/gadget/Devices/driver.defs.mk
 PRE_DSO_DRIVER_DEPS=	@TWEEK_DRIVER_DEPS@
 
 ifeq ($(HAVE_TWEEK_CXX), Y)
+   ifneq ($(srcdir), $(IDL_GENDIR))
+      INSTALL_FILES+=	$(IDL_GENDIR)/*.h
+   endif
+
    CLEAN_FILES+=	$(IDL_CXX_FILES)
 endif
 
