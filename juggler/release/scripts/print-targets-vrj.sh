@@ -56,12 +56,12 @@ Build targets are:
     debug           - Build the VR Juggler libraries (dynamic and static) with
                       debugging symbols turned on.
     dbg             - Build the debugging, static copy of the libraries.
-    ddso            - Build the debugging, dynamic shared object version of
+    dbg-dso         - Build the debugging, dynamic shared object version of
                       the libraries.
     optim           - Build the VR Juggler libraries (dynamic and static) with
                       optimization flags enabled.
     opt             - Build the optimized, static version of the libraries.
-    dso             - Build the dynamic shared object version of the
+    optdso          - Build the dynamic shared object version of the
                       libraries.
     obj             - Build the object files using the default value for
                       $(OBJDIR).
@@ -77,12 +77,12 @@ Install targets are:
                         both static and dynamic libraries). 
     install-debug     - Same as 'install'.
     install-dbg       - Install the debugging, static version of the libraries.
-    install-ddso      - Install the debugging, dynamic shared object version of
+    install-dbg-dso   - Install the debugging, dynamic shared object version of
                         the libraries.
     install-optim     - Install the full optimized version of VR Juggler (with
                         both static and dynamic libraries).
     install-opt       - Install the optimized, static version of the libraries.
-    install-dso       - Install the dynamic shared object version of the
+    install-opt-dso   - Install the dynamic shared object version of the
                         libraries.
     install-headers   - Install only the header files.
     install-samples   - Install only the sample applications.
