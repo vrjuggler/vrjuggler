@@ -2,10 +2,11 @@
 #define _VJDebug_h_
 #pragma once
 
-#define DEBUG_VJ
+// #define VJ_DEBUG  Defined in config.h
+#include <config.h>
 #define LOCK_DEBUG_STREAM
 
-#ifdef DEBUG_VJ
+#ifdef VJ_DEBUG
    #define vjDEBUG(val) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val)
    #define vjDEBUG_BEGIN(val) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val, 1)
    #define vjDEBUG_END(val) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val, -1)
@@ -26,7 +27,7 @@
 #endif
 
 // -- ASSERT -- //
-#ifdef DEBUG_VJ
+#ifdef VJ_DEBUG
    #define vjASSERT(val) assert((val))
 #else
    #define vjASSERT(val) ((void)0)
@@ -35,7 +36,6 @@
 // --------------- //
 // --- Headers --- //
 // --------------- //
-#include <config.h>
 #include <iostream.h>
 #include <iomanip.h>
 
