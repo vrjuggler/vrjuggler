@@ -53,7 +53,7 @@
 namespace vpr
 {
 
-/** \class SemaphreNSPR RWMutexNSPR.h vpr/Sync/RWMutex.h
+/** \class RWMutexNSPR RWMutexNSPR.h vpr/Sync/RWMutex.h
  *
  * Read/write mutex implementation using NSPR read/write mutexes (PRRWLock).
  * This is typedef'd to vpr::RWMutex.

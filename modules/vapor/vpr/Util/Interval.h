@@ -50,7 +50,7 @@
 namespace vpr
 {
 
-/** \class Interal Interval.h vpr/Util/Interval.h
+/** \class Interval Interval.h vpr/Util/Interval.h
  *
  * This class captures a high-resolution interval.
  *
