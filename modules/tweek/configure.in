@@ -694,10 +694,9 @@ fi
 DPP_INSTALLER(tweek, 0644, 0755, 0755)
 
 # Add these C++ options when compiling with G++.
-if test "x$GXX" = "xyes" ; then
-#   CXXFLAGS="-fhonor-std -Wall $CXXFLAGS"
-   CXXFLAGS="-Wall $CXXFLAGS"
-fi
+#if test "x$GXX" = "xyes" ; then
+#   CXXFLAGS="-fhonor-std $CXXFLAGS"
+#fi
 
 # For use in linking applications.
 EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
@@ -733,14 +732,15 @@ tweek_cxxflags="$STDFLAGS $EXTRA_DEFS $INCLUDES $tweek_idl_gen_includes"
 tweek_dep_scripts="vpr-config"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
-   CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
-   CXXFLAGS="$CXXFLAGS -woff 1234,1388,3303,3322 -w2"
+#   CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
+#   CXXFLAGS="$CXXFLAGS -woff 1234,1388,3303,3322 -w2"
+   CXXFLAGS="$CXXFLAGS -w2"
    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -J4 -all"
 elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
    vc_cflags='/QIfdiv /QI0f'
    vc_cxxflags='/GR /GX /EHc /QIfdiv /QI0f'
-   CFLAGS="$CFLAGS /W3 $vc_cflags"
-   CXXFLAGS="$CXXFLAGS /W3 $vc_cxxflags"
+   CFLAGS="$CFLAGS $vc_cflags"
+   CXXFLAGS="$CXXFLAGS $vc_cxxflags"
    DBG_FLAGS="$DBG_FLAGS /MDd"
    OPT_FLAGS="$OPT_FLAGS /MD"
    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /nologo /incremental:no"
