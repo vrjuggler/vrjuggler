@@ -107,6 +107,11 @@ fi
 # Checks for programs.
 # -----------------------------------------------------------------------------
 VJ_COMPILER_SETUP
+
+# If we are using GCC, make sure that $USE_GCC reflects it, even if the use
+# of GCC was not forced on the command line.
+USE_GCC="$GXX"
+
 DPP_CC_PTHREAD_ARG
 
 if test "x$CC_ACCEPTS_PTHREAD" = "xno" ; then
