@@ -44,7 +44,6 @@ namespace vrj
 class DisplayManager;
 class App;
 class Display;
-class DrawSimInterface;
 
 /**
  * Abstract base class for API specific Draw Manager.
@@ -104,8 +103,6 @@ public:
     * @note If it was an active object, kill process here.
     */
    virtual void closeAPI() = 0;
-
-   virtual DrawSimInterface* createDefaultSimulator() = 0;
 
    /// Setter for display manager variable
    void setDisplayManager(DisplayManager* _dispMgr);

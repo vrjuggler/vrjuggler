@@ -56,9 +56,8 @@
 
 namespace vrj
 {
-// Do not register the default simulator since it will be used 
-// automatically when the factory can not find the specified simulator.
-//VRJ_REGISTER_SIM_INTERFACE_CREATOR(GlBasicSimulator);
+
+VRJ_REGISTER_SIM_INTERFACE_CREATOR(GlBasicSimulator);
 
 GlBasicSimulator::GlBasicSimulator() : mQuadObj(NULL)
 {
