@@ -116,7 +116,6 @@ typedef vjSocketIDPosix vjSocketID;
 
 #else
 
-#include <strings.h>    // For bzero()
 #include <winsock2.h>
 
 
@@ -172,7 +171,8 @@ public:
 	int err;
 	err = WSAStartup( wVersionRequested, &wsaData ); 
 	if(err < 0) {
-	    return false;
+		cout << "---------------------------------------- socket - WSAstartup failed-------------------------" << endl;
+	    //return false;
 	    // output the error.
 	    //std::string error;
 	    //socketUtil::getLastError( error );
@@ -181,21 +181,27 @@ public:
 
 
 	struct sockaddr_in sockaddress;
-	bzero(&sockaddress, sizeof (struct sockaddr_in));
+	//bzero(&sockaddress, sizeof (struct sockaddr_in));
+	for (int j = 0; j < sizeof (struct sockaddr_in); j++)
+		*((char*)&sockaddress) = 0;
 	sockaddress.sin_family = PF_INET;
 	sockaddress.sin_port = htons(port);
 
 
 	sockid = socket (AF_INET, SOCK_STREAM, 0);
-	if (sockid == -1)
-	    return false;
+	if (sockid == -1) {
+			cout << "-------------------------------------- socket - sockID bad---------------------------" <<endl;
+	    //return false;
+	}
 
-	int err = bind ( sockid, (sockaddr*)&sockaddress,
+	err = bind ( sockid, (sockaddr*)&sockaddress,
 		   sizeof (struct sockaddr_in));
+	if (err) cout << "--------------------------------------- socket - bind error " << err << " ------------------------" << endl;
 	if (!err)
 	    err = ::listen (sockid, 0);
 
 	if (err) {
+			cout << "--------------------------------------- socket - listen fail ---------------------------" << endl;
 	    close();
 	    return false;
 	}
@@ -207,7 +213,7 @@ public:
     // must be called after listen
     vjSocketWin32* accept () {
 	sockaddr_in servaddr;
-	int servsock;
+	unsigned int servsock;
  	int len = sizeof (struct sockaddr_in);
  	servsock = ::accept (sockid,
  			   (sockaddr*)&servaddr, &len);
