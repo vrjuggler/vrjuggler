@@ -1,0 +1,5 @@
+#!/bin/sh
+
+: ${JACORB_PATH=.}
+
+java  -classpath $JACORB_PATH/idl.jar org.jacorb.idl.parser  "$@"
