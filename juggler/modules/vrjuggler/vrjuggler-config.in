@@ -115,6 +115,10 @@ else
    $base_dir =~ s|${path_sep}bin$||io; # If the path ends in "/bin", strip it
 }
 
+# XXX: This is a hack for crumminess in vpr-config!
+my $hack_deps_dir = "$deps_dir" || "$base_dir";
+$ENV{'VPR_DEPS_DIR'} = "$hack_deps_dir" unless defined($ENV{'VPR_DEPS_DIR'});
+
 # If we are on Windows, make sure that $base_dir is a full DOS path.
 if ( $Win32  && $base_dir !~ /^[A-Za-z]:/ )
 {
