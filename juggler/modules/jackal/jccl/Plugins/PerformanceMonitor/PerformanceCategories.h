@@ -153,6 +153,7 @@ private:
 };
 
 
+#define jcclTIMESTAMP(cat, id) jccl::PerformanceMonitor::instance()->getLabeledTSBuffer()->set (cat, id)
 
 /** Utility class for auto-registering a category.  Use the macros
  *  below instead of using this class directly.
