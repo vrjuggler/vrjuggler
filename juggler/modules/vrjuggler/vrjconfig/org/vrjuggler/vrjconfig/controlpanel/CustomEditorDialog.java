@@ -98,7 +98,12 @@ public class CustomEditorDialog
 
    public void dispose()
    {
-      mEditor.editorClosing();
+      if ( mEditor != null )
+      {
+         mEditor.editorClosing();
+         mEditor = null;
+      }
+
       super.dispose();
    }
 
