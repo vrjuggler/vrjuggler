@@ -93,16 +93,10 @@ public:
     * @post configures internal data members,
     *          doesn't actually talk to the FOB yet.
     */
-   Flock(const char* const port = "/dev/ttyd3",
+   Flock(const char* const port = "/dev/ttyS0",
          const int& baud = 38400,
-         const int& sync = 1,
-         const bool& block = false,
          const int& numBrds = 3,
-         const int& transmit = 3,
-         const BIRD_HEMI& hemi = LOWER_HEM,
-         const BIRD_FILT& filt = AC_NARROW,
-         const char& report = 'R',
-         const char* const calfile = "");
+         const int& transmit = 3);
    ~Flock();
 
 
@@ -127,199 +121,9 @@ public:
    /**  see if the flock is active or not */
    bool isActive() const
    {
-      return mFlockOfBirds.isActive();
+      return (mFlockOfBirds.getStatus() != FlockStandalone::CLOSED);
    }
-
-   /**
-    * Sets the port to use.
-    * This will be a string in the form of the native OS descriptor.<BR>
-    * ex: unix - "/dev/ttyd3", win32 - "COM3"
-    *
-    * @pre flock.isActive() must be false to use this function
-    */
-   void setPort( const char* const serialPort );
-
-   /**
-    * Gets the port used.
-    * This will be a string in the form of the native OS descriptor.<BR>
-    * ex: unix - "/dev/ttyd3", win32 - "COM3"
-    */
-   inline const std::string& getPort() const
-   {
-      return mFlockOfBirds.getPort();
-   }
-
-   /**
-    * Sets the baud rate.
-    * This is generally 38400.  Consult the Flock manual for other rates.
-    * @note flock.isActive() must be false to use this function.
-    */
-   void setBaudRate( const int& baud );
-
-   /**
-    * Gets the baud rate.
-    */
-   inline const int& getBaudRate() const
-   {
-      return mFlockOfBirds.getBaudRate();
-   }
-
-   /**
-    * Sets the unit number of the transmitter.
-    * @param Transmit  An integer that is the same as the dip switch
-    *          setting on the transmitter box (for the unit number).
-    * @note flock.isActive() must be false to use this function
-    */
-   void setTransmitter( const int& Transmit );
-
-   /**
-    * Gets the unit number of the transmitter.
-    * @post Returns an integer that is the same as the dip switch
-    *       setting on the transmitter box (for the unit number).
-    */
-   inline const int& getTransmitter() const
-   {
-      return mFlockOfBirds.getTransmitter();
-   }
-
-   /**
-    * Sets the number of birds to use in the Flock.
-    * @param n  an integer number not more than the number of
-    *          birds attached to the system.
-    * @note flock.isActive() must be false to use this function.
-    */
-   void setNumBirds( const int& n );
-
-   /**
-    * Gets the number of birds to use in the Flock.
-    * @return An integer number not more than the number of
-    *         birds attached to the system.
-    */
-   inline const int&  getNumBirds() const
-   {
-      return mFlockOfBirds.getNumBirds();
-   }
-
-   /**
-    * Set the video sync type.  This option allows the Flock to syncronize its
-    * pulses with your video display.  This will eliminate most flicker caused
-    * by the magnetic distortion.
-    *
-    * @pre flock.isActive() must be false to use this function.
-    * @note Refer to your Flock manual for what number to use.
-    */
-   void setSync( const int& sync );
-
-   /**
-    * Gets the video sync type.  This option allows the Flock to syncronize its
-    * pulses with your video display.  This will eliminate most flicker caused
-    * by the magnetic distortion.
-    *
-    * @post returns the sync type.
-    * @note Refer to your Flock manual for what the return number means.
-    */
-   inline const int& getSync() const
-   {
-      return mFlockOfBirds.getSync();
-   }
-
-   /**
-    * Sets blocking of the Flock.
-    * @pre flock.isActive() must be false to use this function.
-    * @note See the Flock manual for details.
-    */
-   void setBlocking( const bool& blVal );
-
-   /**
-    * Gets the Flock's blocking type.
-    * @note See the Flock manual for details.
-    */
-   inline const bool& getBlocking() const
-   {
-      return mFlockOfBirds.getBlocking();
-   }
-
-   /**
-    * Sets the type of filtering that the Flock uses.
-    * @note flock.isActive() must be false to use this function.
-    */
-   void setFilterType( const BIRD_FILT& f );
-
-   /** Sets the type of filtering that the flock uses. */
-   inline const BIRD_FILT& getFilterType() const
-   {
-      return mFlockOfBirds.getFilterType();
-   }
-
-   /**
-    * Sets the hemisphere from which the transmitter transmits.
-    * @note flock.isActive() must be false to use this function.
-    */
-   void setHemisphere( const BIRD_HEMI& h );
-
-   /** Sets the hemisphere that the transmitter transmits from. */
-   inline const BIRD_HEMI& getHemisphere() const
-   {
-      return mFlockOfBirds.getHemisphere();
-   }
-
-   /**
-    * Sets the report rate that the flock uses.
-    * @note flock.isActive() must be false to use this function.
-    */
-   void setReportRate( const char& rRate );
-
-   /** Sets the report rate that the flock uses. */
-   inline const char& getReportRate() const
-   {
-      return mFlockOfBirds.getReportRate();
-   }
-
-   /** Gets the x position of the i'th reciever. */
-   inline float& xPos( const int& i )
-   {
-      return mFlockOfBirds.xPos( i );
-   }
-
-   /** Gets the y position of the i'th reciever. */
-   inline float& yPos( const int& i )
-   {
-      return mFlockOfBirds.yPos( i );
-   }
-
-   /** Gets the z position of the i'th reciever. */
-   inline float& zPos( const int& i )
-   {
-      return mFlockOfBirds.zPos( i );
-   }
-
-   /** Gets the z rotation of the i'th reciever. */
-   inline float& zRot( const int& i )
-   {
-      return mFlockOfBirds.zRot( i );
-   };
-
-   /** Gets the y rotation of the i'th reciever. */
-   inline float& yRot( const int& i )
-   {
-      return mFlockOfBirds.yRot( i );
-   }
-
-   /** Gets the x rotation of the i'th reciever. */
-   inline float& xRot( const int& i )
-   {
-      return mFlockOfBirds.xRot( i );
-   }
-
-   /**
-    * Invokes the global scope delete operator.  This is required for proper
-    * releasing of memory in DLLs on Win32.
-    */
-   void operator delete(void* p)
-   {
-      ::operator delete(p);
-   }
-
+   
 protected:
    /**
     * Deletes this object.  This is an implementation of the pure virtual
@@ -330,18 +134,11 @@ protected:
       delete this;
    }
 
-private:
    void controlLoop(void* nullParam);
-   void positionCorrect(float&x,float&y,float&z);
-   void initCorrectionTable(const char*);
 
-   int getBirdIndex(int birdNum, int bufferIndex);
-
+private:
    vpr::Thread*      mThread;      /**< The thread doing the flock sampling */
    FlockStandalone   mFlockOfBirds; /**< The actual Flock device object */
-
-   std::string       mPortName;
-   int               mBaudRate;
 };
 
 } // End of gadget namespace

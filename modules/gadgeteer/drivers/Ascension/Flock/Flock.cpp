@@ -72,13 +72,10 @@ namespace gadget
  * @param report  flock report rate
  * @param calfile  a calibration file, if "", then use none
  */
-Flock::Flock(const char* const port, const int& baud, const int& sync,
-             const bool& block, const int& numBrds, const int& transmit,
-             const BIRD_HEMI& hemi, const BIRD_FILT& filt, const char& report,
-             const char* const calfile)
+Flock::Flock(const char* const port, const int& baud,
+             const int& numBrds, const int& transmit)
    : mThread(NULL),
-     mFlockOfBirds(port, baud, sync, block, numBrds, transmit, hemi, filt,
-                   report, calfile)
+     mFlockOfBirds(port, numBrds, transmit, baud)
 
 {
    ;
@@ -101,51 +98,27 @@ bool Flock::config(jccl::ConfigElementPtr e)
       return false;
    }
 
-   mPortName = e->getProperty<std::string>("port");
-   mBaudRate = e->getProperty<int>("baud");
+   std::string port_name = e->getProperty<std::string>("port");
+   int baud_rate = e->getProperty<int>("baud");
 
    // keep FlockStandalone's port and baud members in sync with Input's port
    // and baud members.
-   mFlockOfBirds.setPort( mPortName );
-   mFlockOfBirds.setBaudRate( mBaudRate );
+   mFlockOfBirds.setPort( port_name );
+   mFlockOfBirds.setBaudRate( baud_rate );
 
+   // If these are non-negative, then override the auto-configuration abilities of the flock driver
+   int num_birds =  e->getProperty<int>("number_of_birds");
+   if(num_birds > 0)
+   {  mFlockOfBirds.setNumSensors(num_birds); }
+   int trans_addr =  e->getProperty<int>("transmitter_id");
+   if (trans_addr > 0)
+   {  mFlockOfBirds.setTransmitter(trans_addr); }
+      
    // set mFlockOfBirds with the config info.
    mFlockOfBirds.setSync( e->getProperty<int>("sync_style") );
-   mFlockOfBirds.setBlocking( e->getProperty<bool>("blocking") );
-   mFlockOfBirds.setNumBirds( e->getProperty<int>("number_of_birds") );
-   mFlockOfBirds.setTransmitter( e->getProperty<int>("transmitter_id") );
-   mFlockOfBirds.setExtendedRange( e->getProperty<bool>("extended_range") );
    mFlockOfBirds.setHemisphere( (BIRD_HEMI) e->getProperty<int>("hemisphere") ); //LOWER_HEMI
    mFlockOfBirds.setFilterType( (BIRD_FILT) e->getProperty<int>("filter") ); //
-
-   // sanity check the report rate
-   char r = e->getProperty<std::string>("report").c_str()[0];
-   if ((r != 'Q') && (r != 'R') &&
-       (r != 'S') && (r != 'T'))
-   {
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
-         << "   illegal report rate from config element, defaulting to every other cycle (R)"
-         << std::endl << vprDEBUG_FLUSH;
-      mFlockOfBirds.setReportRate( 'R' );
-   }
-   else
-   {
-      mFlockOfBirds.setReportRate( r );
-   }
-
-   // output what was read.
-   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
-      << "    Flock Settings: " << std::endl
-      << "          FlockStandalone::getTransmitter(): " << mFlockOfBirds.getTransmitter() << std::endl
-      << "          FlockStandalone::getNumBirds(): " << mFlockOfBirds.getNumBirds() << std::endl
-      << "          FlockStandalone::getBaudRate(): " << mFlockOfBirds.getBaudRate() << std::endl
-      << "          FlockStandalone::getPort(): " << mFlockOfBirds.getPort() << std::endl
-      << "     instance name : " << mInstName << std::endl
-      << std::endl << vprDEBUG_FLUSH;
-
-   // init the correction table with the calibration file.
-   std::string calfile = e->getProperty<std::string>("calibration_file");
-   mFlockOfBirds.initCorrectionTable(vpr::replaceEnvVars(calfile).c_str());
+   mFlockOfBirds.setOutputFormat(::Flock::Output::PositionQuaternion);          // Default to pos quaternion
 
    return true;
 }
@@ -183,11 +156,13 @@ bool Flock::startSampling()
    if (mThread == NULL)
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
-         << "    Getting flock ready....\n" << vprDEBUG_FLUSH;
-      mFlockOfBirds.start();
+         << "    Opening flock....\n" << vprDEBUG_FLUSH;
+      mFlockOfBirds.open();
+      mFlockOfBirds.configure();
+      mFlockOfBirds.startStreaming();
 
       //sanity check.. make sure birds actually started
-      if (this->isActive() == false)
+      if (mFlockOfBirds.getStatus() == FlockStandalone::CLOSED)
       {
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
             << "gadget::Flock failed to start.." << std::endl << vprDEBUG_FLUSH;
@@ -219,42 +194,26 @@ bool Flock::startSampling()
 
 bool Flock::sample()
 {
-   std::vector< gadget::PositionData > cur_samples(mFlockOfBirds.getNumBirds());
+   std::vector< gadget::PositionData > cur_samples(mFlockOfBirds.getNumSensors());
 
    if ( !isActive() )
-   {
-      return false;
-   }
-
-   int i;
+   {  return false; }
 
    mFlockOfBirds.sample();
 
    // get an initial timestamp for this entire sample. we'll copy it into
    // each PositionData for this sample.
    if (!cur_samples.empty())
-   {
-       cur_samples[0].setTime();
-   }
+   {  cur_samples[0].setTime(); }
 
    vpr::Thread::yield();
 
    // For each bird
-   for (i=0; i < (mFlockOfBirds.getNumBirds()); ++i)
+   for (unsigned i=0; i < mFlockOfBirds.getNumSensors(); ++i)
    {
       // Transforms between the cord frames
-      gmtl::Matrix44f transmitter_T_reciever;
-
-      // XXX: Check to see if this comment is valid.
-      // We add 1 to "i" to account for the fact that FlockStandalone is 1-based
-      gmtl::identity(transmitter_T_reciever);
-      gmtl::EulerAngleZYXf euler( gmtl::Math::deg2Rad(mFlockOfBirds.zRot( i )),
-                                  gmtl::Math::deg2Rad(mFlockOfBirds.yRot( i )),
-                                  gmtl::Math::deg2Rad(mFlockOfBirds.xRot( i )) );
-      gmtl::setRot( transmitter_T_reciever, euler );
-      gmtl::setTrans( transmitter_T_reciever, gmtl::Vec3f( mFlockOfBirds.xPos( i ),
-                                                           mFlockOfBirds.yPos( i ),
-                                                           mFlockOfBirds.zPos( i )) );
+      gmtl::Matrix44f transmitter_T_reciever = mFlockOfBirds.getSensorPosition(i);
+      
       // Set timestamp & Store the corrected xform back into buffer.
       cur_samples[i].mPosData = transmitter_T_reciever;
       cur_samples[i].setTime (cur_samples[0].getTime());
@@ -285,7 +244,7 @@ bool Flock::stopSampling()
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
          << "  Stopping the flock..." << vprDEBUG_FLUSH;
 
-      mFlockOfBirds.stop();
+      mFlockOfBirds.close();
 
       // sanity check: did the flock actually stop?
       if (this->isActive() == true)
@@ -311,136 +270,5 @@ void Flock::updateData()
    }
 }
 
-void Flock::setHemisphere(const BIRD_HEMI& h)
-{
-   if (this->isActive())
-   {
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
-         << "gadget::Flock: Cannot change the hemisphere while active\n"
-         << vprDEBUG_FLUSH;
-      return;
-   }
-   mFlockOfBirds.setHemisphere( h );
-}
-
-void Flock::setFilterType(const BIRD_FILT& f)
-{
-   if (this->isActive())
-   {
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
-         << "gadget::Flock: Cannot change filters while active\n"
-         << vprDEBUG_FLUSH;
-      return;
-   }
-   mFlockOfBirds.setFilterType( f );
-}
-
-void Flock::setReportRate(const char& rRate)
-{
-  if (this->isActive())
-  {
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
-         << "gadget::Flock: Cannot change report rate while active\n"
-         << vprDEBUG_FLUSH;
-      return;
-  }
-  mFlockOfBirds.setReportRate( rRate );
-}
-
-void Flock::setTransmitter(const int& Transmit)
-{
-  if (this->isActive())
-  {
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
-         << "gadget::Flock: Cannot change transmitter while active\n"
-         << vprDEBUG_FLUSH;
-      return;
-  }
-  mFlockOfBirds.setTransmitter( Transmit );
-}
-
-
-void Flock::setNumBirds(const int& n)
-{
-  if (this->isActive())
-  {
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
-         << "gadget::Flock: Cannot change num birds while active\n"
-         << vprDEBUG_FLUSH;
-      return;
-  }
-  mFlockOfBirds.setNumBirds( n );
-}
-
-
-void Flock::setSync(const int& sync)
-{
-  if (this->isActive())
-  {
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
-         << "gadget::Flock: Cannot change report rate while active\n"
-         << vprDEBUG_FLUSH;
-      return;
-  }
-  mFlockOfBirds.setSync( sync );
-}
-
-
-void Flock::setBlocking(const bool& blVal)
-{
-  if (this->isActive())
-  {
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
-         << "gadget::Flock: Cannot change report rate while active\n"
-         << vprDEBUG_FLUSH;
-      return;
-  }
-  mFlockOfBirds.setBlocking( blVal );
-}
-
-
-/**
- * Sets the port to use.
- * This will be a string in the form of the native OS descriptor.<BR>
- * ex: unix - "/dev/ttyd3", win32 - "COM3"
- *
- * @note this->isActive() must be false to use this function
- */
-void Flock::setPort( const char* const serialPort )
-{
-    if (this->isActive())
-    {
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
-         << "gadget::Flock: Cannot change port while active\n"
-         << vprDEBUG_FLUSH;
-      return;
-    }
-    mFlockOfBirds.setPort( serialPort );
-
-    // keep Input's port and baud members in sync
-    // with FlockStandalone's port and baud members.
-    mPortName = serialPort;
-}
-
-/**
- * Gets the port used.
- * This will be a string in the form of the native OS descriptor.<BR>
- * ex: unix - "/dev/ttyd3", win32 - "COM3"
- */
-void Flock::setBaudRate( const int& baud )
-{
-   // keep Input's port and baud members in sync
-   // with FlockStandalone's port and baud members.
-   mBaudRate = baud;
-
-   if (this->isActive())
-   {
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
-         << "gadget::Flock: Cannot change baud rate while active\n"
-         << vprDEBUG_FLUSH;
-      return;
-   }
-   mFlockOfBirds.setBaudRate( mBaudRate );
-}
 
 } // End of gadget namespace

@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Nov-11-2003 allenb      Complete rewrite of flock standalone driver.
+                        The new driver is much more stable and has many new
+                        abilities. (including auto detection of the setup)
 Nov-06-2003 allenb      Fixed bug with SampleBuffer that could allow memory
                         exhaustion errors if devices are not swapped
                         for several minutes.
