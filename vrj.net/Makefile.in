@@ -63,5 +63,9 @@ install:
 	$(PERL) $(scriptdir)/install-dir.pl -o $(projdatadir)/examples	\
           -i $(top_srcdir)/examples -v "$(topdir)/VARS.pl"
 
-clean clobber:
+clean:
 	$(MAKE) RECTARGET="$@" recursive
+
+clobber:
+	$(MAKE) RECTARGET="$@" recursive
+	rm -rf lib
