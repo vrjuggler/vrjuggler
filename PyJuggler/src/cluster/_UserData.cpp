@@ -173,9 +173,6 @@ object PickleObject::pickle_mod;
 object PickleObject::pickle_dumps;
 object PickleObject::pickle_loads;
 
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(cluster_UserData_PickleObject_init_overloads_1_2,
-                                       init, 1, 2)
-
 static
 void setContainedUserDataObject(cluster::UserData<pyj::PickleObject>* self_,
                                 object obj)
