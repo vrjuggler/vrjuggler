@@ -16,7 +16,9 @@
 #endif
 
 #include <stdio.h>
-#include <termio.h>
+
+#include <termios.h>
+
 #include <ctype.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -84,8 +86,6 @@
 			| ICRNL | IGNCR | IUCLC | ISTRIP | IXON  \
 			| IXOFF)
 #endif
-
-
 
 
 /* Use timeval (usec) ticks for timing out on receive attempts */
@@ -185,7 +185,8 @@ int host_timed_out(int port)
 /*----------------------*/
 
 #define FRAME_BUF_SIZE  240
-struct termio  old_setup[NUM_PORTS+1];
+
+struct termios old_setup[NUM_PORTS+1];
 int     port_ref[NUM_PORTS+1];
 char    frame_buffer[NUM_PORTS+1][FRAME_BUF_SIZE];
 int     frame_head[NUM_PORTS+1] = { 0, 0};      /* chars come in here */
@@ -245,7 +246,7 @@ int host_open_serial(int port, long int baud)
 {
         int     result = 0;     /* Assume the port will not be accessible */
         tcflag_t        baud_code;
-        struct termio  new_setup;
+        struct termios new_setup;
 
         /* Get reference number for the desired port */
         if (port == 1)
@@ -267,7 +268,7 @@ int host_open_serial(int port, long int baud)
 
         /* If port and its parameters are accessible, reconfigure for Probe */
         if ((port_ref[port] >= 0)
-                && (ioctl(port_ref[port], TCGETA, &old_setup[port]) >= 0))
+                && (tcgetattr(port_ref[port], &old_setup[port]) >= 0))
         {
                 /* Save original set-up */
                 new_setup = old_setup[port];
@@ -299,7 +300,7 @@ int host_open_serial(int port, long int baud)
                 new_setup.c_cflag = baud_code | CS8 | CREAD;
 
                 /* Set these new parameters.  Record success if it works. */
-                if (ioctl(port_ref[port], TCSETA, &new_setup) >= 0)
+                if (tcsetattr(port_ref[port], TCSANOW, &new_setup) >= 0)
                 {
                         result = 1;
                 }
@@ -315,7 +316,7 @@ int host_open_serial(int port, long int baud)
  */
 void host_close_serial(int port)
 {
-        ioctl(port_ref[port], TCSETA, &old_setup[port]);
+        tcsetattr(port_ref[port], TCSANOW, &old_setup[port]);
 }
 
 
@@ -323,7 +324,7 @@ void host_close_serial(int port)
  */
 void host_flush_serial(int port)
 {
-        ioctl(port_ref[port], TCFLSH, 2);      /* 2 means flush both buffers */
+        tcflush(port_ref[port], TCIOFLUSH);
 }
 
 
