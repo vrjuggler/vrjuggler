@@ -647,6 +647,7 @@ if test "$JAVAC" = "no" ; then
     BUILD_GUI='N'
 dnl # Otherwise, set $JAR to the path to jar(1) and continue.
 else
+    JAVAC=`unix2dos "$JAVAC"`
     JAR="${JAVAC%javac}jar"
     BUILD_GUI='Y'
 fi
