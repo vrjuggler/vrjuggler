@@ -108,8 +108,8 @@ class AronsEditor implements TreeCellEditor
       // Get a reference to the selected ConfigElement.
       mElement = (ConfigElement)node.getUserObject();
       mTextField = new JTextField(mElement.getName());
+      mTree = tree;
      
-      final JTree temp_tree = tree;
       
       // Specify what should happen when done editing.
       mTextField.addActionListener(new ActionListener()
@@ -125,7 +125,7 @@ class AronsEditor implements TreeCellEditor
             // focusLostEvent. But I have choosen to leave this line here in
             // case it might become useful later.
             stopCellEditing();
-            temp_tree.clearSelection();
+            mTree.clearSelection();
          }
       });
       
@@ -143,9 +143,24 @@ class AronsEditor implements TreeCellEditor
    {
       return mElement;
    }
-   public boolean isCellEditable(EventObject anEvent)
-   { return true; }
-   public boolean shouldSelectCell(EventObject anEvent)
+   public boolean isCellEditable(EventObject evt)
+   {
+      TreePath current_selection = ((JTree)evt.getSource()).getSelectionPath();
+      if (current_selection != null) 
+      {
+         DefaultMutableTreeNode current_node = (DefaultMutableTreeNode)
+            (current_selection.getLastPathComponent());
+         if (current_node != null)
+         {
+            if(current_node.getUserObject() instanceof ConfigElement)
+            {
+               return true;
+            }
+         }
+      } 
+      return false;
+   }
+   public boolean shouldSelectCell(EventObject evt)
    { return true; }
    public boolean stopCellEditing()
    {
@@ -160,6 +175,7 @@ class AronsEditor implements TreeCellEditor
    public void removeCellEditorListener(CellEditorListener l)
    {;}
 
+   private JTree           mTree       = null;
    private JTextField      mTextField  = null;
    private ConfigElement   mElement    = null;
 }
@@ -181,7 +197,7 @@ class ElementTree extends JTree implements DragGestureListener,
    public ElementTree()
    {
       super();
-      
+
       // Allow the user to change the name of a leaf node(an element)
       setEditable(true);
      
