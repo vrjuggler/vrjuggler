@@ -52,7 +52,8 @@ public:
 
    std::string getHostname() { return mHostname; }
    int getPort() { return mPort; }
-    
+   const vpr::GUID& getManagerId(){ return mManagerId; }
+ 
    // Other names for this connection
    std::string getAliasName(int i) { return mAliasList[i]; }
    unsigned int getNumAliases() { return mAliasList.size(); }
