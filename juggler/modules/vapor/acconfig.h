@@ -78,7 +78,6 @@
 
 /* Define all of the following if building on HP-UX. */
 #undef VPR_OS_HPUX
-#undef _HPUX_SOURCE
 #undef _INCLUDE_TERMIO
 #undef _CMA_NOWRAPPERS_
 #undef notdef
@@ -123,6 +122,9 @@
 
 /* Define to `int' if the socklen_t type is not available.  */
 #undef socklen_t
+
+/* Define to `int' if the in_addr_t type is not available.  */
+#undef in_addr_t
 
 /* Define to the appropriate type if the ssize_t type is not available.  */
 #undef ssize_t
