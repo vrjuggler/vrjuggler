@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet href="../../../../../../../../../../../home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
+<?morphon-document-settings
+  morphon.document.settings.whitespaces.amount="3"
+  morphon.document.settings.print.fixed.attributes="true"
+  morphon.document.settings.stylesheetpi.autoupdate="true"
+  morphon.document.settings.print.defaultvalues.attributes="false"
+  morphon.document.settings.relative.systemids="0"
+  morphon.document.settings.endofline.type="2"
+  morphon.document.settings.whitespaces.type="indent"
+?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <book>
    <bookinfo>
@@ -53,7 +62,7 @@
             <title>Windows Folder View of ZIP File</title>
             <mediaobject>
                <imageobject>
-                  <imagedata align="center" fileref="figures/Window.Temp.png" format="PNG"/>
+                  <imagedata fileref="figures/Window.Temp.png" format="PNG" align="center"/>
                </imageobject>
             </mediaobject>
          </figure>
@@ -62,7 +71,7 @@
             <title>Open WinZip Window</title>
             <mediaobject>
                <imageobject>
-                  <imagedata align="center" fileref="figures/Window.WinZip.png" format="PNG" scalefit="1"/>
+                  <imagedata fileref="figures/Window.WinZip.png" format="PNG" align="center" scalefit="1"/>
                </imageobject>
             </mediaobject>
          </figure>
@@ -71,7 +80,7 @@
             <title>WinZip Extract Dialog</title>
             <mediaobject>
                <imageobject>
-                  <imagedata align="center" fileref="figures/Window.WinZip.Extract.png" format="PNG"/>
+                  <imagedata fileref="figures/Window.WinZip.Extract.png" format="PNG" align="center"/>
                </imageobject>
             </mediaobject>
          </figure>
@@ -305,7 +314,7 @@ value</screen>
                <title>Selecting the Workspace File</title>
                <mediaobject>
                   <imageobject>
-                     <imagedata align="center" fileref="figures/torus.dir.png" format="PNG"/>
+                     <imagedata fileref="figures/torus.dir.png" format="PNG" align="center"/>
                   </imageobject>
                </mediaobject>
             </figure>
@@ -314,7 +323,7 @@ value</screen>
                <title>torus Project</title>
                <mediaobject>
                   <imageobject>
-                     <imagedata align="center" fileref="figures/torus.visual.c++.png" format="PNG"/>
+                     <imagedata fileref="figures/torus.visual.c++.png" format="PNG" align="center"/>
                   </imageobject>
                </mediaobject>
             </figure>
@@ -323,7 +332,7 @@ value</screen>
                <title>Project Menu</title>
                <mediaobject>
                   <imageobject>
-                     <imagedata align="center" fileref="figures/torus.visual.c++.settings.png" format="PNG"/>
+                     <imagedata fileref="figures/torus.visual.c++.settings.png" format="PNG" align="center"/>
                   </imageobject>
                </mediaobject>
             </figure>
@@ -332,7 +341,7 @@ value</screen>
                <title>Project Settings Dialog</title>
                <mediaobject>
                   <imageobject>
-                     <imagedata align="center" fileref="figures/torus.visual.c++.args.png" format="PNG"/>
+                     <imagedata fileref="figures/torus.visual.c++.args.png" format="PNG" align="center"/>
                   </imageobject>
                </mediaobject>
             </figure>
@@ -342,7 +351,7 @@ value</screen>
                <title>Build <filename>torus.exe</filename></title>
                <mediaobject>
                   <imageobject>
-                     <imagedata align="center" fileref="figures/torus.visual.c++.build.png" format="PNG"/>
+                     <imagedata fileref="figures/torus.visual.c++.build.png" format="PNG" align="center"/>
                   </imageobject>
                </mediaobject>
             </figure>
@@ -351,7 +360,7 @@ value</screen>
                <title>Execute <filename>torus.exe</filename></title>
                <mediaobject>
                   <imageobject>
-                     <imagedata align="center" fileref="figures/torus.visual.c++.run.png" format="PNG"/>
+                     <imagedata fileref="figures/torus.visual.c++.run.png" format="PNG" align="center"/>
                   </imageobject>
                </mediaobject>
             </figure>
@@ -412,7 +421,7 @@ value</screen>
             <title>MPApp running on a Linux desktop with multiple input windows</title>
             <mediaobject>
                <imageobject>
-                  <imagedata align="center" fileref="figures/MPApp.thumbnail.multi.png" format="PNG"/>
+                  <imagedata fileref="figures/MPApp.thumbnail.multi.png" format="PNG" align="center"/>
                </imageobject>
             </mediaobject>
          </figure>
@@ -423,7 +432,7 @@ value</screen>
             <title>MPApp running on a Linux desktop with one window</title>
             <mediaobject>
                <imageobject>
-                  <imagedata align="center" fileref="figures/MPApp.thumbnail.single.png" format="PNG"/>
+                  <imagedata fileref="figures/MPApp.thumbnail.single.png" format="PNG" align="center"/>
                </imageobject>
             </mediaobject>
          </figure>
