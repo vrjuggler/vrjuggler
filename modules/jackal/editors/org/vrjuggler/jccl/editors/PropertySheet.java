@@ -68,6 +68,17 @@ public class PropertySheet extends PropertyComponent
    {
       mConfigElement = elm;
       mColor = new Color(160, 160, 180);
+      
+      Object color = UIManager.get( "desktop" );
+      if(null != color && color instanceof Color)
+      {
+         mColor = (Color)color;
+      }
+      else
+      {
+         System.out.println("Could not get the desktop color from the  UIManager.");
+      }
+      
       init();
       //addHeadings(); 
       int row = 1;
