@@ -148,7 +148,7 @@ public:
     */
    void setOpenBlocking (void)
    {
-      std::cout << "'setOpenBlocking' not implemented for Win32" << std::endl;
+      mBlocking &= ~FILE_FLAG_OVERLAPPED; 
    }
 
    /**
@@ -161,7 +161,8 @@ public:
     */
    void setOpenNonBlocking (void)
    {
-      std::cout << "'setOpenBlocking' not implemented for Win32" << std::endl;
+       std::cout << "non-Blocking not currently supported in win32." << std::endl; 
+//      mBlocking |= FILE_FLAG_OVERLAPPED;
    }
 
    /**
@@ -213,7 +214,7 @@ public:
     */
    vpr::ReturnStatus enableBlocking (void)
    {
-      vpr::ReturnStatus status(vpr::ReturnStatus::Fail);
+     vpr::ReturnStatus status(vpr::ReturnStatus::Fail);
       std::cout << "Enabling blocking mode after port open is unsuported in Win32." << std::endl;
       return status;
    }
@@ -1080,7 +1081,7 @@ protected:
    DWORD mOpenFlag;     /**< flag to specify how to open comm port */
    std::string mName; /**< name of communication device */
    bool mOpen;
-   bool mBlocking;    /**< flag for blocking I/O */
+   DWORD mBlocking;    /**< flag for blocking I/O */
    bool mParityMark;    /**< flag for parity marking */
 };
 
