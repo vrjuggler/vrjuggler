@@ -31,13 +31,15 @@ public:
 
    virtual void setUp()
    {
-      mItemProtectionMutex = new vpr::Mutex();
       mCounter = 0;
    }
 
    virtual void tearDown()
    {
    }
+
+   void testNoSpawnCtor();
+   void testAutoSpawnCtor();
 
    // =========================================================================
    // thread CreateJoin test
@@ -94,6 +96,8 @@ public:
    {
       CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("ThreadTest");
 
+      test_suite->addTest(new CppUnit::TestCaller<ThreadTest>("testNoSpawnCtor", &ThreadTest::testNoSpawnCtor));
+      test_suite->addTest(new CppUnit::TestCaller<ThreadTest>("testAutoSpawnCtor", &ThreadTest::testAutoSpawnCtor));
       //test_suite->addTest( new CppUnit::TestCaller<ThreadTest>("testCreateJoin", &ThreadTest::testCreateJoin));
       //test_suite->addTest( new CppUnit::TestCaller<ThreadTest>("testSuspendResume", &ThreadTest::testSuspendResume));
       //test_suite->addTest( new CppUnit::TestCaller<ThreadTest>("testPriority", &ThreadTest::testPriority));
@@ -111,7 +115,7 @@ public:
    }
 
 protected:
-   vpr::Mutex*    mItemProtectionMutex;         // Protect an exclusive item
+   vpr::Mutex     mItemProtectionMutex;        // Protect an exclusive item
    long           mCounter;                    // A counter that we will use for now
    vpr::Mutex     mCounterMutex;
    long           mCounter1;                   // A nother counter
