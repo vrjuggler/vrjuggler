@@ -1,44 +1,19 @@
 #!/bin/sh
-
-# ************** <auto-copyright.pl BEGIN do not edit this line> **************
-#
-# Doozer++ is (C) Copyright 2000, 2001 by Iowa State University
-#
-# Original Author:
-#   Patrick Hartling
-#
-# This library is free software; you can redistribute it and/or
-# modify it under the terms of the GNU Library General Public
-# License as published by the Free Software Foundation; either
-# version 2 of the License, or (at your option) any later version.
-#
-# This library is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# Library General Public License for more details.
-#
-# You should have received a copy of the GNU Library General Public
-# License along with this library; if not, write to the
-# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# Boston, MA 02111-1307, USA.
-#
-# *************** <auto-copyright.pl END do not edit this line> ***************
-
 # Run this to generate all the initial makefiles, etc.
 
-# dppgen.sh,v 1.5 2001/02/22 23:33:25 patrick Exp
+# dppgen.sh,v 1.4 2000/12/30 14:34:19 patrick Exp
 
 DIE=0
 
-export DPP_PATH=./Doozer++
+dpp_path=${DPP_PATH-../../Doozer++}
 
-if [ -n "$DPP_PATH" ]; then
-	ACLOCAL_FLAGS="-I $DPP_PATH/config $ACLOCAL_FLAGS"
+if [ -n "$dpp_path" ]; then
+	ACLOCAL_FLAGS="-I $dpp_path/config -I ../../macros $ACLOCAL_FLAGS"
 fi
 
 (autoconf --version) < /dev/null > /dev/null 2>&1 || {
   echo
-  echo "**Error**: You must have \`autoconf' installed to compile."
+  echo "**Error**: You must have \`autoconf' installed to compile VR Juggler."
   echo "Download the appropriate package for your distribution,"
   echo "or get the source tarball at ftp://ftp.gnu.org/pub/gnu/"
   DIE=1
@@ -57,29 +32,13 @@ if test "$DIE" -eq 1; then
   exit 1
 fi
 
-for coin in `find ${srcdir-.} -name configure.in -print`
-do 
-  dr=`dirname $coin`
-  if test -f $dr/NO-AUTO-GEN; then
-    echo skipping $dr -- flagged as no auto-gen
-  else
-    echo processing $dr
-    macrodirs=`sed -n -e 's,AM_ACLOCAL_INCLUDE(\(.*\)),\1,gp' < $coin`
-    ( cd $dr
-      macrosdir=`find . -name macros -print`
-#      for i in $macrodirs; do
-#      done
-
-      aclocalinclude="$ACLOCAL_FLAGS"
-      echo "Running aclocal $aclocalinclude ..."
-      aclocal $aclocalinclude
-      if grep "^AC_CONFIG_HEADER" configure.in >/dev/null
-      then
-	echo "Running autoheader..."
-	autoheader
-      fi
-      echo "Running autoconf ..."
-      autoconf
-    )
-  fi
-done
+aclocalinclude="$ACLOCAL_FLAGS"
+echo "Running aclocal $aclocalinclude ..."
+aclocal $aclocalinclude
+if grep "^AC_CONFIG_HEADER" configure.in >/dev/null
+then
+  echo "Running autoheader..."
+  autoheader
+fi
+echo "Running autoconf ..."
+autoconf
