@@ -42,7 +42,7 @@
 /*
  * --------------------------------------------------------------------------
  * NOTES:
- *    - This file (SystemPosix.h) MUST be included by SystemBase.h, not the
+ *    - This file (SystemPosix.h) MUST be included by vpr/System.h, not the
  *      other way around.
  * --------------------------------------------------------------------------
  */
@@ -55,16 +55,10 @@
 #include <string>
 #include <unistd.h>
 #include <sys/time.h>
-
-// I don't know why this is necessary, but I think something is being defined
-// incorrectly somewhere.
-#ifdef VPR_OS_IRIX
-#  include <sys/endian.h>
-#endif
-
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <sys/param.h>
+#include <arpa/inet.h>
 
 #include <vpr/Util/ReturnStatus.h>
 #include <vpr/vprTypes.h>
