@@ -7,7 +7,7 @@ install-docs: install-html install-chunk-html install-pdf
 
 NAME=		device.driver.guide
 
-#XSLT_TOOL=	Saxon
+XSLT_TOOL=	Saxon
 
 XML_FILES=	$(NAME).xml
 HTML_FILES=	$(NAME).html
