@@ -48,7 +48,7 @@ public class ConfigElementPointerEditor
     */
    public String getAsText()
    {
-      if (mValue.getTarget().equals(""))
+      if (null == mValue.getTarget() || mValue.getTarget().equals(""))
       {
          return "None";
       }
