@@ -123,6 +123,7 @@ protected:
                                                 Doesn't store time correctly */
    std::string    mPortName;
    int            mBaudRate;
+   bool           mExitFlag;
 };
 
 } // End of gadget namespace

@@ -61,6 +61,7 @@
 #include <gmtl/Generate.h>
 
 #include <vpr/System.h>
+#include <boost/concept_check.hpp>
 #include <jccl/Config/ConfigElement.h>
 #include <gadget/Type/DeviceConstructor.h>
 #include <drivers/Logitech/ThreeDMouse/logiclass.h>   /* classprototypes and data types */
@@ -85,8 +86,11 @@ bool ThreeDMouse::startSampling()
    openMouse(mPortName);
    ThreeDMouse* devicePtr = this;
    void sampleMouse(void*);
-
-   mThread = new vpr::Thread(sampleMouse, (void *) devicePtr);
+  
+   mExitFlag = false;
+   vpr::ThreadMemberFunctor<ThreeDMouse>* run_thread =
+      new vpr::ThreadMemberFunctor<ThreeDMouse>(this, &ThreeDMouse::controlLoop, NULL);
+   mThread = new vpr::Thread(run_thread);
 
    if ( ! mThread->valid() )
    {
@@ -103,33 +107,40 @@ bool ThreeDMouse::startSampling()
 
 }
 
-void sampleMouse(void* pointer) {
- struct timeval tv;
-  double start_time, stop_time;
+void ThreeDMouse::controlLoop(void* nullParam)
+{
+   boost::ignore_unused_variable_warning(nullParam); 
+   struct timeval tv;
+   double start_time, stop_time;
 
-    ThreeDMouse* devPointer = (ThreeDMouse*)pointer;
-    for(;;) {
-     gettimeofday(&tv,0);
-     start_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
+   while(!mExitFlag) 
+   {
+      gettimeofday(&tv,0);
+      start_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
 
-    for(int i = 0; i < 60; i++)
-   devPointer->sample();
+      for(int i = 0; i < 60; i++)
+          sample();
 
-     gettimeofday(&tv,0);
-     stop_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
-     std::cout << 1/((stop_time-start_time) / 60) << "  " << std::endl;
-    }
+      gettimeofday(&tv,0);
+      stop_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
+      std::cout << 1/((stop_time-start_time) / 60) << "  " << std::endl;
+   }
 }
 
 bool ThreeDMouse::stopSampling()
 {
-  if (mThread != NULL) {
-    mThread->kill();
+    // Tell thread to stop polling for data and then join and wait for it to
+    // complete
+    if( mThread != NULL)
+    {
+       mExitFlag = true; 
+       mThread->join();
 
-    mThreadID = NULL;
-//    sginap(1);
-    std::cout << "stopping the ThreeDMouse.." << std::endl;
-   }
+       mThreadID = NULL;
+       closeMouse();
+       std::cout << "stopping the ThreeDMouse.." << std::endl;
+    }
+
    return 1;
 }
 

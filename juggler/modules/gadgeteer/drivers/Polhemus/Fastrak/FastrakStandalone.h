@@ -118,6 +118,7 @@ private:
    void checkchild();
    void getTrackerInfo(struct perstation* psp, unsigned char c);
    void getTrackerBuf();
+   bool mExitFlag;
 
    vpr::SerialPort* mSerialPort;
    vpr::Thread* mReadThread;

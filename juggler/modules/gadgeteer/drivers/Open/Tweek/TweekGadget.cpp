@@ -253,6 +253,9 @@ bool TweekGadget::startSampling()
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
          << "TweekGadget::startSampling(): Starting sample loop thread\n"
          << vprDEBUG_FLUSH;
+     
+      // Reset mThreadRunning in case it has shutdown and is being restarted
+       mThreadRunning = true;
 
       mFunctor =
          new vpr::ThreadMemberFunctor<TweekGadget>(this,
@@ -271,14 +274,15 @@ bool TweekGadget::startSampling()
 
 bool TweekGadget::stopSampling()
 {
-   // This will cause the thread sample loop to exit.
-   mThreadRunning = false;
 
-   // Wait for the thread to shut down before deleting memory.
-   mThread->join();
 
    if ( NULL != mThread )
    {
+      // This will cause the thread sample loop to exit.
+      mThreadRunning = false;
+
+      // Wait for the thread to shut down before deleting memory.
+      mThread->join();
       delete mThread;
    }
 

@@ -171,6 +171,8 @@ bool Vrpn::startSampling()
 
    if ( NULL == mReadThread )
    {
+      // Set flags and spawn sample thread
+      mExitFlag = false;
       vpr::ThreadMemberFunctor<Vrpn>* read_func =
          new vpr::ThreadMemberFunctor<Vrpn>(this, &Vrpn::readLoop, NULL);
       mReadThread = new vpr::Thread(read_func);
@@ -205,7 +207,7 @@ void Vrpn::readLoop(void *nullParam)
    button->register_change_handler((void *) this, staticHandleButton);
 
    // loop through  and keep sampling
-   while ( 1 )
+   while ( !mExitFlag )
    {
       tracker->mainloop();
       button->mainloop();
@@ -285,7 +287,19 @@ bool Vrpn::sample()
 
 bool Vrpn::stopSampling()
 {
-   return 1;
+   if( mReadThread != NULL )
+   {
+      
+      mExitFlag = true;
+
+      //Wait for thread to exit..
+      mReadThread->join();
+      delete mReadThread;
+      mReadThread = NULL;
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+         << "[vrpn] stopping driver..." << std::endl << vprDEBUG_FLUSH;
+   }
+   return true;
 }
 
 void Vrpn::updateData()

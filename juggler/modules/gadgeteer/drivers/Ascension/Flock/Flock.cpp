@@ -136,8 +136,8 @@ void Flock::controlLoop(void* nullParam)
    //    << "gadget::Flock: Spawned SampleBirds starting"
    //    << std::endl << vprDEBUG_FLUSH;
 
-   // XXX: I can never exit!
-   for (;;)
+   // Loop will flag is set
+  while  ( !mExitFlag )
    {
       this->sample();
    }
@@ -173,6 +173,7 @@ bool Flock::startSampling()
          << "gadget::Flock ready to go..\n" << vprDEBUG_FLUSH;
 
       // Create a new thread to handle the control
+      mExitFlag = false;
       vpr::ThreadMemberFunctor<Flock>* memberFunctor =
           new vpr::ThreadMemberFunctor<Flock>(this, &Flock::controlLoop, NULL);
       mThread = new vpr::Thread(memberFunctor);
@@ -237,7 +238,8 @@ bool Flock::stopSampling()
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
          << "Stopping the flock thread..." << vprDEBUG_FLUSH;
 
-      mThread->kill();
+      mExitFlag = true;
+      mThread->join();
       delete mThread;
       mThread = NULL;
 

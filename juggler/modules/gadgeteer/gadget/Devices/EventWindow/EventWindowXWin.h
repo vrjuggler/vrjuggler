@@ -82,7 +82,7 @@ public:
 
    EventWindowXWin()
       : mWeOwnTheWindow(true), mVisual(NULL), mDisplay(NULL),
-        mEmptyCursorSet(false), mExitFlag(false), mControlLoopDone(false),
+        mEmptyCursorSet(false), mExitFlag(false),
         mLockState(Unlocked), mPrevX(0), mPrevY(0)
    {
       //mThread = NULL; -- Should be done in base constructor
@@ -263,7 +263,6 @@ protected:
    int        mRealkeys[gadget::LAST_KEY]; /**< (0,1): The real keyboard state, all events processed (ie. what is the key now). */
    vpr::Mutex mKeysLock;         /**< Must hold this lock when accessing m_keys. */
    bool       mExitFlag;         /**< Should we exit? */
-   bool       mControlLoopDone;
 
    lockState  mLockState;        /**< The current state of locking. */
    int        mLockStoredKey;    /**< The key that was pressed down. */

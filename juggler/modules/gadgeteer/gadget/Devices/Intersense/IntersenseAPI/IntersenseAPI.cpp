@@ -369,11 +369,9 @@ bool IntersenseAPI::stopSampling()
       // Set the done flag to attempt to cause the control loop to exit naturally.
       mDone = true;
 
-      // XXX: This is not a valid way to kill a thread, we must allow it to die
-      // naturally.
-      // mThread->kill();
-      //delete mThread;
-      //mThread = NULL;
+      mThread->join();
+      delete mThread;
+      mThread = NULL;
 
       // Close the connection to the tracker
       mTracker.close();

@@ -54,10 +54,6 @@ void initDevice(gadget::InputManager* inputMgr)
 namespace gadget
 {
 
-// ============================================================================
-// Helper functions speccfic to this file.
-// ============================================================================
-
 /**
  * Continuously samples the device.
  *
@@ -67,18 +63,18 @@ namespace gadget
  *
  * @param arg A pointer to a MotionStar object cast to a void*.
  */
-static void sampleBirds(void* arg)
+void MotionStar::controlLoop(void* nullParam)
 {
-   MotionStar* devPointer = (MotionStar*) arg;
+   boost::ignore_unused_variable_warning(nullParam);
 
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
       << "gadget::MotionStar: Spawned SampleBirds starting\n"
       << vprDEBUG_FLUSH;
 
-   // Keep sampling until the device is shut down.
-   while ( devPointer->isActive() )
+   // Keep sampling until the flag is set
+   while ( !mExitFlag )
    {
-      devPointer->sample();
+      sample();
    }
 }
 
@@ -252,7 +248,13 @@ bool MotionStar::startSampling()
             vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
                << "gadget::MotionStar ready to go.\n" << vprDEBUG_FLUSH;
 
-            mMyThread = new vpr::Thread(sampleBirds, (void*) this);
+            // Set exit flag to not exit and start sample thread
+            mExitFlag = false;
+
+            vpr::ThreadMemberFunctor<MotionStar>* run_thread =
+               new vpr::ThreadMemberFunctor<MotionStar>(this, &MotionStar::controlLoop, NULL);
+
+            mMyThread = new vpr::Thread(run_thread);
 
             if ( ! mMyThread->valid() )
             {
@@ -317,7 +319,8 @@ bool MotionStar::stopSampling()
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
          << "Stopping the MotionStar thread ...\n" << vprDEBUG_FLUSH;
-      mMyThread->kill();
+      mExitFlag = true;
+      mMyThread->join();
       delete mMyThread;
       mMyThread = NULL;
 
