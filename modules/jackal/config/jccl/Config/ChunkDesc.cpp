@@ -240,7 +240,7 @@ std::vector<PropertyDesc> ChunkDesc::getAllPropertyDesc() const
 
 bool ChunkDesc::remove (const std::string& _token)
 {
-   vprASSERT("ChunkDesc::remove: Not implemented yet");
+   vprASSERT(false && "ChunkDesc::remove: Not implemented yet");
    return false;
 }
 
