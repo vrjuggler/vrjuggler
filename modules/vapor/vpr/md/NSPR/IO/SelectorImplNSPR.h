@@ -52,7 +52,7 @@
 #include <vpr/IO/SelectorBase.h>
 #include <vpr/IO/IOSys.h>
 #include <vpr/Util/Debug.h>
-#include <vpr/Util/Status.h>
+#include <vpr/Util/ReturnStatus.h>
 
 
 namespace vpr {
@@ -96,7 +96,7 @@ public:
    //: Select
    //! ARGS: numWithEvents - Upon completion, this holds the number of items that have events
    //! ARGS: timeout - The number of msecs to select for (0 - don't wait)
-   vpr::Status select(vpr::Uint16& numWithEvents, const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   vpr::ReturnStatus select(vpr::Uint16& numWithEvents, const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    //: Get the number of handles
    vpr::Uint16 getNumHandles()

@@ -158,7 +158,7 @@ public:  // ----- Various other thread functions ------
     //+       (i.e., calls the exit() method).  This routine may return
     //+       immediately if this thread has already exited.
     //
-    //! ARGS: status - Status value of the terminating thread when that
+    //! ARGS: status - Current state of the terminating thread when that
     //+                thread calls the exit routine (optional).
     //
     //! RETURNS:  0 - Successful completion

@@ -85,17 +85,17 @@ SocketStreamImplNSPR::SocketStreamImplNSPR (const vpr::InetAddr& local_addr,
 // ----------------------------------------------------------------------------
 // Listen on the socket for incoming connection requests.
 // ----------------------------------------------------------------------------
-vpr::Status
+vpr::ReturnStatus
 SocketStreamImplNSPR::listen (const int backlog)
 {
-    vpr::Status retval;
+    vpr::ReturnStatus retval;
     PRStatus status;
 
     if(!m_bound)        // To listen, we must be bound
     {
         vprDEBUG(0,0) << "SocketStreamImplNSPR::listen: Trying to listen on an unbound socket.\n"
                       << vprDEBUG_FLUSH;
-        retval.setCode(vpr::Status::Failure);
+        retval.setCode(vpr::ReturnStatus::Failure);
     }
     else {
         // Put the socket into listning mode.  If that fails, print an error
@@ -104,7 +104,7 @@ SocketStreamImplNSPR::listen (const int backlog)
 
         if (PR_FAILURE == status) {
            NSPR_PrintError("SocketStreamImplNSPR::listen: Cannon listen on socket: ");
-           retval.setCode(vpr::Status::Failure);
+           retval.setCode(vpr::ReturnStatus::Failure);
         }
     }
 
@@ -114,17 +114,17 @@ SocketStreamImplNSPR::listen (const int backlog)
 // ----------------------------------------------------------------------------
 // Accept an incoming connection request.
 // ----------------------------------------------------------------------------
-vpr::Status
+vpr::ReturnStatus
 SocketStreamImplNSPR::accept (SocketStreamImplNSPR& sock, vpr::Interval timeout)
 {
-    vpr::Status retval;
+    vpr::ReturnStatus retval;
     vpr::InetAddr addr;
 
     if(!m_bound)        // To listen, we must be bound
     {
         vprDEBUG(0,0) << "SocketStreamImplNSPR::accept: Trying to accept on an unbound socket.\n"
                       << vprDEBUG_FLUSH;
-        retval.setCode(vpr::Status::Failure);
+        retval.setCode(vpr::ReturnStatus::Failure);
     }
     else {
        PRFileDesc* accept_sock = NULL;
@@ -141,14 +141,14 @@ SocketStreamImplNSPR::accept (SocketStreamImplNSPR& sock, vpr::Interval timeout)
           PRErrorCode err_code = PR_GetError();
 
           if ( err_code == PR_WOULD_BLOCK_ERROR ) {
-             retval.setCode(vpr::Status::WouldBlock);
+             retval.setCode(vpr::ReturnStatus::WouldBlock);
           }
           else if ( err_code == PR_IO_TIMEOUT_ERROR ) {
-             retval.setCode(vpr::Status::Timeout);
+             retval.setCode(vpr::ReturnStatus::Timeout);
           }
           else {
              NSPR_PrintError("SocketStreamImplNSPR::accept: Cannot accept on socket: ");
-             retval.setCode(vpr::Status::Failure);
+             retval.setCode(vpr::ReturnStatus::Failure);
           }
        }
        // Otherwise, put the new socket in the passed socket object.

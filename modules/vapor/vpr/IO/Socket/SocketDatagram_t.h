@@ -117,7 +117,7 @@ public:
     /**
      * Receives a message from the designated source.
      */
-    inline Status
+    inline ReturnStatus
     recvfrom (void* msg, const vpr::Uint32 len, const int flags,
               vpr::InetAddr& from, vpr::Uint32& bytes_read,
               const vpr::Interval timeout = vpr::Interval::NoTimeout)
@@ -129,7 +129,7 @@ public:
     /**
      * Receives a message from the designated source.
      */
-    Status
+    ReturnStatus
     recvfrom (std::string& msg, const vpr::Uint32 len, const int flags,
               vpr::InetAddr& from, vpr::Uint32& bytes_read,
               const vpr::Interval timeout = vpr::Interval::NoTimeout)
@@ -144,12 +144,12 @@ public:
     /**
      * Receives a message from the designated source.
      */
-    Status
+    ReturnStatus
     recvfrom (std::vector<vpr::Uint8>& msg, const vpr::Uint32 len,
               const int flags, vpr::InetAddr& from, vpr::Uint32& bytes_read,
               const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-        Status retval;
+        ReturnStatus retval;
 
         msg.resize(length);
 
@@ -169,7 +169,7 @@ public:
     /**
      * Sends a message to the designated recipient.
      */
-    inline Status
+    inline ReturnStatus
     sendto (const void* msg, const vpr::Uint32 len, const int flags,
             const vpr::InetAddr& to, vpr::Uint32& bytes_sent,
             const vpr::Interval timeout = vpr::Interval::NoTimeout)
@@ -181,7 +181,7 @@ public:
     /**
      * Sends a message to the designated recipient.
      */
-    inline Status
+    inline ReturnStatus
     sendto (const std::string& msg, const vpr::Uint32 len, const int flags,
             const vpr::InetAddr& to, vpr::Uint32& bytes_sent,
             const vpr::Interval timeout = vpr::Interval::NoTimeout)
@@ -193,7 +193,7 @@ public:
     /**
      * Sends a message to the designated recipient.
      */
-    inline Status
+    inline ReturnStatus
     sendto (const std::vector<vpr::Uint8>& msg, const vpr::Uint32 len,
             const int flags, const vpr::InetAddr& to, vpr::Uint32& bytes_sent,
             const vpr::Interval timeout = vpr::Interval::NoTimeout)
@@ -204,14 +204,14 @@ public:
     }
 
 protected:
-    virtual vpr::Status
+    virtual vpr::ReturnStatus
     getOption (const vpr::SocketOptions::Types option,
                struct vpr::SocketOptions::Data& data)
     {
         return m_socket_dgram_imp.getOption(option, data);
     }
 
-    virtual vpr::Status
+    virtual vpr::ReturnStatus
     setOption (const vpr::SocketOptions::Types option,
                const struct vpr::SocketOptions::Data& data)
     {

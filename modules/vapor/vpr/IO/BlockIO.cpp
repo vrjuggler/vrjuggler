@@ -57,7 +57,7 @@ BlockIO::isReadBlocked (const vpr::Interval& timeout) {
     vpr::Selector selector;
     vpr::IOSys::Handle handle;
     vpr::Uint16 num_events;
-    vpr::Status status;
+    vpr::ReturnStatus status;
 
     handle = getHandle();
     selector.addHandle(handle);
@@ -85,7 +85,7 @@ BlockIO::isWriteBlocked (const vpr::Interval& timeout) {
     vpr::Selector selector;
     vpr::IOSys::Handle handle;
     vpr::Uint16 num_events;
-    vpr::Status status;
+    vpr::ReturnStatus status;
 
     handle = getHandle();
     selector.addHandle(handle);

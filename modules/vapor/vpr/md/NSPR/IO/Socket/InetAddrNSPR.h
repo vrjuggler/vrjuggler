@@ -103,7 +103,7 @@ public:
     //+                 by a colon.  The address can be a hostname or a
     //+                 dotted-decimal IP address.
     // ------------------------------------------------------------------------
-    Status setAddress(const std::string& address);
+    ReturnStatus setAddress(const std::string& address);
 
     // ------------------------------------------------------------------------
     //: Set the address for this object using the given address and port
@@ -114,9 +114,9 @@ public:
     //+                 address).
     //! ARGS: port    - The port to associate with the IP address.
     // ------------------------------------------------------------------------
-    inline Status setAddress (const std::string& address, const Uint16 port)
+    inline ReturnStatus setAddress (const std::string& address, const Uint16 port)
     {
-       Status retval;
+       ReturnStatus retval;
        retval = lookupAddress(address);
        setFamily(SocketTypes::INET);
        setPort(port);
@@ -133,11 +133,11 @@ public:
     //! ARGS: address - A 32-bit integer IP address.
     //! ARGS: port    - The port to associate with the IP address.
     // ------------------------------------------------------------------------
-    inline Status setAddress (const Uint32 address, const Uint16 port) {
+    inline ReturnStatus setAddress (const Uint32 address, const Uint16 port) {
         setAddressValue(address);
         setPort(port);
         setFamily(SocketTypes::INET);
-        return Status();
+        return ReturnStatus();
     }
 
     // ------------------------------------------------------------------------
@@ -295,7 +295,7 @@ protected:
    // -------------------------------------------------------------------------
    // Look up the address in m_name and store the address in m_remote_addr.
    // -------------------------------------------------------------------------
-   Status lookupAddress(const std::string& address);
+   ReturnStatus lookupAddress(const std::string& address);
 
    PRNetAddr   mAddr;         // Actual address
 };

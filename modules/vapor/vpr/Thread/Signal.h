@@ -53,7 +53,7 @@
 #error "I don't know what to do without signal.h!"
 #endif
 
-#include <vpr/Util/Status.h>
+#include <vpr/Util/ReturnStatus.h>
 
 
 namespace vpr {
@@ -119,40 +119,40 @@ public:
     /**
      * Creates a set that includes no signals defined by the system.
      *
-     * @return vpr::Status::Success is returned if this object's signal set is
-     *         emptied.  vpr::Status::Failure is returned otherwise.
+     * @return vpr::ReturnStatus::Success is returned if this object's signal set is
+     *         emptied.  vpr::ReturnStatus::Failure is returned otherwise.
      */
-    vpr::Status emptySet(void);
+    vpr::ReturnStatus emptySet(void);
 
     /**
      * Creates a set that includes all signals defined by the system.
      *
-     * @return vpr::Status::Success is returned if this object's signal set is
-     *         filled.  vpr::Status::Failure is returned otherwise.
+     * @return vpr::ReturnStatus::Success is returned if this object's signal set is
+     *         filled.  vpr::ReturnStatus::Failure is returned otherwise.
      */
-    vpr::Status fillSet(void);
+    vpr::ReturnStatus fillSet(void);
 
     /**
      * Adds the individual signal specified by <sig_num> to the set.
      *
      * @param sig_num The signal number to be added.
      *
-     * @return vpr::Status::Success is returned if the given signal is added
-     *         to this object's signal set.  vpr::Status::Failure is returned
+     * @return vpr::ReturnStatus::Success is returned if the given signal is added
+     *         to this object's signal set.  vpr::ReturnStatus::Failure is returned
      *         otherwise.
      */
-    vpr::Status addSignal(const int sig_num);
+    vpr::ReturnStatus addSignal(const int sig_num);
 
     /**
      * Deletes the individual signal specified by <sig_num> from the set.
      *
      * @param sig_num The signal number to be removed.
      *
-     * @return vpr::Status::Success is returned if the given signal is removed
-     *         from this object's signal set.  vpr::Status::Failure is returned
+     * @return vpr::ReturnStatus::Success is returned if the given signal is removed
+     *         from this object's signal set.  vpr::ReturnStatus::Failure is returned
      *         otherwise.
      */
-    vpr::Status removeSignal(const int sig_num);
+    vpr::ReturnStatus removeSignal(const int sig_num);
 
     /**
      * Checks whether the signal specified by <sig_num> is in the set.
@@ -261,10 +261,10 @@ class VPR_CLASS_API SigHandler {
      * @param sig_num The signal to be handled.
      * @param handler The callback that does the signal handling.
      *
-     * @returns vpr::Status::Success is returned if the given handler is
-     *          registered successfully; vpr::Status::Failure otherwise.
+     * @returns vpr::ReturnStatus::Success is returned if the given handler is
+     *          registered successfully; vpr::ReturnStatus::Failure otherwise.
      */
-    static vpr::Status registerHandler(const int sig_num,
+    static vpr::ReturnStatus registerHandler(const int sig_num,
                                        vpr::SignalHandler_t handler);
 
     /**
@@ -280,10 +280,10 @@ class VPR_CLASS_API SigHandler {
      * @param action  A vpr::SignalAction object encapsulating all the
      *                information needed to handle the named signal.
      *
-     * @returns vpr::Status::Success is returned if the given action is
-     *          registered successfully; vpr::Status::Failure otherwise.
+     * @returns vpr::ReturnStatus::Success is returned if the given action is
+     *          registered successfully; vpr::ReturnStatus::Failure otherwise.
      */
-    static vpr::Status registerHandler(const int sig_num,
+    static vpr::ReturnStatus registerHandler(const int sig_num,
                                        vpr::SignalAction& action);
 
 protected:

@@ -23,7 +23,7 @@
 #include <vpr/IO/Socket/SocketConnector.h>
 #include <vpr/IO/IOSys.h>
 #include <vpr/IO/Selector.h>
-#include <vpr/Util/Status.h>
+#include <vpr/Util/ReturnStatus.h>
 
 #include <vpr/System.h>
 
@@ -56,7 +56,7 @@ public:
    virtual void tearDown()
    {
       //checkThreadAssertions();
-   }   
+   }
 
    // Test an acceptor pool
    // This test is based upon the idea of having a pool of acceptors that
@@ -67,7 +67,7 @@ public:
    {
        threadAssertReset();
        mRendevousPort = 30000 + (random() % 30000);     // Get a partially random port
-       
+
        mNumRendevousPorts = 13;
        mNumIters = 50;
        mMessageValue = std::string("The Data");
@@ -88,7 +88,7 @@ public:
        // Wait for threads
        acceptor_thread.join();
        connector_thread.join();
-       
+
        checkThreadAssertions();
    }
    void testAcceptorPoolSelection_acceptor(void* arg)
@@ -97,7 +97,7 @@ public:
       std::map<vpr::IOSys::Handle, vpr::SocketAcceptor*> acceptorTable;
       vpr::Selector selector;
       //vpr::SocketStream* sock(NULL);
-      Status ret_val;
+      ReturnStatus ret_val;
       vpr::Uint32 bytes_written;
       vpr::Uint16 num_events = 0;
 
@@ -133,7 +133,7 @@ public:
        for(i=0;i<mNumIters;i++)
        {
           num_events = 0;
-          Status ret = selector.select(num_events, vpr::Interval::NoTimeout );
+          ReturnStatus ret = selector.select(num_events, vpr::Interval::NoTimeout );
 
           assertTestThread((ret.success()) &&
                            "Selection did not return successfully");
@@ -179,7 +179,7 @@ public:
    }
    void testAcceptorPoolSelection_connector( void* arg )
    {
-      Status ret_val;
+      ReturnStatus ret_val;
       vpr::InetAddr remote_addr;
       vpr::SocketConnector connector;           // Connect to acceptor
       vpr::Uint32 bytes_read;
@@ -222,7 +222,7 @@ public:
    void testSendThenPoll()
    {
        threadAssertReset();
-       mRendevousPort = 30000 + (random() % 30000);     // Get a partially random port       
+       mRendevousPort = 30000 + (random() % 30000);     // Get a partially random port
        mNumRendevousPorts = 37;
        mNumIters = 10;
        mMessageValue = std::string("The Data");
@@ -244,7 +244,7 @@ public:
        acceptor_thread.join();
        connector_thread.join();
 
-       checkThreadAssertions();       
+       checkThreadAssertions();
    }
    void testSendThenPoll_acceptor(void* arg)
    {
@@ -253,7 +253,7 @@ public:
       vpr::Selector selector;
       vector<vpr::SocketStream>     socks;                        // The acceptor side sockets
       vector<vpr::SocketAcceptor*>  acceptors;
-      vpr::Status ret_val;
+      vpr::ReturnStatus ret_val;
       //bool ret_val(false);
 
       // Bind to the accepting ports
@@ -308,7 +308,7 @@ public:
 
           // Get the events
           vpr::Uint16 num_events;
-          Status ret = selector.select(num_events, vpr::Interval::NoTimeout);
+          ReturnStatus ret = selector.select(num_events, vpr::Interval::NoTimeout);
 
           //vpr::System::msleep(50);
 
@@ -376,7 +376,7 @@ public:
    void testSendThenPoll_connector(void* arg)
    {
       unsigned i,j;
-      Status ret_val;
+      ReturnStatus ret_val;
       vpr::Uint32 bytes_written;
       vpr::InetAddr remote_addr;
       vpr::SocketConnector connector;           // Connect to acceptor

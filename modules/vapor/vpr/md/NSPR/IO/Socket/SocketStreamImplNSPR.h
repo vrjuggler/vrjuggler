@@ -97,7 +97,7 @@ public:
     //     false - The socket could not be put into a listening state.  An
     //             error message is printed explaining what went wrong.
     // ------------------------------------------------------------------------
-    vpr::Status listen(const int backlog = 5);
+    vpr::ReturnStatus listen(const int backlog = 5);
 
     // ------------------------------------------------------------------------
     // Accept an incoming connection request.
@@ -109,7 +109,7 @@ public:
     //
     // Returns:
     // ------------------------------------------------------------------------
-    vpr::Status accept(SocketStreamImplNSPR& sock,
+    vpr::ReturnStatus accept(SocketStreamImplNSPR& sock,
                        const vpr::Interval timeout = vpr::Interval::NoTimeout);
 };
 

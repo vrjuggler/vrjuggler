@@ -54,7 +54,7 @@ public:
    virtual ~SocketTest()
    {
    }
-      
+
    // =========================================================================
    // open-close * n test
    // start two threads, cli/serv... both opening and closing many many times.
@@ -535,7 +535,7 @@ public:
       assertTestThread( sock1.listen().success() && "server Socket::listen() failed" );
 
       vpr::SocketStream child_socket;
-      vpr::Status status = sock1.accept(child_socket);
+      vpr::ReturnStatus status = sock1.accept(child_socket);
       assertTestThread( status.success() && "child didn't spawn" );
 
          // assume server crashes, so lets restart it.
@@ -578,7 +578,7 @@ public:
       connector_thread.join(); // join is broken.
 
       checkThreadAssertions();
-      
+
    }
 
    // =========================================================================
@@ -769,7 +769,7 @@ public:
       connector_thread.join(); // join is broken.
       acceptor_thread.join();
 
-      checkThreadAssertions();      
+      checkThreadAssertions();
    }
 
 
@@ -939,7 +939,7 @@ public:
       assertTest(client_thread->valid() && "Server could not create client thread");
 
       vpr::SocketStream client_sock;
-      vpr::Status status = server_sock.accept(client_sock);
+      vpr::ReturnStatus status = server_sock.accept(client_sock);
       assertTest(status.success() && "Server could not accept connection");
 
       for ( unsigned int i = 0; i < 20; i += pkt_size ) {

@@ -109,7 +109,7 @@ public:
     //+                 by a colon.  The address can be a hostname or a
     //+                 dotted-decimal IP address.
     // ------------------------------------------------------------------------
-    Status setAddress(const std::string& address);
+    ReturnStatus setAddress(const std::string& address);
 
     // ------------------------------------------------------------------------
     //: Set the address for this object using the given address and port
@@ -123,9 +123,9 @@ public:
     //+                 address).
     //! ARGS: port    - The port to associate with the IP address.
     // ------------------------------------------------------------------------
-    inline Status
+    inline ReturnStatus
     setAddress (const std::string& address, const Uint16 port) {
-        Status retval;
+        ReturnStatus retval;
 
         retval = lookupAddress(address);
         setPort(port);
@@ -144,12 +144,12 @@ public:
     //! ARGS: address - A 32-bit integer IP address.
     //! ARGS: port    - The port to associate with the IP address.
     // ------------------------------------------------------------------------
-    inline Status
+    inline ReturnStatus
     setAddress (const Uint32 address, const Uint16 port) {
         setAddressValue(address);
         setPort(port);
         setFamily(SocketTypes::INET);
-        return Status();
+        return ReturnStatus();
     }
 
     // ------------------------------------------------------------------------
@@ -425,7 +425,7 @@ protected:
     //! RETURNS: false - The address could not be looked up.  An error message
     //+                  is printed to stderr explaining what went wrong.
     // ------------------------------------------------------------------------
-    Status lookupAddress(const std::string& addr);
+    ReturnStatus lookupAddress(const std::string& addr);
 
     struct sockaddr_in m_addr;    //: The Ineternet address structure
 };

@@ -45,7 +45,7 @@
 #include <vpr/vprConfig.h>
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/IO/Socket/InetAddr.h>
-#include <vpr/Util/Status.h>
+#include <vpr/Util/ReturnStatus.h>
 
 namespace vpr
 {
@@ -113,7 +113,7 @@ public:
      * @param backlog   The maximum allowed size for the queue of pending
      *                  connections.
      */
-    inline vpr::Status open(const vpr::InetAddr& addr, bool reuseAddr = true,
+    inline vpr::ReturnStatus open(const vpr::InetAddr& addr, bool reuseAddr = true,
                             const int backlog = 5);
 
     /**
@@ -131,14 +131,14 @@ public:
      *                request.  This argument is optional and default to
      *                vpr::Interval::NoTimeout.
      *
-     * @return vpr::Status::Success is returned when a connection is completed
+     * @return vpr::ReturnStatus::Success is returned when a connection is completed
      *         successfully.  In this case, the <code>sock</code> argument
      *         returned is the newly created connected socket.<br>
-     *         vpr::Status::WouldBlock is returned if this is a non-blocking
+     *         vpr::ReturnStatus::WouldBlock is returned if this is a non-blocking
      *         acceptor and there are no pending connections.<br>
-     *         vpr::Status::Failure is returned if the socket failed to accept.
+     *         vpr::ReturnStatus::Failure is returned if the socket failed to accept.
      */
-    vpr::Status accept(vpr::SocketStream& sock,
+    vpr::ReturnStatus accept(vpr::SocketStream& sock,
                        vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
        vprASSERT(mSocket.isOpen());
@@ -149,7 +149,7 @@ public:
     /**
      * Closes the accepting socket.
      */
-    vpr::Status close()
+    vpr::ReturnStatus close()
     { return mSocket.close(); }
 
     /**
@@ -165,10 +165,10 @@ private:
     vpr::SocketStream    mSocket;
 };
 
-inline vpr::Status SocketAcceptor::open(const vpr::InetAddr& addr,
+inline vpr::ReturnStatus SocketAcceptor::open(const vpr::InetAddr& addr,
                                         bool reuseAddr, int backlog)
 {
-   vpr::Status ret_val;
+   vpr::ReturnStatus ret_val;
 
    vprASSERT((!mSocket.isOpen()) && "Trying to re-open socket that has already been opened");
 

@@ -13,7 +13,7 @@
 
 #include <TestCases/IO/Stats/SocketBandwidthIOStatsTest.h>
 
-#include <TestCases/StatusTest.h>
+#include <TestCases/ReturnStatusTest.h>
 #include <TestCases/Util/IntervalTest.h>
 
 #include <vpr/Util/Debug.h>
@@ -25,12 +25,12 @@
 
 int main (int ac, char **av)
 {
-   vprDEBUG(0,0) << "\n\n-----------------------------------------\n" << vprDEBUG_FLUSH; 
+   vprDEBUG(0,0) << "\n\n-----------------------------------------\n" << vprDEBUG_FLUSH;
    vprDEBUG(0,0) << "Starting test\n" << vprDEBUG_FLUSH;       // Do this here to get init text out of the way
 
     // Init random number generation
     unsigned int random_seed;
-    
+
 #ifdef vprtest_RANDOM_SEED
     timeval cur_time;
     vpr::System::gettimeofday(&cur_time);
@@ -55,7 +55,7 @@ int main (int ac, char **av)
 
    // add tests to the suite
    //suite_1->addTest( /* put your test here */ );
-   noninteractive_suite->addTest(vprTest::StatusTest::suite());
+   noninteractive_suite->addTest(vprTest::ReturnStatusTest::suite());
    noninteractive_suite->addTest(vprTest::IntervalTest::suite());
    noninteractive_suite->addTest(vprTest::InetAddrTest::suite());
    noninteractive_suite->addTest(vprTest::SocketTest::suite());
@@ -74,7 +74,7 @@ int main (int ac, char **av)
 
    metrics_suite->addTest(vprTest::IntervalTest::metric_suite());
    metrics_suite->addTest(vprTest::SocketBandwidthIOStatsTest::metric_suite());
-   
+
    runner.addTest("metrics", metrics_suite);
 
    //noninteractive_suite->addTest(metrics_suite);

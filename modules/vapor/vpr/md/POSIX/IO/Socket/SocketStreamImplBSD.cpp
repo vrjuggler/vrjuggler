@@ -67,9 +67,9 @@ namespace vpr {
 // ----------------------------------------------------------------------------
 // Listen on the socket for incoming connection requests.
 // ----------------------------------------------------------------------------
-Status
+ReturnStatus
 SocketStreamImplBSD::listen (const int backlog) {
-    Status retval;
+    ReturnStatus retval;
 
     // Put the socket into listning mode.  If that fails, print an error and
     // return error status.
@@ -77,7 +77,7 @@ SocketStreamImplBSD::listen (const int backlog) {
         fprintf(stderr,
                 "[vpr::SocketStreamImplBSD] Cannot listen on socket: %s\n",
                 strerror(errno));
-        retval.setCode(Status::Failure);
+        retval.setCode(ReturnStatus::Failure);
     }
 
     return retval;
@@ -86,10 +86,10 @@ SocketStreamImplBSD::listen (const int backlog) {
 // ----------------------------------------------------------------------------
 // Accept an incoming connection request.
 // ----------------------------------------------------------------------------
-Status
+ReturnStatus
 SocketStreamImplBSD::accept (SocketStreamImplBSD& sock,vpr::Interval timeout) {
     int accept_sock;
-    Status retval;
+    ReturnStatus retval;
     InetAddr addr;
     socklen_t addrlen;
 
@@ -106,13 +106,13 @@ SocketStreamImplBSD::accept (SocketStreamImplBSD& sock,vpr::Interval timeout) {
         // If accept(2) failed, print an error message and return error stauts.
         if ( accept_sock == -1 ) {
             if ( errno == EWOULDBLOCK && getNonBlocking() ) {
-                retval.setCode(Status::WouldBlock);
+                retval.setCode(ReturnStatus::WouldBlock);
             }
             else {
                 fprintf(stderr,
                         "[vpr::SocketStreamImplBSD] Error while accepting "
                         "incoming connection: %s\n", strerror(errno));
-                retval.setCode(Status::Failure);
+                retval.setCode(ReturnStatus::Failure);
             }
         }
         // Otherwise, put the new socket in the passed socket object.

@@ -112,14 +112,14 @@ public:
     /**
      * Receives a message from the specified address.
      */
-    vpr::Status recvfrom(void* msg, const vpr::Uint32 length, const int flags,
+    vpr::ReturnStatus recvfrom(void* msg, const vpr::Uint32 length, const int flags,
                          vpr::InetAddr& from, vpr::Uint32& bytes_read,
                          const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     /**
      * Sends a message to the specified address.
      */
-    vpr::Status sendto(const void* msg, const vpr::Uint32 length,
+    vpr::ReturnStatus sendto(const void* msg, const vpr::Uint32 length,
                        const int flags, const vpr::InetAddr& to,
                        vpr::Uint32& bytes_sent,
                        const vpr::Interval timeout = vpr::Interval::NoTimeout);

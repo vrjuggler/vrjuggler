@@ -53,7 +53,7 @@
 #endif
 
 #include <vpr/Util/Assert.h>
-#include <vpr/Util/Status.h>
+#include <vpr/Util/ReturnStatus.h>
 #include <vpr/Util/Interval.h>
 #include <vpr/IO/IOSys.h>
 
@@ -121,11 +121,11 @@ public:
      *       is returned to the caller.  If the I/O device is opened,
      *       <code>m_open</code> is set to true.
      *
-     * @return vpr::Status::Success is returned if the device is opened
+     * @return vpr::ReturnStatus::Success is returned if the device is opened
      *         successfully.<br>
-     *         vpr::Status::Failure is returned otherwise.
+     *         vpr::ReturnStatus::Failure is returned otherwise.
      */
-    virtual Status open(void) = 0;
+    virtual ReturnStatus open(void) = 0;
 
     /**
      * Closes the I/O device.
@@ -135,11 +135,11 @@ public:
      *       is returned to the caller.  If the I/O device is closed,
      *       <code>m_open</code> is set to false.
      *
-     * @return vpr::Status::Success is returned if the device is closed
+     * @return vpr::ReturnStatus::Success is returned if the device is closed
      *         successfully.<br>
-     *         vpr::Status::Failure is returned otherwise.
+     *         vpr::ReturnStatus::Failure is returned otherwise.
      */
-    virtual Status close(void) = 0;
+    virtual ReturnStatus close(void) = 0;
 
     /**
      * Gets the open state of this I/O device.
@@ -161,11 +161,11 @@ public:
      * @pre The device is open.
      * @post Processes will block when accessing the device.
      *
-     * @return vpr::Status::Success is returned if the device's blocking mode
+     * @return vpr::ReturnStatus::Success is returned if the device's blocking mode
      *         is set to blocking.<br>
-     *         vpr::Status::Failure is returned otherwise.
+     *         vpr::ReturnStatus::Failure is returned otherwise.
      */
-    virtual Status enableBlocking(void) = 0;
+    virtual ReturnStatus enableBlocking(void) = 0;
 
     /**
      * Reconfigures the I/O device so that it is in non-blocking mode.
@@ -173,11 +173,11 @@ public:
      * @pre The device is open.
      * @post Processes will not block when accessing the device.
      *
-     * @return vpr::Status::Success is returned if the device's blocking mode
+     * @return vpr::ReturnStatus::Success is returned if the device's blocking mode
      *         is set to non-blocking.<br>
-     *         vpr::Status::Failure is returned otherwise.
+     *         vpr::ReturnStatus::Failure is returned otherwise.
      */
-    virtual Status enableNonBlocking(void) = 0;
+    virtual ReturnStatus enableNonBlocking(void) = 0;
 
     /**
      * Gets the current blocking state for the I/O device.
@@ -235,15 +235,15 @@ public:
      *                   available for reading.  This argument is optional
      *                   and defaults to vpr::Interval::NoTimeout.
      *
-     * @return vpr::Status::Success is returned if the read operation
+     * @return vpr::ReturnStatus::Success is returned if the read operation
      *         completed successfully.<br>
-     *         vpr::Status::WouldBlock if the device is in non-blocking mode,
+     *         vpr::ReturnStatus::WouldBlock if the device is in non-blocking mode,
      *         and there is no data to read.<br>
-     *         vpr::Status::Timeout is returned if the read could not begin
+     *         vpr::ReturnStatus::Timeout is returned if the read could not begin
      *         within the timeout interval.<br>
-     *         vpr::Status::Failure is returned if the read operation failed.
+     *         vpr::ReturnStatus::Failure is returned if the read operation failed.
      */
-    Status
+    ReturnStatus
     read (void* buffer, const vpr::Uint32 length, vpr::Uint32& bytes_read,
           const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
@@ -269,20 +269,20 @@ public:
      *                   available for reading.  This argument is optional
      *                   and defaults to vpr::Interval::NoTimeout.
      *
-     * @return vpr::Status::Success is returned if the read operation completed
+     * @return vpr::ReturnStatus::Success is returned if the read operation completed
      *         successfully.<br>
-     *         vpr::Status::WouldBlock if the device is in non-blocking mode,
+     *         vpr::ReturnStatus::WouldBlock if the device is in non-blocking mode,
      *         and there is no data to read.<br>
-     *         vpr::Status::Timeout is returned if the read could not begin
+     *         vpr::ReturnStatus::Timeout is returned if the read could not begin
      *         within the timeout interval.<br>
-     *         vpr::Status::Failure is returned if the read operation failed.
+     *         vpr::ReturnStatus::Failure is returned if the read operation failed.
      */
-    Status
+    ReturnStatus
     read (std::string& buffer, const vpr::Uint32 length,
           vpr::Uint32& bytes_read,
           const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-       Status status;
+       ReturnStatus status;
 
        // Allocate the temporary buffer, zero it, and read in the current
        // buffer from the device.
@@ -312,20 +312,20 @@ public:
      *                   available for reading.  This argument is optional
      *                   and defaults to vpr::Interval::NoTimeout.
      *
-     * @return vpr::Status::Success is returned if the read operation completed
+     * @return vpr::ReturnStatus::Success is returned if the read operation completed
      *         successfully.<br>
-     *         vpr::Status::WouldBlock if the device is in non-blocking mode,
+     *         vpr::ReturnStatus::WouldBlock if the device is in non-blocking mode,
      *         and there is no data to read.<br>
-     *         vpr::Status::Timeout is returned if the read could not begin
+     *         vpr::ReturnStatus::Timeout is returned if the read could not begin
      *         within the timeout interval.<br>
-     *         vpr::Status::Failure is returned if the read operation failed.
+     *         vpr::ReturnStatus::Failure is returned if the read operation failed.
      */
-    Status
+    ReturnStatus
     read (std::vector<vpr::Uint8>& buffer, const vpr::Uint32 length,
           vpr::Uint32& bytes_read,
           const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-       Status status;
+       ReturnStatus status;
        buffer.resize( length );
 
        // Allocate the temporary buffer, zero it, and read in the current
@@ -358,13 +358,13 @@ public:
      *                   available for reading.  This argument is optional
      *                   and defaults to vpr::Interval::NoTimeout.
      *
-     * @return vpr::Status::Success is returned if the read operation completed
+     * @return vpr::ReturnStatus::Success is returned if the read operation completed
      *         successfully.<br>
-     *         vpr::Status::WouldBlock if the device is in non-blocking mode,
+     *         vpr::ReturnStatus::WouldBlock if the device is in non-blocking mode,
      *         and there is no data to read.<br>
-     *         vpr::Status::Failure is returned if the read operation failed.
+     *         vpr::ReturnStatus::Failure is returned if the read operation failed.
      */
-    Status
+    ReturnStatus
     readn (void* buffer, const vpr::Uint32 length, vpr::Uint32& bytes_read,
            const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
@@ -390,18 +390,18 @@ public:
      *                   available for reading.  This argument is optional
      *                   and defaults to vpr::Interval::NoTimeout.
      *
-     * @return vpr::Status::Success is returned if the read
+     * @return vpr::ReturnStatus::Success is returned if the read
      *         operation completed successfully.<br>
-     *         vpr::Status::WouldBlock if the device is in non-blocking mode,
+     *         vpr::ReturnStatus::WouldBlock if the device is in non-blocking mode,
      *         and there is no data to read.<br>
-     *         vpr::Status::Failure is returned if the read operation failed.
+     *         vpr::ReturnStatus::Failure is returned if the read operation failed.
      */
-    Status
+    ReturnStatus
     readn (std::string& buffer, const vpr::Uint32 length,
            vpr::Uint32& bytes_read,
            const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-       Status status;
+       ReturnStatus status;
 
        // Allocate the temporary buffer, zero it, and read in the current
        // buffer from the device.
@@ -432,20 +432,20 @@ public:
      *                   available for reading.  This argument is optional
      *                   and defaults to vpr::Interval::NoTimeout.
      *
-     * @return vpr::Status::Success is returned if the read operation completed
+     * @return vpr::ReturnStatus::Success is returned if the read operation completed
      *         successfully.<br>
-     *         vpr::Status::WouldBlock if the device is in non-blocking mode,
+     *         vpr::ReturnStatus::WouldBlock if the device is in non-blocking mode,
      *         and there is no data to read.<br>
-     *         vpr::Status::Timeout is returned if the read could not begin
+     *         vpr::ReturnStatus::Timeout is returned if the read could not begin
      *         within the timeout interval.<br>
-     *         vpr::Status::Failure is returned if the read operation failed.
+     *         vpr::ReturnStatus::Failure is returned if the read operation failed.
      */
-    Status
+    ReturnStatus
     readn (std::vector<vpr::Uint8>& buffer, const vpr::Uint32 length,
            vpr::Uint32& bytes_read,
            const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-        Status status;
+        ReturnStatus status;
 
         // Allocate the temporary buffer, zero it, and read in the current
         // buffer from the device.
@@ -472,16 +472,16 @@ public:
      *                      available for writing.  This argument is optional
      *                      and defaults to vpr::Interval::NoTimeout.
      *
-     * @return vpr::Status::Success is returned if the write operation
+     * @return vpr::ReturnStatus::Success is returned if the write operation
      *         completed successfully.<br>
-     *         vpr::Status::WouldBlock is returned if the handle is in
+     *         vpr::ReturnStatus::WouldBlock is returned if the handle is in
      *         non-blocking mode, and the write operation could not be
      *         completed.<br>
-     *         vpr::Status::Timeout is returned if the write could not begin
+     *         vpr::ReturnStatus::Timeout is returned if the write could not begin
      *         within the timeout interval.<br>
-     *         vpr::Status::Failure is returned if the write operation failed.
+     *         vpr::ReturnStatus::Failure is returned if the write operation failed.
      */
-    Status
+    ReturnStatus
     write (const void* buffer, const vpr::Uint32 length,
            vpr::Uint32& bytes_written,
            const vpr::Interval timeout = vpr::Interval::NoTimeout)
@@ -505,16 +505,16 @@ public:
      *                      available for writing.  This argument is optional
      *                      and defaults to vpr::Interval::NoTimeout.
      *
-     * @return vpr::Status::Success is returned if the write operation
+     * @return vpr::ReturnStatus::Success is returned if the write operation
      *         completed successfully.<br>
-     *         vpr::Status::WouldBlock is returned if the handle is in
+     *         vpr::ReturnStatus::WouldBlock is returned if the handle is in
      *         non-blocking mode, and the write operation could not be
      *         completed.<br>
-     *         vpr::Status::Timeout is returned if the write could not begin
+     *         vpr::ReturnStatus::Timeout is returned if the write could not begin
      *         within the timeout interval.<br>
-     *         vpr::Status::Failure is returned if the write operation failed.
+     *         vpr::ReturnStatus::Failure is returned if the write operation failed.
      */
-    Status
+    ReturnStatus
     write (const std::string& buffer, const vpr::Uint32 length,
            vpr::Uint32& bytes_written,
            const vpr::Interval timeout = vpr::Interval::NoTimeout)
@@ -539,16 +539,16 @@ public:
      *                      available for writing.  This argument is optional
      *                      and defaults to vpr::Interval::NoTimeout.
      *
-     * @return vpr::Status::Success is returned if the write operation
+     * @return vpr::ReturnStatus::Success is returned if the write operation
      *         completed successfully.<br>
-     *         vpr::Status::WouldBlock is returned if the handle is in
+     *         vpr::ReturnStatus::WouldBlock is returned if the handle is in
      *         non-blocking mode, and the write operation could not be
      *         completed.<br>
-     *         vpr::Status::Timeout is returned if the write could not begin
+     *         vpr::ReturnStatus::Timeout is returned if the write could not begin
      *         within the timeout interval.<br>
-     *         vpr::Status::Failure is returned if the write operation failed.
+     *         vpr::ReturnStatus::Failure is returned if the write operation failed.
      */
-    Status
+    ReturnStatus
     write (const std::vector<vpr::Uint8>& buffer, const vpr::Uint32 length,
            vpr::Uint32& bytes_written,
            const vpr::Interval timeout = vpr::Interval::NoTimeout)
@@ -603,7 +603,7 @@ public:
      * Get the current IO stats strategy
      */
     vpr::BaseIOStatsStrategy* getIOStatStrategy()
-    { return mStatsStrategy; }    
+    { return mStatsStrategy; }
 
 protected:
     /**
@@ -651,11 +651,11 @@ protected:
     /**
      * read strategy
      */
-    virtual Status read_s(void* buffer, const vpr::Uint32 length,
+    virtual ReturnStatus read_s(void* buffer, const vpr::Uint32 length,
                           vpr::Uint32& bytes_read,
                           const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-       Status status;
+       ReturnStatus status;
 
        if(mStatsStrategy != NULL)
           mStatsStrategy->read_s(status, buffer, length, bytes_read, timeout);
@@ -664,15 +664,15 @@ protected:
 
        return status;
     }
-    
+
     /**
      * read strategy
      */
-    virtual Status readn_s(void* buffer, const vpr::Uint32 length,
+    virtual ReturnStatus readn_s(void* buffer, const vpr::Uint32 length,
                            vpr::Uint32& bytes_read,
                            const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-       Status status;
+       ReturnStatus status;
 
        if(mStatsStrategy != NULL)
          mStatsStrategy->readn_s(status, buffer, length, bytes_read, timeout);
@@ -685,14 +685,14 @@ protected:
     /**
      * write strategy
      */
-    virtual Status write_s(const void* buffer, const vpr::Uint32 length,
+    virtual ReturnStatus write_s(const void* buffer, const vpr::Uint32 length,
                            vpr::Uint32& bytes_written,
                            const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-       Status status;
+       ReturnStatus status;
 
        if(mStatsStrategy != NULL)
-         mStatsStrategy->write_s(status, buffer, length, bytes_written, timeout);          
+         mStatsStrategy->write_s(status, buffer, length, bytes_written, timeout);
        else
           status = write_i(buffer, length, bytes_written, timeout);
 
@@ -719,15 +719,15 @@ protected:
      *                   available for reading.  This argument is optional and
      *                   defaults to vpr::Interval::NoTimeout.
      *
-     * @return vpr::Status::Success is returned if the read operation
+     * @return vpr::ReturnStatus::Success is returned if the read operation
      *         completed successfully.<br>
-     *         vpr::Status::WouldBlock if the device is in non-blocking mode,
+     *         vpr::ReturnStatus::WouldBlock if the device is in non-blocking mode,
      *         and there is no data to read.<br>
-     *         vpr::Status::Timeout is returned if the read could not begin
+     *         vpr::ReturnStatus::Timeout is returned if the read could not begin
      *         within the timeout interval.<br>
-     *         vpr::Status::Failure is returned if the read operation failed.
+     *         vpr::ReturnStatus::Failure is returned if the read operation failed.
      */
-    virtual Status read_i(void* buffer, const vpr::Uint32 length,
+    virtual ReturnStatus read_i(void* buffer, const vpr::Uint32 length,
                           vpr::Uint32& bytes_read,
                           const vpr::Interval timeout = vpr::Interval::NoTimeout) = 0;
 
@@ -751,16 +751,16 @@ protected:
      *                   available for reading.  This argument is optional and
      *                   defaults to vpr::Interval::NoTimeout.
      *
-     * @return vpr::Status::Success is returned if the read
+     * @return vpr::ReturnStatus::Success is returned if the read
      *         operation completed successfully.<br>
-     *         vpr::Status::Failure is returned if the read
+     *         vpr::ReturnStatus::Failure is returned if the read
      *         operation failed.<br>
-     *         vpr::Status::WouldBlock if the device is in non-blocking mode,
+     *         vpr::ReturnStatus::WouldBlock if the device is in non-blocking mode,
      *         and there is no data to read.<br>
-     *         vpr::Status::Timeout is returned if the read
+     *         vpr::ReturnStatus::Timeout is returned if the read
      *         could not begin within the timeoBaseIOStatsStrategyut interval.
      */
-    virtual Status readn_i(void* buffer, const vpr::Uint32 length,
+    virtual ReturnStatus readn_i(void* buffer, const vpr::Uint32 length,
                            vpr::Uint32& bytes_read,
                            const vpr::Interval timeout = vpr::Interval::NoTimeout) = 0;
 
@@ -780,16 +780,16 @@ protected:
      *                      available for writing.  This argument is optional
      *                      and defaults to vpr::Interval::NoTimeout.
      *
-     * @return vpr::Status::Success is returned if the write operation
+     * @return vpr::ReturnStatus::Success is returned if the write operation
      *         completed successfully.<br>
-     *         vpr::Status::WouldBlock is returned if the handle is in
+     *         vpr::ReturnStatus::WouldBlock is returned if the handle is in
      *         non-blocking mode, and the write operation could not
      *         complete.<br>
-     *         vpr::Status::Timeout is returned if the write could not begin
+     *         vpr::ReturnStatus::Timeout is returned if the write could not begin
      *         within the timeout interval.<br>
-     *         vpr::Status::Failure is returned if the write operation failed.
+     *         vpr::ReturnStatus::Failure is returned if the write operation failed.
      */
-    virtual Status write_i(const void* buffer, const vpr::Uint32 length,
+    virtual ReturnStatus write_i(const void* buffer, const vpr::Uint32 length,
                            vpr::Uint32& bytes_written,
                            const vpr::Interval timeout = vpr::Interval::NoTimeout) = 0;
 
@@ -798,7 +798,7 @@ protected:
 
 protected:
         /// The name of the I/O device.
-    std::string m_name; 
+    std::string m_name;
 
     /// Flag telling if blocking is enabled when opening the device
     bool m_open_blocking;
