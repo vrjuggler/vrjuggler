@@ -3,7 +3,7 @@ Builder: JExplorerBuilder V 1. 0. 7
 	< font face="Helvetica" style="Plain" size="${TREE_FONTSIZE}">
 		< idefault title="Item" image="Book_Closed.gif" imagetwo="" info="VR Juggler" target="Body" link="" rlink="">
 
-			< rootfolder title="Developer Guide" 
+			< rootfolder title="Juggler Team Guide" 
 				expand 
 				link="index.html"
 				info="In depth documentation for the VR Juggler project.  Intended to be a resource for the Juggle Development Team (JDT)"
