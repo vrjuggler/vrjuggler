@@ -186,14 +186,18 @@
 	    <BLOCKQUOTE>
 	      {private false}
 		{if descr}
-		  {include ../common/descr.html.inc}
+		  <P>
+		    {include ../common/descr.html.inc}
+		  </P>
 		{endif}
 
-		<H5>Contract</H5>
+		<P>
+		  <B>Contract</B>
+		</P>
 
-		  <BLOCKQUOTE>
-		    {include ../common/contract.html.inc}
-		  </BLOCKQUOTE>
+		<BLOCKQUOTE>
+		  {include ../common/contract.html.inc}
+		</BLOCKQUOTE>
 	      {endprivate}
 
 	      {if ARGS}
@@ -228,19 +232,25 @@
 	    <BLOCKQUOTE>
 	      {private false}
 		{if descr}
-		  {include ../common/descr.html.inc}
+		  <P>
+		    {include ../common/descr.html.inc}
+		  </P>
 		{endif}
 		{else}
 		  {if overrides}
-		    {include ../common/descr.html.inc}
+		    <P>
+		      {include ../common/descr.html.inc}
+		    </P>
 		  {endif}
 		{endelse}
 
-		<H5>Contract</H5>
+		<P>
+		  <B>Contract</B>
+		</P>
 
-		  <BLOCKQUOTE>
-		    {include ../common/contract.html.inc}
-		  </BLOCKQUOTE>
+		<BLOCKQUOTE>
+		  {include ../common/contract.html.inc}
+		</BLOCKQUOTE>
 	      {endprivate}
 
 	      {if ARGS}
