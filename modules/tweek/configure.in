@@ -333,7 +333,7 @@ fi
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH(0.15.0, , AC_MSG_ERROR(*** VPR required for Tweek C++ API ***))
+VPR_PATH([0.15.0], , [AC_MSG_ERROR([*** VPR required for Tweek C++ API ***])])
 VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
 
 # Find omniORB.  This one is a beast.
@@ -430,28 +430,40 @@ int omni_main_i(int argc, char** const argv)
    fi
 }
 
+# omniORB requires pthreads, and that conflicts with IRIX SPROC threads.
+if test "x$VPR_SUBSYSTEM" = "xSPROC" ; then
+   case $cxx_orb_name in
+      omniORB*)
+         AC_MSG_WARN([*** Tweek C++ ABI will not run with SPROC threads ***])
+         BUILD_CXX='N'
+         ;;
+   esac
+fi
+
 # --------------------
 # Find the C++ ORB.
 # --------------------
-tweeksave_CPPFLAGS="$CPPFLAGS"
-tweeksave_LDFLAGS="$LDFLAGS"
-tweeksave_LIBS="$LIBS"
+if test "x$BUILD_CXX" != "xN" ; then
+   tweeksave_CPPFLAGS="$CPPFLAGS"
+   tweeksave_LDFLAGS="$LDFLAGS"
+   tweeksave_LIBS="$LIBS"
 
-case $cxx_orb_name in
-   omniORB3)
-      setup_omniORB 3
-      ;;
-   omniORB4)
-      setup_omniORB 4
-      ;;
-   *)
-      AC_MSG_ERROR([Unsupported C++ ORB $cxx_orb_name!])
-      ;;
-esac
+   case $cxx_orb_name in
+      omniORB3)
+         setup_omniORB 3
+         ;;
+      omniORB4)
+         setup_omniORB 4
+         ;;
+      *)
+         AC_MSG_ERROR([Unsupported C++ ORB $cxx_orb_name!])
+         ;;
+   esac
 
-CPPFLAGS="$tweeksave_CPPFLAGS"
-LDFLAGS="$tweeksave_LDFLAGS"
-LIBS="$tweeksave_LIBS"
+   CPPFLAGS="$tweeksave_CPPFLAGS"
+   LDFLAGS="$tweeksave_LDFLAGS"
+   LIBS="$tweeksave_LIBS"
+fi
 
 # --------------------
 # Find the Java ORB.
