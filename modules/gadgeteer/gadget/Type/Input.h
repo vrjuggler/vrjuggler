@@ -221,7 +221,7 @@ protected:
 
    Input(const Input& o) : vpr::SerializableObject(o)
    {;}
-   void operator= (const Input& o) {;}
+   void operator= (const Input&) {;}
 };
 
 } // end namespace

@@ -47,9 +47,9 @@ private:
    /**
     * Hide copy constructor and assignment operator.
     */
-   Acceptor( const Acceptor& a )
+   Acceptor(const Acceptor&)
    {;}
-   void operator=( const Acceptor& a )
+   void operator=(const Acceptor&)
    {;}
 public:
    /**

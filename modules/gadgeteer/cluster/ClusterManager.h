@@ -75,7 +75,7 @@ protected:
       /* Do nothing. */;
    }
 
-   void operator=( const ClusterManager& cm )
+   void operator=(const ClusterManager&)
    {
       /* Do nothing. */ ;
    }

@@ -146,8 +146,8 @@ protected:
    PositionData      mDefaultValue;   /**< Default positional value to return */
 
    // gadget::SampleBuffer<T> is not copyable, so neither are we.
-   Position(const gadget::Position& d) : vpr::SerializableObject() {;}
-   void operator=(const gadget::Position& d) {;}
+   Position(const gadget::Position& p) : vpr::SerializableObject(p) {;}
+   void operator=(const gadget::Position&) {;}
 
 private:
    std::vector<PositionFilter*>  mPositionFilters;    /**< The active filters that are to be used */
