@@ -36,14 +36,15 @@ package VjControl;
 import VjControl.VjComponent;
 
 /** Base interface for all CoreModules.
- *  This doesn't add anything in particular to VjComponent but is needed
- *  for type inference by module users.
+ *  This is a tag interface.  It does not define any additional
+ *  methods, but is used for configuration checking by VjControl.Core.
+ *  Essentially, any component that is to be added directly as a child
+ *  of Core should implement this interface.
+ *
+ *  @author Christopher Just
+ *  @version $Revision$
  */
 public interface CoreModule
     extends VjComponent {
 
-//      /** Returns the unique name of an instance of this component. */
-//      public String getComponentName ();
-
-    // possible fns:  getChunk; getDependencies
 }
