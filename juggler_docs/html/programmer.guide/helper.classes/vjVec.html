@@ -515,7 +515,15 @@
 </PRE>
 
     Depending on the transformations contained within <TT>xform_mat</TT>,
-    <TT>vec</TT> will be fully transformed appropriately.
+    <TT>vec</TT> will be fully transformed appropriately.  The operation
+    as a mathematical equation would be:
+
+<PRE>
+    V' = M * V
+</PRE>
+
+    where <TT>V</TT> and <TT>V'</TT> are vectors and <TT>M</TT> is a 4x4
+    transformation matrix.
   </P>
 
 <H4><A NAME="xform_vec">Partial Transformation by a Matrix</A></H4>
