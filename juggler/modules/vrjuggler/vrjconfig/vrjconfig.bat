@@ -30,27 +30,32 @@ rem Version:       $Revision$
 rem -----------------------------------------------------------------
 rem
 rem ************** <auto-copyright.pl END do not edit this line> **************
-IF NOT "%VJ_BASE_DIR%" == "" GOTO ELSE1
+IF NOT "%VJ_BASE_DIR%" == "" GOTO TEST_VJ_EXIST
 ECHO [ERR] VJ_BASE_DIR unset; please set the environment variable VJ_BASE_DIR to
-ECHO [ERR] point to your VR Juggler installation directory.  For more information, 
+ECHO [ERR] point to your VR Juggler installation directory.  For more information,
 ECHO [ERR] please see INSTALL.html
 GOTO ERREXIT
-:ELSE1
-IF EXIST "%VJ_BASE_DIR%" GOTO ELSE2
-ECHO [ERR] The VJ_BASE_DIR %VJ_BASE_DIR% does not appear to exist.  Please 
+:TEST_VJ_EXIST
+IF EXIST "%VJ_BASE_DIR%" GOTO TEST_TWEEK_BASE
+ECHO [ERR] The VJ_BASE_DIR %VJ_BASE_DIR% does not appear to exist.  Please
 ECHO [ERR] check the path and try again.
 GOTO ERREXIT
-:ELSE2
-IF NOT "%TWEEK_BASE_DIR%"=="" GOTO ELSE3
+:TEST_TWEEK_BASE
+IF NOT "%TWEEK_BASE_DIR%" == "" GOTO TEST_TWEEK_EXIST
 ECHO  WARNING: Setting TWEEK_BASE_DIR to "%VJ_BASE_DIR%"
 set TWEEK_BASE_DIR=%VJ_BASE_DIR%
-:ELSE3
-IF EXIST "%TWEEK_BASE_DIR%" GOTO RUNJAVA
-ECHO [ERR] The TWEEK_BASE_DIR %TWEEK_BASE_DIR does not appear to exist.  Please 
+:TEST_TWEEK_EXIST
+IF EXIST "%TWEEK_BASE_DIR%" GOTO TEST_JCCL_DEF
+ECHO [ERR] The TWEEK_BASE_DIR %TWEEK_BASE_DIR% does not appear to exist.  Please
 ECHO [ERR] check the path and try again.
 GOTO ERREXIT
+:TEST_JCCL_DEF
+IF NOT "%JCCL_DEFINITION_PATH%" == "" GOTO RUNJAVA
+ECHO  WARNING: Setting JCCL_DEFINITION_PATH to "%VJ_BASE_DIR%\share\vrjuggler\data\definitions"
+set JCCL_DEFINITION_PATH=%VJ_BASE_DIR%\share\vrjuggler\data\definitions
 :RUNJAVA
 java -DTWEEK_BASE_DIR=%TWEEK_BASE_DIR% -DVJ_BASE_DIR=%VJ_BASE_DIR% -DJCCL_DEFINITION_PATH=%JCCL_DEFINITION_PATH% -Djava.security.policy=%TWEEK_BASE_DIR%/bin/java.security.policy.txt -cp %TWEEK_BASE_DIR%/bin/jdom.jar;%TWEEK_BASE_DIR%/bin/xerces.jar;%TWEEK_BASE_DIR%/bin/Tweek.jar;%TWEEK_BASE_DIR%/bin/TweekBeans.jar;%TWEEK_BASE_DIR%/bin/TweekEvents.jar;%TWEEK_BASE_DIR%/bin/TweekNet.jar;%TWEEK_BASE_DIR%/bin/TweekBeanDelivery.jar;%TWEEK_BASE_DIR%/bin/TweekServices.jar;%TWEEK_BASE_DIR%/bin/kunststoff-mod.jar;%TWEEK_BASE_DIR%/bin/metouia.jar org.vrjuggler.tweek.Tweek --defaultbean=VRJConfig %1 %2 %3 %4 %5 %6 %7 %8 %9
-EXIT
+GOTO DONE
 :ERREXIT
 ECHO [ERR] VRJConfig exiting due to previous errors.
+:DONE
