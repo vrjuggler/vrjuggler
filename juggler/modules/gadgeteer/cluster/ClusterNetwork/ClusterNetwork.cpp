@@ -167,8 +167,8 @@ namespace cluster
          std::string local_host_name;
 
          local.getHostname(local_host_name);
-         ConnectionAck* responce_packet = new ConnectionAck(local_host_name,
-                                                            mListenAddr.getPort(),true);
+         ConnectionAck* responce_packet =
+            new ConnectionAck(local_host_name, mListenAddr.getPort(), true);
 
          // Try to send a responce packet
          try
@@ -461,12 +461,16 @@ namespace cluster
       {
          vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL)
             << clrSetBOLD(clrRED) << "[ClusterNetwork]"
-            << " Unable to open listening socket on port: " << mListenAddr.getPort() << std::endl << clrRESET << vprDEBUG_FLUSH;
+            << " Unable to open listening socket on port: "
+            << mListenAddr.getPort() << std::endl
+            << clrRESET << vprDEBUG_FLUSH;
+
          exit(0);
       }
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
          << clrOutBOLD(clrMAGENTA,"[ClusterNetwork]")
-         << " Listening on Port: " << mListenAddr.getPort() << std::endl << vprDEBUG_FLUSH;
+         << " Listening on Port: " << mListenAddr.getPort()
+         << std::endl << vprDEBUG_FLUSH;
 
 
       // Create a socketstream for new socket
@@ -478,7 +482,8 @@ namespace cluster
          vpr::ReturnStatus status = sock.accept(*client_sock, vpr::Interval::NoTimeout);
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
             << clrOutBOLD(clrMAGENTA,"[ClusterNetwork]")
-            << " Receiving a connection request on Port: " << mListenAddr.getPort() << std::endl << vprDEBUG_FLUSH;
+            << " Receiving a connection request on Port: "
+            << mListenAddr.getPort() << std::endl << vprDEBUG_FLUSH;
 
          if ( status.success() )
          {
@@ -490,7 +495,8 @@ namespace cluster
 
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
                << clrOutBOLD(clrMAGENTA,"[ClusterNetwork]")
-               << " Receiving a connection request from: " << remote_host_name << std::endl << vprDEBUG_FLUSH;
+               << " Receiving a connection request from: " << remote_host_name
+               << std::endl << vprDEBUG_FLUSH;
 
             // See if we already have a ClusterNode with the same hostname
             ClusterNode* requesting_node = getClusterNodeByHostname(remote_host_name);
@@ -506,7 +512,11 @@ namespace cluster
                   << " Adding new node to ClusterNetwork..." << std::endl << vprDEBUG_FLUSH;
 
                // Create a new ClusterNode and pass it the new SocketStream
-               requesting_node = new ClusterNode(std::string("Unknown"), std::string("Unknown"), vpr::Uint16(0), client_sock);
+               requesting_node = new ClusterNode(std::string("Unknown"),
+                                                 std::string("Unknown"),
+                                                 vpr::Uint16(0),
+                                                 client_sock);
+
                // Add the new node to the cluster
                ClusterNetwork::instance()->addClusterNode(requesting_node);
             }
@@ -739,10 +749,11 @@ namespace cluster
          }
       }
    }
+   
    bool ClusterNetwork::isClusterNetworkReady()
    {
       // ClusterNetwork is ready if it has
-      // no pending connection requests
+      // no pending connections
       return (0 == mPendingNodes.size());
    }
-}   // end namespace cluster
+} // end namespace cluster

@@ -41,7 +41,6 @@
 #include <jccl/Config/ConfigElementPtr.h>
 
 #include <vpr/IO/Socket/SocketStream.h>
-//#include <list>
 
 namespace vpr
 {
@@ -58,33 +57,48 @@ class GADGET_CLASS_API ClusterNetwork : public jccl::ConfigElementHandler
 {
    vprSingletonHeader( ClusterNetwork );
 public:
+   /**
+    * Construct an empty representation of a cluster.
+    */
    ClusterNetwork();
+
+   /**
+    * Deconstruct object and release memory.
+    */
    virtual ~ClusterNetwork();
 
+   /**
+    * Process an incoming packet.
+    */
    void handlePacket(Packet* packet, ClusterNode* node);
-     
+
+   /**
+    * Return true if there are no pending cluster nodes.
+    */
    bool isClusterNetworkReady();
 
    void updateNewConnections();
 
-   /** Locks the list of ClusterNodes
+   /**
+    * Locks the list of ClusterNodes
     *
-    *  This function blocks until it can lock the std::vector of
-    *  ClusterNodes.
+    * This function blocks until it can lock the std::vector of
+    * ClusterNodes.
     *
-    *  The caller of this method must call unlockActive() when it
-    *  is finished viewing/modifying the active list.
+    * The caller of this method must call unlockActive() when it
+    * is finished viewing/modifying the active list.
     */
    void lockClusterNodes()
    { mClusterNodesLock.acquire(); }
 
-   /** Unlocks the list of ClusterNodes
+   /**
+    * Unlocks the list of ClusterNodes
     *
-    *  The method releases the lock on the std::map.of
-    *  ClusterNodes
+    * The method releases the lock on the std::map.of
+    * ClusterNodes
     *
-    *  The caller of this method must have previously locked the 
-    *  ClusterNodes list with lockClusterNodes().
+    * The caller of this method must have previously locked the 
+    * ClusterNodes list with lockClusterNodes().
     */
    void unlockClusterNodes()
    { mClusterNodesLock.release(); }
@@ -114,13 +128,15 @@ private:
    void removeClusterNode(const std::string& node_hostname);
 
 public:  
-   /** Returns the ClusterNode with the given hostname
-    *  If no ClusterNode with this hostname exists, NULL is returned.
+   /**
+    * Returns the ClusterNode with the given hostname
+    * If no ClusterNode with this hostname exists, NULL is returned.
     */   
    cluster::ClusterNode* getClusterNodeByHostname(const std::string& host_name);
    
-   /** Returns the ClusterNode with the given name
-    *  If no ClusterNode with this name exists, NULL is returned.
+   /**
+    * Returns the ClusterNode with the given name
+    * If no ClusterNode with this name exists, NULL is returned.
     */   
    cluster::ClusterNode* getClusterNodeByName(const std::string& node_name);
    
@@ -130,15 +146,17 @@ public:
    int getNumClusterNodes()
    { return mClusterNodes.size(); }
 
-   /** Print out debug information abour all nodes in the current 
-    *  cluster configuration
+   /**
+    * Print out debug information abour all nodes in the current 
+    * cluster configuration
     *
-    *  @pre The caller of this method must NOT have locked the pending list.
+    * @pre The caller of this method must NOT have locked the pending list.
     */
    void debugDumpClusterNodes(int debug_level);
 
-   /** Get an iterator to the beginning of the ClusterNodes std::vector.
-    *  The caller of this method must have locked the ClusterNodes list.
+   /**
+    * Get an iterator to the beginning of the ClusterNodes std::vector.
+    * The caller of this method must have locked the ClusterNodes list.
     */
    std::vector<cluster::ClusterNode*>::iterator getClusterNodesBegin()
    {
@@ -146,8 +164,9 @@ public:
       return mClusterNodes.begin();
    }
    
-   /** Get an iterator to the end of the ClusterNodes std::vector.
-    *  The caller of this method must have locked the ClusterNodes list.
+   /**
+    * Get an iterator to the end of the ClusterNodes std::vector.
+    * The caller of this method must have locked the ClusterNodes list.
     */
    std::vector<cluster::ClusterNode*>::iterator getClusterNodesEnd()
    {
@@ -156,41 +175,46 @@ public:
    }
 
 public:
-   /** Locks the list of PendingNodes
+   /**
+    * Locks the list of PendingNodes
     *
-    *  This function blocks until it can lock the std::vector of
-    *  PendingNodes.
+    * This function blocks until it can lock the std::vector of
+    * PendingNodes.
     *
-    *  The caller of this method must call unlockActive() when it
-    *  is finished viewing/modifying the active list.
+    * The caller of this method must call unlockActive() when it
+    * is finished viewing/modifying the active list.
     */
    void lockPendingNodes()
    { mPendingNodesLock.acquire(); }
    
-   /** Unlocks the list of PendingNodes
+   /**
+    * Unlocks the list of PendingNodes
     *
-    *  The method releases the lock on the std::map.of
-    *  PendingNodes
+    * This method releases the lock on the std::map of
+    * PendingNodes
     *
-    *  The caller of this method must have previously locked the PendingNodes
-    *  list with lockPendingNodes().
+    * The caller of this method must have previously locked the PendingNodes
+    * list with lockPendingNodes().
     */   
    void unlockPendingNodes()
    { mPendingNodesLock.release(); }
 
 public:
-   /** Adds the given ClusterNode to a list of pending nodes
-    *  that are still trying to gain a connection.
+   /**
+    * Adds the given ClusterNode to a list of pending nodes
+    * that are still trying to gain a connection.
     */
    void addPendingNode(ClusterNode* node);
    
-   /** Removes the ClusterNode with the given hostname from
-    *  the list of PendingNodes.
+   /**
+    * Removes the ClusterNode with the given hostname from
+    * the list of PendingNodes.
     */
    void removePendingNode(std::string hostname);
 
-   /** Returns the Pending node with the given hostname.
-    *  If the is not a node with the given hotname, NULL is returned.
+   /**
+    * Returns the Pending node with the given hostname.
+    * If the is not a node with the given hotname, NULL is returned.
     */
    ClusterNode* getPendingNode(std::string host_name);
 
@@ -220,10 +244,6 @@ private:
     */
    void acceptLoop(void* nullParam);           
    
-   /////////////////////////////
-   //    UPDATING METHODS     //
-   /////////////////////////////
-private:   
    /**
     * Kill the listen thread and the update thread
     */
@@ -278,8 +298,6 @@ private:
    
    std::vector<cluster::ClusterNode*>     mPendingNodes;       /**< Vector of Pending Nodes */
    vpr::Mutex                             mPendingNodesLock;   /**< Lock the mPendingNodes list */
-   
-   vpr::Thread*                           mUpdateThread;       /**< Thread to continually attempt pending nodes */
    
    vpr::Thread*                           mAcceptThread;       /**< Thread that listens for incoming connections. */
    vpr::InetAddr                          mListenAddr;         /**< Address to listen for incoming connections on. */
