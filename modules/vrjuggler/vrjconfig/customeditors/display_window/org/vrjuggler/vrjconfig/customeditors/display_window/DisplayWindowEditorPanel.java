@@ -493,9 +493,9 @@ public class DisplayWindowEditorPanel
    void addSurfaceViewportClicked(ActionEvent e)
    {
       SurfaceViewportCreateDialog dlg =
-         new SurfaceViewportCreateDialog(getOwner());
+         new SurfaceViewportCreateDialog(getOwner(), mContext);
 
-      if ( dlg.showDialog() == DisplayWindowStartDialog.OK_OPTION )
+      if ( dlg.showDialog() == SurfaceViewportCreateDialog.OK_OPTION )
       {
          ConfigBrokerProxy broker = new ConfigBrokerProxy();
          ConfigDefinition vp_def =
@@ -560,9 +560,9 @@ public class DisplayWindowEditorPanel
    void addSimulatorViewportClicked(ActionEvent e)
    {
       SimulatorViewportCreateDialog dlg =
-         new SimulatorViewportCreateDialog(getOwner());
+         new SimulatorViewportCreateDialog(getOwner(), mContext);
 
-      if ( dlg.showDialog() == DisplayWindowStartDialog.OK_OPTION )
+      if ( dlg.showDialog() == SimulatorViewportCreateDialog.OK_OPTION )
       {
          ConfigBrokerProxy broker = new ConfigBrokerProxy();
          ConfigDefinition vp_def =
