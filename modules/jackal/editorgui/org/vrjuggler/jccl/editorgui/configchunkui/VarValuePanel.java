@@ -32,6 +32,14 @@
 
 
 
+package VjComponents.ConfigEditor.ConfigChunkUI;
+
+import javax.swing.JPanel;
+import java.awt.event.ActionListener;
+
+import VjConfig.VarValue;
+
+
 /* VarValuePanel is just a little panel that we'll stick several of 
  * in a PropertyPanel.
  *
@@ -44,24 +52,18 @@
  * the value gadget is going to be either a TextArea or a multisetSelectedItem
  * with the acceptable values in it.  removebutton will be there if the
  * associated property has var numbers of values.
+ *
+ *  VarValuePanels are a source of ActionEvents.  The commands associated
+ *  with the events (accessible via ActionEvent.getActionCommand()), are:
+ *    "Remove" - if the panel's remove button was pressed.
  */
-
-package VjComponents.ConfigEditor.ConfigChunkUI;
-
-import javax.swing.JPanel;
-
-import VjConfig.VarValue;
-
 abstract public class VarValuePanel extends JPanel {
-
-    public interface VarValuePanelParent {
-	public void removePanel (VarValuePanel p);
-    }
 
     abstract public void setValue (VarValue v);
     abstract public VarValue getValue ();
 
-
+    abstract public void addActionListener (ActionListener l);
+    abstract public void removeActionListener (ActionListener l);
 
 }
 

@@ -50,6 +50,7 @@ package VjComponents.ConfigEditor.ConfigChunkUI;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
 import javax.swing.*;
 
 import VjControl.Core;
@@ -64,23 +65,24 @@ public class VarValueBigChunkPanel
                ChildFrameParent {
 
 
-    VarValuePanelParent     parent; // the parent is a listener on the remove button
-    Property      prop;
-    ConfigChunk  chunk;
-    JButton           remove_button;
-    JButton           edit_button;
-    GenericEditorFrame chunkframe;
-    ConfigUIHelper uihelper_module;
+    protected Property           prop;
+    protected ConfigChunk        chunk;
+    protected JButton            remove_button;
+    protected JButton            edit_button;
+    protected GenericEditorFrame chunkframe;
+    protected ConfigUIHelper     uihelper_module;
+    protected java.util.List     action_listeners;
 
-    public VarValueBigChunkPanel(VarValuePanelParent par, Property _prop, 
+
+    public VarValueBigChunkPanel(Property _prop, 
                                  ConfigChunk _chunk, 
                                  ConfigUIHelper _uihelper_module) {
 	super();
-	parent = par;
 	prop = _prop;
 	chunk = new ConfigChunk (_chunk);
 	chunkframe = null;
         uihelper_module = _uihelper_module;
+        action_listeners = new ArrayList();
 
 	//setLayout (new BoxLayout (this, BoxLayout.X_AXIS));
         setLayout (new GridLayout (1, 2));
@@ -130,7 +132,7 @@ public class VarValueBigChunkPanel
 
     public void actionPerformed (ActionEvent e) {
 	if (e.getSource() == remove_button)
-	    parent.removePanel(this);
+            notifyActionListenersRemove();
 	else if (e.getSource() == edit_button) {
 	    if (chunkframe == null) {
                 ConfigChunkPanel p = uihelper_module.configchunkpanel_factory.createConfigChunkPanel (chunk.getDescToken());
@@ -143,6 +145,35 @@ public class VarValueBigChunkPanel
 	    // BUG!!! that call to p.setChunk ought to pass the
 	    // chunkdb, but this panel doesn't know what it is!!!
 	}
+    }
+
+
+    //--------------------- ActionEvent Stuff ------------------------
+
+    public void addActionListener (ActionListener l) {
+	synchronized (action_listeners) {
+	    action_listeners.add (l);
+	}
+    }
+
+    public void removeActionListener (ActionListener l) {
+	synchronized (action_listeners) {
+	    action_listeners.remove (l);
+	}
+    }
+
+    private void notifyActionListenersRemove () {
+        ActionEvent e = new ActionEvent (this, ActionEvent.ACTION_PERFORMED,
+                                         "Remove");
+        ActionListener l;
+        int i, n;
+        synchronized (action_listeners) {
+            n = action_listeners.size();
+            for (i = 0; i < n; i++) {
+                l = (ActionListener)action_listeners.get(i);
+                l.actionPerformed (e);
+            }
+        }
     }
 
 
