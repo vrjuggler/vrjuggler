@@ -76,38 +76,49 @@ public:
 	const char* const GetPort();
 	
 	void	    SetBaudRate( const int& baud );
-	inline int  GetBaudRate() { return baudRate;}
+	inline int  GetBaudRate() { return _baud;}
    
 	void	    SetTransmitter( const int& Transmit );
-	inline int  GetTransmitter() { return theTransmitter; }
+	inline int  GetTransmitter() { return _xmitterUnitNumber; }
 
 	void	    SetNumBirds( const int& n );
-	inline int  GetNumBirds() { return numBirds; }
+	inline int  GetNumBirds() { return _numBirds; }
 
 	void	    SetSync( const int& sync );
-	inline int  GetSync() {return syncStyle; }
+	inline int  GetSync() {return _syncStyle; }
 
 	void	    SetBlocking( const int& blVal );
-	inline int  GetBlocking() { return blocking; }
+	inline int  GetBlocking() { return _blocking; }
 
 	void	    SetFilters( const BIRD_FILT& f );
-	inline int  GetFilters() { return filter; }
+	inline int  GetFilters() { return _filter; }
 
 	void	    SetHemisphere( const BIRD_HEMI& h );
-	inline int  GetHemisphere() {return hemisphere; }
+	inline int  GetHemisphere() {return _hemisphere; }
 
 	void	    SetReportRate( const char& rRate );
-        inline char GetReportRate() {return repRate; }
+        inline char GetReportRate() {return _reportRate; }
 
 private:
 	void        Position_Correct( float& x, float& y, float& z );
 	void        InitCorrectionTable( const char* const );
 	CalStruct   caltable;
-	int         theTransmitter, syncStyle, blocking;
-	int         numBirds;
-	char        repRate;
-	BIRD_HEMI   hemisphere;
-	BIRD_FILT   filter;
+	char        _reportRate;
+	BIRD_HEMI   _hemisphere;
+	BIRD_FILT   _filter;
+	
+	std::string _port;
+	int	    _baud;
+	int	    _syncStyle;
+	int	    _blocking;
+	int	    _numBirds;
+	int	    _xmitterUnitNumber;
+	std::string _calibrationFileName;
+	bool	    _usingCorrectionTable;
+	
+	vjMatrix* theData;
+	
+	bool _active;
 	
 // bird declarations.
 private:	
