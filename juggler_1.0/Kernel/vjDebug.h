@@ -170,12 +170,8 @@ const std::string vjDBG_CONFIGstr("DBG_CONFIGDB");
 #   define vjDEBUG_FLUSH std::flush
 #endif
 
-// -- ASSERT -- //
-#ifdef VJ_DEBUG
-#   define vjASSERT(val) assert((val))
-#else
-#   define vjASSERT(val) ((void)0)
-#endif
+
+#include "vjAssert.h"
 
 
 //------------------------------------------
