@@ -38,7 +38,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="sonix_d.lib gadget_d.lib jccl_d.lib vpr_d.lib cppdom_d.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj_d.dll"
-				Version="1.1.153"
+				Version="1.1.154"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;..\VPR\DebugDLL;..\JCCL\DebugDLL;..\Gadgeteer\DebugDLL;..\Sonix\DebugDLL"
 				GenerateDebugInformation="TRUE"
@@ -91,7 +91,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="sonix.lib gadget.lib jccl.lib vpr.lib cppdom.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj.dll"
-				Version="1.1.153"
+				Version="1.1.154"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;..\VPR\ReleaseDLL;..\JCCL\ReleaseDLL;..\Gadgeteer\ReleaseDLL;..\Sonix\ReleaseDLL"
 				GenerateDebugInformation="FALSE"
@@ -195,6 +195,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Draw\DrawSimInterface.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vrjuggler\vrj\Kernel\Exceptions.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Display\Frustum.h">
