@@ -35,6 +35,7 @@
 //
 // Date: 9-7-97
 //-------------------------------------------------------
+//!PUBLIC_API
 class vjKernel
 {
 public:
@@ -42,7 +43,9 @@ public:
    //: Start the Kernel running
    int start();
 
-   //: Load initial configuration data
+   //: Load initial configuration data for the managers
+   //! POST: Managers set up
+   //+       Config files loaded and handed to configAdd
    void initConfig();
 
    //: The Kernel loop
@@ -63,8 +66,12 @@ public:
    { return 1; }
 
 public:  // --- Config interface --- //
-   void config(vjConfigChunkDB* chunkDB);
+      // Add a group of config chunks
+   void configAdd(vjConfigChunkDB* chunkDB);
+
+      // Remove a group of config chunks
    void configRemove(vjConfigChunkDB* chunkDB);
+
    vjConfigChunkDB* getChunkDB()
    { return mChunkDB; }
 

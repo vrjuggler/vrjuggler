@@ -31,6 +31,7 @@ int vjKernel::start()
 // Initialize Shared Memory
 // Load config
 // Setup Input, Display, and then Draw Managers
+//!NOTE: Does initial configuration and then sends config file to configAdd
 //!POST: Shared Memory Initialized
 //----------------------------------------------
 void vjKernel::initConfig()
@@ -46,6 +47,7 @@ void vjKernel::initConfig()
    setupInputManager();
    setupEnvironmentManager();
 
+   configAdd(mChunkDB);       // Setup the configuration
 
    //apiFactory = app->api.getAPIFactory();
    sysFactory = vjSGISystemFactory::instance(); // XXX: Should not be system specific
@@ -118,12 +120,45 @@ void vjKernel::updateFrameData()
 //---------------------------------
 // Config routines
 //---------------------------------
-void vjKernel::config(vjConfigChunkDB* chunkDB)
+void vjKernel::configAdd(vjConfigChunkDB* chunkDB)
 {
-   // Config input manager
-   // Config display manager
-   // Config draw manager
-   // Update config database
+   // Dependency sort the items
+   int dep_result = chunkDB->dependencySort();
+
+   // If sort fails, exit with error
+   if(dep_result == -1)
+   {
+      vjDEBUG(0) << "vjKernel::configAdd: ERROR: Dependency sort failed. Aborting add.\n" << vjDEBUG_FLUSH;
+      return;
+   }
+
+   // Get sorted list
+   vector<vjConfigChunk*> chunks = chunkDB->getChunks();
+
+   // For each element
+   for(int i=0;i<chunks.size();i++)
+   {
+      bool added_chunk = false;
+
+      if(getInputManager()->configCanHandle(chunks[i]))  // inputMgr
+         added_chunk = getInputManager()->configAdd(chunks[i]);
+      // displayMgr
+      // drawMgr
+      // app
+
+      // --- Check for adding to active config --- //
+      if(added_chunk)      // if added: add to config database
+      {}
+      else                 // Else: Give unrecognized error
+      {
+         vjDEBUG(0) << "vjKernel::configAdd: Unrecognized chunk.\n"
+                    << "   type: " << (char*)chunks[i]->getType() << endl << vjDEBUG_FLUSH;
+      }
+   }
+
+   // Dump status
+   getInputManager()->DumpStatus();
+
 }
 
 void vjKernel::configRemove(vjConfigChunkDB* chunkDB)
@@ -186,18 +221,21 @@ void vjKernel::loadConfigFile()
 
 }
 
+
 void vjKernel::setupInputManager()
 {
    vjDEBUG(0) << "   vjKernel::setupInputManager\n" << vjDEBUG_FLUSH;
    data.inputManager = new (sharedMemPool) vjInputManager;
-   data.inputManager->FNewInput(mChunkDB);
+   // data.inputManager->FNewInput(mChunkDB);
+   data.inputManager->ConfigureInitial(mChunkDB);
 
-   vjDEBUG(0) << "      Input manager has passed. (Andy did good)" << endl << vjDEBUG_FLUSH;
+   //vjDEBUG(0) << "      Input manager has passed. (Andy did good)" << endl << vjDEBUG_FLUSH;
 
-   data.inputManager->UpdateAllData();
+   //data.inputManager->UpdateAllData();
 
-   vjDEBUG(0) << "      First Update trackers succeeded..." << endl << vjDEBUG_FLUSH;
+   //vjDEBUG(0) << "      First Update trackers succeeded..." << endl << vjDEBUG_FLUSH;
 }
+
 
 void vjKernel::setupDisplayManager()
 {
@@ -255,4 +293,4 @@ void vjKernel::setupEnvironmentManager() {
    environmentManager->activate();
    vjDEBUG(0) << "      Environment Manager running & accepting "
               << "connections\n" << vjDEBUG_FLUSH;
-} 
+}
