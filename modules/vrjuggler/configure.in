@@ -269,7 +269,7 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 #fi
 
 CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS_MIN $JCCL_CXXFLAGS_MIN $GADGET_CXXFLAGS_MIN $SNX_CXXFLAGS $GMTL_INCLUDES"
-EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
+BASE_APP_LINK_FLAGS="$STDFLAGS $BASE_APP_LINK_FLAGS"
 DEPEND_FLAGS="$VPR_INCLUDES_MIN $JCCL_INCLUDES_MIN $GADGET_INCLUDES_MIN $SNX_INCLUDES_MIN $GMTL_INCLUDES"
 vrj_cxxflags="$STDFLAGS"
 
@@ -283,17 +283,23 @@ if test "x$USE_GCC" != "xyes" ; then
    if test "x$PLATFORM" = "xIRIX" ; then
 #      CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
       CXXFLAGS="$CXXFLAGS -w2"
-      EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -J4 -all"
+      BASE_APP_LINK_FLAGS="$BASE_APP_LINK_FLAGS -J4 -all"
    elif test "x$OS_TYPE" = "xWin32" ; then
       vc_cflags='/QIfdiv /QI0f'
       vc_cxxflags='/GR /GX /EHc /QIfdiv /QI0f'
       CFLAGS="$CFLAGS $vc_cflags"
       CXXFLAGS="$CXXFLAGS $vc_cxxflags"
-      EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /nologo /incremental:no"
+      BASE_APP_LINK_FLAGS="$BASE_APP_LINK_FLAGS /nologo /incremental:no"
       DBG_FLAGS="$DBG_FLAGS /MDd"
       OPT_FLAGS="$OPT_FLAGS /MD"
       vrj_cxxflags="$vc_cxxflags $vrj_cxxflags"
    fi
+fi
+
+if test "x$PLATFORM" = "xDarwin" ; then
+   CFLAGS_DYNLIB="$CFLAGS_DYNLIB -fexport-coalesced"
+   CXXFLAGS_DYNLIB="$CXXFLAGS_DYNLIB -fexport-coalesced"
+   BASE_APP_LINK_FLAGS="$BASE_APP_LINK_FLAGS -flat_namespace -Wl,-bind_at_load"
 fi
 
 if test "x$LOCAL_GMTL" = "xY" ; then
@@ -363,9 +369,9 @@ fi
 # Put together the basic information needed to compile VR Juggler applications.
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $VJ_APP_CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
                 VJ_BASE_DIR, $DEFS, , ${_EXTRA_FLAGS})
-VJ_APP_LINKER_DOOZER(["$CXX"], ["$EXTRA_LINK_FLAGS"], ["$LDOPTS_DBG"],
-                     ["$LDOPTS_OPT"], ['$(VRJ_LIBS_MIN)'],
-                     ["$VJ_APP_EXTRA_LIBS"])
+VJ_APP_LINKER_DOOZER([$CXX], [$BASE_APP_LINK_FLAGS], [$LDOPTS_DBG],
+                     [$LDOPTS_OPT], ['$(VRJ_LIBS_MIN)'],
+                     [$VJ_APP_EXTRA_LIBS])
 
 APP_BASE_DIR='$(topdir)/instlinks'
 APP_BASE_DIR_INST='$(VJ_BASE_DIR)'
@@ -563,8 +569,8 @@ AC_SUBST(VJROOT_ABS)
 AC_SUBST(JUGGLERROOT_ABS)
 AC_SUBST(VJ_SHARE_DIR)
 
+AC_SUBST(EXTRA_LDFLAGS)
 AC_SUBST(RM_LN)
-AC_SUBST(EXTRA_LINK_FLAGS)
 AC_SUBST(VPR_SUBSYSTEM)
 
 AC_SUBST(BUILD_JAVA)
