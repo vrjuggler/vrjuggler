@@ -38,6 +38,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Stack;
 import javax.swing.*;
+
+import org.vrjuggler.tweek.TweekCore;
+import org.vrjuggler.tweek.beans.FileLoader;
+import org.vrjuggler.tweek.event.FileActionGenerator;
 import org.vrjuggler.tweek.services.EnvironmentService;
 import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 import org.vrjuggler.tweek.services.GlobalPreferencesServiceProxy;
@@ -57,8 +61,10 @@ public class ConfigToolbar
    extends JComponent
    implements VrjConfigConstants
 {
-   public ConfigToolbar()
+   public ConfigToolbar(FileLoader fileLoader)
    {
+      mFileLoaderBean = fileLoader;
+
       try
       {
          jbInit();
@@ -114,6 +120,18 @@ public class ConfigToolbar
          System.err.println("ConfigToolbar(): WARNING: Failed to set file " +
                             "chooser start directory: " + ex.getMessage());
       }
+   }
+
+   public void addNotify()
+   {
+      super.addNotify();
+      TweekCore.instance().registerFileActionGenerator(mFileActionGen);
+   }
+
+   public void removeNotify()
+   {
+      TweekCore.instance().unregisterFileActionGenerator(mFileActionGen);
+      super.removeNotify();
    }
 
    public void addToToolbar(Component comp)
@@ -587,21 +605,39 @@ public class ConfigToolbar
       {
          public void actionPerformed(ActionEvent evt)
          {
-            doNew();
+            if ( doNew() )
+            {
+               // Indicate that an open operation was completed successfully.
+               // We only do this here because we can guarantee that a child
+               // of this component is the true source of the open event.
+               mFileActionGen.fireOpenPerformed(mFileLoaderBean);
+            }
          }
       });
       openBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
          {
-            doOpen();
+            if ( doOpen() )
+            {
+               // Indicate that an open operation was completed successfully.
+               // We only do this here because we can guarantee that a child
+               // of this component is the true source of the open event.
+               mFileActionGen.fireOpenPerformed(mFileLoaderBean);
+            }
          }
       });
       saveAllBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
          {
-            doSaveAll();
+            if ( doSaveAll() )
+            {
+               // Indicate that a save operation was completed successfully.
+               // We only do this here because we can guarantee that a child
+               // of this component is the true source of the save event.
+               mFileActionGen.fireSaveAllPerformed(mFileLoaderBean);
+            }
          }
       });
       copyBtn.addActionListener(new ActionListener()
@@ -667,4 +703,7 @@ public class ConfigToolbar
    private ConfigContext context = new ConfigContext();
    private EnvironmentService mEnvService = new EnvironmentServiceProxy();
    private Container mParentFrame = null;
+
+   private FileLoader mFileLoaderBean = null;
+   private FileActionGenerator mFileActionGen = new FileActionGenerator();
 }

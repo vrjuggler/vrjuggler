@@ -43,6 +43,7 @@ import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.editors.*;
 import org.vrjuggler.jccl.editors.net.TinyBrowser;
 
+import org.vrjuggler.tweek.TweekCore;
 import org.vrjuggler.tweek.beans.BeanRegistry;
 import org.vrjuggler.tweek.beans.FileLoader;
 import org.vrjuggler.tweek.beans.HelpProvider;
@@ -54,6 +55,7 @@ import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 import org.vrjuggler.vrjconfig.ui.ConfigToolbar;
 import org.vrjuggler.vrjconfig.ui.ContextToolbar;
 
+
 public class VrjConfig
    extends JPanel
    implements FileLoader
@@ -61,6 +63,9 @@ public class VrjConfig
 {
    public VrjConfig()
    {
+      TweekCore.instance().registerFileActionGenerator(mFileActionGen);
+      mToolbar = new ConfigToolbar(this);
+
       // Init the GUI
       try
       {
@@ -129,6 +134,24 @@ public class VrjConfig
       return true;
    }
 
+   public boolean hasUnsavedChanges()
+   {
+      JInternalFrame[] frames = mDesktop.getAllFrames();
+
+      boolean has_unsaved = false;
+      for ( int i = 0; i < frames.length; ++i )
+      {
+         ConfigContext ctx = ((ConfigIFrame) frames[i]).getConfigContext();
+         if ( ctx.getConfigUndoManager().getUnsavedChanges() )
+         {
+            has_unsaved = true;
+            break;
+         }
+      }
+
+      return has_unsaved;
+   }
+
    public boolean saveRequested()
    {
       return mToolbar.doSaveAll();
@@ -144,6 +167,11 @@ public class VrjConfig
       }
 
       return status;
+   }
+
+   public boolean saveAllRequested()
+   {
+      return mToolbar.doSaveAll();
    }
 
    public boolean closeRequested()
@@ -193,7 +221,7 @@ public class VrjConfig
    private ConfigIFrame toolbarContextChanged()
    {
       ConfigIFrame frame = new ConfigIFrame(mToolbar.getCurrentDirectory(),
-                                            mToolbar.getConfigContext());
+                                            mToolbar.getConfigContext(), this);
       frame.getEditor().setConfigContext(mToolbar.getConfigContext());
       addFrame(frame);
       return frame;
@@ -273,9 +301,11 @@ public class VrjConfig
 
    private ConfigIFrame mCurContextFrame = null;
 
+   private FileActionGenerator mFileActionGen = new FileActionGenerator();
+
    // JBuilder GUI variables
    private BorderLayout mBaseLayout = new BorderLayout();
-   private ConfigToolbar mToolbar = new ConfigToolbar();
+   private ConfigToolbar mToolbar = null;
    private JDesktopPane mDesktop = new JDesktopPane();
 
    /** A handle to the configuration broker. */
@@ -290,7 +320,8 @@ public class VrjConfig
    public class ConfigIFrame
       extends JInternalFrame implements ActionListener
    {
-      public ConfigIFrame(File curDir, ConfigContext ctx)
+      public ConfigIFrame(File curDir, ConfigContext ctx,
+                          FileLoader fileLoader)
       {
          super("Configuration Editor",
                true,
@@ -298,7 +329,7 @@ public class VrjConfig
                true,
                true);
          getContentPane().setLayout(new BorderLayout());
-         mContextToolbar = new ContextToolbar(curDir, ctx, this);
+         mContextToolbar = new ContextToolbar(curDir, ctx, this, fileLoader);
 
          mToolbar.addActionListener(this);
          addActionListener(editor.getContextEditor().getElementTree());
