@@ -51,8 +51,8 @@ namespace gadget
 /**
  * Fakespace Pinchglove Device.
  */
-class PinchGlove : virtual public Input, public Glove, public Digital
-//class PinchGlove : public InputMixer<Input,Digital>
+//class PinchGlove : virtual public Input, public Glove, public Digital
+class PinchGlove : public InputMixer<Input,Digital>
 {
 public:
    /** Default constructor. */

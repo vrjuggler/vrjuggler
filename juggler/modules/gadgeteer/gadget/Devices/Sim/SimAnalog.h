@@ -35,9 +35,11 @@
 //#pragma once
 
 #include <gadget/gadgetConfig.h>
+#include <jccl/Config/ConfigChunk.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Analog.h>
 #include <gadget/Devices/Sim/SimInput.h>
+#include <gadget/Type/InputMixer.h>
 
 
 namespace gadget
@@ -49,7 +51,8 @@ namespace gadget
 *
 * This class should not be used directly by the user.
 */
-class SimAnalog : public Input, public Analog, public SimInput
+//class SimAnalog : public Input, public Analog, public SimInput
+class SimAnalog : public InputMixer<InputMixer<SimInput,Input>,Analog>
 {
 public:
    SimAnalog();

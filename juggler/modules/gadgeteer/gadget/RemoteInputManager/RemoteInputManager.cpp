@@ -788,7 +788,7 @@ namespace gadget
          break;
       case MSG_DEVICE_DATA:   // Data for a given device has been received
          {
-            vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrOutNORM(clrGREEN,"[RIM Packet] DEVICE_DATA\n") << vprDEBUG_FLUSH;
+            vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << clrOutNORM(clrGREEN,"[RIM Packet] DEVICE_DATA\n") << vprDEBUG_FLUSH;
             
                // Try to find the NetDevice for this remote device
             NetDevice* net_device_recvr = net_connection->findReceivingNetDeviceByLocalId(device_id);    
@@ -801,7 +801,8 @@ namespace gadget
             }
             else
             {
-               vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "Receiving data for: " << net_device_recvr->getSourceName() << "\n" << vprDEBUG_FLUSH;
+               this->debugDump();
+               vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << "Receiving data for: " << net_device_recvr->getSourceName() << "\n" << vprDEBUG_FLUSH;
                msg_package->recieveDeviceDataPacket(data_reader,net_device_recvr->getRealDevice());
             }
          }

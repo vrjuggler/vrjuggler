@@ -30,15 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <gadget/gadgetConfig.h>
 #include <gadget/Devices/Sim/SimAnalog.h>
-#include <jccl/Config/ConfigChunk.h>
+
 
 namespace gadget
 {
 
 /** Default Constructor */
-SimAnalog::SimAnalog() : Analog(), SimInput()
+SimAnalog::SimAnalog()
 {
    //vprDEBUG(vprDBG_ALL,4)<<"*** SimAnalog::SimPinchGlove()\n"<< vprDEBUG_FLUSH;
 }

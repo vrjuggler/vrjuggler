@@ -52,7 +52,8 @@
 
 #include <gadget/gadgetConfig.h>
 #include <gadget/Type/Input.h>
-#include <gadget/Type/Position.h>    // The base class for vr_devices
+#include <gadget/Type/Position.h>
+#include <gadget/Type/InputMixer.h>
 #include <gmtl/Vec.h>
 //#include <Inventor/SbLinear.h> // For the vec classes
 
@@ -77,6 +78,8 @@
 #define logitech_RIGHTBUTTON    0x01
 
 
+namespace gadget
+{
 
 /** ThreeDMouse a positional device driver for the Logitech ThreeD mouse.
 *
@@ -84,7 +87,8 @@
 *
 *  Digital driver support could/should be added in the future.
 */
-class ThreeDMouse : public gadget::Input, public gadget::Position
+//class ThreeDMouse : public gadget::Input, public gadget::Position
+class ThreeDMouse : public InputMixer<Input,Position>
 {
 public:
    //: Default constructor
@@ -153,6 +157,6 @@ private:
    void eulerToAbsolute (byte record[], gmtl::Matrix44f* data);
    void printBin (char a);
 };
-
+}
 
 #endif   /* _LOGICLASS_H_ */
