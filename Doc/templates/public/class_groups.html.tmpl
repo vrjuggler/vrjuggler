@@ -15,7 +15,9 @@
 {foreach classgroup sort}
   <A NAME="{name}"><B>{gname}</B></A><BR>
   {foreach gmember sort}
-    &nbsp;&nbsp;&nbsp;&nbsp;<A HREF="{class}.html">{classname}</A><BR>
+    {if PUBLIC_API}
+      &nbsp;&nbsp;&nbsp;&nbsp;<A HREF="{class}.html">{classname}</A><BR>
+    {endif}
   {next gmember}
   {if !last} <P> {endif}
 {next classgroup}
