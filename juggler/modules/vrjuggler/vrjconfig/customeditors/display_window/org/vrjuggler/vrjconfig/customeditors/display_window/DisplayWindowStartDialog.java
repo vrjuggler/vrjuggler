@@ -111,6 +111,11 @@ public class DisplayWindowStartDialog
       return new Rectangle(x, y, width, height);
    }
 
+   public Integer getVisualID()
+   {
+      return Integer.valueOf(mVisualIdField.getText());
+   }
+
    public Integer getRedDepth()
    {
       return (Integer) mRedDepthSpinner.getModel().getValue();
@@ -196,7 +201,8 @@ public class DisplayWindowStartDialog
       double fb_settings_size[][] =
          {{TableLayout.FILL, TableLayout.MINIMUM},
           {TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED,
-           TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED}};
+           TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED,
+           TableLayout.PREFERRED}};
       mFBSettingsLayout = new TableLayout(fb_settings_size);
 
       double window_props_size[][] =
@@ -337,6 +343,15 @@ public class DisplayWindowStartDialog
       mFBSettingsPanel.setBorder(mFBSettingsPanelBorder);
       mButtonPanel.setLayout(mButtonPanelLayout);
       mButtonPanelLayout.setAlignment(FlowLayout.RIGHT);
+      mVisualIdLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mVisualIdLabel.setLabelFor(mVisualIdField);
+      mVisualIdLabel.setText("Visual ID");
+      mVisualIdField.setMinimumSize(new Dimension(19, 20));
+      mVisualIdField.setPreferredSize(new Dimension(28, 20));
+      mVisualIdField.setToolTipText("Enter a GLX or WGL visual ID in hexadecimal notation or -1 to ignore");
+      mVisualIdField.setText("-1");
+      mVisualIdField.addActionListener(new DisplayWindowStartDialog_mVisualIdField_actionAdapter(this));
+      mVisualIdField.addFocusListener(new DisplayWindowStartDialog_mVisualIdField_focusAdapter(this));
       this.getContentPane().add(mMainPanel, BorderLayout.CENTER);
       mMainPanel.add(mNameLabel, new TableLayoutConstraints(0, 0, 0, 0,
                                                             TableLayout.RIGHT,
@@ -367,8 +382,8 @@ public class DisplayWindowStartDialog
       mSizePanel.add(mWidthField, null);
       mSizePanel.add(mSizeXLabel, null);
       mSizePanel.add(mHeightField, null);
-      mFrameBufferPanel.setMinimumSize(new Dimension(450, 160));
-      mFrameBufferPanel.setPreferredSize(new Dimension(450, 160));
+      mFrameBufferPanel.setMinimumSize(new Dimension(450, 180));
+      mFrameBufferPanel.setPreferredSize(new Dimension(450, 180));
 //      mFBSettingsPanel.setMinimumSize(new Dimension(400, 100));
 //      mFBSettingsPanel.setPreferredSize(new Dimension(400, 100));
       mMainPanel.add(mFrameBufferPanel,
@@ -383,48 +398,56 @@ public class DisplayWindowStartDialog
                             new TableLayoutConstraints(1, 0, 1, 0,
                                                        TableLayout.RIGHT,
                                                        TableLayout.FULL));
-      mFBSettingsPanel.add(mRedDepthLabel,
+      mFBSettingsPanel.add(mVisualIdLabel,
                            new TableLayoutConstraints(0, 0, 0, 0,
                                                       TableLayout.FULL,
                                                       TableLayout.CENTER));
-      mFBSettingsPanel.add(mRedDepthSpinner,
+      mFBSettingsPanel.add(mVisualIdField,
                            new TableLayoutConstraints(1, 0, 1, 0,
                                                       TableLayout.FULL,
                                                       TableLayout.CENTER));
-      mFBSettingsPanel.add(mGreenDepthLabel,
+      mFBSettingsPanel.add(mRedDepthLabel,
                            new TableLayoutConstraints(0, 1, 0, 1,
                                                       TableLayout.FULL,
                                                       TableLayout.CENTER));
-      mFBSettingsPanel.add(mGreenDepthSpinner,
+      mFBSettingsPanel.add(mRedDepthSpinner,
                            new TableLayoutConstraints(1, 1, 1, 1,
                                                       TableLayout.FULL,
                                                       TableLayout.CENTER));
-      mFBSettingsPanel.add(mBlueDepthLabel,
+      mFBSettingsPanel.add(mGreenDepthLabel,
                            new TableLayoutConstraints(0, 2, 0, 2,
                                                       TableLayout.FULL,
                                                       TableLayout.CENTER));
-      mFBSettingsPanel.add(mBlueDepthSpinner,
+      mFBSettingsPanel.add(mGreenDepthSpinner,
                            new TableLayoutConstraints(1, 2, 1, 2,
                                                       TableLayout.FULL,
                                                       TableLayout.CENTER));
-      mFBSettingsPanel.add(mAlphaDepthLabel,
+      mFBSettingsPanel.add(mBlueDepthLabel,
                            new TableLayoutConstraints(0, 3, 0, 3,
                                                       TableLayout.FULL,
                                                       TableLayout.CENTER));
-      mFBSettingsPanel.add(mAlphaDepthSpinner,
+      mFBSettingsPanel.add(mBlueDepthSpinner,
                            new TableLayoutConstraints(1, 3, 1, 3,
                                                       TableLayout.FULL,
                                                       TableLayout.CENTER));
-      mFBSettingsPanel.add(mDepthBufferLabel,
+      mFBSettingsPanel.add(mAlphaDepthLabel,
                            new TableLayoutConstraints(0, 4, 0, 4,
                                                       TableLayout.FULL,
                                                       TableLayout.CENTER));
-      mFBSettingsPanel.add(mDepthBufferSpinner,
+      mFBSettingsPanel.add(mAlphaDepthSpinner,
                            new TableLayoutConstraints(1, 4, 1, 4,
                                                       TableLayout.FULL,
                                                       TableLayout.CENTER));
+      mFBSettingsPanel.add(mDepthBufferLabel,
+                           new TableLayoutConstraints(0, 5, 0, 5,
+                                                      TableLayout.FULL,
+                                                      TableLayout.CENTER));
+      mFBSettingsPanel.add(mDepthBufferSpinner,
+                           new TableLayoutConstraints(1, 5, 1, 5,
+                                                      TableLayout.FULL,
+                                                      TableLayout.CENTER));
       mFBSettingsPanel.add(mFSAACheckbox,
-                           new TableLayoutConstraints(0, 5, 1, 5,
+                           new TableLayoutConstraints(0, 6, 1, 6,
                                                       TableLayout.LEFT,
                                                       TableLayout.CENTER));
       mMainPanel.add(mWindowPropsPanel,
@@ -480,6 +503,8 @@ public class DisplayWindowStartDialog
    private JPanel mFBSettingsPanel = new JPanel();
    private Border mFBSettingsPanelBorder;
    private TableLayout mFBSettingsLayout = null;
+   private JLabel mVisualIdLabel = new JLabel();
+   private JTextField mVisualIdField = new JTextField();
    private JLabel mRedDepthLabel = new JLabel();
    private JSpinner mRedDepthSpinner = new JSpinner();
    private JLabel mGreenDepthLabel = new JLabel();
@@ -655,6 +680,64 @@ public class DisplayWindowStartDialog
       {
       }
    }
+
+   void mVisualIdField_focusLost(FocusEvent e)
+   {
+      validateVisualID();
+   }
+
+   void mVisualIdField_actionPerformed(ActionEvent e)
+   {
+      validateVisualID();
+   }
+
+   private void validateVisualID()
+   {
+      String id = mVisualIdField.getText();
+
+      if ( ! id.equals("-1") )
+      {
+         if ( id.startsWith("0x") )
+         {
+            id = id.substring(2);
+         }
+
+         try
+         {
+            Integer.parseInt(id, 16);
+            if ( ! mVisualIdField.getText().startsWith("0x") )
+            {
+               mVisualIdField.setText("0x" + mVisualIdField.getText());
+            }
+         }
+         catch (NumberFormatException ex)
+         {
+            JOptionPane.showMessageDialog(this,
+                                          "Invalid visual ID '" +
+                                             mVisualIdField.getText() +
+                                             "' entered",
+                                          "Visual ID Format Error",
+                                          JOptionPane.ERROR_MESSAGE);
+            mVisualIdField.setText("-1");
+         }
+      }
+
+      // If the value in the visual ID field is "-1", then the individual
+      // frame buffer settings editors must be active.  Otherwise, they will
+      // be deactivated since the values will be ignored at run time.
+      boolean enabled = mVisualIdField.getText().equals("-1");
+      mRedDepthLabel.setEnabled(enabled);
+      mRedDepthSpinner.setEnabled(enabled);
+      mGreenDepthLabel.setEnabled(enabled);
+      mGreenDepthSpinner.setEnabled(enabled);
+      mBlueDepthLabel.setEnabled(enabled);
+      mBlueDepthSpinner.setEnabled(enabled);
+      mAlphaDepthLabel.setEnabled(enabled);
+      mAlphaDepthSpinner.setEnabled(enabled);
+      mDepthBufferLabel.setEnabled(enabled);
+      mDepthBufferSpinner.setEnabled(enabled);
+      mFSAACheckbox.setEnabled(enabled);
+   }
 }
 
 class DisplayWindowStartDialog_mOkButton_actionAdapter
@@ -699,5 +782,33 @@ class DisplayWindowStartDialog_mHelpButton_actionAdapter
    public void actionPerformed(ActionEvent e)
    {
       adaptee.helpPressed(e);
+   }
+}
+
+class DisplayWindowStartDialog_mVisualIdField_focusAdapter extends java.awt.event.FocusAdapter
+{
+   private DisplayWindowStartDialog adaptee;
+
+   DisplayWindowStartDialog_mVisualIdField_focusAdapter(DisplayWindowStartDialog adaptee)
+   {
+      this.adaptee = adaptee;
+   }
+   public void focusLost(FocusEvent e)
+   {
+      adaptee.mVisualIdField_focusLost(e);
+   }
+}
+
+class DisplayWindowStartDialog_mVisualIdField_actionAdapter implements java.awt.event.ActionListener
+{
+   private DisplayWindowStartDialog adaptee;
+
+   DisplayWindowStartDialog_mVisualIdField_actionAdapter(DisplayWindowStartDialog adaptee)
+   {
+      this.adaptee = adaptee;
+   }
+   public void actionPerformed(ActionEvent e)
+   {
+      adaptee.mVisualIdField_actionPerformed(e);
    }
 }
