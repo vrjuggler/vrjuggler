@@ -116,6 +116,16 @@ public:
    //------------------------------------
 
    /**
+    * Function that is called upon entry into a buffer of an OpenGL context
+    * (window).
+    *
+    * @note This function is designed to be used when you want to do something
+    *       only once per buffer (ie.once for left buffer, once for right
+    *       buffer).
+    */
+   virtual void bufferPreDraw();
+
+   /**
     * Called before start of frame.
     *
     * @note Function called after device updates but before start of drawing.
@@ -126,10 +136,15 @@ public:
 
       mMesh.compute(mCurTime);
 
-      if(mButton0->getData())
-         { std::cout << "Button 0 pressed" << std::endl; }
-      if(mButton1->getData())
-         { std::cout << "Button 1 pressed" << std::endl; }
+      if (mButton0->getData())
+      {
+         std::cout << "Button 0 pressed" << std::endl;
+      }
+
+      if (mButton1->getData())
+      {
+         std::cout << "Button 1 pressed" << std::endl;
+      }
    }
 
    /**
