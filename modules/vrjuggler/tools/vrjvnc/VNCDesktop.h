@@ -41,7 +41,7 @@
 #include <vpr/vpr.h>
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
-#include <gadget/Type/EventWindowInterface.h>
+#include <gadget/Type/KeyboardMouseInterface.h>
 #include <vector>
 #include <vrj/Draw/OGL/GlContextData.h>
 
@@ -140,11 +140,11 @@ private:
    vpr::ThreadRunFunctor<VNCInterface>* mVncThreadFunctor;
    vpr::Thread*                         mVncThread;
 
-   gadget::PositionInterface    mWand;
-   gadget::DigitalInterface     mLeftButton;
-   gadget::DigitalInterface     mMiddleButton;
-   gadget::DigitalInterface     mRightButton;
-   gadget::EventWindowInterface mKeyboard;
+   gadget::PositionInterface      mWand;
+   gadget::DigitalInterface       mLeftButton;
+   gadget::DigitalInterface       mMiddleButton;
+   gadget::DigitalInterface       mRightButton;
+   gadget::KeyboardMouseInterface mKeyboard;
 
    bool mHaveKeyboard;
 
