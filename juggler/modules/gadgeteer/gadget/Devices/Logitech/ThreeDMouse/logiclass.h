@@ -78,13 +78,12 @@
 
 
 
-//: ThreeDMouse a positional device driver for the Logitech ThreeD mouse.
-//
-//  This is a vj hack of Allen's standalone driver for the ThreeD mouse.
-//
-//  Digital driver support could/should be added in the future.
-//
-//!PUBLIC_API:
+/** ThreeDMouse a positional device driver for the Logitech ThreeD mouse.
+*
+*  This is a vj hack of Allen's standalone driver for the ThreeD mouse.
+*
+*  Digital driver support could/should be added in the future.
+*/
 class ThreeDMouse : public gadget::Input, public gadget::Position
 {
 public:
@@ -99,22 +98,19 @@ public:
    int startSampling();
    int stopSampling();
    void updateData();
-   int sample() { 
-       return getRecord(&mData[current]); 
+   int sample()
+   {
+      std::vector<gadget::PositionData> cur_samples(1);
+      getRecord(&cur_samples[0]);
+
+      mPosSamples.lock();
+      mPosSamples.addSample(cur_samples);
+      mPosSamples.unlock();
+
+      return 1;
    }
 
    static std::string getChunkType() { return std::string("ThreeDMouse");}
-
-    /** Get current data from the receiver.
-     *  @arg dev - the receiver number.  Clients of juggler should access
-     *             tracker receivers as [0-n].  For example, if you have
-     *             receivers 1, 2, and 4, with transmitter on 3, then
-     *             you can access them as devs 0, 1, and 2.
-     *  @return a pointer to the receiver's current PositionData, or NULL
-     *          if the device is not active.
-     */
-    gadget::PositionData* getPositionData (int dev=0);
-
 
    /** @name Internal functions from original implementation
     *
@@ -139,32 +135,14 @@ public:
    int  getRecord (gadget::PositionData *data);
    void resetControlUnit ();
 
-
-   void setBaseOrigin();
+   //void setBaseOrigin();
        // PURPOSE: Sets the current mouse X,Y,Z position to be the base origin
 
-//     float getX()
-//     { return theData[current].pos[0] + baseVector[0]; }
-//     float getY()
-//     { return theData[current].pos[1] + baseVector[1]; }
-//     float getZ()
-//     { return theData[current].pos[2] + baseVector[2]; }
-//     float getPitch()    { return theData[current].orient[0]; }
-//     float getYaw()     { return theData[current].orient[1]; }
-//     float getRoll()       { return theData[current].orient[2]; }
-// Vec3 getLocation() { return SbVec3f(GetX(), GetY(), GetZ()); }
-
-// int buttonPressed() { return currentMouseReadings.buttons; }
-       // PURPOSE: Examine what buttons are pressed
-       // Returns packed int,
-       // EX:  if(ButtonPressed() & logitech_LEFTBUTTON) then
-       //          Button was pressed.
-
    //@}
-    private:
+private:
    int mouseFD;
-//     gadget::POS_DATA theData[3];
-    gadget::PositionData mData[3];
+
+   //gadget::PositionData mData[3];
 
    vpr::Thread*   mThreadID; // Ptr to the thread object
    vrj::Vec3      baseVector; // Used to store the base location tooffset from
