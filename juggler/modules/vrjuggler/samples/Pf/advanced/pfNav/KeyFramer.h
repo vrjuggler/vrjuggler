@@ -9,7 +9,6 @@
 #include <gmtl/QuatOps.h>
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
-#include <gmtl/Convert.h>
 #include <gmtl/Generate.h>
 #include <gmtl/Math.h>
 
@@ -45,7 +44,7 @@ namespace kev
          {
             assert( timeVal >= 0 && "Keyframes always have positive time value" );
             mTime = timeVal;
-            gmtl::convert(mRot, mat);
+            gmtl::set(mRot, mat);
             mPos = gmtl::makeTrans<gmtl::Vec3f>(mat);
          }
 
@@ -72,7 +71,7 @@ namespace kev
             gmtl::Matrix44f rot;
             gmtl::Matrix44f pos;
 
-            gmtl::convert(rot, mRot);
+            gmtl::set(rot, mRot);
             pos = gmtl::makeTrans<gmtl::Matrix44f>(mPos);
 
             // why does this work in performer?  (why does it work at all?)

@@ -34,7 +34,6 @@
 
 #include <gmtl/Quat.h>
 #include <gmtl/QuatOps.h>
-#include <gmtl/Convert.h>
 #include <navigator.h>
 #include <collider.h>
 #include <vector>
@@ -425,13 +424,13 @@ inline void velocityNav::scaled_rotate(gmtl::Matrix44f rot_mat)
    gmtl::identity(transformIdent);
 
    // Create the goal rotation quaternion (the goal is the input matrix)
-   gmtl::convert(goal_rot, rot_mat);
+   gmtl::set(goal_rot, rot_mat);
 
    // If we don't have two identity matrices, then interpolate between them
    if(transformIdent != rot_mat)
    {
       gmtl::slerp(slerp_rot, 0.04f, source_rot, goal_rot ); // Transform part way there
-      gmtl::convert( transform, slerp_rot ); // Create the transform matrix to use
+      gmtl::set( transform, slerp_rot ); // Create the transform matrix to use
    }
    else
    {

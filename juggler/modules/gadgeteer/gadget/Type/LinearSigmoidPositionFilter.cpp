@@ -39,7 +39,6 @@
 #include <gmtl/Vec.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Generate.h>
-#include <gmtl/Convert.h>
 
 
 namespace gadget
@@ -123,13 +122,13 @@ gmtl::Matrix44f LinearSigmoidPositionFilter::getPos(const gmtl::Matrix44f newPos
 
       // Compute scaled rotation
       gmtl::Quatf source_rot, goal_rot, slerp_rot;
-      gmtl::convert( source_rot, mLastReturnedPos );
-      gmtl::convert( goal_rot, newPos );
+      gmtl::set( source_rot, mLastReturnedPos );
+      gmtl::set( goal_rot, newPos );
 
       // ASSERT: We don't have two identical matrices
       gmtl::slerp( slerp_rot, scale_factor, source_rot, goal_rot );
       //slerp_rot.slerp( scale_factor,source_rot,goal_rot );    // Transform part way there
-      gmtl::convert( ret_val, slerp_rot );
+      gmtl::set( ret_val, slerp_rot );
       //ret_val.makeQuaternion( slerp_rot );            // Create the transform matrix to use
       //ret_val.setTrans(ret_trans);
       gmtl::setTrans(ret_val, ret_trans );
