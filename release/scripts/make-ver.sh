@@ -83,6 +83,10 @@ while [ $# -gt 0 ]; do
             shift
             shift
             ;;
+        *)
+            echo "WARNING: Unknown argument '$1'"
+            shift
+            ;;
     esac
 done
 
