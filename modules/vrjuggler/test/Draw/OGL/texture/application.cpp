@@ -47,10 +47,10 @@ TextureDemoApplication::~TextureDemoApplication()
 // put your opengl initialization here...
 void TextureDemoApplication::contextInit()
 {
-   //: Initialize the cube GL state:
+   //: Initialize the cube GL state (texture objext and display list)
       
       // create cube texture object
-      mCubeTexture.image() = hexImage;
+      mCubeTexture.image() = squareImage;
       TextureDemoApplication::setTexObjID( mCubeTexture, mCubeTextureObj );
       tex::bind( mCubeTexture, TextureDemoApplication::getTexObjID( mCubeTexture ) );
 
@@ -59,6 +59,13 @@ void TextureDemoApplication::contextInit()
       ::glNewList( mCubeDisplayList->id, GL_COMPILE );
          geom::renderVertexArray( mCubeGeometry.data(), mCubeGeometry.size() );
       ::glEndList();
+      
+   //: Floor GL state (just a texture obj)
+
+      // create cube texture object
+      mFloorTexture.image() = hexImage;
+      TextureDemoApplication::setTexObjID( mFloorTexture, mFloorTextureObj );
+      tex::bind( mFloorTexture, TextureDemoApplication::getTexObjID( mFloorTexture ) );
 }
 
 //: Function to "draw" the scene 
@@ -96,6 +103,10 @@ void TextureDemoApplication::draw()
 
    // render the cube geometry (display listed)
    ::glCallList( mCubeDisplayList->id );
+
+   
+   // render the floor texture (texture object)
+   tex::render( mFloorTexture, TextureDemoApplication::getTexObjID( mFloorTexture ) );
 
    // render the floor geometry (not display listed)
    const float size = 6.0f;
