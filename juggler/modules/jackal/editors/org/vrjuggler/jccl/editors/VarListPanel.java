@@ -78,21 +78,31 @@ public class VarListPanel extends ExpandablePanel implements ConfigElementListen
                                                          evt.getValue(), prop_def, label, 2,
                                                          elm.getPropertyValueCount(prop_def.getToken()) - 1);
       }
+
+      revalidate();
+      repaint();
    }
    
    public void nameChanged(ConfigElementEvent evt)
    {
-      // Do Nothing...
+      revalidate();
+      repaint();
    }
+
    public void propertyValueChanged(ConfigElementEvent evt)
    { 
-      // Do Nothing...
+      revalidate();
+      repaint();
    }
+
    public void propertyValueRemoved(ConfigElementEvent evt)
    {
       System.out.println("Property value removed...");
+
+      revalidate();
+      repaint();
    }
-   
+
    private PropertyDefinition   mPropDef = null;
    private ConfigElement        mConfigElement = null;
 }
