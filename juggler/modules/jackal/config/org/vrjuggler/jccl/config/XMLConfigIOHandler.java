@@ -40,11 +40,7 @@ import org.xml.sax.SAXParseException;
 import org.w3c.dom.*;
 import java.io.*;
 
-import VjConfig.ConfigChunkDB;
-import VjConfig.ChunkDescDB;
-import VjConfig.ConfigChunk;
-import VjConfig.ChunkFactory;
-import VjConfig.ConfigIOHandler;
+import VjConfig.*;
 
 /** ConfigIOHandler for XML files.
  *  This class handles reading and writing ChunkDescDB and ConfigChunkDB files
@@ -111,6 +107,9 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
 
 
     public void readConfigChunkDB (File file, ConfigChunkDB db) throws IOException, ConfigParserException {
+
+        ConfigIOStatus iostatus = new ConfigIOStatus();
+
         Document doc;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         
@@ -118,19 +117,27 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
             doc = builder.parse (file);
-            if (!buildChunkDB (db, doc))
-                throw new ConfigParserException ("buildChunkDB failed.");
+            buildChunkDB (db, doc, iostatus);
         }
         catch (javax.xml.parsers.ParserConfigurationException e1) {
-            throw new ConfigParserException (e1.getMessage());
+            iostatus.addFailure (e1);
         }
         catch (org.xml.sax.SAXException e2) {
-            throw new ConfigParserException (e2.getMessage());
+            iostatus.addFailure (e2);
         }
+
+        // temporary
+        System.out.println (iostatus.toString());
+
+        if (iostatus.getStatus() == iostatus.FAILURE)
+            throw new ConfigParserException (iostatus.toString());
     }
 
 
     public void readConfigChunkDB (InputStream in, ConfigChunkDB db) throws IOException, ConfigParserException {
+
+        ConfigIOStatus iostatus = new ConfigIOStatus();
+
         boolean retval = false;
         Document doc;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -139,15 +146,20 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
             doc = builder.parse (in);
-            if (!buildChunkDB (db, doc))
-                throw new ConfigParserException ("buildChunkDB failed.");
+            buildChunkDB (db, doc, iostatus);
         }
         catch (javax.xml.parsers.ParserConfigurationException e1) {
-            throw new ConfigParserException (e1.getMessage());
+            iostatus.addFailure (e1);
         }
         catch (org.xml.sax.SAXException e2) {
-            throw new ConfigParserException (e2.getMessage());
+            iostatus.addFailure (e2);
         }
+
+        // temporary
+        System.out.println (iostatus.toString());
+
+        if (iostatus.getStatus() == iostatus.FAILURE)
+            throw new ConfigParserException (iostatus.toString());
     }
     
 
@@ -178,7 +190,23 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         }
     }
 
-    
+    /** temporary hack to avoid breaking apis... */
+    public boolean buildChunkDB (ConfigChunkDB db, Node doc) {
+        ConfigIOStatus iostatus = new ConfigIOStatus();
+        buildChunkDB (db, doc, iostatus);
+        return (iostatus.getStatus() == iostatus.SUCCESS || iostatus.getStatus() == iostatus.WARNINGS);
+    }
+
+    /** temporary hack */
+    public ConfigChunk buildConfigChunk (Node doc, boolean use_defaults) {
+        ConfigIOStatus iostatus = new ConfigIOStatus();
+        ConfigChunk ch = buildConfigChunk (doc, use_defaults, iostatus);
+        if (iostatus.getStatus() == iostatus.ERRORS || iostatus.getStatus() == iostatus.FAILURE)
+            return null;
+        else
+            return ch;
+    }
+
 
     /** Converts a DOM tree to a ConfigChunkDB.
      *  This method reads the DOM tree rooted at doc, and puts all
@@ -189,42 +217,37 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
      *  @returns False if errors were encountered, otherwise true.  If
      *           false, some ConfigChunks may still have been read into db.
      */
-    public boolean buildChunkDB (ConfigChunkDB db, Node doc) {
+    public void buildChunkDB (ConfigChunkDB db, Node doc, 
+                              ConfigIOStatus iostatus) {
         Node child;
         ConfigChunk ch;
         boolean retval = true;
         String name = doc.getNodeName();
         
-        //System.out.println ("XML handler: buildChunkDB nodename '" + name + "'");
         switch (doc.getNodeType()) {
         case Node.DOCUMENT_NODE:
         case Node.DOCUMENT_FRAGMENT_NODE:
             child = doc.getFirstChild();
-            while (/*retval &&*/ (child != null)) {
-                retval = retval && buildChunkDB (db, child);
+            while (child != null) {
+                buildChunkDB (db, child, iostatus);
                 child = child.getNextSibling();
             }
             break;
         case Node.ELEMENT_NODE:
             if (name.equalsIgnoreCase ("ConfigChunkDB")) {
                 child = doc.getFirstChild();
-                while (/*retval &&*/ (child != null)) {
+                while (child != null) {
                     //System.out.println ("got a child of ConfigChunkDB");
                     if (child.getNodeType() == Node.ELEMENT_NODE) {
-                        ch = buildConfigChunk (child, true);
-                        if (ch != null) {
+                        ch = buildConfigChunk (child, true, iostatus);
+                        if (ch != null)
                             db.add (ch);
-                            //System.out.println ("read chunk: " + ch);
-                        }
-                        else
-                            retval = false;
                     }
                     child = child.getNextSibling();
                 }
             }
             else {
-                System.out.println ("Error: buildChunkDB - unrecognized element '" + name + "'\n");
-                retval = false;
+                iostatus.addWarning ("Unrecognized element '" + name + "'.\n");
             }
             break;
         case Node.COMMENT_NODE:
@@ -233,14 +256,13 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         case Node.TEXT_NODE:
             break;
         default:
-            System.out.println ("Unexpected node type...");
+            iostatus.addWarning ("Unexpected DOM node type...\n");
         }
-        
-        return retval;
     }
 
 
-    public ConfigChunk buildConfigChunk (Node doc, boolean use_defaults) {
+    public ConfigChunk buildConfigChunk (Node doc, boolean use_defaults,
+                                         ConfigIOStatus iostatus) {
         Node child;
         NamedNodeMap attributes;
         int attrcount;
@@ -252,21 +274,25 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         case Node.DOCUMENT_NODE:
         case Node.DOCUMENT_FRAGMENT_NODE:
             child = doc.getFirstChild();
-            return buildConfigChunk (child, use_defaults);
+            return buildConfigChunk (child, use_defaults, iostatus);
         case Node.ELEMENT_NODE:
             ch = ChunkFactory.createChunkWithDescToken (name, use_defaults);
-            if (ch != null) {
+            if (ch == null) {
+                iostatus.addError ("Unable to create ConfigChunk of type '"
+                                   + name + "' - no ChunkDesc known.\n");
+            }
+            else {
                 // parse attributes
                 attributes = doc.getAttributes();
                 attrcount = attributes.getLength();
                 for (i = 0; i < attrcount; i++) {
                     child = attributes.item(i);
-                    buildProperty (ch, child);
+                    buildProperty (ch, child, iostatus);
                 }
                 // parse child elements
                 child = doc.getFirstChild();
                 while (child != null) {
-                    buildProperty (ch, child);
+                    buildProperty (ch, child, iostatus);
                     child = child.getNextSibling();
                 }
             }
@@ -277,14 +303,15 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         case Node.TEXT_NODE:
             break;
         default:
-            System.out.println ("Unexpected node type...");
+            iostatus.addWarning ("Unexpected DOM node type...\n");
         }
 
         return ch;
     }
         
             
-    private boolean buildProperty (ConfigChunk ch, Node doc) {
+    private void buildProperty (ConfigChunk ch, Node doc,
+                                ConfigIOStatus iostatus) {
         String name = doc.getNodeName();
         String value = doc.getNodeValue();
         boolean retval = true;
@@ -299,7 +326,7 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
                 child = doc.getFirstChild();
                 while (child != null) {
                     if (p.getValType() == ValType.EMBEDDEDCHUNK) {
-                        ch = buildConfigChunk (child, true);
+                        ch = buildConfigChunk (child, true, iostatus);
                         if (ch != null)
                             p.setValue (new VarValue(ch), valindex++);
                     }
@@ -311,17 +338,22 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
                             // need to muck with parseTextValues cuz we're
                             // not passing valindex by reference like we do
                             // on the C++ side.
-                            parseTextValues (p, valindex, child.getNodeValue());
+                            parseTextValues (p, valindex, child.getNodeValue(), iostatus);
                             break;
                         default:
-                            System.out.println ("parser confused about an element value: '" + child.getNodeValue() + "'\n");
+                            iostatus.addWarning ("Unexpected XML element in " +
+                                                 "Property definition: '" +
+                                                 child.getNodeValue() + 
+                                                 "'.\n");
                         }
                     }
                     child = child.getNextSibling();
                 }
             }
             else
-                System.out.println ("no such property...");
+                iostatus.addWarning ("No such property '" + name + 
+                                     "' in ConfigChunk of type '" +
+                                     ch.getDescName() + "'.\n");
             break;
         case Node.ATTRIBUTE_NODE:
             if (name.equalsIgnoreCase ("name")) {
@@ -330,10 +362,12 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
             else {
                 p = ch.getPropertyFromToken (name);
                 if (p != null) {
-                    parseTextValues (p, valindex, value);
+                    parseTextValues (p, valindex, value, iostatus);
                 }
                 else
-                    System.out.println ("no such property '" + name + "'\n");
+                    iostatus.addWarning ("No such property '" + name + 
+                                         "' in ConfigChunk of type '" +
+                                         ch.getDescName() + "'.\n");
             }
             break;
         case Node.COMMENT_NODE:
@@ -342,10 +376,8 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         case Node.TEXT_NODE:
             break;
         default:
-            System.out.println ("Unexpected node type...");
+            iostatus.addWarning ("Unexpected DOM node type...\n");
         }
-
-        return retval;
     }
 
 
@@ -369,7 +401,6 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
                         break;
                 s = buf.substring (i+1, j);
                 buf.delete (0, j+1);
-                //return s;
                 break;
             }
             else {
@@ -379,7 +410,6 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
                         break;
                 s = buf.substring (i, j);
                 buf.delete (0, j);
-                //return s;
                 break;
             }
         }
@@ -388,12 +418,12 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
     }
 
 
-    private boolean parseTextValues (Property p, int startval, String text) {
+    private void parseTextValues (Property p, int startval, String text,
+                                  ConfigIOStatus iostatus) {
 
         StringBuffer buf = new StringBuffer (text);
         String s;
         VarValue v;
-        boolean retval = true;
 
         ValType vt = p.getValType();
         if (vt == ValType.CHUNK) {
@@ -418,14 +448,10 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
                 p.setValue (v, startval++);
             }
         }
-        else if (vt == ValType.EMBEDDEDCHUNK) {
-            System.out.println ("strange parsing error...");
-        }
-        else {
-            System.out.println ("what the heck type is this anyway?");
-        }
+        else
+            iostatus.addError ("THIS SHOULD NOT HAPPEN in XMLConfigIOHandler" +
+                               ".parseTextValues().\n");
 
-        return retval;
     }
 
 
