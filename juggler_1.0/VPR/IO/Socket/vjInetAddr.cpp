@@ -30,6 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vjConfig.h>
+
 #include <stdio.h>
 
 #if ! defined(__WIN32__) && ! defined(WIN32) && ! defined(_Windows) && \
@@ -41,8 +43,8 @@
 #include <VPR/IO/Socket/vjInetAddr.h>
 
 // _WINSOCKAPI_ is defined in winsock2.h which is included by vjInetAdr.h.
-#if (defined(__sun__) && ! defined(u_int32_t)) || defined(_WINSOCKAPI_)
-typedef unsigned int u_int32_t;
+#if (defined(__sun__) && ! defined(uint32_t)) || defined(_WINSOCKAPI_)
+typedef unsigned int uint32_t;
 #endif
 
 
@@ -135,8 +137,8 @@ vjInetAddr::getAddressString (void) const {
     char ip_addr[sizeof("255.255.255.255")];
     std::string ip_str;
     union {
-        char c[sizeof(u_int32_t)];
-        u_int32_t value;
+        char c[sizeof(uint32_t)];
+        uint32_t value;
     } addr;
 
     // XXX: This isn't working quite right on little endian systems...

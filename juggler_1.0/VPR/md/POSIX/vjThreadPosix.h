@@ -60,7 +60,7 @@ typedef unsigned int thread_id_t;
 #elif defined(VJ_OS_FreeBSD)
 typedef caddr_t thread_id_t;
 #else
-typedef u_int32_t thread_id_t;
+typedef uint32_t thread_id_t;
 #endif
 
 // To get the posix key stuff for storing self.
@@ -327,7 +327,7 @@ public:  // ----- Various other thread functions ------
     // -----------------------------------------------------------------------
     // -----------------------------------------------------------------------
     inline static int
-    usleep (u_int32_t micro) {
+    usleep (uint32_t micro) {
 #ifdef VJ_OS_Linux
         ::usleep(micro);
         return 0;  // usleep can't report failure, so assume success.
@@ -339,14 +339,14 @@ public:  // ----- Various other thread functions ------
     // -----------------------------------------------------------------------
     // -----------------------------------------------------------------------
     inline static int
-    msleep (u_int32_t milli) {
+    msleep (uint32_t milli) {
         return vjThreadPosix::usleep(milli * 1000);
     }
 
     // -----------------------------------------------------------------------
     // -----------------------------------------------------------------------
     inline static int
-    sleep (u_int32_t seconds) {
+    sleep (uint32_t seconds) {
         return ::sleep(seconds);
     }
 

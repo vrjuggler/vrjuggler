@@ -47,21 +47,21 @@ public:
     // -----------------------------------------------------------------------
     // -----------------------------------------------------------------------
     inline static int
-    usleep (u_int32_t micro) {
+    usleep (uint32_t micro) {
         return vjThread::usleep(micro);
     }
 
     // -----------------------------------------------------------------------
     // -----------------------------------------------------------------------
     inline static int
-    msleep (u_int32_t milli) {
+    msleep (uint32_t milli) {
         return vjThread::msleep(milli);
     }
 
     // -----------------------------------------------------------------------
     // -----------------------------------------------------------------------
     inline static int
-    sleep (u_int32_t seconds) {
+    sleep (uint32_t seconds) {
         return vjThread::sleep(seconds);
     }
 
