@@ -146,6 +146,9 @@ AFTERBUILD	= afterbuild
 # Things to do before the object files and library are built.
 beforebuild:
 	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
+	@$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
+            -t $(VJROOT_ABS)/juggler-config.in -o $(topdir)/juggler-config
+	@chmod +x $(topdir)/juggler-config
 
 # Things to do after the object files and library are built.
 afterbuild:
@@ -248,6 +251,9 @@ ifndef NO_JAVA_GUI
               ${VJROOT_ABS}/GUI/vjcontrol.sh > vjcontrol &&		\
           chmod ${EXEC_PERMS} vjcontrol
 endif
+	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
+            -t $(VJROOT_ABS)/juggler-config.in -p 'use_base_dir=yes'	\
+            -o $(instlinks)/bin/juggler-config -x
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$VJ_BASE_DIR to:'
@@ -317,6 +323,8 @@ post-install:
 	@$(MAKE) install-tools
 	@$(MAKE) install-data
 	@$(MAKE) install-gui
+	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
+          $(topdir)/juggler-config $(bindir)
 
 PREINSTALL_HEADERS	= pre-install-headers
 POSTINSTALL_HEADERS	= post-install-headers
