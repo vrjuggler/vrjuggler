@@ -223,11 +223,11 @@ ThreadPosix::spawn (BaseThreadFunctor* functorPtr,
     // Finally create the thread.
 #ifdef _PTHREADS_DRAFT_4
     ret_val = pthread_create(&(mThread), thread_attrs,
-                             (pthread_startroutine_t) ThreadFunctorFunction,
+                             (pthread_startroutine_t) vprThreadFunctorFunction,
                              (pthread_addr_t) functorPtr);
 #else
     ret_val = pthread_create(&(mThread), &thread_attrs,
-                             ThreadFunctorFunction, (void *) functorPtr);
+                             vprThreadFunctorFunction, (void *) functorPtr);
 #endif
 
     // Inform the caller if the thread was not created successfully.
