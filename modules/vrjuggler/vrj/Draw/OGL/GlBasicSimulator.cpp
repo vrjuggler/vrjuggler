@@ -120,16 +120,18 @@ void GlBasicSimulator::draw(const float scaleFactor)
 
 
 /**
- * Sets the event window the simulator can use to get input from the user.
+ * Sets the keyboard/mouse device the simulator can use to get input from the
+ * user.
  */
-void GlBasicSimulator::setKeyboardMouse(gadget::KeyboardMouseInterface ewInterface)
+void GlBasicSimulator::setKeyboardMouse(gadget::KeyboardMouseInterface kmInterface)
 {
-   boost::ignore_unused_variable_warning(ewInterface);
+   boost::ignore_unused_variable_warning(kmInterface);
 }
 
 
 void GlBasicSimulator::updateProjectionData(const float positionScale,
-                                     Projection* leftProj, Projection* rightProj)
+                                            Projection* leftProj,
+                                            Projection* rightProj)
 {
    updateInternalData(positionScale);
 

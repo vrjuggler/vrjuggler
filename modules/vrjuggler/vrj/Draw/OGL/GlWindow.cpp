@@ -56,7 +56,7 @@
 
 #include <gadget/InputManager.h>
 
-// Get info about Gadgeteer event window stuff for registering the simulator
+// Get info about Gadgeteer keyboard/mouse stuff for registering the simulator
 // below.
 // Note: This may seem kind of strange (and it is) but we need it
 // since all of our derived types are going to be gadget::Eventwindows as well
@@ -118,7 +118,7 @@ void GlWindow::finishSetup()
          if(NULL != gl_draw_sim)
          {
             // Setup the simulator
-            // - Get the event window device
+            // - Get the keyboard/mouse device
             // - Register a proxy that we will use
             // - Make device interface for that proxy
             // - Intialize the simulator
@@ -143,7 +143,7 @@ void GlWindow::finishSetup()
                vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
                   << clrOutBOLD(clrYELLOW, "WARNING")
                   << ": [vrj::GlWindow::finishSetup()] Failed to add the "
-                  << "event window proxy.  Check for a unique name."
+                  << "keyboard/mouse proxy.  Check for a unique name."
                   << std::endl << vprDEBUG_FLUSH;
                vprASSERT(false && "Failed to add sim wind kb proxy: Check for unique name");
             }
