@@ -31,7 +31,9 @@ endif
 # STATICLIB_EXT  - File extension for shared libraries.
 
 
-includedir	= @includedir@
+# the include path directory to install to ...
+includedir	= @includedir@/aj
+
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
