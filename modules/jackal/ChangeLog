@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ---------   --------------------------------------------------------
+May-31-2002 patrickh    Disabled performance collection code by default.  It is
+                        currently unstable.  See SourceForge Bug #562680.
+                        NEW VERSION: 0.2.1
 May-23-2002 patrickh    Merged changes from jccl_file_format_change_branch.
             allenb      The JCCL C++ code now depends on CppDOM instead of
                         Xerces-C; the Java code depends on JDOM instead of
