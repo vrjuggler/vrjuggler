@@ -16,11 +16,11 @@ Build targets are:
 
 Library type targets are:
     lib-static      - Build the static version of the library.  This target
-                      depends on a correct value for \${OBJDIR} (whose default
-                      value is set in Makefile.base).
+                      depends on a correct value for \${LIBDIR} (that does not
+                      have a default value).
     lib-dynamic     - Build the dynamic shared version of the library.  This
-                      target depends on a correct value for \${OBJDIR} (whose
-                      default value is set in Makefile.base).
+                      target depends on a correct value for \${LIBDIR} (that
+                      does not have a default value).
 
 Dependency targets are:
     depend          - Recursively build the dependencies for the source files.
@@ -47,9 +47,7 @@ Install targets are:
 Miscellaneous targets are:
     links           - Define links (for developer use only) that provide
                       functionality allowing the use of the \$VJ_BASE_DIR
-                      environment variable.  This target depends on a correct
-                      value for \${OBJDIR} (whose default value is set in
-                      Makefile.base).
+                      environment variable.
     clean-links     - Remove the symlinks created by 'links'.
 
 Clean-up targets are:
