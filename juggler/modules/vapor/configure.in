@@ -485,8 +485,8 @@ if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
 elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     CFLAGS="$CFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
     CXXFLAGS="$CXXFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
-    DBG_FLAGS="$DBG_FLAGS /MTd"
-    OPT_FLAGS="$OPT_FLAGS /MT"
+    DBG_FLAGS="$DBG_FLAGS /MDd"
+    OPT_FLAGS="$OPT_FLAGS /MD"
     UUID_DEFS="$UUID_DEFS -DWININC"
     vpr_cxxflags="$CXXFLAGS"
 fi
@@ -560,7 +560,7 @@ if test "x$OS_TYPE" = "xWin32" ; then
     LN_S='cp'
     MTREE_CMD=`unix2dos "$MTREE_CMD"`
 
-    APP_EXTRA_LIBS=`unix2dos "$APP_EXTRA_LIBS"`
+#    APP_EXTRA_LIBS=`unix2dos "$APP_EXTRA_LIBS"`
 else
     VPRROOT_ABS="$VPRROOT_ABS"
     JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
