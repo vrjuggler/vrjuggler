@@ -56,25 +56,42 @@ class VJ_CLASS_API Viewport
 {
 public:
    Viewport()
-      : mUser(NULL), mDisplay(NULL),
-        mLeftProj(NULL), mRightProj(NULL)
+      : mUser(NULL)
+      , mType(Viewport::UNDEFINED)
+      , mActive(false)
+      , mDisplay(NULL)
+      , mXorigin(-1.0f)
+      , mYorigin(-1.0f)
+      , mXsize(-1.0f)
+      , mYsize(-1.0f)
+      , mLeftProj(NULL)
+      , mRightProj(NULL)
    {
-      mXorigin = mYorigin = mXsize = mYsize = -1.0f;
-      mType = Viewport::UNDEFINED;
-      mActive = false;
+      ;
    }
 
    Viewport(const Viewport& v)
-      : mName(v.mName), mUser(v.mUser), mType(v.mType), mView(v.mView),
-        mActive(v.mActive), mDisplay(v.mDisplay),
-        mViewportElement(v.mViewportElement), mXorigin(v.mXorigin),
-        mYorigin(v.mYorigin), mXsize(v.mXsize), mYsize(v.mYsize),
-        mLeftProj(v.mLeftProj), mRightProj(v.mRightProj)
+      : mName(v.mName)
+      , mUser(v.mUser)
+      , mType(v.mType)
+      , mView(v.mView)
+      , mActive(v.mActive)
+      , mDisplay(v.mDisplay)
+      , mViewportElement(v.mViewportElement)
+      , mXorigin(v.mXorigin)
+      , mYorigin(v.mYorigin)
+      , mXsize(v.mXsize)
+      , mYsize(v.mYsize)
+      , mLeftProj(v.mLeftProj)
+      , mRightProj(v.mRightProj)
    {
+      ;
    }
 
    virtual ~Viewport()
-   {;}
+   {
+      ;
+   }
 
    /** Type of viewport */
    enum Type
@@ -114,17 +131,25 @@ public:
    virtual void updateProjections(const float positionScale) = 0;
 
 public:
-   Viewport::Type getType()
-   { return mType;}
+   Viewport::Type getType() const
+   {
+      return mType;
+   }
 
-   bool isSimulator()
-   { return (mType == SIM); }
+   bool isSimulator() const
+   {
+      return (mType == SIM);
+   }
 
-   bool isSurface()
-   { return (mType == SURFACE); }
+   bool isSurface() const
+   {
+      return (mType == SURFACE);
+   }
 
-   bool isActive()
-   { return mActive; }
+   bool isActive() const
+   {
+      return mActive;
+   }
 
    void setName(const std::string& name)
    {
@@ -140,44 +165,71 @@ public:
    /**
     * @note If we are in simulator, we can not be in stereo.
     */
-   bool inStereo()
-   { return (mView == STEREO); }
+   bool inStereo() const
+   {
+      return (mView == STEREO);
+   }
 
    // Which view are we supposed to render
    Viewport::View getView()
-   { return mView; }
-
-   void setOriginAndSize(float xo, float yo, float xs, float ys)
-   { mXorigin = xo; mYorigin = yo; mXsize = xs; mYsize = ys;}
-   void getOriginAndSize(float& xo, float& yo, float& xs, float& ys)
    {
-      xo = mXorigin; yo = mYorigin; xs = mXsize; ys = mYsize;
+      return mView;
+   }
+
+   void setOriginAndSize(const float xOrigin, const float yOrigin,
+                         const float width, const float height)
+   {
+      mXorigin = xOrigin;
+      mYorigin = yOrigin;
+      mXsize   = width;
+      mYsize   = height;
+   }
+
+   void getOriginAndSize(float& xOrigin, float& yOrigin, float& width,
+                         float& height)
+      const
+   {
+      xOrigin = mXorigin;
+      yOrigin = mYorigin;
+      width   = mXsize;
+      height  = mYsize;
    }
 
    /** Gets the config element that configured this viewport. */
-   jccl::ConfigElementPtr getConfigElement()
+   jccl::ConfigElementPtr getConfigElement() const
    {
       return mViewportElement;
    }
 
    /** Gets the user associated with this display. */
-   User*  getUser()
-   { return mUser;}
+   User* getUser()
+   {
+      return mUser;
+   }
 
    void setDisplay(Display* disp)
-   { mDisplay = disp; }
+   {
+      mDisplay = disp;
+   }
+
    Display* getDisplay()
-   { return mDisplay; }
+   {
+      return mDisplay;
+   }
 
    Projection* getLeftProj()
-   { return mLeftProj; }
+   {
+      return mLeftProj;
+   }
 
    Projection* getRightProj()
-   { return mRightProj; }
-
+   {
+      return mRightProj;
+   }
 
    virtual std::ostream& outStream(std::ostream& out,
                                    const unsigned int indentLevel = 0);
+
    friend VJ_API(std::ostream&) operator<<(std::ostream& out, Viewport& viewport);
 
 protected:
