@@ -116,7 +116,7 @@ public class TweekCore
          v.addBeanFocusChangeListener(m_gui);
       }
 
-      m_gui.initGUI(panelTreeModel);
+      m_gui.initGUI();
    }
 
    /**
@@ -147,7 +147,7 @@ public class TweekCore
       Object bean = evt.getBean();
       if ( bean instanceof ViewerBean ) {
          BeanModelViewer viewer = ((ViewerBean)bean).getViewer();
-         viewer.initDataModel(panelTreeModel);
+         viewer.setModel(panelTreeModel);
          viewer.initGUI();
       }
    }

@@ -55,30 +55,29 @@ import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
  *
  * @since 1.0
  */
-public class BeanIconViewer extends DefaultBeanModelViewer
+public class BeanIconViewer
+   extends DefaultBeanModelViewer
+   implements BeanRegistrationListener
 {
    public BeanIconViewer ()
    {
    }
 
-   /**
-    * Sets the data model being displayed by this viewer and constructs the
-    * view of the model.  If the given model object is null, no action is
-    * taken.
-    *
-    * @pre No data model has been provided.
-    * @post m_home_panel is created, and m_cur_panel is set to m_home_panel.
-    *       The tree model is traversed, and the view is created.
-    */
-   public void initDataModel (BeanTreeModel model)
+   public void setModel (BeanTreeModel model)
    {
-      if ( model != null )
+      // We only want to perform these steps the first time our model is set.
+      if ( m_model == null )
       {
-         DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
-         m_home_panel = new BeanIconPanel(root, "Home");
-         handleChildren(root, m_home_panel);
-         m_cur_panel = m_home_panel;
+         BeanRegistry.instance().addBeanRegistrationListener(this);
+         initDataModel(model);
       }
+      else
+      {
+         m_model = model;
+         refreshDataModel();
+      }
+
+      m_model = model;
    }
 
    /**
@@ -96,26 +95,52 @@ public class BeanIconViewer extends DefaultBeanModelViewer
       }
    }
 
+   public JComponent getViewer ()
+   {
+      return viewer;
+   }
+
+   public void beanRegistered (BeanRegistrationEvent e)
+   {
+      if ( e.getBean() instanceof PanelBean )
+      {
+         refreshDataModel();
+      }
+   }
+
+   // =========================================================================
+   // Private methods.
+   // =========================================================================
+
+   /**
+    * Sets the data model being displayed by this viewer and constructs the
+    * view of the model.  If the given model object is null, no action is
+    * taken.
+    *
+    * @pre No data model has been provided.
+    * @post m_home_panel is created, and m_cur_panel is set to m_home_panel.
+    *       The tree model is traversed, and the view is created.
+    */
+   private void initDataModel (BeanTreeModel model)
+   {
+      DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+      m_home_panel = new BeanIconPanel(root, "Home");
+      handleChildren(root, m_home_panel);
+      m_cur_panel = m_home_panel;
+   }
+
    /**
     * Refreshes the data model being displayed by this viewer and reconstructs
     * the view of the model.  If the given model object is null, no action is
     * taken.
     */
-   public void refreshDataModel (BeanTreeModel model)
+   private void refreshDataModel ()
    {
-      if ( model != null )
-      {
-         DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
-         m_home_panel.removeAll();
-         handleChildren(root, m_home_panel);
-         m_home_panel.doLayout();
-         m_home_panel.repaint();
-      }
-   }
-
-   public JComponent getViewer ()
-   {
-      return viewer;
+      DefaultMutableTreeNode root = (DefaultMutableTreeNode) m_model.getRoot();
+      m_home_panel.removeAll();
+      handleChildren(root, m_home_panel);
+      m_home_panel.doLayout();
+      m_home_panel.repaint();
    }
 
    private void jbInit () throws Exception
@@ -582,6 +607,8 @@ public class BeanIconViewer extends DefaultBeanModelViewer
 
       private BeanIconPanel m_panel = null;
    }
+
+   private BeanTreeModel m_model = null;
 
    private JPanel       viewer           = new JPanel();
    private BorderLayout m_icon_panel_layout = new BorderLayout();

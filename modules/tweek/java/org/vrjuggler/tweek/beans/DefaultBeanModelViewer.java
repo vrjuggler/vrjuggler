@@ -49,7 +49,7 @@ public abstract class DefaultBeanModelViewer implements BeanModelViewer
     */
    public final void init (BeanTreeModel model)
    {
-      initDataModel(model);
+      setModel(model);
       initGUI();
    }
 

@@ -64,8 +64,7 @@ import org.vrjuggler.tweek.services.*;
  *
  * @see org.vrjuggler.tweek.BeanContainer
  */
-public class TweekFrame extends JFrame implements TreeModelRefreshListener,
-                                                  BeanFocusChangeListener,
+public class TweekFrame extends JFrame implements BeanFocusChangeListener,
                                                   MessageAdditionListener
 {
    public TweekFrame ()
@@ -104,9 +103,8 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
     *
     * @pre The JavaBean search has been performed.
     */
-   public void initGUI (BeanTreeModel data_model)
+   public void initGUI ()
    {
-      data_model.addTreeModelRefreshListener(this);
       MessagePanel.instance().addMessageAdditionListener(this);
 
       try
@@ -134,18 +132,6 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
       }
 
       this.setVisible(true);
-   }
-
-   public void treeModelRefresh (TreeModelRefreshEvent e)
-   {
-      BeanTreeModel data_model = TweekCore.instance().getPanelTreeModel();
-      List viewers = BeanRegistry.instance().getBeansOfType( ViewerBean.class.getName() );
-
-      for ( Iterator itr = viewers.iterator(); itr.hasNext(); )
-      {
-         BeanModelViewer bv = ((ViewerBean)itr.next()).getViewer();
-         bv.refreshDataModel(data_model);
-      }
    }
 
    public void beanFocusChanged (BeanFocusChangeEvent e)
@@ -552,7 +538,6 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
          {
             String exp_path = EnvironmentService.expandEnvVars(path);
             loadBeansFromPath(exp_path);
-            TweekCore.instance().getPanelTreeModel().fireTreeModelRefreshEvent();
          }
       }
       else
@@ -579,8 +564,6 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
                   String path = files[i].getAbsolutePath();
                   loadBeansFromPath(path);
                }
-
-               TweekCore.instance().getPanelTreeModel().fireTreeModelRefreshEvent();
             }
          }
       }
