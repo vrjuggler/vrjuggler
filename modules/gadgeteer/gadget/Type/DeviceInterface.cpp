@@ -59,13 +59,6 @@ void BaseDeviceInterface::init(const std::string proxyName)
    refresh();                 // Refresh the name
 }
 
-vpr::Interval BaseDeviceInterface::getDelta()
-{
-   vpr::Interval cur_time = mProxyPtr->getTimeStamp();
-   vpr::Interval diff_time(cur_time - mLastTime);
-   mLastTime = cur_time;
-   return diff_time;
-}
 
 //! NOTE: If the interface does not have an initialized mProxyName, then don't try to refresh it
 void BaseDeviceInterface::refresh()
