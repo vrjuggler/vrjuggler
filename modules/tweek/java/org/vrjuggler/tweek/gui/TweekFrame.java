@@ -166,12 +166,15 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
          mBeanViewer = (ViewerBean) viewers.get(0);
          mBeanContainer.replaceViewer((BeanModelViewer)mBeanViewer.getViewer() );
 
-         GlobalPreferencesService prefs =
-            (GlobalPreferencesService)BeanRegistry.instance().getBean("GlobalPreferences");
-
-         if ( null != prefs )
+         try
          {
+            GlobalPreferencesService prefs =
+               new GlobalPreferencesServiceProxy();
             prefs.setBeanViewer(mBeanViewer.getName());
+         }
+         catch(RuntimeException ex)
+         {
+            System.err.println("WARNING: No preferred viewer Bean can be loaded");
          }
       }
       else
@@ -297,11 +300,18 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
          // If the user's skill level is below intermediate, give them a hint
          // that there is a message printed in the message panel.  They may not
          // have noticed the icon change made above.
-         GlobalPreferencesService prefs =
-            (GlobalPreferencesService)BeanRegistry.instance().getBean("GlobalPreferences");
-         if ( prefs.getUserLevel() <= 5 )
+         try
          {
-            mStatusMsgLabel.setText("New message in message panel");
+            GlobalPreferencesService prefs =
+               new GlobalPreferencesServiceProxy();
+            if ( prefs.getUserLevel() <= 5 )
+            {
+               mStatusMsgLabel.setText("New message in message panel");
+            }
+         }
+         catch(RuntimeException ex)
+         {
+            ex.printStackTrace();
          }
       }
    }
@@ -334,8 +344,9 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
 
    public void globalPrefsSaved(GlobalPrefsUpdateEvent e)
    {
-      GlobalPreferencesService prefs =
-         (GlobalPreferencesService) BeanRegistry.instance().getBean("GlobalPreferences");
+      // XXX: It might be good to catch the exception thrown if this cannot be
+      // instantiated ...
+      GlobalPreferencesService prefs = new GlobalPreferencesServiceProxy();
 
       // Save this for later.
       int old_level = prefs.getUserLevel();
@@ -441,10 +452,9 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
     * Performes the real GUI intialization.  This method is needed for JBuilder
     * to be happy.
     */
-   private void jbInit () throws Exception
+   private void jbInit() throws Exception
    {
-      GlobalPreferencesService prefs =
-         (GlobalPreferencesService)BeanRegistry.instance().getBean( "GlobalPreferences" );
+      GlobalPreferencesService prefs = new GlobalPreferencesServiceProxy();
       setBeanViewer( prefs.getBeanViewer() );
 
       mContentPane = (JPanel) this.getContentPane();
@@ -835,10 +845,9 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
     * Opens a dialog box used for editing the user's global preferences
     * visually.
     */
-   private void prefsEditGlobal (ActionEvent e)
+   private void prefsEditGlobal(ActionEvent e)
    {
-      GlobalPreferencesService prefs =
-         (GlobalPreferencesService)BeanRegistry.instance().getBean( "GlobalPreferences" );
+      GlobalPreferencesService prefs = new GlobalPreferencesServiceProxy();
 
       // Save this for later.
       int old_level = prefs.getUserLevel();

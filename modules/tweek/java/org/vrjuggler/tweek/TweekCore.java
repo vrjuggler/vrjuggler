@@ -92,7 +92,7 @@ public class TweekCore
       // must happen after the command line arguments have been parsed so that
       // the user can specify an alternate preferences file.
       GlobalPreferencesService global_prefs =
-         (GlobalPreferencesService) BeanRegistry.instance().getBean("GlobalPreferences");
+         new GlobalPreferencesServiceProxy();
       global_prefs.load();
 
       // Set the look and feel now so that any GUI components that are
@@ -124,15 +124,10 @@ public class TweekCore
       // it is available).
       try
       {
-         EnvironmentService service = (EnvironmentService)
-            BeanRegistry.instance().getBean( EnvironmentService.class.getName() );
-
-         if ( service != null )
-         {
-            service.setCommandLineArgs(new_args);
-         }
+         EnvironmentService service = new EnvironmentServiceProxy();
+         service.setCommandLineArgs(new_args);
       }
-      catch (ClassCastException e)
+      catch(RuntimeException e)
       {
          // Use System.err here because the GUI has not been displayed yet.
          System.err.println("WARNING: Failed to register command-line arguments");
@@ -186,11 +181,11 @@ public class TweekCore
       BeanRegistry registry = BeanRegistry.instance();
 
       // environment service
-      registry.registerBean( new EnvironmentService(
+      registry.registerBean( new EnvironmentServiceImpl(
             new BeanAttributes( "Environment" ) ) );
 
       // global preferences service
-      registry.registerBean( new GlobalPreferencesService(
+      registry.registerBean( new GlobalPreferencesServiceImpl(
             new BeanAttributes( "GlobalPreferences" ) ) );
 
    }
@@ -233,13 +228,6 @@ public class TweekCore
          return;
       }
 
-      BeanRegistry registry = BeanRegistry.instance();
-
-      // This service is loaded statically, so we do not have to worry about
-      // finding the Bean first.
-      GlobalPreferencesService prefs =
-         (GlobalPreferencesService) registry.getBean("GlobalPreferences");
-
       for ( Iterator itr = beans.iterator(); itr.hasNext(); )
       {
          TweekBean bean = (TweekBean)itr.next();
@@ -260,6 +248,11 @@ public class TweekCore
          // Try to instantiate the Bean.
          try
          {
+            // This service is loaded statically, so we do not have to worry
+            // about finding the Bean first.
+            GlobalPreferencesService prefs =
+               new GlobalPreferencesServiceProxy();
+
             // If the current Bean is not a Panel Bean or the user has disabled
             // lazy Panel Bean instantiation, we can instantiate the Bean.
             if ( ! (bean instanceof org.vrjuggler.tweek.beans.PanelBean) ||
@@ -268,13 +261,17 @@ public class TweekCore
                bean.instantiate();
             }
 
-            registry.registerBean(bean);
+            BeanRegistry.instance().registerBean(bean);
          }
-         catch (BeanInstantiationException e)
+         catch(BeanInstantiationException e)
          {
             mMsgDocument.printWarningnl("WARNING: Failed to instantiate Bean'" +
                                        bean.getName() + "': " +
                                        e.getMessage());
+         }
+         catch(RuntimeException ex)
+         {
+            ex.printStackTrace();
          }
       }
    }
