@@ -527,8 +527,6 @@ public class TweekFrame
    {
       if ( fireFrameClosing(new TweekFrameEvent(e.getWindow(), e.getID())) )
       {
-         System.out.println("Disposing");
-         
          //Note: When the last displayable window within the Java virtual machine (VM)
          //      is disposed of, the VM may terminate. See AWT Threading Issues for
          //      more information.
