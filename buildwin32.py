@@ -1407,11 +1407,11 @@ class GuiFrontEnd:
       printStatus = self.printMessage
 
       required, optional, options = getDefaultVars()
-      self.mOptions = {}
+      self.mTkOptions = {}
 
       # Make a StringVar dictionary.
       for k in options:
-         self.mOptions[k] = self.__str2TkinterStrVar(options[k])
+         self.mTkOptions[k] = self.__str2TkinterStrVar(options[k])
 
       self.makeOptionsInterface(required, optional)
       self.update()
@@ -1423,7 +1423,7 @@ class GuiFrontEnd:
 
    def __writeCacheFile(self):
       cache_file = open(getCacheFileName(), 'w')
-      for k, v in self.mOptions.iteritems():
+      for k, v in self.mTkOptions.iteritems():
          output = "options['%s'] = r'%s'\n" % (k, v.get())
          cache_file.write(output)
       cache_file.close()
@@ -1668,7 +1668,7 @@ class GuiFrontEnd:
    def updateRequiredOptions(self):
       self.mReqSettingsSet = True
       for k in self.mRoot.SettingsFrame.RequiredSettingsFrame.SettingsRows:
-         if self.mOptions[k].get() == "":
+         if self.mTkOptions[k].get() == "":
             self.mReqSettingsSet = False
 
    def updateCommandFrame(self):
@@ -1685,10 +1685,10 @@ class GuiFrontEnd:
       # Make sure that all options that are directories reference valid
       # directories.
       inv_dir_list = []
-      for k in self.mOptions:
+      for k in self.mTkOptions:
          if self.mOptionWidgetsDict[k][4] and \
-            not os.path.isdir(self.mOptions[k].get() and \
-            self.mOptions[k].get() != ""):
+            not os.path.isdir(self.mTkOptions[k].get() and \
+            self.mTkOptions[k].get() != ""):
             status = False
             inv_dir_list.append(self.mOptionWidgetsDict[k][0]['text'])
 
@@ -1704,8 +1704,8 @@ class GuiFrontEnd:
       self.mRoot.CommandFrame.BuildInstallButton.config(state = "disabled")
 
       # Set the environment vars.
-      for k in self.mOptions.iterkeys():
-         os.environ[k] = self.mOptions[k].get()
+      for k in self.mTkOptions.iterkeys():
+         os.environ[k] = self.mTkOptions[k].get()
 
       if True:#self.validateOptions():
          postProcessOptions()
@@ -1716,17 +1716,17 @@ class GuiFrontEnd:
          self.BuildThread.start()
 
    def installJuggler(self):
-      doInstall(self.mOptions['prefix'].get())
+      doInstall(self.mTkOptions['prefix'].get())
 
    def installDeps(self):
-      doDependencyInstall(self.mOptions['deps-prefix'].get())
+      doDependencyInstall(self.mTkOptions['deps-prefix'].get())
 
    def getFile(self, optionIndex, initialDir, toEntry):
       def clearAndGet(self, optionIndex, initialDir):
          result_dir = tkFileDialog.askdirectory(title = optionIndex,
                                                 initialdir = initialDir)
          if result_dir != '':
-            self.mOptions[optionIndex].set(result_dir)
+            self.mTkOptions[optionIndex].set(result_dir)
 
       return lambda: clearAndGet(self, optionIndex, initialDir)
 
@@ -1740,17 +1740,17 @@ class GuiFrontEnd:
 
       # Entry.
       entry_ref = Tkinter.Entry(master, width = 75,
-                                textvariable = self.mOptions[optionIndex])
+                                textvariable = self.mTkOptions[optionIndex])
       entry_ref.grid(row = row, column = 1,
                      sticky = Tkinter.N + Tkinter.E + Tkinter.S + Tkinter.W,
                      pady = 2)
 
       if isDirectory:
          if required:
-            self.mOptions[optionIndex].trace_variable('w',
+            self.mTkOptions[optionIndex].trace_variable('w',
                lambda n, i, m: self.entryValidation(entry_ref, True))
          else:
-            self.mOptions[optionIndex].trace_variable('w',
+            self.mTkOptions[optionIndex].trace_variable('w',
                lambda n, i, m: self.entryValidation(entry_ref, False))
 
 
@@ -1759,7 +1759,7 @@ class GuiFrontEnd:
       if isDirectory:
          button_ref = Tkinter.Button(master, text = 'Browse',
                                      command = self.getFile(optionIndex,
-                                                            self.mOptions[optionIndex].get(),
+                                                            self.mTkOptions[optionIndex].get(),
                                                             entry_ref))
          button_ref.grid(row = row, column = 2,
                          sticky = Tkinter.N + Tkinter.E + Tkinter.S + Tkinter.W,
@@ -1779,11 +1779,11 @@ class GuiFrontEnd:
 
       if self.mRoot.CommandFrame.InstallJugglerCheck.Variable.get() == "Yes":
          self.printMessage("Installing Juggler...")
-         doInstall(self.mOptions['prefix'].get())
+         doInstall(self.mTkOptions['prefix'].get())
 
       if self.mRoot.CommandFrame.InstallJugglerDepsCheck.Variable.get() == "Yes":
          self.printMessage("Installing Juggler Dependencies...")
-         doDependencyInstall(self.mOptions['deps-prefix'].get())
+         doDependencyInstall(self.mTkOptions['deps-prefix'].get())
 
       self.printMessage("Build and Installation Finished.")
       self.updateCommandFrame()
