@@ -99,8 +99,7 @@ public class VrjConfig
 
    public boolean saveAsRequested()
    {
-      System.err.println("ConfigToolbar.doSaveAs(): not implemented");
-      return false;
+      return mToolbar.doSaveAs();
    }
 
    public boolean closeRequested()
