@@ -286,12 +286,6 @@ pre-install-headers:
 
 post-install-headers:
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(ROOT_ABS)/snx/snxConfig.h		\
-          $(includedir)/snx/snxConfig.h
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(ROOT_ABS)/snx/PluginConfig.h		\
-          $(includedir)/snx/PluginConfig.h
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(topdir)/snx/snxDefines.h		\
           $(includedir)/snx
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
