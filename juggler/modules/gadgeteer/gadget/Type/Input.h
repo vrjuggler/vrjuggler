@@ -46,6 +46,7 @@
 #define _GADGET_INPUT_H_
 
 #include <gadget/gadgetConfig.h>
+#include <boost/concept_check.hpp>
 #include <vpr/vpr.h>
 
 #include <vpr/Sync/Mutex.h>
@@ -193,11 +194,13 @@ public:
 
    virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
    {
+      boost::ignore_unused_variable_warning(writer);
       return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
    }
 
    virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
    {
+      boost::ignore_unused_variable_warning(reader);
       return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
    }
 
