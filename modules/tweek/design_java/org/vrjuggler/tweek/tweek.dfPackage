@@ -1,0 +1,115 @@
+package id28g3actylgvb1ctypo3ef;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.AboutBox:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}/**
+@__ref <oiref:design#Class#id3ht5nctylgvb1ctypq8ij.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#org.vrjuggler.tweek.treeviewer:oiref> 
+*/
+class reference44 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.TweekFrame:oiref><oihard>
+@__modelType reference 
+*/
+class reference45 {
+}/**
+@__ref <oiref:design#Class#id2io4qctylgvb1ctypq8hb.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#org.vrjuggler.tweek.services:oiref> 
+*/
+class reference46 {
+}/**
+@__ref <oiref:design#Class#id3x5spctylgvb1ctypq8gk.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#org.vrjuggler.tweek.net:oiref> 
+*/
+class reference47 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.TweekCore:oiref><oihard>
+@__modelType reference 
+*/
+class reference48 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.PrefsDialog:oiref><oihard>
+@__modelType reference 
+*/
+class reference49 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.Tweek:oiref><oihard>
+@__modelType reference 
+*/
+class reference50 {
+}/**
+@__ref <oiref:design#Class#id1qj3gctylgvb1ctypq8f2.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#org.vrjuggler.tweek.beans:oiref> 
+*/
+class reference51 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.ServiceRegistry:oiref><oihard>
+@__modelType reference 
+*/
+class reference52 {
+}/**
+@__ref <oiref:design#Class#id48814ctylgvb1ctypq8fv.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#org.vrjuggler.tweek.iconviewer:oiref> 
+*/
+class reference53 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.BeanContainer:oiref><oihard>
+@__modelType reference 
+*/
+class reference54 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.ConnectionDialog:oiref><oihard>
+@__modelType reference 
+*/
+class reference55 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.ViewerRegistry:oiref><oihard>
+@__modelType reference 
+*/
+class reference56 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:MemberLink#<oiref:java#Member#org.vrjuggler.tweek.ViewerRegistry#m_instance:oiref>=1020,173,1020,215,1094,215,1094,141,1052,141:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.vrjuggler.tweek.TweekCore#m_instance:oiref>=458,173,458,215,532,215,532,141,490,141:oigroup>
+<oigroup:<oiref:design#Class#id48814ctylgvb1ctypq8fv.diagram:oiref>=410,910,121,75,1:oigroup>
+<oigroup:<oiref:design#Class#id3x5spctylgvb1ctypq8gk.diagram:oiref>=900,770,174,104,1:oigroup>
+<oigroup:<oiref:java#Class#org.vrjuggler.tweek.AboutBox:oiref>=260,250,200,371,1:oigroup>
+<oigroup:<oiref:java#Class#org.vrjuggler.tweek.TweekFrame:oiref>=10,10,200,543,1:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.vrjuggler.tweek.ServiceRegistry#m_instance:oiref>=742,160,742,200,812,200,812,130,772,130:oigroup>
+<oigroup:<oiref:java#Class#org.vrjuggler.tweek.ServiceRegistry:oiref>=572,10,200,150,1:oigroup>
+<oigroup:<oiref:java#Class#org.vrjuggler.tweek.TweekCore:oiref>=290,10,200,163,1:oigroup>
+<oigroup:<oiref:design#Class#id1qj3gctylgvb1ctypq8f2.diagram:oiref>=10,930,200,351,1:oigroup>
+<oigroup:<oiref:java#Class#org.vrjuggler.tweek.PrefsDialog:oiref>=480,250,200,491,1:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.vrjuggler.tweek.TweekFrame#m_bean_container:oiref>=110,553,110,623:oigroup>
+<oigroup:<oiref:java#Class#org.vrjuggler.tweek.Tweek:oiref>=700,250,170,92,1:oigroup>
+<oigroup:<oiref:java#Class#org.vrjuggler.tweek.ConnectionDialog:oiref>=890,250,200,478,1:oigroup>
+<oigroup:<oiref:java#Class#org.vrjuggler.tweek.BeanContainer:oiref>=10,623,200,257,1:oigroup>
+<oigroup:<oiref:design#Class#id3ht5nctylgvb1ctypq8ij.diagram:oiref>=230,910,160,88,1:oigroup>
+<oigroup:<oiref:design#Class#id2io4qctylgvb1ctypq8hb.diagram:oiref>=700,770,180,75,1:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.vrjuggler.tweek.TweekCore#m_gui:oiref>=290,91,210,91:oigroup>
+<oigroup:<oiref:java#Class#org.vrjuggler.tweek.ViewerRegistry:oiref>=852,10,200,163,1:oigroup> 
+*/
+class __positions {
+}

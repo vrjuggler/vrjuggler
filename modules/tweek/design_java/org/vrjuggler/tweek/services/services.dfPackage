@@ -1,0 +1,32 @@
+package id2io4qctylgvb1ctypq8hb;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.services.GlobalPreferencesService:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.services.EnvironmentService:oiref><oihard>
+@__modelType reference 
+*/
+class reference59 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions 
+*/
+class __positions {
+}
