@@ -52,7 +52,8 @@
 namespace vpr
 {
 
-/**
+/** \class Port Port.h vpr/IO/Port/Port.h
+ *
  * A cross-platform interface to using a computer's I/O ports (serial,
  * parallel, IR, etc.).
  */
@@ -67,17 +68,17 @@ protected:
     * @pre None.
     * @post The given port name is passed on to the vpr::BlockIO constructor.
     *
-    * @param port_name The name of the port in use.
+    * @param portName The name of the port in use.
     */
-   Port(const std::string& port_name);
+   Port(const std::string& portName);
 
    /**
     * Destructor.  This does nothing.
     */
-   virtual ~Port(void);
+   virtual ~Port();
 };
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
 #endif	/* _VPR_PORT_H_ */

@@ -193,7 +193,10 @@
 
 namespace vpr
 {
-
+   /** \struct DebugCategory Debug.h vpr/Util/Debug.h
+    *
+    * Container for load-time extension of the debugging categories.
+    */
    struct DebugCategory
    {
       DebugCategory(const vpr::GUID& guid, const std::string& name,
@@ -211,15 +214,17 @@ namespace vpr
    };
 
 
-   /**
-    * Class to support debug output
+   /** \class Debug Debug.h vpr/Util/Debug.h
+    *
+    * Class to support debug output.
     */
    class VPR_CLASS_API Debug
    {
    protected:
-      // Set default values
-      // Set up default categories
-      // Get debug config from environment
+      /**
+       * Sets default values.  Sets up default categories.  Gets debug
+       * configuration from the run-time environment.
+       */
       Debug();
 
       // These two have to be here because Visual C++ will try to make them
@@ -243,9 +248,9 @@ namespace vpr
        * to output.  If there is an error opening the file, no change
        * to the output location will be made.
        *
-       * @param   output      the name of the file to use for output
+       * @param output The name of the file to use for output.
        *
-       * @return     true if the file was successfully set, false if not.
+       * @return \c true if the file was successfully set, \c false if not.
        */
       bool setOutputFile(const std::string& output);
 
@@ -253,11 +258,11 @@ namespace vpr
        * Sets the debug stream to use for debug output.
        * This will switch the default output location to stream.
        *
-       * @param   stream         the new stream to use for debug output.
+       * @param stream The new stream to use for debug output.
        */
       void setOutputStream(std::ostream& stream);
       
-      // Get the debug stream to use
+      /** Gets the debug stream to use */
       std::ostream& getStream(const vpr::DebugCategory& cat, const int level,
                               const bool show_thread_info = true,
                               const bool use_indent = true, 
@@ -274,16 +279,16 @@ namespace vpr
          return mDebugLock;
       }
 
-      /// Adds a category name.
+      /** Adds a category name. */
       void addCategory(const vpr::DebugCategory& catId);
 
-      /// Are we allowed to print this category??
+      /** Are we allowed to print this category? */
       bool isCategoryAllowed(const vpr::DebugCategory& catId);
 
-      /// Sets up the default categories.
+      /** Sets up the default categories. */
       void setDefaultCategoryNames();
 
-      /// Configures the allowed categories from the users environment.
+      /** Configures the allowed categories from the users environment. */
       void updateAllowedCategories();
 
       void enableThreadLocalSettings()
@@ -297,14 +302,19 @@ namespace vpr
          std::cout << clrRESET;     // Reset colors
       }
 
+      /**
+       * @name Thread local settings
+       *
+       * Columns and color.
+       */
       //@{
-      /** Thread local settings: Columns and color. */
       void pushThreadLocalColumn(int column);
       void popThreadLocalColumn();
       void pushThreadLocalColor(std::string color);
       void popThreadLocalColor();
       //@}
 
+      /** @name Debug accessors and manipulators */
       //@{
       /** Is debugging enabled? */
       bool isDebugEnabled()
@@ -312,40 +322,42 @@ namespace vpr
          return mDebugEnabled;
       }
 
+      /** Enables debug output. */
       void enableOutput()
       {
          mDebugEnabled = true;
       }
 
+      /** Disables debug output. */
       void disableOutput()
       {
          mDebugEnabled = false;
       }
       //@}
 
-      /** Dump the current status to screen. */
+      /** Dumps the current status to screen. */
       void debugDump();
 
-      /// Decrement the level of indention.
+      /** Decrements the level of indention. */
       void decrementIndentLevel();
 
-      /// Increment the level of indention.
+      /** Increments the level of indention. */
       void incrementIndentLevel();
 
    private:
-      bool mDebugEnabled;  // Is debug output enabled
-      int debugLevel;      //! Debug level to use
-      int indentLevel;     //! Amount to indent
+      bool mDebugEnabled;  /**< Is debug output enabled? */
+      int debugLevel;      /**< Debug level to use */
+      int indentLevel;     /**< Amount to indent */
 
       std::ofstream* mFile;     /**< File we are using for all output. */
 
       std::ostream* mStreamPtr;
 
-      bool  mUseThreadLocal;  //! Whether to use thread local info or not
+      bool  mUseThreadLocal;  /**< Whether to use thread local info or not */
 
       Mutex mDebugLock;
 
-      //std::vector<bool> mAllowedCategories;      //! The categories we allow
+      //std::vector<bool> mAllowedCategories;  /**< The categories we allow */
 
       struct CategoryInfo
       {
@@ -374,12 +386,15 @@ namespace vpr
       vprSingletonHeaderWithInitFunc(Debug, init);
    };
 
-// Helper class
+   /** \struct DebugColumnGuard Debug.h vpr/Util/Debug.h
+    *
+    * Helper class
+    */
    struct DebugColumnGuard
    {
-      DebugColumnGuard(int col_val)
+      DebugColumnGuard(const int colVal)
       {
-         vprDEBUG_PushColumn(col_val);
+         vprDEBUG_PushColumn(colVal);
       }
 
       ~DebugColumnGuard()
@@ -388,6 +403,10 @@ namespace vpr
       }
    };
 
+   /** \struct DebugColorGuard Debug.h vpr/Util/Debug.h
+    *
+    * Helper class
+    */
    struct DebugColorGuard
    {
       DebugColorGuard(std::string color_val)
@@ -401,7 +420,8 @@ namespace vpr
       }
    };
 
-   /**
+   /** \class DebugOutputGuard Debug.h vpr/Util/Debug.h
+    *
     * Helper class that outputs debug information at creation and destruction
     * of the object.
     */

@@ -42,6 +42,13 @@
 #ifndef _VPR_IOSYS_FAKE_H_
 #define _VPR_IOSYS_FAKE_H_
 
+/**
+ * \file
+ *
+ * Include this file to get the full declaration of the platform-specific class
+ * that is typedef'd to vpr::IOSys.
+ */
+
 #include <vpr/vprConfig.h>
 
 // determine which implementation of vpr::IOSys to include.

@@ -55,13 +55,16 @@
 namespace vpr
 {
 
-/**
+/** \class LibraryUNIX LibraryUNIX.h vpr/DynLoad/Library.h
+ *
  * Low-level class for loading symbols dynamically.  This implementation wraps
  * dlopen(3) and friends.  The idea of this class is to provide the basic
  * features needed to load a single shared/dynamic library and to get symbols
  * from it.  No features for path extension are provided here.
  *
- * @date 9-6-2002
+ * This is typedef'd to vpr::Library.
+ *
+ * @date September 6, 2002
  */
 class LibraryUNIX
 {
@@ -166,6 +169,11 @@ public:
       return mLibrary != NULL;
    }
 
+   /**
+    * @name Symbol search
+    *
+    * These functions search within this library for the named symbol.
+    */
    //@{
    /**
     * Finds and returns an untyped reference to the specified symbol in this
@@ -198,19 +206,56 @@ public:
       return dlsym(mLibrary, symbolName);
    }
 
+   /**
+    * Finds and returns an untyped reference to the specified symbol in this
+    * library.  If no library was loaded previously, all libraries known to the
+    * runtime and the main program are searched in an unspecified order.
+    *
+    * Use this function to look up functions or data symbols in a shared
+    * library.  Getting a pointer to a symbol in a library does indicate that
+    * the library is available when the search was made.  The runtime does
+    * nothing to ensure the continued validity of the symbol.  If the library
+    * is unloaded, for instance, the results of any findSymbol() calls become
+    * invalid as well.
+    *
+    * @post If the library was not loaded, it is loaded before symbol lookup.
+    *
+    * @param symbolName The text representation of the symbol to resolve.
+    *
+    * @return An untyped pointer, possibly NULL.
+    */
    void* findSymbol(const std::string& symbolName)
    {
       return findSymbol(symbolName.c_str());
    }
    //@}
 
+   /**
+    * @name Symbol and library search
+    *
+    * Non-instance search routines that give back vpr::LibraryUNIX objects.
+    */
    //@{
    /**
     * Finds a symbol in one of the currently loaded libraries, and returns
     * both the symbol and the library in which it was found.
+    *
+    * @param symbolName The text representation of the symbol to resolve.
+    * @param lib        The shared library containing the requested symbol.
+    *
+    * @return An untyped pointer, possibly NULL.
     */
    static void* findSymbolAndLibrary(const char* symbolName, LibraryUNIX& lib);
 
+   /**
+    * Finds a symbol in one of the currently loaded libraries, and returns
+    * both the symbol and the library in which it was found.
+    *
+    * @param symbolName The text representation of the symbol to resolve.
+    * @param lib        The shared library containing the requested symbol.
+    *
+    * @return An untyped pointer, possibly NULL.
+    */
    static void* findSymbolAndLibrary(const std::string& symbolName,
                                      LibraryUNIX& lib)
    {

@@ -57,11 +57,14 @@ namespace vpr
 namespace sim
 {
 
-   // do lookups on addresses, giving results for each unique query
+   /** \class DNS DNS.h vpr/md/SIM/DNS.h
+    *
+    * Do lookups on addresses, giving results for each unique query.
+    */
    class VPR_CLASS_API DNS : public vpr::Singleton<DNS>
    {
    public:
-      DNS() : mUniqueGenerator( 0 )
+      DNS() : mUniqueGenerator(0)
       {
          mDnsAddressLookup["localhost"] = 0x7F000001;
       }
@@ -74,7 +77,7 @@ namespace sim
 
    protected:
 
-      // use this to look up an address from a name
+      /** Use this to look up an address from a name. */
       std::map< std::string, vpr::Uint32 > mDnsAddressLookup;
 
       vpr::Uint32 mUniqueGenerator;

@@ -39,11 +39,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 #ifndef VPR_PROFILE_MANAGER_H
 #define VPR_PROFILE_MANAGER_H
 
 /**
+ * \file
+ *
  * Originally based on
  * Real-Time Hierarchical Profiling for Game Programming Gems 3
  * by Greg Hjelstrom & Byon Garrabrant
@@ -68,11 +69,10 @@
 namespace vpr
 {
 
-   /***
-   * Global static facade for using the Profiling code.
-   *
-   *
-   */
+   /*** \class ProfileManager ProfileManager.h vpr/Perf/ProfileManager.h
+    *
+    * Global static facade for using the profiling code.
+    */
    class VPR_CLASS_API ProfileManager
    {
    public:
@@ -89,41 +89,44 @@ namespace vpr
          vpr::Interval  mResetTime;    /**< Reset time for the thread. */
       };
 
-      ///Convenience typedef for use by the Performance Monitor Plugin
+      /** Convenience typedef for use by the Performance Monitor Plugin. */
       typedef std::map<std::string, vpr::Interval> ProfileSampleResult;
 
-      /** @name Profiling methods. */
+      /** @name Profiling methods */
       //@{
       /**
-      * Steps one level deeper into the tree, if a child already exists with
-      * the specified name then it accumulates the profiling;
-      * otherwise a new child node is added to the profile tree.
-      *
-      * @param name      Name of this profiling record
-      * @param queueSize Size of the queue to use
-      * @note
-      *   The string used is assumed to be a static string; pointer compares are used throughout
-      *   the profiling code for efficiency.
-      */
-      static void startProfile( const char * profileName, const unsigned int queueSize = 0);
+       * Steps one level deeper into the tree, if a child already exists with
+       * the specified name then it accumulates the profiling.  Otherwis, a
+       * new child node is added to the profile tree.
+       *
+       * @param profileName Name of this profiling record.
+       * @param queueSize   Size of the queue to use.
+       *
+       * @note The string used is assumed to be a static string.  Pointer
+       *       comparisons are used throughout the profiling code for
+       *       efficiency.
+       */
+      static void startProfile(const char* profileName,
+                               const unsigned int queueSize = 0);
 
       /**
-       * Stop timing on most resent startProfile and record the results.
+       * Stops timing on most resent startProfile and record the results.
        */
       static void stopProfile();
       //@}
 
-      /** Return the root node of the manager.
-       * @param thread The thread to get the root for. NULL --> current thread
+      /**
+       * Returns the root node of the manager.
+       *
+       * @param thread The thread to get the root for.  A value of NULL
+       *               indicates that the current thread should be queried.
        */
-      static ProfileNode* getRootNode(vpr::Thread* thread=NULL);
+      static ProfileNode* getRootNode(vpr::Thread* thread = NULL);
 
-      /** Print the full profile tree. */
-      static void printTree(bool forAllThreads=true);
+      /** Prints the full profile tree. */
+      static void printTree(bool forAllThreads = true);
 
-      // ------------------------
-      /// @nameIterator handling.
-      // ------------------------
+      /** @nameIterator handling. */
       //@{
       /** Returns a new Iterator that is set to the root. */
       static ProfileIterator begin()
@@ -137,37 +140,34 @@ namespace vpr
          return ProfileIterator(NULL);
       }
 
-      /** Release the given iterator. */
-      static void releaseIterator( ProfileIterator* iterator )
+      /** Releases the given iterator. */
+      static void releaseIterator(ProfileIterator* iterator)
       {
          delete iterator;
       }
       //@}
 
-      // ----------------------
-      /// @name Reset methods.
-      // ----------------------
+      /** @name Reset methods. */
       //@{
       /**
-       * Reset the contents of the profiling system.
+       * Resets the contents of the profiling system.
        *
        * @post Everything is reset except tree structure. Timing data is reset.
        */
       static void reset();
 
       /**
-       * @return Returns the elapsed time since last reset
+       * Returns the elapsed time since last reset.
        */
       static float getTimeSinceReset();
-
       //@}
 
    public:
-      // ---------------------------------------------
-      /// @name Data sampling and aggregation methods.
-      // ---------------------------------------------
+      /** @name Data sampling and aggregation methods. */
       //@{
-      /** Get vector of names in the profile.
+      /**
+       * Gets the vector of names in the profile.
+       *
        * @return vector of the names in the Profile.
        */
       static std::vector<std::string> getNames()
@@ -178,14 +178,15 @@ namespace vpr
       }
 
       /**
-       * @return Returns a ProfileSampleResult that has the names in the profile
-       *         and their last sample.
+       * Returns a ProfileSampleResult that has the names in the profile and
+       * their last sample.
        */
-      static ProfileSampleResult getSampleResult( )
+      static ProfileSampleResult getSampleResult()
       {
          ProfileSampleResult sample_time_map;
-         unsigned num_threads = vpr::ThreadManager::instance()->getNumThreads();
-         for(unsigned t=0;t<num_threads;t++)
+         unsigned int num_threads =
+            vpr::ThreadManager::instance()->getNumThreads();
+         for ( unsigned int t = 0; t < num_threads; ++t )
          {
             vpr::Thread* thread = vpr::ThreadManager::instance()->getThread(t);
             getSampleResultRecursively(sample_time_map, getRootNode(thread));
@@ -194,7 +195,7 @@ namespace vpr
       }
 
       /**
-       * @return Returns the last sample from the node with the given name (by string).
+       * Returns the last sample from the node with the given name (by string).
        */
        static float getNamedNodeSample( const char * nodeName )
        {
@@ -214,12 +215,14 @@ namespace vpr
    private:
       static TSObjectProxy<ThreadProfileData>  mThreadData;    /**< The profile data for each thread being sampled. */
 
-      /** Private Member Functions */
+      // Private Member Functions
       static void getNamesRecursively( std::vector<std::string>& nameList,
                                        ProfileNode* node )
       {
          if ( NULL == node )
-         { return; }
+         {
+            return;
+         }
 
          getNamesRecursively(nameList, node->getSibling());
          nameList.push_back(node->getName());
@@ -230,7 +233,9 @@ namespace vpr
                                           ProfileNode* node )
       {
          if ( NULL == node )
-         { return; }
+         {
+            return;
+         }
 
          getSampleResultRecursively(sampleTimeMap, node->getSibling());
          vpr::Interval last_sample;
@@ -242,15 +247,16 @@ namespace vpr
    };
 
 
-/** Set of routines for allowing simplified access to profile monitoring API.
+/**
+ * Set of routines for allowing simplified access to profile monitoring API.
  */
 namespace prof
 {
 #if defined(DISABLE_VPR_PROFILE)
    inline void start(const char* name) {;}
-   inline void start(const char* name, unsigned histSize) {;}
+   inline void start(const char* name, unsigned int histSize) {;}
    inline void next(const char* name) {;}
-   inline void next(const char* name, unsigned histSize) {;}
+   inline void next(const char* name, unsigned int histSize) {;}
    inline void stop() {;}
    inline void printTree() {;}
 #else
@@ -260,7 +266,7 @@ namespace prof
       vpr::ProfileManager::startProfile(name);
    }
    /** Start a sample with history. */
-   inline void start(const char* name, unsigned histSize)
+   inline void start(const char* name, unsigned int histSize)
    {
       vpr::ProfileManager::startProfile(name,histSize);
    }
@@ -271,7 +277,7 @@ namespace prof
       vpr::ProfileManager::startProfile(name);
    }
    /** Go to the next sample (stoping previous sample). */
-   inline void next(const char* name, unsigned histSize)
+   inline void next(const char* name, unsigned int histSize)
    {
       vpr::ProfileManager::stopProfile();
       vpr::ProfileManager::startProfile(name,histSize);
@@ -287,31 +293,33 @@ namespace prof
       vpr::ProfileManager::printTree();
    }
 #endif
-}
+} // End prof namespace
 
-/*
- * ProfileSample is a guard style class for handle a single sample.
- *
- * This class implements a guard pattern where by the creation of a
- * ProfileSample object starts a sample and the destruction stops the sampling.
- *
- * In most cases this class should not be used directly but instead the
- * PROFILE_ macro's should be used.
- */
+   /** \class ProfileSample ProfileManager.h vpr/Perf/ProfileManager.h
+    *
+    * ProfileSample is a guard style class for handle a single sample.
+    *
+    * This class implements a guard pattern where by the creation of a
+    * ProfileSample object starts a sample and the destruction stops the
+    * sampling.
+    *
+    * In most cases this class should not be used directly but instead the
+    * PROFILE_ macro's should be used.
+    */
    class ProfileSample
    {
    public:
-      ProfileSample( const char * name )
+      ProfileSample(const char * name)
       {
-         ProfileManager::startProfile( name );
+         ProfileManager::startProfile(name);
       }
 
-      ProfileSample( const char * name, const unsigned int queue_size)
+      ProfileSample(const char * name, const unsigned int queue_size)
       {
-         ProfileManager::startProfile( name, queue_size);
+         ProfileManager::startProfile(name, queue_size);
       }
 
-      ~ProfileSample( void )
+      ~ProfileSample()
       {
          ProfileManager::stopProfile();
       }

@@ -49,7 +49,8 @@
 namespace vpr
 {
 
-/**
+/** \class McastReq McastReq.h vpr/IO/Socket/McastReq.h
+ *
  * Multicast request wrapper.
  */
 class McastReq

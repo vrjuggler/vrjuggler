@@ -43,10 +43,10 @@
 #define _VPR_MUTEX_H_
 
 /**
- * Defines a mutex wrapper.  No base class because
- *  we don't want to have to use virtual functions.
+ * \file
  *
- * @date 1-20-97
+ * Include this file to get the full declaration of the platform-specific
+ * type that is typedef'd to vpr::Mutex.
  */
 
 #include <vpr/vprConfig.h>

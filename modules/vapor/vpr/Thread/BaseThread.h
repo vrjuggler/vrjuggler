@@ -61,7 +61,8 @@ typedef void (*thread_func_t)(void *);
 
 class BaseThreadFunctor;
 
-/**
+/** \class BaseThread BaseThread.h vpr/Thread/BaseThread.h
+ *
  * Base class for all thread implementations.
  *
  * Provides functionality that is common to all threading implementations.
@@ -111,8 +112,9 @@ public:
 public:     // Thread specific data caching
    /**
     * Gets the Thread specific data table.
-    * NOTE: Users should NOT access the table directly
-    * instead, use vpr::TSObjectProxies.
+    *
+    * @note Users should NOT access the table directly instead, use
+    *       vpr::TSObjectProxy objects.
     */
    TSTable* getTSTable()
    {
@@ -121,36 +123,34 @@ public:     // Thread specific data caching
 
    /**
     * Get the Thread the global thread specific data table.
-    * This table is shared by all threads that were not created by vpr.
+    * This table is shared by all threads that were not created by VPR.
     */
    static TSTable* getGlobalTSTable()
    {
       return &gTSTable;
    }
 
-
 private:
    TSTable        mTSTable;  /**< Thread specific data for the thread */
    static TSTable gTSTable;  /**< Global thread specific data.  Used in all
                                   threads NOT created by vpr.  (ie. the
-                                  primordial thread) */
+                                  primordial thread). */
 
 protected:
    /**
     * After the object has been created, call this routine to complete
-    * initialization.
-    * Done this way, because I need to call this based on stuff that happens
-    * in derived class's constructor.
+    * initialization.  It is done this way because I need to call this based
+    * on stuff that happens in derived class's constructor.
     *
-    * @pre The thread manager should be lock()'ed before calling this function
-    *       so that the addThread function can execute correctly
+    * @pre The Thread Manager should be lock()'ed before calling this function
+    *       so that the addThread() function can execute correctly
     * @post Thread is setup correctly to run.
     *       The thread has been registered with the system.
-    *       Creates the thread's id (mThreadId)
+    *       Creates the thread's ID (mThreadId).
     *
-    * @param successfulCreation Did the thread get created correctly
+    * @param successfulCreation Did the thread get created correctly?
     */
-   void registerThread(bool succesfulCreation);
+   void registerThread(bool successfulCreation);
 
    void unregisterThread();
 
@@ -158,7 +158,7 @@ protected:
     * Creates a new thread that will execute functorPtr.
     *
     * @post A thread (with any specified attributes) is created that begins
-    *       executing func().
+    *       executing \p functorPtr.
     *
     * @param functorPtr Function to be executed by the thread.
     * @param priority   Priority of created thread (optional).
@@ -198,10 +198,10 @@ public:
     * @param status Current state of the terminating thread when that thread
     *               calls the exit routine (optional).
     *
-    * @return 0 is returned if this thread is "joined" successfully.<br>
-    *         -1 is returned on an error condition.
+    * @return 0 is returned if this thread is "joined" successfully.
+    * @return -1 is returned on an error condition.
     */
-   virtual int join (void** status = 0)
+   virtual int join(void** status = 0)
    {
       boost::ignore_unused_variable_warning(status);
       return -1;
@@ -211,8 +211,8 @@ public:
     * Resumes the execution of this thread (if it was previously suspended
     * using suspend()).
     *
-    * @return 0 is returned if this thread resumes execuation successfully.<br>
-    *         -1 is returned otherwise.
+    * @return 0 is returned if this thread resumes execuation successfully.
+    * @return -1 is returned otherwise.
     */
    virtual int resume()
    {
@@ -222,8 +222,8 @@ public:
    /**
     * Suspends the execution of this thread.
     *
-    * @return 0 is returned if this thread is suspended successfully.<br>
-    *         -1 is returned otherwise.
+    * @return 0 is returned if this thread is suspended successfully.
+    * @return -1 is returned otherwise.
     */
    virtual int suspend()
    {
@@ -233,15 +233,14 @@ public:
    /**
     * Gets this thread's current priority.
     *
-    * @pre None.
     * @post The priority of this thread is returned in the integer pointer
     *       variable.
     *
     * @param prio Pointer to an int variable that will have the thread's
     *             priority stored in it.
     *
-    * @return 0 is returned if the priority was retrieved successfully.<br>
-    *         -1 is returned if the priority could not be read.
+    * @return 0 is returned if the priority was retrieved successfully.
+    * @return -1 is returned if the priority could not be read.
     */
    virtual int getPrio(VPRThreadPriority* prio)
    {
@@ -254,8 +253,8 @@ public:
     *
     * @param prio The new priority for this thread.
     *
-    * @return 0 is returned if this thread's priority was set successfully.<br>
-    *         -1 is returned otherwise.
+    * @return 0 is returned if this thread's priority was set successfully.
+    * @return -1 is returned otherwise.
     */
    virtual int setPrio(VPRThreadPriority prio)
    {
@@ -268,8 +267,8 @@ public:
     * integer value assigned when the thread was created.
     *
     * @return -1 is returned if this is a bad thread.  This usually means that
-    *         there was a reation error.<br>
-    *         Otherwise, the value returned is this thread's ID.
+    *         there was a reation error.
+    * @return Otherwise, the value returned is this thread's ID.
     */
    vpr::Int32 getTID()
    {
@@ -293,14 +292,14 @@ public:
    }
 
    /**
-    * Sends the specified signal to this thread (not necessarily SIGKILL).
+    * Sends the specified signal to this thread (not necessarily \c SIGKILL).
     *
     * @post This thread receives the specified signal.
     *
     * @param signum The signal to send to the specified thread.
     *
-    * @return 0 is returned if the thread was sent the given signal.<br>
-    *         -1 is returned if an error occurred.
+    * @return 0 is returned if the thread was sent the given signal.
+    * @return -1 is returned if an error occurred.
     */
    virtual int kill(int signum)
    {
@@ -309,9 +308,8 @@ public:
    }
 
    /**
-    * Kill (cancel) this thread.
+    * Kills (cancels) this thread.
     *
-    * @pre None.
     * @post This thread is cancelled. Immediate cancellation is not guaranteed.
     */
    virtual void kill()
@@ -342,7 +340,8 @@ protected:
    // --- STATICS ---- //
 
 private:
-   // XXX: What happens when it rolls over after we have been running for a LONG time.
+   // XXX: What happens when it rolls over after we have been running for a
+   // LONG time.
    vpr::Int32 getNextThreadId()
    {
       return mNextThreadId++;

@@ -42,6 +42,13 @@
 #ifndef _VPR_Barrier_h_
 #define _VPR_Barrier_h_
 
+/**
+ * \file
+ *
+ * Include this file to get the full declaration of the platform-specific
+ * class that is typedef'd to vpr::Barrier.
+ */
+
 #include <vpr/vprConfig.h>
 
 #if VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_IRIX_SPROC
@@ -57,7 +64,8 @@
 namespace vpr
 {
 
-/**
+/** \class SubBarrier Barrier.h vpr/Sync/Barrier.h
+ *
  * Helper class for vpr::Barrier.
  */
 class SubBarrier
@@ -66,37 +74,39 @@ public:
    /**
     * Initialization.
     */
-   SubBarrier (int count, Mutex* lock)
-      : barrierFinished(lock), runningThreads(count)
+   SubBarrier(int count, Mutex* lock)
+      : barrierFinished(lock)
+      , runningThreads(count)
    {
    }
 
-   CondVar barrierFinished; //! True if this generation of the barrier is done
+   CondVar barrierFinished; /**< True if this generation of the barrier is done */
 
-   int runningThreads;  //! Number of threads that are still running
+   int runningThreads;  /**< Number of threads that are still running */
 };
 
-/**
- * Implements "barrier synchronization" primitive.
+/** \class Barrier Barrier.h vpr/Sync/Barrier.h
  *
+ * Implements "barrier synchronization" primitive.  This is used for non-SPROC
+ * threading subsystems.
  */
 class Barrier
 {
 public:
    /**
     * Constructor for barrier.
-    * Creates a barrier that will wait for "count" num threads to synchronize.
+    * Creates a barrier that will wait for \p count threads to synchronize.
     */
-   Barrier (unsigned count);
+   Barrier(unsigned int count);
 
    /** Destructor. */
    ~Barrier();
 
    /**
-    * Blocks the caller until all <count> threads have called <wait> and
+    * Blocks the caller until all \c mCount threads have called wait() and
     * then allows all the caller threads to continue in parallel.
     */
-   bool wait(void);
+   bool wait();
 
    /**
     * Tells the barrier to increase the count of the number of threads to
@@ -112,15 +122,15 @@ public:
 
 private:
    vpr::CondVar   mCond;   /**< Condition variable and mutex for the barrier. */
-   unsigned       mThreshold;
-   unsigned       mCount;
-   unsigned       mGeneration;
+   unsigned int   mThreshold;
+   unsigned int   mCount;
+   unsigned int   mGeneration;
 
    // = Prevent assignment and initialization.
    void operator= (const Barrier &)
    {;}
 
-   Barrier (const Barrier &)
+   Barrier(const Barrier &)
    {;}
 };
 

@@ -50,7 +50,8 @@
 namespace vpr
 {
 
-/**
+/** \class Interal Interval.h vpr/Util/Interval.h
+ *
  * This class captures a high-resolution interval.
  *
  * This interval is based off an unsigned always increasing
@@ -66,7 +67,8 @@ class VPR_CLASS_API Interval
 {
 public:
    /** Units of time. */
-   enum Unit {
+   enum Unit
+   {
       Sec,     /**< Seconds */
       Msec,    /**< Milliseconds */
       Usec,    /**< Microseconds */
@@ -76,7 +78,7 @@ public:
 public:
    static const Interval NoWait;     /**< Do not wait at all */
    static const Interval NoTimeout;  /**< Wait indefinitely */
-   static const Interval HalfPeriod;   /**< Half of the roll-over period */
+   static const Interval HalfPeriod; /**< Half of the roll-over period */
 
 public:
    /**
@@ -95,9 +97,11 @@ public:
    }
 
    /** 
-    * Sets the interval using a vpr::Uint64 (num) and a unit type (timeUnit).
-    * It sets mMicroSeconds to be the number of microseconds in num timeUnit.
-    * Example: set(1, vpr::Interval::Sec) then mMicroSeconds is set to 1000000.
+    * Sets the interval using a vpr::Uint64 (\p num) and a unit type
+    * (t\p imeUnit).  It sets mMicroSeconds to be the number of microseconds
+    * in num timeUnit.
+    * Example: set(1, vpr::Interval::Sec) then \c mMicroSeconds is set to
+    * 1000000.
     */
    void set(const vpr::Uint64 num, const Unit timeUnit)
    {
@@ -122,10 +126,10 @@ public:
    }
 
    /** 
-    * Sets the interval using a single-precision floating-point number (num)
-    * and a unit type (timeUnit).  It sets mMicroSeconds to be the number of
-    * microseconds in num timeUnit.
-    * Example: setf(1.0f, vpr::Interval::Sec) then mMicroSeconds is set to
+    * Sets the interval using a single-precision floating-point number (\p num)
+    * and a unit type (\p timeUnit).  It sets mMicroSeconds to be the number of
+    * microseconds in \p num \p timeUnit.
+    * Example: setf(1.0f, vpr::Interval::Sec) then \c mMicroSeconds is set to
     * 1000000.
     */
    void setf(const float num, const Unit timeUnit)
@@ -151,10 +155,10 @@ public:
    }
 
    /** 
-    * Sets this interval using a double-precision floating-point number (num)
-    * and a unit type (timeUnit).  It sets mMicroSeconds to be the number of
-    * microseconds in num timeUnit.
-    * Example: setd(1.0, vpr::Interval::Sec) then mMicroSeconds is set to
+    * Sets this interval using a double-precision floating-point number
+    * (\p num) and a unit type (\p timeUnit).  It sets mMicroSeconds to be the
+    * number of microseconds in \p num \p timeUnit.
+    * Example: setd(1.0, vpr::Interval::Sec) then \c mMicroSeconds is set to
     * 1000000.
     */
    void setd(const double num, const Unit timeUnit)
@@ -388,7 +392,7 @@ public:
 
    /**
     * Tests two intervals for equality by checking the values of their
-    * mMicroSeconds variables.
+    * \c mMicroSeconds variables.
     *
     * @return true if both have an equal value for mMicroSeconds; false
     *         otherwise.
@@ -400,7 +404,7 @@ public:
 
    /**
     * Tests two intervals for inequality by checking the values of their
-    * mMicroSeconds variables.
+    * \c mMicroSeconds variables.
     *
     * @return true if the intervals have unequal values for mMicroSeconds;
     *         false otherwise.
@@ -472,7 +476,7 @@ public:
     * Returns a vpr::Interval that is the addition of the value of this
     * vpr::Interval and the given vpr::Interval.
     */
-   Interval operator +(const Interval& r) const
+   Interval operator+ (const Interval& r) const
    { 
       return (Interval(*this) += r);  
    }
@@ -494,7 +498,7 @@ public:
     *
     * @param r The Interval to subtract.
     */
-   Interval operator -(const Interval& r) const
+   Interval operator- (const Interval& r) const
    { 
       return (Interval(*this) -= r); 
    }

@@ -39,12 +39,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-/*
- * --------------------------------------------------------------------------
- * NOTES:
- *    - This file (ThreadKeyPosix.h) MUST be included by Thread.h, not
- *      the other way around.
- * --------------------------------------------------------------------------
+/**
+ * \file
+ *
+ * @note This file MUST be included by Thread.h, not the other way around.
  */
 
 #ifndef _VPR_THREAD_KEY_POSIX_H_
@@ -64,25 +62,47 @@ namespace vpr
 typedef thread_func_t KeyDestructor;
 
 
-/**
- * Wrapper around pthread keys (thread-specific data).
+/** \class ThreadKeyPosix ThreadKeyPosix.h vpr/Thread/Thread.h
+ *
+ * Wrapper around pthread keys (thread-specific data).  It is typedef'd to
+ * vpr::ThreadKey.
  */
 class ThreadKeyPosix
 {
 public:
-   /// Default constructor.
+   /**
+    * Default constructor.  After calling this, one of the keycreate()
+    * overloads must be called to finish the key allocation process.
+    *
+    * @see keycreate
+    */
    ThreadKeyPosix()
    {
       keycreate(NULL);
    }
 
-   /// Create a key that knows how to delete itself using a function pointer.
+   /**
+    * Creates a key that knows how to delete itself using a function pointer.
+    *
+    * @post A key is created and is associated with the specified destructor
+    *       function and argument.
+    *
+    * @param destructor The destructor function for the key.
+    * @param arg        Argument to be passed to destructor.
+    */
    ThreadKeyPosix(thread_func_t destructor, void* arg)
    {
       keycreate(destructor, arg);
    }
 
-   /// Create a key that knows how to delete itself using a functor.
+   /**
+    * Creates a key that knows how to delete itself using a function pointer.
+    *
+    * @post A key is created and is associated with the specified destructor
+    *       function and argument.
+    *
+    * @param destructor The destructor function for the key.
+    */
    ThreadKeyPosix(BaseThreadFunctor* destructor)
    {
       keycreate(destructor);
@@ -102,24 +122,24 @@ public:
     * and is destroyed using the spcefied destructor function that takes a
     * single argument.
     *
-    * @pre None.
     * @post A key is created and is associated with the specified destructor
     *       function and argument.
     *
-    * @param dest_func The destructor function for the key.
-    * @param arg       Argument to be passed to destructor (optional).
+    * @param destructor The destructor function for the key.
+    * @param arg        Argument to be passed to destructor.
     *
-    * @return 0 is returned upown successful completion.
+    * @return 0 is returned upon successful completion.
     * @return -1 is returned if an error occurs.
     *
     * @note Use this routine to construct the key destructor function if
-    *       it requires arguments.  Otherwise, use the two-argument version
+    *       it requires arguments.  Otherwise, use the single-argument version
     *       of keycreate().
     */
    int keycreate(thread_func_t destructor, void* arg)
    {
       // XXX: Memory leak!
-      ThreadNonMemberFunctor *NonMemFunctor = new ThreadNonMemberFunctor(destructor, arg);
+      ThreadNonMemberFunctor* NonMemFunctor =
+         new ThreadNonMemberFunctor(destructor, arg);
 
       return keycreate(NonMemFunctor);
    }
@@ -129,14 +149,13 @@ public:
     * each thread in the process, is global to all threads in the process
     * and is destroyed by the specified destructor function.
     *
-    * @pre None.
     * @post A key is created and is associated with the specified
     *       destructor function.
     *
-    * @param desctructor Procedure to be called to destroy a data value
-    *                    associated with the key when the thread terminates.
+    * @param destructor Procedure to be called to destroy a data value
+    *                   associated with the key when the thread terminates.
     *
-    * @return 0 is returned upown successful completion.
+    * @return 0 is returned upon successful completion.
     * @return -1 is returned if an error occurs.
     */
    int keycreate(BaseThreadFunctor* destructor)
@@ -152,7 +171,7 @@ public:
     * @post This key is destroyed using the destructor function previously
     *       associated with it, and its resources are freed.
     *
-    * @return 0 is returned upown successful completion.
+    * @return 0 is returned upon successful completion.
     * @return -1 is returned if an error occurs.
     *
     * @note This is not currently supported with Pthreads Draft 4.
@@ -173,7 +192,7 @@ public:
     * @param value Address containing data to be associated with the
     *              specified key for the current thread.
     *
-    * @return 0 is returned upown successful completion.
+    * @return 0 is returned upon successful completion.
     * @return -1 is returned if an error occurs.
     */
    int setspecific(void* value)
@@ -193,7 +212,7 @@ public:
     * @param valuep Address of the current data value associated with the
     *               key.
     *
-    * @return 0 is returned upown successful completion.
+    * @return 0 is returned upon successful completion.
     * @return -1 is returned if an error occurs.
     */
    int getspecific(void** valuep)

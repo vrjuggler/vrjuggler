@@ -42,6 +42,13 @@
 #ifndef _VPR_H_INCLUDED_
 #define _VPR_H_INCLUDED_
 
+/**
+ * \file
+ *
+ * Include this file to get the basic declarations of VPR types.  This includes
+ * forward declarations of wrapper classes for platform-specific features.
+ */
+
 #include <vpr/vprConfig.h>
 #include <vpr/vprTypes.h>
 #include <vpr/Util/ReturnStatus.h>

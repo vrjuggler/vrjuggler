@@ -65,9 +65,9 @@ SocketStreamImplBSD::SocketStreamImplBSD()
    /* Do nothing. */ ;
 }
 
-SocketStreamImplBSD::SocketStreamImplBSD(const InetAddr& local_addr,
-                                         const InetAddr& remote_addr)
-   : SocketImplBSD(local_addr, remote_addr, SocketTypes::STREAM)
+SocketStreamImplBSD::SocketStreamImplBSD(const InetAddr& localAddr,
+                                         const InetAddr& remoteAddr)
+   : SocketImplBSD(localAddr, remoteAddr, SocketTypes::STREAM)
 {
    /* Do nothing. */ ;
 }

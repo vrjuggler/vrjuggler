@@ -39,12 +39,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-/*
- * ----------------------------------------------------------------------------
- * NOTES:
- *    - This file (CondVarNSPR.h) must be included by vpr/Sync/Cond.h, not the
- *      other way around.
- * ----------------------------------------------------------------------------
+/**
+ * \file
+ *
+ * @note This file must be included by vpr/Sync/Cond.h, not the other way
+ *       around.
  */
 
 #ifndef _VPR_COND_VAR_NSPR_H_
@@ -63,8 +62,10 @@
 namespace vpr
 {
 
-/**
- * Condition variable wrapper for NSPR condition variables.
+/** \class CondVarNSPR CondVarNSPR.h vpr/Sync/CondVar.h
+ *
+ * Condition variable wrapper for NSPR condition variables.  This is
+ * typedef'd to vpr::CondVar.
  */
 class VPR_CLASS_API CondVarNSPR
 {
@@ -72,7 +73,6 @@ public:
    /**
     * Constructor.
     *
-    * @pre None.
     * @post The condition variable is intialized, and the mutex variable
     *       associated with it is defined.  These two steps must be done
     *       before any other member functions can use them.
@@ -124,8 +124,9 @@ public:
     *       locked, the caller blocks until signaled.
     *
     * @return vpr::ReturnStatus::Succeed is returned when the calling thread is
-    *         signaled.  vpr::ReturnStatus::Fail is returned if something
-    *         went wrong in blocking on the condition.
+    *         signaled.
+    * @return vpr::ReturnStatus::Fail is returned if something went wrong in
+    *         blocking on the condition.
     */
    vpr::ReturnStatus wait(vpr::Interval timeToWait = vpr::Interval::NoTimeout)
    {
@@ -151,7 +152,8 @@ public:
     *       thread waiting on it.
     *
     * @return vpr::ReturnStatus::Succeed is returned when the signal is sent
-    *         successfully.  vpr::ReturnStatus::Fail is returned otherwise.
+    *         successfully.
+    * @return vpr::ReturnStatus::Fail is returned otherwise.
     */
    vpr::ReturnStatus signal()
    {
@@ -177,8 +179,8 @@ public:
     *       are signaled of this event.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the broadcast message
-    *         is sent successfully.  vpr::ReturnStatus::Fail is returned
-    *         otherwise.
+    *         is sent successfully.
+    * @return vpr::ReturnStatus::Fail is returned otherwise.
     */
    vpr::ReturnStatus broadcast()
    {
@@ -199,7 +201,6 @@ public:
     * Acquires a lock on the mutex variable associated with the condition
     * variable.
     *
-    * @pre None.
     * @post A lock is acquired on the mutex variable associated with the
     *      condition variable.  If a lock is acquired, the caller controls
     *      the mutex variable.  If it was previously locked, the caller
@@ -207,7 +208,7 @@ public:
     *
     * @return vpr::ReturnStatus::Succeed is returned if the lock on this
     *         condition variable is acquired successfully.
-    *         vpr::ReturnStatus::Fail is returned otherwise.
+    * @return vpr::ReturnStatus::Fail is returned otherwise.
     */
    vpr::ReturnStatus acquire()
    {
@@ -218,14 +219,13 @@ public:
     * Tries to acquire a lock on the mutex variable associated with the
     * condition variable.
     *
-    * @pre None.
     * @post If the mutex variable is not already locked, the caller
     *       obtains a lock on it.  If it is already locked, the routine
     *       returns immediately to the caller.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the lock on this
     *         condition variable is acquired successfully.
-    *         vpr::ReturnStatus::Fail is returned if the lock is already held
+    * @return vpr::ReturnStatus::Fail is returned if the lock is already held
     *         by another thread.
     */
    vpr::ReturnStatus tryAcquire()
@@ -237,12 +237,11 @@ public:
     * Releases the lock on the mutex variable associated with the condition
     * variable.
     *
-    * @pre None.
     * @post The lock held by the caller on the mutex variable is released.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the lock on this
     *         condition variable is released successfully.
-    *         vpr::ReturnStatus::Fail is returned otherwise.
+    * @return vpr::ReturnStatus::Fail is returned otherwise.
     */
    vpr::ReturnStatus release()
    {
@@ -269,28 +268,27 @@ public:
       mCondMutex = mutex;
    }
 
-   /** Test the mutex to see if it is held.
-    */
+   /** Tests the mutex to see if it is held. */
    int test()
-   { return mCondMutex->test(); }
-
+   {
+      return mCondMutex->test();
+   }
 
    /**
     * Prints out information about the condition variable to stderr.
     *
-    * @pre None.
     * @post All important data and debugging information related to the
     *       condition variable and its mutex are dumped to stderr.
     */
-   void dump (void) const
+   void dump() const
    {
       std::cerr << "------------- vpr::CondVarNSPR::Dump ---------\n"
                 << "Not Implemented yet.\n";
    }
 
 private:
-   PRCondVar* mCondVar;   /**< Condition variable */
-   MutexNSPR* mCondMutex; /**< Mutex for the condition variable */
+   PRCondVar* mCondVar;       /**< Condition variable */
+   MutexNSPR* mCondMutex;     /**< Mutex for the condition variable */
 
    MutexNSPR  mDefaultMutex;  /**< A default mutex variable */
 

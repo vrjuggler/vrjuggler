@@ -49,25 +49,26 @@
 namespace vpr
 {
 
-/**
+/** \class Guard Guard.h vpr/Sync/Guard.h
+ *
  * Guard wrapper.
  *
- * @date 1-31-97
+ * @date January 31, 1997
  */
-template <class LOCK_TYPE>
+template<class LOCK_TYPE>
 class Guard
 {
 public:
    /**
     * Acquires the lock implicitly.
-    * If block = 1 then use a blocking acquire.
+    * If \p block is 1 then use a blocking mutex acquisition operationg.
     */
    Guard(LOCK_TYPE &lock, int block = 1) : mTheLock(&lock)
    {
       mLockStatus = block ? acquire().success() : tryAcquire().success();
    }
 
-   /// Releases the lock.
+   /** Releases the lock. */
    ~Guard()
    {
       if ( mLockStatus )
@@ -77,27 +78,27 @@ public:
    }
 
    /**
-    * @return true is returned if this guard is locked.
-    *         false is returned if this guard is not locked.
+    * @return \c true is returned if this guard is locked.
+    * @return \c false is returned if this guard is not locked.
     */
    const bool& locked()
    {
       return mLockStatus;
    }
 
-   /// Acquires the lock.
+   /** Acquires the lock. */
    vpr::ReturnStatus acquire()
    {
       return mTheLock->acquire();
    }
 
-   /// Tries to acquire lock.
+   /** Tries to acquire lock. */
    vpr::ReturnStatus tryAcquire()
    {
       return mTheLock->tryAcquire();
    }
 
-   /// Explicity releases the lock.
+   /** Explicity releases the lock. */
    vpr::ReturnStatus release()
    {
       mLockStatus = false;
@@ -108,8 +109,6 @@ private:
    LOCK_TYPE* mTheLock;    /**< The lock that we are using */
    bool       mLockStatus; /**< Are we locked or not */
 };
-
-
 
 } // End of vpr namespace
 

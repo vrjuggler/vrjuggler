@@ -53,7 +53,7 @@ namespace vpr
 
 const InetAddrNSPR InetAddrNSPR::AnyAddr;      // Default constructor defaults to ANY addr
 
-vpr::ReturnStatus InetAddrNSPR::getLocalHost(vpr::InetAddrNSPR& host_addr)
+vpr::ReturnStatus InetAddrNSPR::getLocalHost(vpr::InetAddrNSPR& hostAddr)
 {
    vpr::ReturnStatus status(vpr::ReturnStatus::Fail);
    char local_host_name[257];
@@ -61,7 +61,7 @@ vpr::ReturnStatus InetAddrNSPR::getLocalHost(vpr::InetAddrNSPR& host_addr)
 
    if ( PR_GetSystemInfo(PR_SI_HOSTNAME, local_host_name, 256) == PR_SUCCESS )
    {
-      host_addr.setAddress(std::string(local_host_name), 0);
+      hostAddr.setAddress(std::string(local_host_name), 0);
       status.setCode(vpr::ReturnStatus::Succeed);
    }
 

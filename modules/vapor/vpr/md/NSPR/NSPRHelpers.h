@@ -42,6 +42,8 @@
 #ifndef _VPR_NSPR_HELPER_H_
 #define _VPR_NSPR_HELPER_H_
 
+#include <vpr/vprConfig.h>
+
 #include <string>
 #include <prinrval.h>
 #include <vpr/Util/Interval.h>
@@ -49,19 +51,28 @@
 namespace vpr
 {
 
-// Print out the current NSPR error message to stderr
-extern void NSPR_PrintError(const std::string error_prefix_string, std::ostream& = std::cout);
+/** Prints out the current NSPR error message to stderr. */
+extern void NSPR_PrintError(const std::string& errorPrefixString,
+                            std::ostream& = std::cout);
 
+/** Converts the given vpr::Interval object to an NSPR interval. */
 inline PRUint32 NSPR_getInterval(const vpr::Interval interval)
 {
    if(interval == vpr::Interval::NoTimeout)
+   {
       return PR_INTERVAL_NO_TIMEOUT;
+   }
    else if(interval == vpr::Interval::NoWait)
+   {
       return PR_INTERVAL_NO_WAIT;
+   }
    else
+   {
       return PR_MicrosecondsToInterval(interval.usec());
+   }
 }
 
-}; // namespace
+} // namespace
+
 
 #endif

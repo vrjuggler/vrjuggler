@@ -51,7 +51,10 @@
 namespace vpr
 {
 
-/** Interface used to read object data from a stream. */
+/** \class ObjectReader ObjectReader.h vpr/IO/ObjectReader.h
+ *
+ * Interface used to read object data from a stream.
+ */
 class ObjectReader : public AttributeMapBase
 {
 protected:
@@ -60,7 +63,8 @@ protected:
    {;}
 
    ObjectReader(const ObjectReader& o)
-      : AttributeMapBase(o), mIsBinary(false)
+      : AttributeMapBase(o)
+      , mIsBinary(false)
    {;}
 
 public:
@@ -100,13 +104,13 @@ public:
     */
    //@{
    /** Starts a new section/element of name tagName. */
-   virtual vpr::ReturnStatus beginTag(std::string tagName) = 0;
+   virtual vpr::ReturnStatus beginTag(const std::string& tagName) = 0;
 
    /** Ends the most recently named tag. */
    virtual vpr::ReturnStatus endTag() = 0;
 
    /** Starts an attribute of the name attributeName. */
-   virtual vpr::ReturnStatus beginAttribute(std::string attributeName) = 0;
+   virtual vpr::ReturnStatus beginAttribute(const std::string& attributeName) = 0;
 
    /** Ends the most recently named attribute. */
    virtual vpr::ReturnStatus endAttribute() = 0;
@@ -136,23 +140,48 @@ public:
    virtual std::string readString() = 0;
    virtual bool readBool() = 0;
 
-   /* Helper methods */
+   /** @name Helper methods */
+   //@{
    virtual void readUint8(vpr::Uint8& val)
-   { val = this->readUint8(); }
+   {
+      val = this->readUint8();
+   }
+
    virtual void readUint16(vpr::Uint16& val)
-   { val = this->readUint16(); }
+   {
+      val = this->readUint16();
+   }
+
    virtual void readUint32(vpr::Uint32& val)
-   { val = this->readUint32(); }
+   {
+      val = this->readUint32();
+   }
+
    virtual void readUint64(vpr::Uint64& val)
-   { val = this->readUint64(); }
+   {
+      val = this->readUint64();
+   }
+
    virtual void readFloat(float& val)
-   { val = this->readFloat(); }
+   {
+      val = this->readFloat();
+   }
+
    virtual void readDouble(double& val)
-   { val = this->readDouble(); }
+   {
+      val = this->readDouble();
+   }
+
    virtual void readString(std::string& str)
-   { str = this->readString(); }
+   {
+      str = this->readString();
+   }
+
    virtual void readBool(bool& val)
-   { val = this->readBool(); }
+   {
+      val = this->readBool();
+   }
+   //@}
 
 protected:
    bool mIsBinary;   /**< Is this a binary serializer? */

@@ -331,11 +331,13 @@ vpr::ReturnStatus SocketImplNSPR::connect(vpr::Interval timeout)
 
 vpr::ReturnStatus SocketImplNSPR::read_i(void* buffer,
                                          const vpr::Uint32 length,
-                                         vpr::Uint32& bytes_read,
+                                         vpr::Uint32& bytesRead,
                                          const vpr::Interval timeout)
 {
    if(mHandle == NULL)
+   {
       return vpr::ReturnStatus::Fail;
+   }
 
    vpr::ReturnStatus retval;
    PRInt32 bytes;
@@ -346,14 +348,14 @@ vpr::ReturnStatus SocketImplNSPR::read_i(void* buffer,
 
    if( bytes > 0)     // Successful read
    {
-      bytes_read = bytes;
+      bytesRead = bytes;
    }
    else if ( bytes == -1 )      // -1 indicates failure which includes PR_WOULD_BLOCK_ERROR.
    {
       PRErrorCode err_code = PR_GetError();
       vpr::Error::outputCurrentError(std::cerr, "SocketImplNSPR::read_i::Error -->");
 
-      bytes_read = 0;
+      bytesRead = 0;
 
       if ( err_code == PR_WOULD_BLOCK_ERROR )
       {
@@ -376,7 +378,7 @@ vpr::ReturnStatus SocketImplNSPR::read_i(void* buffer,
    }
    else if( bytes == 0)    // Indicates that the network connection is closed
    {
-      bytes_read = bytes;
+      bytesRead = bytes;
       retval.setCode(vpr::ReturnStatus::NotConnected);    // Set status to indicate connection is closed
    }
 
@@ -385,17 +387,19 @@ vpr::ReturnStatus SocketImplNSPR::read_i(void* buffer,
 
 vpr::ReturnStatus SocketImplNSPR::readn_i(void* buffer,
                                           const vpr::Uint32 length,
-                                          vpr::Uint32& bytes_read,
+                                          vpr::Uint32& bytesRead,
                                           const vpr::Interval timeout)
 {
    if(mHandle == NULL)
+   {
       return vpr::ReturnStatus::Fail;
+   }
 
    vpr::ReturnStatus retval;
    PRInt32 bytes;            // Number of bytes read each time
    vpr::Uint32 bytes_left(length);
 
-   bytes_read = 0;
+   bytesRead = 0;
    mBlockingFixed = true;
 
    while ( bytes_left > 0 )
@@ -408,7 +412,7 @@ vpr::ReturnStatus SocketImplNSPR::readn_i(void* buffer,
       {
          buffer = (void*) ((char*) buffer + bytes);
          bytes_left -= bytes;
-         bytes_read += bytes;
+         bytesRead  += bytes;
       }
       else if ( bytes < 0 )
       {
@@ -454,7 +458,7 @@ vpr::ReturnStatus SocketImplNSPR::readn_i(void* buffer,
 
 vpr::ReturnStatus SocketImplNSPR::write_i(const void* buffer,
                                           const vpr::Uint32 length,
-                                          vpr::Uint32& bytes_written,
+                                          vpr::Uint32& bytesWritten,
                                           const vpr::Interval timeout)
 {
    if(mHandle == NULL)
@@ -472,7 +476,7 @@ vpr::ReturnStatus SocketImplNSPR::write_i(const void* buffer,
       PRErrorCode err_code = PR_GetError();
       vpr::Error::outputCurrentError(std::cerr, "SocketImplNspr::write_i: Error --> ");
 
-      bytes_written = 0;
+      bytesWritten = 0;
 
       if ( err_code == PR_WOULD_BLOCK_ERROR )
       {
@@ -496,14 +500,15 @@ vpr::ReturnStatus SocketImplNSPR::write_i(const void* buffer,
    }
    else
    {
-      bytes_written = bytes;
+      bytesWritten = bytes;
    }
 
    return retval;
 }
 
 vpr::ReturnStatus SocketImplNSPR::getOption(const vpr::SocketOptions::Types option,
-                                            struct vpr::SocketOptions::Data& data) const
+                                            vpr::SocketOptions::Data& data)
+   const
 {
    vpr::ReturnStatus retval;
    PRSocketOptionData opt_data;
@@ -651,7 +656,7 @@ vpr::ReturnStatus SocketImplNSPR::getOption(const vpr::SocketOptions::Types opti
 }
 
 vpr::ReturnStatus SocketImplNSPR::setOption(const vpr::SocketOptions::Types option,
-                                            const struct vpr::SocketOptions::Data& data)
+                                            const vpr::SocketOptions::Data& data)
 {
    PRSocketOptionData opt_data;
 
@@ -764,9 +769,9 @@ vpr::ReturnStatus SocketImplNSPR::setOption(const vpr::SocketOptions::Types opti
 
 // Default constructor.  This just initializes member variables to reasonable
 // defaults.
-SocketImplNSPR::SocketImplNSPR(const vpr::SocketTypes::Type sock_type)
+SocketImplNSPR::SocketImplNSPR(const vpr::SocketTypes::Type sockType)
    : mHandle(NULL)
-   , mType(sock_type)
+   , mType(sockType)
    , mOpen(false)
    , mBound(false)
    , mConnected(false)
@@ -781,13 +786,13 @@ SocketImplNSPR::SocketImplNSPR(const vpr::SocketTypes::Type sock_type)
 // hostname or an IP address), port, domain and type and stores the values in
 // the member variables for use when opening the socket and performing
 // communications.
-SocketImplNSPR::SocketImplNSPR(const vpr::InetAddr& local_addr,
-                               const vpr::InetAddr& remote_addr,
-                               const vpr::SocketTypes::Type sock_type)
+SocketImplNSPR::SocketImplNSPR(const vpr::InetAddr& localAddr,
+                               const vpr::InetAddr& remoteAddr,
+                               const vpr::SocketTypes::Type sockType)
    : mHandle(NULL)
-   , mLocalAddr(local_addr)
-   , mRemoteAddr(remote_addr)
-   , mType(sock_type)
+   , mLocalAddr(localAddr)
+   , mRemoteAddr(remoteAddr)
+   , mType(sockType)
    , mOpen(false)
    , mBound(false)
    , mConnected(false)

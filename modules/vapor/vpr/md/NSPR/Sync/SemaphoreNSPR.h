@@ -53,8 +53,10 @@
 namespace vpr
 {
 
-/**
- * Wrapper for semaphores implemented using condition variables.
+/** \class SemaphoreNSPR SemaphoreNSPR.h vpr/Sync/Semaphore.h
+ *
+ * Wrapper for semaphores implemented using condition variables.  This is
+ * typedef'd to vpr::Semaphore.
  */
 class VPR_CLASS_API SemaphoreNSPR
 {
@@ -62,23 +64,21 @@ public:
    /**
     * Custructor.
     *
-    * @pre None.
     * @post The semaphore variable for the class is initilized as an
     *       unnamed semaphore.
     *
     * @param initialValue The initial number of resources controlled by the
     *                     semaphore.  If not specified, the default value is 1.
     */
-   SemaphoreNSPR(int initial_value = 1)
+   SemaphoreNSPR(int initialValue = 1)
    {
       mCondVar = new CondVar;
-      PR_AtomicSet(&mValue, initial_value);
+      PR_AtomicSet(&mValue, initialValue);
    }
 
    /**
     * Destructor.
     *
-    * @pre None.
     * @post The resources used by the semaphore variable are freed.
     */
    ~SemaphoreNSPR()
@@ -89,7 +89,6 @@ public:
    /**
     * Locks this semaphore.
     *
-    * @pre None.
     * @post The calling thread either acquires the semaphore until release()
     *       is called, or the caller is put at the tail of a wait and is
     *       suspended until such time as it can be freed and allowed to acquire
@@ -115,7 +114,6 @@ public:
    /**
     * Acquires a read lock on a resource protected by this semaphore.
     *
-    * @pre None.
     * @post The calling thread either acquires the semaphore until release()
     *       is called, or the caller is put at the tail of a wait and is
     *       suspended until such time as it can be freed and allowed to acquire
@@ -134,7 +132,6 @@ public:
    /**
     * Acquires a write lock on a resource protected by this semaphore.
     *
-    * @pre None.
     * @post The calling thread either acquires the semaphore until release()
     *       is called, or the caller is put at the tail of a wait and is
     *       suspended until such time as it can be freed and allowed to acquire
@@ -153,7 +150,6 @@ public:
    /**
     * Tries to acquire the a resource lock immediately (does not block).
     *
-    * @pre None.
     * @post If the semaphore could be acquired by the caller, the caller
     *       gets control of the semaphore.  If the semaphore was already
     *       locked, the routine returns immediately without suspending the
@@ -178,7 +174,6 @@ public:
    /**
     * Tries to acquire a read lock on a resource (does not block).
     *
-    * @pre None.
     * @post If the semaphore could be acquired by the caller, the caller
     *       gets control of the semaphore.  If the semaphore was already
     *       locked, the routine returns immediately without suspending the
@@ -196,7 +191,6 @@ public:
    /**
     * Tries to acquire a write lock on a resource (does not block).
     *
-    * @pre None.
     * @post If the semaphore could be acquired by the caller, the caller
     *       gets control of the semaphore.  If the semaphore was already
     *       locked, the routine returns immediately without suspending the
@@ -237,10 +231,9 @@ public:
    /**
     * Resets the resource count for this semaphore.
     *
-    * @pre None.
     * @post This semaphore's count is set to the specified value.
     *
-    * @param val - The value to which the semaphore is reset.
+    * @param val The value to which the semaphore is reset.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the resource count is
     *         reset successfully.  vpr::ReturnStatus::Fail is returned
@@ -264,7 +257,6 @@ public:
    /**
     * Dumps the semaphore debug stuff and current state.
     *
-    * @pre None.
     * @post All important data and debugging information related to this
     *       semaphore is dumped to the specified file descriptor (or to
     *       stderr if none is given).

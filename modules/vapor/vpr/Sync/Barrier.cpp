@@ -40,28 +40,29 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <vpr/vprConfig.h>
-#include <vpr/Sync/Barrier.h>
 #include <vpr/Sync/Guard.h>
+#include <vpr/Sync/Barrier.h>
 
 
 namespace vpr
 {
-Barrier::Barrier(unsigned count)
-   : mThreshold(count), mCount(count), mGeneration(0)
+
+Barrier::Barrier(unsigned int count)
+   : mThreshold(count)
+   , mCount(count)
+   , mGeneration(0)
 {;}
 
 Barrier::~Barrier()
 {;}
 
-   /**
- * Block the caller until all <count> threads have called <wait> and then
- * allow all the caller threads to continue in parallel.
- */
-bool Barrier::wait (void)
+// Block the caller until all <count> threads have called <wait> and then
+// allow all the caller threads to continue in parallel.
+bool Barrier::wait()
 {
-Guard<CondVar> guard(mCond);
+   Guard<CondVar> guard(mCond);
 
-   unsigned gen_temp = mGeneration;
+   unsigned int gen_temp(mGeneration);
 
    if (--mCount == 0)   // If last thread to sync
    {
@@ -72,7 +73,9 @@ Guard<CondVar> guard(mCond);
    }
 
    while(gen_temp == mGeneration)      // While generation has not increased...
-   { mCond.wait(); }
+   {
+      mCond.wait();
+   }
 
    return true;
 }
@@ -91,10 +94,8 @@ void Barrier::addProcess()
    }
 }
 
-/**
- * Tells the barrier to decrease the count of the number of threads to
- * syncronize.
- */
+// Tells the barrier to decrease the count of the number of threads to
+// syncronize.
 void Barrier::removeProcess()
 {
    if(mCount != mThreshold)

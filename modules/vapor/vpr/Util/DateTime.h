@@ -50,7 +50,8 @@
 namespace vpr
 {
 
-/**
+/** \class DateTime DateTime.h vpr/Util/DateTime.h
+ *
  * Simple wrapper around time since the UNIX Epoch (00:00 UTC January 1, 1970).
  */
 class DateTime
@@ -62,7 +63,9 @@ public:
     *
     * @see setNow
     */
-   DateTime (void) : mSeconds(0), mMicroSeconds(0)
+   DateTime()
+      : mSeconds(0)
+      , mMicroSeconds(0)
    {
       /* Do nothing. */ ;
    }
@@ -70,11 +73,10 @@ public:
    /**
     * Updates this object to reflect the current time.
     *
-    * @pre None.
     * @post The member variables are updated the time returned by
     *       vpr::System::gettimeofday.
     */
-   void setNow (void)
+   void setNow()
    {
       struct timeval tv;
 
@@ -90,7 +92,7 @@ public:
     *         If 0 (zero) is returned, this object has not been initialized
     *         using setNow.
     */
-   vpr::Uint32 getSeconds (void)
+   vpr::Uint32 getSeconds()
    {
       return mSeconds;
    }
@@ -102,7 +104,7 @@ public:
     *         If 0.0 (zero) is returned, this object has not been initialized
     *         using setNow.
     */
-   double getSecondsf (void)
+   double getSecondsf()
    {
       double sec_f, usec_f, usec_f_div;
 
@@ -120,7 +122,7 @@ public:
     *         If 0 (zero) is returned, this object has not been initialized
     *         using setNow.
     */
-   vpr::Uint32 getMinutes (void)
+   vpr::Uint32 getMinutes()
    {
       return mSeconds / 60;
    }
@@ -133,7 +135,7 @@ public:
     *         If 0.0 (zero) is returned, this object has not been initialized
     *         using setNow.
     */
-   double getMinutesf (void)
+   double getMinutesf()
    {
       return getSecondsf() / 60.0f;
    }
@@ -145,7 +147,7 @@ public:
     *         If 0 (zero) is returned, this object has not been initialized
     *         using setNow.
     */
-   vpr::Uint32 getHours (void)
+   vpr::Uint32 getHours()
    {
       return mSeconds / 3600;
    }
@@ -158,7 +160,7 @@ public:
     *         If 0.0 (zero) is returned, this object has not been initialized
     *         using setNow.
     */
-   double getHoursf (void)
+   double getHoursf()
    {
       return getSecondsf() / 3600.0f;
    }
@@ -170,7 +172,7 @@ public:
     *         If 0 (zero) is returned, this object has not been initialized
     *         using setNow.
     */
-   vpr::Uint32 getDays (void)
+   vpr::Uint32 getDays()
    {
       return mSeconds / 86400;
    }
@@ -183,7 +185,7 @@ public:
     *         If 0.0 (zero) is returned, this object has not been initialized
     *         using setNow.
     */
-   double getDaysf (void)
+   double getDaysf()
    {
       return getSecondsf() / 86400.0f;
    }
@@ -195,7 +197,7 @@ public:
     *         If 0 (zero) is returned, this object has not been initialized
     *         using setNow.
     */
-   vpr::Uint32 getWeeks (void)
+   vpr::Uint32 getWeeks()
    {
       return mSeconds / 608400;
    }
@@ -208,7 +210,7 @@ public:
     *         If 0.0 (zero) is returned, this object has not been initialized
     *         using setNow.
     */
-   double getWeeksf (void)
+   double getWeeksf()
    {
       return getSecondsf() / 608400.0f;
    }
@@ -237,15 +239,15 @@ private:
     * because the arguments reveal too much (i.e., all) of the implmentation
     * details.
     *
-    * @pre None.
     * @post mSeconds and mMicroSeconds are initialized using the given
     *       parameters.
     *
-    * @param seconds       Seconds since the Epoch.
-    * @param micro_seconcd Microseconds value for the given seconds value.
+    * @param seconds      Seconds since the Epoch.
+    * @param microseconds Microseconds value for the given seconds value.
     */
-   DateTime (const vpr::Uint32 seconds, const vpr::Uint32 micro_seconds)
-      : mSeconds(seconds), mMicroSeconds(micro_seconds)
+   DateTime(const vpr::Uint32 seconds, const vpr::Uint32 microseconds)
+      : mSeconds(seconds)
+      , mMicroSeconds(microseconds)
    {
       /* Do nothing. */ ;
    }

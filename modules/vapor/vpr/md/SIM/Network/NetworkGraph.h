@@ -62,7 +62,8 @@ namespace vpr
 namespace sim
 {
 
-/**
+/** \struct network_node_t NetworkGraph.h vpr/md/SIM/Network/NetworkGraph.h
+ *
  * Container type used to define a BGL property for vertices (nodes) in the
  * simulated network graph.
  */
@@ -72,7 +73,8 @@ struct network_node_t
    typedef boost::vertex_property_tag kind;
 };
 
-/**
+/** \struct network_line_t NetworkGraph.h vpr/md/SIM/Network/NetworkGraph.h
+ *
  * Container type used to define a BGL property for edges (network lines) in
  * the simulated network graph.
  */
@@ -86,7 +88,8 @@ typedef boost::property<network_node_t, vpr::sim::NetworkNodePtr > NodeProperty;
 typedef boost::property<network_line_t, vpr::sim::NetworkLine,
                         boost::property<boost::edge_weight_t, int> > LineProperty;
 
-/**
+/** \class NetworkGraph NetworkGraph.h vpr/md/SIM/Network/NetworkGraph.h
+ *
  * Container for a BGL graph object that represents a simulated network
  * constructed from an input file.  In the overall sim socket scheme, this sits
  * at the hardware level (aka, the physical layer).
@@ -94,7 +97,7 @@ typedef boost::property<network_line_t, vpr::sim::NetworkLine,
 class VPR_CLASS_API NetworkGraph
 {
 public:
-   NetworkGraph (void)
+   NetworkGraph()
       : mGraphValid(false)
    {
       /* Do nothing. */ ;
@@ -106,7 +109,7 @@ public:
     */
    vpr::ReturnStatus construct(const std::string& path);
 
-   bool isValid (void) const
+   bool isValid() const
    {
       return mGraphValid;
    }
@@ -114,7 +117,7 @@ public:
    /**
     * Removes all the lines (edges) and nodes (vertices) from the network.
     */
-   void clear (void)
+   void clear()
    {
       mGraph.clear();
    }
@@ -193,13 +196,14 @@ public:
    }
 
    /**
-    * Returns the shortest path (list of vertices) from src (source) to dest
-    * (destination).
+    * Returns the shortest path (list of vertices) from \p src (source) to
+    * \p dest (destination).
     *
     * @param src  The source node.
     * @param dest The destination node.
     *
-    * @return
+    * @return Returns a pointer to a vertex list that is the shortest path
+    *         between the two nodes.
     */
    VertexListPtr getShortestPath(const net_vertex_t& src,
                                  const net_vertex_t& dest) const;
@@ -216,7 +220,7 @@ public:
    /**
     * Returns the current number of nodes in this network.
     */
-   vpr::Uint32 getNodeCount (void) const
+   vpr::Uint32 getNodeCount() const
    {
       return boost::num_vertices(mGraph);
    }
@@ -234,7 +238,7 @@ public:
    /**
     * Returns all the addresses in the network via the by-reference parameter.
     */
-   vpr::ReturnStatus getAllAddresses (AddressList& list);
+   vpr::ReturnStatus getAllAddresses(AddressList& list);
 
 private:
    net_graph_t mGraph;

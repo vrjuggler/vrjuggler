@@ -51,8 +51,7 @@
 namespace vpr
 {
 
-/**
- * @class SocketConnector
+/** \class SocketConnector SocketConnector.h vpr/IO/Socket/SocketConnector.h
  *
  * Defines a factory for creating new connections both synchronously and
  * asynchronously.
@@ -73,12 +72,14 @@ public:
   {;}
 
   /**
-   * Actively connect to the remote address and set the newStream
-   * to the new connection.
+   * Actively connects to the remote address and sets the \p newStream
+   * parameter to the new connection.
    *
-   * @param new_stream The stream to connect
-   * @param remoteAddr The remote address to connect to
-   * @param timeout    The num msecs to wait (0 - NonBlocking)
+   * @param newStream  The stream to connect.
+   * @param remoteAddr The remote address to which we will connect.
+   * @param timeout    The num msecs to wait (0 - NonBlocking).
+   * @param localAddr  Our local address.  This defaults to
+   *                   vpr::InetAddr::AnyAddr.
    */
   vpr::ReturnStatus connect(vpr::SocketStream& newStream,
                             const vpr::InetAddr& remoteAddr,
@@ -86,20 +87,23 @@ public:
                             const vpr::InetAddr& localAddr = vpr::InetAddr::AnyAddr);
 
   /**
-   * Complete a non-blocking connection
-   * Try to complete a non-blocking connection.
+   * Tries to complete a non-blocking connection.
    */
   vpr::ReturnStatus complete(vpr::SocketStream &newStream,
                              const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
 protected:
-   // Make sure we have opened the socket
-   // If not, then open it with the given params
+   /**
+    * Makes sure that we have opened the socket.  If not, then open it with
+    * the given parameters.
+    */
    bool checkOpen(SocketStream& newStream);
 
-   // Do preconnection rituals
-   // - If not bound, then bind to local addr
-   // - If timeout == NoWait, then try to set nonblocking
+   /**
+    * Performs pre-connection rituals.  If we are not bound, then bind to the
+    * given local address.  If \p timeout is vpr::Interval::NoWait, then try
+    * to set non-blocking status.
+    */
    bool connectStart(vpr::SocketStream& newStream,
                      vpr::Interval timeout = vpr::Interval::NoTimeout,
                      const vpr::InetAddr& localAddr = vpr::InetAddr::AnyAddr);

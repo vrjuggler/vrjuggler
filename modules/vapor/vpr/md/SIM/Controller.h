@@ -66,7 +66,8 @@ class Interval;
 namespace sim
 {
 
-/**
+/** \class Controller Controller.h vpr/md/SIM/Controller.h
+ *
  * Socket simulation controller.  This is used to step through a simulation
  * being controlled by the Sim Socket Manager.  This class is a thread-specific
  * singleton so that each running thread can have its own unique instance.  It

@@ -42,6 +42,13 @@
 #ifndef _VPR_ERROR_H_
 #define _VPR_ERROR_H_
 
+/**
+ * \file
+ *
+ * Include this file to get the platform-specific declaration of the class
+ * that is typedef'd to vpr::Error.
+ */
+
 #include <vpr/vprConfig.h>
 
 // include base class

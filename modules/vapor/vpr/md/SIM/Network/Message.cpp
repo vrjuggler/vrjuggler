@@ -72,16 +72,16 @@ Message::Message(const Message& msg)
    */
 }
 
-vpr::Uint32 Message::resize(const vpr::Uint32 bytes_read)
+vpr::Uint32 Message::resize(const vpr::Uint32 bytesRead)
 {
    vpr::Uint32 resize_amount;
 
-   resize_amount = getSize() - bytes_read;
+   resize_amount = getSize() - bytesRead;
 
-   // Only resize the message if 0 < bytes_read < mMessageSize.
+   // Only resize the message if 0 < bytesRead < mMessageSize.
    if ( resize_amount > 0 && resize_amount != getSize() ) {
 
-      mMsg->erase(mMsg->begin(), mMsg->begin()+bytes_read);
+      mMsg->erase(mMsg->begin(), mMsg->begin() + bytesRead);
       vprASSERT(resize_amount == mMsg->size());    // Must be this size
 
       /*
@@ -92,7 +92,7 @@ vpr::Uint32 Message::resize(const vpr::Uint32 bytes_read)
 
       // If there is still stuff left in the buffer, move it over.
       for ( i = 0; i < resize_amount; i++ ) {
-         data[i] = data[bytes_read + i];
+         data[i] = data[bytesRead + i];
       }
 
       data[i]  = '\0';

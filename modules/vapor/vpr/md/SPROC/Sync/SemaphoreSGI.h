@@ -52,11 +52,13 @@
 namespace vpr
 {
 
-/**
- * Semaphore wrapper for the SGI systems
- * This class encapsulates the behavior of a semaphore variable.
+/** \class SemaphoreSGI SemaphoreSGI.h vpr/Sync/Semaphore.h
  *
- * @date 1-20-1997
+ * Semaphore wrapper for the SGI systems.
+ * This class encapsulates the behavior of a semaphore variable.
+ * This is typedef'd to vpr::Semaphore.
+ *
+ * @date January 20, 1997
  */
 class SemaphoreSGI
 {
@@ -64,14 +66,13 @@ public:
    /**
     * Constructor.
     *
-    * @pre None.
     * @post The semaphore variable for the class is initilized as an
     *       unnamed semaphore.
     *
     * @param initialValue The initial number of resources controlled by the
     *                     semaphore.  If not specified, the default value is 1.
     */
-   SemaphoreSGI (int initialValue = 1)
+   SemaphoreSGI(int initialValue = 1)
    {
       // BUG:
       if (semaphorePool == NULL)
@@ -92,7 +93,7 @@ public:
       sema = usnewsema(semaphorePool->getArena(), initialValue);
    }
 
-   ~SemaphoreSGI(void)
+   ~SemaphoreSGI()
    {
       // ---- Delete the semaphore --- //
       usfreesema(sema, semaphorePool->getArena());
@@ -117,7 +118,6 @@ public:
    /**
     * Locks this semaphore.
     *
-    * @pre None.
     * @post The calling thread either acquires the semaphore until release()
     *       is called, or the caller is put at the tail of a wait and is
     *       suspended until such time as it can be freed and allowed to acquire
@@ -142,7 +142,6 @@ public:
    /**
     * Acquires a read lock on a resource protected by this semaphore.
     *
-    * @pre None.
     * @post The calling thread either acquires the semaphore until release()
     *       is called, or the caller is put at the tail of a wait and is
     *       suspended until such time as it can be freed and allowed to acquire
@@ -161,7 +160,6 @@ public:
    /**
     * Acquires a write lock on a resource protected by this semaphore.
     *
-    * @pre None.
     * @post The calling thread either acquires the semaphore until release()
     *       is called, or the caller is put at the tail of a wait and is
     *       suspended until such time as it can be freed and allowed to acquire
@@ -180,7 +178,6 @@ public:
    /**
     * Tries to acquire the a resource lock immediately (does not block).
     *
-    * @pre None.
     * @post If the semaphore could be acquired by the caller, the caller
     *       gets control of the semaphore.  If the semaphore was already
     *       locked, the routine returns immediately without suspending the
@@ -190,7 +187,7 @@ public:
     *         vpr::ReturnStatus::Fail is returned if no resource could be
     *         locked without blocking.
     */
-   vpr::ReturnStatus tryAcquire () const
+   vpr::ReturnStatus tryAcquire() const
    {
       if ( uscpsema(sema) == 1 )
       {
@@ -205,7 +202,6 @@ public:
    /**
     * Tries to acquire a read lock on a resource (does not block).
     *
-    * @pre None.
     * @post If the semaphore could be acquired by the caller, the caller
     *       gets control of the semaphore.  If the semaphore was already
     *       locked, the routine returns immediately without suspending the
@@ -215,7 +211,7 @@ public:
     *         acquired.  vpr::ReturnStatus::Fail is returned if no resource
     *         could be locked without blocking.
     */
-   vpr::ReturnStatus tryAcquireRead () const
+   vpr::ReturnStatus tryAcquireRead() const
    {
       return this->tryAcquire();
    }
@@ -223,7 +219,6 @@ public:
    /**
     * Tries to acquire a write lock on a resource (does not block).
     *
-    * @pre None.
     * @post If the semaphore could be acquired by the caller, the caller
     *       gets control of the semaphore.  If the semaphore was already
     *       locked, the routine returns immediately without suspending the
@@ -265,10 +260,9 @@ public:
    /**
     * Resets the resource count for this semaphore.
     *
-    * @pre None.
     * @post This semaphore's count is set to the specified value.
     *
-    * @param val - The value to which the semaphore is reset.
+    * @param val The value to which the semaphore is reset.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the resource count is
     *         reset successfully.  vpr::ReturnStatus::Fail is returned
@@ -292,7 +286,6 @@ public:
    /**
     * Dumps the semaphore debug stuff and current state.
     *
-    * @pre None.
     * @post All important data and debugging information related to this
     *       semaphore is dumped to the specified file descriptor (or to
     *       stderr if none is given).

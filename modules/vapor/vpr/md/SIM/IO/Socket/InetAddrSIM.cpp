@@ -51,16 +51,15 @@
 
 namespace vpr
 {
+   const InetAddrSIM InetAddrSIM::AnyAddr;
 
-  const InetAddrSIM InetAddrSIM::AnyAddr;
+   vpr::ReturnStatus InetAddrSIM::getLocalHost(vpr::InetAddrSIM& hostAddr)
+   {
+      return vpr::ReturnStatus::Fail;
+   }
 
-  vpr::ReturnStatus InetAddrSIM::getLocalHost(vpr::InetAddrSIM& host_addr)
-  {
-     return vpr::ReturnStatus::Fail;
-  }
-
-  vpr::ReturnStatus InetAddrSIM::setAddress( const std::string& address )
-  {
+   vpr::ReturnStatus InetAddrSIM::setAddress(const std::string& address)
+   {
       std::string::size_type pos;
       std::string host_addr, host_port;
       vpr::Uint32 port;
@@ -80,17 +79,17 @@ namespace vpr
       return vpr::ReturnStatus();
    }
 
-   vpr::ReturnStatus InetAddrSIM::setAddress( const std::string& address,
-                                              const vpr::Uint32 port )
+   vpr::ReturnStatus InetAddrSIM::setAddress(const std::string& address,
+                                             const vpr::Uint32 port)
    {
-      mAddress = vpr::sim::DNS::instance()->lookupAddress( address );
+      mAddress = vpr::sim::DNS::instance()->lookupAddress(address);
       setPort( port );
       setFamily( vpr::SocketTypes::INET );
       setDebugData();
       return vpr::ReturnStatus();
    }
 
-   std::string InetAddrSIM::getAddressString () const
+   std::string InetAddrSIM::getAddressString() const
    {
       char buffer[sizeof("255.255.255.255")];
 

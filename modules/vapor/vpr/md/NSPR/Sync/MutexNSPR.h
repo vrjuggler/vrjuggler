@@ -39,12 +39,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-/*
- * --------------------------------------------------------------------------
- * NOTES:
- *    - This file (MutexNSPR.h) must be included by vpr/Sync/Mutex.h, not the
- *      other way around.
- * ----------------------------------------------------------------------------
+/**
+ * \file
+ *
+ * @note This file must be included by vpr/Sync/Mutex.h, not the other way
+ *       around.
  */
 
 #ifndef _VPR_MUTEX_NSPR_H_
@@ -63,8 +62,9 @@
 namespace vpr
 {
 
-/**
- * Mutex wrapper for NSPR locks.
+/** \class MutexNSPR MutexNSPR.h vpr/Sync/Mutex.h
+ *
+ * Mutex wrapper for NSPR locks.  This is typedef'd to vpr::Mutex.
  */
 class VPR_CLASS_API MutexNSPR
 {
@@ -72,7 +72,6 @@ public:
    /**
     * Constructor.
     *
-    * @pre None.
     * @post This mutex is initialized for use.  It must be initialized before
     *       any other member functions can do anything with it.
     */
@@ -97,13 +96,13 @@ public:
    /**
     * Locks this mutex.
     *
-    * @pre None.
     * @post A lock on this mutex is acquired by the caller.  If a lock has
     *       already been acquired by another process/thread, the caller blocks
     *       until the mutex has been freed.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the lock is acquired
-    *         successfully.  vpr::ReturnStatus::Fail is returned otherwise.
+    *         successfully.
+    * @return vpr::ReturnStatus::Fail is returned otherwise.
     */
    vpr::ReturnStatus acquire()
    {
@@ -116,14 +115,13 @@ public:
    /**
     * Acquires a read lock.
     *
-    * @pre None.
     * @post A lock on this mutex is acquired by the caller.  If a lock has
     *       already been acquired by another process/thread, the caller
     *       blocks until the mutex has been freed.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the read lock is
-    *         acquired successfully.  vpr::ReturnStatus::Fail is returned
-    *         otherwise.
+    *         acquired successfully.
+    * @return vpr::ReturnStatus::Fail is returned otherwise.
     *
     * @note No special read mutex has been defined for now.
     */
@@ -135,14 +133,13 @@ public:
    /**
     * Acquires a write lock.
     *
-    * @pre None.
     * @post A lock on this mutex is acquired by the caller.  If a lock has
     *       already been acquired by another process/thread, the caller blocks
     *       until the mutex has been freed.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the write lock is
-    *         acquired successfully.  vpr::ReturnStatus::Fail is returned
-    *         otherwise.
+    *         acquired successfully.
+    * @return vpr::ReturnStatus::Fail is returned otherwise.
     *
     * @note No special write mutex has been defined for now.
     */
@@ -154,13 +151,12 @@ public:
    /**
     * Tries to acquire a lock on this mutex (does not block).
     *
-    * @pre None.
     * @post A lock on this mutex is acquired by the caller.  If a lock has
     *       already been acquired by another process/thread, the caller
     *       returns does not wait for it to be unlocked.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the lock is acquired.
-    *         vpr::ReturnStatus::Fail is returned if another thread is
+    * @return vpr::ReturnStatus::Fail is returned if another thread is
     *         holding the lock already.
     */
    vpr::ReturnStatus tryAcquire()
@@ -180,14 +176,14 @@ public:
    /**
     * Tries to acquire a read lock (does not block).
     *
-    * @pre None.
     * @post A lock on this mutex is acquired by the caller.  If a lock has
     *       already been acquired by another process/thread, the caller
     *       returns does not wait for it to be unlocked.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the read lock is
-    *         acquired.  vpr::ReturnStatus::Fail is returned if another thread
-    *         is holding the lock already.
+    *         acquired.
+    * @return vpr::ReturnStatus::Fail is returned if another thread is holding
+    *         the lock already.
     */
    vpr::ReturnStatus tryAcquireRead()
    {
@@ -197,14 +193,14 @@ public:
    /**
     * Tries to acquire a write lock (does not block).
     *
-    * @pre None.
     * @post A lock on this mutex is acquired by the caller.  If a lock has
     *       already been acquired by another process/thread, the caller returns
     *       does not wait for it to be unlocked.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the write lock is
-    *         acquired.  vpr::ReturnStatus::Fail is returned if another thread
-    *         is holding the lock already.
+    *         acquired.
+    * @return vpr::ReturnStatus::Fail is returned if another thread is holding
+    *         the lock already.
     */
    vpr::ReturnStatus tryAcquireWrite()
    {
@@ -218,7 +214,8 @@ public:
     * @post This mutex is unlocked.
     *
     * @return vpr::ReturnStatus::Succeed is returned if this mutex is unlocked
-    *         successfully.  vpr::ReturnStatus::Fail is returned otherwise.
+    *         successfully. 
+    * @return vpr::ReturnStatus::Fail is returned otherwise.
     */
    vpr::ReturnStatus release()
    {
@@ -236,7 +233,6 @@ public:
    /**
     * Tests the current lock status.
     *
-    * @pre None.
     * @post The state of this mutex is returned.
     *
     * @return 0 is returned if this mutex is not locked.  1 is returned if it
@@ -253,8 +249,8 @@ public:
    friend class CondVarNSPR;
 
 protected:
-   PRLock* mMutex;     /**<  Mutex variable for the class. */
-   int     mLocked;    /**< */
+   PRLock* mMutex;     /**< Mutex variable for the class */
+   int     mLocked;    /**< Hack used to implement mutex testing */
 
    // = Prevent assignment and initialization.
    MutexNSPR& operator=(const MutexNSPR& r)

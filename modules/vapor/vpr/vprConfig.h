@@ -43,12 +43,15 @@
 #define _VPR_CONFIG_H_
 /* #pragma once */
 
-/*
- * ----------------------------------------------------------------------------
+/**
+ * \file
+ *
  * This file (vprConfig.h) includes header files common to most, if not all,
  * files in the VPR source tree.  It must be included at the top of every .h
  * and .cpp file before any other headers because it includes system headers.
- * ----------------------------------------------------------------------------
+ *
+ * Include this file to get the basic declarations of VPR types.  This includes
+ * forward declarations of wrapper classes for platform-specific features.
  */
 
 /*

@@ -39,12 +39,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-/*
- * --------------------------------------------------------------------------
- * NOTES:
- *    - This file (vprThreadKeyPosix.h) MUST be included by vprThread.h, not
- *      the other way around.
- * --------------------------------------------------------------------------
+/**
+ * \file
+ *
+ * @note This file MUST be included by vprThread.h, not the other way around.
  */
 
 #ifndef _VPR_THREAD_KEY_POSIX_H_
@@ -62,26 +60,48 @@ namespace vpr
 // Key destructor function type.
 typedef PRThreadPrivateDTOR KeyDestructor;
 
-/**
- * Wrapper around NSPR (thread-specific data).
+/** \class ThreadKeyNSPR ThreadKeyNSPR.h vpr/Thread/Thread.h
+ *
+ * Wrapper around NSPR thread-specific data.  It is typedef'd to
+ * vpr::ThreadKey.
  */
 class ThreadKeyNSPR
 {
 public:
-   /// Default constructor.
-   ThreadKeyNSPR ()
+   /**
+    * Default constructor.  After calling this, one of the keycreate()
+    * overloads must be called to finish the key allocation process.
+    *
+    * @see keycreate
+    */
+   ThreadKeyNSPR()
    {
       keycreate(NULL);
    }
 
-   /// Create a key that knows how to delete itself using a function pointer.
-   ThreadKeyNSPR (thread_func_t destructor, void* arg)
+   /**
+    * Creates a key that knows how to delete itself using a function pointer.
+    *
+    * @post A key is created and is associated with the specified destructor
+    *       function and argument.
+    *
+    * @param destructor The destructor function for the key.
+    * @param arg        Argument to be passed to destructor.
+    */
+   ThreadKeyNSPR(thread_func_t destructor, void* arg)
    {
       keycreate(destructor, arg);
    }
 
-   /// Create a key that knows how to delete itself using a functor.
-   ThreadKeyNSPR (BaseThreadFunctor* destructor)
+   /**
+    * Creates a key that knows how to delete itself using a functor.
+    *
+    * @post A key is created and is associated with the specified destructor
+    *       function and argument.
+    *
+    * @param destructor The destructor function for the key.
+    */
+   ThreadKeyNSPR(BaseThreadFunctor* destructor)
    {
       keycreate(destructor);
    }
@@ -89,61 +109,58 @@ public:
    /**
     * Releases this key.
     */
-   ~ThreadKeyNSPR (void)
+   ~ThreadKeyNSPR()
    {
       keyfree();
    }
 
    /**
-    * Allocates a <keyp> that is used to identify data that is specific to
-    * each thread in the process, is global to all threads in the process
-    * and is destroyed using the spcefied destructor function that takes a
+    * Allocates a key that is used to identify data that is specific to each
+    * thread in the process, is global to all threads in the process, and is
+    * is destroyed using the spcefied destructor function that takes a
     * single argument.
     *
-    * @pre None.
     * @post A key is created and is associated with the specified destructor
     *       function and argument.
     *
-    * @param dest_func The destructor function for the key.
-    * @param arg       Argument to be passed to destructor (optional).
+    * @param destructor The destructor function for the key.
+    * @param arg        Argument to be passed to destructor.
     *
-    * @return 0 is returned upown successful completion.<br>
-    *         -1 is returned if an error occurs.
+    * @return 0 is returned upon successful completion.
+    * @return -1 is returned if an error occurs.
     *
     * @note Use this routine to construct the key destructor function if
-    *       it requires arguments.  Otherwise, use the two-argument version
+    *       it requires arguments.  Otherwise, use the single-argument version
     *       of keycreate().
     */
-   int keycreate (thread_func_t destructor, void* arg)
+   int keycreate(thread_func_t destructor, void* arg)
    {
       // XXX: Memory leak!
-      ThreadNonMemberFunctor *NonMemFunctor = new ThreadNonMemberFunctor(destructor, arg);
+      ThreadNonMemberFunctor* NonMemFunctor =
+         new ThreadNonMemberFunctor(destructor, arg);
 
       return keycreate(NonMemFunctor);
    }
 
    /**
-    * Allocates a <keyp> that is used to identify data that is specific to
-    * each thread in the process, is global to all threads in the process
-    * and is destroyed by the specified destructor function.
+    * Allocates a key that is used to identify data that is specific to each
+    * thread in the process, is global to all threads in the process and is
+    * destroyed by the specified destructor function.
     *
-    * @pre None.
     * @post A key is created and is associated with the specified
     *       destructor function.
     *
-    * @param desctructor Procedure to be called to destroy a data value
-    *                    associated with the key when the thread terminates.
+    * @param destructor Procedure to be called to destroy a data value
+    *                   associated with the key when the thread terminates.
     *
-    * @return 0 is returned upown successful completion.<br>
-    *         -1 is returned if an error occurs.
+    * @return 0 is returned upon successful completion.
+    * @return -1 is returned if an error occurs.
     */
-   int keycreate (BaseThreadFunctor* destructor)
+   int keycreate(BaseThreadFunctor* destructor)
    {
-      PRStatus ret = PR_NewThreadPrivateIndex(&keyID, (KeyDestructor) destructor);
-      if(PR_SUCCESS == ret)
-         return 0;
-      else
-         return -1;
+      PRStatus ret = PR_NewThreadPrivateIndex(&mKeyID,
+                                              (KeyDestructor) destructor);
+      return (PR_SUCCESS == ret ? 0 : -1);
    }
 
    /**
@@ -154,12 +171,10 @@ public:
     * @post This key is destroyed using the destructor function previously
     *       associated with it, and its resources are freed.
     *
-    * @return 0 is returned upown successful completion.<br>
-    *         -1 is returned if an error occurs.
-    *
-    * @note This is not currently supported with Pthreads Draft 4.
+    * @return 0 is returned upon successful completion.
+    * @return -1 is returned if an error occurs.
     */
-   int keyfree (void)
+   int keyfree()
    {
       // Key auto-matically freed
       setspecific(NULL);
@@ -167,8 +182,7 @@ public:
    }
 
    /**
-    * Binds value to the thread-specific data key, <key>, for the calling
-    * thread.
+    * Binds value to the thread-specific data key for the calling thread.
     *
     * @pre The specified key must have been properly created using the
     *      keycreate() member function.
@@ -178,41 +192,37 @@ public:
     * @param value Address containing data to be associated with the
     *              specified key for the current thread.
     *
-    * @return 0 is returned upown successful completion.<br>
-    *         -1 is returned if an error occurs.
+    * @return 0 is returned upon successful completion.
+    * @return -1 is returned if an error occurs.
     */
-   int setspecific (void* value)
+   int setspecific(void* value)
    {
-      PRStatus ret = PR_SetThreadPrivate(keyID, value);
-      if(PR_SUCCESS == ret)
-         return 0;
-      else
-         return -1;
+      PRStatus ret = PR_SetThreadPrivate(mKeyID, value);
+      return (PR_SUCCESS == ret ? 0 : -1);
    }
 
    /**
-    * Stores the current value bound to <key> for the calling thread into
-    * the location pointed to by <valuep>.
+    * Stores the current value bound to \c mKeyID for the calling thread into
+    * the location pointed to by \p valuep.
     *
     * @pre The specified key must have been properly created using the
     *      keycreate() member function.
     * @post The value associated with the key is obtained and stored in the
     *       pointer valuep so that the caller may work with it.
     *
-    * @param valuep Address of the current data value associated with the
-    *               key.
+    * @param valuep Address of the current data value associated with the key.
     *
-    * @return 0 is returned upown successful completion.<br>
-    *         -1 is returned if an error occurs.
+    * @return 0 is returned upon successful completion.
+    * @return -1 is returned if an error occurs.
     */
-   int getspecific (void** valuep)
+   int getspecific(void** valuep)
    {
-      *valuep = PR_GetThreadPrivate(keyID);
+      *valuep = PR_GetThreadPrivate(mKeyID);
       return 0;
    }
 
 private:
-   PRUintn keyID;        /**< Thread key ID */
+   PRUintn mKeyID;        /**< Thread key ID */
 };
 
 } // End of vpr namespace

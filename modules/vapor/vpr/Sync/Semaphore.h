@@ -42,6 +42,13 @@
 #ifndef _VPR_Semaphore_h_
 #define _VPR_Semaphore_h_
 
+/**
+ * \file
+ *
+ * Include this file to get the full declaration of the platform-specific
+ * semaphore class.  It will be typedef'd to vpr::Semaphore.
+ */
+
 #include <vpr/vprConfig.h>
 
 #if VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_IRIX_SPROC

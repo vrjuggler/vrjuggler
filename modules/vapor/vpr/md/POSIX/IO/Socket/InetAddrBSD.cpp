@@ -78,7 +78,7 @@ InetAddrBSD::InetAddrBSD()
    setFamily(SocketTypes::INET);
 }
 
-vpr::ReturnStatus InetAddrBSD::getLocalHost(vpr::InetAddrBSD& host_addr)
+vpr::ReturnStatus InetAddrBSD::getLocalHost(vpr::InetAddrBSD& hostAddr)
 {
    char local_host_name[MAXHOSTNAMELEN + 1];
    vpr::ReturnStatus status;
@@ -87,7 +87,7 @@ vpr::ReturnStatus InetAddrBSD::getLocalHost(vpr::InetAddrBSD& host_addr)
 
    if ( gethostname(local_host_name, MAXHOSTNAMELEN) == 0 )
    {
-      host_addr.setAddress(std::string(local_host_name), 0);
+      hostAddr.setAddress(std::string(local_host_name), 0);
    }
    else
    {
@@ -335,16 +335,16 @@ bool InetAddrBSD::operator== (const InetAddrBSD& addr) const
           (mAddr.sin_family == addr.mAddr.sin_family);
 }
 
-void InetAddrBSD::copyAddressValue(const char* addr_value)
+void InetAddrBSD::copyAddressValue(const char* addrValue)
 {
-   vprASSERT(addr_value != NULL);
-   memcpy((void*) &mAddr.sin_addr.s_addr, (void*) addr_value,
+   vprASSERT(addrValue != NULL);
+   memcpy((void*) &mAddr.sin_addr.s_addr, (void*) addrValue,
           sizeof(mAddr.sin_addr.s_addr));
 }
 
-void InetAddrBSD::setAddressValue(const vpr::Uint32 addr_value)
+void InetAddrBSD::setAddressValue(const vpr::Uint32 addrValue)
 {
-   mAddr.sin_addr.s_addr = htonl(addr_value);
+   mAddr.sin_addr.s_addr = htonl(addrValue);
 }
 
 size_t InetAddrBSD::size() const

@@ -50,24 +50,31 @@
 namespace vpr
 {
 
-/** Replace env vars in the str.
-* @param str The string to replace values in
-* @param startStr The string that marks the start of an env var
-* @param endStr The string that marks the end of an env var
-*/
+/**
+ * Replace environment variables in the string.
+ *
+ * @param str      The string in which values will be replaced.
+ * @param startStr The string that marks the start of an environment variable.
+ * @param endStr   The string that marks the end of an environment variable.
+ *
+ * @return The expanded version of \p str is returned.
+ */
 extern VPR_API(std::string) replaceEnvVars(const std::string str,
                                            const std::string startStr,
                                            const std::string endStr);
 
-/** Replace environment variable strings embedded in str
-*
-* Recognizes:
-*  ${VAR}
-*  $(VAR)
-*/
+/**
+ * Replace all environment variable strings embedded in \p str.
+ *
+ * Recognizes:
+ *  ${VAR}
+ *  $(VAR)
+ *
+ * @return The expanded version of \p str is returned.
+ */
 extern VPR_API(std::string) replaceEnvVars(const std::string str);
 
-}; // namespace vpr
+} // namespace vpr
 
 
 #endif

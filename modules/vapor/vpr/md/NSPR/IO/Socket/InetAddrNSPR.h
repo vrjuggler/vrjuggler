@@ -59,8 +59,10 @@ namespace vpr
 // not be included by this file.
 struct InetAddrHash;
 
-/**
- * Cross-platform abstraction to Internet address structures.
+/** \class InetAddrNSPR InetAddrNSPR.h vpr/IO/Socket/InetAddr.h
+ *
+ * Cross-platform abstraction to Internet address structures.  This is
+ * typedef'd to vpr::InetAddr.
  */
 class VPR_CLASS_API InetAddrNSPR : public InetAddrBase
 {
@@ -72,10 +74,8 @@ public:
    /**
     * Default constructor.
     *
-    * @pre None.
-    * @post Zero out the address and set everything to ANY
+    * @post Zero out the address and set it to \c PR_INADDR_ANY.
     */
-
    InetAddrNSPR()
    {
       memset(&mAddr, 0, sizeof(mAddr));
@@ -87,7 +87,6 @@ public:
    /**
     * Copy constructor.
     *
-    * @pre None.
     * @post A copy of the given vpr::InetAddr object is made in this object.
     *
     * @param addr The vpr::InetAddr object to be copied into this object.
@@ -100,16 +99,16 @@ public:
    /**
     * Returns the local host's address via the given object reference.
     *
-    * @param host_addr Storage for the returned address object.
+    * @param hostAddr Storage for the returned address object.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the local host has an
     *         an address.  Otherwise, vpr::ReturnStatus::Fail is returned.
     */
-   static vpr::ReturnStatus getLocalHost(vpr::InetAddrNSPR& host_addr);
+   static vpr::ReturnStatus getLocalHost(vpr::InetAddrNSPR& hostAddr);
 
    /**
     * Sets the address for this object using the given address.  It must be
-    * of the form <address>:<port> where <address> can be a hostname or a
+    * of the form \c address:port where \c address can be a hostname or a
     * dotted-decimal IP address.
     *
     * @param address A string giving the address and port number separated by
@@ -285,13 +284,13 @@ public:
 
    // --- Impl specific --- //
 
-   /// Gets the info needed by other NSPR commands.
+   /** Gets the info needed by other NSPR commands. */
    PRNetAddr* getPRNetAddr()
    {
       return &mAddr;
    }
 
-   /// Gets the info needed by other NSPR commands.
+   /** Gets the info needed by other NSPR commands. */
    const PRNetAddr* getPRNetAddr() const
    {
       return &mAddr;
@@ -306,12 +305,12 @@ protected:
     * @post The given IP address is stored in the address structure in
     *       network byte order.
     *
-    * @param port An unsigned int IP address for this address object in host
-    *             byte order.
+    * @param addrValue An unsigned int IP address for this address object in
+    *                  host byte order.
     */
-   void setAddressValue(const vpr::Uint32 addr_value)
+   void setAddressValue(const vpr::Uint32 addrValue)
    {
-      mAddr.inet.ip = PR_htonl(addr_value);
+      mAddr.inet.ip = PR_htonl(addrValue);
    }
 
    /**

@@ -77,7 +77,8 @@ namespace sim
 
 class Controller;
 
-/**
+/** \class SocketManager SocketManager.h vpr/md/SIM/SocketManager.h
+ *
  * Abstraction for C-style sockets.  This is used by Plexus sim sockets, and
  * in the overall sim socket scheme, this sits at the operating system level.
  * This roughly corresponds to the data link or transport layer.
@@ -87,12 +88,12 @@ class Controller;
 class VPR_CLASS_API SocketManager
 {
 public:
-   SocketManager (void) : mActive(false)
+   SocketManager() : mActive(false)
    {
       /* Do nothing. */ ;
    }
 
-   void setActive (void)
+   void setActive()
    {
       mActive = true;
    }
@@ -103,24 +104,24 @@ public:
 
    /**
     * If the socket is of type SOCK_STREAM, then this call attempts to make
-    *   a connection to another socket.  The other socket is specified by
-    *   name, which is an address in the communications space of the socket.
+    * a connection to another socket.  The other socket is specified by
+    * name, which is an address in the communications space of the socket.
     *
     * If the socket is of type SOCK_DGRAM, then this call
-    *   specifies the peer with which the socket is to be associated; this
-    *   address is that to which datagrams are to be sent, and the only address
-    *   from which datagrams are to be received.
+    * specifies the peer with which the socket is to be associated; this
+    * address is that to which datagrams are to be sent, and the only address
+    * from which datagrams are to be received.
     *
     * Each communications space interprets the name parameter in its own way.
-    *   Generally, stream sockets may successfully connect only once; datagram
-    *   sockets may use connect multiple times to change their association.
-    *   Datagram sockets may dissolve the association by connecting to an
-    *   invalid address, such as a zero-filled address.
+    * Generally, stream sockets may successfully connect only once; datagram
+    * sockets may use connect multiple times to change their association.
+    * Datagram sockets may dissolve the association by connecting to an
+    * invalid address, such as a zero-filled address.
     */
-   vpr::ReturnStatus connect( vpr::SocketImplSIM* localSock,
-                              const vpr::InetAddrSIM& remoteName,
-                              NetworkGraph::VertexListPtr& path,
-                              vpr::Interval timeout );
+   vpr::ReturnStatus connect(vpr::SocketImplSIM* localSock,
+                             const vpr::InetAddrSIM& remoteName,
+                             NetworkGraph::VertexListPtr& path,
+                             vpr::Interval timeout);
 
    // ================
    // acceptor funcs:
@@ -145,7 +146,7 @@ public:
     *         bound to the given address.  vpr::ReturnStatus::Failure is
     *         returned otherwise.
     */
-   vpr::ReturnStatus bind( vpr::SocketImplSIM* handle);
+   vpr::ReturnStatus bind(vpr::SocketImplSIM* handle);
 
    /**
     * Unbinds the given socket from its registered address.  Once the socket
@@ -156,26 +157,25 @@ public:
     *
     * @param handle The socket object to be unbound from its registered address.
     *
-    * @return vpr::ReturnStatus::Success is returned if the handle could be unbound
-    *         from its local address.  vpr::ReturnStatus::Failure is returned
-    *         otherwise.
+    * @return vpr::ReturnStatus::Success is returned if the handle could be
+    *         unbound from its local address.  vpr::ReturnStatus::Failure is
+    *         returned otherwise.
     */
-   vpr::ReturnStatus unbind( vpr::SocketImplSIM* handle );
+   vpr::ReturnStatus unbind(vpr::SocketImplSIM* handle);
 
    /**
     * Sets a socket s to listen for connections.
     *
     * @pre The listen call applies only to sockets of type SOCK_STREAM.
     *
-    * @return true for success, false for error
+    * @return vpr::ReturnStatus::Success for success, vpr::ReturnStatus::Fail
+    *         for error.
     */
-   vpr::ReturnStatus listen( vpr::SocketStreamImplSIM* handle,
-                             const int backlog = 5 );
+   vpr::ReturnStatus listen(vpr::SocketStreamImplSIM* handle,
+                            const int backlog = 5);
 
 // extra stuff...
 public:
-
-
    void findRoute(vpr::SocketImplSIM* src_sock, vpr::SocketImplSIM* dest_sock);
 
    /**
@@ -198,7 +198,7 @@ public:
    /**
     * Is there someone listening on the address?
     */
-   bool isListening( const vpr::InetAddrSIM& address );
+   bool isListening(const vpr::InetAddrSIM& address);
 
 protected:  // -- Internal helpers -- //
   /** Assign the given socket to a node on the actual network
@@ -211,15 +211,19 @@ protected:  // -- Internal helpers -- //
    */
    vpr::ReturnStatus assignToNode(vpr::SocketImplSIM* handle);
 
-   /** Unassigns the socket from the node that it is bound to
-    * This is basically the opposite of assignToNode (and unbind if you will)
+   /**
+    * Unassigns the socket from the node that it is bound to.
+    * This is basically the opposite of assignToNode (and unbind if you will).
     */
-   vpr::ReturnStatus unassignFromNode (vpr::SocketImplSIM* handle);
+   vpr::ReturnStatus unassignFromNode(vpr::SocketImplSIM* handle);
 
-   /** Make sure that the local data structures know about the node at the given address
-   * @pre addr is a valid address in the network
-   * @return success  completed successfully
-   */
+   /**
+    * Make sure that the local data structures know about the node at the given
+    * address.
+    *
+    * @pre \p ipAddr is a valid address in the network.
+    * @return vpr::ReturnStatus::Succeed is returned on successful completion.
+    */
    vpr::ReturnStatus ensureNetworkNodeIsRegistered(const vpr::Uint32& ipAddr);
 
 
@@ -227,7 +231,6 @@ protected:  // -- Internal helpers -- //
 
    /** Get the ip address value for the "localhost" node that we are using */
    //vpr::Uint32 getLocalhostIpAddrValue();
-
 
 protected:
    // These two have to be here because Visual C++ will try to make them
@@ -247,18 +250,22 @@ protected:
    typedef std::map<vpr::Uint32, vpr::sim::NetworkNodePtr> node_map_t;
 #endif
 
-   /** This is a list of sockets that have gone into a listening state
-    * Used to track which sockets are currently in a listening state
+   /**
+    * This is a list of sockets that have gone into a listening state.
+    * Used to track which sockets are currently in a listening state.
     * XXX: Could move this into the actually socket as a socket state instead.
     */
    listener_map_t mListenerList;
    vpr::Mutex mListenerListMutex;
 
 
-   // List of the nodes in the system indexed by IP address
-   // NOTE: Local host will have two mappings
-   // (one for the "localhost" address and one for the node's real address)
-   node_map_t     mNetworkNodes;    /**< The nodes in the managed network */
+   /**
+    * List of the nodes in the system indexed by IP address
+    *
+    * @note Local host will have two mappings, one for the "localhost" address
+    *       and one for the node's real address.
+    */
+   node_map_t     mNetworkNodes;
    vpr::Mutex     mNetworkNodesMutex;
 };
 

@@ -59,8 +59,10 @@ namespace vpr
 // not be included by this file.
 struct InetAddrHash;
 
-/**
- * Simulated Internet address structures.
+/** \class InetAddrSIM InetAddrSIM.h vpr/IO/Socket/InetAddr.h
+ *
+ * Simulated Internet address structures.  This is typedef'd to vpr::InetAddr
+ * when simulated sockets are used.
  */
 class VPR_CLASS_API InetAddrSIM : public vpr::InetAddrBase
 {
@@ -72,16 +74,16 @@ public:
    /**
     * Returns the local host's address via the given object reference.
     *
-    * @param host_addr Storage for the returned address object.
+    * @param hostAddr Storage for the returned address object.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the local host has an
     *         an address.  Otherwise, vpr::ReturnStatus::Fail is returned.
     */
-   static vpr::ReturnStatus getLocalHost(vpr::InetAddrSIM& host_addr);
+   static vpr::ReturnStatus getLocalHost(vpr::InetAddrSIM& hostAddr);
 
    /**
     * Constructs an address object using the given address.  It must be of
-    * the form <address>:<port> where <address> can be a hostname or a
+    * the form \c address:port where \c address can be a hostname or a
     * dotted-decimal IP address.
     *
     * @param address A string giving the address and port number separated
@@ -133,7 +135,6 @@ public:
    /**
     * Copy constructor.
     *
-    * @pre None.
     * @post A copy of the given vpr::InetAddrSIM object is made in this
     *       object.
     *
@@ -155,7 +156,7 @@ public:
     * @return A vpr::SocketTypes::Domain value representing this object's
     *         protocol family.
     */
-   vpr::SocketTypes::Domain getFamily( void ) const
+   vpr::SocketTypes::Domain getFamily() const
    {
       return mFamily;
    }
@@ -163,7 +164,6 @@ public:
    /**
     * Sets the protocol family of this address.
     *
-    * @pre None.
     * @post The given protocol family (a vpr::SocketTypes::Domain value) is
     *       mapped to the appropriate platform-specific protocol family
     *       value and stored.
@@ -185,7 +185,7 @@ public:
     * @return An unsigned 16-bit integer  giving the port for this address
     *          in host byte order.
     */
-   vpr::Uint32 getPort( void ) const
+   vpr::Uint32 getPort() const
    {
       return mPort;
    }
@@ -209,13 +209,13 @@ public:
     * Gets this address's Internet address in host byte order.
     *
     * @pre The IP address has been initialized properly in network byte order.
-    * @psot The IP address associated with this address structure is
+    * @post The IP address associated with this address structure is
     *       returned to the caller in host byte order.
     *
     * @return An unsigned 32-bit integer giving the IP address for this
     *         object in host byte order.
     */
-   vpr::Uint32 getAddressValue( void ) const
+   vpr::Uint32 getAddressValue() const
    {
       return mAddress;
    }
@@ -231,7 +231,7 @@ public:
     * @return A std::string object containing this structure's IP address
     *         in the human-readable "dotted-decimal" notation.
     */
-   std::string getAddressString(void) const;
+   std::string getAddressString() const;
 
    /**
     * Returns the fully qualified hostname for this address.
@@ -246,7 +246,7 @@ public:
     * Returns the fully qualified primary hostname for this address and all
     * known aliases.
     */
-   std::vector<std::string> getHostnames (void) const
+   std::vector<std::string> getHostnames() const
    {
       std::vector<std::string> vec(1);
       vec[0] = getAddressString();
@@ -257,7 +257,6 @@ public:
     * Overloaded assignment operator to ensure that assignments work
     * correctly.
     *
-    * @pre None.
     * @post A copy of the given vpr::InetAddrSIM object is made in this object
     *       which is then returned to the caller.
     *
@@ -296,18 +295,17 @@ protected:
     * @pre The given IP address is in host byte order.
     * @post The given IP address is stored.
     *
-    * @param port An unsigned 32-bit integer IP address for this object in
-    *             host byte order.
+    * @param addrValue An unsigned 32-bit integer IP address for this object in
+    *                  host byte order.
     */
-   void setAddressValue( const vpr::Uint32 addr_value )
+   void setAddressValue(const vpr::Uint32 addrValue)
    {
-      mAddress = addr_value;
+      mAddress = addrValue;
    }
 
    /**
     * Make a copy of the given vpr::InetAddrSIM object in this object.
     *
-    * @pre None.
     * @post The memory in mAddr is overwritten with that of the given
     *       object's mAddr structure.
     *
@@ -331,7 +329,6 @@ protected:
 #ifdef _DEBUG
       mDebugStringAddress = getAddressString();
 #endif
-
    }
 
    vpr::Uint32 mPort;

@@ -51,28 +51,50 @@
 namespace vpr
 {
 
+/** \class SocketDatagramImplSIM SocketDatagramImplSIM.h vpr/IO/Socket/SocketDatagram.h
+ *
+ * Implementation of datagram sockets using simulated sockets.  This is used
+ * in conjunction with vpr::SocketConfiguration to create the typedef
+ * vpr::SocketDatagram.
+ */
 class SocketDatagramImplSIM : public vpr::SocketImplSIM
 {
 public:
-   SocketDatagramImplSIM (void)
+   /**
+    * Default constructor.
+    *
+    * @post The member variables are initialized to default values.  The
+    *       socket type is set to vpr::SocketTypes::DATAGRAM.
+    */
+   SocketDatagramImplSIM()
       : SocketImplSIM(vpr::SocketTypes::DATAGRAM)
    {
       /* Do nothing. */ ;
    }
 
-   SocketDatagramImplSIM (const vpr::InetAddr& local_addr,
-                          const vpr::InetAddr& remote_addr)
-      : SocketImplSIM(local_addr, remote_addr, vpr::SocketTypes::DATAGRAM)
+   /**
+    * Constructor.
+    *
+    * @post The member variables are initialized to default values.  The
+    *       socket type is set to vpr::SocketTypes::DATAGRAM.
+    *
+    * @param localAddr  The local address to which this socket will be bound.
+    * @param remoteAddr The remote address whith which this socket will
+    *                   communicate.
+    */
+   SocketDatagramImplSIM(const vpr::InetAddr& localAddr,
+                         const vpr::InetAddr& remoteAddr)
+      : SocketImplSIM(localAddr, remoteAddr, vpr::SocketTypes::DATAGRAM)
    {
       /* Do nothing. */ ;
    }
 
    vpr::ReturnStatus recvfrom(void* msg, const vpr::Uint32 length,
-                              vpr::InetAddr& from, vpr::Uint32& bytes_read,
+                              vpr::InetAddr& from, vpr::Uint32& bytesRead,
                               const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    vpr::ReturnStatus sendto(const void* msg, const vpr::Uint32 length,
-                            const vpr::InetAddr& to, vpr::Uint32& bytes_sent,
+                            const vpr::InetAddr& to, vpr::Uint32& bytesSent,
                             const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    virtual vpr::ReturnStatus isReadReady() const;

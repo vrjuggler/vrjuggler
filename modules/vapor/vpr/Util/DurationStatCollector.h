@@ -48,14 +48,20 @@
 namespace vpr
 {
 
+/** \class DurationStatCollector DurationStatCollector.h vpr/Util/DurationStatCollector.h
+ *
+ * Duration statistics collector class.
+ */
 class DurationStatCollector : public SampleLimitedStatCollector<double, false>
 {
 public:
-   DurationStatCollector(vpr::Interval::Unit units = vpr::Interval::Sec, unsigned sampleLimit = 100)
-    : SampleLimitedStatCollector<double, false>(sampleLimit)
+   DurationStatCollector(vpr::Interval::Unit units = vpr::Interval::Sec,
+                         unsigned sampleLimit = 100)
+      : SampleLimitedStatCollector<double, false>(sampleLimit)
+      , mUints(units)
+      , mStartTimeNeededNext(true)
    {
-      mUnits = units;
-      mStartTimeNeededNext = true;
+      ;
    }
 
    void startSample()
@@ -108,6 +114,7 @@ protected:
    bool mStartTimeNeededNext;       // For helping with debugging
 };
 
-}; // namespace
+} // namespace
+
 
 #endif

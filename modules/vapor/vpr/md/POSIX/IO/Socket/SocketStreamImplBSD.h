@@ -52,8 +52,11 @@
 namespace vpr
 {
 
-/**
- * Implementation of the stream socket wrapper using BSD sockets.
+/** \class SocketStreamImplBSD SocketStreamImplBSD.h vpr/IO/Socket/SocketStream.h
+ *
+ * Implementation of the stream socket wrapper using BSD sockets.  This is
+ * used in conjunction with vpr::SocketConfiguration to create the typedef
+ * vpr::SocketStream.
  */
 class SocketStreamImplBSD : public SocketImplBSD
 {
@@ -67,7 +70,7 @@ public:
     *
     * @pre None.
     * @post The member variables are initialized with the mType variable in
-    *       particular set to vpr::SocketTypes::SOCK_STREAM.
+    *       particular set to vpr::SocketTypes::STREAM.
     */
    SocketStreamImplBSD();
 
@@ -80,12 +83,12 @@ public:
     * @post The member variables are initialized with the type in particular
     *       set to vpr::SocketTypes::STREAM.
     *
-    * @param local_addr  The local address for this socket.  This is used for
-    *                    binding the socket.
-    * @param remote_addr The remote address for this socket.  This is used to
-    *                    specify the connection addres for this socket.
+    * @param localAddr  The local address for this socket.  This is used for
+    *                   binding the socket.
+    * @param remoteAddr The remote address for this socket.  This is used to
+    *                   specify the connection addres for this socket.
     */
-   SocketStreamImplBSD(const InetAddr& local_addr, const InetAddr& remote_addr);
+   SocketStreamImplBSD(const InetAddr& localAddr, const InetAddr& remoteAddr);
 
    /**
     * Copy constructor.
@@ -99,41 +102,43 @@ public:
     * incoming connection requests.
     *
     * @pre The socket has been opened and bound to the address in
-    *      mLocalAddr.
+    *      \c mLocalAddr.
     * @post The socket is in a listening state waiting for incoming
     *       connection requests.
     *
     * @param backlog The maximum length of th queue of pending connections.
     *
     * @return vpr::ReturnStatus::Succeed is returned if this socket is now in a
-    *         listening state.<br>
-    *         vpr::ReturnStatus::Fail is returned otherwise.
+    *         listening state.
+    * @return vpr::ReturnStatus::Fail is returned otherwise.
     */
    vpr::ReturnStatus listen(const int backlog = 5);
 
    /**
-    * Accepts an incoming connection request and return the connected socket
+    * Accepts an incoming connection request and returns the connected socket
     * to the caller in the given socket object reference.
     *
-    * @pre The socket is open and is in a listening state.
-    * @post When a connection is established, the given vpr::SocketStream
-    *       object is assigned the newly connected socket.
+    * @pre This socket is open, bound, and in a listening state.
+    * @post When a connection is established, the given socket \p sock will
+    *       be set up to communicate with the newly accepted connection.
     *
     * @param sock    A reference to a vpr::SocketStream object that will
-    *                be used to return the connected socket created.
+    *                be used to return the newly connected socket.
     * @param timeout The length of time to wait for the accept call to
     *                return.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the incoming request has
-    *         been handled, and the given SocketStream object is a valid,
-    *         connected socket.<br>
-    *         vpr::ReturnStatus::WouldBlock is returned if this is a
+    * @return vpr::ReturnStatus::Succeed is returned if the new connection was
+    *         accepted succesfully.
+    * @return vpr::ReturnStatus::WouldBlock is returned if this is a
     *         non-blocking socket, and there are no waiting connection
-    *         requests.<br>
-    *         vpr::ReturnStatus::Timeout is returned when no connections
-    *         requests arrived within the given timeout period.<br>
-    *         vpr::ReturnStatus::Fail is returned if the accept failed.  The
-    *         given vpr::SocketStream object is not modified in this case.
+    *         requests.
+    * @return vpr::ReturnStatus::Timeout is returned when no connections
+    *         requests arrived within the given timeout period.
+    * @return vpr::ReturnStatus::Fail is returned if the connection was not
+    *         accepted.  An error message is printed explaining what went
+    *         wrong.
+    *
+    * @see open, bind, listen
     */
    vpr::ReturnStatus accept(SocketStreamImplBSD& sock,
                             vpr::Interval timeout = vpr::Interval::NoTimeout);
