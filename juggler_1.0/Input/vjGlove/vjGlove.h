@@ -52,6 +52,8 @@ public:
    float     angles[NUM_COMPONENTS][NUM_JOINTS];
 
    //: These are the xforms from TO the coord system of the given joint
+   // Ex: xforms[0] ==> <br>
+   //     base<b>T</b>mpj mpj<b>T</b>pij pij<b>T</b>dij
    vjMatrix  xforms[NUM_COMPONENTS][(NUM_JOINTS-1)];
 
    // Finger params
