@@ -52,8 +52,8 @@ const int DEVICE_POSITION = 1;
 const int DEVICE_GESTURE  = 2;
 const int DEVICE_DIGITAL  = 4;
 const int DEVICE_ANALOG   = 8;
-const int DEVICE_GROW1    = 16;
-const int DEVICE_GROW2    = 32;
+const int DEVICE_GLOVE    = 16;
+const int DEVICE_GROW1    = 32;
 
 //-----------------------------------------------------------------------------
 //: vjInput is the abstract base class that all input objects derive from.
@@ -71,6 +71,13 @@ const int DEVICE_GROW2    = 32;
 //  Positional Devices, Analog Devices, and Digital devices, each has its own
 //  added pure virtual functions providing a simple and equal interface to
 //  themselves.
+//
+//! NOTE: We make the assumption in all devices that while UpdateData() is being
+//+       called, no other process will try to read the current data.
+//+       We can make this assumption because the whole idea of UpdateData() is
+//+       to bring in a current copy of the data for threads to process for a
+//+       frame.  Because of this, threads should not be reading data while
+//+       it is being updated to the most recent copy.
 //-----------------------------------------------------------------------------
 class vjInput : public vjMemory
 {
@@ -152,6 +159,17 @@ public:
 
    //: Is this input device active?.
    int IsActive() { return active;}
+
+protected:  // Helpers
+   //: Reset the Index Holders
+   // Sets to (0,1,2) in that order
+   void resetIndexes();
+
+   //: Swap the current and valid indexes (thread safe)
+   void swapCurrentIndexes();
+
+   //: Swap the valid and progress indexes (thread safe)
+   void swapValidIndices();
 
 protected:
    char *sPort;
