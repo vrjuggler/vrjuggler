@@ -45,119 +45,331 @@
 
 #include <gadget/RemoteInputManager/NetConnection.h>
 #include <gadget/RemoteInputManager/MsgPackage.h>
-#include <gadget/Type/NetInput.h>
+//#include <gadget/Type/NetInput.h>
 #include <gadget/RemoteInputManager/NetUtils.h>
-#include <gadget/Type/NetDigital.h>
-#include <gadget/Type/NetPosition.h>
-#include <gadget/RemoteInputManager/NetClockSync.h>
-
+//#include <gadget/Type/NetDigital.h>
+//#include <gadget/Type/NetPosition.h>
+#include <gadget/RemoteInputManager/NetDevice.h>
+#include <gadget/Type/BaseTypeFactory.h>
+#include <gadget/RemoteInputManager/ClusterSync.h>
 
 namespace gadget{
 
-class Proxy;
-class Input;
-class InputManager;
+   class Proxy;
+   class Input;
+   class InputManager;
 
-// Note the RemoteInputManager does not inherit vjConfigChunkHandler like the Input Manager does.
-// That's because it is closely connected to the Input Manager and the chunks it processes must also
-// be processed by the Input Manager.
+   // Note the RemoteInputManager does not inherit vjConfigChunkHandler like the Input Manager does.
+   // That's because it is closely connected to the Input Manager and the chunks it processes must also
+   // be processed by the Input Manager.
 
-class GADGET_CLASS_API RemoteInputManager
-{
-protected:
-   bool mListenWasInitialized;
-   std::string mInstanceName;
-   std::string mShortHostname;
-   std::string mLongHostname;
-   //std::string mHostnameFromConfig;
-   //std::string mHostname;
-   //std::string mHostIp;
-   int mListenPort;
-   vpr::GUID mManagerId;
-
-   gadget::InputManager* mInputManager;  /**< a ptr to the Input Manager so we can access devices */
-
-   // std::list<NetInput*> mLocalInputs;
-   // std::list<NetInput*> mRemoteInputs;
-   // std::vector<std::string> mConnectionNames;
-   // std::list<vpr::SocketStream*> mConnections;
-   // std::list<RecvBuffer*> recv_buffers;
-
-   std::list<NetConnection*> mConnections;    /**< network connections to other juggler instances */
-   std::list<NetInput*> mTransmittingInputs;  /**< devices/proxies that we transmit from */
-   std::list<NetInput*> mReceivingInputs;     /**< devices/proxies that we receive from */
-   IdGenerator<VJ_NETID_TYPE> mLocalIdGen;    /**< keeps track of used/free network ids */
-   MsgPackage mMsgPackage;                    /**< used to package and send messages */
-   NetClockSync mNetClockSync;
-
-   vpr::Thread* mAcceptThread;
-   vpr::InetAddr mListenAddr;
-
-   // bool mWaitingForOtherHosts;  // flag checked by InputManager to see if we need to stall configuration to wait for connections to hosts
-
-   enum
+   class GADGET_CLASS_API RemoteInputManager
    {
-      RIM_FALSE, RIM_TRUE, RIM_UNKNOWN
-   } mRmtMgrChunkExists;  // needed to deteremine if we get our listening port
-   // from an optional Manager chunk or from the Device Host Chunks
+   protected:
+      int                           mIncomingConnections;
+      int                           mNumMachines;
+      ClusterSync                   mClusterSync;
+      bool                          mListenWasInitialized;
+      bool                          mConfigureDone;
+      bool                          mActive;
+      IdGenerator<VJ_NETID_TYPE>    mLocalIdGen;            /**< keeps track of used/free network ids */
+
+      gadget::MsgPackage            mMsgPackage;
+      gadget::InputManager*         mInputManager;          /**< a ptr to the Input Manager so we can access devices */
+
+      std::string                   mInstanceName;
+      std::string                   mShortHostname;
+      std::string                   mLongHostname;
+      std::string                   mLocalMachineChunkName;
+      std::list<NetConnection*>     mConnections;           /**< network connections to other juggler instances */
+      std::list<NetDevice*>         mTransmittingDevices;   /**< devices/proxies that we transmit from */
+      std::list<NetDevice*>         mReceivingDevices;      /**< devices/proxies that we receive from */
+
+      std::vector<jccl::ConfigChunkPtr>                  mDeviceChunks;
+      std::map<std::string, jccl::ConfigChunkPtr>        mMachineTable;    /**< list of proxies in the system */
+
+      vpr::Uint16          mListenPort;
+      vpr::GUID            mManagerId;
+      vpr::Thread*         mAcceptThread;
+      vpr::InetAddr        mListenAddr;
+      vpr::Mutex           mConfigMutex;  // prevents us from try to read devices while they are being modified (added or removed)
+
+      //enum
+      //{
+      //   RIM_FALSE, RIM_TRUE, RIM_UNKNOWN
+      //} mRmtMgrChunkExists;  // needed to deteremine if we get our listening port
+      // from an optional Manager chunk or from the Device Host Chunks
+
+      // bool mWaitingForOtherHosts;  // flag checked by InputManager to see if we need to stall configuration to wait for connections to hosts
+      //vpr::Mutex mNetInitMutex; // on windows helps us call WSAStartup only once
+      //bool mNetworkInitted; // need for windows WSAStartup
+
+      // bool mMetStartingRequirements;
+      // int mMinConnections;   // allows us to wait until network devices are connected and synchronize our start
+
+   public:
+      RemoteInputManager(InputManager* input_manager);
+
+      virtual ~RemoteInputManager();
+
+      void debugDump();
+      bool startCluster(std::vector<jccl::ConfigChunkPtr>);
+      bool configAdd(jccl::ConfigChunkPtr chunk);
+      bool configRemove(jccl::ConfigChunkPtr chunk);
+      bool configCanHandle(jccl::ConfigChunkPtr chunk);
+      bool configureRIM();
+      bool recognizeClusterMachineConfig(jccl::ConfigChunkPtr chunk);
+      bool recognizeRemoteDeviceConfig(jccl::ConfigChunkPtr chunk);
+      bool recognizeClusterSystemConfig(jccl::ConfigChunkPtr chunk);
+      /**
+       * If there is not already a thread for listening and the local listening
+       * port is valid, then create a new thread and startListening on it.
+       * 
+       *	@post	A thread that is running the acceptLoop function, and receiving
+       * 		connection requests.
+       */
+      bool startListening();
+
+      /**
+       * Open a socket and accept incoming connections. When a connection is 
+       * initiated we try to recieve a handshake. If we do then try to create
+       * a new NetConnection. If successful respond by sending a handshake back.
+       *
+       * @post	A NetConnection to a machine that has requested a connection.
+       */
+      virtual void acceptLoop(void* nullParam);
+
+      /**
+       * Kills the local listening thread and removes all connections.
+       */
+      void shutdown();
+      
+      bool isActive()
+      {return mActive;}
 
 
-   vpr::Mutex mConfigMutex;  // prevents us from try to read devices while they are being modified (added or removed)
-   //vpr::Mutex mNetInitMutex; // on windows helps us call WSAStartup only once
-   //bool mNetworkInitted; // need for windows WSAStartup
+      /**
+       * Sends and receives data for all NetDevices
+       * @post All cluster systems have the same device data.
+       */
+      void updateAll();
 
-   // bool mMetStartingRequirements;
-   // int mMinConnections;   // allows us to wait until network devices are connected and synchronize our start
+      /**
+      * Adds machines to a table of cluster machines, and configures the RIM 
+      * if the chunk is for the local machine
+      * @param	chunk The chunk that contains information about a cluster machine.
+      * @post	The cluster machine added to the table. And if the chunk is for
+      * 			the local machine, it is now configured and listening.
+      */
+      bool configureClusterMachine(jccl::ConfigChunkPtr chunk);
+      bool configureClusterSystem(jccl::ConfigChunkPtr chunk);
 
-/*
-    bool addLocalNetDevice(NetInput* net_dev)
-    {
-        mLocalInputs.push_back(net_dev);
-        return true;
-    }
+      //SPELLING
+      /**			 
+       * Determaines if the device's host_chunk field is pointing to a cluster machine
+       * that is in the curent configuration. And create a connection to that machine 
+       * and a NetDevice to manage the communication to the new "virtual device"
+       * @param	chunk The chunk for the device that we are trying to find.
+       * @post		A new NetDevice, BaseType(Virtual Device), and a NetConnection,
+       * 			if one did not exist before.
+       */
+      bool configureDevice(jccl::ConfigChunkPtr chunk);
 
-    bool addRemoteNetDevice(NetInput* net_dev)
-    {
-        mRemoteInputs.push_back(net_dev);
-        connectToRemoteDevice(net_device ); // net_dev->init();
-        return true;
-    }
-*/
-
-public:
-   RemoteInputManager(InputManager* input_manager);
-
-   virtual ~RemoteInputManager();
-
-   // static std::string getChunkType() { return std::string("RemoteInput");}
-   void findIfMgrChunkExists();
-   // returns if there is a chunk (processed yet or not) that will explicitly configure the Remote Input Manager
-   bool mgrChunkExists();
-
-   // if we are waiting to connect to other hosts, return true;
-   // bool chunksWaitingForOtherHosts(){ return mWaitingForOtherHosts; }
-   // void setWaitingForHostsFlagOff(){ mWaitingForOtherHosts = false; }
-   // void setWaitingForHostsFlagOn(){ mWaitingForOtherHosts = true; }
-
-   /*
-   // returns true if the hostname contains a period
-   bool hostnameContainsPeriod(const std::string& hname){
-      int first_period_pos = mLongHostname.find(".");
-      if (first_period_pos == std::string::npos)
-         return true;
-      else
-         return false;
-   } */
-
-   bool hostnameAndPortMatchLocal(const std::string& host, const int port)
-   {
-      if ( port == mListenPort )
+      /**
+       * Locks the configureation of RIM.
+       */
+      void acquireConfigMutex()
       {
-         return true;
+         mConfigMutex.acquire();
       }
-      else
-      {
 
+      /**
+       * Unlocks the configureation of RIM.
+       */
+      void releaseConfigMutex()
+      {
+         mConfigMutex.release();
+      }
+      
+      /**
+       * Get a pointer to a "virtual" device in the RIM
+       *
+       * @param   device_name Name of the device we are trying to find.
+       * @return  A pointer to the base class.
+       */
+      Input* getDevice(std::string device_name);
+      
+      /**
+       * Returns the local hostname as a string
+       */
+      std::string getLocalHostName()
+      {
+         return(mShortHostname);
+      }
+
+      /**
+       * Returns the state of a flag that indicates if listening on the local
+       * machine has been started
+       */
+      bool listenWasInitialized()
+      {
+         return mListenWasInitialized;
+      }
+
+
+      //------------------- INTER-JUGGLER CONNECTION MANAGEMENT ---------------
+
+      /*	Add connection to the list
+       * @param	sync_delta 	calculated difference between the local and remote clock
+       * @param	hostname		remote machine's hostname
+       * @param	port			port that the machine is connected on
+       * @param	manager_id	remote machines manager id
+       * @param sock_stream	stream that is used to transfer data to/from remote machine 
+       *
+       * @post	A new NetConnection to the machine that we specified.
+       * @return	NetConnection* to the new NetConnection.
+       *				NULL if it could not be created
+       */
+      NetConnection* addConnection(vpr::Interval sync_delta, const std::string& hostname, const int port, const std::string& manager_id, vpr::SocketStream* sock_stream);
+
+      /* Opens a connection to a remote machine's RIM
+       * @param hostname	hostname of the remote machine
+       * @param	port		the port on the remote machine to try to connect to
+       *
+       * @post	A NetConnection to the remote machine that we requested.
+       * @return	NetConnection* to the new NetConnection.
+       *				NULL if it could not be created
+       */
+      NetConnection* makeConnection(const std::string &hostname, const int port);
+
+      /**
+       * Configures a new NetDevice for a device on a remote machine.
+       *
+       * @param   chunk    configuration chunk for the device that 
+       *                   we are trying to access
+       * @param   connection  NetConnection that the NetDevice is using to 
+       *                      connect to the remote device
+       * @return  TRUE  - if the configuration was successful
+       *          FALSE - if the configuration was un-successful
+       */
+      bool configureReceivingNetDevice(jccl::ConfigChunkPtr chunk, NetConnection* connection);  // requests a connection to the device
+      
+      /**
+       * Adds a NetDevice to the list of NetDevices in the RIM and the 
+       * NetConnection that it uses.
+       *
+       * @param   net_device     NetDevice we are adding
+       * @param   net_connection NetConnection that it is using
+       */
+      void addReceivingNetDevice(NetDevice* net_device, NetConnection* net_connection);
+
+      /**
+       * Configures a new NetDevice for sending data from a local device.
+       *
+       * @param   device_name       name of the local device
+       * @param   requester_device_id  the unique ID for this device on the
+       *                               remote machine
+       * @param   net_connection    NetConnection that the NetDevice is using
+       */
+      bool configureTransmittingNetDevice(std::string device_name, VJ_NETID_TYPE requester_device_id, NetConnection* net_connection);
+
+      NetDevice* createTransmittingNetDevice(const std::string& device_name, Input* input_ptr, VJ_NETID_TYPE requester_device_id);
+      void addTransmittingNetDevice(NetDevice* net_device, NetConnection* net_connection);
+
+      /**
+       * Send local data to all connected remote machines.
+       */
+      void sendDeviceNetData();
+      
+      /**
+       * Read the network until all connections have received the data 
+       * they need
+       */
+      void receiveDeviceNetData();
+      
+      /**
+       * Parse incoming packets.
+       *
+       * @param net_connection   NetConnection that it is getting the packets on.
+       */
+      void receiveNetworkPacket(NetConnection* net_connection);
+
+      /* Searches through all of the NetConnection to determine if they have
+       * received all of their data
+       *
+       * @return	TRUE if all connections have received their data.
+       *				FALSE if the haven't.
+       */
+      bool allDataReceived();
+      void markDataUnreceived();
+
+      NetDevice* findTransmittingNetDevice(const std::string& device_name);
+      NetConnection* getConnectionByHostAndPort(const std::string& hostname, const int port); // NetConnection* getConnectionByHostAndPort(const std::string& location_name);
+      NetConnection* getConnectionByAliasName(const std::string& alias_name);
+      NetConnection* getConnectionByManagerId(const vpr::GUID& manager_id);
+
+
+      // returns unsigned short by default
+      VJ_NETID_TYPE generateLocalId()
+      {
+         return mLocalIdGen.generateNewId();
+      }
+
+      NetDevice* findDeviceByLocalId(VJ_NETID_TYPE local_id);
+
+      void resendRequestsForNackedDevices();
+      
+      std::string getShortHostnameFromLong(std::string long_name)
+      {
+         int first_period_pos = long_name.find(".");
+         std::string temp = long_name.substr(0, first_period_pos);
+         // just in case it is trailed by a ":port";
+         int colon_pos = temp.find(":");
+         std::string temp2 = temp.substr(0,colon_pos);
+         return temp2;
+      }
+
+      bool hostnameAndPortMatchLocal(const std::string& host, const int port)
+      {
+         if ( port == mListenPort )
+         {
+            return true;
+         }
+         else
+         {
+
+            std::string lowercase_host = host;
+            // make lowercase
+            std::transform (lowercase_host.begin(),lowercase_host.end(), lowercase_host.begin(), tolower);
+
+            // check if test hostname is contained in our long hostname and vice versa
+            if ( mLongHostname.find(lowercase_host) != std::string::npos )
+            {
+               // now make sure short hostnames match
+               if ( getShortHostnameFromLong(lowercase_host) == mShortHostname )
+               {
+                  return true;
+               }
+               else
+               {
+                  vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HEX_LVL)
+                  << lowercase_host << " is not equal to " << mShortHostname
+                  << std::endl << vprDEBUG_FLUSH;
+               }
+            }
+            else
+            {
+               vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HEX_LVL)
+               << lowercase_host << " is not in " << mLongHostname
+               << std::endl << vprDEBUG_FLUSH;
+            }
+
+            return false;
+         }
+      }
+
+      bool hostnameMatchesLocalHostname(const std::string& host)
+      {
          std::string lowercase_host = host;
          // make lowercase
          std::transform (lowercase_host.begin(),lowercase_host.end(), lowercase_host.begin(), tolower);
@@ -173,282 +385,21 @@ public:
             else
             {
                vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HEX_LVL)
-                  << lowercase_host << " is not equal to " << mShortHostname
-                  << std::endl << vprDEBUG_FLUSH;
+               << lowercase_host << " is not equal to " << mShortHostname
+               << std::endl << vprDEBUG_FLUSH;
             }
          }
          else
          {
             vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HEX_LVL)
-               << lowercase_host << " is not in " << mLongHostname
-               << std::endl << vprDEBUG_FLUSH;
-         }
-
-         return false;
-      }
-   }
-
-   bool hostnameMatchesLocalHostname(const std::string& host)
-   {
-      std::string lowercase_host = host;
-      // make lowercase
-      std::transform (lowercase_host.begin(),lowercase_host.end(), lowercase_host.begin(), tolower);
-
-      // check if test hostname is contained in our long hostname and vice versa
-      if ( mLongHostname.find(lowercase_host) != std::string::npos )
-      {
-         // now make sure short hostnames match
-         if ( getShortHostnameFromLong(lowercase_host) == mShortHostname )
-         {
-            return true;
-         }
-         else
-         {
-            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HEX_LVL)
-               << lowercase_host << " is not equal to " << mShortHostname
-               << std::endl << vprDEBUG_FLUSH;
-         }
-      }
-      else
-      {
-         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HEX_LVL)
             << lowercase_host << " is not in " << mLongHostname << std::endl
             << vprDEBUG_FLUSH;
-      }
+         }
 
-      return false;
-   }
-
-   // returns a string without the ending (i.e. returns viper from viper.vrac.iastate.edu)
-   std::string getShortHostnameFromLong(std::string long_name)
-   {
-      int first_period_pos = long_name.find(".");
-      std::string temp = long_name.substr(0, first_period_pos);
-      // just in case it is trailed by a ":port";
-      int colon_pos = temp.find(":");
-      std::string temp2 = temp.substr(0,colon_pos);
-      return temp2;
-   }
-
-
-
-// HOSTNAME STRING UTILITY FUNCTIONS
-
-   /*
-   bool nameContainsColon(const std::string& hname){
-      unsigned int first_colon_pos = mLongHostname.find(":");
-      if (first_colon_pos == std::string::npos)
-         return true;
-      else
          return false;
-   }
-
- hostnameMatchesLocalHostname
-   // bool locationContainsLocalHostname(const std::string& location){
-   // strips the
-   bool hostnameMatchesLocalHostname(const std::string& location){
-      std::string lowercase_location = location;
-      // make lowercase
-      std::transform (lowercase_location.begin(),lowercase_location.end(), lowercase_location.begin(), tolower);
-      // remove any trailing colon and port number
-      std::string test_hostname = "";
-      // remove trailing ":port"
-
-      unsigned int i = 0;// for(int i = 0; i < lowercase_location.size(); i++){
-      while( (i < lowercase_location.size()) &&  (lowercase_location[i] != ':') ){
-         test_hostname += lowercase_location[i];
-         i++;
       }
 
-      // check if test hostname is contained in our long hostname
-      if(mLongHostname.find(test_hostname) != std::string::npos){
-         // now make sure short hostnames match
-         if (getShortHostnameFromLong(test_hostname) == mShortHostname)
-            return true;
-         else
-            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HEX_LVL)
-               << test_hostname << " is not equal to " << mShortHostname
-               << std::endl << vprDEBUG_FLUSH;
-      }
-      else
-         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HEX_LVL)
-            << test_hostname << " is not in " << mLongHostname << std::endl
-            << vprDEBUG_FLUSH;
-
-      return false;
-   }
-
-   // accepts strings in the form "host:port" and returns port as an integer
-   int stripPortFromName(const std::string location){
-      unsigned int colon_pos = location.find(":");
-      if (colon_pos == std::string::npos)
-         return 0; // they don't match, there isn't even a port in "location"
-      else{
-         int port_pos = colon_pos + 1;
-         std::string port_str = location.substr(port_pos, location.size() - port_pos);
-         int return_port = atoi(port_str.c_str());
-         return return_port;
-      }
-   }
-
-   bool hostPortMatchesListeningPort(const std::string& location){
-      unsigned int colon_pos = location.find(":");
-      if (colon_pos == std::string::npos)
-         return false; // they don't match, there isn't even a port in "location"
-      else{
-         int port_pos = colon_pos + 1;
-         std::string port_str = location.substr(port_pos, location.size() - port_pos);
-         int test_port = atoi(port_str.c_str());
-         if(test_port == mListenPort)
-            return true;
-         else
-            return false;
-      }
-   }
-   */
-
-// --- END HOSTNAME STRING UTILITY FUNCTIONS
-
-
-   // Used by InputManager to pass RemoteInputManager a new NetDevice
-   // bool addNetDevice(NetInput* devicePtr);
-
-   // create a new thread to manage network connections
-   bool startListening();
-
-   // stop thread that accepts new connections
-   // remove all net devices
-   void shutdown();
-
-   // send and receive data from network devices
-   void updateAll();
-
-   // loops and accepts new connections if they are valid
-   virtual void acceptLoop(void* nullParam);
-
-   // bool checkStartingRequirements();
-
-   // void sendDeviceAccept(vpr::SocketStream* client_sock);
-   // void sendDeviceReject(vpr::SocketStream* client_sock);
-   // bool connectRemoteDevice(Input* device, int connection_index);
-
-/*
-   bool addRemoteDevice(NetInput* device){
-      mRemoteInputs.push_back(device);
-      connectRemoteDevice(device, connection_index);
-      return true;
-   }
-*/
-   // void initNetwork();
-
-
-   bool config(jccl::ConfigChunkPtr chunk);
-   bool configFromLocalConnection(jccl::ConfigChunkPtr chunk);
-   bool listenWasInitialized()
-   {
-      return mListenWasInitialized;
-   }  // only true after config has been called
-
-   bool configConnection(jccl::ConfigChunkPtr chunk);
-   void findMgrChunk(); // used to see if a Manager chunk exists to specify a listening port
-   /*
-   bool isLocalHostAndPort(const std::string& location){
-
-      std::string lowercase_location = location;
-      // make all lower case
-      std::transform (lowercase_location.begin(),lowercase_location.end(), lowercase_location.begin(), tolower);
-      char port_str[16];
-      sprintf("%s", port_str, mListenPort);
-      std::string our_location = mLocalHostname + std::string(":") + port_str;
-      std::string our_location2 = std::string("localhost") + std::string(":") + port_str;
-
-      if ( (lowercase_location == our_location) ||
-         (lowercase_location == our_location2))
-         return true;
-      else
-         return false;
-   } */
-
-// INTER-JUGGLER CONNECTION MANAGEMENT
-   //  if new stream is valid, returns true and sets deviceName
-   // bool handshake(std::string& deviceName, vpr::SocketStream* newStream);
-   bool sendHandshake(const std::string& host, const std::string& port, const std::string& manager_id, vpr::SocketStream* newStream);
-   bool sendRejectionHandshake(const std::string& host, const std::string& port, const std::string& manager_id, vpr::SocketStream* newStream);
-   bool receiveHandshake(std::string& recievedHostname, int& receivedPort, std::string& received_manager_id, vpr::SocketStream* newStream);
-
-   bool makeConnection(const std::string &connection_alias, const std::string &hostname, const int port);
-   NetConnection* addConnection(const std::string &connection_alias, const std::string& hostname, const int port, const std::string& manager_id, vpr::SocketStream* sock_stream);
-
-/*
-   NetConnection* findConnection(const std::string& connection_name){
-      std::list<NetConnection*>::iterator i;
-      for(i = mConnections.begin(); i != mConnections.end(); i++){
-         if((*i)->getName() == connection_name)
-            return *i;
-      }
-      return NULL;
-   }
-*/
-
-   // read network for messages to update devices
-   void receiveDeviceNetData();
-   void sendDeviceNetData();
-   // parse and process network messages
-   bool processRecvBuff(NetConnection* net_connection);
-
-// ADDING AND REMOVING NET DEVICES
-   void acquireConfigMutex()
-   {
-      mConfigMutex.acquire();
-   }
-   void releaseConfigMutex()
-   {
-      mConfigMutex.release();
-   }
-
-   NetInput* createTransmittingNetInput(const std::string& device_name, Input* input_ptr, VJ_NETID_TYPE requester_device_id);
-
-   NetInput* createTransmittingNetInput(const std::string& device_name, Proxy* proxy_ptr, VJ_NETID_TYPE requester_device_id);
-
-   bool configureReceivingNetInput(jccl::ConfigChunkPtr chunk, NetConnection* net_connection);
-   bool configureTransmittingNetInput(std::string device_name, VJ_NETID_TYPE requester_device_id, NetConnection* net_connection);
-
-   // just add to Input Manager and Remote Input Manager lists
-   void addTransmittingNetInput(NetInput* net_input, NetConnection* net_connection);
-   void addReceivingNetInput(NetInput* net_input, NetConnection* net_connection);
-
-   bool allDataReceived();
-
-   void markDataUnreceived();
-
-   NetInput* findTransmittingNetInput(const std::string& device_name);
-   NetConnection* getConnectionByHostAndPort(const std::string& hostname, const int port); // NetConnection* getConnectionByHostAndPort(const std::string& location_name);
-   NetConnection* getConnectionByAliasName(const std::string& alias_name);
-   NetConnection* getConnectionByManagerId(const vpr::GUID& manager_id);
-   void sendEndBlocks();
-
-   // returns unsigned short by default
-   VJ_NETID_TYPE generateLocalId()
-   {
-      return mLocalIdGen.generateNewId();
-   }
-
-   NetInput* findDeviceByLocalId(VJ_NETID_TYPE local_id);
-
-   void resendRequestsForNackedDevices();
-   void updateManagerStatus();
-
-/*
-   // XXX debug function
-   void configureTestProxy(jccl::ConfigChunkPtr chunk){
-      NetDigitalProxy* dig_proxy = new NetDigitalProxy(chunk, this->generateLocalId());
-      std::string name = chunk->getName();
-      mInputManager->addProxy(name, dynamic_cast<Proxy*>(dig_proxy));
-
-   }
-*/
-
-};
+   };
 
 }  // end namespace gadget
 

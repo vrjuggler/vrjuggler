@@ -56,13 +56,22 @@ namespace gadget
 
 typedef unsigned short VJ_NETID_TYPE;
 
-const unsigned short MAX_DEVICE_ID = 399;  // allows 400 devices per connection -- allows us to send packet ids and device ids as 2 bytes.
-const unsigned short MSG_DEVICE_REQ = 400;
-const unsigned short MSG_DEVICE_ACK = 401;
-const unsigned short MSG_DEVICE_NACK = 402;
-const unsigned short MSG_CLOCK_SRC = 403;
-const unsigned short MSG_CLOCK_SYNC = 404;
-const unsigned short MSG_END_BLOCK = 410;
+
+//const unsigned short MAX_DEVICE_ID = 399;  // allows 400 devices per connection -- allows us to send packet ids and device ids as 2 bytes.
+
+const unsigned short RIM_PACKET_MSG 		= 400;
+const unsigned short MSG_DEVICE_DATA 	= 401;
+const unsigned short MSG_DEVICE_REQ 	= 402;
+const unsigned short MSG_DEVICE_ACK 	= 403;
+const unsigned short MSG_DEVICE_NACK 	= 404;
+const unsigned short MSG_CLOCK_SRC 		= 405;
+const unsigned short MSG_CLOCK_SYNC 	= 406;
+const unsigned short MSG_HANDSHAKE 		= 407;
+const unsigned short MSG_CLUSTER_SYNC	= 408;
+
+const unsigned short MSG_END_BLOCK 		= 410;
+
+const unsigned short RIM_HEAD_LENGTH = 8;
 
 
 #ifndef ulong
@@ -90,67 +99,6 @@ inline bool sendAtOnce(vpr::SocketStream& sock_stream, const char* buf, unsigned
 
 // Buffer for transmitting network data.  Important for remote input manager performance since the manager
 // needs to send and receive a group of messages once per frame, and the send() function is expensive.
-class SendBuffer
-{
-   std::vector<char> mBuffer;
-   unsigned int mValidBytes;
-public:
-   SendBuffer()
-   {
-      mValidBytes = 0;
-      this->resizeBuffer(512);  // default is just a guess
-   }
-
-   void store(const char* buf, unsigned int bytes_to_send_param)
-   {
-      if ( mValidBytes + bytes_to_send_param > mBuffer.size() )
-      {
-         this->resizeBuffer(mValidBytes + bytes_to_send_param);
-      }
-
-      char* array = &(mBuffer[0]);
-      for ( unsigned int i = 0; i < bytes_to_send_param; i++ )
-      {
-         array[mValidBytes + i] = buf[i];
-      }
-
-      mValidBytes += bytes_to_send_param;
-
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HEX_LVL)
-         << "SendBuffer successfully stored " <<  bytes_to_send_param
-         << " bytes.  Total bytes: " << mValidBytes << std::endl
-         << vprDEBUG_FLUSH;
-
-   }
-
-   void resizeBuffer(unsigned int new_size)
-   {
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HEX_LVL)
-         << "SendBuffer: Resizing mBuffer to: " <<  new_size  << std::endl
-         << vprDEBUG_FLUSH;
-      mBuffer.resize(new_size);
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HEX_LVL)
-         << "SendBuffer: Successful resize: " <<  new_size  << std::endl
-         << vprDEBUG_FLUSH;
-   }
-
-   bool sendAllAndClear(vpr::SocketStream& sock_stream)
-   {
-      sendAtOnce(sock_stream, &(mBuffer[0]), mValidBytes);  // transmit data
-
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HEX_LVL)
-         << "SendBuffer sent " <<  mValidBytes  << " bytes. " << std::endl
-         << vprDEBUG_FLUSH;
-
-      this->clearBuffer();
-      return true;
-   }
-
-   void clearBuffer()
-   {
-      mValidBytes = 0;  // buffer is empty
-   }
-};
 
 // Given a hostname, use gethostbyname to get Ip address
 inline std::string getIpFromHostname(const std::string& hostname)
@@ -164,7 +112,7 @@ inline std::string getIpFromHostname(const std::string& hostname)
    delete[] name;
    return return_ip;                                       // return only the ip address
 }
-
+/*
 // Endian-safe network to host float
 inline float vj_ntohf(float f)
 {
@@ -252,7 +200,7 @@ inline void bytes4ToFloat(float& dst, const char* in_char)
    f[2] = in_char[1];
    f[1] = in_char[2];
    f[0] = in_char[3];
-}
+}		*/
 
 template <class T> class IdGenerator
 {
@@ -277,17 +225,15 @@ public:
       {
          T return_value = mReleasedIds.back();   // get a previously released id
          mReleasedIds.pop_back();             // remote it from list
-         // std::cout << "GENERATE ID: " << return_value << std::endl;
          return return_value;                            // and return it
       }
-      else if ( mLargestActiveId + 1 < mMAXID )
+      else
+      if ( mLargestActiveId + 1 < mMAXID )
       {
-         // std::cout << "GENERATE ID: " << mLargestActiveId + 1 << std::endl;
          return ++mLargestActiveId;      // use the next free id
       }
       else
       {
-         // std::cout << "GENERATE ID: None available, returned 0 " << mLargestActiveId + 1 << std::endl;
          return 0;
       }
    }

@@ -38,6 +38,8 @@
 #include <vector>
 #include <jccl/Config/ConfigChunkPtr.h>
 #include <gadget/Type/KeyboardInterface.h>
+#include <vpr/IO/ObjectReader.h>
+#include <vpr/IO/ObjectWriter.h>
 
 
 namespace gadget
@@ -91,6 +93,14 @@ public:
    //: Configure the simulated input device
    //! POST: Keyboard proxy is configured <br>
    virtual bool config(jccl::ConfigChunkPtr chunk);
+   virtual std::string getBaseType()
+   {
+       return std::string("SimInput");
+   }
+   virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
+   {;}
+   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
+   {;}
 
 protected:
    //: Check the given keypair

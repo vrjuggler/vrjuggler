@@ -78,6 +78,35 @@ void ConfigManager::addPendingAdds (ConfigChunkDB* db)
    {
       pending.mChunk = (*i);
       mPendingConfig.push_back(pending);
+		if ((*i)->getDescToken() == std::string("cluster_machine"))
+		{
+			// Get Local Host Name
+			vpr::InetAddr local_addr;
+			vpr::InetAddr::getLocalHost(local_addr);
+			std::string host_name = local_addr.getHostname();
+         if (host_name.find('.') != std::string::npos)
+			{
+				host_name = host_name.substr(0, host_name.find('.'));
+			}
+			if (host_name.find(':') != std::string::npos)
+			{
+				host_name = host_name.substr(0, host_name.find('.'));
+			}                    
+         if ((*i)->getProperty<std::string>("host_name") == host_name)
+			{
+				// NOTE: Add all machine dependent ConfigChunkPtr's here
+				vprASSERT((*i)->getNum("display_system") == 1 && "A Cluster System Chunk must have exactly 1 display_system chunk");
+				std::cout << " Added system display chunk for this machine: " << (*i)->getProperty<std::string>("host_name") << std::endl;
+				//vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_CRITICAL_LVL)
+				//	<< clrOutNORM(/*clrCYAN*/clrBLUE, "[RemoteInputManager]")
+				//   << clrOutNORM(clrBLUE/*MAGENTA*/, " Added system display chunk for this machine" ) << std::endl
+				//	<< vprDEBUG_FLUSH;
+				PendingChunk pending;
+				pending.mType = PendingChunk::ADD;
+				pending.mChunk = (*i)->getProperty<jccl::ConfigChunkPtr>("display_system");
+				mPendingConfig.push_back(pending);
+			}
+		} // End Add Specific Cluster Info
    }
 
    unlockPending();

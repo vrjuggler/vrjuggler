@@ -147,12 +147,11 @@ void SimPosition::updateData()
    // Debug output
    //vjCoord pos_data(mPos);
    //vprDEBUG(vprDBG_ALL,1) << "simPos: pos:" << pos_data.pos << "  or:" << pos_data.orient << endl << vprDEBUG_FLUSH;
-
    mPos.setTime();   // Set the time
    mPosSamples.lock();
    mPosSamples.addSample(std::vector< gadget::PositionData>(1, mPos) );
    mPosSamples.unlock();
-
+   
    mPosSamples.swapBuffers(); // Swap the buffers
 }
 

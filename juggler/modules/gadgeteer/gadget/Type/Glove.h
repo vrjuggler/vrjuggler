@@ -152,6 +152,12 @@ public:  // ---- GLOVE INTERFACE ---- //
 
    /** Returns a copy of the glove data struct. */
    GloveData getGloveData(int devNum);
+	
+	virtual std::string getBaseType()
+	{
+		return std::string("Glove");
+	}
+
 
 protected:
    // NOTE: make sure you use the "vjInput::progress" member in the [3] slot
