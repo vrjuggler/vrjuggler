@@ -37,10 +37,10 @@
 //    software interface to Fakespace Pinchglove hardware
 //
 // Author:
-//	Kevin Meinert
+//  Kevin Meinert
 //
 // NOTES:
-//      The long function names greatly decrease the 
+//      The long function names greatly decrease the
 //       ambiguity of what the functions do ... sorry. :)
 //
 // Date: 1-23-99
@@ -57,47 +57,48 @@
 class PinchGloveStandalone
 {
 public:
-    // Default constructor.
-    PinchGloveStandalone();
-    ~PinchGloveStandalone();
-    //: Connect to the pinch glove hardware
-    bool    connectToHardware( const std::string& ttyPort, int mBaudRate );
-    
-    //: call updateStringFromHardware to get most 
-    //:  current pinch data. 
-    void    updateStringFromHardware();
-    
-    //: get the last sampled string
-    //  NOTE: call updateStringFromHardware to get most current pinch data.
-    void    getSampledString( std::string& gestureString );
-    
-    //: Use one of these indices to index the string 
-    //  returned by "GetSampledString()"
-    enum finger 
-    {
-	LTHUMB = 0, LINDEX = 1, LMIDDLE = 2, LRING = 3, LPINKY = 4, 
-	RTHUMB = 6, RINDEX = 7, RMIDDLE = 8, RRING = 9, RPINKY = 10
-    };
-    
+   // Default constructor.
+   PinchGloveStandalone();
+   ~PinchGloveStandalone();
+
+   //: Connect to the pinch glove hardware
+   bool connectToHardware( const std::string& ttyPort, int mBaudRate );
+
+   //: call updateStringFromHardware to get most
+   //:  current pinch data.
+   void updateStringFromHardware();
+
+   //: get the last sampled string
+   //  NOTE: call updateStringFromHardware to get most current pinch data.
+   void getSampledString( std::string& gestureString );
+
+   //: Use one of these indices to index the string
+   //  returned by "GetSampledString()"
+   enum finger
+   {
+      LTHUMB = 0, LINDEX = 1, LMIDDLE = 2, LRING = 3, LPINKY = 4,
+      RTHUMB = 6, RINDEX = 7, RMIDDLE = 8, RRING = 9, RPINKY = 10
+   };
+
 protected:
-    std::string 		mGestureString;
-    std::string 		mPreviousGestureString;
-    vpr::SerialPort     *port;
+   std::string         mGestureString;
+   std::string         mPreviousGestureString;
+   vpr::SerialPort     *port;
 
-    // equal to "00000.00000"
-    static const std::string 	mOpenHandString;
+   // equal to "00000.00000"
+   static const std::string    mOpenHandString;
 
-    /* functions provided by fakespace */
-    //int	    mConnectToHardware( const unsigned char* const ttyPort = "/dev/ttyd3" );
-    int	    mConnectToHardware( const std::string& ttyPort, int baud );
-    int	    mSendCommandToHardware( const char* const command, unsigned char *reply );
-    
-    int	    mReadRecordsFromHardware( const int& rec_max_len, unsigned char *records );
-    void    mGetStringFromHardware( char string[12] );
-    
+   /* functions provided by fakespace */
+   //int       mConnectToHardware( const unsigned char* const ttyPort = "/dev/ttyd3" );
+   int     mConnectToHardware( const std::string& ttyPort, int baud );
+   int     mSendCommandToHardware( const char* const command, unsigned char *reply );
+
+   int     mReadRecordsFromHardware( const int& rec_max_len, unsigned char *records );
+   void    mGetStringFromHardware( char string[12] );
+
 private:
-    char                        mGestureStringTemp[12];
-    int first;
+   char mGestureStringTemp[12];
+   int  first;
 };
 
 #endif
