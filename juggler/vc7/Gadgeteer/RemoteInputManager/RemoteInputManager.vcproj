@@ -36,13 +36,13 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="gadget_d.lib jccl_d.lib vpr_d.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/RemoteInputManager_d.dll"
+				OutputFile="$(OutDir)/RIMPlugin_d.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;..\DebugDLL;..\..\JCCL\DebugDLL;..\..\VPR\DebugDLL"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/RemoteInputManager_d.pdb"
+				ProgramDatabaseFile="$(OutDir)/RIMPlugin_d.pdb"
 				SubSystem="2"
-				ImportLibrary="$(OutDir)/RemoteInputManager_d.lib"
+				ImportLibrary="$(OutDir)/RIMPlugin_d.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -88,15 +88,15 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
-				OutputFile="$(OutDir)/RemoteInputManager.dll"
+				OutputFile="$(OutDir)/RIMPlugin.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;..\ReleaseDLL;..\..\JCCL\ReleaseDLL;..\..\VPR\ReleaseDLL"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/RemoteInputManager.pdb"
+				ProgramDatabaseFile="$(OutDir)/RIMPlugin.pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(OutDir)/RemoteInputManager.lib"
+				ImportLibrary="$(OutDir)/RIMPlugin.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -119,26 +119,14 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\plugins\RemoteInputManager\DeviceServer.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\modules\gadgeteer\plugins\RemoteInputManager\RemoteInputManager.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\modules\gadgeteer\plugins\RemoteInputManager\VirtualDevice.cpp">
+				RelativePath="..\..\..\modules\gadgeteer\plugins\RIMPlugin\RIMPlugin.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc">
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\plugins\RemoteInputManager\DeviceServer.h">
-			</File>
-			<File
-				RelativePath="..\..\..\modules\gadgeteer\plugins\RemoteInputManager\RemoteInputManager.h">
-			</File>
-			<File
-				RelativePath="..\..\..\modules\gadgeteer\plugins\RemoteInputManager\VirtualDevice.h">
+				RelativePath="..\..\..\modules\gadgeteer\plugins\RIMPlugin\RIMPlugin.h">
 			</File>
 		</Filter>
 		<Filter
