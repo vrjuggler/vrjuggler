@@ -154,7 +154,9 @@ namespace cluster
       cluster::ClusterManager* mgr;
    };
 
-   ClusterManager::ClusterManager() : mClusterActive( false ), mClusterReady( false )
+   ClusterManager::ClusterManager()
+      : mClusterActive( false )
+      , mClusterReady( false )
    {
       mClusterNetwork = new ClusterNetwork();
       jccl::ConfigManager::instance()->addConfigElementHandler( mClusterNetwork );
@@ -198,13 +200,15 @@ namespace cluster
    bool ClusterManager::pluginsReady()
    {
       // Plugins are already locked since we only call this method from
-      // isClusterReady which is only called by StartBarrierPlugin::postPostFrame
-      // which has already locked the list of plugins.
+      // isClusterReady which is only called by
+      // StartBarrierPlugin::postPostFrame which has already locked the list
+      // of plugins.
 
       //vpr::Guard<vpr::Mutex> guard(mPluginsLock);
 
       for ( std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
-            i != mPlugins.end() ; i++ )
+            i != mPlugins.end();
+            ++i )
       {
          if ( !(*i)->isPluginReady() )
          {
@@ -220,7 +224,8 @@ namespace cluster
       vpr::Guard<vpr::Mutex> guard( mPluginsLock );
 
       for ( std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
-            i != mPlugins.end() ; i++ )
+            i != mPlugins.end();
+            ++i )
       {
          (*i)->recoverFromLostNode( lost_node );
       }
@@ -235,11 +240,12 @@ namespace cluster
       if ( !doesPluginExist(new_plugin) )
       {
          mPlugins.push_back( new_plugin );
-         std::pair<vpr::GUID, ClusterPlugin*> p = std::make_pair( new_plugin->getHandlerGUID(), new_plugin );
+         std::pair<vpr::GUID, ClusterPlugin*> p =
+            std::make_pair( new_plugin->getHandlerGUID(), new_plugin );
          mPluginMap.insert( p );
 
-         // We should do this here, but since we do not add the manager until its configAdd
-         // currently you can see the problem
+         // We should do this here, but since we do not add the manager until
+         // its configAdd currently you can see the problem
          jccl::ConfigManager::instance()->addConfigElementHandler( new_plugin );
          mClusterNetwork->addHandler( new_plugin );
          //We can still unregister it when removed below though
@@ -252,7 +258,8 @@ namespace cluster
 
    ClusterPlugin* ClusterManager::getPluginByGUID( const vpr::GUID& plugin_guid )
    {
-      std::map<vpr::GUID, ClusterPlugin*>::const_iterator i = mPluginMap.find( plugin_guid );
+      std::map<vpr::GUID, ClusterPlugin*>::const_iterator i =
+         mPluginMap.find( plugin_guid );
       if( i != mPluginMap.end() )
       {
          return ( (*i).second );
@@ -270,7 +277,8 @@ namespace cluster
       mPluginMap.erase( old_plugin->getHandlerGUID() );
 
       for ( std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
-            i != mPlugins.end() ; i++ )
+            i != mPlugins.end();
+            ++i )
       {
          if ( (*i) == old_plugin )
          {
@@ -278,7 +286,7 @@ namespace cluster
                << clrOutBOLD( clrCYAN, "[ClusterManager] " )
                << "Removing Plugin: " << old_plugin->getPluginName()
                << std::endl << vprDEBUG_FLUSH;
-               
+
             mPlugins.erase(i);
             jccl::ConfigManager::instance()->removeConfigElementHandler(*i);
             return;
@@ -291,10 +299,12 @@ namespace cluster
     */
    bool ClusterManager::doesPluginExist( ClusterPlugin* old_manager )
    {
-      vprASSERT( mPluginsLock.test() == 1 && "mManagers Lock must be aquired before calling ClusterManager::doesManagerExist()" );
+      vprASSERT( mPluginsLock.test() == 1 &&
+                 "mManagers Lock must be aquired before calling ClusterManager::doesManagerExist()" );
 
       for ( std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
-            i != mPlugins.end() ; i++ )
+            i != mPlugins.end();
+            ++i )
       {
          if ( (*i) == old_manager )
          {
@@ -315,7 +325,8 @@ namespace cluster
          << " sendRequests" << std::endl << vprDEBUG_FLUSH;
 
       for ( std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
-            i != mPlugins.end() ; i++ )
+            i != mPlugins.end();
+            ++i )
       {
          (*i)->sendRequests();
          updateNeeded = true;
@@ -337,7 +348,8 @@ namespace cluster
          << " preDraw" << std::endl << vprDEBUG_FLUSH;
 
       for ( std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
-            i != mPlugins.end() ; i++ )
+            i != mPlugins.end();
+            ++i )
       {
          (*i)->preDraw();
          updateNeeded = true;
@@ -364,7 +376,8 @@ namespace cluster
          << " postPostFrame" << std::endl << vprDEBUG_FLUSH;
 
       for ( std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
-            i != mPlugins.end() ; i++ )
+            i != mPlugins.end();
+            ++i )
       {
          (*i)->postPostFrame();
          updateNeeded = true;
@@ -374,13 +387,14 @@ namespace cluster
          sendEndBlocksAndSignalUpdate(3);
       }
    }
-   
+
    void ClusterManager::createBarrier()
    {
       vpr::Guard<vpr::Mutex> guard( mPluginsLock );
-      
+
       for ( std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
-            i != mPlugins.end() ; i++ )
+            i != mPlugins.end();
+            ++i )
       {
          //if ((*i)->isActive())
          //{  // As soon as we find a plug-in that creates
@@ -397,19 +411,23 @@ namespace cluster
    void ClusterManager::sendEndBlocksAndSignalUpdate( const int temp )
    {
       // If the network is not fully connected, then don't try to sync.
-      // Trying to sync a network that is not fully connected can lead to deadlock.
+      // Trying to sync a network that is not fully connected can lead to
+      // deadlock.
       if ( mClusterNetwork->getNumPendingNodes() > 0 )
       {
          return;
       }
 
-      std::vector<gadget::Node*>::iterator begin_cluster_node = mClusterNetwork->getNodesBegin();
-      std::vector<gadget::Node*>::iterator end_cluster_node = mClusterNetwork->getNodesEnd();
+      std::vector<gadget::Node*>::iterator begin_cluster_node =
+         mClusterNetwork->getNodesBegin();
+      std::vector<gadget::Node*>::iterator end_cluster_node =
+         mClusterNetwork->getNodesEnd();
 
       cluster::EndBlock* temp_end_block = new EndBlock( temp );
 
       for ( std::vector<gadget::Node*>::iterator i=begin_cluster_node ;
-            i!=end_cluster_node ; i++ )
+            i!=end_cluster_node;
+            ++i )
       {
          if ( (*i)->isConnected() )
          {
@@ -424,14 +442,16 @@ namespace cluster
             catch(cluster::ClusterException cluster_exception)
             {
                vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
-                  << clrSetBOLD( clrRED ) << cluster_exception.getMessage() 
+                  << clrSetBOLD( clrRED ) << cluster_exception.getMessage()
                   << clrRESET << std::endl << vprDEBUG_FLUSH;
-               
+
                (*i)->shutdown();
             }
          }
       }
-      for ( std::vector<gadget::Node*>::iterator i = begin_cluster_node ; i!=end_cluster_node ; i++ )
+      for ( std::vector<gadget::Node*>::iterator i = begin_cluster_node;
+            i != end_cluster_node;
+            ++i )
       {
          if ( (*i)->isConnected() )
          {
@@ -445,17 +465,21 @@ namespace cluster
    bool ClusterManager::recognizeRemoteDeviceConfig( jccl::ConfigElementPtr element )
    {
       std::string tp("input_parent");
-      if ( element->getConfigDefinition()->isParent("input_device") && element->getNum("device_host") > 0 )
+      if ( element->getConfigDefinition()->isParent("input_device") &&
+           element->getNum("device_host") > 0 )
       {
-         std::string device_host = element->getProperty<std::string>( "device_host" );
+         std::string device_host =
+            element->getProperty<std::string>( "device_host" );
          //std::cout << "Checking: " << element->getName() << std::endl;
          if ( !device_host.empty() )
          {
             // THIS IS A HACK: find a better way to do this
-            jccl::ConfigElementPtr device_host_ptr = getConfigElementPointer( device_host );
+            jccl::ConfigElementPtr device_host_ptr =
+               getConfigElementPointer( device_host );
             if ( device_host_ptr.get() != NULL )
             {
-               std::string host_name = device_host_ptr->getProperty<std::string>( "host_name" );
+               std::string host_name =
+                  device_host_ptr->getProperty<std::string>( "host_name" );
                if ( !cluster::ClusterNetwork::isLocalHost( host_name ) )
                {
                   return true;
@@ -494,23 +518,26 @@ namespace cluster
 
          // Get a list of cluster nodes to use for this cluster.
          int num_nodes = element->getNum( std::string( "cluster_node" ) );
-         
+
          vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_STATUS_LVL )
             << clrOutBOLD( clrCYAN, "[ClusterManager] " )
             << "configAdd() Number of nodes: " << num_nodes
             << std::endl << vprDEBUG_FLUSH;
-            
-         for ( int i = 0 ; i < num_nodes ; i++ )
+
+         for ( int i = 0 ; i < num_nodes ; ++i )
          {
-            std::string new_node = element->getProperty<std::string>( "cluster_node" , i );
+            std::string new_node =
+               element->getProperty<std::string>( "cluster_node" , i );
             vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_STATUS_LVL )
                << clrOutBOLD( clrCYAN, "[ClusterManager] " )
                << "configAdd() New Node Name: " << new_node
                << std::endl << vprDEBUG_FLUSH;
-               
-            jccl::ConfigElementPtr new_node_element = getConfigElementPointer( new_node );
-            std::string new_node_hostname = new_node_element->getProperty<std::string>( "host_name" );
-            
+
+            jccl::ConfigElementPtr new_node_element =
+               getConfigElementPointer( new_node );
+            std::string new_node_hostname =
+               new_node_element->getProperty<std::string>( "host_name" );
+
             vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_STATUS_LVL )
                << clrOutBOLD( clrCYAN, "[ClusterManager] " )
                << "configAdd() New Node Hostname: " << new_node_hostname
@@ -555,7 +582,7 @@ namespace cluster
             vprDEBUG_NEXT( gadgetDBG_RIM, vprDBG_CRITICAL_LVL )
                << "Ignoring this element and moving on." << std::endl
                << vprDEBUG_FLUSH;
-               
+
             ret_val = false;
          }
          // We got the right version of the config element and can proceed.
@@ -582,7 +609,7 @@ namespace cluster
                      << "exception caught while converting"
                      << std::endl << vprDEBUG_FLUSH;
                   vprDEBUG_NEXT( vprDBG_ERROR, vprDBG_CRITICAL_LVL )
-                     << "'" << temp_str << "'" 
+                     << "'" << temp_str << "'"
                      << std::endl << vprDEBUG_FLUSH;
                   vprDEBUG_NEXT( vprDBG_ERROR, vprDBG_CRITICAL_LVL )
                      << "to a Boost.Filesystem path."
@@ -710,16 +737,16 @@ namespace cluster
             vpr::DebugOutputGuard dbg_output( gadgetDBG_RIM, vprDBG_CONFIG_LVL,
                                     std::string( "New Cluster Manager state:\n" ),
                                     std::string( "-- end state -- \n" ) );
-            vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL ) << (*this) << vprDEBUG_FLUSH;
+            vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
+               << (*this) << std::endl << vprDEBUG_FLUSH;
          }
       }
-      
+
       vpr::Guard<vpr::Mutex> guard( mClusterActiveLock );
       mClusterActive = true;
-         
+
       return ret_val;         // Return the success flag if we added at all
     }
-
 
     /** Remove the pending element from the current configuration.
      *  @pre configCanHandle(element) == true.
@@ -738,8 +765,9 @@ namespace cluster
       else
       {
          vprDEBUG( gadgetDBG_RIM, vprDBG_CONFIG_LVL )
-            << "[ClusterManager::configRemove] ERROR, Something is seriously wrong, we should never get here."
-            << std::endl << vprDEBUG_FLUSH;
+            << "[ClusterManager::configRemove()] ERROR: Something is "
+            << "seriously wrong, we should never get here." << std::endl
+            << vprDEBUG_FLUSH;
          return( false );
       }
    }
@@ -800,9 +828,10 @@ namespace cluster
     * Dump the current Status of the InputManager, listing all
     * the devices, proxies and internal settings
     */
-   GADGET_IMPLEMENT( std::ostream& ) operator<<( std::ostream& out, ClusterManager& mgr )
+   std::ostream& operator<<( std::ostream& out, ClusterManager& mgr )
    {
-      out << std::endl << "========== ClusterManager Status ==========" << std::endl;
+      out << std::endl << "========== ClusterManager Status =========="
+          << std::endl;
       out << "Plugins:" << std::endl;
 
       // Dump Plugins
