@@ -498,7 +498,7 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 # For use in linking applications.
 EXTRA_LINK_FLAGS=''
 
-if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" = "xno" ; then
+if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
     CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
     CXXFLAGS="$CXXFLAGS -woff 3322 -w2"
     EXTRA_LINK_FLAGS="-all"
@@ -636,16 +636,6 @@ if test "x$OS_TYPE" = "xWin32" ; then
     APP_EXTRA_LIBS_BASIC=`unix2dos "$APP_EXTRA_LIBS_BASIC"`
 else
     SAFE_VPRROOT_ABS="$VPRROOT_ABS"
-fi
-
-# Set up some sed expressions that will help separate the share directory from
-# the full installation prefix.
-_prefix_var_exp='s|^${prefix}/||'
-
-if test "x$prefix" = "xNONE" ; then
-    _prefix_exp="s|^$ac_default_prefix/||"
-else
-    _prefix_exp="s|^$prefix/||"
 fi
 
 DPP_SUBST
