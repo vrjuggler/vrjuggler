@@ -7,10 +7,11 @@ GMTL
    Module: GGT/macros         [macros.GGT];
    Module: GGT/modules/GMTL   [external/GMTL];
    Tag: HEAD;
-   Date: 07/01/2003 03:30:56 UTC;
+   Date: 02/01/2004 05:00:00 UTC;
    Path: .;
 };
 
+/*
 Boost
 {
    CVSROOT: :pserver:anonymous@cvs.boost.sourceforge.net:/cvsroot/boost;
@@ -18,6 +19,7 @@ Boost
    Tag: Version_1_30_0;
    Path: external;
 };
+*/
 
 Doozer      // Get Doozer for makefiles
 {
