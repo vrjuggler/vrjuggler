@@ -251,6 +251,8 @@ pre-install-headers:
 
 post-install-headers:
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(VPRROOT_ABS)/include/vpr.h $(includedir)/vpr.h
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(VPRROOT_ABS)/include/vprConfig.h $(includedir)/vprConfig.h
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(VPRROOT_ABS)/include/vprTypes.h $(includedir)/vprTypes.h
