@@ -466,6 +466,11 @@ int ConfigManager::attemptReconfiguration()
       }
 
       unlockPending();
+
+      vprDEBUG_END(vprDBG_ALL,vprDBG_STATE_LVL)
+         << "ConfigManager::attemptReconfiguration: Done examining pending list.\n"
+         << vprDEBUG_FLUSH;
+
    }
 
    if ( chunks_processed > 0 )
