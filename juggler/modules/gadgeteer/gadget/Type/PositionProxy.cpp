@@ -13,21 +13,26 @@ void vjPosProxy::SetTransform( float xoff, float yoff, float zoff,    // Transla
                    float xrot, float yrot, float zrot)   // Rotate
 {
    etrans = true;
+   m_matrixTransform.makeIdent();
+   vjMatrix trans_mat; trans_mat.makeIdent();
+   vjMatrix rot_mat; rot_mat.makeIdent();
+
    if((xoff != 0.0f) || (yoff != 0.0f) || (zoff != 0.0f))
-      m_matrixTransform.makeTrans(xoff, yoff, zoff);
+      trans_mat.makeTrans(xoff, yoff, zoff);
    if((xrot != 0.0f) || (yrot != 0.0f) || (xrot != 0.0f))
-      m_matrixTransform.postXYZEuler(m_matrixTransform, xrot, yrot, zrot);
+      rot_mat.makeXYZEuler(xrot, yrot, zrot);
+
+   m_matrixTransform.mult(trans_mat, rot_mat);
 }
 
 //: Set the vjPosProxy to now point to another device and subDevicenumber
-void vjPosProxy::Set(vjPosition* posPtr, int unitNum, int useTransform)
+void vjPosProxy::Set(vjPosition* posPtr, int unitNum)
 {
    vjASSERT( posPtr->FDeviceSupport(DEVICE_POSITION) );
    vjDEBUG(0) << "posPtr: " << posPtr << endl
               << "unit  : " << unitNum << endl << endl << vjDEBUG_FLUSH;
    m_posPtr = posPtr;
    m_unitNum = unitNum;
-   etrans = useTransform;
 }
 
 
@@ -41,9 +46,9 @@ bool vjPosProxy::config(vjConfigChunk* chunk)
    std::string proxy_name = (char*)chunk->getProperty("name");
    std::string dev_name = (char*)chunk->getProperty("device");
 
-   if (1 == (int)chunk->getProperty("etrans") )
+   if (true == (bool)chunk->getProperty("etrans") )
    {
-      vjDEBUG(2) << "Position Transform enabled..." << endl << vjDEBUG_FLUSH;
+      vjDEBUG(1) << "Position Transform enabled..." << endl << vjDEBUG_FLUSH;
       SetTransform
       ( chunk->getProperty("translate",0) , // xtrans
         chunk->getProperty("translate",1) , // ytrans
@@ -51,7 +56,7 @@ bool vjPosProxy::config(vjConfigChunk* chunk)
         chunk->getProperty("rotate",0) , // xrot
         chunk->getProperty("rotate",1) , // yrot
         chunk->getProperty("rotate",2) );// zrot
-      vjDEBUG(2) << "Transform Matrix: " << endl << GetTransform() << endl << vjDEBUG_FLUSH;
+      vjDEBUG(1) << "Transform Matrix: " << endl << GetTransform() << endl << vjDEBUG_FLUSH;
    }
 
    int proxy_num = vjKernel::instance()->getInputManager()->AddPosProxy(dev_name,unitNum,proxy_name,this);
