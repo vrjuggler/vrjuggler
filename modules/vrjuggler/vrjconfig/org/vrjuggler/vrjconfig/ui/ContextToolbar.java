@@ -106,7 +106,7 @@ public class ContextToolbar
       this.context = ctx;
 
       boolean nonempty_context = true;
-      if (context.getResources().size() == 0)
+      if(getBroker().getResourceNames().size() == 0)
       {
          nonempty_context = false;
       }
@@ -557,6 +557,9 @@ public class ContextToolbar
          if (context.getResources().size() == 0)
          {
             saveBtn.setEnabled(false);
+         }
+         if (getBroker().getResourceNames().size() == 0)
+         {
             expandBtn.setEnabled(false);
          }
       }
