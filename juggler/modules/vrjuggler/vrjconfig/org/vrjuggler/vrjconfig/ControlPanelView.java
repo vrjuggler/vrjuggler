@@ -26,6 +26,7 @@
 package org.vrjuggler.vrjconfig;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Frame;
 import java.awt.event.*;
 import java.io.*;
@@ -54,52 +55,110 @@ public class ControlPanelView
          e.printStackTrace();
       }
 
-      // Init the watermark in the control panel
-      ClassLoader loader = BeanJarClassLoader.instance();
-      control.setWatermark(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/watermark_logo.png")));
-      showMainPanel();
-
-      control.addActionListener(new ActionListener()
+      // Add forward and back buttons to the toolbar
+//      toolbar.addSeparator();
+      toolbar.addToToolbar(Box.createHorizontalStrut(8));
+      backBtn.setText("Back");
+      backBtn.setEnabled(false);
+      backBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
          {
-            Object value = control.getModel().getElementAt(evt.getID());
-            String item = (String)value;
-            if (item.equals("D e v i c e s"))
-            {
-               showDevicesPanel();
-            }
-            else if (item.equals("D i s p l a y"))
-            {
-               ControlPanelView.this.remove(control);
-               ControlPanelView.this.add(new DisplayEditor());
-            }
-            else if (item.equals("C l u s t e r"))
-            {
-               JDialog dlg = new JDialog(
-                     (Frame)SwingUtilities.getAncestorOfClass(Frame.class, ControlPanelView.this),
-                     "Sim Device Editor",
-                     true);
-               dlg.getContentPane().setLayout(new BorderLayout());
-               SimAnalogDeviceEditor editor = new SimAnalogDeviceEditor();
-
-               ConfigManagerService mgr = getConfigManager();
-               ConfigChunk device = mgr.getActiveConfig().get("Analog Simulator");
-               editor.setDevice(device);
-               dlg.getContentPane().add(editor, BorderLayout.CENTER);
-               dlg.pack();
-               dlg.setVisible(true);
-            }
-//            else if (item.equals("Simulator"))
-//            {
-//               showSimEditor();
-//            }
-            else
-            {
-               JOptionPane.showMessageDialog(ControlPanelView.this, "Selected "+String.valueOf(value));
-            }
+            backClicked();
          }
       });
+      forwardBtn.setText("Forward");
+      forwardBtn.setEnabled(false);
+      forwardBtn.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            forwClicked();
+         }
+      });
+      toolbar.addToToolbar(backBtn);
+      toolbar.addToToolbar(forwardBtn);
+
+//      // Init the watermark in the control panel
+//      ClassLoader loader = BeanJarClassLoader.instance();
+//      showMainPanel();
+//
+//      control.addActionListener(new ActionListener()
+//      {
+//         public void actionPerformed(ActionEvent evt)
+//         {
+//            Object value = control.getModel().getElementAt(evt.getID());
+//            String item = (String)value;
+//            if (item.equals("D e v i c e s"))
+//            {
+//               showDevicesPanel();
+//            }
+//            else if (item.equals("D i s p l a y"))
+//            {
+//               ControlPanelView.this.remove(control);
+//               ControlPanelView.this.add(new DisplayEditor());
+//            }
+//            else if (item.equals("A n a l o g"))
+//            {
+//               ClassLoader loader = BeanJarClassLoader.instance();
+//               showPanelWithChunks("SimAnalog",
+//                                   new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/analog_devices64.png")),
+//                                   "Choose an analog device");
+//            }
+//            else if (item.equals("D i g i t a l"))
+//            {
+//               ClassLoader loader = BeanJarClassLoader.instance();
+//               showPanelWithChunks("SimDigital",
+//                                   new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/digital_devices64.png")),
+//                                   "Choose a digital device");
+//            }
+//            else if (item.equals("P o s i t i o n a l"))
+//            {
+//               ClassLoader loader = BeanJarClassLoader.instance();
+//               showPanelWithChunks("SimPosition",
+//                                   new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/positional_devices64.png")),
+//                                   "Choose a positional device");
+//
+////               JDialog dlg = new JDialog(
+////                     (Frame)SwingUtilities.getAncestorOfClass(Frame.class, ControlPanelView.this),
+////                     "Simulator Positional Device Editor",
+////                     true);
+////               dlg.getContentPane().setLayout(new BorderLayout());
+////               SimPosDeviceEditor editor = new SimPosDeviceEditor();
+////
+////               ConfigManagerService mgr = getConfigManager();
+////               ConfigChunk device = mgr.getActiveConfig().get("SimHeadPos");
+////               editor.setDevice(device);
+////               dlg.getContentPane().add(editor, BorderLayout.CENTER);
+////               dlg.pack();
+////               dlg.setVisible(true);
+//            }
+//            else if (item.equals("C l u s t e r"))
+//            {
+//               JDialog dlg = new JDialog(
+//                     (Frame)SwingUtilities.getAncestorOfClass(Frame.class, ControlPanelView.this),
+//                     "Sim Device Editor",
+//                     true);
+//               dlg.getContentPane().setLayout(new BorderLayout());
+//               SimAnalogDeviceEditor editor = new SimAnalogDeviceEditor();
+//
+//               ConfigManagerService mgr = getConfigManager();
+//               ConfigChunk device = mgr.getActiveConfig().get("Analog Simulator");
+//               editor.setDevice(device);
+//               dlg.getContentPane().add(editor, BorderLayout.CENTER);
+//               dlg.pack();
+//               dlg.setVisible(true);
+//            }
+////            else if (item.equals("Simulator"))
+////            {
+////               showSimEditor();
+////            }
+//            else
+//            {
+//               JOptionPane.showMessageDialog(ControlPanelView.this, "Selected "+String.valueOf(value));
+//            }
+//         }
+//      });
    }
 
 //   protected void showSimEditor()
@@ -144,9 +203,10 @@ public class ControlPanelView
                ConfigChunkDB chunk_db = config.loadConfigChunks(in, mgr.getAllChunkDescs());
                mgr.add(chunk_db);
                mgr.setActiveConfig(chunk_db);
-               this.add(control, BorderLayout.CENTER);
-               this.updateUI();
-               control.invalidate();
+               showMainPanel();
+//               this.add(control, BorderLayout.CENTER);
+//               this.updateUI();
+//               control.invalidate();
             }
          }
          catch (IOException ioe)
@@ -169,8 +229,44 @@ public class ControlPanelView
       model.add("C l u s t e r",       new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/cluster64.png")));
       model.add("D e v i c e s",       new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/devices64.png")));
       model.add("A u d i o",           new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/audio64.png")));
-      control.setModel(model);
-      control.setTitle("Choose a category");
+      ControlPanel new_control = new ControlPanel();
+      new_control.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            ControlPanel control = (ControlPanel)evt.getSource();
+            Object value = control.getModel().getElementAt(evt.getID());
+            String item = (String)value;
+            if (item.equals("D e v i c e s"))
+            {
+               showDevicesPanel();
+            }
+            else if (item.equals("D i s p l a y"))
+            {
+               pushCurrentBack(new DisplayEditor());
+            }
+            else if (item.equals("C l u s t e r"))
+            {
+               JDialog dlg = new JDialog(
+                     (Frame)SwingUtilities.getAncestorOfClass(Frame.class, ControlPanelView.this),
+                     "Sim Device Editor",
+                     true);
+               dlg.getContentPane().setLayout(new BorderLayout());
+               SimAnalogDeviceEditor editor = new SimAnalogDeviceEditor();
+
+               ConfigManagerService mgr = getConfigManager();
+               ConfigChunk device = mgr.getActiveConfig().get("Analog Simulator");
+               editor.setDevice(device);
+               dlg.getContentPane().add(editor, BorderLayout.CENTER);
+               dlg.pack();
+               dlg.setVisible(true);
+            }
+         }
+      });
+      new_control.setModel(model);
+      new_control.setTitle("Choose a category");
+      new_control.setWatermark(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/watermark_logo.png")));
+      pushCurrentBack(new_control);
    }
 
    private void showDevicesPanel()
@@ -181,8 +277,145 @@ public class ControlPanelView
       model.add("D i g i t a l",          new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/digital_devices64.png")));
       model.add("P o s i t i o n a l",    new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/positional_devices64.png")));
       model.add("G l o v e",              new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/glove_devices64.png")));
-      control.setModel(model);
-      control.setTitle("Choose a device type");
+      ControlPanel new_control = new ControlPanel();
+      new_control.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            ControlPanel control = (ControlPanel)evt.getSource();
+            Object value = control.getModel().getElementAt(evt.getID());
+            String item = (String)value;
+            if (item.equals("A n a l o g"))
+            {
+               ClassLoader loader = BeanJarClassLoader.instance();
+               showPanelWithChunks("SimAnalog",
+                                   new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/analog_devices64.png")),
+                                   "Choose an analog device");
+            }
+            else if (item.equals("D i g i t a l"))
+            {
+               ClassLoader loader = BeanJarClassLoader.instance();
+               showPanelWithChunks("SimDigital",
+                                   new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/digital_devices64.png")),
+                                   "Choose a digital device");
+            }
+            else if (item.equals("P o s i t i o n a l"))
+            {
+               ClassLoader loader = BeanJarClassLoader.instance();
+               showPanelWithChunks("SimPosition",
+                                   new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/positional_devices64.png")),
+                                   "Choose a positional device");
+            }
+            else if (item.equals("G l o v e"))
+            {
+               ClassLoader loader = BeanJarClassLoader.instance();
+               showPanelWithChunks("SimGlove",
+                                   new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/glove_devices64.png")),
+                                   "Choose a glove device");
+            }
+         }
+      });
+      new_control.setModel(model);
+      new_control.setTitle("Choose a device type");
+      new_control.setWatermark(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/watermark_logo.png")));
+      pushCurrentBack(new_control);
+   }
+
+   /**
+    * Displays a panel containing all of the chunks that have the given token.
+    */
+   private void showPanelWithChunks(String token, Icon icon, String title)
+   {
+      ClassLoader loader = BeanJarClassLoader.instance();
+      DefaultControlPanelModel model = new DefaultControlPanelModel();
+      List devices = getConfigManager().getActiveConfig().getOfDescToken(token);
+      for (Iterator itr = devices.iterator(); itr.hasNext(); )
+      {
+         ConfigChunk chunk = (ConfigChunk)itr.next();
+         model.add(chunk.getName(), icon);
+      }
+      ControlPanel new_control = new ControlPanel();
+      new_control.setModel(model);
+      new_control.setTitle(title);
+      new_control.setWatermark(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/watermark_logo.png")));
+      pushCurrentBack(new_control);
+   }
+
+   /**
+    * Handles the case when the backward navigation button is clicked.
+    */
+   private void backClicked()
+   {
+      if (forwStack.empty())
+      {
+         forwardBtn.setEnabled(true);
+      }
+
+      // Change the current component to the one at the top of the back stack.
+      swapCurComponent(backStack, forwStack);
+
+      if (backStack.empty())
+      {
+         backBtn.setEnabled(false);
+      }
+   }
+
+   /**
+    * Handles the case when the forward navigation button is clicked.
+    */
+   private void forwClicked()
+   {
+      if (backStack.empty())
+      {
+         backBtn.setEnabled(true);
+      }
+
+      // Change the current component to the next panel in the forward stack.
+      swapCurComponent(forwStack, backStack);
+
+      if (forwStack.empty())
+      {
+         forwardBtn.setEnabled(false);
+      }
+   }
+
+   /**
+    * Moves the current component to the top of toStack and sets the current
+    * component to the top of fromStack.
+    */
+   private void swapCurComponent(Stack fromStack, Stack toStack)
+   {
+      toStack.push(currentView);
+
+      this.remove(currentView);
+      currentView = (Component)fromStack.pop();
+      this.add(currentView, BorderLayout.CENTER);
+      this.repaint();
+   }
+
+   /**
+    * Pushes the current component to the back stack and makes the given
+    * component the new current component.
+    */
+   private void pushCurrentBack(Component newComp)
+   {
+      if (backStack.empty())
+      {
+         backBtn.setEnabled(true);
+      }
+
+      backStack.push(currentView);
+
+      // Clear out the forward navigation stack because what we are now viewing
+      // is what will go into the forward stack if the back button is pressed.
+      forwStack.clear();
+      forwardBtn.setEnabled(false);
+
+      this.remove(currentView);
+      currentView = newComp;
+      this.add(currentView, BorderLayout.CENTER);
+      updateUI();
+      newComp.invalidate();
    }
 
    /**
@@ -192,7 +425,7 @@ public class ControlPanelView
       throws Exception
    {
       this.setLayout(baseLayout);
-      control.setModel(model);
+//      control.setModel(model);
       toolbar.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
@@ -215,11 +448,22 @@ public class ControlPanelView
    //--- JBuilder GUI variables ---//
    private BorderLayout baseLayout = new BorderLayout();
    private ConfigToolbar toolbar = new ConfigToolbar();
-   private ControlPanel control = new ControlPanel();
+//   private ControlPanel control = new ControlPanel();
    private JFileChooser fileChooser = new JFileChooser();
 
    /**
     * The data model for the control panel.
     */
-   private DefaultControlPanelModel model = new DefaultControlPanelModel();
+//   private DefaultControlPanelModel model = new DefaultControlPanelModel();
+
+   /**
+    * The currently viewed component.
+    */
+   private Component currentView = new ControlPanel();
+
+   private JButton backBtn = new JButton();
+   private JButton forwardBtn = new JButton();
+
+   private Stack backStack = new Stack();
+   private Stack forwStack = new Stack();
 }
