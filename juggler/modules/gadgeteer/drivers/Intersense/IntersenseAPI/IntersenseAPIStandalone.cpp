@@ -53,7 +53,7 @@ bool IntersenseAPIStandalone::open(const std::string& dsoLocation)
 int IntersenseAPIStandalone::convertPort(const std::string& port)
 {
    std::string result;
-   
+
    for(unsigned int i = 0 ; i < port.size() ; i++)
    {
       if(isdigit(port[i]))
@@ -88,7 +88,7 @@ bool IntersenseAPIStandalone::updateData()
 int IntersenseAPIStandalone::buttonState(const unsigned int i,
                                          const unsigned int f)
 {
-   if(f < MAX_NUM_BUTTONS && i < mNumStations)
+   if(f < ISD_MAX_BUTTONS && i < mNumStations)
    {
       return mData.Station[i].ButtonState[f];
    }
@@ -99,7 +99,7 @@ int IntersenseAPIStandalone::buttonState(const unsigned int i,
 int IntersenseAPIStandalone::analogData(const unsigned int i,
                                         const unsigned int j)
 {
-   if(j < MAX_ANALOG_CHANNELS && i < mNumStations)
+   if(j < ISD_MAX_CHANNELS && i < mNumStations)
    {
       return mData.Station[i].AnalogData[j];
    }

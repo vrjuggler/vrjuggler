@@ -149,19 +149,12 @@ public:
    }
 
    /**
-    * Returns whether the station should send button values or not.
+    * Identifies whether the given station has button and joystick inputs
+    * enabled.
     */
-   bool getButtons(const unsigned int currentStation) const
+   bool hasInputs(const unsigned int currentStation) const
    {
-      return mConfigData[currentStation].GetButtons;
-   }
-
-   /**
-    * Returns whether the station should send analog values or not.
-    */
-   bool getAnalogData(const unsigned int currentStation) const 
-   {
-      return mConfigData[currentStation].GetAnalogData;
+      return mConfigData[currentStation].GetInputs;
    }
 
    /////////////
@@ -230,20 +223,12 @@ public:
    }
 
    /**
-    * Returns whether the station should send button values or not.
+    * Sets whether the digital and joystick inputs on the given station
+    * should be used.
     */
-   void setButtons(const unsigned int currentStation, const bool getButtons)
+   void setInputs(const unsigned int currentStation, const bool hasInputs)
    {
-      mConfigData[currentStation].GetButtons = getButtons;
-   }
-
-   /**
-    * Returns whether the station should send analog values or not.
-    */
-   void setAnalogData(const unsigned int currentStation,
-                      const bool getAnalogData)
-   {
-      mConfigData[currentStation].GetAnalogData = getAnalogData;
+      mConfigData[currentStation].GetInputs = hasInputs;
    }
 
    //
