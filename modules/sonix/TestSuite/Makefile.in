@@ -1,12 +1,58 @@
+# ***************** <AJ heading BEGIN do not edit this line> *****************
+#
+# Audio Juggler
+#
+# Original Authors:
+#   Kevin Meinert
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# ****************** <AJ heading END do not edit this line> ******************
+
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+###############################################################################$
+# builder for test suite.  uses kevin's build system in @srcdir@/mk
+###############################################################################$
 
 # project name...
 PROJECT_NAME = runner
 
-default: $(PROJECT_NAME)
+default: echo_info $(PROJECT_NAME)
 
 srcdir		= @srcdir@
 topdir		= @topdir@
 #top_srcdir	= @top_srcdir@
+AJ_BASE_DIR	?= @APP_BASE_DIR@
+CPP_UNIT	= $(srcdir)/../../../external
 
 CXX		= @CXX@
 CFLAGS		= @CFLAGS@ $(OPTIMIZER) $(EXTRA_FLAGS)
@@ -19,12 +65,13 @@ DEPEND_EXTRAS	= @DEPEND_EXTRAS@ $(DEFS)
 EXTRA_FLAGS	= 
 INCLUDES	= @INCLUDES@ -I$(topdir) \
                  -I$(srcdir) -I$(srcdir)/TestCases			\
-                 -I$(srcdir)/CppUnit/framework -I$(srcdir)/CppUnit/textui
+                 -I$(CPP_UNIT) -I$(CPP_UNIT)/CppUnit/framework		\
+                 -I$(CPP_UNIT)/CppUnit/textui
 OPTIMIZER	= @DBG_FLAGS@ -D_DEBUG
 LD		= @LD@
 LDFLAGS		= @LDFLAGS@ -L/usr/lib$(LIBBITSUF)
 LIBBITSUF	= @LIBBITSUF@
-LIBS		= @LIBS@
+LIBS		= @LIBS@ -L$(AJ_BASE_DIR)/lib$(LIBBITSUF) -lAudioJuggler
 MAKEDEPEND	= @MAKEDEPEND@
 OBJEXT		= @OBJEXT@
 OBJ_NAME_FLAG	= @OBJ_NAME_FLAG@
@@ -33,7 +80,7 @@ OS_TYPE		= @OS_TYPE@
 USE_MAKEDEPEND	= @USE_MAKEDEPEND@
 
 LINK		= $(CXX) $(CPPFLAGS) $(CXXFLAGS) @EXTRA_LINK_FLAGS@	\
-                  $(EXTRA_FLAGS)
+                  $(EXTRA_FLAGS) 
 
 EXTRA_LIBS	= 
 
@@ -47,19 +94,24 @@ CXX_COMPILE	= $(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
 # SRC Files
 TEST_SRCS = 
 CPPUNIT_TEXTUI_SRCS = TestRunner.cpp TextTestResult.cpp
-CPPUNIT_SRCS = TestCase.cpp \
-               TestResult.cpp \
-               TestFailure.cpp \
-               TestSuite.cpp
-RUNNER_SRCS = main.cpp
-SRCS	:= $(TEST_SRCS) $(CPPUNIT_TEXTUI_SRCS) $(CPPUNIT_SRCS) $(RUNNER_SRCS)
+CPPUNIT_SRCS	= TestCase.cpp		\
+                  TestResult.cpp	\
+                  TestFailure.cpp	\
+                  TestSuite.cpp
+
+RUNNER_SRCS	= main.cpp
+SRCS		= $(TEST_SRCS)			\
+                  $(CPPUNIT_TEXTUI_SRCS)	\
+                  $(CPPUNIT_SRCS)		\
+                  $(RUNNER_SRCS)
 
 OBJDIR = .
 DEPDIR = 
 
 INCLUDE_PATHS = 
-PATH_TO_SRCS = ${srcdir} ${srcdir}/TestCases ${srcdir}/CppUnit/framework ${srcdir}/CppUnit/textui
-MK_DIR = ${srcdir}/mk
+PATH_TO_SRCS = $(srcdir) $(srcdir)/TestCases 				\
+               $(CPP_UNIT)/CppUnit/framework $(CPP_UNIT)/CppUnit/textui
+MK_DIR = $(srcdir)/mk
 
 include ${MK_DIR}/mk.objs
 
@@ -74,6 +126,12 @@ $(PROJECT_NAME): $(OBJS)
 	@echo "-------------------------------------------"
 	@echo "$(PROJECT_NAME) done"
 	@echo "-------------------------------------------"
+
+echo_info:
+	@echo ""
+	@echo "Building $(PROJECT_NAME)"
+	@echo "Using AJ_BASE_DIR: $(AJ_BASE_DIR)"
+	@echo ""
 
 # Remove the compiled stuff from the system
 clean:
