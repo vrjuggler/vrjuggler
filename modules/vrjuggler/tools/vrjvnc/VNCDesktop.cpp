@@ -252,15 +252,17 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
    // this is our intersection in desktop coordinates (polygon).
    // It will have to be scaled to get back into vnc coords.
    float t_isect;
-   gmtl::intersect(z_plane, mWandRay, t_isect);
+   bool ray_intersects(false);
+   ray_intersects = gmtl::intersect(z_plane, mWandRay, t_isect);
+
    mIsectPoint = (mWandRay.mOrigin + (mWandRay.mDir*t_isect));
    vprASSERT( gmtl::Math::isEqual(mIsectPoint[2], 0.0f, 0.01f) && "Point should be on z=0 plane");
 
    // Compute drawing objects
    mWandRay.setDir(mWandRay.getDir()*t_isect);     // Scale it back
 
-   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
-         << "VNC: Isect point: " << mIsectPoint << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "VNC: Isect point: " << mIsectPoint << std::endl << vprDEBUG_FLUSH;
+
    // Get button states
    bool select_button_state = mLeftButton->getData();
    bool things_grabbed = ((mSelectState > GrabBegin) && (mSelectState < GrabEnd));
@@ -302,7 +304,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
       updateDesktopParameters();
    }
    // --- CHECK SELECTIONS --- //
-   else if(!things_grabbed)    // If nothing grabbed then check for input
+   else if((!things_grabbed) && ray_intersects)    // If nothing grabbed then check for input
    {
       // Check for selecting the main desktop box
       if ( gmtl::isInVolume(mDesktopBox, mIsectPoint) )
@@ -578,7 +580,7 @@ void VNCDesktop::draw()
             gmtl::Vec3f ray_end = mIsectPoint;
 
             glPolygonMode(GL_FRONT, GL_LINE);
-            glLineWidth(2);
+            glLineWidth(1);
             glColor3f(1.0f, 0.0f, 0.0f);
 
             glBegin(GL_LINES);
