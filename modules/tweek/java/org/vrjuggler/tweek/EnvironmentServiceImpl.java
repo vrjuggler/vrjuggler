@@ -66,11 +66,13 @@ class EnvironmentServiceImpl
          mHaveTweekJni = false;
       }
 
-      if ( System.getProperty("mrj.version") != null )
+      String os_name = System.getProperty("os.name");
+
+      if ( os_name.toLowerCase().startsWith("mac os x") )
       {
          os = EnvironmentService.MacOS;
       }
-      else if ( System.getProperty("os.name").indexOf("Windows") != -1 )
+      else if ( os_name.indexOf("Windows") != -1 )
       {
          os = EnvironmentService.Windows;
       }
