@@ -90,29 +90,29 @@ public class NetworkTest
          {
             // First, we need a Java object that implements the Observer.  That
             // object must be registered with the Java CORBA service.
-            m_slider_observer = new SliderObserverImpl(m_data_slider,
-                                                       slider_subject);
-            corba_service.registerObject(m_slider_observer, "SliderObserver");
+            mSliderObserver = new SliderObserverImpl(mDataSlider,
+                                                     slider_subject);
+            corba_service.registerObject(mSliderObserver, "SliderObserver");
 
             // Now that the observer is registered, we can attach it to the
             // subject.  The subject needs to know who its observers are so
             // that it can notify them of updates.
-            slider_subject.attach(m_slider_observer._this());
+            slider_subject.attach(mSliderObserver._this());
 
             // Now we set the slider in our GUI to be whatever value the
             // remote subject is holding for us.
-            m_data_slider.setValue(slider_subject.getValue());
-            m_data_slider.addChangeListener(new SliderChangeListener(slider_subject));
+            mDataSlider.setValue(slider_subject.getValue());
+            mDataSlider.addChangeListener(new SliderChangeListener(slider_subject));
          }
 
          if ( whiteboard_subject != null )
          {
-            m_whiteboard_observer = new WhiteboardObserverImpl(m_whiteboard,
+            mWhiteboardObserver = new WhiteboardObserverImpl(mWhiteboard,
                                                                whiteboard_subject);
-            corba_service.registerObject(m_whiteboard_observer, "WhiteboardObserver");
-            whiteboard_subject.attach(m_whiteboard_observer._this());
-            m_whiteboard.setText(whiteboard_subject.getAllText());
-            m_whiteboard.getDocument().addDocumentListener(new DocumentChangeListener(whiteboard_subject));
+            corba_service.registerObject(mWhiteboardObserver, "WhiteboardObserver");
+            whiteboard_subject.attach(mWhiteboardObserver._this());
+            mWhiteboard.setText(whiteboard_subject.getAllText());
+            mWhiteboard.getDocument().addDocumentListener(new DocumentChangeListener(whiteboard_subject));
          }
       }
       // Handle a CORBA disconnect event from Tweek.
@@ -120,12 +120,12 @@ public class NetworkTest
       {
          if ( slider_subject != null )
          {
-            slider_subject.detach(m_slider_observer._this());
+            slider_subject.detach(mSliderObserver._this());
          }
 
          if ( whiteboard_subject != null )
          {
-            whiteboard_subject.detach(m_whiteboard_observer._this());
+            whiteboard_subject.detach(mWhiteboardObserver._this());
          }
       }
    }
@@ -134,42 +134,42 @@ public class NetworkTest
    {
       if ( e.getType() == TweekFrameEvent.FRAME_CLOSE )
       {
-         if ( m_slider_observer != null )
+         if ( mSliderObserver != null )
          {
-            m_slider_observer.detach();
-            m_slider_observer = null;
+            mSliderObserver.detach();
+            mSliderObserver = null;
          }
 
-         if ( m_whiteboard_observer != null )
+         if ( mWhiteboardObserver != null )
          {
-            m_whiteboard_observer.detach();
-            m_whiteboard_observer = null;
+            mWhiteboardObserver.detach();
+            mWhiteboardObserver = null;
          }
       }
    }
 
    private void jbInit() throws Exception
    {
-      this.setLayout(m_bean_layout);
-      m_whiteboard_panel.setLayout(m_whiteboard_layout);
-      m_data_slider.setMajorTickSpacing(20);
-      m_data_slider.setMinorTickSpacing(5);
-      m_data_slider.setPaintTicks(true);
-      m_whiteboard_label.setHorizontalAlignment(SwingConstants.CENTER);
-      m_whiteboard_label.setText("Whiteboard");
-      m_whiteboard.setBorder(BorderFactory.createLoweredBevelBorder());
-      m_whiteboard.setMinimumSize(new Dimension(200, 25));
-      m_whiteboard.setPreferredSize(new Dimension(300, 200));
-      m_whiteboard.setLineWrap(true);
-      m_whiteboard.setWrapStyleWord(true);
-      m_slider_panel.add(m_data_slider, null);
-      m_whiteboard_scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-      m_whiteboard_scroller.getViewport().add(m_whiteboard, null);
-      m_whiteboard_panel.add(m_whiteboard_scroller, BorderLayout.CENTER);
-      m_whiteboard_panel.add(m_whiteboard_label, BorderLayout.NORTH);
+      this.setLayout(mBeanLayout);
+      mWhiteboardPanel.setLayout(mWhiteboardLayout);
+      mDataSlider.setMajorTickSpacing(20);
+      mDataSlider.setMinorTickSpacing(5);
+      mDataSlider.setPaintTicks(true);
+      mWhiteboardLabel.setHorizontalAlignment(SwingConstants.CENTER);
+      mWhiteboardLabel.setText("Whiteboard");
+      mWhiteboard.setBorder(BorderFactory.createLoweredBevelBorder());
+      mWhiteboard.setMinimumSize(new Dimension(200, 25));
+      mWhiteboard.setPreferredSize(new Dimension(300, 200));
+      mWhiteboard.setLineWrap(true);
+      mWhiteboard.setWrapStyleWord(true);
+      mSliderPanel.add(mDataSlider, null);
+      mWhiteboardScroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+      mWhiteboardScroller.getViewport().add(mWhiteboard, null);
+      mWhiteboardPanel.add(mWhiteboardScroller, BorderLayout.CENTER);
+      mWhiteboardPanel.add(mWhiteboardLabel, BorderLayout.NORTH);
 
-      this.add(m_slider_panel, BorderLayout.NORTH);
-      this.add(m_whiteboard_panel, BorderLayout.CENTER);
+      this.add(mSliderPanel, BorderLayout.NORTH);
+      this.add(mWhiteboardPanel, BorderLayout.CENTER);
    }
 
    private class SliderChangeListener implements ChangeListener
@@ -198,7 +198,7 @@ public class NetworkTest
    {
       public DocumentChangeListener (WhiteboardSubject subject)
       {
-         m_whiteboard_subject = subject;
+         mWhiteboard_subject = subject;
       }
 
       public void insertUpdate (DocumentEvent e)
@@ -211,7 +211,7 @@ public class NetworkTest
             int length = e.getLength();
             String new_text = doc.getText(offset, length);
             System.out.println("New text: " + new_text);
-            m_whiteboard_subject.insertText(offset, length, new_text);
+            mWhiteboard_subject.insertText(offset, length, new_text);
          }
          catch (BadLocationException loc_ex)
          {
@@ -227,19 +227,19 @@ public class NetworkTest
       {
       }
 
-      private WhiteboardSubject m_whiteboard_subject = null;
+      private WhiteboardSubject mWhiteboard_subject = null;
    }
 
-   private BorderLayout m_bean_layout = new BorderLayout();
+   private BorderLayout mBeanLayout = new BorderLayout();
 
-   private JPanel m_slider_panel = new JPanel();
-   private JPanel m_whiteboard_panel = new JPanel();
-   private JSlider m_data_slider = new JSlider();
-   private JScrollPane m_whiteboard_scroller = new JScrollPane();
-   private BorderLayout m_whiteboard_layout = new BorderLayout();
-   private JTextArea m_whiteboard = new JTextArea();
-   private JLabel m_whiteboard_label = new JLabel();
+   private JPanel mSliderPanel = new JPanel();
+   private JPanel mWhiteboardPanel = new JPanel();
+   private JSlider mDataSlider = new JSlider();
+   private JScrollPane mWhiteboardScroller = new JScrollPane();
+   private BorderLayout mWhiteboardLayout = new BorderLayout();
+   private JTextArea mWhiteboard = new JTextArea();
+   private JLabel mWhiteboardLabel = new JLabel();
 
-   private SliderObserverImpl m_slider_observer = null;
-   private WhiteboardObserverImpl m_whiteboard_observer = null;
+   private SliderObserverImpl mSliderObserver = null;
+   private WhiteboardObserverImpl mWhiteboardObserver = null;
 }

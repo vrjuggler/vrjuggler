@@ -23,9 +23,9 @@ class SliderSubjectImpl : public POA_networktest::SliderSubject,
 {
 public:
    SliderSubjectImpl (void)
-      : tweek::SubjectImpl()
+      : tweek::SubjectImpl(), mValue(0)
    {
-      m_value = 0;
+      /* Do nothing. */ ;
    }
 
    virtual ~SliderSubjectImpl (void)
@@ -56,7 +56,7 @@ public:
    }
 
 private:
-   long m_value;   /**< Our value */
+   long mValue;   /**< Our value */
 };
 
 } // End of networktest namespace

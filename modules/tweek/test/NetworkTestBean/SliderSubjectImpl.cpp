@@ -8,8 +8,8 @@ namespace networktest
 void SliderSubjectImpl::setValue (long value)
 {
    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-      << "Setting m_value to " << value << std::endl << vprDEBUG_FLUSH;
-   m_value = value;
+      << "Setting mValue to " << value << std::endl << vprDEBUG_FLUSH;
+   mValue = value;
 
    // Notify any observers that our value has changed.  This is very
    // important.
@@ -19,8 +19,8 @@ void SliderSubjectImpl::setValue (long value)
 long SliderSubjectImpl::getValue ()
 {
    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-      << "Returning " << m_value << " to caller\n" << vprDEBUG_FLUSH;
-   return m_value;
+      << "Returning " << mValue << " to caller\n" << vprDEBUG_FLUSH;
+   return mValue;
 }
 
 } // End networktest namespace

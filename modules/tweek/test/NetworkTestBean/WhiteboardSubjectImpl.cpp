@@ -7,10 +7,10 @@ namespace networktest
 void WhiteboardSubjectImpl::insertText (CORBA::Long offset, CORBA::Long length,
                                         const char* text)
 {
-   m_text.insert(offset, text);
-   m_last_offset = offset;
-   m_last_length = length;
-   m_last_change = text;
+   mText.insert(offset, text);
+   mLastOffset = offset;
+   mLastLength = length;
+   mLastChange = text;
    notify();
 }
 
@@ -18,15 +18,15 @@ void WhiteboardSubjectImpl::getLastChange (CORBA::Long& offset,
                                            CORBA::Long& length,
                                            CORBA::String_out text)
 {
-   offset = m_last_offset;
-   length = m_last_length;
-   text   = CORBA::string_dup(m_last_change.c_str());
+   offset = mLastOffset;
+   length = mLastLength;
+   text   = CORBA::string_dup(mLastChange.c_str());
 }
 
 char* WhiteboardSubjectImpl::getAllText ()
 {
    // XXX: The client is responsible for releasing this memory!
-   return CORBA::string_dup(m_text.c_str());
+   return CORBA::string_dup(mText.c_str());
 }
 
 } // End networktest namespace
