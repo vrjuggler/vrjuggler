@@ -8,7 +8,7 @@
   <TR>
     <TH COLSPAN="2" BGCOLOR="#6b92b2" ALIGN="LEFT">
       <FONT COLOR="#ffffff" SIZE="-1">Contract</FONT>
-    </TH> 
-  </TR> 
+    </TH>
+  </TR>
   {include ../common/contract_table_body.html.inc}
 </TABLE>
