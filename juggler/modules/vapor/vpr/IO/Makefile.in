@@ -50,20 +50,20 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/vpr/IO
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
-INSTALL		= @INSTALL@
-SUBOBJDIR	= $(VPR_LIBRARY)
+includedir=	@includedir@/vpr/IO
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+INSTALL=	@INSTALL@
+SUBOBJDIR=	$(VPR_LIBRARY)
 
 # Prefix for recursive stuff.
-DIRPRFX		= vpr/IO/
+DIRPRFX=	vpr/IO/
 
-SUBDIR		= Port		\
-                  Socket	\
-                  Stats
+SUBDIR=		Port		\
+		Socket		\
+		Stats
 
-SRCS 		= XMLObjectReader.cpp
+SRCS=		XMLObjectReader.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
 
