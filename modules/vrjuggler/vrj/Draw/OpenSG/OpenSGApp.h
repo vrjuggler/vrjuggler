@@ -110,6 +110,10 @@ public:
    * User overrided functions MUST call OpenSGApp::apiInit()
    */
    virtual void apiInit();
+
+   /** Shut down OpenSG.  If overridden, MUST call this method.
+    */
+   virtual void exit();
    
    /** GL Drawing functions.
    * If user code overrides these functions, it MUST call this method
@@ -164,6 +168,14 @@ inline void OpenSGApp::apiInit()
 
    this->initScene();
    vprASSERT(getSceneRoot() != OSG::NullFC);
+}
+
+inline void OpenSGApp::exit()
+{
+   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "OpenSGApp::exit: Called.\n"
+                                         << vprDEBUG_FLUSH;
+
+   OSG::osgExit();
 }
 
 /** Called once per context at context creation */
