@@ -10,3 +10,7 @@ For all versions:
 
 ===============================================================================
 
+To add:
+    - Info about change over to meters scaling
+    - Addition of RIM
+
