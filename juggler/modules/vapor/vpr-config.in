@@ -1,4 +1,4 @@
-#!/bin/sh
+#!@PERL@ -w
 
 # ***************** <VPR heading BEGIN do not edit this line> *****************
 #
@@ -41,56 +41,142 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
+use 5.004;
+
+use strict 'vars';
+use vars qw($ECHO_CXXFLAGS $ECHO_EXEC_PREFIX $ECHO_EXTRA_LIBS $ECHO_LIBS
+            $ECHO_PREFIX);
+use vars qw($exec_prefix $EXEC_PREFIX_SET $prefix $PREFIX_SET $LIBBITSUF
+            $VPR_ABI_FLAGS $VPR_ISA_FLAGS $Win32 $PATH_SEP);
+
+use File::Basename;
+use Getopt::Long;
+
+sub usage($);
+sub make_CXXFLAGS($;$);
+sub make_INCLUDES($);
+sub make_LDFLAGS($;$$$);
+sub make_EXTRA_LDFLAGS($;$);
+sub handleOptArg($$);
+
+# TODO: Do not use @prefix@ if possible.  Make use of @LOCAL_BOOST@.
+
+usage(1) if $#ARGV == -1;
+
+my $vpr_default_abi = "@ABI@";
+my $vpr_default_isa = "@ISA@";
+my $vpr_n32_flags   = "@vpr_n32_flags@";
+my $vpr_64_flags    = "@vpr_64_flags@";
+$LIBBITSUF          = '@LIBBITSUF@';
+
+my $use_gcc = '@USE_GCC@';
+
+$VPR_ABI_FLAGS = '';
+
+if ( $vpr_default_abi =~ /n32/i )
+{
+   $VPR_ABI_FLAGS = "$vpr_n32_flags";
+}
+elsif ( $vpr_default_abi =~ /64/ )
+{
+   $VPR_ABI_FLAGS = "$vpr_64_flags";
+}
+
+$VPR_ISA_FLAGS = '';
+
+# If we are not using GCC and a known ISA is defined, add define the ISA
+# argument for the compiler and linker.
+if ( $use_gcc !~ /^y/i && $vpr_default_isa =~ /^mips[34]/ )
+{
+   $VPR_ISA_FLAGS = "-$vpr_default_isa";
+}
+
+# Set up variables used to determine what the real prefix is.  This is
+# important when this script has been installed.
+$Win32    = (defined($ENV{'OS'}) && "$ENV{'OS'}" eq "Win32");
+$PATH_SEP = ($Win32 ? "\\" : "/");
+
+my $base_dir = (fileparse("$0"))[1];
+$base_dir    =~ s|$PATH_SEP$||o;       # Strip off the trailing slash
+$base_dir    =~ s|${PATH_SEP}bin$||io; # If the path ends in "/bin", strip it
+
+# $exec_prefix may refer to $prefix, so it must be set after $prefix is
+# defined.
+$prefix      = "$base_dir";
+$exec_prefix = "@exec_prefix@";
+
+$ECHO_PREFIX      = 0;
+$ECHO_EXEC_PREFIX = 0;
+$PREFIX_SET       = 0;
+$EXEC_PREFIX_SET  = 0;
+$ECHO_CXXFLAGS    = 0;
+$ECHO_LIBS        = 0;
+$ECHO_EXTRA_LIBS  = 0;
+
+my $script_help    = 0;
+my $print_all      = 0;
+my $echo_includes  = 0;
+my $echo_subsystem = 0;
+my $echo_version   = 0;
+my $echo_static    = 0;
+my $use_base_dir   = 0;
+my $use_linker     = 0;
+
+my $cxxflags_arg   = '';
+my $libs_arg       = '';
+my $extra_libs_arg = '';
+
+# This is special syntax that will get replaced by the configure script based
+# on whether or not the base directory should be used by default.
 %{
 %}
 
-subsystem_cxxflags="@subsystem_cxxflags@"
-subsystem_libs="@subsystem_libs@"
-vpr_extra_cxxflags="@vpr_extra_cxxflags@"
-vpr_libs="@vpr_libs@"
+GetOptions('help|?' => \$script_help, 'all' => \$print_all,
+           'basedir' => \$use_base_dir, 'version' => \$echo_version,
+           'subsystem' => \$echo_subsystem, 'prefix:s' => \&handleOptArg,
+           'exec-prefix:s' => \&handleOptArg, 'cxxflags:s' => \&handleOptArg,
+           'includes' => \$echo_includes, 'libs:s' => \&handleOptArg,
+           'extra-libs:s' => \&handleOptArg, 'linker' => \$use_linker,
+           'static' => \$echo_static);
 
-vpr_extra_include_dirs="@vpr_extra_include_dirs@"
+usage(0) if $script_help;
 
-vpr_default_abi="@ABI@"
-vpr_default_isa="@ISA@"
-vpr_n32_flags="@vpr_n32_flags@"
-vpr_64_flags="@vpr_64_flags@"
-LIBBITSUF='@LIBBITSUF@'
-
-USE_GCC='@USE_GCC@'
-
-if [ "x$vpr_default_abi" = "xN32" ]; then
-    vpr_abi_flags="$vpr_n32_flags"
-elif [ "x$vpr_default_abi" = "x64" ]; then
-    vpr_abi_flags="$vpr_64_flags"
-else
-    vpr_abi_flags=''
-fi
-
-vpr_isa_flags=''
-
-if [ "x$USE_GCC" != "xyes" ]; then
-   if [ "x$vpr_default_isa" = "xmips3" -o "x$vpr_default_isa" = "xmips4" ]
-   then
-      vpr_isa_flags="-$vpr_default_isa"
-   fi
-fi
-
-prefix=@prefix@
-exec_prefix=@exec_prefix@
-prefix_set='no'
-exec_prefix_set='no'
-print_all='no'
-use_linker='no'
-
-usage()
+# If we are using $VPR_BASE_DIR, overwrite $prefix and $exec_prefix unless
+# they were set explicitly on the command line.
+if ( $use_base_dir )
 {
-    if test "x$2" != "x" ; then
-       echo "Unrecognized option '$2'"
-    fi
+   die "ERROR: \$VPR_BASE_DIR not set" unless defined($ENV{'VPR_BASE_DIR'});
+   $prefix      = "$ENV{'VPR_BASE_DIR'}" unless $PREFIX_SET;
+   $exec_prefix = "$ENV{'VPR_BASE_DIR'}" unless $EXEC_PREFIX_SET;
+}
 
-    cat <<EOF
-Usage: vpr-config [OPTIONS] [LIBRARIES]
+# Construct the (potentially complex) strings that may be printed.
+my $cxxflags      = make_CXXFLAGS("$cxxflags_arg", $use_base_dir);
+my $includes      = make_INCLUDES("$cxxflags");
+my $ldflags       = make_LDFLAGS("$libs_arg", $echo_static, $use_base_dir,
+                                 $use_linker);
+my $extra_ldflags = make_EXTRA_LDFLAGS("$extra_libs_arg", $use_linker);
+
+# Finally, print out the requested information.
+print "$prefix\n" if $ECHO_PREFIX;
+print "$exec_prefix\n" if $ECHO_EXEC_PREFIX;
+print "@SUBSYSTEM@\n" if $echo_subsystem;
+print "@MAJOR_VERSION@.@MINOR_VERSION@.@MICRO_VERSION@\n" if $echo_version;
+print "$cxxflags\n" if $ECHO_CXXFLAGS;
+print "$includes\n" if $echo_includes;
+print "$ldflags\n" if $ECHO_LIBS;
+print "$extra_ldflags\n" if $ECHO_EXTRA_LIBS;
+
+exit(0);
+
+# =============================================================================
+# Subroutines follow.
+# =============================================================================
+
+sub usage ($)
+{
+    print <<EOF;
+Usage: $0 [OPTIONS] [LIBRARIES]
 Options:
         [--basedir]             Use \$VPR_BASE_DIR when printing paths
         [--prefix[=DIR]]        Print the installation prefix or set an
@@ -101,6 +187,8 @@ Options:
         [--version]             Print the installed VPR's version number
         [--cxxflags [N32|64]]   Print the VPR-specific flags for the C++
                                 compiler
+        [--includes]            Print out only the header path extension
+                                arguments
         [--libs [N32|64]]       Print the basic VPR-specific libraries
         [--extra-libs [N32|64]] Print the extra linker options needed for
                                 making an executable
@@ -111,209 +199,216 @@ Options:
         [--subsystem]           Print the OS abstraction layer being used
 EOF
 
-    exit $1
+    exit($_[0]);
 }
 
-if test $# -eq 0; then
-    usage 1 1>&2
-fi
+sub make_CXXFLAGS ($;$)
+{
+   my $cxxflags_arg = shift;
+   my $use_base_dir = shift || 0;
 
-while test $# -gt 0; do
-    case "$1" in
-        -*=*) optarg=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
-        *) optarg= ;;
-    esac
+   my $cxxflags = '';
 
-    case $1 in
-        --help)
-            usage 0 1>&2
-            ;;
-        --all)
-            print_all='yes'
-            ;;
-        --basedir)
-            use_base_dir=yes
-            ;;
-        --prefix=*)
-            prefix=$optarg
-            prefix_set='yes'
+   # Default setting from configure.
+   my $vpr_extra_cxxflags = "@vpr_extra_cxxflags@";
 
-            if test $exec_prefix_set = no ; then
-                exec_prefix=$optarg
-            fi
-            ;;
-        --prefix)
-            echo_prefix=yes
-            ;;
-        --exec-prefix=*)
-            exec_prefix=$optarg
-            exec_prefix_set=yes
-            ;;
-        --exec-prefix)
-            echo_exec_prefix=yes
-            ;;
-        --version)
-            echo @MAJOR_VERSION@.@MINOR_VERSION@.@MICRO_VERSION@
-            ;;
-        --cxxflags)
-            echo_cxxflags=yes
-            case $2 in
-                --*)
-                    # This is another option flag, so leave it alone.
-                    ;;
-                N32)
-                    vpr_extra_cxxflags="$vpr_extra_cxxflags $vpr_n32_flags $vpr_isa_flags"
-                    shift
-                    ;;
-                64)
-                    vpr_extra_cxxflags="$vpr_extra_cxxflags $vpr_64_flags $vpr_isa_flags"
-                    shift
-                    ;;
-                *)
-                    vpr_extra_cxxflags="$vpr_extra_cxxflags $vpr_abi_flags $vpr_isa_flags"
-                    if [ "x$2" != "x" ] ; then
-                        shift
-                    fi
-                    ;;
-            esac
-            ;;
-        --subsystem)
-            echo @SUBSYSTEM@
-            ;;
-        --libs)
-            echo_libs=yes
-            case $2 in
-                --*)
-                    # This is another option flag, so leave it alone.
-                    ;;
-                N32)
-                    ldflags="$vpr_n32_flags $vpr_isa_flags"
-                    LIBBITSUF='32'
-                    shift
-                    ;;
-                64)
-                    ldflags="$vpr_64_flags $vpr_isa_flags"
-                    LIBBITSUF='64'
-                    shift
-                    ;;
-                *)
-                    ldflags="$vpr_abi_flags $vpr_isa_flags"
-                    if [ "x$2" != "x" ] ; then
-                        shift
-                    fi
-                    ;;
-            esac
-            ;;
-        --extra-libs)
-            echo_extra_libs=yes
-            case $2 in
-                --*)
-                    # This is another option flag, so leave it alone.
-                    ;;
-                N32)
-                    LIBBITSUF='32'
-                    shift
-                    ;;
-                64)
-                    LIBBITSUF='64'
-                    shift
-                    ;;
-                *)
-                    if [ "x$2" != "x" ] ; then
-                        shift
-                    fi
-                    ;;
-            esac
-            ;;
-        --linker)
-            use_linker=yes
-            ;;
-        --static)
-            echo_static=yes
-            ;;
-        *)
-            usage 1 1>&2
-            ;;
-    esac
-    shift
-done
+   if ( $cxxflags_arg =~ /n32/i )
+   {
+      $vpr_extra_cxxflags = "$vpr_extra_cxxflags $vpr_n32_flags $VPR_ISA_FLAGS";
+   }
+   elsif ( $cxxflags_arg =~ /64/ )
+   {
+      $vpr_extra_cxxflags = "$vpr_extra_cxxflags $vpr_64_flags $VPR_ISA_FLAGS";
+   }
+   elsif ( "$cxxflags_arg" eq '' )
+   {
+      $vpr_extra_cxxflags = "$vpr_extra_cxxflags $VPR_ABI_FLAGS $VPR_ISA_FLAGS";
+   }
 
-# If we are using $VPR_BASE_DIR, overwrite $prefix and $exec_prefix unless
-# they were set explicitly on the command line.
-if test "$use_base_dir" = "yes" ; then
-    if test "$prefix_set" = "no" ; then
-        prefix="$VPR_BASE_DIR"
-    fi
+   my $vpr_extra_include_dirs     = "@vpr_extra_include_dirs@";
+   my $vpr_extra_includes         = '';
+   my $vpr_basedir_extra_includes = '';
 
-    if test "$exec_prefix_set" = "no" ; then
-        exec_prefix="$VPR_BASE_DIR"
-    fi
-fi
+   if ( "$vpr_extra_include_dirs" ne "" )
+   {
+      my $dir;
+      foreach $dir ( split(/\s+/, "$vpr_extra_include_dirs") )
+      {
+         $vpr_extra_includes         .= " -I@includedir@/$dir";
+         $vpr_basedir_extra_includes .= " -I$ENV{'VPR_BASE_DIR'}/include/$dir"
+            if defined($ENV{'VPR_BASE_DIR'});
+      }
+   }
 
-if test "$echo_prefix" = "yes"; then
-    echo $prefix
-fi
+   $cxxflags =
+      "@vpr_cxxflags@ $vpr_extra_cxxflags @subsystem_cxxflags@ " .
+      ($use_base_dir ? "-I$ENV{'VPR_BASE_DIR'}/include $vpr_basedir_extra_includes"
+                     : "-I@includedir@ $vpr_extra_includes");
 
-if test "$echo_exec_prefix" = "yes"; then
-    echo $exec_prefix
-fi
+   # Strip out extra whitespace.
+   $cxxflags =~ s/\s{2,}/ /g;
 
-if test "$echo_cxxflags" = "yes"; then
-    if [ "x$vpr_extra_include_dirs" != "x" ]; then
-        for dir in $vpr_extra_include_dirs ; do
-            vpr_extra_includes="$vpr_extra_includes -I@includedir@/$dir"
-            vpr_basedir_extra_includes="$vpr_basedir_extra_includes -I$VPR_BASE_DIR/include/$dir"
-        done
-    fi
+   return "$cxxflags";
+}
 
-    if test "$use_base_dir" = "yes"; then
-        echo @vpr_cxxflags@ $vpr_extra_cxxflags $subsystem_cxxflags -I$VPR_BASE_DIR/include $vpr_basedir_extra_includes
-    else
-        echo @vpr_cxxflags@ $vpr_extra_cxxflags $subsystem_cxxflags -I@includedir@ $vpr_extra_includes
-    fi
-fi
+sub make_INCLUDES ($)
+{
+   my(@compiler_flags) = split(/\s+/, "$_[0]");
+   return join(" ", grep(/^-I/, @compiler_flags));
+}
 
-if test "$echo_static" = "yes" ; then
-    static_begin='@static_begin@'
-    static_end='@static_end@'
-fi
+sub make_LDFLAGS ($;$$$)
+{
+   my $libs_arg     = shift;
+   my $echo_static  = shift || 0;  # Echo static linking flags
+   my $use_base_dir = shift || 0;  # Use $ENV{'VPR_BASE_DIR'} for the path
+   my $use_linker   = shift || 0;  # Use flags for direct use of the linker
 
-if test "$echo_libs" = "yes"; then
-    if test "$use_base_dir" = "yes"; then
-        ldflags="$ldflags -L$VPR_BASE_DIR/lib$LIBBITSUF"
-    else
-        if test "$use_linker" = "yes" ; then
-            ldflags="$ldflags @vpr_ldflags_linker@"
-        else
-            ldflags="$ldflags @vpr_ldflags_compiler@"
-        fi
-    fi
+   my $static_begin = '';
+   my $static_end   = '';
 
-    echo $ldflags $static_begin $vpr_libs $static_end
-fi      
+   if ( $echo_static )
+   {
+      $static_begin = '@static_begin@';
+      $static_end   = '@static_end@';
+   }
 
-if test "x$echo_extra_libs" = "xyes"; then
-    my_subsystem_libs=
+   my $ldflags = '';
 
-    for i in $subsystem_libs ; do
-        if test $i != -L@libdir@ ; then
-            if test -z "$my_subsystem_libs" ; then
-                my_subsystem_libs="$i"
-            else
-                my_subsystem_libs="$my_subsystem_libs $i"
-            fi
-        fi
-    done
+   if ( $libs_arg =~ /n32/i )
+   {
+      $ldflags   = "$vpr_n32_flags $VPR_ISA_FLAGS";
+      $LIBBITSUF = '32';
+   }
+   elsif ( $libs_arg =~ /64/ )
+   {
+      $ldflags   = "$vpr_64_flags $VPR_ISA_FLAGS";
+      $LIBBITSUF = '64';
+   }
+   elsif ( "$libs_arg" eq '' )
+   {
+      $ldflags = "$VPR_ABI_FLAGS $VPR_ISA_FLAGS";
+   }
 
-    vpr_extra_libs="@vpr_extra_libs@"
+   if ( $use_base_dir )
+   {
+      $ldflags .= " -L$ENV{'VPR_BASE_DIR'}/lib$LIBBITSUF";
+   }
+   else
+   {
+      $ldflags .= ($use_linker ? " @vpr_ldflags_linker@"
+                               : " @vpr_ldflags_compiler@");
+   }
 
-    if test "$use_linker" = "yes" ; then
-        extra_ldflags="$ldflags @vpr_extra_ldflags_linker@"
-    else
-        extra_ldflags="$ldflags @vpr_extra_ldflags_compiler@"
-    fi
+   my $full_ldflags = "$ldflags $static_begin @vpr_libs@ $static_end";
+   $full_ldflags    =~ s/\s{2,}/ /g;
 
-    echo $extra_ldflags $vpr_extra_libs $my_subsystem_libs
-fi
+   return "$full_ldflags";
+}
 
-exit 0
+sub make_EXTRA_LDFLAGS ($;$)
+{
+   my $extra_libs_arg = shift;
+   my $use_linker     = shift || 0;
+
+   if ( $extra_libs_arg =~ /n32/i )
+   {
+      $LIBBITSUF = '32';
+   }
+   elsif ( $extra_libs_arg =~ /64/ )
+   {
+      $LIBBITSUF = '64';
+   }
+
+   my $subsystem_libs    = "@subsystem_libs@";
+   my $my_subsystem_libs = '';
+
+   my $arg;
+   foreach $arg ( split(/\s+/, "$subsystem_libs") )
+   {
+      $my_subsystem_libs .= " $arg" unless "$arg" eq "-L@libdir@";
+   }
+
+   my $extra_ldflags = ($use_linker ? "@vpr_extra_ldflags_linker@"
+                                    : "@vpr_extra_ldflags_compiler@");
+
+   my $full_extra_ldflags = "$extra_ldflags @vpr_extra_libs@ " .
+                            "$my_subsystem_libs";
+   $full_extra_ldflags    =~ s/\s{2,}/ /g;
+
+   return "$full_extra_ldflags";
+}
+
+# Subroutine for handling command-line parameters that have an optional
+# argument.
+sub handleOptArg ($$)
+{
+   my $name  = shift;
+   my $value = shift || '';
+
+   SWITCH:
+   {
+      if ( "$name" eq "prefix" )
+      {
+         # If $value is defined, we set $prefix to its value.  The value of
+         # $prefix will not be printed in this case.
+         if ( $value )
+         {
+            $prefix      = "$value";
+            $ECHO_PREFIX = 0;
+            $PREFIX_SET  = 1;
+         }
+         # If $value is undefined, that means that --prefix was specified, but
+         # no value was given.  In that case, we just want to print the
+         # prefix.
+         else
+         {
+            $ECHO_PREFIX = 1;
+         }
+
+         last SWITCH;
+      }
+
+      if ( "$name" eq "exec-prefix" )
+      {
+         # If $value is defined, we set $exec_prefix to its value.  The value
+         # of $exec_prefix will not be printed in this case.
+         if ( $value )
+         {
+            $exec_prefix      = "$value";
+            $EXEC_PREFIX_SET  = 1;
+            $ECHO_EXEC_PREFIX = 0;
+         }
+         # If $value is undefined, that means that --exec-prefix was specified,
+         # but no value was given.  In that case, we just want to print the
+         # exec prefix.
+         else
+         {
+            $ECHO_EXEC_PREFIX = 1;
+         }
+
+         last SWITCH;
+      }
+
+      if ( "$name" eq "cxxflags" )
+      {
+         $ECHO_CXXFLAGS = 1;
+         $cxxflags_arg  = $value;
+         last SWITCH;
+      }
+
+      if ( "$name" eq "libs" )
+      {
+         $ECHO_LIBS = 1;
+         $libs_arg  = $value;
+         last SWITCH;
+      }
+
+      if ( "$name" eq "extra-libs" )
+      {
+         $ECHO_EXTRA_LIBS = 1;
+         $extra_libs_arg  = $value;
+         last SWITCH;
+      }
+   }
+}
