@@ -3,13 +3,14 @@
 #include <Config/vjChunkDesc.h>
 
 vjChunkDesc::vjChunkDesc () :plist() {
-  name = token = help = NULL;
-  setName ("unnamed");
-  setToken ("unnamed");
-  setHelp ("");
-  vjPropertyDesc *d = new vjPropertyDesc("name",1,T_STRING," ");
-  add (d);
+    name = token = help = NULL;
+    setName ("unnamed");
+    setToken ("unnamed");
+    setHelp ("");
+    vjPropertyDesc *d = new vjPropertyDesc("name",1,T_STRING," ");
+    add (d);
 }
+
 
 vjChunkDesc::~vjChunkDesc() {
 
@@ -128,19 +129,13 @@ istream& operator >> (istream& in, vjChunkDesc& self) {
     vjPropertyDesc *p;
 
     readString (in, str, 256);
-    if (self.token)
-	delete self.token;
-    self.token = strdup (str);
+    self.setToken (str);
 
     readString (in, str, 256);
-    if (self.name)
-	delete self.name;
-    self.name = strdup (str);
+    self.setName (str);
 
     readString (in, str, 256);
-    if (self.help)
-	delete self.help;
-    self.help = strdup (str);
+    self.setHelp (str);
 
     for (int i = 0; i < self.plist.size(); i++)
 	delete self.plist[i];
@@ -156,6 +151,9 @@ istream& operator >> (istream& in, vjChunkDesc& self) {
 	}
 	self.add(p);
     } while (!in.eof());
+
+    if (!self.getPropertyDesc ("name")) 
+	self.plist.insert (self.plist.begin(), new vjPropertyDesc("name",1,T_STRING," "));
     return in;
 }
 
