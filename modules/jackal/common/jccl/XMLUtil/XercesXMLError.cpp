@@ -32,7 +32,7 @@
 
 
 #include <sax/SAXParseException.hpp>
-#include <Utils/vjXercesXMLError.h>
+#include <jccl/XMLUtil/vjXercesXMLError.h>
 #include <iostream.h>
 #include <stdlib.h>
 #include <string.h>
@@ -40,6 +40,7 @@
 
 //based on Xerces DOMPrint source code
 
+namespace jccl {
 
 void vjXercesXMLError::warning(const SAXParseException&)
 {
@@ -75,3 +76,4 @@ void vjXercesXMLError::resetErrors()
 }
 
 
+};

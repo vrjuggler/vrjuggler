@@ -37,6 +37,8 @@
 #include <sax/ErrorHandler.hpp>
 #include <iostream.h>
 
+namespace jccl {
+
 class vjXercesXMLError : public ErrorHandler
 {
 public:
@@ -53,6 +55,8 @@ public:
     void error(const SAXParseException& toCatch);
     void fatalError(const SAXParseException& toCatch);
     void resetErrors();
+};
+
 };
 
 #endif

@@ -31,20 +31,23 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-#include <vjConfig.h>
-#include <Config/vjProperty.h>
-#include <Config/vjConfigChunk.h>
-#include <Config/vjChunkFactory.h>
-#include <Config/vjPropertyDesc.h>
-#include <Config/vjEnumEntry.h>
-#include <Config/vjParseUtil.h>
-#include <Config/vjConfigTokens.h>
-#include <Utils/vjDebug.h>
+#include <jccl/jcclConfig.h>
+#include <jccl/Config/vjProperty.h>
+#include <jccl/Config/vjConfigChunk.h>
+#include <jccl/Config/vjChunkFactory.h>
+#include <jccl/Config/vjPropertyDesc.h>
+#include <jccl/Config/vjEnumEntry.h>
+#include <jccl/Config/vjParseUtil.h>
+#include <jccl/Config/vjConfigTokens.h>
+#include <vpr/Util/Debug.h>
+#include <vpr/Util/Assert.h>
 
-vjProperty::vjProperty (vjPropertyDesc *pd): value() {
-    //cout << "vjProperty(): desc is '" << flush << *pd << "'" << endl;
+namespace jccl {
+   
+Property::Property (PropertyDesc *pd): value() {
+    //cout << "Property(): desc is '" << flush << *pd << "'" << endl;
     int j;
-    vjVarValue *v;
+    VarValue *v;
 
     validation = 1;
 
@@ -56,9 +59,9 @@ vjProperty::vjProperty (vjPropertyDesc *pd): value() {
     embeddesc = NULL;
 
     if (type == T_EMBEDDEDCHUNK) {
-        vjEnumEntry *e = description->getEnumEntryAtIndex (0);
+        EnumEntry *e = description->getEnumEntryAtIndex (0);
         if (e)
-            embeddesc = vjChunkFactory::instance()->getChunkDesc (e->getName());
+            embeddesc = ChunkFactory::instance()->getChunkDesc (e->getName());
     }
 
     /* the idea here is that if num == -1 we can add values to
@@ -67,7 +70,7 @@ vjProperty::vjProperty (vjPropertyDesc *pd): value() {
      */
     if (num != -1) {
         /* we're filling the vector with num copies of a
-         * default vjVarValue */
+         * default VarValue */
         for (j = 0; j < num; j++ ) {
             v = createVarValue (j);
             value.push_back(v);
@@ -77,27 +80,27 @@ vjProperty::vjProperty (vjPropertyDesc *pd): value() {
 
 
 
-vjVarValue *vjProperty::createVarValue (int i) {
+VarValue *Property::createVarValue (int i) {
     assertValid();
 
     // if i == -1, we're just tacking onto the end
     if (i == -1)
         i = value.size();
     if (type == T_EMBEDDEDCHUNK) {
-        vjConfigChunk *ch = vjChunkFactory::instance()->createChunk (embeddesc);
+        ConfigChunk *ch = ChunkFactory::instance()->createChunk (embeddesc);
         if (description->getValueLabelsSize() > i)
             ch->setProperty ("Name", description->getValueLabel(i));
         else {
             ch->setProperty ("Name", description->getName());
         }
-        return new vjVarValue (ch);
+        return new VarValue (ch);
     }
     else
-        return new vjVarValue (type);
+        return new VarValue (type);
 }
 
 
-vjProperty::~vjProperty () {
+Property::~Property () {
     /* XXX
     unsigned int i;
 
@@ -109,7 +112,7 @@ vjProperty::~vjProperty () {
 
 
 
-vjProperty::vjProperty (const vjProperty& p):value() {
+Property::Property (const Property& p):value() {
     description = NULL;
     validation = 1;
     *this = p;
@@ -117,9 +120,9 @@ vjProperty::vjProperty (const vjProperty& p):value() {
 
 
 
-#ifdef VJ_DEBUG
-void vjProperty::assertValid () const {
-    assert (validation == 1 && "Trying to use deleted vjProperty");
+#ifdef VJ_vprDEBUG
+void Property::assertValid () const {
+    vprASSERT (validation == 1 && "Trying to use deleted Property");
 
     for (unsigned int i = 0; i < value.size(); i++)
         value[i]->assertValid();
@@ -131,7 +134,7 @@ void vjProperty::assertValid () const {
 
 
 
-vjProperty& vjProperty::operator= (const vjProperty& p) {
+Property& Property::operator= (const Property& p) {
     assertValid();
     p.assertValid();
 
@@ -153,14 +156,14 @@ vjProperty& vjProperty::operator= (const vjProperty& p) {
     value.clear();
 
     for (i = 0; i < p.value.size(); i++) {
-        value.push_back (new vjVarValue(*(p.value[i])));
+        value.push_back (new VarValue(*(p.value[i])));
     }
     return *this;
 }
 
 
 
-bool vjProperty::operator== (const vjProperty& p) const {
+bool Property::operator== (const Property& p) const {
     assertValid();
     p.assertValid();
 
@@ -176,7 +179,7 @@ bool vjProperty::operator== (const vjProperty& p) const {
 
 
 
-bool vjProperty::applyUnits (CfgUnit u) {
+bool Property::applyUnits (CfgUnit u) {
     assertValid();
 
     if (type == T_DISTANCE) {
@@ -193,23 +196,23 @@ bool vjProperty::applyUnits (CfgUnit u) {
 
 
 
-vjEnumEntry* vjProperty::getEnumEntryWithValue (int val) const {
+EnumEntry* Property::getEnumEntryWithValue (int val) const {
     assertValid();
 
     // gets an enumentry based on the value, instead of the name
-    vjVarValue v(T_INT);
+    VarValue v(T_INT);
     v = val;
     return description->getEnumEntryWithValue (v);
 }
 
 
 
-std::ostream& operator << (std::ostream &out, vjProperty& p) {
+std::ostream& operator << (std::ostream &out, Property& p) {
     p.assertValid();
 
     out << p.getToken().c_str() << " { ";
     for (unsigned int i = 0; i < p.value.size(); i++) {
-        vjVarValue *v = ((p.value))[i];
+        VarValue *v = ((p.value))[i];
 
         if ((p.type == T_STRING) || (p.type == T_CHUNK)) {
             out << '"' << *v << '"';
@@ -221,7 +224,7 @@ std::ostream& operator << (std::ostream &out, vjProperty& p) {
             out << *v;
         }
         else {
-            vjEnumEntry *e = p.getEnumEntryWithValue((int)(*v));
+            EnumEntry *e = p.getEnumEntryWithValue((int)(*v));
             if (e)
                 out << '"' << e->getName().c_str() << '"';
             else
@@ -237,18 +240,18 @@ std::ostream& operator << (std::ostream &out, vjProperty& p) {
 
 
 
-const vjVarValue& vjProperty::getValue (unsigned int ind) const {
+const VarValue& Property::getValue (unsigned int ind) const {
     assertValid();
 
     if (ind >= value.size()) {
-        return vjVarValue::getInvalidInstance();
+        return VarValue::getInvalidInstance();
     }
     return *((value)[ind]);
 }
 
 
 
-int vjProperty::getNum () const {
+int Property::getNum () const {
     assertValid();
 
     return value.size();
@@ -256,25 +259,25 @@ int vjProperty::getNum () const {
 
 
 
-const std::string& vjProperty::getName () const {
+const std::string& Property::getName () const {
     assertValid();
 
     return description->getName();
 }
 
 
-const std::string& vjProperty::getToken () const {
+const std::string& Property::getToken () const {
     assertValid();
 
     return description->getToken();
 }
 
 
-bool vjProperty::preSet (unsigned int ind) {
+bool Property::preSet (unsigned int ind) {
     assertValid();
 
     unsigned int i;
-    vjVarValue *v;
+    VarValue *v;
 
     if (ind >= value.size()) {
         if (num == -1) {
@@ -292,7 +295,7 @@ bool vjProperty::preSet (unsigned int ind) {
 
 
 
-bool vjProperty::setValue (int val, int ind ) {
+bool Property::setValue (int val, int ind ) {
     assertValid();
 
     if (!preSet(ind))
@@ -303,7 +306,7 @@ bool vjProperty::setValue (int val, int ind ) {
 
 
 
-bool vjProperty::setValue (float val, int ind ) {
+bool Property::setValue (float val, int ind ) {
     assertValid();
 
     if (!preSet(ind))
@@ -314,7 +317,7 @@ bool vjProperty::setValue (float val, int ind ) {
 
 
 
-bool vjProperty::setValue (const std::string& val, int ind) {
+bool Property::setValue (const std::string& val, int ind) {
     assertValid();
 
     if (!preSet(ind))
@@ -325,11 +328,11 @@ bool vjProperty::setValue (const std::string& val, int ind) {
 
 
 
-bool vjProperty::setValue (vjConfigChunk* val, int ind) {
+bool Property::setValue (ConfigChunk* val, int ind) {
     assertValid();
 
     if (!preSet(ind)) {
-        vjDEBUG(vjDBG_ERROR, 1) << "vjProperty::Preset failed!\n" << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR, 1) << "Property::Preset failed!\n" << vprDEBUG_FLUSH;
         return false;
     }
     *(value[ind]) = val;
@@ -338,7 +341,7 @@ bool vjProperty::setValue (vjConfigChunk* val, int ind) {
 
 
 
-bool vjProperty::setValue (const vjVarValue& val, int ind) {
+bool Property::setValue (const VarValue& val, int ind) {
     assertValid();
 
     if (!preSet (ind))
@@ -349,12 +352,12 @@ bool vjProperty::setValue (const vjVarValue& val, int ind) {
 
 
 
-bool vjProperty::tryAssign (int index, const char* val) {
+bool Property::tryAssign (int index, const char* val) {
     assertValid();
 
     /* This does some type-checking and translating before just
      * doing an assign into the right value entry of p. Some of
-     * this functionality ought to just be subsumed by vjVarValue
+     * this functionality ought to just be subsumed by VarValue
      * itself, but this way we get back some feedback about
      * wether a type mismatch occurred (ie we return false if
      * a type mismatch occurs ).
@@ -369,7 +372,7 @@ bool vjProperty::tryAssign (int index, const char* val) {
     bool b;
 
     if (type != T_CHUNK) {          // T_CHUNKS have enumeration, but they are really strings (or something)
-        vjEnumEntry* e = getEnumEntry (val);
+        EnumEntry* e = getEnumEntry (val);
         if (e) {
             setValue (e->getValue());
             return true;
@@ -380,15 +383,15 @@ bool vjProperty::tryAssign (int index, const char* val) {
     case T_INT:
         i = strtol (val, &endval, 0);
         if (*endval != '\0')
-            vjDEBUG (vjDBG_CONFIG, 0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected int, got '"
-                  << val << "'\n" << vjDEBUG_FLUSH;
+            vprDEBUG (vprDBG_CONFIG, 0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected int, got '"
+                  << val << "'\n" << vprDEBUG_FLUSH;
         setValue (i, index);
         return true;
     case T_FLOAT:
         f = (float)strtod (val, &endval);
         if (*endval != '\0')
-            vjDEBUG (vjDBG_CONFIG, 0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected float, got '"
-                                      << val << "'\n" << vjDEBUG_FLUSH;
+            vprDEBUG (vprDBG_CONFIG, 0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected float, got '"
+                                      << val << "'\n" << vprDEBUG_FLUSH;
         setValue (f, index);
         return true;
     case T_BOOL:
@@ -401,8 +404,8 @@ bool vjProperty::tryAssign (int index, const char* val) {
             b = strtol (val, &endval, 0);
             if (endval != '\0') {
                 b = false;
-                vjDEBUG (vjDBG_CONFIG,0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected bool, got '"
-                                         << val << "'\n" << vjDEBUG_FLUSH;
+                vprDEBUG (vprDBG_CONFIG,0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected bool, got '"
+                                         << val << "'\n" << vprDEBUG_FLUSH;
             }
         }
         setValue (b, index);
@@ -418,3 +421,5 @@ bool vjProperty::tryAssign (int index, const char* val) {
         return false;
     }
 }
+
+};

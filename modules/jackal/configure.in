@@ -391,8 +391,11 @@ if test "x$XERCES_INCLUDES" != "x" ; then
     INCLUDES="$INCLUDES $XERCES_INCLUDES"
 fi
 
-# For use in linking applications.
+CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS"
 EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
+
+# For use in linking applications.
+#EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" = "xno" ; then
     CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
@@ -421,15 +424,14 @@ fi
 # $VJROOT_ABS, we cd there and save the value of running pwd.  Then return to
 # the directory where configure is being run ($topdir).
 cd "$srcdir"
-JACKALROOT_ABS=`pwd`
-cd "$JACKALROOT_ABS/../.."
+JCCLROOT_ABS=`pwd`
+cd "$JCCLROOT_ABS/../.."
 JUGGLERROOT_ABS=`pwd`
 cd "$topdir"
 
-# Define the base path to the source directory using $(VJROOT_ABS) as an
+# Define the base path to the source directory using $(JCCLROOT_ABS) as an
 # alternative to using $(srcdir).
-JACKAL_SRCDIR='$(JACKALROOT_ABS)'
-UNIX_JACKALROOT_ABS="$JACKALROOT_ABS"
+UNIX_JCCLROOT_ABS="$JCCLROOT_ABS"
 UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 
 if test "x$OS_TYPE" = "xWin32" ; then
@@ -448,25 +450,16 @@ fi
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
                 VJ_BASE_DIR, $DEFS, $INCLUDES, ${_EXTRA_FLAGS})
 VJ_APP_LINKER($CXX, $EXTRA_LINK_FLAGS, $LDOPTS_DBG, $LDOPTS_OPT, VJ_BASE_DIR,
-              Juggler Juggler_utils, $APP_EXTRA_LIBS)
+              Jackal, $APP_EXTRA_LIBS)
 
-if test "$OS_TYPE" = "UNIX" ; then
-    DYLIB_DEPS_VJ="$APP_EXTRA_LIBS"
-    APP_VJ_LIBS_UTILS="-lJuggler_utils"
+APP_BASE_DIR='$(topdir)/instlinks'
+APP_BASE_DIR_INST='$(VJ_BASE_DIR)'
 
-elif test "$OS_TYPE" = "Win32" ; then
-    DYLIB_DEPS_BASIC="$APP_EXTRA_LIBS"
-    DYLIB_DEPS_VJ="-libpath:\$(LIBDIR) Juggler_utils.lib $DYLIB_DEPS_BASIC"
-    DYLIB_DEPS_UTILS="$DYLIB_DEPS_BASIC"
-
-    APP_VJ_LIBS_UTILS='Juggler_utils.lib'
-fi
 
 # Translate paths from UNIX-style to Win32.
 if test "x$OS_TYPE" = "xWin32" ; then
-    SAFE_JACKALROOT_ABS=`unix2dos -p "$JACKALROOT_ABS"`
-    SAFE_JUGGLERROOT_ABS=`unix2dos -p "$JUGGLERROOT_ABS"`
-    JACKAL_SRCDIR=`unix2dos "$JACKAL_SRCDIR"`
+    JCCLROOT_ABS=`unix2dos -p "$JCCLROOT_ABS"`
+    JUGGLERROOT_ABS=`unix2dos -p "$JUGGLERROOT_ABS"`
 
     DEPEND_EXTRAS=`unix2dos "$DEPEND_EXTRAS"`
     INCLUDES=`unix2dos "$INCLUDES"`
@@ -478,8 +471,8 @@ if test "x$OS_TYPE" = "xWin32" ; then
 
     APP_EXTRA_LIBS=`unix2dos "$APP_EXTRA_LIBS"`
 else
-    SAFE_JACKALROOT_ABS="$JACKALROOT_ABS"
-    SAFE_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
+    JCCLROOT_ABS="$JCCLROOT_ABS"
+    JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 fi
 
 # Set up some sed expressions that will help separate the share directory from
@@ -508,36 +501,28 @@ case $OS_TYPE in
             static_end="-B dynamic"
         fi
 
-        jackal_ldflags="-L\$prefix/lib$LIBBITSUF"
-        jackal_libs='-lJackal'
-
-#        Juggler_lib='-lJuggler'
-#        Juggler_utils_lib='-lJuggler_utils'
-#        Juggler_ogl_lib='-lJuggler_ogl'
+        jccl_ldflags="-L\$prefix/lib$LIBBITSUF"
+        jccl_libs='-lJackal'
 
         ;;
     WIN32)
-        jackal_ldflags="/link /libpath:\$prefix/lib/debug "
-        jackal_libs='Jackal.lib'
+        jccl_ldflags="/link /libpath:\$prefix/lib/debug "
+        jccl_libs='Jackal.lib'
 
-#        Juggler_lib='Juggler.lib'
-#        Juggler_utils_lib='Juggler_utils.lib'
-#        Juggler_ogl_lib='Juggler_ogl.lib'
         ;;
 esac
 
-jackal_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
-jackal_extra_libs="$APP_EXTRA_LIBS $APP_EXTRA_LIBS_END"
+jccl_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
+jccl_extra_libs="$APP_EXTRA_LIBS $APP_EXTRA_LIBS_END"
 
 DPP_SUBST
 
 
 AC_SUBST(topdir)
-AC_SUBST(UNIX_JACKALROOT_ABS)
+AC_SUBST(UNIX_JCCLROOT_ABS)
 AC_SUBST(UNIX_JUGGLERROOT_ABS)
-AC_SUBST(SAFE_JACKALROOT_ABS)
-AC_SUBST(SAFE_JUGGLERROOT_ABS)
-AC_SUBST(JACKAL_SRCDIR)
+AC_SUBST(JCCLROOT_ABS)
+AC_SUBST(JUGGLERROOT_ABS)
 AC_SUBST(VJ_SHARE_DIR)
 
 AC_SUBST(EXTRA_LINK_FLAGS)
@@ -555,12 +540,10 @@ AC_SUBST(subsystem_cxxflags)
 AC_SUBST(subsystem_libs)
 AC_SUBST(static_begin)
 AC_SUBST(static_end)
-AC_SUBST(jackal_ldflags)
-AC_SUBST(jackal_libs)
-#AC_SUBST(Juggler_lib)
-#AC_SUBST(Juggler_utils_lib)
-AC_SUBST(jackal_extra_ldflags)
-AC_SUBST(jackal_extra_libs)
+AC_SUBST(jccl_ldflags)
+AC_SUBST(jccl_libs)
+AC_SUBST(jccl_extra_ldflags)
+AC_SUBST(jccl_extra_libs)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.
@@ -572,6 +555,7 @@ AC_OUTPUT(Makefile
           Makefile.inc
           common.defs.mk
           make.defs.mk
+          jccl/Makefile
           jccl/Config/Makefile
           jccl/JackalServer/Makefile
           jccl/Performance/Makefile

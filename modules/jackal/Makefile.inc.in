@@ -45,7 +45,6 @@ includedir	= @includedir@
 instlinks	= $(topdir)/instlinks
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
-JACKAL_SRCDIR	= @JACKAL_SRCDIR@
 
 # Extra compiler and linker options needed only by this file.
 DBG_FLAGS	= -D_DEBUG @DBG_FLAGS@
@@ -74,21 +73,21 @@ STATICLIB_EXT	= @STATICLIB_EXT@
 DYNAMICLIB_EXT	= @DYNAMICLIB_EXT@
 
 # Full list of the libraries to build.
-LIBS		= $(JACKAL_LIBRARY)
+LIBS		= $(JCCL_LIBRARY)
 STATIC_LIBS	= $(LIBS)
 DYNAMIC_LIBS	= $(LIBS)
 
 # Dependencies for each of the various dynamic libraries we build.
 DYLIB_DEPS		= @DYLIB_DEPS@
 
-JACKAL_LIB_STATIC	= $(JACKAL_LIBRARY).$(STATICLIB_EXT)
-JACKAL_LIB_DYNAMIC	= $(JACKAL_LIBRARY).$(DYNAMICLIB_EXT)
+JCCL_LIB_STATIC	        = $(JCCL_LIBRARY).$(STATICLIB_EXT)
+JCCL_LIB_DYNAMIC	= $(JCCL_LIBRARY).$(DYNAMICLIB_EXT)
 
 # Version information.
 BRANCH		= HEAD
 CANON_NAME	= Kenny
-VER_ARGS	= -f $(JACKALROOT_ABS)/VERSION -s @SUBSYSTEM@ -b $(BRANCH)	\
-                  -i $(JACKALROOT_ABS)/jccl/jcclParam.h.in -o jccl/jcclParam.h		\
+VER_ARGS	= -f $(JCCLROOT_ABS)/VERSION -s @SUBSYSTEM@ -b $(BRANCH)	\
+                  -i $(JCCLROOT_ABS)/jccl/jcclParam.h.in -o jccl/jcclParam.h		\
                   -d "`date '+%b %e, %Y %H:%M:%S'`" -n "$(CANON_NAME)"
 
 ifdef VERSION
@@ -106,7 +105,7 @@ AFTERBUILD	= afterbuild
 beforebuild:
 	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
 	@$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
-            -t $(JACKALROOT_ABS)/jccl-config.in -v$(JACKALROOT_ABS)/VERSION \
+            -t $(JCCLROOT_ABS)/jccl-config.in -v$(JCCLROOT_ABS)/VERSION \
             -o $(topdir)/jccl-config
 	@chmod +x $(topdir)/jccl-config
 
@@ -117,7 +116,7 @@ afterbuild:
 # -----------------------------------------------
 # Construct the static version of the libraries.
 # -----------------------------------------------
-$(LIBDIR)/$(JACKAL_LIB_STATIC) $(LIBDIR)/$(UTILS_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(JCCL_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
 ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
@@ -134,7 +133,7 @@ endif
 # ------------------------------------------------
 # Construct the dynamic version of the libraries.
 # ------------------------------------------------
-$(LIBDIR)/$(JACKAL_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(JCCL_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -143,10 +142,10 @@ $(LIBDIR)/$(JACKAL_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
             $(DYLIB_DEPS)
 	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
 ifeq (@OS_TYPE@, Win32)
-	cd $(LIBDIR_BASE) && rm -f $(JACKAL_LIB_STATIC) &&		\
-            $(LN_S) $(LIBDIR)/$(JACKAL_LIB_STATIC) ./
-	cd $(LIBDIR_BASE) && rm -f $(JACKAL_LIBRARY).exp &&			\
-            $(LN_S) $(LIBDIR)/$(JACKAL_LIBRARY).exp ./
+	cd $(LIBDIR_BASE) && rm -f $(JCCL_LIB_STATIC) &&		\
+            $(LN_S) $(LIBDIR)/$(JCCL_LIB_STATIC) ./
+	cd $(LIBDIR_BASE) && rm -f $(JCCL_LIBRARY).exp &&			\
+            $(LN_S) $(LIBDIR)/$(JCCL_LIBRARY).exp ./
 endif
 	@echo "------------------------------------------------"
 	@echo "$@ done"
@@ -187,35 +186,35 @@ ifneq (@OS_TYPE@, Win32)
 	cd $(instlinks)/include &&					\
           for dir in $(SUBDIR) ; do					\
               rm -f ./$$dir ;						\
-              ln -s $(JACKALROOT_ABS)/$$dir ./$$dir ;			\
+              ln -s $(JCCLROOT_ABS)/$$dir ./$$dir ;			\
           done
 	cd $(instlinks) && rm -f ./$(LIBDIR_NAME) &&			\
           ln -s $(LIBDIR_BASE) ./$(LIBDIR_NAME)
 	cd $(instlinks) && rm -rf ./$(VJ_SHARE_DIR) &&			\
           $(SHELL) $(MKINSTALLDIRS) ./$(VJ_SHARE_DIR)
 	cd $(instlinks)/$(VJ_SHARE_DIR) && rm -f ./Data &&		\
-          ln -s $(JACKALROOT_ABS)/Data ./Data
+          ln -s $(JCCLROOT_ABS)/Data ./Data
 	cd $(instlinks)/$(VJ_SHARE_DIR) && rm -f ./samples &&		\
-          ln -s $(JACKALROOT_ABS)/samples ./samples
+          ln -s $(JCCLROOT_ABS)/samples ./samples
 	cd $(instlinks)/include && rm -f ./vjConfig.h &&		\
-          $(LN_S) $(JACKALROOT_ABS)/vjConfig.h ./vjConfig.h
+          $(LN_S) $(JCCROOT_ABS)/vjConfig.h ./vjConfig.h
 	cd $(instlinks)/include && rm -f ./vjDefines.h &&		\
 	  $(LN_S) $(topdir)/vjDefines.h ./vjDefines.h
 	cd $(instlinks)/include && rm -f ./vjParam.h &&			\
 	  $(LN_S) $(topdir)/vjParam.h ./vjParam.h
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
 	cd $(instlinks)/bin && rm -f ./catadf.pl &&			\
-          $(LN_S) $(JACKALROOT_ABS)/tools/catadf.pl ./catadf.pl
+          $(LN_S) $(JCCLROOT_ABS)/tools/catadf.pl ./catadf.pl
 ifndef NO_JAVA_GUI
 	cd $(instlinks)/bin && rm -f ./VjControl.jar &&			\
           $(LN_S) $(topdir)/VjControl/VjControl.jar ./
 	cd $(instlinks)/bin && rm -f ./vjcontrol &&			\
           sed -e 's,#VJ_SHARE_DIR#,${VJ_SHARE_DIR},g'			\
-              ${JACKALROOT_ABS}/VjControl/vjcontrol.sh > vjcontrol &&		\
+              ${JCCLROOT_ABS}/VjControl/vjcontrol.sh > vjcontrol &&		\
           chmod ${EXEC_PERMS} vjcontrol
 endif
 	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
-            -t $(JACKALROOT_ABS)/jccl-config.in -p 'use_base_dir=yes'	\
+            -t $(JCCLROOT_ABS)/jccl-config.in -p 'use_base_dir=yes'	\
             -o $(instlinks)/bin/jccl-config -x
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
@@ -303,7 +302,7 @@ pre-install-headers:
 
 post-install-headers:
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(JACKALROOT_ABS)/jccl/jcclConfig.h $(includedir)
+          $(JCCLROOT_ABS)/jccl/jcclConfig.h $(includedir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/jccl/jcclDefines.h $(includedir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
@@ -350,7 +349,7 @@ install-test:
 #          --startdir="$(top_srcdir)/tools" --mode="$(FILE_PERMS)"	\
 #          $(_GROUP_OPT_PL) --srcdir="."
 #	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-#          $(JACKALROOT_ABS)/tools/catadf.pl $(bindir)/catadf.pl
+#          $(JCCLROOT_ABS)/tools/catadf.pl $(bindir)/catadf.pl
 
 # Install the standard data files.
 install-data:
@@ -376,12 +375,12 @@ ifeq ($(BUILD_VJCONTROL), Y)
 	@echo "------------------------------------------------"
 ifeq (@OS_TYPE@, UNIX)
 	@sed -e 's,#VJ_SHARE_DIR#,$(VJ_SHARE_DIR),g'			\
-          $(JACKALROOT_ABS)/VjControl/vjcontrol.sh > vjcontrol
+          $(JCCLROOT_ABS)/VjControl/vjcontrol.sh > vjcontrol
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
           vjcontrol $(bindir)/vjcontrol && rm -f vjcontrol
 else
 	@sed -e 's,#VJ_SHARE_DIR#,$(VJ_SHARE_DIR),g'			\
-          $(JACKALROOT_ABS)/VjControl/vjcontrol.bat > vjcontrol.bat
+          $(JCCLROOT_ABS)/VjControl/vjcontrol.bat > vjcontrol.bat
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX) 			\
           vjcontrol.bat $(bindir)/vjcontrol.bat && rm -f vjcontrol.bat
 endif	# if OS_TYPE == UNIX

@@ -44,7 +44,7 @@
  */
 
 /* This should always be included first. */
-#include <vjDefines.h>
+#include <jccl/jcclDefines.h>
 
 #ifdef _DEBUG
 #   define VJ_DEBUG

@@ -32,27 +32,30 @@
 
 
 
-#include <vjConfig.h>
+#include <jccl/jcclConfig.h>
 #include <sys/types.h>
 
-#include <Utils/vjDebug.h>
-#include <Config/vjChunkDescDB.h>
-#include <Config/vjParseUtil.h>
-#include <Config/vjConfigTokens.h>
-#include <Config/vjConfigIO.h>
+#include <vpr/Util/Debug.h>
+#include <vpr/Util/Assert.h>
+#include <jccl/Config/vjChunkDescDB.h>
+#include <jccl/Config/vjParseUtil.h>
+#include <jccl/Config/vjConfigTokens.h>
+#include <jccl/Config/vjConfigIO.h>
 
-vjChunkDescDB::vjChunkDescDB (): descs() {
+namespace jccl {
+   
+ChunkDescDB::ChunkDescDB (): descs() {
     ;
 }
 
 
 
-vjChunkDescDB::~vjChunkDescDB() {
+ChunkDescDB::~ChunkDescDB() {
     removeAll();
 }
 
 
-vjChunkDesc* vjChunkDescDB::getChunkDesc (const std::string& _token) {
+ChunkDesc* ChunkDescDB::getChunkDesc (const std::string& _token) {
     for (unsigned int i = 0; i < descs.size(); i++)
         if (!vjstrcasecmp (descs[i]->token, _token))
             return descs[i];
@@ -61,17 +64,17 @@ vjChunkDesc* vjChunkDescDB::getChunkDesc (const std::string& _token) {
 
 
 
-bool vjChunkDescDB::insert (vjChunkDesc *d) {
+bool ChunkDescDB::insert (ChunkDesc *d) {
     for (unsigned int i = 0; i < descs.size(); i++)
         if (!vjstrcasecmp (descs[i]->token, d->token)) {
             if (*descs[i] != *d) {
-                vjDEBUG (vjDBG_ALL,vjDBG_CRITICAL_LVL) <<  clrOutNORM(clrRED, "ERROR:") << " redefinition of vjChunkDesc ("
+                vprDEBUG (vprDBG_ALL,vprDBG_CRITICAL_LVL) <<  clrOutNORM(clrRED, "ERROR:") << " redefinition of ChunkDesc ("
                                      << d->name.c_str() << ") not allowed:\n"
                                      << "  Original Desc: \n" << *descs[i]
                                      << "\n  New Desc: \n" << *d
                                      << "\n (multiple definitions must be identical)\n"
-                                     << vjDEBUG_FLUSH;
-                vjASSERT (false);
+                                     << vprDEBUG_FLUSH;
+                vprASSERT (false);
                 return false;
             }
             //delete d;  // should be safe to delete, not 100% sure (ipt hack)
@@ -83,19 +86,19 @@ bool vjChunkDescDB::insert (vjChunkDesc *d) {
 
 
 
-void vjChunkDescDB::insert (vjChunkDescDB* db) {
-    std::vector<vjChunkDesc*>::iterator begin = db->descs.begin();
+void ChunkDescDB::insert (ChunkDescDB* db) {
+    std::vector<ChunkDesc*>::iterator begin = db->descs.begin();
     while (begin != db->descs.end()) {
-        insert (new vjChunkDesc(**begin));
+        insert (new ChunkDesc(**begin));
         begin++;
     }
 }
 
 
 
-bool vjChunkDescDB::remove (const std::string& tok) {
+bool ChunkDescDB::remove (const std::string& tok) {
 
-    std::vector<vjChunkDesc*>::iterator cur_desc = descs.begin();
+    std::vector<ChunkDesc*>::iterator cur_desc = descs.begin();
     while (cur_desc != descs.end()) {
         if (!vjstrcasecmp ((*cur_desc)->token, tok)) {
             /// delete(*begin);     XXX:
@@ -110,8 +113,8 @@ bool vjChunkDescDB::remove (const std::string& tok) {
 
 
 
-void vjChunkDescDB::removeAll () {
-    std::vector<vjChunkDesc*>::iterator i = descs.begin();
+void ChunkDescDB::removeAll () {
+    std::vector<ChunkDesc*>::iterator i = descs.begin();
     while (i != descs.end()) {
         // delete (*i);    XXX:
         i++;
@@ -121,13 +124,13 @@ void vjChunkDescDB::removeAll () {
 
 
 
-int vjChunkDescDB::size () const {
+int ChunkDescDB::size () const {
     return descs.size();
 }
 
 
 
-std::ostream& operator << (std::ostream& out, const vjChunkDescDB& self) {
+std::ostream& operator << (std::ostream& out, const ChunkDescDB& self) {
     for (unsigned int i = 0; i < self.descs.size(); i++)
         out << "Chunk " << *(self.descs[i]) << std::endl;
     out << "End" << std::endl;
@@ -136,48 +139,48 @@ std::ostream& operator << (std::ostream& out, const vjChunkDescDB& self) {
 
 
 
-std::istream& operator >> (std::istream& in, vjChunkDescDB& self) {
+std::istream& operator >> (std::istream& in, ChunkDescDB& self) {
     const int buflen = 512;
     char str[buflen];
-    vjChunkDesc *ch;
+    ChunkDesc *ch;
 
     for (;;) {
         if (readString (in, str, buflen) == 0)
             break; /* eof */
         else if (!strcasecmp (str, chunk_TOKEN)) {
-            ch = new vjChunkDesc();
+            ch = new ChunkDesc();
             in >> *ch;
             self.insert(ch);
         }
         else if (!strcasecmp (str, end_TOKEN))
             break;
         else {
-            vjDEBUG(vjDBG_ERROR,1) << "Unexpected symbol parsing vjChunkDescDB: '"
-                       << str <<"'"<< std::endl << vjDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ERROR,1) << "Unexpected symbol parsing ChunkDescDB: '"
+                       << str <<"'"<< std::endl << vprDEBUG_FLUSH;
         }
     }
-    vjDEBUG(vjDBG_CONFIG,3) << "vjChunkDescDB::>> : Finished - " << self.descs.size()
-               << " descriptions read." << std::endl << vjDEBUG_FLUSH;
+    vprDEBUG(vprDBG_CONFIG,3) << "ChunkDescDB::>> : Finished - " << self.descs.size()
+               << " descriptions read." << std::endl << vprDEBUG_FLUSH;
     return in;
 }
 
 
 
-bool vjChunkDescDB::load (const std::string& filename, const std::string& parentfile) {
+bool ChunkDescDB::load (const std::string& filename, const std::string& parentfile) {
     std::string fname = demangleFileName (filename, parentfile);
-    bool retval = vjConfigIO::instance()->readChunkDescDB (fname, *this);
+    bool retval = ConfigIO::instance()->readChunkDescDB (fname, *this);
 
     return retval;
 
 //      std::ifstream in(fname.c_str());
 
 //      if (!in) {
-//          vjDEBUG(vjDBG_ERROR, vjDBG_CRITICAL_LVL)
-//              << clrOutNORM(clrYELLOW, "WARNING:") << " vjChunkDescDB::load(): Unable to open file\n"
-//              << vjDEBUG_FLUSH;
-//          vjDEBUG_NEXT(vjDBG_ERROR, vjDBG_CRITICAL_LVL)
+//          vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+//              << clrOutNORM(clrYELLOW, "WARNING:") << " ChunkDescDB::load(): Unable to open file\n"
+//              << vprDEBUG_FLUSH;
+//          vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
 //              << "'" << fname.c_str() << "'" << clrRESET << std::endl
-//              << vjDEBUG_FLUSH;
+//              << vprDEBUG_FLUSH;
 //          return false;
 //      }
 //      in >> *this;
@@ -186,13 +189,15 @@ bool vjChunkDescDB::load (const std::string& filename, const std::string& parent
 
 
 
-bool vjChunkDescDB::save (const char *fname) {
+bool ChunkDescDB::save (const char *fname) {
     std::ofstream out(fname);
     if (!out) {
-        vjDEBUG(vjDBG_ERROR,0) << "vjChunkDescDB::save(): Unable to open file '"
-                   << fname << "'" << std::endl << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,0) << "ChunkDescDB::save(): Unable to open file '"
+                   << fname << "'" << std::endl << vprDEBUG_FLUSH;
         return false;
     }
     out << *this;
     return true;
 }
+
+};

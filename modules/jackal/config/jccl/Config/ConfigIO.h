@@ -33,28 +33,30 @@
 #ifndef _VJCONFIGIO_H_
 #define _VJCONFIGIO_H_
 
-#include <vjConfig.h>
+#include <jccl/jcclConfig.h>
 
-#include <Config/vjConfigIOHandler.h>
-#include <Utils/vjSingleton.h>
+#include <jccl/Config/vjConfigIOHandler.h>
+#include <vpr/Util/Singleton.h>
 
+namespace jccl {
+   
 //: Singleton object which can handle multi-format reading and writing of
 //+ ConfigChunkDB and ChunkDescDB files.
 //  Internally, this class knows a lot of specifics about the different
 //  config_io handlers.  while this isn't great in terms of modularity, if
 //  we ever actually have more than 2 or 3 config io handlers, this'll be the
 //  least of our problems.
-class vjConfigIO {
+class ConfigIO {
 
 public:
 
-    ~vjConfigIO ();
+    ~ConfigIO ();
 
     // valid strings are "standard_config" and "xml_config"
-    vjConfigIOHandler* getHandler (const std::string& handler_name);
+    ConfigIOHandler* getHandler (const std::string& handler_name);
 
     // puts handler back in the pool.
-    void releaseHandler (vjConfigIOHandler* handler);
+    void releaseHandler (ConfigIOHandler* handler);
 
 
     //---------- ConfigChunkDB methods -----------
@@ -62,24 +64,24 @@ public:
     //: Read db from the named file.
     //  If handler_name is "", we use a heuristic to determine which
     //  kind of IO handler to use for reading the file.
-    bool readConfigChunkDB (std::string file_name, vjConfigChunkDB& db, const std::string& handler_name = "");
+    bool readConfigChunkDB (std::string file_name, ConfigChunkDB& db, const std::string& handler_name = "");
 
 
     //: Read db from the stream in.
     //  If handler_name is "", uses the default handler class.
     //  Note that we can't guess which handler to use because we can't
     //  back up the stream by an arbitrary amount.
-    bool readConfigChunkDB (std::istream& input, vjConfigChunkDB& db, const std::string& handler_name = "");
+    bool readConfigChunkDB (std::istream& input, ConfigChunkDB& db, const std::string& handler_name = "");
 
 
     //: Write db to the named file.
     //  If handler_name is "", uses the default handler class.
-    bool writeConfigChunkDB (const char* file_name, const vjConfigChunkDB& db, const std::string& handler_name = "");
+    bool writeConfigChunkDB (const char* file_name, const ConfigChunkDB& db, const std::string& handler_name = "");
 
 
     //: Write db to output.
     //  If handler_name is "", uses the default handler class.
-    bool writeConfigChunkDB (std::ostream& output, const vjConfigChunkDB& db, const std::string& handler_name = "");
+    bool writeConfigChunkDB (std::ostream& output, const ConfigChunkDB& db, const std::string& handler_name = "");
 
 
     //---------- ChunkDescDB methods -----------
@@ -87,34 +89,34 @@ public:
     //: Read db from the named file.
     //  If handler_name is "", we use a heuristic to determine which
     //  kind of IO handler to use for reading the file.
-    bool readChunkDescDB (std::string file_name, vjChunkDescDB& db, const std::string& handler_name = "");
+    bool readChunkDescDB (std::string file_name, ChunkDescDB& db, const std::string& handler_name = "");
 
 
     //: Read db from the stream in.
     //  If handler_name is "", uses the default handler class.
     //  Note that we can't guess which handler to use because we can't
     //  back up the stream by an arbitrary amount.
-    bool readChunkDescDB (std::istream& input, vjChunkDescDB& db, const std::string& handler_name = "");
+    bool readChunkDescDB (std::istream& input, ChunkDescDB& db, const std::string& handler_name = "");
 
 
     //: Write db to the named file.
     //  If handler_name is "", uses the default handler class.
-    bool writeChunkDescDB (const char* file_name, const vjChunkDescDB& db, const std::string& handler_name = "");
+    bool writeChunkDescDB (const char* file_name, const ChunkDescDB& db, const std::string& handler_name = "");
 
 
     //: Write db to output.
     //  If handler_name is "", uses the default handler class.
-    bool writeChunkDescDB (std::ostream& output, const vjChunkDescDB& db, const std::string& handler_name = "");
+    bool writeChunkDescDB (std::ostream& output, const ChunkDescDB& db, const std::string& handler_name = "");
 
 
 private:
 
     //: Constructor - private for singleton.
-    vjConfigIO ();
+    ConfigIO ();
 
     //: pool of io handlers.
-    std::vector<vjConfigIOHandler*> xml_config_handlers;
-    vjConfigIOHandler* standard_config_handler;
+    std::vector<ConfigIOHandler*> xml_config_handlers;
+    ConfigIOHandler* standard_config_handler;
 
     //: Name of default handler for reading/writing streams.
     std::string default_handler_name;
@@ -125,8 +127,9 @@ private:
     //: String name to use for getting an old-fasioned io handler.
     static const std::string standard_handler_name;
 
-vjSingletonHeader(vjConfigIO);
+vprSingletonHeader(ConfigIO);
 
 };
 
+};
 #endif
