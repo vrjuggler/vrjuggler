@@ -34,11 +34,9 @@
 #
 
 # -----------------------------------------------------------------------------
-# Generate Makefiles in the subdirectories (SUBDIRS) of the installation
-# directory (prefix) from Makefile.in's found in the source directory
-# (startdir).  All command-line options shown here are required.  They are
-# used to replace strings of the form "@...@" in the Makefile.in files found
-# in the startdir directory tree.
+# Generate Makefiles in the subdirectories of the installation directory
+# (prefix) from Makefile.in's found in the source directory (startdir).  All
+# command-line options shown here are required.
 #
 # Usage:
 #     makefiles-gen.pl
@@ -46,7 +44,6 @@
 #         --srcdir=<Location of source code>
 #         --prefix=<Base directory where Makefile will go>
 #         --startdir=<Directory where search begins>
-#         --SUBDIRS=<Directories containing Makefile.in's>
 #         --uname=<Owner's user name>
 #         --gname=<Group name>
 #         --mode=<Mode bits>
@@ -71,6 +68,8 @@ BEGIN {
 use lib("$path");
 use InstallOps;
 
+$InstallOps::pass_rec_func_cur_file_dir = 1;
+
 $Win32 = 1 if $ENV{'OS'} =~ /Windows/;
 
 # Turn off case insensitivity when parsing command-line options.
@@ -84,7 +83,6 @@ Usage:
         --srcdir=<Location of source code>
         --prefix=<Base directory where Makefile will go>
         --startdir=<Directory where search begins>
-        --SUBDIRS=<Directories containing Makefile.in's>
       [ --uname=<Owner's user name> --gname=<Group name> --mode=<Mode bits> ]
 USAGE_EOF
 }
@@ -97,9 +95,8 @@ USAGE_EOF
 # Parse the command-line options and store the given values in %VARS which
 # is indexed by the tag name to be replaced (e.g., 'CXX').
 GetOptions("vars=s", \$var_file, "srcdir=s" => \$VARS{'srcdir'},
-	   "SUBDIRS=s" => \$VARS{'SUBDIRS'}, "prefix=s" => \$prefix,
-	   "startdir=s" => \$startdir, "uname=s" => \$uname,
-	   "gname=s" => \$gname, "mode=s" => \$mode);
+	   "prefix=s" => \$prefix, "startdir=s" => \$startdir,
+	   "uname=s" => \$uname, "gname=s" => \$gname, "mode=s" => \$mode);
 
 # Import the extra settings for %VARS found in $var_file if it was given
 # on the command line.
@@ -126,34 +123,50 @@ if ( $gname && ! $Win32 ) {
 
 $mode_bits = "$mode" if $mode;
 
-# Loop over the directories given with --SUBDIRS and generate the Makefiles
-# from the corresponding Makefile.in's.
-foreach $dir ( split(/\s/, "$VARS{'SUBDIRS'}") ) {
-    my $outfile = "$prefix/$dir/Makefile";
-
-    print "Generating $outfile ...\n";
-
-    my $infile = "$basedir/$dir/Makefile.in";
-
-    my $workfile;
-
-    if ( $Win32 ) {
-	$workfile = "C:/temp/Makefile.in";
-    } else {
-	$workfile = "/tmp/Makefile.in";
-    }
-
-    # Make a working copy of the input file to be safe.
-    copy("$infile", "$workfile") unless "$infile" eq "$workfile";
-
-    # Replace the tags in $workfile with the values in %VARS.
-    next if replaceTags("$workfile", %VARS) < 0;
-
-    # Move $workfile to its final destination.
-    copy("$workfile", "$outfile");
-    chown($uid, $gid, "$outfile") or die "chown: $!\n";
-    chmod(oct($mode_bits), "$outfile") or die "chmod: $!\n";
-    unlink("$workfile");
-}
+recurseDir(".", "$prefix");
 
 exit 0;
+
+# -----------------------------------------------------------------------------
+# If the given file is named Makefile.in, use it as a template to generate a
+# makefile that will be installed.
+#
+# Syntax:
+#     recurseAction($curfile, $path);
+#
+# Arguments:
+#     $curfile - The name of the current file in the recursion process.
+#     $path    - The current directory stack.
+# -----------------------------------------------------------------------------
+sub recurseAction {
+    my $curfile = shift;
+    my $path    = shift;
+
+    if ( "$curfile" eq "Makefile.in" ) {
+	my $outfile = "$prefix/$path/Makefile";
+
+	print "Generating $outfile ...\n";
+
+	my $infile = "Makefile.in";
+
+	my $workfile;
+
+	if ( $Win32 ) {
+	    $workfile = "C:/temp/Makefile.in";
+	} else {
+	    $workfile = "/tmp/Makefile.in";
+	}
+
+	# Make a working copy of the input file to be safe.
+	copy("$infile", "$workfile") unless "$infile" eq "$workfile";
+
+	# Replace the tags in $workfile with the values in %VARS.
+	next if replaceTags("$workfile", %VARS) < 0;
+
+	# Move $workfile to its final destination.
+	copy("$workfile", "$outfile");
+	chown($uid, $gid, "$outfile") or die "chown: $!\n";
+	chmod(oct($mode_bits), "$outfile") or die "chmod: $!\n";
+	unlink("$workfile");
+    }
+}
