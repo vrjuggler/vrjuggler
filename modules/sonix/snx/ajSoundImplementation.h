@@ -97,7 +97,6 @@ public:
       {
          this->bind( alias );
       }
-      std::cout<<"associated "<<alias<<" with "<<description.filename<<"\n"<<std::flush;
    }
 
    /**
