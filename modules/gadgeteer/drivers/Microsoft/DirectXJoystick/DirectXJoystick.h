@@ -158,8 +158,6 @@ private:
    std::vector<axis_range_t>  mCurAxesRanges;   /**<  Current known ranges on the axes */
 
    std::string mJsLabel;         /**< The VR Juggler name of the joystick device */
-   unsigned mNumAxes;         /**< Number of axes we have on the joystick */
-   unsigned mNumButtons;      /**< Number of buttons that we have on the joystick */
 
    DirectXJoystickStandalone mInputDrv; /** InputDriver for windows */
 

@@ -79,6 +79,7 @@ DirectXJoystick::DirectXJoystick()
  */
 DirectXJoystick::~DirectXJoystick()
 {
+   stopSampling();
 }
 
 std::string DirectXJoystick::getElementType()
@@ -98,26 +99,27 @@ bool DirectXJoystick::config(jccl::ConfigElementPtr e)
 
    mJsLabel = e->getName();
 
-   unsigned num_axis_buttons = e->getNum("axis_buttons");
-   for ( unsigned i = 0; i < num_axis_buttons; ++i )
+   unsigned int num_axis_buttons = e->getNum("axis_buttons");
+   for ( unsigned int i = 0; i < num_axis_buttons; ++i )
    {
       unsigned idx = e->getProperty<int>("axis_buttons", i);
       mAxisButtonIndices.push_back(idx);
    }
 
-   if ( getMin() >= getMax() )
-   {
-      setMin((float) DirectXJoystickStandalone::getAxisMin());
-      setMax((float) DirectXJoystickStandalone::getAxisMax());
-   }
+   // Override whatever the user configured with the minimum and maximum values
+   // used by the standalone Direct Input device.  User configuration input is
+   // useless in this case.
+   setMin((float) DirectXJoystickStandalone::getAxisMin());
+   setMax((float) DirectXJoystickStandalone::getAxisMax());
 
    return true;
 }
 
 bool DirectXJoystick::startSampling()
 {
-   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_STATUS_LVL)
-      << "Opening Win Joystick driver " << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+      << "Initializing Direct Input joystick device" << std::endl
+      << vprDEBUG_FLUSH;
 
    try
    {
@@ -126,30 +128,28 @@ bool DirectXJoystick::startSampling()
    }
    catch(DirectXJoystickException& ex)
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
          << clrOutBOLD(clrRED, "ERROR:")
-         << "[gadget::DirectXJoystick::startSampling()] Failed to open Direct Input joystick:"
+         << " [gadget::DirectXJoystick::startSampling()] "
+         << "Failed to initialize Direct Input joystick:" << std::endl
          << vprDEBUG_FLUSH;
-      vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+      vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
          << ex.what() << std::endl << vprDEBUG_FLUSH;
       return false;
    }
 
-   // FIXME: hardcoded number of axes and buttons
-   int version = 0;
-   mNumAxes = 9;       // Analog = 8   from DIJOYSTATE
-   mNumButtons = 10;   // Digital = 32  from DIJOYSTATE
-
    // Output joystick description
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
-         << "  joystick label: " << mJsLabel << std::endl
-         << "   joystick name: " << mInputDrv.getProductName() << std::endl
-         << "            axes: " << mNumAxes << std::endl
-         << "         buttons: " << mNumButtons << std::endl
-         << "      driver ver: " << version << std::endl
-         << "    axis buttons: ";
+      << std::endl
+      << "  joystick label: " << mJsLabel << std::endl
+      << "   joystick name: " << mInputDrv.getProductName() << std::endl
+      << "            axes: " << mInputDrv.getNumAxes() << std::endl
+      << "         buttons: " << mInputDrv.getNumButtons() << std::endl
+      << "    firmware rev: " << mInputDrv.getFirmwareRev() << std::endl
+      << "    hardware rev: " << mInputDrv.getHardwareRev() << std::endl
+      << "    axis buttons: ";
 
-   for(unsigned i=0;i<mAxisButtonIndices.size(); ++i)
+   for ( unsigned int i = 0; i < mAxisButtonIndices.size(); ++i )
    { 
       vprDEBUG_CONTnl(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
          << mAxisButtonIndices[i] << " ";
@@ -157,21 +157,30 @@ bool DirectXJoystick::startSampling()
    vprDEBUG_CONTnl(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
       << std::endl << vprDEBUG_FLUSH;
 
-   // Allocate initial device data
-   // - By default this will clear them out
-   mCurAxes.resize(mNumAxes);
-   mCurAxesRanges.resize(mNumAxes, axis_range_t(-100.0f, 100.0f));             // Initialize ranges to 0,255
-   mCurButtons.resize(mNumButtons + mAxisButtonIndices.size());
+   // Allocate initial device data.  By default this will clear them out.
+   const DWORD num_axes(mInputDrv.getNumAxes()),
+               num_buttons(mInputDrv.getNumButtons());
+   mCurAxes.resize(num_axes);
+   mCurAxesRanges.resize(num_axes,
+                         axis_range_t((float) DirectXJoystickStandalone::getAxisMin(),
+                                      (float) DirectXJoystickStandalone::getAxisMax()));
+   mCurButtons.resize(num_buttons + mAxisButtonIndices.size());
 
-   // Setup axis as button stuff
+   // Set up axis-as-button stuff.
+   // Default to -1, meaning no axis button.
    mAxisToButtonIndexLookup.clear();
-   mAxisToButtonIndexLookup.resize(mNumAxes, -1);            // Default to -1, meaning no axis button
-   for(unsigned i=0;i<mAxisButtonIndices.size(); ++i)       // For each configured axis index
+   mAxisToButtonIndexLookup.resize(num_axes, -1);
+
+   for ( unsigned int i = 0; i < mAxisButtonIndices.size(); ++i )
    {
-      unsigned virtual_btn_index = (mNumButtons+i);                     // Index of the virtual button from the axis
-      vprASSERT(virtual_btn_index < mCurButtons.size() && "Virtual button index out of range");
-      unsigned axis_index = mAxisButtonIndices[i];                      // Index of the axis we are mapping
-      mAxisToButtonIndexLookup[axis_index] = int(virtual_btn_index);    // Setup the mapping
+      // Index of the virtual button from the axis.
+      unsigned int virtual_btn_index = num_buttons + i;
+      vprASSERT(virtual_btn_index < mCurButtons.size() &&
+                "Virtual button index out of range");
+      // Index of the axis we are mapping.
+      unsigned int axis_index = mAxisButtonIndices[i];
+      // Set up the mapping.
+      mAxisToButtonIndexLookup[axis_index] = int(virtual_btn_index);
    }
 
    return true;
@@ -204,41 +213,35 @@ void DirectXJoystick::updateData()
    {
       const DIJOYSTATE& mJsData = mInputDrv.getData(); 
 
-      //FIXME: if & only if there is events happen, do setTime
-      // for buttons, do update 
-      for ( unsigned int i = 0; i < mCurButtons.size(); ++i )
+      const DWORD num_buttons(mInputDrv.getNumButtons());
+      for ( unsigned int i = 0; i < num_buttons; ++i )
       {
          mCurButtons[i].setDigital(mJsData.rgbButtons[i]);
-         if( mCurButtons[i].getDigital() != 0)
-         {
-            mCurButtons[i].setTime();
-         }
+         mCurButtons[i].setTime();
+      }
+   
+/*
+      // Handle axis buttons.
+      for ( unsigned int i = num_buttons; i < mNumButtons.size(); ++i )
+      {
+         mCurButtons[i].setTime();
+      }
+*/
+
+      for ( unsigned int i = 0; i < mCurAxes.size(); ++i )
+      {
+         mCurAxes[i].setTime();
       }
 
-      // for axes, do update
       float norm_value;
       normalizeMinToMax(mJsData.lX, norm_value);
       mCurAxes[0] = norm_value;
       normalizeMinToMax(mJsData.lY, norm_value);
       mCurAxes[1] = norm_value;
-      normalizeMinToMax(mJsData.lZ, norm_value);
-      mCurAxes[2] = norm_value;
-      normalizeMinToMax(mJsData.lRx, norm_value); // x rotation
-      mCurAxes[3] = norm_value;
-      normalizeMinToMax(mJsData.lRy, norm_value); // y rotation
-      mCurAxes[4] = norm_value;
-      normalizeMinToMax(mJsData.lRz, norm_value); // z rotation
-      mCurAxes[5] = norm_value;
-      normalizeMinToMax(mJsData.rglSlider[0], norm_value); // u-axis
-      mCurAxes[6] = norm_value;
-      normalizeMinToMax(mJsData.rglSlider[1], norm_value); // v-axis
-      mCurAxes[7] = norm_value;
-      mCurAxes[8] = (float(mJsData.rgdwPOV[0])); //hat: -1, 0, 9,000, 18,000, or 27,000.
-
+/*
       // use axes as button, only first 3 are tested.
-      for ( unsigned int axis_number = 0; axis_number < mNumAxes; ++axis_number )
+      for ( unsigned int axis_number = 0; axis_number < mCurAxes.size(); ++axis_number )
       {
-         // FIXME: don't know when it is changed
          mCurAxes[axis_number].setTime();
 
          // Check for axis buttons
@@ -256,6 +259,7 @@ void DirectXJoystick::updateData()
             }
          }
       }
+*/
 
       addDigitalSample(mCurButtons);
       swapDigitalBuffers();
