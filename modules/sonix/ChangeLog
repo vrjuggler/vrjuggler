@@ -2,6 +2,7 @@ DATE        AUTHOR      CHANGE
 ----------- ---------   -------------------------------------------------------
 Oct-14-2002 browner     Modified Sonix to use vapor for output.  And updated the
                         build system accordingly
+                        NEW VERSION: 0.2.0
 Sep-13-2002 patrickh    Fixed a nasty segmentation fault, most likely caused
                         by a stack overrrun.
                         NEW VERSION: 0.1.2
