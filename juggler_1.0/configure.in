@@ -1493,7 +1493,7 @@ if test "$ac_cv_CC_accepts_pthread" = "yes" ; then
 fi
 
 dnl # If we are using pthreads, add the library containing the pthread calls to
-dnl # $LIBS.  This must be done here because the $TEST_VJ_LIBS* stuff below
+dnl # $LIBS.  This must be done here because the $APP_VJ_LIBS* stuff below
 dnl # uses $LIBS.
 if test "x$THREADS" = "xPOSIX" -a "x${_pthread_lib}" != "x" ; then
     LIBS="$LIBS ${_pthread_lib}"
@@ -1535,91 +1535,91 @@ dnl # alternative to using ${srcdir}.
 VJ_SRCDIR='${VJROOT_ABS}'
 UNIX_VJROOT_ABS="$VJROOT_ABS"
 
-dnl # Variables set in Makefiles found in the test tree.  All variables
+dnl # Variables set in Makefiles found in the application trees.  All variables
 dnl # listed are for use only in the Makefile.in's found in that tree unless
 dnl # otherwise noted.  They are used in the following way:
 dnl #
-dnl #     * TEST_EXTRA_FLAGS: Extra flags for the compiler and linker.
-dnl #     * TEST_VJ_INC_AW: The include path for the AudioWorks header files.
-dnl #     * TEST_VJ_INC_SL: The include path for hte SL header files.
-dnl #     * TEST_VJ_LIBS_BASIC: The basic VR Juggler library.
-dnl #     * TEST_VJ_LIBS_BASIC_INST: Same as the above but is for installed
+dnl #     * APP_EXTRA_FLAGS: Extra flags for the compiler and linker.
+dnl #     * APP_VJ_INC_AW: The include path for the AudioWorks header files.
+dnl #     * APP_VJ_INC_SL: The include path for hte SL header files.
+dnl #     * APP_VJ_LIBS_BASIC: The basic VR Juggler library.
+dnl #     * APP_VJ_LIBS_BASIC_INST: Same as the above but is for installed
 dnl #       Makefiles.
-dnl #     * TEST_VJ_LIBS_GL: The VR Juggler OpenGL API library.
-dnl #     * TEST_VJ_LIBS_PF: The VR Juggler Performer API library.
-dnl #     * TEST_LIBS_BASIC: The _most basic_ basic libraries needed for
+dnl #     * APP_VJ_LIBS_GL: The VR Juggler OpenGL API library.
+dnl #     * APP_VJ_LIBS_PF: The VR Juggler Performer API library.
+dnl #     * APP_LIBS_BASIC: The _most basic_ basic libraries needed for
 dnl #       compiling (e.g., -lC).
-dnl #     * TEST_EXTRA_LIBS_BEGIN: Options used at the beginning of the list
+dnl #     * APP_EXTRA_LIBS_BEGIN: Options used at the beginning of the list
 dnl #       of extra libraries.
-dnl #     * TEST_EXTRA_LIBS_END: Options used at the end of the list of extra
+dnl #     * APP_EXTRA_LIBS_END: Options used at the end of the list of extra
 dnl #       libraries.
-dnl #     * TEST_EXTRA_LIBS_BASIC: A basic set of extra libraries and linker
+dnl #     * APP_EXTRA_LIBS_BASIC: A basic set of extra libraries and linker
 dnl #       flags needed for compiling.  These are put after those listed in
 dnl #       the previous variables in the compile line.
-dnl #     * TEST_VJ_LIBS_GL: The OpenGL libraries needed for compiling with
+dnl #     * APP_VJ_LIBS_GL: The OpenGL libraries needed for compiling with
 dnl #       the OpenGL API.
-dnl #     * TEST_VJ_LIBS_PF: The Performer libraries needed for compiling
+dnl #     * APP_VJ_LIBS_PF: The Performer libraries needed for compiling
 dnl #       with the Performer API.
-dnl #     * TEST_VJ_LIBS_AW: The AudioWorks libraries needed for compiling
+dnl #     * APP_VJ_LIBS_AW: The AudioWorks libraries needed for compiling
 dnl #       with the AudioWorks sound system.
-dnl #     * TEST_VJ_LIBS_SL: The SL libraries needed for compiling with the
+dnl #     * APP_VJ_LIBS_SL: The SL libraries needed for compiling with the
 dnl #       SL sound libraries.
 dnl #
-TEST_EXTRA_FLAGS="${_EXTRA_FLAGS}"
+APP_EXTRA_FLAGS="${_EXTRA_FLAGS}"
 
 dnl # If we have AudioWorks, make it available in the application makefiles.
 if test "$AUDIO_WORKS" = "Y" ; then
     if test "$OS_TYPE" = "Win32" ; then
-        TEST_VJ_LIBS_AW='Juggler_aw.lib'
+        APP_VJ_LIBS_AW='Juggler_aw.lib'
     else
-        TEST_VJ_LIBS_AW='-lJuggler_aw'
+        APP_VJ_LIBS_AW='-lJuggler_aw'
     fi
 
-    TEST_EXTRA_INC_AW="$AW_INC"
-    TEST_EXTRA_LIBS_AW="$AW_LIB ${_aw_libs}"
+    APP_EXTRA_INC_AW="$AW_INC"
+    APP_EXTRA_LIBS_AW="$AW_LIB ${_aw_libs}"
 fi
 
 dnl # If we have SL, make it available in the application makefiles.
 if test "$SL" = "Y" ; then
     if test "$OS_TYPE" = "Win32" ; then
-        TEST_VJ_LIBS_SL='Juggler_sl.lib'
+        APP_VJ_LIBS_SL='Juggler_sl.lib'
     else
-        TEST_VJ_LIBS_SL='-lJuggler_sl'
+        APP_VJ_LIBS_SL='-lJuggler_sl'
     fi
 
-    TEST_EXTRA_INC_SL="$SL_INC"
-    TEST_EXTRA_LIBS_SL="$SL_LIB ${_sl_libs}"
+    APP_EXTRA_INC_SL="$SL_INC"
+    APP_EXTRA_LIBS_SL="$SL_LIB ${_sl_libs}"
 fi
 
 if test "$OS_TYPE" = "UNIX" ; then
     if test "$PLATFORM" = "IRIX" ; then
-        TEST_VJ_LIBS_BASIC="-B static -L\$(VJ_BASE_DIR)/lib${LIBBITSUF} -lJuggler"
-        TEST_VJ_LIBS_BASIC_INST="-B dynamic -L\$(VJ_BASE_DIR)/lib${LIBBITSUF} -lJuggler"
-        TEST_EXTRA_LIBS_BEGIN='-B dynamic'
-        TEST_EXTRA_LIBS_END='-lm -lC'
+        APP_VJ_LIBS_BASIC="-B static -L\$(VJ_BASE_DIR)/lib${LIBBITSUF} -lJuggler"
+        APP_VJ_LIBS_BASIC_INST="-B dynamic -L\$(VJ_BASE_DIR)/lib${LIBBITSUF} -lJuggler"
+        APP_EXTRA_LIBS_BEGIN='-B dynamic'
+        APP_EXTRA_LIBS_END='-lm -lC'
     else
         dnl # For now, we are disabling static linking for the sample
         dnl # applications when compiled in a developer's build tree.  This
         dnl # is only the case on non-IRIX platforms.
-        TEST_VJ_LIBS_BASIC="-L\$(VJ_BASE_DIR)/lib${LIBBITSUF} -lJuggler"
-        TEST_VJ_LIBS_BASIC_INST="$TEST_VJ_LIBS_BASIC"
-        TEST_EXTRA_LIBS_END="-lm"
+        APP_VJ_LIBS_BASIC="-L\$(VJ_BASE_DIR)/lib${LIBBITSUF} -lJuggler"
+        APP_VJ_LIBS_BASIC_INST="$APP_VJ_LIBS_BASIC"
+        APP_EXTRA_LIBS_END="-lm"
     fi
 
-    TEST_VJ_LIBS_GL="-lJuggler_ogl"
-    TEST_VJ_LIBS_PF="-lJuggler_pf"
-    TEST_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
-    TEST_EXTRA_LIBS_GL="${_SYSTEM_OPENGL}"
-    TEST_EXTRA_LIBS_PF="${_PFOGLLIB}"
+    APP_VJ_LIBS_GL="-lJuggler_ogl"
+    APP_VJ_LIBS_PF="-lJuggler_pf"
+    APP_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
+    APP_EXTRA_LIBS_GL="${_SYSTEM_OPENGL}"
+    APP_EXTRA_LIBS_PF="${_PFOGLLIB}"
 elif test "$OS_TYPE" = "Win32" ; then
-    TEST_VJ_LIBS_BASIC="-link -libpath:\$(VJ_BASE_DIR)/lib/debug Juggler.lib"
-    TEST_VJ_LIBS_BASIC_INST="$TEST_VJ_LIBS_BASIC"
-    TEST_LIBS_BASIC='comctl32.lib user32.lib gdi32.lib ws2_32.lib'
-    TEST_VJ_LIBS_GL='Juggler_ogl.lib'
-    TEST_VJ_LIBS_PF='Juggler_pf.lib'
-    TEST_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
-    TEST_EXTRA_LIBS_GL="${_SYSTEM_OPENGL}"
-    TEST_EXTRA_LIBS_PF="${_PFOGLLIB}"
+    APP_VJ_LIBS_BASIC="-link -libpath:\$(VJ_BASE_DIR)/lib/debug Juggler.lib"
+    APP_VJ_LIBS_BASIC_INST="$APP_VJ_LIBS_BASIC"
+    APP_LIBS_BASIC='comctl32.lib user32.lib gdi32.lib ws2_32.lib'
+    APP_VJ_LIBS_GL='Juggler_ogl.lib'
+    APP_VJ_LIBS_PF='Juggler_pf.lib'
+    APP_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
+    APP_EXTRA_LIBS_GL="${_SYSTEM_OPENGL}"
+    APP_EXTRA_LIBS_PF="${_PFOGLLIB}"
 fi
 
 dnl # Translate paths from UNIX-style to Win32.
@@ -1635,11 +1635,11 @@ if test "$OS_TYPE" = "Win32" ; then
 
     JDK_HOME=`unix2dos "$JDK_HOME"`
 
-    TEST_EXTRA_LIBS_BASIC=`unix2dos "$TEST_EXTRA_LIBS_BASIC"`
-    TEST_EXTRA_LIBS_GL=`unix2dos "$TEST_EXTRA_LIBS_GL"`
-    TEST_EXTRA_LIBS_PF=`unix2dos "$TEST_EXTRA_LIBS_PF"`
-    TEST_EXTRA_LIBS_AW=`unix2dos "$TEST_EXTRA_LIBS_AW"`
-    TEST_EXTRA_LIBS_SL=`unix2dos "$TEST_EXTRA_LIBS_SL"`
+    APP_EXTRA_LIBS_BASIC=`unix2dos "$APP_EXTRA_LIBS_BASIC"`
+    APP_EXTRA_LIBS_GL=`unix2dos "$APP_EXTRA_LIBS_GL"`
+    APP_EXTRA_LIBS_PF=`unix2dos "$APP_EXTRA_LIBS_PF"`
+    APP_EXTRA_LIBS_AW=`unix2dos "$APP_EXTRA_LIBS_AW"`
+    APP_EXTRA_LIBS_SL=`unix2dos "$APP_EXTRA_LIBS_SL"`
 else
     SAFE_VJROOT_ABS="$VJROOT_ABS"
 fi
@@ -1713,23 +1713,23 @@ AC_SUBST(SL)
 AC_SUBST(SL_INC)
 AC_SUBST(SL_LIB)
 
-AC_SUBST(TEST_EXTRA_FLAGS)
-AC_SUBST(TEST_EXTRA_INC_AW)
-AC_SUBST(TEST_EXTRA_INC_SL)
-AC_SUBST(TEST_VJ_LIBS_BASIC)
-AC_SUBST(TEST_VJ_LIBS_BASIC_INST)
-AC_SUBST(TEST_VJ_LIBS_GL)
-AC_SUBST(TEST_VJ_LIBS_PF)
-AC_SUBST(TEST_VJ_LIBS_AW)
-AC_SUBST(TEST_VJ_LIBS_SL)
-AC_SUBST(TEST_LIBS_BASIC)
-AC_SUBST(TEST_EXTRA_LIBS_BEGIN)
-AC_SUBST(TEST_EXTRA_LIBS_END)
-AC_SUBST(TEST_EXTRA_LIBS_BASIC)
-AC_SUBST(TEST_EXTRA_LIBS_GL)
-AC_SUBST(TEST_EXTRA_LIBS_PF)
-AC_SUBST(TEST_EXTRA_LIBS_AW)
-AC_SUBST(TEST_EXTRA_LIBS_SL)
+AC_SUBST(APP_EXTRA_FLAGS)
+AC_SUBST(APP_EXTRA_INC_AW)
+AC_SUBST(APP_EXTRA_INC_SL)
+AC_SUBST(APP_VJ_LIBS_BASIC)
+AC_SUBST(APP_VJ_LIBS_BASIC_INST)
+AC_SUBST(APP_VJ_LIBS_GL)
+AC_SUBST(APP_VJ_LIBS_PF)
+AC_SUBST(APP_VJ_LIBS_AW)
+AC_SUBST(APP_VJ_LIBS_SL)
+AC_SUBST(APP_LIBS_BASIC)
+AC_SUBST(APP_EXTRA_LIBS_BEGIN)
+AC_SUBST(APP_EXTRA_LIBS_END)
+AC_SUBST(APP_EXTRA_LIBS_BASIC)
+AC_SUBST(APP_EXTRA_LIBS_GL)
+AC_SUBST(APP_EXTRA_LIBS_PF)
+AC_SUBST(APP_EXTRA_LIBS_AW)
+AC_SUBST(APP_EXTRA_LIBS_SL)
 
 dnl # -------------------------------------------------------------------------
 dnl # Final file generation step.

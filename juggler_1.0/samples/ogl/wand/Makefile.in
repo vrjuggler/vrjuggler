@@ -9,11 +9,11 @@
 
 srcdir		= @srcdir@
 
-EXTRA_FLAGS	= @TEST_EXTRA_FLAGS@
+EXTRA_FLAGS	= @APP_EXTRA_FLAGS@
 COMPILE		= @CXX@ @DEFS@ $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@ @DBG_FLAGS@ $(EXTRA_FLAGS)
 LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@ $(EXTRA_FLAGS)
 VJ_INCLUDES	= @INCLUDES@ -I$(VJ_BASE_DIR)/include -I$(srcdir)
-VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_LIBS_BASIC@
+VJ_LIBS		= @APP_VJ_LIBS_BASIC@ @APP_VJ_LIBS_GL@ @APP_LIBS_BASIC@
 VPATH		= @srcdir@
 
 # This test program requires the following libraries to be linked:
@@ -27,7 +27,7 @@ VPATH		= @srcdir@
 # Binary Interface (ABI) used.  For o32 binaries, -L/usr/lib is the
 # appropriate path.  For n32 binaries, use -L/usr/lib32.  For 64-bit binaries,
 # use -L/usr/lib64.
-EXTRA_LIBS	= @TEST_EXTRA_LIBS_BEGIN@ @TEST_EXTRA_LIBS_BASIC@ @TEST_EXTRA_LIBS_GL@ @TEST_EXTRA_LIBS_END@
+EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
 OBJECTS		= main.@OBJ_FILE_SUFFIX@ wandApp.@OBJ_FILE_SUFFIX@
 
