@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2003-02-27 pallindo Fixed bugs in the Win32 serial port wrapper.  It works now.
+                    NEW VERSION: 0.26.3
 2003-01-22 patrickh Fixed race condition in vpr::ThreadPosix.
                     NEW VERSION: 0.26.2
 2003-01-21 allenb   Fixed vpr::SocketImplNSPR::readn_i().
