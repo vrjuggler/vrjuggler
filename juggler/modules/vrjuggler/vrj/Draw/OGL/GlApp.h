@@ -25,7 +25,6 @@ public:
    vjGlApp(vjKernel* kern) : vjApp(kern)
    {
       api.setOpenGL();     // Tell everyone that we are OpenGL
-      mCurContextId = 0;   // Initialize the context value
    }
 
    //: Function to draw the scene
@@ -44,15 +43,6 @@ public:
    //! POST: Application has completed in initialization the user wishes
    virtual void contextInit()
    {;}
-
-   //: Function to set a context id
-   //! NOTE: Used internally only !!!
-   //+       Users should not call !!!
-   void setContextId(int contextId)
-   { mCurContextId = contextId; }
-
-protected:
-   int                        mCurContextId;          // Internal Unique id of the current openGL context
 };
 
 
