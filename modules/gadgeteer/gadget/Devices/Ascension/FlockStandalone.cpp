@@ -51,8 +51,7 @@ aFlock::aFlock(const char* const port,
 		  _hemisphere(hemi),
 		  _filter( filt ),
 		  _reportRate(report),
-		  _usingCorrectionTable(false),
-		  _current(0), _valid(1), _progress(2)
+		  _usingCorrectionTable(false)
 {
   if (port != NULL)
   	strncpy( _port, port, aFlock::MAXCHARSTRINGSIZE );
@@ -129,47 +128,36 @@ int aFlock::start()
 	aFlock::open_port( _port, _baud, _portId );
 	if (_portId == -1) 
 	    return 0;
-	sleep(5);
 	    
 	cout<<"aFlock: Setting blocking\n"<<flush;
 	aFlock::set_blocking( _portId, _blocking );
-	sleep(5);
 	
 	cout<<"aFlock: Setting sync\n"<<flush;
 	aFlock::set_sync( _portId, _syncStyle );
-	sleep(5);
 	
 	cout<<"aFlock: Setting group\n"<<flush;
 	aFlock::set_group( _portId );
-	sleep(5);
 	
 	cout<<"aFlock: Setting autoconfig\n"<<flush;
 	aFlock::set_autoconfig( _portId, _numBirds );
-	sleep(5);
 	
 	cout<<"aFlock: Setting transmitter\n"<<flush;
 	aFlock::set_transmitter( _portId, _xmitterUnitNumber );
-	sleep(5);
 	
 	cout<<"aFlock: Setting filter\n"<<flush;
 	aFlock::set_filter( _portId, _filter );
-	sleep(5);
 	
 	cout<<"aFlock: Setting hemisphere\n"<<flush;
 	aFlock::set_hemisphere( _portId, _hemisphere, _xmitterUnitNumber, _numBirds );
-	sleep(3);
 	
 	cout<<"aFlock: Setting pos_angles\n"<<flush;
 	aFlock::set_pos_angles( _portId, _xmitterUnitNumber, _numBirds );
-	sleep(3);
 	
 	cout<<"aFlock: Setting pickBird\n"<<flush;
 	aFlock::pickBird( _xmitterUnitNumber,_portId );
-	sleep(3);
 	
 	cout<<"aFlock: Setting rep_and_stream\n"<<flush;
 	aFlock::set_rep_and_stream( _portId, _reportRate );
-	sleep(3);
 	
 	cout  << "aFlock: ready to go.." << endl << flush;
 	
@@ -193,26 +181,26 @@ int aFlock::sample()
      int i;
     
      // for [1..n] birds, get their reading:
-     for (i=1; i < (_numBirds+1); i++)
+     for (i=1; i < (_numBirds+1) && i < MAX_SENSORS; i++)
      {
 	if (i == _xmitterUnitNumber)
 		continue;
 	
-	
-	
+	// you can never go above the maximum number of sensors.
+	assert( i < MAX_SENSORS );
 	aFlock::getReading(i, _portId, 
-		this->xPos(),
-		this->yPos(),
-		this->zPos(),
-		this->zRot(),
-		this->yRot(),
-		this->xRot());	
+		this->xPos(i),
+		this->yPos(i),
+		this->zPos(i),
+		this->zRot(i),
+		this->yRot(i),
+		this->xRot(i));	
 		
 	if (_usingCorrectionTable)
 	{
-	    this->positionCorrect( this->xPos(),
-			    this->yPos(),
-			    this->zPos() );
+	    this->positionCorrect( this->xPos(i),
+			    this->yPos(i),
+			    this->zPos(i) );
 	}
      }
 
@@ -449,6 +437,13 @@ void aFlock::initCorrectionTable( const char* const fName )
    inFile.close();
 }
 
+ float& aFlock::xPos( const int& i )  { assert( i < MAX_SENSORS ); return _position[i][0]; }
+ float& aFlock::yPos( const int& i )  { assert( i < MAX_SENSORS ); return _position[i][1]; }
+ float& aFlock::zPos( const int& i )  { assert( i < MAX_SENSORS ); return _position[i][2]; }
+ float& aFlock::zRot( const int& i )  { assert( i < MAX_SENSORS ); return _orientation[i][0]; }
+ float& aFlock::yRot( const int& i )  { assert( i < MAX_SENSORS ); return _orientation[i][1]; }
+ float& aFlock::xRot( const int& i )  { assert( i < MAX_SENSORS ); return _orientation[i][2]; }
+
 
 ///////////////////////////////////////////////////////////////////
 // Local functions to aFlock.cpp
@@ -540,6 +535,7 @@ int aFlock::open_port( const char* const serialPort,
     // Open the port
     ///////////////////////////////////////////////////////////////////
     _portId = open( serialPort, O_RDWR | O_NDELAY);
+    //_portId = open( "temp.txt", O_WRONLY | O_CREAT);
     if (_portId == -1)
     {
 	cout << "  port reset failed (because port open failed)\n" << flush ;
@@ -550,9 +546,8 @@ int aFlock::open_port( const char* const serialPort,
 	cout << "  port reset successfully (port was opened then closed)\n" << flush;
     }
     
-    
-    sleep(2);
     _portId = open( serialPort, O_RDWR | O_NDELAY);
+    //_portId = open( "temp.txt", O_WRONLY | O_CREAT);
     
     if (_portId == -1)
     {
@@ -561,8 +556,6 @@ int aFlock::open_port( const char* const serialPort,
     } else {
 	cout << "  port open successfully\n" << flush;
     }
-    
-    sleep(2);
     
     //////////////////////////////////////////////////////////////////
     // Setup the port, current setting is 38400 baud

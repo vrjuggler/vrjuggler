@@ -464,7 +464,7 @@ inline int getReading(int n, vjMatrix* data, int port)
 
       while ((read(port,&group,1) == 0) && c < 99999)
       {
-         sgi_nap(1);
+         sginap(1);
 	 c++;
 	}
 	
