@@ -31,7 +31,7 @@ dnl
 dnl ************* <auto-copyright.pl END do not edit this line> *************
 
 dnl ---------------------------------------------------------------------------
-dnl VRJUGGLER_PATH([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULES]]]])
+dnl VRJUGGLER_PATH([minimum-version, [action-if-found [, action-if-not-found [, modules]]]])
 dnl
 dnl Test for VR Juggler and then define the following variables:
 dnl     VRJ_CXXFLAGS
@@ -47,6 +47,8 @@ dnl     VRJ_EXTRA_LIBS_LD
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([VRJUGGLER_PATH],
 [
+    DPP_PREREQ([2.0.1])
+
     dnl Get the cflags and libraries from the vrjuggler-config script
     AC_ARG_WITH(vrjuggler,
                 [  --with-vrjuggler=<PATH> Directory where VR Juggler is
@@ -114,9 +116,8 @@ dnl        VRJ_LIBS_STATIC="`$VRJ_CONFIG $vrj_config_args --libs $ABI --static` 
         VRJ_EXTRA_LIBS_CC_MIN=`$VRJ_CONFIG $vrj_config_args --extra-libs $ABI --min`
         VRJ_EXTRA_LIBS_LD_MIN=`$VRJ_CONFIG $vrj_config_args --extra-libs $ABI --min --linker`
 
-        AC_MSG_CHECKING([whether VR Juggler version is >= $min_vrj_version])
-        AC_MSG_RESULT([$VRJ_VERSION])
-        DPP_VERSION_CHECK([$VRJ_VERSION], [$min_vrj_version], $2, $3)
+        DPP_VERSION_CHECK_MSG_NO_CACHE([VR Juggler], [$VRJ_VERSION],
+                                       [$min_vrj_version], [$2], [$3])
     fi
 
     if test "x$no_vrj" != x ; then

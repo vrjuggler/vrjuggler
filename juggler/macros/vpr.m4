@@ -40,12 +40,14 @@ dnl
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
 dnl ---------------------------------------------------------------------------
-dnl VPR_PATH([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULES]]]])
+dnl VPR_PATH([minimum-version, [action-if-found [, action-if-not-found]]])
 dnl
 dnl Test for VPR and then define VPR_CXXFLAGS, VPR_LIBS, and VPR_LIBS_STATIC.
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([VPR_PATH],
 [
+    DPP_PREREQ([2.0.1])
+
     dnl Get the cflags and libraries from the vpr-config script
     AC_ARG_WITH(vpr,
                 [  --with-vpr=<PATH>       Directory where VPR is
@@ -120,9 +122,8 @@ AC_DEFUN([VPR_PATH],
         VPR_EXTRA_LIBS_LD_MIN=`$VPR_CONFIG $vpr_config_args --extra-libs $ABI --linker --min`
         VPR_VERSION=`$VPR_CONFIG --version`
 
-        AC_MSG_CHECKING([whether VPR version is >= $min_vpr_version])
-        AC_MSG_RESULT([$VPR_VERSION])
-        DPP_VERSION_CHECK([$VPR_VERSION], [$min_vpr_version], $2, $3)
+        DPP_VERSION_CHECK_MSG_NO_CACHE([VPR], [$VPR_VERSION],
+                                       [$min_vpr_version], [$2], [$3])
     fi
 
     if test "x$no_vpr" != x ; then
