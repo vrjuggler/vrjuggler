@@ -36,17 +36,30 @@
 
 int
 main (int argc, char* argv[]) {
+    if ( argc != 3 ) {
+        fprintf(stderr, "Usage: %s <address> <port>\n", argv[0]);
+    }
+
+    // Create a socket that is sending to a remote host named in the first
+    // argument listening on the port named in the second argument.
     vpr::SocketDatagram sock(vpr::InetAddr::AnyAddr,
                              vpr::InetAddr(argv[1], atoi(argv[2])));
 
     if ( sock.open() ) {
         char buffer[40];
 
+        // We only send to one host, so call connect().
         if ( sock.connect() ) {
             ssize_t bytes;
 
+            // Read from the server.
+            strcpy(buffer, "Hi, I'm a client");
             bytes = sock.write(buffer, 40);
 
+            // Read from the server.
+            bytes = sock.read(buffer, 40);
+
+            // If the server reasponded, print the result.
             if ( bytes > 0 ) {
                 printf("Read %d bytes from server\n", bytes);
                 printf("    Got '%s'\n", buffer);
