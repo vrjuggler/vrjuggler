@@ -35,7 +35,7 @@ WindowListener {
 	pane.addHyperlinkListener (this);
 	addWindowListener (this);
 
-	setSize (450, 350);
+	setSize (650, 550);
 	setURL (url);
     }
 
