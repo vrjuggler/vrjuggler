@@ -2,8 +2,6 @@
   This file is specific to the VR Juggler documentation layout and template
   information describing a method's contract.  It fills in the body of the
   table for the current method's contract (PRE, POST, MODIFIES and NOTE).
-
-  $Id$
  -->
 
 {if MODIFIES}

@@ -7,8 +7,6 @@
   and finally any extra information.
   This can typically be used at the start of a class/struct/union description
   page.
-
-  $Id$
  -->
 
 <FONT SIZE="-1"><B>{path}</B></FONT><BR>

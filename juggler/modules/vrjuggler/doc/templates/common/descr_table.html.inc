@@ -2,8 +2,6 @@
   A simple table with the description (both brief and detailed) of the
   current member.  The layout is for the VR Juggler documentation, but it
   could be modified to be used elsewhere.
-
-  $Id$
  -->
 
 <TABLE BORDER="1" WIDTH="100%">

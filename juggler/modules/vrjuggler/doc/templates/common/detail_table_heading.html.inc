@@ -3,8 +3,6 @@
   method.  It provides an anchor for external linking directly to this
   entry in the detailed listing.
   This file is specific to the VR Juggler documetnation layout.
-
-  $Id$
  -->
 
 <TR>

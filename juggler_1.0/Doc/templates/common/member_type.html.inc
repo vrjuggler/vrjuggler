@@ -1,8 +1,6 @@
 <!--
   Print the type and visibility of the current member in typewriter font.
   This is a general purpose file that can be used anywhere necessary.
-
-  $Id$
  -->
 
 <TT>

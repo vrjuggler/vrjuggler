@@ -3,8 +3,6 @@
   a more detailed description of the method.
   This file is specific to the VR Juggler documentation but could be modified
   to be used elsewhere.
-
-  $Id$
  -->
 
 <TT>
