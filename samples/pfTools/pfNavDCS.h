@@ -53,19 +53,29 @@ public:
    { return mNaver; }
 
    void setNavigator(navigator* nav)
-   { mNaver = nav; }
+   {
+      mNaver = nav;
+      mNaver->setActive(mActive);
+   }
 
+   bool isActive() { return mActive;}
+
+   // Set the active state of the nav DCS
+   // NOTE: This is done by setting the state of the navigator
+   void setActive(bool state = true)
+   {
+      mActive = state;
+      mNaver->setActive(state);
+   }
 
 private:
+   bool                 mActive;     // Are we active
    navigator*           mNaver;      // My navigator
 
    vjPosInterface       mWand;
    vjDigitalInterface   mButton0;
    vjDigitalInterface   mButton1;
    vjDigitalInterface   mButton2;
-
-   vjKernel* mKern;        // The Kernel
-
 
 public:  // APP traversal
    virtual int app(pfTraverser*);
@@ -84,6 +94,8 @@ private:
 pfNavDCS::pfNavDCS() : pfDCS()
 {
    setType(classType);  // Set the type
+   mActive = true;
+   mNaver = NULL;
 }
 
 
