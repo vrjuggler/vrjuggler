@@ -257,6 +257,10 @@ fi
 
 # See if we have vapor
 VPR_PATH(, [HAVE_VAPOR='Y'], [HAVE_VAPOR='N'], )
+VPR_SUBSYSTEM=
+if test "x$HAVE_VAPOR" = "xY"; then
+   VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
+fi
 
 dnl append the openal stuff...
 OPENAL_API='N'
