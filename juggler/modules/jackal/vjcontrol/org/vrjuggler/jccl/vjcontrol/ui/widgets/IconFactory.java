@@ -29,15 +29,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.vjcontrol.ui.widgets;
 
-
-
-package VjComponents.UI.Widgets;
-
-import javax.swing.ImageIcon;
-import java.util.HashMap;
 import java.net.URL;
-
+import java.util.HashMap;
+import javax.swing.ImageIcon;
 
 /** Supplies ImageIcons for use in VjControl GUI components.
  *  This provides a common source for image icons, that keeps components
@@ -46,7 +42,6 @@ import java.net.URL;
  *  Icons are available in 2 sizes, small and large (0 and 1 for the size
  *  argument).
  *
- *  @author Christopher Just
  *  @version $Revision$
  */
 public class IconFactory {
@@ -93,5 +88,4 @@ public class IconFactory {
             map.put (icon_name, me);
         }
     }
-
 }

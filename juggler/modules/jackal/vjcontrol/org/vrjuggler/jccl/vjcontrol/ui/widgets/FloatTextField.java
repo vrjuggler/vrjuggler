@@ -29,18 +29,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.vjcontrol.ui.widgets;
 
-
-
-package VjComponents.UI.Widgets;
-
-import javax.swing.*;
 import java.awt.event.*;
-
+import javax.swing.*;
 
 /** A JTextField that only accepts valid floating-point numbers.
  *
- * @author Christopher Just
  * @version $Revision$
  */
 public class FloatTextField extends JTextField {
