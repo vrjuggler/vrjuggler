@@ -195,18 +195,18 @@ public class Property {
 		s += v.toString();
 	    else if (valtype.equals(ValType.t_int)) {
 		try {
-		    s += desc.getEnumString (v.getInt());
+		    s += "\"" + desc.getEnumString (v.getInt()) + "\"";
 		}
 		catch (java.util.NoSuchElementException e) {
-		    ;
+		    s += v.getInt();
 		}
 	    }
 	    else if (valtype.equals(ValType.t_float)) {
 		try {
-		    s += desc.getEnumString (v.getFloat());
+		    s += "\"" + desc.getEnumString (v.getFloat()) + "\"";
 		}
 		catch (java.util.NoSuchElementException e) {
-		    ;
+		    s += v.getFloat();
 		}
 	    }
 	    s+= " ";
