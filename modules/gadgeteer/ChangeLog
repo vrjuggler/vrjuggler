@@ -1,5 +1,8 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Aug-13-2002 patrickh  The standalone MotionStar driver reports errors using
+                      exceptions.
+                      NEW VERSION: 0.3.1
 Aug-06-2002 patrickh  Developer installations are now constructed using the
                       standard installation targets.
 Aug-01-2002 patrickh  Enabled shared library versioning.
