@@ -41,7 +41,7 @@ public:
       vjProjection::config(chunk);        // Call base class config first
 
       // Set the surface by name
-      char* proj  = chunk->getProperty("projectiontype");
+      char* proj  = strdup(((std::string)chunk->getProperty("projectiontype")).c_str());
       vjASSERT(proj != NULL);    // Check for a seg fault error
       setSurface(proj);
 

@@ -29,7 +29,7 @@ public:
 
    vjProjection* getProjection()
       { return mProj; }
-   void setProjection(vjProjection* proj)
+   void setProjection(vjProjection* proj) 
       { mProj = proj; }
 
 protected:

@@ -93,6 +93,19 @@ public:
 
    friend ostream& operator<<(ostream& out, vjDisplay& disp);
 
+// <<<<<<< vjDisplay.h
+// public:
+//    /// Defines the projection for this window. Ex. RIGHT, LEFT, FRONT
+//    vjProjection*   leftProj;              // Left eye
+//    vjProjection*   rightProj;             // Right eye
+//    vjProjection*   cameraProj;            // Camera projection. (For sim, etc.)
+
+//    vjSimulator*      mSim;                // Simulator. if we are one.
+//    //vjPosInterface    mHeadInterface;      //: The proxy interface for the head
+//     vjTimeStamp*       mHeadUpdateTime;        //: When head pos was updated.
+//    vjUser*           mUser;               //: The user being rendered by this window
+
+// =======
 protected:
    vjUser*           mUser;         //: The user being rendered by this window
 
