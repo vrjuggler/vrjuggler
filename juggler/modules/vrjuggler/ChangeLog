@@ -1,5 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+May-03-2002 patrickh  Remvoed catadf.pl which has been obsoleted by Sonix
+                      functionality.
 Apr-23-2002 patrickh  Data files now install into $VJ_BASE_DIR/share/vrjuggler
                       by default.  This is done so that they do not conflict
                       with data files from other Juggler modules or system
