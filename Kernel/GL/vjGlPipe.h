@@ -18,6 +18,7 @@
 class vjGlDrawManager;
 
 #include <Sync/vjCond.h>
+#include <Sync/vjSemaphore.h>
 
    
 //--------------------------------------------------------------------------------------
