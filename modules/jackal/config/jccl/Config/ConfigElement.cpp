@@ -37,13 +37,44 @@
 #include <boost/concept_check.hpp>
 
 #include <jccl/Util/Debug.h>
-#include <jccl/Config/ParseUtil.h>
 #include <jccl/Config/ConfigTokens.h>
 #include <jccl/Config/ElementFactory.h>
 #include <jccl/Config/ConfigDefinition.h>
 #include <jccl/Config/ConfigElement.h>
 
 namespace tokens = jccl::configuration_tokens;
+
+// Static helper functions.
+static bool hasSeparator(const std::string& path)
+{
+   return(path.find(char('/')) != path.npos);
+}
+
+static std::string getRemainder(const std::string& path)
+{
+   std::string::size_type i = path.find(char('/'));
+   if ( i == path.npos )
+   {
+      return path;
+   }
+   else
+   {
+      return path.substr(i + 1);    // Skip the "/"
+   }
+}
+
+static std::string getFirstNameComponent(const std::string& path)
+{
+   std::string::size_type i = path.find(char('/'));
+   if ( i == path.npos )
+   {
+      return path;
+   }
+   else
+   {
+      return path.substr(0, i);
+   }
+}
 
 namespace jccl
 {
@@ -183,12 +214,12 @@ ConfigElementPtr ConfigElement::getChildElement(const std::string &path)
    cppdom::NodePtr root(mNode);
    cppdom::NodeList props;
 
-   while ( jccl::hasSeparator(working_path) )
+   while ( hasSeparator(working_path) )
    {
-      prop_token = jccl::getFirstNameComponent(working_path);
+      prop_token = getFirstNameComponent(working_path);
 
       // Move on to the next element in the path.
-      working_path = jccl::getRemainder(working_path);
+      working_path = getRemainder(working_path);
 
       PropertyDefinition prop_def = mDef->getPropertyDefinition(prop_token);
 
@@ -199,8 +230,8 @@ ConfigElementPtr ConfigElement::getChildElement(const std::string &path)
       if ( prop_def.getVarType() == jccl::T_CHILD_ELEMENT && ! props.empty() )
       {
          // Get the name of the child element we want.
-         std::string child_element_name = jccl::getFirstNameComponent(working_path);
-         working_path = jccl::getRemainder(working_path);
+         std::string child_element_name = getFirstNameComponent(working_path);
+         working_path = getRemainder(working_path);
 
          // Reset root to NULL so that we can use its internal value later to
          // determine if we are done.
