@@ -87,9 +87,9 @@ namespace vpr
        *
        * @post Set status to code.
        */
-      void setCode( const Code& code )
+      void setCode(const Code& c)
       {
-         mReturnStatus = code;
+         mReturnStatus = c;
       }
 
       /**
@@ -107,9 +107,9 @@ namespace vpr
       }
 
       /// ReturnStatus::Code constructor
-      ReturnStatus( const Code& code )
+      ReturnStatus(const Code& c)
       {
-         this->setCode( code );
+         this->setCode(c);
       }
 
       /**
@@ -131,9 +131,9 @@ namespace vpr
        *
        * @post this = status
        */
-      ReturnStatus& operator=( const Code& code )
+      ReturnStatus& operator=(const Code& c)
       {
-         this->setCode( code );
+         this->setCode(c);
          return *this;
       }
 
@@ -152,9 +152,9 @@ namespace vpr
        *
        * @return true if equal, false if not
        */
-      bool operator==( const Code& code ) const
+      bool operator==(const Code& c) const
       {
-         return code == mReturnStatus;
+         return c == mReturnStatus;
       }
 
       /**
@@ -172,9 +172,9 @@ namespace vpr
        *
        * @return false if equal, true if not
        */
-      bool operator!=( const Code& code ) const
+      bool operator!=(const Code& c) const
       {
-         return code != mReturnStatus;
+         return c != mReturnStatus;
       }
 
    public:
@@ -187,6 +187,6 @@ namespace vpr
    private:
       ReturnStatus::Code mReturnStatus;
    };
-}; // namespace vpr
+} // namespace vpr
 
 #endif
