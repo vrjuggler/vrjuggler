@@ -158,15 +158,40 @@ public:
       return ret_val;
    }
 
+   // Specializations of getProperty<T> placed inline for Visual Studio 7.
+   // MIPSpro and GCC do not handle this.  They get out-of-line
+   // specializations, found below.
+#ifdef _MSC_VER
+   template<>
+   std::string getProperty<std::string>(const std::string& prop, int ind) const
+   {
+      std::string prop_string = getPropertyString(prop,ind);
+      return prop_string;
+   }
+
+   template<>
+   ConfigChunkPtr getProperty<ConfigChunkPtr>(const std::string& prop, int ind) const
+   {
+      return getProperty_ChunkPtr(prop,ind);
+   }
+#endif /* ifdef _MSC_VER */
+
    /** Get property that defaults to element 0
    * @note Can't use default param because GCC doesn't
    *       allow specialization in a declaration.
    *       In other words we couldn't use a default value for the property
    *       index within the std::string and ConfigChunkPtr specializations.
    */
+#ifdef _MSC_VER
+   template<class T>
+   T getProperty(const std::string& prop) const
+   {
+      return getProperty<T>(prop, 0);
+   }
+#else
    template<class T>
    T getProperty(const std::string& prop) const;
-
+#endif
 
    /** Sets a value for the given property.
     *  @param property The token string for a property.
@@ -237,6 +262,7 @@ protected:
    bool              mValidation;   /**< Flag for testing memory use.*/
 };
 
+#ifndef _MSC_VER
 template<>
 inline std::string ConfigChunk::getProperty<std::string>(const std::string& prop, int ind) const
 {
@@ -258,6 +284,7 @@ inline T ConfigChunk::getProperty(const std::string& prop) const
 {
    return getProperty<T>(prop, 0);
 }
+#endif /* ifndef _MSC_VER */
 
 } // namespace jccl
 
