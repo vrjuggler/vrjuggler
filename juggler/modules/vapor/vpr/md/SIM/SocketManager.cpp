@@ -513,9 +513,10 @@ namespace sim
             vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
                << "SocketManager::sendMessage(): Starting message on wire "
                << first_edge_prop.getNetworkAddressString() << ": ("
-               << msg->whenStartOnWire().usec() << ", "
-               << msg->whenFullyOnWire().usec() << ", "
-               << msg->whenArrivesFully().usec() << ")\n" << vprDEBUG_FLUSH;
+               << msg->whenStartOnWire().getBaseVal() << ", "
+               << msg->whenFullyOnWire().getBaseVal() << ", "
+               << msg->whenArrivesFully().getBaseVal() << ")\n"
+               << vprDEBUG_FLUSH;
 
             event_time = msg->whenStartOnWire();
             first_edge_prop.addReadyMessage(msg, dir);
