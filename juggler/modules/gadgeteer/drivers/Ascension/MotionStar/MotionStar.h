@@ -65,7 +65,8 @@
 class vjMotionStar : public vjPosition {
     public:
 
-    vjMotionStar(int hemisphere = 3,
+    vjMotionStar(char* ipAddress = NULL,
+                  int hemisphere = 3,
                   unsigned int birdFormat = 4,
                   unsigned int birdsRequired = 10,
                   int runMode = 0,
@@ -128,6 +129,8 @@ class vjMotionStar : public vjPosition {
     void            setReportRate( unsigned char n );
     inline unsigned char  getReportRate() { return mMotionStar.getReportRate();}
 
+    void            setIpAddress( const char* n );
+    inline char* getIpAddress () {return mMotionStar.getIpAddress();}
  
         //: get the x position of the i'th reciever
         inline float       xPos( int i ) { return mMotionStar.xPos(i); }

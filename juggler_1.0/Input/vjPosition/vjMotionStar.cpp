@@ -59,20 +59,21 @@ int vjMotionStar::getBirdIndex(int birdNum, int bufferIndex)
    return ret_val;
 }
  
-vjMotionStar::vjMotionStar(int hemisphere,
+vjMotionStar::vjMotionStar(char* ipAddress,
+                int hemisphere,
                 unsigned int birdFormat,
                 unsigned int birdsRequired,
                 int runMode,
                 double birdRate
 //              unsigned char reportRate
-                ) : mMotionStar(hemisphere,
-                                                    birdFormat,
-                                                    birdsRequired,
-                                                    runMode,
-                                                    birdRate,
-                                                    1
-//                                                  reportRate
-                                                    )
+                ) : mMotionStar(ipAddress,
+                                hemisphere,
+                                birdFormat,
+                                birdsRequired,
+                                runMode,
+                                birdRate,
+                                1 // reportRate
+                                )
 {
    myThread = NULL;
 }
@@ -89,7 +90,8 @@ bool vjMotionStar::config(vjConfigChunk *c)
    mMotionStar.setBirdFormat((unsigned int)(static_cast<int> (c->getProperty("bformat"))));
    mMotionStar.setNumBirds((unsigned int)(static_cast<int> (c->getProperty("num"))));
    mMotionStar.setBirdRate((double)(static_cast<int>(c->getProperty("brate"))));
-   mMotionStar.setRunMode((static_cast<int> (c->getProperty("mode")))); 
+   mMotionStar.setRunMode((static_cast<int> (c->getProperty("mode"))));
+   mMotionStar.setIpAddress(static_cast<std::string>(c->getProperty("ipaddress")).c_str());
 //   mMotionStar.setReportRate( (static_cast<unsigned char>(c->getProperty("rrate"))) ); 
  
 /*
@@ -151,12 +153,12 @@ int vjMotionStar::startSampling()
       mMotionStar.start();
  
       //sanity check.. make sure birds actually started
-/*      if (this->isActive() == false)
+      if (this->isActive() == false)
       {
          vjDEBUG(vjDBG_INPUT_MGR,0)  << "vjMotionStar failed to start.." << endl << vjDEBUG_FLUSH;
          return 0;
       }
-*/
+
       vjDEBUG(vjDBG_INPUT_MGR,1)  << "vjMotionStar ready to go.." << endl << vjDEBUG_FLUSH;
  
       vjMotionStar* devicePtr = this;
@@ -165,7 +167,8 @@ int vjMotionStar::startSampling()
  
       if ( myThread == NULL )
       {
-         return 0;  // Fail
+          assert (false);
+          return 0;  // Fail
       }
       else
       {
@@ -178,9 +181,11 @@ int vjMotionStar::startSampling()
  
 int vjMotionStar::sample()
 {
-/*   if (this->isActive() == false)
-      return 0;
-*/
+   if (this->isActive() == false)
+   {
+       vjDEBUG(vjDBG_ALL,0) << "NOT ACTIVE IN SAMPLE" << endl << vjDEBUG_FLUSH;
+       return 0;
+   }
    mMotionStar.sample();
    int i;
   
@@ -192,7 +197,7 @@ int vjMotionStar::sample()
       int index = getBirdIndex(i,progress);
  
       //if (i==0) 
-      vjDEBUG(vjDBG_ALL,0) << "i:  " << i << "  x: " << xPos(i) << "  y: " << yPos(i) << endl << vjDEBUG_FLUSH;
+      //vjDEBUG(vjDBG_ALL,0) << "i:  " << i << "  x: " << xPos(i) << "  y: " << yPos(i) << endl << vjDEBUG_FLUSH;
       
       theData[index].makeZYXEuler(mMotionStar.zRot( i ),
                                   mMotionStar.yRot( i ),
@@ -229,8 +234,8 @@ int vjMotionStar::sample()
  
 int vjMotionStar::stopSampling()
 {
-   //if (this->isActive() == false)
-   //   return 0;
+   if (this->isActive() == false)
+      return 0;
  
    if (myThread != NULL)
    {
@@ -259,9 +264,11 @@ int vjMotionStar::stopSampling()
  
 vjMatrix* vjMotionStar::getPosData( int d ) // d is 0 based
 {
-    //if (this->isActive() == false)
-    //    return NULL;
- 
+    if (this->isActive() == false)
+    {
+        vjDEBUG(vjDBG_ALL,0) << "Not active in getPosData()" << endl << vjDEBUG_FLUSH;
+        return NULL;
+    }
     return (&theData[getBirdIndex(d,current)]);
 }
  
@@ -272,11 +279,11 @@ vjTimeStamp* vjMotionStar::getPosUpdateTime (int d)
 
 void vjMotionStar::updateData()
 {
-//   int new_index, old_index, tmp;
- 
-   //if (this->isActive() == false)
-   //   return;
- 
+   if (this->isActive() == false)
+   {
+      vjDEBUG(vjDBG_ALL,0) << "Not active in updateData()" << endl << vjDEBUG_FLUSH;
+      return;
+   }
    vjGuard<vjMutex> updateGuard(lock);
  
    // Copy the valid data to the current data so that both are valid
@@ -356,5 +363,13 @@ void vjMotionStar::setReportRate (unsigned char ch)
     mMotionStar.setReportRate ( ch );
 }
 
-
+void vjMotionStar::setIpAddress (const char* n)    
+{
+    if (this->isActive())
+    {
+      vjDEBUG(vjDBG_INPUT_MGR,2) << "vjMotionStar: Cannot change ip address while active\n" << vjDEBUG_FLUSH;
+      return;
+    }
+    mMotionStar.setIpAddress ( n );
+}
 
