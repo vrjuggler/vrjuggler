@@ -77,12 +77,14 @@ class JCCL_CLASS_API LabeledPerfDataBuffer {
     struct buf_entry {
 
         const std::string      *index;
+        char*                   index_cstring;
         vpr::GUID        category;
         
         TimeStamp        stamp;
         
         buf_entry() {
             index = 0;
+            index_cstring = 0;
         }
     };
 
@@ -152,6 +154,8 @@ public:
      */
     void set (const vpr::GUID &category, const std::string& index_name);
 
+    void set (const vpr::GUID &category, char* index_name);
+
 
     /** Records a new data point.
      *  If self is active and the buffer is not full, a new data
@@ -166,6 +170,9 @@ public:
      *  @param _value A TimeStamp.
      */
     void set (const vpr::GUID &category, const std::string& index_name,
+              TimeStamp& _value);
+
+    void set (const vpr::GUID &category, char* index_name,
               TimeStamp& _value);
 
 
