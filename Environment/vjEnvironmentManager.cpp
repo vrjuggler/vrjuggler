@@ -5,8 +5,6 @@
 
 
 #include <vjConfig.h>
-#include <iostream.h>
-#include <fstream.h>
 #include <strings.h>    // For bzero()
 #include <sys/types.h>
 #include <sys/socket.h>
