@@ -45,7 +45,7 @@
 #include <gadget/Type/PositionData.h>
 #include <gadget/Type/SampleBuffer.h>
 
-#include <vrj/Math/Matrix.h>
+#include <gmtl/Matrix.h>
 #include <vpr/Util/Debug.h>
 
 namespace gadget
@@ -112,8 +112,8 @@ public:
    SampleBuffer_t    mPosSamples;   /**< Position samples */
    PositionData      mDefaultValue;   /**< Default analog value to return */
 
-   vrj::Matrix xformMat;   /**< The total xform matrix.  T*R  NOTE: Used to move from trk coord system to Juggler coord system */
-   vrj::Matrix rotMat;     /**< Only the rotation matrix */
+   gmtl::Matrix44f xformMat;   /**< The total xform matrix.  T*R  NOTE: Used to move from trk coord system to Juggler coord system */
+   gmtl::Matrix44f rotMat;     /**< Only the rotation matrix */
 };
 
 };

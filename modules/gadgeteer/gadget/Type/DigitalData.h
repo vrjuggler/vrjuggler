@@ -35,7 +35,6 @@
 #define _GADGET_DIGITALDATA_H_
 
 #include <gadget/Type/InputData.h>
-#include <vrj/Math/Matrix.h>
 
 namespace gadget {
 

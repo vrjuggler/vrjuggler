@@ -32,7 +32,9 @@
 #ifndef _VELOCITY_NAV_H
 #define _VELOCITY_NAV_H
 
-#include <vrj/Math/Quat.h>
+#include <gmtl/Quat.h>
+#include <gmtl/QuatOps.h>
+#include <gmtl/Convert.h>
 #include <navigator.h>
 #include <collider.h>
 #include <vector>
@@ -79,7 +81,7 @@ public:
    //: arbitrary acceleration in any direction.
    //  nice for straefing, rising or diving. :)
    //  accel = velocity per second
-   void accelerate(const vrj::Vec3& accel);
+   void accelerate(const gmtl::Vec3f& accel);
 
    //: zero all velocity
    void stop();
@@ -98,8 +100,8 @@ public:
    void setMode(navMode new_mode)
    { mMode = new_mode; }
 
-   vrj::Vec3 getVelocity() const { return mVelocity; }
-   float  getSpeed() const { return mVelocity.length(); }
+   gmtl::Vec3f getVelocity() const { return mVelocity; }
+   float  getSpeed() const { return gmtl::length(mVelocity); }
 
    // resets the navigator's matrix to the origin (set by setOrigin)
    virtual void reset();
@@ -107,14 +109,14 @@ public:
 protected:
    // set the rotational acceleration matrix
    // only rotational components of this matrix are used.
-   void setRotationalAcceleration( const vrj::Matrix& mat )
+   void setRotationalAcceleration( const gmtl::Matrix44f& mat )
    { mRotationalAcceleration = mat;}
 
    // Rotate the environment
-   void scaled_rotate(vrj::Matrix rot_mat);
+   void scaled_rotate(gmtl::Matrix44f rot_mat);
 
    // util func... used to convert gravity from meters...
-   inline void meters2feet( const vrj::Vec3& gravityInMeters, vrj::Vec3& gravityInFeet )
+   inline void meters2feet( const gmtl::Vec3f& gravityInMeters, gmtl::Vec3f& gravityInFeet )
    {
       float meters_to_feet = (100.0f / 0.3048f) * 0.01f;
       //float convtofeet = (meters / .3048 * 100.0f) * .01;
@@ -129,10 +131,10 @@ protected:
    void setUnits( Units units = FEET ) { mUnits = units; }
 
 private:
-   vrj::Vec3 mVelocity;
-   vrj::Vec3 mVelocityFromGravityAccumulator;
+   gmtl::Vec3f mVelocity;
+   gmtl::Vec3f mVelocityFromGravityAccumulator;
    float    mMaxVelocity;
-   vrj::Matrix mRotationalAcceleration;
+   gmtl::Matrix44f mRotationalAcceleration;
    float    mDamping;
    float    mAcceleration;
 
@@ -254,18 +256,18 @@ inline void velocityNav::updateInteraction()
    // Accelerate Forward
    // TODO: add other directions to accelerate. (since it's hard coded to forward (0,0,-x) here...)
    if(mAcceleratingForward)
-   { accelerate(vrj::Vec3(0, 0, -mAcceleration)); }
+   { accelerate(gmtl::Vec3f(0.0f, 0.0f, -mAcceleration)); }
 
    // Resetting
    if(mResetting)
       this->reset();
 
    // Rotating
-   vrj::Matrix rot_mat = *(mNavWand->getData());
+   gmtl::Matrix44f rot_mat = *(mNavWand->getData());
    //std::cout<<"1: "<<rot_mat<<"\n"<<std::flush;
-   rot_mat.setTrans(0,0,0);
+   gmtl::setTrans(rot_mat, gmtl::Vec3f(0.0f, 0.0f, 0.0f));
    //std::cout<<"2: "<<rot_mat<<"\n=======\n\n"<<std::flush;
-   
+
    setRotationalAcceleration( rot_mat );
 
    // Output visual feedback
@@ -279,7 +281,8 @@ inline void velocityNav::updateInteraction()
                            << std::endl << vprDEBUG_FLUSH;
    if(mResetting)
    {
-      vrj::Vec3 hpos = mHomePos.getTrans();
+      gmtl::Vec3f hpos;
+      gmtl::getTrans(mHomePos, hpos[0], hpos[1], hpos[2]);
       vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Resetting") << " to "
                            << hpos << std::endl << vprDEBUG_FLUSH;
    }
@@ -315,11 +318,11 @@ inline void velocityNav::update()
    // do navigations...
    //////////////////////////////////
    // Define axes, in Juggler/OpenGL coordinate system (right handed)
-   vrj::Vec3    trackerZaxis(0.0f, 0.0f, 1.0f);
-   vrj::Vec3    trackerXaxis(1.0f, 0.0f, 0.0f);
-   vrj::Vec3    trackerYaxis(0.0f, 1.0f, 0.0f);
-   const vrj::Vec3 gravity_meters_per_second( 0.0f, -9.8f, 0.0f ); //9.8 m/s (METERS)
-   vrj::Vec3    gravity( 0.0f, -9.8f, 0.0f ); // to be set by switch (mUnits == METERS)
+   gmtl::Vec3f       trackerZaxis(0.0f, 0.0f, 1.0f);
+   gmtl::Vec3f       trackerXaxis(1.0f, 0.0f, 0.0f);
+   gmtl::Vec3f       trackerYaxis(0.0f, 1.0f, 0.0f);
+   const gmtl::Vec3f gravity_meters_per_second( 0.0f, -9.8f, 0.0f ); //9.8 m/s (METERS)
+   gmtl::Vec3f       gravity( 0.0f, -9.8f, 0.0f ); // to be set by switch (mUnits == METERS)
 
    switch (mUnits)
    {
@@ -341,24 +344,25 @@ inline void velocityNav::update()
    {
       // get the axes of the tracking/pointing device
       // NOTE: constrain to the Y axis in GROUND mode (no flying/hopping or diving faster than gravity allows)
-      vrj::Matrix constrainedToY;
+      gmtl::Matrix44f constrainedToY;
       //mRotationalAcceleration.constrainRotAxis( false, true, false, constrainedToY );
-      constrainedToY.makeXYZEuler(0,mRotationalAcceleration.getYRot(),0);     // Only allow Yaw (rot y)
+      gmtl::setRot(constrainedToY, 0.0f,
+                   gmtl::getYRot(mRotationalAcceleration), 0.0f, gmtl::XYZ); // Only allow Yaw (rot y)
 
-      trackerZaxis.xformVec( constrainedToY, trackerZaxis);
-      trackerXaxis.xformVec( constrainedToY, trackerXaxis);
-      trackerYaxis.xformVec( constrainedToY, trackerYaxis);
+      gmtl::xform( trackerZaxis, constrainedToY, trackerZaxis );
+      gmtl::xform( trackerXaxis, constrainedToY, trackerXaxis );
+      gmtl::xform( trackerYaxis, constrainedToY, trackerYaxis );
    }
    else if (mMode == FLY)
    {
       // get the axes of the tracking/pointing device
-      trackerZaxis.xformVec( mRotationalAcceleration, trackerZaxis);
-      trackerXaxis.xformVec( mRotationalAcceleration, trackerXaxis);
-      trackerYaxis.xformVec( mRotationalAcceleration, trackerYaxis);
+      gmtl::xform( trackerZaxis, mRotationalAcceleration, trackerZaxis );
+      gmtl::xform( trackerXaxis, mRotationalAcceleration, trackerXaxis );
+      gmtl::xform( trackerYaxis, mRotationalAcceleration, trackerYaxis );
    }
 
    // this is used to accumulate velocity added by navigation
-   vrj::Vec3   velocityAccumulator( 0.0f, 0.0f, 0.0f );
+   gmtl::Vec3f velocityAccumulator( 0.0f, 0.0f, 0.0f );
 
    if (mMode == DRIVE)           // if DRIVING --> we have GRAVITY
    {
@@ -388,13 +392,13 @@ inline void velocityNav::update()
    // navigation just calculated navigator's next velocity
    // now convert accumulated velocity to distance traveled this frame (by cancelling out time)
    // NOTE: this is not the final distance, since we still have to do collision correction.
-   vrj::Vec3 distanceToMove = velocityAccumulator * stopWatch.timeInstant;
+   gmtl::Vec3f distanceToMove = velocityAccumulator * stopWatch.timeInstant;
 
    //vprDEBUG(vprDBG_ALL,0) << "velNav: distToMove = velAcum * instant: " << velocityAccumulator << " * " << stopWatch.timeInstant << endl << vprDEBUG_FLUSH;
 
    // --- TRANSLATION and COLLISION DETECTION --- //
    bool     did_collide;               // Did we collide with anything
-   vrj::Vec3   total_correction;          // The total correction on the movement (in modelspace)
+   gmtl::Vec3f total_correction;          // The total correction on the movement (in modelspace)
    navTranslate(distanceToMove,did_collide,total_correction);
 
    if(did_collide)      // If we hit something, stop falling
@@ -405,7 +409,7 @@ inline void velocityNav::update()
    //vprDEBUG_END(vprDBG_ALL,0) << "---------------------\n" << vprDEBUG_FLUSH;
 }
 
-inline void velocityNav::scaled_rotate(vrj::Matrix rot_mat)
+inline void velocityNav::scaled_rotate(gmtl::Matrix44f rot_mat)
 {
    //: Confused by quaternions???
    //  All this does is scale the angle of rotation back by about %4
@@ -414,25 +418,24 @@ inline void velocityNav::scaled_rotate(vrj::Matrix rot_mat)
 
    // I should scale the rotation matrix here
    // I should also compute a relative rotation from the head here as well
-   vrj::Matrix transform, transformIdent;
-   vrj::Quat   source_rot, goal_rot, slerp_rot;
+   gmtl::Matrix44f transform, transformIdent;
+   gmtl::Quatf     source_rot, goal_rot, slerp_rot;
 
    // Create an identity quaternion to rotate from
-   transformIdent.makeIdent();
+   gmtl::identity(transformIdent);
 
    // Create the goal rotation quaternion (the goal is the input matrix)
-   source_rot.identity();
-   goal_rot.makeRot(rot_mat);
-   
+   gmtl::convert(goal_rot, rot_mat);
+
    // If we don't have two identity matrices, then interpolate between them
    if(transformIdent != rot_mat)
    {
-      slerp_rot.slerp( 0.04, source_rot, goal_rot );    // Transform part way there
-      transform.makeQuaternion( slerp_rot );            // Create the transform matrix to use
+      gmtl::slerp(slerp_rot, 0.04f, source_rot, goal_rot ); // Transform part way there
+      gmtl::convert( transform, slerp_rot ); // Create the transform matrix to use
    }
    else
    {
-      transform.makeIdent();
+      gmtl::identity(transform);
    }
    navigator::navRotate(transform);                   // update the mCurPos navigation matrix
 }
@@ -440,9 +443,9 @@ inline void velocityNav::scaled_rotate(vrj::Matrix rot_mat)
 // accel = velocity per second
 // TODO: hook this up to the vel accumulator...,
 //        and get rid of mVelocity weirdness.
-inline void velocityNav::accelerate(const vrj::Vec3& accel)
+inline void velocityNav::accelerate(const gmtl::Vec3f& accel)
 {
-   if(mVelocity.length() < mMaxVelocity)
+   if(gmtl::length(mVelocity) < mMaxVelocity)
    {
       mVelocity += (accel * stopWatch.timeInstant);
    }
@@ -464,7 +467,7 @@ inline void velocityNav::reset()
 {
    mVelocity.set( 0,0,0 );
    mVelocityFromGravityAccumulator.set( 0,0,0 );
-   mRotationalAcceleration.makeIdent();
+   gmtl::identity(mRotationalAcceleration);
    navigator::reset();
    stopWatch.start();   // Reset the stop watch
    stopWatch.stop();

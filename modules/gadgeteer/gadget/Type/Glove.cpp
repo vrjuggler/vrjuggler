@@ -33,7 +33,15 @@
 #include <gadget/gadgetConfig.h>
 
 #include <gadget/Type/Glove.h>
-#include <vrj/Math/Vec4.h>
+
+#include <gmtl/Matrix.h>
+#include <gmtl/Vec.h>
+#include <gmtl/VecOps.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/Generate.h>
+#include <gmtl/Convert.h>
+#include <gmtl/Xforms.h>
+
 
 namespace gadget
 {
@@ -95,8 +103,8 @@ GloveData::GloveData(const GloveData& data)
 // Wrist is not being done at all
 int GloveData::calcXforms()
 {
-   vrj::Vec3 xAxis(1.0f, 0.0f, 0.0f);
-   vrj::Vec3 yAxis(0.0f, 1.0f, 0.0f);
+   gmtl::Vec3f xAxis(1.0f, 0.0f, 0.0f);
+   gmtl::Vec3f yAxis(0.0f, 1.0f, 0.0f);
    const float oneIn(1/12.0f);
 
 
@@ -127,36 +135,36 @@ int GloveData::calcXforms()
 
    // THUMB
    // INDEX
-   xforms[INDEX][DIJ].makeRot(angles[INDEX][DIJ],xAxis);
-   xforms[INDEX][DIJ].preTrans(dims[INDEX][DIJ],xforms[INDEX][DIJ]);
-   xforms[INDEX][PIJ].makeRot(angles[INDEX][PIJ],xAxis);
-   xforms[INDEX][PIJ].preTrans(dims[INDEX][PIJ],xforms[INDEX][PIJ]);
-   xforms[INDEX][MPJ].makeRot(angles[INDEX][MPJ],xAxis);
-   xforms[INDEX][MPJ].preTrans(dims[INDEX][MPJ],xforms[INDEX][MPJ]);
+   gmtl::setRot(xforms[INDEX][DIJ], angles[INDEX][DIJ],xAxis);
+   gmtl::preMult(xforms[INDEX][DIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[INDEX][DIJ]));
+   gmtl::setRot(xforms[INDEX][PIJ], angles[INDEX][PIJ],xAxis);
+   gmtl::preMult(xforms[INDEX][PIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[INDEX][PIJ]));
+   gmtl::setRot(xforms[INDEX][MPJ], angles[INDEX][MPJ],xAxis);
+   gmtl::preMult(xforms[INDEX][MPJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[INDEX][MPJ]));
 
    // MIDDLE
-   xforms[MIDDLE][DIJ].makeRot(angles[MIDDLE][DIJ],xAxis);
-   xforms[MIDDLE][DIJ].preTrans(dims[MIDDLE][DIJ],xforms[MIDDLE][DIJ]);
-   xforms[MIDDLE][PIJ].makeRot(angles[MIDDLE][PIJ],xAxis);
-   xforms[MIDDLE][PIJ].preTrans(dims[MIDDLE][PIJ],xforms[MIDDLE][PIJ]);
-   xforms[MIDDLE][MPJ].makeRot(angles[MIDDLE][MPJ],xAxis);
-   xforms[MIDDLE][MPJ].preTrans(dims[MIDDLE][MPJ],xforms[MIDDLE][MPJ]);
+   gmtl::setRot(xforms[MIDDLE][DIJ], angles[MIDDLE][DIJ],xAxis);
+   gmtl::preMult(xforms[MIDDLE][DIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[MIDDLE][DIJ]));
+   gmtl::setRot(xforms[MIDDLE][PIJ], angles[MIDDLE][PIJ],xAxis);
+   gmtl::preMult(xforms[MIDDLE][PIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[MIDDLE][PIJ]));
+   gmtl::setRot(xforms[MIDDLE][MPJ], angles[MIDDLE][MPJ],xAxis);
+   gmtl::preMult(xforms[MIDDLE][MPJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[MIDDLE][MPJ]));
 
    // RING
-   xforms[RING][DIJ].makeRot(angles[RING][DIJ],xAxis);
-   xforms[RING][DIJ].preTrans(dims[RING][DIJ],xforms[RING][DIJ]);
-   xforms[RING][PIJ].makeRot(angles[RING][PIJ],xAxis);
-   xforms[RING][PIJ].preTrans(dims[RING][PIJ],xforms[RING][PIJ]);
-   xforms[RING][MPJ].makeRot(angles[RING][MPJ],xAxis);
-   xforms[RING][MPJ].preTrans(dims[RING][MPJ],xforms[RING][MPJ]);
+   gmtl::setRot(xforms[RING][DIJ], angles[RING][DIJ],xAxis);
+   gmtl::preMult(xforms[RING][DIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[RING][DIJ]));
+   gmtl::setRot(xforms[RING][PIJ], angles[RING][PIJ],xAxis);
+   gmtl::preMult(xforms[RING][PIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[RING][PIJ]));
+   gmtl::setRot(xforms[RING][MPJ], angles[RING][MPJ],xAxis);
+   gmtl::preMult(xforms[RING][MPJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[RING][MPJ]));
 
    // PINKY
-   xforms[PINKY][DIJ].makeRot(angles[PINKY][DIJ],xAxis);
-   xforms[PINKY][DIJ].preTrans(dims[PINKY][DIJ],xforms[PINKY][DIJ]);
-   xforms[PINKY][PIJ].makeRot(angles[PINKY][PIJ],xAxis);
-   xforms[PINKY][PIJ].preTrans(dims[PINKY][PIJ],xforms[PINKY][PIJ]);
-   xforms[PINKY][MPJ].makeRot(angles[PINKY][MPJ],xAxis);
-   xforms[PINKY][MPJ].preTrans(dims[PINKY][MPJ],xforms[PINKY][MPJ]);
+   gmtl::setRot(xforms[PINKY][DIJ], angles[PINKY][DIJ],xAxis);
+   gmtl::preMult(xforms[PINKY][DIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[PINKY][DIJ]));
+   gmtl::setRot(xforms[PINKY][PIJ], angles[PINKY][PIJ],xAxis);
+   gmtl::preMult(xforms[PINKY][PIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[PINKY][PIJ]));
+   gmtl::setRot(xforms[PINKY][MPJ], angles[PINKY][MPJ],xAxis);
+   gmtl::preMult(xforms[PINKY][MPJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[PINKY][MPJ]));
 
    // WRIST
 
@@ -188,7 +196,7 @@ std::istream& GloveData::inputAngles(std::istream& in)
 ////////////////////////////////////////////////////////////////////////
 Glove::Glove()
 {
-   //vprDEBUG(vrjDBG_INPUT_MGR,3)<<"*** Glove::Glove()\n"<< vprDEBUG_FLUSH;
+   //vprDEBUG(gadgetDBG_INPUT_MGR,3)<<"*** Glove::Glove()\n"<< vprDEBUG_FLUSH;
 
    for(int i=0;i<GADGET_MAX_GLOVE_DEVS;i++)
       mGlovePos[i] = NULL;
@@ -207,29 +215,29 @@ float Glove::getGloveAngle(GloveData::GloveComponent component,
 //: This returns a vector ponting "out" of the component
 // Can be used for selection, etc.
 // Use getGlovePos to get the transformation matrix
-vrj::Vec3 Glove::getGloveVector(GloveData::GloveComponent component, int devNum)
+gmtl::Vec3f Glove::getGloveVector(GloveData::GloveComponent component, int devNum)
 {
    // Take a normalized ray up default (yAxis), and transform by finger tip rot matrix
    // ret_val = wTt yAxis
-   vrj::Vec3 y_axis(0.0f, 1.0f, 0.0f);
-   vrj::Vec3 ret_val(0.0f, 0.0f, 0.0f);
+   gmtl::Vec3f y_axis(0.0f, 1.0f, 0.0f);
+   gmtl::Vec3f ret_val(0.0f, 0.0f, 0.0f);
 
-   ret_val.xformVec(getGlovePos(component, devNum), y_axis);      // Compute the vector direction
+   ret_val = getGlovePos(component, devNum) * y_axis;      // Compute the vector direction
    return ret_val;
 }
 
 // Calculated from the matrices in xforms
 // <sub>world</sub><b>T</b><sub>tip</sub> = <sub>world</sub><b>T</b><sub>base</sub> <sub>base</sub><b>T</b><sub>dij</sub> <sub>dij</sub><b>T</b><sub>tip</sub>
 //  i.e. wTt = wTb bTd dTt
-vrj::Matrix Glove::getGlovePos(GloveData::GloveComponent component, int devNum)
+gmtl::Matrix44f Glove::getGlovePos(GloveData::GloveComponent component, int devNum)
 {
    // Temporarily removed
    /*
    if(mGlovePos[devNum] != NULL)
    {
-      vrj::Matrix ret_val;       // The returned matrix.
-      vrj::Matrix baseTdij;      // Transform from base to dig coord system
-      vrj::Matrix dijTtip;       // Transform to the tip of the finger
+      gmtl::Matrix44f ret_val;       // The returned matrix.
+      gmtl::Matrix44f baseTdij;      // Transform from base to dig coord system
+      gmtl::Matrix44f dijTtip;       // Transform to the tip of the finger
 
       switch(component)
       {
@@ -264,11 +272,14 @@ vrj::Matrix Glove::getGlovePos(GloveData::GloveComponent component, int devNum)
    }
    else
    {
-      vprDEBUG( vrjDBG_INPUT_MGR,0) << clrOutNORM(clrRED, "ERROR:") << " Glove: Trying to get a glove without a position proxy set for device number: "<<devNum<<".\n" << vprDEBUG_FLUSH;
+      vprDEBUG( gadgetDBG_INPUT_MGR,0)
+         << clrOutNORM(clrRED, "ERROR:")
+         << " Glove: Trying to get a glove without a position proxy set for device number: "
+         << devNum << ".\n" << vprDEBUG_FLUSH;
       vprASSERT( mGlovePos[devNum] != NULL );      // should be false in here
-      return vrj::Matrix();
+      return gmtl::Matrix44f();
    }*/
-   vrj::Matrix ret_val;       // The returned matrix.
+   gmtl::Matrix44f ret_val;       // The returned matrix.
    return ret_val;
 }
 

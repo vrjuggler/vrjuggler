@@ -31,60 +31,87 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
-#include <gadget/Type/PositionProxy.h>
 #include <jccl/Config/ConfigChunk.h>
 
 #include <gadget/Type/PositionFilter.h>
 #include <gadget/Type/LinearSigmoidPositionFilter.h>
+#include <gadget/Util/Debug.h>
+
+#include <gmtl/Matrix.h>
+#include <gmtl/Vec.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/Generate.h>
+#include <gmtl/Convert.h>
+
+#include <gadget/Type/PositionProxy.h>
+
 
 namespace gadget
 {
 
-//: Set the transform for this PositionProxy
-// Sets the transformation matrix to
-//    mMatrixTransform = M<sub>trans</sub>.post(M<sub>rot</sub>)
-//! NOTE: This means that to set transform, you specific the translation
-//+       followed by rotation that takes the device from where it physically
-//+       is in space to where you want it to be.
+/**
+ * Sets the transform for this PositionProxy.
+ * Sets the transformation matrix to:
+ * <code>
+ *    mMatrixTransform = M<sub>trans</sub>.post(M<sub>rot</sub>)
+ * </code>
+ *
+ * @note This means that to set transform, you specific the translation
+ *       followed by rotation that takes the device from where it physically
+ *       is in space to where you want it to be.
+ */
 void PositionProxy::setTransform(float xoff, float yoff, float zoff,    // Translate
                                  float xrot, float yrot, float zrot)   // Rotate
 {
    mETrans = true;
-   mMatrixTransform.makeIdent();
-   vrj::Matrix trans_mat; trans_mat.makeIdent();
-   vrj::Matrix rot_mat; rot_mat.makeIdent();
+   gmtl::identity(mMatrixTransform);
+
+   gmtl::Matrix44f trans_mat;
+   gmtl::Matrix44f rot_mat;
 
    if((xoff != 0.0f) || (yoff != 0.0f) || (zoff != 0.0f))
-      trans_mat.makeTrans(xoff, yoff, zoff);
+   {
+      //trans_mat .makeTrans(xoff, yoff, zoff);
+      gmtl::setTrans(trans_mat, gmtl::Vec3f(xoff, yoff, zoff));
+   }
    if((xrot != 0.0f) || (yrot != 0.0f) || (zrot != 0.0f))
-      rot_mat.makeXYZEuler(xrot, yrot, zrot);
+   {
+      //rot_mat.makeXYZEuler(xrot, yrot, zrot);
+      gmtl::setRot(rot_mat, gmtl::Math::deg2Rad(xrot),
+                            gmtl::Math::deg2Rad(yrot),
+                            gmtl::Math::deg2Rad(zrot), gmtl::XYZ);
+   }
 
-   mMatrixTransform.mult(trans_mat, rot_mat);
+   mMatrixTransform = (trans_mat * rot_mat);
 }
 
 
 
 bool PositionProxy::config(jccl::ConfigChunkPtr chunk)
 {
-   vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,3) << "------------------ POS PROXY config() -----------------\n" << vprDEBUG_FLUSH;
+   vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,3)
+      << "------------------ POSITION PROXY config() -----------------\n"
+      << vprDEBUG_FLUSH;
    vprASSERT(((std::string)chunk->getType()) == "PosProxy");
 
    // if we are going to be receiving remote data, we need to connect to a vjNetInput
    std::string location = (std::string)chunk->getProperty("location");
-   if(location.size() > 0){ 
+   if(location.size() > 0)
+   {
       mDeviceName = (std::string)chunk->getProperty("name");
       mDeviceName += "_NET_";   // input device we'll point to
       mUnitNum = 0;
       setTransform(0,0,0, 0,0,0 );
    }
-   else{
+   else
+   {
       mUnitNum = chunk->getProperty("unit");
       mDeviceName = (std::string)chunk->getProperty("device");
 
       if (true == (bool)chunk->getProperty("etrans") )
       {
-         vprDEBUG_NEXT(vrjDBG_INPUT_MGR,3) << "Position Transform enabled..."
-                                       << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR,3)
+            << "Position Transform enabled..." << std::endl << vprDEBUG_FLUSH;
          setTransform
             ( chunk->getProperty("translate",0) , // xtrans
             chunk->getProperty("translate",1) , // ytrans
@@ -92,9 +119,11 @@ bool PositionProxy::config(jccl::ConfigChunkPtr chunk)
             chunk->getProperty("rotate",0) , // xrot
             chunk->getProperty("rotate",1) , // yrot
             chunk->getProperty("rotate",2) );// zrot
-         vprDEBUG_NEXT(vrjDBG_INPUT_MGR,4) << "Transform Matrix: " << std::endl
-                                      << getTransform() << std::endl
-                                      << vprDEBUG_FLUSH;
+/*
+         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR,4)
+            << "Transform Matrix: " << std::endl
+            << getTransform() << std::endl << vprDEBUG_FLUSH;
+*/
       }
 
       // Setup filter method
@@ -102,14 +131,18 @@ bool PositionProxy::config(jccl::ConfigChunkPtr chunk)
       // in future, there should be a filter factory
       if(true == (bool)chunk->getProperty("useFilter"))
       {
-         vprDEBUG_NEXT(vrjDBG_INPUT_MGR,3) << "Using filter: Linear sigmoid."
-                                       << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR,3)
+            << "Using filter: Linear sigmoid." << std::endl << vprDEBUG_FLUSH;
          LinearSigmoidPositionFilter* sig_filter;
          sig_filter = new LinearSigmoidPositionFilter();
-   
+
          jccl::ConfigChunkPtr sigmoid_params = (jccl::ConfigChunkPtr)chunk->getProperty("sigmoidParams");
          if(sigmoid_params.get() == NULL)
-         { vprDEBUG(vprDBG_ERROR,0) << clrOutBOLD(clrRED,"ERROR:") << "Got NULL sigmoid Params.\n" << vprDEBUG_FLUSH; }
+         {
+            vprDEBUG(vprDBG_ERROR,0)
+               << clrOutBOLD(clrRED,"ERROR:") << "Got NULL sigmoid Params.\n"
+               << vprDEBUG_FLUSH;
+         }
 
          sig_filter->setMaxDist(sigmoid_params->getProperty("maxDist"));
          sig_filter->setMinDist(sigmoid_params->getProperty("minDist"));
@@ -118,10 +151,9 @@ bool PositionProxy::config(jccl::ConfigChunkPtr chunk)
       }
       else
       {
-         vprDEBUG_NEXT(vrjDBG_INPUT_MGR,3) << "NOT USING FILTER." << std::endl
-                                       << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR,3) << "NOT USING FILTER."
+                                              << std::endl << vprDEBUG_FLUSH;
       }
-
    }
 
    // --- SETUP PROXY with INPUT MGR ---- //

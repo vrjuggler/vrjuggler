@@ -32,10 +32,15 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <vrj/Math/Coord.h>
-#include <vrj/Util/Debug.h>
+#include <gadget/Util/Debug.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <gadget/Devices/Ascension/MotionStar.h>
+
+#include <gmtl/Matrix.h>
+#include <gmtl/Vec.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/Generate.h>
+#include <gmtl/Convert.h>
 
 
 namespace gadget
@@ -58,8 +63,9 @@ static void sampleBirds (void* arg)
 {
    MotionStar* devPointer = (MotionStar*) arg;
 
-   vprDEBUG(vrjDBG_INPUT_MGR,3)
-      << "vjMotionStar: Spawned SampleBirds starting\n" << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR,3)
+      << "gadget::MotionStar: Spawned SampleBirds starting\n"
+      << vprDEBUG_FLUSH;
 
    for (;;) {
       devPointer->sample();
@@ -108,8 +114,9 @@ bool MotionStar::config (jccl::ConfigChunkPtr c)
 
    if ( Input::config(c) &&  Position::config(c) )
    {
-      vprDEBUG(vrjDBG_INPUT_MGR, 3)
-         << "       MotionStar::config(jccl::ConfigChunkPtr)\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, 3)
+         << "       MotionStar::config(jccl::ConfigChunkPtr)\n"
+         << vprDEBUG_FLUSH;
 
       // Configure m_motion_star with the config info.
       setAddressName(static_cast<std::string>(c->getProperty("address")).c_str());
@@ -137,8 +144,8 @@ int MotionStar::startSampling ()
    // Make sure the device isn't already started.
    if ( isActive() )
    {
-      vprDEBUG(vrjDBG_INPUT_MGR, 2) << "vjMotionStar was already started.\n"
-                                  << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, 2)
+         << "gadget::MotionStar was already started.\n" << vprDEBUG_FLUSH;
       retval = 0;
    }
    else
@@ -147,8 +154,8 @@ int MotionStar::startSampling ()
       {
          int start_status;
 
-         vprDEBUG(vrjDBG_INPUT_MGR, 1) << "    Getting MotionStar ready ...\n"
-                                       << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_INPUT_MGR, 1)
+            << "    Getting MotionStar ready ...\n" << vprDEBUG_FLUSH;
 
          start_status = m_motion_star.start();
 
@@ -160,29 +167,29 @@ int MotionStar::startSampling ()
             // Connection to server failed.  MotionStarStandalone prints out
             // the system error message about why.
             case -1:
-               vprDEBUG(vrjDBG_INPUT_MGR, 0)
-                  << "vjMotionStar failed to connect to server\n"
+               vprDEBUG(gadgetDBG_INPUT_MGR, 0)
+                  << "gadget::MotionStar failed to connect to server\n"
                   << vprDEBUG_FLUSH;
                retval = 1;
                break;
             // No socket could be created, so no connection can be made.
             case -2:
-               vprDEBUG(vrjDBG_INPUT_MGR, 0)
-                  << "vjMotionStar could not create a socket\n"
+               vprDEBUG(gadgetDBG_INPUT_MGR, 0)
+                  << "gadget::MotionStar could not create a socket\n"
                   << vprDEBUG_FLUSH;
                retval = 1;
                break;
             // No address has been set for the server, so no connection can be
             // made.
             case -3:
-               vprDEBUG(vrjDBG_INPUT_MGR, 0)
+               vprDEBUG(gadgetDBG_INPUT_MGR, 0)
                   << "No server address set for MotionStar\n"
                   << vprDEBUG_FLUSH;
                retval = 1;
                break;
             // Unkonwn return value from MotionStarStandalone::start().
             default:
-               vprDEBUG(vrjDBG_INPUT_MGR, 0)
+               vprDEBUG(gadgetDBG_INPUT_MGR, 0)
                   << "Abnormal return from MotionStarStandalone::start()\n"
                   << vprDEBUG_FLUSH;
                retval = 1;
@@ -192,21 +199,21 @@ int MotionStar::startSampling ()
          // Sanity check.  Make sure the servers were actually started.
          if ( ! isActive() )
          {
-            vprDEBUG(vrjDBG_INPUT_MGR, 0) << "vjMotionStar failed to start.\n"
-                                          << vprDEBUG_FLUSH;
+            vprDEBUG(gadgetDBG_INPUT_MGR, 0)
+               << "gadget::MotionStar failed to start.\n" << vprDEBUG_FLUSH;
             retval = 1;
          }
          else
          {
-            vprDEBUG(vrjDBG_INPUT_MGR, 1) << "vjMotionStar ready to go.\n"
-                                        << vprDEBUG_FLUSH;
+            vprDEBUG(gadgetDBG_INPUT_MGR, 1)
+               << "gadget::MotionStar ready to go.\n" << vprDEBUG_FLUSH;
 
             m_my_thread = new vpr::Thread(sampleBirds, (void*) this);
 
             if ( m_my_thread == NULL )
             {
-               vprDEBUG(vrjDBG_INPUT_MGR, 0)
-                  << "vjMotionStar could not create sampling thread.\n"
+               vprDEBUG(gadgetDBG_INPUT_MGR, 0)
+                  << "gadget::MotionStar could not create sampling thread.\n"
                   << vprDEBUG_FLUSH;
                 vprASSERT(false);  // Fail
             }
@@ -241,28 +248,28 @@ int MotionStar::stopSampling ()
    // If the sampling thread was started, stop it and the device.
    else if ( m_my_thread != NULL )
    {
-      vprDEBUG(vrjDBG_INPUT_MGR, 1) << "Stopping the MotionStar thread ...\n"
-                                    << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, 1) << "Stopping the MotionStar thread ...\n"
+                                       << vprDEBUG_FLUSH;
       m_my_thread->kill();
       delete m_my_thread;
       m_my_thread = NULL;
 
-      vprDEBUG(vrjDBG_INPUT_MGR, 1) << "  Stopping the MotionStar ...\n"
-                                    << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, 1) << "  Stopping the MotionStar ...\n"
+                                       << vprDEBUG_FLUSH;
 
       m_motion_star.stop();
 
       // sanity check: did the device actually stop?
       if ( isActive() == true )
       {
-         vprDEBUG(vrjDBG_INPUT_MGR, 1)
+         vprDEBUG(gadgetDBG_INPUT_MGR, 1)
             << "MotionStar server did not shut down.\n" << vprDEBUG_FLUSH;
          retval = 0;
       }
       else
       {
-         vprDEBUG(vrjDBG_INPUT_MGR, 1) << "MotionStar server shut down.\n"
-                                       << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_INPUT_MGR, 1) << "MotionStar server shut down.\n"
+                                          << vprDEBUG_FLUSH;
          retval = 1;
       }
    }
@@ -293,7 +300,7 @@ int MotionStar::sample ()
    }
    else
    {
-      vrj::Matrix trans_mat, rot_mat, quat_mat;
+      gmtl::Matrix44f trans_mat, rot_mat;
       float quat[4], angles[3];
       FLOCK::data_format format;
 
@@ -301,7 +308,7 @@ int MotionStar::sample ()
       // See transform documentation and VR System pg 146
       // Since we want the reciver in the world system, Rw
       // wTr = wTt*tTr
-      vrj::Matrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
+      gmtl::Matrix44f world_T_transmitter, transmitter_T_reciever, world_T_reciever;
       m_motion_star.sample();
 
       // get an initial timestamp for this entire sample. we'll copy it into
@@ -316,7 +323,7 @@ int MotionStar::sample ()
       {
          // Get the index to the current read buffer
          cur_samples[i].setTime( cur_samples[i].getTime() );
-         transmitter_T_reciever.zero();
+         gmtl::identity(transmitter_T_reciever);
 
          format = m_motion_star.getBirdDataFormat(i);
 
@@ -326,50 +333,60 @@ int MotionStar::sample ()
             case FLOCK::INVALID:
                break;
             case FLOCK::POSITION:
-               transmitter_T_reciever.setTrans (
-                    m_motion_star.getXPos(i),
-                    m_motion_star.getYPos(i),
-                    m_motion_star.getZPos(i));
+               gmtl::setTrans (transmitter_T_reciever,
+                               gmtl::Vec3f( m_motion_star.getXPos(i), m_motion_star.getYPos(i), m_motion_star.getZPos(i)) );
                break;
             case FLOCK::ANGLES:
-               transmitter_T_reciever.makeZYXEuler(
-                    m_motion_star.getZRot(i),
-                    m_motion_star.getYRot(i),
-                    m_motion_star.getXRot(i));
+               gmtl::setRot( transmitter_T_reciever,
+                                 gmtl::Math::deg2Rad(m_motion_star.getZRot(i)),
+                                 gmtl::Math::deg2Rad(m_motion_star.getYRot(i)),
+                                 gmtl::Math::deg2Rad(m_motion_star.getXRot(i)),
+                                 gmtl::ZYX);
                break;
             case FLOCK::MATRIX:
                m_motion_star.getMatrixAngles(i, angles);
-               transmitter_T_reciever.makeZYXEuler(angles[0],
-                                                            angles[1],
-                                                            angles[2]);
+
+               gmtl::setRot( transmitter_T_reciever,
+                                 gmtl::Math::deg2Rad(angles[0]),
+                                 gmtl::Math::deg2Rad(angles[1]),
+                                 gmtl::Math::deg2Rad(angles[2]),
+                                 gmtl::ZYX);
+
                break;
             case FLOCK::POSITION_ANGLES:
-               trans_mat.setTrans(m_motion_star.getXPos(i),
-                                  m_motion_star.getYPos(i),
-                                  m_motion_star.getZPos(i));
-               rot_mat.makeZYXEuler(m_motion_star.getZRot(i),
-                                    m_motion_star.getYRot(i),
-                                    m_motion_star.getXRot(i));
+               gmtl::setTrans( trans_mat,
+                                gmtl::Vec3f( m_motion_star.getXPos(i), m_motion_star.getYPos(i), m_motion_star.getZPos(i) ) );
+               gmtl::setRot( rot_mat,
+                                 gmtl::Math::deg2Rad(m_motion_star.getZRot(i)),
+                                 gmtl::Math::deg2Rad(m_motion_star.getYRot(i)),
+                                 gmtl::Math::deg2Rad(m_motion_star.getXRot(i)),
+                                 gmtl::ZYX );
                transmitter_T_reciever = (trans_mat * rot_mat);
                break;
             case FLOCK::POSITION_MATRIX:
-               trans_mat.setTrans(m_motion_star.getXPos(i),
-                                  m_motion_star.getYPos(i),
-                                  m_motion_star.getZPos(i));
+               gmtl::setTrans( trans_mat,
+                                gmtl::Vec3f( m_motion_star.getXPos(i), m_motion_star.getYPos(i), m_motion_star.getZPos(i) ) );
+
                m_motion_star.getMatrixAngles(i, angles);
-               rot_mat.makeXYZEuler(angles[0], angles[1], angles[2]);
+
+               gmtl::setRot( transmitter_T_reciever,
+                                 gmtl::Math::deg2Rad(angles[0]),
+                                 gmtl::Math::deg2Rad(angles[1]),
+                                 gmtl::Math::deg2Rad(angles[2]), gmtl::ZYX);
                transmitter_T_reciever = trans_mat * rot_mat;
                break;
             case FLOCK::QUATERNION:
                m_motion_star.getQuaternion(i, quat);
-               transmitter_T_reciever.makeQuaternion(quat);
+               gmtl::convert( transmitter_T_reciever, gmtl::Quatf(quat[1], quat[2], quat[3], quat[0]));
                break;
             case FLOCK::POSITION_QUATERNION:
-               trans_mat.setTrans(m_motion_star.getXPos(i),
-                                  m_motion_star.getYPos(i),
-                                  m_motion_star.getZPos(i));
+               gmtl::setTrans( trans_mat, gmtl::Vec3f(m_motion_star.getXPos(i),
+                                                      m_motion_star.getYPos(i),
+                                                      m_motion_star.getZPos(i)) );
+
                m_motion_star.getQuaternion(i, quat);
-               quat_mat.makeQuaternion(quat);
+               gmtl::convert( rot_mat, gmtl::Quatf(quat[1], quat[2], quat[3], quat[0]));
+
                transmitter_T_reciever = trans_mat * rot_mat;
                break;
          }
@@ -381,7 +398,8 @@ int MotionStar::sample ()
          //transmitter_T_reciever = *(cur_samples[index].getPosition());
 
          // Compute total transform.
-         world_T_reciever.mult(world_T_transmitter, transmitter_T_reciever);
+         // wTr = wTt * tTr
+         gmtl::mult(world_T_reciever, world_T_transmitter, transmitter_T_reciever);
 
          // Store corrected xform back into data.
          *(cur_samples[i].getPosition()) = world_T_reciever;
@@ -427,8 +445,8 @@ void MotionStar::setAddressName (const char* n)
    // If the device active, we cannot change the server address.
    if ( isActive() )
    {
-      vprDEBUG(vrjDBG_INPUT_MGR, 2)
-         << "vjMotionStar: Cannot change server address while active\n"
+      vprDEBUG(gadgetDBG_INPUT_MGR, 2)
+         << "gadget::MotionStar: Cannot change server address while active\n"
          << vprDEBUG_FLUSH;
    } else
    {
@@ -444,8 +462,8 @@ void MotionStar::setServerPort (const unsigned short port)
    // If the device active, we cannot change the server port.
    if ( isActive() )
    {
-      vprDEBUG(vrjDBG_INPUT_MGR, 2)
-         << "vjMotionStar: Cannot change server port while active\n"
+      vprDEBUG(gadgetDBG_INPUT_MGR, 2)
+         << "gadget::MotionStar: Cannot change server port while active\n"
          << vprDEBUG_FLUSH;
    }
    else
@@ -461,9 +479,9 @@ void MotionStar::setServerPort (const unsigned short port)
             setProtocol(BIRDNET::TCP);
             break;
          default:
-            vprDEBUG(vrjDBG_INPUT_MGR, 1)
-               << "vjMotionStar: Unexpected port number " << port << " given!\n"
-               << "              Defaulting to TCP port.\n" << vprDEBUG_FLUSH;
+            vprDEBUG(gadgetDBG_INPUT_MGR, 1)
+               << "MotionStar: Unexpected port number " << port << " given!\n"
+               << "            Defaulting to TCP port.\n" << vprDEBUG_FLUSH;
             m_motion_star.setProtocol(BIRDNET::TCP);
             break;
       }
@@ -478,8 +496,8 @@ void MotionStar::setProtocol (const enum BIRDNET::protocol proto)
    // If the device active, we cannot change the transmission protocol.
    if ( isActive() )
    {
-      vprDEBUG(vrjDBG_INPUT_MGR, 2)
-         << "vjMotionStar: Cannot change transmission protocol while active\n"
+      vprDEBUG(gadgetDBG_INPUT_MGR, 2)
+         << "gadget::MotionStar: Cannot change transmission protocol while active\n"
          << vprDEBUG_FLUSH;
    }
    else
@@ -496,8 +514,8 @@ void MotionStar::setMasterStatus (const bool master)
    // If the device active, we cannot change the master status.
    if ( isActive() )
    {
-      vprDEBUG(vrjDBG_INPUT_MGR, 2)
-         << "vjMotionStar: Cannot change master status while active\n"
+      vprDEBUG(gadgetDBG_INPUT_MGR, 2)
+         << "gadget::MotionStar: Cannot change master status while active\n"
          << vprDEBUG_FLUSH;
    }
    else
@@ -514,8 +532,8 @@ void MotionStar::setHemisphere (const unsigned char hemisphere)
    // If the device active, we cannot change the hemisphere.
    if ( isActive() )
    {
-      vprDEBUG(vrjDBG_INPUT_MGR, 2)
-         << "vjMotionStar: Cannot change hemisphere while active\n"
+      vprDEBUG(gadgetDBG_INPUT_MGR, 2)
+         << "gadget::MotionStar: Cannot change hemisphere while active\n"
          << vprDEBUG_FLUSH;
    }
    else
@@ -541,8 +559,8 @@ void MotionStar::setHemisphere (const unsigned char hemisphere)
             m_motion_star.setHemisphere(FLOCK::RIGHT_HEMISPHERE);
             break;
          default:
-            vprDEBUG(vrjDBG_INPUT_MGR, 1)
-               << "vjMotionStar: Unknown hemisphere " << hemisphere
+            vprDEBUG(gadgetDBG_INPUT_MGR, 1)
+               << "gadget::MotionStar: Unknown hemisphere " << hemisphere
                << " given!\n              Defaulting to front hemisphere.\n"
                << vprDEBUG_FLUSH;
             m_motion_star.setHemisphere(FLOCK::FRONT_HEMISPHERE);
@@ -559,8 +577,8 @@ void MotionStar::setBirdFormat (const unsigned int format)
    // If the device active, we cannot change the bird format.
    if ( isActive() )
    {
-      vprDEBUG(vrjDBG_INPUT_MGR, 2)
-         << "vjMotionStar: Cannot change format while active\n"
+      vprDEBUG(gadgetDBG_INPUT_MGR, 2)
+         << "gadget::MotionStar: Cannot change format while active\n"
          << vprDEBUG_FLUSH;
    }
    else
@@ -586,9 +604,9 @@ void MotionStar::setBirdFormat (const unsigned int format)
             m_motion_star.setBirdFormat(FLOCK::POSITION_MATRIX);
             break;
          case 6:
-            vprDEBUG(vrjDBG_INPUT_MGR, 1)
-               << "vjMotionStar: Invalid bird format 6 given!\n"
-               << "              Defaulting to position/angles.\n"
+            vprDEBUG(gadgetDBG_INPUT_MGR, 1)
+               << "gadget::MotionStar: Invalid bird format 6 given!\n"
+               << "                    Defaulting to position/angles.\n"
                << vprDEBUG_FLUSH;
             m_motion_star.setBirdFormat(FLOCK::POSITION_ANGLES);
             break;
@@ -599,9 +617,10 @@ void MotionStar::setBirdFormat (const unsigned int format)
             m_motion_star.setBirdFormat(FLOCK::POSITION_QUATERNION);
             break;
          default:
-            vprDEBUG(vrjDBG_INPUT_MGR, 1)
-               << "vjMotionStar: Unexpected bird format " << format
-               << " given!\n              Defaulting to position/angles.\n"
+            vprDEBUG(gadgetDBG_INPUT_MGR, 1)
+               << "gadget::MotionStar: Unexpected bird format " << format
+               << " given!\n"
+               << "                    Defaulting to position/angles.\n"
                << vprDEBUG_FLUSH;
             m_motion_star.setBirdFormat(FLOCK::POSITION_ANGLES);
             break;
@@ -617,8 +636,8 @@ void MotionStar::setNumBirds (unsigned int i)
    // If the device active, we cannot change the number of birds.
    if ( isActive() )
    {
-      vprDEBUG(vrjDBG_INPUT_MGR, 2)
-         << "vjMotionStar: Cannot change number of birds while active\n"
+      vprDEBUG(gadgetDBG_INPUT_MGR, 2)
+         << "gadget::MotionStar: Cannot change number of birds while active\n"
          << vprDEBUG_FLUSH;
    }
    else
@@ -635,8 +654,8 @@ void MotionStar::setRunMode (const unsigned int mode)
    // If the device active, we cannot change the run mode.
    if ( isActive() )
    {
-      vprDEBUG(vrjDBG_INPUT_MGR, 2)
-         << "vjMotionStar: Cannot change run mode while active\n"
+      vprDEBUG(gadgetDBG_INPUT_MGR, 2)
+         << "gadget::MotionStar: Cannot change run mode while active\n"
          << vprDEBUG_FLUSH;
    }
    else
@@ -650,9 +669,11 @@ void MotionStar::setRunMode (const unsigned int mode)
             m_motion_star.setRunMode(BIRDNET::SINGLE_SHOT);
             break;
          default:
-            vprDEBUG(vrjDBG_INPUT_MGR, 1)
-               << "vjMotionStar: Unexpected run mode " << mode << " given!\n"
-               << "              Defaulting to continuous.\n" << vprDEBUG_FLUSH;
+            vprDEBUG(gadgetDBG_INPUT_MGR, 1)
+               << "gadget::MotionStar: Unexpected run mode " << mode
+               << " given!\n"
+               << "                    Defaulting to continuous.\n"
+               << vprDEBUG_FLUSH;
             m_motion_star.setRunMode(BIRDNET::CONTINUOUS);
             break;
       }
@@ -667,8 +688,8 @@ void MotionStar::setReportRate (const unsigned char rate)
    // If the device active, we cannot change the report rate.
    if (isActive())
    {
-      vprDEBUG(vrjDBG_INPUT_MGR, 2)
-         << "vjMotionStar: Cannot change bird report rate while active\n"
+      vprDEBUG(gadgetDBG_INPUT_MGR, 2)
+         << "gadget::MotionStar: Cannot change bird report rate while active\n"
          << vprDEBUG_FLUSH;
    }
    else
@@ -685,8 +706,8 @@ void MotionStar::setMeasurementRate (const double rate)
    // If the device active, we cannot change the measurement rate.
    if (isActive())
    {
-      vprDEBUG(vrjDBG_INPUT_MGR, 2)
-         << "vjMotionStar: Cannot change chassis measurement rate while active\n"
+      vprDEBUG(gadgetDBG_INPUT_MGR, 2)
+         << "gadget::MotionStar: Cannot change chassis measurement rate while active\n"
          << vprDEBUG_FLUSH;
    }
    else
@@ -716,4 +737,4 @@ void MotionStar::initCorrectionTable (const char* table_file)
 }
 
 
-} // End of vrj namespace
+} // End of gadget namespace

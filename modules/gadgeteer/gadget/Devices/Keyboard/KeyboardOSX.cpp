@@ -35,8 +35,7 @@
 #include <vpr/Thread/Thread.h>
 #include <vpr/System.h>
 
-#include <vrj/Utils/Debug.h>
-#include <vrj/Display/DisplayManager.h>
+#include <gadget/Utils/Debug.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <ApplicationServices/ApplicationServices.h>
 
@@ -78,8 +77,9 @@ bool KeyboardOSX::config(jccl::ConfigChunkPtr c)
    if (0.0f == m_mouse_sensitivity)
       m_mouse_sensitivity = 0.5;
 
-   vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_STATE_LVL) << "Mouse Sensititivty: "
-   << m_mouse_sensitivity << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+      << "Mouse Sensititivty: " << m_mouse_sensitivity << std::endl
+      << vprDEBUG_FLUSH;
 
    mSleepTimeMS = c->getProperty("sleep_time");
 
@@ -98,7 +98,9 @@ void KeyboardOSX::controlLoop(void* nullParam)
     Point   mouseLoc;
     Rect    win_rect;
     long usleep_time(1); // to be set...
-    vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "vjKeyboardOSX::controlLoop: Thread started.\n" << vprDEBUG_FLUSH;
+    vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+       << "gadget::KeyboardOSX::controlLoop: Thread started.\n"
+       << vprDEBUG_FLUSH;
 
     // Open the carbon window
     if(mWeOwnTheWindow)
@@ -113,7 +115,9 @@ void KeyboardOSX::controlLoop(void* nullParam)
     // If we have initial locked, then we need to lock the system
     if(mLockState == Lock_LockKey)      // Means that we are in the initially locked state
     {
-    vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "vjKeyboardOSX::controlLoop: Mouse set to initial lock. Locking it now.\n" << vprDEBUG_FLUSH;
+    vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+       << "gadget::KeyboardOSX::controlLoop: Mouse set to initial lock. Locking it now.\n"
+       << vprDEBUG_FLUSH;
     lockMouse();                     // Lock the mouse
     }
 
@@ -233,16 +237,22 @@ void KeyboardOSX::HandleEvents()
             m_keys[vj_key] += 1;
             if (vj_key == VJKEY_ESC)       // Check for Escape from bad state
             {
-                vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "vjKeyboardOSX: Trying to ESCAPE from current state.\n" << vprDEBUG_FLUSH;
+                vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+                   << "gadget::KeyboardOSX: Trying to ESCAPE from current state.\n"
+                   << vprDEBUG_FLUSH;
                 if(mLockState != Unlocked)
                 {
-                    vprDEBUG_NEXT(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "vjKeyboardOSX: STATE switch: <ESCAPE> --> Unlocked\n" << vprDEBUG_FLUSH;
+                    vprDEBUG_NEXT(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+                       << "gadget::KeyboardOSX: STATE switch: <ESCAPE> --> Unlocked\n"
+                       << vprDEBUG_FLUSH;
                     mLockState = Unlocked;
                     unlockMouse();
                 }
                 else
                 {
-                    vprDEBUG_NEXT(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "vjKeyboardOSX: Already unlocked.  Cannot ESCAPE." << vprDEBUG_FLUSH;
+                    vprDEBUG_NEXT(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+                       << "gadget::KeyboardOSX: Already unlocked.  Cannot ESCAPE."
+                       << vprDEBUG_FLUSH;
                 }
             }
             else if(mLockState == Unlocked)
@@ -251,25 +261,33 @@ void KeyboardOSX::HandleEvents()
                 {
                     mLockState = Lock_KeyDown;       // Switch state
                     mLockStoredKey = vj_key;         // Store the VJ key that is down
-                    vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "vjKeyboardOSX: STATE switch: Unlocked --> Lock_KeyDown\n" << vprDEBUG_FLUSH;
+                    vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+                       << "gadget::KeyboardOSX: STATE switch: Unlocked --> Lock_KeyDown\n"
+                       << vprDEBUG_FLUSH;
                     lockMouse();
                 }
                 else if(vj_key == mLockToggleKey)
                 {
                     mLockState = Lock_LockKey;
-                    vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "vjKeyboardOSX: STATE switch: Unlocked --> Lock_LockKey\n" << vprDEBUG_FLUSH;
+                    vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+                       << "gadget::KeyboardOSX: STATE switch: Unlocked --> Lock_LockKey\n"
+                       << vprDEBUG_FLUSH;
                     lockMouse();
                 }
             }
             else if((mLockState == Lock_KeyDown) && (vj_key == mLockToggleKey))     // Just switch the current locking state
             {
                 mLockState = Lock_LockKey;
-                vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "vjKeyboardOSX: STATE switch: Lock_KeyDown --> Lock_LockKey\n" << vprDEBUG_FLUSH;
+                vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+                   << "gadget::KeyboardOSX: STATE switch: Lock_KeyDown --> Lock_LockKey\n"
+                   << vprDEBUG_FLUSH;
             }
             else if((mLockState == Lock_LockKey) && (vj_key == mLockToggleKey))
             {
                 mLockState = Unlocked;
-                vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "vjKeyboardOSX: STATE switch: Lock_LockKey --> Unlocked\n" << vprDEBUG_FLUSH;
+                vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+                   << "gadget::KeyboardOSX: STATE switch: Lock_LockKey --> Unlocked\n"
+                   << vprDEBUG_FLUSH;
             }
 
         } else {
@@ -277,7 +295,9 @@ void KeyboardOSX::HandleEvents()
             if((mLockState == Lock_KeyDown) && (vj_key == mLockStoredKey))
             {
                 mLockState = Unlocked;
-                vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "vjXWinKeyboard: STATE switch: Lock_KeyDown --> Unlocked\n" << vprDEBUG_FLUSH;
+                vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+                   << "gadget::XWinKeyboard: STATE switch: Lock_KeyDown --> Unlocked\n"
+                   << vprDEBUG_FLUSH;
             }
         }
     }
@@ -351,7 +371,8 @@ int KeyboardOSX::stopSampling()
 // Open the X window to sample from
 int KeyboardOSX::openTheWindow()
 {
-    vprDEBUG(vrjDBG_INPUT_MGR,0) << "vjKeyboardOSX::open()" << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(gadgetDBG_INPUT_MGR,0) << "gadget::KeyboardOSX::open()"
+                                    << std::endl << vprDEBUG_FLUSH;
     rectWin.top = m_y;
     rectWin.left = m_x;
     rectWin.bottom = m_y + m_height;
@@ -359,7 +380,9 @@ int KeyboardOSX::openTheWindow()
 
     if (noErr != CreateNewWindow (kDocumentWindowClass, kWindowStandardDocumentAttributes, &rectWin, &gpWindow))
     {
-        vprDEBUG(vrjDBG_INPUT_MGR,0) << "vjKeyboardOSX::open()    Window failed to open!" << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG(gadgetDBG_INPUT_MGR,0)
+           << "gadget::KeyboardOSX::open()    Window failed to open!"
+           << std::endl << vprDEBUG_FLUSH;
         return false;
     }
     SetWindowTitleWithCFString(gpWindow,window_title);
@@ -375,7 +398,8 @@ int KeyboardOSX::openTheWindow()
 void KeyboardOSX::lockMouse()
 {
     CGPoint new_loc;
-    vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "vjKeyboardOSX: LOCKING MOUSE..." << vprDEBUG_FLUSH;
+    vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+       << "gadget::KeyboardOSX: LOCKING MOUSE..." << vprDEBUG_FLUSH;
     new_loc.x = mPrevX = m_width/2 + m_x;
     new_loc.y = mPrevY = m_height/2 + m_y;
     CGWarpMouseCursorPosition( new_loc );
@@ -384,7 +408,8 @@ void KeyboardOSX::lockMouse()
 // Called when locking ends
 void KeyboardOSX::unlockMouse()
 {
-   vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "vjKeyboardOSX: UN-LOCKING MOUSE..." << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+      << "gadget::KeyboardOSX: UN-LOCKING MOUSE..." << vprDEBUG_FLUSH;
 }
 
 int KeyboardOSX::OSXKeyToKey(int xKey)

@@ -1,6 +1,38 @@
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+ *
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <gadget/gadgetConfig.h>
+#include <gadget/Util/Debug.h>
 #include <gadget/RemoteInputManager/RecvBuffer.h>
-#include <vrj/Util/Debug.h>
  
 namespace gadget
 {
@@ -28,7 +60,9 @@ RecvBuffer::RecvBuffer(){
 void RecvBuffer::markAsRead(int num_bytes){
    read_offset += num_bytes;
    if(read_offset > write_offset){
-      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HEX_LVL) << "RecvBuffer::markAsRead() read_offset > RIM_BUFFER_SIZE" << std::endl << vprDEBUG_FLUSH; 
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HEX_LVL)
+         << "RecvBuffer::markAsRead() read_offset > RIM_BUFFER_SIZE"
+         << std::endl << vprDEBUG_FLUSH; 
       read_offset = write_offset;
       // note: this means readable_bytes = 0;
     }

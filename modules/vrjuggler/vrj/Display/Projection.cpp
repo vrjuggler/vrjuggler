@@ -33,6 +33,11 @@
 #include <vrj/vrjConfig.h>
 #include <vrj/Display/Projection.h>
 
+#include <gmtl/Matrix.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/Xforms.h>
+#include <gmtl/Output.h>
+
 namespace vrj
 {
 
@@ -44,10 +49,15 @@ float Projection::mFarDist = 10000.0f;
 //!NOTE: The normal frustum is in camera (clip) coordinates
 //+      and the model is in model (eye) coordinates.
 //+      The matrix viewMat transforms from eye to clip
-void Projection::getFrustumApexAndCorners(Vec3& apex, Vec3& ur, Vec3& lr, Vec3& ul, Vec3& ll)
+void Projection::getFrustumApexAndCorners(gmtl::Vec3f& apex,
+                                          gmtl::Vec3f& ur, gmtl::Vec3f& lr,
+                                          gmtl::Vec3f& ul, gmtl::Vec3f& ll)
 {
-   Matrix view_mat_inv;
-   view_mat_inv.invert(mViewMat);   // Get the inverse matrix
+   gmtl::Matrix44f view_mat_inv;
+   gmtl::invert(view_mat_inv, mViewMat);
+
+   // vprDEBUG(vprDBG_ALL,0) << "GetApex:\nview mat:\n" << mViewMat << "\nviewMatInv:\n" << view_mat_inv << std::endl << vprDEBUG_FLUSH;
+
 
    //float near_dist = mFocusPlaneDist;
    // User like triangles to get the params for the focus surface
@@ -58,17 +68,17 @@ void Projection::getFrustumApexAndCorners(Vec3& apex, Vec3& ur, Vec3& lr, Vec3& 
    float right = mFrustum[Frustum::VJ_RIGHT]*mult_factor;
 
    // Create points in clip space
-   Vec3 apexClip(0.0f, 0.0f, 0.0f);
-   Vec3 urClip(right, top, -mFocusPlaneDist);
-   Vec3 lrClip(right, bot, -mFocusPlaneDist);
-   Vec3 ulClip(left, top, -mFocusPlaneDist);
-   Vec3 llClip(left, bot, -mFocusPlaneDist);
+   gmtl::Vec3f apexClip(0.0f, 0.0f, 0.0f);
+   gmtl::Vec3f urClip(right, top, -mFocusPlaneDist);
+   gmtl::Vec3f lrClip(right, bot, -mFocusPlaneDist);
+   gmtl::Vec3f ulClip(left, top, -mFocusPlaneDist);
+   gmtl::Vec3f llClip(left, bot, -mFocusPlaneDist);
 
-   apex.xformFull(view_mat_inv, apexClip);
-   ur.xformFull(view_mat_inv, urClip);
-   lr.xformFull(view_mat_inv, lrClip);
-   ul.xformFull(view_mat_inv, ulClip);
-   ll.xformFull(view_mat_inv, llClip);
+   apex = view_mat_inv * apexClip;
+   ur = view_mat_inv * urClip;
+   lr = view_mat_inv * lrClip;
+   ul = view_mat_inv * ulClip;
+   ll = view_mat_inv * llClip;
 }
 
 

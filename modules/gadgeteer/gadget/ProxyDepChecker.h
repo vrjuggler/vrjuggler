@@ -37,7 +37,6 @@
 
 // Dependency checker includes
 #include <jccl/Plugins/ConfigManager/DependencyManager.h>
-#include <vrj/Display/DisplayManager.h>
 #include <jccl/Plugins/ConfigManager/DepChecker.h>
 
 

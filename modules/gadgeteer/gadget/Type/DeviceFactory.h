@@ -39,7 +39,7 @@
 #include <jccl/Config/ConfigChunkPtr.h>
 #include <vpr/Util/Singleton.h>
 
-#include <vrj/Util/Debug.h>
+#include <vpr/Util/Debug.h>
 #include <vpr/Util/Assert.h>
 
 namespace gadget

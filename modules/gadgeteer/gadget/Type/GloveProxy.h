@@ -73,18 +73,18 @@ public:
   }
 
 
-  vrj::Vec3 getVector(GloveData::GloveComponent component)
+  gmtl::Vec3f getVector(GloveData::GloveComponent component)
   {
      if(mStupified)
-        return vrj::Vec3(0,0,0);
+        return gmtl::Vec3f(0,0,0);
      else
         return mTypedDevice->getGloveVector(component, mUnitNum);
   }
 
-  vrj::Matrix getPos( GloveData::GloveComponent component = GloveData::WRIST)
+  gmtl::Matrix44f getPos( GloveData::GloveComponent component = GloveData::WRIST)
   {
      if(mStupified)
-        return vrj::Matrix();
+        return gmtl::Matrix44f();
      else
       return mTypedDevice->getGlovePos(component, mUnitNum);
   }

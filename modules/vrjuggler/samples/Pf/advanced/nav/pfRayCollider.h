@@ -58,7 +58,7 @@ public:
    //!ARGS: delta - The amount we want to move
    //!ARGS: correction - The amount to correct the movement so that we do not collide
    //!RETURNS: true - There was a hit.
-   virtual bool testMove( vrj::Vec3 whereYouAre, vrj::Vec3 delta, vrj::Vec3& correction, bool whereYouAreWithDelta = false );
+   virtual bool testMove( gmtl::Vec3f whereYouAre, gmtl::Vec3f delta, gmtl::Vec3f& correction, bool whereYouAreWithDelta = false );
 
    // general ray collision routine with a scene.
    // correctionVector - should be added to whereYouWantToBe after calling this function
@@ -142,7 +142,7 @@ inline bool pfRayCollider::testRayCollision( pfVec3& intersectionPt, pfVec3& whe
 }
 
 
-inline bool pfRayCollider::testMove(vrj::Vec3 _whereYouAre, vrj::Vec3 _delta, vrj::Vec3& correction, bool whereYouAreWithDelta)
+inline bool pfRayCollider::testMove(gmtl::Vec3f _whereYouAre, gmtl::Vec3f _delta, gmtl::Vec3f& correction, bool whereYouAreWithDelta)
 {
    pfVec3 whereYouAre = vrj::GetPfVec(_whereYouAre);
    pfVec3 delta = vrj::GetPfVec(_delta);

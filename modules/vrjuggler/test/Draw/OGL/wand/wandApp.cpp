@@ -36,9 +36,9 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-#include <vrj/Math/Matrix.h>
-#include <vrj/Math/Vec3.h>
-#include <vrj/Math/Coord.h>
+#include <gmtl/Matrix.h>
+#include <gmtl/Vec.h>
+#include <gmtl/Coord.h>
 
 #include <wandApp.h>
 
@@ -66,13 +66,13 @@ void wandApp::myDraw()
    glMatrixMode(GL_MODELVIEW);
 
       // -- Draw box on wand --- //
-   vrj::Matrix* wandMatrix;
+   gmtl::Matrix44f* wandMatrix;
    wandMatrix = mWand->getData();      // Get the wand matrix
 
    glPushMatrix();
       // cout << "wand:\n" << *wandMatrix << endl;
       glPushMatrix();
-         glMultMatrixf(wandMatrix->getFloatPtr());    // Push the wand matrix on the stack
+         glMultMatrixf(wandMatrix->mData);  // Push the wand matrix on the stack
          //glColor3f(1.0f, 0.0f, 1.0f);
          float wand_color[3];
          wand_color[0] = wand_color[1] = wand_color[2] = 0.0f;
@@ -101,25 +101,25 @@ void wandApp::myDraw()
       // Draw Axis
       glDisable(GL_LIGHTING);
       glPushMatrix();
-         glMultMatrixf(wandMatrix->getFloatPtr());    // Goto wand position
+         glMultMatrixf(wandMatrix->mData);    // Goto wand position
 
-         vrj::Vec3 x_axis(7.0f,0.0f,0.0f);
-         vrj::Vec3 y_axis(0.0f, 7.0f, 0.0f);
-         vrj::Vec3 z_axis(0.0f, 0.0f, 7.0f);
-         vrj::Vec3 origin(0.0f, 0.0f, 0.0f);
+         gmtl::Vec3f x_axis(7.0f,0.0f,0.0f);
+         gmtl::Vec3f y_axis(0.0f, 7.0f, 0.0f);
+         gmtl::Vec3f z_axis(0.0f, 0.0f, 7.0f);
+         gmtl::Vec3f origin(0.0f, 0.0f, 0.0f);
 
          glBegin(GL_LINES);
             glColor3f(1.0f, 0.0f, 0.0f);
-            glVertex3fv(origin.vec);
-            glVertex3fv(x_axis.vec);
+            glVertex3fv(origin.mData);
+            glVertex3fv(x_axis.mData);
 
             glColor3f(0.0f, 1.0f, 0.0f);
-            glVertex3fv(origin.vec);
-            glVertex3fv(y_axis.vec);
+            glVertex3fv(origin.mData);
+            glVertex3fv(y_axis.mData);
 
             glColor3f(0.0f, 0.0f, 1.0f);
-            glVertex3fv(origin.vec);
-            glVertex3fv(z_axis.vec);
+            glVertex3fv(origin.mData);
+            glVertex3fv(z_axis.mData);
          glEnd();
       glPopMatrix();
       glEnable(GL_LIGHTING);

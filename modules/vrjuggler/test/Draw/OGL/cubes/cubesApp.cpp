@@ -33,7 +33,12 @@
 #include <iostream>
 #include <math.h>
 
-#include <vrj/Math/Quat.h>
+#include <gmtl/Quat.h>
+#include <gmtl/QuatOps.h>
+#include <gmtl/Vec.h>
+#include <gmtl/Convert.h>
+#include <gmtl/Generate.h>
+#include <gmtl/Output.h>
 
 #include <cubesApp.h>
 
@@ -47,19 +52,22 @@
 // Uses a quaternion to do rotation in the environment
 void UserData::updateNavigation()
 {
-   vrj::Vec3 xyzAngles;
-   vrj::Vec3 xyzTrans;
+   gmtl::Vec3f xyzAngles;
+   gmtl::Vec3f xyzTrans;
 
    // Cur*Transform = New Location
-   vrj::Matrix    transform, transformIdent;
-   vrj::Quat      source_rot, goal_rot, slerp_rot;
+   gmtl::Matrix44f transform, transformIdent;
+   gmtl::Quatf     source_rot, goal_rot, slerp_rot;
 
-   transformIdent.makeIdent();            // Create an identity matrix to rotate from
-   source_rot.makeRot(transformIdent);
+   gmtl::identity(transformIdent);
+//   gmtl::normalize(source_rot);
+//   source_rot.makeRot(transformIdent);
 
-   vrj::Matrix* wand_matrix;
+   gmtl::Matrix44f* wand_matrix;
    wand_matrix = mWand->getData();
-   wand_matrix->getXYZEuler(xyzAngles[0], xyzAngles[1], xyzAngles[2]);
+   gmtl::getRot(*wand_matrix, xyzAngles[0],  xyzAngles[1], xyzAngles[2],
+                gmtl::XYZ);
+//   wand_matrix->getXYZEuler(xyzAngles[0], xyzAngles[1], xyzAngles[2]);
 
 
    vprDEBUG(vprDBG_ALL,6) << "===================================\n"
@@ -69,19 +77,22 @@ void UserData::updateNavigation()
    vprDEBUG(vprDBG_ALL,6) << "Wand XYZ: " << xyzAngles << std::endl
                         << vprDEBUG_FLUSH;
 
-   goal_rot.makeRot(*wand_matrix);    // Create the goal rotation quaternion
+   gmtl::convert(goal_rot, *wand_matrix); // Create the goal rotation quaternion
 
    if(transformIdent != *wand_matrix)  // If we don't have two identity matrices
    {
-      slerp_rot.slerp(0.05, source_rot, goal_rot);    // Transform part way there
-      transform.makeQuaternion(slerp_rot);            // Create the transform matrix to use
+      gmtl::slerp(slerp_rot, 0.05f, source_rot, goal_rot); // Transform part way there
+      gmtl::convert(slerp_rot, transform);      // Create the transform matrix to use
    }
    else
-      transform.makeIdent();
+   {
+      gmtl::identity(transform);
+   }
 
    vprDEBUG(vprDBG_ALL,6) << "Transform:\n" << transform << std::endl
                         << vprDEBUG_FLUSH;
-   transform.getXYZEuler(xyzAngles[0], xyzAngles[1], xyzAngles[2]);
+   gmtl::getRot(transform, xyzAngles[0],  xyzAngles[1], xyzAngles[2],
+                gmtl::XYZ);
    vprDEBUG(vprDBG_ALL,6) << "Transform XYZ: " << xyzAngles << std::endl
                         << vprDEBUG_FLUSH;
 
@@ -114,19 +125,26 @@ void UserData::updateNavigation()
 //      vprDEBUG(vprDBG_ALL,) << "-- OFF --" << std::endl << vprDEBUG_FLUSH;
 
    // Find direction vector
-   vrj::Vec3   forward(0.0f, 0.0f, -1.0f);
+   gmtl::Vec3f forward(0.0f, 0.0f, -1.0f);
    forward *= mCurVelocity;
 
-   vrj::Matrix rot_mat, local_xform;
-   rot_mat.invert(transform);
+   gmtl::Matrix44f rot_mat, local_xform;
+   gmtl::invert(rot_mat, transform);
 
-   local_xform.makeTrans(0, 0, mCurVelocity);
-   local_xform.postMult(rot_mat);
+//   local_xform.makeTrans(0, 0, mCurVelocity);
+//   local_xform.postMult(rot_mat);
+   local_xform = gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f(0.0f, 0.0f,
+                                                              mCurVelocity));
+   gmtl::postMult(local_xform, rot_mat);
 
-   mNavMatrix.preMult(local_xform);
+//   mNavMatrix.preMult(local_xform);
+   gmtl::preMult(mNavMatrix, local_xform);
 
-   local_xform.getXYZEuler(xyzAngles[0], xyzAngles[1], xyzAngles[2]);
-   local_xform.getTrans(xyzTrans[0], xyzTrans[1], xyzTrans[2]);
+//   local_xform.getXYZEuler(xyzAngles[0], xyzAngles[1], xyzAngles[2]);
+//   local_xform.getTrans(xyzTrans[0], xyzTrans[1], xyzTrans[2]);
+   gmtl::getRot(local_xform, xyzAngles[0], xyzAngles[1], xyzAngles[2],
+                gmtl::XYZ);
+   gmtl::getTrans(local_xform, xyzTrans[0], xyzTrans[1], xyzTrans[2]);
    vprDEBUG(vprDBG_ALL,6) << "Transform   Rot: " << xyzAngles << std::endl
                         << vprDEBUG_FLUSH;
    vprDEBUG(vprDBG_ALL,6) << "Transform Trans: " << xyzTrans << std::endl
@@ -236,8 +254,8 @@ void cubesApp::myDraw(vrj::User* user)
    glPushMatrix();
          // --- Push on Navigation matrix for the user --- //
 
-      vrj::Matrix nav_matrix = mUserData[user->getId()]->mNavMatrix;
-      glMultMatrixf(nav_matrix.getFloatPtr());
+      gmtl::Matrix44f nav_matrix = mUserData[user->getId()]->mNavMatrix;
+      glMultMatrixf(nav_matrix.mData);
 
 
       // dereferencing a GlContextData is expensive, so we'll do it once

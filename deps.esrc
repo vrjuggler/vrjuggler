@@ -1,0 +1,30 @@
+// Juggler dependencies
+// Run as: cvs-gather.pl --cfg=deps.esrc
+
+GMTL
+{
+   Source
+   {
+      CVSROOT: allenb@cvs.ggt.sourceforge.net:/cvsroot/ggt;
+      Module: GGT/modules/GMTL   [modules/GMTL];
+      Tag: HEAD;
+      Path: .;
+   }
+
+   Macros
+   {
+      CVSROOT: allenb@cvs.ggt.sourceforge.net:/cvsroot/ggt;
+      Module: GGT/macros   [macros.GGT];
+      Tag: HEAD;
+      Path: .;
+   }
+};
+
+Doozer      // Get Doozer for makefiles
+{
+   CVSROOT: allenb@cvs.doozer.sourceforge.net:/cvsroot/doozer;
+   Module: Doozer;
+   Tag: HEAD;
+   Path: .;
+}; 
+   

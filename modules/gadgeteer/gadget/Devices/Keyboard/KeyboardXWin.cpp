@@ -35,8 +35,8 @@
 #include <vpr/Thread/Thread.h>
 #include <vpr/System.h>
 
-#include <vrj/Util/Debug.h>
-#include <vrj/Display/DisplayManager.h>
+#include <gadget/Util/Debug.h>
+#include <gadget/InputManager.h>
 #include <jccl/Config/ConfigChunk.h>
 
 #include <gadget/Devices/Keyboard/KeyboardXWin.h> // my header
@@ -69,7 +69,7 @@ bool KeyboardXWin::config(jccl::ConfigChunkPtr c)
 
    // Get the X display string
    int x_disp_num = c->getProperty("display_number");
-   jccl::ConfigChunkPtr dispSysChunk = vrj::DisplayManager::instance()->getDisplaySystemChunk();
+   jccl::ConfigChunkPtr dispSysChunk = gadget::InputManager::instance()->getDisplaySystemChunk();
 
    if ((x_disp_num >= 0) && (dispSysChunk.get() != NULL) )
    {
@@ -96,8 +96,9 @@ bool KeyboardXWin::config(jccl::ConfigChunkPtr c)
    if (0.0f == m_mouse_sensitivity)
       m_mouse_sensitivity = 0.5;
 
-   vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_STATE_LVL) << "Mouse Sensititivty: "
-   << m_mouse_sensitivity << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+      << "Mouse Sensititivty: " << m_mouse_sensitivity << std::endl
+      << vprDEBUG_FLUSH;
 
    mSleepTimeMS = c->getProperty("sleep_time");
 
@@ -114,7 +115,7 @@ bool KeyboardXWin::config(jccl::ConfigChunkPtr c)
 // Main thread of control for this active object
 void KeyboardXWin::controlLoop(void* nullParam)
 {
-   vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL)
+   vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
       << "gadget::KeyboardXWin::controlLoop: Thread started.\n"
       << vprDEBUG_FLUSH;
 
@@ -139,7 +140,7 @@ void KeyboardXWin::controlLoop(void* nullParam)
    // If we have initial locked, then we need to lock the system
    if(mLockState == Lock_LockKey)      // Means that we are in the initially locked state
    {
-      vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL)
+      vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
          << "gadget::KeyboardXWin::controlLoop: Mouse set to initial lock. Locking it now.\n"
          << vprDEBUG_FLUSH;
       lockMouse();                     // Lock the mouse
@@ -289,12 +290,12 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
          // lock_keylock[key==lockKey] -> Unlocked
          if (vj_key == VJKEY_ESC)       // Check for Escape from bad state
          {
-            vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL)
+            vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
                << "gadget::KeyboardXWin: Trying to ESCAPE from current state.\n"
                << vprDEBUG_FLUSH;
             if(mLockState != Unlocked)
             {
-               vprDEBUG_NEXT(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL)
+               vprDEBUG_NEXT(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
                   << "gadget::KeyboardXWin: STATE switch: <ESCAPE> --> Unlocked\n"
                   << vprDEBUG_FLUSH;
                mLockState = Unlocked;
@@ -302,7 +303,7 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
             }
             else
             {
-               vprDEBUG_NEXT(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL)
+               vprDEBUG_NEXT(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
                   << "gadget::KeyboardXWin: Already unlocked.  Cannot ESCAPE."
                   << vprDEBUG_FLUSH;
             }
@@ -313,7 +314,7 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
             {
                mLockState = Lock_KeyDown;       // Switch state
                mLockStoredKey = vj_key;         // Store the VJ key that is down
-               vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL)
+               vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
                   << "gadget::KeyboardXWin: STATE switch: Unlocked --> Lock_KeyDown\n"
                   << vprDEBUG_FLUSH;
                lockMouse();
@@ -321,7 +322,7 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
             else if(vj_key == mLockToggleKey)
             {
                mLockState = Lock_LockKey;
-               vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL)
+               vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
                   << "gadget::KeyboardXWin: STATE switch: Unlocked --> Lock_LockKey\n"
                   << vprDEBUG_FLUSH;
                lockMouse();
@@ -330,23 +331,23 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
          else if((mLockState == Lock_KeyDown) && (vj_key == mLockToggleKey))     // Just switch the current locking state
          {
             mLockState = Lock_LockKey;
-            vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL)
+            vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
                << "gadget::KeyboardXWin: STATE switch: Lock_KeyDown --> Lock_LockKey\n"
                << vprDEBUG_FLUSH;
          }
          else if((mLockState == Lock_LockKey) && (vj_key == mLockToggleKey))
          {
             mLockState = Unlocked;
-            vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL)
+            vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
                << "gadget::KeyboardXWin: STATE switch: Lock_LockKey --> Unlocked\n"
                << vprDEBUG_FLUSH;
             unlockMouse();
          }
 
-         vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HVERB_LVL) << "KeyPress:  " << std::hex
-                    << key << " state:" << ((XKeyEvent*)&event)->state
-                    << " ==> " << xKeyToKey(key) << std::endl
-                    << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
+            << "KeyPress:  " << std::hex << key
+            << " state:" << ((XKeyEvent*)&event)->state
+            << " ==> " << xKeyToKey(key) << std::endl << vprDEBUG_FLUSH;
          break;
 
       // A KeyRelease event occurred.  Flag the key that was released (as a
@@ -362,16 +363,16 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
          if((mLockState == Lock_KeyDown) && (vj_key == mLockStoredKey))
          {
             mLockState = Unlocked;
-            vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL)
+            vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
                << "gadget::KeyboardXWin: STATE switch: Lock_KeyDown --> Unlocked\n"
                << vprDEBUG_FLUSH;
             unlockMouse();
          }
 
-         vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HVERB_LVL) << "KeyRelease:" << std::hex
-                    << key << " state:" << ((XKeyEvent*)&event)->state
-                    << " ==> " << xKeyToKey(key) << std::endl
-                    << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
+            << "KeyRelease:" << std::hex << key
+            << " state:" << ((XKeyEvent*)&event)->state
+            << " ==> " << xKeyToKey(key) << std::endl << vprDEBUG_FLUSH;
          break;
 
       // A MotionNotify event (mouse pointer movement) occurred.
@@ -672,9 +673,9 @@ vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
    XRaiseWindow(m_display,m_window);
    XClearWindow(m_display,m_window);    // Try to clear the background
 
-   vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_STATE_LVL)
-              << "gadget::KeyboardXWin::openTheWindow() : done." << std::endl
-              << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+      << "gadget::KeyboardXWin::openTheWindow() : done." << std::endl
+      << vprDEBUG_FLUSH;
 
    XFree (vis_infos);
 
@@ -780,7 +781,7 @@ void KeyboardXWin::lockMouse()
 {
 vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
 
-   vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL)
+   vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
       << "gadget::KeyboardXWin: LOCKING MOUSE..." << vprDEBUG_FLUSH;
 
    // Center the mouse
@@ -807,7 +808,8 @@ vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
                 GrabModeAsync, None, None,
                                CurrentTime);
 
-   vprDEBUG_CONT(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "lock finished.\n" << vprDEBUG_FLUSH;
+   vprDEBUG_CONT(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+      << "lock finished.\n" << vprDEBUG_FLUSH;
 }
 
 // Called when locking ends
@@ -815,7 +817,7 @@ void KeyboardXWin::unlockMouse()
 {
 vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
 
-   vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL)
+   vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
       << "gadget::KeyboardXWin: UN-LOCKING MOUSE..." << vprDEBUG_FLUSH;
 
    // Un-grab the keyboard now
@@ -824,7 +826,8 @@ vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
    // Un-grab the pointer as well
    XUngrabPointer(m_display, CurrentTime);
 
-   vprDEBUG_CONT(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "un-lock finished.\n" << vprDEBUG_FLUSH;
+   vprDEBUG_CONT(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+      << "un-lock finished.\n" << vprDEBUG_FLUSH;
 }
 
 } // end namespace

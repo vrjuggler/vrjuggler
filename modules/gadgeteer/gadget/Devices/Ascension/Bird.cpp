@@ -39,7 +39,10 @@
 
 #include <vpr/vpr.h>
 #include <vpr/System.h>
-#include <vrj/Math/Vec3.h>
+
+#include <gmtl/Vec.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/Generate.h>
 
 #include <gadget/Devices/Ascension/Bird.h>
 #include <jccl/Config/ConfigChunk.h>
@@ -48,7 +51,7 @@
 namespace gadget
 {
 
-int getReading(vrj::Matrix* data, int port);
+int getReading(gmtl::Matrix44f* data, int port);
 float rawToFloat(char& r1, char& r2);
 void  pickBird(int sensor, int port);
 static int open_port(char* serialPort, int baud);
@@ -353,7 +356,7 @@ void Bird::initCorrectionTable()
 ///////////////////////////////////////////////////////////////////
 // Local functions to Bird.cpp
 //////////////////////////////////////////////////////////////////
-inline int getReading(vrj::Matrix *data, int port)
+inline int getReading(gmtl::Matrix44f *data, int port)
 {
   char buff[12];
   //char group;
@@ -381,7 +384,7 @@ inline int getReading(vrj::Matrix *data, int port)
 
   //vjPOS_DATA *dataPtr = data + addr - 1;
 
-  vrj::Vec3 pos_data, or_data;
+  gmtl::Vec3f pos_data, or_data;
 
   pos_data[0] = rawToFloat(buff[1],buff[0]) * POSITION_RANGE;       // X
   pos_data[1] = rawToFloat(buff[3],buff[2]) * POSITION_RANGE;       // Y
@@ -392,8 +395,16 @@ inline int getReading(vrj::Matrix *data, int port)
   or_data[1] = rawToFloat(buff[9],buff[8]) * ANGLE_RANGE;           // rotY
   or_data[2] = rawToFloat(buff[11],buff[10]) * ANGLE_RANGE;         // rotX
 
+  /*
   data->makeZYXEuler(or_data[0], or_data[1], or_data[2]);
   data->setTrans(pos_data[0], pos_data[1], pos_data[2]);
+  */
+
+  gmtl::identity(*data);
+  gmtl::setRot(*data, gmtl::Math::deg2Rad(or_data[0]),
+                      gmtl::Math::deg2Rad(or_data[1]),
+                      gmtl::Math::deg2Rad(or_data[2]), gmtl::ZYX );
+  gmtl::setTrans(*data, pos_data);
 
   return 0;  //addr;
 }

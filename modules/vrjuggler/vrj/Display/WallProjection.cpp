@@ -36,11 +36,14 @@
 #include <vrj/Display/WallProjection.h>
 #include <vrj/Kernel/Kernel.h>
 
-#include <vrj/Math/Matrix.h>
-#include <vrj/Math/Vec3.h>
-#include <vrj/Math/Vec4.h>
+#include <gmtl/Vec.h>
+#include <gmtl/Matrix.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/Generate.h>
+#include <gmtl/Xforms.h>
 
-#include <vrj/Math/Coord.h>
+
+//#include <vrj/Math/Coord.h>
 #include <vrj/Util/Debug.h>
 
 #include <jccl/Config/ConfigChunk.h>
@@ -68,16 +71,17 @@ void WallProjection::config(jccl::ConfigChunkPtr chunk)
 //
 //! PRE: WallRotation matrix must be set correctly
 //! PRE: mOrigin*'s must all be set correctly
-void WallProjection::calcViewMatrix(Matrix& eyePos)
+void WallProjection::calcViewMatrix(gmtl::Matrix44f& eyePos)
 {
    calcViewFrustum(eyePos);
 
-   Coord eye_coord(eyePos);
-   Vec3   eye_pos;             // Non-xformed pos
-   eye_pos = eye_coord.pos;
+   //Coord eye_coord(eyePos);
+   gmtl::Vec3f   eye_pos( gmtl::makeTrans<gmtl::Vec3f>(eyePos) );             // Non-xformed pos
+   //eye_pos = eye_coord.pos;
 
    // Need to post translate to get the view matrix at the position of the eye
-   mViewMat.postTrans(mWallRotationMatrix, -eye_pos[VJ_X], -eye_pos[VJ_Y], -eye_pos[VJ_Z]);
+   mViewMat = mWallRotationMatrix *
+              gmtl::makeTrans<gmtl::Matrix44f>( gmtl::Vec3f(-eye_pos[gmtl::Xelt], -eye_pos[gmtl::Yelt], -eye_pos[gmtl::Zelt]));
 }
 
 
@@ -91,7 +95,7 @@ void WallProjection::calcViewMatrix(Matrix& eyePos)
 //
 //! PRE: WallRotation matrix must be set correctly
 //! PRE: mOrigin*'s must all be set correctly
-void WallProjection::calcViewFrustum(Matrix& eyePos)
+void WallProjection::calcViewFrustum(gmtl::Matrix44f& eyePos)
 {
    float near_dist, far_dist;
    near_dist = mNearDist;
@@ -106,31 +110,36 @@ void WallProjection::calcViewFrustum(Matrix& eyePos)
    float n_eye_to_right, n_eye_to_left, n_eye_to_top, n_eye_to_bottom;
 
 
-   Coord eye_coord(eyePos);
-   Vec3   eye_pos;             // Non-xformed pos
-   eye_pos = eye_coord.pos;
-   Vec3   eye_xformed;         // Xformed position of eyes
+   //Coord eye_coord(eyePos);
+   gmtl::Vec3f   eye_pos;             // Non-xformed pos
+   eye_pos = gmtl::makeTrans<gmtl::Vec3f>(eyePos);
+   gmtl::Vec3f   eye_xformed;         // Xformed position of eyes
 
    vprDEBUG(vrjDBG_DISP_MGR,7)
       << "vjWallProjection::calcWallProjection:  Wall Proj:\n" << *this
       << std::endl << vprDEBUG_FLUSH;
+
+   /*
    vprDEBUG(vrjDBG_DISP_MGR,7)
-      << "vjWallProjection::calcWallProjection:    Base eye:" << eye_coord.pos
+      << "vjWallProjection::calcWallProjection:    Base eye:" << eye_pos
       << std::endl << vprDEBUG_FLUSH;
+      */
 
    // Convert eye coords into the wall's coord system
-   eye_xformed.xformFull(mWallRotationMatrix, eye_pos);
+   gmtl::xform( eye_xformed, mWallRotationMatrix, eye_pos);
 
+   /*
    vprDEBUG(vrjDBG_DISP_MGR,7)
       << "vjWallProjection::calcWallProjection:    Xformed eye:" << eye_xformed
       << std::endl << vprDEBUG_FLUSH;
+      */
 
    // Compute dist from eye to screen/edges
-   eye_to_screen = mOriginToScreen + eye_xformed[VJ_Z];
-   eye_to_right = mOriginToRight - eye_xformed[VJ_X];
-   eye_to_left = mOriginToLeft + eye_xformed[VJ_X];
-   eye_to_top = mOriginToTop - eye_xformed[VJ_Y];
-   eye_to_bottom = mOriginToBottom + eye_xformed[VJ_Y];
+   eye_to_screen = mOriginToScreen + eye_xformed[gmtl::Zelt];
+   eye_to_right = mOriginToRight - eye_xformed[gmtl::Xelt];
+   eye_to_left = mOriginToLeft + eye_xformed[gmtl::Xelt];
+   eye_to_top = mOriginToTop - eye_xformed[gmtl::Yelt];
+   eye_to_bottom = mOriginToBottom + eye_xformed[gmtl::Yelt];
 
    // Find dists on near plane using similar triangles
    float near_distFront = near_dist/eye_to_screen;      // constant factor
@@ -149,9 +158,11 @@ void WallProjection::calcViewFrustum(Matrix& eyePos)
    vprDEBUG(vrjDBG_DISP_MGR,7)
       << "vjWallProjection::calcWallProjection: \n\tFrustum: " << mFrustum
       << std::endl << vprDEBUG_FLUSH;
+   /*
    vprDEBUG(vrjDBG_DISP_MGR,7)
       << "vjWallProjection::calcWallProjection: B4 Trans:\n"
       << mWallRotationMatrix << std::endl << vprDEBUG_FLUSH;
+      */
 }
 
 

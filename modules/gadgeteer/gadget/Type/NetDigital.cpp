@@ -1,13 +1,15 @@
 #include <gadget/Type/NetDigital.h>
 
-#include <vrj/Util/Debug.h>
+#include <gadget/Util/Debug.h>
 
 namespace gadget{
 
 // constructor for a transmitting network device
 NetDigital::NetDigital(const std::string& src_device_name, Input* input_ptr, VJ_NETID_TYPE local_device_id, VJ_NETID_TYPE rmt_device_id) : NetInput(src_device_name, input_ptr, local_device_id, rmt_device_id, sizeof(short)) {
 
-   vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_CONFIG_LVL) << "NetDigital: local_device_id = " << local_device_id << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+      << "NetDigital: local_device_id = " << local_device_id << std::endl
+      << vprDEBUG_FLUSH;
 
   if(src_device_name.length() > 0){   // pointing to another device/proxy for data source
      mLocalSource.init(mDeviceName);
@@ -64,7 +66,10 @@ void NetDigital::updateFromLocalSource(){
    }
 
    for(unsigned int k = 0; k < mNetworkShortDigitalValues.size(); k++){
-      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_VERB_LVL) << "NetDigital: src_name: " << mSrcName << ",  DeviceName" << mDeviceName << ".  Sending : __________________________ : " << digital_data_sample[k].getDigital() << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_VERB_LVL)
+         << "NetDigital: src_name: " << mSrcName << ",  DeviceName"
+         << mDeviceName << ".  Sending : __________________________ : "
+         << digital_data_sample[k].getDigital() << std::endl << vprDEBUG_FLUSH;
       mNetworkShortDigitalValues[k] = htons( (short)digital_data_sample[k].getDigital());           // convert to network format
    }
 
@@ -86,7 +91,9 @@ void NetDigital::updateFromLocalSource(){
 // the recv_buffer should be exactly the same as the mSendBuffer: opcode and semicolon included
 void NetDigital::updateFromRemoteSource(char* recv_buffer, int recv_buff_len){
    if(recv_buff_len < (int)getDataByteLength()){  // make sure the data length is long enough
-      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_VERB_LVL) << "ERROR NetDigital: recv_buff_len is not big enough to receive message." << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_VERB_LVL)
+         << "ERROR NetDigital: recv_buff_len is not big enough to receive message."
+         << std::endl << vprDEBUG_FLUSH;
       return;
    }
 
@@ -108,7 +115,10 @@ void NetDigital::updateFromRemoteSource(char* recv_buffer, int recv_buff_len){
 
       // convert network data to local data
       digital_data_sample[k] = (short) ntohs(mNetworkShortDigitalValues[k]);
-      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_VERB_LVL) << "NetDigital: src_name: " << mSrcName << ",  DeviceName" << mDeviceName << ".  Receiving : __________________________ : " << digital_data_sample[k].getDigital() << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_VERB_LVL)
+         << "NetDigital: src_name: " << mSrcName << ",  DeviceName"
+         << mDeviceName << ".  Receiving : __________________________ : "
+         << digital_data_sample[k].getDigital() << std::endl << vprDEBUG_FLUSH;
    }
 
    mDigitalSamples.lock();
@@ -116,7 +126,9 @@ void NetDigital::updateFromRemoteSource(char* recv_buffer, int recv_buff_len){
    mDigitalSamples.unlock();
 
    mDigitalSamples.swapBuffers();
-   vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_VERB_LVL) << "NetDigital: New Data available: -------------------------- : " << this->getDigitalData(0).getDigital() << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_VERB_LVL)
+      << "NetDigital: New Data available: -------------------------- : "
+      << this->getDigitalData(0).getDigital() << std::endl << vprDEBUG_FLUSH;
 
 }
 

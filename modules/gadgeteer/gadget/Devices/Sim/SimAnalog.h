@@ -38,7 +38,7 @@
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Analog.h>
 #include <gadget/Devices/Sim/SimInput.h>
-#include <vrj/Util/Debug.h>
+
 
 namespace gadget
 {

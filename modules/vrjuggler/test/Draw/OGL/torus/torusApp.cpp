@@ -37,7 +37,13 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-#include <vrj/Math/Coord.h>
+//#include <vrj/Math/Coord.h>
+#include <gmtl/Vec.h>
+#include <gmtl/Matrix.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/Generate.h>
+#include <gmtl/Xforms.h>
+
 
 #include <torusApp.h>
 
@@ -57,12 +63,14 @@ void torusApp::bufferPreDraw()
 //----------------------------------------------
 void torusApp::draw()
 {
-   vrj::Coord wand_pos(*mWand->getData());
+   //vrj::Coord wand_pos(*mWand->getData());
+   gmtl::Matrix44f wand_pos(*mWand->getData());
+   gmtl::Vec4f wand_trans( gmtl::makeTrans<gmtl::Vec4f>(wand_pos) );
 
    // Set light position
    GLfloat light0_position[] = {6.0, 6,0, 6.0, 1.0};
    //glLightfv(GL_LIGHT0, GL_POSITION,  light0_position);
-   glLightfv(GL_LIGHT0, GL_POSITION,  wand_pos.pos.vec);
+   glLightfv(GL_LIGHT0, GL_POSITION,  wand_trans.mData);
 
    //// Draw a doughnut on the wand
 

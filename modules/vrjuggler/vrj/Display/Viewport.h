@@ -35,7 +35,7 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <vrj/Math/Vec3.h>
+#include <gmtl/Vec.h>
 #include <vrj/Kernel/User.h>
 #include <jccl/Plugins/PerformanceMonitor/LabeledPerfDataBuffer.h>
 #include <jccl/Config/ConfigChunkPtr.h>

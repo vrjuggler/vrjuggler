@@ -33,7 +33,7 @@
 #ifndef _COLLIDER_H_
 #define _COLLIDER_H_
 
-#include <vrj/Math/Vec3.h>
+#include <gmtl/Vec.h>
 
 //: Base class for collision detection
 //
@@ -51,7 +51,7 @@ public:
    //!ARGS: correction - The amount to correct the movement so that we do not collide
    //!ARGS: curPosWithDelta - Does the curPos already have delta added in?
    //!RETURNS: true - There was a hit.
-   virtual bool testMove(vrj::Vec3 curPos, vrj::Vec3 delta, vrj::Vec3& correction, bool curPosWithDelta = false) = 0;
+   virtual bool testMove(gmtl::Vec3f curPos, gmtl::Vec3f delta, gmtl::Vec3f& correction, bool curPosWithDelta = false) = 0;
 
    // Did it collide in the last frame
    // API specific functions could return more info about the collision

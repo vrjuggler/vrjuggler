@@ -61,7 +61,7 @@ public:
 
    //: Construct a Tracked wall projections
    //!ARGS: tracker_name - Name of the tracker tracking the screen
-   TrackedWallProjection(Matrix surfaceRot, float toScr,
+   TrackedWallProjection(gmtl::Matrix44f surfaceRot, float toScr,
                     float toRight, float toLeft,
                     float toTop, float toBottom, std::string tracker_name)
       : WallProjection(surfaceRot, toScr, toRight, toLeft, toTop, toBottom)
@@ -88,7 +88,7 @@ public:
 
    //: Recalculate the projection matrix
    //!POST: frustum has been recomputed for given eyePos
-   virtual void calcViewMatrix(Matrix& eyePos)
+   virtual void calcViewMatrix(gmtl::Matrix44f& eyePos)
    {
       updateWallParams();
 
@@ -105,7 +105,7 @@ public:
 
 private:
    // ---- Original parameters ------/
-   Matrix   mWallRotationMatrix_bak;       // Rotation of the screen
+   gmtl::Matrix44f   mWallRotationMatrix_bak;       // Rotation of the screen
    // Screen configuration
    float mOriginToScreen_bak, mOriginToRight_bak, mOriginToLeft_bak, mOriginToTop_bak, mOriginToBottom_bak;
 

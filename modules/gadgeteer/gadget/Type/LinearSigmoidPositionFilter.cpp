@@ -34,6 +34,14 @@
 #include <gadget/Type/LinearSigmoidPositionFilter.h>
 #include <vpr/Util/Debug.h>
 
+#include <gmtl/MatrixOps.h>
+#include <gmtl/Matrix.h>
+#include <gmtl/Vec.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/Generate.h>
+#include <gmtl/Convert.h>
+
+
 namespace gadget
 {
 
@@ -57,7 +65,7 @@ namespace gadget
 // If the scale factor is 0.0 or 1.0, then just return the matrix directly
 // Else, perform a quaternion slerp on the rotation and linear calculation
 // on position and return that matrix.
-vrj::Matrix LinearSigmoidPositionFilter::getPos(const vrj::Matrix newPos)
+gmtl::Matrix44f LinearSigmoidPositionFilter::getPos(const gmtl::Matrix44f newPos)
 {
    // If value is the same, then return immediately
    if(newPos == mLastReturnedPos)
@@ -66,15 +74,15 @@ vrj::Matrix LinearSigmoidPositionFilter::getPos(const vrj::Matrix newPos)
    const float eps(0.001);         // An epsilon value because of numerical precision as we approach zero difference
    float scale_factor(0.0f);
    float dist;
-   vrj::Vec3 last_returned_trans;
-   vrj::Vec3 new_trans;
-   vrj::Vec3 trans_diff;
+   gmtl::Vec3f last_returned_trans;
+   gmtl::Vec3f new_trans;
+   gmtl::Vec3f trans_diff;
 
    // Get difference in translation
-   last_returned_trans = mLastReturnedPos.getTrans();
-   new_trans = newPos.getTrans();
+   last_returned_trans = gmtl::makeTrans<gmtl::Vec3f>(mLastReturnedPos);
+   new_trans = gmtl::makeTrans<gmtl::Vec3f>(newPos);
    trans_diff = new_trans-last_returned_trans;
-   dist = trans_diff.length();
+   dist = gmtl::length(trans_diff);
 
    vprDEBUG(vprDBG_ALL,2) << "sigmoid: dist: " << dist << std::endl
                         << vprDEBUG_FLUSH;
@@ -102,24 +110,29 @@ vrj::Matrix LinearSigmoidPositionFilter::getPos(const vrj::Matrix newPos)
 
       vprASSERT((scale_factor > eps) && (scale_factor < (1.0f-eps)));
 
-      vrj::Vec3 ret_trans;
-      vrj::Matrix ret_val;
+      gmtl::Vec3f ret_trans;
+      gmtl::Matrix44f ret_val;
 
       ret_trans = last_returned_trans + (trans_diff * scale_factor);
 
+      /*
       vprDEBUG(vprDBG_ALL,2) << "\tret_trans = last_returned_trans + (trans_diff * scale_factor) -->"
                            << ret_trans << " = " << last_returned_trans << " + (" << trans_diff
                            << " * " << scale_factor << " )\n" << vprDEBUG_FLUSH;
+                           */
 
       // Compute scaled rotation
-      vrj::Quat      source_rot, goal_rot, slerp_rot;
-      source_rot.makeRot( mLastReturnedPos );          // Create source
-      goal_rot.makeRot( newPos );                      // Create goal
+      gmtl::Quatf source_rot, goal_rot, slerp_rot;
+      gmtl::convert( source_rot, mLastReturnedPos );
+      gmtl::convert( goal_rot, newPos );
 
       // ASSERT: We don't have two identical matrices
-      slerp_rot.slerp( scale_factor,source_rot,goal_rot );    // Transform part way there
-      ret_val.makeQuaternion( slerp_rot );            // Create the transform matrix to use
-      ret_val.setTrans(ret_trans);
+      gmtl::slerp( slerp_rot, scale_factor, source_rot, goal_rot );
+      //slerp_rot.slerp( scale_factor,source_rot,goal_rot );    // Transform part way there
+      gmtl::convert( ret_val, slerp_rot );
+      //ret_val.makeQuaternion( slerp_rot );            // Create the transform matrix to use
+      //ret_val.setTrans(ret_trans);
+      gmtl::setTrans(ret_val, ret_trans );
 
       mLastReturnedPos = ret_val;
       return mLastReturnedPos;
@@ -145,4 +158,4 @@ float LinearSigmoidPositionFilter::getScaleFactor(const float distance)
    }
 }
 
-} // End of vrj namespace
+} // End of gadget namespace

@@ -30,9 +30,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _GADGET_DEBUG_H_
+#define _GADGET_DEBUG_H_
+//#pragma once
 
-#include <vrj/Math/Plane.h>
-#include <vrj/Math/Seg.h>
+// #define VJ_DEBUG  Defined in vjConfig.h
+#include <gadget/gadgetConfig.h>
+#include <stdlib.h>
 
+#include <vpr/Util/Debug.h>
 
+// Gadgeteer categories
+const vpr::GUID gadgetDBG_INPUT_MGR("9cce60c9-9cf9-44e6-a852-1cac224d8b4c");       /* Input output */
 
+#endif

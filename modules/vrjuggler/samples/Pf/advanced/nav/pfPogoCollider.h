@@ -59,7 +59,7 @@ public:
    //!ARGS: delta - The amount we want to move
    //!ARGS: correction - The amount to correct the movement so that we do not collide
    //!RETURNS: true - There was a hit.
-   virtual bool testMove(vrj::Vec3 feetPosition, vrj::Vec3 delta, vrj::Vec3& correction, bool feetPositionWithDelta = false);
+   virtual bool testMove(gmtl::Vec3f feetPosition, gmtl::Vec3f delta, gmtl::Vec3f& correction, bool feetPositionWithDelta = false);
 
 protected:
    pfNode* mWorldNode;        // The world to collide with
@@ -73,19 +73,19 @@ protected:
 // correction: return value to correct feetDelta upon collision with polys.
 // returns true on collide
 // NOTE: not a robust collider, use in combination with a ray collider, or robust volume collider.
-inline bool pfPogoCollider::testMove( vrj::Vec3 feetPosition, vrj::Vec3 feetDelta, vrj::Vec3& correction, bool feetPositionWithDelta )
+inline bool pfPogoCollider::testMove( gmtl::Vec3f feetPosition, gmtl::Vec3f feetDelta, gmtl::Vec3f& correction, bool feetPositionWithDelta )
 {
    pfVec3 pf_feet_position    = vrj::GetPfVec(feetPosition);
    pfVec3 pf_feet_delta       = vrj::GetPfVec(feetDelta);
    pfVec3 pf_feet_destination = pf_feet_position + pf_feet_delta;
    pfVec3 pf_correction;      // Needs to be set
-   
+
    // whats the maximum step height?
    float step_height( 3.5f ); // value picked out of my ass.
    pfVec3 up( 0.0f, 0.0f, 1.0f );
    // whats the ray start position that would test for that step height?
    pfVec3 pf_step_destination = pf_feet_destination + up * step_height;
-   
+
    if (terryCollide.collide( pf_correction, mWorldNode, 0x1, pf_step_destination, step_height))
    {
       correction = vrj::GetVjVec(pf_correction);

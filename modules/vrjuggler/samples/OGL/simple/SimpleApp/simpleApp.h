@@ -39,7 +39,6 @@
 #include <iomanip>
 
 #include <vrj/Draw/OGL/GlApp.h>
-#include <vrj/Math/Matrix.h>
 
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
@@ -50,15 +49,15 @@ using namespace vrj;
 void drawbox( GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
               GLdouble z0, GLdouble z1, GLenum type );
 
-//----------------------------------------------------
-//: Simple OGL Demonstration application
-//
-// This application intialized and recieves positional
-// and digital intput from the wand.
-//
-// It also has basic code that draws a box centered on
-// the origin
-//----------------------------------------------------
+/**
+ * Simple OGL Demonstration application.
+ *
+ * This application intialized and recieves positional
+ * and digital intput from the wand.
+ *
+ * It also has basic code that draws a box centered on
+ * the origin.
+ */
 class simpleApp : public GlApp
 {
 public:
@@ -67,12 +66,14 @@ public:
 
    virtual ~simpleApp (void) {;}
 
-public: // ---- INITIALIZATION FUNCITONS ---- //
-   // Execute any initialization needed before the API is started
-   //
-   // POST: Device interfaces are initialized with the device names
-   //       we want to use
-   //! NOTE: This is called once before OpenGL is initialized
+public: // ---- INITIALIZATION FUNCTIONS ---- //
+   /**
+    * Executes any initialization needed before the API is started.
+    *
+    * @post Device interfaces are initialized with the device names
+    *       we want to use.
+    * @note This is called once before OpenGL is initialized.
+    */
    virtual void init()
    {
       std::cout << "---------- App:init() ---------------" << std::endl;
@@ -83,10 +84,12 @@ public: // ---- INITIALIZATION FUNCITONS ---- //
       mButton1.init("VJButton1");
    }
 
-   // Execute any initialization needed after API is started
-   //  but before the drawManager starts the drawing loops.<BR><BR>
-   //
-   // This is called once after OGL is initialized
+   /**
+    * Executes any initialization needed after API is started but before the
+    * drawManager starts the drawing loops.
+    *
+    * This is called once after OGL is initialized.
+    */
    virtual void apiInit()
    {;}
 
@@ -107,8 +110,11 @@ public:
    //  }
    //------------------------------------
 
-   //: Called before start of frame
-   //!NOTE: Function called after device updates but before start of drawing
+   /**
+    * Called before start of frame.
+    *
+    * @note Function called after device updates but before start of drawing.
+    */
    virtual void preFrame()
    {
       if(mButton0->getData())
@@ -117,29 +123,43 @@ public:
          { std::cout << "Button 1 pressed" << std::endl; }
    }
 
-   //: Called during the Frame
-   //!NOTE: Function called after drawing has been triggered but BEFORE it completes
+   /**
+    * Called during the Frame.
+    *
+    * @note Function called after drawing has been triggered but BEFORE it
+    *       completes.
+    */
    virtual void intraFrame() {;}
 
-   //: Called at end of frame
-   //!NOTE: Function called before updating trackers but after the frame is drawn
+   /**
+    * Called at end of frame.
+    *
+    * @note Function called before updating trackers but after the frame is
+    *       drawn.
+    */
    virtual void postFrame() {;}
 
 public: // ----- OpenGL FUNCTIONS ---- //
-   //: Function that is called immediately after a new OGL context is created
-   // Initialize GL state here. Also used to create context specific information
-   //
-   // This is called once for each context
+   /**
+    * Function that is called immediately after a new OGL context is created.
+    * Initialize GL state here. Also used to create context specific
+    * information.
+    *
+    * This is called once for each context.
+    */
    virtual void contextInit()
    {
       initGLState();       // Initialize the GL state information. (lights, shading, etc)
    }
 
-   //: Function to draw the scene
-   //! PRE: OpenGL state has correct transformation and buffer selected
-   //! POST: The current scene has been drawn
-   //
-   //!NOTE: Called 1 or more times per frame
+   /**
+    * Function to draw the scene.
+    *
+    * @pre OpenGL state has correct transformation and buffer selected.
+    * @post The current scene has been drawn.
+    *
+    * @note Called 1 or more times per frame.
+    */
    virtual void draw();
 
 private:
@@ -151,10 +171,10 @@ private:
    }
 
 public:
-   gadget::PositionInterface  mWand;         // Positional interface for Wand position
-   gadget::PositionInterface  mHead;         // Positional interface for Head position
-   gadget::DigitalInterface   mButton0;   // Digital interface for button 0
-   gadget::DigitalInterface   mButton1;   // Digital interface for button 1
+   gadget::PositionInterface  mWand;    /**< Positional interface for Wand position */
+   gadget::PositionInterface  mHead;    /**< Positional interface for Head position */
+   gadget::DigitalInterface   mButton0; /**< Digital interface for button 0 */
+   gadget::DigitalInterface   mButton1; /**< Digital interface for button 1 */
 };
 
 

@@ -98,6 +98,8 @@ public:
    //+          false - Can't handle it
    bool configCanHandle(jccl::ConfigChunkPtr chunk);
 
+   jccl::ConfigChunkPtr getDisplaySystemChunk();
+
 private:
    //: Load the device for the given chunk
    //!RETURNS: true - Device was configured and added
@@ -179,6 +181,8 @@ protected:
 
    // The mProxyAlias table serves as a secondary lookup for proxies.  ie. if the proxy name is not
    // found in mProxyTable, then search mProxyAliases for it.
+
+   jccl::ConfigChunkPtr    mDisplaySystemChunk;    /**< Config chunk for the displaySystem */
 
 private:
    //: Function to configure the proxy Alias array

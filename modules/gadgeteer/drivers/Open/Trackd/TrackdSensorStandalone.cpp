@@ -1,6 +1,13 @@
 #include <gadget/Devices/Open/Trackd/TrackdSensorStandalone.h>
 #include <assert.h>
 
+#include <gmtl/Matrix.h>
+#include <gmtl/Vec.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/Generate.h>
+#include <gmtl/Convert.h>
+
+
 int TrackdSensorStandalone::numSensors()
 {
    assert(mMem != NULL);
@@ -9,7 +16,7 @@ int TrackdSensorStandalone::numSensors()
 }
 
 // Return the position of the given sensor
-vrj::Matrix TrackdSensorStandalone::getSensorPos(int sensorNum)
+gmtl::Matrix44f TrackdSensorStandalone::getSensorPos(int sensorNum)
 {
    assert(mMem != NULL && "We don't have a valid trackd memory area");
    assert(sensorNum < numSensors() && "Out of bounds request for a sensor");
@@ -18,9 +25,12 @@ vrj::Matrix TrackdSensorStandalone::getSensorPos(int sensorNum)
    sensor_val = trackd_sensor(mMem, sensorNum);
 
    // XXX: This is untested and is probably wrong. :(
-   vrj::Matrix ret_val;
-   ret_val.makeXYZEuler(sensor_val->elev, sensor_val->azim, sensor_val->roll);
-   ret_val.setTrans(sensor_val->x, sensor_val->y, sensor_val->z);
+   gmtl::Matrix44f ret_val;
+
+   gmtl::setRot( ret_val, gmtl::Math::deg2Rad(sensor_val->elev),
+                          gmtl::Math::deg2Rad(sensor_val->azim),
+                          gmtl::Math::deg2Rad(sensor_val->roll), gmtl::XYZ );
+   gmtl::setTrans( ret_val, gmtl::Vec3f( sensor_val->x, sensor_val->y, sensor_val->z) );
 
    return ret_val;
 }

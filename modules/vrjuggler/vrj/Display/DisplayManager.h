@@ -101,8 +101,7 @@ public:
    //! NOTE: DO NOT EDIT THE DISPLAYS
    std::vector<vrj::Display*> getAllDisplays();
 
-   jccl::ConfigChunkPtr getDisplaySystemChunk()
-   {return mDisplaySystemChunk;}
+   jccl::ConfigChunkPtr getDisplaySystemChunk();
 
 private:
    //: Add the chunk to the configuration

@@ -40,7 +40,7 @@
 #include <gadget/InputManager.h>
 #include <gadget/Type/Input.h>
 #include <jccl/Config/ConfigChunk.h>
-#include <vrj/Util/Debug.h>
+#include <gadget/Util/Debug.h>
 
 namespace gadget
 {
@@ -119,12 +119,11 @@ public:
        Input* input_dev = NULL;
        input_dev = InputManager::instance()->getDevice(mDeviceName);
 
-       //InputManager::instance()->getDevice(mDeviceName);
-       //XXX Input* input_dev = vrj::Kernel::instance()->getInputManager()->getDevice(mDeviceName);
-
       if(NULL == input_dev)       // Not found, so stupify
       {
-         vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_STATE_LVL) << "vjTypedProxy::refresh: Could not find device: " << mDeviceName << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+            << "vjTypedProxy::refresh: Could not find device: "
+            << mDeviceName << std::endl << vprDEBUG_FLUSH;
          stupify(true);
       }
       else
@@ -132,14 +131,19 @@ public:
          DEV_TYPE* typed_dev = dynamic_cast<DEV_TYPE*>(input_dev);
          if(NULL == typed_dev)
          {
-            vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_CRITICAL_LVL) << "vjTypedProxy::config: Device was of wrong type: " << mDeviceName
-                                                  << " it was type:" << typeid(input_dev).name() << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+               << "vjTypedProxy::config: Device was of wrong type: "
+               << mDeviceName << " it was type:" << typeid(input_dev).name()
+               << std::endl << vprDEBUG_FLUSH;
             stupify(true);
             return false;
          }
 
-         vprDEBUG_CONT(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "   attaching to device named: " << mDeviceName.c_str() << std::endl << vprDEBUG_FLUSH;
-         vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_STATE_LVL) << "   Proxy config()'ed" << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG_CONT(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+            << "   attaching to device named: " << mDeviceName.c_str()
+            << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+            << "   Proxy config()'ed" << std::endl << vprDEBUG_FLUSH;
 
          set(typed_dev);    // Set the proxy
       }

@@ -35,7 +35,7 @@
 
 #include <Performer/pr/pfLinMath.h>
 
-#include <vrj/Math/Coord.h>
+//#include <vrj/Math/Coord.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Draw/Pf/PfUtil.h>
 #include <Performer/pf/pfDCS.h>

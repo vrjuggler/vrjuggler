@@ -35,7 +35,7 @@
 #include <gadget/Devices/Open/Trackd/TrackdSensor.h>
 #include <jccl/Config/ConfigChunk.h>
 
-#include <vrj/Util/Debug.h>
+#include <vpr/Util/Debug.h>
 
 
 namespace gadget

@@ -39,8 +39,8 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
+#include <gmtl/Vec.h>
 #include <vrj/Draw/OGL/GlApp.h>
-#include <vrj/Math/Vec3.h>
 
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/GloveInterface.h>
@@ -132,11 +132,11 @@ private:
    void initGLState();
 
 protected:
-   void drawLine(vrj::Vec3& start, vrj::Vec3& end)
+   void drawLine(gmtl::Vec3f& start, gmtl::Vec3f& end)
    {
       glBegin(GL_LINES);
-         glVertex3fv(start.vec);
-         glVertex3fv(end.vec);
+         glVertex3fv(start.mData);
+         glVertex3fv(end.mData);
       glEnd();
    }
 

@@ -37,10 +37,13 @@
 #include <vrj/Display/Projection.h>
 #include <jccl/Config/ConfigChunk.h>
 
+#include <gmtl/Matrix.h>
+#include <gmtl/Vec.h>
+#include <gmtl/Generate.h>
+#include <gmtl/Output.h>
+
 namespace vrj
 {
-
-   class Matrix;
 
 //: Projection class that simply takes a matrix for the camera position
 //
@@ -69,9 +72,12 @@ public:
    * Calculates a perspective transform for the given settings.
    * Auto-calculates aspect ratio from the current size of the window and viewport
    */
-   virtual void calcViewMatrix(Matrix& cameraPos)
+   virtual void calcViewMatrix(gmtl::Matrix44f& cameraPos)
    {
       mViewMat = cameraPos;
+
+      gmtl::Vec3f camera_trans = gmtl::makeTrans<gmtl::Vec3f>(cameraPos);
+      vprDEBUG(vprDBG_ALL,6) << "calcView: Cam pos:" << camera_trans << std::endl << vprDEBUG_FLUSH;
 
       int win_xo, win_yo, win_xs, win_ys;  // origin and size of display window
       float vp_xo, vp_yo, vp_xs, vp_ys;  // origin and size of viewport
@@ -88,7 +94,7 @@ public:
       // Calculate frustum
       float top, right;
 
-      top = Math::tan( Math::deg2rad(mVertFOV/2.0f) ) * mNearDist;     // Calculate the top based on fovy
+      top = gmtl::Math::tan( gmtl::Math::deg2Rad(mVertFOV/2.0f) ) * mNearDist;     // Calculate the top based on fovy
       right = aspect_ratio * top;
 
       // XXX: The frustum is not used

@@ -32,9 +32,16 @@
 
 #include <gadget/gadgetConfig.h>
 #include <float.h>
-#include <vrj/Util/Debug.h>
+#include <vpr/Util/Debug.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <gadget/Type/Position.h>
+
+#include <gmtl/Matrix.h>
+#include <gmtl/Vec.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/Generate.h>
+#include <gmtl/Convert.h>
+
 
 namespace gadget
 {
@@ -61,10 +68,11 @@ bool Position::config(jccl::ConfigChunkPtr c)
       // This makes a rotation matrix that moves a pt in
       // the device's coord system to the vj coord system.
       // ==> world_M_transmitter
-    rotMat.makeXYZEuler(xr, yr, zr);
+    rotMat = gmtl::makeRot<gmtl::Matrix44f>(xr,yr,zr,gmtl::XYZ);
 
-    xformMat.makeTrans(xt, yt, zt);
-    xformMat.postMult(rotMat);         // xformMat = T*R
+    gmtl::identity(xformMat);
+    gmtl::setTrans(xformMat, gmtl::Vec3f(xt, yt, zt) );
+    gmtl::postMult(xformMat, rotMat);         // xformMat = T*R
   }
 
   return true;
@@ -74,7 +82,7 @@ bool Position::config(jccl::ConfigChunkPtr c)
 Position::Position()
 {
   //vprDEBUG(vprDBG_ALL,0) << "vjPosition::Position()" << vprDEBUG_FLUSH;
-    xformMat.makeIdent();
+  gmtl::identity(xformMat);
 }
 
 Position::~Position()

@@ -35,7 +35,7 @@
 #define _GADGET_POSITIONDATA_H_
 
 #include <gadget/Type/InputData.h>
-#include <vrj/Math/Matrix.h>
+#include <gmtl/Matrix.h>
 
 namespace gadget {
 
@@ -48,7 +48,7 @@ public:
     PositionData (): InputData()
     {;}
 
-    vrj::Matrix* getPosition()
+    gmtl::Matrix44f* getPosition()
     { return &mPosData; }
 
     PositionData& operator= (const PositionData& pd)
@@ -59,7 +59,7 @@ public:
     }
 
 protected:
-    vrj::Matrix mPosData;
+    gmtl::Matrix44f mPosData;
 
 }; // class PositionData
 

@@ -58,12 +58,6 @@ public:
 
    /** filename handling routines **/
 
-   //: Returns a copy of s with all environment variable names replaced
-   //+ with their values.
-   // if ${...} not found... then replaces it with "", and emits error
-   // message to console.
-   static std::string replaceEnvVars( const std::string& s);
-
    //: is n an absolute path name?
    // examples of one are:
    // ${HOME}/filename

@@ -166,7 +166,7 @@ public:  // Drawing functions used by library
    void drawObjects();
 
    //: Draw projections in Opengl
-   void drawProjections(bool drawFrustum, Vec3 surfColor);
+   void drawProjections(bool drawFrustum, gmtl::Vec3f surfColor);
 
    //: Draw a simulator using OpenGL commands
    //! NOTE: This is called internally by the library
@@ -188,7 +188,7 @@ public:
 
 protected:     // --- Geom helpers --- //
    void initQuadObj();
-   void drawLine(Vec3& start, Vec3& end);
+   void drawLine(gmtl::Vec3f& start, gmtl::Vec3f& end);
    void drawSphere(float radius, int slices, int stacks);
    void drawCone(float base, float height, int slices, int stacks);
    void drawBox(float size, GLenum type);

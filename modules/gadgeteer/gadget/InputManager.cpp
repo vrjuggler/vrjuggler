@@ -38,9 +38,11 @@
 #include <gadget/ProxyFactory.h>
 #include <gadget/Type/DeviceInterface.h>
 
-#include <vrj/Util/Debug.h>
+#include <gadget/Util/Debug.h>
 
 #include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Plugins/ConfigManager/ConfigManager.h>
 
 #include <gadget/RemoteInputManager/RemoteInputManager.h>
 
@@ -61,7 +63,8 @@ bool recognizeRemoteConnectionConfig(jccl::ConfigChunkPtr chunk);
   InputManager Constructor
 
 *********************************************** ahimberg */
-InputManager::InputManager(){
+InputManager::InputManager() : mDisplaySystemChunk(NULL)
+{
    mRemoteInputManager = new RemoteInputManager(this);
 }
 
@@ -95,11 +98,13 @@ InputManager::~InputManager()
 //: Add the given config chunk to the input system
 bool InputManager::configAdd(jccl::ConfigChunkPtr chunk)
 {
-   vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "\nInputManager: Adding pending config chunk... " << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+      << "\nInputManager: Adding pending config chunk... " << std::endl
+      << vprDEBUG_FLUSH;
    vprASSERT(configCanHandle(chunk));
 
    // check and store if a Remote Input Manager chunk exists in configuration
-   mRemoteInputManager->mgrChunkExists(); 
+   mRemoteInputManager->mgrChunkExists();
 
    bool ret_val = false;      // Flag to return success
 
@@ -113,20 +118,30 @@ bool InputManager::configAdd(jccl::ConfigChunkPtr chunk)
       ret_val = configureProxy(chunk);
    else if(recognizeProxyAlias(chunk))
       ret_val = configureProxyAlias(chunk);
+   else if(chunk->getType() == std::string("displaySystem"))
+   {
+      // XXX: Put signal here to tell draw manager to lookup new stuff
+      mDisplaySystemChunk = chunk;     // Keep track of the display system chunk
+      ret_val = true;
+   }
 
    //DumpStatus();                      // Dump the status
-   vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,vprDBG_VERB_LVL) << "New input manager state:\n" << vprDEBUG_FLUSH;
-   vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_VERB_LVL) << (*this) << vprDEBUG_FLUSH;
-   vprDEBUG_END(vrjDBG_INPUT_MGR,vprDBG_VERB_LVL) << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,vprDBG_VERB_LVL)
+      << "New input manager state:\n" << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_VERB_LVL) << (*this) << vprDEBUG_FLUSH;
+   vprDEBUG_END(gadgetDBG_INPUT_MGR,vprDBG_VERB_LVL) << std::endl
+                                                     << vprDEBUG_FLUSH;
 
    if(ret_val)
    {
       updateAllData();                             // Update all the input data
       BaseDeviceInterface::refreshAllDevices();      // Refresh all the device interface handles
-      vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "Updated all devices" << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+         << "Updated all devices" << std::endl << vprDEBUG_FLUSH;
    }
 
-   vprDEBUG_END(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_END(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL) << std::endl
+                                                      << vprDEBUG_FLUSH;
    return ret_val;         // Return the success flag if we added at all
 }
 
@@ -139,7 +154,8 @@ bool InputManager::configAdd(jccl::ConfigChunkPtr chunk)
 //!RETURNS: success
 bool InputManager::configRemove(jccl::ConfigChunkPtr chunk)
 {
-   vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "\nInputManager: Removing config... " << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+      << "\nInputManager: Removing config... " << std::endl << vprDEBUG_FLUSH;
    vprASSERT(configCanHandle(chunk));
 
    bool ret_val = false;      // Flag to return success
@@ -150,6 +166,12 @@ bool InputManager::configRemove(jccl::ConfigChunkPtr chunk)
       ret_val = removeProxyAlias(chunk);
    else if(ProxyFactory::instance()->recognizeProxy(chunk))
       ret_val = removeProxy(chunk);
+   else if(std::string(chunk->getType()) == std::string("displaySystem"))
+   {
+      mDisplaySystemChunk.reset(0);     // Keep track of the display system chunk
+      ret_val = true;                  // We successfully configured.
+                                       // This tell processPending to remove it to the active config
+   }
    else
       ret_val = false;
 
@@ -157,10 +179,13 @@ bool InputManager::configRemove(jccl::ConfigChunkPtr chunk)
    {
       updateAllData();                             // Update all the input data
       BaseDeviceInterface::refreshAllDevices();      // Refresh all the device interface handles
-      vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_VERB_LVL) << "InputManager::configRemove(): Updated all data" << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_VERB_LVL)
+         << "InputManager::configRemove(): Updated all data" << std::endl
+         << vprDEBUG_FLUSH;
    }
 
-   vprDEBUG_END(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_END(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL) << std::endl
+                                                      << vprDEBUG_FLUSH;
    return ret_val;         // Return the success flag if we added at all
 }
 
@@ -173,7 +198,35 @@ bool InputManager::configCanHandle(jccl::ConfigChunkPtr chunk)
             ProxyFactory::instance()->recognizeProxy(chunk) ||
             recognizeProxyAlias(chunk) ||
             recognizeRemoteInputManagerConfig(chunk) ||
-            recognizeRemoteConnectionConfig(chunk) );
+            recognizeRemoteConnectionConfig(chunk) ||
+            ((std::string)chunk->getType() == std::string("displaySystem"))
+           );
+}
+
+jccl::ConfigChunkPtr InputManager::getDisplaySystemChunk()
+{
+   if ( mDisplaySystemChunk.get() == NULL )
+   {
+      jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
+
+      cfg_mgr->lockActive();
+      {
+         std::vector<jccl::ConfigChunkPtr>::iterator i;
+         for(i=cfg_mgr->getActiveBegin(); i != cfg_mgr->getActiveEnd();++i)
+         {
+            if(std::string((*i)->getType()) == std::string("displaySystem"))
+            {
+               mDisplaySystemChunk = *i;
+               break;         // This guarantees that we get the first displaySystem chunk.
+            }
+         }
+      }
+      cfg_mgr->unlockActive();
+
+//      vprASSERT(mDisplaySystemChunk.get() != NULL && "No Display Manager chunk found!");
+   }
+
+   return mDisplaySystemChunk;
 }
 
 // Check if the device factory or proxy factory can handle the chunk
@@ -181,7 +234,9 @@ bool InputManager::configureDevice(jccl::ConfigChunkPtr chunk)
 {
    bool ret_val;
    std::string dev_name = chunk->getProperty("name");
-   vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "ConfigureDevice: Named: " << dev_name.c_str() << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+      << "ConfigureDevice: Named: " << dev_name.c_str() << std::endl
+      << vprDEBUG_FLUSH;
 
    Input* new_device;
    new_device = DeviceFactory::instance()->loadDevice(chunk);
@@ -190,7 +245,9 @@ bool InputManager::configureDevice(jccl::ConfigChunkPtr chunk)
    {
       addDevice(new_device);
       ret_val = true;
-      vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "   Successfully added dev: " << dev_name.c_str() << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+         << "   Successfully added dev: " << dev_name.c_str() << std::endl
+         << vprDEBUG_FLUSH;
    }
    else
    {
@@ -200,7 +257,8 @@ bool InputManager::configureDevice(jccl::ConfigChunkPtr chunk)
       ret_val = false;
    }
 
-   vprDEBUG_END(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_END(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL) << std::endl
+                                                      << vprDEBUG_FLUSH;
    return ret_val;
 }
 
@@ -208,7 +266,9 @@ bool InputManager::configureDevice(jccl::ConfigChunkPtr chunk)
 bool InputManager::configureProxy(jccl::ConfigChunkPtr chunk)
 {
    std::string proxy_name = chunk->getProperty("name");
-   vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "vjInputManager::configureProxy: Named: " << proxy_name.c_str() << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+      << "vjInputManager::configureProxy: Named: " << proxy_name.c_str()
+      << std::endl << vprDEBUG_FLUSH;
 
    std::string location_name = (std::string)(chunk->getProperty("location"));
    if(location_name.size() > 0){
@@ -244,7 +304,8 @@ bool InputManager::configureProxy(jccl::ConfigChunkPtr chunk)
    if(NULL == new_proxy)
    {
       vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:") << "vjInputManager::configureProxy: Proxy construction failed:" << proxy_name.c_str() << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG_END(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG_END(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL) << std::endl
+                                                         << vprDEBUG_FLUSH;
       return false;
    }
 
@@ -252,7 +313,8 @@ bool InputManager::configureProxy(jccl::ConfigChunkPtr chunk)
    if(false == addProxy(proxy_name, new_proxy))
    { return false; }
 
-   vprDEBUG_END(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "   Proxy is set" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_END(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+      << "   Proxy is set" << std::endl << vprDEBUG_FLUSH;
 
    return true;
 }
@@ -455,7 +517,9 @@ bool recognizeRemoteConnectionConfig(jccl::ConfigChunkPtr chunk)
 //+      (alias was already is list) ==> Alias is set to point to the new proxy instead
 bool InputManager::configureProxyAlias(jccl::ConfigChunkPtr chunk)
 {
-   vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "vjInputManager::Configuring proxy alias" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+      << "vjInputManager::Configuring proxy alias" << std::endl
+      << vprDEBUG_FLUSH;
    vprASSERT(((std::string)chunk->getType()) == "proxyAlias");
 
    std::string alias_name, proxy_name;  // The string of the alias, name of proxy to pt to
@@ -465,7 +529,8 @@ bool InputManager::configureProxyAlias(jccl::ConfigChunkPtr chunk)
 
    addProxyAlias(alias_name, proxy_name);
 
-   vprDEBUG_END(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_END(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL) << std::endl
+                                                      << vprDEBUG_FLUSH;
 
    return true;
 }
@@ -476,7 +541,8 @@ bool InputManager::configureProxyAlias(jccl::ConfigChunkPtr chunk)
 //+      (alias is in list) ==> (alias is removed from list) returns true
 bool InputManager::removeProxyAlias(jccl::ConfigChunkPtr chunk)
 {
-   vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "vjInputManager::RemoveProxyAlias" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+      << "vjInputManager::RemoveProxyAlias" << std::endl << vprDEBUG_FLUSH;
    vprASSERT(((std::string)chunk->getType()) == "proxyAlias");
 
    std::string alias_name, proxy_name;  // The string of the alias, name of proxy to pt to
@@ -486,16 +552,21 @@ bool InputManager::removeProxyAlias(jccl::ConfigChunkPtr chunk)
    if(mProxyAliases.end() == mProxyAliases.find(alias_name))
    {
       vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
-                 << clrOutNORM(clrRED,"ERROR:") << "vjInputManager::RemoveProxyAlias: Alias: " << alias_name.c_str()
-                 << "  cannot find proxy: " << proxy_name.c_str() << std::endl << vprDEBUG_FLUSH;
+         << clrOutNORM(clrRED,"ERROR:")
+         << "vjInputManager::RemoveProxyAlias: Alias: " << alias_name.c_str()
+         << "  cannot find proxy: " << proxy_name.c_str() << std::endl
+         << vprDEBUG_FLUSH;
       return false;
    }
 
    mProxyAliases.erase(alias_name);
 
-   vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_CONFIG_LVL) << "   alias:" << alias_name.c_str() << "   index:"
-                 << mProxyAliases[proxy_name] << "  has been removed." << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG_END(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_CONFIG_LVL)
+      << "   alias:" << alias_name.c_str() << "   index:"
+      << mProxyAliases[proxy_name] << "  has been removed." << std::endl
+      << vprDEBUG_FLUSH;
+   vprDEBUG_END(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL) << std::endl
+                                                      << vprDEBUG_FLUSH;
 
    return true;
 }
@@ -506,8 +577,11 @@ bool InputManager::removeProxyAlias(jccl::ConfigChunkPtr chunk)
 // POST: Alias list has alias str refering to proxyName
 void InputManager::addProxyAlias(std::string alias_name, std::string proxy_name)
 {
-   vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "Proxy alias [" << alias_name.c_str() << "] added.\n" << vprDEBUG_FLUSH;
-   vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_VERB_LVL)   << "   proxy:" << proxy_name << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+      << "Proxy alias [" << alias_name.c_str() << "] added.\n"
+      << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_VERB_LVL)
+      << "   proxy:" << proxy_name << std::endl << vprDEBUG_FLUSH;
 
    mProxyAliases[alias_name] = proxy_name;
 }
@@ -520,8 +594,9 @@ bool InputManager::addProxy(std::string proxyName, Proxy* proxy)
    // Check if already in the table
    if(mProxyTable.end() != mProxyTable.find(proxyName))     // Found it
    {
-      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_WARNING_LVL) << "Trying to add proxy: "
-                             << proxyName << " but it is already in the proxy table.\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+         << "Trying to add proxy: " << proxyName
+         << " but it is already in the proxy table.\n" << vprDEBUG_FLUSH;
       return false;
    }
 
@@ -556,7 +631,9 @@ Proxy* InputManager::getProxy(std::string proxyName)
  // Refresh all the proxies to have then update what device they are pointing at
 void InputManager::refreshAllProxies()
 {
-   vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_STATE_LVL) << "vjInputManager::refreshAppProxies: Refreshing all....\n" << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+      << "vjInputManager::refreshAppProxies: Refreshing all....\n"
+      << vprDEBUG_FLUSH;
 
    for(std::map<std::string, Proxy*>::iterator i = mProxyTable.begin(); i != mProxyTable.end(); i++)
    {
@@ -567,21 +644,26 @@ void InputManager::refreshAllProxies()
 
 bool InputManager::removeProxy(std::string proxyName)
 {
-   vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "vjInputManager::removeProxy" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+      << "vjInputManager::removeProxy" << std::endl << vprDEBUG_FLUSH;
 
    if(mProxyTable.end() == mProxyTable.find(proxyName))
    {
       vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
-                 << clrOutNORM(clrRED,"ERROR:") << "vjInputManager::removeProxy: proxy: " << proxyName.c_str()
-                 << "  cannot find proxy: " << proxyName.c_str() << std::endl << vprDEBUG_FLUSH;
+         << clrOutNORM(clrRED,"ERROR:")
+         << "vjInputManager::removeProxy: proxy: " << proxyName.c_str()
+         << "  cannot find proxy: " << proxyName.c_str() << std::endl
+         << vprDEBUG_FLUSH;
       return false;
    }
 
    mProxyTable.erase(proxyName);
 
-   vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_CONFIG_LVL) << "   proxy:" << proxyName.c_str() << "  has been removed."\
-                                             << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG_END(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_CONFIG_LVL)
+      << "   proxy:" << proxyName.c_str() << "  has been removed."
+      << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG_END(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+      << std::endl << vprDEBUG_FLUSH;
    return true;
 }
 
@@ -593,7 +675,9 @@ bool InputManager::removeProxy(jccl::ConfigChunkPtr chunk)
 }
 
 bool InputManager::configureRemoteInputManager(jccl::ConfigChunkPtr chunk){
-   vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_CRITICAL_LVL) << "InputManager:configure Remote Input Manager" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_CRITICAL_LVL)
+      << "InputManager:configure Remote Input Manager" << std::endl
+      << vprDEBUG_FLUSH;
 
    mRemoteInputManager->acquireConfigMutex();
    bool return_value = mRemoteInputManager->config(chunk);
@@ -603,7 +687,9 @@ bool InputManager::configureRemoteInputManager(jccl::ConfigChunkPtr chunk){
 }
 
 bool InputManager::configureRemoteConnection(jccl::ConfigChunkPtr chunk){
-   vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "InputManager:configure RemoteConnection" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+      << "InputManager:configure RemoteConnection" << std::endl
+      << vprDEBUG_FLUSH;
 
    mRemoteInputManager->acquireConfigMutex();
    bool return_value = mRemoteInputManager->configConnection(chunk);
