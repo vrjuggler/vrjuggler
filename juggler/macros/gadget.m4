@@ -40,8 +40,12 @@ dnl     GADGET_INCLUDES
 dnl     GADGET_INCLUDES_MIN
 dnl     GADGET_LIBS_CC
 dnl     GADGET_LIBS_LD
+dnl     GADGET_PROF_LIBS_CC
+dnl     GADGET_PROF_LIBS_LD
 dnl     GADGET_LIBS_STATIC_CC
 dnl     GADGET_LIBS_STATIC_LD
+dnl     GADGET_PROF_LIBS_STATIC_CC
+dnl     GADGET_PROF_LIBS_STATIC_LD
 dnl     GADGET_EXTRA_LIBS_CC
 dnl     GADGET_EXTRA_LIBS_LD
 dnl ---------------------------------------------------------------------------
@@ -103,8 +107,12 @@ dnl                          test Gadgeteer program], , enable_gadgettest=yes)
         GADGET_INCLUDES=`$GADGETEER_CONFIG $gadget_config_args --includes`
         GADGET_LIBS_CC="`$GADGETEER_CONFIG $gadget_config_args --libs $ABI`"
         GADGET_LIBS_LD="`$GADGETEER_CONFIG $gadget_config_args --linker --libs $ABI`"
+        GADGET_PROF_LIBS_CC="`$GADGETEER_CONFIG $gadget_config_args --libs $ABI --profiled`"
+        GADGET_PROF_LIBS_LD="`$GADGETEER_CONFIG $gadget_config_args --linker --libs $ABI --profiled`"
         GADGET_LIBS_STATIC_CC="`$GADGETEER_CONFIG $gadget_config_args --libs $ABI --static`"
         GADGET_LIBS_STATIC_LD="`$GADGETEER_CONFIG $gadget_config_args --linker --libs $ABI --static`"
+        GADGET_PROF_LIBS_STATIC_CC="`$GADGETEER_CONFIG $gadget_config_args --libs $ABI --static --profiled`"
+        GADGET_PROF_LIBS_STATIC_LD="`$GADGETEER_CONFIG $gadget_config_args --linker --libs $ABI --static --profiled`"
         GADGET_EXTRA_LIBS_CC=`$GADGETEER_CONFIG $gadget_config_args --extra-libs $ABI`
         GADGET_EXTRA_LIBS_LD=`$GADGETEER_CONFIG $gadget_config_args --extra-libs $ABI --linker`
         GADGET_VERSION=`$GADGETEER_CONFIG --version`
@@ -113,6 +121,12 @@ dnl                          test Gadgeteer program], , enable_gadgettest=yes)
         GADGET_INCLUDES_MIN=`$GADGETEER_CONFIG $gadget_config_args --includes --min`
         GADGET_LIBS_CC_MIN="`$GADGETEER_CONFIG $gadget_config_args --libs $ABI --min`"
         GADGET_LIBS_LD_MIN="`$GADGETEER_CONFIG $gadget_config_args --linker --libs $ABI --min`"
+        GADGET_PROF_LIBS_CC_MIN="`$GADGETEER_CONFIG $gadget_config_args --libs $ABI --min --profiled`"
+        GADGET_PROF_LIBS_LD_MIN="`$GADGETEER_CONFIG $gadget_config_args --linker --libs $ABI --min --profiled`"
+        GADGET_LIBS_STATIC_CC_MIN="`$GADGETEER_CONFIG $gadget_config_args --libs $ABI --static --min`"
+        GADGET_LIBS_STATIC_LD_MIN="`$GADGETEER_CONFIG $gadget_config_args --linker --libs $ABI --static --min`"
+        GADGET_PROF_LIBS_STATIC_CC_MIN="`$GADGETEER_CONFIG $gadget_config_args --libs $ABI --static --profiled --min`"
+        GADGET_PROF_LIBS_STATIC_LD_MIN="`$GADGETEER_CONFIG $gadget_config_args --linker --libs $ABI --static --profiled --min`"
         GADGET_EXTRA_LIBS_CC_MIN=`$GADGETEER_CONFIG $gadget_config_args --extra-libs $ABI --min`
         GADGET_EXTRA_LIBS_LD_MIN=`$GADGETEER_CONFIG $gadget_config_args --extra-libs $ABI --min --linker`
 
@@ -132,14 +146,26 @@ dnl                          test Gadgeteer program], , enable_gadgettest=yes)
         GADGET_INCLUDES=""
         GADGET_LIBS_CC=""
         GADGET_LIBS_LD=""
+        GADGET_PROF_LIBS_CC=""
+        GADGET_PROF_LIBS_LD=""
         GADGET_LIBS_STATIC_CC=""
         GADGET_LIBS_STATIC_LD=""
+        GADGET_PROF_LIBS_STATIC_CC=""
+        GADGET_PROF_LIBS_STATIC_LD=""
         GADGET_EXTRA_LIBS_CC=""
         GADGET_EXTRA_LIBS_LD=""
         GADGET_VERSION="-1"
 
         GADGET_CXXFLAGS_MIN=""
         GADGET_INCLUDES_MIN=""
+        GADGET_LIBS_CC_MIN=""
+        GADGET_LIBS_LD_MIN=""
+        GADGET_PROF_LIBS_CC_MIN=""
+        GADGET_PROF_LIBS_LD_MIN=""
+        GADGET_LIBS_STATIC_CC_MIN=""
+        GADGET_LIBS_STATIC_LD_MIN=""
+        GADGET_PROF_LIBS_STATIC_CC_MIN=""
+        GADGET_PROF_LIBS_STATIC_LD_MIN=""
         GADGET_EXTRA_LIBS_CC_MIN=""
         GADGET_EXTRA_LIBS_LD_MIN=""
 
@@ -150,8 +176,12 @@ dnl                          test Gadgeteer program], , enable_gadgettest=yes)
     AC_SUBST(GADGET_INCLUDES)
     AC_SUBST(GADGET_LIBS_CC)
     AC_SUBST(GADGET_LIBS_LD)
+    AC_SUBST(GADGET_PROF_LIBS_CC)
+    AC_SUBST(GADGET_PROF_LIBS_LD)
     AC_SUBST(GADGET_LIBS_STATIC_CC)
     AC_SUBST(GADGET_LIBS_STATIC_LD)
+    AC_SUBST(GADGET_PROF_LIBS_STATIC_CC)
+    AC_SUBST(GADGET_PROF_LIBS_STATIC_LD)
     AC_SUBST(GADGET_EXTRA_LIBS_CC)
     AC_SUBST(GADGET_EXTRA_LIBS_LD)
     AC_SUBST(GADGET_VERSION)
@@ -160,6 +190,12 @@ dnl                          test Gadgeteer program], , enable_gadgettest=yes)
     AC_SUBST(GADGET_INCLUDES_MIN)
     AC_SUBST(GADGET_LIBS_CC_MIN)
     AC_SUBST(GADGET_LIBS_LD_MIN)
+    AC_SUBST(GADGET_PROF_LIBS_CC_MIN)
+    AC_SUBST(GADGET_PROF_LIBS_LD_MIN)
+    AC_SUBST(GADGET_LIBS_STATIC_CC_MIN)
+    AC_SUBST(GADGET_LIBS_STATIC_LD_MIN)
+    AC_SUBST(GADGET_PROF_LIBS_STATIC_CC_MIN)
+    AC_SUBST(GADGET_PROF_LIBS_STATIC_LD_MIN)
     AC_SUBST(GADGET_EXTRA_LIBS_CC_MIN)
     AC_SUBST(GADGET_EXTRA_LIBS_LD_MIN)
 ])
