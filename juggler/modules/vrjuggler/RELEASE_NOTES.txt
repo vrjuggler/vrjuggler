@@ -10,12 +10,12 @@ For all versions:
 
 ===============================================================================
 
- Version: 1.1 DR4 (1.1.129)
-Released: October 11, 2002
+ Version: 2.0 Alpha 1 (1.1.135)
+Released: March 15, 2003
 
-    Please refer to the following to get started with VR Juggler 1.1 DR4:
+    Please refer to the following to get started with VR Juggler 2.0 Alpha 1:
 
-       http://www.vrjuggler.org/vrjuggler/1.1-DR4/migration.guide/
+       http://www.vrjuggler.org/vrjuggler/2.0alpha1/migration.guide/
 
     Required application and configuration changes for upgrading from all
     previous versions (including 1.1.x up through 1.1 DR3):
@@ -25,20 +25,33 @@ Released: October 11, 2002
           and the Immersion IBox driver on a UNIX system, add the following
           to the appropriate configuration file:
 
-             <InputManager name="Input Manager">
-               <driver>${VJ_BASE_DIR}/lib/gadgeteer/drivers/libFlock.so</driver>
-               <driver>${VJ_BASE_DIR}/lib/gadgeteer/drivers/libIBox.so</driver>
-             </InputManager>
+            <InputManager name="Input Manager">
+              <driver>${VJ_BASE_DIR}/lib/gadgeteer/drivers/Flock_drv.so</driver>
+              <driver>${VJ_BASE_DIR}/lib/gadgeteer/drivers/IBox_drv.so</driver>
+            </InputManager>
 
           On Win32, it would appear as:
 
-             <InputManager name="Input Manager">
-               <driver>${VJ_BASE_DIR}/lib/gadgeteer/drivers/Flock.dll</driver>
-               <driver>${VJ_BASE_DIR}/lib/gadgeteer/drivers/IBox.dll</driver>
-             </InputManager>
+            <InputManager name="Input Manager">
+              <driver>${VJ_BASE_DIR}/lib/gadgeteer/drivers/Flock_drv.dll</driver>
+              <driver>${VJ_BASE_DIR}/lib/gadgeteer/drivers/IBox_drv.dll</driver>
+            </InputManager>
 
           All drivers except simulator devices and keyboards must be loaded
-          this way on all platforms.
+          this way on all platforms.  For multiple instances of these, be
+          sure to name each <InputManager> block uniquely.
+        * In configuration files, all values representing physical units
+          (corner positions, translation values, etc.) must be specified in
+          meters.
+        * All position devices now use a list of filters to transform the
+          positional data read from the device.  Correct configuration of
+          a device's filter(s) is necessary to inform the Gadgeteer Input
+          Manager of what units (feet, inches, meters) the device driver
+          returns.
+        * gadget::PositionInterface::getData() now returns a copy of a
+          gmtl::Matrix44f instead of a pointer to the object.  The method
+          also takes an optional argument that tells what measurement units
+          the application wants.  The default is feet.
 
  Version: 1.1 DR3 (1.1.128)
 Released: September 29, 2002
