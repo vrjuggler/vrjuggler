@@ -42,6 +42,7 @@
 namespace jccl {
    
 
+
 VarType stringToVarType (const char* str) {
     if (!strcasecmp (str, int_TOKEN))
         return T_INT;
@@ -103,6 +104,8 @@ char *unitString (CfgUnit t) {
     }
 }
 
+
+
 float toFeet (float val, CfgUnit unit) {
     switch (unit) {
     case U_Feet:
@@ -119,6 +122,7 @@ float toFeet (float val, CfgUnit unit) {
 }
 
 
+
 bool vjstrcasecmp (const std::string& a, const std::string& b) {
     if (a.size() != b.size())
         return true;
@@ -127,6 +131,7 @@ bool vjstrcasecmp (const std::string& a, const std::string& b) {
             return true;
     return false;
 }
+
 
 
 bool vjstrncasecmp (const std::string& a, const std::string& b, int _n) {
@@ -204,6 +209,7 @@ std::string demangleFileName (const std::string& n, std::string parentfile) {
 
     return fname;
 }
+
 
 
 const std::string findFileUsingPathVar (std::ifstream& in, const std::string& file_name, const std::string& env_name) {
@@ -302,4 +308,5 @@ const std::string findFileUsingPathVar (std::ifstream& in, const std::string& fi
     return retval;
 }
 
-};
+
+}; // namespace jccl
