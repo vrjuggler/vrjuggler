@@ -537,8 +537,9 @@ fi
 
 jccl_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
 
-DPP_SUBST
+VJ_VERSION_GROK(VERSION)
 
+DPP_SUBST
 
 AC_SUBST(topdir)
 AC_SUBST(UNIX_JCCLROOT_ABS)
@@ -587,7 +588,8 @@ AC_SUBST(jccl_64_flags)
 
 VJ_MTREE_LIB_GEN(JCCL, mtree, $PLATFORM, $ISA)
 
-AC_OUTPUT(Makefile
+AC_OUTPUT(jccl-config
+          Makefile
           Makefile.inc
           common.defs.mk
           make.defs.mk
@@ -617,7 +619,10 @@ AC_OUTPUT(Makefile
           mtree/JCCL.samples.dist
           mtree/JCCL.test.dist
           mtree/JCCL.tools.dist
-          VARS.pl)
+          VARS.pl,
+    [ sed -e 's/^\(%.*\)/#\1/g' jccl-config > jccl-config.tmp
+      mv jccl-config.tmp jccl-config
+      chmod a+x jccl-config ])
 
 cat <<BUILD_INFO
 
