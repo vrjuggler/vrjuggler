@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Sep-07-2003 patrickh    Added separate debug and optimized build capabilities.
 Aug-31-2003 patrickh    Changed --with-bpldir to --with-boost-python.  The
                         option now specifies the root of the Boost.Python
                         installation tree.

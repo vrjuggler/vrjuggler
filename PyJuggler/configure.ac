@@ -34,8 +34,6 @@ AC_CONFIG_AUX_DIR([Doozer++/scripts])
 DPP_PREREQ([1.5.1])
 DPP_INIT
 
-DPP_GEN_RECONFIG
-
 # -----------------------------------------------------------------------------
 # Command-line arguments (--enable-option, --with-pkg=package_name).
 # -----------------------------------------------------------------------------
@@ -210,8 +208,16 @@ AC_CHECK_LIB([$PYTHON_LIB], [Py_Initialize],
 
 DPP_LANG_RESTORE
 
-if test "x$OS_TYPE" = "xUNIX" ; then
+# Convert the string given to AC_CHECK_LIB() as a library to something that
+# the linker can use later on.
+if test "x$OS_TYPE" = "xWin32" ; then
+   PYTHON_LIB="$PYTHON_LIB.lib"
+   PYTHON_LIB_OPT="$PYTHON_LIB.lib"
+   PYTHON_LIB_DBG="${PYTHON_LIB_OPT}_d.lib"
+else
    PYTHON_LIB="-l$PYTHON_LIB"
+   PYTHON_LIB_OPT="$PYTHON_LIB"
+   PYTHON_LIB_DBG="$PYTHON_LIB_OPT"
 fi
 
 CPPFLAGS="${_pyj_save_CPPFLAGS}"
@@ -257,9 +263,13 @@ if test "x$ac_cv_boost__python__handle_in_boost_python" = "xyes" ; then
    BOOST_PYTHON_INCLUDES="-I$BOOST_PYTHON_DIR/include"
 
    if test "x$OS_TYPE" = "xWin32" ; then
-      BOOST_PYTHON_LDFLAGS="/libpath:$PYTHON_ROOT/libs /libpath:$BOOST_PYTHON_DIR/lib $bpl_link_option"
+      bpl_dir="/libpath:$PYTHON_ROOT/libs /libpath:$BOOST_PYTHON_DIR/lib"
+      BOOST_PYTHON_LDFLAGS_OPT="$bpl_dir boost_python.lib"
+      BOOST_PYTHON_LDFLAGS_DBG="$bpl_dir boost_python_debug.lib"
    else
-      BOOST_PYTHON_LDFLAGS="-L$BOOST_PYTHON_DIR/lib $bpl_link_option"
+      bpl_dir="-L$BOOST_PYTHON_LIBDIR"
+      BOOST_PYTHON_LDFLAGS_OPT="$bpl_dir -lboost_python"
+      BOOST_PYTHON_LDFLAGS_DBG="$bpl_dir -lboost_python_debug"
    fi
 else
    AC_MSG_ERROR([*** Boost.Python v2 is required for PyJuggler ***])
@@ -332,9 +342,11 @@ if test "x$USE_GCC" != "xyes" ; then
 fi
 
 if test "x$OS_TYPE" = "xWin32" ; then
-   PYJUTIL_LDFLAGS='/libpath:$(topdir)/lib pyjutil.lib'
+   PYJUTIL_LDFLAGS_OPT='/libpath:$(topdir)/lib pyjutil.lib'
+   PYJUTIL_LDFLAGS_DBG='/libpath:$(topdir)/lib pyjutil_d.lib'
 else
-   PYJUTIL_LDFLAGS='-L$(topdir)/lib -lpyjutil'
+   PYJUTIL_LDFLAGS_OPT='-L$(topdir)/lib -lpyjutil'
+   PYJUTIL_LDFLAGS_DBG="$PYJUTIL_LDFLAGS_OPT"
 fi
 
 DPP_PTHREAD_FINISH
@@ -346,7 +358,8 @@ DPP_PTHREAD_FINISH
 DPP_SUBST
 
 AC_SUBST(EXTRA_LINK_FLAGS)
-AC_SUBST(PYJUTIL_LDFLAGS)
+AC_SUBST(PYJUTIL_LDFLAGS_DBG)
+AC_SUBST(PYJUTIL_LDFLAGS_OPT)
 
 AC_SUBST(HAVE_OSG)
 AC_SUBST(OSG_INCLUDES)
@@ -355,7 +368,8 @@ AC_SUBST(OSG_LIBS)
 
 AC_SUBST(PYTHON_ROOT)
 AC_SUBST(PYTHON_INCLUDES)
-AC_SUBST(PYTHON_LIB)
+AC_SUBST(PYTHON_LIB_OPT)
+AC_SUBST(PYTHON_LIB_DBG)
 AC_SUBST(PYMOD_EXT)
 AC_SUBST(UTIL_LIB)
 AC_SUBST(PYTHON_LIB_DEPS)
@@ -365,7 +379,8 @@ AC_SUBST(PYTHON_VERSION)
 AC_SUBST(PYSTE)
 
 AC_SUBST(BOOST_PYTHON_INCLUDES)
-AC_SUBST(BOOST_PYTHON_LDFLAGS)
+AC_SUBST(BOOST_PYTHON_LDFLAGS_OPT)
+AC_SUBST(BOOST_PYTHON_LDFLAGS_DBG)
 
 # -----------------------------------------------------------------------------
 # Finish up.

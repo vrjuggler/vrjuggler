@@ -25,7 +25,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-default: all
+default: debug
 
 exec_prefix=	@exec_prefix@
 datadir=	@datadir@
@@ -53,7 +53,7 @@ recursive:
            echo "<=== $$dir" ;				\
          done
 
-all:
+all debug optim:
 	$(MAKE) RECTARGET="$@" recursive
 
 # XXX: The chmod thing at the end is pretty lame.

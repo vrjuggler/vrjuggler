@@ -36,11 +36,22 @@ MKINSTALLDIRS=	$(scriptdir)/mkinstalldirs
 CXX=		@CXX@
 
 ifeq (@OS_TYPE@, Win32)
-   CXXFLAGS=	$(shell vrjuggler-config --includes) /Zm800 /Z7 /Od	\
-		/Ob0 /GX /GR /Op /DBOOST_PYTHON_DYNAMIC_LIB		\
-		/Zc:wchar_t,forScope
+   CXXFLAGS=	$(shell vrjuggler-config --includes) /Zm800 /GX /GR /Op	\
+		/DBOOST_PYTHON_DYNAMIC_LIB /Zc:wchar_t,forScope
+   CXXFLAGS_DBG=/Z7 /Od /Ob0 /MDd /D_DEBUG
+   CXXFLAGS_OPT=/Ogity /O2 /Gs /Ob2 /MD /D_OPT
+   LDFLAGS_DBG=	/DEBUG
+   LDFLAGS_OPT=	/RELEASE
+   MODEXT_DBG=	_d
+   MODEXT_OPT=	
 else
    CXXFLAGS=	$(shell vrjuggler-config --cxxflags)
+   CXXFLAGS_DBG=-D_DEBUG -g
+   CXXFLAGS_OPT=-D_OPT -O2
+   LDFLAGS_DBG=	-g
+   LDFLAGS_OPT=	-O2
+   MODEXT_DBG=	
+   MODEXT_OPT=	
 endif
 
 CXXFLAGS+=	@PYTHON_INCLUDES@ -I$(top_srcdir) -I$(srcdir) $(DEFS)
@@ -48,6 +59,8 @@ CXX_PLUGIN=	@CXX_PLUGIN@
 #DEFS=		@DEFS@
 INCLUDES=	$(shell vrjuggler-config --includes) -I$(top_srcdir)	\
 		-I$(srcdir)
+OBJDIR_DBG=	obj.dbg
+OBJDIR_OPT=	obj.opt
 PYTHON=		@PYTHON@
 PYSTE=		$(PYTHON) @PYSTE@ $(INCLUDES)
 
@@ -64,19 +77,32 @@ PYTHON_VERSION=		@PYTHON_VERSION@
 PYTHON_PACKAGES=	$(prefix)/lib/python$(PYTHON_VERSION)/site-packages/PyJuggler
 
 PYTHON_LDFLAGS=		@PYTHON_LIB_DEPS@
-BOOST_PYTHON_LDFLAGS=	@BOOST_PYTHON_LDFLAGS@
 
 # Linker flags needed by all extension modules.
 LDFLAGS=		@EXTRA_LINK_FLAGS@ $(BOOST_PYTHON_LDFLAGS)	\
 			$(PYTHON_LDFLAGS)
 
 ifeq (@OS_TYPE@, Win32)
-   LDFLAGS+=		/DEBUG /subsystem:console /INCREMENTAL:NO
+   LDFLAGS+=		/nologo /subsystem:console /INCREMENTAL:NO
 endif
 
-PYJUTIL_LIB=		@PYJUTIL_LDFLAGS@
+ifeq ($(BUILD_TYPE), DEBUG)
+   CXXFLAGS+=			$(CXXFLAGS_DBG)
+   LDFLAGS+=			$(LDFLAGS_DBG)
+   MOD_SUFFIX=			$(MODEXT_DBG)
+   OBJDIR=			$(OBJDIR_DBG)
+   BOOST_PYTHON_LDFLAGS=	@BOOST_PYTHON_LDFLAGS_DBG@
+   PYJUTIL_LIB=			@PYJUTIL_LDFLAGS_DBG@
+else
+   CXXFLAGS+=			$(CXXFLAGS_OPT)
+   LDFLAGS+=			$(LDFLAGS_OPT)
+   MOD_SUFFIX=			$(MODEXT_OPT)
+   OBJDIR=			$(OBJDIR_OPT)
+   BOOST_PYTHON_LDFLAGS=	@BOOST_PYTHON_LDFLAGS_OPT@
+   PYJUTIL_LIB=			@PYJUTIL_LDFLAGS_OPT@
+endif
 
-PYMOD_EXT=		@PYMOD_EXT@
+PYMOD_EXT=		$(MOD_SUFFIX)@PYMOD_EXT@
 DYLIB_NAME_FLAG=	@DYLIB_NAME_FLAG@
 OBJEXT=			@OBJEXT@
 OBJ_NAME_FLAG=		@OBJ_NAME_FLAG@
@@ -141,10 +167,10 @@ ifeq (@HAVE_OSG@, Y)
    VRJ_SRCS+=		vrj/_OsgApp.cpp
 endif
 
-VPR_OBJS=	$(VPR_SRCS:.cpp=.$(OBJEXT))
-JCCL_OBJS=	$(JCCL_SRCS:.cpp=.$(OBJEXT))
-GADGET_OBJS=	$(GADGET_SRCS:.cpp=.$(OBJEXT))
-VRJ_OBJS=	$(VRJ_SRCS:.cpp=.$(OBJEXT))
+VPR_OBJS=	$(addprefix $(OBJDIR)/, $(VPR_SRCS:.cpp=.$(OBJEXT)))
+JCCL_OBJS=	$(addprefix $(OBJDIR)/, $(JCCL_SRCS:.cpp=.$(OBJEXT)))
+GADGET_OBJS=	$(addprefix $(OBJDIR)/, $(GADGET_SRCS:.cpp=.$(OBJEXT)))
+VRJ_OBJS=	$(addprefix $(OBJDIR)/, $(VRJ_SRCS:.cpp=.$(OBJEXT)))
 
 OBJS=		$(VPR_OBJS) $(JCCL_OBJS) $(GADGET_OBJS) $(VRJ_OBJS)
 
@@ -157,19 +183,26 @@ vpath %.pyste $(srcdir)/../pyste
 # Targets
 # -----------------------------------------------------------------------------
 
-# XXX: It will probably be helpful in the long run to have 'debug' and 'optim'
-# targets that link against the appropriate Boost.Python library.
-# It might also be good to do static linking against Boost.Python to simplify
-# distribution issues.
+default: optim
 
-all:
-	if [ ! -d vpr ] ; then mkdir vpr ; fi
-	if [ ! -d jccl ] ; then mkdir jccl ; fi
-	if [ ! -d gadget ] ; then mkdir gadget ; fi
-	if [ ! -d vrj ] ; then mkdir vrj ; fi
-	if [ ! -d mods ] ; then mkdir mods ; fi
-	$(MAKE) modules
-	$(MAKE) prefix="$(topdir)" install
+all: optim debug
+
+beforebuild:
+	@$(MKINSTALLDIRS) $(OBJDIR)/vpr
+	@$(MKINSTALLDIRS) $(OBJDIR)/jccl
+	@$(MKINSTALLDIRS) $(OBJDIR)/gadget
+	@$(MKINSTALLDIRS) $(OBJDIR)/vrj
+	@$(MKINSTALLDIRS) mods
+
+optim:
+	$(MAKE) BUILD_TYPE=OPTIMIZED beforebuild
+	$(MAKE) BUILD_TYPE=OPTIMIZED modules
+	$(MAKE) BUILD_TYPE=OPTIMIZED prefix="$(topdir)" install
+
+debug:
+	$(MAKE) BUILD_TYPE=DEBUG beforebuild
+	$(MAKE) BUILD_TYPE=DEBUG modules
+	$(MAKE) BUILD_TYPE=DEBUG prefix="$(topdir)" install
 
 modules: $(MODS)
 
@@ -182,7 +215,7 @@ install:
 %.cpp: %.pyste
 	$(PYSTE) --python-ns=pyj --module=$(basename $(@F)) $<
 
-%.$(OBJEXT): %.cpp
+$(OBJDIR)/%.$(OBJEXT): %.cpp
 	$(CXX) $(CXXFLAGS) $(OBJ_NAME_FLAG) -c $<
 
 %$(PYMOD_EXT): %.$(OBJEXT)
@@ -205,7 +238,8 @@ mods/vrj$(PYMOD_EXT): $(VRJ_OBJS)
           $(LDFLAGS) $(VJ_LIBS) $(VJ_EXTRA_LIBS)
 
 clean:
-	rm -f $(OBJS)
+	rm -rf $(OBJDIR_DBG)
+	rm -rf $(OBJDIR_OPT)
 
 clobber:
 	$(MAKE) clean
