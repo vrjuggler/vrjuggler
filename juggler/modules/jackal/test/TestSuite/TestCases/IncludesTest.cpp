@@ -25,7 +25,7 @@ namespace jcclTest
     IncludesTest::IncludesTest() : CppUnit::TestCase ()
     {
     }
-    
+
     IncludesTest::IncludesTest(std::string name) : CppUnit::TestCase (name)
     {
     }
@@ -66,7 +66,7 @@ namespace jcclTest
 
 
 
-    void IncludesTest::XMLChunkIncludeTest () 
+    void IncludesTest::XMLChunkIncludeTest ()
     {
         jccl::ChunkDescPtr desc;
         jccl::ConfigChunkPtr chunk;
@@ -83,7 +83,7 @@ namespace jcclTest
         int i = chunk->getProperty<int> ("int_prop", 0);
         CPPUNIT_ASSERT((i == 2) && "value from include has been superceded");
     }
-        
+
 
 
     /*static*/ CppUnit::Test* IncludesTest::suite()
@@ -91,11 +91,10 @@ namespace jcclTest
         CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("IncludesTest");
         test_suite->addTest( new CppUnit::TestCaller<IncludesTest>("XMLDescIncludeTest", &IncludesTest::XMLDescIncludeTest));
         test_suite->addTest( new CppUnit::TestCaller<IncludesTest>("XMLChunkIncludeTest", &IncludesTest::XMLChunkIncludeTest));
-        
+
         return test_suite;
     }
 
 
 
-};  // namespace jcclTest
-
+}  // namespace jcclTest

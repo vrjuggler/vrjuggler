@@ -402,8 +402,7 @@ protected:
 
 }; // class ConfigManager
 
+} // namespace jccl
 
-}; // namespace jccl
 
 #endif
-

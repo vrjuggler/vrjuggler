@@ -392,5 +392,4 @@ void LabeledPerfDataBuffer::write (std::ostream& out, const std::string& pad)
    out << pad << "</labeledbuffer>\n";
 }
 
-
-};
+}
