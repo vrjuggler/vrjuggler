@@ -43,8 +43,10 @@
 #include <gmtl/Generate.h>
 #include <gmtl/EulerAngle.h>
 
-#include <gadget/Type/PositionProxy.h>
+#include <gadget/Filter/Position/PositionFilter.h>
+#include <gadget/Filter/Position/PositionFilterFactory.h>
 #include <gadget/Type/Position/PositionUnitConversion.h>
+#include <gadget/Type/PositionProxy.h>
 
 namespace gadget
 {
@@ -117,12 +119,19 @@ void PositionProxy::updateData()
    if((!mStupified) && (mTypedDevice != NULL))
    {
       mPositionData = (mTypedDevice->getPositionData (mUnitNum));
-      
+
+      // Create a vector to hold all 1 of our position data samples.
+      std::vector<PositionData> temp_sample(1, mPositionData);
+
       // Apply all the positional filters
       for(std::vector<PositionFilter*>::iterator i = mPositionFilters.begin(); i != mPositionFilters.end(); ++i)
       {
-          (*i)->apply(mPositionData);
+          (*i)->apply(temp_sample);
       }
+
+      // Now that the filters have been applied to our sample, copy it back
+      // over to mPositionData.
+      mPositionData = temp_sample[0];
 
       // Do scaling based on Proxy scale factor
       gmtl::Vec3f trans;                              // SCALE:
