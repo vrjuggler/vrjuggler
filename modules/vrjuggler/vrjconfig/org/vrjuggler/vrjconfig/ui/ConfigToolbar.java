@@ -74,6 +74,8 @@ public class ConfigToolbar
          saveBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/save.gif")));
          saveAsBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/saveas.gif")));
          saveAllBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/saveall.gif")));
+         copyBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/Copy16.gif")));
+         pasteBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/Paste16.gif")));
          undoBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/undo.gif")));
          redoBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/redo.gif")));
          RTRCBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/vrjuggler.gif")));
@@ -86,6 +88,8 @@ public class ConfigToolbar
          saveBtn.setText("Save");
          saveAsBtn.setText("Save As");
          saveAllBtn.setText("Save All");
+         copyBtn.setText("Copy");
+         pasteBtn.setText("Paste");
          undoBtn.setText("Undo");
          redoBtn.setText("Redo");
          RTRCBtn.setText("RTRC");
@@ -551,6 +555,16 @@ public class ConfigToolbar
       saveAllBtn.setToolTipText("Save All Open Configurations");
       saveAllBtn.setActionCommand("SaveAll");
       saveAllBtn.setFocusPainted(false);
+
+      copyBtn.setEnabled(true);
+      copyBtn.setToolTipText("Copy Config Element");
+      copyBtn.setActionCommand("copy");
+      copyBtn.setFocusPainted(false);
+      pasteBtn.setEnabled(true);
+      pasteBtn.setToolTipText("Paste Config Element");
+      pasteBtn.setActionCommand("paste");
+      pasteBtn.setFocusPainted(false);
+      
       undoBtn.setEnabled(false);
       undoBtn.setToolTipText("Undo");
       undoBtn.setActionCommand("Undo");
@@ -594,6 +608,20 @@ public class ConfigToolbar
 //            saveAll();
          }
       });
+      copyBtn.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            fireAction(evt.getActionCommand());
+         }
+      });
+      pasteBtn.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            fireAction(evt.getActionCommand());
+         }
+      });
       undoBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
@@ -624,6 +652,9 @@ public class ConfigToolbar
       toolbar.add(saveAsBtn, null);
       toolbar.add(saveAllBtn, null);
       toolbar.addSeparator();
+      toolbar.add(copyBtn, null);
+      toolbar.add(pasteBtn, null);
+      toolbar.addSeparator();
       toolbar.add(undoBtn, null);
       toolbar.add(redoBtn, null);
       toolbar.add(Box.createHorizontalGlue(), null);
@@ -637,6 +668,8 @@ public class ConfigToolbar
    private JButton saveBtn = new JButton();
    private JButton saveAsBtn = new JButton();
    private JButton saveAllBtn = new JButton();
+   private JButton copyBtn = new JButton();
+   private JButton pasteBtn = new JButton();
    private JButton undoBtn = new JButton();
    private JButton redoBtn = new JButton();
    private JButton RTRCBtn = new JButton();
