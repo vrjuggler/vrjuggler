@@ -303,6 +303,8 @@ public:
       // Then read message after checking to verify subgroup
        for(i=0;i<mNumIters;i++)
        {
+          std::cout << "iter: " << i << std::endl;
+
           // WAIT for data to be sent
          mCondVar.acquire();
          {
@@ -311,9 +313,14 @@ public:
          }
          mCondVar.release();
 
+         std::cout << "num expected events: " << mSelectedPorts.size() << std::endl;
+         vpr::System::msleep(50);
+
           // Get the events
           vpr::Uint16 num_events;
-          Status ret = selector.select(num_events,vpr::Interval(50000, vpr::Interval::Msec));
+          Status ret = selector.select(num_events, vpr::Interval::NoTimeout);
+
+          vpr::System::msleep(50);
 
           threadAssertTest((ret.success()),
                            "Selection did not return successfully");
