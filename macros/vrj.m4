@@ -99,16 +99,19 @@ dnl        VRJ_LIBS="`$VRJ_CONFIG $vrj_config_args --libs $ABI` $VRJ_EXTRA_LIBS"
 dnl        VRJ_LIBS_STATIC="`$VRJ_CONFIG $vrj_config_args --libs $ABI --static` $VRJ_EXTRA_LIBS"
 
         VRJ_CXXFLAGS=`$VRJ_CONFIG $vrj_config_args --cxxflags $ABI`
-        VRJ_CXXFLAGS_MIN=`$VRJ_CONFIG $vrj_config_args --cxxflags $ABI --min`
-        VRJ_LIBS_LD="`$VRJ_CONFIG $vrj_config_args --linker --libs $ABI`"
-        VRJ_LIBS_STATIC_LD="`$VRJ_CONFIG $vrj_config_args --linker --libs $ABI --static`"
         VRJ_LIBS_CC="`$VRJ_CONFIG $vrj_config_args --libs $ABI`"
+        VRJ_LIBS_LD="`$VRJ_CONFIG $vrj_config_args --linker --libs $ABI`"
         VRJ_LIBS_STATIC_CC="`$VRJ_CONFIG $vrj_config_args --libs $ABI --static`"
+        VRJ_LIBS_STATIC_LD="`$VRJ_CONFIG $vrj_config_args --linker --libs $ABI --static`"
         VRJ_EXTRA_LIBS_CC=`$VRJ_CONFIG $vrj_config_args --extra-libs $ABI`
         VRJ_EXTRA_LIBS_LD=`$VRJ_CONFIG $vrj_config_args --extra-libs $ABI --linker`
+        VRJ_VERSION=`$VRJ_CONFIG --version`
+
+        VRJ_CXXFLAGS_MIN=`$VRJ_CONFIG $vrj_config_args --cxxflags $ABI --min`
+        VRJ_LIBS_CC_MIN="`$VRJ_CONFIG $vrj_config_args --libs $ABI --min`"
+        VRJ_LIBS_LD_MIN="`$VRJ_CONFIG $vrj_config_args --linker --libs $ABI --min`"
         VRJ_EXTRA_LIBS_CC_MIN=`$VRJ_CONFIG $vrj_config_args --extra-libs $ABI --min`
         VRJ_EXTRA_LIBS_LD_MIN=`$VRJ_CONFIG $vrj_config_args --extra-libs $ABI --min --linker`
-        VRJ_VERSION=`$VRJ_CONFIG --version`
 
         AC_MSG_CHECKING([whether VR Juggler version is >= $min_vrj_version])
         AC_MSG_RESULT([$VRJ_VERSION])
@@ -137,14 +140,17 @@ dnl        VRJ_LIBS_STATIC="`$VRJ_CONFIG $vrj_config_args --libs $ABI --static` 
     fi
 
     AC_SUBST(VRJ_CXXFLAGS)
-    AC_SUBST(VRJ_CXXFLAGS_MIN)
     AC_SUBST(VRJ_LIBS_CC)
     AC_SUBST(VRJ_LIBS_LD)
     AC_SUBST(VRJ_LIBS_STATIC_CC)
     AC_SUBST(VRJ_LIBS_STATIC_LD)
     AC_SUBST(VRJ_EXTRA_LIBS_CC)
     AC_SUBST(VRJ_EXTRA_LIBS_LD)
+    AC_SUBST(VRJ_VERSION)
+
+    AC_SUBST(VRJ_CXXFLAGS_MIN)
+    AC_SUBST(VRJ_LIBS_CC_MIN)
+    AC_SUBST(VRJ_LIBS_LD_MIN)
     AC_SUBST(VRJ_EXTRA_LIBS_CC_MIN)
     AC_SUBST(VRJ_EXTRA_LIBS_LD_MIN)
-    AC_SUBST(VRJ_VERSION)
 ])

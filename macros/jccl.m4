@@ -99,17 +99,19 @@ dnl                          test JCCL program], , enable_jccltest=yes)
         no_jccl=yes
     else
         JCCL_CXXFLAGS=`$JCCL_CONFIG $jccl_config_args --cxxflags $ABI`
-        JCCL_CXXFLAGS_MIN=`$JCCL_CONFIG $jccl_config_args --cxxflags $ABI --min`
-        JCCL_LIBS_LD="`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker`"
-        JCCL_LIBS_STATIC_LD="`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --static`"
         JCCL_LIBS_CC="`$JCCL_CONFIG $jccl_config_args --libs $ABI`"
+        JCCL_LIBS_LD="`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker`"
         JCCL_LIBS_STATIC_CC="`$JCCL_CONFIG $jccl_config_args --libs $ABI --static`"
+        JCCL_LIBS_STATIC_LD="`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --static`"
         JCCL_EXTRA_LIBS_CC=`$JCCL_CONFIG $jccl_config_args --extra-libs $ABI`
         JCCL_EXTRA_LIBS_LD=`$JCCL_CONFIG $jccl_config_args --extra-libs $ABI --linker`
-        JCCL_EXTRA_LIBS_MIN=`$JCCL_CONFIG $jccl_config_args --extra-libs $ABI --min`
+        JCCL_VERSION=`$JCCL_CONFIG --version`
+
+        JCCL_CXXFLAGS_MIN=`$JCCL_CONFIG $jccl_config_args --cxxflags $ABI --min`
+        JCCL_LIBS_CC_MIN="`$JCCL_CONFIG $jccl_config_args --libs $ABI --min`"
+        JCCL_LIBS_LD_MIN="`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --min`"
         JCCL_EXTRA_LIBS_CC_MIN=`$JCCL_CONFIG $jccl_config_args --extra-libs $ABI --min`
         JCCL_EXTRA_LIBS_LD_MIN=`$JCCL_CONFIG $jccl_config_args --extra-libs $ABI --min --linker`
-        JCCL_VERSION=`$JCCL_CONFIG --version`
 
         AC_MSG_CHECKING([whether JCCL version is >= $min_jccl_version])
         AC_MSG_RESULT([$JCCL_VERSION])
@@ -138,14 +140,17 @@ dnl                          test JCCL program], , enable_jccltest=yes)
     fi
 
     AC_SUBST(JCCL_CXXFLAGS)
-    AC_SUBST(JCCL_CXXFLAGS_MIN)
     AC_SUBST(JCCL_LIBS_CC)
     AC_SUBST(JCCL_LIBS_LD)
     AC_SUBST(JCCL_LIBS_STATIC_CC)
     AC_SUBST(JCCL_LIBS_STATIC_LD)
     AC_SUBST(JCCL_EXTRA_LIBS_CC)
     AC_SUBST(JCCL_EXTRA_LIBS_LD)
+    AC_SUBST(JCCL_VERSION)
+
+    AC_SUBST(JCCL_CXXFLAGS_MIN)
+    AC_SUBST(JCCL_LIBS_CC_MIN)
+    AC_SUBST(JCCL_LIBS_LD_MIN)
     AC_SUBST(JCCL_EXTRA_LIBS_CC_MIN)
     AC_SUBST(JCCL_EXTRA_LIBS_LD_MIN)
-    AC_SUBST(JCCL_VERSION)
 ])
