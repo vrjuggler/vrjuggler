@@ -86,7 +86,7 @@ public:
    float getData() const
    {
       const float analogDefault(0.0f);
-      if(!isStupified())
+      if(isStupified())
          return analogDefault;
       else
          return m_data.getAnalog();
