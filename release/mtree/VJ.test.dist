@@ -24,22 +24,6 @@
 	..
 	input
 	..
-	ogl
-	    combo
-	    ..
-	    cubes
-	    ..
-	    simpleGlove
-	    ..
-	    torus
-	    ..
-	    wand
-	    ..
-	    glove
-	    ..
-	..
-	pfNav
-	..
 	testDynamicCastSTL
 	..
 	threads
