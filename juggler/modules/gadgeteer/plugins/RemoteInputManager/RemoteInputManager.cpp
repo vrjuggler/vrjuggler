@@ -51,6 +51,8 @@
 #include <cluster/ClusterNetwork/ClusterNode.h>
 #include <cluster/ClusterManager.h>
 
+#include <cluster/ClusterManager.h>
+
 // IO Packets
 #include <cluster/Packets/PacketFactory.h>
 #include <cluster/Packets/ConnectionRequest.h>
@@ -60,23 +62,22 @@
 #include <cluster/Packets/EndBlock.h>
 #include <cluster/Packets/DataPacket.h>
 
-
 // Configuration
 #include <jccl/RTRC/ConfigManager.h>
 #include <jccl/Config/ConfigElement.h>
 
 #include <map>
 
-cluster::ClusterPlugin* initPlugin()
+extern "C"
 {
-   return cluster::RemoteInputManager::instance();
+   GADGET_CLUSTER_PLUGIN_EXPORT(void) initPlugin(cluster::ClusterManager* mgr)
+   {
+      mgr->addPlugin(new cluster::RemoteInputManager());
+   }
 }
-
 
 namespace cluster
 {
-   vprSingletonImp( RemoteInputManager );
-
    RemoteInputManager::RemoteInputManager() 
    : mPluginGUID("a35b834d-e7e8-4f34-830b-755c282845b5")
    {
