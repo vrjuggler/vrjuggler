@@ -22,9 +22,13 @@ Primary build/install targets are:
 Build targets are:
     all             - Build everything.
     all-abi         - Build everything using all supported ABIs.
+    debug           - Build the VR Juggler libraries (dynamic and static) with
+                      debugging symbols turned on.
     dbg             - Build the debugging, static copy of the libraries.
     ddso            - Build the debugging, dynamic shared object version of
                       the libraries.
+    optim           - Build the VR Juggler libraries (dynamic and static) with
+                      optimization flags enabled.
     opt             - Build the optimized, static version of the libraries.
     dso             - Build the dynamic shared object version of the
                       libraries.
@@ -50,11 +54,14 @@ Install targets are:
                       the Data directory, the configuration GUI and the test
                       code.
     install-all-abi - Install every ABI possible on the target platform.
-    install         - Install the libraries, all header files, the Data
-                      directory, the configuration GUI and the test code.
+    install         - Install the full debugging version of VR Juggler (with
+                      both static and dynamic libraries). 
+    install-debug   - Same as 'install'.
     install-dbg     - Install the debugging, static version of the libraries.
     install-ddso    - Install the debugging, dynamic shared object version of
                       the libraries.
+    install-optim   - Install the full optimized version of VR Juggler (with
+                      both static and dynamic libraries).
     install-opt     - Install the optimized, static version of the libraries.
     install-dso     - Install the dynamic shared object version of the
                       libraries.
