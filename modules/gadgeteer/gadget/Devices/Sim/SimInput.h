@@ -126,12 +126,6 @@ protected:
    virtual int checkKeyPair(KeyModPair& pair);
 
    /**
-    * Gets number of times the key was pressed.
-    * @return Number of times the key was pressed.
-    */
-   virtual int checkKey(gadget::Keys keyId);
-
-   /**
     * Constructs a vector of key mod pairs.
     * Takes as input a element that has a list of KeyModPair child elements.
     *
