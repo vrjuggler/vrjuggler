@@ -38,8 +38,7 @@ package org.vrjuggler.tweek.beans;
 
 
 /**
- * @version $Revision$
- * @since 1.0
+ * Exception type thrown when a Bean path is invalid.
  */
 public class BeanPathException extends Exception
 {

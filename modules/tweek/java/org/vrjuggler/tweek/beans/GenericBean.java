@@ -39,10 +39,16 @@ package org.vrjuggler.tweek.beans;
 
 /**
  * This class is used to hold information about "generic" Beans loaded into the
- * system.  Such Beans are generic in that they are not viewers, GUI panels, or
- * services.
+ * system.  Such Beans are generic in that they are not Bean viewers or
+ * services.  The functionality they provide is entirely up to the implementing
+ * author, and it is expected that they will be handled and managed by
+ * user-level code.  Hence, the main purpose of Generic Beans is to hide the
+ * details of loading the Bean class and its dependencies and to simplify
+ * Bean instantiation.
  *
- * @since 1.0
+ * @see PanelBean
+ * @see ServiceBean
+ * @see ViewerBean
  */
 public class GenericBean extends TweekBean
 {

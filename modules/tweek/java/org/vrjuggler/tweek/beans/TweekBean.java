@@ -43,8 +43,6 @@ import org.vrjuggler.tweek.beans.loader.*;
 
 /**
  * Abstract base class for all beans that wish to be loaded by Tweek.
- *
- * @since 1.0
  */
 public abstract class TweekBean
 {

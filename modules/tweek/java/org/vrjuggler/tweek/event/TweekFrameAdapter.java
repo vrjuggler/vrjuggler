@@ -37,6 +37,14 @@
 package org.vrjuggler.tweek.event;
 
 
+/**
+ * Default implementation of <code>TweekFrameListener</code>.  The methods
+ * of this class do nothing, but this class does provide a means for users
+ * to implement only the methods of <code>TweekFrameListener</code> that
+ * they care about.
+ *
+ * @since 0.20.0
+ */
 public class TweekFrameAdapter implements TweekFrameListener
 {
    public void frameOpened(TweekFrameEvent e)

@@ -40,7 +40,13 @@ import org.vrjuggler.tweek.beans.loader.BeanInstantiationException;
 
 
 /**
- * @since 1.0
+ * Implementation of <code>TweekBean</code> that is for Vewer Beans.  A Viewer
+ * Bean is a special type of Bean that knows how to manage and display
+ * Panel Beans.  The Viewer Bean must implement the interface
+ * <code>BeanModelViewer</code>.
+ *
+ * @see BeanModelViewer
+ * @see PanelBean
  */
 public class ViewerBean extends TweekBean
 {

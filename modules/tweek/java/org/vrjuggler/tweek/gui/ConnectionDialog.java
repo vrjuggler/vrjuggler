@@ -60,8 +60,6 @@ import org.vrjuggler.tweek.text.MessageDocument;
  * A modal dialog box used to make a connection with a remote ORB.  The Tweek
  * CORBA Service created as a result of the connection is made available to
  * external code.
- *
- * @since 1.0
  */
 public class ConnectionDialog extends JDialog
 {

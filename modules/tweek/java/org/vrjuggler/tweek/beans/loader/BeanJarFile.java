@@ -43,8 +43,6 @@ import java.util.jar.JarFile;
 /**
  * Simple container for a JarFile object and a list of directories that can
  * be used to look up dependencies of the JarFile entries.
- *
- * @since 1.0
  */
 class BeanJarFile
 {

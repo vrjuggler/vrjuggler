@@ -42,8 +42,6 @@ import org.vrjuggler.tweek.beans.*;
 /**
  * A proxy to the built-in Tweek Global Preferences Service Bean.  Instantiate
  * this class to get access to the Global Preferences Service.
- *
- * @since 1.0
  */
 public class GlobalPreferencesServiceProxy
    implements GlobalPreferencesService

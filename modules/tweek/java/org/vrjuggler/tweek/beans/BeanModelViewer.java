@@ -38,16 +38,40 @@ package org.vrjuggler.tweek.beans;
 
 
 /**
- * The basic interface used by all viewers of Bean data models.
+ * The basic interface used by all viewers of Bean data models.  In particular,
+ * this is the interface that must be implemented by Viewer Beans.
  *
- * @since 1.0
+ * @see ViewerBean
  */
 public interface BeanModelViewer
 {
+   /**
+    * Returns the viewer component.
+    */
    public javax.swing.JComponent getViewer();
-   public void init(BeanTreeModel tree_model);
-   public void setModel(BeanTreeModel tree_model);
+
+   /**
+    * Initializes the model viewer.
+    *
+    * @param treeModel  the Bean tree model that this viewer will display
+    */
+   public void init(BeanTreeModel treeModel);
+
+   /**
+    * Changes the model referenced by this viewer.
+    *
+    * @param treeModel  the Bean tree model that this viewer will display
+    */
+   public void setModel(BeanTreeModel treeModel);
+
+   /**
+    * Returns the model used by this viewer.
+    */
    public BeanTreeModel getModel();
+
+   /**
+    * Initializes the user interface for this viewer.
+    */
    public void initGUI();
 
    /**

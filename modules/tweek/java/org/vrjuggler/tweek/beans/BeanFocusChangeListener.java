@@ -38,7 +38,10 @@ package org.vrjuggler.tweek.beans;
 
 
 /**
- * @since 1.0
+ * Interface to be implemented by classes that want to be informed when there
+ * is a change in which Panel Bean is currently focused.
+ *
+ * @see PanelBean
  */
 public interface BeanFocusChangeListener extends java.util.EventListener
 {

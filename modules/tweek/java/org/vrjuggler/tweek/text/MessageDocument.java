@@ -46,7 +46,7 @@ import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 /**
  * A styled document suitable for use in a GUI for printing status messages.
  *
- * @since 1.0
+ * @since 0.6.0
  */
 public class MessageDocument extends DefaultStyledDocument
 {

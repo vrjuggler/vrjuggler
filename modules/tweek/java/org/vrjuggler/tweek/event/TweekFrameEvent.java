@@ -40,7 +40,12 @@ import java.awt.Window;
 
 
 /**
- * @since 1.0
+ * Event type associated with window events that are forwarded from the Tweek
+ * Java GUi frame to listeners.
+ *
+ * @see TweekFrameListener
+ *
+ * @since 0.0.4
  */
 public class TweekFrameEvent extends java.awt.event.WindowEvent
 {

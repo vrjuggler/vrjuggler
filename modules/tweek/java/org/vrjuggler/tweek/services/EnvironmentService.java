@@ -40,8 +40,6 @@ package org.vrjuggler.tweek.services;
 /**
  * The Environment Service interface.  This is the interface that must be
  * implemented in order to get access to the Tweek Environment Service.
- *
- * @since 1.0
  */
 public interface EnvironmentService
 {

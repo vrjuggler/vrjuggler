@@ -51,7 +51,8 @@ import java.util.Vector;
  *
  * @see java.io.FileFilter
  * @see javax.swing.filechooser.FileFilter
- * @since 1.0
+ *
+ * @since 0.0.3
  */
 public class ExtensionFileFilter
    extends javax.swing.filechooser.FileFilter
