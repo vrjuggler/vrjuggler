@@ -100,9 +100,11 @@ public:
       if(!found_window)
       {
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
-            << "WARNING: Could not find KeyboardMouse named: '"
-            << mKeyboardMouseDeviceName << "'. Failed to create InputWindowXWin.\n"
-            << vprDEBUG_FLUSH;
+            << "NOTE: Could not find keyboard/mouse device named '"
+            << mKeyboardMouseDeviceName << "'\n" << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+            << "No InputArea will be created for window named '"
+            << e->getName() << "'.\n" << vprDEBUG_FLUSH;
          return false;
       }
       else
