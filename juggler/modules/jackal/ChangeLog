@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Nov-17-2004 patrickh    Fixed config file lookup problems that showed up under
+                        very specific circumstances.
+                        NEW VERSION: 0.23.1
 Nov-12-2004 patrickh    In the Java APi, the notion that a property definition
                         has a name other than its XML token has been removed.
                         NEW VERSION: 0.23.0
