@@ -121,7 +121,12 @@ public:
     //! POST: this has added the chunks specified
     void addChunks(std::vector<vjConfigChunk*> new_chunks);
 
-
+    void addChunk(vjConfigChunk* new_chunk)
+    {
+       std::vector<vjConfigChunk*> new_chunks;
+       new_chunks.push_back(new_chunk);
+       addChunks(new_chunks);
+    }
 
     //: Returns all chunks of a given type.
     //! PRE: true;
@@ -189,13 +194,14 @@ public:
     //: Sorts the chunks based on dependencies
     //! PRE: true
     //! MODIFIES: self.  In place sort of the config chunks
+    //! ARGS: auxChunks - Auxilary chunks that have been loaded already
     //! POST: (if returns != -1)
     //+     for( i>=0 && i<chunks.size()) <br>
     //+        chunks[i] dependent only of chunks[0...(i-1)] <br>
     //+     This is a topological sorting of the dependencies. <br>
     //+     informally( forall elts in the chunks list ) <br>
     //! RETURNS: -1 - Failed to complete sort
-    int dependencySort();
+    int dependencySort(vjConfigChunkDB* auxChunks = NULL);
 
 
     /* IO functions: */
