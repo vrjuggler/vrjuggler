@@ -73,15 +73,15 @@ bool PositionXformFilter::config(jccl::ConfigChunkPtr c)
 
    // Calculate the scale value
    // - If dev_units is 0.0f, then use custom_scale
-   float custom_scale = c->getProperty<float>("dev_units");
+   mScaleValue = c->getProperty<float>("dev_units");
 
-   if(custom_scale == 0.0f)
-   { custom_scale = c->getProperty<float>("custom_scale"); }
+   if(mScaleValue == 0.0f)
+   { mScaleValue = c->getProperty<float>("custom_scale"); }
 
    // This makes a rotation matrix that moves a pt in
    // the device's coord system to the vj coord system.
    // ==> world_M_transmitter
-   gmtl::Matrix44f trans_mat, rot_mat, scale_mat;
+   gmtl::Matrix44f trans_mat, rot_mat;
    if((0.0f != xt) || (0.0f != yt) || (0.0f != zt))
    {
       gmtl::setTrans(trans_mat, gmtl::Vec3f(xt, yt, zt) );
@@ -91,19 +91,14 @@ bool PositionXformFilter::config(jccl::ConfigChunkPtr c)
       gmtl::EulerAngleXYZf euler( xr,yr,zr );      
       rot_mat = gmtl::makeRot<gmtl::Matrix44f>( euler );
    }
-   if(0.0f != custom_scale)
-   {
-      scale_mat = gmtl::makeScale<gmtl::Matrix44f>( custom_scale );
-   }
-
+      
    m_worldMsensor = trans_mat;
    gmtl::postMult(m_worldMsensor, rot_mat);         // xformMat = T*R
-   gmtl::postMult(m_worldMsensor, scale_mat);       // xformmat = T*R*S
-
+      
    vprDEBUG(vprDBG_ALL,0) << "m:worldMsensor [T*R*S]: \n" << m_worldMsensor
                           << "\ntrans_mat:\n" << trans_mat
                           << "\nrot_mat:\n" << rot_mat 
-                          << "\nscale_mat\n" << scale_mat << "\n" << vprDEBUG_FLUSH;
+                          << "\nscale value: " << mScaleValue << "\n" << vprDEBUG_FLUSH;
       
    return true;
 }
@@ -116,6 +111,11 @@ void PositionXformFilter::apply(std::vector< PositionData >& posSample)
    for(std::vector<PositionData>::iterator i=posSample.begin(); i != posSample.end(); ++i)
    {                               
       cur_mat = (*i).getPosition();
+      gmtl::Vec3f trans;
+      gmtl::setTrans(trans, *cur_mat);                // Get the translational vector
+      trans *= mScaleValue;                           // Scale the translation and set the value again
+      gmtl::setTrans(*cur_mat, trans);
+
       gmtl::preMult(*cur_mat, m_worldMsensor);        // S_world = wMs * S_sensor      
    }
 }
