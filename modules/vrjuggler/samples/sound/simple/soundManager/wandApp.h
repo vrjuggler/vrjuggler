@@ -123,23 +123,10 @@ public:
    //  }
    //------------------------------------
 
-   // Function called after tracker update but before start of drawing<BR><BR>
+   // Function called after tracker update but before start of drawing.
    // Called once before every frame.  Do calculations and state modifications
    // here.
-   virtual void preFrame()
-   {
-      // Put your pre frame computations here.
-
-      /*
-      std::cout  << "Wand Buttons:"
-                 << " 0:" << mButton0->getData()
-                 << " 1:" << mButton1->getData()
-                 << " 2:" << mButton2->getData()
-                 << " 3:" << mButton3->getData()
-                 << " 4:" << mButton4->getData()
-                 << " 5:" << mButton5->getData() << std::endl;
-      */
-   }
+   virtual void preFrame();
 
    virtual void bufferPreDraw();
 
