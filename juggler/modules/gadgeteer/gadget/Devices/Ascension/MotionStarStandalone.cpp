@@ -467,6 +467,12 @@ void aMotionStar::sample() {
                                      response.buffer[11+o]);//YRot
       posinfo[bnum][5] = 180*rawToFloat(response.buffer[12+o],
                                      response.buffer[13+o]);//XRot
+
+      // XXX: This is a hack until we figure out how to set the unit to
+      // feet instead of inches.
+      posinfo[bnum][0] /= 5.0;
+      posinfo[bnum][1] /= 5.0;
+      posinfo[bnum][2] /= 5.0;
     } // end for loop
 
 
