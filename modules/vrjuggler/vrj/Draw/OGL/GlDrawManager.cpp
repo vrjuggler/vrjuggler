@@ -507,8 +507,8 @@ void vjGlDrawManager::drawLine(vjVec3& start, vjVec3& end)
 void vjGlDrawManager::drawSphere(float radius, int slices, int stacks)
 {
   initQuadObj();
-  gluQuadricDrawStyle(mQuadObj, GLU_FILL);
-  gluQuadricNormals(mQuadObj, GLU_SMOOTH);
+  gluQuadricDrawStyle(mQuadObj, (GLenum) GLU_FILL);
+  gluQuadricNormals(mQuadObj, (GLenum) GLU_SMOOTH);
   gluSphere(mQuadObj, radius, slices, stacks);
 }
 
@@ -516,8 +516,8 @@ void vjGlDrawManager::drawSphere(float radius, int slices, int stacks)
 void vjGlDrawManager::drawCone(float base, float height, int slices, int stacks)
 {
   initQuadObj();
-  gluQuadricDrawStyle(mQuadObj, GLU_FILL);
-  gluQuadricNormals(mQuadObj, GLU_SMOOTH);
+  gluQuadricDrawStyle(mQuadObj, (GLenum) GLU_FILL);
+  gluQuadricNormals(mQuadObj, (GLenum) GLU_SMOOTH);
   gluCylinder(mQuadObj, base, 0.0, height, slices, stacks);
 }
 
