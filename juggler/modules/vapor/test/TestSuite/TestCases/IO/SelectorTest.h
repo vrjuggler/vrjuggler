@@ -198,7 +198,7 @@ public:
       // Connect randomly to the rendevous ports
       for(int i=0;i<mNumIters;i++)
       {         
-         PRUint16 port_num = mRendevousPort+(random() % mNumRendevousPorts);
+         vpr::Uint16 port_num = mRendevousPort+(random() % mNumRendevousPorts);
          //std::cout << " p: " << port_num << std::flush;
          remote_addr.setAddress("localhost", port_num);
          vpr::SocketStream con_sock;
@@ -358,7 +358,7 @@ public:
       vpr::InetAddr remote_addr;
       vpr::SocketConnector connector;           // Connect to acceptor
       std::vector<vpr::SocketStream> sockets(mNumRendevousPorts);       // Initialize with the number of sockets needed
-      std::vector<PRUint16> port_indicies(mNumRendevousPorts);     // This vector holds a list of valid indices to send data to
+      std::vector<vpr::Uint16> port_indicies(mNumRendevousPorts);     // This vector holds a list of valid indices to send data to
       std::iota(port_indicies.begin(), port_indicies.end(), 0);    // Fill with (0...n)
 
       // WAIT for READY 
