@@ -18,6 +18,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Zm800"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;&quot;$(GMTL_ROOT)\include&quot;;&quot;$(PFROOT)\Include&quot;;&quot;$(PFROOT)\Include\Performer&quot;;..\..\..\modules\vapor;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\..\modules\gadgeteer;..\..\..\modules\vrjuggler;..\..\..\modules\sonix;..;..\..\VPR;..\..\JCCL;..\..\Gadgeteer;..\..\Sonix"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_VRJ_BUILD_"
@@ -37,7 +38,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="vrj_d.lib gadget_d.lib jccl_d.lib vpr_d.lib libnspr4.lib libplc4.lib libpf.lib libpfdu-util.lib libpfui.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj_pf_d.dll"
-				Version="1.1.149"
+				Version="1.1.150"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\DebugDLL;..\..\VPR\DebugDLL;..\..\JCCL\DebugDLL;..\..\Gadgeteer\DebugDLL;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(PFROOT)\Lib\Debug&quot;"
 				GenerateDebugInformation="TRUE"
@@ -68,6 +69,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Zm800"
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
@@ -90,7 +92,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="vrj.lib gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib libpf.lib libpfdu-util.lib libpfui.lib opengl32.lib glu32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj_pf.dll"
-				Version="1.1.149"
+				Version="1.1.150"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\ReleaseDLL;..\..\VPR\ReleaseDLL;..\..\JCCL\ReleaseDLL;..\..\Gadgeteer\ReleaseDLL;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(PFROOT)\Lib&quot;"
 				GenerateDebugInformation="FALSE"
@@ -124,18 +126,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfDrawManager.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="/Zm200"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="/Zm200"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\modules\vrjuggler\vrj\Draw\Pf\PfSimInterfaceFactory.cpp">
