@@ -1099,7 +1099,7 @@ public class TweekFrame
    private void networkConnectAction (ActionEvent e)
    {
       ConnectionDialog dialog = new ConnectionDialog(this, "ORB Connections");
-      dialog.show();
+      dialog.setVisible(true);
 
       if ( dialog.getStatus() == ConnectionDialog.OK_OPTION )
       {
@@ -1122,7 +1122,7 @@ public class TweekFrame
    {
       DisconnectionDialog dialog =
          new DisconnectionDialog(this, "Disconnect from CORBA Service", mORBs);
-      dialog.show();
+      dialog.setVisible(true);
 
       if ( dialog.getStatus() == DisconnectionDialog.DISCONNECT_OPTION )
       {
@@ -1168,7 +1168,7 @@ public class TweekFrame
          PrefsDialog dialog = new PrefsDialog(this, "Global Preferences",
                                               prefs);
          dialog.addGlobalPrefsUpdateListener(this);
-         dialog.show();
+         dialog.setVisible(true);
       }
       catch(Exception ex)
       {
@@ -1181,7 +1181,7 @@ public class TweekFrame
    private void prefsEditBean (ActionEvent e)
    {
       mBeanPrefsDialog.setLocationRelativeTo(this);
-      mBeanPrefsDialog.show();
+      mBeanPrefsDialog.setVisible(true);
    }
 
    private void beansLoadAction(ActionEvent e)
@@ -1215,7 +1215,7 @@ public class TweekFrame
    private void beansStatusAction(ActionEvent e)
    {
       BeanStatusDialog dialog = new BeanStatusDialog(this, "Bean Status");
-      dialog.show();
+      dialog.setVisible(true);
    }  
 
    private void loadBeansFromPath (String path)
@@ -1239,7 +1239,7 @@ public class TweekFrame
    {
       AboutBox dlg = new AboutBox(this);
       dlg.setModal(true);
-      dlg.show();
+      dlg.setVisible(true);
    }
 
    /**
