@@ -39,9 +39,9 @@
 
 namespace vpr {
 
-// ----------------------------------------------------------------------------
-//: Test if reading from this I/O device will block.
-// ----------------------------------------------------------------------------
+/**
+ * Tests if reading from this I/O device will block.
+ */
 bool
 BlockIO::isReadBlocked (const vpr::Interval& timeout) {
     bool is_blocked;
@@ -67,9 +67,9 @@ BlockIO::isReadBlocked (const vpr::Interval& timeout) {
     return is_blocked;
 }
 
-// ----------------------------------------------------------------------------
-//: Test if writing to this I/O device will block.
-// ----------------------------------------------------------------------------
+/**
+ * Tests if writing to this I/O device will block.
+ */
 bool
 BlockIO::isWriteBlocked (const vpr::Interval& timeout) {
     bool is_blocked;
