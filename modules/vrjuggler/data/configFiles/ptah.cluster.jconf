@@ -2,15 +2,16 @@
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
 <configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Base Simulator Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
-      <cluster_manager name="Cluster Configuration" version="1">
-         <plugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libApplicationDataManager.so</plugin>
-         <plugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libRemoteInputManager.so</plugin>
-         <plugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libStartBarrierPlugin.so</plugin>
-         <plugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libSwapLockTCPPlugin.so</plugin>
-         <cluster_nodes>Node(ptah-1)</cluster_nodes>
-         <cluster_nodes>Node(ptah-2)</cluster_nodes>
-         <cluster_nodes>Node(ptah-3)</cluster_nodes>
-         <cluster_nodes>Node(ptah-4)</cluster_nodes>
+      <cluster_manager name="Cluster Configuration" version="2">
+         <plugin_path>${VJ_BASE_DIR}/lib/gadgeteer/plugins/</plugin_path>
+         <plugin>ApplicationDataManager</plugin>
+         <plugin>RemoteInputManager</plugin>
+         <plugin>StartBarrierPlugin</plugin>
+         <plugin>SwapLockTCPPlugin</plugin>
+         <cluster_node>Node(ptah-1)</cluster_node>
+         <cluster_node>Node(ptah-2)</cluster_node>
+         <cluster_node>Node(ptah-3)</cluster_node>
+         <cluster_node>Node(ptah-4)</cluster_node>
          <barrier_master>Node(ptah-1)</barrier_master>
       </cluster_manager>
       <swap_lock_tcp_plugin name="Swap Lock" version="1">
