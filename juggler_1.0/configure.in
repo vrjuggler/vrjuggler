@@ -40,8 +40,12 @@ dnl # -------------------------------------------------------------------------
 AC_REVISION($Revision$)
 AC_INIT(vjConfig.h)
 AC_CONFIG_HEADER(vjDefines.h)
-DPP_PREREQ(1.2)
+DPP_PREREQ(1.3)
 DPP_INIT
+
+dnl # Generate the reconfig script first so that it's easy to run configure
+dnl # again if it fails later on.
+DPP_GEN_RECONFIG
 
 dnl # -------------------------------------------------------------------------
 dnl # Command-line arguments (--enable-option, --with-pkg=package_name).
@@ -311,9 +315,11 @@ _vjsave_CXXFLAGS="$CXXFLAGS"
 dnl # If no alternate C compiler was specified, check to see if it is
 dnl # necessary to force the use of a specific compiler on a given platform.
 if test "x${_alt_cc}" = "xnone" ; then
+    CC_IRIX='cc'
+    CC_PIC_IRIX='-KPIC'
+
     dnl # On IRIX, we have to use cc (not gcc).
     if test "$PLATFORM" = "IRIX" ; then
-        CC='cc'
         CC_ERR='*** The library requires the IRIX MIPSpro C compiler ***'
     fi
 dnl # Otherwise, force the use of the alternate C compiler.
@@ -324,9 +330,12 @@ fi
 dnl # If no alternate C++ compiler was specified, check to see if it is
 dnl # necessary to force the use of a specific compiler on a given platform.
 if test "x${_alt_cxx}" = "xnone" ; then
+    CXX_HP='aCC'
+    CXX_IRIX='CC'
+    CXX_PIC_IRIX='-KPIC'
+
     dnl # On HP-UX, we have to use the aCC C++ compiler.
     if test "$PLATFORM" = "HP" ; then
-        CXX='aCC'
         CXX_ERR='*** The library requires the HP-UX aCC C++ compiler ***'
     dnl # On Windows, we have to use the Microsoft Visual C++ compiler CL.EXE.
     elif test "$OS_TYPE" = "Win32" -a "x$USE_GCC" != "xyes" ; then
@@ -335,7 +344,6 @@ if test "x${_alt_cxx}" = "xnone" ; then
         CXX_ERR='*** The library requires the MS Visual C++ compiler ***'
     dnl # On IRIX, we have to use CC (not g++).
     elif test "x$PLATFORM" = "xIRIX" ; then
-        CXX='CC'
         CXX_ERR='*** The library requires the IRIX MIPSpro C++ compiler ***'
     fi
 dnl # Otherwise, force the use of the alternate C++ compiler.
@@ -348,14 +356,8 @@ DPP_PROG_CXX($CXX, , AC_MSG_ERROR($CXX_ERR))
 
 if test "x$GXX" = "xyes" ; then
     dnl # If we are using GCC as the compiler, we need to be using at least
-    dnl # egcs 1.1.2.  A newer version (e.g., 2.95.2) is even better.  If the
-    dnl # $CXX binary is not egcs 1.1.2 or newer, check for egcc and eg++.  If
-    dnl # it exists, we will assume that it is new enough.
-    DPP_GPLUSPLUS_VER(2.91,
-        AC_CHECK_PROG(CC, egcc, egcc,
-            AC_MSG_ERROR(*** The library requires the egcc C compiler ***))
-        AC_CHECK_PROG(CXX, eg++, eg++,
-            AC_MSG_ERROR(*** The library requires the eg++ C++ compiler ***)))
+    dnl # egcs 1.1.2.  A newer version (e.g., 2.95.2) is even better.
+    DPP_GPLUSPLUS_MODERN(AC_MSG_ERROR(*** VR Juggler requires a modern G++ ***))
 fi
 
 dnl # Now check to see if the compiler accepts the -pthread option.
@@ -1313,19 +1315,6 @@ AC_OUTPUT(Makefile
           release/mtree/VJ.test.dist
           release/mtree/VJ.tools.dist
           VARS.pl)
-
-dnl # Create a script for handy reconfiguration of a build tree.  It removes
-dnl # configure's cache and status files and then runs configure with the
-dnl # same arguments.
-: ${RECONFIG=./reconfig}
-
-echo "creating $RECONFIG"
-rm -f $RECONFIG
-cat > $RECONFIG <<RECONFIG_SCRIPT
-rm -f config.status config.cache config.log
-$0 $ac_configure_args
-RECONFIG_SCRIPT
-chmod 755 $RECONFIG
 
 cat <<BUILD_INFO
 
