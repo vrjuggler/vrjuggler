@@ -205,7 +205,7 @@ double SampleLimitedStatCollector<TYPE, TimeBased>::getMean()
    }
    else
    {
-      mean_result = double(mCurTotal)/double(mSampleBuffer.size());
+      mean_result = double(mCurTotal)/double(mSampleCount);
    }
 
    return mean_result;
