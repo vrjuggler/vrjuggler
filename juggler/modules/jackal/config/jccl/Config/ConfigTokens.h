@@ -72,6 +72,14 @@ namespace jccl
       const std::string DEF_VERSION_ATTR("definition.version");
       const std::string DESC_DB_VERSION_ATTR("desc.db.version");
 
+      /** The XML namespace for configuration file content. */
+      const std::string DEF_NS_str("http://www.vrjuggler.org/jccl/xsd/" +
+                                   DEF_VERSION + "/definition");
+
+      /** The name of the XML Schema file for the definition file format. */
+      const std::string DEF_SCHEMA(DEF_NS_str + ".xsd");
+
+      // XML Format tokens
       // XML Format tokens
       const std::string DEFAULTVALUE("defaultvalue");
       const std::string DEFINITION("definition");
@@ -95,6 +103,13 @@ namespace jccl
       const std::string SETTINGS_INSTRUCTION("org-vrjuggler-jccl-settings");
       const std::string CFG_VERSION_ATTR("configuration.version");
       const std::string CONFIG_DB_VERSION_ATTR("config.db.version");
+
+      /** The XML namespace for configuration file content. */
+      const std::string CFG_NS_str("http://www.vrjuggler.org/jccl/xsd/" +
+                                   CFG_VERSION + "/configuration");
+
+      /** The name of the XML Schema file for the configuration file format. */
+      const std::string CFG_SCHEMA(CFG_NS_str + ".xsd");
 
       // XML Format tokens
       const std::string CONFIGURATION("configuration");

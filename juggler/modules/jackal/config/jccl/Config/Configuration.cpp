@@ -120,7 +120,8 @@ std::ostream& operator<<(std::ostream& out, const Configuration& self)
    // TODO: Find a better way of doing this, the java side seems to be able to
    // do it just fine.
    out << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-   out << "<?org-vrjuggler-jccl-settings configuration.version=\"3.0\"?>";
+   out << "<?" << tokens::SETTINGS_INSTRUCTION << " "
+       << tokens::CFG_VERSION_ATTR << "=\"" << tokens::CFG_VERSION << "\"?>";
    
    self.createConfigurationNode(cfg_node);
    cfg_node->save(out);
@@ -348,10 +349,12 @@ void Configuration::createConfigurationNode(cppdom::NodePtr& cfgNode) const
    {
       cfgNode = ElementFactory::instance()->createXMLNode();
       cfgNode->setName(tokens::CONFIGURATION);
-      cfgNode->setAttribute("xmlns", "http://www.vrjuggler.org/jccl/xsd/3.0/configuration");
+      cfgNode->setAttribute("xmlns", tokens::CFG_NS_str);
       cfgNode->setAttribute("name", "Active Configuration");
-      cfgNode->setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-      cfgNode->setAttribute("xsi:schemaLocation", "http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd");
+      cfgNode->setAttribute("xmlns:xsi",
+                            "http://www.w3.org/2001/XMLSchema-instance");
+      cfgNode->setAttribute("xsi:schemaLocation",
+                            tokens::CFG_NS_str + " " + tokens::CFG_SCHEMA);
 
       cppdom::NodePtr elements_node = ElementFactory::instance()->createXMLNode();
       elements_node->setName(tokens::ELEMENTS);
