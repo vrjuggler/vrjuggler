@@ -1581,7 +1581,7 @@ The filters are applied in the order that they are specified in this configurati
       <item label="Use this viewport?" defaultvalue="1" />
     </PropertyDesc>
     <PropertyDesc token="tracked" name="tracked" type="bool" variable="0">
-      <help>Is this a tracked surface?</help>
+      <help>Is this a tracked surface?  This is only to be used for surfaces that have a tracker and can move (HMD eyes, for example).</help>
       <item label="Is Tracked" defaultvalue="0" />
     </PropertyDesc>
     <PropertyDesc token="trackerproxy" name="trackerproxy" type="chunk" variable="0">
