@@ -52,10 +52,13 @@
 #  include <uuid/sysdep.h>
 #endif
 
+// Too bad there isn't a standard location for uuid.h ...
 #if defined(HAVE_UUID_H)
 #  include <uuid.h>
 #elif defined(HAVE_UUID_UUID_H) || defined(VPR_USE_LEACH_UUID)
 #  include <uuid/uuid.h>
+#elif defined(HAVE_SYS_UUID_H)
+#  include <sys/uuid.h>
 #endif
 
 #include <vpr/Util/GUID.h>
@@ -153,7 +156,9 @@ void GUID::generate(const GUID& ns_guid, const std::string& name)
 // DCE 1.1 UUID.
 #if defined(VPR_USE_DCE_1_1_UUID)
    uint32_t status(0);
-   uuid_from_string(name.c_str(), (uuid_t*) &mGuid.standard, &status);
+   // XXX: This cast to char* is to deal with the IRIX version of this
+   // function being goofy and not taking a const char*.
+   uuid_from_string((char*) name.c_str(), (uuid_t*) &mGuid.standard, &status);
 // Linux e2fsprogs libuuid.
 #elif defined(VPR_USE_LIBUUID)
    vprASSERT(false && "Unimplemented method!");
