@@ -26,6 +26,7 @@ BOOKS		= getting.started.guide	\
                   juggler.overview	\
                   juggler.team.guide	\
                   programmer.guide	\
+                  programmer.reference	\
                   vjcontrol.guide
 
 HTML_BOOKS	= $(addsuffix .html, $(addprefix $(book_srcdir), $(BOOKS)))
