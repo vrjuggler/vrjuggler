@@ -196,9 +196,9 @@ public class HTMLFrame extends JFrame
         
         url = getFileURL (System.getProperty ("user.dir") + "/.vjconfig/" + name);
         if (url == null)
-            url = getFileURL (System.getProperty ("VJ_BASE_DIR") + "/Data/" + name);
+            url = getFileURL (System.getProperty ("VJ_SHARE_DIR") + "/Data/" + name);
         if (url == null)
-            url = getFileURL ("Data/" + name);
+            url = getFileURL ("share/Data/" + name);
         if (url == null)
             url = ClassLoader.getSystemResource ("VjFiles/" + name);
         if (url == null)
@@ -222,7 +222,7 @@ public class HTMLFrame extends JFrame
      *       If the URL contains the string "DescHelp", setURL will
      *       mangle it in an attempt to search the various places that
      *       DescHelp html files are stored (e.g. the VjControl .jar file,
-     *       $VJ_BASE_DIR/Data, and ~/.vjconfig).
+     *       $VJ_SHARE_DIR/Data, and ~/.vjconfig).
      */
     public void setURL (URL url) {
 
@@ -238,7 +238,7 @@ public class HTMLFrame extends JFrame
             String name = url.toString().substring(i);
             url = getFileURL (System.getProperty ("user.dir") + "/.vjconfig/" + name);
             if (url == null)
-                url = getFileURL (System.getProperty ("VJ_BASE_DIR") + "/Data/" + name);
+                url = getFileURL (System.getProperty ("VJ_SHARE_DIR") + "/Data/" + name);
             if (url == null)
                 url = getFileURL ("Data/" + name);
             if (url == null)

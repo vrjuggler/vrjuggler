@@ -48,6 +48,9 @@
 #                 build and install/release process.
 # topdir        - The top of the build tree.
 # VJROOT_ABS    - The absolute path to the root of the VR Juggler source tree.
+# VJ_SHARE_DIR  - The name of the directory where the VR Juggler data files,
+#                 test programs, and sample apps are installed.  This is
+#                 only the name of the directory, not the full path to it.
 #
 # MKDEPS_CC     - Compiler for C dependencies.
 # MKDEPS_CXX    - Compiler for CXX dependencies.
@@ -90,6 +93,7 @@ MKINSTALLDIRS	= $(scriptdir)/mkinstalldirs
 MKPATH		= $(VJROOT_ABS)/BuildSystem/mk
 MTREE_CMD	= @MTREE_CMD@
 VJROOT_ABS	= @SAFE_VJROOT_ABS@
+VJ_SHARE_DIR	= @VJ_SHARE_DIR@
 
 # -----------------------------------------------------------------------------
 # Extra information for the Doozer++ file common.defs.mk.
@@ -124,3 +128,7 @@ AW_LIBRARY	= @LIB_PREFIX@Juggler_aw
 SL_LIBRARY	= @LIB_PREFIX@Juggler_sl
 
 include $(topdir)/common.defs.mk
+
+# XXX: This has to be here because the current common.defs.mk doesn't allow
+# easy extension of $(DEFS).
+DEFS		+= -DVJ_SHARE_DIR=\"$(VJ_SHARE_DIR)\"

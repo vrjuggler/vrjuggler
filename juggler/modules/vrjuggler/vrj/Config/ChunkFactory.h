@@ -117,13 +117,14 @@ protected:
          exit(1);
       }
 
-      char chunk_desc_file[250];
-      strcpy(chunk_desc_file, vj_base_dir);
-      strcat(chunk_desc_file, "/Data/chunksDesc");
+      std::string chunk_desc_file = vj_base_dir;
+      chunk_desc_file += "/";
+      chunk_desc_file += VJ_SHARE_DIR;
+      chunk_desc_file += "/Data/chunksDesc";
       vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << "Loading chunk desc file: ["
                            << chunk_desc_file << "]\n" << vjDEBUG_FLUSH;
 
-      this->loadDescs(std::string(chunk_desc_file));
+      this->loadDescs(chunk_desc_file);
       /*
       vjChunkDescDB* cfg_desc = new vjChunkDescDB;
       if (!cfg_desc->load(chunk_desc_file))

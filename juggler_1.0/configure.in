@@ -1047,10 +1047,30 @@ else
     SAFE_VJROOT_ABS="$VJROOT_ABS"
 fi
 
+dnl # Set up some sed expressions that will help separate the share directory
+dnl # from the full installation prefix.
+_prefix_var_exp='s|^${prefix}/||'
+
+if test "x$prefix" = "xNONE" ; then
+    _prefix_exp="s|^$ac_default_prefix/||"
+else
+    _prefix_exp="s|^$prefix/||"
+fi
+
+dnl # Make a best-effort attempt to extract the actual share directory from
+dnl # the full installation prefix.  This is not foolproof, but it will work
+dnl # in almost all cases.  A person would have to be doing something
+dnl # malicious or foolish to make it break.
+VJ_SHARE_DIR=`echo "$datadir" | sed -e "${_prefix_var_exp}"`
+VJ_SHARE_DIR=`echo "$VJ_SHARE_DIR" | sed -e "${_prefix_exp}"`
+
 DPP_SUBST
+
+AC_SUBST(topdir)
 AC_SUBST(UNIX_VJROOT_ABS)
 AC_SUBST(SAFE_VJROOT_ABS)
 AC_SUBST(VJ_SRCDIR)
+AC_SUBST(VJ_SHARE_DIR)
 
 AC_SUBST(EXTRA_LINK_FLAGS)
 
