@@ -46,32 +46,32 @@ namespace jccl {
 //  config_io handlers.  while this isn't great in terms of modularity, if
 //  we ever actually have more than 2 or 3 config io handlers, this'll be the
 //  least of our problems.
-class VJ_CLASS_API vjXercesXMLParserPool {
+class VJ_CLASS_API XercesXMLParserPool {
 
 public:
 
-    ~vjXercesXMLParserPool ();
+    ~XercesXMLParserPool ();
 
-    vjXercesXMLParser* getParser();
+    XercesXMLParser* getParser();
 
-    void releaseParser (vjXercesXMLParser* parser);
+    void releaseParser (XercesXMLParser* parser);
 
 private:
 
     //: Constructor - private for singleton.
-    vjXercesXMLParserPool ();
+    XercesXMLParserPool ();
 
-    typedef std::vector<vjXercesXMLParser*> parser_v;
+    typedef std::vector<XercesXMLParser*> parser_v;
 
     parser_v free_parsers;
     parser_v used_parsers;
 
     vpr::Mutex pool_lock;
 
-    vjXercesXMLParserPool(const vjXercesXMLParserPool& o) {;}
-    void operator=(const vjXercesXMLParserPool& o) {;}
+    XercesXMLParserPool(const XercesXMLParserPool& o) {;}
+    void operator=(const XercesXMLParserPool& o) {;}
 
-vprSingletonHeader(vjXercesXMLParserPool);
+vprSingletonHeader(XercesXMLParserPool);
 
 };
 

@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <jccl/XMLUtil/vjXercesXMLParser.h
+#include <jccl/XMLUtil/XercesXMLParser.h
 
 #include <util/PlatformUtils.hpp>
 #include <util/XMLString.hpp>
@@ -46,18 +46,18 @@
 //#include <string.h>
 #include <stdlib.h>
 
-#include <jccl/XMLUtil/vjXercesStreamInputSource.h>
-#include <jccl/XMLUtil/vjXercesXMLError.h>
+#include <jccl/XMLUtil/XercesStreamInputSource.h>
+#include <jccl/XMLUtil/XercesXMLError.h>
 #include <vpr/Util/Debug.h>
 
 namespace jccl {
 
-vjXercesXMLParser::vjXercesXMLParser () {
+XercesXMLParser::XercesXMLParser () {
     // Xerces will have been initialized by the parser pool.
     parser = new DOMParser;
     parser->setValidationScheme(DOMParser::Val_Auto);
     parser->setDoNamespaces(false);
-    error_handler = new vjXercesXMLError();
+    error_handler = new XercesXMLError();
     parser->setErrorHandler(error_handler);
     parser->setCreateEntityReferenceNodes(false);
     parser->setToCreateXMLDeclTypeNode(true);
@@ -65,13 +65,13 @@ vjXercesXMLParser::vjXercesXMLParser () {
 }
 
 
-/*virtual*/ vjXercesXMLParser::~vjXercesXMLParser () {
+/*virtual*/ XercesXMLParser::~XercesXMLParser () {
     delete parser;
     delete error_handler;
 }
 
 
-bool vjXercesXMLParser::readFile (const std::string& file_name, DOM_Node& doc) {
+bool XercesXMLParser::readFile (const std::string& file_name, DOM_Node& doc) {
     // we duplicate a lot of code in readFile & readStream just so we can
     // always use the 'best' version of parse - if we give it an actual
     // file name, we get better error messages from the exceptions.
@@ -118,8 +118,8 @@ bool vjXercesXMLParser::readFile (const std::string& file_name, DOM_Node& doc) {
 }
 
 
-bool vjXercesXMLParser::readStream (std::istream& input, DOM_Node& doc) {
-    vjXercesStreamInputSource input_source (input, "</protocol>");
+bool XercesXMLParser::readStream (std::istream& input, DOM_Node& doc) {
+    XercesStreamInputSource input_source (input, "</protocol>");
     bool retval = true;
     try {
         parser->parse(input_source);
@@ -179,7 +179,7 @@ public:
 };
 
 
-bool vjXercesXMLParser::writeFile (const std::string& file_name, DOM_Node& doc) {
+bool XercesXMLParser::writeFile (const std::string& file_name, DOM_Node& doc) {
     std::ofstream out (file_name.c_str());
     if (!out)
         return false;
@@ -188,7 +188,7 @@ bool vjXercesXMLParser::writeFile (const std::string& file_name, DOM_Node& doc) 
 }
 
 
-bool vjXercesXMLParser::writeStream (std::ostream& output, DOM_Node& doc) {
+bool XercesXMLParser::writeStream (std::ostream& output, DOM_Node& doc) {
     output << "<Not_Implemented/>" << endl;
     return false;
 }
