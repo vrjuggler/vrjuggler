@@ -394,7 +394,7 @@ public class DisplayWindowEditorPanel
          // Validate the name chosen by the user to ensure that we do not
          // create conflicting config elements.
          java.util.List all_elts = broker.getElements(mContext);
-         String title = checkElementName(dlg.getDisplayWindowTitle(), all_elts);
+         String title = checkElementName(dlg.getDisplayWindowTitle());
 
          // Create a new config element based on the initial information we
          // have.
@@ -463,24 +463,22 @@ public class DisplayWindowEditorPanel
       mAllWindows.add(new_frame);
    }
 
-   private String checkElementName(String name, java.util.List allElts)
+   private String checkElementName(String name)
    {
-      for ( Iterator i = allElts.iterator(); i.hasNext(); )
+      if ( mContext.containsElementNamed(name) )
       {
-         ConfigElement cur_elt = (ConfigElement) i.next();
+         Frame parent =
+            (Frame) SwingUtilities.getAncestorOfClass(Frame.class, this);
+         String new_name =
+            (String) JOptionPane.showInputDialog(
+               parent,
+               "A config element named '" + name +
+                  "' already exists in this context\nPlease enter a new name:",
+               "Duplicated Element Name",
+               JOptionPane.ERROR_MESSAGE
+            );
 
-         if ( cur_elt.getName().equals(name) )
-         {
-            String new_name =
-               (String) JOptionPane.showInputDialog(this,
-                                                    "A config element named '" +
-                                                    name +
-                                                       "' already exists in this context\n" +
-                                                       "Please enter a new name:",
-                                                    "Duplicated Element Name",
-                                                    JOptionPane.ERROR_MESSAGE);
-            return checkElementName(new_name, allElts);
-         }
+         return checkElementName(new_name);
       }
 
       return name;
