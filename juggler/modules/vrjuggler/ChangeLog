@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+[2.0 Beta 2 released - 1.15.2005]==============================================
+Jan-15-2005 patrickh    NEW VERSION: 1.1.167
 Jan-11-2005 patrickh    Added a VRJConfig custom editor for flock config
                         elements.
 Jan-09-2005 patrickh    Added a VRJConfig custom editor for motion_star config
