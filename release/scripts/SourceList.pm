@@ -100,8 +100,9 @@ sub DESTROY ($) {
 # object with the actual source list.
 # -----------------------------------------------------------------------------
 sub readSources ($$) {
-    my $this = shift;
-    my $dir  = shift;
+    my $this   = shift;
+    my $dir    = shift;
+    my @nosrcs = @_;
 
     my $status;
 
@@ -116,6 +117,19 @@ sub readSources ($$) {
             # Only match C/C++ source files.
             if ( -f "$dir/$file" && $file =~ /(\.(c\+\+|cpp|cxx|cc|c))$/i ) {
                 my $ext = "$1";
+
+                # Compare the current file name against the list of files to
+                # be excluded.
+                my $exclude = 0;
+                foreach ( @nosrcs ) {
+                    if ( "$dir/$file" eq "$_" ) {
+                        $exclude = 1;
+                        last;
+                    }
+                }
+
+                # Skip this file if is to be excluded.
+                next if $exclude;
 
                 # Add this suffix to the main suffix hash.
                 ${$this->{'suffixes'}}{"$ext"} = '';
