@@ -53,7 +53,7 @@ PYSTE_FILES=	vpr.pyste	\
 		gadget.pyste	\
 		vrj.pyste
 
-SRCS=		$(PYSTE_FILES:.pyste=.cpp) PyJuggler.cpp
+SRCS=		$(PYSTE_FILES:.pyste=.cpp)
 OBJS=		$(SRCS:.cpp=.$(OBJEXT))
 MODS=		$(OBJS:.$(OBJEXT)=.$(DLLEXT)) gmtl.$(DLLEXT)
 
