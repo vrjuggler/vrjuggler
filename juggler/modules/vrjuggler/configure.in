@@ -150,6 +150,15 @@ AC_ARG_ENABLE(performance,
                 fi
               ], _enable_perf='SGI')
 
+dnl # Define a macro VJ_ABI_CFG for setting up the configuration parameters
+dnl # for a given ABI.  The usage is:
+dnl #
+dnl #   VJ_ABI_CFG([ ABI [, ISA [, library suffix [, extra compiler flags]]]])
+dnl #
+dnl # All arguments are optional and will default to the empty string if not
+dnl # provided.
+AC_DEFUN(VJ_ABI_CFG, [ ABI=$1 ISA=$2 LIBBITSUF=$3 _EXTRA_FLAGS=$4 ; ])
+
 dnl # Set default values for these before checking ${_abi_type}.  Currently,
 dnl # these are for non-SGI platforms.
 ABI=''
@@ -159,46 +168,25 @@ dnl # Based on the value of $abi_type, set $ABI for later use and the Makefile
 dnl # substitution variables $LIBBITSUF and $ISA.
 case "x${_abi_type}" in
     x64_M3)
-        ABI='64'
-        ISA='mips3'
-        LIBBITSUF='64'
-        _EXTRA_FLAGS='-64 -mips3'
+        VJ_ABI_CFG('64', 'mips3', '64', '-64 -mips3')
         ;;
     x64_M4)
-        ABI='64'
-        ISA='mips4'
-        LIBBITSUF='64'
-        _EXTRA_FLAGS='-64 -mips4'
+        VJ_ABI_CFG('64', 'mips4', '64', '-64 -mips4')
         ;;
     xN32_M3)
-        ABI='N32'
-        ISA='mips3'
-        LIBBITSUF='32'
-        _EXTRA_FLAGS='-n32 -mips3'
+        VJ_ABI_CFG('N32', 'mips3', '32', '-n32 -mips3')
         ;;
     xN32_M4)
-        ABI='N32'
-        ISA='mips4'
-        LIBBITSUF='32'
-        _EXTRA_FLAGS='-n32 -mips4'
+        VJ_ABI_CFG('N32', 'mips4', '32', '-n32 -mips4')
         ;;
     xO32)
-        ABI='O32'
-        ISA='mips2'
-        LIBBITSUF=''
-        _EXTRA_FLAGS='-o32 -mips2'
+        VJ_ABI_CFG('O32', 'mips2', , '-o32 -mips2')
         ;;
     xHP)
-        ABI=''
-        ISA=''
-        LIBBITSUF=''
-        _EXTRA_FLAGS=''
+        VJ_ABI_CFG()
         ;;
     xELF_i386)
-        ABI='ELF'
-        ISA='i386'
-        LIBBITSUF=''
-        _EXTRA_FLAGS=''
+        VJ_ABI_CFG('ELF', 'i386')
         ;;
 esac
 
