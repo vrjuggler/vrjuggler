@@ -99,8 +99,7 @@ public:
              BaseThread::VPRThreadState state = VPR_JOINABLE_THREAD,
              size_t stackSize = 0);
 
-   virtual ~ThreadSGI()
-   {;}
+   virtual ~ThreadSGI();
 
    /**
     * Sets the functor that this thread will execute.

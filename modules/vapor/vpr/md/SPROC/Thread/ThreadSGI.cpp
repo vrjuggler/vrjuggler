@@ -93,6 +93,15 @@ ThreadSGI::ThreadSGI(BaseThreadFunctor* functorPtr,
    start();
 }
 
+ThreadSGI::~ThreadSGI()
+{
+   ThreadManager::instance()->lock();
+   {
+      unregisterThread();
+   }
+   ThreadManager::instance()->unlock();
+}
+
 void ThreadSGI::setFunctor(BaseThreadFunctor* functorPtr)
 {
    vprASSERT(! mRunning && "Thread already running");

@@ -94,6 +94,11 @@ void BaseThread::registerThread(bool succesfulCreation)
    }
 }
 
+void BaseThread::unregisterThread()
+{
+   vpr::Thread* thread_ptr = dynamic_cast<vpr::Thread*>(this);
+   vprASSERT(NULL != thread_ptr);
+   vpr::ThreadManager::instance()->removeThread(thread_ptr);
 }
 
-
+}

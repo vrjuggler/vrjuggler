@@ -141,6 +141,13 @@ ThreadPosix::~ThreadPosix()
    {
       delete mStartFunctor;
    }
+
+   // TELL EVERYONE THAT WE'RE DEAD!!!!
+   ThreadManager::instance()->lock();      // Lock manager
+   {
+      unregisterThread();                  // Finish thread deallocation
+   }
+   ThreadManager::instance()->unlock();
 }
 
 void ThreadPosix::setFunctor(BaseThreadFunctor* functorPtr)

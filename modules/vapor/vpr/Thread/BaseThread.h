@@ -152,6 +152,8 @@ protected:
     */
    void registerThread(bool succesfulCreation);
 
+   void unregisterThread();
+
    /**
     * Creates a new thread that will execute functorPtr.
     *
