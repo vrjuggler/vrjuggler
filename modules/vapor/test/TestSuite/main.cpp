@@ -23,6 +23,8 @@
 
 // Simulator tests.
 #ifdef VPR_SIMULATOR
+#  include <vpr/md/SIM/Controller.h>
+
 #  include <TestCases/Simulator/SimSelectorTest.h>
 #  include <TestCases/Simulator/SocketSimulatorTest.h>
 
