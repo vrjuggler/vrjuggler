@@ -20,6 +20,7 @@
 #include <TestCases/Util/ReturnStatusTest.h>
 #include <TestCases/Util/IntervalTest.h>
 #include <TestCases/Util/GUIDTest.h>
+#include <TestCases/Util/FactoryTest.h>
 
 // Simulator tests.
 #ifdef VPR_SIMULATOR
@@ -127,6 +128,7 @@ int main (int ac, char **av)
    // Common tests (both real and simulator).
    noninteractive_suite->addTest(vprTest::ReturnStatusTest::suite());
    noninteractive_suite->addTest(vprTest::BoostTest::suite());
+   noninteractive_suite->addTest(vprTest::FactoryTest::suite());
    noninteractive_suite->addTest(vprTest::SystemTest::suite());
    noninteractive_suite->addTest(vprTest::IntervalTest::suite());
    noninteractive_suite->addTest(vprTest::GUIDTest::suite());

@@ -1,5 +1,6 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2002-02-24 allenb   Added Factory Pattern template class.
 2002-02-16 patrickh Turned off the zeroing out of serial port attributes when
                     opening a new port except when building on IRIX.  If the
                     attributes are zeroed out on Linux, the port cannot be
