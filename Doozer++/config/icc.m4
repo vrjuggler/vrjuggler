@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          icc.m4,v
-dnl Date modified: 2004/12/02 06:15:00
-dnl Version:       1.3
+dnl Date modified: 2004/12/02 07:08:00
+dnl Version:       1.4
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -59,7 +59,7 @@ dnl     ICPC    - This is set to "yes" if the Intel C++ compiler is the C++
 dnl               compiler being used.
 dnl ===========================================================================
 
-dnl icc.m4,v 1.3 2004/12/02 06:15:00 patrickh Exp
+dnl icc.m4,v 1.4 2004/12/02 07:08:00 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Force the use of the Intel compiler.
@@ -102,12 +102,12 @@ AC_DEFUN([DPP_SETUP_ICC],
    LDFLAGS_DYNAMIC=''
 
    # These are based on the FreeBSD 5.x build system settings.
-   C_WARNS_LEVEL_0='-w'
-   C_WARNS_LEVEL_1='-Wsystem-headers'
-   C_WARNS_LEVEL_2="$C_WARNS_LEVEL_1 -Wall -Wno-format-y2k"
-   C_WARNS_LEVEL_3="$C_WARNS_LEVEL_2 -Wstrict-prototypes -Wmissing-prototypes -Wpointer-arith"
-   C_WARNS_LEVEL_4="$C_WARNS_LEVEL_3 -Wreturn-type -Wcast-qual -Wwrite-strings -Wswitch -Wshadow -Wcast-align"
-   C_WARNS_LEVEL_5="$C_WARNS_LEVEL_4"
+   C_WARNS_LEVEL_0="-w"
+   C_WARNS_LEVEL_1="-Wall -wd180,279,310,383,444,810,981,1418,1469"
+   C_WARNS_LEVEL_2="-Wall -wd180,279,310,383,810,981,1418,1469"
+   C_WARNS_LEVEL_3="-Wall -wd279,310,981,1418,1469"
+   C_WARNS_LEVEL_4="-Wall -wd279,981,1469 -Wcheck"
+   C_WARNS_LEVEL_5="-Wall -Wcheck"
 
    CXX_WARNS_LEVEL_0='-w'
 ])
