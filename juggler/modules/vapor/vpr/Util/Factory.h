@@ -37,10 +37,9 @@ template<
    class AbstractProduct,
    class IdentifierType,
    typename ProductCreator = AbstractProduct* (*)(),
-   template<typename, class>
-      class FactoryErrorPolicy = NullFactoryError
+      class FactoryErrorPolicy = NullFactoryError<IdentifierType, AbstractProduct>
 >
-class Factory : public FactoryErrorPolicy<IdentifierType, AbstractProduct>
+class Factory : public FactoryErrorPolicy
 {
 public:
    bool registerCreator(const IdentifierType& id, ProductCreator creator)
