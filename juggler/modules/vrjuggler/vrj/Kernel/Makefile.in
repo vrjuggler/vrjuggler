@@ -54,11 +54,16 @@ KERNEL_SRCS	:= vjAPI.cpp			\
                    vjKernel.cpp			\
                    vjProjection.cpp		\
 		   vjQueuedConfigChunkHandler.cpp \
-                   vjSGISystemFactory.cpp	\
                    vjStreamLock.cpp		\
                    vjTrackedWallProjection.cpp	\
                    vjUser.cpp			\
                    vjWallProjection.cpp
+
+ifeq (@OS_TYPE@, Win32)
+    KERNEL_SRCS	+= vjWin32SystemFactory.cpp
+else
+    KERNEL_SRCS	+= vjSGISystemFactory.cpp
+endif
 
 KERNEL_OBJECTS	:= ${addprefix ${OBJDIR}/,${KERNEL_SRCS:.cpp=.o}}
 DEPEND_FILES	:= ${KERNEL_SRCS:.cpp=.d}
