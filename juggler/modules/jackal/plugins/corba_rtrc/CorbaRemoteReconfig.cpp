@@ -51,6 +51,7 @@ namespace jccl
 CorbaRemoteReconfig::CorbaRemoteReconfig()
    : mCorbaManager(NULL)
    , mInterface(NULL)
+   , mEnabled(false)
    , mInterfaceName("CorbaRemoteReconfig")
 {
    /* Do nothing. */ ;
@@ -159,6 +160,7 @@ vpr::ReturnStatus CorbaRemoteReconfig::enable()
    {
       //Attempt to register the subject
       mCorbaManager->getSubjectManager()->registerSubject(mInterface, mInterfaceName.c_str());
+      mEnabled = true;
       return vpr::ReturnStatus::Succeed;
    }
    catch (...)
@@ -172,42 +174,49 @@ vpr::ReturnStatus CorbaRemoteReconfig::enable()
 
 bool CorbaRemoteReconfig::isEnabled() const
 {
-   return true;
+   return mEnabled;
 }
 
 void CorbaRemoteReconfig::disable()
 {
    //Make sure the corba manager has been initialized
-   if ((mInterface == NULL) || (mCorbaManager == NULL))
+   if ( mInterface == NULL || mCorbaManager == NULL || ! mEnabled )
    {
       vprDEBUG(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
-         << "CorbaRemoteReconfig::disable: Cannot disable interface until it has been initialized\n"
-         << vprDEBUG_FLUSH;
+         << clrOutBOLD(clrYELLOW, "WARNING:")
+         << " [CorbaRemoteReconfig::disable()]: Cannot disable interface "
+         << "until it has been initialized!\n" << vprDEBUG_FLUSH;
 
       return;
    }
 
-   //Unregister the subject (note that observers must handle this disconnection)
-   vpr::ReturnStatus status;
-
    try
    {
-      //Attempt to register the subject
+      // Unregister the subject (note that observers must handle this
+      // disconnection).
+      vpr::ReturnStatus status;
+
+      // Attempt to un-register the subject.
       status = mCorbaManager->getSubjectManager()->unregisterSubject(mInterfaceName.c_str());
+
+      if ( ! status.success() )
+      {
+         vprDEBUG(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " [CorbaRemoteReconfig::disable()]: Could not unregister subject."
+            << std::endl << vprDEBUG_FLUSH;
+      }
    }
    catch (...)
    {
       vprDEBUG(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
-         << "CorbaRemoteReconfig::disable: Caught an exception while trying to unregister subject\n"
-         << vprDEBUG_FLUSH;
+         << clrOutBOLD(clrYELLOW, "WARNING:")
+         << " [CorbaRemoteReconfig::disable()]: Caught an exception while "
+         << "trying to unregister subject.\n" << vprDEBUG_FLUSH;
    }
 
-   if (!status.success())
-   {
-      vprDEBUG(jcclDBG_PLUGIN, vprDBG_WARNING_LVL)
-         << "CorbaRemoteReconfig::disable: Could not unregister subject\n"
-         << vprDEBUG_FLUSH;
-   }
+   mCorbaManager->shutdown();
+   mEnabled = false;
 }
 
 } // End of jccl namespace

@@ -99,6 +99,7 @@ protected:
 private:
    tweek::CorbaManager* mCorbaManager;
    RemoteReconfigSubjectImpl* mInterface;
+   bool mEnabled;
    std::string mInterfaceName;
 };
 
