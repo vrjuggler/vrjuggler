@@ -46,8 +46,8 @@
 #include <vpr/Util/Assert.h>
 #include <jccl/Config/ParseUtil.h>
 #include <jccl/Config/ConfigElement.h>
-#include <gadget/Filter/Position/PositionFilterFactory.h>
 #include <gadget/Filter/Position/PositionCalibrationFilter.h>
+#include <gadget/Filter/Position/PositionFilterFactory.h>
 
 namespace gadget
 {
@@ -56,7 +56,6 @@ namespace gadget
    
    PositionCalibrationFilter::~PositionCalibrationFilter()
    {
-      delete[] mAlphaVec;
       for (size_t i = 0; i < mTable.size(); ++i)
       {
          delete[] mWMatrix[i];
@@ -119,16 +118,16 @@ namespace gadget
       
       for (itr = offset_list.begin(); itr != offset_list.end(); ++itr)
       {
-         gmtl::Vec3f real_position;
-         gmtl::Vec3f dev_position;
+         gmtl::Vec3d real_position;
+         gmtl::Vec3d dev_position;
          
          if ( (*itr)->hasAttribute("X") && 
               (*itr)->hasAttribute("Y") && 
               (*itr)->hasAttribute("Z") )
          {
-            real_position.set( (*itr)->getAttribute("X").getValue<float>(),
-                               (*itr)->getAttribute("Y").getValue<float>(),
-                               (*itr)->getAttribute("Z").getValue<float>() );
+            real_position.set( (*itr)->getAttribute("X").getValue<double>(),
+                               (*itr)->getAttribute("Y").getValue<double>(),
+                               (*itr)->getAttribute("Z").getValue<double>() );
             std::istringstream offset_stream((*itr)->getCdata());
             //XXX:  Error checking on the Cdata needs to be more robust.
             offset_stream >> dev_position[gmtl::Xelt];
@@ -145,10 +144,45 @@ namespace gadget
          }
          else
          {
-            //XXX:  Make this more informative.
             vprDEBUG(vprDBG_ERROR, vprDBG_CONFIG_LVL)
-               << "[PositionCalibrationFilter::config()] Element doesn't "
-               << "contain a real position attribute; skipping.\n"
+               << "[PositionCalibrationFilter::config()] Malformed Offset "
+               << "Element.  The element does not contain X, Y, and Z "
+               << "attributes that represent a position; skipping.\n"
+               << vprDEBUG_FLUSH;
+         }
+      }
+
+      // Now that we have the offsets, loop through the alpha elements to
+      // obtain the coefficients.
+      mAlphaVec.reserve(mTable.size());
+      cppdom::NodeList alpha_list = root->getChildren("Alpha");
+      if (alpha_list.empty())
+      {
+         vprDEBUG(vprDBG_ERROR, vprDBG_CONFIG_LVL)
+            << "[PositionCalibrationFilter::config()] Bad calibration file "
+            << "'" << mFileName << "'\n" << "This file contains no Alpha "
+            << " elements; these coefficients are necessary for calibration!\n"
+            << vprDEBUG_FLUSH;
+         return false;
+      }
+      for (itr = alpha_list.begin(); itr != alpha_list.end(); ++itr)
+      {
+         if ( (*itr)->hasAttribute("X") && 
+              (*itr)->hasAttribute("Y") && 
+              (*itr)->hasAttribute("Z") )
+         {
+            gmtl::Vec3d alpha_value(
+                  (*itr)->getAttribute("X").getValue<double>(),
+                  (*itr)->getAttribute("Y").getValue<double>(),
+                  (*itr)->getAttribute("Z").getValue<double>() );
+            mAlphaVec.push_back(alpha_value);
+         }
+         else
+         {
+            vprDEBUG(vprDBG_ERROR, vprDBG_CONFIG_LVL)
+               << "[PositionCalibrationFilter::config()] "
+               << "Malformed Alpha Element; this element does not contain "
+               << "X="", Y="", Z="" attributes.\n"
                << vprDEBUG_FLUSH;
          }
       }
@@ -178,14 +212,12 @@ namespace gadget
          << mTable.size() << "x" << mTable.size() << ".\n" 
          << vprDEBUG_FLUSH;
       
-      float r_squared(100.0f);
-      float r(10.0f);
-      mWMatrix = new float*[mTable.size()];
-      float** w_matrix_copy = new float*[mTable.size()];
+      double r_squared(100.0f);
+      double r(10.0f);
+      mWMatrix = new double*[mTable.size()];
       for (unsigned int i = 0; i < mTable.size(); ++i)
       {
-         mWMatrix[i] = new float[mTable.size()];
-         w_matrix_copy[i] = new float[mTable.size()];
+         mWMatrix[i] = new double[mTable.size()];
          for (unsigned int j = 0; j < mTable.size(); ++j)
          {
             if (i == j)
@@ -199,103 +231,19 @@ namespace gadget
                //      template meta-programming for vectors; unfortunately, 
                //      gmtl::length(v1 - v2) will not compile since the types 
                //      are NOT gmtl::Vec.
-               gmtl::Vec3f difference = mTable[i].second - mTable[j].second;
-               float length = gmtl::length( difference );
+               gmtl::Vec3d difference = mTable[i].second - mTable[j].second;
+               double length = gmtl::length( difference );
                mWMatrix[i][j] = gmtl::Math::sqrt( 
                                 length * length + 
                                 r_squared );
             }
-            w_matrix_copy[i][j] = mWMatrix[i][j];
             vprDEBUG(vprDBG_ALL, vprDBG_HEX_LVL)
-               << "[PositionCalibrationFilter::config()] Assigning " << mWMatrix[i][j]
+               << "[PositionCalibrationFilter::config()] Assigning " 
+               << mWMatrix[i][j]
                << " to mWMatrix( " << i << ", " << j << ").\n"
                << vprDEBUG_FLUSH;
          }
       }
-
-      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
-         << "[PositionCalibrationFilter::config()] Finished preparing the W matrix.\n"
-         << "[PositionCalibrationFilter::config()] Solving for the alpha vector...\n"
-         << vprDEBUG_FLUSH;
-
-      // Our LU Decomposition handles one direction at a time.
-      float* alpha_x = new float[mTable.size()];
-      float* alpha_y = new float[mTable.size()];
-      float* alpha_z = new float[mTable.size()];
-
-      int* permutation = new int[mTable.size()];
-      
-      for (size_t i = 0; i < mTable.size(); ++i)
-      {
-         alpha_x[i] = mTable[i].first[0];
-         alpha_y[i] = mTable[i].first[1];
-         alpha_z[i] = mTable[i].first[2];
-         permutation[i] = 0;
-      }
-      
-      // Solve for each component of the alpha vector.
-      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
-         << "[PositionCalibrationFilter::config()] Performing LU Decomposition on "
-         << "the W Matrix...\n"
-         << vprDEBUG_FLUSH;
-      luDecomposition(mWMatrix, mTable.size(), permutation);
-      
-      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
-         << "[PositionCalibrationFilter::config()] Solving for Alpha X...\n"
-         << vprDEBUG_FLUSH;
-      luBacksubstitution(mWMatrix, mTable.size(), permutation, alpha_x);
-      
-      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
-         << "[PositionCalibrationFilter::config()] Solving for Alpha Y...\n"
-         << vprDEBUG_FLUSH;
-      luBacksubstitution(mWMatrix, mTable.size(), permutation, alpha_y);
-      
-      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
-         << "[PositionCalibrationFilter::config()] Solving for Alpha Z...\n"
-         << vprDEBUG_FLUSH;
-      luBacksubstitution(mWMatrix, mTable.size(), permutation, alpha_z);
-      
-      // Copy the alpha vector into mAlphaVec.
-
-      mAlphaVec = new gmtl::Vec3f[mTable.size()];
-      for (size_t i = 0; i < mTable.size(); ++i)
-      {
-         mAlphaVec[i][0] = alpha_x[i];
-         mAlphaVec[i][1] = alpha_y[i];
-         mAlphaVec[i][2] = alpha_z[i];
-         vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL)
-            << "[PositionCalibrationFilter::config()] AlphaVec[" << i << "] "
-            << ": " << mAlphaVec[i] << ".\n"
-            << vprDEBUG_FLUSH;
-      }
-
-      for (size_t i = 0; i < mTable.size(); ++i)
-      {
-         float x_dot_product = 0.0f;
-         float y_dot_product = 0.0f;
-         float z_dot_product = 0.0f;
-         for (size_t j = 0; j < mTable.size(); ++j)
-         {
-            x_dot_product += w_matrix_copy[i][j] * mAlphaVec[i][0];
-            y_dot_product += w_matrix_copy[i][j] * mAlphaVec[i][1];
-            z_dot_product += w_matrix_copy[i][j] * mAlphaVec[i][2];
-         }
-         gmtl::Vec3f solution(x_dot_product, y_dot_product, z_dot_product);
-         vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL)
-            << "[PositionCalibrationFilter::config() Solution is "
-            << solution << " and the answer should be "
-            << mAlphaVec[i] << ".\n" << vprDEBUG_FLUSH;
-      }
-      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
-         << "[PositionCalibrationFilter::config()] Alpha Vector found.\n"
-         << vprDEBUG_FLUSH;
-      
-      // Clean up memory
-
-      delete[] permutation;
-      delete[] alpha_x;
-      delete[] alpha_y;
-      delete[] alpha_z;
 
       return true;  
    }
@@ -332,7 +280,7 @@ namespace gadget
             << "[PositionCalibrationFIlter::apply()] Received tracked "
             << "position\n" << translation << "\n"
             << vprDEBUG_FLUSH;
-         gmtl::Vec3f tracked_pos( translation[0][3], 
+         gmtl::Vec3d tracked_pos( translation[0][3], 
                                   translation[1][3], 
                                   translation[2][3] );
 
@@ -341,8 +289,8 @@ namespace gadget
          // w[N](tracked_pos)
          // where w[j](p) = sqrt( length( p - p[j] )^2 + R^2 )
          // where 10 <= R^2 <= 1000.
-         gmtl::Vec3f real_pos(0.0f, 0.0f, 0.0f);
-         float r_squared = 100.0f;
+         gmtl::Vec3d real_pos(0.0f, 0.0f, 0.0f);
+         double r_squared = 100.0f;
          vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL)
             << "[PositionCalibrationFilter::apply()] Summing real position...\n"
             << vprDEBUG_FLUSH;
@@ -352,8 +300,8 @@ namespace gadget
             //      template meta-programming for vectors; unfortunately, 
             //      gmtl::length(v1 - v2) will not compile since the types are 
             //      NOT gmtl::Vec.
-            gmtl::Vec3f difference = tracked_pos - mTable[i].second;
-            float length = gmtl::length(difference);
+            gmtl::Vec3d difference = tracked_pos - mTable[i].second;
+            double length = gmtl::length(difference);
             real_pos += mAlphaVec[i] * 
                        gmtl::Math::sqrt( length * length + r_squared ); 
             vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL)
@@ -365,9 +313,9 @@ namespace gadget
          // Now we clobber the old transformation and replace it with a 
          // translation to our real position.
          gmtl::Matrix44f new_translation;
-         new_translation[0][3] = real_pos[0];
-         new_translation[1][3] = real_pos[1];
-         new_translation[2][3] = real_pos[2];
+         new_translation[0][3] = static_cast<float>(real_pos[0]);
+         new_translation[1][3] = static_cast<float>(real_pos[1]);
+         new_translation[2][3] = static_cast<float>(real_pos[2]);
          
          vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
             << "[PositionCalibrationFilter::apply()] Replaced " 
@@ -382,135 +330,5 @@ namespace gadget
          // Rebuild the position sample (transformation matrix).
          itr->setPosition(rotation * new_translation);
       }
-   }
-     
-   void 
-   PositionCalibrationFilter::luBacksubstitution(float** decomposedA, 
-                                                 int size, 
-                                                 int* permutation, 
-                                                 float* solution)
-   {
-      int ii(0);
-      int ip(0);
-      float sum(0.0f);
-
-      for (int i = 0; i < size; ++i) 
-      {
-         ip = permutation[i];
-         sum = solution[ip];
-         solution[ip] = solution[i];
-         if (ii != 0)
-         {
-            for (int j = ii - 1; j < i; ++j)
-            { 
-               sum -= decomposedA[i][j] * solution[j];
-            }
-         }
-         else if (sum != 0.0)
-         {
-            ii = i + 1;
-         }
-         solution[i] = sum;
-      }
-      for (int i = size - 1; i >= 0; --i)
-      {
-         sum = solution[i];
-         for (int j = i + 1; j < size; ++j)
-         {
-            sum -= decomposedA[i][j] * solution[j];
-         }
-         solution[i] = sum / decomposedA[i][i];
-      }
-   }
-   
-   void 
-   PositionCalibrationFilter::luDecomposition(float** matrix, int size, 
-                                              int* permutation) 
-   {
-      const float TINY(0.0f);
-      int imax(0);
-      int i(0);
-      int j(0);
-      int k(0);
-      
-      float big(0.0f);
-      float dum(0.0f);
-      float sum(0.0f);
-      float temp(0.0f);
-
-      float* vv = new float[size];
-      
-      for (i = 0; i < size; ++i)
-      {
-         big = 0.0;
-         for (j = 0; j < size; ++j)
-         {
-            temp = gmtl::Math::abs(matrix[i][j]);
-            if (temp > big)
-            {
-               big = temp;
-            }
-         }
-         if (0.0 == big)
-         {
-            vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
-               << "[PositionCalibrationFilter::luDecomposition()] Singular "
-               << "matrix given.\n"
-               << vprDEBUG_FLUSH;
-         }
-         vv[i] = 1.0 / big;
-      }
-      for (j = 0; j < size; ++j)
-      {
-         for (i = 0; i < j; ++i)
-         {
-            sum = matrix[i][j];
-            for (k = 0; k < i; ++k)
-            {
-               sum -= matrix[i][k] * matrix[k][j];
-            }
-            matrix[i][j] = sum;
-         }
-         big = 0.0;
-         for (i = j; i < size; ++i)
-         {
-            sum = matrix[i][j];
-            for (k = 0; k < j; ++k)
-            {
-               sum -= matrix[i][k] * matrix[k][j];
-            }
-            matrix[i][j] = sum;
-            dum = vv[i] * gmtl::Math::abs(sum);
-            if (dum >= big)
-            {
-               big = dum;
-               imax = i;
-            }
-         }
-         if (j != imax)
-         {
-            for (k = 0; k < size; ++k)
-            {
-               dum = matrix[imax][k];
-               matrix[imax][k] = matrix[j][k];
-               matrix[j][k] = dum;
-            }
-            vv[imax] = vv[j];
-         }
-         permutation[j] = imax;
-         if (0.0 == matrix[j][j])
-         {
-            matrix[j][j] = TINY;
-         }
-         if (j != size - 1)
-         {
-            dum = 1.0 / (matrix[j][j]);
-            for (i = j + 1; i < size; ++i)
-            {
-               matrix[i][j] *= dum;
-            }
-         }
-      }
-      delete[] vv;
    }
 }
