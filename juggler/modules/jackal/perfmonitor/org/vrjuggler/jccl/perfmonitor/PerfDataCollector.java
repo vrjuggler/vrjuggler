@@ -73,11 +73,7 @@ public interface PerfDataCollector {
 
     public void refreshMaxValues ();
 
-    public double getMaxValue ();
-
-//     public double getMaxValueForPhase (int phase);
-
-//     public double getAverageForPhase (int _phase);
+//      public double getMaxValue ();
 
     public String dumpData();
 
