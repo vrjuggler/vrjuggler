@@ -1,0 +1,113 @@
+                   VR Juggler Portable Runtime Release Notes
+                   -----------------------------------------
+
+For all versions:
+
+    - See the ChangeLog for more system-level changes that do not directly
+      affect applications.
+
+===============================================================================
+
+ Version: 1.0.0
+Released: <month> <day>, 2001
+
+ Version: 0.3.0
+Released: July <day>, 2001
+
+ Version: 0.2.5
+Released: July 20, 2001
+
+    New features:
+        * Non-blocking socket connections can now time out.  If the
+          connection does not complete within the given interval, the
+          connection times out, and the caller must check again later to
+          determine if the connection has completed.
+
+ Version: 0.2.4
+Released: July 17, 2001
+
+    Required changes when upgrading from 0.2.x:
+        * The out parameter to the read and write methods used to return the
+          number of bytes read or written has changed types from ssize_t
+          to vpr::Uint32.  -1 is no longer returned through this parameter
+          to indicate error.  The method return value is sufficient to do
+          this.
+
+ Version: 0.2.3
+Released: July 16, 2001
+
+    The Win32 DLL works again.  It had been broken for use with datagram
+    sockets.
+
+    New features:
+        * The definition of cross-platform types such as vpr::Socket and
+          vpr::Thread have been moved into a single file called
+          vpr/vprDomain.h.  Files such as vpr/Thread/Thread.h are now much
+          simpler and now include only the appropriate platform-specific
+          file(s).
+
+ Version: 0.2.2
+Released: July 13, 2001
+
+    Improved stability.
+
+    Required changes when upgrading from 0.2.1:
+        * Test for vpr::Status::WouldBlock instead of vpr::Status::InProgress
+          when using potentially blocking calls with non-blocking I/O
+          devices.
+
+    New features:
+        * When using a non-blocking I/O device, all methods (except for
+          vpr::Status;:connect()) return vpr::Status::WouldBlock if they
+          would have blocked.
+
+ Version: 0.2.1
+Released: July 11, 2001
+
+    New features:
+        The internal I/O implementation classes no longer inherit from
+        vpr::BlockIO.  This dramatically reduces the use of virutal functions
+        and should improve performance in general.
+
+ Version: 0.2.0
+Released: July 2, 2001
+
+    Identical to 0.1.0 but available from HEAD branch.
+
+ Version: 0.1.0
+Released: July 2, 2001
+
+    First stable version--interal release only.  The API has been stabilized
+    on RELENG_0_1 branch.  Only bug fixes are allowed in subsequent 0.1.x
+    releases.
+
+ Version: 0.0.3
+Released: June 24, 2001
+
+    Required changes when upgrading from 0.0.2:
+        * All header files must be included as <vpr/path/to/file.h>.  In
+          most cases, adding "vpr/" is sufficient.
+        * The following directories have been renamed:
+              o Threads --> Thread
+              o Utils   --> Util
+        * The following header files have been renamed:
+              o Sync/Cond.h --> Sync/CondVar.h
+
+    New features:
+        * All I/O methods that can block now take a vpr::Interval argument
+          giving the maximum time allowed for the action to complete.  All
+          such arguments default to vpr::Interval::NoWait so that the API
+          is not broken with respect to previous versions.
+
+ Version: 0.0.2
+Released: June 18, 2001
+
+    Last version before total directory restructuring.
+
+ Version: 0.0.1
+Released: April 16, 2001
+
+    Initial version.  This is the standalone version of VPR taken from the
+    VR Juggler source tree.
+
+===============================================================================
