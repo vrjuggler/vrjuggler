@@ -176,6 +176,7 @@ inline vpr::ReturnStatus BufferObjectWriter::writeDouble(double val)
 
 inline vpr::ReturnStatus BufferObjectWriter::writeString(std::string val)
 {
+   writeUint16(val.size());
    for(unsigned i=0; i<val.length();++i)
    {
       writeRaw((vpr::Uint8*)&(val[i]),1);
