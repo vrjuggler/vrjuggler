@@ -18,13 +18,13 @@ void vjDisplay::config(vjConfigChunk* chunk)
 {
    vjASSERT(chunk != NULL);
 
-   // -- Get config info from chunk -- // 
+   // -- Get config info from chunk -- //
    char* proj  = chunk->getProperty("projectiontype");
     int originX = chunk->getProperty("origin", 0);
     int originY = chunk->getProperty("origin", 1);
     int sizeX   = chunk->getProperty("size", 0);
     int sizeY   = chunk->getProperty("size", 1);
-    char* name  = chunk->getProperty("name"); 
+    char* name  = chunk->getProperty("name");
     mBorder     = chunk->getProperty("border");
     int pipe    = chunk->getProperty("pipe");
     mStereo  = chunk->getProperty("stereo");
@@ -42,7 +42,7 @@ void vjDisplay::config(vjConfigChunk* chunk)
 
       // -- Set local window attributes --- //
     setOriginAndSize(originX, originY, sizeX, sizeY);
-    
+
       // Set type
     if(sim)
     {
@@ -56,7 +56,18 @@ void vjDisplay::config(vjConfigChunk* chunk)
     {
       mType = PROJ;
     }
-    
+
+    // Setup head interface
+    char* head_str = NULL;
+    head_str  = chunk->getProperty("headPos");
+    mHeadInterface.init(head_str);
+
+    if(mHeadInterface.getProxyIndex() == -1)
+    {
+      cerr << "Fatal Error: Head not found: " << head_str << endl;
+      exit(1);
+    }
+
     // XXX HACK: This should not be here
     //**// if(proj != 'User')
     leftProj = new vjWallProjection;
@@ -75,19 +86,36 @@ void vjDisplay::config(vjConfigChunk* chunk)
     displayChunk = chunk;        // Save the chunk for later use
 }
 
-void vjDisplay::updateProjections(vjMatrix& leftEyePos, vjMatrix& rightEyePos)
+void vjDisplay::updateProjections()
 {
-    if(mType == PROJ)
-    {
-      leftProj->calcViewMatrix(leftEyePos);
-      rightProj->calcViewMatrix(rightEyePos);
-    }
-    else
-    {
-       mSim->update();
-       vjMatrix camera_pos = mSim->getCameraPos();
-       cameraProj->calcViewMatrix(camera_pos);
-    }
+   vjMatrix left_eye_pos, right_eye_pos;     // NOTE: Eye coord system is -z forward, x-right, y-up
+
+   // -- Calculate Eye Positions -- //
+   vjMatrix cur_head_pos = *(mHeadInterface->GetData());
+   vjCoord  head_coord(cur_head_pos);       // Create a user readable version
+
+   vjDEBUG(2) << "vjDisplay::updateProjections: Getting head position" << endl << vjDEBUG_FLUSH;
+   vjDEBUG(1) << "\tHeadPos:" << head_coord.pos << "\tHeadOr:" << head_coord.orient << endl << vjDEBUG_FLUSH;
+
+   // Compute location of left and right eyes
+   float interocularDist = 2.75/12.0f;
+   float eye_offset = interocularDist/2.0f;      // Distance to move eye
+
+   left_eye_pos.postTrans(cur_head_pos, -eye_offset, 0, 0);
+   right_eye_pos.postTrans(cur_head_pos, eye_offset, 0, 0);
+
+
+   if (mType == PROJ)
+   {
+      leftProj->calcViewMatrix(left_eye_pos);
+      rightProj->calcViewMatrix(right_eye_pos);
+   }
+   else
+   {
+      mSim->update();
+      vjMatrix camera_pos = mSim->getCameraPos();
+      cameraProj->calcViewMatrix(camera_pos);
+   }
 }
 	
     // ---- FRIEND FUNCTIONS ---- //
@@ -99,6 +127,6 @@ ostream& operator<<(ostream& out,  vjDisplay& disp)
     out << "\t  Pipe:" << disp.mPipe << endl;
     out << "\t  Stereo:" << disp.mStereo << endl;
     out << "---------------------------------------\n";
-    
-    return out;	   
+
+    return out;	
 }
