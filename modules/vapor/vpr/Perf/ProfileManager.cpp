@@ -47,12 +47,11 @@ namespace vpr
 {
 
 // Initialize statics
-ProfileNode    ProfileManager::mRoot( "Root", NULL );
+ProfileNode    ProfileManager::mRoot("Root");
 ProfileNode*   ProfileManager::mCurrentNode = &ProfileManager::mRoot;
 int            ProfileManager::mFrameCounter = 0;
-vpr::Interval* ProfileManager::mResetTime = 0;
 vpr::Mutex     ProfileManager::mTreeLock;
-
+vpr::Interval  ProfileManager::mResetTime;
 
 
    void  ProfileManager::startProfile( const char * name )
@@ -64,7 +63,7 @@ vpr::Mutex     ProfileManager::mTreeLock;
       }
       mTreeLock.release();
 
-      mCurrentNode->call();
+      mCurrentNode->startSample();
    }
 
    void  ProfileManager::startProfile( const char * profileName , const unsigned int queueSize)
@@ -76,7 +75,7 @@ vpr::Mutex     ProfileManager::mTreeLock;
       }
       mTreeLock.release();
 
-      mCurrentNode->call();
+      mCurrentNode->startSample();
    }
 
    void  ProfileManager::stopProfile( void )
@@ -84,7 +83,7 @@ vpr::Mutex     ProfileManager::mTreeLock;
       mTreeLock.acquire();
       // Return will indicate whether we should back up to our parent (we may
       // be profiling a recursive function)
-      if ( mCurrentNode->Return() )
+      if ( mCurrentNode->stopSample() )
       {
          mCurrentNode = mCurrentNode->getParent();
       }
@@ -96,7 +95,7 @@ vpr::Mutex     ProfileManager::mTreeLock;
       mTreeLock.acquire();
       mRoot.reset();
       mFrameCounter = 0;
-      profileGetTicks(mResetTime);
+      mResetTime.setNow();
       mTreeLock.release();
    }
 
@@ -108,8 +107,8 @@ vpr::Mutex     ProfileManager::mTreeLock;
    float ProfileManager::getTimeSinceReset( void )
    {
       vpr::Interval time;
-      profileGetTicks(&time);
-      time = time - *mResetTime;
+      time.setNow();
+      time = time - mResetTime;
       return(float)time.secf();
    }
 

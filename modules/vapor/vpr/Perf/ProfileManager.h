@@ -44,7 +44,7 @@
 #define VPR_PROFILE_MANAGER_H
 
 /**
- * Primarily based on
+ * Originally based on
  * Real-Time Hierarchical Profiling for Game Programming Gems 3
  * by Greg Hjelstrom & Byon Garrabrant
  */
@@ -53,6 +53,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 #include <vpr/Sync/Guard.h>
 #include <vpr/Sync/Mutex.h>
@@ -63,55 +64,58 @@
 namespace vpr
 {
 
-/*
- * The Manager for the Profile system
- */
+   /***
+   * Global static facade for using the Profiling code.
+   *
+   *
+   */
    class VPR_CLASS_API ProfileManager
    {
    public:
 
       ///Convenience typedef; for use by the Performance Monitor Plugin
       typedef std::map<std::string, vpr::Interval> ProfileSampleResult;
-      
+
       /**
-      * Steps one level deeper into the tree, if a child already exists with 
-      * the specified name
-      * then it accumulates the profiling; otherwise a new child node is added to the profile tree.
-      * INPUT: name - name of this profiling record
-      * WARNINGS:
-      * The string used is assumed to be a static string; pointer compares are used throughout
-      * the profiling code for efficiency.
+      * Steps one level deeper into the tree, if a child already exists with
+      * the specified name then it accumulates the profiling;
+      * otherwise a new child node is added to the profile tree.
+      *
+      * @param name - name of this profiling record
+      * @note
+      *   The string used is assumed to be a static string; pointer compares are used throughout
+      *   the profiling code for efficiency.
       */
-      static   void                 startProfile( const char * name );
+      static void startProfile( const char * name );
 
       /** Starts profile for given name.
-       * Same as above but passes a queue size to the child node.
+       * Same as above but creates the ProfileNode with the given queue size.
        */
-      static   void                 startProfile( const char * profileName, const unsigned int queueSize);
+      static void startProfile( const char * profileName, const unsigned int queueSize);
 
       /**
        * Stop timing on most resent startProfile and record the results.
        */
-      static   void                 stopProfile();
+      static void stopProfile();
 
       /**
-       * Reset the contents of the profiling system
+       * Reset the contents of the profiling system.
        *
        * @post Everything is reset except tree structure. Timing data is reset.
        */
-      static   void                 reset();
+      static void reset();
 
       /**
-       * Increment the frame counter
+       * Increment the frame counter.
        *
        * @post Frame counter incremented by one.
        */
-      static   void                 incrementFrameCounter();
+      static void incrementFrameCounter();
 
-      /**
-       * @return Returns the number of frames since reset
+      /** Get the number of frames since reset.
+       * @return Returns the number of frames since reset.
        */
-      static   int                  getFrameCountSinceReset()
+      static int getFrameCountSinceReset()
       {
          return mFrameCounter;
       }
@@ -119,12 +123,12 @@ namespace vpr
       /**
        * @return Returns the elapsed time since last reset
        */
-      static   float                getTimeSinceReset();
+      static float getTimeSinceReset();
 
       /**
        * @return Returns a new Iterator that is set to the root.
        */
-      static   ProfileIterator     begin()
+      static ProfileIterator begin()
       {
          return ProfileIterator(&mRoot);
       }
@@ -132,16 +136,15 @@ namespace vpr
       /**
        * @return Returns a new Iterator that is set to NULL.
        */
-      static   ProfileIterator     end()
+      static ProfileIterator end()
       {
          return ProfileIterator(NULL);
       }
 
-
       /**
        * @return Returns the Root Node.
        */
-      static   ProfileNode*         getRootNode()
+      static ProfileNode* getRootNode()
       {
          return &mRoot;
       }
@@ -149,29 +152,26 @@ namespace vpr
       /**
        * @return Profile Tree has been printed out using vpr::DBG.
        */
-      static   void                 printTree()
+      static void printTree()
       {
          mTreeLock.acquire();
-         if ( mRoot.getChild() != NULL )
-         {
-            mRoot.printTree(mRoot.getChild());
-         }
+         mRoot.printTree();
          mTreeLock.release();
       }
 
-      /**
-       * @return Returns a new vector of the names in the Profile.
+      /** Get vector of names in the profile.
+       * @return vector of the names in the Profile.
        */
       static std::vector<std::string> getNames()
       {
-            mTreeLock.acquire();
-              std::vector<std::string> names_list;
-              getNamesRecursively(names_list, &mRoot);
-            mTreeLock.release();
-            return names_list;
+         mTreeLock.acquire();
+           std::vector<std::string> names_list;
+           getNamesRecursively(names_list, &mRoot);
+         mTreeLock.release();
+         return names_list;
       }
 
-      
+
       /**
        * @return Returns a ProfileSampleResult that has the names in the profile
        *         and their last sample.
@@ -186,43 +186,41 @@ namespace vpr
       }
 
       /**
-       * @return Returns the last sample from the specified nodeName.
+       * @return Returns the last sample from the node with the given name (by string).
        */
        static float getNamedNodeSample( const char * nodeName )
        {
            mTreeLock.acquire();
-           ProfileNode* node = mRoot.getNamedNode( nodeName );
+           ProfileNode* node = mRoot.getNamedChild( nodeName );
 
            if(node == NULL )
-            {
-               mTreeLock.release();
-               return 0.0;
-            }
-
-           ProfileNode::NodeHistoryRange p = node->getNodeHistoryRange();
-           mTreeLock.release();
-           return p.first->msecf();
+           {
+              mTreeLock.release();
+              return 0.0;
+           }
+           else
+           {
+              return node->getLastSample().msecf();
+           }
        }
 
       /**
        * @post Iterator has been deleted
        */
-      static  void  releaseIterator( ProfileIterator* iterator )
+      static void releaseIterator( ProfileIterator* iterator )
       {
          delete iterator;
       }
-
-
 
    private:
       static   vpr::Mutex           mTreeLock;
       static   ProfileNode          mRoot;
       static   ProfileNode*         mCurrentNode;
       static   int                  mFrameCounter;
-      static   vpr::Interval*       mResetTime;
+      static   vpr::Interval        mResetTime;
 
       /** Private Member Functions */
-      static void getNamesRecursively( std::vector<std::string>& nameList, 
+      static void getNamesRecursively( std::vector<std::string>& nameList,
                                        ProfileNode* node )
       {
          if ( NULL == node )
@@ -250,8 +248,13 @@ namespace vpr
 
 
 /*
- * ProfileSampleClass is a simple way to profile a function's scope
- * Use the PROFILE macro at the start of scope to time
+ * ProfileSample is a guard style class for handle a single sample.
+ *
+ * This class implements a guard pattern where by the creation of a
+ * ProfileSample object starts a sample and the destruction stops the sampling.
+ *
+ * In most cases this class should not be used directly but instead the
+ * PROFILE_ macro's should be used.
  */
    class ProfileSample
    {
@@ -272,6 +275,10 @@ namespace vpr
       }
    };
 
+
+// XXX: We really need some macros that do not require scoping.
+/// VPR_PROFILE_NEXT or something like that would be nice.
+//
 #if defined(DISABLE_VPR_PROFILE)
 #define  VPR_PROFILE( name )
 #else
