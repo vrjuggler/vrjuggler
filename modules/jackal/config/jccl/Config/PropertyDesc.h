@@ -62,14 +62,16 @@ public:
    /** Copy Constructor */
    PropertyDesc (const PropertyDesc& d);
 
-   //: Convenience constructor
-   //!POST: name = token = n, help = h, num = i, type = t,
-   //+      valuelabels & enumerations are empty.
+   /**
+    * Convenience constructor.
+    * @post name = token = n, help = h, num = i, type = t,
+    *       valuelabels & enumerations are empty.
+    */
    /*
    PropertyDesc (const std::string& n, int i, VarType t, const std::string& h);
    */
 
-   //: Destroys a PropertyDesc, and frees all allocated memory.
+   /** Destroys a PropertyDesc, and frees all allocated memory. */
    ~PropertyDesc ();
 
 #ifdef JCCL_DEBUG
@@ -81,7 +83,7 @@ public:
    }
 #endif
 
-   //: returns the token string for
+   /** Returns the token string for the described property. */
    inline const std::string getToken () const
    {
       return mNode->getAttribute(jccl::token_TOKEN).getValue<std::string>();
@@ -121,7 +123,6 @@ public:
       return mNode->getAttribute(jccl::num_TOKEN).getValue<int>();
    }
 
-   // -1 for variable
    inline void setNumAllowed (int num)
    {
       mNode->setAttribute(jccl::num_TOKEN, num );
@@ -150,18 +151,18 @@ public:
    */
    friend std::ostream& operator << (std::ostream& out, const PropertyDesc& self);
 
-   //: Equality Operator
+   /** Equality operator. */
    // BUG (IPTHACK) - doesn't check equality of enumerations and valuelabels
    bool operator== (const PropertyDesc& pd) const;
 
-   //: Inequality Operator
+   /** Inequality operator. */
    inline bool operator!= (const PropertyDesc& pd) const
    {
       return !(*this == pd);
    }
 
-   /** Get the xml node pointer.
-   * Users should not use this directly
+   /** Get the XML node pointer.
+   * Users should not use this directly.
    */
    cppdom::XMLNodePtr getNode()
    {
