@@ -1,5 +1,9 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Oct-23-2001 cjust     Made JackalServer a singleton, allow JackalControls
+	              to access its list of connections (e.g. for 
+	              broadcasting messages).
+Oct-21-2001 cjust     Fixed registration of JackalControls.
 Oct-12-2001 cjust     Updated to Allen's improved vprDebug registration
 	              code.
 Oct-09-2001 cjust     Optimized VjConfig.ValType to reduce number of 
