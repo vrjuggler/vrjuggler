@@ -61,65 +61,82 @@ class dtkClient;
 class GADGET_CLASS_API DTK : public InputMixer<InputMixer<InputMixer<Input,Digital>,Analog>,Position>
 {
 public:
-    // ------------------------------------------------------------------------
-    //: Constructor.
-    // ------------------------------------------------------------------------
-    DTK();
+   /** Constructor. */
+   DTK();
 
-    // ------------------------------------------------------------------------
-    //: Destructor.
-    //
-    //! PRE: None.
-    //! POST: Shared memory is released
-    // ------------------------------------------------------------------------
+   /**
+    * Destructor.
+    *
+    * @pre None.
+    * @post Shared memory is released.
+    */
    virtual ~DTK();
 
-//: configure the flock with a config chunk
-    virtual bool config(jccl::ConfigChunkPtr c);
+   /** Configures the device with a config chunk. */
+   virtual bool config(jccl::ConfigChunkPtr c);
 
-//: begin sampling
-    int startSampling();
+   /** Begins sampling. */
+   int startSampling();
 
-// Main thread of control for this active object
-    void controlLoop(void* nullParam);
+   /** Main thread of control for this active object. */
+   void controlLoop(void* nullParam);
 
-//: stop sampling
-    int stopSampling();
+   /** Stops sampling. */
+   int stopSampling();
 
-//: sample data
-    int sample();
+   /** Samples data. */
+   int sample();
 
-//: update to the sampled data.
-    void updateData();
+   /** Updates the sampled data. */
+   void updateData();
 
-//: get the device name
-    char* getDeviceName() { return "vjDTK"; }
+   /** Returns the device name. */
+   char* getDeviceName()
+   {
+      return "vjDTK";
+   }
 
-//: return what chunk type is associated with this class.
-    static std::string getChunkType() { return std::string("DTK");}
+   /** Returns what chunk type is associated with this class. */
+   static std::string getChunkType()
+   {
+      return std::string("DTK");
+   }
 
-//: Get the receiver transform
-//! ARGS: dev - is the reciever number
-//! POST: returns a pointer to the receiver's matrix
-//! NOTE: Clients of juggler should access tracker recievers as [0-n]
-//+  For example, if you have recievers 1,2, and 4 with transmitter on 3,
-//+  then you can access them, in order, as 0,1,2.
-    gmtl::Matrix44f* getPosData( int dev = 0); // 0 base
+   /**
+    * Returns the receiver transform.
+    *
+    * @post Returns a pointer to the receiver's matrix.
+    *
+    * @param dev The reciever number.
+    *
+    * @note Clients of juggler should access tracker recievers as [0-n]
+    *       For example, if you have recievers 1,2, and 4 with transmitter on 3,
+    *       then you can access them, in order, as 0,1,2.
+    */
+   gmtl::Matrix44f* getPosData(int dev = 0); // 0 base
 
-//: Get the digital and analog data
-//! ARGS: d - the button number
-//! POST: returns a boolean value where 0 = false and 1 = true
-//! NOTE: Since the tracker has multiple possible devices but digital
-    int getDigitalData(int d = 0);
-    float getAnalogData(int d = 0);
+   /**
+    * Returns the digital and analog data.
+    *
+    * @post Returns a boolean value where 0 = false and 1 = true.
+    * @param d the button number
+    * @note Since the tracker has multiple possible devices but digital.
+    */
+   int getDigitalData(int d = 0);
+   float getAnalogData(int d = 0);
 
-//: Get time of last update for this receiver
-//! ARGS: dev - is the reciever number
-//! POST: returns a pointer to the reciever's timestamp
-    jccl::TimeStamp* getPosUpdateTime (int dev = 0);
+   /**
+    * Get time of last update for this receiver.
+    * @post Returns a pointer to the reciever's timestamp.
+    * @param dev The reciever number.
+    */
+   jccl::TimeStamp* getPosUpdateTime (int dev = 0);
 
-//: see if the DTK is active or not
-    inline bool isActive() { return active; };
+   /** Checks if the driver is active or not. */
+   bool isActive()
+   {
+      return active;
+   };
 
    /**
     * Invokes the global scope delete operator.  This is required for proper
@@ -143,8 +160,8 @@ protected:
 private:
     int getStationIndex(int stationNum, int bufferIndex);
 
-//: DTK related data (could be in a wrapper, but not necessary)
-
+   /** @name DTK related data (could be in a wrapper, but not necessary) */
+   //@{
     bool active;
 
     dtkClient*      _client;
@@ -158,13 +175,13 @@ private:
     int *mDigitalData;
     float *mAnalogData;
     char*       port;
+   //@}
 
-//: Start the DTK Client Connection
-    bool startDTK();
+   /** Starts the DTK Client Connection. */
+   bool startDTK();
 
-//: Stop the DTK Client Connection
-    bool stopDTK();
-
+   /** Stops the DTK Client Connection. */
+   bool stopDTK();
 };
 
 } // End of gadget namespace

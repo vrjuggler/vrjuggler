@@ -41,29 +41,30 @@ namespace gadget
 {
 
 
- // ------------------------------------------------------------------------
- //: Constructor.
- // ------------------------------------------------------------------------
- TrackdAPIController::TrackdAPIController(): mControllerReader(NULL)
- {;}
+/**
+ * Constructor.
+ */
+TrackdAPIController::TrackdAPIController(): mControllerReader(NULL)
+{;}
 
- // ------------------------------------------------------------------------
- //: Destructor.
- //
- //! PRE: None.
- //! POST: Shared memory is released
- // ------------------------------------------------------------------------
- TrackdAPIController::~TrackdAPIController()
- {
-    delete mControllerReader;
- }
+/**
+ * Destructor.
+ *
+ * @pre None.
+ * @post Shared memory is released.
+ */
+TrackdAPIController::~TrackdAPIController()
+{
+   delete mControllerReader;
+}
 
-// ------------------------------------------------------------------------
-//: Configure the trackd sensor with the given config chunk.
-//
-// -Create the trackdSensor based on config info
-// -set to active
-// -grow the vector to however many values we need
+/**
+ * Configures the trackd sensor with the given config chunk.
+ *
+ * -Create the trackdSensor based on config info.
+ * -set to active.
+ * -grow the vector to however many values we need.
+ */
 bool TrackdAPIController::config(jccl::ConfigChunkPtr c)
 {
    if(! (Input::config(c) && Digital::config(c) && Analog::config(c)))
@@ -89,12 +90,12 @@ bool TrackdAPIController::config(jccl::ConfigChunkPtr c)
 }
 
 
-// ------------------------------------------------------------------------
-//: Update to the sampled data.
-//
-//! PRE: None.
-//! POST: Most recent value is copied over to temp area
-// ------------------------------------------------------------------------
+/**
+ * Updates to the sampled data.
+ *
+ * @pre None.
+ * @post Most recent value is copied over to temp area.
+ */
 void TrackdAPIController::updateData()
 {
    vprASSERT(mTrackdController != NULL && "Make sure that trackd controller has been initialized");
@@ -116,7 +117,7 @@ void TrackdAPIController::updateData()
        mCurValuators[j] = f;
        mCurValuators[j].setTime();
    }
-   
+
    mDigitalSamples.lock();
    mDigitalSamples.addSample(mCurButtons);
    mDigitalSamples.unlock();
@@ -127,8 +128,7 @@ void TrackdAPIController::updateData()
    mAnalogSamples.addSample(mCurValuators);
    mAnalogSamples.unlock();
    mAnalogSamples.swapBuffers();
-  
+
 }
 
-
-};
+} // End of gadget namespace

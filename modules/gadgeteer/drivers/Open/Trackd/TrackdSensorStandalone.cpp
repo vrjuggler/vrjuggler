@@ -52,15 +52,17 @@ gmtl::Matrix44f TrackdSensorStandalone::getSensorPos(int sensorNum)
    return ret_val;
 }
 
-//: Attach to the memory segment with key (mShmKey)
-//! POST: mMem = address of the shared memory area
+/**
+ * Attaches to the memory segment with key (mShmKey).
+ * @post mMem = address of the shared memory area.
+ */
 void TrackdSensorStandalone::attachToMem()
 {
    assert(mShmKey != 0 && "Key was not set correctly");
    mMem = trackd_attach_tracker_mem(mShmKey);
 }
 
-//: Release the memory segment of mMem
+/** Release the memory segment of mMem. */
 void TrackdSensorStandalone::releaseMem()
 {
    assert(mMem != NULL && "Trying to release trackd memory that was NULL");

@@ -21,23 +21,25 @@ public:
       releaseMem();
    }
 
-   //: Get the number of sensors
+   /** Gets the number of sensors. */
    int numSensors();
 
-   // Return the position of the given sensor
+   /** Returns the position of the given sensor. */
    gmtl::Matrix44f getSensorPos(int sensorNum);
 
 protected:
-   //: Attach to the memory segment with key (mShmKey)
-   //! POST: mMem = address of the shared memory area
+   /**
+    * Attaches to the memory segment with key (mShmKey).
+    * @post mMem = address of the shared memory area.
+    */
    void attachToMem();
 
-   //: Release the memory segment of mMem
+   /** Releases the memory segment of mMem. */
    void releaseMem();
 
 private:
-   int   mShmKey;       // The key to the shared memory area
-   void* mMem;          // The memory area
+   int   mShmKey;       /**< The key to the shared memory area. */
+   void* mMem;          /**< The memory area. */
 };
 
 #endif

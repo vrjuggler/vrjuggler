@@ -49,29 +49,28 @@ namespace gadget
 {
 
 
- // ------------------------------------------------------------------------
- //: Constructor.
- // ------------------------------------------------------------------------
- TrackdController::TrackdController(): mTrackdController(NULL)
- {;}
+/** Constructor. */
+TrackdController::TrackdController(): mTrackdController(NULL)
+{;}
 
- // ------------------------------------------------------------------------
- //: Destructor.
- //
- //! PRE: None.
- //! POST: Shared memory is released
- // ------------------------------------------------------------------------
- TrackdController::~TrackdController()
- {
-    delete mTrackdController;
- }
+/**
+ * Destructor.
+ *
+ * @pre None.
+ * @post Shared memory is released.
+ */
+TrackdController::~TrackdController()
+{
+   delete mTrackdController;
+}
 
-// ------------------------------------------------------------------------
-//: Configure the trackd sensor with the given config chunk.
-//
-// -Create the trackdSensor based on config info
-// -set to active
-// -grow the vector to however many values we need
+/**
+ * Configures the trackd sensor with the given config chunk.
+ *
+ * -Create the trackdSensor based on config info<br>
+ * -set to active<br>
+ * -grow the vector to however many values we need<br>
+ */
 bool TrackdController::config(jccl::ConfigChunkPtr c)
 {
    if(! (Input::config(c) && Digital::config(c) && Analog::config(c)))
@@ -97,12 +96,12 @@ bool TrackdController::config(jccl::ConfigChunkPtr c)
 }
 
 
-// ------------------------------------------------------------------------
-//: Update to the sampled data.
-//
-//! PRE: None.
-//! POST: Most recent value is copied over to temp area
-// ------------------------------------------------------------------------
+/**
+ * Updates to the sampled data.
+ *
+ * @pre None.
+ * @post Most recent value is copied over to temp area.
+ */
 void TrackdController::updateData()
 {
    vprASSERT(mTrackdController != NULL && "Make sure that trackd controller has been initialized");
@@ -124,7 +123,7 @@ void TrackdController::updateData()
        mCurValuators[j] = f;
        mCurValuators[j].setTime();
    }
-   
+
    mDigitalSamples.lock();
    mDigitalSamples.addSample(mCurButtons);
    mDigitalSamples.unlock();
@@ -135,7 +134,7 @@ void TrackdController::updateData()
    mAnalogSamples.addSample(mCurValuators);
    mAnalogSamples.unlock();
    mAnalogSamples.swapBuffers();
-  
+
 }
 
 
