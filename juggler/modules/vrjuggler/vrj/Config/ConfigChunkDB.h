@@ -53,11 +53,11 @@ public:
     typedef std::vector<vjConfigChunk*>::iterator iterator;
 
     iterator begin() {
-	return chunks.begin();
+        return chunks.begin();
     }
 
     iterator end() {
-	return chunks.end();
+        return chunks.end();
     }
 
     //: Constructor
@@ -126,10 +126,17 @@ public:
     std::vector<vjConfigChunk*> getChunks();
 
 
-    //: Add chunks to this
-    //! PRE: Description DB that this points to must have all desc's for added chunks
-    //! POST: this has added the chunks specified
+
+    //: Add chunks to self
+    //! POST: self has added copies of all chunks in new_chunks
     void addChunks(std::vector<vjConfigChunk*> new_chunks);
+
+
+
+    //: Add chunks to self
+    //! PRE: db is non-null.
+    //! POST: self has added copies of all chunks in db.
+    void addChunks(vjConfigChunkDB *db);
 
 
 
@@ -150,7 +157,7 @@ public:
     //+       caller when it is no longer needed.  The individual
     //+       vjConfigChunks in the vector should not be freed.
     std::vector<vjConfigChunk*>* getMatching (const std::string& mytypename) {
-	return getMatching ("type", mytypename);
+        return getMatching ("type", mytypename);
     }
 
 

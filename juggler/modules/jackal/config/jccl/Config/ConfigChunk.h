@@ -57,6 +57,15 @@ private:
 
 public:
 
+    //: Constructs a vjConfigChunk with no given description.
+    //! NOTE: a ConfigChunk created with this function is essentially
+    //+       useless until a description has been assigned with
+    //+       associateDesc() or the Chunk is assigned into with =, 
+    //+       but I want this so I can have vectors of
+    //+       ConfigChunks, instead of ptrs...
+    vjConfigChunk ();
+
+
     //: Constructs a vjConfigChunk matching the given description.
     //!PRE: desc points to a valid vjChunkDesc
     //!POST: self has been created, and all its vjPropertys
@@ -75,6 +84,13 @@ public:
     vjConfigChunk (vjConfigChunk& c);
 
 
+    //: Associates the description d with this Chunk
+    //!NOTE:  When this function is called, any previous properties etc.
+    //+       of this Chunk are destroyed, and new (blank) properties are
+    //+       created.
+    void associateDesc (vjChunkDesc* d);
+
+
     vjConfigChunk& operator = (const vjConfigChunk& c);
 
 
@@ -84,7 +100,7 @@ public:
 
     //: tests for inequality of two vjConfigChunks
     inline bool operator != (const vjConfigChunk& c) const {
-   return !(*this == c);
+        return !(*this == c);
     }
 
 

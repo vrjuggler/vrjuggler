@@ -125,7 +125,7 @@ public:
     //!NOTE: Return value only deals with opening the file, and
     //+      true doesn't neccessarily mean no parsing errors
     //+      occurred.
-    bool load (char *fname);
+    bool load (const char *fname);
 
 
     //:Saves a chunkdesc file
@@ -134,7 +134,7 @@ public:
     //+      using << operator.
     //!RETURNS: true - if file was opened succesfully
     //!RETURNS: false - otherwise
-    bool save (char *fname);
+    bool save (const char *fname);
 
 };
 
