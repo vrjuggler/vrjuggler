@@ -54,7 +54,7 @@ int vjKernel::start()
    vjThread* new_thread;   // I set mControlThread in vjKernel::controlLoop
    new_thread = new vjThread(memberFunctor, 0);
 
-   vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::start: Just started control loop.  " << mControlThread << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::start: Just started control loop.  " << endl << vjDEBUG_FLUSH;
 
    return 1;
 }
@@ -63,9 +63,10 @@ int vjKernel::start()
 void vjKernel::controlLoop(void* nullParam)
 {
    vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::controlLoop: Started.\n" << vjDEBUG_FLUSH;
-   
-   mControlThread = vjThread::self();     // Set the id of my thread
 
+   while (0 == vjThread::self());
+   mControlThread = (vjThread*) vjThread::self();
+   
    vjTimeStamp::initialize();
    // Do any initial configuration
    initConfig();
@@ -240,60 +241,6 @@ void vjKernel::updateFrameData()
    mDisplayManager->updateProjections();
 }
 
-// ----------------------------------------------------------------- //
-// --------------- Config queue processing routines  --------------- //
-// ----------------------------------------------------------------- //
-//: Take care of adding a single chunk
-//! RETVAL: true - Chunk has been added
-/*
-bool vjKernel::processChunkAdd(vjConfigChunk* chunk)
-{
-   bool added_chunk = false;        // Flag: true - chunk was added
-
-   vjDEBUG(vjDBG_KERNEL,3) << "vjKernel::processChunkAdd: chunk: "
-                           << chunk->getProperty("name") << endl << vjDEBUG_FLUSH;
-
-   // -- FIND MANAGER to handle them -- //
-   if(this->configKernelHandle(chunk))                    // Kernel
-      added_chunk = this->configKernelAdd(chunk);
-   if(getInputManager()->configCanHandle(chunk))          // inputMgr
-      added_chunk = getInputManager()->configAdd(chunk);
-   if(mDisplayManager->configCanHandle(chunk))            // displayMgr
-      added_chunk = mDisplayManager->configAdd(chunk);
-   if((mDrawManager != NULL) && (mDrawManager->configCanHandle(chunk)))   // drawMgr
-      added_chunk = mDrawManager->configAdd(chunk);
-////         if(environmentManager->configCanHandle(sorted_chunks[i]))         // envMgr
-////            added_chunk = environmentManager->configAdd(sorted_chunks[i]);
-   if((mApp != NULL) && (mApp->configCanHandle(chunk)))   // App
-      added_chunk = mApp->configAdd(chunk);
-
-   return added_chunk;
-}
-
-bool vjKernel::processChunkRemove(vjConfigChunk* chunk)
-{
-   bool removed_chunk = false;        // Flag: true - chunk was removed
-
-   vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::processConfigRemoveQueue: chunk: " << chunk->getProperty("name") << endl << vjDEBUG_FLUSH;
-
-   // Find manager to handle them
-   if(this->configKernelHandle(chunk))                                 // Kernel
-      removed_chunk = this->configKernelRemove(chunk);
-   if(getInputManager()->configCanHandle(chunk))                          // inputMgr
-      removed_chunk = getInputManager()->configRemove(chunk);
-   if(mDisplayManager->configCanHandle(chunk))                            // displayMgr
-      removed_chunk = mDisplayManager->configRemove(chunk);
-   if((mDrawManager != NULL) && (mDrawManager->configCanHandle(chunk)))   // drawMgr
-      removed_chunk = mDrawManager->configRemove(chunk);
-////         if(environmentManager->configCanHandle(chunks[i]))                      // envMgr
-////            removed_chunk = environmentManager->configRemove(chunks[i]);
-   if((mApp != NULL) && (mApp->configCanHandle(chunk)))                // App
-      removed_chunk = mApp->configRemove(chunk);
-
-   return removed_chunk;
-}
-*/
-
 
 // -------------------------------
 // CHUNK Handler
@@ -311,6 +258,8 @@ void vjKernel::configProcessPending(bool lockIt)
       mDisplayManager->configProcessPending(lockIt);
       if(NULL != mDrawManager)
          mDrawManager->configProcessPending(lockIt);              // XXX: We should not necessarily do this for all draw mgrs
+      if (NULL != environmentManager)
+          environmentManager->configProcessPending(lockIt);
       if(NULL != mApp)
          mApp->configProcessPending(lockIt);
    }
@@ -434,7 +383,7 @@ void vjKernel::stopDrawManager()
 
 void vjKernel::setupEnvironmentManager()
 {
-   //**//environmentManager = new vjEnvironmentManager();
+    environmentManager = new vjEnvironmentManager();
 }
 
 vjUser* vjKernel::getUser(std::string userName)
@@ -445,5 +394,4 @@ vjUser* vjKernel::getUser(std::string userName)
 
    return NULL;
 }
-
 
