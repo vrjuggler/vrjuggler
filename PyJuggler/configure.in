@@ -156,12 +156,13 @@ if test "x$OS_TYPE" = "xUNIX" ; then
    PYTHON_LIB_DEPS="$PYTHON_LIB_DEPS -lm"
 fi
 
-LDFLAGS="$LDFLAGS $PYTHON_LDFLAGS $UTIL_LIB $PYTHON_LIB_DEPS"
+LDFLAGS="$LDFLAGS $PYTHON_LDFLAGS"
 
 AC_CHECK_LIB([$PYTHON_LIB], [Py_Initialize],
    [AC_CHECK_HEADER([Python.h], ,
       [AC_MSG_ERROR([*** Python is required for PyJuggler ***])])],
-   [AC_MSG_ERROR([*** Python is required for PyJuggler ***])])
+   [AC_MSG_ERROR([*** Python is required for PyJuggler ***])],
+   [$UTIL_LIB $PYTHON_LIB_DEPS])
 
 if test "x$OS_TYPE" = "xUNIX" ; then
    PYTHON_LIB="-l$PYTHON_LIB"
