@@ -63,6 +63,9 @@
 #include <vpr/md/SIM/Network/NetworkGraph.h>
 #include <vpr/md/SIM/Network/NetworkNode.h>
 
+#include <vector>
+#include <boost/smart_ptr.hpp>
+
 
 namespace vpr
 {
@@ -396,6 +399,14 @@ public:
                              vpr::Uint32& data_read,
                              vpr::Interval timeout = vpr::Interval::NoTimeout );
 
+   /** Exactly like read_i except takes MessageDataPtr directly for zero copy networking
+   * Updates msgData to point at the new message data.
+   */
+   vpr::ReturnStatus read_i( boost::shared_ptr<std::vector<vpr::Uint8> >& msgData,
+                             vpr::Uint32& data_read,
+                             vpr::Interval timeout = vpr::Interval::NoTimeout );
+
+
    /**
     * Implementation of the readn template method.  This reads
     * exactly the specified number of bytes from the socket into the given
@@ -432,6 +443,16 @@ public:
       return read_i(buffer, length, data_read, timeout);
    }
 
+   /** Exactly like read_i except takes MessageDataPtr directly for zero copy networking
+   * Updates msgData to point at the new message data.
+   */
+   vpr::ReturnStatus readn_i( boost::shared_ptr<std::vector<vpr::Uint8> >& msgData,
+                             vpr::Uint32& data_read,
+                             vpr::Interval timeout = vpr::Interval::NoTimeout )
+   {
+      return read_i(msgData, data_read, timeout);
+   }
+
    /**
     * Implementation of the write template method.  This writes
     * the buffer to the socket.
@@ -460,6 +481,13 @@ public:
     *         failed.
     */
    vpr::ReturnStatus write_i( const void* buffer, const vpr::Uint32 length,
+                              vpr::Uint32& data_written,
+                              vpr::Interval timeout = vpr::Interval::NoTimeout );
+
+   /** Exactly like write_i except takes MessageDataPtr directly for zero copy networking
+    * Starts passing a shared copy of msgData across the network
+    */
+   vpr::ReturnStatus write_i( boost::shared_ptr<std::vector<vpr::Uint8> > msgData,
                               vpr::Uint32& data_written,
                               vpr::Interval timeout = vpr::Interval::NoTimeout );
 

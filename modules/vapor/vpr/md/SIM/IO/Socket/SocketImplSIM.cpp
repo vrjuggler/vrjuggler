@@ -227,6 +227,42 @@ vpr::ReturnStatus SocketImplSIM::read_i (void* buffer,
    return status;
 }
 
+/** Exactly like read_i except takes MessageDataPtr directly for zero copy networking
+* Updates msgData to point at the new message data.
+*/
+vpr::ReturnStatus SocketImplSIM::read_i( vpr::sim::Message::MessageDataPtr& msgData,
+                          vpr::Uint32& data_read,
+                          vpr::Interval timeout = vpr::Interval::NoTimeout )
+{
+   vpr:: ReturnStatus status;
+   vprASSERT(mOpen && "Cannot read on an unopened socket");
+
+   // This is a rather long critical sectino, but we need to be sure that the
+   // arrvied queue stays in a consistent state while we are working.
+   mArrivedQueueMutex.acquire();
+   {
+      if ( mArrivedQueue.size() > 0 )
+      {
+         // Get copy of message data, then
+         // Remove the message from the arrival queue.
+         msgData = mArrivedQueue[0]->getMessageData();
+         data_read = msgData->size();
+         mArrivedQueue.erase(mArrivedQueue.begin());
+      }
+      // Nothing is in the queue, so we tell the caller that the operation is
+      // in progress.
+      else
+      {
+         status.setCode(vpr::ReturnStatus::WouldBlock);
+         data_read = 0;
+      }
+   }
+   mArrivedQueueMutex.release();
+
+   return status;
+}
+
+
 vpr::ReturnStatus SocketImplSIM::write_i (const void* buffer,
                                           const vpr::Uint32 length,
                                           vpr::Uint32& data_written,
@@ -284,6 +320,30 @@ vpr::ReturnStatus SocketImplSIM::write_i (const void* buffer,
 
    return status;
 }
+
+/** Exactly like write_i except takes MessageDataPtr directly for zero copy networking */
+vpr::ReturnStatus SocketImplSIM::write_i( vpr::sim::Message::MessageDataPtr msgData,
+                           vpr::Uint32& data_written,
+                           vpr::Interval timeout = vpr::Interval::NoTimeout )
+{
+   vpr::ReturnStatus status;
+
+   if ( mPeer == NULL )
+   {
+      status.setCode(vpr::ReturnStatus::Fail);
+      data_written = 0;
+   }
+   else
+   {
+      data_written = msgData->size();
+      vpr::sim::MessagePtr msg(new vpr::sim::Message(msgData));
+      msg->setPath(mPathToPeer, this, mPeer);
+      vpr::sim::Controller::instance()->getSocketManager().sendMessage(msg);
+   }
+
+   return status;
+}
+
 
 vpr::ReturnStatus SocketImplSIM::getOption (const vpr::SocketOptions::Types option,
                                             struct vpr::SocketOptions::Data& data)
