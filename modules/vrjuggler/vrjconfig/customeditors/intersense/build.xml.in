@@ -13,7 +13,7 @@
    <path id="jccl.classpath">
       <pathelement path="@JCCL_JARS@" />
    </path>
-   
+
    <path id="commoneditors.classpath">
       <pathelement path="${topdir}/vrjconfig/commoneditors/CommonEditors.jar" />
    </path>
@@ -21,7 +21,7 @@
    <property name="tweek.classpath" refid="tweek.classpath" />
    <property name="jccl.classpath" refid="jccl.classpath" />
    <property name="commoneditors.classpath" refid="commoneditors.classpath" />
-   
+
    <!-- Compile all java sources -->
    <target name="compile">
       <javac destdir="."
