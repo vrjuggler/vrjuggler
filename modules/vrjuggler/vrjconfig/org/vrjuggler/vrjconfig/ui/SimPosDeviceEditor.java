@@ -339,6 +339,7 @@ public class SimPosDeviceEditor
          System.out.println("Getting a cell editor");
          keyChunk = (ConfigChunk)value;
          catcher = new KeyCatcher();
+         catcher.requestFocus();
          return catcher;
       }
 
@@ -353,28 +354,29 @@ public class SimPosDeviceEditor
       }
 
       private class KeyCatcher
-         extends JLabel
+         extends JTextField
       {
          public KeyCatcher()
          {
-//            enableEvents(AWTEvent.KEY_EVENT_MASK);
             this.addKeyListener(new KeyAdapter()
             {
                public void keyPressed(KeyEvent evt)
                {
-                  System.out.println("Key Pressed");
+                  System.out.println("Key Pressed: "+evt.getKeyCode());
                   int key = evt.getKeyCode();
                   if (key == KeyEvent.VK_ALT ||
                       key == KeyEvent.VK_CONTROL ||
                       key == KeyEvent.VK_SHIFT)
                   {
                      lastModKey = key;
+                     textChanged();
                   }
                   else
                   {
                      lastKey = key;
+                     textChanged();
+                     stopCellEditing();
                   }
-                  textChanged();
                }
 
                public void keyTyped(KeyEvent evt)
