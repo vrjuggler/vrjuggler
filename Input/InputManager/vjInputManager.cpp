@@ -4,6 +4,9 @@
 #include <Kernel/vjDebug.h>
 
 // Sims
+#include <Input/vjSim/vjSimAnalog.h>
+#include <Input/vjSim/vjSimDigital.h>
+#include <Input/vjSim/vjSimPosition.h>
 #include <Input/vjSim/vjSimGloveGesture.h>
 
 // Physical devices
@@ -77,7 +80,7 @@ vjInputManager::~vjInputManager()
 *********************************************** ahimberg */
 int vjInputManager::FNewInput(vjConfigChunkDB *cdb)
 {
-   vjDEBUG_BEGIN(1) << "vjInputManager::InitialConfig(vjConfigChunkDB*) " << endl << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(1) << "\nvjInputManager::InitialConfig(vjConfigChunkDB*) " << endl << vjDEBUG_FLUSH;
 
    ConfigureInputManager(cdb);
 
@@ -88,11 +91,14 @@ int vjInputManager::FNewInput(vjConfigChunkDB *cdb)
    Configure3DMouse(cdb);
 #endif
    ConfigureKeyboard(cdb);
+   ConfigureKeyboardProxy(cdb);
 
-   ConfigurePosProxy(cdb);
+   ConfigureSimAnalog(cdb);
+   ConfigureSimDigital(cdb);
+   ConfigureSimPosition(cdb);
    ConfigureAnaProxy(cdb);
    ConfigureDigProxy(cdb);
-   ConfigureKeyboardProxy(cdb);
+   ConfigurePosProxy(cdb);
 
    ConfigureSimGloveGesture(cdb);
    ConfigureGestureProxy(cdb);
@@ -106,7 +112,7 @@ int vjInputManager::FNewInput(vjConfigChunkDB *cdb)
 
    DumpStatus();                      // Dump the status
 
-   vjDEBUG_END(1) << vjDEBUG_FLUSH;
+   vjDEBUG_END(1) << endl << vjDEBUG_FLUSH;
    return 1;
 }
 
@@ -569,7 +575,9 @@ int vjInputManager::SetKeyboardProxy(int ProxyNum, int DevNum)
 int vjInputManager::AddKeyboardProxy(int DevNum)
 {
    vjKeyboardProxy* new_kb_proxy = new vjKeyboardProxy(&m_dummyKeyboard);
-   new_kb_proxy->Set(dynamic_cast<vjKeyboard*>(m_devVector[DevNum]));
+   vjKeyboard* theKB = dynamic_cast<vjKeyboard*>(m_devVector[DevNum]);
+   vjASSERT(theKB != NULL);
+   new_kb_proxy->Set(theKB);
    m_keyboardProxyVector.push_back(new_kb_proxy);
    return (m_keyboardProxyVector.size() -1);
 }
@@ -621,7 +629,8 @@ void vjInputManager::StupifyGesture(int ProxyNum)
 #ifndef WIN32
 void vjInputManager::ConfigureFlock(vjConfigChunkDB *cdb)
 {
-   vjDEBUG_BEGIN(1) << "vjInputManager::ConfigureFlock" << endl << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(1) << "----------------- FLOCK ----------------------\n"
+                    << "vjInputManager::ConfigureFlock" << endl << vjDEBUG_FLUSH;
    vector<vjConfigChunk*> *vChunks;
    vector<vjConfigChunk*>::iterator i;
 
@@ -647,13 +656,14 @@ void vjInputManager::ConfigureFlock(vjConfigChunkDB *cdb)
    }
    delete vChunks;
 
-   vjDEBUG_END(1) << vjDEBUG_FLUSH;
+   vjDEBUG_END(1) << endl << vjDEBUG_FLUSH;
 
 }
 
 void vjInputManager::Configure3DMouse(vjConfigChunkDB *cdb)
 {
-   vjDEBUG(1) << "   vjInputManager::Configure3DMouse" << endl << vjDEBUG_FLUSH;
+   vjDEBUG(1) << "----------------- 3DMOUSE ----------------------\n"
+              << "   vjInputManager::Configure3DMouse" << endl << vjDEBUG_FLUSH;
    vector<vjConfigChunk*> *vChunks;
    vector<vjConfigChunk*>::iterator i;
 
@@ -683,7 +693,8 @@ void vjInputManager::Configure3DMouse(vjConfigChunkDB *cdb)
 
 void vjInputManager::ConfigureDummyPos(vjConfigChunkDB *cdb)
 {
-   vjDEBUG_BEGIN(1) << "vjInputManager::DummyPos" << endl << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(1) << "----------------- DUMMY POS ----------------------\n"
+                    << "vjInputManager::DummyPos" << endl << vjDEBUG_FLUSH;
    vector<vjConfigChunk*> *vChunks;
    vector<vjConfigChunk*>::iterator i;
 
@@ -699,12 +710,13 @@ void vjInputManager::ConfigureDummyPos(vjConfigChunkDB *cdb)
    }
    delete vChunks;
 
-   vjDEBUG_END(1) << vjDEBUG_FLUSH;
+   vjDEBUG_END(1) << endl << vjDEBUG_FLUSH;
 }
 
 void vjInputManager::ConfigureIbox(vjConfigChunkDB *cdb)
 {
-   vjDEBUG_BEGIN(1) << "   vjInputManager::ConfigureIbox" << endl << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(1) << "----------------- IBOX ----------------------\n"
+                    << "   vjInputManager::ConfigureIbox" << endl << vjDEBUG_FLUSH;
    vector<vjConfigChunk*> *vChunks;
    vector<vjConfigChunk*>::iterator i;
 
@@ -722,12 +734,13 @@ void vjInputManager::ConfigureIbox(vjConfigChunkDB *cdb)
    }
    delete vChunks;
 
-   vjDEBUG_END(1) << vjDEBUG_FLUSH;
+   vjDEBUG_END(1) << endl << vjDEBUG_FLUSH;
 }
 
 void vjInputManager::ConfigureCyberGlove(vjConfigChunkDB *cdb)
 {
-   vjDEBUG_BEGIN(1) << "vjInputManager::ConfigureCyberGlove" << endl << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(1) << "----------------- CYBER GLOVE ----------------------\n"
+                    << "vjInputManager::ConfigureCyberGlove" << endl << vjDEBUG_FLUSH;
    vector<vjConfigChunk*> *vChunks;
    vector<vjConfigChunk*>::iterator i;
 
@@ -745,19 +758,20 @@ void vjInputManager::ConfigureCyberGlove(vjConfigChunkDB *cdb)
       else
       {
          vjDEBUG(0) << "CyberGlove:" << (char*)( (*i)->getProperty("name") )
-                    <<  "failed to start.  Deleting...." << vjDEBUG_FLUSH;
+                    <<  "failed to start.  Deleting...." << endl << vjDEBUG_FLUSH;
          delete aGlove;
       }
    }
    delete vChunks;
 
-   vjDEBUG_END(1) << vjDEBUG_FLUSH;
+   vjDEBUG_END(1) << endl << vjDEBUG_FLUSH;
 }
 #endif // ndef WIN32
 
 void vjInputManager::ConfigureKeyboard(vjConfigChunkDB *cdb)
 {
-   vjDEBUG_BEGIN(1) << "vjInputManager::ConfigureKeyboard" << endl << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(1) << "----------------- KEYBOARD ----------------------\n"
+                    << "vjInputManager::ConfigureKeyboard" << endl << vjDEBUG_FLUSH;
    vector<vjConfigChunk*> *vChunks;
    vector<vjConfigChunk*>::iterator i;
 
@@ -775,7 +789,10 @@ void vjInputManager::ConfigureKeyboard(vjConfigChunkDB *cdb)
       vjKeyboard* aKeyboard = new (getMyMemPool()) vjWin32Keyboard (*i);
 #endif
       if (aKeyboard->StartSampling())
-         FAddDevice(aKeyboard);
+      {
+         int dev_num = FAddDevice(aKeyboard);
+         vjDEBUG(1) << "Added Device: devnum: " << dev_num << endl << vjDEBUG_FLUSH;
+      }
       else
       {
          vjDEBUG(0) << "ERROR: Keyboard failed to start.. deleting instance" << endl << vjDEBUG_FLUSH;
@@ -784,12 +801,105 @@ void vjInputManager::ConfigureKeyboard(vjConfigChunkDB *cdb)
    }
    delete vChunks;
 
-   vjDEBUG_END(1) << vjDEBUG_FLUSH;
+   vjDEBUG_END(1) << endl << vjDEBUG_FLUSH;
 }
+
+void vjInputManager::ConfigureSimAnalog(vjConfigChunkDB* cdb)
+{
+   vjDEBUG_BEGIN(1) << "----------------- SIM ANALOG ----------------------\n"
+                    << "vjInputManager::ConfigureSimAnalog" << endl << vjDEBUG_FLUSH;
+   vector<vjConfigChunk*> *vChunks;
+   vector<vjConfigChunk*>::iterator i;
+
+   vChunks = cdb->getMatching("SimAnalog");
+
+   for (i = vChunks->begin(); i != vChunks->end(); i++)
+   {
+      char* dev_name = (char*)(*i)->getProperty("name");
+      vjDEBUG(1) << "found a SimAnalog named: "
+                 << dev_name << endl << vjDEBUG_FLUSH;
+
+      vjSimAnalog* aSimAnalog = new (getMyMemPool()) vjSimAnalog (*i);
+
+      if (aSimAnalog->StartSampling())
+         FAddDevice(aSimAnalog);
+      else
+      {
+         vjDEBUG(0) << "ERROR: SimAnalog failed to start.. deleting instance" << endl << vjDEBUG_FLUSH;
+         delete aSimAnalog;
+      }
+   }
+   delete vChunks;
+
+   vjDEBUG_END(1) << endl << vjDEBUG_FLUSH;
+}
+
+void vjInputManager::ConfigureSimDigital(vjConfigChunkDB* cdb)
+{
+   vjDEBUG_BEGIN(1) << "----------------- SIM DIGITAL ----------------------\n"
+                    << "vjInputManager::ConfigureSimDigital" << endl << vjDEBUG_FLUSH;
+   vector<vjConfigChunk*> *vChunks;
+   vector<vjConfigChunk*>::iterator i;
+
+   vChunks = cdb->getMatching("SimDigital");
+
+   for (i = vChunks->begin(); i != vChunks->end(); i++)
+   {
+      char* dev_name = (char*)(*i)->getProperty("name");
+      vjDEBUG(1) << "found a SimDigital named: "
+                 << dev_name << endl << vjDEBUG_FLUSH;
+
+      vjSimDigital* aSimDigital = new (getMyMemPool()) vjSimDigital (*i);
+
+      if (aSimDigital->StartSampling())
+         FAddDevice(aSimDigital);
+      else
+      {
+         vjDEBUG(0) << "ERROR: SimDigital failed to start.. deleting instance" << endl << vjDEBUG_FLUSH;
+         delete aSimDigital;
+      }
+   }
+   delete vChunks;
+
+   vjDEBUG_END(1) << endl << vjDEBUG_FLUSH;
+}
+
+
+void vjInputManager::ConfigureSimPosition(vjConfigChunkDB* cdb)
+{
+   vjDEBUG_BEGIN(1) << "----------------- SIM POSITION ----------------------\n"
+                    << "vjInputManager::ConfigureSimPosition" << endl << vjDEBUG_FLUSH;
+   vector<vjConfigChunk*> *vChunks;
+   vector<vjConfigChunk*>::iterator i;
+
+   vChunks = cdb->getMatching("SimPosition");
+
+   for (i = vChunks->begin(); i != vChunks->end(); i++)
+   {
+      char* dev_name = (char*)(*i)->getProperty("name");
+      vjDEBUG(1) << "found a SimPosition named: "
+                 << dev_name << endl << vjDEBUG_FLUSH;
+
+      vjSimPosition* aSimPos = new (getMyMemPool()) vjSimPosition (*i);
+
+      if (aSimPos->StartSampling())
+         FAddDevice(aSimPos);
+      else
+      {
+         vjDEBUG(0) << "ERROR: SimPosition failed to start.. deleting instance" << endl << vjDEBUG_FLUSH;
+         delete aSimPos;
+      }
+   }
+   delete vChunks;
+
+   vjDEBUG_END(1) << endl << vjDEBUG_FLUSH;
+}
+
 
 void vjInputManager::ConfigureSimGloveGesture(vjConfigChunkDB* cdb)
 {
-   vjDEBUG_BEGIN(1) << "vjInputManager::ConfigureSimGloveGesture" << endl << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(1) << "----------------- SIM GLOVE GESTURE ----------------------\n"
+                    << "vjInputManager::ConfigureSimGloveGesture" << endl << vjDEBUG_FLUSH;
    vector<vjConfigChunk*> *vChunks;
    vector<vjConfigChunk*>::iterator i;
 
@@ -814,7 +924,7 @@ void vjInputManager::ConfigureSimGloveGesture(vjConfigChunkDB* cdb)
    }
    delete vChunks;
 
-   vjDEBUG_END(1) << vjDEBUG_FLUSH;
+   vjDEBUG_END(1) << endl << vjDEBUG_FLUSH;
 }
 
 /******************************************************************
@@ -824,7 +934,8 @@ void vjInputManager::ConfigureSimGloveGesture(vjConfigChunkDB* cdb)
 *******************************************************************/
 void vjInputManager::ConfigurePosProxy(vjConfigChunkDB *cdb)
 {
-   vjDEBUG(2) << "   vjInputManager::ConfigurePosProxy" << endl << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(1) << "----------------- POS PROXY ----------------------\n"
+                    << "vjInputManager::ConfigurePosProxy" << endl << vjDEBUG_FLUSH;
    vector<vjConfigChunk*> *vChunks;
    vector<vjConfigChunk*>::iterator i;
    vChunks = cdb->getMatching("PosProxy");
@@ -834,19 +945,19 @@ void vjInputManager::ConfigurePosProxy(vjConfigChunkDB *cdb)
       int unitNum = (*i)->getProperty("unit");
       string proxy_name = (char*)(*i)->getProperty("name");
 
-      vjDEBUG(5) << "	  found a posProxy:" << proxy_name << endl << vjDEBUG_FLUSH;
-      vjDEBUG(5) << "		  attaching to device named: "
+      vjDEBUG(1) << "found a posProxy:" << proxy_name << endl << vjDEBUG_FLUSH;
+      vjDEBUG_BEGIN(1) << "   attaching to device named: "
                  << (char*) ( (*i)->getProperty("device") ) << endl << vjDEBUG_FLUSH;
-      vjDEBUG(5) << "		  at unit number: " << unitNum << endl << vjDEBUG_FLUSH;
+      vjDEBUG(1) << "   at unit number: " << unitNum << endl << vjDEBUG_FLUSH;
 
       int devNum = FindDeviceNum((*i)->getProperty("device"));
-      vjDEBUG(5) << "	  Found the device at devNum: " << devNum << endl << vjDEBUG_FLUSH;
+      vjDEBUG(1) << "   Found the device at devNum: " << devNum << endl << vjDEBUG_FLUSH;
 
       if ( devNum != -1)
       {
          int proxyNum = AddPosProxy(devNum, unitNum);
          AddProxyAlias(proxy_name, proxyNum);                  // Set the alias for this proxy name
-         vjDEBUG(5) << "		PosProxy is set" << endl << vjDEBUG_FLUSH;
+         vjDEBUG(1) << "   PosProxy is set" << endl << vjDEBUG_FLUSH;
 
          if (1 == (int)(*i)->getProperty("etrans") )
          {
@@ -860,25 +971,20 @@ void vjInputManager::ConfigurePosProxy(vjConfigChunkDB *cdb)
               (*i)->getProperty("rotate",2) );// zrot
             vjDEBUG(2) << "Transform Matrix: " << endl
                        << m_posProxyVector[proxyNum]->GetTransform() << endl << vjDEBUG_FLUSH;
-
-/*		vjVec3 pos(1,0,0), or(0,0,0);
-      pos.xformFull( m_posProxyVector[proxyNum]->GetTransform() ,
-                pos);
-      or.xformVec  (m_posProxyVector[proxyNum]->GetTransform() ,
-                or);
-      cout << "pos(1,0,0) after translate: " << endl << pos
-           << "or (0,0,0) after translate: " << endl << or << endl;
-*/
          }
+         else
+            vjDEBUG(0) << "ERROR: Could not find device:" << (*i)->getProperty("device") << endl << vjDEBUG_FLUSH;
       }
-
+      vjDEBUG_END(1) << endl << vjDEBUG_FLUSH;
    }
    delete vChunks;
+   vjDEBUG_END(1) << endl << vjDEBUG_FLUSH;
 }
 
 void vjInputManager::ConfigureDigProxy(vjConfigChunkDB *cdb)
 {
-   vjDEBUG(2) << "   vjInputManager::ConfigureDigProxy" << endl << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(1) << "----------------- DIG PROXY ----------------------\n"
+                    << "vjInputManager::ConfigureDigProxy" << endl << vjDEBUG_FLUSH;
    vector<vjConfigChunk*> *vChunks;
    vector<vjConfigChunk*>::iterator i;
    vChunks = cdb->getMatching("DigProxy");
@@ -888,26 +994,30 @@ void vjInputManager::ConfigureDigProxy(vjConfigChunkDB *cdb)
       int unitNum = (*i)->getProperty("unit");
       string proxy_name = (char*)(*i)->getProperty("name");
 
-      vjDEBUG(5)  << "	  found a digProxy: " << proxy_name << endl
-                  << "		attaching to device named: " << (char*) ( (*i)->getProperty("device") ) << endl
-                  << "		at unit number: " << unitNum << endl << vjDEBUG_FLUSH;
+      vjDEBUG(1)  << "found a digProxy: " << proxy_name << endl
+                  << "  attaching to device named: " << (char*) ( (*i)->getProperty("device") ) << endl
+                  << "  at unit number: " << unitNum << endl << vjDEBUG_FLUSH;
 
       int devNum = FindDeviceNum((*i)->getProperty("device"));
-      vjDEBUG(5) << "	Found the device at devNum: " << devNum << endl << vjDEBUG_FLUSH;
+      vjDEBUG(1) << "	Found the device at devNum: " << devNum << endl << vjDEBUG_FLUSH;
 
       if ( devNum != -1)
       {
          int proxy_num = AddDigProxy(devNum, unitNum);
          AddProxyAlias(proxy_name, proxy_num);                  // Set the alias for this proxy name
-         vjDEBUG(5) << "	      DigProxy is set" << endl << vjDEBUG_FLUSH;
+         vjDEBUG(1) << "   DigProxy is set" << endl << vjDEBUG_FLUSH;
       }
+      else
+         vjDEBUG(0) << "ERROR: Could not find device: " << (*i)->getProperty("device") << endl << vjDEBUG_FLUSH;
    }
    delete vChunks;
+   vjDEBUG_END(1) << endl << vjDEBUG_FLUSH;
 }
 
 void vjInputManager::ConfigureAnaProxy(vjConfigChunkDB *cdb)
 {
-   vjDEBUG(2) << "   vjInputManager::ConfigureAnaProxy" << endl << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(1) << "------------------ ANALOG PROXY -----------------\n"
+                    << "   vjInputManager::ConfigureAnaProxy" << endl << vjDEBUG_FLUSH;
    vector<vjConfigChunk*> *vChunks;
    vector<vjConfigChunk*>::iterator i;
    vChunks = cdb->getMatching("AnaProxy");
@@ -917,32 +1027,28 @@ void vjInputManager::ConfigureAnaProxy(vjConfigChunkDB *cdb)
       int unitNum = (*i)->getProperty("unit");
       string proxy_name = (char*)(*i)->getProperty("name");
 
-      vjDEBUG(5) << "	  found a anaProxy : " << proxy_name << endl << vjDEBUG_FLUSH;
-      vjDEBUG(5) << "		attaching to device named: " << (char*) ( (*i)->getProperty("device") ) << endl << vjDEBUG_FLUSH;
-      vjDEBUG(5) << "		at unit number: " << unitNum << endl << vjDEBUG_FLUSH;
+      vjDEBUG(1) << "found a anaProxy : " << proxy_name << endl << vjDEBUG_FLUSH;
+      vjDEBUG(1) << "   attaching to device named: " << (char*) ( (*i)->getProperty("device") ) << endl << vjDEBUG_FLUSH;
+      vjDEBUG(1) << "   at unit number: " << unitNum << endl << vjDEBUG_FLUSH;
 
       int devNum = FindDeviceNum((*i)->getProperty("device"));
-      vjDEBUG(2) << "	Found the device at devNum: " << devNum << endl << vjDEBUG_FLUSH;
+      vjDEBUG(1) << "	Found the device at devNum: " << devNum << endl << vjDEBUG_FLUSH;
 
       if ( devNum != -1)
       {
          int proxy_num = AddAnaProxy(devNum, unitNum);
          AddProxyAlias(proxy_name, proxy_num);
-         vjDEBUG(2) << "	      AnaProxy is set" << endl << vjDEBUG_FLUSH;
+         vjDEBUG(1) << "   AnaProxy is set" << endl << vjDEBUG_FLUSH;
       }
+      else
+         vjDEBUG(0) << "ERROR: Could not find device:" << (*i)->getProperty("device") << endl << vjDEBUG_FLUSH;
    }
    delete vChunks;
+   vjDEBUG_END(1) << endl << vjDEBUG_FLUSH;
 }
 
 void vjInputManager::ConfigureGloveProxy(vjConfigChunkDB* cdb)
 {
-   //XX: hack to get a glove up
-   // Adds a stupified glove
-   /*
-   vjGloveProxy* new_glove_proxy = new vjGloveProxy(&m_dummyGlove,0);
-   m_gloveProxyVector.push_back(new_glove_proxy);
-   */
-
    vjDEBUG_BEGIN(1) << "vjInputManager::ConfigureGloveProxy" << endl << vjDEBUG_FLUSH;
    vector<vjConfigChunk*> *vChunks;
    vector<vjConfigChunk*>::iterator i;
@@ -955,17 +1061,17 @@ void vjInputManager::ConfigureGloveProxy(vjConfigChunkDB* cdb)
       string device_name = (char*)(*i)->getProperty("device");
 
       vjDEBUG_BEGIN(1) << "found a gloveProxy : " << proxy_name << endl << vjDEBUG_FLUSH;
-      vjDEBUG(1)       << "attaching to device named: " << device_name << endl << vjDEBUG_FLUSH;
+      vjDEBUG(1)       << "   attaching to device named: " << device_name << endl << vjDEBUG_FLUSH;
       vjDEBUG(1)       << "   at unit number: " << unitNum << endl << vjDEBUG_FLUSH;
 
       int devNum = FindDeviceNum(device_name.c_str());
-      vjDEBUG_END(1) << "Found the device at devNum: " << devNum << endl << vjDEBUG_FLUSH;
+      vjDEBUG_END(1) << "  Found the device at devNum: " << devNum << endl << vjDEBUG_FLUSH;
 
       if ( devNum != -1)
       {
          int proxy_num = AddGloveProxy(devNum, unitNum);
          AddProxyAlias(proxy_name, proxy_num);
-         vjDEBUG(1) << "GloveProxy is set" << endl << vjDEBUG_FLUSH;
+         vjDEBUG(1) << "   GloveProxy is set" << endl << vjDEBUG_FLUSH;
       }
       else
       {
@@ -992,14 +1098,17 @@ void vjInputManager::ConfigureKeyboardProxy(vjConfigChunkDB* cdb)
       vjDEBUG(1) << "found a keyboardProxy : " << proxy_name << endl << vjDEBUG_FLUSH;
       vjDEBUG(1) << "   attaching to device named: " << dev_name << endl << vjDEBUG_FLUSH;
 
-      int devNum = FindDeviceNum((*i)->getProperty("device"));
+      int devNum = FindDeviceNum(dev_name.c_str());
       vjDEBUG(1) << "	Found the device at devNum: " << devNum << endl << vjDEBUG_FLUSH;
+      vjKeyboard* kb = dynamic_cast<vjKeyboard*>(m_devVector[devNum]);
+      if(kb == NULL)
+         vjDEBUG(0) << "FATAL ERROR: Device is not a keyboard\n" << vjDEBUG_FLUSH;
 
       if ( devNum != -1)
       {
          int proxy_num = AddKeyboardProxy(devNum);
          AddProxyAlias(proxy_name, proxy_num);
-         vjDEBUG(1) << "KeyboardProxy is set" << endl << vjDEBUG_FLUSH;
+         vjDEBUG(1) << "   KeyboardProxy is set" << endl << vjDEBUG_FLUSH;
       }
       else
          vjDEBUG(0) << "ERROR: ConfigureKeyboardProxy: Could not create proxy: " << proxy_name
@@ -1031,7 +1140,7 @@ void vjInputManager::ConfigureGestureProxy(vjConfigChunkDB* cdb)
       {
          int proxy_num = AddGestureProxy(devNum);
          AddProxyAlias(proxy_name, proxy_num);
-         vjDEBUG(1) << "GestureProxy is set" << endl << vjDEBUG_FLUSH;
+         vjDEBUG(1) << "   GestureProxy is set" << endl << vjDEBUG_FLUSH;
       }
       else
          vjDEBUG(0) << "ERROR: ConfigureGestureProxy: Could not create proxy: " << proxy_name
@@ -1043,7 +1152,7 @@ void vjInputManager::ConfigureGestureProxy(vjConfigChunkDB* cdb)
 
 void vjInputManager::ConfigureInputManager(vjConfigChunkDB *cdb)
 {
-   vjDEBUG(2) << "   vjInputManager::ConfigureInputManager" << endl << vjDEBUG_FLUSH;
+   vjDEBUG(1) << "vjInputManager::ConfigureInputManager" << endl << vjDEBUG_FLUSH;
    vjConfigChunk *c;// = cdb->getChunk("vjInputManager");
    vector<vjConfigChunk*> *vChunks;
    vChunks = cdb->getMatching("InputManager");
@@ -1093,12 +1202,13 @@ void vjInputManager::ConfigureProxyAliases(vjConfigChunkDB* cdb)
             // Since all proxies are already in the alias list, we just have to find the
             // one to point to and use it's index
          proxyAliases[alias_name] = proxyAliases[proxy_ptr];
-         vjDEBUG(1) << "      alias:" << alias_name << "   index:" << proxyAliases[proxy_ptr] << endl << vjDEBUG_FLUSH;
+         vjDEBUG(1) << "   alias:" << alias_name << "   index:"
+                    << proxyAliases[proxy_ptr] << endl << vjDEBUG_FLUSH;
       }
    }
    delete vChunks;
 
-   vjDEBUG_END(1) << vjDEBUG_FLUSH;
+   vjDEBUG_END(1) << endl << vjDEBUG_FLUSH;
 }
 
 //: Adds a Proxy alias to the alias list
