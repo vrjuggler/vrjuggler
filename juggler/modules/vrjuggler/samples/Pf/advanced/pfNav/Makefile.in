@@ -41,13 +41,16 @@
 srcdir		= @srcdir@
 
 EXTRA_FLAGS	= @APP_EXTRA_FLAGS@ @APP_EXTRA_FLAGS_PF@
-COMPILE		= @CXX@ @DEFS@ $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@ @DBG_FLAGS@ $(EXTRA_FLAGS)
-LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@ $(EXTRA_FLAGS)
+COMPILE		= @APP_CXX@ @APP_DEFS@ @APP_CXXFLAGS@ @APP_DEBUG_FLAGS@	\
+                  $(VJ_INCLUDES) $(EXTRA_FLAGS)
+LINK		= @APP_LINK@ @APP_LINK_FLAGS@ $(EXTRA_FLAGS)
 
-VJ_INCLUDES	= @INCLUDES@ $(AW_INCLUDES) -I$(VJ_BASE_DIR)/include	\
-                  -I$(srcdir) -I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/pf/advanced/nav \
+VJ_INCLUDES	= @APP_INCLUDES@ $(AW_INCLUDES) -I$(srcdir)		\
+                  -I$(VJ_BASE_DIR)/include				\
+                  -I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/pf/advanced/nav \
                   -I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/pf/advanced/pfTools
-VJ_LIBS		= @APP_VJ_LIBS_BEGIN@ @APP_VJ_LIBS_BASIC@ @APP_VJ_LIBS_GL@ @APP_VJ_LIBS_PF@ $(VJ_AUDIO_LIBS) @APP_VJ_LIBS_END@  @APP_LIBS_BASIC@ 
+VJ_LIBS		= @APP_BASIC_LIBS_BEGIN@ @APP_BASIC_LIBS@		\
+                  @APP_VJ_LIBS_GL@ @APP_VJ_LIBS_PF@ $(VJ_AUDIO_LIBS) @APP_BASIC_LIBS_END@
 
 VJ_LIB_DEPS	= $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler.a		\
                   $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler_ogl.a	\
@@ -74,7 +77,8 @@ vpath %.cpp $(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/pf/advanced/pfTools
 # The proper library path must be specified depending on the Application
 # Binary Interface (ABI) used.  For n32 binaries, use -L/usr/lib32.  For
 # 64-bit binaries, use -L/usr/lib64.
-EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ $(AW_LIBS) @APP_EXTRA_LIBS_PF@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
+EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS@ $(AW_LIBS)	\
+                  @APP_EXTRA_LIBS_PF@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
 COMMON_OBJECTS	= simplePfNavApp.@OBJEXT@        \
                   pfFileIO.@OBJEXT@             \
@@ -93,10 +97,10 @@ default: pfNav
 all: pfNav
 
 pfNav: $(PFNAV_OBJECTS) $(VJ_LIB_DEPS)
-	$(LINK) -o $@ $(PFNAV_OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
+	$(LINK) @EXE_NAME_FLAG@ $(PFNAV_OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
 .cpp.@OBJEXT@:
-	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
+	$(COMPILE) @OBJ_NAME_FLAG@ @OBJ_BUILD_FLAG@ $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
