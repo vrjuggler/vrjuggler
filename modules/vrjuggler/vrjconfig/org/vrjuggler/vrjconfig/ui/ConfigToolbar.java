@@ -340,7 +340,10 @@ public class ConfigToolbar
          for (Iterator itr = context.getResources().iterator(); itr.hasNext(); )
          {
             DataSource data_source = broker.get((String)itr.next());
-            data_source.commit();
+            if (! data_source.isReadOnly())
+            {
+               data_source.commit();
+            }
          }
          success = true;
       }
