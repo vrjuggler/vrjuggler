@@ -68,14 +68,33 @@ public:
     }
 
     // ------------------------------------------------------------------------
-    // Set address to a string like "hostname.domain.com:<port_num>" or IP:port
+    //: Construct an address object using the given address.  It must be of
+    //+ the form <address>:<port> where <address> can be a hostname or a
+    //+ dotted-decimal IP address.
+    //
+    //! PRE: None.
+    //! POST:
+    //
+    //! ARGS: address - A string giving the address and port number separated
+    //+                 by a colon.  The address can be a hostname or a
+    //+                 dotted-decimal IP address.
     // ------------------------------------------------------------------------
     InetAddrNSPR (const std::string& address)
     {
+       std::string::size_type pos;
+       std::string host_addr, host_port;
+       Uint16 port;
+
+       // Extract the address and the port number from the given string.
+       pos       = address.find(":");
+       host_addr = address.substr(0, pos);
+       host_port = address.substr(pos + 1);
+       port      = (Uint16) atoi(host_port.c_str());
+
        memset(&mAddr, 0, sizeof(mAddr));
+       setAddress(host_addr);
+       setPort(port);
        setFamily(SocketTypes::INET);
-       setAddress(address);
-       setPort(PR_INADDR_ANY);
     }
 
     // ------------------------------------------------------------------------

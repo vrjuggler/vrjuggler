@@ -33,9 +33,15 @@
 #include <vprConfig.h>
 
 #include <stdio.h>
+
+#ifdef VPR_OS_Win32
+#define MAXHOSTNAMELEN INTERNET_MAX_HOST_NAME_LENGTH
+#else
+#include <sys/param.h>
+#endif
+
 #include <md/NSPR/InetAddrNSPR.h>
 #include <md/NSPR/NSPRHelpers.h>
-#include <prio.h>
 
 namespace vpr {
 
@@ -96,7 +102,7 @@ InetAddrNSPR::setFamily (const SocketTypes::Domain family) {
 // ----------------------------------------------------------------------------
 std::string
 InetAddrNSPR::getAddressString (void) const {
-    char* ip_str(NULL);
+    char ip_str[256];
     PR_NetAddrToString(&mAddr, ip_str, sizeof(PRNetAddr));
     return std::string(ip_str);
 }
@@ -109,9 +115,10 @@ InetAddrNSPR::setAddress (const std::string& address) {
    bool retval;
    PRStatus ret_status;
    PRHostEnt host_entry;
-   char buffer[1200];
+   char buffer[MAXHOSTNAMELEN];
 
-   ret_status = PR_GetHostByName(address.c_str(), buffer, 1200, &host_entry);
+   ret_status = PR_GetHostByName(address.c_str(), buffer, sizeof(buffer),
+                                 &host_entry);
 
    if(ret_status == PR_FAILURE)
    {
