@@ -46,6 +46,7 @@
 #include <vpr/vprTypes.h>
 #include <vpr/Util/AttributeMapBase.h>
 #include <vector>
+#include <vpr/Util/ReturnStatus.h>
 
 #include <boost/static_assert.hpp>
 #include <map>
