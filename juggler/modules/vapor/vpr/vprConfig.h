@@ -107,6 +107,24 @@
 #   define VPR_CALLBACK_DECL
 #   define VPR_STATIC_CALLBACK(__x) static __x
 
+#elif defined(VPR_OS_MacOSX)
+
+#   define VPR_EXPORT(__type)		__declspec(export) __type
+#   define VPR_EXPORT_CLASS		__declspec(export)
+#   define VPR_EXPORT_DATA(__type)	__declspec(export) __type
+#   define VPR_IMPORT(__type)		__declspec(export) __type
+#   define VPR_IMPORT_CLASS		__declspec(export)
+#   define VPR_IMPORT_DATA(__type)	__declspec(export) __type
+
+#   define VPR_EXTERN(__type)		extern __declspec(export) __type
+#   define VPR_IMPLEMENT(__type)	__declspec(export) __type
+#   define VPR_EXTERN_DATA(__type)	extern __declspec(export) __type
+#   define VPR_IMPLEMENT_DATA(__type)	__declspec(export) __type
+
+#   define VPR_CALLBACK
+#   define VPR_CALLBACK_DECL
+#   define VPR_STATIC_CALLBACK(__x) static __x
+
 #else   /* UNIX (where this stuff is simple!) */
 
 #   define VPR_EXPORT(__type)      __type
