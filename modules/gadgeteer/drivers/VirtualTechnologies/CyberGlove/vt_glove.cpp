@@ -468,7 +468,7 @@ CyberGloveBasic::set_baud_rate(CbGlove glove, void *address_arg1)
   unsigned char baudbyte, dontcaremask = 0x37;
   va_list temp = (va_list)address_arg1;
 
-  baudbyte = va_arg(temp, unsigned char);
+  baudbyte = va_arg(temp, int);
   baudbyte &= dontcaremask;
 
   /* send the set baud rate command */
@@ -503,7 +503,7 @@ CyberGloveBasic::enable_timestamp(CbGlove glove, void *address_arg1)
   int enabled;
   va_list temp = (va_list)address_arg1;
 
-  enabled = va_arg(temp, Boolean);
+  enabled = va_arg(temp, int);
 
   /* send the timestamp enable/disable command */
   if ((vt_serial_write_byte(portfd,CG_TIME_STAMP_CH) < Ok) ||
@@ -539,7 +539,7 @@ CyberGloveBasic::enable_filter(CbGlove glove, void *address_arg1)
   Boolean enabled;
   va_list temp = (va_list)address_arg1;
 
-  enabled = va_arg(temp, Boolean);
+  enabled = va_arg(temp, int);
 
   /* send the filter enable/disable command */
   if ((vt_serial_write_byte(portfd,CG_FILTER_CH) < Ok) ||
@@ -622,7 +622,7 @@ CyberGloveBasic::enable_switch_controls_light(CbGlove glove, void *address_arg1)
   Boolean enabled;
   va_list temp = (va_list)address_arg1;
 
-  enabled = va_arg(temp, Boolean);
+  enabled = va_arg(temp, int);
 
   /* send the switch controls light command */
   if ((vt_serial_write_byte(portfd,CG_LIGHTCNTL_CH) < Ok) ||
