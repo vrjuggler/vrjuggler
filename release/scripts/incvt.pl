@@ -32,6 +32,8 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
+require 5.004;
+
 use Getopt::Std;
 use strict 'vars';
 use vars qw(%opts);
