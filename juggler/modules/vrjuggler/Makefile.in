@@ -870,6 +870,7 @@ install-data:
 
 # Install the Java-based config editor if possible.
 install-gui:
+ifndef NO_JAVA_GUI
 ifeq (${BUILD_GUI}, Y)
 	@echo "------------------------------------------------"
 	@echo "Installing vjcontrol"
@@ -883,6 +884,7 @@ else
 	@echo "Skipping installation of vjcontrol (not built)"
 	@echo "------------------------------------------------"
 endif
+endif	# ifndef NO_JAVA_GUI
 
 # =============================================================================
 # Clean-up targets.  '_clean' removes all the files in the build directories.  
