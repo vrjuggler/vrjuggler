@@ -4,7 +4,7 @@
 #include <ulocks.h>
 #include <SharedMem/vjMemPool.h>
 #include <SharedMem/vjMemPoolSGI.h>
-#include <SharedMem/SharedType.h>
+//#include <SharedMem/SharedType.h>
 #include <Sync/vjMutex.h>
 #include <Sync/vjGuard.h>
 
@@ -24,7 +24,9 @@
 class  vjBarrierSGI
 {
 public:
-   // Initialize the barrier to synchronize <count> threads.
+   // -----------------------------------------------------------------------
+   //: Initialize the barrier to synchronize <count> threads.
+   // -----------------------------------------------------------------------
    vjBarrierSGI (int count) : syncCount(count)
    {
       if (barrierPool == NULL)
@@ -59,8 +61,10 @@ public:
       }
    }
 
-   // Block the caller until all <count> threads have called <wait> and
-   // then allow all the caller threads to continue in parallel.
+   // -----------------------------------------------------------------------
+   //: Block the caller until all <count> threads have called <wait> and
+   //+ then allow all the caller threads to continue in parallel.
+   // -----------------------------------------------------------------------
    int wait(int numProcs)
    {
       ;
@@ -73,18 +77,20 @@ public:
       return 0;
    }
 
-   //-----------------------------------------------------------
-   // addProcess/removeProcess
-   // PURPOSE:
-   //	    Tell the barrier to increase/decrease the count of the number
-   //	    of threads to syncronize
-   //-----------------------------------------------------------
+   // -----------------------------------------------------------------------
+   //: Tell the barrier to increase the count of the number of threads to
+   //+ syncronize.
+   // -----------------------------------------------------------------------
    void addProcess()
    {
       vjGuard<vjMutex> guard(mutex);
       syncCount++;
    }
 
+   // -----------------------------------------------------------------------
+   //: Tell the barrier to decrease the count of the number of threads to
+   //+ syncronize.
+   // -----------------------------------------------------------------------
    void removeProcess()
    {
       vjGuard<vjMutex> guard(mutex);
@@ -115,7 +121,5 @@ protected:
    static int* attachedCounter;
 };
 
-vjMemPoolSGI*  vjBarrierSGI::barrierPool = NULL;
-int*  vjBarrierSGI::attachedCounter = NULL;
 
 #endif
