@@ -26,7 +26,11 @@
 #include <sys/types.h>
 //#include <unistd.h>
 
-#ifndef WIN32
+#ifdef HAVE_SYS_TIME_H
+#   include <sys/time.h>
+#endif
+
+#ifndef VJ_OS_Win32
 #   include <sys/resource.h>
 #endif
 
