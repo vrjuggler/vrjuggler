@@ -105,7 +105,7 @@ $(LIBDIR)/$(SNX_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
-	$(LD) $(LDOPTS) -o $@ $(OBJDIR)/*.$(OBJEXT)
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $@ $(OBJDIR)/*.$(OBJEXT)
 	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"
