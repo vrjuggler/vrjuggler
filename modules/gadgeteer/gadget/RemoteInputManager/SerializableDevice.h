@@ -1,3 +1,18 @@
+/****************** <VPR heading BEGIN do not edit this line> *****************
+ *
+ * VR Juggler Portable Runtime
+ *
+ * Original Authors:
+ *   Allen Bierbaum, Patrick Hartling, Kevin Meinert, Carolina Cruz-Neira
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
+ ****************** <VPR heading END do not edit this line> ******************/
+
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998-2002 by Iowa State University
@@ -22,52 +37,39 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  *
- * -----------------------------------------------------------------
- * File:          $RCSfile$
- * Date modified: $Date$
- * Version:       $Revision$
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VPR_SERIALIZABLE_DEVICE_OBJ_H
+#define _VPR_SERIALIZABLE_DEVICE_OBJ_H
 
-#ifndef _GADGET_POSITIONDATA_H_
-#define _GADGET_POSITIONDATA_H_
+#include <vpr/IO/SerializableObject.h>
 
-#include <gadget/Type/InputData.h>
-#include <gmtl/Matrix.h>
-
-namespace gadget {
-
-    /** InputData subclass for positional data. */
-class GADGET_CLASS_API PositionData: public InputData
+namespace gadget
+{
+                              
+class SerializableDevice : public vpr::SerializableObject
 {
 public:
-
-    /** Constructor. */
-    PositionData (): InputData()
-    {;}
-
-    gmtl::Matrix44f* getPosition()
-    { return &mPosData; }
-    
-    void setPosition(gmtl::Matrix44f posMatrix)
-    { mPosData = posMatrix; }
-
-    PositionData& operator= (const PositionData& pd)
-    {
-        InputData::copy (pd);
-        mPosData = pd.mPosData;
-        return *this;
-    }
-
+   SerializableDevice()
+   {
+      mDelta = 0;
+   }
+   /*
+   * Template method for reading object.
+   * POST: All object data is read from the reader
+   */
+   virtual void setDelta(vpr::Uint64 delta)
+   {
+      mDelta = delta;
+   }
 protected:
-    gmtl::Matrix44f mPosData;
+   vpr::Uint64 mDelta;
 
-}; // class PositionData
+   /** @link dependency 
+    * @stereotype use*/
+   /*#  ObjectReader lnkObjectReader; */
+};
 
-
-}; // namespace gadget
-
+} // namespace vpr
 
 #endif

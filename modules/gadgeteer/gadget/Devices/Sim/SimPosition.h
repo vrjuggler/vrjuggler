@@ -38,7 +38,7 @@
 #include <gadget/Type/Input.h>
 #include <gadget/Devices/Sim/SimInput.h>
 #include <gadget/Type/Position.h>
-
+#include <gadget/Type/InputMixer.h>
 #include <gmtl/Vec.h>
 #include <gmtl/VecOps.h>
 
@@ -50,7 +50,8 @@ namespace gadget
 //
 // This class should not be used directly by the user.
 //!PUBLIC_API:
-class SimPosition :  public SimInput, public Input, public Position
+//class SimPosition :  public SimInput, public Input, public Position
+class SimPosition : public InputMixer<InputMixer<SimInput,Input>,Position>
 {
 public:
    /* constants for the key array */

@@ -42,6 +42,7 @@
 
 // Gadgeteer categories
 const vpr::DebugCategory gadgetDBG_INPUT_MGR("d6be4359-e8cf-41fc-a72b-a5b4f3f29aa2", "DBG_INPUT_MGR", "gadgetINP:");       /* Input output */
+const vpr::DebugCategory gadgetDBG_RIM("2af7e28f-a831-4b7c-b5c9-beda5289ffde", "DBG_RIM", "gadgetRIM:");       /* Input output */
 
 
 #endif

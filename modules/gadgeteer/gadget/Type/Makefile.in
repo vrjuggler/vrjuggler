@@ -49,21 +49,18 @@ SUBOBJDIR	= $(GADGET_LIBRARY)
 
 SRCS		= AnalogProxy.cpp			\
                   DeviceFactory.cpp			\
+                  BaseTypeFactory.cpp			\
                   DeviceInterface.cpp			\
                   DigitalProxy.cpp			\
                   Input.cpp				\
                   KeyboardProxy.cpp			\
                   LinearSigmoidPositionFilter.cpp	\
-                  NetDigital.cpp                        \
-                  NetInput.cpp				\
-                  NetPosition.cpp                       \
                   Position.cpp				\
                   PositionProxy.cpp			\
                   Glove.cpp				\
                   GloveProxy.cpp			\
                   GestureProxy.cpp		\
-                  GloveGesture.cpp		\
-
+                  GloveGesture.cpp		
 
 include $(MKPATH)/dpp.obj.mk
 

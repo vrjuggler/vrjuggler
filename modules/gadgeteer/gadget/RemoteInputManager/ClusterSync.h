@@ -1,0 +1,123 @@
+/****************** <VPR heading BEGIN do not edit this line> *****************
+ *
+ * VR Juggler Portable Runtime
+ *
+ * Original Authors:
+ *   Allen Bierbaum, Patrick Hartling, Kevin Meinert, Carolina Cruz-Neira
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
+ ****************** <VPR heading END do not edit this line> ******************/
+
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VR Juggler is (C) Copyright 1998-2002 by Iowa State University
+ *
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
+
+#ifndef _GADGET_CLUSTER_SYNC_H
+#define _GADGET_CLUSTER_SYNC_H
+
+#include <vpr/vprConfig.h>
+#include <vpr/System.h>
+
+#include <vector>
+
+#include <boost/static_assert.hpp>
+#include <vpr/IO/Socket/SocketStream.h>
+#include <vpr/IO/ObjectWriter.h>
+#include <vpr/IO/ObjectReader.h>
+
+   // Algorithm to calculate clock diff between the two nodes (as a vpr::Interval)
+   // - Initialize tolerance value
+   // Until(passes)
+   // - Connector sends it's current time
+   // - Reciever reads and sends back it's current time
+   // - Connector calculates an approximate difference
+   // - Connector sends a message with an approximated recieve time and the calculated diff
+   // - Reciever responds with either success or failure
+   // - If passed exit loop
+   // - else increase tolerance by 1ms
+   // @todo: hton crap
+   // NOTE:
+   //    One of the reasons that this is so convoluted is....
+   //    InitialState gets triggered explicitly when the previous handler completes
+   //    Otherwise, the only way in is when there is a packet of data waiting for us
+   //    thus, we can't just exist on any state.  We have to exit in a state that is waiting for data.
+   //    This leads to much ugliness (like a goto. grrrrr)
+
+namespace gadget
+{
+
+class ClusterSync
+{
+public:
+	ClusterSync() : syncPacket(12)
+	{
+		mTol = 2;
+		mAccept = false;
+	}
+   void getPacket(unsigned num);
+	void sendAndClear();
+	void clearIntervals();
+	void recieveExpectedTime();
+	void createExpectedTime();
+	void recieveHandshake();
+	void createHandshake();
+	void createResponce();
+	void recieveResponce();
+	void clientClusterSync(vpr::SocketStream* socket_stream);
+	vpr::Interval getClusterSync(vpr::SocketStream* socket_stream);
+	void setSocketStream(vpr::SocketStream* socket_stream)
+	{mSocketStream = socket_stream;}
+
+private:
+	vpr::Interval mLocalSendTime;
+   vpr::Interval mLocalReceiveTime;
+   vpr::Interval mRemoteSendTime;
+	vpr::Interval mRemoteReceiveTime;
+	vpr::Interval mExpectedRemoteTime;
+	vpr::Interval mLatencyTime;
+	vpr::Interval mDelta;
+   vpr::Interval mErrorTime;
+	std::vector<vpr::Uint8> syncPacket;
+	bool mAccept;
+
+	// Tolerance
+	float                   mTol;
+	
+	// Object Reader & Writer
+	unsigned                   mCurHeadPos;
+   vpr::ObjectWriter 			mWriter;
+	vpr::ObjectReader* 			mReader;
+	vpr::SocketStream* 			mSocketStream;
+};
+
+
+} // namespace vpr
+
+#endif

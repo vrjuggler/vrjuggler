@@ -1,6 +1,6 @@
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
- * VR Juggler is (C) Copyright 1998-2002 by Iowa State University
+ * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
  *
  * Original Authors:
  *   Allen Bierbaum, Christopher Just,
@@ -47,9 +47,14 @@
 
 #include <gmtl/Matrix.h>
 #include <vpr/Util/Debug.h>
+//#include <vpr/IO/ObjectReader.h>
+//#include <vpr/IO/ObjectWriter.h>
+#include <gadget/RemoteInputManager/SerializableDevice.h>
+
 
 namespace gadget
 {
+   const unsigned short MSG_DATA_POS = 422;
 
 /** Position is the abstract base class that devices with digital data derive from.
 *
@@ -64,7 +69,7 @@ namespace gadget
 *  Position adds one new pure virtual function, GetPosData for retreiving
 *  the positional data, similar to the addition for Analog and Digital.
 */
-class Position
+class Position : public SerializableDevice
 {
 public:
    typedef gadget::SampleBuffer<PositionData> SampleBuffer_t;
@@ -77,6 +82,7 @@ public:
    virtual ~Position();
 
    virtual bool config(jccl::ConfigChunkPtr c);
+
 
    /** Get Positional data. */
    PositionData getPositionData (int devNum = 0)
@@ -102,6 +108,15 @@ public:
          return mDefaultValue;
       }
    }
+	virtual std::string getBaseType()
+	{
+		return std::string("Position");
+	}
+
+   virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
+   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
+
+
 
    const SampleBuffer_t::buffer_t& getPositionDataBuffer()
    {

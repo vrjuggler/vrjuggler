@@ -38,6 +38,7 @@
 #include <jccl/RTRC/DepChecker.h>
 #include <jccl/Config/ConfigChunkPtr.h>
 #include <vpr/Util/Debug.h>
+#include <jccl/Config/ConfigChunk.h>
 
 namespace gadget{
 

@@ -138,8 +138,6 @@ void DeviceFactory::hackLoadKnownDevices()
       vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vprDEBUG_FLUSH;
    }
 
-   jccl::DependencyManager::instance()->registerChecker(new RmtMgrDepChecker());
-
 #ifndef VPR_OS_Win32
 #ifdef VPR_OS_Darwin
    DeviceConstructor<OSXKeyboard>* osx_keyboard = new DeviceConstructor<OSXKeyboard>;

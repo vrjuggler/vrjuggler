@@ -43,7 +43,7 @@ namespace gadget
 // send 1 msg, recv 1 msg, send 1 msg
 void NetClockSync::firstIterationAsInitiator(SyncConnection& sconn)
 {
-   vprDEBUG(gadgetDBG_INPUT_MGR, 5)
+   /*vprDEBUG(gadgetDBG_INPUT_MGR, 5)
       << "NetClockSync::firstIterationAsInitiator() " << std::endl
       << vprDEBUG_FLUSH;
 
@@ -68,13 +68,13 @@ void NetClockSync::firstIterationAsInitiator(SyncConnection& sconn)
    // send return msg
    msg.createClockSync(clock1, returned_clock2, clock_is_synced);
    sconn.connection->sendMsg(msg);
-   msg.clear();
+   msg.clear();*/
 }
 
 // recv 1 msg, send 1 msg, recv 1 msg
 float NetClockSync::firstIterationAsResponder(SyncConnection& sconn, float& returned_clock1)
 {
-   vprDEBUG(gadgetDBG_INPUT_MGR, 5)
+   /*vprDEBUG(gadgetDBG_INPUT_MGR, 5)
       << "NetClockSync::firstIterationAsResponder() " << std::endl
       << vprDEBUG_FLUSH;
 
@@ -114,14 +114,14 @@ float NetClockSync::firstIterationAsResponder(SyncConnection& sconn, float& retu
    new_clock2.setNow();
    float delta = (new_clock2.usecf()-clock2)/2.0f;
 
-   return delta;
+   return delta;*/
 }
 
 // recv 1 msg, send 1 msg
 // returns true if other comp needs clock and sync should continue
 bool NetClockSync::iterationLoopAsInitiator(SyncConnection& sconn)
 {
-   vprDEBUG(gadgetDBG_INPUT_MGR, 5)
+   /*vprDEBUG(gadgetDBG_INPUT_MGR, 5)
       << "NetClockSync::iterationLoopAsInitiator() " << std::endl
       << vprDEBUG_FLUSH;
 
@@ -147,14 +147,14 @@ bool NetClockSync::iterationLoopAsInitiator(SyncConnection& sconn)
    sconn.connection->sendMsg(msg);
    msg.clear();
 
-   return other_clock_is_synced;
+   return other_clock_is_synced;*/
 }
 
 // send 1 msg, recv 1 msg, return delta
 float NetClockSync::iterationLoopAsResponder(SyncConnection& sconn, const float& clock1, float& clock2,
                                              float& returned_clock1, float& returned_clock2, const bool clock_is_synced)
 {
-   vprDEBUG(gadgetDBG_INPUT_MGR, 5)
+   /*vprDEBUG(gadgetDBG_INPUT_MGR, 5)
       << "NetClockSync::iterationLoopAsResponder() " << std::endl
       << vprDEBUG_FLUSH;
 
@@ -182,12 +182,12 @@ float NetClockSync::iterationLoopAsResponder(SyncConnection& sconn, const float&
    new_clock2.setNow();
    float delta = (new_clock2.usecf() - clock2) / 2.0f;
 
-   return delta;
+   return delta;*/
 }
 
 void NetClockSync::initiateExchange(SyncConnection& sconn)
 {
-   vprDEBUG(gadgetDBG_INPUT_MGR, 5) << "NetClockSync::initiateExchange() "
+   /*vprDEBUG(gadgetDBG_INPUT_MGR, 5) << "NetClockSync::initiateExchange() "
       << std::endl << vprDEBUG_FLUSH;
    // clock synchronization disabled per Eric's suggestion.  This needs to
    // be revisited with vpr intervals and some kind of clock offset per
@@ -235,12 +235,12 @@ void NetClockSync::initiateExchange(SyncConnection& sconn)
 //      other_clock_is_synced = iterationLoopAsInitiator(sconn);
 
 // #endif
-
+	  */
 }
 
 void NetClockSync::respondExchange(SyncConnection& sconn)
 {
-   vprDEBUG(gadgetDBG_INPUT_MGR, 5) << "NetClockSync::respondExchange() "
+   /*vprDEBUG(gadgetDBG_INPUT_MGR, 5) << "NetClockSync::respondExchange() "
       << std::endl << vprDEBUG_FLUSH;
 
    // SPROC does not have resync function yet
@@ -344,24 +344,24 @@ void NetClockSync::respondExchange(SyncConnection& sconn)
 //    iterationLoopAsResponder(sconn, clock1, clock2, returned_clock1, returned_clock2, clock_is_synced);
 
 // #endif
-
+	  */
 }
 
 bool NetClockSync::syncNeeded()
 {
-   if ( mConnections.size() > 0 )
+   /*if ( mConnections.size() > 0 )
    {
       return true;
    }
    else
    {
       return false;
-   }
+   } */
 }
 
 void NetClockSync::sync()
 {
-   vprDEBUG(gadgetDBG_INPUT_MGR, 5) << "NetClockSync::sync() " << std::endl
+   /*vprDEBUG(gadgetDBG_INPUT_MGR, 5) << "NetClockSync::sync() " << std::endl
                                     << vprDEBUG_FLUSH;
 
    std::vector<SyncConnection*>::iterator i;
@@ -378,27 +378,28 @@ void NetClockSync::sync()
 
       delete (*i);  // we have synced this item so delete it
    }
-   mConnections.clear();
+   mConnections.clear();*/
 }
 
 void NetClockSync::syncWithMyClock(NetConnection* conn)
 {
-   vprDEBUG(gadgetDBG_INPUT_MGR, 5) << "NetClockSync::syncWithMyClock() "
+   /*vprDEBUG(gadgetDBG_INPUT_MGR, 5) << "NetClockSync::syncWithMyClock() "
                                     << std::endl << vprDEBUG_FLUSH;
    SyncConnection* sconn = new SyncConnection;
    sconn->state = SYNC_INITIATE;
    sconn->connection = conn;
    mConnections.push_back(sconn);
+	*/
 }
 
 void NetClockSync::syncWithOtherClock(NetConnection* conn)
 {
-   vprDEBUG(gadgetDBG_INPUT_MGR, 5) << "NetClockSync::syncWithOtherClock() "
+   /*vprDEBUG(gadgetDBG_INPUT_MGR, 5) << "NetClockSync::syncWithOtherClock() "
                                     << std::endl << vprDEBUG_FLUSH;
    SyncConnection* sconn = new SyncConnection;
    sconn->state = SYNC_RESPOND;
    sconn->connection = conn;
-   mConnections.push_back(sconn);
+   mConnections.push_back(sconn);*/
 }
 
 }  // end namespace gadget
