@@ -42,11 +42,13 @@ import org.vrjuggler.tweek.services.EnvironmentService;
 import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 import org.vrjuggler.tweek.services.GlobalPreferencesServiceProxy;
 import org.vrjuggler.tweek.services.GlobalPreferencesService;
+
 import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.config.event.ConfigContextEvent;
+import org.vrjuggler.jccl.config.event.ConfigContextListener;
+import org.vrjuggler.jccl.rtrc.*;
 import org.vrjuggler.vrjconfig.PopupButton;
 import org.vrjuggler.vrjconfig.VrjConfigConstants;
-
-import org.vrjuggler.jccl.rtrc.*;
 
 /**
  * A specialized toolbar that pays attention to the ConfigManager.
@@ -112,7 +114,7 @@ public class ConfigToolbar
 
    public void setConfigContext(ConfigContext ctx)
    {
-      this.context.removeContextListener(contextListener);
+      this.context.removeConfigContextListener(contextListener);
       this.context = ctx;
 
       boolean nonempty_context = true;
@@ -122,7 +124,7 @@ public class ConfigToolbar
       }
       //saveBtn.setEnabled(nonempty_context);
       saveAllBtn.setEnabled(nonempty_context);
-      context.addContextListener(contextListener);
+      context.addConfigContextListener(contextListener);
    }
 
    public ConfigContext getConfigContext()
@@ -764,14 +766,14 @@ public class ConfigToolbar
     * toolbar buttons.
     */
    private class ContextChangeListener
-      implements ContextListener
+      implements ConfigContextListener
    {
-      public void resourceAdded(ContextEvent evt)
+      public void resourceAdded(ConfigContextEvent evt)
       {
          saveAllBtn.setEnabled(true);
       }
 
-      public void resourceRemoved(ContextEvent evt)
+      public void resourceRemoved(ConfigContextEvent evt)
       {
          if (context.getResources().size() == 0)
          {
