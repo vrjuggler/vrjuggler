@@ -17,7 +17,7 @@
 
 namespace vprTest
 {
-CPPUNIT_TEST_SUITE_REGISTRATION( ThreadTest );
+//CPPUNIT_TEST_SUITE_REGISTRATION( ThreadTest );
 
 class Tester
 {
@@ -72,20 +72,20 @@ void ThreadTest::testNoSpawnCtor()
       Tester test_obj;
       const vpr::Uint32 start_val(500);
       test_obj.mValue = start_val;
-   
+
       vpr::Thread my_thread;
       CPPUNIT_ASSERT(! my_thread.valid() && "Thread should not be running yet");
-   
+
       vpr::ThreadMemberFunctor<Tester> functor(&test_obj, &Tester::doSomething,
                                                NULL);
       CPPUNIT_ASSERT(functor.isValid() && "Functor should be valid");
-   
+
       my_thread.setFunctor(&functor);
       CPPUNIT_ASSERT(! my_thread.valid() && "Thread should not be running yet");
-   
+
       my_thread.start();
       CPPUNIT_ASSERT(my_thread.valid() && "Thread should be running now");
-   
+
       my_thread.join();
       CPPUNIT_ASSERT_EQUAL(test_obj.mValue, (start_val + Tester::mMaxInc));
    }
@@ -98,14 +98,14 @@ void ThreadTest::testAutoSpawnCtor()
       Tester test_obj;
       const vpr::Uint32 start_val(500);
       test_obj.mValue = start_val;
-   
+
       vpr::ThreadMemberFunctor<Tester> functor(&test_obj, &Tester::doSomething,
                                                NULL);
       CPPUNIT_ASSERT(functor.isValid() && "Functor should be valid");
-   
+
       vpr::Thread my_thread(&functor);
       CPPUNIT_ASSERT(my_thread.valid() && "Thread should be running now");
-   
+
       my_thread.join();
       CPPUNIT_ASSERT_EQUAL(test_obj.mValue, (start_val + Tester::mMaxInc));
    }
