@@ -1,6 +1,7 @@
 #include <vjConfig.h>
 #include <string.h>
 #include <Kernel/vjKernel.h>
+#include <Config/vjChunkFactory.h>
 
 // Initailize Statics
 vjKernel* vjKernel::_instance = NULL;
@@ -126,6 +127,7 @@ void vjKernel::loadConfigFile()
    strcat(chunk_desc_file, "/Data/chunksDesc");
 
    configDesc = new vjChunkDescDB;
+   vjChunkFactory::setChunkDescDB (configDesc);
    if (!configDesc->load(chunk_desc_file))
    {
       cerr << "vjKernel::loadConfig: Config Desc failed to load file: " << endl;
