@@ -157,6 +157,10 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       {
          mStatusMsgButton.setIcon(mBulbOnIcon);
       }
+      else
+      {
+         mStatusMsgButton.setForeground(Color.red);
+      }
 
       // If the user's skill level is below intermediate, give them a hint that
       // there is a message printed in the message panel.  They may not have
@@ -672,6 +676,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
          else
          {
             mStatusMsgButton.setText("Collapse");
+            mStatusMsgButton.setForeground(Color.black);
          }
       }
    }
