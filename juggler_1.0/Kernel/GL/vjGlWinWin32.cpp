@@ -222,6 +222,11 @@ bool vjGlWinWin32::setPixelFormat(HDC hDC)
 
 	/* Defaults. */
 	pfd.dwFlags = PFD_SUPPORT_OPENGL | PFD_DRAW_TO_WINDOW | PFD_DOUBLEBUFFER;
+
+        if ( mDisplay->inStereo() ) {
+            pfd.dwFlags |= PFD_STEREO;
+        }
+
 	pfd.iPixelType = PFD_TYPE_RGBA;
 	pfd.cColorBits = 32;
 	pfd.cRedBits = 8; /* Try to get the maximum. */
@@ -244,8 +249,7 @@ bool vjGlWinWin32::setPixelFormat(HDC hDC)
        format that doesn't have stereo even if it was requested
        so we need to make sure that if stereo was selected, we
        got it. */
-		/*
-		if (stereo)
+		if (mDisplay->inStereo())
 		{
 			if (!(match->dwFlags & PFD_STEREO))
 			{
@@ -253,7 +257,6 @@ bool vjGlWinWin32::setPixelFormat(HDC hDC)
 				return NULL;
 			}
 		}
-		*/
 	}
 
 	// Set the pixel format for the device context
