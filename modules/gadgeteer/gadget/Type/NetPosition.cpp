@@ -4,7 +4,7 @@
 namespace gadget{
 
 // constructor for a transmitting network device
-NetPosition::NetPosition(const std::string& src_device_name, Input* input_ptr, VJ_NETID_TYPE local_device_id, VJ_NETID_TYPE rmt_device_id) : NetInput(src_device_name, input_ptr, local_device_id, rmt_device_id){
+NetPosition::NetPosition(const std::string& src_device_name, Input* input_ptr, VJ_NETID_TYPE local_device_id, VJ_NETID_TYPE rmt_device_id) : NetInput(src_device_name, input_ptr, local_device_id, rmt_device_id, 16 * sizeof(float) ){
 
    vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_CONFIG_LVL) << "NetPosition: local_device_id = " << local_device_id << std::endl << vprDEBUG_FLUSH;
 
@@ -30,7 +30,7 @@ NetPosition::NetPosition(const std::string& src_device_name, Input* input_ptr, V
 }
 
 // constructor for a transmitting network proxy
-NetPosition::NetPosition(const std::string& src_device_name, Proxy* proxy_ptr, VJ_NETID_TYPE local_device_id, VJ_NETID_TYPE rmt_device_id) : NetInput(src_device_name, proxy_ptr, local_device_id, rmt_device_id){
+NetPosition::NetPosition(const std::string& src_device_name, Proxy* proxy_ptr, VJ_NETID_TYPE local_device_id, VJ_NETID_TYPE rmt_device_id ) : NetInput(src_device_name, proxy_ptr, local_device_id, rmt_device_id, 16 * sizeof(float)){
    mLocalSource.init(mDeviceName);
    mSendBuffer.resize(3 + 16 * sizeof(float)); // 2 bytes of code/id, 16*4 bytes of data, 1 byte for semicolon
    vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_HEX_LVL) << "NetPosition: SendBuffer size: " << (3 + 16 * sizeof(float) ) << std::endl << vprDEBUG_FLUSH;
@@ -38,7 +38,7 @@ NetPosition::NetPosition(const std::string& src_device_name, Proxy* proxy_ptr, V
 }
 
 // constructor for a receiving NetInput
-NetPosition::NetPosition(jccl::ConfigChunkPtr chunk, VJ_NETID_TYPE local_device_id) : NetInput(chunk, local_device_id){
+NetPosition::NetPosition(jccl::ConfigChunkPtr chunk, VJ_NETID_TYPE local_device_id) : NetInput(chunk, local_device_id, 16 * sizeof(float)){
    mNetworkMatrices.resize(1);  // a proxy only points to a single data item
    mSendBuffer.resize(3 + 16 * sizeof(float) * mNetworkMatrices.size()); // buffer not used when receiving, but its size is currently used to determine how much data to pull from the recv buffer
 }
