@@ -158,7 +158,7 @@ int EventWindowOSX::onlyModifier(int mod)
 void EventWindowOSX::updateData()
 {
    vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
-   if ( mHandleEventsHasBeenCalled )            // If we haven't updated anything, then don't swap stuff
+   //if ( mHandleEventsHasBeenCalled )            // If we haven't updated anything, then don't swap stuff
    {
       mHandleEventsHasBeenCalled = false;
 
