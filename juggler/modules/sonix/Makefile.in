@@ -38,11 +38,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-
 default: debug
-
-LIBDIR_NAME?=lib
-LIBDIR_BASE?=@topdir@/$(LIBDIR_NAME)
 
 # This is a hack to deal with GNU make's ignorance about defined targets.
 # Without this, the 'default' set in dpp.subdir.mk becomes the default
@@ -55,6 +51,8 @@ include @topdir@/make.defs.mk
 includedir           = @includedir@
 instlinks            = $(topdir)/install-clone
 
+STATICLIB_EXT	= @STATICLIB_EXT@
+DYNAMICLIB_EXT	= @DYNAMICLIB_EXT@
 
 SNX_LIBRARY           = @LIB_PREFIX@sonix
 SNX_LIB_STATIC        = $(SNX_LIBRARY).$(STATICLIB_EXT)
@@ -243,20 +241,6 @@ install-share:
 
 install-test:
 
-include $(MKPATH)/dpp.libs.mk
-
-# -----------------------------------------------------------------------------
-# Clean-up.
-# -----------------------------------------------------------------------------
-include $(MKPATH)/dpp.clean.mk
-CLEAN_DIRS      += $(BUILDDIR_BASE) $(LIBDIR_NAME) $(instlinks)
-CLOBBER_DIRS    += $(BUILDDIR_BASE) $(LIBDIR_NAME)
-
-
-# this is for "ooops! i configured in the root dir of my project..."
-cleanconfigure:
-	rm config.cache configure config.status reconfig simple_config.h make.defs.mk config.log aclocal.m4 Makefile
-
 # -------------------------------------
 # Build all versions of the libraries.
 # -------------------------------------
@@ -312,9 +296,17 @@ endif
 	@echo ">>> Sonix make release completed on `LTIME=C date`"
 	@echo "==============================================================="
 
-# =============================================================================
-# Automatically generated documentation.
-# =============================================================================
-docs: doc-internal doc-public
-
+include $(MKPATH)/dpp.libs.mk
 include $(MKPATH)/dpp.subdir.mk
+
+# -----------------------------------------------------------------------------
+# Clean-up.
+# -----------------------------------------------------------------------------
+include $(MKPATH)/dpp.clean.mk
+CLEAN_DIRS      += $(BUILDDIR_BASE) $(LIBDIR_NAME) $(instlinks)
+CLOBBER_DIRS    += $(BUILDDIR_BASE) $(LIBDIR_NAME)
+
+
+# this is for "ooops! i configured in the root dir of my project..."
+cleanconfigure:
+	rm config.cache configure config.status reconfig simple_config.h make.defs.mk config.log aclocal.m4 Makefile
