@@ -75,6 +75,21 @@ jccl::ConfigElementPtr DisplayManager::getDisplaySystemElement()
          }
       }
       cfg_mgr->unlockActive();
+      
+      // XXX: This hack sucks but we need to ensure that we get the display_system element.
+      cfg_mgr->lockPending();
+      {
+         std::list<jccl::ConfigManager::PendingElement>::iterator i;
+         for(i=cfg_mgr->getPendingBegin(); i != cfg_mgr->getPendingEnd();++i)
+         {
+            if( (*i).mElement->getID() == std::string("display_system") )
+            {
+               mDisplaySystemElement = (*i).mElement;
+               break;         // This guarantees that we get the first displaySystem element.
+            }
+         }
+      }
+      cfg_mgr->unlockPending();
 
 //      vprASSERT(mDisplaySystemElement.get() != NULL && "No Display Manager config element found!");
    }
