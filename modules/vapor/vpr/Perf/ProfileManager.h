@@ -214,22 +214,22 @@ namespace vpr
       }
    };
 
-#if defined(DEBUG) || defined(_DEBUG)
-#define  VPR_PROFILE( name )        vpr::ProfileSample __profile( name )
-#else
+#if defined(DISABLE_VPR_PROFILE)
 #define  VPR_PROFILE( name )
+#else
+#define  VPR_PROFILE( name )        vpr::ProfileSample __profile( name )
 #endif
 
-#if defined(DEBUG) || defined(_DEBUG)
-#define  VPR_PROFILE_HISTORY( name, queue_size )         vpr::ProfileSample __profile( name, queue_size)
-#else
+#if defined(DISABLE_VPR_PROFILE)
 #define  VPR_PROFILE_HISTORY( name, queue_size )
+#else
+#define  VPR_PROFILE_HISTORY( name, queue_size )         vpr::ProfileSample __profile( name, queue_size)
 #endif
 
-#if defined(DEBUG) || defined(_DEBUG)
-#define  VPR_PROFILE_RESULTS( )        vpr::ProfileManager::printTree( )
-#else
+#if defined(DISABLE_VPR_PROFILE)
 #define  VPR_PROFILE_RESULTS( )
+#else
+#define  VPR_PROFILE_RESULTS( )        vpr::ProfileManager::printTree( )
 #endif
 
 } // end vpr namespace
