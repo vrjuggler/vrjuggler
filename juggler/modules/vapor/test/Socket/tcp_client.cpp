@@ -1,5 +1,4 @@
-/*************** <auto-copyright.pl BEGIN do not edit this line> **************
- *
+/*************** <auto-copyright.pl BEGIN do not edit this line> ************** *
  * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
  *
  * Original Authors:
@@ -34,6 +33,8 @@
 
 #include <vpr/vpr.h>
 #include <vpr/IO/Socket/SocketStream.h>
+#include <vpr/Util/Interval.h>
+#include <vpr/Util/Debug.h>
 
 
 int
@@ -74,18 +75,26 @@ main (int argc, char* argv[]) {
             ssize_t bytes;
 
             // Read from teh server.
-            status = sock->read(buffer, 40, bytes);
+            status = sock->read(buffer, 40, bytes,
+                                vpr::Interval(5, vpr::Interval::SEC));
 
-            // If we read anything, print it.
-            if ( bytes > 0 ) {
-                printf("Read %d bytes from server\n", bytes);
-                printf("    Got '%s'\n", buffer);
+            if ( status.success() ) {
+                // If we read anything, print it.
+                if ( bytes > 0 ) {
+                    printf("Read %d bytes from server\n", bytes);
+                    printf("    Got '%s'\n", buffer);
+                }
+                else if ( bytes == -1 ) {
+                    printf("Error reading!\n");
+                }
+                else {
+                    printf("What the ???\n");
+                }
             }
-            else if ( bytes == -1 ) {
-                printf("Error reading!\n");
-            }
-            else {
-                printf("What the ???\n");
+            else if ( status == vpr::Status::Timeout ) {
+                vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+                    << "No resposne from server within timeout period!\n"
+                    << vprDEBUG_FLUSH;
             }
 
             fflush(stdout);
