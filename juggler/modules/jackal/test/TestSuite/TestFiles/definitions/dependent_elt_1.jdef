@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.0"?>
+<definition xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/definition http://www.vrjuggler.org/jccl/xsd/3.0/definition.xsd"
+            name="dependent_elt_1">
+   <definition_version version="1" label="Dependent Element">
+      <help>This is to be used as a simple dependency of another element.</help>
+      <parent/>
+      <property valuetype="boolean" variable="false" name="boolProp">
+         <help></help>
+         <value label="Boolean" defaultvalue="false" />
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>
