@@ -172,7 +172,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     getMaxSegmentSize (Int32& size) const {
         return m_socket_stream_imp.getMaxSegmentSize(size);
     }
@@ -180,7 +180,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     setMaxSegmentSize (const Int32 size) {
         return m_socket_stream_imp.setMaxSegmentSize(size);
     }
@@ -188,7 +188,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     getNoDelay (bool& enabled) const {
         return m_socket_stream_imp.getNoDelay(enabled);
     }
@@ -196,7 +196,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     setNoDelay (const bool enable_val) {
         return m_socket_stream_imp.setNoDelay(enable_val);
     }

@@ -110,7 +110,7 @@ public:
 protected:
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    virtual int
+    virtual bool
     getOption (const SocketOptions::Types option,
                struct SocketOptions::Data& data)
     {
@@ -119,7 +119,7 @@ protected:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    virtual int
+    virtual bool
     setOption (const SocketOptions::Types option,
                const struct SocketOptions::Data& data)
     {

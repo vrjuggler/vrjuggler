@@ -322,14 +322,14 @@ protected:
     /**
      *
      */
-    int getOption(const SocketOptions::Types option,
-                  struct SocketOptions::Data& data);
+    virtual bool getOption(const SocketOptions::Types option,
+                           struct SocketOptions::Data& data);
 
     /**
      *
      */
-    int setOption(const SocketOptions::Types option,
-                  const struct SocketOptions::Data& data);
+    virtual bool setOption(const SocketOptions::Types option,
+                           const struct SocketOptions::Data& data);
 
     SOCKET            m_sockfd;
     InetAddr          m_local_addr;

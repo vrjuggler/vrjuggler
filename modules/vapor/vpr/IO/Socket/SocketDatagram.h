@@ -137,7 +137,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     getMcastInterface (InetAddr& mcast_if) {
         return m_socket_imp->getMcastInterface(mcast_if);
     }
@@ -145,7 +145,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     setMcastInterface (const InetAddr& mcast_if) {
         return m_socket_imp->setMcastInterface(mcast_if);
     }
@@ -153,7 +153,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     getMcastTimeToLive (Uint8& ttl) {
         return m_socket_imp->getMcastTimeToLive(ttl);
     }
@@ -161,7 +161,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     setMcastTimeToLive (const Uint8 ttl) {
         return m_socket_imp->setMcastTimeToLive(ttl);
     }
@@ -169,7 +169,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     getMcastLoopback (Uint8& loop) {
         return m_socket_imp->getMcastLoopback(loop);
     }
@@ -177,7 +177,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     setMcastLoopback (const Uint8 loop) {
         return m_socket_imp->setMcastLoopback(loop);
     }
@@ -185,7 +185,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     addMcastMember (const McastReq& request) {
         return m_socket_imp->addMcastMember(request);
     }
@@ -193,7 +193,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     dropMcastMember (const McastReq& request) {
         return m_socket_imp->dropMcastMember(request);
     }

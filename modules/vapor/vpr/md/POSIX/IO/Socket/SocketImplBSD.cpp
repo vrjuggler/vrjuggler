@@ -238,11 +238,12 @@ union sockopt_data {
 /**
  *
  */
-int
+bool
 SocketImpBSD::getOption (const SocketOptions::Types option,
                          struct SocketOptions::Data& data)
 {
-    int opt_name, opt_level, retval;
+    int opt_name, opt_level, status;
+    bool retval;
     socklen_t opt_size;
     union sockopt_data opt_data;
 
@@ -310,10 +311,12 @@ SocketImpBSD::getOption (const SocketOptions::Types option,
         break;
     }
 
-    retval = getsockopt(m_handle->m_fdesc, opt_level, opt_name,
+    status = getsockopt(m_handle->m_fdesc, opt_level, opt_name,
                         (void*) &opt_data, &opt_size);
 
-    if ( retval == 0 ) {
+    if ( status == 0 ) {
+        retval = true;
+
         // This extracts the information from the union passed to getsockopt(2)
         // and puts it in our friendly SocketOptions::Data object.  This code
         // depends on the type of that object being a union!
@@ -375,6 +378,7 @@ SocketImpBSD::getOption (const SocketOptions::Types option,
         }
     }
     else {
+        retval = false;
         fprintf(stderr,
                 "[vpr::SocketImpBSD] ERROR: Could not get socket option for socket %s: %s\n",
                 m_handle->getName().c_str(), strerror(errno));
@@ -386,7 +390,7 @@ SocketImpBSD::getOption (const SocketOptions::Types option,
 /**
  *
  */
-int
+bool
 SocketImpBSD::setOption (const SocketOptions::Types option,
                          const struct SocketOptions::Data& data)
 {
@@ -510,8 +514,7 @@ SocketImpBSD::setOption (const SocketOptions::Types option,
         break;
     }
 
-    return setsockopt(m_handle->m_fdesc, opt_level, opt_name, &opt_data,
-                      opt_size);
+    return (setsockopt(m_handle->m_fdesc, opt_level, opt_name, &opt_data, opt_size) == 0);
 }
 
 }; // End of vpr namespace

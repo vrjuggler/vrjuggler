@@ -43,7 +43,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     getMcastInterface (InetAddr& mcast_if) {
         SocketOptions::Data option;
         int retval;
@@ -60,7 +60,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     setMcastInterface (const InetAddr& mcast_if) {
         SocketOptions::Data option;
         option.mcast_if = mcast_if;
@@ -70,7 +70,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     getMcastTimeToLive (Uint8& ttl) {
         SocketOptions::Data option;
         int retval;
@@ -87,7 +87,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     setMcastTimeToLive (const Uint8 ttl) {
         SocketOptions::Data option;
         option.mcast_ttl = ttl;
@@ -97,7 +97,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     getMcastLoopback (Uint8& loop) {
         SocketOptions::Data option;
         int retval;
@@ -114,7 +114,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     setMcastLoopback (const Uint8 loop) {
         SocketOptions::Data option;
         option.mcast_loopback = loop;
@@ -124,7 +124,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     addMcastMember (const McastReq& request) {
         SocketOptions::Data option;
         option.mcast_add_member = request;
@@ -134,7 +134,7 @@ public:
     /**
      *
      */
-    inline int
+    inline bool
     dropMcastMember (const McastReq& request) {
         SocketOptions::Data option;
         option.mcast_drop_member = request;

@@ -263,14 +263,14 @@ protected:
     /**
      *
      */
-    virtual int getOption(const SocketOptions::Types option,
-                          struct SocketOptions::Data& data);
+    virtual bool getOption(const SocketOptions::Types option,
+                           struct SocketOptions::Data& data);
 
     /**
      *
      */
-    virtual int setOption(const SocketOptions::Types option,
-                          const struct SocketOptions::Data& data);
+    virtual bool setOption(const SocketOptions::Types option,
+                           const struct SocketOptions::Data& data);
 
     FileHandleUNIX*   m_handle;      //:
     InetAddr          m_local_addr;  //: The local site's address structure
