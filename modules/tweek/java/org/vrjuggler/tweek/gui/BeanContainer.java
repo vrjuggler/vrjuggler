@@ -64,7 +64,7 @@ public class BeanContainer extends JPanel
    // Public methods.
    // ========================================================================
 
-   public BeanContainer ()
+   public BeanContainer()
    {
       // Before we register ourselves as a listener for Bean instatiation
       // events, query the list of existing Beans.  We need to make sure that
@@ -109,7 +109,7 @@ public class BeanContainer extends JPanel
       }
    }
 
-   public void replaceViewer (org.vrjuggler.tweek.beans.BeanModelViewer v)
+   public void replaceViewer(org.vrjuggler.tweek.beans.BeanModelViewer v)
    {
       if ( v != null )
       {
@@ -119,18 +119,18 @@ public class BeanContainer extends JPanel
       }
    }
 
-   public synchronized void addUserLevelChangeListener (UserLevelChangeListener listener)
+   public synchronized void addUserLevelChangeListener(UserLevelChangeListener listener)
    {
       System.out.println("Adding new UserLevelChangeListener");
       mLevelListeners.add(listener);
    }
 
-   public synchronized void removeUserLevelChangeListener (UserLevelChangeListener listener)
+   public synchronized void removeUserLevelChangeListener(UserLevelChangeListener listener)
    {
       mLevelListeners.removeElement(listener);
    }
 
-   public void fireUserLevelChange (int old_level, int new_level)
+   public void fireUserLevelChange(int old_level, int new_level)
    {
       UserLevelChangeEvent e = new UserLevelChangeEvent(this, old_level,
                                                         new_level);
@@ -150,18 +150,18 @@ public class BeanContainer extends JPanel
       }
    }
 
-   public synchronized void addCommunicationListener (CommunicationListener listener)
+   public synchronized void addCommunicationListener(CommunicationListener listener)
    {
       System.out.println("Adding new CommunicationListener");
       mCommListeners.add(listener);
    }
 
-   public synchronized void removeCommunicationListener (CommunicationListener listener)
+   public synchronized void removeCommunicationListener(CommunicationListener listener)
    {
       mCommListeners.removeElement(listener);
    }
 
-   public void fireConnectionEvent (CorbaService corba_if)
+   public void fireConnectionEvent(CorbaService corba_if)
    {
       CommunicationEvent e =
          new CommunicationEvent(this, CommunicationEvent.CONNECT, corba_if);
@@ -181,7 +181,7 @@ public class BeanContainer extends JPanel
       }
    }
 
-   public void fireDisconnectionEvent (CorbaService corba_if)
+   public void fireDisconnectionEvent(CorbaService corba_if)
    {
       CommunicationEvent e = new CommunicationEvent(this,
                                                     CommunicationEvent.DISCONNECT,
@@ -203,24 +203,24 @@ public class BeanContainer extends JPanel
    }
 
    // XXX: Should this be here or in TweekFrame?
-   public synchronized void addTweekFrameListener (TweekFrameListener l)
+   public synchronized void addTweekFrameListener(TweekFrameListener l)
    {
       System.out.println("Adding new TweekFrameListener");
       mFrameListeners.add(l);
    }
 
-   public synchronized void removeTweekFrameListener (TweekFrameListener l)
+   public synchronized void removeTweekFrameListener(TweekFrameListener l)
    {
       mFrameListeners.removeElement(l);
    }
 
-   public void fireFrameOpened ()
+   public void fireFrameOpened()
    {
       TweekFrameEvent e = new TweekFrameEvent(this, TweekFrameEvent.FRAME_OPEN);
       fireFrameStateChangeEvent(e);
    }
 
-   public void fireFrameClosed ()
+   public void fireFrameClosed()
    {
       TweekFrameEvent e = new TweekFrameEvent(this, TweekFrameEvent.FRAME_CLOSE);
       fireFrameStateChangeEvent(e);
@@ -233,13 +233,15 @@ public class BeanContainer extends JPanel
     * If it is so determined, the Bean is automatically added to the
     * collection of listeners for CommunicationEvents.
     */
-   public void beanInstantiated (BeanInstantiationEvent event)
+   public void beanInstantiated(BeanInstantiationEvent event)
    {
       Object bean = event.getBean();
 
-      if ( ! (bean instanceof PanelBean) ) {
+      if ( ! (bean instanceof PanelBean) )
+      {
          return;
       }
+
       bean = ((PanelBean)bean).getComponent();
 
       try
@@ -272,7 +274,7 @@ public class BeanContainer extends JPanel
       this.setLayout(mContainerLayout);
    }
 
-   private void fireFrameStateChangeEvent (TweekFrameEvent e)
+   private void fireFrameStateChangeEvent(TweekFrameEvent e)
    {
       TweekFrameListener l = null;
       Vector listeners;
