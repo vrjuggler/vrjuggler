@@ -83,8 +83,8 @@ bool EventWindowOSX::config(jccl::ConfigElementPtr e)
    }
 
    // Get size and position
-   m_width = e->getProperty<int>("width");
-   m_height = e->getProperty<int>("height");
+   m_width = e->getProperty<int>("size", 0);
+   m_height = e->getProperty<int>("size", 1);
 
    if ( m_width == 0 )
    {

@@ -110,8 +110,8 @@ bool EventWindowXWin::config(jccl::ConfigElementPtr e)
       mUseOwnDisplay = true;
 
       // Get size and position
-      mWidth  = e->getProperty<int>("width");
-      mHeight = e->getProperty<int>("height");
+      mWidth  = e->getProperty<int>("size", 0);
+      mHeight = e->getProperty<int>("size", 1);
 
       // Sanity checks.
       if (mWidth == 0) mWidth = 400;
