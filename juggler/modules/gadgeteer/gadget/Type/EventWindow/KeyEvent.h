@@ -40,8 +40,6 @@
 #include <gadget/Type/EventWindow/Keys.h>
 #include <gadget/Type/EventWindow/EventFactory.h>
 
-#include <vpr/IO/SerializableObject.h>
-
 
 namespace gadget
 {
@@ -52,7 +50,7 @@ GADGET_REGISTER_EVENT_CREATOR( KeyEvent, KeyReleaseEvent );
 /**
  * Key press or release event class.
  */
-class KeyEvent : public gadget::Event
+class GADGET_CLASS_API KeyEvent : public gadget::Event
 {
 public:
    /**
@@ -76,12 +74,8 @@ public:
     *
     * @see gadget::ModifierMask
     */
-   KeyEvent(const gadget::EventType& type, const gadget::Keys& key,
-            const int& mask, const unsigned long& time, char asciiKey = 0)
-      : gadget::Event(type, time), mKey(key), mModifierMask(mask),
-        mAsciiKey(asciiKey)
-   {
-   }
+   KeyEvent(const gadget::EventType type, const gadget::Keys key,
+            int mask, unsigned long time, char asciiKey = 0);
 
    /**
     * Default constructor needed in order to use the templated EventFactory 
@@ -89,13 +83,7 @@ public:
     * correct subtype of Event, KeyEvent in this case, to be created 
     * during de-serialization.
     */
-   KeyEvent() 
-      : gadget::Event(NoEvent, 0)
-   {
-      mKey           = gadget::KEY_SPACE;
-      mModifierMask  = 0;
-      mAsciiKey      = ' ';
-   }
+   KeyEvent();
 
    /**
     * Get the key that was pressed while generating this event.
@@ -129,35 +117,12 @@ public:
    /**
     * Serializes this event using the given ObjectWriter.
     */
-   vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
-   {
-      writer->writeUint16(mType);
+   virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
 
-      // Serialize all member variables
-      writer->writeUint32(mKey);
-      writer->writeUint32(mModifierMask);
-      writer->writeUint64(mTime);
-      writer->writeUint8(mAsciiKey);
-      
-      return vpr::ReturnStatus::Succeed;
-   }
-   
    /**
     * De-serializes this event using the given ObjectReader.
     */
-   vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
-   {
-      // We have already read the type in EventWindow to decide
-      // if we should construct a KeyEvent or a MouseEvent
-      //mType = reader->readUint16();
-
-      // De-Serialize all member variables
-      mKey = (gadget::Keys)reader->readUint32();
-      mModifierMask = reader->readUint32();
-      mTime = reader->readUint64();
-      mAsciiKey = reader->readUint8();
-      return vpr::ReturnStatus::Succeed;
-   }
+   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
 
 protected:
    gadget::Keys mKey;          /**< The actual key pressed. */
