@@ -42,7 +42,7 @@ import javax.swing.event.ChangeListener;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.editors.PropertyEditorPanel;
 import org.vrjuggler.vrjconfig.commoneditors.DeviceTypeEditor;
-import org.vrjuggler.vrjconfig.commoneditors.ProxyEditor;
+import org.vrjuggler.vrjconfig.commoneditors.SimpleProxyEditor;
 import org.vrjuggler.vrjconfig.commoneditors.TransmitterTransformPanel;
 
 
@@ -360,7 +360,7 @@ public class MotionStarEditorPanel
 
    private TransmitterTransformPanel mPosXformFilterPanel =
       new TransmitterTransformPanel();
-   private ProxyEditor mProxyEditorPanel = new ProxyEditor();
+   private SimpleProxyEditor mProxyEditorPanel = new SimpleProxyEditor();
    private JPanel mHardwarePanel = new JPanel();
    private TitledBorder mHardwarePanelTitle = new TitledBorder("");
    private JPanel mRealHardwarePanel = new JPanel();
