@@ -341,7 +341,7 @@ public:  // Configure the application
       // if the navigator is already created then initScene has been called,
       // so we need to set the home pos in the nav, not just the member var.
       // FIXME: some code duplication here.
-      if (mNavigators[0] != NULL)
+      if (mNavigators.size() > 0 && mNavigators[0] != NULL)
       {
          vjDEBUG(vjDBG_ALL,0) << "setting pos\n" << vjDEBUG_FLUSH;
 
