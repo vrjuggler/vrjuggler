@@ -1,5 +1,8 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2004-11-13 patrickh    Refactored the handling of TweekFrameListener so that
+                       all window events are delivered to the listeners.
+                       NEW VERSION: 0.20.0
 2004-11-05 patrickh    Added EnvironmentService.getenv(), which is implemented
                        using a Java native method.
                        NEW VERSION: 0.19.2
