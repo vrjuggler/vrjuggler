@@ -133,6 +133,8 @@ class ElementTree extends JTree implements DragGestureListener,
       popup.setOpaque(true);
       popup.setLightWeightPopupEnabled(true);
 
+
+
       // Add mouse listener to get the popup menu events.
       addMouseListener(
          new MouseAdapter() 
@@ -159,6 +161,25 @@ class ElementTree extends JTree implements DragGestureListener,
                }
             } 
          });
+      
+      // Add key listener to catch the shortcuts for copy/paste
+      addKeyListener(
+            new KeyAdapter()
+            {
+               public void keyPressed(KeyEvent e)
+               {
+                  if(e.getKeyCode() == KeyEvent.VK_C && e.getModifiers() == ActionEvent.CTRL_MASK)
+                  {
+                     System.out.println("We have a copy.");
+                     actionPerformed(new ActionEvent(this, 0, "copy"));
+                  }
+                  if(e.getKeyCode() == KeyEvent.VK_V && e.getModifiers() == ActionEvent.CTRL_MASK)
+                  {
+                     System.out.println("We have a paste.");
+                     actionPerformed(new ActionEvent(this, 0, "paste"));
+                  }
+               }
+            });
    }
 
    /**
