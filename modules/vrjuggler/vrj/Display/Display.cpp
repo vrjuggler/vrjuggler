@@ -144,6 +144,20 @@ void Display::configViewports(jccl::ConfigChunkPtr chunk)
    }
 }
 
+jccl::ConfigChunkPtr Display::getGlFrameBufferConfig()
+{
+   jccl::ConfigChunkPtr chunk;
+
+   // XXX: Refactor this to allow different frame buffer child chunks.  Right
+   // now, this assumes that the child chunk type is OpenGLFBConfig.
+   if ( mDisplayChunk->getNum("frameBufferConfig") == 1 )
+   {
+      chunk =
+         mDisplayChunk->getProperty<jccl::ConfigChunkPtr>("frameBufferConfig");
+   }
+
+   return chunk;
+}
 
 VJ_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, Display& disp)
 {
@@ -159,4 +173,5 @@ VJ_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, Display& disp)
 
    return out;
 }
-};
+
+}

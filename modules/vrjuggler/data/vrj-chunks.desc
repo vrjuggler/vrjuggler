@@ -249,6 +249,11 @@ The filters are applied in the order that they are specified in this configurati
       <help>Graphics pipe.  Zero-based reference to the display system chunk</help>
       <item label="Pipe" defaultvalue="0" />
     </PropertyDesc>
+    <PropertyDesc name="Frame Buffer Configuration" token="frameBufferConfig" type="embeddedchunk" variable="0">
+      <help>Configuration of this display's frame buffer.</help>
+      <item label="Frame Buffer Configuration" />
+      <enumeration name="OpenGLFBConfig" />
+    </PropertyDesc>
     <PropertyDesc token="stereo" name="In stereo" type="bool" variable="0">
       <item label="In Stereo" defaultvalue="0" />
     </PropertyDesc>
@@ -270,7 +275,7 @@ The filters are applied in the order that they are specified in this configurati
       <item label="Use this window?" defaultvalue="1" />
     </PropertyDesc>
     <PropertyDesc token="sim_viewports" name="Contained Sim Viewports" type="embeddedchunk" variable="1">
-      <help>The simulator viewports to put in this window</help>
+      <help>The simulator viewports to put in this window.</help>
       <item label="Contained Sim Viewport" />
       <enumeration name="simViewport" />
     </PropertyDesc>
@@ -1046,6 +1051,29 @@ The filters are applied in the order that they are specified in this configurati
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="OpenGLFBConfig" name="OpenGL Frame Buffer Configuration">
+    <category>Display</category>
+    <PropertyDesc name="Red Channel Size" token="redSize" type="int" variable="0">
+      <item label="size" defaultvalue="1" />
+      <help>The number of bits to use per pixel for the red channel.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
+    </PropertyDesc>
+    <PropertyDesc name="Green Chanel Size" token="greenSize" type="int" variable="0">
+      <item label="size" defaultvalue="1" />
+      <help>The number of bits to use per pixel for the green channel.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
+    </PropertyDesc>
+    <PropertyDesc name="Blue Channel Size" token="blueSize" type="int" variable="0">
+      <item label="size" defaultvalue="1" />
+      <help>The number of bits to use per pixel for the blue channel.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
+    </PropertyDesc>
+    <PropertyDesc name="Alpha ChannelSize" token="alphaSize" type="int" variable="0">
+      <item label="size" defaultvalue="1" />
+      <help>The number of bits to use per pixel for the alpha channel.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
+    </PropertyDesc>
+    <PropertyDesc name="Depth Buffer Size" token="depthBufferSize" type="int" variable="0">
+      <item label="size" defaultvalue="1" />
+      <help>The size of the depth buffer.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="PerfTestActive" name="PerfTestActive">

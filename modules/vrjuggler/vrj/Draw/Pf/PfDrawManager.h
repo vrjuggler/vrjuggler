@@ -265,10 +265,16 @@ protected:
    void releasePipeWin(pfPipeWindow* pipeWin, unsigned pipeNum);
    //@}
 
-   /** Return the needed mono frame buffer config */
-   std::vector<int> getMonoFBConfig();
-   /** Return the needed stereo frame buffer config */
-   std::vector<int> getStereoFBConfig();
+   /** Return the needed mono frame buffer config. */
+   std::vector<int> getMonoFBConfig(vrj::Display* disp);
+   /** Return the needed stereo frame buffer config. */
+   std::vector<int> getStereoFBConfig(vrj::Display* disp);
+
+   /**
+    * Adds frame buffer configuration options to the given vector based on
+    * the given vrj::Display object's OpenGL frame buffer configuration.
+    */
+   void configFrameBuffer(vrj::Display* disp, std::vector<int>& attrs);
 
 protected:
    // NOTE:  ---- REMEMBER THAT PF HAS SHARED MEM Model ---

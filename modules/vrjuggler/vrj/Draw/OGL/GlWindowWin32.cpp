@@ -415,13 +415,71 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
       in_stereo = false;
    }
 
+   int red_size(8), green_size(8), blue_size(8), alpha_size(8), db_size(32);
+   jccl::ConfigChunkPtr gl_fb_chunk = mDisplay->getGlFrameBufferConfig();
+
+   if ( gl_fb_chunk.get() != NULL )
+   {
+      red_size   = gl_fb_chunk->getProperty<int>("redSize");
+      green_size = gl_fb_chunk->getProperty<int>("greenSize");
+      blue_size  = gl_fb_chunk->getProperty<int>("blueSize");
+      alpha_size = gl_fb_chunk->getProperty<int>("alphaSize");
+      db_size    = gl_fb_chunk->getProperty<int>("depthBufferSize");
+
+      if ( red_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << "WARNING: Red channel size was negative, set to: " << red_size
+            << ".  Setting to 1.\n" << vprDEBUG_FLUSH;
+         red_size = 1;
+      }
+
+      if ( green_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << "WARNING: Green channel size was negative, set to: "
+            << green_size << ".  Setting to 1.\n" << vprDEBUG_FLUSH;
+         green_size = 1;
+      }
+
+      if ( blue_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << "WARNING: Blue channel size was negative, set to: " << blue_size
+            << ".  Setting to 1.\n" << vprDEBUG_FLUSH;
+         blue_size = 1;
+      }
+
+      if ( alpha_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << "WARNING: Alpha channel size was negative, set to: "
+            << alpha_size << ".  Setting to 1.\n" << vprDEBUG_FLUSH;
+         alpha_size = 1;
+      }
+
+      if ( db_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << "WARNING: Depth buffer size was negative, set to: " << db_size
+            << ".  Setting to 1.\n" << vprDEBUG_FLUSH;
+         db_size = 1;
+      }
+   }
+
+   vprDEBUG(vrjDBG_DISP_MGR, vprDBG_CONFIG_LVL)
+      << "Frame buffer visual settings for " << mDisplay->getName()
+      << ": R:" << red_size << " G:" << green_size << " B:" << blue_size
+      << " A:" << alpha_size << " DB:" << db_size << std::endl
+      << vprDEBUG_FLUSH;
+
    pfd.iPixelType = PFD_TYPE_RGBA;
    pfd.cColorBits = 32;
-   pfd.cRedBits = 8; /* Try to get the maximum. */
-   pfd.cGreenBits = 8;
-   pfd.cBlueBits = 8;
-   pfd.cAlphaBits = 8;
-   pfd.cDepthBits = 32;
+   pfd.cRedBits = red_size;
+   pfd.cGreenBits = green_size;
+   pfd.cBlueBits = blue_size;
+   pfd.cAlphaBits = alpha_size;
+   pfd.cDepthBits = db_size;
    pfd.cStencilBits = 0;
    pfd.cAccumBits = 0;
    pfd.cAuxBuffers = 0;
