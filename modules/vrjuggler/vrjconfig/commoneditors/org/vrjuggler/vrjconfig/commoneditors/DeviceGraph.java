@@ -86,7 +86,7 @@ public class DeviceGraph
       ConfigDefinitionRepository repos = broker.getRepository();
 
       factory.registerCreator(repos.get(SIM_DIGITAL_DEVICE_TYPE),
-                              JGraphRoundRectView.class);
+                              MultiUnitDeviceVertexView.class);
       factory.registerCreator(repos.get(SIM_POS_DEVICE_TYPE),
                               JGraphRoundRectView.class);
       factory.registerCreator(repos.get(DIGITAL_PROXY_TYPE),
