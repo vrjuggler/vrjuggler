@@ -201,7 +201,7 @@ def installExamples(prefix):
 
    destdir = os.path.join(prefix, 'share', 'pyjuggler', 'examples')
    srcdir  = os.path.join(pyj_dir, 'examples')
-   installDir(srcdir, destdir)
+   installDir(srcdir, destdir, None, ['.in'])
 
 def main():
    options = setVars()
