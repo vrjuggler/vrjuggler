@@ -1007,15 +1007,57 @@
             <xsl:value-of select="@name"/>
          </xsl:attribute>
          <xsl:attribute name="version">
-            <xsl:text>1</xsl:text>
+            <xsl:text>2</xsl:text>
          </xsl:attribute>
+
+         <!--
+            If there are one or more drivers listed, get the path information
+            from the first.  This will be used for the new <driver_path>
+            element.
+            XXX: This does not handle the case when there are different paths
+            used in the configuration.
+         -->
+         <xsl:if test="count(./driver) &gt; 0">
+            <xsl:element name="driver_path">
+               <xsl:call-template name="get-path">
+                  <xsl:with-param name="original" select="./driver"/>
+                  <xsl:with-param name="path_sep"><xsl:text>/</xsl:text></xsl:with-param>
+               </xsl:call-template>
+            </xsl:element>
+            <xsl:value-of select="$newline"/>
+         </xsl:if>
+
          <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
 
+   <xsl:template match="InputManager/driver">
+      <xsl:variable name="no_ext">
+         <xsl:choose>
+            <xsl:when test="contains(., '.dll')">
+               <xsl:value-of select="substring-before(., '.dll')"/>
+            </xsl:when>
+            <xsl:when test="contains(., '.dylib')">
+               <xsl:value-of select="substring-before(., '.dylib')"/>
+            </xsl:when>
+            <xsl:otherwise>
+               <xsl:value-of select="substring-before(., '.so')"/>
+            </xsl:otherwise>
+         </xsl:choose>
+      </xsl:variable>
+
+      <xsl:element name="driver">
+         <xsl:call-template name="strip-path">
+            <xsl:with-param name="original" select="$no_ext"/>
+            <xsl:with-param name="path_sep"><xsl:text>/</xsl:text></xsl:with-param>
+         </xsl:call-template>
+      </xsl:element>
+      <xsl:value-of select="$newline"/>
+   </xsl:template>
+
    <!-- InputManger property "driverDirectory". -->
    <xsl:template match="InputManger/driverDirectory">
-      <xsl:element name="driver_directory">
+      <xsl:element name="driver_scan_path">
          <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
@@ -2219,6 +2261,52 @@
       </xsl:element>
 
       <xsl:value-of select="$newline"/>
+   </xsl:template>
+
+   <!--
+      Returns the directory containing a file, given a full path to the file.
+   -->
+   <xsl:template name="get-path">
+      <xsl:param name="original"/>
+      <xsl:param name="path_sep"/>
+      <xsl:variable name="driver_name">
+         <xsl:call-template name="strip-path">
+            <xsl:with-param name="original" select="$original"/>
+            <xsl:with-param name="path_sep" select="$path_sep"/>
+         </xsl:call-template>
+      </xsl:variable>
+      <xsl:value-of select="substring-before($original, $driver_name)"/>
+   </xsl:template>
+
+   <!--
+      Removes the path information from a full path, leaving only the last
+      element (normally a file name).  This is based on code from the XSLT
+      book.
+   -->
+   <xsl:template name="strip-path">
+      <xsl:param name="original"/>
+      <xsl:param name="path_sep"/>
+      <xsl:variable name="last">
+         <xsl:choose>
+            <xsl:when test="contains($original, $path_sep)">
+               <xsl:choose>
+                  <xsl:when test="contains(substring-after($original, $path_sep), $path_sep)">
+                     <xsl:call-template name="strip-path">
+                        <xsl:with-param name="original"><xsl:value-of select="substring-after($original, $path_sep)"/></xsl:with-param>
+                        <xsl:with-param name="path_sep"><xsl:value-of select="$path_sep"/></xsl:with-param>
+                     </xsl:call-template>
+                  </xsl:when>
+                  <xsl:otherwise>
+                     <xsl:value-of select="substring-after($original, $path_sep)"/>
+                  </xsl:otherwise>
+               </xsl:choose>
+            </xsl:when>
+            <xsl:otherwise>
+               <xsl:text></xsl:text>
+            </xsl:otherwise>
+         </xsl:choose>
+      </xsl:variable>
+      <xsl:value-of select="$last"/>
    </xsl:template>
 
    <!--
