@@ -29,7 +29,7 @@ void vjPosProxy::setTransform( float xoff, float yoff, float zoff,    // Transla
 void vjPosProxy::set(vjPosition* posPtr, int unitNum)
 {
    vjASSERT( posPtr->fDeviceSupport(DEVICE_POSITION) );
-   vjDEBUG(vjDBG_ALL,0) << "posPtr: " << posPtr << endl
+   vjDEBUG(vjDBG_INPUT_MGR,1) << "posPtr: " << posPtr << endl
               << "unit  : " << unitNum << endl << endl << vjDEBUG_FLUSH;
    m_posPtr = posPtr;
    m_unitNum = unitNum;
@@ -38,8 +38,7 @@ void vjPosProxy::set(vjPosition* posPtr, int unitNum)
 
 bool vjPosProxy::config(vjConfigChunk* chunk)
 {
-   vjDEBUG_BEGIN(vjDBG_ALL,1) << "------------------ POS PROXY -----------------\n"
-                    << "   config()" << endl << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(vjDBG_INPUT_MGR,3) << "------------------ POS PROXY config() -----------------\n" << vjDEBUG_FLUSH;
    vjASSERT(((std::string)chunk->getType()) == "PosProxy");
 
    int unitNum = chunk->getProperty("unit");
@@ -48,7 +47,7 @@ bool vjPosProxy::config(vjConfigChunk* chunk)
 
    if (true == (bool)chunk->getProperty("etrans") )
    {
-      vjDEBUG(vjDBG_ALL,1) << "Position Transform enabled..." << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_INPUT_MGR,3) << "Position Transform enabled..." << endl << vjDEBUG_FLUSH;
       setTransform
       ( chunk->getProperty("translate",0) , // xtrans
         chunk->getProperty("translate",1) , // ytrans
@@ -56,19 +55,20 @@ bool vjPosProxy::config(vjConfigChunk* chunk)
         chunk->getProperty("rotate",0) , // xrot
         chunk->getProperty("rotate",1) , // yrot
         chunk->getProperty("rotate",2) );// zrot
-      vjDEBUG(vjDBG_ALL,1) << "Transform Matrix: " << endl << getTransform() << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_INPUT_MGR,4) << "Transform Matrix: " << endl << getTransform() << endl << vjDEBUG_FLUSH;
    }
 
    int proxy_num = vjKernel::instance()->getInputManager()->addPosProxy(dev_name,unitNum,proxy_name,this);
 
    if ( proxy_num != -1)
    {
-      vjDEBUG_END(vjDBG_ALL,1) << "   PosProxy config()'ed" << endl << vjDEBUG_FLUSH;
+      vjDEBUG_END(vjDBG_INPUT_MGR,3) << "   PosProxy config()'ed" << endl << vjDEBUG_FLUSH;
       return true;
    }
    else
    {
-      vjDEBUG_END(vjDBG_ALL,1) << "   PosProxy config() failed" << endl << vjDEBUG_FLUSH;
+      vjDEBUG_END(vjDBG_INPUT_MGR,0) << "   PosProxy config() failed" << endl << vjDEBUG_FLUSH;
+      vjDEBUG_END(vjDBG_INPUT_MGR,3) << endl << vjDEBUG_FLUSH;
       return false;
    }
 }

@@ -55,7 +55,7 @@ void vjDeviceFactory::registerDevice(vjDeviceConstructorBase* constructor)
 {
    vjASSERT(constructor != NULL);
    mConstructors.push_back(constructor);     // Add the constructor to the list
-   vjDEBUG(vjDBG_ALL,1) << "vjDeviceFactor::registerDevice: Device registered for: "
+   vjDEBUG(vjDBG_INPUT_MGR,1) << "vjDeviceFactor::registerDevice: Device registered for: "
               << constructor->getChunkType()
               << "   :" << (void*)constructor
               << " type:" << typeid(*constructor).name() << endl << vjDEBUG_FLUSH;
@@ -85,7 +85,7 @@ vjInput* vjDeviceFactory::loadDevice(vjConfigChunk* chunk)
    vjInput* new_dev;
    vjDeviceConstructorBase* constructor = mConstructors[index];
 
-   vjDEBUG(vjDBG_ALL,1) << "vjDeviceFactory::loadDevice: Loading device: "
+   vjDEBUG(vjDBG_INPUT_MGR,3) << "vjDeviceFactory::loadDevice: Loading device: "
               << chunk->getType() << "  with: "
               << typeid(*constructor).name() << endl << vjDEBUG_FLUSH;
 
@@ -114,16 +114,16 @@ int vjDeviceFactory::findConstructor(vjConfigChunk* chunk)
 
 void vjDeviceFactory::debugDump()
 {
-   vjDEBUG_BEGIN(vjDBG_ALL,0) << "vjDeviceFactory::debugDump\n" << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_ALL,0) << "num constructors:" << mConstructors.size() << "\n" << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(vjDBG_INPUT_MGR,0) << "vjDeviceFactory::debugDump\n" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_INPUT_MGR,0) << "num constructors:" << mConstructors.size() << "\n" << vjDEBUG_FLUSH;
 
    for(int cNum=0;cNum<mConstructors.size();cNum++)
    {
       vjDeviceConstructorBase* dev_constr = mConstructors[cNum];
-      vjDEBUG(vjDBG_ALL,0) << cNum << ": Constructor:" << (void*)dev_constr
+      vjDEBUG(vjDBG_INPUT_MGR,0) << cNum << ": Constructor:" << (void*)dev_constr
                  << "   type:" << typeid(*dev_constr).name() << "\n" << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_ALL,0) << "   recog:" << (std::string)dev_constr->getChunkType() << "\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_INPUT_MGR,0) << "   recog:" << (std::string)dev_constr->getChunkType() << "\n" << vjDEBUG_FLUSH;
    }
 
-   vjDEBUG_END(vjDBG_ALL,0) << "------ END DUMP ------\n" << vjDEBUG_FLUSH;
+   vjDEBUG_END(vjDBG_INPUT_MGR,0) << "------ END DUMP ------\n" << vjDEBUG_FLUSH;
 }
