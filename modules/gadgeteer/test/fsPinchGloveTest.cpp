@@ -34,7 +34,7 @@
 #include <string>
 #include <unistd.h> // for usleep
 
-#include <Input/vjGlove/fsPinchGlove.h>
+#include <vrj/Input/Devices/Fakespace/PinchGloveStandalone.h>
 
 char spin()
 {
@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
 {
 	if (argc == 2)
 	{
-		fsPinchGlove pinchGlove;
+		PinchGloveStandalone pinchGlove;
 		
 		std::string port;
 		port = argv[1];

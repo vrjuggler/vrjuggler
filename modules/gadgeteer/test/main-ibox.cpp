@@ -34,20 +34,16 @@
 #include <iomanip>
 #include <unistd.h>
 
-#include <VPR/SharedMem/vjMemPool.h>
-//#include <VPR/SharedMem/vjSharedType.h>
-#include <Input/vjInput/vjIbox.h>
-#include <Input/ibox/hci.h>
-#include <Input/ibox/ibox.h>
+#include <vrj/Input/Devices/Immersion/Ibox.h>
+#include <vrj/Input/Devices/Immersion/hci.h>
+#include <vrj/Input/Devices/Immersion/iboxStandalone.h>
 #include <vpr/System.h>
 
 int main()
 {
-  MemPool* anSgiPool = new SharedPool(1024*1024);
-  
-  IBox* t1 = new(anSgiPool) IBox;
+  vrj::IBox* t1 = new vrj::IBox;
  
-  IBOX_DATA *data;
+  vrj::IBOX_DATA *data;
 
   char achar;
   std::cout << "U - Update\n"
@@ -81,6 +77,5 @@ int main()
   } while ((achar != 'q') && (achar != 'Q'));
   t1->stopSampling();
   delete t1;
-  delete anSgiPool;
   return 0;
 }
