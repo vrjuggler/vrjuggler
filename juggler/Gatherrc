@@ -14,7 +14,7 @@ Boost
 {
    CVSROOT: :pserver:anonymous@cvs.boost.sourceforge.net:/cvsroot/boost;
    Module: boost;
-   Tag: Version_1_28_0;
+   Tag: Version_1_29_0;
    Path: external;
 };
 
