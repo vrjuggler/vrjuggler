@@ -338,7 +338,7 @@ dnl -------------------------------------------------------------
 sample_application_includes="-I\${SNX_BASE_DIR}/include $INCLUDES"
 sample_application_ldflags="$LDFLAGS"
 
-snx_dep_scripts='vpr-config'
+#snx_dep_scripts='vpr-config'
 
 if test "x$OS_TYPE" = "xWin32" ; then
    snx_ldflags_compiler="/link /libpath:\$prefix/lib"
