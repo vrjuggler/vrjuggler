@@ -70,7 +70,7 @@ public:
     //! ARGS: remote_addr - A reference to a vpr::InetAddr object for the
     //+                     remote socket address.
     // ------------------------------------------------------------------------
-    SocketStream_t (const InetAddr& local_addr, const InetAddr& remote_addr)
+    SocketStream_t (InetAddr local_addr, InetAddr remote_addr)
         : Socket_t<RealSocketStreamImpParent>(),
           m_socket_stream_imp(local_addr, remote_addr)
     {
