@@ -93,6 +93,11 @@ public class BeanRegistry
    {
       return (TweekBean) mBeans.get(name);
    }
+   
+   public synchronized Map getBeans ()
+   {
+      return mBeans;
+   }
 
    /**
     * Gets all the beans that derive or implement the given class or interface.
