@@ -18,7 +18,7 @@
    </section>
    <section>
       <title>Porting from 1.0 to 1.1</title>
-      <para>Much has changed from VR Juggler 1.0 to 1.1. Why? Within the last 6 months, our user base has been increasing steadily, and we wanted to put in changes that would make Juggler last for years to come. Many of the warts and bugs in the old version have been fixed, and the interface to everything has been changed to support some of our future plans. Don't worry, this change has been made for the best, and a change this big will not happen again. Our system is more modular and reusable than before. Thanks for your patience, and let us know if you have any porting questions not answered here.</para>
+      <para>Much has changed from VR Juggler 1.0 to 1.1. Why? Our user base has been increasing steadily, and we wanted to put in changes that would make VR Juggler last for years to come. Many of the warts and bugs in the old version have been fixed, and the interface to everything has been changed to support some of our future plans. Don't worry, this change has been made for the best, and a change this big will not happen again. Our system is more modular and reusable than before. Thanks for your patience, and let us know if you have any porting questions not answered here.</para>
       <itemizedlist>
          <title>Summary of Changes</title>
          <listitem>
