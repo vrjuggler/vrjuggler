@@ -31,6 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
+#include <vpr/Util/Assert.h>
 #include <gadget/Util/Debug.h>
 #include <gadget/RemoteInputManager/RecvBuffer.h>
 
