@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2001-07-23 allenb   Added vprTest::BoostTest for testing boost functionality
+                    required for vapor and other Juggler libs.
 2001-07-22 allenb   Replace vpr::Status with vpr::ReturnStatus
 2001-07-21 allenb   Imported Boost 1.0.23. ( www.boost.org )
 2001-07-20 patrick  The vpr::Socket connect() method now uses its timeout to
