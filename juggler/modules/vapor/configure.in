@@ -625,7 +625,7 @@ fi
 
 # Ensure that a compiled version of the Boost.Filesystem library is available.
 boost_fs_name="boost_filesystem-$toolset$threading"
-vprsave_CFLAGS="$CFLAGS"
+vprsave_CXXFLAGS="$CXXFLAGS"
 vprsave_CPPFLAGS="$CPPFLAGS"
 vprsave_LIBS="$LIBS"
 vprsave_LDFLAGS="$LDFLAGS"
