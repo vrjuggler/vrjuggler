@@ -29,29 +29,26 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
-package VjComponents.ConfigEditor;
+package org.vrjuggler.jccl.editorgui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.util.Enumeration;
 import javax.swing.*;
-import javax.swing.tree.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
-import java.util.Enumeration;
-import java.io.File;
+import javax.swing.tree.*;
 
-import VjControl.*;
-import VjComponents.UI.Widgets.*;
-import VjConfig.*;
-import VjComponents.UI.PlugPanel;
-import VjComponents.ConfigEditor.ConfigModule;
-import VjComponents.ConfigEditor.ConfigModuleEvent;
-import VjComponents.ConfigEditor.ConfigModuleListener;
-import VjComponents.ConfigEditor.ChunkOrgTreeModule;
-import VjComponents.UI.ControlUIModule;
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.editorgui.ConfigModule;
+import org.vrjuggler.jccl.editorgui.ConfigModuleEvent;
+import org.vrjuggler.jccl.editorgui.ConfigModuleListener;
+import org.vrjuggler.jccl.editorgui.ChunkOrgTreeModule;
+import org.vrjuggler.jccl.vjcontrol.*;
+import org.vrjuggler.jccl.vjcontrol.ui.ControlUIModule;
+import org.vrjuggler.jccl.vjcontrol.ui.PlugPanel;
+import org.vrjuggler.jccl.vjcontrol.ui.widgets.*;
 
 /* there are some big issues with this piece of code.
  * handling of orgtrees is pathologically stupid in some ways 
@@ -64,7 +61,6 @@ import VjComponents.UI.ControlUIModule;
  *  "revert" button or something to recapture the active ChunkOrgTree and
  *  cancel changes.
  * 
- *  @author Christopher Just
  *  @version $Revision$
  */
 public class ChunkOrgTreePane 

@@ -29,19 +29,17 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
-package VjComponents.ConfigEditor;
+package org.vrjuggler.jccl.editorgui;
 
 import java.awt.event.*;
 import java.io.*;
 import java.util.*;
-import VjConfig.ConfigStreamTokenizer;
-import VjConfig.ConfigChunk;
-import VjConfig.VarValue;
-import VjControl.*;
-import VjComponents.ConfigEditor.ChunkOrgTree;
+
+import org.vrjuggler.jccl.config.ConfigStreamTokenizer;
+import org.vrjuggler.jccl.config.ConfigChunk;
+import org.vrjuggler.jccl.config.VarValue;
+import org.vrjuggler.jccl.editorgui.ChunkOrgTree;
+import org.vrjuggler.jccl.vjcontrol.*;
 
 
 /** Core Module for ChunkOrgTrees
@@ -51,7 +49,6 @@ import VjComponents.ConfigEditor.ChunkOrgTree;
  *  This module is separate from the ConfigModule because only certain
  *  UI components need it.
  * 
- *  @author Christopher Just
  *  @version $Revision$
  */
 public class ChunkOrgTreeModule extends DefaultCoreModule {

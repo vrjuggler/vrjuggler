@@ -29,22 +29,18 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-package VjComponents.ConfigEditor;
+package org.vrjuggler.jccl.editorgui;
 
 import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.tree.*;
 
-import VjControl.Core;
-import VjConfig.*;
-import VjComponents.ConfigEditor.*;
+import org.vrjuggler.jccl.vjcontrol.Core;
+import org.vrjuggler.jccl.config.*;
 
 /** Trees used by ChunkDBPanel.
  * 
- *  @author Christopher Just
  *  @version $Revision$
  */
 public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener, ChunkDBListener{

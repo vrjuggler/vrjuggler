@@ -29,14 +29,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-package VjComponents.ConfigEditor;
+package org.vrjuggler.jccl.editorgui;
 
 import java.awt.event.*;
-import java.util.Vector;
 import java.io.*;
-import VjConfig.ConfigStreamTokenizer;
+import java.util.Vector;
+import org.vrjuggler.jccl.config.ConfigStreamTokenizer;
 
 public class ChunkOrgTree {
 

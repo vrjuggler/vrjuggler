@@ -29,20 +29,18 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.editorgui;
+
+import java.util.EventObject;
+
+import org.vrjuggler.jccl.config.ChunkDescDB;
+import org.vrjuggler.jccl.config.ConfigChunkDB;
 
 /** Event spawned by ConfigModule for add/remove databases.
  *  By becoming a ConfigModuleListener, an object can receive these
  *  events, which give information about addition or removal of
  *  ConfigChunkDBs and ChunkDescDBs.
  */
-package VjComponents.ConfigEditor;
-
-import java.util.EventObject;
-
-import VjConfig.ChunkDescDB;
-import VjConfig.ConfigChunkDB;
-
-
 public class ConfigModuleEvent extends EventObject {
     private ConfigChunkDB chunkdb;
     private ChunkDescDB descdb;

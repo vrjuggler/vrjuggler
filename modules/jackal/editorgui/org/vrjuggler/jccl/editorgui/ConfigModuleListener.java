@@ -29,10 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-package VjComponents.ConfigEditor;
-
-import VjComponents.ConfigEditor.ConfigModuleEvent;
+package org.vrjuggler.jccl.editorgui;
 
 /** Listener interface for ConfigModule events.
  *  By becoming a ConfigModuleListener, an object can receive 
@@ -44,7 +41,6 @@ import VjComponents.ConfigEditor.ConfigModuleEvent;
  *  SwingUtilities.invokeLater or something similar to ensure correct
  *  synchronization.
  * 
- *  @author Christopher Just
  *  @version $Revision$
  */
 public interface ConfigModuleListener extends java.util.EventListener {

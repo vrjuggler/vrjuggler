@@ -29,17 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
-// frame to display a vector of dependency information
-// NOTE: A whole bunch of things could be done with the new event system
-// to autoupdate the dependency data.  The only question is if we really
-// want to be listening to change notification on every open chunkdb.
-// Given that it would only be an issue when the depframe is open, this
-// might not be a bad idea.
-
-package VjComponents.ConfigEditor;
+package org.vrjuggler.jccl.editorgui;
 
 import javax.swing.*;
 import javax.swing.border.*;
@@ -47,10 +37,15 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 
-import VjConfig.*;
-import VjComponents.UI.Widgets.ChildFrame;
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.vjcontrol.ui.widgets.ChildFrame;
 
-
+// frame to display a vector of dependency information
+// NOTE: A whole bunch of things could be done with the new event system
+// to autoupdate the dependency data.  The only question is if we really
+// want to be listening to change notification on every open chunkdb.
+// Given that it would only be an issue when the depframe is open, this
+// might not be a bad idea.
 
 public class DependencyFrame extends JFrame 
     implements ChildFrame, ActionListener {
@@ -178,6 +173,4 @@ public class DependencyFrame extends JFrame
     public void updateUI () {
 	SwingUtilities.updateComponentTreeUI (this);
     }
-
 }
-
