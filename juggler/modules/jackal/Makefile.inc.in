@@ -401,7 +401,13 @@ EXTRA_OBJ_TARGETS = build-java
 # to write to the same files at the same time while building different sources.
 MAKEFLAGS += -j 1
 build-java:
+ifdef NO_JAVA_GUI
+	@echo "------------------------------------------------"
+	@echo "Skipping Java GUI targets."
+	@echo "------------------------------------------------"
+else
 	$(MAKE) $(MAKEFLAGS) RECTARGET=java recursive
+endif #ifdef NO_JAVA_GUI
 
 include $(MKPATH)/dpp.libs.mk
 include $(MKPATH)/dpp.clean.mk
