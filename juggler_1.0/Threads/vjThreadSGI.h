@@ -11,6 +11,7 @@
 #include <sys/prctl.h>
 #include <signal.h>
 #include <sched.h>
+#include <unistd.h>
 
 #include <Threads/vjThreadFunctor.h>
 #include <Threads/vjBaseThread.h>
@@ -155,7 +156,7 @@ public:
    //+       process.
    // -----------------------------------------------------------------------
    virtual void yield (void)
-   { sched_yield();}
+   { sginap(0);}
 
 
    // -----------------------------------------------------------------------
