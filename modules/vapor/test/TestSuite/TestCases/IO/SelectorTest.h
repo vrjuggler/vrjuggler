@@ -28,6 +28,8 @@
 
 #include <vector>
 #include <map>
+#include <numeric>
+#include <algorithm>
 
 using namespace vpr;
 
@@ -61,8 +63,8 @@ public:
            mThreadAssertTest = testcase; 
            std::cerr << "threadAssertTest: " << text << std::endl;
        }
-       else
-           std::cout << "." << std::flush;
+       //else
+       //    std::cout << "." << std::flush;
    }
    void testAssertReset()
    { mThreadAssertTest = true; }
@@ -204,12 +206,221 @@ public:
       }
    }
    
+
+   // Test sending data to a group of recievers that are pooled
+   // This test is based upon the idea of having a pool of
+   // connected sockets.  The connector side is sending, and the acceptor side is recieving.
+   //
+   // The connector side selects some subgroup of the sockets, marks them as selected, and then sends data on them
+   // The acceptor side then selects on the sockets and hopefully it gets that same group back as the ones with pending data
+   //      
+   void testSendThenPoll()
+   {
+       testAssertReset();
+       mRendevousPort = 47100 + (random() % 71);     // Get a partially random port       
+       mNumRendevousPorts = 50;
+       mNumIters = 250;
+       mMessageValue = std::string("The Data");
+       mMessageLen = mMessageValue.length();
+       
+       mState = NOT_READY;                        // Initialize
+
+       // Spawn acceptor thread
+       vpr::ThreadMemberFunctor<SelectorTest> 
+           acceptor_functor( this, &SelectorTest::testSendThenPoll_acceptor );
+       vpr::Thread acceptor_thread( &acceptor_functor);
+
+       // Spawn connector thread
+       vpr::ThreadMemberFunctor<SelectorTest> 
+           connector_functor( this, &SelectorTest::testSendThenPoll_connector );
+       vpr::Thread connector_thread( &connector_functor);
+
+       // Wait for threads
+       acceptor_thread.join();
+       connector_thread.join();
+
+       assertTest( mThreadAssertTest );
+   }
+   void testSendThenPoll_acceptor(void* arg)
+   {
+      unsigned i,j;
+      std::map<vpr::IOSys::Handle, vpr::Uint16> handleTable;      // Table mapping Handles to the socket index
+      vpr::Selector selector;
+      vector<vpr::SocketStream*> socks;
+      vector<vpr::SocketAcceptor*> acceptors;
+      //bool ret_val(false);
+
+      // Bind to the accepting ports
+      for(i=0;i<mNumRendevousPorts;i++)
+      {
+         vpr::SocketAcceptor* new_acceptor = new vpr::SocketAcceptor();          // Create acceptor
+         acceptors.push_back(new_acceptor);
+         vpr::InetAddr local_acceptor_addr;
+         local_acceptor_addr.setAddress("localhost", (mRendevousPort+i));        // Set local address
+         new_acceptor->open(local_acceptor_addr);                                // Open acceptor                  
+      }
+
+      // READY - Tell everyone that we are ready to accept
+      mCondVar.acquire();
+      {
+         mState = ACCEPTOR_READY;
+         mCondVar.signal();       // Tell any waiting threads
+      }
+      mCondVar.release();      
+
+      // Accept all the connections
+      for(i=0;i<mNumRendevousPorts;i++)
+      {
+         vpr::SocketStream* sock = acceptors[i]->accept();           // Accept the connection
+         threadAssertTest((sock != NULL), "Error accepting a connection");
+         socks.push_back(sock);
+         vpr::IOSys::Handle handle = sock->getHandle();       // Get the Handle to register
+         handleTable[handle] = i;                           // Save handle index
+         selector.addHandle(handle);                          // Add to selector
+         selector.setIn(handle, (vpr::Selector::READ));       // Set it for waiting for READ
+      }
+
+      threadAssertTest((mNumRendevousPorts == selector.getNumHandles()), "We didn't add all ports correctly to selector");
+
+      // Use selector to find the sock(s) to read on
+      // Then read message after checking to verify subgroup                     
+       for(i=0;i<mNumIters;i++)
+       {
+          // WAIT for data to be sent
+         mCondVar.acquire();
+         {
+            while(mState != DATA_SENT)
+               mCondVar.wait();         
+         }
+         mCondVar.release();
+          
+          // Get the events
+          vpr::Uint16 num_events;
+          bool ret = selector.select(num_events, 50000);
+
+          threadAssertTest((true == ret) && "Selection did not return successfully");
+          threadAssertTest((num_events == mSelectedPorts.size()) && "There was an incorrect number of events");
+
+          // mSelectedPorts holds the index numbers of the sockets that data was sent on          
+          // Read from each selected socket
+          unsigned num_found(0);
+          for(j=0;j<selector.getNumHandles();j++)
+          {
+             // If have data to read
+             if(selector.getOut(selector.getHandle(j)) & (vpr::Selector::READ))      
+            {
+               threadAssertTest((handleTable.find(selector.getHandle(j)) != handleTable.end()) && "Handle not found int acceptor table");
+               vpr::Uint16 sock_index = handleTable[selector.getHandle(j)];
+               threadAssertTest((std::find(mSelectedPorts.begin(), mSelectedPorts.end(), sock_index) != mSelectedPorts.end()), "Found a port that wasn't supposed to have data");
+               num_found += 1;
+
+               std::string data;
+               socks[j]->read(data, mMessageLen);
+               threadAssertTest((data.length() == mMessageLen), "Data recieved is of wrong length");
+            }
+          }
+          threadAssertTest((num_found == mSelectedPorts.size()) && "Wrong number of readers found");
+          
+          // Tell senders that we are DONE_READING
+          mCondVar.acquire();
+          {
+             mState = DONE_READING;
+             mCondVar.signal();
+          }
+          mCondVar.release();
+       }
+
+       // Close Sockets and delete acceptors
+       for(i=0;i<socks.size();i++)
+       {
+          socks[i]->close();
+          delete socks[i];
+       }
+       for(i=0;i<mNumRendevousPorts;i++)
+       {
+          delete acceptors[i];
+       }
+   }
+   void testSendThenPoll_connector(void* arg)
+   {
+      unsigned i,j;
+      bool ret_val(true);
+      vpr::InetAddr remote_addr;
+      vpr::SocketConnector connector;           // Connect to acceptor
+      std::vector<vpr::SocketStream> sockets(mNumRendevousPorts);       // Initialize with the number of sockets needed
+      std::vector<PRUint16> port_indicies(mNumRendevousPorts);     // This vector holds a list of valid indices to send data to
+      std::iota(port_indicies.begin(), port_indicies.end(), 0);    // Fill with (0...n)
+
+      // WAIT for READY 
+      mCondVar.acquire();
+      {
+         while(mState != ACCEPTOR_READY)
+            mCondVar.wait();
+      }
+      mCondVar.release();
+
+      // Connect all the sockets
+      for(i=0;i<mNumRendevousPorts;i++)
+      {
+         remote_addr.setAddress("localhost", (mRendevousPort+i));             // Set remote port
+         ret_val = connector.connect(sockets[i], remote_addr, 100);           // Connect to the port
+         threadAssertTest((ret_val == true), "Connector can't connect");
+      }
+
+      // Send data in random groupings
+      // - First selecte a random subgroup of ports to send to
+      // - Send the data
+      // - Wait for recievers to say that it was good
+      for(i=0;i<mNumIters;i++)
+      { 
+         vpr::Uint16 num_ports = (random() % mNumRendevousPorts);          // Select some number of ports to send to
+         if(num_ports == 0)
+            num_ports = 1;                                                 // Make sure we always send some
+         
+         mSelectedPorts = std::vector<vpr::Uint16>(num_ports, 0);          // Replace old data with new of given size
+         std::random_sample(port_indicies.begin(), port_indicies.end(),      // Select the random subset
+                            mSelectedPorts.begin(), mSelectedPorts.end());
+  
+         // Send data to the random subset of ports
+         for(j=0;j<mSelectedPorts.size();j++)
+         {
+            threadAssertTest((mSelectedPorts[j] < sockets.size()));           // Make sure we are in range
+            ret_val = sockets[mSelectedPorts[j]].write(mMessageValue, mMessageLen);    // Write the data
+            threadAssertTest((ret_val == true), "Error writing data on socket");
+         }
+         
+         // SIGNAL that we have SENT_DATA
+         mCondVar.acquire();
+         {
+            mState = DATA_SENT;
+            mCondVar.signal();
+         }
+         mCondVar.release();
+
+         // WAIT for DONE_READING
+         mCondVar.acquire();
+         {
+            while(mState != DONE_READING)
+               mCondVar.wait();
+         }
+         mCondVar.release();
+      }
+
+      for(i=0;i<sockets.size();i++)
+      {
+         sockets[i].close();
+         //delete sockets[i];
+      }
+   }
+
+
    static Test* suite()
    {
       TestSuite *test_suite = new TestSuite ("SelectorTest");
 
       test_suite->addTest( new TestCaller<SelectorTest>("testAcceptorPoolSelection", &SelectorTest::testAcceptorPoolSelection));
-      
+      test_suite->addTest( new TestCaller<SelectorTest>("testSendThenPoll", &SelectorTest::testSendThenPoll));
+                                         
       return test_suite;
    }
 
@@ -225,9 +436,11 @@ protected:
     vpr::Uint16     mMessageLen;        // Length of message to send
     std::string     mMessageValue;      // The value of the message that is supposed to be sent (and recieved)
 
-    enum State { ACCEPTOR_READY, NOT_READY, CONNECTOR_CLOSED };
+    enum State { ACCEPTOR_READY, NOT_READY, CONNECTOR_CLOSED, DATA_SENT, DONE_READING };
     State           mState;         // State variable
     vpr::Cond       mCondVar;       // Condition variable
+
+    std::vector<vpr::Uint16>     mSelectedPorts;      // List of ports that were selected to send data
     
 };
 
