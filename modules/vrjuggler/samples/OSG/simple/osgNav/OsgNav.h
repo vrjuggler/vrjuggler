@@ -65,7 +65,6 @@
 #include <tweek/CORBA/CorbaManager.h>
 #endif
 
-#include <cluster/Plugins/ApplicationDataManager/UserData.h>
 #include "nav.h"
 
 #include <vrj/Draw/OSG/OsgApp.h>
