@@ -73,23 +73,15 @@ int fileSize( const char* const filename )
 
    FILE* fh = fopen( filename, "rb" );
    assert( fh != NULL ); 
-   
-   const int one_kilobyte = 1024;
-   const int arbitraliy_chosen_size = one_kilobyte * 1000;
-   
-   char data[arbitraliy_chosen_size];
-   int file_length( arbitraliy_chosen_size ); // makes the first while condition
-   int total_size = 0;
-   
-   while (file_length == arbitraliy_chosen_size)
-   {
-      file_length = fread( &data, 1, arbitraliy_chosen_size, fh );
-      total_size += file_length;
-   }
-   
-   fclose( fh );
 
-   return total_size;
+   if ( fseek(fh, 0, SEEK_END) == 0 )
+   {
+      return ftell(fh);
+   }
+   else
+   {
+      return 0;
+   }
 }
 
 void fileLoad( const char* const filename, std::vector<unsigned char>& data )
