@@ -71,13 +71,6 @@ PropertyDefinition::~PropertyDefinition()
    mIsValid = false;
 }
 
-#ifdef JCCL_DEBUG
-void PropertyDefinition::assertValid() const
-{
-   vprASSERT(mIsValid == true && "Trying to use deleted PropertyDefinition");
-}
-#endif
-
 std::string PropertyDefinition::getToken() const
 {
    return mNode->getAttribute(tokens::NAME).getValue<std::string>();
