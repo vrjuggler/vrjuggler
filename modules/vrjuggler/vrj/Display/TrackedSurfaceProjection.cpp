@@ -64,7 +64,7 @@ void TrackedSurfaceProjection::calcViewMatrix(gmtl::Matrix44f& eyePos, const flo
    gmtl::setTrans(base_M_surf_rotonly, gmtl::Vec3f(0.0f, 0.0f, 0.0f));
    gmtl::Matrix44f temp_surf_M_base = base_M_surf_rotonly * m_surftrans_M_surf;
    gmtl::invert(temp_surf_M_base);
-   mViewMat = temp_surf_M_base * gmtl::makeInverse(eyePos);
+   mViewMat = temp_surf_M_base * gmtl::makeInvert(eyePos);
 }
 
 // @post: All projection transforms must be updates
