@@ -130,8 +130,6 @@ public:
          gmtl::identity(*mPositionData.getPosition());
       }
 
-      //vprDEBUG(vprDBG_ALL,0) << "Proxy::getData: mPosData:" << *(mPositionData.getPosition()) << "\n" << vprDEBUG_FLUSH;
-
       return mPositionData.getPosition();
    }
 
@@ -194,10 +192,7 @@ public:
 
 private:
    PositionData      mPositionData;
-   //gmtl::Matrix44f   mMatrixTransform; /**< reciever_t_modifiedReciever */
-   int               mUnitNum;
-   //bool              mETrans;          /**< Are transformation enabled? */
-   //PositionFilter*   mFilter;          /**< A possible position filter to use */
+   int               mUnitNum;   
 };
 
 } // End of gadget namespace
